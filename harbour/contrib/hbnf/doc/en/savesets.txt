@@ -2,29 +2,29 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_SAVESETS()
- *  $CATEGORY$
- *     Environment
- *  $ONELINER$
- *     Save the status of all the SET command settings
- *  $SYNTAX$
- *     FT_SAVESETS() -> aOldSets
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     An array containing the values of the supported SETs.
- *  $DESCRIPTION$
- *     This function saves the SET Settings, i.e., it copies them into an
- *     array, aOldSets.  The following SETs are not currently supported:
- *     FILTER, FORMAT, FUNCTION, INDEX, KEYS, MODE, ORDER, PROCEDURE,
- *     RELATION, TYPEAHEAD
- *  $EXAMPLES$
- *     aOldSets := FT_SAVESETS()
- *  $INCLUDE$
- *     set.ch
- *  $SEEALSO$
- *     FT_RESTSETS() FT_SETCENTURY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_SAVESETS()
+   $CATEGORY$
+      Environment
+   $ONELINER$
+      Save the status of all the SET command settings
+   $SYNTAX$
+      FT_SAVESETS() -> aOldSets
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      An array containing the values of the supported SETs.
+   $DESCRIPTION$
+      This function saves the SET Settings, i.e., it copies them into an
+      array, aOldSets.  The following SETs are not currently supported:
+      FILTER, FORMAT, FUNCTION, INDEX, KEYS, MODE, ORDER, PROCEDURE,
+      RELATION, TYPEAHEAD
+   $EXAMPLES$
+      aOldSets := FT_SAVESETS()
+   $INCLUDE$
+      set.ch
+   $SEEALSO$
+      FT_RESTSETS() FT_SETCENTURY()
+   $END$
  */

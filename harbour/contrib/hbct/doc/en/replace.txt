@@ -2,98 +2,98 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      REPLALL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace certain characters at the left and right of a string
- *  $SYNTAX$
- *      REPLALL( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REPLALL() is compatible with CT3's REPLALL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      REPLLEFT(),REPLRIGHT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      REPLALL()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace certain characters at the left and right of a string
+   $SYNTAX$
+      REPLALL( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      REPLALL() is compatible with CT3's REPLALL().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      REPLLEFT(),REPLRIGHT()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      REPLLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace certain characters at the left of a string
- *  $SYNTAX$
- *      REPLLEFT( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REPLLEFT() is compatible with CT3's REPLLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      REPLALL(),REPLRIGHT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      REPLLEFT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace certain characters at the left of a string
+   $SYNTAX$
+      REPLLEFT( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      REPLLEFT() is compatible with CT3's REPLLEFT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      REPLALL(),REPLRIGHT()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      REPLRIGHT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace certain characters at the right of a string
- *  $SYNTAX$
- *      REPLRIGHT( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REPLRIGHT() is compatible with CT3's REPLRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      REPLALL(),REPLLEFT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      REPLRIGHT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace certain characters at the right of a string
+   $SYNTAX$
+      REPLRIGHT( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      REPLRIGHT() is compatible with CT3's REPLRIGHT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      REPLALL(),REPLLEFT()
+   $END$
  */

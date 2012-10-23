@@ -2,67 +2,67 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      FT_SETRATE()
- *  $CATEGORY$
- *      Keyboard/Mouse
- *  $ONELINER$
- *      Set the keyboard delay and repeat rate on PC/AT & PS/2
- *  $SYNTAX$
- *      FT_SETRATE( [ <nDelayTime> ] [, <nRepeatRate> ] ) -> NIL
- *  $ARGUMENTS$
- *      <nDelayTime> is the keyboard delay time.
- *
- *      <nRepeatRate> is the keyboard repeat rate.
- *
- *           ┌───────────────────────┐  ┌────────────────────────┐
- *           │ nDelayTime      DELAY │  │ RepeatRate      SPEED  │
- *           ├───────────────────────┤  ├────────────────────────┤
- *           │     0           250ms │  │    0           30.0cps │
- *           │     1 (default) 500ms │  │    1           26.7cps │
- *           │     2           750ms │  │    2           24.0cps │
- *           │     3          1000ms │  │    3           21.8cps │
- *           └───────────────────────┘  │    4           20.0cps │
- *                                      │    5           18.5cps │
- *                                      │    6           17.1cps │
- *                                      │    7           16.0cps │
- *                                      │    8           15.0cps │
- *                                      │    9           13.3cps │
- *                                      │   10           12.0cps │
- *                                      │   11           10.9cps │
- *                                      │   12 (default) 10.0cps │
- *                                      │   13            9.2cps │
- *                                      │   14            8.6cps │
- *                                      │   15            8.0cps │
- *                                      │   16            7.5cps │
- *                                      │   17            6.7cps │
- *                                      │   18            6.0cps │
- *                                      │   19            5.5cps │
- *                                      │   20            5.0cps │
- *                                      │   21            4.6cps │
- *                                      │   22            4.3cps │
- *                                      │   23            4.0cps │
- *                                      │   24            3.7cps │
- *                                      │   25            3.3cps │
- *                                      │   26            3.0cps │
- *                                      │   27            2.7cps │
- *                                      │   28            2.5cps │
- *                                      │   29            2.3cps │
- *                                      │   30            2.1cps │
- *                                      │   31            2.0cps │
- *                                      └────────────────────────┘
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     This routine is used to adjust the IBM PC/AT and PS/2 "typematic"
- *     repeat and delay feature.  This is used to allow the users of your
- *     application to adjust these speeds to the most comfortable level.
- *
- *     This source code is written for Microsoft Assembler v5.1.
- *  $EXAMPLES$
- *     FT_SETRATE( 0, 0 )    // Set keyboard to fastest possible settings
- *     FT_SETRATE()          // Set keyboard to AT defaults (10.9cps,500ms delay)
- *     FT_SETRATE( 11, 1 )   // Set keyboard to PS/2 defaults (10cps,500ms delay)
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_SETRATE()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Set the keyboard delay and repeat rate on PC/AT & PS/2
+   $SYNTAX$
+      FT_SETRATE( [ <nDelayTime> ] [, <nRepeatRate> ] ) -> NIL
+   $ARGUMENTS$
+      <nDelayTime> is the keyboard delay time.
+  
+      <nRepeatRate> is the keyboard repeat rate.
+  
+           ┌───────────────────────┐  ┌────────────────────────┐
+           │ nDelayTime      DELAY │  │ RepeatRate      SPEED  │
+           ├───────────────────────┤  ├────────────────────────┤
+           │     0           250ms │  │    0           30.0cps │
+           │     1 (default) 500ms │  │    1           26.7cps │
+           │     2           750ms │  │    2           24.0cps │
+           │     3          1000ms │  │    3           21.8cps │
+           └───────────────────────┘  │    4           20.0cps │
+                                      │    5           18.5cps │
+                                      │    6           17.1cps │
+                                      │    7           16.0cps │
+                                      │    8           15.0cps │
+                                      │    9           13.3cps │
+                                      │   10           12.0cps │
+                                      │   11           10.9cps │
+                                      │   12 (default) 10.0cps │
+                                      │   13            9.2cps │
+                                      │   14            8.6cps │
+                                      │   15            8.0cps │
+                                      │   16            7.5cps │
+                                      │   17            6.7cps │
+                                      │   18            6.0cps │
+                                      │   19            5.5cps │
+                                      │   20            5.0cps │
+                                      │   21            4.6cps │
+                                      │   22            4.3cps │
+                                      │   23            4.0cps │
+                                      │   24            3.7cps │
+                                      │   25            3.3cps │
+                                      │   26            3.0cps │
+                                      │   27            2.7cps │
+                                      │   28            2.5cps │
+                                      │   29            2.3cps │
+                                      │   30            2.1cps │
+                                      │   31            2.0cps │
+                                      └────────────────────────┘
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      This routine is used to adjust the IBM PC/AT and PS/2 "typematic"
+      repeat and delay feature.  This is used to allow the users of your
+      application to adjust these speeds to the most comfortable level.
+  
+      This source code is written for Microsoft Assembler v5.1.
+   $EXAMPLES$
+      FT_SETRATE( 0, 0 )    // Set keyboard to fastest possible settings
+      FT_SETRATE()          // Set keyboard to AT defaults (10.9cps,500ms delay)
+      FT_SETRATE( 11, 1 )   // Set keyboard to PS/2 defaults (10cps,500ms delay)
+   $END$
  */

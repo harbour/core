@@ -2,66 +2,66 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      PRINTSTAT()
- *  $CATEGORY$
- *      CT3 printer functions
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      PRINTSTAT( [<nPrinter>] ) -> nState
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *
- *  $PLATFORMS$
- *      DOS
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      PRINTSTAT()
+   $CATEGORY$
+      CT3 printer functions
+   $ONELINER$
+  
+   $SYNTAX$
+      PRINTSTAT( [<nPrinter>] ) -> nState
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+      DOS
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+  
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      PRINTREADY()
- *  $CATEGORY$
- *      CT3 printer functions
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      PRINTREADY( [<nPrinter>] ) -> lPrinterReady
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *
- *  $PLATFORMS$
- *      DOS
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      PRINTREADY()
+   $CATEGORY$
+      CT3 printer functions
+   $ONELINER$
+  
+   $SYNTAX$
+      PRINTREADY( [<nPrinter>] ) -> lPrinterReady
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+      DOS
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+  
+   $END$
  */

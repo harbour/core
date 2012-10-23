@@ -13,510 +13,510 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_dateSeconds()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateSeconds( void ) --> ( double )dResult
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <dResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_dateSeconds()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateSeconds( void ) --> ( double )dResult
+   $ARGUMENTS$
+
+   $RETURNS$
+      <dResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_dateToday()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateToday( long * plYear, long * plMonth, long * plDay )
- *  $ARGUMENTS$
- *      <plYear>
- *
- *      <plMonth>
- *
- *      <plDay>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_dateToday()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateToday( long * plYear, long * plMonth, long * plDay )
+   $ARGUMENTS$
+      <plYear>
+
+      <plMonth>
+
+      <plDay>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_dateTimeStr()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Get the current workstation time
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateTimeStr( char * pszTime )
- *  $ARGUMENTS$
- *      <pszTime>
- *  $DESCRIPTION$
- *      The current workstation time is stored into the buffer pointed
- *      to by pszTime.  This buffer must be at least nine characters long.
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_dateTimeStr()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Get the current workstation time
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateTimeStr( char * pszTime )
+   $ARGUMENTS$
+      <pszTime>
+   $DESCRIPTION$
+      The current workstation time is stored into the buffer pointed
+      to by pszTime.  This buffer must be at least nine characters long.
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_dateCMonth()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateCMonth( int iMonth ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <iMonth>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_dateCMonth()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateCMonth( int iMonth ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <iMonth>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_dateCDOW()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateCDOW( int iDay ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <iDay>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_dateCDOW()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateCDOW( int iDay ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <iDay>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_dateDOW()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateDOW( long lYear, long lMonth, long lDay ) --> ( long )lResult
- *  $ARGUMENTS$
- *      <lYear>
- *
- *      <lMonth>
- *
- *      <lDay>
- *  $RETURNS$
- *      <lResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_dateDOW()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateDOW( long lYear, long lMonth, long lDay ) --> ( long )lResult
+   $ARGUMENTS$
+      <lYear>
+
+      <lMonth>
+
+      <lDay>
+   $RETURNS$
+      <lResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_dateFormat()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <szDate>
- *
- *      <szFormattedDate>
- *
- *      <szDateFormat>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_dateFormat()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateFormat( const char * szDate, char * szFormattedDate, const char * szDateFormat ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <szDate>
+
+      <szFormattedDate>
+
+      <szDateFormat>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_dateEncode()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateEncode( long lYear, long lMonth, long lDay ) --> ( long )lResult
- *  $ARGUMENTS$
- *      <lYear>
- *
- *      <lMonth>
- *
- *      <lDay>
- *  $RETURNS$
- *      <lResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_dateEncode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateEncode( long lYear, long lMonth, long lDay ) --> ( long )lResult
+   $ARGUMENTS$
+      <lYear>
+
+      <lMonth>
+
+      <lDay>
+   $RETURNS$
+      <lResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_dateDecode()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateDecode( long julian, long * plYear, long * plMonth, long * plDay )
- *  $ARGUMENTS$
- *      <julian>
- *
- *      <plYear>
- *
- *      <plMonth>
- *
- *      <plDay>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_dateDecode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateDecode( long julian, long * plYear, long * plMonth, long * plDay )
+   $ARGUMENTS$
+      <julian>
+
+      <plYear>
+
+      <plMonth>
+
+      <plDay>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_dateStrPut()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay )
- *  $ARGUMENTS$
- *      <szDate>
- *
- *      <lYear>
- *
- *      <lMonth>
- *
- *      <lDay>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_dateStrPut()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateStrPut( char * szDate, long lYear, long lMonth, long lDay )
+   $ARGUMENTS$
+      <szDate>
+
+      <lYear>
+
+      <lMonth>
+
+      <lDay>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_dateStrGet()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateStrGet( const char * szDate, long * plYear, long * plMonth, long * plDay )
- *  $ARGUMENTS$
- *      <szDate>
- *
- *      <plYear>
- *
- *      <plMonth>
- *
- *      <plDay>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_dateStrGet()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateStrGet( const char * szDate, long * plYear, long * plMonth, long * plDay )
+   $ARGUMENTS$
+      <szDate>
+
+      <plYear>
+
+      <plMonth>
+
+      <plDay>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_dateDecStr()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateDecStr( char * szDate, long lJulian ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <szDate>
- *
- *      <lJulian>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_dateDecStr()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateDecStr( char * szDate, long lJulian ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <szDate>
+
+      <lJulian>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_dateEncStr()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbdate.h"
- *      hb_dateEncStr( char * szDate ) --> ( long ) lResult
- *  $ARGUMENTS$
- *      <szDate>
- *  $RETURNS$
- *      <lResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_dateEncStr()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbdate.h"
+      hb_dateEncStr( char * szDate ) --> ( long ) lResult
+   $ARGUMENTS$
+      <szDate>
+   $RETURNS$
+      <lResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */

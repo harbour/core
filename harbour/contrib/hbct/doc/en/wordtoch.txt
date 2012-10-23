@@ -2,35 +2,35 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      WORDTOCHAR()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace double with single characters
- *  $SYNTAX$
- *      WORDTOCHAR( <cDoubleCharacterSearchString>, <cString>,
- *                  <cSingleCharacterReplaceString> ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      WORDTOCHAR() is compatible with CT3's WORDTOCHAR().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CSETATMUPA(),CHARREPL(),WORDREPL()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      WORDTOCHAR()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace double with single characters
+   $SYNTAX$
+      WORDTOCHAR( <cDoubleCharacterSearchString>, <cString>,
+                  <cSingleCharacterReplaceString> ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      WORDTOCHAR() is compatible with CT3's WORDTOCHAR().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CSETATMUPA(),CHARREPL(),WORDREPL()
+   $END$
  */

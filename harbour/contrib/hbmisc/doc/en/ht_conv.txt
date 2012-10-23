@@ -2,240 +2,228 @@
  * $Id$
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 Luiz Rafael Culik <Culik@sl.conex.net>
- *    Documentation
- *
- * See COPYING for licensing terms.
- *
+/* $DOC$
+   $FUNCNAME$
+      ISBIN()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Check if the value is a Binary  Number
+   $SYNTAX$
+      ISBIN(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> STRING TO BE CHECKED
+   $RETURNS$
+      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.
+   $DESCRIPTION$
+      check if the passed string is a bynary number or not
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      ISOCTAL(),ISDEC(),ISHEXA()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ISBIN()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Check if the value is a Binary  Number
- *  $SYNTAX$
- *      ISBIN(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED
- *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS BYNARY,otherwise .F.
- *  $DESCRIPTION$
- *      check if the passed string is a bynary number or not
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      ISOCTAL(),ISDEC(),ISHEXA()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ISOCTAL()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Check if the value is a Octal  Number
+   $SYNTAX$
+      ISOCTAL(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> STRING TO BE CHECKED
+   $RETURNS$
+      <cNr> .T. IF THE STRING IS OCTAL;otherwise .F.
+   $DESCRIPTION$
+      check if the passed string is a octal number or not
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      ISBIN(),ISDEC(),ISHEXA()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ISOCTAL()
- *  $CATEGORY$
- *     Conversion Tools
- *  $ONELINER$
- *     Check if the value is a Octal  Number
- *  $SYNTAX$
- *      ISOCTAL(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED
- *  $RETURNS$
- *   <cNr> .T. IF THE STRING IS OCTAL;otherwise .F.
- *  $DESCRIPTION$
- *      check if the passed string is a octal number or not
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      ISBIN(),ISDEC(),ISHEXA()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ISDEC()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Check if the value is a Decimal  Number
+   $SYNTAX$
+      ISDEC(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> STRING TO BE CHECKED
+   $RETURNS$
+      <cNr> .T. IF THE STRING IS DECIMAL;otherwise .F.
+   $DESCRIPTION$
+      check if the passed string is a decimal number or not
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      ISOCTAL(),ISBIN(),ISHEXA()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ISDEC()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Check if the value is a Decimal  Number
- *  $SYNTAX$
- *      ISDEC(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED
- *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS DECIMAL;otherwise .F.
- *  $DESCRIPTION$
- *      check if the passed string is a decimal number or not
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      ISOCTAL(),ISBIN(),ISHEXA()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ISHEXA()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Check if the value is a Hexal  Number
+   $SYNTAX$
+      ISHEXA(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> STRING TO BE CHECKED
+   $RETURNS$
+      <cNr> .T. IF THE STRING IS HEXA;otherwise .F.
+   $DESCRIPTION$
+      check if the passed string is a hexa number or not
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      ISOCTAL(),ISDEC(),ISBIN()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ISHEXA()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Check if the value is a Hexal  Number
- *  $SYNTAX$
- *      ISHEXA(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> STRING TO BE CHECKED
- *  $RETURNS$
- *      <cNr> .T. IF THE STRING IS HEXA;otherwise .F.
- *  $DESCRIPTION$
- *      check if the passed string is a hexa number or not
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      ISOCTAL(),ISDEC(),ISBIN()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      DECTOBIN()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Converts a Decimal Value to Binary
+   $SYNTAX$
+      DECTOBIN(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> NUMBER TO BE CONVERTED
+   $RETURNS$
+      <cNr>  NUMBER CONVERTED
+   $DESCRIPTION$
+      This function converts a string <cN> from an decimal value
+      to an binary value.
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      Dectohexa(),dectooctal()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      DECTOBIN()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Converts a Decimal Value to Binary
- *  $SYNTAX$
- *      DECTOBIN(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *      This function converts a string <cN> from an decimal value
- *      to an binary value.
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      Dectohexa(),dectooctal()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      DECTOOCTAL()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Converts a Decimal Value to Octal
+   $SYNTAX$
+      DECTOOCTAL(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> NUMBER TO BE CONVERTED
+   $RETURNS$
+      <cNr>  NUMBER CONVERTED
+   $DESCRIPTION$
+      This function converts a string <cN> from an decimal value
+      to an octal value.
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      Dectohexa(),dectobin()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      DECTOOCTAL()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Converts a Decimal Value to Octal
- *  $SYNTAX$
- *      DECTOOCTAL(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *      This function converts a string <cN> from an decimal value
- *      to an octal value.
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      Dectohexa(),dectobin()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      DECTOHEXA()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Converts a Decimal Value to Hexa
+   $SYNTAX$
+      DECTOHEXA(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> NUMBER TO BE CONVERTED
+   $RETURNS$
+      <cNr>  NUMBER CONVERTED
+   $DESCRIPTION$
+      This function converts a string <cN> from an decimal value
+      to an hexadecimal value.
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      Dectobin(),dectooctal()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      DECTOHEXA()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Converts a Decimal Value to Hexa
- *  $SYNTAX$
- *      DECTOHEXA(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *      This function converts a string <cN> from an decimal value
- *      to an hexadecimal value.
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      Dectobin(),dectooctal()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      BINTODEC()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Converts a Binary Value to Decimal
+   $SYNTAX$
+      BIntODEC(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> NUMBER TO BE CONVERTED
+   $RETURNS$
+      <cNr>  NUMBER CONVERTED
+   $DESCRIPTION$
+      This function converts a string <cN> from an binary value
+      to a numeric decimal value.
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      OctaltoDec(),HexatoDec()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      BINTODEC()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Converts a Binary Value to Decimal
- *  $SYNTAX$
- *      BIntODEC(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *      This function converts a string <cN> from an binary value
- *      to a numeric decimal value.
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      OctaltoDec(),HexatoDec()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      OCTALTODEC()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Converts a Octal Value to Decimal
+   $SYNTAX$
+      OCTALTODEC(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> NUMBER TO BE CONVERTED
+   $RETURNS$
+      <cNr>  NUMBER CONVERTED
+   $DESCRIPTION$
+      This function converts a string <cN> from an octal value
+      to a numeric decimal value.
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      BintoDec(),HexatoDec()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      OCTALTODEC()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Converts a Octal Value to Decimal
- *  $SYNTAX$
- *      OCTALTODEC(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *      This function converts a string <cN> from an octal value
- *      to a numeric decimal value.
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      BintoDec(),HexatoDec()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      HEXATODEC()
+   $CATEGORY$
+      Conversion Tools
+   $ONELINER$
+      Converts a Hexa Value to Decimal
+   $SYNTAX$
+      HEXATODEC(<cN>) -><cNr>
+   $ARGUMENTS$
+      <cN> NUMBER TO BE CONVERTED
+   $RETURNS$
+      <cNr>  NUMBER CONVERTED
+   $DESCRIPTION$
+      This function converts a string <cN> from an hexadecimal value
+      to a numeric decimal value.
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      OctaltoDec(),BintoDec()
+   $END$
  */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      HEXATODEC()
- *  $CATEGORY$
- *      Conversion Tools
- *  $ONELINER$
- *      Converts a Hexa Value to Decimal
- *  $SYNTAX$
- *      HEXATODEC(<cN>) -><cNr>
- *  $ARGUMENTS$
- *      <cN> NUMBER TO BE CONVERTED
- *  $RETURNS$
- *      <cNr>  NUMBER CONVERTED
- *  $DESCRIPTION$
- *      This function converts a string <cN> from an hexadecimal value
- *      to a numeric decimal value.
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      OctaltoDec(),BintoDec()
- *  $END$
- */
-

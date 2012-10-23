@@ -2,29 +2,29 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_SHIFT()
- *  $CATEGORY$
- *     Keyboard/Mouse
- *  $ONELINER$
- *     Determine status of shift key
- *  $SYNTAX$
- *     FT_SHIFT() -> lValue
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     .T. if a shift key is pressed, .F. if otherwise.
- *  $DESCRIPTION$
- *     This function is useful for times you need to know whether or not the
- *     shift key is pressed, such as during a MemoEdit().
- *  $EXAMPLES$
- *     IF FT_SHIFT()
- *        @ 24, 0 say "Shift"
- *     ELSE
- *        @ 24, 0 say "     "
- *     ENDIF
- *  $SEEALSO$
- *     FT_CAPLOCK() FT_CTRL() FT_NUMLOCK() FT_PRTSCR() FT_ALT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_SHIFT()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Determine status of shift key
+   $SYNTAX$
+      FT_SHIFT() -> lValue
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      .T. if a shift key is pressed, .F. if otherwise.
+   $DESCRIPTION$
+      This function is useful for times you need to know whether or not the
+      shift key is pressed, such as during a MemoEdit().
+   $EXAMPLES$
+      IF FT_SHIFT()
+         @ 24, 0 say "Shift"
+      ELSE
+         @ 24, 0 say "     "
+      ENDIF
+   $SEEALSO$
+      FT_CAPLOCK() FT_CTRL() FT_NUMLOCK() FT_PRTSCR() FT_ALT()
+   $END$
  */

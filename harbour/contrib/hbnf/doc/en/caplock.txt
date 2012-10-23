@@ -2,31 +2,31 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_CAPLOCK()
- *  $CATEGORY$
- *     Keyboard/Mouse
- *  $ONELINER$
- *     Determine and optionally change the status of CapLock key
- *  $SYNTAX$
- *     FT_CAPLOCK([ <lNewSetting> ]) -> lCurrentSetting
- *  $ARGUMENTS$
- *     <lNewSetting> is optional and if supplied is the new setting
- *     for the CapLock key.  Specify .T. to turn CapLock on, or .F. to
- *     turn it off.
- *  $RETURNS$
- *     .T. if CapLock is set, .F. if it isn't set.  The value returned
- *      represents the setting in effect prior to any changes that might
- *      by made by <lNewSetting>.
- *  $DESCRIPTION$
- *     This function is useful if you need to know or set the status of the
- *     CapLock key for some reason.
- *  $EXAMPLES$
- *     IF FT_CAPLOCK()
- *        ? "CapLock is active"
- *     ENDIF
- *  $SEEALSO$
- *     FT_ALT() FT_CTRL() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_CAPLOCK()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Determine and optionally change the status of CapLock key
+   $SYNTAX$
+      FT_CAPLOCK([ <lNewSetting> ]) -> lCurrentSetting
+   $ARGUMENTS$
+      <lNewSetting> is optional and if supplied is the new setting
+      for the CapLock key.  Specify .T. to turn CapLock on, or .F. to
+      turn it off.
+   $RETURNS$
+      .T. if CapLock is set, .F. if it isn't set.  The value returned
+       represents the setting in effect prior to any changes that might
+       by made by <lNewSetting>.
+   $DESCRIPTION$
+      This function is useful if you need to know or set the status of the
+      CapLock key for some reason.
+   $EXAMPLES$
+      IF FT_CAPLOCK()
+         ? "CapLock is active"
+      ENDIF
+   $SEEALSO$
+      FT_ALT() FT_CTRL() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT()
+   $END$
  */

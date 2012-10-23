@@ -2,111 +2,111 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CSETARGERR()
- *  $CATEGORY$
- *      CT3 general functions
- *  $ONELINER$
- *      Sets argument error behaviour
- *  $SYNTAX$
- *      CSETARGERR( [<nNewMode>] ) -> <nOldMode>
- *  $ARGUMENTS$
- *      [<nNewMode>]   New argument error throwing mode
- *  $RETURNS$
- *      <nOldMode>     The current or old argument error throwing mode.
- *  $DESCRIPTION$
- *      All CT3 functions are very compliant in their reaction to wrong
- *      parameters. By using the CSETARGERR() function, you can make the
- *      library throw an error with the severity <nNewMode>. It is then
- *      up to the error handler to substitute the return value.
- *      <nNewMode> can be one of the severity modes defined in ct.ch:
- *           CT_ARGERR_WHOCARES      corresponds to ES_WHOCARES
- *           CT_ARGERR_WARNING       corresponds to ES_WARNING
- *           CT_ARGERR_ERROR         corresponds to ES_ERROR
- *           CT_ARGERR_CATASTROPHIC  corresponds to ES_CATASTROPHIC
- *           CT_ARGERR_IGNORE
- *      The last is the default behaviour and switches any argument error
- *      throwing off.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CSETARGERR() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CSETARGERR()
+   $CATEGORY$
+      CT3 general functions
+   $ONELINER$
+      Sets argument error behaviour
+   $SYNTAX$
+      CSETARGERR( [<nNewMode>] ) -> <nOldMode>
+   $ARGUMENTS$
+      [<nNewMode>]   New argument error throwing mode
+   $RETURNS$
+      <nOldMode>     The current or old argument error throwing mode.
+   $DESCRIPTION$
+      All CT3 functions are very compliant in their reaction to wrong
+      parameters. By using the CSETARGERR() function, you can make the
+      library throw an error with the severity <nNewMode>. It is then
+      up to the error handler to substitute the return value.
+      <nNewMode> can be one of the severity modes defined in ct.ch:
+           CT_ARGERR_WHOCARES      corresponds to ES_WHOCARES
+           CT_ARGERR_WARNING       corresponds to ES_WARNING
+           CT_ARGERR_ERROR         corresponds to ES_ERROR
+           CT_ARGERR_CATASTROPHIC  corresponds to ES_CATASTROPHIC
+           CT_ARGERR_IGNORE
+      The last is the default behaviour and switches any argument error
+      throwing off.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CSETARGERR() is a new function in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+  
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CTCINIT()
- *  $CATEGORY$
- *      CT3 general functions
- *  $ONELINER$
- *      Initializes the CT3 library, C part
- *  $SYNTAX$
- *      CTCINIT() -> lInitialized
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      lInitialized     .T. if the function has been correctly initialized
- *  $DESCRIPTION$
- *      The CTCINIT() function initializes the C source part of the CT3
- *      library. Do not call this function directly.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CTCINIT() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CTINIT(),CTEXIT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CTCINIT()
+   $CATEGORY$
+      CT3 general functions
+   $ONELINER$
+      Initializes the CT3 library, C part
+   $SYNTAX$
+      CTCINIT() -> lInitialized
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      lInitialized     .T. if the function has been correctly initialized
+   $DESCRIPTION$
+      The CTCINIT() function initializes the C source part of the CT3
+      library. Do not call this function directly.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CTCINIT() is a new function in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CTINIT(),CTEXIT()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CTCEXIT()
- *  $CATEGORY$
- *      CT3 general functions
- *  $ONELINER$
- *      Uninitializes the CT3 library, C part
- *  $SYNTAX$
- *      CTCEXIT() -> NIL
- *  $ARGUMENTS$
- *      none
- *  $RETURNS$
- *      nil
- *  $DESCRIPTION$
- *      The CTCEXIT() function uninitializes the C part of the CT3 library.
- *      Do not call this function directly.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CTCEXIT() is a new function in Harbour's CT3 library.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CTINIT(),CTEXIT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CTCEXIT()
+   $CATEGORY$
+      CT3 general functions
+   $ONELINER$
+      Uninitializes the CT3 library, C part
+   $SYNTAX$
+      CTCEXIT() -> NIL
+   $ARGUMENTS$
+      none
+   $RETURNS$
+      nil
+   $DESCRIPTION$
+      The CTCEXIT() function uninitializes the C part of the CT3 library.
+      Do not call this function directly.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CTCEXIT() is a new function in Harbour's CT3 library.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CTINIT(),CTEXIT()
+   $END$
  */

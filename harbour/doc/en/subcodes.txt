@@ -1,1494 +1,1477 @@
 /*
  * $Id$
  */
-/*
- Proposition:
-
-*   If the error is raised in the same condition as in CA-Cl*pper then the same
-subcode number should be used.
-
-*   Errors specific to the Harbour and generated in RTL modules should
-start from 3000
-
-*   Errors generated in tools functions should start from 4000
-*/
-/* ************************************************************************** */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1003
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Attempt to access nonexisting or hidden variable
- *  $DESCRIPTION$
- *      The specified variable was not found.
- *
- *      If it is a database field ensure that the required database is open.
- *
- *      If it is a private or public variable then it must be first created
- *      using PRIVATE or PUBLIC statement.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1068
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of argument
- *  $DESCRIPTION$
- *      The used data is not of logical type.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1068
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Bound error in array access
- *  $DESCRIPTION$
- *      The attempt to retrieve data from non-array value.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1069
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Bound error in array access
- *  $DESCRIPTION$
- *      The attempt to set data to non-array value.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1078
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The type of compared arguments do not match.
- *  $EXAMPLES$
- *      ==
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1072
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The type of compared arguments do not match.
- *  $EXAMPLES$
- *      <>
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1073
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The type of compared argument do not match.
- *  $EXAMPLES$
- *      <
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1074
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The type of compared arguments do not match.
- *  $EXAMPLES$
- *      <=
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1075
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The type of compared arguments do not match.
- *  $EXAMPLES$
- *      >
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1076
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The type of compared arguments do not match.
- *  $EXAMPLES$
- *      >=
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1077
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      Operation is not allowed for passed argument. The argument is not
- *      a logical value.
- *  $EXAMPLES$
- *      !
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1078
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The type of one or both arguments is not a logical.
- *  $EXAMPLES$
- *      .AND.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1079
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The type of one or both arguments is not a logical.
- *  $EXAMPLES$
- *      .OR.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1076
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The value of argument cannot be incremented.
- *  $EXAMPLES$
- *      ++
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1081
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The plus operation is not allowed for used arguments.
- *  $EXAMPLES$
- *      +
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1082
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The minus operation is not allowed for used arguments.
- *  $EXAMPLES$
- *      -
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1100
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect type of argument
- *  $DESCRIPTION$
- *      The specified argument is not a string.
- *  $EXAMPLES$
- *      RTRIM, TRIM
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1101
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect type of argument
- *  $DESCRIPTION$
- *      The specified argument is not a string.
- *  $EXAMPLES$
- *      LTRIM
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1102
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The first argument passed to a function is not a string.
- *  $EXAMPLES$
- *      UPPER
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1103
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The first argument passed to a function is not a string.
- *  $EXAMPLES$
- *      LOWER
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1104
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect type of argument
- *  $DESCRIPTION$
- *      The specified argument is not a numeric value.
- *  $EXAMPLES$
- *      CHR
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1105
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The arguments passed to a function are of incorrect type.
- *  $EXAMPLES$
- *      SPACE
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1106
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The arguments passed to a function are of incorrect type.
- *  $EXAMPLES$
- *      REPLICATE
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1107
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect type of argument
- *  $DESCRIPTION$
- *      The specified argument is not a string.
- *  $EXAMPLES$
- *      ASC
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1108
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect type of argument
- *  $DESCRIPTION$
- *      The specified argument is not a string.
- *  $EXAMPLES$
- *      AT
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1076
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of arguments
- *  $DESCRIPTION$
- *      The arguments of '$' operator are not a strings.
- *  $EXAMPLES$
- *      $
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1110
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The first argument passed to a function is not a string.
- *  $EXAMPLES$
- *      SUBSTR
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1110
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The passed argument is neither a string nor an array.
- *  $EXAMPLES$
- *      LEN
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1112
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function are of incorrect
- *      type
- *  $EXAMPLES$
- *      YEAR
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1113
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function are of incorrect
- *      type
- *  $EXAMPLES$
- *      MONTH
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1114
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function are of incorrect
- *      type
- *  $EXAMPLES$
- *      DAY
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1115
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function are of incorrect
- *      type
- *  $EXAMPLES$
- *      DOW
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1116
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function are of incorrect
- *      type
- *  $EXAMPLES$
- *      CMONTH
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1117
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is of incorrect
- *      type
- *  $EXAMPLES$
- *      CDOW
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1120
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is of incorrect
- *      type
- *  $EXAMPLES$
- *      DTOS
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1122
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect type of argument
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is of incorrect
- *      type
- *  $EXAMPLES$
- *      TRANSFORM
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1124
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect type of argument
- *  $DESCRIPTION$
- *      The first argument is not a string.
- *  $EXAMPLES$
- *      LEFT
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1126
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The first arguments passed to a function is not a string.
- *  $EXAMPLES$
- *      STRTRAN
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1132
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Bound error in array access
- *  $DESCRIPTION$
- *      The specified index into an array was greater then the number of
- *      elements in the array.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1133
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Bound error in array assignment
- *  $DESCRIPTION$
- *      The specified index into an array was greater then the number of
- *      elements in the array.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1068
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Bound error in array element assignment
- *  $DESCRIPTION$
- *      The specified index into an array was greater then the number of
- *      elements in the array.
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1085
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      MOD
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1089
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      ABS
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1090
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      INT
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1092
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      MIN
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1093
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      MAX
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1094
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      ROUND
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1095
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      LOG
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1096
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      EXP
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1097
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not an numeric
- *      value
- *  $EXAMPLES$
- *      SQRT
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1098
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not a string
- *      value
- *  $EXAMPLES$
- *      VAL
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/1099
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The argument (or arguments) passed to a function is not a numeric
- *      value
- *  $EXAMPLES$
- *      STR
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/* ************************************************************************** */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/2010
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect arguments type
- *  $DESCRIPTION$
- *      Passed Run time errors was not strings with filenames to copy/
- *  $EXAMPLES$
- *      __COPYFILE
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/2012
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      File error
- *  $DESCRIPTION$
- *      An error has occurred during the attempt to open, create or write
- *      during copy operation
- *  $EXAMPLES$
- *      __COPYFILE
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/2017
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to a function
- *  $DESCRIPTION$
- *      The first argument is not an array or/and the second argument
- *      is not a code block
- *  $EXAMPLES$
- *      AEVAL
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/2020
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The passed value is negative. Only values > 0 are allowed.
- *  $EXAMPLES$
- *      SET DECIMALS
- *      SET EPOCH
- *      SET MARGIN
- *      SET MESSAGE
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/* ************************************************************************** */
-
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3001
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect argument type
- *  $DESCRIPTION$
- *      The passed argument is not an object. Only data of type OBJECT
- *      can be cloned by this function
- *  $EXAMPLES$
- *      OCLONE
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3002
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Super class does not return an object
- *  $DESCRIPTION$
- *      Passed argument is not a name of defined class or specified class
- *      doesn't have a super class
- *  $EXAMPLES$
- *      __INSTSUPER
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3003
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Cannot find super class
- *  $DESCRIPTION$
- *      Passed argument is not a name of defined class
- *  $EXAMPLES$
- *      __INSTSUPER
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3004
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Cannot modify a DATA item in a class
- *  $DESCRIPTION$
- *      The attempt to modify a data member of a class was made.
- *      Only INLINE and METHOD can be modified
- *  $EXAMPLES$
- *      CLASSMOD
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3005
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect arguments type
- *  $DESCRIPTION$
- *      Either the first argument was not an object or the second argument
- *      wasn't a string.
- *  $EXAMPLES$
- *      ISMESSAGE, OSEND
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3007
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of argument
- *  $DESCRIPTION$
- *      The passed arguments are causing conflict in handling of the request.
- *      There is no point in waiting forever for no input events!
- *  $EXAMPLES$
- *      INKEY
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3008
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid type of argument
- *  $DESCRIPTION$
- *      The passed argument(s) is not a string. It should be a string with
- *      a variable name or an one-dimensional array of strings.
- *  $EXAMPLES$
- *      __MVPRIVATE, __MVPUBLIC
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3009
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect argument passed to __MVGET function
- *  $DESCRIPTION$
- *      __MVGET function expects only one argument: a string with a name
- *      of variable. The value of this variable will be returned.
- *  $EXAMPLES$
- *      __MVGET
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3010
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Incorrect argument passed to __MVPUT function
- *  $DESCRIPTION$
- *      __MVPUT function expects at least one argument: a string with a name
- *      of variable. The value of this variable will be set.
- *  $EXAMPLES$
- *      __MVPUT
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3011
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to a function
- *  $DESCRIPTION$
- *      The attempt to retrieve the function argument that was not passed.
- *      The number of requested argument is greater then the number of
- *      passed arguments.
- *  $EXAMPLES$
- *      PVALUE
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3012
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to a function
- *  $DESCRIPTION$
- *      The first argument is not a string with function/procedure name
- *      that should be called.
- *  $EXAMPLES$
- *      DO
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3101
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to an object/class function
- *  $DESCRIPTION$
- *      One passed argument is not of the required type.
- *  $EXAMPLES$
- *      __OBJ*()
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3102
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      A symbol should be modified or deleted from a class, but the symbol
- *      doesn't exist.
- *  $DESCRIPTION$
- *      A symbol should be modified or deleted from a class, but the symbol
- *      doesn't exist.
- *  $EXAMPLES$
- *      __OBJ*()
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      BASE/3103
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      A symbol should be added to a class, but the symbol already exists.
- *  $DESCRIPTION$
- *      A symbol should be added to a class, but the symbol already exists.
- *  $EXAMPLES$
- *      __OBJ*()
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
- /* ************************************************************************** */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      TOOLS/4001
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Invalid argument passed to function
- *  $DESCRIPTION$
- *      The second arguments passed to a function is not a string.
- *  $EXAMPLES$
- *      ISLEAPYEAR
- *  $COMPLIANCE$
- *      H
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/* ************************************************************************** */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Run time error
- *  $NAME$
- *      TERM/2013
- *  $CATEGORY$
- *      Run time errors
- *  $ONELINER$
- *      Create error
- *  $DESCRIPTION$
- *      The specified file cannot be created due some OS error.
- *  $EXAMPLES$
- *      SET, SET ALTERNATE TO
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *
- *  $END$
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1003
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Attempt to access nonexisting or hidden variable
+   $DESCRIPTION$
+      The specified variable was not found.
+  
+      If it is a database field ensure that the required database is open.
+  
+      If it is a private or public variable then it must be first created
+      using PRIVATE or PUBLIC statement.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1068
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of argument
+   $DESCRIPTION$
+      The used data is not of logical type.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1068
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Bound error in array access
+   $DESCRIPTION$
+      The attempt to retrieve data from non-array value.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1069
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Bound error in array access
+   $DESCRIPTION$
+      The attempt to set data to non-array value.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1078
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The type of compared arguments do not match.
+   $EXAMPLES$
+      ==
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1072
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The type of compared arguments do not match.
+   $EXAMPLES$
+      <>
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1073
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The type of compared argument do not match.
+   $EXAMPLES$
+      <
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1074
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The type of compared arguments do not match.
+   $EXAMPLES$
+      <=
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1075
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The type of compared arguments do not match.
+   $EXAMPLES$
+      >
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1076
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The type of compared arguments do not match.
+   $EXAMPLES$
+      >=
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1077
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      Operation is not allowed for passed argument. The argument is not
+      a logical value.
+   $EXAMPLES$
+      !
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1078
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The type of one or both arguments is not a logical.
+   $EXAMPLES$
+      .AND.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1079
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The type of one or both arguments is not a logical.
+   $EXAMPLES$
+      .OR.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1076
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The value of argument cannot be incremented.
+   $EXAMPLES$
+      ++
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1081
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The plus operation is not allowed for used arguments.
+   $EXAMPLES$
+      +
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1082
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The minus operation is not allowed for used arguments.
+   $EXAMPLES$
+      -
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1100
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect type of argument
+   $DESCRIPTION$
+      The specified argument is not a string.
+   $EXAMPLES$
+      RTRIM, TRIM
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1101
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect type of argument
+   $DESCRIPTION$
+      The specified argument is not a string.
+   $EXAMPLES$
+      LTRIM
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1102
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The first argument passed to a function is not a string.
+   $EXAMPLES$
+      UPPER
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1103
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The first argument passed to a function is not a string.
+   $EXAMPLES$
+      LOWER
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1104
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect type of argument
+   $DESCRIPTION$
+      The specified argument is not a numeric value.
+   $EXAMPLES$
+      CHR
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1105
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The arguments passed to a function are of incorrect type.
+   $EXAMPLES$
+      SPACE
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1106
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The arguments passed to a function are of incorrect type.
+   $EXAMPLES$
+      REPLICATE
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1107
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect type of argument
+   $DESCRIPTION$
+      The specified argument is not a string.
+   $EXAMPLES$
+      ASC
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1108
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect type of argument
+   $DESCRIPTION$
+      The specified argument is not a string.
+   $EXAMPLES$
+      AT
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1076
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of arguments
+   $DESCRIPTION$
+      The arguments of '$' operator are not a strings.
+   $EXAMPLES$
+  
+   $$
+  
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1110
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The first argument passed to a function is not a string.
+   $EXAMPLES$
+      SUBSTR
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1110
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The passed argument is neither a string nor an array.
+   $EXAMPLES$
+      LEN
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1112
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function are of incorrect
+      type
+   $EXAMPLES$
+      YEAR
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1113
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function are of incorrect
+      type
+   $EXAMPLES$
+      MONTH
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1114
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function are of incorrect
+      type
+   $EXAMPLES$
+      DAY
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1115
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function are of incorrect
+      type
+   $EXAMPLES$
+      DOW
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1116
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function are of incorrect
+      type
+   $EXAMPLES$
+      CMONTH
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1117
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is of incorrect
+      type
+   $EXAMPLES$
+      CDOW
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1120
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is of incorrect
+      type
+   $EXAMPLES$
+      DTOS
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1122
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect type of argument
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is of incorrect
+      type
+   $EXAMPLES$
+      TRANSFORM
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1124
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect type of argument
+   $DESCRIPTION$
+      The first argument is not a string.
+   $EXAMPLES$
+      LEFT
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1126
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The first arguments passed to a function is not a string.
+   $EXAMPLES$
+      STRTRAN
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1132
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Bound error in array access
+   $DESCRIPTION$
+      The specified index into an array was greater then the number of
+      elements in the array.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1133
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Bound error in array assignment
+   $DESCRIPTION$
+      The specified index into an array was greater then the number of
+      elements in the array.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1068
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Bound error in array element assignment
+   $DESCRIPTION$
+      The specified index into an array was greater then the number of
+      elements in the array.
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1085
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      MOD
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1089
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      ABS
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1090
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      INT
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1092
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      MIN
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1093
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      MAX
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1094
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      ROUND
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1095
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      LOG
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1096
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      EXP
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1097
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not an numeric
+      value
+   $EXAMPLES$
+      SQRT
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1098
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not a string
+      value
+   $EXAMPLES$
+      VAL
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/1099
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The argument (or arguments) passed to a function is not a numeric
+      value
+   $EXAMPLES$
+      STR
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/2010
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect arguments type
+   $DESCRIPTION$
+      Passed Run time errors was not strings with filenames to copy/
+   $EXAMPLES$
+      __COPYFILE
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/2012
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      File error
+   $DESCRIPTION$
+      An error has occurred during the attempt to open, create or write
+      during copy operation
+   $EXAMPLES$
+      __COPYFILE
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/2017
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to a function
+   $DESCRIPTION$
+      The first argument is not an array or/and the second argument
+      is not a code block
+   $EXAMPLES$
+      AEVAL
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/2020
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The passed value is negative. Only values > 0 are allowed.
+   $EXAMPLES$
+      SET DECIMALS
+      SET EPOCH
+      SET MARGIN
+      SET MESSAGE
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3001
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect argument type
+   $DESCRIPTION$
+      The passed argument is not an object. Only data of type OBJECT
+      can be cloned by this function
+   $EXAMPLES$
+      OCLONE
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3002
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Super class does not return an object
+   $DESCRIPTION$
+      Passed argument is not a name of defined class or specified class
+      doesn't have a super class
+   $EXAMPLES$
+      __INSTSUPER
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3003
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Cannot find super class
+   $DESCRIPTION$
+      Passed argument is not a name of defined class
+   $EXAMPLES$
+      __INSTSUPER
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3004
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Cannot modify a DATA item in a class
+   $DESCRIPTION$
+      The attempt to modify a data member of a class was made.
+      Only INLINE and METHOD can be modified
+   $EXAMPLES$
+      CLASSMOD
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3005
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect arguments type
+   $DESCRIPTION$
+      Either the first argument was not an object or the second argument
+      wasn't a string.
+   $EXAMPLES$
+      ISMESSAGE, OSEND
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3007
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of argument
+   $DESCRIPTION$
+      The passed arguments are causing conflict in handling of the request.
+      There is no point in waiting forever for no input events!
+   $EXAMPLES$
+      INKEY
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3008
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid type of argument
+   $DESCRIPTION$
+      The passed argument(s) is not a string. It should be a string with
+      a variable name or an one-dimensional array of strings.
+   $EXAMPLES$
+      __MVPRIVATE, __MVPUBLIC
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3009
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect argument passed to __MVGET function
+   $DESCRIPTION$
+      __MVGET function expects only one argument: a string with a name
+      of variable. The value of this variable will be returned.
+   $EXAMPLES$
+      __MVGET
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3010
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Incorrect argument passed to __MVPUT function
+   $DESCRIPTION$
+      __MVPUT function expects at least one argument: a string with a name
+      of variable. The value of this variable will be set.
+   $EXAMPLES$
+      __MVPUT
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3011
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to a function
+   $DESCRIPTION$
+      The attempt to retrieve the function argument that was not passed.
+      The number of requested argument is greater then the number of
+      passed arguments.
+   $EXAMPLES$
+      PVALUE
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3012
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to a function
+   $DESCRIPTION$
+      The first argument is not a string with function/procedure name
+      that should be called.
+   $EXAMPLES$
+      DO
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3101
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to an object/class function
+   $DESCRIPTION$
+      One passed argument is not of the required type.
+   $EXAMPLES$
+      __OBJ*()
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3102
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      A symbol should be modified or deleted from a class, but the symbol
+      doesn't exist.
+   $DESCRIPTION$
+      A symbol should be modified or deleted from a class, but the symbol
+      doesn't exist.
+   $EXAMPLES$
+      __OBJ*()
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      BASE/3103
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      A symbol should be added to a class, but the symbol already exists.
+   $DESCRIPTION$
+      A symbol should be added to a class, but the symbol already exists.
+   $EXAMPLES$
+      __OBJ*()
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      TOOLS/4001
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Invalid argument passed to function
+   $DESCRIPTION$
+      The second arguments passed to a function is not a string.
+   $EXAMPLES$
+      ISLEAPYEAR
+   $COMPLIANCE$
+      H
+   $SEEALSO$
+  
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Run time error
+   $NAME$
+      TERM/2013
+   $CATEGORY$
+      Run time errors
+   $ONELINER$
+      Create error
+   $DESCRIPTION$
+      The specified file cannot be created due some OS error.
+   $EXAMPLES$
+      SET, SET ALTERNATE TO
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+  
+   $END$
  */

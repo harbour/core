@@ -13,5737 +13,5737 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _evalLaunch()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _evalLaunch --> <see hb_evalLaunch>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_evalLaunch>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_evalLaunch()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _evalNew()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _evalNew --> <see hb_evalNew>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_evalNew>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_evalNew()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _evalPutParam()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _evalPutParam --> <see hb_evalPutParam>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_evalPutParam>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_evalPutParam()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _evalRelease()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _evalRelease --> <see hb_evalRelease>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_evalRelease>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_evalRelease()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemArrayGet()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemArrayGet --> <see hb_itemArrayGet>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemArrayGet>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemArrayGet()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemArrayNew()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemArrayNew --> <see hb_itemArrayNew>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemArrayNew>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemArrayNew()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemArrayPut()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemArrayPut --> <see hb_itemArrayPut>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemArrayPut>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemArrayPut()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemNew()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemNew --> <see hb_itemNew>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemNew>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemNew()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemParam()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemParam --> <see hb_itemParam>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemParam>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemParam()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemRelease()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemRelease --> <see hb_itemRelease>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemRelease>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemRelease()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemReturn()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemReturn --> <see hb_itemReturn>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemReturn>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemReturn()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemSize()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemSize --> <see hb_itemSize>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemSize>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemSize()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _itemType()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Item
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "item.api"
- *      _itemType --> <see hb_itemType>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_itemType>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is item.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_itemType()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _reta()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _reta --> <see hb_reta>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_reta>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_reta()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _pcount()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _pcount --> <see hb_pcount>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_pcount>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_pcount()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tchdir()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tchdir --> <see hb_fsChDir>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsChDir>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsChDir()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tchdrv()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tchdrv --> <see hb_fsChDrv>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsChDrv>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsChDrv()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tclose()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tclose --> <see hb_fsClose>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsClose>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsClose()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tcommit()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tcommit --> <see hb_fsCommit>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsCommit>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsCommit()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tcreat()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tcreat --> <see hb_fsCreate>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsCreate>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsCreate()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tcurdir()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tcurdir --> <see hb_fsCurDir>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsCurDir>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsCurDir()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tcurdrv()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tcurdrv --> <see hb_fsCurDrv>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsCurDrv>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsCurDrv()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tdevraw()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tdevraw --> <see hb_fsSetDevRaw>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsSetDevRaw>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsSetDevRaw()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _terror()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _terror --> <see hb_fsError>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsError>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsError()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tisdevice()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tisdevice --> <see hb_fsIsDevice>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsIsDevice>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsIsDevice()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tisdrv()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tisdrv --> <see hb_fsIsDrv>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsIsDrv>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsIsDrv()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tlock()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tlock --> <see hb_fsLock>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsLock>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsLock()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tlseek()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tlseek --> <see hb_fsSeek>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsSeek>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsSeek()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tmkdir()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tmkdir --> <see hb_fsMkDir>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsMkDir>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsMkDir()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _topen()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _topen --> <see hb_fsOpen>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsOpen>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsOpen()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tread()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tread --> <see hb_fsRead>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsRead>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsRead()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _trename()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _trename --> <see hb_fsRename>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsRename>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsRename()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _trmdir()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _trmdir --> <see hb_fsRmDir>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsRmDir>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsRmDir()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _tunlink()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _tunlink --> <see hb_fsDelete>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsDelete>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsDelete()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _twrite()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _twrite --> <see hb_fsWrite>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsWrite>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsWrite()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _bset()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _bset --> <see memset>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see memset>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      memset()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _bmove()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _bmove --> <see memmove>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see memmove>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      memmove()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _bcopy()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _bcopy --> <see memcpy>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see memcpy>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      memcpy()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _bcmp()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Undocumented
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "hbundoc.api"
- *      _bcmp --> <see memcmp>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see memcmp>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is hbundoc.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      memcmp()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtBox()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtBox --> <see hb_gtBox>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtBox>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtBox()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtColorSelect()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtColorSelect --> <see hb_gtColorSelect>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtColorSelect>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtColorSelect()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtDispBegin()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtDispBegin --> <see hb_gtDispBegin>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtDispBegin>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtDispBegin()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtDispCount()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtDispCount --> <see hb_gtDispCount>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtDispCount>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtDispCount()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtDispEnd()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtDispEnd --> <see hb_gtDispEnd>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtDispEnd>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtDispEnd()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtGetColorStr()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtGetColorStr --> <see hb_gtGetColorStr>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtGetColorStr>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtGetColorStr()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtGetCursor()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtGetCursor --> <see hb_gtGetCursor>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtGetCursor>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtGetCursor()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtGetPos()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtGetPos --> <see hb_gtGetPos>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtGetPos>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtGetPos()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtIsColor()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtIsColor --> <see hb_gtIsColor>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtIsColor>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtIsColor()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtMaxCol()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtMaxCol --> <see hb_gtMaxCol>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtMaxCol>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtMaxCol()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtMaxRow()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtMaxRow --> <see hb_gtMaxRow>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtMaxRow>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtMaxRow()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtPostExt()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtPostExt --> <see hb_gtPostExt>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtPostExt>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtPostExt()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtPreExt()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtPreExt --> <see hb_gtPreExt>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtPreExt>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtPreExt()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtRectSize()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtRectSize --> <see hb_gtRectSize>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtRectSize>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtRectSize()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtRepChar()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtRepChar --> <see hb_gtRepChar>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtRepChar>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtRepChar()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtRest()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtRest --> <see hb_gtRest>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtRest>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtRest()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSave()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSave --> <see hb_gtSave>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSave>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSave()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtScrDim()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtScrDim --> <see hb_gtScrDim>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtScrDim>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtScrDim()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtScroll()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtScroll --> <see hb_gtScroll>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtScroll>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtScroll()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSetBlink()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSetBlink --> <see hb_gtSetBlink>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSetBlink>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSetBlink()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSetColorStr()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSetColorStr --> <see hb_gtSetColorStr>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSetColorStr>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSetColorStr()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSetCursor()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSetCursor --> <see hb_gtSetCursor>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSetCursor>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSetCursor()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSetMode()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSetMode --> <see hb_gtSetMode>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSetMode>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSetMode()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSetPos()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSetPos --> <see hb_gtSetPos>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSetPos>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSetPos()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSetSnowFlag()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSetSnowFlag --> <see hb_gtSetSnowFlag>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSetSnowFlag>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSetSnowFlag()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWrite()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWrite --> <see hb_gtWrite>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWrite>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWrite()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWriteAt()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWriteAt --> <see hb_gtWriteAt>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWriteAt>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWriteAt()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWriteCon()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWriteCon --> <see hb_gtWriteCon>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWriteCon>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWriteCon()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtInit()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtInit --> <see hb_gtInit>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtInit>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtInit()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtExit()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtExit --> <see hb_gtExit>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtExit>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtExit()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWCreate()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWCreate --> <see hb_gtWCreate>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWCreate>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWCreate()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWDestroy()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWDestroy --> <see hb_gtWDestroy>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWDestroy>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWDestroy()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWFlash()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWFlash --> <see hb_gtWFlash>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWFlash>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWFlash()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWApp()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWApp --> <see hb_gtWApp>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWApp>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWApp()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWCurrent()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWCurrent --> <see hb_gtWCurrent>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWCurrent>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWCurrent()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWPos()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWPos --> <see hb_gtWPos>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWPos>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWPos()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtWVis()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtWVis --> <see hb_gtWVis>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtWVis>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtWVis()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtModalRead()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtModalRead --> <see hb_gtModalRead>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtModalRead>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtModalRead()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtBeginWrite()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtBeginWrite --> <see hb_gtBeginWrite>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtBeginWrite>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtBeginWrite()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtEndWrite()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtEndWrite --> <see hb_gtEndWrite>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtEndWrite>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtEndWrite()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtFlushCursor()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtFlushCursor --> <see hb_gtFlushCursor>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtFlushCursor>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtFlushCursor()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSetColor()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSetColor --> <see hb_gtSetColor>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSetColor>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSetColor()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtGetColor()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtGetColor --> <see hb_gtGetColor>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtGetColor>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtGetColor()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _gtSetBorder()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Terminal
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "gt.api"
- *      _gtSetBorder --> <see hb_gtSetBorder>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_gtSetBorder>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is gt.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_gtSetBorder()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _xalloc()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Fixed memory
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "fm.api"
- *      _xalloc --> <see hb_xalloc>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_xalloc>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is fm.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_xalloc()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _xgrab()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Fixed memory
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "fm.api"
- *      _xgrab --> <see hb_xgrab>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_xgrab>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is fm.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_xgrab()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _xfree()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Fixed memory
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "fm.api"
- *      _xfree --> <see hb_xfree>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_xfree>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is fm.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_xfree()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _exmgrab()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Fixed memory
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "fm.api"
- *      _exmgrab --> <see hb_xgrab>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_xgrab>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is fm.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_xgrab()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsChDir()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsChDir --> <see hb_fsChDir>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsChDir>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsChDir()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsChDrv()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsChDrv --> <see hb_fsChDrv>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsChDrv>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsChDrv()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsClose()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsClose --> <see hb_fsClose>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsClose>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsClose()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsCommit()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsCommit --> <see hb_fsCommit>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsCommit>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsCommit()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsCreate()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsCreate --> <see hb_fsCreate>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsCreate>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsCreate()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsCurDir()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsCurDir --> <see hb_fsCurDir>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsCurDir>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsCurDir()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsCurDrv()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsCurDrv --> <see hb_fsCurDrv>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsCurDrv>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsCurDrv()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsDelete()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsDelete --> <see hb_fsDelete>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsDelete>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsDelete()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsError()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsError --> <see hb_fsError>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsError>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsError()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsExtOpen()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsExtOpen --> <see hb_fsExtOpen>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsExtOpen>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsExtOpen()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsIsDrv()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsIsDrv --> <see hb_fsIsDrv>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsIsDrv>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsIsDrv()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsLock()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsLock --> <see hb_fsLock>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsLock>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsLock()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsMkDir()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsMkDir --> <see hb_fsMkDir>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsMkDir>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsMkDir()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsOpen()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsOpen --> <see hb_fsOpen>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsOpen>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsOpen()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsRead()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsRead --> <see hb_fsRead>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsRead>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsRead()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsRmDir()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsRmDir --> <see hb_fsRmDir>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsRmDir>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsRmDir()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsRename()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsRename --> <see hb_fsRename>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsRename>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsRename()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsSeek()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsSeek --> <see hb_fsSeek>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsSeek>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsSeek()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _fsWrite()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    FileSys
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "filesys.api"
- *      _fsWrite --> <see hb_fsWrite>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_fsWrite>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is filesys.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_fsWrite()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      ALENGTH
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include "extend.api"
- *      ALENGTH( n ) --> <see hb_parinfa( n, 0 )>
- *  $ARGUMENTS$
- *      <n>
- *  $RETURNS$
- *      <see hb_parinfa( n, 0 )>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parc()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parc --> <see hb_parc>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parc>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parc()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parclen()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parclen --> <see hb_parclen>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parclen>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parclen()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parcsiz()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parcsiz --> <see hb_parcsiz>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parcsiz>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parcsiz()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _pards()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _pards --> <see hb_pards>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_pards>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_pards()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parinfa()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parinfa --> <see hb_parinfa>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parinfa>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parinfa()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parinfo()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parinfo --> <see hb_parinfo>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parinfo>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parinfo()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parl()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parl --> <see hb_parl>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parl>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parl()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parnd()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parnd --> <see hb_parnd>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parnd>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parnd()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parni()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parni --> <see hb_parni>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parni>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parni()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _parnl()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _parnl --> <see hb_parnl>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_parnl>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_parnl()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _ret()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _ret --> <see hb_ret>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_ret>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_ret()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _retc()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _retc --> <see hb_retc>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_retc>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_retc()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _retclen()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _retclen --> <see hb_retclen>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_retclen>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_retclen()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _retds()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _retds --> <see hb_retds>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_retds>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_retds()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _retl()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _retl --> <see hb_retl>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_retl>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_retl()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _retnd()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _retnd --> <see hb_retnd>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_retnd>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_retnd()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _retni()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _retni --> <see hb_retni>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_retni>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_retni()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _retnl()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _retnl --> <see hb_retnl>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_retnl>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_retnl()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _storc()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _storc --> <see hb_storc>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_storc>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_storc()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _storclen()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _storclen --> <see hb_storclen>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_storclen>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_storclen()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _stords()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _stords --> <see hb_stords>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_stords>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_stords()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _storl()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _storl --> <see hb_storl>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_storl>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_storl()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _stornd()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _stornd --> <see hb_stornd>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_stornd>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_stornd()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _storni()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _storni --> <see hb_storni>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_storni>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_storni()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _stornl()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Extend
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "extend.api"
- *      _stornl --> <see hb_stornl>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_stornl>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is extend.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_stornl()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetDescription()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetDescription --> <see hb_errGetDescription>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetDescription>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetDescription()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetFileName()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetFileName --> <see hb_errGetFileName>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetFileName>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetFileName()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetFlags()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetFlags --> <see hb_errGetFlags>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetFlags>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetFlags()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetGenCode()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetGenCode --> <see hb_errGetGenCode>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetGenCode>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetGenCode()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetOperation()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetOperation --> <see hb_errGetOperation>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetOperation>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetOperation()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetOsCode()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetOsCode --> <see hb_errGetOsCode>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetOsCode>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetOsCode()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetSeverity()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetSeverity --> <see hb_errGetSeverity>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetSeverity>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetSeverity()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetSubCode()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetSubCode --> <see hb_errGetSubCode>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetSubCode>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetSubCode()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetSubSystem()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetSubSystem --> <see hb_errGetSubSystem>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetSubSystem>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetSubSystem()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errGetTries()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errGetTries --> <see hb_errGetTries>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errGetTries>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errGetTries()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errLaunch()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errLaunch --> <see hb_errLaunch>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errLaunch>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errLaunch()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errNew()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errNew --> <see hb_errNew>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errNew>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errNew()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutDescription()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutDescription --> <see hb_errPutDescription>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutDescription>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutDescription()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutFileName()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutFileName --> <see hb_errPutFileName>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutFileName>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutFileName()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutFlags()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutFlags --> <see hb_errPutFlags>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutFlags
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutFlags()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutGenCode()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutGenCode --> <see hb_errPutGenCode>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutGenCode>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutGenCode()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutOperation()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutOperation --> <see hb_errPutOperation>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutOperation>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutOperation()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutOsCode()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutOsCode --> <see hb_errPutOsCode>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutOsCode>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutOsCode()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutSeverity()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutSeverity --> <see hb_errPutSeverity>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutSeverity>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutSeverity()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutSubCode()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutSubCode --> <see hb_errPutSubCode>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutSubCode>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutSubCode()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutSubSystem()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutSubSystem --> <see hb_errPutSubSystem>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutSubSystem>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutSubSystem()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errPutTries()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errPutTries --> <see hb_errPutTries>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errPutTries>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errPutTries()
- *  $END$
- */
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      _errRelease()
- *  $CATEGORY$
- *      C level API compatability
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro replacement)
- *
- *      #include "error.api"
- *      _errRelease --> <see hb_errRelease>
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <see hb_errRelease>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $FILES$
- *      Header file is error.api
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_errRelease()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _evalLaunch()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _evalLaunch --> <see hb_evalLaunch>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_evalLaunch>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_evalLaunch()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _evalNew()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _evalNew --> <see hb_evalNew>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_evalNew>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_evalNew()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _evalPutParam()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _evalPutParam --> <see hb_evalPutParam>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_evalPutParam>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_evalPutParam()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _evalRelease()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _evalRelease --> <see hb_evalRelease>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_evalRelease>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_evalRelease()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemArrayGet()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemArrayGet --> <see hb_itemArrayGet>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemArrayGet>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemArrayGet()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemArrayNew()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemArrayNew --> <see hb_itemArrayNew>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemArrayNew>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemArrayNew()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemArrayPut()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemArrayPut --> <see hb_itemArrayPut>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemArrayPut>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemArrayPut()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemNew()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemNew --> <see hb_itemNew>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemNew>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemNew()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemParam()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemParam --> <see hb_itemParam>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemParam>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemParam()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemRelease()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemRelease --> <see hb_itemRelease>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemRelease>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemRelease()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemReturn()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemReturn --> <see hb_itemReturn>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemReturn>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemReturn()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemSize()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemSize --> <see hb_itemSize>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemSize>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemSize()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _itemType()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Item
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "item.api"
+      _itemType --> <see hb_itemType>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_itemType>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is item.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_itemType()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _reta()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _reta --> <see hb_reta>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_reta>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_reta()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _pcount()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _pcount --> <see hb_pcount>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_pcount>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_pcount()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tchdir()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tchdir --> <see hb_fsChDir>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsChDir>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsChDir()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tchdrv()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tchdrv --> <see hb_fsChDrv>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsChDrv>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsChDrv()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tclose()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tclose --> <see hb_fsClose>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsClose>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsClose()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tcommit()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tcommit --> <see hb_fsCommit>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsCommit>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsCommit()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tcreat()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tcreat --> <see hb_fsCreate>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsCreate>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsCreate()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tcurdir()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tcurdir --> <see hb_fsCurDir>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsCurDir>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsCurDir()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tcurdrv()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tcurdrv --> <see hb_fsCurDrv>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsCurDrv>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsCurDrv()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tdevraw()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tdevraw --> <see hb_fsSetDevRaw>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsSetDevRaw>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsSetDevRaw()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _terror()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _terror --> <see hb_fsError>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsError>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsError()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tisdevice()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tisdevice --> <see hb_fsIsDevice>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsIsDevice>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsIsDevice()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tisdrv()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tisdrv --> <see hb_fsIsDrv>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsIsDrv>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsIsDrv()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tlock()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tlock --> <see hb_fsLock>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsLock>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsLock()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tlseek()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tlseek --> <see hb_fsSeek>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsSeek>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsSeek()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tmkdir()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tmkdir --> <see hb_fsMkDir>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsMkDir>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsMkDir()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _topen()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _topen --> <see hb_fsOpen>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsOpen>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsOpen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tread()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tread --> <see hb_fsRead>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsRead>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsRead()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _trename()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _trename --> <see hb_fsRename>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsRename>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsRename()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _trmdir()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _trmdir --> <see hb_fsRmDir>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsRmDir>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsRmDir()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _tunlink()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _tunlink --> <see hb_fsDelete>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsDelete>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsDelete()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _twrite()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _twrite --> <see hb_fsWrite>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsWrite>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _bset()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _bset --> <see memset>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see memset>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      memset()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _bmove()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _bmove --> <see memmove>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see memmove>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      memmove()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _bcopy()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _bcopy --> <see memcpy>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see memcpy>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      memcpy()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _bcmp()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Undocumented
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "hbundoc.api"
+      _bcmp --> <see memcmp>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see memcmp>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is hbundoc.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      memcmp()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtBox()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtBox --> <see hb_gtBox>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtBox>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtBox()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtColorSelect()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtColorSelect --> <see hb_gtColorSelect>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtColorSelect>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtColorSelect()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtDispBegin()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtDispBegin --> <see hb_gtDispBegin>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtDispBegin>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtDispBegin()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtDispCount()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtDispCount --> <see hb_gtDispCount>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtDispCount>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtDispCount()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtDispEnd()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtDispEnd --> <see hb_gtDispEnd>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtDispEnd>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtDispEnd()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtGetColorStr()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtGetColorStr --> <see hb_gtGetColorStr>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtGetColorStr>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtGetColorStr()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtGetCursor()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtGetCursor --> <see hb_gtGetCursor>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtGetCursor>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtGetCursor()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtGetPos()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtGetPos --> <see hb_gtGetPos>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtGetPos>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtGetPos()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtIsColor()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtIsColor --> <see hb_gtIsColor>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtIsColor>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtIsColor()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtMaxCol()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtMaxCol --> <see hb_gtMaxCol>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtMaxCol>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtMaxCol()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtMaxRow()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtMaxRow --> <see hb_gtMaxRow>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtMaxRow>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtMaxRow()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtPostExt()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtPostExt --> <see hb_gtPostExt>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtPostExt>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtPostExt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtPreExt()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtPreExt --> <see hb_gtPreExt>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtPreExt>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtPreExt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtRectSize()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtRectSize --> <see hb_gtRectSize>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtRectSize>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtRectSize()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtRepChar()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtRepChar --> <see hb_gtRepChar>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtRepChar>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtRepChar()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtRest()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtRest --> <see hb_gtRest>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtRest>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtRest()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSave()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSave --> <see hb_gtSave>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSave>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSave()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtScrDim()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtScrDim --> <see hb_gtScrDim>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtScrDim>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtScrDim()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtScroll()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtScroll --> <see hb_gtScroll>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtScroll>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtScroll()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSetBlink()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSetBlink --> <see hb_gtSetBlink>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSetBlink>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSetBlink()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSetColorStr()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSetColorStr --> <see hb_gtSetColorStr>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSetColorStr>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSetColorStr()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSetCursor()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSetCursor --> <see hb_gtSetCursor>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSetCursor>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSetCursor()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSetMode()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSetMode --> <see hb_gtSetMode>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSetMode>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSetMode()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSetPos()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSetPos --> <see hb_gtSetPos>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSetPos>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSetPos()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSetSnowFlag()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSetSnowFlag --> <see hb_gtSetSnowFlag>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSetSnowFlag>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSetSnowFlag()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWrite()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWrite --> <see hb_gtWrite>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWrite>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWriteAt()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWriteAt --> <see hb_gtWriteAt>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWriteAt>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWriteAt()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWriteCon()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWriteCon --> <see hb_gtWriteCon>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWriteCon>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWriteCon()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtInit()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtInit --> <see hb_gtInit>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtInit>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtInit()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtExit()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtExit --> <see hb_gtExit>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtExit>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtExit()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWCreate()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWCreate --> <see hb_gtWCreate>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWCreate>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWCreate()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWDestroy()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWDestroy --> <see hb_gtWDestroy>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWDestroy>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWDestroy()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWFlash()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWFlash --> <see hb_gtWFlash>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWFlash>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWFlash()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWApp()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWApp --> <see hb_gtWApp>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWApp>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWApp()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWCurrent()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWCurrent --> <see hb_gtWCurrent>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWCurrent>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWCurrent()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWPos()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWPos --> <see hb_gtWPos>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWPos>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWPos()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtWVis()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtWVis --> <see hb_gtWVis>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtWVis>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtWVis()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtModalRead()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtModalRead --> <see hb_gtModalRead>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtModalRead>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtModalRead()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtBeginWrite()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtBeginWrite --> <see hb_gtBeginWrite>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtBeginWrite>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtBeginWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtEndWrite()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtEndWrite --> <see hb_gtEndWrite>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtEndWrite>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtEndWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtFlushCursor()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtFlushCursor --> <see hb_gtFlushCursor>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtFlushCursor>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtFlushCursor()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSetColor()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSetColor --> <see hb_gtSetColor>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSetColor>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSetColor()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtGetColor()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtGetColor --> <see hb_gtGetColor>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtGetColor>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtGetColor()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _gtSetBorder()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Terminal
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "gt.api"
+      _gtSetBorder --> <see hb_gtSetBorder>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_gtSetBorder>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is gt.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_gtSetBorder()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _xalloc()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Fixed memory
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "fm.api"
+      _xalloc --> <see hb_xalloc>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_xalloc>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is fm.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_xalloc()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _xgrab()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Fixed memory
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "fm.api"
+      _xgrab --> <see hb_xgrab>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_xgrab>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is fm.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_xgrab()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _xfree()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Fixed memory
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "fm.api"
+      _xfree --> <see hb_xfree>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_xfree>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is fm.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_xfree()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _exmgrab()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Fixed memory
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "fm.api"
+      _exmgrab --> <see hb_xgrab>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_xgrab>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is fm.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_xgrab()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsChDir()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsChDir --> <see hb_fsChDir>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsChDir>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsChDir()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsChDrv()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsChDrv --> <see hb_fsChDrv>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsChDrv>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsChDrv()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsClose()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsClose --> <see hb_fsClose>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsClose>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsClose()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsCommit()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsCommit --> <see hb_fsCommit>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsCommit>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsCommit()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsCreate()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsCreate --> <see hb_fsCreate>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsCreate>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsCreate()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsCurDir()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsCurDir --> <see hb_fsCurDir>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsCurDir>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsCurDir()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsCurDrv()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsCurDrv --> <see hb_fsCurDrv>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsCurDrv>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsCurDrv()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsDelete()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsDelete --> <see hb_fsDelete>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsDelete>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsDelete()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsError()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsError --> <see hb_fsError>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsError>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsError()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsExtOpen()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsExtOpen --> <see hb_fsExtOpen>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsExtOpen>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsExtOpen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsIsDrv()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsIsDrv --> <see hb_fsIsDrv>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsIsDrv>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsIsDrv()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsLock()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsLock --> <see hb_fsLock>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsLock>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsLock()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsMkDir()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsMkDir --> <see hb_fsMkDir>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsMkDir>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsMkDir()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsOpen()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsOpen --> <see hb_fsOpen>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsOpen>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsOpen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsRead()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsRead --> <see hb_fsRead>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsRead>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsRead()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsRmDir()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsRmDir --> <see hb_fsRmDir>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsRmDir>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsRmDir()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsRename()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsRename --> <see hb_fsRename>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsRename>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsRename()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsSeek()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsSeek --> <see hb_fsSeek>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsSeek>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsSeek()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _fsWrite()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      FileSys
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "filesys.api"
+      _fsWrite --> <see hb_fsWrite>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_fsWrite>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is filesys.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_fsWrite()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      ALENGTH
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro definition)
+
+      #include "extend.api"
+      ALENGTH( n ) --> <see hb_parinfa( n, 0 )>
+   $ARGUMENTS$
+      <n>
+   $RETURNS$
+      <see hb_parinfa( n, 0 )>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parc()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parc --> <see hb_parc>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parc>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parc()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parclen()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parclen --> <see hb_parclen>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parclen>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parclen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parcsiz()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parcsiz --> <see hb_parcsiz>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parcsiz>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parcsiz()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _pards()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _pards --> <see hb_pards>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_pards>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_pards()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parinfa()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parinfa --> <see hb_parinfa>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parinfa>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parinfa()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parinfo()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parinfo --> <see hb_parinfo>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parinfo>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parinfo()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parl()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parl --> <see hb_parl>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parl>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parl()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parnd()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parnd --> <see hb_parnd>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parnd>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parnd()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parni()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parni --> <see hb_parni>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parni>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parni()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _parnl()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _parnl --> <see hb_parnl>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_parnl>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_parnl()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _ret()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _ret --> <see hb_ret>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_ret>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_ret()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _retc()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _retc --> <see hb_retc>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_retc>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_retc()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _retclen()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _retclen --> <see hb_retclen>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_retclen>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_retclen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _retds()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _retds --> <see hb_retds>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_retds>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_retds()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _retl()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _retl --> <see hb_retl>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_retl>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_retl()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _retnd()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _retnd --> <see hb_retnd>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_retnd>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_retnd()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _retni()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _retni --> <see hb_retni>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_retni>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_retni()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _retnl()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _retnl --> <see hb_retnl>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_retnl>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_retnl()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _storc()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _storc --> <see hb_storc>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_storc>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_storc()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _storclen()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _storclen --> <see hb_storclen>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_storclen>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_storclen()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _stords()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _stords --> <see hb_stords>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_stords>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_stords()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _storl()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _storl --> <see hb_storl>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_storl>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_storl()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _stornd()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _stornd --> <see hb_stornd>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_stornd>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_stornd()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _storni()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _storni --> <see hb_storni>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_storni>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_storni()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _stornl()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Extend
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "extend.api"
+      _stornl --> <see hb_stornl>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_stornl>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is extend.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_stornl()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetDescription()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetDescription --> <see hb_errGetDescription>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetDescription>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetDescription()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetFileName()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetFileName --> <see hb_errGetFileName>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetFileName>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetFileName()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetFlags()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetFlags --> <see hb_errGetFlags>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetFlags>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetFlags()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetGenCode()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetGenCode --> <see hb_errGetGenCode>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetGenCode>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetGenCode()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetOperation()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetOperation --> <see hb_errGetOperation>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetOperation>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetOperation()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetOsCode()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetOsCode --> <see hb_errGetOsCode>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetOsCode>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetOsCode()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetSeverity()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetSeverity --> <see hb_errGetSeverity>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetSeverity>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetSeverity()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetSubCode()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetSubCode --> <see hb_errGetSubCode>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetSubCode>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetSubCode()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetSubSystem()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetSubSystem --> <see hb_errGetSubSystem>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetSubSystem>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetSubSystem()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errGetTries()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errGetTries --> <see hb_errGetTries>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errGetTries>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errGetTries()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errLaunch()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errLaunch --> <see hb_errLaunch>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errLaunch>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errLaunch()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errNew()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errNew --> <see hb_errNew>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errNew>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errNew()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutDescription()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutDescription --> <see hb_errPutDescription>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutDescription>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutDescription()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutFileName()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutFileName --> <see hb_errPutFileName>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutFileName>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutFileName()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutFlags()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutFlags --> <see hb_errPutFlags>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutFlags
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutFlags()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutGenCode()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutGenCode --> <see hb_errPutGenCode>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutGenCode>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutGenCode()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutOperation()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutOperation --> <see hb_errPutOperation>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutOperation>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutOperation()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutOsCode()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutOsCode --> <see hb_errPutOsCode>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutOsCode>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutOsCode()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutSeverity()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutSeverity --> <see hb_errPutSeverity>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutSeverity>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutSeverity()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutSubCode()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutSubCode --> <see hb_errPutSubCode>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutSubCode>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutSubCode()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutSubSystem()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutSubSystem --> <see hb_errPutSubSystem>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutSubSystem>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutSubSystem()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errPutTries()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errPutTries --> <see hb_errPutTries>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errPutTries>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errPutTries()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      _errRelease()
+   $CATEGORY$
+      C level API compatability
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro replacement)
+
+      #include "error.api"
+      _errRelease --> <see hb_errRelease>
+   $ARGUMENTS$
+
+   $RETURNS$
+      <see hb_errRelease>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $FILES$
+      Header file is error.api
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_errRelease()
+   $END$
  */

@@ -2,32 +2,32 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_ESCCODE()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *     Convert Lotus style escape codes
- *  $SYNTAX$
- *     FT_ESCCODE( <cASCII> )  -> <cPrinterFormat>
- *  $ARGUMENTS$
- *     <cASCII> is the ASCII representation of the printer control
- *     codes in Lotus 123 format (e.g. "\027E" for Chr(27)+"E")
- *
- *     "\nnn" will be converted to Chr(nnn)
- *     "\\" will be converted to "\"
- *  $RETURNS$
- *     The binary version of an ASCII coded printer setup string.
- *  $DESCRIPTION$
- *     This function is useful for allowing the user to enter printer
- *     control codes in Lotus-style ASCII format, and then having
- *     this function convert that code to the format that the printer
- *     needs to receive.
- *  $EXAMPLES$
- *     cSetup = "\015"          // default = Epson compressed print
- *     UserInput( @cSetup )     // Let user modify setup code
- *     SET DEVICE TO PRINT      // get ready to print
- *     ?? FT_ESCCODE( cSetup )  // Output the converted code
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_ESCCODE()
+   $CATEGORY$
+      Conversion
+   $ONELINER$
+      Convert Lotus style escape codes
+   $SYNTAX$
+      FT_ESCCODE( <cASCII> )  -> <cPrinterFormat>
+   $ARGUMENTS$
+      <cASCII> is the ASCII representation of the printer control
+      codes in Lotus 123 format (e.g. "\027E" for Chr(27)+"E")
+  
+      "\nnn" will be converted to Chr(nnn)
+      "\\" will be converted to "\"
+   $RETURNS$
+      The binary version of an ASCII coded printer setup string.
+   $DESCRIPTION$
+      This function is useful for allowing the user to enter printer
+      control codes in Lotus-style ASCII format, and then having
+      this function convert that code to the format that the printer
+      needs to receive.
+   $EXAMPLES$
+      cSetup = "\015"          // default = Epson compressed print
+      UserInput( @cSetup )     // Let user modify setup code
+      SET DEVICE TO PRINT      // get ready to print
+      ?? FT_ESCCODE( cSetup )  // Output the converted code
+   $END$
  */

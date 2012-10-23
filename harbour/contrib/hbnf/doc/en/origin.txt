@@ -2,38 +2,38 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_ORIGIN()
- *  $CATEGORY$
- *     Environment
- *  $ONELINER$
- *     Report the drive, path and filename of the current program
- *  $SYNTAX$
- *     FT_ORIGIN() -> cString
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     A string containing the full drive/directory/filename of
- *     the currently executing file.
- *  $DESCRIPTION$
- *     Often users will install multiple copies of application software,
- *     especially on networks and in situations where the user is trying
- *     to get around a copy protection scheme.
- *
- *     This function enables you to learn the name and source location
- *     of the currently executing file, so that you may take whatever
- *     action you need to.
- *
- *     Requires DOS v3.xx and above.
- *  $EXAMPLES$
- *     cMyFile := FT_ORIGIN()
- *
- *     IF !( cMyFile == "C:\appdir\myfile.exe" )
- *        ? "Incorrect startup file.  Please remove/rename and start again"
- *        QUIT
- *     ENDIF
- *  $SEEALSO$
- *     FT_WHEREIS() FT_TREE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_ORIGIN()
+   $CATEGORY$
+      Environment
+   $ONELINER$
+      Report the drive, path and filename of the current program
+   $SYNTAX$
+      FT_ORIGIN() -> cString
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      A string containing the full drive/directory/filename of
+      the currently executing file.
+   $DESCRIPTION$
+      Often users will install multiple copies of application software,
+      especially on networks and in situations where the user is trying
+      to get around a copy protection scheme.
+  
+      This function enables you to learn the name and source location
+      of the currently executing file, so that you may take whatever
+      action you need to.
+  
+      Requires DOS v3.xx and above.
+   $EXAMPLES$
+      cMyFile := FT_ORIGIN()
+  
+      IF !( cMyFile == "C:\appdir\myfile.exe" )
+         ? "Incorrect startup file.  Please remove/rename and start again"
+         QUIT
+      ENDIF
+   $SEEALSO$
+      FT_WHEREIS() FT_TREE()
+   $END$
  */

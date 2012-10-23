@@ -2,58 +2,58 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_SETMODE()
- *  $CATEGORY$
- *     Video
- *  $ONELINER$
- *     Set the video mode
- *  $SYNTAX$
- *     FT_SETMODE( <nMode> ) -> NIL
- *  $ARGUMENTS$
- *     <nMode> is one of the DOS video modes.
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     Use this function to put your display adapter into a video mode.
- *     Uses DOS interrupt 10h to set the mode.  For a table of modes
- *     available on various graphics adapters, refer to a book such
- *     as Wilton's "Programmer's Guide to PC & PS/2 Video Systems"
- *     (Microsoft Press)
- *  $EXAMPLES$
- *     PROCEDURE Main( cMode )
- *        FT_SETMODE( Val( cMode ) )
- *        ? "Video mode is: " + Str( FT_GETMODE() )
- *        RETURN
- *  $SEEALSO$
- *     FT_ADAPTER()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_SETMODE()
+   $CATEGORY$
+      Video
+   $ONELINER$
+      Set the video mode
+   $SYNTAX$
+      FT_SETMODE( <nMode> ) -> NIL
+   $ARGUMENTS$
+      <nMode> is one of the DOS video modes.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      Use this function to put your display adapter into a video mode.
+      Uses DOS interrupt 10h to set the mode.  For a table of modes
+      available on various graphics adapters, refer to a book such
+      as Wilton's "Programmer's Guide to PC & PS/2 Video Systems"
+      (Microsoft Press)
+   $EXAMPLES$
+      PROCEDURE Main( cMode )
+         FT_SETMODE( Val( cMode ) )
+         ? "Video mode is: " + Str( FT_GETMODE() )
+         RETURN
+   $SEEALSO$
+      FT_ADAPTER()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_GETMODE()
- *  $CATEGORY$
- *     Video
- *  $ONELINER$
- *     Get the video mode
- *  $SYNTAX$
- *     FT_GETMODE() -> nVMode
- *  $ARGUMENTS$
- *     None.
- *  $RETURNS$
- *     The video mode, as a numeric.
- *  $DESCRIPTION$
- *     Use this function to find out what mode your display adapter is in.
- *     Uses DOS interrupt 10h to get the mode.  For a table of modes
- *     available on various graphics adapters, refer to a book such
- *     as Wilton's "Programmer's Guide to PC & PS/2 Video Systems"
- *     (Microsoft Press)
- *  $EXAMPLES$
- *     PROCEDURE Main( cMode )
- *       FT_SETMODE( Val( cMode ) )
- *       ? "Video mode is: " + Str( FT_GETMODE() )
- *       RETURN
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_GETMODE()
+   $CATEGORY$
+      Video
+   $ONELINER$
+      Get the video mode
+   $SYNTAX$
+      FT_GETMODE() -> nVMode
+   $ARGUMENTS$
+      None.
+   $RETURNS$
+      The video mode, as a numeric.
+   $DESCRIPTION$
+      Use this function to find out what mode your display adapter is in.
+      Uses DOS interrupt 10h to get the mode.  For a table of modes
+      available on various graphics adapters, refer to a book such
+      as Wilton's "Programmer's Guide to PC & PS/2 Video Systems"
+      (Microsoft Press)
+   $EXAMPLES$
+      PROCEDURE Main( cMode )
+        FT_SETMODE( Val( cMode ) )
+        ? "Video mode is: " + Str( FT_GETMODE() )
+        RETURN
+   $END$
  */

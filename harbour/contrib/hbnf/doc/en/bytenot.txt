@@ -2,36 +2,36 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_BYTENOT()
- *  $CATEGORY$
- *     String
- *  $ONELINER$
- *     Perform bit-wise NOT on an ASCII character (byte)
- *  $SYNTAX$
- *     FT_BYTENOT( <cByte> ) -> cNewByte
- *  $ARGUMENTS$
- *     <cByte> is a character from Chr(0) to Chr(255).
- *     May be passed in Chr() form, as character literal, or
- *     as expression evaluating to Chr() value.
- *  $RETURNS$
- *     Returns resulting byte, in Chr() form.  If parameters are faulty,
- *     returns NIL.
- *  $DESCRIPTION$
- *     Can be used for bitwise byte manipulation.  In effect, this is a
- *     bit-by-bit NOT (one's complement) operation.  Equivalent to the
- *     NOT assembler instruction.
- *
- *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .c or
- *     .asm versions and use the Clipper Extend system.
- *  $EXAMPLES$
- *     This code performs a bitwise NOT on byte represented by Chr( 32 ):
- *
- *          cNewByte := FT_BYTENOT( Chr( 32 ) )
- *          ? Asc( cNewByte )     // result: 223
- *  $SEEALSO$
- *     FT_BYTEOR() FT_BYTEXOR() FT_BYTENEG() FT_BYTEAND()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_BYTENOT()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Perform bit-wise NOT on an ASCII character (byte)
+   $SYNTAX$
+      FT_BYTENOT( <cByte> ) -> cNewByte
+   $ARGUMENTS$
+      <cByte> is a character from Chr(0) to Chr(255).
+      May be passed in Chr() form, as character literal, or
+      as expression evaluating to Chr() value.
+   $RETURNS$
+      Returns resulting byte, in Chr() form.  If parameters are faulty,
+      returns NIL.
+   $DESCRIPTION$
+      Can be used for bitwise byte manipulation.  In effect, this is a
+      bit-by-bit NOT (one's complement) operation.  Equivalent to the
+      NOT assembler instruction.
+  
+      This function is presented to illustrate that bit-wise operations
+      are possible with Clipper code.  For greater speed, write .c or
+      .asm versions and use the Clipper Extend system.
+   $EXAMPLES$
+      This code performs a bitwise NOT on byte represented by Chr( 32 ):
+  
+           cNewByte := FT_BYTENOT( Chr( 32 ) )
+           ? Asc( cNewByte )     // result: 223
+   $SEEALSO$
+      FT_BYTEOR() FT_BYTEXOR() FT_BYTENEG() FT_BYTEAND()
+   $END$
  */

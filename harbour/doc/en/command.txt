@@ -13,481 +13,481 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      CLASS
- *  $CATEGORY$
- *      Class
- *  $SUBCATEGORY$
- *      Definition
- *  $ONELINER$
- *      Define a Class for Object Oriented Programming
- *  $SYNTAX$
- *      [CREATE] CLASS <ClassName> [ <FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ]  [STATIC]
- *  $ARGUMENTS$
- *      <ClassName>  Name of the class to define. By tradition, Harbour
- *                   classes start with "T" to avoid collisions with user-
- *                   created classes.
- *
- *      <SuperClass1...n> The Parent class(es) to use for inheritance.
- *                   Harbour supports Multiple Inheritance.
- *
- *      STATIC       This clause causes the class function to be declared
- *                   as a static function. It will therefore not be available outside the current module.
- *  $DESCRIPTION$
- *      CLASS creates a class from which you can create objects.
- *      The CLASS command begins the class specification, in which the VAR
- *      elements (also known as instance variables) and METHODS of the
- *      class are named. The following scoping commands may also appear.
- *      They control the default scope of VAR and METHOD commands that follow them.
- *
- *      <fixed>
- *         EXPORTED:
- *         VISIBLE:
- *         HIDDEN:
- *         PROTECTED:
- *      </fixed>
- *      The class specification ends with the END CLASS command.
- *
- *      Classes can inherit from multiple <SuperClasses>, and the chain of
- *      inheritance can extend to many levels.
- *
- *      A program uses a Class by calling the Class Constructor, usually the
- *      New() method, to create an object. That object is usually assigned
- *      to a variable, which is used to access the VAR elements and
- *      methods.
- *
- *      Harbour's OOP syntax and implementation supports Scoping (Protect, Hidden and Readonly)
- *      and Delegating, and is largely compatible with Class(y)(tm), TopClass(tm)
- *      and Visual Objects(tm).
- *  $EXAMPLES$
- *      CREATE CLASS TBColumn
- *
- *         VAR Block      // Code block to retrieve data for the column
- *         VAR Cargo      // User-definable variable
- *         VAR ColorBlock // Code block that determines color of data items
- *         VAR ColSep     // Column separator character
- *         VAR DefColor   // Array of numeric indexes into the color table
- *         VAR Footing    // Column footing
- *         VAR FootSep    // Footing separator character
- *         VAR Heading    // Column heading
- *         VAR HeadSep    // Heading separator character
- *         VAR Width      // Column display width
- *         VAR ColPos     // Temporary column position on screen
- *
- *         METHOD New()    // Constructor
- *
- *      ENDCLASS
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      HBClass(),Object Oriented Programming,VAR,METHOD
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      CLASS
+   $CATEGORY$
+      Class
+   $SUBCATEGORY$
+      Definition
+   $ONELINER$
+      Define a Class for Object Oriented Programming
+   $SYNTAX$
+      [CREATE] CLASS <ClassName> [ <FROM, INHERIT> <SuperClass1> [,<SuperClassN>] ]  [STATIC]
+   $ARGUMENTS$
+      <ClassName>  Name of the class to define. By tradition, Harbour
+                   classes start with "T" to avoid collisions with user-
+                   created classes.
+
+      <SuperClass1...n> The Parent class(es) to use for inheritance.
+                   Harbour supports Multiple Inheritance.
+
+      STATIC       This clause causes the class function to be declared
+                   as a static function. It will therefore not be available outside the current module.
+   $DESCRIPTION$
+      CLASS creates a class from which you can create objects.
+      The CLASS command begins the class specification, in which the VAR
+      elements (also known as instance variables) and METHODS of the
+      class are named. The following scoping commands may also appear.
+      They control the default scope of VAR and METHOD commands that follow them.
+
+      <fixed>
+         EXPORTED:
+         VISIBLE:
+         HIDDEN:
+         PROTECTED:
+      </fixed>
+      The class specification ends with the END CLASS command.
+
+      Classes can inherit from multiple <SuperClasses>, and the chain of
+      inheritance can extend to many levels.
+
+      A program uses a Class by calling the Class Constructor, usually the
+      New() method, to create an object. That object is usually assigned
+      to a variable, which is used to access the VAR elements and
+      methods.
+
+      Harbour's OOP syntax and implementation supports Scoping (Protect, Hidden and Readonly)
+      and Delegating, and is largely compatible with Class(y)(tm), TopClass(tm)
+      and Visual Objects(tm).
+   $EXAMPLES$
+      CREATE CLASS TBColumn
+
+         VAR Block      // Code block to retrieve data for the column
+         VAR Cargo      // User-definable variable
+         VAR ColorBlock // Code block that determines color of data items
+         VAR ColSep     // Column separator character
+         VAR DefColor   // Array of numeric indexes into the color table
+         VAR Footing    // Column footing
+         VAR FootSep    // Footing separator character
+         VAR Heading    // Column heading
+         VAR HeadSep    // Heading separator character
+         VAR Width      // Column display width
+         VAR ColPos     // Temporary column position on screen
+
+         METHOD New()    // Constructor
+
+      ENDCLASS
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      HBClass(),Object Oriented Programming,VAR,METHOD
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      VAR
- *  $CATEGORY$
- *      Class
- *  $SUBCATEGORY$
- *      Data
- *  $ONELINER$
- *      Alternate syntax for VAR: instance variable for the objects.
- *  $SYNTAX$
- *      VAR <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
- *      [[EXPORTED | VISIBLE] | [PROTECTED] | [HIDDEN]] [READONLY | RO]
- *  $ARGUMENTS$
- *      <DataName1>  Name of the VAR
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      VAR
+   $CATEGORY$
+      Class
+   $SUBCATEGORY$
+      Data
+   $ONELINER$
+      Alternate syntax for VAR: instance variable for the objects.
+   $SYNTAX$
+      VAR <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
+      [[EXPORTED | VISIBLE] | [PROTECTED] | [HIDDEN]] [READONLY | RO]
+   $ARGUMENTS$
+      <DataName1>  Name of the VAR
 
- *      <type>       Optional data type specification from the following:
- *                   Character, Numeric, Date, Logical, Codeblock, Nil.
- *
- *      <uValue>     Optional initial value when creating a new object.
- *
- *      EXPORTED     Specifies that this VAR is accessible to functions and
- *                   methods outside of the class.  VISIBLE is a synonym for EXPORTED.
- *
- *      PROTECTED    Specifies that this VAR is only accessible to functions and methods within this class and its subclasses.
- *
- *      HIDDEN       Specifies that this VAR is only accessible to the
- *                   class where it was defined, and is not inherited by the
- *                   subclasses.
- *
- *      READONLY     Restricts assignment to the variable. If specified with
- *                   the EXPORTED clause, assignment is only permitted from the current
- *                   class and its subclasses.  If specified with the PROTECTED clause,
- *                   assignment is only permitted from the current class.
- *                   RO is a synonym for READONLY.
- *  $DESCRIPTION$
- *      VAR elements can also be thought of as the "properties" of an
- *      object. They can be of any data type, including codeblock.
- *      Once an object has been created, the VAR elements are referenced
- *      with the colon (:) as in  MyObject:Heading := "Last name".
- *      Usually a class also defines methods to manipulate the VAR.
- *
- *      You can use the "AS <type>" clause to enforce that the VAR is
- *      maintained as a certain type. Otherwise it will take on the type of
- *      whatever value is first assigned to it.
- *
- *      Use the "INIT <uValue>" clause to initialize that VAR to <uValue>
- *      whenever a new object is created.
- *
- *      VAR can be a synonym for VAR, or it can use a slightly different
- *      syntax for compatibility with other dialects.
- *  $EXAMPLES$
- *      CREATE CLASS TBColumn
- *
- *         VAR Block      // Code block to retrieve data for the column
- *         VAR Cargo      // User-definable variable
- *         VAR ColorBlock // Code block that determines color of data items
- *         VAR ColSep     // Column separator character
- *         VAR DefColor   // Array of numeric indexes into the color table
- *         VAR Footing    // Column footing
- *         VAR FootSep    // Footing separator character
- *         VAR Heading    // Column heading
- *         VAR HeadSep    // Heading separator character
- *         VAR Width      // Column display width
- *         VAR ColPos     // Temporary column position on screen
- *
- *         METHOD New()   // Constructor
- *
- *      ENDCLASS
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      Object Oriented Programming,CLASS,METHOD,CLASS VAR,VAR
- *  $END$
+      <type>       Optional data type specification from the following:
+                   Character, Numeric, Date, Logical, Codeblock, Nil.
+
+      <uValue>     Optional initial value when creating a new object.
+
+      EXPORTED     Specifies that this VAR is accessible to functions and
+                   methods outside of the class.  VISIBLE is a synonym for EXPORTED.
+
+      PROTECTED    Specifies that this VAR is only accessible to functions and methods within this class and its subclasses.
+
+      HIDDEN       Specifies that this VAR is only accessible to the
+                   class where it was defined, and is not inherited by the
+                   subclasses.
+
+      READONLY     Restricts assignment to the variable. If specified with
+                   the EXPORTED clause, assignment is only permitted from the current
+                   class and its subclasses.  If specified with the PROTECTED clause,
+                   assignment is only permitted from the current class.
+                   RO is a synonym for READONLY.
+   $DESCRIPTION$
+      VAR elements can also be thought of as the "properties" of an
+      object. They can be of any data type, including codeblock.
+      Once an object has been created, the VAR elements are referenced
+      with the colon (:) as in  MyObject:Heading := "Last name".
+      Usually a class also defines methods to manipulate the VAR.
+
+      You can use the "AS <type>" clause to enforce that the VAR is
+      maintained as a certain type. Otherwise it will take on the type of
+      whatever value is first assigned to it.
+
+      Use the "INIT <uValue>" clause to initialize that VAR to <uValue>
+      whenever a new object is created.
+
+      VAR can be a synonym for VAR, or it can use a slightly different
+      syntax for compatibility with other dialects.
+   $EXAMPLES$
+      CREATE CLASS TBColumn
+
+         VAR Block      // Code block to retrieve data for the column
+         VAR Cargo      // User-definable variable
+         VAR ColorBlock // Code block that determines color of data items
+         VAR ColSep     // Column separator character
+         VAR DefColor   // Array of numeric indexes into the color table
+         VAR Footing    // Column footing
+         VAR FootSep    // Footing separator character
+         VAR Heading    // Column heading
+         VAR HeadSep    // Heading separator character
+         VAR Width      // Column display width
+         VAR ColPos     // Temporary column position on screen
+
+         METHOD New()   // Constructor
+
+      ENDCLASS
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      Object Oriented Programming,CLASS,METHOD,CLASS VAR,VAR
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      CLASS VAR
- *  $CATEGORY$
- *      Class
- *  $SUBCATEGORY$
- *      Data
- *  $ONELINER$
- *      Define a CLASS VAR variable for a class (NOT for an Object!)
- *  $SYNTAX$
- *      CLASS VAR <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
- *  $ARGUMENTS$
- *      <DataName1>  Name of the VAR
- *
- *      <type>       Optional data type specification from the following:
- *                      Character, Numeric, Date, Logical, Codeblock, Nil
- *
- *      <uValue>     Optional initial value at program startup
- *  $DESCRIPTION$
- *      CLASS VAR variables can also be thought of as the "properties" of an
- *      entire class. Each CLASS VAR exists only once, no matter how many
- *      objects are created. A common usage is for a counter that is
- *      incremented whenever an object is created and decremented when one
- *      is destroyed, thus monitoring the number of objects in existence
- *      for this class.
- *
- *      You can use the "AS <type>" clause to enforce that the CLASS VAR is
- *      maintained as a certain type. Otherwise it will take on the type of
- *      whatever value is first assigned to it.
- *      Use the "INIT <uValue>" clause to initialize that VAR to <uValue>
- *      whenever the class is first used.
- *  $EXAMPLES$
- *      CREATE CLASS TWindow
- *         VAR   hWnd, nOldProc
- *         CLASS VAR lRegistered AS LOGICAL
- *      ENDCLASS
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      Object Oriented Programming,CLASS,METHOD,VAR
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      CLASS VAR
+   $CATEGORY$
+      Class
+   $SUBCATEGORY$
+      Data
+   $ONELINER$
+      Define a CLASS VAR variable for a class (NOT for an Object!)
+   $SYNTAX$
+      CLASS VAR <DataName1> [,<DataNameN>] [ AS <type> ] [ INIT <uValue> ]
+   $ARGUMENTS$
+      <DataName1>  Name of the VAR
+
+      <type>       Optional data type specification from the following:
+                      Character, Numeric, Date, Logical, Codeblock, Nil
+
+      <uValue>     Optional initial value at program startup
+   $DESCRIPTION$
+      CLASS VAR variables can also be thought of as the "properties" of an
+      entire class. Each CLASS VAR exists only once, no matter how many
+      objects are created. A common usage is for a counter that is
+      incremented whenever an object is created and decremented when one
+      is destroyed, thus monitoring the number of objects in existence
+      for this class.
+
+      You can use the "AS <type>" clause to enforce that the CLASS VAR is
+      maintained as a certain type. Otherwise it will take on the type of
+      whatever value is first assigned to it.
+      Use the "INIT <uValue>" clause to initialize that VAR to <uValue>
+      whenever the class is first used.
+   $EXAMPLES$
+      CREATE CLASS TWindow
+         VAR   hWnd, nOldProc
+         CLASS VAR lRegistered AS LOGICAL
+      ENDCLASS
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      Object Oriented Programming,CLASS,METHOD,VAR
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      METHOD
- *  $CATEGORY$
- *      Class
- *  $SUBCATEGORY$
- *      Method
- *  $ONELINER$
- *      Declare a METHOD for a class in the class header
- *  $SYNTAX$
- *      METHOD <MethodName>( [<params,...>] ) [CONSTRUCTOR]
- *
- *      METHOD <MethodName>( [<params,...>] ) INLINE <Code,...>
- *
- *      METHOD <MethodName>( [<params,...>] ) BLOCK  <CodeBlock>
- *
- *      METHOD <MethodName>( [<params,...>] ) EXTERN <NAME>([<args,...>])
- *
- *      METHOD <MethodName>( [<params,...>] ) SETGET
- *
- *      METHOD <MethodName>( [<params,...>] ) VIRTUAL
- *
- *      METHOD <MethodName>( [<param>] )      OPERATOR <op>
- *
- *      METHOD <MethodName>( [<params,...>] ) CLASS <ClassName>
- *  $ARGUMENTS$
- *      <MethodName>  Name of the method to define
- *
- *      <params,...>  Optional parameter list
- *  $DESCRIPTION$
- *      Methods are "class functions" which do the work of the class.
- *      All methods must be defined in the class header between the
- *      CLASS and ENDCLASS commands.  If the body of a method is not fully
- *      defined here, the full body is written below the ENDCLASS command
- *      using this syntax:
- *
- *      METHOD <MethodName>( [<params,...>] ) CLASS <ClassName>
- *
- *      Methods can reference the current object with the keyword "Self:" or
- *      its shorthand version "::".
- *
- *      CLAUSES:
- *
- *      CONSTRUCTOR  Defines a special method Class Constructor method,
- *                   used to create objects.  This is usually the
- *                   New() method. Constructors always return the new
- *                   object.
- *
- *      INLINE       Fast and easy to code, INLINE lets you define the
- *                   code for the method immediately within the definition
- *                   of the Class. Any methods not declared INLINE or BLOCK
- *                   must be fully defined after the ENDCLASS command.
- *                   The <Code,...> following INLINE receives a parameter
- *                   of Self. If you need to receive more parameters, use
- *                   the BLOCK clause instead.
- *
- *      BLOCK        Use this clause when you want to declare fast 'inline'
- *                   methods that need parameters. The first parameter to
- *                   <CodeBlock> must be Self, as in:
- *
- *      METHOD       <MethodName> BLOCK {| Self, <arg1>, <arg2>, ..., <argN> | ... }
- *
- *      EXTERN       If an external function does what the method needs,
- *                   use this clause to make an optimized call to that
- *                   function directly.
- *
- *      SETGET       For calculated Data. The name of the method can be
- *                   manipulated like a Data element to Set or Get a value.
- *
- *      VIRTUAL      Methods that do nothing. Useful for Base classes where
- *                   the child class will define the method's behavior, or
- *                   when you are first creating and testing a Class.
- *
- *      OPERATOR     Operator Overloading for classes.
- *                   See example Tests/TestOp.prg for details.
- *
- *      CLASS <ClassName>
- *                   Use this syntax only for defining a full method after
- *                   the ENDCLASS command.
- *  $EXAMPLES$
- *      CREATE CLASS TWindow
- *         VAR    hWnd, nOldProc
- *         METHOD New( ) CONSTRUCTOR
- *         METHOD Capture() INLINE  SetCapture( ::hWnd )
- *         METHOD End() BLOCK  {| Self, lEnd | iif( lEnd := ::lValid(),;
- *                                 ::PostMsg( WM_CLOSE ), ), lEnd }
- *         METHOD EraseBkGnd( hDC )
- *         METHOD cTitle( cNewTitle ) SETGET
- *         METHOD Close() VIRTUAL
- *      ENDCLASS
- *
- *      METHOD New( ) CLASS TWindow
- *         local nVar, cStr
- *         ... <code> ...
- *         ... <code> ...
- *      RETURN Self
- *  $TESTS$
- *      TestOp.prg
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      HBClass(),Object Oriented Programming,VAR,CLASS
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      METHOD
+   $CATEGORY$
+      Class
+   $SUBCATEGORY$
+      Method
+   $ONELINER$
+      Declare a METHOD for a class in the class header
+   $SYNTAX$
+      METHOD <MethodName>( [<params,...>] ) [CONSTRUCTOR]
+
+      METHOD <MethodName>( [<params,...>] ) INLINE <Code,...>
+
+      METHOD <MethodName>( [<params,...>] ) BLOCK  <CodeBlock>
+
+      METHOD <MethodName>( [<params,...>] ) EXTERN <NAME>([<args,...>])
+
+      METHOD <MethodName>( [<params,...>] ) SETGET
+
+      METHOD <MethodName>( [<params,...>] ) VIRTUAL
+
+      METHOD <MethodName>( [<param>] )      OPERATOR <op>
+
+      METHOD <MethodName>( [<params,...>] ) CLASS <ClassName>
+   $ARGUMENTS$
+      <MethodName>  Name of the method to define
+
+      <params,...>  Optional parameter list
+   $DESCRIPTION$
+      Methods are "class functions" which do the work of the class.
+      All methods must be defined in the class header between the
+      CLASS and ENDCLASS commands.  If the body of a method is not fully
+      defined here, the full body is written below the ENDCLASS command
+      using this syntax:
+
+      METHOD <MethodName>( [<params,...>] ) CLASS <ClassName>
+
+      Methods can reference the current object with the keyword "Self:" or
+      its shorthand version "::".
+
+      CLAUSES:
+
+      CONSTRUCTOR  Defines a special method Class Constructor method,
+                   used to create objects.  This is usually the
+                   New() method. Constructors always return the new
+                   object.
+
+      INLINE       Fast and easy to code, INLINE lets you define the
+                   code for the method immediately within the definition
+                   of the Class. Any methods not declared INLINE or BLOCK
+                   must be fully defined after the ENDCLASS command.
+                   The <Code,...> following INLINE receives a parameter
+                   of Self. If you need to receive more parameters, use
+                   the BLOCK clause instead.
+
+      BLOCK        Use this clause when you want to declare fast 'inline'
+                   methods that need parameters. The first parameter to
+                   <CodeBlock> must be Self, as in:
+
+      METHOD       <MethodName> BLOCK {| Self, <arg1>, <arg2>, ..., <argN> | ... }
+
+      EXTERN       If an external function does what the method needs,
+                   use this clause to make an optimized call to that
+                   function directly.
+
+      SETGET       For calculated Data. The name of the method can be
+                   manipulated like a Data element to Set or Get a value.
+
+      VIRTUAL      Methods that do nothing. Useful for Base classes where
+                   the child class will define the method's behavior, or
+                   when you are first creating and testing a Class.
+
+      OPERATOR     Operator Overloading for classes.
+                   See example Tests/TestOp.prg for details.
+
+      CLASS <ClassName>
+                   Use this syntax only for defining a full method after
+                   the ENDCLASS command.
+   $EXAMPLES$
+      CREATE CLASS TWindow
+         VAR    hWnd, nOldProc
+         METHOD New( ) CONSTRUCTOR
+         METHOD Capture() INLINE  SetCapture( ::hWnd )
+         METHOD End() BLOCK  {| Self, lEnd | iif( lEnd := ::lValid(),;
+                                 ::PostMsg( WM_CLOSE ), ), lEnd }
+         METHOD EraseBkGnd( hDC )
+         METHOD cTitle( cNewTitle ) SETGET
+         METHOD Close() VIRTUAL
+      ENDCLASS
+
+      METHOD New( ) CLASS TWindow
+         local nVar, cStr
+         ... <code> ...
+         ... <code> ...
+      RETURN Self
+   $TESTS$
+      TestOp.prg
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      HBClass(),Object Oriented Programming,VAR,CLASS
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      MESSAGE
- *  $CATEGORY$
- *      Class
- *  $SUBCATEGORY$
- *      Method
- *  $ONELINER$
- *      Route a method call to another Method
- *  $SYNTAX$
- *      MESSAGE <MessageName>   METHOD <MethodName>( [<params,...>] )
- *
- *      MESSAGE <MessageName>() METHOD <MethodName>( [<params,...>] )
- *  $ARGUMENTS$
- *      <MessageName>  The pseudo-method name to define
- *
- *      <MethodName>   The method to create and call when <MessageName>
- *                     is invoked.
- *
- *      <params,...>   Optional parameter list for the method
- *  $DESCRIPTION$
- *      The MESSAGE command is a seldom-used feature that lets you re-route
- *      a call to a method with a different name. This can be necessary if
- *      a method name conflicts with a public function that needs to be
- *      called from within the class methods.
- *
- *      For example, your app may have a public function called BeginPaint()
- *      that is used in painting windows. It would also be natural to have a
- *      Window class method called :BeginPaint() that the application can
- *      call. But within the class method you would not be able to call the
- *      public function because internally methods are based on static
- *      functions (which hide public functions of the same name).
- *
- *      The MESSAGE command lets you create the true method with a different
- *      name (::xBeginPaint()), yet still allow the ::BeginPaint() syntax
- *      to call ::xBeginPaint().  This is then free to call the public
- *      function BeginPaint().
- *  $EXAMPLES$
- *      CREATE CLASS TWindow
- *         VAR    hWnd, nOldProc
- *         METHOD New( ) CONSTRUCTOR
- *         MESSAGE BeginPaint METHOD xBeginPaint()
- *      ENDCLASS
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      METHOD,VAR,CLASS,Object Oriented Programming
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      MESSAGE
+   $CATEGORY$
+      Class
+   $SUBCATEGORY$
+      Method
+   $ONELINER$
+      Route a method call to another Method
+   $SYNTAX$
+      MESSAGE <MessageName>   METHOD <MethodName>( [<params,...>] )
+
+      MESSAGE <MessageName>() METHOD <MethodName>( [<params,...>] )
+   $ARGUMENTS$
+      <MessageName>  The pseudo-method name to define
+
+      <MethodName>   The method to create and call when <MessageName>
+                     is invoked.
+
+      <params,...>   Optional parameter list for the method
+   $DESCRIPTION$
+      The MESSAGE command is a seldom-used feature that lets you re-route
+      a call to a method with a different name. This can be necessary if
+      a method name conflicts with a public function that needs to be
+      called from within the class methods.
+
+      For example, your app may have a public function called BeginPaint()
+      that is used in painting windows. It would also be natural to have a
+      Window class method called :BeginPaint() that the application can
+      call. But within the class method you would not be able to call the
+      public function because internally methods are based on static
+      functions (which hide public functions of the same name).
+
+      The MESSAGE command lets you create the true method with a different
+      name (::xBeginPaint()), yet still allow the ::BeginPaint() syntax
+      to call ::xBeginPaint().  This is then free to call the public
+      function BeginPaint().
+   $EXAMPLES$
+      CREATE CLASS TWindow
+         VAR    hWnd, nOldProc
+         METHOD New( ) CONSTRUCTOR
+         MESSAGE BeginPaint METHOD xBeginPaint()
+      ENDCLASS
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      METHOD,VAR,CLASS,Object Oriented Programming
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      ERROR HANDLER
- *  $CATEGORY$
- *      Class
- *  $SUBCATEGORY$
- *      Method
- *  $ONELINER$
- *      Designate a method as an error handler for the class
- *  $SYNTAX$
- *      ERROR HANDLER <MethodName>( [<params,...>] )
- *  $ARGUMENTS$
- *      <MethodName>  Name of the method to define
- *
- *      <params,...>  Optional parameter list
- *  $DESCRIPTION$
- *      ERROR HANDLER names the method that should handle errors for the
- *      class being defined.
- *  $EXAMPLES$
- *      CREATE CLASS TWindow
- *         ERROR HANDLER  MyErrHandler()
- *      ENDCLASS
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      Object Oriented Programming,ON ERROR,CLASS,METHOD,VAR
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      ERROR HANDLER
+   $CATEGORY$
+      Class
+   $SUBCATEGORY$
+      Method
+   $ONELINER$
+      Designate a method as an error handler for the class
+   $SYNTAX$
+      ERROR HANDLER <MethodName>( [<params,...>] )
+   $ARGUMENTS$
+      <MethodName>  Name of the method to define
+
+      <params,...>  Optional parameter list
+   $DESCRIPTION$
+      ERROR HANDLER names the method that should handle errors for the
+      class being defined.
+   $EXAMPLES$
+      CREATE CLASS TWindow
+         ERROR HANDLER  MyErrHandler()
+      ENDCLASS
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      Object Oriented Programming,ON ERROR,CLASS,METHOD,VAR
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      ON ERROR
- *  $CATEGORY$
- *      Class
- *  $SUBCATEGORY$
- *      Method
- *  $ONELINER$
- *      Designate a method as an error handler for the class
- *  $SYNTAX$
- *      ON ERROR <MethodName>( [<params,...>] )
- *  $ARGUMENTS$
- *      <MethodName>  Name of the method to define
- *
- *      <params,...>  Optional parameter list
- *  $DESCRIPTION$
- *      ON ERROR is a synonym for ERROR HANDLER.
- *      It names the method that should handle errors for the
- *      class being defined.
- *  $EXAMPLES$
- *      CREATE CLASS TWindow
- *         ON ERROR  MyErrHandler()
- *      ENDCLASS
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      Object Oriented Programming,ERROR HANDLER,CLASS,METHOD,VAR
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      ON ERROR
+   $CATEGORY$
+      Class
+   $SUBCATEGORY$
+      Method
+   $ONELINER$
+      Designate a method as an error handler for the class
+   $SYNTAX$
+      ON ERROR <MethodName>( [<params,...>] )
+   $ARGUMENTS$
+      <MethodName>  Name of the method to define
+
+      <params,...>  Optional parameter list
+   $DESCRIPTION$
+      ON ERROR is a synonym for ERROR HANDLER.
+      It names the method that should handle errors for the
+      class being defined.
+   $EXAMPLES$
+      CREATE CLASS TWindow
+         ON ERROR  MyErrHandler()
+      ENDCLASS
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      Object Oriented Programming,ERROR HANDLER,CLASS,METHOD,VAR
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      ENDCLASS
- *  $CATEGORY$
- *      Class
- *  $SUBCATEGORY$
- *      Definition
- *  $ONELINER$
- *      End the declaration of a class.
- *  $SYNTAX$
- *      ENDCLASS
- *  $ARGUMENTS$
- *      (This statement has no arguments)
- *  $DESCRIPTION$
- *      ENDCLASS marks the end of a class declaration.
- *      It is usually followed by the class methods that are not INLINE.
- *  $EXAMPLES$
- *      CREATE CLASS TWindow
- *         VAR hWnd, nOldProc
- *      ENDCLASS
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      Object Oriented Programming,CLASS,METHOD,VAR
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      ENDCLASS
+   $CATEGORY$
+      Class
+   $SUBCATEGORY$
+      Definition
+   $ONELINER$
+      End the declaration of a class.
+   $SYNTAX$
+      ENDCLASS
+   $ARGUMENTS$
+      (This statement has no arguments)
+   $DESCRIPTION$
+      ENDCLASS marks the end of a class declaration.
+      It is usually followed by the class methods that are not INLINE.
+   $EXAMPLES$
+      CREATE CLASS TWindow
+         VAR hWnd, nOldProc
+      ENDCLASS
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      Object Oriented Programming,CLASS,METHOD,VAR
+   $END$
  */

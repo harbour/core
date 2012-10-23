@@ -2,35 +2,35 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_METAPH()
- *  $CATEGORY$
- *     String
- *  $ONELINER$
- *     Convert a character string to MetaPhone format
- *  $SYNTAX$
- *     FT_METAPH( <cName> [, <nSize> ] ) -> cMetaPhone
- *  $ARGUMENTS$
- *     <cName> is the character string to convert
- *
- *     <nSize> is the length of the character string to be returned.
- *             If not specified the default length is 4 bytes.
- *  $RETURNS$
- *     A phonetically spelled character string
- *  $DESCRIPTION$
- *     This function is a character function use to index and search for
- *     sound-alike or phonetic matches.  It is an alternative to
- *     the SOUNDEX() function, and addresses some basic pronunciation
- *     rules, by looking at surrounding letters to determine how parts of
- *     the string are pronounced.  FT_METAPH() will group sound-alikes
- *     together, and forgive shortcomings in spelling ability.
- *  $EXAMPLES$
- *     USE persons
- *     INDEX ON FT_METAPH( LastName ) TO lastname
- *     SEEK FT_METAPH( "Philmore" )
- *     ? Found(), LastName             // Result: .T. Philmore
- *     SEEK FT_METAPH( "Fillmore" )
- *     ? Found(), LastName             // Result: .T. Philmore
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_METAPH()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Convert a character string to MetaPhone format
+   $SYNTAX$
+      FT_METAPH( <cName> [, <nSize> ] ) -> cMetaPhone
+   $ARGUMENTS$
+      <cName> is the character string to convert
+  
+      <nSize> is the length of the character string to be returned.
+              If not specified the default length is 4 bytes.
+   $RETURNS$
+      A phonetically spelled character string
+   $DESCRIPTION$
+      This function is a character function use to index and search for
+      sound-alike or phonetic matches.  It is an alternative to
+      the SOUNDEX() function, and addresses some basic pronunciation
+      rules, by looking at surrounding letters to determine how parts of
+      the string are pronounced.  FT_METAPH() will group sound-alikes
+      together, and forgive shortcomings in spelling ability.
+   $EXAMPLES$
+      USE persons
+      INDEX ON FT_METAPH( LastName ) TO lastname
+      SEEK FT_METAPH( "Philmore" )
+      ? Found(), LastName             // Result: .T. Philmore
+      SEEK FT_METAPH( "Fillmore" )
+      ? Found(), LastName             // Result: .T. Philmore
+   $END$
  */

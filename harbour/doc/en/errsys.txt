@@ -13,34 +13,34 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      ERRORSYS()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Error
- *  $ONELINER$
- *      Install default error handler
- *  $SYNTAX$
- *      ERRORSYS() --> NIL
- *  $ARGUMENTS$
- *      None.
- *  $RETURNS$
- *      ERRORSYS() always return NIL.
- *  $DESCRIPTION$
- *      ERRORSYS() is called upon startup by Harbour and installs the default
- *      error handler. Normally you should not call this function directly,
- *      instead use ERRORBLOCK() to install your own error handler.
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      ERRORBLOCK(),Error class
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      ERRORSYS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+      Install default error handler
+   $SYNTAX$
+      ERRORSYS() --> NIL
+   $ARGUMENTS$
+      None.
+   $RETURNS$
+      ERRORSYS() always return NIL.
+   $DESCRIPTION$
+      ERRORSYS() is called upon startup by Harbour and installs the default
+      error handler. Normally you should not call this function directly,
+      instead use ERRORBLOCK() to install your own error handler.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      ERRORBLOCK(),Error class
+   $END$
  */

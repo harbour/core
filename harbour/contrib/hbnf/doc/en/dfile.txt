@@ -2,86 +2,86 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_DFSETUP()
- *  $CATEGORY$
- *     File I/O
- *  $ONELINER$
- *     Set up parameters for FT_DISPFILE()
- *  $SYNTAX$
- *     FT_DFSETUP( <cInFile>, <nTop>, <nLeft>, <nBottom>, <nRight>, ;
- *              <nStart>, <nCNormal>, <nCHighlight>, <cExitKeys>,   ;
- *              <lBrowse>, <nColSkip>, <nRMargin>, <nBuffSize> ) -> nResult
- *  $ARGUMENTS$
- *        <cInFile>     - text file to display (full path and filename)
- *        <nTop>        - upper row of window
- *        <nLeft>       - left col of window
- *        <nBottom>     - lower row of window
- *        <nRight>      - right col of window
- *        <nStart>      - line to place highlight at startup
- *        <nCNormal>    - normal text color     (numeric attribute)
- *        <nCHighlight> - text highlight color  (numeric attribute)
- *        <cExitKeys>   - terminating key list  (each byte of string is a
- *                        key code)
- *        <lBrowse>     - act-like-a-browse-routine flag
- *        <nColSkip>    - col increment for left/right arrows
- *        <nRMargin>    - right margin - anything to right is truncated
- *        <nBuffSize>   - size of the paging buffer
- *  $RETURNS$
- *     0 if successful, FError() code if not
- *  $DESCRIPTION$
- *     Note: make sure you allocate a buffer large enough to hold enough
- *     data for the number of lines that you have in the window.  Use the
- *     following formula as a guideline:
- *
- *        buffer size = (# of line) + 1 * RMargin
- *
- *     This is the smallest you should make the buffer.  For normal use,
- *     4096 bytes is recommended
- *  $EXAMPLES$
- *     @ 4, 9 TO 11, 71
- *
- *     FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
- *                 "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
- *
- *     cKey := FT_DISPFILE()
- *
- *     FT_DFCLOSE()
- *
- *     @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
- *  $SEEALSO$
- *     FT_DISPFILE() FT_DFCLOSE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_DFSETUP()
+   $CATEGORY$
+      File I/O
+   $ONELINER$
+      Set up parameters for FT_DISPFILE()
+   $SYNTAX$
+      FT_DFSETUP( <cInFile>, <nTop>, <nLeft>, <nBottom>, <nRight>, ;
+               <nStart>, <nCNormal>, <nCHighlight>, <cExitKeys>,   ;
+               <lBrowse>, <nColSkip>, <nRMargin>, <nBuffSize> ) -> nResult
+   $ARGUMENTS$
+      <cInFile>     - text file to display (full path and filename)
+      <nTop>        - upper row of window
+      <nLeft>       - left col of window
+      <nBottom>     - lower row of window
+      <nRight>      - right col of window
+      <nStart>      - line to place highlight at startup
+      <nCNormal>    - normal text color     (numeric attribute)
+      <nCHighlight> - text highlight color  (numeric attribute)
+      <cExitKeys>   - terminating key list  (each byte of string is a
+                      key code)
+      <lBrowse>     - act-like-a-browse-routine flag
+      <nColSkip>    - col increment for left/right arrows
+      <nRMargin>    - right margin - anything to right is truncated
+      <nBuffSize>   - size of the paging buffer
+   $RETURNS$
+      0 if successful, FError() code if not
+   $DESCRIPTION$
+      Note: make sure you allocate a buffer large enough to hold enough
+      data for the number of lines that you have in the window.  Use the
+      following formula as a guideline:
+  
+         buffer size = (# of line) + 1 * RMargin
+  
+      This is the smallest you should make the buffer.  For normal use,
+      4096 bytes is recommended
+   $EXAMPLES$
+      @ 4, 9 TO 11, 71
+  
+      FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
+                  "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
+  
+      cKey := FT_DISPFILE()
+  
+      FT_DFCLOSE()
+  
+      @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
+   $SEEALSO$
+      FT_DISPFILE() FT_DFCLOSE()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_DFCLOSE()
- *  $CATEGORY$
- *     File I/O
- *  $ONELINER$
- *     Close file displayed by FT_DISPFILE()
- *  $SYNTAX$
- *     FT_DFCLOSE() -> NIL
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     Closes the file opened by FT_DFSETUP()
- *  $EXAMPLES$
- *     @ 4, 9 TO 11, 71
- *
- *     FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
- *                 "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
- *
- *     cKey := FT_DISPFILE()
- *
- *     FT_DFCLOSE()
- *
- *     @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
- *  $SEEALSO$
- *     FT_DFSETUP() FT_DISPFILE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_DFCLOSE()
+   $CATEGORY$
+      File I/O
+   $ONELINER$
+      Close file displayed by FT_DISPFILE()
+   $SYNTAX$
+      FT_DFCLOSE() -> NIL
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      Closes the file opened by FT_DFSETUP()
+   $EXAMPLES$
+      @ 4, 9 TO 11, 71
+  
+      FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
+                  "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
+  
+      cKey := FT_DISPFILE()
+  
+      FT_DFCLOSE()
+  
+      @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
+   $SEEALSO$
+      FT_DFSETUP() FT_DISPFILE()
+   $END$
  */

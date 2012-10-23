@@ -2,714 +2,731 @@
  * $Id$
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 1999 Andy M Leighton
- *    Documentation
- *
- * FlagString functions GT_NEWFLAG, GT_SETFLAG, GT_CLRFLAG, and
- * GT_ISFLAG are an original work by Dave Pearson and
- * are placed in the public domain.
- *
- * See doc/license.txt for licensing terms.
- *
+/* $DOC$
+   $FUNCNAME$
+      GT_ASCPOS()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Return the ascii value of a specified character in a string
+   $SYNTAX$
+      GT_Ascpos(<cStr>, <nPos>) --> nAscVal
+   $ARGUMENTS$
+      <cStr>  - The string
+      <nPos>  - The position in <cStr>
+   $RETURNS$
+      <nAscVal> - The ascii value of substr(<cStr>, <nPos>, 1)
+   $DESCRIPTION$
+      Return the ascii value of a specified character in a string
+      Equivalent (but much faster) to
+          asc(substr(cStr, nPos, 1)
+  
+      NOTE:
+         invalid parameters will return -1
+         nPos > len(cStr)   will return -2
+  
+      This last behaviour is different to the Funcky function of the
+      same name.  I changed the behaviour because some of the strings
+      I process contain embedded NULs.
+   $EXAMPLES$
+      ? gt_ascpos("the cat sat on the mat", 3) // prints e
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_ASCPOS()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Return the ascii value of a specified character in a string
- *  $SYNTAX$
- *      GT_Ascpos(<cStr>, <nPos>) --> nAscVal
- *  $ARGUMENTS$
- *      <cStr>  - The string
- *      <nPos>  - The position in <cStr>
- *  $RETURNS$
- *      <nAscVal> - The ascii value of substr(<cStr>, <nPos>, 1)
- *  $DESCRIPTION$
- *      Return the ascii value of a specified character in a string
- *      Equivalent (but much faster) to
- *          asc(substr(cStr, nPos, 1)
- *
- *      NOTE:
- *         invalid parameters will return -1
- *         nPos > len(cStr)   will return -2
- *
- *      This last behaviour is different to the Funcky function of the
- *      same name.  I changed the behaviour because some of the strings
- *      I process contain embedded NULs.
- *  $EXAMPLES$
- *       ? gt_ascpos("the cat sat on the mat", 3) // prints e
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_ASCIISUM()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Sum the ascii values in a string.
+   $SYNTAX$
+      GT_AsciiSum(<cStr>) --> nSum
+   $ARGUMENTS$
+      <cStr>  - The string to sum
+   $RETURNS$
+      <nSum>    - The sum of all ascii values in <cStr>.
+   $DESCRIPTION$
+      Sum the ascii value of every character in the passed string
+      and return the result.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_ASCIISUM()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Sum the ascii values in a string.
- *  $SYNTAX$
- *      GT_AsciiSum(<cStr>) --> nSum
- *  $ARGUMENTS$
- *      <cStr>  - The string to sum
- *  $RETURNS$
- *      <nSum>    - The sum of all ascii values in <cStr>.
- *  $DESCRIPTION$
- *      Sum the ascii value of every character in the passed string
- *      and return the result.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_ATDIFF()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Return the position where two strings begin to differ
+   $SYNTAX$
+      GT_AtDiff(<cStr1>, <cStr2>) --> nPos
+   $ARGUMENTS$
+      <cStr1>  - A character string to compare
+      <cStr2>  - The string to compare with
+   $RETURNS$
+      <nPos>     - The position in <cStr2> where <cStr1> begins to differ
+   $DESCRIPTION$
+      Return the position in <cStr2> where <cStr1> begins to differ.
+      If the strings differ in the first character GT_AtDiff() will
+      return 1.  If the two strings are identical (or identical upto
+      the last character in <cStr2>) the function will return 0.
+  
+      NOTE:
+         invalid parameters will return -1
+   $EXAMPLES$
+      ? gt_atDiff("the cat", "the rat")          // prints 5
+      ? gt_atDiff("the cat", "the ")             // prints 0
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_ATDIFF()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Return the position where two strings begin to differ
- *  $SYNTAX$
- *      GT_AtDiff(<cStr1>, <cStr2>) --> nPos
- *  $ARGUMENTS$
- *      <cStr1>  - A character string to compare
- *      <cStr2>  - The string to compare with
- *  $RETURNS$
- *      <nPos>     - The position in <cStr2> where <cStr1> begins to differ
- *  $DESCRIPTION$
- *      Return the position in <cStr2> where <cStr1> begins to differ.
- *      If the strings differ in the first character GT_AtDiff() will
- *      return 1.  If the two strings are identical (or identical upto
- *      the last character in <cStr2>) the function will return 0.
- *
- *      NOTE:
- *         invalid parameters will return -1
- *  $EXAMPLES$
- *      ? gt_atDiff("the cat", "the rat")          // prints 5
- *      ? gt_atDiff("the cat", "the ")             // prints 0
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_CHAREVEN()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Return a string of all the characters in even positions
+   $SYNTAX$
+      GT_CharEven(<cStr>) --> cRet
+   $ARGUMENTS$
+      <cStr>   - A character string to extract chars from
+   $RETURNS$
+      <cRet>     - A string of all the chars in even positions
+   $DESCRIPTION$
+      Return a string consisting of all the characters in even
+      positions in <cStr1>.
+  
+      NOTE:
+         invalid parameters will return ""
+   $EXAMPLES$
+      ? gt_CharEven("abcdefghijklm")             // prints "bdfhjl"
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHAREVEN()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Return a string of all the characters in even positions
- *  $SYNTAX$
- *      GT_CharEven(<cStr>) --> cRet
- *  $ARGUMENTS$
- *      <cStr>   - A character string to extract chars from
- *  $RETURNS$
- *      <cRet>     - A string of all the chars in even positions
- *  $DESCRIPTION$
- *      Return a string consisting of all the characters in even
- *      positions in <cStr1>.
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *      ? gt_CharEven("abcdefghijklm")             // prints "bdfhjl"
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_CHARMIX()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Amalgamate two strings to form the return value
+   $SYNTAX$
+      GT_CharMix(<cStr1>, <cStr2>) --> cRet
+   $ARGUMENTS$
+      <cStr1>  - A character string to mix
+      <cStr2>  - A character string to mix with
+   $RETURNS$
+      <cRet>     - A string consisting of all the characters in <cStr1>
+                 mixed with all the characters in <cStr2>
+   $DESCRIPTION$
+      Return a string consisting of all the characters in <cStr1>
+      mixed with the characters from <cStr2>.
+  
+      NOTE:
+         invalid parameters will return ""
+   $EXAMPLES$
+      ? gt_CharMix("abc", "123")               // prints "a1b2c3"
+      ? gt_CharMix("abcde", "123")             // prints "a1b2c3de"
+      ? gt_CharMix("abc", "12345")             // prints "a1b2c345"
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHARMIX()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Amalgamate two strings to form the return value
- *  $SYNTAX$
- *      GT_CharMix(<cStr1>, <cStr2>) --> cRet
- *  $ARGUMENTS$
- *      <cStr1>  - A character string to mix
- *      <cStr2>  - A character string to mix with
- *  $RETURNS$
- *      <cRet>     - A string consisting of all the characters in <cStr1>
- *                 mixed with all the characters in <cStr2>
- *  $DESCRIPTION$
- *      Return a string consisting of all the characters in <cStr1>
- *      mixed with the characters from <cStr2>.
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *      ? gt_CharMix("abc", "123")               // prints "a1b2c3"
- *      ? gt_CharMix("abcde", "123")             // prints "a1b2c3de"
- *      ? gt_CharMix("abc", "12345")             // prints "a1b2c345"
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_CHARODD()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Return a string of all the characters in odd positions
+   $SYNTAX$
+      GT_CharOdd(<cStr>) --> cRet
+   $ARGUMENTS$
+      <cStr>   - A character string to extract chars from
+   $RETURNS$
+      <cRet>     - A string of all the chars in odd positions
+   $DESCRIPTION$
+      Return a string consisting of all the characters in odd
+      positions in <cStr1>.
+  
+      NOTE:
+         invalid parameters will return ""
+   $EXAMPLES$
+      ? gt_CharOdd("abcdefghijklm")             // prints "acegikm"
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHARODD()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Return a string of all the characters in odd positions
- *  $SYNTAX$
- *      GT_CharOdd(<cStr>) --> cRet
- *  $ARGUMENTS$
- *      <cStr>   - A character string to extract chars from
- *  $RETURNS$
- *      <cRet>     - A string of all the chars in odd positions
- *  $DESCRIPTION$
- *      Return a string consisting of all the characters in odd
- *      positions in <cStr1>.
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *      ? gt_CharOdd("abcdefghijklm")             // prints "acegikm"
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_CHRCOUNT()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Count the number of times a character appears in a string
+   $SYNTAX$
+      GT_ChrCount(<cChr>, <cStr>) --> nFreq
+   $ARGUMENTS$
+      <cChr>  - The character to find the frequence of
+      <cStr>  - The string in which to find the character
+   $RETURNS$
+      nFreq   - The number of times <cChr> occurs in <cStr>
+   $DESCRIPTION$
+      GT_ChrCount() counts how many times a specified character
+      appears in a string.
+  
+      NOTE:
+         invalid parameters will return -1
+   $EXAMPLES$
+      ? GT_ChrCount("t", "the cat sat on the mat")      // prints 4
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHRCOUNT()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Count the number of times a character appears in a string
- *  $SYNTAX$
- *      GT_ChrCount(<cChr>, <cStr>) --> nFreq
- *  $ARGUMENTS$
- *      <cChr>  - The character to find the frequence of
- *      <cStr>  - The string in which to find the character
- *  $RETURNS$
- *      nFreq   - The number of times <cChr> occurs in <cStr>
- *  $DESCRIPTION$
- *      GT_ChrCount() counts how many times a specified character
- *      appears in a string.
- *
- *      NOTE:
- *         invalid parameters will return -1
- *  $EXAMPLES$
- *      ? GT_ChrCount("t", "the cat sat on the mat")      // prints 4
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_CHRFIRST()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Find which character occurs first in a string
+   $SYNTAX$
+      GT_ChrFirst(<cChars>, <cStr>) --> nAsc
+   $ARGUMENTS$
+      <cChars> - The set of characters to find
+      <cStr>   - The input string
+   $RETURNS$
+      <nAsc>     - The ASCII value of the first character in <cChars>
+                 which appears first in <cStr>
+   $DESCRIPTION$
+      Return the ascii value of a character in <cChars>
+      which appears first in <cStr>.
+   $EXAMPLES$
+      ? chr(GT_ChrFirst("sa ", "This is a test"))  // prints "s"
+      ? chr(GT_ChrFirst("et",  "This is a test"))   // prints "t"
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHRFIRST()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Find which character occurs first in a string
- *  $SYNTAX$
- *      GT_ChrFirst(<cChars>, <cStr>) --> nAsc
- *  $ARGUMENTS$
- *      <cChars> - The set of characters to find
- *      <cStr>   - The input string
- *  $RETURNS$
- *      <nAsc>     - The ASCII value of the first character in <cChars>
- *                 which appears first in <cStr>
- *  $DESCRIPTION$
- *      Return the ascii value of a character in <cChars>
- *      which appears first in <cStr>.
- *  $EXAMPLES$
- *      ? chr(GT_ChrFirst("sa ", "This is a test"))  // prints "s"
- *      ? chr(GT_ChrFirst("et",  "This is a test"))   // prints "t"
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_CHRTOTAL()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Find number of times a set of characters appears in a string
+   $SYNTAX$
+      GT_ChrTotal(<cChrs>, <cStr>) --> nTotOcc
+   $ARGUMENTS$
+      <cChrs> - The set of characters
+      <cStr>  - The string to search
+   $RETURNS$
+      <nTotOcc> - The number of times the characters specified in
+                <cChrs> appears in <cStr>
+   $DESCRIPTION$
+      Returns the numnber of occurrences of characters belonging
+      to the set <cChrs> in the string <cStr>.  If no characters
+      in <cChrs> appears in <cStr> GT_ChrTotal() will return 0.
+  
+      NOTE:
+         invalid parameters will return -1
+   $EXAMPLES$
+      local cStr1 := "the cat sat on the mat"
+  
+      ? GT_ChrTotal("tae", cStr1)            // prints 10
+      ? GT_ChrTotal("zqw", cStr1)            // prints  0
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_CHRTOTAL()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Find number of times a set of characters appears in a string
- *  $SYNTAX$
- *      GT_ChrTotal(<cChrs>, <cStr>) --> nTotOcc
- *  $ARGUMENTS$
- *      <cChrs> - The set of characters
- *      <cStr>  - The string to search
- *  $RETURNS$
- *      <nTotOcc> - The number of times the characters specified in
- *                <cChrs> appears in <cStr>
- *  $DESCRIPTION$
- *      Returns the numnber of occurrences of characters belonging
- *      to the set <cChrs> in the string <cStr>.  If no characters
- *      in <cChrs> appears in <cStr> GT_ChrTotal() will return 0.
- *
- *      NOTE:
- *         invalid parameters will return -1
- *  $EXAMPLES$
- *       local cStr1 := "the cat sat on the mat"
- *
- *       ? GT_ChrTotal("tae", cStr1)            // prints 10
- *       ? GT_ChrTotal("zqw", cStr1)            // prints  0
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_STRCOUNT()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Count the number of times a substring appears in a string
+   $SYNTAX$
+      GT_StrCount(<cChrs>, <cStr>) --> nFreq
+   $ARGUMENTS$
+      <cChrs> - The substring to find the frequence of
+      <cStr>  - The string in which to find the character
+   $RETURNS$
+      <nFreq>   - The number of times <cChrs> occurs in <cStr>
+   $DESCRIPTION$
+      GT_StrCount() counts how many times a specified substring
+      appears in a string.
+      If the substring does NOT appear in <cStr> this function
+      will return 0.
+      If the substring is a single character use GT_ChrCount() as
+      it will be faster.
+  
+      NOTE:
+         invalid parameters will return -1
+   $EXAMPLES$
+      ? GT_StrCount("the", "the cat sat on the mat")      // prints 2
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRCOUNT()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Count the number of times a substring appears in a string
- *  $SYNTAX$
- *      GT_StrCount(<cChrs>, <cStr>) --> nFreq
- *  $ARGUMENTS$
- *      <cChrs> - The substring to find the frequence of
- *      <cStr>  - The string in which to find the character
- *  $RETURNS$
- *      <nFreq>   - The number of times <cChrs> occurs in <cStr>
- *  $DESCRIPTION$
- *      GT_StrCount() counts how many times a specified substring
- *      appears in a string.
- *      If the substring does NOT appear in <cStr> this function
- *      will return 0.
- *      If the substring is a single character use GT_ChrCount() as
- *      it will be faster.
- *
- *      NOTE:
- *         invalid parameters will return -1
- *  $EXAMPLES$
- *      ? GT_StrCount("the", "the cat sat on the mat")      // prints 2
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_STRCSPN()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Return length of prefix in string of chars NOT in set.
+   $SYNTAX$
+      GT_strcspn(<cString>, <cSet>) --> nLength
+   $ARGUMENTS$
+      <cString> - The string to find the prefix in
+      <cSet>    - The set of characters
+   $RETURNS$
+      <nLength>   - The length of a string upto a character in the set
+   $DESCRIPTION$
+      Return the number of characters in the leading segment of a
+      string that consists solely of characters NOT in the set.
+   $EXAMPLES$
+      ? GT_strcspn("this is a test", "as ")      // prints 3
+      ? GT_strcspn("this is a test", "elnjpq")   // prints 11
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRCSPN()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Return length of prefix in string of chars NOT in set.
- *  $SYNTAX$
- *      GT_strcspn(<cString>, <cSet>) --> nLength
- *  $ARGUMENTS$
- *      <cString> - The string to find the prefix in
- *      <cSet>    - The set of characters
- *  $RETURNS$
- *      <nLength>   - The length of a string upto a character in the set
- *  $DESCRIPTION$
- *      Return the number of characters in the leading segment of a
- *      string that consists solely of characters NOT in the set.
- *  $EXAMPLES$
- *      ? GT_strcspn("this is a test", "as ")      // prints 3
- *      ? GT_strcspn("this is a test", "elnjpq")   // prints 11
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_STRDIFF()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Return a string where it begins to differ from another
+   $SYNTAX$
+      GT_StrDiff(<cStr1>, <cStr2>) --> cRet
+   $ARGUMENTS$
+      <cStr1>  - A character string to compare
+      <cStr2>  - The string to compare with
+   $RETURNS$
+      <cRet>     - A string beginning at the position in <cStr2> where
+                 <cStr1> begins to differ from <cStr1>
+   $DESCRIPTION$
+      Return a string beginning at the position in <cStr2> where
+      <cStr1> begins to differ from <cStr1>. If the two strings are
+      identical (or identical upto the last character in <cStr2>)
+      the function will return "".
+  
+      NOTE:
+         invalid parameters will return ""
+   $EXAMPLES$
+      ? gt_strDiff("the cat", "the rat")          // prints "rat"
+      ? gt_strDiff("the cat", "the ")             // prints ""
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRDIFF()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Return a string where it begins to differ from another
- *  $SYNTAX$
- *      GT_StrDiff(<cStr1>, <cStr2>) --> cRet
- *  $ARGUMENTS$
- *      <cStr1>  - A character string to compare
- *      <cStr2>  - The string to compare with
- *  $RETURNS$
- *      <cRet>     - A string beginning at the position in <cStr2> where
- *                 <cStr1> begins to differ from <cStr1>
- *  $DESCRIPTION$
- *      Return a string beginning at the position in <cStr2> where
- *      <cStr1> begins to differ from <cStr1>. If the two strings are
- *      identical (or identical upto the last character in <cStr2>)
- *      the function will return "".
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *      ? gt_strDiff("the cat", "the rat")          // prints "rat"
- *      ? gt_strDiff("the cat", "the ")             // prints ""
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_STREXPAND()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Insert fillers between characters in a passed string
+   $SYNTAX$
+      GT_StrExpand(<cStr>, [<nNum>], [<cChar>]) --> cRet
+   $ARGUMENTS$
+      <cStr1>  - A character string to insert chars into
+      <nNum>   - The number of fill characters to insert (default 1)
+      <cChar>  - The fill chararacter (default space)
+   $RETURNS$
+      <cRet>     - The input string with fill characters inserted between
+                 every character in the original.
+   $DESCRIPTION$
+      Inserts fill characters into a string.
+  
+      NOTE:
+         invalid parameters will return ""
+   $EXAMPLES$
+      ? gt_strexpand("abc")                    // prints "a b c"
+      ? gt_strexpand("abc", 2)                 // prints "a  b  c"
+      ? gt_strexpand("abc", 2, '|')            // prints "a||b||c"
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STREXPAND()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Insert fillers between characters in a passed string
- *  $SYNTAX$
- *      GT_StrExpand(<cStr>, [<nNum>], [<cChar>]) --> cRet
- *  $ARGUMENTS$
- *      <cStr1>  - A character string to insert chars into
- *      <nNum>   - The number of fill characters to insert (default 1)
- *      <cChar>  - The fill chararacter (default space)
- *  $RETURNS$
- *      <cRet>     - The input string with fill characters inserted between
- *                 every character in the original.
- *  $DESCRIPTION$
- *      Inserts fill characters into a string.
- *
- *      NOTE:
- *         invalid parameters will return ""
- *  $EXAMPLES$
- *      ? gt_strexpand("abc")                    // prints "a b c"
- *      ? gt_strexpand("abc", 2)                 // prints "a  b  c"
- *      ? gt_strexpand("abc", 2, '|')            // prints "a||b||c"
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_STRLEFT()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Find length of prefix of a string
+   $SYNTAX$
+      GT_StrLeft(<cStr>, <cChars>) --> nLen
+   $ARGUMENTS$
+      <cStr>   - The input string
+      <cChars> - The set of characters to find
+   $RETURNS$
+      nLen     - The length of the prefix found.
+   $DESCRIPTION$
+      Return the length of the leading segment in the passed string
+      <cStr> that consists solely of the characters in the character
+      set <cChars>.
+  
+      If no characters in the the search set are found, the function
+      shall return 0
+   $EXAMPLES$
+      ? GT_StrLeft("this is a test", "hsit ")       // prints 8
+      ? GT_StrLeft("this is a test", "hit a")       // prints 3
+      ? GT_StrLeft("this is a test", "zxy")         // prints 0
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRLEFT()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Find length of prefix of a string
- *  $SYNTAX$
- *      GT_StrLeft(<cStr>, <cChars>) --> nLen
- *  $ARGUMENTS$
- *      <cStr>   - The input string
- *      <cChars> - The set of characters to find
- *  $RETURNS$
- *      nLen     - The length of the prefix found.
- *  $DESCRIPTION$
- *      Return the length of the leading segment in the passed string
- *      <cStr> that consists solely of the characters in the character
- *      set <cChars>.
- *
- *      If no characters in the the search set are found, the function
- *      shall return 0
- *  $EXAMPLES$
- *      ? GT_StrLeft("this is a test", "hsit ")       // prints 8
- *      ? GT_StrLeft("this is a test", "hit a")       // prints 3
- *      ? GT_StrLeft("this is a test", "zxy")         // prints 0
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_STRPBRK()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Return string after 1st char from a set
+   $SYNTAX$
+      GT_StrpBrk(<cStr>, <cSet>) --> cString
+   $ARGUMENTS$
+      <cStr>   - The input string
+      <cSet>   - The set of characters to find
+   $RETURNS$
+      <cString>  - The input string after the first occurance of any
+                 character from <cSet>
+   $DESCRIPTION$
+      Return a string after the first occurance of any character from
+      the input set <cSet>.
+   $EXAMPLES$
+      ? GT_Strpbrk("This is a test", "sa ")  // prints "s is a test"
+      ? GT_Strpbrk("This is a test", "et")   // prints "test"
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRPBRK()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Return string after 1st char from a set
- *  $SYNTAX$
- *      GT_StrpBrk(<cStr>, <cSet>) --> cString
- *  $ARGUMENTS$
- *      <cStr>   - The input string
- *      <cSet>   - The set of characters to find
- *  $RETURNS$
- *      <cString>  - The input string after the first occurance of any
- *                 character from <cSet>
- *  $DESCRIPTION$
- *      Return a string after the first occurance of any character from
- *      the input set <cSet>.
- *  $EXAMPLES$
- *      ? GT_Strpbrk("This is a test", "sa ")  // prints "s is a test"
- *      ? GT_Strpbrk("This is a test", "et")   // prints "test"
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_STRRIGHT()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Find length of a suffix of a string
+   $SYNTAX$
+      GT_StrRight(<cStr>, <cChars>) --> nLen
+   $ARGUMENTS$
+      <cStr>   - The input string
+      <cChars> - The set of characters to find
+   $RETURNS$
+      <nLen>     - The length of the prefix found.
+   $DESCRIPTION$
+      Return the length of the trailing segment in the passed string
+      <cStr> that consists solely of the characters in the character
+      set <cChars>.
+  
+      If no characters in the the search set are found, the function
+      shall return 0
+   $EXAMPLES$
+      ? GT_StrRight("this is a test", "teas ")       // prints 8
+      ? GT_StrRight("this is a test", "tes h")       // prints 5
+      ? GT_StrRight("this is a test", "zxy")         // prints 0
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+  
+   $PLATFORMS$
+  
+   $FILES$
+      Library is libgt
+   $END$
  */
 
-/*
- *  $DOC$
- *  $FUNCNAME$
- *      GT_STRRIGHT()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Find length of a suffix of a string
- *  $SYNTAX$
- *      GT_StrRight(<cStr>, <cChars>) --> nLen
- *  $ARGUMENTS$
- *      <cStr>   - The input string
- *      <cChars> - The set of characters to find
- *  $RETURNS$
- *      <nLen>     - The length of the prefix found.
- *  $DESCRIPTION$
- *      Return the length of the trailing segment in the passed string
- *      <cStr> that consists solely of the characters in the character
- *      set <cChars>.
- *
- *      If no characters in the the search set are found, the function
- *      shall return 0
- *  $EXAMPLES$
- *      ? GT_StrRight("this is a test", "teas ")       // prints 8
- *      ? GT_StrRight("this is a test", "tes h")       // prints 5
- *      ? GT_StrRight("this is a test", "zxy")         // prints 0
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *  $PLATFORMS$
- *  $FILES$
- *      Library is libgt
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_NEWFLAG()
+   $CATEGORY$
+      General
+   $ONELINER$
+      Create a new bit flag string.
+   $SYNTAX$
+      GT_NewFlag(<nFlagCount>) --> cFlagString
+   $ARGUMENTS$
+      <nFlagCount> is the number of flags you wish to store.
+   $RETURNS$
+      A string to hold the bit flags. All flags are set to FALSE.
+   $DESCRIPTION$
+      GT_NewFlag() is used to construct a bit flag string. The bit flag
+      functions can be used for storing a large number of logical values
+      in a small space.
+  
+      To create a bit flag string you need to pass GT_NewFlag() a value
+      that is equal to or greater than the number of flags required (you
+      may want to allow for future expansion). Each character in the
+      string returned from GT_NewFlag() will hold 8 logical values.
+   $EXAMPLES$
+      cFlags := GT_NewFlag(20)   // Create a bit flag string for 20
+                                 // logical values.
+   $SEEALSO$
+      GT_SETFLAG() GT_CLRFLAG() GT_ISFLAG()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      GT_NEWFLAG()
- *  $CATEGORY$
- *      General
- *  $ONELINER$
- *      Create a new bit flag string.
- *  $SYNTAX$
- *      GT_NewFlag(<nFlagCount>) --> cFlagString
- *  $ARGUMENTS$
- *      <nFlagCount> is the number of flags you wish to store.
- *  $RETURNS$
- *      A string to hold the bit flags. All flags are set to FALSE.
- *  $DESCRIPTION$
- *      GT_NewFlag() is used to construct a bit flag string. The bit flag
- *      functions can be used for storing a large number of logical values
- *      in a small space.
- *
- *      To create a bit flag string you need to pass GT_NewFlag() a value
- *      that is equal to or greater than the number of flags required (you
- *      may want to allow for future expansion). Each character in the
- *      string returned from GT_NewFlag() will hold 8 logical values.
- *  $EXAMPLES$
- *      cFlags := GT_NewFlag(20)   // Create a bit flag string for 20
- *                                 // logical values.
- *  $SEEALSO$
- *      GT_SETFLAG() GT_CLRFLAG() GT_ISFLAG()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_SETFLAG()
+   $CATEGORY$
+      General
+   $ONELINER$
+      Set a number of flags to TRUE in a bit flag string.
+   $SYNTAX$
+      GT_SetFlag(<cFlagString>,[<nStart>],[<nEnd>]) --> cFlagString
+   $ARGUMENTS$
+      <cFlagString> is a bit flag string created with GT_NewFlag()
+  
+      <nStart> is the starting flag. This is an optional numeric value.
+      If not supplied it defaults to 1.
+  
+      <nEnd> is the ending flag. This is an optional numeric value. If
+      not supplied it defaults to <nStart>.
+   $RETURNS$
+      The bit map string with the new flag settings.
+   $DESCRIPTION$
+      GT_SetFlag() is used to turn flags within the flag string on.
+   $EXAMPLES$
+      cFlags := GT_NewFlag(20)   // Create a bit flag string for 20
+                                 // logical values.
+  
+      // Now set flags 10 to 15 to true.
+  
+      cFlags := GT_SetFlag(cFlags,10,15)
+  
+      // And set flag 18 to true.
+  
+      cFlags := GT_SetFlag(cFlags,18)
+  
+      // And set flag 1 to true.
+  
+      cFlags := GT_SetFlag(cFlags)
+   $SEEALSO$
+      GT_NEWFLAG() GT_CLRFLAG() GT_ISFLAG()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      GT_SETFLAG()
- *  $CATEGORY$
- *      General
- *  $ONELINER$
- *      Set a number of flags to TRUE in a bit flag string.
- *  $SYNTAX$
- *      GT_SetFlag(<cFlagString>,[<nStart>],[<nEnd>]) --> cFlagString
- *  $ARGUMENTS$
- *      <cFlagString> is a bit flag string created with GT_NewFlag()
- *
- *      <nStart> is the starting flag. This is an optional numeric value.
- *      If not supplied it defaults to 1.
- *
- *      <nEnd> is the ending flag. This is an optional numeric value. If
- *      not supplied it defaults to <nStart>.
- *  $RETURNS$
- *      The bit map string with the new flag settings.
- *  $DESCRIPTION$
- *      GT_SetFlag() is used to turn flags within the flag string on.
- *  $EXAMPLES$
- *      cFlags := GT_NewFlag(20)   // Create a bit flag string for 20
- *                                 // logical values.
- *
- *      // Now set flags 10 to 15 to true.
- *
- *      cFlags := GT_SetFlag(cFlags,10,15)
- *
- *      // And set flag 18 to true.
- *
- *      cFlags := GT_SetFlag(cFlags,18)
- *
- *      // And set flag 1 to true.
- *
- *      cFlags := GT_SetFlag(cFlags)
- *  $SEEALSO$
- *      GT_NEWFLAG() GT_CLRFLAG() GT_ISFLAG()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_CLRFLAG()
+   $CATEGORY$
+      General
+   $ONELINER$
+      Set a number of flags to FALSE in a bit flag string.
+   $SYNTAX$
+      GT_ClrFlag(<cFlagString>,[<nStart>],[<nEnd>]) --> cFlagString
+   $ARGUMENTS$
+      <cFlagString> is a bit flag string created with GT_NewFlag()
+  
+      <nStart> is the starting flag. This is an optional numeric value.
+      If not supplied it defaults to 1.
+  
+      <nEnd> is the ending flag. This is an optional numeric value. If
+      not supplied it defaults to <nStart>.
+   $RETURNS$
+      The bit map string with the new flag settings.
+   $DESCRIPTION$
+      GT_ClrFlag() is used to turn flags within the flag string off.
+   $EXAMPLES$
+      cFlags := GT_NewFlag(20)   // Create a bit flag string for 20
+                                 // logical values.
+  
+      // Now, turn them all on.
+  
+      cFlags := GT_SetFlag(cFlags,1,20)
+  
+      // Now set flags 10 to 15 to false.
+  
+      cFlags := GT_ClrFlag(cFlags,10,15)
+  
+      // And set flag 18 to false.
+  
+      cFlags := GT_ClrFlag(cFlags,18)
+  
+      // And set flag 1 to false.
+  
+      cFlags := GT_ClrFlag(cFlags)
+   $SEEALSO$
+      GT_NEWFLAG() GT_SETFLAG() GT_ISFLAG()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      GT_CLRFLAG()
- *  $CATEGORY$
- *      General
- *  $ONELINER$
- *      Set a number of flags to FALSE in a bit flag string.
- *  $SYNTAX$
- *      GT_ClrFlag(<cFlagString>,[<nStart>],[<nEnd>]) --> cFlagString
- *  $ARGUMENTS$
- *      <cFlagString> is a bit flag string created with GT_NewFlag()
- *
- *      <nStart> is the starting flag. This is an optional numeric value.
- *      If not supplied it defaults to 1.
- *
- *      <nEnd> is the ending flag. This is an optional numeric value. If
- *      not supplied it defaults to <nStart>.
- *  $RETURNS$
- *      The bit map string with the new flag settings.
- *  $DESCRIPTION$
- *      GT_ClrFlag() is used to turn flags within the flag string off.
- *  $EXAMPLES$
- *      cFlags := GT_NewFlag(20)   // Create a bit flag string for 20
- *                                 // logical values.
- *
- *      // Now, turn them all on.
- *
- *      cFlags := GT_SetFlag(cFlags,1,20)
- *
- *      // Now set flags 10 to 15 to false.
- *
- *      cFlags := GT_ClrFlag(cFlags,10,15)
- *
- *      // And set flag 18 to false.
- *
- *      cFlags := GT_ClrFlag(cFlags,18)
- *
- *      // And set flag 1 to false.
- *
- *      cFlags := GT_ClrFlag(cFlags)
- *  $SEEALSO$
- *      GT_NEWFLAG() GT_SETFLAG() GT_ISFLAG()
- *  $END$
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      GT_ISFLAG()
- *  $CATEGORY$
- *      General
- *  $ONELINER$
- *      Test the setting of a flag in a bit flag string.
- *  $SYNTAX$
- *      GT_IsFlag(<cFlagString>,[<nFlag>]) --> lSetting
- *  $ARGUMENTS$
- *      <cFlagString> is a bit flag string created with GT_NewFlag()
- *
- *      <nFlag> is the flag to be tested.
- *  $RETURNS$
- *      A boolean value, TRUE if the flag is on, FALSE if it's off.
- *  $DESCRIPTION$
- *      GT_IsFlag() is used to test the state of a flag with a bit flag
- *      string.
- *  $EXAMPLES$
- *
- *      // Print the setting of the flags in a flag string called ``cDave''
- *
- *      for nFlag := 1 to (len(cDave)*8)
- *         ? "Flag number ",nFlag," == ",GT_IsFlag(cDave,nFlag)
- *      next
- *  $SEEALSO$
- *      GT_NEWFLAG() GT_SETFLAG() GT_CLRFLAG()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      GT_ISFLAG()
+   $CATEGORY$
+      General
+   $ONELINER$
+      Test the setting of a flag in a bit flag string.
+   $SYNTAX$
+      GT_IsFlag(<cFlagString>,[<nFlag>]) --> lSetting
+   $ARGUMENTS$
+      <cFlagString> is a bit flag string created with GT_NewFlag()
+  
+      <nFlag> is the flag to be tested.
+   $RETURNS$
+      A boolean value, TRUE if the flag is on, FALSE if it's off.
+   $DESCRIPTION$
+      GT_IsFlag() is used to test the state of a flag with a bit flag
+      string.
+   $EXAMPLES$
+      // Print the setting of the flags in a flag string called ``cDave''
+  
+      for nFlag := 1 to (len(cDave)*8)
+         ? "Flag number ",nFlag," == ",GT_IsFlag(cDave,nFlag)
+      next
+   $SEEALSO$
+      GT_NEWFLAG() GT_SETFLAG() GT_CLRFLAG()
+   $END$
  */

@@ -2,40 +2,40 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ASCIISUM()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      calculate the sum of the ASCII values of the characters in a string
- *  $SYNTAX$
- *      ASCIISUM( <cString> ) --> nAsciiSum
- *  $ARGUMENTS$
- *      <cString>      the string to be processed
- *  $RETURNS$
- *      <nAsciiSum>    sum of the ASCII values in <cString>
- *  $DESCRIPTION$
- *      The ASCIISUM() function sums up the ASCII values of the characters
- *      in <cString>. Be aware that the function is not position sensitive,
- *      i.e. a change of position of a certain character in the string does
- *      not change the ascii sum.
- *  $EXAMPLES$
- *      ? asciisum( "ABC" ) // -->  197
- *      ? asciisum( "ACB" ) // -->  197
- *  $TESTS$
- *      asciisum( Replicate( "A", 10000 ) ) == 650000
- *      asciisum( "0123456789" ) == 525
- *      asciisum( NIL ) == 0
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      ASCIISUM() is compatible with CT3's ASCIISUM().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CHECKSUM()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ASCIISUM()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      calculate the sum of the ASCII values of the characters in a string
+   $SYNTAX$
+      ASCIISUM( <cString> ) --> nAsciiSum
+   $ARGUMENTS$
+      <cString>      the string to be processed
+   $RETURNS$
+      <nAsciiSum>    sum of the ASCII values in <cString>
+   $DESCRIPTION$
+      The ASCIISUM() function sums up the ASCII values of the characters
+      in <cString>. Be aware that the function is not position sensitive,
+      i.e. a change of position of a certain character in the string does
+      not change the ascii sum.
+   $EXAMPLES$
+      ? asciisum( "ABC" ) // -->  197
+      ? asciisum( "ACB" ) // -->  197
+   $TESTS$
+      asciisum( Replicate( "A", 10000 ) ) == 650000
+      asciisum( "0123456789" ) == 525
+      asciisum( NIL ) == 0
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      ASCIISUM() is compatible with CT3's ASCIISUM().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CHECKSUM()
+   $END$
  */

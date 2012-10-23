@@ -2,185 +2,185 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      FLOOR()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Rounds down a number to the next integer
- *  $SYNTAX$
- *      FLOOR( <nNumber> ) -> nDownRoundedNumber
- *  $ARGUMENTS$
- *      <nNumber>             number to round down
- *  $RETURNS$
- *      <nDownRoundedNumber>  the rounded number
- *  $DESCRIPTION$
- *      The function FLOOR() determines the biggest integer that is smaller
- *      than <nNumber>.
- *  $EXAMPLES$
- *      ? floor( 1.1 )  // --> 1.0
- *      ? floor( -1.1 ) // --> -2.0
- *  $TESTS$
- *      floor( 1.1 )  == 1.0
- *      floor( -1.1 ) == -2.0
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      FLOOR() is compatible with CT3's FLOOR().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CEILING
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FLOOR()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Rounds down a number to the next integer
+   $SYNTAX$
+      FLOOR( <nNumber> ) -> nDownRoundedNumber
+   $ARGUMENTS$
+      <nNumber>             number to round down
+   $RETURNS$
+      <nDownRoundedNumber>  the rounded number
+   $DESCRIPTION$
+      The function FLOOR() determines the biggest integer that is smaller
+      than <nNumber>.
+   $EXAMPLES$
+      ? floor( 1.1 )  // --> 1.0
+      ? floor( -1.1 ) // --> -2.0
+   $TESTS$
+      floor( 1.1 )  == 1.0
+      floor( -1.1 ) == -2.0
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      FLOOR() is compatible with CT3's FLOOR().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CEILING
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CEILING()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Rounds up a number to the next integer
- *  $SYNTAX$
- *      CEILING( <nNumber> ) -> nUpRoundedNumber
- *  $ARGUMENTS$
- *      <nNumber>             number to round up
- *  $RETURNS$
- *      <nUpRoundedNumber>    the rounded number
- *  $DESCRIPTION$
- *      The function CEILING() determines the smallest integer that is bigger
- *      than <nNumber>.
- *  $EXAMPLES$
- *      ? ceiling( 1.1 )  // --> 2.0
- *      ? ceiling( -1.1 ) // --> -1.0
- *  $TESTS$
- *      ceiling( 1.1 )  == 2.0
- *      ceiling( -1.1 ) == -1.0
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CEILING() is compatible with CT3's CEILING().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      FLOOR
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CEILING()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Rounds up a number to the next integer
+   $SYNTAX$
+      CEILING( <nNumber> ) -> nUpRoundedNumber
+   $ARGUMENTS$
+      <nNumber>             number to round up
+   $RETURNS$
+      <nUpRoundedNumber>    the rounded number
+   $DESCRIPTION$
+      The function CEILING() determines the smallest integer that is bigger
+      than <nNumber>.
+   $EXAMPLES$
+      ? ceiling( 1.1 )  // --> 2.0
+      ? ceiling( -1.1 ) // --> -1.0
+   $TESTS$
+      ceiling( 1.1 )  == 2.0
+      ceiling( -1.1 ) == -1.0
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CEILING() is compatible with CT3's CEILING().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      FLOOR
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      SIGN()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Sign of a number
- *  $SYNTAX$
- *      SIGN( <nNumber> ) -> nSign
- *  $ARGUMENTS$
- *      <nNumber>             a number
- *  $RETURNS$
- *      <nSign>               sign of <nNumber>
- *  $DESCRIPTION$
- *      The function SIGN() determines the sign of <nNumber>.
- *      If <nNumber> is > 0, then SIGN(<nNumber>) returns 1
- *      If <nNumber> is < 0, then SIGN(<nNumber>) returns -1
- *      If <nNumber> is == 0, then SIGN(<nNumber>) returns 0
- *  $EXAMPLES$
- *      ? sign( 1.1 )   // --> 1
- *      ? sign( -1.1 )  // --> -1
- *      ? sign( 0.0 )   // --> 0
- *  $TESTS$
- *      sign( 1.1 )  == 1
- *      sign( -1.1 ) == -1
- *      sign( 0.0 )  == 0
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      SIGN() is compatible with CT3's SIGN().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      SIGN()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Sign of a number
+   $SYNTAX$
+      SIGN( <nNumber> ) -> nSign
+   $ARGUMENTS$
+      <nNumber>             a number
+   $RETURNS$
+      <nSign>               sign of <nNumber>
+   $DESCRIPTION$
+      The function SIGN() determines the sign of <nNumber>.
+      If <nNumber> is > 0, then SIGN(<nNumber>) returns 1
+      If <nNumber> is < 0, then SIGN(<nNumber>) returns -1
+      If <nNumber> is == 0, then SIGN(<nNumber>) returns 0
+   $EXAMPLES$
+      ? sign( 1.1 )   // --> 1
+      ? sign( -1.1 )  // --> -1
+      ? sign( 0.0 )   // --> 0
+   $TESTS$
+      sign( 1.1 )  == 1
+      sign( -1.1 ) == -1
+      sign( 0.0 )  == 0
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      SIGN() is compatible with CT3's SIGN().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+  
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      LOG10()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Decadic logarithm of a number
- *  $SYNTAX$
- *      LOG10( <nNumber> ) -> nLogarithm
- *  $ARGUMENTS$
- *      <nNumber>             number to logarithm
- *  $RETURNS$
- *      <nLogarithm>          decadic logarithm of <nNumber>
- *  $DESCRIPTION$
- *      The function LOG10() calculates the decadic logarithm of <nNumber>,
- *      i.e. 10^<nLogarithm> == <nNumber>.
- *  $EXAMPLES$
- *      ? log10( 10.0 )         // --> 1.0
- *      ? log10( sqrt( 10.0 ) ) // --> 0.5
- *  $TESTS$
- *      log10( 10.0 )         == 1.0
- *      log10( sqrt( 10.0 ) ) == 0.5
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      LOG10() is compatible with CT3's LOG10().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      LOG10()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Decadic logarithm of a number
+   $SYNTAX$
+      LOG10( <nNumber> ) -> nLogarithm
+   $ARGUMENTS$
+      <nNumber>             number to logarithm
+   $RETURNS$
+      <nLogarithm>          decadic logarithm of <nNumber>
+   $DESCRIPTION$
+      The function LOG10() calculates the decadic logarithm of <nNumber>,
+      i.e. 10^<nLogarithm> == <nNumber>.
+   $EXAMPLES$
+      ? log10( 10.0 )         // --> 1.0
+      ? log10( sqrt( 10.0 ) ) // --> 0.5
+   $TESTS$
+      log10( 10.0 )         == 1.0
+      log10( sqrt( 10.0 ) ) == 0.5
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      LOG10() is compatible with CT3's LOG10().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+  
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      FACT()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Calculates faculty
- *  $SYNTAX$
- *      FACT( <nNumber> ) -> nFaculty
- *  $ARGUMENTS$
- *      <nNumber>          number between 0 and 21
- *  $RETURNS$
- *      <nFaculty>         the faculty of <nNumber>
- *  $DESCRIPTION$
- *      The function FACT() calculates the faculty to the integer given in
- *      <nNumber>. The faculty is defined as n! = 1*2*...*n and is often
- *      used in statistics. Note, that faculties above 21 are too big
- *      so that the function must return a -1.
- *  $EXAMPLES$
- *      ? fact( 0 ) // --> 1
- *      ? fact( 1 ) // --> 1
- *      ? fact( 4 ) // --> 24
- *  $TESTS$
- *      fact( 0 ) == 1
- *      fact( 1 ) == 1
- *      fact( 4 ) == 24
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      FACT() is compatible with CT3's FACT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FACT()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Calculates faculty
+   $SYNTAX$
+      FACT( <nNumber> ) -> nFaculty
+   $ARGUMENTS$
+      <nNumber>          number between 0 and 21
+   $RETURNS$
+      <nFaculty>         the faculty of <nNumber>
+   $DESCRIPTION$
+      The function FACT() calculates the faculty to the integer given in
+      <nNumber>. The faculty is defined as n! = 1*2*...*n and is often
+      used in statistics. Note, that faculties above 21 are too big
+      so that the function must return a -1.
+   $EXAMPLES$
+      ? fact( 0 ) // --> 1
+      ? fact( 1 ) // --> 1
+      ? fact( 4 ) // --> 24
+   $TESTS$
+      fact( 0 ) == 1
+      fact( 1 ) == 1
+      fact( 4 ) == 24
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      FACT() is compatible with CT3's FACT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+  
+   $END$
  */

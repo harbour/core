@@ -2,48 +2,48 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_MADD()
- *  $CATEGORY$
- *     Date/Time
- *  $ONELINER$
- *     Add or subtract months to/from a date
- *  $SYNTAX$
- *     FT_MADD( [ <dGivenDate> ], [ <nAddMonths> ], [ <lMakeEOM> ] )
- *         -> dDate
- *  $ARGUMENTS$
- *     <dGivenDate> is any valid date in any date format. Defaults to
- *     current system date if not supplied.
- *
- *     <nAddMonths> is the number of months to be added or subtracted.
- *     Defaults to 0 if not supplied.
- *
- *     <lMakeEOM> is a logical variable indicating whether or not to
- *     force the returned date to the last date of the month.  It only
- *     affects the returned date if <dGivenDate> is an end-of-month date.
- *  $RETURNS$
- *     A date.
- *  $DESCRIPTION$
- *     FT_MADD() adds or subtracts months to/from a given date.
- *
- *     If MakeEOM is passed and dGivenDate is the last day of a month,
- *     it will return the EOM of calculated month.  Otherwise it will
- *     return the same day as the day of the passed date.
- *  $EXAMPLES$
- *     dDate := SToD( "19900915" )
- *     ? FT_MADD( dDate, 1 )        // 10/15/90
- *     ? FT_MADD( dDate, -2 )       // 07/15/90
- *
- *     // force EOM
- *     dDate := SToD( "19910430" )
- *     ? FT_MADD( dDate, 1 )        // 05/30/91
- *     ? FT_MADD( dDate, 1, .T. )   // 05/31/91  <- forced EOM
- *     ? FT_MADD( dDate, 2 )        // 06/30/91
- *     ? FT_MADD( dDate, 2, .T. )   // 06/30/91  <- June only has 30 days
- *     ? FT_MADD( dDate, 3 )        // 07/30/91
- *     ? FT_MADD( dDate, 3, .T. )   // 07/31/91  <- forced EOM
- *  $SEEALSO$
- *     FT_DAYOFYR() FT_DAYTOBOW()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_MADD()
+   $CATEGORY$
+      Date/Time
+   $ONELINER$
+      Add or subtract months to/from a date
+   $SYNTAX$
+      FT_MADD( [ <dGivenDate> ], [ <nAddMonths> ], [ <lMakeEOM> ] )
+          -> dDate
+   $ARGUMENTS$
+      <dGivenDate> is any valid date in any date format. Defaults to
+      current system date if not supplied.
+  
+      <nAddMonths> is the number of months to be added or subtracted.
+      Defaults to 0 if not supplied.
+  
+      <lMakeEOM> is a logical variable indicating whether or not to
+      force the returned date to the last date of the month.  It only
+      affects the returned date if <dGivenDate> is an end-of-month date.
+   $RETURNS$
+      A date.
+   $DESCRIPTION$
+      FT_MADD() adds or subtracts months to/from a given date.
+  
+      If MakeEOM is passed and dGivenDate is the last day of a month,
+      it will return the EOM of calculated month.  Otherwise it will
+      return the same day as the day of the passed date.
+   $EXAMPLES$
+      dDate := SToD( "19900915" )
+      ? FT_MADD( dDate, 1 )        // 10/15/90
+      ? FT_MADD( dDate, -2 )       // 07/15/90
+  
+      // force EOM
+      dDate := SToD( "19910430" )
+      ? FT_MADD( dDate, 1 )        // 05/30/91
+      ? FT_MADD( dDate, 1, .T. )   // 05/31/91  <- forced EOM
+      ? FT_MADD( dDate, 2 )        // 06/30/91
+      ? FT_MADD( dDate, 2, .T. )   // 06/30/91  <- June only has 30 days
+      ? FT_MADD( dDate, 3 )        // 07/30/91
+      ? FT_MADD( dDate, 3, .T. )   // 07/31/91  <- forced EOM
+   $SEEALSO$
+      FT_DAYOFYR() FT_DAYTOBOW()
+   $END$
  */

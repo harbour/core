@@ -2,98 +2,98 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      REMALL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Remove certain characters at the left and right of a string
- *  $SYNTAX$
- *      REMALL( <cString>, [<cSearch|nSearch>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REMALL() is compatible with CT3's REMALL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      REMLEFT(),REMRIGHT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      REMALL()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Remove certain characters at the left and right of a string
+   $SYNTAX$
+      REMALL( <cString>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      REMALL() is compatible with CT3's REMALL().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      REMLEFT(),REMRIGHT()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      REMLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Remove certain characters at the left of a string
- *  $SYNTAX$
- *      REMLEFT( <cString>, [<cSearch|nSearch>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REMLEFT() is compatible with CT3's REMLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      REMALL(),REMRIGHT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      REMLEFT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Remove certain characters at the left of a string
+   $SYNTAX$
+      REMLEFT( <cString>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      REMLEFT() is compatible with CT3's REMLEFT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      REMALL(),REMRIGHT()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      REMRIGHT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Remove certain characters at the right of a string
- *  $SYNTAX$
- *      REMRIGHT( <cString>, [<cSearch|nSearch>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      REMRIGHT() is compatible with CT3's REMRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      REMALL(),REMLEFT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      REMRIGHT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Remove certain characters at the right of a string
+   $SYNTAX$
+      REMRIGHT( <cString>, [<cSearch|nSearch>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      REMRIGHT() is compatible with CT3's REMRIGHT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      REMALL(),REMLEFT()
+   $END$
  */

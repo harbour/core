@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
@@ -14,568 +13,568 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      CDOW()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Converts a date to the day of week
- *  $SYNTAX$
- *      CDOW(<dDate>)  --> cDay
- *  $ARGUMENTS$
- *      <dDate>  Any date expression.
- *  $RETURNS$
- *      <cDay>  The current day of week.
- *  $DESCRIPTION$
- *      This function returns a character string of the day of the week,
- *      from a date expression <dDate> passed to it.
- *      If a NULL date is passed to the function, the value of the function
- *      will be a NULL byte.
- *  $EXAMPLES$
- *      ? CDOW( Date() )
- *      IF CDOW( Date() + 10 ) == "Sunday"
- *         ? "This is a sunny day."
- *      ENDIF
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      DAY(),DOW(),DATE(),CMONTH()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      CDOW()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Converts a date to the day of week
+   $SYNTAX$
+      CDOW(<dDate>)  --> cDay
+   $ARGUMENTS$
+      <dDate>  Any date expression.
+   $RETURNS$
+      <cDay>  The current day of week.
+   $DESCRIPTION$
+      This function returns a character string of the day of the week,
+      from a date expression <dDate> passed to it.
+      If a NULL date is passed to the function, the value of the function
+      will be a NULL byte.
+   $EXAMPLES$
+      ? CDOW( Date() )
+      IF CDOW( Date() + 10 ) == "Sunday"
+         ? "This is a sunny day."
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      DAY(),DOW(),DATE(),CMONTH()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      CMONTH()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Return the name of the month.
- *  $SYNTAX$
- *      CMONTH(<dDate>)  --> cMonth
- *  $ARGUMENTS$
- *      <dDate>  Any date expression.
- *  $RETURNS$
- *      <cMonth>  The current month name
- *  $DESCRIPTION$
- *      This function returns the name of the month (January,February,etc.)
- *      from a date expression <dDate> passed to it.
- *      If a NULL date is passed to the function, the value of the function
- *      will be a NULL byte.
- *  $EXAMPLES$
- *      ? CMonth( Date() )
- *      IF CMonth( Date() + 10 ) =="March"
- *         ? "Have you done your system BACKUP?"
- *      ENDIF
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      CDOW(),DATE(),MONTH(),YEAR(),DOW(),DTOC()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      CMONTH()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Return the name of the month.
+   $SYNTAX$
+      CMONTH(<dDate>)  --> cMonth
+   $ARGUMENTS$
+      <dDate>  Any date expression.
+   $RETURNS$
+      <cMonth>  The current month name
+   $DESCRIPTION$
+      This function returns the name of the month (January,February,etc.)
+      from a date expression <dDate> passed to it.
+      If a NULL date is passed to the function, the value of the function
+      will be a NULL byte.
+   $EXAMPLES$
+      ? CMonth( Date() )
+      IF CMonth( Date() + 10 ) =="March"
+         ? "Have you done your system BACKUP?"
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      CDOW(),DATE(),MONTH(),YEAR(),DOW(),DTOC()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DATE()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Return the Current OS Date
- *  $SYNTAX$
- *      DATE() --> dCurDate
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      <dCurDate>  Current system date.
- *  $DESCRIPTION$
- *      This function returns the current system date.
- *  $EXAMPLES$
- *      ? Date()
- *  $TESTS$
- *      ? "Today is ",Day(Date())," of ",cMonth(Date())," of ",Year(Date())
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      CTOD(),DTOS(),DTOC(),DAY(),MONTH(),CMONTH()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DATE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Return the Current OS Date
+   $SYNTAX$
+      DATE() --> dCurDate
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <dCurDate>  Current system date.
+   $DESCRIPTION$
+      This function returns the current system date.
+   $EXAMPLES$
+      ? Date()
+   $TESTS$
+      ? "Today is ",Day(Date())," of ",cMonth(Date())," of ",Year(Date())
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      CTOD(),DTOS(),DTOC(),DAY(),MONTH(),CMONTH()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      CTOD()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Converts a character string to a date expression
- *  $SYNTAX$
- *      CTOD(<cDateString>)  --> dDate
- *  $ARGUMENTS$
- *      <cDateString> A character date in format 'mm/dd/yy'
- *  $RETURNS$
- *      <dDate> A date expression
- *  $DESCRIPTION$
- *      This function converts a date that has been entered as a character
- *      expression to a date expression. The character expression will be in
- *      the form "MM/DD/YY" (based on the default value in SET DATE) or in
- *      the appropriate format specified by the SET DATE TO command. If an
- *      improper character string is passed to the function, an empty date
- *      value will be returned.
- *  $EXAMPLES$
- *      ? CToD( "12/21/00" )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      SET DATE,DATE(),DTOS()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      CTOD()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Converts a character string to a date expression
+   $SYNTAX$
+      CTOD(<cDateString>)  --> dDate
+   $ARGUMENTS$
+      <cDateString> A character date in format 'mm/dd/yy'
+   $RETURNS$
+      <dDate> A date expression
+   $DESCRIPTION$
+      This function converts a date that has been entered as a character
+      expression to a date expression. The character expression will be in
+      the form "MM/DD/YY" (based on the default value in SET DATE) or in
+      the appropriate format specified by the SET DATE TO command. If an
+      improper character string is passed to the function, an empty date
+      value will be returned.
+   $EXAMPLES$
+      ? CToD( "12/21/00" )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      SET DATE,DATE(),DTOS()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DAY()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Return the numeric day of the month.
- *  $SYNTAX$
- *      DAY(<cDate>) --> nMonth
- *  $ARGUMENTS$
- *      <cDate> Any valid date expression.
- *  $RETURNS$
- *     <nMonth> Numeric value of the day of month.
- *  $DESCRIPTION$
- *      This function returns the numeric value of the day of month from a
- *      date.
- *  $EXAMPLES$
- *      ? Day( Date() )
- *      ? Day( Date() + 6325 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      CTOD(),DTOS(),DTOC(),DATE(),MONTH(),CMONTH()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DAY()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Return the numeric day of the month.
+   $SYNTAX$
+      DAY(<cDate>) --> nMonth
+   $ARGUMENTS$
+      <cDate> Any valid date expression.
+   $RETURNS$
+      <nMonth> Numeric value of the day of month.
+   $DESCRIPTION$
+      This function returns the numeric value of the day of month from a
+      date.
+   $EXAMPLES$
+      ? Day( Date() )
+      ? Day( Date() + 6325 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      CTOD(),DTOS(),DTOC(),DATE(),MONTH(),CMONTH()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DAYS()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Convert elapsed seconds into days
- *  $SYNTAX$
- *      DAYS(<nSecs> ) --> nDay
- *  $ARGUMENTS$
- *      <nSecs> The number of seconds
- *  $RETURNS$
- *      <nDay>  The number of days
- *  $DESCRIPTION$
- *      This function converts <nSecs> seconds to the equivalent number
- *      of days; 86399 seconds represents one day, 0 seconds being midnight.
- *  $EXAMPLES$
- *      ? Days( 2434234 )
- *      ? "Has been passed", Days( 63251 ), "since midnight"
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      SECONDS(),SECS(),ELAPTIME()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DAYS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Convert elapsed seconds into days
+   $SYNTAX$
+      DAYS(<nSecs> ) --> nDay
+   $ARGUMENTS$
+      <nSecs> The number of seconds
+   $RETURNS$
+      <nDay>  The number of days
+   $DESCRIPTION$
+      This function converts <nSecs> seconds to the equivalent number
+      of days; 86399 seconds represents one day, 0 seconds being midnight.
+   $EXAMPLES$
+      ? Days( 2434234 )
+      ? "Has been passed", Days( 63251 ), "since midnight"
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      SECONDS(),SECS(),ELAPTIME()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DOW()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Value for the day of week.
- *  $SYNTAX$
- *      DOW(<dDate>) --> nDay
- *  $ARGUMENTS$
- *      <dDate>  Any valid date expression
- *  $RETURNS$
- *      <nDay>  The current day number
- *  $DESCRIPTION$
- *      This function returns the number representing the day of the week
- *      for the date expressed as <dDate>.
- *  $EXAMPLES$
- *      ? DOW( Date() )
- *      ? DOW( Date() - 6584 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      DTOC(),CDOW(),DATE(),DTOS(),DAY()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DOW()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Value for the day of week.
+   $SYNTAX$
+      DOW(<dDate>) --> nDay
+   $ARGUMENTS$
+      <dDate>  Any valid date expression
+   $RETURNS$
+      <nDay>  The current day number
+   $DESCRIPTION$
+      This function returns the number representing the day of the week
+      for the date expressed as <dDate>.
+   $EXAMPLES$
+      ? DOW( Date() )
+      ? DOW( Date() - 6584 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      DTOC(),CDOW(),DATE(),DTOS(),DAY()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DTOC()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Date to character conversion
- *  $SYNTAX$
- *      DTOC(<dDateString>)  --> cDate
- *  $ARGUMENTS$
- *      <dDateString> Any date
- *  $RETURNS$
- *      <dDate> Character represention of date
- *  $DESCRIPTION$
- *      This function converts any date expression (a field or variable)
- *      expressed as <dDateString> to a character expression in the default
- *      format "MM/DD/YY". The date format expressed by this function is
- *      controled in part by the date format specified in the SET DATE
- *      command
- *  $EXAMPLES$
- *      ? DToC( Date() )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      SET DATE,DATE(),DTOS()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DTOC()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Date to character conversion
+   $SYNTAX$
+      DTOC(<dDateString>)  --> cDate
+   $ARGUMENTS$
+      <dDateString> Any date
+   $RETURNS$
+      <dDate> Character represention of date
+   $DESCRIPTION$
+      This function converts any date expression (a field or variable)
+      expressed as <dDateString> to a character expression in the default
+      format "MM/DD/YY". The date format expressed by this function is
+      controled in part by the date format specified in the SET DATE
+      command
+   $EXAMPLES$
+      ? DToC( Date() )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      SET DATE,DATE(),DTOS()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DTOS()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Date to string conversion
- *  $SYNTAX$
- *      DTOS(<dDateString>)  --> cDate
- *  $ARGUMENTS$
- *      <dDateString> Any date
- *  $RETURNS$
- *      <dDate> String notation of the date
- *  $DESCRIPTION$
- *      This function returns the value of <dDateString> as a character
- *      string in the format of YYYYMMDD. If the value of <dDateString> is
- *      an empty date, this function will return eight blank spaces.
- *  $EXAMPLES$
- *      ? DToS( Date() )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      DTOC(),DATE(),DTOS()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DTOS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Date to string conversion
+   $SYNTAX$
+      DTOS(<dDateString>)  --> cDate
+   $ARGUMENTS$
+      <dDateString> Any date
+   $RETURNS$
+      <dDate> String notation of the date
+   $DESCRIPTION$
+      This function returns the value of <dDateString> as a character
+      string in the format of YYYYMMDD. If the value of <dDateString> is
+      an empty date, this function will return eight blank spaces.
+   $EXAMPLES$
+      ? DToS( Date() )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      DTOC(),DATE(),DTOS()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      ELAPTIME()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Calculates elapted time.
- *  $SYNTAX$
- *      ELAPTIME(<cStartTime>,<cEndTime>) --> cDiference
- *  $ARGUMENTS$
- *      <cStartTime> Start in time as a string format
- *      <cEndTime>   End time as a string format
- *  $RETURNS$
- *      <cDiference>  Difference between the times
- *  $DESCRIPTION$
- *      This function returns a string that shows the difference between
- *      the starting time represented as <cStartTime> and the ending time
- *      as <cEndTime>. If the stating time is greater then the ending
- *      time, the function will assume that the date changed once.
- *  $EXAMPLES$
- *      STATIC s_cStartTime
- *      INIT PROCEDURE Startup()
- *         s_cStartTime := Time()
- *         RETURN
- *      EXIT PROCEDURE StartExit()
- *         ? "You used this program by", ElapTime( s_cStartTime, Time() )
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      SECS(),SECONDS(),TIME(),DAY()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      ELAPTIME()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Calculates elapted time.
+   $SYNTAX$
+      ELAPTIME(<cStartTime>,<cEndTime>) --> cDiference
+   $ARGUMENTS$
+      <cStartTime> Start in time as a string format
+      <cEndTime>   End time as a string format
+   $RETURNS$
+      <cDiference>  Difference between the times
+   $DESCRIPTION$
+      This function returns a string that shows the difference between
+      the starting time represented as <cStartTime> and the ending time
+      as <cEndTime>. If the stating time is greater then the ending
+      time, the function will assume that the date changed once.
+   $EXAMPLES$
+      STATIC s_cStartTime
+      INIT PROCEDURE Startup()
+         s_cStartTime := Time()
+         RETURN
+      EXIT PROCEDURE StartExit()
+         ? "You used this program by", ElapTime( s_cStartTime, Time() )
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      SECS(),SECONDS(),TIME(),DAY()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      MONTH()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Converts a date expression to a month value
- *  $SYNTAX$
- *      MONTH(<dDate>) --> nMonth
- *  $ARGUMENTS$
- *      <dDate> Any valid date expression
- *  $RETURNS$
- *     <nMonth> Corresponding number of the month in the year, ranging from
- *      0 to 12
- *  $DESCRIPTION$
- *      This function returns a number that represents the month of a given
- *      date expression <dDate>. If a NULL date (CTOD('')) is passed to the
- *      function, the value of the function will be 0.
- *  $EXAMPLES$
- *      ? Month( Date() )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      CDOW(),DOW(),YEAR(),CMONTH()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      MONTH()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Converts a date expression to a month value
+   $SYNTAX$
+      MONTH(<dDate>) --> nMonth
+   $ARGUMENTS$
+      <dDate> Any valid date expression
+   $RETURNS$
+      <nMonth> Corresponding number of the month in the year, ranging from
+       0 to 12
+   $DESCRIPTION$
+      This function returns a number that represents the month of a given
+      date expression <dDate>. If a NULL date (CTOD('')) is passed to the
+      function, the value of the function will be 0.
+   $EXAMPLES$
+      ? Month( Date() )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      CDOW(),DOW(),YEAR(),CMONTH()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      SECONDS()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Returns the number of elapsed seconds past midnight.
- *  $SYNTAX$
- *      SECONDS() --> nSeconds
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      <nSeconds> Number of seconds since midnight
- *  $DESCRIPTION$
- *      This function returns a numeric value representing the number of
- *      elapsed seconds based on the current system time.
- *      The system time is considered to start at 0 (midnight); it continues
- *      up to 86399 seconds. The value of the return expression is displayed
- *      in both seconds and hundredths of seconds.
- *  $EXAMPLES$
- *      ? Seconds()
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      TIME()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      SECONDS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Returns the number of elapsed seconds past midnight.
+   $SYNTAX$
+      SECONDS() --> nSeconds
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <nSeconds> Number of seconds since midnight
+   $DESCRIPTION$
+      This function returns a numeric value representing the number of
+      elapsed seconds based on the current system time.
+      The system time is considered to start at 0 (midnight); it continues
+      up to 86399 seconds. The value of the return expression is displayed
+      in both seconds and hundredths of seconds.
+   $EXAMPLES$
+      ? Seconds()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      TIME()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      SECS()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Return the number of seconds from the system date.
- *  $SYNTAX$
- *      SECS( <cTime> ) --> nSeconds
- *  $ARGUMENTS$
- *      <cTime> Character expression in a time string format
- *  $RETURNS$
- *      <nSeconds> Number of seconds
- *  $DESCRIPTION$
- *      This function returns a numeric value that is a number of elapsed
- *      seconds from midnight based on a time string given as <cTime>.
- *  $EXAMPLES$
- *      ? Secs( Time() )
- *      ? Secs( Time() - 10 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      SECONDS(),ELAPTIME(),TIME()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      SECS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Return the number of seconds from the system date.
+   $SYNTAX$
+      SECS( <cTime> ) --> nSeconds
+   $ARGUMENTS$
+      <cTime> Character expression in a time string format
+   $RETURNS$
+      <nSeconds> Number of seconds
+   $DESCRIPTION$
+      This function returns a numeric value that is a number of elapsed
+      seconds from midnight based on a time string given as <cTime>.
+   $EXAMPLES$
+      ? Secs( Time() )
+      ? Secs( Time() - 10 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      SECONDS(),ELAPTIME(),TIME()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      TIME()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Returns the system time as a string
- *  $SYNTAX$
- *      TIME() --> cTime
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      <cTime> Character string representing time
- *  $DESCRIPTION$
- *      This function returns the system time represented as a character
- *      expression in the format of HH:MM:SS
- *  $EXAMPLES$
- *      ? Time()
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      DATE(),SECONDS()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      TIME()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Returns the system time as a string
+   $SYNTAX$
+      TIME() --> cTime
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <cTime> Character string representing time
+   $DESCRIPTION$
+      This function returns the system time represented as a character
+      expression in the format of HH:MM:SS
+   $EXAMPLES$
+      ? Time()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      DATE(),SECONDS()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      YEAR()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *      Date/Time
- *  $ONELINER$
- *      Converts the year portion of a date into a numeric value
- *  $SYNTAX$
- *      YEAR(<cDate>) --> nYear
- *  $ARGUMENTS$
- *      <dDate> Any valid date expression
- *  $RETURNS$
- *      <nYear> The year portion of the date.
- *  $DESCRIPTION$
- *      This function returns the numeric value for the year in <dDate>.
- *      This value will always be a four-digit number and is not affected
- *      by the setting of the SET CENTURY and SET DATE commands. Addition
- *      ally, an empty date expression passed to this function will yield
- *      a zero value.
- *  $EXAMPLES$
- *      ? Year( Date() )
- *      ? Year( SToD( "32510125" ) )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      DAY(),MONTH()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      YEAR()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Date/Time
+   $ONELINER$
+      Converts the year portion of a date into a numeric value
+   $SYNTAX$
+      YEAR(<cDate>) --> nYear
+   $ARGUMENTS$
+      <dDate> Any valid date expression
+   $RETURNS$
+      <nYear> The year portion of the date.
+   $DESCRIPTION$
+      This function returns the numeric value for the year in <dDate>.
+      This value will always be a four-digit number and is not affected
+      by the setting of the SET CENTURY and SET DATE commands. Addition
+      ally, an empty date expression passed to this function will yield
+      a zero value.
+   $EXAMPLES$
+      ? Year( Date() )
+      ? Year( SToD( "32510125" ) )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      DAY(),MONTH()
+   $END$
  */

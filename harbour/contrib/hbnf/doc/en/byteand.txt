@@ -2,38 +2,38 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_BYTEAND()
- *  $CATEGORY$
- *     String
- *  $ONELINER$
- *     Perform bit-wise AND on two ASCII characters (bytes)
- *  $SYNTAX$
- *     FT_BYTEAND( <cByte1>, <cByte2> ) -> cByte
- *  $ARGUMENTS$
- *     <cByte1> and <cByte2> are characters from Chr(0) TO Chr(255).
- *     May be passed in Chr() form, as character literals, or as expressions
- *     evaluating to Chr() values.
- *  $RETURNS$
- *     Returns resulting byte, in Chr() form.  If parameters are faulty,
- *     returns NIL.
- *  $DESCRIPTION$
- *     Can be used for any bit-wise masking operation.  In effect, this is a
- *     bit-by-bit AND operation.  Equivalent to AND assembler instruction.
- *
- *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .c or
- *     .asm versions and use the Clipper Extend system.
- *  $EXAMPLES$
- *     This code would mask out the high nibble (four most significant bits)
- *     of the byte represented by Chr(123) and leave the low nibble bits as in
- *     the parameter byte.
- *
- *          cNewbyte := FT_BYTEAND( Chr( 123 ), Chr( 15 ) )
- *          ? Asc( cNewByte )  // result: 11
- *          ? cNewByte         // result: non-printable character
- *  $SEEALSO$
- *     FT_BYTEOR() FT_BYTEXOR() FT_BYTENOT() FT_BYTENEG()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_BYTEAND()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Perform bit-wise AND on two ASCII characters (bytes)
+   $SYNTAX$
+      FT_BYTEAND( <cByte1>, <cByte2> ) -> cByte
+   $ARGUMENTS$
+      <cByte1> and <cByte2> are characters from Chr(0) TO Chr(255).
+      May be passed in Chr() form, as character literals, or as expressions
+      evaluating to Chr() values.
+   $RETURNS$
+      Returns resulting byte, in Chr() form.  If parameters are faulty,
+      returns NIL.
+   $DESCRIPTION$
+      Can be used for any bit-wise masking operation.  In effect, this is a
+      bit-by-bit AND operation.  Equivalent to AND assembler instruction.
+  
+      This function is presented to illustrate that bit-wise operations
+      are possible with Clipper code.  For greater speed, write .c or
+      .asm versions and use the Clipper Extend system.
+   $EXAMPLES$
+      This code would mask out the high nibble (four most significant bits)
+      of the byte represented by Chr(123) and leave the low nibble bits as in
+      the parameter byte.
+  
+           cNewbyte := FT_BYTEAND( Chr( 123 ), Chr( 15 ) )
+           ? Asc( cNewByte )  // result: 11
+           ? cNewByte         // result: non-printable character
+   $SEEALSO$
+      FT_BYTEOR() FT_BYTEXOR() FT_BYTENOT() FT_BYTENEG()
+   $END$
  */

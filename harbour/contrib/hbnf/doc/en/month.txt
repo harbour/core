@@ -2,60 +2,60 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_MONTH()
- *  $CATEGORY$
- *     Date/Time
- *  $ONELINER$
- *     Return Calendar or Fiscal Month Data
- *  $SYNTAX$
- *     FT_MONTH( [ <dGivenDate> ], [nMonthNum] ) -> aDateInfo
- *  $ARGUMENTS$
- *     <dGivenDate> is any valid date in any date format.  Defaults
- *     to current system date if not supplied.
- *
- *     <nMonthNum> is a number from 1 to 12 signifying a month.
- *     Defaults to current month if not supplied.
- *  $RETURNS$
- *     A three element array containing the following data:
- *
- *        aDateInfo[ 1 ] - The year and month as a character string "YYYYMM"
- *        aDateInfo[ 2 ] - The beginning date of the month
- *        aDateInfo[ 3 ] - The ending date of the month
- *  $DESCRIPTION$
- *     FT_MONTH() returns an array containing data about the month
- *     containing the given date.
- *
- *     Normally the return data will be based on a year beginning
- *     on January 1st with weeks beginning on Sunday.
- *
- *     The beginning of year date and/or beginning of week day can be
- *     changed by using FT_DATECNFG(), which will affect all subsequent
- *     calls to FT_MONTH() until another call to FT_DATECNFG().
- *
- *     The beginning of year date and beginning of week day may be reset
- *     to January 1 and Sunday by calling FT_DATECNFG() with no
- *     parameters.
- *  $EXAMPLES$
- *     // get info about month containing 9/15/90
- *     aDateInfo := FT_MONTH( SToD( "19900915" ) )
- *     ? aDateInfo[ 1 ]   //  199009       (9th month)
- *     ? aDateInfo[ 2 ]   //  09/01/90     beginning of month 9
- *     ? aDateInfo[ 3 ]   //  09/30/90     end of week month 9
- *
- *     // get info about month 5 in year containing 9/15/90
- *     aDateInfo := FT_MONTH( SToD( "19900915" ), 5 )
- *     ? aDateInfo[ 1 ]   //  199005
- *     ? aDateInfo[ 2 ]   //  05/01/90   beginning of month 5
- *     ? aDateInfo[ 3 ]   //  05/31/90   end of month 5
- *
- *     // get info about month 5 in current year (1991)
- *     aDateInfo := FT_MONTH( , 5 )
- *     ? aDateInfo[ 1 ]   //  199105
- *     ? aDateInfo[ 2 ]   //  05/01/91   beginning of month 5
- *     ? aDateInfo[ 3 ]   //  05/31/91   end of month 5
- *  $SEEALSO$
- *     FT_DATECNFG() FT_WEEK() FT_QTR() FT_YEAR()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_MONTH()
+   $CATEGORY$
+      Date/Time
+   $ONELINER$
+      Return Calendar or Fiscal Month Data
+   $SYNTAX$
+      FT_MONTH( [ <dGivenDate> ], [nMonthNum] ) -> aDateInfo
+   $ARGUMENTS$
+      <dGivenDate> is any valid date in any date format.  Defaults
+      to current system date if not supplied.
+  
+      <nMonthNum> is a number from 1 to 12 signifying a month.
+      Defaults to current month if not supplied.
+   $RETURNS$
+      A three element array containing the following data:
+  
+         aDateInfo[ 1 ] - The year and month as a character string "YYYYMM"
+         aDateInfo[ 2 ] - The beginning date of the month
+         aDateInfo[ 3 ] - The ending date of the month
+   $DESCRIPTION$
+      FT_MONTH() returns an array containing data about the month
+      containing the given date.
+  
+      Normally the return data will be based on a year beginning
+      on January 1st with weeks beginning on Sunday.
+  
+      The beginning of year date and/or beginning of week day can be
+      changed by using FT_DATECNFG(), which will affect all subsequent
+      calls to FT_MONTH() until another call to FT_DATECNFG().
+  
+      The beginning of year date and beginning of week day may be reset
+      to January 1 and Sunday by calling FT_DATECNFG() with no
+      parameters.
+   $EXAMPLES$
+      // get info about month containing 9/15/90
+      aDateInfo := FT_MONTH( SToD( "19900915" ) )
+      ? aDateInfo[ 1 ]   //  199009       (9th month)
+      ? aDateInfo[ 2 ]   //  09/01/90     beginning of month 9
+      ? aDateInfo[ 3 ]   //  09/30/90     end of week month 9
+  
+      // get info about month 5 in year containing 9/15/90
+      aDateInfo := FT_MONTH( SToD( "19900915" ), 5 )
+      ? aDateInfo[ 1 ]   //  199005
+      ? aDateInfo[ 2 ]   //  05/01/90   beginning of month 5
+      ? aDateInfo[ 3 ]   //  05/31/90   end of month 5
+  
+      // get info about month 5 in current year (1991)
+      aDateInfo := FT_MONTH( , 5 )
+      ? aDateInfo[ 1 ]   //  199105
+      ? aDateInfo[ 2 ]   //  05/01/91   beginning of month 5
+      ? aDateInfo[ 3 ]   //  05/31/91   end of month 5
+   $SEEALSO$
+      FT_DATECNFG() FT_WEEK() FT_QTR() FT_YEAR()
+   $END$
  */

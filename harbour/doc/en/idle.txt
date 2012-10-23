@@ -1,199 +1,199 @@
 /*
  * $Id$
-*/
-
-/*  $DOC$
- *  $TEMPLATE$
- *     Document
- *  $NAME$
- *      The idle states
- *  $CATEGORY$
- *      Document
- *  $ONELINER$
- *      Read me file for Idle States
- *  $DESCRIPTION$
- *      The idle state is the state of the harbour virtual machine when it
- *      waits for the user input from the keyboard or the mouse. The idle
- *      state is entered during INKEY() calls currently. All applications
- *      that don't use INKEY() function call can signal the idle states with
- *      the call of HB_IDLESTATE() function (or hb_idleState() on C level).
- *
- *      During idle states the virtual machine calls the garbage collector and
- *      it can call user defined actions (background tasks). It also releases
- *      the CPU time slices for some poor platforms that are not smart enough
- *      to detect it automatically.
- *
- *      For defining the background tasks see the HB_IDLEADD() and HB_IDLEDEL()
- *      functions.
- *
- *      For direct call for background actions see HB_IDLESTATE() function.
- *
- *      For signaling the idle state from C code see the hb_idleState()
- *      API function.
- *  $SEEALSO$
- *      HB_IDLEADD(),HB_IDLEDEL()
- *  $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *     Function
- *  $NAME$
- *      HB_IDLEADD()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Idle states
- *  $ONELINER$
- *      Adds the background task.
- *  $SYNTAX$
- *      HB_IDLEADD( <bAction> ) --> nHandle
- *  $ARGUMENTS$
- *      <bAction> is a codeblock that will be executed during idle states.
- *      There are no arguments passed to this codeblock during evaluation.
- *  $RETURNS$
- *      <nHandle> The handle (an integer value) that identifies the task. This
- *      handle can be used for deleting the task.
- *  $DESCRIPTION$
- *      HB_IDLEADD() adds a passed codeblock to the list of background
- *      tasks that will be evaluated during the idle states. There is no
- *      limit for the number of tasks.
- *  $EXAMPLES$
- *      nTask := hb_idleAdd( {|| SayTime() } )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension similar to FT_ONIDLE() function available
- *      in NanForum library.
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      HB_IDLEDEL(),HB_IDLESTATE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Document
+   $NAME$
+      The idle states
+   $CATEGORY$
+      Document
+   $ONELINER$
+      Read me file for Idle States
+   $DESCRIPTION$
+      The idle state is the state of the harbour virtual machine when it
+      waits for the user input from the keyboard or the mouse. The idle
+      state is entered during INKEY() calls currently. All applications
+      that don't use INKEY() function call can signal the idle states with
+      the call of HB_IDLESTATE() function (or hb_idleState() on C level).
+  
+      During idle states the virtual machine calls the garbage collector and
+      it can call user defined actions (background tasks). It also releases
+      the CPU time slices for some poor platforms that are not smart enough
+      to detect it automatically.
+  
+      For defining the background tasks see the HB_IDLEADD() and HB_IDLEDEL()
+      functions.
+  
+      For direct call for background actions see HB_IDLESTATE() function.
+  
+      For signaling the idle state from C code see the hb_idleState()
+      API function.
+   $SEEALSO$
+      HB_IDLEADD(),HB_IDLEDEL()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *     Function
- *  $NAME$
- *      HB_IDLEDEL()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Idle states
- *  $ONELINER$
- *      Removes the background task from the list of tasks.
- *  $SYNTAX$
- *      HB_IDLEDEL( <nHandle> ) --> <bAction>
- *  $ARGUMENTS$
- *      <nHandle> is the identifier of the task returned by the
- *      HB_IDLEADD() function.
- *  $RETURNS$
- *      <bAction> NIL if invalid handle is passed or a codeblock that was
- *      passed to HB_IDLEADD() function
- *  $DESCRIPTION$
- *      HB_IDLEDEL() removes the action associated with passed identifier
- *      from the list of background tasks. The identifer should be the
- *      value returned by the previous call of HB_IDLEADD() function.
- *
- *      If specified task is defined then the codeblock is returned
- *      otherwise the NIL value is returned.
- *  $EXAMPLES$
- *      nTask := hb_idleAdd( {|| SayTime() } )
- *      Inkey( 10 )
- *      bAction := hb_idleDel( nTask )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      HB_IDLEADD(),HB_IDLESTATE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_IDLEADD()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Idle states
+   $ONELINER$
+      Adds the background task.
+   $SYNTAX$
+      HB_IDLEADD( <bAction> ) --> nHandle
+   $ARGUMENTS$
+      <bAction> is a codeblock that will be executed during idle states.
+      There are no arguments passed to this codeblock during evaluation.
+   $RETURNS$
+      <nHandle> The handle (an integer value) that identifies the task. This
+      handle can be used for deleting the task.
+   $DESCRIPTION$
+      HB_IDLEADD() adds a passed codeblock to the list of background
+      tasks that will be evaluated during the idle states. There is no
+      limit for the number of tasks.
+   $EXAMPLES$
+      nTask := hb_idleAdd( {|| SayTime() } )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension similar to FT_ONIDLE() function available
+      in NanForum library.
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      HB_IDLEDEL(),HB_IDLESTATE()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *     Procedure
- *  $NAME$
- *      HB_IdleState()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Idle states
- *  $ONELINER$
- *      Evaluates a single background task and calls the garbage collector.
- *  $SYNTAX$
- *      HB_IDLESTATE()
- *  $ARGUMENTS$
- *      None
- *  $DESCRIPTION$
- *      HB_IDLESTATE() requests the garbage collection and executes a
- *      single background task defined by the codeblock passed with
- *      HB_IDLEADD() function. Every call to this function evaluates a
- *      different task in the order of task creation. There are no
- *      arguments passed during a codeblock evaluation.
- *
- *      This function can be safely called even if there are no background
- *      tasks defined.
- *  $EXAMPLES$
- *      nTask1 := hb_idleAdd( {|| SayTime() } )
- *      nTask2 := hb_idleAdd( {|| SaveScreen() } )
- *      DO WHILE ! bFinished
- *        bFinished := DoSomethingVeryImportant()
- *        hb_idleState()
- *      ENDDO
- *      cbAction := hb_idleDel( nTask1 )
- *      hb_idleDel( nTask2 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension similar to FT_IAMIDLE() function available
- *      in NanForum library.
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      HB_IDLEADD(),HB_IDLEDEL()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_IDLEDEL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Idle states
+   $ONELINER$
+      Removes the background task from the list of tasks.
+   $SYNTAX$
+      HB_IDLEDEL( <nHandle> ) --> <bAction>
+   $ARGUMENTS$
+      <nHandle> is the identifier of the task returned by the
+      HB_IDLEADD() function.
+   $RETURNS$
+      <bAction> NIL if invalid handle is passed or a codeblock that was
+      passed to HB_IDLEADD() function
+   $DESCRIPTION$
+      HB_IDLEDEL() removes the action associated with passed identifier
+      from the list of background tasks. The identifer should be the
+      value returned by the previous call of HB_IDLEADD() function.
+  
+      If specified task is defined then the codeblock is returned
+      otherwise the NIL value is returned.
+   $EXAMPLES$
+      nTask := hb_idleAdd( {|| SayTime() } )
+      Inkey( 10 )
+      bAction := hb_idleDel( nTask )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      HB_IDLEADD(),HB_IDLESTATE()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *     Procedure
- *  $NAME$
- *      hb_idleState()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Idle states
- *  $ONELINER$
- *      Evaluates a single background task and calls the garbage collector.
- *  $SYNTAX$
- *      void hb_idleState( void );
- *  $ARGUMENTS$
- *      None
- *  $DESCRIPTION$
- *      hb_idleState() is a C function that requests garbage collection and
- *      executes a single background task defined by the codeblock passed
- *      with HB_IDLEADD() function. It also releases the CPU time slices for
- *      platforms that require it.
- *
- *      Every call for this function evaluates different task in the
- *      order of task creation. There are no arguments passed during
- *      codeblock evaluation.
- *
- *      This function can be safely called even if there are no background
- *      tasks defined.
- *
- *      This function is automatically called from the INKEY() function.
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      HB_IDLEADD(),HB_IDLEDEL(),HB_IDLESTATE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      HB_IdleState()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Idle states
+   $ONELINER$
+      Evaluates a single background task and calls the garbage collector.
+   $SYNTAX$
+      HB_IDLESTATE()
+   $ARGUMENTS$
+      None
+   $DESCRIPTION$
+      HB_IDLESTATE() requests the garbage collection and executes a
+      single background task defined by the codeblock passed with
+      HB_IDLEADD() function. Every call to this function evaluates a
+      different task in the order of task creation. There are no
+      arguments passed during a codeblock evaluation.
+  
+      This function can be safely called even if there are no background
+      tasks defined.
+   $EXAMPLES$
+      nTask1 := hb_idleAdd( {|| SayTime() } )
+      nTask2 := hb_idleAdd( {|| SaveScreen() } )
+      DO WHILE ! bFinished
+        bFinished := DoSomethingVeryImportant()
+        hb_idleState()
+      ENDDO
+      cbAction := hb_idleDel( nTask1 )
+      hb_idleDel( nTask2 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension similar to FT_IAMIDLE() function available
+      in NanForum library.
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      HB_IDLEADD(),HB_IDLEDEL()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_idleState()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Idle states
+   $ONELINER$
+      Evaluates a single background task and calls the garbage collector.
+   $SYNTAX$
+      void hb_idleState( void );
+   $ARGUMENTS$
+      None
+   $DESCRIPTION$
+      hb_idleState() is a C function that requests garbage collection and
+      executes a single background task defined by the codeblock passed
+      with HB_IDLEADD() function. It also releases the CPU time slices for
+      platforms that require it.
+  
+      Every call for this function evaluates different task in the
+      order of task creation. There are no arguments passed during
+      codeblock evaluation.
+  
+      This function can be safely called even if there are no background
+      tasks defined.
+  
+      This function is automatically called from the INKEY() function.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      HB_IDLEADD(),HB_IDLEDEL(),HB_IDLESTATE()
+   $END$
  */

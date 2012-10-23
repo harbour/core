@@ -2,86 +2,86 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CD()
- *  $CATEGORY$
- *      Dos Tools
- *  $ONELINER$
- *      Change the Current Directory
- *  $SYNTAX$
- *      CD(<cDir>) --> lSuccess
- *  $ARGUMENTS$
- *      <cDir> DIR TO BE CHANGED
- *  $RETURNS$
- *      <lSucess> .T. IF SUCESSFUL; otherwise .F.
- *  $DESCRIPTION$
- *      CHANGE THE CURRENT DIRECTORY
- *  $EXAMPLES$
- *      IF CD( "OLA" )
- *         RETURN .T.
- *      ELSE
- *         RETURN .F.
- *      ENDIF
- *  $FILES$
- *      Header is Fileio.ch
- *  $SEEALSO$
- *      MD(),RD()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CD()
+   $CATEGORY$
+      Dos Tools
+   $ONELINER$
+      Change the Current Directory
+   $SYNTAX$
+      CD(<cDir>) --> lSuccess
+   $ARGUMENTS$
+      <cDir> DIR TO BE CHANGED
+   $RETURNS$
+      <lSucess> .T. IF SUCESSFUL; otherwise .F.
+   $DESCRIPTION$
+      CHANGE THE CURRENT DIRECTORY
+   $EXAMPLES$
+      IF CD( "OLA" )
+         RETURN .T.
+      ELSE
+         RETURN .F.
+      ENDIF
+   $FILES$
+      Header is Fileio.ch
+   $SEEALSO$
+      MD(),RD()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      MD()
- *  $CATEGORY$
- *      Dos Tools
- *  $ONELINER$
- *      Creates a Directory
- *  $SYNTAX$
- *      MD(<cDir>) -> <lSucess>
- *  $ARGUMENTS$
- *      <cDir> DIRECTORY TO BE CREATED
- *  $RETURNS$
- *      <lSucess> .T. IF SUCESSFUL; otherwise .F.
- *  $DESCRIPTION$
- *      CREATE A  DIRECTORY
- *  $EXAMPLES$
- *      IF MD( "OLA" )
- *         RETURN .T.
- *      ELSE
- *         RETURN .F.
- *      ENDIF
- *  $FILES$
- *      Header is Fileio.ch
- *  $SEEALSO$
- *      CD(),MD()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      MD()
+   $CATEGORY$
+      Dos Tools
+   $ONELINER$
+      Creates a Directory
+   $SYNTAX$
+      MD(<cDir>) -> <lSucess>
+   $ARGUMENTS$
+      <cDir> DIRECTORY TO BE CREATED
+   $RETURNS$
+      <lSucess> .T. IF SUCESSFUL; otherwise .F.
+   $DESCRIPTION$
+      CREATE A  DIRECTORY
+   $EXAMPLES$
+      IF MD( "OLA" )
+         RETURN .T.
+      ELSE
+         RETURN .F.
+      ENDIF
+   $FILES$
+      Header is Fileio.ch
+   $SEEALSO$
+      CD(),MD()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      RD()
- *  $CATEGORY$
- *      Dos Tools
- *  $ONELINER$
- *      Remove a Directory
- *  $SYNTAX$
- *      RD(<cDir>) --> <lSucess>
- *  $ARGUMENTS$
- *     <cDir> DIR TO BE DELETED
- *  $RETURNS$
- *     <lSucess> .T. IF SUCESSFUL; otherwise .F.
- *  $DESCRIPTION$
- *     REMOVE A  DIRECTORY
- *  $EXAMPLES$
- *     IF RD( "OLA" )
- *        RETURN .T.
- *     ELSE
- *        RETURN .F.
- *     ENDIF
- *  $FILES$
- *      Header is Fileio.ch
- *  $SEEALSO$
- *     CD(),MD()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      RD()
+   $CATEGORY$
+      Dos Tools
+   $ONELINER$
+      Remove a Directory
+   $SYNTAX$
+      RD(<cDir>) --> <lSucess>
+   $ARGUMENTS$
+      <cDir> DIR TO BE DELETED
+   $RETURNS$
+      <lSucess> .T. IF SUCESSFUL; otherwise .F.
+   $DESCRIPTION$
+      REMOVE A  DIRECTORY
+   $EXAMPLES$
+      IF RD( "OLA" )
+         RETURN .T.
+      ELSE
+         RETURN .F.
+      ENDIF
+   $FILES$
+      Header is Fileio.ch
+   $SEEALSO$
+      CD(),MD()
+   $END$
  */

@@ -2,175 +2,174 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      FIELD
- *  $CATEGORY$
- *      Command
- *  $SUBCATEGORY$
- *      RDD
- *  $ONELINER$
- *      Declares a list of database field names.
- *  $SYNTAX$
- *      FIELD <xField> [,<xFieldn...>  [in <cDatabase>]
- *  $ARGUMENTS$
- *      <xField>    A valid field name
- *
- *      <xFieldn>   Additional field name
- *
- *      <cDatabase> An valid alias name
- *  $DESCRIPTION$
- *      This command declares the names of fields <xField> (and <xFieldn> and
- *      following) with an optional alias identifier as <cDatabase> for each.
- *      This command allow  Harbour to resolve any reference to a field
- *      specified in the field list by viewing it as a field when it is not
- *      referenced by an alias. If a field is not listed in this list and it
- *      is not  explicity tagged with an alias indentifier, it may be viewed
- *      as a memory variable, which may cause run-time errors. This command
- *      has no effect on memory variables or on field reference buried within
- *      a macro expression.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         FIELD Id
- *         FIELD Name
- *         USE tests NEW
- *         Name := "Sales"
- *         Id := 5
- *         USE
- *         RETURN
- *  $TESTS$
- *      See tests/testwarn.prg
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      None.
- *  $SEEALSO$
- *      MEMVAR,PRIVATE,PUBLIC,STATIC
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      FIELD
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      RDD
+   $ONELINER$
+      Declares a list of database field names.
+   $SYNTAX$
+      FIELD <xField> [,<xFieldn...>  [in <cDatabase>]
+   $ARGUMENTS$
+      <xField>    A valid field name
+  
+      <xFieldn>   Additional field name
+  
+      <cDatabase> An valid alias name
+   $DESCRIPTION$
+      This command declares the names of fields <xField> (and <xFieldn> and
+      following) with an optional alias identifier as <cDatabase> for each.
+      This command allow  Harbour to resolve any reference to a field
+      specified in the field list by viewing it as a field when it is not
+      referenced by an alias. If a field is not listed in this list and it
+      is not  explicity tagged with an alias indentifier, it may be viewed
+      as a memory variable, which may cause run-time errors. This command
+      has no effect on memory variables or on field reference buried within
+      a macro expression.
+   $EXAMPLES$
+      PROCEDURE Main()
+         FIELD Id
+         FIELD Name
+         USE tests NEW
+         Name := "Sales"
+         Id := 5
+         USE
+         RETURN
+   $TESTS$
+      See tests/testwarn.prg
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      None.
+   $SEEALSO$
+      MEMVAR,PRIVATE,PUBLIC,STATIC
+   $END$
  */
 
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      LOCAL
- *  $CATEGORY$
- *      Command
- *  $SUBCATEGORY$
- *      Variable management
- *  $ONELINER$
- *      Initializes a local memory variable or array
- *  $SYNTAX$
- *      LOCAL <xVar> [:= <xInit> ]
- *  $ARGUMENTS$
- *      <xVar>    Name of a memory variable or array.
- *
- *      <xInit>   Value to be assinged to a variable or array
- *  $DESCRIPTION$
- *      This command created a LOCAL memory variable or array. The name
- *      of either is specified in <xVar>. If more then one variable is being
- *      initialized with the LOCAL command,separate each entry with a comma.
- *      If a variable or an array is to be assingned a start-up value,that
- *      expression may be specified in <xInit> and folling. Is Strong type
- *      compile mode is used, the Compiler will check if the value recived
- *      matchs the type specified in <xType>.
- *
- *      LOCAL varibles are symbols generated at run time and are resolved
- *      at compile time. The visibility and life span of a LOCAL variable or
- *      array is limited to the function or procedure in which it is defined.
- *
- *      No macro expansions are allowed in the LOCAL declaration statement.
- *
- *      No Harbour command other then FUNCTION, PROCEDURE, PUBLIC, PRIVATE,
- *      PARAMETERS, MEMVAR, STATIC and FIELD, may precede the LOCAL command.
- *
- *      LOCAL array reference may not be initialized (i.e., assigned values)
- *      on the same command line as the LOCAL command statement. This can be
- *      done later in the program.
- *
- *      LOCAL variables and arrays are not affected by the RELEASE command.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL n, lVar
- *
- *         n := iif( lVar, "A", 3 )
- *         n := 2
- *         n := "a"
- *         n := seconds() + 2
- *         n := int( seconds() + 2 )
- *         RETURN
- *  $TESTS$
- *      See tests/testwarn.prg for more examples
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      None
- *  $SEEALSO$
- *      FIELD,PRIVATE,PUBLIC,STATIC,MEMVAR
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      LOCAL
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Variable management
+   $ONELINER$
+      Initializes a local memory variable or array
+   $SYNTAX$
+      LOCAL <xVar> [:= <xInit> ]
+   $ARGUMENTS$
+      <xVar>    Name of a memory variable or array.
+  
+      <xInit>   Value to be assinged to a variable or array
+   $DESCRIPTION$
+      This command created a LOCAL memory variable or array. The name
+      of either is specified in <xVar>. If more then one variable is being
+      initialized with the LOCAL command,separate each entry with a comma.
+      If a variable or an array is to be assingned a start-up value,that
+      expression may be specified in <xInit> and folling. Is Strong type
+      compile mode is used, the Compiler will check if the value recived
+      matchs the type specified in <xType>.
+  
+      LOCAL varibles are symbols generated at run time and are resolved
+      at compile time. The visibility and life span of a LOCAL variable or
+      array is limited to the function or procedure in which it is defined.
+  
+      No macro expansions are allowed in the LOCAL declaration statement.
+  
+      No Harbour command other then FUNCTION, PROCEDURE, PUBLIC, PRIVATE,
+      PARAMETERS, MEMVAR, STATIC and FIELD, may precede the LOCAL command.
+  
+      LOCAL array reference may not be initialized (i.e., assigned values)
+      on the same command line as the LOCAL command statement. This can be
+      done later in the program.
+  
+      LOCAL variables and arrays are not affected by the RELEASE command.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL n, lVar
+  
+         n := iif( lVar, "A", 3 )
+         n := 2
+         n := "a"
+         n := seconds() + 2
+         n := int( seconds() + 2 )
+         RETURN
+   $TESTS$
+      See tests/testwarn.prg for more examples
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      None
+   $SEEALSO$
+      FIELD,PRIVATE,PUBLIC,STATIC,MEMVAR
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      MEMVAR
- *  $CATEGORY$
- *      Command
- *  $SUBCATEGORY$
- *      Variable management
- *  $ONELINER$
- *      Declares private and public variables and arrays.
- *  $SYNTAX$
- *      MEMVAR <xVar>
- *  $ARGUMENTS$
- *      <xVar> Memory variable Name
- *  $DESCRIPTION$
- *      This command tells the compiler to resolve any reference to a memory
- *      variable designated within this list s if it possessed an explicit
- *      memory variable alias with either the M-> or MEMVAR-> prefix.Only
- *      those memory variables that do not contain any such explicit are
- *      affected by this command. Those memory variabls within macro
- *      expansions are not affected by this command.
- *
- *      The MEMVAR declaration must apear before any executable commands;it
- *      is similat to the LOCAL,STATIC,FIELD,PARAMETERS,FUNCTION, and
- *      PROCEDURE commands statements.
- *  $EXAMPLES$
- *      MEMVAR y AS NUMERIC
- *      PROCEDURE Main()
- *         LOCAL n, lVar
- *
- *         n := iif( lVar, "A", 3 )
- *         n := 2
- *         n := "a"
- *         n := seconds() + 2
- *         n := int( seconds() + 2 )
- *         y := n
- *         ? y
- *         RETURN
- *  $TESTS$
- *      See tests/testwarn.prg for more examples
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      None.
- *  $SEEALSO$
- *      LOCAL,STATIC,FIELD,PRIVATE,PUBLIC
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      MEMVAR
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Variable management
+   $ONELINER$
+      Declares private and public variables and arrays.
+   $SYNTAX$
+      MEMVAR <xVar>
+   $ARGUMENTS$
+      <xVar> Memory variable Name
+   $DESCRIPTION$
+      This command tells the compiler to resolve any reference to a memory
+      variable designated within this list s if it possessed an explicit
+      memory variable alias with either the M-> or MEMVAR-> prefix.Only
+      those memory variables that do not contain any such explicit are
+      affected by this command. Those memory variabls within macro
+      expansions are not affected by this command.
+  
+      The MEMVAR declaration must apear before any executable commands;it
+      is similat to the LOCAL,STATIC,FIELD,PARAMETERS,FUNCTION, and
+      PROCEDURE commands statements.
+   $EXAMPLES$
+      MEMVAR y AS NUMERIC
+      PROCEDURE Main()
+         LOCAL n, lVar
+  
+         n := iif( lVar, "A", 3 )
+         n := 2
+         n := "a"
+         n := seconds() + 2
+         n := int( seconds() + 2 )
+         y := n
+         ? y
+         RETURN
+   $TESTS$
+      See tests/testwarn.prg for more examples
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      None.
+   $SEEALSO$
+      LOCAL,STATIC,FIELD,PRIVATE,PUBLIC
+   $END$
  */

@@ -13,387 +13,387 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      ACHOICE()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      User interface
- *  $ONELINER$
- *      Allows selection of an element from an array
- *  $SYNTAX$
- *      ACHOICE(<nTop>, <nLeft>, <nBottom>, <nRight>, <acMenuItems>, [<alSelableItems> | <lSelableItems>], [<cUserFunction> | <bUserBlock>], [<nInitialItem>], [<nWindowRow>]) --> nPosition
- *  $ARGUMENTS$
- *      <nTop>           - topmost row used to display array (default 0)
- *
- *      <nLeft>          - leftmost row used to display array (default 0)
- *
- *      <nBottom>        - bottommost row used to display array (default MaxRow())
- *
- *      <nRight>         - rightmost row used to display array (default MaxCol())
- *
- *      <acMenuItems>    - the character array of items from which to select
- *
- *      <alSelableItems> - an array of items, either logical or character,
- *                         which is used to determine if a particular item
- *                         may be selected.  If the type of a given item is
- *                         character, it is macro evaluated, and the result
- *                         is expected to be a logical.  A value of .T. means
- *                         that the item may be selected, .F. that it may not.
- *                         (See next argument: lSelectableItems)
- *
- *      <lSelableItems>  - a logical value which is used to apply to all
- *                         items in acMenuItems.  If .T., all items may be
- *                         selected; if .F., none may be selected.
- *                         (See previous argument: alSelectableItems)
- *                         Default .T.
- *
- *      <cUserFunction>  - the name of a function to be called which may
- *                         affect special processing of keystrokes.  It is
- *                         specified without parentheses or parameters.
- *                         When it is called, it will be supplied with the
- *                         parameters: nMode, nCurElement, and nRowPos.
- *                         Default NIL.
- *
- *      <bUserBlock>     - a codeblock to be called which may
- *                         affect special processing of keystrokes. It
- *                         should be specified in the form
- *                         {| nMode, nCurElemenet, nRowPos | ;
- *                           MyFunc( nMode, nCurElemenet, nRowPos ) }.
- *                         Default NIL.
- *
- *      <nInitialItem>   - the number of the element to be highlighted as
- *                         the current item when the array is initially
- *                         displayed.  1 origin.  Default 1.
- *
- *      <nWindowRow>     - the number of the window row on which the initial
- *                         item is to be displayed. 0 origin.  Default 0.
- *  $RETURNS$
- *      <nPosition>  - the number of the item to be selected, or 0 if the
- *      selection was aborted.
- *  $DESCRIPTION$
- *      Allows selection of an element from an array.
- *      Please see standard CA-Cl*pper documentation for ACHOICE for
- *      additional detail.
- *  $EXAMPLES$
- *      aItems := { "One", "Two", "Three" }
- *      nChoice := AChoice( 10, 10, 20, 20, aItems )
- *      IF nChoice == 0
- *         ? "You did not choose an item"
- *      ELSE
- *         ? "You chose element " + hb_ntos( nChoice )
- *         ?? " which has a value of " + aItems[ nChoice ]
- *      ENDIF
- *  $FILES$
- *      Library is rtl
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *      MENU TO
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      ACHOICE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Allows selection of an element from an array
+   $SYNTAX$
+      ACHOICE(<nTop>, <nLeft>, <nBottom>, <nRight>, <acMenuItems>, [<alSelableItems> | <lSelableItems>], [<cUserFunction> | <bUserBlock>], [<nInitialItem>], [<nWindowRow>]) --> nPosition
+   $ARGUMENTS$
+      <nTop>           - topmost row used to display array (default 0)
+
+      <nLeft>          - leftmost row used to display array (default 0)
+
+      <nBottom>        - bottommost row used to display array (default MaxRow())
+
+      <nRight>         - rightmost row used to display array (default MaxCol())
+
+      <acMenuItems>    - the character array of items from which to select
+
+      <alSelableItems> - an array of items, either logical or character,
+                         which is used to determine if a particular item
+                         may be selected.  If the type of a given item is
+                         character, it is macro evaluated, and the result
+                         is expected to be a logical.  A value of .T. means
+                         that the item may be selected, .F. that it may not.
+                         (See next argument: lSelectableItems)
+
+      <lSelableItems>  - a logical value which is used to apply to all
+                         items in acMenuItems.  If .T., all items may be
+                         selected; if .F., none may be selected.
+                         (See previous argument: alSelectableItems)
+                         Default .T.
+
+      <cUserFunction>  - the name of a function to be called which may
+                         affect special processing of keystrokes.  It is
+                         specified without parentheses or parameters.
+                         When it is called, it will be supplied with the
+                         parameters: nMode, nCurElement, and nRowPos.
+                         Default NIL.
+
+      <bUserBlock>     - a codeblock to be called which may
+                         affect special processing of keystrokes. It
+                         should be specified in the form
+                         {| nMode, nCurElemenet, nRowPos | ;
+                           MyFunc( nMode, nCurElemenet, nRowPos ) }.
+                         Default NIL.
+
+      <nInitialItem>   - the number of the element to be highlighted as
+                         the current item when the array is initially
+                         displayed.  1 origin.  Default 1.
+
+      <nWindowRow>     - the number of the window row on which the initial
+                         item is to be displayed. 0 origin.  Default 0.
+   $RETURNS$
+      <nPosition>  - the number of the item to be selected, or 0 if the
+      selection was aborted.
+   $DESCRIPTION$
+      Allows selection of an element from an array.
+      Please see standard CA-Cl*pper documentation for ACHOICE for
+      additional detail.
+   $EXAMPLES$
+      aItems := { "One", "Two", "Three" }
+      nChoice := AChoice( 10, 10, 20, 20, aItems )
+      IF nChoice == 0
+         ? "You did not choose an item"
+      ELSE
+         ? "You chose element " + hb_ntos( nChoice )
+         ?? " which has a value of " + aItems[ nChoice ]
+      ENDIF
+   $FILES$
+      Library is rtl
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      MENU TO
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      __AtPrompt()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      User interface
- *  $ONELINER$
- *      Display a menu item on screen and define a message
- *  $SYNTAX$
- *      __AtPrompt( <nRow>, <nCol>, <cPrompt>, [<xMsg>] ) --> .F.
- *  $ARGUMENTS$
- *      <nRow> is the row number to display the menu <cPrompt>. Value could
- *      range from zero to MaxRow().
- *
- *      <nCol> is the column number to display the menu <cPrompt>. Value
- *      could range from zero to MaxCol().
- *
- *      <cPrompt> is the menu item character string to display.
- *
- *      <xMsg> define a message to display each time this menu item is
- *      highlighted. <xMsg> could be a character string or code block that
- *      is evaluated to a character string. If <xMsg> is not specified or
- *      of the wrong type, an empty string ("") would be used.
- *  $RETURNS$
- *      __AtPrompt() always return .F.
- *  $DESCRIPTION$
- *      With __AtPrompt() you define and display a menu item, each call to
- *      __AtPrompt() add another item to the menu, to start the menu itself
- *      you should call the __MenuTo() function (MENU TO command). You can
- *      define any row and column combination and they will be displayed at
- *      the order of definition. After each call to __AtPrompt(), the cursor
- *      is placed one column to the right of the last text displayed, and
- *      ROW() and COL() are updated.
- *
- *      @...PROMPT command is preprocessed into __AtPrompt() function during
- *      compile time.
- *  $EXAMPLES$
- *      // display a two line menu with status line at the bottom
- *      // let the user select favorite day
- *      SET MESSAGE TO 24 CENTER
- *      @ 10, 2 PROMPT "Sunday" MESSAGE "This is the 1st item"
- *      @ 11, 2 PROMPT "Monday" MESSAGE "Now we're on the 2nd item"
- *      MENU TO nChoice
- *      DO CASE
- *      CASE nChoice == 0           // user press Esc key
- *         QUIT
- *      CASE nChoice == 1           // user select 1st menu item
- *         ? "Guess you don't like Mondays"
- *      CASE nChoice == 2           // user select 2nd menu item
- *         ? "Just another day for some"
- *      ENDCASE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C(menu)
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __AtPrompt()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Display a menu item on screen and define a message
+   $SYNTAX$
+      __AtPrompt( <nRow>, <nCol>, <cPrompt>, [<xMsg>] ) --> .F.
+   $ARGUMENTS$
+      <nRow> is the row number to display the menu <cPrompt>. Value could
+      range from zero to MaxRow().
+
+      <nCol> is the column number to display the menu <cPrompt>. Value
+      could range from zero to MaxCol().
+
+      <cPrompt> is the menu item character string to display.
+
+      <xMsg> define a message to display each time this menu item is
+      highlighted. <xMsg> could be a character string or code block that
+      is evaluated to a character string. If <xMsg> is not specified or
+      of the wrong type, an empty string ("") would be used.
+   $RETURNS$
+      __AtPrompt() always return .F.
+   $DESCRIPTION$
+      With __AtPrompt() you define and display a menu item, each call to
+      __AtPrompt() add another item to the menu, to start the menu itself
+      you should call the __MenuTo() function (MENU TO command). You can
+      define any row and column combination and they will be displayed at
+      the order of definition. After each call to __AtPrompt(), the cursor
+      is placed one column to the right of the last text displayed, and
+      ROW() and COL() are updated.
+
+      @...PROMPT command is preprocessed into __AtPrompt() function during
+      compile time.
+   $EXAMPLES$
+      // display a two line menu with status line at the bottom
+      // let the user select favorite day
+      SET MESSAGE TO 24 CENTER
+      @ 10, 2 PROMPT "Sunday" MESSAGE "This is the 1st item"
+      @ 11, 2 PROMPT "Monday" MESSAGE "Now we're on the 2nd item"
+      MENU TO nChoice
+      DO CASE
+      CASE nChoice == 0           // user press Esc key
+         QUIT
+      CASE nChoice == 1           // user select 1st menu item
+         ? "Guess you don't like Mondays"
+      CASE nChoice == 2           // user select 2nd menu item
+         ? "Just another day for some"
+      ENDCASE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C(menu)
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      @...PROMPT
- *  $CATEGORY$
- *      Command
- *  $SUBCATEGORY$
- *      User interface
- *  $ONELINER$
- *      Display a menu item on screen and define a message
- *  $SYNTAX$
- *      @ <nRow>, <nCol> PROMPT <cPrompt> [MESSAGE <xMsg>]
- *  $ARGUMENTS$
- *      <nRow> is the row number to display the menu <cPrompt>. Value could
- *      range from zero to MaxRow().
- *
- *      <nCol> is the column number to display the menu <cPrompt>. Value
- *      could range from zero to MaxCol().
- *
- *      <cPrompt> is the menu item character string to display.
- *
- *      <xMsg> define a message to display each time this menu item is
- *      highlighted. <xMsg> could be a character string or code block that
- *      is evaluated to a character string. If <xMsg> is not specified or
- *      of the wrong type, an empty string ("") would be used.
- *  $DESCRIPTION$
- *      With @...Prompt you define and display a menu item, each call to
- *      @...Prompt add another item to the menu, to start the menu itself
- *      you should call the __MenuTo() function (MENU TO command). You can
- *      define any row and column combination and they will be displayed at
- *      the order of definition. After each call to @...Prompt, the cursor
- *      is placed one column to the right of the last text displayed, and
- *      ROW() and COL() are updated.
- *
- *      @...PROMPT command is preprocessed into __AtPrompt() function during
- *      compile time.
- *  $EXAMPLES$
- *      // display a two line menu with status line at the bottom
- *      // let the user select favorite day
- *      SET MESSAGE TO 24 CENTER
- *      @ 10, 2 PROMPT "Sunday" MESSAGE "This is the 1st item"
- *      @ 11, 2 PROMPT "Monday" MESSAGE "Now we're on the 2nd item"
- *      MENU TO nChoice
- *      DO CASE
- *      CASE nChoice == 0           // user press Esc key
- *         QUIT
- *      CASE nChoice == 1           // user select 1st menu item
- *         ? "Guess you don't like Mondays"
- *      CASE nChoice == 2           // user select 2nd menu item
- *         ? "Just another day for some"
- *      ENDCASE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C(menu)
- *  $SEEALSO$
- *      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      @...PROMPT
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Display a menu item on screen and define a message
+   $SYNTAX$
+      @ <nRow>, <nCol> PROMPT <cPrompt> [MESSAGE <xMsg>]
+   $ARGUMENTS$
+      <nRow> is the row number to display the menu <cPrompt>. Value could
+      range from zero to MaxRow().
+
+      <nCol> is the column number to display the menu <cPrompt>. Value
+      could range from zero to MaxCol().
+
+      <cPrompt> is the menu item character string to display.
+
+      <xMsg> define a message to display each time this menu item is
+      highlighted. <xMsg> could be a character string or code block that
+      is evaluated to a character string. If <xMsg> is not specified or
+      of the wrong type, an empty string ("") would be used.
+   $DESCRIPTION$
+      With @...Prompt you define and display a menu item, each call to
+      @...Prompt add another item to the menu, to start the menu itself
+      you should call the __MenuTo() function (MENU TO command). You can
+      define any row and column combination and they will be displayed at
+      the order of definition. After each call to @...Prompt, the cursor
+      is placed one column to the right of the last text displayed, and
+      ROW() and COL() are updated.
+
+      @...PROMPT command is preprocessed into __AtPrompt() function during
+      compile time.
+   $EXAMPLES$
+      // display a two line menu with status line at the bottom
+      // let the user select favorite day
+      SET MESSAGE TO 24 CENTER
+      @ 10, 2 PROMPT "Sunday" MESSAGE "This is the 1st item"
+      @ 11, 2 PROMPT "Monday" MESSAGE "Now we're on the 2nd item"
+      MENU TO nChoice
+      DO CASE
+      CASE nChoice == 0           // user press Esc key
+         QUIT
+      CASE nChoice == 1           // user select 1st menu item
+         ? "Guess you don't like Mondays"
+      CASE nChoice == 2           // user select 2nd menu item
+         ? "Just another day for some"
+      ENDCASE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C(menu)
+   $SEEALSO$
+      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      __MenuTo()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      User interface
- *  $ONELINER$
- *      Invoked a menu defined by set of @...PROMPT
- *  $SYNTAX$
- *      __MenuTo( <bBlock>, <cVariable> ) --> nChoice
- *  $ARGUMENTS$
- *      <bBlock> is a set/get code block for variable named <cVariable>.
- *
- *      <cVariable> is a character string that contain the name of the
- *      variable to hold the menu choices, if this variable does not exist
- *      a PRIVATE variable with the name <cVariable> would be created to
- *      hold the result.
- *  $RETURNS$
- *      __MenuTo() return the number of select menu item, or 0 if there was
- *      no item to select from or if the user pressed the Esc key.
- *  $DESCRIPTION$
- *      __MenuTo() invoked the menu define by previous __AtPrompt() call
- *      and display a highlight bar that the user can move to select an
- *      option from the menu. If <cVariable> does not exist or not visible,
- *      a PRIVATE variable named <cVariable> is created and hold the current
- *      menu selection. If there is a variable named <cVariable>, its value
- *      is used to select the first highlighted item.
- *
- *      Menu prompts and messages are displayed in current Standard color,
- *      highlighted bar is displayed using current Enhanced color.
- *
- *      Pressing the arrow keys move the highlighted bar. When a menu item
- *      is highlighted the message associated with it is displayed on the
- *      line specified with SET MESSAGE. If SET WRAP is ON and the user
- *      press UP arrow while on the first selection the last menu item is
- *      highlighted, if the user press Down arrow while on the last item,
- *      the first item is highlighted.
- *
- *      Following are active keys that handled by __MenuTo():
- *
- *
- *      <table>
- *       key            Meaning
- *
- *       Up             Move to previous item
- *       Down           Move to next item
- *       Left           Move to previous item
- *       Right          Move to next item
- *       Home           Move to the first item
- *       End            Move to the last item
- *       Page-Up        Select menu item, return position
- *       Page-Down      Select menu item, return position
- *       Enter          Select menu item, return position
- *       Esc            Abort selection, return 0
- *       First letter   Select next menu with the same first letter,
- *       |              return this item position.
- *      </table>
- *      upon exit the cursor is placed at MaxRow()-1, 0
- *      __MenuTo() can be nested without loosing the previous prompts.
- *
- *      MENU TO command is preprocessed into __MenuTo() function during
- *      compile time.
- *  $EXAMPLES$
- *      // display menu item on each screen corner and let user select one
- *      CLS
- *      SET MESSAGE TO MaxRow() / 2 CENTER
- *      SET WRAP ON
- *      @ 0           , 0           PROMPT "1. Upper left"   MESSAGE " One "
- *      @ 0           , MaxCol()-16 PROMPT "2. Upper right"  MESSAGE " Two "
- *      @ MaxRow() - 1, MaxCol()-16 PROMPT "3. Bottom right" MESSAGE "Three"
- *      @ MaxRow() - 1, 0           PROMPT "4. Bottom left"  MESSAGE "Four "
- *      MENU TO nChoice
- *      SetPos( MaxRow() / 2, MaxCol() / 2 - 10 )
- *      IF nChoice == 0
- *         ?? "Esc was pressed"
- *      ELSE
- *         ?? "Selected option is", nChoice
- *      ENDIF
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      __MenuTo()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Invoked a menu defined by set of @...PROMPT
+   $SYNTAX$
+      __MenuTo( <bBlock>, <cVariable> ) --> nChoice
+   $ARGUMENTS$
+      <bBlock> is a set/get code block for variable named <cVariable>.
+
+      <cVariable> is a character string that contain the name of the
+      variable to hold the menu choices, if this variable does not exist
+      a PRIVATE variable with the name <cVariable> would be created to
+      hold the result.
+   $RETURNS$
+      __MenuTo() return the number of select menu item, or 0 if there was
+      no item to select from or if the user pressed the Esc key.
+   $DESCRIPTION$
+      __MenuTo() invoked the menu define by previous __AtPrompt() call
+      and display a highlight bar that the user can move to select an
+      option from the menu. If <cVariable> does not exist or not visible,
+      a PRIVATE variable named <cVariable> is created and hold the current
+      menu selection. If there is a variable named <cVariable>, its value
+      is used to select the first highlighted item.
+
+      Menu prompts and messages are displayed in current Standard color,
+      highlighted bar is displayed using current Enhanced color.
+
+      Pressing the arrow keys move the highlighted bar. When a menu item
+      is highlighted the message associated with it is displayed on the
+      line specified with SET MESSAGE. If SET WRAP is ON and the user
+      press UP arrow while on the first selection the last menu item is
+      highlighted, if the user press Down arrow while on the last item,
+      the first item is highlighted.
+
+      Following are active keys that handled by __MenuTo():
+
+
+      <table>
+       key            Meaning
+
+       Up             Move to previous item
+       Down           Move to next item
+       Left           Move to previous item
+       Right          Move to next item
+       Home           Move to the first item
+       End            Move to the last item
+       Page-Up        Select menu item, return position
+       Page-Down      Select menu item, return position
+       Enter          Select menu item, return position
+       Esc            Abort selection, return 0
+       First letter   Select next menu with the same first letter,
+       |              return this item position.
+      </table>
+      upon exit the cursor is placed at MaxRow()-1, 0
+      __MenuTo() can be nested without loosing the previous prompts.
+
+      MENU TO command is preprocessed into __MenuTo() function during
+      compile time.
+   $EXAMPLES$
+      // display menu item on each screen corner and let user select one
+      CLS
+      SET MESSAGE TO MaxRow() / 2 CENTER
+      SET WRAP ON
+      @ 0           , 0           PROMPT "1. Upper left"   MESSAGE " One "
+      @ 0           , MaxCol()-16 PROMPT "2. Upper right"  MESSAGE " Two "
+      @ MaxRow() - 1, MaxCol()-16 PROMPT "3. Bottom right" MESSAGE "Three"
+      @ MaxRow() - 1, 0           PROMPT "4. Bottom left"  MESSAGE "Four "
+      MENU TO nChoice
+      SetPos( MaxRow() / 2, MaxCol() / 2 - 10 )
+      IF nChoice == 0
+         ?? "Esc was pressed"
+      ELSE
+         ?? "Selected option is", nChoice
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      MENU TO
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      User interface
- *  $ONELINER$
- *      Invoked a menu defined by set of @...PROMPT
- *  $SYNTAX$
- *      MENU TO <cVariable>
- *  $ARGUMENTS$
- *      <cVariable> is a character string that contain the name of the
- *      variable to hold the menu choices, if this variable does not exist
- *      a PRIVATE variable with the name <cVariable> would be created to
- *      hold the result.
- *  $DESCRIPTION$
- *      Menu To() invoked the menu define by previous __AtPrompt() call
- *      and display a highlight bar that the user can move to select an
- *      option from the menu. If <cVariable> does not exist or not visible,
- *      a PRIVATE variable named <cVariable> is created and hold the current
- *      menu selection. If there is a variable named <cVariable>, its value
- *      is used to select the first highlighted item.
- *
- *      Menu prompts and messages are displayed in current Standard color,
- *      highlighted bar is displayed using current Enhanced color.
- *
- *      Pressing the arrow keys move the highlighted bar. When a menu item
- *      is highlighted the message associated with it is displayed on the
- *      line specified with SET MESSAGE. If SET WRAP is ON and the user
- *      press UP arrow while on the first selection the last menu item is
- *      highlighted, if the user press Down arrow while on the last item,
- *      the first item is highlighted.
- *
- *      Following are active keys that handled by Menu To:
- *
- *      <table>
- *       key              Meaning
- *
- *       Up             - Move to previous item
- *       Down           - Move to next item
- *       Left           - Move to previous item
- *       Right          - Move to next item
- *       Home           - Move to the first item
- *       End            - Move to the last item
- *       Page-Up        - Select menu item, return position
- *       Page-Down      - Select menu item, return position
- *       Enter          - Select menu item, return position
- *       Esc            - Abort selection, return 0
- *       First letter   - Select next menu with the same first letter,
- *       |              return this item position.
- *      </table>
- *      upon exit the cursor is placed at MaxRow()-1, 0
- *      Menu To can be nested without loosing the previous prompts.
- *
- *      MENU TO command is preprocessed into __MenuTo() function during
- *      compile time.
- *  $EXAMPLES$
- *      // display menu item on each screen corner and let user select one
- *      CLS
- *      SET MESSAGE TO MaxRow() / 2 CENTER
- *      SET WRAP ON
- *      @ 0           , 0             PROMPT "1. Upper left"   MESSAGE " One "
- *      @ 0           , MaxCol() - 16 PROMPT "2. Upper right"  MESSAGE " Two "
- *      @ MaxRow() - 1, MaxCol() - 16 PROMPT "3. Bottom right" MESSAGE "Three"
- *      @ MaxRow() - 1, 0             PROMPT "4. Bottom left"  MESSAGE "Four "
- *      MENU TO nChoice
- *      SetPos( MaxRow() / 2, MaxCol() / 2 - 10 )
- *      IF nChoice == 0
- *         ?? "Esc was pressed"
- *      ELSE
- *         ?? "Selected option is", nChoice
- *      ENDIF
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *   @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      MENU TO
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      User interface
+   $ONELINER$
+      Invoked a menu defined by set of @...PROMPT
+   $SYNTAX$
+      MENU TO <cVariable>
+   $ARGUMENTS$
+      <cVariable> is a character string that contain the name of the
+      variable to hold the menu choices, if this variable does not exist
+      a PRIVATE variable with the name <cVariable> would be created to
+      hold the result.
+   $DESCRIPTION$
+      Menu To() invoked the menu define by previous __AtPrompt() call
+      and display a highlight bar that the user can move to select an
+      option from the menu. If <cVariable> does not exist or not visible,
+      a PRIVATE variable named <cVariable> is created and hold the current
+      menu selection. If there is a variable named <cVariable>, its value
+      is used to select the first highlighted item.
+
+      Menu prompts and messages are displayed in current Standard color,
+      highlighted bar is displayed using current Enhanced color.
+
+      Pressing the arrow keys move the highlighted bar. When a menu item
+      is highlighted the message associated with it is displayed on the
+      line specified with SET MESSAGE. If SET WRAP is ON and the user
+      press UP arrow while on the first selection the last menu item is
+      highlighted, if the user press Down arrow while on the last item,
+      the first item is highlighted.
+
+      Following are active keys that handled by Menu To:
+
+      <table>
+       key              Meaning
+
+       Up             - Move to previous item
+       Down           - Move to next item
+       Left           - Move to previous item
+       Right          - Move to next item
+       Home           - Move to the first item
+       End            - Move to the last item
+       Page-Up        - Select menu item, return position
+       Page-Down      - Select menu item, return position
+       Enter          - Select menu item, return position
+       Esc            - Abort selection, return 0
+       First letter   - Select next menu with the same first letter,
+       |              return this item position.
+      </table>
+      upon exit the cursor is placed at MaxRow()-1, 0
+      Menu To can be nested without loosing the previous prompts.
+
+      MENU TO command is preprocessed into __MenuTo() function during
+      compile time.
+   $EXAMPLES$
+      // display menu item on each screen corner and let user select one
+      CLS
+      SET MESSAGE TO MaxRow() / 2 CENTER
+      SET WRAP ON
+      @ 0           , 0             PROMPT "1. Upper left"   MESSAGE " One "
+      @ 0           , MaxCol() - 16 PROMPT "2. Upper right"  MESSAGE " Two "
+      @ MaxRow() - 1, MaxCol() - 16 PROMPT "3. Bottom right" MESSAGE "Three"
+      @ MaxRow() - 1, 0             PROMPT "4. Bottom left"  MESSAGE "Four "
+      MENU TO nChoice
+      SetPos( MaxRow() / 2, MaxCol() / 2 - 10 )
+      IF nChoice == 0
+         ?? "Esc was pressed"
+      ELSE
+         ?? "Selected option is", nChoice
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
+   $END$
  */

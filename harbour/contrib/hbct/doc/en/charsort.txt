@@ -2,83 +2,83 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARSORT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Sort sequences within a string.
- *  $SYNTAX$
- *      CHARSORT( <[@]cString>, [<nElementLength>], [<nCompareLength>],
- *                [<nIgnoreCharacters>], [<nElemenOffset>], [<nSortLength>],
- *                [<lDescending>] ) -> cSortedString
- *  $ARGUMENTS$
- *      <[@]cString>             is the string that should be processed
- *      [<nElementLength>]       specifies the length of the elements that
- *                               should be sorted
- *                               Default: 1
- *      [<nCompareLength>]       specifies how many characters within one
- *                               element should be used for comparison
- *                               Default: <nElementLength>
- *      [<nIgnoreCharacters>]    specifies the number of characters at the
- *                               beginning of <cString> that should be ignored
- *                               in the sort process
- *                               Default: 0
- *      [<nElementOffset>]       specifies the offset of the comparison string
- *                               within a element
- *                               Default: 0
- *      [<nSortLength>]          specifies how many characters in <cString>,
- *                               starting from the <nIgnoreCharacters> position,
- *                               should be sorted
- *                               Default: len(cString)-nIgnoreCharacters
- *      [<lDescending>])         specifies whether the process should
- *                               sort descending or not
- *  $RETURNS$
- *      <cSortedString>          the string resulting from the sort process
- *  $DESCRIPTION$
- *      The CHARSORT function sorts the characters within a string <cString>.
- *      With the parameters <nIgnoreCharacters> and <nSortLength>, you can
- *      determine that only the substring from position <nIgnoreCharacters>+1
- *      to position <nIgnoreCharacters>+<nSortLength> within <cString> should
- *      be sorted.
- *      The sorting algorithm is determined with the other parameters.
- *      <nElementLength> specifies the length of one element, i.e. there are
- *      <nSortLength>/<nElementLength> elements that are sorted. Note that
- *      surplus characters are not sorted but stay at their position.
- *      To do the sorting, the function uses the Quicksort algorithm implemented
- *      in the C-lib qsort() function. This algorithm needs to know how to compare
- *      and order two elements. This is done by comparing the ASCII values of
- *      a substring within each element. This substring is determined by the
- *      parameters <nElementOffset> and <nCompareLength> and the order
- *      by <lDescending>.
- *      By setting the CSETREF() switch to .T., one can omit the return value
- *      of the function, but one must then pass <cString> by reference.
- *  $EXAMPLES$
- *      ? CHARSORT( "qwert" )                     // "eqrtw"
- *      ? CHARSORT( "qwert", 2 )                  // "erqwt"
- *      ? CHARSORT( "b1a4a3a2a1", 2, 1 )          // "a2a1a3a4b1"
- *      ? CHARSORT( "XXXqwert", 1, 1, 3 )         // "XXXeqrtw"
- *      ? CHARSORT( "b1a4a3a2a1", 2, 1, 0, 1 )    // "a1b1a2a3a4"
- *      ? CHARSORT( "384172852", 1, 1, 0, 0, 4 )  // "134872852"
- *      ? CHARSORT( "qwert", .T. )                // "wtrqe"
- *  $TESTS$
- *      CHARSORT( "qwert" )                     == "eqrtw"
- *      CHARSORT( "qwert", 2 )                  == "erqwt"
- *      CHARSORT( "b1a4a3a2a1", 2, 1 )          == "a2a1a3a4b1"
- *      CHARSORT( "XXXqwert", 1, 1, 3 )         == "XXXeqrtw"
- *      CHARSORT( "b1a4a3a2a1", 2, 1, 0, 1 )    == "a1b1a2a3a4"
- *      CHARSORT( "384172852", 1, 1, 0, 0, 4 )  == "134872852"
- *      CHARSORT( "qwert", .T. )                == "wtrqe"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARSORT() is compatible with CT3's CHARSORT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CSETREF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CHARSORT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Sort sequences within a string.
+   $SYNTAX$
+      CHARSORT( <[@]cString>, [<nElementLength>], [<nCompareLength>],
+                [<nIgnoreCharacters>], [<nElemenOffset>], [<nSortLength>],
+                [<lDescending>] ) -> cSortedString
+   $ARGUMENTS$
+      <[@]cString>             is the string that should be processed
+      [<nElementLength>]       specifies the length of the elements that
+                               should be sorted
+                               Default: 1
+      [<nCompareLength>]       specifies how many characters within one
+                               element should be used for comparison
+                               Default: <nElementLength>
+      [<nIgnoreCharacters>]    specifies the number of characters at the
+                               beginning of <cString> that should be ignored
+                               in the sort process
+                               Default: 0
+      [<nElementOffset>]       specifies the offset of the comparison string
+                               within a element
+                               Default: 0
+      [<nSortLength>]          specifies how many characters in <cString>,
+                               starting from the <nIgnoreCharacters> position,
+                               should be sorted
+                               Default: len(cString)-nIgnoreCharacters
+      [<lDescending>])         specifies whether the process should
+                               sort descending or not
+   $RETURNS$
+      <cSortedString>          the string resulting from the sort process
+   $DESCRIPTION$
+      The CHARSORT function sorts the characters within a string <cString>.
+      With the parameters <nIgnoreCharacters> and <nSortLength>, you can
+      determine that only the substring from position <nIgnoreCharacters>+1
+      to position <nIgnoreCharacters>+<nSortLength> within <cString> should
+      be sorted.
+      The sorting algorithm is determined with the other parameters.
+      <nElementLength> specifies the length of one element, i.e. there are
+      <nSortLength>/<nElementLength> elements that are sorted. Note that
+      surplus characters are not sorted but stay at their position.
+      To do the sorting, the function uses the Quicksort algorithm implemented
+      in the C-lib qsort() function. This algorithm needs to know how to compare
+      and order two elements. This is done by comparing the ASCII values of
+      a substring within each element. This substring is determined by the
+      parameters <nElementOffset> and <nCompareLength> and the order
+      by <lDescending>.
+      By setting the CSETREF() switch to .T., one can omit the return value
+      of the function, but one must then pass <cString> by reference.
+   $EXAMPLES$
+      ? CHARSORT( "qwert" )                     // "eqrtw"
+      ? CHARSORT( "qwert", 2 )                  // "erqwt"
+      ? CHARSORT( "b1a4a3a2a1", 2, 1 )          // "a2a1a3a4b1"
+      ? CHARSORT( "XXXqwert", 1, 1, 3 )         // "XXXeqrtw"
+      ? CHARSORT( "b1a4a3a2a1", 2, 1, 0, 1 )    // "a1b1a2a3a4"
+      ? CHARSORT( "384172852", 1, 1, 0, 0, 4 )  // "134872852"
+      ? CHARSORT( "qwert", .T. )                // "wtrqe"
+   $TESTS$
+      CHARSORT( "qwert" )                     == "eqrtw"
+      CHARSORT( "qwert", 2 )                  == "erqwt"
+      CHARSORT( "b1a4a3a2a1", 2, 1 )          == "a2a1a3a4b1"
+      CHARSORT( "XXXqwert", 1, 1, 3 )         == "XXXeqrtw"
+      CHARSORT( "b1a4a3a2a1", 2, 1, 0, 1 )    == "a1b1a2a3a4"
+      CHARSORT( "384172852", 1, 1, 0, 0, 4 )  == "134872852"
+      CHARSORT( "qwert", .T. )                == "wtrqe"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CHARSORT() is compatible with CT3's CHARSORT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CSETREF()
+   $END$
  */

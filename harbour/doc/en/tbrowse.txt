@@ -2,309 +2,308 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Class
- *  $NAME$
- *      TBROWSENew()
- *  $CATEGORY$
- *      TBrowse class
- *  $ONELINER$
- *      Create a Browse Object
- *  $CONSTRUCTOR$
- *      TBROWSENew(<nTop>,<nLeft>,<nBottom>,<nRight>)   --> <oBrowse>
- *  $ARGUMENTS$
- *      <nTop>    Top Row
-
- *      <nLeft>   Top Left Column
-
- *      <nBottom> Bottom Row
-
- *      <nRight>  Bottom Right Column
- *  $RETURNS$
- *      <oBrowse>  An new Browse Object
- *  $DESCRIPTION$
- *      This function set up a browsing window at top-left coordinates of
- *      <nTop>,<nLeft> to bottom-right coordinates of <nBottom>,<nRight>.
- *      To browse Database files use TBROWSEDB() function insted.
- *  $DATANOLINK$
- *      :aColumns       Array to hold all browse columns
-
- *      :autoLite       Logical value to control highlighting
-
- *      :cargo          User-definable variable
-
- *      :colorSpec      Color table for the TBrowse display
-
- *      :colPos         Current cursor column position
-
- *      :colSep         Column separator character
-
- *      :footSep        Footing separator character
-
- *      :freeze         Number of columns to freeze
-
- *      :goBottomBlock  Code block executed by TBrowse:goBottom()
-
- *      :goTopBlock     Code block executed by TBrowse:goTop()
-
- *      :headSep        Heading separator character
-
- *      :hitBottom      Indicates the end of available data
-
- *      :hitTop         Indicates the beginning of available data
-
- *      :leftVisible    Indicates position of leftmost unfrozen column
- *      in display
-
- *      :nBottom        Bottom row number for the TBrowse display
-
- *      :nLeft          Leftmost column for the TBrowse display
-
- *      :nRight         Rightmost column for the TBrowse display
-
- *      :nTop           Top row number for the TBrowse display
-
- *      :rightVisible   Indicates position of rightmost unfrozen column
- *      in display
-
- *      :rowCount       Number of visible data rows in the TBrowse
- *      display
-
- *      :rowPos         Current cursor row position
-
- *      :skipBlock      Code block used to reposition data source
-
- *      :stable         Indicates if the TBrowse object is stable
- *
- *      :aRedraw        Array of logical items indicating, is appropriate
- *      row need to be redraw
-
- *      :RelativePos    Indicates record position relatively position of
- *      first record on the screen
-
- *      :lHeaders       Internal variable which indicates whether there
- *      are column footers to paint
-
- *      :lFooters       Internal variable which indicates whether there
- *      are column footers to paint
-
- *      :aRect          The rectangle specified with ColorRect()
-
- *      :aRectColor     The color positions to use in the rectangle
- *      specified with ColorRect()
-
- *      :aKeys        Holds the Default movement keys
- *  $METHODSLINK$
- *      AddColumn() Adds an new TBColumn object to the current Browse
- *
- *      Applykey()  Perform the Browse Key movement
- *
- *      SetKey()    Add an New key to the Keyboard dictionary
- *  $METHODSNOLINK$
- *      New(nTop, nLeft, nBottom, nRight) Create an new Browse class and set the
- *      default values
- *
- *      Down()       Moves the cursor down one row
- *
- *      End()        Moves the cursor to the rightmost visible data column
- *
- *      GoBottom()   Repositions the data source to the bottom of file
- *
- *      GoTop()      Repositions the data source to the top of file
- *
- *      Home()       Moves the cursor to the leftmost visible data column
- *
- *      Left()       Moves the cursor left one column
- *
- *      PageDown()   Repositions the data source downward
- *
- *      PageUp()     Repositions the data source upward
- *
- *      PanEnd()     Moves the cursor to the rightmost data column
- *
- *      PanHome()    Moves the cursor to the leftmost visible data column
- *
- *      PanLeft()    Pans left without changing the cursor position
- *
- *      PanRight()   Pans right without changing the cursor position
- *
- *      Right()      Moves the cursor right one column
- *
- *      Up()         Moves the cursor up one row
- *
- *      ColCount()    Return the Current number of Columns
- *
- *      ColorRect()   Alters the color of a rectangular group of cells
- *
- *      ColWidth( nColumn )  Returns the display width of a particular column
- *
- *      Configure( nMode )   Reconfigures the internal settings of the TBrowse
- *      object nMode is an undocumented parameter in CA-Cl*pper
- *
- *      LeftDetermine()      Determine leftmost unfrozen column in display
- *
- *      DeHilite()           Dehighlights the current cell
- *
- *      DelColumn( nPos )    Delete a column object from a browse
- *
- *      ForceStable()        Performs a full stabilization
- *
- *      GetColumn( nColumn ) Gets a specific TBColumn object
- *
- *      Hilite()             Highlights the current cell
- *
- *      InsColumn( nPos, oCol )   Insert a column object in a browse
- *
- *      Invalidate()        Forces entire redraw during next stabilization
- *
- *      RefreshAll()        Causes all data to be recalculated during the next
- *      stabilize
- *
- *      RefreshCurrent()    Causes the current row to be refilled and repainted
- *      on next stabilize
- *
- *      SetColumn( nColumn, oCol )   Replaces one TBColumn object with another
- *
- *      Stabilize()          Performs incremental stabilization
- *
- *      DispCell( nColumn, cColor )  Displays a single cell
- *  $EXAMPLES$
- *      See tests/testbrw.prg
- *  $TESTS$
- *      See tests/testbrw.prg
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      This functions is Compatible with CA-Cl*pper 5.2. The applykey() and
- *      Setkey() methods are only visible if HB_COMPAT_C53 is defined.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      TBROWSENEW(),TBCOLUMNNEW()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Class
+   $NAME$
+      TBROWSENew()
+   $CATEGORY$
+      TBrowse class
+   $ONELINER$
+      Create a Browse Object
+   $CONSTRUCTOR$
+      TBROWSENew(<nTop>,<nLeft>,<nBottom>,<nRight>)   --> <oBrowse>
+   $ARGUMENTS$
+      <nTop>    Top Row
+  
+      <nLeft>   Top Left Column
+  
+      <nBottom> Bottom Row
+  
+      <nRight>  Bottom Right Column
+   $RETURNS$
+      <oBrowse>  An new Browse Object
+   $DESCRIPTION$
+      This function set up a browsing window at top-left coordinates of
+      <nTop>,<nLeft> to bottom-right coordinates of <nBottom>,<nRight>.
+      To browse Database files use TBROWSEDB() function insted.
+   $DATANOLINK$
+      :aColumns       Array to hold all browse columns
+  
+      :autoLite       Logical value to control highlighting
+  
+      :cargo          User-definable variable
+  
+      :colorSpec      Color table for the TBrowse display
+  
+      :colPos         Current cursor column position
+  
+      :colSep         Column separator character
+  
+      :footSep        Footing separator character
+  
+      :freeze         Number of columns to freeze
+  
+      :goBottomBlock  Code block executed by TBrowse:goBottom()
+  
+      :goTopBlock     Code block executed by TBrowse:goTop()
+  
+      :headSep        Heading separator character
+  
+      :hitBottom      Indicates the end of available data
+  
+      :hitTop         Indicates the beginning of available data
+  
+      :leftVisible    Indicates position of leftmost unfrozen column
+      in display
+  
+      :nBottom        Bottom row number for the TBrowse display
+  
+      :nLeft          Leftmost column for the TBrowse display
+  
+      :nRight         Rightmost column for the TBrowse display
+  
+      :nTop           Top row number for the TBrowse display
+  
+      :rightVisible   Indicates position of rightmost unfrozen column
+      in display
+  
+      :rowCount       Number of visible data rows in the TBrowse
+      display
+  
+      :rowPos         Current cursor row position
+  
+      :skipBlock      Code block used to reposition data source
+  
+      :stable         Indicates if the TBrowse object is stable
+  
+      :aRedraw        Array of logical items indicating, is appropriate
+      row need to be redraw
+  
+      :RelativePos    Indicates record position relatively position of
+      first record on the screen
+  
+      :lHeaders       Internal variable which indicates whether there
+      are column footers to paint
+  
+      :lFooters       Internal variable which indicates whether there
+      are column footers to paint
+  
+      :aRect          The rectangle specified with ColorRect()
+  
+      :aRectColor     The color positions to use in the rectangle
+      specified with ColorRect()
+  
+      :aKeys        Holds the Default movement keys
+   $METHODSLINK$
+      AddColumn() Adds an new TBColumn object to the current Browse
+  
+      Applykey()  Perform the Browse Key movement
+  
+      SetKey()    Add an New key to the Keyboard dictionary
+   $METHODSNOLINK$
+      New(nTop, nLeft, nBottom, nRight) Create an new Browse class and set the
+      default values
+  
+      Down()       Moves the cursor down one row
+  
+      End()        Moves the cursor to the rightmost visible data column
+  
+      GoBottom()   Repositions the data source to the bottom of file
+  
+      GoTop()      Repositions the data source to the top of file
+  
+      Home()       Moves the cursor to the leftmost visible data column
+  
+      Left()       Moves the cursor left one column
+  
+      PageDown()   Repositions the data source downward
+  
+      PageUp()     Repositions the data source upward
+  
+      PanEnd()     Moves the cursor to the rightmost data column
+  
+      PanHome()    Moves the cursor to the leftmost visible data column
+  
+      PanLeft()    Pans left without changing the cursor position
+  
+      PanRight()   Pans right without changing the cursor position
+  
+      Right()      Moves the cursor right one column
+  
+      Up()         Moves the cursor up one row
+  
+      ColCount()    Return the Current number of Columns
+  
+      ColorRect()   Alters the color of a rectangular group of cells
+  
+      ColWidth( nColumn )  Returns the display width of a particular column
+  
+      Configure( nMode )   Reconfigures the internal settings of the TBrowse
+      object nMode is an undocumented parameter in CA-Cl*pper
+  
+      LeftDetermine()      Determine leftmost unfrozen column in display
+  
+      DeHilite()           Dehighlights the current cell
+  
+      DelColumn( nPos )    Delete a column object from a browse
+  
+      ForceStable()        Performs a full stabilization
+  
+      GetColumn( nColumn ) Gets a specific TBColumn object
+  
+      Hilite()             Highlights the current cell
+  
+      InsColumn( nPos, oCol )   Insert a column object in a browse
+  
+      Invalidate()        Forces entire redraw during next stabilization
+  
+      RefreshAll()        Causes all data to be recalculated during the next
+      stabilize
+  
+      RefreshCurrent()    Causes the current row to be refilled and repainted
+      on next stabilize
+  
+      SetColumn( nColumn, oCol )   Replaces one TBColumn object with another
+  
+      Stabilize()          Performs incremental stabilization
+  
+      DispCell( nColumn, cColor )  Displays a single cell
+   $EXAMPLES$
+      See tests/testbrw.prg
+   $TESTS$
+      See tests/testbrw.prg
+   $STATUS$
+      S
+   $COMPLIANCE$
+      This functions is Compatible with CA-Cl*pper 5.2. The applykey() and
+      Setkey() methods are only visible if HB_COMPAT_C53 is defined.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      TBROWSENEW(),TBCOLUMNNEW()
+   $END$
  */
 
-
-/*  $DOC$
- *  $TEMPLATE$
- *      Class
- *  $METHOD$
- *      SetKey()
- *  $CATEGORY$
- *      TBrowse Method
- *  $ONELINER$
- *      Get an optionaly Set an new Code block associated to a inkey value
- *  $SYNTAX$
- *      SetKey(<nKey>[,<bBlock>]) --> bOldBlock
- *  $ARGUMENTS$
- *      <nKey> An valid inkey Code
- *
- *      <bBlock>  An optional action to associate to the inkey value.
- *  $RETURNS$
- *      <bOldBlock>  If an Keypress has it code block changes, it will return
- *      the previus one; otherwise, it will return the current one
- *  $DESCRIPTION$
- *      This method Get an optionaly set an code block that is associated to
- *      an inkey value.
- *      The table below show the default keypress/Code Block definitions
- *
- *      <table>
- *      Inkey Value    Code Block
- *
- *      K_DOWN         {| oB, nKey | oB:Down(), 0 }
- *      K_END          {| oB, nKey | oB:End(), 0 }
- *      K_CTRL_PGDN    {| oB, nKey | oB:GoBottom(), 0 }
- *      K_CTRL_PGUP    {| oB, nKey | oB:GoTop(), 0 }
- *      K_HOME         {| oB, nKey | oB:Home(), 0 }
- *      K_LEFT         {| oB, nKey | oB:Left(), 0 }
- *      K_PGDN         {| oB, nKey | oB:PageDown(), 0 }
- *      K_PGUP         {| oB, nKey | oB:PageUp(), 0 }
- *      K_CTRL_END     {| oB, nKey | oB:PanEnd(), 0 }
- *      K_CTRL_HOME    {| oB, nKey | oB:PanHome(), 0 }
- *      K_CTRL_LEFT    {| oB, nKey | oB:PanLeft(), 0 }
- *      K_CTRL_RIGHT   {| oB, nKey | oB:PanRight(), 0 }
- *      K_RIGHT        {| oB, nKey | oB:Right(), 0 }
- *      K_UP           {| oB, nKey | oB:Up(), 0 }
- *      K_ESC          {| oB, nKey | -1 }
- *      </table>
- *
- *      The keys handlers can be queried,added and replace an removed from
- *      the internal keyboard dictionary. See the example.
- *
- *      oTb:SETKEY( K_TAB, {| oTb, nKey | -1 } )
- *
- *      An default key handler can be declared by specifyin a value of 0
- *      for <nKey>. It associate code block will be evaluated each time
- *      TBrowse:Applykey() is called  with an key value that is not contained
- *      in the dictionary. For example
- *
- *      oTb:SetKey( 0, {| oTb, nKey | DefKeyHandler( otb, nkey } )
- *      This call the a function named DefKeyHandler() when nKey is not
- *      contained in the dictionary.
- *
- *      To remove an keypress/code block definition, specify NIL for <bBlock>
- *      oTb:SetKey( K_ESC, NIL )
- *  $EXAMPLES$
- *      oTb:SeyKey( K_F10, {| otb, nkey | ShowListByname( otb ) }
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Class
+   $METHOD$
+      SetKey()
+   $CATEGORY$
+      TBrowse Method
+   $ONELINER$
+      Get an optionaly Set an new Code block associated to a inkey value
+   $SYNTAX$
+      SetKey(<nKey>[,<bBlock>]) --> bOldBlock
+   $ARGUMENTS$
+      <nKey> An valid inkey Code
+  
+      <bBlock>  An optional action to associate to the inkey value.
+   $RETURNS$
+      <bOldBlock>  If an Keypress has it code block changes, it will return
+      the previus one; otherwise, it will return the current one
+   $DESCRIPTION$
+      This method Get an optionaly set an code block that is associated to
+      an inkey value.
+      The table below show the default keypress/Code Block definitions
+  
+      <table>
+      Inkey Value    Code Block
+  
+      K_DOWN         {| oB, nKey | oB:Down(), 0 }
+      K_END          {| oB, nKey | oB:End(), 0 }
+      K_CTRL_PGDN    {| oB, nKey | oB:GoBottom(), 0 }
+      K_CTRL_PGUP    {| oB, nKey | oB:GoTop(), 0 }
+      K_HOME         {| oB, nKey | oB:Home(), 0 }
+      K_LEFT         {| oB, nKey | oB:Left(), 0 }
+      K_PGDN         {| oB, nKey | oB:PageDown(), 0 }
+      K_PGUP         {| oB, nKey | oB:PageUp(), 0 }
+      K_CTRL_END     {| oB, nKey | oB:PanEnd(), 0 }
+      K_CTRL_HOME    {| oB, nKey | oB:PanHome(), 0 }
+      K_CTRL_LEFT    {| oB, nKey | oB:PanLeft(), 0 }
+      K_CTRL_RIGHT   {| oB, nKey | oB:PanRight(), 0 }
+      K_RIGHT        {| oB, nKey | oB:Right(), 0 }
+      K_UP           {| oB, nKey | oB:Up(), 0 }
+      K_ESC          {| oB, nKey | -1 }
+      </table>
+  
+      The keys handlers can be queried,added and replace an removed from
+      the internal keyboard dictionary. See the example.
+  
+      oTb:SETKEY( K_TAB, {| oTb, nKey | -1 } )
+  
+      An default key handler can be declared by specifyin a value of 0
+      for <nKey>. It associate code block will be evaluated each time
+      TBrowse:Applykey() is called  with an key value that is not contained
+      in the dictionary. For example
+  
+      oTb:SetKey( 0, {| oTb, nKey | DefKeyHandler( otb, nkey } )
+      This call the a function named DefKeyHandler() when nKey is not
+      contained in the dictionary.
+  
+      To remove an keypress/code block definition, specify NIL for <bBlock>
+      oTb:SetKey( K_ESC, NIL )
+   $EXAMPLES$
+      oTb:SeyKey( K_F10, {| otb, nkey | ShowListByname( otb ) }
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Class
- *  $METHOD$
- *      Applykey()
- *  $CATEGORY$
- *      TBrowse Method
- *  $ONELINER$
- *      Evaluates an code block associated with an specific key
- *  $SYNTAX$
- *      ApplyKey(<nKey>) --> nResult
- *  $ARGUMENTS$
- *      <nKey>      An valid Inkey code
- *  $RETURNS$
- *      <nResult>   Value returned from the evaluated Code Block
- *      See Table Below
- *
- *      <table>
- *      Value    Meaning
- *      -1       User request for the browse lost input focus
- *      0        Code block associated with <nkey> was evaluated
- *      1        Unable to locate <nKey> in the dictionary,Key was not processed
- *      </table>
- *  $DESCRIPTION$
- *      This method evaluate an code block associated with <nkey> that is
- *      contained in the TBrowse:setkey() dictionary.
- *  $EXAMPLES$
- *      DO WHILE .T.
- *         oTb:forceStable()
- *         IF oTb:applykey( Inkey( 0 ) ) == -1
- *            EXIT
- *         ENDIF
- *      ENDDO
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Class
+   $METHOD$
+      Applykey()
+   $CATEGORY$
+      TBrowse Method
+   $ONELINER$
+      Evaluates an code block associated with an specific key
+   $SYNTAX$
+      ApplyKey(<nKey>) --> nResult
+   $ARGUMENTS$
+      <nKey>      An valid Inkey code
+   $RETURNS$
+      <nResult>   Value returned from the evaluated Code Block
+      See Table Below
+  
+      <table>
+      Value    Meaning
+      -1       User request for the browse lost input focus
+      0        Code block associated with <nkey> was evaluated
+      1        Unable to locate <nKey> in the dictionary,Key was not processed
+      </table>
+   $DESCRIPTION$
+      This method evaluate an code block associated with <nkey> that is
+      contained in the TBrowse:setkey() dictionary.
+   $EXAMPLES$
+      DO WHILE .T.
+         oTb:forceStable()
+         IF oTb:applykey( Inkey( 0 ) ) == -1
+            EXIT
+         ENDIF
+      ENDDO
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Class
- *  $METHOD$
- *      AddColumn()
- *  $CATEGORY$
- *      TBrowse Method
- *  $ONELINER$
- *      Add an New Column to an TBrowse Object
- *  $SYNTAX$
- *      AddColumn(oCol) --> Self
- *  $ARGUMENTS$
- *      <oCol>  Is an TbColumn object
- *  $RETURNS$
- *      <Self>  The Current object
- *  $DESCRIPTION$
- *      This method add an new column object specified as <oCol> to the
- *      assigned browsing object.
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Class
+   $METHOD$
+      AddColumn()
+   $CATEGORY$
+      TBrowse Method
+   $ONELINER$
+      Add an New Column to an TBrowse Object
+   $SYNTAX$
+      AddColumn(oCol) --> Self
+   $ARGUMENTS$
+      <oCol>  Is an TbColumn object
+   $RETURNS$
+      <Self>  The Current object
+   $DESCRIPTION$
+      This method add an new column object specified as <oCol> to the
+      assigned browsing object.
+   $END$
  */

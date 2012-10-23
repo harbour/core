@@ -2,35 +2,35 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_POKE()
- *  $CATEGORY$
- *     DOS/BIOS
- *  $ONELINER$
- *     Write a byte to a specified memory location
- *  $SYNTAX$
- *     FT_POKE( <nSegment>, <nOffset>, <nValue> ) -> lResult
- *  $ARGUMENTS$
- *     <nSegment> is the segment of the desired memory address.
- *
- *     <nOffset>  is the offset of the desired memory address.
- *
- *     <nValue>   is the value to write to the desired memory address.
- *  $RETURNS$
- *     <lResult> will be .T. if all parameters were valid and the function was
- *               able to write the desired byte.
- *     <lResult> will be .F. if invalid parameters were passed.
- *  $DESCRIPTION$
- *     Use this function if you have a need to change the value at a specific
- *     memory location.  The function will write the specified byte to the
- *     specified address.  The value must be passed as a numeric; if the byte
- *     you wish to use is stored as a character, use the Asc() function
- *     to convert it.
- *
- *     This function was written for version 5.1 of MicroSoft C.  You may
- *     have to modify the source code to use another compiler.
- *  $EXAMPLES$
- *     FT_POKE( 0, 1047, 64 )  // Turn CapsLock on
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_POKE()
+   $CATEGORY$
+      DOS/BIOS
+   $ONELINER$
+      Write a byte to a specified memory location
+   $SYNTAX$
+      FT_POKE( <nSegment>, <nOffset>, <nValue> ) -> lResult
+   $ARGUMENTS$
+      <nSegment> is the segment of the desired memory address.
+  
+      <nOffset>  is the offset of the desired memory address.
+  
+      <nValue>   is the value to write to the desired memory address.
+   $RETURNS$
+      <lResult> will be .T. if all parameters were valid and the function was
+                able to write the desired byte.
+      <lResult> will be .F. if invalid parameters were passed.
+   $DESCRIPTION$
+      Use this function if you have a need to change the value at a specific
+      memory location.  The function will write the specified byte to the
+      specified address.  The value must be passed as a numeric; if the byte
+      you wish to use is stored as a character, use the Asc() function
+      to convert it.
+  
+      This function was written for version 5.1 of MicroSoft C.  You may
+      have to modify the source code to use another compiler.
+   $EXAMPLES$
+      FT_POKE( 0, 1047, 64 )  // Turn CapsLock on
+   $END$
  */

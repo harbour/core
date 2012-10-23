@@ -157,7 +157,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    lConsoleOn := Set( _SET_CONSOLE )
    Set( _SET_CONSOLE, ! ( lNoConsole .OR. ! lConsoleOn ) )
 
-   IF !Empty( cAltFile )         // To file
+   IF ! Empty( cAltFile )         // To file
       lExtraState := Set( _SET_EXTRA, .T. )
       cExtraFile  := Set( _SET_EXTRAFILE, cAltFile )
    ENDIF
@@ -208,7 +208,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    Set( _SET_PRINTER, lPrintOn ) // Set the printer back to prior state
    Set( _SET_CONSOLE, lConsoleOn )  // Set the console back to prior state
 
-   IF !Empty( cAltFile )            // Set extrafile back
+   IF ! Empty( cAltFile )           // Set extrafile back
       Set( _SET_EXTRAFILE, cExtraFile )
       Set( _SET_EXTRA, lExtraState )
    ENDIF
@@ -412,21 +412,21 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
    IF nFileError == 0
 
       // Load label dimension into aLabel
-      aLabel[ LBL_REMARK  ] := SubStr( cBuff, REMARKOFFSET, REMARKSIZE )
-      aLabel[ LBL_HEIGHT  ] := BIN2W( SubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
-      aLabel[ LBL_WIDTH   ] := BIN2W( SubStr( cBuff, WIDTHOFFSET, WIDTHSIZE ) )
-      aLabel[ LBL_LMARGIN ] := BIN2W( SubStr( cBuff, LMARGINOFFSET, LMARGINSIZE ) )
-      aLabel[ LBL_LINES   ] := BIN2W( SubStr( cBuff, LINESOFFSET, LINESSIZE ) )
-      aLabel[ LBL_SPACES  ] := BIN2W( SubStr( cBuff, SPACESOFFSET, SPACESSIZE ) )
-      aLabel[ LBL_ACROSS  ] := BIN2W( SubStr( cBuff, ACROSSOFFSET, ACROSSSIZE ) )
+      aLabel[ LBL_REMARK  ] := hb_BSubStr( cBuff, REMARKOFFSET, REMARKSIZE )
+      aLabel[ LBL_HEIGHT  ] := BIN2W( hb_BSubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
+      aLabel[ LBL_WIDTH   ] := BIN2W( hb_BSubStr( cBuff, WIDTHOFFSET, WIDTHSIZE ) )
+      aLabel[ LBL_LMARGIN ] := BIN2W( hb_BSubStr( cBuff, LMARGINOFFSET, LMARGINSIZE ) )
+      aLabel[ LBL_LINES   ] := BIN2W( hb_BSubStr( cBuff, LINESOFFSET, LINESSIZE ) )
+      aLabel[ LBL_SPACES  ] := BIN2W( hb_BSubStr( cBuff, SPACESOFFSET, SPACESSIZE ) )
+      aLabel[ LBL_ACROSS  ] := BIN2W( hb_BSubStr( cBuff, ACROSSOFFSET, ACROSSSIZE ) )
 
       FOR i := 1 TO aLabel[ LBL_HEIGHT ]
 
          // Get the text of the expression
-         cFieldText := RTrim( SubStr( cBuff, nOffset, FIELDSIZE ) )
+         cFieldText := RTrim( hb_BSubStr( cBuff, nOffset, FIELDSIZE ) )
          nOffset := nOffSet + 60
 
-         IF !Empty( cFieldText )
+         IF ! Empty( cFieldText )
 
             AAdd( aLabel[ LBL_FIELDS ], {} )
 

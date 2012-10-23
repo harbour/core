@@ -2,130 +2,130 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      POSCHAR()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace character at a certain position within a string
- *  $SYNTAX$
- *      POSCHAR( <[@]cString>, <cCharacter|nCharacter>, [<nPosition>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSCHAR() is compatible with CT3's POSCHAR().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      POSDEL(),POSINS(),POSREPL(),CSETREF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      POSCHAR()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace character at a certain position within a string
+   $SYNTAX$
+      POSCHAR( <[@]cString>, <cCharacter|nCharacter>, [<nPosition>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      POSCHAR() is compatible with CT3's POSCHAR().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      POSDEL(),POSINS(),POSREPL(),CSETREF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      POSDEL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Delete characters at a certain position within a string
- *  $SYNTAX$
- *      POSDEL( <cString>, [<nStartPosition>], <nLength> ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSDEL() is compatible with CT3's POSDEL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      POSCHAR(),POSINS(),POSREPL()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      POSDEL()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Delete characters at a certain position within a string
+   $SYNTAX$
+      POSDEL( <cString>, [<nStartPosition>], <nLength> ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      POSDEL() is compatible with CT3's POSDEL().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      POSCHAR(),POSINS(),POSREPL()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      POSINS()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Insert characters at a certain position within a string
- *  $SYNTAX$
- *      POSINS( <cString>, <cInsert>, [<nPosition>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSINS() is compatible with CT3's POSINS().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      POSCHAR,POSDEL(),POSREPL()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      POSINS()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Insert characters at a certain position within a string
+   $SYNTAX$
+      POSINS( <cString>, <cInsert>, [<nPosition>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      POSINS() is compatible with CT3's POSINS().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      POSCHAR,POSDEL(),POSREPL()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      POSREPL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace characters at a certain position within a string
- *  $SYNTAX$
- *      POSREPL( <[@]cString>, <cReplacement>, [<nStartPosition>] ) -> cString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      POSREPL() is compatible with CT3's POSREPL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      POSCHAR(),POSDEL(),POSINS(),CSETREF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      POSREPL()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace characters at a certain position within a string
+   $SYNTAX$
+      POSREPL( <[@]cString>, <cReplacement>, [<nStartPosition>] ) -> cString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      POSREPL() is compatible with CT3's POSREPL().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      POSCHAR(),POSDEL(),POSINS(),CSETREF()
+   $END$
  */

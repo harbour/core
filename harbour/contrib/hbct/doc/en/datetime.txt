@@ -2,194 +2,194 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      BOM()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _B_egin _O_f _M_onth
- *  $SYNTAX$
- *      BOM( [<dDate>] ) -> dDateBeginOfMonth
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      BOM() is compatible with CT3's BOM().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      EOM(),BOQ(),EOQ(),BOY(),EOY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      BOM()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _B_egin _O_f _M_onth
+   $SYNTAX$
+      BOM( [<dDate>] ) -> dDateBeginOfMonth
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      BOM() is compatible with CT3's BOM().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      EOM(),BOQ(),EOQ(),BOY(),EOY()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      EOM()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _E_nd _O_f _M_onth
- *  $SYNTAX$
- *      EOM( [<dDate>] ) -> dDateEndOfMonth
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      EOM() is compatible with CT3's EOM().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      BOM(),BOQ(),EOQ(),BOY(),EOY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      EOM()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _E_nd _O_f _M_onth
+   $SYNTAX$
+      EOM( [<dDate>] ) -> dDateEndOfMonth
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      EOM() is compatible with CT3's EOM().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      BOM(),BOQ(),EOQ(),BOY(),EOY()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      BOQ()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _B_egin _O_f _Q_uarter
- *  $SYNTAX$
- *      BOQ( [<dDate>] ) -> dDateBeginOfQuarter
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      BOQ() is compatible with CT3's BOQ().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      BOM(),EOM(),EOQ(),BOY(),EOY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      BOQ()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _B_egin _O_f _Q_uarter
+   $SYNTAX$
+      BOQ( [<dDate>] ) -> dDateBeginOfQuarter
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      BOQ() is compatible with CT3's BOQ().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      BOM(),EOM(),EOQ(),BOY(),EOY()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      EOQ()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _E_nd _O_f _Q_uarter
- *  $SYNTAX$
- *      EOQ( [<dDate>] ) -> dDateEndOfQuarter
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      EOQ() is compatible with CT3's EOQ().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      BOM(),EOM(),BOQ(),BOY(),EOY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      EOQ()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _E_nd _O_f _Q_uarter
+   $SYNTAX$
+      EOQ( [<dDate>] ) -> dDateEndOfQuarter
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      EOQ() is compatible with CT3's EOQ().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      BOM(),EOM(),BOQ(),BOY(),EOY()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      BOY()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _B_egin _O_f _Y_ear
- *  $SYNTAX$
- *      BOY( [<dDate>] ) -> dDateBeginOfYear
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      BOY() is compatible with CT3's BOY().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      BOM(),EOM(),BOQ(),EOQ(),EOY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      BOY()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _B_egin _O_f _Y_ear
+   $SYNTAX$
+      BOY( [<dDate>] ) -> dDateBeginOfYear
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      BOY() is compatible with CT3's BOY().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      BOM(),EOM(),BOQ(),EOQ(),EOY()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      EOY()
- *  $CATEGORY$
- *      CT3 date and time functions
- *  $ONELINER$
- *      _E_nd _O_f _Y_ear
- *  $SYNTAX$
- *      EOY( [<dDate>] ) -> dDateEndOfYear
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      EOY() is compatible with CT3's EOY().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      BOM(),EOM(),BOQ(),EOQ(),BOY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      EOY()
+   $CATEGORY$
+      CT3 date and time functions
+   $ONELINER$
+      _E_nd _O_f _Y_ear
+   $SYNTAX$
+      EOY( [<dDate>] ) -> dDateEndOfYear
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      EOY() is compatible with CT3's EOY().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      BOM(),EOM(),BOQ(),EOQ(),BOY()
+   $END$
  */

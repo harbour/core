@@ -2,1487 +2,1501 @@
  * $Id$
  */
 
-/*
- * The following are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 Extended Systems, Inc.
- *    Documentation for Advantage Database Server and Local Server
- *
- * Copyright 2000 Brian Hays <bhays@abacuslaw.com>
- *    Documentation for Harbour-specific features
- *
- * See COPYING for licensing terms.
- *
+/* $DOC$
+   $FUNCNAME$
+      ADSBlob2File()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Write a Binary (memo) field's contents to a file
+   $SYNTAX$
+      ADSBlob2File(cFileName, cFieldName) --> lSuccess
+   $ARGUMENTS$
+      <cFileName>    File to create. If it already exists, it will be
+      overwritten on success and destroyed on error.
+  
+      <cFieldName>   Field in the current workarea that contains binary data.
+  
+   $RETURNS$
+      <lSuccess>  True if the file is successfully written.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+      ADSBlob2File() is a wrapper for AdsBinaryToFile.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSFile2Blob()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSBlob2File()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Write a Binary (memo) field's contents to a file
- *  $SYNTAX$
- *      ADSBlob2File(cFileName, cFieldName) --> lSuccess
- *  $ARGUMENTS$
- *      <cFileName>    File to create. If it already exists, it will be
- *      overwritten on success and destroyed on error.
- *
- *      <cFieldName>   Field in the current workarea that contains binary data.
- *
- *  $RETURNS$
- *      <lSuccess>  True if the file is successfully written.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *      ADSBlob2File() is a wrapper for AdsBinaryToFile.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSFile2Blob()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSFile2Blob()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Save a Binary file to a field
+   $SYNTAX$
+      ADSFile2Blob(cFileName, cFieldName, <nBinaryType>) --> lSuccess
+   $ARGUMENTS$
+      <cFileName>    File to read. Can be in UNC format. A common example is an image file.
+  
+      <cFieldName>   Field in the current workarea to contain the binary data.
+  
+      <nBinaryType>  Either ADS_BINARY (the default) or ADS_IMAGE.
+      This parameter is for fields in DBF files.
+      ADT tables cannot store binary and image data in standard character
+      memo fields (they have specific field types for that).
+   $RETURNS$
+      <lSuccess>   True if the file is successfully written.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+      ADSFile2Blob() is a wrapper for AdsFileToBinary.
+      Use of this function is illegal in an ADS transaction.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSBlob2File()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSFile2Blob()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Save a Binary file to a field
- *  $SYNTAX$
- *      ADSFile2Blob(cFileName, cFieldName, <nBinaryType>) --> lSuccess
- *  $ARGUMENTS$
- *      <cFileName>    File to read. Can be in UNC format. A common example is an image file.
- *
- *      <cFieldName>   Field in the current workarea to contain the binary data.
- *
- *      <nBinaryType>  Either ADS_BINARY (the default) or ADS_IMAGE.
- *      This parameter is for fields in DBF files.
- *      ADT tables cannot store binary and image data in standard character
- *      memo fields (they have specific field types for that).
- *  $RETURNS$
- *      <lSuccess>   True if the file is successfully written.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *      ADSFile2Blob() is a wrapper for AdsFileToBinary.
- *      Use of this function is illegal in an ADS transaction.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSBlob2File()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSClearAOF()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Clears an Advantage Optimized Filter in the current workarea.
+   $SYNTAX$
+      ADSClearAOF()
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSCustomizeAOF(),ADSEvalAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSClearAOF()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Clears an Advantage Optimized Filter in the current workarea.
- *  $SYNTAX$
- *      ADSClearAOF()
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      NIL
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSCustomizeAOF(),ADSEvalAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSCustomizeAOF()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Add or remove records from an existing AOF
+   $SYNTAX$
+      ADSCustomizeAOF( [<nRecno | aRecNos>] [, <nType>] ) --> nSuccess
+   $ARGUMENTS$
+      <nRecno | aRecNos> Can be either a single record number or an array of
+      record numbers to add or delete from the AOF. If omitted, defaults to
+      the current record.
+  
+      <nType>   The type of operation:
+  
+      <table>
+      ADS_AOF_ADD_RECORD      Add the record to the AOF (set the bit). This is the default operation.
+      ADS_AOF_REMOVE_RECORD   Remove the record from the AOF (clear the bit).
+      ADS_AOF_TOGGLE_RECORD   Switch the record into or out of the AOF.
+      </table>
+   $RETURNS$
+      <nError>  ADS error code, or 0 for success.
+   $DESCRIPTION$
+      An Advantage Optimized Filter (AOF) consists of a bitmap of the records in
+      the database. If bit 5 is on, record 5 is considered a visible record.
+      If bit 5 is off, record 5 is not visible. It does not "pass the test".
+      Initially, the bits are set by the Server according to a filter expression
+      from SET FILTER TO or adsSetAOF(). But by using ADSCustomizeAOF() you can
+      add or remove records at will from the visible set.  This is useful for
+      tagging records or for refining a result set after the data has been retrieved
+      from the server.
+  
+      The maximum number of records that can be customized in a single call is
+      16,383, so <aRecNos> must not be longer than this.
+  
+      Calls to AdsCustomizeAOF must be made after an application has created a
+      filter with a call to AdsSetAOF. To create a completely empty record set
+      (to which records can be added with calls to AdsCustomizeAOF), use ".F." as
+      the filter expression given to AdsSetAOF. To create a completely full
+      record set (from which records can be removed), use ".T." as the filter
+      expression.
+  
+      WARNING: Always start with a FULLY optimized AOF!
+      If an application must use a filter expression that is not fully optimized
+      as the starting point for customization, the ADS_RESOLVE_IMMEDIATE option
+      should be used with the call to AdsSetAOF. Otherwise, the dynamic filter
+      resolution that occurs on the server will automatically remove records that
+      have been added through the AdsCustomizeAOF calls. The
+      filter expressions ".T." and ".F." both result in fully optimized AOFs
+      regardless of available indexes.
+  
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSClearAOF(),ADSEvalAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSCustomizeAOF()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Add or remove records from an existing AOF
- *  $SYNTAX$
- *      ADSCustomizeAOF( [<nRecno | aRecNos>] [, <nType>] ) --> nSuccess
- *  $ARGUMENTS$
- *      <nRecno | aRecNos> Can be either a single record number or an array of
- *      record numbers to add or delete from the AOF. If omitted, defaults to
- *      the current record.
- *
- *      <nType>   The type of operation:
-
- *      <table>
- *      ADS_AOF_ADD_RECORD      Add the record to the AOF (set the bit). This is the default operation.
- *      ADS_AOF_REMOVE_RECORD   Remove the record from the AOF (clear the bit).
- *      ADS_AOF_TOGGLE_RECORD   Switch the record into or out of the AOF.
- *      </table>
- *  $RETURNS$
- *      <nError>  ADS error code, or 0 for success.
- *  $DESCRIPTION$
- *      An Advantage Optimized Filter (AOF) consists of a bitmap of the records in
- *      the database. If bit 5 is on, record 5 is considered a visible record.
- *      If bit 5 is off, record 5 is not visible. It does not "pass the test".
- *      Initially, the bits are set by the Server according to a filter expression
- *      from SET FILTER TO or adsSetAOF(). But by using ADSCustomizeAOF() you can
- *      add or remove records at will from the visible set.  This is useful for
- *      tagging records or for refining a result set after the data has been retrieved
- *      from the server.
-
- *      The maximum number of records that can be customized in a single call is
- *      16,383, so <aRecNos> must not be longer than this.
-
- *      Calls to AdsCustomizeAOF must be made after an application has created a
- *      filter with a call to AdsSetAOF. To create a completely empty record set
- *      (to which records can be added with calls to AdsCustomizeAOF), use ".F." as
- *      the filter expression given to AdsSetAOF. To create a completely full
- *      record set (from which records can be removed), use ".T." as the filter
- *      expression.
-
- *      WARNING: Always start with a FULLY optimized AOF!
- *      If an application must use a filter expression that is not fully optimized
- *      as the starting point for customization, the ADS_RESOLVE_IMMEDIATE option
- *      should be used with the call to AdsSetAOF. Otherwise, the dynamic filter
- *      resolution that occurs on the server will automatically remove records that
- *      have been added through the AdsCustomizeAOF calls. The
- *      filter expressions ".T." and ".F." both result in fully optimized AOFs
- *      regardless of available indexes.
-
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSClearAOF(),ADSEvalAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSEvalAOF()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Evaluate a filter expression to determine its optimization level
+   $SYNTAX$
+      ADSEvalAOF(<cFilter>) --> nOptimizationLevel
+   $ARGUMENTS$
+      <cFilter>       Expression to test.
+   $RETURNS$
+      <nOptimizationLevel>      </par>
+      Values are defined in ads.ch:
+      ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
+      IMPORTANT NOTE: These values are NOT the same as those returned
+      by dbOrderInfo().
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSClearAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSEvalAOF()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Evaluate a filter expression to determine its optimization level
- *  $SYNTAX$
- *      ADSEvalAOF(<cFilter>) --> nOptimizationLevel
- *  $ARGUMENTS$
- *      <cFilter>       Expression to test.
- *  $RETURNS$
- *      <nOptimizationLevel>      </par>
- *      Values are defined in ads.ch:
- *      ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
- *      IMPORTANT NOTE: These values are NOT the same as those returned
- *      by dbOrderInfo().
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSClearAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSGetAOFoptLevel()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Returns optimization level of the current AOF filter
+   $SYNTAX$
+      ADSGetAOFoptLevel() --> nOptimizationLevel
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <nOptimizationLevel>      </par>
+      Values are defined in ads.ch:
+      ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSClearAOF(),ADSGetAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSGetAOFoptLevel()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Returns optimization level of the current AOF filter
- *  $SYNTAX$
- *      ADSGetAOFoptLevel() --> nOptimizationLevel
- *  $ARGUMENTS$
- *       None
- *  $RETURNS$
- *      <nOptimizationLevel>      </par>
- *      Values are defined in ads.ch:
- *      ADS_OPTIMIZED_FULL, ADS_OPTIMIZED_PART, ADS_OPTIMIZED_NONE.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSClearAOF(),ADSGetAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSGetAOF()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Retrieve the filter expression used in the call to AdsSetAOF
+   $SYNTAX$
+      ADSGetAOF() --> cFilter
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <cFilter>  The filter expression used in the call to AdsSetAOF.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSClearAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSGetAOF()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Retrieve the filter expression used in the call to AdsSetAOF
- *  $SYNTAX$
- *      ADSGetAOF() --> cFilter
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      <cFilter>  The filter expression used in the call to AdsSetAOF.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSClearAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSGetAOFnoOpt()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Return the non-optimized portion of the current filter expression
+   $SYNTAX$
+      ADSGetAOFnoOpt() --> cFilterFragment
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <cFilterFragment>  If an AOF filter expression is not fully optimizable,
+      the non-optimizable part of the expression can be retrieved with this function.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSGetAOFnoOpt()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Return the non-optimized portion of the current filter expression
- *  $SYNTAX$
- *      ADSGetAOFnoOpt() --> cFilterFragment
- *  $ARGUMENTS$
- *    None
- *  $RETURNS$
- *      <cFilterFragment>  If an AOF filter expression is not fully optimizable,
- *      the non-optimizable part of the expression can be retrieved with this function.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSRefreshAOF()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Update the filter snapshot
+   $SYNTAX$
+      ADSRefreshAOF()
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+      If record updates occur after an AOF is set, the updated records may
+      or may not be valid records for the filter. ADSRefreshAOF()
+      re-evaluates the data to include or exclude changed records.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSClearAOF(),ADSIsRecordInAOF(),ADSSetAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSRefreshAOF()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Update the filter snapshot
- *  $SYNTAX$
- *      ADSRefreshAOF()
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      NIL
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *      If record updates occur after an AOF is set, the updated records may
- *      or may not be valid records for the filter. ADSRefreshAOF()
- *      re-evaluates the data to include or exclude changed records.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSClearAOF(),ADSIsRecordInAOF(),ADSSetAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSSetAOF()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Create an Advantage Optimized Filter
+   $SYNTAX$
+      ADSSetAOF( <cFilter> [, <nResolveOption>] ) --> lSuccess
+   $ARGUMENTS$
+      <cFilter>         Filter expression to set.
+  
+      <nResolveOption>  Option to indicate how the filter should be resolved
+      in the event that the expression cannot be fully optimized.
+      Options are defined in ads.ch:
+      ADS_RESOLVE_IMMEDIATE, ADS_RESOLVE_DYNAMIC.
+   $RETURNS$
+      <lSuccess>   True if AOF is created.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSSetAOF()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Create an Advantage Optimized Filter
- *  $SYNTAX$
- *      ADSSetAOF( <cFilter> [, <nResolveOption>] ) --> lSuccess
- *  $ARGUMENTS$
- *       <cFilter>         Filter expression to set.
-
- *       <nResolveOption>  Option to indicate how the filter should be resolved
- *       in the event that the expression cannot be fully optimized.
- *       Options are defined in ads.ch:
- *       ADS_RESOLVE_IMMEDIATE, ADS_RESOLVE_DYNAMIC.
- *  $RETURNS$
- *      <lSuccess>   True if AOF is created.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSIsRecordInAOF()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Determine if a record is in the current AOF
+   $SYNTAX$
+      ADSIsRecordInAOF( [<nRecNo>] ) --> lSatisfiesFilter
+   $ARGUMENTS$
+      <nRecNo>         Record number to test. Default is current record.
+   $RETURNS$
+      True if the record satisfies the filter criteria.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSClearAOF(),ADSRefreshAOF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSIsRecordInAOF()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Determine if a record is in the current AOF
- *  $SYNTAX$
- *      ADSIsRecordInAOF( [<nRecNo>] ) --> lSatisfiesFilter
- *  $ARGUMENTS$
- *       <nRecNo>         Record number to test. Default is current record.
- *  $RETURNS$
- *      True if the record satisfies the filter criteria.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSClearAOF(),ADSRefreshAOF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSGetRelKeyPos()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Estimated key position of current record within the current index
+   $SYNTAX$
+      ADSGetRelKeyPos() --> nKeyPos
+   $ARGUMENTS$
+      None.  Only accesses the current index, if any.
+   $RETURNS$
+      A value between 0.0 and 1.0, inclusive.
+   $DESCRIPTION$
+      This function estimates the relative key position within the current index,
+      respecting any scope setting.
+      It also works with no active index to yield the relative position of the
+      current record number.
+      The value returned is between 0.0 and 1.0, inclusive.
+  
+      This is the recommended function for positioning a scrollbar
+      or other "coarse" position interface.
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSKeyNo(),ADSKeyCount(),ADSSetRelKeyPos()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSGetRelKeyPos()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Estimated key position of current record within the current index
- *  $SYNTAX$
- *      ADSGetRelKeyPos() --> nKeyPos
- *  $ARGUMENTS$
- *      None.  Only accesses the current index, if any.
- *  $RETURNS$
- *      A value between 0.0 and 1.0, inclusive.
- *  $DESCRIPTION$
- *      This function estimates the relative key position within the current index,
- *      respecting any scope setting.
- *      It also works with no active index to yield the relative position of the
- *      current record number.
- *      The value returned is between 0.0 and 1.0, inclusive.
- *
- *      This is the recommended function for positioning a scrollbar
- *      or other "coarse" position interface.
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSKeyNo(),ADSKeyCount(),ADSSetRelKeyPos()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSSetRelKeyPos()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      GoTo the given estimated key position within the current index
+   $SYNTAX$
+      ADSSetSelKeyPos( <nPercent> ) --> nError
+   $ARGUMENTS$
+      <nPercent>  Relative key position between 0.0 and 1.0, inclusive.
+   $RETURNS$
+      The return/error value of the ADS API call.
+   $DESCRIPTION$
+      This function moves the record pointer to the estimated relative position
+      within the current index order, respecting any scope setting.
+      It also works with no active index to go to the relative position of the
+      current record number.
+  
+      This is the recommended function for re-positioning in reaction to
+      a dragged scrollbar thumb or other "coarse" navigation interface.
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSKeyNo(),ADSKeyCount(),ADSGetRelKeyPos()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSSetRelKeyPos()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      GoTo the given estimated key position within the current index
- *  $SYNTAX$
- *      ADSSetSelKeyPos( <nPercent> ) --> nError
- *  $ARGUMENTS$
- *      <nPercent>  Relative key position between 0.0 and 1.0, inclusive.
- *  $RETURNS$
- *      The return/error value of the ADS API call.
- *  $DESCRIPTION$
- *      This function moves the record pointer to the estimated relative position
- *      within the current index order, respecting any scope setting.
- *      It also works with no active index to go to the relative position of the
- *      current record number.
- *
- *      This is the recommended function for re-positioning in reaction to
- *      a dragged scrollbar thumb or other "coarse" navigation interface.
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSKeyNo(),ADSKeyCount(),ADSGetRelKeyPos()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSKeyCount()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Retrieve the number of keys in a specified index
+   $SYNTAX$
+      ADSKeyCount([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyCount
+   $ARGUMENTS$
+      <xTag>     Numeric order number OR index tag name. Default is current index.
+  
+      <cIgnoredIndexFile>   This parameter is not processed. In other Harbour RDDs,
+      the second parameter to "ordKeyCount" takes a second argument to identify
+      a particular Index File in cases where two files are open that contain
+      orders with the same name. The ADS driver does not support this and
+      will select the first order with the requested name. To stay consistent
+      with other RDDs, therefore, the second parameter is reserved and the
+      <nFilterOption> is passed as a third parameter.
+  
+      <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
+  
+      Options are defined in ads.ch:
+  
+      <table>
+         ADS_RESPECTFILTERS   Respect filters and scopes
+         ADS_IGNOREFILTERS    Ignore filters and scopes
+         ADS_RESPECTSCOPES    Respect scopes only
+      </table>
+   $RETURNS$
+      <nKeyCount>  The number of keys within the current index.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSKeyNo(),ADSGetRelKeyPos()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSKeyCount()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Retrieve the number of keys in a specified index
- *  $SYNTAX$
- *      ADSKeyCount([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyCount
- *  $ARGUMENTS$
- *      <xTag>     Numeric order number OR index tag name. Default is current index.
- *
- *      <cIgnoredIndexFile>   This parameter is not processed. In other Harbour RDDs,
- *      the second parameter to "ordKeyCount" takes a second argument to identify
- *      a particular Index File in cases where two files are open that contain
- *      orders with the same name. The ADS driver does not support this and
- *      will select the first order with the requested name. To stay consistent
- *      with other RDDs, therefore, the second parameter is reserved and the
- *      <nFilterOption> is passed as a third parameter.
- *
- *      <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
-
- *      Options are defined in ads.ch:
- *
-        <table>
- *         ADS_RESPECTFILTERS   Respect filters and scopes
- *         ADS_IGNOREFILTERS    Ignore filters and scopes
- *         ADS_RESPECTSCOPES    Respect scopes only
-        </table>
- *  $RETURNS$
- *      <nKeyCount>  The number of keys within the current index.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSKeyNo(),ADSGetRelKeyPos()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSKeyNo()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Get the logical key number of the current record in the given index
+   $SYNTAX$
+      ADSKeyNo([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyNo
+   $ARGUMENTS$
+      <xTag>          Numeric order number OR index tag name. Default is current index.
+  
+      <cIgnoredIndexFile>   This parameter is not processed. In other Harbour RDDs,
+      the second parameter to "ordKeyNo" takes a second argument to identify
+      a particular Index File in cases where two files are open that contain
+      orders with the same name. The ADS driver does not support this and
+      will select the first order with the requested name. To stay consistent
+      with other RDDs, therefore, the second parameter is reserved and the
+      <nFilterOption> is passed as a third parameter.
+  
+      <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
+  
+      <table>
+      Options are defined in ads.ch:
+         ADS_RESPECTFILTERS   Respect filters and scopes
+         ADS_IGNOREFILTERS    Ignore filters and scopes
+         ADS_RESPECTSCOPES    Respect scopes only
+      </table>
+   $RETURNS$
+      <nKeyNo>   The logical key number of the current record in the given index.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.</par>
+      Wrapper for AdsGetKeyNum. </par>
+      This function may be slow on a large database with
+      ADS_RESPECTFILTERS set because it walks through the keys to get the
+      current position.  Compare to ADSGetRelKeyPos().
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSKeyCount(),ADSGetRelKeyPos()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSKeyNo()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Get the logical key number of the current record in the given index
- *  $SYNTAX$
- *      ADSKeyNo([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyNo
- *  $ARGUMENTS$
- *      <xTag>          Numeric order number OR index tag name. Default is current index.
- *
- *      <cIgnoredIndexFile>   This parameter is not processed. In other Harbour RDDs,
- *      the second parameter to "ordKeyNo" takes a second argument to identify
- *      a particular Index File in cases where two files are open that contain
- *      orders with the same name. The ADS driver does not support this and
- *      will select the first order with the requested name. To stay consistent
- *      with other RDDs, therefore, the second parameter is reserved and the
- *      <nFilterOption> is passed as a third parameter.
- *
- *      <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
- *
- *      <table>
- *      Options are defined in ads.ch:
- *         ADS_RESPECTFILTERS   Respect filters and scopes
- *         ADS_IGNOREFILTERS    Ignore filters and scopes
- *         ADS_RESPECTSCOPES    Respect scopes only
- *      </table>
- *  $RETURNS$
- *      <nKeyNo>   The logical key number of the current record in the given index.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.</par>
- *      Wrapper for AdsGetKeyNum. </par>
- *      This function may be slow on a large database with
- *      ADS_RESPECTFILTERS set because it walks through the keys to get the
- *      current position.  Compare to ADSGetRelKeyPos().
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSKeyCount(),ADSGetRelKeyPos()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSLocking()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Turns on/off the Advantage proprietary locking mode
+   $SYNTAX$
+      ADSLocking( <lMode> ) --> lPriorSetting
+   $ARGUMENTS$
+      <lMode>    .T. to use the Advantage proprietary locking mode
+      (this is the default setting if a remote server is used)
+      or pass .F. to use "compatibility" locking.
+  
+   $RETURNS$
+      <lPriorSetting>   .T. if prior setting was for the proprietary mode.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+      The Advantage Database Server has a fast Proprietary locking mode that
+      is more efficient than traditional network locking. It is only available
+      when using the remote server (not the local server).
+  
+      If a file is opened in the proprietary mode, other applications cannot
+      open it in a "write" mode. So if non-Advantage applications need
+      concurrent access to the data files, use the Compatibility locking mode
+      by calling  ADSLocking( .F. ).
+  
+      ADSLocking() is a Get/Set function for the locking mode. It affects
+      files at the time they are opened. So when a data
+      file is opened, the current setting is used for that file until it is
+      closed. Different files can have different locking modes by changing
+      the setting before opening a second file.
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSRightsCheck()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSLocking()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Turns on/off the Advantage proprietary locking mode
- *  $SYNTAX$
- *      ADSLocking( <lMode> ) --> lPriorSetting
- *  $ARGUMENTS$
- *      <lMode>    .T. to use the Advantage proprietary locking mode
- *      (this is the default setting if a remote server is used)
- *      or pass .F. to use "compatibility" locking.
- *
- *  $RETURNS$
- *      <lPriorSetting>   .T. if prior setting was for the proprietary mode.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *      The Advantage Database Server has a fast Proprietary locking mode that
- *      is more efficient than traditional network locking. It is only available
- *      when using the remote server (not the local server).
-
- *      If a file is opened in the proprietary mode, other applications cannot
- *      open it in a "write" mode. So if non-Advantage applications need
- *      concurrent access to the data files, use the Compatibility locking mode
- *      by calling  ADSLocking( .F. ).
-
- *      ADSLocking() is a Get/Set function for the locking mode. It affects
- *      files at the time they are opened. So when a data
- *      file is opened, the current setting is used for that file until it is
- *      closed. Different files can have different locking modes by changing
- *      the setting before opening a second file.
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSRightsCheck()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSRightsCheck()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Sets the "rights checking" setting for opening files
+   $SYNTAX$
+      ADSRightsCheck( <lMode> ) --> lPriorSetting
+   $ARGUMENTS$
+      <lMode>    .T. to check rights upon opening data files (the default),
+      or .F. to ignore rights
+  
+   $RETURNS$
+      <lPriorSetting>
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
+      If the setting is .T. when a file is opened, then the Advantage
+      Database Server will use the rights of the connected user when
+      opening the file. If the user does not have rights to the
+      directory or server, then the open call will fail.
+  
+      If the setting is .F., then the ADS will
+      ignore the connected user's rights and open the file
+      regardless. This lets you allow only
+      Advantage-based applications to access specific data.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSLocking()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSRightsCheck()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Sets the "rights checking" setting for opening files
- *  $SYNTAX$
- *      ADSRightsCheck( <lMode> ) --> lPriorSetting
- *  $ARGUMENTS$
- *      <lMode>    .T. to check rights upon opening data files (the default),
- *      or .F. to ignore rights
- *
- *  $RETURNS$
- *      <lPriorSetting>
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
- *      If the setting is .T. when a file is opened, then the Advantage
- *      Database Server will use the rights of the connected user when
- *      opening the file. If the user does not have rights to the
- *      directory or server, then the open call will fail.
-
- *      If the setting is .F., then the ADS will
- *      ignore the connected user's rights and open the file
- *      regardless. This lets you allow only
- *      Advantage-based applications to access specific data.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSLocking()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsRegCallBack()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      For Progress displays: Sets a codeblock to be called during indexing
+   $SYNTAX$
+      AdsRegCallBack( bEval )  --> nil
+   $ARGUMENTS$
+      <bEval>    The codeblock that is eval'ed every 2 seconds during
+      indexing. A numeric value of the "percent completed" is passed
+      to the codeblock by the ADS server. The codeblock should return
+      a logical value: .T. to abort or .F. to not stop indexing.
+  
+   $RETURNS$
+      <nil>
+   $DESCRIPTION$
+      See ace.hlp for full details on AdsRegisterProgressCallback.
+      ace32.dll does not support the EVAL/EVERY clauses. Remember, there
+      is an external process doing the indexing that knows nothing of
+      Harbour expressions or codeblocks. Even with Local Server it's the
+      DLLs doing all the indexing. So to do progress meters
+      you need to implement this.
+   $EXAMPLES$
+      #include "inkey.ch"
+      PROCEDURE Main()
+         ...
+         AdsRegCallBack( {| nPercent | outputstuff( nPercent ) }  )
+         /* The above codeblock will be called approximately
+              every 2 seconds while indexing.
+              The codeblock can return .T. to abort.   */
+         INDEX ON First+LAST+LABEL1+LABEL2 TAG First
+         AdsClrCallBack()
+         RETURN
+  
+      FUNCTION outputstuff( nPercent )  /* The "callback" function */
+         ? "output stuff", nPercent
+         RETURN Inkey() == K_ESC
+         /*  If press ESC, returns .T. to abort.   */
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      AdsClrCallBack()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsRegCallBack()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      For Progress displays: Sets a codeblock to be called during indexing
- *  $SYNTAX$
- *      AdsRegCallBack( bEval )  --> nil
- *  $ARGUMENTS$
- *      <bEval>    The codeblock that is eval'ed every 2 seconds during
- *      indexing. A numeric value of the "percent completed" is passed
- *      to the codeblock by the ADS server. The codeblock should return
- *      a logical value: .T. to abort or .F. to not stop indexing.
- *
- *  $RETURNS$
- *      <nil>
- *  $DESCRIPTION$
- *      See ace.hlp for full details on AdsRegisterProgressCallback.
- *      ace32.dll does not support the EVAL/EVERY clauses. Remember, there
- *      is an external process doing the indexing that knows nothing of
- *      Harbour expressions or codeblocks. Even with Local Server it's the
- *      DLLs doing all the indexing. So to do progress meters
- *      you need to implement this.
- *  $EXAMPLES$
- *       #include "inkey.ch"
- *       PROCEDURE Main()
- *          ...
- *          AdsRegCallBack( {| nPercent | outputstuff( nPercent ) }  )
- *          /* The above codeblock will be called approximately
- *               every 2 seconds while indexing.
- *               The codeblock can return .T. to abort.   */
- *          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
- *          AdsClrCallBack()
- *          RETURN
- *
- *       FUNCTION outputstuff( nPercent )  /* The "callback" function */
- *          ? "output stuff", nPercent
- *          RETURN Inkey() == K_ESC
- *          /*  If press ESC, returns .T. to abort.   */
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      AdsClrCallBack()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsClrCallBack()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Clears the callback set by AdsRegCallBack().
+   $SYNTAX$
+      AdsClrCallBack() --> nil
+   $ARGUMENTS$
+  
+   $RETURNS$
+      <nil>
+   $DESCRIPTION$
+      See AdsRegCallBack().
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      AdsRegCallBack()
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsClrCallBack()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Clears the callback set by AdsRegCallBack().
- *  $SYNTAX$
- *      AdsClrCallBack() --> nil
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <nil>
- *  $DESCRIPTION$
- *      See AdsRegCallBack().
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      AdsRegCallBack()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSSetDefault() *
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Get/Set function for ADS's DEFAULT setting.
+   $SYNTAX$
+      ADSSetDefault( [<cPath>] ) --> cPriorSetting
+   $ARGUMENTS$
+      <cPath>    Sets new value if passed.
+  
+   $RETURNS$
+      <cPriorSetting>
+   $DESCRIPTION$
+      This function is NOT recommended! It allows direct access to the
+      ADS internal equivalent to SET DEFAULT TO. But this setting is
+      automatically maintained by Harbour's Set() function and the
+      SET DEFAULT TO command, so normal programming will not use this.
+      It exists primarily for testing purposes.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+  
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSSetDefault() *
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Get/Set function for ADS's DEFAULT setting.
- *  $SYNTAX$
- *      ADSSetDefault( [<cPath>] ) --> cPriorSetting
- *  $ARGUMENTS$
- *      <cPath>    Sets new value if passed.
- *
- *  $RETURNS$
- *      <cPriorSetting>
- *  $DESCRIPTION$
- *      This function is NOT recommended! It allows direct access to the
- *      ADS internal equivalent to SET DEFAULT TO. But this setting is
- *      automatically maintained by Harbour's Set() function and the
- *      SET DEFAULT TO command, so normal programming will not use this.
- *      It exists primarily for testing purposes.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSSetDeleted() *
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Get/Set function for ADS's ShowDeleted() setting.
+   $SYNTAX$
+      ADSSetDeleted( [<lOnOff>] ) --> lPriorSetting
+   $ARGUMENTS$
+      <lOnOff>    Sets new value if passed. The value is parallel
+      to Harbour usage, so pass .F. to see deleted records or .T.
+      to hide them. (This is inverted from ADS's AdsShowDeleted()
+      syntax.)
+  
+   $RETURNS$
+      <lPriorSetting>
+   $DESCRIPTION$
+      This function is NOT recommended! It allows direct access to the
+      ADS internal equivalent to SET DELETED. But this setting is
+      automatically maintained by Harbour's Set() function and the
+      SET DELETED ON/OFF command, so normal programming will not use this.
+      It exists primarily for testing purposes.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+  
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSSetDeleted() *
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Get/Set function for ADS's ShowDeleted() setting.
- *  $SYNTAX$
- *      ADSSetDeleted( [<lOnOff>] ) --> lPriorSetting
- *  $ARGUMENTS$
- *      <lOnOff>    Sets new value if passed. The value is parallel
- *      to Harbour usage, so pass .F. to see deleted records or .T.
- *      to hide them. (This is inverted from ADS's AdsShowDeleted()
- *      syntax.)
- *
- *  $RETURNS$
- *      <lPriorSetting>
- *  $DESCRIPTION$
- *      This function is NOT recommended! It allows direct access to the
- *      ADS internal equivalent to SET DELETED. But this setting is
- *      automatically maintained by Harbour's Set() function and the
- *      SET DELETED ON/OFF command, so normal programming will not use this.
- *      It exists primarily for testing purposes.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsSetSearchPath() *
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Get/Set function for ADS's AdsSetSearchPath() setting.
+   $SYNTAX$
+      AdsSetSearchPath( [<cPath>] ) --> cPriorSetting
+   $ARGUMENTS$
+      <cPath>     Sets new value if passed.
+  
+   $RETURNS$
+      <cPriorSetting>
+   $DESCRIPTION$
+      This function is NOT recommended! It allows direct access to the
+      ADS AdsSetSearchPath() setting. But this setting is
+      automatically maintained by Harbour's Set() function and the
+      SET PATH command, so normal programming will not use this.
+      It exists primarily for testing purposes.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+  
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsSetSearchPath() *
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Get/Set function for ADS's AdsSetSearchPath() setting.
- *  $SYNTAX$
- *      AdsSetSearchPath( [<cPath>] ) --> cPriorSetting
- *  $ARGUMENTS$
- *      <cPath>     Sets new value if passed.
- *
- *  $RETURNS$
- *      <cPriorSetting>
- *  $DESCRIPTION$
- *      This function is NOT recommended! It allows direct access to the
- *      ADS AdsSetSearchPath() setting. But this setting is
- *      automatically maintained by Harbour's Set() function and the
- *      SET PATH command, so normal programming will not use this.
- *      It exists primarily for testing purposes.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsSetExact() *
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Get/Set function for ADS's AdsSetExact() setting.
+   $SYNTAX$
+      AdsSetExact( [<lOnOff>] ) --> lPriorSetting
+   $ARGUMENTS$
+      <lOnOff>    Sets new value if passed.
+  
+   $RETURNS$
+      <lPriorSetting>
+   $DESCRIPTION$
+      This function is NOT recommended! It allows direct access to the
+      ADS internal equivalent to SET EXACT. But this setting is
+      automatically maintained by Harbour's Set() function and the
+      SET EXACT ON/OFF command, so normal programming will not use this.
+      It exists primarily for testing purposes.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+  
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsSetExact() *
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Get/Set function for ADS's AdsSetExact() setting.
- *  $SYNTAX$
- *      AdsSetExact( [<lOnOff>] ) --> lPriorSetting
- *  $ARGUMENTS$
- *      <lOnOff>    Sets new value if passed.
-
- *  $RETURNS$
- *      <lPriorSetting>
- *  $DESCRIPTION$
- *      This function is NOT recommended! It allows direct access to the
- *      ADS internal equivalent to SET EXACT. But this setting is
- *      automatically maintained by Harbour's Set() function and the
- *      SET EXACT ON/OFF command, so normal programming will not use this.
- *      It exists primarily for testing purposes.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSSetCharType()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Sets the type of character data expected when opening tables.
+   $SYNTAX$
+      ADSSetCharType( <nCharType>, [lOEM] ) --> nPriorSetting
+   $ARGUMENTS$
+      <nCharType>    Type of character data in the table.
+      From ADS docs:
+      Options are ADS_ANSI and ADS_OEM. This indicates the type of
+      character data to be stored in the table. For compatibility with
+      DOS-based CA-Cl*pper applications, ADS_OEM should be specified.
+      When usTableType is ADS_ADT, this parameter is ignored and ANSI
+      is always used.
+      <lOEM> This parameter used for console mode applications, when
+      character data stored in OEM charset. If lOEM is passed as .T.,
+      rddads doesn't convert character data into ANSI charset.
+  
+   $RETURNS$
+      <nPriorSetting>
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+      This sets the usCharType parameter used when ADS opens a table.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      AdsRightsCheck(),AdsLocking(), ADSSetFileType()
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSSetCharType()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Sets the type of character data expected when opening tables.
- *  $SYNTAX$
- *      ADSSetCharType( <nCharType>, [lOEM] ) --> nPriorSetting
- *  $ARGUMENTS$
- *      <nCharType>    Type of character data in the table.
- *      From ADS docs:
- *      Options are ADS_ANSI and ADS_OEM. This indicates the type of
- *      character data to be stored in the table. For compatibility with
- *      DOS-based CA-Cl*pper applications, ADS_OEM should be specified.
- *      When usTableType is ADS_ADT, this parameter is ignored and ANSI
- *      is always used.
- *      <lOEM> This parameter used for console mode applications, when
- *      character data stored in OEM charset. If lOEM is passed as .T.,
- *      rddads doesn't convert character data into ANSI charset.
- *
- *  $RETURNS$
- *      <nPriorSetting>
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *      This sets the usCharType parameter used when ADS opens a table.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      AdsRightsCheck(),AdsLocking(), ADSSetFileType()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsIsIndexed()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Fast determination for if current workarea has a selected index
+   $SYNTAX$
+      AdsIsIndexed() --> lActiveIndex
+   $ARGUMENTS$
+  
+   $RETURNS$
+      <lActiveIndex>
+   $DESCRIPTION$
+      Equivalent to <b>empty(ordSetFocus())<\b>, but faster.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+   $SEEALSO$
+  
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsIsIndexed()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Fast determination for if current workarea has a selected index
- *  $SYNTAX$
- *      AdsIsIndexed() --> lActiveIndex
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <lActiveIndex>
- *  $DESCRIPTION$
- *      Equivalent to <b>empty(ordSetFocus())<\b>, but faster.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *  $SEEALSO$
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsTestRecLocks()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Turn On or Off a "debug mode" for trapping missed record locks.
+   $SYNTAX$
+      AdsTestRecLocks( <lOnOff> ) --> lPriorSetting
+   $ARGUMENTS$
+      <lOnOff>    New setting. Default is FALSE.
+   $RETURNS$
+      Prior Setting.
+   $DESCRIPTION$
+      AdsTestRecLocks() is a Get/Set function for a "record lock checking" mode.
+      ADS has Implicit Record locking that can mask programming errors.
+      Implicit locking can occur the first time a value is written to a
+      field with no lock in effect. The lock can potentially remain in
+      effect indefinitely if the record pointer is not moved, causing
+      bugs later in program execution that are hard to find.
+      In Harbour internal RDDs, a runtime error occurs if an attempt is made
+      to write to a shared file without a proper lock.
+  
+      AdsTestRecLocks( .T. ) will turn on a debugging mode to mimic this behavior
+      and throw an error instead of allowing an implicit lock. Each time a field
+      is set, we see if the file is open exclusively or locked, and whether
+      the record has been explicitly locked already. If not, we throw
+      an error so the developer can catch the missing lock condition.
+      For performance reasons, Release code should leave this OFF.
+      Although the call to AdsIsRecordLocked is documented as a client
+      call, not a server request, and should be fast, it will be
+      called for EACH FIELD as it is assigned a value.
+  
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+  
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsTestRecLocks()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Turn On or Off a "debug mode" for trapping missed record locks.
- *  $SYNTAX$
- *      AdsTestRecLocks( <lOnOff> ) --> lPriorSetting
- *  $ARGUMENTS$
- *      <lOnOff>    New setting. Default is FALSE.
- *  $RETURNS$
- *      Prior Setting.
- *  $DESCRIPTION$
- *      AdsTestRecLocks() is a Get/Set function for a "record lock checking" mode.
- *      ADS has Implicit Record locking that can mask programming errors.
- *      Implicit locking can occur the first time a value is written to a
- *      field with no lock in effect. The lock can potentially remain in
- *      effect indefinitely if the record pointer is not moved, causing
- *      bugs later in program execution that are hard to find.
- *      In Harbour internal RDDs, a runtime error occurs if an attempt is made
- *      to write to a shared file without a proper lock.
-
- *      AdsTestRecLocks( .T. ) will turn on a debugging mode to mimic this behavior
- *      and throw an error instead of allowing an implicit lock. Each time a field
- *      is set, we see if the file is open exclusively or locked, and whether
- *      the record has been explicitly locked already. If not, we throw
- *      an error so the developer can catch the missing lock condition.
- *      For performance reasons, Release code should leave this OFF.
- *      Although the call to AdsIsRecordLocked is documented as a client
- *      call, not a server request, and should be fast, it will be
- *      called for EACH FIELD as it is assigned a value.
-
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsGetLastError()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Returns any error code generated by the most recent ADS API call
+   $SYNTAX$
+      AdsGetLastError() --> nErrorCode
+   $ARGUMENTS$
+      None.
+   $RETURNS$
+      The error code generated by the most recent ADS API call. Zero for success.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+  
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsGetLastError()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Returns any error code generated by the most recent ADS API call
- *  $SYNTAX$
- *      AdsGetLastError() --> nErrorCode
- *  $ARGUMENTS$
- *      None.
- *  $RETURNS$
- *      The error code generated by the most recent ADS API call. Zero for success.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsIsExprValid()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Determine if the ADS server can parse an expression
+   $SYNTAX$
+      AdsIsExprValid( <cExp> ) --> lSuccess
+   $ARGUMENTS$
+      <cExp>    Any hopefully valid expression; often a filter string
+   $RETURNS$
+      .T. if the expression is understood by ADS.
+   $DESCRIPTION$
+      ADS has its own limitations for the logical or string expressions
+      used in indexes, filters, scopes, etc. Unlike internal RDDs like DBFNTX,
+      the server is independent of the applications code, so it cannot understand
+      references to PUBLIC variables or User-Defined Functions (UDFs).
+      (See ace.hlp under Advantage Expression Engine for a list of functions
+      allowed by ADS.)
+      Call AdsIsExprValid() to determine if the server can process the expression.
+  
+      For illustration, consider filter expressions.
+      Since Harbour attempts to be as compatible with Clipper as possible,
+      you CAN set a filter that ADS DOES NOT understand, but the filtering
+      will be done by the RDD layer itself and ADS will be unaware of the
+      filter setting. This means more data will be sent "across the wire" from
+      the server to the client, and the client (in RDDADS) will be doing the
+      processing. Since the value of a database server is to have more processing
+      done by the server itself to reduce network traffic, it is better to only use
+      filter expressions ADS can understand.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+  
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsIsExprValid()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Determine if the ADS server can parse an expression
- *  $SYNTAX$
- *      AdsIsExprValid( <cExp> ) --> lSuccess
- *  $ARGUMENTS$
- *      <cExp>    Any hopefully valid expression; often a filter string
- *  $RETURNS$
- *      .T. if the expression is understood by ADS.
- *  $DESCRIPTION$
- *      ADS has its own limitations for the logical or string expressions
- *      used in indexes, filters, scopes, etc. Unlike internal RDDs like DBFNTX,
- *      the server is independent of the applications code, so it cannot understand
- *      references to PUBLIC variables or User-Defined Functions (UDFs).
- *      (See ace.hlp under Advantage Expression Engine for a list of functions
- *      allowed by ADS.)
- *      Call AdsIsExprValid() to determine if the server can process the expression.
-
- *      For illustration, consider filter expressions.
- *      Since Harbour attempts to be as compatible with Clipper as possible,
- *      you CAN set a filter that ADS DOES NOT understand, but the filtering
- *      will be done by the RDD layer itself and ADS will be unaware of the
- *      filter setting. This means more data will be sent "across the wire" from
- *      the server to the client, and the client (in RDDADS) will be doing the
- *      processing. Since the value of a database server is to have more processing
- *      done by the server itself to reduce network traffic, it is better to only use
- *      filter expressions ADS can understand.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsGetConnectionType()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Returns the type of Server used by the given connection handle.
+   $SYNTAX$
+      AdsGetConnectionType( [<hConnection>] ) --> nConnectionType
+   $ARGUMENTS$
+      <hConnection>    A connection handle retrieved via AdsConnect()
+      or AdsConnect60(). If omitted, the RDD's current connection
+      handle is used, but this only exists if AdsConnect() or AdsConnect60()
+      were previously called.
+  
+   $RETURNS$
+      The type of Advantage Server that the connection uses, either
+      ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER.
+   $DESCRIPTION$
+      Advantage uses Handles to control connections to various servers.
+      It's possible that an app may open some files via the Remote server,
+      but others via the Local server or an Internect connection.
+      This function identifies the type of server used by a connection handle.
+      Note that after a table is opened, the type of connection used for
+      that workarea can be retrieved with AdsGetTableConType().
+      See ace.hlp for full details.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      AdsGetTableConType(),AdsConnect(),AdsConnect60()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsGetConnectionType()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Returns the type of Server used by the given connection handle.
- *  $SYNTAX$
- *      AdsGetConnectionType( [<hConnection>] ) --> nConnectionType
- *  $ARGUMENTS$
- *      <hConnection>    A connection handle retrieved via AdsConnect()
- *      or AdsConnect60(). If omitted, the RDD's current connection
- *      handle is used, but this only exists if AdsConnect() or AdsConnect60()
- *      were previously called.
- *
- *  $RETURNS$
- *      The type of Advantage Server that the connection uses, either
- *      ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER.
- *  $DESCRIPTION$
- *      Advantage uses Handles to control connections to various servers.
- *      It's possible that an app may open some files via the Remote server,
- *      but others via the Local server or an Internect connection.
- *      This function identifies the type of server used by a connection handle.
- *      Note that after a table is opened, the type of connection used for
- *      that workarea can be retrieved with AdsGetTableConType().
- *      See ace.hlp for full details.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      AdsGetTableConType(),AdsConnect(),AdsConnect60()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      AdsGetTableConType()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Returns the type of Server used by current workarea.
+   $SYNTAX$
+      AdsGetTableConType() --> nConnectionType
+   $ARGUMENTS$
+      None.
+  
+   $RETURNS$
+      The type of Advantage Server that the current workarea uses, either
+      ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER.
+      Returns zero if the current workarea does not have an Advantage table opened.
+   $DESCRIPTION$
+      Advantage uses Handles to control connections to various servers.
+      It's possible that an app may open some files via the Remote server,
+      but others via the Local server or an Internect connection.
+      This function identifies the type of server used in the current workarea.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      AdsGetConnectionType(),AdsConnect(),AdsConnect60()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      AdsGetTableConType()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Returns the type of Server used by current workarea.
- *  $SYNTAX$
- *      AdsGetTableConType() --> nConnectionType
- *  $ARGUMENTS$
- *      None.
- *
- *  $RETURNS$
- *      The type of Advantage Server that the current workarea uses, either
- *      ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER.
- *      Returns zero if the current workarea does not have an Advantage table opened.
- *  $DESCRIPTION$
- *      Advantage uses Handles to control connections to various servers.
- *      It's possible that an app may open some files via the Remote server,
- *      but others via the Local server or an Internect connection.
- *      This function identifies the type of server used in the current workarea.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      AdsGetConnectionType(),AdsConnect(),AdsConnect60()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSDDADDTABLE()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Add a new table to a Data dictionary
+   $SYNTAX$
+      ADSDDADDTABLE( <cTableName>, <cFileName>, <cIndexFileName> ) --> lSuccess
+   $ARGUMENTS$
+      <cTableName> Name of the table inside the data dictionary
+      <cFileName>  Name of the adt or dbf file name
+      <cIndexFileName> Optional name of the index file
+   $RETURNS$
+      <lSuccess> -> .T. if file was added, otherwise .F.
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+      AdsDDAddTable() adds a new table to an ADS data dictionary.
+      To add the table you must be connected as ADSSYS user using the AdsConnect60() function
+   $EXAMPLES$
+      IF adsConnect60( "harbour.add", 7/* All types of connection*/, "ADSSYS", "",)
+         // Add one user
+          AdsDDCreateUser(,"Luiz", "papael", "This is luiz User")
+         // Add the tables
+          AdsDDaddTable("Table1", "table1.adt", "table1.adi")
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSCONNECT60(),ADSUSEDICTIONARY()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSDDADDTABLE()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Add a new table to a Data dictionary
- *  $SYNTAX$
- *      ADSDDADDTABLE( <cTableName>, <cFileName>, <cIndexFileName> ) --> lSuccess
- *  $ARGUMENTS$
- *      <cTableName> Name of the table inside the data dictionary
- *      <cFileName>  Name of the adt or dbf file name
- *      <cIndexFileName> Optional name of the index file
- *  $RETURNS$
- *      <lSuccess> -> .T. if file was added, otherwise .F.
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *      AdsDDAddTable() adds a new table to an ADS data dictionary.
- *      To add the table you must be connected as ADSSYS user using the AdsConnect60() function
- *  $EXAMPLES$
- *  IF adsConnect60( "harbour.add", 7/* All types of connection*/, "ADSSYS", "",)
- *     // Add one user
- *      AdsDDCreateUser(,"Luiz", "papael", "This is luiz User")
- *     // Add the tables
- *      AdsDDaddTable("Table1", "table1.adt", "table1.adi")
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSCONNECT60(),ADSUSEDICTIONARY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSUSEDICTIONARY()*
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      This function has been REMOVED.  It specified usage of a datadictionary connection
+   $SYNTAX$
+      None
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      None
+   $DESCRIPTION$
+      This function no longer exists.  See the Data Dictionary topic
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+  
+   $SEEALSO$
+      ADSCONNECT60()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSUSEDICTIONARY()*
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      This function has been REMOVED.  It specified usage of a datadictionary connection
- *  $SYNTAX$
- *      None
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      None
- *  $DESCRIPTION$
- *      This function no longer exists.  See the Data Dictionary topic
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *  $SEEALSO$
- *      ADSCONNECT60()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSCONNECT60()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Connect to a local/remote/internet server
+   $SYNTAX$
+      ADSCONNECT60(<cFilePath>, <nServertype>, [<cUserName>], [<cUserPass>], [<nOptions>]) -> lSuccess
+   $ARGUMENTS$
+      <cFilePath>   Name of data dictionary to connect to.
+      <nServertype> The server type to connect (LOCAL, REMOTE, AIS or all together)
+      <cUserName>   Optional Name of the user connecting to the server
+      <cUserPass>   Optional password for the user Name
+      <nOptions>    The optional connection options
+  
+   $RETURNS$
+      <lSuccess>   True if connected, otherwise False.
+   $DESCRIPTION$
+      Adsconnect60() makes the connection to an advantage database server.
+      See ace.hlp for full details about the Advantage Database Server.
+   $EXAMPLES$
+      IF adsConnect60( "harbour.add", 7/* All types of connection*/, "ADSSYS", "",)
+         // Add one user
+         AdsDDCreateUser(, "Luiz", "papael", "This is luiz User")
+      ENDIF
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      ADSDDADDTABLE()
+   $END$
  */
 
-
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSCONNECT60()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Connect to a local/remote/internet server
- *  $SYNTAX$
- *      ADSCONNECT60(<cFilePath>, <nServertype>, [<cUserName>], [<cUserPass>], [<nOptions>]) -> lSuccess
- *  $ARGUMENTS$
- *      <cFilePath>   Name of data dictionary to connect to.
- *      <nServertype> The server type to connect (LOCAL, REMOTE, AIS or all together)
- *      <cUserName>   Optional Name of the user connecting to the server
- *      <cUserPass>   Optional password for the user Name
- *      <nOptions>    The optional connection options
- *
- *  $RETURNS$
- *      <lSuccess>   True if connected, otherwise False.
- *  $DESCRIPTION$
- *      Adsconnect60() makes the connection to an advantage database server.
- *      See ace.hlp for full details about the Advantage Database Server.
- *  $EXAMPLES$
- *      IF adsConnect60( "harbour.add", 7/* All types of connection*/, "ADSSYS", "",)
- *         // Add one user
- *         AdsDDCreateUser(, "Luiz", "papael", "This is luiz User")
- *      ENDIF
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      ADSDDADDTABLE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSCACHEOPENTABLES()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Provides caching of open tables
+   $SYNTAX$
+      ADSCACHEOPENTABLES(<nOpen>) -> nRetVal
+   $ARGUMENTS$
+      <nOpen>       Number of tables to cache.
+  
+   $RETURNS$
+      <nRetVal>     ???
+   $DESCRIPTION$
+      AdsCacheOpenTables allows table closes to be cached in order for
+      subsequent opens to occur faster. A call to AdsCloseTable with
+      the table cache greater than zero results in the table appearing
+      closed to an application, but still open on the Advantage server.
+      AdsCacheOpenTables is a global setting that affects the behavior
+      of the entire application. The default number of open tables that
+      are cached is 0.
+   $EXAMPLES$
+      AdsCacheOpenTables( 25 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      AdsCacheOpenCursors()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSCACHEOPENTABLES()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Provides caching of open tables
- *  $SYNTAX$
- *      ADSCACHEOPENTABLES(<nOpen>) -> nRetVal
- *  $ARGUMENTS$
- *      <nOpen>       Number of tables to cache.
- *
- *  $RETURNS$
- *      <nRetVal>     ???
- *  $DESCRIPTION$
- *      AdsCacheOpenTables allows table closes to be cached in order for
- *      subsequent opens to occur faster. A call to AdsCloseTable with
- *      the table cache greater than zero results in the table appearing
- *      closed to an application, but still open on the Advantage server.
- *      AdsCacheOpenTables is a global setting that affects the behavior
- *      of the entire application. The default number of open tables that
- *      are cached is 0.
- *  $EXAMPLES$
- *      AdsCacheOpenTables( 25 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      AdsCacheOpenCursors()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSCACHEOPENCURSORS()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Provides caching of open cursors
+   $SYNTAX$
+      ADSCACHEOPENCURSORS(<nOpen>) -> nRetVal
+   $ARGUMENTS$
+      <nOpen>       Number of cursors to cache.
+  
+   $RETURNS$
+      <nRetVal>     ???
+   $DESCRIPTION$
+      AdsCacheOpenCursors allows cursor closes to be cached in
+      order for subsequent SELECTS to occur faster. A call to
+      AdsCloseTable with the cursor cache greater than zero results
+      in the cursor appearing closed to an application, but still
+      open on the Advantage server.
+      AdsCacheOpenCursors is a global setting that affects the
+      behavior of the entire application. The default number of
+      open cursors that are cached is 25.
+   $EXAMPLES$
+      AdsCacheOpenCursors( 0 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      AdsCacheOpenTables()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSCACHEOPENCURSORS()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Provides caching of open cursors
- *  $SYNTAX$
- *      ADSCACHEOPENCURSORS(<nOpen>) -> nRetVal
- *  $ARGUMENTS$
- *      <nOpen>       Number of cursors to cache.
- *
- *  $RETURNS$
- *      <nRetVal>     ???
- *  $DESCRIPTION$
- *      AdsCacheOpenCursors allows cursor closes to be cached in
- *      order for subsequent SELECTS to occur faster. A call to
- *      AdsCloseTable with the cursor cache greater than zero results
- *      in the cursor appearing closed to an application, but still
- *      open on the Advantage server.
- *      AdsCacheOpenCursors is a global setting that affects the
- *      behavior of the entire application. The default number of
- *      open cursors that are cached is 25.
- *  $EXAMPLES$
- *      AdsCacheOpenCursors( 0 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      AdsCacheOpenTables()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ADSCLOSECACHEDTABLES()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      Close all cached tables on the given connection
+   $SYNTAX$
+      ADSCLOSECACHEDTABLES([<hConnection>]) -> nRetVal
+   $ARGUMENTS$
+      <hConnection>    A connection handle retrieved via AdsConnect()
+      or AdsConnect60(). If omitted, the RDD's current connection
+      handle is used, but this only exists if AdsConnect() or AdsConnect60()
+      were previously called.
+   $RETURNS$
+      <nRetVal>     ???
+   $DESCRIPTION$
+      AdsCloseCachedTables can be used to close all cached tables
+      on a given connection. All cached closed tables on the client
+      will be closed, as well as all cache closed tables on the server
+      that might have been used when executing SQL statements.
+   $EXAMPLES$
+      AdsCloseCachedTables()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Ads 7.x and above, Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      AdsCacheOpenTables(), AdsCacheOpenCursors()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ADSCLOSECACHEDTABLES()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      Close all cached tables on the given connection
- *  $SYNTAX$
- *      ADSCLOSECACHEDTABLES([<hConnection>]) -> nRetVal
- *  $ARGUMENTS$
- *      <hConnection>    A connection handle retrieved via AdsConnect()
- *      or AdsConnect60(). If omitted, the RDD's current connection
- *      handle is used, but this only exists if AdsConnect() or AdsConnect60()
- *      were previously called.
- *  $RETURNS$
- *      <nRetVal>     ???
- *  $DESCRIPTION$
- *      AdsCloseCachedTables can be used to close all cached tables
- *      on a given connection. All cached closed tables on the client
- *      will be closed, as well as all cache closed tables on the server
- *      that might have been used when executing SQL statements.
- *  $EXAMPLES$
- *      AdsCloseCachedTables()
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Ads 7.x and above, Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      AdsCacheOpenTables(), AdsCacheOpenCursors()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      xxx()
+   $CATEGORY$
+      Advantage Database RDD
+   $ONELINER$
+      xxx
+   $SYNTAX$
+      xxx( <lMode> ) --> lPriorSetting
+   $ARGUMENTS$
+      <lMode>    xxx
+      xxx
+  
+   $RETURNS$
+      <lPriorSetting>
+   $DESCRIPTION$
+      See ace.hlp for full details about the Advantage Database Server.
+      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      R
+   $COMPLIANCE$
+      Harbour extension
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is RddAds
+      Header is ads.ch
+   $SEEALSO$
+      xxx()
+   $END$
  */
-
-
-/*  $DOC$
- *  $FUNCNAME$
- *      xxx()
- *  $CATEGORY$
- *      Advantage Database RDD
- *  $ONELINER$
- *      xxx
- *  $SYNTAX$
- *      xxx( <lMode> ) --> lPriorSetting
- *  $ARGUMENTS$
- *      <lMode>    xxx
- *      xxx
- *
- *  $RETURNS$
- *      <lPriorSetting>
- *  $DESCRIPTION$
- *      See ace.hlp for full details about the Advantage Database Server.
- *      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
- *  $EXAMPLES$
- *  $TESTS$
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      Harbour extension
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is RddAds
- *      Header is ads.ch
- *  $SEEALSO$
- *      xxx()
- *  $END$
- */
-
-/* TO-DO:
-
-v6:
-   AdsAddUserToGroup
-
-AdsAddCustomKey
-AdsDeleteCustomKey
-AdsGetTableAlias
-AdsConnect
-AdsDisconnect
-AdsCloseAllTables
-AdsWriteAllRecords
-AdsRefreshRecord
-AdsCopyTable
-AdsConvertTable
-AdsGetNumIndexes
-
-ADSDecryptRecord
-ADSDecryptTable
-ADSDisableEncryption
-ADSEnableEncryption
-ADSEncryptRecord
-ADSEncryptTable
-ADSIsEncryptionEnabled
-ADSIsRecordEncrypted
-ADSIsTableEncrypted
-
-*/

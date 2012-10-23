@@ -2,37 +2,37 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_BYTEOR()
- *  $CATEGORY$
- *     String
- *  $ONELINER$
- *     Perform bit-wise OR on two ASCII characters (bytes)
- *  $SYNTAX$
- *     FT_BYTEOR( <cByte1>, <cByte2> ) -> cNewByte
- *  $ARGUMENTS$
- *     <cByte1> and <cByte2> are characters from Chr(0) TO Chr(255).
- *     May be passed in Chr() form, as character literals, or as
- *     expressions evaluating to Chr() values.
- *  $RETURNS$
- *     Returns resulting byte, in Chr() form.  If parameters are faulty,
- *     returns NIL.
- *  $DESCRIPTION$
- *     Can be used for bit-wise byte manipulation.  In effect, this is a
- *     bit-by-bit OR operation.  Equivalent to OR assembler instruction.
- *
- *     This function is presented to illustrate that bit-wise operations
- *     are possible with Clipper code.  For greater speed, write .c or
- *     .asm versions and use the Clipper Extend system.
- *  $EXAMPLES$
- *     This code performs a bit-wise OR on two bytes represented
- *     by Chr( 20 ) and Chr( 10 ):
- *
- *     cNewByte := FT_BYTEOR( Chr( 20 ), Chr( 10 ) )
- *     ? Asc( cNewByte )  // result: 30
- *     ? cNewByte         // result: non-printable character
- *  $SEEALSO$
- *     FT_BYTEXOR() FT_BYTENOT() FT_BYTENEG() FT_BYTEAND()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_BYTEOR()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Perform bit-wise OR on two ASCII characters (bytes)
+   $SYNTAX$
+      FT_BYTEOR( <cByte1>, <cByte2> ) -> cNewByte
+   $ARGUMENTS$
+      <cByte1> and <cByte2> are characters from Chr(0) TO Chr(255).
+      May be passed in Chr() form, as character literals, or as
+      expressions evaluating to Chr() values.
+   $RETURNS$
+      Returns resulting byte, in Chr() form.  If parameters are faulty,
+      returns NIL.
+   $DESCRIPTION$
+      Can be used for bit-wise byte manipulation.  In effect, this is a
+      bit-by-bit OR operation.  Equivalent to OR assembler instruction.
+  
+      This function is presented to illustrate that bit-wise operations
+      are possible with Clipper code.  For greater speed, write .c or
+      .asm versions and use the Clipper Extend system.
+   $EXAMPLES$
+      This code performs a bit-wise OR on two bytes represented
+      by Chr( 20 ) and Chr( 10 ):
+  
+      cNewByte := FT_BYTEOR( Chr( 20 ), Chr( 10 ) )
+      ? Asc( cNewByte )  // result: 30
+      ? cNewByte         // result: non-printable character
+   $SEEALSO$
+      FT_BYTEXOR() FT_BYTENOT() FT_BYTENEG() FT_BYTEAND()
+   $END$
  */

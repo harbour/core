@@ -2,30 +2,30 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_PRTSCR()
- *  $CATEGORY$
- *     Keyboard/Mouse
- *  $ONELINER$
- *     Enable or disable the Print Screen key
- *  $SYNTAX$
- *     FT_PRTSCR( [ <lSetStat> ] ) -> lCurStat
- *  $ARGUMENTS$
- *     <lSetStat> set to .T. will enable the Print Screen key,
- *     .F. will disable it.  If omitted, leaves status as is.
- *  $RETURNS$
- *     The current state: .T. if enabled, .F. if disabled.
- *  $DESCRIPTION$
- *     This function is valuable if you have a need to disable the
- *     printscreen key.  It works by fooling the BIOS into thinking that
- *     a printscreen is already in progress.  The BIOS will then refuse
- *     to invoke the printscreen handler.
- *  $EXAMPLES$
- *     FT_PRTSCR( .F. )       // Disable the printscreen key
- *     FT_PRTSCR( .T. )       // Enable the printscreen key
- *     MemVar := FT_PRTSCR()  // Get the current status
- *  $SEEALSO$
- *     FT_CAPLOCK() FT_CTRL() FT_NUMLOCK() FT_SHIFT() FT_ALT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_PRTSCR()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Enable or disable the Print Screen key
+   $SYNTAX$
+      FT_PRTSCR( [ <lSetStat> ] ) -> lCurStat
+   $ARGUMENTS$
+      <lSetStat> set to .T. will enable the Print Screen key,
+      .F. will disable it.  If omitted, leaves status as is.
+   $RETURNS$
+      The current state: .T. if enabled, .F. if disabled.
+   $DESCRIPTION$
+      This function is valuable if you have a need to disable the
+      printscreen key.  It works by fooling the BIOS into thinking that
+      a printscreen is already in progress.  The BIOS will then refuse
+      to invoke the printscreen handler.
+   $EXAMPLES$
+      FT_PRTSCR( .F. )       // Disable the printscreen key
+      FT_PRTSCR( .T. )       // Enable the printscreen key
+      MemVar := FT_PRTSCR()  // Get the current status
+   $SEEALSO$
+      FT_CAPLOCK() FT_CTRL() FT_NUMLOCK() FT_SHIFT() FT_ALT()
+   $END$
  */

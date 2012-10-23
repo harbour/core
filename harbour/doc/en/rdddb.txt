@@ -2,7 +2,6 @@
  * $Id$
  */
 
-
 /*
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
@@ -16,1258 +15,1258 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBEVAL()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Execute and Execution
- *  $ONELINER$
- *      Performs a code block operation on the current Database
- *  $SYNTAX$
- *      DBEVAL( <bBlock>,
- *      [<bFor>], [<bWhile>],
- *      [<nNext>], [<nRecord>],
- *      [<lRest>] ) --> NIL
- *  $ARGUMENTS$
- *      <bBlock> Operation that is to be performed
- *
- *      <bFor> Code block for the For condition
- *
- *      <bWhile> Code block for the WHILE condition
- *
- *      <nNext> Number of NEXT records  to process
- *
- *      <nRecord> Record number to work on exactly
- *
- *      <lRest> Toggle to rewind record pointer
- *  $RETURNS$
- *      DBEVAL() always returns NIL
- *  $DESCRIPTION$
- *      Performs a code block operation on the current Database
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL nCount
- *
- *         USE test
- *
- *         dbGoto( 4 )
- *         ? RecNo()
- *         COUNT TO nCount
- *         ? RecNo(), nCount
- *         COUNT TO nCount NEXT 10
- *         ? RecNo(), nCount
- *
- *         RETURN
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      EVAL()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBEVAL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Execute and Execution
+   $ONELINER$
+      Performs a code block operation on the current Database
+   $SYNTAX$
+      DBEVAL( <bBlock>,
+      [<bFor>], [<bWhile>],
+      [<nNext>], [<nRecord>],
+      [<lRest>] ) --> NIL
+   $ARGUMENTS$
+      <bBlock> Operation that is to be performed
+
+      <bFor> Code block for the For condition
+
+      <bWhile> Code block for the WHILE condition
+
+      <nNext> Number of NEXT records  to process
+
+      <nRecord> Record number to work on exactly
+
+      <lRest> Toggle to rewind record pointer
+   $RETURNS$
+      DBEVAL() always returns NIL
+   $DESCRIPTION$
+      Performs a code block operation on the current Database
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL nCount
+
+         USE test
+
+         dbGoto( 4 )
+         ? RecNo()
+         COUNT TO nCount
+         ? RecNo(), nCount
+         COUNT TO nCount NEXT 10
+         ? RecNo(), nCount
+
+         RETURN
+   $STATUS$
+      S
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      EVAL()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *     DBF()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Alias name of a work area
- *  $SYNTAX$
- *      Dbf() --> <cWorkArea>
- *  $RETURNS$
- *      <cWorkArea> Name of alias
- *  $DESCRIPTION$
- *      This function returns the same alias name ofthe currently selected
- *      work area.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *
- *         USE test
- *         SELECT 0
- *         ? iif( DBF() == "", "No Name", DBF() )
- *         ? test->( DBF() )
- *         ? Alias( 1 )
- *
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      ALIAS()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBF()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Alias name of a work area
+   $SYNTAX$
+      Dbf() --> <cWorkArea>
+   $RETURNS$
+      <cWorkArea> Name of alias
+   $DESCRIPTION$
+      This function returns the same alias name ofthe currently selected
+      work area.
+   $EXAMPLES$
+      PROCEDURE Main()
+
+         USE test
+         SELECT 0
+         ? iif( DBF() == "", "No Name", DBF() )
+         ? test->( DBF() )
+         ? Alias( 1 )
+
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      ALIAS()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *     DBAPPEND()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Appends a new record to a database file.
- *  $SYNTAX$
- *      DbAppend( [<lLock>] ) --> NIL
- *  $ARGUMENTS$
- *      <lLock> Toggle to release record locks
- *  $RETURNS$
- *      DbAppend() always returns NIL
- *  $DESCRIPTION$
- *     This function add a new record to the end of the database
- *     in the selected or aliased work area. All fields in that
- *     database will be given empty data values - character fields
- *     will be filled with blank spaces,date fields with CTOD('//'),
- *     numeric fields with 0, logical fields with .F., and memo fields
- *     with NULL bytes. The header of the database is not updated until
- *     the record is flushed from the buffer and the contents are
- *     written to the disk.
- *
- *     Under a networking enviroment, DBAPPEND() performs an additional
- *     operation: It attrmps to lock the newly added record. If
- *     the database file is currently locked or if a locking assignment
- *     if made to LASTREC()+1, NETERR() will return a logical true (.T.)
- *     immediately after the DBAPPEND() function. This function does
- *     not unlock the locked records.
- *
- *     If <lLock> is passed a logical true (.T.) value, it will
- *     release the record locks, which allows the application to main-
- *     tain multiple record locks during an appending operation. The
- *     default for this parameter is a logical false (.F.).
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL cName := "HARBOUR", nId := 10
- *         USE test
- *         test->( dbAppend() )
- *         REPLACE test->Name WITH cName, test->Id WITH nId
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBUNLOCK(),DBUNLOCKALL()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBAPPEND()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Appends a new record to a database file.
+   $SYNTAX$
+      DbAppend( [<lLock>] ) --> NIL
+   $ARGUMENTS$
+      <lLock> Toggle to release record locks
+   $RETURNS$
+      DbAppend() always returns NIL
+   $DESCRIPTION$
+      This function add a new record to the end of the database
+      in the selected or aliased work area. All fields in that
+      database will be given empty data values - character fields
+      will be filled with blank spaces,date fields with CTOD('//'),
+      numeric fields with 0, logical fields with .F., and memo fields
+      with NULL bytes. The header of the database is not updated until
+      the record is flushed from the buffer and the contents are
+      written to the disk.
+
+      Under a networking enviroment, DBAPPEND() performs an additional
+      operation: It attrmps to lock the newly added record. If
+      the database file is currently locked or if a locking assignment
+      if made to LASTREC()+1, NETERR() will return a logical true (.T.)
+      immediately after the DBAPPEND() function. This function does
+      not unlock the locked records.
+
+      If <lLock> is passed a logical true (.T.) value, it will
+      release the record locks, which allows the application to main-
+      tain multiple record locks during an appending operation. The
+      default for this parameter is a logical false (.F.).
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL cName := "HARBOUR", nId := 10
+         USE test
+         test->( dbAppend() )
+         REPLACE test->Name WITH cName, test->Id WITH nId
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBUNLOCK(),DBUNLOCKALL()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBCLEARFILTER()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Clears the current filter condiction in a work area
- *  $SYNTAX$
- *      DbClearFilTer() --> NIL
- *  $RETURNS$
- *      DbClearFilTer() always returns NIL
- *  $DESCRIPTION$
- *      This function clears any active filter condiction
- *      for the current or selected work area.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE test
- *         SET FILTER TO Left( test->Name, 2 ) == "An"
- *         dbEdit()
- *         Test->( dbClearFilter() )
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBSETFILTER(),DBFILTER()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBCLEARFILTER()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Clears the current filter condiction in a work area
+   $SYNTAX$
+      DbClearFilTer() --> NIL
+   $RETURNS$
+      DbClearFilTer() always returns NIL
+   $DESCRIPTION$
+      This function clears any active filter condiction
+      for the current or selected work area.
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE test
+         SET FILTER TO Left( test->Name, 2 ) == "An"
+         dbEdit()
+         Test->( dbClearFilter() )
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBSETFILTER(),DBFILTER()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBCLOSEALL()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Close all open files in all work areas.
- *  $SYNTAX$
- *      DbCloseAll() --> NIL
- *  $RETURNS$
- *      DBCLOSEALL() always return NIL
- *  $DESCRIPTION$
- *      This function close all open databases and all associated
- *      indexes. In addition, it closes all format files and moves
- *      the work area pointer to the first position
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE test NEW
- *         dbEdit()
- *         USE test1 NEW
- *         dbEdit()
- *         dbCloseAll()
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBUSEAREA(),DBCLOSEAREA()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBCLOSEALL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Close all open files in all work areas.
+   $SYNTAX$
+      DbCloseAll() --> NIL
+   $RETURNS$
+      DBCLOSEALL() always return NIL
+   $DESCRIPTION$
+      This function close all open databases and all associated
+      indexes. In addition, it closes all format files and moves
+      the work area pointer to the first position
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE test NEW
+         dbEdit()
+         USE test1 NEW
+         dbEdit()
+         dbCloseAll()
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBUSEAREA(),DBCLOSEAREA()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *     DBCLOSEAREA()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Close a database file in a work area.
- *  $SYNTAX$
- *      DbCloseArea()
- *  $DESCRIPTION$
- *      This function  will close any database open in the selected
- *      or aliased work area.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE test
- *         dbEdit()
- *         Test->( dbCloseArea() )
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBUSEAREA(),DBCLOSEALL()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBCLOSEAREA()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Close a database file in a work area.
+   $SYNTAX$
+      DbCloseArea()
+   $DESCRIPTION$
+      This function  will close any database open in the selected
+      or aliased work area.
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE test
+         dbEdit()
+         Test->( dbCloseArea() )
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBUSEAREA(),DBCLOSEALL()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBCOMMIT()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Updates all index and database buffers for a given workarea
- *  $SYNTAX$
- *     DBCOMMIT()
- *  $DESCRIPTION$
- *      This function updates all of the information for a give,selected,
- *      or active workarea. This operation includes all database and index
- *      buffers for that work area only. This function does not update all
- *      open work areas.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL cName := SPACE( 40 )
- *         LOCAL nId := 0
- *         USE test EXCLUSIVE NEW
- *         //
- *         @ 10, 10 GET cName
- *         @ 11, 10 GET nId
- *         READ
- *         //
- *         IF UPDATED()
- *            APPEND BLANK
- *            REPLACE tests->Name WITH cName
- *            REPLACE tests->Id WITH nId
- *            tests->( DBCOMMIT() )
- *         ENDIF
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBCOMMIT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Updates all index and database buffers for a given workarea
+   $SYNTAX$
+      DBCOMMIT()
+   $DESCRIPTION$
+      This function updates all of the information for a give,selected,
+      or active workarea. This operation includes all database and index
+      buffers for that work area only. This function does not update all
+      open work areas.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL cName := SPACE( 40 )
+         LOCAL nId := 0
+         USE test EXCLUSIVE NEW
+         //
+         @ 10, 10 GET cName
+         @ 11, 10 GET nId
+         READ
+         //
+         IF UPDATED()
+            APPEND BLANK
+            REPLACE tests->Name WITH cName
+            REPLACE tests->Id WITH nId
+            tests->( DBCOMMIT() )
+         ENDIF
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBCOMMITALL()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Flushes the memory buffer and performs a hard-disk write
- *  $SYNTAX$
- *      DBCOMMIT()
- *  $DESCRIPTION$
- *      This function performs a hard-disk write for all work areas.
- *      Before the disk write is performed,all buffers are flushed.
- *      open work areas.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL cName := SPACE( 40 )
- *         LOCAL nId := 0
- *         USE test EXCLUSIVE NEW
- *         USE testid NEW INDEX testid
- *         //
- *         @ 10, 10 GET cName
- *         @ 11, 10 GET nId
- *         READ
- *         //
- *         IF UPDATED()
- *            APPEND BLANK
- *            REPLACE tests->Name WITH cName
- *            REPLACE tests->Id WITH nId
- *            IF ! testid->( DBSEEK( nId ) )
- *               APPEND BLANK
- *               REPLACE tests->Id WITH nId
- *            ENDIF
- *         ENDIF
- *         DBCOMMITALL()
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *     DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBCOMMITALL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Flushes the memory buffer and performs a hard-disk write
+   $SYNTAX$
+      DBCOMMIT()
+   $DESCRIPTION$
+      This function performs a hard-disk write for all work areas.
+      Before the disk write is performed,all buffers are flushed.
+      open work areas.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL cName := SPACE( 40 )
+         LOCAL nId := 0
+         USE test EXCLUSIVE NEW
+         USE testid NEW INDEX testid
+         //
+         @ 10, 10 GET cName
+         @ 11, 10 GET nId
+         READ
+         //
+         IF UPDATED()
+            APPEND BLANK
+            REPLACE tests->Name WITH cName
+            REPLACE tests->Id WITH nId
+            IF ! testid->( DBSEEK( nId ) )
+               APPEND BLANK
+               REPLACE tests->Id WITH nId
+            ENDIF
+         ENDIF
+         DBCOMMITALL()
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBCREATE()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Creates an empty database from a array.
- *  $SYNTAX$
- *      DBCREATE( <cDatabase>, <aStruct>, [<cDriver>], [<lOpen>],
- *                [<cAlias>] )
- *  $ARGUMENTS$
- *      <cDatabase> Name of database to be create
- *
- *      <aStruct>   Name of a multidimensional array that contains the
- *                  database structure
- *
- *      <cDriver>   Name of the RDD
- *
- *      <lOpenNew>  3-way toggle to Open the file in New or Current workarea:
- *
- *                       <table>
- *                       NIL     The file is not opened.
- *                       True    It is opened in a New area.
- *                       False   It is opened in the current area.
- *                  </table>
- *
- *      <cAlias>    Name of database Alias
- *  $DESCRIPTION$
- *      This function creates the database file specified as <cDatabase> from the
- *      multidimensional array <aStruct>. If no file extension is use with <cDatabase>
- *      the .dbf extension is assumed.
- *      The array specified in <aStruct> must follow a few guidelines when being
- *      built prior to a call to DBCREATE():
- *
- *      - All subscripts values in the second dimension must be set to proper values
- *
- *      - The fourth subscript value in the second dimension - which contains
- *        the decimal value-must he specified. even 1kw nonnumeric fields.
- *
- *      - The second subscript value in the second dimension-which contains
- *        the field data type-must contain a proper value: C, D, L, M or N
- *        It is possible to use additional letters (or clarity (e.g., 'Numeric'
- *        for 'N'): however, the first letter of this array element must
- *        be a proper value.
- *
- *      The DBCREATE( ) function does not use the decimal field to
- *      calculate the length of a character held longer than 256. Values
- *      up to the maximum length of a character field (which is 65,519 bytes)
- *      are stored directly in the database in the length attribute if that
- *      database was created via this function. However, a file containing
- *      fields longer than 256 bytes is not compatible with any interpreter.
- *
- *      The <cDriver> parameter specifies the name of the Replaceable
- *      Database Driver to use to create the database. If it is not
- *      specified, then the Replaceable Database Driver in the current work
- *      area is used.
- *
- *      The <lOpenNew> parameter specifies if the already created database is
- *      to be opened, and where.  If NIL, the file is not opened. If True,
- *      it is opened in a New area, and if False it is opened in the current
- *      area (closing any file already occupying that area).
- *      The <cAlias> parameter specifies the alias name for the new opened
- *      database.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL nI, aStruct := { { "CHARACTER", "C", 25, 0 }, ;
- *                                { "NUMERIC",   "N",  8, 0 }, ;
- *                                { "DOUBLE",    "N",  8, 2 }, ;
- *                                { "DATE",      "D",  8, 0 }, ;
- *                                { "LOGICAL",   "L",  1, 0 }, ;
- *                                { "MEMO1",     "M", 10, 0 }, ;
- *                                { "MEMO2",     "M", 10, 0 } }
- *
- *         REQUEST DBFCDX
- *
- *         dbCreate( "testdbf", aStruct, "DBFCDX", .T., "MYALIAS" )
- *
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This function is not CA-Cl*pper compliant
- *  $FILES$
- *      Library is rdd
- *      Header  is dbstruct.ch
- *  $SEEALSO$
- *      AFIELDS()*,DBSTRUCT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBCREATE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Creates an empty database from a array.
+   $SYNTAX$
+      DBCREATE( <cDatabase>, <aStruct>, [<cDriver>], [<lOpen>],
+                [<cAlias>] )
+   $ARGUMENTS$
+      <cDatabase> Name of database to be create
+
+      <aStruct>   Name of a multidimensional array that contains the
+                  database structure
+
+      <cDriver>   Name of the RDD
+
+      <lOpenNew>  3-way toggle to Open the file in New or Current workarea:
+
+                       <table>
+                       NIL     The file is not opened.
+                       True    It is opened in a New area.
+                       False   It is opened in the current area.
+                  </table>
+
+      <cAlias>    Name of database Alias
+   $DESCRIPTION$
+      This function creates the database file specified as <cDatabase> from the
+      multidimensional array <aStruct>. If no file extension is use with <cDatabase>
+      the .dbf extension is assumed.
+      The array specified in <aStruct> must follow a few guidelines when being
+      built prior to a call to DBCREATE():
+
+      - All subscripts values in the second dimension must be set to proper values
+
+      - The fourth subscript value in the second dimension - which contains
+        the decimal value-must he specified. even 1kw nonnumeric fields.
+
+      - The second subscript value in the second dimension-which contains
+        the field data type-must contain a proper value: C, D, L, M or N
+        It is possible to use additional letters (or clarity (e.g., 'Numeric'
+        for 'N'): however, the first letter of this array element must
+        be a proper value.
+
+      The DBCREATE( ) function does not use the decimal field to
+      calculate the length of a character held longer than 256. Values
+      up to the maximum length of a character field (which is 65,519 bytes)
+      are stored directly in the database in the length attribute if that
+      database was created via this function. However, a file containing
+      fields longer than 256 bytes is not compatible with any interpreter.
+
+      The <cDriver> parameter specifies the name of the Replaceable
+      Database Driver to use to create the database. If it is not
+      specified, then the Replaceable Database Driver in the current work
+      area is used.
+
+      The <lOpenNew> parameter specifies if the already created database is
+      to be opened, and where.  If NIL, the file is not opened. If True,
+      it is opened in a New area, and if False it is opened in the current
+      area (closing any file already occupying that area).
+      The <cAlias> parameter specifies the alias name for the new opened
+      database.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL nI, aStruct := { { "CHARACTER", "C", 25, 0 }, ;
+                                { "NUMERIC",   "N",  8, 0 }, ;
+                                { "DOUBLE",    "N",  8, 2 }, ;
+                                { "DATE",      "D",  8, 0 }, ;
+                                { "LOGICAL",   "L",  1, 0 }, ;
+                                { "MEMO1",     "M", 10, 0 }, ;
+                                { "MEMO2",     "M", 10, 0 } }
+
+         REQUEST DBFCDX
+
+         dbCreate( "testdbf", aStruct, "DBFCDX", .T., "MYALIAS" )
+
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This function is not CA-Cl*pper compliant
+   $FILES$
+      Library is rdd
+      Header  is dbstruct.ch
+   $SEEALSO$
+      AFIELDS()*,DBSTRUCT()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBDELETE()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Mark a record for deletion in a database.
- *  $SYNTAX$
- *      DBDELETE()
- *  $DESCRIPTION$
- *      This function marks a record for deletion in the selected
- *      or aliased work area. If the DELETED setting is on, the record
- *      will still be visible until the record pointer in that work area
- *      is moved to another record.
- *
- *      In a networking situation, this function requires that the record
- *      be locked prior to issuing the DBDELETE() function.
- *  $EXAMPLES$
- *      nId := 10
- *      USE testid INDEX testid NEW
- *      IF testid->( DBSEEK( nId ) )
- *         IF testid->( RLOCK() )
- *            DBDELETE()
- *         ENDIF
- *      ENDIF
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBRECALL()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBDELETE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Mark a record for deletion in a database.
+   $SYNTAX$
+      DBDELETE()
+   $DESCRIPTION$
+      This function marks a record for deletion in the selected
+      or aliased work area. If the DELETED setting is on, the record
+      will still be visible until the record pointer in that work area
+      is moved to another record.
+
+      In a networking situation, this function requires that the record
+      be locked prior to issuing the DBDELETE() function.
+   $EXAMPLES$
+      nId := 10
+      USE testid INDEX testid NEW
+      IF testid->( DBSEEK( nId ) )
+         IF testid->( RLOCK() )
+            DBDELETE()
+         ENDIF
+      ENDIF
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBRECALL()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBFILTER()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Return the filter expression in a work area
- *  $SYNTAX$
- *      DBFILTER() --> cFilter
- *  $RETURNS$
- *      DBFILTER() returns the filter expression.
- *  $DESCRIPTION$
- *      This function return the expression of the SET FILTER TO command
- *      for the current or designated work area. If no filter condition
- *      is present, a NULL string will be returned.
- *  $EXAMPLES$
- *      USE test INDEX test NEW
- *      SET FILTER TO Name == "Harbour"
- *      USE testid INDEX testid NEW
- *      SET FILTER TO Id == 1
- *      SELECT Test
- *      //
- *      ? DBFILTER()
- *      ? testid->( DBFILTER() )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBRELATION(),DBRSELECT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBFILTER()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Return the filter expression in a work area
+   $SYNTAX$
+      DBFILTER() --> cFilter
+   $RETURNS$
+      DBFILTER() returns the filter expression.
+   $DESCRIPTION$
+      This function return the expression of the SET FILTER TO command
+      for the current or designated work area. If no filter condition
+      is present, a NULL string will be returned.
+   $EXAMPLES$
+      USE test INDEX test NEW
+      SET FILTER TO Name == "Harbour"
+      USE testid INDEX testid NEW
+      SET FILTER TO Id == 1
+      SELECT Test
+      //
+      ? DBFILTER()
+      ? testid->( DBFILTER() )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBRELATION(),DBRSELECT()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBGOBOTTOM()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Moves the record pointer to the bottom of the database.
- *  $SYNTAX$
- *      DBGOBOTTOM()
- *  $DESCRIPTION$
- *      This function moves the record pointer in the selected or aliased
- *      work area to the end of the file. The position of the record pointer
- *      is affected by the values in the index key or by an active FILTER
- *      condition. Otherwise, if no index is active or if no filter condition
- *      is present, the value of the record pointer will be LASTREC().
- *  $EXAMPLES$
- *      USE tests
- *      DBGOTOP()
- *      ? RECNO()
- *      DBGOBOTTOM()
- *      ? RECNO()
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBGOBOTTOM()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Moves the record pointer to the bottom of the database.
+   $SYNTAX$
+      DBGOBOTTOM()
+   $DESCRIPTION$
+      This function moves the record pointer in the selected or aliased
+      work area to the end of the file. The position of the record pointer
+      is affected by the values in the index key or by an active FILTER
+      condition. Otherwise, if no index is active or if no filter condition
+      is present, the value of the record pointer will be LASTREC().
+   $EXAMPLES$
+      USE tests
+      DBGOTOP()
+      ? RECNO()
+      DBGOBOTTOM()
+      ? RECNO()
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBGOTO()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Position the record pointer to a specific location.
- *  $SYNTAX$
- *      DBGOTO(<xRecordNumber>)
- *  $ARGUMENTS$
- *      <xRecordNumber> Record number or unique identity
- *  $DESCRIPTION$
- *      This function places the record pointer, if working with a .dbf file,
- *      in selected or aliased work area at the record number specified by
- *      <xRecordNumber>. The position is not affected by an active index or
- *      by any enviromental SET condiction.
- *
- *      The parameter <xRecordNumber> may be something other than a record
- *      number. In some data formats, for example, the value of <xRecordNumber>
- *      is a unique primary key while in other formats,<xRecordNumber> could
- *      be an array offset if the data set was an array.
- *
- *      Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
- *      the database and index buffers. This is the same as a DBSKIP(0) call.
- *  $EXAMPLES$
- *      The following example uses DBGOTO() to iteratively process
- *      every fourth record:
- *
- *      DBUSEAREA( .T., "DBFNTX", "sales", "sales", .T. )
- *      //
- *      // toggle every fourth record
- *      DO WHILE ! EOF()
- *         DBGOTO( RECNO() + 4 )
- *         sales->Group := "Bear"
- *      ENDDO
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBGOTO()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Position the record pointer to a specific location.
+   $SYNTAX$
+      DBGOTO(<xRecordNumber>)
+   $ARGUMENTS$
+      <xRecordNumber> Record number or unique identity
+   $DESCRIPTION$
+      This function places the record pointer, if working with a .dbf file,
+      in selected or aliased work area at the record number specified by
+      <xRecordNumber>. The position is not affected by an active index or
+      by any enviromental SET condiction.
+
+      The parameter <xRecordNumber> may be something other than a record
+      number. In some data formats, for example, the value of <xRecordNumber>
+      is a unique primary key while in other formats,<xRecordNumber> could
+      be an array offset if the data set was an array.
+
+      Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
+      the database and index buffers. This is the same as a DBSKIP(0) call.
+   $EXAMPLES$
+      The following example uses DBGOTO() to iteratively process
+      every fourth record:
+
+      DBUSEAREA( .T., "DBFNTX", "sales", "sales", .T. )
+      //
+      // toggle every fourth record
+      DO WHILE ! EOF()
+         DBGOTO( RECNO() + 4 )
+         sales->Group := "Bear"
+      ENDDO
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBGOTOP()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Moves the record pointer to the top of the database.
- *  $SYNTAX$
- *      DBGOTOP()
- *  $DESCRIPTION$
- *      This function moves the record pointer in the selected or aliased
- *      work area to the top of the file. The position of the record pointer
- *      is affected by the values in the index key or by an active FILTER
- *      condition. Otherwise, if no index is active or if no filter condition
- *      is present, the value of RECNO() will be 1.
- *  $EXAMPLES$
- *      USE tests
- *      DBGOTOP()
- *      ? RECNO()
- *      DBGOBOTTOM()
- *      ? RECNO()
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBGOTOP()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Moves the record pointer to the top of the database.
+   $SYNTAX$
+      DBGOTOP()
+   $DESCRIPTION$
+      This function moves the record pointer in the selected or aliased
+      work area to the top of the file. The position of the record pointer
+      is affected by the values in the index key or by an active FILTER
+      condition. Otherwise, if no index is active or if no filter condition
+      is present, the value of RECNO() will be 1.
+   $EXAMPLES$
+      USE tests
+      DBGOTOP()
+      ? RECNO()
+      DBGOBOTTOM()
+      ? RECNO()
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBRECALL()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Recalls a record previousy marked for deletion.
- *  $SYNTAX$
- *      DBRECALL()
- *  $DESCRIPTION$
- *      This function unmarks those records marked for deletion and
- *      reactivates them in the aliased or selected work area. If a record
- *      is DELETED and the DELETED setting is on, the record will still be
- *      visible for a DBRECALL() provided that the database record pointer
- *      has not been skipped. Once a record marked for deletion with the
- *      DELETE setting ON has been skipped, it no longer can be brought back
- *      with DBRECALL().
- *  $EXAMPLES$
- *      USE test NEW
- *      DBGOTO( 10 )
- *      DBDELETE()
- *      ? DELETED()
- *      DBRECALL()
- *      ? DELETED()
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBDELETE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBRECALL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Recalls a record previousy marked for deletion.
+   $SYNTAX$
+      DBRECALL()
+   $DESCRIPTION$
+      This function unmarks those records marked for deletion and
+      reactivates them in the aliased or selected work area. If a record
+      is DELETED and the DELETED setting is on, the record will still be
+      visible for a DBRECALL() provided that the database record pointer
+      has not been skipped. Once a record marked for deletion with the
+      DELETE setting ON has been skipped, it no longer can be brought back
+      with DBRECALL().
+   $EXAMPLES$
+      USE test NEW
+      DBGOTO( 10 )
+      DBDELETE()
+      ? DELETED()
+      DBRECALL()
+      ? DELETED()
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBDELETE()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBRLOCK()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      This function locks the record based on identity
- *  $SYNTAX$
- *      DBRLOCK([<xIdentity>]) --> lSuccess
- *  $ARGUMENTS$
- *      <xIdentity> Record identifier
- *  $RETURNS$
- *      DBRLOCK() returns a logical true (.T.) if lock was successful
- *  $DESCRIPTION$
- *      This function attempts to lock a record which is identified
- *      by <xIdentity> in the active data set. If the lock is successful
- *      the function will return a logical true (.T.) value; otherwise
- *      a logical false (.F.) will be returned. If <xIdentity> is not
- *      passed it will be assumed to lock the current active record/data
- *      item.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL x := 0
- *         USE tests NEW
- *         FOR x := 1 TO reccount()
- *            IF ! DBRLOCK()
- *               DBUNLOCK()
- *            ENDIF
- *         NEXT
- *         USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBRLOCK()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      This function locks the record based on identity
+   $SYNTAX$
+      DBRLOCK([<xIdentity>]) --> lSuccess
+   $ARGUMENTS$
+      <xIdentity> Record identifier
+   $RETURNS$
+      DBRLOCK() returns a logical true (.T.) if lock was successful
+   $DESCRIPTION$
+      This function attempts to lock a record which is identified
+      by <xIdentity> in the active data set. If the lock is successful
+      the function will return a logical true (.T.) value; otherwise
+      a logical false (.F.) will be returned. If <xIdentity> is not
+      passed it will be assumed to lock the current active record/data
+      item.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL x := 0
+         USE tests NEW
+         FOR x := 1 TO reccount()
+            IF ! DBRLOCK()
+               DBUNLOCK()
+            ENDIF
+         NEXT
+         USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBRLOCKLIST()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      This function return a list of locked records in the database work area
- *  $SYNTAX$
- *      DBRLOCKLIST() --> aRecordLocks
- *  $RETURNS$
- *      <aRecordList> is an array of lock records
- *  $DESCRIPTION$
- *      This function will return an array of locked records in a given
- *      and active work area. If the return array is an empty array
- *      (meaning no elements in it), then there are no locked records in that
- *      work area.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL aList := {}
- *         LOCAL x := 0
- *         USE tests NEW
- *         DBGOTO( 10 )
- *         RLOCK()
- *         DBGOTO( 100 )
- *         RLOCK()
- *         aList := DBRLOCKLIST()
- *         FOR x := 1 TO Len( aList )
- *            ? aList[ x ]
- *         NEXT
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      RLOCK(),DBRLOCK(),DBRUNLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBRLOCKLIST()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      This function return a list of locked records in the database work area
+   $SYNTAX$
+      DBRLOCKLIST() --> aRecordLocks
+   $RETURNS$
+      <aRecordList> is an array of lock records
+   $DESCRIPTION$
+      This function will return an array of locked records in a given
+      and active work area. If the return array is an empty array
+      (meaning no elements in it), then there are no locked records in that
+      work area.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL aList := {}
+         LOCAL x := 0
+         USE tests NEW
+         DBGOTO( 10 )
+         RLOCK()
+         DBGOTO( 100 )
+         RLOCK()
+         aList := DBRLOCKLIST()
+         FOR x := 1 TO Len( aList )
+            ? aList[ x ]
+         NEXT
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      RLOCK(),DBRLOCK(),DBRUNLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBRUNLOCK()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Unlocks a record based on its identifier
- *  $SYNTAX$
- *      DBRUNLOCK([<xIdentity>])
- *  $ARGUMENTS$
- *      <xIdentity> Record identifier, typically a record number
- *  $DESCRIPTION$
- *      This function will attempt to unlock the record specified as
- *      <xIdentity>, which in a .dbf format is the record number. If not
- *      specified, them the current active record/data item will be
- *      unlocked
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE tests NEW
- *         DBGOTO( 10 )
- *         IF RLOCK()
- *            ? tests->ID
- *            DBRUNLOCK()
- *         ENDIF
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      RLOCK(),DBRLOCK(),DBRLOCKLIST()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBRUNLOCK()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Unlocks a record based on its identifier
+   $SYNTAX$
+      DBRUNLOCK([<xIdentity>])
+   $ARGUMENTS$
+      <xIdentity> Record identifier, typically a record number
+   $DESCRIPTION$
+      This function will attempt to unlock the record specified as
+      <xIdentity>, which in a .dbf format is the record number. If not
+      specified, them the current active record/data item will be
+      unlocked
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE tests NEW
+         DBGOTO( 10 )
+         IF RLOCK()
+            ? tests->ID
+            DBRUNLOCK()
+         ENDIF
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      RLOCK(),DBRLOCK(),DBRLOCKLIST()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBSEEK()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Searches for a value based on an active index.
- *  $SYNTAX$
- *      DBSEEK(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
- *  $ARGUMENTS$
- *      <expKey> Any expression
- *
- *      <lSoftSeek> Toggle SOFTSEEK condition
- *
- *      <lFindLast> is an optional logical value that set the current
- *      record position to the last record if successful
- *  $RETURNS$
- *      DBSEEK() returns logical true (.T.) if found, otherwise false
- *  $DESCRIPTION$
- *      This function searches for the first record in a database file whose
- *      index key matches <expKey>. If the item is found, the function will
- *      return a logical true (.T.), the value of FOUND() wilI be a logical
- *      true (.T.), and the value of EOF() wilI be a logical false (.F.). If
- *      no item is found. then the function will return a logical false, the
- *      value of FOUND( ) will be a logical false (.F.), and the value of
- *      EOF( ) will be a logical true (.T.).
- *
- *      This function always "rewinds" the database pointer and starts the
- *      search from the top of the file.
- *
- *      If the SOFTSEEK flag is on or if <lSoftSeek> is set to a logical true
- *      (.T.) the value of FOUND() will be a logical false and EOF() will be
- *      false if there is an item in the index key with a greater value than
- *      the key expression <expKey>; at this point the record pointer will
- *      position itself on that record. However, if there is no greater key
- *      in the index,EOF() will return a logical true (.T.) value. If
- *      <lSoftSeek> is not passed, the function will look to the internal
- *      status of SOFTSEEK before performing the operation. The default of
- *      <lSoftSeek> is a logical false (.F.)
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE tests NEW INDEX tests
- *         DBGOTO( 10 )
- *         nId := tests->nId
- *         IF tests->( DBSEEK( nId ) )
- *            IF RLOCK()
- *               ? tests->Name
- *               DBRUNLOCK()
- *            ENDIF
- *         ENDIF
- *         USE
- *         RETURN
- *
- *      ACCEPT "Employee name: " TO cName
- *      IF Employee->( DBSEEK( cName ) )
- *         Employee->( ViewRecord() )
- *      ELSE
- *         ? "Not found"
- *      ENDIF
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      DBSEEK() is  Compatible with CA-Cl*pper 5.3
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBSEEK()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Searches for a value based on an active index.
+   $SYNTAX$
+      DBSEEK(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
+   $ARGUMENTS$
+      <expKey> Any expression
+
+      <lSoftSeek> Toggle SOFTSEEK condition
+
+      <lFindLast> is an optional logical value that set the current
+      record position to the last record if successful
+   $RETURNS$
+      DBSEEK() returns logical true (.T.) if found, otherwise false
+   $DESCRIPTION$
+      This function searches for the first record in a database file whose
+      index key matches <expKey>. If the item is found, the function will
+      return a logical true (.T.), the value of FOUND() wilI be a logical
+      true (.T.), and the value of EOF() wilI be a logical false (.F.). If
+      no item is found. then the function will return a logical false, the
+      value of FOUND( ) will be a logical false (.F.), and the value of
+      EOF( ) will be a logical true (.T.).
+
+      This function always "rewinds" the database pointer and starts the
+      search from the top of the file.
+
+      If the SOFTSEEK flag is on or if <lSoftSeek> is set to a logical true
+      (.T.) the value of FOUND() will be a logical false and EOF() will be
+      false if there is an item in the index key with a greater value than
+      the key expression <expKey>; at this point the record pointer will
+      position itself on that record. However, if there is no greater key
+      in the index,EOF() will return a logical true (.T.) value. If
+      <lSoftSeek> is not passed, the function will look to the internal
+      status of SOFTSEEK before performing the operation. The default of
+      <lSoftSeek> is a logical false (.F.)
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE tests NEW INDEX tests
+         DBGOTO( 10 )
+         nId := tests->nId
+         IF tests->( DBSEEK( nId ) )
+            IF RLOCK()
+               ? tests->Name
+               DBRUNLOCK()
+            ENDIF
+         ENDIF
+         USE
+         RETURN
+
+      ACCEPT "Employee name: " TO cName
+      IF Employee->( DBSEEK( cName ) )
+         Employee->( ViewRecord() )
+      ELSE
+         ? "Not found"
+      ENDIF
+   $STATUS$
+      S
+   $COMPLIANCE$
+      DBSEEK() is  Compatible with CA-Cl*pper 5.3
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBSELECTAREA()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Change to another work area
- *  $SYNTAX$
- *      DBSELECTAREA(<xArea>) -
- *  $ARGUMENTS$
- *      <xArea> Alias or work area
- *  $DESCRIPTION$
- *      This function moves the Harbour internal primary focus to the work
- *      area designated by <xArea>. If <xArea> is numeric, then it will
- *      select the numeric work area; if <xArea> is character,then it will
- *      select the work area with the alias name.
- *
- *      DBSELECTAREA(0) will select the next avaliable and unused work area.
- *      Up to 255 work areas are supported. Each work area has its own alias
- *      and record pointer, as well as its own FOUND(), DBFILTER(),
- *      DBRSELECT() and DBRELATION() function values.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL nId
- *         USE tests NEW INDEX tests
- *         USE tests1 NEW INDEX tests1
- *         DBSELECTAREA( 1 )
- *         nId := tests->Id
- *         DBSELECTAREA( 2 )
- *         IF DBSEEK( nId )
- *            ? tests1->cName
- *         ENDIF
- *         DBCLOSEALL()
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBUSEAREA(),SELECT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBSELECTAREA()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Change to another work area
+   $SYNTAX$
+      DBSELECTAREA(<xArea>) -
+   $ARGUMENTS$
+      <xArea> Alias or work area
+   $DESCRIPTION$
+      This function moves the Harbour internal primary focus to the work
+      area designated by <xArea>. If <xArea> is numeric, then it will
+      select the numeric work area; if <xArea> is character,then it will
+      select the work area with the alias name.
+
+      DBSELECTAREA(0) will select the next avaliable and unused work area.
+      Up to 255 work areas are supported. Each work area has its own alias
+      and record pointer, as well as its own FOUND(), DBFILTER(),
+      DBRSELECT() and DBRELATION() function values.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL nId
+         USE tests NEW INDEX tests
+         USE tests1 NEW INDEX tests1
+         DBSELECTAREA( 1 )
+         nId := tests->Id
+         DBSELECTAREA( 2 )
+         IF DBSEEK( nId )
+            ? tests1->cName
+         ENDIF
+         DBCLOSEALL()
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBUSEAREA(),SELECT()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBSETDRIVER()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Establishes the RDD name for the selected work area
- *  $SYNTAX$
- *      DBSETDRIVER( [<cDriver>] ) --> cCurrentDriver
- *  $ARGUMENTS$
- *      <cDriver> Optional database driver name
- *  $RETURNS$
- *      DBSETDRIVER() returns the name of active driver
- *  $DESCRIPTION$
- *      This function returns the name of the current database driver for the
- *      selected work area. The default will be "DBFNTX". If specified,
- *      <cDriver> contains the name of the database driver that should be
- *      used to activate and manage the work area. If the specified driver is
- *      not avaliable,this function will have no effect.
- *  $EXAMPLES$
- *      DBSETDRIVER("ADS")
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBUSEAREA()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBSETDRIVER()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Establishes the RDD name for the selected work area
+   $SYNTAX$
+      DBSETDRIVER( [<cDriver>] ) --> cCurrentDriver
+   $ARGUMENTS$
+      <cDriver> Optional database driver name
+   $RETURNS$
+      DBSETDRIVER() returns the name of active driver
+   $DESCRIPTION$
+      This function returns the name of the current database driver for the
+      selected work area. The default will be "DBFNTX". If specified,
+      <cDriver> contains the name of the database driver that should be
+      used to activate and manage the work area. If the specified driver is
+      not avaliable,this function will have no effect.
+   $EXAMPLES$
+      DBSETDRIVER("ADS")
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBUSEAREA()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBSKIP()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Moves the record pointer in the selected work area.
- *  $SYNTAX$
- *      DBSKIP([<nRecords>])
- *  $ARGUMENTS$
- *      <nRecords> Numbers of records to move record pointer.
- *  $DESCRIPTION$
- *      This function moves the record pointer <nRecords> in the selected or
- *      aliased work area. The default value for <nRecords> will be 1.
- *      A DBSKIP(0) will flush and refresh the internal database bufer and
- *      make any changes made to the record visible without moving the record
- *      pointer in either direction.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE tests NEW
- *         DBGOTOP()
- *         DO WHILE ! EOF()
- *            ? tests->Id, tests->Name
- *            DBSKIP()
- *         ENDDO
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *    BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBSKIP()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Moves the record pointer in the selected work area.
+   $SYNTAX$
+      DBSKIP([<nRecords>])
+   $ARGUMENTS$
+      <nRecords> Numbers of records to move record pointer.
+   $DESCRIPTION$
+      This function moves the record pointer <nRecords> in the selected or
+      aliased work area. The default value for <nRecords> will be 1.
+      A DBSKIP(0) will flush and refresh the internal database bufer and
+      make any changes made to the record visible without moving the record
+      pointer in either direction.
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE tests NEW
+         DBGOTOP()
+         DO WHILE ! EOF()
+            ? tests->Id, tests->Name
+            DBSKIP()
+         ENDDO
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBSETFILTER()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Establishes a filter condition for a work area.
- *  $SYNTAX$
- *      DBSETFILTER(<bCondition>, [<cCondition>])
- *  $ARGUMENTS$
- *      <bCondition> Code block expression for filtered evaluation.
- *
- *      <cCondition> Optional character expression of code block.
- *  $DESCRIPTION$
- *      This function masks a database so that only those records that meet
- *      the condition prescribed by the expression in the code block
- *      <bCondition> and literally expressed as <cCondition> are visible.
- *      If <cCondition> is not passed to this function,then the DBFILTER()
- *      function will return an empty string showing no filter in that work
- *      area which in fact,would be not correct.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE tests NEW
- *         DBSETFILTER( {|| tests->Id <100 }, "tests->Id <100" )
- *         DBGOTOP()
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBFILTER(),DBCLEARFILTER()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBSETFILTER()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Establishes a filter condition for a work area.
+   $SYNTAX$
+      DBSETFILTER(<bCondition>, [<cCondition>])
+   $ARGUMENTS$
+      <bCondition> Code block expression for filtered evaluation.
+
+      <cCondition> Optional character expression of code block.
+   $DESCRIPTION$
+      This function masks a database so that only those records that meet
+      the condition prescribed by the expression in the code block
+      <bCondition> and literally expressed as <cCondition> are visible.
+      If <cCondition> is not passed to this function,then the DBFILTER()
+      function will return an empty string showing no filter in that work
+      area which in fact,would be not correct.
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE tests NEW
+         DBSETFILTER( {|| tests->Id <100 }, "tests->Id <100" )
+         DBGOTOP()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBFILTER(),DBCLEARFILTER()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DBSTRUCT()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Creates a multidimensional array of a database structure.
- *  $SYNTAX$
- *      DBSTRUCT() --> aStruct
- *  $RETURNS$
- *      DBSTRUCT() returns an array pointer to database structure
- *  $DESCRIPTION$
- *      This function returns a multidimensional array. This array has array
- *      pointers to other arrays,each of which contains the characteristic
- *      of a field in the active work area. The lenght of this array is based
- *      in the number of fields in that particular work area. In other words,
- *      LEN(DBSTRUCT()) is equal to the value obtained from FCOUNT().
- *      Each subscript position
- *  $EXAMPLES$
- *      #include "dbstruct.ch"
- *      PROCEDURE Main()
- *         LOCAL aStru, x
- *         USE tests NEW
- *         aStru := dbStruct()
- *         FOR x := 1 TO LEN( aStru )
- *            ? aStru[ x ][ DBS_NAME ]
- *         NEXT
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *      Header  is dbstruct.ch
- *  $SEEALSO$
- *      AFIELDS()*
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DBSTRUCT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Creates a multidimensional array of a database structure.
+   $SYNTAX$
+      DBSTRUCT() --> aStruct
+   $RETURNS$
+      DBSTRUCT() returns an array pointer to database structure
+   $DESCRIPTION$
+      This function returns a multidimensional array. This array has array
+      pointers to other arrays,each of which contains the characteristic
+      of a field in the active work area. The lenght of this array is based
+      in the number of fields in that particular work area. In other words,
+      LEN(DBSTRUCT()) is equal to the value obtained from FCOUNT().
+      Each subscript position
+   $EXAMPLES$
+      #include "dbstruct.ch"
+      PROCEDURE Main()
+         LOCAL aStru, x
+         USE tests NEW
+         aStru := dbStruct()
+         FOR x := 1 TO LEN( aStru )
+            ? aStru[ x ][ DBS_NAME ]
+         NEXT
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+      Header  is dbstruct.ch
+   $SEEALSO$
+      AFIELDS()*
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBUNLOCK()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Unlock a record or release a file lock
- *  $SYNTAX$
- *      DBUNLOCK()
- *  $DESCRIPTION$
- *      This function releases the file or record lock in the currently
- *      selected or aliased work area. It will not unlock an associated lock
- *      in a related databases.
- *  $EXAMPLES$
- *      nId := 10
- *      USE testid INDEX testid NEW
- *      IF testid->( DBSEEK( nId ) )
- *         IF testid->( RLOCK() )
- *            DBDELETE()
- *         ELSE
- *            DBUNLOCK()
- *         ENDIF
- *      ENDIF
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBUNLOCKALL(),FLOCK(),RLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBUNLOCK()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Unlock a record or release a file lock
+   $SYNTAX$
+      DBUNLOCK()
+   $DESCRIPTION$
+      This function releases the file or record lock in the currently
+      selected or aliased work area. It will not unlock an associated lock
+      in a related databases.
+   $EXAMPLES$
+      nId := 10
+      USE testid INDEX testid NEW
+      IF testid->( DBSEEK( nId ) )
+         IF testid->( RLOCK() )
+            DBDELETE()
+         ELSE
+            DBUNLOCK()
+         ENDIF
+      ENDIF
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBUNLOCKALL(),FLOCK(),RLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBUNLOCKALL()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Unlocks all records and releases all file locks in all work areas.
- *  $SYNTAX$
- *      DBUNLOCKALL()
- *  $DESCRIPTION$
- *      This function will remove all file and record locks in all work area.
- *  $EXAMPLES$
- *      nId := 10
- *      USE tests INDEX testid NEW
- *      USE tests1 INDEX tests NEW
- *      IF testid->( DBSEEK( nId ) )
- *         IF testid->( RLOCK() )
- *            DBDELETE()
- *         ELSE
- *            DBUNLOCK()
- *         ENDIF
- *      ELSE
- *         DBUNLOCKALL()
- *      ENDIF
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBUNLOCK(),FLOCK(),RLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBUNLOCKALL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Unlocks all records and releases all file locks in all work areas.
+   $SYNTAX$
+      DBUNLOCKALL()
+   $DESCRIPTION$
+      This function will remove all file and record locks in all work area.
+   $EXAMPLES$
+      nId := 10
+      USE tests INDEX testid NEW
+      USE tests1 INDEX tests NEW
+      IF testid->( DBSEEK( nId ) )
+         IF testid->( RLOCK() )
+            DBDELETE()
+         ELSE
+            DBUNLOCK()
+         ENDIF
+      ELSE
+         DBUNLOCKALL()
+      ENDIF
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBUNLOCK(),FLOCK(),RLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      DBUSEAREA()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Opens a work area and uses a database file.
- *  $SYNTAX$
- *      DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
- *      [<lShared>], [<lReadonly>])
- *  $ARGUMENTS$
- *     <lNewArea>  A optional logical expression for the new work area
- *
- *     <cDriver>   Database driver name
- *
- *     <cName>     File Name
- *
- *     <xcAlias>   Alias name
- *
- *     <lShared>   Shared/exclusive status flag
- *
- *     <lReadonly> Read-write status flag.
- *  $DESCRIPTION$
- *      This function opens an existing database named <cName> in the current
- *      work area. If <lNewArea> is set to a logical true (.T.) value, then
- *      the database <cName> will be opened in the next available and unused
- *      work area. The default value of <lNewArea> is a logical false (.F.).
- *      If used, <cDriver> is the name of the database driver associated with
- *      the file <cName> that is opened. The default for this will be the
- *      value of DBSETDRlVER().
- *
- *      IF used, <xcAlias> contains the alias name for that work area, If not
- *      specified, the root name of the database specified in <cName> will be
- *      used.
- *
- *      If <lShared> is set to a logical true (.T.) value, the database that
- *      is specified in <cName> will be opened by the user EXCLUSIVELY. Thus
- *      locking it from all other nodes or users on the network. If <lShared>
- *      is set to a logical false (.F.) value, then the database will be in
- *      SHARED mode. If <lShared> is not passed, then the function will turn
- *      to the internal setting of SET EXCLUSIVE to determine a setting.
- *
- *      If <lReadOnly> is specified, the file will be set to READ ONLY mode.
- *      If it is not specified, the file will he opened in normal read-write
- *      mode.
- *  $EXAMPLES$
- *      DBUSEAREA( .T.,, "tests" )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      DBUSEAREA()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Opens a work area and uses a database file.
+   $SYNTAX$
+      DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
+      [<lShared>], [<lReadonly>])
+   $ARGUMENTS$
+      <lNewArea>  A optional logical expression for the new work area
+
+      <cDriver>   Database driver name
+
+      <cName>     File Name
+
+      <xcAlias>   Alias name
+
+      <lShared>   Shared/exclusive status flag
+
+      <lReadonly> Read-write status flag.
+   $DESCRIPTION$
+      This function opens an existing database named <cName> in the current
+      work area. If <lNewArea> is set to a logical true (.T.) value, then
+      the database <cName> will be opened in the next available and unused
+      work area. The default value of <lNewArea> is a logical false (.F.).
+      If used, <cDriver> is the name of the database driver associated with
+      the file <cName> that is opened. The default for this will be the
+      value of DBSETDRlVER().
+
+      IF used, <xcAlias> contains the alias name for that work area, If not
+      specified, the root name of the database specified in <cName> will be
+      used.
+
+      If <lShared> is set to a logical true (.T.) value, the database that
+      is specified in <cName> will be opened by the user EXCLUSIVELY. Thus
+      locking it from all other nodes or users on the network. If <lShared>
+      is set to a logical false (.F.) value, then the database will be in
+      SHARED mode. If <lShared> is not passed, then the function will turn
+      to the internal setting of SET EXCLUSIVE to determine a setting.
+
+      If <lReadOnly> is specified, the file will be set to READ ONLY mode.
+      If it is not specified, the file will he opened in normal read-write
+      mode.
+   $EXAMPLES$
+      DBUSEAREA( .T.,, "tests" )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
+   $END$
  */

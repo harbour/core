@@ -2,46 +2,46 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_ADAPTER()
- *  $CATEGORY$
- *     Video
- *  $ONELINER$
- *     Report the type of video adapter installed
- *  $SYNTAX$
- *     FT_ADAPTER() -> nResult
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     Integer representing type of video adapter
- *
- *        0 - monochrome
- *        1 - CGA
- *        2 - EGA
- *        3 - VGA
- *  $DESCRIPTION$
- *     This function is valuable if you use a graphics library and need to
- *     know what type of graphics adapter is installed.
- *
- *     The source code is written to adhere to Turbo Assembler's IDEAL mode.
- *     To use another assembler, you will need to rearrange the PROC and
- *     SEGMENT directives, and also the ENDP and ENDS directives (a very
- *     minor task).
- *  $EXAMPLES$
- *     iVideo := FT_ADAPTER()
- *
- *     DO CASE
- *     CASE iVideo == 0
- *        QOut( "You have a monochrome adapter." )
- *     CASE iVideo == 1
- *        QOut( "You have a CGA adapter." )
- *     CASE iVideo == 2
- *        QOut( "You have an EGA adapter." )
- *     CASE iVideo == 3
- *        QOut( "You have a VGA adapter." )
- *     ENDCASE
- *  $SEEALSO$
- *     FT_SETMODE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_ADAPTER()
+   $CATEGORY$
+      Video
+   $ONELINER$
+      Report the type of video adapter installed
+   $SYNTAX$
+      FT_ADAPTER() -> nResult
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      Integer representing type of video adapter
+  
+         0 - monochrome
+         1 - CGA
+         2 - EGA
+         3 - VGA
+   $DESCRIPTION$
+      This function is valuable if you use a graphics library and need to
+      know what type of graphics adapter is installed.
+  
+      The source code is written to adhere to Turbo Assembler's IDEAL mode.
+      To use another assembler, you will need to rearrange the PROC and
+      SEGMENT directives, and also the ENDP and ENDS directives (a very
+      minor task).
+   $EXAMPLES$
+      iVideo := FT_ADAPTER()
+  
+      DO CASE
+      CASE iVideo == 0
+         QOut( "You have a monochrome adapter." )
+      CASE iVideo == 1
+         QOut( "You have a CGA adapter." )
+      CASE iVideo == 2
+         QOut( "You have an EGA adapter." )
+      CASE iVideo == 3
+         QOut( "You have a VGA adapter." )
+      ENDCASE
+   $SEEALSO$
+      FT_SETMODE()
+   $END$
  */

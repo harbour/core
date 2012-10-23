@@ -15,1506 +15,1506 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetDescription()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetDescription( PHB_ITEM pError ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetDescription()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetDescription( PHB_ITEM pError ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetFileName()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetFileName( PHB_ITEM pError ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetFileName()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetFileName( PHB_ITEM pError ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetFlags()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetFlags( PHB_ITEM pError ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetFlags()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetFlags( PHB_ITEM pError ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetGenCode()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetGenCode( PHB_ITEM pError ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetGenCode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetGenCode( PHB_ITEM pError ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetOperation()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetOperation( PHB_ITEM pError ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetOperation()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetOperation( PHB_ITEM pError ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetOsCode()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetOsCode( PHB_ITEM pError ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetOsCode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetOsCode( PHB_ITEM pError ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetSeverity()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetSeverity( PHB_ITEM pError ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetSeverity()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetSeverity( PHB_ITEM pError ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetSubCode()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetSubCode( PHB_ITEM pError ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetSubCode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetSubCode( PHB_ITEM pError ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetSubSystem()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetSubSystem( PHB_ITEM pError ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetSubSystem()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetSubSystem( PHB_ITEM pError ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errGetTries()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errGetTries( PHB_ITEM pError ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errGetTries()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errGetTries( PHB_ITEM pError ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errLaunch()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errLaunch( PHB_ITEM pError ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errLaunch()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errLaunch( PHB_ITEM pError ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errNew()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errNew( void ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errNew()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errNew( void ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutArgs()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <uiArgCount>
- *
- *      <...>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutArgs()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutArgs( PHB_ITEM pError, USHORT uiArgCount, ... ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <uiArgCount>
+
+      <...>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutDescription()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutDescription( PHB_ITEM pError, char * szDescription ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <szDescription>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutDescription()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutDescription( PHB_ITEM pError, char * szDescription ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <szDescription>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutFileName()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutFileName( PHB_ITEM pError, char * szFileName ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <szFileName>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutFileName()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutFileName( PHB_ITEM pError, char * szFileName ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <szFileName>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutFlags()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <uiFlags>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutFlags()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutFlags( PHB_ITEM pError, USHORT uiFlags ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <uiFlags>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutGenCode()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <uiGenCode>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutGenCode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutGenCode( PHB_ITEM pError, USHORT uiGenCode ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <uiGenCode>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutOperation()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutOperation( PHB_ITEM pError, char * szOperation ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <szOperation>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutOperation()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutOperation( PHB_ITEM pError, char * szOperation ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <szOperation>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutOsCode()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <uiOsCode>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutOsCode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutOsCode( PHB_ITEM pError, USHORT uiOsCode ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <uiOsCode>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutSeverity()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <uiSeverity>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutSeverity()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutSeverity( PHB_ITEM pError, USHORT uiSeverity ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <uiSeverity>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutSubCode()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <uiSubCode>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutSubCode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutSubCode( PHB_ITEM pError, USHORT uiSubCode ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <uiSubCode>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutSubSystem()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <szSubSystem>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutSubSystem()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutSubSystem( PHB_ITEM pError, char * szSubSystem ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <szSubSystem>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errPutTries()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errPutTries( PHB_ITEM pError, USHORT uiTries ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *
- *      <uiTries>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errPutTries()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errPutTries( PHB_ITEM pError, USHORT uiTries ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+
+      <uiTries>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_errRelease()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRelease( PHB_ITEM pError )
- *  $ARGUMENTS$
- *      <pError>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_errRelease()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRelease( PHB_ITEM pError )
+   $ARGUMENTS$
+      <pError>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_errInit()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errInit( void )
- *  $ARGUMENTS$
- *
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_errInit()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errInit( void )
+   $ARGUMENTS$
+
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_errExit()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errExit( void )
- *  $ARGUMENTS$
- *
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_errExit()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errExit( void )
+   $ARGUMENTS$
+
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errLaunchSubst()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errLaunchSubst( PHB_ITEM pError ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <pError>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errLaunchSubst()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errLaunchSubst( PHB_ITEM pError ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <pError>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errRT_New()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_New( USHORT uiSeverity, char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <uiSeverity>
- *
- *      <szSubSystem>
- *
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *
- *      <uiOsCode>
- *
- *      <uiFlags>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errRT_New()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_New( USHORT uiSeverity, char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <uiSeverity>
+
+      <szSubSystem>
+
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+
+      <uiOsCode>
+
+      <uiFlags>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errRT_New_Subst()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_New_Subst( USHORT uiSeverity, char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <uiSeverity>
- *
- *      <szSubSystem>
- *
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *
- *      <uiOsCode>
- *
- *      <uiFlags>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errRT_New_Subst()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_New_Subst( USHORT uiSeverity, char * szSubSystem, ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <uiSeverity>
+
+      <szSubSystem>
+
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+
+      <uiOsCode>
+
+      <uiFlags>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errRT_BASE()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errRT_BASE()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_BASE( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errRT_BASE_Ext1()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *
- *      <uiOsCode>
- *
- *      <uiFlags>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errRT_BASE_Ext1()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_BASE_Ext1( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOsCode, USHORT uiFlags ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+
+      <uiOsCode>
+
+      <uiFlags>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errRT_BASE_Subst()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( PHB_ITEM )pResult
- *  $ARGUMENTS$
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errRT_BASE_Subst()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_BASE_Subst( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( PHB_ITEM )pResult
+   $ARGUMENTS$
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_errRT_BASE_SubstR()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
- *  $ARGUMENTS$
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_errRT_BASE_SubstR()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_BASE_SubstR( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation )
+   $ARGUMENTS$
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errRT_TERM()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_TERM( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *
- *      <uiOSCode>
- *
- *      <uiFlags>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errRT_TERM()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_TERM( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation, USHORT uiOSCode, USHORT uiFlags ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+
+      <uiOSCode>
+
+      <uiFlags>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errRT_DBCMD()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errRT_DBCMD()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_DBCMD( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errRT_TOOLS()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
- *  $ARGUMENTS$
- *      <ulGenCode>
- *
- *      <ulSubCode>
- *
- *      <szDescription>
- *
- *      <szOperation>
- *  $RETURNS$
- *      <usResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errRT_TOOLS()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errRT_TOOLS( ULONG ulGenCode, ULONG ulSubCode, char * szDescription, char * szOperation ) --> ( USHORT )usResult
+   $ARGUMENTS$
+      <ulGenCode>
+
+      <ulSubCode>
+
+      <szDescription>
+
+      <szOperation>
+   $RETURNS$
+      <usResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_errInternal()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
- *  $ARGUMENTS$
- *      <ulIntCode>
- *
- *      <szText>
- *
- *      <szPar1>
- *
- *      <szPar2>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_errInternal()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errInternal( ULONG ulIntCode, char * szText, char * szPar1, char * szPar2 )
+   $ARGUMENTS$
+      <ulIntCode>
+
+      <szText>
+
+      <szPar1>
+
+      <szPar2>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_errorHandler()
- *  $CATEGORY$
- *      C level API
- * $SUBCATEGORY$
- *    Error
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapierr.h"
- *      hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler ) --> ( HB_ERROR_INFO_PTR )hParam
- *  $ARGUMENTS$
- *      <pNewHandler>
- *  $RETURNS$
- *      <hParam>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_errorHandler()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Error
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapierr.h"
+      hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler ) --> ( HB_ERROR_INFO_PTR )hParam
+   $ARGUMENTS$
+      <pNewHandler>
+   $RETURNS$
+      <hParam>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */

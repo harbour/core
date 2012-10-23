@@ -2,87 +2,87 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARONE()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Reduce multiple occurences of a character to one
- *  $SYNTAX$
- *      CHARONE( [<cCharactersToReduce>,] <cString> ) -> cReducedString
- *  $ARGUMENTS$
- *      [<cCharactersToReduce>]    specifies the characters the multiple
- *                                 occurences of which should be reduced to one
- *                                 Default: All characters.
- *      <cString>                  specifies the processed string
- *  $RETURNS$
- *      <cReducedString>           the string with the reduced occurences
- *  $DESCRIPTION$
- *      The CHARONE() function reduces multiple occurences of characters in
- *      <cString> to a single one. It is important to note that the multiple
- *      occurences must occur directly one behind the other. This behaviour is
- *      is in contrast to the CHARLIST() function.
- *  $EXAMPLES$
- *      ? CHARONE( "122333a123" )      // "123a123"
- *      ? CHARONE( "A  B  CCCD" )      // "A B CD"
- *      ? CHARONE( " ", "A  B  A  B" ) // "A B A B"
- *      ? CHARONE( "o", "122oooB12o" ) // "122oB12o"
- *  $TESTS$
- *      CHARONE( "122333a123" )      == "123a123"
- *      CHARONE( "A  B  CCCD" )      == "A B CD"
- *      CHARONE( " ", "A  B  A  B" ) == "A B A B"
- *      CHARONE( "o", "122oooB12o" ) == "122oB12o"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARONE() is compatible with CT3's CHARONE().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CHARREM()   WORDONE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CHARONE()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Reduce multiple occurences of a character to one
+   $SYNTAX$
+      CHARONE( [<cCharactersToReduce>,] <cString> ) -> cReducedString
+   $ARGUMENTS$
+      [<cCharactersToReduce>]    specifies the characters the multiple
+                                 occurences of which should be reduced to one
+                                 Default: All characters.
+      <cString>                  specifies the processed string
+   $RETURNS$
+      <cReducedString>           the string with the reduced occurences
+   $DESCRIPTION$
+      The CHARONE() function reduces multiple occurences of characters in
+      <cString> to a single one. It is important to note that the multiple
+      occurences must occur directly one behind the other. This behaviour is
+      is in contrast to the CHARLIST() function.
+   $EXAMPLES$
+      ? CHARONE( "122333a123" )      // "123a123"
+      ? CHARONE( "A  B  CCCD" )      // "A B CD"
+      ? CHARONE( " ", "A  B  A  B" ) // "A B A B"
+      ? CHARONE( "o", "122oooB12o" ) // "122oB12o"
+   $TESTS$
+      CHARONE( "122333a123" )      == "123a123"
+      CHARONE( "A  B  CCCD" )      == "A B CD"
+      CHARONE( " ", "A  B  A  B" ) == "A B A B"
+      CHARONE( "o", "122oooB12o" ) == "122oB12o"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CHARONE() is compatible with CT3's CHARONE().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CHARREM()   WORDONE()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      WORDONE()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Reduce multiple occurences of a double character to one
- *  $SYNTAX$
- *      WORDONE( [<cDoubleCharactersToReduce>,] <cString> ) -> cReducedString
- *  $ARGUMENTS$
- *      [<cDoubleCharactersToReduce>]  specifies the double characters the multiple
- *                                     occurences of which should be reduced to one
- *                                     Default: All characters.
- *      <cString>                      specifies the processed string
- *  $RETURNS$
- *      <cReducedString>               the string with the reduced occurences
- *  $DESCRIPTION$
- *      The WORDONE() function reduces multiple occurences of double characters in
- *      <cString> to a single one. It is important to note that the multiple
- *      occurences must occur directly one behind the other.
- *  $EXAMPLES$
- *      ? WORDONE( "12ABAB12" )       // "12AB12"
- *      ? WORDONE( "1AAAA2" )         // "1AAAA2"
- *      ? WORDONE( "12", "1212ABAB" ) // "12ABAB"
- *  $TESTS$
- *      WORDONE( "12ABAB12" )       == "12AB12"
- *      WORDONE( "1AAAA2" )         == "1AAAA2"
- *      WORDONE( "12", "1212ABAB" ) == "12ABAB"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      WORDONE() is compatible with CT3's WORDONE().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CHARONE()   CHARREM()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      WORDONE()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Reduce multiple occurences of a double character to one
+   $SYNTAX$
+      WORDONE( [<cDoubleCharactersToReduce>,] <cString> ) -> cReducedString
+   $ARGUMENTS$
+      [<cDoubleCharactersToReduce>]  specifies the double characters the multiple
+                                     occurences of which should be reduced to one
+                                     Default: All characters.
+      <cString>                      specifies the processed string
+   $RETURNS$
+      <cReducedString>               the string with the reduced occurences
+   $DESCRIPTION$
+      The WORDONE() function reduces multiple occurences of double characters in
+      <cString> to a single one. It is important to note that the multiple
+      occurences must occur directly one behind the other.
+   $EXAMPLES$
+      ? WORDONE( "12ABAB12" )       // "12AB12"
+      ? WORDONE( "1AAAA2" )         // "1AAAA2"
+      ? WORDONE( "12", "1212ABAB" ) // "12ABAB"
+   $TESTS$
+      WORDONE( "12ABAB12" )       == "12AB12"
+      WORDONE( "1AAAA2" )         == "1AAAA2"
+      WORDONE( "12", "1212ABAB" ) == "12ABAB"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      WORDONE() is compatible with CT3's WORDONE().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CHARONE()   CHARREM()
+   $END$
  */

@@ -2,148 +2,147 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *     Document
- *  $NAME$
- *     Harbour License
- *  $CATEGORY$
- *     Document
- *  $SUBCATEGORY$
- *     License
- *  $ONELINER$
- *     Harbour License
- *  $DESCRIPTION$
- *
- *  <b>THE HARBOUR PROJECT COMPILER LICENSE</b>   </par>
- *   ====================================   </par>
- *
- *   Note: This license applies to most of the files in the src/compiler
- *         directory.  </par>
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version.  </par>
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.  </par>
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this program; if not, write to the Free Software
- *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- *   their web site at http://www.gnu.org/).  </par>
- *
- *
- *   <b>THE HARBOUR PROJECT LIBRARY LICENSE</b>  </par>
- *   ===================================  </par>
- *
- *   Note: This license applies to most of the files in the include directory,
- *         source directory, and subdirectories.  </par>
- *
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2, or (at your option)
- *   any later version.  </par>
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.  </par>
- *
- *   You should have received a copy of the GNU General Public License
- *   along with this software; see the file COPYING.  If not, write to
- *   the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- *   Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).  </par>
- *
- *   As a special exception, the Harbour Project gives permission for
- *   additional uses of the text contained in its release of Harbour.  </par>
- *
- *   The exception is that, if you link the Harbour libraries with other
- *   files to produce an executable, this does not by itself cause the
- *   resulting executable to be covered by the GNU General Public License.
- *   Your use of that executable is in no way restricted on account of
- *   linking the Harbour library code into it.  </par>
- *
- *   This exception does not however invalidate any other reasons why
- *   the executable file might be covered by the GNU General Public License.  </par>
- *
- *   This exception applies only to the code released by the Harbour
- *   Project under the name Harbour.  If you copy code from other
- *   Harbour Project or Free Software Foundation releases into a copy of
- *   Harbour, as the General Public License permits, the exception does
- *   not apply to the code that you add in this way.  To avoid misleading
- *   anyone as to the status of such modified files, you must delete
- *   this exception notice from them.  </par>
- *
- *   If you write modifications of your own for Harbour, it is your choice
- *   whether to permit this exception to apply to your modifications.
- *   If you do not wish that, delete this exception notice.  </par>
- *
- *
- *   <b>THE OLD HARBOUR PROJECT LIBRARY LICENSE</b>  </par>
- *   =======================================  </par>
- *
- *   Note: This license only applies to the following files:  </par>
- *   <pre>
- *      contrib\libmisc\dates2.c (Only the DateTime() function by Jon Berg)
- *      samples\pe\*
- *      source\rtl\philes.c
- *      source\rtl\binnum.c
- *      source\lang\msgsr852.c
- *      source\lang\msgpl852.c
- *      source\lang\msgpliso.c
- *      source\lang\msgplmaz.c
- *      source\lang\msgeu.c
- *      source\lang\msgcsiso.c
- *      source\lang\msgcswin.c
- *      source\lang\msgcskam.c
- *      source\lang\msgsriso.c
- *      source\lang\msgde.c
- *      source\lang\msghr852.c
- *      source\lang\msgcs852.c
- *      source\lang\msghriso.c
- *      source\lang\msgis850.c
- *   </pre>  </par>
- *   This program is free software; you can redistribute it and/or modify
- *   it under the terms of the GNU General Public License as published by
- *   the Free Software Foundation; either version 2 of the License, or
- *   (at your option) any later version, with one exception:  </par>
- *
- *   The exception is that if you link the Harbour Runtime Library (HRL)
- *   and/or the Harbour Virtual Machine (HVM) with other files to produce
- *   an executable, this does not by itself cause the resulting executable
- *   to be covered by the GNU General Public License. Your use of that
- *   executable is in no way restricted on account of linking the HRL
- *   and/or HVM code into it.  </par>
- *
- *   This program is distributed in the hope that it will be useful,
- *   but WITHOUT ANY WARRANTY; without even the implied warranty of
- *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *   GNU General Public License for more details.  </par>
- *
- *   You should have received a copy of the GNU General Public License
- *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
- *   their web site at http://www.gnu.org/).  </par>
- *
- *
- *   <b>THE HARBOUR PROJECT CONTRIB LICENSE</b>  </par>
- *   ===================================  </par>
- *
- *   There is no one single license that applies to the Harbour Project
- *   contrib files. Some files use the Harbour Project Compiler license.
- *   Some files use the Harbour Project Library license. Some files use
- *   the old Harbour Project Library license (and in one case, just one
- *   function in a file that otherwise uses the Harbour Project Library
- *   license uses the old license - this is the DateTime() function in
- *   the file  contrib\libmisc\dates2.c).  Some files may even use other
- *   types of free software or open source  software licenses. Some files
- *   have been donated to the public domain. If you use any of the contrib
- *   files, you need to investigate the license that applies to each file.  </par>
- *
- *  $SEEALSO$
- *     Overview
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Document
+   $NAME$
+      Harbour License
+   $CATEGORY$
+      Document
+   $SUBCATEGORY$
+      License
+   $ONELINER$
+      Harbour License
+   $DESCRIPTION$
+      <b>THE HARBOUR PROJECT COMPILER LICENSE</b>   </par>
+       ====================================   </par>
+  
+       Note: This license applies to most of the files in the src/compiler
+             directory.  </par>
+  
+       This program is free software; you can redistribute it and/or modify
+       it under the terms of the GNU General Public License as published by
+       the Free Software Foundation; either version 2 of the License, or
+       (at your option) any later version.  </par>
+  
+       This program is distributed in the hope that it will be useful,
+       but WITHOUT ANY WARRANTY; without even the implied warranty of
+       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+       GNU General Public License for more details.  </par>
+  
+       You should have received a copy of the GNU General Public License
+       along with this program; if not, write to the Free Software
+       Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+       their web site at http://www.gnu.org/).  </par>
+  
+  
+       <b>THE HARBOUR PROJECT LIBRARY LICENSE</b>  </par>
+       ===================================  </par>
+  
+       Note: This license applies to most of the files in the include directory,
+             source directory, and subdirectories.  </par>
+  
+       This program is free software; you can redistribute it and/or modify
+       it under the terms of the GNU General Public License as published by
+       the Free Software Foundation; either version 2, or (at your option)
+       any later version.  </par>
+  
+       This program is distributed in the hope that it will be useful,
+       but WITHOUT ANY WARRANTY; without even the implied warranty of
+       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+       GNU General Public License for more details.  </par>
+  
+       You should have received a copy of the GNU General Public License
+       along with this software; see the file COPYING.  If not, write to
+       the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
+       Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).  </par>
+  
+       As a special exception, the Harbour Project gives permission for
+       additional uses of the text contained in its release of Harbour.  </par>
+  
+       The exception is that, if you link the Harbour libraries with other
+       files to produce an executable, this does not by itself cause the
+       resulting executable to be covered by the GNU General Public License.
+       Your use of that executable is in no way restricted on account of
+       linking the Harbour library code into it.  </par>
+  
+       This exception does not however invalidate any other reasons why
+       the executable file might be covered by the GNU General Public License.  </par>
+  
+       This exception applies only to the code released by the Harbour
+       Project under the name Harbour.  If you copy code from other
+       Harbour Project or Free Software Foundation releases into a copy of
+       Harbour, as the General Public License permits, the exception does
+       not apply to the code that you add in this way.  To avoid misleading
+       anyone as to the status of such modified files, you must delete
+       this exception notice from them.  </par>
+  
+       If you write modifications of your own for Harbour, it is your choice
+       whether to permit this exception to apply to your modifications.
+       If you do not wish that, delete this exception notice.  </par>
+  
+  
+       <b>THE OLD HARBOUR PROJECT LIBRARY LICENSE</b>  </par>
+       =======================================  </par>
+  
+       Note: This license only applies to the following files:  </par>
+       <pre>
+          contrib\libmisc\dates2.c (Only the DateTime() function by Jon Berg)
+          samples\pe\*
+          source\rtl\philes.c
+          source\rtl\binnum.c
+          source\lang\msgsr852.c
+          source\lang\msgpl852.c
+          source\lang\msgpliso.c
+          source\lang\msgplmaz.c
+          source\lang\msgeu.c
+          source\lang\msgcsiso.c
+          source\lang\msgcswin.c
+          source\lang\msgcskam.c
+          source\lang\msgsriso.c
+          source\lang\msgde.c
+          source\lang\msghr852.c
+          source\lang\msgcs852.c
+          source\lang\msghriso.c
+          source\lang\msgis850.c
+       </pre>  </par>
+       This program is free software; you can redistribute it and/or modify
+       it under the terms of the GNU General Public License as published by
+       the Free Software Foundation; either version 2 of the License, or
+       (at your option) any later version, with one exception:  </par>
+  
+       The exception is that if you link the Harbour Runtime Library (HRL)
+       and/or the Harbour Virtual Machine (HVM) with other files to produce
+       an executable, this does not by itself cause the resulting executable
+       to be covered by the GNU General Public License. Your use of that
+       executable is in no way restricted on account of linking the HRL
+       and/or HVM code into it.  </par>
+  
+       This program is distributed in the hope that it will be useful,
+       but WITHOUT ANY WARRANTY; without even the implied warranty of
+       MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+       GNU General Public License for more details.  </par>
+  
+       You should have received a copy of the GNU General Public License
+       Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA (or visit
+       their web site at http://www.gnu.org/).  </par>
+  
+  
+       <b>THE HARBOUR PROJECT CONTRIB LICENSE</b>  </par>
+       ===================================  </par>
+  
+       There is no one single license that applies to the Harbour Project
+       contrib files. Some files use the Harbour Project Compiler license.
+       Some files use the Harbour Project Library license. Some files use
+       the old Harbour Project Library license (and in one case, just one
+       function in a file that otherwise uses the Harbour Project Library
+       license uses the old license - this is the DateTime() function in
+       the file  contrib\libmisc\dates2.c).  Some files may even use other
+       types of free software or open source  software licenses. Some files
+       have been donated to the public domain. If you use any of the contrib
+       files, you need to investigate the license that applies to each file.  </par>
+  
+   $SEEALSO$
+      Overview
+   $END$
  */

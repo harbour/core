@@ -2,52 +2,52 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_PENDING()
- *  $CATEGORY$
- *     Menus/Prompts
- *  $ONELINER$
- *     Display same-line pending messages after a wait.
- *  $SYNTAX$
- *     FT_PENDING ( <cMsg>, [ <nRow> ], [ <nCol> ], ;
- *                       [ <nWait> ], [ <cColor> ] ) -> NIL
- *  $ARGUMENTS$
- *     <cMsg> is the message string to display.
- *
- *     <nRow> is an optional screen row for message display, default row 24.
- *
- *     <nCol> is an optional screen col for message display, default col 0.
- *
- *     <nWait> is an optional wait (sec) between messages, default 5 sec.
- *
- *     <cColor> is an optional color string for displayed messages, default
- *              is white text over red background.
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     A good way to display information messages during the running
- *     of an application is to send them all to the SAME line on the
- *     screen where users are expected to look for them. In order to
- *     give users a chance to read the current message before the next one
- *     is displayed we may need to insert a delay after each message.
- *
- *     FT_PENDING() function displays messages by keeping track of
- *     the time of the last message and providing a delay ONLY if the next
- *     pending message is issued much too soon after the current one.
- *
- *  $EXAMPLES$
- *     FT_PENDING( "Message one",20,0,3,"W+/G" ) // Displays "Message one."
- *                                               // sets row to 20, col to 0.
- *                                               // wait to 3 and color to
- *                                               // bright white over green.
- *     FT_PENDING( "Message two" )   // Displays "Message two", after 5 sec.
- *     FT_PENDING( "Message three" ) // Displays "Message three", after 5 sec.
- *
- *
- *     Note that default row, col, wait time and color need to be set only
- *     once in the very first call to FT_PENDING() and only if the internal
- *     default values are not appropriate.
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_PENDING()
+   $CATEGORY$
+      Menus/Prompts
+   $ONELINER$
+      Display same-line pending messages after a wait.
+   $SYNTAX$
+      FT_PENDING ( <cMsg>, [ <nRow> ], [ <nCol> ], ;
+                        [ <nWait> ], [ <cColor> ] ) -> NIL
+   $ARGUMENTS$
+      <cMsg> is the message string to display.
+  
+      <nRow> is an optional screen row for message display, default row 24.
+  
+      <nCol> is an optional screen col for message display, default col 0.
+  
+      <nWait> is an optional wait (sec) between messages, default 5 sec.
+  
+      <cColor> is an optional color string for displayed messages, default
+               is white text over red background.
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      A good way to display information messages during the running
+      of an application is to send them all to the SAME line on the
+      screen where users are expected to look for them. In order to
+      give users a chance to read the current message before the next one
+      is displayed we may need to insert a delay after each message.
+  
+      FT_PENDING() function displays messages by keeping track of
+      the time of the last message and providing a delay ONLY if the next
+      pending message is issued much too soon after the current one.
+  
+   $EXAMPLES$
+      FT_PENDING( "Message one",20,0,3,"W+/G" ) // Displays "Message one."
+                                                // sets row to 20, col to 0.
+                                                // wait to 3 and color to
+                                                // bright white over green.
+      FT_PENDING( "Message two" )   // Displays "Message two", after 5 sec.
+      FT_PENDING( "Message three" ) // Displays "Message three", after 5 sec.
+  
+  
+      Note that default row, col, wait time and color need to be set only
+      once in the very first call to FT_PENDING() and only if the internal
+      default values are not appropriate.
+  
+   $END$
  */

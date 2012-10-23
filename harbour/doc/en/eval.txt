@@ -13,56 +13,56 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      EVAL()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Execute and Execution
- *  $ONELINER$
- *      Evaluate a code block
- *  $SYNTAX$
- *      EVAL( <bBlock> [, <xVal> [,...]])  --> xExpression
- *  $ARGUMENTS$
- *      <bBlock>   Code block expression to be evaluated
- *
- *      <xVal>     Argument to be passed to the code block expression
- *
- *      <xVal...>  Argument list to be passed to the code block expression
- *  $RETURNS$
- *      <xExpression>  The result of the evaluated code block
- *  $DESCRIPTION$
- *      This function evaluates the code bloc expressed as <bBlock> and
- *      returns its evaluated value. If their are multiple expressions within
- *      the code block, the last expression will be value of this function.
- *
- *      If the code block requires parameters to be passed to it,they are
- *      specified in the parameter list <xVal> and following. Each parameter
- *      is separated by a comma within the expression list.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL bBlock := {|| NIL }
- *         ? Eval( 1 )
- *         ? Eval( @bBlock )
- *
- *         ? Eval( {| p1 | p1 }, "A", "B" )
- *         ? Eval( {| p1, p2 | p1 + p2 }, "A", "B" )
- *         ? Eval( {| p1, p2, p3 | p1 }, "A", "B" )
- *         RETURN
- *  $TESTS$
- *      See examples
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is vm
- *  $SEEALSO$
- *      AEVAL(),DBEVAL()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      EVAL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Execute and Execution
+   $ONELINER$
+      Evaluate a code block
+   $SYNTAX$
+      EVAL( <bBlock> [, <xVal> [,...]])  --> xExpression
+   $ARGUMENTS$
+      <bBlock>   Code block expression to be evaluated
+
+      <xVal>     Argument to be passed to the code block expression
+
+      <xVal...>  Argument list to be passed to the code block expression
+   $RETURNS$
+      <xExpression>  The result of the evaluated code block
+   $DESCRIPTION$
+      This function evaluates the code bloc expressed as <bBlock> and
+      returns its evaluated value. If their are multiple expressions within
+      the code block, the last expression will be value of this function.
+
+      If the code block requires parameters to be passed to it,they are
+      specified in the parameter list <xVal> and following. Each parameter
+      is separated by a comma within the expression list.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL bBlock := {|| NIL }
+         ? Eval( 1 )
+         ? Eval( @bBlock )
+
+         ? Eval( {| p1 | p1 }, "A", "B" )
+         ? Eval( {| p1, p2 | p1 + p2 }, "A", "B" )
+         ? Eval( {| p1, p2, p3 | p1 }, "A", "B" )
+         RETURN
+   $TESTS$
+      See examples
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is vm
+   $SEEALSO$
+      AEVAL(),DBEVAL()
+   $END$
  */

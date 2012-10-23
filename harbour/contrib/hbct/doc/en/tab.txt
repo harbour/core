@@ -2,100 +2,100 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      TABEXPAND()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replace tabulator control characters with fill characters
- *  $SYNTAX$
- *      TABEXPAND (<cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
- *                 [<cNewLineCharacters>], [<cTabChar|nTabChar>],
- *                 [<lIgnore141>]) -> cExpandedString
- *  $ARGUMENTS$
- *      <cString>
- *      <nTabWidth>
- *      <cFillChar|nFillChar>
- *      <cNewLineCharacters>      string indicating new line,
- *                                default is the string returned by
- *                                hb_eol()
- *      <cTabChar|nTabChar>       character indicating a tab stop,
- *                                default is Chr(9)
- *      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
- *                                should be ignored as a newline indicator,
- *                                default is .F. (functions uses Chr(141))
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *      tabexpand("-"+Chr(9)+"!")             == "-       !"
- *      tabexpand("----"+Chr(9) +"!")         == "----    !"
- *      tabexpand("-"+Chr(9)+"!",, "+")       == "-+++++++!"
- *      tabexpand("-"+Chr(9)+ "!", 4)         == "-   !"
- *      tabexpand("----"+Chr(9)+ "!", 8)      == "----    !"
- *      tabexpand("----"+Chr(9)+ "!", 8, "+") == "----++++!"
- *      tabexpand("-"+Chr(9)+"!"+hb_eol()+"----"+Chr(9)+ "!",, "+") == "-+++++++!"+hb_eol()+"----++++!"
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      TABEXPAND() is compatible with CT3's TABEXPAND(), but there are
- *      three new parameters for a better fine control of the function's
- *      behaviour.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      TABPACK()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      TABEXPAND()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replace tabulator control characters with fill characters
+   $SYNTAX$
+      TABEXPAND (<cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
+                 [<cNewLineCharacters>], [<cTabChar|nTabChar>],
+                 [<lIgnore141>]) -> cExpandedString
+   $ARGUMENTS$
+      <cString>
+      <nTabWidth>
+      <cFillChar|nFillChar>
+      <cNewLineCharacters>      string indicating new line,
+                                default is the string returned by
+                                hb_eol()
+      <cTabChar|nTabChar>       character indicating a tab stop,
+                                default is Chr(9)
+      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
+                                should be ignored as a newline indicator,
+                                default is .F. (functions uses Chr(141))
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+      tabexpand("-"+Chr(9)+"!")             == "-       !"
+      tabexpand("----"+Chr(9) +"!")         == "----    !"
+      tabexpand("-"+Chr(9)+"!",, "+")       == "-+++++++!"
+      tabexpand("-"+Chr(9)+ "!", 4)         == "-   !"
+      tabexpand("----"+Chr(9)+ "!", 8)      == "----    !"
+      tabexpand("----"+Chr(9)+ "!", 8, "+") == "----++++!"
+      tabexpand("-"+Chr(9)+"!"+hb_eol()+"----"+Chr(9)+ "!",, "+") == "-+++++++!"+hb_eol()+"----++++!"
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      TABEXPAND() is compatible with CT3's TABEXPAND(), but there are
+      three new parameters for a better fine control of the function's
+      behaviour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      TABPACK()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      TABPACK()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Pack fill characters to appropriate tab characters
- *  $SYNTAX$
- *      TABPACK( <cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
- *               [<cNewLineCharacters>], [<cTabChar|nTabChar>],
- *               [<lIgnore141>] ) -> cPackedString
- *  $ARGUMENTS$
- *      <cString>
- *      <nTabWidth>
- *      <cFillChar|nFillChar>
- *      <cNewLineCharacters>      string indicating new line,
- *                                default is the string returned by
- *                                hb_eol()
- *      <cTabChar|nTabChar>       character indicating a tab stop,
- *                                default is Chr(9)
- *      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
- *                                should be ignored as a newline indicator,
- *                                default is .F. (functions uses Chr(141))
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      TABPACK() is compatible with CT3's TABPACK(), but there are
- *      three new parameters for a better fine control of the function's
- *      behaviour.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      TABEXPAND()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      TABPACK()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Pack fill characters to appropriate tab characters
+   $SYNTAX$
+      TABPACK( <cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
+               [<cNewLineCharacters>], [<cTabChar|nTabChar>],
+               [<lIgnore141>] ) -> cPackedString
+   $ARGUMENTS$
+      <cString>
+      <nTabWidth>
+      <cFillChar|nFillChar>
+      <cNewLineCharacters>      string indicating new line,
+                                default is the string returned by
+                                hb_eol()
+      <cTabChar|nTabChar>       character indicating a tab stop,
+                                default is Chr(9)
+      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
+                                should be ignored as a newline indicator,
+                                default is .F. (functions uses Chr(141))
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      TABPACK() is compatible with CT3's TABPACK(), but there are
+      three new parameters for a better fine control of the function's
+      behaviour.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      TABEXPAND()
+   $END$
  */

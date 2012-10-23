@@ -18,726 +18,725 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      ABS()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Return the absolute value of a number.
- *  $SYNTAX$
- *      ABS(<nNumber>) --> <nAbsNumber>
- *  $ARGUMENTS$
- *      <nNumber> Any number.
- *  $RETURNS$
- *      <nAbsNumber> The absolute numeric value.
- *  $DESCRIPTION$
- *      This function yields the absolute value of the numeric value or
- *      expression <nNumber>.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL nNumber := 50
- *         LOCAL nNumber1 := 27
- *         CLS
- *
- *         ? nNumber - nNumber1
- *         ? nNumber1 - nNumber
- *         ? ABS( nNumber - nNumber1 )
- *         ? ABS( nNumber1 - nNumber )
- *         ? ABS( -1 * 345 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      ABS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Return the absolute value of a number.
+   $SYNTAX$
+      ABS(<nNumber>) --> <nAbsNumber>
+   $ARGUMENTS$
+      <nNumber> Any number.
+   $RETURNS$
+      <nAbsNumber> The absolute numeric value.
+   $DESCRIPTION$
+      This function yields the absolute value of the numeric value or
+      expression <nNumber>.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL nNumber := 50
+         LOCAL nNumber1 := 27
+         CLS
+
+         ? nNumber - nNumber1
+         ? nNumber1 - nNumber
+         ? ABS( nNumber - nNumber1 )
+         ? ABS( nNumber1 - nNumber )
+         ? ABS( -1 * 345 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      EXP()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Calculates the value of e raised to the passed power.
- *  $SYNTAX$
- *      EXP( <nNumber> ) --> <nValue>
- *  $ARGUMENTS$
- *      <nNumber> Any  real number.
- *  $RETURNS$
- *      <nValue>  The anti-logarithm of <nNumber>
- *  $DESCRIPTION$
- *      This function returns the value of e raised to the power of
- *      <nNumber>.  It is the inverse of LOG().
- *  $EXAMPLES$
- *      ? EXP(45)
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      LOG()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      EXP()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Calculates the value of e raised to the passed power.
+   $SYNTAX$
+      EXP( <nNumber> ) --> <nValue>
+   $ARGUMENTS$
+      <nNumber> Any  real number.
+   $RETURNS$
+      <nValue>  The anti-logarithm of <nNumber>
+   $DESCRIPTION$
+      This function returns the value of e raised to the power of
+      <nNumber>.  It is the inverse of LOG().
+   $EXAMPLES$
+      ? EXP(45)
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      LOG()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      INT()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Return the integer port of a numeric value.
- *  $SYNTAX$
- *      INT( <nNumber> ) --> <nIntNumber>
- *  $ARGUMENTS$
- *      <nNumber> Any  numeric value.
- *  $RETURNS$
- *      <nIntNumber> The integer portion of the numeric value.
- *  $DESCRIPTION$
- *      This function converts a numeric expression to an integer. All
- *      decimal digits are truncated. This function does not round a value
- *      upward or downward; it merely truncates a number at the decimal
- *      point.
- *  $EXAMPLES$
- *      SET DECIMAL TO 5
- *      ? INT( 632512.62541 )
- *      ? INT( 845414111.91440 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      ROUND(),STRZERO()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      INT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Return the integer port of a numeric value.
+   $SYNTAX$
+      INT( <nNumber> ) --> <nIntNumber>
+   $ARGUMENTS$
+      <nNumber> Any  numeric value.
+   $RETURNS$
+      <nIntNumber> The integer portion of the numeric value.
+   $DESCRIPTION$
+      This function converts a numeric expression to an integer. All
+      decimal digits are truncated. This function does not round a value
+      upward or downward; it merely truncates a number at the decimal
+      point.
+   $EXAMPLES$
+      SET DECIMAL TO 5
+      ? INT( 632512.62541 )
+      ? INT( 845414111.91440 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      ROUND(),STRZERO()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      LOG()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Returns the natural logarithm of a number.
- *  $SYNTAX$
- *      LOG( <nNumber> ) --> <nLog>
- *  $ARGUMENTS$
- *      <nNumber> Any numeric expression.
- *  $RETURNS$
- *      <nExponent> The natural logarithm of <nNumber>.
- *  $DESCRIPTION$
- *      This function returns the natural logarithm of the number <nNumber>.
- *      If <nNumber> is 0 or less than 0, a numeric overflow occurs,
- *      which is depicted on the display device as a series of asterisks.
- *      This function is the inverse of EXP().
- *  $EXAMPLES$
- *      ? LOG( 632512 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      EXP()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      LOG()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Returns the natural logarithm of a number.
+   $SYNTAX$
+      LOG( <nNumber> ) --> <nLog>
+   $ARGUMENTS$
+      <nNumber> Any numeric expression.
+   $RETURNS$
+      <nExponent> The natural logarithm of <nNumber>.
+   $DESCRIPTION$
+      This function returns the natural logarithm of the number <nNumber>.
+      If <nNumber> is 0 or less than 0, a numeric overflow occurs,
+      which is depicted on the display device as a series of asterisks.
+      This function is the inverse of EXP().
+   $EXAMPLES$
+      ? LOG( 632512 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      EXP()
+   $END$
  */
 
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      MAX()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Returns the maximum of two numbers or dates.
+   $SYNTAX$
+      MAX( <xValue>, <xValue1> )  --> <xMax>
+   $ARGUMENTS$
+      <xValue>  Any date or numeric value.
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      MAX()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Returns the maximum of two numbers or dates.
- *  $SYNTAX$
- *      MAX( <xValue>, <xValue1> )  --> <xMax>
- *  $ARGUMENTS$
- *      <xValue>  Any date or numeric value.
- *
- *      <xValue1> Any date or numeric value (same type as <xValue>).
- *  $RETURNS$
- *      <xMax> The larger numeric (or later date) value.
- *  $DESCRIPTION$
- *      This function returns the larger of the two passed espressions. If
- *      <xValue> and <xValue1> are numeric data types, the value returned by
- *      this function will be a numeric data type as well and will be the
- *      larger of the two numbers passed to it. If <xValue> and <xValue1>
- *      are date data types, the return value will be a date data type as
- *      well. It will be the later of the two dates passed to it.
- *  $EXAMPLES$
- *      ? MAX( 214514214, 6251242142 )
- *      ? MAX( STOD( "20001111" ), STOD( "20140621" ) )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      Min()
- *  $END$
+      <xValue1> Any date or numeric value (same type as <xValue>).
+   $RETURNS$
+      <xMax> The larger numeric (or later date) value.
+   $DESCRIPTION$
+      This function returns the larger of the two passed espressions. If
+      <xValue> and <xValue1> are numeric data types, the value returned by
+      this function will be a numeric data type as well and will be the
+      larger of the two numbers passed to it. If <xValue> and <xValue1>
+      are date data types, the return value will be a date data type as
+      well. It will be the later of the two dates passed to it.
+   $EXAMPLES$
+      ? MAX( 214514214, 6251242142 )
+      ? MAX( STOD( "20001111" ), STOD( "20140621" ) )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      Min()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      MIN()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Determines the minumum of two numbers or dates.
- *  $SYNTAX$
- *      MIN( <xValue>, <xValue1> )  --> <xMin>
- *  $ARGUMENTS$
- *      <xValue>  Any date or numeric value.
- *
- *      <xValue1> Any date or numeric value.
- *  $RETURNS$
- *      <xMin>  The smaller numeric (or earlier date) value.
- *  $DESCRIPTION$
- *      This function returns the smaller of the two passed espressions.
- *      <xValue> and <xValue1> must be the same data type. If numeric, the
- *      smaller number is returned. If dates, the earlier date is returned.
- *  $EXAMPLES$
- *      ? MIN( 214514214, 6251242142 )
- *      ? MIN( STOD( "20001111" ), STOD( "20140621" ) )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      MAX()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      MIN()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Determines the minumum of two numbers or dates.
+   $SYNTAX$
+      MIN( <xValue>, <xValue1> )  --> <xMin>
+   $ARGUMENTS$
+      <xValue>  Any date or numeric value.
+
+      <xValue1> Any date or numeric value.
+   $RETURNS$
+      <xMin>  The smaller numeric (or earlier date) value.
+   $DESCRIPTION$
+      This function returns the smaller of the two passed espressions.
+      <xValue> and <xValue1> must be the same data type. If numeric, the
+      smaller number is returned. If dates, the earlier date is returned.
+   $EXAMPLES$
+      ? MIN( 214514214, 6251242142 )
+      ? MIN( STOD( "20001111" ), STOD( "20140621" ) )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      MAX()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      MOD()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Return the modulus of two numbers.
- *  $SYNTAX$
- *      MOD( <nNumber>, <nNumber1> ) -->  <nRemainder>
- *  $ARGUMENTS$
- *      <nNumber>  Numerator in a divisional expression.
- *
- *      <nNumber1> Denominator in a divisional expression.
- *  $RETURNS$
- *      <nRemainder>  The remainder after the division operation.
- *  $DESCRIPTION$
- *      This functuion returns the remainder of one number divided by
- *      another.
- *  $EXAMPLES$
- *      ? Mod( 12, 8.521 )
- *      ? Mod( 12, 0 )
- *      ? Mod( 62412.5142, 4522114.12014 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      %
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      MOD()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Return the modulus of two numbers.
+   $SYNTAX$
+      MOD( <nNumber>, <nNumber1> ) -->  <nRemainder>
+   $ARGUMENTS$
+      <nNumber>  Numerator in a divisional expression.
+
+      <nNumber1> Denominator in a divisional expression.
+   $RETURNS$
+      <nRemainder>  The remainder after the division operation.
+   $DESCRIPTION$
+      This functuion returns the remainder of one number divided by
+      another.
+   $EXAMPLES$
+      ? Mod( 12, 8.521 )
+      ? Mod( 12, 0 )
+      ? Mod( 62412.5142, 4522114.12014 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      %
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      SQRT()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Calculates the square root of a number.
- *  $SYNTAX$
- *      SQRT( <nNumber> ) --> <nSqrt>
- *  $ARGUMENTS$
- *      <nNumber> Any  numeric value.
- *  $RETURNS$
- *      <nSqrt>   The square root of <number>.
- *  $DESCRIPTION$
- *      This function returns the square root of <nNumber>. The precision
- *      of this evaluation is based solely on the settings of the
- *      SET DECIMAL TO command. Any negative number passed as <nNumber>
- *      will always return a 0.
- *  $EXAMPLES$
- *      SET DECIMAL TO 5
- *      ? SQRT( 632512.62541 )
- *      ? SQRT( 845414111.91440 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      ROUND()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      SQRT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Calculates the square root of a number.
+   $SYNTAX$
+      SQRT( <nNumber> ) --> <nSqrt>
+   $ARGUMENTS$
+      <nNumber> Any  numeric value.
+   $RETURNS$
+      <nSqrt>   The square root of <number>.
+   $DESCRIPTION$
+      This function returns the square root of <nNumber>. The precision
+      of this evaluation is based solely on the settings of the
+      SET DECIMAL TO command. Any negative number passed as <nNumber>
+      will always return a 0.
+   $EXAMPLES$
+      SET DECIMAL TO 5
+      ? SQRT( 632512.62541 )
+      ? SQRT( 845414111.91440 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      ROUND()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      ROUND()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Rounds off a numeric expression.
- *  $SYNTAX$
- *      ROUND( <nNumber>,<nPlace> ) --> <nResult>
- *  $ARGUMENTS$
- *      <nNumber> Any numeric value.
- *
- *      <nPlace>  The number of places to round to.
- *  $RETURNS$
- *      <nResult> The rounded number.
- *  $DESCRIPTION$
- *      This function rounds off the value of <nNumber> to the number of
- *      decimal places specified by <nPlace>. If the value of <nPlace> is
- *      a negative number, the function will attempt to round <nNumber> in
- *      whole numbers. Numbers from 5 through 9 will be rounded up, all
- *      others will be rounded down.
- *  $EXAMPLES$
- *      ? ROUND( 632512.62541, 5 )
- *      ? ROUND( 845414111.91440, 3 )
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      INT(),STR(),VAL(),SET FIXED
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      ROUND()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Rounds off a numeric expression.
+   $SYNTAX$
+      ROUND( <nNumber>,<nPlace> ) --> <nResult>
+   $ARGUMENTS$
+      <nNumber> Any numeric value.
+
+      <nPlace>  The number of places to round to.
+   $RETURNS$
+      <nResult> The rounded number.
+   $DESCRIPTION$
+      This function rounds off the value of <nNumber> to the number of
+      decimal places specified by <nPlace>. If the value of <nPlace> is
+      a negative number, the function will attempt to round <nNumber> in
+      whole numbers. Numbers from 5 through 9 will be rounded up, all
+      others will be rounded down.
+   $EXAMPLES$
+      ? ROUND( 632512.62541, 5 )
+      ? ROUND( 845414111.91440, 3 )
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      INT(),STR(),VAL(),SET FIXED
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_mathGetLastError()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      get the last math lib error
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbmath.h"
- *      hb_mathGetLastError( HB_MATH_EXCEPTION * phb_exc )
- *                          --> int iMathErrorType
- *  $ARGUMENTS$
- *      phb_exc     pointer to HB_MATH_EXCEPTION structure, if not NULL,
- *                  the structure will be filled with information about the
- *                  last math error:
- *
- *           typedef struct _HB_MATH_EXCEPTION {
- *             int type;        // Math error type, is one of the constants
- *                              // HB_MATH_ERR_xxx defined in hbmath.ch
- *             char *funcname;  // Pointer to name of the math C RTL routine
- *                              // that caused the error.
- *             char *error;     // Pointer to error description.
- *             double arg1;     // First and
- *             double arg2;     // Second double argument to the math routine.
- *             double retval;   // Corrected return value for the math routine.
- *             int retvalwidth; // Width and
- *             int retvaldec;   // Decimals of the corrected return value,
- *                              // both default to -1
- *             int handled;     // 1, if the math error is already corrected,
- *                              // 0 otherwise.
- *          } HB_MATH_EXCEPTION;
- *  $RETURNS$
- *      <iMathErrorType>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is hbmath.h
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_mathGetLastError()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      get the last math lib error
+   $SYNTAX$
+      C Prototype
+
+      #include "hbmath.h"
+      hb_mathGetLastError( HB_MATH_EXCEPTION * phb_exc )
+                          --> int iMathErrorType
+   $ARGUMENTS$
+      phb_exc     pointer to HB_MATH_EXCEPTION structure, if not NULL,
+                  the structure will be filled with information about the
+                  last math error:
+
+           typedef struct _HB_MATH_EXCEPTION {
+             int type;        // Math error type, is one of the constants
+                              // HB_MATH_ERR_xxx defined in hbmath.ch
+             char *funcname;  // Pointer to name of the math C RTL routine
+                              // that caused the error.
+             char *error;     // Pointer to error description.
+             double arg1;     // First and
+             double arg2;     // Second double argument to the math routine.
+             double retval;   // Corrected return value for the math routine.
+             int retvalwidth; // Width and
+             int retvaldec;   // Decimals of the corrected return value,
+                              // both default to -1
+             int handled;     // 1, if the math error is already corrected,
+                              // 0 otherwise.
+          } HB_MATH_EXCEPTION;
+   $RETURNS$
+      <iMathErrorType>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is hbmath.h
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_mathResetError()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Reset the internal math error information structure
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbmath.h"
- *      hb_mathResetError( void )
- *  $ARGUMENTS$
- *
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is hbmath.h
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_mathResetError()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Reset the internal math error information structure
+   $SYNTAX$
+      C Prototype
+
+      #include "hbmath.h"
+      hb_mathResetError( void )
+   $ARGUMENTS$
+
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is hbmath.h
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_mathIsMathErr()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Check if harbour math error handling is available
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbmath.h"
- *      hb_mathIsMathErr( void ) --> int iIsMathHandler
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <iIsMathHandler>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is hbmath.h
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_mathIsMathErr()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Check if harbour math error handling is available
+   $SYNTAX$
+      C Prototype
+
+      #include "hbmath.h"
+      hb_mathIsMathErr( void ) --> int iIsMathHandler
+   $ARGUMENTS$
+
+   $RETURNS$
+      <iIsMathHandler>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is hbmath.h
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_mathSetHandler()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      set the harbour math handler
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbmath.h"
- *      hb_mathSetHandler( HB_MATH_HANDLERPROC handlerproc )
- *                        --> HB_MATH_HANDLERPROC previous_handerproc
- *  $ARGUMENTS$
- *      handlerproc             custom math handler
- *              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
- *  $RETURNS$
- *      previous_handlerproc    previous math handler
- *              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is hbmath.h
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_mathSetHandler()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      set the harbour math handler
+   $SYNTAX$
+      C Prototype
+
+      #include "hbmath.h"
+      hb_mathSetHandler( HB_MATH_HANDLERPROC handlerproc )
+                        --> HB_MATH_HANDLERPROC previous_handerproc
+   $ARGUMENTS$
+      handlerproc             custom math handler
+              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
+   $RETURNS$
+      previous_handlerproc    previous math handler
+              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is hbmath.h
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_mathGetHandler()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      get current Harbour math error handler
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbmath.h"
- *      hb_mathGetHandler( void ) --> HB_MATH_HANDLERPROC handlerproc
- *  $ARGUMENTS$
- *      handlerproc             custom math handler
- *              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
- *  $RETURNS$
- *      <handerproc>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is hbmath.h
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_mathGetHandler()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      get current Harbour math error handler
+   $SYNTAX$
+      C Prototype
+
+      #include "hbmath.h"
+      hb_mathGetHandler( void ) --> HB_MATH_HANDLERPROC handlerproc
+   $ARGUMENTS$
+      handlerproc             custom math handler
+              typedef int (* HB_MATH_HANDLERPROC)(HB_MATH_EXCEPTION * err)
+   $RETURNS$
+      <handerproc>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is hbmath.h
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_mathSetErrMode()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      set math error handling mode
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbmath.h"
- *      hb_mathSetErrMode( int imode ) --> int ioldmode
- *  $ARGUMENTS$
- *      imode        math error handling mode, one of the following
- *                   constants, defined in hbmath.ch:
- *                     HB_MATH_ERRMODE_DEFAULT
- *                     HB_MATH_ERRMODE_CDEFAULT
- *                     HB_MATH_ERRMODE_USER
- *                     HB_MATH_ERRMODE_USERDEFAULT
- *                     HB_MATH_ERRMODE_USERCDEFAULT
- *  $RETURNS$
- *      ioldmode     old math error handling mode
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is hbmath.h
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_mathGetErrMode()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_mathSetErrMode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      set math error handling mode
+   $SYNTAX$
+      C Prototype
+
+      #include "hbmath.h"
+      hb_mathSetErrMode( int imode ) --> int ioldmode
+   $ARGUMENTS$
+      imode        math error handling mode, one of the following
+                   constants, defined in hbmath.ch:
+                     HB_MATH_ERRMODE_DEFAULT
+                     HB_MATH_ERRMODE_CDEFAULT
+                     HB_MATH_ERRMODE_USER
+                     HB_MATH_ERRMODE_USERDEFAULT
+                     HB_MATH_ERRMODE_USERCDEFAULT
+   $RETURNS$
+      ioldmode     old math error handling mode
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is hbmath.h
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_mathGetErrMode()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_mathGetErrMode()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      get math error handling mode
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbmath.h"
- *      hb_mathGetErrMode( void ) --> imode
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      imode       math error handling mode
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is hbmath.h
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_mathSetErrMode()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_mathGetErrMode()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      get math error handling mode
+   $SYNTAX$
+      C Prototype
+
+      #include "hbmath.h"
+      hb_mathGetErrMode( void ) --> imode
+   $ARGUMENTS$
+
+   $RETURNS$
+      imode       math error handling mode
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is hbmath.h
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_mathSetErrMode()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_MATHERMODE()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Set/Get math error handling mode
- *  $SYNTAX$
- *      HB_MATHERMODE( [<nNewMode>] ) --> <nOldMode>
- *  $ARGUMENTS$
- *      [<nNumber>]   new math error handling mode, one of the following
- *                    constants, defined in hbmath.ch:
- *                     HB_MATH_ERRMODE_DEFAULT
- *                     HB_MATH_ERRMODE_CDEFAULT
- *                     HB_MATH_ERRMODE_USER
- *                     HB_MATH_ERRMODE_USERDEFAULT
- *                     HB_MATH_ERRMODE_USERCDEFAULT
- *  $RETURNS$
- *      <nOldMode>    old math error handling mode
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Header file is hbmath.ch
- *      Library is rtl
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_MATHERMODE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Set/Get math error handling mode
+   $SYNTAX$
+      HB_MATHERMODE( [<nNewMode>] ) --> <nOldMode>
+   $ARGUMENTS$
+      [<nNumber>]   new math error handling mode, one of the following
+                    constants, defined in hbmath.ch:
+                     HB_MATH_ERRMODE_DEFAULT
+                     HB_MATH_ERRMODE_CDEFAULT
+                     HB_MATH_ERRMODE_USER
+                     HB_MATH_ERRMODE_USERDEFAULT
+                     HB_MATH_ERRMODE_USERCDEFAULT
+   $RETURNS$
+      <nOldMode>    old math error handling mode
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Header file is hbmath.ch
+      Library is rtl
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_MATHERBLOCK()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Math
- *  $ONELINER$
- *      Set/Get math error handling codeblock
- *  $SYNTAX$
- *      HB_MATHERBLOCK( [<bNewBlock>] ) --> <bOldBlock>
- *  $ARGUMENTS$
- *      <bNewBlock>
- *  $RETURNS$
- *      <bOldBlock> is the current error handler codeblock
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_MATHERBLOCK()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Math
+   $ONELINER$
+      Set/Get math error handling codeblock
+   $SYNTAX$
+      HB_MATHERBLOCK( [<bNewBlock>] ) --> <bOldBlock>
+   $ARGUMENTS$
+      <bNewBlock>
+   $RETURNS$
+      <bOldBlock> is the current error handler codeblock
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+
+   $END$
  */

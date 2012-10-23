@@ -15,372 +15,372 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langRegister()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langRegister( PHB_LANG lang ) --> ( HB_BOOL )bResult
- *  $ARGUMENTS$
- *      <lang>
- *  $RETURNS$
- *      <bResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langRegister()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langRegister( PHB_LANG lang ) --> ( HB_BOOL )bResult
+   $ARGUMENTS$
+      <lang>
+   $RETURNS$
+      <bResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langDeRegister()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langDeRegister( char * pszID ) --> ( HB_BOOL )bResult
- *  $ARGUMENTS$
- *      <pszID>
- *  $RETURNS$
- *      <bResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langDeRegister()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langDeRegister( char * pszID ) --> ( HB_BOOL )bResult
+   $ARGUMENTS$
+      <pszID>
+   $RETURNS$
+      <bResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langFind()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langFind( char * pszID ) --> ( PHB_LANG )pResult
- *  $ARGUMENTS$
- *      <pszID>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langFind()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langFind( char * pszID ) --> ( PHB_LANG )pResult
+   $ARGUMENTS$
+      <pszID>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langSelect()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langSelect( PHB_LANG lang ) --> ( PHB_LANG )pResult
- *  $ARGUMENTS$
- *      <lang>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langSelect()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langSelect( PHB_LANG lang ) --> ( PHB_LANG )pResult
+   $ARGUMENTS$
+      <lang>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langSelectID()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langSelectID( char * pszID ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <pszID>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langSelectID()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langSelectID( char * pszID ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <pszID>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langDGetItem()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langDGetItem( int iIndex ) --> ( void * )pResult
- *  $ARGUMENTS$
- *      <iIndex>
- *  $RETURNS$
- *      <pResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langDGetItem()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langDGetItem( int iIndex ) --> ( void * )pResult
+   $ARGUMENTS$
+      <iIndex>
+   $RETURNS$
+      <pResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langID()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langID( void ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langID()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langID( void ) --> ( char * )pszResult
+   $ARGUMENTS$
+
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langName()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langName( void ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langName()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langName( void ) --> ( char * )pszResult
+   $ARGUMENTS$
+
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_langDGetErrorDesc()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbapilng.h"
- *      hb_langDGetErrorDesc( ULONG ulIndex ) --> ( char * )pszResult
- *  $ARGUMENTS$
- *      <ulIndex>
- *  $RETURNS$
- *      <pszResult>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is lang
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_langDGetErrorDesc()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbapilng.h"
+      hb_langDGetErrorDesc( ULONG ulIndex ) --> ( char * )pszResult
+   $ARGUMENTS$
+      <ulIndex>
+   $RETURNS$
+      <pszResult>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is lang
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_LANG_REQUEST()
- *  $CATEGORY$
- *      API
- * $SUBCATEGORY$
- *    Language and Nation
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype (macro definition)
- *
- *      #include "hbapilng.h"
- *      HB_LANG_REQUEST( id ) --> <see HB_LANG_REQUEST_( id )>
- *  $ARGUMENTS$
- *      <id>
- *  $RETURNS$
- *      <see HB_LANG_REQUEST_( id )>
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Header file is hbapilng.h
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_LANG_REQUEST()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Language and Nation
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype (macro definition)
+
+      #include "hbapilng.h"
+      HB_LANG_REQUEST( id ) --> <see HB_LANG_REQUEST_( id )>
+   $ARGUMENTS$
+      <id>
+   $RETURNS$
+      <see HB_LANG_REQUEST_( id )>
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Header file is hbapilng.h
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */

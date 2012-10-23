@@ -2,28 +2,28 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_ELTIME()
- *  $CATEGORY$
- *     Date/Time
- *  $ONELINER$
- *     Compute difference between times in hours, minutes, seconds.
- *  $SYNTAX$
- *     FT_ELTIME( <cTime1>, <cTime2> ) -> cDiff
- *  $ARGUMENTS$
- *     <cTime1, cTime2>  character strings representing times in
- *        hh:mm:ss format.
- *  $RETURNS$
- *     <cDiff>  character string representing time difference in
- *        hh:mm:ss format.
- *  $DESCRIPTION$
- *     Return the absolute difference between two times in hh:mm:ss format
- *     in character hours, minutes and seconds (hh:mm:ss).
- *  $EXAMPLES$
- *     FT_ELTIME( "22:40:12", "23:55:17" ) // 01:15:05
- *     FT_ELTIME( "23:55:17", "22:40:12" ) // 01:15:05
- *  $SEEALSO$
- *     FT_ELAPMIN() FT_MIL2MIN() FT_MIN2MIL()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_ELTIME()
+   $CATEGORY$
+      Date/Time
+   $ONELINER$
+      Compute difference between times in hours, minutes, seconds.
+   $SYNTAX$
+      FT_ELTIME( <cTime1>, <cTime2> ) -> cDiff
+   $ARGUMENTS$
+      <cTime1, cTime2>  character strings representing times in
+         hh:mm:ss format.
+   $RETURNS$
+      <cDiff>  character string representing time difference in
+         hh:mm:ss format.
+   $DESCRIPTION$
+      Return the absolute difference between two times in hh:mm:ss format
+      in character hours, minutes and seconds (hh:mm:ss).
+   $EXAMPLES$
+      FT_ELTIME( "22:40:12", "23:55:17" ) // 01:15:05
+      FT_ELTIME( "23:55:17", "22:40:12" ) // 01:15:05
+   $SEEALSO$
+      FT_ELAPMIN() FT_MIL2MIN() FT_MIN2MIL()
+   $END$
  */

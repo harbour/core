@@ -13,71 +13,71 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      LABEL FORM
- *  $CATEGORY$
- *      Command
- *  $SUBCATEGORY$
- *      Legacy
- *  $ONELINER$
- *      Displays labels to the screen or an alternate device
- *  $SYNTAX$
- *      LABEL FORM <cLabelName> [TO PRINTER] [TO FILE <cFile>] [<cScope>]
- *                 [WHILE <bWhile> ] [FOR <bFor> ] [SAMPLE] [NOCONSOLE]
- *  $ARGUMENTS$
- *        <cLabelName>   Name of label file
- *        <cFile>        Name of an alternate file
- *        <cScope>       Expression of a scoping condition
- *        <bWhile>       WHILE condition
- *        <bFor>         FOR condition
- *  $DESCRIPTION$
- *      This command allows labels to be printed based on the format
- *      outlined in LBL file specified as <cLabelName>. By default, output
- *      will go to the screen however this output may be rerouted with
- *      either the TO PRINTER or the TO FILE clause.
- *
- *      If the TO FILE clause is specified, the name of the ASCII text file
- *      containing the generated labels will be <cFile>.
- *
- *      If no file extension is specified a .txt extension is added.
- *      <cScope> is the scope condition for this command. Valid scopes
- *      include NEXT <expN> (number of records to be displayed, where <expN>
- *      is the number of records), RECORD <expN> (a specific record to be
- *      printed), REST (all records starting from the current record
- *      position,and ALL (all records). The default is ALL.
- *
- *      Both logical expression may work ill conjunction with one another
- *      where <bFor> is the logical expression for the FOR condition (for
- *      records to be displayed whitin a given value range) and <bWhile> for
- *      the WHILE condition (for records to be displayed until they fail to
- *      meet the condition).
- *
- *      If the SAMPLE clause is specified, test labels will be generated.
- *
- *      If the NOCONSOLE clause is specified,the console will be turned off
- *      while this command is being executed.
- *
- *      This command follows the search criteria outlined in the SET PATH TO
- *      command. The path may be specified, along, with (the drive letter,
- *      in <cLabelName>
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE test NEW
- *         LABEL FORM EE
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      REPORT FORM
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      LABEL FORM
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Legacy
+   $ONELINER$
+      Displays labels to the screen or an alternate device
+   $SYNTAX$
+      LABEL FORM <cLabelName> [TO PRINTER] [TO FILE <cFile>] [<cScope>]
+                 [WHILE <bWhile> ] [FOR <bFor> ] [SAMPLE] [NOCONSOLE]
+   $ARGUMENTS$
+      <cLabelName>   Name of label file
+      <cFile>        Name of an alternate file
+      <cScope>       Expression of a scoping condition
+      <bWhile>       WHILE condition
+      <bFor>         FOR condition
+   $DESCRIPTION$
+      This command allows labels to be printed based on the format
+      outlined in LBL file specified as <cLabelName>. By default, output
+      will go to the screen however this output may be rerouted with
+      either the TO PRINTER or the TO FILE clause.
+
+      If the TO FILE clause is specified, the name of the ASCII text file
+      containing the generated labels will be <cFile>.
+
+      If no file extension is specified a .txt extension is added.
+      <cScope> is the scope condition for this command. Valid scopes
+      include NEXT <expN> (number of records to be displayed, where <expN>
+      is the number of records), RECORD <expN> (a specific record to be
+      printed), REST (all records starting from the current record
+      position,and ALL (all records). The default is ALL.
+
+      Both logical expression may work ill conjunction with one another
+      where <bFor> is the logical expression for the FOR condition (for
+      records to be displayed whitin a given value range) and <bWhile> for
+      the WHILE condition (for records to be displayed until they fail to
+      meet the condition).
+
+      If the SAMPLE clause is specified, test labels will be generated.
+
+      If the NOCONSOLE clause is specified,the console will be turned off
+      while this command is being executed.
+
+      This command follows the search criteria outlined in the SET PATH TO
+      command. The path may be specified, along, with (the drive letter,
+      in <cLabelName>
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE test NEW
+         LABEL FORM EE
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      REPORT FORM
+   $END$
  */

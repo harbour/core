@@ -2,29 +2,29 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_CTRL()
- *  $CATEGORY$
- *     Keyboard/Mouse
- *  $ONELINER$
- *     Determine status of the Ctrl key
- *  $SYNTAX$
- *     FT_CTRL() -> lValue
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     .T. if Ctrl key is pressed, .F. if otherwise.
- *  $DESCRIPTION$
- *     This function is useful for times you need to know whether or not
- *     the Ctrl key is pressed, such as during a MemoEdit().
- *  $EXAMPLES$
- *     IF FT_CTRL()
- *        @ 24, 0 say "Ctrl"
- *     ELSE
- *        @ 24, 0 say "    "
- *     ENDIF
- *  $SEEALSO$
- *     FT_CAPLOCK() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT() FT_ALT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_CTRL()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Determine status of the Ctrl key
+   $SYNTAX$
+      FT_CTRL() -> lValue
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      .T. if Ctrl key is pressed, .F. if otherwise.
+   $DESCRIPTION$
+      This function is useful for times you need to know whether or not
+      the Ctrl key is pressed, such as during a MemoEdit().
+   $EXAMPLES$
+      IF FT_CTRL()
+         @ 24, 0 say "Ctrl"
+      ELSE
+         @ 24, 0 say "    "
+      ENDIF
+   $SEEALSO$
+      FT_CAPLOCK() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT() FT_ALT()
+   $END$
  */

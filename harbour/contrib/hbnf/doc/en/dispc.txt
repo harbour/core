@@ -2,63 +2,63 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_DISPFILE()
- *  $CATEGORY$
- *     File I/O
- *  $ONELINER$
- *     Browse a text file
- *  $SYNTAX$
- *     FT_DISPFILE() -> cExitkey
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     The ASCII keystroke that terminated FT_DISPFILE()
- *  $DESCRIPTION$
- *     This routine displays a text file within a defined window using as
- *     little memory as possible.  The text file to display has to be
- *     present or an error value of 0 is returned (as a character.)
- *
- *     Assumptions: The routine assumes that all lines are terminated
- *                  with a CR/LF sequence (0x0d and 0x0a).
- *
- *     Note:        Make sure you allocate a buffer large enough to hold
- *                  enough data for the number of lines that you have
- *                  in the window.  Use the following formula as a
- *                  guideline - buffer size = (# of line) + 1 * RMargin
- *                  this is the smallest you should make the buffer and
- *                  for normal use I recommend 4096 bytes.
- *
- *     Cursor Keys: Up, Down    - moves the highlight line
- *                  Left, Right - moves the window over nColSkip col's
- *                  Home        - moves the window to the far left
- *                  End         - moves the window to the nRMargin column
- *                  PgUp, PgDn  - moves the highlight one page
- *                  Ctrl-PgUp   - moves the highlight to the file top
- *                  Ctrl-PgDn   - moves the highlight to the file bottom
- *                  Ctrl-Right  - moves the window 16 col's to the right
- *                  Ctrl-Left   - moves the window 16 col's to the left
- *
- *                  Esc, Return - terminates the function
- *
- *                  All other keys are ignored unless they are specified
- *                  within cExitKeys parameter.  This list will tell the
- *                  routine what keys terminate the function.  Special
- *                  keys must be passed by a unique value and that value
- *                  can be found by looking in the keys.h file.
- *  $EXAMPLES$
- *     @ 4, 9 TO 11, 71
- *
- *     FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
- *                 "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
- *
- *     cKey := FT_DISPFILE()
- *
- *     FT_DFCLOSE()
- *
- *     @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
- *  $SEEALSO$
- *     FT_DFSETUP() FT_DFCLOSE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_DISPFILE()
+   $CATEGORY$
+      File I/O
+   $ONELINER$
+      Browse a text file
+   $SYNTAX$
+      FT_DISPFILE() -> cExitkey
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      The ASCII keystroke that terminated FT_DISPFILE()
+   $DESCRIPTION$
+      This routine displays a text file within a defined window using as
+      little memory as possible.  The text file to display has to be
+      present or an error value of 0 is returned (as a character.)
+  
+      Assumptions: The routine assumes that all lines are terminated
+                   with a CR/LF sequence (0x0d and 0x0a).
+  
+      Note:        Make sure you allocate a buffer large enough to hold
+                   enough data for the number of lines that you have
+                   in the window.  Use the following formula as a
+                   guideline - buffer size = (# of line) + 1 * RMargin
+                   this is the smallest you should make the buffer and
+                   for normal use I recommend 4096 bytes.
+  
+      Cursor Keys: Up, Down    - moves the highlight line
+                   Left, Right - moves the window over nColSkip col's
+                   Home        - moves the window to the far left
+                   End         - moves the window to the nRMargin column
+                   PgUp, PgDn  - moves the highlight one page
+                   Ctrl-PgUp   - moves the highlight to the file top
+                   Ctrl-PgDn   - moves the highlight to the file bottom
+                   Ctrl-Right  - moves the window 16 col's to the right
+                   Ctrl-Left   - moves the window 16 col's to the left
+  
+                   Esc, Return - terminates the function
+  
+                   All other keys are ignored unless they are specified
+                   within cExitKeys parameter.  This list will tell the
+                   routine what keys terminate the function.  Special
+                   keys must be passed by a unique value and that value
+                   can be found by looking in the keys.h file.
+   $EXAMPLES$
+      @ 4, 9 TO 11, 71
+  
+      FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
+                  "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
+  
+      cKey := FT_DISPFILE()
+  
+      FT_DFCLOSE()
+  
+      @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
+   $SEEALSO$
+      FT_DFSETUP() FT_DFCLOSE()
+   $END$
  */

@@ -13,346 +13,346 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      OS()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Environment
- * $ONELINER$
- *      Return the current operating system.
- *  $SYNTAX$
- *      OS() --> <cOperatingSystem>
- *  $RETURNS$
- *     <cOperatinSystem> The current operating system.
- *  $DESCRIPTION$
- *      This function will return the current operating system.
- *  $EXAMPLES$
- *      ? OS()
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      OS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Return the current operating system.
+   $SYNTAX$
+      OS() --> <cOperatingSystem>
+   $RETURNS$
+      <cOperatinSystem> The current operating system.
+   $DESCRIPTION$
+      This function will return the current operating system.
+   $EXAMPLES$
+      ? OS()
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      VERSION()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *      Returns the HARBOUR Version or the Harbour/Compiler Version.
- *  $SYNTAX$
- *      VERSION()  --> <cReturn>
- *  $ARGUMENTS$
- *      None
- *  $RETURNS$
- *      <cReturn>   String containing the Harbour Version
- *  $DESCRIPTION$
- *      This function returns the current Harbour Version.
- *  $EXAMPLES$
- *      ? VERSION() // "Harbour Terminal: Standard stream console"
- *  $TESTS$
- *
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      OS()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      VERSION()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Returns the HARBOUR Version or the Harbour/Compiler Version.
+   $SYNTAX$
+      VERSION()  --> <cReturn>
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      <cReturn>   String containing the Harbour Version
+   $DESCRIPTION$
+      This function returns the current Harbour Version.
+   $EXAMPLES$
+      ? VERSION() // "Harbour Terminal: Standard stream console"
+   $TESTS$
+
+   $STATUS$
+      S
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      OS()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      GETENV()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *      Obtains a system environmental setting.
- *  $SYNTAX$
- *      GETENV(<cEnviroment> )  --> <cReturn>
- *  $ARGUMENTS$
- *      <cEnviroment> Enviromental variable to obtain.
- *  $RETURNS$
- *      <cReturn>     Value of the Environment Variable.
- *  $DESCRIPTION$
- *      This function yields a string that is the value of the
- *      environment variable <cEnviroment>, which is stored at the
- *      system level.
- *
- *      If no environment variable
- *      is found, an empty string is returned.
- *  $EXAMPLES$
- *      ? GETENV( "PATH" )
- *      ? GETENV( "CONFIG" )
- *      ? GETENV( "HARBOURCMD", "-n -l -es2" )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *     GETE
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      GETENV()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Obtains a system environmental setting.
+   $SYNTAX$
+      GETENV(<cEnviroment> )  --> <cReturn>
+   $ARGUMENTS$
+      <cEnviroment> Enviromental variable to obtain.
+   $RETURNS$
+      <cReturn>     Value of the Environment Variable.
+   $DESCRIPTION$
+      This function yields a string that is the value of the
+      environment variable <cEnviroment>, which is stored at the
+      system level.
+
+      If no environment variable
+      is found, an empty string is returned.
+   $EXAMPLES$
+      ? GETENV( "PATH" )
+      ? GETENV( "CONFIG" )
+      ? GETENV( "HARBOURCMD", "-n -l -es2" )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      GETE
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      GETE()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *      Obtains a system environmental setting.
- *  $SYNTAX$
- *      GETE(<cEnviroment> )  --> <cReturn>
- *  $ARGUMENTS$
- *      <cEnviroment> Enviromental variable to obtain.
- *  $RETURNS$
- *      <cReturn>     Value of the Environment Variable.
- *  $DESCRIPTION$
- *      This function yields a string that is the value of the
- *      environment variable <cEnviroment>, which is stored at the
- *      system level.
- *
- *      If no environment variable
- *      is found, an empty string is returned.
- *  $EXAMPLES$
- *      ? GETE( "PATH" )
- *      ? GETE( "CONFIG" )
- *      ? GETE( "HARBOURCMD", "-n -l -es2" )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This is CA-Cl*pper compliant.
- *
- *      The <cDefaultValue> parameter is a Harbour extension.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *     GETENV
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      GETE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Obtains a system environmental setting.
+   $SYNTAX$
+      GETE(<cEnviroment> )  --> <cReturn>
+   $ARGUMENTS$
+      <cEnviroment> Enviromental variable to obtain.
+   $RETURNS$
+      <cReturn>     Value of the Environment Variable.
+   $DESCRIPTION$
+      This function yields a string that is the value of the
+      environment variable <cEnviroment>, which is stored at the
+      system level.
+
+      If no environment variable
+      is found, an empty string is returned.
+   $EXAMPLES$
+      ? GETE( "PATH" )
+      ? GETE( "CONFIG" )
+      ? GETE( "HARBOURCMD", "-n -l -es2" )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This is CA-Cl*pper compliant.
+
+      The <cDefaultValue> parameter is a Harbour extension.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      GETENV
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_GETENV()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *      Obtains a system environmental setting.
- *  $SYNTAX$
- *      HB_GETENV(<cEnviroment>, [<cDefaultValue>], [<lApplyCodepage>] )  --> <cReturn>
- *  $ARGUMENTS$
- *      <cEnviroment> Enviromental variable to obtain.
- *
- *      <cDefaultValue> Optional value to return if <cEnvironment> is not found.
- *
- *      <lApplyCodepage> optional logical parameter specifing whether to
- *       apply automatic codepage conversion (to the codepage
- *       specified by Set( _SET_OSCODEPAGE ) on the obtained value.
- *       The default is .T.  Note that if the default value is passed and the environment
- *       value is not found, this codepage conversion is not performed against
- *       the returned default value
- *  $RETURNS$
- *      <cReturn>     Value of the environment variable or <cDefaultValue> or an empty string.
- *  $DESCRIPTION$
- *      This function yields a string that is the value of the
- *      environment variable <cEnviroment>, which is stored at the
- *      system level.
- *
- *      If no environment variable
- *      can be found, the value of the function will be <cDefaultValue>
- *      if it is passed, else an empty string.
- *  $EXAMPLES$
- *      ? HB_GETENV( "PATH" )
- *      ? HB_GETENV( "CONFIG" )
- *      ? HB_GETENV( "HARBOURCMD", "-n -l -es2" )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *     GETENV, GETE
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_GETENV()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Obtains a system environmental setting.
+   $SYNTAX$
+      HB_GETENV(<cEnviroment>, [<cDefaultValue>], [<lApplyCodepage>] )  --> <cReturn>
+   $ARGUMENTS$
+      <cEnviroment> Enviromental variable to obtain.
+
+      <cDefaultValue> Optional value to return if <cEnvironment> is not found.
+
+      <lApplyCodepage> optional logical parameter specifing whether to
+       apply automatic codepage conversion (to the codepage
+       specified by Set( _SET_OSCODEPAGE ) on the obtained value.
+       The default is .T.  Note that if the default value is passed and the environment
+       value is not found, this codepage conversion is not performed against
+       the returned default value
+   $RETURNS$
+      <cReturn>     Value of the environment variable or <cDefaultValue> or an empty string.
+   $DESCRIPTION$
+      This function yields a string that is the value of the
+      environment variable <cEnviroment>, which is stored at the
+      system level.
+
+      If no environment variable
+      can be found, the value of the function will be <cDefaultValue>
+      if it is passed, else an empty string.
+   $EXAMPLES$
+      ? HB_GETENV( "PATH" )
+      ? HB_GETENV( "CONFIG" )
+      ? HB_GETENV( "HARBOURCMD", "-n -l -es2" )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      GETENV, GETE
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      __RUN()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *      Run an external program.
- *  $SYNTAX$
- *      __RUN( <cCommand> )
- *  $ARGUMENTS$
- *      <cCommand> Command to execute.
- *  $DESCRIPTION$
- *      This command runs an external program. Ensure that
- *      you have enough free memory to be able to run the external
- *      program. Do not use it to run 'Terminate and Stay Resident' programs
- *      (in case of MS-DOS) since that causes several problems.
- *
- *      Note: This function is what the RUN command preprocesses into.
- *            It is considered bad form to use this function directly.
- *            Use the RUN command instead.
- *  $EXAMPLES$
- *      __run( "edit " + cMyTextFile )    // Runs an external editor
- *      __run( "command" )                // Gives a OS shell
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      RUN
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      __RUN()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Run an external program.
+   $SYNTAX$
+      __RUN( <cCommand> )
+   $ARGUMENTS$
+      <cCommand> Command to execute.
+   $DESCRIPTION$
+      This command runs an external program. Ensure that
+      you have enough free memory to be able to run the external
+      program. Do not use it to run 'Terminate and Stay Resident' programs
+      (in case of MS-DOS) since that causes several problems.
+
+      Note: This function is what the RUN command preprocesses into.
+            It is considered bad form to use this function directly.
+            Use the RUN command instead.
+   $EXAMPLES$
+      __run( "edit " + cMyTextFile )    // Runs an external editor
+      __run( "command" )                // Gives a OS shell
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      RUN
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      TONE()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *      Sound a tone with a specified frequency and duration.
- *  $SYNTAX$
- *      TONE( <nFrequency>, <nDuration> ) --> NIL
- *  $ARGUMENTS$
- *      <nFrequency>  A non-negative numeric value that specifies the
- *      frequency of the tone in hertz.
- *
- *      <nDuration>   A positive numeric value which specifies the duration
- *      of the tone in 1/18 of a second units.
- *  $RETURNS$
- *      TONE() always returns NIL.
- *  $DESCRIPTION$
- *      TONE() is a sound function that could be used to irritate the end
- *      user, his or her dog, and the surrounding neighborhood. The frequency
- *      is limited to the range 0 to 32767 Hz.
- *  $EXAMPLES$
- *      IF lOk   // Good Sound
- *         TONE(  500, 1 )
- *         TONE( 4000, 1 )
- *         TONE( 2500, 1 )
- *      ELSE     // Bad Sound
- *         TONE(  300, 1 )
- *         TONE(  499, 5 )
- *         TONE(  700, 5 )
- *      ENDIF
- *  $TESTS$
- *      TONE( 800, 1 )                         // same as ? CHR( 7 )
- *      TONE( 32000, 200 )                     // any dogs around yet?
- *      TONE( 130.80, 1 )                      // musical note - C
- *      TONE( 400, 0 )                         // short beep
- *      TONE( 700 )                            // short beep
- *      TONE( 10, 18.2 )                       // 1 second delay
- *      TONE( -1 )                             // 1/18.2 second delay
- *      TONE( )                                // 1/18.2 second delay
- *  $STATUS$
- *      S
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      CHR(),SET BELL
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      TONE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Sound a tone with a specified frequency and duration.
+   $SYNTAX$
+      TONE( <nFrequency>, <nDuration> ) --> NIL
+   $ARGUMENTS$
+      <nFrequency>  A non-negative numeric value that specifies the
+      frequency of the tone in hertz.
+
+      <nDuration>   A positive numeric value which specifies the duration
+      of the tone in 1/18 of a second units.
+   $RETURNS$
+      TONE() always returns NIL.
+   $DESCRIPTION$
+      TONE() is a sound function that could be used to irritate the end
+      user, his or her dog, and the surrounding neighborhood. The frequency
+      is limited to the range 0 to 32767 Hz.
+   $EXAMPLES$
+      IF lOk   // Good Sound
+         TONE(  500, 1 )
+         TONE( 4000, 1 )
+         TONE( 2500, 1 )
+      ELSE     // Bad Sound
+         TONE(  300, 1 )
+         TONE(  499, 5 )
+         TONE(  700, 5 )
+      ENDIF
+   $TESTS$
+      TONE( 800, 1 )                         // same as ? CHR( 7 )
+      TONE( 32000, 200 )                     // any dogs around yet?
+      TONE( 130.80, 1 )                      // musical note - C
+      TONE( 400, 0 )                         // short beep
+      TONE( 700 )                            // short beep
+      TONE( 10, 18.2 )                       // 1 second delay
+      TONE( -1 )                             // 1/18.2 second delay
+      TONE( )                                // 1/18.2 second delay
+   $STATUS$
+      S
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      CHR(),SET BELL
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      RUN
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *      Run an external program.
- *  $SYNTAX$
- *      RUN <cCommand>
- *  $ARGUMENTS$
- *      <cCommand> Command to execute.
- *  $DESCRIPTION$
- *      This command runs an external program. Please make sure that you have
- *      enough free memory to be able to run the external program.
- *      Do not use it to run Terminate and Stay Resident programs
- *      (in case of DOS) since that causes several problems.
- *  $EXAMPLES$
- *      RUN ( "edit " + cMyTextFile )  // Runs an external editor
- *      RUN command                    // Gives a OS shell
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rtl
- *  $SEEALSO$
- *      RUN
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      RUN
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+      Run an external program.
+   $SYNTAX$
+      RUN <cCommand>
+   $ARGUMENTS$
+      <cCommand> Command to execute.
+   $DESCRIPTION$
+      This command runs an external program. Please make sure that you have
+      enough free memory to be able to run the external program.
+      Do not use it to run Terminate and Stay Resident programs
+      (in case of DOS) since that causes several problems.
+   $EXAMPLES$
+      RUN ( "edit " + cMyTextFile )  // Runs an external editor
+      RUN command                    // Gives a OS shell
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      RUN
+   $END$
  */

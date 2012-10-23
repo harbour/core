@@ -2,34 +2,34 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_D2E()
- *  $CATEGORY$
- *     Conversion
- *  $ONELINER$
- *     Convert decimal to scientific notation
- *  $SYNTAX$
- *     FT_D2E( <nDec>, <nPrecision> )  -> <cNumE>
- *  $ARGUMENTS$
- *     <nDec>         Decimal number to convert
- *
- *     <nPrecision>   Number of decimal places in result.
- *                    Defaults to 6 decimal places.
- *  $RETURNS$
- *     <cNumE>        A string representing a number in
- *                    scientific notation
- *  $DESCRIPTION$
- *     Given a decimal number and the desired precision,
- *     a string representing the equivalent in scientific
- *     notation is returned.
- *  $EXAMPLES$
- *     ? FT_D2E( 12.345, 2 )     -> 1.23E1
- *
- *     ? FT_D2E( -12.345, 3 )    -> -1.235E1
- *
- *     ? FT_D2E( 0.00000543, 2 ) -> 5.43E-6
- *  $SEEALSO$
- *     FT_E2D()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_D2E()
+   $CATEGORY$
+      Conversion
+   $ONELINER$
+      Convert decimal to scientific notation
+   $SYNTAX$
+      FT_D2E( <nDec>, <nPrecision> )  -> <cNumE>
+   $ARGUMENTS$
+      <nDec>         Decimal number to convert
+  
+      <nPrecision>   Number of decimal places in result.
+                     Defaults to 6 decimal places.
+   $RETURNS$
+      <cNumE>        A string representing a number in
+                     scientific notation
+   $DESCRIPTION$
+      Given a decimal number and the desired precision,
+      a string representing the equivalent in scientific
+      notation is returned.
+   $EXAMPLES$
+      ? FT_D2E( 12.345, 2 )     -> 1.23E1
+  
+      ? FT_D2E( -12.345, 3 )    -> -1.235E1
+  
+      ? FT_D2E( 0.00000543, 2 ) -> 5.43E-6
+   $SEEALSO$
+      FT_E2D()
+   $END$
  */

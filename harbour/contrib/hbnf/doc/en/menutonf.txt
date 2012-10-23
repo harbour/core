@@ -2,195 +2,195 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_Prompt()
- *  $CATEGORY$
- *     Menus/Prompts
- *  $ONELINER$
- *     Define a menu item for use with FT_MenuTo()
- *  $SYNTAX$
- *     #include "ftmenuto.ch"
- *
- *     @ <nRow>, <nCol> PROMPT <cPrompt>                     ;
- *                      [COLOR <cColor>]                     ;
- *                      [MESSAGE <cMessage>]                 ;
- *                      [MSGROW <nMsgRow>]                   ;
- *                      [MSGCOL <nMsgCol>]                   ;
- *                      [MSGCOLOR <cMsgColor>]               ;
- *                      [TRIGGER <nTrigger>]                 ;
- *                      [TRIGGERCOLOR <cTriggerColor>]       ;
- *                      [HOME <nHome>]                       ;
- *                      [END <nEnd>]                         ;
- *                      [UP <nUp>]                           ;
- *                      [DOWN <nDown>]                       ;
- *                      [LEFT <nLeft>]                       ;
- *                      [RIGHT <nRight>]                     ;
- *                      [EXECUTE <bExec>]                    ;
- *
- *  $ARGUMENTS$
- *     <nRow> is the row at which the prompt is to appear.
- *
- *     <nCol> is the column at which the prompt will appear.
- *
- *     <cPrompt> is the menu item string.
- *
- *     <cColor> is optional and is the color attribute of the prompt.  Note
- *     that two colors are required; one for the standard setting and one
- *     for the enhanced setting (i.e. the light bar color).  See the example
- *     below if this isn't clear.  If <cColor> is not specified then the
- *     current SetColor() value is used by default.
- *
- *     <cMessage> is optional and is the message associated with the
- *     prompt. If not specified, then no message will be displayed.
- *
- *     <nMsgRow> is optional and is the row at which the message, if any,
- *     will appear.  If not specified, the default is the current setting
- *     of the SET MESSAGE TO command.
- *
- *     <nMsgCol> is optional and is the column at which the message, if
- *     any, will appear.  If not specified, the default is either zero or
- *     centered, depending on the current setting of the CENTER option of
- *     the SET MESSAGE TO command.
- *
- *     <cMsgColor> is optional and is the color attribute of the message.
- *     If not specified, the default is the same as the prompt color.
- *
- *     <nTrigger> is optional and is the position within the prompt string
- *     where the trigger character is located.  If not specified, the
- *     default is one.
- *
- *     <cTriggerColor> is optional and is the color attribute of the trigger
- *     character.  Note that two colors are required; one for the standard
- *     setting and one for the enhanced setting (i.e. the light bar color).
- *     See the example below if this isn't clear.  If <cTriggerColor> is not
- *     specified then the default is the same color as the rest of the
- *     prompt.
- *
- *     <nHome> is optional and specifies which prompt becomes active
- *     when the home key is pressed.  If not specified, the default is
- *     the first prompt.
- *
- *     <nEnd> is optional and specifies which prompt becomes active
- *     when the end key is pressed.  If not specified, the default is
- *     the last prompt.
- *
- *     <nUp> is optional and specifies which prompt becomes active
- *     when the up arrow key is pressed.  If not specified, the
- *     default is the previous prompt.  The current setting of SET
- *     WRAP TO is obeyed.
- *
- *     <nDown> is optional and specifies which prompt becomes
- *     active when the down arrow key is pressed.  If not
- *     specified, the default is the next prompt.  The current
- *     setting of SET WRAP TO is obeyed.
- *
- *     <nRight> is optional and specifies which prompt becomes
- *     active when the right arrow key is pressed.  If not
- *     specified, the default is the next prompt.  The current
- *     setting of SET WRAP TO is obeyed.
- *
- *     <nLeft> is optional and specifies which prompt becomes
- *     active when the left arrow is pressed.  If not specified,
- *     the default is the previous prompt.  The current setting of
- *     SET WRAP TO is obeyed.
- *
- *     <bExec> is optional and is a code block to evaluate whenever
- *     the menu item to which it belongs is selected.
- *  $DESCRIPTION$
- *     Clipper's @...PROMPT and MENU TO commands are fine as far as
- *     they go.  But many times you need more flexibility.  As
- *     you'll no doubt notice if you read the argument list, this
- *     function is almost completely flexible. You can adjust
- *     locations and colors for every part of the prompt and its
- *     associated message.  In addition, since you can control the
- *     effect of the arrow keys, you can allow both horizontal and
- *     vertical movement, or even disable certain arrow keys if you
- *     so desire.  Support for nested menus is also available, since
- *     the prompts are stored in stack-based static arrays.
- *
- *     Note that this command can also be called using function-style
- *     syntax.  See the entry for FT_PROMPT() for further details.
- *
- *     This enhanced version of @...PROMPT requires the inclusion of
- *     the header file ftmenuto.ch in any source file that uses it.
- *     It is may be used in place of the standard Clipper @...PROMPT
- *     command.  However, in the interests of functionality it is NOT
- *     100% compatible.  No whining!  If compatibility is such a big
- *     deal then use the standard Clipper commands.
- *
- *  $EXAMPLES$
- *     #include "ftmenuto.ch"
- *
- *     // Simple prompt
- *     @  1, 1 PROMPT "Menu choice #1"
- *
- *     // Prompt with color
- *     @  3, 1 PROMPT "Menu choice #2" COLOR "W+/R,W+/B"
- *
- *     // Prompt with a message
- *     @  5, 1 PROMPT "Menu choice #3" MESSAGE "Go to lunch"
- *
- *     // Prompt with pinpoint message control
- *     @  7, 1 PROMPT "Menu choice #4" MESSAGE "Drop Dead" ;
- *                     MSGROW 22 MSGCOL 4 MSGCOLOR "GR+/N"
- *
- *     // Prompt with a trigger character ("#" character)
- *     @ 11, 1 PROMPT "Menu choice #6" TRIGGER 13
- *
- *     // Prompt with trigger character color control
- *     @ 13, 1 PROMPT "Menu Choice #7" TRIGGER 13 TRIGGERCOLOR "R+/BG,G+/N"
- *
- *     // Prompt with right and left arrow keys disabled
- *     @ 15, 1 PROMPT "Menu Choice #8" RIGHT 8 LEFT 8
- *  $INCLUDE$
- *     ftmenuto.ch
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_Prompt()
+   $CATEGORY$
+      Menus/Prompts
+   $ONELINER$
+      Define a menu item for use with FT_MenuTo()
+   $SYNTAX$
+      #include "ftmenuto.ch"
+  
+      @ <nRow>, <nCol> PROMPT <cPrompt>                     ;
+                       [COLOR <cColor>]                     ;
+                       [MESSAGE <cMessage>]                 ;
+                       [MSGROW <nMsgRow>]                   ;
+                       [MSGCOL <nMsgCol>]                   ;
+                       [MSGCOLOR <cMsgColor>]               ;
+                       [TRIGGER <nTrigger>]                 ;
+                       [TRIGGERCOLOR <cTriggerColor>]       ;
+                       [HOME <nHome>]                       ;
+                       [END <nEnd>]                         ;
+                       [UP <nUp>]                           ;
+                       [DOWN <nDown>]                       ;
+                       [LEFT <nLeft>]                       ;
+                       [RIGHT <nRight>]                     ;
+                       [EXECUTE <bExec>]                    ;
+  
+   $ARGUMENTS$
+      <nRow> is the row at which the prompt is to appear.
+  
+      <nCol> is the column at which the prompt will appear.
+  
+      <cPrompt> is the menu item string.
+  
+      <cColor> is optional and is the color attribute of the prompt.  Note
+      that two colors are required; one for the standard setting and one
+      for the enhanced setting (i.e. the light bar color).  See the example
+      below if this isn't clear.  If <cColor> is not specified then the
+      current SetColor() value is used by default.
+  
+      <cMessage> is optional and is the message associated with the
+      prompt. If not specified, then no message will be displayed.
+  
+      <nMsgRow> is optional and is the row at which the message, if any,
+      will appear.  If not specified, the default is the current setting
+      of the SET MESSAGE TO command.
+  
+      <nMsgCol> is optional and is the column at which the message, if
+      any, will appear.  If not specified, the default is either zero or
+      centered, depending on the current setting of the CENTER option of
+      the SET MESSAGE TO command.
+  
+      <cMsgColor> is optional and is the color attribute of the message.
+      If not specified, the default is the same as the prompt color.
+  
+      <nTrigger> is optional and is the position within the prompt string
+      where the trigger character is located.  If not specified, the
+      default is one.
+  
+      <cTriggerColor> is optional and is the color attribute of the trigger
+      character.  Note that two colors are required; one for the standard
+      setting and one for the enhanced setting (i.e. the light bar color).
+      See the example below if this isn't clear.  If <cTriggerColor> is not
+      specified then the default is the same color as the rest of the
+      prompt.
+  
+      <nHome> is optional and specifies which prompt becomes active
+      when the home key is pressed.  If not specified, the default is
+      the first prompt.
+  
+      <nEnd> is optional and specifies which prompt becomes active
+      when the end key is pressed.  If not specified, the default is
+      the last prompt.
+  
+      <nUp> is optional and specifies which prompt becomes active
+      when the up arrow key is pressed.  If not specified, the
+      default is the previous prompt.  The current setting of SET
+      WRAP TO is obeyed.
+  
+      <nDown> is optional and specifies which prompt becomes
+      active when the down arrow key is pressed.  If not
+      specified, the default is the next prompt.  The current
+      setting of SET WRAP TO is obeyed.
+  
+      <nRight> is optional and specifies which prompt becomes
+      active when the right arrow key is pressed.  If not
+      specified, the default is the next prompt.  The current
+      setting of SET WRAP TO is obeyed.
+  
+      <nLeft> is optional and specifies which prompt becomes
+      active when the left arrow is pressed.  If not specified,
+      the default is the previous prompt.  The current setting of
+      SET WRAP TO is obeyed.
+  
+      <bExec> is optional and is a code block to evaluate whenever
+      the menu item to which it belongs is selected.
+   $DESCRIPTION$
+      Clipper's @...PROMPT and MENU TO commands are fine as far as
+      they go.  But many times you need more flexibility.  As
+      you'll no doubt notice if you read the argument list, this
+      function is almost completely flexible. You can adjust
+      locations and colors for every part of the prompt and its
+      associated message.  In addition, since you can control the
+      effect of the arrow keys, you can allow both horizontal and
+      vertical movement, or even disable certain arrow keys if you
+      so desire.  Support for nested menus is also available, since
+      the prompts are stored in stack-based static arrays.
+  
+      Note that this command can also be called using function-style
+      syntax.  See the entry for FT_PROMPT() for further details.
+  
+      This enhanced version of @...PROMPT requires the inclusion of
+      the header file ftmenuto.ch in any source file that uses it.
+      It is may be used in place of the standard Clipper @...PROMPT
+      command.  However, in the interests of functionality it is NOT
+      100% compatible.  No whining!  If compatibility is such a big
+      deal then use the standard Clipper commands.
+  
+   $EXAMPLES$
+      #include "ftmenuto.ch"
+  
+      // Simple prompt
+      @  1, 1 PROMPT "Menu choice #1"
+  
+      // Prompt with color
+      @  3, 1 PROMPT "Menu choice #2" COLOR "W+/R,W+/B"
+  
+      // Prompt with a message
+      @  5, 1 PROMPT "Menu choice #3" MESSAGE "Go to lunch"
+  
+      // Prompt with pinpoint message control
+      @  7, 1 PROMPT "Menu choice #4" MESSAGE "Drop Dead" ;
+                      MSGROW 22 MSGCOL 4 MSGCOLOR "GR+/N"
+  
+      // Prompt with a trigger character ("#" character)
+      @ 11, 1 PROMPT "Menu choice #6" TRIGGER 13
+  
+      // Prompt with trigger character color control
+      @ 13, 1 PROMPT "Menu Choice #7" TRIGGER 13 TRIGGERCOLOR "R+/BG,G+/N"
+  
+      // Prompt with right and left arrow keys disabled
+      @ 15, 1 PROMPT "Menu Choice #8" RIGHT 8 LEFT 8
+   $INCLUDE$
+      ftmenuto.ch
+   $SEEALSO$
+  
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_MenuTo()
- *  $CATEGORY$
- *     Menus/Prompts
- *  $ONELINER$
- *     Execute light bar menu using prompts created with @...PROMPT
- *  $SYNTAX$
- *     #include "ftmenuto.ch"
- *
- *     MENU TO <var> [COLD]
- *  $ARGUMENTS$
- *     <var> is the name of the variable to which the result of the menu
- *     selection should be assigned.
- *
- *     [COLD] is optional and if specified indicates that trigger characters
- *     should be treated as "cold," i.e. rather than causing the menu item
- *     to be selected it only causes the light bar to move to that selection.
- *  $DESCRIPTION$
- *     This enhanced version of MENU TO requires the inclusion of the header
- *     file ftmenuto.ch in any source file that uses it.  It may be used in
- *     place of the standard Clipper MENU TO command.  However, in the
- *     interests of functionality it is NOT 100% compatible (in particular,
- *     you should make sure that the target memvar exists before executing
- *     the menu -- the Clipper version will create a PRIVATE memvar for you
- *     if it does not already exist, but this version does not).  No whining!
- *     If compatibility is such a big deal then use the standard Clipper
- *     command.
- *
- *     Note that this command can also be called using function-style
- *     syntax.  See the entry for FT_MENUTO() for further details.
- *  $EXAMPLES$
- *     #include "ftmenuto.ch"
- *
- *     // Simple command
- *
- *     MENU TO memvar
- *
- *  $INCLUDE$
- *    ftmenuto.ch
- *  $SEEALSO$
- *    FT_Prompt()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_MenuTo()
+   $CATEGORY$
+      Menus/Prompts
+   $ONELINER$
+      Execute light bar menu using prompts created with @...PROMPT
+   $SYNTAX$
+      #include "ftmenuto.ch"
+  
+      MENU TO <var> [COLD]
+   $ARGUMENTS$
+      <var> is the name of the variable to which the result of the menu
+      selection should be assigned.
+  
+      [COLD] is optional and if specified indicates that trigger characters
+      should be treated as "cold," i.e. rather than causing the menu item
+      to be selected it only causes the light bar to move to that selection.
+   $DESCRIPTION$
+      This enhanced version of MENU TO requires the inclusion of the header
+      file ftmenuto.ch in any source file that uses it.  It may be used in
+      place of the standard Clipper MENU TO command.  However, in the
+      interests of functionality it is NOT 100% compatible (in particular,
+      you should make sure that the target memvar exists before executing
+      the menu -- the Clipper version will create a PRIVATE memvar for you
+      if it does not already exist, but this version does not).  No whining!
+      If compatibility is such a big deal then use the standard Clipper
+      command.
+  
+      Note that this command can also be called using function-style
+      syntax.  See the entry for FT_MENUTO() for further details.
+   $EXAMPLES$
+      #include "ftmenuto.ch"
+  
+      // Simple command
+  
+      MENU TO memvar
+  
+   $INCLUDE$
+      ftmenuto.ch
+   $SEEALSO$
+      FT_Prompt()
+   $END$
  */

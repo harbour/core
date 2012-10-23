@@ -2,29 +2,29 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_ALT()
- *  $CATEGORY$
- *     Keyboard/Mouse
- *  $ONELINER$
- *     Determine status of the Alt key
- *  $SYNTAX$
- *     FT_ALT() -> lValue
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     .T. if Alt key is pressed, .F. if otherwise.
- *  $DESCRIPTION$
- *     This function is useful for times you need to know whether or not the
- *     Alt key is pressed, such as during a MemoEdit().
- *  $EXAMPLES$
- *     IF FT_ALT()
- *        @ 24, 0 SAY "Alt"
- *     ELSE
- *        @ 24, 0 SAY "   "
- *     ENDIF
- *  $SEEALSO$
- *     FT_CAPLOCK() FT_CTRL() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_ALT()
+   $CATEGORY$
+      Keyboard/Mouse
+   $ONELINER$
+      Determine status of the Alt key
+   $SYNTAX$
+      FT_ALT() -> lValue
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      .T. if Alt key is pressed, .F. if otherwise.
+   $DESCRIPTION$
+      This function is useful for times you need to know whether or not the
+      Alt key is pressed, such as during a MemoEdit().
+   $EXAMPLES$
+      IF FT_ALT()
+         @ 24, 0 SAY "Alt"
+      ELSE
+         @ 24, 0 SAY "   "
+      ENDIF
+   $SEEALSO$
+      FT_CAPLOCK() FT_CTRL() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT()
+   $END$
  */

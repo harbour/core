@@ -2,66 +2,66 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      WORDREPL()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Replacement of double characters
- *  $SYNTAX$
- *      WORDREPL( <cDoubleCharacterSearchString>, <[@]cString>,
- *                <cDoubleCharacterReplaceString>, [<lMode>] ) -> cString
- *  $ARGUMENTS$
- *      <cDoubleCharacterSearchString>   is a string of double characters
- *                                       that should be replaced
- *      <[@]cString>                     is the processed string
- *      <cDoubleCharacterReplaceString>  is a string of double characters that
- *                                       replace the one of <cSearchString>
- *      [<lMode>]                        sets the replacement method (see description)
- *                                       Default: .F.
- *  $RETURNS$
- *      cString                          the processed string
- *  $DESCRIPTION$
- *      The WORDREPL() takes the double characters of <cDoubleCharacterSearchString>
- *      one after the other and searches for them in <cString>.
- *      For <lMode> set to .F., this search is successful, if the double
- *      character sequence in <cString> starts at an odd position or at any
- *      position, if <lMode> is set to .T.
- *      If this happens, the double character sequence will be replaced with
- *      the corresponding double character sequence of <cDoubleCharacterReplaceString>.
- *      If <cDoubleCharacterReplaceString> is shorter than <cDoubleCharacterSearchString>
- *      the last double sequence of <cDoubleCharacterReplaceString> is used for
- *      the "rest" of <cDoubleCharacterSearchString>. Note that the last double
- *      character sequence in "AABBC" is "BB" in this context !!
- *      After the replacement the function restarts the search in <cString>
- *      BEHIND the replacement if the CSETATMUPA() switch is turned off, or
- *      BEHIND the first character of the replacement if the switch is turned on.
- *      (see examples for this !)
- *      One can omit the return value of this function by setting the CSETREF()
- *      to .T., but one must then pass <cString> by reference to get a result.
- *  $EXAMPLES$
- *      ? wordrepl( "CC", "AABBCCDDEE", "XX" ) // "AABBXXDDEE"
- *      ? wordrepl( "aa", "1aaaa", "ba" )      // "1abaa"
- *      ? wordrepl( "aa", "1aaaa", "ba", .T. ) // "1baba"
- *      csetatmupa( .T. )
- *      ? wordrepl( "aa", "1aaaa", "ba" )      // "1abaa"
- *      ? wordrepl( "aa", "1aaaa", "ba", .T. ) // "1bbba"
- *  $TESTS$
- *      wordrepl( "CC", "AABBCCDDEE", "XX" ) == "AABBXXDDEE"
- *      wordrepl( "aa", "1aaaa", "ba" )      == "1abaa"
- *      wordrepl( "aa", "1aaaa", "ba", .T. ) == "1baba"
- *      Eval( {|| csetatmupa( .T. ), wordrepl( "aa", "1aaaa", "ba" ) } ) == "1abaa"
- *      Eval( {|| csetatmupa( .T. ), wordrepl( "aa", "1aaaa", "ba", .T. ) } ) == "1bbba"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      WORDREPL() is compatible with CT3's WORDREPL().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CHARREPL(),RANGEREPL(),POSREPL(),CSETREF(),CSETATMUPA()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      WORDREPL()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Replacement of double characters
+   $SYNTAX$
+      WORDREPL( <cDoubleCharacterSearchString>, <[@]cString>,
+                <cDoubleCharacterReplaceString>, [<lMode>] ) -> cString
+   $ARGUMENTS$
+      <cDoubleCharacterSearchString>   is a string of double characters
+                                       that should be replaced
+      <[@]cString>                     is the processed string
+      <cDoubleCharacterReplaceString>  is a string of double characters that
+                                       replace the one of <cSearchString>
+      [<lMode>]                        sets the replacement method (see description)
+                                       Default: .F.
+   $RETURNS$
+      cString                          the processed string
+   $DESCRIPTION$
+      The WORDREPL() takes the double characters of <cDoubleCharacterSearchString>
+      one after the other and searches for them in <cString>.
+      For <lMode> set to .F., this search is successful, if the double
+      character sequence in <cString> starts at an odd position or at any
+      position, if <lMode> is set to .T.
+      If this happens, the double character sequence will be replaced with
+      the corresponding double character sequence of <cDoubleCharacterReplaceString>.
+      If <cDoubleCharacterReplaceString> is shorter than <cDoubleCharacterSearchString>
+      the last double sequence of <cDoubleCharacterReplaceString> is used for
+      the "rest" of <cDoubleCharacterSearchString>. Note that the last double
+      character sequence in "AABBC" is "BB" in this context !!
+      After the replacement the function restarts the search in <cString>
+      BEHIND the replacement if the CSETATMUPA() switch is turned off, or
+      BEHIND the first character of the replacement if the switch is turned on.
+      (see examples for this !)
+      One can omit the return value of this function by setting the CSETREF()
+      to .T., but one must then pass <cString> by reference to get a result.
+   $EXAMPLES$
+      ? wordrepl( "CC", "AABBCCDDEE", "XX" ) // "AABBXXDDEE"
+      ? wordrepl( "aa", "1aaaa", "ba" )      // "1abaa"
+      ? wordrepl( "aa", "1aaaa", "ba", .T. ) // "1baba"
+      csetatmupa( .T. )
+      ? wordrepl( "aa", "1aaaa", "ba" )      // "1abaa"
+      ? wordrepl( "aa", "1aaaa", "ba", .T. ) // "1bbba"
+   $TESTS$
+      wordrepl( "CC", "AABBCCDDEE", "XX" ) == "AABBXXDDEE"
+      wordrepl( "aa", "1aaaa", "ba" )      == "1abaa"
+      wordrepl( "aa", "1aaaa", "ba", .T. ) == "1baba"
+      Eval( {|| csetatmupa( .T. ), wordrepl( "aa", "1aaaa", "ba" ) } ) == "1abaa"
+      Eval( {|| csetatmupa( .T. ), wordrepl( "aa", "1aaaa", "ba", .T. ) } ) == "1bbba"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      WORDREPL() is compatible with CT3's WORDREPL().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CHARREPL(),RANGEREPL(),POSREPL(),CSETREF(),CSETATMUPA()
+   $END$
  */

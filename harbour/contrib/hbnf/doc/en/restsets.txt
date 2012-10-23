@@ -2,29 +2,29 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_RESTSETS()
- *  $CATEGORY$
- *     Environment
- *  $ONELINER$
- *     Restore status of all SET command settings
- *  $SYNTAX$
- *     FT_RESTSETS( [ <aOldSets> ] ) -> NIL
- *  $ARGUMENTS$
- *     aOldSets is an array of SET settings created by FT_SAVESETS()
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     This function "restores" the SET Settings, i.e., it sets them to the
- *     values in the array aOldSets.  The following SETs are not currently
- *     supported: FILTER, FORMAT, FUNCTION, INDEX, KEYS, MODE, ORDER,
- *     PROCEDURE, RELATION, TYPEAHEAD
- *  $EXAMPLES$
- *     FT_RESTSETS(aOldSets)
- *  $INCLUDE$
- *     set.ch
- *  $SEEALSO$
- *     FT_SAVESETS() FT_SETCENTURY()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_RESTSETS()
+   $CATEGORY$
+      Environment
+   $ONELINER$
+      Restore status of all SET command settings
+   $SYNTAX$
+      FT_RESTSETS( [ <aOldSets> ] ) -> NIL
+   $ARGUMENTS$
+      aOldSets is an array of SET settings created by FT_SAVESETS()
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      This function "restores" the SET Settings, i.e., it sets them to the
+      values in the array aOldSets.  The following SETs are not currently
+      supported: FILTER, FORMAT, FUNCTION, INDEX, KEYS, MODE, ORDER,
+      PROCEDURE, RELATION, TYPEAHEAD
+   $EXAMPLES$
+      FT_RESTSETS(aOldSets)
+   $INCLUDE$
+      set.ch
+   $SEEALSO$
+      FT_SAVESETS() FT_SETCENTURY()
+   $END$
  */

@@ -2,25 +2,25 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_MIN2DHM()
- *  $CATEGORY$
- *     Date/Time
- *  $ONELINER$
- *     Convert numeric minutes to days, hours and minutes.
- *  $SYNTAX$
- *     FT_MIN2DHM( <nMinutes> ) -> aDHM_
- *  $ARGUMENTS$
- *     <nMinutes>  the number of minutes.
- *  $RETURNS$
- *     <aDHM_>
- *        where:
- *           aDHM_[ 1 ] = cDAYS, aDHM_[ 2 ] = cHours, aDHM_[ 3 ] = cMinutes
- *  $DESCRIPTION$
- *     Converts numeric minutes into a character array containing
- *     days, hours & minutes.
- *  $EXAMPLES$
- *     aDHM_ := MIN2DHM( 16789 ) // aDHM_[ 1 ] = 11, aDHM_[ 2 ] = 15, aDHM_[ 3 ] = 49
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_MIN2DHM()
+   $CATEGORY$
+      Date/Time
+   $ONELINER$
+      Convert numeric minutes to days, hours and minutes.
+   $SYNTAX$
+      FT_MIN2DHM( <nMinutes> ) -> aDHM_
+   $ARGUMENTS$
+      <nMinutes>  the number of minutes.
+   $RETURNS$
+      <aDHM_>
+         where:
+            aDHM_[ 1 ] = cDAYS, aDHM_[ 2 ] = cHours, aDHM_[ 3 ] = cMinutes
+   $DESCRIPTION$
+      Converts numeric minutes into a character array containing
+      days, hours & minutes.
+   $EXAMPLES$
+      aDHM_ := MIN2DHM( 16789 ) // aDHM_[ 1 ] = 11, aDHM_[ 2 ] = 15, aDHM_[ 3 ] = 49
+   $END$
  */

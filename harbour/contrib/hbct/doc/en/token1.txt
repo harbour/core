@@ -2,333 +2,333 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      ATTOKEN()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Position of a token in a string
- *  $SYNTAX$
- *      ATTOKEN( <cString>, [<cTokenizer>],
- *               [<nTokenCount>], [<nSkipWidth>] ) -> nPosition
- *  $ARGUMENTS$
- *      <cString>          is the processed string
- *      [<cTokenizer>]     is a list of characters separating the tokens
- *                         in <cString>
- *                         Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) +
- *                                  Chr( 13 ) + Chr( 26 ) + Chr( 32 ) +
- *                                  Chr( 32 ) + Chr( 138 ) + Chr( 141 ) +
- *                                  ",.;:!\?/\\<>()#&%+-*"
- *      [<nTokenCount>]    specifies the count of the token whose
- *                         position should be calculated
- *                         Default: last token
- *      [<nSkipWidth>]     specifies the maximum number of successive
- *                         tokenizing characters that are combined as
- *                         ONE token stop, e.g. specifying 1 can
- *                         yield to empty tokens
- *                         Default: 0, any number of successive tokenizing
- *                         characters are combined as ONE token stop
- *  $RETURNS$
- *      <nPosition>        The start position of the specified token or
- *                         0 if such a token does not exist in <cString>.
- *  $DESCRIPTION$
- *      The ATTOKEN() function calculates the start position of tne
- *      <nTokenCount>th token in <cString>. By setting the new <nSkipWidth>
- *      parameter to a value different than 0, you can specify how many tokenizing
- *      characters are combined at most to one token stop. Be aware that
- *      this can result to empty tokens there the start position is not
- *      defined clearly. Then, ATTOKEN() returns the position there the
- *      token WOULD start if its length is larger than 0. To check for
- *      empty tokens, simply look if the character at the returned position
- *      is within the tokenizer list.
- *  $EXAMPLES$
- *      attoken( "Hello, World!" ) // --> 8  // empty strings after tokenizer
- *                                           // are not a token !
- *  $TESTS$
- *      attoken( "Hello, World!" ) == 8
- *      attoken( "Hello, World!",, 2 ) == 8
- *      attoken( "Hello, World!",, 2, 1 ) == 7
- *      attoken( "Hello, World!", " ", 2, 1 ) == 8
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      ATTOKEN() is compatible with CT3's ATTOKEN, but has an additional
- *      4th parameter to let you specify a skip width equal to that in the
- *      TOKEN() function.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      TOKEN(),NUMTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      ATTOKEN()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Position of a token in a string
+   $SYNTAX$
+      ATTOKEN( <cString>, [<cTokenizer>],
+               [<nTokenCount>], [<nSkipWidth>] ) -> nPosition
+   $ARGUMENTS$
+      <cString>          is the processed string
+      [<cTokenizer>]     is a list of characters separating the tokens
+                         in <cString>
+                         Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) +
+                                  Chr( 13 ) + Chr( 26 ) + Chr( 32 ) +
+                                  Chr( 32 ) + Chr( 138 ) + Chr( 141 ) +
+                                  ",.;:!\?/\\<>()#&%+-*"
+      [<nTokenCount>]    specifies the count of the token whose
+                         position should be calculated
+                         Default: last token
+      [<nSkipWidth>]     specifies the maximum number of successive
+                         tokenizing characters that are combined as
+                         ONE token stop, e.g. specifying 1 can
+                         yield to empty tokens
+                         Default: 0, any number of successive tokenizing
+                         characters are combined as ONE token stop
+   $RETURNS$
+      <nPosition>        The start position of the specified token or
+                         0 if such a token does not exist in <cString>.
+   $DESCRIPTION$
+      The ATTOKEN() function calculates the start position of tne
+      <nTokenCount>th token in <cString>. By setting the new <nSkipWidth>
+      parameter to a value different than 0, you can specify how many tokenizing
+      characters are combined at most to one token stop. Be aware that
+      this can result to empty tokens there the start position is not
+      defined clearly. Then, ATTOKEN() returns the position there the
+      token WOULD start if its length is larger than 0. To check for
+      empty tokens, simply look if the character at the returned position
+      is within the tokenizer list.
+   $EXAMPLES$
+      attoken( "Hello, World!" ) // --> 8  // empty strings after tokenizer
+                                           // are not a token !
+   $TESTS$
+      attoken( "Hello, World!" ) == 8
+      attoken( "Hello, World!",, 2 ) == 8
+      attoken( "Hello, World!",, 2, 1 ) == 7
+      attoken( "Hello, World!", " ", 2, 1 ) == 8
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      ATTOKEN() is compatible with CT3's ATTOKEN, but has an additional
+      4th parameter to let you specify a skip width equal to that in the
+      TOKEN() function.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      TOKEN(),NUMTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      TOKEN()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Tokens of a string
- *  $SYNTAX$
- *      TOKEN( <cString>, [<cTokenizer>],
- *             [<nTokenCount], [<nSkipWidth>],
- *             [<@cPreTokenSep>], [<@cPostTokenSep>] ) -> cToken
- *  $ARGUMENTS$
- *      <cString>          is the processed string
- *      [<cTokenizer>]     is a list of characters separating the tokens
- *                         in <cString>
- *                         Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) +
- *                                  Chr( 13 ) + Chr( 26 ) + Chr( 32 ) +
- *                                  Chr( 32 ) + Chr( 138 ) + Chr( 141 ) +
- *                                  ",.;:!\?/\\<>()#&%+-*"
- *      [<nTokenCount>]    specifies the count of the token that
- *                         should be extracted
- *                         Default: last token
- *      [<nSkipWidth>]     specifies the maximum number of successive
- *                         tokenizing characters that are combined as
- *                         ONE token stop, e.g. specifying 1 can
- *                         yield to empty token
- *                         Default: 0, any number of successive tokenizing
- *                         characters are combined as ONE token stop
- *      [<@cPreTokenSep>]  If given by reference, the tokenizer before
- *                         the actual token will be stored
- *      [<@cPostTokenSep>] If given by reference, the tokenizer after
- *                         the actual token will be stored
- *  $RETURNS$
- *      <cToken>           the token specified by the parameters given above
- *  $DESCRIPTION$
- *      The TOKEN() function extracts the <nTokenCount>th token from the
- *      string <cString>. In the course of this, the tokens in the
- *      string are separated by the character(s) specified in <cTokenizer>.
- *      The function may also extract empty tokens, if you specify a skip
- *      width other than zero.
- *      Be aware of the new 5th and 6th parameter there the TOKEN() function
- *      stores the tokenizing character before and after the extracted token.
- *      Therefore, additional calls to the TOKENSEP() function are not
- *      necessary.
- *  $EXAMPLES$
- *      ? token( "Hello, World!" )            -->  "World"
- *      ? token( "Hello, World!",, 2, 1 )     --> ""
- *      ? token( "Hello, World!", ",", 2, 1 ) --> " World!"
- *      ? token( "Hello, World!", " ", 2, 1 ) --> "World!"
- *  $TESTS$
- *      token( "Hello, World!" )            == "World"
- *      token( "Hello, World!",, 2, 1 )     == ""
- *      token( "Hello, World!", ",", 2, 1 ) == " World!"
- *      token( "Hello, World!", " ", 2, 1 ) == "World!"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      TOKEN() is compatible with CT3's TOKEN, but two additional
- *      parameters have been added there the TOKEN() function can store
- *      the tokenizers before and after the current token.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      TOKEN()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Tokens of a string
+   $SYNTAX$
+      TOKEN( <cString>, [<cTokenizer>],
+             [<nTokenCount], [<nSkipWidth>],
+             [<@cPreTokenSep>], [<@cPostTokenSep>] ) -> cToken
+   $ARGUMENTS$
+      <cString>          is the processed string
+      [<cTokenizer>]     is a list of characters separating the tokens
+                         in <cString>
+                         Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) +
+                                  Chr( 13 ) + Chr( 26 ) + Chr( 32 ) +
+                                  Chr( 32 ) + Chr( 138 ) + Chr( 141 ) +
+                                  ",.;:!\?/\\<>()#&%+-*"
+      [<nTokenCount>]    specifies the count of the token that
+                         should be extracted
+                         Default: last token
+      [<nSkipWidth>]     specifies the maximum number of successive
+                         tokenizing characters that are combined as
+                         ONE token stop, e.g. specifying 1 can
+                         yield to empty token
+                         Default: 0, any number of successive tokenizing
+                         characters are combined as ONE token stop
+      [<@cPreTokenSep>]  If given by reference, the tokenizer before
+                         the actual token will be stored
+      [<@cPostTokenSep>] If given by reference, the tokenizer after
+                         the actual token will be stored
+   $RETURNS$
+      <cToken>           the token specified by the parameters given above
+   $DESCRIPTION$
+      The TOKEN() function extracts the <nTokenCount>th token from the
+      string <cString>. In the course of this, the tokens in the
+      string are separated by the character(s) specified in <cTokenizer>.
+      The function may also extract empty tokens, if you specify a skip
+      width other than zero.
+      Be aware of the new 5th and 6th parameter there the TOKEN() function
+      stores the tokenizing character before and after the extracted token.
+      Therefore, additional calls to the TOKENSEP() function are not
+      necessary.
+   $EXAMPLES$
+      ? token( "Hello, World!" )            -->  "World"
+      ? token( "Hello, World!",, 2, 1 )     --> ""
+      ? token( "Hello, World!", ",", 2, 1 ) --> " World!"
+      ? token( "Hello, World!", " ", 2, 1 ) --> "World!"
+   $TESTS$
+      token( "Hello, World!" )            == "World"
+      token( "Hello, World!",, 2, 1 )     == ""
+      token( "Hello, World!", ",", 2, 1 ) == " World!"
+      token( "Hello, World!", " ", 2, 1 ) == "World!"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      TOKEN() is compatible with CT3's TOKEN, but two additional
+      parameters have been added there the TOKEN() function can store
+      the tokenizers before and after the current token.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      NUMTOKEN()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Retrieves the number of tokens in a string
- *  $SYNTAX$
- *      NUMTOKEN( <cString>, [<cTokenizer>], [<nSkipWidth>] ) -> nTokenCount
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *      numtoken( "Hello, World!" ) ==  2
- *      numtoken( "This is good. See you! How do you do?", ".!?" ) == 3
- *      numtoken( "one,,three,four,,six", ",", 1 ) ==  6
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      NUMTOKEN() is compatible with CT3's NUMTOKEN().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      TOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      NUMTOKEN()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Retrieves the number of tokens in a string
+   $SYNTAX$
+      NUMTOKEN( <cString>, [<cTokenizer>], [<nSkipWidth>] ) -> nTokenCount
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+  
+   $EXAMPLES$
+  
+   $TESTS$
+      numtoken( "Hello, World!" ) ==  2
+      numtoken( "This is good. See you! How do you do?", ".!?" ) == 3
+      numtoken( "one,,three,four,,six", ",", 1 ) ==  6
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      NUMTOKEN() is compatible with CT3's NUMTOKEN().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      TOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER(),TOKENSEP()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      TOKENLOWER()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Change the first letter of tokens to lower case
- *  $SYNTAX$
- *      TOKENLOWER( <[@]cString>, [<cTokenizer>], [<nTokenCount>],
- *                  [<nSkipWidth>] ) -> cString
- *  $ARGUMENTS$
- *      <[@]cString>      is the processed string
- *      [<cTokenizer>]    is a list of characters separating the tokens
- *                        in <cString>
- *                         Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) +
- *                                  Chr( 13 ) + Chr( 26 ) + Chr( 32 ) +
- *                                  Chr( 32 ) + Chr( 138 ) + Chr( 141 ) +
- *                                  ",.;:!\?/\\<>()#&%+-*"
- *      [<nTokenCount>]   specifies the number of tokens that
- *                        should be processed
- *                        Default: all tokens
- *      [<nSkipWidth>]    specifies the maximum number of successive
- *                        tokenizing characters that are combined as
- *                        ONE token stop, e.g. specifying 1 can
- *                        yield to empty token
- *                        Default: 0, any number of successive tokenizing
- *                        characters are combined as ONE token stop
- *  $RETURNS$
- *      <cString>         the string with the lowercased tokens
- *  $DESCRIPTION$
- *      The TOKENLOWER() function changes the first letter of tokens in <cString>
- *      to lower case. To do this, it uses the same tokenizing mechanism
- *      as the token() function. If TOKENLOWER() extracts a token that starts
- *      with a letter, this letter will be changed to lower case.
- *      You can omit the return value of this function by setting the CSETREF()
- *      switch to .T., but you must then pass <cString> by reference to get
- *      the result.
- *  $EXAMPLES$
- *      ? tokenlower( "Hello, World, here I am!" )         // "hello, world, here i am!"
- *      ? tokenlower( "Hello, World, here I am!",, 3 )     // "hello, world, here I am!"
- *      ? tokenlower( "Hello, World, here I am!", ",", 3 ) // "hello, World, here I am!"
- *      ? tokenlower( "Hello, World, here I am!", " W" )   // "hello, World, here i am!"
- *  $TESTS$
- *      tokenlower( "Hello, World, here I am!" )         == "hello, world, here i am!"
- *      tokenlower( "Hello, World, here I am!",, 3 )     == "hello, world, here I am!"
- *      tokenlower( "Hello, World, here I am!", ",", 3 ) == "hello, World, here I am!"
- *      tokenlower( "Hello, World, here I am!", " W" )   == "hello, World, here i am!"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      TOKENLOWER() is compatible with CT3's TOKENLOWER(),
- *      but a new 4th parameter, <nSkipWidth> has been added for
- *      synchronization with the the other token functions.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENUPPER(),TOKENSEP(),CSETREF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      TOKENLOWER()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Change the first letter of tokens to lower case
+   $SYNTAX$
+      TOKENLOWER( <[@]cString>, [<cTokenizer>], [<nTokenCount>],
+                  [<nSkipWidth>] ) -> cString
+   $ARGUMENTS$
+      <[@]cString>      is the processed string
+      [<cTokenizer>]    is a list of characters separating the tokens
+                        in <cString>
+                         Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) +
+                                  Chr( 13 ) + Chr( 26 ) + Chr( 32 ) +
+                                  Chr( 32 ) + Chr( 138 ) + Chr( 141 ) +
+                                  ",.;:!\?/\\<>()#&%+-*"
+      [<nTokenCount>]   specifies the number of tokens that
+                        should be processed
+                        Default: all tokens
+      [<nSkipWidth>]    specifies the maximum number of successive
+                        tokenizing characters that are combined as
+                        ONE token stop, e.g. specifying 1 can
+                        yield to empty token
+                        Default: 0, any number of successive tokenizing
+                        characters are combined as ONE token stop
+   $RETURNS$
+      <cString>         the string with the lowercased tokens
+   $DESCRIPTION$
+      The TOKENLOWER() function changes the first letter of tokens in <cString>
+      to lower case. To do this, it uses the same tokenizing mechanism
+      as the token() function. If TOKENLOWER() extracts a token that starts
+      with a letter, this letter will be changed to lower case.
+      You can omit the return value of this function by setting the CSETREF()
+      switch to .T., but you must then pass <cString> by reference to get
+      the result.
+   $EXAMPLES$
+      ? tokenlower( "Hello, World, here I am!" )         // "hello, world, here i am!"
+      ? tokenlower( "Hello, World, here I am!",, 3 )     // "hello, world, here I am!"
+      ? tokenlower( "Hello, World, here I am!", ",", 3 ) // "hello, World, here I am!"
+      ? tokenlower( "Hello, World, here I am!", " W" )   // "hello, World, here i am!"
+   $TESTS$
+      tokenlower( "Hello, World, here I am!" )         == "hello, world, here i am!"
+      tokenlower( "Hello, World, here I am!",, 3 )     == "hello, world, here I am!"
+      tokenlower( "Hello, World, here I am!", ",", 3 ) == "hello, World, here I am!"
+      tokenlower( "Hello, World, here I am!", " W" )   == "hello, World, here i am!"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      TOKENLOWER() is compatible with CT3's TOKENLOWER(),
+      but a new 4th parameter, <nSkipWidth> has been added for
+      synchronization with the the other token functions.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENUPPER(),TOKENSEP(),CSETREF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      TOKENUPPER()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Change the first letter of tokens to upper case
- *  $SYNTAX$
- *      TOKENUPPER( <[@]cString>, [<cTokenizer>], [<nTokenCount>],
- *                  [<nSkipWidth>] ) -> cString
- *  $ARGUMENTS$
- *      <[@]cString>      is the processed string
- *      [<cTokenizer>]    is a list of characters separating the tokens
- *                        in <cString>
- *                         Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) +
- *                                  Chr( 13 ) + Chr( 26 ) + Chr( 32 ) +
- *                                  Chr( 32 ) + Chr( 138 ) + Chr( 141 ) +
- *                                  ",.;:!\?/\\<>()#&%+-*"
- *      [<nTokenCount>]   specifies the number of tokens that
- *                        should be processed
- *                        Default: all tokens
- *      [<nSkipWidth>]    specifies the maximum number of successive
- *                        tokenizing characters that are combined as
- *                        ONE token stop, e.g. specifying 1 can
- *                        yield to empty token
- *                        Default: 0, any number of successive tokenizing
- *                        characters are combined as ONE token stop
- *  $RETURNS$
- *      <cString>         the string with the uppercased tokens
- *  $DESCRIPTION$
- *      The TOKENUPPER() function changes the first letter of tokens in <cString>
- *      to upper case. To do this, it uses the same tokenizing mechanism
- *      as the token() function. If TOKENUPPER() extracts a token that starts
- *      with a letter, this letter will be changed to upper case.
- *      You can omit the return value of this function by setting the CSETREF()
- *      switch to .T., but you must then pass <cString> by reference to get
- *      the result.
- *  $EXAMPLES$
- *      ? tokenupper( "Hello, world, here I am!" )         // "Hello, World, Here I Am!"
- *      ? tokenupper( "Hello, world, here I am!",, 3 )     // "Hello, World, Here I am!"
- *      ? tokenupper( "Hello, world, here I am!", ",", 3 ) // "Hello, world, here I am!"
- *      ? tokenupper( "Hello, world, here I am!", " w" )   // "Hello, wOrld, Here I Am!"
- *  $TESTS$
- *      tokenupper( "Hello, world, here I am!" )         == "Hello, World, Here I Am!"
- *      tokenupper( "Hello, world, here I am!",, 3 )     == "Hello, World, Here I am!"
- *      tokenupper( "Hello, world, here I am!", ",", 3 ) == "Hello, world, here I am!"
- *      tokenupper( "Hello, world, here I am!", " w" )   == "Hello, wOrld, Here I Am!"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      TOKENUPPER() is compatible with CT3's TOKENUPPER(),
- *      but a new 4th parameter, <nSkipWidth> has been added for
- *      synchronization with the the other token functions.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENSEP(),CSETREF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      TOKENUPPER()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Change the first letter of tokens to upper case
+   $SYNTAX$
+      TOKENUPPER( <[@]cString>, [<cTokenizer>], [<nTokenCount>],
+                  [<nSkipWidth>] ) -> cString
+   $ARGUMENTS$
+      <[@]cString>      is the processed string
+      [<cTokenizer>]    is a list of characters separating the tokens
+                        in <cString>
+                         Default: Chr( 0 ) + Chr( 9 ) + Chr( 10 ) +
+                                  Chr( 13 ) + Chr( 26 ) + Chr( 32 ) +
+                                  Chr( 32 ) + Chr( 138 ) + Chr( 141 ) +
+                                  ",.;:!\?/\\<>()#&%+-*"
+      [<nTokenCount>]   specifies the number of tokens that
+                        should be processed
+                        Default: all tokens
+      [<nSkipWidth>]    specifies the maximum number of successive
+                        tokenizing characters that are combined as
+                        ONE token stop, e.g. specifying 1 can
+                        yield to empty token
+                        Default: 0, any number of successive tokenizing
+                        characters are combined as ONE token stop
+   $RETURNS$
+      <cString>         the string with the uppercased tokens
+   $DESCRIPTION$
+      The TOKENUPPER() function changes the first letter of tokens in <cString>
+      to upper case. To do this, it uses the same tokenizing mechanism
+      as the token() function. If TOKENUPPER() extracts a token that starts
+      with a letter, this letter will be changed to upper case.
+      You can omit the return value of this function by setting the CSETREF()
+      switch to .T., but you must then pass <cString> by reference to get
+      the result.
+   $EXAMPLES$
+      ? tokenupper( "Hello, world, here I am!" )         // "Hello, World, Here I Am!"
+      ? tokenupper( "Hello, world, here I am!",, 3 )     // "Hello, World, Here I am!"
+      ? tokenupper( "Hello, world, here I am!", ",", 3 ) // "Hello, world, here I am!"
+      ? tokenupper( "Hello, world, here I am!", " w" )   // "Hello, wOrld, Here I Am!"
+   $TESTS$
+      tokenupper( "Hello, world, here I am!" )         == "Hello, World, Here I Am!"
+      tokenupper( "Hello, world, here I am!",, 3 )     == "Hello, World, Here I am!"
+      tokenupper( "Hello, world, here I am!", ",", 3 ) == "Hello, world, here I am!"
+      tokenupper( "Hello, world, here I am!", " w" )   == "Hello, wOrld, Here I Am!"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      TOKENUPPER() is compatible with CT3's TOKENUPPER(),
+      but a new 4th parameter, <nSkipWidth> has been added for
+      synchronization with the the other token functions.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENSEP(),CSETREF()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      TOKENSEP()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Retrieves the token separators of the last token() call
- *  $SYNTAX$
- *      TOKENSEP( [<lMode>] ) -> cSeparator
- *  $ARGUMENTS$
- *      [<lMode>]   if set to .T., the token separator BEHIND the token
- *                  retrieved from the token() call will be returned.
- *                  Default: .F., returns the separator BEFORE the token
- *  $RETURNS$
- *      Depending on the setting of <lMode>, the separating character of the
- *      the token retrieved from the last token() call will be returned.
- *      These separating characters can now also be retrieved with the token()
- *      function.
- *  $DESCRIPTION$
- *      When one does extract tokens from a string with the token() function,
- *      one might be interested in the separator characters that have been
- *      used to extract a specific token. To get this information you can
- *      either use the TOKENSEP() function after each token() call, or
- *      use the new 5th and 6th parameter of the token() function.
- *  $EXAMPLES$
- *      see TOKEN() function
- *  $TESTS$
- *
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      TOKENSEP() is compatible with CT3's TOKENSEP().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      TOKENSEP()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Retrieves the token separators of the last token() call
+   $SYNTAX$
+      TOKENSEP( [<lMode>] ) -> cSeparator
+   $ARGUMENTS$
+      [<lMode>]   if set to .T., the token separator BEHIND the token
+                  retrieved from the token() call will be returned.
+                  Default: .F., returns the separator BEFORE the token
+   $RETURNS$
+      Depending on the setting of <lMode>, the separating character of the
+      the token retrieved from the last token() call will be returned.
+      These separating characters can now also be retrieved with the token()
+      function.
+   $DESCRIPTION$
+      When one does extract tokens from a string with the token() function,
+      one might be interested in the separator characters that have been
+      used to extract a specific token. To get this information you can
+      either use the TOKENSEP() function after each token() call, or
+      use the new 5th and 6th parameter of the token() function.
+   $EXAMPLES$
+      see TOKEN() function
+   $TESTS$
+  
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      TOKENSEP() is compatible with CT3's TOKENSEP().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      TOKEN(),NUMTOKEN(),ATTOKEN(),TOKENLOWER(),TOKENUPPER()
+   $END$
  */

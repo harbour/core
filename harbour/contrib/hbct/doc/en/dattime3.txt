@@ -2,219 +2,219 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      WAITPERIOD()
- *  $CATEGORY$
- *      HBCT date and time functions
- *  $ONELINER$
- *      Pauses a specified time in increments of 1/100 seconds
- *  $SYNTAX$
- *      WAITPERIOD( [<nDelay>] ) --> lNotElapsed
- *  $ARGUMENTS$
- *      <nDelay>  Designates the waiting period at initialization in
- *      1/100ths of seconds.  Values from 1 to 8, 640, 000 (one day) are
- *      possible.
- *  $RETURNS$
- *      WAITPERIOD() returns .T., if the time span designated at initialization
- *      has not elapsed.
- *  $DESCRIPTION$
- *      This function sets a time span for a xHarbour DO WHILE loop to run.
- *      The function must initialize prior to the loop, since you must specify
- *      the <nDelay> parameter in 1/100th seconds.  Subsequently, the function
- *      can be implemented without a parameter for additional loop conditions.
- *      It returns .T., as long as the designated time span has not yet run out.
- *
- *      Note
- *
- *      The function notes the status of the internal timer at
- *      initialization.  From that point on, the initialization should always
- *      precede the respective DO WHILE; otherwise, the time delay is
- *      incorrect.  The passing of midnight (the time resets to the 0 value)
- *      is taken into account.
- *  $EXAMPLES$
- *      Run a loop for 5 seconds:
- *
- *      WAITPERIOD( 500 )             // Initialization, 5 seconds
- *      DO WHILE <cond1> .AND. <cond2> .AND. WAITPERIOD()
- *         *...
- *      ENDDO
- *  $TESTS$
- *
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      WAITPERIOD() is Clipper Tools compatible.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      WAITPERIOD()
+   $CATEGORY$
+      HBCT date and time functions
+   $ONELINER$
+      Pauses a specified time in increments of 1/100 seconds
+   $SYNTAX$
+      WAITPERIOD( [<nDelay>] ) --> lNotElapsed
+   $ARGUMENTS$
+      <nDelay>  Designates the waiting period at initialization in
+      1/100ths of seconds.  Values from 1 to 8, 640, 000 (one day) are
+      possible.
+   $RETURNS$
+      WAITPERIOD() returns .T., if the time span designated at initialization
+      has not elapsed.
+   $DESCRIPTION$
+      This function sets a time span for a xHarbour DO WHILE loop to run.
+      The function must initialize prior to the loop, since you must specify
+      the <nDelay> parameter in 1/100th seconds.  Subsequently, the function
+      can be implemented without a parameter for additional loop conditions.
+      It returns .T., as long as the designated time span has not yet run out.
+  
+      Note
+  
+      The function notes the status of the internal timer at
+      initialization.  From that point on, the initialization should always
+      precede the respective DO WHILE; otherwise, the time delay is
+      incorrect.  The passing of midnight (the time resets to the 0 value)
+      is taken into account.
+   $EXAMPLES$
+      Run a loop for 5 seconds:
+  
+      WAITPERIOD( 500 )             // Initialization, 5 seconds
+      DO WHILE <cond1> .AND. <cond2> .AND. WAITPERIOD()
+         *...
+      ENDDO
+   $TESTS$
+  
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      WAITPERIOD() is Clipper Tools compatible.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+  
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      TIMEVALID()
- *  $CATEGORY$
- *      HBCT Date and Time Functions
- *  $ONELINER$
- *      Determines whether a specIFied time is valid
- *  $SYNTAX$
- *      TIMEVALID( <cTime> ) --> lValid
- *  $ARGUMENTS$
- *      <cTime>  Designates a character string that contains the time to
- *      test.
- *  $RETURNS$
- *      TIMEVALID() RETURNs .T. when <cTime> is a valid time; or .F. when
- *      <cTime> is an invalid time.
- *  $DESCRIPTION$
- *      With input that requires time manipulation, writing your own UDF to
- *      check time inputs was unavoidable up to now.  TIMEVALID() permits
- *      Complete checking of a time designation.  You can use this FUNCTION
- *      effectively with a VALID clause within a READ mask.
- *
- *      Note
- *
- *      Note the format for time designations.  There must always be
- *      two digits for hours, minutes, seconds, and hundredths; otherwise,
- *      the time it is regarded as invalid.  Valid examples are "12",
- *      "12:59", "12:59:59", and "12:59:59:99".  By contrast, invalid
- *      examples are "24", "12:60", or "12:1", and/or "12:".  IF you work
- *      with time strings that are not completely filled and that you need to
- *      check with TIMEVALID(), then they must be TRIMmed prior to the use of
- *      TIMEVALID() (see following Examples).
- *  $EXAMPLES$
- *      Using the VALID clause with TRIM, all valid times are
- *      accepted, even IF no seconds or minutes are specIFied:
- *
- *      cBegin := SPACE( 11 )
- *      @ 5, 10 SAY "Please input time for beginning work:";
- *      GET cBegin VALID TIMEVALID( RTRIM( cBegin ) )
- *      READ
- *
- *      Using a VALID clause without TRIM, hours and minutes must be
- *      specified, so that TIMEVALID() can confirm a valid time:
- *
- *      cBegin := SPACE( 5 )
- *      @ 5, 10 SAY "Please input time for beginning work:";
- *      GET cBegin VALID TIMEVALID( cBegin )
- *      READ
- *  $TESTS$
- *
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      This function is CA-Cl*pper Tools compatible.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      SETTIME()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      TIMEVALID()
+   $CATEGORY$
+      HBCT Date and Time Functions
+   $ONELINER$
+      Determines whether a specIFied time is valid
+   $SYNTAX$
+      TIMEVALID( <cTime> ) --> lValid
+   $ARGUMENTS$
+      <cTime>  Designates a character string that contains the time to
+      test.
+   $RETURNS$
+      TIMEVALID() RETURNs .T. when <cTime> is a valid time; or .F. when
+      <cTime> is an invalid time.
+   $DESCRIPTION$
+      With input that requires time manipulation, writing your own UDF to
+      check time inputs was unavoidable up to now.  TIMEVALID() permits
+      Complete checking of a time designation.  You can use this FUNCTION
+      effectively with a VALID clause within a READ mask.
+  
+      Note
+  
+      Note the format for time designations.  There must always be
+      two digits for hours, minutes, seconds, and hundredths; otherwise,
+      the time it is regarded as invalid.  Valid examples are "12",
+      "12:59", "12:59:59", and "12:59:59:99".  By contrast, invalid
+      examples are "24", "12:60", or "12:1", and/or "12:".  IF you work
+      with time strings that are not completely filled and that you need to
+      check with TIMEVALID(), then they must be TRIMmed prior to the use of
+      TIMEVALID() (see following Examples).
+   $EXAMPLES$
+      Using the VALID clause with TRIM, all valid times are
+      accepted, even IF no seconds or minutes are specIFied:
+  
+      cBegin := SPACE( 11 )
+      @ 5, 10 SAY "Please input time for beginning work:";
+      GET cBegin VALID TIMEVALID( RTRIM( cBegin ) )
+      READ
+  
+      Using a VALID clause without TRIM, hours and minutes must be
+      specified, so that TIMEVALID() can confirm a valid time:
+  
+      cBegin := SPACE( 5 )
+      @ 5, 10 SAY "Please input time for beginning work:";
+      GET cBegin VALID TIMEVALID( cBegin )
+      READ
+   $TESTS$
+  
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      This function is CA-Cl*pper Tools compatible.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      SETTIME()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      SETTIME()
- *  $CATEGORY$
- *      HBCT Date and Time Functions
- *  $ONELINER$
- *      Sets the system clock
- *  $SYNTAX$
- *      SETTIME( <cTime>, [<lMode>] ) --> lSet
- *  $ARGUMENTS$
- *      <cTime>  Designates a character string that contains the time that
- *      is to become the system time.
- *
- *      <lMode>  Designates whether the time should also be set in the
- *      CMOS-RAM of an AT.  The default is do not write to CMOS-RAM. Note that in
- *      Windows platform this adjust is automatic, therefore this parameter is
- *      without efect.
- *  $RETURNS$
- *      The FUNCTION RETURNs .T. when the time is set successfully.
- *  $DESCRIPTION$
- *      When you use this FUNCTION to convert the time into the system time from
- *      within your xHarbour application, all files acquire this time with
- *      each write procedure.
- *  $EXAMPLES$
- *      Set the system time in each case; but the hardware clock only
- *      on an AT:
- *
- *      cNewTime := "10:20:00"
- *      IF ISAT()
- *         SETTIME( cNewTime, .T. )
- *      ELSE
- *         SETTIME( cNewTime )
- *      ENDIF
- *
- *      Or, more compactly:
- *
- *      SETTIME( cNewTime, ISAT() )
- *  $TESTS$
- *
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      This function is CA-Cl*pper Tools compatible.
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      SETDATE(),TIMEVALID()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      SETTIME()
+   $CATEGORY$
+      HBCT Date and Time Functions
+   $ONELINER$
+      Sets the system clock
+   $SYNTAX$
+      SETTIME( <cTime>, [<lMode>] ) --> lSet
+   $ARGUMENTS$
+      <cTime>  Designates a character string that contains the time that
+      is to become the system time.
+  
+      <lMode>  Designates whether the time should also be set in the
+      CMOS-RAM of an AT.  The default is do not write to CMOS-RAM. Note that in
+      Windows platform this adjust is automatic, therefore this parameter is
+      without efect.
+   $RETURNS$
+      The FUNCTION RETURNs .T. when the time is set successfully.
+   $DESCRIPTION$
+      When you use this FUNCTION to convert the time into the system time from
+      within your xHarbour application, all files acquire this time with
+      each write procedure.
+   $EXAMPLES$
+      Set the system time in each case; but the hardware clock only
+      on an AT:
+  
+      cNewTime := "10:20:00"
+      IF ISAT()
+         SETTIME( cNewTime, .T. )
+      ELSE
+         SETTIME( cNewTime )
+      ENDIF
+  
+      Or, more compactly:
+  
+      SETTIME( cNewTime, ISAT() )
+   $TESTS$
+  
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      This function is CA-Cl*pper Tools compatible.
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      SETDATE(),TIMEVALID()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      SETDATE()
- *  $CATEGORY$
- *      HBCT Date and Time Functions
- *  $ONELINER$
- *      Sets the system date
- *  $SYNTAX$
- *      SETDATE( <dDate>, [<lMode>] ) --> lSet
- *  $ARGUMENTS$
- *      <dDate>  Designates which date to use to set the system date.
- *
- *      <lMode>  Designates whether the date should also be set in the CMOS-
- *      RAM of an AT.  The default is do not write (.F.). Note that in Windows
- *      plataform this adjust is automatic, therefore this parameter is without
- *      efect.
- *  $RETURNS$
- *      SETDATE() RETURNs .T. when the date is successfully set.
- *  $DESCRIPTION$
- *      When you use this FUNCTION to set the system date from within your
- *      xHarbour application, all files acquire this date with each write
- *      procedure.
- *  $EXAMPLES$
- *      Set the system date in each case; but the hardware clock only
- *      on an AT:
- *
- *      dNewDate := SToD( "19910730" )
- *      IF ISAT()
- *         SETDATE( dNewDate, .T. )
- *      ELSE
- *         SETDATE( dNewDate )
- *      ENDIF
- *
- *      Or, more compactly:
- *
- *      SETDATE( dNewDate, ISAT() )
- *  $TESTS$
- *
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      This function is CA-Cl*pper Tools compatible.
- *  $PLATFORMS$
- *      Windows, Linux
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      SETTIME()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      SETDATE()
+   $CATEGORY$
+      HBCT Date and Time Functions
+   $ONELINER$
+      Sets the system date
+   $SYNTAX$
+      SETDATE( <dDate>, [<lMode>] ) --> lSet
+   $ARGUMENTS$
+      <dDate>  Designates which date to use to set the system date.
+  
+      <lMode>  Designates whether the date should also be set in the CMOS-
+      RAM of an AT.  The default is do not write (.F.). Note that in Windows
+      plataform this adjust is automatic, therefore this parameter is without
+      efect.
+   $RETURNS$
+      SETDATE() RETURNs .T. when the date is successfully set.
+   $DESCRIPTION$
+      When you use this FUNCTION to set the system date from within your
+      xHarbour application, all files acquire this date with each write
+      procedure.
+   $EXAMPLES$
+      Set the system date in each case; but the hardware clock only
+      on an AT:
+  
+      dNewDate := SToD( "19910730" )
+      IF ISAT()
+         SETDATE( dNewDate, .T. )
+      ELSE
+         SETDATE( dNewDate )
+      ENDIF
+  
+      Or, more compactly:
+  
+      SETDATE( dNewDate, ISAT() )
+   $TESTS$
+  
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      This function is CA-Cl*pper Tools compatible.
+   $PLATFORMS$
+      Windows, Linux
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      SETTIME()
+   $END$
  */

@@ -53,1138 +53,1138 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HASH()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Returns a hash table
- *  $SYNTAX$
- *       HB_HASH( [ <Key1>, <Value1> ], [ <KeyN>, <ValueN> ], ... ) -> hsTable
- *  $ARGUMENTS$
- *       <Key1> entry key;
- *       can be of type: number, date, datetime, string, pointer
- *
- *       <Value1> entry value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
- *  $RETURNS$
- *       A hash table built from the initial key/value pairs
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HASH()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Returns a hash table
+   $SYNTAX$
+      HB_HASH( [ <Key1>, <Value1> ], [ <KeyN>, <ValueN> ], ... ) -> hsTable
+   $ARGUMENTS$
+      <Key1> entry key;
+      can be of type: number, date, datetime, string, pointer
+
+      <Value1> entry value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
+   $RETURNS$
+      A hash table built from the initial key/value pairs
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HHASKEY()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Determines whether a hash table has an entry with a give key
- *  $SYNTAX$
- *       HB_HHASKEY( <hsTable>, <Key> ) -> lExists
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <Key> a key value to be queried for;
- *       can be of type: number, date, datetime, string, pointer
- *  $RETURNS$
- *       A logical value indicating whether the key exists within the hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HHASKEY()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Determines whether a hash table has an entry with a give key
+   $SYNTAX$
+      HB_HHASKEY( <hsTable>, <Key> ) -> lExists
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <Key> a key value to be queried for;
+      can be of type: number, date, datetime, string, pointer
+   $RETURNS$
+      A logical value indicating whether the key exists within the hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HPOS()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Locates the index of a key within a hash table
- *  $SYNTAX$
- *       HB_HPOS( <hsTable>, <Key> ) -> nPosition
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <Key> key for which its position is to be determined;
- *       can be of type: number, date, datetime, string, pointer
- *  $RETURNS$
- *       A integer number being the index position of the key within the hash table.
- *
- *       TODO: what is the return value if the key does not exist?  zero (0)?  RTE?
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HPOS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Locates the index of a key within a hash table
+   $SYNTAX$
+      HB_HPOS( <hsTable>, <Key> ) -> nPosition
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <Key> key for which its position is to be determined;
+      can be of type: number, date, datetime, string, pointer
+   $RETURNS$
+      A integer number being the index position of the key within the hash table.
+
+      TODO: what is the return value if the key does not exist?  zero (0)?  RTE?
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HGET()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Returns a hash value
- *  $SYNTAX$
- *       HB_HGET( <hsTable>, <Key> ) -> <Value>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <Key> key to be retrieve from the hash table;
- *       can be of type: number, date, datetime, string, pointer
- *  $RETURNS$
- *       Either the value within the hash table for the given key.
- *
- *       An array access error occurs of the key is not found
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HGET()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Returns a hash value
+   $SYNTAX$
+      HB_HGET( <hsTable>, <Key> ) -> <Value>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <Key> key to be retrieve from the hash table;
+      can be of type: number, date, datetime, string, pointer
+   $RETURNS$
+      Either the value within the hash table for the given key.
+
+      An array access error occurs of the key is not found
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HGETDEF()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Returns a hash value, or a default value if the key is not present
- *  $SYNTAX$
- *       HB_HGETDEF( <hsTable>, <Key>, [<DefaultValue>] ) -> <Value>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <Key> key to be retrieve from the hash table;
- *       can be of type: number, date, datetime, string, pointer
- *
- *       <DefaultValue> a default value to be returned if the
- *       hash table does not contain the key
- *  $RETURNS$
- *       Either the value within the hash table for the given key,
- *       or the default value.
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HGETDEF()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Returns a hash value, or a default value if the key is not present
+   $SYNTAX$
+      HB_HGETDEF( <hsTable>, <Key>, [<DefaultValue>] ) -> <Value>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <Key> key to be retrieve from the hash table;
+      can be of type: number, date, datetime, string, pointer
+
+      <DefaultValue> a default value to be returned if the
+      hash table does not contain the key
+   $RETURNS$
+      Either the value within the hash table for the given key,
+      or the default value.
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HSET()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Sets a hash value
- *  $SYNTAX$
- *       HB_HSET( <hsTable>, <Key>, <Value> ) -> <hsTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <Key> the key of the entry to be set;
- *       can be of type: number, date, datetime, string, pointer
- *
- *       <Value> the entry value
- *  $RETURNS$
- *       The hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HSET()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Sets a hash value
+   $SYNTAX$
+      HB_HSET( <hsTable>, <Key>, <Value> ) -> <hsTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <Key> the key of the entry to be set;
+      can be of type: number, date, datetime, string, pointer
+
+      <Value> the entry value
+   $RETURNS$
+      The hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HDEL()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *        Removes a key/value pair from a hash table
- *  $SYNTAX$
- *       HB_HDEL( <hsTable>, <Key> ) -> <hsTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <Key> key to be removed from the hash table;
- *       can be of type: number, date, datetime, string, pointer
- *  $RETURNS$
- *       The hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HDEL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Removes a key/value pair from a hash table
+   $SYNTAX$
+      HB_HDEL( <hsTable>, <Key> ) -> <hsTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <Key> key to be removed from the hash table;
+      can be of type: number, date, datetime, string, pointer
+   $RETURNS$
+      The hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HKEYAT()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Gets a hash table key at a given position
- *  $SYNTAX$
- *       HB_HKEYAT( <hsTable>, <nPosition> ) -> <Key>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <nPosition> the position of an entry within the hash table that will
- *       be returned
- *  $RETURNS$
- *       The key at the given position of the hash table;
- *       the type will be one: number, date, datetime, string, pointer
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HKEYAT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Gets a hash table key at a given position
+   $SYNTAX$
+      HB_HKEYAT( <hsTable>, <nPosition> ) -> <Key>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <nPosition> the position of an entry within the hash table that will
+      be returned
+   $RETURNS$
+      The key at the given position of the hash table;
+      the type will be one: number, date, datetime, string, pointer
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HVALUEAT()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Gets/sets a hash value at a given position
- *  $SYNTAX$
- *       HB_HVALUEAT( <hsTable>, <nPosition>, [<NewValue>] ) -> <Value>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <nPosition> the position of an entry within the hash table that will
- *       be returned
- *
- *       <NewValue> a new value to be assigned to the hash table at the given
- *       position
- *  $RETURNS$
- *       The existing value, or the new value if it is given
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HVALUEAT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Gets/sets a hash value at a given position
+   $SYNTAX$
+      HB_HVALUEAT( <hsTable>, <nPosition>, [<NewValue>] ) -> <Value>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <nPosition> the position of an entry within the hash table that will
+      be returned
+
+      <NewValue> a new value to be assigned to the hash table at the given
+      position
+   $RETURNS$
+      The existing value, or the new value if it is given
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HPAIRAT()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Returns a two-dimensional array of a hash table entry key/value pair
- *  $SYNTAX$
- *       HB_HPAIRAT( <hsTable>, <nPosition> ) -> <aKeyValue>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <nPosition> the position of an entry within the hash table that will
- *       be returned
- *  $RETURNS$
- *       A two-dimensional array of the key/value pair entry of the hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HPAIRAT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Returns a two-dimensional array of a hash table entry key/value pair
+   $SYNTAX$
+      HB_HPAIRAT( <hsTable>, <nPosition> ) -> <aKeyValue>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <nPosition> the position of an entry within the hash table that will
+      be returned
+   $RETURNS$
+      A two-dimensional array of the key/value pair entry of the hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HDELAT()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Removes an entry from a hash table based on its index position
- *  $SYNTAX$
- *       HB_HDELAT( <hsTable>, <nPosition> ) -> <hsTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <nPosition> the position of an entry within the hash table that will
- *       be deleted
- *  $RETURNS$
- *       The hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HDELAT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Removes an entry from a hash table based on its index position
+   $SYNTAX$
+      HB_HDELAT( <hsTable>, <nPosition> ) -> <hsTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <nPosition> the position of an entry within the hash table that will
+      be deleted
+   $RETURNS$
+      The hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HKEYS()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Returns an array of the keys of a hash table
- *  $SYNTAX$
- *       HB_HKEYS( <hsTable> ) -> <aKeys>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *  $RETURNS$
- *       An array of all the hash table keys
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HKEYS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Returns an array of the keys of a hash table
+   $SYNTAX$
+      HB_HKEYS( <hsTable> ) -> <aKeys>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+   $RETURNS$
+      An array of all the hash table keys
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HVALUES()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Returns an array of the values of a hash table
- *  $SYNTAX$
- *       HB_HVALUES( <hsTable> ) -> <aValues>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *  $RETURNS$
- *       An array of all the hash values
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HVALUES()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Returns an array of the values of a hash table
+   $SYNTAX$
+      HB_HVALUES( <hsTable> ) -> <aValues>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+   $RETURNS$
+      An array of all the hash values
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HFILL()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Fills a hash table with a value
- *  $SYNTAX$
- *       HB_HFILL( <hsTable>, <Value> ) -> <hsTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <Value> fill value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
- *  $RETURNS$
- *       The hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HFILL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Fills a hash table with a value
+   $SYNTAX$
+      HB_HFILL( <hsTable>, <Value> ) -> <hsTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <Value> fill value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
+   $RETURNS$
+      The hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HCLONE()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Creates a copy of a hash table
- *  $SYNTAX$
- *       HB_HCLONE( <hsTable> ) -> <hsDestination>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *  $RETURNS$
- *       A cloned copy of the hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HCLONE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Creates a copy of a hash table
+   $SYNTAX$
+      HB_HCLONE( <hsTable> ) -> <hsDestination>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+   $RETURNS$
+      A cloned copy of the hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HCOPY()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Adds entries from the source hash table to the destination hash table
- *  $SYNTAX$
- *       HB_HCOPY( <hsDestination>, <hsSource>, [<nStart>], [<nCount>] ) -> <hsDestination>
- *  $ARGUMENTS$
- *       <hsDestination> a destination hash table, created by HB_HASH()
- *
- *       <hsSource> a source hash table, created by HB_HASH()
- *
- *       <nStart> starting index, defaults to 1 if omitted
- *
- *       <nCount> counter, defaults to (length) - <nStart> is omitted
- *  $RETURNS$
- *       The destination hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HCOPY()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Adds entries from the source hash table to the destination hash table
+   $SYNTAX$
+      HB_HCOPY( <hsDestination>, <hsSource>, [<nStart>], [<nCount>] ) -> <hsDestination>
+   $ARGUMENTS$
+      <hsDestination> a destination hash table, created by HB_HASH()
+
+      <hsSource> a source hash table, created by HB_HASH()
+
+      <nStart> starting index, defaults to 1 if omitted
+
+      <nCount> counter, defaults to (length) - <nStart> is omitted
+   $RETURNS$
+      The destination hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HMERGE()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Merges a source hash table into a destination hash table
- *  $SYNTAX$
- *       HB_HMERGE( <hsDestination>, <hsSource>, <bBlock>|<nPosition> ) -> <hsDestination>
- *  $ARGUMENTS$
- *       <hsDestination> a destination hash table, created by HB_HASH()
- *
- *       <hsSource> a source hash table, created by HB_HASH()
- *
- *       <bBlock> a code block that will be evaluated for each entry within the
- *       source hash table; the code block will be passed the entry key, value and
- *       position; if the code block returns a true value, the entry will be added to
- *       the destination hash table
- *
- *       <nPosition> the position of an entry within the source hash table that will
- *       be appended to the destination hash table
- *
- *       TODO: the source code passes either a number or HB_HASH_UNION; research this
- *  $RETURNS$
- *       The destination hash table with the contents of the source hash table merged
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HMERGE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Merges a source hash table into a destination hash table
+   $SYNTAX$
+      HB_HMERGE( <hsDestination>, <hsSource>, <bBlock>|<nPosition> ) -> <hsDestination>
+   $ARGUMENTS$
+      <hsDestination> a destination hash table, created by HB_HASH()
+
+      <hsSource> a source hash table, created by HB_HASH()
+
+      <bBlock> a code block that will be evaluated for each entry within the
+      source hash table; the code block will be passed the entry key, value and
+      position; if the code block returns a true value, the entry will be added to
+      the destination hash table
+
+      <nPosition> the position of an entry within the source hash table that will
+      be appended to the destination hash table
+
+      TODO: the source code passes either a number or HB_HASH_UNION; research this
+   $RETURNS$
+      The destination hash table with the contents of the source hash table merged
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HEVAL()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Evaluate a code block across the contents of a hash table
- *  $SYNTAX$
- *       HB_HEVAL( <hsTable>, <bBlock>, [<nStart>], [<nCount>] ) -> <hsTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <bBlock> code block to be evaluated
- *
- *       <nStart> starting index, defaults to 1 if omitted
- *
- *       <nCount> counter, defaults to (length) - <nStart> is omitted
- *  $RETURNS$
- *       The hash table
- *  $DESCRIPTION$
- *       The code block is evaluated for every hash table entry starting at
- *       <nStart> for <nCount> items.
- *
- *       The code block is passed the entry key, value, and numeric position
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HEVAL()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Evaluate a code block across the contents of a hash table
+   $SYNTAX$
+      HB_HEVAL( <hsTable>, <bBlock>, [<nStart>], [<nCount>] ) -> <hsTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <bBlock> code block to be evaluated
+
+      <nStart> starting index, defaults to 1 if omitted
+
+      <nCount> counter, defaults to (length) - <nStart> is omitted
+   $RETURNS$
+      The hash table
+   $DESCRIPTION$
+      The code block is evaluated for every hash table entry starting at
+      <nStart> for <nCount> items.
+
+      The code block is passed the entry key, value, and numeric position
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HSCAN()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Scans a hash table
- *  $SYNTAX$
- *       HB_HSCAN( <hsTable>, <Value>, [<nStart>], [<nCount>, [<lExact>] ) -> nPosition
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <Value> to be located within the hash table
- *
- *       <nStart> starting index, defaults to 1 if omitted
- *
- *       <nCount> counter, defaults to (length) - <nStart> is omitted
- *
- *       <lExact> logical valuye indicating whether the comparision
- *       is to be be exact or not
- *  $RETURNS$
- *       The position of the located value within the hash table, or zero (0) if not found.
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HSCAN()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Scans a hash table
+   $SYNTAX$
+      HB_HSCAN( <hsTable>, <Value>, [<nStart>], [<nCount>, [<lExact>] ) -> nPosition
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <Value> to be located within the hash table
+
+      <nStart> starting index, defaults to 1 if omitted
+
+      <nCount> counter, defaults to (length) - <nStart> is omitted
+
+      <lExact> logical valuye indicating whether the comparision
+      is to be be exact or not
+   $RETURNS$
+      The position of the located value within the hash table, or zero (0) if not found.
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HSORT()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Reorganizes the internal list of the hash table to be sorted
- *  $SYNTAX$
- *       HB_HSORT( <hsTable> ) -> <hsSortedTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *  $RETURNS$
- *       The hash table sorted
- *
- *       TODO: is the original table altered?
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HSORT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Reorganizes the internal list of the hash table to be sorted
+   $SYNTAX$
+      HB_HSORT( <hsTable> ) -> <hsSortedTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+   $RETURNS$
+      The hash table sorted
+
+      TODO: is the original table altered?
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HCASEMATCH()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Sets the 'case match' flag for the hash table
- *  $SYNTAX$
- *       HB_HCASEMATCH( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <lFlag> a logical value indicating to turn on or off
- *       the 'case match' flag of the hash table
- *  $RETURNS$
- *       The previous value of the 'case match' flag
- *  $DESCRIPTION$
- *       This function is equivalent to HB_HSETCASEMATCH() but it returns
- *       the old flag value rather than the hash table
- *  $EXAMPLES$
- *       LOCAL hsTable, lFlag
- *       hsTable := { "one" => 1, "two" => 2 }
- *       // turn 'case match' on for a new hash table, storing ol flag
- *       lFlag := hb_HCaseMatch( hsTable, .T. )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *      HB_HSETCASEMATCH()
- *  $END$
-  */
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HCASEMATCH()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Sets the 'case match' flag for the hash table
+   $SYNTAX$
+      HB_HCASEMATCH( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HBINARY()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Sets the 'binary' flag for the hash table
- *  $SYNTAX$
- *       HB_HBINARY( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <lFlag> a logical value indicating to turn on or off
- *       the 'binary' flag of the hash table
- *  $RETURNS$
- *       The previous value of the 'binary' flag
- *  $DESCRIPTION$
- *       This function is equivalent to HB_HBINARY() but it returns
- *       the old flag value rather than the hash table
- *  $EXAMPLES$
- *       LOCAL hsTable, lFlag
- *       hsTable := { "one" => 1, "two" => 2 }
- *       // turn 'binary' on for a new hash table, storing ol flag
- *       lFlag := hb_HBinary( hsTable, .T. )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *      HB_HSETBINARY()
- *  $END$
+      <lFlag> a logical value indicating to turn on or off
+      the 'case match' flag of the hash table
+   $RETURNS$
+      The previous value of the 'case match' flag
+   $DESCRIPTION$
+      This function is equivalent to HB_HSETCASEMATCH() but it returns
+      the old flag value rather than the hash table
+   $EXAMPLES$
+      LOCAL hsTable, lFlag
+      hsTable := { "one" => 1, "two" => 2 }
+      // turn 'case match' on for a new hash table, storing ol flag
+      lFlag := hb_HCaseMatch( hsTable, .T. )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+      HB_HSETCASEMATCH()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HAUTOADD()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Sets the 'auto add' flag for the hash table
- *  $SYNTAX$
- *       HB_HAUTOADD( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <lFlag> a logical value indicating to turn on or off
- *       the 'auto add' flag of the hash table
- *  $RETURNS$
- *       The previous value of the 'auto add' flag
- *  $DESCRIPTION$
- *       This function is equivalent to HB_HAUTOADD() but it returns
- *       the old flag value rather than the hash table
- *  $EXAMPLES$
- *       LOCAL hsTable, lFlag
- *       hsTable := { "one" => 1, "two" => 2 }
- *       // turn 'auto add' on for a new hash table, storing ol flag
- *       lFlag := hb_HAutoAdd( hsTable, .T. )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *      HB_HSETAUTOADD()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HBINARY()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Sets the 'binary' flag for the hash table
+   $SYNTAX$
+      HB_HBINARY( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <lFlag> a logical value indicating to turn on or off
+      the 'binary' flag of the hash table
+   $RETURNS$
+      The previous value of the 'binary' flag
+   $DESCRIPTION$
+      This function is equivalent to HB_HBINARY() but it returns
+      the old flag value rather than the hash table
+   $EXAMPLES$
+      LOCAL hsTable, lFlag
+      hsTable := { "one" => 1, "two" => 2 }
+      // turn 'binary' on for a new hash table, storing ol flag
+      lFlag := hb_HBinary( hsTable, .T. )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+      HB_HSETBINARY()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Procedure
- *  $NAME$
- *       HB_HALLOCATE()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Preallocates a hash table
- *  $SYNTAX$
- *       HB_HALLOCATE( <hsTable>, <nItems> )
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <nItems> number of items to preallocate in the hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HAUTOADD()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Sets the 'auto add' flag for the hash table
+   $SYNTAX$
+      HB_HAUTOADD( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <lFlag> a logical value indicating to turn on or off
+      the 'auto add' flag of the hash table
+   $RETURNS$
+      The previous value of the 'auto add' flag
+   $DESCRIPTION$
+      This function is equivalent to HB_HAUTOADD() but it returns
+      the old flag value rather than the hash table
+   $EXAMPLES$
+      LOCAL hsTable, lFlag
+      hsTable := { "one" => 1, "two" => 2 }
+      // turn 'auto add' on for a new hash table, storing ol flag
+      lFlag := hb_HAutoAdd( hsTable, .T. )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+      HB_HSETAUTOADD()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HDEFAULT()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Returns/sets a default value for a hash table.
- *  $SYNTAX$
- *       HB_HDEFAULT( <hsTable>, <DefaultValue> ) -> <OldDefaultValye>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <DefaultValue>
- *  $RETURNS$
- *       The previous default value assigned to the hash table
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *      TODO: locate and list those methods that use this feature
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      HB_HALLOCATE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Preallocates a hash table
+   $SYNTAX$
+      HB_HALLOCATE( <hsTable>, <nItems> )
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <nItems> number of items to preallocate in the hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HSETAUTOADD()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Sets the 'auto add' flag for the hash table
- *  $SYNTAX$
- *       HB_HSETAUTOADD( <hsTable>, [<lFlag>] ) -> <hsTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <lFlag> a logical value indicating to turn on or off
- *       the 'auto add' flag of the hash table
- *  $RETURNS$
- *       The hash table
- *  $DESCRIPTION$
- *       This function is equivalent to HB_HAUTOADD() but it returns
- *       the passed hash table rather than the old flag value
- *  $EXAMPLES$
- *       LOCAL hsTable
- *       // turn 'auto add' on for a new hash table
- *       hsTable := hb_HSetAutoAdd( { "one" => 1, "two" => 2 }, .T. )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *      HB_HAUTOADD(),HB_HSETBINARY(),HB_HSETCASEMATCH()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HDEFAULT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Returns/sets a default value for a hash table.
+   $SYNTAX$
+      HB_HDEFAULT( <hsTable>, <DefaultValue> ) -> <OldDefaultValye>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <DefaultValue>
+   $RETURNS$
+      The previous default value assigned to the hash table
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+      TODO: locate and list those methods that use this feature
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HSETCASEMATCH()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Sets the 'case match' flag for the hash table
- *  $SYNTAX$
- *       HB_HSETCASEMATCH( <hsTable>, [<lFlag>] ) -> <hsTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <lFlag> a logical value indicating to turn on or off
- *       the 'case match' flag of the hash table
- *  $RETURNS$
- *       The hash table
- *  $DESCRIPTION$
- *       This function is equivalent to HB_HCASEMATCH() but it returns
- *       the passed hash table rather than the old flag value
- *  $EXAMPLES$
- *       LOCAL hsTable
- *       // turn 'case match' on for a new hash table
- *       hsTable := hb_HSetCaseMatch( { "one" => 1, "two" => 2 }, .T. )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *      HB_HCASEMATCH(),HB_HSETAUTOADD(),HB_HSETBINARY
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HSETAUTOADD()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Sets the 'auto add' flag for the hash table
+   $SYNTAX$
+      HB_HSETAUTOADD( <hsTable>, [<lFlag>] ) -> <hsTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <lFlag> a logical value indicating to turn on or off
+      the 'auto add' flag of the hash table
+   $RETURNS$
+      The hash table
+   $DESCRIPTION$
+      This function is equivalent to HB_HAUTOADD() but it returns
+      the passed hash table rather than the old flag value
+   $EXAMPLES$
+      LOCAL hsTable
+      // turn 'auto add' on for a new hash table
+      hsTable := hb_HSetAutoAdd( { "one" => 1, "two" => 2 }, .T. )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+      HB_HAUTOADD(),HB_HSETBINARY(),HB_HSETCASEMATCH()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *       Function
- *  $NAME$
- *       HB_HSETBINARY()
- *  $CATEGORY$
- *       API
- *  $SUBCATEGORY$
- *       Hash table
- *  $ONELINER$
- *       Sets the 'binary' flag for the hash table
- *  $SYNTAX$
- *       HB_HSETBINARY( <hsTable>, [<lFlag>] ) -> <hsTable>
- *  $ARGUMENTS$
- *       <hsTable> a hash table, created by HB_HASH()
- *
- *       <lFlag> a logical value indicating to turn on or off
- *       the 'binary' flag of the hash table
- *  $RETURNS$
- *       The hash table
- *  $DESCRIPTION$
- *       This function is equivalent to HB_HBINARY() but it returns
- *       the passed hash table rather than the old flag value
- *  $EXAMPLES$
- *       LOCAL hsTable
- *       // turn 'binary' on for a new hash table
- *       hsTable := hb_HSetBinary( { "one" => 1, "two" => 2 }, .T. )
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *      HB_HBINARY(),HB_HSETAUTOADD(),HB_HSETCASEMATCH
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HSETCASEMATCH()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Sets the 'case match' flag for the hash table
+   $SYNTAX$
+      HB_HSETCASEMATCH( <hsTable>, [<lFlag>] ) -> <hsTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <lFlag> a logical value indicating to turn on or off
+      the 'case match' flag of the hash table
+   $RETURNS$
+      The hash table
+   $DESCRIPTION$
+      This function is equivalent to HB_HCASEMATCH() but it returns
+      the passed hash table rather than the old flag value
+   $EXAMPLES$
+      LOCAL hsTable
+      // turn 'case match' on for a new hash table
+      hsTable := hb_HSetCaseMatch( { "one" => 1, "two" => 2 }, .T. )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+      HB_HCASEMATCH(),HB_HSETAUTOADD(),HB_HSETBINARY
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_HSETBINARY()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Hash table
+   $ONELINER$
+      Sets the 'binary' flag for the hash table
+   $SYNTAX$
+      HB_HSETBINARY( <hsTable>, [<lFlag>] ) -> <hsTable>
+   $ARGUMENTS$
+      <hsTable> a hash table, created by HB_HASH()
+
+      <lFlag> a logical value indicating to turn on or off
+      the 'binary' flag of the hash table
+   $RETURNS$
+      The hash table
+   $DESCRIPTION$
+      This function is equivalent to HB_HBINARY() but it returns
+      the passed hash table rather than the old flag value
+   $EXAMPLES$
+      LOCAL hsTable
+      // turn 'binary' on for a new hash table
+      hsTable := hb_HSetBinary( { "one" => 1, "two" => 2 }, .T. )
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+      HB_HBINARY(),HB_HSETAUTOADD(),HB_HSETCASEMATCH
+   $END$
  */

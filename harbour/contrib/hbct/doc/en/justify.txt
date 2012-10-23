@@ -2,66 +2,66 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      JUSTLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Move characters from the beginning to the end of a string
- *  $SYNTAX$
- *      JUSTLEFT( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      JUSTLEFT() is compatible with CT3's JUSTLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      JUSTRIGHT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      JUSTLEFT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Move characters from the beginning to the end of a string
+   $SYNTAX$
+      JUSTLEFT( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      JUSTLEFT() is compatible with CT3's JUSTLEFT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      JUSTRIGHT()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      JUSTRIGHT()
- *  $CATEGORY$
- *      Harbour Tools string functions
- *  $ONELINER$
- *      Move characters from the end to the beginning of a string
- *  $SYNTAX$
- *      JUSTRIGHT( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      JUSTRIGHT() is compatible with CT3's JUSTRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      JUSTLEFT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      JUSTRIGHT()
+   $CATEGORY$
+      Harbour Tools string functions
+   $ONELINER$
+      Move characters from the end to the beginning of a string
+   $SYNTAX$
+      JUSTRIGHT( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      JUSTRIGHT() is compatible with CT3's JUSTRIGHT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      JUSTLEFT()
+   $END$
  */

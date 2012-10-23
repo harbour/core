@@ -2,84 +2,84 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *     Document
- *  $NAME$
- *      Macro compiler
- *  $CATEGORY$
- *      Document
- *  $SUBCATEGORY$
- *      Compiler
- *  $ONELINER$
- *      Macro compiler
- *  $DESCRIPTION$
- *      <b>Invoking the macro compiler:  </b> </par>
- *      ==============================   </par>
- *
- *         &variable                     </par>
- *      or                               </par>
- *         &( expression )               </par>
- *      or                               </par>
- *         &variable.text                </par>
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Document
+   $NAME$
+      Macro compiler
+   $CATEGORY$
+      Document
+   $SUBCATEGORY$
+      Compiler
+   $ONELINER$
+      Macro compiler
+   $DESCRIPTION$
+      <b>Invoking the macro compiler:  </b> </par>
+      ==============================   </par>
+  
+         &variable                     </par>
+      or                               </par>
+         &( expression )               </par>
+      or                               </par>
+         &variable.text                </par>
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *     Function
- *  $NAME$
- *      HB_SETMACRO()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Macro
- *  $ONELINER$
- *      Enable/disable the macro compiler runtime features.
- *  $SYNTAX$
- *      HB_SETMACRO( <nOption>, [<lOnOff>] ) --> <lOldSetting>
- *  $ARGUMENTS$
- *      <nOption> One of the HB_SM_* constants defined in set.ch.
- *
- *      <lOnOff> .T. to enable or .F. to disable a feature
- *  $RETURNS$
- *      HB_SETMACRO() return the old state of requested feature.
- *  $DESCRIPTION$
- *      This function enables or disables some features of the macro
- *      compiler. The Harbour is extending the macro features compared
- *      to an original set available in CA-Cl*pper. Enabling/disabling
- *      some of them allows to keep strict CA-Cl*pper compatibility.
- *
- *      Available features are:</par>
- *      <b>HB_SM_HARBOUR</b> - enables harbour extensions:
- *            operators: ++, --, +=, -=, *=, /=, ^=
- *            objects: assigments to an instance variable
- *
- *      <b>HB_SM_XBASE</b> - enables other Xbase++ dialects extensions:</par>
- *            expanding of expresions lists
- *
- *      <b>HB_SM_SHORTCUTS</b> - enables optimized evaluation of
- *            logical operators (.and., .or.)
- *
- *      <b>HB_SM_PREPROC</b> - enables preprocessing of commands
- *            This is meaningfull if Harbour is compiled with
- *            HB_MACRO_STATEMENTS flag
- *
- *  $EXAMPLES$
- *      INIT PROCEDURE IWANTCLIPPER()
- *         HB_SETMACRO( HB_SM_HARBOUR, .F. )
- *         HB_SETMACRO( HB_SM_XBASE, .F. )
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Header file is set.ch
- *      Library is macro
- *  $SEEALSO$
- *      Macro compiler
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_SETMACRO()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Macro
+   $ONELINER$
+      Enable/disable the macro compiler runtime features.
+   $SYNTAX$
+      HB_SETMACRO( <nOption>, [<lOnOff>] ) --> <lOldSetting>
+   $ARGUMENTS$
+      <nOption> One of the HB_SM_* constants defined in set.ch.
+  
+      <lOnOff> .T. to enable or .F. to disable a feature
+   $RETURNS$
+      HB_SETMACRO() return the old state of requested feature.
+   $DESCRIPTION$
+      This function enables or disables some features of the macro
+      compiler. The Harbour is extending the macro features compared
+      to an original set available in CA-Cl*pper. Enabling/disabling
+      some of them allows to keep strict CA-Cl*pper compatibility.
+  
+      Available features are:</par>
+      <b>HB_SM_HARBOUR</b> - enables harbour extensions:
+            operators: ++, --, +=, -=, *=, /=, ^=
+            objects: assigments to an instance variable
+  
+      <b>HB_SM_XBASE</b> - enables other Xbase++ dialects extensions:</par>
+            expanding of expresions lists
+  
+      <b>HB_SM_SHORTCUTS</b> - enables optimized evaluation of
+            logical operators (.and., .or.)
+  
+      <b>HB_SM_PREPROC</b> - enables preprocessing of commands
+            This is meaningfull if Harbour is compiled with
+            HB_MACRO_STATEMENTS flag
+  
+   $EXAMPLES$
+      INIT PROCEDURE IWANTCLIPPER()
+         HB_SETMACRO( HB_SM_HARBOUR, .F. )
+         HB_SETMACRO( HB_SM_XBASE, .F. )
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+      All
+   $FILES$
+      Header file is set.ch
+      Library is macro
+   $SEEALSO$
+      Macro compiler
+   $END$
  */

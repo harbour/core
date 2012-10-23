@@ -2,93 +2,82 @@
  * $Id$
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    Documentation
- *
- * See COPYING for licensing terms.
- *
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      TFileRead()
- *  $CATEGORY$
- *      Harbour Tools
- *  $ONELINER$
- *      Read a file one line at a time
- *  $SYNTAX$
- *      oFile := TFileRead():New( <cFileName> [, <nReadSize> ] )
- *  $ARGUMENTS$
- *      <cFileName> is the required name of the file to be read.   </par>
- *
- *      <nReadSize> is the optional size to use when reading from the file.
- *      The default value is 4096 and the allowed range is 1 through 65535.
- *      Any value outside of this range causes the default value to be used.   </par>
- *  $RETURNS$
- *      An instance of the File Reader class   </par>
- *  $DESCRIPTION$
- *      TFileRead() is used to access a file one line at a time. You must
- *      specify the name of the file when an instance of the class is created.   </par>
- *      The class data should be considered private to the class.   </par>
- *
- *      The class methods are as follows:   </par>
- *
- *         New()              Creates a new instance of the TFileRead class.   </par>
- *
- *         Open([<nFlags>])   Opens the file for reading. The optional nFlags
- *                            parameter can use any of the FOPEN() flags from
- *                            fileio.ch. The default is FO_READ + FO_SHARED.
- *                            Calling this method when the file is already
- *                            open causes the next ReadLine() to start over
- *                            from the beginning of the file.   </par>
-
- *         Close()            Closes the file.   </par>
- *
- *         ReadLine()         Returns one line from the file, stripping the
- *                            newline characters. The following sequences are
- *                            treated as one newline: 1) CR CR LF; 2) CR LF;
- *                            3) LF; and 4) CR. Note: LF CR is 2 newlines.   </par>
- *         Name()             Returns the name of the file.   </par>
- *
- *         IsOpen()           Returns .T. if the file is open.   </par>
- *
- *         MoreToRead()       Returns .T. if there are more lines to be read
- *                            (think of it as an inverse EOF function).
- *
- *         Error()            Returns .T. if an error has occurred.   </par>
- *
- *         ErrorNo()          Returns the current error code.   </par>
- *
- *         ErrorMsg([<cPre>]) Returns a formatted error message.   </par>
- *  $EXAMPLES$
- *      PROCEDURE Main( cFile )
- *         LOCAL oFile := TFileRead():New( cFile )
- *
- *         oFile:Open()
- *         IF oFile:Error()
- *            OutStd( oFile:ErrorMsg( "FileRead: " ) )
- *            OutStd( hb_eol() )
- *         ELSE
- *            DO WHILE oFile:MoreToRead()
- *               OutStd( oFile:ReadLine() )
- *               OutStd( hb_eol() )
- *            ENDDO
- *            oFile:Close()
- *         ENDIF
- *         RETURN
- *  $TESTS$
- *      See Examples
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      This is a new Harbour Tools class
- *  $FILES$
- *      Library is libmisc
- *  $SEEALSO$
- *      TClass()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      TFileRead()
+   $CATEGORY$
+      Harbour Tools
+   $ONELINER$
+      Read a file one line at a time
+   $SYNTAX$
+      oFile := TFileRead():New( <cFileName> [, <nReadSize> ] )
+   $ARGUMENTS$
+      <cFileName> is the required name of the file to be read.   </par>
+  
+      <nReadSize> is the optional size to use when reading from the file.
+      The default value is 4096 and the allowed range is 1 through 65535.
+      Any value outside of this range causes the default value to be used.   </par>
+   $RETURNS$
+      An instance of the File Reader class   </par>
+   $DESCRIPTION$
+      TFileRead() is used to access a file one line at a time. You must
+      specify the name of the file when an instance of the class is created.   </par>
+      The class data should be considered private to the class.   </par>
+  
+      The class methods are as follows:   </par>
+  
+         New()              Creates a new instance of the TFileRead class.   </par>
+  
+         Open([<nFlags>])   Opens the file for reading. The optional nFlags
+                            parameter can use any of the FOPEN() flags from
+                            fileio.ch. The default is FO_READ + FO_SHARED.
+                            Calling this method when the file is already
+                            open causes the next ReadLine() to start over
+                            from the beginning of the file.   </par>
+  
+         Close()            Closes the file.   </par>
+  
+         ReadLine()         Returns one line from the file, stripping the
+                            newline characters. The following sequences are
+                            treated as one newline: 1) CR CR LF; 2) CR LF;
+                            3) LF; and 4) CR. Note: LF CR is 2 newlines.   </par>
+         Name()             Returns the name of the file.   </par>
+  
+         IsOpen()           Returns .T. if the file is open.   </par>
+  
+         MoreToRead()       Returns .T. if there are more lines to be read
+                            (think of it as an inverse EOF function).
+  
+         Error()            Returns .T. if an error has occurred.   </par>
+  
+         ErrorNo()          Returns the current error code.   </par>
+  
+         ErrorMsg([<cPre>]) Returns a formatted error message.   </par>
+   $EXAMPLES$
+      PROCEDURE Main( cFile )
+         LOCAL oFile := TFileRead():New( cFile )
+  
+         oFile:Open()
+         IF oFile:Error()
+            OutStd( oFile:ErrorMsg( "FileRead: " ) )
+            OutStd( hb_eol() )
+         ELSE
+            DO WHILE oFile:MoreToRead()
+               OutStd( oFile:ReadLine() )
+               OutStd( hb_eol() )
+            ENDDO
+            oFile:Close()
+         ENDIF
+         RETURN
+   $TESTS$
+      See Examples
+   $STATUS$
+      R
+   $COMPLIANCE$
+      This is a new Harbour Tools class
+   $FILES$
+      Library is libmisc
+   $SEEALSO$
+      TClass()
+   $END$
  */

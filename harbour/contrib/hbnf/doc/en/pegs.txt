@@ -2,24 +2,24 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_PEGS()
- *  $CATEGORY$
- *     Game
- *  $ONELINER$
- *     FT_PEGS GAME (all work and no play...)
- *  $SYNTAX$
- *     FT_PEGS() -> NIL
- *  $ARGUMENTS$
- *     None
- *  $RETURNS$
- *     NIL
- *  $DESCRIPTION$
- *     This function can be used to alleviate boredom.  The object is to
- *     remove all pegs except one.  This is done by jumping over adjacent
- *     pegs.
- *  $EXAMPLES$
- *     FT_PEGS()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_PEGS()
+   $CATEGORY$
+      Game
+   $ONELINER$
+      FT_PEGS GAME (all work and no play...)
+   $SYNTAX$
+      FT_PEGS() -> NIL
+   $ARGUMENTS$
+      None
+   $RETURNS$
+      NIL
+   $DESCRIPTION$
+      This function can be used to alleviate boredom.  The object is to
+      remove all pegs except one.  This is done by jumping over adjacent
+      pegs.
+   $EXAMPLES$
+      FT_PEGS()
+   $END$
  */

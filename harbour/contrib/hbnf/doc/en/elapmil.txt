@@ -2,28 +2,28 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_ELAPMIN()
- *  $CATEGORY$
- *     Date/Time
- *  $ONELINER$
- *  Return difference, in minutes, between two mil format times.
- *  $SYNTAX$
- *     FT_ELAPMIN( <cTIME1>, <cTIME2> ) -> nMINUTES
- *  $ARGUMENTS$
- *     <cTIME1, cTIME2>  character strings of military form "hhmm",
- *         where 0<=hh<24.
- *  $RETURNS$
- *     <nMINUTES>
- *  $DESCRIPTION$
- *     Finds the arithmetic difference between time two times
- *     (time 2 - time 1).
- *     If time 2 is smaller than time 1, a NEGATIVE value is returned.
- *  $EXAMPLES$
- *     FT_ELAPMIN( "1718", "2040" ) ->  322
- *     FT_ELAPMIN( "2040", "1718" ) -> -322
- *  $SEEALSO$
- *     FT_ELTIME() FT_MIL2MIN() FT_MIN2MIL()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_ELAPMIN()
+   $CATEGORY$
+      Date/Time
+   $ONELINER$
+      Return difference, in minutes, between two mil format times.
+   $SYNTAX$
+      FT_ELAPMIN( <cTIME1>, <cTIME2> ) -> nMINUTES
+   $ARGUMENTS$
+      <cTIME1, cTIME2>  character strings of military form "hhmm",
+          where 0<=hh<24.
+   $RETURNS$
+      <nMINUTES>
+   $DESCRIPTION$
+      Finds the arithmetic difference between time two times
+      (time 2 - time 1).
+      If time 2 is smaller than time 1, a NEGATIVE value is returned.
+   $EXAMPLES$
+      FT_ELAPMIN( "1718", "2040" ) ->  322
+      FT_ELAPMIN( "2040", "1718" ) -> -322
+   $SEEALSO$
+      FT_ELTIME() FT_MIL2MIN() FT_MIN2MIL()
+   $END$
  */

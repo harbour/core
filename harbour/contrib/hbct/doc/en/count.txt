@@ -2,66 +2,66 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      COUNTLEFT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Count a certain character at the beginning of a string
- *  $SYNTAX$
- *      COUNTLEFT( <cString>, [<cSearch|nSearch>] ) -> nCount
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      COUNTLEFT() is compatible with CT3's COUNTLEFT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *     COUNTRIGHT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      COUNTLEFT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Count a certain character at the beginning of a string
+   $SYNTAX$
+      COUNTLEFT( <cString>, [<cSearch|nSearch>] ) -> nCount
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      COUNTLEFT() is compatible with CT3's COUNTLEFT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      COUNTRIGHT()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      COUNTRIGHT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Count a certain character at the end of a string
- *  $SYNTAX$
- *      COUNTRIGHT( <cString>, [<cSearch|nSearch>] ) -> nCount
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      COUNTRIGHT() is compatible with CT3's COUNTRIGHT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *     COUNTLEFT()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      COUNTRIGHT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Count a certain character at the end of a string
+   $SYNTAX$
+      COUNTRIGHT( <cString>, [<cSearch|nSearch>] ) -> nCount
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      COUNTRIGHT() is compatible with CT3's COUNTRIGHT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      COUNTLEFT()
+   $END$
  */

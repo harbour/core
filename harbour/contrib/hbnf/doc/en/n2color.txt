@@ -2,26 +2,26 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_N2COLOR()
- *  $CATEGORY$
- *     String
- *  $ONELINER$
- *     Returns the string complement of a Clipper color number
- *  $SYNTAX$
- *     FT_COLOR2N( <nColor> ) -> cColor
- *  $ARGUMENTS$
- *     <nColor> a number representing a Clipper color
- *  $RETURNS$
- *     The string complement of a number representing a Clipper or a
- *     null string if the parameter is invalid
- *  $DESCRIPTION$
- *     This function is useful for converting a number to a Clipper color
- *     string.
- *  $EXAMPLES$
- *     cColor := FT_COLOR2N( 239 )         // returns "*+w/gr"
- *  $SEEALSO$
- *     FT_N2COLOR()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_N2COLOR()
+   $CATEGORY$
+      String
+   $ONELINER$
+      Returns the string complement of a Clipper color number
+   $SYNTAX$
+      FT_COLOR2N( <nColor> ) -> cColor
+   $ARGUMENTS$
+      <nColor> a number representing a Clipper color
+   $RETURNS$
+      The string complement of a number representing a Clipper or a
+      null string if the parameter is invalid
+   $DESCRIPTION$
+      This function is useful for converting a number to a Clipper color
+      string.
+   $EXAMPLES$
+      cColor := FT_COLOR2N( 239 )         // returns "*+w/gr"
+   $SEEALSO$
+      FT_N2COLOR()
+   $END$
  */

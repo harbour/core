@@ -2,70 +2,70 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      STRDIFF()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Evaluate the "Edit (Levensthein) Distance" of two strings
- *  $SYNTAX$
- *      STRDIFF( <cString1>, <cString2>, [<nReplacementPenalty>], [<nDeletionPenalty>],
- *               [<nInsertionPenalty>] ) -> <nDistance>
- *  $ARGUMENTS$
- *      <cString1>              string at the "starting point" of the transformation process, default is ""
- *      <cString2>              string at the "end point" of the transformation process, default is ""
- *      <nReplacementPenalty>   penalty points for a replacement of one character, default is 3
- *      <nDeletionPenalty>      penalty points for a deletion of one character, default is 6
- *      <nInsertionPenalty>     penalty points for an insertion of one character, default is 1
- *  $RETURNS$
- *      <nDistance>             penalty point sum of all operations needed to transform <cString1> to <cString2>
- *  $DESCRIPTION$
- *      The STRDIFF() functions calculates the so called "Edit" or "Levensthein" distance of two strings.
- *      This distance is a measure for the number of single character replace/insert/delete operations (so called
- *      "point mutations") required to transform <cString1> into <cString2> and its value will be the smallest sum of
- *      the penalty points of the required operations.
- *
- *      Be aware that this function is both quite time - O(len(cString1)*len(cString2)) - and memory consuming -
- *      O((len(cString1)+1)*(len(cString2)+1)*sizeof(int)) - so keep the strings as short as possible.
- *      E.g., on common 32 bit systems (sizeof(int) == 4), calling strdiff() with two strings of 1024 bytes
- *      in length will consume 4 MB of memory. To not impose unneeded restrictions, the function will only check if
- *      (len(cString1)+1)*(len(cString2)+1)*sizeof(int) <= UINT_MAX, although allocing UINT_MAX bytes will not
- *      work on most systems. If this simple check fails, -1 is returned.
- *
- *      Also, be aware that there can be an overflow when the penalty points are summed up: Assuming that the
- *      number of transformation operations is in the order of max(len(cString1),len(cString2)), the penalty point
- *      sum, that is internally stored in an "int" variable, is in the order of
- *      (max(len(cString1),len(cString2))*max(nReplacementPenalty,nDeletionPenalty,nInsertionPentaly).
- *      The STRDIFF() does not do an overflow check due to time performance reasons. Future versions of STRDIFF()
- *      could use a type different to "int" to store the penalty point sum to save memory or to avoid overflows.
- *
- *      The function is aware of the settings done by SETATLIKE(), that means that the wildchar character
- *      is considered equal to ALL characters.
- *
- *  $EXAMPLES$
- *      ? strdiff( "ABC", "ADC" ) // 3, one character replaced
- *      ? strdiff( "ABC", "AEC" ) // 3, dito
- *      ? strdiff( "CBA", "ABC" ) // 6, two characters replaced
- *      ? strdiff( "ABC", "AXBC" ) // 1, one character inserted
- *      ? strdiff( "AXBC", "ABC" ) // 6, one character removed
- *      ? strdiff( "AXBC", "ADC" ) // 9, one character removed and one replaced
- *  $TESTS$
- *      strdiff( "ABC", "ADC" ) == 3
- *      strdiff( "ABC", "AEC" ) == 3
- *      strdiff( "CBA", "ABC" ) == 6
- *      strdiff( "ABC", "AXBC" ) == 1
- *      strdiff( "AXBC", "ABC" ) == 6
- *      strdiff( "AXBC", "ADC" ) == 9
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      STRDIFF() is compatible with CT3's STRDIFF().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      SETATLIKE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      STRDIFF()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Evaluate the "Edit (Levensthein) Distance" of two strings
+   $SYNTAX$
+      STRDIFF( <cString1>, <cString2>, [<nReplacementPenalty>], [<nDeletionPenalty>],
+               [<nInsertionPenalty>] ) -> <nDistance>
+   $ARGUMENTS$
+      <cString1>              string at the "starting point" of the transformation process, default is ""
+      <cString2>              string at the "end point" of the transformation process, default is ""
+      <nReplacementPenalty>   penalty points for a replacement of one character, default is 3
+      <nDeletionPenalty>      penalty points for a deletion of one character, default is 6
+      <nInsertionPenalty>     penalty points for an insertion of one character, default is 1
+   $RETURNS$
+      <nDistance>             penalty point sum of all operations needed to transform <cString1> to <cString2>
+   $DESCRIPTION$
+      The STRDIFF() functions calculates the so called "Edit" or "Levensthein" distance of two strings.
+      This distance is a measure for the number of single character replace/insert/delete operations (so called
+      "point mutations") required to transform <cString1> into <cString2> and its value will be the smallest sum of
+      the penalty points of the required operations.
+  
+      Be aware that this function is both quite time - O(len(cString1)*len(cString2)) - and memory consuming -
+      O((len(cString1)+1)*(len(cString2)+1)*sizeof(int)) - so keep the strings as short as possible.
+      E.g., on common 32 bit systems (sizeof(int) == 4), calling strdiff() with two strings of 1024 bytes
+      in length will consume 4 MB of memory. To not impose unneeded restrictions, the function will only check if
+      (len(cString1)+1)*(len(cString2)+1)*sizeof(int) <= UINT_MAX, although allocing UINT_MAX bytes will not
+      work on most systems. If this simple check fails, -1 is returned.
+  
+      Also, be aware that there can be an overflow when the penalty points are summed up: Assuming that the
+      number of transformation operations is in the order of max(len(cString1),len(cString2)), the penalty point
+      sum, that is internally stored in an "int" variable, is in the order of
+      (max(len(cString1),len(cString2))*max(nReplacementPenalty,nDeletionPenalty,nInsertionPentaly).
+      The STRDIFF() does not do an overflow check due to time performance reasons. Future versions of STRDIFF()
+      could use a type different to "int" to store the penalty point sum to save memory or to avoid overflows.
+  
+      The function is aware of the settings done by SETATLIKE(), that means that the wildchar character
+      is considered equal to ALL characters.
+  
+   $EXAMPLES$
+      ? strdiff( "ABC", "ADC" ) // 3, one character replaced
+      ? strdiff( "ABC", "AEC" ) // 3, dito
+      ? strdiff( "CBA", "ABC" ) // 6, two characters replaced
+      ? strdiff( "ABC", "AXBC" ) // 1, one character inserted
+      ? strdiff( "AXBC", "ABC" ) // 6, one character removed
+      ? strdiff( "AXBC", "ADC" ) // 9, one character removed and one replaced
+   $TESTS$
+      strdiff( "ABC", "ADC" ) == 3
+      strdiff( "ABC", "AEC" ) == 3
+      strdiff( "CBA", "ABC" ) == 6
+      strdiff( "ABC", "AXBC" ) == 1
+      strdiff( "AXBC", "ABC" ) == 6
+      strdiff( "AXBC", "ADC" ) == 9
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      STRDIFF() is compatible with CT3's STRDIFF().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      SETATLIKE()
+   $END$
  */

@@ -2,59 +2,48 @@
  * $Id$
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://www.harbour-project.org
- *
- * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    STRFORMAT() documentation
- *
- * See COPYING for licensing terms.
- *
- */
-
-/*  $DOC$
- *  $FUNCNAME$
- *      StrFormat()
- *  $CATEGORY$
- *      String Tools
- *  $ONELINER$
- *      Format a string
- *  $SYNTAX$
- *      StrFormat(<cMask>[, <cPar1>[, <cParn>[, ...]]) --> cString
- *  $ARGUMENTS$
- *      <cMask> Holds the mask for the resulting string   </par>
- *      <cParn> Holds the strings to be inserted in the mask
- *             maximum 9 of them can be specified.   </par>
- *  $RETURNS$
- *      <cString> Return the mask with all the parameters inserted.   </par>
- *  $DESCRIPTION$
- *      String replacment, can be useful when writing international
- *      apps. You can separate the constant strings from the variable ones.
- *      Each %1 - %9 marks will be replaced with the appropriate parameter
- *      from the parameter list.   </par>
- *      Marks can be in any order, and can be duplicated.   </par>
- *      You can print "%" character with "%%".   </par>
- *  $EXAMPLES$
- *      StrFormat( "Please insert disk %1 to drive %2", hb_ntos( 2 ), "A:" )
- *      StrFormat( "This is %1 from %2", "Victor", "Hungary" )
- *      StrFormat( "%2 %1 %2", "Param1", "Param2" )
- *  $TESTS$
- *      ? StrFormat( "Please insert disk %1 to drive %2", hb_ntos( 2 ), "A:" )
- *      ? StrFormat( "This is %1 from %2", "Victor", "Hungary" )
- *      ? StrFormat( "%2 %1 %2", "Param1", "Param2" )
- *      ? StrFormat( "Hello" )
- *      ? StrFormat( "%1 - %2", "one" )
- *      ? StrFormat( "%1 - %2", "one", "two" )
- *      ? StrFormat( "%2 - %1", "one", "two" )
- *      ? StrFormat( "%2 - %", "one", "two" )
- *      ? StrFormat( "%% - %", "one", "two" )
- *      ? StrFormat( "%9 - %", "one", "two" )
- *  $STATUS$
- *      Done
- *  $COMPLIANCE$
- *      All platforms
- *  $FILES$
- *      Library is libmisc
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      StrFormat()
+   $CATEGORY$
+      String Tools
+   $ONELINER$
+      Format a string
+   $SYNTAX$
+      StrFormat(<cMask>[, <cPar1>[, <cParn>[, ...]]) --> cString
+   $ARGUMENTS$
+      <cMask> Holds the mask for the resulting string   </par>
+      <cParn> Holds the strings to be inserted in the mask
+             maximum 9 of them can be specified.   </par>
+   $RETURNS$
+      <cString> Return the mask with all the parameters inserted.   </par>
+   $DESCRIPTION$
+      String replacment, can be useful when writing international
+      apps. You can separate the constant strings from the variable ones.
+      Each %1 - %9 marks will be replaced with the appropriate parameter
+      from the parameter list.   </par>
+      Marks can be in any order, and can be duplicated.   </par>
+      You can print "%" character with "%%".   </par>
+   $EXAMPLES$
+      StrFormat( "Please insert disk %1 to drive %2", hb_ntos( 2 ), "A:" )
+      StrFormat( "This is %1 from %2", "Victor", "Hungary" )
+      StrFormat( "%2 %1 %2", "Param1", "Param2" )
+   $TESTS$
+      ? StrFormat( "Please insert disk %1 to drive %2", hb_ntos( 2 ), "A:" )
+      ? StrFormat( "This is %1 from %2", "Victor", "Hungary" )
+      ? StrFormat( "%2 %1 %2", "Param1", "Param2" )
+      ? StrFormat( "Hello" )
+      ? StrFormat( "%1 - %2", "one" )
+      ? StrFormat( "%1 - %2", "one", "two" )
+      ? StrFormat( "%2 - %1", "one", "two" )
+      ? StrFormat( "%2 - %", "one", "two" )
+      ? StrFormat( "%% - %", "one", "two" )
+      ? StrFormat( "%9 - %", "one", "two" )
+   $STATUS$
+      Done
+   $COMPLIANCE$
+      All platforms
+   $FILES$
+      Library is libmisc
+   $END$
  */

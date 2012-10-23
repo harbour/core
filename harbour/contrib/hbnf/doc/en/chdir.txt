@@ -2,32 +2,32 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *     FT_CHDIR()
- *  $CATEGORY$
- *     DOS/BIOS
- *  $ONELINER$
- *     Change the current directory
- *  $SYNTAX$
- *     FT_CHDIR( <cDirName> ) -> nResult
- *  $ARGUMENTS$
- *     <cDirName> is the name of the desired directory.
- *  $RETURNS$
- *     0  if successful
- *     3  if path not found
- *     99 if invalid parameters passed
- *  $DESCRIPTION$
- *     Use this function if you prefer to change the active directory
- *     instead of relying on the SET PATH command.
- *
- *     The source code is written to adhere to Turbo Assembler's IDEAL mode.
- *     To use another assembler, you will need to rearrange the PROC and
- *     SEGMENT directives, and also the ENDP and ENDS directives (a very
- *     minor task).
- *  $EXAMPLES$
- *     FT_CHDIR( "C:\harbour" )
- *     FT_CHDIR( hb_ps() )
- *     FT_CHDIR( ".." + hb_ps() + "hbnf" )
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FT_CHDIR()
+   $CATEGORY$
+      DOS/BIOS
+   $ONELINER$
+      Change the current directory
+   $SYNTAX$
+      FT_CHDIR( <cDirName> ) -> nResult
+   $ARGUMENTS$
+      <cDirName> is the name of the desired directory.
+   $RETURNS$
+      0  if successful
+      3  if path not found
+      99 if invalid parameters passed
+   $DESCRIPTION$
+      Use this function if you prefer to change the active directory
+      instead of relying on the SET PATH command.
+  
+      The source code is written to adhere to Turbo Assembler's IDEAL mode.
+      To use another assembler, you will need to rearrange the PROC and
+      SEGMENT directives, and also the ENDP and ENDS directives (a very
+      minor task).
+   $EXAMPLES$
+      FT_CHDIR( "C:\harbour" )
+      FT_CHDIR( hb_ps() )
+      FT_CHDIR( ".." + hb_ps() + "hbnf" )
+   $END$
  */

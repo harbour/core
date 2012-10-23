@@ -13,216 +13,215 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_setInitialize()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbset.h"
- *      hb_setInitialize( void )
- *  $ARGUMENTS$
- *
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_setInitialize()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbset.h"
+      hb_setInitialize( void )
+   $ARGUMENTS$
+
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      hb_setRelease()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbset.h"
- *      hb_setRelease( void )
- *  $ARGUMENTS$
- *
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      hb_setRelease()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbset.h"
+      hb_setRelease( void )
+   $ARGUMENTS$
+
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_setListenerAdd()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbset.h"
- *      hb_setListenerAdd( PHB_SET_LISTENER_CALLBACK callback ) --> int
- *  $ARGUMENTS$
- *      <callback>
- *      A pointer to a function taking two enum parameters and returning
- *      no value. The first parameter identifies the SET parameter that is
- *      to be changed and the second parameter identifies whether the call
- *      is from before or after the value is changed. The callback function
- *      will be called twice whenever a SET parameter is changed using the
- *      Harbour SET function. The first call takes place before the SET
- *      value is changed and the second one is after the SET parameter has
- *      been changed.
- *  $RETURNS$
- *      An integer value representing the callback handle, in case the
- *      caller needs to deactivate the callback function.
- *  $DESCRIPTION$
- *      This function allows a subsystem that needs to track the status
- *      of some SET parameters to be notified whenever a SET parameter gets
- *      changed.
- *  $EXAMPLES$
- *      void callback_function( HB_set_enum set, HB_set_listener_enum when )
- *      {
- *         printf("\nCalled for SET parameter %d %s changing.",
- *            set, (when ? "after" : "before"));
- *      }
- *      int handle = hb_setListenerAdd( callback_function );
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_setListenerRemove()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_setListenerAdd()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbset.h"
+      hb_setListenerAdd( PHB_SET_LISTENER_CALLBACK callback ) --> int
+   $ARGUMENTS$
+      <callback>
+      A pointer to a function taking two enum parameters and returning
+      no value. The first parameter identifies the SET parameter that is
+      to be changed and the second parameter identifies whether the call
+      is from before or after the value is changed. The callback function
+      will be called twice whenever a SET parameter is changed using the
+      Harbour SET function. The first call takes place before the SET
+      value is changed and the second one is after the SET parameter has
+      been changed.
+   $RETURNS$
+      An integer value representing the callback handle, in case the
+      caller needs to deactivate the callback function.
+   $DESCRIPTION$
+      This function allows a subsystem that needs to track the status
+      of some SET parameters to be notified whenever a SET parameter gets
+      changed.
+   $EXAMPLES$
+      void callback_function( HB_set_enum set, HB_set_listener_enum when )
+      {
+         printf("\nCalled for SET parameter %d %s changing.",
+            set, (when ? "after" : "before"));
+      }
+      int handle = hb_setListenerAdd( callback_function );
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_setListenerRemove()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_setListenerNotify()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbset.h"
- *      hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum
- *      when ) --> int
- *  $ARGUMENTS$
- *      <set>
- *      The number of the SET parameter that is to be or was changed.
- *
- *      <when>
- *      Set to HB_SET_LISTENER_BEFORE when called before the SET parameter
- *      is to be changed and set to HB_SET_LISTENER_AFTER when called
- *      after the SET parameter has been changed.
- *  $RETURNS$
- *      <int>
- *  $DESCRIPTION$
- *      This function notifies all SET listener callback functions. It
- *      must be called any time you change the value of a SET parameter
- *      directly instead of using the Harbour SET function. Both before
- *      and after the change.
- *  $EXAMPLES$
- *      hb_setListenerNotify( HB_SET_DECIMALS, HB_SET_LISTENER_BEFORE );
- *      hb_set.HB_SET_DECIMALS = 3;
- *      hb_setListenerNotify( HB_SET_DECIMALS, HB_SET_LISTENER_AFTER );
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_setListenerAdd()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_setListenerNotify()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
+
+   $SYNTAX$
+      C Prototype
+
+      #include "hbset.h"
+      hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum
+      when ) --> int
+   $ARGUMENTS$
+      <set>
+      The number of the SET parameter that is to be or was changed.
+
+      <when>
+      Set to HB_SET_LISTENER_BEFORE when called before the SET parameter
+      is to be changed and set to HB_SET_LISTENER_AFTER when called
+      after the SET parameter has been changed.
+   $RETURNS$
+      <int>
+   $DESCRIPTION$
+      This function notifies all SET listener callback functions. It
+      must be called any time you change the value of a SET parameter
+      directly instead of using the Harbour SET function. Both before
+      and after the change.
+   $EXAMPLES$
+      hb_setListenerNotify( HB_SET_DECIMALS, HB_SET_LISTENER_BEFORE );
+      hb_set.HB_SET_DECIMALS = 3;
+      hb_setListenerNotify( HB_SET_DECIMALS, HB_SET_LISTENER_AFTER );
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_setListenerAdd()
+   $END$
  */
 
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      hb_setListenerRemove()
+   $CATEGORY$
+      C level API
+   $SUBCATEGORY$
+      Environment
+   $ONELINER$
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      hb_setListenerRemove()
- *  $CATEGORY$
- *      C level API
- *  $SUBCATEGORY$
- *      Environment
- *  $ONELINER$
- *
- *  $SYNTAX$
- *      C Prototype
- *
- *      #include "hbset.h"
- *      hb_setListenerRemove( int handle ) --> int
- *  $ARGUMENTS$
- *      <handle>
- *      The handle for the SET listener callback function to be removed.
- *  $RETURNS$
- *      The handle if the callback function could not be located or the
- *      negative value of the handle if the callback function was removed.
- *  $DESCRIPTION$
- *      This function removes a SET listener callback function.
- *  $EXAMPLES$
- *      int handle = hb_setListenerAdd( callback_function );
- *      ...
- *      hb_setListenerRemove( handle );
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      NA
- *  $FILES$
- *      Library is rtl
- *  $PLATFORMS$
- *      All
- *  $SEEALSO$
- *      hb_setListenerAdd()
- *  $END$
+   $SYNTAX$
+      C Prototype
+
+      #include "hbset.h"
+      hb_setListenerRemove( int handle ) --> int
+   $ARGUMENTS$
+      <handle>
+      The handle for the SET listener callback function to be removed.
+   $RETURNS$
+      The handle if the callback function could not be located or the
+      negative value of the handle if the callback function was removed.
+   $DESCRIPTION$
+      This function removes a SET listener callback function.
+   $EXAMPLES$
+      int handle = hb_setListenerAdd( callback_function );
+      ...
+      hb_setListenerRemove( handle );
+   $STATUS$
+      R
+   $COMPLIANCE$
+      NA
+   $FILES$
+      Library is rtl
+   $PLATFORMS$
+      All
+   $SEEALSO$
+      hb_setListenerAdd()
+   $END$
  */

@@ -15,1028 +15,1028 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *     AFIELDS()*
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Fills referenced arrays with database field information
- *  $SYNTAX$
- *      AFields(<aNames>[,<aTypes>][,<aLen>][,<aDecs>]) --> <nFields>
- *  $ARGUMENTS$
- *      <aNames>  Array of field names
- *
- *      <aTypes>  Array of field names
- *
- *      <aLens>  Array of field names
- *
- *      <aDecs>  Array of field names
- *  $RETURNS$
- *      <nFields> Number od fields in a database or work area
- *  $DESCRIPTION$
- *      This function will fill a series of arrays with field
- *      names, field types, field lenghts, and number of field
- *      decimal positions for the currently selected or designed
- *      database. Each array parallels the different descriptors
- *      of a file's structure. The first array will consist of the
- *      names of the fields in the current work area. All other arrays
- *      are optional and will be filled with the corrensponding data.
- *      This function will return zero if no parameters are specified
- *      or if no database is avaliable in the current work area. Otherwise,
- *      the number of fields or the lenght of the shortest array argument,
- *      witchever is smaller, will be returned.
- *
- *      AFIELDS() is a compatibility function, it is superseded by
- *      DBSTRUCT() which returns one multidimensional array.
- *
- *      NOTE: The destination arrays must be initialized to a given size,
- *            usually FCOUNT(), before calling this function.
- *
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL aNames, aTypes, aLens, aDecs, nCount, nFields, i
- *         USE Test
- *
- *         nCount := FCount()
- *         ? "Number of fields:", nCount
- *         PrintFields( nCount )   // Information for all fields
- *         PrintFields( 4      )   // Information for first 4 fields
- *         RETURN
- *
- *      PROCEDURE PrintFields( nCount )
- *         LOCAL aNames, aTypes, aLens, aDecs, nFields, i
- *
- *         aNames  := Array( nCount )
- *         aTypes  := Array( nCount )
- *         aLens   := Array( nCount )
- *         aDecs   := Array( nCount )
- *         nFields := aFields( aNames, aTypes, aLens, aDecs )
- *
- *         ? "Number of items :", nFields
- *         FOR i := 1 TO nFields
- *            ?  i, PadR( aNames[ i ], 12 ), aTypes[ i ]
- *            ?? aLens[ i ], aDecs[ i ]
- *         NEXT
- *         ?
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBSTRUCT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      AFIELDS()*
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Fills referenced arrays with database field information
+   $SYNTAX$
+      AFields(<aNames>[,<aTypes>][,<aLen>][,<aDecs>]) --> <nFields>
+   $ARGUMENTS$
+      <aNames>  Array of field names
+
+      <aTypes>  Array of field names
+
+      <aLens>  Array of field names
+
+      <aDecs>  Array of field names
+   $RETURNS$
+      <nFields> Number od fields in a database or work area
+   $DESCRIPTION$
+      This function will fill a series of arrays with field
+      names, field types, field lenghts, and number of field
+      decimal positions for the currently selected or designed
+      database. Each array parallels the different descriptors
+      of a file's structure. The first array will consist of the
+      names of the fields in the current work area. All other arrays
+      are optional and will be filled with the corrensponding data.
+      This function will return zero if no parameters are specified
+      or if no database is avaliable in the current work area. Otherwise,
+      the number of fields or the lenght of the shortest array argument,
+      witchever is smaller, will be returned.
+
+      AFIELDS() is a compatibility function, it is superseded by
+      DBSTRUCT() which returns one multidimensional array.
+
+      NOTE: The destination arrays must be initialized to a given size,
+            usually FCOUNT(), before calling this function.
+
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL aNames, aTypes, aLens, aDecs, nCount, nFields, i
+         USE Test
+
+         nCount := FCount()
+         ? "Number of fields:", nCount
+         PrintFields( nCount )   // Information for all fields
+         PrintFields( 4      )   // Information for first 4 fields
+         RETURN
+
+      PROCEDURE PrintFields( nCount )
+         LOCAL aNames, aTypes, aLens, aDecs, nFields, i
+
+         aNames  := Array( nCount )
+         aTypes  := Array( nCount )
+         aLens   := Array( nCount )
+         aDecs   := Array( nCount )
+         nFields := aFields( aNames, aTypes, aLens, aDecs )
+
+         ? "Number of items :", nFields
+         FOR i := 1 TO nFields
+            ?  i, PadR( aNames[ i ], 12 ), aTypes[ i ]
+            ?? aLens[ i ], aDecs[ i ]
+         NEXT
+         ?
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBSTRUCT()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *     ALIAS()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Returns the alias name of a work area
- *  $SYNTAX$
- *      Alias([<nWorkArea>]) --> <cWorkArea>
- *  $ARGUMENTS$
- *      <nWorkArea> Number of a work area
- *  $RETURNS$
- *      <cWorkArea> Name of alias
- *  $DESCRIPTION$
- *      This function returns the alias of the work area indicated by <nWorkArea>
- *      If <nWorkArea> is not provided, the alias of the current work area is
- *      returned.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *
- *         USE test
- *         SELECT 0
- *         ? iif( Alias() == "", "No Name", Alias() )
- *         ? test->( Alias() )
- *         ? Alias( 1 )
- *
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBF()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      ALIAS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Returns the alias name of a work area
+   $SYNTAX$
+      Alias([<nWorkArea>]) --> <cWorkArea>
+   $ARGUMENTS$
+      <nWorkArea> Number of a work area
+   $RETURNS$
+      <cWorkArea> Name of alias
+   $DESCRIPTION$
+      This function returns the alias of the work area indicated by <nWorkArea>
+      If <nWorkArea> is not provided, the alias of the current work area is
+      returned.
+   $EXAMPLES$
+      PROCEDURE Main()
+
+         USE test
+         SELECT 0
+         ? iif( Alias() == "", "No Name", Alias() )
+         ? test->( Alias() )
+         ? Alias( 1 )
+
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBF()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *     BOF()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Test for the beggining-of-file condition
- *  $SYNTAX$
- *      BOF() --> <lBegin>
- *  $RETURNS$
- *      BOF() Logical true (.T.) or false (.F.)
- *  $DESCRIPTION$
- *      This function determines if the beggining of the file marker has been
- *      reached. If so, the function will return a logical true (.T.); otherwise,
- *      a logical false (.F.) will be returned.
- *      By default, BOF() will apply to the currently selected database unless
- *      the function is preceded by an alias
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE tests NEW
- *         DBGOTOP()
- *         ? "Is Eof()", EOF()
- *         DBGOBOTTOM()
- *         ? "Is Eof()", EOF()
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *    EOF(),FOUND(),LASTREC()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      BOF()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Test for the beggining-of-file condition
+   $SYNTAX$
+      BOF() --> <lBegin>
+   $RETURNS$
+      BOF() Logical true (.T.) or false (.F.)
+   $DESCRIPTION$
+      This function determines if the beggining of the file marker has been
+      reached. If so, the function will return a logical true (.T.); otherwise,
+      a logical false (.F.) will be returned.
+      By default, BOF() will apply to the currently selected database unless
+      the function is preceded by an alias
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE tests NEW
+         DBGOTOP()
+         ? "Is Eof()", EOF()
+         DBGOBOTTOM()
+         ? "Is Eof()", EOF()
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      EOF(),FOUND(),LASTREC()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      ZAP
- *  $CATEGORY$
- *      Command
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Remove all records from the current database file
- *  $SYNTAX$
- *      ZAP
- *  $ARGUMENTS$
- *      (This command has no arguments)
- *  $DESCRIPTION$
- *      This command removes all of the records from the database in the
- *      current work area. This operation also updates any index file in
- *      use at the time of this operation. In addition, this command removes
- *      all items within an associated memo file.
- *      In a network enviroment, any file that is about to be ZAPped must
- *      be used exclusively.
- *  $EXAMPLES$
- *      USE tests NEW INDEX tests
- *      ZAP
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *      DELETE,PACK,USE
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      ZAP
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Remove all records from the current database file
+   $SYNTAX$
+      ZAP
+   $ARGUMENTS$
+      (This command has no arguments)
+   $DESCRIPTION$
+      This command removes all of the records from the database in the
+      current work area. This operation also updates any index file in
+      use at the time of this operation. In addition, this command removes
+      all items within an associated memo file.
+      In a network enviroment, any file that is about to be ZAPped must
+      be used exclusively.
+   $EXAMPLES$
+      USE tests NEW INDEX tests
+      ZAP
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      DELETE,PACK,USE
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      DELETED()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Tests the record's deletion flag.
- *  $SYNTAX$
- *      DELETED() --> lDeleted
- *  $ARGUMENTS$
- *      (This command has no arguments)
- *  $RETURNS$
- *      DELETED() return a logical true (.T.) or false (.F.).
- *  $DESCRIPTION$
- *      This function returns a logical true (.T.) is the current record in the
- *      selected or designated work area ha ben marked for deletion. If not, the
- *      function will return a logical false (.F.).
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE test NEW
- *         DBGOTO()
- *         DBDELETE()
- *         ? "Is Record Deleted", Test->( DELETED() )
- *         DBRECALL()
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBDELETE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      DELETED()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Tests the record's deletion flag.
+   $SYNTAX$
+      DELETED() --> lDeleted
+   $ARGUMENTS$
+      (This command has no arguments)
+   $RETURNS$
+      DELETED() return a logical true (.T.) or false (.F.).
+   $DESCRIPTION$
+      This function returns a logical true (.T.) is the current record in the
+      selected or designated work area ha ben marked for deletion. If not, the
+      function will return a logical false (.F.).
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE test NEW
+         DBGOTO()
+         DBDELETE()
+         ? "Is Record Deleted", Test->( DELETED() )
+         DBRECALL()
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBDELETE()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      EOF()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Test for end-of-file condition.
- *  $SYNTAX$
- *      EOF() --> <lEnd>
- *  $ARGUMENTS$
- *      (This command has no arguments)
- *  $RETURNS$
- *      <lEnd> A logical true (.T.) or false (.F.)
- *  $DESCRIPTION$
- *      This function determines if the end-of-file marker has been reached.
- *      If it has, the function will return a logical true (.T.); otherwise
- *      a logical false (.F.) will be returnd
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE tests NEW
- *         DBGOTOP()
- *         ? "Is Eof()", EOF()
- *         DBGOBOTTOM()
- *         ? "Is Eof()", EOF()
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *    BOF(),FOUND(),LASTREC()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      EOF()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Test for end-of-file condition.
+   $SYNTAX$
+      EOF() --> <lEnd>
+   $ARGUMENTS$
+      (This command has no arguments)
+   $RETURNS$
+      <lEnd> A logical true (.T.) or false (.F.)
+   $DESCRIPTION$
+      This function determines if the end-of-file marker has been reached.
+      If it has, the function will return a logical true (.T.); otherwise
+      a logical false (.F.) will be returnd
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE tests NEW
+         DBGOTOP()
+         ? "Is Eof()", EOF()
+         DBGOBOTTOM()
+         ? "Is Eof()", EOF()
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      BOF(),FOUND(),LASTREC()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      FCOUNT()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Counts the number of fields in an active database.
- *  $SYNTAX$
- *      FCOUNT() --> nFields
- *  $RETURNS$
- *      <nFields> Return the number of fields
- *  $DESCRIPTION$
- *      This function returns the number of fields in the current or designated
- *      work area. If no database is open in this work area, the function will
- *      return 0.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE tests NEW
- *         ? "This database have", tests->( FCOUNT() ), "Fields"
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      FIELDNAME(),TYPE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FCOUNT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Counts the number of fields in an active database.
+   $SYNTAX$
+      FCOUNT() --> nFields
+   $RETURNS$
+      <nFields> Return the number of fields
+   $DESCRIPTION$
+      This function returns the number of fields in the current or designated
+      work area. If no database is open in this work area, the function will
+      return 0.
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE tests NEW
+         ? "This database have", tests->( FCOUNT() ), "Fields"
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      FIELDNAME(),TYPE()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      FIELDGET()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Obtains the value  of a specified field
- *  $SYNTAX$
- *      FIELDGET(<nField>) --> ValueField
- *  $ARGUMENTS$
- *      <nField> Is the numeric field position
- *  $RETURNS$
- *      <ValueField>  Any expression
- *  $DESCRIPTION$
- *      This function returns the value of the field at the <nField>th location
- *      in the selected or designed work area. If the value in <nField> does not
- *      correspond to n avaliable field position in this work area, the function
- *      will return a NIL data type.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE test NEW
- *         ? test->( FieldGet( 1 ) )
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      FIELDPUT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FIELDGET()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Obtains the value  of a specified field
+   $SYNTAX$
+      FIELDGET(<nField>) --> ValueField
+   $ARGUMENTS$
+      <nField> Is the numeric field position
+   $RETURNS$
+      <ValueField>  Any expression
+   $DESCRIPTION$
+      This function returns the value of the field at the <nField>th location
+      in the selected or designed work area. If the value in <nField> does not
+      correspond to n avaliable field position in this work area, the function
+      will return a NIL data type.
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE test NEW
+         ? test->( FieldGet( 1 ) )
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      FIELDPUT()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      FIELDNAME()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Return the name of a field at a numeric field location.
- *  $SYNTAX$
- *      FIELDNAME/FIELD(<nPosition>) --> cFieldName
- *  $ARGUMENTS$
- *      <nPosition> Field order in the database.
- *  $RETURNS$
- *      <cFieldName> returns the field name.
- *  $DESCRIPTION$
- *      This function return the name of the field at the <nPosition>th position.
- *      If the numeric value passed to this function does not correspond to an
- *      existing field in the designated or selected work area, this function
- *      will return a NULL byte.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         LOCAL x
- *         USE tests NEW
- *         FOR x := 1 TO tests->( FCOUNT() )
- *            ? "Field Name", FieldName( x )
- *         NEXT
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *    DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FIELDNAME()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Return the name of a field at a numeric field location.
+   $SYNTAX$
+      FIELDNAME/FIELD(<nPosition>) --> cFieldName
+   $ARGUMENTS$
+      <nPosition> Field order in the database.
+   $RETURNS$
+      <cFieldName> returns the field name.
+   $DESCRIPTION$
+      This function return the name of the field at the <nPosition>th position.
+      If the numeric value passed to this function does not correspond to an
+      existing field in the designated or selected work area, this function
+      will return a NULL byte.
+   $EXAMPLES$
+      PROCEDURE Main()
+         LOCAL x
+         USE tests NEW
+         FOR x := 1 TO tests->( FCOUNT() )
+            ? "Field Name", FieldName( x )
+         NEXT
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      FIELDPOS()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Return the ordinal position of a field.
- *  $SYNTAX$
- *      FIELDPOS(<cFieldName>) --> nFieldPos
- *  $ARGUMENTS$
- *      <cFieldName> Name of a field.
- *  $RETURNS$
- *      <nFieldPos> is ordinal position of the field.
- *  $DESCRIPTION$
- *      This function return the ordinal position of the specified field <cField>
- *      in the current or aliased work areaIf there isn't field under the name
- *      of <cField> or of no database is open in the selected work area, the func-
- *      tion will return a 0.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE test NEW
- *         ? test->( FIELDPOS( "ID" ) )
- *         USE
- *         RETURN
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      FIELDGET(),FIELDPUT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FIELDPOS()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Return the ordinal position of a field.
+   $SYNTAX$
+      FIELDPOS(<cFieldName>) --> nFieldPos
+   $ARGUMENTS$
+      <cFieldName> Name of a field.
+   $RETURNS$
+      <nFieldPos> is ordinal position of the field.
+   $DESCRIPTION$
+      This function return the ordinal position of the specified field <cField>
+      in the current or aliased work areaIf there isn't field under the name
+      of <cField> or of no database is open in the selected work area, the func-
+      tion will return a 0.
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE test NEW
+         ? test->( FIELDPOS( "ID" ) )
+         USE
+         RETURN
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      FIELDGET(),FIELDPUT()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      FIELDPUT()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Set the value of a field variable
- *  $SYNTAX$
- *      FIELDPUT(<nField>, <expAssign>) --> ValueAssigned
- *  $ARGUMENTS$
- *      <nField> The field numeric position
- *
- *      <expAssign> Expression to be assigned to the specified field
- *  $RETURNS$
- *      <ValueAssigned> Any expression
- *  $DESCRIPTION$
- *      This function assings the value in <expAssing> to the <nField>th
- *      field in the current or designated work area. If the operation is
- *      successful, the return value of the function will be the same value
- *      assigned to the specified field. If the operation is not successful,
- *      the function will return a NIL data type
- *  $EXAMPLES$
- *      USE tests NEW
- *      FIELDPUT( 1, "Mr. Jones" )
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      FIELDGET()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FIELDPUT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Set the value of a field variable
+   $SYNTAX$
+      FIELDPUT(<nField>, <expAssign>) --> ValueAssigned
+   $ARGUMENTS$
+      <nField> The field numeric position
+
+      <expAssign> Expression to be assigned to the specified field
+   $RETURNS$
+      <ValueAssigned> Any expression
+   $DESCRIPTION$
+      This function assings the value in <expAssing> to the <nField>th
+      field in the current or designated work area. If the operation is
+      successful, the return value of the function will be the same value
+      assigned to the specified field. If the operation is not successful,
+      the function will return a NIL data type
+   $EXAMPLES$
+      USE tests NEW
+      FIELDPUT( 1, "Mr. Jones" )
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      FIELDGET()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      FLOCK()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Locks a file
- *  $SYNTAX$
- *      FLOCK() --> lSuccess
- *  $RETURNS$
- *      <lSuccess> A true (.T.) value, if the lock was successful;otherwise
- *      false (.F.)
- *  $DESCRIPTION$
- *      This function returns a logical true (.T.) if a file lock is
- *      attempted and is successfully placed on the current or designated
- *      database. This function will also unlock all records locks placed
- *      by the same network station.
- *  $EXAMPLES$
- *      USE tests New
- *      IF FLOCK()
- *         SUM tests->Ammount
- *      ENDIF
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      RLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FLOCK()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Locks a file
+   $SYNTAX$
+      FLOCK() --> lSuccess
+   $RETURNS$
+      <lSuccess> A true (.T.) value, if the lock was successful;otherwise
+      false (.F.)
+   $DESCRIPTION$
+      This function returns a logical true (.T.) if a file lock is
+      attempted and is successfully placed on the current or designated
+      database. This function will also unlock all records locks placed
+      by the same network station.
+   $EXAMPLES$
+      USE tests New
+      IF FLOCK()
+         SUM tests->Ammount
+      ENDIF
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      RLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      FOUND()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Determine the success of a previous search operation.
- *  $SYNTAX$
- *      FOUND() --> lSuccess
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      <lSuccess> A logical true (.T.) is successful; otherwise, false (.F.)
- *  $DESCRIPTION$
- *      This function is used to test if the previous SEEK, LOCATE, CONTINUE,
- *      or FIND operation was successful. Each wrk area has its own FOUND()
- *      flag, so that a FOUND() condition may be tested in unselected work
- *      areas by using an alias.
- *  $EXAMPLES$
- *      nId := 100
- *      USE tests NEW INDEX tests
- *      SEEK nId
- *      IF FOUND()
- *         ? tests->Name
- *      ENDIF
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      EOF()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      FOUND()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Determine the success of a previous search operation.
+   $SYNTAX$
+      FOUND() --> lSuccess
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      <lSuccess> A logical true (.T.) is successful; otherwise, false (.F.)
+   $DESCRIPTION$
+      This function is used to test if the previous SEEK, LOCATE, CONTINUE,
+      or FIND operation was successful. Each wrk area has its own FOUND()
+      flag, so that a FOUND() condition may be tested in unselected work
+      areas by using an alias.
+   $EXAMPLES$
+      nId := 100
+      USE tests NEW INDEX tests
+      SEEK nId
+      IF FOUND()
+         ? tests->Name
+      ENDIF
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      EOF()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HEADER()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Return the length of a database file header
- *  $SYNTAX$
- *      HEADER() --> nBytes
- *  $RETURNS$
- *      <nBytes> The numeric size of a database file header in bytes
- *  $DESCRIPTION$
- *      This function returns the number of bytes in the header of the
- *      selected database ot the database in the designated work area.
- *
- *      If used in conjunction with the LASTREC(), RECSIZE() and DISKSPACE()
- *      functions, this functions is capable of implementing a backup and
- *      restore routine.
- *  $EXAMPLES$
- *      USE tests NEW
- *      ? Header()
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DISKSPACE(),LASTREC(),RECSIZE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HEADER()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Return the length of a database file header
+   $SYNTAX$
+      HEADER() --> nBytes
+   $RETURNS$
+      <nBytes> The numeric size of a database file header in bytes
+   $DESCRIPTION$
+      This function returns the number of bytes in the header of the
+      selected database ot the database in the designated work area.
+
+      If used in conjunction with the LASTREC(), RECSIZE() and DISKSPACE()
+      functions, this functions is capable of implementing a backup and
+      restore routine.
+   $EXAMPLES$
+      USE tests NEW
+      ? Header()
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DISKSPACE(),LASTREC(),RECSIZE()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      LASTREC()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Returns the number of records in an active work area or database.
- *  $SYNTAX$
- *      LASTREC() | RECCOUNT()* --> nRecords
- *  $RETURNS$
- *      <nRecords > The number of records
- *  $DESCRIPTION$
- *      This function returns the number of records present in the database
- *      in the selected or designated work area. If no records are present
- *      the value of this function will be 0. Additionaly, if no database is
- *      in use in the selected or designated work area, this function will
- *      return a 0 value as well.
- *  $EXAMPLES$
- *      USE tests NEW
- *      ? LASTREC(), RECCOUNT()
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      EOF()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      LASTREC()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Returns the number of records in an active work area or database.
+   $SYNTAX$
+      LASTREC() | RECCOUNT()* --> nRecords
+   $RETURNS$
+      <nRecords > The number of records
+   $DESCRIPTION$
+      This function returns the number of records present in the database
+      in the selected or designated work area. If no records are present
+      the value of this function will be 0. Additionaly, if no database is
+      in use in the selected or designated work area, this function will
+      return a 0 value as well.
+   $EXAMPLES$
+      USE tests NEW
+      ? LASTREC(), RECCOUNT()
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      EOF()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      LUPDATE()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Yields the date the database was last updated.
- *  $SYNTAX$
- *      LUPDATE() --> dModification
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      <dModification>  The date of the last modification.
- *  $DESCRIPTION$
- *      This function returns the date recorded by the OS when the selected
- *      or designated database was last written to disk. This function will
- *      only work for those database files in USE.
- *  $EXAMPLES$
- *      PROCEDURE Main()
- *         USE tests NEW
- *         ? LUpdate()
- *         USE
- *         RETURN
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      FIELDNAME(),LASTREC(),RECSIZE()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      LUPDATE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Yields the date the database was last updated.
+   $SYNTAX$
+      LUPDATE() --> dModification
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      <dModification>  The date of the last modification.
+   $DESCRIPTION$
+      This function returns the date recorded by the OS when the selected
+      or designated database was last written to disk. This function will
+      only work for those database files in USE.
+   $EXAMPLES$
+      PROCEDURE Main()
+         USE tests NEW
+         ? LUpdate()
+         USE
+         RETURN
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      FIELDNAME(),LASTREC(),RECSIZE()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      NETERR()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Tests the success of a network function
- *  $SYNTAX$
- *      NETERR([<lNewError>]) --> lError
- *  $ARGUMENTS$
- *      <lNewError> Is a logical Expression.
- *  $RETURNS$
- *      <lError> A value based on the success of a network operation or
- *      function.
- *  $DESCRIPTION$
- *      This function return a logical true (.T.) is a USE, APPEND BLANK, or
- *      a USE...EXCLUSIVE command is issue and fails in a network enviroment.
- *      In the case of USE and USE...EXCLUSIVE commands, a NETERR() value
- *      of .T. would be returned if another node of the network has the
- *      exclusive use of a file. And the case of the APPEND BLANK command,
- *      NETERR() will return a logical true (.T.) if the file or record
- *      is locked by another node or the value of LASTREC() has been advanced
- *      The value of NETERR() may be changed via the value of <lNewError>.
- *      This allow the run-time error-handling system to control the way
- *      certains errors are handled.
- *  $EXAMPLES$
- *      USE test NEW INDEX test
- *      IF ! NetErr()
- *          SEEK test->Name := "HARBOUR"
- *          IF Found()
- *             ? test->Name
- *          ENDIF
- *      ENDIF
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      FLOCK(),RLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      NETERR()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Tests the success of a network function
+   $SYNTAX$
+      NETERR([<lNewError>]) --> lError
+   $ARGUMENTS$
+      <lNewError> Is a logical Expression.
+   $RETURNS$
+      <lError> A value based on the success of a network operation or
+      function.
+   $DESCRIPTION$
+      This function return a logical true (.T.) is a USE, APPEND BLANK, or
+      a USE...EXCLUSIVE command is issue and fails in a network enviroment.
+      In the case of USE and USE...EXCLUSIVE commands, a NETERR() value
+      of .T. would be returned if another node of the network has the
+      exclusive use of a file. And the case of the APPEND BLANK command,
+      NETERR() will return a logical true (.T.) if the file or record
+      is locked by another node or the value of LASTREC() has been advanced
+      The value of NETERR() may be changed via the value of <lNewError>.
+      This allow the run-time error-handling system to control the way
+      certains errors are handled.
+   $EXAMPLES$
+      USE test NEW INDEX test
+      IF ! NetErr()
+          SEEK test->Name := "HARBOUR"
+          IF Found()
+             ? test->Name
+          ENDIF
+      ENDIF
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      FLOCK(),RLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      RECCOUNT()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Counts the number of records in a database.
- *  $SYNTAX$
- *      RECCOUNT()* | LASTREC() --> nRecords
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      <nRecords>  The number of records
- *  $DESCRIPTION$*
- *      This function returns the number of records present in the database
- *      in the selected or designated work area. If no records are present
- *      the value of this function will be 0. Additionaly, if no database is
- *      in use in the selected or designated work area, this function will
- *      return a 0 value as well.
- *  $EXAMPLES$
- *      USE test NEW
- *      USE harbour NEW
- *      ? RecCount()
- *      ? Test->( RecCount() )
- *      CLOSE ALL
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      EOF(),LASTREC(),RECNO(),DBGOBOTTOM()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      RECCOUNT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Counts the number of records in a database.
+   $SYNTAX$
+      RECCOUNT()* | LASTREC() --> nRecords
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      <nRecords>  The number of records
+      CRIPTION$*
+      This function returns the number of records present in the database
+      in the selected or designated work area. If no records are present
+      the value of this function will be 0. Additionaly, if no database is
+      in use in the selected or designated work area, this function will
+      return a 0 value as well.
+   $EXAMPLES$
+      USE test NEW
+      USE harbour NEW
+      ? RecCount()
+      ? Test->( RecCount() )
+      CLOSE ALL
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      EOF(),LASTREC(),RECNO(),DBGOBOTTOM()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      RECNO()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Returns the current record number or identity.
- *  $SYNTAX$
- *      RECNO() --> Identity
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      RECNO() The record number or identity
- *  $DESCRIPTION$
- *      This function returns the position of the record pointer in the
- *      currently selected ot designated work area.
- *
- *      If the database file is empty and if the RDD is the traditional .dbf
- *      file, the value of this function will be 1.
- *  $EXAMPLES$
- *      USE tests NEW
- *      DBGOTOP()
- *      RECNO()            // Returns 1
- *      DBGOTO( 50 )
- *      RECNO()            // Returns 50
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DBGOTO(),DBGOTOP(),DBGOBOTTOM(),LASTREC(),EOF(),BOF()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      RECNO()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Returns the current record number or identity.
+   $SYNTAX$
+      RECNO() --> Identity
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      RECNO() The record number or identity
+   $DESCRIPTION$
+      This function returns the position of the record pointer in the
+      currently selected ot designated work area.
+
+      If the database file is empty and if the RDD is the traditional .dbf
+      file, the value of this function will be 1.
+   $EXAMPLES$
+      USE tests NEW
+      DBGOTOP()
+      RECNO()            // Returns 1
+      DBGOTO( 50 )
+      RECNO()            // Returns 50
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DBGOTO(),DBGOTOP(),DBGOBOTTOM(),LASTREC(),EOF(),BOF()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      RECSIZE()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Returns the size of a single record in an active database.
- *  $SYNTAX$
- *      RECSIZE() --> nBytes
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      <nBytes> The record size.
- *  $DESCRIPTION$
- *      This function returns the number os bytes used by a single record
- *      in the currently selected or designated database file. If no database
- *      is in use in this work area, the return value from this function
- *      will be 0.
- *  $EXAMPLES$
- *      USE tests NEW
- *      DBGOTOP()
- *      RECSIZE()            // Returns 1
- *      DBGOTO( 50 )
- *      RECSIZE()
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      DISKSPACE(),FIELDNAME(),HEADER(),LASTREC()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      RECSIZE()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Returns the size of a single record in an active database.
+   $SYNTAX$
+      RECSIZE() --> nBytes
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      <nBytes> The record size.
+   $DESCRIPTION$
+      This function returns the number os bytes used by a single record
+      in the currently selected or designated database file. If no database
+      is in use in this work area, the return value from this function
+      will be 0.
+   $EXAMPLES$
+      USE tests NEW
+      DBGOTOP()
+      RECSIZE()            // Returns 1
+      DBGOTO( 50 )
+      RECSIZE()
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      DISKSPACE(),FIELDNAME(),HEADER(),LASTREC()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      RLOCK()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Lock a record in a work area
- *  $SYNTAX$
- *      RLOCK() --> lSuccess
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      RLOCK() True (.T.) if record lock is successful; otherwise, it
- *      returns false (.F.).
- *  $DESCRIPTION$
- *      This function returns a logical true (.T.) if an attempt to lock a
- *      specific record in a selected or designated work area is successful.
- *      It will yield a false (.F.) if either the file or the desired record
- *      is currently locked.
- *      A record that is locked remains locked until another RLOCK() is issued
- *      or until an UNLOCK command is executed.
- *      On a Network enviroment the follow command need that the record is
- *      locked:
- *
- *      @...GET
- *
- *      DELETE (single record)
- *
- *      RECALL (single record)
- *
- *      REPLACE (single record)
- *  $EXAMPLES$
- *      nId := 10
- *      USE testid INDEX testid NEW
- *      IF testid->( DBSEEK( nId ) )
- *         IF testid->( RLOCK() )
- *            DBDELETE()
- *         ENDIF
- *      ENDIF
- *      USE
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      FLOCK()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      RLOCK()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Lock a record in a work area
+   $SYNTAX$
+      RLOCK() --> lSuccess
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      RLOCK() True (.T.) if record lock is successful; otherwise, it
+      returns false (.F.).
+   $DESCRIPTION$
+      This function returns a logical true (.T.) if an attempt to lock a
+      specific record in a selected or designated work area is successful.
+      It will yield a false (.F.) if either the file or the desired record
+      is currently locked.
+      A record that is locked remains locked until another RLOCK() is issued
+      or until an UNLOCK command is executed.
+      On a Network enviroment the follow command need that the record is
+      locked:
+
+      @...GET
+
+      DELETE (single record)
+
+      RECALL (single record)
+
+      REPLACE (single record)
+   $EXAMPLES$
+      nId := 10
+      USE testid INDEX testid NEW
+      IF testid->( DBSEEK( nId ) )
+         IF testid->( RLOCK() )
+            DBDELETE()
+         ENDIF
+      ENDIF
+      USE
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      FLOCK()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      SELECT()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Returns the work area number for a specified alias.
- *  $SYNTAX$
- *      SELECT([<cAlias>]) --> nWorkArea
- *  $ARGUMENTS$
- *      <cAlias> is the target work area alias name.
- *  $RETURNS$
- *      SELECT() returns the work area number.
- *  $DESCRIPTION$
- *      This function returns the work area number for the specified alias
- *      name <cAlias>. If no parameter is specified, the current work area will
- *      be the return value of the function.
- *  $EXAMPLES$
- *      USE tests NEW
- *      USE names NEW
- *      cOldArea := Select( "names" )
- *      SELECT test
- *      LIST
- *      SELECT cOldArea
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      ALIAS(), USED()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      SELECT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Returns the work area number for a specified alias.
+   $SYNTAX$
+      SELECT([<cAlias>]) --> nWorkArea
+   $ARGUMENTS$
+      <cAlias> is the target work area alias name.
+   $RETURNS$
+      SELECT() returns the work area number.
+   $DESCRIPTION$
+      This function returns the work area number for the specified alias
+      name <cAlias>. If no parameter is specified, the current work area will
+      be the return value of the function.
+   $EXAMPLES$
+      USE tests NEW
+      USE names NEW
+      cOldArea := Select( "names" )
+      SELECT test
+      LIST
+      SELECT cOldArea
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      ALIAS(), USED()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      USED()
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Checks whether a database is in use in a work area
- *  $SYNTAX$
- *      USED() --> lDbfOpen
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      <lDbfOpen> True is a database is Used;otherwise False
- *  $DESCRIPTION$
- *      This function returns a logical true (.T.) if a database file is in
- *      USE in the current or designated work area. If no alias is specified
- *      along with this function , it will default to the currently selected
- *      work area.
- *  $EXAMPLES$
- *      USE tests NEW
- *      USE names NEW
- *      ? USED()    // .T.
- *      ? TESTS->( USED() ) //.T.
- *      CLOSE
- *      ? USED()  // .F.
- *      SELECT tests
- *      ? USED() //.T.
- *  $TESTS$
- *
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $FILES$
- *      Library is rdd
- *  $SEEALSO$
- *      ALIAS(), SELECT()
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      USED()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Checks whether a database is in use in a work area
+   $SYNTAX$
+      USED() --> lDbfOpen
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      <lDbfOpen> True is a database is Used;otherwise False
+   $DESCRIPTION$
+      This function returns a logical true (.T.) if a database file is in
+      USE in the current or designated work area. If no alias is specified
+      along with this function , it will default to the currently selected
+      work area.
+   $EXAMPLES$
+      USE tests NEW
+      USE names NEW
+      ? USED()    // .T.
+      ? TESTS->( USED() ) //.T.
+      CLOSE
+      ? USED()  // .F.
+      SELECT tests
+      ? USED() //.T.
+   $TESTS$
+
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $FILES$
+      Library is rdd
+   $SEEALSO$
+      ALIAS(), SELECT()
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Command
- *  $NAME$
- *      PACK
- *  $CATEGORY$
- *      Command
- *  $SUBCATEGORY$
- *      Database
- *  $ONELINER$
- *      Remove records marked for deletion from a database
- *  $SYNTAX$
- *      PACK
- *  $ARGUMENTS$
- *      (This command has no arguments)
- *  $DESCRIPTION$
- *      This command removes records that were marked for deletion from the
- *      currently selected database. This command does not pack the contents
- *      of a memo field; those files must be packed via low-level fuctions.
- *
- *      All open index files will be automatically reindexed once PACK command
- *      has completed its operation. On completion, the record pointer is placed
- *      on the first record in the database.
- *  $EXAMPLES$
- *      USE tests NEW INDEX tests
- *      DBGOTO( 10 )
- *      DELETE NEXT 10
- *      PACK
- *      USE
- *  $STATUS$
- *      R
- *  $COMPLIANCE$
- *      C
- *  $SEEALSO$
- *      DBEVAL(), DELETE, DELETED(), ZAP, RECALL
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Command
+   $NAME$
+      PACK
+   $CATEGORY$
+      Command
+   $SUBCATEGORY$
+      Database
+   $ONELINER$
+      Remove records marked for deletion from a database
+   $SYNTAX$
+      PACK
+   $ARGUMENTS$
+      (This command has no arguments)
+   $DESCRIPTION$
+      This command removes records that were marked for deletion from the
+      currently selected database. This command does not pack the contents
+      of a memo field; those files must be packed via low-level fuctions.
+
+      All open index files will be automatically reindexed once PACK command
+      has completed its operation. On completion, the record pointer is placed
+      on the first record in the database.
+   $EXAMPLES$
+      USE tests NEW INDEX tests
+      DBGOTO( 10 )
+      DELETE NEXT 10
+      PACK
+      USE
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $SEEALSO$
+      DBEVAL(), DELETE, DELETED(), ZAP, RECALL
+   $END$
  */

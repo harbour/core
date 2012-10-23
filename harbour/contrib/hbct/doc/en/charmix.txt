@@ -2,53 +2,53 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARMIX()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Mix two strings
- *  $SYNTAX$
- *      CHARMIX( <cString1>[, <cString2>] ) --> cMixedString
- *  $ARGUMENTS$
- *      <cString1>     String that will be mixed with the characters from <cString2>
- *      [<cString2>]   String whose characters will be mixed with the one from
- *                     <cString1>.
- *                     Default: " " (string with one space char)
- *  $RETURNS$
- *      <cMixedString> Mixed string
- *  $DESCRIPTION$
- *      The CHARMIX() function mixes the strings <cString1> and <cString2>. To
- *      do this it takes one character after the other alternatively from
- *      <cString1> and <cString2> and puts them in the output string.
- *      This procedure is stopped when the end of <cString1> is reached. If
- *      <cString2> is shorter than <cString1>, the function will start at
- *      the begin of <cString2> again. If on the other hand <cString2> is
- *      longer than <cString1>, the surplus characters will be omitted.
- *  $EXAMPLES$
- *      ? CHARMIX( "ABC", "123" )    // "A1B2C3"
- *      ? CHARMIX( "ABCDE", "12" )   // "A1B2C1D2E1"
- *      ? CHARMIX( "AB", "12345" )   // "A1B2"
- *      ? CHARMIX( "HELLO", " " )    //  "H E L L O "
- *      ? CHARMIX( "HELLO", "" )     //  "HELLO"
- *  $TESTS$
- *      CHARMIX( "ABC", "123" )  == "A1B2C3"
- *      CHARMIX( "ABCDE", "12" ) == "A1B2C1D2E1"
- *      CHARMIX( "AB", "12345") == "A1B2"
- *      CHARMIX( "HELLO", " " )   == "H E L L O "
- *      CHARMIX( "HELLO", "" )   == "HELLO"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARMIX() is compatible with CT3's CHARMIX().
- *      NOTE: CA-Tools version of CHARMIX() will hang
- *            if the second parameter is an empty string, this version will not.
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CHAREVEN()   CHARODD()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CHARMIX()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Mix two strings
+   $SYNTAX$
+      CHARMIX( <cString1>[, <cString2>] ) --> cMixedString
+   $ARGUMENTS$
+      <cString1>     String that will be mixed with the characters from <cString2>
+      [<cString2>]   String whose characters will be mixed with the one from
+                     <cString1>.
+                     Default: " " (string with one space char)
+   $RETURNS$
+      <cMixedString> Mixed string
+   $DESCRIPTION$
+      The CHARMIX() function mixes the strings <cString1> and <cString2>. To
+      do this it takes one character after the other alternatively from
+      <cString1> and <cString2> and puts them in the output string.
+      This procedure is stopped when the end of <cString1> is reached. If
+      <cString2> is shorter than <cString1>, the function will start at
+      the begin of <cString2> again. If on the other hand <cString2> is
+      longer than <cString1>, the surplus characters will be omitted.
+   $EXAMPLES$
+      ? CHARMIX( "ABC", "123" )    // "A1B2C3"
+      ? CHARMIX( "ABCDE", "12" )   // "A1B2C1D2E1"
+      ? CHARMIX( "AB", "12345" )   // "A1B2"
+      ? CHARMIX( "HELLO", " " )    //  "H E L L O "
+      ? CHARMIX( "HELLO", "" )     //  "HELLO"
+   $TESTS$
+      CHARMIX( "ABC", "123" )  == "A1B2C3"
+      CHARMIX( "ABCDE", "12" ) == "A1B2C1D2E1"
+      CHARMIX( "AB", "12345") == "A1B2"
+      CHARMIX( "HELLO", " " )   == "H E L L O "
+      CHARMIX( "HELLO", "" )   == "HELLO"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CHARMIX() is compatible with CT3's CHARMIX().
+      NOTE: CA-Tools version of CHARMIX() will hang
+            if the second parameter is an empty string, this version will not.
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CHAREVEN()   CHARODD()
+   $END$
  */

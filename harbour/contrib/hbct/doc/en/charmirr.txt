@@ -2,47 +2,47 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      CHARMIRR()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Mirror a string
- *  $SYNTAX$
- *      CHARMIRR( <[@]cString>, [<lDontMirrorSpaces>] ) -> cMirroredString
- *  $ARGUMENTS$
- *      <[@]cString>            is the string that should be mirrored
- *      [<lDontMirrorSpaces>]   if set to .T., spaces at the end of
- *                              <cString> will not be mirrored but kept at the end
- *                              Default: .F., mirror the whole string
- *  $RETURNS$
- *      <cMirroredString>       the mirrored string
- *  $DESCRIPTION$
- *      The CHARMIRR() function mirrors a string, i.e. the first character
- *      will be put at the end, the second at the last but one position etc..
- *      One can use this function for index searches, but then, the spaces
- *      at the end of the string should not be mirrored.
- *      One can omit the return value of the function by setting the CSETREF()
- *      switch to .T., but <cString> must then be passed by reference to get
- *      a result.
- *  $EXAMPLES$
- *      ? charmirr( "racecar" )        // "racecar"
- *      ? charmirr( "racecar  ", .T. ) // "racecar  "
- *      ? charmirr( "racecar  ", .F. ) // "  racecar"
- *  $TESTS$
- *      charmirr( "racecar" ) == "racecar"
- *      charmirr( "racecar  ", .T. ) == "racecar  "
- *      charmirr( "racecar  ", .F. ) == "  racecar"
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      CHARMIRR() is compatible with CT3's CHARMIRR().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CSETREF()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      CHARMIRR()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Mirror a string
+   $SYNTAX$
+      CHARMIRR( <[@]cString>, [<lDontMirrorSpaces>] ) -> cMirroredString
+   $ARGUMENTS$
+      <[@]cString>            is the string that should be mirrored
+      [<lDontMirrorSpaces>]   if set to .T., spaces at the end of
+                              <cString> will not be mirrored but kept at the end
+                              Default: .F., mirror the whole string
+   $RETURNS$
+      <cMirroredString>       the mirrored string
+   $DESCRIPTION$
+      The CHARMIRR() function mirrors a string, i.e. the first character
+      will be put at the end, the second at the last but one position etc..
+      One can use this function for index searches, but then, the spaces
+      at the end of the string should not be mirrored.
+      One can omit the return value of the function by setting the CSETREF()
+      switch to .T., but <cString> must then be passed by reference to get
+      a result.
+   $EXAMPLES$
+      ? charmirr( "racecar" )        // "racecar"
+      ? charmirr( "racecar  ", .T. ) // "racecar  "
+      ? charmirr( "racecar  ", .F. ) // "  racecar"
+   $TESTS$
+      charmirr( "racecar" ) == "racecar"
+      charmirr( "racecar  ", .T. ) == "racecar  "
+      charmirr( "racecar  ", .F. ) == "  racecar"
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      CHARMIRR() is compatible with CT3's CHARMIRR().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CSETREF()
+   $END$
  */

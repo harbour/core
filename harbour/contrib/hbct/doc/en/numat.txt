@@ -2,34 +2,34 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      NUMAT()
- *  $CATEGORY$
- *      CT3 string functions
- *  $ONELINER$
- *      Number of occurrences of a sequence in a string
- *  $SYNTAX$
- *      NUMAT( <cStringToMatch>, <cString>, [<nIgnore>] ) --> nCount
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *      TODO: add documentation
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *      Started
- *  $COMPLIANCE$
- *      NUMAT() is compatible with CT3's NUMAT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      CSETATMUPA(),SETATLIKE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      NUMAT()
+   $CATEGORY$
+      CT3 string functions
+   $ONELINER$
+      Number of occurrences of a sequence in a string
+   $SYNTAX$
+      NUMAT( <cStringToMatch>, <cString>, [<nIgnore>] ) --> nCount
+   $ARGUMENTS$
+  
+   $RETURNS$
+  
+   $DESCRIPTION$
+      TODO: add documentation
+   $EXAMPLES$
+  
+   $TESTS$
+  
+   $STATUS$
+      Started
+   $COMPLIANCE$
+      NUMAT() is compatible with CT3's NUMAT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      CSETATMUPA(),SETATLIKE()
+   $END$
  */

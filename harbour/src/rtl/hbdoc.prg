@@ -266,17 +266,17 @@ FUNCTION __hbdoc_ToSource( aEntry )
    IF HB_ISARRAY( aEntry )
       FOR EACH hEntry IN aEntry
          cSource += hb_eol()
-         cSource += "/*  $DOC$" + hb_eol()
+         cSource += "/* $DOC$" + hb_eol()
          FOR EACH item IN hEntry
             IF HB_ISSTRING( item ) .AND. ;
                !( Left( item:__enumKey(), 1 ) == "_" )
-               cSource += " *  $" + item:__enumKey() + "$" + hb_eol()
+               cSource += "   $" + item:__enumKey() + "$" + hb_eol()
                FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
-                  cSource += " * " + iif( Len( cLine ) == 0, "", Space( 4 ) + cLine ) + hb_eol()
+                  cSource += "  " + iif( Len( cLine ) == 0, "", Space( 4 ) + cLine ) + hb_eol()
                NEXT
             ENDIF
          NEXT
-         cSource += " *  $END$" + hb_eol()
+         cSource += "   $END$" + hb_eol()
          cSource += " */" + hb_eol()
       NEXT
    ENDIF

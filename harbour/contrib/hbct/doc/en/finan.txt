@@ -2,255 +2,255 @@
  * $Id$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      FV()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Future value of a capital
- *  $SYNTAX$
- *      FV( nDeposit, nInterest, nPeriods ) --> nFutureValue
- *  $ARGUMENTS$
- *      <nDeposit>     amount of money invested per period
- *      <nInterest>    rate of interest per period, 1 == 100%
- *      <nPeriods>     period count
- *  $RETURNS$
- *      <nFutureValue> Total value of the capital after <nPeriods> of
- *                     paying <nDeposit> and <nInterest> interest being
- *                     paid every period and added to the capital (resulting
- *                     in compound interest)
- *  $DESCRIPTION$
- *      FV() calculates the value of a capital after <nPeriods> periods.
- *      Starting with a value of 0, every period, <nDeposit>
- *      (Dollars, Euros, Yens, ...) and an interest of <nInterest> for the
- *      current capital are added for the capital (<nInterest>=Percent/100).
- *      Thus, one gets the non-linear effects of compound interests:
- *      value in period 0 = 0
- *      value in period 1 = ((value in period 0)*(1+<nInterest>/100)) + <nDeposit>
- *      value in period 2 = ((value in period 1)*(1+<nInterest>/100)) + <nDeposit>
- *              etc....
- *      value in period <nPeriod> = ((value in period <nPeriod>-1)*(1+<nInterest>/100))< + <nDeposit>
- *                                = <nDeposit> * sum from i=0 to <nPeriod>-1 over (1+<nInterest>/100)^i
- *                                = <nDeposit> * ((1+<nInterest>/100)^n-1) / (<nInterest>/100)
- *  $EXAMPLES$
- *      // Payment of 1000 per year for 10 years at a interest rate
- *      // of 5 per cent per year
- *
- *      ? fv( 1000, 0.05, 10 ) // --> 12577.893
- *  $TESTS$
- *      fv( 1000, 0.00, 10 ) == 10000.0
- *      fv( 1000, 0.05, 10 ) == 12577.893
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      FV() is compatible with CT3's FV().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      PV(),PAYMENT(),PERIODS(),RATE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      FV()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Future value of a capital
+   $SYNTAX$
+      FV( nDeposit, nInterest, nPeriods ) --> nFutureValue
+   $ARGUMENTS$
+      <nDeposit>     amount of money invested per period
+      <nInterest>    rate of interest per period, 1 == 100%
+      <nPeriods>     period count
+   $RETURNS$
+      <nFutureValue> Total value of the capital after <nPeriods> of
+                     paying <nDeposit> and <nInterest> interest being
+                     paid every period and added to the capital (resulting
+                     in compound interest)
+   $DESCRIPTION$
+      FV() calculates the value of a capital after <nPeriods> periods.
+      Starting with a value of 0, every period, <nDeposit>
+      (Dollars, Euros, Yens, ...) and an interest of <nInterest> for the
+      current capital are added for the capital (<nInterest>=Percent/100).
+      Thus, one gets the non-linear effects of compound interests:
+      value in period 0 = 0
+      value in period 1 = ((value in period 0)*(1+<nInterest>/100)) + <nDeposit>
+      value in period 2 = ((value in period 1)*(1+<nInterest>/100)) + <nDeposit>
+              etc....
+      value in period <nPeriod> = ((value in period <nPeriod>-1)*(1+<nInterest>/100))< + <nDeposit>
+                                = <nDeposit> * sum from i=0 to <nPeriod>-1 over (1+<nInterest>/100)^i
+                                = <nDeposit> * ((1+<nInterest>/100)^n-1) / (<nInterest>/100)
+   $EXAMPLES$
+      // Payment of 1000 per year for 10 years at a interest rate
+      // of 5 per cent per year
+  
+      ? fv( 1000, 0.05, 10 ) // --> 12577.893
+   $TESTS$
+      fv( 1000, 0.00, 10 ) == 10000.0
+      fv( 1000, 0.05, 10 ) == 12577.893
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      FV() is compatible with CT3's FV().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      PV(),PAYMENT(),PERIODS(),RATE()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      PV()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Present value of a loan
- *  $SYNTAX$
- *      PV( nPayment, nInterest, nPeriods ) --> nPresentValue
- *  $ARGUMENTS$
- *      <nPayment>     amount of money paid back per period
- *      <nInterest>    rate of interest per period, 1 == 100%
- *      <nPeriods>     period count
- *  $RETURNS$
- *      <nPresentValue> Present value of a loan when one is paying back
- *                      <nDeposit> per period at a rate of interest of
- *                      <nInterest> per period
- *  $DESCRIPTION$
- *      PV() calculates the present value of a loan that is paid back
- *      in <nPeriods> payments of <nPayment> (Dollars, Euros, Yens,...)
- *      while the rate of interest is <nInterest> per period:
- *      debt in period 0 = <nPresentValue>
- *      debt in period 1 = ((debt in period 0)-<nPayment>)*(1+<nInterest>/100)
- *      debt in period 2 = ((debt in period 1)-<nPayment>)*(1+<nInterest>/100)
- *           etc...
- *      debt in period <nPeriod> = ((debt in period <nPeriod>-1)-<nPayment>)*(1+<nInterest>/100)
- *                                 -> has to be 0, so
- *      <nPresentValue> = <nPayment>*(1-(1+<nInterest>/100)^(-n))/(<nInterest>/100)
- *  $EXAMPLES$
- *      // You can afford to pay back 100 Dollars per month for 5 years
- *      // at a interest rate of 0.5% per month (6% per year), so instead
- *      // of 6000 Dollars (the amount you will pay back) the bank will pay
- *      // you
- *
- *      ? pv( 100, 0.005, 60 ) // --> 5172.56
- *  $TESTS$
- *      pv( 100, 0.0, 60 )   == 6000.0
- *      pv( 100, 0.005, 60 ) == 5172.56
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      PV() is compatible with CT3's PV().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      FV(),PAYMENT(),PERIODS(),RATE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      PV()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Present value of a loan
+   $SYNTAX$
+      PV( nPayment, nInterest, nPeriods ) --> nPresentValue
+   $ARGUMENTS$
+      <nPayment>     amount of money paid back per period
+      <nInterest>    rate of interest per period, 1 == 100%
+      <nPeriods>     period count
+   $RETURNS$
+      <nPresentValue> Present value of a loan when one is paying back
+                      <nDeposit> per period at a rate of interest of
+                      <nInterest> per period
+   $DESCRIPTION$
+      PV() calculates the present value of a loan that is paid back
+      in <nPeriods> payments of <nPayment> (Dollars, Euros, Yens,...)
+      while the rate of interest is <nInterest> per period:
+      debt in period 0 = <nPresentValue>
+      debt in period 1 = ((debt in period 0)-<nPayment>)*(1+<nInterest>/100)
+      debt in period 2 = ((debt in period 1)-<nPayment>)*(1+<nInterest>/100)
+           etc...
+      debt in period <nPeriod> = ((debt in period <nPeriod>-1)-<nPayment>)*(1+<nInterest>/100)
+                                 -> has to be 0, so
+      <nPresentValue> = <nPayment>*(1-(1+<nInterest>/100)^(-n))/(<nInterest>/100)
+   $EXAMPLES$
+      // You can afford to pay back 100 Dollars per month for 5 years
+      // at a interest rate of 0.5% per month (6% per year), so instead
+      // of 6000 Dollars (the amount you will pay back) the bank will pay
+      // you
+  
+      ? pv( 100, 0.005, 60 ) // --> 5172.56
+   $TESTS$
+      pv( 100, 0.0, 60 )   == 6000.0
+      pv( 100, 0.005, 60 ) == 5172.56
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      PV() is compatible with CT3's PV().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      FV(),PAYMENT(),PERIODS(),RATE()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      PAYMENT()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Payments for a loan
- *  $SYNTAX$
- *      PAYMENT( nLoan, nInterest, nPeriods ) --> nPayment
- *  $ARGUMENTS$
- *      <nLoan>        amount of money you get from the bank
- *      <nInterest>    rate of interest per period, 1 == 100%
- *      <nPeriods>     period count
- *  $RETURNS$
- *      <nPayment>     Periodical payment one has to make to pay the
- *                     loan <nLoan> back
- *  $DESCRIPTION$
- *      PAYMENT() calculates the payment one has to make periodically
- *      to pay back a loan <nLoan> within <nPeriods> periods and for a
- *      rate of interest <nInterest> per period.
- *      debt in period 0 = <nLoan>
- *      debt in period 1 = ((debt in period 0)-<nPayment>)*(1+<nInterest>/100)
- *      debt in period 2 = ((debt in period 1)-<nPayment>)*(1+<nInterest>/100)
- *           etc...
- *      debt in period <nPeriod> = ((debt in period <nPeriod>-1)-<nPayment>)*(1+<nInterest>/100)
- *                                 -> has to be 0, so
- *      <nPayment> = <nLoan>*(<nInterest>/100)/(1-(1+<nInterest>/100)^(-n))
- *  $EXAMPLES$
- *      // You get a loan of 5172.56 at a interest rate of 0.5% per
- *      // month (6% per year).
- *      // For 5 years, you have to pay back every month
- *
- *      ? payment( 5172.56, 0.005, 60 ) // --> 100.00
- *  $TESTS$
- *      payment( 5172.56, 0.0, 60 )   == 86.21
- *      payment( 5172.56, 0.005, 60 ) == 100.00
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      PAYMENT() is compatible with CT3's PAYMENT().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      PV(),FV(),PERIODS(),RATE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      PAYMENT()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Payments for a loan
+   $SYNTAX$
+      PAYMENT( nLoan, nInterest, nPeriods ) --> nPayment
+   $ARGUMENTS$
+      <nLoan>        amount of money you get from the bank
+      <nInterest>    rate of interest per period, 1 == 100%
+      <nPeriods>     period count
+   $RETURNS$
+      <nPayment>     Periodical payment one has to make to pay the
+                     loan <nLoan> back
+   $DESCRIPTION$
+      PAYMENT() calculates the payment one has to make periodically
+      to pay back a loan <nLoan> within <nPeriods> periods and for a
+      rate of interest <nInterest> per period.
+      debt in period 0 = <nLoan>
+      debt in period 1 = ((debt in period 0)-<nPayment>)*(1+<nInterest>/100)
+      debt in period 2 = ((debt in period 1)-<nPayment>)*(1+<nInterest>/100)
+           etc...
+      debt in period <nPeriod> = ((debt in period <nPeriod>-1)-<nPayment>)*(1+<nInterest>/100)
+                                 -> has to be 0, so
+      <nPayment> = <nLoan>*(<nInterest>/100)/(1-(1+<nInterest>/100)^(-n))
+   $EXAMPLES$
+      // You get a loan of 5172.56 at a interest rate of 0.5% per
+      // month (6% per year).
+      // For 5 years, you have to pay back every month
+  
+      ? payment( 5172.56, 0.005, 60 ) // --> 100.00
+   $TESTS$
+      payment( 5172.56, 0.0, 60 )   == 86.21
+      payment( 5172.56, 0.005, 60 ) == 100.00
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      PAYMENT() is compatible with CT3's PAYMENT().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      PV(),FV(),PERIODS(),RATE()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      PERIODS()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Number of periods for a loan
- *  $SYNTAX$
- *      PERIODS( nLoan, nPayment, nInterest ) --> nPeriods
- *  $ARGUMENTS$
- *      <nLoan>        amount of money you get from the bank
- *      <nPayment>     amount of money you pay back per period
- *      <nInterest>    rate of interest per period, 1 == 100%
- *  $RETURNS$
- *      <nPeriods>     number of periods you need to pay the loan back
- *  $DESCRIPTION$
- *      PERIODS() calculates the number of periods one needs to pay back
- *      a loan of <nLoan> with periodical payments of <nPayment> and for a
- *      rate of interest <nInterest> per period.
- *      debt in period 0 = <nLoan>
- *      debt in period 1 = ((debt in period 0)-<nPayment>)*(1+<nInterest>/100)
- *      debt in period 2 = ((debt in period 1)-<nPayment>)*(1+<nInterest>/100)
- *           etc...
- *      debt in period <nPeriod> = ((debt in period <nPeriod>-1)-<nPayment>)*(1+<nInterest>/100)
- *                                 -> has to be 0, so
- *      <nPeriods> = -log(1-<nLoan>*(<nInterest>/100)/<nPayment>)/log(1+<nInterest>/100))
- *
- *      Note, however that in the case of nPayment <= <nLoan>*(<nInterest>/100),
- *      one would need infinite time to pay the loan back. The functions does
- *      then return -1.
- *  $EXAMPLES$
- *      // You get a loan of 5172.56 at a interest rate of 0.5% per
- *      // month (6% per year).
- *      // You can afford to pay 100 back every month, so you need
- *
- *      ? periods( 5172.56, 100, 0.005 ) // --> 60.0
- *
- *      // months to cancel the loan.
- *  $TESTS$
- *      periods( 5172.56, 100, 0.005 ) == 60.0
- *      periods( 5172.56, 100, 0.0 ) == 51.7256
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      PERIODS() is compatible with CT3's PERIODS().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      PV(),FV(),PAYMENT(),RATE()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      PERIODS()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Number of periods for a loan
+   $SYNTAX$
+      PERIODS( nLoan, nPayment, nInterest ) --> nPeriods
+   $ARGUMENTS$
+      <nLoan>        amount of money you get from the bank
+      <nPayment>     amount of money you pay back per period
+      <nInterest>    rate of interest per period, 1 == 100%
+   $RETURNS$
+      <nPeriods>     number of periods you need to pay the loan back
+   $DESCRIPTION$
+      PERIODS() calculates the number of periods one needs to pay back
+      a loan of <nLoan> with periodical payments of <nPayment> and for a
+      rate of interest <nInterest> per period.
+      debt in period 0 = <nLoan>
+      debt in period 1 = ((debt in period 0)-<nPayment>)*(1+<nInterest>/100)
+      debt in period 2 = ((debt in period 1)-<nPayment>)*(1+<nInterest>/100)
+           etc...
+      debt in period <nPeriod> = ((debt in period <nPeriod>-1)-<nPayment>)*(1+<nInterest>/100)
+                                 -> has to be 0, so
+      <nPeriods> = -log(1-<nLoan>*(<nInterest>/100)/<nPayment>)/log(1+<nInterest>/100))
+  
+      Note, however that in the case of nPayment <= <nLoan>*(<nInterest>/100),
+      one would need infinite time to pay the loan back. The functions does
+      then return -1.
+   $EXAMPLES$
+      // You get a loan of 5172.56 at a interest rate of 0.5% per
+      // month (6% per year).
+      // You can afford to pay 100 back every month, so you need
+  
+      ? periods( 5172.56, 100, 0.005 ) // --> 60.0
+  
+      // months to cancel the loan.
+   $TESTS$
+      periods( 5172.56, 100, 0.005 ) == 60.0
+      periods( 5172.56, 100, 0.0 ) == 51.7256
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      PERIODS() is compatible with CT3's PERIODS().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      PV(),FV(),PAYMENT(),RATE()
+   $END$
  */
 
-/*  $DOC$
- *  $FUNCNAME$
- *      RATE()
- *  $CATEGORY$
- *      CT3 math functions
- *  $ONELINER$
- *      Estimate rate of interest for a loan
- *  $SYNTAX$
- *      RATE( nLoan, nPayment, nPeriods ) --> nRate
- *  $ARGUMENTS$
- *      <nLoan>          amount of money you get from the bank
- *      <nPayment>       amount of money you pay back per period
- *      <nPeriods>       number of periods you pay the loan back
- *  $RETURNS$
- *      <nInterest>    estimated rate of interest per period, 1 == 100%
- *  $DESCRIPTION$
- *      RATE() calculates the rate of interest per period for the given
- *      loan, payment per periods and number of periods. This is done with
- *      the same equation used in the PAYMENT() or PERIODS() function:
- *
- *      <nPayment> = <nLoan>*(<nInterest>/100)/(1-(1+<nInterest>/100)^(-<nPeriods>))
- *
- *      However, this equation can not be solved for <nInterest> in a "closed"
- *      manner, i.e. <nInterest> = ..., so that the result can only be estimated.
- *  $EXAMPLES$
- *      // You get a loan of 5172.56, pay 100 back every month for
- *      // 5 years (60 months). The effective interest rate per
- *      // period (=month) is
- *
- *      ? rate( 5172.56, 100, 60 ) // --> 0.005
- *
- *  $TESTS$
- *      rate( 5172.56, 100, 60.0 ) == 0.005
- *      rate( 6000.0, 100, 60.0 ) == 0.0
- *  $STATUS$
- *      Ready
- *  $COMPLIANCE$
- *      RATE() is compatible with CT3's RATE().
- *  $PLATFORMS$
- *      All
- *  $FILES$
- *      Library is libct.
- *  $SEEALSO$
- *      PV(),FV(),PAYMENT(),PERIODS()
- *  $END$
+/* $DOC$
+   $FUNCNAME$
+      RATE()
+   $CATEGORY$
+      CT3 math functions
+   $ONELINER$
+      Estimate rate of interest for a loan
+   $SYNTAX$
+      RATE( nLoan, nPayment, nPeriods ) --> nRate
+   $ARGUMENTS$
+      <nLoan>          amount of money you get from the bank
+      <nPayment>       amount of money you pay back per period
+      <nPeriods>       number of periods you pay the loan back
+   $RETURNS$
+      <nInterest>    estimated rate of interest per period, 1 == 100%
+   $DESCRIPTION$
+      RATE() calculates the rate of interest per period for the given
+      loan, payment per periods and number of periods. This is done with
+      the same equation used in the PAYMENT() or PERIODS() function:
+  
+      <nPayment> = <nLoan>*(<nInterest>/100)/(1-(1+<nInterest>/100)^(-<nPeriods>))
+  
+      However, this equation can not be solved for <nInterest> in a "closed"
+      manner, i.e. <nInterest> = ..., so that the result can only be estimated.
+   $EXAMPLES$
+      // You get a loan of 5172.56, pay 100 back every month for
+      // 5 years (60 months). The effective interest rate per
+      // period (=month) is
+  
+      ? rate( 5172.56, 100, 60 ) // --> 0.005
+  
+   $TESTS$
+      rate( 5172.56, 100, 60.0 ) == 0.005
+      rate( 6000.0, 100, 60.0 ) == 0.0
+   $STATUS$
+      Ready
+   $COMPLIANCE$
+      RATE() is compatible with CT3's RATE().
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is libct.
+   $SEEALSO$
+      PV(),FV(),PAYMENT(),PERIODS()
+   $END$
  */

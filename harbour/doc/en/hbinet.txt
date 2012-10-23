@@ -50,1779 +50,1779 @@
  *
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETINIT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Activate Harbour INET support
- *  $SYNTAX$
- *      HB_INETINIT() -> lResult
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      Returns .T. or .F. whether the internal INET system was successfully initialized
- *  $DESCRIPTION$
- *      Activates inet support; mainly used for winsock start up at the moment, but
- *      could be used in the future for many other purpose. Put it at the beginning
- *      of every program using INET functions.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETINIT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Activate Harbour INET support
+   $SYNTAX$
+      HB_INETINIT() -> lResult
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      Returns .T. or .F. whether the internal INET system was successfully initialized
+   $DESCRIPTION$
+      Activates inet support; mainly used for winsock start up at the moment, but
+      could be used in the future for many other purpose. Put it at the beginning
+      of every program using INET functions.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      HB_INETCLEANUP
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Terminate Harbour INET support
- *  $SYNTAX$
- *      HB_INETCLEANUP()
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $DESCRIPTION$
- *      Closes inet support; mainly used for Windows. Put it at the end of any program
- *      using Inet functions, just before the program exits.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      HB_INETCLEANUP
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Terminate Harbour INET support
+   $SYNTAX$
+      HB_INETCLEANUP()
+   $ARGUMENTS$
+      (This function has no arguments)
+   $DESCRIPTION$
+      Closes inet support; mainly used for Windows. Put it at the end of any program
+      using Inet functions, just before the program exits.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETCREATE
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Create an INET socket
- *  $SYNTAX$
- *      HB_INETCREATE( [ <nTimeout> ] ) -> SOCKET
- *  $ARGUMENTS$
- *      <nTimeout> Socket timeout (optional) TODO: what is the scale (seconds, milliseconds?)
- *  $RETURNS$
- *      An INET socket
- *  $DESCRIPTION$
- *      Creates the raw data of the socket, that can be passed to a asynchronous
- *      connection function (hb_InetConnect or hb_InetConnectIP). This will prevent the
- *      connection function from allocating some data that could be never used in
- *      certain cases, i.e. an asynchronously detected timeout.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETCREATE
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Create an INET socket
+   $SYNTAX$
+      HB_INETCREATE( [ <nTimeout> ] ) -> SOCKET
+   $ARGUMENTS$
+      <nTimeout> Socket timeout (optional) TODO: what is the scale (seconds, milliseconds?)
+   $RETURNS$
+      An INET socket
+   $DESCRIPTION$
+      Creates the raw data of the socket, that can be passed to a asynchronous
+      connection function (hb_InetConnect or hb_InetConnectIP). This will prevent the
+      connection function from allocating some data that could be never used in
+      certain cases, i.e. an asynchronously detected timeout.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETCLOSE
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Close an INET socket
- *  $SYNTAX$
- *      HB_INETCLOSE( <socket> ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Returns 0 on success or -1 on error; on error, the error code is set;
- *      (actually, on success the socket error code is set to 1 -- socket closed )
- *  $DESCRIPTION$
- *      Closes the socket, notifiying both ends of the communication pipe that the
- *      connection is over.
- *
- *      If you have threads waiting for data to be read from
- *      this socket, this method will make them stop waiting and return an error
- *      (socket closed) to their callers.
- *
- *      The method does not destroy the socket, which can be used by subordinate
- *      threads to check that the socket is closed, and so they should stop as soon
- *      as they can. Don't destroy the socket unless you are sure that no other
- *      thread is using it.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETCLOSE
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Close an INET socket
+   $SYNTAX$
+      HB_INETCLOSE( <socket> ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Returns 0 on success or -1 on error; on error, the error code is set;
+      (actually, on success the socket error code is set to 1 -- socket closed )
+   $DESCRIPTION$
+      Closes the socket, notifiying both ends of the communication pipe that the
+      connection is over.
+
+      If you have threads waiting for data to be read from
+      this socket, this method will make them stop waiting and return an error
+      (socket closed) to their callers.
+
+      The method does not destroy the socket, which can be used by subordinate
+      threads to check that the socket is closed, and so they should stop as soon
+      as they can. Don't destroy the socket unless you are sure that no other
+      thread is using it.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETFD
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      ?
- *  $SYNTAX$
- *      HB_INETFD( <socket> [, <lNoSocket> ] ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <lNoSocket>
- *  $RETURNS$
- *      ?
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETFD
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      ?
+   $SYNTAX$
+      HB_INETFD( <socket> [, <lNoSocket> ] ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <lNoSocket>
+   $RETURNS$
+      ?
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETSTATUS
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get the status of a socket
- *  $SYNTAX$
- *      HB_INETSTATUS( <socket> ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Returns 1 (one) if the socket exists, -1 if it does not
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETSTATUS
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get the status of a socket
+   $SYNTAX$
+      HB_INETSTATUS( <socket> ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Returns 1 (one) if the socket exists, -1 if it does not
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETERRORCODE
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get the last INET error code
- *  $SYNTAX$
- *      HB_INETERRORCODE( <socket> ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Last error code
- *  $DESCRIPTION$
- *      Returns the last error code that has been provoked by a network operation,
- *      or 0 if none.
- *
- *      Error codes are the ones used for winsock or UnixSockets (they
- *      are the same); 1 is reserved for "connection closed" message.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETERRORCODE
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get the last INET error code
+   $SYNTAX$
+      HB_INETERRORCODE( <socket> ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Last error code
+   $DESCRIPTION$
+      Returns the last error code that has been provoked by a network operation,
+      or 0 if none.
+
+      Error codes are the ones used for winsock or UnixSockets (they
+      are the same); 1 is reserved for "connection closed" message.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETERRORDESC
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get the last INET error code description
- *  $SYNTAX$
- *      HB_INETERRORDESC( <socket> ) -> cResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      System-dependant error string
- *  $DESCRIPTION$
- *      Returns a string describing the last error that occurred in the socket;
- *      the string is system dependent, and should be used only for debugging
- *      purposes.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETERRORDESC
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get the last INET error code description
+   $SYNTAX$
+      HB_INETERRORDESC( <socket> ) -> cResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      System-dependant error string
+   $DESCRIPTION$
+      Returns a string describing the last error that occurred in the socket;
+      the string is system dependent, and should be used only for debugging
+      purposes.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      HB_INETCLEARERROR
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Clear the socket error value
- *  $SYNTAX$
- *      HB_INETCLEARERROR( <socket> )
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      HB_INETCLEARERROR
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Clear the socket error value
+   $SYNTAX$
+      HB_INETCLEARERROR( <socket> )
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETCOUNT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get the number of bytes last read or sent
- *  $SYNTAX$
- *      HB_INETCOUNT( <socket> ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Last socket operation character count
- *  $DESCRIPTION$
- *      Returns the amount of characters read or written in the latest socket
- *      operation.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETCOUNT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get the number of bytes last read or sent
+   $SYNTAX$
+      HB_INETCOUNT( <socket> ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Last socket operation character count
+   $DESCRIPTION$
+      Returns the amount of characters read or written in the latest socket
+      operation.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETADDRESS
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get a remote server address
- *  $SYNTAX$
- *      HB_INETADDRESS( <socket> ) -> cResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Server address
- *  $DESCRIPTION$
- *      Returns a string representing the remote server address in quad dot notation,
- *      e.g. "192.168.1.1", or the local server address if the socket is server
- *      side.
- *
- *      TODO: have a version that returns a vector of 4 numbers.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETADDRESS
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get a remote server address
+   $SYNTAX$
+      HB_INETADDRESS( <socket> ) -> cResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Server address
+   $DESCRIPTION$
+      Returns a string representing the remote server address in quad dot notation,
+      e.g. "192.168.1.1", or the local server address if the socket is server
+      side.
+
+      TODO: have a version that returns a vector of 4 numbers.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETPORT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get the port a socket is bound to.
- *  $SYNTAX$
- *      HB_INETPORT( <socket> ) -> cResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Port name the socket is bound to.
- *  $DESCRIPTION$
- *      Returns the port to which this socket is bound, or the remote port if this
- *      socket is connected with a remote host or client
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETPORT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get the port a socket is bound to.
+   $SYNTAX$
+      HB_INETPORT( <socket> ) -> cResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Port name the socket is bound to.
+   $DESCRIPTION$
+      Returns the port to which this socket is bound, or the remote port if this
+      socket is connected with a remote host or client
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETTIMEOUT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get or change the timeout value of a socket
- *  $SYNTAX$
- *      HB_INETTIMEOUT( <socket> [, <nTimeout> ] ) -> nPreviousTimeout
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <nTimeout> is the new socket timeout value
- *  $RETURNS$
- *      Returns the previous timeout value of the socket
- *  $DESCRIPTION$
- *      Sets or changes the timeout value of the socket.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETTIMEOUT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get or change the timeout value of a socket
+   $SYNTAX$
+      HB_INETTIMEOUT( <socket> [, <nTimeout> ] ) -> nPreviousTimeout
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <nTimeout> is the new socket timeout value
+   $RETURNS$
+      Returns the previous timeout value of the socket
+   $DESCRIPTION$
+      Sets or changes the timeout value of the socket.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      HB_INETCLEARTIMEOUT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Clear the timeout value of a socket
- *  $SYNTAX$
- *      HB_INETCLEARTIMEOUT( <socket> )
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $DESCRIPTION$
- *      Clears the default timeout of the given socket. Default timeout is used in all
- *      blocking operations.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      HB_INETCLEARTIMEOUT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Clear the timeout value of a socket
+   $SYNTAX$
+      HB_INETCLEARTIMEOUT( <socket> )
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $DESCRIPTION$
+      Clears the default timeout of the given socket. Default timeout is used in all
+      blocking operations.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETTIMELIMIT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get or change the time limit value of a socket
- *  $SYNTAX$
- *      HB_INETTIMELIMIT( <socket> [, <nTimeLimit> ) -> NIL
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <nTimeLimit>
- *  $RETURNS$
- *      Returns the previous time limit value of the socket
- *  $DESCRIPTION$
- *      Sets or changes the time limit value of the socket.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETTIMELIMIT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get or change the time limit value of a socket
+   $SYNTAX$
+      HB_INETTIMELIMIT( <socket> [, <nTimeLimit> ) -> NIL
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <nTimeLimit>
+   $RETURNS$
+      Returns the previous time limit value of the socket
+   $DESCRIPTION$
+      Sets or changes the time limit value of the socket.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      HB_INETCLEARTIMELIMIT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Clear the time limit value of a socket
- *  $SYNTAX$
- *      HB_INETCLEARTIMELIMIT( <socket> )
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $DESCRIPTION$
- *      Clears the default time limit of the given socket.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      HB_INETCLEARTIMELIMIT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Clear the time limit value of a socket
+   $SYNTAX$
+      HB_INETCLEARTIMELIMIT( <socket> )
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $DESCRIPTION$
+      Clears the default time limit of the given socket.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETPERIODCALLBACK
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get or change the periodic callback value of a socket
- *  $SYNTAX$
- *      HB_INETPERIODCALLBACK( <socket> [, <xCallback> ] ) -> xPreviousCallback
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      xCallback a new periodic callback
- *  $RETURNS$
- *      The previous periodic callback value
- *  $DESCRIPTION$
- *      Sets or returns the socket periodic callback value
- *
- *      xCallback can be one of: a codeblock, an array of (...), or a (symbol)
- *      TODO: describe these better
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETPERIODCALLBACK
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get or change the periodic callback value of a socket
+   $SYNTAX$
+      HB_INETPERIODCALLBACK( <socket> [, <xCallback> ] ) -> xPreviousCallback
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      xCallback a new periodic callback
+   $RETURNS$
+      The previous periodic callback value
+   $DESCRIPTION$
+      Sets or returns the socket periodic callback value
+
+      xCallback can be one of: a codeblock, an array of (...), or a (symbol)
+      TODO: describe these better
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Procedure
- *  $NAME$
- *      HB_INETCLEARPERIODCALLBACK
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Clear the periodic callback value of a socket
- *  $SYNTAX$
- *      HB_INETCLEARPERIODCALLBACK( <socket> )
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Procedure
+   $NAME$
+      HB_INETCLEARPERIODCALLBACK
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Clear the periodic callback value of a socket
+   $SYNTAX$
+      HB_INETCLEARPERIODCALLBACK( <socket> )
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETGETSNDBUFSIZE
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get the socket send buffer size
- *  $SYNTAX$
- *      HB_INETGETSNDBUFSIZE( <socket> ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Returns the socket send buffer size or -1 if the socket is closed or an error occurs
- *  $DESCRIPTION$
- *      Returns the socket send buffer size or -1 if the socket is closed or an error occurs
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETGETSNDBUFSIZE
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get the socket send buffer size
+   $SYNTAX$
+      HB_INETGETSNDBUFSIZE( <socket> ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Returns the socket send buffer size or -1 if the socket is closed or an error occurs
+   $DESCRIPTION$
+      Returns the socket send buffer size or -1 if the socket is closed or an error occurs
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETGETRCVBUFSIZE
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get the socket receive buffer size
- *  $SYNTAX$
- *      HB_INETGETRCVBUFSIZE( <socket> ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Returns the socket receive buffer size or -1 if the socket is closed or an error occurs
- *  $DESCRIPTION$
- *      Returns the socket receive buffer size or -1 if the socket is closed or an error occurs
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETGETRCVBUFSIZE
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get the socket receive buffer size
+   $SYNTAX$
+      HB_INETGETRCVBUFSIZE( <socket> ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Returns the socket receive buffer size or -1 if the socket is closed or an error occurs
+   $DESCRIPTION$
+      Returns the socket receive buffer size or -1 if the socket is closed or an error occurs
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETSETSNDBUFSIZE
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Set the send buffer size of a socket
- *  $SYNTAX$
- *      HB_INETSETSNDBUFSIZE( <socket>, <nSize> ) -> nSize
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      nSize
- *  $RETURNS$
- *      Returns the passed nSize or -1 on error
- *  $DESCRIPTION$
- *      Sets the send buffer size of a socket
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETSETSNDBUFSIZE
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Set the send buffer size of a socket
+   $SYNTAX$
+      HB_INETSETSNDBUFSIZE( <socket>, <nSize> ) -> nSize
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      nSize
+   $RETURNS$
+      Returns the passed nSize or -1 on error
+   $DESCRIPTION$
+      Sets the send buffer size of a socket
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETSETRCVBUFSIZE
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Set the receive buffer size of a socket
- *  $SYNTAX$
- *      HB_INETSETRCVBUFSIZE( <socket>, nSize ) -> nSize
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      nSize
- *  $RETURNS$
- *      Returns the passed nSize or -1 on error
- *  $DESCRIPTION$
- *      Sets the receive buffer size of a socket
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETSETRCVBUFSIZE
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Set the receive buffer size of a socket
+   $SYNTAX$
+      HB_INETSETRCVBUFSIZE( <socket>, nSize ) -> nSize
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      nSize
+   $RETURNS$
+      Returns the passed nSize or -1 on error
+   $DESCRIPTION$
+      Sets the receive buffer size of a socket
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETRECV
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Read from a socket
- *  $SYNTAX$
- *      HB_INETRECV( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <cResult> is the target buffer and must be passed by reference
- *
- *      <nAmount> is the upper limit of characters to be read from the socket.
- *      If not passed this defaults to the length of cResult
- *  $RETURNS$
- *      The number of the characters read from the socket.
- *  $DESCRIPTION$
- *      Reads from the socket into a buffer.
- *
- *      The parameter cString must be preallocated so that it has enough
- *      space to receive the data. The routine will block the thread until some
- *      bytes are read from the socket, the socket is closed (either from the
- *      receiver or the sender side) or a network error occurs, whichever comes
- *      first. In the latter cases, an error is set, and only the characters
- *      received until premature end of communications are returned.
- *
- *      Notice that there is no guarantee that all the available bytes will be
- *      read before the function returns, in fact, hb_InetRecv returns as soon it
- *      is able to fill cString with one or more bytes. To block the current
- *      process until the whole cString is filled (or nAmount bytes are read),
- *      use the hb_InetRecvALL().
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETRECV
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Read from a socket
+   $SYNTAX$
+      HB_INETRECV( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <cResult> is the target buffer and must be passed by reference
+
+      <nAmount> is the upper limit of characters to be read from the socket.
+      If not passed this defaults to the length of cResult
+   $RETURNS$
+      The number of the characters read from the socket.
+   $DESCRIPTION$
+      Reads from the socket into a buffer.
+
+      The parameter cString must be preallocated so that it has enough
+      space to receive the data. The routine will block the thread until some
+      bytes are read from the socket, the socket is closed (either from the
+      receiver or the sender side) or a network error occurs, whichever comes
+      first. In the latter cases, an error is set, and only the characters
+      received until premature end of communications are returned.
+
+      Notice that there is no guarantee that all the available bytes will be
+      read before the function returns, in fact, hb_InetRecv returns as soon it
+      is able to fill cString with one or more bytes. To block the current
+      process until the whole cString is filled (or nAmount bytes are read),
+      use the hb_InetRecvALL().
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETRECVALL
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Read from a socket without blocking
- *  $SYNTAX$
- *      HB_INETRECVALL( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <cResult> is the target buffer and must be passed by reference
- *
- *      <nAmount> is the upper limit of characters to be read from the socket.
- *      If not passed this defaults to the length of cResult
- *  $RETURNS$
- *      The number of the characters read from the socket. Might be
- *      less than nAmount on premature socket closing or on network error.
- *  $DESCRIPTION$
- *      This function works exactly as hb_InetRecv except that it
- *      blocks until nAmount bytes are read, if nAmount is given, or
- *      cString is filled for its whole length.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETRECVALL
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Read from a socket without blocking
+   $SYNTAX$
+      HB_INETRECVALL( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <cResult> is the target buffer and must be passed by reference
+
+      <nAmount> is the upper limit of characters to be read from the socket.
+      If not passed this defaults to the length of cResult
+   $RETURNS$
+      The number of the characters read from the socket. Might be
+      less than nAmount on premature socket closing or on network error.
+   $DESCRIPTION$
+      This function works exactly as hb_InetRecv except that it
+      blocks until nAmount bytes are read, if nAmount is given, or
+      cString is filled for its whole length.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETRECVLINE
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Read a line from a socket
- *  $SYNTAX$
- *      HB_INETRECVLINE( <socket> [, @<nBytesRead>, [, <nMaxLength> [, <nBufSize> ]]] ) -> cResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <nBytesRead> must be passed by reference
- *
- *      <nMaxLength>
- *
- *      <nBufSize>
- *  $RETURNS$
- *      Line read
- *  $DESCRIPTION$
- *      Blocks the calling thread until a sequence CRLF is read from the socket.
- *      Incremental allocation and end-of-line checking are done in an efficient
- *      way.
- *
- *      If an error occurs, or if the stream is closed before a CRLF is read,
- *      the function returns nothing and sets the socket error.
- *
- *      The returned string does not contain the trailing CRLF sequence, so an
- *      empty line is effectively returned as an empty string.
- *
- *      If the nBytesRead parameter is given, it will contain the number of bytes
- *      read from the socket, including the CRLF sequence, so that in normal
- *      conditions, nResult will report a count equal to the length of the
- *      returned string plus 2. nBytesRead will be 0 if stream is closed before
- *      a CRLF sequence is read, and will be -1 on error.
- *
- *      An optional nMaxLength parameter can be given to allow a maximum character
- *      count before the data is returned anyway. If this number is reached before
- *      a CRLF sequence is encountered, nBytesRead will contain the value one.
- *
- *      Finally, a nBufSize parameter can be given. If not, memory allocation
- *      will be increased by discrete amounts of 80 bytes. The programmer
- *      can provide here a different allocation strategy (e.g. setting nBufSize
- *      equal to nMaxLength, memory for reading the line will be allocated only
- *      once, at the beginning of the function).
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETRECVLINE
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Read a line from a socket
+   $SYNTAX$
+      HB_INETRECVLINE( <socket> [, @<nBytesRead>, [, <nMaxLength> [, <nBufSize> ]]] ) -> cResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <nBytesRead> must be passed by reference
+
+      <nMaxLength>
+
+      <nBufSize>
+   $RETURNS$
+      Line read
+   $DESCRIPTION$
+      Blocks the calling thread until a sequence CRLF is read from the socket.
+      Incremental allocation and end-of-line checking are done in an efficient
+      way.
+
+      If an error occurs, or if the stream is closed before a CRLF is read,
+      the function returns nothing and sets the socket error.
+
+      The returned string does not contain the trailing CRLF sequence, so an
+      empty line is effectively returned as an empty string.
+
+      If the nBytesRead parameter is given, it will contain the number of bytes
+      read from the socket, including the CRLF sequence, so that in normal
+      conditions, nResult will report a count equal to the length of the
+      returned string plus 2. nBytesRead will be 0 if stream is closed before
+      a CRLF sequence is read, and will be -1 on error.
+
+      An optional nMaxLength parameter can be given to allow a maximum character
+      count before the data is returned anyway. If this number is reached before
+      a CRLF sequence is encountered, nBytesRead will contain the value one.
+
+      Finally, a nBufSize parameter can be given. If not, memory allocation
+      will be increased by discrete amounts of 80 bytes. The programmer
+      can provide here a different allocation strategy (e.g. setting nBufSize
+      equal to nMaxLength, memory for reading the line will be allocated only
+      once, at the beginning of the function).
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETRECVENDBLOCK
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Read a block from a socket
- *  $SYNTAX$
- *      HB_INETRECVENDBLOCK( <socket> [, <cBlock >[, @<nBytesRead> [, <nMaxLength> [, <nBufSize> ]]]] ) -> cResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <cBlock>
- *
- *      <nBytesRead>
- *
- *      <nMaxLength>
- *
- *      <nBufSize>
- *  $RETURNS$
- *      Block read
- *  $DESCRIPTION$
- *      This function operates exactly the same way as hb_InetRecvLine, but
- *      the "record termination" is customizable through the cBlock parameter.
- *      If not given, this parameter defaults to the CRLF sequence.
- *      Provided by: Marcelo Lombardo
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETRECVENDBLOCK
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Read a block from a socket
+   $SYNTAX$
+      HB_INETRECVENDBLOCK( <socket> [, <cBlock >[, @<nBytesRead> [, <nMaxLength> [, <nBufSize> ]]]] ) -> cResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <cBlock>
+
+      <nBytesRead>
+
+      <nMaxLength>
+
+      <nBufSize>
+   $RETURNS$
+      Block read
+   $DESCRIPTION$
+      This function operates exactly the same way as hb_InetRecvLine, but
+      the "record termination" is customizable through the cBlock parameter.
+      If not given, this parameter defaults to the CRLF sequence.
+      Provided by: Marcelo Lombardo
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETDATAREADY
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get whether there is data ready in a socket
- *  $SYNTAX$
- *      HB_INETDATAREADY( <socket>, [ <nMillisec> ] ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <nMillisec>
- *  $RETURNS$
- *      If there is data available 1 (one) is returned, 0 (zero) if there is no data
- *      and -1 if there is an  error.
- *  $DESCRIPTION$
- *      Verifies if some data is available to be read in the socket without blocking
- *      execution of the caller.
- *
- *      If nMillisecs is not given, the function returns
- *      immediately 1 if there is some data to be read, 0 if there isn't any data and
- *      -1 in case of error.
- *
- *      If nMillisecs is given, the functon will wait up to that
- *      amount of milliseconds for data to be available; if some data arrives in the
- *      meanwhile, the wait is immediately interrupted.
- *
- *      The next hb_InetRecv() function will read all the available data (up to the
- *      required length) without blocking.
- *
- *      On error, hb_InetErrorCode and hb_InetErrorDesc can be use to determine what kind
- *      of error happened.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETDATAREADY
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get whether there is data ready in a socket
+   $SYNTAX$
+      HB_INETDATAREADY( <socket>, [ <nMillisec> ] ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <nMillisec>
+   $RETURNS$
+      If there is data available 1 (one) is returned, 0 (zero) if there is no data
+      and -1 if there is an  error.
+   $DESCRIPTION$
+      Verifies if some data is available to be read in the socket without blocking
+      execution of the caller.
+
+      If nMillisecs is not given, the function returns
+      immediately 1 if there is some data to be read, 0 if there isn't any data and
+      -1 in case of error.
+
+      If nMillisecs is given, the functon will wait up to that
+      amount of milliseconds for data to be available; if some data arrives in the
+      meanwhile, the wait is immediately interrupted.
+
+      The next hb_InetRecv() function will read all the available data (up to the
+      required length) without blocking.
+
+      On error, hb_InetErrorCode and hb_InetErrorDesc can be use to determine what kind
+      of error happened.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETSEND
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Sent data through a socket
- *  $SYNTAX$
- *      HB_INETSEND( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <cBuffer>
- *
- *      <nLength>
- *  $RETURNS$
- *      The amount of data written, 0 (zero) if the socket is closed, or -1 on an error
- *  $DESCRIPTION$
- *      Send data being stored in a string over the socket.
- *
- *      The nLength parameter can be given to allow writing only a part of
- *      the string.
- *
- *      There is no guarantee that all of cBuffer will be
- *      sent, as this is a decision that is up to the OS; this function does not
- *      take care to ensure that the data is really sent; check
- *      the returned number and send the part that has not been sent.
- *
- *      To ensure that all the data is sent before the function returns, use the
- *      hb_InetSendAll() function.
- *
- *      On error, the error in the socket is set.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETSEND
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Sent data through a socket
+   $SYNTAX$
+      HB_INETSEND( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <cBuffer>
+
+      <nLength>
+   $RETURNS$
+      The amount of data written, 0 (zero) if the socket is closed, or -1 on an error
+   $DESCRIPTION$
+      Send data being stored in a string over the socket.
+
+      The nLength parameter can be given to allow writing only a part of
+      the string.
+
+      There is no guarantee that all of cBuffer will be
+      sent, as this is a decision that is up to the OS; this function does not
+      take care to ensure that the data is really sent; check
+      the returned number and send the part that has not been sent.
+
+      To ensure that all the data is sent before the function returns, use the
+      hb_InetSendAll() function.
+
+      On error, the error in the socket is set.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETSENDALL
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Send data through a socket with blocking
- *  $SYNTAX$
- *      HB_INETSENDALL( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <cBuffer>
- *
- *      <nLength>
- *  $RETURNS$
- *      The amount of data written, 0 (zero) if the socket is closed, or -1 on an error
- *  $DESCRIPTION$
- *      This function works exactly as hb_InetSend() but it ensures that all the
- *      data to be sent is written before returning.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETSENDALL
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Send data through a socket with blocking
+   $SYNTAX$
+      HB_INETSENDALL( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <cBuffer>
+
+      <nLength>
+   $RETURNS$
+      The amount of data written, 0 (zero) if the socket is closed, or -1 on an error
+   $DESCRIPTION$
+      This function works exactly as hb_InetSend() but it ensures that all the
+      data to be sent is written before returning.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETGETHOSTS
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get an array of IP addresses of a host
- *  $SYNTAX$
- *      HB_INETGETHOSTS( <cName> ) -> aHosts
- *  $ARGUMENTS$
- *      <cName>
- *  $RETURNS$
- *      An array of IP addresses
- *  $DESCRIPTION$
- *      Returns an array containing all the IP addresses associated with a given
- *      host name. The IP addressess returned by this funtion are strings in
- *      quad dot notations, eg "192.168.1.1", and can be directly used into
- *      hb_InetConnectIP().
- *
- *      cName can be any string: valid DNS names (eg.
- *      "www.myserver.com"), locally available names (e.g. "localhost" or
- *      windows Network Neighborhood names), or even IP addresses in quad
- *      dot notation.
- *
- *      NOTE: This function is not thread safe (by design), and programmers
- *      must be sure not to use it at the same time in two different threads,
- *      or not to use it together with a hb_InetConnect(). If this kind of situation
- *      should ever arise, you are advised to use a thread MUTEX.
- *
- *      On error, and if the server can't be found, the function returns NIL.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETGETHOSTS
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get an array of IP addresses of a host
+   $SYNTAX$
+      HB_INETGETHOSTS( <cName> ) -> aHosts
+   $ARGUMENTS$
+      <cName>
+   $RETURNS$
+      An array of IP addresses
+   $DESCRIPTION$
+      Returns an array containing all the IP addresses associated with a given
+      host name. The IP addressess returned by this funtion are strings in
+      quad dot notations, eg "192.168.1.1", and can be directly used into
+      hb_InetConnectIP().
+
+      cName can be any string: valid DNS names (eg.
+      "www.myserver.com"), locally available names (e.g. "localhost" or
+      windows Network Neighborhood names), or even IP addresses in quad
+      dot notation.
+
+      NOTE: This function is not thread safe (by design), and programmers
+      must be sure not to use it at the same time in two different threads,
+      or not to use it together with a hb_InetConnect(). If this kind of situation
+      should ever arise, you are advised to use a thread MUTEX.
+
+      On error, and if the server can't be found, the function returns NIL.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETGETALIAS
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get an array of aliases of a server
- *  $SYNTAX$
- *      HB_INETGETALIAS( <cName> ) -> aHosts
- *  $ARGUMENTS$
- *      <cName>
- *  $RETURNS$
- *      Array of server aliases
- *  $DESCRIPTION$
- *      Returns an array containing the aliases ( CNAME DNS records ) by
- *      which the server is currently known.
- *
- *      Whether this function is able
- *      to have the complete list of aliases or not depends on the verbosity
- *      of the DNS server.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETGETALIAS
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get an array of aliases of a server
+   $SYNTAX$
+      HB_INETGETALIAS( <cName> ) -> aHosts
+   $ARGUMENTS$
+      <cName>
+   $RETURNS$
+      Array of server aliases
+   $DESCRIPTION$
+      Returns an array containing the aliases ( CNAME DNS records ) by
+      which the server is currently known.
+
+      Whether this function is able
+      to have the complete list of aliases or not depends on the verbosity
+      of the DNS server.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETSERVER
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Create a socket bound to a port
- *  $SYNTAX$
- *      HB_INETSERVER( <port> [, <cBindAddr> [, <nListenLimit> ]]  ) -> SOCKET
- *  $ARGUMENTS$
- *      <port>
- *
- *      <cBindAddr>
- *
- *      <nListenLimit> is an internal parameter and rarely needs to be passed, defaults to 10
- *  $RETURNS$
- *      An INET socket
- *  $DESCRIPTION$
- *      Creates a server that can accept connections from client on a certain port.
- *
- *      If the computer on which hb_InetServer is called has more than one logical
- *      interface (e.g. one network card, one loopback and one PPP address),
- *      cBindAddr can be specified to select only one of these interfaces to accept
- *      connections for this process. This is useful when a server is present on
- *      two networks, and the service is to be available only in one of them. Also,
- *      the same port on other addresses is left free to be used, so you can have
- *      different server programs running for different networks but managing
- *      the same service. For example, an FTP server available to the internal
- *      network could be radically different from an FTP server available for
- *      the internet.
- *
- *      nListenLimit is the number of incoming connections accepted by kernel before the
- *      kernel has the chance to report them to the application program. If
- *      the sockets receive nListenLimit connections before accepting them
- *      all, the nListenLimit + 1 connection will be notified to be "busy" by
- *      the kernel. The default value of 10 is enough for even
- *      a heavy duty server.
- *
- *      On error, sets error description in the newly returned socket.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETSERVER
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Create a socket bound to a port
+   $SYNTAX$
+      HB_INETSERVER( <port> [, <cBindAddr> [, <nListenLimit> ]]  ) -> SOCKET
+   $ARGUMENTS$
+      <port>
+
+      <cBindAddr>
+
+      <nListenLimit> is an internal parameter and rarely needs to be passed, defaults to 10
+   $RETURNS$
+      An INET socket
+   $DESCRIPTION$
+      Creates a server that can accept connections from client on a certain port.
+
+      If the computer on which hb_InetServer is called has more than one logical
+      interface (e.g. one network card, one loopback and one PPP address),
+      cBindAddr can be specified to select only one of these interfaces to accept
+      connections for this process. This is useful when a server is present on
+      two networks, and the service is to be available only in one of them. Also,
+      the same port on other addresses is left free to be used, so you can have
+      different server programs running for different networks but managing
+      the same service. For example, an FTP server available to the internal
+      network could be radically different from an FTP server available for
+      the internet.
+
+      nListenLimit is the number of incoming connections accepted by kernel before the
+      kernel has the chance to report them to the application program. If
+      the sockets receive nListenLimit connections before accepting them
+      all, the nListenLimit + 1 connection will be notified to be "busy" by
+      the kernel. The default value of 10 is enough for even
+      a heavy duty server.
+
+      On error, sets error description in the newly returned socket.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETACCEPT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Wait until a socket is ready
- *  $SYNTAX$
- *      HB_INETACCEPT( <socket> ) -> SOCKET
- *  $ARGUMENTS$
- *      An INET socket
- *  $RETURNS$
- *      <socket> a socket previously created  / opened
- *  $DESCRIPTION$
- *      Waits until a connection is available on a socket created with hb_InetServer,
- *      returns a socket that can be used to communicate with the incoming client.
- *
- *      On error, NIL is returned and error code sets in the passed SOCKET.
- *
- *      This error can be accessed using hb_InetErrorCode() function.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETACCEPT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Wait until a socket is ready
+   $SYNTAX$
+      HB_INETACCEPT( <socket> ) -> SOCKET
+   $ARGUMENTS$
+      An INET socket
+   $RETURNS$
+      <socket> a socket previously created  / opened
+   $DESCRIPTION$
+      Waits until a connection is available on a socket created with hb_InetServer,
+      returns a socket that can be used to communicate with the incoming client.
+
+      On error, NIL is returned and error code sets in the passed SOCKET.
+
+      This error can be accessed using hb_InetErrorCode() function.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETCONNECT
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Connect a socket to a remote server by IP address or name
- *  $SYNTAX$
- *      HB_INETCONNECT( <cAddress>, <nPort> ) -> SOCKET
- *
- *      HB_INETCONNECT( <cAddress>, <nPort>, <socket> ) -> NIL
- *  $ARGUMENTS$
- *      <cAddress>
- *
- *      <nPort>
- *
- *      <socket>
- *  $RETURNS$
- *      (First form) INET socket
- *
- *      (Second form has no return value)
- *  $DESCRIPTION$
- *      Connects to a remote server described by cAddress, that can be in
- *      quad dot notation (e.g. "192.168.1.1") or in DNS name (e.g.
- *      "www.xharbour.org"), using the desired port.
- *
- *      hb_InetConnect uses "gethostbyname" C system call to
- *      find the network address of the specified server; this means that
- *      this call is an hybrid function doing both a DNS scan and a TCP/IP
- *      connection. hb_InetConnect is not thread safe, and the
- *      program must take care that two hb_InetConnect functions are never
- *      called at the same moment from two different threads (or that
- *      hb_InetGetHosts is not called in the same moment as an hb_InetConnect).
- *
- *      The second version of this function accepts a pre-built socket
- *      as a parameter. This allows to kill asyncronously a thread waiting
- *      for hb_InetConnect to connect, and then cleaning up the leftover
- *      socket data. Also, it is possible to give timeout to the given SOCKET,
- *      but this timeout will be used only in the connection phase, after that
- *      the network address resolution is completed. Use GetHosts() and
- *      hb_InetConnectIP for a finer timeout control.
- *      On error, the error of the returned socket is set. The error could
- *      be due to unavailable name resolving service, host name not valid,
- *      host address not reachable and host reachable but port not open.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETCONNECT
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Connect a socket to a remote server by IP address or name
+   $SYNTAX$
+      HB_INETCONNECT( <cAddress>, <nPort> ) -> SOCKET
+
+      HB_INETCONNECT( <cAddress>, <nPort>, <socket> ) -> NIL
+   $ARGUMENTS$
+      <cAddress>
+
+      <nPort>
+
+      <socket>
+   $RETURNS$
+      (First form) INET socket
+
+      (Second form has no return value)
+   $DESCRIPTION$
+      Connects to a remote server described by cAddress, that can be in
+      quad dot notation (e.g. "192.168.1.1") or in DNS name (e.g.
+      "www.xharbour.org"), using the desired port.
+
+      hb_InetConnect uses "gethostbyname" C system call to
+      find the network address of the specified server; this means that
+      this call is an hybrid function doing both a DNS scan and a TCP/IP
+      connection. hb_InetConnect is not thread safe, and the
+      program must take care that two hb_InetConnect functions are never
+      called at the same moment from two different threads (or that
+      hb_InetGetHosts is not called in the same moment as an hb_InetConnect).
+
+      The second version of this function accepts a pre-built socket
+      as a parameter. This allows to kill asyncronously a thread waiting
+      for hb_InetConnect to connect, and then cleaning up the leftover
+      socket data. Also, it is possible to give timeout to the given SOCKET,
+      but this timeout will be used only in the connection phase, after that
+      the network address resolution is completed. Use GetHosts() and
+      hb_InetConnectIP for a finer timeout control.
+      On error, the error of the returned socket is set. The error could
+      be due to unavailable name resolving service, host name not valid,
+      host address not reachable and host reachable but port not open.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETCONNECTIP
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Connect to a remote server by IP address
- *  $SYNTAX$
- *      HB_INETCONNECTIP( <cAddress>, <nPort> ) -> SOCKET
- *
- *      HB_INETCONNECTIP( <cAddress>, <nPort>, <socket> ) -> NIL
- *  $ARGUMENTS$
- *      <cAddress>
- *
- *      <nPort>
- *
- *      <socket>
- *  $RETURNS$
- *      (First form) INET socket
- *
- *      (Second form has no return value)
- *  $DESCRIPTION$
- *      Connects to a remote server described by cAddress, that can be specified
- *      only in quad dot IPV4 notation (e.g. "127.0.0.1"), using the desired port.
- *      This version of hb_InetConnect does not use gethostbyname, and thus is thread
- *      safe and can be used in combination with hb_InetGetHosts to have a finer
- *      timeout control while connecting to a server, and a finer error control.
- *
- *      The second version of this function accepts a pre-built socket
- *      as a parameter. This allows to kill asyncronously a thread waiting
- *      for hb_InetConnectIP to connect, and then cleaning up the leftover
- *      socket data. Also, it is possible to give timeout at the given SOCKET.
- *
- *      On error, the error of the returned socket is set.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETCONNECTIP
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Connect to a remote server by IP address
+   $SYNTAX$
+      HB_INETCONNECTIP( <cAddress>, <nPort> ) -> SOCKET
+
+      HB_INETCONNECTIP( <cAddress>, <nPort>, <socket> ) -> NIL
+   $ARGUMENTS$
+      <cAddress>
+
+      <nPort>
+
+      <socket>
+   $RETURNS$
+      (First form) INET socket
+
+      (Second form has no return value)
+   $DESCRIPTION$
+      Connects to a remote server described by cAddress, that can be specified
+      only in quad dot IPV4 notation (e.g. "127.0.0.1"), using the desired port.
+      This version of hb_InetConnect does not use gethostbyname, and thus is thread
+      safe and can be used in combination with hb_InetGetHosts to have a finer
+      timeout control while connecting to a server, and a finer error control.
+
+      The second version of this function accepts a pre-built socket
+      as a parameter. This allows to kill asyncronously a thread waiting
+      for hb_InetConnectIP to connect, and then cleaning up the leftover
+      socket data. Also, it is possible to give timeout at the given SOCKET.
+
+      On error, the error of the returned socket is set.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETDGRAM
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Create a datagram socket
- *  $SYNTAX$
- *      HB_INETDGRAM( [<lBroadcast>] ) -> SOCKET
- *  $ARGUMENTS$
- *      lBroadcast
- *  $RETURNS$
- *      An INET socket
- *  $DESCRIPTION$
- *      Creates a datagram-oriented socket that will be able to send data and
- *      eventually receive data. Since the socket is not bound, the program can't
- *      retrieve the address at which this socket appaers to be, but a second
- *      socket receiving a message sent from this one would be able to reply
- *      correctly with a datagram that can be read from a non-bound socket.
- *
- *      If lBroadcast is set to .T., the routine creates a broadcast capable socket:
- *      it will be able to receive and send broadcast messages. On most systems this
- *      requires special user privileges.
- *
- *      Returns the socket, and if an error occurs, the socket error message
- *      and code are set.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETDGRAM
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Create a datagram socket
+   $SYNTAX$
+      HB_INETDGRAM( [<lBroadcast>] ) -> SOCKET
+   $ARGUMENTS$
+      lBroadcast
+   $RETURNS$
+      An INET socket
+   $DESCRIPTION$
+      Creates a datagram-oriented socket that will be able to send data and
+      eventually receive data. Since the socket is not bound, the program can't
+      retrieve the address at which this socket appaers to be, but a second
+      socket receiving a message sent from this one would be able to reply
+      correctly with a datagram that can be read from a non-bound socket.
+
+      If lBroadcast is set to .T., the routine creates a broadcast capable socket:
+      it will be able to receive and send broadcast messages. On most systems this
+      requires special user privileges.
+
+      Returns the socket, and if an error occurs, the socket error message
+      and code are set.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETDGRAMBIND
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Create a bound datagram socket
- *  $SYNTAX$
- *      HB_INETDGRAMBIND( <nPort>, [<cAddress> [, <lBroadcast>] ] ) -> SOCKET
- *  $ARGUMENTS$
- *      <nPort>
- *
- *      <cAddress>
- *
- *      <bBroadcast>
- *  $RETURNS$
- *      An INET socket
- *  $DESCRIPTION$
- *      Creates a datagram-oriented socket and binds it to a particular port, and
- *      eventually to a certain interface if cAddress is given and not NIL.
- *
- *      If lBroadcast is set to .T., the routine creates a broadcast capable socket:
- *      it will be able to receive and send broadcast messages. On most systems this
- *      requires special user privileges.
- *
- *      Returns the socket
- *
- *      If an error occurs, the socket error message
- *      and code are set.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETDGRAMBIND
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Create a bound datagram socket
+   $SYNTAX$
+      HB_INETDGRAMBIND( <nPort>, [<cAddress> [, <lBroadcast>] ] ) -> SOCKET
+   $ARGUMENTS$
+      <nPort>
+
+      <cAddress>
+
+      <bBroadcast>
+   $RETURNS$
+      An INET socket
+   $DESCRIPTION$
+      Creates a datagram-oriented socket and binds it to a particular port, and
+      eventually to a certain interface if cAddress is given and not NIL.
+
+      If lBroadcast is set to .T., the routine creates a broadcast capable socket:
+      it will be able to receive and send broadcast messages. On most systems this
+      requires special user privileges.
+
+      Returns the socket
+
+      If an error occurs, the socket error message
+      and code are set.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETDGRAMSEND
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Send data to a datagram socket
- *  $SYNTAX$
- *      HB_INETDGRAMSEND( <socket>, <cAddress>, <nPort>, <cBuffer> [, <nSize> ] ) -> nBytesSent
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <cAddress>
- *
- *      <nPort>
- *
- *      <cBuffer>
- *
- *      <nSize>
- *  $RETURNS$
- *      Returns number of bytes sent, or -1 on error
- *  $DESCRIPTION$
- *      Sends a datagram (a fixed length data) to a determined ip address (cAddress,
- *      to be specified in quad-dot notation) and port.
- *
- *      If nSize is not specified,
- *      all the data in cBuffer will be sent; if nSize is specified, only
- *      the first nSize bytes of cBuffer will be sent.
- *
- *      There isn't any guarantee that all the data required to be written is
- *      really sent to the socket: the calling program should check for the
- *      numeric return and send iteratively the unsent data to complete
- *      the message.
- *
- *      Anyway, the raw datagram is sent and received as once, and any data
- *      less than the system datagram size will be sent and received
- *      as a single item.
- *
- *      If the socket is created in broadcast mode, the cAddress element
- *      can be a broadcast address.
- *
- *      Returns -1 on error, or the number of bytes actually sent on success.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETDGRAMSEND
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Send data to a datagram socket
+   $SYNTAX$
+      HB_INETDGRAMSEND( <socket>, <cAddress>, <nPort>, <cBuffer> [, <nSize> ] ) -> nBytesSent
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <cAddress>
+
+      <nPort>
+
+      <cBuffer>
+
+      <nSize>
+   $RETURNS$
+      Returns number of bytes sent, or -1 on error
+   $DESCRIPTION$
+      Sends a datagram (a fixed length data) to a determined ip address (cAddress,
+      to be specified in quad-dot notation) and port.
+
+      If nSize is not specified,
+      all the data in cBuffer will be sent; if nSize is specified, only
+      the first nSize bytes of cBuffer will be sent.
+
+      There isn't any guarantee that all the data required to be written is
+      really sent to the socket: the calling program should check for the
+      numeric return and send iteratively the unsent data to complete
+      the message.
+
+      Anyway, the raw datagram is sent and received as once, and any data
+      less than the system datagram size will be sent and received
+      as a single item.
+
+      If the socket is created in broadcast mode, the cAddress element
+      can be a broadcast address.
+
+      Returns -1 on error, or the number of bytes actually sent on success.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETDGRAMRECV
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get data from a datagram socket
- *  $SYNTAX$
- *      HB_INETDGRAMRECV( <socket>, @<cBuffer> [, <nSize> ] ) -> nBytesRead
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *
- *      <cBuffer> is the target buffer and must be passed by reference
- *
- *      <nSize>
- *  $RETURNS$
- *      Returns number of bytes read, or -1 on error
- *  $DESCRIPTION$
- *      Reads at maximum nSize bytes incoming from a UDP socket, if nSize is
- *      given, or reads at maximum cBuffer length if nSize is not given.
- *
- *      There isn't any guarantee that all the data required to be read is
- *      really sent from the kernel to the application: the kernel should
- *      just return the last complete datagram that has been received, up
- *      to nSize bytes.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETDGRAMRECV
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get data from a datagram socket
+   $SYNTAX$
+      HB_INETDGRAMRECV( <socket>, @<cBuffer> [, <nSize> ] ) -> nBytesRead
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+
+      <cBuffer> is the target buffer and must be passed by reference
+
+      <nSize>
+   $RETURNS$
+      Returns number of bytes read, or -1 on error
+   $DESCRIPTION$
+      Reads at maximum nSize bytes incoming from a UDP socket, if nSize is
+      given, or reads at maximum cBuffer length if nSize is not given.
+
+      There isn't any guarantee that all the data required to be read is
+      really sent from the kernel to the application: the kernel should
+      just return the last complete datagram that has been received, up
+      to nSize bytes.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETCRLF
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get a CRLF sequence for internet protocols
- *  $SYNTAX$
- *      HB_INETCRLF() -> cResult
- *  $ARGUMENTS$
- *      (This function has no arguments)
- *  $RETURNS$
- *      Internet CRLF sequence
- *  $DESCRIPTION$
- *      Returns a CRLF sequence used in many internet protocols.
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETCRLF
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get a CRLF sequence for internet protocols
+   $SYNTAX$
+      HB_INETCRLF() -> cResult
+   $ARGUMENTS$
+      (This function has no arguments)
+   $RETURNS$
+      Internet CRLF sequence
+   $DESCRIPTION$
+      Returns a CRLF sequence used in many internet protocols.
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
-/*  $DOC$
- *  $TEMPLATE$
- *      Function
- *  $NAME$
- *      HB_INETISSOCKET
- *  $CATEGORY$
- *      API
- *  $SUBCATEGORY$
- *      INET
- *  $ONELINER$
- *      Get whether a variable is a socket
- *  $SYNTAX$
- *      HB_INETISSOCKET( <socket> ) -> lResult
- *  $ARGUMENTS$
- *      <socket> a socket previously created  / opened
- *  $RETURNS$
- *      Returns whether the passed parameter is a socket
- *  $DESCRIPTION$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *      H
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_INETISSOCKET
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      INET
+   $ONELINER$
+      Get whether a variable is a socket
+   $SYNTAX$
+      HB_INETISSOCKET( <socket> ) -> lResult
+   $ARGUMENTS$
+      <socket> a socket previously created  / opened
+   $RETURNS$
+      Returns whether the passed parameter is a socket
+   $DESCRIPTION$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+      H
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
