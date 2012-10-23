@@ -63,6 +63,7 @@ FUNCTION hbmk_plugin_tpl( hbmk )
 #else
 
 PROCEDURE Main()
-   OutStd( "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2." + hb_eol() )
+   ? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+   RETURN
 
 #endif

@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbwin"
+
 #include "hbwin.ch"
 
 PROCEDURE Main( cPortName )
@@ -71,7 +73,7 @@ PROCEDURE Main( cPortName )
       IF ( nResult := oWinPort:Write( cString ) ) == Len( cString )
           ? "Write() succeeded"
       ELSE
-          ? "Write() failed, returned ", nResult, " expected ", Len(cString)
+          ? "Write() failed, returned ", nResult, " expected ", Len( cString )
       ENDIF
       ? "Scan something... we'll not read it but purge it, press enter"
       Inkey( 0 )

@@ -48,9 +48,6 @@
 #define _NETIOMGM_IPV4_DEF  "127.0.0.1"
 #define _NETIOMGM_PORT_DEF  2940
 
-/* netio_mtserver() needs MT HVM version */
-REQUEST HB_MT
-
 #define _RPC_FILTER "HBNETIOSRV_RPCMAIN"
 
 /* enable this if you need all core functions in RPC support */
@@ -99,6 +96,11 @@ PROCEDURE netiosrv_Main( lUI, ... )
 
    LOCAL cExt
    LOCAL cFile
+
+   IF ! hb_mtvm()
+      QOut( "Multithread support required." )
+      RETURN
+   ENDIF
 
    Set( _SET_DATEFORMAT, "yyyy.mm.dd" )
    Set( _SET_TIMEFORMAT, "HH:MM:SS.FFF" )

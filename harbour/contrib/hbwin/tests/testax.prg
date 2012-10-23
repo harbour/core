@@ -2,14 +2,22 @@
  * $Id$
  */
 
+#require "hbwin"
+
 #include "hbgtinfo.ch"
 #include "hbclass.ch"
 #include "hbwin.ch"
 
+#if ! defined( __HBSCRIPT__HBSHELL )
 REQUEST HB_GT_WVT_DEFAULT
+#endif
 
 PROCEDURE Main()
    LOCAL oMSCAL
+
+#if defined( __PLATFORM__WINDOWS ) .AND. defined( __HBSCRIPT__HBSHELL )
+   hbshell_gtSelect( "GTWVT" )
+#endif
 
    WAIT "Make sure we are 'Active Window'"
    oMSCAL := HActiveX():Init( WAPI_GetActiveWindow(), "MSCAL.Calendar", 0, 0, 300, 300 )

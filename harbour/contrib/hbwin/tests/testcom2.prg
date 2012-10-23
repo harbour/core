@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbwin"
+
 #include "hbwin.ch"
 
 PROCEDURE Main( cPortName )

@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbwin"
+
 #include "hbwin.ch"
 
 #define KEY_WOW64_64KEY 0x0100

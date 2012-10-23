@@ -13328,8 +13328,8 @@ STATIC FUNCTION __hbshell_detect_GT( hHRB )
 /* ------------------------------------------------------------- */
 
 /* for interactive shell and running .hrb. Though it'd be
-   much better if .hrb would natively support list of #require-ed
-   modules, which could be queried and loaded. shell could
+   even better if .hrb would natively support list of #require-ed
+   modules, which could be queried and loaded. Shell prompt could
    support #require as well. */
 
 /* Public hbshell API */

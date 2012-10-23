@@ -10,6 +10,8 @@
  * www - http://harbour-project.org
  */
 
+#require "hbwin"
+
 #include "hbsim.ch"
 
 PROCEDURE Main()
@@ -70,6 +72,10 @@ PROCEDURE Main()
    ENDIF
 
    o:End()
+
+#else
+
+   ? "This test requires WinCE to run."
 
 #endif
 

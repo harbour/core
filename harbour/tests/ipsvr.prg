@@ -11,10 +11,6 @@
 #define EOT                         hb_BChar( 4 )
 #define TIMEOUT                     3000    // 3 seconds
 
-#ifndef __HBSCRIPT__HBSHELL
-REQUEST HB_MT
-#endif
-
 PROCEDURE Main()
 
    LOCAL hListen

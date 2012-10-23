@@ -50,6 +50,8 @@
  *
  */
 
+#if ! defined( __HBSCRIPT__HBSHELL )
+
 #include "hbwin.ch"
 
 #define _SERVICE_NAME "Harbour_Test_Service"
@@ -129,3 +131,13 @@ PROCEDURE SrvMain()
    win_serviceStop()
 
    RETURN
+
+#else
+
+PROCEDURE Main()
+
+   ? "Cannot be used in script mode."
+
+   RETURN
+
+#endif

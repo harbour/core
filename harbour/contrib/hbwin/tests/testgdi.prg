@@ -11,6 +11,8 @@
  *
  */
 
+#require "hbwin"
+
 #include "simpleio.ch"
 
 #include "hbwin.ch"
