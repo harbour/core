@@ -75,73 +75,73 @@ FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
 CLASS HEADER TEMPLATE
 ========================
 
-/*  $CLASSDOC$
- *  $NAME$
- *
- *  $CATEGORY$
- *
- *  $ONELINER$
- *
- *  $CONSTRUCTOR$
- *
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *
- *  $DATALINK$
- *
- *  $DATANOLINK$
- *
- *  $METHODSLINK$
- *
- *  $METHODSNOLINK$
- *
- *  $EXAMPLES$
- *
- *  $TESTS$
- *
- *  $STATUS$
- *
- *  $COMPLIANCE$
- *
- *  $PLATFORMS$
- *
- *  $FILES$
- *
- *  $SEEALSO$
- *
- *  $END$
+/* $CLASSDOC$
+   $NAME$
+
+   $CATEGORY$
+
+   $ONELINER$
+
+   $CONSTRUCTOR$
+
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+
+   $DATALINK$
+
+   $DATANOLINK$
+
+   $METHODSLINK$
+
+   $METHODSNOLINK$
+
+   $EXAMPLES$
+
+   $TESTS$
+
+   $STATUS$
+
+   $COMPLIANCE$
+
+   $PLATFORMS$
+
+   $FILES$
+
+   $SEEALSO$
+
+   $END$
  */
 
 
-/*  $CLASSDOC$
- *  $METHOD$
- *
- *  $CATEGORY$
- *
- *  $ONELINER$
- *
- *  $SYNTAX$
- *
- *  $ARGUMENTS$
- *
- *  $RETURNS$
- *
- *  $DESCRIPTION$
- *
- *  $END$
+/* $CLASSDOC$
+   $METHOD$
+
+   $CATEGORY$
+
+   $ONELINER$
+
+   $SYNTAX$
+
+   $ARGUMENTS$
+
+   $RETURNS$
+
+   $DESCRIPTION$
+
+   $END$
  */
 
-/*  $CLASSDOC$
- *  $DATA$
- *
- *  $CATEGORY$
- *
- *  $ONELINER$
- *
- *  $DESCRIPTION$
- *
- *  $END$
+/* $CLASSDOC$
+   $DATA$
+
+   $CATEGORY$
+
+   $ONELINER$
+
+   $DESCRIPTION$
+
+   $END$
  */

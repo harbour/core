@@ -74,126 +74,126 @@ FILE HEADER TEMPLATE (OPTIONAL ADDITION FOR PARTIAL COPYRIGHTS)
 FUNCTION HEADER TEMPLATE
 ========================
 
-/*  $DOC$
-    $NAME$
-        StartHere()
-    $CATEGORY$
+/* $DOC$
+   $NAME$
+       StartHere()
+   $CATEGORY$
 
-    $SUBCATEGORY$
+   $SUBCATEGORY$
 
-    $ONELINER$
+   $ONELINER$
 
-    $SYNTAX$
+   $SYNTAX$
 
-    $ARGUMENTS$
+   $ARGUMENTS$
 
-    $RETURNS$
+   $RETURNS$
 
-    $DESCRIPTION$
+   $DESCRIPTION$
 
-    $EXAMPLES$
+   $EXAMPLES$
 
-    $TESTS$
+   $TESTS$
 
-    $STATUS$
+   $STATUS$
 
-    $COMPLIANCE$
+   $COMPLIANCE$
 
-    $PLATFORMS$
+   $PLATFORMS$
 
-    $VERSION$
+   $VERSION$
 
-    $FILES$
+   $FILES$
 
-    $SEEALSO$
-        Comma separated list of references
-    $END$
+   $SEEALSO$
+       Comma separated list of references
+   $END$
  */
 
 HEADER EXAMPLES
 ===============
 
-/*  $DOC$
-    $NAME$
-        IsLeapYr()
-    $CATEGORY$
-        Date functions
-    $ONELINER$
-        Test if a date falls in a leap year.
-    $SYNTAX$
-        IsLeapYr( [<dDate>] ) --> <lIsLeap>
-    $ARGUMENTS$
-        <dDate> is an optional date. If not supplied is defaults to the
-        value returned from date().
-    $RETURNS$
-        .T. if <dDate> falls in a leap year, .F. if not.
-    $DESCRIPTION$
-        IsLeapYr() can be used to check if a given year is a leap year.
-    $EXAMPLES$
-        /* Check if it's a leap year. */
+/* $DOC$
+   $NAME$
+       IsLeapYr()
+   $CATEGORY$
+       Date functions
+   $ONELINER$
+       Test if a date falls in a leap year.
+   $SYNTAX$
+       IsLeapYr( [<dDate>] ) --> <lIsLeap>
+   $ARGUMENTS$
+       <dDate> is an optional date. If not supplied is defaults to the
+       value returned from date().
+   $RETURNS$
+       .T. if <dDate> falls in a leap year, .F. if not.
+   $DESCRIPTION$
+       IsLeapYr() can be used to check if a given year is a leap year.
+   $EXAMPLES$
+       /* Check if it's a leap year. */
 
-        IF IsLeapYr()
-           ? "One extra day before you get paid this Feb!!"
-        ELSE
-           ? "A normal year"
-        ENDIF
-    $TESTS$
-        ValType( IsLeapYr( Date() ) ) == "L"
-        ValType( IsLeapYr( SToD() ) ) == "L"
-        ValType( IsLeapYr() ) == "L"
-        IsLeapYr( SToD( "20000101" ) )
-        !IsLeapYr( SToD( "19000101" ) )
-        IsLeapYr( SToD( "19841231" ) )
-        !IsLeapYr()
-    $STATUS$
-        C
-    $COMPLIANCE$
-        IsLeapYr() works exactly like CA-Cl*pper's IsLeapYr(), if your
-        CA-Cl*pper doesn't have such a function you're probably in a
-        different universe from the author of this function.
-    $PLATFORMS$
-        All
-    $FILES$
+       IF IsLeapYr()
+          ? "One extra day before you get paid this Feb!!"
+       ELSE
+          ? "A normal year"
+       ENDIF
+   $TESTS$
+       ValType( IsLeapYr( Date() ) ) == "L"
+       ValType( IsLeapYr( SToD() ) ) == "L"
+       ValType( IsLeapYr() ) == "L"
+       IsLeapYr( SToD( "20000101" ) )
+       !IsLeapYr( SToD( "19000101" ) )
+       IsLeapYr( SToD( "19841231" ) )
+       !IsLeapYr()
+   $STATUS$
+       C
+   $COMPLIANCE$
+       IsLeapYr() works exactly like CA-Cl*pper's IsLeapYr(), if your
+       CA-Cl*pper doesn't have such a function you're probably in a
+       different universe from the author of this function.
+   $PLATFORMS$
+       All
+   $FILES$
 
-    $SEEALSO$
-        Date(), IsWeekend(), IsHarbourFinished(), IsApocalypse(), SET DATE
-    $END$
+   $SEEALSO$
+       Date(), IsWeekend(), IsHarbourFinished(), IsApocalypse(), SET DATE
+   $END$
  */
 
-/*  $DOC$
-    $TEMPLATE$
-        Function
-    $NAME$
-        hb_dateEncStr()
-    $CATEGORY$
-        C level API
-    $SUBCATEGORY$
-        Date/Time
-    $ONELINER$
+/* $DOC$
+   $TEMPLATE$
+       Function
+   $NAME$
+       hb_dateEncStr()
+   $CATEGORY$
+       C level API
+   $SUBCATEGORY$
+       Date/Time
+   $ONELINER$
 
-    $SYNTAX$
-        C Prototype
+   $SYNTAX$
+       C Prototype
 
-        #include <hbdate.h>
-        long hb_dateEncStr( char * szDate )
-    $ARGUMENTS$
-        <szDate>
-    $RETURNS$
-        <lResult>
-    $DESCRIPTION$
+       #include <hbdate.h>
+       long hb_dateEncStr( char * szDate )
+   $ARGUMENTS$
+       <szDate>
+   $RETURNS$
+       <lResult>
+   $DESCRIPTION$
 
-    $EXAMPLES$
+   $EXAMPLES$
 
-    $STATUS$
-        R
-    $COMPLIANCE$
-        NA
-    $FILES$
-    $PLATFORMS$
-        All
-    $VERSION$
-        1.0
-    $SEEALSO$
+   $STATUS$
+       R
+   $COMPLIANCE$
+       NA
+   $FILES$
+   $PLATFORMS$
+       All
+   $VERSION$
+       1.0
+   $SEEALSO$
 
-    $END$
+   $END$
  */
