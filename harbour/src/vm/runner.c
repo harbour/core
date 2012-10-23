@@ -540,8 +540,8 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
                      else
                      {
                         /* overload existing public function */
-                        hb_vmSetFunction( pDynSym->pSymbol, &pSymRead[ ul ] );
                         pDynSym->pSymbol = &pSymRead[ ul ];
+                        hb_vmSetDynFunc( pDynSym );
                      }
                   }
                }

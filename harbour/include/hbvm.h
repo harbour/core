@@ -106,6 +106,7 @@ extern HB_EXPORT PHB_SYMB hb_vmProcessDynLibSymbols( PHB_SYMB pSymbols, HB_USHOR
    extern HB_BOOL       hb_vmFindModuleSymbols( PHB_SYMB pSym, PHB_SYMB * pSymbols, HB_USHORT * puiSymbols );
    extern PHB_SYMB      hb_vmGetRealFuncSym( PHB_SYMB pSym );
    extern void          hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym );
+   extern void          hb_vmSetDynFunc( PHB_DYNS pDynSym );
 
    extern void          hb_vmEnumRelease( PHB_ITEM pBase, PHB_ITEM pValue );
    extern HB_BOOL       hb_vmMsgReference( PHB_ITEM pObject, PHB_DYNS pMessage, PHB_DYNS pAccMsg ); /* create extended message reference */

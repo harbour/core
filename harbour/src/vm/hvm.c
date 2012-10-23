@@ -947,6 +947,25 @@ void hb_vmSetFunction( PHB_SYMB pOldSym, PHB_SYMB pNewSym )
    }
 }
 
+void hb_vmSetDynFunc( PHB_DYNS pDynSym )
+{
+   PHB_SYMBOLS pLastSymbols = s_pSymbols;
+
+   while( pLastSymbols )
+   {
+      HB_USHORT ui, uiSymbols = pLastSymbols->uiModuleSymbols;
+
+      for( ui = 0; ui < uiSymbols; ++ui )
+      {
+         PHB_SYMB pSym = pLastSymbols->pModuleSymbols + ui;
+
+         if( pSym->pDynSym == pDynSym && pDynSym->pSymbol != pSym )
+            pSym->scope.value |= HB_FS_DEFERRED;
+      }
+      pLastSymbols = pLastSymbols->pNext;
+   }
+}
+
 /* application entry point */
 
 void hb_vmInit( HB_BOOL bStartMainProc )
