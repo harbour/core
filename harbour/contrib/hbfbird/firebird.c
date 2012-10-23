@@ -477,16 +477,15 @@ HB_FUNC( FBFETCH )
       XSQLDA *         sqlda = ( XSQLDA * ) hb_itemGetPtr( hb_itemArrayGet( aParam, 2 ) );
       ISC_STATUS_ARRAY status;
       unsigned short   dialect = ( unsigned short ) hb_itemGetNI( hb_itemArrayGet( aParam, 5 ) );
-      ISC_STATUS       fetch_stat;
 
       /* TOFIX */
-      fetch_stat = isc_dsql_fetch( status, &stmt, dialect, sqlda );
-
-      hb_retnl( fetch_stat == 100L ? isc_sqlcode( status ) : -1 );
-      return;
+      hb_retnl( isc_dsql_fetch( status,
+                                &stmt,
+                                dialect,
+                                sqlda ) == 100L ? -1 : isc_sqlcode( status ) );
    }
-
-   hb_retnl( 0 );
+   else
+      hb_retnl( 0 );
 }
 
 HB_FUNC( FBFREE )
