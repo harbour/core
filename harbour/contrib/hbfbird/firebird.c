@@ -54,7 +54,7 @@
 
 #include <time.h>
 
-/* NOTE: Ugly hack to avoid this error when compiler with BCC 5.8.2 and above:
+/* NOTE: Ugly hack to avoid this error when compiled with BCC 5.8.2 and above:
          Error E2238 C:\...\Firebird-2.1.1\include\ibase.h 82: Multiple declaration for 'intptr_t' */
 #if ( defined( __BORLANDC__ ) && __BORLANDC__ >= 1410 )
    /* Prevent inclusion of <stdint.h> from hbdefs.h */
@@ -464,7 +464,6 @@ HB_FUNC( FBQUERY )
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
 }
 
 HB_FUNC( FBFETCH )

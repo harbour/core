@@ -52,8 +52,6 @@
  *
  */
 
-#include "ct.ch"
-
 PROCEDURE Main()
 
    LOCAL cStr := "This is a test!"

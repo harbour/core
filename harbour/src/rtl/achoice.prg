@@ -154,7 +154,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
          Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
          IF Empty( NextKey() )
-            hb_setLastKey( 255 )
+            hb_keySetLast( 255 )
             nKey := 0
          ENDIF
 

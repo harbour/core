@@ -52,8 +52,6 @@
  *
  */
 
-#include "ct.ch"
-
 PROCEDURE Main()
 
    LOCAL cStr := ".,.This.,.is.,.a.,.test!"
@@ -68,11 +66,11 @@ PROCEDURE Main()
    ? [   tokenlower("Hello, World, here I am!")       == "hello, world, here i am!" ?]
    ? [                                                -> "] + tokenlower( "Hello, World, here I am!" ) + ["]
    ? [   tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?]
-   ? [                                                -> "] + tokenlower( "Hello, World, here I am!",,3 ) + ["]
+   ? [                                                -> "] + tokenlower( "Hello, World, here I am!",, 3 ) + ["]
    ? [   tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?]
-   ? [                                                -> "] + tokenlower( "Hello, World, here I am!",",",3 ) + ["]
+   ? [                                                -> "] + tokenlower( "Hello, World, here I am!", ",", 3 ) + ["]
    ? [   tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?]
-   ? [                                                -> "] + tokenlower( "Hello, World, here I am!"," W" ) + ["]
+   ? [                                                -> "] + tokenlower( "Hello, World, here I am!", " W" ) + ["]
    ?
 
    ? [  Lowercase the tokens in the string "] + cStr + ["]

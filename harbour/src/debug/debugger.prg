@@ -2185,7 +2185,7 @@ METHOD RestoreAppState() CLASS HBDebugger
    Set( _SET_DIRCASE, ::nAppDirCase )
    Set( _SET_FILECASE, ::nAppFileCase )
    Set( _SET_TYPEAHEAD, ::nAppTypeAhead )
-   hb_SetLastKey( ::nAppLastKey )
+   hb_keySetLast( ::nAppLastKey )
    RETURN NIL
 
 

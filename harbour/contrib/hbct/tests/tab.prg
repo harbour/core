@@ -52,8 +52,6 @@
  *
  */
 
-#include "ct.ch"
-
 PROCEDURE Main()
 
    LOCAL cStr, nLen

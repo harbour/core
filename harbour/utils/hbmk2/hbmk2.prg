@@ -13243,7 +13243,7 @@ STATIC FUNCTION __hbshell_win_reg_app( lRegister, lAllUser, cAppPath )
 /* List of Harbour RTL function typically used in
    a full-screen CUI ("interactive") app */
 STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
-   RETURN {;
+   RETURN { ;
       "COL"               => NIL ,;
       "DISPBEGIN"         => NIL ,;
       "DISPBOX"           => NIL ,;
@@ -13255,18 +13255,27 @@ STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
       "HB_DISPBOX"        => NIL ,;
       "HB_DISPOUTAT"      => NIL ,;
       "HB_DISPOUTATBOX"   => NIL ,;
+      "HB_KEYCLEAR"       => NIL ,;
+      "HB_KEYINS"         => NIL ,;
+      "HB_KEYLAST"        => NIL ,;
+      "HB_KEYNEXT"        => NIL ,;
+      "HB_KEYPUT"         => NIL ,;
+      "HB_KEYSETLAST"     => NIL ,;
+      "HB_KEYSTD"         => NIL ,;
+      "HB_MGETBOUNDS"     => NIL ,;
+      "HB_MMIDDLEDOWN"    => NIL ,;
       "HB_SCRMAXCOL"      => NIL ,;
       "HB_SCRMAXROW"      => NIL ,;
       "HB_SCROLL"         => NIL ,;
       "HB_SHADOW"         => NIL ,;
+      "INKEY"             => NIL ,;
+      "LASTKEY"           => NIL ,;
       "MAXCOL"            => NIL ,;
       "MAXROW"            => NIL ,;
-      "HB_MMIDDLEDOWN"    => NIL ,;
       "MCOL"              => NIL ,;
       "MDBLCLK"           => NIL ,;
       "MHIDE"             => NIL ,;
       "MLEFTDOWN"         => NIL ,;
-      "MMIDDLEDOWN"       => NIL ,;
       "MPRESENT"          => NIL ,;
       "MRESTSTATE"        => NIL ,;
       "MRIGHTDOWN"        => NIL ,;
@@ -13276,6 +13285,7 @@ STATIC FUNCTION __hbshell_detect_CUI_extern_positive()
       "MSETCURSOR"        => NIL ,;
       "MSETPOS"           => NIL ,;
       "MSHOW"             => NIL ,;
+      "NEXTKEY"           => NIL ,;
       "RESTSCREEN"        => NIL ,;
       "ROW"               => NIL ,;
       "SAVESCREEN"        => NIL ,;

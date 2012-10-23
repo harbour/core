@@ -52,19 +52,19 @@
  *
  */
 
+#require "hbct"
+
+#include "ct.ch"
+
 #ifndef __HARBOUR__
    #define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
-#include "ct.ch"
-
-PROCEDURE main
+PROCEDURE Main()
 
    LOCAL cRet, olderr
 
    ctinit()
-
-   CLS
 
    ? "Begin test of CSETARGERR()"
    ?

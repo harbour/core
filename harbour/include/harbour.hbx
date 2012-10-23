@@ -639,6 +639,7 @@ DYNAMIC hb_keyIns
 DYNAMIC hb_keyLast
 DYNAMIC hb_keyNext
 DYNAMIC hb_keyPut
+DYNAMIC hb_keySetLast
 DYNAMIC hb_keyStd
 DYNAMIC hb_langErrMsg
 DYNAMIC hb_langMessage

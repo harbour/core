@@ -52,8 +52,6 @@
  *
  */
 
-#include "ct.ch"
-
 PROCEDURE Main()
 
    LOCAL cStr := ".,.This.,.is.,.a.,.test!"
@@ -65,9 +63,9 @@ PROCEDURE Main()
 
    // Some simple tests
    ? "  Simple tests:"
-   ? [    numtoken("Hello, World!") ==  2 ? ------------------------------> ] + Str( numtoken("Hello, World!" ),2 )
-   ? [    numtoken("This is good. See you! How do you do?",".!?") == 3 ? -> ] + Str( numtoken("This is good. See you! How do you do?",".!?" ),2 )
-   ? [    numtoken("one,,three,four,,six",",",1) ==  6 ? -----------------> ] + Str( numtoken("one,,three,four,,six",",",1 ),2 )
+   ? [    numtoken("Hello, World!") ==  2 ? ------------------------------> ] + Str( numtoken( "Hello, World!" ),2 )
+   ? [    numtoken("This is good. See you! How do you do?",".!?") == 3 ? -> ] + Str( numtoken( "This is good. See you! How do you do?", ".!?" ), 2 )
+   ? [    numtoken("one,,three,four,,six",",",1) ==  6 ? -----------------> ] + Str( numtoken( "one,,three,four,,six", ",", 1 ), 2 )
    ?
 
    ? [  # of tokens in the string "] + cStr + ["]

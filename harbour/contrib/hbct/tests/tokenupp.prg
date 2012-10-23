@@ -52,8 +52,6 @@
  *
  */
 
-#include "ct.ch"
-
 PROCEDURE Main()
 
    LOCAL cStr := ".,.This.,.is.,.a.,.test!"
@@ -68,11 +66,11 @@ PROCEDURE Main()
    ? [   tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!" ?]
    ? [                                                -> "] + tokenupper( "Hello, world, here I am!" ) + ["]
    ? [   tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!" ?]
-   ? [                                                -> "] + tokenupper( "Hello, world, here I am!",,3 ) + ["]
+   ? [                                                -> "] + tokenupper( "Hello, world, here I am!",, 3 ) + ["]
    ? [   tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!" ?]
-   ? [                                                -> "] + tokenupper( "Hello, world, here I am!",",",3 ) + ["]
+   ? [                                                -> "] + tokenupper( "Hello, world, here I am!", ",", 3 ) + ["]
    ? [   tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!" ?]
-   ? [                                                -> "] + tokenupper( "Hello, world, here I am!"," w" ) + ["]
+   ? [                                                -> "] + tokenupper( "Hello, world, here I am!", " w" ) + ["]
    ?
 
    ? [  Uppercase the tokens in the string "] + cStr + ["]

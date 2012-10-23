@@ -56,8 +56,6 @@
    #define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
-#include "ct.ch"
-
 PROCEDURE Main()
 
    LOCAL cStr := "...This...is...a...test!"

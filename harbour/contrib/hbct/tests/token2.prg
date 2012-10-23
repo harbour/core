@@ -60,8 +60,6 @@
  *
  */
 
-#include "ct.ch"
-
 PROCEDURE Main()
 
    LOCAL cStr1 := "A,BB,CCC,DDDD,EEEEE,FFFFFF"

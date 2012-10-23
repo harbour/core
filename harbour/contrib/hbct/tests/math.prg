@@ -86,6 +86,7 @@ PROCEDURE Main()
    ? "FLOOR( -1.1 ) = -2       // CT3"
    ? Space( 7 ), FLOOR( -1.1 ), "  <-- CT for Harbour"
    ?
+
    WAIT4()
 
    ? "CEILING( 1.9 ) = 2       // CT3"
@@ -113,7 +114,6 @@ PROCEDURE Main()
    ?
 
    WAIT4()
-
 
    ? "LOG10( 0.01 ) = -2.00    // CT3"
    ?  Space( 7 ), LOG10( 0.01 ), "  <-- CT for Harbour"

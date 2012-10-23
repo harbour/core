@@ -52,6 +52,8 @@
  *
  */
 
+#require "hbct"
+
 #include "ct.ch"
 
 PROCEDURE Main()
