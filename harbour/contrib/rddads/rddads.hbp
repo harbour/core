@@ -20,8 +20,6 @@
 {x86}-depimplibs=ads:32bit/ace32.dll
 {x86}-depimplibs=ads:ace32.dll
 
--instfile=inc:ads.ch
-
 # To avoid a warning in ACE header
 -cflag+=-Wno-unknown-pragmas{allgcc}
 

@@ -18,11 +18,6 @@
 -instfile=contrib:ctstr.h
 -instfile=contrib:ctstrfil.h
 -instfile=contrib:ctwin.h
--instfile=inc:ct.ch
--instfile=inc:ctcom.ch
--instfile=inc:ctdisk.ch
--instfile=inc:cterror.ch
--instfile=inc:ctvideo.ch
 
 hbct.hbx
 

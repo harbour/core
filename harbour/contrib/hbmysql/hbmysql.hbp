@@ -18,8 +18,6 @@
 -depimplibs=mysql:../lib/opt/libmySQL.dll
 -depimplibs=mysql:../lib/libmySQL.dll
 
--instfile=inc:mysql.ch
-
 hbmysql.hbx
 
 mysql.c

@@ -24,8 +24,6 @@
 
 -iflag={bcc}-a
 
--instfile=inc:postgres.ch
-
 hbpgsql.hbx
 
 postgres.c

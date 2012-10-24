@@ -14,9 +14,6 @@
 
 -instfile=contrib:hbcompat.h
 -instfile=contrib:xhb.h
--instfile=inc:hbcompat.ch
--instfile=inc:xhb.ch
--instfile=inc:xhbcls.ch
 
 # For hbserv.c, maybe more
 -c=gnu90

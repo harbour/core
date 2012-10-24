@@ -17,8 +17,6 @@
 -depincpathlocal=sqlite3:../3rd/sqlite3
 -depfinish=sqlite3
 
--instfile=inc:hbsqlit3.ch
-
 hbsqlit3.hbx
 
 core.c

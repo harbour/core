@@ -11,7 +11,5 @@
 
 -hbx=
 
--instfile=inc:hbrddsql.ch
-
 sqlbase.c
 sqlmix.c

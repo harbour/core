@@ -19,8 +19,6 @@
 -depimplibs=libharu:../lib_dll/libhpdf.dll
 -depfinish=libharu
 
--instfile=inc:harupdf.ch
-
 hbhpdf.hbx
 
 core.c
