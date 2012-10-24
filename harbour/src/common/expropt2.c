@@ -1143,6 +1143,42 @@ HB_EXPR_PTR hb_compExprReduceNE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       HB_COMP_EXPR_FREE( pLeft );
       HB_COMP_EXPR_FREE( pRight );
    }
+   else if( HB_SUPPORT_EXTOPT &&
+            ( pLeft->ExprType == HB_ET_LOGICAL ||
+              pRight->ExprType == HB_ET_LOGICAL ) )
+   {
+      /* NOTE: This will not generate a runtime error if incompatible
+       * data type is used
+       */
+
+      if( pLeft->ExprType == HB_ET_LOGICAL )
+      {
+         pSelf->value.asOperator.pLeft = pRight;
+         pRight = pLeft;
+         pLeft = pSelf->value.asOperator.pRight;
+      }
+
+      if( !pRight->value.asLogical )
+      {
+         pSelf->ExprType = HB_ET_NONE;
+         HB_COMP_EXPR_FREE( pSelf );
+         pSelf = pLeft;
+      }
+      else if( pLeft->ExprType == HB_EO_NOT )
+      {
+         pSelf->ExprType = HB_ET_NONE;
+         HB_COMP_EXPR_FREE( pSelf );
+         pSelf = pLeft->value.asOperator.pLeft;
+         pLeft->ExprType = HB_ET_NONE;
+         HB_COMP_EXPR_FREE( pLeft );
+      }
+      else
+      {
+         pSelf->ExprType = HB_EO_NOT;
+         pSelf->value.asOperator.pRight = NULL;
+      }
+      HB_COMP_EXPR_FREE( pRight );
+   }
    else if( ( pLeft->ExprType == HB_ET_NIL &&
               ( pRight->ExprType == HB_ET_NUMERIC ||
                 pRight->ExprType == HB_ET_LOGICAL ||
@@ -1646,6 +1682,42 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       pSelf->ExprType = HB_ET_LOGICAL;
       pSelf->ValType  = HB_EV_LOGICAL;
       HB_COMP_EXPR_FREE( pLeft );
+      HB_COMP_EXPR_FREE( pRight );
+   }
+   else if( HB_SUPPORT_EXTOPT &&
+            ( pLeft->ExprType == HB_ET_LOGICAL ||
+              pRight->ExprType == HB_ET_LOGICAL ) )
+   {
+      /* NOTE: This will not generate a runtime error if incompatible
+       * data type is used
+       */
+
+      if( pLeft->ExprType == HB_ET_LOGICAL )
+      {
+         pSelf->value.asOperator.pLeft = pRight;
+         pRight = pLeft;
+         pLeft = pSelf->value.asOperator.pRight;
+      }
+
+      if( pRight->value.asLogical )
+      {
+         pSelf->ExprType = HB_ET_NONE;
+         HB_COMP_EXPR_FREE( pSelf );
+         pSelf = pLeft;
+      }
+      else if( pLeft->ExprType == HB_EO_NOT )
+      {
+         pSelf->ExprType = HB_ET_NONE;
+         HB_COMP_EXPR_FREE( pSelf );
+         pSelf = pLeft->value.asOperator.pLeft;
+         pLeft->ExprType = HB_ET_NONE;
+         HB_COMP_EXPR_FREE( pLeft );
+      }
+      else
+      {
+         pSelf->ExprType = HB_EO_NOT;
+         pSelf->value.asOperator.pRight = NULL;
+      }
       HB_COMP_EXPR_FREE( pRight );
    }
    else if( ( pLeft->ExprType == HB_ET_NIL &&

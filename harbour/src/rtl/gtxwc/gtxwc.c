@@ -4415,8 +4415,8 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
    s_atomCutBuffer0      = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
    s_atomText            = XInternAtom( wnd->dpy, "TEXT", False );
    s_atomCompoundText    = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
-   s_atomFullScreen      = XInternAtom(wnd->dpy, "_NET_WM_STATE_FULLSCREEN",  False);
-   s_atomState           = XInternAtom(wnd->dpy, "_NET_WM_STATE",  False);
+   s_atomFullScreen      = XInternAtom(wnd->dpy, "_NET_WM_STATE_FULLSCREEN", False );
+   s_atomState           = XInternAtom(wnd->dpy, "_NET_WM_STATE", False );
 
    HB_XWC_XLIB_UNLOCK
 

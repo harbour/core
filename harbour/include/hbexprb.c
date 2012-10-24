@@ -1934,9 +1934,9 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                      HB_BOOL        fStrict, fNoop, fPlural;
 
                      fStrict = funcID == HB_F_I18N_GETTEXT_STRICT ||
-                               funcID == HB_F_I18N_GETTEXT_STRICT;
+                               funcID == HB_F_I18N_NGETTEXT_STRICT;
                      fNoop   = funcID == HB_F_I18N_GETTEXT_NOOP ||
-                               funcID == HB_F_I18N_GETTEXT_NOOP;
+                               funcID == HB_F_I18N_NGETTEXT_NOOP;
                      fPlural = funcID == HB_F_I18N_NGETTEXT ||
                                funcID == HB_F_I18N_NGETTEXT_NOOP ||
                                funcID == HB_F_I18N_NGETTEXT_STRICT;

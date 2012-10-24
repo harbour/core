@@ -45,9 +45,9 @@ optimized at compile time:
    - Harbour special functions:
 
       HB_I18N_GETTEXT_NOOP( <cConst1> [ , <cConst2> ] )
-      HB_I18N_NGETTEXT_NOOP( <cConst1> | <acConst1> [ , <cConst2> ] )
+      HB_I18N_NGETTEXT_NOOP( <nCount>, <cConst1> | <acConst1> [ , <cConst2> ] )
       HB_I18N_GETTEXT_NOOP_*( <cConst1> [ , <cConst2> ] )
-      HB_I18N_NGETTEXT_NOOP_*( <cConst1> | <acConst1> [ , <cConst2> ] )
+      HB_I18N_NGETTEXT_NOOP_*( <nCount>, <cConst1> | <acConst1> [ , <cConst2> ] )
       HB_MUTEXCREATE()
 
 
@@ -160,6 +160,18 @@ arguments are well known and can be calculated at compile time:
          <expr> + ""             => <expr>
          "" + <expr>             => <expr>
          ( "<alias>" )->         => <alias>->
+         <expr> == .T.           => <expr>
+         .T. == <expr>           => <expr>
+         <expr> == .F.           => !<expr>
+         .F. == <expr>           => !<expr>
+         <expr> =  .T.           => <expr>
+         .T. =  <expr>           => <expr>
+         <expr> =  .F.           => !<expr>
+         .F. =  <expr>           => !<expr>
+         <expr> != .T.           => !<expr>
+         .T. != <expr>           => !<expr>
+         <expr> != .F.           => <expr>
+         .F. != <expr>           => <expr>
 
      In cases when result is meaningless Harbour compiler can skip code
      for operation, i.e. for such line of .prg code:
