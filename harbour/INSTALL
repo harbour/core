@@ -756,6 +756,9 @@ HARBOUR
                                  We test only the official/mainstream ones. Also
                                  note that the generated implibs will require .dlls
                                  compatible with the ones used at build time.)
+   - HB_INSTALL_3RDDYN=yes       Copy dynamic libraries of external .dll dependencies
+                                 to the dynamic library directory in 'install' build
+                                 phase. Default: no
    - HB_SRC_ROOTPATH=<dir>       When using GNU Make older than 3.81, you shall set
                                  the root directory of Harbour source tree as an
                                  absolute path. If not set, some build functionality
