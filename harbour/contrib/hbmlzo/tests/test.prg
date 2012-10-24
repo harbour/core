@@ -46,7 +46,7 @@ PROCEDURE Main()
    ?
    cStr := Replicate( TEST_STRING, 500 )
    nLen := Len( cStr )
-   checksum := lzo_adler32( cStr )
+   checksum := hb_adler32( cStr )
    cCompressed := hb_lzo1x_1_compress( @cStr, @nLenC, @nResult )
    ShowResult( @cStr, @cCompressed, @nLenC, @nResult )
 
@@ -60,7 +60,7 @@ PROCEDURE Main()
    nLenD := nLenC
    cDeCompressed := hb_lzo1x_decompress_safe( @cCompressed, @nLenD, @nResult )
 
-   IF nResult != LZO_E_OK .OR. nLenD != nLen .OR. checksum != lzo_adler32( cDeCompressed )
+   IF nResult != LZO_E_OK .OR. nLenD != nLen .OR. checksum != hb_adler32( cDeCompressed )
       ? "Internal error - decompression failed: ", hb_ntos( nResult )
    ELSE
       ? hb_strFormat( FMT2_STRING, nLenC, nLenD, nLen )
@@ -79,7 +79,7 @@ PROCEDURE Main()
    nLenD := nLen
    cDeCompressed := hb_lzo1x_decompress( @cCompressed, @nLenD, @nResult )
 
-   IF nResult != LZO_E_OK .OR. nLenD != nLen .OR. checksum != lzo_adler32( cDeCompressed )
+   IF nResult != LZO_E_OK .OR. nLenD != nLen .OR. checksum != hb_adler32( cDeCompressed )
       ? "Internal error - decompression failed: ", hb_ntos( nResult )
    ELSE
       ? hb_strFormat( FMT2_STRING, nLenC, nLenD, nLen )
