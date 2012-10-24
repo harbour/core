@@ -21,7 +21,6 @@
 -iflag={bcc}-a
 
 -instfile=inc:hbcairo.ch
--instfile=inc:hbcairo.hbx
 
 hbcairo.hbx
 

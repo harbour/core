@@ -32,7 +32,6 @@
 -depincpathlocal=zlib:../../src/3rd/zlib
 
 -instfile=inc:hbmzip.ch
--instfile=inc:hbmzip.hbx
 
 hbmzip.hbx
 

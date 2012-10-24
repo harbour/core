@@ -12,7 +12,6 @@
 
 -instfile=inc:tip.ch
 -instfile=inc:thtml.ch
--instfile=inc:hbtip.hbx
 
 hbtip.hbx
 

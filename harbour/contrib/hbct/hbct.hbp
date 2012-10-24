@@ -22,9 +22,7 @@
 -instfile=inc:ctcom.ch
 -instfile=inc:ctdisk.ch
 -instfile=inc:cterror.ch
--instfile=inc:ctextern.ch
 -instfile=inc:ctvideo.ch
--instfile=inc:hbct.hbx
 
 hbct.hbx
 

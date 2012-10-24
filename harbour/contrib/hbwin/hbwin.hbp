@@ -25,7 +25,6 @@
 -instfile=contrib:hbwin.h
 -instfile=contrib:hbwinole.h
 -instfile=inc:hbwin.ch
--instfile=inc:hbwin.hbx
 -instfile=contrib:*.def
 
 hbwin.hbx

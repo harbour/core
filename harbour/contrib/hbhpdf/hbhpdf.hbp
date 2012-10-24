@@ -20,7 +20,6 @@
 -depfinish=libharu
 
 -instfile=inc:harupdf.ch
--instfile=inc:hbhpdf.hbx
 
 hbhpdf.hbx
 
