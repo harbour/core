@@ -54,6 +54,7 @@
 
 #include "hbapi.h"
 #include "hbapierr.h"
+#include "hbchksum.h"
 #include "hbinit.h"
 #include "hbvm.h"
 
@@ -266,11 +267,7 @@ HB_FUNC( LZO_ADLER32 )
    const char * src = hb_parc( 1 );
 
    if( src )
-   {
-      lzo_uint32 checksum = lzo_adler32( 0, NULL, 0 );
-
-      hb_retnint( ( HB_MAXINT ) lzo_adler32( checksum, ( lzo_bytep ) src, hb_parclen( 1 ) ) );
-   }
+      hb_retnint( ( HB_MAXINT ) hb_adler32( 1, ( lzo_bytep ) src, hb_parclen( 1 ) ) );
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
