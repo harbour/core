@@ -1038,23 +1038,26 @@ int hb_comp_yylex( YYSTYPE *yylval_ptr, HB_COMP_DECL )
 
             case FOR:
                if( pLex->iState == LOOKUP &&
-                   !HB_PP_TOKEN_ISEOC( pToken->pNext ) &&
-                   ( HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD ||
-                     /* Clipper always assume FOR (somevar):=1 TO ... here */
-                     HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_LEFT_PB ) )
+                   !HB_PP_TOKEN_ISEOC( pToken->pNext ) )
                {
-                  if( pToken->pNext->pNext &&
-                      HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) != HB_PP_TOKEN_ASSIGN &&
-                      HB_PP_TOKEN_TYPE( pToken->pNext->pNext->type ) != HB_PP_TOKEN_EQ &&
-                      HB_PP_TOKEN_TYPE( pToken->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
-                      hb_stricmp( "EACH", pToken->pNext->value ) == 0 )
+                  PHB_PP_TOKEN pNext = pToken->pNext;
+
+                  if( HB_PP_TOKEN_TYPE( pNext->type ) == HB_PP_TOKEN_KEYWORD &&
+                      pNext->pNext &&
+                      HB_PP_TOKEN_TYPE( pNext->pNext->type ) == HB_PP_TOKEN_KEYWORD &&
+                      hb_stricmp( "EACH", pNext->value ) == 0 )
                   {
                      hb_pp_tokenGet( pLex->pPP );
                      pLex->iState = FOREACH;
                      return FOREACH;
                   }
-                  pLex->iState = FOR;
-                  return FOR;
+                  if( !hb_pp_tokenNextExp( &pNext ) && pNext &&
+                      HB_PP_TOKEN_TYPE( pNext->type ) == HB_PP_TOKEN_KEYWORD &&
+                      hb_stricmp( "TO", pNext->value ) == 0 )
+                  {
+                     pLex->iState = FOR;
+                     return FOR;
+                  }
                }
                iType = IDENTIFIER;
                break;

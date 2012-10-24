@@ -859,6 +859,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
          else if( pExp->ExprType == HB_ET_ALIASVAR )
          {
             if( pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE &&
+                pExp->value.asAlias.pAlias->ExprType == HB_ET_ALIAS &&
                 hb_compExprIsMemvarAlias( pExp->value.asAlias.pAlias->value.asSymbol.name ) )
             {  /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
                HB_GEN_FUNC1( PushMemvarRef, pExp->value.asAlias.pVar->value.asSymbol.name );
@@ -1426,6 +1427,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             }
             else if( pList->ExprType == HB_ET_ALIASVAR &&
                      pList->value.asAlias.pVar->ExprType == HB_ET_VARIABLE &&
+                     pList->value.asAlias.pAlias->ExprType == HB_ET_ALIAS &&
                      hb_compExprIsMemvarAlias( pList->value.asAlias.pAlias->value.asSymbol.name ) )
             {
                HB_GEN_FUNC1( PushMemvarRef, pList->value.asAlias.pVar->value.asSymbol.name );
@@ -1507,6 +1509,7 @@ static HB_EXPR_FUNC( hb_compExprUseArrayAt )
             }
             else if( pList->ExprType == HB_ET_ALIASVAR &&
                      pList->value.asAlias.pVar->ExprType == HB_ET_VARIABLE &&
+                     pList->value.asAlias.pAlias->ExprType == HB_ET_ALIAS &&
                      hb_compExprIsMemvarAlias( pList->value.asAlias.pAlias->value.asSymbol.name ) )
             {
                HB_GEN_FUNC1( PushMemvarRef, pList->value.asAlias.pVar->value.asSymbol.name );
