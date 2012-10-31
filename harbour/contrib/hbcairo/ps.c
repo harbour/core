@@ -68,7 +68,7 @@ HB_FUNC( CAIRO_PS_SURFACE_CREATE )
 HB_FUNC( CAIRO_PS_SURFACE_SET_SIZE )
 {
 #ifdef CAIRO_HAS_PS_SURFACE
-   cairo_surface_t *  pSurface = hb_cairo_surface_param( 1 );
+   cairo_surface_t * pSurface = hb_cairo_surface_param( 1 );
    if( pSurface )
       cairo_ps_surface_set_size( pSurface, hb_parnd( 2 ), hb_parnd( 3 ) );
 #else
@@ -81,7 +81,7 @@ HB_FUNC( CAIRO_PS_SURFACE_SET_SIZE )
 HB_FUNC( CAIRO_PS_SURFACE_SET_EPS )
 {
 #ifdef CAIRO_HAS_PS_SURFACE
-   cairo_surface_t *  pSurface = hb_cairo_surface_param( 1 );
+   cairo_surface_t * pSurface = hb_cairo_surface_param( 1 );
    if( pSurface )
       cairo_ps_surface_set_eps( pSurface, hb_parl( 2 ) );
 #else
@@ -94,7 +94,7 @@ HB_FUNC( CAIRO_PS_SURFACE_SET_EPS )
 HB_FUNC( CAIRO_PS_SURFACE_GET_EPS )
 {
 #ifdef CAIRO_HAS_PS_SURFACE
-   cairo_surface_t *  pSurface = hb_cairo_surface_param( 1 );
+   cairo_surface_t * pSurface = hb_cairo_surface_param( 1 );
    if( pSurface )
       hb_retl( cairo_ps_surface_get_eps( pSurface ) );
 #else

@@ -17,8 +17,8 @@
 #include "hbapigt.h"
 #include "hbapifs.h"
 
-#define SINGLEBUF 32768
-#define MAXLEN    ( 16 * 1024 * 1024 )
+#define SINGLEBUF  32768
+#define MAXLEN     ( 16 * 1024 * 1024 )
 
 static int s_nCount = 0;
 
@@ -37,30 +37,30 @@ static void countCheck( int n )
 
 HB_FUNC( AMFSTDIO_READ )
 {
-   char *     pszStrIn      = ( char * ) hb_xgrab( SINGLEBUF );
-   char *     pszLenPrefix  = ( char * ) hb_xgrab( 5 );
+   char *     pszStrIn     = ( char * ) hb_xgrab( SINGLEBUF );
+   char *     pszLenPrefix = ( char * ) hb_xgrab( 5 );
    char *     pszBuf;    /* = ( char * ) hb_xgrab( SINGLEBUF ); */
-   char *     pszTmp      = pszLenPrefix;
+   char *     pszTmp = pszLenPrefix;
    HB_USHORT  nBytes;
-   int        nTotal      = 0;
+   int        nTotal = 0;
    int        nLen;
    int        nToRead;
-   HB_FHANDLE hStdIn      = hb_fsGetOsHandle( HB_STDIN_HANDLE );
+   HB_FHANDLE hStdIn = hb_fsGetOsHandle( HB_STDIN_HANDLE );
 
    while( nTotal < 4 )
    {
-      nToRead  = ( s_nCount + 4 - nTotal > SINGLEBUF ? SINGLEBUF - s_nCount : 4 - nTotal );
-      nBytes   = hb_fsRead( hStdIn, pszStrIn, ( HB_USHORT ) nToRead );
+      nToRead = ( s_nCount + 4 - nTotal > SINGLEBUF ? SINGLEBUF - s_nCount : 4 - nTotal );
+      nBytes  = hb_fsRead( hStdIn, pszStrIn, ( HB_USHORT ) nToRead );
 
       countCheck( nBytes );
 
       memcpy( pszTmp, pszStrIn, nBytes );
-      nTotal    += nBytes;
-      pszTmp    = pszLenPrefix + nTotal;
+      nTotal += nBytes;
+      pszTmp  = pszLenPrefix + nTotal;
    }
 
    pszLenPrefix[ 4 ] = '\0';
-   nLen              = HB_GET_LE_UINT32( pszLenPrefix );
+   nLen = HB_GET_LE_UINT32( pszLenPrefix );
 
    if( nLen >= MAXLEN )
    {
@@ -68,9 +68,9 @@ HB_FUNC( AMFSTDIO_READ )
       return;
    }
 
-   nTotal     = 0;
-   pszBuf     = ( char * ) hb_xgrab( nLen + 1 );
-   pszTmp     = pszBuf;
+   nTotal = 0;
+   pszBuf = ( char * ) hb_xgrab( nLen + 1 );
+   pszTmp = pszBuf;
 
    while( nTotal < nLen )
    {
@@ -89,8 +89,8 @@ HB_FUNC( AMFSTDIO_READ )
       countCheck( nBytes );
 
       memcpy( pszTmp, pszStrIn, nBytes );
-      nTotal    += nBytes;
-      pszTmp    = pszBuf + nTotal;
+      nTotal += nBytes;
+      pszTmp  = pszBuf + nTotal;
    }
 
    hb_xfree( pszStrIn );

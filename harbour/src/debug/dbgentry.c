@@ -84,14 +84,9 @@ static HB_BOOL hb_clsSetScope( HB_BOOL fScope ) { return fScope; }
          memmove( array + index, array + index + 1, sizeof( type ) * ( length - index ) ); \
    } while( 0 )
 
-#if 1
-#  define HB_DBGCOMMON_LOCK()   hb_threadEnterCriticalSection( &s_dbgMtx )
-#  define HB_DBGCOMMON_UNLOCK() hb_threadLeaveCriticalSection( &s_dbgMtx )
-   static HB_CRITICAL_NEW( s_dbgMtx );
-#else
-#  define HB_DBGCOMMON_LOCK()
-#  define HB_DBGCOMMON_UNLOCK()
-#endif
+#define HB_DBGCOMMON_LOCK()   hb_threadEnterCriticalSection( &s_dbgMtx )
+#define HB_DBGCOMMON_UNLOCK() hb_threadLeaveCriticalSection( &s_dbgMtx )
+static HB_CRITICAL_NEW( s_dbgMtx );
 
 typedef struct
 {

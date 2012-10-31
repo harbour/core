@@ -33,19 +33,19 @@
 
 typedef struct
 {
-   char * cBuf;
-   HB_ISIZ position;
-   HB_ISIZ length;
-   HB_BOOL use_refs;
-   HB_BOOL use_strstr;
-   HB_BOOL str_rtrim;
-   HB_SIZE strstr_count; /* used only when str_ref is disabled */
+   char *   cBuf;
+   HB_ISIZ  position;
+   HB_ISIZ  length;
+   HB_BOOL  use_refs;
+   HB_BOOL  use_strstr;
+   HB_BOOL  str_rtrim;
+   HB_SIZE  strstr_count; /* used only when str_ref is disabled */
    PHB_ITEM obj_ref;
    PHB_ITEM str_ref;
    PHB_ITEM strstr_ref;
    PHB_ITEM class_ref;
    PHB_ITEM conv_function;
-   HB_BOOL encode_ba;
+   HB_BOOL  encode_ba;
 } amfContext;
 
 static HB_BOOL amf3_encode( amfContext * context, PHB_ITEM pItem );
@@ -113,11 +113,11 @@ static HB_ISIZ writeBuffer( amfContext * context, const char * str, HB_ISIZ len 
 
 static HB_BOOL amfX_encode_double( amfContext * context, double value )
 {
-   char     c_value[ 8 ];
-   char *   c_value_ref = &c_value[ 0 ];
+   char   c_value[ 8 ];
+   char * c_value_ref = &c_value[ 0 ];
 
    #ifndef HB_BIG_ENDIAN
-   char     flipped[ 8 ];
+   char flipped[ 8 ];
    #endif
 
    memcpy( c_value_ref, &value, 8 );
@@ -126,14 +126,14 @@ static HB_BOOL amfX_encode_double( amfContext * context, double value )
    if( writeBuffer( context, c_value_ref, 8 ) == 0 )
       return HB_FALSE;
    #else
-   flipped[ 0 ]   = c_value[ 7 ];
-   flipped[ 1 ]   = c_value[ 6 ];
-   flipped[ 2 ]   = c_value[ 5 ];
-   flipped[ 3 ]   = c_value[ 4 ];
-   flipped[ 4 ]   = c_value[ 3 ];
-   flipped[ 5 ]   = c_value[ 2 ];
-   flipped[ 6 ]   = c_value[ 1 ];
-   flipped[ 7 ]   = c_value[ 0 ];
+   flipped[ 0 ] = c_value[ 7 ];
+   flipped[ 1 ] = c_value[ 6 ];
+   flipped[ 2 ] = c_value[ 5 ];
+   flipped[ 3 ] = c_value[ 4 ];
+   flipped[ 4 ] = c_value[ 3 ];
+   flipped[ 5 ] = c_value[ 2 ];
+   flipped[ 6 ] = c_value[ 1 ];
+   flipped[ 7 ] = c_value[ 0 ];
    if( writeBuffer( context, flipped, 8 ) == 0 )
       return HB_FALSE;
    #endif
@@ -152,8 +152,8 @@ static HB_BOOL amfX_write_double( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_encode_int( amfContext * context, int value )
 {
-   char     tmp[ 4 ];
-   HB_SIZE  tmp_size;
+   char    tmp[ 4 ];
+   HB_SIZE tmp_size;
 
    /*
     * Int can be up to 4 bytes long.
@@ -208,9 +208,9 @@ static HB_BOOL amf3_encode_int( amfContext * context, int value )
 static HB_BOOL amf3_write_int( amfContext * context, PHB_ITEM pItem )
 {
 #ifndef HB_LONG_LONG_OFF
-   HB_LONGLONG n  = hb_itemGetNLL( pItem );
+   HB_LONGLONG n = hb_itemGetNLL( pItem );
 #else
-   long        n  = hb_itemGetNL( pItem );
+   long n = hb_itemGetNL( pItem );
 #endif
 
    if( n > MIN_INT && n < MAX_INT )
@@ -228,11 +228,11 @@ static HB_BOOL amf3_write_int( amfContext * context, PHB_ITEM pItem )
 }
 
 /*
-static HB_BOOL amf3_encode_float(amfContext * context, PHB_ITEM pItem)
-{
+   static HB_BOOL amf3_encode_float(amfContext * context, PHB_ITEM pItem)
+   {
    float n = (float)hb_itemGetND(pItem);
    return amfX_encode_double(context, (double)n);
-}
+   }
  */
 
 static HB_BOOL amf3_encode_nil( amfContext * context )
@@ -250,10 +250,10 @@ static HB_BOOL amf3_encode_bool( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_encode_string( amfContext * context, PHB_ITEM pItem )
 {
-   void *         hStr     = NULL; /* = hb_itemGetCPtr(pItem); not needed with UTF8 conversion */
-   HB_SIZE        len;
-   const char *   utf8str  = hb_itemGetStrUTF8( pItem, &hStr, &len );
-   HB_BOOL        result;
+   void *       hStr = NULL;       /* = hb_itemGetCPtr(pItem); not needed with UTF8 conversion */
+   HB_SIZE      len;
+   const char * utf8str = hb_itemGetStrUTF8( pItem, &hStr, &len );
+   HB_BOOL      result;
 
    if( ! hStr )
       return HB_FALSE;
@@ -394,8 +394,8 @@ static int amf3_encode_reference( amfContext * context, PHB_ITEM pHash, PHB_ITEM
 
 static HB_BOOL amf3_serialize_string( amfContext * context, PHB_ITEM pItem )
 {
-   int      result;
-   HB_SIZE  len = hb_itemGetCLen( pItem );
+   int     result;
+   HB_SIZE len = hb_itemGetCLen( pItem );
 
    if( len == 0 )
       return writeByte( context, EMPTY_STRING_TYPE );
@@ -410,8 +410,8 @@ static HB_BOOL amf3_serialize_string( amfContext * context, PHB_ITEM pItem )
 }
 
 /*
-static HB_BOOL amf3_serialize_object_as_string(amfContext * context, PHB_ITEM pItem)
-{
+   static HB_BOOL amf3_serialize_object_as_string(amfContext * context, PHB_ITEM pItem)
+   {
    PHB_ITEM pStr;
    HB_BOOL result;
 
@@ -425,7 +425,7 @@ static HB_BOOL amf3_serialize_object_as_string(amfContext * context, PHB_ITEM pI
 
    hb_itemRelease(pStr);
    return result;
-}
+   }
 
  */
 
@@ -454,8 +454,8 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
 
    for( i = 1; i <= len; i++ )
    {
-      pKey  = hb_hashGetKeyAt( pItem, i );
-      pVal  = hb_hashGetValueAt( pItem, i );
+      pKey = hb_hashGetKeyAt( pItem, i );
+      pVal = hb_hashGetValueAt( pItem, i );
       if( HB_IS_STRING( pKey ) )
       {
          if( ! amf3_encode_string( context, pKey ) )
@@ -472,8 +472,8 @@ static HB_BOOL amf3_encode_hash( amfContext * context, PHB_ITEM pItem )
    {
       for( i = 1; i <= len; i++ )
       {
-         pKey  = hb_hashGetKeyAt( pItem, i );
-         pVal  = hb_hashGetValueAt( pItem, i );
+         pKey = hb_hashGetKeyAt( pItem, i );
+         pVal = hb_hashGetValueAt( pItem, i );
          if( HB_IS_INTEGER( pKey ) )
          {
             if( ! amf3_encode( context, pVal ) )
@@ -494,8 +494,8 @@ static HB_BOOL amf3_encode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 
    for( i = 1; i <= len; i++ )
    {
-      pKey  = hb_hashGetKeyAt( pItem, i );
-      pVal  = hb_hashGetValueAt( pItem, i );
+      pKey = hb_hashGetKeyAt( pItem, i );
+      pVal = hb_hashGetValueAt( pItem, i );
       if( HB_IS_STRING( pKey ) )
       {
          if( ! amf3_serialize_string( context, pKey ) )
@@ -533,8 +533,8 @@ static HB_BOOL amf3_write_hash( amfContext * context, PHB_ITEM pItem )
 
 static HB_ISIZ amf3_encode_byte_array( amfContext * context, PHB_ITEM pItem )
 {
-   HB_ISIZ        item_len;
-   const char *   bytes;
+   HB_ISIZ      item_len;
+   const char * bytes;
 
    if( HB_IS_STRING( pItem ) || HB_IS_MEMO( pItem ) )
    {
@@ -736,10 +736,10 @@ static int amf3_serialize_class_def( amfContext * context, PHB_ITEM pClass )
 /* Get an object's class def. */
 static PHB_ITEM class_def_from_class( /* amfContext * context, */ PHB_ITEM pItem )
 {
-   HB_USHORT   uiClass;
-   PHB_ITEM    pClass;
-   PHB_ITEM    pKey;
-   PHB_ITEM    pValue;
+   HB_USHORT uiClass;
+   PHB_ITEM  pClass;
+   PHB_ITEM  pKey;
+   PHB_ITEM  pValue;
 
    /* get Harbour's class id/handle */
    uiClass = hb_objGetClass( pItem );
@@ -752,10 +752,10 @@ static PHB_ITEM class_def_from_class( /* amfContext * context, */ PHB_ITEM pItem
       "tags" which are put into the Harbour class definitions
       right now */
 
-   pClass   = hb_hashNew( NULL );
+   pClass = hb_hashNew( NULL );
 
-   pKey     = hb_itemPutC( NULL, "CLASS_DEF" );
-   pValue   = hb_itemNew( NULL );
+   pKey   = hb_itemPutC( NULL, "CLASS_DEF" );
+   pValue = hb_itemNew( NULL );
    if( ! hb_hashAdd( pClass, pKey, pValue ) )
    {
       hb_itemRelease( pKey );
@@ -766,8 +766,8 @@ static PHB_ITEM class_def_from_class( /* amfContext * context, */ PHB_ITEM pItem
    hb_itemRelease( pKey );
    hb_itemRelease( pValue );
 
-   pKey     = hb_itemPutC( NULL, "alias" );
-   pValue   = hb_itemPutC( NULL, hb_clsName( uiClass ) );
+   pKey   = hb_itemPutC( NULL, "alias" );
+   pValue = hb_itemPutC( NULL, hb_clsName( uiClass ) );
    if( ! hb_hashAdd( pClass, pKey, pValue ) )
    {
       hb_itemRelease( pKey );
@@ -780,8 +780,8 @@ static PHB_ITEM class_def_from_class( /* amfContext * context, */ PHB_ITEM pItem
 
    if( hbamf_is_cls_externalizable( uiClass ) )
    {
-      pKey     = hb_itemPutC( NULL, "EXTERNALIZABLE_CLASS_DEF" );
-      pValue   = hb_itemNew( NULL );
+      pKey   = hb_itemPutC( NULL, "EXTERNALIZABLE_CLASS_DEF" );
+      pValue = hb_itemNew( NULL );
       if( ! hb_hashAdd( pClass, pKey, pValue ) )
       {
          hb_itemRelease( pKey );
@@ -968,9 +968,9 @@ static HB_BOOL amf3_serialize_object( amfContext * context, PHB_ITEM pItem )
 
 static void amf3_conversion_out( amfContext * context, PHB_ITEM pItem )
 {
-   PHB_ITEM pRetCopy       = hb_itemNew( NULL );
-   PHB_ITEM pOuterContext  = hb_itemPutPtr( NULL, context );
-   PHB_SYMB pSym           = hb_itemGetSymbol( context->conv_function );
+   PHB_ITEM pRetCopy      = hb_itemNew( NULL );
+   PHB_ITEM pOuterContext = hb_itemPutPtr( NULL, context );
+   PHB_SYMB pSym = hb_itemGetSymbol( context->conv_function );
 
    if( pItem == hb_stackReturnItem() )
    {
@@ -1067,28 +1067,28 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
 {
    amfContext * context;
 
-   context              = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
+   context = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
    memset( context, 0, sizeof( amfContext ) );
 
-   context->cBuf        = ( char * ) hb_xgrab( sizeof( char ) * 8 );
+   context->cBuf = ( char * ) hb_xgrab( sizeof( char ) * 8 );
    /* memset( context->cBuf, 0, sizeof( char ) * 8 ); */
-   context->position    = 0;
-   context->length      = sizeof( char ) * 8;
-   context->str_rtrim   = str_rtrim;
-   context->use_refs    = use_refs;
+   context->position  = 0;
+   context->length    = sizeof( char ) * 8;
+   context->str_rtrim = str_rtrim;
+   context->use_refs  = use_refs;
    if( use_refs )
    {
       if( outer_context && outer_context->use_refs )
       {
-         context->obj_ref     = outer_context->obj_ref;
-         context->str_ref     = outer_context->str_ref;
-         context->class_ref   = outer_context->class_ref;
+         context->obj_ref   = outer_context->obj_ref;
+         context->str_ref   = outer_context->str_ref;
+         context->class_ref = outer_context->class_ref;
       }
       else
       {
-         context->obj_ref     = hb_hashNew( NULL );
-         context->str_ref     = hb_hashNew( NULL );
-         context->class_ref   = hb_hashNew( NULL );
+         context->obj_ref   = hb_hashNew( NULL );
+         context->str_ref   = hb_hashNew( NULL );
+         context->class_ref = hb_hashNew( NULL );
          hb_hashSetFlags( context->obj_ref, HB_HASH_KEEPORDER );
          hb_hashSetFlags( context->str_ref, HB_HASH_KEEPORDER );
          hb_hashSetFlags( context->class_ref, HB_HASH_KEEPORDER );
@@ -1096,17 +1096,17 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
    }
    else
    {
-      context->obj_ref     = NULL;
-      context->str_ref     = NULL;
-      context->class_ref   = NULL;
+      context->obj_ref   = NULL;
+      context->str_ref   = NULL;
+      context->class_ref = NULL;
    }
 
-   context->conv_function  = pFuncSym;
+   context->conv_function = pFuncSym;
 
    /* "strstr" is another optional idea of catching similar strings,
       key in this hash is not the pointer to C char, but the string
       itself and the value is id of the reference */
-   context->use_strstr     = HB_TRUE;
+   context->use_strstr = HB_TRUE;
 
    if( outer_context )
    {
@@ -1121,8 +1121,8 @@ static amfContext * context_setup( PHB_ITEM pFuncSym, HB_BOOL use_refs, HB_BOOL 
    }
    else
    {
-      context->strstr_count   = 0;
-      context->strstr_ref     = hb_hashNew( NULL );
+      context->strstr_count = 0;
+      context->strstr_ref   = hb_hashNew( NULL );
    }
 
    return context;
@@ -1156,44 +1156,44 @@ static void context_release( amfContext * context, amfContext * outer_context )
 
 HB_FUNC( AMF3_FROMWA )
 {
-   PHB_ITEM       pWhile         = hb_param( 1, HB_IT_BLOCK );
-   PHB_ITEM       pFor           = hb_param( 2, HB_IT_BLOCK );
-   PHB_ITEM       pFields        = hb_param( 3, HB_IT_ARRAY );
-   HB_ULONG       nCount         = hb_parnldef( 4, 0 );
-   HB_BOOL        str_rtrim      = hb_parldef( 5, HB_TRUE );
-   HB_USHORT      nPkg           = ( HB_USHORT ) hb_parnidef( 6, 0 );
-   amfContext *   outer_context  = ( amfContext * ) hb_parptr( 7 );
+   PHB_ITEM     pWhile        = hb_param( 1, HB_IT_BLOCK );
+   PHB_ITEM     pFor          = hb_param( 2, HB_IT_BLOCK );
+   PHB_ITEM     pFields       = hb_param( 3, HB_IT_ARRAY );
+   HB_ULONG     nCount        = hb_parnldef( 4, 0 );
+   HB_BOOL      str_rtrim     = hb_parldef( 5, HB_TRUE );
+   HB_USHORT    nPkg          = ( HB_USHORT ) hb_parnidef( 6, 0 );
+   amfContext * outer_context = ( amfContext * ) hb_parptr( 7 );
 
-   DBORDERINFO    pInfo;
-   int            iOrd;
-   HB_USHORT      uiFields;
-   HB_ULONG       uiRecCount     = 0;
-   HB_ULONG       uiRecNo        = 0;
-   HB_BOOL        bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
-   HB_BOOL        bEof           = HB_FALSE;
-   AREAP          pArea          = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   PHB_ITEM       pItem;
-   HB_USHORT      uiFieldCopy    = 0; /* GCC knows better (warns) */
-   HB_USHORT      uiIter;
-   amfContext *   context;
-   HB_BOOL        bPredictLen    = ( ! pWhile && ! pFor );
+   DBORDERINFO  pInfo;
+   int          iOrd;
+   HB_USHORT    uiFields;
+   HB_ULONG     uiRecCount     = 0;
+   HB_ULONG     uiRecNo        = 0;
+   HB_BOOL      bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
+   HB_BOOL      bEof  = HB_FALSE;
+   AREAP        pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   PHB_ITEM     pItem;
+   HB_USHORT    uiFieldCopy = 0;      /* GCC knows better (warns) */
+   HB_USHORT    uiIter;
+   amfContext * context;
+   HB_BOOL      bPredictLen = ( ! pWhile && ! pFor );
 
-   HB_BOOL        bAsArray       = ! nPkg;
-   PHB_ITEM       pFieldNames    = NULL; /* again GCC knows better */
-   PHB_ITEM       pField;
+   HB_BOOL  bAsArray    = ! nPkg;
+   PHB_ITEM pFieldNames = NULL;          /* again GCC knows better */
+   PHB_ITEM pField;
 
    if( pArea )
    {
       memset( &pInfo, 0, sizeof( pInfo ) );
-      pInfo.itmResult   = hb_itemPutNI( NULL, 0 );
+      pInfo.itmResult = hb_itemPutNI( NULL, 0 );
       SELF_ORDINFO( pArea, DBOI_NUMBER, &pInfo );
-      iOrd              = hb_itemGetNI( pInfo.itmResult );
+      iOrd = hb_itemGetNI( pInfo.itmResult );
       if( iOrd > 0 )
       {
          SELF_ORDINFO( pArea, DBOI_KEYCOUNT, &pInfo );
-         uiRecCount  = hb_itemGetNL( pInfo.itmResult );
+         uiRecCount = hb_itemGetNL( pInfo.itmResult );
          SELF_ORDINFO( pArea, DBOI_POSITION, &pInfo );
-         uiRecNo     = hb_itemGetNL( pInfo.itmResult );
+         uiRecNo = hb_itemGetNL( pInfo.itmResult );
 
          hb_itemRelease( pInfo.itmResult );
       }
@@ -1208,9 +1208,9 @@ HB_FUNC( AMF3_FROMWA )
             return;
       }
 
-      pItem    = hb_itemNew( NULL );
+      pItem = hb_itemNew( NULL );
 
-      context  = context_setup( NULL, HB_FALSE, str_rtrim, outer_context );
+      context = context_setup( NULL, HB_FALSE, str_rtrim, outer_context );
 
       if( bPredictLen )
       {
@@ -1240,8 +1240,8 @@ HB_FUNC( AMF3_FROMWA )
          if( iOrd > 0 )
          {
             memset( &pInfo, 0, sizeof( pInfo ) );
-            pInfo.itmNewVal   = hb_itemPutNL( NULL, uiRecNo );
-            pInfo.itmResult   = hb_itemPutL( NULL, HB_FALSE );
+            pInfo.itmNewVal = hb_itemPutNL( NULL, uiRecNo );
+            pInfo.itmResult = hb_itemPutL( NULL, HB_FALSE );
             SELF_ORDINFO( pArea, DBOI_POSITION, &pInfo );
             hb_itemRelease( pInfo.itmNewVal );
             hb_itemRelease( pInfo.itmResult );
@@ -1419,30 +1419,30 @@ HB_FUNC( AMF3_FROMWA )
 
 HB_FUNC( AMF3_ENCODE )
 {
-   PHB_ITEM       pItem    = hb_param( 1, HB_IT_ANY );
-   PHB_ITEM       pFuncSym = hb_param( 2, HB_IT_SYMBOL );
-   HB_BOOL        lBA      = hb_parldef( 3, HB_FALSE );
-   HB_BOOL        lRetval;
+   PHB_ITEM pItem    = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pFuncSym = hb_param( 2, HB_IT_SYMBOL );
+   HB_BOOL  lBA      = hb_parldef( 3, HB_FALSE );
+   HB_BOOL  lRetval;
 
-   amfContext *   context;
+   amfContext * context;
 
    if( ! pItem )
       return;
 
-   context                 = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
+   context = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
    memset( context, 0, sizeof( amfContext ) );
 
-   context->cBuf           = ( char * ) hb_xgrab( sizeof( char ) * 8 );
+   context->cBuf = ( char * ) hb_xgrab( sizeof( char ) * 8 );
    /* memset( context->cBuf, 0, sizeof( char ) * 8 ); */
-   context->position       = 0;
-   context->length         = sizeof( char ) * 8;
-   context->str_rtrim      = HB_FALSE;
-   context->obj_ref        = hb_hashNew( NULL );
-   context->str_ref        = hb_hashNew( NULL );
-   context->class_ref      = hb_hashNew( NULL );
-   context->use_refs       = HB_TRUE;
-   context->conv_function  = pFuncSym;
-   context->encode_ba      = lBA;
+   context->position      = 0;
+   context->length        = sizeof( char ) * 8;
+   context->str_rtrim     = HB_FALSE;
+   context->obj_ref       = hb_hashNew( NULL );
+   context->str_ref       = hb_hashNew( NULL );
+   context->class_ref     = hb_hashNew( NULL );
+   context->use_refs      = HB_TRUE;
+   context->conv_function = pFuncSym;
+   context->encode_ba     = lBA;
    hb_hashSetFlags( context->obj_ref, HB_HASH_KEEPORDER );
    hb_hashSetFlags( context->str_ref, HB_HASH_KEEPORDER );
    hb_hashSetFlags( context->class_ref, HB_HASH_KEEPORDER );
@@ -1450,11 +1450,11 @@ HB_FUNC( AMF3_ENCODE )
    /* "strstr" is another optional idea of catching similar strings,
       key in this hash is not the pointer to C char, but the string
       itself and the value is id of the reference */
-   context->use_strstr     = HB_TRUE;
-   context->strstr_count   = 0;
-   context->strstr_ref     = hb_hashNew( NULL );
+   context->use_strstr   = HB_TRUE;
+   context->strstr_count = 0;
+   context->strstr_ref   = hb_hashNew( NULL );
 
-   lRetval                 = amf3_encode( context, pItem );
+   lRetval = amf3_encode( context, pItem );
 
    if( context->use_refs )
    {

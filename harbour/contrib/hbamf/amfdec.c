@@ -29,12 +29,12 @@
 typedef struct
 {
    const char * cBuf;
-   HB_ISIZ position;
-   HB_ISIZ length;
-   PHB_ITEM obj_ref;
-   PHB_ITEM str_ref;
-   PHB_ITEM class_ref;
-   PHB_ITEM conv_function;
+   HB_ISIZ      position;
+   HB_ISIZ      length;
+   PHB_ITEM     obj_ref;
+   PHB_ITEM     str_ref;
+   PHB_ITEM     class_ref;
+   PHB_ITEM     conv_function;
 } amfContext;
 
 static HB_BOOL amf3_getItem( amfContext * context, PHB_ITEM pItem );
@@ -78,26 +78,26 @@ static PHB_ITEM hbamf_cls_externalizable_instance( PHB_ITEM pClassFuncStr )
 
 static char * readByte( amfContext * context )
 {
-   HB_ISIZ  new_position = context->position + 1;
-   char *   byte_ref;
+   HB_ISIZ new_position = context->position + 1;
+   char *  byte_ref;
 
    if( new_position < 0 || new_position > context->length )
       return NULL;
 
-   byte_ref          = ( char * ) ( context->cBuf + context->position );
+   byte_ref = ( char * ) ( context->cBuf + context->position );
    context->position = new_position;
    return byte_ref;
 }
 
 static char * readBytes( amfContext * context, HB_ISIZ len )
 {
-   HB_ISIZ  new_position = context->position + len;
-   char *   result;
+   HB_ISIZ new_position = context->position + len;
+   char *  result;
 
    if( new_position < 0 || new_position > context->length )
       return NULL;
 
-   result            = ( char * ) ( context->cBuf + context->position );
+   result = ( char * ) ( context->cBuf + context->position );
    context->position = new_position;
    return result;
 }
@@ -105,9 +105,9 @@ static char * readBytes( amfContext * context, HB_ISIZ len )
 static HB_BOOL amfX_decode_double( amfContext * context, double * val )
 {
    #ifndef HB_BIG_ENDIAN
-   char           c_val[ 8 ];
+   char c_val[ 8 ];
    #endif
-   const char *   bytes = readBytes( context, 8 );
+   const char * bytes = readBytes( context, 8 );
    if( ! bytes )
       return HB_FALSE;
 
@@ -127,14 +127,14 @@ static HB_BOOL amfX_decode_double( amfContext * context, double * val )
    memcpy( val, bytes, 8 );
 #else
    /* Flip endianness */
-   c_val[ 0 ]  = bytes[ 7 ];
-   c_val[ 1 ]  = bytes[ 6 ];
-   c_val[ 2 ]  = bytes[ 5 ];
-   c_val[ 3 ]  = bytes[ 4 ];
-   c_val[ 4 ]  = bytes[ 3 ];
-   c_val[ 5 ]  = bytes[ 2 ];
-   c_val[ 6 ]  = bytes[ 1 ];
-   c_val[ 7 ]  = bytes[ 0 ];
+   c_val[ 0 ] = bytes[ 7 ];
+   c_val[ 1 ] = bytes[ 6 ];
+   c_val[ 2 ] = bytes[ 5 ];
+   c_val[ 3 ] = bytes[ 4 ];
+   c_val[ 4 ] = bytes[ 3 ];
+   c_val[ 5 ] = bytes[ 2 ];
+   c_val[ 6 ] = bytes[ 1 ];
+   c_val[ 7 ] = bytes[ 0 ];
    memcpy( val, c_val, 8 );
 #endif
 
@@ -143,10 +143,10 @@ static HB_BOOL amfX_decode_double( amfContext * context, double * val )
 
 static HB_BOOL amf3_decode_int( amfContext * context, int * iVal )
 {
-   int      result   = 0;
-   int      byte_cnt = 0;
-   char *   byte_ref;
-   char     byte;
+   int    result   = 0;
+   int    byte_cnt = 0;
+   char * byte_ref;
+   char   byte;
 
    byte_ref = readByte( context );
    if( ! byte_ref )
@@ -157,25 +157,25 @@ static HB_BOOL amf3_decode_int( amfContext * context, int * iVal )
    /* If 0x80 is set, int includes the next byte, up to 4 total bytes */
    while( ( byte & 0x80 ) && ( byte_cnt < 3 ) )
    {
-      result   <<= 7;
-      result   |= byte & 0x7F;
+      result <<= 7;
+      result  |= byte & 0x7F;
       byte_ref = readByte( context );
       if( ! byte_ref )
          return HB_FALSE;
-      byte     = byte_ref[ 0 ];
+      byte = byte_ref[ 0 ];
       byte_cnt++;
    }
 
    /* shift bits in last byte */
    if( byte_cnt < 3 )
    {
-      result   <<= 7; /* shift by 7, since the 1st bit is reserved for next byte flag */
-      result   |= byte & 0x7F;
+      result <<= 7;   /* shift by 7, since the 1st bit is reserved for next byte flag */
+      result  |= byte & 0x7F;
    }
    else
    {
-      result   <<= 8; /* shift by 8, since no further bytes are possible and 1st bit is not used for flag. */
-      result   |= byte & 0xff;
+      result <<= 8;   /* shift by 8, since no further bytes are possible and 1st bit is not used for flag. */
+      result  |= byte & 0xff;
    }
 
    /* Move sign bit, since we're converting 29bit->32bit */
@@ -191,7 +191,7 @@ static HB_BOOL amf3_decode_int( amfContext * context, int * iVal )
 static HB_BOOL amf3_decode_reference( PHB_ITEM pHash, int val, PHB_ITEM pRefItem )
 {
    /* Check for index reference */
-   if( (val & REFERENCE_BIT) == 0 )
+   if( ( val & REFERENCE_BIT ) == 0 )
    {
       PHB_ITEM pKey = hb_itemNew( NULL );
       hb_itemPutNI( pKey, val >> 1 );
@@ -229,8 +229,8 @@ static PHB_ITEM amf3_decode_reference( PHB_ITEM pHash, int val )
 
 static void amf3_add_reference( PHB_ITEM pHash, PHB_ITEM pItem )
 {
-   HB_SIZE  iRef  = hb_hashLen( pHash );
-   PHB_ITEM pKey  = hb_itemNew( NULL );
+   HB_SIZE  iRef = hb_hashLen( pHash );
+   PHB_ITEM pKey = hb_itemNew( NULL );
 
    /* the reference id in AMF starts from 0, and increase
       sequentially - this means we can also use an array,
@@ -258,7 +258,7 @@ static HB_BOOL amf3_deserialize_string( amfContext * context, PHB_ITEM pItem )
    int      header;
    int *    header_p = &header;
    PHB_ITEM pRefItem;
-   PHB_ITEM pHash    = context->str_ref;
+   PHB_ITEM pHash = context->str_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
       return HB_FALSE;
@@ -337,8 +337,8 @@ static HB_BOOL amf3_decode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
 /* Populate an array with vals from the buffer. */
 static HB_BOOL decode_dynamic_array_AMF3( amfContext * context, PHB_ITEM pItem, int array_len, HB_BOOL dict )
 {
-   int      i;
-   HB_BOOL  lRet;
+   int     i;
+   HB_BOOL lRet;
 
    if( dict )
    {
@@ -394,7 +394,7 @@ static HB_BOOL amf3_deserialize_array( amfContext * context, PHB_ITEM pItem, HB_
    int      header;
    int *    header_p = &header;
    PHB_ITEM pRefItem;
-   PHB_ITEM pHash    = context->obj_ref;
+   PHB_ITEM pHash = context->obj_ref;
    int      array_len;
    HB_BOOL  mixed; /* if the result will be a Hash with both numbers and strings as keys */
    char *   byte_ref;
@@ -507,7 +507,7 @@ static HB_BOOL amf3_deserialize_date( amfContext * context, PHB_ITEM pItem )
    int      header;
    int *    header_p = &header;
    PHB_ITEM pRefItem;
-   PHB_ITEM pHash    = context->obj_ref;
+   PHB_ITEM pHash = context->obj_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
       return HB_FALSE;
@@ -554,7 +554,7 @@ static HB_BOOL amf3_deserialize_byte_array( amfContext * context, PHB_ITEM pItem
    int      header;
    int *    header_p = &header;
    PHB_ITEM pRefItem;
-   PHB_ITEM pHash    = context->obj_ref;
+   PHB_ITEM pHash = context->obj_ref;
 
    if( ! amf3_decode_int( context, header_p ) )
       return HB_FALSE;
@@ -586,12 +586,12 @@ static HB_BOOL amf3_deserialize_byte_array( amfContext * context, PHB_ITEM pItem
 /* Get an object's class def - nearly a copy/paste from decoder */
 static PHB_ITEM class_def_from_classname( /* amfContext * context, */ PHB_ITEM pClassName )
 {
-   HB_USHORT   uiClass;
-   PHB_ITEM    pClass;
-   PHB_ITEM    pKey;
-   PHB_ITEM    pValue;
-   char *      pszBuffer   = hb_itemGetC( pClassName );
-   HB_SIZE     nLen        = hb_itemGetCLen( pClassName );
+   HB_USHORT uiClass;
+   PHB_ITEM  pClass;
+   PHB_ITEM  pKey;
+   PHB_ITEM  pValue;
+   char *    pszBuffer = hb_itemGetC( pClassName );
+   HB_SIZE   nLen      = hb_itemGetCLen( pClassName );
 
    hb_strUpper( pszBuffer, nLen );
 
@@ -604,10 +604,10 @@ static PHB_ITEM class_def_from_classname( /* amfContext * context, */ PHB_ITEM p
    if( ! uiClass )
       return NULL;
 
-   pClass   = hb_hashNew( NULL );
+   pClass = hb_hashNew( NULL );
 
-   pKey     = hb_itemPutC( NULL, "CLASS_DEF" );
-   pValue   = hb_itemNew( NULL );
+   pKey   = hb_itemPutC( NULL, "CLASS_DEF" );
+   pValue = hb_itemNew( NULL );
    if( ! hb_hashAdd( pClass, pKey, pValue ) )
    {
       hb_itemRelease( pKey );
@@ -618,8 +618,8 @@ static PHB_ITEM class_def_from_classname( /* amfContext * context, */ PHB_ITEM p
    hb_itemRelease( pKey );
    hb_itemRelease( pValue );
 
-   pKey     = hb_itemPutC( NULL, "alias" );
-   pValue   = hb_itemPutC( NULL, hb_clsName( uiClass ) );
+   pKey   = hb_itemPutC( NULL, "alias" );
+   pValue = hb_itemPutC( NULL, hb_clsName( uiClass ) );
    if( ! hb_hashAdd( pClass, pKey, pValue ) )
    {
       hb_itemRelease( pKey );
@@ -632,8 +632,8 @@ static PHB_ITEM class_def_from_classname( /* amfContext * context, */ PHB_ITEM p
 
    if( hbamf_is_cls_externalizable( uiClass ) )
    {
-      pKey     = hb_itemPutC( NULL, "EXTERNALIZABLE_CLASS_DEF" );
-      pValue   = hb_itemNew( NULL );
+      pKey   = hb_itemPutC( NULL, "EXTERNALIZABLE_CLASS_DEF" );
+      pValue = hb_itemNew( NULL );
       if( ! hb_hashAdd( pClass, pKey, pValue ) )
       {
          hb_itemRelease( pKey );
@@ -655,8 +655,8 @@ static PHB_ITEM class_def_from_classname( /* amfContext * context, */ PHB_ITEM p
  */
 static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int header )
 {
-   PHB_ITEM pStrAlias         = hb_itemNew( NULL );
-   PHB_ITEM pMappedClassDef   = NULL;
+   PHB_ITEM pStrAlias       = hb_itemNew( NULL );
+   PHB_ITEM pMappedClassDef = NULL;
    PHB_ITEM pKey;
    PHB_ITEM pValue;
    PHB_ITEM pAttrs;
@@ -729,8 +729,8 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
 
 
    /* Set dynamic flag */
-   pKey     = hb_itemPutC( NULL, "dynamic" );
-   pValue   = hb_itemPutL( NULL, ( header & DYNAMIC ) == DYNAMIC );
+   pKey   = hb_itemPutC( NULL, "dynamic" );
+   pValue = hb_itemPutL( NULL, ( header & DYNAMIC ) == DYNAMIC );
    if( ! hb_hashAdd( pClass, pKey, pValue ) )
    {
       hb_itemRelease( pKey );
@@ -741,8 +741,8 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
    hb_itemRelease( pValue );
 
    /* Decode static attr names */
-   static_attr_len   = ( int ) ( header >> 4 );
-   pAttrs            = hb_itemNew( NULL );
+   static_attr_len = ( int ) ( header >> 4 );
+   pAttrs = hb_itemNew( NULL );
    hb_arrayNew( pAttrs, static_attr_len );
 
    for( i = 0; i < static_attr_len; i++ )
@@ -787,7 +787,7 @@ static HB_BOOL amf3_decode_class_def( amfContext * context, PHB_ITEM pClass, int
  */
 static HB_BOOL amf3_deserialize_class_def( amfContext * context, PHB_ITEM pClass, int header )
 {
-   PHB_ITEM pHash    = context->class_ref;
+   PHB_ITEM pHash = context->class_ref;
    PHB_ITEM pRefItem;
 
    /* Check for reference */
@@ -877,8 +877,8 @@ static HB_BOOL amf3_decode_obj_attrs( amfContext * context, PHB_ITEM pHash, PHB_
 /* Decode an anonymous obj. */
 static HB_BOOL amf3_decode_anon_obj( amfContext * context, PHB_ITEM pItem, PHB_ITEM pClass )
 {
-   PHB_ITEM pAnonHash   = hb_itemNew( NULL );
-   HB_BOOL  result      = HB_FALSE;
+   PHB_ITEM pAnonHash = hb_itemNew( NULL );
+   HB_BOOL  result    = HB_FALSE;
 
    /* Original python comment which I don't understand:
       We're using merge instead of populating the dict
@@ -896,11 +896,11 @@ static HB_BOOL amf3_decode_anon_obj( amfContext * context, PHB_ITEM pItem, PHB_I
 
 static HB_BOOL amf3_decode_externalizable( amfContext * context, PHB_ITEM pItem )
 {
-   const char *   position;
-   PHB_ITEM       pRetCopy = hb_itemNew( NULL );
-   PHB_ITEM       pStr, pPos;
-   HB_BOOL        result   = HB_TRUE;
-   PHB_ITEM       pObject;
+   const char * position;
+   PHB_ITEM     pRetCopy = hb_itemNew( NULL );
+   PHB_ITEM     pStr, pPos;
+   HB_BOOL      result = HB_TRUE;
+   PHB_ITEM     pObject;
 
    if( pItem == hb_stackReturnItem() )
       pObject = pRetCopy;
@@ -940,9 +940,9 @@ static HB_BOOL amf3_decode_externalizable( amfContext * context, PHB_ITEM pItem 
 static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BOOL proxy )
 {
    int      header;
-   int *    header_p          = &header;
+   int *    header_p = &header;
    PHB_ITEM pRefItem;
-   PHB_ITEM pHash             = context->obj_ref;
+   PHB_ITEM pHash = context->obj_ref;
    PHB_ITEM pClass;
    PHB_ITEM pMappedClassDef;
    PHB_ITEM pValue;
@@ -1028,13 +1028,13 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
       /* performance TOFIX, cache class id (in context maybe)
          to not scan all classes by name everytime */
       hb_objSetClass( pItem, "AMF_OBJ", "AMF_OBJ" );
-      pValue   = hb_itemPutNI( NULL, OBJAMF_VER );
+      pValue = hb_itemPutNI( NULL, OBJAMF_VER );
       hb_arraySet( pItem, OBJAMF_VAR_VER, pValue );
       hb_itemRelease( pValue );
-      pValue   = hb_itemPutC( NULL, "ANONYMOUS" );
+      pValue = hb_itemPutC( NULL, "ANONYMOUS" );
       hb_arraySet( pItem, OBJAMF_VAR_NAME, pValue );
       hb_itemRelease( pValue );
-      pValue   = hb_hashNew( NULL );
+      pValue = hb_hashNew( NULL );
       hb_arraySet( pItem, OBJAMF_VAR_HASH, pValue );
       hb_itemRelease( pValue );
    }
@@ -1140,9 +1140,9 @@ static void amf3_conversion_in( amfContext * context, PHB_ITEM pItem )
 
 static HB_BOOL amf3_getItem( amfContext * context, PHB_ITEM pItem )
 {
-   char           byte;
-   const char *   byte_ref;
-   HB_BOOL        lRet = HB_TRUE;
+   char byte;
+   const char * byte_ref;
+   HB_BOOL      lRet = HB_TRUE;
 
    byte_ref = readByte( context );
 
@@ -1235,29 +1235,30 @@ static HB_BOOL amf3_getItem( amfContext * context, PHB_ITEM pItem )
 
 HB_FUNC( AMF3_DECODE )
 {
-   PHB_ITEM       pItem    = hb_stackReturnItem();
+   PHB_ITEM pItem = hb_stackReturnItem();
+
 #if defined( _DEBUG )
    PHB_ITEM pDebugBlock = hb_param( 2, HB_IT_BLOCK );
 #endif
-   PHB_ITEM       pFuncSym = hb_param( 2, HB_IT_SYMBOL );
+   PHB_ITEM pFuncSym = hb_param( 2, HB_IT_SYMBOL );
 
-   amfContext *   context;
+   amfContext * context;
 
-   const char *   szBuffer = hb_parc( 1 );
+   const char * szBuffer = hb_parc( 1 );
 
    if( ! szBuffer )
       return;
 
-   context                 = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
+   context = ( amfContext * ) hb_xgrab( sizeof( amfContext ) );
    memset( context, 0, sizeof( amfContext ) );
 
-   context->cBuf           = szBuffer;
-   context->position       = 0;
-   context->length         = hb_parclen( 1 );
-   context->obj_ref        = hb_hashNew( NULL );
-   context->str_ref        = hb_hashNew( NULL );
-   context->class_ref      = hb_hashNew( NULL );
-   context->conv_function  = pFuncSym;
+   context->cBuf          = szBuffer;
+   context->position      = 0;
+   context->length        = hb_parclen( 1 );
+   context->obj_ref       = hb_hashNew( NULL );
+   context->str_ref       = hb_hashNew( NULL );
+   context->class_ref     = hb_hashNew( NULL );
+   context->conv_function = pFuncSym;
 
    amf3_getItem( context, pItem );
 
