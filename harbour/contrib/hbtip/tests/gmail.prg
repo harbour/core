@@ -17,25 +17,26 @@ PROCEDURE Main( cFrom, cPassword, cTo )
    hb_default( @cPassword, "<mypassword>" )
    hb_default( @cTo      , "addressee@domain.com" )
 
-   ? hb_SendMail( "smtp.gmail.com",;
-                  465,;
-                  cFrom,;
-                  cTo,;
-                  NIL /* CC */,;
-                  {} /* BCC */,;
-                  "test: body",;
-                  "test: subject",;
-                  NIL /* attachment */,;
-                  cFrom,;
-                  cPassword,;
-                  "",;
-                  NIL /* nPriority */,;
-                  NIL /* lRead */,;
-                  .T. /* lTrace */,;
-                  .F.,;
-                  NIL /* lNoAuth */,;
-                  NIL /* nTimeOut */,;
-                  NIL /* cReplyTo */,;
-                  .T. )
+   ? hb_SendMail( ;
+      "smtp.gmail.com", ;
+      465, ;
+      cFrom, ;
+      cTo, ;
+      NIL /* CC */, ;
+      {} /* BCC */, ;
+      "test: body", ;
+      "test: subject", ;
+      NIL /* attachment */, ;
+      cFrom, ;
+      cPassword, ;
+      "", ;
+      NIL /* nPriority */, ;
+      NIL /* lRead */, ;
+      .T. /* lTrace */, ;
+      .F., ;
+      NIL /* lNoAuth */, ;
+      NIL /* nTimeOut */, ;
+      NIL /* cReplyTo */, ;
+      .T. )
 
    RETURN

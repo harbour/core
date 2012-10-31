@@ -23,10 +23,10 @@
 PROCEDURE ExecGCUI()
 
    IF hb_mtvm()
-      hb_threadStart( {| oCrt | oCrt := WvgCrt():New( , , { 2,4 }, { 20,81 }, , .T. ) , ;
+      hb_threadStart( {| oCrt | oCrt := WvgCrt():New( , , { 2, 4 }, { 20, 81 }, , .T. ), ;
          oCrt:icon := GetResource( "dia_excl.ico" ), ;
          oCrt:create(), ;
-         GCUIConsole( oCrt ) , ;
+         GCUIConsole( oCrt ), ;
          oCrt:destroy() } )
    ENDIF
 
@@ -39,7 +39,7 @@ PROCEDURE ExecGCUI()
 PROCEDURE GCUIConsole( oCrt )
 
    LOCAL dDate      := Date()
-   LOCAL cName      := PadR( 'Some Usefule Name'   , 35 )
+   LOCAL cName      := PadR( 'Some Usefule Name', 35 )
    LOCAL cAdd1      := PadR( 'Linda Goldman Avenue', 35 )
    LOCAL cAdd2      := PadR( 'Excellent Street'    , 35 )
    LOCAL cAdd3      := PadR( 'Suit #415'           , 35 )
@@ -63,22 +63,22 @@ PROCEDURE GCUIConsole( oCrt )
 
    @  3, nColGet GET dDate  ;
       WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 1 ) ) } ;
-      Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,0,0 ) ), .T. }
+      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 0, 0 ) ), .T. }
    @  6, nColGet GET cName  ;
       WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 2 ) ) } ;
-      Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,255,0 ) ), ;
+      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 255, 0 ) ), ;
       Wvg_SetGObjState( hBoxR, 3 ), .T. }
    @  9, nColGet GET cAdd1  ;
       WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 3 ) ) } ;
-      Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,0,255 ) ), .T. }
+      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 0, 255 ) ), .T. }
    @ 11, nColGet GET cAdd2  ;
       WHEN  {|| Wvg_SetGObjData( hTxt, 1, FetchText( 4 ) ) } ;
-      Valid {|| Wvg_SetGObjData( hTxt, 6, RGB( 255,255,255 ) ), ;
+      VALID {|| Wvg_SetGObjData( hTxt, 6, RGB( 255, 255, 255 ) ), ;
       Wvg_SetGObjState( hBoxR, 1 ), .T. }
    @ 13, nColGet GET cAdd3  ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 198,21,140 ) ), .T. }
+      WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 198, 21, 140 ) ), .T. }
    @ 16, nColGet GET nSlry PICTURE "@Z 9999999.99" ;
-      WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 0,0,0 ) ), .T. }
+      WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 0, 0, 0 ) ), .T. }
 
    // The only additional calls to render your console GUI
    //

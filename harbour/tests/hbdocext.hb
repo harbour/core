@@ -14,13 +14,14 @@
 #include "simpleio.ch"
 
 PROCEDURE Main()
+
    LOCAL aFile
    LOCAL cFile
    LOCAL cDst
 
    LOCAL cHdr := ;
-      "/*" + hb_eol() +;
-      " * $" + "Id" + "$" + hb_eol() +;
+      "/*" + hb_eol() + ;
+      " * $" + "Id" + "$" + hb_eol() + ;
       " */" + hb_eol()
 
    FOR EACH aFile IN Directory( hb_osFileMask() )

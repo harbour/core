@@ -146,7 +146,7 @@ METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_OVERLAPPED + WS_TABSTOP + WS_CLIPSIBLINGS + LBS_NOINTEGRALHEIGHT + LBS_WANTKEYBOARDINPUT
-   ::exStyle     := WS_EX_CLIENTEDGE //+ WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
+   ::exStyle     := WS_EX_CLIENTEDGE // + WS_EX_LEFT + WS_EX_LTRREADING + WS_EX_RIGHTSCROLLBAR
    ::className   := "LISTBOX"
    ::objType     := objTypeListBox
 

@@ -102,12 +102,14 @@ FUNCTION tp_baud( nPort, nNewBaud )
 
 
 FUNCTION tp_inkey( ... )
-   RETURN inkey( ... )
+   RETURN Inkey( ... )
 
 FUNCTION tp_idle( lNewval )
+
    IF lNewval != NIL .AND. lNewval
       RETURN .T.
    ENDIF
+
    RETURN .F.
 
 PROCEDURE tp_delay( nTime )
@@ -233,8 +235,8 @@ FUNCTION tp_recv( nPort, nLength, nTimeout )
 
    nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
-   DO WHILE Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND.;
-            ( nTimeout < 0 .OR. Seconds() < nDone )
+   DO WHILE Len( t_aPorts[ nPort, TPFP_INBUF ] ) < nLength .AND. ;
+         ( nTimeout < 0 .OR. Seconds() < nDone )
 
       IF ! tp_idle()
          FetchChars( nPort )
@@ -419,18 +421,17 @@ PROCEDURE tp_clrkbd()
 
 FUNCTION tp_crc16( cString )
 
-   RETURN hb_byteSwapW( hb_crcct( cString ) )   /* swap lo and hi bytes */
+   RETURN hb_ByteSwapW( hb_CRCCT( cString ) )   /* swap lo and hi bytes */
 
 FUNCTION tp_crc32( cString )
 
-   RETURN hb_crc32( cString )
+   RETURN hb_CRC32( cString )
 
 
-/*                   nPort, nTimeout, acList|cString..., lIgnorecase */
-FUNCTION tp_waitfor( ... )
+FUNCTION tp_waitfor( ... ) /* nPort, nTimeout, acList|cString..., lIgnorecase */
 
    LOCAL aParam := hb_AParams()
-   LOCAL nPort//, nTimeout, lIgnorecase
+   LOCAL nPort // , nTimeout, lIgnorecase
 
    nPort := aParam[ 1 ]
    // nTimeout := aParam[ 2 ]
@@ -443,7 +444,7 @@ FUNCTION tp_waitfor( ... )
    // hb_default( @nTimeout, -1 )
    // hb_default( @lIgnorecase, .F. )
 
-   /*
+#if 0
 
    IF ntimeout < 0
       nDone := _clock() + 999999
@@ -484,16 +485,17 @@ FUNCTION tp_waitfor( ... )
    ENDDO
 
    IF nFirst < 64000
-      tp_recv( nPort, nAt + Len( acList[ nRet ] ))
+      tp_recv( nPort, nAt + Len( acList[ nRet ] ) )
       RETURN nRet
    ENDIF
-   */
+#endif
 
    RETURN 0
 
 /* We cannot set, well, _I_ think we cannot, CTS without setting RTS flowcontrol, so this
    function and tp_ctrlrts() do the same thing, that is set/reset CRTSCTS flowcontol */
 FUNCTION tp_ctrlcts( nPort, nNewCtrl )
+
    LOCAL nCurValue
    LOCAL nFlag
 
@@ -528,6 +530,7 @@ FUNCTION tp_ctrlrts( nPort, nNewCtrl )
 // sets to 0 = dtr off, 1 dtr on, 2 = dtr flow control autotoggle
 // I don't support 2.  who uses dtr for flow control anyway...
 FUNCTION tp_ctrldtr( nPort, nNewCtrl )
+
    LOCAL nCurValue
    LOCAL nFlag
 
@@ -552,6 +555,7 @@ FUNCTION tp_ctrldtr( nPort, nNewCtrl )
    RETURN nCurValue
 
 FUNCTION tp_isdcd( nPort )
+
    LOCAL nValue
 
    IF ! isopenport( nPort )
@@ -563,6 +567,7 @@ FUNCTION tp_isdcd( nPort )
    RETURN hb_bitAnd( nValue, HB_COM_MSR_DCD ) != 0
 
 FUNCTION tp_isri( nPort )
+
    LOCAL nValue
 
    IF ! isopenport( nPort )
@@ -574,6 +579,7 @@ FUNCTION tp_isri( nPort )
    RETURN hb_bitAnd( nValue, HB_COM_MSR_RI ) != 0
 
 FUNCTION tp_isdsr( nPort )
+
    LOCAL nValue
 
    IF ! isopenport( nPort )
@@ -585,6 +591,7 @@ FUNCTION tp_isdsr( nPort )
    RETURN hb_bitAnd( nValue, HB_COM_MSR_DSR ) != 0
 
 FUNCTION tp_iscts( nPort )
+
    LOCAL nValue
 
    IF ! isopenport( nPort )
@@ -613,26 +620,26 @@ FUNCTION tp_flush( nPort, nTimeout )
 
    DO WHILE tp_OutFree( nPort ) > 0 .AND. ;
          ( nTimeout < 0 .OR. Seconds() < nDone )
-      hb_IdleState()
+      hb_idleState()
    ENDDO
 
    RETURN iif( tp_OutFree( nPort ) > 0, TE_TMOUT, 0 )
 
-/*
+#if 0
 
-/// sorry, but ctrldsr and ctrlcts will act like isdsr and iscts... if you want
-/// flow control, talk to the system.
+// / sorry, but ctrldsr and ctrlcts will act like isdsr and iscts... if you want
+// / flow control, talk to the system.
 FUNCTION tp_ctrldsr( nPort )
    RETURN tp_isdsr( nPort )
 
-/// you can't do these things.  try rc.serial
-FUNCTION tp_shared
+// / you can't do these things.  try rc.serial
+FUNCTION tp_shared()
    RETURN 0
 
-FUNCTION tp_setport
+FUNCTION tp_setport()
    RETURN 0
 
-*/
+#endif
 
 // internal (static) functions ---------------------------------------------------
 
@@ -674,63 +681,67 @@ INIT PROCEDURE _tpinit()
    IF t_aPorts == NIL
       t_aPorts := Array( TP_MAXPORTS )
       FOR x := 1 TO Len( t_aPorts )
-         /// port name, file handle, baud, data bits, parity, stop bits, Open?, input buffer, input buff.size
+         // / port name, file handle, baud, data bits, parity, stop bits, Open?, input buffer, input buff.size
          t_aPorts[ x ] := { "", -1, 1200, 8, "N", 1, .F., "", 0 }
       NEXT
    ENDIF
 
    RETURN
 
-/*
-/// you can uncomment the following section for compatability with TP code... I figured
-/// you'd probably want them commented so it won't compile so that you would see where
-/// you have potential incomplete port problems
-///FUNCTION tp_mstat
-///   RETURN ""
-///
-///FUNCTION tp_szmodem
-///   RETURN 0
-///
-///FUNCTION tp_noteoff
-///   RETURN 0
-///
-///FUNCTION tp_ontime
-///   RETURN 0
-///
-///FUNCTION tp_rzmodem
-///   RETURN 0
-///
-///FUNCTION tp_error
-///   RETURN 0
-///
-///FUNCTION tp_errmsg
-///   RETURN ""
-///
-///FUNCTION tp_fifo
-///   RETURN 0
-///
-///
-///FUNCTION tp_outchrs
-///   RETURN 0
-///
-///FUNCTION tp_keybd
-///   RETURN 0
-///
+#if 0
 
-/// tp_debug is not a real TP function.  I included it so you can define your own debug
-/// output function.
-/// the point of the first parameter is a "debug level".  I keep a system variable for how
-/// much debuggning output is wanted and if the tp_debug parameter is a LOWER number than
-/// the global debug level I print the message.  Since I don't have your system globals,
-/// I will ignore the first parameter and always print it.
-/// I recommend you modify this function to suit your own debugging needs
+// you can uncomment the following section for compatability with TP code... I figured
+// you'd probably want them commented so it won't compile so that you would see where
+// you have potential incomplete port problems
+FUNCTION tp_mstat()
+   RETURN ""
+
+FUNCTION tp_szmodem()
+   RETURN 0
+
+FUNCTION tp_noteoff()
+   RETURN 0
+
+FUNCTION tp_ontime()
+   RETURN 0
+
+FUNCTION tp_rzmodem()
+   RETURN 0
+
+FUNCTION tp_error()
+   RETURN 0
+
+FUNCTION tp_errmsg()
+   RETURN ""
+
+FUNCTION tp_fifo()
+   RETURN 0
+
+FUNCTION tp_outchrs()
+   RETURN 0
+
+FUNCTION tp_keybd()
+   RETURN 0
+
+// / tp_debug is not a real TP function.  I included it so you can define your own debug
+// / output function.
+// / the point of the first parameter is a "debug level".  I keep a system variable for how
+// / much debuggning output is wanted and if the tp_debug parameter is a LOWER number than
+// / the global debug level I print the message.  Since I don't have your system globals,
+// / I will ignore the first parameter and always print it.
+// / I recommend you modify this function to suit your own debugging needs
 FUNCTION tp_debug( nDebugLevel, cString )
+
    ? cString
+
    RETURN NIL
-*/
+
+#endif
 
 PROCEDURE tp_uninstall()
+
    /* NOTE: dummy function, solely for compatibility. */
+
    RETURN
 
 STATIC FUNCTION __TP_INFREE()
@@ -740,13 +751,13 @@ STATIC FUNCTION __TP_OUTFREE()
    RETURN -1
 
 FUNCTION BIN_AND( ... )
-   RETURN HB_BITAND( ... )
+   RETURN hb_bitAnd( ... )
 
 FUNCTION BIN_OR( ... )
-   RETURN HB_BITOR( ... )
+   RETURN hb_bitOr( ... )
 
 FUNCTION BIN_XOR( ... )
-   RETURN HB_BITXOR( ... )
+   RETURN hb_bitXor( ... )
 
 FUNCTION BIN_NOT( ... )
-   RETURN HB_BITNOT( ... )
+   RETURN hb_bitNot( ... )

@@ -28,6 +28,7 @@ FUNCTION FT_FINDITH( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
    LOCAL nIthOccurrence
 
    // Is Case Important??
+
    IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. lIgnoreCase
       cCheckFor := Upper( cCheckFor )
       cCheckIn  := Upper( cCheckIn )

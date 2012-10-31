@@ -74,6 +74,7 @@ PROCEDURE Main()
 /*
 */
 PROCEDURE t1()
+
    LOCAL lCreateIfNotExist := .F.
    LOCAL db := sqlite3_open( "new.s3db", lCreateIfNotExist )
 
@@ -86,6 +87,7 @@ PROCEDURE t1()
 /*
 */
 PROCEDURE t2()
+
    LOCAL lCreateIfNotExist := .T.
    LOCAL db := sqlite3_open( "new.s3db", lCreateIfNotExist )
    LOCAL stmt
@@ -126,7 +128,7 @@ PROCEDURE t2()
 
       sqlite3_sleep( 3000 )
 
-      stmt := sqlite3_prepare( db, "INSERT INTO t1( name, age ) VALUES( :name, :age )")
+      stmt := sqlite3_prepare( db, "INSERT INTO t1( name, age ) VALUES( :name, :age )" )
       IF ! Empty( stmt )
          IF sqlite3_bind_text( stmt, 1, "Andy" ) == SQLITE_OK .AND. ;
             sqlite3_bind_int( stmt, 2, 17 ) == SQLITE_OK
@@ -151,7 +153,7 @@ PROCEDURE t2()
       ? "Last _ROWID_: " + Str( sqlite3_last_insert_rowid( db ) )
       ? ""
 
-      stmt := sqlite3_prepare( db, "SELECT * FROM t1 WHERE name == :name ")
+      stmt := sqlite3_prepare( db, "SELECT * FROM t1 WHERE name == :name " )
       sqlite3_bind_text( stmt, 1, "Andy" )
 
       ?
@@ -172,7 +174,7 @@ PROCEDURE t2()
 
                SWITCH nCType
                CASE SQLITE_BLOB
-                  ?? "BLOB" //sqlite3_column_blob( stmt, nI )
+                  ?? "BLOB" // sqlite3_column_blob( stmt, nI )
                   EXIT
 
                CASE SQLITE_INTEGER
@@ -198,7 +200,7 @@ PROCEDURE t2()
 
       sqlite3_sleep( 3000 )
 
-      stmt := sqlite3_prepare( db, "SELECT * FROM t1 WHERE age >= ?5")
+      stmt := sqlite3_prepare( db, "SELECT * FROM t1 WHERE age >= ?5" )
       sqlite3_bind_int( stmt, 5, 40 )
 
       ?
@@ -218,7 +220,7 @@ PROCEDURE t2()
 
                SWITCH nCType
                CASE SQLITE_BLOB
-                  ?? "BLOB" //sqlite3_column_blob( stmt, nI )
+                  ?? "BLOB" // sqlite3_column_blob( stmt, nI )
                   EXIT
 
                CASE SQLITE_INTEGER
@@ -245,7 +247,7 @@ PROCEDURE t2()
 
       ?
       ? "SELECT id, name, age + 5 FROM t1"
-      stmt := sqlite3_prepare( db, "SELECT id, name, age + 5 FROM t1")
+      stmt := sqlite3_prepare( db, "SELECT id, name, age + 5 FROM t1" )
 
       ? sqlite3_column_name( stmt, 1 )
       ? sqlite3_column_name( stmt, 2 )

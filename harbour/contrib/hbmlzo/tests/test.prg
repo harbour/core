@@ -15,6 +15,7 @@
 #define FMT2_STRING  "Decompressed %d bytes back into %d bytes (%d)"
 
 PROCEDURE Main()
+
    LOCAL cStr, cCompressed, cDeCompressed
    LOCAL checksum
    LOCAL nLen, nLenC, nLenD, nResult
@@ -25,7 +26,7 @@ PROCEDURE Main()
    ?? "miniLZO -- mini subset of the LZO real-time data compression library"
    ? "Ver. " + ;
       lzo_version_string() + ;
-      " (0x" + hb_numtohex( lzo_version() ) +"), " + ;
+      " (0x" + hb_NumToHex( lzo_version() ) + "), " + ;
       lzo_version_date()
 
    ?
@@ -46,7 +47,7 @@ PROCEDURE Main()
    ?
    cStr := Replicate( TEST_STRING, 500 )
    nLen := Len( cStr )
-   checksum := hb_adler32( cStr )
+   checksum := hb_Adler32( cStr )
    cCompressed := hb_lzo1x_1_compress( @cStr, @nLenC, @nResult )
    ShowResult( @cStr, @cCompressed, @nLenC, @nResult )
 
@@ -60,10 +61,10 @@ PROCEDURE Main()
    nLenD := nLenC
    cDeCompressed := hb_lzo1x_decompress_safe( @cCompressed, @nLenD, @nResult )
 
-   IF nResult != LZO_E_OK .OR. nLenD != nLen .OR. checksum != hb_adler32( cDeCompressed )
+   IF nResult != LZO_E_OK .OR. nLenD != nLen .OR. checksum != hb_Adler32( cDeCompressed )
       ? "Internal error - decompression failed: ", hb_ntos( nResult )
    ELSE
-      ? hb_strFormat( FMT2_STRING, nLenC, nLenD, nLen )
+      ? hb_StrFormat( FMT2_STRING, nLenC, nLenD, nLen )
    ENDIF
 
    /*
@@ -79,10 +80,10 @@ PROCEDURE Main()
    nLenD := nLen
    cDeCompressed := hb_lzo1x_decompress( @cCompressed, @nLenD, @nResult )
 
-   IF nResult != LZO_E_OK .OR. nLenD != nLen .OR. checksum != hb_adler32( cDeCompressed )
+   IF nResult != LZO_E_OK .OR. nLenD != nLen .OR. checksum != hb_Adler32( cDeCompressed )
       ? "Internal error - decompression failed: ", hb_ntos( nResult )
    ELSE
-      ? hb_strFormat( FMT2_STRING, nLenC, nLenD, nLen )
+      ? hb_StrFormat( FMT2_STRING, nLenC, nLenD, nLen )
    ENDIF
 
    ?
@@ -105,12 +106,13 @@ PROCEDURE Main()
    ? "LZF ", hb_ntos( Len( hb_lzf_compress( cStr, NIL, @nResult ) ) )
    ? "LZO ", hb_ntos( Len( hb_lzo1x_1_compress( cStr, NIL, @nResult ) ) )
 */
+
    RETURN
 
 STATIC PROCEDURE ShowResult( cStr, cCompressed, nLen, nResult )
 
    IF nResult == LZO_E_OK
-      ? hb_strFormat( FMT_STRING, Len( cStr ), nLen, Len( cCompressed ) )
+      ? hb_StrFormat( FMT_STRING, Len( cStr ), nLen, Len( cCompressed ) )
    ELSEIF nResult == LZO_E_OUT_OF_MEMORY
       ? "Out of memory.."
    ELSEIF nResult == LZO_E_NOT_COMPRESSIBLE

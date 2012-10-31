@@ -132,13 +132,13 @@ METHOD New( name, lOpen, width, height, bgColor, ;
 
    ::cMainNode := name
 
-   cStr += ""       //SPACE(10)
+   cStr += ""       // SPACE(10)
    cStr += name + " = new List("
    cStr += iif( lOpen, "true,", "false," )
    cStr += hb_ntos( width ) + ","
    cStr += hb_ntos( height ) + ","
    cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
-   cStr += ""       //SPACE(10)
+   cStr += ""       // SPACE(10)
    cStr += name + [.setFont("<FONT FACE='] + FONT + [' SIZE=] + hb_ntos( fntSize ) + [' COLOR='] + fntColor + ['>","</FONT>");] + CRLF()
 
    ::nItems++
@@ -160,7 +160,7 @@ METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJsList
    __defaultNIL( @WIDTH, 200 )
    __defaultNIL( @HEIGHT, 22 )
    __defaultNIL( @BGCOLOR, "white" )
-   cStr += ""       //SPACE(10)
+   cStr += ""       // SPACE(10)
    cStr += name + "= new List("
    cStr += iif( lOpen, "true,", "false," )
    cStr += hb_ntos( width ) + ","

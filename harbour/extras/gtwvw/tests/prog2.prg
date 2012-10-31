@@ -33,7 +33,7 @@ STATIC s_zwin := {}
 STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
 
 #ifdef __GTWVW__
-STATIC s_amiscobjlist := {}      //x misc object list (actually: list of codeblocks)
+STATIC s_amiscobjlist := {}      // x misc object list (actually: list of codeblocks)
 #endif
 
 PROCEDURE Main()
@@ -54,7 +54,7 @@ PROCEDURE Main()
    CLS
    @ 0, 0 SAY PadC( "This is the Main Window", MaxCol() + 1 )
 
-// screen background
+   // screen background
 #ifndef __GTWVW__
    DispBegin()
    FOR i := 1 TO MaxRow() - 1
@@ -64,7 +64,7 @@ PROCEDURE Main()
    NEXT
    DispEnd()
 #else
-   ResetMiscObjects( 0 )   //make sure we start with no GUI objects
+   ResetMiscObjects( 0 )   // make sure we start with no GUI objects
    AddMiscObjects( 0, {| nWindow | WVW_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, "vouch1.bmp" ) } )
 #endif
 
@@ -75,10 +75,10 @@ PROCEDURE Main()
    xBrowse1()
    lboxmessage( "That's all folks" )
 
-// restore state
+   // restore state
    SetCursor( SC_NORMAL )
 
-   RETURN //main
+   RETURN // main
 
 PROCEDURE xGet1()
 
@@ -118,7 +118,7 @@ PROCEDURE xGet1()
 
    SetCursor( oldCurs )
 
-   RETURN //xGet1()
+   RETURN // xGet1()
 
 /* the following is adapted from WVTGUI.PRG by Pritpal Bedi
    for illustration purposes only */
@@ -152,7 +152,7 @@ FUNCTION xBrowse1()
    oBrowse:ColSep        := hb_UTF8ToStrBox( "│" )
    oBrowse:HeadSep       := hb_UTF8ToStrBox( "═" )
 #else
-   oBrowse:ColSep        := "  "     //we'll draw a line between these spaces
+   oBrowse:ColSep        := "  "     // we'll draw a line between these spaces
    oBrowse:HeadSep       := "__"
 #endif
    oBrowse:GoTopBlock    := {|| dbGoTop() }
@@ -169,7 +169,7 @@ FUNCTION xBrowse1()
    nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
 
 #ifdef __GTWVW__
-   Wvw_SetPen( 0, 0, rgb( 210,1210,210 ) )
+   Wvw_SetPen( 0, 0, rgb( 210, 1210, 210 ) )
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep
@@ -226,7 +226,7 @@ FUNCTION xBrowse1()
 
    zrevwindow()
 
-// restore state
+   // restore state
    SetCursor( nCursor )
 
    dbCloseArea()
@@ -260,11 +260,11 @@ STATIC FUNCTION TBNext( oTbr )
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
-   IF EOF()
+   IF Eof()
       lMoved := .F.
    ELSE
       dbSkip( 1 )
-      IF EOF()
+      IF Eof()
          lMoved := .F.
          dbGoto( nSaveRecNum )
       ENDIF
@@ -280,7 +280,7 @@ STATIC FUNCTION TBPrev( oTbr )
    LOCAL lMoved := .T.
 
    dbSkip( - 1 )
-   IF BOF()
+   IF Bof()
       dbGoto( nSaveRecNum )
       lMoved := .F.
    ENDIF
@@ -301,6 +301,7 @@ FUNCTION lMessage( cMsg )
 #ifndef __GTWVW__
 
    LOCAL cOldColor := SetColor( s_cStdColor )
+
    @ MaxRow(), 0 SAY PadC( cMsg, MaxCol() + 1 )
    SetColor( cOldColor )
 
@@ -330,7 +331,7 @@ FUNCTION lYesNo( cMsg )
    nWidth := Max( Len( cmsg ), Len( "Yes" ) )
    nTopLine := nBotLine - 2 - 1
 
-   nLeft := Max( nLeft, ( (nRight + nLeft ) * .5 ) - ( nWidth * .5 ) - 1 )
+   nLeft := Max( nLeft, ( ( nRight + nLeft ) * .5 ) - ( nWidth * .5 ) - 1 )
    nRight := nLeft + nWidth + 1
 
    // open window
@@ -364,7 +365,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
    nWidth := iif( nNumLines < 2, Len( cmsg ), nRight - nLeft - 1 )
    nTopLine := nBotLine - nNumLines - 1
-   IF nTopLine < 0            //too many lines to display
+   IF nTopLine < 0            // too many lines to display
       nNumLines += nTopLine
       nTopLine := 0
    ENDIF
@@ -415,7 +416,7 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
 #ifdef __GTWVW__
    WVW_nOpenWindow( ctitle, r1, c1, r2, c2 )
-   ResetMiscObjects( NIL )   //make sure we start with no GUI objects
+   ResetMiscObjects( NIL )   // make sure we start with no GUI objects
 #endif
 
    AAdd( s_zwin, { i + 1, r1, c1, r2, c2, cScreen, ctitle, nrow, ncol, coldcolor } )
@@ -448,7 +449,7 @@ FUNCTION ZREVWINDOW()
    ENDIF
 
 #ifdef __GTWVW__
-   ResetMiscObjects( NIL )   //clear all GUI objects, if any
+   ResetMiscObjects( NIL )   // clear all GUI objects, if any
    WVW_lCloseWindow()
 #endif
 
@@ -466,7 +467,7 @@ FUNCTION nCeiling( nNumber )
 
    LOCAL nTemp
 
-   nTemp := nNumber - Int( nNumber )  //right of dec point
+   nTemp := nNumber - Int( nNumber )  // right of dec point
    IF nTemp > 0
       nNumber := Int( nNumber ) + 1
    ELSE
@@ -480,7 +481,7 @@ FUNCTION nCeiling( nNumber )
 //
 //      WVW_Paint() must be a FUNCTION in your application
 //      as it is called when Window gets WM_PAINT message.
-//WARNING: it now receives only nWinNum parameter
+// WARNING: it now receives only nWinNum parameter
 //
 
 FUNCTION WVW_Paint( nWinNum )
@@ -498,7 +499,7 @@ FUNCTION ResetMiscObjects( nWinNum )
    DO WHILE Len( s_amiscobjlist ) < nWinNum + 1
       AAdd( s_amiscobjlist, {} )
    ENDDO
-   s_amiscobjlist[ nWinNum+1 ] := {}
+   s_amiscobjlist[ nWinNum + 1 ] := {}
 
    RETURN .T.
 

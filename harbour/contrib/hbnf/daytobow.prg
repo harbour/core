@@ -36,7 +36,7 @@ FUNCTION FT_DAYTOBOW( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
-   nRetVal := DOW( dGivenDate ) - nDOW_Start
+   nRetVal := DoW( dGivenDate ) - nDOW_Start
    IF nRetVal < 0
       nRetVal += 7
    ENDIF

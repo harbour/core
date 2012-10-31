@@ -12,18 +12,20 @@
  */
 
 PROCEDURE Main()
+
    LOCAL oObject
 
-   BEGIN SEQUENCE WITH {|| break() }
+   BEGIN SEQUENCE WITH {|| Break() }
       oObject := CreateObject( "MyOleServer" )
       ? oObject:MyMethod( "Hello", 123, .T., ;
-                          { hb_datetime(), 123.45, { date(), 2, 3 } } )
+         { hb_DateTime(), 123.45, { Date(), 2, 3 } } )
       ? oObject:Property1
-      oObject:Property1 := "!!! >>>" + upper( oObject:Property1 ) + "<<< !!!"
+      oObject:Property1 := "!!! >>>" + Upper( oObject:Property1 ) + "<<< !!!"
       ? oObject:Property1
    RECOVER
       ? "Can not access 'MyOleServer' OLE server."
    END SEQUENCE
 
    WAIT
-RETURN
+
+   RETURN

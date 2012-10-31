@@ -128,7 +128,7 @@ FUNCTION ReferParam()
       bResult := GetBlock( @lEnd ), ;
       SetByRef( @lEnd ) } )
    // Clipper & xHarbour it's .T.
-   //In Harbour it is .F.
+   // In Harbour it is .F.
    ? "Printed value in Clipper  .T. =", Eval( bResult )
    ?
    // Notice the Clipper bug: GetBlock is receiving the reference to
@@ -139,7 +139,7 @@ FUNCTION ReferParam()
       bResult := GetBlock( @lEnd ), ;
       SetByRef( @lEnd ) } )
    // Clipper & xHarbour it's .T.
-   //In Harbour it is .F.
+   // In Harbour it is .F.
    ? "Printed value in Clipper  .T. =", Eval( bResult )
    ?
 
@@ -149,7 +149,7 @@ FUNCTION ReferParam()
       SetByRef( @lEnd ), ;
       bResult := GetBlock( @lEnd ) } )
    // Clipper & xHarbour it's .T.
-   //In Harbour it is .F.
+   // In Harbour it is .F.
    ? "Printed value in Clipper  .F. =", Eval( bResult )
    ?
 
@@ -157,11 +157,11 @@ FUNCTION ReferParam()
       SetByRef( @lEnd ), ;
       bResult := GetBlock( @lEnd ) } )
    // Clipper & xHarbour it's .T.
-   //In Harbour it is .F.
+   // In Harbour it is .F.
    ? "Printed value in Clipper  .F. =", Eval( bResult )
    ?
 
-   RETURN Nil
+   RETURN NIL
 
 STATIC FUNCTION PassByValue( bBlock )
 
@@ -185,7 +185,7 @@ STATIC FUNCTION SetByRef( lVar )
 
    lVar := .F.
 
-   RETURN Nil
+   RETURN NIL
 
 STATIC FUNCTION GetBlock( lVar )
 

@@ -51,6 +51,7 @@
  */
 
 FUNCTION hb_CStr( xVal )
+
    LOCAL v := ValType( xVal )
 
    SWITCH v
@@ -76,11 +77,12 @@ FUNCTION hb_CStr( xVal )
 
 REQUEST __objSetClass
 
-FUNCTION hb_valToExp( xVal )
+FUNCTION hb_ValToExp( xVal )
 
    RETURN s_valToExp( xVal )
 
 STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
+
    LOCAL cVal, cKey
    LOCAL tmp
    LOCAL v := ValType( xVal )
@@ -119,8 +121,8 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
             FOR EACH tmp IN xVal
                cKey := s_valToExp( tmp:__enumKey() )
                cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
-                       cKey + "=>" + ;
-                       s_valToExp( tmp, cInd + cKey, hRefs, @cRefs )
+                  cKey + "=>" + ;
+                  s_valToExp( tmp, cInd + cKey, hRefs, @cRefs )
             NEXT
             cVal += "}"
          ENDIF
@@ -128,7 +130,7 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
          cVal := "{"
          FOR EACH tmp IN xVal
             cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
-                    s_valToExp( tmp, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs )
+               s_valToExp( tmp, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs )
          NEXT
          cVal += "}"
       ENDIF
@@ -153,11 +155,12 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
    RETURN cVal
 
 FUNCTION __itemSetRef( xVal, aRefs )
+
    LOCAL aRef
 
    FOR EACH aRef in aRefs
-      xVal[ hb_arrayToParams( aRef[ 1 ] ) ] := ;
-         iif( aRef[ 2 ] == NIL, xVal, xVal[ hb_arrayToParams( aRef[ 2 ] ) ] )
+      xVal[ hb_ArrayToParams( aRef[ 1 ] ) ] := ;
+         iif( aRef[ 2 ] == NIL, xVal, xVal[ hb_ArrayToParams( aRef[ 2 ] ) ] )
    NEXT
 
    RETURN xVal

@@ -315,7 +315,7 @@ METHOD Finish( image_style, quality, nFG ) CLASS TBarCode
 
       // Output std handle == 1
 
-      //::filename := ::text
+      // ::filename := ::text
       IF image_style == IMG_FORMAT_PNG
          ::OutputPng()
       ELSEIF image_style == IMG_FORMAT_JPEG

@@ -3,20 +3,21 @@
  */
 
 PROCEDURE Main()
-   LOCAL nCount := __dynsCount()
+
+   LOCAL nCount := __dynSCount()
    LOCAL nPos
 
    FOR nPos := 1 TO nCount
-      ? __dynsGetName( nPos )
+      ? __dynSGetName( nPos )
    NEXT
 
-   nPos := __dynsGetIndex( "MAIN" )
+   nPos := __dynSGetIndex( "MAIN" )
    ? "MAIN", nPos
 
-   ? __dynsGetName( nPos )
-   ? __dynsGetName()
-   ? __dynsGetName( 0 )
-   ? __dynsGetName( 100000 )
-   ? __dynsGetName( __dynsGetIndex( "HB_THISDOESNTEXIST_" ) )
+   ? __dynSGetName( nPos )
+   ? __dynSGetName()
+   ? __dynSGetName( 0 )
+   ? __dynSGetName( 100000 )
+   ? __dynSGetName( __dynSGetIndex( "HB_THISDOESNTEXIST_" ) )
 
    RETURN

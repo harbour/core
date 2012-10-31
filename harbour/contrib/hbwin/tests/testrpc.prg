@@ -14,6 +14,6 @@
 
 PROCEDURE Main()
 
-    ? win_UuidCreateString()
+   ? win_UuidCreateString()
 
-    RETURN
+   RETURN

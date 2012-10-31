@@ -38,8 +38,8 @@ PROCEDURE Main( ... )
    ENDIF
 
    oMail := TipMail( "This is the body of the mail" )
-   oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=iso8851"
-   oMail:hHeaders[ "Date" ]  := Tip_Timestamp()
+   oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=utf-8"
+   oMail:hHeaders[ "Date" ] := Tip_Timestamp()
 
    i := 1
    DO WHILE i < PCount()
@@ -51,31 +51,31 @@ PROCEDURE Main( ... )
       ENDIF
 
       IF Lower( cData ) == "-f"
-         i ++
+         i++
          cData := hb_PValue( i )
          IF cData != NIL
-            oMail:hHeaders[ "From" ] := cData
+            oMail:hHeaders[ "From" ] := hb_StrToUTF8( cData )
          ENDIF
       ELSEIF Lower( cData ) == "-t"
-         i ++
+         i++
          cData := hb_PValue( i )
          IF cData != NIL
-            oMail:hHeaders[ "To" ] := cData
+            oMail:hHeaders[ "To" ] := hb_StrToUTF8( cData )
          ENDIF
       ELSEIF Lower( cData ) == "-s"
-         i ++
+         i++
          cData := hb_PValue( i )
          IF cData != NIL
-            oMail:hHeaders[ "Subject" ] := cData
+            oMail:hHeaders[ "Subject" ] := hb_StrToUTF8( cData )
          ENDIF
       ELSEIF Lower( cData ) == "-b"
-         i ++
+         i++
          cData := hb_PValue( i )
          IF cData != NIL
-            oMail:SetBody( cData + e"\r\n" )
+            oMail:SetBody( hb_StrToUTF8( cData ) + e"\r\n" )
          ENDIF
       ELSEIF Lower( cData ) == "-m"
-         i ++
+         i++
          cData := hb_PValue( i )
          IF cData != NIL
             cData := MemoRead( cData )
@@ -94,8 +94,8 @@ PROCEDURE Main( ... )
          oAttach := TipMail():New()
 
          oAttach:SetEncoder( "base64" )
-         //TODO: mime type magic auto-finder
-         HB_FNameSplit( hb_PValue( i ), , @cFname, @cFext )
+         // TODO: mime type magic auto-finder
+         hb_FNameSplit( hb_PValue( i ), , @cFname, @cFext )
          // Some EMAIL readers use Content-Type to check for filename
          oAttach:hHeaders[ "Content-Type" ] := ;
             "application/X-TIP-Attachment; filename=";
@@ -108,7 +108,7 @@ PROCEDURE Main( ... )
          oMail:Attach( oAttach )
       ENDIF
 
-      i ++
+      i++
    ENDDO
 
    /* Writing stream */

@@ -58,8 +58,8 @@
 
 
 /* MT macros */
-#define HB_CDP_LOCK           hb_threadEnterCriticalSection( &s_cdpMtx );
-#define HB_CDP_UNLOCK         hb_threadLeaveCriticalSection( &s_cdpMtx );
+#define HB_CDP_LOCK()           hb_threadEnterCriticalSection( &s_cdpMtx )
+#define HB_CDP_UNLOCK()         hb_threadLeaveCriticalSection( &s_cdpMtx )
 static HB_CRITICAL_NEW( s_cdpMtx );
 
 
@@ -158,7 +158,7 @@ void hb_cdpBuildTransTable( PHB_UNITABLE uniTable )
    HB_WCHAR wcMax = 0;
    int i;
 
-   HB_CDP_LOCK
+   HB_CDP_LOCK();
    if( uniTable->uniTrans == NULL )
    {
       HB_UCHAR * uniTrans;
@@ -181,7 +181,7 @@ void hb_cdpBuildTransTable( PHB_UNITABLE uniTable )
       uniTable->wcMax = wcMax;
       uniTable->uniTrans = uniTrans;
    }
-   HB_CDP_UNLOCK
+   HB_CDP_UNLOCK();
 }
 
 /*

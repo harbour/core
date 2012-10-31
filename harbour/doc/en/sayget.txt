@@ -19,44 +19,44 @@
       [VALID <lValid> / RANGE <xStart>,<xEnd>]
    $ARGUMENTS$
       <nRow>      The row coordinate.
-  
+
       <nCol>      The column coordinate.
-  
+
       <cSay>      Message to display.
-  
+
       <cSayPict>  Character expression of PICTURE displayed.
-  
+
       <cSayColor> Color to be Used for the SAY expression.
-  
+
       <xVar>      An variable/field name.
-  
+
       <cGetPict>  Character expression of PICTURE to get.
-  
+
       <lWhen>     Logical expression to allow GET.
-  
+
       <lValid>    Logical expression to validate GET input.
-  
+
       <xStart>    Lower RANGE value.
-  
+
       <xEnd>      Upper RANGE value.
-  
+
       <cGetColor> Color string to be used for the GET expression.
    $DESCRIPTION$
       This command adds a GET object to the reserved array variable
       named GETLIST[] and displays it to the screen. The field or variable
       to be added to the GET object is specified in <xVar> and is displayed
       at row, column coordinate <nRow>, <nCol>.
-  
+
       If the SAY clause is used <cSay> will be displayed starting at
       <nRow>,<nCol>, with the field variable <xVar> displayed at ROW(),
       COL()+ 1. If <cSayPicr>, the picture template for the SAY expression
       <cSay>, is used, all formatting rules contained will apply See the
       TRANSFORM I function for further information.
-  
+
       If <cGetPict> is specified, the PICTURE clause of <xVar> will be
       used for the GET object and all formatting rules will apply. See
       the table below for GET formatting rules.
-  
+
       If the WHEN clause is specified,when <lWhen> evaluates to a logical
       true (.T.) condition, the GET object will he activated otherwise the
       GET object will be skipped and no information will be obtained via
@@ -64,7 +64,7 @@
       true (.T.) or false ( F.) or a code block may be ,specified in <lWhen>
       This clause not activated until a READ command or READMODAL()
       function call is issued.
-  
+
       If the VALID clause is specified and <lValid> evaluates to it logical
       true (.T.) condition the current GET will be considered valid and
       the get operation will continue onto the next active GET object. If
@@ -74,7 +74,7 @@
       (.F.) or it code block may be specified in <lValid>. This clause is
       not activated until a READ command or READMODAL( ) function call is
       issued.
-  
+
       If the RANGE clause is specified instead of the VALID clause, the
       two inclusive range values for <xVar> must be specified in <xStart>
       and <xEnd>. Id <xVar> is a date data type,<xStart> and <xEnd> must
@@ -83,9 +83,9 @@
       RANGE test ,a message of OUT OF RANGE will appear in the SCOREBOARD
       area (row = 0, col = 60). The RANGE message may be turned off it the
       SET SCOREBOARD command or SET() function appropriately toggled.
-  
+
       NOTE       GET functions/formatting rules:
-  
+
       <table>
       @A          Allows only alphabetic characters.
       @B          Numbers will be left justified
@@ -104,9 +104,9 @@
       @(          Displays negative numbers in parentheses with leading spaces.
       @)          Displays negative numbers in parentheses without leading spaces.
       </table>
-  
+
       GET templates/formatting rules:
-  
+
       <table>
       A   Only alphabetic characters allowed.
       N   Only alphabetic and numeric characters allowed
@@ -123,7 +123,7 @@
       .   Position of decimal point.
       ,   Position of comma.
       </table>
-  
+
       Format PICTURE functions may he grouped together as well as used
       in Conjunction with a PICTURE templates;however, a blank space must
       be included in the PICTURE string if there are both functions and
@@ -167,13 +167,13 @@
       @ <nRow>,<nCol> SAY <xValue> [ PICTURE <cPict> ] [COLOR <cColor>]
    $ARGUMENTS$
       <nRow>     Row coordinate
-  
+
       <nCol>     Column coordinate
-  
+
       <xValue>   Value to display
-  
+
       <cPict>    PICTURE format
-  
+
       <cColor>   Color string
    $DESCRIPTION$
       This command displays the contents of <xValue> at row column
@@ -181,7 +181,7 @@
       in <cPict>. If the current device is set to the printer, the output
       will go to the printer; the default is for all output to go to
       the screen.
-  
+
       For a complete list of PICTURES templates and functions, see the
       @...GET command.
    $EXAMPLES$
@@ -200,7 +200,7 @@
    $PLATFORMS$
       All
    $FILES$
-  
+
    $SEEALSO$
       @...GET,SET DEVICE,TRANSFORM()
    $END$

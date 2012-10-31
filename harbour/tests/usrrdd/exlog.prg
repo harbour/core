@@ -28,10 +28,10 @@ PROCEDURE Main()
    hb_LogRddActive( .T. )
 
    // Uncomment next command to change logged string that I have to return to standard LOGRDD file
-// hb_LogRddMsgLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) } )
+   // hb_LogRddMsgLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) } )
 
    // Uncomment next command to change standard destination of my logged string
-// hb_LogRddUserLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | hb_toOutDebug( MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) + "\n\r" ) } )
+   // hb_LogRddUserLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | hb_toOutDebug( MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) + "\n\r" ) } )
 
    // Start program logic
 
@@ -65,7 +65,7 @@ STATIC FUNCTION MyToString( cCmd, nWA, xPar1, xPar2, xPar3 )
       // In this example I don't want to log Open Command
    CASE cCmd == "CLOSE"
       // Parameters received: xPar1 = cTableName, xPar2 = cAlias
-      //cString := 'Table : "' + xPar1 + '", Alias : "' + xPar2 + '", WorkArea : ' + hb_ntos( nWA )
+      // cString := 'Table : "' + xPar1 + '", Alias : "' + xPar2 + '", WorkArea : ' + hb_ntos( nWA )
       // In this example I don't want to log Close Command
    CASE cCmd == "APPEND"
       // Parameters received: xPar1 = lUnlockAll

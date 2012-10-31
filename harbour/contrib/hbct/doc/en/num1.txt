@@ -98,9 +98,9 @@
       INFINITY() returns the largest floating point number available
       in the system. For platform independance, this is set to DBL_MAX.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -110,6 +110,6 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */

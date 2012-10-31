@@ -2,30 +2,30 @@
  * $Id$
  */
 
-//+--------------------------------------------------------------------
-//+ Browse function
-//+
-//+ Written by Alexander Kresin <alex@belacy.belgorod.su>
-//+
-//+ Placed in the public domain
-//+
-//+    Functions: PROCEDURE Main()
-//+               Function DBFLIST()
-//+               Function DBFLIST()
-//+               Function FLDCOUNT()
-//+               Function VIVNAMES()
-//+               Function WNDVIVOD()
-//+               Static Procedure VIVSTR()
-//+               Function FLDSTR()
-//+               Function InitList()
-//+               Function Defpict()
-//+               Function NUM_STR()
-//+
-//+       Tables: USE &filename
-//+
-//+    Reformatted by Click! 2.00 on Apr-20-2001 at 11:46 am
-//+
-//+--------------------------------------------------------------------
+// --------------------------------------------------------------------
+//  Browse function
+//
+//  Written by Alexander Kresin <alex@belacy.belgorod.su>
+//
+//  Placed in the public domain
+//
+//     Functions: PROCEDURE Main()
+//                Function DBFLIST()
+//                Function DBFLIST()
+//                Function FLDCOUNT()
+//                Function VIVNAMES()
+//                Function WNDVIVOD()
+//                Static Procedure VIVSTR()
+//                Function FLDSTR()
+//                Function InitList()
+//                Function Defpict()
+//                Function NUM_STR()
+//
+//        Tables: USE &filename
+//
+//     Reformatted by Click! 2.00 on Apr-20-2001 at 11:46 am
+//
+// --------------------------------------------------------------------
 
 /* UTF-8 */
 
@@ -76,12 +76,11 @@
 #define LI_COLCOUNT     mslist[ 42 ]
 #define LI_LEN          42
 
-//+--------------------------------------------------------------------
-//+
-//+    PROCEDURE Main()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     PROCEDURE Main()
+//
+// --------------------------------------------------------------------
 
 PROCEDURE Main( filename )
 
@@ -108,14 +107,13 @@ PROCEDURE Main( filename )
 
    RETURN
 
-//+--------------------------------------------------------------------
-//+
-//+    Function DBFLIST()
-//+
-//+    Called from ( db_brows.prg )   1 - PROCEDURE Main()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Function DBFLIST()
+//
+//     Called from ( db_brows.prg )   1 - PROCEDURE Main()
+//
+// --------------------------------------------------------------------
 
 FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
 
@@ -451,14 +449,13 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
 
    RETURN rezproc
 
-//+--------------------------------------------------------------------
-//+
-//+    Function FLDCOUNT()
-//+
-//+    Called from ( db_brows.prg )   6 - function dbflist()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Function FLDCOUNT()
+//
+//     Called from ( db_brows.prg )   6 - function dbflist()
+//
+// --------------------------------------------------------------------
 
 FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
 
@@ -479,14 +476,13 @@ FUNCTION FLDCOUNT( mslist, xstrt, xend, fld1 )
 
    RETURN iif( klf == 0, 1, klf )
 
-//+--------------------------------------------------------------------
-//+
-//+    Function VIVNAMES()
-//+
-//+    Called from ( db_brows.prg )   3 - function dbflist()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Function VIVNAMES()
+//
+//     Called from ( db_brows.prg )   3 - function dbflist()
+//
+// --------------------------------------------------------------------
 
 FUNCTION VIVNAMES( mslist )
 
@@ -516,14 +512,13 @@ FUNCTION VIVNAMES( mslist )
 
    RETURN NIL
 
-//+--------------------------------------------------------------------
-//+
-//+    Function WNDVIVOD()
-//+
-//+    Called from ( db_brows.prg )   8 - function dbflist()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Function WNDVIVOD()
+//
+//     Called from ( db_brows.prg )   8 - function dbflist()
+//
+// --------------------------------------------------------------------
 
 FUNCTION WNDVIVOD( mslist )
 
@@ -550,15 +545,14 @@ FUNCTION WNDVIVOD( mslist )
 
    RETURN nstr - 1
 
-//+--------------------------------------------------------------------
-//+
-//+    Static Procedure VIVSTR()
-//+
-//+    Called from ( db_brows.prg )   5 - function dbflist()
-//+                                   1 - function wndvivod()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Static Procedure VIVSTR()
+//
+//     Called from ( db_brows.prg )   5 - function dbflist()
+//                                    1 - function wndvivod()
+//
+// --------------------------------------------------------------------
 
 STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
 
@@ -601,17 +595,16 @@ STATIC PROCEDURE VIVSTR( mslist, nstroka, vybfld )
 
    RETURN
 
-//+--------------------------------------------------------------------
-//+
-//+    Function FLDSTR()
-//+
-//+    Called from ( db_brows.prg )   1 - function dbflist()
-//+                                   1 - function fldcount()
-//+                                   1 - function vivnames()
-//+                                   3 - static procedure vivstr()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Function FLDSTR()
+//
+//     Called from ( db_brows.prg )   1 - function dbflist()
+//                                    1 - function fldcount()
+//                                    1 - function vivnames()
+//                                    3 - static procedure vivstr()
+//
+// --------------------------------------------------------------------
 
 FUNCTION FLDSTR( mslist, numf )
 
@@ -657,15 +650,14 @@ FUNCTION FLDSTR( mslist, numf )
 
    RETURN rez
 
-//+--------------------------------------------------------------------
-//+
-//+    Function InitList()
-//+
-//+    Called from ( db_brows.prg )   1 - PROCEDURE Main()
-//+                                   1 - function dbflist()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Function InitList()
+//
+//     Called from ( db_brows.prg )   1 - PROCEDURE Main()
+//                                    1 - function dbflist()
+//
+// --------------------------------------------------------------------
 
 FUNCTION InitList
 
@@ -678,8 +670,8 @@ FUNCTION InitList
    LI_BSKIP   := {| a, x | HB_SYMBOL_UNUSED( a ), dbSkip( x ) }
    LI_BGTOP   := {|| dbGoTop() }
    LI_BGBOT   := {|| dbGoBottom() }
-   LI_BEOF    := {|| EOF() }
-   LI_BBOF    := {|| BOF() }
+   LI_BEOF    := {|| Eof() }
+   LI_BBOF    := {|| Bof() }
    LI_B1      := {| a | HB_SYMBOL_UNUSED( a ), hb_DispOutAt( LI_Y2, LI_X1 + 2, Str( RecNo(), 6 ) + "/" + Str( LI_KOLZ, 6 ) ) }
    LI_FREEZE  := 0
    LI_RCOU    := {|| RecCount() }
@@ -692,14 +684,13 @@ FUNCTION InitList
 
    RETURN mslist
 
-//+--------------------------------------------------------------------
-//+
-//+    Function Defpict()
-//+
-//+    Called from ( db_brows.prg )   1 - function dbflist()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Function Defpict()
+//
+//     Called from ( db_brows.prg )   1 - function dbflist()
+//
+// --------------------------------------------------------------------
 
 FUNCTION Defpict( mslist, i, maxlen )
 
@@ -717,14 +708,13 @@ FUNCTION Defpict( mslist, i, maxlen )
 
    RETURN spict
 
-//+--------------------------------------------------------------------
-//+
-//+    Function NUM_STR()
-//+
-//+    Called from ( db_brows.prg )   1 - function defpict()
-//+
-//+--------------------------------------------------------------------
-//+
+// --------------------------------------------------------------------
+//
+//     Function NUM_STR()
+//
+//     Called from ( db_brows.prg )   1 - function defpict()
+//
+// --------------------------------------------------------------------
 
 FUNCTION NUM_STR( NOM, KOLZN )
 

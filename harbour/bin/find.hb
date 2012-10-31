@@ -35,6 +35,7 @@ PROCEDURE Main( cContains )
    RETURN
 
 STATIC PROCEDURE WalkDir( cDir, cContains )
+
    LOCAL aFile
 
    FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
@@ -49,6 +50,7 @@ STATIC PROCEDURE WalkDir( cDir, cContains )
    RETURN
 
 STATIC PROCEDURE ProcessFile( cFileName, cContains )
+
    LOCAL cDynamic
    LOCAL lFirst := .T.
 
@@ -65,6 +67,7 @@ STATIC PROCEDURE ProcessFile( cFileName, cContains )
    RETURN
 
 STATIC FUNCTION __hb_extern_get_exception_list( cInputName )
+
    LOCAL cFile
    LOCAL pRegex
    LOCAL tmp

@@ -56,6 +56,7 @@ STATIC s_hPort := { => }
 STATIC s_hbcomm_mutex := hb_mutexCreate()
 
 FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
+
    LOCAL nPort
    LOCAL cOldPortName
    LOCAL cParity
@@ -98,7 +99,7 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
 
       IF hb_comInit( nPort, nBaud, cParity, nData, nStop )
          s_hPort[ nPort ] := cOldPortName
-         hb_mutexUnLock( s_hbcomm_mutex )
+         hb_mutexUnlock( s_hbcomm_mutex )
          RETURN nPort
       ELSE
          hb_comClose( nPort )
@@ -109,7 +110,7 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
       hb_comSetDevice( nPort, cOldPortName )
    ENDIF
 
-   hb_mutexUnLock( s_hbcomm_mutex )
+   hb_mutexUnlock( s_hbcomm_mutex )
 
    RETURN 0
 
@@ -127,11 +128,14 @@ FUNCTION ISWORKING( nPort )
          [vszakats] */
 /* Fetch <nCount> chars into <cData> */
 FUNCTION INCHR( nPort, nCount, /* @ */ cData )
+
    cData := iif( HB_ISNUMERIC( nCount ), Space( nCount ), "" )
+
    RETURN hb_comRecv( nPort, @cData, nCount )
 
 /* Send out characters. Returns .T. if successful. */
 FUNCTION OUTCHR( nPort, cData )
+
    LOCAL nLen
 
    DO WHILE hb_BLen( cData ) > 0
@@ -158,6 +162,7 @@ FUNCTION OUTBUFSIZE( nPort )
 
 /* Close port and clear handle */
 FUNCTION UNINT_PORT( nPort )
+
    LOCAL lRetVal := .F.
 
    hb_mutexLock( s_hbcomm_mutex )
@@ -173,6 +178,6 @@ FUNCTION UNINT_PORT( nPort )
       ENDIF
    ENDIF
 
-   hb_mutexUnLock( s_hbcomm_mutex )
+   hb_mutexUnlock( s_hbcomm_mutex )
 
    RETURN lRetVal

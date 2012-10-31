@@ -12,15 +12,15 @@ PROCEDURE Main
 
    LOCAL oHttp, cHtml, hQuery, aLink, oNode, oDoc
 
-   oHttp := TIpClientHttp():new( "http://www.google.de/search" )
+   oHttp := TIpClientHttp():new( "http://www.google.com/search" )
 
    /* build the Google query */
    hQUery := { => }
-   hb_hSetCaseMatch( hQuery, .F. )
+   hb_HSetCaseMatch( hQuery, .F. )
 
-   hQuery["q"]    := "Harbour"
-   hQuery["hl"]   := "en"
-   hQuery["btnG"] := "Google+Search"
+   hQuery[ "q" ]    := "Harbour"
+   hQuery[ "hl" ]   := "en"
+   hQuery[ "btnG" ] := "Google+Search"
 
    /* add query data to the TUrl object */
    oHttp:oUrl:addGetForm( hQuery )
@@ -38,7 +38,7 @@ PROCEDURE Main
 
    oDoc := THtmlDocument():new( cHtml )
 
-   oDoc:writeFile( "Google.html" )
+   oDoc:writeFile( "google.html" )
 
    /* ":a" retrieves the first <a href="url"> text </a> tag */
    oNode := oDoc:body:a

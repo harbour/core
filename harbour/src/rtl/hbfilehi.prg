@@ -54,6 +54,7 @@
 
 /* NOTE: Can hurt if there are symlinks on the way. */
 FUNCTION hb_PathNormalize( cPath )
+
    LOCAL aDir
    LOCAL cDir
 
@@ -66,15 +67,19 @@ FUNCTION hb_PathNormalize( cPath )
       aDir := hb_ATokens( cPath, hb_ps() )
 
       FOR EACH cDir IN aDir DESCEND
+
          IF cDir == "." .OR. ;
             ( Empty( cDir ) .AND. ;
-              cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
-              ( cDir:__enumIndex() > 2 .OR. ;
-                ( cDir:__enumIndex() == 2 .AND. ! Empty( aDir[ 1 ] ) ) ) )
+            cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
+            ( cDir:__enumIndex() > 2 .OR. ;
+            ( cDir:__enumIndex() == 2 .AND. ! Empty( aDir[ 1 ] ) ) ) )
+
             hb_ADel( aDir, cDir:__enumIndex(), .T. )
+
          ELSEIF !( cDir == ".." ) .AND. ;
             ! Empty( cDir ) .AND. ;
             ! _ISDRIVESPEC( cDir )
+
             IF cDir:__enumIndex() < Len( cDir:__enumBase() ) .AND. ;
                aDir[ cDir:__enumIndex() + 1 ] == ".."
                hb_ADel( aDir, cDir:__enumIndex() + 1, .T. )
@@ -99,6 +104,7 @@ FUNCTION hb_PathNormalize( cPath )
    RETURN cPath
 
 FUNCTION hb_PathJoin( cPathA, cPathR )
+
    LOCAL cDirA
    LOCAL cDirR, cDriveR, cNameR, cExtR
 
@@ -125,6 +131,7 @@ FUNCTION hb_PathJoin( cPathA, cPathR )
    RETURN hb_FNameMerge( cDirA + cDirR, cNameR, cExtR )
 
 FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
+
    LOCAL tmp
 
    LOCAL aPathBase
@@ -143,8 +150,8 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
       lForceRelative := .T.
    ENDIF
 
-   cPathBase   := hb_PathJoin( hb_dirBase(), hb_DirSepAdd( cPathBase ) )
-   cPathTarget := hb_PathJoin( hb_dirBase(), cPathTarget )
+   cPathBase   := hb_PathJoin( hb_DirBase(), hb_DirSepAdd( cPathBase ) )
+   cPathTarget := hb_PathJoin( hb_DirBase(), cPathTarget )
 
    /* TODO: Optimize to operate on strings instead of arrays */
 
@@ -173,9 +180,9 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
 
    /* Different drive spec. There is no way to solve that using relative dirs. */
    IF ! Empty( hb_osDriveSeparator() ) .AND. ;
-      tmp == 1 .AND. ;
-      ( Right( aPathBase[ 1 ]  , Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() .OR. ;
-        Right( aPathTarget[ 1 ], Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
+      tmp == 1 .AND. ( ;
+      Right( aPathBase[ 1 ]  , Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() .OR. ;
+      Right( aPathTarget[ 1 ], Len( hb_osDriveSeparator() ) ) == hb_osDriveSeparator() )
       RETURN cPathTarget
    ENDIF
 
@@ -187,6 +194,7 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
    RETURN cPathTarget
 
 STATIC FUNCTION s_FN_ToArray( cPath, /* @ */ cFileName  )
+
    LOCAL cDir, cName, cExt
 
    hb_FNameSplit( cPath, @cDir, @cName, @cExt )
@@ -198,6 +206,7 @@ STATIC FUNCTION s_FN_ToArray( cPath, /* @ */ cFileName  )
    RETURN hb_ATokens( cDir, hb_ps() )
 
 STATIC FUNCTION s_FN_FromArray( aPath, nFrom, cFileName, cDirPrefix )
+
    LOCAL nTo := Len( aPath )
    LOCAL cDir
    LOCAL tmp
@@ -243,13 +252,15 @@ FUNCTION hb_DirSepDel( cDir )
 
    IF Empty( hb_osDriveSeparator() )
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-               !( cDir == hb_ps() + hb_ps() )
+         !( cDir == hb_ps() + hb_ps() )
+
          cDir := hb_StrShrink( cDir, 1 )
       ENDDO
    ELSE
       DO WHILE Len( cDir ) > 1 .AND. Right( cDir, 1 ) == hb_ps() .AND. ;
-               !( cDir == hb_ps() + hb_ps() ) .AND. ;
-               !( Right( cDir, Len( hb_osDriveSeparator() ) + 1 ) == hb_osDriveSeparator() + hb_ps() )
+         !( cDir == hb_ps() + hb_ps() ) .AND. ;
+         !( Right( cDir, Len( hb_osDriveSeparator() ) + 1 ) == hb_osDriveSeparator() + hb_ps() )
+
          cDir := hb_StrShrink( cDir, 1 )
       ENDDO
    ENDIF
@@ -257,6 +268,7 @@ FUNCTION hb_DirSepDel( cDir )
    RETURN cDir
 
 FUNCTION hb_DirBuild( cDir )
+
    LOCAL cDirTemp
    LOCAL cDirItem
    LOCAL tmp
@@ -302,6 +314,7 @@ FUNCTION hb_DirBuild( cDir )
    RETURN .T.
 
 FUNCTION hb_DirUnbuild( cDir )
+
    LOCAL cDirTemp
    LOCAL tmp
 

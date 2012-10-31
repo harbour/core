@@ -22,7 +22,7 @@
       Binary representation follows right-to-left convention of bit position
       numbering, 0 through 7.  Space between high and low nibbles for clarity
       and easy comparison to hexadecimal notation.
-  
+
       This function is presented to illustrate that bit-wise operations
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
@@ -30,10 +30,10 @@
       These three code lines perform a bitwise AND on bytes with values of
       Chr(20) and Chr(36), and deliver the result as a string in binary (bit)
       format.
-  
+
            ? FT_BYT2BIT( Chr( 20 ) )         // byte1: '0001 0100'
            ? FT_BYT2BIT( Chr( 36 ) )         // byte2: '0010 0100'
-  
+
            ? FT_BYT2BIT( FT_BYTEAND( Chr( 20 ), Chr( 36 ) ) )
                               // result: '0000 0100'
    $SEEALSO$

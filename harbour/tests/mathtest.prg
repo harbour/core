@@ -52,7 +52,7 @@ PROCEDURE Main()
 
    hb_matherMode( nOldMathErrMode )
 
-   bOldMathErr := hb_matherBlock( {| nType, cFuncname, cError, nArg1, nArg2, aInfo |;
+   bOldMathErr := hb_matherBlock( {| nType, cFuncname, cError, nArg1, nArg2, aInfo | ;
       localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo ) } )
 
    ? "  IIc) error handling by callback block(hb_MathErBlock())"

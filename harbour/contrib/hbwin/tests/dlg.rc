@@ -10,7 +10,7 @@ LANGUAGE LANG_ENGLISH,SUBLANG_ENGLISH_US
 
 101 DIALOGEX DISCARDABLE 6, 18, 210, 174
 STYLE WS_POPUP|DS_MODALFRAME|DS_CONTEXTHELP|DS_3DLOOK|DS_CENTER|WS_CAPTION|WS_SYSMENU|WS_VISIBLE
-CAPTION "Sample Dialog (Win32 API Demo With Harbour)"
+CAPTION "Sample Dialog (Windows API Demo With Harbour)"
 FONT 8, "Segoe UI", 0, 0, 1
 {
    CONTROL "", 1003, "Edit", ES_AUTOHSCROLL|WS_BORDER|WS_TABSTOP, 8, 48, 192, 14
@@ -22,10 +22,8 @@ FONT 8, "Segoe UI", 0, 0, 1
    CONTROL "&Occupation:", 1008, "Static", WS_GROUP, 8, 72, 40, 8
    CONTROL "Own a &car?", 1007, "Button", BS_AUTOCHECKBOX|WS_TABSTOP, 96, 116, 58, 10
    CONTROL "Click me!", 4001, "Button", BS_DEFPUSHBUTTON|WS_TABSTOP, 8, 156, 84, 14
-   CONTROL "This example demonstrates how to work with some features of the native Win32 API. The following function displays a dialog created with an external resource editor.", 4002, "Static", SS_CENTER|WS_GROUP, 4, 4, 204, 28
+   CONTROL "This example demonstrates how to work with some features of the native Windows API. The following function displays a dialog created with an external resource editor.", 4002, "Static", SS_CENTER|WS_GROUP, 4, 4, 204, 28
    CONTROL "&Has children?", 4003, "Button", BS_AUTOCHECKBOX|WS_TABSTOP, 96, 132, 58, 10
 }
 
 LANGUAGE LANG_ENGLISH,SUBLANG_ENGLISH_US
-
-1 MANIFEST "dlg.xml"

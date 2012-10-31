@@ -157,33 +157,45 @@ METHOD GetOk() CLASS tIPClientSMTP
    RETURN .T.
 
 METHOD Close() CLASS tIPClientSMTP
+
    ::InetTimeOut( ::SocketCon )
    ::Quit()
+
    RETURN ::super:Close()
 
 METHOD Commit() CLASS tIPClientSMTP
+
    ::InetSendall( ::SocketCon, ::cCRLF + "." + ::cCRLF )
+
    RETURN ::GetOk()
 
 METHOD Quit() CLASS tIPClientSMTP
+
    ::InetSendall( ::SocketCon, "QUIT" + ::cCRLF )
    ::isAuth := .F.
+
    RETURN ::GetOk()
 
 METHOD Mail( cFrom ) CLASS tIPClientSMTP
+
    ::InetSendall( ::SocketCon, "MAIL FROM: <" + cFrom + ">" + ::cCRLF )
+
    RETURN ::GetOk()
 
 METHOD Rcpt( cTo ) CLASS tIPClientSMTP
+
    ::InetSendall( ::SocketCon, "RCPT TO: <" + cTo + ">" + ::cCRLF )
+
    RETURN ::GetOk()
 
 METHOD Data( cData ) CLASS tIPClientSMTP
+
    ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
    IF ! ::GetOk()
       RETURN .F.
    ENDIF
-   ::InetSendall(::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
+   ::InetSendall( ::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
+
    RETURN ::GetOk()
 
 METHOD Auth( cUser, cPass ) CLASS tIPClientSMTP
@@ -208,6 +220,7 @@ METHOD AuthPlain( cUser, cPass ) CLASS tIPClientSMTP
    RETURN ::isAuth := ::GetOk()
 
 METHOD Write( cData, nLen, bCommit ) CLASS tIPClientSMTP
+
    LOCAL cRcpt
 
    IF ! ::bInitialized
@@ -259,6 +272,7 @@ METHOD ServerSuportSecure( /* @ */ lAuthPlain, /* @ */ lAuthLogin ) CLASS tIPCli
    RETURN lAuthLogin .OR. lAuthPlain
 
 METHOD SendMail( oTIpMail ) CLASS TIpClientSmtp
+
    LOCAL cTo
 
    IF ! ::isOpen

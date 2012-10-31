@@ -87,6 +87,7 @@ METHOD New( aArray, cVarName, lEditable ) CLASS HBDbArray
    RETURN Self
 
 METHOD addWindows( aArray, nRow ) CLASS HBDbArray
+
    LOCAL oBrwSets
    LOCAL nSize := Len( aArray )
    LOCAL oWndSets
@@ -142,11 +143,11 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
    oBrwSets:goTopBlock := {|| oBrwSets:cargo[ 1 ] := 1 }
    oBrwSets:goBottomBlock := {|| oBrwSets:cargo[ 1 ] := Len( oBrwSets:cargo[ 2 ][ 1 ] ) }
    oBrwSets:skipBlock := {| nPos | ( nPos := ArrayBrowseSkip( nPos, oBrwSets ), oBrwSets:cargo[ 1 ] := ;
-                                    oBrwSets:cargo[ 1 ] + nPos, nPos ) }
+      oBrwSets:cargo[ 1 ] + nPos, nPos ) }
 
    ::aWindows[ ::nCurWindow ]:bPainted    := {|| ( oBrwSets:forcestable(), RefreshVarsS( oBrwSets ) ) }
-   ::aWindows[ ::nCurWindow ]:bKeyPressed := {| nKey | ::SetsKeyPressed( nKey, oBrwSets,;
-                           ::aWindows[ ::nCurWindow ], ::arrayName, aArray ) }
+   ::aWindows[ ::nCurWindow ]:bKeyPressed := {| nKey | ::SetsKeyPressed( nKey, oBrwSets, ;
+      ::aWindows[ ::nCurWindow ], ::arrayName, aArray ) }
 
    SetCursor( SC_NONE )
 
@@ -157,16 +158,16 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbArray
 METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbArray
 
    LOCAL oErr
-   LOCAL cValue := PadR( __dbgValToStr( pItem[ nSet ] ),;
-                         oBrowse:nRight - oBrowse:nLeft - oBrowse:GetColumn( 1 ):width )
+   LOCAL cValue := PadR( __dbgValToStr( pItem[ nSet ] ), ;
+      oBrowse:nRight - oBrowse:nLeft - oBrowse:GetColumn( 1 ):width )
 
    // make sure browse is stable
    oBrowse:forceStable()
    // if confirming new record, append blank
 
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
-                  {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
-      BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
+     {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          pItem[ nSet ] := &cValue
       RECOVER USING oErr
          __dbgAlert( oErr:description )
@@ -241,7 +242,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, oWnd, cName, aArray ) CLASS HBDbArray
    RefreshVarsS( oBrwSets )
 
    ::aWindows[ ::nCurWindow ]:SetCaption( cName + "[" + hb_ntos( oBrwSets:cargo[ 1 ] ) + ".." + ;
-                                          hb_ntos( Len( aArray ) ) + "]" )
+      hb_ntos( Len( aArray ) ) + "]" )
 
    RETURN self
 
@@ -271,6 +272,6 @@ STATIC PROCEDURE RefreshVarsS( oBrowse )
    RETURN
 
 STATIC FUNCTION ArrayBrowseSkip( nPos, oBrwSets )
-   RETURN iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1 , ;
-             iif( oBrwSets:cargo[ 1 ] + nPos > Len( oBrwSets:cargo[ 2 ][ 1 ] ), ;
-                Len( oBrwSets:cargo[ 2 ][ 1 ] ) - oBrwSets:cargo[ 1 ], nPos ) )
+   RETURN iif( oBrwSets:cargo[ 1 ] + nPos < 1, 0 - oBrwSets:cargo[ 1 ] + 1, ;
+      iif( oBrwSets:cargo[ 1 ] + nPos > Len( oBrwSets:cargo[ 2 ][ 1 ] ), ;
+      Len( oBrwSets:cargo[ 2 ][ 1 ] ) - oBrwSets:cargo[ 1 ], nPos ) )

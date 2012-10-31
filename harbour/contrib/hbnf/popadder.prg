@@ -57,25 +57,6 @@
 #define FT_B_DOUBLE  HB_B_DOUBLE_UNI + " "
 #define FT_B_SINGLE  HB_B_SINGLE_UNI + " "
 
-#define nTotTran Len( aTrans )
-
-#command DISPMESSAGE <mess>,<t>,<l>,<b>,<r> => ;
-      _ftPushKeys(); hb_keyPut( { K_CTRL_PGDN, K_CTRL_W } ) ;;
-      MemoEdit( <mess>, <t>, <l>, <b>, <r>, .F., NIL, ( <r> ) - ( <l> ) + 1 ) ;;
-      _ftPopKeys()
-
-/* This INKEY UDC was posted by Don Caton on NanForum... Thanks Don <g> */
-#command FT_INKEY [ <secs> ] TO <var>                                     ;
-      =>                                                                  ;
-      WHILE .T.                                                          ;;
-         <var> := Inkey( [ <secs> ] )                                    ;;
-         IF SetKey( <var> ) != NIL                                       ;;
-            Eval( SetKey( <var> ), ProcName(), ProcLine(), #<var> )      ;;
-         ELSE                                                            ;;
-            EXIT                                                         ;;
-         END                                                             ;;
-      END
-
 // Instead of using STATIC variables for these I'm using a LOCAL array
 //   and passing aAdder[] all over the place.... Don't let this confuse
 //   you. I wrote the Adder using the variable names & now let the
@@ -112,7 +93,7 @@ THREAD STATIC t_nWinColor
 THREAD STATIC t_aWinColor
 THREAD STATIC t_aStdColor
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Pop Up Adder / Calculator with Tape Display
 // NOTE: To make FT_Adder() pop up from any wait state in your
 //       application just insert the line:
@@ -135,6 +116,7 @@ FUNCTION FT_Adder()
    LOCAL lAC_exit_ok
 
    // Must prevent recursive calls
+
    IF t_lAdderOpen
       RETURN NIL
    ELSE
@@ -147,7 +129,6 @@ FUNCTION FT_Adder()
    cTapeScr     := ""
    nTotal       := nNumTotal := nSavTotal := nDecDigit := 0
    lDone        := .F.                   // Loop flag
-   nKey         := 0
    nMaxDeci     := 2                     // Initial # of decimals
    nSavSubTot   := 0
    lNewNum      := .F.
@@ -174,7 +155,7 @@ FUNCTION FT_Adder()
    hb_DispOutAt( 4 + nTopOS, 7 + nAddSpace, Transform( nTotal, cTotPict ) )
 
    DO WHILE ! lDone                      // Input key & test loop
-      FT_INKEY 0 TO nKey
+      nKey := _ftInkey( 0, "nKey" )
       DO CASE
       CASE hb_keyChar( nKey ) $ "1234567890."
          _ftProcessNumb( aAdder, nKey )
@@ -240,28 +221,28 @@ FUNCTION FT_Adder()
             _ftSetWinColor( W_CURR, W_PROMPT )
          ENDIF
       CASE ( nKey == hb_keyCode( "S" ) .OR. nKey == hb_keyCode( "s" ) ) .AND. lTape  // <S> Scroll tape display
-         IF nTotTran > 16                  // We need to scroll
+         IF Len( aTrans ) > 16           // We need to scroll
             SetColor( "GR+/W" )
             hb_DispOutAt( 21 + nTopOS, 8 + nTapeSpace, " " + /* LOW-ASCII "↑↓" */ Chr( 24 ) + Chr( 25 ) + "-SCROLL  <ESC>-QUIT " )
             SetColor( "N/W,W+/N" )
             lAC_exit_ok := .F.
             AChoice( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, aTrans, .T., ;
-               {| nMode, cur_elem, rel_pos | _ftAdderTapeUDF( nMode, cur_elem, rel_pos, @lAC_exit_ok ) }, nTotTran, 20 )
+               {| nMode, cur_elem, rel_pos | _ftAdderTapeUDF( nMode, cur_elem, rel_pos, @lAC_exit_ok ) }, Len( aTrans ), 20 )
             SetColor( "R+/W" )
             hb_DispBox( 21 + nTopOS, 8 + nTapeSpace, 21 + nTopOS, 30 + nTapeSpace, HB_B_SINGLE_UNI )
             _ftSetWinColor( W_CURR, W_PROMPT )
             CLEAR TYPEAHEAD
          ELSE
-            _ftError( "there are " + iif( nTotTran > 0, "only " + ;
-               hb_ntos( nTotTran ), "no" ) + ;
+            _ftError( "there are " + iif( Len( aTrans ) > 0, "only " + ;
+               hb_ntos( Len( aTrans ) ), "no" ) + ;
                " transactions entered so far." + ;
                " No need to scroll!" )
          ENDIF
-      CASE nKey == K_DEL                // Delete - Clear adder
+      CASE nKey == K_DEL                 // Delete - Clear adder
          _ftClearAdder( aAdder )
-      CASE nKey == K_F1                 // <F1> Help
+      CASE nKey == K_F1                  // <F1> Help
          _ftAddHelp()
-      CASE nKey == K_F10                // <F10> Quit - Return total
+      CASE nKey == K_F10                 // <F10> Quit - Return total
          IF lTotalOk                     // Did they finish the calculation
             IF oGet != NIL .AND. oGet:type == "N"
                Set( _SET_DECIMALS, nOldDecim )
@@ -293,7 +274,7 @@ FUNCTION FT_Adder()
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Display the Adder
 
 STATIC FUNCTION _ftAddScreen( aAdder )
@@ -301,7 +282,7 @@ STATIC FUNCTION _ftAddScreen( aAdder )
    LOCAL nCol
 
    _ftPushWin( 2 + nTopOS, 2 + nAddSpace, 22 + nTopOS, 30 + nAddSpace, "   Adder   ", ;
-      "<F-1> for Help", , FT_B_DOUBLE )
+      "<F-1> for Help",, FT_B_DOUBLE )
    nCol := 5 + nAddSpace
    hb_DispOutAt(  7 + nTopOS, nCol, hb_UTF8ToStr( "      ┌───┐ ┌───┐ ┌───┐" ) )
    hb_DispOutAt(  8 + nTopOS, nCol, hb_UTF8ToStr( "      │   │ │   │ │   │" ) )
@@ -345,7 +326,7 @@ STATIC FUNCTION _ftAddScreen( aAdder )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Change the decimal position in the display
 
 STATIC FUNCTION _ftChangeDec( aAdder, nNumDec )
@@ -375,7 +356,7 @@ STATIC FUNCTION _ftChangeDec( aAdder, nNumDec )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Display total number to Adder Window
 
 STATIC FUNCTION _ftDispTotal( aAdder )
@@ -399,7 +380,7 @@ STATIC FUNCTION _ftDispTotal( aAdder )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Display subtotal number
 
 STATIC FUNCTION _ftDispSubTot( aAdder )
@@ -423,7 +404,7 @@ STATIC FUNCTION _ftDispSubTot( aAdder )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Act on NUMBER key pressed
 
 STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
@@ -458,7 +439,7 @@ STATIC FUNCTION _ftProcessNumb( aAdder, nKey )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Enter key - SUBTOTAL\TOTAL
 
 STATIC FUNCTION _ftAddTotal( aAdder )
@@ -533,7 +514,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Process + or - keypress
 
 STATIC FUNCTION _ftAddSub( aAdder, nKey )
@@ -576,7 +557,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Process * or / keypress
 
 STATIC FUNCTION _ftMultDiv( aAdder, nKey )
@@ -624,7 +605,7 @@ STATIC FUNCTION _ftMultDiv( aAdder, nKey )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Help window
 
 STATIC FUNCTION _ftAddHelp
@@ -652,7 +633,7 @@ STATIC FUNCTION _ftAddHelp
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Clear entry / Clear Adder
 
 STATIC FUNCTION _ftClearAdder( aAdder )
@@ -674,7 +655,7 @@ STATIC FUNCTION _ftClearAdder( aAdder )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Update transactions array
 
 STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
@@ -693,13 +674,13 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 
    IF lTypeTotal                         // If lTypeTotal == .T. Update from total
       AAdd( aTrans, Str( iif( lUseTotal, nTotal, nAmount ), 22, nMaxDeci ) )
-      aTrans[ nTotTran ] := _ftStuffComma( aTrans[ nTotTran ], .T. ) + " *" + ;
+      aTrans[ Len( aTrans ) ] := _ftStuffComma( aTrans[ Len( aTrans ) ], .T. ) + " *" + ;
          iif( lAddError, "ER", "" )
 
    ELSE                            // If lTypeTotal=.F. Update from nNumTotal
       AAdd( aTrans, Str( iif( lUseTotal, nTotal, nAmount ), 22, nMaxDeci ) )
 
-      aTrans[ nTotTran ] := _ftStuffComma( aTrans[ nTotTran ], .T. ) + ;
+      aTrans[ Len( aTrans ) ] := _ftStuffComma( aTrans[ Len( aTrans ) ], .T. ) + ;
          iif( lSubRtn, " S", iif( nAddMode == 1, " +", iif( nAddMode == 2, " -", ;
          iif( lTotalOk, " =", iif( nAddMode == 3, " X", " /" ) ) ) ) ) + iif( lAddError, "ER", "" )
 
@@ -711,7 +692,7 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Clear the <TOTAL> & <SUBTOTAL> from Adder
 
 STATIC FUNCTION _ftEraseTotSubTot( aAdder )
@@ -722,7 +703,7 @@ STATIC FUNCTION _ftEraseTotSubTot( aAdder )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Adder Rounding function
 
 STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
@@ -732,7 +713,7 @@ STATIC FUNCTION _ftRoundIt( nNumber, nPlaces )
    RETURN iif( nNumber < 0.0, -1.0, 1.0 ) * ;
       Int( Abs( nNumber ) * 10 ^ nPlaces + 0.50 + 10 ^ -12 ) / 10 ^ nPlaces
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Check divide by zero not allowed
 
 STATIC FUNCTION _ftDivide( aAdder, nNumerator, nDenominator )
@@ -746,7 +727,7 @@ STATIC FUNCTION _ftDivide( aAdder, nNumerator, nDenominator )
 
    RETURN nNumerator / nDenominator
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Validate the number of decimals
 
 STATIC FUNCTION _ftValDeci( oGet )
@@ -760,7 +741,7 @@ STATIC FUNCTION _ftValDeci( oGet )
 
    RETURN lRtnValue
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Display the Tape
 
 STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
@@ -775,8 +756,8 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
    IF lTape                              // Are we in the display mode
       SetColor( "N/W" )
       hb_Scroll( 5 + nTopOS, 7 + nTapeSpace, 20 + nTopOS, 32 + nTapeSpace, 1 )
-      IF nTotTran > 0                       // Any transactions been entered yet?
-         hb_DispOutAt( 20 + nTopOS, 7 + nTapeSpace, aTrans[ nTotTran ] )
+      IF Len( aTrans ) > 0               // Any transactions been entered yet?
+         hb_DispOutAt( 20 + nTopOS, 7 + nTapeSpace, aTrans[ Len( aTrans ) ] )
       ENDIF
       _ftSetWinColor( W_CURR, W_PROMPT )
    ELSE                                  // Start displaying tape
@@ -788,18 +769,18 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
       SetColor( "GR+/W" )
       hb_DispOutAt( 4 + nTopOS, 17 + nTapeSpace, " TAPE " )
       SetColor( "N/W" )
-      IF nTotTran > 15
-         nTopTape := nTotTran - 15
+      IF Len( aTrans ) > 15
+         nTopTape := Len( aTrans ) - 15
       ENDIF
-      FOR nDispTape := nTotTran TO nTopTape STEP -1
-         hb_DispOutAt( 20 + nDispTape - nTotTran + nTopOS, 7 + nTapeSpace, aTrans[ nDispTape ] )
+      FOR nDispTape := Len( aTrans ) TO nTopTape STEP -1
+         hb_DispOutAt( 20 + nDispTape - Len( aTrans ) + nTopOS, 7 + nTapeSpace, aTrans[ nDispTape ] )
       NEXT
    ENDIF
    _ftSetWinColor( W_CURR, W_PROMPT )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Sets the LASTKEY() value to value of nLastKey
 // NOTE: I use this in most of my Pop-Up routines to reset the
 //       original value of LASTKEY() when quitting.
@@ -813,7 +794,7 @@ STATIC FUNCTION _ftSetLastKey( nLastKey )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Push any keys in the Keyboard buffer on the array t_aKeys[]
 // NOTE: Save any keys in the buffer... for FAST typists <g>.
 
@@ -825,7 +806,7 @@ STATIC FUNCTION _ftPushKeys()
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Restore the keyboard with any keystrokes that were saved with _ftPushKeys
 
 STATIC FUNCTION _ftPopKeys
@@ -837,13 +818,13 @@ STATIC FUNCTION _ftPopKeys
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Display a message on the screen in a window
 // See Also: _ftPopMessage
 
 STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop )
 
-   LOCAL nMessLen, nNumRows, nWide, nLeft, nBottom, nRight, nKey, cOldDevic
+   LOCAL nMessLen, nNumRows, nWide, nLeft, nBottom, nRight, cOldDevic
    LOCAL lOldPrint
    LOCAL cOldColor   := SetColor()
    LOCAL nOldLastkey := LastKey()
@@ -868,13 +849,13 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
    __defaultNIL( @lWait, .F. )
 
    _ftPushWin( nTop, nLeft, nBottom, nRight, cTitle, cBotTitle, nWinColor )
-   DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
+   _ftDispMessage( cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2 )
 
    IF xQuiet == NIL
       Tone( 800, 1 )
    ENDIF
    IF lWait
-      FT_INKEY 0 TO nKey
+      _ftInkey( 0, "nKey" )
       _ftPopMessage()
    ENDIF
 
@@ -887,7 +868,7 @@ STATIC FUNCTION _ftPushMessage( cMessage, lWait, cTitle, cBotTitle, xQuiet, nTop
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Pop off the Message Box
 // See Also: _ftPushMessage()
 
@@ -897,7 +878,7 @@ STATIC FUNCTION _ftPopMessage
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Push a Question Box on the Screen
 // NOTE: This function will work for all Data Types
 
@@ -907,7 +888,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    LOCAL nRight, oNewGet, nNumMessRow, nLenLastRow, lGetOnNextLine, nOldCurs
    LOCAL cVarType := ValType( xVarVal )
    LOCAL nVarLen  := ;
-      iif( cVarType == "C", Len( xVarVal ),;
+      iif( cVarType == "C", Len( xVarVal ), ;
       iif( cVarType == "D", 8, ;
       iif( cVarType == "L", 1, ;
       iif( cVarType == "N", iif( cPict == NIL, 9, Len( cPict ) ), 0 ) ) ) )
@@ -938,7 +919,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
 
    _ftPushWin( nTop, nLeft, nBottom, nRight, "QUESTION ?", iif( HB_ISSTRING( xVarVal ) ;
       .AND. nVarLen > nWide, /* LOW-ASCII "←" */ Chr( 27 ) + " scroll " + Chr( 26 ) /* LOW-ASCII "→" */, NIL ), nWinColor )
-   DISPMESSAGE cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2
+   _ftDispMessage( cMessage, nTop + 1, nLeft + 2, nBottom - 1, nRight - 2 )
 
    oNewGet := GetNew( ;
       iif( lGetOnNextLine, Row() + 1, Row() ), ;
@@ -984,13 +965,13 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    SetCursor( nOldCurs )
    SetColor( cOldColor )
    SetPos( nOldRow, nOldCol )
-   Set( _SET_DEVICE,  cOldDevice )
+   Set( _SET_DEVICE, cOldDevice )
    Set( _SET_PRINTER, lOldPrint )
    _ftSetLastKey( nOldLastKey )
 
    RETURN xVarVal
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // User function for ACHOICE() when scrolling tape
 
 STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
@@ -1022,13 +1003,13 @@ STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
 
    RETURN nRtnVal
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Display an ERROR message in a window
 
 STATIC FUNCTION _ftError( cMessage, xDontReset )
 
    LOCAL nOldRow, nOldCol, nOldCurs, nTop, nLeft, nBot, nRight, cOldColor
-   LOCAL nOldLastKey, cErrorScr, nMessLen, nWide, nNumRows, nKey
+   LOCAL nOldLastKey, cErrorScr, nMessLen, nWide, nNumRows
    LOCAL cOldDevic, lOldPrint
    LOCAL lResetLKey := ( xDontReset == NIL )
 
@@ -1053,9 +1034,9 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
    hb_DispBox( nTop, nLeft, nBot, nRight, FT_B_SINGLE )
    hb_DispOutAt( nTop, nLeft + Int( nWide / 2 ) - 1, " ERROR " )
    hb_DispOutAt( nBot - 1, nLeft + Int( nWide - 28 ) / 2 + 3, "Press any key to continue..." )
-   DISPMESSAGE cMessage, nTop + 1, nLeft + 3, nBot - 2, nRight - 3
+   _ftDispMessage( cMessage, nTop + 1, nLeft + 3, nBot - 2, nRight - 3 )
    Tone( 70, 5 )
-   FT_INKEY 0 TO nKey
+   _ftInkey( 0, "nKey" )
    RestScreen( nTop, nLeft, nBot + 1, nRight + 2, cErrorScr )
    SetCursor( nOldCurs )
    SetColor( cOldColor )
@@ -1070,7 +1051,7 @@ STATIC FUNCTION _ftError( cMessage, xDontReset )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Stuff a Comma in a string
 
 STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
@@ -1093,11 +1074,11 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
    ENDIF
    nDecPosit := At( ".", cStrToStuff )
 
-   IF Len( Left( LTrim(_ftCharRem("-",cStrToStuff ) ), ;
-         At( ".", LTrim( _ftCharRem("-",cStrToStuff ) ) ) - 1 ) ) > 3
+   IF Len( Left( LTrim( _ftCharRem( "-", cStrToStuff ) ), ;
+      At( ".", LTrim( _ftCharRem( "-", cStrToStuff ) ) ) - 1 ) ) > 3
       IF lTrimStuffedStr    // Do we trim the number each time we insert a comma
          FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP -4
-            cStrToStuff := SubStr( _ftPosIns( cStrToStuff,",",x ), 2 )
+            cStrToStuff := SubStr( _ftPosIns( cStrToStuff, ",", x ), 2 )
          NEXT
       ELSE
          FOR x := nDecPosit - 3 TO 2 + _ftCountLeft( cStrToStuff, " " ) STEP -3
@@ -1108,7 +1089,7 @@ STATIC FUNCTION _ftStuffComma( cStrToStuff, lTrimStuffedStr )
 
    RETURN cStrToStuff
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Set the standard screen colors to the color requested.
 // See Also: _ftSetWinColor()
 
@@ -1118,10 +1099,10 @@ STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
       _ftInitColors()
    ENDIF
 
-   __defaultNIL( @nStd  , 8 )
-   __defaultNIL( @nEnh  , 8 )
-   __defaultNIL( @nBord , 8 )
-   __defaultNIL( @nBack , 8 )
+   __defaultNIL( @nStd, 8 )
+   __defaultNIL( @nEnh, 8 )
+   __defaultNIL( @nBord, 8 )
+   __defaultNIL( @nBack, 8 )
    __defaultNIL( @nUnsel, nEnh )
 
    RETURN SetColor( ;
@@ -1131,7 +1112,7 @@ STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
       t_aStdColor[ nBack ] + "," + ;
       t_aStdColor[ nUnsel ] )
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // NOTE: Push a new window on the screen in the position t,l,b,r
 //       and if cTitle is not NIL print the title for the window
 //       in centered in the top line of the box. Similarly do
@@ -1171,7 +1152,7 @@ STATIC FUNCTION _ftPushWin( t, l, b, r, cTitle, cBotTitle, nWinColor )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Pop a Window off the screen
 // NOTE: Pop the currently active window off the screen by restoring
 //       it from the t_aWindow Array and if they pushed a new window
@@ -1201,7 +1182,7 @@ STATIC FUNCTION _ftPopWin()
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Set the Color to the Window Colors requested
 // See Also: _ftSetSCRColor()
 // NOTE: If the window number is not passed use the currently
@@ -1209,11 +1190,11 @@ STATIC FUNCTION _ftPopWin()
 
 STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
 
-   __defaultNIL( @nWin  , t_nWinColor )
-   __defaultNIL( @nStd  , 7 )
-   __defaultNIL( @nEnh  , 7 )
-   __defaultNIL( @nBord , 7 )
-   __defaultNIL( @nBack , 7 )
+   __defaultNIL( @nWin, t_nWinColor )
+   __defaultNIL( @nStd, 7 )
+   __defaultNIL( @nEnh, 7 )
+   __defaultNIL( @nBord, 7 )
+   __defaultNIL( @nBack, 7 )
    __defaultNIL( @nUnsel, nEnh )
 
    RETURN SetColor( ;
@@ -1223,7 +1204,7 @@ STATIC FUNCTION _ftSetWinColor( nWin, nStd, nEnh, nBord, nBack, nUnsel )
       t_aWinColor[ nBack, nWin ] + "," + ;
       t_aWinColor[ nUnsel, nWin ] )
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Decrement the active window color number and return the current value
 // NOTE: If we are already on window #1 restart count by using # 4.
 
@@ -1231,7 +1212,7 @@ STATIC FUNCTION _ftLastWinColor()
 
    RETURN t_nWinColor := iif( t_nWinColor == 1, 4, t_nWinColor - 1 )
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Increment the active window color number and return the current value
 // NOTE: If we are already on window #4 restart count by using # 1.
 
@@ -1243,7 +1224,7 @@ STATIC FUNCTION _ftNextWinColor()
 
    RETURN t_nWinColor := ( iif( t_nWinColor < 4, t_nWinColor + 1, 1 ) )
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Print the top or bottom titles on the border of the currently
 // active window.
 
@@ -1257,57 +1238,82 @@ STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Initilize the colors for the Adder
 
 STATIC FUNCTION _ftInitColors()
 
    t_aWinColor := { ;
-      { "GR+/BG","GR+/G", "B+/RB", "G+/R" }                        ,;
-      { "R+/N",   "W+/RB", "W+/BG", "GR+/B" }                      ,;
-      { "GR+/N", "GR+/N", "GR+/N", "GR+/N" }                       ,;
-      {  "B/BG", "BG+/G", "W+/RB", "BG+/R" }                       ,;
-      { "W+/BG", "W+/G", "GR+/RB", "W+/R" }                        ,;
-      { "GR+/B", "GR+/R", "R+/B",  "W+/BG" }                       ,;
-      {  "N/N",   "N/N",  "N/N",   "N/N" }   }
+      { "GR+/BG", "GR+/G", "B+/RB",  "G+/R" },;
+      { "R+/N",   "W+/RB", "W+/BG",  "GR+/B" },;
+      { "GR+/N",  "GR+/N", "GR+/N",  "GR+/N" },;
+      {  "B/BG",  "BG+/G", "W+/RB",  "BG+/R" },;
+      { "W+/BG",  "W+/G",  "GR+/RB", "W+/R" },;
+      { "GR+/B",  "GR+/R", "R+/B",   "W+/BG" },;
+      {  "N/N",   "N/N",   "N/N",    "N/N" }   }
 
    t_aStdColor := { ;
-      "BG+*/RB"                                                    ,;
-      "GR+/R"                                                      ,;
-      "GR+/N"                                                      ,;
-      "W/B"                                                        ,;
-      "GR+/N"                                                      ,;
-      "GR+/GR"                                                     ,;
-      { "W+/B",  "W/B", "G+/B", "R+/B"                             ,;
-      "GR+/B", "BG+/B", "B+/B", "G+/B" }                           ,;
+      "BG+*/RB",;
+      "GR+/R",;
+      "GR+/N",;
+      "W/B",;
+      "GR+/N",;
+      "GR+/GR",;
+      { ;
+      "W+/B",  "W/B",   "G+/B", "R+/B",;
+      "GR+/B", "BG+/B", "B+/B", "G+/B" },;
       "N/N" }
 
    RETURN NIL
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Replace the Character at nPosit in cString with cChar
 
 STATIC FUNCTION _ftPosRepl( cString, cChar, nPosit )
 
    RETURN StrTran( cString, "9", cChar, nPosit, 1 ) + ""
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Removes all occurances of cChar from cString.
 
 STATIC FUNCTION _ftCharRem( cChar, cString )
 
    RETURN StrTran( cString, cChar )
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Returns the number of spaces on the Left side of the String
 
 STATIC FUNCTION _ftCountLeft( cString )
 
    RETURN Len( cString ) - Len( LTrim( cString ) )
 
-//----------------------------------------------------------
+// ----------------------------------------------------------
 // Insert the Character cChar in cString at position nPosit
 
 STATIC FUNCTION _ftPosIns( cString, cChar, nPosit )
 
    RETURN Left( cString, nPosit - 1 ) + cChar + SubStr( cString, nPosit )
+
+STATIC FUNCTION _ftInkey( nSecs, cVar )
+
+   LOCAL nVar
+
+   DO WHILE .T.
+      nVar := Inkey( nSecs )
+      IF SetKey( nVar ) != NIL
+         Eval( SetKey( nVar ), ProcName(), ProcLine(), cVar )
+      ELSE
+         EXIT
+      ENDIF
+   ENDDO
+
+   RETURN nVar
+
+STATIC PROCEDURE _ftDispMessage( cMessage, nT, nL, nB, nR )
+
+   _ftPushKeys()
+   hb_keyPut( { K_CTRL_PGDN, K_CTRL_W } )
+   MemoEdit( cMessage, nT, nL, nB, nR, .F., NIL, nR - nL + 1 )
+   _ftPopKeys()
+
+   RETURN

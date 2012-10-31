@@ -51,7 +51,7 @@
  */
 
 FUNCTION ThreadID()
-   RETURN hb_threadId()
+   RETURN hb_threadID()
 
 
 FUNCTION ThreadObject( oThread )
@@ -63,6 +63,7 @@ FUNCTION ThreadObject( oThread )
 
 
 FUNCTION ThreadWait( aThreads, nTimeOut )
+
    LOCAL xResult, nPos, apThIDs, th
 
    apThIDs := {}
@@ -75,7 +76,7 @@ FUNCTION ThreadWait( aThreads, nTimeOut )
    NEXT
 
    nPos := hb_threadWait( apThIDs, iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
-                                        nTimeOut / 100, ) )
+      nTimeOut / 100, ) )
    IF nPos != 0
       xResult := aThreads[ nPos ]
    ENDIF
@@ -84,6 +85,7 @@ FUNCTION ThreadWait( aThreads, nTimeOut )
 
 
 FUNCTION ThreadWaitAll( aThreads, nTimeOut )
+
    LOCAL apThIDs, th
 
    apThIDs := {}
@@ -96,6 +98,6 @@ FUNCTION ThreadWaitAll( aThreads, nTimeOut )
    NEXT
 
    RETURN hb_threadWait( apThIDs, iif( HB_ISNUMERIC( nTimeOut ) .AND. nTimeOut != 0, ;
-                                       nTimeOut / 100, ), .T. ) == Len( apThIDs )
+      nTimeOut / 100, ), .T. ) == Len( apThIDs )
 
 /* TODO: ThreadInfo() */

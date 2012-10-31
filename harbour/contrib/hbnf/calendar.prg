@@ -30,10 +30,10 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
    LOCAL  aRetVal[ 8 ]
    LOCAL  nHelpRow, cSaveHelp, lHelpIsDisplayed := .F.
 
-   __defaultNIL( @nRow     , 1 )       // check display row
-   __defaultNIL( @nCol     , 63 )      // check display col
-   __defaultNIL( @cColor   , "W+/G" )  // check display color
-   __defaultNIL( @lShadow  , .F. )     // check shadow switch
+   __defaultNIL( @nRow, 1 )       // check display row
+   __defaultNIL( @nCol, 63 )      // check display col
+   __defaultNIL( @cColor, "W+/G" )  // check display color
+   __defaultNIL( @lShadow, .F. )     // check shadow switch
    __defaultNIL( @lShowHelp, .F. )     // check help switch
 
    nRow := iif( nRow < 1 .OR. nRow > 21,  1, nRow )     // check row bounds
@@ -86,7 +86,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
          IF lShowHelp .AND. ! lHelpIsDisplayed
             lHelpIsDisplayed := .T.
             cSaveHelp := SaveScreen( nHelpRow - 1, 1, nHelpRow + 7, 80 )
-            FT_XBOX( "L", , , cColor, cColor, nHelpRow, 1, ;
+            FT_XBOX( "L",,, cColor, cColor, nHelpRow, 1, ;
                "Home, Up_Arrow or PgUp keys page by day, month or year to a past date.", ;
                "End, Dn_Arrow or PgDn keys page by day, month or year to a future date.", ;
                "Left_Arrow or Right_Arrow keys page by week to a past or future date.", ;
@@ -101,7 +101,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
       aRetVal[ 3 ] :=    Day( Date() + nJump )
       aRetVal[ 4 ] :=   Year( Date() + nJump )
       aRetVal[ 5 ] := CMonth( Date() + nJump )
-      aRetVal[ 6 ] :=   CDOW( Date() + nJump )
+      aRetVal[ 6 ] :=   CDoW( Date() + nJump )
       aRetVal[ 7 ] :=   JDOY( aRetVal[ 4 ], aRetVal[ 2 ], aRetVal[ 3 ] )
 
       hb_DispOutAt( nRow, nCol, ;
@@ -121,9 +121,9 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
       aRetVal[ 8 ] := Time()
    ENDDO
 
-   SetColor( cSavColor )                 //restore colors.
-   SetCursor( cSaveCursor )              //restore cursor.
-   RestScreen( nRow - 1, nCol - 1, nRow + 3, nCol + 17, cSaveScreen ) //restore screen.
+   SetColor( cSavColor )                 // restore colors.
+   SetCursor( cSaveCursor )              // restore cursor.
+   RestScreen( nRow - 1, nCol - 1, nRow + 3, nCol + 17, cSaveScreen ) // restore screen.
    IF lHelpIsDisplayed
       RestScreen( nHelpRow - 1, 1, nHelpRow + 7, 80, cSaveHelp )
    ENDIF
@@ -138,4 +138,5 @@ STATIC FUNCTION JDOY( nYear, nMonth, nDay )
       iif( nYear % 4 == 0 .AND. nMonth > 2, 1, 0 )
 
 STATIC FUNCTION VALS( cString, nOffset, nChar )
+
    RETURN Val( SubStr( cString, nOffset, nChar ) )

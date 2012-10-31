@@ -68,6 +68,7 @@ STATIC s_paint_ := { { "", {} } }
 //
 
 EXIT PROCEDURE CleanHandles()
+
    LOCAL obj
 
    FOR EACH obj IN SetFonts()
@@ -144,15 +145,15 @@ PROCEDURE Main()
 
    AAdd( aBlocks, {|| Wvt_SetIcon( GetResource( "vr_1.ico" ) ) } )
    AAdd( aBlocks, {|| Wvt_SetTitle( "Vouch" ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLabel( 1,40, cLabel,6,, rgb(255,255,255 ), rgb(198,198,198 ), "Arial", 26, , , , , .T., .T. ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLabel( 1, 40, cLabel, 6,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRaised( nTop, nLft, nBtm, nRgt ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxGroup( 5, 6, 19, 44 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawImage( 8,62,12,69, IMAGE_VOUCH ) } )
+   AAdd( aBlocks, {|| Wvt_DrawImage( 8, 62, 12, 69, IMAGE_VOUCH ) } )
    AAdd( aBlocks, {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 2,0,MaxRow() - 2,MaxCol(),WVT_LINE_HORZ,WVT_LINE_RECESSED,WVT_LINE_BOTTOM ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1,41,MaxRow(),41,WVT_LINE_VERT,WVT_LINE_RECESSED,WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 2, 0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1, 41, MaxRow(), 41, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
    AAdd( aBlocks, {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    AAdd( aBlocks, {|| Wvt_Mouse( -1000001 ) } )
@@ -218,9 +219,9 @@ PROCEDURE WvtConsoleGets( nMode )
    hb_default( @nMode, 0 )
 
    IF hb_mtvm()
-      hb_threadStart( {| oCrt | hb_gtReload( 'WVT' ) , ;
+      hb_threadStart( {| oCrt | hb_gtReload( 'WVT' ), ;
          oCrt := hb_gtSelect(), ;
-         iif( nMode == 0, WvtNextGetsConsole(), GoogleMap() ) , ;
+         iif( nMode == 0, WvtNextGetsConsole(), GoogleMap() ), ;
          oCrt := NIL } )
    ENDIF
 
@@ -267,7 +268,7 @@ PROCEDURE WvtNextGetsConsole()
 PROCEDURE WvtNextGets()
 
    IF hb_mtvm()
-      hb_threadStart( {|| hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal',20 ), ;
+      hb_threadStart( {|| hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal', 20 ), ;
          hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
    ELSE
       WvtNextGets_X()
@@ -307,21 +308,21 @@ PROCEDURE WvtNextGets_X()
    Wvt_SetPalette( aNewPalette )
 
    AAdd( aBlocks, {|| Wvt_SetTitle( "Wvt Gets 2nd Window with Different Palette" ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1,0,MaxRow() - 1,MaxCol() ) } )
-   AAdd( aBlocks, {|| Wvt_SetBrush( 0, rgb( 32,255,100 ) )    } )
-   AAdd( aBlocks, {|| Wvt_DrawEllipse( 6,50,10,58 )           } )
-   AAdd( aBlocks, {|| Wvt_SetBrush( 2, rgb( 255,255,100 ),1 ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( MaxRow() - 1, 0, MaxRow() - 1, MaxCol() ) } )
+   AAdd( aBlocks, {|| Wvt_SetBrush( 0, rgb( 32, 255, 100 ) )    } )
+   AAdd( aBlocks, {|| Wvt_DrawEllipse( 6, 50, 10, 58 )           } )
+   AAdd( aBlocks, {|| Wvt_SetBrush( 2, rgb( 255, 255, 100 ), 1 ) } )
    AAdd( aBlocks, {|| Wvt_DrawRectangle( 11, 50, 13, 58 )     } )
    AAdd( aBlocks, {|| Wvt_DrawBoxGroupRaised( 5, 6, 19, 72 )  } )
    AAdd( aBlocks, {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 6,22, 9,"New"   ,"vouch1.bmp" )                             } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21,11,22,14,"Browse","vouch1.bmp", 1, rgb( 255,255,255 ) )      } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21,16,22,19, ,"vouch1.bmp" )                                    } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21,21,22,24,"Data",, 0, rgb( 100,22,241 ), rgb( 198,198,198 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21,26,22,29,"Flat",IMAGE_VR,2 )                                 } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21,31,22,34,"Outline",IMAGE_VR,3 )                              } )
-   AAdd( aBlocks, {|| Wvt_DrawButton( 22,36,22,41,"Data",, 0, rgb( 100,22,241 ), rgb( 198,198,198 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 6, 22, 9, "New","vouch1.bmp" )                             } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 11, 22, 14, "Browse", "vouch1.bmp", 1, rgb( 255, 255, 255 ) )      } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 16, 22, 19, , "vouch1.bmp" )                                    } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 21, 22, 24, "Data",, 0, rgb( 100, 22, 241 ), rgb( 198, 198, 198 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 26, 22, 29, "Flat", IMAGE_VR, 2 )                                 } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 31, 22, 34, "Outline", IMAGE_VR, 3 )                              } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 22, 36, 22, 41, "Data",, 0, rgb( 100, 22, 241 ), rgb( 198, 198, 198 ) ) } )
 
    aLastPaint := WvtSetBlocks( aBlocks )
 
@@ -416,10 +417,10 @@ FUNCTION WvtLines()
 
    CLS
 
-   AAdd( aBlocks, {|| Wvt_DrawLine( 0, 0, 0, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED  , WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 0, 0, 0, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( 1, 0, 1, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_TOP )    } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 2, 0, 2, nCols, WVT_LINE_HORZ, WVT_LINE_PLAIN   , WVT_LINE_CENTER, WVT_LINE_SOLID, 4, Rgb( 255,255,255 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 3, 0, 3, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED  , WVT_LINE_CENTER, WVT_LINE_DASH , 0, Rgb( 255,0,0 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 2, 0, 2, nCols, WVT_LINE_HORZ, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_SOLID, 4, Rgb( 255, 255, 255 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 3, 0, 3, nCols, WVT_LINE_HORZ, WVT_LINE_RAISED, WVT_LINE_CENTER, WVT_LINE_DASH, 0, Rgb( 255, 0, 0 ) ) } )
    AAdd( aBlocks, {|| Wvt_DrawLine( 4, 0, 4, nCols, WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) } )
 
    @ 0, 1 SAY "Center Raised"
@@ -431,14 +432,14 @@ FUNCTION WvtLines()
 
    @ nRows, 0 SAY PadC( "Press ESC to Quit", nCols + 1 ) COLOR "GR+/W"
 
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 5,nRows - 2, 5, WVT_LINE_VERT, WVT_LINE_RAISED  , WVT_LINE_CENTER ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 6,nRows - 2, 6, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 7,nRows - 2, 7, WVT_LINE_VERT, WVT_LINE_PLAIN   , WVT_LINE_LEFT   ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 8,nRows - 2, 8, WVT_LINE_VERT, WVT_LINE_PLAIN   , WVT_LINE_CENTER ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 9,nRows - 2, 9, WVT_LINE_VERT, WVT_LINE_PLAIN   , WVT_LINE_RIGHT  ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11,10,nRows - 2,10, WVT_LINE_VERT, WVT_LINE_PLAIN   , WVT_LINE_CENTER, WVT_LINE_DOT,     0, RGB( 0,0,255 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11,11,nRows - 2,11, WVT_LINE_VERT, WVT_LINE_PLAIN   , WVT_LINE_CENTER, WVT_LINE_DASH,    0, RGB( 255,0,0 ) ) } )
-   AAdd( aBlocks, {|| Wvt_DrawLine( 11,12,nRows - 2,12, WVT_LINE_VERT, WVT_LINE_PLAIN   , WVT_LINE_CENTER, WVT_LINE_DASHDOT, 0, RGB( 0,255,0 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 5, nRows - 2, 5, WVT_LINE_VERT, WVT_LINE_RAISED, WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 6, nRows - 2, 6, WVT_LINE_VERT, WVT_LINE_RECESSED, WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 7, nRows - 2, 7, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_LEFT   ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 8, nRows - 2, 8, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 9, nRows - 2, 9, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_RIGHT  ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 10, nRows - 2, 10, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DOT,     0, RGB( 0, 0, 255 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 11, nRows - 2, 11, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASH,    0, RGB( 255, 0, 0 ) ) } )
+   AAdd( aBlocks, {|| Wvt_DrawLine( 11, 12, nRows - 2, 12, WVT_LINE_VERT, WVT_LINE_PLAIN, WVT_LINE_CENTER, WVT_LINE_DASHDOT, 0, RGB( 0, 255, 0 ) ) } )
 
    WvtSetBlocks( aBlocks )
 

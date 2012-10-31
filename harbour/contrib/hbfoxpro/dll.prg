@@ -58,6 +58,7 @@ DECLARE [cFunctionType] FunctionName IN LibraryName [AS AliasName]
 */
 
 FUNCTION FOX___DYNCALL( cCommand, ... )
+
    LOCAL aParam
 
    LOCAL cFunction
@@ -67,13 +68,13 @@ FUNCTION FOX___DYNCALL( cCommand, ... )
    LOCAL aCommand := hb_ATokens( cCommand )
    LOCAL nPos := 1
 
-   LOCAL aType := {;
-      "SHORT"   => HB_DYN_CTYPE_SHORT ,;
-      "INTEGER" => HB_DYN_CTYPE_INT ,;
-      "SINGLE"  => HB_DYN_CTYPE_FLOAT ,;
-      "DOUBLE"  => HB_DYN_CTYPE_DOUBLE ,;
-      "LONG"    => HB_DYN_CTYPE_LONG ,;
-      "STRING"  => HB_DYN_CTYPE_CHAR_PTR ,;
+   LOCAL aType := { ;
+      "SHORT"   => HB_DYN_CTYPE_SHORT, ;
+      "INTEGER" => HB_DYN_CTYPE_INT, ;
+      "SINGLE"  => HB_DYN_CTYPE_FLOAT, ;
+      "DOUBLE"  => HB_DYN_CTYPE_DOUBLE, ;
+      "LONG"    => HB_DYN_CTYPE_LONG, ;
+      "STRING"  => HB_DYN_CTYPE_CHAR_PTR, ;
       "OBJECT"  => HB_DYN_CTYPE_VOID_PTR }
 
    IF nPos <= Len( aCommand ) .AND. Upper( aCommand[ nPos ] ) == "DECLARE"
@@ -130,4 +131,4 @@ FUNCTION FOX___DYNCALL( cCommand, ... )
       ENDIF
    ENDDO
 
-   RETURN hb_dynCall( aParam, ... )
+   RETURN hb_DynCall( aParam, ... )

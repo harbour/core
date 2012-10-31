@@ -12,7 +12,7 @@
 REQUEST ADS
 
 #if defined( __HBDYNLOAD__RDDADS__ )
-#  include "rddads.hbx"
+#include "rddads.hbx"
 #endif
 
 PROCEDURE Main()
@@ -62,7 +62,7 @@ PROCEDURE Main()
       // now create two free tables with same structure
       dbCreate( "Table1", aStru )
       dbCreate( "Table2", aStru )
-      //now create an index
+      // now create an index
       USE table1 NEW
       INDEX ON FIELD->id TAG codigo
       USE

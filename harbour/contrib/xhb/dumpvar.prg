@@ -85,7 +85,7 @@ FUNCTION HB_DumpVar( xVar, lRecursive, nMaxRecursionLevel )
    LOCAL nRecursionLevel := 1
    LOCAL nIndent         := 0
 
-// TraceLog( "HB_DumpVariable: xVar, lAssocAsObj, lRecursive", xVar, lAssocAsObj, lRecursive )
+   // TraceLog( "HB_DumpVariable: xVar, lAssocAsObj, lRecursive", xVar, lAssocAsObj, lRecursive )
 
    __defaultNIL( @nMaxRecursionLevel, 0 )
 
@@ -100,7 +100,7 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
    __defaultNIL( @lAssocAsObj, .F. )
    __defaultNIL( @lRecursive, .F. )
 
-// TraceLog( "Recursion: xVar, nRecursionLevel, nMaxRecursionLevel", xVar, nRecursionLevel, nMaxRecursionLevel )
+   // TraceLog( "Recursion: xVar, nRecursionLevel, nMaxRecursionLevel", xVar, nRecursionLevel, nMaxRecursionLevel )
 
    // return if there is limit in recursion
    IF nMaxRecursionLevel > 0 .AND. ;
@@ -198,7 +198,7 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
       IF Len( aMethods ) > 0
          cString += Space( nIndent ) + " |  +- >> Begin Methods ------" + hb_eol()
          FOR EACH aMth IN aMethods
-            cString += Space( nIndent ) + " |  +- " + PadR( aMth[HB_OO_DATA_SYMBOL], 20 ) + " [" + DecodeType( aMth[HB_OO_DATA_TYPE] ) + "]" + " [" + DecodeScope( aMth[HB_OO_DATA_SCOPE] ) +  "] " + hb_eol()
+            cString += Space( nIndent ) + " |  +- " + PadR( aMth[ HB_OO_DATA_SYMBOL ], 20 ) + " [" + DecodeType( aMth[ HB_OO_DATA_TYPE ] ) + "]" + " [" + DecodeScope( aMth[ HB_OO_DATA_SCOPE ] ) +  "] " + hb_eol()
          NEXT
          cString += Space( nIndent ) + " |  +- >> End   Methods ------" + hb_eol()
          cString += Space( nIndent ) + " |     " + hb_eol()
@@ -217,7 +217,7 @@ STATIC FUNCTION DShowArray( aVar, lRecursive, nIndent, nRecursionLevel, nMaxRecu
 
    __defaultNIL( @nIndent, 0 )
 
-   //TraceLog( "DShowArray: aVar, lRecursive", aVar, lRecursive )
+   // TraceLog( "DShowArray: aVar, lRecursive", aVar, lRecursive )
 
    IF HB_ISARRAY( aVar )
       nEolLen := Len( hb_eol() )
@@ -248,7 +248,7 @@ STATIC FUNCTION DShowHash( hVar, lRecursive, nIndent, nRecursionLevel, nMaxRecur
 
    __defaultNIL( @nIndent, 0 )
 
-   //TraceLog( "DShowHash: hVar, ValType( hVar ), lRecursive", hVar, ValType( hVar ), ValToPrg( hVar ), lRecursive )
+   // TraceLog( "DShowHash: hVar, ValType( hVar ), lRecursive", hVar, ValType( hVar ), ValToPrg( hVar ), lRecursive )
 
    IF HB_ISHASH( hVar )
       nEolLen := Len( hb_eol() )
@@ -430,8 +430,8 @@ STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
    aVars   := __objGetMsgFullList( oObject, .T., HB_MSGLISTALL, nScope, nNoScope )
    aReturn := {}
    FOR EACH aVar IN aVars
-      IF hb_AScan( aExcept, aVar[HB_OO_DATA_SYMBOL], , , .T. ) == 0
-         //TraceLog( "__objGetValueFullList():  aVar[HB_OO_DATA_SYMBOL]",  aVar[ HB_OO_DATA_SYMBOL ] )
+      IF hb_AScan( aExcept, aVar[ HB_OO_DATA_SYMBOL ], , , .T. ) == 0
+         // TraceLog( "__objGetValueFullList():  aVar[HB_OO_DATA_SYMBOL]",  aVar[ HB_OO_DATA_SYMBOL ] )
          AAdd( aReturn, { aVar[ HB_OO_DATA_SYMBOL ], __SendRawMsg( oObject, aVar[ HB_OO_DATA_SYMBOL ] ), aVar[ HB_OO_DATA_TYPE ], aVar[ HB_OO_DATA_SCOPE ] } )
       ENDIF
    NEXT

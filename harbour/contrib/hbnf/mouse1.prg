@@ -118,6 +118,7 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
    LOCAL nCurHoriz, nCurVert, nCurDouble
 
    // Get current values
+
    FT_MGETSENS( @nCurHoriz, @nCurVert, @nCurDouble )
 
    hb_default( @nHoriz, nCurHoriz )
@@ -139,7 +140,7 @@ FUNCTION FT_MVERSION( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
 
 FUNCTION FT_MINIT()
 
-   // If not previously initialized then try
+// If not previously initialized then try
 
    IF ! t_lMInit
       t_lMInit := ( FT_MRESET() != 0 )
@@ -192,7 +193,7 @@ FUNCTION FT_MXLIMIT( nMin, nMax )
 
    LOCAL nTop, nBottom
 
-   hb_MGetBounds( @nTop, , @nBottom )
+   hb_MGetBounds( @nTop,, @nBottom )
    MSetBounds( nTop, nMin, nBottom, nMax )
 
    RETURN NIL
@@ -201,7 +202,7 @@ FUNCTION FT_MYLIMIT( nMin, nMax )
 
    LOCAL nLeft, nRight
 
-   hb_MGetBounds( , @nLeft, , @nRight )
+   hb_MGetBounds(, @nLeft,, @nRight )
    MSetBounds( nMin, nLeft, nMax, nRight )
 
    RETURN NIL
@@ -219,9 +220,11 @@ FUNCTION FT_MGETY()
    RETURN MCol()
 
 FUNCTION FT_MGETPAGE()
+
    RETURN 0
 
-/* NOTE: Page is ignored in Harbour */
+   /* NOTE: Page is ignored in Harbour */
+
 FUNCTION FT_MSETPAGE( nPage )
 
    HB_SYMBOL_UNUSED( nPage )

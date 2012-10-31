@@ -147,7 +147,7 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
          nLen  := Len( aData )
          FOR n := 1 TO nLen                     // For each item : Recurse !
             cOut += aData[ n ][ HB_OO_DATA_SYMBOL ] + ":" + ;
-               ToChar( aData[ n ] [HB_OO_DATA_VALUE ], cSeparator, lDebug )
+               ToChar( aData[ n ][ HB_OO_DATA_VALUE ], cSeparator, lDebug )
             IF n != nLen
                cOut += cSeparator
             ENDIF

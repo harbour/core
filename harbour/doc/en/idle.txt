@@ -17,17 +17,17 @@
       state is entered during INKEY() calls currently. All applications
       that don't use INKEY() function call can signal the idle states with
       the call of HB_IDLESTATE() function (or hb_idleState() on C level).
-  
+
       During idle states the virtual machine calls the garbage collector and
       it can call user defined actions (background tasks). It also releases
       the CPU time slices for some poor platforms that are not smart enough
       to detect it automatically.
-  
+
       For defining the background tasks see the HB_IDLEADD() and HB_IDLEDEL()
       functions.
-  
+
       For direct call for background actions see HB_IDLESTATE() function.
-  
+
       For signaling the idle state from C code see the hb_idleState()
       API function.
    $SEEALSO$
@@ -95,7 +95,7 @@
       HB_IDLEDEL() removes the action associated with passed identifier
       from the list of background tasks. The identifer should be the
       value returned by the previous call of HB_IDLEADD() function.
-  
+
       If specified task is defined then the codeblock is returned
       otherwise the NIL value is returned.
    $EXAMPLES$
@@ -134,7 +134,7 @@
       HB_IDLEADD() function. Every call to this function evaluates a
       different task in the order of task creation. There are no
       arguments passed during a codeblock evaluation.
-  
+
       This function can be safely called even if there are no background
       tasks defined.
    $EXAMPLES$
@@ -178,14 +178,14 @@
       executes a single background task defined by the codeblock passed
       with HB_IDLEADD() function. It also releases the CPU time slices for
       platforms that require it.
-  
+
       Every call for this function evaluates different task in the
       order of task creation. There are no arguments passed during
       codeblock evaluation.
-  
+
       This function can be safely called even if there are no background
       tasks defined.
-  
+
       This function is automatically called from the INKEY() function.
    $STATUS$
       R

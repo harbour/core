@@ -14,16 +14,16 @@
 
 PROCEDURE Main()
 
-   ? hb_LibName( NIL )
-   ? hb_LibName( "" )
-   ? hb_LibName( "name" )
-   ? hb_LibName( "name.ext" )
-   ? hb_LibName( "name." )
-   ? hb_LibName( "name.ext", NIL )
-   ? hb_LibName( "dir\name.ext", NIL )
-   ? hb_LibName( "name.ext", "mydir" )
-   ? hb_LibName( "dir\name.ext", "mydir" )
-   ? hb_LibName( "name.ext", "mydir\" )
-   ? hb_LibName( "dir\name.ext", "mydir\" )
+   ? hb_libName( NIL )
+   ? hb_libName( "" )
+   ? hb_libName( "name" )
+   ? hb_libName( "name.ext" )
+   ? hb_libName( "name." )
+   ? hb_libName( "name.ext", NIL )
+   ? hb_libName( "dir\name.ext", NIL )
+   ? hb_libName( "name.ext", "mydir" )
+   ? hb_libName( "dir\name.ext", "mydir" )
+   ? hb_libName( "name.ext", "mydir\" )
+   ? hb_libName( "dir\name.ext", "mydir\" )
 
    RETURN

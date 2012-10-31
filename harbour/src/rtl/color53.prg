@@ -53,6 +53,7 @@
 #ifdef HB_COMPAT_C53
 
 FUNCTION GetClrPair( cColor, nColor )
+
    LOCAL nPos
 
    IF ( nPos := GetPairPos( cColor, nColor ) ) == 0
@@ -62,6 +63,7 @@ FUNCTION GetClrPair( cColor, nColor )
    RETURN SubStr( cColor, nPos, GetPairLen( cColor, nColor ) )
 
 FUNCTION SetClrPair( cColor, nColor, cNewColor )
+
    LOCAL nPos
 
    IF ( nPos := GetPairPos( cColor, nColor ) ) == 0
@@ -71,6 +73,7 @@ FUNCTION SetClrPair( cColor, nColor, cNewColor )
    RETURN Stuff( cColor, nPos, GetPairLen( cColor, nColor ), cNewColor )
 
 FUNCTION GetPairPos( cColor, nColor )
+
    LOCAL nPos := 1
    LOCAL nSep
    LOCAL n
@@ -85,6 +88,7 @@ FUNCTION GetPairPos( cColor, nColor )
    RETURN nPos
 
 FUNCTION GetPairLen( cColor, nColor )
+
    LOCAL nPos := GetPairPos( cColor, nColor )
    LOCAL nLen
 
@@ -97,6 +101,7 @@ FUNCTION GetPairLen( cColor, nColor )
    RETURN iif( nLen == 0, Len( cColor ) - nPos + 1, nLen - 1 )
 
 FUNCTION GetClrFore( cColor )
+
    LOCAL nPos
 
    IF ( nPos := At( "/", cColor ) ) == 0
@@ -106,6 +111,7 @@ FUNCTION GetClrFore( cColor )
    RETURN SubStr( cColor, 1, nPos - 1 )
 
 FUNCTION GetClrBack( cColor )
+
    LOCAL nPos
 
    IF ( nPos := At( "/", cColor ) ) == 0
@@ -114,39 +120,39 @@ FUNCTION GetClrBack( cColor )
 
    RETURN SubStr( cColor, nPos + 1 )
 
-FUNCTION RADGRDefCo( cColor )
-   RETURN iif( IsDefColor(),;
-      ApplyDefau( cColor, "W/N", "W/N", "W+/N" ),;
+FUNCTION RadGrDefCo( cColor )
+   RETURN iif( IsDefColor(), ;
+      ApplyDefau( cColor, "W/N", "W/N", "W+/N" ), ;
       ApplyDefau( cColor, 3, 1, 4 ) )
 
-FUNCTION RADITDefCo( cColor )
-   RETURN iif( IsDefColor(),;
-      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N" ),;
+FUNCTION RadItDefCo( cColor )
+   RETURN iif( IsDefColor(), ;
+      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N" ), ;
       ApplyDefau( cColor, 5, 5, 2, 2, 1, 1, 4 ) )
 
-FUNCTION LISTBDefCo( cColor )
-   RETURN iif( IsDefColor(),;
-      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N" ),;
+FUNCTION ListBDefCo( cColor )
+   RETURN iif( IsDefColor(), ;
+      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N" ), ;
       ApplyDefau( cColor, 5, 5, 5, 2, 3, 1, 4 ) )
 
-FUNCTION COMBODefCo( cColor )
-   RETURN iif( IsDefColor(),;
-      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N", "W/N" ),;
+FUNCTION ComboDefCo( cColor )
+   RETURN iif( IsDefColor(), ;
+      ApplyDefau( cColor, "W/N", "W+/N", "W+/N", "N/W", "W/N", "W/N", "W+/N", "W/N" ), ;
       ApplyDefau( cColor, 5, 5, 5, 2, 3, 1, 4, 1 ) )
 
-FUNCTION CHECKDefCo( cColor )
-   RETURN iif( IsDefColor(),;
-      ApplyDefau( cColor, "W/N", "W+/N", "W/N", "W+/N" ),;
+FUNCTION CheckDefCo( cColor )
+   RETURN iif( IsDefColor(), ;
+      ApplyDefau( cColor, "W/N", "W+/N", "W/N", "W+/N" ), ;
       ApplyDefau( cColor, 5, 2, 1, 4 ) )
 
-FUNCTION BUTTNDefCo( cColor )
-   RETURN iif( IsDefColor(),;
-      ApplyDefau( cColor, "W/N", "N/W", "W+/N", "W+/N" ),;
+FUNCTION ButtnDefCo( cColor )
+   RETURN iif( IsDefColor(), ;
+      ApplyDefau( cColor, "W/N", "N/W", "W+/N", "W+/N" ), ;
       ApplyDefau( cColor, 5, 2, 1, 4 ) )
 
-FUNCTION MENUDefCol( cColor )
-   RETURN iif( IsDefColor(),;
-      ApplyDefau( cColor, "N/W", "W/N", "W+/W", "W+/N", "N+/W", "W/N" ),;
+FUNCTION MenuDefCol( cColor )
+   RETURN iif( IsDefColor(), ;
+      ApplyDefau( cColor, "N/W", "W/N", "W+/W", "W+/N", "N+/W", "W/N" ), ;
       ApplyDefau( cColor, 5, 2, 4, 2, 1, 3 ) )
 
 FUNCTION ApplyDefau( cColor, xClr1, xClr2, xClr3, xClr4, xClr5, xClr6, xClr7, xClr8 )
@@ -170,21 +176,21 @@ FUNCTION ApplyDefau( cColor, xClr1, xClr2, xClr3, xClr4, xClr5, xClr6, xClr7, xC
 
    cSetColor := SetColor()
 
-   aSetColor := {;
-      GetClrPair( cSetColor, 1 ) ,;
-      GetClrPair( cSetColor, 2 ) ,;
-      GetClrPair( cSetColor, 3 ) ,;
-      GetClrPair( cSetColor, 4 ) ,;
+   aSetColor := { ;
+      GetClrPair( cSetColor, 1 ), ;
+      GetClrPair( cSetColor, 2 ), ;
+      GetClrPair( cSetColor, 3 ), ;
+      GetClrPair( cSetColor, 4 ), ;
       GetClrPair( cSetColor, 5 ) }
 
-   aNewColor := {;
-      xClr1 ,;
-      xClr2 ,;
-      xClr3 ,;
-      xClr4 ,;
-      xClr5 ,;
-      xClr6 ,;
-      xClr7 ,;
+   aNewColor := { ;
+      xClr1, ;
+      xClr2, ;
+      xClr3, ;
+      xClr4, ;
+      xClr5, ;
+      xClr6, ;
+      xClr7, ;
       xClr8 }
 
    nColors  := PCount() - 1

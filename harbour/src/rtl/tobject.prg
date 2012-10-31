@@ -75,10 +75,11 @@
 #include "error.ch"
 
 FUNCTION HBObject()
+
    STATIC s_oClass
    LOCAL oClass
 
-   IF s_oClass == NIL .and. __clsLockDef( @s_oClass )
+   IF s_oClass == NIL .AND. __clsLockDef( @s_oClass )
 
       BEGIN SEQUENCE
 
@@ -146,7 +147,7 @@ FUNCTION HBObject()
 
       ALWAYS
 
-         __clsUnlockDef( @s_oClass, oClass ) ;;
+         __clsUnlockDef( @s_oClass, oClass )
 
       END SEQUENCE
 
@@ -161,7 +162,9 @@ FUNCTION HBObject()
    RETURN s_oClass:Instance()
 
 STATIC FUNCTION HBObject_New( ... )
+
    QSelf():Init( ... )
+
    RETURN QSelf()
 
 STATIC FUNCTION HBObject_Init()

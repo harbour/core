@@ -541,7 +541,7 @@ METHOD RUN() CLASS tRPCServeCon
          /* Challeng reply */
       CASE cCode == "XHBR95"
          IF nSafeStatus == RPCS_STATUS_CHALLENGE
-            lBreak := ! ::RecvChallenge( )
+            lBreak := ! ::RecvChallenge()
             IF ! lBreak
                nSafeStatus := RPCS_STATUS_LOGGED
             ENDIF
@@ -754,7 +754,7 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS tRPCServeCon
    /* Let's generate the sequence */
    cChallenge := ""
    FOR nCount := 1 TO 255
-      cChallenge += hb_BChar( HB_Random(0, 255 ) )
+      cChallenge += hb_BChar( hb_Random( 0, 255 ) )
    NEXT
 
    ::nChallengeCRC := HB_Checksum( cChallenge )
@@ -770,6 +770,7 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS tRPCServeCon
 
 
 METHOD RecvChallenge() CLASS tRPCServeCon
+
    LOCAL cNumber := Space( 8 )
 
    IF hb_inetRecvAll( ::skRemote, @cNumber ) != 8
@@ -922,7 +923,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
 
    LOCAL oFunc
 
-   //Check for function existance
+   // Check for function existance
    oFunc := ::oServer:Find( cFuncName )
    IF Empty( oFunc )
       // signal error
@@ -939,7 +940,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
       RETURN .T.
    ENDIF
 
-   //check for parameters
+   // check for parameters
    IF aParams == NIL .OR. ! oFunc:CheckTypes( aParams )
       // signal error
       ::oServer:OnFunctionError( Self, cFuncName, 02 )
@@ -966,7 +967,7 @@ METHOD FunctionRunner( cFuncName, oFunc, nMode, aParams, aDesc ) CLASS tRPCServe
    LOCAL oRet, oElem, aRet
    LOCAL aSubst, nSubstPos
 
-//? "TH:", ::thFunction
+   // ? "TH:", ::thFunction
    DO CASE
 
    CASE nMode == 0  // just run the function
@@ -1104,7 +1105,7 @@ METHOD SendResult( oRet, cFuncName )
    IF ::lCanceled
       hb_mutexUnlock( ::mtxBusy )
       ::oServer:OnFunctionCanceled( Self, cFuncName )
-      RETURN .T. //as if it were done
+      RETURN .T. // as if it were done
    ENDIF
    hb_mutexUnlock( ::mtxBusy )
 
@@ -1255,7 +1256,7 @@ CREATE CLASS tRPCService
    /* Provide encryption key for a user */
    METHOD GetEncryption( cUserId )
    METHOD OnFunctionScan()
-   METHOD OnServerScan( )
+   METHOD OnServerScan()
    METHOD OnClientConnect( oClient )
    METHOD OnClientLogin( oClient )
    METHOD OnClientRequest( oClient, nRequest, cData )
@@ -1436,7 +1437,7 @@ METHOD StartService( skIn ) CLASS tRPCService
 
    RETURN .T.
 
-METHOD UDPListen( ) CLASS tRPCService
+METHOD UDPListen() CLASS tRPCService
 
    LOCAL cData := Space( 1000 )
    LOCAL nPacketLen
@@ -1464,6 +1465,7 @@ METHOD UDPParseRequest( cData, nPacketLen ) CLASS tRPCService
    RETURN .F.
 
 METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
+
    LOCAL cCode, cMatch, cNumber, cSerial
    LOCAL oFunc
 
@@ -1471,7 +1473,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
       RETURN .F.
    ENDIF
 
-   cCode := hb_BSubstr( cData, 1, 6 )
+   cCode := hb_BSubStr( cData, 1, 6 )
 
    DO CASE
    /* XHRB00 - server scan */
@@ -1480,23 +1482,23 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
          RETURN .F.
       ENDIF
       IF nPacketLen > 6
-         cMatch := hb_Deserialize( hb_BSubstr( cData, 7 ) )
+         cMatch := hb_Deserialize( hb_BSubStr( cData, 7 ) )
          IF hb_regexMatch( cMatch, ::cServerName )
-           cRes := "XHBR10" + hb_Serialize( ::cServerName )
+            cRes := "XHBR10" + hb_Serialize( ::cServerName )
          ENDIF
       ELSE
          cRes := "XHBR10" + hb_Serialize( ::cServerName )
       ENDIF
       RETURN .T.
 
-   /* XRB01 - Function scan */
+      /* XRB01 - Function scan */
    CASE cCode == "XHBR01"
       IF ! ::OnFunctionScan()
          RETURN .F.
       ENDIF
       /* minimal length to be valid */
       IF nPacketLen > 24
-         cSerial := hb_DeserialBegin( hb_BSubstr( cData, 7 ) )
+         cSerial := hb_DeserialBegin( hb_BSubStr( cData, 7 ) )
          cMatch := hb_DeserialNext( @cSerial )
          cNumber := NIL
          IF ! Empty( cMatch )
@@ -1524,6 +1526,7 @@ METHOD UDPInterpretRequest( cData, nPacketLen, cRes ) CLASS tRPCService
    ENDCASE
 
    /* Ignore malformed requests. */
+
    RETURN .F.
 
 METHOD Terminating( oConnection ) CLASS tRPCService
@@ -1569,8 +1572,8 @@ METHOD AuthorizeChallenge( cUserId, cData ) CLASS tRPCService
 
    RETURN NIL
 
-   /* Default authorization will ALWAYS return 1 if a bAuthorize block is not provided */
-   /* IF cPassword is NIL, must return the level of the given userid */
+/* Default authorization will ALWAYS return 1 if a bAuthorize block is not provided */
+/* IF cPassword is NIL, must return the level of the given userid */
 
 METHOD Authorize( cUserid, cPassword ) CLASS tRPCService
 
@@ -1580,7 +1583,7 @@ METHOD Authorize( cUserid, cPassword ) CLASS tRPCService
 
    RETURN 1
 
-   /* By default, do not provide an encryption key for any user */
+/* By default, do not provide an encryption key for any user */
 
 METHOD GetEncryption( cUserId ) CLASS tRPCService
 

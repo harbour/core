@@ -62,8 +62,9 @@
 #include "error.ch"
 
 FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
-                         cPasswd, nCompressLevel, nStrategy, ;
-                         sSrvFunc )
+      cPasswd, nCompressLevel, nStrategy, ;
+      sSrvFunc )
+
    LOCAL pListenSocket, lRPC
    LOCAL oError
 
@@ -88,8 +89,8 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
       pListenSocket := netio_listen( nPort, cIfAddr, cRootDir, lRPC )
       IF !Empty( pListenSocket )
          hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, ;
-                                          xRPC, sSrvFunc, ;
-                                          cPasswd, nCompressLevel, nStrategy ) )
+            xRPC, sSrvFunc, ;
+            cPasswd, nCompressLevel, nStrategy ) )
       ENDIF
    ELSE
       oError := ErrorNew()
@@ -98,7 +99,7 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
       oError:genCode     := EG_UNSUPPORTED
       oError:subSystem   := "HBNETIO"
       oError:subCode     := 0
-      oError:description := hb_LangErrMsg( EG_UNSUPPORTED )
+      oError:description := hb_langErrMsg( EG_UNSUPPORTED )
       oError:canRetry    := .F.
       oError:canDefault  := .F.
       oError:fileName    := ""
@@ -106,10 +107,12 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
 
       Eval( ErrorBlock(), oError )
    ENDIF
+
    RETURN pListenSocket
 
 
 STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, sSrvFunc, ... )
+
    LOCAL pConnectionSocket
 
    WHILE .T.
@@ -123,4 +126,5 @@ STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, sSrvFunc, ... )
       hb_threadDetach( hb_threadStart( sSrvFunc, pConnectionSocket ) )
       pConnectionSocket := NIL
    ENDDO
+
    RETURN NIL

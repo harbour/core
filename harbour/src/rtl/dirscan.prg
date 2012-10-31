@@ -66,8 +66,8 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
          ENDIF
          IF !( aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".." .OR. aFile[ F_NAME ] == "" )
             AEval( hb_DoScan( cPath + aFile[ F_NAME ] + cPathSep, cMask, cAttr, cPathSep ), ;
-                   {| x | x[ F_NAME ] := aFile[ F_NAME ] + cPathSep + x[ F_NAME ], ;
-                          AAdd( aResult, x ) } )
+               {| x | x[ F_NAME ] := aFile[ F_NAME ] + cPathSep + x[ F_NAME ], ;
+               AAdd( aResult, x ) } )
          ENDIF
       ELSEIF lMatch
          AAdd( aResult, aFile )
@@ -90,6 +90,6 @@ FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
    ENDIF
 
    RETURN HB_DoScan( cFilePath, ;
-                     iif( Empty( cFileMask ), hb_osFileMask(), cFileMask ), ;
-                     iif( HB_ISSTRING( cAttr ), cAttr, "" ), ;
-                     hb_ps() )
+      iif( Empty( cFileMask ), hb_osFileMask(), cFileMask ), ;
+      iif( HB_ISSTRING( cAttr ), cAttr, "" ), ;
+      hb_ps() )

@@ -26,8 +26,8 @@
  *
  */
 
-FUNCTION FT_MIN2DHM( nMINS )
-   RETURN {;
-      hb_ntos( Int(   nMINS / 1440        ) ) ,;
-      hb_ntos( Int( ( nMINS % 1440 ) / 60 ) ) ,;
-      hb_ntos( Int( ( nMINS % 1440 ) % 60 ) ) }
+FUNCTION FT_MIN2DHM( nMins )
+   RETURN { ;
+      hb_ntos( Int(   nMins / 1440        ) ), ;
+      hb_ntos( Int( ( nMins % 1440 ) / 60 ) ), ;
+      hb_ntos( Int( ( nMins % 1440 ) % 60 ) ) }

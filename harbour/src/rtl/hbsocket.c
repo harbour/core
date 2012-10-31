@@ -808,8 +808,8 @@ typedef union
 } HB_SOCKADDR_STORAGE;
 
 /* MT macros */
-#define HB_SOCKET_LOCK        hb_threadEnterCriticalSection( &s_sockMtx );
-#define HB_SOCKET_UNLOCK      hb_threadLeaveCriticalSection( &s_sockMtx );
+#define HB_SOCKET_LOCK()        hb_threadEnterCriticalSection( &s_sockMtx )
+#define HB_SOCKET_UNLOCK()      hb_threadLeaveCriticalSection( &s_sockMtx )
 static HB_CRITICAL_NEW( s_sockMtx );
 
 static int s_iSessions;
@@ -838,7 +838,7 @@ int hb_socketInit( void )
 {
    int ret = 0;
 
-   HB_SOCKET_LOCK
+   HB_SOCKET_LOCK();
    if( ++s_iSessions == 1 )
    {
 #if defined( HB_OS_WIN )
@@ -848,14 +848,14 @@ int hb_socketInit( void )
       ret = sock_init();
 #endif
    }
-   HB_SOCKET_UNLOCK
+   HB_SOCKET_UNLOCK();
 
    return ret;
 }
 
 void hb_socketCleanup( void )
 {
-   HB_SOCKET_LOCK
+   HB_SOCKET_LOCK();
    if( --s_iSessions == 0 )
    {
 #if defined( HB_OS_WIN )
@@ -864,7 +864,7 @@ void hb_socketCleanup( void )
       sock_exit();
 #endif
    }
-   HB_SOCKET_UNLOCK
+   HB_SOCKET_UNLOCK();
 }
 
 static void hb_socketSetOsError( int err )

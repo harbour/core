@@ -1183,11 +1183,11 @@ STATIC FUNCTION ADO_ORDDESTROY( nWA, aOrderInfo )
    LOCAL aWAData := USRRDD_AREADATA( nWA ), n, oIndex
 
    IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes != NIL
-      FOR n := 1 to aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
-          oIndex := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
-          IF oIndex:Name == aOrderInfo[ UR_ORI_TAG ]
-             aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Delete( oIndex:Name )
-          ENDIF
+      FOR n := 1 TO aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
+         oIndex := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( n - 1 )
+         IF oIndex:Name == aOrderInfo[ UR_ORI_TAG ]
+            aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Delete( oIndex:Name )
+         ENDIF
       NEXT
    ENDIF
 
@@ -1199,7 +1199,7 @@ STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
 
    nCurrArea := Select()
    IF nCurrArea != nArea
-      DbSelectArea( nArea )
+      dbSelectArea( nArea )
    ELSE
       nCurrArea := 0
    ENDIF
@@ -1207,7 +1207,7 @@ STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
    uResult := Eval( bBlock )
 
    IF nCurrArea > 0
-      DbSelectArea( nCurrArea )
+      dbSelectArea( nCurrArea )
    ENDIF
 
    RETURN HB_SUCCESS
@@ -1221,13 +1221,13 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-         //n := aRData[ WA_CATALOG ]:Tables( cTable )
+         // n := aRData[ WA_CATALOG ]:Tables( cTable )
          lRet := HB_SUCCESS
       RECOVER
       END SEQUENCE
       IF ! Empty( cIndex )
          BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-            //n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
+            // n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes( cIndex )
             lRet := HB_SUCCESS
          RECOVER
          END SEQUENCE
@@ -1245,13 +1245,13 @@ STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
 
    IF ! Empty( cTable ) .AND. ! Empty( aRData[ WA_CATALOG ] )
       BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-         //n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
+         // n := aRData[ WA_CATALOG ]:Tables:Delete( cTable )
          lRet := HB_SUCCESS
       RECOVER
       END SEQUENCE
       IF ! Empty( cIndex )
          BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-            //n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
+            // n := aRData[ WA_CATALOG ]:Tables( cTable ):Indexes:Delete( cIndex )
             lRet := HB_SUCCESS
          RECOVER
          END SEQUENCE
@@ -1554,7 +1554,7 @@ PROCEDURE HB_AdoSetLocateFor( cLocateFor )
 
 STATIC FUNCTION SQLTranslate( cExpr )
 
-   IF Left( cExpr, 1 ) == '"' .and. Right( cExpr, 1 ) == '"'
+   IF Left( cExpr, 1 ) == '"' .AND. Right( cExpr, 1 ) == '"'
       cExpr := SubStr( cExpr, 2, Len( cExpr ) - 2 )
    ENDIF
 

@@ -162,9 +162,9 @@ METHOD display() CLASS RADIOBUTTN
    DispBegin()
 
    cColor := iif( ::lBuffer, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 1 ) )
-   hb_dispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ) +;
-                                 iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ) +;
-                                 Right( cStyle, 1 ), cColor )
+   hb_DispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ) + ;
+      iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ) + ;
+      Right( cStyle, 1 ), cColor )
 
    IF !Empty( cOldCaption := ::cCaption )
 
@@ -175,10 +175,10 @@ METHOD display() CLASS RADIOBUTTN
          cOldCaption := Stuff( cOldCaption, nPos, 1, "" )
       ENDIF
 
-      hb_dispOutAt( ::nCapRow, ::nCapCol, cOldCaption, hb_ColorIndex( ::cColorSpec, 4 ) )
+      hb_DispOutAt( ::nCapRow, ::nCapCol, cOldCaption, hb_ColorIndex( ::cColorSpec, 4 ) )
 
       IF nPos != 0
-         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cOldCaption, nPos, 1 ), iif( ::lHasfocus, hb_ColorIndex( ::cColorSpec, 6 ), hb_ColorIndex( ::cColorSpec, 5 ) ) )
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cOldCaption, nPos, 1 ), iif( ::lHasfocus, hb_ColorIndex( ::cColorSpec, 6 ), hb_ColorIndex( ::cColorSpec, 5 ) ) )
       ENDIF
    ENDIF
 
@@ -193,7 +193,7 @@ METHOD isAccel( xKey ) CLASS RADIOBUTTN
    IF HB_ISSTRING( xKey )
       cKey := xKey
    ELSEIF HB_ISNUMERIC( xKey )
-      cKey := hb_KeyChar( xKey )
+      cKey := hb_keyChar( xKey )
    ELSE
       RETURN .F.
    ENDIF
@@ -279,7 +279,7 @@ METHOD col( nCol ) CLASS RADIOBUTTN
 METHOD colorSpec( cColorSpec ) CLASS RADIOBUTTN
 
    IF cColorSpec != NIL
-      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
          {|| !Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } )
    ENDIF
 
@@ -344,13 +344,14 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RADIOBUTTN
       ::cColorSpec := "W/N,W+/N,W+/N,N/W,W/N,W/N,W+/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BACKGROUND )
+      ::cColorSpec := ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self

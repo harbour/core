@@ -56,63 +56,48 @@
 #include "tbrowse.ch"
 
 FUNCTION TApplyKey( nKey, oBrowse )
-
    RETURN oBrowse:applyKey( nKey )
 
-FUNCTION TBAddCol()
-   /* TODO */
+FUNCTION TBAddCol() /* TODO */
    RETURN NIL
 
-FUNCTION TBBBlock()
-   /* TODO */
+FUNCTION TBBBlock() /* TODO */
    RETURN NIL
 
-FUNCTION TBClose()
-   /* TODO */
+FUNCTION TBClose() /* TODO */
    RETURN NIL
 
-FUNCTION TBCreate()
-   /* TODO */
+FUNCTION TBCreate() /* TODO */
    RETURN NIL
 
-FUNCTION TBDelCol()
-   /* TODO */
+FUNCTION TBDelCol() /* TODO */
    RETURN NIL
 
-FUNCTION TBDisplay()
-   /* TODO */
+FUNCTION TBDisplay() /* TODO */
    RETURN NIL
 
-FUNCTION TBEditCell()
-   /* TODO */
+FUNCTION TBEditCell() /* TODO */
    RETURN NIL
 
-FUNCTION TBFBlock()
-   /* TODO */
+FUNCTION TBFBlock() /* TODO */
    RETURN NIL
 
-FUNCTION TBGoBot()
-   /* TODO */
+FUNCTION TBGoBot() /* TODO */
    RETURN NIL
 
-FUNCTION TBGoTop()
-   /* TODO */
+FUNCTION TBGoTop() /* TODO */
    RETURN NIL
 
-FUNCTION TBInsCol()
-   /* TODO */
+FUNCTION TBInsCol() /* TODO */
    RETURN NIL
 
-FUNCTION TBModal()
-   /* TODO */
+FUNCTION TBModal() /* TODO */
    RETURN NIL
 
-FUNCTION TBSBlock()
-   /* TODO */
+FUNCTION TBSBlock() /* TODO */
    RETURN NIL
 
-FUNCTION TBSkip()
-   /* TODO */
+FUNCTION TBSkip() /* TODO */
    RETURN NIL
 
 #endif

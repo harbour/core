@@ -14,7 +14,7 @@
 
 PROCEDURE Main()
 
-    ? ">" + wapi_GetWindowsDirectory() + "<"
-    ? ">" + wapi_GetSystemDirectory() + "<"
+   ? ">" + wapi_GetWindowsDirectory() + "<"
+   ? ">" + wapi_GetSystemDirectory() + "<"
 
-    RETURN
+   RETURN

@@ -62,31 +62,31 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
 
    // inkey codes for A - Z
    LOCAL aKeyCodes := { ;
-      K_ALT_A ,;
-      K_ALT_B ,;
-      K_ALT_C ,;
-      K_ALT_D ,;
-      K_ALT_E ,;
-      K_ALT_F ,;
-      K_ALT_G ,;
-      K_ALT_H ,;
-      K_ALT_I ,;
-      K_ALT_J ,;
-      K_ALT_K ,;
-      K_ALT_L ,;
-      K_ALT_M ,;
-      K_ALT_N ,;
-      K_ALT_O ,;
-      K_ALT_P ,;
-      K_ALT_Q ,;
-      K_ALT_R ,;
-      K_ALT_S ,;
-      K_ALT_T ,;
-      K_ALT_U ,;
-      K_ALT_V ,;
-      K_ALT_W ,;
-      K_ALT_X ,;
-      K_ALT_Y ,;
+      K_ALT_A, ;
+      K_ALT_B, ;
+      K_ALT_C, ;
+      K_ALT_D, ;
+      K_ALT_E, ;
+      K_ALT_F, ;
+      K_ALT_G, ;
+      K_ALT_H, ;
+      K_ALT_I, ;
+      K_ALT_J, ;
+      K_ALT_K, ;
+      K_ALT_L, ;
+      K_ALT_M, ;
+      K_ALT_N, ;
+      K_ALT_O, ;
+      K_ALT_P, ;
+      K_ALT_Q, ;
+      K_ALT_R, ;
+      K_ALT_S, ;
+      K_ALT_T, ;
+      K_ALT_U, ;
+      K_ALT_V, ;
+      K_ALT_W, ;
+      K_ALT_X, ;
+      K_ALT_Y, ;
       K_ALT_Z }
 
    // Len() of widest array element for for each pulldown menu
@@ -195,10 +195,12 @@ FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
 
    RETURN NIL
 
-// ACHOICE() user function
+// AChoice() user function
+
 STATIC FUNCTION __ftAcUdf( nMode )
 
    LOCAL nRtnVal := AC_CONT
+
    DO CASE
    CASE nMode == AC_HITTOP
       hb_keyPut( K_CTRL_END )

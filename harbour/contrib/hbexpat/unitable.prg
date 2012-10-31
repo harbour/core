@@ -55,6 +55,7 @@
 #define _UNI_NAME_NORM( s ) StrTran( StrTran( StrTran( s, "-" ), "." ), " " )
 
 FUNCTION hb_xml_get_unicode_table( cCP )
+
    THREAD STATIC t_uni := NIL
 
    LOCAL cdp

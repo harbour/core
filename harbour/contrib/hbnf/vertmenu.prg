@@ -20,9 +20,7 @@
  *
  */
 
-/*
-   FT_MENU2(): display vertical menu
-*/
+/* display vertical menu */
 
 FUNCTION ft_menu2( aMenuInfo, cColors )
 
@@ -36,11 +34,7 @@ FUNCTION ft_menu2( aMenuInfo, cColors )
    LOCAL lOldwrap    := Set( _SET_WRAP, .T. )
    LOCAL lOldcenter  := Set( _SET_MCENTER, .T. )
    LOCAL lOldmessrow := Set( _SET_MESSAGE )
-   LOCAL cOldcolor   := Set( _SET_COLOR )
-
-   IF cColors != NIL
-      Set( _SET_COLOR, cColors )
-   ENDIF
+   LOCAL cOldcolor   := SetColor( cColors )
 
    /* if no message row has been established, use bottom row */
    IF lOldmessrow == 0
@@ -84,6 +78,6 @@ FUNCTION ft_menu2( aMenuInfo, cColors )
    Set( _SET_MESSAGE, lOldmessrow )
    Set( _SET_MCENTER, lOldcenter )
    Set( _SET_WRAP,    lOldwrap )
-   Set( _SET_COLOR,   cOldcolor )
+   SetColor( cOldcolor )
 
    RETURN NIL

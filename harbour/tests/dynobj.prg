@@ -20,7 +20,7 @@ PROCEDURE Main()
    ? "What methods are in the class :"
    ? hb_ValToExp(  __objGetMethodList( oForm ) )
 
-/* Let's add an inline at run-time. Should already be possible */
+   /* Let's add an inline at run-time. Should already be possible */
 
    ? "Let's add inline 'CalcArea' at run-time to an already instanced class"
 

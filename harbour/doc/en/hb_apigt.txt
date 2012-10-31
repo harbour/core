@@ -12,22 +12,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtInit( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    $ARGUMENTS$
       <iFilenoStdin>
-  
+
       <iFilenoStdout>
-  
+
       <iFilenoStderr>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -37,7 +37,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -51,18 +51,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtExit( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -72,7 +72,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -86,22 +86,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtAdjustPos( int iHandle, char * pStr, ULONG ulLen )
    $ARGUMENTS$
       <iHandle>
-  
+
       <pStr>
-  
+
       <ulLen>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -111,7 +111,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -125,28 +125,28 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtBox( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <pbyFrame>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -156,7 +156,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -170,26 +170,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtBoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -199,7 +199,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -213,26 +213,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtBoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -242,7 +242,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -256,10 +256,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtColorSelect( USHORT uiColorIndex ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -267,9 +267,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -279,7 +279,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -293,10 +293,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtColorToN( char * szColorString ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -304,9 +304,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -316,7 +316,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -330,20 +330,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtDispBegin( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -353,7 +353,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -367,20 +367,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtDispCount( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -390,7 +390,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -404,20 +404,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtDispEnd( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -427,7 +427,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -441,28 +441,28 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtDrawShadow( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <byAttr>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -472,7 +472,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -486,10 +486,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtGetBlink( HB_BOOL * pbBlink ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -497,9 +497,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -509,7 +509,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -523,10 +523,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtGetColorStr( char * pszColorString ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -534,9 +534,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -546,7 +546,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -560,10 +560,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtGetCursor( USHORT * puiCursorShape ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -571,9 +571,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -583,7 +583,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -597,22 +597,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtGetPos( SHORT * piRow, SHORT * piCol ) --> ( USHORT )usResult
    $ARGUMENTS$
       <piRow>
-  
+
       <piCol>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -622,7 +622,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -636,20 +636,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtIsColor( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -659,7 +659,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -673,20 +673,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtMaxCol( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -696,7 +696,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -710,20 +710,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtMaxRow( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -733,7 +733,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -747,20 +747,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtPostExt( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -770,7 +770,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -784,20 +784,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtPreExt( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -807,7 +807,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -824,17 +824,17 @@
       Prepare the reminal for shell output
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSuspend( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -844,7 +844,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -861,17 +861,17 @@
       Resume the terminal after the shell output
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtResume( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -881,7 +881,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -895,10 +895,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtReadKey( HB_inkey_enum eventmask ) --> ( int )iResult
    $ARGUMENTS$
@@ -906,9 +906,9 @@
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -918,7 +918,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -932,28 +932,28 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtRectSize( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, USHORT * puiBuffSize ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <puiBuffSize>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -963,7 +963,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -977,26 +977,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtRepChar( USHORT uiRow, USHORT uiCol, BYTE byChar, USHORT uiCount ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiRow>
-  
+
       <uiCol>
-  
+
       <byChar>
-  
+
       <uiCount>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1006,7 +1006,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1020,28 +1020,28 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtRest( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <pScrBuff>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1051,7 +1051,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1065,28 +1065,28 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSave( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, void * pScrBuff ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <pScrBuff>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1096,7 +1096,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1110,22 +1110,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtScrDim( USHORT * puiHeight, USHORT * puiWidth ) --> ( USHORT )usResult
    $ARGUMENTS$
       <puiHeight>
-  
+
       <puiWidth>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1135,7 +1135,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1149,30 +1149,30 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtScroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, SHORT iRows, SHORT iCols ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <iRows>
-  
+
       <iCols>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1182,7 +1182,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1196,10 +1196,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetBlink( HB_BOOL bBlink ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -1207,9 +1207,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1219,7 +1219,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1233,10 +1233,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetColorStr( char * pszColorString ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -1244,9 +1244,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1256,7 +1256,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1270,10 +1270,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetCursor( USHORT uiCursorShape ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -1281,9 +1281,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1293,7 +1293,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1307,22 +1307,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetMode( USHORT uiRows, USHORT uiCols ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiRows>
-  
+
       <uiCols>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1332,7 +1332,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1346,22 +1346,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetPos( SHORT iRow, SHORT iCol ) --> ( USHORT )usResult
    $ARGUMENTS$
       <iRow>
-  
+
       <iCol>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1371,7 +1371,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1385,24 +1385,24 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetPosContext( SHORT iRow, SHORT iCol, SHORT iMode ) --> ( USHORT )usResult
    $ARGUMENTS$
       <iRow>
-  
+
       <iCol>
-  
+
       <iMode>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1412,7 +1412,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1426,10 +1426,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetSnowFlag( HB_BOOL bNoSnow ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -1437,9 +1437,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1449,7 +1449,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1463,20 +1463,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtTone( double dFrequency, double dDuration )
    $ARGUMENTS$
       <dFrequency>
-  
+
       <dDuration>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1486,7 +1486,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1500,22 +1500,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWrite( BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
    $ARGUMENTS$
       <pbyStr>
-  
+
       <ulLen>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1525,7 +1525,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1539,26 +1539,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWriteAt( USHORT uiRow, USHORT uiCol, BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiRow>
-  
+
       <uiCol>
-  
+
       <pbyStr>
-  
+
       <ulLen>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1568,7 +1568,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1582,22 +1582,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWriteCon( BYTE * pbyStr, ULONG ulLen ) --> ( USHORT )usResult
    $ARGUMENTS$
       <pbyStr>
-  
+
       <ulLen>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1607,7 +1607,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1621,20 +1621,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtVersion( void ) --> ( char * )pszResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <pszResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1644,7 +1644,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1658,20 +1658,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWCreate( HB_GT_RECT * rect, HB_GT_WND ** wnd )
    $ARGUMENTS$
       <rect>
-  
+
       <wnd>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1681,7 +1681,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1695,18 +1695,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWDestroy( HB_GT_WND * wnd )
    $ARGUMENTS$
       <wnd>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1716,7 +1716,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1730,20 +1730,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWFlash( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1753,7 +1753,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1767,18 +1767,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWApp( HB_GT_WND ** wnd )
    $ARGUMENTS$
       <wnd>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1788,7 +1788,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1802,18 +1802,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWCurrent( HB_GT_WND * wnd )
    $ARGUMENTS$
       <wnd>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1823,7 +1823,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1837,20 +1837,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWPos( HB_GT_WND * wnd, HB_GT_RECT * rect )
    $ARGUMENTS$
       <wnd>
-  
+
       <rect>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1860,7 +1860,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1874,22 +1874,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtWVis( HB_GT_WND * wnd, USHORT uiStatus ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
       <wnd>
-  
+
       <uiStatus>
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1899,7 +1899,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1916,7 +1916,7 @@
       System Level Request
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSLR( HB_GT_SLR * pSLR ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -1924,9 +1924,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1936,7 +1936,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1950,10 +1950,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtModalRead( void * ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -1961,9 +1961,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1973,7 +1973,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1987,20 +1987,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtBeginWrite( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2010,7 +2010,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2024,20 +2024,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtEndWrite( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2047,7 +2047,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2061,20 +2061,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtFlushCursor( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2084,7 +2084,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2098,10 +2098,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetColor( HB_GT_RGB * color ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -2109,9 +2109,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2121,7 +2121,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2135,10 +2135,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtGetColor( HB_GT_RGB * color ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -2146,9 +2146,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2158,7 +2158,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2172,10 +2172,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gtSetBorder( HB_GT_RGB * color ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -2183,9 +2183,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2195,7 +2195,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2209,22 +2209,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Init( int iFilenoStdin, int iFilenoStdout, int iFilenoStderr )
    $ARGUMENTS$
       <iFilenoStdin>
-  
+
       <iFilenoStdout>
-  
+
       <iFilenoStderr>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2234,7 +2234,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2248,18 +2248,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Exit( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2269,7 +2269,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2283,22 +2283,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_AdjustPos( BYTE * pStr, ULONG ulLen ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
       <pStr>
-  
+
       <ulLen>
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2308,7 +2308,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2322,30 +2322,30 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Box( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <pbyFrame>
-  
+
       <byAttr>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2355,7 +2355,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2369,30 +2369,30 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_BoxD( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <pbyFrame>
-  
+
       <byAttr>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2402,7 +2402,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2416,30 +2416,30 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_BoxS( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyFrame, BYTE byAttr ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <pbyFrame>
-  
+
       <byAttr>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2449,7 +2449,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2463,20 +2463,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Col( void ) --> ( SHORT )sResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <sResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2486,7 +2486,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2500,18 +2500,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_DispBegin( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2521,7 +2521,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2535,20 +2535,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_DispCount( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2558,7 +2558,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2572,18 +2572,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_DispEnd( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2593,7 +2593,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2607,20 +2607,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_GetBlink( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2630,7 +2630,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2644,20 +2644,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_GetCursorStyle( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2667,7 +2667,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2681,20 +2681,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_GetScreenHeight( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2704,7 +2704,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2718,20 +2718,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_GetScreenWidth( void ) --> ( USHORT )usResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2741,7 +2741,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2755,26 +2755,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_GetText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbyDst )
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <pbyDst>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2784,7 +2784,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2798,28 +2798,28 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_HorizLine( USHORT uiRow, USHORT uiLeft, USHORT uiRight, BYTE byChar, BYTE byAttr ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiRow>
-  
+
       <uiLeft>
-  
+
       <uiRight>
-  
+
       <byChar>
-  
+
       <byAttr>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2829,7 +2829,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2843,20 +2843,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_IsColor( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2866,7 +2866,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2880,20 +2880,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_PreExt( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2903,7 +2903,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2917,20 +2917,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_PostExt( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2940,7 +2940,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2957,17 +2957,17 @@
       Suspend the terminal before the shell call
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Suspend( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2977,7 +2977,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2994,17 +2994,17 @@
       Resume the terminal after the shell call
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Resume( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3014,7 +3014,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3028,26 +3028,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Puts( USHORT uiRow, USHORT uiCol, BYTE byAttr, BYTE * pbyStr, ULONG ulLen )
    $ARGUMENTS$
       <uiRow>
-  
+
       <uiCol>
-  
+
       <byAttr>
-  
+
       <pbyStr>
-  
+
       <ulLen>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3057,7 +3057,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3071,26 +3071,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_PutText( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE * pbySrc )
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <pbySrc>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3100,7 +3100,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3114,10 +3114,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_ReadKey( HB_inkey_enum eventmask ) --> ( int )iResult
    $ARGUMENTS$
@@ -3125,9 +3125,9 @@
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3137,7 +3137,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3151,22 +3151,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_RectSize( USHORT rows, USHORT cols ) --> ( int )iResult
    $ARGUMENTS$
       <rows>
-  
+
       <cols>
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3176,7 +3176,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3190,26 +3190,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Replicate( USHORT uiTop, USHORT uiLeft, BYTE byAttr, BYTE byChar, ULONG ulLen )
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <byAttr>
-  
+
       <byChar>
-  
+
       <ulLen>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3219,7 +3219,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3233,20 +3233,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Row( void ) --> ( SHORT )sResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <sResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3256,7 +3256,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3270,30 +3270,30 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Scroll( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr, SHORT iRows, SHORT iCols )
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <byAttr>
-  
+
       <iRows>
-  
+
       <iCols>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3303,7 +3303,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3317,26 +3317,26 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_SetAttribute( USHORT uiTop, USHORT uiLeft, USHORT uiBottom, USHORT uiRight, BYTE byAttr )
    $ARGUMENTS$
       <uiTop>
-  
+
       <uiLeft>
-  
+
       <uiBottom>
-  
+
       <uiRight>
-  
+
       <byAttr>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3346,7 +3346,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3360,18 +3360,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_SetBlink( HB_BOOL bBlink )
    $ARGUMENTS$
       <bBlink>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3381,7 +3381,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3395,18 +3395,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_SetCursorStyle( USHORT uiCursorShape )
    $ARGUMENTS$
       <uiCursorShape>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3416,7 +3416,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3430,22 +3430,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_SetMode( USHORT uiRows, USHORT uiCols ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
       <uiRows>
-  
+
       <uiCols>
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3455,7 +3455,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3469,22 +3469,22 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_SetPos( SHORT iRow, SHORT iCol, SHORT iMethod )
    $ARGUMENTS$
       <iRow>
-  
+
       <iCol>
-  
+
       <iMethod>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3494,7 +3494,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3508,20 +3508,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Tone( double dFrequency, double dDuration )
    $ARGUMENTS$
       <dFrequency>
-  
+
       <dDuration>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3531,7 +3531,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3545,20 +3545,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_Version( void ) --> ( char * )pszResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <pszResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3568,7 +3568,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3582,28 +3582,28 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_gt_VertLine( USHORT uiCol, USHORT uiTop, USHORT uiBottom, BYTE byChar, BYTE byAttr ) --> ( USHORT )usResult
    $ARGUMENTS$
       <uiCol>
-  
+
       <uiTop>
-  
+
       <uiBottom>
-  
+
       <byChar>
-  
+
       <byAttr>
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3613,7 +3613,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3630,21 +3630,21 @@
       Wait for keyboard input
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_inkey( HB_BOOL bWait, double dSeconds, HB_inkey_enum event_mask ) --> ( int )iResult
    $ARGUMENTS$
       <bWait>
-  
+
       <dSeconds>
-  
+
       <event_mask>
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3654,7 +3654,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3671,17 +3671,17 @@
       Extract the next key from the Harbour keyboard buffer
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_inkeyGet( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3691,7 +3691,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3708,15 +3708,15 @@
       Inserts an inkey code into the keyboard buffer
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_inkeyPut( int ch )
    $ARGUMENTS$
       <ch>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3726,7 +3726,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3743,17 +3743,17 @@
       Return the value of the last key that was extracted
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_inkeyLast( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3763,7 +3763,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3780,17 +3780,17 @@
       Return the next key without extracting it
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_inkeyNext( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3800,7 +3800,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3817,15 +3817,15 @@
       Poll the console keyboard to stuff the Harbour buffer
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_inkeyPoll( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3835,7 +3835,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3852,15 +3852,15 @@
       Reset the Harbour keyboard buffer
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_inkeyReset( HB_BOOL allocate )
    $ARGUMENTS$
       <allocate>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3870,7 +3870,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3884,20 +3884,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseIsPresent( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3907,7 +3907,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3921,20 +3921,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseGetCursor( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3944,7 +3944,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3958,18 +3958,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseSetCursor( HB_BOOL bVisible )
    $ARGUMENTS$
       <bVisible>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3979,7 +3979,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3993,20 +3993,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseCol( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4016,7 +4016,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4030,20 +4030,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseRow( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4053,7 +4053,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4067,20 +4067,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseSetPos( int iRow, int iCol )
    $ARGUMENTS$
       <iRow>
-  
+
       <iCol>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4090,7 +4090,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4104,10 +4104,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseIsButtonPressed( int iButton ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
@@ -4115,9 +4115,9 @@
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4127,7 +4127,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4141,20 +4141,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseCountButton( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4164,7 +4164,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4178,24 +4178,24 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseSetBounds( int iTop, int iLeft, int iBottom, int iRight )
    $ARGUMENTS$
       <iTop>
-  
+
       <iLeft>
-  
+
       <iBottom>
-  
+
       <iRight>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4205,7 +4205,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4219,24 +4219,24 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouseGetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
    $ARGUMENTS$
       <piTop>
-  
+
       <piLeft>
-  
+
       <piBottom>
-  
+
       <piRight>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4246,7 +4246,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4260,18 +4260,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_Init( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4281,7 +4281,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4295,18 +4295,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_Exit( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4316,7 +4316,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4330,20 +4330,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_IsPresent( void ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4353,7 +4353,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4367,18 +4367,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_Show( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4388,7 +4388,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4402,18 +4402,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_Hide( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4423,7 +4423,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4437,20 +4437,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_Col( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4460,7 +4460,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4474,20 +4474,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_Row( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4497,7 +4497,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4511,20 +4511,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_SetPos( int iRow, int iCol )
    $ARGUMENTS$
       <iRow>
-  
+
       <iCol>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4534,7 +4534,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4548,10 +4548,10 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_IsButtonPressed( int iButton ) --> ( HB_BOOL )bResult
    $ARGUMENTS$
@@ -4559,9 +4559,9 @@
    $RETURNS$
       <bResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4571,7 +4571,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4585,20 +4585,20 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_CountButton( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4608,7 +4608,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4622,24 +4622,24 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_SetBounds( int iTop, int iLeft, int iBottom, int iRight )
    $ARGUMENTS$
       <iTop>
-  
+
       <iLeft>
-  
+
       <iBottom>
-  
+
       <iRight>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4649,7 +4649,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4663,24 +4663,24 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_mouse_GetBounds( int * piTop, int * piLeft, int * piBottom, int * piRight )
    $ARGUMENTS$
       <piTop>
-  
+
       <piLeft>
-  
+
       <piBottom>
-  
+
       <piRight>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4690,7 +4690,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4704,18 +4704,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_setkeyInit( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4725,7 +4725,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4739,18 +4739,18 @@
    $SUBCATEGORY$
       Terminal
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapigt.h"
       hb_setkeyExit( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4760,6 +4760,6 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */

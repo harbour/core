@@ -13,7 +13,7 @@
       FT_ISBITON( <nNumber>, <nBit> ) -> lResult
    $ARGUMENTS$
       <nNumber> is an integer for which a bit state needs to be checked.
-  
+
       <nBit> is a number from 0 to 15 that indicates which bit to test.
    $RETURNS$
       .T. if the specified bit was on., .F. if off.
@@ -26,7 +26,7 @@
       IF FT_ISBITON( nCPUFlags, 0 )
          ? "The carry flag was set."
       ENDIF
-  
+
       IF FT_ISBITON( nCPUFlags, 7 )
          ? "The sign flag was set."
       ENDIF

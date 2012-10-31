@@ -361,7 +361,7 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
       cErrMsg += '<tr><td>CRITICAL ERROR:</td><td>' + xError:Description + '</td></tr>'
       cErrMsg += '<tr><td>OPERATION:</td><td>' + xError:Operation + '</td></tr>'
       cErrMsg += '<tr><td>OS ERROR:</td><td>' + hb_ntos( xError:OsCode ) + ' IN ' + xError:SubSystem + '/' + hb_ntos( xError:SubCode ) + '</td></tr>'
-      cErrMsg += '<tr><td>FILENAME:</td><td>' + right( xError:FileName, 40 ) + '</td></tr>'
+      cErrMsg += '<tr><td>FILENAME:</td><td>' + Right( xError:FileName, 40 ) + '</td></tr>'
    ELSEIF HB_ISSTRING( xError )
       cErrMsg += '<tr><td>ERROR MESSAGE:</td><td>' + TIP_HTMLSPECIALCHARS( xError ) + '</td></tr>'
    ENDIF
@@ -392,19 +392,20 @@ METHOD Write( cString ) CLASS TIpCgi
 
 METHOD StartHtml( hOptions ) CLASS TIpCgi
 
-   ::cHtmlPage += '<?xml version="1.0"' + HtmlOption( hOptions, 'encoding', ' ' ) + '?>' + _CRLF + ;
-                  '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' + _CRLF + ;
-                  '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
-                  '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
-                  '<head>' + ;
-                  HtmlTag( hOptions, 'title', 'title' ) + ;
-                  HtmlScript( hOptions ) + ;
-                  HtmlStyle( hOptions ) + ;
-                  HtmlLinkRel( hOptions ) + ;
-                  '</head>' + ;
-                  '<body ' + ;
-                     HtmlAllOption( hOptions ) + ;
-                  '>'
+   ::cHtmlPage += ;
+      '<?xml version="1.0"' + HtmlOption( hOptions, 'encoding', ' ' ) + '?>' + _CRLF + ;
+      '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' + _CRLF + ;
+      '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
+      '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
+      '<head>' + ;
+      HtmlTag( hOptions, 'title', 'title' ) + ;
+      HtmlScript( hOptions ) + ;
+      HtmlStyle( hOptions ) + ;
+      HtmlLinkRel( hOptions ) + ;
+      '</head>' + ;
+      '<body ' + ;
+      HtmlAllOption( hOptions ) + ;
+      '>'
 
    RETURN Self
 

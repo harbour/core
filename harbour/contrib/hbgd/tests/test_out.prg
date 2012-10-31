@@ -34,8 +34,6 @@ PROCEDURE Main( ... )
       hParams := GetParams( aParams )
    ENDIF
 
-//
-
    // Gestione parametri
    IF ! Empty( hParams )
       FOR EACH cPar IN hParams:Keys
@@ -69,15 +67,15 @@ PROCEDURE Main( ... )
    hb_default( @nPt, 30 )
 
    IF cImg != NIL
-      //OutJpg( cImg, nPt )
+      // OutJpg( cImg, nPt )
       OutPhoto( cImg, nWidth, nHeight )
 
    ELSEIF cPhoto != NIL
       StartHTML()
-      //OutHTML ValToPrg( hParams ) + "<br>"
-      //OutHTML ValToPrg( cParams ) + "<br>"
-      //OutHTML ValToPrg( cQuery ) + "<br>"
-      //OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
+      // OutHTML ValToPrg( hParams ) + "<br>"
+      // OutHTML ValToPrg( cParams ) + "<br>"
+      // OutHTML ValToPrg( cQuery ) + "<br>"
+      // OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
       OutHTML "<table border=1>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br>"
@@ -93,8 +91,8 @@ PROCEDURE Main( ... )
       OutHTML "</td></tr>"
       OutHTML "</table>"
       OutHTML "<br>"
-      //OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
-      //OutHTML OS() + "<br>"
+      // OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
+      // OutHTML OS() + "<br>"
       EndHTML()
    ELSE
       StartHTML()
@@ -107,8 +105,8 @@ PROCEDURE StartHTML( cTitle )
 
    hb_default( @cTitle, "" )
 
-   WRITE 'content-type: text/html'
-   WRITE 'Pragma: no-cache'
+   WRITE "content-type: text/html"
+   WRITE "Pragma: no-cache"
    WRITE hb_eol()
    WRITE "<html>"
    WRITE "<head>"
@@ -143,7 +141,7 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
 
 // __OutDebug( hb_dumpvar( oImage ) )
 
-   WRITE 'content-type: ' + oImage:cMime + hb_eol()
+   WRITE "content-type: " + oImage:cMime + hb_eol()
    cType := oImage:cType
 
    DO CASE
@@ -205,7 +203,7 @@ PROCEDURE OutJpg( cText, nPitch )
 // oI:SetColor( blue )
 // oI:Say( 0, 0, cText )
 
-   WRITE 'content-type: image/jpeg' + hb_eol()
+   WRITE "content-type: image/jpeg" + hb_eol()
 
    oI:OutputJpeg()
 
@@ -243,7 +241,7 @@ FUNCTION GetVars( cFields, cSeparator )
          hHashVars[ cName ] := xValue
 
       ENDIF
-      //Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
+      // Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
 // __OutDebug( hHashVars )
 
@@ -279,7 +277,7 @@ FUNCTION GetParams( aParams )
          hHashVars[ cName ] := xValue
 
       ENDIF
-      //Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
+      // Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
 // __OutDebug( hHashVars )
 

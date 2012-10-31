@@ -46,7 +46,7 @@ PROCEDURE Main()
 
    ? "Creating domain for boolean fields..."
 
-   ? oServer:Execute("create domain boolean_field as smallint default 0 not null check (value in (0,1))")
+   ? oServer:Execute( "create domain boolean_field as smallint default 0 not null check (value in (0,1))" )
 
    ? "Creating test table..."
    cQuery := "CREATE TABLE test("
@@ -72,12 +72,12 @@ PROCEDURE Main()
 
       oRow := oQuery:Blank()
 
-      oRow:Fieldput( 1, i )
-      oRow:Fieldput( 2, i + 1 )
-      oRow:Fieldput( 3, "DEPARTMENT NAME " + StrZero( i ) )
-      oRow:Fieldput( 4, ( i % 10 ) == 0 )
-      oRow:Fieldput( 5, 3000 + i )
-      oRow:fieldput( 6, Date() )
+      oRow:FieldPut( 1, i )
+      oRow:FieldPut( 2, i + 1 )
+      oRow:FieldPut( 3, "DEPARTMENT NAME " + StrZero( i ) )
+      oRow:FieldPut( 4, ( i % 10 ) == 0 )
+      oRow:FieldPut( 5, 3000 + i )
+      oRow:FieldPut( 6, Date() )
 
       oServer:Append( oRow )
 
@@ -103,7 +103,7 @@ PROCEDURE Main()
       @ 17, 0 SAY "Updating values...." + Str( i )
 
       oRow := oQuery:Blank()
-      oRow:Fieldput( 5, 4000 + i )
+      oRow:FieldPut( 5, 4000 + i )
       oServer:update( oRow, "code = " + Str( i ) )
 
       IF i % 100 == 0
@@ -114,9 +114,9 @@ PROCEDURE Main()
 
    oQuery := oServer:Query( "SELECT sum(salary) sum_salary FROM test WHERE code between 1 and 4000" )
 
-   IF ! oQuery:Neterr()
+   IF ! oQuery:NetErr()
       oQuery:Fetch()
-      @ 18, 0 SAY "Sum values...." + Str( oQuery:Fieldget( 1 ) )
+      @ 18, 0 SAY "Sum values...." + Str( oQuery:FieldGet( 1 ) )
       oQuery:Destroy()
    ENDIF
 
@@ -124,12 +124,12 @@ PROCEDURE Main()
    FOR i := 1 TO 4000
       oQuery := oServer:Query( "SELECT * FROM test WHERE code = " + Str( i ) )
 
-      IF ! oQuery:Neterr()
+      IF ! oQuery:NetErr()
          oQuery:Fetch()
          oRow := oQuery:getrow()
 
          oQuery:destroy()
-         x += oRow:fieldget( oRow:fieldpos( "salary" ) )
+         x += oRow:FieldGet( oRow:FieldPos( "salary" ) )
 
          @ 19, 0 SAY "Sum values...." + Str( x )
       ENDIF

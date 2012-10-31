@@ -12,10 +12,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddInsertAreaNode( char *szDriver ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -23,9 +23,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -35,7 +35,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -49,20 +49,20 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddGetCurrentWorkAreaNumber( void ) --> ( int )iResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <iResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -72,7 +72,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -86,20 +86,20 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddGetCurrentWorkAreaPointer( void ) --> ( void * )pResult
    $ARGUMENTS$
-  
+
    $RETURNS$
       <pResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -109,7 +109,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -123,10 +123,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddSelectWorkAreaAlias( char * szAlias ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
@@ -134,9 +134,9 @@
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -146,7 +146,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -160,10 +160,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddSelectWorkAreaNumber( int iArea ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
@@ -171,9 +171,9 @@
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -183,7 +183,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -197,10 +197,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
@@ -208,9 +208,9 @@
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -220,7 +220,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -234,22 +234,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddGetFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
       <pItem>
-  
+
       <pFieldSymbol>
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -259,7 +259,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -273,22 +273,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddPutFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
       <pItem>
-  
+
       <pFieldSymbol>
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -298,7 +298,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -312,22 +312,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddFieldGet( PHB_ITEM pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
       <pItem>
-  
+
       <pFieldSymbol>
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -337,7 +337,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -351,22 +351,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddFieldPut( PHB_ITEM pItem, PHB_SYMB pFieldSymbol ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
       <pItem>
-  
+
       <pFieldSymbol>
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -376,7 +376,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -390,18 +390,18 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddShutDown( void )
    $ARGUMENTS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -411,7 +411,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -425,26 +425,26 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddInherit( PRDDFUNCS pTable, PRDDFUNCS pSubTable, PRDDFUNCS pSuperTable, BYTE * szDrvName ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
       <pTable>
-  
+
       <pSubTable>
-  
+
       <pSuperTable>
-  
+
       <szDrvName>
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -454,7 +454,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -468,10 +468,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddDisinherit( BYTE * drvName ) --> ( HB_ERRCODE )hResult
    $ARGUMENTS$
@@ -479,9 +479,9 @@
    $RETURNS$
       <hResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -491,7 +491,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -505,10 +505,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddExtendType( USHORT fieldType ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -516,9 +516,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -528,7 +528,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -542,10 +542,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype
-  
+
       #include "hbapirdd.h"
       hb_rddFieldType( USHORT extendType ) --> ( USHORT )usResult
    $ARGUMENTS$
@@ -553,9 +553,9 @@
    $RETURNS$
       <usResult>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -565,7 +565,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -579,22 +579,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_BOF( w, sp ) --> <see ( ( *( w )->lprfsHost->bof )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->bof )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -604,7 +604,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -618,22 +618,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_EOF( w, sp ) --> <see ( ( *( w )->lprfsHost->eof )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->eof )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -643,7 +643,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -657,22 +657,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_FOUND( w, sp ) --> <see ( ( *( w )->lprfsHost->found )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->found )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -682,7 +682,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -696,22 +696,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GOTO( w, l ) --> <see ( ( *( w )->lprfsHost->go )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->go )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -721,7 +721,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -735,22 +735,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GOTOID( w, sp ) --> <see ( ( *( w )->lprfsHost->goToId )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->goToId )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -760,7 +760,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -774,10 +774,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GOBOTTOM( w ) --> <see ( ( *( w )->lprfsHost->goBottom )( w ) )>
    $ARGUMENTS$
@@ -785,9 +785,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->goBottom )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -797,7 +797,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -811,10 +811,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GOTOP( w ) --> <see ( ( *( w )->lprfsHost->goTop )( w ) )>
    $ARGUMENTS$
@@ -822,9 +822,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->goTop )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -834,7 +834,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -848,26 +848,26 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SEEK( w, i1, v, i2 ) --> <see ( ( *( w )->lprfsHost->seek )( w, i1, v, i2 ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i1>
-  
+
       <v>
-  
+
       <i2>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->seek )( w, i1, v, i2 ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -877,7 +877,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -891,22 +891,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SKIP( w, l ) --> <see ( ( *( w )->lprfsHost->skip )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->skip )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -916,7 +916,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -930,22 +930,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SKIPFILTER( w, l ) --> <see ( ( *( w )->lprfsHost->skipFilter )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->skipFilter )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -955,7 +955,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -969,22 +969,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SKIPRAW( w, l ) --> <see ( ( *( w )->lprfsHost->skipRaw )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->skipRaw )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -994,7 +994,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1008,22 +1008,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ADDFIELD( w, ip ) --> <see ( ( *( w )->lprfsHost->addField )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->addField )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1033,7 +1033,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1047,22 +1047,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_APPEND( w, l ) --> <see ( ( *( w )->lprfsHost->append )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->append )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1072,7 +1072,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1086,22 +1086,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CREATEFIELDS( w, v ) --> <see ( ( *( w )->lprfsHost->createFields )( w, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->createFields )( w, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1111,7 +1111,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1125,10 +1125,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_DELETE( w ) --> <see ( ( *( w )->lprfsHost->deleterec )( w ) )>
    $ARGUMENTS$
@@ -1136,9 +1136,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->deleterec )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1148,7 +1148,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1162,22 +1162,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_DELETED( w, sp ) --> <see ( ( *( w )->lprfsHost->deleted )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->deleted )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1187,7 +1187,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1201,22 +1201,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_FIELDCOUNT( w, sp ) --> <see ( ( *( w )->lprfsHost->fieldCount )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->fieldCount )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1226,7 +1226,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1240,22 +1240,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_FIELDDISPLAY( w, sp ) --> <see ( ( *( w )->lprfsHost->fieldDisplay )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->fieldDisplay )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1265,7 +1265,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1279,26 +1279,26 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_FIELDINFO( w, s1, s2, v ) --> <see ( ( *( w )->lprfsHost->fieldInfo )( w, s1, s2, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <s1>
-  
+
       <s2>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->fieldInfo )( w, s1, s2, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1308,7 +1308,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1322,24 +1322,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_FIELDNAME( w, i, bp ) --> <see ( ( *( w )->lprfsHost->fieldName )( w, i, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->fieldName )( w, i, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1349,7 +1349,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1363,10 +1363,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_FLUSH( w ) --> <see ( ( *( w )->lprfsHost->flush )( w ) )>
    $ARGUMENTS$
@@ -1374,9 +1374,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->flush )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1386,7 +1386,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1400,22 +1400,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GETREC( w, bpp ) --> <see ( ( *( w )->lprfsHost->getRec )( w, bpp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bpp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->getRec )( w, bpp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1425,7 +1425,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1439,24 +1439,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GETVALUE( w, i, v ) --> <see ( ( *( w )->lprfsHost->getValue )( w, i, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->getValue )( w, i, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1466,7 +1466,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1480,24 +1480,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GETVARLEN( w, i, lp ) --> <see ( ( *( w )->lprfsHost->getVarLen )( w, i, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->getVarLen )( w, i, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1507,7 +1507,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1521,10 +1521,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GOCOLD( w ) --> <see ( ( *( w )->lprfsHost->goCold )( w ) )>
    $ARGUMENTS$
@@ -1532,9 +1532,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->goCold )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1544,7 +1544,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1558,10 +1558,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GOHOT( w ) --> <see ( ( *( w )->lprfsHost->goHot )( w ) )>
    $ARGUMENTS$
@@ -1569,9 +1569,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->goHot )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1581,7 +1581,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1595,24 +1595,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_PUTVALUE( w, i, v ) --> <see ( ( *( w )->lprfsHost->putValue )( w, i, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->putValue )( w, i, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1622,7 +1622,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1636,22 +1636,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_PUTREC( w, bp ) --> <see ( ( *( w )->lprfsHost->putRec )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->putRec )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1661,7 +1661,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1675,10 +1675,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RECALL( w ) --> <see ( ( *( w )->lprfsHost->recall )( w ) )>
    $ARGUMENTS$
@@ -1686,9 +1686,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->recall )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1698,7 +1698,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1712,22 +1712,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RECCOUNT( w, sp ) --> <see ( ( *( w )->lprfsHost->reccount )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->reccount )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1737,7 +1737,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1751,26 +1751,26 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RECINFO( w, v1, i, v2 ) --> <see ( ( *( w )->lprfsHost->recInfo )( w, v1, i, v2 ) )>
    $ARGUMENTS$
       <w>
-  
+
       <v1>
-  
+
       <i>
-  
+
       <v2>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->recInfo )( w, v1, i, v2 ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1780,7 +1780,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1794,22 +1794,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RECNO( w, i ) --> <see ( ( *( w )->lprfsHost->recno )( w, i ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->recno )( w, i ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1819,7 +1819,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1833,22 +1833,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SETFIELDEXTENT( w, s ) --> <see ( ( *( w )->lprfsHost->setFieldExtent )( w, s ) )>
    $ARGUMENTS$
       <w>
-  
+
       <s>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->setFieldExtent )( w, s ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1858,7 +1858,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1872,22 +1872,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ALIAS( w, bp ) --> <see ( ( *( w )->lprfsHost->alias )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->alias )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1897,7 +1897,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1911,10 +1911,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CLOSE( w ) --> <see ( ( *( w )->lprfsHost->close )( w ) )>
    $ARGUMENTS$
@@ -1922,9 +1922,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->close )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1934,7 +1934,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1948,22 +1948,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CREATE( w, ip ) --> <see ( ( *( w )->lprfsHost->create )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->create )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1973,7 +1973,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1987,24 +1987,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_INFO( w, i, g ) --> <see ( ( *( w )->lprfsHost->info )( w, i, g ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <g>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->info )( w, i, g ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2014,7 +2014,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2028,10 +2028,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_NEW( w ) --> <see ( ( *( w )->lprfsHost->newarea )( w ) )>
    $ARGUMENTS$
@@ -2039,9 +2039,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->newarea )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2051,7 +2051,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2065,22 +2065,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_OPEN( w, ip ) --> <see ( ( *( w )->lprfsHost->open )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->open )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2090,7 +2090,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2104,10 +2104,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RELEASE( w ) --> <see ( ( *( w )->lprfsHost->release )( w ) )>
    $ARGUMENTS$
@@ -2115,9 +2115,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->release )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2127,7 +2127,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2141,22 +2141,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_STRUCTSIZE( w, sp ) --> <see ( ( *( w )->lprfsHost->structSize )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->structSize )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2166,7 +2166,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2180,22 +2180,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SYSNAME( w, bp ) --> <see ( ( *( w )->lprfsHost->sysName )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->sysName )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2205,7 +2205,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2219,22 +2219,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_DBEVAL( w, ip ) --> <see ( ( *( w )->lprfsHost->dbEval )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->dbEval )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2244,7 +2244,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2258,10 +2258,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_PACK( w ) --> <see ( ( *( w )->lprfsHost->pack )( w ) )>
    $ARGUMENTS$
@@ -2269,9 +2269,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->pack )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2281,7 +2281,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2295,24 +2295,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_PACKREC( w, l, sp ) --> <see ( ( *( w )->lprfsHost->packRec )( w, l, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->packRec )( w, l, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2322,7 +2322,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2336,22 +2336,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SORT( w, ip ) --> <see ( ( *( w )->lprfsHost->sort )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->sort )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2361,7 +2361,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2375,22 +2375,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_TRANS( w, ip ) --> <see ( ( *( w )->lprfsHost->trans )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->trans )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2400,7 +2400,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2414,22 +2414,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_TRANSREC( w, ip ) --> <see ( ( *( w )->lprfsHost->transRec )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->transRec )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2439,7 +2439,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2453,10 +2453,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ZAP( w ) --> <see ( ( *( w )->lprfsHost->zap )( w ) )>
    $ARGUMENTS$
@@ -2464,9 +2464,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->zap )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2476,7 +2476,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2490,22 +2490,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CHILDEND( w, ip ) --> <see ( ( *( w )->lprfsHost->childEnd )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->childEnd )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2515,7 +2515,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2529,22 +2529,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CHILDSTART( w, ip ) --> <see ( ( *( w )->lprfsHost->childStart )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->childStart )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2554,7 +2554,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2568,22 +2568,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CHILDSYNC( w, ip ) --> <see ( ( *( w )->lprfsHost->childSync )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->childSync )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2593,7 +2593,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2607,10 +2607,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SYNCCHILDREN( w ) --> <see ( ( *( w )->lprfsHost->syncChildren )( w ) )>
    $ARGUMENTS$
@@ -2618,9 +2618,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->syncChildren )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2630,7 +2630,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2644,10 +2644,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CLEARREL( w ) --> <see ( ( *( w )->lprfsHost->clearRel )( w ) )>
    $ARGUMENTS$
@@ -2655,9 +2655,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->clearRel )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2667,7 +2667,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2681,10 +2681,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_FORCEREL( w ) --> <see ( ( *( w )->lprfsHost->forceRel )( w ) )>
    $ARGUMENTS$
@@ -2692,9 +2692,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->forceRel )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2704,7 +2704,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2718,24 +2718,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RELAREA( w, s, sp ) --> <see ( ( *( w )->lprfsHost->relArea )( w, s, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <s>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->relArea )( w, s, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2745,7 +2745,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2759,22 +2759,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RELEVAL( w, ip ) --> <see ( ( *( w )->lprfsHost->relEval )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->relEval )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2784,7 +2784,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2798,24 +2798,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RELTEXT( w, s, bp ) --> <see ( ( *( w )->lprfsHost->relText )( w, s, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <s>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->relText )( w, s, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2825,7 +2825,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2839,22 +2839,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SETREL( w, ip ) --> <see ( ( *( w )->lprfsHost->setRel )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->setRel )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2864,7 +2864,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2878,22 +2878,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDLSTADD( w, lp ) --> <see ( ( *( w )->lprfsHost->orderListAdd )( w, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderListAdd )( w, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2903,7 +2903,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2917,22 +2917,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDLSTDELETE( w, lp ) --> <see ( ( *( w )->lprfsHost->orderListDelete )( w, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderListDelete )( w, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2942,7 +2942,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2956,22 +2956,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDLSTFOCUS( w, lp ) --> <see ( ( *( w )->lprfsHost->orderListFocus )( w, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderListFocus )( w, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -2981,7 +2981,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -2995,10 +2995,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDLSTREBUILD( w ) --> <see ( ( *( w )->lprfsHost->orderListRebuild )( w ) )>
    $ARGUMENTS$
@@ -3006,9 +3006,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderListRebuild )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3018,7 +3018,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3032,10 +3032,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDLSTCLEAR( w ) --> <see ( ( *( w )->lprfsHost->orderListClear )( w ) )>
    $ARGUMENTS$
@@ -3043,9 +3043,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderListClear )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3055,7 +3055,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3069,22 +3069,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDSETCOND( w, ip ) --> <see ( ( *( w )->lprfsHost->orderCondition )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderCondition )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3094,7 +3094,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3108,22 +3108,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDCREATE( w, ip ) --> <see ( ( *( w )->lprfsHost->orderCreate )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderCreate )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3133,7 +3133,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3147,22 +3147,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDDESTROY( w, p ) --> <see ( ( *( w )->lprfsHost->orderDestroy )( w, p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderDestroy )( w, p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3172,7 +3172,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3186,24 +3186,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDINFO( w, i, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, i, p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, i, p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3213,7 +3213,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3227,22 +3227,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDEXPR( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_EXPRESSION, p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_EXPRESSION, p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3252,7 +3252,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3266,22 +3266,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDCOND( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_CONDITION,  p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_CONDITION,  p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3291,7 +3291,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3305,22 +3305,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDRECNO( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_RECNO,      p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_RECNO,      p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3330,7 +3330,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3344,22 +3344,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDPOS( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_POSITION,   p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_POSITION,   p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3369,7 +3369,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3383,22 +3383,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDNUMBER( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_NUMBER,     p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_NUMBER,     p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3408,7 +3408,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3422,22 +3422,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDNAME( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_NAME,       p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_NAME,       p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3447,7 +3447,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3461,22 +3461,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDBAGNAME( w, p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_BAGNAME,    p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_BAGNAME,    p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3486,7 +3486,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3500,22 +3500,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ORDBAGEXT( w,  p ) --> <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_BAGEXT,     p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->orderInfo )( w, DBOI_BAGEXT,     p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3525,7 +3525,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3539,10 +3539,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CLEARFILTER( w ) --> <see ( ( *( w )->lprfsHost->clearFilter )( w ) )>
    $ARGUMENTS$
@@ -3550,9 +3550,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->clearFilter )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3562,7 +3562,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3576,10 +3576,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CLEARLOCATE( w ) --> <see ( ( *( w )->lprfsHost->clearLocate )( w ) )>
    $ARGUMENTS$
@@ -3587,9 +3587,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->clearLocate )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3599,7 +3599,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3613,10 +3613,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CLEARSCOPE( w ) --> <see ( ( *( w )->lprfsHost->clearScope )( w ) )>
    $ARGUMENTS$
@@ -3624,9 +3624,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->clearScope )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3636,7 +3636,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3650,24 +3650,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_COUNTSCOPE( w, ip, lp ) --> <see ( ( *( w )->lprfsHost->countScope )( w, ip, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->countScope )( w, ip, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3677,7 +3677,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3691,22 +3691,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_FILTERTEXT( w, bp ) --> <see ( ( *( w )->lprfsHost->filterText )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->filterText )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3716,7 +3716,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3730,24 +3730,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SCOPEINFO( w, i, v ) --> <see ( ( *( w )->lprfsHost->scopeInfo )( w, i, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->scopeInfo )( w, i, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3757,7 +3757,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3771,22 +3771,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SETFILTER( w, ip ) --> <see ( ( *( w )->lprfsHost->setFilter )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->setFilter )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3796,7 +3796,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3810,22 +3810,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SETLOCATE( w, ip ) --> <see ( ( *( w )->lprfsHost->setLocate )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->setLocate )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3835,7 +3835,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3849,22 +3849,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SETSCOPE( w, ip ) --> <see ( ( *( w )->lprfsHost->setScope )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->setScope )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3874,7 +3874,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3888,24 +3888,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SKIPSCOPE( w, bp, l ) --> <see ( ( *( w )->lprfsHost->skipScope )( w, bp, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->skipScope )( w, bp, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3915,7 +3915,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3929,22 +3929,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_COMPILE( w, bp ) --> <see ( ( *( w )->lprfsHost->compile )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->compile )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3954,7 +3954,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -3968,22 +3968,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_ERROR( w, ip ) --> <see ( ( *( w )->lprfsHost->error )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->error )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -3993,7 +3993,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4007,22 +4007,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_EVALBLOCK( w, v ) --> <see ( ( *( w )->lprfsHost->evalBlock )( w, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->evalBlock )( w, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4032,7 +4032,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4046,22 +4046,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GETLOCKS( w, g ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_GETLOCKARRAY, g ) )>
    $ARGUMENTS$
       <w>
-  
+
       <g>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->info )( w, DBI_GETLOCKARRAY, g ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4071,7 +4071,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4085,24 +4085,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RAWLOCK( w, i, l ) --> <see ( ( *( w )->lprfsHost->rawlock )( w, i, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->rawlock )( w, i, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4112,7 +4112,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4126,22 +4126,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_LOCK( w, sp ) --> <see ( ( *( w )->lprfsHost->lock )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->lock )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4151,7 +4151,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4165,22 +4165,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_UNLOCK( w, l ) --> <see ( ( *( w )->lprfsHost->unlock )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->unlock )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4190,7 +4190,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4204,10 +4204,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CLOSEMEMFILE( w ) --> <see ( ( *( w )->lprfsHost->closeMemFile )( w ) )>
    $ARGUMENTS$
@@ -4215,9 +4215,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->closeMemFile )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4227,7 +4227,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4241,22 +4241,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_CREATEMEMFILE( w, bp ) --> <see ( ( *( w )->lprfsHost->createMemFile )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->createMemFile )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4266,7 +4266,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4280,24 +4280,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GETVALUEFILE( w, i, bp ) --> <see ( ( *( w )->lprfsHost->getValueFile )( w, i, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->getValueFile )( w, i, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4307,7 +4307,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4321,22 +4321,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_OPENMEMFILE( w, bp ) --> <see ( ( *( w )->lprfsHost->openMemFile )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->openMemFile )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4346,7 +4346,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4360,24 +4360,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_PUTVALUEFILE( w, i, bp ) --> <see ( ( *( w )->lprfsHost->putValueFile )( w, i, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->putValueFile )( w, i, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4387,7 +4387,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4401,10 +4401,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_READDBHEADER( w ) --> <see ( ( *( w )->lprfsHost->readDBHeader )( w ) )>
    $ARGUMENTS$
@@ -4412,9 +4412,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->readDBHeader )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4424,7 +4424,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4438,10 +4438,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_WRITEDBHEADER( w ) --> <see ( ( *( w )->lprfsHost->writeDBHeader )( w ) )>
    $ARGUMENTS$
@@ -4449,9 +4449,9 @@
    $RETURNS$
       <see ( ( *( w )->lprfsHost->writeDBHeader )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4461,7 +4461,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4475,22 +4475,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_RECSIZE( w, lp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_GETRECSIZE, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->info )( w, DBI_GETRECSIZE, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4500,7 +4500,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4514,22 +4514,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_HEADERSIZE( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_GETHEADERSIZE, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->info )( w, DBI_GETHEADERSIZE, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4539,7 +4539,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4553,22 +4553,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_LUPDATE( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_LASTUPDATE, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->info )( w, DBI_LASTUPDATE, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4578,7 +4578,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4592,22 +4592,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_SETDELIM( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_SETDELIMITER, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->info )( w, DBI_SETDELIMITER, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4617,7 +4617,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4631,22 +4631,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_GETDELIM( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_GETDELIMITER, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->info )( w, DBI_GETDELIMITER, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4656,7 +4656,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4670,22 +4670,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SELF_TABLEEXT( w, fp ) --> <see ( ( *( w )->lprfsHost->info )( w, DBI_TABLEEXT, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( w )->lprfsHost->info )( w, DBI_TABLEEXT, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4695,7 +4695,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4709,22 +4709,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_BOF( w, sp ) --> <see ( ( *( SUPERTABLE )->bof )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->bof )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4734,7 +4734,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4748,22 +4748,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_EOF( w, sp ) --> <see ( ( *( SUPERTABLE )->eof )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->eof )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4773,7 +4773,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4787,22 +4787,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_FOUND( w, sp ) --> <see ( ( *( SUPERTABLE )->found )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->found )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4812,7 +4812,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4826,22 +4826,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GOTO( w, l ) --> <see ( ( *( SUPERTABLE )->go )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->go )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4851,7 +4851,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4865,22 +4865,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GOTOID( w, sp ) --> <see ( ( *( SUPERTABLE )->goToId )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->goToId )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4890,7 +4890,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4904,10 +4904,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GOBOTTOM( w ) --> <see ( ( *( SUPERTABLE )->goBottom )( w ) )>
    $ARGUMENTS$
@@ -4915,9 +4915,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->goBottom )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4927,7 +4927,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4941,10 +4941,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GOTOP( w ) --> <see ( ( *( SUPERTABLE )->goTop )( w ) )>
    $ARGUMENTS$
@@ -4952,9 +4952,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->goTop )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -4964,7 +4964,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -4978,26 +4978,26 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SEEK( w, i1, v, i2 ) --> <see ( ( *( SUPERTABLE )->seek )( w, i1, v, i2 ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i1>
-  
+
       <v>
-  
+
       <i2>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->seek )( w, i1, v, i2 ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5007,7 +5007,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5021,22 +5021,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SKIP( w, l ) --> <see ( ( *( SUPERTABLE )->skip )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->skip )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5046,7 +5046,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5060,22 +5060,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SKIPFILTER( w, l ) --> <see ( ( *( SUPERTABLE )->skipFilter )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->skipFilter )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5085,7 +5085,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5099,22 +5099,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SKIPRAW( w, l ) --> <see ( ( *( SUPERTABLE )->skipRaw )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->skipRaw )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5124,7 +5124,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5138,22 +5138,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ADDFIELD( w, ip ) --> <see ( ( *( SUPERTABLE )->addField )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->addField )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5163,7 +5163,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5177,22 +5177,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_APPEND( w, l ) --> <see ( ( *( SUPERTABLE )->append )( w, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->append )( w, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5202,7 +5202,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5216,22 +5216,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CREATEFIELDS( w, v ) --> <see ( ( *( SUPERTABLE )->createFields )( w, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->createFields )( w, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5241,7 +5241,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5255,10 +5255,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_DELETE( w ) --> <see ( ( *( SUPERTABLE )->deleterec )( w ) )>
    $ARGUMENTS$
@@ -5266,9 +5266,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->deleterec )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5278,7 +5278,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5292,22 +5292,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_DELETED( w, sp ) --> <see ( ( *( SUPERTABLE )->deleted )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->deleted )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5317,7 +5317,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5331,22 +5331,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_FIELDCOUNT( w, sp ) --> <see ( ( *( SUPERTABLE )->fieldCount )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->fieldCount )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5356,7 +5356,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5370,22 +5370,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_FIELDDISPLAY( w, sp ) --> <see ( ( *( SUPERTABLE )->fieldDisplay )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->fieldDisplay )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5395,7 +5395,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5409,26 +5409,26 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_FIELDINFO( w, s1, s2, v ) --> <see ( ( *( SUPERTABLE )->fieldInfo )( w, s1, s2, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <s1>
-  
+
       <s2>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->fieldInfo )( w, s1, s2, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5438,7 +5438,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5452,24 +5452,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_FIELDNAME( w, i, bp ) --> <see ( ( *( SUPERTABLE )->fieldName )( w, i, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->fieldName )( w, i, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5479,7 +5479,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5493,10 +5493,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_FLUSH( w ) --> <see ( ( *( SUPERTABLE )->flush )( w ) )>
    $ARGUMENTS$
@@ -5504,9 +5504,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->flush )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5516,7 +5516,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5530,22 +5530,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GETREC( w, bpp ) --> <see ( ( *( SUPERTABLE )->getRec )( w, bpp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bpp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->getRec )( w, bpp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5555,7 +5555,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5569,24 +5569,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GETVALUE( w, i, v ) --> <see ( ( *( SUPERTABLE )->getValue )( w, i, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->getValue )( w, i, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5596,7 +5596,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5610,24 +5610,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GETVARLEN( w, i, lp ) --> <see ( ( *( SUPERTABLE )->getVarLen )( w, i, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->getVarLen )( w, i, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5637,7 +5637,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5651,10 +5651,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GOCOLD( w ) --> <see ( ( *( SUPERTABLE )->goCold )( w ) )>
    $ARGUMENTS$
@@ -5662,9 +5662,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->goCold )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5674,7 +5674,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5688,10 +5688,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GOHOT( w ) --> <see ( ( *( SUPERTABLE )->goHot )( w ) )>
    $ARGUMENTS$
@@ -5699,9 +5699,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->goHot )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5711,7 +5711,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5725,24 +5725,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_PUTVALUE( w, i, v ) --> <see ( ( *( SUPERTABLE )->putValue )( w, i, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->putValue )( w, i, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5752,7 +5752,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5766,22 +5766,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_PUTREC( w, bp ) --> <see ( ( *( SUPERTABLE )->putRec )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->putRec )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5791,7 +5791,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5805,10 +5805,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RECALL( w ) --> <see ( ( *( SUPERTABLE )->recall )( w ) )>
    $ARGUMENTS$
@@ -5816,9 +5816,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->recall )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5828,7 +5828,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5842,22 +5842,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RECCOUNT( w, sp ) --> <see ( ( *( SUPERTABLE )->reccount )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->reccount )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5867,7 +5867,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5881,26 +5881,26 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RECINFO( w, v1, i, v2 ) --> <see ( ( *( SUPERTABLE )->recInfo )( w, v1, i, v2 ) )>
    $ARGUMENTS$
       <w>
-  
+
       <v1>
-  
+
       <i>
-  
+
       <v2>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->recInfo )( w, v1, i, v2 ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5910,7 +5910,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5924,22 +5924,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RECNO( w, sp ) --> <see ( ( *( SUPERTABLE )->recno )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->recno )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5949,7 +5949,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -5963,22 +5963,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SETFIELDEXTENT( w, s ) --> <see ( ( *( SUPERTABLE )->setFieldExtent )( w, s ) )>
    $ARGUMENTS$
       <w>
-  
+
       <s>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->setFieldExtent )( w, s ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -5988,7 +5988,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6002,22 +6002,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ALIAS( w, bp ) --> <see ( ( *( SUPERTABLE )->alias )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->alias )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6027,7 +6027,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6041,10 +6041,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CLOSE( w ) --> <see ( ( *( SUPERTABLE )->close )( w ) )>
    $ARGUMENTS$
@@ -6052,9 +6052,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->close )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6064,7 +6064,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6078,22 +6078,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CREATE( w, ip ) --> <see ( ( *( SUPERTABLE )->create )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->create )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6103,7 +6103,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6117,24 +6117,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_INFO( w, i, g ) --> <see ( ( *( SUPERTABLE )->info )( w, i, g ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <g>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->info )( w, i, g ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6144,7 +6144,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6158,10 +6158,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_NEW( w ) --> <see ( ( *( SUPERTABLE )->newarea )( w ) )>
    $ARGUMENTS$
@@ -6169,9 +6169,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->newarea )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6181,7 +6181,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6195,22 +6195,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_OPEN( w, ip ) --> <see ( ( *( SUPERTABLE )->open )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->open )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6220,7 +6220,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6234,10 +6234,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RELEASE( w ) --> <see ( ( *( SUPERTABLE )->release )( w ) )>
    $ARGUMENTS$
@@ -6245,9 +6245,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->release )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6257,7 +6257,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6271,22 +6271,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_STRUCTSIZE( w, sp ) --> <see ( ( *( SUPERTABLE )->structSize )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->structSize )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6296,7 +6296,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6310,22 +6310,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SYSNAME( w, bp ) --> <see ( ( *( SUPERTABLE )->sysName )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->sysName )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6335,7 +6335,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6349,22 +6349,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_DBEVAL( w, ip ) --> <see ( ( *( SUPERTABLE )->dbEval )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->dbEval )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6374,7 +6374,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6388,10 +6388,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_PACK( w ) --> <see ( ( *( SUPERTABLE )->pack )( w ) )>
    $ARGUMENTS$
@@ -6399,9 +6399,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->pack )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6411,7 +6411,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6425,24 +6425,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_PACKREC( w, l, sp ) --> <see ( ( *( SUPERTABLE )->packRec )( w, l, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <l>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->packRec )( w, l, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6452,7 +6452,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6466,22 +6466,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SORT( w, ip ) --> <see ( ( *( SUPERTABLE )->sort )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->sort )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6491,7 +6491,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6505,22 +6505,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_TRANS( w, ip ) --> <see ( ( *( SUPERTABLE )->trans )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->trans )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6530,7 +6530,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6544,22 +6544,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_TRANSREC( w, ip ) --> <see ( ( *( SUPERTABLE )->transRec )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->transRec )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6569,7 +6569,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6583,10 +6583,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ZAP( w ) --> <see ( ( *( SUPERTABLE )->zap )( w ) )>
    $ARGUMENTS$
@@ -6594,9 +6594,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->zap )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6606,7 +6606,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6620,22 +6620,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CHILDEND( w, ip ) --> <see ( ( *( SUPERTABLE )->childEnd )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->childEnd )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6645,7 +6645,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6659,22 +6659,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CHILDSTART( w, ip ) --> <see ( ( *( SUPERTABLE )->childStart )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->childStart )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6684,7 +6684,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6698,22 +6698,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CHILDSYNC( w, ip ) --> <see ( ( *( SUPERTABLE )->childSync )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->childSync )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6723,7 +6723,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6737,10 +6737,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SYNCCHILDREN( w ) --> <see ( ( *( SUPERTABLE )->syncChildren )( w ) )>
    $ARGUMENTS$
@@ -6748,9 +6748,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->syncChildren )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6760,7 +6760,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6774,10 +6774,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CLEARREL( w ) --> <see ( ( *( SUPERTABLE )->clearRel )( w ) )>
    $ARGUMENTS$
@@ -6785,9 +6785,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->clearRel )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6797,7 +6797,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6811,10 +6811,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_FORCEREL( w ) --> <see ( ( *( SUPERTABLE )->forceRel )( w ) )>
    $ARGUMENTS$
@@ -6822,9 +6822,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->forceRel )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6834,7 +6834,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6848,24 +6848,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RELAREA( w, s, sp ) --> <see ( ( *( SUPERTABLE )->relArea )( w, s, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <s>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->relArea )( w, s, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6875,7 +6875,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6889,22 +6889,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RELEVAL( w, ip ) --> <see ( ( *( SUPERTABLE )->relEval )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->relEval )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6914,7 +6914,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6928,24 +6928,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RELTEXT( w, s, bp ) --> <see ( ( *( SUPERTABLE )->relText )( w, s, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <s>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->relText )( w, s, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6955,7 +6955,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -6969,22 +6969,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SETREL( w, ip ) --> <see ( ( *( SUPERTABLE )->setRel )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->setRel )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -6994,7 +6994,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7008,22 +7008,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDLSTADD( w, lp ) --> <see ( ( *( SUPERTABLE )->orderListAdd )( w, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderListAdd )( w, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7033,7 +7033,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7047,22 +7047,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDLSTDELETE( w, lp ) --> <see ( ( *( SUPERTABLE )->orderListDelete )( w, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderListDelete )( w, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7072,7 +7072,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7086,22 +7086,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDLSTFOCUS( w, lp ) --> <see ( ( *( SUPERTABLE )->orderListFocus )( w, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderListFocus )( w, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7111,7 +7111,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7125,10 +7125,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDLSTREBUILD( w ) --> <see ( ( *( SUPERTABLE )->orderListRebuild )( w ) )>
    $ARGUMENTS$
@@ -7136,9 +7136,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderListRebuild )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7148,7 +7148,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7162,10 +7162,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDLSTCLEAR( w ) --> <see ( ( *( SUPERTABLE )->orderListClear )( w ) )>
    $ARGUMENTS$
@@ -7173,9 +7173,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderListClear )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7185,7 +7185,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7199,22 +7199,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDSETCOND( w, ip ) --> <see ( ( *( SUPERTABLE )->orderCondition )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderCondition )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7224,7 +7224,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7238,22 +7238,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDCREATE( w, ip ) --> <see ( ( *( SUPERTABLE )->orderCreate )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderCreate )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7263,7 +7263,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7277,22 +7277,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDDELETE( w, ip ) --> <see ( ( *( SUPERTABLE )->orderDelete )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderDelete )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7302,7 +7302,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7316,24 +7316,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDINFO( w, i, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, i, p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, i, p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7343,7 +7343,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7357,22 +7357,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDEXPR( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_EXPRESSION, p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_EXPRESSION, p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7382,7 +7382,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7396,22 +7396,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDCOND( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_CONDITION,  p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_CONDITION,  p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7421,7 +7421,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7435,22 +7435,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDRECNO( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_RECNO,      p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_RECNO,      p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7460,7 +7460,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7474,22 +7474,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDPOS( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_POSITION,   p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_POSITION,   p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7499,7 +7499,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7513,22 +7513,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDNUMBER( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_NUMBER,     p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_NUMBER,     p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7538,7 +7538,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7552,22 +7552,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDNAME( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_NAME,       p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_NAME,       p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7577,7 +7577,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7591,22 +7591,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDBAGNAME( w, p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_BAGNAME,    p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_BAGNAME,    p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7616,7 +7616,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7630,22 +7630,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ORDBAGEXT( w,  p ) --> <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_BAGEXT,     p ) )>
    $ARGUMENTS$
       <w>
-  
+
       <p>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->orderInfo )( w, DBOI_BAGEXT,     p ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7655,7 +7655,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7669,10 +7669,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CLEARFILTER( w ) --> <see ( ( *( SUPERTABLE )->clearFilter )( w ) )>
    $ARGUMENTS$
@@ -7680,9 +7680,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->clearFilter )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7692,7 +7692,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7706,10 +7706,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CLEARLOCATE( w ) --> <see ( ( *( SUPERTABLE )->clearLocate )( w ) )>
    $ARGUMENTS$
@@ -7717,9 +7717,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->clearLocate )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7729,7 +7729,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7743,10 +7743,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CLEARSCOPE( w ) --> <see ( ( *( SUPERTABLE )->clearScope )( w ) )>
    $ARGUMENTS$
@@ -7754,9 +7754,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->clearScope )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7766,7 +7766,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7780,24 +7780,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_COUNTSCOPE( w, ip, lp ) --> <see ( ( *( SUPERTABLE )->countScope )( w, ip, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->countScope )( w, ip, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7807,7 +7807,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7821,22 +7821,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_FILTERTEXT( w, bp ) --> <see ( ( *( SUPERTABLE )->filterText )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->filterText )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7846,7 +7846,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7860,24 +7860,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SCOPEINFO( w, i, v ) --> <see ( ( *( SUPERTABLE )->scopeInfo )( w, i, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->scopeInfo )( w, i, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7887,7 +7887,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7901,22 +7901,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SETFILTER( w, ip ) --> <see ( ( *( SUPERTABLE )->setFilter )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->setFilter )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7926,7 +7926,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7940,22 +7940,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SETLOCATE( w, ip ) --> <see ( ( *( SUPERTABLE )->setLocate )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->setLocate )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -7965,7 +7965,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -7979,22 +7979,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SETSCOPE( w, ip ) --> <see ( ( *( SUPERTABLE )->setScope )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->setScope )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8004,7 +8004,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8018,24 +8018,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SKIPSCOPE( w, bp, l ) --> <see ( ( *( SUPERTABLE )->skipScope )( w, bp, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->skipScope )( w, bp, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8045,7 +8045,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8059,22 +8059,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_COMPILE( w, bp ) --> <see ( ( *( SUPERTABLE )->compile )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->compile )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8084,7 +8084,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8098,22 +8098,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_ERROR( w, ip ) --> <see ( ( *( SUPERTABLE )->error )( w, ip ) )>
    $ARGUMENTS$
       <w>
-  
+
       <ip>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->error )( w, ip ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8123,7 +8123,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8137,22 +8137,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_EVALBLOCK( w, v ) --> <see ( ( *( SUPERTABLE )->evalBlock )( w, v ) )>
    $ARGUMENTS$
       <w>
-  
+
       <v>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->evalBlock )( w, v ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8162,7 +8162,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8176,22 +8176,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GETLOCKS( w, g ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_GETLOCKARRAY, g ) )>
    $ARGUMENTS$
       <w>
-  
+
       <g>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->info )( w, DBI_GETLOCKARRAY, g ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8201,7 +8201,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8215,24 +8215,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RAWLOCK( w, i, l ) --> <see ( ( *( SUPERTABLE )->rawlock )( w, i, l ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <l>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->rawlock )( w, i, l ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8242,7 +8242,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8256,22 +8256,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_LOCK( w, sp ) --> <see ( ( *( SUPERTABLE )->lock )( w, sp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <sp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->lock )( w, sp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8281,7 +8281,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8295,10 +8295,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_UNLOCK( w ) --> <see ( ( *( SUPERTABLE )->unlock )( w ) )>
    $ARGUMENTS$
@@ -8306,9 +8306,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->unlock )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8318,7 +8318,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8332,10 +8332,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CLOSEMEMFILE( w ) --> <see ( ( *( SUPERTABLE )->closeMemFile )( w ) )>
    $ARGUMENTS$
@@ -8343,9 +8343,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->closeMemFile )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8355,7 +8355,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8369,22 +8369,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_CREATEMEMFILE( w, bp ) --> <see ( ( *( SUPERTABLE )->createMemFile )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->createMemFile )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8394,7 +8394,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8408,24 +8408,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GETVALUEFILE( w, i, bp ) --> <see ( ( *( SUPERTABLE )->getValueFile )( w, i, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->getValueFile )( w, i, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8435,7 +8435,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8449,22 +8449,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_OPENMEMFILE( w, bp ) --> <see ( ( *( SUPERTABLE )->openMemFile )( w, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->openMemFile )( w, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8474,7 +8474,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8488,24 +8488,24 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_PUTVALUEFILE( w, i, bp ) --> <see ( ( *( SUPERTABLE )->putValueFile )( w, i, bp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <i>
-  
+
       <bp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->putValueFile )( w, i, bp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8515,7 +8515,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8529,10 +8529,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_READDBHEADER( w ) --> <see ( ( *( SUPERTABLE )->readDBHeader )( w ) )>
    $ARGUMENTS$
@@ -8540,9 +8540,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->readDBHeader )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8552,7 +8552,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8566,10 +8566,10 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_WRITEDBHEADER( w ) --> <see ( ( *( SUPERTABLE )->writeDBHeader )( w ) )>
    $ARGUMENTS$
@@ -8577,9 +8577,9 @@
    $RETURNS$
       <see ( ( *( SUPERTABLE )->writeDBHeader )( w ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8589,7 +8589,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8603,22 +8603,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_RECSIZE( w, lp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_GETRECSIZE, lp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <lp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->info )( w, DBI_GETRECSIZE, lp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8628,7 +8628,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8642,22 +8642,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_HEADERSIZE( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_GETHEADERSIZE, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->info )( w, DBI_GETHEADERSIZE, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8667,7 +8667,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8681,22 +8681,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_LUPDATE( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_LASTUPDATE, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->info )( w, DBI_LASTUPDATE, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8706,7 +8706,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8720,22 +8720,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_SETDELIM( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_SETDELIMITER, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->info )( w, DBI_SETDELIMITER, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8745,7 +8745,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8759,22 +8759,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_GETDELIM( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_GETDELIMITER, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->info )( w, DBI_GETDELIMITER, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8784,7 +8784,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -8798,22 +8798,22 @@
    $SUBCATEGORY$
       RDD
    $ONELINER$
-  
+
    $SYNTAX$
       C Prototype (macro definition)
-  
+
       #include "hbapirdd.h"
       SUPER_TABLEEXT( w, fp ) --> <see ( ( *( SUPERTABLE )->info )( w, DBI_TABLEEXT, fp ) )>
    $ARGUMENTS$
       <w>
-  
+
       <fp>
    $RETURNS$
       <see ( ( *( SUPERTABLE )->info )( w, DBI_TABLEEXT, fp ) )>
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -8823,6 +8823,6 @@
    $PLATFORMS$
       All
    $SEEALSO$
-  
+
    $END$
  */

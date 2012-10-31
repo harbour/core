@@ -15,20 +15,20 @@
    $ARGUMENTS$
       <acBarNames> is a character array containing the names to appear
       on the menu bar.
-  
+
       <acOptions> is a multi-dimensional array with one element for each
       selection to appear on the pulldown menus.
-  
+
       <acColors> is an array containing the colors for the menu groups.
-  
+
       <nTopRow> is a numeric value that determines the row for the menu
       bar.  If omitted, it defaults to 0.
-  
+
       <lShadow> is a logical variable.  If true (.T.) or omitted, it
       uses FT_SHADOW() to add a transparent shadow to the each
       pulldown menu.  If false (.F.), the menu is drawn without
       the shadow.
-  
+
       All arguments except nTopRow and lShadow are required.
    $RETURNS$
       NIL
@@ -37,9 +37,9 @@
       on the menu bar and executes the corresponding function for the item
       selected.  When a called function returns false, FT_MENU1 returns
       control to the calling program.
-  
+
       Valid keystrokes and their corresponding actions:
-  
+
       Home             -  Activates Pulldown for first item on the menu bar
       End              -  Activates Pulldown for last item on the menu bar
       Left Arrow       -  Activates next Pulldown to the left
@@ -57,55 +57,55 @@
       // Declare arrays
       LOCAL aColors  := {}
       LOCAL aBar     := { " ENTER/EDIT ", " REPORTS ", " DISPLAY " }
-  
+
       // Include the following two lines of code in your program, as is.
       // The first creates aOptions with the same length as aBar.  The
       // second assigns a three-element array to each element of aOptions.
       LOCAL aOptions[ Len( aBar ) ]
       AEval( aBar, {| x, i | aOptions[ i ] := { {}, {}, {} } } )
-  
+
       // fill color array
       // Box Border, Menu Options, Menu Bar, Current Selection, Unselected
       aColors := iif( lColor, { "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;
                               { "W+/N", "W+/N", "W/N", "N/W","W/N" } )
-  
+
       // array for first pulldown menu
       FT_FILL( aOptions[ 1 ], "A. Execute A Dummy Procedure" , {|| fubar() }, .T. )
       FT_FILL( aOptions[ 1 ], "B. Enter Daily Charges"       , {|| .T. },     .F. )
       FT_FILL( aOptions[ 1 ], "C. Enter Payments On Accounts", {|| .T. },     .T. )
-  
+
       // array for second pulldown menu
       FT_FILL( aOptions[ 2 ], "A. Print Member List"         , {|| .T. },     .T. )
       FT_FILL( aOptions[ 2 ], "B. Print Active Auto Charges" , {|| .T. },     .T. )
-  
+
       // array for third pulldown menu
       FT_FILL( aOptions[ 3 ], "A. Transaction Totals Display", {|| .T. },     .T. )
       FT_FILL( aOptions[ 3 ], "B. Display Invoice Totals"    , {|| .T. },     .T. )
       FT_FILL( aOptions[ 3 ], "C. Exit To DOS"               , {|| .F. },     .T. )
-  
+
       Call FT_FILL() once for each item on each pulldown menu, passing it
       three parameters:
-  
+
          FT_FILL( <cMenuSelection>, <bCodeBlock>, <lSelectable>
-  
+
       <cMenuSelection> is a character string which will be displayed on
        the pulldown menu.
-  
+
       <bCodeBlock> should contain one of the following:
-  
+
          A function name to execute, which in turn should return .T. or .F.
          FT_MENU1 WILL RETURN CONTROL TO THE CALLING PROGRAM IF .F. IS
          RETURNED OR CONTINUE IF .T. IS RETURNED.
-  
+
          .F. WHICH WILL CAUSE FT_MENU1 TO RETURN CONTROL TO THE CALLING
          PROGRAM.
-  
+
          .T. WHICH WILL DO NOTHING.  THIS ALLOWS THE DEVELOPER TO DESIGN A
          SKELETON MENU STRUCTURE PRIOR TO COMPLETING ALL OF THE SUBROUTINES.
-  
+
       // CALL FT_MENU1
       FT_MENU1( aBar, aOptions, aColors, 0 )
-  
+
       NOTE: FT_MENU1() disables Alt-C and Alt-D in order to make them
             available for the menu bar.  It enables Alt-D and resets
             Alt-C to its previous state prior to calling each function.
@@ -128,16 +128,16 @@
       <aSubArrayName> is a sub-array of <acOptions> in FT_MENU1()
       denoting the group in which to include the selection --
       e.g., acOptions[ 1 ]
-  
+
       <cMenuSelection> is the character string that will appear on
       the menu.
-  
+
       <bFunction> is the code block to be executed when that menu
       option is selected.  i.e. {|| MyFunction() } would execute
       the function called MyFunction().  {|| .F. } would exit the
       FT_MENU1 and return to the calling routine.  {|| .T. } would
       do nothing.
-  
+
       <lSelectable> is a logical variable that determines whether
       the corresponding menu option is selectable or not.
    $RETURNS$
@@ -147,26 +147,26 @@
       to calling FT_MENU1().
    $EXAMPLES$
       FT_FILL( aOptions[ 1 ], "A. Execute A Dummy Procedure" , {|| fubar() }, .T. )
-  
+
       The above would be added to the sub-menu associated with the first menu
       bar item, would execute the function FUBAR() when that option was
       selected, and would be selectable.
-  
-  
+
+
       FT_FILL( aOptions[ 3 ], "B. Enter Daily Charges"       , {|| .T. },     .F. )
-  
+
       The above would be added to the sub-menu associated with the third menu
       bar item, and would be unselectable.
-  
-  
+
+
       FT_FILL( aOptions[ 2 ], "C. Enter Payments On Accounts", {|| .T. },     .T. )
-  
+
       The above would be added to the sub-menu associated with the second menu
       bar item, and would be selectable, but would do nothing when selected.
-  
-  
+
+
       FT_FILL( aOptions[ 4 ], "C. Exit"                      , {|| .F. },     .T. )
-  
+
       The above would be added to the sub-menu associated with the fourth menu
       bar item, and would be selectable, and would exit FT_MENU1() when chosen.
    $SEEALSO$

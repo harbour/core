@@ -5,6 +5,7 @@
 #require "hbpgsql"
 
 PROCEDURE Main( cHost, cDatabase, cUser, cPass )
+
    LOCAL oServer, oQuery, oRow, i, x, aTables, aStruct
 
    LOCAL cQuery
@@ -50,7 +51,7 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    oQuery := oServer:Query( cQuery )
 
-   IF oQuery:neterr()
+   IF oQuery:NetErr()
       ? oQuery:ErrorMsg()
    ENDIF
 
@@ -70,12 +71,12 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    oServer:StartTransaction()
 
    FOR i := 1 TO 10
-      cQuery := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) " +;
-                "VALUES( " + Str( i ) + ", 2, 'TEST', 'y', 5, 3000, 1500.2, 7.5, '2003-12-17', 'Short Description about what ? ')"
+      cQuery := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) " + ;
+         "VALUES( " + Str( i ) + ", 2, 'TEST', 'y', 5, 3000, 1500.2, 7.5, '2003-12-17', 'Short Description about what ? ')"
 
       oQuery := oServer:Query( cQuery )
 
-      IF oQuery:neterr()
+      IF oQuery:NetErr()
          ? oQuery:errorMsg()
       ENDIF
 
@@ -92,22 +93,23 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
       ? aStruct[ i ][ 1 ], aStruct[ i ][ 2 ], aStruct[ i ][ 3 ], aStruct[ i ][ 4 ]
    NEXT
 
-   ? "Fields: ", oQuery:Fcount()
+   ? "Fields: ", oQuery:FCount()
 
    oRow := oQuery:Blank()
 
-   ? oRow:FCount(), ;
-     oRow:Fieldpos( "sales" ), ;
-     oRow:Fieldget( 1 ), ;
-     oRow:Fieldname( 2 ), ;
-     oRow:Fieldtype( 1 ), ;
-     oRow:Fielddec( 1 ), ;
-     oRow:Fieldlen( 1 )
+   ? ;
+      oRow:FCount(), ;
+      oRow:FieldPos( "sales" ), ;
+      oRow:FieldGet( 1 ), ;
+      oRow:FieldName( 2 ), ;
+      oRow:FieldType( 1 ), ;
+      oRow:FieldDec( 1 ), ;
+      oRow:FieldLen( 1 )
 
-   oRow:Fieldput( 1, 150 )
-   oRow:Fieldput( 2, "MY TEST" )
+   oRow:FieldPut( 1, 150 )
+   oRow:FieldPut( 2, "MY TEST" )
 
-   ? oRow:Fieldget( 1 ), oRow:Fieldget( 2 )
+   ? oRow:FieldGet( 1 ), oRow:FieldGet( 2 )
 
    ? oRow:aRow[ 1 ], oRow:aRow[ 2 ], oRow:aOld[ 1 ], oRow:aOld[ 2 ]
 
@@ -116,25 +118,26 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
    ? oQuery:ErrorMsg()
 
    DO WHILE ! oQuery:Eof()
-      ? oQuery:Recno(),;
-        oQuery:Fieldpos( "code" ),;
-        oQuery:Fieldget( oQuery:Fieldpos( "code" ) ), ;
-        oQuery:Fieldget( 4 ), ;
-        oQuery:Fieldget( 2 ), ;
-        oQuery:Fieldname( 1 ),;
-        oQuery:Fieldtype( 1 ), ;
-        oQuery:Fielddec( 1 ), ;
-        oQuery:Fieldlen( 1 ),;
-        oQuery:Fieldget( 3 )
+      ? ;
+         oQuery:RecNo(), ;
+         oQuery:FieldPos( "code" ), ;
+         oQuery:FieldGet( oQuery:FieldPos( "code" ) ), ;
+         oQuery:FieldGet( 4 ), ;
+         oQuery:FieldGet( 2 ), ;
+         oQuery:FieldName( 1 ), ;
+         oQuery:FieldType( 1 ), ;
+         oQuery:FieldDec( 1 ), ;
+         oQuery:FieldLen( 1 ), ;
+         oQuery:FieldGet( 3 )
 
-      IF oQuery:Recno() == 50
+      IF oQuery:RecNo() == 50
          oRow := oQuery:getrow()
 
-         oRow:Fieldput( 2, "My Second test" )
+         oRow:FieldPut( 2, "My Second test" )
          ? "Update: ", oQuery:Update( oRow )
       ENDIF
 
-      IF oQuery:Recno() == 60
+      IF oQuery:RecNo() == 60
          oRow := oQuery:getrow()
          ? "Delete: ", oQuery:Delete( oRow )
       ENDIF
@@ -145,17 +148,18 @@ PROCEDURE Main( cHost, cDatabase, cUser, cPass )
 
    oQuery:Refresh()
 
-   FOR i := 1 TO oQuery:Lastrec()
+   FOR i := 1 TO oQuery:LastRec()
       oRow := oQuery:getrow( i )
 
-      ? i, oRow:Fieldget( oRow:Fieldpos( "code" ) ),;
-        oRow:Fieldget( 4 ),;
-        oRow:Fieldget( 2 ),;
-        oRow:Fieldname( 1 ),;
-        oRow:Fieldtype( 1 ),;
-        oRow:Fielddec( 1 ),;
-        oRow:Fieldlen( 1 ),;
-        oRow:Fieldget( i, 3 )
+      ? i, ;
+         oRow:FieldGet( oRow:FieldPos( "code" ) ), ;
+         oRow:FieldGet( 4 ), ;
+         oRow:FieldGet( 2 ), ;
+         oRow:FieldName( 1 ), ;
+         oRow:FieldType( 1 ), ;
+         oRow:FieldDec( 1 ), ;
+         oRow:FieldLen( 1 ), ;
+         oRow:FieldGet( i, 3 )
 
    NEXT
 

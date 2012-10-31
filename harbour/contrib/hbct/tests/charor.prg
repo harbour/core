@@ -62,8 +62,8 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests:"
 
-   ? [  charor("012345678", chr(1)) == "113355779" ? --> "] + charor( "012345678", Chr( 1 ) ) + ["]
-   ? [  charor("012345678", chr(1)+chr(3)) == "133357779" ? --> "] + charor( "012345678", Chr( 1 ) + Chr( 3 ) ) + ["]
+   ? '  charor("012345678", chr(1)) == "113355779" ? --> "' + charor( "012345678", Chr( 1 ) ) + '"'
+   ? '  charor("012345678", chr(1)+chr(3)) == "133357779" ? --> "' + charor( "012345678", Chr( 1 ) + Chr( 3 ) ) + '"'
 
    ? "End test of CHAROR()"
    ?

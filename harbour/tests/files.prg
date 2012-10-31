@@ -12,7 +12,7 @@
 // use only *one* at a time
 // dejar solo una de las dos lineas siguientes:
 #define WITH_DBFCDX
-//#define WITH_ADS
+// #define WITH_ADS
 
 #ifdef WITH_ADS
 #include "ads.ch"
@@ -28,7 +28,7 @@ PROCEDURE Main()
 #ifdef WITH_ADS
 
    rddRegister( "ADS", 1 )
-   rddsetdefault( "ADS" )
+   rddSetDefault( "ADS" )
    SET SERVER LOCAL
    SET FILETYPE TO CDX
    SET CHARTYPE TO OEM
@@ -59,9 +59,9 @@ PROCEDURE Main()
       @ 12, 0 SAY "Opening files.... " + Str( n )
       USE ( "file" + hb_ntos( n ) ) NEW
 
-   #ifdef WITH_ADS
+#ifdef WITH_ADS
       SET ORDER TO TAG CODIGO
-   #endif
+#endif
 
    ENDDO
 

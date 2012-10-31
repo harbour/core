@@ -41,7 +41,8 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL nAtTop                            // The number of the item at the top
    LOCAL nItems    := 0                    // The number of items
    LOCAL nGap                              // The number of lines between top and current lines
-                                           // Block used to search for items
+
+   // Block used to search for items
    LOCAL lUserFunc                         // Is a user function to be used?
    LOCAL nUserFunc                         // Return value from user function
    LOCAL nSaveCsr
@@ -234,7 +235,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             ELSE
                DispBegin()
                DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, Ach_Select( alSelect, nPos ), .F., nNumCols )
-               hb_scroll( nTop, nLeft, nBottom, nRight, ( nNewPos - ( nAtTop + nNumRows - 1 ) ) )
+               hb_Scroll( nTop, nLeft, nBottom, nRight, ( nNewPos - ( nAtTop + nNumRows - 1 ) ) )
                nAtTop := nNewPos
                nPos   := Max( nPos, nAtTop + nNumRows - 1 )
                DO WHILE nPos > nNewPos
@@ -274,7 +275,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
             ELSE
                DispBegin()
                DispLine( acItems[ nPos ], nTop + ( nPos - nAtTop ), nLeft, Ach_Select( alSelect, nPos ), .F., nNumCols )
-               hb_scroll( nTop, nLeft, nBottom, nRight, ( nNewPos - ( nAtTop + nNumRows - 1 ) ) )
+               hb_Scroll( nTop, nLeft, nBottom, nRight, ( nNewPos - ( nAtTop + nNumRows - 1 ) ) )
                nAtTop := nNewPos - nNumRows + 1
                nPos   := Max( nPos, nAtTop )
                DO WHILE nPos < nNewPos
@@ -620,7 +621,7 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
          DispLine( acItems[ nIndex ], nRow, nLeft, Ach_Select( alSelect, nIndex ), nIndex == nPos, nRight - nLeft + 1 )
       ELSE
          ColorSelect( CLR_STANDARD )
-         hb_dispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ) )
+         hb_DispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ) )
       ENDIF
    NEXT
 
@@ -631,9 +632,9 @@ STATIC PROCEDURE DispPage( acItems, alSelect, nTop, nLeft, nRight, nNumRows, nPo
 STATIC PROCEDURE DispLine( cLine, nRow, nCol, lSelect, lHiLite, nNumCols )
 
    ColorSelect( iif( lSelect .AND. HB_ISSTRING( cLine ), ;
-                iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
+      iif( lHiLite, CLR_ENHANCED, CLR_STANDARD ), CLR_UNSELECTED ) )
 
-   hb_dispOutAt( nRow, nCol, iif( HB_ISSTRING( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
+   hb_DispOutAt( nRow, nCol, iif( HB_ISSTRING( cLine ), PadR( cLine, nNumCols ), Space( nNumCols ) ) )
    IF lHiLite
       SetPos( nRow, nCol )
    ENDIF
@@ -674,7 +675,9 @@ STATIC FUNCTION Ach_Limits( nFrstItem, nLastItem, nItems, alSelect, acItems )
    RETURN nMode
 
 STATIC FUNCTION Ach_Select( alSelect, nPos )
+
    LOCAL sel
+
    IF nPos >= 1 .AND. nPos <= Len( alSelect )
       sel := alSelect[ nPos ]
       IF HB_ISSTRING( sel ) .AND. !Empty( sel )
@@ -684,4 +687,5 @@ STATIC FUNCTION Ach_Select( alSelect, nPos )
          RETURN sel
       ENDIF
    ENDIF
+
    RETURN .T.

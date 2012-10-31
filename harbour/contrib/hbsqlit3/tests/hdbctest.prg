@@ -4,6 +4,8 @@
 
 #require "hbsqlit3"
 
+#define _NUMROWS_ 10
+
 PROCEDURE Main()
 
    LOCAL oConn, oMeta, oStmt, cSql, n, oRs
@@ -45,8 +47,6 @@ PROCEDURE Main()
 
    ? "Inserting using direct statement..."
 
-   #define _NUMROWS_ 10
-
    ? Time()
    FOR n := 1 TO _NUMROWS_
       cSql := "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) "
@@ -63,7 +63,7 @@ PROCEDURE Main()
    ? "Creating prepared statement"
 
    ? Time()
-   oStmt := oConn:prepareStatement( "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )")
+   oStmt := oConn:prepareStatement( "INSERT INTO test(code, dept, name, sales, tax, salary, budget, Discount, Creation, Description) VALUES ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10 )" )
 
    FOR n := _NUMROWS_ + 1 TO _NUMROWS_ * 2
       oStmt:SetNumber( 1, n )
@@ -152,7 +152,7 @@ PROCEDURE Main()
 
    oRs:first()
    oRs:updateNumber( 8, 99.99 )
-   oRs:updateDate( 9, date() )
+   oRs:updateDate( 9, Date() )
    oRs:updateString( "description", "Updated" )
    oRs:updateRow()
 

@@ -118,15 +118,15 @@ FUNCTION StringToLiteral( cString )
    LOCAL lSingle := .F.
 
    IF hb_regexHas( "\n|\r", cString ) .OR. ;
-         ( ( lDouble := '"' $ cString ) .AND. ;
-           ( lSingle := "'" $ cString ) .AND. ;
-           hb_regexHas( "\[|\]", cString ) )
+      ( ( lDouble := '"' $ cString ) .AND. ;
+        ( lSingle := "'" $ cString ) .AND. ;
+      hb_regexHas( "\[|\]", cString ) )
 
       cString := StrTran( cString, '"', '\"' )
       cString := StrTran( cString, Chr( 10 ), "\n" )
       cString := StrTran( cString, Chr( 13 ), "\r" )
 
-      //TraceLog( cString )
+      // TraceLog( cString )
 
       RETURN 'E"' + cString + '"'
    ELSEIF ! lDouble
@@ -143,7 +143,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
    LOCAL aVar, cRet, cPad, nObj
 
-// TraceLog( xVal, cName, nPad, aObjs )
+   // TraceLog( xVal, cName, nPad, aObjs )
 
    SWITCH ValType( xVal )
    CASE "C"
@@ -236,7 +236,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       nPad += 3
       cPad := Space( nPad )
 
-      FOR EACH aVar IN __objGetValueList( xVal )
+      FOR EACH aVar IN __objGetValueLIST( xVal )
          cRet += cPad + cName + ":" + aVar[ 1 ] + " := " + ValToPrg( aVar[ 2 ], cName + ":" + aVar[ 1 ], nPad, aObjs ) + CRLF
       NEXT
 
@@ -244,7 +244,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       RETURN cRet
 
    OTHERWISE
-      //TraceLog( xVal, cName, nPad )
+      // TraceLog( xVal, cName, nPad )
       IF xVal == NIL
          cRet := "NIL"
       ELSE
@@ -252,7 +252,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       ENDIF
    ENDSWITCH
 
-// TraceLog( cRet )
+   // TraceLog( cRet )
 
    RETURN cRet
 

@@ -9,7 +9,7 @@
 #include "fileio.ch"
 #include "simpleio.ch"
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL pMMFOld, pMMFNew, pDiff
    LOCAL cFileCtx
@@ -38,7 +38,7 @@ PROCEDURE main()
    ENDIF
 
    pDiff := xdl_init_mmfile( XDLT_STD_BLKSIZE, XDL_MMF_ATOMIC )
-   cFileCtx := hb_memoRead( cDiffName )
+   cFileCtx := hb_MemoRead( cDiffName )
    xdl_write_mmfile( pDiff, cFileCtx )
 
    hNew := FCreate( hb_FNameMerge( NIL, cDiffName, ".new" ), FC_NORMAL )

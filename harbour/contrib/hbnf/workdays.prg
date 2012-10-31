@@ -38,13 +38,13 @@ FUNCTION FT_WorkDays( dStart, dStop )
             dStart   := nAdjust
          ENDIF
 
-         IF ( nDays := DOW( dStart ) ) == 1 // Sunday (change to next Monday)
+         IF ( nDays := DoW( dStart ) ) == 1 // Sunday (change to next Monday)
             dStart++
          ELSEIF nDays == 7 // Saturday (change to next Monday)
             dStart += 2
          ENDIF
 
-         IF ( nDays := DOW( dStop ) ) == 1 // Sunday (change to prev Friday)
+         IF ( nDays := DoW( dStop ) ) == 1 // Sunday (change to prev Friday)
             dStop -= 2
          ELSEIF nDays == 7 // Saturday (change to prev Friday)
             dStop--
@@ -52,13 +52,13 @@ FUNCTION FT_WorkDays( dStart, dStop )
 
          nAdjust := ( nDays := dStop - dStart + 1 ) % 7
 
-         IF DOW( dStop ) + 1 < DOW( dStart ) // Weekend adjustment
+         IF DoW( dStop ) + 1 < DoW( dStart ) // Weekend adjustment
             nAdjust -= 2
          ENDIF
 
          nWorkDays := Int( nDays / 7 ) * 5 + nAdjust
 
-      ELSEIF DOW( dStart ) != 1 .AND. DOW( dStart ) != 7
+      ELSEIF DoW( dStart ) != 1 .AND. DoW( dStart ) != 7
 
          nWorkDays := 1
 

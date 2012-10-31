@@ -250,7 +250,7 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
       IF HB_ISBLOCK( ::sl_resize )
          Eval( ::sl_resize, NIL, NIL, self )
       ENDIF
-      AEval( ::aChildren, {|o| o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
+      AEval( ::aChildren, {| o | o:handleEvent( HB_GTE_RESIZED, { 0, 0, 0, 0, 0 } ) } )
       RETURN EVENT_HANDELLED
 
    CASE nMessage == HB_GTE_CTLCOLOR

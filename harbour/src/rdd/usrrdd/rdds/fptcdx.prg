@@ -68,10 +68,13 @@ REQUEST DBFFPT
 ANNOUNCE FPTCDX
 
 FUNCTION FPTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
+
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               "DBFCDX", {}, pSuperRddID ) /* We are inheriting from DBFCDX */
+      "DBFCDX", {}, pSuperRddID ) /* We are inheriting from DBFCDX */
 
 INIT PROCEDURE FPTCDX_INIT()
+
    rddRegister( "FPTCDX", RDT_FULL )
    rddInfo( RDDI_MEMOTYPE, DB_MEMO_FPT, "FPTCDX" )
+
    RETURN

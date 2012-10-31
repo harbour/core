@@ -6,7 +6,8 @@
 
 #include "postgres.ch"
 
-PROCEDURE main()
+PROCEDURE Main()
+
    LOCAL conn, res, aTemp, x, y, pFile
    LOCAL cDb := "test"
    LOCAL cUser := "user"
@@ -32,10 +33,11 @@ PROCEDURE main()
 
    ? "Verbose: ", PQsetErrorVerbosity( conn, 2 )
 
-   ? "Protocol: ", PQprotocolVersion( conn ),;
-     " Server Version: ", PQserverVersion( conn ),;
-     " Client Encoding: ", PQsetClientEncoding( conn, "ASCII" ),;
-     "New encode: ", PQclientEncoding( conn )
+   ? ;
+      "Protocol: ", PQprotocolVersion( conn ), ;
+      " Server Version: ", PQserverVersion( conn ), ;
+      " Client Encoding: ", PQsetClientEncoding( conn, "ASCII" ), ;
+      "New encode: ", PQclientEncoding( conn )
 
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
@@ -68,7 +70,7 @@ PROCEDURE main()
    FOR x := 1 TO Len( aTemp )
       ? "Linha 1: "
       FOR y := 1 TO 6
-        ?? aTemp[ x ][ y ], ", "
+         ?? aTemp[ x ][ y ], ", "
       NEXT
    NEXT
 

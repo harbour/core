@@ -13,9 +13,18 @@
 
 #include "hbgtinfo.ch"
 
+#if ! defined( __HBSCRIPT__HBSHELL )
 REQUEST HB_GT_XWC_DEFAULT
+#endif
+
 proc main()
    local cChars, i, j, n
+
+#if defined( __HBSCRIPT__HBSHELL )
+   #if defined( __PLATFORM__UNIX )
+      hbshell_gtSelect( "GTXWC" )
+   #endif
+#endif
 
    cChars := ""
    for i := 0 to 7

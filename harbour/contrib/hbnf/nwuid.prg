@@ -34,6 +34,7 @@
 #include "ftint86.ch"
 
 /* TODO: rewrite in C */
+
 FUNCTION FT_NWUID( nConn )
 
    LOCAL aRegs[ INT86_MAX_REGS ]

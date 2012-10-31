@@ -131,7 +131,7 @@ FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
                ELSEIF cType == "L"
                   ar[ nDim, nElem ] := .F.
                ELSEIF cType == "D"
-                  ar[ nDim, nElem ] := SToD()
+                  ar[ nDim, nElem ] := hb_SToD()
                ENDIF
             NEXT
             b:refreshAll()

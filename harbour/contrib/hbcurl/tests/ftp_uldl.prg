@@ -15,6 +15,7 @@
 #define REMOTE_URL_MEM      "ftp://harbour:power@localhost/from_mem.txt"
 
 PROCEDURE Main( cDL, cUL )
+
    LOCAL curl
    LOCAL info
    LOCAL tmp
@@ -59,7 +60,10 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL )
       ? curl_easy_setopt( curl, HB_CURLOPT_UL_FILE_SETUP, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, hb_FSize( cUL ) ), hb_FSize( cUL )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
+#if 0
+      /* May use this instead of embedding in URL */
+      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" )
+#endif
       ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), hb_DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_POSTQUOTE, { "RNFR " + UPLOAD_FILE_AS, "RNTO " + RENAME_FILE_TO } )
@@ -86,7 +90,10 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_UPLOAD )
       ? curl_easy_setopt( curl, HB_CURLOPT_UL_NULL_SETUP )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL_DEL )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
+#if 0
+      /* May use this instead of embedding in URL */
+      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" )
+#endif
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS )
       ? curl_easy_setopt( curl, HB_CURLOPT_POSTQUOTE, { "DELE " + RENAME_FILE_TO } )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
@@ -106,7 +113,10 @@ PROCEDURE Main( cDL, cUL )
       ? curl_easy_setopt( curl, HB_CURLOPT_URL, REMOTE_URL_MEM )
       ? curl_easy_setopt( curl, HB_CURLOPT_UL_BUFF_SETUP, tmp )
       ? curl_easy_setopt( curl, HB_CURLOPT_INFILESIZE, Len( tmp ) ), Len( tmp )
-//    ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" ) /* May use this instead of embedding in URL */
+#if 0
+      /* May use this instead of embedding in URL */
+      ? curl_easy_setopt( curl, HB_CURLOPT_USERPWD, "harbour:power" )
+#endif
       ? curl_easy_setopt( curl, HB_CURLOPT_PROGRESSBLOCK, {| nPos, nLen | a := CurGet(), hb_DispOutAt( 10, 10, Str( ( nPos / nLen ) * 100, 6, 2 ) + "%" ), CurSet( a ) } )
       ? curl_easy_setopt( curl, HB_CURLOPT_NOPROGRESS, .F. )
       ? curl_easy_setopt( curl, HB_CURLOPT_VERBOSE, lVerbose )
@@ -201,5 +211,7 @@ STATIC FUNCTION CurGet()
    RETURN { Row(), Col() }
 
 STATIC PROCEDURE CurSet( a )
+
    SetPos( a[ 1 ], a[ 2 ] )
+
    RETURN

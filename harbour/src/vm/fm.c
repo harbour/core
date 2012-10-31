@@ -259,13 +259,13 @@
       !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC ) )
 
    static HB_CRITICAL_NEW( s_fmMtx );
-#  define HB_FM_LOCK          hb_threadEnterCriticalSection( &s_fmMtx );
-#  define HB_FM_UNLOCK        hb_threadLeaveCriticalSection( &s_fmMtx );
+#  define HB_FM_LOCK()        hb_threadEnterCriticalSection( &s_fmMtx )
+#  define HB_FM_UNLOCK()      hb_threadLeaveCriticalSection( &s_fmMtx )
 
 #else
 
-#  define HB_FM_LOCK
-#  define HB_FM_UNLOCK
+#  define HB_FM_LOCK()
+#  define HB_FM_UNLOCK()
 
 #endif
 
@@ -366,17 +366,17 @@ typedef void * PHB_MEMINFO;
 #  undef HB_ATOM_SET
    static HB_FORCEINLINE void hb_counterIncrement( volatile HB_COUNTER * p )
    {
-      HB_FM_LOCK
+      HB_FM_LOCK();
       ++(*p);
-      HB_FM_UNLOCK
+      HB_FM_UNLOCK();
    }
 #  define HB_ATOM_INC( p )    hb_counterIncrement( p )
    static HB_FORCEINLINE int hb_counterDecrement( volatile HB_COUNTER * p )
    {
       int iResult;
-      HB_FM_LOCK
+      HB_FM_LOCK();
       iResult = --(*p) != 0;
-      HB_FM_UNLOCK
+      HB_FM_UNLOCK();
       return iResult;
    }
 #  define HB_ATOM_DEC( p )    hb_counterDecrement( p )
@@ -507,9 +507,9 @@ void hb_xinit_thread( void )
 
    if( hb_stack.allocator == NULL )
    {
-      HB_FM_LOCK
+      HB_FM_LOCK();
       hb_stack.allocator = ( void * ) hb_mspace_alloc();
-      HB_FM_UNLOCK
+      HB_FM_UNLOCK();
    }
 #endif
 }
@@ -523,10 +523,10 @@ void hb_xexit_thread( void )
    if( pm )
    {
       hb_stack.allocator = NULL;
-      HB_FM_LOCK
+      HB_FM_LOCK();
       if( --pm->count == 0 )
          mspace_trim( pm->ms, 0 );
-      HB_FM_UNLOCK
+      HB_FM_UNLOCK();
    }
 #endif
 }
@@ -534,7 +534,7 @@ void hb_xexit_thread( void )
 void hb_xclean( void )
 {
 #if defined( HB_FM_DLMT_ALLOC )
-   HB_FM_LOCK
+   HB_FM_LOCK();
    {
       int i, imax, icount;
 
@@ -558,7 +558,7 @@ void hb_xclean( void )
          hb_vmUpdateAllocator( hb_mspace_update, icount );
       }
    }
-   HB_FM_UNLOCK
+   HB_FM_UNLOCK();
 #elif defined( HB_FM_DL_ALLOC )
    dlmalloc_trim( 0 );
 #endif
@@ -610,7 +610,7 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
    {
       PHB_TRACEINFO pTrace;
 
-      HB_FM_LOCK
+      HB_FM_LOCK();
 
       if( ! s_pFirstBlock )
       {
@@ -656,7 +656,7 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
       if( s_nMemoryMaxBlocks < s_nMemoryBlocks )
          s_nMemoryMaxBlocks = s_nMemoryBlocks;
 
-      HB_FM_UNLOCK
+      HB_FM_UNLOCK();
 
 #ifdef HB_PARANOID_MEM_CHECK
       memset( HB_MEM_PTR( pMem ), HB_MEMFILER, nSize );
@@ -696,7 +696,7 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
    {
       PHB_TRACEINFO pTrace;
 
-      HB_FM_LOCK
+      HB_FM_LOCK();
 
       if( ! s_pFirstBlock )
       {
@@ -742,7 +742,7 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
       if( s_nMemoryMaxBlocks < s_nMemoryBlocks )
          s_nMemoryMaxBlocks = s_nMemoryBlocks;
 
-      HB_FM_UNLOCK
+      HB_FM_UNLOCK();
 
 #ifdef HB_PARANOID_MEM_CHECK
       memset( HB_MEM_PTR( pMem ), HB_MEMFILER, nSize );
@@ -799,7 +799,7 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
 
       HB_FM_CLRSIG( pMem, nMemSize );
 
-      HB_FM_LOCK
+      HB_FM_LOCK();
 
 #ifdef HB_PARANOID_MEM_CHECK
       pMem = malloc( HB_ALLOC_SIZE( nSize ) );
@@ -839,7 +839,7 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
             s_pLastBlock = ( PHB_MEMINFO ) pMem;
       }
 
-      HB_FM_UNLOCK
+      HB_FM_UNLOCK();
    }
    else
       pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( nSize ) );
@@ -893,7 +893,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
          if( HB_FM_GETSIG( pMem, pMemBlock->nSize ) != HB_MEMINFO_SIGNATURE )
             hb_errInternal( HB_EI_XMEMOVERFLOW, NULL, NULL, NULL );
 
-         HB_FM_LOCK
+         HB_FM_LOCK();
 
          s_nMemoryConsumed -= pMemBlock->nSize + sizeof( HB_COUNTER );
          s_nMemoryBlocks--;
@@ -908,7 +908,7 @@ void hb_xfree( void * pMem )            /* frees fixed memory */
          else
             s_pLastBlock = pMemBlock->pPrevBlock;
 
-         HB_FM_UNLOCK
+         HB_FM_UNLOCK();
 
          pMemBlock->u32Signature = 0;
          HB_FM_CLRSIG( pMem, pMemBlock->nSize );

@@ -111,7 +111,7 @@ FUNCTION xhb_setTraceStack( xLevel )
 
    RETURN nTraceLevel
 
-//--------------------------------------------------------------//
+// --------------------------------------------------------------//
 
 FUNCTION TraceLog( ... )
 
@@ -172,8 +172,11 @@ FUNCTION TraceLog( ... )
 
 //
 
-STATIC FUNCTION cWithPath( cFilename )
 /* Ensure cFilename contains path. If it doesn't, add current directory to the front of it */
+STATIC FUNCTION cWithPath( cFilename )
+
    LOCAL cPath
-   hb_fnamesplit( cFilename, @cPath )
+
+   hb_FNameSplit( cFilename, @cPath )
+
    RETURN iif( Empty( cPath ), "." + hb_ps(), "" ) + cFilename

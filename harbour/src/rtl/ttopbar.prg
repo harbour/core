@@ -118,6 +118,7 @@ METHOD addItem( oItem ) CLASS TOPBARMENU
    RETURN Self
 
 METHOD delItem( nPos ) CLASS TOPBARMENU
+
    LOCAL nLen
    LOCAL aItems
    LOCAL nWidth
@@ -130,13 +131,13 @@ METHOD delItem( nPos ) CLASS TOPBARMENU
       ASize( ::aItems, --::nItemCount )
 
       IF ::nWidth == nLen + 2
-          aItems := ::aItems
-          nLen := ::nItemCount
-          nWidth := 0
-          FOR nPos := 1 TO nLen
-             nWidth := Max( __CapMetrics( aItems[ nPos ] ), nWidth )
-          NEXT
-          ::nWidth := nWidth
+         aItems := ::aItems
+         nLen := ::nItemCount
+         nWidth := 0
+         FOR nPos := 1 TO nLen
+            nWidth := Max( __CapMetrics( aItems[ nPos ] ), nWidth )
+         NEXT
+         ::nWidth := nWidth
       ENDIF
    ENDIF
 
@@ -162,7 +163,7 @@ METHOD display() CLASS TOPBARMENU
 
    DispBegin()
 
-   hb_dispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ), cColor1 )
+   hb_DispOutAt( nRow, nLeft, Space( nRight - nLeft + 1 ), cColor1 )
 
    FOR nItem := 1 TO nItemCount
 
@@ -197,12 +198,12 @@ METHOD display() CLASS TOPBARMENU
          ENDIF
       ENDIF
 
-      hb_dispOutAt( nRow, nLeft, cCaption,;
+      hb_DispOutAt( nRow, nLeft, cCaption,;
          iif( nItem == nCurrent, cColor2,;
             iif( aItems[ nItem ]:enabled, cColor1, hb_ColorIndex( ::cColorSpec, 4 ) ) ) )
 
       IF aItems[ nItem ]:enabled .AND. nPos > 0
-         hb_dispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ),;
+         hb_DispOutAt( nRow, nLeft + nPos - 1, SubStr( cCaption, nPos, 1 ),;
             iif( nItem == nCurrent, hb_ColorIndex( ::cColorSpec, 3 ), hb_ColorIndex( ::cColorSpec, 2 ) ) )
       ENDIF
 
@@ -282,12 +283,14 @@ METHOD getPrev() CLASS TOPBARMENU
 
 METHOD getAccel( nKey ) CLASS TOPBARMENU
 
-   LOCAL nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
-                            K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;
-                            K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
-                            K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
-                            K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4,;
-                            K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
+   LOCAL nIndex := AScan( { ;
+      K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F, ;
+      K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L, ;
+      K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R, ;
+      K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X, ;
+      K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4, ;
+      K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
+
    LOCAL cKey
    LOCAL item
 
@@ -363,12 +366,14 @@ METHOD select( nPos ) CLASS TOPBARMENU
       ::nCurrent != nPos .AND. ;
       ::aItems[ nPos ]:enabled ) .OR. nPos == 0
 
-//    IF ::isOpen() .AND. ;
-//       ::nCurrent > 0 .AND. ;
-//       ::aItems[ ::nCurrent ]:isPopUp()
-//
-//       ::aItems[ ::nCurrent ]:data:close()
-//    ENDIF
+#if 0
+      IF ::isOpen() .AND. ;
+         ::nCurrent > 0 .AND. ;
+         ::aItems[ ::nCurrent ]:isPopUp()
+
+         ::aItems[ ::nCurrent ]:data:close()
+      ENDIF
+#endif
 
       ::nCurrent := nPos
    ENDIF
@@ -447,12 +452,13 @@ METHOD New( nRow, nLeft, nRight ) CLASS TOPBARMENU
       ::cColorSpec := "N/W,W/N,W+/W,W+/N,N+/W,W/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BACKGROUND ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BORDER     )
+      ::cColorSpec := ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BACKGROUND ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BORDER     )
    ENDIF
 
    RETURN Self

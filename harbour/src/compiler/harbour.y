@@ -1232,7 +1232,7 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB
                {
                  HB_COMP_PARAM->pLastDeclared->cType = $7->cVarType;
 
-                 if ( HB_TOUPPER( $7->cVarType ) == 'S' )
+                 if( HB_TOUPPER( $7->cVarType ) == 'S' )
                  {
                    HB_COMP_PARAM->pLastDeclared->pClass = hb_compClassFind( HB_COMP_PARAM, $7->szFromClass );
                    if( ! HB_COMP_PARAM->pLastDeclared->pClass )
@@ -1267,7 +1267,7 @@ DecMethod  : IdentName '(' { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_C
                if( HB_COMP_PARAM->pLastMethod )
                {
                  HB_COMP_PARAM->pLastMethod->cType = $6->cVarType;
-                 if ( HB_TOUPPER( $6->cVarType ) == 'S' )
+                 if( HB_TOUPPER( $6->cVarType ) == 'S' )
                  {
                    HB_COMP_PARAM->pLastMethod->pClass = hb_compClassFind( HB_COMP_PARAM, $6->szFromClass );
                    if( ! HB_COMP_PARAM->pLastMethod->pClass )
@@ -1295,7 +1295,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                      cVarType = HB_COMP_PARAM->cDataListType;
 
                   HB_COMP_PARAM->pLastMethod->cType = cVarType;
-                  if ( HB_TOUPPER( cVarType ) == 'S' )
+                  if( HB_TOUPPER( cVarType ) == 'S' )
                   {
                      pClass = hb_compClassFind( HB_COMP_PARAM, $3->szFromClass );
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
@@ -1326,7 +1326,7 @@ DecData    : IdentName { HB_COMP_PARAM->pLastMethod = hb_compMethodAdd( HB_COMP_
                   HB_COMP_PARAM->pLastMethod->cParamTypes[0] = cVarType;
                   HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
 
-                  if ( HB_TOUPPER( cVarType ) == 'S' )
+                  if( HB_TOUPPER( cVarType ) == 'S' )
                   {
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
                   }

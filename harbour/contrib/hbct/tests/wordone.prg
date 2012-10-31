@@ -61,9 +61,9 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? [  wordone("12ABAB12")       == "12AB12" ? --> "] + wordone( "12ABAB12" )       + ["]
-   ? [  wordone("1AAAA2")         == "1AAAA2" ? --> "] + wordone( "1AAAA2" )         + ["]
-   ? [  wordone("12", "1212ABAB") == "12ABAB" ? --> "] + wordone( "12", "1212ABAB" ) + ["]
+   ? '  wordone("12ABAB12")       == "12AB12" ? --> "' + wordone( "12ABAB12" )       + '"'
+   ? '  wordone("1AAAA2")         == "1AAAA2" ? --> "' + wordone( "1AAAA2" )         + '"'
+   ? '  wordone("12", "1212ABAB") == "12ABAB" ? --> "' + wordone( "12", "1212ABAB" ) + '"'
    ?
 
    ? "End test of WORDONE()"

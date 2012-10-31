@@ -34,6 +34,7 @@
 #if defined( __HBSCRIPT__HBMK_PLUGIN )
 
 FUNCTION hbmk_plugin_tpl( hbmk )
+
    LOCAL tmp
 
    IF hbmk[ "lTRACE" ]
@@ -63,7 +64,9 @@ FUNCTION hbmk_plugin_tpl( hbmk )
 #else
 
 PROCEDURE Main()
+
    ? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+
    RETURN
 
 #endif

@@ -8,8 +8,8 @@ PROCEDURE Main()
    ? CMonth( Date() + 31 )
    ? CMonth( Date() + 60 )
 
-   ? CDow( Date() )
-   ? CDow( Date() + 6 )
-   ? CDow( Date() + 7 )
+   ? CDoW( Date() )
+   ? CDoW( Date() + 6 )
+   ? CDoW( Date() + 7 )
 
    RETURN

@@ -61,7 +61,9 @@
 /* NOTE: Harbour port accepts a path as a string for checking
          for writability. It also won't detected unformatted
          state and "not ready" state. [vszakats] */
+
 FUNCTION FT_FLOPTST( nDriveNum )
+
    LOCAL cFileName
    LOCAL fhnd
 

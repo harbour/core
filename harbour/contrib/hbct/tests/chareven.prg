@@ -61,9 +61,9 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? [  chareven(" 1 2 3 4 5") == "12345" ? --> "] + chareven( " 1 2 3 4 5" ) + ["]
-   ? [  chareven(" 1 2 3 4 ")  == "1234"  ? --> "] + chareven( " 1 2 3 4 " )  + ["]
-   ? [  chareven(" ")          == ""      ? --> "] + chareven( " " )          + ["]
+   ? '  chareven(" 1 2 3 4 5") == "12345" ? --> "' + chareven( " 1 2 3 4 5" ) + '"'
+   ? '  chareven(" 1 2 3 4 ")  == "1234"  ? --> "' + chareven( " 1 2 3 4 " )  + '"'
+   ? '  chareven(" ")          == ""      ? --> "' + chareven( " " )          + '"'
 
    ? "End test of CHAREVEN()"
    ?

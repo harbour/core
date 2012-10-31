@@ -9,8 +9,8 @@
 #include "sql.ch"
 
 #xcommand GET ROW <nRow> INTO <cVar> => ;
-  <cVar> := Space( 128 ) ;;
-  SQLGetData( hStmt, <nRow>, SQL_CHAR, Len( <cVar> ), @<cVar> )
+      <cVar> := Space( 128 ) ;;
+      SQLGetData( hStmt, <nRow>, SQL_CHAR, Len( <cVar> ), @ <cVar> )
 
 PROCEDURE Main()
 
@@ -46,7 +46,7 @@ PROCEDURE Main()
    ? "SQL: SELECT FROM test"
    SQLExecDirect( hStmt, "SELECT FROM test" )
 
-   ? SQLError( ,,hStmt, @cError1, @nError, @cError2 )
+   ? SQLError( ,, hStmt, @cError1, @nError, @cError2 )
    ? "SQLERROR", cError1, nError, cError2
    ? SQLGetDiagRec( SQL_HANDLE_STMT, hStmt, 1, @cError1, @nError, @cError2 )
    ? "SQLGETDIAGREC", cError1, nError, cError2

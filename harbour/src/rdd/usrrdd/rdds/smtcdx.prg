@@ -68,10 +68,13 @@ REQUEST DBFFPT
 ANNOUNCE SMTCDX
 
 FUNCTION SMTCDX_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSuperRddID )
+
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               "DBFCDX", {}, pSuperRddID ) /* We are inheriting from DBFCDX */
+      "DBFCDX", {}, pSuperRddID ) /* We are inheriting from DBFCDX */
 
 INIT PROCEDURE SMTCDX_INIT()
+
    rddRegister( "SMTCDX", RDT_FULL )
    rddInfo( RDDI_MEMOTYPE, DB_MEMO_SMT, "SMTCDX" )
+
    RETURN

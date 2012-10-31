@@ -161,9 +161,10 @@ METHOD ExcelWriterXML_Sheet:writeData( type, row, column, xData, style, formula 
       styleID := NIL
    ENDIF
 
-   cell := { "type"      => type   , ;
+   cell := { ;
+      "type"      => type, ;
       "style"     => styleID, ;
-      "data"      => xData  , ;
+      "data"      => xData, ;
       "formula"   => formula }
    IF hb_HPos( ::cells, row ) > 0
       hcol := ::cells[ row ]

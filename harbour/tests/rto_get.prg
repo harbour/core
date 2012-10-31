@@ -81,9 +81,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    LOCAL cStr05 := ""
    LOCAL cStr06 := ""
    LOCAL cStr07 := ""
-//#ifdef NULL
    LOCAL dDate01
-//#endif
 
    LOCAL bOldBlock
    LOCAL o

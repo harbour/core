@@ -65,7 +65,7 @@ CREATE CLASS THtmlFrameSet
    METHOD END ()
 
    METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
-   marginwidth, marginheight, cTarget, cScrolling )
+      marginwidth, marginheight, cTarget, cScrolling )
 
 ENDCLASS
 
@@ -88,9 +88,9 @@ METHOD New( cFName, cTitle ) CLASS THtmlFrameSet
    ENDIF
 
    cStr += "<html>" + CRLF() + ;
-                             " <head>" + CRLF() + ;
-                             "  <title>" + ::Title + "</title>" + CRLF() + ;
-                             " </head>" + CRLF()
+      " <head>" + CRLF() + ;
+      "  <title>" + ::Title + "</title>" + CRLF() + ;
+      " </head>" + CRLF()
 
    ::cStr += cStr
 
@@ -167,7 +167,7 @@ METHOD END () CLASS THtmlFrameSet
 
 
 METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
-                 marginwidth, marginheight, cTarget, cScrolling ) CLASS THtmlFrameSet
+      marginwidth, marginheight, cTarget, cScrolling ) CLASS THtmlFrameSet
 
    LOCAL cStr
 

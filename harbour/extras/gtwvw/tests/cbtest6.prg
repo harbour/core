@@ -56,19 +56,19 @@ PROCEDURE Main()
 
    LOCAL getlist := {}
    LOCAL mname := PadR( "Budyanto Dj.", 30 ), msex := "MALE", mage := 17, mstat := "married"
-   LOCAL __nCBid__, __temp__  //these two are temporary var required by CB get creation
+   LOCAL __nCBid__, __temp__  // these two are temporary var required by CB get creation
 
    WVW_SetCodePage( NIL, 255 )
    WVW_SetLineSpacing( NIL, 4 )
    WVW_SetLSpaceColor( NIL, 0 )
-   WVW_cbSetFont( NIL, "Arial", 14 )  //std: 20-2
+   WVW_cbSetFont( NIL, "Arial", 14 )  // std: 20-2
 // Set( _SET_TRACESTACK, 0 )
 
 // wvw_setmousemove( , .T. )
 
    CLS
 
-  // reset combobox list:
+   // reset combobox list:
    s_aComboList := {}
 
    @ 0, 0 SAY     "Name :" GET mname PICT "@K"
@@ -80,7 +80,7 @@ PROCEDURE Main()
    READ
 
    // disable all comboboxes:
-   AEval( s_aComboList, {| x | wvw_cbenable( NIL, x[1], .F. ) } )
+   AEval( s_aComboList, {| x | wvw_cbenable( NIL, x[ 1 ], .F. ) } )
 
    DevPos( 5, 0 )
    ? "name: '" + mname + "'"
@@ -133,11 +133,11 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    IF Empty( GetList )
       MyAlert( "Bad practice: you left an active combobox, but READ already ended" )
-      RETURN NIL//ignore this event
+      RETURN NIL // ignore this event
    ENDIF
 
    DO CASE
-   CASE nEvent == 3 //CBN_SETFOCUS
+   CASE nEvent == 3 // CBN_SETFOCUS
       i := AScan( GetList, {| x | x:Name == cVar } )
       IF i > 0
          /* !oGet:HasFocus means
@@ -169,22 +169,22 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
              */
 
             SetWinFocus( nWinNum )
-            MSetPos( GetList[i]:row, GetList[i]:col + 1 )
+            MSetPos( GetList[ i ]:row, GetList[ i ]:col + 1 )
             hb_keyPut( K_LBUTTONDOWN )
-         ENDIF //oGet:HasFocus
+         ENDIF // oGet:HasFocus
 
-      ELSE  //i==0
+      ELSE  // i==0
          /* there's no GET object beneath the combobox.
           * This must be a combobox living in the wild.
           * Do what you want with it, we do nothing here.
           */
       ENDIF
 
-   CASE nEvent == 4 //CBN_KILLFOCUS
+   CASE nEvent == 4 // CBN_KILLFOCUS
       // put current content of combobox into GET variable beneath it.
       cCurSel := wvw_cbGetCurText( nWinNum, nId )
       oGet:varput( cCurSel )
-      oGet:display() //this is optional
+      oGet:display() // this is optional
 
    ENDCASE
 
@@ -250,13 +250,13 @@ FUNCTION CBreader( oGet )
       ENDIF
 
    ELSEIF HB_ISBLOCK( bKeyBlock := SetKey( nKey ) )
-      oGetList:GetDoSetKey( bKeyBlock )  //eval(bKeyBlock)
+      oGetList:GetDoSetKey( bKeyBlock )  // eval(bKeyBlock)
       oGet:exitState := GE_NOEXIT
 
    ENDIF
 
    IF oGet:exitState != GE_NOEXIT
-      SetWinFocus( NIL )  //assume current window
+      SetWinFocus( NIL )  // assume current window
       oGet:killfocus()
    ENDIF
 
@@ -267,8 +267,9 @@ FUNCTION CBreader( oGet )
 STATIC FUNCTION MoveToGet( GetList, nPos )
 
    LOCAL i
-   LOCAL oGetList := __GetListActive( )
+   LOCAL oGetList := __GetListActive()
    LOCAL oGet
+
    // leave current active get
    oGet := GetActive()
 
@@ -277,7 +278,7 @@ STATIC FUNCTION MoveToGet( GetList, nPos )
          IF GetPostValidate( oGet )
             oGet:updatebuffer()
          ELSE
-            //oGet:undo()
+            // oGet:undo()
             RETURN .F.
          ENDIF
       ENDIF
@@ -295,6 +296,7 @@ STATIC FUNCTION MoveToGet( GetList, nPos )
 STATIC FUNCTION SetWinFocus( nWinNum )
 
    LOCAL hWnd := wvw_getWindowHandle( nWinNum )
+
    WIN_SETFOCUS( hWnd )
 
    RETURN NIL

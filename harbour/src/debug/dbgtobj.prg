@@ -91,11 +91,11 @@ METHOD New( oObject, cVarName, lEditable ) CLASS HBDbObject
    aMethods := {}
    FOR EACH cMsg IN aMessages
       IF Left( cMsg, 1 ) == "_" .AND. ;
-         HB_AScan( aMessages, cMsgAcc := Substr( cMsg, 2 ),,, .T. ) != 0
+         hb_AScan( aMessages, cMsgAcc := SubStr( cMsg, 2 ),,, .T. ) != 0
          xValue := __dbgObjGetValue( oObject, cMsgAcc )
          AAdd( ::pItems, { cMsgAcc, xValue, .T. } )
          AAdd( ::AllNames, cMsgAcc )
-      ELSEIF HB_AScan( aMessages, "_" + cMsg,,, .T. ) == 0
+      ELSEIF hb_AScan( aMessages, "_" + cMsg,,, .T. ) == 0
          AAdd( aMethods, cMsg )
       ENDIF
    NEXT
@@ -121,7 +121,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    LOCAL oCol
    LOCAL nMaxLen
 
-   IF nSize < MaxRow()-2
+   IF nSize < MaxRow() - 2
       IF nRow != NIL
          oWndSets := HBDbWindow():New( nRow, 5, iif( nRow + nSize + 1 < MaxRow() - 2, nRow + nSize + 1, MaxRow() - 2 ), MaxCol() - 5, ::objname + " is of class: " + ::TheObj:ClassName(), "N/W" )
       ELSE
@@ -144,19 +144,19 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    oBrwSets:ColorSpec := __Dbg():ClrModal()
    oBrwSets:GoTopBlock := {|| ::Arrayindex := 1 }
    oBrwSets:GoBottomBlock := {|| ::arrayindex := Len( ::ArrayReference ) }
-   oBrwSets:SkipBlock := {| nSkip, nPos | nPos := ::arrayindex,;
-                          ::arrayindex := iif( nSkip > 0, Min( ::arrayindex + nSkip, Len( ::arrayReference ) ),;
-                          Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
+   oBrwSets:SkipBlock := {| nSkip, nPos | nPos := ::arrayindex, ;
+      ::arrayindex := iif( nSkip > 0, Min( ::arrayindex + nSkip, Len( ::arrayReference ) ), ;
+      Max( 1, ::arrayindex + nSkip ) ), ::arrayindex - nPos }
 
    nMaxLen := ArrayMaxLen( ::AllNames )
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "",;
-                    {|| PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxLen ) } ) )
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", ;
+      {|| PadR( ::ArrayReference[ ::arrayindex, 1 ], nMaxLen ) } ) )
    oCol:width := nMaxLen
    oCol:ColorBlock := {|| { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze := 1
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( HB_ISSTRING( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ],;
-      ::ArrayReference[ ::ArrayIndex, 2 ],;
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( HB_ISSTRING( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ], ;
+      ::ArrayReference[ ::ArrayIndex, 2 ], ;
       PadR( __dbgValToStr( __dbgObjGetValue( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
    oBrwSets:Cargo := 1 // Actual highlighted row
@@ -165,7 +165,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    oBrwSets:colPos := 2
    ::aWindows[ ::nCurWindow ]:bPainted    := {|| oBrwSets:ForceStable() }
    ::aWindows[ ::nCurWindow ]:bKeyPressed := {| nKey | ::SetsKeyPressed( nKey, oBrwSets, Len( aArray ), ::ArrayReference ) }
-   ::aWindows[ ::nCurwindow ]:cCaption := ::objname + " is of class: " +::TheObj:ClassName()
+   ::aWindows[ ::nCurwindow ]:cCaption := ::objname + " is of class: " + ::TheObj:ClassName()
 
    SetCursor( SC_NONE )
 
@@ -196,8 +196,8 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
    cValue := PadR( __dbgValToStr( cValue ), column:Width )
 
    IF __dbgInput( Row(), oBrowse:nLeft + oBrowse:GetColumn( 1 ):width + 1,, @cValue, ;
-                  {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
-      BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
+      {| cValue | iif( Type( cValue ) == "UE", ( __dbgAlert( "Expression error" ), .F. ), .T. ) } )
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          __dbgObjSetValue( ::TheObj, pitem[ nSet, 1 ], &cValue )
       RECOVER USING oErr
          __dbgAlert( oErr:description )
@@ -273,9 +273,9 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
          ELSEIF HB_ISOBJECT( aArray[ nSet, 2 ] )
             HBDbObject():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
          ELSEIF ( HB_ISSTRING( aArray[ nSet, 2 ] ) .AND. ;
-                  !aArray[ nSet, 3 ] ) .OR. ;
-                HB_ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
-                HB_ISPOINTER( aArray[ nSet, 2 ] )
+            !aArray[ nSet, 3 ] ) .OR. ;
+            HB_ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
+            HB_ISPOINTER( aArray[ nSet, 2 ] )
             __dbgAlert( "Value cannot be edited" )
          ELSE
             IF ::lEditable
@@ -283,7 +283,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
                ::doGet( oBrwSets, ::arrayReference, nSet )
                oBrwSets:RefreshCurrent()
                oBrwSets:ForceStable()
-            else
+            ELSE
                __dbgAlert( "Value cannot be edited" )
             ENDIF
          ENDIF
@@ -317,11 +317,11 @@ STATIC FUNCTION __dbgObjGetValue( oObject, cVar, lCanAcc )
    LOCAL xResult
    LOCAL oErr
 
-   BEGIN SEQUENCE WITH {|| break() }
+   BEGIN SEQUENCE WITH {|| Break() }
       xResult := __dbgSENDMSG( nProcLevel, oObject, cVar )
       lCanAcc := .T.
    RECOVER
-      BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          /* Try to access variables using class code level */
          xResult := __dbgSENDMSG( 0, oObject, cVar )
          lCanAcc := .T.
@@ -338,10 +338,10 @@ STATIC FUNCTION __dbgObjSetValue( oObject, cVar, xValue )
    LOCAL nProcLevel := __Dbg():nProcLevel
    LOCAL oErr
 
-   BEGIN SEQUENCE WITH {|| break() }
+   BEGIN SEQUENCE WITH {|| Break() }
       __dbgSENDMSG( nProcLevel, oObject, "_" + cVar, xValue )
    RECOVER
-      BEGIN SEQUENCE WITH {| oErr | break( oErr ) }
+      BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
          /* Try to access variables using class code level */
          __dbgSENDMSG( 0, oObject, "_" + cVar, xValue )
       RECOVER USING oErr

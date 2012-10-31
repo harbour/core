@@ -29,9 +29,9 @@
       The last is the default behaviour and switches any argument error
       throwing off.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -41,7 +41,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -62,9 +62,9 @@
       The CTCINIT() function initializes the C source part of the CT3
       library. Do not call this function directly.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -95,9 +95,9 @@
       The CTCEXIT() function uninitializes the C part of the CT3 library.
       Do not call this function directly.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$

@@ -24,11 +24,11 @@
       This function allows you to implement the popular "shadow effect."  It
       draws a shadow using the specified screen coordinates.  The shadow
       is drawn along the bottom and right side of the specified region.
-  
+
       The source code is written to TASM IDEAL mode.
    $EXAMPLES$
       FT_Shadow( 10, 10, 15, 50, 8 )   // draw a dim shadow
-  
+
       FT_Shadow( 10, 10, 15, 40, 47 )  // draw a green shadow
    $END$
  */

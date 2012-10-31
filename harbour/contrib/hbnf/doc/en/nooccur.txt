@@ -14,9 +14,9 @@
                   [, <lIgnoreCase> ] )      -> <nOccurrences>
    $ARGUMENTS$
       <cCheckFor> is the string to search for
-  
+
       <cCheckIn> is the string to search
-  
+
       <lIgnoreCase> is a boolean variable to force case sensitivity
       (optional, defaults to .F.).
    $RETURNS$
@@ -27,12 +27,12 @@
    $EXAMPLES$
       // Find the number of times "the" appears in cMemoString, case
       // insensitive
-  
+
       nNoOfOccurrences := FT_NOOCCUR( "the", cMemoString )
-  
+
       // Find the number of times "the" appears in cMemoString, case
       // sensitive
-  
+
       nNoOfOccurrences := FT_NOOCCUR( "the", cMemoString, .T. )
    $END$
  */

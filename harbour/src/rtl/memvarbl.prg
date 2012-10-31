@@ -52,10 +52,10 @@
 
 #include "hbmemvar.ch"
 
-FUNCTION MEMVARBLOCK( cMemvar )
+FUNCTION MemVarBlock( cMemvar )
 
-   IF HB_ISSTRING( cMemvar ) .AND. __mvEXIST( cMemvar )
-      RETURN {| x | iif( x == NIL, __mvGET( cMemvar ), __mvPUT( cMemvar, x ) ) }
+   IF HB_ISSTRING( cMemvar ) .AND. __mvExist( cMemvar )
+      RETURN {| x | iif( x == NIL, __mvGet( cMemvar ), __mvPut( cMemvar, x ) ) }
    ENDIF
 
    RETURN NIL

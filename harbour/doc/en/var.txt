@@ -144,14 +144,14 @@
 
          RETURN
 
-      PROCEDURE Test()
+      PROCEDURE Main()
          PRIVATE mPrivate
 
-         mPrivate :="PRIVATE from Test()"
-         ? mPrivate           //PRIVATE from TEST()
+         mPrivate := "PRIVATE from Main()"
+         ? mPrivate           //PRIVATE from Main()
          RELEASE mPrivate
          ? mPrivate           //NIL
-         mPrivate :="Again in Test()"
+         mPrivate := "Again in Main()"
 
          RETURN
    $STATUS$
@@ -840,7 +840,7 @@
    $EXAMPLES$
       See Test(s)
    $TESTS$
-      PROCEDURE Test()
+      PROCEDURE Main()
          ? ValType( Array( 1 ) )   // "A"
          ? ValType( {|| 1 + 1 } )  // "B"
          ? ValType( "HARBOUR" )    // "C"
@@ -900,12 +900,12 @@
    $TESTS$
       PROCEDURE Main()
          LOCAL cVar := "Test local"
-         PRIVATE nVar := 0
+         PRIVATE m_nVar := 0
 
-         Test( @cVar, @nVar, cVar, nVar )
+         Test( @cVar, @m_nVar, cVar, m_nVar )
          RETURN
 
-      PROCEDURE Test( Arg1, Arg2, Arg3, Arg4 )
+      STATIC PROCEDURE Test( Arg1, Arg2, Arg3, Arg4 )
          ? hb_isbyref( @Arg1 )        // .T.
          ? hb_isbyref( @Arg2 )        // .T.
          ? hb_isbyref( @Arg3 )        // .F.

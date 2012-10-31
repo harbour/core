@@ -127,19 +127,24 @@ METHOD New( nTop, nLeft, nBottom, nRight, oParentWindow ) CLASS HBDbBrowser
    RETURN Self
 
 METHOD Configure()
+
    ::rowCount := ::nBottom - ::nTop + 1
    AFill( ASize( ::aRowState, ::rowCount ), .F. )
    ::lConfigured := .T.
+
    RETURN Self
 
 METHOD SetColorSpec( cColors )
+
    IF HB_ISSTRING( cColors )
       ::cColorSpec := cColors
-      ::aColorSpec := hb_aTokens( ::cColorSpec, "," )
+      ::aColorSpec := hb_ATokens( ::cColorSpec, "," )
    ENDIF
+
    RETURN ::cColorSpec
 
 METHOD MoveCursor( nSkip )
+
    LOCAL nSkipped
 
    nSkipped := ::GoTo( ::rowPos + ::nFirstVisible - 1 + nSkip )
@@ -153,9 +158,11 @@ METHOD MoveCursor( nSkip )
          ::RefreshAll()
       ENDIF
    ENDIF
+
    RETURN Self
 
 METHOD ForceStable()
+
    LOCAL nRow, nCol, xData, oCol, nColX, nWid, aClr, nClr
 
    IF !::lConfigured
@@ -166,7 +173,7 @@ METHOD ForceStable()
       IF !::aRowState[ nRow ]
          ::GoTo( ::nFirstVisible + nRow - 1 )
          IF ::hitBottom
-            hb_dispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
+            hb_DispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
          ELSE
             nColX := ::nLeft
             FOR nCol := 1 TO Len( ::aColumns )
@@ -184,7 +191,7 @@ METHOD ForceStable()
                   IF nWid == NIL
                      nWid := Len( xData )
                   ENDIF
-                  hb_dispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
+                  hb_DispOutAt( ::nTop + nRow - 1, nColX, PadR( xData, nWid ) + iif( nCol < Len( ::aColumns ), " ", "" ), ::aColorSpec[ nClr ] )
                   nColX += nWid + 1
                ENDIF
             NEXT
@@ -195,9 +202,11 @@ METHOD ForceStable()
    ::GoTo( ::nFirstVisible + ::rowPos - 1 )
    SetPos( ::nTop + ::rowPos - 1, ::nLeft )
    DispEnd()
+
    RETURN Self
 
 METHOD GoTo( nRow )
+
    LOCAL nOldRow := ::nFirstVisible + ::rowPos - 1
    LOCAL nSkipped := 0
 
@@ -208,15 +217,19 @@ METHOD GoTo( nRow )
       nSkipped := Eval( ::skipBlock, nRow - 1 )
       ::hitBottom := ( nSkipped != nRow - 1 )
    ENDIF
+
    RETURN nSkipped - nOldRow + 1
 
 METHOD GoBottom()
+
    DO WHILE !::hitBottom
       ::PageDown()
    ENDDO
+
    RETURN Self
 
 METHOD Resize( nTop, nLeft, nBottom, nRight )
+
    LOCAL lResize := .F.
 
    IF nTop != NIL .AND. nTop != ::nTop

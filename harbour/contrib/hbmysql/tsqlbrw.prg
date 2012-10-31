@@ -215,7 +215,7 @@ STATIC FUNCTION Skipper( nSkip, oQuery )
    CASE nSkip > 0
       DO WHILE i < nSkip           // Skip Foward
 
-         //DAVID: change in TMySQLquery:eof() definition  if oQuery:eof()
+         // DAVID: change in TMySQLquery:eof() definition  if oQuery:eof()
          IF oQuery:recno() == oQuery:lastrec()
             EXIT
          ENDIF
@@ -227,7 +227,7 @@ STATIC FUNCTION Skipper( nSkip, oQuery )
    CASE nSkip < 0
       DO WHILE i > nSkip           // Skip backward
 
-         //DAVID: change in TMySQLquery:bof() definition  if oQuery:bof()
+         // DAVID: change in TMySQLquery:bof() definition  if oQuery:bof()
          IF oQuery:recno() == 1
             EXIT
          ENDIF

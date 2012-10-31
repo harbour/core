@@ -55,15 +55,16 @@
 MEMVAR _REQUEST
 
 #xcommand TEXT INTO <v> => #pragma __cstream|<v>+=%s
-//#pragma escapedstrings = on
+// #pragma escapedstrings = on
 
 FUNCTION HRBMAIN()
+
    LOCAL cHtml := ""
    LOCAL cCookie := uhttpd_GetField( "mycookie" )
    LOCAL cAction := uhttpd_GetField( "action" )
    LOCAL oCookie
 
-   //hb_ToOutDebug( "cCookie = %s, cAction = %s\n\r", hb_ValToExp( cCookie ), cAction )
+   // hb_ToOutDebug( "cCookie = %s, cAction = %s\n\r", hb_ValToExp( cCookie ), cAction )
 
    hb_default( @cCookie, "" )
    hb_default( @cAction, "" )
@@ -108,7 +109,7 @@ Pressing button you will redirect to /info page. Look at COOKIE values.
       oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )
       oCookie:SetCookie( "mycookie", cCookie )
       uhttpd_SetHeader( "Location", "/info" )
-      //uhttpd_Write( "cookie set <a href='/info'>Go to info page</a>" )
+      // uhttpd_Write( "cookie set <a href='/info'>Go to info page</a>" )
       RETURN NIL
    ENDIF
 

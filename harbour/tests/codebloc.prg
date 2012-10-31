@@ -56,9 +56,9 @@ PROCEDURE Main()
 
    yy := 5
    x  := {| xx | OutStd( hb_ntos( xx ) ), OutStd( "+" ), OutStd( hb_ntos( yy ) ), OutStd( "=" ), xx + yy }
-   OutStd( Eval( x, 1 ) )       //this is OK
+   OutStd( Eval( x, 1 ) )       // this is OK
    OutStd( hb_eol() )
-   OutStd( Eval( x, 1, 2 ) )    //this should ignore unnecesary parameters
+   OutStd( Eval( x, 1, 2 ) )    // this should ignore unnecesary parameters
 
    QOut( Eval( RetBlock(), 5 ) )
 
@@ -71,7 +71,7 @@ PROCEDURE Main()
    x2 := 6
    de := DetachLocal( x1, x2 )
    OutStd( Eval( de ) )
-   //changing the value of variables
+   // changing the value of variables
    OutStd( hb_eol() )
    x1 := 10
    x2 := 11
@@ -108,7 +108,7 @@ PROCEDURE AnotherTest( cb, a )
 
 FUNCTION DetachLocal( x, y )
 
-   //NOTE! this should work
+   // NOTE! this should work
    LOCAL z := x + y
    LOCAL cb := {|| QOut( "z=x+y=" ), QOut( z ), QOut( "x*x=" ), QOut( x * x ), QOut( "x*x+z=" ), x * x + z }
 

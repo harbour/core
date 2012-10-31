@@ -46,7 +46,7 @@ CREATE CLASS TRtf
 
    METHOD new( cfilename )
    METHOD write( csource )
-   METHOD close()
+   METHOD CLOSE()
 
 END CLASS
 
@@ -68,21 +68,20 @@ METHOD write( csource ) CLASS TRtf
    // + means a turn-on
    // - means a turn-off
    LOCAL attrib := { ;
-      { "+b"  , "\b "            } /* turn bold on*/, ;
-      { "+bu" , "\ul\b "         } /* turn bold_underline on */, ;
-      { "+bi" , "\b\i "          } /* turn bold_italic on */, ;
-      { "+bui", "\ul\b\i "       } /* turn bold_underline_italic on */, ;
-      { "+i"  , "\i "            } /* turn italic on */, ;
-      { "+il" , "\ul\i "         } /* turn italic_underline on */, ;
-      { "+u"  , "\ul "           } /* turn underline on */, ;
-      { "-b"  , "\b0 "           } /* turn bold off */, ;
-      { "-bu" , "\b0\ulnone "    } /* turn bold_underline off */, ;
-      { "-bi" , "\b0\i0 "        } /* turn bold_italic off */, ;
-      { "-bui", "\b0\i0\ulnone " } /* turn bold_underline_italic off */, ;
-      { "-i"  , "\i0 "           } /* turn italic off */, ;
-      { "-il" , "\ulnone\i0 "    } /* turn italic_underline off */, ;
-      { "-u"  , "\ulnone "       } /* turn underline off */;
-      }
+      { "+b"  , "\b "            }, ; /* turn bold on*/
+      { "+bu" , "\ul\b "         }, ; /* turn bold_underline on */
+      { "+bi" , "\b\i "          }, ; /* turn bold_italic on */
+      { "+bui", "\ul\b\i "       }, ; /* turn bold_underline_italic on */
+      { "+i"  , "\i "            }, ; /* turn italic on */
+      { "+il" , "\ul\i "         }, ; /* turn italic_underline on */
+      { "+u"  , "\ul "           }, ; /* turn underline on */
+      { "-b"  , "\b0 "           }, ; /* turn bold off */
+      { "-bu" , "\b0\ulnone "    }, ; /* turn bold_underline off */
+      { "-bi" , "\b0\i0 "        }, ; /* turn bold_italic off */
+      { "-bui", "\b0\i0\ulnone " }, ; /* turn bold_underline_italic off */
+      { "-i"  , "\i0 "           }, ; /* turn italic off */
+      { "-il" , "\ulnone\i0 "    }, ; /* turn italic_underline off */
+      { "-u"  , "\ulnone "       } } /* turn underline off */
 
    hb_fuse( csource )  // open source file
    WHILE ! hb_FEof()   // read the file line by line
@@ -130,7 +129,7 @@ METHOD write( csource ) CLASS TRtf
 
    RETURN self
 
-METHOD close() CLASS TRtf
+METHOD CLOSE() CLASS TRtf
 
    FWrite( ::nhandle, "\f1\fs16\par" + hb_eol() + "}" )
    FClose( ::nhandle )

@@ -62,6 +62,7 @@
 #define KEY_CREATE_LINK                32
 
 PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntry )
+
    LOCAL cHKEY
    LOCAL tmp
 
@@ -104,6 +105,7 @@ PROCEDURE win_regPathSplit( cRegPath, /* @ */ nHKEY, /* @ */ cKey, /* @ */ cEntr
    RETURN
 
 FUNCTION win_regRead( cRegPath, xDefault, nRegSam )
+
    LOCAL nHKEY, cKey, cEntry
 
    win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
@@ -111,6 +113,7 @@ FUNCTION win_regRead( cRegPath, xDefault, nRegSam )
    RETURN win_regGet( nHKEY, cKey, cEntry, xDefault, nRegSam )
 
 FUNCTION win_regWrite( cRegPath, xValue, nType, nRegSam )
+
    LOCAL nHKEY, cKey, cEntry
 
    win_regPathSplit( cRegPath, @nHKEY, @cKey, @cEntry )
@@ -118,6 +121,7 @@ FUNCTION win_regWrite( cRegPath, xValue, nType, nRegSam )
    RETURN win_regSet( nHKEY, cKey, cEntry, xValue, nType, nRegSam )
 
 FUNCTION win_regDelete( cRegPath, nRegSam )
+
    LOCAL nHKEY, cKey, cEntry
    LOCAL lRetVal
    LOCAL pKeyHandle
@@ -142,6 +146,7 @@ FUNCTION win_regDelete( cRegPath, nRegSam )
    RETURN lRetVal
 
 FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt, nRegSam )
+
    LOCAL xKey := win_regGet( nHKEY, cKeyName, cEntryName,, nRegSam )
 
    LOCAL cValType := ValType( xValue )
@@ -167,10 +172,13 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt, nRegSam )
    RETURN lRetVal
 
 STATIC FUNCTION Bin2U( c )
+
    LOCAL l := Bin2L( c )
+
    RETURN iif( l < 0, l + 4294967296, l )
 
 FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
+
    LOCAL xRetVal
    LOCAL pKeyHandle
    LOCAL nValueType
@@ -194,8 +202,8 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
             xRetVal := Bin2U( Right( xRetVal, 2 ) + Left( xRetVal, 2 ) )
          CASE nValueType == WIN_REG_QWORD .OR. ;
               nValueType == WIN_REG_QWORD_LITTLE_ENDIAN
-              xRetVal := hb_bitShift( Bin2U( SubStr( xRetVal, 5, 2 ) + SubStr( xRetVal, 7, 2 ) ), 32 ) +;
-                                      Bin2U( SubStr( xRetVal, 1, 2 ) + SubStr( xRetVal, 3, 2 ) )
+            xRetVal := hb_bitShift( Bin2U( SubStr( xRetVal, 5, 2 ) + SubStr( xRetVal, 7, 2 ) ), 32 ) +;
+                                    Bin2U( SubStr( xRetVal, 1, 2 ) + SubStr( xRetVal, 3, 2 ) )
          OTHERWISE
             /* Strip ending zero byte */
             IF hb_BRight( xRetVal, 1 ) == hb_BChar( 0 )
@@ -214,6 +222,7 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
    RETURN xRetVal
 
 FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
+
    LOCAL cName
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle

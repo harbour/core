@@ -55,7 +55,7 @@ cd _hb_mpkg_src
 
 echo Downloading sources with LF line ending...
 
-svn export -q --native-eol LF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+svn export -q --native-eol LF http://svn.code.sf.net/p/harbour-project/code/trunk/harbour
 
 echo Creating bz2, gz packages...
 
@@ -68,7 +68,7 @@ rm harbour-nightly.tar
 echo Downloading sources with CRLF line ending...
 
 rm -f -r harbour
-svn export -q --native-eol CRLF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+svn export -q --native-eol CRLF http://svn.code.sf.net/p/harbour-project/code/trunk/harbour
 
 echo Creating zip package...
 

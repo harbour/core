@@ -57,8 +57,6 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-//
-
 FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       cColorList, cColorShad, nTop, nLeft, nBottom, nRight )
 
@@ -262,20 +260,18 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
 
    RETURN nPassRec
 
-//
-
 STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
    LOCAL i := 0
 
    IF n == 0 .OR. LastRec() == 0
-      SKIP 0  // significant on a network
+      dbSkip( 0 )  // significant on a network
 
    ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
       WHILE i < n
-         SKIP 1
-         IF EOF() .OR. ! Eval( bWhileCond )
-            SKIP -1
+         dbSkip()
+         IF Eof() .OR. ! Eval( bWhileCond )
+            dbSkip( -1 )
             EXIT
          ENDIF
          i++
@@ -283,11 +279,11 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
    ELSEIF n < 0
       DO WHILE i > n
-         SKIP -1
-         IF BOF()
+         dbSkip( -1 )
+         IF Bof()
             EXIT
          ELSEIF ! Eval( bWhileCond )
-            SKIP
+            dbSkip()
             EXIT
          ENDIF
          i--
@@ -296,24 +292,20 @@ STATIC FUNCTION TbSkipWhil( n, bWhileCond )
 
    RETURN i
 
-//
-
 STATIC FUNCTION TbWhileTop( cKey )
 
    dbSeek( cKey )
 
    RETURN NIL
 
-//
+// SeekLast: Finds Last Record For Matching Key
+// Developed By Jon Cole
+// With softseek set on, seek the first record after condition.
+// This is accomplished by incrementing the right most character of the
+// string cKey by one ascii character.  After SEEKing the new string,
+// back up one record to get to the last record which matches cKey.
 
 STATIC FUNCTION TbWhileBot( cKey )
-
-   // SeekLast: Finds Last Record For Matching Key
-   // Developed By Jon Cole
-   // With softseek set on, seek the first record after condition.
-   // This is accomplished by incrementing the right most character of the
-   // string cKey by one ascii character.  After SEEKing the new string,
-   // back up one record to get to the last record which matches cKey.
 
    dbSeek( Left( cKey, Len( cKey ) - 1 ) + Chr( Asc( Right( cKey, 1 ) ) + 1 ), .T. )
    dbSkip( -1 )

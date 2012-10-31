@@ -57,7 +57,7 @@ PROCEDURE Main( cUrl, cFile )
    LOCAL oUrl, oClient
    LOCAL cData
 
-   SET COLOR TO w+/b
+   SetColor( "w+/b" )
    CLS
    @ 1, 6 SAY "X H A R B O U R - TIP (class based internet client protocol) test"
 

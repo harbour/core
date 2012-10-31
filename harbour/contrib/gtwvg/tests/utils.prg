@@ -48,23 +48,23 @@
 
 //
 
-THREAD STATIC t_keys_ := { , , , , , , , , , , , , , , , , , , , }
-THREAD STATIC t_pic_ := { , , , , , , , , , , , , , , , , , , , }
+THREAD STATIC t_keys_ := {, , , , , , , , , , , , , , , , , , , }
+THREAD STATIC t_pic_ := {, , , , , , , , , , , , , , , , , , , }
 
 //
 
 FUNCTION WvtSetKeys( lSet )
 
    IF lSet
-      t_keys_[ 2 ] := SetKey( K_F2, {|| WvtNextGets()         } )
-      t_keys_[ 3 ] := SetKey( K_F3, {|| WvtWindowExpand( 1 )  } )
-      t_keys_[ 4 ] := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
-      t_keys_[ 5 ] := SetKey( K_F5, {|| WvtMyBrowse()         } )
-      t_keys_[ 6 ] := SetKey( K_F6, {|| Wvt_Minimize()        } )
-      t_keys_[ 7 ] := SetKey( K_F7, {|| WvtPartialScreen()    } )
-      t_keys_[ 8 ] := SetKey( K_F8, {|| WvtLines()            } )
-      t_keys_[ 9 ] := SetKey( K_F9, {|| Wvt_ChooseFont()      } )
-      t_keys_[ 10] := SetKey( K_F10, {|| Wvt_ChooseColor()     } )
+      t_keys_[  2 ] := SetKey( K_F2, {|| WvtNextGets()         } )
+      t_keys_[  3 ] := SetKey( K_F3, {|| WvtWindowExpand( 1 )  } )
+      t_keys_[  4 ] := SetKey( K_F4, {|| WvtWindowExpand( -1 ) } )
+      t_keys_[  5 ] := SetKey( K_F5, {|| WvtMyBrowse()         } )
+      t_keys_[  6 ] := SetKey( K_F6, {|| Wvt_Minimize()        } )
+      t_keys_[  7 ] := SetKey( K_F7, {|| WvtPartialScreen()    } )
+      t_keys_[  8 ] := SetKey( K_F8, {|| WvtLines()            } )
+      t_keys_[  9 ] := SetKey( K_F9, {|| Wvt_ChooseFont()      } )
+      t_keys_[ 10 ] := SetKey( K_F10, {|| Wvt_ChooseColor()     } )
    ELSE
       SetKey( K_F2,  t_keys_[ 2 ] )
       SetKey( K_F3,  t_keys_[ 3 ] )
@@ -74,7 +74,7 @@ FUNCTION WvtSetKeys( lSet )
       SetKey( K_F7,  t_keys_[ 7 ] )
       SetKey( K_F8,  t_keys_[ 8 ] )
       SetKey( K_F9,  t_keys_[ 9 ] )
-      SetKey( K_F10, t_keys_[ 10] )
+      SetKey( K_F10, t_keys_[ 10 ] )
    ENDIF
 
    RETURN NIL
@@ -352,7 +352,7 @@ FUNCTION BuildWvgToolBar( oDA, nActiveX )
    oTBar:style        := WVGTOOLBAR_STYLE_FLAT
    oTBar:borderStyle  := WVGFRAME_RECT
 
-   oTBar:buttonWidth  := 40 //28
+   oTBar:buttonWidth  := 40 // 28
    oTBar:buttonHeight := 26
 
    oTBar:imageWidth   := 26
@@ -490,7 +490,7 @@ FUNCTION Popups( nID, lDestroy )
 
 FUNCTION DispStatusMsg( cMsg )
 
-   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb( 198,198,198 ), "Arial", 18, , 900 )
+   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb( 198, 198, 198 ), "Arial", 18, , 900 )
 
    RETURN .T.
 

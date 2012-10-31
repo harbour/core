@@ -16,6 +16,6 @@
 
 PROCEDURE Main()
 
-    ? posix_getpid()
+   ? posix_getpid()
 
-    RETURN
+   RETURN

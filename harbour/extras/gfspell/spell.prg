@@ -2,37 +2,35 @@
  * $Id$
  */
 
-* Program...:  SpellLib.prg
-* Author....:  Joseph D. Booth
-* Copyright.:  (C)1993, Joseph D. Booth, All Rights Reserved
-*
-* Purpose...:  Library of functions to allow a Clipper program to
-*              spell check a string and to also work with individual
-*              words.
-*
-*              SP_Add()        - Add word to the dictionary
-*              SP_Cache()      - Add word to spelling cache
-*              SP_Check()      - Is word spelled correctly?
-*              SP_Clear()      - Clear the spelling cache
-*              SP_Init()       - Initialize the spelling dictionary
-*              SP_GetSet()     - Get/Set global parameters
-*              SP_LoadAux()    - Loads an auxiliary dictionary
-*              SP_Suggest()    - Offer list of sound alike suggestions
-*              SP_Quick()      - Offer list of suggested spellings
-*              SP_WildCard()   - List of wildcard matches
-*
-*              DBF2Dic()       - Convert a DBF file to a DIC file
-*              Dic2DBF()       - Convert a DIC file to a DBF file
-*
-****************************************************************************
+// Author....:  Joseph D. Booth
+// Copyright.:  (C)1993, Joseph D. Booth, All Rights Reserved
+//
+// Purpose...:  Library of functions to allow a Clipper program to
+//              spell check a string and to also work with individual
+//              words.
+//
+//              SP_Add()        - Add word to the dictionary
+//              SP_Cache()      - Add word to spelling cache
+//              SP_Check()      - Is word spelled correctly?
+//              SP_Clear()      - Clear the spelling cache
+//              SP_Init()       - Initialize the spelling dictionary
+//              SP_GetSet()     - Get/Set global parameters
+//              SP_LoadAux()    - Loads an auxiliary dictionary
+//              SP_Suggest()    - Offer list of sound alike suggestions
+//              SP_Quick()      - Offer list of suggested spellings
+//              SP_WildCard()   - List of wildcard matches
+//
+//              DBF2Dic()       - Convert a DBF file to a DIC file
+//              Dic2DBF()       - Convert a DIC file to a DBF file
+//
 
 #include "fileio.ch"
 
 #xtranslate    StoreWord( <cWord> )   => Xform( <cWord> )
 #xtranslate    ExtractWord( <cWord> ) => Xunform( <cWord> )
 
-#define    NSIZE                  26*26*6
-#define    EACH_WORD                    6
+#define    NSIZE                  ( 26 * 26 * 6 )
+#define    EACH_WORD                          6
 #define    CRLF                   Chr( 13 ) + Chr( 10 )
 #define    FOUR_BYTES             Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
 #define    MAX_STRING             40000
@@ -55,38 +53,40 @@
 #define    CHECK_RUNONS           aGlobal[16]
 
 
-* #define    REDUCE_MEMORY_NEEDS
+// #define    REDUCE_MEMORY_NEEDS
 
 
 
 
-THREAD STATIC aGlobal := { NIL,;
-                        "",;
-                        "",;
-                        "DICT.DIC",;
-                        "",;
-                        NIL,;
-                        .T.,;
-                        .T.,;
-                        .T.,;
-                        .T.,;
-                        "B",;     // (M)etaphone, (A)lgorithmic, (B)oth
-                         2,;
-                         5,;
-                         1,;
-                         "THES.DIC",;
-                        .T. }
+THREAD STATIC aGlobal := { ;
+   NIL,;
+   "",;
+   "",;
+   "DICT.DIC",;
+   "",;
+   NIL,;
+   .T.,;
+   .T.,;
+   .T.,;
+   .T.,;
+   "B",;     // (M)etaphone, (A)lgorithmic, (B)oth
+    2,;
+    5,;
+    1,;
+    "THES.DIC",;
+   .T. }
 
-STATIC aContracts  :=  { { "CAN'T"       ,"CANNOT"    },;
-                         { "WON'T"       ,"WILL NOT"  },;
-                         { "AREN'T"      ,"ARE NOT"   },;
-                         { "AIN'T"       ,"ARE NOT"   },;
-                         { "THEY'RE"     ,"THEY ARE"  },;
-                         { "THEY'VE"     ,"THEY HAVE" },;
-                         { "IT'S"        ,"IT IS"     },;
-                         { "I'LL"        ,"I WILL"    },;
-                         { "I'D"         ,"I WOULD"   },;
-                         { "DON'T"       ,"DO NOT"    } }
+STATIC aContracts := { ;
+   { "CAN'T"       ,"CANNOT"    },;
+   { "WON'T"       ,"WILL NOT"  },;
+   { "AREN'T"      ,"ARE NOT"   },;
+   { "AIN'T"       ,"ARE NOT"   },;
+   { "THEY'RE"     ,"THEY ARE"  },;
+   { "THEY'VE"     ,"THEY HAVE" },;
+   { "IT'S"        ,"IT IS"     },;
+   { "I'LL"        ,"I WILL"    },;
+   { "I'D"         ,"I WOULD"   },;
+   { "DON'T"       ,"DO NOT"    } }
 
 
 
@@ -105,45 +105,47 @@ THREAD STATIC cOffsets
 //      Notes:  Does not check to see if the word already exists in the
 //              dictionary.
 //
-////////////////////////////
-function SP_Add(cWord)
-LOCAL was_added := .F.             // Was word written to dictionary?
-LOCAL nAuxHandle                   // Dictionary file handle
-LOCAL nWritten                     // Number of bytes written
 
-// Initialize the spell checker and make sure
-// an auxiliary dictionary name was specified
+FUNCTION SP_Add( cWord )
 
-**DEBUG**
-@24,30 SAY "At SP_ADD"
+   LOCAL was_added := .F.             // Was word written to dictionary?
+   LOCAL nAuxHandle                   // Dictionary file handle
+   LOCAL nWritten                     // Number of bytes written
 
-if SP_Init() .and. !empty( AUXILIARY_DICTIONARY )
-   cWord      := upper(alltrim(cWord))
+   // Initialize the spell checker and make sure
+   // an auxiliary dictionary name was specified
 
-   //
-   // If the auxiliary dictionary does not exist,
-   // we will create it for the user
-   //
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_ADD"
 
-   if file( AUXILIARY_DICTIONARY )
-      nAuxHandle := fopen( AUXILIARY_DICTIONARY, FO_READWRITE + FO_DENYWRITE )
-   else
-      nAuxHandle := fcreate( AUXILIARY_DICTIONARY )
-   endif
-   if nAuxHandle >= 0
+   IF SP_Init() .AND. !Empty( AUXILIARY_DICTIONARY )
+      cWord      := Upper( AllTrim( cWord ) )
 
-      Fseek(nAuxHandle,0,FS_END)             // Bottom of the file
-      nWritten := Fwrite(nAuxHandle,;        // Write word into file
-                  cWord+CRLF,len(cWord)+2)
+      //
+      // If the auxiliary dictionary does not exist,
+      // we will create it for the user
+      //
 
-      Fclose(nAuxHandle)                     // Close the file
-      SP_Cache(cWord)                        // Add word to cache
+      IF File( AUXILIARY_DICTIONARY )
+         nAuxHandle := FOpen( AUXILIARY_DICTIONARY, FO_READWRITE + FO_DENYWRITE )
+      ELSE
+         nAuxHandle := FCreate( AUXILIARY_DICTIONARY )
+      ENDIF
+      IF nAuxHandle >= 0
 
-      was_added := (nWritten == len(cWord)+2)
-   endif
-endif
-return was_added
-*******************************************************************************
+         FSeek( nAuxHandle, 0, FS_END )             // Bottom of the file
+         nWritten := FWrite( nAuxHandle, ;        // Write word into file
+         cWord + CRLF, Len( cWord ) + 2 )
+
+         FClose( nAuxHandle )                     // Close the file
+         SP_Cache( cWord )                        // Add word to cache
+
+         was_added := ( nWritten == Len( cWord ) + 2 )
+      ENDIF
+   ENDIF
+
+   RETURN was_added
+
 
 //
 //   Function:  Sp_cache()
@@ -157,21 +159,22 @@ return was_added
 //
 //      Notes:  Check to see if the word already exists in the cache
 //
-////////////////////////
-function Sp_cache(cWord)
 
-LOCAL cTemp  := "|"+upper(alltrim(cWord))+"|"
-LOCAL lAdded := .F.
+FUNCTION Sp_cache( cWord )
 
-**DEBUG**
-@24,30 SAY "At SP_cache"
+   LOCAL cTemp  := "|" + Upper( AllTrim( cWord ) ) + "|"
+   LOCAL lAdded := .F.
 
-if ! cTemp $ CACHE_WORDS .and. len(CACHE_WORDS) < MAX_STRING
-   CACHE_WORDS += cTemp
-   lAdded      := .T.
-endif
-return lAdded
-*******************************************************************************
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_cache"
+
+   IF ! cTemp $ CACHE_WORDS .AND. Len( CACHE_WORDS ) < MAX_STRING
+      CACHE_WORDS += cTemp
+      lAdded      := .T.
+   ENDIF
+
+   RETURN lAdded
+
 
 //
 //   Function:  Sp_check()
@@ -189,108 +192,109 @@ return lAdded
 //      Notes:
 //
 //
-////////////////////////
-function SP_Check(cWord)
 
-STATIC cBuf   := ""
-STATIC cLast
+FUNCTION SP_Check( cWord )
 
-
-STATIC nDicCount   := 0
-STATIC nCacheCount := 0
-STATIC nBuffCount  := 0
+   STATIC cBuf   := ""
+   STATIC cLast
 
 
-LOCAL ok      := .T.
-LOCAL cLookup := upper(rtrim(cWord))
-LOCAL nRow
-LOCAL nCol
-LOCAL x
-LOCAL y
-LOCAL z := 4
-LOCAL cTemp
+   STATIC nDicCount   := 0
+   STATIC nCacheCount := 0
+   STATIC nBuffCount  := 0
 
-**DEBUG**
-@24,30 SAY "At SP_init"
 
-if sp_init()
-   if len(cLookup) == 1 .and. cLookup$"IA"
-      return .T.
-   endif
-   if len(cLookup) < MINIMUM_WORD_LENGTH
-      return .T.
-   endif
-   if right(cLookup,2)="'S"
-      cLookUp := substr(cLookup,1, len(cLookup)-2 )
-   endif
-   cTemp := "|"+cLookup+"|"
-   if fat(cTemp, COMMON_WORDS) == 0    // Check the common words first
-      if fat(cTemp,CACHE_WORDS) == 0   // then check the cache words
-          ok    := .F.
-          nRow  := asc(substr(cLookup,1,1))-64
-          nCol  := asc(substr(cLookup,2,1))-64
-          if (nRow>0 .and. nRow<=26) .and. (nCol>0 .and. nCol<=26)
+   LOCAL ok      := .T.
+   LOCAL cLookup := Upper( RTrim( cWord ) )
+   LOCAL nRow
+   LOCAL nCol
+   LOCAL x
+   LOCAL y
+   LOCAL z := 4
+   LOCAL cTemp
 
-             #ifdef REDUCE_MEMORY_NEEDS
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_init"
 
-                cOffsets := space(6)
-                fseek(nHandle,((nRow-1)*156)+((nCol-1)*6+1)+5,FS_SET)
-                fread(nHandle,@cOffsets,6)
-                x  := bin2l(substr(cOffsets,1,4))
-                y  := bin2w(substr(cOffsets,5,2))
+   IF sp_init()
+      IF Len( cLookup ) == 1 .AND. cLookup $ "IA"
+         RETURN .T.
+      ENDIF
+      IF Len( cLookup ) < MINIMUM_WORD_LENGTH
+         RETURN .T.
+      ENDIF
+      IF Right( cLookup, 2 ) = "'S"
+         cLookUp := SubStr( cLookup, 1, Len( cLookup ) -2 )
+      ENDIF
+      cTemp := "|" + cLookup + "|"
+      IF fat( cTemp, COMMON_WORDS ) == 0    // Check the common words first
+         IF fat( cTemp, CACHE_WORDS ) == 0   // then check the cache words
+            ok    := .F.
+            nRow  := Asc( SubStr( cLookup, 1, 1 ) ) -64
+            nCol  := Asc( SubStr( cLookup, 2, 1 ) ) -64
+            IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
 
-             #else
+#ifdef REDUCE_MEMORY_NEEDS
 
-                x  := bin2l(substr(cOffsets,((nRow-1)*156)+((nCol-1)*EACH_WORD+1),4))
-                y  := bin2w(substr(cOffsets,((nRow-1)*156)+((nCol-1)*EACH_WORD+5),2))
+               cOffsets := Space( 6 )
+               FSeek( nHandle, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * 6 + 1 ) + 5, FS_SET )
+               FRead( nHandle, @cOffsets, 6 )
+               x  := Bin2L( SubStr( cOffsets, 1, 4 ) )
+               y  := Bin2W( SubStr( cOffsets, 5, 2 ) )
 
-             #endif
+#else
 
-             if !empty(x)
-                if !(cLast==substr(cLookup,1,2))
-                   cBuf := space(y)
-                   fseek(nHandle,x,FS_SET)
-                   fread(nHandle,@cBuf,y)
-                   nDicCount++
-                else
-                   nBuffCount++
-                endif
-                if len(cLookup)=3
-                   z  := asc(substr(cLookup,3,1))-64
-                   ok := bit(cBuf,z)
-                elseif len(cLookup) < 3
-                   ok := bit(cBuf,27)
-                elseif y > 4
-                   cTemp := StoreWord(cLookup)
-                   do while z < y
-                      z   := fat( cTemp, cBuf,z )
-                      if z < 6
-                         exit
-                      elseif substr(cBuf,z-1,1) < Chr( 128 )
-                         z++
-                      else
-                         exit
-                      endif
-                   enddo
-                   ok   := z > 4 .and. z<y
-                endif
-                cLast := substr(cLookup,1,2)
-             endif
-         endif
-      else
+               x  := Bin2L( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
+               y  := Bin2W( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
+
+#endif
+
+               IF !Empty( x )
+                  IF !( cLast == SubStr( cLookup, 1, 2 ) )
+                     cBuf := Space( y )
+                     FSeek( nHandle, x, FS_SET )
+                     FRead( nHandle, @cBuf, y )
+                     nDicCount++
+                  ELSE
+                     nBuffCount++
+                  ENDIF
+                  IF Len( cLookup ) = 3
+                     z  := Asc( SubStr( cLookup, 3, 1 ) ) -64
+                     ok := bit( cBuf, z )
+                  ELSEIF Len( cLookup ) < 3
+                     ok := bit( cBuf, 27 )
+                  ELSEIF y > 4
+                     cTemp := StoreWord( cLookup )
+                     DO WHILE z < y
+                        z   := fat( cTemp, cBuf, z )
+                        IF z < 6
+                           EXIT
+                        ELSEIF SubStr( cBuf, z - 1, 1 ) < Chr( 128 )
+                           z++
+                        ELSE
+                           EXIT
+                        ENDIF
+                     ENDDO
+                     ok   := z > 4 .AND. z < y
+                  ENDIF
+                  cLast := SubStr( cLookup, 1, 2 )
+               ENDIF
+            ENDIF
+         ELSE
+            nCacheCount++
+         ENDIF
+      ELSE
          nCacheCount++
-      endif
-   else
-      nCacheCount++
-   endif
-else
-   ok := .F.
-endif
-if !ok .and. EXTRA_CODE_BLOCK != NIL
-   ok := eval( EXTRA_CODE_BLOCK,cWord )
-endif
-return ok
-*******************************************************************************
+      ENDIF
+   ELSE
+      ok := .F.
+   ENDIF
+   IF !ok .AND. EXTRA_CODE_BLOCK != NIL
+      ok := Eval( EXTRA_CODE_BLOCK, cWord )
+   ENDIF
+
+   RETURN ok
+
 
 //
 //   Function:  Sp_GetBuf()
@@ -299,28 +303,30 @@ return ok
 //  Arguments:  <cLetters>   - First two letters
 //    Returns:  cString      - Buffer string from DIC file
 //
-////////////////////////
-STATIC function sp_GetBuf(cLetters)
-LOCAL x
-LOCAL y
-LOCAL cBuf  := ""
-LOCAL nRow  := asc(substr(cLetters,1,1))-64
-LOCAL nCol  := asc(substr(cLetters,2,1))-64
 
-**DEBUG**
-@24,30 SAY "At SP_getbuf"
+STATIC FUNCTION sp_GetBuf( cLetters )
 
-if (nRow>0 .and. nRow<=26) .and. (nCol>0 .and. nCol<=26)
-   x  := bin2l(substr(cOffsets,((nRow-1)*156)+((nCol-1)*EACH_WORD+1),4))
-   if !empty(x)
-       y    := bin2w(substr(cOffsets,((nRow-1)*156)+((nCol-1)*EACH_WORD+5),2))
-       cBuf := space(y)
-       fseek(nHandle,x+4,FS_SET)
-       fread(nHandle,@cBuf,y-4)
-   endif
-endif
-return cBuf
-******************************************************************************
+   LOCAL x
+   LOCAL y
+   LOCAL cBuf  := ""
+   LOCAL nRow  := Asc( SubStr( cLetters, 1, 1 ) ) -64
+   LOCAL nCol  := Asc( SubStr( cLetters, 2, 1 ) ) -64
+
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_getbuf"
+
+   IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
+      x  := Bin2L( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
+      IF !Empty( x )
+         y    := Bin2W( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
+         cBuf := Space( y )
+         FSeek( nHandle, x + 4, FS_SET )
+         FRead( nHandle, @cBuf, y - 4 )
+      ENDIF
+   ENDIF
+
+   RETURN cBuf
+
 
 //
 //   Function:  Sp_clear()
@@ -331,15 +337,16 @@ return cBuf
 //
 //     Static:  CACHE_WORDS  - String of cache words
 //
-////////////////////////
-function sp_clear
 
-**DEBUG**
-@24,30 SAY "At SP_clear"
+FUNCTION sp_clear
 
-CACHE_WORDS := ""
-return NIL
-******************************************************************************
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_clear"
+
+   CACHE_WORDS := ""
+
+   RETURN NIL
+
 
 //     Function: Sp_GetSet()
 //      Purpose: To get/set a parameter for the spell check function
@@ -351,21 +358,23 @@ return NIL
 //                          FALSE if an error occurs, usually network lock
 //                          problem
 //
-//////////////////////////////////////
-function Sp_GetSet(nWhich,xNewSetting)
-LOCAL xOld := NIL
 
-**DEBUG**
-@24,30 SAY "At SP_getset"
+FUNCTION Sp_GetSet( nWhich, xNewSetting )
 
-if nWhich != NIL .and. (nWhich>0 .and. nWhich<=len(aGlobal))
-    xOld := aGlobal[nWhich]
-    if valtype(xNewSetting) == valtype(xOld)
-       aGlobal[nWhich] := xNewSetting
-    endif
-endif
-return xOld
-******************************************************************************
+   LOCAL xOld := NIL
+
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_getset"
+
+   IF nWhich != NIL .AND. ( nWhich > 0 .AND. nWhich <= Len( aGlobal ) )
+      xOld := aGlobal[ nWhich ]
+      IF ValType( xNewSetting ) == ValType( xOld )
+         aGlobal[ nWhich ] := xNewSetting
+      ENDIF
+   ENDIF
+
+   RETURN xOld
+
 
 //     Function: Sp_LoadAux()
 //      Purpose: To load an auxiliary dictionary of words
@@ -377,39 +386,41 @@ return xOld
 //
 //
 //
-//////////////////////////////////////
-function Sp_LoadAux(cFile)
-LOCAL is_ok := .F.
-LOCAL x     := 0
-LOCAL cStr  := ""
-LOCAL nSize
 
-**DEBUG**
-@24,30 SAY "At SP_loadaux"
+FUNCTION Sp_LoadAux( cFile )
 
-if !empty(cFile)
-   if file(cFile)
-      x := fopen(cFile, FO_READ + FO_DENYNONE )
-   else
-      x := fcreate(cFile)
-   endif
-   SP_GetSet(5,cFile)
+   LOCAL is_ok := .F.
+   LOCAL x     := 0
+   LOCAL cStr  := ""
+   LOCAL nSize
 
-   if x > 0
-      nSize := fseek(x,0,FS_END)
-      if nSize < MAX_STRING
-         cStr  := space(nSize)
-         fseek(x,0,FS_SET)
-         fread(x,@cStr,nSize)
-         cStr  := "|"+strtran(cStr,CRLF,"|")
-         CACHE_WORDS += upper(cStr)
-         is_ok := .T.
-      endif
-      fclose(x)
-   endif
-endif
-return is_ok
-******************************************************************************
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_loadaux"
+
+   IF !Empty( cFile )
+      IF File( cFile )
+         x := FOpen( cFile, FO_READ + FO_DENYNONE )
+      ELSE
+         x := FCreate( cFile )
+      ENDIF
+      SP_GetSet( 5, cFile )
+
+      IF x > 0
+         nSize := FSeek( x, 0, FS_END )
+         IF nSize < MAX_STRING
+            cStr  := Space( nSize )
+            FSeek( x, 0, FS_SET )
+            FRead( x, @cStr, nSize )
+            cStr  := "|" + StrTran( cStr, CRLF, "|" )
+            CACHE_WORDS += Upper( cStr )
+            is_ok := .T.
+         ENDIF
+         FClose( x )
+      ENDIF
+   ENDIF
+
+   RETURN is_ok
+
 
 //
 //     Function:  Sp_Suggest()
@@ -419,647 +430,637 @@ return is_ok
 //                lInclude  - Should word be included in list?
 //      Returns:  aSuggest_ - List of suggested words
 //
-///////////////////////////////////
-function Sp_Suggest(cWord,lInclude)
 
-STATIC aParts_ := { {"A"    ,{"AI","AO","AU","AY","EA","EI","EIGH","ET","EY","E","I","O"}},;
-                    {"AIR"  ,{"ARE"}},;
-                    {"AIT"  ,{"ATE"}},;
-                    {"C"    ,{"CK"}},;
-                    {"CH"   ,{"TCH","TI","TU"}},;
-                    {"CKS"  ,{"X"}},;
-                    {"D"    ,{"ED"}},;
-                    {"E"    ,{"A","AE","AI","AY","EA","EI","EO","IE","I","U","O"}},;
-                    {"EM"   ,{"TEM"}},;
-                    {"ER"   ,{"OUR","RE","URE","YR"}},;
-                    {"ERE"  ,{"EIR","EAR","IER"}},;
-                    {"F"    ,{"GH","LF","PH","G"}},;
-                    {"FIZ"  ,{"PHYS"}},;
-                    {"G"    ,{"GH","GU","GUE"}},;
-                    {"GZ"   ,{"X"}},;
-                    {"H"    ,{"WH"}},;
-                    {"I"    ,{"A","E","EE","IA","IE","O","U","UI","Y","YE","UY","EI","IGH"}},;
-                    {"IS"   ,{"US","ACE","ICE"}},;
-                    {"ISE"  ,{"IZE"}},;
-                    {"J"    ,{"D","DG","DI","DJ","G","GG"}},;
-                    {"K"    ,{"C","CC","CH","CK","CQU","CU","LK","Q","QU","QUE"}},;
-                    {"KW"   ,{"QU"}},;
-                    {"L"    ,{"SL"}},;
-                    {"LE"   ,{"TLE","AL"}},;
-                    {"M"    ,{"CHM","GM","LM","MB","MN","N"}},;
-                    {"N"    ,{"M","PN","GN","KN","MN"}},;
-                    {"NG"   ,{"N","NGUE"}},;
-                    {"O"    ,{"AU","EAU","EO","EW","OA","OE","OH","OU","OUGH","OW","A","AH","AW","UO","E"}},;
-                    {"OE"   ,{"OWE","OUGH"}},;
-                    {"OO"   ,{"O","EU","EW","OE","OU","OUGH","U","UE","UI"}},;
-                    {"OU"   ,{"OUGH","OW"}},;
-                    {"PER"  ,{"PRO","PRI","PRA","PRU"}},;
-                    {"PRE"  ,{"PRO","PRI","PRA","PRU"}},;
-                    {"R"    ,{"RH","WR"}},;
-                    {"S"    ,{"C","CE","PS","SC","SCH"}},;
-                    {"SH"   ,{"CE","CH","CI","S","SCH","SCI","SE","SI","SS","SSI","TI"}},;
-                    {"SI"   ,{"PSY","CY"}},;
-                    {"T"    ,{"ED","GHT","PT","TH"}},;
-                    {"TION" ,{"SION","CION","CEAN","CIAN"}},;
-                    {"TIOUS",{"SEOUS"}},;
-                    {"TURE" ,{"TEUR"}},;
-                    {"U"    ,{"O","OE","OO","OU","EUA","EU","EUE","EW","IEU","IEW","UE","UI","YOU","YU"}},;
-                    {"UR"   ,{"EAR","ER","IR","YR"}},;
-                    {"V"    ,{"F","LV","PH"}},;
-                    {"W"    ,{"O","U","WH"}},;
-                    {"X"    ,{"CKS","GZ","K"}},;
-                    {"Y"    ,{"I","J","IE","EI"}},;
-                    {"Z"    ,{"S","SC","SS","X","GE","SI","ZI"}},;
-                    {"ZI"   ,{"XY"}} }
+FUNCTION Sp_Suggest( cWord, lInclude )
 
-STATIC aEnds := { "ED","ER","ING","LY","AL","FUL","NESS","MENT","IVE" }
-STATIC aBegs := { "UN","IN","DIS","MIS","EN","WEL","AL" }
+   STATIC aParts_ := { ;
+      {"A"    , { "AI", "AO", "AU", "AY", "EA", "EI", "EIGH", "ET", "EY", "E", "I", "O" } }, ;
+      {"AIR"  , { "ARE" } }, ;
+      {"AIT"  , { "ATE" } }, ;
+      {"C"    , { "CK" } }, ;
+      {"CH"   , { "TCH", "TI", "TU" } }, ;
+      {"CKS"  , { "X" } }, ;
+      {"D"    , { "ED" } }, ;
+      {"E"    , { "A", "AE", "AI", "AY", "EA", "EI", "EO", "IE", "I", "U", "O" } }, ;
+      {"EM"   , { "TEM" } }, ;
+      {"ER"   , { "OUR", "RE", "URE", "YR" } }, ;
+      {"ERE"  , { "EIR", "EAR", "IER" } }, ;
+      {"F"    , { "GH", "LF", "PH", "G" } }, ;
+      {"FIZ"  , { "PHYS" } }, ;
+      {"G"    , { "GH", "GU", "GUE" } }, ;
+      {"GZ"   , { "X" } }, ;
+      {"H"    , { "WH" } }, ;
+      {"I"    , { "A", "E", "EE", "IA", "IE", "O", "U", "UI", "Y", "YE", "UY", "EI", "IGH" } }, ;
+      {"IS"   , { "US", "ACE", "ICE" } }, ;
+      {"ISE"  , { "IZE" } }, ;
+      {"J"    , { "D", "DG", "DI", "DJ", "G", "GG" } }, ;
+      {"K"    , { "C", "CC", "CH", "CK", "CQU", "CU", "LK", "Q", "QU", "QUE" } }, ;
+      {"KW"   , { "QU" } }, ;
+      {"L"    , { "SL" } }, ;
+      {"LE"   , { "TLE", "AL" } }, ;
+      {"M"    , { "CHM", "GM", "LM", "MB", "MN", "N" } }, ;
+      {"N"    , { "M", "PN", "GN", "KN", "MN" } }, ;
+      {"NG"   , { "N", "NGUE" } }, ;
+      {"O"    , { "AU", "EAU", "EO", "EW", "OA", "OE", "OH", "OU", "OUGH", "OW", "A", "AH", "AW", "UO", "E" } }, ;
+      {"OE"   , { "OWE", "OUGH" } }, ;
+      {"OO"   , { "O", "EU", "EW", "OE", "OU", "OUGH", "U", "UE", "UI" } }, ;
+      {"OU"   , { "OUGH", "OW" } }, ;
+      {"PER"  , { "PRO", "PRI", "PRA", "PRU" } }, ;
+      {"PRE"  , { "PRO", "PRI", "PRA", "PRU" } }, ;
+      {"R"    , { "RH", "WR" } }, ;
+      {"S"    , { "C", "CE", "PS", "SC", "SCH" } }, ;
+      {"SH"   , { "CE", "CH", "CI", "S", "SCH", "SCI", "SE", "SI", "SS", "SSI", "TI" } }, ;
+      {"SI"   , { "PSY", "CY" } }, ;
+      {"T"    , { "ED", "GHT", "PT", "TH" } }, ;
+      {"TION" , { "SION", "CION", "CEAN", "CIAN" } }, ;
+      {"TIOUS", { "SEOUS" } }, ;
+      {"TURE" , { "TEUR" } }, ;
+      {"U"    , { "O", "OE", "OO", "OU", "EUA", "EU", "EUE", "EW", "IEU", "IEW", "UE", "UI", "YOU", "YU" } }, ;
+      {"UR"   , { "EAR", "ER", "IR", "YR" } }, ;
+      {"V"    , { "F", "LV", "PH" } }, ;
+      {"W"    , { "O", "U", "WH" } }, ;
+      {"X"    , { "CKS", "GZ", "K" } }, ;
+      {"Y"    , { "I", "J", "IE", "EI" } }, ;
+      {"Z"    , { "S", "SC", "SS", "X", "GE", "SI", "ZI" } }, ;
+      {"ZI"   , { "XY"} } }
 
-LOCAL jj,kk,zz,ii
-LOCAL cHold
-LOCAL aRet_   := {}                // List of suggested words
-LOCAL cTemp
-LOCAL nSugg
-LOCAL nSize    := len(aParts_)
-LOCAL nSuffix  := len(aEnds)
-LOCAL cMeta
-LOCAL cFirst
-LOCAL cKey
-LOCAL arr_
+   STATIC aEnds := { "ED", "ER", "ING", "LY", "AL", "FUL", "NESS", "MENT", "IVE" }
+   STATIC aBegs := { "UN", "IN", "DIS", "MIS", "EN", "WEL", "AL" }
 
-**DEBUG**
-@24,30 SAY "At SP_suggest"
+   LOCAL jj, kk, zz, ii
+   LOCAL cHold
+   LOCAL aRet_   := {}                // List of suggested words
+   LOCAL cTemp
+   LOCAL nSugg
+   LOCAL nSize    := Len( aParts_ )
+   LOCAL nSuffix  := Len( aEnds )
+   LOCAL cMeta
+   LOCAL cFirst
+   LOCAL cKey
+   LOCAL arr_
 
-cWord := upper(rtrim(cWord))
-zz    := len(cWord)
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_suggest"
 
-if zz =1                           // Don't offer suggestions for
-   return aRet_                    // single letter words
-endif
+   cWord := Upper( RTrim( cWord ) )
+   zz    := Len( cWord )
 
-if lInclude == NIL ; lInclude := .F.  ; endif
+   IF zz = 1                           // Don't offer suggestions for
+      RETURN aRet_                    // single letter words
+   ENDIF
 
-//
-// Should the current word be included?
-//
-//////////////////////////////////
-if Sp_Check(cWord)
-   Aadd(aRet_,"A0AA"+cWord)
-endif
-
-if "'" $ cWord
-  cHold := SP_Expand(cWord)
-  if !empty(cHold)
-     Aadd(aRet_,"A1AA"+cHold)
-  endif
-endif
-
-if CHECK_RUNONS
-   arr_ := SP_Split( cWord )
-   for jj := 1 to len(arr_)
-      Aadd(aRet_,"A1AA"+arr_[jj] )
-   next
-endif
-
-if SUGGEST_PREFERENCE $ "AB"
+   IF lInclude == NIL ; lInclude := .F.  ; ENDIF
 
    //
-   // Step One - Do letter doubling
+   // Should the current word be included?
    //
-   //////////////////////////////////
-   for jj := 2 to zz
-      if substr(cWord,jj,1)$"BCDEFGKLMNOPRSTZ"
-         cHold := left(cWord,jj)+substr(cWord,jj, 1)+;
-                  substr(cWord,jj+1)
+
+   IF Sp_Check( cWord )
+      AAdd( aRet_, "A0AA" + cWord )
+   ENDIF
+
+   IF "'" $ cWord
+      cHold := SP_Expand( cWord )
+      IF !Empty( cHold )
+         AAdd( aRet_, "A1AA" + cHold )
+      ENDIF
+   ENDIF
+
+   IF CHECK_RUNONS
+      arr_ := SP_Split( cWord )
+      FOR jj := 1 TO Len( arr_ )
+         AAdd( aRet_, "A1AA" + arr_[ jj ] )
+      NEXT
+   ENDIF
+
+   IF SUGGEST_PREFERENCE $ "AB"
+
+      //
+      // Step One - Do letter doubling
+      //
+
+      FOR jj := 2 TO zz
+         IF SubStr( cWord, jj, 1 ) $ "BCDEFGKLMNOPRSTZ"
+            cHold := Left( cWord, jj ) + SubStr( cWord, jj, 1 ) + ;
+               SubStr( cWord, jj + 1 )
+            //
+            // If the word is not already in the list, then check
+            // to see if it is a valid word.
+            //
+
+            IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+               AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+            ENDIF
+         ENDIF
+      NEXT
+
+      //
+      // Step Two - Remove extra letters
+      //
+
+      FOR jj := 1 TO zz
+         cHold := Left( cWord, jj - 1 ) + SubStr( cWord, jj + 1 )
          //
          // If the word is not already in the list, then check
          // to see if it is a valid word.
          //
-         //////////////////////////////////////////
-         if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
-            Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
-         endif
-      endif
-   next
 
-   //
-   // Step Two - Remove extra letters
-   //
-   //////////////////////////////////
-   for jj := 1 to zz
-      cHold := left(cWord,jj-1)+substr(cWord,jj+1)
+         IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+            AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+         ENDIF
+      NEXT
+
       //
-      // If the word is not already in the list, then check
-      // to see if it is a valid word.
+      // Step Three - Transpose the letters
       //
-      //////////////////////////////////////////
-      if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
-         Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
-      endif
-   next
-
-   //
-   // Step Three - Transpose the letters
-   //
-   //////////////////////////
-   for jj := 2 to zz
-      cHold := left(cWord,jj-2)+substr(cWord,jj, 1)+;
-               substr(cWord,jj-1,1)+substr(cWord,jj+1)
-     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
-         Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
-      endif
-   next
-
-   //
-   // Step Four - Try adding a silent E to the end
-   //
-   //////////////////
-
-   cHold := cWord+"E"
-   if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
-      Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
-   endif
-
-   //
-   // Step Five - Do sound alike substitutions
-   //
-   //////////////////////////////////
-   for jj := 1 to nSize
-      if aParts_[jj,1]$cWord
-         if aParts_[jj,1]$"AEIOUT"
-            ii := 0
-            do while (ii := fat(aParts_[jj,1],cWord,ii))>0
-               for kk := 1 to len(aParts_[jj,2])
-                  cHold := substr(cWord,1,ii-1)+aParts_[jj,2,kk]+substr(cWord,ii+1)
-                  if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
-                     Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
-                  endif
-               next
-               ii++
-            enddo
-         else
-            for kk := 1 to len(aParts_[jj,2])
-               cHold := strtran(cWord,aParts_[jj,1],aParts_[jj,2,kk])
-               if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0 .and. Sp_Check(cHold)
-                  Aadd(aRet_,"B"+SP_Rate(cHold,cWord)+cHold)
-              endif
-           next
-        endif
-      endif
-   next
-   nSugg := len(aRet_)
-
-   //
-   // At this point, we have a list of words in aRet_, which now need to
-   // be checked for suffixes, prefixes, and plurals.
-   //
-
-   for jj := 1 to nSugg
-      cHold := rtrim(substr(aRet_[jj],5))    // Extract the word
-      zz    := len(cHold)
       //
-      // Check suffixes
+      FOR jj := 2 TO zz
+         cHold := Left( cWord, jj - 2 ) + SubStr( cWord, jj, 1 ) + ;
+            SubStr( cWord, jj - 1, 1 ) + SubStr( cWord, jj + 1 )
+         IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+            AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+         ENDIF
+      NEXT
+
       //
-      ////////////////
-      if ADD_SUFFIXES
-         for kk := 1 to nSuffix
-            cTemp := cHold+aEnds[kk]
-            if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-               Sp_Check(cTemp)
-               Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-            endif
-         next
-         //
-         // Try doubling the last letter
-         //
-         //////////
-         for kk := 1 to nSuffix
-            cTemp := cHold+substr(cHold,zz,1)+aEnds[kk]
-            if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-               SP_Check( cTemp )
-               Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-            endif
-         next
-         //
-         // Accomodate words ending in C
-         //
-         //////////
-         if substr(cHold,-1,1)=="C"
-            for kk := 1 to nSuffix
-               cTemp := cHold+"K"+aEnds[kk]
-               if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-                  SP_Check( cTemp )
-                  Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-               endif
-            next
-         endif
-         //
-         // Accomodate words ending in ND
-         //
-         //////////
-         if substr(cHold,-2,2)=="ND"
-            cTemp := substr(cHold,1,zz-1)+"SE"
-            if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-               SP_Check( cTemp )
-               Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-            endif
-            for kk := 1 to nSuffix
-               cTemp := substr(cHold,1,zz-1)+"SE"+aEnds[kk]
-               if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-                  SP_Check( cTemp )
-                  Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-               endif
-               cTemp := substr(cHold,1,zz-1)+"S"+aEnds[kk]
-               if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-                  SP_Check( cTemp )
-                  Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-               endif
-            next
-         endif
-         //
-         // Words ending in E, remove the E and try
-         //
-         ///////////////////////////////////////
-         if substr(cHold,zz,1)=="E"
-            for kk := 1 to nSuffix
-               cTemp := substr(cHold,1,zz-1)+aEnds[kk]
-               if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-                  SP_Check( cTemp )
-                  Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-               endif
-            next
-         endif
-      endif
+      // Step Four - Try adding a silent E to the end
+      //
 
-      if ADD_PREFIXES
-         for kk := 1 to 7
-            cTemp := aBegs[kk]+cHold
-            if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-               SP_Check( cTemp )
-               Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-            endif
-         next
-      endif
 
-      if ADD_PLURALS
-         cTemp := cHold+"S"
-         if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-            SP_Check(cTemp)
-            Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-         endif
+      cHold := cWord + "E"
+      IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+         AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+      ENDIF
 
-         if substr(cHold,zz,1)=="Y"
-            cTemp := substr(cHold,1,zz-1)+"IES"
-            if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-               SP_Check(cTemp)
-               Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-            endif
-         elseif substr(cHold,zz,1)=="F"
-            cTemp := substr(cHold,1,zz-1)+"VES"
-            if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-               SP_Check(cTemp)
-               Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-            endif
-         elseif substr(cHold,zz,1)=="O"
-            cTemp := cHold+"ES"
-            if ascan(aRet_,{ |xx| substr(xx,5)==cTemp}) == 0 .and. ;
-               SP_Check(cTemp)
-               Aadd( aRet_,"C"+SP_Rate(cTemp,cWord)+cTemp )
-            endif
-         endif
-      endif
-   next
-endif
+      //
+      // Step Five - Do sound alike substitutions
+      //
+
+      FOR jj := 1 TO nSize
+         IF aParts_[ jj, 1 ] $ cWord
+            IF aParts_[ jj, 1 ] $ "AEIOUT"
+               ii := 0
+               DO WHILE ( ii := fat( aParts_[ jj, 1 ], cWord, ii ) ) > 0
+                  FOR kk := 1 TO Len( aParts_[ jj, 2 ] )
+                     cHold := SubStr( cWord, 1, ii - 1 ) + aParts_[ jj, 2, kk ] + SubStr( cWord, ii + 1 )
+                     IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+                        AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+                     ENDIF
+                  NEXT
+                  ii++
+               ENDDO
+            ELSE
+               FOR kk := 1 TO Len( aParts_[ jj, 2 ] )
+                  cHold := StrTran( cWord, aParts_[ jj, 1 ], aParts_[ jj, 2, kk ] )
+                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+                     AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+                  ENDIF
+               NEXT
+            ENDIF
+         ENDIF
+      NEXT
+      nSugg := Len( aRet_ )
+
+      //
+      // At this point, we have a list of words in aRet_, which now need to
+      // be checked for suffixes, prefixes, and plurals.
+      //
+
+      FOR jj := 1 TO nSugg
+         cHold := RTrim( SubStr( aRet_[ jj ], 5 ) )    // Extract the word
+         zz    := Len( cHold )
+         //
+         // Check suffixes
+         //
+         //
+         IF ADD_SUFFIXES
+            FOR kk := 1 TO nSuffix
+               cTemp := cHold + aEnds[ kk ]
+               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     Sp_Check( cTemp )
+                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               ENDIF
+            NEXT
+            //
+            // Try doubling the last letter
+            //
+
+            FOR kk := 1 TO nSuffix
+               cTemp := cHold + SubStr( cHold, zz, 1 ) + aEnds[ kk ]
+               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     SP_Check( cTemp )
+                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               ENDIF
+            NEXT
+            //
+            // Accomodate words ending in C
+            //
+
+            IF SubStr( cHold, -1, 1 ) == "C"
+               FOR kk := 1 TO nSuffix
+                  cTemp := cHold + "K" + aEnds[ kk ]
+                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                        SP_Check( cTemp )
+                     AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+                  ENDIF
+               NEXT
+            ENDIF
+            //
+            // Accomodate words ending in ND
+            //
+
+            IF SubStr( cHold, -2, 2 ) == "ND"
+               cTemp := SubStr( cHold, 1, zz - 1 ) + "SE"
+               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     SP_Check( cTemp )
+                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               ENDIF
+               FOR kk := 1 TO nSuffix
+                  cTemp := SubStr( cHold, 1, zz - 1 ) + "SE" + aEnds[ kk ]
+                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                        SP_Check( cTemp )
+                     AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+                  ENDIF
+                  cTemp := SubStr( cHold, 1, zz - 1 ) + "S" + aEnds[ kk ]
+                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                        SP_Check( cTemp )
+                     AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+                  ENDIF
+               NEXT
+            ENDIF
+            //
+            // Words ending in E, remove the E and try
+            //
+
+            IF SubStr( cHold, zz, 1 ) == "E"
+               FOR kk := 1 TO nSuffix
+                  cTemp := SubStr( cHold, 1, zz - 1 ) + aEnds[ kk ]
+                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                        SP_Check( cTemp )
+                     AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+                  ENDIF
+               NEXT
+            ENDIF
+         ENDIF
+
+         IF ADD_PREFIXES
+            FOR kk := 1 TO 7
+               cTemp := aBegs[ kk ] + cHold
+               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     SP_Check( cTemp )
+                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               ENDIF
+            NEXT
+         ENDIF
+
+         IF ADD_PLURALS
+            cTemp := cHold + "S"
+            IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                  SP_Check( cTemp )
+               AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+            ENDIF
+
+            IF SubStr( cHold, zz, 1 ) == "Y"
+               cTemp := SubStr( cHold, 1, zz - 1 ) + "IES"
+               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     SP_Check( cTemp )
+                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               ENDIF
+            ELSEIF SubStr( cHold, zz, 1 ) == "F"
+               cTemp := SubStr( cHold, 1, zz - 1 ) + "VES"
+               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     SP_Check( cTemp )
+                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               ENDIF
+            ELSEIF SubStr( cHold, zz, 1 ) == "O"
+               cTemp := cHold + "ES"
+               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     SP_Check( cTemp )
+                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               ENDIF
+            ENDIF
+         ENDIF
+      NEXT
+   ENDIF
+
+   //
+   // Check metaphone matches, only if SUGGEST_PREFERENCE is metafone or both,
+   // because this search can slow things down a bit
+   //
+
+   IF SUGGEST_PREFERENCE $ "MB"
+      IF METAPHONE_SIZE == 0
+         zz    := Min( 5, Len( cWord ) )
+         IF zz < 3
+            zz := 3
+         ENDIF
+      ELSE
+         zz  := METAPHONE_SIZE
+      ENDIF
+      cTemp  := SP_GetBuf( cWord )
+      ii     := Len( cTemp )
+      cMeta  := C_Metafone( cWord, zz )
+      zz     := Len( cMeta )
+      cFirst := SubStr( cWord, 1, 2 )
+
+      IF ii > 0
+
+         IF SubStr( cMeta, 2, 1 ) >= "N"
+
+            kk := ii - 5
+            jj := ii - 4
+
+            DO WHILE kk > 0
+               IF Asc( SubStr( cTemp, kk, 1 ) ) >= 128      // End of word
+                  cHold := cFirst + xUnForm( SubStr( cTemp, kk + 1, jj - kk ) )
+                  cKey  := c_metafone( cHold, zz )
+                  IF cMeta ==  c_Metafone( cHold, zz )
+                     IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) -Len( cHold ) ) <= MAX_DIFFERENCE
+                        IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0
+                           AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+                        ENDIF
+                     ENDIF
+                  ELSEIF cKey < cMeta
+                     EXIT
+                  ENDIF
+                  jj    := kk
+               ENDIF
+               kk--
+            ENDDO
+
+
+         ELSE
+            kk := 1
+            jj := 1
+
+            DO WHILE kk < ii
+               IF Asc( SubStr( cTemp, kk, 1 ) ) >= 128      // End of word
+                  cHold := cFirst + xUnForm( SubStr( cTemp, jj, kk - jj + 1 ) )
+                  cKey  := c_metafone( cHold, zz )
+                  IF cMeta ==  c_Metafone( cHold, zz )
+                     IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) -Len( cHold ) ) <= MAX_DIFFERENCE
+                        IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0
+                           AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+                        ENDIF
+                     ENDIF
+                  ELSEIF cKey > cMeta
+                     EXIT
+                  ENDIF
+                  jj    := kk + 1
+               ENDIF
+               kk++
+            ENDDO
+         ENDIF
+
+      ENDIF
+   ENDIF
+
+
+   nSugg := Len( aRet_ )
+   IF nSugg > 1 .AND. SORT_SUGGESTIONS
+      ASort( aRet_ )
+   ENDIF
+
+   FOR kk := 1 TO nSugg
+      aRet_[ kk ] := SubStr( aRet_[ kk ], 5 )
+   NEXT
+
+   RETURN aRet_
+
+
+// *
+// *     Function:  Sp_Quick()
+// *      Purpose:  To return an array of quick spellings
+// *       Syntax:  aSuggest  := Sp_Quick( cWord )
+// *    Arguments:  cWord     - Word to look for suggestions for
+// *      Returns:  aSuggest  - List of suggested words
+// *
+
+FUNCTION Sp_Quick( cWord )
+
+   STATIC aTryThese := { ;
+      "AI$AO$AU$AY$EA$EI$EIGH$ET$EY$E$O$", ;
+      "A$AE$AI$AY$EA$EI$EO$IE$U$O$", ;
+      "A$E$EE$IA$IE$O$U$UI$Y$YE$UY$EI$IGH$", ;
+      "AU$EAU$EO$EW$OA$OE$OH$OU$OUGH$OW$A$AH$AW$UO$E$", ;
+      "O$OE$OO$OU$EUA$EU$EUE$EW$IEU$IEW$UE$UI$YOU$YU$", ;
+      "ED$GHT$PT$TH$"  }
+
+   LOCAL ii       := 0
+   LOCAL nOld, jj, kk
+   LOCAL zz       := Len( cWord )
+   LOCAL arr_     := {}
+   LOCAL cHold, ll, cTemp
+
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_quick"
+
+   cWord    := Upper( RTrim( cWord ) )
+
+   IF zz < 3                          // Don't offer suggestions for
+      RETURN {}                       // one or two letter words
+   ENDIF
+
+
+   // *
+   // * Step One - Do letter doubling
+   // *
+
+   FOR jj := 2 TO zz
+      IF SubStr( cWord, jj, 1 ) $ "BCDEFGKLMNOPRSTZ"
+         cHold := Left( cWord, jj ) + SubStr( cWord, jj, 1 ) + ;
+            SubStr( cWord, jj + 1 )
+         // *
+         // * If the word is not already in the list, then check
+         // * to see if it is a valid word.
+         // *
+
+         IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+            AAdd( arr_, cHold )
+         ENDIF
+      ENDIF
+   NEXT
+
+   // *
+   // * Step Two - Remove extra letters
+   // *
+
+   FOR jj := 1 TO zz
+      cHold := Left( cWord, jj - 1 ) + SubStr( cWord, jj + 1 )
+      // *
+      // * If the word is not already in the list, then check
+      // * to see if it is a valid word.
+      // *
+
+      IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+         AAdd( arr_, cHold )
+      ENDIF
+   NEXT
+
+   // *
+   // * Step Three - Transpose the letters
+   // *
+
+   FOR jj := 2 TO zz
+      cHold := Left( cWord, jj - 2 ) + SubStr( cWord, jj, 1 ) + ;
+         SubStr( cWord, jj - 1, 1 ) + SubStr( cWord, jj + 1 )
+      IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+         AAdd( arr_, cHold )
+      ENDIF
+   NEXT
+
+   // *
+   // * Step Four - Try adding a silent E to the end
+   // *
+
+
+   cHold := cWord + "E"
+   IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+      AAdd( arr_, cHold )
+   ENDIF
+
+   // *
+   // * Step Five - Do sound alike substitutions
+   // *
+
+
+
+   FOR jj := 1 TO 6
+      IF SubStr( "AEIOUT", jj, 1 ) $ cWord
+         ii   := fat( SubStr( "AEIOUT", jj, 1 ), cWord, ii )
+         nold := 1
+         DO WHILE ii > 0
+            FOR kk := 1 TO chrcount( "$", aTryThese[ jj ] )
+               ll    := fat( "$", aTryThese[ jj ], nOld )
+               cTemp := SubStr( aTryThese[ jj ], nOld, ll - nOld )
+               nOld  := ll + 1
+               cHold := SubStr( cWord, 1, ii - 1 ) + cTemp + SubStr( cWord, ii + 1 )
+               IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
+                  AAdd( arr_, cHold )
+               ENDIF
+            NEXT
+            ii++
+            ii := fat( SubStr( "AEIOUT", jj, 1 ), cWord, ii )
+         ENDDO
+      ENDIF
+   NEXT
+
+   RETURN arr_
+
+STATIC FUNCTION ChrCount( cChar, cString )
+
+   // *DEBUG**
+   @ 24, 30 SAY "At ChrCount"
+
+   RETURN Len( cString ) -Len( StrTran( cString, cChar ) )
+
+FUNCTION Sp_Split( cWord )
+
+   LOCAL arr_ := {}
+   LOCAL x
+   LOCAL cWord1
+   LOCAL cWord2
+
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_split"
+
+   FOR x := 2 TO Len( cWord )
+      cWord1 := Left( cWord, x - 1 )
+      cWord2 := SubStr( cWord, x )
+      IF Len( cWord1 ) > 1 .AND. Len( cWord2 ) > 1
+         IF SP_Check( cWord1 ) .AND.  SP_Check( cWord2 )
+            AAdd( arr_, cWord1 + ' ' + cWord2 )
+         ENDIF
+      ENDIF
+   NEXT
+
+   RETURN arr_
+
+FUNCTION SP_Expand( cWord )
+
+   LOCAL x
+   LOCAL cExpand
+
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_expand"
+
+   cWord := Upper( AllTrim( cWord ) )
+   x := AScan( aContracts, {|jj| jj[ 1 ] = cWord } )
+   IF x > 0
+      cExpand :=  aContracts[ x, 2 ]
+   ENDIF
+
+   RETURN cExpand
+
+
+
 
 //
-// Check metaphone matches, only if SUGGEST_PREFERENCE is metafone or both,
-// because this search can slow things down a bit
+//      Function:  Sp_WildCard()
+//       Purpose:  To return an array of wildcard matches
+//        Syntax:  aSuggest  := Sp_WildCard( cPattern )
+//     Arguments:  cPattern  - Pattern to match using * or ?'s
+//       Returns:  aSuggest  - List of matching words
 //
-////////////////////////////
-if SUGGEST_PREFERENCE $ "MB"
-   if METAPHONE_SIZE == 0
-      zz    := min( 5,len(cWord))
-      if zz < 3
-         zz := 3
-      endif
-   else
-      zz  := METAPHONE_SIZE
-   endif
-   cTemp  := SP_GetBuf(cWord)
-   ii     := len(cTemp)
-   cMeta  := C_Metafone(cWord,zz)
-   zz     := len(cMeta)
-   cFirst := substr(cWord,1,2)
 
-   if ii > 0
+FUNCTION Sp_Wildcard( cPattern )
 
-      if substr(cMeta,2,1) >= "N"
+   LOCAL   cTemp
+   LOCAL   ii, kk, jj, cFirst, cHold, x, z
+   LOCAL   arr_   := {}
+   LOCAL   nStart, nEnd
 
-         kk := ii-5
-         jj := ii-4
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_wildcard"
 
-         do while kk > 0
-            if asc(substr(cTemp,kk,1)) >= 128      // End of word
-               cHold := cFirst+xUnForm(substr(cTemp,kk+1,jj-kk))
-               cKey  := c_metafone(cHold,zz)
-               if cMeta ==  c_Metafone(cHold,zz)
-                  if MAX_DIFFERENCE < 0 .or. abs(len(cWord)-len(cHold)) <= MAX_DIFFERENCE
-                     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0
-                        Aadd( aRet_,"B"+SP_Rate(cHold,cWord)+cHold )
-                     endif
-                  endif
-               elseif cKey < cMeta
-                 exit
-               endif
-               jj    := kk
-            endif
-            kk--
-         enddo
+   cPattern := Upper( cPattern )
+
+   IF SP_Init()
+      x      := fat( "*", cPattern )
+      IF x == 0
+         x := fat( "?", cPattern )
+      ENDIF
+      IF x == 1                 // Can't handle wildcards in first position
+         RETURN arr_
+      ENDIF
+      IF x == 2
+         nStart := 1
+         nEnd   := 26
+      ELSE
+         nStart := Asc( SubStr( cPattern, 2, 1 ) ) -64
+         nEnd   := nStart
+      ENDIF
 
 
-      else
-         kk := 1
-         jj := 1
+      FOR z := nStart TO nEnd
+         cTemp  := SP_GetBuf( SubStr( cPattern, 1, 1 ) + Chr( z + 64 ) )
+         ii     := Len( cTemp )
+         cFirst := SubStr( cPattern, 1, 1 ) + Chr( z + 64 )
 
-         do while kk < ii
-            if asc(substr(cTemp,kk,1)) >= 128      // End of word
-               cHold := cFirst+xUnForm(substr(cTemp,jj,kk-jj+1))
-               cKey  := c_metafone(cHold,zz)
-               if cMeta ==  c_Metafone(cHold,zz)
-                  if MAX_DIFFERENCE < 0 .or. abs(len(cWord)-len(cHold)) <= MAX_DIFFERENCE
-                     if ascan(aRet_,{ |xx| substr(xx,5)==cHold}) == 0
-                        Aadd( aRet_,"B"+SP_Rate(cHold,cWord)+cHold )
-                     endif
-                  endif
-               elseif cKey > cMeta
-                 exit
-               endif
-               jj    := kk+1
-            endif
-            kk++
-         enddo
-      endif
+         IF ii > 0
+            kk := 1
+            jj := 1
+            DO WHILE kk < ii
+               IF Asc( SubStr( cTemp, kk, 1 ) ) >= 128      // End of word
+                  cHold := cFirst + xUnForm( SubStr( cTemp, jj, kk - jj + 1 ) )
+                  IF WildCard( cPattern, cHold )
+                     AAdd( arr_, cHold )
+                  ENDIF
+                  jj    := kk + 1
+               ENDIF
+               kk++
+            ENDDO
+         ENDIF
+      NEXT
+   ENDIF
 
-   endif
-endif
-
-
-nSugg := len(aRet_)
-if nSugg > 1 .and. SORT_SUGGESTIONS
-   Asort(aRet_)
-endif
-
-for kk := 1 to nSugg
-   aRet_[kk] := substr(aRet_[kk],5)
-next
-
-return aRet_
-*******************************************************************************
-
-**
-**     Function:  Sp_Quick()
-**      Purpose:  To return an array of quick spellings
-**       Syntax:  aSuggest  := Sp_Quick( cWord )
-**    Arguments:  cWord     - Word to look for suggestions for
-**      Returns:  aSuggest  - List of suggested words
-**
-******************************************************************************
-function Sp_Quick( cWord )
-
-STATIC aTryThese := { "AI$AO$AU$AY$EA$EI$EIGH$ET$EY$E$O$",;
-                      "A$AE$AI$AY$EA$EI$EO$IE$U$O$",;
-                      "A$E$EE$IA$IE$O$U$UI$Y$YE$UY$EI$IGH$",;
-                      "AU$EAU$EO$EW$OA$OE$OH$OU$OUGH$OW$A$AH$AW$UO$E$",;
-                      "O$OE$OO$OU$EUA$EU$EUE$EW$IEU$IEW$UE$UI$YOU$YU$",;
-                      "ED$GHT$PT$TH$"  }
-
-LOCAL ii       := 0
-LOCAL nOld,jj,kk
-LOCAL zz       := len(cWord)
-LOCAL arr_     := {}
-LOCAL cHold,ll,cTemp
-
-**DEBUG**
-@24,30 SAY "At SP_quick"
-
-cWord    := upper(rtrim(cWord))
-
-if zz < 3                          && Don't offer suggestions for
-   return {}                       && one or two letter words
-endif
-
-
-**
-** Step One - Do letter doubling
-**
-**********************************
-for jj := 2 to zz
-   if substr(cWord,jj,1)$"BCDEFGKLMNOPRSTZ"
-      cHold := left(cWord,jj)+substr(cWord,jj, 1)+;
-               substr(cWord,jj+1)
-      **
-      ** If the word is not already in the list, then check
-      ** to see if it is a valid word.
-      **
-      ******************************************
-      if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
-         Aadd(arr_,cHold)
-      endif
-   endif
-next
-
-**
-** Step Two - Remove extra letters
-**
-**********************************
-for jj := 1 to zz
-   cHold := left(cWord,jj-1)+substr(cWord,jj+1)
-   **
-   ** If the word is not already in the list, then check
-   ** to see if it is a valid word.
-   **
-   ******************************************
-   if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
-      Aadd(arr_,cHold)
-   endif
-next
-
-**
-** Step Three - Transpose the letters
-**
-**************************
-for jj := 2 to zz
-   cHold := left(cWord,jj-2)+substr(cWord,jj, 1)+;
-            substr(cWord,jj-1,1)+substr(cWord,jj+1)
-   if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
-      Aadd(arr_,cHold)
-   endif
-next
-
-**
-** Step Four - Try adding a silent E to the end
-**
-******************
-
-cHold := cWord+"E"
-if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
-   Aadd(arr_,cHold)
-endif
-
-**
-** Step Five - Do sound alike substitutions
-**
-**********************************
-
-
-for jj := 1 to 6
-   if substr("AEIOUT",jj,1)$cWord
-      ii   := fat(substr("AEIOUT",jj,1),cWord,ii)
-      nold := 1
-      do while ii > 0
-         for kk := 1 to chrcount("$",aTryThese[jj])
-            ll    := fat("$",aTryThese[jj],nOld)
-            cTemp := substr(aTryThese[jj],nOld,ll-nOld)
-            nOld  := ll +1
-            cHold := substr(cWord,1,ii-1)+cTemp+substr(cWord,ii+1)
-            if ascan(arr_,cHold) == 0 .and. Sp_Check(cHold)
-               Aadd(arr_,cHold)
-            endif
-         next
-         ii++
-         ii := fat(substr("AEIOUT",jj,1),cWord,ii)
-      enddo
-   endif
-next
-
-return arr_
-
-STATIC function ChrCount(cChar,cString)
-
-**DEBUG**
-@24,30 SAY "At ChrCount"
-
-return len(cString)-len(strTran(cString,cChar))
-
-**
-**     Function:  Sp_Split()
-**      Purpose:
-**       Syntax:
-**    Arguments:
-**      Returns:
-**
-******************************************************************************
-function Sp_Split( cWord )
-LOCAL arr_ := {}
-LOCAL x
-LOCAL cWord1
-LOCAL cWord2
-
-**DEBUG**
-@24,30 SAY "At SP_split"
-
-for x := 2 to len(cWord)
-   cWord1 := left(cWord,x-1)
-   cWord2 := substr(cWord,x)
-   if len(cWord1) > 1 .and. len(cWord2) > 1
-      if SP_Check(cWord1) .and.  SP_Check(cWord2)
-         Aadd(arr_,cWord1+' '+cWord2)
-      endif
-   endif
-next
-return arr_
-******************************************************************************
-
-
-**
-**     Function:  Sp_Expand()
-**      Purpose:
-**       Syntax:
-**    Arguments:
-**      Returns:
-**
-******************************************************************************
-function SP_Expand(cWord)
-LOCAL x
-LOCAL cExpand
-
-**DEBUG**
-@24,30 SAY "At SP_expand"
-
-cWord := upper(alltrim(cWord))
-x := ascan( aContracts, { |jj|jj[1]=cWord } )
-if x > 0
-   cExpand :=  aContracts[x,2]
-endif
-return cExpand
-******************************************************************************
+   RETURN arr_
 
 
 
-**
-**     Function:  Sp_WildCard()
-**      Purpose:  To return an array of wildcard matches
-**       Syntax:  aSuggest  := Sp_WildCard( cPattern )
-**    Arguments:  cPattern  - Pattern to match using * or ?'s
-**      Returns:  aSuggest  - List of matching words
-**
-******************************************************************************
-function Sp_Wildcard( cPattern )
-LOCAL   cTemp
-LOCAL   ii,kk,jj,cFirst,cHold,x,z
-LOCAL   arr_   := {}
-LOCAL   nStart,nEnd
 
-**DEBUG**
-@24,30 SAY "At SP_wildcard"
+// The following functions are internal and should not be modified.           *
 
-cPattern := upper(cPattern)
-
-if SP_Init()
-   x      := fat("*",cPattern)
-   if x == 0
-      x := fat("?",cPattern)
-   endif
-   if x == 1                 // Can't handle wildcards in first position
-      return arr_
-   endif
-   if x == 2
-      nStart := 1
-      nEnd   := 26
-   else
-      nStart := asc(substr(cPattern,2,1))-64
-      nEnd   := nStart
-   endif
-
-
-   for z := nStart to nEnd
-      cTemp  := SP_GetBuf(substr(cPattern,1,1)+chr( z + 64 ) )
-      ii     := len(cTemp)
-      cFirst := substr(cPattern,1,1)+chr( z + 64 )
-
-      if ii > 0
-         kk := 1
-         jj := 1
-         do while kk < ii
-            if asc(substr(cTemp,kk,1)) >= 128      // End of word
-               cHold := cFirst+xUnForm(substr(cTemp,jj,kk-jj+1))
-               if WildCard(cPattern,cHold)
-                  Aadd( arr_,cHold )
-               endif
-               jj    := kk+1
-            endif
-            kk++
-         enddo
-      endif
-   next
-endif
-return arr_
-
-
-
-******************************************************************************
-* The following functions are internal and should not be modified.           *
-******************************************************************************
 
 //   Function:  SP_Init()
 //    Purpose:  Internal function to initialize the dictionary
@@ -1068,75 +1069,76 @@ return arr_
 //
 //      Notes:
 //
-////////////////////////////
-function Sp_init
-LOCAL isok := .T.
-LOCAL cBuf
-LOCAL i
-LOCAL j
-LOCAL nOther := 0
-LOCAL cOther := ""
-LOCAL nFileSize
 
-**DEBUG**
-@24,30 SAY "At SP_init"
+FUNCTION Sp_init
 
-if cOffsets == NIL
-   isok    := .F.
-   nHandle := fopen(DICTIONARY_PATH+DICTIONARY_NAME, FO_READ + FO_DENYWRITE )
-   if nHandle > 0
+   LOCAL isok := .T.
+   LOCAL cBuf
+   LOCAL i
+   LOCAL j
+   LOCAL nOther := 0
+   LOCAL cOther := ""
+   LOCAL nFileSize
 
-      #ifdef REDUCE_MEMORY_NEEDS
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_init"
 
-         cBuf := space(6)
-         fread(nHandle,@cBuf,6)
+   IF cOffsets == NIL
+      isok    := .F.
+      nHandle := FOpen( DICTIONARY_PATH + DICTIONARY_NAME, FO_READ + FO_DENYWRITE )
+      IF nHandle > 0
 
-      #else
+#ifdef REDUCE_MEMORY_NEEDS
 
-         cBuf       := space(NSIZE+6)
-         fread(nHandle,@cBuf,NSIZE+6)
+         cBuf := Space( 6 )
+         FRead( nHandle, @cBuf, 6 )
 
-      #endif
+#else
 
-      if substr(cBuf,1,2)=="JJ"
-         nOther    := bin2l(substr(cBuf,3,4))
+         cBuf       := Space( NSIZE + 6 )
+         FRead( nHandle, @cBuf, NSIZE + 6 )
 
-         #ifndef REDUCE_MEMORY_NEEDS
+#endif
 
-             cOffSets  := substr(cBuf,7)
+         IF SubStr( cBuf, 1, 2 ) == "JJ"
+            nOther    := Bin2L( SubStr( cBuf, 3, 4 ) )
 
-         #endif
+#ifndef REDUCE_MEMORY_NEEDS
 
-         nFileSize := fseek(nHandle,0,FS_END)
-         if nFileSize-nOther > 0
-            cOther   := space(nFileSize-nOther)
-            fseek(nHandle,nOther,FS_SET)
-            fread(nHandle,@cOther,(nFileSize-nOther))
-         endif
-         aGlobal[2] += cOther
-         isok     := .T.
-      endif
-      if !empty( AUXILIARY_DICTIONARY )
-         SP_LoadAux( AUXILIARY_DICTIONARY )
-      endif
-   endif
-   if aGlobal[1] == NIL
-      SP_Common()
-   endif
+            cOffSets  := SubStr( cBuf, 7 )
 
-** Thesaurus comented out as not needed
-*  if !empty( THESAURUS_NAME )
-*     if file( DICTIONARY_PATH+THESAURUS_NAME )
-*        SP_OpenThes( DICTIONARY_PATH+THESAURUS_NAME )
-*     elseif file( THESAURUS_NAME )
-*        SP_OpenThes( THESAURUS_NAME )
-*     endif
-*  endif
+#endif
 
-endif
+            nFileSize := FSeek( nHandle, 0, FS_END )
+            IF nFileSize - nOther > 0
+               cOther   := Space( nFileSize - nOther )
+               FSeek( nHandle, nOther, FS_SET )
+               FRead( nHandle, @cOther, ( nFileSize - nOther ) )
+            ENDIF
+            aGlobal[ 2 ] += cOther
+            isok     := .T.
+         ENDIF
+         IF !Empty( AUXILIARY_DICTIONARY )
+            SP_LoadAux( AUXILIARY_DICTIONARY )
+         ENDIF
+      ENDIF
+      IF aGlobal[ 1 ] == NIL
+         SP_Common()
+      ENDIF
 
-return isok
-******************************************************************************
+      // * Thesaurus comented out as not needed
+      //  if !empty( THESAURUS_NAME )
+      //     if file( DICTIONARY_PATH+THESAURUS_NAME )
+      //        SP_OpenThes( DICTIONARY_PATH+THESAURUS_NAME )
+      //     elseif file( THESAURUS_NAME )
+      //        SP_OpenThes( THESAURUS_NAME )
+      //     endif
+      //  endif
+
+   ENDIF
+
+   RETURN isok
+
 
 
 //
@@ -1155,155 +1157,156 @@ return isok
 //
 //         Calls:
 //
-//////////////////////////////////
-function DBF2Dic(cDbf,cDictionary,lTalk)
 
-LOCAL nStatus := 0                 // Status code
-LOCAL i                            // Loop counters
-LOCAL j
-LOCAL x
-LOCAL nH                           // File handle
-LOCAL nWhere
-LOCAL temp
-LOCAL cBits
-LOCAL cSave
-LOCAL nSize
-LOCAL cOther := ""
-LOCAL nCurRec := 0
+FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
-//
-//  DEFAULT name for dictionary file
-//
-//////////////////////////////////////
-**DEBUG**
-@24,30 SAY "At DBF2DIC"
+   LOCAL nStatus := 0                 // Status code
+   LOCAL i                            // Loop counters
+   LOCAL j
+   LOCAL x
+   LOCAL nH                           // File handle
+   LOCAL nWhere
+   LOCAL temp
+   LOCAL cBits
+   LOCAL cSave
+   LOCAL nSize
+   LOCAL cOther := ""
+   LOCAL nCurRec := 0
 
-if cDictionary == NIL
-   cDictionary := "DICT.DIC"
-endif
-
-if lTalk == NIL
-   lTalk := .F.
-endif
-
-
-//
-//  See if the DBF file exists
-//
-//////////////////////////////////////
-if ! "."$cDBF
-   cDBF += ".DBF"
-endif
-
-if !file( cDBF )
-   return -1
-endif
-
-use (cDbf) alias DICT new
-if fieldpos("WORD") == 0
-   use
-   return -2
-endif
-
-if lTalk
-
-   cSave := SaveScreen(8,30,11,48)
-   hb_DispBox(8,30,11,48,,"W+/R")
-   @  8,33 say " Creating DIC "     color "W+/R"
-   @  9,31 say " Indexing words  "  color "W/R"
-   @ 10,31 say "                 "  color "W/R"
-
-   nSize := DICT->(lastrec())
-
-endif
-
-index on substr(DICT->word,1,2)+padr(c_metafone(alltrim(DICT->word),5),6) to $$temp
-go top
-
-
-if lTalk
-   @  9,31 say "Percent          "  color "W/R"
-   @ 10,31 say "Complete:        "  color "W/R"
-endif
-
-//
-//  Create the dictionary file
-//
-//////////////////////////////////////
-                                       && ADDED - 02/08/96 - JAMES
-IF nHandle > 0                         && Is dictionary already open?
-   FCLOSE(nHandle)                     && Yes, close it
-   nHandle := 0
-ENDIF                                  && END OF ADDITION
-
-nH := fcreate(cDictionary)
-
-if nH >= 0
    //
-   // Write out enough bytes to hold the index information
+   //  DEFAULT name for dictionary file
    //
-   /////////////////////////////////////////////////////////////////////////
-   fwrite(nH,"JJ"+l2bin(NSIZE+4)+replicate(chr( 0 ),NSIZE)+space(10),NSIZE+16)
 
-   for i := 1 to 26
-      do while substr(DICT->word,1,1)==chr( i + 64 ) .and. !eof()
-         for j := 1 to 26
-            temp  := ""
-            cBits := FOUR_BYTES
-            do while !isAlpha(substr(DICT->word,2,1)) .and. !eof()
-               if len(alltrim(DICT->word)) > 0
-                  cOther += "|"+alltrim(DICT->word)
-               endif
-               skip +1
-            enddo
-            do while substr(DICT->word,2,1)==chr( j + 64 ) .and. !eof()
-               if len(rtrim(DICT->word))=3
-                  Bit(cBits,asc(substr(DICT->word,3,1))-64,.T.)
-               elseif len(rtrim(DICT->word))==2
-                  Bit(cBits,27,.T.)
-               else
-                  temp += StoreWord(rtrim(DICT->word))
-               endif
-               skip +1
-               if lTalk
-                   nCurRec++
-                   @ 10,41 say (nCurRec/nSize) * 100   picture "999.9%"   color "W+/R"
-               endif
-            enddo
-            if !empty(temp) .or. cBits != FOUR_BYTES
+   // *DEBUG**
+   @ 24, 30 SAY "At DBF2DIC"
 
-               nWhere := fseek(nH,0,FS_END)
+   IF cDictionary == NIL
+      cDictionary := "DICT.DIC"
+   ENDIF
 
-               Fseek(nH,((i-1)*26*EACH_WORD)+((j-1)*EACH_WORD)+6)
-               Fwrite(nH,l2bin(nWhere)+i2bin(len(temp)+4),EACH_WORD)
-               Fseek(nH,0,FS_END)
-               Fwrite(nH,cBits+temp,len(temp)+4)
-            endif
-         next
-      enddo
-   next
-   j := fseek(nH,0,FS_END)
-   fseek(nH,2,FS_SET)
-   fwrite(nH,l2bin(j),4)
-   if !empty(cOther)
-      fseek(nH,j,FS_SET)
-      cOther += "|"
-      fwrite(nH,cOther,len(cOther))
-   endif
-   fclose(nH)
-else
-   nStatus := nH
-endif
+   IF lTalk == NIL
+      lTalk := .F.
+   ENDIF
 
-if lTalk
-   RestScreen(8,30,11,48,cSave)
-endif
 
-select DICT
-use
-//  ferase("$$TEMP"+indexext())
-return nStatus
-*******************************************************************************
+   //
+   //  See if the DBF file exists
+   //
+
+   IF ! "." $ cDBF
+      cDBF += ".DBF"
+   ENDIF
+
+   IF !File( cDBF )
+      RETURN -1
+   ENDIF
+
+   USE ( cDbf ) ALIAS DICT new
+   IF FieldPos( "WORD" ) == 0
+      USE
+      RETURN -2
+   ENDIF
+
+   IF lTalk
+
+      cSave := SaveScreen( 8, 30, 11, 48 )
+      hb_DispBox( 8, 30, 11, 48,, "W+/R" )
+      @  8, 33 SAY " Creating DIC "     COLOR "W+/R"
+      @  9, 31 SAY " Indexing words  "  COLOR "W/R"
+      @ 10, 31 SAY "                 "  COLOR "W/R"
+
+      nSize := DICT->( LastRec() )
+
+   ENDIF
+
+   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( c_metafone( AllTrim( DICT->word ), 5 ), 6 ) to $$ temp
+   GO TOP
+
+
+   IF lTalk
+      @  9, 31 SAY "Percent          "  COLOR "W/R"
+      @ 10, 31 SAY "Complete:        "  COLOR "W/R"
+   ENDIF
+
+   //
+   //  Create the dictionary file
+   //
+
+   // ADDED - 02/08/96 - JAMES
+   IF nHandle > 0                         // Is dictionary already open?
+      FClose( nHandle )                     // Yes, close it
+      nHandle := 0
+   ENDIF                                  // END OF ADDITION
+
+   nH := FCreate( cDictionary )
+
+   IF nH >= 0
+      //
+      // Write out enough bytes to hold the index information
+      //
+
+      FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( Chr( 0 ), NSIZE ) + Space( 10 ), NSIZE + 16 )
+
+      FOR i := 1 TO 26
+         DO WHILE SubStr( DICT->word, 1, 1 ) == Chr( i + 64 ) .AND. !Eof()
+            FOR j := 1 TO 26
+               temp  := ""
+               cBits := FOUR_BYTES
+               DO WHILE !IsAlpha( SubStr( DICT->word, 2, 1 ) ) .AND. !Eof()
+                  IF Len( AllTrim( DICT->word ) ) > 0
+                     cOther += "|" + AllTrim( DICT->word )
+                  ENDIF
+                  skip + 1
+               ENDDO
+               DO WHILE SubStr( DICT->word, 2, 1 ) == Chr( j + 64 ) .AND. !Eof()
+                  IF Len( RTrim( DICT->word ) ) = 3
+                     Bit( cBits, Asc( SubStr( DICT->word, 3, 1 ) ) -64, .T. )
+                  ELSEIF Len( RTrim( DICT->word ) ) == 2
+                     Bit( cBits, 27, .T. )
+                  ELSE
+                     temp += StoreWord( RTrim( DICT->word ) )
+                  ENDIF
+                  skip + 1
+                  IF lTalk
+                     nCurRec++
+                     @ 10, 41 say ( nCurRec / nSize ) * 100   PICTURE "999.9%"   COLOR "W+/R"
+                  ENDIF
+               ENDDO
+               IF !Empty( temp ) .OR. cBits != FOUR_BYTES
+
+                  nWhere := FSeek( nH, 0, FS_END )
+
+                  FSeek( nH, ( ( i - 1 ) * 26 * EACH_WORD ) + ( ( j - 1 ) * EACH_WORD ) + 6 )
+                  FWrite( nH, L2Bin( nWhere ) + I2Bin( Len( temp ) + 4 ), EACH_WORD )
+                  FSeek( nH, 0, FS_END )
+                  FWrite( nH, cBits + temp, Len( temp ) + 4 )
+               ENDIF
+            NEXT
+         ENDDO
+      NEXT
+      j := FSeek( nH, 0, FS_END )
+      FSeek( nH, 2, FS_SET )
+      FWrite( nH, L2Bin( j ), 4 )
+      IF !Empty( cOther )
+         FSeek( nH, j, FS_SET )
+         cOther += "|"
+         FWrite( nH, cOther, Len( cOther ) )
+      ENDIF
+      FClose( nH )
+   ELSE
+      nStatus := nH
+   ENDIF
+
+   IF lTalk
+      RestScreen( 8, 30, 11, 48, cSave )
+   ENDIF
+
+   SELECT DICT
+   USE
+   //  ferase("$$TEMP"+indexext())
+
+   RETURN nStatus
+
 
 //
 //      Function:  Dic2DBF()
@@ -1320,143 +1323,144 @@ return nStatus
 //
 //         Calls:
 //
-//////////////////////////////////
-function DIC2DBF(cDictionary,cDBF,lTalk)
 
-LOCAL nStatus := 0                 // Status code
-LOCAL i                            // Loop counters
-LOCAL j
-LOCAL x,y,z
-LOCAL temp
-LOCAL cBuf
-LOCAL cWord
-LOCAL cSave
-LOCAL nSize
+FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
 
-**DEBUG**
-@24,30 SAY "At DIC2DBF"
+   LOCAL nStatus := 0                 // Status code
+   LOCAL i                            // Loop counters
+   LOCAL j
+   LOCAL x, y, z
+   LOCAL temp
+   LOCAL cBuf
+   LOCAL cWord
+   LOCAL cSave
+   LOCAL nSize
 
+   // *DEBUG**
+   @ 24, 30 SAY "At DIC2DBF"
+
+   //
+   //  DEFAULT name for dictionary file
+   //
+
+   IF cDictionary == NIL
+      cDictionary := "DICT.DIC"
+   ENDIF
+
+   IF lTalk == NIL
+      lTalk := .F.
+   ENDIF
+
+   IF !File( cDictionary )
+      RETURN -1
+   ENDIF
+
+   DICTIONARY_NAME := cDictionary
+
+   //
+   //  Read the dictionary file
+   //
+
+   IF !SP_Init()
+      RETURN -2
+   ENDIF
+   //
+   //  See if the DBF file exists
+   //
+
+   IF ! "." $ cDBF
+      cDBF += ".DBF"
+   ENDIF
+
+   dbCreate( cDbf, { { "WORD", "C", 25, 0 } } )
+
+   USE ( cDbf ) ALIAS DICT new
+
+   IF lTalk
+      cSave := SaveScreen( 8, 30, 12, 48 )
+      hb_DispBox( 8, 30, 12, 48,, "W+/R" )
+      @  8, 34 SAY " Creating DBF "     COLOR "W+/R"
+      @  9, 31 SAY "Percent          "  COLOR "W/R"
+      @ 10, 31 SAY "Complete:        "  COLOR "W/R"
+      @ 11, 31 SAY "  Record:        "  COLOR "W/R"
+
+      temp  := Directory( cDictionary )
+      nSize := temp[ 1, 2 ]
+
+   ENDIF
+
+
+   j := 2
+
+   FOR i := 2 TO Len( CACHE_WORDS )
+      IF SubStr( CACHE_WORDS, i, 1 ) == "|"
+         APPEND BLANK
+         REPLACE DICT->word WITH SubStr( CACHE_WORDS, j, i - j )
+         j := i + 1
+      ENDIF
+   NEXT
+
+
+   FOR i := 1 TO 26
+      FOR j := 1 TO 26
+         temp := Chr( i + 64 ) + Chr( j + 64 )
+         x  := Bin2L( SubStr( cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 1 ), 4 ) )
+         IF !Empty( x )
+            y    := Bin2W( SubStr( cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 5 ), 2 ) )
+
+            IF lTalk
+               @ 10, 43 say ( x / nSize ) * 100   PICTURE "999%"   COLOR "W+/R"
+               @ 11, 41 SAY LastRec()         PICTURE "99,999" COLOR "W+/R"
+            ENDIF
+
+            cBuf := Space( y )
+            FSeek( nHandle, x, FS_SET )
+            FRead( nHandle, @cBuf, y )
+            FOR z := 1 TO 26
+               IF bit( cBuf, z )
+                  APPEND BLANK
+                  REPLACE DICT->word WITH temp + Chr( z + 64 )
+               ENDIF
+            NEXT
+            IF bit( cBuf, 27 )
+               APPEND BLANK
+               REPLACE DICT->word WITH temp
+            ENDIF
+            cBuf := SubStr( cBuf, 5 )
+            z    := 1
+            DO WHILE !Empty( cBuf )
+               IF SubStr( cBuf, z, 1 ) >= Chr( 128 )
+                  cWord := SubStr( cBuf, 1, z )
+                  APPEND BLANK
+                  REPLACE DICT->word WITH temp + ExtractWord( cWord )
+                  cWord := ""
+                  cBuf  := SubStr( cBuf, z + 1 )
+                  z     := 1
+
+                  IF lTalk
+                     @ 11, 41 SAY LastRec()  PICTURE "99,999" COLOR "W+/R"
+                  ENDIF
+
+               ELSE
+                  z++
+               ENDIF
+            ENDDO
+            IF !Empty( cWord )
+            ENDIF
+            cWord := ""
+         ENDIF
+      NEXT
+   NEXT
+
+   IF lTalk
+      RestScreen( 8, 30, 12, 48, cSave )
+   ENDIF
+
+   SELECT DICT
+   USE
+
+   RETURN nStatus
 //
-//  DEFAULT name for dictionary file
-//
-//////////////////////////////////////
-if cDictionary == NIL
-   cDictionary := "DICT.DIC"
-endif
-
-if lTalk == NIL
-   lTalk := .F.
-endif
-
-if !file(cDictionary)
-   return -1
-endif
-
-DICTIONARY_NAME := cDictionary
-
-//
-//  Read the dictionary file
-//
-//////////////////////////////////////
-if !SP_Init()
-   return -2
-endif
-//
-//  See if the DBF file exists
-//
-//////////////////////////////////////
-if ! "."$cDBF
-   cDBF += ".DBF"
-endif
-
-dbcreate( cDbf,{ {"WORD","C",25,0} } )
-
-use (cDbf) alias DICT new
-
-if lTalk
-   cSave := SaveScreen(8,30,12,48)
-   hb_DispBox(8,30,12,48,,"W+/R")
-   @  8,34 say " Creating DBF "     color "W+/R"
-   @  9,31 say "Percent          "  color "W/R"
-   @ 10,31 say "Complete:        "  color "W/R"
-   @ 11,31 say "  Record:        "  color "W/R"
-
-   temp  := directory(cDictionary)
-   nSize := temp[1,2]
-
-endif
-
-
-j := 2
-
-for i := 2 to len(CACHE_WORDS)
-    if substr(CACHE_WORDS,i,1)=="|"
-       append blank
-       replace DICT->word with substr(CACHE_WORDS,j,i-j)
-       j := i +1
-    endif
-next
-
-
-for i := 1 to 26
-   for j := 1 to 26
-      temp := chr( i + 64 )+chr( j + 64 )
-      x  := bin2l(substr(cOffsets,((i-1)*156)+((j-1)*EACH_WORD+1),4))
-      if !empty(x)
-         y    := bin2w(substr(cOffsets,((i-1)*156)+((j-1)*EACH_WORD+5),2))
-
-         if lTalk
-            @ 10,43 say (x/nSize) * 100   picture "999%"   color "W+/R"
-            @ 11,41 say lastrec()         picture "99,999" color "W+/R"
-         endif
-
-         cBuf := space(y)
-         fseek(nHandle,x,FS_SET)
-         fread(nHandle,@cBuf,y)
-         for z := 1 to 26
-            if bit(cBuf,z)
-               append blank
-               replace DICT->word with temp+chr( z + 64 )
-            endif
-         next
-         if bit(cBuf,27)
-            append blank
-            replace DICT->word with temp
-         endif
-         cBuf := substr(cBuf,5)
-         z    := 1
-         do while !empty(cBuf)
-            if substr(cBuf,z,1)>=Chr( 128 )
-               cWord := substr(cBuf,1,z)
-               append blank
-               replace DICT->word with temp+ExtractWord(cWord)
-               cWord := ""
-               cBuf  := substr(cBuf,z+1)
-               z     := 1
-
-               if lTalk
-                  @ 11,41 say lastrec()  picture "99,999" color "W+/R"
-               endif
-
-            else
-               z++
-            endif
-         enddo
-         if !empty(cWord)
-         endif
-         cWord := ""
-      endif
-   next
-next
-
-if lTalk
-   RestScreen(8,30,12,48,cSave)
-endif
-
-select DICT
-use
-return nStatus
-********************************************************************************
 
 //     Function:  SP_Common()
 //      Purpose:  Loads the COMMON word static array element
@@ -1468,186 +1472,193 @@ return nStatus
 //                used English words.  They are stored in RAM to prevent a
 //                dictionary lookup for 70-80% of the words.
 //
-///////////////////////////
-STATIC function SP_common
+//
+STATIC FUNCTION SP_common
 
-#ifDef REDUCE_MEMORY_NEEDS
+#ifdef REDUCE_MEMORY_NEEDS
 
-aGlobal_[1]  :=  "|THE|OF|AND|TO|A|IN|THAT|FOR|IS|WAS|IT|HE|I|AS"+;
-                 "|WITH|ON|HIS|BE|AT|BY|NOT|THIS|HAD|HAVE|YOU|BUT"+;
-                 "|FROM|ARE|OR|WHICH|AN|THEY|WILL|ONE|WERE|ALL|WE"+;
-                 "|HER|SHE|WOULD|THERE|HAS|BEEN|HIM|THEIR|IF|WHEN"+;
-                 "|SO|MORE|NO|WHO|YOUR|OUT|MY|I'VE|I'D|I'LL|CAN'T|"
+   aGlobal_[ 1 ]  := ;
+      "|THE|OF|AND|TO|A|IN|THAT|FOR|IS|WAS|IT|HE|I|AS" + ;
+      "|WITH|ON|HIS|BE|AT|BY|NOT|THIS|HAD|HAVE|YOU|BUT" + ;
+      "|FROM|ARE|OR|WHICH|AN|THEY|WILL|ONE|WERE|ALL|WE" + ;
+      "|HER|SHE|WOULD|THERE|HAS|BEEN|HIM|THEIR|IF|WHEN" + ;
+      "|SO|MORE|NO|WHO|YOUR|OUT|MY|I'VE|I'D|I'LL|CAN'T|"
 
 #else
 
-aGlobal[1] := "|THE|OF|AND|TO|A|IN|THAT|FOR|IS|WAS|IT|HE|I|AS|WITH|ON|HIS|BE|AT|BY"+;
-              "|NOT|THIS|HAD|HAVE|YOU|BUT|FROM|ARE|OR|WHICH|AN|THEY|WILL|ONE|WERE|ALL"+;
-              "|WE|HER|SHE|WOULD|THERE|HAS|BEEN|HIM|THEIR|IF|WHEN|SO|MORE|NO|WHO|YOUR"+;
-              "|OUT|MY|WHAT|UP|CAN|THEM|ABOUT|INTO|ITS|TIME|SOME|THAN|ME|OTHER|ONLY|NEW"+;
-              "|COULD|SAID|ANY|THESE|MAY|TWO|THEN|DO|FIRST|NOW|MAN|SUCH|VERY|LIKE|OVER"+;
-              "|OUR|EVEN|MOST|AFTER|MADE|ALSO|DID|MANY|SHOULD|BEFORE|MUST|THROUGH|YEARS"+;
-              "|WHERE|MUCH|WAY|WELL|DOWN|GOOD|BECAUSE|HERE|EACH|THOSE|PEOPLE|STATE|HOW"+;
-              "|TOO|LITTLE|WORLD|LAST|WORK|STILL|BACK|OWN|SEE|MEN|LONG|GET|JUST|GO|HOUSE"+;
-              "|BETWEEN|BOTH|LIFE|BEING|UNDER|YEAR|NEVER|DAY|SAME|ANOTHER|KNOW|WHILE|MIGHT"+;
-              "|US|GREAT|OLD|OFF|COME|AGAINST|SINCE|CAME|RIGHT|TAKE|USED|THREE|SMALL|MAKE"+;
-              "|STATES|HIMSELF|FEW|DURING|WITHOUT|AGAIN|PLACE|AROUND|HOWEVER|HOME|FOUND"+;
-              "|SAY|WHOSE|THOUGHT|NIGHT|DEAR|ONCE|WENT|GENERAL|HIGH|UPON|SCHOOL|EVERY|PART"+;
-              "|DON'T|DOES|GOT|UNITED|LEFT|NUMBER|COURSE|WAR|GOING|UNTIL|ALWAYS|AWAY"+;
-              "|SOMETHING|FACT|THOUGH|WATER|LESS|PUBLIC|PUT|THINK|ALMOST|HAND|ENOUGH|FAR"+;
-              "|TOOK|YET|GOVERNMENT|SYSTEM|BETTER|EYES|SET|TOLD|NOTHING|PRESIDENT|END"+;
-              "|HEAD|WHY|CALLED|DIDN'T|FIND|LOOK|ASKED|LATER|POINT|NEXT|PROGRAM|KNEW|CITY"+;
-              "|BUSINESS|GIVE|GROUP|TOWARD|YOUNG|DAYS|LET|ROOM|WITHIN|CHILDREN|SIDE|SOCIAL"+;
-              "|GIVEN|ORDER|PRESENT|SEVERAL|NATIONAL|USE|RATHER|SECOND|FACE|PER|POSSIBLE"+;
-              "|AMONG|FORM|IMPORTANT|OFTEN|THINGS|LOOKED|EARLY|WHITE|BECOME|CASE|SEND"+;
-              "|BIG|LARGE|NEED|FOUR|FELT|ALONG|GOD|SAW|BEST|CHURCH|EVER|LEAST|POWER"+;
-              "|DEVELOPMENT|LIGHT|THING|FAMILY|INTEREST|SEEMED|WANT|TODAY|MEMBERS|MIND"+;
-              "|COUNTRY|AREA|OTHERS|TURNED|ALTHOUGH|DONE|OPEN|SERVICE|CERTAIN|KIND|PROBLEM"+;
-              "|BEGAN|DIFFERENT|DOOR|THUS|HELP|MEANS|SENSE|WHOLE|MATTER|PERHAPS|ITSELF"+;
-              "|IT'S|TIMES|HUMAN|LAW|LINE|ABOVE|NAME|EXAMPLE|COMPANY|HANDS|LOCAL|SHOW"+;
-              "|BODY|FIVE|HISTORY|WHETHER|GAVE|EITHER|ACROSS|ACT|ACTION|FEET|ANYTHING"+;
-              "|PAST|QUITE|TAKEN|HAVING|SEEN|DEATH|EXPERIENCE|HALF|REALLY|WEEK|WORDS"+;
-              "|CAR|FIELD|MONEY|WORD|ALREADY|THEMSELVES|INFORMATION|I'M|TELL|CLOSE"+;
-              "|COLLEGE|PERIOD|SHALL|TOGETHER|HELD|KEEP|SURE|PROBABLY|FREE|REAL|BEHIND"+;
-              "|SEEMS|CANNOT|POLITICAL|AIR|QUESTION|OFFICE|WOMAN|BROUGHT|MAJOR|MOTHER"+;
-              "|SPECIAL|HEARD|PROBLEMS|AGO|BECAME|AVAILABLE|FEDERAL|MOMENT|STUDY"+;
-              "|KNOWN|RESULT|STREET|BOY|ECONOMIC|CHANGE|POSITION|REASON|SOUTH|BOARD"+;
-              "|INDIVIDUAL|JOB|SOCIETY|AREAS|WEST|SPACE|TURN|LOVE|COMMUNITY|TOWN|TRUE"+;
-              "|COURT|FORCE|FULL|SEEM|AGE|AM|COST|WIFE|FUTURE|VOICE|WANTED|CAN'T|DEPARTMENT"+;
-              "|USE|CENTER|COMMON|CONTROL|NECESSARY|POLICY|FOLLOWING|FRONTSOMETIMES|FATHER"+;
-              "|GIRL|SIX|WOMEN|CLEAR|MILITARY|FURTHER|ABLE|FIGURE|LAND|FEEL|MUSIC|PARTY"+;
-              "|PROVIDE|CENTURY|EDUCATION|UNIVERSITY|CHILD|EFFECT|STUDENTS|RUN|SHORT"+;
-              "|STOOD|MORNING|TOTAL|OUTSIDE|ART|RATE|SAYS|YOU'RE|CLASS|TYPE|EVIDENCE"+;
-              "|EXCEPT|LEAVE|MILLION|MISS|NORTH|PLAN|SOUND|THEREFORE|TOP|USUALLY|BLACK"+;
-              "|HARD|SCHOOLS|STRONG|BELIEVE|PLAY|VARIOUS|SURFACE|MAKING|MEAN|SOON|VALUE"+;
-              "|LINES|MODERN|NEAR|TABLE|PRIVATE|RED|ROAD|TAX|ALONE|MINUTES|PERSONAL|PROCESS"+;
-              "|SITUATION|THAT'S|GONE|IDEA|INCREASE|NOR|PEACE|SECTION|LIVING|STARTED|BOOK"+;
-              "|LONGER|CUT|FINALLY|NATURE|SECRETARY|MONTHS|THIRD|CALL|COMPLETE|GREATER"
+   aGlobal[ 1 ] := ;
+      "|THE|OF|AND|TO|A|IN|THAT|FOR|IS|WAS|IT|HE|I|AS|WITH|ON|HIS|BE|AT|BY" + ;
+      "|NOT|THIS|HAD|HAVE|YOU|BUT|FROM|ARE|OR|WHICH|AN|THEY|WILL|ONE|WERE|ALL" + ;
+      "|WE|HER|SHE|WOULD|THERE|HAS|BEEN|HIM|THEIR|IF|WHEN|SO|MORE|NO|WHO|YOUR" + ;
+      "|OUT|MY|WHAT|UP|CAN|THEM|ABOUT|INTO|ITS|TIME|SOME|THAN|ME|OTHER|ONLY|NEW" + ;
+      "|COULD|SAID|ANY|THESE|MAY|TWO|THEN|DO|FIRST|NOW|MAN|SUCH|VERY|LIKE|OVER" + ;
+      "|OUR|EVEN|MOST|AFTER|MADE|ALSO|DID|MANY|SHOULD|BEFORE|MUST|THROUGH|YEARS" + ;
+      "|WHERE|MUCH|WAY|WELL|DOWN|GOOD|BECAUSE|HERE|EACH|THOSE|PEOPLE|STATE|HOW" + ;
+      "|TOO|LITTLE|WORLD|LAST|WORK|STILL|BACK|OWN|SEE|MEN|LONG|GET|JUST|GO|HOUSE" + ;
+      "|BETWEEN|BOTH|LIFE|BEING|UNDER|YEAR|NEVER|DAY|SAME|ANOTHER|KNOW|WHILE|MIGHT" + ;
+      "|US|GREAT|OLD|OFF|COME|AGAINST|SINCE|CAME|RIGHT|TAKE|USED|THREE|SMALL|MAKE" + ;
+      "|STATES|HIMSELF|FEW|DURING|WITHOUT|AGAIN|PLACE|AROUND|HOWEVER|HOME|FOUND" + ;
+      "|SAY|WHOSE|THOUGHT|NIGHT|DEAR|ONCE|WENT|GENERAL|HIGH|UPON|SCHOOL|EVERY|PART" + ;
+      "|DON'T|DOES|GOT|UNITED|LEFT|NUMBER|COURSE|WAR|GOING|UNTIL|ALWAYS|AWAY" + ;
+      "|SOMETHING|FACT|THOUGH|WATER|LESS|PUBLIC|PUT|THINK|ALMOST|HAND|ENOUGH|FAR" + ;
+      "|TOOK|YET|GOVERNMENT|SYSTEM|BETTER|EYES|SET|TOLD|NOTHING|PRESIDENT|END" + ;
+      "|HEAD|WHY|CALLED|DIDN'T|FIND|LOOK|ASKED|LATER|POINT|NEXT|PROGRAM|KNEW|CITY" + ;
+      "|BUSINESS|GIVE|GROUP|TOWARD|YOUNG|DAYS|LET|ROOM|WITHIN|CHILDREN|SIDE|SOCIAL" + ;
+      "|GIVEN|ORDER|PRESENT|SEVERAL|NATIONAL|USE|RATHER|SECOND|FACE|PER|POSSIBLE" + ;
+      "|AMONG|FORM|IMPORTANT|OFTEN|THINGS|LOOKED|EARLY|WHITE|BECOME|CASE|SEND" + ;
+      "|BIG|LARGE|NEED|FOUR|FELT|ALONG|GOD|SAW|BEST|CHURCH|EVER|LEAST|POWER" + ;
+      "|DEVELOPMENT|LIGHT|THING|FAMILY|INTEREST|SEEMED|WANT|TODAY|MEMBERS|MIND" + ;
+      "|COUNTRY|AREA|OTHERS|TURNED|ALTHOUGH|DONE|OPEN|SERVICE|CERTAIN|KIND|PROBLEM" + ;
+      "|BEGAN|DIFFERENT|DOOR|THUS|HELP|MEANS|SENSE|WHOLE|MATTER|PERHAPS|ITSELF" + ;
+      "|IT'S|TIMES|HUMAN|LAW|LINE|ABOVE|NAME|EXAMPLE|COMPANY|HANDS|LOCAL|SHOW" + ;
+      "|BODY|FIVE|HISTORY|WHETHER|GAVE|EITHER|ACROSS|ACT|ACTION|FEET|ANYTHING" + ;
+      "|PAST|QUITE|TAKEN|HAVING|SEEN|DEATH|EXPERIENCE|HALF|REALLY|WEEK|WORDS" + ;
+      "|CAR|FIELD|MONEY|WORD|ALREADY|THEMSELVES|INFORMATION|I'M|TELL|CLOSE" + ;
+      "|COLLEGE|PERIOD|SHALL|TOGETHER|HELD|KEEP|SURE|PROBABLY|FREE|REAL|BEHIND" + ;
+      "|SEEMS|CANNOT|POLITICAL|AIR|QUESTION|OFFICE|WOMAN|BROUGHT|MAJOR|MOTHER" + ;
+      "|SPECIAL|HEARD|PROBLEMS|AGO|BECAME|AVAILABLE|FEDERAL|MOMENT|STUDY" + ;
+      "|KNOWN|RESULT|STREET|BOY|ECONOMIC|CHANGE|POSITION|REASON|SOUTH|BOARD" + ;
+      "|INDIVIDUAL|JOB|SOCIETY|AREAS|WEST|SPACE|TURN|LOVE|COMMUNITY|TOWN|TRUE" + ;
+      "|COURT|FORCE|FULL|SEEM|AGE|AM|COST|WIFE|FUTURE|VOICE|WANTED|CAN'T|DEPARTMENT" + ;
+      "|USE|CENTER|COMMON|CONTROL|NECESSARY|POLICY|FOLLOWING|FRONTSOMETIMES|FATHER" + ;
+      "|GIRL|SIX|WOMEN|CLEAR|MILITARY|FURTHER|ABLE|FIGURE|LAND|FEEL|MUSIC|PARTY" + ;
+      "|PROVIDE|CENTURY|EDUCATION|UNIVERSITY|CHILD|EFFECT|STUDENTS|RUN|SHORT" + ;
+      "|STOOD|MORNING|TOTAL|OUTSIDE|ART|RATE|SAYS|YOU'RE|CLASS|TYPE|EVIDENCE" + ;
+      "|EXCEPT|LEAVE|MILLION|MISS|NORTH|PLAN|SOUND|THEREFORE|TOP|USUALLY|BLACK" + ;
+      "|HARD|SCHOOLS|STRONG|BELIEVE|PLAY|VARIOUS|SURFACE|MAKING|MEAN|SOON|VALUE" + ;
+      "|LINES|MODERN|NEAR|TABLE|PRIVATE|RED|ROAD|TAX|ALONE|MINUTES|PERSONAL|PROCESS" + ;
+      "|SITUATION|THAT'S|GONE|IDEA|INCREASE|NOR|PEACE|SECTION|LIVING|STARTED|BOOK" + ;
+      "|LONGER|CUT|FINALLY|NATURE|SECRETARY|MONTHS|THIRD|CALL|COMPLETE|GREATER"
 
-aGlobal[1] += "|EXPECTED|FIRE|NEEDED|KEPT|VALUES|VIEW|BASIS|DARK|EVERYTHING|PRESSURE"+;
-              "|GROUND|EAST|RECENT|REQUIRED|SPIRIT|UNION|HOPE|I'LL|MOVED|NATIONS|WROTE"+;
-              "|CONDITIONS|RETURN|SUPPORT|ATTENTION|LATE|PARTICULAR|BROWN|COSTS|ELSE|NATION"+;
-              "|BEYOND|COULDN'T|FORCES|HOURS|NUCLEAR|PERSON|TAKING|COMING|DEAD|INSIDE|LOW"+;
-              "|MATERIAL|REPORT|STAGE|ADDED|AMOUNT|BASIC|DATA|FEELING|FOLLOWED|HEART|INSTEAD"+;
-              "|LOOKING|LOST|MILES|PAY|SINGLE|COLD|HUNDRED|INCLUDING|INDUSTRY|MOVE|RESEARCH"+;
-              "|SHOWN|BRIDGE|DEVELOPED|SIMPLY|TRIED|HOLD|REACHED|SHARE|SORT|COMMITTEE|DEFENSE"+;
-              "|EQUIPMENT|ISLAND|SENDING|ACTUALLY|EARTH|BEGINNING|RELIGIOUS|RIVER|TEN|CENTRAL"+;
-              "|DOING|GETTING|LETTER|RECEIVED|REST|TERMS|TRYING|CARE|FRIENDS|INDEED|MEDICAL"+;
-              "|PICTURE|DIFFICULT|FINE|SIMPLE|STATUS|SUBJECT|BUILDING|ESPECIALLY|HIGHER|RANGE"+;
-              "|WALL|BRING|MEETING|WALKED|CENT|FLOOR|FOREIGN|NEEDS|PAPER|PASSED|SIMILAR"+;
-              "|FINAL|NATURAL|PROPERTY|TRAINING|COUNTY|GROWTH|HOT|INTERNATIONAL|LIVE"+;
-              "|MARKET|POLICE|START|TALK|WASN'T|WRITTEN|BOOKS|ANSWER|CONGRESS|HEAR|PRIMARY"+;
-              "|STORY|SUDDENLY|CONSIDERED|COUNTRIES|HALL|ISSUE|LIKELY|PARTICULARLY|TRULY"+;
-              "|WORKING|EFFORT|SAT|ENTIRE|HAPPENED|LABOR|PURPOSE|RESULTS|CASES|DIFFERENCE"+;
-              "|HAIR|PRODUCTION|STAND|I'VE|I'D|WON'T|"
+   aGlobal[ 1 ] += ;
+      "|EXPECTED|FIRE|NEEDED|KEPT|VALUES|VIEW|BASIS|DARK|EVERYTHING|PRESSURE" + ;
+      "|GROUND|EAST|RECENT|REQUIRED|SPIRIT|UNION|HOPE|I'LL|MOVED|NATIONS|WROTE" + ;
+      "|CONDITIONS|RETURN|SUPPORT|ATTENTION|LATE|PARTICULAR|BROWN|COSTS|ELSE|NATION" + ;
+      "|BEYOND|COULDN'T|FORCES|HOURS|NUCLEAR|PERSON|TAKING|COMING|DEAD|INSIDE|LOW" + ;
+      "|MATERIAL|REPORT|STAGE|ADDED|AMOUNT|BASIC|DATA|FEELING|FOLLOWED|HEART|INSTEAD" + ;
+      "|LOOKING|LOST|MILES|PAY|SINGLE|COLD|HUNDRED|INCLUDING|INDUSTRY|MOVE|RESEARCH" + ;
+      "|SHOWN|BRIDGE|DEVELOPED|SIMPLY|TRIED|HOLD|REACHED|SHARE|SORT|COMMITTEE|DEFENSE" + ;
+      "|EQUIPMENT|ISLAND|SENDING|ACTUALLY|EARTH|BEGINNING|RELIGIOUS|RIVER|TEN|CENTRAL" + ;
+      "|DOING|GETTING|LETTER|RECEIVED|REST|TERMS|TRYING|CARE|FRIENDS|INDEED|MEDICAL" + ;
+      "|PICTURE|DIFFICULT|FINE|SIMPLE|STATUS|SUBJECT|BUILDING|ESPECIALLY|HIGHER|RANGE" + ;
+      "|WALL|BRING|MEETING|WALKED|CENT|FLOOR|FOREIGN|NEEDS|PAPER|PASSED|SIMILAR" + ;
+      "|FINAL|NATURAL|PROPERTY|TRAINING|COUNTY|GROWTH|HOT|INTERNATIONAL|LIVE" + ;
+      "|MARKET|POLICE|START|TALK|WASN'T|WRITTEN|BOOKS|ANSWER|CONGRESS|HEAR|PRIMARY" + ;
+      "|STORY|SUDDENLY|CONSIDERED|COUNTRIES|HALL|ISSUE|LIKELY|PARTICULARLY|TRULY" + ;
+      "|WORKING|EFFORT|SAT|ENTIRE|HAPPENED|LABOR|PURPOSE|RESULTS|CASES|DIFFERENCE" + ;
+      "|HAIR|PRODUCTION|STAND|I'VE|I'D|WON'T|"
 
 
 #endif
 
-**DEBUG**
-@24,30 SAY "At SP_common"
+   // *DEBUG**
+   @ 24, 30 SAY "At SP_common"
 
-return NIL
-******************************************************************************
+   RETURN NIL
 
-function WildCard(cPattern,cString)
-LOCAL lMatch  := .F.
-LOCAL x       := at("*",cPattern)
-LOCAL cBefore
-LOCAL cAfter
-LOCAL y
-LOCAL nStrSize,nPatSize
 
-**DEBUG**
-@24,30 SAY "At wildcard"
+FUNCTION WildCard( cPattern, cString )
 
-cString := upper(alltrim(cString))
+   LOCAL lMatch  := .F.
+   LOCAL x       := At( "*", cPattern )
+   LOCAL cBefore
+   LOCAL cAfter
+   LOCAL y
+   LOCAL nStrSize, nPatSize
 
-if cPattern == "*"
-   return .T.
-endif
-//
-// Do a * match
-//
-if x > 0
-   cBefore := upper(substr(cPattern,1,x-1))
-   cAfter  := upper(substr(cPattern,x+1))
-   do case
-   case empty(cBefore)
-      lMatch := right(cString,len(cAfter))==cAfter
-   case empty(cAfter)
-      lMatch := left(cString,len(cBefore))==cBefore
-   otherwise
-      lMatch := ( left(cString,len(cBefore))==cBefore ) .and. ;
-                right(cString,len(cAfter))==cAfter
-   endcase
-else
-   x      := at("?",cPattern)
-   if x > 0
-      nPatSize  := len(cPattern)
-      nStrSize  := len(cString)
-      if nPatSize == nStrSize
-         lMatch := .T.
-         for y := 1 to nPatSize
-            if !(substr(cPattern,y,1)=="?") .and. ;
-               !(substr(cPattern,y,1)== substr(cString,y,1))
+   // *DEBUG**
+   @ 24, 30 SAY "At wildcard"
+
+   cString := Upper( AllTrim( cString ) )
+
+   IF cPattern == "*"
+      RETURN .T.
+   ENDIF
+   //
+   // Do a * match
+   //
+   IF x > 0
+      cBefore := Upper( SubStr( cPattern, 1, x - 1 ) )
+      cAfter  := Upper( SubStr( cPattern, x + 1 ) )
+      DO CASE
+      CASE Empty( cBefore )
+         lMatch := Right( cString, Len( cAfter ) ) == cAfter
+      CASE Empty( cAfter )
+         lMatch := Left( cString, Len( cBefore ) ) == cBefore
+      OTHERWISE
+         lMatch := ( Left( cString, Len( cBefore ) ) == cBefore ) .AND. ;
+            Right( cString, Len( cAfter ) ) == cAfter
+      ENDCASE
+   ELSE
+      x      := At( "?", cPattern )
+      IF x > 0
+         nPatSize  := Len( cPattern )
+         nStrSize  := Len( cString )
+         IF nPatSize == nStrSize
+            lMatch := .T.
+            FOR y := 1 TO nPatSize
+               IF !( SubStr( cPattern, y, 1 ) == "?" ) .AND. ;
+                     !( SubStr( cPattern, y, 1 ) == SubStr( cString, y, 1 ) )
                   lMatch := .F.
-                  exit
-            endif
-         next
-      endif
-   else
-      lMatch := upper(cPattern)=upper(cString)
-   endif
-endif
-return lMatch
-******************************************************************************
+                  EXIT
+               ENDIF
+            NEXT
+         ENDIF
+      ELSE
+         lMatch := Upper( cPattern ) = Upper( cString )
+      ENDIF
+   ENDIF
+
+   RETURN lMatch
+
 #ifndef CLIP52
-function aWords(cLine)
-LOCAL aWords_   := {}
-LOCAL nSize     := len(rtrim(cLine))
-LOCAL x,y,z
-LOCAL cWord     := ""
-LOCAL nOffset
+FUNCTION aWords( cLine )
 
-**DEBUG**
-@24,30 SAY "At clip52"
+   LOCAL aWords_   := {}
+   LOCAL nSize     := Len( RTrim( cLine ) )
+   LOCAL x, y, z
+   LOCAL cWord     := ""
+   LOCAL nOffset
 
-z := 0
-do while z <= nSize
-  z++
-  y := asc(substr(cLine,z,1))
-  if  y >=48 .and. ! chr( y ) $ ":;<=>?@[\^]_`{|}~"
-     nOffset := z
-     cWord   := chr( y )
-     z++
-     y     := asc(substr(cLine,z,1))
-     while ( y >=48 .and. ! chr( y ) $ ":;<=>?@[\^]_`{|}~" ) .or. y == 39
-        cWord += chr( y )
-        z++
-        if z > nSize
-           exit
-        endif
-        y     := asc(substr(cLine,z,1))
-     enddo
-     Aadd(aWords_,{cWord,nOffset})
-  endif
-enddo
-return  aWords_
+   // *DEBUG**
+   @ 24, 30 SAY "At clip52"
+
+   z := 0
+   DO WHILE z <= nSize
+      z++
+      y := Asc( SubStr( cLine, z, 1 ) )
+      IF  y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~"
+         nOffset := z
+         cWord   := Chr( y )
+         z++
+         y     := Asc( SubStr( cLine, z, 1 ) )
+         WHILE ( y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" ) .OR. y == 39
+            cWord += Chr( y )
+            z++
+            IF z > nSize
+               EXIT
+            ENDIF
+            y     := Asc( SubStr( cLine, z, 1 ) )
+         ENDDO
+         AAdd( aWords_, { cWord, nOffset } )
+      ENDIF
+   ENDDO
+
+   RETURN  aWords_
 #endif
 
-* Find an occurrence of 'f_str' in 'l_str' starting from position 'f_rom'
-FUNCTION FAT(f_str, l_str, f_rom)
+// Find an occurrence of 'f_str' in 'l_str' starting from position 'f_rom'
+FUNCTION FAT( f_str, l_str, f_rom )
 
-LOCAL ret_val
+   LOCAL ret_val
 
-**DEBUG**
-@24,30 SAY "At FAT"
+   // *DEBUG**
+   @ 24, 30 SAY "At FAT"
 
-IF PCOUNT() < 3                        && Is f_rom passed?
-   f_rom := 1
-ENDIF
+   IF PCount() < 3                        // Is f_rom passed?
+      f_rom := 1
+   ENDIF
 
-ret_val := AT(f_str, SUBSTR(l_str, f_rom))
+   ret_val := At( f_str, SubStr( l_str, f_rom ) )
 
-RETURN ret_val
+   RETURN ret_val

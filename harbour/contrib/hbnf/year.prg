@@ -36,7 +36,7 @@ FUNCTION FT_YEAR( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
-   aRetVal[ 2 ] := SToD( ;
+   aRetVal[ 2 ] := hb_SToD( ;
       StrZero( Year( dGivenDate ) - iif( Month( dGivenDate ) < Month( hb_CToD( cFY_Start, "yyyy.mm.dd" ) ), 1, 0 ), 4 ) + ;
       SubStr( cFY_Start, 6, 2 ) + ;
       SubStr( cFY_Start, 9, 6 ) )

@@ -96,7 +96,7 @@ CREATE CLASS myClass
 
    CLASS VAR   var2
 
-   METHOD      init
+   METHOD      INIT
    DESTRUCTOR  dtor
 
 END CLASS

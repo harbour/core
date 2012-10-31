@@ -47,14 +47,14 @@ PROCEDURE Main()
    IF !o:lGetSimPhoneEntry( 1, SIM_PBSTORAGE_SIM, @a )
       Alert( "Pos 1 error" )
    ELSE
-      Alert( "VALTYPE-> " + ValType( a ) + " LEN -> " + Str( Len(a ) ), a[ 1 ][ 1 ] )
-      AEval( a, {| n, m | Alert( "Phone: " + n[ 1 ] + hb_eol() + "Name: " + n[ 2 ] + hb_eol() + "Adr. Type: " + Str( n[ 3 ] ) + hb_eol() + "Plan Type: " + Str( n[ 4 ] ),"pos 1" ) } )
+      Alert( "VALTYPE-> " + ValType( a ) + " LEN -> " + Str( Len( a ) ), a[ 1 ][ 1 ] )
+      AEval( a, {| n, m | Alert( "Phone: " + n[ 1 ] + hb_eol() + "Name: " + n[ 2 ] + hb_eol() + "Adr. Type: " + Str( n[ 3 ] ) + hb_eol() + "Plan Type: " + Str( n[ 4 ] ), "pos 1" ) } )
    ENDIF
 
    IF !o:lGetSimPhoneEntry( 110, SIM_PBSTORAGE_SIM, @a )
       Alert( "Pos 123 error" )
    ELSE
-      AEval( a, {| n, m | Alert( "Phone: " + n[ 1 ] + hb_eol() + "Name: " + n[ 2 ] + hb_eol() + "Adr. Type: " + Str( n[ 3 ] ) + hb_eol() + "Plan Type: " + Str( n[ 4 ] ),"pos 110" ) } )
+      AEval( a, {| n, m | Alert( "Phone: " + n[ 1 ] + hb_eol() + "Name: " + n[ 2 ] + hb_eol() + "Adr. Type: " + Str( n[ 3 ] ) + hb_eol() + "Plan Type: " + Str( n[ 4 ] ), "pos 110" ) } )
    ENDIF
 
    IF !o:lSetSimPhoneEntry( 80, SIM_PBSTORAGE_SIM, "660099696", "pepeluis", SIM_NUMPLAN_UNKNOWN, SIM_ADDRTYPE_NATIONAL )

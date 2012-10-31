@@ -57,6 +57,7 @@
 #define TABLE_SQL "CREATE TABLE image( id INTEGER PRIMARY KEY AUTOINCREMENT, title TEXT(50), image BLOB )"
 
 PROCEDURE Main()
+
    LOCAL lCreateIfNotExist := .T.
    LOCAL db := sqlite3_open( "test.s3db", lCreateIfNotExist )
    LOCAL stmt
@@ -71,7 +72,7 @@ PROCEDURE Main()
 
       sqlite3_exec( db, TABLE_SQL )
 
-      stmt := sqlite3_prepare( db, "INSERT INTO image( title, image ) VALUES( :title, :image )")
+      stmt := sqlite3_prepare( db, "INSERT INTO image( title, image ) VALUES( :title, :image )" )
       IF ! Empty( stmt )
          buff := sqlite3_file_to_buff( "pngtest.png" )
 
@@ -116,7 +117,7 @@ PROCEDURE Main()
 
       ? ""
       ? "Save BLOB using sqlite3_column_blob()"
-      stmt := sqlite3_prepare( db, "SELECT image FROM image WHERE id == ?5 ")
+      stmt := sqlite3_prepare( db, "SELECT image FROM image WHERE id == ?5 " )
       IF ! Empty( stmt )
          IF sqlite3_bind_int64( stmt, 5, sqlite3_last_insert_rowid( db ) ) == SQLITE_OK
             IF sqlite3_step( stmt ) == SQLITE_ROW

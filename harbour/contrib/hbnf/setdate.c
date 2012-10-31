@@ -85,7 +85,7 @@
 HB_FUNC( FT_SETDATE )
 {
 #if defined( HB_OS_DOS )
-   int iYear, iMonth, iDay;
+   int        iYear, iMonth, iDay;
    union REGS regs;
 
    if( HB_ISDATE( 1 ) )
@@ -93,10 +93,10 @@ HB_FUNC( FT_SETDATE )
    else
       hb_dateToday( &iYear, &iMonth, &iDay );
 
-   regs.h.ah = 43;
+   regs.h.ah        = 43;
    regs.HB_XREGS.cx = iYear;
-   regs.h.dh = iMonth;
-   regs.h.dl = iDay;
+   regs.h.dh        = iMonth;
+   regs.h.dl        = iDay;
    HB_DOS_INT86( 0x21, &regs, &regs );
 
    hb_retl( HB_TRUE );

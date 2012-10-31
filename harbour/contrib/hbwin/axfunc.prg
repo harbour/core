@@ -51,6 +51,7 @@
  */
 
 FUNCTION WIN_AxGetControl( hWnd, bHandler, cID )
+
    LOCAL oAx := WIN_OleAuto()
 
    oAx:__hObj := __AxGetControl( hWnd )

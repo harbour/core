@@ -52,70 +52,73 @@
 
 /* real functions used as wrappers in above translations */
 
-function StartThread( p1, p2, ... )
-   if PCount() < 2
-      return hb_threadStart( p1 )
-   elseif HB_ISOBJECT( p1 ) .and. HB_ISSTRING( p2 )
-      return hb_threadStart( {|...| p1:&p2( ... ) }, ... )
-   endif
-   return hb_threadStart( p1, p2, ... )
+FUNCTION StartThread( p1, p2, ... )
 
+   IF PCount() < 2
+      RETURN hb_threadStart( p1 )
+   ELSEIF HB_ISOBJECT( p1 ) .AND. HB_ISSTRING( p2 )
+      RETURN hb_threadStart( {| ...| p1:&p2( ... ) }, ... )
+   ENDIF
 
-function Subscribe( mtx, nTimeOut, lSubscribed )
-   local xSubscribed
+   RETURN hb_threadStart( p1, p2, ... )
+
+FUNCTION Subscribe( mtx, nTimeOut, lSubscribed )
+
+   LOCAL xSubscribed
+
    lSubscribed := hb_mutexSubscribe( mtx, ;
-                                     iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, ), ;
-                                     @xSubscribed )
-   return xSubscribed
+      iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, ), ;
+      @xSubscribed )
 
+   RETURN xSubscribed
 
-function SubscribeNow( mtx, nTimeOut, lSubscribed )
-   local xSubscribed
+FUNCTION SubscribeNow( mtx, nTimeOut, lSubscribed )
+
+   LOCAL xSubscribed
+
    lSubscribed := hb_mutexSubscribeNow( mtx, ;
-                                        iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, ), ;
-                                        @xSubscribed )
-   return xSubscribed
+      iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, ), ;
+      @xSubscribed )
 
+   RETURN xSubscribed
 
-function IsSameThread( pThID1, pThID2 )
-   return hb_threadId( pThID1 ) == iif( pcount() < 2, hb_threadId(), ;
-                                                      hb_threadId( pThID2 ) )
+FUNCTION IsSameThread( pThID1, pThID2 )
+   RETURN hb_threadID( pThID1 ) == iif( PCount() < 2, hb_threadID(), ;
+      hb_threadID( pThID2 ) )
 
+FUNCTION IsValidThread( pThID )
 
-function IsValidThread( pThID )
-   local lValid
+   LOCAL lValid
 
-   begin sequence with {|| break() }
-      lValid := hb_threadId( pThID ) != 0
+   BEGIN SEQUENCE WITH {|| Break() }
+      lValid := hb_threadID( pThID ) != 0
    recover
       lValid := .F.
-   end sequence
+   END SEQUENCE
 
-   return lValid
+   RETURN lValid
 
+FUNCTION KillThread( pThID )
 
-function KillThread( pThID )
    hb_threadQuitRequest( pThID )
-   return NIL
 
+   RETURN NIL
 
-function StopThread( pThID )
+FUNCTION StopThread( pThID )
+
    hb_threadQuitRequest( pThID )
    hb_threadJoin( pThID )
-   return NIL
 
+   RETURN NIL
 
-function ThreadSleep( nTimeOut )
-   return hb_idleSleep( nTimeOut / 1000 )
+FUNCTION ThreadSleep( nTimeOut )
+   RETURN hb_idleSleep( nTimeOut / 1000 )
 
+FUNCTION hb_MutexTryLock( mtx )
+   RETURN hb_mutexLock( mtx, 0 )
 
-function hb_MutexTryLock( mtx )
-   return hb_mutexLock( mtx, 0 )
+FUNCTION hb_MutexTimeOutLock( mtx, nTimeOut )
+   RETURN hb_mutexLock( mtx, iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, 0 ) )
 
-
-function hb_MutexTimeOutLock( mtx, nTimeOut )
-   return hb_mutexLock( mtx, iif( HB_ISNUMERIC( nTimeOut ), nTimeOut / 1000, 0 ) )
-
-
-function GetSystemThreadId( pThID )
-   return iif( PCount() < 1, hb_threadId(), hb_threadId( pThID ) )
+FUNCTION GetSystemThreadId( pThID )
+   RETURN iif( PCount() < 1, hb_threadID(), hb_threadID( pThID ) )

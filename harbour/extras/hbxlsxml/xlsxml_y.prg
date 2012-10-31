@@ -302,7 +302,7 @@ METHOD ExcelWriterXML_Style:checkColor( color )
    IF Left( color, 1 ) == "#"
       RETURN COLOR
    ELSEIF hb_HPos( ::namedColorsIE, Lower( color ) ) > 0
-      color := ::namedColorsIE[ lower( color ) ]
+      color := ::namedColorsIE[ Lower( color ) ]
       RETURN COLOR
    ELSE
       RETURN ""

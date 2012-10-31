@@ -17,9 +17,9 @@
       FIELD <xField> [,<xFieldn...>  [in <cDatabase>]
    $ARGUMENTS$
       <xField>    A valid field name
-  
+
       <xFieldn>   Additional field name
-  
+
       <cDatabase> An valid alias name
    $DESCRIPTION$
       This command declares the names of fields <xField> (and <xFieldn> and
@@ -70,7 +70,7 @@
       LOCAL <xVar> [:= <xInit> ]
    $ARGUMENTS$
       <xVar>    Name of a memory variable or array.
-  
+
       <xInit>   Value to be assinged to a variable or array
    $DESCRIPTION$
       This command created a LOCAL memory variable or array. The name
@@ -80,25 +80,25 @@
       expression may be specified in <xInit> and folling. Is Strong type
       compile mode is used, the Compiler will check if the value recived
       matchs the type specified in <xType>.
-  
+
       LOCAL varibles are symbols generated at run time and are resolved
       at compile time. The visibility and life span of a LOCAL variable or
       array is limited to the function or procedure in which it is defined.
-  
+
       No macro expansions are allowed in the LOCAL declaration statement.
-  
+
       No Harbour command other then FUNCTION, PROCEDURE, PUBLIC, PRIVATE,
       PARAMETERS, MEMVAR, STATIC and FIELD, may precede the LOCAL command.
-  
+
       LOCAL array reference may not be initialized (i.e., assigned values)
       on the same command line as the LOCAL command statement. This can be
       done later in the program.
-  
+
       LOCAL variables and arrays are not affected by the RELEASE command.
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL n, lVar
-  
+
          n := iif( lVar, "A", 3 )
          n := 2
          n := "a"
@@ -142,7 +142,7 @@
       those memory variables that do not contain any such explicit are
       affected by this command. Those memory variabls within macro
       expansions are not affected by this command.
-  
+
       The MEMVAR declaration must apear before any executable commands;it
       is similat to the LOCAL,STATIC,FIELD,PARAMETERS,FUNCTION, and
       PROCEDURE commands statements.
@@ -150,7 +150,7 @@
       MEMVAR y AS NUMERIC
       PROCEDURE Main()
          LOCAL n, lVar
-  
+
          n := iif( lVar, "A", 3 )
          n := 2
          n := "a"

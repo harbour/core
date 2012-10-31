@@ -76,6 +76,7 @@ METHOD shadowed( lShadowed ) CLASS hb_POPUPMENU
    RETURN ::lShadowed
 
 METHOD setCoors( nRow, nCol, lTop ) CLASS hb_POPUPMENU
+
    LOCAL oItem
    LOCAL nDif
 

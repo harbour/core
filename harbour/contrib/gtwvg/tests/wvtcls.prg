@@ -33,11 +33,11 @@ FUNCTION DialogWvgClassesOne( nMode )
          bBlock := {| oCrt | ;
             oCrt := WvgCrt():New( , , { -1, -1 }, { 54, 184 }, , .F. ), ;
             oCrt:fontName   := 'Courier', ;
-            oCrt:fontHeight := 13       , ;
-            oCrt:fontWidth  := 0        , ;
-            oCrt:Create()               , ;
-            MyDialogOne( oCrt )       , ;
-            oCrt:destroy()               ;
+            oCrt:fontHeight := 13, ;
+            oCrt:fontWidth  := 0, ;
+            oCrt:Create(), ;
+            MyDialogOne( oCrt ), ;
+            oCrt:destroy() ;
             }
          hb_threadStart( bBlock )
       ENDIF
@@ -133,14 +133,14 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oTBar := WvtToolbar():New( oDlg, 103, 0, 0, 2 )
    oTBar:lFloating := .F.
    oTBar:Tooltip   := "Toolbar"
-   oTBar:AddButton( aImg_[ 1 ], {|| oImg:SetImage( aImg_[ 1 ] ) } , "Lock" )
-   oTBar:AddButton( aImg_[ 2 ], {|| oImg:SetImage( aImg_[ 2 ] ), oText:SetText( "Harbour" ) } , "New" )
-   oTBar:AddButton( aImg_[ 3 ], {|| oImg:SetImage( aImg_[ 3 ] ) } , "Calculator" )
+   oTBar:AddButton( aImg_[ 1 ], {|| oImg:SetImage( aImg_[ 1 ] ) }, "Lock" )
+   oTBar:AddButton( aImg_[ 2 ], {|| oImg:SetImage( aImg_[ 2 ] ), oText:SetText( "Harbour" ) }, "New" )
+   oTBar:AddButton( aImg_[ 3 ], {|| oImg:SetImage( aImg_[ 3 ] ) }, "Calculator" )
    oTBar:AddButton()
-   oTBar:AddButton( aImg_[ 5 ], {|| oImg:SetImage( aImg_[ 5 ] ) } , "Restore" )
-   oTBar:AddButton( aImg_[ 4 ], {|| oImg:SetImage( aImg_[ 4 ] ), oText:SetText( "Vouch" )    } , "Calendar" )
-   oTBar:AddButton( aImg_[ 6 ], {|| oImg:SetImage( aImg_[ 6 ] ) } , "Notes" )
-   oTBar:AddButton( aImg_[ 7 ], {|| oImg:SetImage( aImg_[ 7 ] ) } , "Press to Send Browse on Top" )
+   oTBar:AddButton( aImg_[ 5 ], {|| oImg:SetImage( aImg_[ 5 ] ) }, "Restore" )
+   oTBar:AddButton( aImg_[ 4 ], {|| oImg:SetImage( aImg_[ 4 ] ), oText:SetText( "Vouch" )    }, "Calendar" )
+   oTBar:AddButton( aImg_[ 6 ], {|| oImg:SetImage( aImg_[ 6 ] ) }, "Notes" )
+   oTBar:AddButton( aImg_[ 7 ], {|| oImg:SetImage( aImg_[ 7 ] ) }, "Press to Send Browse on Top" )
    oTBar:AddButton()
    oDlg:AddObject( oTBar )
 
@@ -188,8 +188,8 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oDlg:AddObject( oCon )
 
    nGetCol := 158
-   bBlock  := {|| oCon:Say( 12, 148, "Name"  , "N/W" ), ;
-      oCon:Say( 14, 148, "Date"  , "N/W" ), ;
+   bBlock  := {|| oCon:Say( 12, 148, "Name", "N/W" ), ;
+      oCon:Say( 14, 148, "Date", "N/W" ), ;
       oCon:Say( 16, 148, "Amount", "N/W" ) }
 
    oGet := WvtGets():New( oDlg, 210, 9, oDlg:MaxCol() - 40, 18, oDlg:MaxCol() - 2 )
@@ -235,7 +235,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oTBx:nTextColor  := RGB( 255, 255, 255 )
    oTBx:nTextColorHoverOn := RGB( 0, 0, 255 )
    oTBx:aPopup      := {}
-   AAdd( oTBx:aPopup, { "Getsome" , {|| .T. } } )
+   AAdd( oTBx:aPopup, { "Getsome", {|| .T. } } )
    AAdd( oTBx:aPopup, { "Getsome2", {|| .T. } } )
    oDlg:AddObject( oTBx )
 
@@ -343,7 +343,7 @@ FUNCTION DialogWvgClassesTwo()
    g_oMenuBar    := WvtMenu():new():create()
    oMenu         := wvtMenu():new():create()
    oMenu:Caption := "Miscellaneous"
-   oMenu:AddItem( "Progressbar", {|| ExeProgBar( oPBar,oPBar1,oPBar2,oPBar3, oPBar4 ) } )
+   oMenu:AddItem( "Progressbar", {|| ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 ) } )
    oMenu:AddItem( "-" )
    oMenu:AddItem( "Exit",        {|| Wvt_Keyboard( K_ESC ) } )
    g_oMenuBar:addItem( "", oMenu )

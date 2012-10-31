@@ -142,7 +142,7 @@ PROCEDURE Main()
             NEXT
 
             cLine := StrTran( cLine, "<#DateTime>", ;
-               oIni:ReadString( "Entries", "DateTime" + hb_ntos( Len(aEntries ) - i + 1 ), "" ) )
+               oIni:ReadString( "Entries", "DateTime" + hb_ntos( Len( aEntries ) - i + 1 ), "" ) )
 
             cCode += cLine + "</td></tr>" + hb_eol()
 

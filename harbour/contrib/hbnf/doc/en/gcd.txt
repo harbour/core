@@ -13,7 +13,7 @@
       FT_GCD( <nNumber1>, <nNumber2> ) -> nGCD
    $ARGUMENTS$
       <nNumber1> is the first number to find the GCD of.
-  
+
       <nNumber2> is the second number to find the GCD of.
    $RETURNS$
       The greatest common divisor of the 2 numbers, or 0 if either is 0.

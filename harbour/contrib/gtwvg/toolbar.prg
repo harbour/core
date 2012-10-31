@@ -229,7 +229,7 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
                IF ::isParentCrt()
                   ::oParent:setFocus()
                ENDIF
-               Eval( ::sl_lbClick, ::aItems[ nObj,2 ], NIL, Self )
+               Eval( ::sl_lbClick, ::aItems[ nObj, 2 ], NIL, Self )
 
             ENDIF
          ENDIF
@@ -253,14 +253,14 @@ METHOD WvgToolBar:destroy()
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
-         IF ::aItems[ i,2 ]:image != NIL
-            WVG_DeleteObject( ::aItems[ i,2 ]:image )
+         IF ::aItems[ i, 2 ]:image != NIL
+            WVG_DeleteObject( ::aItems[ i, 2 ]:image )
          ENDIF
-         IF ::aItems[ i,2 ]:disabledImage != NIL
-            WVG_DeleteObject( ::aItems[ i,2 ]:disabledImage )
+         IF ::aItems[ i, 2 ]:disabledImage != NIL
+            WVG_DeleteObject( ::aItems[ i, 2 ]:disabledImage )
          ENDIF
-         IF ::aItems[ i,2 ]:hotImage != NIL
-            WVG_DeleteObject( ::aItems[ i,2 ]:hotImage )
+         IF ::aItems[ i, 2 ]:hotImage != NIL
+            WVG_DeleteObject( ::aItems[ i, 2 ]:hotImage )
          ENDIF
       NEXT
    ENDIF
@@ -351,7 +351,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth, ::buttonHeight )
 
 #if 0
-      SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10,10 ) );
+      SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10, 10 ) );
          ::sendToolbarMessage( TB_SETPADDING, 10, 10 )
 #endif
       ::sendToolbarMessage( TB_AUTOSIZE )

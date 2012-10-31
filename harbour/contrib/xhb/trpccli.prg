@@ -93,7 +93,7 @@ CREATE CLASS tRPCClient
    METHOD StopScan()
 
    /* Function call */
-   METHOD CheckServer( cRemote )    //Checks if a server is ready on tcp
+   METHOD CheckServer( cRemote )    // Checks if a server is ready on tcp
    METHOD SetLoopMode( nMethod, xData, nEnd, nStep )
    METHOD Call( ... )  // variable parameters
    METHOD CallAgain()            INLINE ::TCPAccept()
@@ -652,7 +652,7 @@ METHOD SetPeriodCallback( ... ) CLASS tRPCClient
    LOCAL nCount
 
    IF PCount() < 3
-      //TODO set an error
+      // TODO set an error
       RETURN .F.
    ENDIF
 
@@ -730,7 +730,7 @@ METHOD StopCall() CLASS tRPCClient
    // send cancelation request
    hb_inetSendAll( ::skTCP, "XHBR29" );
 
-      //Stops waiting for a result
+   // Stops waiting for a result
    hb_mutexLock( ::mtxBusy )
    IF hb_threadID( ::thTCPAccept ) != 0
       hb_threadQuitRequest( ::thTCPAccept )

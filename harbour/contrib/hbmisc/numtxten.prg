@@ -8,6 +8,7 @@
 // ; Decimals not supported
 
 FUNCTION NumToTxtEN( nValue )
+
    LOCAL cRetVal := ""
 
    IF nValue == 0
@@ -53,38 +54,39 @@ FUNCTION NumToTxtEN( nValue )
    RETURN RTrim( cRetVal )
 
 STATIC FUNCTION int_to_string( nValue )
-   LOCAL cRetVal
-   LOCAL aArray1 := {;
-        "one"        ,;
-        "two"        ,;
-        "three"      ,;
-        "four"       ,;
-        "five"       ,;
-        "six"        ,;
-        "seven"      ,;
-        "eight"      ,;
-        "nine"       ,;
-        "ten"        ,;
-        "eleven"     ,;
-        "twelve"     ,;
-        "thirteen"   ,;
-        "fourteen"   ,;
-        "fifteen"    ,;
-        "sixteen"    ,;
-        "seventeen"  ,;
-        "eighteen"   ,;
-        "nineteen"   }
 
-   LOCAL aArray2 := {;
-        "ten"        ,;
-        "twenty"     ,;
-        "thirty"     ,;
-        "forty"      ,;
-        "fifty"      ,;
-        "sixty"      ,;
-        "seventy"    ,;
-        "eighty"     ,;
-        "ninety"     }
+   LOCAL cRetVal
+   LOCAL aArray1 := { ;
+      "one", ;
+      "two", ;
+      "three", ;
+      "four", ;
+      "five", ;
+      "six", ;
+      "seven", ;
+      "eight", ;
+      "nine", ;
+      "ten", ;
+      "eleven", ;
+      "twelve", ;
+      "thirteen", ;
+      "fourteen", ;
+      "fifteen", ;
+      "sixteen", ;
+      "seventeen", ;
+      "eighteen", ;
+      "nineteen" }
+
+   LOCAL aArray2 := { ;
+      "ten", ;
+      "twenty", ;
+      "thirty", ;
+      "forty", ;
+      "fifty", ;
+      "sixty", ;
+      "seventy", ;
+      "eighty", ;
+      "ninety" }
 
    IF nValue < 20
       cRetVal := aArray1[ nValue ]

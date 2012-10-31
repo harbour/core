@@ -63,7 +63,7 @@
 CREATE CLASS TPLGenerate
 
    EXPORTED:
-//~ PROTECTED:
+   // ~ PROTECTED:
    VAR nHandle AS NUMERIC
    VAR cFolder AS STRING
    VAR cFilename AS STRING
@@ -83,14 +83,19 @@ CREATE CLASS TPLGenerate
    METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) HIDDEN
    VAR nType AS INTEGER
    VAR Depth AS INTEGER INIT 0
+
 ENDCLASS
 
 METHOD NewIndex( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+
    self:New( cFolder, cFilename, cTitle, cExtension, INDEX_ )
+
    RETURN self
 
 METHOD NewDocument( cFolder, cFilename, cTitle, cExtension ) CLASS TPLGenerate
+
    self:New( cFolder, cFilename, cTitle, cExtension, DOCUMENT_ )
+
    RETURN self
 
 METHOD New( cFolder, cFilename, cTitle, cExtension, nType ) CLASS TPLGenerate

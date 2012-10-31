@@ -40,13 +40,14 @@
 #define _NETIOCLI_MAX_                   8
 
 FUNCTION __hbshell_plugin()
-   RETURN {;
-      "id"   => "netio",;
-      "init" => {| hConIO, ... | hbnetiocon_init( hConIO, ... ) } ,;
-      "exit" => {| context | hbnetiocon_exit( context ) } ,;
+   RETURN { ;
+      "id"   => "netio", ;
+      "init" => {| hConIO, ... | hbnetiocon_init( hConIO, ... ) }, ;
+      "exit" => {| context | hbnetiocon_exit( context ) }, ;
       "cmd"  => {| context, cCommand | hbnetiocon_command( context, cCommand ) } }
 
 STATIC PROCEDURE hbnetiocon_dispevent( netiocli, cText )
+
    LOCAL cPrompt
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
@@ -60,6 +61,7 @@ STATIC PROCEDURE hbnetiocon_dispevent( netiocli, cText )
    RETURN
 
 STATIC FUNCTION hbnetiocon_init( hConIO, aParam )
+
    LOCAL netiocli[ _NETIOCLI_MAX_ ]
 
    LOCAL cParam
@@ -131,6 +133,7 @@ STATIC PROCEDURE hbnetiocon_exit( netiocli )
    RETURN
 
 STATIC FUNCTION hbnetiocon_command( netiocli, cCommand )
+
    LOCAL aCommand
    LOCAL nPos
 
@@ -145,6 +148,7 @@ STATIC FUNCTION hbnetiocon_command( netiocli, cCommand )
    RETURN .F.
 
 STATIC PROCEDURE hbnetiocon_IPPortSplit( cAddr, /* @ */ cIP, /* @ */ nPort )
+
    LOCAL tmp
 
    IF ! Empty( cAddr )
@@ -174,17 +178,18 @@ STATIC FUNCTION hbnetiocon_acceptStreamData( netiocli, xItem )
    RETURN .T.
 
 STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread */
+
    LOCAL lExit := .F.
    LOCAL xList
    LOCAL xItem
    LOCAL xRetVal
 
-   LOCAL nLastPing := hb_milliSeconds()
+   LOCAL nLastPing := hb_MilliSeconds()
 
    DO WHILE netiocli[ _NETIOCLI_lWaitStream ]
 
       IF ! Empty( netiocli[ _NETIOCLI_pConnection ] )
-         IF hb_milliSeconds() > nLastPing + 5000
+         IF hb_MilliSeconds() > nLastPing + 5000
             /* Is connection alive? */
             BEGIN SEQUENCE WITH {| oError | Break( oError ) }
                netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_ping" )
@@ -192,7 +197,7 @@ STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread
                hbnetiocon_dispevent( netiocli, "Connection lost." )
                EXIT
             END SEQUENCE
-            nLastPing := hb_milliSeconds()
+            nLastPing := hb_MilliSeconds()
          ENDIF
       ENDIF
 
@@ -262,6 +267,7 @@ STATIC PROCEDURE DisconnectLow( netiocli )
    RETURN
 
 STATIC FUNCTION MyClientInfo()
+
    LOCAL hInfo := { => }
 
    hb_HKeepOrder( hInfo, .T. )
@@ -275,6 +281,7 @@ STATIC FUNCTION MyClientInfo()
    RETURN hInfo
 
 STATIC FUNCTION XToStrX( xValue )
+
    LOCAL cType := ValType( xValue )
 
    LOCAL tmp
@@ -340,6 +347,7 @@ STATIC PROCEDURE cmdAbout( netiocli )
    RETURN
 
 STATIC PROCEDURE cmdHelp( netiocli )
+
    LOCAL hCommands := netiocli[ _NETIOCLI_hCommands ]
    LOCAL aTexts := {}
    LOCAL n, m
@@ -363,6 +371,7 @@ STATIC PROCEDURE cmdHelp( netiocli )
    RETURN
 
 STATIC PROCEDURE cmdConnect( netiocli, cCommand )
+
    LOCAL cIP
    LOCAL nPort
    LOCAL aToken
@@ -404,6 +413,7 @@ STATIC PROCEDURE cmdDisconnect( netiocli )
    RETURN
 
 STATIC PROCEDURE cmdSysInfo( netiocli )
+
    LOCAL cLine
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
@@ -417,6 +427,7 @@ STATIC PROCEDURE cmdSysInfo( netiocli )
    RETURN
 
 STATIC PROCEDURE cmdServerConfig( netiocli )
+
    LOCAL cLine
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
@@ -430,6 +441,7 @@ STATIC PROCEDURE cmdServerConfig( netiocli )
    RETURN
 
 STATIC PROCEDURE cmdConnStop( netiocli, cCommand )
+
    LOCAL aToken
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
@@ -446,6 +458,7 @@ STATIC PROCEDURE cmdConnStop( netiocli, cCommand )
    RETURN
 
 STATIC PROCEDURE cmdConnClientInfo( netiocli, cCommand )
+
    LOCAL aToken
    LOCAL xCargo
 
@@ -468,6 +481,7 @@ STATIC PROCEDURE cmdConnClientInfo( netiocli, cCommand )
    RETURN
 
 STATIC PROCEDURE cmdConnInfo( netiocli, lManagement )
+
    LOCAL aArray
    LOCAL hConn
 
@@ -479,14 +493,14 @@ STATIC PROCEDURE cmdConnInfo( netiocli, lManagement )
       hbnetiocon_dispevent( netiocli, hb_StrFormat( "Number of connections: %1$d", Len( aArray ) ) )
 
       FOR EACH hConn IN aArray
-         hbnetiocon_dispevent( netiocli, "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " +;
-                                         hb_TToC( hConn[ "tStart" ] ) + " " +;
-                                         PadR( hConn[ "cStatus" ], 12 ) + " " +;
-                                         "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " +;
-                                         "send: " + Str( hConn[ "nBytesSent" ] ) + " " +;
-                                         "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " +;
-                                         hConn[ "cAddressPeer" ] + " " +;
-                                         iif( "xCargo" $ hconn, hb_ValToStr( hConn[ "xCargo" ] ), "" ) )
+         hbnetiocon_dispevent( netiocli, "#" + PadR( hb_ntos( hConn[ "nThreadID" ] ), Len( Str( hConn[ "nThreadID" ] ) ) ) + " " + ;
+            hb_TToC( hConn[ "tStart" ] ) + " " + ;
+            PadR( hConn[ "cStatus" ], 12 ) + " " + ;
+            "fcnt: " + Str( hConn[ "nFilesCount" ] ) + " " + ;
+            "send: " + Str( hConn[ "nBytesSent" ] ) + " " + ;
+            "recv: " + Str( hConn[ "nBytesReceived" ] ) + " " + ;
+            hConn[ "cAddressPeer" ] + " " + ;
+            iif( "xCargo" $ hconn, hb_ValToStr( hConn[ "xCargo" ] ), "" ) )
       NEXT
    ENDIF
 
@@ -523,6 +537,7 @@ STATIC PROCEDURE cmdConnLogEnable( netiocli, lValue )
    RETURN
 
 STATIC PROCEDURE cmdConnFilterMod( netiocli, cCommand, cRPC )
+
    LOCAL aToken
 
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
@@ -543,6 +558,7 @@ STATIC PROCEDURE cmdConnFilterMod( netiocli, cCommand, cRPC )
    RETURN
 
 STATIC PROCEDURE cmdConnFilters( netiocli, lManagement )
+
    LOCAL aArray
    LOCAL hFilter
 
@@ -552,8 +568,8 @@ STATIC PROCEDURE cmdConnFilters( netiocli, lManagement )
       aArray := netio_funcexec( netiocli[ _NETIOCLI_pConnection ], iif( lManagement, "hbnetiomgm_filtersadmin", "hbnetiomgm_filters" ) )
 
       FOR EACH hFilter IN aArray
-         hbnetiocon_dispevent( netiocli, hFilter[ "cType" ],;
-                                         hFilter[ "cAddress" ] )
+         hbnetiocon_dispevent( netiocli, hFilter[ "cType" ], ;
+            hFilter[ "cAddress" ] )
       NEXT
    ENDIF
 

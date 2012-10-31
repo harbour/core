@@ -48,7 +48,7 @@ PROCEDURE Main()
    LOCAL cOldLang
 
    IF Empty( aChanges )
-      OutStd( hb_progname() + ": no changes" + hb_eol() )
+      OutStd( hb_ProgName() + ": no changes" + hb_eol() )
       RETURN
    ENDIF
 
@@ -62,12 +62,12 @@ PROCEDURE Main()
 
    nOffset := hb_UTCOffset()
 
-   cLogNew := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s",;
-                 hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ),;
-                 iif( nOffset < 0, "-", "+" ),;
-                 Int( nOffset / 3600 ),;
-                 Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ),;
-                 cMyName ) + hb_eol()
+   cLogNew := hb_StrFormat( "%1$s UTC%2$s%3$02d%4$02d %5$s", ;
+      hb_TToC( hb_DateTime(), "YYYY-MM-DD", "HH:MM" ), ;
+      iif( nOffset < 0, "-", "+" ), ;
+      Int( nOffset / 3600 ), ;
+      Int( ( ( nOffset / 3600 ) - Int( nOffset / 3600 ) ) * 60 ), ;
+      cMyName ) + hb_eol()
 
    FOR EACH cLine IN aChanges
       cLogNew += cLine + hb_eol()
@@ -108,6 +108,7 @@ STATIC FUNCTION VCSDetect()
    RETURN ""
 
 STATIC FUNCTION DoctorChanges( cVCS, aChanges )
+
    LOCAL cLine
    LOCAL cStart
    LOCAL aNew := {}
@@ -180,23 +181,25 @@ STATIC FUNCTION DoctorChanges( cVCS, aChanges )
 
 
 STATIC FUNCTION Shell()
+
    LOCAL cShell
 
-   #if defined( __PLATFORM__UNIX )
-      cShell := hb_GetEnv( "SHELL" )
-   #else
-      cShell := hb_GetEnv( "COMSPEC" )
-   #endif
+#if defined( __PLATFORM__UNIX )
+   cShell := hb_GetEnv( "SHELL" )
+#else
+   cShell := hb_GetEnv( "COMSPEC" )
+#endif
 
    IF ! Empty( cShell )
-      #if ! defined( __PLATFORM__UNIX )
-         cShell := cShell + " /c"
-      #endif
+#if ! defined( __PLATFORM__UNIX )
+      cShell := cShell + " /c"
+#endif
    ENDIF
 
    RETURN cShell
 
 STATIC FUNCTION Changes( cVCS )
+
    LOCAL cStdOut := ""
 
    DO CASE

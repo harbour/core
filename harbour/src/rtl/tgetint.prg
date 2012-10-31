@@ -53,42 +53,42 @@
 REQUEST HB_PVALUE
 REQUEST PCOUNT
 
-FUNCTION __GET( bSetGet, cVarName, cPicture, bValid, bWhen )
+FUNCTION __Get( bSetGet, cVarName, cPicture, bValid, bWhen )
 
    LOCAL oGet
 
    IF bSetGet == NIL
       IF FieldPos( cVarName ) > 0
          bSetGet := hb_macroBlock( "iif(PCount()==0,FIELD->" + cVarName + ",FIELD->" + cVarName + ":=hb_PValue(1))" )
-      ELSEIF __MVEXIST( cVarName )
-         bSetGet := {| _1 | iif( _1 == NIL, __MVGET( cVarName ), __MVPUT( cVarName, _1 ) ) }
+      ELSEIF __mvExist( cVarName )
+         bSetGet := {| _1 | iif( _1 == NIL, __mvGet( cVarName ), __mvPut( cVarName, _1 ) ) }
       ELSE
          bSetGet := hb_macroBlock( "iif(PCount()==0," + cVarName + "," + cVarName + ":=hb_PValue(1))" )
       ENDIF
    ENDIF
 
-   oGet := GetNew( , , bSetGet, cVarName, cPicture )
+   oGet := GetNew(,, bSetGet, cVarName, cPicture )
 
    oGet:PreBlock := bWhen
    oGet:PostBlock := bValid
 
    RETURN oGet
 
-FUNCTION __GETA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
+FUNCTION __GetA( bGetArray, cVarName, cPicture, bValid, bWhen, aIndex )
 
    LOCAL oGet
 
    IF bGetArray == NIL
       IF FieldPos( cVarName ) > 0
          bGetArray := hb_macroBlock( "FIELD->" + cVarName )
-      ELSEIF __MVEXIST( cVarName )
-         bGetArray := {|| __MVGET( cVarName ) }
+      ELSEIF __mvExist( cVarName )
+         bGetArray := {|| __mvGet( cVarName ) }
       ELSE
          bGetArray := hb_macroBlock( cVarName )
       ENDIF
    ENDIF
 
-   oGet := GetNew( , , bGetArray, cVarName, cPicture )
+   oGet := GetNew(,, bGetArray, cVarName, cPicture )
    oGet:SubScript := aIndex
 
    oGet:PreBlock := bWhen

@@ -75,10 +75,10 @@ PROCEDURE Main()
 
    SetKey( K_F10, {|| Alert( Transform( GetActive():varGet(), NIL ) ) }, ;
       {|| ! Empty( GetActive():VarGet() ) } )  /* :buffer */
-   SetKey( K_F9 , {|| k := hb_SetKeySave( NIL ), ;
+   SetKey( K_F9, {|| k := hb_SetKeySave( NIL ), ;
       SetKey( K_F9, {|| hb_SetKeySave( k ) } ) } )
-   SetKey( K_F8 , {|| SubMain() }, {|| F8Active } )
-   SetKey( K_F7 , {|| F8Active := ! F8Active } )
+   SetKey( K_F8, {|| SubMain() }, {|| F8Active } )
+   SetKey( K_F7, {|| F8Active := ! F8Active } )
 
    READ
    ? alpha, bravo, charlie

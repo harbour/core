@@ -108,6 +108,7 @@ METHOD Add( cMsg ) CLASS TIPLOG
    RETURN .F.
 
 METHOD Close() CLASS TIPLOG
+
    LOCAL lRetVal
 
    IF ! Empty( ::fhnd ) .AND. ::fhnd != F_ERROR

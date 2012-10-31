@@ -3,6 +3,7 @@
  */
 
 PROCEDURE Main()
+
    LOCAL nPrn := 1
    LOCAL cFileName := Space( 40 )
    LOCAL aPrn := WIN_PRINTERLIST()
@@ -11,7 +12,7 @@ PROCEDURE Main()
    CLS
 
    IF Empty( aPrn )
-      Alert("No printers installed - Cannot continue")
+      Alert( "No printers installed - Cannot continue" )
       QUIT
    ENDIF
 

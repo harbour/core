@@ -25,10 +25,10 @@
 
 HB_FUNC( FT_DESCEND )
 {
-   PHB_ITEM iP       = hb_itemParam( 1 );
-   HB_TYPE  uiType   = hb_itemType( iP );
+   PHB_ITEM iP     = hb_itemParam( 1 );
+   HB_TYPE  uiType = hb_itemType( iP );
 
-   PHB_ITEM iR       = NULL;
+   PHB_ITEM iR = NULL;
 
    if( ( uiType & HB_IT_NUMERIC ) && ( uiType & HB_IT_DOUBLE ) )
       iR = hb_itemPutND( 0, 0 - hb_itemGetND( iP ) );

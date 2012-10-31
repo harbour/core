@@ -75,8 +75,9 @@ FUNCTION __objHasData( oObject, cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   RETURN __objHasMsg( oObject, cSymbol ) .AND. ;
-          __objHasMsg( oObject, "_" + cSymbol )
+   RETURN ;
+      __objHasMsg( oObject, cSymbol ) .AND. ;
+      __objHasMsg( oObject, "_" + cSymbol )
 
 FUNCTION __objHasMethod( oObject, cSymbol )
 
@@ -84,10 +85,12 @@ FUNCTION __objHasMethod( oObject, cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   RETURN __objHasMsg( oObject, cSymbol ) .AND. ;
-          !__objHasMsg( oObject, "_" + cSymbol )
+   RETURN ;
+      __objHasMsg( oObject, cSymbol ) .AND. ;
+      ! __objHasMsg( oObject, "_" + cSymbol )
 
 FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
+
    LOCAL aInfo
    LOCAL aData
    LOCAL n
@@ -110,7 +113,7 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
    n     := 1
    nLen  := Len( aInfo )
 
-   DO WHILE n <= nLen .AND. !( Substr( aInfo[ n ], 1, 1 ) == "_" )
+   DO WHILE n <= nLen .AND. !( SubStr( aInfo[ n ], 1, 1 ) == "_" )
 
       /* If in range and no set function found yet
          (set functions begin with a leading underscore). */
@@ -138,7 +141,8 @@ FUNCTION __objGetMethodList( oObject )
 
    RETURN __objGetMsgList( oObject, .F. )
 
-FUNCTION __objGetValueList( oObject, aExcept )
+FUNCTION __objGetValueLIST( oObject, aExcept )
+
    LOCAL aDataSymbol
    LOCAL nLen
    LOCAL aData
@@ -157,7 +161,7 @@ FUNCTION __objGetValueList( oObject, aExcept )
    nLen        := Len( aDataSymbol )
    aData       := {}
 
-   FOR n := 1 to nLen
+   FOR n := 1 TO nLen
       cSymbol := aDataSymbol[ n ]
       IF AScan( aExcept, {| tmp | tmp == cSymbol } ) == 0
          AAdd( aData, { cSymbol, __objSendMsg( oObject, cSymbol ) } )
@@ -197,6 +201,7 @@ FUNCTION __objAddInline( oObject, cSymbol, bInline )
    RETURN oObject
 
 FUNCTION __objAddData( oObject, cSymbol )
+
    LOCAL nSeq, hClass
 
    IF ! HB_ISOBJECT( oObject ) .OR. ! HB_ISSTRING( cSymbol )
@@ -256,6 +261,7 @@ FUNCTION __objDelData( oObject, cSymbol )
    RETURN oObject
 
 FUNCTION __objDerivedFrom( oObject, xSuper )
+
    LOCAL cClassName
 
    IF ! HB_ISOBJECT( oObject )
@@ -273,6 +279,7 @@ FUNCTION __objDerivedFrom( oObject, xSuper )
    RETURN __clsParent( oObject:ClassH, cClassName )
 
 FUNCTION __objGetProperties( oObject, lAllExported )
+
    LOCAL msg
    LOCAL aMsgList := __clsGetProperties( oObject:classH, lAllExported )
 

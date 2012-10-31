@@ -14,28 +14,28 @@ PROCEDURE Main()
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )
-   ? CDOW( Date() )
+   ? CDoW( Date() )
    ? "---------"
 
    ? "Prev:", hb_langSelect( "HU852" )
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )
-   ? CDOW( Date() )
+   ? CDoW( Date() )
    ? "---------"
 
    ? "Prev:", hb_langSelect( "NOTHERE" )
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )
-   ? CDOW( Date() )
+   ? CDoW( Date() )
    ? "---------"
 
    ? "Prev:", hb_langSelect( "KO" )
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )
-   ? CDOW( Date() )
+   ? CDoW( Date() )
    ? "---------"
 
    RETURN

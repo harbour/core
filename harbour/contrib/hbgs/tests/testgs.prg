@@ -15,15 +15,16 @@
 #include "simpleio.ch"
 
 PROCEDURE Main()
-    LOCAL a, b, c, d
 
-    ? HB_GSAPI_REVISION( @a, @b, @c, @d )
+   LOCAL a, b, c, d
 
-    ? a
-    ? b
-    ? c
-    ? d
+   ? HB_GSAPI_REVISION( @a, @b, @c, @d )
 
-    ? HB_GS( { "--version" } )
+   ? a
+   ? b
+   ? c
+   ? d
 
-    RETURN
+   ? HB_GS( { "--version" } )
+
+   RETURN

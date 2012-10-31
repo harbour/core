@@ -28,8 +28,12 @@
 proc main()
    local pGT, pGT1, pGT2
 
-#if defined( __PLATFORM__WINDOWS ) .AND. defined( __HBSCRIPT__HBSHELL )
-   hbshell_gtSelect( "GTWVT" )
+#if defined( __HBSCRIPT__HBSHELL )
+   #if defined( __PLATFORM__WINDOWS )
+      hbshell_gtSelect( "GTWVT" )
+   #elif defined( __PLATFORM__UNIX )
+      hbshell_gtSelect( "GTXWC" )
+   #endif
 #endif
 
    ? "This is small test for using more then one console window."

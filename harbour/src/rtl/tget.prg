@@ -222,6 +222,7 @@ CREATE CLASS GET
 ENDCLASS
 
 METHOD assign() CLASS GET
+
    LOCAL xValue
 
    IF ::hasFocus
@@ -304,9 +305,9 @@ METHOD display() CLASS GET
          ENDIF
       ENDIF
 
-      hb_dispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, GET_CLR_CAPTION ) )
+      hb_DispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, GET_CLR_CAPTION ) )
       IF nPos > 0
-         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_ACCEL ) )
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_ACCEL ) )
       ENDIF
 
       /* should we set fixed cursor position here?
@@ -326,8 +327,8 @@ METHOD display() CLASS GET
 
    IF !::lSuppDisplay .OR. nDispPos != ::nOldPos
 
-      hb_dispOutAt( ::nRow, ::nCol,;
-                    iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ),;
+      hb_DispOutAt( ::nRow, ::nCol, ;
+                    iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ), ;
                     hb_ColorIndex( ::cColorSpec, iif( ::hasFocus, GET_CLR_ENHANCED, GET_CLR_UNSELECTED ) ) )
 
       nRowPos := ::nRow
@@ -335,12 +336,12 @@ METHOD display() CLASS GET
 
       IF Set( _SET_DELIMITERS ) .AND. !::hasFocus
 #ifdef HB_COMPAT_C53
-         hb_dispOutAt( nRowPos, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
-         hb_dispOutAt( nRowPos, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
+         hb_DispOutAt( nRowPos, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
+         hb_DispOutAt( nRowPos, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
 #else
          /* NOTE: C5.2 will use the default color. We're replicating this here. [vszakats] */
-         hb_dispOutAt( nRowPos, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ) )
-         hb_dispOutAt( nRowPos, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ) )
+         hb_DispOutAt( nRowPos, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ) )
+         hb_DispOutAt( nRowPos, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ) )
 #endif
          ++nColPos
       ENDIF
@@ -778,7 +779,7 @@ METHOD toDecPos() CLASS GET
 
       IF ::type == "N" .AND. ::lMinus .AND. ::unTransform() == 0
          ::backSpace()
-         ::overStrike("-")
+         ::overStrike( "-" )
       ENDIF
 
       ::display()
@@ -912,12 +913,12 @@ METHOD setColorSpec( cColorSpec ) CLASS GET
    IF HB_ISSTRING( cColorSpec )
 
 #ifdef HB_COMPAT_C53
-      ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) ) +;
-                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != -1, nClrOth, nClrUns ) ) +;
+      ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) + ;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) ) + ;
+                      "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_CAPTION  ) ) ) != -1, nClrOth, nClrUns ) ) + ;
                       "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ACCEL    ) ) ) != -1, nClrOth, nClrUns ) )
 #else
-      ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) +;
+      ::cColorSpec := hb_NToColor( nClrUns := Max( hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_UNSELECTED ) ), 0 ) ) + ;
                       "," + hb_NToColor( iif( ( nClrOth := hb_ColorToN( hb_ColorIndex( cColorSpec, GET_CLR_ENHANCED ) ) ) != -1, nClrOth, nClrUns ) )
 #endif
 
@@ -931,15 +932,17 @@ METHOD setColorSpec( cColorSpec ) CLASS GET
             replicate some original C5.3 behaviour. */
    ELSE
       IF Set( _SET_INTENSITY )
-         ::cColorSpec := hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_BACKGROUND )
+         ::cColorSpec := ;
+            hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + ;
+            hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," + ;
+            hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + ;
+            hb_ColorIndex( SetColor(), CLR_BACKGROUND )
       ELSE
-         ::cColorSpec := hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
-                         hb_ColorIndex( SetColor(), CLR_STANDARD )
+         ::cColorSpec := ;
+            hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + ;
+            hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + ;
+            hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + ;
+            hb_ColorIndex( SetColor(), CLR_STANDARD )
       ENDIF
 #endif
    ENDIF
@@ -1188,8 +1191,8 @@ METHOD PutMask( xValue, lEdit ) CLASS GET
          cBuffer += " "
       ENDIF
 
-      IF ( ( "C" $ cPicFunc .AND. xValue <  0 ) .OR.;
-           ( "X" $ cPicFunc .AND. xValue >= 0 ) ) .AND.;
+      IF ( ( "C" $ cPicFunc .AND. xValue <  0 ) .OR. ;
+           ( "X" $ cPicFunc .AND. xValue >= 0 ) ) .AND. ;
            !( "X" $ cPicFunc .AND. "C" $ cPicFunc )
          cBuffer += "   "
       ENDIF
@@ -1291,12 +1294,12 @@ METHOD unTransform() CLASS GET
                NEXT
             ELSE
                IF "E" $ ::cPicFunc
-                  cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) +;
-                             StrTran( StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".", " " ), ",", "." ) +;
+                  cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) + ;
+                             StrTran( StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ".", " " ), ",", "." ) + ;
                              SubStr( cBuffer, ::LastEditable() + 1 )
                ELSE
-                  cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) +;
-                                      StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ",", " " ) +;
+                  cBuffer := Left( cBuffer, ::FirstEditable() - 1 ) + ;
+                                      StrTran( SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 ), ",", " " ) + ;
                              SubStr( cBuffer, ::LastEditable() + 1 )
                ENDIF
 
@@ -1598,7 +1601,7 @@ METHOD backSpaceLow() CLASS GET
 
       IF nMinus > 0 .AND. !( SubStr( ::cPicMask, nMinus, 1 ) == "(" )
 
-         ::cBuffer := SubStr( ::cBuffer, 1, nMinus - 1 ) + " " +;
+         ::cBuffer := SubStr( ::cBuffer, 1, nMinus - 1 ) + " " + ;
                       SubStr( ::cBuffer, nMinus + 1 )
 
          ::lEdit := .T.
@@ -1640,7 +1643,7 @@ METHOD deleteLow() CLASS GET
    ENDIF
 
    ::cBuffer := PadR( SubStr( ::cBuffer, 1, ::nPos - 1 ) + ;
-                SubStr( ::cBuffer, ::nPos + 1, nMaxLen - ::nPos ) + " " +;
+                SubStr( ::cBuffer, ::nPos + 1, nMaxLen - ::nPos ) + " " + ;
                 SubStr( ::cBuffer, nMaxLen + 1 ), ::nMaxLen )
 
    ::lChanged := .T.
@@ -1759,9 +1762,9 @@ METHOD Input( cChar ) CLASS GET
    IF ! Empty( ::cPicMask )
       cPic  := hb_asciiUpper( SubStr( ::cPicMask, ::nPos, 1 ) )
 
-//    cChar := Transform( cChar, cPic )
-// Above line eliminated because some get picture template symbols for
-// numeric input not work in text input. eg: $ and *
+      //    cChar := Transform( cChar, cPic )
+      // Above line eliminated because some get picture template symbols for
+      // numeric input not work in text input. eg: $ and *
 
       DO CASE
       CASE cPic == "A"
@@ -1943,19 +1946,21 @@ METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS GET
       cVarName := ""
    ENDIF
    IF bVarBlock == NIL
-      bVarBlock := iif( HB_ISSTRING( cVarName ), MemvarBlock( cVarName ), NIL )
+      bVarBlock := iif( HB_ISSTRING( cVarName ), MemVarBlock( cVarName ), NIL )
    ENDIF
 #ifdef HB_COMPAT_C53
    IF cColorSpec == NIL
-      cColorSpec := hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
-                    hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," +;
-                    hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," +;
-                    iif( IsDefColor(), iif( Set( _SET_INTENSITY ), "W+/N", "W/N" ), hb_ColorIndex( SetColor(), CLR_BACKGROUND ) )
+      cColorSpec := ;
+         hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( SetColor(), CLR_ENHANCED ) + "," + ;
+         hb_ColorIndex( SetColor(), CLR_STANDARD ) + "," + ;
+         iif( IsDefColor(), iif( Set( _SET_INTENSITY ), "W+/N", "W/N" ), hb_ColorIndex( SetColor(), CLR_BACKGROUND ) )
    ENDIF
 #else
    IF cColorSpec == NIL
-      cColorSpec := hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," +;
-                    hb_ColorIndex( SetColor(), CLR_ENHANCED )
+      cColorSpec := ;
+         hb_ColorIndex( SetColor(), CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( SetColor(), CLR_ENHANCED )
    ENDIF
 #endif
 

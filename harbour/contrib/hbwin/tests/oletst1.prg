@@ -16,6 +16,7 @@
 #define NETPASSWD  "topsecret"
 
 PROCEDURE Main()
+
    LOCAL oObject
 
    oObject := win_OleCreateObject( "MyOleRPCServer" )
@@ -26,10 +27,10 @@ PROCEDURE Main()
          /* execute some functions on the server side and display
           * the results.
           */
-         ? oObject:upper( "hello world !!!" )
-         ? "SERVER DATE:",     oObject:DATE()
-         ? "SERVER TIME:",     oObject:TIME()
-         ? "SERVER DATETIME:", oObject:HB_DATETIME()
+         ? oObject:Upper( "hello world !!!" )
+         ? "SERVER DATE:",     oObject:Date()
+         ? "SERVER TIME:",     oObject:Time()
+         ? "SERVER DATETIME:", oObject:hb_DateTime()
       ELSE
          ? "Cannot connect to the server:", NETSERVER
       ENDIF
@@ -38,4 +39,5 @@ PROCEDURE Main()
    ENDIF
 
    WAIT
-RETURN
+
+   RETURN

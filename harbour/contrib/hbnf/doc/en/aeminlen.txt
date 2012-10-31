@@ -14,13 +14,13 @@
                  -> nMinlen
    $ARGUMENTS$
       <aArray> is the array containing the elements to be measured.
-  
+
       <nDimension> is the array dimension to be measured,
                  defaults to first dimension.
-  
+
       <nStart> is the starting array element to include,
                  defaults to first array element.
-  
+
       <nCount> is the number of array elements to process from
                  from <nStart>, defaults to remaining elements
                  in array.
@@ -31,13 +31,13 @@
       dimension and return the shortest element.
    $EXAMPLES$
       FT_AEMINLEN( aArray )          // Measure the 1st dimension of an Array
-  
+
       FT_AEMINLEN( aArray, 2 )       // Measure the 2nd dimension of an Array
-  
+
       FT_AEMINLEN( aArray, 2, , 9 )  // Measure Elements 1-9 of 2nd dimension
-  
+
       FT_AEMINLEN( aArray, 3, 5, 9 ) // Measure Elements 5-9 of 3rd dimension
-  
+
       FT_AEMINLEN( aArray, 3, 5 )    // Measure Elements 5 to end of 3rd dimension
    $SEEALSO$
       FT_AEMAXLEN()

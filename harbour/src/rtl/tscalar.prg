@@ -82,7 +82,7 @@ METHOD AsString() CLASS ScalarObject
    CASE "M"
    CASE "C" ; RETURN Self
    CASE "D" ; RETURN DToC( Self )
-   CASE "T" ; RETURN HB_TToC( Self )
+   CASE "T" ; RETURN hb_TToC( Self )
    CASE "H" ; RETURN "{ ... => ... }"
    CASE "L" ; RETURN iif( Self, ".T.", ".F." )
    CASE "N" ; RETURN hb_ntos( Self )
@@ -99,37 +99,39 @@ METHOD AsExpStr() CLASS ScalarObject
    CASE "M"
    CASE "C" ; RETURN '"' + Self + '"'
    CASE "D" ; RETURN 'CToD("' + DToC( Self ) + '")'
-   CASE "T" ; RETURN 'HB_CToT("' + HB_TToC( Self ) + '")'
+   CASE "T" ; RETURN 'hb_CToT("' + hb_TToC( Self ) + '")'
    ENDSWITCH
 
    RETURN ::AsString()
 
 METHOD BecomeErr() CLASS ScalarObject
+
    // Not implemented yet
    // ::error( CSYERR_BECOME, "Message 'become' illegally sent to scalar", ::ClassName() )
+
    RETURN NIL
 
 /* -------------------------------------------- */
 
 CREATE CLASS Array INHERIT HBScalar FUNCTION __HBArray
 
-   METHOD Init
+   METHOD Init( nElements )
 
-   METHOD AsString
-   METHOD At
-   METHOD AtPut
-   METHOD Add
-   METHOD AddAll
-   METHOD Collect
-   METHOD Copy
-   METHOD Do
-   METHOD DeleteAt
-   METHOD InsertAt
-   METHOD IndexOf
-   METHOD IsScalar
-   METHOD Remove
-   METHOD Scan
-   METHOD _Size                          // assignment method
+   METHOD AsString()
+   METHOD At( n )
+   METHOD AtPut( n, x )
+   METHOD Add( x )
+   METHOD AddAll( aOtherCollection )
+   METHOD Collect( b )
+   METHOD Copy()
+   METHOD Do( b )
+   METHOD DeleteAt( n )
+   METHOD InsertAt( n, x )
+   METHOD IndexOf( x )
+   METHOD IsScalar()
+   METHOD Remove( e )
+   METHOD Scan( b )
+   METHOD _Size( newSize )                   // assignment method
 
    MESSAGE Append  METHOD Add
 
@@ -169,7 +171,7 @@ METHOD Collect( b ) CLASS Array
    LOCAL result := {}
    LOCAL nElems := Len( Self )
 
-   FOR i := 1 to nElems
+   FOR i := 1 TO nElems
       currElem := Self[ i ]
       IF Eval( b, currElem )
          AAdd( result, currElem )
@@ -312,16 +314,16 @@ CREATE CLASS TimeStamp INHERIT HBScalar FUNCTION __HBTimeStamp
 ENDCLASS
 
 METHOD AsString() CLASS TimeStamp
-   RETURN HB_TTOS( Self )
+   RETURN hb_TToS( Self )
 
 METHOD AsExpStr() CLASS TimeStamp
-   RETURN 'HB_STOT("' + ::AsString() + '")'
+   RETURN 'hb_SToT("' + ::AsString() + '")'
 
 METHOD Date() CLASS TimeStamp
-   RETURN HB_TTOC( Self, NIL, "" )
+   RETURN hb_TToC( Self, NIL, "" )
 
 METHOD Time() CLASS TimeStamp
-   RETURN HB_TTOC( Self, "", "HH:MM:SS" )
+   RETURN hb_TToC( Self, "", "HH:MM:SS" )
 
 METHOD Year() CLASS TimeStamp
    RETURN Year( Self )
@@ -333,13 +335,13 @@ METHOD Day() CLASS TimeStamp
    RETURN Day( Self )
 
 METHOD Hour() CLASS TimeStamp
-   RETURN HB_HOUR( Self )
+   RETURN hb_Hour( Self )
 
 METHOD Minute() CLASS TimeStamp
-   RETURN HB_MINUTE( Self )
+   RETURN hb_Minute( Self )
 
 METHOD Sec() CLASS TimeStamp
-   RETURN HB_SEC( Self )
+   RETURN hb_Sec( Self )
 
 /* -------------------------------------------- */
 
@@ -365,13 +367,13 @@ METHOD AsString() CLASS Logical
 
 /* -------------------------------------------- */
 
-CREATE CLASS Nil INHERIT HBScalar FUNCTION __HBNil
+CREATE CLASS NIL INHERIT HBScalar FUNCTION __HBNil
 
    METHOD AsString()
 
 ENDCLASS
 
-METHOD AsString() CLASS Nil
+METHOD AsString() CLASS NIL
    RETURN "NIL"
 
 /* -------------------------------------------- */

@@ -131,6 +131,7 @@ METHOD Recv( nLength, nResult ) CLASS win_Com
    RETURN win_ComRecv( ::nPort, nLength, @nResult )
 
 METHOD RecvTo( cDelim, nMaxlen ) CLASS win_Com
+
    LOCAL nResult
    LOCAL cRecv := ""
 
@@ -200,6 +201,7 @@ METHOD DebugDCB( nDebug ) CLASS win_Com
    you to see what call did the deed when things go wrong. */
 
 METHOD ErrorText() CLASS win_Com
+
    LOCAL nFcn := win_ComFuncLast( ::nPort )
    LOCAL cString
    LOCAL nError

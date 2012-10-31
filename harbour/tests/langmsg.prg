@@ -46,7 +46,7 @@ PROCEDURE Main( cLng )
    ? "-------"
    a := GET_ERR()
    FOR i := 1 TO Len( a )
-      ? PadR( a[i,1], 15 ) + "|" + PadR( aErr[i,2], 30 ) + "|" + PadR( a[i,2], 32 )
+      ? PadR( a[ i, 1 ], 15 ) + "|" + PadR( aErr[ i, 2 ], 30 ) + "|" + PadR( a[ i, 2 ], 32 )
    NEXT
    ?
    Inkey( 0 )
@@ -85,8 +85,8 @@ FUNCTION GET_DAYS()
    LOCAL i, n, aDays[ 7 ], dt := Date()
 
    FOR i := 1 TO 7
-      n := DOW( dt )
-      aDays[ n ] := CDOW( dt )
+      n := DoW( dt )
+      aDays[ n ] := CDoW( dt )
       ++dt
    NEXT
 
@@ -110,7 +110,7 @@ FUNCTION GET_ERR()
 
    LOCAL aErr
 
-   aErr := {;
+   aErr := { ;
       { "EG_ARG         ", hb_langErrMsg(  1 ) }, ;
       { "EG_BOUND       ", hb_langErrMsg(  2 ) }, ;
       { "EG_STROVERFLOW ", hb_langErrMsg(  3 ) }, ;

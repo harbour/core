@@ -32,7 +32,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    HB_SYMBOL_UNUSED( xParam )
    HB_SYMBOL_UNUSED( oCom )
 
-//--------------------------- Dialog -------------------------------\\
+   // --------------------------- Dialog -------------------------------\\
 #if 1
    oCrt := WvgDialog():new( , , { 30, 30 }, { 800, 600 }, , .T. )
    oCrt:closable := .T.
@@ -47,13 +47,13 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
 
    oDA := oCrt:drawingArea
 
-   //--------------------------- Menu --------------------------------\\
+   // --------------------------- Menu --------------------------------\\
    ActiveXBuildMenu( oCrt, @oStatic, @oStatic2 )
 
-   //--------------------------- ToolBar -----------------------------\\
+   // --------------------------- ToolBar -----------------------------\\
    oTBar := BuildWvgToolBar( oDA, nActiveX )
 
-   //--------------------------- StatusBar ---------------------------\\
+   // --------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oDA ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
@@ -63,17 +63,17 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oPanel2 := oSBar:addItem()
    oPanel2:caption := 'Click on any part!'
 
-   //--------------------------- Static ------------------------------\\
+   // --------------------------- Static ------------------------------\\
    oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
    oStatic:caption := Chr( 13 ) + 'Implemented   Xbase++ Parts'
-   oStatic:create( , , { 0, oTBar:currentSize()[2] + 3 }, { 120, oCrt:currentSize()[2] - ;
-      oTBar:currentSize()[2] - oSBar:currentSize()[2] - 4 }, , .T. )
-   oStatic:setColorBG( RGB( 198,198,198 ) )
+   oStatic:create( , , { 0, oTBar:currentSize()[ 2 ] + 3 }, { 120, oCrt:currentSize()[ 2 ] - ;
+      oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
+   oStatic:setColorBG( RGB( 198, 198, 198 ) )
 
 #if 0  // panel
-   //--------------------------- Static + Radio + Checkbox ----------\\
+   // --------------------------- Static + Radio + Checkbox ----------\\
    oStatic2 := WvgStatic():New( oCrt, , { 150, 150 }, { 500, 310 }, , .F. )
 // oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
@@ -99,21 +99,21 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oCheck              := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100, 15 }, , .T. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, WVG_MessageBox( , iif( o:getData(), 'I am selected', 'I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp                := Wvg3State():new( oStatic2 )
    oXbp:caption := "3 State A"
    oXbp:create( , , { 10, 100 }, { 100, 15 } )
    // Determine current state using mp1
-   oXbp:selected := {| m1, m2, oBtn | m2 := m2, oBtn := oBtn, oPanel1:caption := "3State A [" + aState[ m1+1 ] + "]" }
+   oXbp:selected := {| m1, m2, oBtn | m2 := m2, oBtn := oBtn, oPanel1:caption := "3State A [" + aState[ m1 + 1 ] + "]" }
 
    // Create second 3State Button, passing the position to :new()
    oXbp                := Wvg3State():new( oStatic2, , { 10, 125 }, { 100, 15 } )
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1, m2, oBtn | m1 := m1, m2 := m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| m1, m2, oBtn | m1 := m1, m2 := m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData() + 1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -132,7 +132,7 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oXbp:tabStop        := .T.
    oXbp:bufferLength   := 15
    oXbp:dataLink       := {| x | iif( x == NIL, cVarB, cVarB := x ) }
-   oXbp:create(  )
+   oXbp:create()
    oXbp:setData()
    oXbp:killInputFocus := {| x, y, oSLE | x := x, y := y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
@@ -149,11 +149,11 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oMLE:setData()
 #endif
 
-   //--------------------------- ListBox -----------------------------\\
+   // --------------------------- ListBox -----------------------------\\
    oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
-   oListBox:setColorFG( RGB( 218,61,34 ) )
+   oListBox:setColorFG( RGB( 218, 61, 34 ) )
 
    AAdd( aParts, 'XbpDialog'     )
    AAdd( aParts, 'XbpMenuBar'    )
@@ -175,22 +175,22 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
    oListBox:itemSelected := {|| WVG_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )
 
-   //--------------------------- PushButton --------------------------\\
+   // --------------------------- PushButton --------------------------\\
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20, 440 }, { 80, 30 } )
    oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   //--------------------------- TreeView ---------------------------\\
-   oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[1] - 160, oTBar:currentSize()[2] + 3 }, ;
-      { 160, oCrt:currentSize()[2] - ;
-      oTBar:currentSize()[2] - oSBar:currentSize()[2] - 4 }, , .T. )
+   // --------------------------- TreeView ---------------------------\\
+   oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[ 1 ] - 160, oTBar:currentSize()[ 2 ] + 3 }, ;
+      { 160, oCrt:currentSize()[ 2 ] - ;
+      oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
    oTree:hasLines   := .T.
    oTree:hasButtons := .T.
    oTree:alwaysShowSelection := .T.
    oTree:create()
-   oTree:setColorBG( RGB( 120,15,240 ) )
-   oTree:setColorFG( RGB( 15,240,120 ) )
+   oTree:setColorBG( RGB( 120, 15, 240 ) )
+   oTree:setColorFG( RGB( 15, 240, 120 ) )
    oTree:itemSelected := {| oItem | iif( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
@@ -212,16 +212,16 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
 
    oTree:setData( oItem2 )
 
-   //--------------------------- Misc Config ------------------------\\
-   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == 'Hide' , oStatic:hide(), NIL ), ;
-      iif( oBtn:caption == 'Show' , oStatic:show(), NIL ), ;
+   // --------------------------- Misc Config ------------------------\\
+   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == 'Hide', oStatic:hide(), NIL ), ;
+      iif( oBtn:caption == 'Show', oStatic:show(), NIL ), ;
       iif( oBtn:caption == 'Tools', oStatic2:show():toFront(), NIL ), ;
       iif( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ), ;
       oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
    oDA:resize := {|| ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree ) }
 
 #if 1
-   //--------------------------- Active-X ---------------------------\\
+   // --------------------------- Active-X ---------------------------\\
    oCom := BuildActiveXControl( nActiveX, oDA )
    IF HB_ISOBJECT( oCom )
       oCrt:sendMessage( WM_SIZE, 0, 0 )
@@ -257,16 +257,16 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
 // aTree   := oTree:currentSize()
 // aCom    := oCom:currentSize()
 
-   nT := aTBar[2]
-   nH := aCrt[2] - aTBar[2] - aSBar[2]
+   nT := aTBar[ 2 ]
+   nH := aCrt[ 2 ] - aTBar[ 2 ] - aSBar[ 2 ]
 
    IF oStatic:isVisible
       oStatic:setPosAndSize( { 0, nT + 3 }, { 120, nH - 4 }, .T. )
-      oCom:setPosAndSize( { 120, nT }, { aCrt[1] - 120 - 150, nH }, .T. )
-      oTree:setPosAndSize( { aCrt[1] - 150, nT }, { 150, nH }, .T. )
+      oCom:setPosAndSize( { 120, nT }, { aCrt[ 1 ] - 120 - 150, nH }, .T. )
+      oTree:setPosAndSize( { aCrt[ 1 ] - 150, nT }, { 150, nH }, .T. )
    ELSE
-      oCom:setPosAndSize( { 0, nT }, { aCrt[1] - 150, nH }, .T. )
-      oTree:setPosAndSize( { aCrt[1] - 150, nT }, { 150, nH }, .T. )
+      oCom:setPosAndSize( { 0, nT }, { aCrt[ 1 ] - 150, nH }, .T. )
+      oTree:setPosAndSize( { aCrt[ 1 ] - 150, nT }, { 150, nH }, .T. )
    ENDIF
 
    RETURN 1
@@ -343,16 +343,16 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
       oCom:CLSID := 'AnalogClockControl.AnalogClock'
       oCom:Id    := 5
 
-      oCom:mapEvent( evDblClk, {|| oCom:Value     := Seconds()/86400 , ;
+      oCom:mapEvent( evDblClk, {|| oCom:Value     := Seconds() / 86400, ;
          oCom:BackColor := RGB( 0, 140, 210 ), ;
-         oCom:Refresh()                    , ;
-         oCom:ShowSecondsHand := .T.       , ;
-         oCom:Hands3D   := .T.             , ;
-         oCom:Refresh()                    , ;
-         oCom:showAboutBox()                ;
+         oCom:Refresh(), ;
+         oCom:ShowSecondsHand := .T., ;
+         oCom:Hands3D := .T., ;
+         oCom:Refresh(), ;
+         oCom:showAboutBox() ;
          } )
 
-      oCom:mapEvent( evBtnUp, {| nBtn | iif( nBtn == 2, oCom:oParent:sendMessage( WM_CLOSE,0,0 ), NIL ) } )
+      oCom:mapEvent( evBtnUp, {| nBtn | iif( nBtn == 2, oCom:oParent:sendMessage( WM_CLOSE, 0, 0 ), NIL ) } )
 
    CASE nActiveX == 3
       hb_gtInfo( HB_GTI_WINTITLE, 'file://' + hb_DirBase() + 'myharu.pdf' )
@@ -399,13 +399,13 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
    ELSEIF nActiveX == 5
       oCom:loadMultiPage( hb_DirBase() + 'myharu.pdf', 2 )
-      oCom:addGradientBorder( 10, RGB( 12,20,233 ), RGB( 100,255,20 ), 0 )
+      oCom:addGradientBorder( 10, RGB( 12, 20, 233 ), RGB( 100, 255, 20 ), 0 )
       oCom:drawText( 10, 10, 'Vouch' )
-      //oCom:emboss( 3,0 )
+      // oCom:emboss( 3,0 )
       oCom:copy2ClipBoard()
       oCom:view := 11
-      oCom:setBackGroundColor( rgb( 225,225,225 ) )
-      //oCom:rotate90()
+      oCom:setBackGroundColor( rgb( 225, 225, 225 ) )
+      // oCom:rotate90()
 
    ENDIF
 
@@ -413,7 +413,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
       nKey := Inkey()
 
       IF nActiveX == 2
-         oCom:Value := Seconds()/86400
+         oCom:Value := Seconds() / 86400
       ENDIF
 
       IF nKey == K_F12
@@ -421,7 +421,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
             oCom:Navigate( 'www.vouch.info' )
 
          ELSEIF nActiveX == 11
-            //oCom:document( 0 ):InnerHTML := "<html><h1>Stream Test</h1><p>This HTML content in a document.</html>"
+            // oCom:document( 0 ):InnerHTML := "<html><h1>Stream Test</h1><p>This HTML content in a document.</html>"
 
          ELSEIF nActiveX == 4
             oCom:RMCBackColor     := 23456142
@@ -445,7 +445,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
             DO CASE
             CASE s_nTurn == 1
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Stacked Bars' )
-               //SetMode( 30,100 )
+               // SetMode( 30,100 )
 
                sData += "00003600|00004450|000051|000061|000073|00008-6972|00009412|00011Tahoma|100011|10"
                sData += "0035|1000410|10005-5|10006-5|1000911|100101|100111|100181|100200|1002150000|1002"
@@ -466,7 +466,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
             CASE s_nTurn == 2
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Floating Bars' )
-               //SetMode( 20,90 )
+               // SetMode( 20,90 )
 
                sData += "00003550|00004300|000051|000073|00008-2894893|00009412|00011Tahoma|100011|100035"
                sData += "|100045|10005-5|10006-5|1000911|100101|100111|100131|100181|100201|1002113|10022"
@@ -481,7 +481,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
             CASE s_nTurn == 3
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Four Regions' )
-               //SetMode( 40,120 )
+               // SetMode( 40,120 )
 
                sData += "00003700|00004500|000054|000061|000071|00008-984833|00009412|00011Tahoma|100011|"
                sData += "100032|100042|10005348|10006248|1000910|100101|100111|100181|100200|10021100|100"
@@ -514,7 +514,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
             CASE s_nTurn == 4
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + '10 Biggest Companies' )
-               //SetMode( 25,90 )
+               // SetMode( 25,90 )
 
                sData += "00003670|00004450|000051|000061|000071|00008-10185235|00009412|00011Tahoma|10001"
                sData += "1|100035|1000410|10005-5|10006-5|1000912|100101|100111|100131|100181|10020100000"
@@ -532,7 +532,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
             CASE s_nTurn == 5
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Grouped Bars' )
-               //SetMode( 25,80 )
+               // SetMode( 25,80 )
 
                sData += "00003600|00004450|000051|000061|000075|00008-2|00009412|00010paper.jpg|00011Taho"
                sData += "ma|100011|100035|100045|10005-5|10006-5|1000910|100101|100111|100181|100200|1002"
@@ -545,7 +545,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
             CASE s_nTurn == 6
                hb_gtInfo( HB_GTI_WINTITLE, 'RMChart [ Next:F11 ] ' + 'Flow Chart' )
-               //SetMode( 30,50 )
+               // SetMode( 30,50 )
 
                sData += "00003305|00004400|000051|00008-984833|00009412|00011Tahoma|100011|100035|100045|"
                sData += "10005-5|10006-5|10180\7C|010011|010051|010072|010081|0101050|0101125|01012100|01"
@@ -659,10 +659,10 @@ STATIC FUNCTION MyFunction( nMode )
       WVG_MessageBox( , "Button clicked!" )
 
    CASE nMode == 101  // Charge
-      Eval( {|| Tone( 523,2 ), Tone( 698,2 ), Tone( 880,2 ), Tone( 1046,4 ), Tone( 880,2 ), Tone( 1046,8 ) } )
+      Eval( {|| Tone( 523, 2 ), Tone( 698, 2 ), Tone( 880, 2 ), Tone( 1046, 4 ), Tone( 880, 2 ), Tone( 1046, 8 ) } )
 
    CASE nMode == 102  // NannyBoo
-      AEval( { { 196,2 }, { 196,2 }, { 164,2 }, { 220,2 }, { 196,4 }, { 164,4 } }, {| a | Tone( a[ 1 ], a[ 2 ] ) } )
+      AEval( { { 196, 2 }, { 196, 2 }, { 164, 2 }, { 220, 2 }, { 196, 4 }, { 164, 4 } }, {| a | Tone( a[ 1 ], a[ 2 ] ) } )
 
    CASE nMode == 103  // BADKEY
       Tone( 480, 0.25 )

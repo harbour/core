@@ -86,8 +86,8 @@ FUNCTION DirectoryRecurse( cPath, cAttr )
     * compatibility though it should be reverted when it will
     * be fixed in xHarbour
     */
-   aResult := HB_DirScan( cFilePath, cMask, ;
-                          StrTran( Upper( cAttr ), "D" ) )
+   aResult := hb_DirScan( cFilePath, cMask, ;
+      StrTran( Upper( cAttr ), "D" ) )
 
    AEval( aResult, {| x | x[ F_NAME ] := cFilePath + x[ F_NAME ] } )
 

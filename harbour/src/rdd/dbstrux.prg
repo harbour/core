@@ -73,13 +73,14 @@ FUNCTION __dbCopyXStruct( cFileName )
       dbSelectArea( 0 )
       __dbCreate( cFileName, NIL, NIL, .F., NIL )
 
-      AEval( aStruct, {| aField | iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255,;
-                                     ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), ),;
-                                  dbAppend(),;
-                                  FIELD->FIELD_NAME := aField[ DBS_NAME ],;
-                                  FIELD->FIELD_TYPE := aField[ DBS_TYPE ],;
-                                  FIELD->FIELD_LEN := aField[ DBS_LEN ],;
-                                  FIELD->FIELD_DEC := aField[ DBS_DEC ] } )
+      AEval( aStruct, {| aField | ;
+         iif( aField[ DBS_TYPE ] == "C" .AND. aField[ DBS_LEN ] > 255,;
+            ( aField[ DBS_DEC ] := Int( aField[ DBS_LEN ] / 256 ), aField[ DBS_LEN ] := aField[ DBS_LEN ] % 256 ), ),;
+         dbAppend(),;
+         FIELD->FIELD_NAME := aField[ DBS_NAME ],;
+         FIELD->FIELD_TYPE := aField[ DBS_TYPE ],;
+         FIELD->FIELD_LEN := aField[ DBS_LEN ],;
+         FIELD->FIELD_DEC := aField[ DBS_DEC ] } )
 
    /* NOTE: CA-Cl*pper has a bug, where only a plain RECOVER statement is
             used here (without the USING keyword), so oError will always be NIL. */
@@ -121,18 +122,20 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
       IF Empty( cFileFrom )
 
-         dbCreate( cFileName, { { "FIELD_NAME", "C", 10, 0 },;
-                                { "FIELD_TYPE", "C",  1, 0 },;
-                                { "FIELD_LEN" , "N",  3, 0 },;
-                                { "FIELD_DEC" , "N",  3, 0 } },;
-                   cRDD, .F., cAlias, NIL, cCodePage, nConnection )
+         dbCreate( cFileName, { ;
+            { "FIELD_NAME", "C", 10, 0 }, ;
+            { "FIELD_TYPE", "C",  1, 0 }, ;
+            { "FIELD_LEN" , "N",  3, 0 }, ;
+            { "FIELD_DEC" , "N",  3, 0 } }, ;
+            cRDD, .F., cAlias, NIL, cCodePage, nConnection )
       ELSE
          dbUseArea( lNew, NIL, cFileFrom, "" )
 
-         dbEval( {|| AAdd( aStruct, { FIELD->FIELD_NAME ,;
-                                      FIELD->FIELD_TYPE ,;
-                                      FIELD->FIELD_LEN ,;
-                                      FIELD->FIELD_DEC } ) } )
+         dbEval( {|| AAdd( aStruct, { ;
+            FIELD->FIELD_NAME ,;
+            FIELD->FIELD_TYPE ,;
+            FIELD->FIELD_LEN ,;
+            FIELD->FIELD_DEC } ) } )
          dbCloseArea()
 
          IF lNew

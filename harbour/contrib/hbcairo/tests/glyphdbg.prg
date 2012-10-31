@@ -7,6 +7,7 @@
 #include "hbcairo.ch"
 
 PROCEDURE Main()
+
    LOCAL hSurface, hCairo
 
    hSurface := cairo_pdf_surface_create( "glyphdbg.pdf", 566.9, 793.7 )  // 200x280 mm in pt
@@ -27,15 +28,17 @@ PROCEDURE Main()
    cairo_show_page( hCairo )
    cairo_destroy( hCairo )
    cairo_surface_destroy( hSurface )
-RETURN
+
+   RETURN
 
 
-PROC path_debug( hCairo, nTolerance )
+PROCEDURE path_debug( hCairo, nTolerance )
+
    LOCAL hPath, hIterator, nType, aPoints
 
    cairo_save( hCairo )
 
-   IF EMPTY( nTolerance )
+   IF Empty( nTolerance )
       hPath := cairo_copy_path( hCairo )
    ELSE
       cairo_save( hCairo )
@@ -81,4 +84,5 @@ PROC path_debug( hCairo, nTolerance )
    cairo_stroke( hCairo )
    cairo_path_destroy( hPath )
    cairo_restore( hCairo )
-RETURN
+
+   RETURN

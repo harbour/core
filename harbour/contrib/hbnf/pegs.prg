@@ -31,8 +31,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => ;
-      hb_DispBox( <top>, <left>, <bottom>, <right>, hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ) )
+#translate DOUBLEBOX( <top>, <left>, <bottom>, <right> ) => hb_DispBox( <top>, <left>, <bottom>, <right>, hb_UTF8ToStrBox( "╔═╗║╝═╚║ " ) )
 
 /*
    here's the board array -- structure of which is:
@@ -49,9 +48,9 @@ FUNCTION FT_PEGS()
    LOCAL oldscrn := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL GetList
 
-   LOCAL board_ := {;
+   LOCAL board_ := { ;
       { {  0, 29,  2, 34 }, { 2, 4 }, { 3, 9 }, .T. }, ;
-      { {  0, 37,  2, 42 }, { 5 }, { 10 }, .T. }      , ;
+      { {  0, 37,  2, 42 }, { 5 }, { 10 }, .T. }, ;
       { {  0, 45,  2, 50 }, { 2, 6 }, { 1, 11 }, .T. }, ;
       { {  3, 29,  5, 34 }, { 5, 9 }, { 6, 16 }, .T. }, ;
       { {  3, 37,  5, 42 }, { 10 }, { 17 }, .T. }, ;
@@ -100,7 +99,7 @@ FUNCTION FT_PEGS()
 
       SetColor( "w/n" )
       GetList := { Get():New( 23, 44, {| v | iif( PCount() == 0, move, move := v ) }, "move", "##" ) }
-      ATail( GetList ):postBlock := {| oGet | RangeCheck( oGet, , 1, 33 ) }
+      ATail( GetList ):postBlock := {| oGet | RangeCheck( oGet,, 1, 33 ) }
       ATail( GetList ):display()
       READ
 
@@ -112,7 +111,7 @@ FUNCTION FT_PEGS()
             possible_ := {}
             FOR xx := 1 TO Len( board_[ move ][ 2 ] )
                IF board_[ board_[ move ][ 2, xx ] ][ 4 ] .AND. ;
-                ! board_[ board_[ move ][ 3, xx ] ][ 4 ]
+                  ! board_[ board_[ move ][ 3, xx ] ][ 4 ]
                   AAdd( possible_, { board_[ move ][ 2, xx ], board_[ move ][ 3, xx ] } )
                ENDIF
             NEXT
@@ -163,23 +162,21 @@ FUNCTION FT_PEGS()
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION DrawBox( board_, nelement )
 
    SetColor( iif( board_[ nelement ][ 4 ], "+w/rb", "w/n" ) )
 
-   hb_DispBox( board_[ nelement ][ 1, 1 ], ;
-               board_[ nelement ][ 1, 2 ], ;
-               board_[ nelement ][ 1, 3 ], ;
-               board_[ nelement ][ 1, 4 ], hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
+   hb_DispBox( ;
+      board_[ nelement ][ 1, 1 ], ;
+      board_[ nelement ][ 1, 2 ], ;
+      board_[ nelement ][ 1, 3 ], ;
+      board_[ nelement ][ 1, 4 ], hb_UTF8ToStrBox( "┌─┐│┘─└│ " ) )
 
-   hb_DispOutAt( board_[ nelement ][ 1, 1 ] + 1, ;
-                 board_[ nelement ][ 1, 2 ] + 2, hb_ntos( nelement ) )
+   hb_DispOutAt( ;
+      board_[ nelement ][ 1, 1 ] + 1, ;
+      board_[ nelement ][ 1, 2 ] + 2, hb_ntos( nelement ) )
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION err_msg( msg )
 
@@ -194,8 +191,6 @@ STATIC FUNCTION err_msg( msg )
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION moremoves( board_ )
 
    LOCAL xx, yy, canmove := .F., piecesleft := 0, buffer
@@ -204,7 +199,7 @@ STATIC FUNCTION moremoves( board_ )
       FOR yy := 1 TO Len( board_[ xx ][ 2 ] )
          IF board_[ xx ][ 4 ] .AND.  ;                     // if current location is filled
             board_[ board_[ xx ][ 2, yy ] ][ 4 ] .AND. ;   // adjacent must be filled
-          ! board_[ board_[ xx ][ 3, yy ] ][ 4 ]           // target must be empty
+            ! board_[ board_[ xx ][ 3, yy ] ][ 4 ]         // target must be empty
             canmove := .T.
             EXIT
          ENDIF

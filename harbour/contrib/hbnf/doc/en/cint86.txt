@@ -13,11 +13,11 @@
       FT_INT86( <nInterruptNumber>, <aRegisterValues> ) -> lResult
    $ARGUMENTS$
       <nInterruptNumber> is the interrupt to execute.
-  
+
       <aRegisterValues> is an array that contains values to be loaded
       into the various CPU registers.  The correspondence between
       registers and array elements is as follows:
-  
+
                aElement[1]  ==  AX register
                aElement[2]  ==  BX register
                aElement[3]  ==  CX register
@@ -34,7 +34,7 @@
       .F. if invalid parameters passed.  If you call this function in
           protected mode, .F. may also be returned if an allocation
           of low DOS memory fails.
-  
+
       n addition, the array elements will contain whatever values were in
       he CPU registers immediately after the interrupt was executed.  If
       ither of the string parameters were altered by the interrupt, these
@@ -43,7 +43,7 @@
       It is occasionally useful to be able to call interrupts directly from
       Clipper, without having to write a separate routine in C or ASM.  This
       function allows you that capability.
-  
+
       Given Clipper's high-level orientation, this function is necessarily
       somewhat messy to use.  First, declare an array of ten elements to
       hold the eight values for the CPU registers and two string parameters.
@@ -52,14 +52,14 @@
       initialize all the elements.  For example, if the interrupt requires
       you to specify values for AX, DX, and DS, you would only need to
       initialize elements 1, 4, and 8.
-  
+
       Once you have done the required register setup, call FT_INT86(),
       passing the interrupt number and the register array as parameters.
       The function will load the CPU with your specified values, execute the
       interrupt, and then store the contents of the CPU registers back into
       your array.  This will allow you to evaluate the results of the
       interrupt.
-  
+
       Some interrupt services require you to pass the address of a string in
       a pair of registers.  This function is capable of handling these sorts
       of situations, but it will take a little work on your part.  If you need
@@ -67,7 +67,7 @@
       8;  if you need to pass a string that uses the ES register, store the
       string in element 9.  FT_INT86() will detect that you've supplied a
       string instead of a numeric value and will behave accordingly.
-  
+
       That takes care of obtaining the segment portion of the pointer.  To
       specify which register is to contain the offset, use the values REG_DS
       and REG_ES which are defined in the FTINT86.CH file.  When one of these
@@ -75,23 +75,23 @@
       offset portion of a pointer instead of a numeric value.  REG_DS tells
       FT_Int86() to use the offset of the string in element 8, while REG_ES
       tells FT_Int86() to use the offset of the string in element 9.
-  
+
       All the CPU registers are sixteen bits in size.  Some, however, are
       also split into two 8-bit registers.  This function is only capable of
       receiving and returning registers that are 16 bits in size.  To split
       a 16-bit register into two 8-bit values, you can use the
       pseudo-functions HighByte() and LowByte(), contained in the .CH file.
-  
+
       To alter an 8-bit number so it will appear in the high-order byte of a
       register when passed to the FT_INT86() function, use the MakeHI()
       pseudo-function contained in the .CH file.
-  
+
       When run in real mode, this function is a shell for __ftint86(),
       which is written in assembler and does the actual work of executing
       the interrupt.  __ftint86() is callable from C, so feel free to
       incorporate it into any C routines for which it might be useful.  The
       source for __ftint86() can be found in the file AINT86.ASM.
-  
+
       When run in protected mode, this function is a shell for cpmiInt86(),
       which is written in assembler and makes a DPMI call to drop into
       real mode and execute the interrupt.  cpmiInt86() is also callable
@@ -101,49 +101,49 @@
    $EXAMPLES$
       * This example shows how to call the DOS "create file" service.  Take
       * special note of how to set up string parameters.
-  
+
       #include "ftint86.ch"
-  
+
       LOCAL aRegs[ 10 ]            // Declare the register array
       aRegs[ AX ] := makehi( 60 )  // DOS service, create file
       aRegs[ CX ] := 0             // Specify file attribute
-  
+
       * Pay attention here, this is crucial.  Note how to set up the string
       * so it appears in DS:DX.
-  
+
       aRegs[ DS ] := "C:\misc\myfile.xxx"
       aRegs[ DX ] := REG_DS
       FT_INT86( 33, aRegs )        // Make the call to the DOS interrupt
-  
-  
+
+
       * This example shows how to call the DOS "get current directory"
       * service.  This one also uses a string parameter, but note that it
       * uses a different offset register.
-  
+
       #include "ftint86.ch"
-  
+
       LOCAL aRegs[ 10 ]
       aRegs[ AX ] := makehi( 71 )
       aRegs[ DX ] := 0           // Choose default drive
-  
+
       * This service requires a 64-byte buffer whose address is in DS:SI.  DOS
       * will fill the buffer with the current directory.
-  
+
       aRegs[ DS ] := Space( 64 )
       aRegs[ SI ] := REG_DS
       FT_INT86( 33, aRegs )
-  
+
       ? aRegs[ DS ]       // Display the directory name
-  
-  
-  
+
+
+
       * For the sake of completeness, here's an example that doesn't use a
       * string.  This one changes the video mode.
-  
+
       #include "ftint86.ch"
-  
+
       LOCAL aRegs[ 10 ]
-  
+
       aRegs[ AX ] := 16          // Choose hi-res graphics
       FT_INT86( 16, aRegs )
    $INCLUDE$

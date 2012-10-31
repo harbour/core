@@ -52,7 +52,7 @@
 
 /* enable this if you need all core functions in RPC support */
 #ifdef HB_EXTERN
-   REQUEST __HB_EXTERN__
+REQUEST __HB_EXTERN__
 #endif
 
 #define _NETIOSRV_cName             1
@@ -83,10 +83,13 @@
 #define _NETIOSRV_CONN_MAX_         4
 
 PROCEDURE Main( ... )
+
    netiosrv_Main( .T., ... )
+
    RETURN
 
 PROCEDURE netiosrv_Main( lUI, ... )
+
    LOCAL netiosrv[ _NETIOSRV_MAX_ ]
    LOCAL netiomgm[ _NETIOSRV_MAX_ ]
 
@@ -185,8 +188,8 @@ PROCEDURE netiosrv_Main( lUI, ... )
          SWITCH cExt
          CASE ".prg"
          CASE ".hb"
-            cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0",;
-                                    "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
+            cFile := hb_compileBuf( hb_argv( 0 ), "-n2", "-w", "-es2", "-q0", ;
+               "-D" + "__HBSCRIPT__HBNETIOSRV", netiosrv[ _NETIOSRV_cRPCFFileName ] )
             IF cFile != NIL
                netiosrv[ _NETIOSRV_hRPCFHRB ] := hb_hrbLoad( HB_HRB_BIND_FORCELOCAL, cFile )
             ENDIF
@@ -220,15 +223,15 @@ PROCEDURE netiosrv_Main( lUI, ... )
 
    hb_DirBuild( netiosrv[ _NETIOSRV_cRootDir ] )
 
-   netiosrv[ _NETIOSRV_pListenSocket ] := ;
-      netio_mtserver( netiosrv[ _NETIOSRV_nPort ],;
-                      netiosrv[ _NETIOSRV_cIFAddr ],;
-                      netiosrv[ _NETIOSRV_cRootDir ],;
-                      iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], hb_hrbGetFunSym( netiosrv[ _NETIOSRV_hRPCFHRB ], _RPC_FILTER ) ),;
-                      cPassword,;
-                      NIL,;
-                      NIL,;
-                      {| pConnectionSocket | netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, .F. ) } )
+   netiosrv[ _NETIOSRV_pListenSocket ] := netio_mtserver( ;
+      netiosrv[ _NETIOSRV_nPort ], ;
+      netiosrv[ _NETIOSRV_cIFAddr ], ;
+      netiosrv[ _NETIOSRV_cRootDir ], ;
+      iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), netiosrv[ _NETIOSRV_lRPC ], hb_hrbGetFunSym( netiosrv[ _NETIOSRV_hRPCFHRB ], _RPC_FILTER ) ), ;
+      cPassword, ;
+      NIL, ;
+      NIL, ;
+      {| pConnectionSocket | netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, .F. ) } )
 
    netiosrv[ _NETIOSRV_lEncryption ] := ! Empty( cPassword )
    cPassword := NIL
@@ -240,39 +243,39 @@ PROCEDURE netiosrv_Main( lUI, ... )
 
       IF ! Empty( cPasswordManagement )
 
-         netiomgm[ _NETIOSRV_pListenSocket ] := ;
-            netio_mtserver( netiomgm[ _NETIOSRV_nPort ],;
-                            netiomgm[ _NETIOSRV_cIFAddr ],;
-                            netiomgm[ _NETIOSRV_cRootDir ],;
-                            { "hbnetiomgm_ping"           => {| ... | .T. } ,;
-                              "hbnetiomgm_setclientinfo"  => {| ... | netiomgm_rpc_setclientinfo( netiomgm, ... ) } ,;
-                              "hbnetiomgm_sysinfo"        => {| ... | netiomgm_rpc_sysinfo() } ,;
-                              "hbnetiomgm_serverconfig"   => {| ... | netiomgm_rpc_serverconfig( netiosrv, netiomgm ) } ,;
-                              "hbnetiomgm_clientinfo"     => {| ... | netiomgm_rpc_clientinfo( netiosrv, netiomgm, ... ) } ,;
-                              "hbnetiomgm_shutdown"       => {| ... | netiomgm_rpc_shutdown( netiosrv, netiomgm ) } ,;
-                              "hbnetiomgm_conninfo"       => {| ... | netiomgm_rpc_conninfo( netiosrv ) } ,;
-                              "hbnetiomgm_adminfo"        => {| ... | netiomgm_rpc_conninfo( netiomgm ) } ,;
-                              "hbnetiomgm_allowadd"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hAllow ], .T., ... ) } ,;
-                              "hbnetiomgm_allowdel"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hAllow ], .F., ... ) } ,;
-                              "hbnetiomgm_blockadd"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hBlock ], .T., ... ) } ,;
-                              "hbnetiomgm_blockdel"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hBlock ], .F., ... ) } ,;
-                              "hbnetiomgm_allowaddadmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hAllow ], .T., ... ) } ,;
-                              "hbnetiomgm_allowdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hAllow ], .F., ... ) } ,;
-                              "hbnetiomgm_blockaddadmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .T., ... ) } ,;
-                              "hbnetiomgm_blockdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .F., ... ) } ,;
-                              "hbnetiomgm_filters"        => {| ... | netiomgm_rpc_filters( netiosrv ) } ,;
-                              "hbnetiomgm_filtersadmin"   => {| ... | netiomgm_rpc_filters( netiomgm ) } ,;
-                              "hbnetiomgm_filtersave"     => {| ... | netiomgm_rpc_filtersave( netiosrv, netiomgm ) } ,;
-                              "hbnetiomgm_stop"           => {| ... | netiomgm_rpc_stop( netiosrv, ... ) } ,;
-                              "hbnetiomgm_conn"           => {| ... | netiomgm_rpc_conn( netiosrv, .T. ) } ,;
-                              "hbnetiomgm_noconn"         => {| ... | netiomgm_rpc_conn( netiosrv, .F. ) } ,;
-                              "hbnetiomgm_logconn"        => {| ... | netiomgm_rpc_logconn( netiosrv, .T. ) } ,;
-                              "hbnetiomgm_nologconn"      => {| ... | netiomgm_rpc_logconn( netiosrv, .F. ) } ,;
-                              "hbnetiomgm_regnotif"       => {| ... | netiomgm_rpc_regnotif( netiomgm, ... ) } },;
-                            cPasswordManagement,;
-                            NIL,;
-                            NIL,;
-                            {| pConnectionSocket | netiosrv_callback( netiomgm, netiomgm, pConnectionSocket, .T. ) } )
+         netiomgm[ _NETIOSRV_pListenSocket ] := netio_mtserver( ;
+            netiomgm[ _NETIOSRV_nPort ], ;
+            netiomgm[ _NETIOSRV_cIFAddr ], ;
+            netiomgm[ _NETIOSRV_cRootDir ], { ;
+            "hbnetiomgm_ping"           => {| ... | .T. },;
+            "hbnetiomgm_setclientinfo"  => {| ... | netiomgm_rpc_setclientinfo( netiomgm, ... ) },;
+            "hbnetiomgm_sysinfo"        => {| ... | netiomgm_rpc_sysinfo() },;
+            "hbnetiomgm_serverconfig"   => {| ... | netiomgm_rpc_serverconfig( netiosrv, netiomgm ) },;
+            "hbnetiomgm_clientinfo"     => {| ... | netiomgm_rpc_clientinfo( netiosrv, netiomgm, ... ) },;
+            "hbnetiomgm_shutdown"       => {| ... | netiomgm_rpc_shutdown( netiosrv, netiomgm ) },;
+            "hbnetiomgm_conninfo"       => {| ... | netiomgm_rpc_conninfo( netiosrv ) },;
+            "hbnetiomgm_adminfo"        => {| ... | netiomgm_rpc_conninfo( netiomgm ) },;
+            "hbnetiomgm_allowadd"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hAllow ], .T., ... ) },;
+            "hbnetiomgm_allowdel"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hAllow ], .F., ... ) },;
+            "hbnetiomgm_blockadd"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hBlock ], .T., ... ) },;
+            "hbnetiomgm_blockdel"       => {| ... | netiomgm_rpc_filtermod( netiosrv, netiosrv[ _NETIOSRV_hBlock ], .F., ... ) },;
+            "hbnetiomgm_allowaddadmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hAllow ], .T., ... ) },;
+            "hbnetiomgm_allowdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hAllow ], .F., ... ) },;
+            "hbnetiomgm_blockaddadmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .T., ... ) },;
+            "hbnetiomgm_blockdeladmin"  => {| ... | netiomgm_rpc_filtermod( netiomgm, netiomgm[ _NETIOSRV_hBlock ], .F., ... ) },;
+            "hbnetiomgm_filters"        => {| ... | netiomgm_rpc_filters( netiosrv ) },;
+            "hbnetiomgm_filtersadmin"   => {| ... | netiomgm_rpc_filters( netiomgm ) },;
+            "hbnetiomgm_filtersave"     => {| ... | netiomgm_rpc_filtersave( netiosrv, netiomgm ) },;
+            "hbnetiomgm_stop"           => {| ... | netiomgm_rpc_stop( netiosrv, ... ) },;
+            "hbnetiomgm_conn"           => {| ... | netiomgm_rpc_conn( netiosrv, .T. ) },;
+            "hbnetiomgm_noconn"         => {| ... | netiomgm_rpc_conn( netiosrv, .F. ) },;
+            "hbnetiomgm_logconn"        => {| ... | netiomgm_rpc_logconn( netiosrv, .T. ) },;
+            "hbnetiomgm_nologconn"      => {| ... | netiomgm_rpc_logconn( netiosrv, .F. ) },;
+            "hbnetiomgm_regnotif"       => {| ... | netiomgm_rpc_regnotif( netiomgm, ... ) } }, ;
+            cPasswordManagement, ;
+            NIL, ;
+            NIL, ;
+            {| pConnectionSocket | netiosrv_callback( netiomgm, netiomgm, pConnectionSocket, .T. ) } )
 
          IF Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
             netiosrv_LogEvent( "Warning: Cannot start server management." )
@@ -310,7 +313,9 @@ PROCEDURE netiosrv_Main( lUI, ... )
    RETURN
 
 STATIC PROCEDURE netiosrv_LogEvent( cText )
+
    QQOut( hb_TToC( hb_DateTime() ) + " " + cText + hb_eol() )
+
    RETURN
 
 #define _NETIOSRV_SIGNATURE "netiosrv"
@@ -319,6 +324,7 @@ STATIC FUNCTION netiosrv_ConfName()
    RETURN hb_ProgName() + ".config"
 
 STATIC FUNCTION netiosrv_ConfSave( netiosrv, netiomgm )
+
    LOCAL hConf := { => }
 
    hb_HKeepOrder( hConf, .T. )
@@ -335,6 +341,7 @@ STATIC FUNCTION netiosrv_ConfSave( netiosrv, netiomgm )
    RETURN hb_MemoWrit( netiosrv_ConfName(), hb_Serialize( hConf ) )
 
 STATIC FUNCTION netiosrv_ConfLoad( netiosrv, netiomgm )
+
    LOCAL hConf := hb_Deserialize( hb_MemoRead( netiosrv_ConfName() ) )
 
    IF HB_ISHASH( hConf ) .AND. ;
@@ -365,12 +372,13 @@ STATIC FUNCTION netiosrv_ConfLoad( netiosrv, netiomgm )
    RETURN .F.
 
 STATIC FUNCTION netiosrv_config( netiosrv, netiomgm )
-   LOCAL aArray := {;
-      hb_StrFormat( "Listening on: %1$s:%2$d" , netiosrv[ _NETIOSRV_cIFAddr ], netiosrv[ _NETIOSRV_nPort] ),;
-      hb_StrFormat( "Root filesystem: %1$s"   , netiosrv[ _NETIOSRV_cRootDir ] ),;
-      hb_StrFormat( "RPC support: %1$s"       , iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ) ),;
-      hb_StrFormat( "Encryption: %1$s"        , iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ) ),;
-      hb_StrFormat( "RPC filter module: %1$s" , iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ) ) }
+
+   LOCAL aArray := { ;
+      hb_StrFormat( "Listening on: %1$s:%2$d", netiosrv[ _NETIOSRV_cIFAddr ], netiosrv[ _NETIOSRV_nPort ] ), ;
+      hb_StrFormat( "Root filesystem: %1$s", netiosrv[ _NETIOSRV_cRootDir ] ), ;
+      hb_StrFormat( "RPC support: %1$s", iif( netiosrv[ _NETIOSRV_lRPC ], "enabled", "disabled" ) ), ;
+      hb_StrFormat( "Encryption: %1$s", iif( netiosrv[ _NETIOSRV_lEncryption ], "enabled", "disabled" ) ), ;
+      hb_StrFormat( "RPC filter module: %1$s", iif( Empty( netiosrv[ _NETIOSRV_hRPCFHRB ] ), iif( netiosrv[ _NETIOSRV_lRPC ], "not set (WARNING: unsafe open server)", "not set" ), netiosrv[ _NETIOSRV_cRPCFFileName ] ) ) }
 
    IF ! Empty( netiomgm[ _NETIOSRV_pListenSocket ] )
       AAdd( aArray, hb_StrFormat( "Management iface: %1$s:%2$d", netiomgm[ _NETIOSRV_cIFAddr ], netiomgm[ _NETIOSRV_nPort ] ) )
@@ -385,6 +393,7 @@ STATIC FUNCTION netiosrv_config( netiosrv, netiomgm )
 #define _CLI_MAX_                   4
 
 STATIC PROCEDURE netiosrv_notifyclients( netiomgm, cMsg )
+
    LOCAL aClient
 
    hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
@@ -412,6 +421,7 @@ STATIC PROCEDURE netiosrv_notifyclients( netiomgm, cMsg )
 /* Server connect callback */
 
 STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManagement )
+
    LOCAL aAddressPeer
    LOCAL cAddressPeer
    LOCAL lBlocked
@@ -487,6 +497,7 @@ STATIC FUNCTION netiosrv_callback( netiomgm, netiosrv, pConnectionSocket, lManag
    RETURN NIL
 
 STATIC PROCEDURE netiosrv_conn_register( netiosrv, pConnectionSocket )
+
    LOCAL nconn[ _NETIOSRV_CONN_MAX_ ]
 
    nconn[ _NETIOSRV_CONN_pConnection ] := pConnectionSocket
@@ -518,19 +529,20 @@ STATIC PROCEDURE netiosrv_conn_unregister( netiosrv, pConnectionSocket )
 /* RPC management interface */
 
 STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister )
-   LOCAL index := hb_ValToStr( pConnSock )
+
+   LOCAL cIndex := hb_ValToStr( pConnSock )
    LOCAL cli
 
    SWITCH PCount()
 #if 0
    CASE 2
-      RETURN iif( index $ netiomgm[ _NETIOSRV_hNotifStream ], netiomgm[ _NETIOSRV_hNotifStream ][ index ][ _CLI_xCargo ], NIL )
+      RETURN iif( cIndex $ netiomgm[ _NETIOSRV_hNotifStream ], netiomgm[ _NETIOSRV_hNotifStream ][ cIndex ][ _CLI_xCargo ], NIL )
 #endif
    CASE 4
       IF ! HB_ISLOGICAL( lRegister ) .OR. ! lRegister
          hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
-         IF index $ netiomgm[ _NETIOSRV_hNotifStream ]
-            hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], index )
+         IF cIndex $ netiomgm[ _NETIOSRV_hNotifStream ]
+            hb_HDel( netiomgm[ _NETIOSRV_hNotifStream ], cIndex )
          ENDIF
          hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
          RETURN -1
@@ -541,7 +553,7 @@ STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister
          cli[ _CLI_lNotify ]     := .T.
          cli[ _CLI_nSendErrors ] := 0
          hb_mutexLock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
-         netiomgm[ _NETIOSRV_hNotifStream ][ index ] := cli
+         netiomgm[ _NETIOSRV_hNotifStream ][ cIndex ] := cli
          hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxNotifStream ] )
          RETURN nStreamID
       ENDIF
@@ -550,6 +562,7 @@ STATIC FUNCTION netiomgm_rpc_regnotif( netiomgm, pConnSock, nStreamID, lRegister
    RETURN NIL
 
 STATIC FUNCTION netiomgm_rpc_setclientinfo( netiosrv, hInfo )
+
    LOCAL nconn
 
    IF HB_ISHASH( hInfo )
@@ -569,16 +582,17 @@ STATIC FUNCTION netiomgm_rpc_setclientinfo( netiosrv, hInfo )
    RETURN NIL
 
 STATIC FUNCTION netiomgm_rpc_sysinfo()
-   RETURN {;
-      hb_StrFormat( "OS: %1$s"          , OS() )                  ,;
-      hb_StrFormat( "Harbour: %1$s"     , Version() )             ,;
-      hb_StrFormat( "C Compiler: %1$s"  , hb_Compiler() )         ,;
-      hb_StrFormat( "Memory (KB): %1$d" , Memory( 0 ) )           }
+   RETURN { ;
+      hb_StrFormat( "OS: %1$s", OS() ), ;
+      hb_StrFormat( "Harbour: %1$s", Version() ), ;
+      hb_StrFormat( "C Compiler: %1$s", hb_Compiler() ), ;
+      hb_StrFormat( "Memory (KB): %1$d", Memory( 0 ) ) }
 
 STATIC FUNCTION netiomgm_rpc_serverconfig( netiosrv, netiomgm )
    RETURN netiosrv_config( netiosrv, netiomgm )
 
 STATIC FUNCTION netiomgm_rpc_logconn( netiosrv, lValue )
+
    LOCAL lOldValue := netiosrv[ _NETIOSRV_lShowConn ]
 
    IF HB_ISLOGICAL( lValue )
@@ -588,6 +602,7 @@ STATIC FUNCTION netiomgm_rpc_logconn( netiosrv, lValue )
    RETURN lOldValue
 
 STATIC FUNCTION netiomgm_rpc_conn( netiosrv, lValue )
+
    LOCAL lOldValue := netiosrv[ _NETIOSRV_lAcceptConn ]
 
    IF HB_ISLOGICAL( lValue )
@@ -597,6 +612,7 @@ STATIC FUNCTION netiomgm_rpc_conn( netiosrv, lValue )
    RETURN lOldValue
 
 STATIC FUNCTION netiomgm_rpc_stop( netiosrv, cIPPort )
+
    LOCAL nconn
    LOCAL aAddressPeer
 
@@ -625,6 +641,7 @@ STATIC FUNCTION netiomgm_rpc_stop( netiosrv, cIPPort )
    RETURN .F.
 
 STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
+
    LOCAL nconn
    LOCAL aAddressPeer
    LOCAL xCargo := NIL
@@ -644,9 +661,9 @@ STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
             netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
 
             IF cIPPort == AddrToIPPort( aAddressPeer )
-                xCargo := nconn[ _NETIOSRV_CONN_hInfo ]
-                lDone := .T.
-                EXIT
+               xCargo := nconn[ _NETIOSRV_CONN_hInfo ]
+               lDone := .T.
+               EXIT
             ENDIF
          NEXT
          hb_mutexUnlock( netiosrv[ _NETIOSRV_mtxConnection ] )
@@ -660,8 +677,8 @@ STATIC FUNCTION netiomgm_rpc_clientinfo( netiosrv, netiomgm, cIPPort )
             netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
 
             IF cIPPort == AddrToIPPort( aAddressPeer )
-                xCargo := nconn[ _NETIOSRV_CONN_hInfo ]
-                EXIT
+               xCargo := nconn[ _NETIOSRV_CONN_hInfo ]
+               EXIT
             ENDIF
          NEXT
          hb_mutexUnlock( netiomgm[ _NETIOSRV_mtxConnection ] )
@@ -681,6 +698,7 @@ STATIC FUNCTION netiomgm_rpc_shutdown( netiosrv, netiomgm )
    RETURN .T.
 
 STATIC FUNCTION netiomgm_rpc_conninfo( netiosrv )
+
    LOCAL nconn
 
    LOCAL nStatus
@@ -701,19 +719,19 @@ STATIC FUNCTION netiomgm_rpc_conninfo( netiosrv )
       aAddressPeer := NIL
 
       nStatus := ;
-      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_FILESCOUNT   , @nFilesCount    )
-      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESSENT    , @nBytesSent     )
+         netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_FILESCOUNT, @nFilesCount )
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESSENT, @nBytesSent )
       netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_BYTESRECEIVED, @nBytesReceived )
-      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS  , @aAddressPeer   )
+      netio_srvStatus( nconn[ _NETIOSRV_CONN_pConnection ], NETIO_SRVINFO_PEERADDRESS, @aAddressPeer )
 
-      AAdd( aArray, {;
-         "nThreadID"      => nconn[ _NETIOSRV_CONN_nThreadID ],;
-         "tStart"         => nconn[ _NETIOSRV_CONN_tStart ],;
-         "cStatus"        => ConnStatusStr( nStatus ),;
-         "nFilesCount"    => nFilesCount,;
-         "nBytesSent"     => nBytesSent,;
-         "nBytesReceived" => nBytesReceived,;
-         "cAddressPeer"   => AddrToIPPort( aAddressPeer ),;
+      AAdd( aArray, { ;
+         "nThreadID"      => nconn[ _NETIOSRV_CONN_nThreadID ], ;
+         "tStart"         => nconn[ _NETIOSRV_CONN_tStart ], ;
+         "cStatus"        => ConnStatusStr( nStatus ), ;
+         "nFilesCount"    => nFilesCount, ;
+         "nBytesSent"     => nBytesSent, ;
+         "nBytesReceived" => nBytesReceived, ;
+         "cAddressPeer"   => AddrToIPPort( aAddressPeer ), ;
          "xCargo"         => nconn[ _NETIOSRV_CONN_hInfo ] } )
    NEXT
 
@@ -722,6 +740,7 @@ STATIC FUNCTION netiomgm_rpc_conninfo( netiosrv )
    RETURN aArray
 
 STATIC FUNCTION netiomgm_rpc_filtermod( netiosrv, hList, lAdd, cAddress )
+
    LOCAL lSuccess := .T.
 
    hb_mutexLock( netiosrv[ _NETIOSRV_mtxFilters ] )
@@ -745,6 +764,7 @@ STATIC FUNCTION netiomgm_rpc_filtermod( netiosrv, hList, lAdd, cAddress )
    RETURN lSuccess
 
 STATIC FUNCTION netiomgm_rpc_filters( netiosrv )
+
    LOCAL cType
    LOCAL hFilter
    LOCAL cAddress
@@ -755,8 +775,8 @@ STATIC FUNCTION netiomgm_rpc_filters( netiosrv )
 
    FOR EACH cType, hFilter IN { "allow", "block" }, { netiosrv[ _NETIOSRV_hAllow ], netiosrv[ _NETIOSRV_hBlock ] }
       FOR EACH cAddress IN hFilter
-         AAdd( aArray, {;
-            "cType"    => cType,;
+         AAdd( aArray, { ;
+            "cType"    => cType, ;
             "cAddress" => cAddress:__enumKey() } )
       NEXT
    NEXT
@@ -782,6 +802,7 @@ STATIC FUNCTION ConnStatusStr( nStatus )
    RETURN "UNKNOWN:" + hb_ntos( nStatus )
 
 STATIC FUNCTION AddrToIPPort( aAddr )
+
    LOCAL cIP
 
    IF HB_ISARRAY( aAddr ) .AND. ;
@@ -797,6 +818,7 @@ STATIC FUNCTION AddrToIPPort( aAddr )
 /* Helper functions */
 
 STATIC FUNCTION FileSig( cFile )
+
    LOCAL hFile
    LOCAL cBuff, cSig, cExt
 
@@ -822,10 +844,11 @@ STATIC PROCEDURE ShowConfig( netiosrv, netiomgm )
 
 STATIC PROCEDURE HB_Logo()
 
-   OutStd( "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() +;
-           "Copyright (c) 2009-2012, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
-           "http://harbour-project.org/" + hb_eol() +;
-           hb_eol() )
+   OutStd( ;
+      "Harbour NETIO Server " + StrTran( Version(), "Harbour " ) + hb_eol() + ;
+      "Copyright (c) 2009-2012, Przemyslaw Czerpak, Viktor Szakats" + hb_eol() + ;
+      "http://harbour-project.org/" + hb_eol() + ;
+      hb_eol() )
 
    RETURN
 

@@ -37,6 +37,7 @@ PROCEDURE Main()
 /* Harbour implementation */
 
 FUNCTION BubbleBabbleEncode_Prg( cString )
+
    LOCAL vo := "aeiouy"
    LOCAL co := "bcdfghklmnprstvzx"
 
@@ -51,17 +52,19 @@ FUNCTION BubbleBabbleEncode_Prg( cString )
    DO WHILE .T.
 
       IF i > Len( cString )
-         cResult += SubStr( vo, nSeed % 6 + 1, 1 ) +;
-                    SubStr( co, 16 + 1, 1 ) +;
-                    SubStr( vo, nSeed / 6 + 1, 1 )
+         cResult += ;
+            SubStr( vo, nSeed % 6 + 1, 1 ) + ;
+            SubStr( co, 16 + 1, 1 ) + ;
+            SubStr( vo, nSeed / 6 + 1, 1 )
          EXIT
       ENDIF
 
       byte1 := Asc( SubStr( cString, i, 1 ) )
 
-      cResult += SubStr( vo, ( ( hb_bitAnd( hb_bitShift( byte1, -6 ), 3 ) + nSeed ) % 6 ) + 1, 1 ) +;
-                 SubStr( co, hb_bitAnd( hb_bitShift( byte1, -2 ), 15 ) + 1, 1 ) +;
-                 SubStr( vo, ( ( hb_bitAnd( byte1, 3 ) + ( nSeed / 6 ) ) % 6 ) + 1, 1 )
+      cResult += ;
+         SubStr( vo, ( ( hb_bitAnd( hb_bitShift( byte1, -6 ), 3 ) + nSeed ) % 6 ) + 1, 1 ) + ;
+         SubStr( co, hb_bitAnd( hb_bitShift( byte1, -2 ), 15 ) + 1, 1 ) + ;
+         SubStr( vo, ( ( hb_bitAnd( byte1, 3 ) + ( nSeed / 6 ) ) % 6 ) + 1, 1 )
 
       IF i + 1 > Len( cString )
          EXIT
@@ -69,9 +72,10 @@ FUNCTION BubbleBabbleEncode_Prg( cString )
 
       byte2 := Asc( SubStr( cString, i + 1, 1 ) )
 
-      cResult += SubStr( co, hb_bitAnd( hb_bitShift( byte2, -4 ), 15 ) + 1, 1 ) +;
-                 "-" +;
-                 SubStr( co, hb_bitAnd( byte2, 15 ) + 1, 1 )
+      cResult += ;
+         SubStr( co, hb_bitAnd( hb_bitShift( byte2, -4 ), 15 ) + 1, 1 ) + ;
+         "-" + ;
+         SubStr( co, hb_bitAnd( byte2, 15 ) + 1, 1 )
 
       nSeed := ( nSeed * 5 + byte1 * 7 + byte2 ) % 36
 

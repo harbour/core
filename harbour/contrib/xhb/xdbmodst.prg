@@ -233,7 +233,7 @@ FUNCTION dbMerge( xSource, lAppend )
 
             BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
                // Test type compatability
-               FieldPut( cField:__EnumIndex(), ValToType( (nSource )->( FieldGet( nSourcePos ) ), cTargetType ) )
+               FieldPut( cField:__EnumIndex(), ValToType( ( nSource )->( FieldGet( nSourcePos ) ), cTargetType ) )
 
                // Restore
                FieldPut( cField:__EnumIndex(), xField )
@@ -241,7 +241,7 @@ FUNCTION dbMerge( xSource, lAppend )
                // Ok to process
                AAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | ValToType( xSource, cTargetType ) } } )
             RECOVER // USING oErr
-               //TraceLog( oErr:Description, oErr:Operation )
+               // TraceLog( oErr:Description, oErr:Operation )
             END SEQUENCE
          END SEQUENCE
       ENDIF
@@ -259,7 +259,7 @@ FUNCTION dbMerge( xSource, lAppend )
    nRecNo := ( nSource )->( RecNo() )
    ( nSource )->( dbGoTop( 1 ) )
 
-   WHILE ! ( nSource )->( EOF() )
+   WHILE ! ( nSource )->( Eof() )
       APPEND BLANK
 
       FOR EACH aTranslation IN aTranslate

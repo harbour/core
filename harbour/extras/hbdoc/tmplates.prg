@@ -141,9 +141,11 @@ CREATE CLASS Entry
    VAR sourcefileversion_ AS STRING
    VAR uid_ AS STRING
    CLASS VAR uid__ AS INTEGER INIT 0
+
 ENDCLASS
 
 METHOD New( cType ) CLASS Entry
+
    ::uid_ := hb_ntos( ++::uid__ )
    IF ! __objHasData( self, self:Fields[ 1 ][ 1 ] )
       AEval( self:Fields, {| a | __objAddData( self, a[ 1 ] ) } )
@@ -151,9 +153,11 @@ METHOD New( cType ) CLASS Entry
    IF cType != NIL
       self:Group := self:Templates[ AScan( self:Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) ][ 2 ]
    ENDIF
+
    RETURN self
 
 METHOD IsField( c, nType ) CLASS Entry
+
    LOCAL idx
    LOCAL lResult
 
@@ -172,6 +176,7 @@ METHOD IsTemplate( cType ) CLASS Entry
    RETURN AScan( self:Templates, {| a | Upper( a[ 1 ] ) == Upper( cType ) } ) > 0
 
 METHOD SetTemplate( cTemplate ) CLASS Entry
+
    LOCAL aData := Array( Len( self:Fields ) )
    LOCAL idx
 
@@ -184,17 +189,20 @@ METHOD SetTemplate( cTemplate ) CLASS Entry
       ENDIF
    NEXT
    __objSetValueList( self, aData )
+
    RETURN self
 
 METHOD IsConstraint( cSectionName, cSection ) CLASS Entry
+
    LOCAL lResult
    LOCAL idx := AScan( self:Fields, {| a | a[ 1 ] == cSectionName } )
 
    IF hb_bitAnd( self:Group[ idx ], hb_bitAnd( TPL_REQUIRED, TPL_OPTIONAL ) ) == 0
       lResult := .T.
    ELSEIF Type( "p_a" + cSectionName ) == "A"
-      lResult := hb_AScan( &( "p_a" + cSectionName ), cSection, , , .T. ) .OR. ;
-                 hb_AScan( &( "p_a" + cSectionName ), Parse( cSection, "," ), , , .T. )
+      lResult := ;
+         hb_AScan( &( "p_a" + cSectionName ), cSection, , , .T. ) .OR. ;
+         hb_AScan( &( "p_a" + cSectionName ), Parse( cSection, "," ), , , .T. )
    ELSE
       lResult := .T.
    ENDIF
@@ -202,6 +210,7 @@ METHOD IsConstraint( cSectionName, cSection ) CLASS Entry
    RETURN lResult
 
 METHOD IsComplete( cIncompleteFielsList ) CLASS Entry
+
    LOCAL lResult := .T.
    LOCAL idx
 
@@ -214,7 +223,7 @@ METHOD IsComplete( cIncompleteFielsList ) CLASS Entry
       ENDIF
    NEXT
 
-   cIncompleteFielsList := SUBSTR( cIncompleteFielsList, 2 )
+   cIncompleteFielsList := SubStr( cIncompleteFielsList, 2 )
 
    RETURN lResult
 
@@ -240,6 +249,7 @@ METHOD SubcategoryIndex( cCategory, cSubcategory ) CLASS Entry
    RETURN hb_AScan( p_aCategories[ ::CategoryIndex( cCategory ) ][ 2 ], cSubcategory, , , .T. )
 
 PROCEDURE init_Templates()
+
    LOCAL idx
    LOCAL aSubCategories := { ;
       "Application", ;
@@ -358,6 +368,7 @@ PROCEDURE init_Templates()
 
 
 PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
+
    LOCAL o := Entry():New()
    LOCAL idxTemplates, nFrom := 1, nTo := Len( o:Templates )
    LOCAL idx
@@ -376,9 +387,9 @@ PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
          ! Empty( o:Templates[ idxTemplates ][ 1 ] ) .AND. ;
          !( o:Templates[ idxTemplates ][ 1 ] == "Template" )
 
-         //~ IF nFrom != nTo
-            //~ ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
-         //~ ENDIF
+         // ~ IF nFrom != nTo
+         // ~    ShowSubHelp( o:Templates[ idxTemplates ][ 1 ], 1, 0 )
+         // ~ ENDIF
 
          o:SetTemplate( o:Templates[ idxTemplates ][ 1 ] )
 
@@ -400,6 +411,7 @@ PROCEDURE ShowTemplatesHelp( cTemplate, cDelimiter )
    RETURN
 
 PROCEDURE ShowComplianceHelp()
+
    LOCAL idx
 
    FOR idx := 1 TO Len( p_aCompliance )
@@ -411,6 +423,7 @@ PROCEDURE ShowComplianceHelp()
    RETURN
 
 PROCEDURE ShowPlatformsHelp
+
    LOCAL idx
 
    FOR idx := 1 TO Len( p_aPlatforms )

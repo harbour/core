@@ -33,7 +33,7 @@
 
 HB_FUNC( FT_NUMLOCK )
 {
-   int iState = 0;
+   int        iState = 0;
    HB_GT_INFO gtInfo;
 
    memset( &gtInfo, 0, sizeof( gtInfo ) );
@@ -48,8 +48,8 @@ HB_FUNC( FT_NUMLOCK )
    if( HB_ISLOG( 1 ) )
    {
       int iNewState = hb_parl( 1 ) ?
-         ( iState | HB_GTI_KBD_NUMLOCK ) :
-         ( iState & ~HB_GTI_KBD_NUMLOCK );
+                      ( iState | HB_GTI_KBD_NUMLOCK ) :
+                      ( iState & ~HB_GTI_KBD_NUMLOCK );
       gtInfo.pNewVal = hb_itemPutNI( gtInfo.pNewVal, iNewState );
       hb_gtInfo( HB_GTI_KBDSHIFTS, &gtInfo );
    }

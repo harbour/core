@@ -79,30 +79,30 @@ HB_FUNC( _FT_NWKSTAT )
 
 HB_FUNC( _FT_TEMPFIL )
 {
-   int            nax;
-   int            iflags;
-   const char *   cPath;
+   int nax;
+   int iflags;
+   const char * cPath;
 
 #if defined( HB_OS_DOS ) && ! defined( HB_OS_DOS_32 )
    {
-      int            iMode = hb_parni( 2 );
-      union REGS     regs;
-      struct SREGS   sregs;
+      int          iMode = hb_parni( 2 );
+      union REGS   regs;
+      struct SREGS sregs;
       segread( &sregs );
-      cPath             = hb_parcx( 1 );
-      regs.h.ah         = 0x5A;
-      regs.HB_XREGS.cx  = iMode;
-      sregs.ds          = FP_SEG( cPath );
-      regs.HB_XREGS.dx  = FP_OFF( cPath );
+      cPath            = hb_parcx( 1 );
+      regs.h.ah        = 0x5A;
+      regs.HB_XREGS.cx = iMode;
+      sregs.ds         = FP_SEG( cPath );
+      regs.HB_XREGS.dx = FP_OFF( cPath );
       HB_DOS_INT86X( 0x21, &regs, &regs, &sregs );
-      nax               = regs.HB_XREGS.ax;
-      iflags            = regs.HB_XREGS.flags;
+      nax    = regs.HB_XREGS.ax;
+      iflags = regs.HB_XREGS.flags;
    }
 #else
    {
-      nax      = 0;
-      iflags   = 0;
-      cPath    = hb_parcx( 1 );
+      nax    = 0;
+      iflags = 0;
+      cPath  = hb_parcx( 1 );
    }
 #endif
    {
@@ -120,7 +120,7 @@ HB_FUNC( FT_REBOOT )
 {
 #if defined( HB_OS_DOS )
    {
-       int iTODO;
+      int iTODO;
    }
 #endif
    hb_ret();

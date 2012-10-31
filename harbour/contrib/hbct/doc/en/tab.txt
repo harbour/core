@@ -26,11 +26,11 @@
                                 should be ignored as a newline indicator,
                                 default is .F. (functions uses Chr(141))
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
       tabexpand("-"+Chr(9)+"!")             == "-       !"
       tabexpand("----"+Chr(9) +"!")         == "----    !"
@@ -78,13 +78,13 @@
                                 should be ignored as a newline indicator,
                                 default is .F. (functions uses Chr(141))
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$

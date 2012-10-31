@@ -10,13 +10,14 @@
 #define KEY_WOW64_32KEY 0x0200
 
 PROCEDURE Main()
+
    LOCAL tmp
 
    ? win_regWrite( "HKCU\_TEST\mydword", 0x11223344, WIN_REG_DWORD )
-   ? hb_numtohex( win_regRead( "HKCU\_TEST\mydword" ) )
+   ? hb_NumToHex( win_regRead( "HKCU\_TEST\mydword" ) )
 
    ? win_regWrite( "HKCU\_TEST\myqword", 0x1122334455667788, WIN_REG_QWORD )
-   ? hb_numtohex( win_regRead( "HKCU\_TEST\myqword" ) )
+   ? hb_NumToHex( win_regRead( "HKCU\_TEST\myqword" ) )
 
    Inkey( 0 )
 
@@ -42,7 +43,7 @@ PROCEDURE Main()
    ? win_regWrite( "HKCU\Control Panel\Desktop\Wallpaper", tmp )
 
    ? win_regRead( "HKLM\SOFTWARE\7-Zip\Path" )
-   IF hb_OSis64bit()
+   IF hb_osIs64bit()
       ? win_regRead( "HKLM\SOFTWARE\7-Zip\Path",, KEY_WOW64_32KEY )
       ? win_regRead( "HKLM\SOFTWARE\7-Zip\Path",, KEY_WOW64_64KEY )
    ENDIF

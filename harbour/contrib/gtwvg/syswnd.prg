@@ -358,33 +358,33 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
          WVG_SetWindowText( ::hWnd, ::title )
       ENDIF
       IF ! ::buttonCancel
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,IDCANCEL ), .F. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd, IDCANCEL ), .F. )
       ENDIF
       IF ! ::buttonApply
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1026 ), .F. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd, 1026 ), .F. )
       ENDIF
       IF ! ::buttonHelp
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1038 ), .F. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd, 1038 ), .F. )
       ENDIF
       IF ! ::strikeOut
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1040 ), .F. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd, 1040 ), .F. )
       ENDIF
       IF ! ::underscore
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1041 ), .F. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd, 1041 ), .F. )
       ENDIF
       IF ! ::name
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1136 ), .F. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd, 1136 ), .F. )
       ENDIF
       IF ! ::style
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1137 ), .F. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd, 1137 ), .F. )
       ENDIF
       IF ! ::size
-         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd,1138 ), .F. )
+         WVG_EnableWindow( WVG_GetDlgItem( ::hWnd, 1138 ), .F. )
       ENDIF
 
       IF ::aPos[ 1 ] > 0 .OR. ::aPos[ 2 ] > 0
          aRect := WVG_GetWindowRect( ::hWnd )
-         WVG_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[3] - aRect[1], aRect[4] - aRect[2], .F. )
+         WVG_MoveWindow( ::hWnd, ::aPos[ 1 ], ::aPos[ 2 ], aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ], .F. )
       ENDIF
 
       RETURN 1
@@ -625,7 +625,7 @@ METHOD createFont() CLASS WvgFont
    aFont := Wvg_FontCreate( ::aFontInfo )
 
    IF Empty( aFont[ 1 ] )
-      RETURN nil
+      RETURN NIL
    ENDIF
 
    ::hFont     := aFont[ 15 ]

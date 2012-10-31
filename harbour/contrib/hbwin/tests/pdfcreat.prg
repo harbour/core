@@ -64,8 +64,8 @@ PROCEDURE Main()
 
    oPC:cPrinterStop := .F.
 
-   nTime := hb_milliSeconds()
-   DO WHILE nEvent == 0 .AND. hb_milliSeconds() - nTime < 10000
+   nTime := hb_MilliSeconds()
+   DO WHILE nEvent == 0 .AND. hb_MilliSeconds() - nTime < 10000
       hb_idleSleep( 0.5 )
       /* The following dummy line is required to allow COM server to send event [Mindaugas] */
       oPC:cOption( "UseAutosave" )

@@ -60,7 +60,7 @@ FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, n
    LOCAL nOffSet := 0
    LOCAL cSearch, nStart, nLenSearch, nLenReplace
 
-   aMatches := HB_RegExAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
+   aMatches := hb_regexAll( cRegEx, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, .F. )
    cReturn := cString
 
    IF ! Empty( aMatches )

@@ -12,7 +12,7 @@
    $SYNTAX$
       PI() -> nPi
    $ARGUMENTS$
-  
+
    $RETURNS$
       <nPi>      the math constant Pi with maximum precision available
    $DESCRIPTION$
@@ -22,10 +22,10 @@
    $EXAMPLES$
       // the diameter of a circle-like swimming pool is 3.4 meters, how
       // long is the perimeter ?
-  
+
       ? Str( PI() * 3.4, 5, 3 ) + " meters" // --> 10.681 meters
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$

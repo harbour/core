@@ -245,7 +245,7 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    IF lSuccess
       AAdd( ::aItems, oPanel )
    ELSE
-      RETURN nil
+      RETURN NIL
    ENDIF
 
    RETURN oPanel

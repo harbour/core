@@ -56,11 +56,11 @@
 #include "dbinfo.ch"
 
 FUNCTION IsDbExcl()
-   RETURN ! DBINFO( DBI_SHARED )
+   RETURN ! dbInfo( DBI_SHARED )
 
 FUNCTION IsDbFlock()
-   RETURN DBINFO( DBI_ISFLOCK )
+   RETURN dbInfo( DBI_ISFLOCK )
 
 FUNCTION IsDbRLock( xRec )
-   RETURN DBINFO( DBI_ISFLOCK ) .OR. ! DBINFO( DBI_SHARED ) .OR. ;
-          dbRecordInfo( DBRI_LOCKED, xRec )
+   RETURN dbInfo( DBI_ISFLOCK ) .OR. ! dbInfo( DBI_SHARED ) .OR. ;
+      dbRecordInfo( DBRI_LOCKED, xRec )

@@ -14,6 +14,9 @@
 
 -DHBMK_WITH_ALL_EMBEDDED_HEADERS
 
+-DHBMK_WITH_GTXWC{HBMK_WITH_GTXWC='yes'}
+-gtxwc{HBMK_WITH_GTXWC='yes'}
+
 hbct.hbc           -request=__HBEXTERN__HBCT__
 hbexpat.hbc        -request=__HBEXTERN__HBEXPAT__
 hbmemio.hbc        -request=__HBEXTERN__HBMEMIO__

@@ -112,20 +112,26 @@ PROCEDURE DllMain()
 
    WIN_OleServerInit( CLS_ID, CLS_Name, {|| OleNetioSrv():new() }, .T. )
 
-RETURN
+   RETURN
 
 
 CREATE CLASS OleNetioSrv
-HIDDEN:
+
+   HIDDEN:
+
    VAR      pConn
-EXPORTED:
+
+   EXPORTED:
+
    METHOD   Eval( cMethodName, ... )
+
 ENDCLASS
 
 METHOD Eval( cMethodName, ... ) CLASS OleNetioSrv
+
    LOCAL xRetVal, oErr
 
-   BEGIN SEQUENCE WITH {| oErr | BREAK( oErr ) }
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       SWITCH cMethodName
       CASE "CONNECT"
          xRetVal := !Empty( ::pConn := NETIO_GETCONNECTION( ... ) )
@@ -154,7 +160,7 @@ METHOD Eval( cMethodName, ... ) CLASS OleNetioSrv
       xRetVal := oErr
    END SEQUENCE
 
-RETURN xRetVal
+   RETURN xRetVal
 
 
 ANNOUNCE GT_SYS

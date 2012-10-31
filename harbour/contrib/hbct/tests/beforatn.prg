@@ -69,38 +69,38 @@ PROCEDURE Main()
 
    // Some simple tests
    ? "  Simple tests:"
-   ? [  beforatnum("..",cStr)     should be "...This...is...a.",]
-   ? [                               and is "] + beforatnum( "..", cStr ) + ["]
-   ? [  beforatnum("..",cStr,2)   should be "...This",]
-   ? [                               and is "] + beforatnum( "..", cStr, 2 ) + ["]
-   ? [  beforatnum("..",cStr,2,2) should be "...This...is",]
-   ? [                               and is "] + beforatnum( "..", cStr, 2, 2 ) + ["]
+   ? '  beforatnum("..",cStr)     should be "...This...is...a.",'
+   ? '                               and is "' + beforatnum( "..", cStr ) + '"'
+   ? '  beforatnum("..",cStr,2)   should be "...This",'
+   ? '                               and is "' + beforatnum( "..", cStr, 2 ) + '"'
+   ? '  beforatnum("..",cStr,2,2) should be "...This...is",'
+   ? '                               and is "' + beforatnum( "..", cStr, 2, 2 ) + '"'
    ?
 
    // Tests with CSetAtMuPa(.T.)
    ? "  Multi-Pass tests"
    ? "  Setting csetatmupa() to .T."
    csetatmupa( .T. )
-   ? [  beforatnum("..",cStr)     should be "...This...is...a.",]
-   ? [                               and is "] + beforatnum( "..", cStr ) + ["]
-   ? [  beforatnum("..",cStr,2)   should be ".",]
-   ? [                               and is "] + beforatnum( "..", cStr, 2 ) + ["]
-   ? [  beforatnum("..",cStr,2,2) should be "...This.",]
-   ? [                               and is "] + beforatnum( "..", cStr, 2, 2 ) + ["]
+   ? '  beforatnum("..",cStr)     should be "...This...is...a.",'
+   ? '                               and is "' + beforatnum( "..", cStr ) + '"'
+   ? '  beforatnum("..",cStr,2)   should be ".",'
+   ? '                               and is "' + beforatnum( "..", cStr, 2 ) + '"'
+   ? '  beforatnum("..",cStr,2,2) should be "...This.",'
+   ? '                               and is "' + beforatnum( "..", cStr, 2, 2 ) + '"'
    ? "  Setting csetatmupa() to .F."
    csetatmupa( .F. )
    ?
 
    // Tests mit SetAtlike(1)
    ? "  SetAtLike tests"
-   ? [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")]
+   ? '  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")'
    setatlike( CT_SETATLIKE_WILDCARD, "." )
-   ? [  beforatnum("..",cStr) should be "...This...is...a...tes",]
-   ? [                           and is "] + beforatnum( "..", cStr ) + ["]
-   ? [  beforatnum("..",cStr,2,2) should be "...T",]
-   ? [                               and is "] + beforatnum( "..", cStr, 2, 2 ) + ["]
-   ? [  beforatnum("..",cStr,2,10) should be "...This...is",]
-   ? [                                and is "] + beforatnum( "..", cStr, 2, 10 ) + ["]
+   ? '  beforatnum("..",cStr) should be "...This...is...a...tes",'
+   ? '                           and is "' + beforatnum( "..", cStr ) + '"'
+   ? '  beforatnum("..",cStr,2,2) should be "...T",'
+   ? '                               and is "' + beforatnum( "..", cStr, 2, 2 ) + '"'
+   ? '  beforatnum("..",cStr,2,10) should be "...This...is",'
+   ? '                                and is "' + beforatnum( "..", cStr, 2, 10 ) + '"'
    ?
 
    ? "End test of BEFORATNUM()"

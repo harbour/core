@@ -154,15 +154,15 @@ METHOD Open() CLASS TableManager
 
    LOCAL cDBF := ::cTable
 
-   //hb_ToOutDebug( "CurPath = %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+   // hb_ToOutDebug( "CurPath = %s", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
-   //hb_ToOutDebug( "before: cDBF = %s, Used() = %s\n", cDBF, Used() )
+   // hb_ToOutDebug( "before: cDBF = %s, Used() = %s\n", cDBF, Used() )
 
    IF ! ::lOpened
 
       CLOSE ALL
       USE ( cDBF ) ALIAS table SHARED NEW
-      //hb_ToOutDebug( "after: cDBF = %s, Used() = %s\n", cDBF, Used() )
+      // hb_ToOutDebug( "after: cDBF = %s, Used() = %s\n", cDBF, Used() )
       ::lOpened := Used()
 
    ENDIF
@@ -182,8 +182,8 @@ METHOD READ() CLASS TableManager
    IF ::lOpened
 
       table->( dbGoTop() )
-      //n := 0
-      DO WHILE table->( !EOF() ) //.AND. ++n < 50
+      // n := 0
+      DO WHILE table->( !Eof() ) // .AND. ++n < 50
 
          hMap := { => }
          hMap[ "recno"   ] := StrZero( table->( RecNo() ), 4 )
@@ -252,7 +252,7 @@ METHOD getXmlData( page ) CLASS TableManager
 
    // Check the validity of the page index.
    IF startIndex < 0 .OR. startIndex >= stopIndex
-      //throw new IllegalArgumentException("Page index is out of bounds.");
+      // throw new IllegalArgumentException("Page index is out of bounds.");
    ENDIF
 
    xml := BasicXML():New()
@@ -371,9 +371,9 @@ METHOD xmlEncode( input ) CLASS TableManager
 //    CASE ' '
 //       out += "&nbsp;"
 //       EXIT
-      CASE Chr( 9 )  //E'\t'
-      CASE Chr( 13 ) //E'\r'
-      CASE Chr( 10 ) //E'\n'
+      CASE Chr( 9 )  // E'\t'
+      CASE Chr( 13 ) // E'\r'
+      CASE Chr( 10 ) // E'\n'
          out += c
          EXIT
       OTHERWISE

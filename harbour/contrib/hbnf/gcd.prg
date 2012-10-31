@@ -30,6 +30,7 @@ FUNCTION FT_GCD( nNumber1, nNumber2 )
    LOCAL nResult                     // GCD
 
    // Either Number Zero??
+
    IF nNumber1 == 0 .OR. nNumber2 == 0
       nResult := 0                      // Yes, Can't Have a GCD
    ELSE                                 // No, Calculate the GCD

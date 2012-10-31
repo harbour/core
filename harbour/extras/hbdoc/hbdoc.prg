@@ -111,6 +111,7 @@ STATIC sc_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
 MEMVAR p_hsSwitches
 
 PROCEDURE Main( ... )
+
    LOCAL aArgs := hb_AParams()
    LOCAL idx, idx2, idx3, idx4
    LOCAL arg
@@ -128,7 +129,7 @@ PROCEDURE Main( ... )
 
    init_Templates()
 
-   PUBLIC p_hsSwitches := {;
+   PUBLIC p_hsSwitches := { ;
       /* configuration settings, values, etc */ ;
       "basedir"             => BASE_DIR, ;
       "doc"                 => .T., ;
@@ -161,7 +162,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    FOR EACH arg IN aArgs
-      IF ! Empty(arg)
+      IF ! Empty( arg )
          IF ( idx := At( "=", arg ) ) == 0
             cArgName := arg
             arg := ""
@@ -196,7 +197,7 @@ PROCEDURE Main( ... )
                   AAdd( p_hsSwitches[ "format" ], SubStr( cArgName, 2 ) )
                ENDIF
             ELSE
-               ShowHelp( "Unknown option:" + cArgName + iif( Len(arg) > 0, "=" + arg, "") )
+               ShowHelp( "Unknown option:" + cArgName + iif( Len( arg ) > 0, "=" + arg, "" ) )
                RETURN
             ENDIF
          ENDCASE
@@ -264,7 +265,7 @@ PROCEDURE Main( ... )
          DO CASE
          CASE p_hsSwitches[ "output" ] == "single"
 
-            oDocument := &("Generate" + cFormat + "()"):NewDocument( cFormat, "harbour", "Harbour Reference Guide" )
+            oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, "harbour", "Harbour Reference Guide" )
 
             FOR idx := 1 TO Len( aContent )
                IF Right( aContent[ idx ]:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
@@ -285,7 +286,7 @@ PROCEDURE Main( ... )
 
          CASE p_hsSwitches[ "output" ] == "category"
 
-            oIndex := &("Generate" + cFormat + "()"):NewIndex( cFormat, "harbour", "Harbour Reference Guide" )
+            oIndex := &( "Generate" + cFormat + "()" ):NewIndex( cFormat, "harbour", "Harbour Reference Guide" )
 
             FOR idx := 1 TO Len( aContent )
                IF Right( aContent[ idx ]:sourcefile_, Len( "1stread.txt" ) ) == "1stread.txt"
@@ -299,14 +300,14 @@ PROCEDURE Main( ... )
             FOR idx3 := 1 TO Len( p_aCategories )
                IF ! Empty( p_aCategories[ idx3 ] )
                   p_aCategories[ idx3 ][ 4 ] := Filename( p_aCategories[ idx3 ][ 1 ] )
-                  //~ oIndex:BeginSection( p_aCategories[ idx3 ][ 1 ], p_aCategories[ idx3 ][ 4 ] )
-                  //~ oIndex:EndSection( p_aCategories[ idx3 ][ 1 ], p_aCategories[ idx3 ][ 4 ] )
+                  // ~ oIndex:BeginSection( p_aCategories[ idx3 ][ 1 ], p_aCategories[ idx3 ][ 4 ] )
+                  // ~ oIndex:EndSection( p_aCategories[ idx3 ][ 1 ], p_aCategories[ idx3 ][ 4 ] )
                ENDIF
             NEXT
 
             FOR idx3 := 1 TO Len( p_aCategories )
                IF ! Empty( p_aCategories[ idx3 ] )
-                  oDocument := &("Generate" + cFormat + "()"):NewDocument( cFormat, p_aCategories[ idx3 ][ 4 ], "Harbour Reference Guide - " + p_aCategories[ idx3 ][ 1 ] )
+                  oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, p_aCategories[ idx3 ][ 4 ], "Harbour Reference Guide - " + p_aCategories[ idx3 ][ 1 ] )
 
                   IF oIndex != NIL
                      oIndex:BeginSection( p_aCategories[ idx3 ][ 1 ], oDocument:cFilename )
@@ -332,7 +333,7 @@ PROCEDURE Main( ... )
                                  oDocument:AddEntry( p_aCategories[ idx3 ][ 3 ][ idx ][ idx4 ] )
                                  IF oIndex != NIL
                                     oDocument:AddReference( "Index", oIndex:cFilename )
-// this kind of works; the reference is outputed but it is not what I meant
+                                    // this kind of works; the reference is outputed but it is not what I meant
                                     oDocument:AddReference( p_aCategories[ idx3 ][ 1 ], oIndex:cFilename, p_aCategories[ idx3 ][ 4 ] )
                                  ENDIF
                               ENDIF
@@ -357,7 +358,7 @@ PROCEDURE Main( ... )
          CASE p_hsSwitches[ "output" ] == "entry"
 
             FOR idx := 1 TO Len( aContent )
-               oDocument := &("Generate" + cFormat + "()"):NewDocument( cFormat, aContent[ idx ]:filename, "Harbour Reference Guide" )
+               oDocument := &( "Generate" + cFormat + "()" ):NewDocument( cFormat, aContent[ idx ]:filename, "Harbour Reference Guide" )
                IF oIndex != NIL
                   oIndex:AddEntry( aContent[ idx ] )
                ENDIF
@@ -382,24 +383,25 @@ PROCEDURE Main( ... )
    RETURN
 
 STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive procedure
+
    LOCAL aFiles
    LOCAL nLen
    LOCAL idx
    LOCAL cExt
 
-   //~ OutStd( ">>> " + cFolder + hb_eol() )
+   // ~ OutStd( ">>> " + cFolder + hb_eol() )
 
    cFolder += hb_ps()
 
    aFiles := Directory( cFolder + hb_osFileMask(), "D" )
    IF ( nLen := Len( aFiles ) ) > 0
       FOR idx := 1 TO nLen
-         IF aFiles[ idx ][F_ATTR ] == "D"
+         IF aFiles[ idx ][ F_ATTR ] == "D"
             IF !( aFiles[ idx ][ F_NAME ] == "." ) .AND. ;
                !( aFiles[ idx ][ F_NAME ] == ".." )
 
-               IF ( p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ] ) /* .AND. ;
-                  AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0 */
+               IF ( p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ] )
+                  /* .AND. AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0 */
                   ProcessFolder( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
                ENDIF
             ENDIF
@@ -417,6 +419,7 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
    RETURN
 
 STATIC FUNCTION ProcessFile( cFile, aContent )
+
    LOCAL aHandle := { 0, 0 } // file handle and position
    LOCAL cSectionName
    LOCAL cVersion
@@ -429,13 +432,13 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
    ENDIF
 
    IF ! FReadLn( @aHandle, "" ) // assume first line is ID comment prefix
-      //~ FClose( aHandle[ 1 ] )
-      //~ RETURN .F.
+      // ~ FClose( aHandle[ 1 ] )
+      // ~ RETURN .F.
    ENDIF
 
    IF ! FReadLn( @aHandle, @cVersion ) // assume second line is ID
-      //~ FClose( aHandle[ 1 ] )
-      //~ RETURN .F.
+      // ~ FClose( aHandle[ 1 ] )
+      // ~ RETURN .F.
    ENDIF
 
    o := Entry():New( "Template" )
@@ -455,6 +458,7 @@ STATIC FUNCTION ProcessFile( cFile, aContent )
    RETURN .T.
 
 STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
+
    LOCAL cSectionName
    LOCAL cSection
    LOCAL lAccepted := .T.
@@ -538,7 +542,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             CASE ! o:IsConstraint( cSectionName, cSection )
 
                cSource := cSectionName + " is '" + iif( Len( cSection ) <= 20, cSection, Left( StrTran( cSection, hb_eol() ), 20 ) + "..." ) + "', should be one of: "
-               //~ cSource := hb_HKeyAt( hsTemplate, idx ) + " should be one of: "
+               // ~ cSource := hb_HKeyAt( hsTemplate, idx ) + " should be one of: "
                AEval( &( "p_a" + cSectionName ), {| c, n | cSource += iif( n == 1, "", "," ) + c } )
                AddErrorCondition( cFile, cSource, aHandle[ 2 ] - 1 )
 
@@ -576,7 +580,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
                      Lower( o:Returns ) == "none." )
 
       AddErrorCondition( cFile, "'" + o:Name + "' is identified as template " + o:Template + " but has no RETURNS value (" + o:Returns + ")", aHandle[ 2 ] )
-      //~ lAccepted := .F.
+      // ~ lAccepted := .F.
 
    ELSE
 
@@ -593,7 +597,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
             AAdd( p_hsSwitches[ "not in hbextern" ], cSectionName + "; " + cFile )
          ENDIF
 
-         //~ OutStd( "    > " + cSectionName + hb_eol() )
+         // ~ OutStd( "    > " + cSectionName + hb_eol() )
 
       ENDIF
 
@@ -605,7 +609,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
 
       AAdd( aContent, o )
 
-      IF idxSubCategory == -1 .AND. ( ! o:IsField( "SUBCATEGORY" ) .OR. ! o:IsRequired( "SUBCATEGORY" ) ) //.AND. idxSubCategory == -1
+      IF idxSubCategory == -1 .AND. ( ! o:IsField( "SUBCATEGORY" ) .OR. ! o:IsRequired( "SUBCATEGORY" ) ) // .AND. idxSubCategory == -1
          idxSubCategory := o:SubcategoryIndex( o:Category, "" )
          IF idxSubCategory == -1
             idxSubCategory := 1
@@ -622,6 +626,7 @@ STATIC PROCEDURE ProcessBlock( aHandle, aContent, cFile, cType, cVersion, o )
    RETURN
 
 STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
+
    LOCAL nPosition
    LOCAL cBuffer
    LOCAL nLastIndent
@@ -646,7 +651,7 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
                   .AND. Right( cBuffer, 1 ) == p_hsSwitches[ "DELIMITER" ]
                   FSeek( aHandle[ 1 ], nPosition, FS_SET )
                   aHandle[ 2 ]-- // decrement the line number when rewinding the file
-                  Exit
+                  EXIT
                ELSEIF Len( AllTrim( cBuffer ) ) == 0
                   IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() )
                      cSection += hb_eol()
@@ -656,7 +661,7 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
                   IF !( Right( cSection, Len( hb_eol() ) ) == hb_eol() ) .OR. lPreformatted
                      cSection += hb_eol()
                   ENDIF
-                  cSection += "<table>" //+ hb_eol()
+                  cSection += "<table>" // + hb_eol()
                   lLastPreformatted := lPreformatted
                   lPreformatted := .T.
                ELSEIF AllTrim( cBuffer ) == "</table>"
@@ -703,6 +708,7 @@ STATIC FUNCTION FReadSection( aHandle, cSectionName, cSection, o )
    RETURN .T.
 
 STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
+
    LOCAL aHandle := { 0, 0 }
    LOCAL cBuffer
    LOCAL lCloseFile := .F.
@@ -735,6 +741,7 @@ STATIC PROCEDURE FileEval( acFile, bBlock, nMaxLine )
    RETURN
 
 STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
+
    STATIC s_aEOL := { Chr( 13 ) + Chr( 10 ), Chr( 10 ), Chr( 13 ) }
    LOCAL cLine, nSavePos, nEol, nNumRead, nLenEol, idx
 
@@ -748,10 +755,10 @@ STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
    cLine := hb_BLeft( cLine, nNumRead )
 
    nEol := 0
-   FOR idx := 1 To Len( s_aEOL )
+   FOR idx := 1 TO Len( s_aEOL )
       IF ( nEol := At( s_aEOL[ idx ], cLine ) ) > 0
          nLenEol := hb_BLen( s_aEOL[ idx ] ) - 1
-         Exit
+         EXIT
       ENDIF
    NEXT
 
@@ -767,6 +774,7 @@ STATIC FUNCTION FReadLn( aHandle, cBuffer, nMaxLine )
    RETURN nNumRead != 0
 
 FUNCTION Decode( cType, hsBlock, cKey )
+
    LOCAL cCode
    LOCAL cResult
    LOCAL idx
@@ -875,6 +883,7 @@ FUNCTION Decode( cType, hsBlock, cKey )
    RETURN /* cType + "=" +  */cCode
 
 PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
+
    LOCAL cIndent := Space( nIndent )
 
    IF xLine != NIL
@@ -894,7 +903,7 @@ PROCEDURE ShowSubHelp( xLine, nMode, nIndent, n )
       OTHERWISE
          DO CASE
          CASE nMode == 1         ; OutStd( cIndent + xLine ) ; OutStd( hb_eol() )
-         CASE nMode == 2         ; OutStd( iif( n > 1, ", ", "") + xLine )
+         CASE nMode == 2         ; OutStd( iif( n > 1, ", ", "" ) + xLine )
          OTHERWISE               ; OutStd( "(" + hb_ntos( nMode ) + ") " ) ; OutStd( xLine ) ; OutStd( hb_eol() )
          ENDCASE
       ENDCASE
@@ -906,6 +915,7 @@ STATIC FUNCTION HBRawVersion()
    RETURN StrTran( Version(), "Harbour " )
 
 PROCEDURE ShowHelp( cExtraMessage, aArgs )
+
    LOCAL nMode := 1
 
 #define OnOrOff( b )   iif( b, "excluded", "included" )
@@ -988,6 +998,7 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
    RETURN
 
 FUNCTION Parse( cVar, xDelimiter )
+
    LOCAL cResult
    LOCAL idx
 
@@ -1007,6 +1018,7 @@ FUNCTION Parse( cVar, xDelimiter )
    RETURN cResult
 
 FUNCTION Join( aVar, cDelimiter )
+
    LOCAL cResult := ""
 
    AEval( aVar, {| c, n | cResult += iif( n > 1, cDelimiter, "" ) + c } )
@@ -1014,12 +1026,15 @@ FUNCTION Join( aVar, cDelimiter )
    RETURN cResult
 
 STATIC PROCEDURE AddErrorCondition( cFile, cMessage, nLine )
+
    IF p_hsSwitches[ "immediate-errors" ]
       OutStd( cFile + ":" + hb_ntos( nLine ) + ": " + cMessage + hb_eol() )
    ENDIF
+
    RETURN
 
 FUNCTION Indent( cText, nLeftMargin, nWidth, lRaw )
+
    LOCAL cResult := ""
    LOCAL idx
    LOCAL cLine

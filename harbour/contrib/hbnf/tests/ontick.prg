@@ -16,11 +16,11 @@ PROCEDURE Main()
 
    CLS
 
-   FT_ONTICK( {|| OutStd( hb_milliSeconds(), hb_eol() ) } )
+   FT_ONTICK( {|| OutStd( hb_MilliSeconds(), hb_eol() ) } )
 
    Inkey( 0 )
 
-   FT_ONTICK( {|| OutStd( hb_milliSeconds(), hb_eol() ) }, 18 )
+   FT_ONTICK( {|| OutStd( hb_MilliSeconds(), hb_eol() ) }, 18 )
 
    Inkey( 0 )
 

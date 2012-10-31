@@ -62,12 +62,12 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests:"
 
-   ? [  strdiff("ABC", "ADC") == 3 ?  -> ], strdiff( "ABC", "ADC" )
-   ? [  strdiff("ABC", "AEC") == 3 ?  -> ], strdiff( "ABC", "AEC" )
-   ? [  strdiff("CBA", "ABC") == 6 ?  -> ], strdiff( "CBA", "ABC" )
-   ? [  strdiff("ABC", "AXBC") == 1 ? -> ], strdiff( "ABC", "AXBC" )
-   ? [  strdiff("AXBC", "ABC") == 6 ? -> ], strdiff( "AXBC", "ABC" )
-   ? [  strdiff("AXBC", "ADC") == 9 ? -> ], strdiff( "AXBC", "ADC" )
+   ? '  strdiff("ABC", "ADC") == 3 ?  -> ', strdiff( "ABC", "ADC" )
+   ? '  strdiff("ABC", "AEC") == 3 ?  -> ', strdiff( "ABC", "AEC" )
+   ? '  strdiff("CBA", "ABC") == 6 ?  -> ', strdiff( "CBA", "ABC" )
+   ? '  strdiff("ABC", "AXBC") == 1 ? -> ', strdiff( "ABC", "AXBC" )
+   ? '  strdiff("AXBC", "ABC") == 6 ? -> ', strdiff( "AXBC", "ABC" )
+   ? '  strdiff("AXBC", "ADC") == 9 ? -> ', strdiff( "AXBC", "ADC" )
 
    ? "End test of STRDIFF()"
    ?

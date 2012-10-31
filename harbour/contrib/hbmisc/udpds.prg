@@ -33,7 +33,7 @@ FUNCTION hb_UDPDS_Find( nPort, cName )
       hb_socketSetBroadcast( hSocket, .T. )
       cName := hb_StrToUTF8( cName )
       IF hb_socketSendTo( hSocket, hb_BChar( 5 ) + cName + hb_BChar( 0 ), , , { HB_SOCKET_AF_INET, "255.255.255.255", nPort } ) == hb_BLen( cName ) + 2
-         nTime := hb_milliseconds()
+         nTime := hb_MilliSeconds()
          nEnd := nTime + 100   /* 100ms delay is enough on LAN */
          aRet := {}
          DO WHILE nEnd > nTime
@@ -42,7 +42,7 @@ FUNCTION hb_UDPDS_Find( nPort, cName )
             IF hb_BLeft( cBuffer, hb_BLen( cName ) + 2 ) == hb_BChar( 6 ) + cName + hb_BChar( 0 )
                AAdd( aRet, { aAddr[ 2 ], hb_BSubStr( cBuffer, hb_BLen( cName ) + 3, nLen - hb_BLen( cName ) - 2 ) } )
             ENDIF
-            nTime := hb_milliseconds()
+            nTime := hb_MilliSeconds()
          ENDDO
       ENDIF
       hb_socketClose( hSocket )

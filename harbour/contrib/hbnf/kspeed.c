@@ -34,8 +34,8 @@ HB_FUNC( FT_SETRATE )
 #if defined( HB_OS_DOS )
    {
       union REGS regs;
-      int iSpeed = 0;
-      int iRepeat = 0;
+      int        iSpeed  = 0;
+      int        iRepeat = 0;
 
       switch( hb_pcount() )
       {

@@ -62,7 +62,8 @@
 
 CREATE CLASS HbDbInput
 
-HIDDEN:
+   HIDDEN:
+
    VAR nRow    AS INTEGER
    VAR nCol    AS INTEGER
    VAR nWidth  AS INTEGER
@@ -73,7 +74,8 @@ HIDDEN:
    VAR acColor AS ARRAY
    VAR lFocus  AS LOGICAL     INIT .F.
 
-EXPORTED:
+   EXPORTED:
+
    METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize )
    METHOD applyKey( nKey )
    METHOD getValue()
@@ -99,45 +101,55 @@ METHOD new( nRow, nCol, nWidth, cValue, cColor, nSize ) CLASS HbDbInput
 
    RETURN Self
 
-METHOD setColor( cColor ) CLASS HbDbInput
+METHOD SetColor( cColor ) CLASS HbDbInput
 
-   ::acColor:= { hb_ColorIndex( cColor, CLR_STANDARD ), ;
-                 hb_ColorIndex( cColor, CLR_ENHANCED ) }
-   IF hb_colorToN( ::acColor[ 2 ] ) == -1
-      ::acColor[ 2 ] := iif( hb_colorToN( ::acColor[ 1 ] ) != -1, ;
-                             ::acColor[ 1 ], ;
-                             hb_ColorIndex( SetColor(), CLR_ENHANCED ) )
+   ::acColor := { ;
+      hb_ColorIndex( cColor, CLR_STANDARD ), ;
+      hb_ColorIndex( cColor, CLR_ENHANCED ) }
+   IF hb_ColorToN( ::acColor[ 2 ] ) == -1
+      ::acColor[ 2 ] := iif( hb_ColorToN( ::acColor[ 1 ] ) != -1, ;
+         ::acColor[ 1 ], ;
+         hb_ColorIndex( SetColor(), CLR_ENHANCED ) )
    ENDIF
-   IF hb_colorToN( ::acColor[ 1 ] ) == -1
+   IF hb_ColorToN( ::acColor[ 1 ] ) == -1
       ::acColor[ 1 ] := hb_ColorIndex( SetColor(), CLR_STANDARD )
    ENDIF
+
    RETURN Self
 
 METHOD newPos( nRow, nCol ) CLASS HbDbInput
+
    ::nRow := nRow
    ::nCol := nCol
+
    RETURN Self
 
 METHOD setFocus() CLASS HbDbInput
+
    IF !::lFocus
       ::lFocus := .T.
       ::display()
    ENDIF
+
    RETURN Self
 
 METHOD killFocus() CLASS HbDbInput
+
    IF ::lFocus
       ::lFocus := .F.
       ::display()
    ENDIF
+
    RETURN Self
 
 METHOD getValue() CLASS HbDbInput
    RETURN ::cValue
 
 METHOD setValue( cValue ) CLASS HbDbInput
+
    ::cValue := PadR( cValue, ::nSize )
    ::nPos := Min( ::nSize, Len( RTrim( ::cValue ) ) + 1 )
+
    RETURN Self
 
 METHOD display() CLASS HbDbInput
@@ -147,12 +159,13 @@ METHOD display() CLASS HbDbInput
    ELSEIF ::nPos - ::nFirst >= ::nWidth
       ::nFirst := ::nPos - ::nWidth + 1
    ENDIF
-   hb_dispOutAt( ::nRow, ::nCol, Substr( ::cValue, ::nFirst, ::nWidth ), ;
-                 ::acColor[ iif( ::lFocus, 2, 1 ) ] )
+   hb_DispOutAt( ::nRow, ::nCol, SubStr( ::cValue, ::nFirst, ::nWidth ), ;
+      ::acColor[ iif( ::lFocus, 2, 1 ) ] )
    IF ::lFocus
       SetPos( ::nRow, ::nCol + ::nPos - ::nFirst )
       SetCursor( iif( Set( _SET_INSERT ), SC_INSERT, SC_NORMAL ) )
    ENDIF
+
    RETURN Self
 
 METHOD applyKey( nKey ) CLASS HbDbInput

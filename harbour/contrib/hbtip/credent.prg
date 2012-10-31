@@ -58,7 +58,9 @@
 */
 
 CREATE CLASS tIPCredentials
+
    VAR cMethod
    VAR cUserid
    VAR cPassword
+
 ENDCLASS

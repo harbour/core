@@ -12,12 +12,13 @@
 #define _NREPL_     128
 
 PROCEDURE Main()
+
    LOCAL cStr, str_compressed, str_decompressed
    LOCAL b64_expected_result := "BFRoaXMgIAIUdGVzdCBvZiBMWkYgZXh0ZW5zaW9u"
    LOCAL nLen, nResult := 0
 
    ? "LZF Api version is", ;
-      hb_ntos( hb_lzf_version() ) + "(0x" + hb_numtohex( hb_lzf_version() ) +")"
+      hb_ntos( hb_lzf_version() ) + "(0x" + hb_NumToHex( hb_lzf_version() ) + ")"
    ? "LibLZF optimized for", iif( hb_lzf_optimized_for_speed(), "speed.", "compression." )
 
    ? "--- test 1 ---"
@@ -57,7 +58,7 @@ PROCEDURE Main()
       ? "Lenght of a string is", hb_ntos( Len( cStr ) )
       ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
 
-      ? iif( hb_base64encode( str_compressed ) == b64_expected_result, "OK!", "not OK!" )
+      ? iif( hb_base64Encode( str_compressed ) == b64_expected_result, "OK!", "not OK!" )
    ELSE
       ? "hb_lzf_compress() return ", iif( nResult == HB_LZF_BUF_ERROR, "LZF_BUF_ERROR", "LZF_MEM_ERROR" )
    ENDIF
@@ -73,7 +74,7 @@ PROCEDURE Main()
       ? "Lenght of a string is", hb_ntos( Len( cStr ) )
       ? "Lenght of a compressed string is", hb_ntos( Len( str_compressed ) )
 
-      ? iif( hb_base64encode( str_compressed ) == b64_expected_result, "OK!", "not OK!" )
+      ? iif( hb_base64Encode( str_compressed ) == b64_expected_result, "OK!", "not OK!" )
    ELSE
       ? "hb_lzf_compress() return ", iif( nResult == HB_LZF_BUF_ERROR, "LZF_BUF_ERROR", "LZF_MEM_ERROR" )
    ENDIF
@@ -100,7 +101,7 @@ PROCEDURE Main()
 
    ? "--- test 7 ---"
    cStr := Replicate( TEST_STRING, _NREPL_ )
-   str_compressed := hb_zcompress( cStr, NIL, @nResult )
+   str_compressed := hb_ZCompress( cStr, NIL, @nResult )
 
    str_decompressed := hb_lzf_decompress( str_compressed, NIL, @nResult )
 

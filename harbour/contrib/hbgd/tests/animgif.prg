@@ -82,7 +82,7 @@ PROCEDURE Main()
    gdImageGifAnimAdd( im3, IMAGES_OUT + "anim2.gif", 0, 0, 0, 100, 1, im2 )
    /* Write the end marker */
    /* gdImageGifAnimEnd(out); is the same as the following: */
-   //putc (";", out);
+   // putc (";", out);
    gdImageGifAnimEnd( hFile )
    gdImageGifAnimEnd( IMAGES_OUT + "anim2.gif" )
    /* Close file */

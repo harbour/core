@@ -167,7 +167,7 @@ CREATE CLASS tIPClient
    METHOD ReadHTTPProxyResponse( sResponse )
 
    /* Methods to log data if needed */
-   METHOD InetRecv( SocketCon, cStr1, len)
+   METHOD InetRecv( SocketCon, cStr1, len )
    METHOD InetRecvLine( SocketCon, nRet, size )
    METHOD InetRecvAll( SocketCon, cRet, size )
    METHOD InetCount( SocketCon )
@@ -181,6 +181,7 @@ CREATE CLASS tIPClient
 ENDCLASS
 
 METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClient
+
    LOCAL oErr
    LOCAL oLog
 
@@ -224,7 +225,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClient
       hb_inetInit()
 #if defined( HB_HAS_OPENSSL )
       SSL_init()
-      RAND_seed( Time() + hb_username() + DToS( Date() ) + hb_DirBase() + NetName() )
+      RAND_seed( Time() + hb_UserName() + DToS( Date() ) + hb_DirBase() + NetName() )
 #endif
       ::bInitSocks := .T.
    ENDIF
@@ -244,6 +245,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClient
    RETURN self
 
 METHOD Open( cUrl ) CLASS tIPClient
+
    LOCAL nPort
    LOCAL cResp
 
@@ -274,9 +276,11 @@ METHOD Open( cUrl ) CLASS tIPClient
       ENDIF
    ENDIF
    ::isOpen := .T.
+
    RETURN .T.
 
 METHOD EnableTLS( lEnable ) CLASS tIPClient
+
    LOCAL lSuccess
 
    IF ::lTLS == lEnable
@@ -304,6 +308,7 @@ METHOD EnableTLS( lEnable ) CLASS tIPClient
    RETURN lSuccess
 
 METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWord, cUserAgent ) CLASS tIPClient
+
    LOCAL cRequest
    LOCAL lRet := .F.
    LOCAL tmp
@@ -338,6 +343,7 @@ METHOD OpenProxy( cServer, nPort, cProxy, nProxyPort, cResp, cUserName, cPassWor
    RETURN lRet
 
 METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS tIPClient
+
    LOCAL bMoreDataToRead := .T.
    LOCAL nLength, nData
    LOCAL szResponse
@@ -354,13 +360,14 @@ METHOD ReadHTTPProxyResponse( /* @ */ sResponse ) CLASS tIPClient
       nLength := Len( sResponse )
       IF nLength >= 4
          bMoreDataToRead := !( SubStr( sResponse, nLength - 3, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength - 2, 1 ) == Chr( 10 ) .AND. ;
-                               SubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength    , 1 ) == Chr( 10 ) )
+            SubStr( sResponse, nLength - 1, 1 ) == Chr( 13 ) .AND. SubStr( sResponse, nLength, 1 ) == Chr( 10 ) )
       ENDIF
    ENDDO
 
    RETURN .T.
 
 METHOD Close() CLASS tIPClient
+
    LOCAL nRet := -1
 
    IF ! Empty( ::SocketCon )
@@ -387,14 +394,17 @@ METHOD Close() CLASS tIPClient
    RETURN nRet
 
 METHOD Reset() CLASS tIPClient
+
    ::bInitialized := .F.
    ::bEof := .F.
+
    RETURN .T.
 
 METHOD Commit() CLASS tIPClient
    RETURN .T.
 
 METHOD Read( nLen ) CLASS tIPClient
+
    LOCAL cStr0
    LOCAL cStr1
 
@@ -449,6 +459,7 @@ METHOD Read( nLen ) CLASS tIPClient
    RETURN cStr0
 
 METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
+
    LOCAL nFout
    LOCAL cData
    LOCAL nSent
@@ -507,6 +518,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS tIPClient
    RETURN .T.
 
 METHOD WriteFromFile( cFile ) CLASS tIPClient
+
    LOCAL nFin
    LOCAL cData
    LOCAL nLen
@@ -551,6 +563,7 @@ METHOD WriteFromFile( cFile ) CLASS tIPClient
 
    ::nStatus := 2
    FClose( nFin )
+
    RETURN .T.
 
 /*
@@ -582,6 +595,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS tIPClient
    RETURN ::nLastWrite
 
 METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
+
    LOCAL nRet
 
    IF Empty( nLen )
@@ -609,6 +623,7 @@ METHOD InetSendAll( SocketCon, cData, nLen ) CLASS tIPClient
    RETURN nRet
 
 METHOD InetCount( SocketCon ) CLASS tIPClient
+
    LOCAL nRet := hb_inetCount( SocketCon )
 
    IF HB_ISBLOCK( ::bTrace )
@@ -618,6 +633,7 @@ METHOD InetCount( SocketCon ) CLASS tIPClient
    RETURN nRet
 
 METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
+
    LOCAL nRet
 
    IF ::lTLS
@@ -641,6 +657,7 @@ METHOD InetRecv( SocketCon, cStr1, len ) CLASS tIPClient
    RETURN nRet
 
 METHOD InetRecvLine( SocketCon, nRet, size ) CLASS tIPClient
+
    LOCAL cRet
 
    IF ::lTLS
@@ -665,9 +682,10 @@ METHOD InetRecvLine( SocketCon, nRet, size ) CLASS tIPClient
       ::Log( SocketCon, "", size, cRet )
    ENDIF
 
-  RETURN cRet
+   RETURN cRet
 
 METHOD InetRecvAll( SocketCon, cRet, size ) CLASS tIPClient
+
    LOCAL nRet
 
    IF ::lTLS
@@ -695,6 +713,7 @@ METHOD InetRecvAll( SocketCon, cRet, size ) CLASS tIPClient
    RETURN nRet
 
 METHOD InetErrorCode( SocketCon ) CLASS tIPClient
+
    LOCAL nRet
 
    IF ::lTLS
@@ -716,6 +735,7 @@ METHOD InetErrorCode( SocketCon ) CLASS tIPClient
    RETURN nRet
 
 METHOD InetErrorDesc( SocketCon ) CLASS tIPClient
+
    LOCAL cMsg := ""
 
    hb_default( @SocketCon, ::SocketCon )
@@ -764,24 +784,30 @@ METHOD InetConnect( cServer, nPort, SocketCon ) CLASS tIPClient
 
 /* Methods to manage buffers */
 METHOD InetRcvBufSize( SocketCon, nSizeBuff ) CLASS tIPClient
+
    IF ! Empty( nSizeBuff )
       hb_inetSetRcvBufSize( SocketCon, nSizeBuff )
    ENDIF
+
    RETURN hb_inetGetRcvBufSize( SocketCon )
 
 METHOD InetSndBufSize( SocketCon, nSizeBuff ) CLASS tIPClient
+
    IF ! Empty( nSizeBuff )
       hb_inetSetSndBufSize( SocketCon, nSizeBuff )
    ENDIF
+
    RETURN hb_inetGetSndBufSize( SocketCon )
 
 METHOD InetTimeOut( SocketCon, nConnTimeout ) CLASS tIPClient
+
    IF HB_ISNUMERIC( nConnTimeout )
       ::nConnTimeout := nConnTimeout
    ENDIF
    IF HB_ISNUMERIC( ::nConnTimeout )
       RETURN hb_inetTimeout( SocketCon, ::nConnTimeout )
    ENDIF
+
    RETURN NIL
 
 /* Called from another method with list of parameters and, as last parameter, return code
@@ -797,8 +823,8 @@ METHOD Log( ... ) CLASS tIPClient
    IF HB_ISBLOCK( ::bTrace )
 
       cMsg := DToS( Date() ) + "-" + Time() + Space( 2 ) + ;
-                 SubStr( ProcName( 1 ), RAt( ":", ProcName( 1 ) ) ) +;
-                 "( "
+         SubStr( ProcName( 1 ), RAt( ":", ProcName( 1 ) ) ) + ;
+         "( "
 
       FOR EACH xVar IN hb_AParams()
 
@@ -833,6 +859,7 @@ METHOD SetProxy( cProxyHost, nProxyPort, cProxyUser, cProxyPassword ) CLASS tIPC
    RETURN Self
 
 FUNCTION tip_SSL()
+
 #if defined( HB_HAS_OPENSSL )
    RETURN .T.
 #else

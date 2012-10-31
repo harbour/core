@@ -80,21 +80,21 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
    nOldCursor := SetCursor( SC_NONE )
    cOldScreen := SaveScreen( nTop, nLeft, nBottom, nRight )
 
-   hb_dispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI )
-   hb_dispOutAtBox( nTop + 3, nLeft, hb_UTF8ToStrBox( "╞" ) )
-   hb_dispOutAtBox( nTop + 3, nRight, hb_UTF8ToStrBox( "╡" ) )
-   hb_dispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
+   hb_DispBox( nTop, nLeft, nBottom, nRight, HB_B_DOUBLE_SINGLE_UNI )
+   hb_DispOutAtBox( nTop + 3, nLeft, hb_UTF8ToStrBox( "╞" ) )
+   hb_DispOutAtBox( nTop + 3, nRight, hb_UTF8ToStrBox( "╡" ) )
+   hb_DispOutAt( nTop + 1, nLeft + 1, Space( nRight - nLeft - 1 ) )
 
    oBrw := TBrowseDB( nTop + 2, nLeft + 1, nBottom - 1, nRight - 1 )
    oBrw:HeadSep := " " + hb_UTF8ToStrBox( "═" )
    oBrw:SkipBlock := {| nRecs | Skipped( nRecs, lAppend ) }
 
-   FOR n := 1 to FCount()
+   FOR n := 1 TO FCount()
       oBrw:AddColumn( TBColumnNew( FieldName( n ), FieldBlock( FieldName( n ) ) ) )
    NEXT
 
    IF Eof()
-      DbGoTop()
+      dbGoTop()
    ENDIF
 
    oBrw:ForceStable()
@@ -128,7 +128,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
             oBrw:Down()
             oBrw:ForceStable()
             oBrw:ColorRect( { oBrw:RowPos, 1, oBrw:RowPos, oBrw:ColCount }, ;
-                            { 2, 2 } )
+               { 2, 2 } )
          ENDIF
 
          StatLine( oBrw, lAppend )
@@ -149,7 +149,7 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
 #ifdef HB_COMPAT_C53
       CASE K_LBUTTONDOWN
       CASE K_LDBLCLK
-         TBMOUSE( oBrw, MRow(), MCol() )
+         TBMouse( oBrw, MRow(), MCol() )
          EXIT
 #endif
 #ifndef HB_CLP_STRICT
@@ -241,16 +241,16 @@ FUNCTION Browse( nTop, nLeft, nBottom, nRight )
       CASE K_INS
          IF lAppend
             SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
-                            SC_NORMAL, SC_INSERT ) )
+               SC_NORMAL, SC_INSERT ) )
          ENDIF
          EXIT
 
       CASE K_DEL
          IF RecNo() != LastRec() + 1
             IF Deleted()
-               DbRecall()
+               dbRecall()
             ELSE
-               DbDelete()
+               dbDelete()
             ENDIF
          ENDIF
          EXIT
@@ -297,18 +297,18 @@ STATIC PROCEDURE StatLine( oBrw, lAppend )
    LOCAL nRecNo := RecNo()
    LOCAL nLastRec := LastRec()
 
-   hb_dispOutAt( nTop, nRight - 27, "Record " )
+   hb_DispOutAt( nTop, nRight - 27, "Record " )
 
    IF nLastRec == 0 .AND. ! lAppend
-      hb_dispOutAt( nTop, nRight - 20, "<none>               " )
+      hb_DispOutAt( nTop, nRight - 20, "<none>               " )
    ELSEIF nRecNo == nLastRec + 1
-      hb_dispOutAt( nTop, nRight - 40, "         " )
-      hb_dispOutAt( nTop, nRight - 20, "                <new>" )
+      hb_DispOutAt( nTop, nRight - 40, "         " )
+      hb_DispOutAt( nTop, nRight - 20, "                <new>" )
    ELSE
-      hb_dispOutAt( nTop, nRight - 40, iif( Deleted(), "<Deleted>", "         " ) )
-      hb_dispOutAt( nTop, nRight - 20, PadR( hb_ntos( nRecNo ) + "/" + ;
-                                             hb_ntos( nLastRec ), 16 ) + ;
-                                       iif( oBrw:HitTop, "<bof>", "     " ) )
+      hb_DispOutAt( nTop, nRight - 40, iif( Deleted(), "<Deleted>", "         " ) )
+      hb_DispOutAt( nTop, nRight - 20, PadR( hb_ntos( nRecNo ) + "/" + ;
+         hb_ntos( nLastRec ), 16 ) + ;
+         iif( oBrw:HitTop, "<bof>", "     " ) )
    ENDIF
 
    RETURN
@@ -327,17 +327,17 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
    lScore := Set( _SET_SCOREBOARD, .F. )
    lExit := Set( _SET_EXIT, .T. )
    bIns := SetKey( K_INS, {|| SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
-                                              SC_NORMAL, SC_INSERT ) ) } )
+      SC_NORMAL, SC_INSERT ) ) } )
    nCursor := SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
-   IF !Empty( cIndexKey := IndexKey( 0 ) )
+   IF ! Empty( cIndexKey := IndexKey( 0 ) )
       xKeyValue := &cIndexKey
    ENDIF
 
    oCol := oBrw:GetColumn( oBrw:ColPos )
    xValue := Eval( oCol:Block )
    oGet := GetNew( Row(), Col(), ;
-               {| xNewVal | iif( PCount() == 0, xValue, xValue := xNewVal ) }, ;
-               "mGetVar", NIL, oBrw:ColorSpec )
+      {| xNewVal | iif( PCount() == 0, xValue, xValue := xNewVal ) }, ;
+      "mGetVar", NIL, oBrw:ColorSpec )
    lSuccess := .F.
    IF ReadModal( { oGet } )
       IF lAppend .AND. RecNo() == LastRec() + 1
@@ -345,11 +345,11 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
       ENDIF
       Eval( oCol:Block, xValue )
 
-      IF !lAppend .AND. !Empty( cForExp := OrdFor( IndexOrd() ) ) .AND. ;
+      IF ! lAppend .AND. ! Empty( cForExp := ordFor( IndexOrd() ) ) .AND. ;
          ! &cForExp
          dbGoTop()
       ENDIF
-      IF !lAppend .AND. !Empty( cIndexKey ) .AND. ! xKeyValue == &cIndexKey
+      IF ! lAppend .AND. ! Empty( cIndexKey ) .AND. ! xKeyValue == &cIndexKey
          lSuccess := .T.
       ENDIF
    ENDIF
@@ -364,7 +364,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
 
    IF lAppend
       oBrw:ColorRect( { oBrw:RowPos, 1, oBrw:RowPos, oBrw:ColCount }, ;
-                      { 2, 2 } )
+         { 2, 2 } )
    ENDIF
 
    SetCursor( nCursor )
@@ -392,7 +392,7 @@ STATIC FUNCTION ExitKey( lAppend )
 
    OTHERWISE
       nKey := iif( nKey == K_ENTER .OR. ;
-                   !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
+         !( hb_keyChar( nKey ) == "" ), K_RIGHT, 0 )
    ENDSWITCH
 
    RETURN nKey
@@ -405,7 +405,7 @@ STATIC PROCEDURE FreshOrder( oBrw )
    oBrw:ForceStable()
 
    IF nRec != LastRec() + 1
-      DO WHILE RecNo() != nRec .AND. !BOF()
+      DO WHILE RecNo() != nRec .AND. !Bof()
          oBrw:Up()
          oBrw:ForceStable()
       ENDDO

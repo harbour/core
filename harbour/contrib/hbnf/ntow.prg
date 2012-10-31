@@ -66,12 +66,12 @@ STATIC FUNCTION grp_to_words( nGrp, sQual )
 
    DO CASE
    CASE nTemp > 19
-      sResult += sc_tens[ int( nTemp / 10 ) + 1 ]
-      sResult += sc_ones[ int( nTemp % 10 ) + 1 ]
+      sResult += sc_tens[ Int( nTemp / 10 ) + 1 ]
+      sResult += sc_ones[ Int( nTemp % 10 ) + 1 ]
    CASE nTemp < 20 .AND. nTemp > 9
-      sResult += sc_teens[ int( nTemp % 10 ) + 1 ]
+      sResult += sc_teens[ Int( nTemp % 10 ) + 1 ]
    CASE nTemp < 10 .AND. nTemp > 0
-      sResult += sc_ones[ int( nTemp) + 1 ]
+      sResult += sc_ones[ Int( nTemp ) + 1 ]
    ENDCASE
 
    RETURN sResult + sQual

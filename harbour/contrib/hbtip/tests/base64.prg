@@ -48,7 +48,7 @@ PROCEDURE Main( ... )
       CASE cData == '-u'
          lUrl := .T.
 
-         OTHERWISE
+      OTHERWISE
          IF hb_FileExists( cData ) .AND. hInput == hSTDIN
             hInput := FOpen( cData )
          ELSEIF hOutput == hSTDOUT

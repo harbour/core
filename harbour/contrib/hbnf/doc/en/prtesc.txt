@@ -14,7 +14,7 @@
    $ARGUMENTS$
       <cASCII> is the ASCII representation of the printer control
       codes in Lotus 123 format (e.g. "\027E" for Chr(27)+"E")
-  
+
       "\nnn" will be converted to Chr(nnn)
       "\\" will be converted to "\"
    $RETURNS$

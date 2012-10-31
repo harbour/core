@@ -66,14 +66,14 @@ PROCEDURE Main( cPortName )
       ? "Open() succeeded"
       ?
       IF oWinPort:SetDTR( .T. )
-          ? "SetDTR( .T. ) succeeded"
+         ? "SetDTR( .T. ) succeeded"
       ELSE
-          ? "SetDTR( .T. ) failed :", oWinPort:ErrorText()
+         ? "SetDTR( .T. ) failed :", oWinPort:ErrorText()
       ENDIF
       IF ( nResult := oWinPort:Write( cString ) ) == Len( cString )
-          ? "Write() succeeded"
+         ? "Write() succeeded"
       ELSE
-          ? "Write() failed, returned ", nResult, " expected ", Len( cString )
+         ? "Write() failed, returned ", nResult, " expected ", Len( cString )
       ENDIF
       ? "Scan something... we'll not read it but purge it, press enter"
       Inkey( 0 )

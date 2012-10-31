@@ -17,12 +17,13 @@
 #include "hbwin.ch"
 
 PROCEDURE Main()
+
    LOCAL hDC
    LOCAL pDEVMODE := __wapi_DEVMODE_New( "Microsoft XPS Document Writer" )
    LOCAL hOBJECT
 
-   __wapi_DEVMODE_Set( pDEVMODE, {;
-      "dmPaperSize"   => WIN_DMPAPER_A4,;
+   __wapi_DEVMODE_Set( pDEVMODE, { ;
+      "dmPaperSize"   => WIN_DMPAPER_A4, ;
       "dmOrientation" => WIN_DMORIENT_PORTRAIT } )
 
    hDC := wapi_CreateDC( NIL, "Microsoft XPS Document Writer", NIL, pDEVMODE )
@@ -36,20 +37,21 @@ PROCEDURE Main()
 
          IF wapi_StartPage( hDC ) > 0
 
-            hOBJECT := wapi_CreateFont( 96,;
-                                        42,;
-                                        NIL,;
-                                        NIL,;
-                                        WIN_FW_NORMAL,;
-                                        .F.,;
-                                        .F.,;
-                                        NIL,;
-                                        WIN_ANSI_CHARSET,;
-                                        NIL,;
-                                        NIL,;
-                                        NIL,;
-                                        NIL,;
-                                        "Arial" )
+            hOBJECT := wapi_CreateFont( ;
+               96, ;
+               42, ;
+               NIL, ;
+               NIL, ;
+               WIN_FW_NORMAL, ;
+               .F., ;
+               .F., ;
+               NIL, ;
+               WIN_ANSI_CHARSET, ;
+               NIL, ;
+               NIL, ;
+               NIL, ;
+               NIL, ;
+               "Arial" )
 
             wapi_SelectObject( hDC, hOBJECT )
 
@@ -72,11 +74,11 @@ PROCEDURE Main()
             DrawBarcode( hDC, 340,   1, "CODE93",     "TEST93" )
             DrawBarcode( hDC, 360,   1, "CODE11",     "12", HB_ZEBRA_FLAG_WIDE3 )
             DrawBarcode( hDC, 380,   1, "CODE11",     "1234567890", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
-            DrawBarcode( hDC, 400,   1, "CODE128",    "Code 128")
-            DrawBarcode( hDC, 420,   1, "CODE128",    "1234567890")
-            DrawBarcode( hDC, 440,   1, "CODE128",    "Wikipedia")
+            DrawBarcode( hDC, 400,   1, "CODE128",    "Code 128" )
+            DrawBarcode( hDC, 420,   1, "CODE128",    "1234567890" )
+            DrawBarcode( hDC, 440,   1, "CODE128",    "Wikipedia" )
             DrawBarcode( hDC, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
-            DrawBarcode( hDC, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)")
+            DrawBarcode( hDC, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)" )
             DrawBarcode( hDC, 580,   1, "QRCODE",     "http://harbour-project.org/" )
 
             wapi_EndPage( hDC )
@@ -90,6 +92,7 @@ PROCEDURE Main()
 #define _SCALE_ 7.2
 
 PROCEDURE DrawBarcode( hDC, nY, nLineWidth, cType, cCode, nFlags )
+
    LOCAL hZebra, nLineHeight, cTxt
 
    SWITCH cType

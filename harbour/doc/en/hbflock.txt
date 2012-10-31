@@ -18,11 +18,11 @@
                 --> <lSuccess>
    $ARGUMENTS$
       <nHandle>  Dos file handle
-  
+
       set>  Offset of the first byte of the region to be locked.
-  
+
       <nBytes>   Number of bytes to be locked.
-  
+
       e>    The type (read or write) of lock requested.
    $RETURNS$
       <lSuccess> .T. if the lock was obtained, else .F.
@@ -30,16 +30,16 @@
       This function attempts to lock a region of the file whose file handle
       is <nHandle>. This is a low level file function.  To lock Harbour
       data files use either the FLOCK() or RLOCK() function.
-  
+
       The value of <nHandle> is obtained from either a call to the FOPEN()
       or the FCREATE() function.
-  
+
       <nOffset> is the offset (from the beginning of the file) to the first
       of the region to be locked.  (Offsets from the current position
       nd of file are not currently supported.)
-  
+
       <nBytes> is the length of the region to be locked in bytes.
-  
+
       e> is the type of lock requested.  There are two types of locks:
       sive write locks ( <nType> = 0x0000 ) - the default, and shared
       locks( <nType> = 0x0100 ).  Additionally you can specify a
@@ -74,12 +74,12 @@
       Unlocks part or all of any file
    $SYNTAX$
       HB_FUNLOCK( <nHandle>, <nOffset>, <nBytes> )  --> <lSuccess>
-  
+
    $ARGUMENTS$
       <nHandle>  Dos file handle
-  
+
       set>  Offset of the first byte of the region to be locked.
-  
+
       <nBytes>   Number of bytes to be locked.
    $RETURNS$
       <lSuccess> .T. if the lock was removed, else .F.
@@ -87,14 +87,14 @@
       This function attempts to unlock a region of the file whose file
       handle is <nHandle>. This is a low level file function.  To
       unlock Harbour data files use the DBUNLOCK() function.
-  
+
       The value of <nHandle> is obtained from either a call to the FOPEN()
       or the FCREATE() function.
-  
+
       <nOffset> is the offset (from the beginning of the file) to the first
       of the region to be unlocked.  (Offsets from the current position
       nd of file are not currently supported.)
-  
+
       <nBytes> is the length of the region to be unlocked in bytes.
    $EXAMPLES$
       refer to tfl.prg

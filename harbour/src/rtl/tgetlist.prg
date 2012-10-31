@@ -186,7 +186,7 @@ METHOD ReadModal() CLASS HBGetList
          cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
-      hb_scroll( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
+      hb_Scroll( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
 
       ::cMsgSaveS := SaveScreen( nMsgRow, nMsgLeft, nMsgRow, nMsgRight )
    ENDIF
@@ -352,7 +352,7 @@ METHOD GetApplyKey( nKey, oGet, oMenu, aMsg ) CLASS HBGetList
    ELSEIF ( nHotItem := oMenu:getAccel( nKey ) ) != 0
       ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
       nKey := 0
-   ELSEIF IsShortCut( oMenu, nKey )
+   ELSEIF IsShortcut( oMenu, nKey )
       nKey := 0
    ENDIF
 #else
@@ -810,7 +810,7 @@ METHOD ShowScoreboard() CLASS HBGetList
 
    IF Set( _SET_SCOREBOARD )
 
-      hb_dispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), __NatMsg( _GET_INSERT_ON ), __NatMsg( _GET_INSERT_OFF ) ) )
+      hb_DispOutAt( SCORE_ROW, SCORE_COL, iif( Set( _SET_INSERT ), __natMsg( _GET_INSERT_ON ), __natMsg( _GET_INSERT_OFF ) ) )
 
    ENDIF
 
@@ -820,12 +820,12 @@ METHOD DateMsg() CLASS HBGetList
 
    IF Set( _SET_SCOREBOARD )
 
-      hb_dispOutAt( SCORE_ROW, SCORE_COL, __NatMsg( _GET_INVD_DATE ) )
+      hb_DispOutAt( SCORE_ROW, SCORE_COL, __natMsg( _GET_INVD_DATE ) )
 
       DO WHILE NextKey() == 0
       ENDDO
 
-      hb_dispOutAt( SCORE_ROW, SCORE_COL, Space( Len( __NatMsg( _GET_INVD_DATE ) ) ) )
+      hb_DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( __natMsg( _GET_INVD_DATE ) ) ) )
 
    ENDIF
 
@@ -954,7 +954,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
    ELSEIF ( nHotItem := oMenu:getAccel( nKey ) ) != 0
       ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
       nKey := 0
-   ELSEIF IsShortCut( oMenu, nKey )
+   ELSEIF IsShortcut( oMenu, nKey )
       nKey := 0
    ENDIF
 
@@ -1241,7 +1241,7 @@ METHOD TBApplyKey( oGet, oTB, nKey, oMenu, aMsg ) CLASS HBGetList
    ELSEIF ( nHotItem := oMenu:getAccel( nKey ) ) != 0
       ::nMenuID := MenuModal( oMenu, nHotItem, aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGRIGHT ], aMsg[ MSGCOLOR ] )
       nKey := 0
-   ELSEIF IsShortCut( oMenu, nKey )
+   ELSEIF IsShortcut( oMenu, nKey )
       nKey := 0
    ENDIF
 
@@ -1365,7 +1365,7 @@ METHOD TBReader( oGet, oMenu, aMsg ) CLASS HBGetList
             ENDDO
 
             IF nKey == 0
-               nKey := Inkey(0)
+               nKey := Inkey( 0 )
             ENDIF
 
             nProcessed := oTB:ApplyKey( nKey )
@@ -1568,6 +1568,7 @@ METHOD HitTest( nMRow, nMCol, aMsg ) CLASS HBGetList
 #define SNSVCURSOR      17
 
 METHOD ReadStats( nElement, xNewValue ) CLASS HBGetList
+
    LOCAL xRetVal
 
    SWITCH nElement
@@ -1630,7 +1631,7 @@ METHOD ShowGetMsg( oGet, aMsg ) CLASS HBGetList
 
       IF !Empty( cMsg )
          lMOldState := MSetCursor( .F. )
-         hb_dispOutAt( aMsg[ MSGROW ], aMsg[ MSGLEFT ], PadC( cMsg, aMsg[ MSGRIGHT ] - aMsg[ MSGLEFT ] + 1 ), aMsg[ MSGCOLOR ] )
+         hb_DispOutAt( aMsg[ MSGROW ], aMsg[ MSGLEFT ], PadC( cMsg, aMsg[ MSGRIGHT ] - aMsg[ MSGLEFT ] + 1 ), aMsg[ MSGCOLOR ] )
          MSetCursor( lMOldState )
       ENDIF
    ENDIF

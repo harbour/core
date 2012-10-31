@@ -20,7 +20,7 @@
       Useful for using FT_INT86().
    $EXAMPLES$
       FT_INT86( HEX2DEC( "21" ), aRegs )
-  
+
       Converts 21h, the Dos Interrupt, to its decimal equivalent,
       33, for use by FT_INT86().
    $END$

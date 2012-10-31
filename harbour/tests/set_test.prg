@@ -86,8 +86,9 @@ PROCEDURE Main()
 
 PROCEDURE testline( c, n )
 
-   ? Str( n, 3 ) ,;
-     PadR( c, 20 ) ,;
-     Set( n )
+   ? ;
+      Str( n, 3 ),;
+      PadR( c, 20 ),;
+      Set( n )
 
    RETURN

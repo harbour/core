@@ -65,6 +65,7 @@ STATIC FUNCTION port_send( h, s )
    RETURN hb_comSend( h, s )
 
 STATIC FUNCTION port_rece( h, n, t )
+
    LOCAL cString
 
    IF ! HB_ISNUMERIC( n )
@@ -82,6 +83,7 @@ STATIC FUNCTION port_rece( h, n, t )
    RETURN cString
 
 FUNCTION sms_Send( cPort, cPhoneNo, cText, lNotification, cPIN )
+
    LOCAL smsctx
    LOCAL nRetVal
 
@@ -96,6 +98,7 @@ FUNCTION sms_Send( cPort, cPhoneNo, cText, lNotification, cPIN )
    RETURN nRetVal
 
 FUNCTION sms_ReceiveAll( cPort, cPIN )
+
    LOCAL smsctx
    LOCAL aRetVal
 
@@ -117,6 +120,7 @@ FUNCTION sms_ReceiveAll( cPort, cPIN )
 #define _SMSCTX_MAX_          3
 
 FUNCTION smsctx_New( xPort )
+
    LOCAL smsctx[ _SMSCTX_MAX_ ]
 
    IF HB_ISNUMERIC( xPort )
@@ -160,6 +164,7 @@ FUNCTION smsctx_Close( smsctx )
    RETURN .T.
 
 FUNCTION smsctx_Send( smsctx, cPhoneNo, cText, lNotification )
+
    LOCAL tmp
 
    IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
@@ -243,6 +248,7 @@ FUNCTION smsctx_Receive( smsctx )
    RETURN {}
 
 FUNCTION smsctx_PIN( smsctx, cPIN )
+
    LOCAL cOldValue
 
    IF ! HB_ISARRAY( smsctx ) .OR. Len( smsctx ) != _SMSCTX_MAX_
@@ -265,11 +271,13 @@ STATIC FUNCTION StripCRLF( cString )
    RETURN StrTran( cString, Chr( 13 ) + Chr( 10 ) )
 
 STATIC FUNCTION IsOK( cString )
+
    LOCAL tmp := GetLines( cString )
 
    RETURN ! Empty( tmp ) .AND. ATail( tmp ) == "OK"
 
 STATIC FUNCTION GetLines( cString )
+
    LOCAL aLine := {}
    LOCAL tmp
 
@@ -287,6 +295,7 @@ STATIC FUNCTION GetLines( cString )
    RETURN aLine
 
 STATIC FUNCTION GetList( cString )
+
    LOCAL aList := {}
    LOCAL tmp
 
@@ -297,6 +306,7 @@ STATIC FUNCTION GetList( cString )
    RETURN aList
 
 STATIC FUNCTION MakeList( aList )
+
    LOCAL cString := ""
    LOCAL tmp
 

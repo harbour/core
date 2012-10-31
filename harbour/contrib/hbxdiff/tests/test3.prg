@@ -18,7 +18,7 @@ FUNCTION Diff( ... )
 
    RETURN 0
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL pMMFOld, pMMFNew
    LOCAL cFileCtx
@@ -26,7 +26,7 @@ PROCEDURE main()
    pMMFOld := xdl_init_mmfile( XDLT_STD_BLKSIZE )
    pMMFNew := xdl_init_mmfile( XDLT_STD_BLKSIZE, XDL_MMF_ATOMIC )
 
-   cFileCtx := hb_memoRead( __FILE__ )
+   cFileCtx := hb_MemoRead( __FILE__ )
 
    xdl_write_mmfile( pMMFOld, @cFileCtx )
    xdl_write_mmfile( pMMFNew, cFileCtx + hb_eol() + Space( 3 ) + "RETURN NIL" + hb_eol() )

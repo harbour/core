@@ -104,10 +104,10 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    hb_default( @cBaseImage, "57chevy.gif" )
 
    IF ! hb_FileExists( IMAGES_IN + cBaseImage )
-      //hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
-      //THROW( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
+      // hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
+      // THROW( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
       RETURN NIL
-      //ELSE
+      // ELSE
       //   hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' FOUND" )
    ENDIF
 
@@ -156,7 +156,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    /* extracts single digits */
    FOR n := 1 TO nDigits
       oTemp := oIDigits:Copy( ( n - 1 ) * nNumWidth, 0, nNumWidth, nHeight )
-      //oTemp:SaveGif( IMAGES_OUT + StrZero( n - 1, 2 ) + ".gif" )
+      // oTemp:SaveGif( IMAGES_OUT + StrZero( n - 1, 2 ) + ".gif" )
       // Here I have to clone the image, otherwise on var destruction I loose
       // the image in memory
       AAdd( aNumberImages, oTemp:Clone() )
@@ -184,7 +184,7 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
       // Retrieve the number from array in memory
       oTemp := aNumberImages[ Val( SubStr( cValue, n, 1 ) ) + 1 ]:Clone()
       // Save it to show the number for a position
-      //oTemp:SaveGif( IMAGES_OUT + "Pos_" + StrZero( n, 2 ) + ".gif" )
+      // oTemp:SaveGif( IMAGES_OUT + "Pos_" + StrZero( n, 2 ) + ".gif" )
       // Set the digit as tile that I have to use to fill position in counter
       oI:SetTile( oTemp )
       // Fill the position with the image digit

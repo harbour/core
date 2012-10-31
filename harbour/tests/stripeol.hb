@@ -13,6 +13,7 @@
 #include "directry.ch"
 
 PROCEDURE Main( cMask )
+
    LOCAL aFile
 
    hb_default( @cMask, "*.txt" )
@@ -24,6 +25,7 @@ PROCEDURE Main( cMask )
    RETURN
 
 FUNCTION __stripeol( cFile )
+
    LOCAL cOK := ""
    LOCAL cLine
 

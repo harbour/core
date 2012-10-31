@@ -34,6 +34,7 @@
 #if defined( __HBSCRIPT__HBMK_PLUGIN )
 
 FUNCTION hbmk_plugin_bison( hbmk )
+
    LOCAL cRetVal := ""
 
    LOCAL cSrc
@@ -107,19 +108,20 @@ FUNCTION hbmk_plugin_bison( hbmk )
             FOR EACH cSrc, cDst IN hbmk[ "vars" ][ "aBIS_Src" ], hbmk[ "vars" ][ "aBIS_Dst" ]
 
                IF hbmk[ "lINC" ] .AND. ! hbmk[ "lREBUILD" ]
-                  lBuildIt := ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
-                              ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
-                              tSrc > tDst
+                  lBuildIt := ;
+                     ! hb_FGetDateTime( cDst, @tDst ) .OR. ;
+                     ! hb_FGetDateTime( cSrc, @tSrc ) .OR. ;
+                     tSrc > tDst
                ELSE
                   lBuildIt := .T.
                ENDIF
 
                IF lBuildIt
 
-                  cCommand := hbmk[ "vars" ][ "cBIS_BIN" ] +;
-                              " -d -p hb_comp" +;
-                              " -o " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cDst ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] ) +;
-                              " " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cSrc ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] )
+                  cCommand := hbmk[ "vars" ][ "cBIS_BIN" ] + ;
+                     " -d -p hb_comp" + ;
+                     " -o " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cDst ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] ) + ;
+                     " " + hbmk_FNameEscape( hbmk_PathSepToTarget( hbmk, cSrc ), hbmk[ "nCmd_Esc" ], hbmk[ "nCmd_FNF" ] )
 
                   IF hbmk[ "lTRACE" ]
                      IF ! hbmk[ "lQUIET" ]
@@ -148,8 +150,9 @@ FUNCTION hbmk_plugin_bison( hbmk )
    CASE "post_all"
 
       IF ! hbmk[ "lINC" ] .OR. hbmk[ "lCLEAN" ]
-         AEval( hbmk[ "vars" ][ "aBIS_Dst" ], {| tmp | FErase( tmp ),;
-                                                       FErase( HB_FNameExtSet( tmp, ".h" ) ) } )
+         AEval( hbmk[ "vars" ][ "aBIS_Dst" ], {| tmp | ;
+            FErase( tmp ), ;
+            FErase( hb_FNameExtSet( tmp, ".h" ) ) } )
       ENDIF
 
       EXIT
@@ -159,6 +162,7 @@ FUNCTION hbmk_plugin_bison( hbmk )
    RETURN cRetVal
 
 STATIC FUNCTION tool_detect( hbmk, cName )
+
    LOCAL cBIN
    LOCAL aEnvList := { "HB_BISONPATH" }
 
@@ -182,7 +186,9 @@ STATIC FUNCTION tool_detect( hbmk, cName )
 #else
 
 PROCEDURE Main()
+
    ? "Cannot be run in standalone mode. Use it with -plugin= option of hbmk2."
+
    RETURN
 
 #endif

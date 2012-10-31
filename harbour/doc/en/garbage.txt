@@ -15,12 +15,12 @@
       The garbage collector uses the following logic:
       - first collect all memory allocations that can cause garbage;
       - next scan all variables if these memory blocks are still referenced.
-  
+
       Notice that only arrays, objects and codeblocks are collected because
       these are the only datatypes that can cause self-references (a[1]:=a)
       or circular references (a[1]:=b; b[1]:=c; c[1]:=a) that cannot be
       properly deallocated by simple reference counting.
-  
+
       Since all variables in harbour are stored inside some available tables
       (the eval stack, memvars table and array of static variables) then checking
       if the reference is still alive is quite easy and doesn't require any
@@ -29,7 +29,7 @@
       implementation that also stores some values that can contain memory
       references. These data are used to initialize class instance variables
       and are stored in class shared variables.
-  
+
       In special cases when the value of a harbour variable is stored internally
       in some static area (at C or assembler level), the garbage collector will
       be not able to scan such values since it doesn't know their location. This
@@ -38,44 +38,44 @@
       a pointer to the value created with hb_itemNew() function.
       Example:
         static HB_ITEM s_item; // this item can be released by the GC
-  
+
         static PHB_ITEM pItem; // this item will be maintained correctly
         pItem = hb_itemNew( hb_param(1, IT_BLOCK) );
-  
+
       However, scanning of all variables can be a time consuming operation. It
       requires that all allocated arrays have to be traversed through all their
       elements to find more arrays. Also all codeblocks are scanned for detached
       local variables they are referencing. For this reason, looking for unreferenced
       memory blocks is performed during the idle states.
-  
+
       The idle state is a state when there is no real application code
       executed. For example, the user code is stopped for 0.1 of a second
       during INKEY(0.1) - Harbour is checking the keyboard only
       during this time. It leaves however quite enough time for
       many other background tasks. One such background task can be looking
       for unreferenced memory blocks.
-  
+
       Allocating memory    </par>
       -----------------
-  
+
       The garbage collector collects memory blocks allocated with hb_gcAlloc()
       function calls. Memory allocated by hb_gcAlloc() should be released with
       hb_gcFree() function.
-  
+
       The garbage collecting   </par>
       ----------------------
-  
+
       During scanning of unreferenced memory the GC is using a mark & sweep
       algorithm. This is done in three steps:
-  
+
       1) mark all memory blocks allocated by the GC with unused flag;
-  
+
       2) sweep (scan) all known places and clear unused flag for memory
       blocks that are referenced there;
-  
+
       3) finalize collecting by deallocation of all memory blocks that are
       still marked as unused and that are not locked.
-  
+
       To speed things up, the mark step is simplified by swapping the meaning
       of the unused flag. After deallocation of unused blocks all still alive
       memory blocks are marked with the same 'used' flag so we can reverse
@@ -84,10 +84,10 @@
       using the current flag, which assures that all memory blocks are marked
       with the same flag before the sweep step will start.
       See hb_gcCollectAll()  and hb_gcItemRef()
-  
+
       Calling the garbage collector from harbour code   </par>
       -----------------------------------------------
-  
+
       The garbage collector can be called directly from the harbour code.
       This is usefull in situations where there is no idle states available
       or the application is working in the loop with no user interaction
@@ -116,7 +116,7 @@
       HB_GARBAGE_FUNC_PTR pCleanupFunc );
    $ARGUMENTS$
       <ulSize> Requested size of memory block
-  
+
       <pCleanupFunc> Pointer to HB_GARBAGE_FUNC function that will be called
       directly before releasing the garbage memory block or NULL. This
       function should release all other memory allocated and stored inside
@@ -236,7 +236,7 @@
       scanning of referenced memory pointers. This function checks the
       type of passed item and scans recursively all other memory blocks
       referenced by this item if it is an array, an object or a codeblock.
-  
+
       NOTE: This function is reserved for the garbage collector only. It
             cannot be called from the user code - calling it can cause
             unpredicted results (memory blocks referenced by the

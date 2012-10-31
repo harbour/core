@@ -8,14 +8,14 @@ PROCEDURE Main()
 
    USE test.csv VIA "FCOMMA"
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
-      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+      "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    ? RecNo(), '"' + FIELD->LINE + '"'
    dbGoBottom()
    ? RecNo(), '"' + FIELD->LINE + '"'
    dbGoTop()
    ? RecNo(), '"' + FIELD->LINE + '"'
    WAIT
-   DO WHILE !EOF()
+   DO WHILE !Eof()
       ? RecNo(), '"' + FIELD->LINE + '"'
       IF RecNo() == 20
          Inkey( 0 )
@@ -23,13 +23,13 @@ PROCEDURE Main()
       dbSkip()
    ENDDO
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
-      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+      "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    WAIT
    dbGoBottom()
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
-      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+      "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    WAIT
-   DO WHILE !BOF()
+   DO WHILE !Bof()
       ? RecNo(), '[' + FIELD->LINE + ']'
       IF RecNo() == LastRec() - 20
          Inkey( 0 )
@@ -37,7 +37,7 @@ PROCEDURE Main()
       dbSkip( -1 )
    ENDDO
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
-      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+      "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    WAIT
    Browse()
 

@@ -97,9 +97,9 @@ CREATE CLASS TCgiFile
 
    METHOD GoBottom() INLINE FSeek( ::Handle, 0, FS_END )
 
-   METHOD BOF() INLINE( FPOS( ::Handle ) == 0 )
+   METHOD Bof() INLINE( FPOS( ::Handle ) == 0 )
 
-   METHOD EOF() INLINE FPOS( ::Handle ) == ::FileSize
+   METHOD Eof() INLINE FPOS( ::Handle ) == ::FileSize
 
    METHOD SEEK( n, o ) INLINE FSeek( ::Handle, n, o )
 
@@ -206,7 +206,7 @@ METHOD _Read( nSize, cBuff ) CLASS TCgiFile
    ::BytesRead := FRead( ::Handle, @cBuff, nSize )
    ::Buffer    := cBuff
 
-   RETURN cBuff    //nBytesRead )
+   RETURN cBuff    // nBytesRead )
 
 /*
 **   ::ReadAhead( [<nSize>], [@<cBuff>] ) --> nBytesRead
@@ -352,7 +352,7 @@ METHOD GOTO( nLine ) CLASS TCgiFile
       RETURN nPos
    ENDIF
 
-   WHILE !::EOF()
+   WHILE !::Eof()
 
       ::ReadLine()
 
@@ -385,7 +385,7 @@ METHOD SKIP( nLines ) CLASS TCgiFile
 
    ENDIF
 
-   WHILE !::EOF()
+   WHILE !::Eof()
 
       IF nCount == nLines
          EXIT
@@ -419,7 +419,7 @@ METHOD PrevPage( nBytes ) CLASS TCgiFile
       RETURN ""
    ENDIF
 
-   IF !::BOF()
+   IF !::Bof()
       FSeek( ::Handle, - nBytes, FS_RELATIVE )
       ::cPage := FReadStr( ::Handle, nBytes )
       FSeek( ::Handle, - nBytes, FS_RELATIVE )
@@ -440,7 +440,7 @@ METHOD NextPage( nBytes ) CLASS TCgiFile
       RETURN ""
    ENDIF
 
-   IF !::EOF()
+   IF !::Eof()
       ::cPage := FReadStr( ::Handle, nBytes )
       ::nPage++
    ENDIF

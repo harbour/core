@@ -36,7 +36,7 @@ FUNCTION FT_INVCLR( cDsrdColor )
 
    // Get Any Modifiers
    cModifiers := ;
-      iif( "*" $ cDsrdColor, "*", "" ) +;
+      iif( "*" $ cDsrdColor, "*", "" ) + ;
       iif( "+" $ cDsrdColor, "+", "" )
 
    // Separate the Fore/Background Colors

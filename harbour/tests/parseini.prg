@@ -23,7 +23,7 @@ PROCEDURE Main( cName )
 
    IF Empty( cName )
       cName := "parseini.ini"
-      @nRow++ , 5 SAY "Using default parseini.ini file"
+      @ nRow++, 5 SAY "Using default parseini.ini file"
    ENDIF
 
    hIni := hb_iniRead( cName )
@@ -101,7 +101,7 @@ PROCEDURE Main( cName )
    hIni[ "Added" ][ "NEW" ] := "new"
 
    ? "Writing output to parseini_out1.ini"
-   IF hb_IniWrite( "parseini_out1.ini", hIni,;
+   IF hb_iniWrite( "parseini_out1.ini", hIni,;
                    "#Generated file without main auto section; don't touch", "#End of file",;
                    .F. )
       ? "File written"
@@ -118,7 +118,7 @@ PROCEDURE Main( cName )
    ? "WRITING INI TO A STRING"
    ?
 
-   cIni := hb_IniWriteStr( hIni )
+   cIni := hb_iniWriteStr( hIni )
 
    ? "Content of hIni : "
    ?
@@ -133,7 +133,7 @@ PROCEDURE Main( cName )
    ? "READING INI FILE FROM A STRING"
    ?
 
-   hIni := hb_IniReadStr( cIni,; /*default case*/
+   hIni := hb_iniReadStr( cIni,; /*default case*/
             ,; /*Default key indicators */
             , .F. )
 
@@ -171,7 +171,7 @@ PROCEDURE Main( cName )
    ? "WRITING INI FILE TO A STRING "
    ?
 
-   cIni := hb_IniWriteStr( hb_IniRead( cName ) )
+   cIni := hb_iniWriteStr( hb_iniRead( cName ) )
 
    ? "Content of " + cName
    ?

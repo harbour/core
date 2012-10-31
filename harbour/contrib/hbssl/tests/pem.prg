@@ -14,6 +14,7 @@
 #include "hbssl.ch"
 
 PROCEDURE Main()
+
    LOCAL cString
    LOCAL bio
    LOCAL bioe
@@ -55,7 +56,7 @@ VGue9TIkMgy7RW1VFWLcLsCArTEAl83bv+BQ+YaPp9aLNq8bL5vfU2od0R7LXIOe
 jH09fWcojNNLfmZU0Jzy7viUiScTtNqpqoH0qPI1hkisvELqXKhW1Lpkr56Ij8IL
 B0NDIZKbaPJHHPb9Ne7nQECzv0/kzmAley9UMTZ1M7fq6KYemR0LsA==
 -----END RSA PRIVATE KEY-----
-ENDTEXT
+#pragma __endtext
 
    ? PEM_READ_BIO_RSAPRIVATEKEY( bio := BIO_new_mem_buf( cString ), {| lWrite | QOut( "Callback", lWrite, hb_eol() ), "test" } )
    ? ; ERR_print_errors( bioe )
@@ -72,9 +73,13 @@ ENDTEXT
    RETURN
 
 STATIC FUNCTION cb_function( lWrite )
+
    ? "Callback (func)", lWrite
+
    RETURN "test"
 
 STATIC FUNCTION Output( ... )
+
    ? ...
+
    RETURN NIL

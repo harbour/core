@@ -423,7 +423,7 @@ METHOD absolute( nMove ) CLASS hdbcSQLTResultSet
          RETURN .T.
       ENDIF
    ELSEIF nMove < 0
-      if - nMove <= ::nRows
+      IF -nMove <= ::nRows
          ::nRow := ::nRows + nMove
          ::lBeforeFirst := .F.
          ::lAfterLast := .F.

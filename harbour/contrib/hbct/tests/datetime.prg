@@ -156,14 +156,14 @@ PROCEDURE Main( cLang )
 
    RETURN
 
-//:
+//
 
 FUNCTION addmtest()
 
-   //:
-   //: addmonth(dDate, nMonths)
-   //: =========================
-   //: This version will only accept an nMonths value of from 0 to 70
+   //
+   // addmonth(dDate, nMonths)
+   // =========================
+   // This version will only accept an nMonths value of from 0 to 70
 
    LOCAL getlist := {}
    LOCAL dDate   := SToD()
@@ -205,13 +205,13 @@ FUNCTION addmtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION bomtest()
 
-   //:
-   //: bom( dDate )
-   //: =============
+   //
+   // bom( dDate )
+   // =============
 
    LOCAL getlist := {}
    LOCAL dDate   := SToD()
@@ -249,13 +249,13 @@ FUNCTION bomtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION boqtest()
 
-   //:
-   //: bom( dDate )
-   //: =============
+   //
+   // bom( dDate )
+   // =============
 
    LOCAL getlist := {}
    LOCAL dDate   := SToD()
@@ -295,13 +295,13 @@ FUNCTION boqtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION boytest()
 
-   //:
-   //: boy( dDate )
-   //: =============
+   //
+   // boy( dDate )
+   // =============
 
    LOCAL getlist := {}
    LOCAL dDate   := SToD()
@@ -341,16 +341,16 @@ FUNCTION boytest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION ctodowtest()
 
-   //:
-   //: ctodow( cDow )
-   //: ==============
-   //: Convert name of day of the week to its ordinal number
-   //: if cDow is invalid, returns 0
-   //: English day names only.
+   //
+   // ctodow( cDow )
+   // ==============
+   // Convert name of day of the week to its ordinal number
+   // if cDow is invalid, returns 0
+   // English day names only.
 
    LOCAL getlist := {}
    LOCAL cDow    := Space( 9 )
@@ -390,15 +390,15 @@ FUNCTION ctodowtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION ctomonthtest()
 
-   //:
-   //: ctomonth(cDom )
-   //: ===============
-   //: Convert the name of a month to its ordinal number. If cMonth is
-   //: invalid, ctomonth() Returns 0. English month names only
+   //
+   // ctomonth(cDom )
+   // ===============
+   // Convert the name of a month to its ordinal number. If cMonth is
+   // invalid, ctomonth() Returns 0. English month names only
 
    LOCAL getlist := {}
    LOCAL cDom    := Space( 9 )
@@ -438,15 +438,15 @@ FUNCTION ctomonthtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION dInMonthtest()
 
-   //:
-   //: daysInMonth( xDate, lleap )
-   //: ============================
-   //: Returns the number of days in nMonth, either whose name as a
-   //: string or month number is passed. English Month names only.
+   //
+   // daysInMonth( xDate, lleap )
+   // ============================
+   // Returns the number of days in nMonth, either whose name as a
+   // string or month number is passed. English Month names only.
 
    LOCAL getlist := {}
    LOCAL cMonth  := Space( 9 )
@@ -506,16 +506,16 @@ FUNCTION dInMonthtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION d2month()
 
-   //:
-   //: daystomonth()
-   //: =============
-   //: Total number days from first of Jan to beginning of nMonth.
-   //: lLeap is .F. for a non-leap year but .T. if it is. If so and
-   //: nMonth is greater than 2, ndays is incremented.
+   //
+   // daystomonth()
+   // =============
+   // Total number days from first of Jan to beginning of nMonth.
+   // lLeap is .F. for a non-leap year but .T. if it is. If so and
+   // nMonth is greater than 2, ndays is incremented.
 
    LOCAL getlist := {}
    LOCAL cMonth  := Space( 2 )
@@ -564,17 +564,17 @@ FUNCTION d2month()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION dmytest()
 
-   //:
-   //: dmy( dDate, lmode)
-   //: ===================
-   //: Returns the date as a string in DD Month YY format. If lmode
-   //: is .T., a "." is inserted after the DD
-   //: This version does not observe the Nations module. English
-   //: only.
+   //
+   // dmy( dDate, lmode)
+   // ===================
+   // Returns the date as a string in DD Month YY format. If lmode
+   // is .T., a "." is inserted after the DD
+   // This version does not observe the Nations module. English
+   // only.
 
    LOCAL getlist := {}
    LOCAL dDate   := SToD()
@@ -621,15 +621,15 @@ FUNCTION dmytest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION doytest()
 
-   //:
-   //: doy( dDate )
-   //: =============
-   //: Determines the day of the year for a specific date
-   //: if dDate is invalid, returns 0
+   //
+   // doy( dDate )
+   // =============
+   // Determines the day of the year for a specific date
+   // if dDate is invalid, returns 0
 
    LOCAL getlist := {}
    LOCAL dDate   := SToD()
@@ -669,15 +669,15 @@ FUNCTION doytest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION eomtest()
 
-   //:
-   //: dBom := eom( dDate )
-   //: =====================
-   //: Returns the last date in the month of the month appearing in
-   //: date.
+   //
+   // dBom := eom( dDate )
+   // =====================
+   // Returns the last date in the month of the month appearing in
+   // date.
 
    LOCAL getlist := {}
    LOCAL dDate := SToD()
@@ -718,14 +718,14 @@ FUNCTION eomtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION eoqtest()
 
-   //:
-   //: dret := eoq( dDate )
-   //: =====================
-   //: Returns the last date in the quarter in which dDate falls.
+   //
+   // dret := eoq( dDate )
+   // =====================
+   // Returns the last date in the quarter in which dDate falls.
 
    LOCAL getlist := {}
    LOCAL dDate := SToD()
@@ -766,15 +766,15 @@ FUNCTION eoqtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION eoytest()
 
-   //:
-   //: dEoy := eoy( dDate )
-   //: =====================
-   //: Returns the last date in the year of the year appearing in
-   //: date.
+   //
+   // dEoy := eoy( dDate )
+   // =====================
+   // Returns the last date in the year of the year appearing in
+   // date.
 
    LOCAL getlist := {}
    LOCAL dDate := SToD()
@@ -815,15 +815,15 @@ FUNCTION eoytest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION isleaptest()
 
-   //:
-   //:  lRet :=  isleap( dDate )
-   //:  ========================
-   //:  if dDate is a leap year, lRet is .T., otherwise .F..
-   //:  Leap years are exactly divisible by 4 and 1,000 but not 100.
+   //
+   // lRet :=  isleap( dDate )
+   // ========================
+   // if dDate is a leap year, lRet is .T., otherwise .F..
+   // Leap years are exactly divisible by 4 and 1,000 but not 100.
 
    LOCAL getlist := {}
    LOCAL dDate := SToD()
@@ -870,17 +870,17 @@ FUNCTION isleaptest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION lastdayomtest()
 
-   //:
-   //:   ndays := lastdayom( xDate )
-   //:   ===========================
-   //: Returns the the number of days in the month.
-   //: xDate can be a date or a month number. If empty uses the
-   //: system date.
-   //: If xDate is invalid, returns 0
+   //
+   //  ndays := lastdayom( xDate )
+   //  ===========================
+   // Returns the the number of days in the month.
+   // xDate can be a date or a month number. If empty uses the
+   // system date.
+   // If xDate is invalid, returns 0
 
    LOCAL getlist := {}
    LOCAL dDate := SToD()
@@ -896,7 +896,7 @@ FUNCTION lastdayomtest()
       @ 10, 10 SAY "a month"
 
       @  9, 30 GET dDate
-      @ 10, 38 GET cMth PICTURE "99"       //valid val(cmth) < 12
+      @ 10, 38 GET cMth PICTURE "99"       // VALID Val( cmth ) < 12
 
       SET CONFIRM ON
       SET ESCAPE ON
@@ -930,16 +930,16 @@ FUNCTION lastdayomtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION mdytest()
 
-   //:
-   //:  cDate := mdy( dDate )
-   //:  ======================
-   //: Returns the date as a string in "Month DD, YY" or "Month DD, YYYY"
-   //: If dDate is NULL, the system date is used
-   //: This version does not observe the Nations module. English only.
+   //
+   // cDate := mdy( dDate )
+   // ======================
+   // Returns the date as a string in "Month DD, YY" or "Month DD, YYYY"
+   // If dDate is NULL, the system date is used
+   // This version does not observe the Nations module. English only.
 
    LOCAL getlist := {}
    LOCAL dDate := SToD()
@@ -981,16 +981,16 @@ FUNCTION mdytest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION ntocdowtest()
 
-   //:
-   //:  cDay :=  ntocdow( nDayNum )
-   //:  ==================================
-   //:  ntocdow() receives the number of a day and returns its
-   //:  name as a string. This version does not observe the Nations
-   //:  module. English only.
+   //
+   // cDay :=  ntocdow( nDayNum )
+   // ==================================
+   // ntocdow() receives the number of a day and returns its
+   // name as a string. This version does not observe the Nations
+   // module. English only.
 
    LOCAL getlist := {}
    LOCAL cDay := "  "
@@ -1031,16 +1031,16 @@ FUNCTION ntocdowtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION ntocmthtest()
 
-   //:
-   //:  cMonth :=  ntocmonth( nMonthNum )
-   //:  ==================================
-   //:  ntocmonth() receives the number of a month and returns its
-   //:  name as a string. This version does not observe the Nations
-   //:  module. English only.
+   //
+   // cMonth :=  ntocmonth( nMonthNum )
+   // ==================================
+   // ntocmonth() receives the number of a month and returns its
+   // name as a string. This version does not observe the Nations
+   // module. English only.
 
    LOCAL getlist := {}
    LOCAL cMonth := "  "
@@ -1081,15 +1081,15 @@ FUNCTION ntocmthtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION qtrtest()
 
-   //:
-   //:  nqtr := quarter( dDate )
-   //:  ===========================
-   //:  Returns the quarter as a number. If no date is specified,
-   //:  the system date is used.
+   //
+   // nqtr := quarter( dDate )
+   // ===========================
+   // Returns the quarter as a number. If no date is specified,
+   // the system date is used.
 
    LOCAL getlist := {}
    LOCAL dDate  := SToD()
@@ -1130,15 +1130,15 @@ FUNCTION qtrtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION stodtest()
 
-   //:
-   //:  stod( ansi-date)
-   //:  ================
-   //:  Returns a Clipper format date. If Ansi date is invalid, a
-   //:  null date is returned.
+   //
+   // stod( ansi-date)
+   // ================
+   // Returns a Clipper format date. If Ansi date is invalid, a
+   // null date is returned.
 
    LOCAL getlist   := {}
    LOCAL dDate
@@ -1181,11 +1181,11 @@ FUNCTION stodtest()
 
    RETURN NIL
 
-//:
+//
 
 FUNCTION chkansi( cAnsidate )
 
-   //:
+   //
    LOCAL nYear
    LOCAL nMonth
    LOCAL nDay
@@ -1207,16 +1207,16 @@ FUNCTION chkansi( cAnsidate )
 
    RETURN lretval
 
-//:
+//
 
 FUNCTION weektest()
 
-   //:
-   //:  nWeek := week( dDate, lSWN )
-   //:  =============================
-   //:  Returns the calendar week as a number. If no date is specified,
-   //:  the system date is used. An empty date viz stod()
-   //:  returns 0.
+   //
+   // nWeek := week( dDate, lSWN )
+   // =============================
+   // Returns the calendar week as a number. If no date is specified,
+   // the system date is used. An empty date viz stod()
+   // returns 0.
 
    LOCAL getlist := {}
    LOCAL dDate  := SToD()

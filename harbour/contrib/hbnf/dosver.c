@@ -60,7 +60,7 @@ HB_FUNC( FT_DOSVER )
 {
 #if defined( HB_OS_DOS )
    {
-      char * pszPlatform = ( char * ) hb_xgrab( 256 );
+      char *     pszPlatform = ( char * ) hb_xgrab( 256 );
       union REGS regs;
 
       regs.h.ah = 0x30;

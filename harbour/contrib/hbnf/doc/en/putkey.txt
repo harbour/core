@@ -23,20 +23,20 @@
       Inkey() value, you can stuff any key, including function keys, into
       the keyboard buffer. However, this also means that unlike the KEYBOARD
       command, you can only stuff one keystroke at a time.
-  
+
       You can easily create a User-Defined Command that makes this function
       even more like the KEYBOARD command.  For example,
-  
+
          #command KEYSTROKE <key> => FT_PUTKEY( <key> )
-  
+
       will create a command called KEYSTROKE that could be used as a
       companion command to KEYBOARD.  The only difference is that it would
       insert a single keystroke instead of a string.
-  
+
       Be aware that this function makes use of Clipper's internal event
       handler.  If you don't like using internals, then don't use this
       function, you sniveling coward.
-  
+
       This function is written to adhere to Turbo Assembler's IDEAL mode.
       To use another assembler, rearrange the SEGMENT and PROC directives
       and make any other necessary changes to the source code.

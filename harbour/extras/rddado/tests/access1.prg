@@ -11,7 +11,7 @@ PROCEDURE Main()
    SET DATE ANSI
    SET CENTURY ON
 
-   USE ( hb_dirBase() + "test.mdb" ) VIA "ADORDD" TABLE "Table1"
+   USE ( hb_DirBase() + "test.mdb" ) VIA "ADORDD" TABLE "Table1"
 
    Browse()
 

@@ -41,6 +41,7 @@ STATIC s_lNoAlert
 #endif
 
 FUNCTION Alert( cMessage, aOptions, cColorNorm )
+
    LOCAL cColorHigh
    LOCAL aOptionsOK
    LOCAL cOption
@@ -71,8 +72,8 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
-      cColorHigh := StrTran( StrTran( iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" +;
-                                      iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
+      cColorHigh := StrTran( StrTran( iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" + ;
+         iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
    ENDIF
 
    aOptionsOK := {}
@@ -85,8 +86,7 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
    IF Len( aOptionsOK ) == 0
       aOptionsOK := { "Ok" }
 #ifdef HB_CLP_STRICT
-   /* NOTE: Clipper allows only four options [vszakats] */
-   ELSEIF Len( aOptionsOK ) > 4
+   ELSEIF Len( aOptionsOK ) > 4 /* NOTE: Clipper allows only four options [vszakats] */
       ASize( aOptionsOK, 4 )
 #endif
    ENDIF
@@ -97,6 +97,7 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
 /* NOTE: nDelay parameter is a Harbour extension over Alert(). */
 
 FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
+
    LOCAL cMessage
    LOCAL cColorHigh
    LOCAL aOptionsOK
@@ -138,8 +139,8 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
       cColorHigh := "W+/B" // second pair color (Options buttons)
    ELSE
-      cColorHigh := StrTran( StrTran( iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" +;
-                                      iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
+      cColorHigh := StrTran( StrTran( iif( At( "/", cColorNorm ) == 0, "N", SubStr( cColorNorm, At( "/", cColorNorm ) + 1 ) ) + "/" + ;
+         iif( At( "/", cColorNorm ) == 0, cColorNorm, Left( cColorNorm, At( "/", cColorNorm ) - 1 ) ), "+", "" ), "*", "" )
    ENDIF
 
    aOptionsOK := {}
@@ -152,8 +153,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
    IF Len( aOptionsOK ) == 0
       aOptionsOK := { "Ok" }
 #ifdef HB_CLP_STRICT
-   /* NOTE: Clipper allows only four options [vszakats] */
-   ELSEIF Len( aOptionsOK ) > 4
+   ELSEIF Len( aOptionsOK ) > 4 /* NOTE: Clipper allows only four options [vszakats] */
       ASize( aOptionsOK, 4 )
 #endif
    ENDIF
@@ -162,7 +162,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
 
 #ifdef HB_CLP_UNDOC
 
-PROCEDURE __NONOALERT()
+PROCEDURE __NoNoAlert()
 
    s_lNoAlert := .F.
 

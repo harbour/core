@@ -36,8 +36,9 @@ FUNCTION FT_ELTIME( cTIME1, cTIME2 )
    nMINS    := Int( ( nDELSECS - nHRS * 3600 ) / 60 )
    nSECS    := nDELSECS - ( nHRS * 3600 ) - ( nMINS * 60 )
 
-   RETURN Right( "00" + hb_ntos( nHRS ), 2 ) + ;
-          ":" + ;
-          Right( "00" + hb_ntos( nMINS ), 2 ) + ;
-          ":" + ;
-          Right( "00" + hb_ntos( nSECS ), 2 )
+   RETURN ;
+      Right( "00" + hb_ntos( nHRS ), 2 ) + ;
+      ":" + ;
+      Right( "00" + hb_ntos( nMINS ), 2 ) + ;
+      ":" + ;
+      Right( "00" + hb_ntos( nSECS ), 2 )

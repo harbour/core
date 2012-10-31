@@ -41,8 +41,8 @@ FUNCTION FT_ASUM( aArray, nStartIndex, nEndIndex )
       {| xElement | ;
       nSumTotal += ;
       CASE_AT( ValType( xElement ), "NC", ;
-         { 0, xElement, ;
-         iif( HB_ISSTRING( xElement ), Len( xElement ), 0 ) } ) }, ;
-         nStartIndex, nEndIndex - nStartIndex + 1 )
+      { 0, xElement, ;
+      iif( HB_ISSTRING( xElement ), Len( xElement ), 0 ) } ) }, ;
+      nStartIndex, nEndIndex - nStartIndex + 1 )
 
    RETURN nSumTotal

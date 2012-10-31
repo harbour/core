@@ -71,6 +71,7 @@
 #define SQL_DATE                        SQL_TIMESTAMP
 
 CREATE CLASS TFbServer
+
    VAR      db
    VAR      trans
    VAR      StartedTrans
@@ -468,6 +469,7 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
    RETURN result
 
 CREATE CLASS TFbQuery
+
    VAR      nError
    VAR      lError
    VAR      Dialect
@@ -575,6 +577,7 @@ METHOD Refresh() CLASS TFbQuery
    RETURN result
 
 METHOD Destroy() CLASS TFbQuery
+
    LOCAL result := .T.
    LOCAL n
 
@@ -588,6 +591,7 @@ METHOD Destroy() CLASS TFbQuery
    RETURN result
 
 METHOD Fetch() CLASS TFbQuery
+
    LOCAL result := .F.
    LOCAL fetch_stat
 
@@ -610,6 +614,7 @@ METHOD Fetch() CLASS TFbQuery
    RETURN result
 
 METHOD Struct() CLASS TFbQuery
+
    LOCAL result := {}
    LOCAL i
 
@@ -622,6 +627,7 @@ METHOD Struct() CLASS TFbQuery
    RETURN result
 
 METHOD FieldPos( cField ) CLASS TFbQuery
+
    LOCAL result := 0
 
    IF ! ::lError
@@ -631,6 +637,7 @@ METHOD FieldPos( cField ) CLASS TFbQuery
    RETURN result
 
 METHOD FieldName( nField ) CLASS TFbQuery
+
    LOCAL result
 
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct )
@@ -640,6 +647,7 @@ METHOD FieldName( nField ) CLASS TFbQuery
    RETURN result
 
 METHOD FieldType( nField ) CLASS TFbQuery
+
    LOCAL result
 
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct )
@@ -649,6 +657,7 @@ METHOD FieldType( nField ) CLASS TFbQuery
    RETURN result
 
 METHOD FieldLen( nField ) CLASS TFbQuery
+
    LOCAL result
 
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct )
@@ -658,6 +667,7 @@ METHOD FieldLen( nField ) CLASS TFbQuery
    RETURN result
 
 METHOD FieldDec( nField ) CLASS TFbQuery
+
    LOCAL result
 
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct )
@@ -667,6 +677,7 @@ METHOD FieldDec( nField ) CLASS TFbQuery
    RETURN result
 
 METHOD FieldGet( nField ) CLASS TFbQuery
+
    LOCAL result, aBlob, i, cType
 
    IF ! ::lError .AND. nField >= 1 .AND. nField <= Len( ::aStruct ) .AND. ! ::closed
@@ -687,7 +698,7 @@ METHOD FieldGet( nField ) CLASS TFbQuery
                result += aBlob[ i ]
             NEXT
 
-            //result := FBGetBlob( ::db, result )
+            // result := FBGetBlob( ::db, result )
          ELSE
             result := ""
          ENDIF
@@ -728,7 +739,7 @@ METHOD Getrow() CLASS TFbQuery
       aRow := Array( ::numcols )
 
       FOR i := 1 TO ::numcols
-         aRow[ i ] := ::Fieldget( i )
+         aRow[ i ] := ::FieldGet( i )
       NEXT
 
       result := TFbRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
@@ -778,6 +789,7 @@ METHOD GetKeyField() CLASS TFbQuery
    RETURN ::aKeys
 
 CREATE CLASS TFbRow
+
    VAR      aRow
    VAR      aStruct
    VAR      aChanged
@@ -813,6 +825,7 @@ METHOD new( row, struct, nDb, nDialect, aTable ) CLASS TFbRow
    RETURN self
 
 METHOD Changed( nField ) CLASS TFbRow
+
    LOCAL result
 
    IF nField >= 1 .AND. nField <= Len( ::aRow )
@@ -822,6 +835,7 @@ METHOD Changed( nField ) CLASS TFbRow
    RETURN result
 
 METHOD FieldGet( nField ) CLASS TFbRow
+
    LOCAL result
 
    IF nField >= 1 .AND. nField <= Len( ::aRow )
@@ -831,6 +845,7 @@ METHOD FieldGet( nField ) CLASS TFbRow
    RETURN result
 
 METHOD FieldPut( nField, Value ) CLASS TFbRow
+
    LOCAL result
 
    IF nField >= 1 .AND. nField <= Len( ::aRow )
@@ -841,6 +856,7 @@ METHOD FieldPut( nField, Value ) CLASS TFbRow
    RETURN result
 
 METHOD FieldName( nField ) CLASS TFbRow
+
    LOCAL result
 
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
@@ -853,6 +869,7 @@ METHOD FieldPos( cField ) CLASS TFbRow
    RETURN AScan( ::aStruct, {| x | x[ 1 ] == RTrim( Upper( cField ) ) } )
 
 METHOD FieldType( nField ) CLASS TFbRow
+
    LOCAL result
 
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
@@ -862,6 +879,7 @@ METHOD FieldType( nField ) CLASS TFbRow
    RETURN result
 
 METHOD FieldLen( nField ) CLASS TFbRow
+
    LOCAL result
 
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
@@ -871,6 +889,7 @@ METHOD FieldLen( nField ) CLASS TFbRow
    RETURN result
 
 METHOD FieldDec( nField ) CLASS TFbRow
+
    LOCAL result
 
    IF nField >= 1 .AND. nField <= Len( ::aStruct )
@@ -906,12 +925,12 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
       cQuery += ' where                                       '
       cQuery += '   a.rdb$index_name = b.rdb$index_name and   '
       cQuery += '   b.rdb$constraint_type = "PRIMARY KEY" and '
-      cQuery += '   b.rdb$relation_name = ' + DataToSql(cTable)
+      cQuery += '   b.rdb$relation_name = ' + DataToSql( cTable )
       cQuery += ' order by                                    '
       cQuery += '   b.rdb$relation_name,                      '
       cQuery += '   a.rdb$field_position                      '
 
-      qry := FBQuery(db, RemoveSpaces(cQuery), dialect)
+      qry := FBQuery( db, RemoveSpaces( cQuery ), dialect )
 
       IF HB_ISARRAY( qry )
          DO WHILE FBFetch( qry ) == 0
@@ -982,9 +1001,10 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
    IF HB_ISARRAY( qry )
 
       DO WHILE FBFetch( qry ) == 0
-         AAdd( aDomains, { iif( FBGetdata( qry, 1 ) == NIL, "", FBGetdata( qry, 1 ) ),;
-                           iif( FBGetdata( qry, 2 ) == NIL, "", FBGetdata( qry, 2 ) ),;
-                           iif( FBGetdata( qry, 3 ) == NIL, "", FBGetdata( qry, 3 ) ) } )
+         AAdd( aDomains, { ;
+            iif( FBGetdata( qry, 1 ) == NIL, "", FBGetdata( qry, 1 ) ), ;
+            iif( FBGetdata( qry, 2 ) == NIL, "", FBGetdata( qry, 2 ) ), ;
+            iif( FBGetdata( qry, 3 ) == NIL, "", FBGetdata( qry, 3 ) ) } )
       ENDDO
 
       FBFree( qry )

@@ -56,10 +56,10 @@
 #ifndef __PLATFORM__WINDOWS
 
 FUNCTION WIN32PRN()
-RETURN NIL
+   RETURN NIL
 
 FUNCTION WIN32BMP()
-RETURN NIL
+   RETURN NIL
 
 #else
 
@@ -77,28 +77,32 @@ CREATE CLASS WIN32PRN FROM WIN_PRN
    METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
    METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
    METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
-                      nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
-                      lUpdatePosX, nColor, nAlignHori, nAlignVert )
+      nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
+      lUpdatePosX, nColor, nAlignHori, nAlignVert )
 
    VAR SetTextHori      INIT TA_LEFT      // Default horizontal alignment SetTextAlign() (TEXTOUT)
    VAR SetTextVert      INIT TA_BOTTOM    // Default vertical alignment for SetTextAlign() (TEXTOUT)
 
    /* not implemented */
-//   METHOD TextOutW( wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
-//   METHOD TextOutWAt( nPosX, nPosY, wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
+// METHOD TextOutW( wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
+// METHOD TextOutWAt( nPosX, nPosY, wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
 
 ENDCLASS
 
 METHOD Create() CLASS WIN32PRN
+
    IF ::PaperLength > 0 .AND. ::PaperWidth > 0
       ::FormType := FORM_CUSTOM
    ENDIF
+
    RETURN ::WIN_PRN:Create()
 
 METHOD StartPage() CLASS WIN32PRN
+
    IF ::PaperLength > 0 .AND. ::PaperWidth > 0
       ::FormType := FORM_CUSTOM
    ENDIF
+
    RETURN ::WIN_PRN:StartPage()
 
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert ) CLASS WIN32PRN
@@ -107,7 +111,7 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert ) CLASS W
    __defaultNIL( @nAlignVert, ::SetTextVert )
 
    RETURN ::WIN_PRN:TextOut( cString, lNewLine, lUpdatePosX, ;
-                             HB_BITOR( nAlignHori, nAlignVert ) )
+      hb_bitOr( nAlignHori, nAlignVert ) )
 
 METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert ) CLASS WIN32PRN
 
@@ -115,19 +119,19 @@ METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlignHori, nAli
    __defaultNIL( @nAlignVert, ::SetTextVert )
 
    RETURN ::WIN_PRN:TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, ;
-                               HB_BITOR( nAlignHori, nAlignVert ) )
+      hb_bitOr( nAlignHori, nAlignVert ) )
 
 METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
-                   nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
-                   lUpdatePosX, nColor, nAlignHori, nAlignVert ) CLASS WIN32PRN
+      nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
+      lUpdatePosX, nColor, nAlignHori, nAlignVert ) CLASS WIN32PRN
 
    __defaultNIL( @nAlignHori, ::SetTextHori )
    __defaultNIL( @nAlignVert, ::SetTextVert )
 
    RETURN ::WIN_PRN:TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
-                                nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
-                                lUpdatePosX, nColor, ;
-                                HB_BITOR( nAlignHori, nAlignVert ) )
+      nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
+      lUpdatePosX, nColor, ;
+      hb_bitOr( nAlignHori, nAlignVert ) )
 
 CREATE CLASS Win32Bmp FROM WIN_BMP
 ENDCLASS

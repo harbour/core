@@ -13,10 +13,11 @@ PROCEDURE Main()
    SET DATE ANSI
    SET CENTURY ON
 
-   dbCreate( "test2.mdb;table1", { { "FIRST",   "C", 10, 0 },;
-                                   { "LAST",    "C", 10, 0 },;
-                                   { "AGE",     "N",  8, 0 },;
-                                   { "MYDATE",  "D",  8, 0 } }, "ADORDD" )
+   dbCreate( "test2.mdb;table1", { ;
+      { "FIRST",   "C", 10, 0 }, ;
+      { "LAST",    "C", 10, 0 }, ;
+      { "AGE",     "N",  8, 0 }, ;
+      { "MYDATE",  "D",  8, 0 } }, "ADORDD" )
 
    USE test2.mdb VIA "ADORDD" TABLE "table1"
 

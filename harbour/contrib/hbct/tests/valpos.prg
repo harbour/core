@@ -59,10 +59,10 @@ PROCEDURE Main()
    ? "Begin test of VALPOS()"
    ?
 
-   ? [  valpos("1234x56789") == 9    ? --> ] + Str( valpos("1234x56789" ) )
-   ? [  valpos("1234x56789",1) == 1  ? --> ] + Str( valpos("1234x56789",1 ) )
-   ? [  valpos("1234x56789",11) == 0 ? --> ] + Str( valpos("1234x56789",11 ) )
-   ? [  valpos("1234x56789",5) == 0  ? --> ] + Str( valpos("1234x56789",5 ) )
+   ? '  valpos("1234x56789") == 9    ? --> ' + Str( valpos( "1234x56789" ) )
+   ? '  valpos("1234x56789",1) == 1  ? --> ' + Str( valpos( "1234x56789", 1 ) )
+   ? '  valpos("1234x56789",11) == 0 ? --> ' + Str( valpos( "1234x56789", 11 ) )
+   ? '  valpos("1234x56789",5) == 0  ? --> ' + Str( valpos( "1234x56789", 5 ) )
 
    ?
    ? "End test of VALPOS()"

@@ -82,7 +82,7 @@ FUNCTION ReadModal( GetList )
 
    oGetList := HBGetList():New( GetList )
 
-   oSaveGetList := __GetListActive( )
+   oSaveGetList := __GetListActive()
 #ifdef HB_COMPAT_C53
 // oSaveGetList:ReadStats( SLUPDATED, .F. )
 // oSaveGetList:ReadStats( SXREADVAR, ReadVar( "" ) )
@@ -126,6 +126,7 @@ PROCEDURE GetReader( oGet )
 #endif
 
 FUNCTION GetActive( oGet )
+
    LOCAL oGetList := __GetListActive()
 
    LOCAL oGetActiveOld
@@ -155,6 +156,7 @@ FUNCTION GetActive( oGet )
    RETURN NIL
 
 PROCEDURE GetDoSetKey( bKeyBlock, oGet )
+
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
@@ -165,11 +167,13 @@ PROCEDURE GetDoSetKey( bKeyBlock, oGet )
 
 #ifdef HB_COMPAT_C53
 PROCEDURE GetApplyKey( oGet, nKey, oGetList, oMenu, aMsg )
+
    IF ! HB_ISOBJECT( oGetList )
       oGetList := __GetListActive()
    ENDIF
 #else
 PROCEDURE GetApplyKey( oGet, nKey )
+
    LOCAL oGetList := __GetListActive()
 #endif
 
@@ -205,6 +209,7 @@ FUNCTION GetPostValidate( oGet, aMsg )
 #else
 FUNCTION GetPostValidate( oGet )
 #endif
+
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
@@ -224,11 +229,13 @@ FUNCTION ReadInsert( lInsert )
    RETURN Set( _SET_INSERT, lInsert )
 
 FUNCTION Updated()
+
    LOCAL oGetList := __GetListLast()
 
    RETURN iif( oGetList != NIL, oGetList:Updated(), .F. )
 
 PROCEDURE __KillRead()
+
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
@@ -238,6 +245,7 @@ PROCEDURE __KillRead()
    RETURN
 
 FUNCTION ReadUpdated( lUpdated )
+
    LOCAL oGetList := __GetListLast()
 
    IF oGetList != NIL
@@ -251,6 +259,7 @@ FUNCTION ReadUpdated( lUpdated )
    RETURN .F.
 
 FUNCTION ReadKill( lKill )
+
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
@@ -264,6 +273,7 @@ FUNCTION ReadKill( lKill )
    RETURN .F.
 
 FUNCTION ReadFormat( bFormat )
+
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
@@ -277,6 +287,7 @@ FUNCTION ReadFormat( bFormat )
    RETURN NIL
 
 PROCEDURE __SetFormat( bFormat )
+
    LOCAL oGetList := __GetListActive()
 
    IF oGetList != NIL
@@ -296,6 +307,7 @@ PROCEDURE __SetFormat( bFormat )
 #define _GET_RANGE_TO   11
 
 FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
+
    LOCAL xValue
    LOCAL cMessage
 
@@ -313,15 +325,15 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
 
    IF Set( _SET_SCOREBOARD )
 
-      cMessage := Left( __NatMsg( _GET_RANGE_FROM ) + LTrim( Transform( xLow, "" ) ) + ;
-                        __NatMsg( _GET_RANGE_TO ) + LTrim( Transform( xHigh, "" ) ), MaxCol() )
+      cMessage := Left( __natMsg( _GET_RANGE_FROM ) + LTrim( Transform( xLow, "" ) ) + ;
+         __natMsg( _GET_RANGE_TO ) + LTrim( Transform( xHigh, "" ) ), MaxCol() )
 
-      hb_dispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), cMessage )
+      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), cMessage )
 
       DO WHILE NextKey() == 0
       ENDDO
 
-      hb_dispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), Space( Len( cMessage ) ) )
+      hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), Space( Len( cMessage ) ) )
 
    ENDIF
 

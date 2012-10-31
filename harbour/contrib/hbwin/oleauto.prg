@@ -55,6 +55,7 @@
 
 
 CREATE CLASS WIN_OLEAUTO
+
    VAR __hObj
    VAR __hObjEnum
    VAR __hSink
@@ -67,10 +68,12 @@ CREATE CLASS WIN_OLEAUTO
    METHOD __OpIndex( xIndex, xValue ) OPERATOR "[]"
 
    ERROR HANDLER __OnError()
+
 ENDCLASS
 
 
 METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
+
    LOCAL hObjEnum
 
    hObjEnum := __OleEnumCreate( ::__hObj, lDescend )
@@ -81,7 +84,7 @@ METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
       ENDIF
       ::__hObjEnum := hObjEnum
       /* set base value for enumerator */
-      (@enum):__enumBase( self )
+      ( @enum ):__enumBase( self )
       RETURN ::__enumSkip( @enum, lDescend )
    ENDIF
 
@@ -89,25 +92,29 @@ METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
 
 
 METHOD __enumSkip( enum, lDescend ) CLASS WIN_OLEAUTO
+
    LOCAL lContinue, xValue
 
    HB_SYMBOL_UNUSED( lDescend )
 
    xValue := __OleEnumNext( ::__hObjEnum, @lContinue, ::classH )
    /* set enumerator value */
-   (@enum):__enumValue( xValue )
+   ( @enum ):__enumValue( xValue )
 
    RETURN lContinue
 
 
 METHOD PROCEDURE __enumStop() CLASS WIN_OLEAUTO
+
    ::__hObjEnum := NIL     /* activate autodestructor */
+
    RETURN
 
 
 /* OLE functions */
 
 FUNCTION win_OleGetActiveObject( ... )
+
    LOCAL oOle, hOle
 
    hOle := __OleGetActiveObject( ... )
@@ -120,6 +127,7 @@ FUNCTION win_OleGetActiveObject( ... )
 
 
 FUNCTION win_OleCreateObject( ... )
+
    LOCAL oOle, hOle
 
    hOle := __OleCreateObject( ... )

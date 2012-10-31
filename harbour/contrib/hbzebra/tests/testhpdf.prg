@@ -17,6 +17,7 @@
 #include "harupdf.ch"
 
 PROCEDURE Main()
+
    LOCAL pdf
    LOCAL page
 
@@ -44,11 +45,11 @@ PROCEDURE Main()
    DrawBarcode( page, 340,   1, "CODE93",     "TEST93" )
    DrawBarcode( page, 360,   1, "CODE11",     "12", HB_ZEBRA_FLAG_WIDE3 )
    DrawBarcode( page, 380,   1, "CODE11",     "1234567890", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( page, 400,   1, "CODE128",    "Code 128")
-   DrawBarcode( page, 420,   1, "CODE128",    "1234567890")
-   DrawBarcode( page, 440,   1, "CODE128",    "Wikipedia")
+   DrawBarcode( page, 400,   1, "CODE128",    "Code 128" )
+   DrawBarcode( page, 420,   1, "CODE128",    "1234567890" )
+   DrawBarcode( page, 440,   1, "CODE128",    "Wikipedia" )
    DrawBarcode( page, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
-   DrawBarcode( page, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)")
+   DrawBarcode( page, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)" )
    DrawBarcode( page, 580,   1, "QRCODE",     "http://harbour-project.org/" )
 
    FErase( "testhpdf.pdf" )
@@ -57,6 +58,7 @@ PROCEDURE Main()
    RETURN
 
 PROCEDURE DrawBarcode( page, nY, nLineWidth, cType, cCode, nFlags )
+
    LOCAL hZebra, nLineHeight, cTxt
 
    nY := HPDF_Page_GetHeight( page ) - nY

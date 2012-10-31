@@ -62,10 +62,10 @@ PROCEDURE Main()
    ?
    // simple tests
    ? "Simple tests:"
-   ? [  This should be "1000": ] + addascii( "0000", 1, 1 )
-   ? [  This should be "0001": ] + addascii( "0000", 1 )
-   ? [  This should be "BAAA": ] + addascii( "AAAA", -255, 1 )
-   ? [  This should be "AAAB": ] + addascii( "AAAA", -255 )
+   ? '  This should be "1000": ' + addascii( "0000", 1, 1 )
+   ? '  This should be "0001": ' + addascii( "0000", 1 )
+   ? '  This should be "BAAA": ' + addascii( "AAAA", -255, 1 )
+   ? '  This should be "AAAB": ' + addascii( "AAAA", -255 )
 
    // csetref() tests
    ?
@@ -96,7 +96,7 @@ PROCEDURE Main()
    ? "  return value of addascii([AAAA],257,2,.T.) call('BBAA')..:", addascii( "AAAA", 257, 2, .T. )
    ? "  return value of addascii([AAAA],257,2,.F.) call('ABAA')..:", addascii( "AAAA", 257, 2, .F. )
    ? "  return value of addascii([AAAA],258,,.T.) call('AABC')...:", addascii( "AAAA", 258,, .T. )
-   ? "  return value of addascii([ABBA],-257,3,.T.) call('AAAA').:", addascii( "ABBA", -257,3, .T. )
+   ? "  return value of addascii([ABBA],-257,3,.T.) call('AAAA').:", addascii( "ABBA", -257, 3, .T. )
 
    ? "End test of ADDASCII()"
    ?

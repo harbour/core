@@ -16,11 +16,11 @@ PROCEDURE Main()
 
    LOCAL cShell
 
-   #if defined( __PLATFORM__UNIX )
-      cShell := GetEnv( "SHELL" )
-   #else
-      cShell := GetEnv( "COMSPEC" )
-   #endif
+#if defined( __PLATFORM__UNIX )
+   cShell := GetEnv( "SHELL" )
+#else
+   cShell := GetEnv( "COMSPEC" )
+#endif
 
    ? "About to shell to OS.."
    ! ( cShell )

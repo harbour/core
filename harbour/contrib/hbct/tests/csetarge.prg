@@ -57,7 +57,7 @@
 #include "ct.ch"
 
 #ifndef __HARBOUR__
-   #define hb_ntos( n ) LTrim( Str( n ) )
+#define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
 PROCEDURE Main()

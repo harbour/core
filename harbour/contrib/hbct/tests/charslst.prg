@@ -61,8 +61,8 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? [  charslist("Hello World !") == " !HWdelor" ? -> "] + charslist( "Hello World !" ) + ["]
-   ? [  charslist(NIL) == "" ? -> "] + charslist( NIL ) + ["]
+   ? '  charslist("Hello World !") == " !HWdelor" ? -> "' + charslist( "Hello World !" ) + '"'
+   ? '  charslist(NIL) == "" ? -> "' + charslist( NIL ) + '"'
 
    ? "End test of CHARSLIST()"
    ?

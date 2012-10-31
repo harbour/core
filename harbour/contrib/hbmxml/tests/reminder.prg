@@ -9,13 +9,13 @@
 STATIC s_mxml_error := .F.
 STATIC s_mxml_error_msg := ""
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL xml
 
    mxmlSetErrorCallback( @my_mxmlError() )
 
-   IF hb_fileExists( "rem.xml" )
+   IF hb_FileExists( "rem.xml" )
       xml := simplexml_load_file( "rem.xml" )
    ELSE
       RETURN
@@ -27,7 +27,7 @@ PROCEDURE main()
 
    mxmlDelete( xml )
 
-   IF hb_fileExists( "rem_err.xml" )
+   IF hb_FileExists( "rem_err.xml" )
       xml := simplexml_load_file( "rem_err.xml" )
 
       IF s_mxml_error
@@ -48,7 +48,7 @@ PROCEDURE my_mxmlError( cErrorMsg )
 
 STATIC FUNCTION simplexml_load_file( file )
 
-   RETURN mxmlLoadString( NIL, hb_memoRead( file ), @type_cb() )
+   RETURN mxmlLoadString( NIL, hb_MemoRead( file ), @type_cb() )
 
 STATIC FUNCTION asXML( xml )
 

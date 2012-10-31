@@ -209,7 +209,7 @@ FUNCTION DoModalDialog()
    oCrt:Create()
    oCrt:show()
 
-   AAdd( aPaint, { "Box_V" , {|| Wvt_DrawBoxRaised( 1, 2, 11, 47 ) }, NIL, { WVT_BLOCK_BOX,  0, 0, MaxRow(), MaxCol() } } )
+   AAdd( aPaint, { "Box_V", {|| Wvt_DrawBoxRaised( 1, 2, 11, 47 ) }, NIL, { WVT_BLOCK_BOX,  0, 0, MaxRow(), MaxCol() } } )
    WvtSetPaint( aPaint )
 
    SetColor( 'N/W' )

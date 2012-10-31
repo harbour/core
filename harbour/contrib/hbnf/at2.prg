@@ -32,6 +32,7 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL cSubstr := cTarget
 
    // Set default parameters as necessary.
+
    __defaultNIL( @lCaseSens, .T. )
    __defaultNIL( @nOccurs, 1 )
 
@@ -65,6 +66,7 @@ FUNCTION FT_RAT2( cSearch, cTarget, nOccurs, lCaseSens )
    LOCAL cSubstr := cTarget
 
    // Set default parameters as necessary.
+
    __defaultNIL( @lCaseSens, .T. )
    __defaultNIL( @nOccurs, 1 )
 

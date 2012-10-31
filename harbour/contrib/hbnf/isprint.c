@@ -83,9 +83,9 @@ HB_FUNC( FT_ISPRINT )
    const char * pszPort;
 
    #if defined( HB_OS_UNIX )
-      pszPort = hb_parc( 1 );
+   pszPort = hb_parc( 1 );
    #else
-      pszPort = HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "PRN";
+   pszPort = HB_ISCHAR( 1 ) ? hb_parc( 1 ) : "PRN";
    #endif
 
    hb_retl( hb_printerIsReady( pszPort ) );

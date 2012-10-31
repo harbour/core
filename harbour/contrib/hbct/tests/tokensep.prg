@@ -53,7 +53,7 @@
  */
 
 #ifndef __HARBOUR__
-   #define hb_ntos( n ) LTrim( Str( n ) )
+#define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
 PROCEDURE Main()
@@ -67,21 +67,21 @@ PROCEDURE Main()
    ?
 
    // Some simple tests
-   ? [  Tokenizing the string "] + cStr + ["]
-   ? [    with skip width == 1 and ".,!" as tokenizer list:]
+   ? '  Tokenizing the string "' + cStr + '"'
+   ? '    with skip width == 1 and ".,!" as tokenizer list:'
    ?
    FOR ni := 1 TO numtoken( cStr, ".,!", 1 )
-      ? [    Token #] + hb_ntos( ni ) + [("] + token( cStr, ".,!", ni, 1 ) + ;
-         [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["]
+      ? '    Token #' + hb_ntos( ni ) + '("' + token( cStr, ".,!", ni, 1 ) + ;
+         '") is tokenized by "' + tokensep( .F. ) + '" and "' + tokensep( .T. ) + '"'
    NEXT
 
    ?
-   ? [  Tokenizing the string "] + cStr + ["]
-   ? [    with skip width == 3 and ".,!" as tokenizer list:]
+   ? '  Tokenizing the string "' + cStr + '"'
+   ? '    with skip width == 3 and ".,!" as tokenizer list:'
    ?
    FOR ni := 1 TO numtoken( cStr, ".,!", 3 )
-      ? [    Token #] + hb_ntos( ni ) + [("] + token( cStr, ".,!", ni, 3 ) + ;
-         [") is tokenized by "] + tokensep( .F. ) + [" and "] + tokensep( .T. ) + ["]
+      ? '    Token #' + hb_ntos( ni ) + '("' + token( cStr, ".,!", ni, 3 ) + ;
+         '") is tokenized by "' + tokensep( .F. ) + '" and "' + tokensep( .T. ) + '"'
    NEXT
 
    ?

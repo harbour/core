@@ -6480,7 +6480,7 @@ yyreduce:
                {
                  HB_COMP_PARAM->pLastDeclared->cType = (yyvsp[(7) - (8)].asVarType)->cVarType;
 
-                 if ( HB_TOUPPER( (yyvsp[(7) - (8)].asVarType)->cVarType ) == 'S' )
+                 if( HB_TOUPPER( (yyvsp[(7) - (8)].asVarType)->cVarType ) == 'S' )
                  {
                    HB_COMP_PARAM->pLastDeclared->pClass = hb_compClassFind( HB_COMP_PARAM, (yyvsp[(7) - (8)].asVarType)->szFromClass );
                    if( ! HB_COMP_PARAM->pLastDeclared->pClass )
@@ -6559,7 +6559,7 @@ yyreduce:
                if( HB_COMP_PARAM->pLastMethod )
                {
                  HB_COMP_PARAM->pLastMethod->cType = (yyvsp[(6) - (6)].asVarType)->cVarType;
-                 if ( HB_TOUPPER( (yyvsp[(6) - (6)].asVarType)->cVarType ) == 'S' )
+                 if( HB_TOUPPER( (yyvsp[(6) - (6)].asVarType)->cVarType ) == 'S' )
                  {
                    HB_COMP_PARAM->pLastMethod->pClass = hb_compClassFind( HB_COMP_PARAM, (yyvsp[(6) - (6)].asVarType)->szFromClass );
                    if( ! HB_COMP_PARAM->pLastMethod->pClass )
@@ -6597,7 +6597,7 @@ yyreduce:
                      cVarType = HB_COMP_PARAM->cDataListType;
 
                   HB_COMP_PARAM->pLastMethod->cType = cVarType;
-                  if ( HB_TOUPPER( cVarType ) == 'S' )
+                  if( HB_TOUPPER( cVarType ) == 'S' )
                   {
                      pClass = hb_compClassFind( HB_COMP_PARAM, (yyvsp[(3) - (3)].asVarType)->szFromClass );
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
@@ -6628,7 +6628,7 @@ yyreduce:
                   HB_COMP_PARAM->pLastMethod->cParamTypes[0] = cVarType;
                   HB_COMP_PARAM->pLastMethod->pParamClasses[0] = pClass;
 
-                  if ( HB_TOUPPER( cVarType ) == 'S' )
+                  if( HB_TOUPPER( cVarType ) == 'S' )
                   {
                      HB_COMP_PARAM->pLastMethod->pClass = pClass;
                   }

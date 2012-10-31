@@ -250,18 +250,13 @@ METHOD readFile( cFileName ) CLASS THtmlDocument
 
 METHOD writeFile( cFileName ) CLASS THtmlDocument
 
-   LOCAL cHtml := ::toString()
-   LOCAL nFileHandle := FCreate( cFileName )
+   LOCAL lSuccess := hb_MemoWrit( cFileName, ::toString() )
 
-   IF FError() != 0
-      RETURN .F.
+   IF lSuccess
+      ::changed := .F.
    ENDIF
 
-   FWrite( nFileHandle, cHtml )
-   FClose( nFileHandle )
-   ::changed := .F.
-
-   RETURN FError() == 0
+   RETURN lSuccess
 
 // builds a one dimensional array of all nodes contained in the HTML document
 
@@ -579,7 +574,7 @@ CREATE CLASS THtmlNode MODULE FRIENDLY
    ACCESS isInline()
    ACCESS isOptional()
    ACCESS isNode()
-   ACCESS HB_ISBLOCK()
+   ACCESS isBlock()
 
    METHOD addNode( oTHtmlNode )
    METHOD insertAfter( oTHtmlNode )
@@ -714,7 +709,7 @@ METHOD isNode() CLASS THtmlNode
 
 // checks if this is a block node that must be closed with an ending tag: eg: <table></table>, <ul></ul>
 
-METHOD HB_ISBLOCK() CLASS THtmlNode
+METHOD isBlock() CLASS THtmlNode
 
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_BLOCK ) > 0
 
@@ -764,7 +759,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
          ELSEIF Chr( 10 ) $ cText
             cText := RTrim( cText )
             nPos := Len( cText ) + 1
-            DO WHILE nPos > 0 .AND. SubStr( cText, -- nPos, 1 ) $ Chr( 9 ) + Chr( 10 ) + Chr( 13 )
+            DO WHILE nPos > 0 .AND. SubStr( cText, --nPos, 1 ) $ Chr( 9 ) + Chr( 10 ) + Chr( 13 )
             ENDDO
             oThisTag:addNode( THtmlNode():new( oThisTag, "_text_", , Left( cText, nPos ) ) )
          ELSE
@@ -812,7 +807,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
          lRewind := .T.
          EXIT
 
-         OTHERWISE
+      OTHERWISE
 
          IF oThisTag:isOptional()
             // this tag has no closing tag
@@ -822,7 +817,7 @@ METHOD parseHtml( parser ) CLASS THtmlNode
                // the next tag is the same like this tag
                // ( e.g. <p>|<tr>|<td>|<li>)
                lRewind := .T.
-            CASE ( Lower( cTagName ) == Lower( oThisTag:parent:htmlTagName ) ) .AND. ! oThisTag:isType( CM_LIST )
+            CASE Lower( cTagName ) == Lower( oThisTag:parent:htmlTagName ) .AND. ! oThisTag:isType( CM_LIST )
                // the next tag is the same like the parent tag
                // ( e.g. this is <td> and the next tag is <tr> )
                lRewind := .T.
@@ -911,8 +906,8 @@ METHOD parseHtmlFixed( parser ) CLASS THtmlNode
    ENDIF
 
    // back to "<"
-   DO WHILE !( P_PREV( parser ) == "<" )
-   ENDDO /* NOTE: != changed to !( == ) */
+   DO WHILE !( P_PREV( parser ) == "<" ) /* NOTE: != changed to !( == ) */
+   ENDDO
 
    nEnd  := parser:p_pos
    ::addNode( THtmlNode():new( Self, "_text_", , SubStr( parser:p_Str, nStart, nEnd - nStart ) ) )
@@ -1513,7 +1508,7 @@ METHOD noAttribute( cName, aValue ) CLASS THtmlNode
 
    ELSEIF Right( cName, 1 ) == "s" .AND. hb_HHasKey( t_hTagTypes, Left( cName, Len( cName ) - 1 ) )
       // message is the plural of a html tag -> oNode:forms -> Array of <FORM> tags
-      RETURN ::findNodesByTagName( Left( cName, Len( cName ) - 1 ), Atail( aValue ) )
+      RETURN ::findNodesByTagName( Left( cName, Len( cName ) - 1 ), ATail( aValue ) )
    ENDIF
 
    IF ! Empty( aValue )
@@ -1606,7 +1601,7 @@ METHOD pushNode( cTagName ) CLASS THtmlNode
    ENDIF
 
    IF ! hb_HHasKey( t_hTagTypes, cName )
-      IF Left( cName, 1 ) == "/" .AND. hb_HHasKey( t_hTagTypes, SubStr( cName,2 ) )
+      IF Left( cName, 1 ) == "/" .AND. hb_HHasKey( t_hTagTypes, SubStr( cName, 2 ) )
          IF ! Lower( SubStr( cName, 2 ) ) == Lower( ::htmlTagName )
             RETURN ::error( "Not a valid closing HTML tag for: <" + ::htmlTagName + ">", ::className(), "-", EG_ARG, { cName } )
          ENDIF
@@ -1650,7 +1645,7 @@ METHOD popNode( cName ) CLASS THtmlNode
     */
    IF AScan( { "tr", "th", "td" }, cName ) > 0
       endTag := "</" + cName + ">"
-      IF !Right( ::toString(), 3 + Len( cName ) ) == endTag
+      IF ! Right( ::toString(), 3 + Len( cName ) ) == endTag
          ::addNode( THtmlNode():new( Self, "/" + cName, ,  ) )
       ENDIF
    ENDIF
@@ -4544,7 +4539,7 @@ FUNCTION HtmlToAnsi( cHtmlText )
 
 FUNCTION HtmlToOem( cHtmlText )
 
-   RETURN hb_AnsiToOem( HtmlToAnsi( cHtmlText ) )
+   RETURN hb_ANSIToOEM( HtmlToAnsi( cHtmlText ) )
 
 // Inserts HTML character entities into an ANSI text string
 
@@ -4615,7 +4610,7 @@ FUNCTION AnsiToHtml( cAnsiText )
 
 FUNCTION OemToHtml( cOemText )
 
-   RETURN AnsiToHtml( hb_OemToAnsi( cOemText ) )
+   RETURN AnsiToHtml( hb_OEMToANSI( cOemText ) )
 
 // This function returs the HTML character entities that are exchangeable between ANSI and OEM character sets
 

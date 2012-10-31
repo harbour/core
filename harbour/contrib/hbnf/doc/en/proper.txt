@@ -23,11 +23,11 @@
       catches most names, including special cases such as names
       beginning with O' (O'Malley, O'Reilly) and hyphenated names
       (such as Susan Chia-Mei Lo).
-  
+
       Next, it does a specific adjustment for words beginning in "Mc"
       It finds the first 'Mc' and capitalizes the next character after
       it.  It does this for all occurrences of Mc.
-  
+
       The original FT_PROPER() was written in Clipper by Glenn Scott
       and Mark Zechiel; it was re-written in C (and thus, optimized
       and enhanced) by Robert DiFalco.

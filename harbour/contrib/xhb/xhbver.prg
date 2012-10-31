@@ -55,6 +55,7 @@
 #include "xhbver.ch"
 
 FUNCTION hb_buildinfo( n )
+
    LOCAL v := Array( _HB_VER_LAST - 1 )
 
    v[ _HB_VER_MAJOR              ] := hb_Version( HB_VERSION_MAJOR )
@@ -108,7 +109,7 @@ FUNCTION hb_buildinfo( n )
    v[ _HB_SYMBOL_NAME_LEN        ] := 63  /* Constant in Harbour */
    v[ _HB_MULTITHREAD            ] := hb_mtvm()
    v[ _HB_VM_OPTIMIZATION        ] := 2   /* Emulate xhb */
-   v[ _HB_LANG_ID                ] := hb_LangSelect()
+   v[ _HB_LANG_ID                ] := hb_langSelect()
    v[ _HB_ARRAY_MODE             ] := 0   /* Emulate xhb */
    v[ _HB_CREDITS                ] := { "See 'harbour -credits'" }
 

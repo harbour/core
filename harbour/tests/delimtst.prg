@@ -19,7 +19,7 @@ PROCEDURE Main()
    COPY TO test1 DELIMITED
 
    // Copy only address fields for records with salary over 50,000.
-   COPY FIELD first, last, street, city, state, zip TO test2 delimited for _field->salary > 50000
+   COPY FIELD first, last, street, city, state, zip TO test2 delimited FOR _field->salary > 50000
 
    // Only copy record 3.
    COPY RECORD 3 TO test3 DELIMITED
@@ -40,7 +40,7 @@ PROCEDURE Main()
    // Copy the last 10 records again.
    GO BOTTOM
    SKIP -9
-   COPY TO test6 delimited WHILE ! EOF()
+   COPY TO test6 delimited WHILE ! Eof()
 
    // Copy only some of the last 10 records.
    GO BOTTOM

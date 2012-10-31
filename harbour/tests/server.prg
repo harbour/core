@@ -12,6 +12,7 @@
  */
 
 PROCEDURE Main( cPort )
+
    LOCAL Socket, s
    LOCAL nResponse, cResponse
    LOCAL nTurn := 0, nTurn1 := 0
@@ -80,7 +81,7 @@ PROCEDURE Main( cPort )
             IF Lower( cResponse ) == "quit"
                bCont := .F.
             ENDIF
-            @ 8, 5 SAY space(70)
+            @ 8, 5 SAY Space( 70 )
             @ 8, 5 SAY cResponse
             cResponse := "Count: " + Str( nResponse ) + " characters" + hb_eol()
             hb_inetSend( s, cResponse )

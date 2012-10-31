@@ -18,6 +18,7 @@
 #include "hbwin.ch"
 
 PROCEDURE Main()
+
    LOCAL cPrinterName := "Microsoft XPS Document Writer"
 
    LOCAL hDC

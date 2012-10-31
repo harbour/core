@@ -60,7 +60,7 @@
 
 CREATE CLASS xpp_TBrowse INHERIT TBrowse
 
-EXPORTED:
+   EXPORTED:
 
    METHOD viewArea()
    METHOD firstScrCol()
@@ -85,11 +85,12 @@ METHOD viewArea() CLASS xpp_TBrowse
    /* _MAXFREEZE( ::nFrozen, ::aColData, @nWidth ) */
    nFrozenWidth -= nWidth
 
-   RETURN { ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ),;
-            ::n_Left,;
-            ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ),;
-            ::n_Right,;
-            nFrozenWidth }
+   RETURN { ;
+      ::n_Top + ::nHeadHeight + iif( ::lHeadSep, 1, 0 ), ;
+      ::n_Left, ;
+      ::n_Bottom - ::nFootHeight - iif( ::lFootSep, 1, 0 ), ;
+      ::n_Right, ;
+      nFrozenWidth }
 
 /* NOTE: Returns the left margin relative column position of the first
          non-frozen column. Xbase++ compatible method. */

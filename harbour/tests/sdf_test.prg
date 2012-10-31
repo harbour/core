@@ -3,8 +3,8 @@
  * $Id$
  */
 
-   // Test program for COPY TO SDF and APPEND FROM SDF
-   // Note: Only COPY TO SDF is fully implemented at this time...
+// Test program for COPY TO SDF and APPEND FROM SDF
+// Note: Only COPY TO SDF is fully implemented at this time...
 /* Harbour Project source code
    http://harbour-project.org/
    Donated to the public domain on 2001-04-18 by David G. Holm <dholm@jsd-llc.com>
@@ -40,7 +40,7 @@ PROCEDURE Main()
    // Copy the last 10 records again.
    GO BOTTOM
    SKIP -9
-   COPY TO test6 SDF WHILE !EOF()
+   COPY TO test6 SDF WHILE !Eof()
 
    // Copy only some of the last 10 records.
    GO BOTTOM

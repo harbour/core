@@ -69,38 +69,38 @@ PROCEDURE Main()
 
    // Some simple tests
    ? "  Simple tests:"
-   ? [  afteratnum("..",cStr)     should be "test!",]
-   ? [                               and is "] + afteratnum( "..", cStr ) + ["]
-   ? [  afteratnum("..",cStr,2)   should be ".is...a...test!",]
-   ? [                               and is "] + afteratnum( "..", cStr, 2 ) + ["]
-   ? [  afteratnum("..",cStr,2,2) should be ".a...test!",]
-   ? [                               and is "] + afteratnum( "..", cStr, 2, 2 ) + ["]
+   ? '  afteratnum("..",cStr)     should be "test!",'
+   ? '                               and is "' + afteratnum( "..", cStr ) + '"'
+   ? '  afteratnum("..",cStr,2)   should be ".is...a...test!",'
+   ? '                               and is "' + afteratnum( "..", cStr, 2 ) + '"'
+   ? '  afteratnum("..",cStr,2,2) should be ".a...test!",'
+   ? '                               and is "' + afteratnum( "..", cStr, 2, 2 ) + '"'
    ?
 
    // Tests with CSetAtMuPa(.T.)
    ? "  Multi-Pass tests"
    ? "  Setting csetatmupa() to .T."
    csetatmupa( .T. )
-   ? [  afteratnum("..",cStr)     should be "test!",]
-   ? [                               and is "] + afteratnum( "..", cStr ) + ["]
-   ? [  afteratnum("..",cStr,2)   should be "This...is...a...test!",]
-   ? [                               and is "] + afteratnum( "..", cStr, 2 ) + ["]
-   ? [  afteratnum("..",cStr,2,2) should be "is...a...test!",]
-   ? [                               and is "] + afteratnum( "..", cStr, 2, 2 ) + ["]
+   ? '  afteratnum("..",cStr)     should be "test!",'
+   ? '                               and is "' + afteratnum( "..", cStr ) + '"'
+   ? '  afteratnum("..",cStr,2)   should be "This...is...a...test!",'
+   ? '                               and is "' + afteratnum( "..", cStr, 2 ) + '"'
+   ? '  afteratnum("..",cStr,2,2) should be "is...a...test!",'
+   ? '                               and is "' + afteratnum( "..", cStr, 2, 2 ) + '"'
    ? "  Setting csetatmupa() to .F."
    csetatmupa( .F. )
    ?
 
    // Tests mit SetAtlike(1)
    ? "  SetAtLike tests"
-   ? [  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")]
+   ? '  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")'
    setatlike( CT_SETATLIKE_WILDCARD, "." )
-   ? [  afteratnum("..",cStr) should be "",]
-   ? [                           and is "] + afteratnum( "..", cStr ) + ["]
-   ? [  afteratnum("..",cStr,2,2) should be "s...is...a...test!",]
-   ? [                               and is "] + afteratnum( "..", cStr, 2, 2 ) + ["]
-   ? [  afteratnum("..",cStr,2,10) should be ".a...test!",]
-   ? [                                and is "] + afteratnum( "..", cStr, 2, 10 ) + ["]
+   ? '  afteratnum("..",cStr) should be "",'
+   ? '                           and is "' + afteratnum( "..", cStr ) + '"'
+   ? '  afteratnum("..",cStr,2,2) should be "s...is...a...test!",'
+   ? '                               and is "' + afteratnum( "..", cStr, 2, 2 ) + '"'
+   ? '  afteratnum("..",cStr,2,10) should be ".a...test!",'
+   ? '                                and is "' + afteratnum( "..", cStr, 2, 10 ) + '"'
    ?
 
    ? "End test of AFTERATNUM()"

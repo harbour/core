@@ -13,6 +13,7 @@
 #include "simpleio.ch"
 
 PROCEDURE Main()
+
    LOCAL a := WIN_PRINTERGETDEFAULT()
 
    ? ">" + a + "<"

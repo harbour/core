@@ -78,7 +78,8 @@ STATIC FUNCTION _sx_INIlogical( cVal )
 
    RETURN NIL
 
-FUNCTION _sx_INIinit( nArea )
+FUNCTION _sx_IniInit( nArea )
+
    LOCAL cFile, cPath, cName, cExt, cDrive
    LOCAL xShared, xReadOnly, xAlias, xTrigger
    LOCAL hIni, item, sect, h, a
@@ -90,8 +91,8 @@ FUNCTION _sx_INIinit( nArea )
 
    IF Left( Type( "SxIniInfo" ), 1 ) == "U"
       PUBLIC SxIniInfo := { => }
-      HB_HCaseMatch( SxIniInfo, .F. )
-      HB_HAutoAdd( SxIniInfo, HB_HAUTOADD_ASSIGN )
+      hb_HCaseMatch( SxIniInfo, .F. )
+      hb_HAutoAdd( SxIniInfo, HB_HAUTOADD_ASSIGN )
    ENDIF
 
    IF nArea == NIL
@@ -101,7 +102,7 @@ FUNCTION _sx_INIinit( nArea )
    cFile := ( nArea )->( dbInfo( DBI_FULLPATH ) )
    hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
    cFile := hb_FNameMerge( cPath, cName, ".ini", cDrive )
-   hIni := hb_IniRead( cFile, .F.,, .F. )
+   hIni := hb_iniRead( cFile, .F.,, .F. )
 
    IF !Empty( hIni )
       IF hb_HHasKey( hIni, HB_SIX_SECTION )
@@ -122,7 +123,7 @@ FUNCTION _sx_INIinit( nArea )
             ENDSWITCH
          NEXT
          IF xTrigger != NIL
-            ( nArea )->( Sx_SetTrigger( TRIGGER_INSTALL, xTrigger ) )
+            ( nArea )->( sx_SetTrigger( TRIGGER_INSTALL, xTrigger ) )
          ENDIF
          _sxOpenInit( nArea, xShared, xReadOnly, xAlias )
       ENDIF
@@ -144,7 +145,7 @@ FUNCTION _sx_INIinit( nArea )
 
    RETURN .F.
 
-FUNCTION Sx_INIheader( cHeaderName, nArea )
+FUNCTION sx_IniHeader( cHeaderName, nArea )
 
    IF nArea == NIL
       nArea := Select()

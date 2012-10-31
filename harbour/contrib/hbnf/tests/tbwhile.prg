@@ -92,7 +92,7 @@ STATIC FUNCTION make_dbf()
       { "OLEANDAR", "JILL", "425 FLORAL PARK DRIVE", "FLORAL PARK", "NY", "10093"       }, ;
       { "SUGARMAN", "CANDY", "1541 SWEETHEART ROAD", "HERSHEY", "PA", "10132"           } }
 
-   dbCreate( "TBNAMES", {;
+   dbCreate( "TBNAMES", { ;
       { "LAST ", "C", 18, 0, }, ;
       { "FIRST", "C",  9, 0, }, ;
       { "ADDR ", "C", 28, 0, }, ;

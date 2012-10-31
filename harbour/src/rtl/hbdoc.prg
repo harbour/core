@@ -59,6 +59,7 @@
 #define _HBDOC_ADD_MSG( a, m )  IF HB_ISARRAY( a ); AAdd( a, m ); ENDIF
 
 FUNCTION __hbdoc_FromSource( cFile, aErrMsg )
+
    LOCAL aEntry := {}
 
    IF HB_ISSTRING( cFile )
@@ -68,6 +69,7 @@ FUNCTION __hbdoc_FromSource( cFile, aErrMsg )
    RETURN aEntry
 
 FUNCTION __hbdoc_DirLastModified( cDir )
+
    LOCAL aFile
 
    LOCAL cDocDir
@@ -103,6 +105,7 @@ FUNCTION __hbdoc_DirLastModified( cDir )
    RETURN tLast
 
 FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
+
    LOCAL hMeta
    LOCAL nCount
    LOCAL aFile
@@ -141,6 +144,7 @@ FUNCTION __hbdoc_LoadDir( cDir, cName, aErrMsg )
    RETURN aEntry
 
 STATIC PROCEDURE __hbdoc__read_langdir( aEntry, cDir, hMeta, aErrMsg )
+
    LOCAL aFile
    LOCAL nCount
 
@@ -158,11 +162,12 @@ STATIC PROCEDURE __hbdoc__read_langdir( aEntry, cDir, hMeta, aErrMsg )
    RETURN
 
 STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
-   LOCAL aFilenameTemplateMap := {;
-      "FUNCTION"   => "func_"  ,;
-      "C FUNCTION" => "cfunc_" ,;
-      "CLASS"      => "class_" ,;
-      "COMMAND"    => "cmd_"   ,;
+
+   LOCAL aFilenameTemplateMap := { ;
+      "FUNCTION"   => "func_"  , ;
+      "C FUNCTION" => "cfunc_" , ;
+      "CLASS"      => "class_" , ;
+      "COMMAND"    => "cmd_"   , ;
       "PP"         => "pp_"    }
 
    LOCAL tmp
@@ -185,6 +190,7 @@ STATIC PROCEDURE __hbdoc__read_file( aEntry, cFileName, hMeta, aErrMsg )
    RETURN
 
 STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg )
+
    LOCAL hEntry := NIL
    LOCAL cLine
    LOCAL cSection
@@ -258,10 +264,12 @@ STATIC PROCEDURE __hbdoc__read_stream( aEntry, cFile, cFileName, hMeta, aErrMsg 
    RETURN
 
 FUNCTION __hbdoc_ToSource( aEntry )
+
    LOCAL cSource := ""
    LOCAL hEntry
    LOCAL item
    LOCAL cLine
+   LOCAL cLineOut
 
    IF HB_ISARRAY( aEntry )
       FOR EACH hEntry IN aEntry
@@ -272,7 +280,8 @@ FUNCTION __hbdoc_ToSource( aEntry )
                !( Left( item:__enumKey(), 1 ) == "_" )
                cSource += "   $" + item:__enumKey() + "$" + hb_eol()
                FOR EACH cLine IN hb_ATokens( StrTran( item, Chr( 13 ) ), Chr( 10 ) )
-                  cSource += "  " + iif( Len( cLine ) == 0, "", Space( 4 ) + cLine ) + hb_eol()
+                  cLineOut := iif( Len( cLine ) == 0, "", Space( 4 ) + cLine )
+                  cSource += iif( Empty( cLineOut ), "", "  " + cLineOut ) + hb_eol()
                NEXT
             ENDIF
          NEXT
@@ -284,6 +293,7 @@ FUNCTION __hbdoc_ToSource( aEntry )
    RETURN cSource
 
 FUNCTION __hbdoc_FilterOut( cFile )
+
    LOCAL lEntry := .F.
    LOCAL cLine
    LOCAL cOK := ""
@@ -337,16 +347,20 @@ FUNCTION __hbdoc_FilterOut( cFile )
  * previously-saved files is required, only a naive approach of using
  * version 1 is taken.
  */
-#define _HBDOC_SIGNATURE ( HB_BCHAR( 0xC0 ) + ;
-                           HB_BCHAR( 0x48 ) + ;
-                           HB_BCHAR( 0x42 ) + ;
-                           HB_BCHAR( 0x44 ) + ;
-                           HB_BCHAR( 0x01 ) + ;
-                           HB_BCHAR( 0x00 ) )
-#define _HBDOC_SIG_LEN   6
+
 #define _HBDOC_EXT       ".hbd"
 
+#define _HBDOC_SIG_LEN   6
+#define _HBDOC_SIGNATURE ( ;
+   hb_BChar( 0xC0 ) + ;
+   hb_BChar( 0x48 ) + ;
+   hb_BChar( 0x42 ) + ;
+   hb_BChar( 0x44 ) + ;
+   hb_BChar( 0x01 ) + ;
+   hb_BChar( 0x00 ) )
+
 FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
+
    LOCAL fhnd
 
    IF HB_ISSTRING( cFileName ) .AND. ;
@@ -359,7 +373,7 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
       fhnd := hb_FCreate( cFileName, FC_NORMAL, FO_CREAT + FO_TRUNC + FO_READWRITE + FO_EXCLUSIVE )
       IF fhnd != F_ERROR
          FWrite( fhnd, _HBDOC_SIGNATURE )
-         FWrite( fhnd, hb_ZCompress( hb_serialize( aEntry ) ) )
+         FWrite( fhnd, hb_ZCompress( hb_Serialize( aEntry ) ) )
          FClose( fhnd )
          RETURN .T.
       ENDIF
@@ -368,6 +382,7 @@ FUNCTION __hbdoc_SaveHBD( cFileName, aEntry )
    RETURN .F.
 
 FUNCTION __hbdoc_LoadHBD( cFileName )
+
    LOCAL fhnd
    LOCAL aEntry := NIL
 
@@ -391,7 +406,7 @@ FUNCTION __hbdoc_LoadHBD( cFileName )
             FRead( fhnd, @cBuffer, hb_BLen( cBuffer ) )
             FClose( fhnd )
 
-            aEntry := hb_deserialize( hb_ZUncompress( cBuffer ) )
+            aEntry := hb_Deserialize( hb_ZUncompress( cBuffer ) )
             cBuffer := NIL
 
             IF ! HB_ISARRAY( aEntry )

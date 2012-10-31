@@ -185,7 +185,7 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
 
    IF PCount() >= 1 .AND. HB_ISBLOCK( ::sl_beforeNavigate )
       Eval( ::sl_beforeNavigate, cURL, NIL, Self )
-      RETURN nil
+      RETURN NIL
    ENDIF
 
    RETURN Self

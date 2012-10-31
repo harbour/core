@@ -107,7 +107,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -142,7 +142,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -181,6 +181,6 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */

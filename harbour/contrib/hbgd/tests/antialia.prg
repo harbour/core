@@ -79,7 +79,7 @@ PROCEDURE Main()
    gdImageFilledRectangle( im, 0, 0, 100, 100, white )
 
    /* set foreground color */
-   blue  := gdImageColorAllocate( im, 0, 0, 255 )
+   blue := gdImageColorAllocate( im, 0, 0, 255 )
 
    /* Now we draw an aliased line */
    gdImageLine( im, 0, 0, 99, 40, blue )

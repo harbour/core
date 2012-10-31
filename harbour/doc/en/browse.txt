@@ -120,16 +120,16 @@
         Ctrl Right       Pan one column to the right
         Ctrl Home        Move to the leftmost column
         Ctrl End         Move to the rightmost column
-      /table>
+      </table>
 
       When <xUserFunc> is omitted, two more keys are active:
 
-      table>
+      <table>
        Key              Meaning
 
        Esc              Terminate BROWSE()
        Enter            Terminate BROWSE()
-      /table>
+      </table>
 
       When DBEDIT() execute <xUserFunc> it pass the following arguments:
       nMode and the index of current record in <acColumns>. If <acColumns>

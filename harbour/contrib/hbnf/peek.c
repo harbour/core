@@ -40,23 +40,23 @@
 
    #if ! defined( MK_FP )
       #define MK_FP( seg, off ) \
-         ((void FAR *)(((unsigned long)(seg) << 4)|(unsigned)(off)))
+   ( ( void FAR * ) ( ( ( unsigned long ) ( seg ) << 4 ) | ( unsigned ) ( off ) ) )
    #endif
 
    #if defined( __WATCOMC__ )
-      #define outportb outp
-      #define inportb  inp
+      #define outportb  outp
+      #define inportb   inp
    #endif
 
    #if defined( __WATCOMC__ ) && defined( __386__ )
-      #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) )
-      #define HB_POKE_BYTE(s,o,b)   ( *( ( HB_UCHAR * ) ( ( (s) << 4 ) | (o) ) ) = ( HB_UCHAR ) (b) )
+      #define HB_PEEK_BYTE( s, o )     ( *( ( HB_UCHAR * ) ( ( ( s ) << 4 ) | ( o ) ) ) )
+      #define HB_POKE_BYTE( s, o, b )  ( *( ( HB_UCHAR * ) ( ( ( s ) << 4 ) | ( o ) ) ) = ( HB_UCHAR ) ( b ) )
    #elif defined( __DJGPP__ )
-      #define HB_PEEK_BYTE(s,o)     _farpeekb( (s), (o) )
-      #define HB_POKE_BYTE(s,o,b)   _farpokeb( (s), (o), (b) )
+      #define HB_PEEK_BYTE( s, o )     _farpeekb( ( s ), ( o ) )
+      #define HB_POKE_BYTE( s, o, b )  _farpokeb( ( s ), ( o ), ( b ) )
    #else
-      #define HB_PEEK_BYTE(s,o)     ( *( ( HB_UCHAR FAR * ) MK_FP( (s), (o) ) ) )
-      #define HB_POKE_BYTE(s,o,b)   ( *( ( HB_UCHAR FAR * ) MK_FP( (s), (o) ) ) = ( HB_UCHAR ) (b) )
+      #define HB_PEEK_BYTE( s, o )     ( *( ( HB_UCHAR FAR * ) MK_FP( ( s ), ( o ) ) ) )
+      #define HB_POKE_BYTE( s, o, b )  ( *( ( HB_UCHAR FAR * ) MK_FP( ( s ), ( o ) ) ) = ( HB_UCHAR ) ( b ) )
    #endif
 #endif
 

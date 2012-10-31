@@ -23,43 +23,51 @@ PROCEDURE DllMain()
 
    WIN_OleServerInit( CLS_ID, CLS_Name, OleObjServer():new() )
 
-RETURN
+   RETURN
 
 
 CREATE CLASS OleObjServer
+
    METHOD   timer
    METHOD   info
    METHOD   ref
+
 ENDCLASS
 
 METHOD timer() CLASS OleObjServer
-RETURN timerCls():new()
+   RETURN timerCls():new()
 
 METHOD info() CLASS OleObjServer
-RETURN infoCls():new()
+   RETURN infoCls():new()
 
 METHOD ref( p1, p2, p3, p4, p5, p6, p7 ) CLASS OleObjServer
-   p1 := date()
-   p2 := hb_datetime()
+
+   p1 := Date()
+   p2 := hb_DateTime()
    p3 := .T.
    p4 := { "A", "B", "C" }
    p5 := timerCls():new()
    p6 := 123.456
    p7 := "text"
-RETURN "DONE"
+
+   RETURN "DONE"
 
 
 CREATE CLASS timerCls
+
    MESSAGE date EXTERN date
    MESSAGE time EXTERN time
    MESSAGE now  EXTERN hb_datetime
+
 ENDCLASS
 
 CREATE CLASS infoCls
+
    MESSAGE os           EXTERN os
    MESSAGE ver          EXTERN version
    MESSAGE compiler     EXTERN hb_compiler
    MESSAGE build        EXTERN hb_builddate
+
 ENDCLASS
 
 ANNOUNCE GT_SYS

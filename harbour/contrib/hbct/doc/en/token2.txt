@@ -35,24 +35,24 @@
       This information is created in the process of tokenization of the
       string <cString> - equal to the one used in the TOKEN() function
       with the help of the <cTokenizer> and <nSkipWidth> parameters.
-  
+
       This token environment can be very useful when large strings have
       to be tokenized since the tokenization has to take place only once
       whereas the TOKEN() function must always start the tokenizing process
       from scratch.
-  
+
       Unlike CTIII, this function provides two mechanisms of storing the
       resulting token environment. If a variable is passed by reference
       as 4th parameter, the token environment is stored in this variable,
       otherwise the global token environment is used. Do not modify the
       token environment string directly !
-  
+
       Additionally, a counter is stored in the token environment, so that
       the tokens can successivly be obtained. This counter is first set to 1.
       When the TOKENINIT() function is called without a string a tokenize,
       the counter of either the global environment or the environment given
       by reference in the 4th parameter is rewind to 1.
-  
+
       Additionally, unlike CTIII, tokeninit() does not need the string
       <cString> to be passed by reference, since one must provide the
       string in calls to TOKENNEXT() again.
@@ -71,7 +71,7 @@
                                        // not given by reference !!!
       tokeninit( ,,, @cTE1 )           // set counter in TE stored in cTE1 to 1
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -108,13 +108,13 @@
       in either the global token environment or the local one supplied by
       <cTokenEnvironment>. Note that, is supplied, this 3rd parameter has
       always to be passed by reference.
-  
+
       If the 2nd parameter, <nToken> is given, TOKENNEXT() simply returns
       the <nToken>th token without manipulating the TE counter. Otherwise
       the token pointed to by the TE counter is returned and the counter
       is incremented by one. Like this, a simple loop with TOKENEND() can
       be used to retrieve all tokens of a string successivly.
-  
+
       Note that <cString> does not have to be the same used in TOKENINIT(),
       so that one can do a "correlational tokenization", i.e. tokenize a string
       as if it was another! E.G. using TOKENINIT() with the string
@@ -129,7 +129,7 @@
       ? tokennext( cString, 3 )  // get the 3rd token, counter will remain the same
       tokenexit()                // free the memory used for the global TE
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -168,7 +168,7 @@
       tokeninit( "a.b.c.d", ".", 1 )  // initialize global TE
       ? tokennum()  // --> 4
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -211,7 +211,7 @@
          ? tokennext( "a.b.c.d" )     // get all tokens successivly
       ENDDO
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -236,7 +236,7 @@
    $SYNTAX$
       TOKENEXIT() -> lStaticEnvironmentReleased
    $ARGUMENTS$
-  
+
    $RETURNS$
       <lStaticEnvironmentReleased>   .T., if global token environment is successfully released
    $DESCRIPTION$
@@ -252,7 +252,7 @@
       ? tokennext( cString, 3 )  // get the 3rd token, counter will remain the same
       tokenexit()                // free the memory used for the global TE
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -289,17 +289,17 @@
       The TOKENAT() function is used to retrieve the start and end position
       of the tokens in a token environment. Note however that the position of
       last character of a token is given by tokenat (.T.)-1 !!
-  
+
       If the 2nd parameter, <nToken> is given, TOKENAT() returns the
       positions of the <nToken>th token. Otherwise
       the token pointed to by the TE counter, i.e. the token that will
       be retrieved by TOKENNEXT() _NEXT_ is used.
-  
+
       If the parameter <@cTokenEnvironment> is supplied (must be by
       reference), the information from this token environment is used,
       otherwise the global TE is used.
    $EXAMPLES$
-  
+
    $TESTS$
       tokeninit( cString ) // initialize a TE
       DO WHILE ! tokenend()
@@ -333,7 +333,7 @@
    $SYNTAX$
       SAVETOKEN() -> cStaticTokenEnvironment
    $ARGUMENTS$
-  
+
    $RETURNS$
       <cStaticTokenEnvironment>   a binary string encoding the global TE
    $DESCRIPTION$
@@ -342,9 +342,9 @@
       Note however that the latter can now be solved with locally stored
       token environments.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -377,9 +377,9 @@
       of SAVETOKEN() or the value stored in the 4th parameter in a
       TOKENINIT() call.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$

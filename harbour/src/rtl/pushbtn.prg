@@ -233,20 +233,20 @@ METHOD display() CLASS PUSHBUTTON
       nCol++
 
       IF Len( cStyle ) == 2
-         hb_dispOutAt( ::nRow, ::nCol, SubStr( cStyle, 1, 1 ), cColor )
-         hb_dispOutAt( ::nRow, ::nCol + Len( cCaption ) + 1, SubStr( cStyle, 2, 1 ), cColor )
+         hb_DispOutAt( ::nRow, ::nCol, SubStr( cStyle, 1, 1 ), cColor )
+         hb_DispOutAt( ::nRow, ::nCol + Len( cCaption ) + 1, SubStr( cStyle, 2, 1 ), cColor )
       ELSE
          nRow++
-         hb_dispBox( ::nRow, ::nCol, ::nRow + 2, ::nCol + Len( cCaption ) + 1, cStyle, cColor )
+         hb_DispBox( ::nRow, ::nCol, ::nRow + 2, ::nCol + Len( cCaption ) + 1, cStyle, cColor )
       ENDIF
    ENDIF
 
    IF !Empty( cCaption )
 
-      hb_dispOutAt( nRow, nCol, cCaption, cColor )
+      hb_DispOutAt( nRow, nCol, cCaption, cColor )
 
       IF nPos != 0
-         hb_dispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
+         hb_DispOutAt( nRow, nCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
 
    ENDIF
@@ -356,10 +356,11 @@ METHOD New( nRow, nCol, cCaption ) CLASS PUSHBUTTON
       ::cColorSpec := "W/N,N/W,W+/N,W+/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BACKGROUND )
+      ::cColorSpec := ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self
@@ -368,6 +369,7 @@ FUNCTION PushButton( nRow, nCol, cCaption )
    RETURN HBPushButton():New( nRow, nCol, cCaption )
 
 FUNCTION _PUSHBUTT_( cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, nSizeX, nSizeY, nCapXOff, nCapYOff, cBitmap, nBmpXOff, nBmpYOff )
+
    LOCAL o := HBPushButton():New( Row(), Col(), cCaption )
 
    o:message   := cMessage

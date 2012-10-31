@@ -51,13 +51,14 @@
  */
 
 FUNCTION FieldGetArr( xRecNo )
+
    LOCAL xPrevRec
    LOCAL aFields
    LOCAL nFields, n
 
    IF xRecNo != NIL
-      xPrevRec := recNo()
-      dbGoTo( xRecNo )
+      xPrevRec := RecNo()
+      dbGoto( xRecNo )
    ENDIF
 
    nFields := FCount()
@@ -67,18 +68,19 @@ FUNCTION FieldGetArr( xRecNo )
    NEXT
 
    IF xPrevRec != NIL
-      dbGoTo( xPrevRec )
+      dbGoto( xPrevRec )
    ENDIF
 
-RETURN aFields
+   RETURN aFields
 
 FUNCTION FieldPutArr( aFields, xRecNo )
+
    LOCAL xPrevRec
    LOCAL nFields, n
 
    IF xRecNo != NIL
-      xPrevRec := recNo()
-      dbGoTo( xRecNo )
+      xPrevRec := RecNo()
+      dbGoto( xRecNo )
    ENDIF
 
    nFields := FCount()
@@ -92,7 +94,7 @@ FUNCTION FieldPutArr( aFields, xRecNo )
    NEXT
 
    IF xPrevRec != NIL
-      dbGoTo( xPrevRec )
+      dbGoto( xPrevRec )
    ENDIF
 
-RETURN .T.
+   RETURN .T.

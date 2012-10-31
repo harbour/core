@@ -56,9 +56,11 @@ STATIC s_hDLL := { => }
 STATIC s_mutex := hb_mutexCreate()
 
 PROCEDURE UNLOADALLDLL()
+
    hb_mutexLock( s_mutex )
    s_hDLL := { => }
    hb_mutexUnlock( s_mutex )
+
    RETURN
 
 FUNCTION CALLDLL32( cFunction, cLibrary, ... )
@@ -68,12 +70,13 @@ FUNCTION CALLDLL32( cFunction, cLibrary, ... )
    /* Use Windows system .dll calling convention on Windows systems,
       like in original lib. Original .lib was a Windows-only solution.
       [vszakats] */
-   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
+#  define _DEF_CALLCONV_ HB_DYN_CALLCONV_STDCALL
 #else
-   #define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
+#  define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
 #endif
 
 FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
+
    LOCAL aParams
    LOCAL hHandle
 
@@ -83,7 +86,7 @@ FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
       hb_mutexLock( s_mutex )
 
       IF !( cLibrary $ s_hDLL )
-         s_hDLL[ cLibrary ] := hb_LibLoad( cLibrary )
+         s_hDLL[ cLibrary ] := hb_libLoad( cLibrary )
       ENDIF
 
       hHandle := s_hDLL[ cLibrary ]
@@ -92,9 +95,9 @@ FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
 
       IF HB_ISNUMERIC( nCount ) .AND. nCount >= 0 .AND. nCount < PCount() - 3
          aParams := ASize( hb_AParams(), nCount )
-         RETURN hb_dynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, hb_arrayToParams( aParams ) )
+         RETURN hb_DynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, hb_ArrayToParams( aParams ) )
       ELSE
-         RETURN hb_dynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, ... )
+         RETURN hb_DynCall( { cFunction, hHandle, _DEF_CALLCONV_ }, ... )
       ENDIF
    ENDIF
 

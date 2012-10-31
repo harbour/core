@@ -26,13 +26,14 @@ PROCEDURE Main()
       TestMatrix( "Float numbers r, where 0.0 <= r < 1.0", {|| PadL( tinymt32_generate_float01(), 15 ) } )
       TestMatrix( "Float numbers r, where 1.0 <= r < 2.0", {|| PadL( tinymt32_generate_float12(), 15 ) } )
       TestMatrix( "Float numbers r, where 0.0 < r <= 1.0", {|| PadL( tinymt32_generate_floatOC(), 15 ) } )
-      TestMatrix( "Float numbers r, where 0.0 < r < 1.0" , {|| PadL( tinymt32_generate_floatOO(), 15 ) } )
+      TestMatrix( "Float numbers r, where 0.0 < r <  1.0", {|| PadL( tinymt32_generate_floatOO(), 15 ) } )
       TestMatrix( "32-bit precision double numbers r, where 0.0 <= r < 1.0", {|| PadL( tinymt32_generate_32double(), 15 ) } )
    ENDIF
 
    RETURN
 
 STATIC PROCEDURE TestMatrix( cDescription, bBlock )
+
    LOCAL i, j
 
    ? cDescription

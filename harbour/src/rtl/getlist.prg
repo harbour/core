@@ -74,6 +74,7 @@ FUNCTION __GetListActive()
    RETURN t_oGetListActive
 
 FUNCTION __GetListLast( oGetListLast )
+
    THREAD STATIC t_oGetListLast
 
    IF oGetListLast != NIL

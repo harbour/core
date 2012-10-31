@@ -9,7 +9,7 @@ PROCEDURE Main()
    LOCAL aNames := {}
 
    Set( _SET_SCOREBOARD, .F. )
-   Set( _SET_COLOR, "W/B" )
+   SetColor( "W/B" )
    CLS
 
    // Demo will create an array of names and display in 3 columns

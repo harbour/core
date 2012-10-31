@@ -147,7 +147,7 @@ CREATE CLASS GDImage
    // Functions usefull for polygons
    METHOD Polygon( aPoints, lFilled, color )
    METHOD OpenPolygon( aPoints, color )
-   METHOD AddPoint( x, y )                 INLINE aAdd( ::aPoints, { x, y } )
+   METHOD AddPoint( x, y )                 INLINE AAdd( ::aPoints, { x, y } )
    METHOD ResetPoints()                    INLINE ::aPoints := {}
    METHOD Points()                         INLINE Len( ::aPoints )
 
@@ -170,7 +170,7 @@ CREATE CLASS GDImage
 
    // Functions usefull for style
    METHOD SetStyle( aStyle )               INLINE hb_default( @aStyle, ::aStyles ), gdImageSetStyle( ::pImage, aStyle )
-   METHOD AddStyle( pColor )               INLINE aAdd( ::aStyles, pColor )
+   METHOD AddStyle( pColor )               INLINE AAdd( ::aStyles, pColor )
    METHOD ResetStyles()                    INLINE ::aStyles := {}
    METHOD StyleLenght()                    INLINE Len( ::aStyles )
 
@@ -364,19 +364,20 @@ METHOD Ellipse( x, y, nWidth, nHeight, lFilled, color ) CLASS GDImage
    RETURN Self
 
 METHOD LoadFromFile( cFile ) CLASS GDImage
+
    LOCAL aLoad
 
    aLoad := gdImageFromFile( cFile )
-   //Self  := aLoad[1]:Clone()
+   //Self  := aLoad[ 1 ]:Clone()
    ::Destroy()
-   Self := ::CloneDataFrom( aLoad[1] )
-   //Self := __objClone( aLoad[1] )
-   aLoad[1]:lDestroy := .F.
-   aLoad[1] := NIL
+   Self := ::CloneDataFrom( aLoad[ 1 ] )
+   // Self := __objClone( aLoad[1] )
+   aLoad[ 1 ]:lDestroy := .F.
+   aLoad[ 1 ] := NIL
 
-   ::hFile := aLoad[2]
-   ::cType := aLoad[3]
-   ::cMime := aLoad[4]
+   ::hFile := aLoad[ 2 ]
+   ::cType := aLoad[ 3 ]
+   ::cMime := aLoad[ 4 ]
 
    RETURN Self
 
@@ -518,6 +519,7 @@ METHOD CopyMergeGray( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, nPerc, oDestI
    RETURN oDestImage
 
 METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight ) CLASS GDImage
+
    LOCAL oDestImage
    LOCAL nDstX, nDstY, nDstWidth, nDstHeight
 
@@ -547,6 +549,7 @@ METHOD CopyZoomed( nPerc, nSrcX, nSrcY, nSrcWidth, nSrcHeight ) CLASS GDImage
    RETURN oDestImage
 
 METHOD Rotate( nAngle, lInside ) CLASS GDImage
+
    LOCAL oDestImage
    LOCAL nWidth, nHeight
    LOCAL nAngRad := nAngle * PI() / 180
@@ -567,13 +570,13 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
       oDestImage := GDImage():Create( nWidth, nHeight )
    ENDIF
    IF !lInside
-       ::CopyRotated( ,,,, nWidth - nWidth/2, nHeight - nHeight/2, nAngle, oDestImage )
+      ::CopyRotated( ,,,, nWidth - nWidth / 2, nHeight - nHeight / 2, nAngle, oDestImage )
    ELSE
-       ::CopyRotated( ,,,,,, nAngle, oDestImage )
+      ::CopyRotated( ,,,,,, nAngle, oDestImage )
    ENDIF
    ::Destroy()
    Self := ::CloneDataFrom( oDestImage )
-   //Self := __ObjClone( oDestImage ) // non funziona
+   // Self := __ObjClone( oDestImage ) // non funziona
 
    // Move new image to existing one
    // Signal that this image must not be destroyed
@@ -583,12 +586,13 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
    RETURN Self
 
 METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
+
    LOCAL oDestImage
 
    oDestImage := ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight )
    ::Destroy()
    Self := ::CloneDataFrom( oDestImage )
-   //Self := __ObjClone( oDestImage ) // non funziona
+   // Self := __ObjClone( oDestImage ) // non funziona
 
    // Move new image to existing one
    // Signal that this image must not be destroyed
@@ -598,12 +602,13 @@ METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
    RETURN Self
 
 METHOD Resize( nWidth, nHeight ) CLASS GDImage
+
    LOCAL oDestImage
 
    oDestImage := ::CopyResampled( 0, 0, NIL, NIL, 0, 0, nWidth, nHeight )
    ::Destroy()
    Self := ::CloneDataFrom( oDestImage )
-   //Self := __ObjClone( oDestImage ) // non funziona
+   // Self := __ObjClone( oDestImage ) // non funziona
 
    // Move new image to existing one
    // Signal that this image must not be destroyed
@@ -613,12 +618,13 @@ METHOD Resize( nWidth, nHeight ) CLASS GDImage
    RETURN Self
 
 METHOD Zoom( nPerc ) CLASS GDImage
+
    LOCAL oDestImage
 
    oDestImage := ::CopyZoomed( nPerc )
    ::Destroy()
    Self := ::CloneDataFrom( oDestImage )
-   //Self := __ObjClone( oDestImage ) // non funziona
+   // Self := __ObjClone( oDestImage ) // non funziona
 
    // Move new image to existing one
    // Signal that this image must not be destroyed
@@ -628,6 +634,7 @@ METHOD Zoom( nPerc ) CLASS GDImage
    RETURN Self
 
 METHOD Clone() CLASS GDImage
+
    LOCAL oDestImage
    LOCAL pImage
 
@@ -639,24 +646,25 @@ METHOD Clone() CLASS GDImage
 
    pImage := oDestImage:pImage
    oDestImage := oDestImage:CloneDataFrom( Self )
-   //oDestImage := __objClone( Self )
+   // oDestImage := __objClone( Self )
    oDestImage:pImage := pImage
    ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
 
 
-   //pImage := oDestImage:pImage
-   //// Signal that this image must not be destroyed
-   //oDestImage:lDestroy := .F.
-   //oDestImage := NIL
-   //oDestImage:pImage := pImage
+   // pImage := oDestImage:pImage
+   // // Signal that this image must not be destroyed
+   // oDestImage:lDestroy := .F.
+   // oDestImage := NIL
+   // oDestImage:pImage := pImage
 
    RETURN oDestImage
 
 METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
+
    LOCAL nWidth, nLen
    LOCAL nPosX
 
-   hb_default( @color , ::pColor )
+   hb_default( @color, ::pColor )
    hb_default( @nAlign, gdAlignLeft )
 
    IF     nAlign == gdAlignCenter
@@ -676,7 +684,8 @@ METHOD Say( x, y, cString, color, nAlign ) CLASS GDImage
    RETURN Self
 
 METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
-                    nLineSpacing, nCharMap, nResolution )  CLASS GDImage
+      nLineSpacing, nCharMap, nResolution )  CLASS GDImage
+
    LOCAL nWidth, nLen
    LOCAL nPosX
 
@@ -687,11 +696,11 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
    hb_default( @nAngle    , ::nFontAngle )
 
    IF     nAlign == gdAlignCenter
-      nWidth := nPitch //gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
+      nWidth := nPitch // gdImageFTWidth( cFontName, nPitch )//, ::Radians( nAngle ) ) //::GetFontWidth()
       nLen   := Len( cString )
-      nPosX  := x - ( (nLen / 2) * nWidth )
+      nPosX  := x - ( ( nLen / 2 ) * nWidth )
    ELSEIF nAlign == gdAlignRight
-      nWidth := gdImageFTWidth( cFontName, nPitch ) //, ::Radians( nAngle ) ) //::GetFontWidth()
+      nWidth := gdImageFTWidth( cFontName, nPitch ) // , ::Radians( nAngle ) ) //::GetFontWidth()
       nLen   := Len( cString )
       nPosX  := x - ( nLen * nWidth )
    ELSE
@@ -699,11 +708,12 @@ METHOD SayFreeType( x, y, cString, cFontName, nPitch, nAngle, color, nAlign, ;
    ENDIF
 
    gdImageStringFT( ::pImage, color, cFontName, nPitch, ::Radians( nAngle ), nPosX, y, ;
-                    cString, nLineSpacing, nCharMap, nResolution )
+      cString, nLineSpacing, nCharMap, nResolution )
 
    RETURN Self
 
 METHOD CloneDataFrom( oSrc )
+
    // copy values from Source to Dest
    // please update in case of new datas
 

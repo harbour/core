@@ -170,9 +170,9 @@ METHOD SetActiveLine( n ) CLASS HBBrwText
 
 METHOD GetLine() CLASS HBBrwText
 
-   RETURN PadR( hb_NToS( ::nRow ) + ": " + SubStr( ;
-                MemoLine( ::aRows[ ::nRow ], ::nWidth + ::nLineOffset, 1, ::nTabWidth, .F. ),;
-                ::nLineOffset ), ::nWidth )
+   RETURN PadR( hb_ntos( ::nRow ) + ": " + SubStr( ;
+      MemoLine( ::aRows[ ::nRow ], ::nWidth + ::nLineOffset, 1, ::nTabWidth, .F. ), ;
+      ::nLineOffset ), ::nWidth )
 
 METHOD ToggleBreakPoint( nRow, lSet ) CLASS HBBrwText
 
@@ -306,12 +306,12 @@ METHOD Skip( n ) CLASS HBBrwText
 
    IF n > 0
       IF ::nRow < ::nRows
-         nSkipped := MIN( ::nRows - ::nRow, n )
+         nSkipped := Min( ::nRows - ::nRow, n )
          ::nRow += nSkipped
       ENDIF
    ELSEIF n < 0
       IF ::nRow > 1
-         nSkipped := MAX( 1 - ::nRow, n )
+         nSkipped := Max( 1 - ::nRow, n )
          ::nRow += nSkipped
       ENDIF
    ENDIF
@@ -357,4 +357,4 @@ STATIC FUNCTION WhichEOL( cString )
 
 STATIC FUNCTION Text2Array( cString )
 
-   RETURN hb_aTokens( cString, WhichEOL( cString ) )
+   RETURN hb_ATokens( cString, WhichEOL( cString ) )

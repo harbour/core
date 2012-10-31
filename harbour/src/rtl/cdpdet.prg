@@ -53,28 +53,30 @@
 #include "hbextcdp.ch"
 
 FUNCTION hb_cdpTerm()
+
    LOCAL cCP
    LOCAL cLang
 
-   #if defined( __PLATFORM__WINDOWS )
-      cCP := __CPWinToCPStd( __wapi_GetOEMCP() )
-      cLang := hb_UserLang()
-   #elif defined( __PLATFORM__UNIX )
-      IF ! Empty( GetEnv( "LANG" ) )
-         __UnixParseLangCP( GetEnv( "LANG" ), @cCP, @cLang )
-      ELSE
-         __UnixParseLangCP( GetEnv( "LC_CTYPE" ), @cCP, @cLang )
-      ENDIF
-      cCP := __CPUnixToCPStd( cCP )
-   #elif defined( __PLATFORM__DOS )
-      /* TODO */
-      cCP := NIL
-      cLang := NIL
-   #elif defined( __PLATFORM__OS2 )
-      /* TODO */
-      cCP := NIL
-      cLang := NIL
-   #endif
+#if defined( __PLATFORM__WINDOWS )
+
+   cCP := __CPWinToCPStd( __wapi_GetOEMCP() )
+   cLang := hb_UserLang()
+#elif defined( __PLATFORM__UNIX )
+   IF ! Empty( GetEnv( "LANG" ) )
+      __UnixParseLangCP( GetEnv( "LANG" ), @cCP, @cLang )
+   ELSE
+      __UnixParseLangCP( GetEnv( "LC_CTYPE" ), @cCP, @cLang )
+   ENDIF
+   cCP := __CPUnixToCPStd( cCP )
+#elif defined( __PLATFORM__DOS )
+   /* TODO */
+   cCP := NIL
+   cLang := NIL
+#elif defined( __PLATFORM__OS2 )
+   /* TODO */
+   cCP := NIL
+   cLang := NIL
+#endif
 
    IF ! Empty( cCP := __CPStdToHarbour( cCP, cLang ) )
       RETURN cCP
@@ -83,28 +85,30 @@ FUNCTION hb_cdpTerm()
    RETURN NIL
 
 FUNCTION hb_cdpOS()
+
    LOCAL cCP
    LOCAL cLang
 
-   #if defined( __PLATFORM__WINDOWS )
-      cCP := __CPWinToCPStd( __wapi_GetACP() )
-      cLang := hb_UserLang()
-   #elif defined( __PLATFORM__UNIX )
-      IF ! Empty( GetEnv( "LANG" ) )
-         __UnixParseLangCP( GetEnv( "LANG" ), @cCP, @cLang )
-      ELSE
-         __UnixParseLangCP( GetEnv( "LC_CTYPE" ), @cCP, @cLang )
-      ENDIF
-      cCP := __CPUnixToCPStd( cCP )
-   #elif defined( __PLATFORM__DOS )
-      /* TODO */
-      cCP := NIL
-      cLang := NIL
-   #elif defined( __PLATFORM__OS2 )
-      /* TODO */
-      cCP := NIL
-      cLang := NIL
-   #endif
+#if defined( __PLATFORM__WINDOWS )
+
+   cCP := __CPWinToCPStd( __wapi_GetACP() )
+   cLang := hb_UserLang()
+#elif defined( __PLATFORM__UNIX )
+   IF ! Empty( GetEnv( "LANG" ) )
+      __UnixParseLangCP( GetEnv( "LANG" ), @cCP, @cLang )
+   ELSE
+      __UnixParseLangCP( GetEnv( "LC_CTYPE" ), @cCP, @cLang )
+   ENDIF
+   cCP := __CPUnixToCPStd( cCP )
+#elif defined( __PLATFORM__DOS )
+   /* TODO */
+   cCP := NIL
+   cLang := NIL
+#elif defined( __PLATFORM__OS2 )
+   /* TODO */
+   cCP := NIL
+   cLang := NIL
+#endif
 
    IF ! Empty( cCP := __CPStdToHarbour( cCP, cLang ) )
       RETURN cCP
@@ -153,6 +157,7 @@ STATIC FUNCTION __CPWinToCPStd( nCPWin )
 /* [language[_territory][.codeset][@modifier]] */
 /* TODO: handle "C"/"POSIX" values and values starting with "/" */
 STATIC FUNCTION __UnixParseLangCP( cString, /* @ */ cCP, /* @ */ cLang )
+
    LOCAL tmp
 
    IF ( tmp := At( ".", cString ) ) > 0
@@ -218,6 +223,7 @@ STATIC FUNCTION __CPUnixToCPStd( cCPUnix )
 #endif
 
 STATIC FUNCTION __CPStdToHarbour( cCPStd, cCtryStd )
+
    LOCAL cCP
    LOCAL cCtryHb
    LOCAL cdp
@@ -252,6 +258,7 @@ STATIC FUNCTION __CPStdToHarbour( cCPStd, cCtryStd )
    RETURN cCP
 
 STATIC FUNCTION __CtryStdToCtry( cCtryStd )
+
    LOCAL cCtryHb := Left( hb_cdpSelect(), 2 )
 
    IF HB_ISSTRING( cCtryStd )

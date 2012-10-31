@@ -50,7 +50,8 @@
  *
  */
 
-FUNCTION hb_LibName( cLibName, cLibDir )
+FUNCTION hb_libName( cLibName, cLibDir )
+
    LOCAL cDir, cName, cExt
 
    IF HB_ISSTRING( cLibName )

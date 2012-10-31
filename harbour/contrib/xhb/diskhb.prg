@@ -53,6 +53,7 @@
 #include "directry.ch"
 
 FUNCTION GETVOLINFO( cDir )
-     LOCAL aFiles := Directory( cDir, "V" )
 
-     RETURN iif( Len( aFiles ) >= 1, aFiles[ 1 ][ F_NAME ], "" )
+   LOCAL aFiles := Directory( cDir, "V" )
+
+   RETURN iif( Len( aFiles ) >= 1, aFiles[ 1 ][ F_NAME ], "" )

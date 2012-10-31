@@ -58,62 +58,79 @@
 #include "hbdoc.ch"
 
 CREATE CLASS GenerateAscii FROM GenerateText
+
    METHOD NewIndex( cFolder, cFilename, cTitle, cDescription )
    METHOD NewDocument( cFolder, cFilename, cTitle, cDescription )
+
 ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
+
    ::lContinuous := .T.
    super:NewDocument( cFolder, cFilename, cTitle, cDescription )
+
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
+
    ::lContinuous := .T.
    super:NewIndex( cFolder, cFilename, cTitle, cDescription )
+
    RETURN self
 
 CREATE CLASS GenerateText FROM TPLGenerate
-HIDDEN:
 
-PROTECTED:
+   HIDDEN:
+
+   PROTECTED:
    VAR lContinuous AS LOGICAL INIT .F.
 
-EXPORTED:
+   EXPORTED:
    METHOD NewIndex( cFolder, cFilename, cTitle )
    METHOD NewDocument( cFolder, cFilename, cTitle )
    METHOD AddEntry( oEntry )
    METHOD AddIndex( oEntry ) HIDDEN
    METHOD BeginSection( cSection, cFilename )
-   //~ METHOD EndSection( cSection, cFilename ) // will use inherited method
+   // ~ METHOD EndSection( cSection, cFilename ) // will use inherited method
    METHOD Generate()
 
    METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
+
 ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
+
    super:NewDocument( cFolder, cFilename, cTitle, ".txt" )
    ::WriteEntry( "", cTitle + hb_eol(), .F. )
+
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
+
    super:NewIndex( cFolder, cFilename, cTitle, ".txt" )
    ::WriteEntry( "", cTitle + hb_eol(), .F. )
+
    RETURN self
 
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateText
+
    IF ::Depth == 0
       ::WriteEntry( "", cSection + " (see " + cFilename + ::cExtension + "):", .F. )
    ELSE
       ::WriteEntry( "", cSection + ":", .F. )
    ENDIF
    ::Depth++
+
    RETURN self
 
 METHOD AddIndex( oEntry ) CLASS GenerateText
+
    ::WriteEntry( oEntry:FieldName( "NAME" ), oEntry:Name + " - " + oEntry:OneLiner, .F. )
+
    RETURN self
 
 METHOD AddEntry( oEntry ) CLASS GenerateText
+
    LOCAL idx
 
    IF self:IsIndex()
@@ -133,11 +150,13 @@ METHOD AddEntry( oEntry ) CLASS GenerateText
    RETURN self
 
 METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateText
+
    LOCAL nIndent
+
    IF ! Empty( cEntry )
       nIndent := iif( Len( cCaption ) > 0, 6, 0 )
       IF Len( cCaption ) > 0 .AND. nIndent > 0
-            FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
+         FWrite( ::nHandle, Space( ::Depth * 6 ) + cCaption + ": " + hb_eol() )
       ENDIF
       nIndent += ::Depth * 6
       DO WHILE Len( cEntry ) > 0
@@ -146,6 +165,7 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateTex
    ENDIF
 
 METHOD Generate() CLASS GenerateText
+
    IF ::IsIndex()
       IF ! ::lContinuous
          FWrite( ::nHandle, hb_BChar( 12 ) + hb_eol() )

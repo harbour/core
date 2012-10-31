@@ -22,7 +22,7 @@
    $DESCRIPTION$
       This function is useful if you need to remove a subdirectory for
       some reason.
-  
+
       The source code is written to adhere to Turbo Assembler's IDEAL mode.
       To use another assembler, you will need to rearrange the PROC and
       SEGMENT directives, and also the ENDP and ENDS directives (a very

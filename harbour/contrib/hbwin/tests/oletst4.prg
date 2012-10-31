@@ -13,6 +13,7 @@
  */
 
 PROCEDURE Main()
+
    LOCAL oObject, oTime, oInfo
    LOCAL p1, p2, p3, p4, p5, p6, p7
 
@@ -32,16 +33,17 @@ PROCEDURE Main()
       ? "     build:", oInfo:build
       ?
       ? "REF:", oObject:ref( @p1, @p2, @p3, @p4, @p5, @p6, @p7 )
-      ? "        p1:", hb_valToExp( p1 )
-      ? "        p2:", hb_valToExp( p2 )
-      ? "        p3:", hb_valToExp( p3 )
-      ? "        p4:", hb_valToExp( p4 )
+      ? "        p1:", hb_ValToExp( p1 )
+      ? "        p2:", hb_ValToExp( p2 )
+      ? "        p3:", hb_ValToExp( p3 )
+      ? "        p4:", hb_ValToExp( p4 )
       ? "        p5:", p5:className() // hb_valToExp( p5 )
-      ? "        p6:", hb_valToExp( p6 )
-      ? "        p7:", hb_valToExp( p7 )
+      ? "        p6:", hb_ValToExp( p6 )
+      ? "        p7:", hb_ValToExp( p7 )
    ELSE
       ? "Can not access 'MyOleObjServer' OLE server."
    ENDIF
 
    WAIT
-RETURN
+
+   RETURN

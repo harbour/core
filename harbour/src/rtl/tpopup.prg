@@ -159,6 +159,7 @@ METHOD close( lCloseChild ) CLASS POPUPMENU
    RETURN Self
 
 METHOD delItem( nPos ) CLASS POPUPMENU
+
    LOCAL nLen
    LOCAL aItems
    LOCAL nWidth
@@ -171,13 +172,13 @@ METHOD delItem( nPos ) CLASS POPUPMENU
       ASize( ::aItems, --::nItemCount )
 
       IF ::nWidth == nLen + 2
-          aItems := ::aItems
-          nLen := ::nItemCount
-          nWidth := 0
-          FOR nPos := 1 TO nLen
-             nWidth := Max( __CapMetrics( aItems[ nPos ] ), nWidth )
-          NEXT
-          ::nWidth := nWidth
+         aItems := ::aItems
+         nLen := ::nItemCount
+         nWidth := 0
+         FOR nPos := 1 TO nLen
+            nWidth := Max( __CapMetrics( aItems[ nPos ] ), nWidth )
+         NEXT
+         ::nWidth := nWidth
       ENDIF
    ENDIF
 
@@ -210,7 +211,7 @@ METHOD display() CLASS POPUPMENU
 
       DispBegin()
 
-      hb_dispBox( nTop, nLeft, ::nBottom, ::nRight, ;
+      hb_DispBox( nTop, nLeft, ::nBottom, ::nRight, ;
                   SubStr( ::cBorder, 1, 8 ) + " ", ;
                   hb_ColorIndex( ::cColorSpec, 5 ) )
 
@@ -227,7 +228,7 @@ METHOD display() CLASS POPUPMENU
          //          to use it for flag purposes.
          IF aItems[ nPos ]:caption == HB_MENU_SEPARATOR_UNI
 
-            hb_dispOutAtBox( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
+            hb_DispOutAtBox( nTop, nLeft - 1, SubStr( ::cBorder, 9, 1 ) + Replicate( SubStr( ::cBorder, 10, 1 ), nWidth ) + SubStr( ::cBorder, 11, 1 ), hb_ColorIndex( ::cColorSpec, 5 ) )
 
          ELSE
             cCaption := PadR( aItems[ nPos ]:caption, nWidth - 1 )
@@ -267,10 +268,10 @@ METHOD display() CLASS POPUPMENU
                cCaption := Stuff( cCaption, nHotKeyPos, 1, "" )
             ENDIF
 
-            hb_dispOutAt( nTop, nLeft, cCaption, hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 1, iif( aItems[ nPos ]:enabled, 0, 4 ) ) ) )
+            hb_DispOutAt( nTop, nLeft, cCaption, hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 1, iif( aItems[ nPos ]:enabled, 0, 4 ) ) ) )
 
             IF aItems[ nPos ]:enabled .AND. nHotKeyPos != 0
-               hb_dispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 3, 2 ) ) )
+               hb_DispOutAt( nTop, nLeft + nHotKeyPos - 1, SubStr( cCaption, nHotKeyPos, 1 ), hb_ColorIndex( ::cColorSpec, iif( nPos == nCurrent, 3, 2 ) ) )
             ENDIF
          ENDIF
       NEXT
@@ -282,13 +283,14 @@ METHOD display() CLASS POPUPMENU
    RETURN Self
 
 METHOD getAccel( xKey ) CLASS POPUPMENU
+
    LOCAL cKey
    LOCAL item
 
    IF HB_ISSTRING( xKey )
       cKey := xKey
    ELSEIF HB_ISNUMERIC( xKey )
-      cKey := hb_KeyChar( xKey )
+      cKey := hb_keyChar( xKey )
    ELSE
       RETURN 0
    ENDIF
@@ -305,6 +307,7 @@ METHOD getAccel( xKey ) CLASS POPUPMENU
    RETURN 0
 
 METHOD getFirst() CLASS POPUPMENU
+
    LOCAL nPos
    LOCAL nLen := ::nItemCount
    LOCAL aItems := ::aItems
@@ -321,6 +324,7 @@ METHOD getItem( nPos ) CLASS POPUPMENU
    RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ], NIL )
 
 METHOD getLast() CLASS POPUPMENU
+
    LOCAL nPos
    LOCAL nLen := ::nItemCount
    LOCAL aItems := ::aItems
@@ -334,6 +338,7 @@ METHOD getLast() CLASS POPUPMENU
    RETURN 0
 
 METHOD getNext() CLASS POPUPMENU
+
    LOCAL nPos
 
    IF ::nCurrent < ::nItemCount
@@ -347,6 +352,7 @@ METHOD getNext() CLASS POPUPMENU
    RETURN 0
 
 METHOD getPrev() CLASS POPUPMENU
+
    LOCAL nPos
 
    IF ::nCurrent > 1
@@ -363,6 +369,7 @@ METHOD getPrev() CLASS POPUPMENU
          1) when a menuitem is disabled it will ignore the key [jlalin] */
 
 METHOD getShortCt( nKey ) CLASS POPUPMENU
+
    LOCAL nPos
    LOCAL nLen := ::nItemCount
    LOCAL aItems := ::aItems
@@ -379,6 +386,7 @@ METHOD getShortCt( nKey ) CLASS POPUPMENU
          1) when a menuitem is disabled it will ignore the click [jlalin] */
 
 METHOD hitTest( nMRow, nMCol ) CLASS POPUPMENU
+
    LOCAL nPos
 
    ::setMetrics()
@@ -492,12 +500,14 @@ METHOD select( nPos ) CLASS POPUPMENU
       ::nCurrent != nPos .AND. ;
       ::aItems[ nPos ]:enabled ) .OR. nPos == 0
 
-//    IF ::isOpen() .AND. ;
-//       ::nCurrent > 0 .AND. ;
-//       ::aItems[ ::nCurrent ]:isPopUp()
-//
-//       ::aItems[ ::nCurrent ]:data:close()
-//    ENDIF
+#if 0
+      IF ::isOpen() .AND. ;
+         ::nCurrent > 0 .AND. ;
+         ::aItems[ ::nCurrent ]:isPopUp()
+
+         ::aItems[ ::nCurrent ]:data:close()
+      ENDIF
+#endif
 
       ::nCurrent := nPos
    ENDIF
@@ -561,7 +571,7 @@ METHOD bottom( nBottom ) CLASS POPUPMENU
 METHOD colorSpec( cColorSpec ) CLASS POPUPMENU
 
    IF cColorSpec != NIL
-      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
          {|| !Empty( hb_ColorIndex( cColorSpec, 5 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 6 ) ) } )
    ENDIF
 
@@ -619,6 +629,7 @@ METHOD width() CLASS POPUPMENU
    RETURN ::nWidth
 
 METHOD New( nTop, nLeft, nBottom, nRight ) CLASS POPUPMENU
+
    LOCAL cColor
 
    IF HB_ISNUMERIC( nTop )
@@ -638,17 +649,18 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS POPUPMENU
       ::cColorSpec := "N/W,W/N,W+/W,W+/N,N+/W,W/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BACKGROUND ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BORDER     )
+      ::cColorSpec := ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BACKGROUND ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BORDER     )
    ENDIF
 
    RETURN Self
 
-FUNCTION PopUp( nTop, nLeft, nBottom, nRight )
-   RETURN HBPopUpMenu():New( nTop, nLeft, nBottom, nRight )
+FUNCTION Popup( nTop, nLeft, nBottom, nRight )
+   RETURN HBPopupMenu():New( nTop, nLeft, nBottom, nRight )
 
 #endif

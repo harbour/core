@@ -11,9 +11,10 @@
 REQUEST HB_CODEPAGE_LTWIN
 
 PROCEDURE Main()
+
    LOCAL hSurface, hCairo, nI
 
-   HB_CDPSELECT("LTWIN")
+   hb_cdpSelect( "LTWIN" )
    hSurface := cairo_pdf_surface_create( "hellow.pdf", 566.9, 793.7 )  // 200x280 mm in pt
    hCairo := cairo_create( hSurface )
 
@@ -26,7 +27,7 @@ PROCEDURE Main()
 
    cairo_set_line_width( hCairo, 1 )
    FOR nI := 1 TO 10
-      cairo_set_source_rgb( hCairo, HB_RANDOM(), HB_RANDOM(), HB_RANDOM() )
+      cairo_set_source_rgb( hCairo, hb_Random(), hb_Random(), hb_Random() )
       cairo_rectangle( hCairo, 100 + nI * 5, 50 + nI * 5, 100, 70 )
       cairo_stroke( hCairo )
    NEXT
@@ -41,4 +42,5 @@ PROCEDURE Main()
    cairo_show_page( hCairo )
    cairo_destroy( hCairo )
    cairo_surface_destroy( hSurface )
-RETURN
+
+   RETURN

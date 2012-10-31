@@ -13,7 +13,9 @@
 #require "hbmisc"
 
 PROCEDURE Main()
+
 #if defined( __PLATFORM__WINDOWS )
+
    LOCAL nFlags
 
    nFlags := -1
@@ -21,4 +23,5 @@ PROCEDURE Main()
    ? nFlags
 
 #endif
+
    RETURN

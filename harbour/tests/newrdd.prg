@@ -50,52 +50,52 @@ PROCEDURE Main()
 
    ? "dbGoTop():"
    dbGoTop()
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
    dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
    dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbGoTop():"
    dbGoTop()
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
    dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
    dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    Inkey( 0 )
@@ -103,27 +103,27 @@ PROCEDURE Main()
 
    ? "dbGoBottom():"
    dbGoBottom()
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( 1 ):"
    dbSkip( 1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
    dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "dbSkip( -1 ):"
    dbSkip( -1 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
 
@@ -133,7 +133,7 @@ PROCEDURE Main()
 
    ? "dbGoto( 490 ):"
    dbGoto( 490 )
-   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( BOF() ), TESTDBF->( EOF() ), ;
+   ? "Bof Eof Found Deleted RecNo:", TESTDBF->( Bof() ), TESTDBF->( Eof() ), ;
       TESTDBF->( Found() ), TESTDBF->( Deleted() ), TESTDBF->( Deleted() ), ;
       TESTDBF->( RecNo() )
    ? "FCount:", TESTDBF->( FCount() )
@@ -150,7 +150,7 @@ PROCEDURE Main()
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
    ? ""
-   WHILE !TESTDBF->( EOF() )
+   WHILE !TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
@@ -171,7 +171,7 @@ PROCEDURE Main()
    SET FILTER TO TESTDBF->AGE == 21
    ? TESTDBF->( dbFilter() )
    TESTDBF->( dbGoTop() )
-   WHILE !TESTDBF->( EOF() )
+   WHILE !TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
@@ -260,7 +260,7 @@ PROCEDURE Main()
    SELECT( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 120000
    TESTDBF->( dbGoTop() )
-   WHILE !TESTDBF->( EOF() )
+   WHILE !TESTDBF->( Eof() )
       NEWRDD->( dbAppend() )
       NEWRDD->FIRST_NAME := TESTDBF->FIRST
       NEWRDD->AGE := TESTDBF->AGE

@@ -57,19 +57,14 @@
 #define C_TYPE   3
 #define C_CHAR   4
 
-#translate Single( <t>, <l>, <b>, <r> ) =>;
-      hb_DispBox( <t>, <l>, <b>, <r>, hb_UTF8ToStrBox( "┌─┐│┘─└│" ) )
+#translate Single( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, hb_UTF8ToStrBox( "┌─┐│┘─└│" ) )
+#translate Double( <t>, <l>, <b>, <r> )      => hb_DispBox( <t>, <l>, <b>, <r>, hb_UTF8ToStrBox( "╔═╗║╝═╚║" ) )
+#translate BkGrnd( <t>, <l>, <b>, <r>, <c> ) => hb_DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
 
-#translate Double( <t>, <l>, <b>, <r> ) =>;
-      hb_DispBox( <t>, <l>, <b>, <r>, hb_UTF8ToStrBox( "╔═╗║╝═╚║" ) )
-
-#translate BkGrnd( <t>, <l>, <b>, <r>, <c> ) =>;
-      hb_DispBox( <t>, <l>, <b>, <r>, Replicate( <c>, 9 ) )
+// Colour selection routine
+// Return -> the same array that was passed but with modified colours
 
 FUNCTION FT_ClrSel( aClrs, lColour, cChr )
-
-   // Colour selection routine
-   // Return -> the same array that was passed but with modified colours
 
    LOCAL aClrOld := AClone( aClrs )
    LOCAL aOptions
@@ -94,36 +89,36 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
    SetColor( iif( lColour, "GR+/N,,N/N", "W+/N,,N/N" ) )
    hb_Scroll()
 
-   //.... initialize the colour palette
+   // .... initialize the colour palette
    aClrPal := _ftInitPal( iif( lColour, aClrTab, aClrBW ) )
 
-   //.... paint the colours on the screen
+   // .... paint the colours on the screen
    _ftShowPal( aClrPal, cChr )
 
-   //.... Determine length of longest name and make sure not greater than 20
+   // .... Determine length of longest name and make sure not greater than 20
    AEval( aClrs, {| aOpt | nLen := Max( nLen, Len( aOpt[ C_NAME ] ) ) } )
    nLen := Min( Max( nLen, 1 ), 20 ) + 2
 
-   //.... prepare an array for use with aChoice(); truncate names at 20 chrs.
+   // .... prepare an array for use with aChoice(); truncate names at 20 chrs.
    aPrompt := Array( Len( aClrs ) )
    AEval( aClrs, ;
       {| aOpt, nE | aPrompt[ nE ] := " " + SubStr( aOpt[ C_NAME ], 1, nLen - 2 ) + " " };
       )
 
-   //.... determine co-ordinates for the achoice window
+   // .... determine co-ordinates for the achoice window
    nT := Max( Int( ( 18 - Len( aPrompt ) ) / 2 ) - 1, 1 )
    nB := Min( nT + Len( aPrompt ) + 1, 17 )
    nL := Max( Int( ( 27 - nLen ) / 2 ) - 2, 1 )
    nR := Min( nL + nLen + 3, 26 )
 
-   //.... set up the window for aChoice
+   // .... set up the window for aChoice
    SetColor( iif( lColour, "N/W,W+/R", "N/W,W+/N" ) )
    hb_Scroll( nT, nL, nB, nR )
 
-   //.... prompt for colour setting and modify
+   // .... prompt for colour setting and modify
    DO WHILE nChoice != 0
       Double( nT, nL + 1, nB, nR - 1 )
-      nChoice := AChoice( nt + 1, nL + 2, nB - 1, nR - 2, aPrompt, , , nChoice )
+      nChoice := AChoice( nt + 1, nL + 2, nB - 1, nR - 2, aPrompt,,, nChoice )
       IF nChoice != 0
          _ftHiLite( Row(), nL + 2, aPrompt[ nChoice ], nLen )
          Single( nT, nL + 1, nB, nR - 1 )
@@ -144,8 +139,6 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
 
    RETURN iif( nChoice == 1, aClrs, aClrOld )
 
-//
-
 // Highlight the current selected aChoice element
 // Return -> NIL
 
@@ -156,8 +149,6 @@ STATIC FUNCTION _ftHiLite( nRow, nCol, cStr, nLen )
    hb_DispOutAt( nRow, nCol, PadR( cStr, nLen ), aClr[ 2 ] ) // enhanced colour
 
    RETURN NIL
-
-//
 
 // Colour selection for specific type of colour setting
 // Return -> aOpt with modified colour strings
@@ -182,7 +173,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 
    __defaultNIL( @lColour, IsColor() )
 
-   //.... display appropriate prompts based on type of colour setting
+   // .... display appropriate prompts based on type of colour setting
    nChoice := 1
    DO CASE
    CASE aOpt[ C_TYPE ] == "D"
@@ -197,7 +188,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
    ENDCASE
 
    IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
-      //.... we need to know top,left,bottom,right for the prompt window
+      // .... we need to know top,left,bottom,right for the prompt window
       AEval( aPrompt, {| cPrompt | nLen := Max( nLen, Len( cPrompt ) ) } )
       nLen := Max( nLen, Len( aOpt[ C_NAME ] ) + 2 )
       nT := iif( aOpt[ C_TYPE ] == "M", 18, 19 )
@@ -205,14 +196,14 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       nL := Max( Int( ( 27 - nLen ) / 2 ) - 2, 1 )
       nR := Min( nL + nLen + 3, 26 )
 
-      //.... set up the window for prompt
+      // .... set up the window for prompt
       SetColor( "N/W" )
       hb_Scroll( nT, nL, nB, nR )
    ENDIF
 
    DO WHILE .T.
 
-      //.... show sample window
+      // .... show sample window
       _ftShowIt( aOpt )
 
       IF !( aOpt[ C_TYPE ] == "T" )  // no prompt for titles
@@ -228,7 +219,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
          CASE nChoice == 0
             EXIT
          CASE nChoice == 2 .AND. aOpt[ C_TYPE ] == "D"
-            //....  desktop character
+            // ....  desktop character
             aOpt := _ftDeskChar( aOpt )
             LOOP
          CASE nChoice == 4 .AND. !( aOpt[ C_TYPE ] == "M" )
@@ -236,10 +227,10 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
          ENDCASE
       ENDIF
 
-      //.... get the specific colour combination
+      // .... get the specific colour combination
       aClrs := _ftChr2Arr( aOpt[ C_CLR ] )   // place color string in an array
       ASize( aClrs, 5 )                      // make sure there are 5 settings
-      //.... empty elements are made NIL so they can be defaulted
+      // .... empty elements are made NIL so they can be defaulted
       AEval( aClrs, {| v, e | aClrs[ e ] := iif( Empty( v ), NIL, AllTrim( v ) ) } )
       __defaultNIL( @aClrs[ 1 ], "W/N" )
       __defaultNIL( @aClrs[ 2 ], "N/W" )  // place default colours into
@@ -248,7 +239,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
       __defaultNIL( @aClrs[ 5 ], "N/W" )
       cClr := aClrs[ nChoice ]    // selected colour
 
-      //.... allow change to specific part of colour string
+      // .... allow change to specific part of colour string
       IF !( aOpt[ C_TYPE ] == "T" )
          Single( nT, nL + 1, nB, nR - 1 )
          hb_DispOutAt( nT, nL + 2, PadC( " " + aOpt[ C_NAME ] + " ", nR - nL - 3, hb_UTF8ToStr( "─" ) ) )
@@ -263,13 +254,11 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
 
    ENDDO
 
-   //.... restore the lower 1/2 of screen, and colour
+   // .... restore the lower 1/2 of screen, and colour
    RestScreen( 18, 00, MaxRow(), MaxCol(), cScrSav )
    SetColor( cColour )
 
    RETURN aOpt
-
-//
 
 // Show an example of the colour setting
 // Return -> NIL
@@ -381,8 +370,6 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    RETURN NIL
 
-//
-
 // select the colour combination from aClrPal and place in cClr
 // cClr is the current colour being modified
 // Return -> selected colour combination
@@ -404,7 +391,7 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 
    SetColor( "W+/N" )
 
-   //.... find the starting row and column for the current colour
+   // .... find the starting row and column for the current colour
    FOR nR := 1 TO nDim
       FOR nC := 1 TO nDim
          IF aClrPal[ nR, nC ] == AllTrim( cClr )
@@ -424,17 +411,17 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 
    DO WHILE .T.
 
-      //.... make sure array boundary not exceeded
+      // .... make sure array boundary not exceeded
       nR := iif( nR > nDim, 1, iif( nR == 0, nDim, nR ) )
       nC := iif( nC > nDim, 1, iif( nC == 0, nDim, nC ) )
 
-      //.... place selected colour in the appropriate spot in clr string
+      // .... place selected colour in the appropriate spot in clr string
       aOpt[ C_CLR ] := _ftClrPut( aOpt[ C_CLR ], nElem, aClrPal[ nR, nC ] )
 
-      //.... show sample window
+      // .... show sample window
       _ftShowIt( aOpt )
 
-      //.... highlight the colour palette element
+      // .... highlight the colour palette element
       SetColor( "W+/N" )
       hb_DispOutAt( nR, nC * 3 + 26, "" ) /* LOW-ASCII "►" */
       hb_DispOutAt( nR, nC * 3 + 29, "" ) /* LOW-ASCII "◄" */
@@ -442,7 +429,7 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
       hb_DispOutAt( nR, nC * 3 + 26, " " )
       hb_DispOutAt( nR, nC * 3 + 29, " " )
 
-      //.... check key movement and modify co-ordinates
+      // .... check key movement and modify co-ordinates
       DO CASE
       CASE nKey == K_ESC   ; EXIT
       CASE nKey == K_ENTER ; cClr := aClrPal[ nR, nC ] ; EXIT
@@ -459,8 +446,6 @@ STATIC FUNCTION _ftClrSel( aClrPal, cClr, nElem, aOpt )
 
    RETURN cClr
 
-//
-
 // Place a colour setting in the colour string
 // Return -> modified colour string
 
@@ -472,8 +457,6 @@ STATIC FUNCTION _ftClrPut( cClrStr, nElem, cClr )
 
    RETURN _ftArr2Chr( aClr )
 
-//
-
 // Select the character to be used for the desktop background
 // Return -> same array with new character
 
@@ -482,7 +465,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    LOCAL aChar := { " ", "░", "▒", "▓" }
    LOCAL cChar := aOpt[ C_CHAR ]
    LOCAL cClr  := aOpt[ C_CLR ]
-   LOCAL nElem := hb_AScan( aChar, cChar, , , .T. )
+   LOCAL nElem := hb_AScan( aChar, cChar,,, .T. )
    LOCAL n, nKey
 
    IF nElem == 0             // this allows another character to be selected
@@ -490,7 +473,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
       nElem := 5             // not be available if they ever select another
    ENDIF                     // char and store it. It's up to you to put it in
 
-   //.... draw the choices on the screen
+   // .... draw the choices on the screen
    SetColor( cClr )
    FOR n := 1 TO Len( aChar )
       hb_DispOutAt( n + 18, 29, Replicate( hb_UTF8ToStr( aChar[ n ] ), 10 ) )
@@ -498,10 +481,10 @@ STATIC FUNCTION _ftDeskChar( aOpt )
 
    n := nElem + 18
    DO WHILE .T.
-      //.... make sure boundary not exeeded
+      // .... make sure boundary not exeeded
       n := iif( n > Len( aChar ) + 18, 19, iif( n < 19, Len( aChar ) + 18, n ) )
 
-      //.... show sample window
+      // .... show sample window
       aOpt[ C_CHAR ] := aChar[ n - 18 ] // place in array
       _ftShowIt( aOpt )
 
@@ -512,7 +495,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
       hb_DispOutAt( n, 28, " " )
       hb_DispOutAt( n, 39, " " )
 
-      //.... check key movement and modify co-ordinates
+      // .... check key movement and modify co-ordinates
       DO CASE
       CASE nKey == K_ESC   ; aOpt[ C_CHAR ] := cChar ; EXIT
       CASE nKey == K_ENTER ; EXIT
@@ -526,8 +509,6 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    hb_Scroll( 18, 28, 23, 39 )
 
    RETURN aOpt
-
-//
 
 // Convert a chr string to an array
 // Return -> array
@@ -552,8 +533,6 @@ STATIC FUNCTION _ftChr2Arr( cString, cDelim )
 
    RETURN aArray
 
-//
-
 // convert an array to a chr string
 // Return -> string
 
@@ -568,8 +547,6 @@ STATIC FUNCTION _ftArr2Chr( aArray, cDelim )
 
    RETURN cString
 
-//
-
 // Paint the palette on the screen
 // Return -> NIL
 
@@ -581,7 +558,8 @@ STATIC FUNCTION _ftShowPal( aClrPal, cChr )
    LOCAL nBottom := nTop  + Len( aClrPal ) + 1
    LOCAL nRight  := nLeft + ( Len( aClrPal ) * 3 ) + 2
 
-   //.... Buffer the screen output
+   // .... Buffer the screen output
+
    DispBegin()
    Single( nTop, nLeft, nBottom, nRight )
    FOR nF := 1 TO Len( aClrPal )
@@ -593,8 +571,6 @@ STATIC FUNCTION _ftShowPal( aClrPal, cChr )
    DispEnd()
 
    RETURN NIL
-
-//
 
 // Initialise the colour palette based on the passed colour table aClrTab
 // Load the palette with colours
@@ -615,8 +591,6 @@ STATIC FUNCTION _ftInitPal( aClrTab )
    NEXT
 
    RETURN aClrPal
-
-//
 
 // Compares the contents of 2 arrays
 // Return -> logical

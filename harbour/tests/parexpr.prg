@@ -14,6 +14,7 @@
 #endif
 
 PROCEDURE Main()
+
    LOCAL x
    LOCAL y
 
@@ -41,7 +42,7 @@ PROCEDURE Main()
    x := ( y := 10, y )
    ? x
 
-   x := ( ( y := ( 1, 2, 3) ), y * ( 10, 20, 30 ) )
+   x := ( ( y := ( 1, 2, 3 ) ), y * ( 10, 20, 30 ) )
    ? x
 
    // Now mix with statements and functions

@@ -15,7 +15,7 @@ PROCEDURE Main()
 
    LOCATE FOR "City LIKE 'Chi*'"
 
-   DO WHILE ! EOF()
+   DO WHILE ! Eof()
       ? test00->First, test00->City
       CONTINUE
    ENDDO

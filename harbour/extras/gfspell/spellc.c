@@ -3,11 +3,11 @@
  */
 
 // #define _CLIPDEFS_H     // Don't redefine basic types
- #include "extend.h"
+#include "extend.h"
 // #include "hbapi.h"
- #include "hbapifs.h"
- #include "extend.api"
- #include "hbundoc.api"
+#include "hbapifs.h"
+#include "extend.api"
+#include "hbundoc.api"
 
 typedef char uchar;
 typedef unsigned int uint;
@@ -19,8 +19,8 @@ typedef unsigned int uint;
 //Org  extern cdecl int _bscan( uchar *, int, uchar );
 //Org  extern cdecl int _bcmp( uchar *, uchar *, int );
 
-uchar *  cSearch  = "INEDTIERESTEON";
-uchar *  cRepl    = "[\\]^_`a";
+uchar * cSearch = "INEDTIERESTEON";
+uchar * cRepl   = "[\\]^_`a";
 
 
 
@@ -34,13 +34,13 @@ uchar *  cRepl    = "[\\]^_`a";
 ////////////////////////////
 HB_FUNC( XFORM )
 {
-   uchar          cRet[ 128 ];
-   uchar *        cPtr;
-   int            iRetLen = 0;
-   const uchar *  cWord;
-   int            iWordLen;
-   int            x;
-   uint           iKey;
+   uchar cRet[ 128 ];
+   uchar *       cPtr;
+   int           iRetLen = 0;
+   const uchar * cWord;
+   int           iWordLen;
+   int           x;
+   uint          iKey;
 
    cWord    = _parc( 1 ) + 2;
    iWordLen = _parclen( 1 ) - 2;
@@ -66,8 +66,8 @@ HB_FUNC( XFORM )
                }
             }
             iWordLen--;
-            cWord    += 2;
-            *cPtr++  = *( cRepl + ( x >> 1 ) );
+            cWord  += 2;
+            *cPtr++ = *( cRepl + ( x >> 1 ) );
             break;
          }
 
@@ -101,13 +101,13 @@ HB_FUNC( XFORM )
 ////////////////////////////
 HB_FUNC( XUNFORM )
 {
-   uchar          cRet[ 128 ];
-   uchar *        cPtr;
-   int            iRetLen = 0;
-   uchar          c;
-   const uchar *  cWord;
-   int            iWordLen;
-   int            x;
+   uchar cRet[ 128 ];
+   uchar *       cPtr;
+   int           iRetLen = 0;
+   uchar         c;
+   const uchar * cWord;
+   int           iWordLen;
+   int           x;
 
    cWord    = _parc( 1 );
    iWordLen = _parclen( 1 );
@@ -133,14 +133,14 @@ HB_FUNC( XUNFORM )
                *cPtr++  = 'I';
                *cPtr++  = 'N';
                *cPtr++  = 'G';
-               iRetLen  += 2;
+               iRetLen += 2;
             }
          }
          else if( iRetLen < 128 )
          {
-            x        = x << 1;
-            *cPtr++  = *( cSearch + x++ );
-            *cPtr++  = *( cSearch + x );
+            x       = x << 1;
+            *cPtr++ = *( cSearch + x++ );
+            *cPtr++ = *( cSearch + x );
             iRetLen++;
          }
       }
@@ -175,14 +175,14 @@ HB_FUNC( XUNFORM )
 ////////////////////////////
 HB_FUNC( SP_RATE )
 {
-   const uchar *  cFound;
-   int            nFound;
-   const uchar *  cWord;
-   int            nWord;
-   int            nMinLen;
-   int            x;
-   int            lim;
-   uchar *        cRating = "nZZ";
+   const uchar * cFound;
+   int nFound;
+   const uchar * cWord;
+   int nWord;
+   int nMinLen;
+   int x;
+   int lim;
+   uchar * cRating = "nZZ";
 
    cFound   = _parc( 1 );
    nFound   = _parclen( 1 );
@@ -200,8 +200,8 @@ HB_FUNC( SP_RATE )
       *( cRating + 1 ) = 'A' - 1 + lim - x;
    }
 
-   cFound   = cFound + nFound - 1;
-   cWord    = cWord + nWord - 1;
+   cFound = cFound + nFound - 1;
+   cWord  = cWord + nWord - 1;
 
    for( x = 0; x < lim; x++ )
    {
@@ -225,13 +225,13 @@ HB_FUNC( SP_RATE )
  * Program Name: test.c
  * Author: Clayton Neff
  * Copyright (c) 1992 by CoN Computer Consultants
- **-----------------------------------------------------------------------------
+ * -----------------------------------------------------------------------------
  * Created: 8/23/1992 at 16:47
  *
- **.............................................................................
+ * .............................................................................
  * Revision: 1.0 Last Revised: 8/23/1992 at 16:47
  * Description: Original Creation.
- **.............................................................................
+ * .............................................................................
  *---------------------------- ALL RIGHTS RESERVED ----------------------------*/
 
 // #include "extend.h"
@@ -242,43 +242,43 @@ HB_FUNC( SP_RATE )
 
 HB_FUNC( C_METAFONE )
 {
-   char *         sReturn;          /* Pointer to the return string.   */
-   const char *   sMeta;            /* Pointer to the passed string.   */
-   unsigned int   iRetLen;          /* Length of the return string.    */
-   unsigned int   iStrLen;          /* Length of the passed string.    */
-   unsigned int   iRetPtr;          /* Pointer into the return string. */
-   unsigned int   iStrPtr;          /* Pointer into the passed string. */
+   char * sReturn;                  /* Pointer to the return string.   */
+   const char * sMeta;              /* Pointer to the passed string.   */
+   unsigned int iRetLen;            /* Length of the return string.    */
+   unsigned int iStrLen;            /* Length of the passed string.    */
+   unsigned int iRetPtr;            /* Pointer into the return string. */
+   unsigned int iStrPtr;            /* Pointer into the passed string. */
 
    /* If no string was passed then return an empty string. */
    if( PCOUNT == 0 )
    {
 //Org    sMeta    = _xalloc( 1 ) ;
-      sMeta       = hb_xgrab( 1 );
-      sMeta[ 1 ]  = '\0';
-      iStrLen     = 0;
-      iRetLen     = 4;
+      sMeta      = hb_xgrab( 1 );
+      sMeta[ 1 ] = '\0';
+      iStrLen    = 0;
+      iRetLen    = 4;
    }
    /* If no return lenght was passed, default to 4. */
    else if( PCOUNT == 1 )
    {
-      sMeta    = _parc( 1 );
-      iStrLen  = _parclen( 1 );
-      iRetLen  = 4;
+      sMeta   = _parc( 1 );
+      iStrLen = _parclen( 1 );
+      iRetLen = 4;
    }
    else
    {
-      sMeta    = _parc( 1 );
-      iStrLen  = _parclen( 1 );
-      iRetLen  = _parni( 2 );
+      sMeta   = _parc( 1 );
+      iStrLen = _parclen( 1 );
+      iRetLen = _parni( 2 );
    }
 
    /* Set up the buffer to hold the return string.
       Be sure to make it 1 character longer than needed
       so there is space for the null terminator. */
 //Org sReturn = _xalloc( iRetLen + 1 ) ;
-   sReturn  = hb_xgrab( iRetLen + 1 );
-   iRetPtr  = 0;
-   iStrPtr  = 0;
+   sReturn = hb_xgrab( iRetLen + 1 );
+   iRetPtr = 0;
+   iStrPtr = 0;
 
    /* Handle the special prefixes. */
    switch( sMeta[ iStrPtr ] )
@@ -298,7 +298,7 @@ HB_FUNC( C_METAFONE )
 
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'N';
-            iStrPtr              += 2;
+            iStrPtr += 2;
          }
          break;
 
@@ -309,7 +309,7 @@ HB_FUNC( C_METAFONE )
 
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'E';
-            iStrPtr              += 2;
+            iStrPtr += 2;
          }
          break;
 
@@ -329,7 +329,7 @@ HB_FUNC( C_METAFONE )
          {
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'R';
-            iStrPtr              += 2;
+            iStrPtr += 2;
          }
          /* WHO->H */
          else if( ( sMeta[ iStrPtr + 1 ] == 'H' ) &&
@@ -337,14 +337,14 @@ HB_FUNC( C_METAFONE )
          {
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'H';
-            iStrPtr              += 3;
+            iStrPtr += 3;
          }
          /* WH->W */
          else if( sMeta[ iStrPtr + 1 ] == 'H' )
          {
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'W';
-            iStrPtr              += 2;
+            iStrPtr += 2;
          }
          break;
 
@@ -357,7 +357,7 @@ HB_FUNC( C_METAFONE )
             /* Put in the first return characters and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'M';
             sReturn[ iRetPtr++ ] = 'K';
-            iStrPtr              += ( sMeta[ iStrPtr + 2 ] == 'G' ) ? 3 : 2;
+            iStrPtr += ( sMeta[ iStrPtr + 2 ] == 'G' ) ? 3 : 2;
          }
          /* MACH->MX */
          else if( ( sMeta[ iStrPtr + 1 ] == 'A' ) &&
@@ -367,7 +367,7 @@ HB_FUNC( C_METAFONE )
             /* Put in the first return characters and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'M';
             sReturn[ iRetPtr++ ] = 'X';
-            iStrPtr              += 4;
+            iStrPtr += 4;
          }
          /* MACG->MK or MAC->MK */
          else if( ( sMeta[ iStrPtr + 1 ] == 'A' ) &&
@@ -376,7 +376,7 @@ HB_FUNC( C_METAFONE )
             /* Put in the first return characters and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'M';
             sReturn[ iRetPtr++ ] = 'K';
-            iStrPtr              += ( sMeta[ iStrPtr + 3 ] == 'G' ) ? 4 : 3;
+            iStrPtr += ( sMeta[ iStrPtr + 3 ] == 'G' ) ? 4 : 3;
          }
          break;
 
@@ -387,14 +387,14 @@ HB_FUNC( C_METAFONE )
 
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'N';
-            iStrPtr              += 2;
+            iStrPtr += 2;
          }
          else if( sMeta[ iStrPtr + 1 ] == 'I' )
          {
 
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'K';
-            iStrPtr              += 2;
+            iStrPtr += 2;
          }
          break;
 
@@ -431,7 +431,7 @@ HB_FUNC( C_METAFONE )
                 ( sMeta[ iStrPtr + 3 ] == 'H' ) )
             {
                sReturn[ iRetPtr++ ] = 'X';
-               iStrPtr              += 3;
+               iStrPtr += 3;
             }
             iStrPtr++;
             break;
@@ -474,7 +474,7 @@ HB_FUNC( C_METAFONE )
                    ( sMeta[ iStrPtr + 2 ] == 'Y' ) )
                {
                   sReturn[ iRetPtr++ ] = 'J';
-                  iStrPtr              += 3;
+                  iStrPtr += 3;
                }
                /* If not one of those three, transform to T. */
                else
@@ -505,7 +505,7 @@ HB_FUNC( C_METAFONE )
                 ! ( sMeta[ iStrPtr - 1 ] == 'G' ) )
             {
                sReturn[ iRetPtr++ ] = 'J';
-               iStrPtr              += 2;
+               iStrPtr += 2;
             }
             /* vGHT -> T or vGH, vGHTH -> W leaving TH to be processed. */
             else if( ( sMeta[ iStrPtr + 1 ] == 'H' ) &&
@@ -519,7 +519,7 @@ HB_FUNC( C_METAFONE )
                    ! ( sMeta[ iStrPtr + 3 ] == 'H' ) )
                {
                   sReturn[ iRetPtr++ ] = 'T';
-                  iStrPtr              += 3;
+                  iStrPtr += 3;
                }
                else
                {
@@ -528,12 +528,12 @@ HB_FUNC( C_METAFONE )
                       ( sMeta[ iStrPtr - 1 ] == 'U' ) )
                   {
                      sReturn[ iRetPtr++ ] = 'F';
-                     iStrPtr              += 2;
+                     iStrPtr += 2;
                   }
                   else
                   {
                      sReturn[ iRetPtr++ ] = 'W';
-                     iStrPtr              += 2;
+                     iStrPtr += 2;
                   }
                }
             }
@@ -546,13 +546,13 @@ HB_FUNC( C_METAFONE )
                        ( sMeta[ iStrPtr + 2 ] == 'U' ) ) )
             {
                sReturn[ iRetPtr++ ] = 'K';
-               iStrPtr              += 2;
+               iStrPtr += 2;
             }
             /* GN -> N */
             else if( sMeta[ iStrPtr + 1 ] == 'N' )
             {
                sReturn[ iRetPtr++ ] = 'N';
-               iStrPtr              += 2;
+               iStrPtr += 2;
             }
             /* The suffix NG is skipped. */
             else if( ( ( iStrPtr == iStrLen - 1 ) ||
@@ -583,7 +583,7 @@ HB_FUNC( C_METAFONE )
             if( sMeta[ iStrPtr + 1 ] == 'H' )
             {
                sReturn[ iRetPtr++ ] = 'F';
-               iStrPtr              += 2;
+               iStrPtr += 2;
             }
             else
                sReturn[ iRetPtr++ ] = sMeta[ iStrPtr++ ];
@@ -609,7 +609,7 @@ HB_FUNC( C_METAFONE )
             {
                sReturn[ iRetPtr++ ] = 'S';
                sReturn[ iRetPtr++ ] = 'K';
-               iStrPtr              += 3;
+               iStrPtr += 3;
             }
             /* SIO, SIA, SH -> X */
             else if( ( ( sMeta[ iStrPtr + 1 ] == 'I' ) &&
@@ -618,7 +618,7 @@ HB_FUNC( C_METAFONE )
                      ( sMeta[ iStrPtr + 1 ] == 'H' ) )
             {
                sReturn[ iRetPtr++ ] = 'X';
-               iStrPtr              += ( sMeta[ iStrPtr + 1 ] == 'H' ) ? 2 : 3;
+               iStrPtr += ( sMeta[ iStrPtr + 1 ] == 'H' ) ? 2 : 3;
             }
             /* SCE, SCI, SCY -> S */
             else if( sMeta[ iStrPtr + 1 ] == 'C' )
@@ -628,7 +628,7 @@ HB_FUNC( C_METAFONE )
                    ( sMeta[ iStrPtr + 2 ] == 'Y' ) )
                {
                   sReturn[ iRetPtr++ ] = 'S';
-                  iStrPtr              += 3;
+                  iStrPtr += 3;
                }
                /* If not one of those three, just copy it over. */
                else
@@ -657,13 +657,13 @@ HB_FUNC( C_METAFONE )
                   ( sMeta[ iStrPtr + 2 ] == 'H' ) ) )
             {
                sReturn[ iRetPtr++ ] = 'X';
-               iStrPtr              += 3;
+               iStrPtr += 3;
             }
             /* TH -> 0 */
             else if( sMeta[ iStrPtr + 1 ] == 'H' )
             {
                sReturn[ iRetPtr++ ] = '0';
-               iStrPtr              += 2;
+               iStrPtr += 2;
             }
             /* Copy the letter over. */
             else
@@ -699,7 +699,7 @@ HB_FUNC( C_METAFONE )
             {
                sReturn[ iRetPtr++ ] = 'S';
                sReturn[ iRetPtr++ ] = 'K';
-               iStrPtr              += 3;
+               iStrPtr += 3;
             }
             /* SIO, SIA, SH -> X */
             else if( ( ( sMeta[ iStrPtr + 1 ] == 'I' ) &&
@@ -708,7 +708,7 @@ HB_FUNC( C_METAFONE )
                      ( sMeta[ iStrPtr + 1 ] == 'H' ) )
             {
                sReturn[ iRetPtr++ ] = 'X';
-               iStrPtr              += ( sMeta[ iStrPtr + 1 ] == 'H' ) ? 2 : 3;
+               iStrPtr += ( sMeta[ iStrPtr + 1 ] == 'H' ) ? 2 : 3;
             }
             /* SCE, SCI, SCY -> S */
             else if( sMeta[ iStrPtr + 1 ] == 'C' )
@@ -718,7 +718,7 @@ HB_FUNC( C_METAFONE )
                    ( sMeta[ iStrPtr + 2 ] == 'Y' ) )
                {
                   sReturn[ iRetPtr++ ] = 'S';
-                  iStrPtr              += 3;
+                  iStrPtr += 3;
                }
                /* If not one of those three, just copy it over. */
                else
@@ -755,7 +755,7 @@ HB_FUNC( C_METAFONE )
                   ( sMeta[ iStrPtr + 2 ] == 'A' ) ) )
             {
                sReturn[ iRetPtr++ ] = 'X';
-               iStrPtr              += ( sMeta[ iStrPtr + 1 ] == 'I' ) ? 3 : 2;
+               iStrPtr += ( sMeta[ iStrPtr + 1 ] == 'I' ) ? 3 : 2;
             }
             /* CE, CI, CY -> S */
             else if( ( sMeta[ iStrPtr + 1 ] == 'E' ) ||
@@ -763,7 +763,7 @@ HB_FUNC( C_METAFONE )
                      ( sMeta[ iStrPtr + 1 ] == 'Y' ) )
             {
                sReturn[ iRetPtr++ ] = 'S';
-               iStrPtr              += 2;
+               iStrPtr += 2;
             }
             /* CK - Skip. */
             else if( sMeta[ iStrPtr + 1 ] == 'K' )
@@ -852,18 +852,18 @@ HB_FUNC( C_METAFONE )
 
 HB_FUNC( BIT )
 {
-   unsigned char           mask;
-   const unsigned char *   ptr;
-   unsigned int            loc,
-                           offset   = _parni( 2 ) - 1,
-                           res      = 0;
+   unsigned char mask;
+   const unsigned char * ptr;
+   unsigned int          loc,
+                         offset = _parni( 2 ) - 1,
+                         res    = 0;
 
    loc = offset / 8;
    if( loc < _parclen( 1 ) )
    {
-      ptr   = _parc( 1 ) + loc;
-      loc   = offset % 8;
-      res   = *ptr << loc & 0x80;
+      ptr = _parc( 1 ) + loc;
+      loc = offset % 8;
+      res = *ptr << loc & 0x80;
 
       if( PCOUNT > 2 )
       {
@@ -910,16 +910,16 @@ static int WordSep( unsigned char c )
    --------------------------------------------------*/
 HB_FUNC( SP_LINE )
 {
-   int            nArgs       = PCOUNT;
-   BOOL           bLineBreak  = FALSE;
-   int            nCount      = 0;
-   int            nWrap       = 0;
-   unsigned int   nOffset     = 0;
-   const BYTEP    cIn;
-   BYTEP          p;
-   BYTE           cTest;
-   int            nLineLen;
-   unsigned int   nStop;
+   int  nArgs           = PCOUNT;
+   BOOL bLineBreak      = FALSE;
+   int  nCount          = 0;
+   int  nWrap           = 0;
+   unsigned int nOffset = 0;
+   const BYTEP  cIn;
+   BYTEP        p;
+   BYTE         cTest;
+   int          nLineLen;
+   unsigned int nStop;
 
    if( nArgs > 0 && ISCHAR( 1 ) )
    {
@@ -974,8 +974,4 @@ HB_FUNC( SP_LINE )
 
    if( ISBYREF( 2 ) )                                 // Change reference val
       _stornl( nOffset, 2 );
-
-
 }
-
-// ** End of SP_LINE **

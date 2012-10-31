@@ -53,6 +53,7 @@
 #include "hbclass.ch"
 
 CREATE CLASS TIPEncoderBase64 FROM TIPEncoder
+
    // Set this to .T. to enable RFC 2068 (HTTP/1.1) exception to
    // RFC 2045 (MIME) base64 format. This exception consists in
    // not applying CRLF after each 76 output bytes.
@@ -61,27 +62,31 @@ CREATE CLASS TIPEncoderBase64 FROM TIPEncoder
    METHOD New()      Constructor
    METHOD Encode( cData )
    METHOD Decode( cData )
+
 ENDCLASS
 
 METHOD New() CLASS TIPEncoderBase64
+
    ::cName := "Base64"
    ::bHttpExcept := .F.
+
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderBase64
    RETURN TIP_BASE64ENCODE( cData, iif( ::bHttpExcept, NIL, 72 ), Chr( 13 ) + Chr( 10 ) )
 
 METHOD Decode( cData ) CLASS TIPEncoderBase64
-   RETURN hb_base64decode( cData )
+   RETURN hb_base64Decode( cData )
 
 FUNCTION TIP_BASE64ENCODE( cBinary, nLineLength, cCRLF )
-   LOCAL cTextIn := HB_BASE64ENCODE( cBinary )
+
+   LOCAL cTextIn := hb_base64Encode( cBinary )
 
    LOCAL cText
    LOCAL tmp
 
    IF ! HB_ISNUMERIC( nLineLength )
-       RETURN cTextIn
+      RETURN cTextIn
    ENDIF
    IF ! HB_ISSTRING( cCRLF )
       cCRLF := hb_eol()

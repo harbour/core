@@ -24,7 +24,7 @@ PROCEDURE Main()
 
    aStyle := { "Normal", "Bold", "Italic", "BoldItalic" }
 
-   aFonts := {;
+   aFonts := { ;
       { "Times",     .T., .T., .T., .T. }, ;
       { "Helvetica", .T., .T., .T., .T. }, ;
       { "Courier",   .T., .T., .T., .T. } }
@@ -61,7 +61,7 @@ PROCEDURE Main()
 
    nRow := 85
    nCol := 85
-   pdfBox( nRow     , ( nCol * 2 )     , ( nRow * 3 )     , ( nCol * 4 )     , 1.00,  15, "D" )
+   pdfBox( nRow +  0, ( nCol * 2 ) +  0, ( nRow * 3 ) +  0, ( nCol * 4 ) +  0, 1.00,  15, "D" )
    pdfBox( nRow + 10, ( nCol * 2 ) + 10, ( nRow * 3 ) + 10, ( nCol * 4 ) + 10, 0.50,  25, "D" )
    pdfBox( nRow + 20, ( nCol * 2 ) + 20, ( nRow * 3 ) + 20, ( nCol * 4 ) + 20, 0.25,  35, "D" )
    pdfBox( nRow + 30, ( nCol * 2 ) + 30, ( nRow * 3 ) + 30, ( nCol * 4 ) + 30, 0.15,  45, "D" )
@@ -99,15 +99,15 @@ PROCEDURE Main()
 
    cTestFile := MemoRead( "files" + hb_ps() + "test.txt" )
 
-   pdfText( cTestFile,  28, 107.95, nWidth, nTab, 3, "M", Chr( 253 ) + Chr( 0 ) + Chr( 0 ) + Chr( 255 ) )//,              pdfTextCount( memoread("test.txt"),  28, 107.95, nWidth, nTab, 3, "M" )
-   pdfText( cTestFile,  58, 107.95, nWidth, nTab, 2, "M", Chr( 253 ) + Chr( 0 ) + Chr( 255 ) + Chr( 0 ) )//,              pdfTextCount( memoread("test.txt"),  58, 107.95, nWidth, nTab, 2, "M" )
-   pdfText( cTestFile,  88, 107.95, nWidth, nTab, 1, "M", Chr( 253 ) + Chr( 255 ) + Chr( 0 ) + Chr( 0 ) )//,              pdfTextCount( memoread("test.txt"),  88, 107.95, nWidth, nTab, 1, "M" )
-   pdfText( cTestFile, 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M", Chr( 253 ) + Chr( 255 ) + Chr( 255 ) + Chr( 0 ) )//, pdfTextCount( memoread("test.txt"), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M" )
+   pdfText( cTestFile,  28, 107.95, nWidth, nTab, 3, "M", Chr( 253 ) + Chr( 0 ) + Chr( 0 ) + Chr( 255 ) )   // ,              pdfTextCount( memoread("test.txt"),  28, 107.95, nWidth, nTab, 3, "M" )
+   pdfText( cTestFile,  58, 107.95, nWidth, nTab, 2, "M", Chr( 253 ) + Chr( 0 ) + Chr( 255 ) + Chr( 0 ) )   // ,              pdfTextCount( memoread("test.txt"),  58, 107.95, nWidth, nTab, 2, "M" )
+   pdfText( cTestFile,  88, 107.95, nWidth, nTab, 1, "M", Chr( 253 ) + Chr( 255 ) + Chr( 0 ) + Chr( 0 ) )   // ,              pdfTextCount( memoread("test.txt"),  88, 107.95, nWidth, nTab, 1, "M" )
+   pdfText( cTestFile, 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M", Chr( 253 ) + Chr( 255 ) + Chr( 255 ) + Chr( 0 ) ) // , pdfTextCount( memoread("test.txt"), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M" )
 
-   pdfText( cTestFile,  34, 100,    nWidth, nTab, 3, "R", Chr( 253 ) + Chr( 0 ) + Chr( 128 ) + Chr( 128 ) )//, pdfTextCount( memoread("test.txt"),  33, 100,    nWidth, nTab, 3, "R" )
-   pdfText( cTestFile,  41, 100,    nWidth, nTab, 2, "R", Chr( 253 ) + Chr( 0 ) + Chr( 191 ) + Chr( 255 ) )//, pdfTextCount( memoread("test.txt"),  40, 100,    nWidth, nTab, 2, "R" )
-   pdfText( cTestFile,  48, 100,    nWidth, nTab, 1, "R", Chr( 253 ) + Chr( 244 ) + Chr( 164 ) + Chr( 96 ) )//, pdfTextCount( memoread("test.txt"),  47, 100,    nWidth, nTab, 1, "R" )
-   pdfText( cTestFile,  55,  35,    nWidth, nTab, 4, "R", Chr( 253 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )//, pdfTextCount( memoread("test.txt"),  54,  35,    nWidth, nTab, 4, "R" )
+   pdfText( cTestFile,  34, 100,    nWidth, nTab, 3, "R", Chr( 253 ) + Chr( 0 ) + Chr( 128 ) + Chr( 128 ) )  // , pdfTextCount( memoread("test.txt"),  33, 100,    nWidth, nTab, 3, "R" )
+   pdfText( cTestFile,  41, 100,    nWidth, nTab, 2, "R", Chr( 253 ) + Chr( 0 ) + Chr( 191 ) + Chr( 255 ) )  // , pdfTextCount( memoread("test.txt"),  40, 100,    nWidth, nTab, 2, "R" )
+   pdfText( cTestFile,  48, 100,    nWidth, nTab, 1, "R", Chr( 253 ) + Chr( 244 ) + Chr( 164 ) + Chr( 96 ) ) // , pdfTextCount( memoread("test.txt"),  47, 100,    nWidth, nTab, 1, "R" )
+   pdfText( cTestFile,  55,  35,    nWidth, nTab, 4, "R", Chr( 253 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )      // , pdfTextCount( memoread("test.txt"),  54,  35,    nWidth, nTab, 4, "R" )
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Fonts", 1, aReport[ REPORTPAGE ], 0 )
@@ -166,7 +166,7 @@ STATIC FUNCTION cton( cString, nBase ) // this function called only used in pdf_
 
    nLen := Len( cString )
    cTemp := ""
-   FOR nI := nLen TO 1 step - 1
+   FOR nI := nLen TO 1 STEP - 1
       cTemp += SubStr( cString, nI, 1 )
    NEXT
    cTemp := Upper( cTemp )
@@ -174,9 +174,9 @@ STATIC FUNCTION cton( cString, nBase ) // this function called only used in pdf_
    FOR nI := 1 TO nLen
       cChar := SubStr( cTemp, nI, 1 )
       IF ! IsDigit( cChar )
-         n := n + ( ( Asc( cChar ) - 65 ) + 10 ) * ( nBase ^ ( nI - 1 ) )
+         n += ( nBase ^ ( nI - 1 ) ) * ( ( Asc( cChar ) - 65 ) + 10 )
       ELSE
-         n := n + ( ( nBase ^ ( nI - 1 ) ) * Val( cChar ) )
+         n += ( nBase ^ ( nI - 1 ) ) * Val( cChar )
       ENDIF
    NEXT
 

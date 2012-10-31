@@ -12,7 +12,7 @@ PROCEDURE Main()
    LOCAL nPrev := Seconds()
 
    CLS
-   ? "   Time:        Memory used:                          Miliseconds elapsed"
+   ? "   Time:        Memory used:                          Milliseconds elapsed"
    ?
    ? "Can you see it ??? :) Press any key or wait 30 seconds"
    ?

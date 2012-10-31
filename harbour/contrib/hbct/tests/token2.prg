@@ -64,7 +64,7 @@ PROCEDURE Main()
 
    LOCAL cStr1 := "A,BB,CCC,DDDD,EEEEE,FFFFFF"
 
-// LOCAL cStr2 := "ZZZZZZ,YYYYY,XXXX,WWW,VV,U"
+   // LOCAL cStr2 := "ZZZZZZ,YYYYY,XXXX,WWW,VV,U"
    LOCAL cStr3 := "0123456789ABCDEFGHIJKLM"
    LOCAL cStr4 := "08:09:10:11:12"
    LOCAL cStr5 := "05:00+20:00+35:00+50:00"
@@ -77,93 +77,93 @@ PROCEDURE Main()
    ?
 
    // Some simple tests with global token environment
-   ? [  Incremental tokenizing the string "] + cStr1 + ["]
-   ? [    tokeninit(@cStr1, ",", 1) == .T. ? ----> ] + ltoc( tokeninit(@cStr1, ",", 1 ) )
-   ? [    tokennum() == 6 ? ---------------------> ] + Str( tokennum() )
-   ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+   ? '  Incremental tokenizing the string "' + cStr1 + '"'
+   ? '    tokeninit(@cStr1, ",", 1) == .T. ? ----> ' + ltoc( tokeninit( @cStr1, ",", 1 ) )
+   ? '    tokennum() == 6 ? ---------------------> ' + Str( tokennum() )
+   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    WHILE !tokenend()
-      ? [      tokennext(@cStr1)  ------------------> "] + tokennext( @cStr1 ) + ["]
-      ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+      ? '      tokennext(@cStr1)  ------------------> "' + tokennext( @cStr1 ) + '"'
+      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    ENDDO
    ?
-   ? [    rewind with tokeninit() == .T. ? ------> ] + ltoc( tokeninit() )
-   ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+   ? '    rewind with tokeninit() == .T. ? ------> ' + ltoc( tokeninit() )
+   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    WHILE !tokenend()
-      ? [      tokennext(@cStr1)  ------------------> "] + tokennext( @cStr1 ) + ["]
-      ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+      ? '      tokennext(@cStr1)  ------------------> "' + tokennext( @cStr1 ) + '"'
+      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    ENDDO
    ?
-   ? [    access tokens directly with tokennext]
-   ? [      tokennext(@cStr1,2) == "BB" ? -------> "] + tokennext( @cStr1,2 ) + ["]
-   ? [      tokennext(@cStr1,4) == "DDDD" ? -----> "] + tokennext( @cStr1,4 ) + ["]
+   ? '    access tokens directly with tokennext'
+   ? '      tokennext(@cStr1,2) == "BB" ? -------> "' + tokennext( @cStr1, 2 ) + '"'
+   ? '      tokennext(@cStr1,4) == "DDDD" ? -----> "' + tokennext( @cStr1, 4 ) + '"'
    ?
 
    ? "...Press any key..."
    ?
    Inkey( 0 )
 
-   ? [  Incremental tokenizing the string "] + cStr3 + [" with the]
-   ? [  token environment of cStr1 !]
-   ? [    rewind with tokeninit() == .T. ? ------> ] + ltoc( tokeninit() )
-   ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+   ? '  Incremental tokenizing the string "' + cStr3 + '" with the'
+   ? '  token environment of cStr1 !'
+   ? '    rewind with tokeninit() == .T. ? ------> ' + ltoc( tokeninit() )
+   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    WHILE !tokenend()
-      ? [      tokennext(@cStr3)  ------------------> "] + tokennext( @cStr3 ) + ["]
-      ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+      ? '      tokennext(@cStr3)  ------------------> "' + tokennext( @cStr3 ) + '"'
+      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    ENDDO
    ?
-   ? [    rewind with tokeninit() == .T. ? ------> ] + ltoc( tokeninit() )
-   ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+   ? '    rewind with tokeninit() == .T. ? ------> ' + ltoc( tokeninit() )
+   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    WHILE( !tokenend() )
-      ? [      start & end with tokenat(.F./.T.)-----> ] + Str( tokenat() ) + [ ] + Str( tokenat( .T. ) )
+      ? '      start & end with tokenat(.F./.T.)-----> ' + Str( tokenat() ) + ' ' + Str( tokenat( .T. ) )
       tokennext( @cStr1 )
-      ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    ENDDO
    ?
-   ? [    access tokens directly with tokenat]
-   ? [      tokenat( .F., 2 ) == 3 ? ---------------> ] + Str( tokenat( .F., 2 ) )
-   ? [      tokenat( .T., 4 ) == 14 ? --------------> ] + Str( tokenat( .T., 4 ) )
+   ? '    access tokens directly with tokenat'
+   ? '      tokenat( .F., 2 ) == 3 ? ---------------> ' + Str( tokenat( .F., 2 ) )
+   ? '      tokenat( .T., 4 ) == 14 ? --------------> ' + Str( tokenat( .T., 4 ) )
    ?
 
    ? "...Press any key..."
    ?
    Inkey( 0 )
 
-   ? [  Save global token environment with savetoken]
+   ? '  Save global token environment with savetoken'
    cTE1 := savetoken()
-   ? [    tokeninit a different string, cStr4 := "] + cStr4 + [", with tokeninit()]
-   ? [    tokeninit( @cStr4, ":", 1 ) == .T. ? ----> ] + ltoc( tokeninit( @cStr4, ":", 1 ) )
-   ? [    tokennum() == 5 ? ---------------------> ] + Str( tokennum() )
-   ? [    tokennext() == "08" ? ------------------> "] + tokennext( @cStr4 ) + ["]
-   ? [    Now restore global token environment with resttoken and rewind it]
+   ? '    tokeninit a different string, cStr4 := "' + cStr4 + '", with tokeninit()'
+   ? '    tokeninit( @cStr4, ":", 1 ) == .T. ? ----> ' + ltoc( tokeninit( @cStr4, ":", 1 ) )
+   ? '    tokennum() == 5 ? ---------------------> ' + Str( tokennum() )
+   ? '    tokennext() == "08" ? ------------------> "' + tokennext( @cStr4 ) + '"'
+   ? '    Now restore global token environment with resttoken and rewind it'
    resttoken( cTE1 )
    tokeninit()
-   ? [    tokennum() == 6 ? ----------------------> ] + Str( tokennum() )
-   ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+   ? '    tokennum() == 6 ? ----------------------> ' + Str( tokennum() )
+   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    WHILE !tokenend()
-      ? [      tokennext( @cStr1 ) -----------------> "] + tokennext( @cStr1 ) + ["]
-      ? [      tokenend() ? -------------------------> ] + ltoc( tokenend() )
+      ? '      tokennext( @cStr1 ) -----------------> "' + tokennext( @cStr1 ) + '"'
+      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
    ENDDO
-   ? [  Release global TE with tokenexit() ----> ] + ltoc( tokenexit() )
+   ? '  Release global TE with tokenexit() ----> ' + ltoc( tokenexit() )
    ?
 
    ? "...Press any key..."
    ?
    Inkey( 0 )
 
-   ? [  Now tokenize cStr4 := "] + cStr4 + [" and]
-   ? [  cStr5 := "] + cStr5 + ["]
-   ? [  and store the token environment locally to cTE1 and cTE2:]
-   ? [    tokeninit( @cStr4, ":", 1, @cTE1 ) == .T. ? -> ] + ltoc( tokeninit( @cStr4, ":", 1, @cTE1 ) )
-   ? [    tokeninit( @cStr5, "+", 1, @cTE2 ) == .T. ? -> ] + ltoc( tokeninit( @cStr5, "+", 1, @cTE2 ) )
-   ? [    tokennum( @cTE1 ) == 5 ? --------------------> ] + Str( tokennum( @cTE1 ) )
-   ? [    tokennum( @cTE2 ) == 4 ? --------------------> ] + Str( tokennum( @cTE2 ) )
-   ? [        tokenend( @cTE1 ) ? ---------------------> ] + ltoc( tokenend( @cTE1 ) )
-   ? [        tokenend( @cTE2 ) ? ---------------------> ] + ltoc( tokenend( @cTE2 ) )
+   ? '  Now tokenize cStr4 := "' + cStr4 + '" and'
+   ? '  cStr5 := "' + cStr5 + '"'
+   ? '  and store the token environment locally to cTE1 and cTE2:'
+   ? '    tokeninit( @cStr4, ":", 1, @cTE1 ) == .T. ? -> ' + ltoc( tokeninit( @cStr4, ":", 1, @cTE1 ) )
+   ? '    tokeninit( @cStr5, "+", 1, @cTE2 ) == .T. ? -> ' + ltoc( tokeninit( @cStr5, "+", 1, @cTE2 ) )
+   ? '    tokennum( @cTE1 ) == 5 ? --------------------> ' + Str( tokennum( @cTE1 ) )
+   ? '    tokennum( @cTE2 ) == 4 ? --------------------> ' + Str( tokennum( @cTE2 ) )
+   ? '        tokenend( @cTE1 ) ? ---------------------> ' + ltoc( tokenend( @cTE1 ) )
+   ? '        tokenend( @cTE2 ) ? ---------------------> ' + ltoc( tokenend( @cTE2 ) )
    WHILE !tokenend( @cTE1 ) .AND. !tokenend( @cTE2 )
-      ? [      next train at ] + tokennext( cStr4,, @cTE1 ) + ":" + tokennext( cStr5,, @cTE2 )
-      ? [          compiled with tokennext( cStr4,, @cTE1 ) + ":" + tokennext( cStr5,, @cTE2 )]
-      ? [        tokenend( @cTE1 ) ? ---------------------> ] + ltoc( tokenend( @cTE1 ) )
-      ? [        tokenend( @cTE2 ) ? ---------------------> ] + ltoc( tokenend( @cTE2 ) )
+      ? '      next train at ' + tokennext( cStr4,, @cTE1 ) + ":" + tokennext( cStr5,, @cTE2 )
+      ? '          compiled with tokennext( cStr4,, @cTE1 ) + ":" + tokennext( cStr5,, @cTE2 )'
+      ? '        tokenend( @cTE1 ) ? ---------------------> ' + ltoc( tokenend( @cTE1 ) )
+      ? '        tokenend( @cTE2 ) ? ---------------------> ' + ltoc( tokenend( @cTE2 ) )
    ENDDO
 
    ?

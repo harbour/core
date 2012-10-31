@@ -59,11 +59,15 @@ FUNCTION ISPRN( p )
    RETURN hb_IsPrinter( p )
 
 PROCEDURE RAT_ON()
+
    MShow()
+
    RETURN
 
 PROCEDURE RAT_OFF()
+
    MHide()
+
    RETURN
 
 FUNCTION RAT_ROW()
@@ -73,14 +77,18 @@ FUNCTION RAT_COL()
    RETURN MCol()
 
 PROCEDURE RAT_POSIT( nRow, nCol )
+
    MSetPos( nRow, nCol )
+
    RETURN
 
 FUNCTION RAT_EXIST()
    RETURN MPresent()
 
 PROCEDURE RAT_AREA( nTop, nLeft, nBottom, nRight )
+
    MSetBounds( nTop, nLeft, nBottom, nRight )
+
    RETURN
 
 FUNCTION RAT_LBHD
@@ -123,5 +131,7 @@ FUNCTION RAT_RIGHTB()
 /* TOFIX: This is just a dummy stub */
 
 FUNCTION SHIFTY( f )
+
    HB_SYMBOL_UNUSED( f )
+
    RETURN .F.

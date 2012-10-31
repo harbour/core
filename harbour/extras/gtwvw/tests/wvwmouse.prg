@@ -51,15 +51,15 @@ STATIC s_nrepeatdelay := 0.5
 
 
 // mouse object types
-#define _MOBJECT_BUTTON  0      //mouse button
-#define _MOBJECT_HSCROLL 1      //horiz scrollbar: OBSOLETE, NOT USED HERE
-#define _MOBJECT_VSCROLL 2      //horiz scrollbar: OBSOLETE, NOT USED HERE
+#define _MOBJECT_BUTTON  0      // mouse button
+#define _MOBJECT_HSCROLL 1      // horiz scrollbar: OBSOLETE, NOT USED HERE
+#define _MOBJECT_VSCROLL 2      // horiz scrollbar: OBSOLETE, NOT USED HERE
 
 // for Button Types:
-#define _BUTTON_NORMAL 0        //normal button
-#define _BUTTON_FLAT   1        //'transparent', raised when mouseover
-#define _BUTTON_NONE   2        //no sign even when mouseover or clicked
-#define _BUTTON_HARD   3        //no recessed when pressed
+#define _BUTTON_NORMAL 0        // normal button
+#define _BUTTON_FLAT   1        // 'transparent', raised when mouseover
+#define _BUTTON_NONE   2        // no sign even when mouseover or clicked
+#define _BUTTON_HARD   3        // no recessed when pressed
 
 //**************************************************************
 // WVWMouseButton
@@ -67,33 +67,33 @@ STATIC s_nrepeatdelay := 0.5
 
 CREATE CLASS WVWMouseButton
 
-// VAR nId         /* TODO */       //mouse object id
-// VAR nHotKey     /* TODO */       //hotkey associated with this object
-   VAR nWinId                       //20040303, parent window's number
-   VAR lVisible                     //is the object visible
-   VAR lEnable                      //20040303, is the object enable
-   VAR lTight                       //allow tight neighboring
-   VAR nType                        //20040303, appearance of this button
-   VAR nRow1, nCol1, nRow2, nCol2   //mouse object region
+// VAR nId         /* TODO */       // mouse object id
+// VAR nHotKey     /* TODO */       // hotkey associated with this object
+   VAR nWinId                       // 20040303, parent window's number
+   VAR lVisible                     // is the object visible
+   VAR lEnable                      // 20040303, is the object enable
+   VAR lTight                       // allow tight neighboring
+   VAR nType                        // 20040303, appearance of this button
+   VAR nRow1, nCol1, nRow2, nCol2   // mouse object region
 
-   VAR bClickBlock                  //executed on Left Click
-   VAR bPressBlock                  //executed on Left Press
+   VAR bClickBlock                  // executed on Left Click
+   VAR bPressBlock                  // executed on Left Press
 
-   VAR lRepeatPress                 //repeat Left Press when pressed during mouse over?
+   VAR lRepeatPress                 // repeat Left Press when pressed during mouse over?
 
    VAR cCaption
-   VAR cCaptionFont                 //font name for caption
-   VAR nCaptionHeight               //height of font for caption, if NIL use current wvw_getfontinfo()
-   VAR cImage                       //20040325, image file name
+   VAR cCaptionFont                 // font name for caption
+   VAR nCaptionHeight               // height of font for caption, if NIL use current wvw_getfontinfo()
+   VAR cImage                       // 20040325, image file name
 
-   VAR cNormalColor    //button normal color, pls use single color, eg "W"
-   VAR cPressedColor   //button pressed color, pls use single color, eg "B"
+   VAR cNormalColor    // button normal color, pls use single color, eg "W"
+   VAR cPressedColor   // button pressed color, pls use single color, eg "B"
 
-// private DATA, should be protected
-   VAR lPressed                     //is it being pressed by Left Button?
-   VAR lHover                       //20040303, is mouse over the button?
+   // private DATA, should be protected
+   VAR lPressed                     // is it being pressed by Left Button?
+   VAR lHover                       // 20040303, is mouse over the button?
 
-// METHODS
+   // METHODS
    METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId )
 
 // METHOD nGetId() INLINE ::nId            /* TODO */
@@ -114,30 +114,30 @@ CREATE CLASS WVWMouseButton
    METHOD SetCaption( cCaption )
 
    METHOD OnClick()
-   METHOD OnPress()          //K_LBUTTONDOWN occurs over this mouse object
-   METHOD OnRelease()        //K_LBUTTONUP occurs over this mouse object
-   METHOD OnReleaseOut()     //K_LBUTTONUP occurs outside of this mouse object
-   METHOD OnMouseOut()       //mouse is moved from over the button outside
-   METHOD OnMouseOver()    //TODO
+   METHOD OnPress()          // K_LBUTTONDOWN occurs over this mouse object
+   METHOD OnRelease()        // K_LBUTTONUP occurs over this mouse object
+   METHOD OnReleaseOut()     // K_LBUTTONUP occurs outside of this mouse object
+   METHOD OnMouseOut()       // mouse is moved from over the button outside
+   METHOD OnMouseOver()    // TODO
 
    METHOD Draw( nWinNum )
 
-ENDCLASS   //WVWMouseButton
+ENDCLASS   // WVWMouseButton
 
 METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId ) CLASS WVWMouseButton
 
-   hb_default( @cCaption, "" ) //20040325,was: "Button"
+   hb_default( @cCaption, "" ) // 20040325,was: "Button"
    hb_default( @nRow1, 0 )
    hb_default( @nCol1, 0 )
    hb_default( @nRow2, nRow1 )
    hb_default( @nCol2, nCol1 + Max( 10, Len( cCaption ) + 2 ) - 1 )
-   hb_default( @nType, _BUTTON_NORMAL )        //20040303
+   hb_default( @nType, _BUTTON_NORMAL )        // 20040303
    hb_default( @lDraw, .T. )
-   hb_default( @nWinId, wvw_nNumWindows() - 1 )  //20040303
+   hb_default( @nWinId, wvw_nNumWindows() - 1 )  // 20040303
 
-   //TODO: ::nId := iif( Empty( s_amouseobjlist ), 1, s_amouseobjlist[ Len( s_amouseobjlist ) ]:nGetId() + 1 )
-   //TODO: ::nHotKey := NIL
-   ::nWinId := nWinId  //20040303
+   // TODO: ::nId := iif( Empty( s_amouseobjlist ), 1, s_amouseobjlist[ Len( s_amouseobjlist ) ]:nGetId() + 1 )
+   // TODO: ::nHotKey := NIL
+   ::nWinId := nWinId  // 20040303
 
    ::nRow1 := nRow1
    ::nCol1 := nCol1
@@ -150,14 +150,14 @@ METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWi
    ::lRepeatPress  := .F.
 
    ::lPressed  := .F.
-   ::lHover    := .F.  //20040303
+   ::lHover    := .F.  // 20040303
    ::cCaption := cCaption
    ::cCaptionFont := _DEFAULT_CAPTION_FONT
    ::nCaptionHeight := _DEFAULT_CAPTION_HEIGHT
 
-   ::cImage    := NIL  //20040325
+   ::cImage    := NIL  // 20040325
 
-   //TODO: pls use current color
+   // TODO: pls use current color
    ::cNormalColor := "W"
    ::cPressedColor := "W"
 
@@ -166,11 +166,11 @@ METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWi
    ::lTight   := .F.
    ::nType := nType
 
-   IF lDraw  //20040304
+   IF lDraw  // 20040304
       ::Draw( ::nWinId )
    ENDIF
 
-   RETURN Self     //WVWMouseButton
+   RETURN Self     // WVWMouseButton
 
 METHOD Enable( lEnable ) CLASS WVWMouseButton
 
@@ -207,7 +207,7 @@ METHOD OnPress() CLASS WVWMouseButton
 
    // this is called when LEFT mouse button is pressed on the object
    LOCAL lWasPressed
-   IF !::lEnable  //20040303
+   IF !::lEnable  // 20040303
       RETURN Self
    ENDIF
 
@@ -217,9 +217,9 @@ METHOD OnPress() CLASS WVWMouseButton
 
    IF ::lRepeatPress // .AND. ::lPressed
       IF ! lWasPressed
-         xKeyRepeater( .T. ) //init it
+         xKeyRepeater( .T. ) // init it
       ENDIF
-      wvwm_SetKeyRepeater( .T. )   //activate key repeater
+      wvwm_SetKeyRepeater( .T. )   // activate key repeater
    ENDIF
 
    IF HB_ISBLOCK( ::bPressBlock )
@@ -232,7 +232,7 @@ METHOD OnClick() CLASS WVWMouseButton
 
    // this is called when LEFT mouse button is clicked on the object
    // normally (or should it be restricted to be?) called from ::OnRelease()
-   IF !::lEnable  //20040303
+   IF !::lEnable  // 20040303
       RETURN Self
    ENDIF
 
@@ -246,15 +246,15 @@ METHOD OnRelease() CLASS WVWMouseButton
 
    LOCAL lWasPressed := ::lPressed
 
-   IF !::lEnable  //20040303
+   IF !::lEnable  // 20040303
       RETURN Self
    ENDIF
 
    ::lPressed := .F.
    ::Draw()
 
-   IF ::lRepeatPress //.AND. ::lPressed
-      wvwm_SetKeyRepeater( .F. )   //deactivate key repeater
+   IF ::lRepeatPress // .AND. ::lPressed
+      wvwm_SetKeyRepeater( .F. )   // deactivate key repeater
    ENDIF
 
    IF lWasPressed
@@ -266,29 +266,29 @@ METHOD OnRelease() CLASS WVWMouseButton
 METHOD OnReleaseOut() CLASS WVWMouseButton
 
    // left button is released outside of mouse region
-   IF !::lEnable  //20040303
+   IF !::lEnable  // 20040303
       RETURN Self
    ENDIF
 
    ::lPressed := .F.
    ::Draw()
 
-   //NOTE: no need to do SetKeyRepeater( .F. ),
+   // NOTE: no need to do SetKeyRepeater( .F. ),
    //      because it was already handled by onMouseOut
 
    RETURN Self
 
-//20040303
+// 20040303
 
 METHOD OnMouseOut() CLASS WVWMouseButton
 
    // mouse is moved from over the button outside
-   IF !::lEnable  //20040303
+   IF !::lEnable  // 20040303
       RETURN Self
    ENDIF
 
    if ::lRepeatPress .AND. ::lPressed
-      wvwm_SetKeyRepeater( .F. )   //stop key repeater
+      wvwm_SetKeyRepeater( .F. )   // stop key repeater
    ENDIF
 
    ::lHover := .F.
@@ -296,17 +296,17 @@ METHOD OnMouseOut() CLASS WVWMouseButton
 
    RETURN Self
 
-//20040303
+// 20040303
 
 METHOD OnMouseOver() CLASS WVWMouseButton
 
    // mouse is moved to over the button from outside
-   IF !::lEnable  //20040303
+   IF !::lEnable  // 20040303
       RETURN Self
    ENDIF
 
    if ::lRepeatPress .AND. ::lPressed
-      wvwm_SetKeyRepeater( .T. )   //activate key repeater
+      wvwm_SetKeyRepeater( .T. )   // activate key repeater
    ENDIF
 
    ::lHover := .T.
@@ -318,30 +318,30 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
    LOCAL nROw := Row(), nCol := Col()
    LOCAL nOldCursor := SetCursor( SC_NONE )
-   LOCAL lMouseOver := ::lHover //20040303,was: ( mrow() >= ::nrow1 .and. mrow() <= ::nrow2 .and. mcol() >= ::ncol1 .and. mcol() <= ::ncol2 )
+   LOCAL lMouseOver := ::lHover // 20040303,was: ( mrow() >= ::nrow1 .and. mrow() <= ::nrow2 .and. mcol() >= ::ncol1 .and. mcol() <= ::ncol2 )
    LOCAL lPressed := ::lPressed .AND. lMouseOver
    LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_getFontInfo( nWinNum ), NIL )
    LOCAL nLabelColor := iif( !lPressed, rgb( 0, 0, 0 ), rgb( 96, 96, 96 ) )
-   LOCAL lUseImage := HB_ISSTRING( ::cImage ) //20040325
+   LOCAL lUseImage := HB_ISSTRING( ::cImage ) // 20040325
 
    IF !::lVisible .OR. ::nType == _BUTTON_NONE
-      SetCursor( nOldCursor ) //20040303
+      SetCursor( nOldCursor ) // 20040303
       RETURN Self
    ENDIF
 
    if ::nrow1 > ::nrow2 .OR. ::ncol1 > ::ncol2
-      SetCursor( nOldCursor ) //20040303
+      SetCursor( nOldCursor ) // 20040303
       RETURN Self
    ENDIF
 
    hb_default( @nWinNum, ::nWinId )
 
-   IF lPressed //::lPressed
+   IF lPressed // ::lPressed
       IF ::nType != _BUTTON_HARD
-         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN(::cPressedColor ) ), ::lTight )
-         Wvw_DrawBoxRecessed( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )  //wvw
+         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN( ::cPressedColor ) ), ::lTight )
+         Wvw_DrawBoxRecessed( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )  // wvw
       ELSE
-         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN(::cNormalColor ) ), ::lTight )
+         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN( ::cNormalColor ) ), ::lTight )
          Wvw_DrawBoxRaised(   nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )
       ENDIF
 
@@ -352,11 +352,11 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
       ENDIF
 
       IF ! Empty( ::cCaption )
-         Wvw_DrawLabel( nWinNum, ::nRow1, nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, rgb( 198,198,198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
+         Wvw_DrawLabel( nWinNum, ::nRow1, nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, rgb( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
       ENDIF
    ELSE
       IF lMouseOver .OR. ::nType == _BUTTON_NORMAL .OR. ::nType == _BUTTON_HARD
-         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN(::cNormalColor ) ), ::lTight )
+         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN( ::cNormalColor ) ), ::lTight )
          Wvw_DrawBoxRaised( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )
       ELSE
          // must undraw the box. ideally GTWVW has this function
@@ -376,14 +376,14 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
       ENDIF
 
       IF ! Empty( ::cCaption )
-         Wvw_DrawLabel( nWinNum, ::nRow1, nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, rgb( 198,198,198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
+         Wvw_DrawLabel( nWinNum, ::nRow1, nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, rgb( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
       ENDIF
    ENDIF
    SetCursor( nOldCursor )
 
    RETURN Self
 
-//*******************************************************
+// *******************************************************
 // interface functions
 
 FUNCTION wvwm_paint( nWinNum )
@@ -402,7 +402,7 @@ FUNCTION wvwm_ResetMouseObjects( nWinNum )
    DO WHILE Len( s_amouseobjlist ) < nWinNum + 1
       AAdd( s_amouseobjlist, {} )
    ENDDO
-   s_amouseobjlist[ nWinNum+1 ] := {}
+   s_amouseobjlist[ nWinNum + 1 ] := {}
 
    RETURN .T.
 
@@ -417,12 +417,12 @@ FUNCTION wvwm_AddMouseObjects( nWinNum, oMouse, nObjType )
 // returns number of mouse objects in window nWinNum
 FUNCTION wvwm_nNumMouseObjects( nWinNum )
 
-   RETURN Len( s_amouseobjlist[ nWinNum+1 ] )
+   RETURN Len( s_amouseobjlist[ nWinNum + 1 ] )
 
 // returns type of mouse objects number nObjNum in window nWinNum
 FUNCTION wvwm_nObjectType( nWinNum, nObjNum )
 
-   RETURN s_amouseobjlist[ nWinNum+1 ][nObjNum][1]
+   RETURN s_amouseobjlist[ nWinNum + 1 ][ nObjNum ][ 1 ]
 
 FUNCTION wvwm_SetKeyRepeater( lSet )
 
@@ -487,7 +487,7 @@ STATIC FUNCTION nButtonChecker( nkey, oMouseObj )
 
    ENDIF
 
-   RETURN nkey //nButtonChecker(nkey)
+   RETURN nkey // nButtonChecker(nkey)
 
 STATIC FUNCTION nScrollChecker( nkey, cType, oMouseObj )
 
@@ -499,7 +499,7 @@ STATIC FUNCTION nScrollChecker( nkey, cType, oMouseObj )
    nButtonChecker( nkey, oMouseObj:oRail2Button )
    nButtonChecker( nkey, oMouseObj:oSecondButton )
 
-   RETURN nkey //nHScrollChecker(nkey)
+   RETURN nkey // nHScrollChecker(nkey)
 
 /* HANDLING MULTIPLE MOUSE OBJECTS */
 /* called by SETKEYAFTERBLOCK() function */
@@ -519,7 +519,7 @@ FUNCTION wvwm_nMouseChecker( nkey )
       RETURN nkey
    ENDIF
 
-   s_ncurkey := nkey   //20040303
+   s_ncurkey := nkey   // 20040303
 
    FOR i := 1 TO Len( s_amouseobjlist[ nCurWindow + 1 ] )
       oMouseObj := s_amouseobjlist[ nCurWindow + 1 ][ i ][ 2 ]
@@ -537,7 +537,7 @@ FUNCTION wvwm_nMouseChecker( nkey )
 
    NEXT
 
-   s_ncurkey := 0  //20040303
+   s_ncurkey := 0  // 20040303
 
    RETURN nKey
 
@@ -561,7 +561,7 @@ STATIC PROCEDURE xKeyRepeater( lInit )
    nRepeatInterval := iif( s_lFirstRepeat, s_nrepeatdelay, s_nrepeatrate )
 
    nNow := Seconds()
-   IF nNow - s_nLastValidCheck < nRepeatInterval  //s_nrepeatrate
+   IF nNow - s_nLastValidCheck < nRepeatInterval  // s_nrepeatrate
       // not yet
       RETURN
    ENDIF
@@ -576,20 +576,20 @@ STATIC PROCEDURE xKeyRepeater( lInit )
    hb_keyPut( K_LBUTTONDOWN )
 
    // to be more precise
-   s_nLastValidCheck := Seconds()   //nNow
+   s_nLastValidCheck := Seconds()   // nNow
 
    // next repeat will be quicker
    s_lFirstRepeat := .F.
 
-   RETURN //xKeyRepeater()
+   RETURN // xKeyRepeater()
 
-//*************************** supporters
+// *************************** supporters
 
 STATIC FUNCTION nCeiling( nNumber )
 
    LOCAL nTemp
 
-   nTemp := nNumber - Int( nNumber )  //right of dec point
+   nTemp := nNumber - Int( nNumber )  // right of dec point
    IF nTemp > 0
       nNumber := Int( nNumber ) + 1
    ELSE

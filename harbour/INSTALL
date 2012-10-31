@@ -1266,7 +1266,7 @@ HARBOUR
 
           You'll need Subversion (SVN) version control software installed
           on your system, and issue this command:
-             svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+             svn co https://svn.code.sf.net/p/harbour-project/code/trunk/harbour harbour
 
           You can get subsequent updates using this command:
              svn update
@@ -1808,16 +1808,13 @@ HARBOUR
       http://groups.google.com/group/harbour-devel/
 
    Development Timeline:
-      http://sourceforge.net/apps/trac/harbour-project/timeline/
+      https://github.com/svn2github/harbour/commits/master
 
    Bug Tracker:
-      http://sourceforge.net/tracker/?group_id=681
+      http://sourceforge.net/p/harbour-project/bugs/
 
    Source Repository Browser:
-      http://harbour-project.svn.sourceforge.net/viewvc/harbour-project/
-
-   Source Repository Checkout (anonymous) [needs Subversion]:
-      svn co https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+      http://sourceforge.net/p/harbour-project/code/
 
    CA-Cl*pper 5.3 online documentation:
       http://x-hacker.org/ng/53guide/
@@ -1827,9 +1824,9 @@ HARBOUR
 
    Particularly:
       Comparing Harbour to xHarbour:
-         http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/doc/xhb-diff.txt
+         http://svn.code.sf.net/p/harbour-project/code/trunk/harbour/doc/xhb-diff.txt
       ChangeLog:
-         http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/ChangeLog
+         http://svn.code.sf.net/p/harbour-project/code/trunk/harbour/ChangeLog
 
 
 [ Copyright (c) 2009-2012 Viktor Szakats (harbour syenar.net)

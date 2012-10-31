@@ -64,6 +64,7 @@
 */
 
 CREATE CLASS tURL
+
    VAR cAddress
    VAR cProto
    VAR cServer
@@ -77,23 +78,26 @@ CREATE CLASS tURL
    METHOD New( cUrl )
    METHOD SetAddress( cUrl )
    METHOD BuildAddress()
-   METHOD BuildQuery( )
+   METHOD BuildQuery()
    METHOD AddGetForm( xPostData )
 
    HIDDEN:
 
-   CLASS VAR cREuri   INIT hb_regexComp("(?:(.*)://)?([^?/]*)(/[^?]*)?\??(.*)")
-   CLASS VAR cREServ  INIT hb_regexComp("(?:([^:@]*):?([^@:]*)@|)([^:]+):?(.*)")
-   CLASS VAR cREFile  INIT hb_regexComp("^((?:/.*/)|/)*(.*)$")
+   CLASS VAR cREuri   INIT hb_regexComp( "(?:(.*)://)?([^?/]*)(/[^?]*)?\??(.*)" )
+   CLASS VAR cREServ  INIT hb_regexComp( "(?:([^:@]*):?([^@:]*)@|)([^:]+):?(.*)" )
+   CLASS VAR cREFile  INIT hb_regexComp( "^((?:/.*/)|/)*(.*)$" )
 
 ENDCLASS
 
 
 METHOD New( cUrl ) CLASS tURL
+
    ::SetAddress( cUrl )
+
    RETURN Self
 
 METHOD SetAddress( cUrl ) CLASS tURL
+
    LOCAL aMatch, cServer, cPath
 
    ::cAddress := cUrl
@@ -142,6 +146,7 @@ METHOD SetAddress( cUrl ) CLASS tURL
 
 
 METHOD BuildAddress() CLASS tURL
+
    LOCAL cRet := ""
 
    IF ::cProto != NIL
@@ -185,6 +190,7 @@ METHOD BuildAddress() CLASS tURL
    RETURN cRet
 
 METHOD BuildQuery() CLASS tURL
+
    LOCAL cLine
 
    IF Len( ::cPath ) == 0 .OR. !( Right( ::cPath, 1 ) == "/" )
@@ -199,6 +205,7 @@ METHOD BuildQuery() CLASS tURL
    RETURN cLine
 
 METHOD AddGetForm( xPostData )
+
    LOCAL cData := ""
    LOCAL nI
    LOCAL y

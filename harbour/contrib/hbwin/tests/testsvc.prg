@@ -57,6 +57,7 @@
 #define _SERVICE_NAME "Harbour_Test_Service"
 
 PROCEDURE Main( cMode )
+
    LOCAL nError
    LOCAL cMsg
 
@@ -72,7 +73,7 @@ PROCEDURE Main( cMode )
          cMsg := Space( 128 )
          wapi_FormatMessage( ,,,, @cMsg )
          ? "Error installing service: " + hb_ntos( nError ) + " " + cMsg
-      ENDIf
+      ENDIF
       EXIT
 
    CASE "U"
@@ -84,7 +85,7 @@ PROCEDURE Main( cMode )
          cMsg := Space( 128 )
          wapi_FormatMessage( ,,,, @cMsg )
          ? "Error deleting service: " + hb_ntos( nError ) + " " + cMsg
-      ENDIf
+      ENDIF
       EXIT
 
    CASE "S"
@@ -109,8 +110,9 @@ PROCEDURE Main( cMode )
 #include "fileio.ch"
 
 PROCEDURE SrvMain()
+
    LOCAL n := 0
-   LOCAL fhnd := hb_FCreate( hb_dirBase() + "testsvc.out", FC_NORMAL, FO_DENYNONE + FO_WRITE )
+   LOCAL fhnd := hb_FCreate( hb_DirBase() + "testsvc.out", FC_NORMAL, FO_DENYNONE + FO_WRITE )
    LOCAL cParam
 
    FWrite( fhnd, "Startup" + hb_eol() )

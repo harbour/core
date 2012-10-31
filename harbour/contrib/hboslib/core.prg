@@ -69,9 +69,11 @@ FUNCTION OL_IsNT()
    RETURN hb_osIsWinNT()
 
 FUNCTION OL_IsOS2()
+
 #if defined( __PLATFORM__OS2 )
    RETURN .T.
 #else
+
    RETURN .F. /* TODO: detect OS/2 in MS-DOS builds */
 #endif
 
@@ -88,14 +90,16 @@ FUNCTION OL_WinCBCopy()
    RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA )
 
 FUNCTION OL_WinCBPaste( cText )
+
    IF HB_ISSTRING( cText )
       hb_gtInfo( HB_GTI_CLIPBOARDDATA, cText )
       RETURN .T.
    ENDIF
+
    RETURN .F.
 
 FUNCTION OL_WinFullScreen()
    RETURN hb_gtInfo( HB_GTI_ISFULLSCREEN, .T. )
 
 FUNCTION OL_Yield()
-   RETURN hb_releaseCPU()
+   RETURN hb_ReleaseCPU()

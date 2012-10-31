@@ -73,10 +73,10 @@ STATIC FUNCTION TRP20FTPEnv( cCarpeta )
          cStr := "Could not connect to FTP server " + oURL:cServer
          IF oFTP:SocketCon == NIL
             cStr += hb_eol() + "Connection not initialized"
-         ELSEIF hb_InetErrorCode( oFTP:SocketCon ) == 0
+         ELSEIF hb_inetErrorCode( oFTP:SocketCon ) == 0
             cStr += hb_eol() + "Server response:" + " " + oFTP:cReply
          ELSE
-            cStr += hb_eol() + "Error in connection:" + " " + hb_InetErrorDesc( oFTP:SocketCon )
+            cStr += hb_eol() + "Error in connection:" + " " + hb_inetErrorDesc( oFTP:SocketCon )
          ENDIF
          ? cStr
          lRetVal := .F.

@@ -397,7 +397,7 @@ METHOD WvgCrt:destroy()
 
    IF ! ::isGT
       IF ::lModal
-         hb_gtInfo( HB_GTI_ENABLE  , ::pGTp )
+         hb_gtInfo( HB_GTI_ENABLE, ::pGTp )
          hb_gtSelect( ::pGTp )
          hb_gtInfo( HB_GTI_SETFOCUS, ::pGTp )
       ENDIF

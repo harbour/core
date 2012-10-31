@@ -80,6 +80,7 @@ FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
    LOCAL cScreen
    LOCAL lNeedReset := .F., ;
       maxsavedscrrow, maxsavedscrcol
+
    IF !s_lSizeReady
       // program is not ready to handle window resizing
       // (or this function is currently running)
@@ -94,8 +95,8 @@ FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
    s_lSizeReady := .F.
 
    DO CASE
-   CASE wParam == 2 //SIZE_MAXIMIZED
-      //Alert( "MAXIMIZE" )
+   CASE wParam == 2 // SIZE_MAXIMIZED
+      // Alert( "MAXIMIZE" )
       // reset is required only if we are changing size
       lNeedReset := MaxCol() != wvw_maxmaxcol();
          .OR. MaxRow() != wvw_maxmaxrow()
@@ -104,13 +105,13 @@ FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
          maxsavedscrrow := Min( Min( s_nNormalMaxrow, wvw_maxmaxrow() ), MaxRow() )
          maxsavedscrcol := Min( Min( s_nNormalMaxcol, wvw_maxmaxcol() ), MaxCol() )
          cScreen := SaveScreen( 0, 0, maxsavedscrrow, maxsavedscrcol )
-         IF SetMode( wvw_maxmaxrow() + 1, wvw_maxmaxcol() + 1 ) //adjust maxrow() & maxcol()
+         IF SetMode( wvw_maxmaxrow() + 1, wvw_maxmaxcol() + 1 ) // adjust maxrow() & maxcol()
             RestScreen( 0, 0, maxsavedscrrow, maxsavedscrcol, cScreen )
          ENDIF
-         diminfo()  //updatescr()
+         diminfo()  // updatescr()
       ENDIF
-   CASE wParam == 0 //SIZE_RESTORED
-      //Alert( "RESTORE" )
+   CASE wParam == 0 // SIZE_RESTORED
+      // Alert( "RESTORE" )
       lNeedReset := MaxCol() != s_nNormalMaxcol .OR. ;
          MaxRow() != s_nNormalMaxrow
       IF lNeedReset
@@ -120,7 +121,7 @@ FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
          IF SetMode( s_nNormalMaxrow + 1, s_nNormalMaxcol + 1 )
             RestScreen( 0, 0, maxsavedscrrow, maxsavedscrcol, cScreen )
          ENDIF
-         diminfo()  //updatescr()
+         diminfo()  // updatescr()
       ENDIF
    OTHERWISE
       // do nothing

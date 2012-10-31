@@ -53,7 +53,7 @@ PROCEDURE Main()
    // restore state
    SetCursor( SC_NORMAL )
 
-   RETURN //main
+   RETURN // main
 
 PROCEDURE xGet1()
 
@@ -86,7 +86,7 @@ PROCEDURE xGet1()
 
    SetCursor( oldCurs )
 
-   RETURN //xGet1()
+   RETURN // xGet1()
 
 /* the following is adapted from WVTGUI.PRG by Pritpal Bedi
    for illustration purposes only */
@@ -120,7 +120,7 @@ FUNCTION xBrowse1()
 
    FOR i := 1 TO Len( info_ )
       bBlock := VouBlockField( i )
-      oBrowse:AddColumn( TBColumnNew( info_[ i,1 ], bBlock ) )
+      oBrowse:AddColumn( TBColumnNew( info_[ i, 1 ], bBlock ) )
    NEXT
 
    oBrowse:configure()
@@ -172,7 +172,7 @@ FUNCTION xBrowse1()
 
    zrevwindow()
 
-// restore state
+   // restore state
    SetCursor( nCursor )
 
    dbCloseArea()
@@ -206,11 +206,11 @@ STATIC FUNCTION TBNext( oTbr )
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
-   IF EOF()
+   IF Eof()
       lMoved := .F.
    ELSE
       dbSkip( 1 )
-      IF EOF()
+      IF Eof()
          lMoved := .F.
          dbGoto( nSaveRecNum )
       ENDIF
@@ -226,7 +226,7 @@ STATIC FUNCTION TBPrev( oTbr )
    LOCAL lMoved := .T.
 
    dbSkip( - 1 )
-   IF BOF()
+   IF Bof()
       dbGoto( nSaveRecNum )
       lMoved := .F.
    ENDIF
@@ -245,6 +245,7 @@ STATIC FUNCTION VouBlockField( i )
 FUNCTION lMessage( cMsg )
 
    LOCAL cOldColor := SetColor( s_cStdColor )
+
    @ MaxRow(), 0 SAY PadC( cMsg, MaxCol() + 1 )
    SetColor( cOldColor )
 
@@ -301,7 +302,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
    nNumLines := MLCount( cmsg, ( nright - nleft ) - 1 )
    nWidth := iif( nNumLines < 2, Len( cmsg ), nRight - nLeft - 1 )
    nTopLine := nBotLine - nNumLines - 1
-   IF nTopLine < 0            //too many lines to display
+   IF nTopLine < 0            // too many lines to display
       nNumLines += nTopLine
       nTopLine := 0
    ENDIF
@@ -390,7 +391,7 @@ FUNCTION nCeiling( nNumber )
 
    LOCAL nTemp
 
-   nTemp := nNumber - Int( nNumber )  //right of dec point
+   nTemp := nNumber - Int( nNumber )  // right of dec point
    IF nTemp > 0
       nNumber := Int( nNumber ) + 1
    ELSE

@@ -85,12 +85,12 @@ static HB_BOOL hb_clsSetScope( HB_BOOL fScope ) { return fScope; }
    } while( 0 )
 
 #if 1
-#  define HB_DBGCOMMON_LOCK   hb_threadEnterCriticalSection( &s_dbgMtx );
-#  define HB_DBGCOMMON_UNLOCK hb_threadLeaveCriticalSection( &s_dbgMtx );
+#  define HB_DBGCOMMON_LOCK()   hb_threadEnterCriticalSection( &s_dbgMtx )
+#  define HB_DBGCOMMON_UNLOCK() hb_threadLeaveCriticalSection( &s_dbgMtx )
    static HB_CRITICAL_NEW( s_dbgMtx );
 #else
-#  define HB_DBGCOMMON_LOCK
-#  define HB_DBGCOMMON_UNLOCK
+#  define HB_DBGCOMMON_LOCK()
+#  define HB_DBGCOMMON_UNLOCK()
 #endif
 
 typedef struct
@@ -293,7 +293,7 @@ static PHB_ITEM hb_dbgActivateModuleArray( void )
    PHB_ITEM pArray;
    int i;
 
-   HB_DBGCOMMON_LOCK
+   HB_DBGCOMMON_LOCK();
 
    pArray = hb_itemArrayNew( s_common.nModules );
 
@@ -323,7 +323,7 @@ static PHB_ITEM hb_dbgActivateModuleArray( void )
       hb_itemRelease( pModule );
    }
 
-   HB_DBGCOMMON_UNLOCK
+   HB_DBGCOMMON_UNLOCK();
 
    return pArray;
 }
@@ -591,11 +591,11 @@ static void hb_dbgAddLocal( HB_DEBUGINFO * info, const char * szName, int nIndex
    {
       HB_MODULEINFO * module;
 
-      HB_DBGCOMMON_LOCK
+      HB_DBGCOMMON_LOCK();
       module = &s_common.aModules[ s_common.nModules - 1 ];
       hb_dbgAddVar( &module->nGlobals, &module->aGlobals, szName,
                     'G', nIndex, hb_dbg_vmVarGCount(), NULL );
-      HB_DBGCOMMON_UNLOCK
+      HB_DBGCOMMON_UNLOCK();
    }
    else
    {
@@ -617,7 +617,7 @@ static void hb_dbgAddModule( const char * szName )
    iLen = szFuncName ? ( int ) ( szFuncName - szName ) : ( int ) strlen( szName );
    szModuleName = hb_strndup( szName, iLen );
 
-   HB_DBGCOMMON_LOCK
+   HB_DBGCOMMON_LOCK();
    if( !s_common.nModules || strcmp( s_common.aModules[ s_common.nModules - 1 ].szModule, szModuleName ) )
    {
       HB_MODULEINFO * pModule;
@@ -630,7 +630,7 @@ static void hb_dbgAddModule( const char * szName )
 
       szModuleName = NULL;
    }
-   HB_DBGCOMMON_UNLOCK
+   HB_DBGCOMMON_UNLOCK();
 
    if( szModuleName )
       hb_xfree( szModuleName );
@@ -687,21 +687,21 @@ static void hb_dbgAddStatic( HB_DEBUGINFO * info, const char * szName, int nInde
    {
       HB_MODULEINFO * module;
 
-      HB_DBGCOMMON_LOCK
+      HB_DBGCOMMON_LOCK();
       module = &s_common.aModules[ s_common.nModules - 1 ];
       hb_dbgAddVar( &module->nExternGlobals, &module->aExternGlobals, szName,
                     'G', nIndex, hb_dbg_vmVarGCount(), NULL );
-      HB_DBGCOMMON_UNLOCK
+      HB_DBGCOMMON_UNLOCK();
    }
    else if( info->bInitStatics )
    {
       HB_MODULEINFO * module;
 
-      HB_DBGCOMMON_LOCK
+      HB_DBGCOMMON_LOCK();
       module = &s_common.aModules[ s_common.nModules - 1 ];
       hb_dbgAddVar( &module->nStatics, &module->aStatics, szName,
                     'S', nIndex, 0, pFrame );
-      HB_DBGCOMMON_UNLOCK
+      HB_DBGCOMMON_UNLOCK();
    }
    else
    {
@@ -716,7 +716,7 @@ static void hb_dbgAddStopLines( PHB_ITEM pItem )
 {
    HB_ISIZ i, nLinesLen;
 
-   HB_DBGCOMMON_LOCK
+   HB_DBGCOMMON_LOCK();
 
    if( !s_common.pStopLines )
    {
@@ -793,7 +793,7 @@ static void hb_dbgAddStopLines( PHB_ITEM pItem )
       }
    }
 
-   HB_DBGCOMMON_UNLOCK
+   HB_DBGCOMMON_UNLOCK();
 }
 
 
@@ -1214,7 +1214,7 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO * info, HB_WATCHPOINT * watch )
    scopes = ( HB_VARINFO * ) hb_xgrab( watch->nVars * sizeof( HB_VARINFO ) );
    nProcLevel = hb_dbg_ProcLevel();
 
-   HB_DBGCOMMON_LOCK
+   HB_DBGCOMMON_LOCK();
 
    for( i = 0; i < s_common.nModules; i++ )
    {
@@ -1323,7 +1323,7 @@ static PHB_ITEM hb_dbgEvalResolve( HB_DEBUGINFO * info, HB_WATCHPOINT * watch )
    }
    watch->aScopes = scopes;
 
-   HB_DBGCOMMON_UNLOCK
+   HB_DBGCOMMON_UNLOCK();
 
    return aVars;
 }
@@ -1356,12 +1356,12 @@ PHB_ITEM hb_dbgGetSourceFiles( void * handle )
    /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
    HB_SYMBOL_UNUSED( handle );
 
-   HB_DBGCOMMON_LOCK
+   HB_DBGCOMMON_LOCK();
    nModules = hb_itemSize( s_common.pStopLines );
    ret = hb_itemArrayNew( nModules );
    for( i = 1; i <= nModules; i++ )
       hb_arraySet( ret, i, hb_arrayGetItemPtr( hb_arrayGetItemPtr( s_common.pStopLines, i ), 1 ) );
-   HB_DBGCOMMON_UNLOCK
+   HB_DBGCOMMON_UNLOCK();
 
    return ret;
 }
@@ -1409,7 +1409,7 @@ HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
    /* HB_DEBUGINFO * info = ( HB_DEBUGINFO * ) handle; */
    HB_SYMBOL_UNUSED( handle );
 
-   HB_DBGCOMMON_LOCK
+   HB_DBGCOMMON_LOCK();
    nModules = hb_itemSize( s_common.pStopLines );
    for( i = 1; i <= nModules; i++ )
    {
@@ -1426,7 +1426,7 @@ HB_BOOL hb_dbgIsValidStopLine( void * handle, const char * szModule, int nLine )
          break;
       }
    }
-   HB_DBGCOMMON_UNLOCK
+   HB_DBGCOMMON_UNLOCK();
    return fResult;
 }
 

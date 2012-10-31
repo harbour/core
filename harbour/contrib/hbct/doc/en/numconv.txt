@@ -8,23 +8,23 @@
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
-  
+
    $SYNTAX$
       NTOC( <xNumber>[, <nBase>][,<nLength>][,<cPadChar>] ) -> <cNumber>
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       All
    $FILES$
@@ -40,23 +40,23 @@
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
-  
+
    $SYNTAX$
       CTON( <xNumber>[, <nBase>][,<lMode>] ) -> <nNumber>
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       All
    $FILES$
@@ -72,23 +72,23 @@
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
-  
+
    $SYNTAX$
       BITTOC( <nInteger>, <cBitPattern>[,<lMode>] ) -> <cBitString>
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       All
    $FILES$
@@ -104,23 +104,23 @@
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
-  
+
    $SYNTAX$
       CTOBIT( <cBitString>, <cBitPattern> ) -> <nWord>
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       All
    $FILES$

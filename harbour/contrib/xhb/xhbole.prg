@@ -80,17 +80,19 @@ FUNCTION CreateOLEObject()
 STATIC s_bBreak := {| oError | Break( oError ) }
 
 STATIC FUNCTION s_oleOpError( cOperator, ... )
-   STATIC sc_hErrCode := { "==" => 1070, ;
-                           "="  => 1071, ;
-                           "!=" => 1072, ;
-                           "+"  => 1081, ;
-                           "-"  => 1082, ;
-                           "*"  => 1083, ;
-                           "/"  => 1084, ;
-                           "%"  => 1085, ;
-                           "++" => 1086, ;
-                           "--" => 1087, ;
-                           "^"  => 1088 }
+
+   STATIC sc_hErrCode := { ;
+      "==" => 1070, ;
+      "="  => 1071, ;
+      "!=" => 1072, ;
+      "+"  => 1081, ;
+      "-"  => 1082, ;
+      "*"  => 1083, ;
+      "/"  => 1084, ;
+      "%"  => 1085, ;
+      "++" => 1086, ;
+      "--" => 1087, ;
+      "^"  => 1088 }
    LOCAL oErr
 
    oErr := ErrorNew()
@@ -108,6 +110,7 @@ STATIC FUNCTION s_oleOpError( cOperator, ... )
    RETURN oErr
 
 STATIC FUNCTION s_oleError( nGenCode, cDescript )
+
    LOCAL oErr
 
    oErr := ErrorNew()
@@ -131,6 +134,7 @@ STATIC FUNCTION s_oleError( nGenCode, cDescript )
 
 
 CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
+
    VAR cClassName
 
    METHOD hObj( xOle ) SETGET
@@ -160,9 +164,11 @@ CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
    METHOD OleValuePower( xArg )           OPERATOR "^"
    METHOD OleValueInc()                   OPERATOR "++"
    METHOD OleValueDec()                   OPERATOR "--"
+
 ENDCLASS
 
 METHOD hObj( xOle ) CLASS TOLEAUTO
+
    IF xOle != NIL
       IF HB_ISNUMERIC( xOle )
          xOle := __OLEPDISP( xOle )
@@ -171,10 +177,13 @@ METHOD hObj( xOle ) CLASS TOLEAUTO
          ::__hObj := xOle
       ENDIF
    ENDIF
+
    RETURN ::__hObj
 
 METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
+
    LOCAL hOle
+
    IF HB_ISSTRING( xOle )
       hOle := __OleCreateObject( xOle,, cLicense )
       IF ! Empty( hOle )
@@ -193,9 +202,11 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
          ::cClassName := hb_ntos( win_P2N( ::__hObj ) )
       ENDIF
    ENDIF
+
    RETURN Self
 
 METHOD GetActiveObject( cClass ) CLASS TOLEAUTO
+
    IF HB_ISSTRING( cClass )
       IF ! Empty( ::__hObj := __OleGetActiveObject( cClass ) )
          ::cClassName := cClass
@@ -204,9 +215,10 @@ METHOD GetActiveObject( cClass ) CLASS TOLEAUTO
       ENDIF
    ELSE
       WAPI_MessageBox( , "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", ;
-                         "OLE Interface", )
+         "OLE Interface", )
       ::__hObj := NIL
    ENDIF
+
    RETURN Self
 
 METHOD OleValue() CLASS TOLEAUTO

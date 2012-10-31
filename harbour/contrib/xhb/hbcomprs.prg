@@ -63,6 +63,7 @@ THREAD STATIC t_nLastError := HB_ZLIB_RES_OK
 *  HB_COMPRESS( nComprFactor, cSource, nSourceLen, @cDest, @nDestLen ) --> nError
 */
 FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
+
    LOCAL nComprFactor
    LOCAL cSource
    LOCAL nSourceLen
@@ -109,13 +110,13 @@ FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
 
    IF lReturnByRef
       IF HB_ISNUMERIC( xPar1 )
-         xPar4 := HB_ZCOMPRESS( cSource, nDestLen, @t_nLastError, nComprFactor )
+         xPar4 := hb_ZCompress( cSource, nDestLen, @t_nLastError, nComprFactor )
          IF ! HB_ISSTRING( xPar4 )
             xPar4 := ""
          ENDIF
          xPar5 := Len( xPar4 )
       ELSE
-         xPar3 := HB_ZCOMPRESS( cSource, nDestLen, @t_nLastError, nComprFactor )
+         xPar3 := hb_ZCompress( cSource, nDestLen, @t_nLastError, nComprFactor )
          IF ! HB_ISSTRING( xPar3 )
             xPar3 := ""
          ENDIF
@@ -124,13 +125,14 @@ FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
       RETURN t_nLastError
    ENDIF
 
-   RETURN HB_ZCOMPRESS( cSource, nDestLen, @t_nLastError, nComprFactor )
+   RETURN hb_ZCompress( cSource, nDestLen, @t_nLastError, nComprFactor )
 
 /****** DECOMPRESSOR WRAPPER *****
 *  HB_UNCOMPRESS( nDestLen, cSource [, nSourceLen ] ) --> cDest
 *  HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, @cDest ) --> nError
 */
 FUNCTION HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, /* @ */ cDest )
+
    LOCAL oError
 
    IF ! HB_ISNUMERIC( nDestLen ) .OR. ;
@@ -153,11 +155,11 @@ FUNCTION HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, /* @ */ cDest )
    ENDIF
 
    IF PCount() >= 4
-      cDest := HB_ZUNCOMPRESS( cSource, nDestLen, @t_nLastError )
+      cDest := hb_ZUncompress( cSource, nDestLen, @t_nLastError )
       RETURN t_nLastError
    ENDIF
 
-   RETURN HB_ZUNCOMPRESS( cSource, nDestLen, @t_nLastError )
+   RETURN hb_ZUncompress( cSource, nDestLen, @t_nLastError )
 
 /*********************************
 *  HB_COMPRESSERROR() --> nError
@@ -169,12 +171,13 @@ FUNCTION HB_COMPRESSERROR()
 *  HB_COMPRESSERRORDESC( nErrorCode ) --> cDesc
 */
 FUNCTION HB_COMPRESSERRORDESC( nError )
-   RETURN HB_ZERROR( nError )
+   RETURN hb_ZError( nError )
 
 /*******************************
 *  HB_COMPRESSBUFLEN( nSrcLen ) --> nDestLen
 */
 FUNCTION HB_COMPRESSBUFLEN( nSrcLen )
+
    LOCAL nRet
 
    IF ! HB_ISNUMERIC( nSrcLen )

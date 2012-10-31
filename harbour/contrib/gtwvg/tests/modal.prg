@@ -85,9 +85,9 @@ FUNCTION Just_Alert( cMsg, aOpt )
       [ <lNoTitleBar:NOTITLEBAR> ] ;
       INTO < oCrt > ;
       => ;
-      < oCrt > := CreateOCrt( < nTop > , < nLeft > , < nBottom > , < nRight > , < ttl > , < icon > , ;
-      < .lModal. > , < .lRowCols. > , < .lHidden. > , < .lCenter. > , ;
-      < nRow > , < nCol > , < .lNoTitleBar. > )
+      <oCrt > := CreateOCrt( <nTop>, <nLeft>, <nBottom>, <nRight>, <ttl>, <icon>, ;
+      <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
+      <nRow>, <nCol>, <.lNoTitleBar.> )
 
 //
 
@@ -100,7 +100,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    LOCAL maxRow  := MaxRow()
    LOCAL nBtnCol_
    LOCAL pal_    := { "w+/n", "w/r", "n/w", "n/bg", "r/bg", "N/W", "n/B", "w+/B" }
-   LOCAL aTrg_   , x_ := {}
+   LOCAL aTrg_, x_ := {}
 
    hb_default( @cCaption  , "Your Attention Please!" )
    hb_default( @aButtons_ , { "OK" } )
@@ -146,7 +146,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    aTrg_ := Array( Len( aButtons_ ) )
    FOR i := 1 TO Len( aButtons_ )
-      aTrg_[i] := Upper( SubStr( aButtons_[ i ], 1, 1 ) )
+      aTrg_[ i ] := Upper( SubStr( aButtons_[ i ], 1, 1 ) )
    NEXT
 
    //                        Create a new Window
@@ -164,7 +164,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    nBtnCol_[ 1 ] := Int( ( nColRqd - nColBut ) / 2 ) + 3
    IF Len( aButtons_ ) > 1
       FOR i := 2 TO Len( aButtons_ )
-         nBtnCol_[ i ] := nBtnCol_[ i-1 ] + Len( aButtons_[ i-1 ] ) + 3 + 4
+         nBtnCol_[ i ] := nBtnCol_[ i - 1 ] + Len( aButtons_[ i - 1 ] ) + 3 + 4
       NEXT
    ENDIF
 
@@ -196,7 +196,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    NEXT
 
    SetColor( pal_[ DLG_CLR_HILITE ] )
-   @ nBtnRow, nBtnCol_[ sel ] SAY "  " + aButtons_[sel] + "  "
+   @ nBtnRow, nBtnCol_[ sel ] SAY "  " + aButtons_[ sel ] + "  "
 
    SetColor( pal_[ DLG_CLR_HISEL ] )
    @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
@@ -263,13 +263,13 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
       DispBegin()
       FOR i := 1 TO Len( aButtons_ )
          SetColor( pal_[ DLG_CLR_BTN ] )
-         @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[i] + "  "
-         SetColor( pal_[ DLG_CLR_TRG] )
-         @ nBtnRow, nBtnCol_[i] + 2 SAY SubStr( aButtons_[i], 1, 1 )
+         @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[ i ] + "  "
+         SetColor( pal_[ DLG_CLR_TRG ] )
+         @ nBtnRow, nBtnCol_[ i ] + 2 SAY SubStr( aButtons_[ i ], 1, 1 )
       NEXT
       IF sel > 0
          SetColor( pal_[ DLG_CLR_HILITE ] )
-         @ nBtnRow, nBtnCol_[sel] SAY "  " + aButtons_[ sel ] + "  "
+         @ nBtnRow, nBtnCol_[ sel ] SAY "  " + aButtons_[ sel ] + "  "
          SetColor( pal_[ DLG_CLR_HISEL ] )
          @ nBtnRow, nBtnCol_[ sel ] + 2 SAY SubStr( aButtons_[ sel ], 1, 1 )
       ENDIF
@@ -295,7 +295,7 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
    hb_default( @lCenter     , .F. )
    hb_default( @lNoTitleBar , .F. )
 
-   aPos := iif( lCenter, { -1, -1 }, iif( nRow == NIL, { nT, nL }, { nRow,nCol } ) )
+   aPos := iif( lCenter, { -1, -1 }, iif( nRow == NIL, { nT, nL }, { nRow, nCol } ) )
 
    oCrt := WvgCrt():new( , , aPos, { nB - nT, nR - nL }, , !lHidden )
    oCrt:lModal := lModal

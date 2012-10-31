@@ -112,7 +112,6 @@ PROCEDURE Main
    WAIT
    ? HtmlToOem( oDoc:body:getText() )
 
-   /* DllCall( "shell32.dll", NIL, "ShellExecute", 0, "open", "address.html", NIL, "", 1 ) */
    hb_run( "address.html" )
 
    RETURN

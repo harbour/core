@@ -233,13 +233,13 @@ static void hb_vmRequestTest( void );
 static PHB_ITEM s_pSymbolsMtx = NULL;
 
 static HB_CRITICAL_NEW( s_atInitMtx );
-#  define HB_ATINIT_LOCK      hb_threadEnterCriticalSection( &s_atInitMtx );
-#  define HB_ATINIT_UNLOCK    hb_threadLeaveCriticalSection( &s_atInitMtx );
-#  define HB_TASK_SHEDULER    HB_THREAD_SHEDULER();
+#  define HB_ATINIT_LOCK()    hb_threadEnterCriticalSection( &s_atInitMtx )
+#  define HB_ATINIT_UNLOCK()  hb_threadLeaveCriticalSection( &s_atInitMtx )
+#  define HB_TASK_SHEDULER()  HB_THREAD_SHEDULER()
 #else
-#  define HB_ATINIT_LOCK
-#  define HB_ATINIT_UNLOCK
-#  define HB_TASK_SHEDULER
+#  define HB_ATINIT_LOCK()
+#  define HB_ATINIT_UNLOCK()
+#  define HB_TASK_SHEDULER()
 #endif /* HB_MT_VM */
 
 #ifndef HB_NO_PROFILER
@@ -303,10 +303,10 @@ static void hb_vmAddModuleFunction( PHB_FUNC_LIST * pLstPtr, HB_INIT_FUNC pFunc,
 
    pLst->pFunc = pFunc;
    pLst->cargo = cargo;
-   HB_ATINIT_LOCK
+   HB_ATINIT_LOCK();
    pLst->pNext = *pLstPtr;
    *pLstPtr = pLst;
-   HB_ATINIT_UNLOCK
+   HB_ATINIT_UNLOCK();
 }
 
 static void hb_vmDoModuleFunctions( PHB_FUNC_LIST pLst )
@@ -440,14 +440,14 @@ static HB_THREAD_NO s_threadNo = 0;
 #  define HB_THREQUEST_STOP   1
 #  define HB_THREQUEST_QUIT   2
 
-#  define HB_VM_LOCK      hb_threadEnterCriticalSection( &s_vmMtx );
-#  define HB_VM_UNLOCK    hb_threadLeaveCriticalSection( &s_vmMtx );
+#  define HB_VM_LOCK()    hb_threadEnterCriticalSection( &s_vmMtx )
+#  define HB_VM_UNLOCK()  hb_threadLeaveCriticalSection( &s_vmMtx )
 
 HB_BOOL hb_vmIsMt( void ) { return HB_TRUE; }
 
 static void hb_vmRequestTest( void )
 {
-   HB_VM_LOCK
+   HB_VM_LOCK();
 
    s_iRunningCount--;
    for( ;; )
@@ -471,7 +471,7 @@ static void hb_vmRequestTest( void )
    }
    s_iRunningCount++;
 
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 }
 
 /* unlock VM, allow GC and other exclusive single task code execution */
@@ -483,7 +483,7 @@ void hb_vmUnlock( void )
    {
       if( hb_stackUnlock() == 1 )
       {
-         HB_VM_LOCK
+         HB_VM_LOCK();
          s_iRunningCount--;
          if( hb_vmThreadRequest )
          {
@@ -497,11 +497,11 @@ void hb_vmUnlock( void )
             }
             hb_threadCondBroadcast( &s_vmCond );
          }
-         HB_VM_UNLOCK
+         HB_VM_UNLOCK();
       }
    }
 
-   HB_TASK_SHEDULER
+   HB_TASK_SHEDULER();
 }
 
 /* lock VM blocking GC and other exclusive single task code execution */
@@ -513,7 +513,7 @@ void hb_vmLock( void )
    {
       if( hb_stackLock() == 0 )
       {
-         HB_VM_LOCK
+         HB_VM_LOCK();
          for( ;; )
          {
             if( hb_vmThreadRequest & HB_THREQUEST_QUIT )
@@ -530,7 +530,7 @@ void hb_vmLock( void )
                break;
          }
          s_iRunningCount++;
-         HB_VM_UNLOCK
+         HB_VM_UNLOCK();
       }
    }
 }
@@ -538,7 +538,7 @@ void hb_vmLock( void )
 /* (try to) stop all threads except current one */
 HB_BOOL hb_vmSuspendThreads( HB_BOOL fWait )
 {
-   HB_VM_LOCK
+   HB_VM_LOCK();
 
    if( ( hb_vmThreadRequest & ( HB_THREQUEST_STOP | HB_THREQUEST_QUIT ) ) == 0 )
    {
@@ -563,7 +563,7 @@ HB_BOOL hb_vmSuspendThreads( HB_BOOL fWait )
       hb_threadCondBroadcast( &s_vmCond );
    }
 
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 
    return HB_FALSE;
 }
@@ -573,7 +573,7 @@ void hb_vmResumeThreads( void )
 {
    hb_vmThreadRequest &= ~HB_THREQUEST_STOP;
    hb_threadCondBroadcast( &s_vmCond );
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 }
 
 /* send QUIT request to all threads except current one
@@ -586,7 +586,7 @@ void hb_vmTerminateThreads( void )
 
    if( s_main_thread == hb_stackId() )
    {
-      HB_VM_LOCK
+      HB_VM_LOCK();
 
       hb_vmThreadRequest |= HB_THREQUEST_QUIT;
       --s_iRunningCount;
@@ -603,7 +603,7 @@ void hb_vmTerminateThreads( void )
       /* hb_vmThreadRequest &= ~HB_THREQUEST_QUIT; */
       hb_vmThreadRequest = 0;
 
-      HB_VM_UNLOCK
+      HB_VM_UNLOCK();
    }
 }
 
@@ -616,7 +616,7 @@ void hb_vmWaitForThreads( void )
 
    if( s_main_thread == hb_stackId() )
    {
-      HB_VM_LOCK
+      HB_VM_LOCK();
 
       --s_iRunningCount;
       if( hb_vmThreadRequest )
@@ -627,7 +627,7 @@ void hb_vmWaitForThreads( void )
 
       ++s_iRunningCount;
 
-      HB_VM_UNLOCK
+      HB_VM_UNLOCK();
    }
 }
 
@@ -704,7 +704,7 @@ static void hb_vmStackInit( PHB_THREADSTATE pState )
 
    hb_stackInit();      /* initialize HVM thread stack */
 
-   HB_VM_LOCK
+   HB_VM_LOCK();
    {
       HB_STACK_TLS_PRELOAD
 
@@ -714,7 +714,7 @@ static void hb_vmStackInit( PHB_THREADSTATE pState )
       pState->fActive = HB_TRUE;
       hb_vmStackAdd( pState );
    }
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 
    hb_vmLock();
 }
@@ -727,12 +727,12 @@ static void hb_vmStackRelease( void )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmStackRelease()"));
 
-   HB_VM_LOCK
+   HB_VM_LOCK();
 
    fLocked = hb_stackUnlock() == 1;
    pThItm = hb_vmStackDel( ( PHB_THREADSTATE ) hb_stackList(), HB_FALSE );
 
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 
    /* NOTE: releasing pThItm may force pState freeing if parent
     *       thread does not keep thread pointer item. So it's
@@ -746,7 +746,7 @@ static void hb_vmStackRelease( void )
 
    hb_threadMutexUnlockAll();
 
-   HB_VM_LOCK
+   HB_VM_LOCK();
 
    if( fLocked )
       s_iRunningCount--;
@@ -754,18 +754,18 @@ static void hb_vmStackRelease( void )
    s_iStackCount--;
    hb_threadCondBroadcast( &s_vmCond );
 
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 }
 
 HB_BOOL hb_vmThreadRegister( void * Cargo )
 {
    HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadRegister(%p)", Cargo));
 
-   HB_VM_LOCK
+   HB_VM_LOCK();
 
    hb_vmStackAdd( ( PHB_THREADSTATE ) Cargo );
 
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 
    return HB_TRUE;
 }
@@ -776,12 +776,12 @@ void hb_vmThreadRelease( void * Cargo )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmThreadRelease(%p)", Cargo));
 
-   HB_VM_LOCK
+   HB_VM_LOCK();
 
    pThItm = hb_vmStackDel( ( PHB_THREADSTATE ) Cargo, HB_TRUE );
    hb_threadCondBroadcast( &s_vmCond );
 
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 
    if( pThItm )
       hb_itemRelease( pThItm );
@@ -890,12 +890,12 @@ void hb_vmThreadQuitRequest( void * Cargo )
 
    pState = ( PHB_THREADSTATE ) Cargo;
 
-   HB_VM_LOCK
+   HB_VM_LOCK();
 
    if( pState->pStackId && pState->fActive )
       hb_stackIdSetActionRequest( pState->pStackId, HB_QUIT_REQUESTED );
 
-   HB_VM_UNLOCK
+   HB_VM_UNLOCK();
 }
 
 #endif /* HB_MT_VM */
@@ -5823,7 +5823,7 @@ void hb_vmProc( HB_USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmProc(%hu)", uiParams));
 
-   HB_TASK_SHEDULER
+   HB_TASK_SHEDULER();
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
@@ -5883,7 +5883,7 @@ void hb_vmDo( HB_USHORT uiParams )
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmDo(%hu)", uiParams));
 
-   HB_TASK_SHEDULER
+   HB_TASK_SHEDULER();
 
 #ifndef HB_NO_PROFILER
    if( bProfiler )
@@ -5970,7 +5970,7 @@ void hb_vmSend( HB_USHORT uiParams )
    HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 #endif
 
-   HB_TASK_SHEDULER
+   HB_TASK_SHEDULER();
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmSend(%hu)", uiParams));
 
@@ -6044,7 +6044,7 @@ void hb_vmEval( HB_USHORT uiParams )
    HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
 #endif
 
-   HB_TASK_SHEDULER
+   HB_TASK_SHEDULER();
 
    HB_TRACE(HB_TR_DEBUG, ("hb_vmEval(%hu)", uiParams));
 
@@ -8970,14 +8970,18 @@ void hb_vmSetI18N( void * pI18N )
 
 #if defined( HB_MT_VM )
 #  define HB_XVM_RETURN \
-      if( hb_vmThreadRequest ) \
-         hb_vmRequestTest(); \
-      return ( hb_stackGetActionRequest() & \
-               ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
+      { \
+         if( hb_vmThreadRequest ) \
+            hb_vmRequestTest(); \
+         return ( hb_stackGetActionRequest() & \
+                  ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0; \
+      }
 #else
 #  define HB_XVM_RETURN \
-      return ( hb_stackGetActionRequest() & \
-               ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0;
+      { \
+         return ( hb_stackGetActionRequest() & \
+                  ( HB_ENDPROC_REQUESTED | HB_BREAK_REQUESTED | HB_QUIT_REQUESTED ) ) != 0; \
+      }
 #endif /* HB_MT_VM */
 
 void hb_xvmExitProc( void )

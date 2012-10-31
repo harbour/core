@@ -53,7 +53,7 @@
  */
 
 #ifndef __HARBOUR__
-   #define hb_ntos( n ) LTrim( Str( n ) )
+#define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
 PROCEDURE Main()
@@ -68,17 +68,17 @@ PROCEDURE Main()
 
    // Some simple tests
    ? "  Simple tests:"
-   ? [    attoken("Hello, World!") == 8 ? ---------> ] + Str( attoken( "Hello, World!" ) )
-   ? [    attoken("Hello, World!",,2) == 8 ? ------> ] + Str( attoken( "Hello, World!",, 2 ) )
-   ? [    attoken("Hello, World!",,2,1) == 7 ? ----> ] + Str( attoken( "Hello, World!",, 2, 1 ) )
-   ? [    attoken("Hello, World!"," ",2,1) == 8 ? -> ] + Str( attoken( "Hello, World!", " ", 2, 1 ) )
+   ? '    attoken("Hello, World!") == 8 ? ---------> ' + Str( attoken( "Hello, World!" ) )
+   ? '    attoken("Hello, World!",,2) == 8 ? ------> ' + Str( attoken( "Hello, World!",, 2 ) )
+   ? '    attoken("Hello, World!",,2,1) == 7 ? ----> ' + Str( attoken( "Hello, World!",, 2, 1 ) )
+   ? '    attoken("Hello, World!"," ",2,1) == 8 ? -> ' + Str( attoken( "Hello, World!", " ", 2, 1 ) )
    ?
 
-   ? [  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:]
+   ? '  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:'
    ? "    Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
    ?
    FOR ni := 1 TO numtoken( cStr, ".!", 1 )
-      ? [    Token #] + hb_ntos( ni ) + [("] + token( cStr, ".!", ni, 1 ) + [")]
+      ? '    Token #' + hb_ntos( ni ) + '("' + token( cStr, ".!", ni, 1 ) + '")'
       ? "          starts at pos " + Str( npos := attoken( cStr, ".!", ni, 1 ), 3 ) + ;
          " and is " + iif( SubStr( cStr, npos, 1 ) $ ".!", "", "not " ) + "an empty token."
    NEXT

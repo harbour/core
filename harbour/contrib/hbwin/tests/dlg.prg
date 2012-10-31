@@ -6,7 +6,7 @@
  * This example demonstrates how to work with some features of the native Win32
  * API. The following function displays a dialog created with an external
  * resource editor (Pelles C)
- * 06/10/2010 - 00:16:41 - [vailtom]
+ * 2010/06/10 - 00:16:41 - [vailtom]
  */
 
 // Some constants
@@ -30,7 +30,7 @@ PROCEDURE Main()
    RETURN
 
 // Main function to control the user interaction
-FUNCTION DialogFunc( hWnd, message, wParam, lParam, wPHigh, wPLow )
+FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
 
    LOCAL cText
 
@@ -38,11 +38,11 @@ FUNCTION DialogFunc( hWnd, message, wParam, lParam, wPHigh, wPLow )
    HB_SYMBOL_UNUSED( lParam )
    HB_SYMBOL_UNUSED( wPHigh )
 
-   SWITCH message
+   SWITCH nMessage
    CASE WM_INITDIALOG
 
       wapi_SetDlgItemText( hWnd, IDC_STATIC1, "Hi! " + Time() )
-      wapi_SetDlgItemText( hWnd, IDC_EDIT1  , "Harbour" )
+      wapi_SetDlgItemText( hWnd, IDC_EDIT1, "Harbour" )
 
       wapi_ComboBox_AddString( WAPI_GETDLGITEM( hWnd, IDC_COMBO1 ), "Architect" )
       wapi_ComboBox_AddString( WAPI_GETDLGITEM( hWnd, IDC_COMBO1 ), "Engineer" )

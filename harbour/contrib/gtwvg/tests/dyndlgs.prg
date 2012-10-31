@@ -190,20 +190,20 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       EXIT
 
    CASE WM_CTLCOLOREDIT
-      IF ( WVG_GetDlgItem( hDlg,ID_MLE ) == lParam )
-         WVG_SetTextColor( wParam, RGB( 0,0,255 ) )
-         WVG_SetBkColor( wParam, RGB( 255,255,200 ) )
+      IF ( WVG_GetDlgItem( hDlg, ID_MLE ) == lParam )
+         WVG_SetTextColor( wParam, RGB( 0, 0, 255 ) )
+         WVG_SetBkColor( wParam, RGB( 255, 255, 200 ) )
          RETURN 1
-      ELSEIF ( WVG_GetDlgItem( hDlg,ID_EDT_TEXT ) == lParam )
-         WVG_SetTextColor( wParam, RGB( 255,255,255 ) )
-         WVG_SetBkColor( wParam, RGB( 10,200,45 ) )
+      ELSEIF ( WVG_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam )
+         WVG_SetTextColor( wParam, RGB( 255, 255, 255 ) )
+         WVG_SetBkColor( wParam, RGB( 10, 200, 45 ) )
          RETURN 1
       ENDIF
       EXIT
 
    CASE WM_CTLCOLORSTATIC
-      IF ( WVG_GetDlgItem( hDlg,ID_STA_TEXT ) == lParam )
-         WVG_SetTextColor( wParam, RGB( 255,255,255 ) )
+      IF ( WVG_GetDlgItem( hDlg, ID_STA_TEXT ) == lParam )
+         WVG_SetTextColor( wParam, RGB( 255, 255, 255 ) )
          RETURN 1
       ENDIF
       EXIT

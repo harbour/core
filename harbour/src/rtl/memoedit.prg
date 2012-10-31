@@ -163,7 +163,7 @@ METHOD KeyboardHook( nKey ) CLASS HBMemoEditor
 
             nRow := Row()
             nCol := Col()
-            hb_dispOutAt( 0, MaxCol() - 18, "Abort Edit? (Y/N)" )
+            hb_DispOutAt( 0, MaxCol() - 18, "Abort Edit? (Y/N)" )
             SetPos( 0, MaxCol() - 1 )
 
             nYesNoKey := Inkey( 0 )
@@ -271,21 +271,22 @@ METHOD MoveCursor( nKey ) CLASS HBMemoEditor
 
    RETURN .F.
 
-/*----------------------------------------------------------------------------------------*/
+/* ------------------------------------------ */
 
-FUNCTION MemoEdit( cString,;
-                   nTop,;
-                   nLeft,;
-                   nBottom,;
-                   nRight,;
-                   lEditMode,;
-                   xUserFunction,;
-                   nLineLength,;
-                   nTabSize,;
-                   nTextBuffRow,;
-                   nTextBuffColumn,;
-                   nWindowRow,;
-                   nWindowColumn )
+FUNCTION MemoEdit( ;
+   cString,;
+   nTop,;
+   nLeft,;
+   nBottom,;
+   nRight,;
+   lEditMode,;
+   xUserFunction,;
+   nLineLength,;
+   nTabSize,;
+   nTextBuffRow,;
+   nTextBuffColumn,;
+   nWindowRow,;
+   nWindowColumn )
 
    LOCAL oEd
 

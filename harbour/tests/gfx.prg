@@ -12,9 +12,17 @@ PROCEDURE Main()
    LOCAL nFontHeight, nFontWidth
    LOCAL nTop, nLeft, nHeight, nWidth, nColor, nSec := Seconds()
 
+#if defined( __HBSCRIPT__HBSHELL )
+#  if defined( __PLATFORM__WINDOWS )
+      hbshell_gtSelect( "GTWVT" )
+#  elif defined( __PLATFORM__UNIX )
+      hbshell_gtSelect( "GTXWC" )
+#  endif
+#endif
+
    IF ! hb_gtInfo( HB_GTI_ISGRAPHIC )
-      OutStd( "You are using a non graphics capable gt:" + hb_eol() )
-      OutStd( hb_gtVersion() + hb_eol() )
+      ? "You are using a non graphics capable gt:"
+      ? hb_gtVersion()
       QUIT
    ENDIF
 
@@ -42,11 +50,11 @@ PROCEDURE Main()
       hb_gfxMakeColor( 0, 0, 0 ), hb_gfxMakeColor( 255, 255, 255 ) )
 
    DO WHILE Inkey() == 0
-      nTop := Int( hb_Random( 3.1 * nFontHeight, hb_gtInfo(HB_GTI_SCREENHEIGHT ) ) )
-      nLeft := Int( hb_Random( hb_gtInfo(HB_GTI_SCREENWIDTH ) ) )
+      nTop := Int( hb_Random( 3.1 * nFontHeight, hb_gtInfo( HB_GTI_SCREENHEIGHT ) ) )
+      nLeft := Int( hb_Random( hb_gtInfo( HB_GTI_SCREENWIDTH ) ) )
       nHeight := Int( hb_Random( 251 ) )
       nWidth := Int( hb_Random( 251 ) )
-      nColor := hb_gfxMakeColor( Int( hb_Random(32, 256 ) ), Int( hb_Random(32, 256 ) ), Int( hb_Random(32, 256 ) ) )
+      nColor := hb_gfxMakeColor( Int( hb_Random( 32, 256 ) ), Int( hb_Random( 32, 256 ) ), Int( hb_Random( 32, 256 ) ) )
 
       SWITCH Int( hb_Random( 1, 9 ) )
       CASE 1
@@ -77,7 +85,7 @@ PROCEDURE Main()
       CASE 8
          nHeight %= 64
          IF nHeight % 2 == 1
-            nHeight ++
+            nHeight++
          ENDIF
          hb_gfxText( nTop, nLeft, "Hello", nColor, nHeight )
          EXIT
@@ -94,7 +102,9 @@ FUNCTION PutFrame( nTop, nLeft, nBottom, nRight, nColor1, nColor2 )
 
    hb_gfxRect( ntop, nLeft, nBottom, nRight, nColor1 )
    hb_gfxRect( ntop + 1, nLeft + 1, nBottom - 1, nRight - 1, nColor2 )
-/* hb_gfxLine( nTop + 1, nLeft + 1, nTop + 1, nRight - 1, nColor2 )
-   hb_gfxLine( nTop + 2, nLeft + 1, nBottom - 1, nLeft + 1, nColor2 ) */
+#if 0
+   hb_gfxLine( nTop + 1, nLeft + 1, nTop + 1, nRight - 1, nColor2 )
+   hb_gfxLine( nTop + 2, nLeft + 1, nBottom - 1, nLeft + 1, nColor2 )
+#endif
 
    RETURN NIL

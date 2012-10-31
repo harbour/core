@@ -7,20 +7,21 @@
 #include "simpleio.ch"
 
 PROCEDURE Main( cZip, ... )
-    LOCAL a, b, c
 
-    SET DATE TO ANSI
-    SET CENTURY ON
+   LOCAL a, b, c
 
-    ? hb_ZipFile( cZip, hb_AParams() )
+   SET DATE TO ANSI
+   SET CENTURY ON
 
-    a := hb_GetFilesInZip( cZip, .T. )
+   ? hb_ZipFile( cZip, hb_AParams() )
 
-    FOR EACH b IN a
-       ?
-       FOR EACH c IN b
-          ?? c, ""
-       NEXT
-    NEXT
+   a := hb_GetFilesInZip( cZip, .T. )
 
-    RETURN
+   FOR EACH b IN a
+      ?
+      FOR EACH c IN b
+         ?? c, ""
+      NEXT
+   NEXT
+
+   RETURN

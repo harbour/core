@@ -148,7 +148,7 @@ FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
 
    oHtm:Write( "</center>" )
 
-   RETURN Nil
+   RETURN NIL
 
 PROCEDURE htmlBrowse( oHtm, cAction, lUseLinks )
 
@@ -178,7 +178,7 @@ PROCEDURE htmlBrowse( oHtm, cAction, lUseLinks )
       oHtm:TableHead( aFlds[ i, 1 ] )
    NEXT
 
-   WHILE ! EOF()
+   WHILE ! Eof()
 
       // each row has a different color...
       IF n == 0
@@ -289,7 +289,7 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
          oHtm:EndTableCell()
       NEXT
       oHtm:endTableRow()
-      IF !oquery:EOF()
+      IF !oquery:Eof()
          oquery:skip()
       ENDIF
 
@@ -404,7 +404,7 @@ METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS JWindow
    ::height  := h
    ::width   := w
 
-// objectViewer( self )
+   // objectViewer( self )
 
    RETURN Self
 
@@ -855,7 +855,7 @@ FUNCTION Greek2Html( cText )
       t_aGreek := initGreek()
    ENDIF
    FOR I := 1 TO Len( cText )
-      cStr += t_aGreek[ Asc( Substr( cText, i, 1 ) ) ] /* TOFIX: for unicode */
+      cStr += t_aGreek[ Asc( SubStr( cText, i, 1 ) ) ] /* TOFIX: for unicode */
    NEXT
 
    RETURN cStr

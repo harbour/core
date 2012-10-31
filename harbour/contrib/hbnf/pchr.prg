@@ -77,10 +77,11 @@ FUNCTION FT_PCHR( c_nums )
             CASE LEFTEQUAL( c_upper, "/ITALIC" )
                c_ret += hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 0 )
             CASE LEFTEQUAL( c_upper, "/PICTURE" )
-               c_ret += hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 1 ) + ;
-                        hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 1 ) + ;
-                        hb_BChar( 27 ) + hb_BChar( 107 ) + hb_BChar( 1 ) + ;
-                        hb_BChar( 27 ) + hb_BChar( 77 ) + hb_BChar( 27 ) + "U"
+               c_ret += ;
+                  hb_BChar( 27 ) + hb_BChar( 116 ) + hb_BChar( 1 ) + ;
+                  hb_BChar( 27 ) + hb_BChar( 120 ) + hb_BChar( 1 ) + ;
+                  hb_BChar( 27 ) + hb_BChar( 107 ) + hb_BChar( 1 ) + ;
+                  hb_BChar( 27 ) + hb_BChar( 77 ) + hb_BChar( 27 ) + "U"
             CASE LEFTEQUAL( c_upper, "/COND" ) .OR. LEFTEQUAL( c_upper, "/SI" )
                c_ret += hb_BChar( 15 )
             CASE LEFTEQUAL( c_upper, "/ROMAN" )

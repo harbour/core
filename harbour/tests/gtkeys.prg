@@ -228,9 +228,9 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
 #ifdef __HARBOUR__
    SET( _SET_EVENTMASK, HB_INKEY_ALL )
-   //hb_gtInfo( HB_GTI_RESIZABLE, .F. )
-   //hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
-   //hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
+   // hb_gtInfo( HB_GTI_RESIZABLE, .F. )
+   // hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
+   // hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
    hb_gtInfo( HB_GTI_ISFULLSCREEN, .T. )
    hb_gtInfo( HB_GTI_ALTENTER, .T. )
    hb_gtInfo( HB_GTI_CLOSABLE, .F. )
@@ -256,7 +256,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
    MDblClk( 250 )
    SetCancel( .F. )
-   //altd(0)
+   // altd(0)
 
    ? OS(), Version(), Date(), Time()
 #ifdef __HARBOUR__
@@ -276,7 +276,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
       ELSE
          ? " key:" + Str( k, 7 )
       ENDIF
- //   ?? "  (" + hb_ntos( maxrow() ) + ":" + hb_ntos( maxcol() ) + ")"
+//    ?? "  (" + hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ) + ")"
 
       IF k == hb_keyCode( "@" ) .AND. NextKey() == 0
          EXIT

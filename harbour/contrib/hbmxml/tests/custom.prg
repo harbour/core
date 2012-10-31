@@ -8,7 +8,7 @@
 
 #include "hbmxml.ch"
 
-PROCEDURE main()
+PROCEDURE Main()
 
    LOCAL tree, node
    LOCAL xData
@@ -31,7 +31,7 @@ PROCEDURE main()
       RETURN
    ENDIF
 
-   IF !( hb_md5( _ENCODE( node ) ) == mxmlElementGetAttr( node, "checksum" ) )
+   IF !( hb_MD5( _ENCODE( node ) ) == mxmlElementGetAttr( node, "checksum" ) )
       OutErr( "Custom data of element <hash> is corrupted!" )
       mxmlDelete( tree )
 
@@ -40,7 +40,7 @@ PROCEDURE main()
    ENDIF
 
    xData := mxmlGetCustom( node )
-   IF HB_ISHASH( xData ) .AND. hb_hHasKey( xData, "Today" )
+   IF HB_ISHASH( xData ) .AND. hb_HHasKey( xData, "Today" )
       OutStd( xData[ "Today" ], hb_eol() )
    ENDIF
 
@@ -48,14 +48,15 @@ PROCEDURE main()
    mxmlSetCustomHandlers( NIL, NIL )
 
    ErrorLevel( 0 )
+
    RETURN
 
 STATIC PROCEDURE create_cust()
 
    LOCAL tree, group, element, node
-   LOCAL hData := {=>}
+   LOCAL hData := { => }
 
-   hData[ "Today" ] := hb_tsToStr( hb_dateTime() )
+   hData[ "Today" ] := hb_TSToStr( hb_DateTime() )
    /* etc. */
 
    tree    := mxmlNewXML()
@@ -64,7 +65,7 @@ STATIC PROCEDURE create_cust()
    node    := mxmlNewCustom( element, hData )
 
    mxmlElementSetAttr( element, "type", "custom" )
-   mxmlElementSetAttr( element, "checksum", hb_md5( _ENCODE( node ) ) )
+   mxmlElementSetAttr( element, "checksum", hb_MD5( _ENCODE( node ) ) )
 
    mxmlSaveFile( tree, "cust.xml", @whitespace_cb() )
 
@@ -78,7 +79,7 @@ PROCEDURE my_mxmlError( cErrorMsg )
 
 FUNCTION load_c( node, cString )
 
-   mxmlSetCustom( node, hb_deserialize( hb_base64decode( cString ) ) )
+   mxmlSetCustom( node, hb_Deserialize( hb_base64Decode( cString ) ) )
 
    RETURN 0  /* 0 on success or non-zero on error */
 
@@ -102,8 +103,8 @@ FUNCTION whitespace_cb( node, where )
       ENDIF
 
    ELSEIF where == MXML_WS_BEFORE_OPEN .OR. ;
-          ( ( name == "choice" .OR. name == "option" ) .AND. ;
-          where == MXML_WS_BEFORE_CLOSE )
+         ( ( name == "choice" .OR. name == "option" ) .AND. ;
+         where == MXML_WS_BEFORE_CLOSE )
 
       parent := mxmlGetParent( node )
       DO WHILE ! Empty( parent )
@@ -120,8 +121,8 @@ FUNCTION whitespace_cb( node, where )
       RETURN Replicate( Chr( 9 ), nLevel )
 
    ELSEIF where == MXML_WS_AFTER_CLOSE .OR. ;
-          ( ( name == "group".OR. name == "option" .OR. name == "choice" ) .AND. ;
-          where == MXML_WS_AFTER_OPEN )
+         ( ( name == "group" .OR. name == "option" .OR. name == "choice" ) .AND. ;
+         where == MXML_WS_AFTER_OPEN )
       RETURN hb_eol()
 
    ELSEIF where == MXML_WS_AFTER_OPEN .AND. Empty( mxmlGetFirstChild( node ) )

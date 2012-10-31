@@ -42,6 +42,7 @@
 #define CLOSE_SEMAPHORE   4
 
 /* TODO: rewrite in C */
+
 FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], cRequest, nRet
@@ -69,6 +70,7 @@ FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
    RETURN iif( nRet < 0, nRet + 256, nRet )
 
 /* TODO: rewrite in C */
+
 FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
@@ -105,6 +107,7 @@ FUNCTION ft_nwSemClose( nHandle )
 // _ftnwsem() - internal for the semaphore package
 
 /* TODO: rewrite in C */
+
 STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet

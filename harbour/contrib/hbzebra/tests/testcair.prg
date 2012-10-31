@@ -9,6 +9,7 @@
 #include "hbcairo.ch"
 
 PROCEDURE Main()
+
    LOCAL hCairo, hSurface
 
    hSurface := cairo_pdf_surface_create( "testcair.pdf", 567, 794 )  // A4
@@ -39,19 +40,21 @@ PROCEDURE Main()
    DrawBarcode( hCairo, 340,   1, "CODE93",     "TEST93" )
    DrawBarcode( hCairo, 360,   1, "CODE11",     "12", HB_ZEBRA_FLAG_WIDE3 )
    DrawBarcode( hCairo, 380,   1, "CODE11",     "1234567890", HB_ZEBRA_FLAG_CHECKSUM + HB_ZEBRA_FLAG_WIDE3 )
-   DrawBarcode( hCairo, 400,   1, "CODE128",    "Code 128")
-   DrawBarcode( hCairo, 420,   1, "CODE128",    "61300073570004616")
-   DrawBarcode( hCairo, 440,   1, "CODE128",    "Wikipedia")
+   DrawBarcode( hCairo, 400,   1, "CODE128",    "Code 128" )
+   DrawBarcode( hCairo, 420,   1, "CODE128",    "61300073570004616" )
+   DrawBarcode( hCairo, 440,   1, "CODE128",    "Wikipedia" )
    DrawBarcode( hCairo, 460,   1, "PDF417",     "Hello, World of Harbour!!! It's 2D barcode PDF417 :)" )
-   DrawBarcode( hCairo, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)")
+   DrawBarcode( hCairo, 540,   1, "DATAMATRIX", "Hello, World of Harbour!!! It's 2D barcode DataMatrix :)" )
    DrawBarcode( hCairo, 580,   1, "QRCODE",     "http://harbour-project.org/" )
    cairo_destroy( hCairo )
    cairo_surface_write_to_png( hSurface, "testcair.png" )
    cairo_surface_destroy( hSurface )
+
    RETURN
 
 
 PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
+
    LOCAL hZebra, nLineHeight, cTxt
 
    SWITCH cType
@@ -89,6 +92,7 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
    ELSE
       ? "Invalid barcode type", cType
    ENDIF
+
    RETURN
 
 STATIC FUNCTION hb_zebra_draw_cairo( hZebra, hCairo, ... )

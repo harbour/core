@@ -43,7 +43,6 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
    cLine1, cLine2, cLine3, cLine4, cLine5, cLine6, cLine7, cLine8 )
 
    LOCAL nLLen := 0
-// LOCAL cOldColor
    LOCAL nLCol
    LOCAL nRCol
    LOCAL nTRow
@@ -55,8 +54,8 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
    LOCAL aLines_[ 8 ]
 
    hb_default( @cJustType, "" )
-   hb_default( @cRetWait , "" )
-   hb_default( @cBorType , "" )
+   hb_default( @cRetWait, "" )
+   hb_default( @cBorType, "" )
    hb_default( @cBorColor, "N/W" )
    hb_default( @cBoxColor, "W/N" )
    hb_default( @nStartRow, 99 )
@@ -92,7 +91,6 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
    // form box and border
 
    // save screen color and set new color
-// cOldColor := SetColor( cBoxColor )
    hb_Scroll( nTRow, nLCol, nBRow, nRCol )
 
    // draw border
@@ -109,7 +107,7 @@ FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
    // print text in box
    SetColor( cBoxColor )
    nLoop := 1
-   AEval( aLines_, {| cSayStr |;
+   AEval( aLines_, {| cSayStr | ;
       nSayRow := nTRow + nLoop, ;
       nSayCol := iif( Left( cJustType, 1 ) == "L", ;
       nLCol + 2, ;

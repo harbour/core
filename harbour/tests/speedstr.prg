@@ -14,64 +14,71 @@
 #define N_LOOP 200000
 
 #ifndef __XHARBOUR__
-   #translate secondsCPU( => hb_secondsCPU(
+#  translate secondsCPU( => hb_secondsCPU(
 #endif
 #ifdef __XPP__
-   #translate secondsCPU( => seconds(
+#  translate secondsCPU( => seconds(
 #endif
 #ifdef __HARBOUR__
-#include "hbclass.ch"
+#  include "hbclass.ch"
+#else
+#  translate hb_BChar( => Chr(
 #endif
 
-proc main()
-   memvar p
-   local i, t
-   local l, o
-   static s, s2[ 1 ]
-   private p
+PROCEDURE Main()
+
+   MEMVAR p
+   LOCAL i, t
+   LOCAL l, o
+   STATIC s, s2[ 1 ]
+   PRIVATE p
+
    p := s2[ 1 ] := s := l := ""
    t := secondsCPU()
-   for i := 1 to N_LOOP
-      l += chr( i )
-   next
+   FOR i := 1 TO N_LOOP
+      l += hb_BChar( i )
+   NEXT
    t := secondsCPU() - t
    ? "LOCAL  +=", t, "sec."
    t := secondsCPU()
-   for i := 1 to N_LOOP
-      s += chr( i )
-   next
+   FOR i := 1 TO N_LOOP
+      s += hb_BChar( i )
+   NEXT
    t := secondsCPU() - t
    ? "STATIC +=", t, "sec."
    t := secondsCPU()
-   for i := 1 to N_LOOP
-      s2[ 1 ] += chr( i )
-   next
+   FOR i := 1 TO N_LOOP
+      s2[ 1 ] += hb_BChar( i )
+   NEXT
    t := secondsCPU() - t
    ? "ARRAY[] +=", t, "sec."
    t := secondsCPU()
-   for i := 1 to N_LOOP
-      p += chr( i )
-   next
+   FOR i := 1 TO N_LOOP
+      p += hb_BChar( i )
+   NEXT
    t := secondsCPU() - t
    ? "PRIVATE +=", t, "sec."
    p := ""; s := "p"
    t := secondsCPU()
-   for i := 1 to N_LOOP
-      &s += chr( i )
-   next
+   FOR i := 1 TO N_LOOP
+      &s += hb_BChar( i )
+   NEXT
    t := secondsCPU() - t
    ? "MACRO +=", t, "sec."
    o := mycls():new(); o:v := ""
    t := secondsCPU()
-   for i := 1 to N_LOOP
-      o:v += chr( i )
-   next
+   FOR i := 1 TO N_LOOP
+      o:v += hb_BChar( i )
+   NEXT
    t := secondsCPU() - t
    ? "OBJECT:VAR +=", t, "sec."
-   wait
-return
+   WAIT
 
-class mycls
-   exported:
-      var v
-endclass
+   RETURN
+
+CLASS mycls
+
+   EXPORTED:
+   VAR v
+
+ENDCLASS

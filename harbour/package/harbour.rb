@@ -9,7 +9,7 @@ class Harbour < Formula
   homepage 'harbour-project.sourceforge.net/'
   sha1 '66c21d666ac24c45485179eeaa9f90458b552e92'
 
-  head 'https://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour'
+  head 'https://svn.code.sf.net/p/harbour-project/code/trunk/harbour'
 
   # depends_on 'pcre' if ARGV.include? '--with-pcre'
 

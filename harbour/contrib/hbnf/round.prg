@@ -35,9 +35,9 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
 
    LOCAL nResult := Abs( nNumber )        // The Result of the Rounding
 
-   __defaultNIL( @nRoundToAmount  , 2 )
-   __defaultNIL( @cRoundType      , NEAREST_DECIMAL )
-   __defaultNIL( @cRoundDirection , ROUND_NORMAL )
+   __defaultNIL( @nRoundToAmount, 2 )
+   __defaultNIL( @cRoundType, NEAREST_DECIMAL )
+   __defaultNIL( @cRoundDirection, ROUND_NORMAL )
    __defaultNIL( @nAcceptableError, 1 / ( nRoundToAmount ** 2 ) )
 
    // Are We Rounding to the Nearest Whole
@@ -67,14 +67,15 @@ FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
          -1 / nRoundToAmount / 2, ;
             ; // No, Rounding Normal, No Adjustment
          0 ) )
-         //Do the Actual Rounding
+         // Do the Actual Rounding
          nResult := Int( ( nRoundToAmount * nResult ) + .5 + nAcceptableError ) / ;
             nRoundToAmount
 
       ENDIF
 
-   ELSE                                 // Yes, Round to Nearest Whole Number
-                                        // or to Zero Places
+   ELSE
+      // Yes, Round to Nearest Whole Number
+      // or to Zero Places
 
       nRoundToAmount := Max( nRoundToAmount, 1 )
 

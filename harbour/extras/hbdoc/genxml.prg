@@ -58,6 +58,7 @@
 #include "hbdoc.ch"
 
 CREATE CLASS GenerateXML FROM TPLGenerate
+
    HIDDEN:
 
    PROTECTED:
@@ -72,41 +73,53 @@ CREATE CLASS GenerateXML FROM TPLGenerate
    METHOD Generate()
 
    METHOD WriteEntry( cCaption, cEntry, lPreformatted ) HIDDEN
+
 ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateXML
+
    super:NewDocument( cFolder, cFilename, cTitle, ".xml" )
    FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
    FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
+
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
+
    super:NewIndex( cFolder, cFilename, cTitle, ".xml" )
    FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
    FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
+
    RETURN self
 
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
+
    IF ::Depth == 0
       FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + ::cExtension + [">] + hb_eol() )
    ELSE
       FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [<Section name="] + cSection + [">] + hb_eol() )
    ENDIF
    ::Depth++
+
    RETURN self
 
 METHOD EndSection( cSection, cFilename ) CLASS GenerateXML
+
    HB_SYMBOL_UNUSED( cSection )
    HB_SYMBOL_UNUSED( cFilename )
    ::Depth--
    FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [</Section>] + hb_eol() )
+
    RETURN self
 
 METHOD AddIndex( oEntry ) CLASS GenerateXML
+
    ::WriteEntry( "ENTRY", oEntry:Name + " - " + oEntry:OneLiner, .F. )
+
    RETURN self
 
 METHOD AddEntry( oEntry ) CLASS GenerateXML
+
    LOCAL idx
 
    IF self:IsIndex()
@@ -124,6 +137,7 @@ METHOD AddEntry( oEntry ) CLASS GenerateXML
    RETURN self
 
 METHOD Generate() CLASS GenerateXML
+
    FWrite( ::nHandle, '</HarbourReference>' + hb_eol() )
 
    IF ::IsIndex()
@@ -137,6 +151,7 @@ METHOD Generate() CLASS GenerateXML
    RETURN self
 
 METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
+
    LOCAL cResult
    LOCAL idx
 
@@ -147,7 +162,7 @@ METHOD PROCEDURE WriteEntry( cCaption, cEntry, lPreformatted ) CLASS GenerateXML
       NEXT
       cEntry := cResult
 
-      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "") + ">" )
+      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + "<" + cCaption + iif( lPreformatted, ' preformatted="yes"', "" ) + ">" )
       FWrite( ::nHandle, cEntry )
       FWrite( ::nHandle, /* Replicate( Chr( 9 ), ::Depth ) + */ "</" + cCaption + ">" + hb_eol() )
    ENDIF

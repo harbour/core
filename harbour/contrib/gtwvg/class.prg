@@ -298,7 +298,7 @@ METHOD wvtDialog:Create()
       IF !Empty( ::aObjects[ i ]:aPaint )
          FOR j := 1 TO Len( ::aObjects[ i ]:aPaint )
             wvg_SetPaint( ::cPaintBlockID, ::nPaintID++, ;
-               ::aObjects[ i ]:aPaint[ j,1 ], ::aObjects[ i ]:aPaint[ j,2 ] )
+               ::aObjects[ i ]:aPaint[ j, 1 ], ::aObjects[ i ]:aPaint[ j, 2 ] )
          NEXT
       ENDIF
    NEXT
@@ -345,17 +345,17 @@ METHOD wvtDialog:Destroy()
    SetColor( ::cOldColor )
    SetCursor( ::nOldCursor )
 
-   IF ::oldMenuHandle != nil .AND. ::oldMenuHandle != 0
+   IF ::oldMenuHandle != NIL .AND. ::oldMenuHandle != 0
       Wvt_SetMenu( ::oldMenuHandle )
    ENDIF
    SetKey( Wvt_SetMenuKeyEvent(), ::oldMenuBlock )
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cScreen )
-   Wvt_RestScreen( 0, 0 , MaxRow(), MaxCol(), ::aWvtScreen )
+   Wvt_RestScreen( 0, 0, MaxRow(), MaxCol(), ::aWvtScreen )
    wvg_PurgePaint( ::cPaintBlockID )
    WvtSetPaint( ::aOldPnt )
    Wvt_SetGui( ::lGui )
 
-   RETURN nil
+   RETURN NIL
 
 //
 
@@ -441,7 +441,7 @@ METHOD wvtDialog:Inkey()
          ::MouseOver()
          IF ::nObjOver == 0
             Wvt_SetPointer( WVT_IDC_ARROW )
-         ELSEIF ::oObjOver:nPointer != nil .AND. ::oObjOver:lActive
+         ELSEIF ::oObjOver:nPointer != NIL .AND. ::oObjOver:lActive
             Wvt_SetPointer( ::oObjOver:nPointer )
          ELSE
             Wvt_SetPointer( WVT_IDC_ARROW )
@@ -771,7 +771,7 @@ CREATE CLASS WvtObject
    VAR    hFont
 
    VAR    aPopup                                  INIT {}
-   VAR    hPopup                                  INIT nil
+   VAR    hPopup                                  INIT NIL
    VAR    nPopupItemID                            INIT 700000
 
    VAR    nMRow                                   INIT 0
@@ -958,7 +958,7 @@ METHOD WvtObject:Destroy()
       ::hPopup := nil
    ENDIF
 
-   RETURN Nil
+   RETURN NIL
 
 //
 
@@ -973,9 +973,9 @@ METHOD WvtObject:CreatePopup()
 
          ASize( ::aPopup[ i ], 3 )
          nID := ::nPopupItemID++
-         ::aPopup[ i,3 ] := nID
+         ::aPopup[ i, 3 ] := nID
 
-         Wvt_AppendMenu( ::hPopup, MF_ENABLED + MF_STRING, nID, ::aPopup[ i,1 ] )
+         Wvt_AppendMenu( ::hPopup, MF_ENABLED + MF_STRING, nID, ::aPopup[ i, 1 ] )
       NEXT
    ENDIF
 
@@ -996,8 +996,8 @@ METHOD WvtObject:ShowPopup()
          IF ( n := AScan( ::aPopup, {| e_ | e_[ 3 ] == nRet } ) ) > 0
             lRet := .T.
 
-            IF HB_ISBLOCK( ::aPopup[ n,2 ] )
-               Eval( ::aPopup[ n,2 ] )
+            IF HB_ISBLOCK( ::aPopup[ n, 2 ] )
+               Eval( ::aPopup[ n, 2 ] )
             ENDIF
          ENDIF
       ENDIF
@@ -1064,7 +1064,7 @@ METHOD WvtBrowse:Create()
    ::nTop    := ::oBrw:nTop - 2
    ::nLeft   := ::oBrw:nLeft - 2
    ::nBottom := iif( ::lHSBar, ::oBrw:nBottom, ::oBrw:nBottom + 1 )
-   ::nRight  := iif( ::lVSBar, ::oBrw:nRight , ::oBrw:nRight + 2  )
+   ::nRight  := iif( ::lVSBar, ::oBrw:nRight , ::oBrw:nRight + 2 )
 #else
    ::nTop    := ::oBrw:nTop
    ::nLeft   := ::oBrw:nLeft
@@ -1278,7 +1278,7 @@ METHOD WvtBrowse:SaveSettings()
 
 METHOD WvtBrowse:RestSettings()
 
-   IF ::xSettings != nil .AND. HB_ISBLOCK( ::bRestSettings )
+   IF ::xSettings != NIL .AND. HB_ISBLOCK( ::bRestSettings )
       Eval( ::bRestSettings, self )
    ENDIF
 
@@ -1294,12 +1294,12 @@ METHOD WvtBrowse:PaintBlock( nPaintObj )
 
    CASE 1
       bBlock := {|| Wvt_DrawBoxRaised( b:nTop - 2, b:nLeft - 2, b:nBottom + 1, b:nRight + 2 ) }
-      AAdd( ::aPaint, { bBlock, { WVT_BLOCK_BOX, b:nTop - 3,b:nLeft - 3,b:nBottom + 2,b:nRight + 3 } } )
+      AAdd( ::aPaint, { bBlock, { WVT_BLOCK_BOX, b:nTop - 3, b:nLeft - 3, b:nBottom + 2, b:nRight + 3 } } )
       EXIT
 
    CASE 2
       bBlock := {|| Wvt_DrawBoxRecessed( b:nTop, b:nLeft, b:nBottom, b:nRight ) }
-      AAdd( ::aPaint, { bBlock, { WVT_BLOCK_BOX, b:nTop - 1,b:nLeft - 1,b:nBottom + 1,b:nRight + 1 } } )
+      AAdd( ::aPaint, { bBlock, { WVT_BLOCK_BOX, b:nTop - 1, b:nLeft - 1, b:nBottom + 1, b:nRight + 1 } } )
       EXIT
 
    CASE 3
@@ -1374,10 +1374,10 @@ METHOD WvtStatusBar:PaintBlock()
 
    LOCAL a_ := {}, nPanels
 
-   AEval( ::aPanels, {| o | AAdd( a_,o:nTop )   , AAdd( a_,o:nLeft ), ;
+   AEval( ::aPanels, {| o | AAdd( a_, o:nTop ), AAdd( a_, o:nLeft ), ;
       AAdd( a_, o:nBottom ), AAdd( a_, o:nRight ) } )
 
-   a_[ len( a_ ) ]++
+   a_[ Len( a_ ) ]++
    nPanels := Len( ::aPanels )
 
    ::bPaint  := {|| Wvt_DrawStatusBar( nPanels, a_ ) }
@@ -1414,7 +1414,7 @@ METHOD WvtStatusBar:SetPanels( aPanels )
 
    FOR i := Len( ::aPanels ) - 1 TO 1 STEP - 1
       oPanel        := ::aPanels[ i ]
-      oPanel:nRight := ::aPanels[ i+1 ]:nLeft
+      oPanel:nRight := ::aPanels[ i + 1 ]:nLeft
       oPanel:cColor := ::cColor
    NEXT
 
@@ -1471,7 +1471,7 @@ METHOD WvtStatusBar:Refresh()
       ::aPanels[ i ]:Refresh()
    NEXT
 
-   RETURN nil
+   RETURN NIL
 
 //
 //
@@ -2232,7 +2232,7 @@ METHOD WvtPushButton:PaintButton()
 
 METHOD WvtPushButton:LeftDown()
 
-   Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, { 0, 0, 0, 0 } , 2 )
+   Wvt_DrawToolButtonState( ::nTop, ::nLeft, ::nBottom, ::nRight, { 0, 0, 0, 0 }, 2 )
 
    RETURN .T.
 
@@ -2296,16 +2296,16 @@ METHOD WvtGets:Create()
 
    FOR i := 1 TO Len( ::aGetList )
 
-      __defaultNIL( @::aGetList[ i,7 ], "N/W*,N/W*,,,N/GR*" )
-      __defaultNIL( @::aGetList[ i,5 ], {|| .T. } )
-      __defaultNIL( @::aGetList[ i,6 ], {|| .T. } )
+      __defaultNIL( @::aGetList[ i, 7 ], "N/W*,N/W*,,,N/GR*" )
+      __defaultNIL( @::aGetList[ i, 5 ], {|| .T. } )
+      __defaultNIL( @::aGetList[ i, 6 ], {|| .T. } )
 
-      AAdd( ::GetList, Get():New( ::aGetList[ i,1 ], ::aGetList[ i,2 ], {| v | iif( PCount() == 0, ::aGetList[ i,3 ], ::aGetList[ i,3 ] := v ) }, "::aGetList[ i, 3 ]", ::aGetList[ i,7 ] ) )
+      AAdd( ::GetList, Get():New( ::aGetList[ i, 1 ], ::aGetList[ i, 2 ], {| v | iif( PCount() == 0, ::aGetList[ i, 3 ], ::aGetList[ i, 3 ] := v ) }, "::aGetList[ i, 3 ]", ::aGetList[ i, 7 ] ) )
 
       ::GetList[ i ]:Display()
       ::PaintBlock( i )
    NEXT
-   setPos( nCurRow, nCurCol )
+   SetPos( nCurRow, nCurCol )
 
    ::Super:Create()
    ::Dehilite()
@@ -2318,13 +2318,13 @@ METHOD WvtGets:PaintBlock( nIndex )
 
    LOCAL nLen, bPaint
 
-   nLen   := Len( Transform( ::aGetList[ nIndex,3 ], ::aGetList[ nIndex,4 ] ) )
+   nLen   := Len( Transform( ::aGetList[ nIndex, 3 ], ::aGetList[ nIndex, 4 ] ) )
 
-   bPaint := {|| Wvt_DrawBoxGet( ::aGetList[ nIndex,1 ], ::aGetList[ nIndex,2 ], nLen ) }
+   bPaint := {|| Wvt_DrawBoxGet( ::aGetList[ nIndex, 1 ], ::aGetList[ nIndex, 2 ], nLen ) }
 
    AAdd( ::aPaint, { bPaint, ;
-      { WVT_BLOCK_GETS, ::aGetList[ nIndex,1 ] - 1, ::aGetList[ nIndex,2 ] - 1, ;
-      ::aGetList[ nIndex,1 ] - 1,  ::aGetList[ nIndex,2 ] + nLen } } )
+      { WVT_BLOCK_GETS, ::aGetList[ nIndex, 1 ] - 1, ::aGetList[ nIndex, 2 ] - 1, ;
+      ::aGetList[ nIndex, 1 ] - 1,  ::aGetList[ nIndex, 2 ] + nLen } } )
 
    RETURN Self
 
@@ -2479,13 +2479,13 @@ METHOD wvtScrollbar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD wvtScrollbar:Create()
 
-   IF ::nTop == nil .OR. ::nLeft == nil
-      RETURN nil
+   IF ::nTop == NIL .OR. ::nLeft == nil
+      RETURN NIL
    ENDIF
 
    IF ::nBarType == WVT_SCROLLBAR_VERT
       __defaultNIL( @::nBottom, ::nTop + 5 )
-      __defaultNIL( @::nRight , ::nLeft + 1 )
+      __defaultNIL( @::nRight, ::nLeft + 1 )
 
       ::nRight       := ::nLeft + 1
       ::nBottom      := Max( 7, ::nBottom )
@@ -2516,7 +2516,7 @@ METHOD wvtScrollbar:Create()
       ::bBtnRightBottom := ;
          {|| Wvt_DrawScrollButton( ::nBtn2Top, ::nBtn2Left, ::nBtn2Bottom, ::nBtn2Right, ::aPxlBtnBtm, 3 ) }
       ::bBtnScroll := ;
-         {|| Wvt_DrawScrollThumbVert( ::nSTop , ::nSLeft  , ::nSBottom, ::nSRight, ::aPxlScroll, ;
+         {|| Wvt_DrawScrollThumbVert( ::nSTop, ::nSLeft, ::nSBottom, ::nSRight, ::aPxlScroll, ;
          ::nThumbPos ) }
       ::bBtnLeftTopDep := ;
          {|| Wvt_DrawScrollButton( ::nBtn1Top, ::nBtn1Left, ::nBtn1Bottom, ::nBtn1Right, ::aPxlBtnTop, 1, .T. ) }
@@ -2525,7 +2525,7 @@ METHOD wvtScrollbar:Create()
 
    ELSE
       __defaultNIL( @::nBottom, ::nTop )
-      __defaultNIL( @::nRight , ::nLeft + 11 )
+      __defaultNIL( @::nRight, ::nLeft + 11 )
 
       ::nBottom      := ::nTop
       ::nRight       := Max( 11, ::nRight )
@@ -3029,7 +3029,7 @@ METHOD WvtBanner:Destroy()
 
    WVG_DeleteObject( ::oLabel:hFont )
 
-   RETURN nil
+   RETURN NIL
 
 //
 
@@ -3380,7 +3380,7 @@ METHOD wvtMenu:Destroy()
 
       IF !Wvt_DestroyMenu( ::hMenu )
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},__FILE__ ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {}, __FILE__ ) )
 #endif
       ENDIF
       ::hMenu := 0
@@ -3404,13 +3404,13 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
          aItem := { MF_SEPARATOR, 0, 0, NIL }
       ELSE
 #if 0
-         Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction },__FILE__ ) )
+         Throw( ErrorNew( "wvtMenu", 3101, "wvtMenu:AddItem()", "Argument Error", { cCaption, bAction }, __FILE__ ) )
 #endif
       ENDIF
 
-      IF !Wvt_AppendMenu( ::hMenu, aItem[WVT_MENU_TYPE], aItem[WVT_MENU_IDENTIFIER], aItem[WVT_MENU_CAPTION] )
+      IF !Wvt_AppendMenu( ::hMenu, aItem[ WVT_MENU_TYPE ], aItem[ WVT_MENU_IDENTIFIER ], aItem[ WVT_MENU_CAPTION ] )
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction },__FILE__ ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction }, __FILE__ ) )
 #endif
       ENDIF
 
@@ -3441,15 +3441,15 @@ METHOD wvtMenu:DelItem( nItemNum )
    LOCAL lResult := .F.
 
    IF nItemNum > 0 .AND. nItemNum <= ::NumItems()
-      IF ::aItems[ nItemNum,WVT_MENU_TYPE ] == MF_POPUP
-         ::aItems[ nItemNum,WVT_MENU_MENUOBJ ]:Destroy()
+      IF ::aItems[ nItemNum, WVT_MENU_TYPE ] == MF_POPUP
+         ::aItems[ nItemNum, WVT_MENU_MENUOBJ ]:Destroy()
       ENDIF
 
-      IF ( lResult := Wvt_DeleteMenu( ::hMenu, nItemNum - 1,MF_BYPOSITION ) ) /* Remember ZERO base */
+      IF ( lResult := Wvt_DeleteMenu( ::hMenu, nItemNum - 1, MF_BYPOSITION ) ) /* Remember ZERO base */
          hb_ADel( ::aItems, nItemNum, .T. )
       ELSE
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },__FILE__ ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum }, __FILE__ ) )
 #endif
       ENDIF
    ENDIF
@@ -3507,9 +3507,9 @@ METHOD wvtMenu:FindMenuItemById( nId )
    IF !Empty( nId )
       x := ::NumItems()
       DO WHILE x > 0 .AND. Empty( aResult )
-         IF ::aItems[ x,WVT_MENU_TYPE ] == MF_POPUP
-            aResult := ::aItems[ x,WVT_MENU_MENUOBJ ]:FindMenuItemById( nId )
-         ELSEIF ::aItems[ x,WVT_MENU_IDENTIFIER ] == nId
+         IF ::aItems[ x, WVT_MENU_TYPE ] == MF_POPUP
+            aResult := ::aItems[ x, WVT_MENU_MENUOBJ ]:FindMenuItemById( nId )
+         ELSEIF ::aItems[ x, WVT_MENU_IDENTIFIER ] == nId
             aResult := ::aItems[ x ]
          ENDIF
          x--
@@ -3641,7 +3641,7 @@ METHOD TBrowseWVG:SetVisible()
             nColPos := aCol[ _TBCI_COLPOS ]
 
             IF aCol[ _TBCI_SEPWIDTH ] > 0
-               nColPos += Int( aCol[ _TBCI_SEPWIDTH ]/2 )
+               nColPos += Int( aCol[ _TBCI_SEPWIDTH ] / 2 )
             ENDIF
 
             AAdd( ::aColumnsSep, nColPos )

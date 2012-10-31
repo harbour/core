@@ -33,7 +33,7 @@ FUNCTION demoxbp()
    LOCAL aState := { "not selected", "selected", "undefined" }
    LOCAL aParts := {}
 
-   //--------------------------- Dialog -------------------------------\\
+   // --------------------------- Dialog -------------------------------\\
    oCrt := WvgDialog():new( , , { 30, 30 }, { 900, 600 }, , .T. )
    oCrt:closable := .T.
    oCrt:icon := GetResource( "vr_1.ico" )
@@ -43,13 +43,13 @@ FUNCTION demoxbp()
 
    oDA := oCrt:drawingArea
 
-   //--------------------------- Menu --------------------------------\\
+   // --------------------------- Menu --------------------------------\\
    ActiveXBuildMenuXbp( oCrt, @oStatic, @oStatic2 )
 
-   //--------------------------- ToolBar -----------------------------\\
+   // --------------------------- ToolBar -----------------------------\\
    oTBar := ActiveXBuildToolBarXbp( oDA )
 
-   //--------------------------- StatusBar ---------------------------\\
+   // --------------------------- StatusBar ---------------------------\\
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
@@ -59,7 +59,7 @@ FUNCTION demoxbp()
    oPanel2 := oSBar:addItem()
    oPanel2:caption := 'Click on any part!'
 
-   //--------------------------- Static ------------------------------\\
+   // --------------------------- Static ------------------------------\\
    oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
@@ -67,13 +67,13 @@ FUNCTION demoxbp()
 
    oStatic:create( , , { 0, oTBar:currentSize()[ 2 ] + 3 }, { 120, oCrt:currentSize()[ 2 ] - ;
       oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
-   oStatic:setColorBG( RGB( 200,200,200 ) )
+   oStatic:setColorBG( RGB( 200, 200, 200 ) )
 
-   //--------------------------- ListBox -----------------------------\\
+   // --------------------------- ListBox -----------------------------\\
    oListBox := WvgListBox():new()
    oListBox:create( oStatic, , { 5, 55 }, { 107, 380 } )
 
-   oListBox:setColorFG( RGB( 218,61,34 ) )
+   oListBox:setColorFG( RGB( 218, 61, 34 ) )
 // oListBox:setColorBG( RGB( 250,244,182 ) )
 
    AAdd( aParts, 'XbpDialog'        )
@@ -103,13 +103,13 @@ FUNCTION demoxbp()
    oListBox:itemSelected := {|| WVG_MessageBox( , oListBox:getCurItem() ) }
    oListBox:setData( 3 )    // show selected 'XbpToolBar'
 
-   //--------------------------- PushButton --------------------------\\
+   // --------------------------- PushButton --------------------------\\
    oXbp := WvgPushButton():new( oStatic )
    oXbp:caption := "Hide"
    oXbp:create( , , { 20, 440 }, { 80, 30 } )
    oXbp:activate := {|| oStatic:hide(), oCrt:sendMessage( WM_SIZE, 0, 0 ) }
 
-   //--------------------------- TreeView ---------------------------\\
+   // --------------------------- TreeView ---------------------------\\
 
    oTree := WvgTreeView():new( oDA, , { oCrt:currentSize()[ 1 ] - 160, oTBar:currentSize()[ 2 ] + 3 }, ;
       { 160, oCrt:currentSize()[ 2 ] - ;
@@ -118,8 +118,8 @@ FUNCTION demoxbp()
    oTree:hasButtons := .T.
    oTree:alwaysShowSelection := .T.
    oTree:create()
-   oTree:setColorBG( RGB( 120,15,240 ) )
-   oTree:setColorFG( RGB( 15,240,120 ) )
+   oTree:setColorBG( RGB( 120, 15, 240 ) )
+   oTree:setColorFG( RGB( 15, 240, 120 ) )
    oTree:itemSelected := {| oItem | iif( oItem != NIL, WVG_MessageBox( , oItem:caption ), NIL ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
@@ -141,7 +141,7 @@ FUNCTION demoxbp()
 
    oTree:setData( oItem2 )
 
-   //--------------------------- Active-X ---------------------------\\
+   // --------------------------- Active-X ---------------------------\\
    hb_gtInfo( HB_GTI_WINTITLE, 'http://www.harbour.vouch.info' )
 #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
@@ -161,19 +161,19 @@ FUNCTION demoxbp()
    oAddr:border       := .T.
    cNavigate          := 'http://www.harbour.vouch.info'
    oAddr:dataLink     := {| x | iif( x == NIL, cNavigate, cNavigate := x ) }
-   oAddr:setColorFG( RGB( 0,0,255   ) )
-   oAddr:setColorBG( RGB( 0,255,255 ) )
+   oAddr:setColorFG( RGB( 0, 0, 255   ) )
+   oAddr:setColorBG( RGB( 0, 255, 255 ) )
    oAddr:create( oDA, , { 120, oTBar:currentSize()[ 2 ] }, { 500, 20 }, , .T. )
    oAddr:setData()
    oAddr:killInputFocus := {| m1, m2, oS | m1 := m1, m2 := m2, oS:getData(), oCom:navigate( cNavigate ) }
 
-   //----------------- Panel : Static + Radio + Checkbox ----------\\
+   // ----------------- Panel : Static + Radio + Checkbox ----------\\
    oStatic2 := WvgStatic():New( oDA, , { 150, 150 }, { 500, 310 }, , .F. )
-// oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
+   // oStatic2:type    := WVGSTATIC_TYPE_RAISEDBOX //BGNDFRAME
    oStatic2:exStyle += WS_EX_WINDOWEDGE
-// oStatic2:options := WVGSTATIC_FRAMETHICK
+   // oStatic2:options := WVGSTATIC_FRAMETHICK
    oStatic2:create()
-   oStatic2:setColorBG( RGB( 175,175,175 ) )
+   oStatic2:setColorBG( RGB( 175, 175, 175 ) )
 
    oXbp    := WvgPushButton():new( oStatic2 )
    oXbp:caption     := "Hide"
@@ -194,21 +194,21 @@ FUNCTION demoxbp()
    oCheck  := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100, 15 }, , .T. )
    oCheck:caption   := 'Checkbox A'
    oCheck:create()
-   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, WVG_MessageBox( , iif( o:getData(), 'I am selected','I am not selected' ) ) }
+   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, WVG_MessageBox( , iif( o:getData(), 'I am selected', 'I am not selected' ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp    := Wvg3State():new()
    oXbp:caption := "3 State A"
    oXbp:create( oStatic2, , { 10, 100 }, { 100, 15 } )
    // Determine current state using mp1
-   oXbp:selected := {| m1, m2, oBtn | m2 := m2, oBtn := oBtn, oPanel1:caption := "3State A [" + aState[ m1+1 ] + "]" }
+   oXbp:selected := {| m1, m2, oBtn | m2 := m2, oBtn := oBtn, oPanel1:caption := "3State A [" + aState[ m1 + 1 ] + "]" }
 
    // Create second 3State Button, passing the position to :new()
    oXbp    := Wvg3State():new( oStatic2, , { 10, 125 }, { 100, 15 } )
    oXbp:caption := "3 State B"
    oXbp:create( oStatic2 )
    // Determine current state using :getData()
-   oXbp:selected := {| m1, m2, oBtn | m1 := m1, m2 := m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData()+1 ] ) }
+   oXbp:selected := {| m1, m2, oBtn | m1 := m1, m2 := m2, WVG_MessageBox( , "3State B", aState[ oBtn:getData() + 1 ] ) }
 
    // Create first SLE, specify position using :create()
    // On :typeOut set the focus to the second SLE
@@ -243,10 +243,10 @@ FUNCTION demoxbp()
    // Copy text from LOCAL variable into edit buffer via :dataLink
    oMLE:setData()
 
-   //--------------------------- Misc Config ------------------------\\
-   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == 'Hide'   , oStatic:hide(), NIL ), ;
-      iif( oBtn:caption == 'Show'   , oStatic:show(), NIL ), ;
-      iif( oBtn:caption == 'Tools'  , oStatic2:show():toFront(), NIL ), ;
+   // --------------------------- Misc Config ------------------------\\
+   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == 'Hide', oStatic:hide(), NIL ), ;
+      iif( oBtn:caption == 'Show', oStatic:show(), NIL ), ;
+      iif( oBtn:caption == 'Tools', oStatic2:show():toFront(), NIL ), ;
       iif( oBtn:caption == 'FontDlg', ExeFontDialogXbp( oCrt ), NIL ), ;
       iif( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ), ;
       oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
@@ -343,7 +343,7 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    LOCAL oTBar
 
-   oTBar := WvgToolBar():new( oCrt , , { 0, 0 }, { 0, 0 }, , .T. )
+   oTBar := WvgToolBar():new( oCrt, , { 0, 0 }, { 0, 0 }, , .T. )
 
    oTBar:style        := WVGTOOLBAR_STYLE_FLAT
 
@@ -361,11 +361,11 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    oTBar:addItem( "New"       , hb_DirBase() + 'v_new.bmp'    )
    oTBar:addItem( "Select"    , hb_DirBase() + 'v_selct1.bmp' )
-   oTBar:addItem( )
+   oTBar:addItem()
    oTBar:addItem( "FontDlg"   , hb_DirBase() + 'v_calend.bmp' )
    oTBar:addItem( "Tools"     , hb_DirBase() + 'v_lock.bmp'   )
    oTBar:addItem( "Index"     , hb_DirBase() + 'v_index.bmp'  )
-   oTBar:addItem( )
+   oTBar:addItem()
    oTBar:addItem( "Show"      , hb_DirBase() + 'v_clclt.bmp'  )
    oTBar:addItem( "Hide"      , hb_DirBase() + 'v_notes1.bmp' )
 
@@ -388,10 +388,10 @@ STATIC FUNCTION MyFunctionXbp( nMode )
       WVG_MessageBox( , "Button clicked!" )
 
    CASE nMode == 101  // Charge
-      Eval( {|| Tone( 523,2 ), Tone( 698,2 ), Tone( 880,2 ), Tone( 1046,4 ), Tone( 880,2 ), Tone( 1046,8 ) } )
+      Eval( {|| Tone( 523, 2 ), Tone( 698, 2 ), Tone( 880, 2 ), Tone( 1046, 4 ), Tone( 880, 2 ), Tone( 1046, 8 ) } )
 
    CASE nMode == 102  // NannyBoo
-      AEval( { { 196,2 }, { 196,2 }, { 164,2 }, { 220,2 }, { 196,4 }, { 164,4 } }, {| a | Tone( a[ 1 ], a[ 2 ] ) } )
+      AEval( { { 196, 2 }, { 196, 2 }, { 164, 2 }, { 220, 2 }, { 196, 4 }, { 164, 4 } }, {| a | Tone( a[ 1 ], a[ 2 ] ) } )
 
    CASE nMode == 103  // BADKEY
       Tone( 480, 0.25 )

@@ -236,7 +236,7 @@
       the second expression, the function will return 0. The third and fourth
       parameters lets you indicate a starting and end offset to search in.
    $EXAMPLES$
-      ? 'At( "cde", "abcdefgfedcba" ) = ' +;
+      ? 'At( "cde", "abcdefgfedcba" ) = ' + ;
          At( "cde", "abcsefgfedcba" )
    $STATUS$
       R
@@ -279,7 +279,7 @@
       of <cString> to the left. If the function is unable to find any
       occurrence of <cSearch> in <cString>, the return value is 0.
    $EXAMPLES$
-      ? 'RAt( "cde", "abcdefgfedcba" ) = ' +;
+      ? 'RAt( "cde", "abcdefgfedcba" ) = ' + ;
          RAt( "cde", "abcsefgfedcba" )
    $STATUS$
       R
@@ -451,7 +451,7 @@
 
       Results of STR() with No Optional Arguments
 
-      le>
+      <table>
       Expression               Return Value Length
 
       Field Variable           Field length plus decimals
@@ -484,8 +484,8 @@
       *  If <nLength> is specified but <nDecimals> is omitted (no
          decimal places), the return value is rounded to an integer.
    $EXAMPLES$
-      ? STR( 10, 6, 2 ) // " 10.00"
-      ? STR( -10, 8, 2 ) // "  -10.00"
+      ? Str( 10, 6, 2 ) // " 10.00"
+      ? Str( -10, 8, 2 ) // "  -10.00"
    $TESTS$
       See the regression test suit for comprehensive tests.
    $STATUS$
@@ -647,7 +647,7 @@
       ? LEN( "Harbour" )           // 7
       ? LEN( { "One", "Two" } )    // 2
    $TESTS$
-      PROCEDURE Test()
+      PROCEDURE Main()
          LOCAL cName := ""
          ACCEPT "Enter your name: " TO cName
          ? LEN( cName )
@@ -687,7 +687,7 @@
    $EXAMPLES$
       ? EMPTY( "I'm not empty" )    // .F.
    $TESTS$
-      PROCEDURE Test()
+      PROCEDURE Main()
          ? EMPTY( NIL )             // .T.
          ? EMPTY( 0 )               // .T.
          ? EMPTY( .F. )             // .T.

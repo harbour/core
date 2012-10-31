@@ -189,7 +189,7 @@ STATIC FUNCTION xhb_DefError( oError )
       ENDIF
 
       // Show alert box
-      //TraceLog( cMessage )
+      // TraceLog( cMessage )
 
       nChoice := 0
       DO WHILE nChoice == 0
@@ -316,7 +316,7 @@ STATIC FUNCTION LogError( oerr )
       cScreen := SaveScreen()
    ENDIF
 
-// Alert( "An error occured, Information will be ;written to error.log" )
+   // Alert( "An error occured, Information will be ;written to error.log" )
 
    IF ! lAppendLog
       nHandle := FCreate( cLogFile, FC_NORMAL )
@@ -349,7 +349,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, "" )
       FWriteLine( nHandle, "Application name...: " + hb_cmdargargv() )
       FWriteLine( nHandle, "Workstation name...: " + NetName() )
-      FWriteLine( nHandle, "Available memory...: " + strvalue( Memory(0 ) )  )
+      FWriteLine( nHandle, "Available memory...: " + strvalue( Memory( 0 ) )  )
       FWriteLine( nHandle, "Current disk.......: " + DiskName() )
       FWriteLine( nHandle, "Current directory..: " + CurDir() )
       FWriteLine( nHandle, "Free disk space....: " + strvalue( DiskSpace() ) )
@@ -364,7 +364,7 @@ STATIC FUNCTION LogError( oerr )
 
       IF hb_IsFunction( "Select" )
          FWriteLine( nHandle, "" )
-         FWriteLine( nHandle, "Current Area ......:" + strvalue( &("Select()" ) ) )
+         FWriteLine( nHandle, "Current Area ......:" + strvalue( &( "Select()" ) ) )
       ENDIF
 
       FWriteLine( nHandle, "" )
@@ -546,9 +546,9 @@ STATIC FUNCTION LogError( oerr )
       IF HB_ISSTRING( cScreen )
          FWriteLine( nHandle, PadC( " Video Screen Dump ", nCols, "#" ) )
          FWriteLine( nHandle, "" )
-         //FWriteLine( nHandle, "" )
+         // FWriteLine( nHandle, "" )
          FWriteLine( nHandle, "+" + Replicate( "-", nCols + 1 ) + "+" )
-         //FWriteLine( nHandle, "" )
+         // FWriteLine( nHandle, "" )
          nCellSize := Len( SaveScreen( 0, 0, 0, 0 ) )
          nRange := ( nCols + 1 ) * nCellSize
          FOR nCount := 1 TO nRows + 1
@@ -665,7 +665,7 @@ STATIC FUNCTION strvalue( c, l )
 STATIC PROCEDURE FWriteLine( nh, c )
 
    FWrite( nh, c + hb_eol() )
-// HB_OutDebug( c + hb_eol() )
+   // HB_OutDebug( c + hb_eol() )
 
    RETURN
 
@@ -689,7 +689,7 @@ FUNCTION __BreakBlock()
 
    RETURN {| e | Break( e ) }
 
-FUNCTION __ErrorBlock( )
+FUNCTION __ErrorBlock()
 
    RETURN {| e | __MinimalErrorHandler( e ) }
 

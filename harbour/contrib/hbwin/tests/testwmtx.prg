@@ -5,6 +5,7 @@
 STATIC s_hMutex
 
 PROCEDURE Main()
+
    LOCAL cAppName
 
    // It may be a random program name :)

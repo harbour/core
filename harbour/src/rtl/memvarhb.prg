@@ -65,16 +65,20 @@
  * previously-saved files is required, only a naive approach of using
  * version 1 is taken.
  */
-#define _HBMEM_SIGNATURE ( HB_BCHAR( 0xC0 ) + ;
-                           HB_BCHAR( 0x48 ) + ;
-                           HB_BCHAR( 0x42 ) + ;
-                           HB_BCHAR( 0x56 ) + ;
-                           HB_BCHAR( 0x01 ) + ;
-                           HB_BCHAR( 0x00 ) )
-#define _HBMEM_SIG_LEN   6
+
 #define _HBMEM_EXT       ".hbv"
 
-FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
+#define _HBMEM_SIG_LEN   6
+#define _HBMEM_SIGNATURE ( ;
+   hb_BChar( 0xC0 ) + ;
+   hb_BChar( 0x48 ) + ;
+   hb_BChar( 0x42 ) + ;
+   hb_BChar( 0x56 ) + ;
+   hb_BChar( 0x01 ) + ;
+   hb_BChar( 0x00 ) )
+
+FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
+
    LOCAL nCount
    LOCAL xValue
    LOCAL cName
@@ -145,7 +149,7 @@ FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
 
       IF fhnd != F_ERROR
          FWrite( fhnd, _HBMEM_SIGNATURE )
-         FWrite( fhnd, hb_serialize( aVars ) )
+         FWrite( fhnd, hb_Serialize( aVars ) )
          FClose( fhnd )
       ENDIF
    ELSE
@@ -165,7 +169,8 @@ FUNCTION HB_MVSAVE( cFileName, cMask, lIncludeMask )
 
    RETURN NIL
 
-FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
+FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
+
    LOCAL item
    LOCAL cName
    LOCAL lMatch
@@ -242,7 +247,7 @@ FUNCTION HB_MVRESTORE( cFileName, lAdditive, cMask, lIncludeMask )
          FRead( fhnd, @cBuffer, Len( cBuffer ) )
          FClose( fhnd )
 
-         aVars := hb_deserialize( cBuffer )
+         aVars := hb_Deserialize( cBuffer )
          cBuffer := NIL
 
          IF HB_ISARRAY( aVars )

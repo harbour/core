@@ -19,29 +19,29 @@
       FT_SCANCODE() enables you to distinguish the different scancodes
       of similar keys (such as Grey minus versus regular minus), thus
       increasing the number of keys your input routine can recognize.
-  
+
       It works like INKEY(), in that it waits for a key to be pressed.
       The scan code consists of two bytes, which are returned as a
       two-character string.
-  
+
       For example, calling FT_SCANCODE() and pressing the Grey-minus
       key will return a two character string:
-  
+
              Chr( 45 ) + Chr( 74 )
-  
+
       LASTKEY() is not updated by FT_SCANCODE(), so don't try to
       test LASTKEY() to see what was pressed during an FT_SCANCODE()
       call.  Simply assign the return value to a variable and test
       that (see the test driver below).
-  
+
       *  This was adapted from a short C routine posted by John Kaster on
          NANFORUM.  It was written in Clipper to help demonstrate the
          FT_INT86 function of the Nanforum Toolkit.
-  
+
       This program requires FT_INT86().
    $EXAMPLES$
       cKey := FT_SCANCODE()
-  
+
       [grey-] returns:  Chr( 45 ) + Chr( 74 )
       [-]     returns:  Chr( 45 ) + Chr( 12 )
       [grey+] returns:  Chr( 43 ) + Chr( 78 )

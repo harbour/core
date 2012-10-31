@@ -18,10 +18,10 @@
    $DESCRIPTION$
       Generates a non-integer random number based on the Linear
       Congruential Method.
-  
+
       If you need a random number between 1 and <nMax> inclusive, INT()
       the result and add 1.
-  
+
       If you need a random number between 0 and <nMax> inclusive,
       then you should ROUND() the result.
    $EXAMPLES$

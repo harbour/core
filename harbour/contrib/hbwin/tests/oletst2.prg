@@ -13,13 +13,14 @@
  */
 
 PROCEDURE Main()
+
    LOCAL oObject
 
    oObject := win_OleCreateObject( "MyOleTimeServer" )
 
    IF !Empty( oObject )
-      ? "DATE:", oObject:date()
-      ? "TIME:", oObject:time()
+      ? "DATE:", oObject:Date()
+      ? "TIME:", oObject:Time()
       ? "DATTIME:", oObject:datetime()
       ? "VALUE:", oObject:value
       ? "GETDATA:", oObject:getdata()
@@ -31,4 +32,5 @@ PROCEDURE Main()
    ENDIF
 
    WAIT
-RETURN
+
+   RETURN

@@ -27,12 +27,12 @@ PROCEDURE DllMain()
     */
    WIN_OleServerInit( CLS_ID, CLS_Name )
 
-RETURN
+   RETURN
 
 
 FUNCTION MyMethod( ... )
 
-RETURN "Hello from MyOleServer [" + hb_valToExp( { ... } ) + "]"
+   RETURN "Hello from MyOleServer [" + hb_ValToExp( { ... } ) + "]"
 
 
 ANNOUNCE GT_SYS

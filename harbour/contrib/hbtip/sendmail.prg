@@ -54,9 +54,9 @@
 #translate ( <exp1> LIKE <exp2> )   => ( hb_regexLike( (<exp2>), (<exp1>) ) )
 
 FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
-                      aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
-                      xTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;
-                      lTLS, cSMTPPass, cCharset, cEncoding, cClientHost )
+      aFiles, cUser, cPass, cPopServer, nPriority, lRead, ;
+      xTrace, lPopAuth, lNoAuth, nTimeOut, cReplyTo, ;
+      lTLS, cSMTPPass, cCharset, cEncoding, cClientHost )
    /*
    cServer    -> Required. IP or domain name of the mail server
    nPort      -> Optional. Port used my email server
@@ -328,9 +328,9 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    RETURN lReturn
 
 FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
-                          aFiles, nPriority, lRead, ;
-                          cReplyTo, ;
-                          cCharset, cEncoding )
+      aFiles, nPriority, lRead, ;
+      cReplyTo, ;
+      cCharset, cEncoding )
    /*
    cFrom      -> Required. Email address of the sender
    xTo        -> Required. Character string or array of email addresses to send the email to

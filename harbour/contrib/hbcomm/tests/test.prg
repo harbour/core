@@ -18,6 +18,7 @@ STATIC s_nHandle
 STATIC s_lConnected := .F.
 
 PROCEDURE Main()
+
    LOCAL nOption
 
    DO WHILE .T.
@@ -45,6 +46,7 @@ PROCEDURE Main()
    RETURN
 
 STATIC PROCEDURE FConnect()
+
    LOCAL cCom       := "COM1"
    LOCAL nBaudeRate := 19200
    LOCAL nDatabits  := 8
@@ -65,11 +67,14 @@ STATIC PROCEDURE FConnect()
    RETURN
 
 STATIC PROCEDURE FDisconnect()
+
    s_lConnected := .F.
    UNINT_PORT( s_nHandle )
+
    RETURN
 
 STATIC PROCEDURE FSend()
+
    LOCAL cToSend
 
    ACCEPT "Enter string to send: " TO cToSend
@@ -83,6 +88,7 @@ STATIC PROCEDURE FSend()
    RETURN
 
 STATIC PROCEDURE FReceive()
+
    LOCAL cReceive
    LOCAL nSize
 

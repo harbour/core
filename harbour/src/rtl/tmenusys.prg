@@ -141,7 +141,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
          ::cMsgColor := GetClrPair( SetColor(), 1 )
       ENDIF
 
-      hb_scroll( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
+      hb_Scroll( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
 
       ::cMsgSaveS := SaveScreen( ::nMsgRow, ::nMsgLeft, ::nMsgRow, ::nMsgRight )
 
@@ -166,7 +166,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          ELSEIF ( nSelection := oTopMenu:getAccel( nKey ) ) != 0
 
-         ELSEIF IsShortCut( oTopMenu, nKey, @nReturn )
+         ELSEIF IsShortcut( oTopMenu, nKey, @nReturn )
             RETURN nReturn
 
          ELSE
@@ -406,7 +406,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          ENDIF
 
-      CASE IsShortCut( oTopMenu, nKey, @nReturn )
+      CASE IsShortcut( oTopMenu, nKey, @nReturn )
 
          IF nReturn != 0
             EXIT
@@ -463,6 +463,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 *
 ***/
 METHOD PushMenu() CLASS HBMenuSys
+
    LOCAL oNewMenu := ::oMenu:getItem( ::oMenu:current )
 
    IF HB_ISOBJECT( oNewMenu ) .AND. oNewMenu:IsPopUp
@@ -503,6 +504,7 @@ METHOD PopMenu() CLASS HBMenuSys
 *
 ***/
 METHOD PopChild( nNewLevel ) CLASS HBMenuSys
+
    LOCAL oOldMenuItem
    LOCAL nCurrent
 
@@ -540,6 +542,7 @@ METHOD PopAll() CLASS HBMenuSys
 *
 ***/
 METHOD Execute() CLASS HBMenuSys
+
    LOCAL oNewMenu := ::oMenu:getItem( ::oMenu:current )
    LOCAL lPas := .T.
 
@@ -612,6 +615,7 @@ METHOD MHitTest( oNewMenu, nNewLevel, nNewItem ) CLASS HBMenuSys
 *
 ***/
 METHOD ShowMsg( lMode ) CLASS HBMenuSys
+
    LOCAL nCurrent
    LOCAL cMsg
 
@@ -628,7 +632,7 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
          ( nCurrent := ::oMenu:current ) != 0 .AND. ;
          !Empty( cMsg := ::oMenu:getItem( nCurrent ):message )
 
-         hb_dispOutAt( ::nMsgRow, ::nMsgLeft, PadC( cMsg, ::nMsgRight - ::nMsgLeft + 1 ), ::cMsgColor )
+         hb_DispOutAt( ::nMsgRow, ::nMsgLeft, PadC( cMsg, ::nMsgRight - ::nMsgLeft + 1 ), ::cMsgColor )
       ENDIF
 
       ::cOldMessage := cMsg
@@ -642,12 +646,14 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
          This format contradicts the one in the official docs. */
 
 METHOD GetMsgArray() CLASS HBMenuSys
-   RETURN { , ::nMsgRow, ::nMsgLeft, ::nMsgRight, ::cMsgColor, , , , , }
+   RETURN {, ::nMsgRow, ::nMsgLeft, ::nMsgRight, ::cMsgColor, , , , , }
 
 /* -------------------------------------------- */
 
 METHOD New( oMenu ) CLASS HBMenuSys
+
    ::oMenu := oMenu
+
    RETURN Self
 
 #endif

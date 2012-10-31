@@ -102,8 +102,8 @@ FUNCTION HB_Decode( ... )
             // couples of values
             IF HB_ISARRAY( xDefault[ 1 ] )
 
-               //// If i have an array as default, this contains couples of key / value
-               //// so I have to convert in a linear array
+               // // If i have an array as default, this contains couples of key / value
+               // // so I have to convert in a linear array
 
                nLen := Len( xDefault )
 

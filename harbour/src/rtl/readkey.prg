@@ -53,6 +53,7 @@
 #include "inkey.ch"
 
 FUNCTION ReadKey()
+
    LOCAL nKey := LastKey()
 
    SWITCH nKey

@@ -12,6 +12,7 @@
 #require "hbmisc"
 
 PROCEDURE Main( cFile )
+
    LOCAL oFile := TFileRead():New( cFile )
 
    oFile:Open()

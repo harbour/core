@@ -18,19 +18,19 @@
    $DESCRIPTION$
       This function supplements EXPONENT() to return the mantissa of the
       <nFloatingPointNumber> number.
-  
+
       Note:  The mantissa value can be 0 or in the range of 1 to 2.
-  
+
              The following calculation reproduces the original value:
-  
+
       MANTISSA( <nFloatingPointNumber> ) * 2 ^ EXPONENT( <nFloatingPointNumber> ) =
       <nFloatingPointNumber>
-  
+
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
@@ -61,23 +61,23 @@
    $DESCRIPTION$
       This function supplements MANTISSA() to return the exponent of the
       <nFloatingPointNumber> number.
-  
+
       Values > 1 or values < -1 return a positive number 0 to 1023.
-  
+
       Values < 1 or values > -1 return a negative number -1 to -1023.
-  
+
       The EXPONENT( 0 ), return 0.
-  
+
       The following calculation reproduces the original value:
-  
+
       2^EXPONENT(<nFloatingPointNumber>) * MANTISSA(<nFloatingPointNumber>) =
       <nFloatingPointNumber>
-  
+
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$

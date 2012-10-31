@@ -15,6 +15,7 @@
 #include "hbexpat.ch"
 
 PROCEDURE Main( cFileName )
+
    LOCAL p := XML_ParserCreate()
    LOCAL xData
    LOCAL v1, v2, v3
@@ -41,20 +42,21 @@ PROCEDURE Main( cFileName )
    OutStd( XML_GetUserData( p ), hb_eol() )
    XML_SetUserData( p, xData )
    OutStd( ValType( XML_GetUserData( p ) ), hb_eol() )
-   XML_SetElementHandler( p, {| x, e, a | start( x, e, a ) }, {| x, e | end( x, e ) } )
-   XML_SetCharacterDataHandler( p, {| x, d | data( x, d ) } )
+   XML_SetElementHandler( p, {| x, e, a | cb_start( x, e, a ) }, {| x, e | cb_end( x, e ) } )
+   XML_SetCharacterDataHandler( p, {| x, d | cb_data( x, d ) } )
 
    IF XML_Parse( p, MemoRead( cFileName ), .T. ) == HB_XML_STATUS_ERROR
-      OutErr( hb_StrFormat( e"Parse error at line %s:\n%s\n",;
-                 hb_ntos( XML_GetCurrentLineNumber( p ) ),;
-                 XML_ErrorString( XML_GetErrorCode( p ) ) ) )
+      OutErr( hb_StrFormat( e"Parse error at line %s:\n%s\n", ;
+         hb_ntos( XML_GetCurrentLineNumber( p ) ), ;
+         XML_ErrorString( XML_GetErrorCode( p ) ) ) )
       ErrorLevel( -1 )
       RETURN
    ENDIF
 
    RETURN
 
-PROCEDURE start( xData, cElement, aAttr )
+STATIC PROCEDURE cb_start( xData, cElement, aAttr )
+
    LOCAL aItem
 
    OutStd( Replicate( "  ", xData[ 1 ] ), cElement )
@@ -71,7 +73,7 @@ PROCEDURE start( xData, cElement, aAttr )
 
    RETURN
 
-PROCEDURE end( xData, cElement )
+STATIC PROCEDURE cb_end( xData, cElement )
 
    HB_SYMBOL_UNUSED( xData )
    HB_SYMBOL_UNUSED( cElement )
@@ -80,7 +82,7 @@ PROCEDURE end( xData, cElement )
 
    RETURN
 
-PROCEDURE data( xData, cData )
+STATIC PROCEDURE cb_data( xData, cData )
 
    HB_SYMBOL_UNUSED( xData )
 

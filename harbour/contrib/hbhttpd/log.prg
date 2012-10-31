@@ -97,6 +97,7 @@ METHOD Add( cMsg ) CLASS UHttpdLog
    RETURN ::fhnd != F_ERROR .AND. FWrite( ::fhnd, cMsg ) == hb_BLen( cMsg )
 
 METHOD Close() CLASS UHttpdLog
+
    LOCAL lRetVal
 
    IF ::fhnd != F_ERROR

@@ -63,13 +63,14 @@ ANNOUNCE HB_GTSYS
 REQUEST HB_GT_CGI_DEFAULT
 
 PROCEDURE Main( ... )
+
    LOCAL aParams, aFiles
    LOCAL cFileOut, cFileIn, cExt
    LOCAL lError, lEmpty, lQuiet
    LOCAL nMode, n
-   LOCAL param
+   LOCAL cParam
 
-   aParams := hb_aParams()
+   aParams := hb_AParams()
    IF Empty( aParams )
       Syntax()
    ENDIF
@@ -79,36 +80,36 @@ PROCEDURE Main( ... )
    nMode := 0
    FOR n := 1 TO Len( aParams )
       IF LEFTEQUAL( aParams[ n ], "-" )
-         param := SubStr( aParams[ n ], 2 )
-         IF param == "m"
+         cParam := SubStr( aParams[ n ], 2 )
+         IF cParam == "m"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_MERGE
             ENDIF
-         ELSEIF param == "g"
+         ELSEIF cParam == "g"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_GENHBL
             ENDIF
-         ELSEIF param == "a"
+         ELSEIF cParam == "a"
             IF nMode != 0
                lError := .T.
             ELSE
                nMode := _HB_I18N_TRANS
             ENDIF
-         ELSEIF LEFTEQUAL( param, "o" )
-            IF !Empty( param := SubStr( param, 2 ) )
-               cFileOut := param
+         ELSEIF LEFTEQUAL( cParam, "o" )
+            IF ! Empty( cParam := SubStr( cParam, 2 ) )
+               cFileOut := cParam
             ELSEIF n < Len( aParams ) .AND. ! LEFTEQUAL( aParams[ n + 1 ], "-" )
                cFileOut := aParams[ ++n ]
             ELSE
                lError := .T.
             ENDIF
-         ELSEIF param == "e"
+         ELSEIF cParam == "e"
             lEmpty := .T.
-         ELSEIF param == "q"
+         ELSEIF cParam == "q"
             lQuiet := .T.
          ELSE
             lError := .T.
@@ -126,9 +127,9 @@ PROCEDURE Main( ... )
    IF nMode == _HB_I18N_TRANS
       FOR n := 1 TO Len( aFiles )
          hb_FNameSplit( aFiles[ n ],,, @cExt )
-         IF !Lower( cExt ) == ".hbl"
+         IF ! Lower( cExt ) == ".hbl"
             cFileIn := aFiles[ n ]
-            HB_ADel( aFiles, n, .T. )
+            hb_ADel( aFiles, n, .T. )
             EXIT
          ENDIF
       NEXT
@@ -139,7 +140,7 @@ PROCEDURE Main( ... )
       Syntax()
    ENDIF
 
-   IF !lQuiet
+   IF ! lQuiet
       Logo()
    ENDIF
 
@@ -153,34 +154,36 @@ PROCEDURE Main( ... )
 
    RETURN
 
-
 STATIC FUNCTION HBRawVersion()
+
    RETURN StrTran( Version(), "Harbour " )
 
 STATIC PROCEDURE Logo()
 
-   OutStd( "Harbour i18n .pot/.hbl file manager " + HBRawVersion() + hb_eol() +;
-           "Copyright (c) 2009-2012, Przemyslaw Czerpak" + hb_eol() + ;
-           "http://harbour-project.org/" + hb_eol() +;
-           hb_eol() )
-   RETURN
+   OutStd( ;
+      "Harbour i18n .pot/.hbl file manager " + HBRawVersion() + hb_eol() + ;
+      "Copyright (c) 2009-2012, Przemyslaw Czerpak" + hb_eol() + ;
+      "http://harbour-project.org/" + hb_eol() + ;
+      hb_eol() )
 
+   RETURN
 
 STATIC PROCEDURE Syntax()
 
    Logo()
-   OutStd( "Syntax: hbi18n -m | -g | -a [-o<outfile>] [-e] [-q] <files1[.pot] ...>" + hb_eol() + ;
-           hb_eol() + ;
-           "    -m          merge given .pot files" + hb_eol() + ;
-           "    -g          generate .hbl file from given .pot files" + hb_eol() + ;
-           "    -a          add automatic translations to 1-st .pot file using" + hb_eol() + ;
-           "                translations from other .pot or .hbl files" + hb_eol() + ;
-           "    -o<outfile> output file name" + hb_eol() + ;
-           "                default is first .pot file name with" + hb_eol() + ;
-           "                .po (merge) or .hbl extension" + hb_eol() + ;
-           "    -e          do not strip empty translation rules from .hbl files" + hb_eol() + ;
-           "    -q          quiet mode" + hb_eol() + ;
-           hb_eol() )
+   OutStd( ;
+      "Syntax: hbi18n -m | -g | -a [-o<outfile>] [-e] [-q] <files1[.pot] ...>" + hb_eol() + ;
+      hb_eol() + ;
+      "    -m          merge given .pot files" + hb_eol() + ;
+      "    -g          generate .hbl file from given .pot files" + hb_eol() + ;
+      "    -a          add automatic translations to 1-st .pot file using" + hb_eol() + ;
+      "                translations from other .pot or .hbl files" + hb_eol() + ;
+      "    -o<outfile> output file name" + hb_eol() + ;
+      "                default is first .pot file name with" + hb_eol() + ;
+      "                .po (merge) or .hbl extension" + hb_eol() + ;
+      "    -e          do not strip empty translation rules from .hbl files" + hb_eol() + ;
+      "    -q          quiet mode" + hb_eol() + ;
+      hb_eol() )
 
    IF hb_gtInfo( HB_GTI_ISGRAPHIC )
       OutStd( "Press any key to continue..." )
@@ -188,7 +191,6 @@ STATIC PROCEDURE Syntax()
    ENDIF
    ErrorLevel( 1 )
    QUIT
-
 
 STATIC PROCEDURE ErrorMsg( cErrorMsg )
 
@@ -201,23 +203,25 @@ STATIC PROCEDURE ErrorMsg( cErrorMsg )
    ErrorLevel( 1 )
    QUIT
 
-
 STATIC FUNCTION FileExt( cFile, cDefExt, lForce )
+
    LOCAL cPath, cName, cExt
 
    hb_FNameSplit( cFile, @cPath, @cName, @cExt )
    IF lForce .OR. Empty( cExt )
       cFile := hb_FNameMerge( cPath, cName, cDefExt )
    ENDIF
-   RETURN cFile
 
+   RETURN cFile
 
 STATIC FUNCTION ExpandWildCards( aFiles )
 
 /* do not expand wild cards in environments where SHELL already does it.
  * In *nixes it's possible that file name will contains "*" or "?".
  */
+
 #ifndef __PLATFORM__UNIX
+
    LOCAL cFile, cRealFile
    LOCAL aRealFiles
    LOCAL lWild
@@ -247,27 +251,28 @@ STATIC FUNCTION ExpandWildCards( aFiles )
    RETURN aFiles
 
 STATIC FUNCTION LoadFiles( aFiles )
+
    LOCAL aTrans, aTrans2
    LOCAL hIndex
    LOCAL cErrorMsg
    LOCAL n
 
-   aTrans := __I18N_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
+   aTrans := __i18n_potArrayLoad( aFiles[ 1 ], @cErrorMsg )
    IF aTrans == NIL
       ErrorMsg( cErrorMsg )
    ENDIF
    FOR n := 2 TO Len( aFiles )
-      aTrans2 := __I18N_potArrayLoad( aFiles[ n ], @cErrorMsg )
+      aTrans2 := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
       IF aTrans2 == NIL
          ErrorMsg( cErrorMsg )
       ENDIF
-      __I18N_potArrayJoin( aTrans, aTrans2, @hIndex )
+      __i18n_potArrayJoin( aTrans, aTrans2, @hIndex )
    NEXT
 
    RETURN aTrans
 
-
 STATIC FUNCTION LoadFilesAsHash( aFiles )
+
    LOCAL cTrans, cExt, cErrorMsg
    LOCAL hTrans
    LOCAL aTrans
@@ -276,28 +281,28 @@ STATIC FUNCTION LoadFilesAsHash( aFiles )
    FOR n := 1 TO Len( aFiles )
       hb_FNameSplit( aFiles[ n ],,, @cExt )
       IF Lower( cExt ) == ".hbl"
-         cTrans := hb_memoRead( aFiles[ n ] )
-         IF !HB_I18N_Check( cTrans )
+         cTrans := hb_MemoRead( aFiles[ n ] )
+         IF ! hb_i18n_Check( cTrans )
             ErrorMsg( "Wrong file format: " + aFiles[ n ] )
          ENDIF
          IF hTrans == NIL
-            hTrans := __I18N_hashTable( HB_I18N_RestoreTable( cTrans ) )
+            hTrans := __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) )
          ELSE
-            __I18N_hashJoin( hTrans, __I18N_hashTable( HB_I18N_RestoreTable( cTrans ) ) )
+            __i18n_hashJoin( hTrans, __i18n_hashTable( hb_i18n_RestoreTable( cTrans ) ) )
          ENDIF
       ELSE
-         aTrans := __I18N_potArrayLoad( aFiles[ n ], @cErrorMsg )
+         aTrans := __i18n_potArrayLoad( aFiles[ n ], @cErrorMsg )
          IF aTrans == NIL
             ErrorMsg( cErrorMsg )
          ENDIF
-         hTrans := __I18N_potArrayToHash( aTrans,, hTrans )
+         hTrans := __i18n_potArrayToHash( aTrans,, hTrans )
       ENDIF
    NEXT
 
    RETURN hTrans
 
-
 STATIC PROCEDURE Merge( aFiles, cFileOut )
+
    LOCAL cErrorMsg
 
    IF Empty( cFileOut )
@@ -306,14 +311,14 @@ STATIC PROCEDURE Merge( aFiles, cFileOut )
       cFileOut := FileExt( cFileOut, ".po", .F. )
    ENDIF
 
-   IF !__I18N_potArraySave( cFileOut, LoadFiles( aFiles ), @cErrorMsg )
+   IF ! __i18n_potArraySave( cFileOut, LoadFiles( aFiles ), @cErrorMsg )
       ErrorMsg( cErrorMsg )
    ENDIF
 
    RETURN
 
-
 STATIC PROCEDURE GenHBL( aFiles, cFileOut, lEmpty )
+
    LOCAL cHBLBody
    LOCAL pI18N
 
@@ -323,17 +328,17 @@ STATIC PROCEDURE GenHBL( aFiles, cFileOut, lEmpty )
       cFileOut := FileExt( cFileOut, ".hbl", .F. )
    ENDIF
 
-   pI18N := __I18N_hashTable( __I18N_potArrayToHash( LoadFiles( aFiles ), ;
-                                                     lEmpty ) )
-   cHBLBody := HB_I18N_SaveTable( pI18N )
-   IF !hb_memoWrit( cFileOut, cHBLBody )
+   pI18N := __i18n_hashTable( __i18n_potArrayToHash( LoadFiles( aFiles ), ;
+      lEmpty ) )
+   cHBLBody := hb_i18n_SaveTable( pI18N )
+   IF ! hb_MemoWrit( cFileOut, cHBLBody )
       ErrorMsg( "cannot create file: " + cFileOut )
    ENDIF
 
    RETURN
 
-
 STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
+
    LOCAL cErrorMsg
 
    IF Empty( cFileOut )
@@ -342,9 +347,9 @@ STATIC PROCEDURE AutoTrans( cFileIn, aFiles, cFileOut )
       cFileOut := FileExt( cFileOut, ".po", .F. )
    ENDIF
 
-   IF !__I18N_potArraySave( cFileOut, ;
-         __I18N_potArrayTrans( LoadFiles( { cFileIn } ), ;
-                               LoadFilesAsHash( aFiles ) ), @cErrorMsg )
+   IF ! __i18n_potArraySave( cFileOut, ;
+      __i18n_potArrayTrans( LoadFiles( { cFileIn } ), ;
+                            LoadFilesAsHash( aFiles ) ), @cErrorMsg )
       ErrorMsg( cErrorMsg )
    ENDIF
 

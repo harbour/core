@@ -166,7 +166,7 @@ ENDCLASS
 
 METHOD addItem( cText, cData ) CLASS LISTBOX
 
-   IF HB_ISSTRING( cText ) .AND. Valtype( cData ) $ "CU"
+   IF HB_ISSTRING( cText ) .AND. ValType( cData ) $ "CU"
 
       AAdd( ::aItems, { cText, cData } )
 
@@ -257,11 +257,11 @@ METHOD display() CLASS LISTBOX
 
    IF ::lDropDown
 
-      hb_dispOutAt( nTop, nLeft,;
-         iif( ::nValue == 0, Space( nSize - 1 ), PadR( ::aItems[ ::nValue ][ _ITEM_cTEXT ], nSize - 1 ) ),;
+      hb_DispOutAt( nTop, nLeft, ;
+         iif( ::nValue == 0, Space( nSize - 1 ), PadR( ::aItems[ ::nValue ][ _ITEM_cTEXT ], nSize - 1 ) ), ;
          cColorAny )
 
-      hb_dispOutAt( nTop++, nLeft + nSize - 1, ::cStyle, hb_ColorIndex( ::cColorSpec, 7 ) )
+      hb_DispOutAt( nTop++, nLeft + nSize - 1, ::cStyle, hb_ColorIndex( ::cColorSpec, 7 ) )
 
       nEnd--
    ENDIF
@@ -270,8 +270,8 @@ METHOD display() CLASS LISTBOX
       IF !Empty( cHotBox )
 
          cColorScrl := hb_ColorIndex( ::cColorSpec, 4 )
-         hb_scroll( nTop, nLeft, ::nBottom, ::nRight,,, cColorScrl )
-         hb_dispBox( nTop, nLeft, ::nBottom, ::nRight, cHotBox, cColorScrl )
+         hb_Scroll( nTop, nLeft, ::nBottom, ::nRight,,, cColorScrl )
+         hb_DispBox( nTop, nLeft, ::nBottom, ::nRight, cHotBox, cColorScrl )
 
          IF ::oVScroll != NIL
             ::oVScroll:display()
@@ -289,7 +289,7 @@ METHOD display() CLASS LISTBOX
       ENDIF
 
       FOR nItem := ::nTopItem TO nEnd
-         hb_dispOutAt( nTop++, nLeft, PadR( ::aItems[ nItem ][ _ITEM_cTEXT ], nSize ), iif( nItem == ::nValue, cColor4, cColor3 ) )
+         hb_DispOutAt( nTop++, nLeft, PadR( ::aItems[ nItem ][ _ITEM_cTEXT ], nSize ), iif( nItem == ::nValue, cColor4, cColor3 ) )
       NEXT
    ENDIF
 
@@ -302,16 +302,15 @@ METHOD display() CLASS LISTBOX
          cCaption := Stuff( cCaption, nPos, 1, "" )
       ENDIF
 
-      hb_dispOutAt( ::nCapRow, ::nCapCol - 1, cCaption, hb_ColorIndex( ::cColorSpec, 5 ) )
+      hb_DispOutAt( ::nCapRow, ::nCapCol - 1, cCaption, hb_ColorIndex( ::cColorSpec, 5 ) )
 
       IF nPos != 0
-         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 2, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 6 ) )
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 2, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 6 ) )
       ENDIF
 
    ENDIF
 
    DispEnd()
-
 
    RETURN Self
 
@@ -518,6 +517,7 @@ METHOD insItem( nPos, cText, cData )
    RETURN Self
 
 METHOD killFocus() CLASS LISTBOX
+
    LOCAL nOldMCur
 
    IF ::lHasFocus
@@ -557,11 +557,13 @@ METHOD open() CLASS LISTBOX
 
    IF ! ::lIsOpen
 
-      ::aSaveScr := { ::nTop + 1,;
-                      ::nLeft,;
-                      ::nBottom,;
-                      ::nRight,;
-                      Savescreen( ::nTop + 1, ::nLeft, ::nBottom, ::nRight ) }
+      ::aSaveScr := { ;
+         ::nTop + 1,;
+         ::nLeft,;
+         ::nBottom,;
+         ::nRight,;
+         Savescreen( ::nTop + 1, ::nLeft, ::nBottom, ::nRight ) }
+
       ::lIsOpen := .T.
       ::display()
    ENDIF
@@ -690,12 +692,12 @@ METHOD select( xPos ) CLASS LISTBOX
 
    LOCAL nValue
    LOCAL nPos
-   LOCAL cType := Valtype( xPos )
+   LOCAL cType := ValType( xPos )
 
    DO CASE
    CASE cType == "C"
       nPos := ::findData( xPos )
-      IF !( Valtype( ::xBuffer ) $ "CU" )
+      IF !( ValType( ::xBuffer ) $ "CU" )
          ::xBuffer := nPos
       ELSEIF ::nValue == 0
          ::xBuffer := xPos
@@ -712,7 +714,7 @@ METHOD select( xPos ) CLASS LISTBOX
       RETURN ::nValue
    OTHERWISE
       nPos := xPos
-      IF Valtype( ::xBuffer ) $ "NU"
+      IF ValType( ::xBuffer ) $ "NU"
          ::xBuffer := nPos
       ELSEIF nPos == 0
          ::xBuffer := ""
@@ -905,9 +907,9 @@ METHOD coldBox( cColdBox ) CLASS LISTBOX
 METHOD colorSpec( cColorSpec ) CLASS LISTBOX
 
    IF cColorSpec != NIL
-      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
-         iif( ::lDropDown,;
-            {|| !Empty( hb_ColorIndex( cColorSpec, 7 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 8 ) ) },;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
+         iif( ::lDropDown, ;
+            {|| !Empty( hb_ColorIndex( cColorSpec, 7 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 8 ) ) }, ;
             {|| !Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } ) )
    ENDIF
 
@@ -1081,13 +1083,14 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
       ::cColorSpec := "W/N,W+/N,W+/N,N/W,W/N,W/N,W+/N,W/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BORDER     ) + "," +;
-                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BACKGROUND )
+      ::cColorSpec := ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BORDER     ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self

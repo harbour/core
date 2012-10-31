@@ -63,6 +63,7 @@
 #include "fileio.ch"
 
 FUNCTION TIp_GetEncoder( cModel )
+
    LOCAL oEncoder
 
    hb_default( @cModel, "as-is" )
@@ -91,16 +92,20 @@ FUNCTION TIp_GetEncoder( cModel )
    RETURN oEncoder
 
 CREATE CLASS TIPEncoder
+
    VAR cName
 
    METHOD New( cModel )
    METHOD Encode( cData )
    METHOD Decode( cData )
+
 ENDCLASS
 
 METHOD New( cModel ) CLASS TIPEncoder
+
    hb_default( @cModel, "as-is" )
    ::cName := cModel
+
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoder

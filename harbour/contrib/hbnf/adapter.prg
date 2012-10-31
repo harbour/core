@@ -51,4 +51,5 @@
  */
 
 FUNCTION FT_ADAPTER()
+
    RETURN iif( IsColor(), 3 /* VGA */, 0 /* monochrome */ )

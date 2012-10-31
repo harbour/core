@@ -57,12 +57,13 @@ REQUEST HB_CODEPAGE_UTF8
       These cannot have a compatibility puller symbol in langlgcy.prg,
       which in turn pulls all CP modules, so we're pulling them from
       here. */
-   REQUEST HB_CODEPAGE_CS852
-   REQUEST HB_CODEPAGE_DE850
-   REQUEST HB_CODEPAGE_EL737
+REQUEST HB_CODEPAGE_CS852
+REQUEST HB_CODEPAGE_DE850
+REQUEST HB_CODEPAGE_EL737
 #endif
 
 FUNCTION hb_langSelect( cLangID, cCP )
+
    LOCAL tmp
    LOCAL cCPDef
    LOCAL cLangIDBase
@@ -182,6 +183,7 @@ FUNCTION hb_langSelect( cLangID, cCP )
    RETURN __hb_langSelect( cLangID )
 
 STATIC FUNCTION __LangStdToLangHb( cLangStd )
+
    LOCAL cLangHb := ""
 
    IF HB_ISSTRING( cLangStd )

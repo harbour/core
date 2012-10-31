@@ -63,22 +63,22 @@ PROCEDURE Main()
 
    // Some simple tests
    ? "  Simple tests:"
-   ? [   tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!" ?]
-   ? [                                                -> "] + tokenupper( "Hello, world, here I am!" ) + ["]
-   ? [   tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!" ?]
-   ? [                                                -> "] + tokenupper( "Hello, world, here I am!",, 3 ) + ["]
-   ? [   tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!" ?]
-   ? [                                                -> "] + tokenupper( "Hello, world, here I am!", ",", 3 ) + ["]
-   ? [   tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!" ?]
-   ? [                                                -> "] + tokenupper( "Hello, world, here I am!", " w" ) + ["]
+   ? '   tokenupper("Hello, world, here I am!")       == "Hello, World, Here I Am!" ?'
+   ? '                                                -> "' + tokenupper( "Hello, world, here I am!" ) + '"'
+   ? '   tokenupper("Hello, world, here I am!",,3)    == "Hello, World, Here I am!" ?'
+   ? '                                                -> "' + tokenupper( "Hello, world, here I am!",, 3 ) + '"'
+   ? '   tokenupper("Hello, world, here I am!",",",3) == "Hello, world, here I am!" ?'
+   ? '                                                -> "' + tokenupper( "Hello, world, here I am!", ",", 3 ) + '"'
+   ? '   tokenupper("Hello, world, here I am!"," w")  == "Hello, wOrld, Here I Am!" ?'
+   ? '                                                -> "' + tokenupper( "Hello, world, here I am!", " w" ) + '"'
    ?
 
-   ? [  Uppercase the tokens in the string "] + cStr + ["]
-   ? [            with csetref(.T.) and "@"]
+   ? '  Uppercase the tokens in the string "' + cStr + '"'
+   ? '            with csetref(.T.) and "@"'
    csetref( .T. )
    ?
-   ? [    --> return value of tokenupper(@cStr): ], tokenupper( @cStr )
-   ? [    --> cStr is now: "] + cStr + ["]
+   ? '    --> return value of tokenupper(@cStr): ', tokenupper( @cStr )
+   ? '    --> cStr is now: "' + cStr + '"'
 
    ?
    ? "End test of TOKENUPPER()"

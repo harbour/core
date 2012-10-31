@@ -50,9 +50,9 @@ PROCEDURE Main()
    ? "To the power 3   : ", aFunc()[ 1 ]
 
    ? "Global stack"
-   ? hb_ValToExp(  __dbgVMStkGList() )        // Please note a is a reference to aArray !
+   ? hb_ValToExp( __dbgVMStkGList() )        // Please note a is a reference to aArray !
    ? "Statics"
-   ? hb_ValToExp(  __dbgVMVarSList() )
+   ? hb_ValToExp( __dbgVMVarSList() )
 
    RETURN
 

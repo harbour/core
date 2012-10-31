@@ -25,6 +25,7 @@ PROCEDURE Main()
    RETURN
 
 STATIC PROCEDURE Dump( a )
+
    LOCAL b, c
 
    ? "=================="

@@ -86,9 +86,9 @@ CREATE CLASS HBDbMenu
    METHOD AddItem( oMenuItem )
    METHOD Build()
    METHOD ClosePopup( nPopup )
-   METHOD Close() INLINE ::ClosePopup( ::nOpenPopup ), ::nOpenPopup := 0
+   METHOD CLOSE() INLINE ::ClosePopup( ::nOpenPopup ), ::nOpenPopup := 0
    METHOD DeHilite()
-   METHOD Display()
+   METHOD DISPLAY()
    METHOD EvalAction()
    METHOD GetHotKeyPos( cKey )
    METHOD GetItemByIdent( uIdent )
@@ -151,7 +151,7 @@ METHOD AddItem( oMenuItem ) CLASS HBDbMenu
       IF Len( oLastMenu:aItems ) > 0
          oLastMenuItem := ATail( oLastMenu:aItems )
          oMenuItem:nCol := oLastMenuItem:nCol + ;
-                          Len( StrTran( oLastMenuItem:cPrompt, "~" ) )
+            Len( StrTran( oLastMenuItem:cPrompt, "~" ) )
       ELSE
          oMenuItem:nCol := 0
       ENDIF
@@ -203,8 +203,8 @@ METHOD ClosePopup( nPopup ) CLASS HBDbMenu
    IF nPopup != 0
       oPopup := ::aItems[ nPopup ]:bAction
       IF HB_ISOBJECT( oPopup )
-         RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2,;
-                     oPopup:cBackImage )
+         RestScreen( oPopup:nTop, oPopup:nLeft, oPopup:nBottom + 1, oPopup:nRight + 2, ;
+            oPopup:cBackImage )
          oPopup:cBackImage := NIL
       ENDIF
       ::aItems[ nPopup ]:Display( ::cClrPopup, ::cClrHotKey )
@@ -227,17 +227,17 @@ METHOD Display() CLASS HBDbMenu
    SetColor( ::cClrPopup )
 
    IF ! ::lPopup
-      hb_dispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
+      hb_DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
       SetPos( 0, 0 )
    ELSE
       ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + 1, ::nRight + 2 )
-      hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, HB_B_SINGLE_UNI )
+      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, HB_B_SINGLE_UNI )
       hb_Shadow( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ENDIF
 
    FOR n := 1 TO Len( ::aItems )
       IF ::aItems[ n ]:cPrompt == "-"  // Separator
-         hb_dispOutAtBox( ::aItems[ n ]:nRow, ::nLeft,;
+         hb_DispOutAtBox( ::aItems[ n ]:nRow, ::nLeft, ;
             hb_UTF8ToStrBox( "├" + Replicate( "─", ::nRight - ::nLeft - 1 ) + "┤" ) )
       ELSE
          ::aItems[ n ]:Display( ::cClrPopup, ::cClrHotKey )
@@ -265,7 +265,7 @@ METHOD GetHotKeyPos( cKey ) CLASS HBDbMenu
    LOCAL n
 
    FOR n := 1 TO Len( ::aItems )
-      IF Upper( SubStr( ::aItems[ n ]:cPrompt,;
+      IF Upper( SubStr( ::aItems[ n ]:cPrompt, ;
          At( "~", ::aItems[ n ]:cPrompt ) + 1, 1 ) ) == cKey
          RETURN n
       ENDIF
@@ -298,7 +298,7 @@ METHOD GetItemByIdent( uIdent ) CLASS HBDbMenu
             RETURN oItem
          ENDIF
       ELSE
-         IF VALTYPE( ::aItems[ n ]:Ident ) == VALTYPE( uIdent ) .AND.;
+         IF ValType( ::aItems[ n ]:Ident ) == ValType( uIdent ) .AND. ;
             ::aItems[ n ]:Ident == uIdent
             RETURN ::aItems[ n ]
          ENDIF
@@ -404,7 +404,7 @@ METHOD Refresh() CLASS HBDbMenu
    DispBegin()
 
    IF ! ::lPopup
-      hb_dispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
+      hb_DispOutAt( 0, 0, Space( MaxCol() + 1 ), ::cClrPopup )
       SetPos( 0, 0 )
    ENDIF
 
@@ -435,48 +435,48 @@ METHOD ProcessKey( nKey ) CLASS HBDbMenu
 
    DO CASE
    CASE nKey == K_LBUTTONDOWN
-        IF MRow() == 0
-           IF ( nPopup := ::GetItemOrdByCoors( 0, MCol() ) ) != 0
-              IF nPopup != ::nOpenPopup
-                 ::ClosePopup( ::nOpenPopup )
-                 ::ShowPopup( nPopup )
-              ENDIF
-           ENDIF
-        ELSE
-           oPopup := ::aItems[ ::nOpenPopup ]:bAction
-           IF ( nPopup := oPopup:GetItemOrdByCoors( MRow(), MCol() ) ) == 0
-              ::Close()
-           ELSE
-              oPopup:DeHilite()
-              oPopup:nOpenPopup := nPopup
-              oPopup:aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
-              ::EvalAction()
-           ENDIF
-        ENDIF
+      IF MRow() == 0
+         IF ( nPopup := ::GetItemOrdByCoors( 0, MCol() ) ) != 0
+            IF nPopup != ::nOpenPopup
+               ::ClosePopup( ::nOpenPopup )
+               ::ShowPopup( nPopup )
+            ENDIF
+         ENDIF
+      ELSE
+         oPopup := ::aItems[ ::nOpenPopup ]:bAction
+         IF ( nPopup := oPopup:GetItemOrdByCoors( MRow(), MCol() ) ) == 0
+            ::Close()
+         ELSE
+            oPopup:DeHilite()
+            oPopup:nOpenPopup := nPopup
+            oPopup:aItems[ nPopup ]:Display( ::cClrHilite, ::cClrHotFocus )
+            ::EvalAction()
+         ENDIF
+      ENDIF
 
    CASE nKey == K_ESC
-        ::Close()
+      ::Close()
 
    CASE nKey == K_LEFT
-        ::GoLeft()
+      ::GoLeft()
 
    CASE nKey == K_RIGHT
-        ::GoRight()
+      ::GoRight()
 
    CASE nKey == K_DOWN
-        ::GoDown()
+      ::GoDown()
 
    CASE nKey == K_UP
-        ::GoUp()
+      ::GoUp()
 
    CASE nKey == K_ENTER
-        ::EvalAction()
+      ::EvalAction()
 
    CASE nKey == K_HOME
-        ::GoTop()
+      ::GoTop()
 
    CASE nKey == K_END
-        ::GoBottom()
+      ::GoBottom()
 
    OTHERWISE
 
@@ -504,11 +504,12 @@ METHOD ProcessKey( nKey ) CLASS HBDbMenu
 
 FUNCTION __dbgAltToKey( nKey )
 
-   LOCAL nIndex := AScan( { K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F,;
-                            K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L,;
-                            K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R,;
-                            K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X,;
-                            K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4,;
-                            K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
+   LOCAL nIndex := AScan( { ;
+      K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F, ;
+      K_ALT_G, K_ALT_H, K_ALT_I, K_ALT_J, K_ALT_K, K_ALT_L, ;
+      K_ALT_M, K_ALT_N, K_ALT_O, K_ALT_P, K_ALT_Q, K_ALT_R, ;
+      K_ALT_S, K_ALT_T, K_ALT_U, K_ALT_V, K_ALT_W, K_ALT_X, ;
+      K_ALT_Y, K_ALT_Z, K_ALT_1, K_ALT_2, K_ALT_3, K_ALT_4, ;
+      K_ALT_5, K_ALT_6, K_ALT_7, K_ALT_8, K_ALT_9, K_ALT_0 }, nKey )
 
    RETURN iif( nIndex > 0, SubStr( "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890", nIndex, 1 ), "" )

@@ -44,7 +44,7 @@ PROCEDURE Main()
    @ 13, 0 SAY "0         1         2         3 "
    Pause()
 
-   //save/restore test
+   // save/restore test
    cT := SaveScreen( 0, 0, 13, 31 )
    RestScreen( 10, 40, 23, 71, cT )
    pause()

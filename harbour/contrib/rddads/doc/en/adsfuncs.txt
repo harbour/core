@@ -14,18 +14,18 @@
    $ARGUMENTS$
       <cFileName>    File to create. If it already exists, it will be
       overwritten on success and destroyed on error.
-  
+
       <cFieldName>   Field in the current workarea that contains binary data.
-  
+
    $RETURNS$
       <lSuccess>  True if the file is successfully written.
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
       ADSBlob2File() is a wrapper for AdsBinaryToFile.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -51,9 +51,9 @@
       ADSFile2Blob(cFileName, cFieldName, <nBinaryType>) --> lSuccess
    $ARGUMENTS$
       <cFileName>    File to read. Can be in UNC format. A common example is an image file.
-  
+
       <cFieldName>   Field in the current workarea to contain the binary data.
-  
+
       <nBinaryType>  Either ADS_BINARY (the default) or ADS_IMAGE.
       This parameter is for fields in DBF files.
       ADT tables cannot store binary and image data in standard character
@@ -65,9 +65,9 @@
       ADSFile2Blob() is a wrapper for AdsFileToBinary.
       Use of this function is illegal in an ADS transaction.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -98,9 +98,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -128,9 +128,9 @@
       <nRecno | aRecNos> Can be either a single record number or an array of
       record numbers to add or delete from the AOF. If omitted, defaults to
       the current record.
-  
+
       <nType>   The type of operation:
-  
+
       <table>
       ADS_AOF_ADD_RECORD      Add the record to the AOF (set the bit). This is the default operation.
       ADS_AOF_REMOVE_RECORD   Remove the record from the AOF (clear the bit).
@@ -147,17 +147,17 @@
       add or remove records at will from the visible set.  This is useful for
       tagging records or for refining a result set after the data has been retrieved
       from the server.
-  
+
       The maximum number of records that can be customized in a single call is
       16,383, so <aRecNos> must not be longer than this.
-  
+
       Calls to AdsCustomizeAOF must be made after an application has created a
       filter with a call to AdsSetAOF. To create a completely empty record set
       (to which records can be added with calls to AdsCustomizeAOF), use ".F." as
       the filter expression given to AdsSetAOF. To create a completely full
       record set (from which records can be removed), use ".T." as the filter
       expression.
-  
+
       WARNING: Always start with a FULLY optimized AOF!
       If an application must use a filter expression that is not fully optimized
       as the starting point for customization, the ADS_RESOLVE_IMMEDIATE option
@@ -166,12 +166,12 @@
       have been added through the AdsCustomizeAOF calls. The
       filter expressions ".T." and ".F." both result in fully optimized AOFs
       regardless of available indexes.
-  
+
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -206,9 +206,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -241,9 +241,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -274,9 +274,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -308,9 +308,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -344,9 +344,9 @@
       or may not be valid records for the filter. ADSRefreshAOF()
       re-evaluates the data to include or exclude changed records.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -372,7 +372,7 @@
       ADSSetAOF( <cFilter> [, <nResolveOption>] ) --> lSuccess
    $ARGUMENTS$
       <cFilter>         Filter expression to set.
-  
+
       <nResolveOption>  Option to indicate how the filter should be resolved
       in the event that the expression cannot be fully optimized.
       Options are defined in ads.ch:
@@ -382,9 +382,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -415,9 +415,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -451,14 +451,14 @@
       It also works with no active index to yield the relative position of the
       current record number.
       The value returned is between 0.0 and 1.0, inclusive.
-  
+
       This is the recommended function for positioning a scrollbar
       or other "coarse" position interface.
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -491,14 +491,14 @@
       within the current index order, respecting any scope setting.
       It also works with no active index to go to the relative position of the
       current record number.
-  
+
       This is the recommended function for re-positioning in reaction to
       a dragged scrollbar thumb or other "coarse" navigation interface.
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -524,7 +524,7 @@
       ADSKeyCount([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyCount
    $ARGUMENTS$
       <xTag>     Numeric order number OR index tag name. Default is current index.
-  
+
       <cIgnoredIndexFile>   This parameter is not processed. In other Harbour RDDs,
       the second parameter to "ordKeyCount" takes a second argument to identify
       a particular Index File in cases where two files are open that contain
@@ -532,11 +532,11 @@
       will select the first order with the requested name. To stay consistent
       with other RDDs, therefore, the second parameter is reserved and the
       <nFilterOption> is passed as a third parameter.
-  
+
       <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
-  
+
       Options are defined in ads.ch:
-  
+
       <table>
          ADS_RESPECTFILTERS   Respect filters and scopes
          ADS_IGNOREFILTERS    Ignore filters and scopes
@@ -547,9 +547,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -575,7 +575,7 @@
       ADSKeyNo([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyNo
    $ARGUMENTS$
       <xTag>          Numeric order number OR index tag name. Default is current index.
-  
+
       <cIgnoredIndexFile>   This parameter is not processed. In other Harbour RDDs,
       the second parameter to "ordKeyNo" takes a second argument to identify
       a particular Index File in cases where two files are open that contain
@@ -583,9 +583,9 @@
       will select the first order with the requested name. To stay consistent
       with other RDDs, therefore, the second parameter is reserved and the
       <nFilterOption> is passed as a third parameter.
-  
+
       <nFilterOption> Indicates if filters and/or scopes are to be respected if set.
-  
+
       <table>
       Options are defined in ads.ch:
          ADS_RESPECTFILTERS   Respect filters and scopes
@@ -627,7 +627,7 @@
       <lMode>    .T. to use the Advantage proprietary locking mode
       (this is the default setting if a remote server is used)
       or pass .F. to use "compatibility" locking.
-  
+
    $RETURNS$
       <lPriorSetting>   .T. if prior setting was for the proprietary mode.
    $DESCRIPTION$
@@ -635,12 +635,12 @@
       The Advantage Database Server has a fast Proprietary locking mode that
       is more efficient than traditional network locking. It is only available
       when using the remote server (not the local server).
-  
+
       If a file is opened in the proprietary mode, other applications cannot
       open it in a "write" mode. So if non-Advantage applications need
       concurrent access to the data files, use the Compatibility locking mode
       by calling  ADSLocking( .F. ).
-  
+
       ADSLocking() is a Get/Set function for the locking mode. It affects
       files at the time they are opened. So when a data
       file is opened, the current setting is used for that file until it is
@@ -672,7 +672,7 @@
    $ARGUMENTS$
       <lMode>    .T. to check rights upon opening data files (the default),
       or .F. to ignore rights
-  
+
    $RETURNS$
       <lPriorSetting>
    $DESCRIPTION$
@@ -682,15 +682,15 @@
       Database Server will use the rights of the connected user when
       opening the file. If the user does not have rights to the
       directory or server, then the open call will fail.
-  
+
       If the setting is .F., then the ADS will
       ignore the connected user's rights and open the file
       regardless. This lets you allow only
       Advantage-based applications to access specific data.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -719,7 +719,7 @@
       indexing. A numeric value of the "percent completed" is passed
       to the codeblock by the ADS server. The codeblock should return
       a logical value: .T. to abort or .F. to not stop indexing.
-  
+
    $RETURNS$
       <nil>
    $DESCRIPTION$
@@ -740,7 +740,7 @@
          INDEX ON First+LAST+LABEL1+LABEL2 TAG First
          AdsClrCallBack()
          RETURN
-  
+
       FUNCTION outputstuff( nPercent )  /* The "callback" function */
          ? "output stuff", nPercent
          RETURN Inkey() == K_ESC
@@ -769,15 +769,15 @@
    $SYNTAX$
       AdsClrCallBack() --> nil
    $ARGUMENTS$
-  
+
    $RETURNS$
       <nil>
    $DESCRIPTION$
       See AdsRegCallBack().
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -803,7 +803,7 @@
       ADSSetDefault( [<cPath>] ) --> cPriorSetting
    $ARGUMENTS$
       <cPath>    Sets new value if passed.
-  
+
    $RETURNS$
       <cPriorSetting>
    $DESCRIPTION$
@@ -813,9 +813,9 @@
       SET DEFAULT TO command, so normal programming will not use this.
       It exists primarily for testing purposes.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -826,7 +826,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -844,7 +844,7 @@
       to Harbour usage, so pass .F. to see deleted records or .T.
       to hide them. (This is inverted from ADS's AdsShowDeleted()
       syntax.)
-  
+
    $RETURNS$
       <lPriorSetting>
    $DESCRIPTION$
@@ -854,9 +854,9 @@
       SET DELETED ON/OFF command, so normal programming will not use this.
       It exists primarily for testing purposes.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -867,7 +867,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -882,7 +882,7 @@
       AdsSetSearchPath( [<cPath>] ) --> cPriorSetting
    $ARGUMENTS$
       <cPath>     Sets new value if passed.
-  
+
    $RETURNS$
       <cPriorSetting>
    $DESCRIPTION$
@@ -892,9 +892,9 @@
       SET PATH command, so normal programming will not use this.
       It exists primarily for testing purposes.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -905,7 +905,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -920,7 +920,7 @@
       AdsSetExact( [<lOnOff>] ) --> lPriorSetting
    $ARGUMENTS$
       <lOnOff>    Sets new value if passed.
-  
+
    $RETURNS$
       <lPriorSetting>
    $DESCRIPTION$
@@ -930,9 +930,9 @@
       SET EXACT ON/OFF command, so normal programming will not use this.
       It exists primarily for testing purposes.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -943,7 +943,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -967,16 +967,16 @@
       <lOEM> This parameter used for console mode applications, when
       character data stored in OEM charset. If lOEM is passed as .T.,
       rddads doesn't convert character data into ANSI charset.
-  
+
    $RETURNS$
       <nPriorSetting>
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
       This sets the usCharType parameter used when ADS opens a table.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1001,15 +1001,15 @@
    $SYNTAX$
       AdsIsIndexed() --> lActiveIndex
    $ARGUMENTS$
-  
+
    $RETURNS$
       <lActiveIndex>
    $DESCRIPTION$
       Equivalent to <b>empty(ordSetFocus())<\b>, but faster.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1019,7 +1019,7 @@
    $FILES$
       Library is RddAds
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1045,7 +1045,7 @@
       bugs later in program execution that are hard to find.
       In Harbour internal RDDs, a runtime error occurs if an attempt is made
       to write to a shared file without a proper lock.
-  
+
       AdsTestRecLocks( .T. ) will turn on a debugging mode to mimic this behavior
       and throw an error instead of allowing an implicit lock. Each time a field
       is set, we see if the file is open exclusively or locked, and whether
@@ -1055,12 +1055,12 @@
       Although the call to AdsIsRecordLocked is documented as a client
       call, not a server request, and should be fast, it will be
       called for EACH FIELD as it is assigned a value.
-  
+
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1071,7 +1071,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1091,9 +1091,9 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1104,7 +1104,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1129,7 +1129,7 @@
       (See ace.hlp under Advantage Expression Engine for a list of functions
       allowed by ADS.)
       Call AdsIsExprValid() to determine if the server can process the expression.
-  
+
       For illustration, consider filter expressions.
       Since Harbour attempts to be as compatible with Clipper as possible,
       you CAN set a filter that ADS DOES NOT understand, but the filtering
@@ -1140,9 +1140,9 @@
       done by the server itself to reduce network traffic, it is better to only use
       filter expressions ADS can understand.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1153,7 +1153,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -1171,7 +1171,7 @@
       or AdsConnect60(). If omitted, the RDD's current connection
       handle is used, but this only exists if AdsConnect() or AdsConnect60()
       were previously called.
-  
+
    $RETURNS$
       The type of Advantage Server that the connection uses, either
       ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER.
@@ -1184,9 +1184,9 @@
       that workarea can be retrieved with AdsGetTableConType().
       See ace.hlp for full details.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1212,7 +1212,7 @@
       AdsGetTableConType() --> nConnectionType
    $ARGUMENTS$
       None.
-  
+
    $RETURNS$
       The type of Advantage Server that the current workarea uses, either
       ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER.
@@ -1223,9 +1223,9 @@
       but others via the Local server or an Internect connection.
       This function identifies the type of server used in the current workarea.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1266,7 +1266,7 @@
          // Add the tables
           AdsDDaddTable("Table1", "table1.adt", "table1.adi")
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1297,7 +1297,7 @@
    $DESCRIPTION$
       This function no longer exists.  See the Data Dictionary topic
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$
@@ -1305,7 +1305,7 @@
    $PLATFORMS$
       Windows, Linux
    $FILES$
-  
+
    $SEEALSO$
       ADSCONNECT60()
    $END$
@@ -1326,7 +1326,7 @@
       <cUserName>   Optional Name of the user connecting to the server
       <cUserPass>   Optional password for the user Name
       <nOptions>    The optional connection options
-  
+
    $RETURNS$
       <lSuccess>   True if connected, otherwise False.
    $DESCRIPTION$
@@ -1362,7 +1362,7 @@
       ADSCACHEOPENTABLES(<nOpen>) -> nRetVal
    $ARGUMENTS$
       <nOpen>       Number of tables to cache.
-  
+
    $RETURNS$
       <nRetVal>     ???
    $DESCRIPTION$
@@ -1400,7 +1400,7 @@
       ADSCACHEOPENCURSORS(<nOpen>) -> nRetVal
    $ARGUMENTS$
       <nOpen>       Number of cursors to cache.
-  
+
    $RETURNS$
       <nRetVal>     ???
    $DESCRIPTION$
@@ -1477,16 +1477,16 @@
    $ARGUMENTS$
       <lMode>    xxx
       xxx
-  
+
    $RETURNS$
       <lPriorSetting>
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
       ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       R
    $COMPLIANCE$

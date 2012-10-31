@@ -59,6 +59,7 @@ PROCEDURE ErrorSys()
    RETURN
 
 STATIC FUNCTION DefError( oError )
+
    LOCAL cMessage
    LOCAL cDOSError
 
@@ -97,7 +98,7 @@ STATIC FUNCTION DefError( oError )
 
    cMessage := ErrorMessage( oError )
    IF ! Empty( oError:osCode )
-      cDOSError := "(DOS Error " + hb_NToS( oError:osCode ) + ")"
+      cDOSError := "(DOS Error " + hb_ntos( oError:osCode ) + ")"
    ENDIF
 
    // Build buttons
@@ -152,7 +153,7 @@ STATIC FUNCTION DefError( oError )
 
       OutErr( hb_eol() )
       OutErr( "Called from " + ProcName( n ) + ;
-               "(" + hb_NToS( ProcLine( n ) ) + ")  " )
+         "(" + hb_ntos( ProcLine( n ) ) + ")  " )
 
    ENDDO
 
@@ -175,7 +176,7 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add subsystem's error code if available
    IF HB_ISNUMERIC( oError:subCode )
-      cMessage += "/" + hb_NToS( oError:subCode )
+      cMessage += "/" + hb_ntos( oError:subCode )
    ELSE
       cMessage += "/???"
    ENDIF

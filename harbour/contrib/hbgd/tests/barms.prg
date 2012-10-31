@@ -54,7 +54,7 @@ PROCEDURE Main()
    bar:Finish( 2 )
 
    // EAN8
-   bar:= TCode():New( 8 )
+   bar := TCode():New( 8 )
 
    bar:Configure( 70, black, white, 2, 1 )
 
@@ -67,12 +67,12 @@ PROCEDURE Main()
    bar:ResizeImage()
 
    // EAN128
-   bar:= TCode():New( 128 )
+   bar := TCode():New( 128 )
 
    bar:Configure( 50, black, white, 2, 1 )
 
    // output image
-   //bar:out_img := "image_out/"
+   // bar:out_img := "image_out/"
 
    bar:CreateBar( 559, 88, IMAGES_OUT + "bar128.gif", white )
 
@@ -91,7 +91,7 @@ PROCEDURE Main()
    bar:Configure( 25, black, white, 1, 1,, .T. )
 
    // output image
-   //bar:out_img := "febraban/"
+   // bar:out_img := "febraban/"
    bar:CreateBar( 560, 60, IMAGES_OUT + "febraban.gif", white )
    bar:DrawI25( "P48WBQ7BX3M73X8V3WRT7F9JW" )
    bar:Finish( 8 )

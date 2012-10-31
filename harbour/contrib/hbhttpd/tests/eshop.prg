@@ -22,7 +22,7 @@ PROCEDURE Main()
 
    LOCAL nPort
 
-   IF HB_ARGCHECK( "help" )
+   IF hb_argCheck( "help" )
       ? "Usage: app [options]"
       ? "Options:"
       ? "  //help               Print help"
@@ -30,8 +30,8 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   IF HB_ARGCHECK( "stop" )
-      HB_MEMOWRIT( ".uhttpd.stop", "" )
+   IF hb_argCheck( "stop" )
+      hb_MemoWrit( ".uhttpd.stop", "" )
       RETURN
    ELSE
       FErase( ".uhttpd.stop" )
@@ -41,40 +41,40 @@ PROCEDURE Main()
    SET( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
 
-   IF ! HB_FILEEXISTS( "users.dbf" )
+   IF ! hb_FileExists( "users.dbf" )
       FErase( "users.cdx" )
       dbCreate( "users", { { "USER", "C", 16, 0 }, { "PASSWORD", "C", 16, 0 }, { "NAME", "C", 50, 0 } }, , .T., "user" )
       dbAppend()
       FIELD->USER := "demo"
       FIELD->PASSWORD := "demo"
       FIELD->NAME := "Demo"
-      OrdCreate( "users", "user", "USER" )
+      ordCreate( "users", "user", "USER" )
       dbCloseArea()
-   ELSEIF ! HB_FILEEXISTS( "users.cdx" )
+   ELSEIF ! hb_FileExists( "users.cdx" )
       dbUseArea( .T., , "users", , .F., .F. )
-      OrdCreate( "users", "user", "USER" )
+      ordCreate( "users", "user", "USER" )
       dbCloseArea()
    ENDIF
 
-   IF ! HB_FILEEXISTS( "carts.dbf" )
+   IF ! hb_FileExists( "carts.dbf" )
       FErase( "carts.cdx" )
       dbCreate( "carts", { { "USER", "C", 16, 0 }, { "CODE", "C", 16, 0 }, { "AMOUNT", "N", 6, 0 }, { "TOTAL", "N", 9, 2 } }, , .T., "cart" )
-      OrdCreate( "carts", "user", "USER+CODE" )
+      ordCreate( "carts", "user", "USER+CODE" )
       dbCloseArea()
-   ELSEIF ! HB_FILEEXISTS( "carts.cdx" )
+   ELSEIF ! hb_FileExists( "carts.cdx" )
       dbUseArea( .T., , "carts", , .F., .F. )
-      OrdCreate( "carts", "user", "USER+CODE" )
+      ordCreate( "carts", "user", "USER+CODE" )
       dbCloseArea()
    ENDIF
 
-   IF ! HB_FILEEXISTS( "items.dbf" )
+   IF ! hb_FileExists( "items.dbf" )
       FErase( "items.cdx" )
       dbCreate( "items", { { "CODE", "C", 16, 0 }, { "TITLE", "C", 80, 0 }, { "PRICE", "N", 9, 2 } }, , .T., "items" )
-      OrdCreate( "items", "code", "CODE" )
+      ordCreate( "items", "code", "CODE" )
       dbCloseArea()
-   ELSEIF ! HB_FILEEXISTS( "item.cdx" )
+   ELSEIF ! hb_FileExists( "item.cdx" )
       dbUseArea( .T., , "items", , .F., .F. )
-      OrdCreate( "items", "code", "CODE" )
+      ordCreate( "items", "code", "CODE" )
       dbCloseArea()
    ENDIF
 
@@ -99,20 +99,20 @@ PROCEDURE Main()
 
    oServer := UHttpdNew()
 
-   IF ! oServer:Run( {;
-      "FirewallFilter"      => "", ;
-      "LogAccess"           => {| m | oLogAccess:Add( m + hb_eol() ) }, ;
-      "LogError"            => {| m | oLogError:Add( m + hb_eol() ) }, ;
-      "Trace"               => {| ... | QOut( ... ) }, ;
-      "Port"                => nPort, ;
-      "Idle"                => {| o | iif( HB_FILEEXISTS( ".uhttpd.stop" ), ( FErase(".uhttpd.stop" ), o:Stop() ), NIL ) }, ;
-      "PrivateKeyFilename"  => "private.key", ;
-      "CertificateFilename" => "certificate.crt", ;
-      "SSL"                 => .T., ;
-      "Mount"          => {;
+   IF ! oServer:Run( { ;
+         "FirewallFilter"      => "", ;
+         "LogAccess"           => {| m | oLogAccess:Add( m + hb_eol() ) }, ;
+         "LogError"            => {| m | oLogError:Add( m + hb_eol() ) }, ;
+         "Trace"               => {| ... | QOut( ... ) }, ;
+         "Port"                => nPort, ;
+         "Idle"                => {| o | iif( hb_FileExists( ".uhttpd.stop" ), ( FErase( ".uhttpd.stop" ), o:Stop() ), NIL ) }, ;
+         "PrivateKeyFilename"  => "private.key", ;
+         "CertificateFilename" => "certificate.crt", ;
+         "SSL"                 => .T., ;
+         "Mount"          => { ;
          "/hello"            => {|| UWrite( "Hello!" ) }, ;
          "/info"             => {|| UProcInfo() }, ;
-         "/files/*"          => {| x | QOUT( HB_DIRBASE() + "/files/" + X ), UProcFiles( HB_DIRBASE() + "/files/" + X, .F. ) }, ;
+         "/files/*"          => {| x | QOut( hb_DirBase() + "/files/" + X ), UProcFiles( hb_DirBase() + "/files/" + X, .F. ) }, ;
          "/app/login"        => @proc_login(), ;
          "/app/logout"       => @proc_logout(), ;
          "/app/account"      => @proc_account(), ;
@@ -138,14 +138,14 @@ STATIC FUNCTION proc_login()
 
    LOCAL cUser
 
-   IF server["REQUEST_METHOD"] == "POST"
+   IF server[ "REQUEST_METHOD" ] == "POST"
       dbUseArea( .T., , "users", "users", .T., .T. )
-      OrdSetFocus( "user" )
-      cUser := PadR( HB_HGetDef( post, "user", "" ), 16 )
+      ordSetFocus( "user" )
+      cUser := PadR( hb_HGetDef( post, "user", "" ), 16 )
       USessionStart()
       IF !Empty( cUser ) .AND. dbSeek( cUser, .F. ) .AND. ! Deleted() .AND. ;
-            PadR( HB_HGetDef( post, "password", "" ), 16 ) == FIELD->PASSWORD
-         session["user"] := cUser
+            PadR( hb_HGetDef( post, "password", "" ), 16 ) == FIELD->PASSWORD
+         session[ "user" ] := cUser
          URedirect( "main" )
       ELSE
          URedirect( "login?err" )
@@ -153,7 +153,7 @@ STATIC FUNCTION proc_login()
       ENDIF
       dbCloseArea()
    ELSE
-      IF HB_HHasKey( get, "err" )
+      IF hb_HHasKey( get, "err" )
          RETURN { "errtext" => "Invalid user name or password!" }
       ENDIF
       RETURN { => }
@@ -171,7 +171,7 @@ STATIC FUNCTION proc_logout()
 STATIC FUNCTION proc_main()
 
    USessionStart()
-   IF ! HB_HHasKey( session, "user" )
+   IF ! hb_HHasKey( session, "user" )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
@@ -183,22 +183,22 @@ STATIC FUNCTION proc_shopping()
    LOCAL oW, nT, cCode
 
    USessionStart()
-   IF ! HB_HHasKey( session, "user" )
+   IF ! hb_HHasKey( session, "user" )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
 
    dbUseArea( .T., , "carts", "carts", .T., .F. )
-   OrdSetFocus( "user" )
+   ordSetFocus( "user" )
    dbUseArea( .T., , "items", "items", .T., .T. )
-   OrdSetFocus( "code" )
+   ordSetFocus( "code" )
 
-   IF HB_HHasKey( get, "add" )
-      cCode := PadR( get["add"], 16 )
+   IF hb_HHasKey( get, "add" )
+      cCode := PadR( get[ "add" ], 16 )
       IF items->( dbSeek( cCode ) ) .AND. carts->( FLock() )
-         IF ! carts->( dbSeek( session["user"] + cCode ) )
+         IF ! carts->( dbSeek( session[ "user" ] + cCode ) )
             carts->( dbAppend() )
-            carts->USER := session["user"]
+            carts->USER := session[ "user" ]
             carts->CODE := cCode
          ENDIF
          carts->AMOUNT += 1
@@ -210,8 +210,8 @@ STATIC FUNCTION proc_shopping()
    ENDIF
 
    dbSelectArea( "carts" )
-   ORDSCOPE( 0, session["user"] )
-   ORDSCOPE( 1, session["user"] )
+   ordScope( 0, session[ "user" ] )
+   ordScope( 1, session[ "user" ] )
    nT := 0
    carts->( dbEval( {|| nT += FIELD->TOTAL } ) )
    dbSelectArea( "items" )
@@ -221,8 +221,8 @@ STATIC FUNCTION proc_shopping()
    oW:AddColumn( 103, "Price",       "PRICE" )
    oW:AddColumn( 104, "",            {|| ULink( "Add to cart", "?add=" + RTrim( FIELD->CODE ) ) }, .T. )
    oW:nPageSize := 10
-   IF HB_HHasKey( get, "_pos" )
-      oW:nPos := Val( get["_pos"] )
+   IF hb_HHasKey( get, "_pos" )
+      oW:nPos := Val( get[ "_pos" ] )
    ENDIF
 
    RETURN { "browse" => oW:Output(), "cartsum" => nT }
@@ -232,20 +232,20 @@ STATIC FUNCTION proc_cart()
    LOCAL oW, nT, cCode
 
    USessionStart()
-   IF ! HB_HHasKey( session, "user" )
+   IF ! hb_HHasKey( session, "user" )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
 
    dbUseArea( .T., , "items", "items", .T., .T. )
-   OrdSetFocus( "code" )
+   ordSetFocus( "code" )
    dbUseArea( .T., , "carts", "carts", .T., .F. )
-   OrdSetFocus( "user" )
+   ordSetFocus( "user" )
 
-   IF HB_HHasKey( get, "del" )
-      cCode := PadR( get["del"], 16 )
+   IF hb_HHasKey( get, "del" )
+      cCode := PadR( get[ "del" ], 16 )
       IF items->( dbSeek( cCode ) ) .AND. carts->( FLock() )
-         IF carts->( dbSeek( session["user"] + cCode ) )
+         IF carts->( dbSeek( session[ "user" ] + cCode ) )
             carts->( dbDelete() )
             carts->USER := ""
             carts->CODE := cCode
@@ -256,8 +256,8 @@ STATIC FUNCTION proc_cart()
       RETURN NIL
    ENDIF
 
-   ORDSCOPE( 0, session["user"] )
-   ORDSCOPE( 1, session["user"] )
+   ordScope( 0, session[ "user" ] )
+   ordScope( 1, session[ "user" ] )
    nT := 0
    carts->( dbEval( {|| nT += FIELD->TOTAL } ) )
 
@@ -268,8 +268,8 @@ STATIC FUNCTION proc_cart()
    oW:AddColumn( 104, "Total",       "TOTAL" )
    oW:AddColumn( 104, "",            {|| ULink( "Delete", "?del=" + RTrim( FIELD->CODE ) ) }, .T. )
    oW:nPageSize := 10
-   IF HB_HHasKey( get, "_pos" )
-      oW:nPos := Val( get["_pos"] )
+   IF hb_HHasKey( get, "_pos" )
+      oW:nPos := Val( get[ "_pos" ] )
    ENDIF
 
    RETURN { "browse" => oW:Output(), "cartsum" => nT }
@@ -277,13 +277,13 @@ STATIC FUNCTION proc_cart()
 STATIC FUNCTION proc_account()
 
    USessionStart()
-   IF ! HB_HHasKey( session, "user" )
+   IF ! hb_HHasKey( session, "user" )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
    dbUseArea( .T., , "users", "users", .T., .F. )
-   OrdSetFocus( "user" )
-   dbSeek( session["user"], .F. )
+   ordSetFocus( "user" )
+   dbSeek( session[ "user" ], .F. )
 
    RETURN { "user" => users->USER, "name" => users->NAME }
 
@@ -292,27 +292,27 @@ STATIC FUNCTION proc_account_edit()
    LOCAL cName, cPassword1, cPassword2, aRet
 
    USessionStart()
-   IF ! HB_HHasKey( session, "user" )
+   IF ! hb_HHasKey( session, "user" )
       URedirect( "/app/login" )
       RETURN NIL
    ENDIF
    dbUseArea( .T., , "users", "users", .T., .F. )
-   OrdSetFocus( "user" )
-   dbSeek( session["user"], .F. )
+   ordSetFocus( "user" )
+   dbSeek( session[ "user" ], .F. )
 
    cName := users->NAME
-   IF HB_HHasKey( session, "formdata_account/edit" )
-      cName := session["formdata_account/edit", "name"]
+   IF hb_HHasKey( session, "formdata_account/edit" )
+      cName := session[ "formdata_account/edit", "name" ]
    ENDIF
-   IF server["REQUEST_METHOD"] == "POST"
-      cName := HB_HGetDef( post, "name", "" )
-      cPassword1 := HB_HGetDef( post, "password1", "" )
-      cPassword2 := HB_HGetDef( post, "password2", "" )
+   IF server[ "REQUEST_METHOD" ] == "POST"
+      cName := hb_HGetDef( post, "name", "" )
+      cPassword1 := hb_HGetDef( post, "password1", "" )
+      cPassword2 := hb_HGetDef( post, "password2", "" )
       IF Empty( cName )
-         session["formdata_account/edit"] := { "name" => cName }
+         session[ "formdata_account/edit" ] := { "name" => cName }
          URedirect( "?err=1" )
       ELSEIF ( ! Empty( cPassword1 ) .OR. ! Empty( cPassword2 ) ) .AND. ! ( cPassword1 == cPassword2 )
-         session["formdata_account/edit"] := { "name" => cName }
+         session[ "formdata_account/edit" ] := { "name" => cName }
          URedirect( "?err=2" )
       ELSE
          FLock()
@@ -321,8 +321,8 @@ STATIC FUNCTION proc_account_edit()
             FIELD->PASSWORD := cPassword1
          ENDIF
          dbUnlock()
-         IF HB_HHasKey( session, "formdata_account/edit" )
-            HB_HDel( session, "formdata_account/edit" )
+         IF hb_HHasKey( session, "formdata_account/edit" )
+            hb_HDel( session, "formdata_account/edit" )
          ENDIF
          URedirect( "/app/account" )
       ENDIF
@@ -330,11 +330,11 @@ STATIC FUNCTION proc_account_edit()
    ENDIF
 
    aRet := { "user" => users->USER, "name" => cName }
-   IF HB_HHasKey( get, "err" )
-      IF get["err"] == "1"
-         aRet["errtext"] := "Name value should not be empty!"
-      ELSEIF get["err"] == "2"
-         aRet["errtext"] := "Passwords do not match!"
+   IF hb_HHasKey( get, "err" )
+      IF get[ "err" ] == "1"
+         aRet[ "errtext" ] := "Name value should not be empty!"
+      ELSEIF get[ "err" ] == "2"
+         aRet[ "errtext" ] := "Passwords do not match!"
       ENDIF
    ENDIF
 
@@ -347,26 +347,26 @@ STATIC FUNCTION proc_register()
    USessionStart()
    cUser := ""
    cName := ""
-   IF HB_HHasKey( session, "formdata_register" )
-      cUser := session["formdata_register", "user"]
-      cName := session["formdata_register", "name"]
+   IF hb_HHasKey( session, "formdata_register" )
+      cUser := session[ "formdata_register", "user" ]
+      cName := session[ "formdata_register", "name" ]
    ENDIF
-   IF server["REQUEST_METHOD"] == "POST"
+   IF server[ "REQUEST_METHOD" ] == "POST"
       dbUseArea( .T., , "users", "users", .T., .F. )
-      OrdSetFocus( "user" )
-      cUser := HB_HGetDef( post, "user", "" )
-      cName := HB_HGetDef( post, "name", "" )
-      cPassword1 := HB_HGetDef( post, "password1", "" )
-      cPassword2 := HB_HGetDef( post, "password2", "" )
+      ordSetFocus( "user" )
+      cUser := hb_HGetDef( post, "user", "" )
+      cName := hb_HGetDef( post, "name", "" )
+      cPassword1 := hb_HGetDef( post, "password1", "" )
+      cPassword2 := hb_HGetDef( post, "password2", "" )
 
       IF Empty( cUser ) .OR. Empty( cName ) .OR. Empty( cPassword1 ) .OR. Empty( cPassword2 )
-         session["formdata_register"] := { "user" => cUser, "name" => cName }
+         session[ "formdata_register" ] := { "user" => cUser, "name" => cName }
          URedirect( "?err=1" )
       ELSEIF !( cPassword1 == cPassword2 )
-         session["formdata_register"] := { "user" => cUser, "name" => cName }
+         session[ "formdata_register" ] := { "user" => cUser, "name" => cName }
          URedirect( "?err=2" )
       ELSEIF dbSeek( cUser, .F. )
-         session["formdata_register"] := { "user" => cUser, "name" => cName }
+         session[ "formdata_register" ] := { "user" => cUser, "name" => cName }
          URedirect( "?err=3" )
       ELSE
          FLock()
@@ -377,19 +377,19 @@ STATIC FUNCTION proc_register()
          dbUnlock()
          USessionDestroy()
          USessionStart()
-         session["user"] := cUser
+         session[ "user" ] := cUser
          URedirect( "/app/main" )
       ENDIF
       RETURN NIL
    ENDIF
    aRet := { "user" => cUser, "name" => cName }
-   IF HB_HHasKey( get, "err" )
-      IF get["err"] == "1"
-         aRet["errtext"] := "All fields are required!"
-      ELSEIF get["err"] == "2"
-         aRet["errtext"]  := "Passwords does not match!"
-      ELSEIF get["err"] == "3"
-         aRet["errtext"]  := "This user already exists!"
+   IF hb_HHasKey( get, "err" )
+      IF get[ "err" ] == "1"
+         aRet[ "errtext" ] := "All fields are required!"
+      ELSEIF get[ "err" ] == "2"
+         aRet[ "errtext" ]  := "Passwords does not match!"
+      ELSEIF get[ "err" ] == "3"
+         aRet[ "errtext" ]  := "This user already exists!"
       ENDIF
    ENDIF
 

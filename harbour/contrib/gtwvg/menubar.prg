@@ -217,7 +217,7 @@ METHOD WvgMenuBar:destroy()
 
       IF !WVG_DestroyMenu( ::hMenu )
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {},__FILE__ ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {}, __FILE__ ) )
 #endif
       ENDIF
 
@@ -255,7 +255,7 @@ METHOD WvgMenuBar:delItem( nItemNum )
          hb_ADel( ::aMenuItems, nItemNum, .T. )
       ELSE
 #if 0
-         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum },__FILE__ ) )
+         Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:DelItem()", "Delete menu item FAILED", { nItemNum }, __FILE__ ) )
 #endif
       ENDIF
    ENDIF
@@ -319,7 +319,7 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
 
    CASE "O"
       cCaption := iif( bAction == NIL, xCaption:title, bAction )
-      aItem    := { MF_POPUP , xCaption:hMenu , cCaption, xCaption, nStyle, nAttrib }
+      aItem    := { MF_POPUP, xCaption:hMenu, cCaption, xCaption, nStyle, nAttrib }
       EXIT
 
    CASE "N"  /* Resource ID */
@@ -379,7 +379,7 @@ METHOD WvgMenuBar:findMenuItemById( nId )
 
       DO WHILE x > 0 .AND. Empty( aResult )
          IF ::aMenuItems[ x, WVT_MENU_TYPE ] == MF_POPUP
-            aResult := ::aMenuItems[ x,WVT_MENU_MENUOBJ ]:findMenuItemById( nId )
+            aResult := ::aMenuItems[ x, WVT_MENU_MENUOBJ ]:findMenuItemById( nId )
 
          ELSEIF ::aMenuItems[ x, WVT_MENU_IDENTIFIER ] == nId
             aResult := { x, ::aMenuItems[ x, WVT_MENU_ACTION ], ::sl_itemSelected, Self }
@@ -401,10 +401,10 @@ METHOD WvgMenuBar:findMenuPosById( nId )
       x := ::numItems()
 
       DO WHILE x > 0 .AND. Empty( nPos )
-         IF ::aMenuItems[ x,WVT_MENU_TYPE ] == MF_POPUP
-            nPos := ::aMenuItems[ x,WVT_MENU_MENUOBJ ]:findMenuPosById( nId )
+         IF ::aMenuItems[ x, WVT_MENU_TYPE ] == MF_POPUP
+            nPos := ::aMenuItems[ x, WVT_MENU_MENUOBJ ]:findMenuPosById( nId )
 
-         ELSEIF ::aMenuItems[ x,WVT_MENU_IDENTIFIER ] == nId
+         ELSEIF ::aMenuItems[ x, WVT_MENU_IDENTIFIER ] == nId
             nPos := x
 
          ENDIF

@@ -58,6 +58,7 @@ EXIT FUNCTION Sixth()
    RETURN NIL
 
 INIT PROCEDURE initStatics()
+
    PUBLIC p_initStatics := "P_INITSTATICS"
 
    RETURN

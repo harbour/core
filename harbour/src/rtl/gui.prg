@@ -55,9 +55,10 @@
 #define LLG_VIDEO_TXT   3
 
 FUNCTION _IsGraphic()
-   RETURN Set( _SET_VIDEOMODE ) != NIL .AND. ;
-          Set( _SET_VIDEOMODE ) != 0 .AND. ;
-          Set( _SET_VIDEOMODE ) != LLG_VIDEO_TXT
+   RETURN ;
+      Set( _SET_VIDEOMODE ) != NIL .AND. ;
+      Set( _SET_VIDEOMODE ) != 0 .AND. ;
+      Set( _SET_VIDEOMODE ) != LLG_VIDEO_TXT
 
 FUNCTION _SetVideoMode( nMode )
 
@@ -70,6 +71,7 @@ FUNCTION _SetVideoMode( nMode )
          compatibility function. [vszakats] */
 
 FUNCTION _GetNumCol( cColor )
+
    LOCAL nPos
 
    IF ( nPos := At( "/", cColor ) ) > 0
@@ -89,11 +91,13 @@ FUNCTION IsDefColor()
 
 /* Removes the accelerator marker from a caption string */
 FUNCTION __Caption( cCaption )
+
    LOCAL nPos
 
    RETURN iif( ( nPos := At( "&", cCaption ) ) > 0, Stuff( cCaption, nPos, 1, "" ), cCaption )
 
 FUNCTION __CapLength( cCaption )
+
    LOCAL nCaptionLen := Len( cCaption )
    LOCAL nPos
 

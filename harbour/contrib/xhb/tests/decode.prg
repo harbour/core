@@ -53,6 +53,7 @@
 #require "xhb"
 
 PROCEDURE Main()
+
    LOCAL aArray
 
    ? "HB_DECODE() FUNCTION TESTS"

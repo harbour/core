@@ -389,7 +389,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
    ENDIF
 
-// preload images...
+   // preload images...
    IF aImages != NIL
       ::aImages := aImages
       ::cStr +=  ;
@@ -1195,9 +1195,9 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
 
 METHOD CLOSE() CLASS THtml
 
-//::cStr +=  ::cStr
-   ::cStr +=  "</body>" + CRLF()
-   ::cStr +=  "</html>" + CRLF()
+// ::cStr += ::cStr
+   ::cStr += "</body>" + CRLF()
+   ::cStr += "</html>" + CRLF()
 
    FWrite( ::nh, ::cStr )
 
@@ -1987,7 +1987,7 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
 
    RETURN Self
 
-   /*   New    Methods   */
+/*   New    Methods   */
 
 METHOD Span( c, Style ) CLASS THtml
 

@@ -2,7 +2,7 @@
  * $Id$
  */
 
-//****************************************************
+// ****************************************************
 // Demo of realtime string compression
 //
 // Giancarlo Niccolai
@@ -24,7 +24,7 @@ PROCEDURE Main()
    @ 2, 5 SAY "TEST 1: using on-the-fly Buffer creation"
 
    nBufLen := HB_CompressBuflen( Len( cText ) )
-   //cComp and cDecomp will be created with the correct length
+   // cComp and cDecomp will be created with the correct length
    cComp := HB_Compress( cText )
    cDecomp := HB_Uncompress( nBuflen, cComp )
 
@@ -41,7 +41,7 @@ PROCEDURE Main()
 
    // on exit, nBuflen will contain the length of the compressed buffer
    HB_Compress( cText, Len( cText ), @cComp, @nBuflen )
-   HB_Uncompress( Len( cText ), cComp, nBuflen , @cDecomp )
+   HB_Uncompress( Len( cText ), cComp, nBuflen, @cDecomp )
 
    @ 8, 7 SAY "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
    @ 9, 7 SAY "Compressed (" + hb_ntos( nBuflen ) + ")" + hb_StrToHex( cComp ) + "<<"

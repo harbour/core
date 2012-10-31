@@ -60,10 +60,10 @@
 #define NMAX 5552    /* largest n such that 255n(n+1)/2 + (n+1)(BASE-1) <= 2^32-1 */
 
 #define LOOP_DO1( buf, i )  s1 += buf[ i ]; s2 += s1
-#define LOOP_DO2( buf, i )  LOOP_DO1( buf, i ); LOOP_DO1( buf, i + 1 );
-#define LOOP_DO4( buf, i )  LOOP_DO2( buf, i ); LOOP_DO2( buf, i + 2 );
-#define LOOP_DO8( buf, i )  LOOP_DO4( buf, i ); LOOP_DO4( buf, i + 4 );
-#define LOOP_DO16( buf, i ) LOOP_DO8( buf, i ); LOOP_DO8( buf, i + 8 );
+#define LOOP_DO2( buf, i )  { LOOP_DO1( buf, i ); LOOP_DO1( buf, i + 1 ); }
+#define LOOP_DO4( buf, i )  { LOOP_DO2( buf, i ); LOOP_DO2( buf, i + 2 ); }
+#define LOOP_DO8( buf, i )  { LOOP_DO4( buf, i ); LOOP_DO4( buf, i + 4 ); }
+#define LOOP_DO16( buf, i ) { LOOP_DO8( buf, i ); LOOP_DO8( buf, i + 8 ); }
 
 HB_U32 hb_adler32( HB_U32 adler, const void * buf, HB_SIZE len )
 {

@@ -21,17 +21,17 @@
       FT_SAVRGN() is similar to Clipper's SAVESCREEN(), but it saves the
       screen coordinates as well as the display information.  The saved
       area can be restored by passing the returned string to FT_RSTRGN().
-  
+
       Note that the strings returned from FT_SAVRGN() and Clipper's
       SAVESCREEN() are not interchangeable.  A screen region saved with
       with FT_SAVRGN() must be restored using FT_RSTRGN().
-  
+
       FT_SAVRGN() calls Clipper's SAVESCREEN().  Refer to the Clipper
       documentation for more information regarding this function.
    $EXAMPLES$
       The following example uses FT_SAVRGN() and FT_RSTRGN() to save
       and restore a portion of the screen.
-  
+
       @ 00, 00, 24, 79 BOX "111111111"       // fill the screen with 1's
       cScreen = FT_SAVRGN(10, 10, 20, 30)    // save a region
       @ 00, 00, 24, 79 BOX "222222222"       // fill the screen with 2's
@@ -52,7 +52,7 @@
       FT_RSTRGN( <cScreen>, [ <nTop> ], [ <nLeft> ] ) -> NIL
    $ARGUMENTS$
       <cScreen> is a screen region previously returned from FT_SAVRGN().
-  
+
       <nTop> and <nLeft> are optional parameters that define a new location
       for the upper left corner of the screen area contained in <cScreen>.
       Allowable values are 0 through 255.
@@ -64,16 +64,16 @@
       parameter will restore the saved region to its original location.
       <nTop> and <nLeft> may be used to define a new location for the
       upper left corner of the saved region.
-  
+
       <nTop> and <nLeft> are dependent upon each other. You may not
       specify one without the other.
-  
+
       FT_RSTRGN() calls Clipper's RESTSCREEN().  Refer to the Clipper
       documentation for more information regarding this function.
    $EXAMPLES$
       The following example uses FT_RSTRGN() to restore a saved portion
       of the screen to different locations.
-  
+
       @ 00, 00, 24, 79 BOX "111111111"      // fill the screen with 1's
       cScreen = FT_SAVRGN(10, 10, 20, 30)   // save a region
       @ 00, 00, 24, 79 BOX "222222222"      // fill the screen with 2's
@@ -102,12 +102,12 @@
       allowable values for this parameter are "push", "pop", and "pop all".
       If the function is called with any other string as the first parameter
       no action is performed.
-  
+
       <cAction> with a value of "push" will push a saved screen region onto
       the stack.  A value of "pop" will restore the most recently pushed
       screen region.  "pop all" tells the function to restore all screen
       images which are currently on the stack.
-  
+
       The use of <nTop>, <nLeft>, <nBottom>, and <nRight> depends on the
       <cAction> parameter.  If <cAction> is "push", the next four parameters
       define the screen region to save.  If <cAction> is "pop" or "pop all"
@@ -118,26 +118,26 @@
       FT_RGNSTACK() allows multiple screens to be saved and restored from
       a stack.  The stack is implemented with Clipper static array that is
       visible only to FT_RGNSTACK().
-  
+
       The purpose of FT_RGNSTACK() is to allow multiple screen regions to be
       managed without the need to remember the original coordinates or to
       create variables for each one.
-  
+
       When called with "push", FT_RGNSTACK() places the saved screen area
       at the end of the static array.  The array size is incremented by one
       to accommodate the new screen area.
-  
+
       When called with "pop", the function restores the screen image stored
       in the last element of the array, and the array size is decremented by
       one.  If "pop all" is specified, all the saved screens are restored
       until the array is empty.
-  
+
       FT_RGNSTACK() calls FT_SAVRGN() and FT_RSTRGN().  Refer to the
       documentation for these two functions for more information.
    $EXAMPLES$
       The following example uses FT_RGNSTACK() to save and restore various
       sections of the screen.
-  
+
       @ 00, 00, 24, 79 BOX "111111111"           // fill the screen with 1's
       FT_RGNSTACK( "push", 10, 05, 15, 15 )      // push a region
       @ 00, 00, 24, 79 BOX "222222222"           // fill the screen with 2's

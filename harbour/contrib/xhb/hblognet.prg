@@ -319,7 +319,7 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogInetPort
    hb_mutexLock( ::mtxBusy )
 #else
    // IF we have not a thread, we must see if there is a new connection
-   sk := hb_inetAccept( ::skIn )  //timeout should be short
+   sk := hb_inetAccept( ::skIn )  // timeout should be short
 
    IF sk != NIL
       AAdd( ::aListeners, sk )

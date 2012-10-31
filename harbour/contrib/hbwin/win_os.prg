@@ -67,6 +67,7 @@
          Administrator rights are required by default in Windows. [vszakats] */
 
 FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
+
    LOCAL bRetVal := .T.
    LOCAL cKeySrv
    LOCAL cKeyWks
@@ -123,6 +124,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
    RETURN bRetVal
 
 FUNCTION WIN_OSNETVREDIROK( /* @ */ nResult )
+
    LOCAL aFiles
 
    nResult := 0

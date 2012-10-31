@@ -19,6 +19,7 @@
 #include "fileio.ch"
 
 PROCEDURE Main( ... )
+
    LOCAL nErrorLevel := 0
    LOCAL aFile
 
@@ -121,11 +122,12 @@ PROCEDURE Main( ... )
          OutStd( "! Copying *nix man files..." + hb_eol() )
 
          IF hb_DirBuild( PathSepToSelf( GetEnvC( "HB_INSTALL_MAN" ) ) + hb_ps() + "man1" )
-            FOR EACH tmp IN { "src/main/harbour.1"    ,;
-                              "src/pp/hbpp.1"         ,;
-                              "utils/hbmk2/hbmk2.1"   ,;
-                              "utils/hbtest/hbtest.1" ,;
-                              "contrib/hbrun/hbrun.1" }
+            FOR EACH tmp IN { ;
+                  "src/main/harbour.1", ;
+                  "src/pp/hbpp.1", ;
+                  "utils/hbmk2/hbmk2.1", ;
+                  "utils/hbtest/hbtest.1", ;
+                  "contrib/hbrun/hbrun.1" }
                mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
             NEXT
          ELSE
@@ -157,8 +159,7 @@ PROCEDURE Main( ... )
             mk_hb_FLinkSym( "harbour" + hb_ps() + cDynVersionFull, PathSepToSelf( GetEnvC( "HB_INSTALL_DYN" ) ) + hb_ps() + ".." + hb_ps() + cDynVersionFull )
 
          CASE GetEnvC( "HB_INSTALL_DYN" ) == "/usr/local/harbour/lib"
-            /* TOFIX: Rewrite this in .prg */
-            #if 0
+            /* TOFIX: Rewrite this in .prg:
                ld="/usr/lib"
                if [ -n "${HB_INST_PKGPREF}" ] || [ -w $ld ]
                   then
@@ -166,7 +167,7 @@ PROCEDURE Main( ... )
                      ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$ll
                      ln -sf ../local/harbour/lib/$l ${HB_INST_PKGPREF}$ld/$l
                   fi
-            #endif
+            */
          ENDCASE
       ENDIF
 
@@ -180,8 +181,8 @@ PROCEDURE Main( ... )
          FOR EACH tmp IN Directory( "utils" + hb_ps() + hb_osFileMask(), "D" )
             IF "D" $ tmp[ F_ATTR ] .AND. !( tmp[ F_NAME ] == "." ) .AND. !( tmp[ F_NAME ] == ".." )
                FOR EACH aFile IN Directory( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + "*.po" )
-                  mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ],;
-                          PathSepToSelf( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
+                  mk_hbl( "utils" + hb_ps() + tmp[ F_NAME ] + hb_ps() + aFile[ F_NAME ], ;
+                     PathSepToSelf( GetEnvC( "HB_INSTALL_BIN" ) ) + hb_ps() + hb_FNameExtSet( aFile[ F_NAME ], ".hbl" ) )
                NEXT
             ENDIF
          NEXT
@@ -217,11 +218,11 @@ PROCEDURE Main( ... )
 
             cOldDir := hb_cwd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
 
-            mk_hb_processRun( PathSepToSelf( GetEnvC( "HB_DIR_ZIP" ) ) + "zip" +;
-                              " -q -9 -X -r -o" +;
-                              " " + FNameEscape( tmp ) +;
-                              " . -i " + FNameEscape( GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" ) +;
-                              " -x *.tds -x *.exp" )
+            mk_hb_processRun( PathSepToSelf( GetEnvC( "HB_DIR_ZIP" ) ) + "zip" + ;
+               " -q -9 -X -r -o" + ;
+               " " + FNameEscape( tmp ) + ;
+               " . -i " + FNameEscape( GetEnvC( "HB_PKGNAME" ) + hb_ps() + "*" ) + ;
+               " -x *.tds -x *.exp" )
 
             hb_cwd( cOldDir )
 
@@ -231,9 +232,9 @@ PROCEDURE Main( ... )
 
                OutStd( "! Making Harbour .exe install package: '" + tmp + "'" + hb_eol() )
 
-               mk_hb_processRun( PathSepToSelf( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" +;
-                                 " -V2" +;
-                                 " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
+               mk_hb_processRun( PathSepToSelf( GetEnvC( "HB_DIR_NSIS" ) ) + "makensis.exe" + ;
+                  " -V2" + ;
+                  " " + FNameEscape( StrTran( "package/mpkg_win.nsi", "/", hb_ps() ) ) )
             ENDIF
          ELSE
             cBin_Tar := "tar"
@@ -261,18 +262,19 @@ PROCEDURE Main( ... )
                FErase( cTar_Path )
 
                cOwner := "root"
-               cGroup := iif( GetEnvC( "HB_PLATFORM" ) == "darwin" .OR. ;
-                              GetEnvC( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
+               cGroup := iif( ;
+                  GetEnvC( "HB_PLATFORM" ) == "darwin" .OR. ;
+                  GetEnvC( "HB_PLATFORM" ) == "bsd", "wheel", "root" )
 
                cOldDir := hb_cwd( GetEnvC( "HB_INSTALL_PKG_ROOT" ) )
 
                /* TODO: Add support for non-GNU non-BSD tar (which gets the data from stdio) */
 
-               mk_hb_processRun( cBin_Tar +;
-                                 " czvf" +;
-                                 " " + FNameEscape( cTar_Path ) +;
-                                 iif( lGNU_Tar, " --owner=" + cOwner + " --group=" + cGroup, "" ) +;
-                                 " ." )
+               mk_hb_processRun( cBin_Tar + ;
+                  " czvf" + ;
+                  " " + FNameEscape( cTar_Path ) + ;
+                  iif( lGNU_Tar, " --owner=" + cOwner + " --group=" + cGroup, "" ) + ;
+                  " ." )
 
                hb_cwd( cOldDir )
 
@@ -334,6 +336,7 @@ PROCEDURE Main( ... )
    RETURN
 
 STATIC FUNCTION mk_hbl( cIn, cOut )
+
    LOCAL cErrorMsg
    LOCAL aTrans
 
@@ -352,6 +355,7 @@ STATIC FUNCTION mk_hbl( cIn, cOut )
    RETURN .F.
 
 STATIC FUNCTION mk_hbd_core( cDirSource, cDirDest )
+
    LOCAL cName := "harbour"
    LOCAL tmp
 
@@ -388,9 +392,10 @@ STATIC FUNCTION PathSepToSelf( cFileName )
 
 /* Like hb_FCopy(), but accepts dir as target and can set attributes */
 STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
+
    LOCAL cDir, cName, cExt
 
-   IF ! hb_isLogical( l644 )
+   IF ! HB_ISLOGICAL( l644 )
       l644 := .F.
    ENDIF
 
@@ -434,6 +439,7 @@ STATIC FUNCTION EndsWith( cString, cEnd )
    RETURN Right( cString, Len( cEnd ) ) == cEnd
 
 STATIC FUNCTION query_stdout( cName )
+
    LOCAL cStdOut
    LOCAL cStdErr
    LOCAL nRetVal
@@ -443,6 +449,7 @@ STATIC FUNCTION query_stdout( cName )
    RETURN iif( nRetVal == 0, AllTrim( StrTran( cStdOut, Chr( 10 ), " " ) ), "" )
 
 STATIC FUNCTION query_rpm( cName, cID )
+
    LOCAL cResult := query_stdout( "rpm -q --queryformat='.%{VERSION}' " + cName )
 
    RETURN iif( Empty( cResult ), "", cID + AllTrim( StrTran( StrTran( cResult, Chr( 10 ), " " ), "." ) ) )
@@ -450,6 +457,7 @@ STATIC FUNCTION query_rpm( cName, cID )
 /* Please add your distro suffix if it not belong to the one recognized below
    and remember that order checking can be important */
 STATIC FUNCTION unix_name()
+
    LOCAL tmp
 
    DO CASE
@@ -469,6 +477,7 @@ STATIC FUNCTION unix_name()
    RETURN StrTran( Lower( query_stdout( "uname -s" ) ), " ", "_" )
 
 STATIC FUNCTION mk_extern_core()
+
    LOCAL aExtern
 
    IF GetEnvC( "HB_REBUILD_EXTERN" ) == "yes" .AND. ;
@@ -492,6 +501,7 @@ STATIC FUNCTION mk_extern_core()
    RETURN .F.
 
 STATIC FUNCTION GetEnvC( cEnvVar )
+
    STATIC s_hEnvCache := { => }
 
    IF cEnvVar $ s_hEnvCache
@@ -507,6 +517,7 @@ STATIC FUNCTION GetEnvC( cEnvVar )
 #define _HB_SELF_SUFFIX   "__"
 
 STATIC FUNCTION __hb_extern_get_list( cInputName )
+
    LOCAL aExtern := NIL
    LOCAL hExtern
 
@@ -573,6 +584,7 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
    RETURN aExtern
 
 STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /* @ */ aExclude, /* @ */ hDynamic )
+
    LOCAL cFile
    LOCAL pRegex
    LOCAL tmp
@@ -602,6 +614,7 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    RETURN
 
 STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
+
    LOCAL aExtern
    LOCAL cExtern
    LOCAL tmp
@@ -613,9 +626,10 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    LOCAL cSelfName := _HB_SELF_PREFIX + Upper( hb_FNameName( cOutputName ) ) + _HB_SELF_SUFFIX
 
    LOCAL cLine := "/* " + Replicate( "-", 68 ) + hb_eol()
-   LOCAL cHelp := " *          Syntax: // HB_FUNC_INCLUDE <func>" + hb_eol() +;
-                  " *                  // HB_FUNC_EXCLUDE <func>" + hb_eol() +;
-                  " */" + hb_eol()
+   LOCAL cHelp := ;
+      " *          Syntax: // HB_FUNC_INCLUDE <func>" + hb_eol() + ;
+      " *                  // HB_FUNC_EXCLUDE <func>" + hb_eol() + ;
+      " */" + hb_eol()
 
    __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
 

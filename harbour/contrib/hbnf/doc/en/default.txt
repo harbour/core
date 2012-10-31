@@ -24,7 +24,7 @@
    $EXAMPLES$
       cDrive := FT_DEFAULT()  // Get the current drive
       FT_DEFAULT( "C" )       // Switch to drive C
-  
+
       IF !( FT_DEFAULT( "E" ) == "E" )
          QOut( "Drive E does not exist!" )
       ENDIF

@@ -22,9 +22,9 @@ PROCEDURE DllMain()
    hAction := { => }
    hb_HKeepOrder( hAction, .T. )
    hb_HSetCaseMatch( hAction, .F. )
-   hAction[ "DATE" ]     := @date()          // DISPID=1
-   hAction[ "TIME" ]     := @time()          // DISPID=2
-   hAction[ "DATETIME" ] := @hb_datetime()   // DISPID=3
+   hAction[ "DATE" ]     := @Date()          // DISPID=1
+   hAction[ "TIME" ]     := @Time()          // DISPID=2
+   hAction[ "DATETIME" ] := @hb_DateTime()   // DISPID=3
    hAction[ "VALUE" ]    := NIL              // DISPID=4
    hAction[ "GETDATA" ]  := @get_data()      // DISPID=5
 
@@ -33,17 +33,18 @@ PROCEDURE DllMain()
     */
    WIN_OleServerInit( CLS_ID, CLS_Name, hAction, .T. )
 
-RETURN
+   RETURN
 
 
 STATIC FUNCTION get_data( ... )
+
    LOCAL hAction := QSelf()
 
    IF hAction[ "VALUE" ] == NIL
       RETURN "(:VALUE IS NOT SET)"
    ENDIF
 
-RETURN ":VALUE='" + hAction[ "VALUE" ] + "'"
+   RETURN ":VALUE='" + hAction[ "VALUE" ] + "'"
 
 
 ANNOUNCE GT_SYS

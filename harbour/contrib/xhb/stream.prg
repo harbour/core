@@ -101,7 +101,7 @@ METHOD PROCEDURE CopyTo( oTargetStream ) CLASS TStream
    LOCAL nPosition
 
    IF ! oTargetStream:lCanWrite
-      Throw( xhb_ErrorNew( "Stream", 0, 1001, ProcName(), "Target not writable.", HB_aParams() ) )
+      Throw( xhb_ErrorNew( "Stream", 0, 1001, ProcName(), "Target not writable.", hb_AParams() ) )
    ENDIF
 
    // Save.
@@ -116,7 +116,7 @@ METHOD PROCEDURE CopyTo( oTargetStream ) CLASS TStream
       nBytesToRead -= nRead
    ENDDO
 
-   //Truncate incase it was a bigger file.
+   // Truncate incase it was a bigger file.
    oTargetStream:Write( "", 0, 0 )
 
    // Restore.
@@ -153,7 +153,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
 
    ::Handle := FOpen( cFile, nMode )
    IF ::Handle <= 0
-      Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + Str( FError() ), HB_aParams() ) )
+      Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + Str( FError() ), hb_AParams() ) )
    ENDIF
 
    ::nPosition := 0
@@ -164,7 +164,9 @@ METHOD New( cFile, nMode ) CLASS TStreamFileReader
    RETURN Self
 
 METHOD PROCEDURE Finalize CLASS TStreamFileReader
+
    ::Close()
+
    RETURN
 
 METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
@@ -222,7 +224,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
 
       ::Handle := FOpen( cFile, nMode )
       IF ::Handle <= 0
-         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + Str( FError() ), HB_aParams() ) )
+         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Open Error: " + Str( FError() ), hb_AParams() ) )
       ENDIF
 
       ::nLength := FSeek( ::Handle, 0, FS_END )
@@ -232,7 +234,7 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
 
       ::Handle := FCreate( cFile, nMode )
       IF ::Handle <= 0
-         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + Str( FError() ), HB_aParams() ) )
+         Throw( xhb_ErrorNew( "Stream", 0, 1004, ProcName(), "Create Error: " + Str( FError() ), hb_AParams() ) )
       ENDIF
 
       ::nPosition := 0
@@ -242,7 +244,9 @@ METHOD New( cFile, nMode ) CLASS TStreamFileWriter
    RETURN Self
 
 METHOD PROCEDURE Finalize CLASS TStreamFileWriter
+
    ::Close()
+
    RETURN
 
 METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
@@ -254,7 +258,7 @@ METHOD Write( sBuffer, nOffset, nCount ) CLASS TStreamFileWriter
    ::nPosition += nWritten
 
    IF nWritten != nCount
-      Throw( xhb_ErrorNew( "Stream", 0, 1003, ProcName(), "Write failed - written:" + Str( nWritten ) + " bytes", HB_aParams() ) )
+      Throw( xhb_ErrorNew( "Stream", 0, 1003, ProcName(), "Write failed - written:" + Str( nWritten ) + " bytes", hb_AParams() ) )
    ENDIF
 
    RETURN nWritten
@@ -266,7 +270,7 @@ METHOD PROCEDURE WriteByte( cByte ) CLASS TStreamFileWriter
    ::nPosition += nWritten
 
    IF nWritten != 1
-      Throw( xhb_ErrorNew( "Stream", 0, 1006, ProcName(), "Write failed", HB_aParams() ) )
+      Throw( xhb_ErrorNew( "Stream", 0, 1006, ProcName(), "Write failed", hb_AParams() ) )
    ENDIF
 
    RETURN

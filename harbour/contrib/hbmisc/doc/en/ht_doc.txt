@@ -29,7 +29,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL oHtm
-  
+
          oHtm := THTML():New( "www\harbour.html" )
          oHtm:WriteTitle( "Harbour Reference Guide" )
          oHtm:WritePar( "HARBOUR" )
@@ -38,7 +38,7 @@
          oHtm:WriteLink( "http://www.gnu.org/copyleft/gpl" )
          oHtm:WritePar( "See the Links Above" )
          oHtm:Close()
-  
+
          RETURN
       r>
    $STATUS$
@@ -80,16 +80,16 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL oNg
-  
+
          oNg := TOs2():New( "ngi\harbour.ngi" )
          oNg:WriteTitle( "Harbour Reference Guide" )
          oNg:WritePar( "HARBOUR" )
          oNg:WriteLink( "OverView" )
          oNg:WriteLink( "License" )
-  
+
          oNg:WritePar( "See the Links Above" )
          oNg:Close()
-  
+
          RETURN
    $STATUS$
       R
@@ -128,16 +128,16 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL oNg
-  
+
          oNg := TNortonGuide():New( "ngi\harbour.ngi" )
          oNg:WriteTitle( "Harbour Reference Guide" )
          oNg:WritePar( "HARBOUR" )
          oNg:WriteLink( "OverView" )
          oNg:WriteLink( "License" )
-  
+
          oNg:WritePar( "See the Links Above" )
          oNg:Close()
-  
+
          RETURN
    $STATUS$
       R
@@ -178,17 +178,17 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL oRtf
-  
+
          oRtf := TRtf():New( "rtf\harbour.rtf" )
          oRtf:WriteHeader()
          oRtf:WriteTitle( "Harbour Reference Guide" )
          oRtf:WritePar( "HARBOUR" ):Endpar()
          oRtf:WriteLink( "OverView" )
          oRtf:WriteLink( "License" )
-  
+
          oRtf:WritePar( "See the Links Above" ):EndPar()
          oRtf:Close()
-  
+
          RETURN
    $STATUS$
       R
@@ -228,16 +228,16 @@
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL oTroff
-  
+
          oTroff := TTroff():New( "tr\harbour.ngi" )
          oTroff:WriteTitle( "Harbour Reference Guide" )
          oTroff:WritePar( "HARBOUR" )
          oTroff:WriteLink( "OverView" )
          oTroff:WriteLink( "License" )
-  
+
          oTroff:WritePar( "See the Links Above" )
          oTroff:Close()
-  
+
          RETURN
    $STATUS$
       R

@@ -53,13 +53,17 @@
 #include "hbclass.ch"
 
 CREATE CLASS TIPEncoderUrl FROM TIPEncoder
+
    METHOD New() CONSTRUCTOR
    METHOD Encode( cData )
    METHOD Decode( cData )
+
 ENDCLASS
 
 METHOD New() CLASS TIPEncoderURL
+
    ::cName := "urlencoded"
+
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderURL

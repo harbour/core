@@ -78,6 +78,7 @@
 #include "setcurs.ch"
 
 /* NOTE: In Harbour video pages are ignored. */
+
 PROCEDURE FT_SETVCUR( nPage, nRow, nCol )
 
    HB_SYMBOL_UNUSED( nPage )
@@ -87,7 +88,9 @@ PROCEDURE FT_SETVCUR( nPage, nRow, nCol )
    RETURN
 
 /* NOTE: In Harbour video pages are ignored. */
+
 FUNCTION FT_GETVCUR( nPage )
+
    LOCAL nTop, nBot
 
    HB_SYMBOL_UNUSED( nPage )
@@ -110,8 +113,7 @@ FUNCTION FT_GETVCUR( nPage )
       nBot := 3
       EXIT
    OTHERWISE
-      nTop := ;
-      nBot := 0
+      nTop := nBot := 0
    ENDSWITCH
 
    RETURN { nTop, nBot, Row(), Col() }

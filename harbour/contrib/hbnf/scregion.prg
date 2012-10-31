@@ -33,16 +33,17 @@ FUNCTION FT_SAVRGN( nTop, nLeft, nBottom, nRight )
 FUNCTION FT_RSTRGN( cScreen, nTop, nLeft )
 
    IF PCount() == 3
-      RestScreen( nTop, nLeft,;
+      RestScreen( nTop, nLeft, ;
          ( nTop  - hb_BCode( hb_BSubStr( cScreen, 1, 1 ) ) ) + hb_BCode( hb_BSubStr( cScreen, 3, 1 ) ), ;
          ( nLeft - hb_BCode( hb_BSubStr( cScreen, 2, 1 ) ) ) + hb_BCode( hb_BSubStr( cScreen, 4, 1 ) ), ;
          hb_BSubStr( cScreen, 5 ) )
    ELSE
-      RestScreen( hb_BCode( hb_BSubStr( cScreen, 1, 1 ) ),;
-                  hb_BCode( hb_BSubStr( cScreen, 2, 1 ) ),;
-                  hb_BCode( hb_BSubStr( cScreen, 3, 1 ) ),;
-                  hb_BCode( hb_BSubStr( cScreen, 4, 1 ) ),;
-                  hb_BSubStr( cScreen, 5 ) )
+      RestScreen( ;
+         hb_BCode( hb_BSubStr( cScreen, 1, 1 ) ), ;
+         hb_BCode( hb_BSubStr( cScreen, 2, 1 ) ), ;
+         hb_BCode( hb_BSubStr( cScreen, 3, 1 ) ), ;
+         hb_BCode( hb_BSubStr( cScreen, 4, 1 ) ), ;
+         hb_BSubStr( cScreen, 5 ) )
    ENDIF
 
    RETURN NIL

@@ -27,12 +27,13 @@ FUNCTION FT_MIL2MIN( cMILTIME )
 
    RETURN Int( Val( Left( cMILTIME, 2 ) ) * 60 + Val( Right( cMILTIME, 2 ) ) )
 
-FUNCTION FT_MIN2MIL( nMIN )
+FUNCTION FT_MIN2MIL( nMin )
 
-   nMIN := nMIN % 1440
+   nMin := nMin % 1440
 
-   RETURN Right( "00" + hb_ntos( Int( nMIN / 60 ) ), 2 ) + ;
-          Right( "00" + hb_ntos( Int( nMIN % 60 ) ), 2 )
+   RETURN ;
+      Right( "00" + hb_ntos( Int( nMin / 60 ) ), 2 ) + ;
+      Right( "00" + hb_ntos( Int( nMin % 60 ) ), 2 )
 
 FUNCTION FT_MIL2CIV( cMILTIME )
 
@@ -69,15 +70,16 @@ FUNCTION FT_CIV2MIL( cTIME )
 
    LOCAL cKEY, cMILTIME
 
-   //** Insure leading 0's
+   // ** Ensure leading 0's
+
    cTIME := Replicate( "0", 3 - At( ":", LTrim( cTIME ) ) ) + LTrim( cTIME )
 
-   //** Adjust for popular use of '12' for first hour after noon and midnight
+   // ** Adjust for popular use of '12' for first hour after noon and midnight
    IF Left( LTrim( cTIME ), 2 ) == "12"
       cTIME := Stuff( cTIME, 1, 2, "00" )
    ENDIF
 
-   //** am, pm, noon or midnight
+   // ** am, pm, noon or midnight
    cKEY := SubStr( LTrim( cTIME ), 7, 1 )
 
    DO CASE

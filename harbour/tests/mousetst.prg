@@ -26,18 +26,18 @@ PROCEDURE Main()
    @ MaxRow() - 1,  2 SAY "Y:"
    @ MaxRow() - 1, 10 SAY "X:"
 
-   @ nR    ,  2 SAY "Mouse Type    : "
+   @ nR,  2 SAY "Mouse Type    : "
 
    @ nR, 18 SAY "Mouse System"
 
    @ MaxRow() - 2, 68 TO MaxRow(), MaxCol() DOUBLE
    @ MaxRow() - 1, 70 SAY "Exit"
 
-   @ 10, 02 SAY " -- Checkings --  "
-   @ 11, 02 SAY "Window Boundaries :"
-   @ 12, 02 SAY "Press/Release But.:"
-   @ 13, 02 SAY "Double Click Left :"
-   @ 14, 02 SAY "Double Click Right:"
+   @ 10,  2 SAY " -- Checkings --  "
+   @ 11,  2 SAY "Window Boundaries :"
+   @ 12,  2 SAY "Press/Release But.:"
+   @ 13,  2 SAY "Double Click Left :"
+   @ 14,  2 SAY "Double Click Right:"
 
    TEST1()
 
@@ -52,8 +52,8 @@ PROCEDURE Main()
 
 FUNCTION MUPDATE()
 
-   @ MaxRow() - 1, 04 SAY MRow() PICT "9999"
-   @ MaxRow() - 1, 12 SAY MCol() PICT "9999"
+   @ MaxRow() - 1,  4 SAY MRow() PICTURE "9999"
+   @ MaxRow() - 1, 12 SAY MCol() PICTURE "9999"
 
    RETURN 0
 
@@ -69,7 +69,7 @@ FUNCTION MINRECT( nTop, nLeft, nBott, nRight )
 
    RETURN lInside
 
-   // First test: Check the boundaries of the main window
+// First test: Check the boundaries of the main window
 
 PROCEDURE TEST1()
 
@@ -137,7 +137,7 @@ PROCEDURE TEST2( nR, nC )
 
    LOCAL cSkip := "", nKey, nPress := 0
 
-   @ nR     , nC SAY  "+---------|---------+"
+   @ nR +  0, nC SAY  "+---------|---------+"
    @ nR +  1, nC SAY  "| +===+ +===+ +===+ |"
    @ nR +  2, nC SAY  "| |   | |   | |   | |"
    @ nR +  3, nC SAY  "| |   | |   | |   | |"

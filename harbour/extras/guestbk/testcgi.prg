@@ -286,7 +286,7 @@ METHOD GetCGIParam( nParam ) CLASS THTML
       RETURN NIL
    ENDIF
 
-   RETURN ::aCGIContents[nParam]
+   RETURN ::aCGIContents[ nParam ]
 
 METHOD QueryFields( cQueryName ) CLASS THTML
 

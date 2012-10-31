@@ -195,12 +195,12 @@ METHOD display() CLASS CHECKBOX
 
    DispBegin()
 
-   hb_dispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ),;
-                 hb_ColorIndex( ::cColorSpec, iif( ::lHasFocus, 1, 0 ) ) )
+   hb_DispOutAt( ::nRow, ::nCol + 1, iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ), ;
+      hb_ColorIndex( ::cColorSpec, iif( ::lHasFocus, 1, 0 ) ) )
 
    cColor := hb_ColorIndex( ::cColorSpec, 2 )
-   hb_dispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ), cColor )
-   hb_dispOutAt( ::nRow, ::nCol + 2, Right( cStyle, 1 ), cColor )
+   hb_DispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ), cColor )
+   hb_DispOutAt( ::nRow, ::nCol + 2, Right( cStyle, 1 ), cColor )
 
    IF !Empty( cCaption := ::cCaption )
 
@@ -215,11 +215,11 @@ METHOD display() CLASS CHECKBOX
          cColor := hb_ColorIndex( ::cColorSpec, 3 )
       ENDIF
 
-      hb_dispOutAt( ::nCapRow, ::nCapCol, cCaption, cColor )
+      hb_DispOutAt( ::nCapRow, ::nCapCol, cCaption, cColor )
 
       IF !::lHasFocus .AND. nPos != 0
-         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
-                       hb_ColorIndex( ::cColorSpec, 3 ) )
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
+            hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
 
    ENDIF
@@ -274,7 +274,7 @@ METHOD col( nCol ) CLASS CHECKBOX
 METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
 
    IF cColorSpec != NIL
-      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
          {|| !Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 4 ) ) } )
    ENDIF
 
@@ -342,15 +342,17 @@ METHOD New( nRow, nCol, cCaption ) CLASS CHECKBOX
       ::cColorSpec := "W/N,W+/N,W/N,W+/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," +;
-                      hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," +;
-                      hb_ColorIndex( cColor, CLR_BACKGROUND )
+      ::cColorSpec := ;
+         hb_ColorIndex( cColor, CLR_UNSELECTED ) + "," + ;
+         hb_ColorIndex( cColor, CLR_ENHANCED   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self
 
 FUNCTION _CHECKBOX_( lState, cCaption, cMessage, cColorSpec, bFBlock, bSBlock, cStyle, aBitmaps )
+
    LOCAL o := HBCheckBox():New( Row(), Col(), cCaption )
 
    o:select( lState )

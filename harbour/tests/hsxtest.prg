@@ -13,7 +13,7 @@
 
 #include "dbinfo.ch"
 
-//REQUEST RMDBFCDX
+// REQUEST RMDBFCDX
 
 PROCEDURE Main()
 

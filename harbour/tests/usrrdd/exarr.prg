@@ -65,9 +65,9 @@ PROCEDURE Main()
 
    ? "Create a new dbf in memory using dbCreate() command"
    aStruct := { ;
-      { "NAME"     , "C", 40, 0 } , ;
-      { "ADDRESS"  , "C", 40, 0 } , ;
-      { "BIRTHDAY" , "D",  8, 0 } , ;
+      { "NAME"     , "C", 40, 0 }, ;
+      { "ADDRESS"  , "C", 40, 0 }, ;
+      { "BIRTHDAY" , "D",  8, 0 }, ;
       { "AGE"      , "N",  3, 0 } }
 
 #ifndef USE_DBCREATE_EXTENSIONS
@@ -88,7 +88,7 @@ PROCEDURE Main()
    WAIT
 
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
-      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+      "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    ? RecNo(), '"' + FIELD->NAME + '"'
    dbGoBottom()
    ? RecNo(), '"' + FIELD->NAME + '"'
@@ -111,7 +111,7 @@ PROCEDURE Main()
    field->birthday := SToD( "19400101" )
    field->age      := 66
 
-   WHILE !EOF()
+   WHILE !Eof()
       ? RecNo(), '"' + FIELD->NAME + '"'
       IF RecNo() == 20
          Inkey( 0 )
@@ -119,13 +119,13 @@ PROCEDURE Main()
       dbSkip()
    ENDDO
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
-      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+      "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    WAIT
    dbGoBottom()
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
-      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+      "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    WAIT
-   WHILE !BOF()
+   WHILE !Bof()
       ? RecNo(), '[' + FIELD->NAME + ']'
       IF RecNo() == LastRec() - 20
          Inkey( 0 )
@@ -133,7 +133,7 @@ PROCEDURE Main()
       dbSkip( -1 )
    ENDDO
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
-      "BOF", BOF(), "EOF", EOF(), "LASTREC", LastRec()
+      "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    WAIT
 
    ? "Show it - Please don't press any key except movement keys and ESC"

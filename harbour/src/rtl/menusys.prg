@@ -78,7 +78,8 @@ FUNCTION ShowMsg( aMsg, lMode )
 *  ShortCut processing for initial Get or Menu Item.
 *
 ***/
-FUNCTION IsShortCut( oMenu, nKey, nID )
+FUNCTION IsShortcut( oMenu, nKey, nID )
+
    LOCAL nItem
    LOCAL nTotal
    LOCAL nShortCut
@@ -138,6 +139,7 @@ FUNCTION IsShortCut( oMenu, nKey, nID )
 *
 ***/
 FUNCTION IsQuick( oMenu, nKey, nID )
+
    LOCAL nItem
    LOCAL nTotal
    LOCAL nShortCut

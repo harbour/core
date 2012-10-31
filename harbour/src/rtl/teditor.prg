@@ -110,9 +110,9 @@ CREATE CLASS HBEditor
    MESSAGE RefreshWindow() METHOD display()              // for compatibility
 
 
-   METHOD New( cString, nTop, nLeft, nBottom,;           // Converts a string to an array of strings splitting input string at EOL boundaries
-               nRight, lEditMode, nLineLength, nTabSize,;
-               nTextRow, nTextCol, nWndRow, nWndCol )
+   METHOD New( cString, nTop, nLeft, nBottom, ;          // Converts a string to an array of strings splitting input string at EOL boundaries
+      nRight, lEditMode, nLineLength, nTabSize, ;
+      nTextRow, nTextCol, nWndRow, nWndCol )
 
    PROTECTED:
 
@@ -182,7 +182,7 @@ METHOD Resize( nTop, nLeft, nBottom, nRight ) CLASS HBEditor
    ::nNumRows := ::nBottom - ::nTop + 1
 
    IF ( ::nRow - ::nFirstRow ) > ::nNumRows
-      //current row is outide the editor window - display it at the top
+      // current row is outide the editor window - display it at the top
       ::nFirstRow := ::nRow
    ENDIF
    // FirstCol/Row of current text visible inside editor window
@@ -425,12 +425,12 @@ METHOD display() CLASS HBEditor
    DispBegin()
 
    FOR i := 0 TO Min( ::nNumRows - 1, ::naTextLen - 1 )
-      hb_dispOutAt( ::nTop + i, ::nLeft, PadR( SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nFirstRow + i ) )
+      hb_DispOutAt( ::nTop + i, ::nLeft, PadR( SubStr( ::GetLine( ::nFirstRow + i ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nFirstRow + i ) )
    NEXT
 
    // Clear rest of editor window (needed when deleting lines of text)
    IF ::naTextLen < ::nNumRows
-      hb_scroll( ::nTop + ::naTextLen, ::nLeft, ::nBottom, ::nRight,,, ::cColorSpec )
+      hb_Scroll( ::nTop + ::naTextLen, ::nLeft, ::nBottom, ::nRight,,, ::cColorSpec )
    ENDIF
 
    ::SetPos( nORow, nOCol )
@@ -442,7 +442,7 @@ METHOD display() CLASS HBEditor
 // Redraws current screen line
 METHOD RefreshLine() CLASS HBEditor
 
-   hb_dispOutAt( ::Row(), ::nLeft, PadR( SubStr( ::GetLine( ::nRow ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nRow ) )
+   hb_DispOutAt( ::Row(), ::nLeft, PadR( SubStr( ::GetLine( ::nRow ), ::nFirstCol, ::nNumCols ), ::nNumCols, " " ), ::LineColor( ::nRow ) )
 
    RETURN Self
 
@@ -454,7 +454,7 @@ METHOD RefreshColumn() CLASS HBEditor
    DispBegin()
 
    FOR i := 0 TO Min( ::nNumRows - 1, ::naTextLen - 1 )
-      hb_dispOutAt( ::nTop + i, ::Col(), SubStr( ::GetLine( ::nFirstRow + i ), ::nCol, 1 ), ::LineColor( ::nFirstRow + i ) )
+      hb_DispOutAt( ::nTop + i, ::Col(), SubStr( ::GetLine( ::nFirstRow + i ), ::nCol, 1 ), ::LineColor( ::nFirstRow + i ) )
    NEXT
 
    DispEnd()
@@ -483,7 +483,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ENDIF
       IF ::Row() == ::nBottom
          IF ::nRow < ::naTextLen
-            hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, 1 )
+            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, 1 )
             ::nFirstRow++
             ::nRow++
             ::RefreshLine()
@@ -530,7 +530,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ENDIF
       IF ::Row() == ::nTop
          IF ::nRow > 1
-            hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, -1 )
+            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, -1 )
             ::nFirstRow--
             ::nRow--
             ::RefreshLine()
@@ -570,7 +570,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
    CASE K_RIGHT
       IF ::Col() == ::nRight
          IF ::nCol <= iif( ::lWordWrap, ::nWordWrapCol, ::LineLen( ::nRow ) )
-            hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, 1 )
+            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, 1 )
             ::nFirstCol++
             ::nCol++
             ::RefreshColumn()
@@ -594,7 +594,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
    CASE K_LEFT
       IF ::Col() == ::nLeft
          IF ::nCol > 1
-            hb_scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, -1 )
+            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, -1 )
             ::nFirstCol--
             ::nCol--
             ::RefreshColumn()
@@ -706,7 +706,7 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
          ENDIF
 
          DO CASE
-         CASE Len( cKey := hb_KeyChar( nKey ) ) > 0
+         CASE Len( cKey := hb_keyChar( nKey ) ) > 0
             ::lDirty := .T.
             // If I'm past EOL I need to add as much spaces as I need to reach ::nCol
             IF ::nCol > ::LineLen( ::nRow )
@@ -866,8 +866,9 @@ METHOD SetColor( cColorString ) CLASS HBEditor
 METHOD Hilite() CLASS HBEditor
 
    // Swap CLR_STANDARD and CLR_ENHANCED
-   LOCAL cEnhanced := hb_TokenGet( ::cColorSpec, 2, "," ) + "," +;
-                      hb_TokenGet( ::cColorSpec, 1, "," )
+   LOCAL cEnhanced := ;
+      hb_tokenGet( ::cColorSpec, 2, "," ) + "," + ;
+      hb_tokenGet( ::cColorSpec, 1, "," )
 
    ::SetColor( cEnhanced + Right( ::cColorSpec, Len( ::cColorSpec ) - Len( cEnhanced ) ) )
 
@@ -876,8 +877,9 @@ METHOD Hilite() CLASS HBEditor
 METHOD DeHilite() CLASS HBEditor
 
    // Swap CLR_STANDARD and CLR_ENHANCED back to their original position inside cColorSpec
-   LOCAL cStandard := hb_TokenGet( ::cColorSpec, 2, "," ) + "," +;
-                      hb_TokenGet( ::cColorSpec, 1, "," )
+   LOCAL cStandard := ;
+      hb_tokenGet( ::cColorSpec, 2, "," ) + "," + ;
+      hb_tokenGet( ::cColorSpec, 1, "," )
 
    ::SetColor( cStandard + Right( ::cColorSpec, Len( ::cColorSpec ) - Len( cStandard ) ) )
 
@@ -979,7 +981,7 @@ METHOD BrowseText( nPassedKey )
          nKey := nPassedKey
       ENDIF
 
-      IF ( bKeyBlock := Setkey( nKey ) ) != NIL
+      IF ( bKeyBlock := SetKey( nKey ) ) != NIL
          Eval( bKeyBlock )
          LOOP
       ENDIF
@@ -1079,7 +1081,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ENDIF
 
    // Empty area of screen which will hold editor window
-   hb_scroll( nTop, nLeft, nBottom, nRight )
+   hb_Scroll( nTop, nLeft, nBottom, nRight )
 
    // Set cursor upper left corner
    ::SetPos( ::nTop + nWndRow, ::nLeft + nWndCol )
@@ -1120,7 +1122,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
    DO WHILE nRetLen < ncSLen
 
-      cLine := hb_TokenPtr( @cString, @nTokPos, cEOL )
+      cLine := hb_tokenPtr( @cString, @nTokPos, cEOL )
 
       nRetLen += Len( cLine ) + nEOLLen
 

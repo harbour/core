@@ -56,6 +56,7 @@
 #define _DIR_HEADER             1
 
 PROCEDURE __Dir( cFileMask )
+
    LOCAL cPath
    LOCAL cName
    LOCAL cExt
@@ -63,17 +64,17 @@ PROCEDURE __Dir( cFileMask )
    IF Empty( cFileMask )
 
       /* NOTE: Although Cl*pper has this string in the national language
-               modul, it will not use it from there.
+               module, it will not use it from there.
                This is hard wired to English. So this is a small
                incompatibility. */
 
 #ifdef HB_CLP_STRICT
       QOut( "Database Files    # Records    Last Update     Size" )
 #else
-      QOut( __NatMsg( _DIR_HEADER ) )
+      QOut( __natMsg( _DIR_HEADER ) )
 #endif
 
-      AEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ),;
+      AEval( Directory( hb_FNameMerge( Set( _SET_DEFAULT ), "*", ".dbf" ) ), ;
          {| aDirEntry | PutDbf( aDirEntry ) } )
    ELSE
 
@@ -82,7 +83,7 @@ PROCEDURE __Dir( cFileMask )
          cPath := Set( _SET_DEFAULT )
       ENDIF
 
-      AEval( Directory( hb_FNameMerge( cPath, cName, cExt ) ),;
+      AEval( Directory( hb_FNameMerge( cPath, cName, cExt ) ), ;
          {| aDirEntry | PutNormal( aDirEntry ) } )
    ENDIF
 
@@ -91,6 +92,7 @@ PROCEDURE __Dir( cFileMask )
    RETURN
 
 STATIC PROCEDURE PutDBF( aDirEntry )
+
    LOCAL fhnd
    LOCAL buffer
    LOCAL nRecCount := 0
@@ -102,12 +104,13 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
       IF FRead( fhnd, @buffer, 8 ) == 8 .AND. ;
          AScan( { 0x03, 0x06, 0x30, 0x31, 0x83, 0x86, 0xE5, 0xE6, 0xF5, 0xF6 }, ;
-                Asc( buffer ) ) != 0
+         hb_BCode( buffer ) ) != 0
 
-         nRecCount := Bin2L( SubStr( buffer, 5, 4 ) )
-         dLastUpdate := hb_SToD( StrZero( Asc( SubStr( buffer, 2, 1 ) ) + 1900, 4 ) +;
-                                 StrZero( Asc( SubStr( buffer, 3, 1 ) ), 2 ) +;
-                                 StrZero( Asc( SubStr( buffer, 4, 1 ) ), 2 ) )
+         nRecCount := Bin2L( hb_BSubStr( buffer, 5, 4 ) )
+         dLastUpdate := hb_SToD( ;
+            StrZero( hb_BCode( hb_BSubStr( buffer, 2, 1 ) ) + 1900, 4 ) + ;
+            StrZero( hb_BCode( hb_BSubStr( buffer, 3, 1 ) ), 2 ) + ;
+            StrZero( hb_BCode( hb_BSubStr( buffer, 4, 1 ) ), 2 ) )
 
       ENDIF
 
@@ -115,14 +118,15 @@ STATIC PROCEDURE PutDBF( aDirEntry )
 
    ENDIF
 
-   QOut( PadR( aDirEntry[ F_NAME ], 15 ) +;
-         Str( nRecCount, 12 ) + "    " +;
-         DToC( dLastUpdate ) +;
-         Str( aDirEntry[ F_SIZE ], 12 ) )
+   QOut( PadR( aDirEntry[ F_NAME ], 15 ) + ;
+      Str( nRecCount, 12 ) + "    " + ;
+      DToC( dLastUpdate ) + ;
+      Str( aDirEntry[ F_SIZE ], 12 ) )
 
    RETURN
 
 STATIC PROCEDURE PutNormal( aDirEntry )
+
    LOCAL cName
    LOCAL cExt
 
@@ -131,9 +135,9 @@ STATIC PROCEDURE PutNormal( aDirEntry )
    /* strict DOS like formatting, it does not play well with long file names
     * which do not stick to 8.3 MS-DOS convention
     */
-   QOut( PadR( cName, 8 ) + " " +;
-         PadR( Substr( cExt, 2 ), 3 ) + " " +;
-         Str( aDirEntry[ F_SIZE ], 8 ) + "  " +;
-         DToC( aDirEntry[ F_DATE ] ) )
+   QOut( PadR( cName, 8 ) + " " + ;
+      PadR( SubStr( cExt, 2 ), 3 ) + " " + ;
+      Str( aDirEntry[ F_SIZE ], 8 ) + "  " + ;
+      DToC( aDirEntry[ F_DATE ] ) )
 
    RETURN

@@ -91,6 +91,7 @@ STATIC FUNCTION _HSX_CLOSE( nWA )
    LOCAL aWData := USRRDD_AREADATA( nWA ), nHSX
 
    /* close all HSX indexes */
+
    FOR EACH nHSX IN aWData[ 2 ]
       hs_Close( nHSX )
    NEXT
@@ -120,7 +121,7 @@ STATIC FUNCTION _HSX_GOCOLD( nWA )
                   nKeyNo := hs_Add( nHSX, "" )
                ENDDO
                IF nKeyNo >= nRecNo
-                  hs_Replace( nHSX, , nRecNo )
+                  hs_Replace( nHSX,, nRecNo )
                ENDIF
             NEXT
          ENDIF
@@ -261,6 +262,7 @@ FUNCTION HSX_GET( nSlot )
    RETURN -1
 
 /* Force linking DBFCDX from which our RDD inherits */
+
 REQUEST DBFCDX
 
 /*

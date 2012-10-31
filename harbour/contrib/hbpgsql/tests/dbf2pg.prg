@@ -150,7 +150,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    USE ( cFile ) SHARED
-   aDbfStruct := DBStruct()
+   aDbfStruct := dbStruct()
 
    oServer := TPQServer():New( cHostName, cDatabase, cUser, cPassWord, NIL, cPath )
    IF oServer:NetErr()
@@ -217,46 +217,46 @@ PROCEDURE Main( ... )
       FOR i := 1 TO oTable:FCount()
          cField := Lower( oTable:FieldName( i ) )
          sType := FieldType( FieldPos( cField ) )
-         dType := oRecord:Fieldtype( i )
+         dType := oRecord:FieldType( i )
          cValue := FieldGet( FieldPos( cField ) )
 
          IF cValue != NIL
             IF dType != sType
                IF dType == "C" .AND. sType == "N"
-                 cValue := Str( cValue )
+                  cValue := Str( cValue )
 
                ELSEIF dType == "C" .AND. sType == "D"
-                 cValue := DToC( cValue )
+                  cValue := DToC( cValue )
 
                ELSEIF dType == "C" .AND. sType == "L"
-                 cValue := iif( cValue, "S", "N" )
+                  cValue := iif( cValue, "S", "N" )
 
                ELSEIF dType == "N" .AND. sType == "C"
-                 cValue := Val( cValue )
+                  cValue := Val( cValue )
 
                ELSEIF dType == "N" .AND. sType == "D"
-                 cValue := Val( DToS( cValue ) )
+                  cValue := Val( DToS( cValue ) )
 
                ELSEIF dType == "N" .AND. sType == "L"
-                 cValue := iif( cValue, 1, 0 )
+                  cValue := iif( cValue, 1, 0 )
 
                ELSEIF dType == "D" .AND. sType == "C"
-                 cValue := CToD( cValue )
+                  cValue := CToD( cValue )
 
                ELSEIF dType == "D" .AND. sType == "N"
-                 cValue := SToD( Str( cValue ) )
+                  cValue := SToD( Str( cValue ) )
 
                ELSEIF dType == "L" .AND. sType == "N"
-                 cValue := ! Empty( cValue )
+                  cValue := ! Empty( cValue )
 
                ELSEIF dType == "L" .AND. sType == "C"
-                 cValue := iif( AllTrim( cValue ) $ "YySs1", .T., .F. )
+                  cValue := iif( AllTrim( cValue ) $ "YySs1", .T., .F. )
 
                ENDIF
             ENDIF
 
             IF cValue != NIL
-               IF oRecord:Fieldtype( i ) == "C" .OR. oRecord:Fieldtype( i ) == "M"
+               IF oRecord:FieldType( i ) == "C" .OR. oRecord:FieldType( i ) == "M"
                   oRecord:FieldPut( i, hb_StrToUTF8( cValue ) )
                ELSE
                   oRecord:FieldPut( i, cValue )
@@ -265,7 +265,7 @@ PROCEDURE Main( ... )
          ENDIF
       NEXT
 
-      oTable:Append(oRecord)
+      oTable:Append( oRecord )
 
       IF oTable:NetErr()
          ?

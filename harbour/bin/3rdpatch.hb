@@ -220,9 +220,9 @@
 #include "directry.ch"
 
 #if defined( _TRACE )
-   #define TRACE( str )    OutStd( "T: " + str + hb_eol() )
+#  define TRACE( str )    OutStd( "T: " + str + hb_eol() )
 #else
-   #define TRACE( str )
+#  define TRACE( str )
 #endif
 
 #define ONEARG_KW   2        /* one-arg line keyword */
@@ -280,19 +280,19 @@ PROCEDURE Main( ... )
 
    FOR EACH cArg IN hb_AParams()
       SWITCH cArg
-         CASE "-rediff"
-            lRediff := .T.
-            EXIT
-         CASE "-validate"
-            lValidateOnly := .T.
-            EXIT
-         CASE "-h"
-         CASE "-help"
-         CASE "--help"
-         CASE "/?"
-            Usage( 0 )
-         OTHERWISE
-            Usage( 1 )
+      CASE "-rediff"
+         lRediff := .T.
+         EXIT
+      CASE "-validate"
+         lValidateOnly := .T.
+         EXIT
+      CASE "-h"
+      CASE "-help"
+      CASE "--help"
+      CASE "/?"
+         Usage( 0 )
+      OTHERWISE
+         Usage( 1 )
       ENDSWITCH
    NEXT
 
@@ -323,7 +323,7 @@ PROCEDURE Main( ... )
          /* Process one-arg keywords */
          IF aRegexMatch[ ONEARG_KW ] == "DIFF"
             cDiffFile := iif( Empty( AllTrim( aRegexMatch[ ONEARG_ARG ] ) ), NIL,         ;
-                              AllTrim( aRegexMatch[ ONEARG_ARG ] ) )
+               AllTrim( aRegexMatch[ ONEARG_ARG ] ) )
          ELSEIF aRegexMatch[ ONEARG_KW ] == "URL"
             cArchiveURL := AllTrim( aRegexMatch[ ONEARG_ARG ] )
          ENDIF
@@ -334,7 +334,7 @@ PROCEDURE Main( ... )
             /* Do not allow implicit destination with non-flat source spec */
             IF Empty( aRegexMatch[ TWOARG_ARG1 ] ) .AND. "/" $ aRegexMatch[ TWOARG_ARG2 ]
                OutStd( hb_StrFormat( "E: Non-flat source spec with implicit " +           ;
-                                     "destination, offending line %d:%s:", nMemoLine, hb_eol() ) )
+                  "destination, offending line %d:%s:", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
                QUIT
@@ -342,7 +342,7 @@ PROCEDURE Main( ... )
             /* Do not allow tree spec in the destination ever */
             IF "/" $ aRegexMatch[ TWOARG_ARG2 ]
                OutStd( hb_StrFormat( "E: Non-flat destination, offending line %d:%s",     ;
-                                     nMemoLine, hb_eol() ) )
+                  nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
                QUIT
@@ -355,8 +355,8 @@ PROCEDURE Main( ... )
             /* The destination argument must fit in the 8+3 scheme */
             IF Len( hb_FNameName( aRegexMatch[ TWOARG_ARG2 ] ) ) > 8 .OR.                 ;
                   Len( hb_FNameExt( aRegexMatch[ TWOARG_ARG2 ] ) ) > 4
-               OutStd( hb_StrFormat( "E: Destination does not fit 8+3, offending "+       ;
-                                     "line %d:%s", nMemoLine, hb_eol() ) )
+               OutStd( hb_StrFormat( "E: Destination does not fit 8+3, offending " +       ;
+                  "line %d:%s", nMemoLine, hb_eol() ) )
                OutStd( aRegexMatch[ 1 ] + hb_eol() )
                ErrorLevel( 2 )
                QUIT
@@ -368,16 +368,16 @@ PROCEDURE Main( ... )
              */
             AAdd( s_aChangeMap, {                                                         ;
                iif( Empty( aRegexMatch[ TWOARG_ARG1 ] ),                                  ;
-                     aRegexMatch[ TWOARG_ARG2 ],                                          ;
-                     aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ]             ;
-            } )
+               aRegexMatch[ TWOARG_ARG2 ],                                          ;
+               aRegexMatch[ TWOARG_ARG1 ] ), aRegexMatch[ TWOARG_ARG2 ]             ;
+               } )
             /* If this is the first MAP entry, treat the original part as the
              * source tree root indicator */
             IF Len( s_aChangeMap ) == 1
                cTopIndicator := s_aChangeMap[ 1 ][ FN_ORIG ]
                IF "/" $ cTopIndicator
                   OutStd( hb_StrFormat( "E: First `MAP' entry is not flat, offending " +  ;
-                                        "line %d:%s", nMemoLine, hb_eol() ) )
+                     "line %d:%s", nMemoLine, hb_eol() ) )
                   OutStd( aRegexMatch[ 1 ] + hb_eol() )
                   ErrorLevel( 2 )
                   QUIT
@@ -405,9 +405,9 @@ PROCEDURE Main( ... )
 
    cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
 
-   #if defined( _CURDIR )
-      cRoot := cCWD + hb_ps()
-   #endif
+#if defined( _CURDIR )
+   cRoot := cCWD + hb_ps()
+#endif
 
    FClose( hb_FTempCreateEx( @s_cTempDir, cRoot, hb_FNameName( hb_ProgName() ) + "_" ) )
    FErase( s_cTempDir )
@@ -452,7 +452,7 @@ PROCEDURE Main( ... )
       ELSE
          /* Create the `pristine tree' */
          hb_FCopy( CombinePath( s_cSourceRoot, aOneMap[ FN_ORIG ] ),                      ;
-                   CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
+            CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
 
          /* Munch the file, applying the appropriate xforms */
          hb_FileTran( CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ) )
@@ -462,12 +462,12 @@ PROCEDURE Main( ... )
 
          IF lRediff
             hb_FCopy( aOneMap[ FN_HB ],                                                   ;
-                      CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
+               CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
 
          ELSE
             /* Copy it to `our tree' */
-            hb_FCopy( CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ),;
-                      CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
+            hb_FCopy( CombinePath( s_cTempDir, cThisComponent + ".orig", aOneMap[ FN_HB ] ), ;
+               CombinePath( s_cTempDir, cThisComponent, aOneMap[ FN_HB ] ) )
          ENDIF
 
       ENDIF
@@ -477,9 +477,9 @@ PROCEDURE Main( ... )
 
       IF ! lRediff /* If we have a local diff, and are not to re-create it, apply */
          cCommand := hb_StrFormat( "%s --no-backup-if-mismatch -d %s -p 1 -i %s",         ;
-                     s_aTools[ "patch" ],                                                 ;
-                     CombinePath( s_cTempDir, cThisComponent ),                           ;
-                     CombinePath( cCWD, cDiffFile ) )
+            s_aTools[ "patch" ],                                                 ;
+            CombinePath( s_cTempDir, cThisComponent ),                           ;
+            CombinePath( cCWD, cDiffFile ) )
          TRACE( "Running " + cCommand )
          nRunResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
          SaveLog( "patch", cStdOut, cStdErr )
@@ -491,7 +491,7 @@ PROCEDURE Main( ... )
 
       /* Re-create the diff */
       cCommand := hb_StrFormat( "%s -urN %s %s",                                          ;
-                  s_aTools[ "diff" ], cThisComponent + ".orig", cThisComponent )
+         s_aTools[ "diff" ], cThisComponent + ".orig", cThisComponent )
 
       DirChange( s_cTempDir )
       TRACE( "Running " + cCommand )
@@ -556,6 +556,7 @@ STATIC PROCEDURE SetupTools()
    /* Look for g$tool first, only attempt raw name if it isn't found
     * Helps non-GNU userland systems with GNU tools installed.
     * Only several of the tools are known to have GNU variants. */
+
    FOR EACH cPathComp IN hb_ATokens( hb_GetEnv( "PATH" ), hb_osPathListSeparator() )
       FOR EACH cTool IN hb_HKeys( s_aTools )
          IF cTool $ "patch|diff|tar" .AND. hb_FileExists( CombinePath( cPathComp, "g" + cTool ) + cExeExt )
@@ -641,33 +642,33 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
     * pick one of these, refrain from the more exotic ones. */
 
    LOCAL aActionMap := {                                                                  ;
-      '.tar.gz|.tgz' => {                                                                 ;
-         'Extractor'          => 'gzip',                                                  ;
-         'ExtractorArgs'      => '-d',                                                    ;
-         'ExtractedFile'      => '.tar',                                                  ;
-         'Archiver'           => 'tar',                                                   ;
-         'ArchiverArgs'       => '--force-local -xvf'                                     ;
+      ".tar.gz|.tgz" => {                                                                 ;
+         "Extractor"          => "gzip",                                                  ;
+         "ExtractorArgs"      => "-d",                                                    ;
+         "ExtractedFile"      => ".tar",                                                  ;
+         "Archiver"           => "tar",                                                   ;
+         "ArchiverArgs"       => "--force-local -xvf"                                     ;
       },                                                                                  ;
-      '.tar.bz2|.tbz|.tbz2' => {                                                          ;
-         'Extractor'          => 'bzip2',                                                 ;
-         'ExtractorArgs'      => '-d',                                                    ;
-         'ExtractedFile'      => '.tar',                                                  ;
-         'Archiver'           => 'tar',                                                   ;
-         'ArchiverArgs'       => '--force-local -xvf'                                     ;
+      ".tar.bz2|.tbz|.tbz2" => {                                                          ;
+         "Extractor"          => "bzip2",                                                 ;
+         "ExtractorArgs"      => "-d",                                                    ;
+         "ExtractedFile"      => ".tar",                                                  ;
+         "Archiver"           => "tar",                                                   ;
+         "ArchiverArgs"       => "--force-local -xvf"                                     ;
       },                                                                                  ;
-      '.tar.xz|.txz' => {                                                                 ;
-         'Extractor'          => 'xz',                                                    ;
-         'ExtractorArgs'      => '-d',                                                    ;
-         'ExtractedFile'      => '.tar',                                                  ;
-         'Archiver'           => 'tar',                                                   ;
-         'ArchiverArgs'       => '--force-local -xvf'                                     ;
+      ".tar.xz|.txz" => {                                                                 ;
+         "Extractor"          => "xz",                                                    ;
+         "ExtractorArgs"      => "-d",                                                    ;
+         "ExtractedFile"      => ".tar",                                                  ;
+         "Archiver"           => "tar",                                                   ;
+         "ArchiverArgs"       => "--force-local -xvf"                                     ;
       },                                                                                  ;
-      '.zip' => {                                                                         ;
-         'Extractor'          => NIL,                                                     ;
-         'ExtractorArgs'      => NIL,                                                     ;
-         'ExtractedFile'      => NIL,                                                     ;
-         'Archiver'           => 'unzip',                                                 ;
-         'ArchiverArgs'       => ''                                                       ;
+      ".zip" => {                                                                         ;
+         "Extractor"          => NIL,                                                     ;
+         "ExtractorArgs"      => NIL,                                                     ;
+         "ExtractedFile"      => NIL,                                                     ;
+         "Archiver"           => "unzip",                                                 ;
+         "ArchiverArgs"       => ""                                                       ;
       }                                                                                   ;
    }
 
@@ -682,16 +683,16 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       FOR EACH cFrag IN hb_ATokens( cPattern, "|" )
          IF At( cFrag, cFileName ) != 0
             cMatchedPattern := cFrag
-            cExtractor := aActionMap[ cPattern ][ 'Extractor' ]
-            cExtractorArgs := aActionMap[ cPattern ][ 'ExtractorArgs' ]
-            cExtractedFileName := iif( aActionMap[ cPattern ][ 'ExtractedFile' ] == NIL,  ;
+            cExtractor := aActionMap[ cPattern ][ "Extractor" ]
+            cExtractorArgs := aActionMap[ cPattern ][ "ExtractorArgs" ]
+            cExtractedFileName := iif( aActionMap[ cPattern ][ "ExtractedFile" ] == NIL,  ;
                                     NIL,                                                  ;
                                     Left( cFileName, Len( cFileName ) -                   ;
                                        Len( cMatchedPattern ) ) +                         ;
-                                       aActionMap[ cPattern ][ 'ExtractedFile' ]          ;
+                                       aActionMap[ cPattern ][ "ExtractedFile" ]          ;
                                   )
-            cArchiver := aActionMap[ cPattern ][ 'Archiver' ]
-            cArchiverArgs := aActionMap[ cPattern ][ 'ArchiverArgs' ]
+            cArchiver := aActionMap[ cPattern ][ "Archiver" ]
+            cArchiverArgs := aActionMap[ cPattern ][ "ArchiverArgs" ]
             EXIT
          ENDIF
       NEXT
@@ -699,7 +700,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
 
    IF cArchiver == NIL
       OutStd( "E: Can not find archiver for `" +                                          ;
-               hb_FNameNameExt( cArchiveURL ) + "'" + hb_eol() )
+         hb_FNameNameExt( cArchiveURL ) + "'" + hb_eol() )
       RETURN .F.
    ENDIF
 
@@ -709,7 +710,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       RETURN .F.
    ENDIF
    cCommand := hb_StrFormat( "%s -L -# -o %s %s", s_aTools[ "curl" ],                     ;
-               CombinePath( s_cTempDir, cFileName ), FNameEscape( cArchiveURL ) )
+      CombinePath( s_cTempDir, cFileName ), FNameEscape( cArchiveURL ) )
    TRACE( "Running " + cCommand )
    nResult := hb_processRun( cCommand, , , @cStdErr, .F. )
    SaveLog( "fetch", cStdOut, cStdErr )
@@ -725,7 +726,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
          RETURN .F.
       ENDIF
       cCommand := hb_StrFormat( "%s " + cExtractorArgs + " %s",                           ;
-                  cExtractor, CombinePath( s_cTempDir, cFileName ) )
+         cExtractor, CombinePath( s_cTempDir, cFileName ) )
       TRACE( "Running " + cCommand )
       nResult := hb_processRun( cCommand, , @cStdOut, @cStdErr, .F. )
       SaveLog( "extract", cStdOut, cStdErr )
@@ -743,7 +744,7 @@ STATIC FUNCTION FetchAndExtract( cArchiveURL )
       RETURN .F.
    ENDIF
    cCommand := hb_StrFormat( "%s " + cArchiverArgs + " %s",                               ;
-               cArchiver, CombinePath( s_cTempDir, cExtractedFileName ) )
+      cArchiver, CombinePath( s_cTempDir, cExtractedFileName ) )
    TRACE( "Running " + cCommand )
    cCWD := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
    DirChange( CombinePath( s_cTempDir, "root" ) )
@@ -834,19 +835,20 @@ STATIC FUNCTION hb_FileTran( cFileName )
 
       /* Local-style includes */
       cTransformedContent := StrTran( cTransformedContent,                                ;
-                                      Chr( 34 ) + cChangeFrom + Chr( 34 ),                ;
-                                      Chr( 34 ) + cChangeTo + Chr( 34 ) )
+         Chr( 34 ) + cChangeFrom + Chr( 34 ),                ;
+         Chr( 34 ) + cChangeTo + Chr( 34 ) )
 
       /* System-style include */
       cTransformedContent := StrTran( cTransformedContent,                                ;
-                                      "<" + cChangeFrom + ">",                            ;
-                                      "<" + cChangeTo + ">" )
+         "<" + cChangeFrom + ">",                            ;
+         "<" + cChangeTo + ">" )
 
    NEXT
 
    RETURN hb_MemoWrit( cFileName, cTransformedContent )
 
 STATIC FUNCTION FNameEscape( cFileName )
+
 #if defined( __PLATFORM__UNIX )
    RETURN cFileName
 #else

@@ -13,6 +13,7 @@
 #include "directry.ch"
 
 PROCEDURE Main()
+
    LOCAL aFile
 
    FOR EACH aFile IN Directory( hb_osFileMask() )

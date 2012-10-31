@@ -73,9 +73,9 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    LOCAL oColumn
 
    // TODO: Check if datasource is open
-// IF ! Used()
-//    RETURN .F.
-// ENDIF
+   // IF ! Used()
+   //    RETURN .F.
+   // ENDIF
 
    IF PCount() < 4
       nTop    := 1
@@ -99,8 +99,8 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    oBrw:HeadSep := "-"
 
    // TODO: Find out number of columns in ODBC result set, up to then you have to add columns by hand
-   FOR n := 1 to Len( oDataSource:Fields )
-      oColumn:= TBColumn():New( oDataSource:Fields[ n ]:FieldName, ODBCFget( oDataSource:Fields[ n ]:FieldName, oDataSource ) )
+   FOR n := 1 TO Len( oDataSource:Fields )
+      oColumn := TBColumn():New( oDataSource:Fields[ n ]:FieldName, ODBCFget( oDataSource:Fields[ n ]:FieldName, oDataSource ) )
       oBrw:AddColumn( oColumn )
    NEXT
 
@@ -117,7 +117,7 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
       IF NextKey() == 0
 
          oBrw:forceStable()
-         Statline( oBrw, oDataSource)
+         Statline( oBrw, oDataSource )
 
          nKey := Inkey( 0 )
 
@@ -196,10 +196,10 @@ STATIC PROCEDURE Statline( oBrw, oDataSource )
       hb_DispOutAt( nTop, nRight - 40, "         " )
       hb_DispOutAt( nTop, nRight - 20, "                <new>" )
    ELSE
-      hb_DispOutAt( nTop, nRight - 20, PadR( hb_ntos( oDataSource:RecNo() ) + "/" +;
-                                             hb_ntos( oDataSource:LastRec() ), 16 ) +;
-                                       iif( oBrw:hitTop, "<bof>", "     " ) +;
-                                       iif( oBrw:hitBottom, "<eof>", "     " ) )
+      hb_DispOutAt( nTop, nRight - 20, PadR( hb_ntos( oDataSource:RecNo() ) + "/" + ;
+         hb_ntos( oDataSource:LastRec() ), 16 ) + ;
+         iif( oBrw:hitTop, "<bof>", "     " ) + ;
+         iif( oBrw:hitBottom, "<eof>", "     " ) )
    ENDIF
 
    RETURN
@@ -213,24 +213,24 @@ STATIC FUNCTION Skipped( nRecs, oDataSource )
          // ODBC doesn't have Skip( 0 )
       ELSEIF nRecs > 0
          DO WHILE nSkipped < nRecs
-           IF ! oDataSource:Eof()
-             oDataSource:next( )
-             IF oDataSource:Eof()
-               oDataSource:prior( )
-               EXIT
-             ENDIF
-             nSkipped++
-           ENDIF
+            IF ! oDataSource:Eof()
+               oDataSource:next()
+               IF oDataSource:Eof()
+                  oDataSource:prior()
+                  EXIT
+               ENDIF
+               nSkipped++
+            ENDIF
          ENDDO
       ELSEIF nRecs < 0
          DO WHILE nSkipped > nRecs
-           IF ! oDataSource:Bof()
-             oDataSource:prior( )
-             IF oDataSource:Bof()
-               EXIT
-             ENDIF
-             nSkipped--
-           ENDIF
+            IF ! oDataSource:Bof()
+               oDataSource:prior()
+               IF oDataSource:Bof()
+                  EXIT
+               ENDIF
+               nSkipped--
+            ENDIF
          ENDDO
       ENDIF
    ENDIF

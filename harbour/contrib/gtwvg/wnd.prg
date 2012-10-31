@@ -619,12 +619,12 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
    /* Compares without Xbp or Wvg prefixes  */
 
    IF HB_ISSTRING( cClassORoObject )
-      IF Upper( SubStr( cClassORoObject,4 ) ) == Upper( SubStr( cCls,4 ) )
+      IF Upper( SubStr( cClassORoObject, 4 ) ) == Upper( SubStr( cCls, 4 ) )
          lTrue := .T.
       ENDIF
 
    ELSEIF HB_ISOBJECT( cClassORoObject )
-      IF Upper( SubStr( cClassORoObject:className,4 ) ) == Upper( SubStr( cCls,4 ) )
+      IF Upper( SubStr( cClassORoObject:className, 4 ) ) == Upper( SubStr( cCls, 4 ) )
          lTrue := .T.
       ENDIF
    ENDIF
@@ -698,7 +698,7 @@ METHOD WvgWindow:setFontCompoundName( xFont )
          ENDIF
 
          IF ( n := At( ".", cFont ) ) > 0
-            nPoint := Val( SubStr( cFont,1,n - 1 ) )
+            nPoint := Val( SubStr( cFont, 1, n - 1 ) )
             cFont  := SubStr( cFont, n + 1 )
          ELSE
             nPoint := 0

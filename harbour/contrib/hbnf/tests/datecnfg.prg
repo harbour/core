@@ -2,7 +2,7 @@
  * $Id$
  */
 
-//*******************************************************************
+// *******************************************************************
 //
 // NOTES: 1) The date functions are 'international'; i.e., the
 //           system date format is maintained, although ANSI is
@@ -44,7 +44,7 @@
 //
 //              See function: FT_DATECNFG()
 //
-//*******************************************************************
+// *******************************************************************
 
 #require "hbnf"
 
@@ -186,7 +186,7 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
    dTemp := aTemp[ 2 ]
 
    FOR nTemp := 0 TO 6
-      ?? PadC( CDOW( dTemp + nTemp ), 10 )
+      ?? PadC( CDoW( dTemp + nTemp ), 10 )
    NEXT
 
    ?

@@ -79,7 +79,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
    ENDIF
 
    bError := iif( HB_ISLOGICAL( lIgnoreErrors ) .AND. lIgnoreErrors, ;
-                  {| e | break( e ) }, errorBlock() )
+                  {| e | Break( e ) }, ErrorBlock() )
 
    FOR EACH cLine IN hb_ATokens( StrTran( cObjectText, Chr( 13 ) ), Chr( 10 ) )
 
@@ -91,7 +91,7 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
          CASE Empty( cLine ) .OR. Left( cLine, 2 ) == "//"
             /* ignore comments and empty lines */
 
-         CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "OBJECT"
+         CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "OBJECT"
             IF lStart
                lStart := .F.
             ELSE
@@ -102,10 +102,10 @@ METHOD LoadFromText( cObjectText, lIgnoreErrors ) CLASS HBPersistent
                AAdd( aObjects, &( cLine ) )
             ENDIF
 
-         CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
+         CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "ENDOBJECT"
             ASize( aObjects, Len( aObjects ) - 1 )
 
-         CASE hb_asciiUpper( LTrim( hb_TokenGet( cLine, 1 ) ) ) == "ARRAY"
+         CASE hb_asciiUpper( LTrim( hb_tokenGet( cLine, 1 ) ) ) == "ARRAY"
             cLine := SubStr( cLine, At( "::", cLine ) )
             MEMVAR->oSelf := ATail( aObjects )
             cLine := StrTran( cLine, "::", "oSelf:",, 1 )
@@ -160,7 +160,7 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
               "OBJECT " + iif( nIndent != 0, "::", "" ) + cObjectName + " AS " + ;
               ::ClassName() + hb_eol()
 
-   aProperties := __ClsGetProperties( ::ClassH )
+   aProperties := __clsGetProperties( ::ClassH )
 
    FOR n := 1 TO Len( aProperties )
       uValue := __objSendMsg( Self, aProperties[ n ] )
@@ -213,7 +213,7 @@ METHOD SaveToText( cObjectName, nIndent ) CLASS HBPersistent
 STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
 
    LOCAL cArray := hb_eol() + Space( nIndent ) + "ARRAY ::" + cName + ;
-                   " LEN " + hb_NToS( Len( aArray ) ) + hb_eol()
+                   " LEN " + hb_ntos( Len( aArray ) ) + hb_eol()
    LOCAL n
    LOCAL uValue
 
@@ -224,13 +224,13 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
       CASE "A"
          nIndent += 3
          cArray += ArrayToText( uValue, cName + "[ " + ;
-                   hb_NToS( n ) + " ]", nIndent ) + hb_eol()
+                   hb_ntos( n ) + " ]", nIndent ) + hb_eol()
          nIndent -= 3
          EXIT
 
       CASE "O"
          IF __objDerivedFrom( uValue, "HBPERSISTENT" )
-            cArray += uValue:SaveToText( cName + "[ " + hb_NToS( n ) + ;
+            cArray += uValue:SaveToText( cName + "[ " + hb_ntos( n ) + ;
                                          " ]", nIndent )
          ENDIF
          EXIT
@@ -245,7 +245,7 @@ STATIC FUNCTION ArrayToText( aArray, cName, nIndent )
             cArray += hb_eol()
          ENDIF
          cArray += Space( nIndent ) + "   ::" + cName + ;
-                   + "[ " + hb_NToS( n ) + " ]" + " := " + ;
+                   + "[ " + hb_ntos( n ) + " ]" + " := " + ;
                    hb_ValToExp( uValue ) + hb_eol()
       ENDSWITCH
    NEXT

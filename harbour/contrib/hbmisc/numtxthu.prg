@@ -84,6 +84,7 @@ FUNCTION NumToTxtHU( nValue )
    RETURN hb_UTF8ToStr( cRetVal )
 
 STATIC FUNCTION NumToTxtRaw( nValue )
+
    LOCAL aEgesz  := { "", "ezer" , "millió", "milliárd", "billió" , "trillió", "kvadrillió", "kvintillió" } // , "szextillió", "szeptillió", "oktillió", "nontillió" }
    LOCAL aEgyes  := { "", "egy"  , "kettő" , "három"   , "négy"   , "öt"     , "hat"       , "hét"       , "nyolc"     , "kilenc" }
    LOCAL aTizes1 := { "", "tíz"  , "húsz"  , "harminc" , "negyven", "ötven"  , "hatvan"    , "hetven"    , "nyolcvan"  , "kilencven" }
@@ -109,11 +110,12 @@ STATIC FUNCTION NumToTxtRaw( nValue )
          aDigit[ tmp + 1 ] != 0 .OR. ;
          aDigit[ tmp + 2 ] != 0
 
-         cValue += iif( Empty( cValue ), "", "-") +;
-                   iif( aDigit[ tmp ] != 0, aEgyes[ aDigit[ tmp ] + 1 ] + "száz", "" ) +;
-                   iif( aDigit[ tmp + 2 ] == 0, aTizes1[ aDigit[ tmp + 1 ] + 1 ], aTizes2[ aDigit[ tmp + 1 ] + 1 ] ) +;
-                   aEgyes[ aDigit[ tmp + 2 ] + 1 ] +;
-                   aEgesz[ ( Int( ( nLen - tmp ) / 3 ) ) + 1 ]
+         cValue += ;
+            iif( Empty( cValue ), "", "-") +;
+            iif( aDigit[ tmp ] != 0, aEgyes[ aDigit[ tmp ] + 1 ] + "száz", "" ) +;
+            iif( aDigit[ tmp + 2 ] == 0, aTizes1[ aDigit[ tmp + 1 ] + 1 ], aTizes2[ aDigit[ tmp + 1 ] + 1 ] ) +;
+            aEgyes[ aDigit[ tmp + 2 ] + 1 ] +;
+            aEgesz[ ( Int( ( nLen - tmp ) / 3 ) ) + 1 ]
       ENDIF
    NEXT
 

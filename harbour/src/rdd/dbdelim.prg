@@ -111,8 +111,8 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
 
 #else
 
-   RETURN iif( lExport,;
-      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , cCodePage, cDelimArg ) ,;
-      __dbApp( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM", , cCodePage, cDelimArg ) )
+   RETURN iif( lExport, ;
+      __dbCopy( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM",, cCodePage, cDelimArg ), ;
+      __dbApp( cFile, aFields, bFor, bWhile, nNext, nRecord, lRest, "DELIM",, cCodePage, cDelimArg ) )
 
 #endif

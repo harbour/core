@@ -202,7 +202,7 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    ::aBandToPrint := {}
    ::nCurrentCol  := 1
    ::cBlank       := ""
-   ::lOneMoreBand :=.T.
+   ::lOneMoreBand := .T.
 
    // clean up
    Set( _SET_PRINTER, lPrintOn ) // Set the printer back to prior state
@@ -222,10 +222,12 @@ METHOD New( cLBLName, lPrinter, cAltFile, lNoConsole, bFor, ;
    RETURN Self
 
 METHOD ExecuteLabel() CLASS HBLabelForm
+
    LOCAL nField, nMoreLines, aBuffer := {}, cBuffer
    LOCAL v
 
    // Load the current record into aBuffer
+
    FOR nField := 1 TO Len( ::aLabelData[ LBL_FIELDS ] )
 
       IF ::aLabelData[ LBL_FIELDS, nField ] != NIL
@@ -300,12 +302,14 @@ METHOD ExecuteLabel() CLASS HBLabelForm
    RETURN Self
 
 METHOD SampleLabels() CLASS HBLabelForm
+
    LOCAL cKey, lMoreSamples := .T., nField
    LOCAL aBand := {}
 
    // Create the sample label row
+
    ASize( aBand, ::aLabelData[ LBL_HEIGHT ] )
-   AFill( aBand, Space( ::aLabelData[ LBL_LMARGIN ] ) +;
+   AFill( aBand, Space( ::aLabelData[ LBL_LMARGIN ] ) + ;
       Replicate( Replicate( "*", ;
       ::aLabelData[ LBL_WIDTH ] ) + ;
       Space( ::aLabelData[ LBL_SPACES ] ), ;
@@ -325,7 +329,7 @@ METHOD SampleLabels() CLASS HBLabelForm
       ENDIF
 
       // Prompt for more
-      DispOutAt( Row(), 0, __NatMsg( _LF_SAMPLES ) + " (" + __NatMsg( _LF_YN ) + ")" )
+      DispOutAt( Row(), 0, __natMsg( _LF_SAMPLES ) + " (" + __natMsg( _LF_YN ) + ")" )
       cKey := hb_keyChar( Inkey( 0 ) )
       DispOutAt( Row(), Col(), cKey )
       IF Row() == MaxRow()
@@ -334,7 +338,7 @@ METHOD SampleLabels() CLASS HBLabelForm
       ELSE
          SetPos( Row() + 1, 0 )
       ENDIF
-      IF __NatIsNegative( cKey )    // Don't give sample labels
+      IF __natIsNegative( cKey )    // Don't give sample labels
          lMoreSamples := .F.
       ENDIF
    ENDDO
@@ -342,6 +346,7 @@ METHOD SampleLabels() CLASS HBLabelForm
    RETURN Self
 
 METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
+
    LOCAL i                                // Counters
    LOCAL cBuff      := Space( BUFFSIZE )  // File buffer
    LOCAL nHandle                          // File handle
@@ -357,6 +362,7 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
    // Create and initialize default label array
    LOCAL aLabel[ LBL_COUNT ]
+
    aLabel[ LBL_REMARK ]  := Space( 60 )    // Label remark
    aLabel[ LBL_HEIGHT ]  := 5              // Label height
    aLabel[ LBL_WIDTH ]   := 35             // Label width
@@ -413,12 +419,12 @@ METHOD LoadLabel( cLblFile ) CLASS HBLabelForm
 
       // Load label dimension into aLabel
       aLabel[ LBL_REMARK  ] := hb_BSubStr( cBuff, REMARKOFFSET, REMARKSIZE )
-      aLabel[ LBL_HEIGHT  ] := BIN2W( hb_BSubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
-      aLabel[ LBL_WIDTH   ] := BIN2W( hb_BSubStr( cBuff, WIDTHOFFSET, WIDTHSIZE ) )
-      aLabel[ LBL_LMARGIN ] := BIN2W( hb_BSubStr( cBuff, LMARGINOFFSET, LMARGINSIZE ) )
-      aLabel[ LBL_LINES   ] := BIN2W( hb_BSubStr( cBuff, LINESOFFSET, LINESSIZE ) )
-      aLabel[ LBL_SPACES  ] := BIN2W( hb_BSubStr( cBuff, SPACESOFFSET, SPACESSIZE ) )
-      aLabel[ LBL_ACROSS  ] := BIN2W( hb_BSubStr( cBuff, ACROSSOFFSET, ACROSSSIZE ) )
+      aLabel[ LBL_HEIGHT  ] := Bin2W( hb_BSubStr( cBuff, HEIGHTOFFSET, HEIGHTSIZE ) )
+      aLabel[ LBL_WIDTH   ] := Bin2W( hb_BSubStr( cBuff, WIDTHOFFSET, WIDTHSIZE ) )
+      aLabel[ LBL_LMARGIN ] := Bin2W( hb_BSubStr( cBuff, LMARGINOFFSET, LMARGINSIZE ) )
+      aLabel[ LBL_LINES   ] := Bin2W( hb_BSubStr( cBuff, LINESOFFSET, LINESSIZE ) )
+      aLabel[ LBL_SPACES  ] := Bin2W( hb_BSubStr( cBuff, SPACESOFFSET, SPACESSIZE ) )
+      aLabel[ LBL_ACROSS  ] := Bin2W( hb_BSubStr( cBuff, ACROSSOFFSET, ACROSSSIZE ) )
 
       FOR i := 1 TO aLabel[ LBL_HEIGHT ]
 

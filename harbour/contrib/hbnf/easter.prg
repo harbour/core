@@ -93,4 +93,4 @@ FUNCTION FT_EASTER( nYear )
       nYear := 0
    ENDIF
 
-   RETURN SToD( Str( nYear,4 ) + PadL( nMonth, 2, "0" ) + PadL( Int( nDay ), 2, "0" ) )
+   RETURN hb_SToD( Str( nYear, 4 ) + PadL( nMonth, 2, "0" ) + PadL( Int( nDay ), 2, "0" ) )

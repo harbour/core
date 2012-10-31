@@ -56,7 +56,7 @@ FUNCTION FT_CLS( nTop, nLeft, nBottom, nRight, nColor )
       nColor := 0
    ENDIF
 
-   RETURN hb_Scroll( nTop, nLeft, nBottom, nRight, , , nColor )
+   RETURN hb_Scroll( nTop, nLeft, nBottom, nRight,,, nColor )
 
 FUNCTION FT_VIDSTR( nRow, nCol, cString, nColor )
 

@@ -7,7 +7,8 @@
 #include "hbxml.ch"
 
 PROCEDURE Main()
-   LOCAL cFile := hb_dirBase() + "test.xml"
+
+   LOCAL cFile := hb_DirBase() + "test.xml"
    LOCAL cString
    LOCAL cNote, cDiscount
    LOCAL oDoc, oBook, oIterator, oCurrent

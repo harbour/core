@@ -11,13 +11,14 @@
 #include "inkey.ch"
 
 PROCEDURE Main( cServer, cDatabase, cUser, cPass )
+
    LOCAL conn
 
    CLS
 
    ? "Connect", conn := PQconnectDB( "dbname = " + cDatabase + " host = " + cServer + " user = " + cUser + " password = " + cPass + " port = 5432" )
 
-   ? "Conection status", PQerrorMessage(conn), PQstatus(conn)
+   ? "Conection status", PQerrorMessage( conn ), PQstatus( conn )
 
    Query( conn, "SELECT codigo, descri FROM client limit 100", .F. )
    Query( conn, "SELECT codigo, descri FROM fornec limit 100", .F. )
@@ -26,6 +27,7 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    RETURN
 
 PROCEDURE Query( conn, cQuery, lCancel )
+
    LOCAL pCancel, cErrMsg := Space( 30 )
    LOCAL res, x, y, cTime
 
@@ -36,7 +38,7 @@ PROCEDURE Query( conn, cQuery, lCancel )
 
    DO WHILE Inkey() != K_ESC
       DevPos( Row(), 20 )
-      DevOut( "Processing: " + Elaptime( cTime, Time() ) )
+      DevOut( "Processing: " + ElapTime( cTime, Time() ) )
 
       Inkey( 1 )
 
@@ -58,7 +60,7 @@ PROCEDURE Query( conn, cQuery, lCancel )
    ENDDO
 
    IF Inkey() != K_ESC
-      ? "PQgetResult", hb_valtoexp( res := PQgetResult( conn ) )
+      ? "PQgetResult", hb_ValToExp( res := PQgetResult( conn ) )
 
       FOR x := 1 TO PQlastrec( res )
          ?

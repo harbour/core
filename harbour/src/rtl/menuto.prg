@@ -72,9 +72,10 @@ FUNCTION __MenuTo( bBlock, cVariable )
    LOCAL cFrontColor
 
    // Detect if a memvar was passed
-   lDeclared := !__mvEXIST( cVariable )
+   lDeclared := ! __mvExist( cVariable )
+
    IF lDeclared
-      __mvPUBLIC( cVariable )
+      __mvPublic( cVariable )
    ENDIF
 
    n := Eval( bBlock )
@@ -145,9 +146,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
          q := n
 
          IF t_aLevel[ t_nPointer - 1, n, 5 ] != NIL
-             aColor := COLORARRAY( t_aLevel[ t_nPointer - 1, n, 5 ] )
-             cFrontColor := iif( Empty( aColor[ 1 ] ), NIL, aColor[ 1 ] )
-             cBackColor  := iif( Len( aColor ) > 1, aColor[ 2 ], NIL )
+            aColor := COLORARRAY( t_aLevel[ t_nPointer - 1, n, 5 ] )
+            cFrontColor := iif( Empty( aColor[ 1 ] ), NIL, aColor[ 1 ] )
+            cBackColor  := iif( Len( aColor ) > 1, aColor[ 2 ], NIL )
          ENDIF
 
          IF Set( _SET_INTENSITY )
@@ -157,14 +158,14 @@ FUNCTION __MenuTo( bBlock, cVariable )
          ENDIF
 
          // highlight the prompt
-         DispOutAt( t_aLevel[ nPointer - 1, n, 1 ],;
-                    t_aLevel[ nPointer - 1, n, 2 ],;
-                    t_aLevel[ nPointer - 1, n, 3 ],;
-                    cBackColor )
+         DispOutAt( t_aLevel[ nPointer - 1, n, 1 ], ;
+            t_aLevel[ nPointer - 1, n, 2 ], ;
+            t_aLevel[ nPointer - 1, n, 3 ], ;
+            cBackColor )
 
          IF Set( _SET_INTENSITY )
             IF cFrontColor == NIL    // Only select Color Enhace if no color was passed
-              ColorSelect( CLR_STANDARD )
+               ColorSelect( CLR_STANDARD )
             ENDIF
          ENDIF
 
@@ -203,11 +204,11 @@ FUNCTION __MenuTo( bBlock, cVariable )
          CASE K_LBUTTONDOWN
          CASE K_LDBLCLK
             IF ( nMouseClik := HitTest( t_aLevel[ nPointer - 1 ], ;
-                                        MRow(), MCol() ) ) > 0
+               MRow(), MCol() ) ) > 0
                n := nMouseClik
             ENDIF
             IF nKey == K_LDBLCLK
-                lExit := .T.
+               lExit := .T.
             ENDIF
             EXIT
 #endif
@@ -251,10 +252,11 @@ FUNCTION __MenuTo( bBlock, cVariable )
          ENDSWITCH
 
          IF n != 0
-            DispOutAt( t_aLevel[ nPointer - 1, q, 1 ],;
-                       t_aLevel[ nPointer - 1, q, 2 ],;
-                       t_aLevel[ nPointer - 1, q, 3 ],;
-                       cFrontColor )
+            DispOutAt( ;
+               t_aLevel[ nPointer - 1, q, 1 ], ;
+               t_aLevel[ nPointer - 1, q, 2 ], ;
+               t_aLevel[ nPointer - 1, q, 3 ], ;
+               cFrontColor )
          ENDIF
 
       ENDDO
@@ -271,7 +273,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
    Eval( bBlock, n )
 
    IF lDeclared
-      __mvXRELEASE( cVariable )
+      __mvXRelease( cVariable )
    ENDIF
 
    SetPos( MaxRow() - 1, 0 )

@@ -75,7 +75,7 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
          lMode := .F.
       ENDIF
 
-      nSeconds := hb_milliSeconds()
+      nSeconds := hb_MilliSeconds()
       t_hIdle := hb_idleAdd( {|| doKeySec( nKey, nTime, lMode, ;
          @nCounter, @nSeconds ) } )
       RETURN .T.
@@ -85,7 +85,7 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
 
 STATIC PROCEDURE doKeySec( nKey, nTime, lMode, nCounter, nSeconds )
 
-   LOCAL nSec := hb_milliSeconds()
+   LOCAL nSec := hb_MilliSeconds()
 
    IF lMode .AND. ! Empty( NextKey() )
       nSeconds := nSec

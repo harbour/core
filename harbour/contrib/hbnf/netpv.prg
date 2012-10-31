@@ -36,4 +36,3 @@ FUNCTION FT_NETPV( nInitialInvestment, nInterestRate, aCashFlow, nNoOfCashFlows 
       1, nNoOfCashFlows )
 
    RETURN nNetPresentValue -= nInitialInvestment
-

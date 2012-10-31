@@ -58,15 +58,19 @@
           This should be reverted once derived classes
           work fine from dynamically loaded libs. */
 CREATE CLASS TIPEncoderQP
+
    VAR cName
 
    METHOD New() CONSTRUCTOR
    METHOD Encode( cData )
    METHOD Decode( cData )
+
 ENDCLASS
 
 METHOD New() CLASS TIPEncoderQP
+
    ::cName := "quoted-printable"
+
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderQP
@@ -76,6 +80,7 @@ METHOD Decode( cData ) CLASS TIPEncoderQP
    RETURN TIP_QPDecode( cData )
 
 FUNCTION TIP_QPEncode( cData )
+
    LOCAL nPos
    LOCAL c
    LOCAL nLen
@@ -107,6 +112,7 @@ FUNCTION TIP_QPEncode( cData )
    RETURN cString
 
 FUNCTION TIP_QPDecode( cData )
+
    LOCAL nPos
    LOCAL c
    LOCAL nLen

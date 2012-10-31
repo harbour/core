@@ -15,10 +15,10 @@ PROCEDURE Main()
 
    SetColor( "N/W" )
 
-   WVW_SetMainCoord( .F. )    //Standard Mode
+   WVW_SetMainCoord( .F. )    // Standard Mode
    fillscreen()
 
-   WVW_SetMainCoord( .T. )    //MainCoord Mode
+   WVW_SetMainCoord( .T. )    // MainCoord Mode
    fillscreen()
 
    RETURN

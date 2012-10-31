@@ -41,7 +41,7 @@ set _HB_DIR_TOOL=%~dp0tool\
 echo ! Downloading Harbour sources...
 
 if exist harbour rd /q /s harbour
-%_HB_DIR_TOOL%svn\bin\svn export http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour
+%_HB_DIR_TOOL%svn\bin\svn export http://svn.code.sf.net/p/harbour-project/code/trunk/harbour
 if errorlevel 1 goto _EXIT
 cd harbour
 

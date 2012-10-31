@@ -59,12 +59,12 @@ PROCEDURE Main()
    ? "Begin test of RANGEREM()"
    ?
 
-   ? [  rangerem("0","9","year2002.dbf") == "year.dbf"     ? --> "] + ;
-      rangerem( "0", "9", "year2002.dbf" ) + ["]
-   ? [  rangerem("9","0","year2002.dbf") == "22"           ? --> "] + ;
-      rangerem( "9", "0", "year2002.dbf" ) + ["]
-   ? [  rangerem("0","9","yearcurr.dbf") == "yearcurr.dbf" ? --> "] + ;
-      rangerem( "0", "9", "yearcurr.dbf" ) + ["]
+   ? '  rangerem("0","9","year2002.dbf") == "year.dbf"     ? --> "' + ;
+      rangerem( "0", "9", "year2002.dbf" ) + '"'
+   ? '  rangerem("9","0","year2002.dbf") == "22"           ? --> "' + ;
+      rangerem( "9", "0", "year2002.dbf" ) + '"'
+   ? '  rangerem("0","9","yearcurr.dbf") == "yearcurr.dbf" ? --> "' + ;
+      rangerem( "0", "9", "yearcurr.dbf" ) + '"'
 
    ?
    ? "End test of RANGEREM()"

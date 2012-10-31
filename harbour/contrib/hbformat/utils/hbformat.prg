@@ -57,27 +57,27 @@ REQUEST HB_GT_CGI_DEFAULT
 
 PROCEDURE Main( ... )
 
-   LOCAL oRef, aParams, cFileName, cInitDir, i, lRecursive := .F.
+   LOCAL oRef, aParams, cFileName, cInitDir, i, cParam, lRecursive := .F.
 
-   // Altd( 2 ); Altd()
+   // AltD( 2 ); AltD()
    aParams := hb_AParams()
 
-   IF Empty( aParams ) .OR. ( Left( cFileName := Atail(aParams ), 1 ) $ "@/-" )
+   IF Empty( aParams ) .OR. ( Left( cFileName := ATail( aParams ), 1 ) $ "@/-" )
       About()
       RETURN
    ENDIF
 
-   FOR i := 1 TO Len( aParams )
-      IF Left( aParams[ i ], 1 ) $ "-/"
-         IF SubStr( aParams[ i ], 2 ) == "r"
+   FOR EACH cParam IN aParams
+      IF Left( cParam, 1 ) $ "-/"
+         IF SubStr( cParam, 2 ) == "r"
             lRecursive := .T.
-            aParams[ i ] := "#"
+            cParam := "#"
             EXIT
          ENDIF
       ENDIF
    NEXT
 
-   oRef := hbFormatCode():New( aParams, hb_FNameMerge( hb_dirBase(), "hbformat.ini" ) )
+   oRef := hbFormatCode():New( aParams, hb_FNameMerge( hb_DirBase(), "hbformat.ini" ) )
    IF oRef:nErr > 0
       OutStd( "Initialization error", oRef:nErr, iif( oRef:nLineErr == 0, "in parameter", "on line " + hb_ntos( oRef:nLineErr ) ), ":", oRef:cLineErr, hb_eol() )
       RETURN
@@ -86,12 +86,14 @@ PROCEDURE Main( ... )
    oRef:bCallBack := {| a, i | FCallBack( a, i ) }
 
    IF "*" $ cFileName
-      IF ( i := RAt( ".", cFileName ) ) == 0 .OR. Substr( cFileName, i + 1, 1 ) < "A"
+      IF ( i := RAt( ".", cFileName ) ) == 0 .OR. SubStr( cFileName, i + 1, 1 ) < "A"
          OutErr( "Wrong mask" + hb_eol() )
       ELSE
-         cInitDir := iif( ( i := RAt( "\", cFileName ) ) == 0, ;
+         cInitDir := ;
+            iif( ( i := RAt( "\", cFileName ) ) == 0, ;
             iif( ( i := RAt( "/", cFileName ) ) == 0, ;
-            "." + hb_ps(), Left( cFileName, i ) ), ;
+            "." + hb_ps(), ;
+            Left( cFileName, i ) ), ;
             Left( cFileName, i ) )
          cFileName := iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) )
          DirEval( cInitDir, cFileName, lRecursive, {| name | Reformat( oRef, name ) } )
@@ -99,7 +101,6 @@ PROCEDURE Main( ... )
    ELSE
       Reformat( oRef, cFileName )
    ENDIF
-   OutStd( hb_eol() )
 
    RETURN
 
@@ -115,12 +116,12 @@ STATIC PROCEDURE Reformat( oRef, cFileName )
 
    LOCAL aFile
 
-   IF !Empty( aFile := oRef:File2Array( cFileName ) )
+   IF ! Empty( aFile := oRef:File2Array( cFileName ) )
       OutStd( "Reformatting " + cFileName + " (" + hb_ntos( Len( aFile ) ) + " lines)" + hb_eol() )
-      OutStd( "<" + hb_eol() )
+      OutStd( "<" )
       IF oRef:Reformat( aFile )
          oRef:Array2File( cFileName, aFile )
-         OutStd( ">" )
+         OutStd( ">" + hb_eol() )
       ELSE
          OutErr( "Error", oRef:nErr, "on line", oRef:nLineErr, ":", oRef:cLineErr, hb_eol() )
       ENDIF
@@ -130,58 +131,22 @@ STATIC PROCEDURE Reformat( oRef, cFileName )
 
    RETURN
 
-STATIC FUNCTION CmpMsk( strcmp, mask )
-
-   LOCAL lenm := Len( mask ), i, nPos1 := 1, nPos2, c
-
-   FOR i := 1 TO lenm
-      c := SubStr( mask, i, 1 )
-      IF c == "*"
-         IF i == lenm
-            RETURN .T.
-         ELSE
-            c := SubStr( mask, i + 1, 1 )
-            DO WHILE .T.
-               nPos2 := At( c, SubStr( strcmp, nPos1 ) )
-               IF nPos2 == 0
-                  RETURN .F.
-               ENDIF
-               nPos1 += nPos2 - 1
-               IF CmpMsk( SubStr( strcmp, nPos1 ), SubStr( mask, i + 1 ) )
-                  RETURN .T.
-               ENDIF
-               nPos1 ++
-            ENDDO
-         ENDIF
-      ELSE
-         IF !( c == SubStr( strcmp, nPos1, 1 ) )
-            RETURN .F.
-         ENDIF
-         nPos1 ++
-      ENDIF
-   NEXT
-
-   RETURN .T.
-
 STATIC PROCEDURE DirEval( cInitDir, cMask, lRecur, bCode )
 
-   LOCAL i, nLen, aFiles
+   LOCAL file
 
    cInitDir := hb_DirSepAdd( cInitDir )
+   cMask := iif( cMask == NIL, hb_osFileMask(), cMask )
 
-   cMask := iif( cMask == NIL, hb_osFileMask(), Upper( cMask ) )
-
-   aFiles := Directory( cInitDir + hb_osFileMask(), "HSD" )
-   nLen := Len( aFiles )
-   FOR i := 1 TO nLen
-      IF "D" $ aFiles[ i ][ F_ATTR ]
-         IF !( "." == aFiles[ i ][ F_NAME ] ) .AND. ;
-            !( ".." == aFiles[ i ][ F_NAME ] ) .AND. lRecur
-            DirEval( cInitDir + aFiles[ i ][ F_NAME ], cMask, lRecur, bCode )
+   FOR EACH file IN Directory( cInitDir + cMask, "HSD" )
+      IF "D" $ file[ F_ATTR ]
+         IF !( "." == file[ F_NAME ] ) .AND. ;
+            !( ".." == file[ F_NAME ] ) .AND. lRecur
+            DirEval( cInitDir + file[ F_NAME ], cMask, lRecur, bCode )
          ENDIF
-      ELSEIF CmpMsk( Upper( aFiles[ i ][ F_NAME ] ), cMask )
+      ELSE
          IF bCode != NIL
-            Eval( bCode, cInitDir + aFiles[ i ][ F_NAME ] )
+            Eval( bCode, cInitDir + file[ F_NAME ] )
          ENDIF
       ENDIF
    NEXT
@@ -190,12 +155,13 @@ STATIC PROCEDURE DirEval( cInitDir, cMask, lRecur, bCode )
 
 STATIC PROCEDURE About()
 
-   OutStd( "Harbour Source Formatter " + HBRawVersion() + hb_eol() +;
-           "Copyright (c) 2009-2012, Alexander S.Kresin" + hb_eol() +;
-           "http://harbour-project.org/" + hb_eol() +;
-           hb_eol() +;
-           "Syntax:  hbformat [options] [@config] <file[s]>" + hb_eol() +;
-           hb_eol() )
+   OutStd( ;
+      "Harbour Source Formatter " + HBRawVersion() + hb_eol() + ;
+      "Copyright (c) 2009-2012, Alexander S.Kresin" + hb_eol() + ;
+      "http://harbour-project.org/" + hb_eol() + ;
+      hb_eol() + ;
+      "Syntax:  hbformat [options] [@config] <file[s]>" + hb_eol() + ;
+      hb_eol() )
 
    RETURN
 

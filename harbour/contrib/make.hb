@@ -39,11 +39,11 @@
 #define _ACT_INC_REBUILD        4
 #define _ACT_INC_REBUILD_INST   5
 
-STATIC sc_hActions := {;
-   _ACT_INC_CLEAN        => "clean" ,;
-   _ACT_INC              => "build" ,;
-   _ACT_INC_INST         => "build and install" ,;
-   _ACT_INC_REBUILD      => "rebuild" ,;
+STATIC sc_hActions := { ;
+   _ACT_INC_CLEAN        => "clean", ;
+   _ACT_INC              => "build", ;
+   _ACT_INC_INST         => "build and install", ;
+   _ACT_INC_REBUILD      => "rebuild", ;
    _ACT_INC_REBUILD_INST => "rebuild and install" }
 
 STATIC s_cBase
@@ -53,6 +53,7 @@ STATIC s_cBinDir
 STATIC s_cReBase
 
 PROCEDURE Main( ... )
+
    LOCAL hProjectList
    LOCAL aParams
 
@@ -68,11 +69,11 @@ PROCEDURE Main( ... )
       s_cRoot := "../"
    ENDIF
 
-   #if defined( __HBSCRIPT__HBSHELL )
-      s_cBinDir := hbshell_DirBase()
-   #else
-      s_cBinDir := hb_DirBase()
-   #endif
+#if defined( __HBSCRIPT__HBSHELL )
+   s_cBinDir := hbshell_DirBase()
+#else
+   s_cBinDir := hb_DirBase()
+#endif
    /* For *nixes */
    s_cBinDir := hb_PathNormalize( s_cBinDir )
 
@@ -87,7 +88,7 @@ PROCEDURE Main( ... )
    aParams := hb_AParams()
 
    IF AScanL( aParams, "verbose" ) > 0
-      hb_setenv( "HB_BUILD_VERBOSE", "yes" )
+      hb_SetEnv( "HB_BUILD_VERBOSE", "yes" )
    ENDIF
 
    /* Build */
@@ -110,6 +111,7 @@ PROCEDURE Main( ... )
    #5 clean install  clean install  _ACT_INC_REBUILD_INST  -inc -rebuildall -instpath=
  */
 PROCEDURE Standalone( aParams, hProjectList )
+
    LOCAL hProjectReqList
 
    LOCAL cOptionsUser
@@ -210,6 +212,7 @@ PROCEDURE Standalone( aParams, hProjectList )
                      clean      install clean    _ACT_INC_CLEAN         -inc -clean
  */
 PROCEDURE GNUMake( aParams, hProjectList )
+
    LOCAL cProject
    LOCAL hProjectReqList
 
@@ -324,20 +327,20 @@ PROCEDURE GNUMake( aParams, hProjectList )
    /* Clearing envvars that may interact with hbmk2 */
 
    /* Saving original install dirs to our own variables */
-   hb_setenv( "_HB_INSTALL_BIN", GetEnv( "HB_INSTALL_BIN" ) )
-   hb_setenv( "_HB_INSTALL_LIB", GetEnv( "HB_INSTALL_LIB" ) )
-   hb_setenv( "_HB_INSTALL_DYN", GetEnv( "HB_INSTALL_DYN" ) )
-   hb_setenv( "_HB_INSTALL_INC", GetEnv( "HB_INSTALL_INC" ) )
-   hb_setenv( "_HB_INSTALL_MAN", GetEnv( "HB_INSTALL_MAN" ) )
-   hb_setenv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
-   hb_setenv( "_HB_INSTALL_CONTRIB", GetEnv( "HB_INSTALL_CONTRIB" ) )
+   hb_SetEnv( "_HB_INSTALL_BIN", GetEnv( "HB_INSTALL_BIN" ) )
+   hb_SetEnv( "_HB_INSTALL_LIB", GetEnv( "HB_INSTALL_LIB" ) )
+   hb_SetEnv( "_HB_INSTALL_DYN", GetEnv( "HB_INSTALL_DYN" ) )
+   hb_SetEnv( "_HB_INSTALL_INC", GetEnv( "HB_INSTALL_INC" ) )
+   hb_SetEnv( "_HB_INSTALL_MAN", GetEnv( "HB_INSTALL_MAN" ) )
+   hb_SetEnv( "_HB_INSTALL_ETC", GetEnv( "HB_INSTALL_ETC" ) )
+   hb_SetEnv( "_HB_INSTALL_CONTRIB", GetEnv( "HB_INSTALL_CONTRIB" ) )
 
    /* Override hbmk2 autodetection. WARNING: Must be in sync with global.mk logic */
-   hb_setenv( "HB_INSTALL_PREFIX", s_cRoot )
-   hb_setenv( "HB_INSTALL_BIN", s_cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
-   hb_setenv( "HB_INSTALL_LIB", s_cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
-   hb_setenv( "HB_INSTALL_DYN" )
-   hb_setenv( "HB_INSTALL_INC", s_cRoot + "include" )
+   hb_SetEnv( "HB_INSTALL_PREFIX", s_cRoot )
+   hb_SetEnv( "HB_INSTALL_BIN", s_cRoot + "bin/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
+   hb_SetEnv( "HB_INSTALL_LIB", s_cRoot + "lib/" + GetEnv( "HB_PLATFORM" ) + "/" + GetEnv( "HB_COMPILER" ) + GetEnv( "HB_BUILD_NAME" ) )
+   hb_SetEnv( "HB_INSTALL_DYN" )
+   hb_SetEnv( "HB_INSTALL_INC", s_cRoot + "include" )
 
    /* Start building */
 
@@ -350,6 +353,7 @@ PROCEDURE GNUMake( aParams, hProjectList )
    RETURN
 
 STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOptionsUser, lStdAlone )
+
    LOCAL aPairList
    LOCAL aSortedList
 
@@ -367,7 +371,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    LOCAL nErrorLevel
 
    /* Signal that we're doing a Harbour build */
-   hb_setenv( "_HB_BUILD_", "yes" )
+   hb_SetEnv( "_HB_BUILD_", "yes" )
 
    /* Preprocessing */
 
@@ -428,7 +432,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    lInstall := nAction == _ACT_INC_INST .OR. ;
                nAction == _ACT_INC_REBUILD_INST
 
-   hb_setenv( iif( lStdAlone, "_HB_BUILD_INSTALL_STDALONE", "_HB_BUILD_INSTALL" ), iif( lInstall, "yes", NIL ) )
+   hb_SetEnv( iif( lStdAlone, "_HB_BUILD_INSTALL_STDALONE", "_HB_BUILD_INSTALL" ), iif( lInstall, "yes", NIL ) )
 
    /* Build the dependencies and primary targets in sorted order */
 
@@ -439,10 +443,10 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
          lPrimary := cProject $ hProjectReqList
          lContainer := "lFromContainer" $ hProjectList[ cProject ]
 
-         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ) +;
-                                                       iif( ( lPrimary .OR. lContainer ) .AND. ;
-                                                            hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn" .AND. ;
-                                                            GetEnv( "HB_REBUILD_EXTERN" ) == "yes", " -hbx=" + hb_FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
+         IF ( nErrorLevel := call_hbmk2( cProjectPath, iif( lPrimary .OR. lContainer, iif( lContainer, cOptions, cOptions + cOptionsUser ), " -inc" ) + ;
+               iif( ( lPrimary .OR. lContainer ) .AND. ;
+               hProjectList[ cProject ][ "cType" ] $ "hblib|hbdyn" .AND. ;
+               GetEnv( "HB_REBUILD_EXTERN" ) == "yes", " -hbx=" + hb_FNameExtSet( cProjectPath, ".hbx" ), "" ), NIL ) ) == 0
 
             /* Build dynamic lib */
             IF GetEnv( "HB_BUILD_CONTRIB_DYN" ) == "yes" .AND. hProjectList[ cProject ][ "cType" ] == "hblib"
@@ -481,6 +485,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
    RETURN
 
 STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
+
    LOCAL cStdOut
    LOCAL cDir
    LOCAL cName
@@ -505,14 +510,14 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
       FOR EACH tmp IN hb_ATokens( hbmk2_hbinfo_getitem( hInfo, "hbctree" ), Chr( 10 ) )
          IF ! Empty( tmp )
             hb_FNameSplit( LTrim( tmp ), @cDir, @cName )
-            #ifdef __PLATFORM__DOS
-                /* Ignore long filenames on MS-DOS hosts */
-                IF Len( cName ) > 8
-                   LOOP
-                ENDIF
-            #endif
-            AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ),;
-                                         "cFileName_HBP" => StrTran( hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ) ) ), "\", "/" ) } )
+#ifdef __PLATFORM__DOS
+            /* Ignore long filenames on MS-DOS hosts */
+            IF Len( cName ) > 8
+               LOOP
+            ENDIF
+#endif
+            AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ), ;
+               "cFileName_HBP" => StrTran( hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ) ) ), "\", "/" ) } )
          ENDIF
       NEXT
    ENDIF
@@ -523,38 +528,39 @@ STATIC FUNCTION hbmk2_hbinfo_getitem( hInfo, cItem )
    RETURN iif( HB_ISHASH( hInfo ), hb_HGetDef( hInfo, cItem, "" ), "" )
 
 STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStdOut )
+
    LOCAL nErrorLevel
    LOCAL cOptionsLibDyn := ""
    LOCAL cCommand
 
    /* Making sure that user settings do not interfere with the std build process. */
-   hb_setenv( "HBMK_OPTIONS" )
-   hb_setenv( "HARBOUR" )
-   hb_setenv( "HARBOURCMD" )
-   hb_setenv( "CLIPPER" )
-   hb_setenv( "CLIPPERCMD" )
+   hb_SetEnv( "HBMK_OPTIONS" )
+   hb_SetEnv( "HARBOUR" )
+   hb_SetEnv( "HARBOURCMD" )
+   hb_SetEnv( "CLIPPER" )
+   hb_SetEnv( "CLIPPERCMD" )
 
    IF cDynSuffix != NIL
-      hb_setenv( "_HB_DYNSUFF", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
-      hb_setenv( "_HB_BUILD_LIBDYN", "yes" )
+      hb_SetEnv( "_HB_DYNSUFF", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
+      hb_SetEnv( "_HB_BUILD_LIBDYN", "yes" )
 
       IF hb_FileExists( hb_FNameExtSet( cProjectPath, ".hbc" ) )
          cOptionsLibDyn += " " + hb_FNameExtSet( cProjectPath, ".hbc" )
       ENDIF
    ELSE
-      hb_setenv( "_HB_DYNSUFF" )
-      hb_setenv( "_HB_BUILD_LIBDYN" )
+      hb_SetEnv( "_HB_DYNSUFF" )
+      hb_SetEnv( "_HB_BUILD_LIBDYN" )
    ENDIF
 
-   hb_setenv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
+   hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
 
-   cCommand := s_cBinDir + "hbmk2" +;
-               " -quiet -width=0 -autohbm-" +;
-               " @" + StrTran( s_cHome + "hbpre", "\", "/" ) +;
-               cOptionsPre +;
-               " " + StrTran( cProjectPath, "\", "/" ) +;
-               " @" + StrTran( s_cHome, "\", "/" ) + "hbpost" +;
-               cOptionsLibDyn
+   cCommand := s_cBinDir + "hbmk2" + ;
+      " -quiet -width=0 -autohbm-" + ;
+      " @" + StrTran( s_cHome + "hbpre", "\", "/" ) + ;
+      cOptionsPre + ;
+      " " + StrTran( cProjectPath, "\", "/" ) + ;
+      " @" + StrTran( s_cHome, "\", "/" ) + "hbpost" + ;
+      cOptionsLibDyn
 
    IF PCount() >= 4
       nErrorLevel := hb_processRun( cCommand,, @cStdOut, @cStdErr )
@@ -569,6 +575,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
    RETURN nErrorLevel
 
 STATIC FUNCTION hbmk2_errorstr( nErrorLevel )
+
    SWITCH nErrorLevel
    CASE 0  ; RETURN "no error"
    CASE 1  ; RETURN "unknown platform"
@@ -585,6 +592,7 @@ STATIC FUNCTION hbmk2_errorstr( nErrorLevel )
    CASE 30 ; RETURN "too deep nesting"
    CASE 50 ; RETURN "stop requested"
    ENDSWITCH
+
    RETURN "unknown"
 
 STATIC FUNCTION mk_hb_processRun( cCommand, ... )
@@ -594,6 +602,7 @@ STATIC FUNCTION mk_hb_processRun( cCommand, ... )
    RETURN hb_processRun( cCommand, ... )
 
 STATIC FUNCTION mk_hbd( cDir )
+
    LOCAL cName
    LOCAL cDocDir
    LOCAL tmp
@@ -632,6 +641,7 @@ STATIC FUNCTION AScanL( aArray, cString )
    RETURN AScan( aArray, {| tmp | Lower( tmp ) == cString } )
 
 STATIC FUNCTION DirGetName( cDir )
+
    LOCAL cName
 
    cDir := hb_DirSepDel( cDir )
@@ -649,6 +659,7 @@ STATIC FUNCTION PathSepToSelf( cFileName )
 
 /* Convert indented list of line to tree / list of parent-child pairs */
 STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
+
    LOCAL hFlatTreeElement
    LOCAL hNode, hNewNode, tmp
    LOCAL nLevel, nDepth
@@ -687,6 +698,7 @@ STATIC PROCEDURE AddDeptPair( aPairList, cParent, cChild )
 
 /* Topological sort of the dependency graph */
 STATIC FUNCTION TopoSort( aEdgeList )
+
    LOCAL aList := {}
    LOCAL hTopNodes := { => }
 
@@ -729,6 +741,7 @@ STATIC FUNCTION TopoSort( aEdgeList )
    RETURN aList
 
 PROCEDURE AddProject( hProjectList, cFileName )
+
    LOCAL cDir
    LOCAL cName
    LOCAL cExt
@@ -757,6 +770,7 @@ PROCEDURE AddProject( hProjectList, cFileName )
    RETURN
 
 PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
+
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) ), Chr( 10 ) )
@@ -769,6 +783,7 @@ PROCEDURE LoadProjectListFromFile( hProjectList, cFileName )
    RETURN
 
 PROCEDURE LoadProjectListFromString( hProjectList, cString )
+
    LOCAL cItem
 
    FOR EACH cItem IN hb_ATokens( cString,, .T. )

@@ -45,7 +45,7 @@ PROCEDURE Main()
    WVW_pbSetFont( NIL, "Arial", 16 )
 
    nMaxWidth := 0
-   AEval( s_aAnswers, {| x | nMaxWIdth := Max( nMaxWidth,Len(x ) ) } )
+   AEval( s_aAnswers, {| x | nMaxWIdth := Max( nMaxWidth, Len( x ) ) } )
 
    SetMode( 11, nMaxWidth + 1 + 10 + 2 )
 
@@ -87,7 +87,7 @@ PROCEDURE Main()
          wvw_cbSetFocus( NIL, nCBid )
       CASE nPos == 2
          wvw_pbSetFocus( NIL, nPBid )
-         wvw_pbSetStyle( NIL, nPBid, 1 ) //BS_DEFPUSHBUTTON
+         wvw_pbSetStyle( NIL, nPBid, 1 ) // BS_DEFPUSHBUTTON
       ENDCASE
    ENDDO
 
@@ -99,21 +99,21 @@ PROCEDURE Main()
    Inkey( 0 )
    SetCursor( nCursor )
 
-   RETURN  //main
+   RETURN  // main
 
 STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
 
    DO CASE
-   CASE nEvent == 3 //CBN_SETFOCUS
+   CASE nEvent == 3 // CBN_SETFOCUS
       // none
-   CASE nEvent == 4 //CBN_KILLFOCUS
+   CASE nEvent == 4 // CBN_KILLFOCUS
       // none
       IF nIndex == 0
          wvw_pbEnable( nWinNum, nPBid, .T. )
       ELSE
          wvw_pbEnable( nWinNum, nPBid, .F. )
       ENDIF
-   CASE nEvent == 1 //CBN_SELCHANGE
+   CASE nEvent == 1 // CBN_SELCHANGE
       IF !wvw_cbIsDropped( nWinNum, nId )
          // nIndex is 0-based
          IF nIndex == 0

@@ -55,7 +55,7 @@
 MEMVAR _COOKIE
 
 FUNCTION uhttpd_CookieNew( cDomain, cPath, nExpireDays, nExpireSecs )
-RETURN uhttpd_Cookie():New( cDomain, cPath, nExpireDays, nExpireSecs )
+   RETURN uhttpd_Cookie():New( cDomain, cPath, nExpireDays, nExpireSecs )
 
 CLASS uhttpd_Cookie
 
@@ -83,6 +83,7 @@ ENDCLASS
 // ------------------------------
 
 METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttpd_Cookie
+
    IF cDomain != NIL
       ::cDomain := cDomain
    ENDIF
@@ -95,9 +96,11 @@ METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs ) CLASS uhttp
    IF nExpireSecs != NIL
       ::nExpireSecs := nExpireSecs
    ENDIF
+
    RETURN NIL
 
 METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly ) CLASS uhttpd_Cookie
+
    LOCAL cStr, nPos, nCookies
 
    __defaultNIL( @cDomain, ::cDomain )
@@ -112,24 +115,24 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
 
    IF xValue != NIL
       // Search if a cookie already exists
-                                        // case sensitive
-      IF ( nPos := aScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
-         ::aCookies[ nPos ][ 2 ] := uhttpd_UrlEncode( hb_cStr( xValue ) )
+      // case sensitive
+      IF ( nPos := AScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
+         ::aCookies[ nPos ][ 2 ] := uhttpd_UrlEncode( hb_CStr( xValue ) )
       ELSE
-         aAdd( ::aCookies, { cCookieName, uhttpd_UrlEncode( hb_cStr( xValue ) ) } )
+         AAdd( ::aCookies, { cCookieName, uhttpd_UrlEncode( hb_CStr( xValue ) ) } )
       ENDIF
    ELSE
-      IF ( nPos := aScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
-         hb_aDel( ::aCookies, nPos, .T. )
+      IF ( nPos := AScan( ::aCookies, {| e | e[ 1 ] == cCookieName } ) ) > 0
+         hb_ADel( ::aCookies, nPos, .T. )
       ENDIF
    ENDIF
 
    // Rebuild cookie string as per RFC2616 (comma separated list)
    cStr     := ""
    nCookies := Len( ::aCookies )
-   aEval( ::aCookies, {| e, i | cStr += e[ 1 ] + "=" + e[ 2 ] + iif( i < nCookies, ",", "" ) } )
+   AEval( ::aCookies, {| e, i | cStr += e[ 1 ] + "=" + e[ 2 ] + iif( i < nCookies, ",", "" ) } )
 
-   //cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_cStr( xValue ) )
+   // cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_cStr( xValue ) )
 
    IF cDomain != NIL
       cStr += "; domain=" + cDomain
@@ -141,45 +144,50 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
       cStr += "; expires=" + cExpires
    ENDIF
    IF HB_ISLOGICAL( lSecure ) .AND. lSecure
-       cStr += "; secure"
+      cStr += "; secure"
    ENDIF
 
    // Send the header
-   //uhttpd_SetHeader( "Set-Cookie", cStr, .F. )
+   // uhttpd_SetHeader( "Set-Cookie", cStr, .F. )
    uhttpd_SetHeader( "Set-Cookie", cStr )
 
    RETURN NIL
 
 METHOD DeleteCookie( cCookieName, cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
-   LOCAL cExpires := uhttpd_DateToGMT( DATE() - 1 ) // Setting date in the past delete cookie
+
+   LOCAL cExpires := uhttpd_DateToGMT( Date() - 1 ) // Setting date in the past delete cookie
 
    ::SetCookie( cCookieName, "", cDomain, cPath, cExpires, lSecure )
 
    RETURN NIL
 
 METHOD DeleteAllCookies( cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
+
    LOCAL cCookieName
 
    FOR EACH cCookieName IN _COOKIE:Keys
-       //::DeleteCookie( Substr( cCookieName, 2 ), cDomain, cPath, lSecure )
-       ::DeleteCookie( cCookieName, cDomain, cPath, lSecure )
+      // ::DeleteCookie( Substr( cCookieName, 2 ), cDomain, cPath, lSecure )
+      ::DeleteCookie( cCookieName, cDomain, cPath, lSecure )
    NEXT
 
    RETURN NIL
 
 METHOD GetCookie( cCookieName ) CLASS uhttpd_Cookie
+
    LOCAL cHeader, cRet
    LOCAL nPos := 1
+
    DO WHILE .T.
-       IF ( cHeader := uhttpd_GetHeader( "Set-Cookie", @nPos ) ) != NIL
-          IF cHeader == cCookieName
-             cRet := cHeader
-             EXIT
-          ELSE
-             nPos++
-          ENDIF
-       ELSE
-          EXIT
-       ENDIF
+      IF ( cHeader := uhttpd_GetHeader( "Set-Cookie", @nPos ) ) != NIL
+         IF cHeader == cCookieName
+            cRet := cHeader
+            EXIT
+         ELSE
+            nPos++
+         ENDIF
+      ELSE
+         EXIT
+      ENDIF
    ENDDO
+
    RETURN cRet

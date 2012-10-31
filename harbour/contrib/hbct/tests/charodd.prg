@@ -61,8 +61,8 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? [  charodd("1A2B3C4D5E") == "12345" ? --> "] + charodd( "1A2B3C4D5E" ) + ["]
-   ? [  charodd("1A2B3C4D5")  == "12345" ? --> "] + charodd( "1A2B3C4D5" ) + ["]
+   ? '  charodd("1A2B3C4D5E") == "12345" ? --> "' + charodd( "1A2B3C4D5E" ) + '"'
+   ? '  charodd("1A2B3C4D5")  == "12345" ? --> "' + charodd( "1A2B3C4D5" ) + '"'
 
    ? "End test of CHARODD()"
    ?

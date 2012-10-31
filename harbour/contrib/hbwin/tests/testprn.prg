@@ -7,6 +7,7 @@
 #include "hbwin.ch"
 
 PROCEDURE Main( cPar1 )
+
    LOCAL nPrn := 1
    LOCAL cBMPFile := Space( 40 )
    LOCAL aPrn := WIN_PRINTERLIST()
@@ -15,7 +16,7 @@ PROCEDURE Main( cPar1 )
    CLS
 
    IF Empty( aPrn )
-      Alert("No printers installed - Cannot continue")
+      Alert( "No printers installed - Cannot continue" )
       QUIT
    ENDIF
 
@@ -34,6 +35,7 @@ PROCEDURE Main( cPar1 )
    RETURN
 
 STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
+
    LOCAL oPrinter := Win_Prn():New( cPrinter )
    LOCAL aFonts
    LOCAL x
@@ -59,7 +61,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() = " + Str( oPrinter:MaxRow(), 4 ) + "   MaxCol() = " + Str( oPrinter:MaxCol(), 4 ) )
          oPrinter:Bold( WIN_FW_DONTCARE )
          oPrinter:NewLine()
-         oPrinter:TextOut("   Partial list of available fonts that are available for OEM_")
+         oPrinter:TextOut( "   Partial list of available fonts that are available for OEM_" )
          oPrinter:NewLine()
          oPrinter:UnderLine( .T. )
          oPrinter:Italic( .T. )
@@ -79,7 +81,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:UnderLine( .F. )
          aFonts := oPrinter:GetFonts()
          oPrinter:NewLine()
-         FOR x:= 1 TO Len( aFonts ) STEP 2
+         FOR x := 1 TO Len( aFonts ) STEP 2
             oPrinter:CharSet( aFonts[ x, 4 ] )
             IF oPrinter:SetFont( aFonts[ x, 1 ] )       // Could use "IF oPrinter:SetFontOk" after call to oPrinter:SetFont()
                IF oPrinter:FontName == aFonts[ x, 1 ]  // Make sure Windows didn't pick a different font
@@ -102,10 +104,10 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:CharSet( 0 )  // Reset default charset
          oPrinter:Bold( WIN_FW_EXTRABOLD )
          oPrinter:NewLine()
-         oPrinter:TextOut( "This is on line" + Str( oPrinter:Prow(), 4 ) + ", Printed bold, " )
+         oPrinter:TextOut( "This is on line" + Str( oPrinter:PRow(), 4 ) + ", Printed bold, " )
          oPrinter:TextOut( " finishing at Column: " )
-         oPrinter:TextOut( Str( oPrinter:Pcol(), 4 ) )
-         oPrinter:SetPrc( oPrinter:Prow() + 3, 0 )
+         oPrinter:TextOut( Str( oPrinter:PCol(), 4 ) )
+         oPrinter:SetPRC( oPrinter:PRow() + 3, 0 )
          oPrinter:Bold( WIN_FW_DONTCARE )
          oPrinter:TextOut( "Notice: UNDERLINE only prints correctly if there is a blank line after", .T. )
          oPrinter:TextOut( "        it. This is because of :LineHeight and the next line", .T. )
@@ -121,10 +123,10 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:Ellipse( 400, oPrinter:PosY + 100, 500, oPrinter:PosY + 200 )
          oPrinter:FillRect( 600, oPrinter:PosY + 100, 700, oPrinter:PosY + 200, HB_WIN_RGB_RED )
 
-//       To print a barcode;
-//       Replace 'BCod39HN' with your own bar code font or any other font
-//         oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ), oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
-//
+         //       To print a barcode;
+         //       Replace 'BCod39HN' with your own bar code font or any other font
+         //         oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ), oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
+         //
          PrintBitMap( oPrinter, cBMPFile )
 
          oPrinter:EndDoc()
@@ -135,10 +137,11 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
    RETURN
 
 STATIC PROCEDURE PrintBitMap( oPrn, cBitFile )
+
    LOCAL oBMP
 
    IF Empty( cBitFile )
-      *
+      //
    ELSEIF ! hb_FileExists( cBitFile )
       Alert( cBitFile + " not found " )
    ELSE

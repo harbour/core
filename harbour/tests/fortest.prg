@@ -36,9 +36,10 @@ PROCEDURE Main()
       s_nTo   := array[ tmp ][ 2 ]
       s_nStep := array[ tmp ][ 3 ]
 
-      ? " From:", s_nFrom,;
-        "   To:", s_nTo,;
-        " Step:", s_nStep
+      ? ;
+         " From:", s_nFrom, ;
+         "   To:", s_nTo, ;
+         " Step:", s_nStep
 
       FOR n := Eval( {|| ValFrom() } ) TO Eval( {|| ValTo() } ) STEP Eval( {|| ValStep() } )
          ? "Exec", n

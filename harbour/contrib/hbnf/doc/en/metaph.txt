@@ -13,7 +13,7 @@
       FT_METAPH( <cName> [, <nSize> ] ) -> cMetaPhone
    $ARGUMENTS$
       <cName> is the character string to convert
-  
+
       <nSize> is the length of the character string to be returned.
               If not specified the default length is 4 bytes.
    $RETURNS$

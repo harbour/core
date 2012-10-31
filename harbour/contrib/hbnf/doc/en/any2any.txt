@@ -14,10 +14,10 @@
                [, <lWantYesNo> ] ) -> xResult
    $ARGUMENTS$
       <xValueToConvert> is the value to convert.
-  
+
       <cTypeToConvertTo> is the type of value to convert to
       ("C","D","L","N","A" or "B").
-  
+
       <lWantYesNo> is a logical to signal if 'Y' or 'N' is to be returned
       if Converting a logical, otherwise '.T.' or '.F.' will be returned
       for logicals.

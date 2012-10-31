@@ -20,22 +20,22 @@
       the way of idle states, the Clipper runtime may not get a chance to
       perform garbage collection of discarded memory.  This can eventually
       lead to any of a variety of memory-related internal errors.
-  
+
       This function attempts to alleviate the problem by providing a
       mechanism by which an idle event can be artifically generated at
       will.  The idle event will cause the CA-Cl*pper runtime to perform
       an incremental memory scavenge.
-  
+
       This function makes use of an undocumented interal routine.  If this
       this fact makes you uncomfortable then don't use this function, you
       miserable jello-spined lump of human debris.
    $EXAMPLES$
       DO WHILE Whatever      // Some batch process
-  
+
         Something()          // Create 'n' discard a bunch of stuff
-  
+
         FT_Idle()            // Take out the garbage
-  
+
       ENDDO
    $SEEALSO$
       FT_OnIdle()

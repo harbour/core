@@ -29,13 +29,13 @@ PROCEDURE Main()
       dsFunctions:SetSQL( "SELECT * FROM test" )
       dsFunctions:Open()
 
-      @  3, 24 TO len( dsFunctions:Fields ) + 4, 55
+      @  3, 24 TO Len( dsFunctions:Fields ) + 4, 55
 
       aOrders := {}
       FOR i := 1 TO Len( dsFunctions:Fields )
 
          AAdd( aOrders, dsFunctions:Fields[ i ] :FieldName )
-         @ i + 3, 25 PROMPT padc( "ORDER BY " + aOrders[ i ], 30 )
+         @ i + 3, 25 PROMPT PadC( "ORDER BY " + aOrders[ i ], 30 )
 
       NEXT
 
@@ -62,17 +62,19 @@ PROCEDURE Main()
       @ 11, 2         SAY "Statement:"     COLOR "GR+/B"
       @ 11, Col() + 1 SAY dsFunctions:cSQL
 
-      @ 14, 5 SAY " " + PadR( dsFunctions:FieldByName( "First" ):FieldName, 3 ) + "   " + ;
-                        PadR( dsFunctions:FieldByName( "Last" ):FieldName, 15 ) + "   " + ;
-                        PadR( dsFunctions:FieldByName( "Street" ):FieldName, 2 ) + "   " + ;
-                        PadR( dsFunctions:FieldByName( "City" ):FieldName, 40 ) ;
-              COLOR "B/W"
+      @ 14, 5 SAY " " + ;
+         PadR( dsFunctions:FieldByName( "First" ):FieldName, 3 ) + "   " + ;
+         PadR( dsFunctions:FieldByName( "Last" ):FieldName, 15 ) + "   " + ;
+         PadR( dsFunctions:FieldByName( "Street" ):FieldName, 2 ) + "   " + ;
+         PadR( dsFunctions:FieldByName( "City" ):FieldName, 40 ) ;
+         COLOR "B/W"
 
       DO WHILE !dsFunctions:Eof()
-         ? "      " + PadR( dsFunctions:FieldByName( "First" ):Value, 3 ), "|", ;
-                      PadR( dsFunctions:FieldByName( "Last" ):Value, 15 ), "|", ;
-                      PadR( dsFunctions:FieldByName( "Street" ):Value, 2 ), "|", ;
-                      PadR( dsFunctions:FieldByName( "City" ):Value, 40 )
+         ? "      " + ;
+            PadR( dsFunctions:FieldByName( "First" ):Value, 3 ), "|", ;
+            PadR( dsFunctions:FieldByName( "Last" ):Value, 15 ), "|", ;
+            PadR( dsFunctions:FieldByName( "Street" ):Value, 2 ), "|", ;
+            PadR( dsFunctions:FieldByName( "City" ):Value, 40 )
          dsFunctions:Skip()
       ENDDO
 

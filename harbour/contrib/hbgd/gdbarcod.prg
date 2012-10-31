@@ -108,7 +108,7 @@ METHOD New( nTypeCode ) CLASS TCode
 
    ELSEIF nTypeCode == 128
 
-      ::aCode := {;
+      ::aCode := { ;
          "212222", "222122", "222221", "121223", "121322", "131222", "122213", "122312", "132212", "221213", ;
          "221312", "231212", "112232", "122132", "122231", "113222", "123122", "123221", "223211", "221132", ;
          "221231", "213212", "223112", "312131", "311222", "321122", "321221", "312212", "322112", "322211", ;
@@ -245,7 +245,7 @@ METHOD Draw13( cText )  CLASS TCode
 
             IF ii > 1 .AND. ii < 8
 
-               ::DrawSingleBar( iif( SubStr( xParity, ii - 1, 1 ) == "E",;
+               ::DrawSingleBar( iif( SubStr( xParity, ii - 1, 1 ) == "E", ;
                   ::LeftHand_Even[ jj ], ;
                   ::LeftHand_Odd[ jj ] ) )
             ELSEIF ii > 1 .AND. ii >= 8
@@ -323,7 +323,7 @@ METHOD Draw8( cText ) CLASS TCode
 
       ::positionX := iif( ::textfont == 0, 0, 10 )
 
-      //xParity := ::Parity[ 7 ]
+      // xParity := ::Parity[ 7 ]
 
       // First Bar
       ::positionX := 10

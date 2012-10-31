@@ -12,15 +12,15 @@
    $SYNTAX$
       POSALPHA( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
@@ -44,15 +44,15 @@
    $SYNTAX$
       POSLOWER( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
@@ -77,15 +77,15 @@
       POSRANGE( <cChar1>, <cChar2>, <cString>, [<lMode>],
                 [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
@@ -109,15 +109,15 @@
    $SYNTAX$
       POSUPPER( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$

@@ -52,11 +52,12 @@
  */
 
 FUNCTION sprintf( ... )
+
    LOCAL aPar, cReturn, nPar, nPos, cTok
    LOCAL nLen := 0, lUnsigned, l0 := .F., lSign := .F., nDec, xVal
    LOCAL cString
 
-   aPar    := HB_aParams()
+   aPar    := hb_AParams()
    cReturn := ""
    cString := aPar[ 1 ]
    nPar    := 2
@@ -133,7 +134,7 @@ FUNCTION sprintf( ... )
             nLen    := Val( SubStr( cString, nPos ) )
             cTok    := Left( cString, nPos - 1 )
             DO WHILE SubStr( cString, nPos, 1 ) $ "1234567890."
-                nPos++
+               nPos++
             ENDDO
             cString := cTok + SubStr( cString, nPos )
             nPos    := At( "%", cString ) - 1
@@ -147,7 +148,7 @@ FUNCTION sprintf( ... )
          CASE "l"
          CASE "f"
          CASE "i"
-            xVal := aPar[nPar++]
+            xVal := aPar[ nPar++ ]
             IF !HB_ISNUMERIC( xVal )
                xVal := 0
             ENDIF
@@ -155,7 +156,7 @@ FUNCTION sprintf( ... )
                IF nLen - Int( nLen ) > 0.0
                   nDec := Str( nLen )
                   DO WHILE Right( nDec, 1 ) == "0"
-                    nDec := Left( nDec, Len( nDec ) - 1 )
+                     nDec := Left( nDec, Len( nDec ) - 1 )
                   ENDDO
                   nDec := Val( SubStr( nDec, At( ".", nDec ) + 1 ) )
                ELSE
@@ -163,7 +164,7 @@ FUNCTION sprintf( ... )
                ENDIF
                cTok := Str( iif( lUnsigned, Abs( xVal ), xVal ), nLen, nDec )
             ELSE
-               cTok := hb_NToS( iif( lUnsigned, Abs( xVal ), xVal ) )
+               cTok := hb_ntos( iif( lUnsigned, Abs( xVal ), xVal ) )
             ENDIF
             IF l0
                IF "-" $ cTok .AND. !( Left( cTok, 1 ) == "-" )
@@ -188,9 +189,9 @@ FUNCTION sprintf( ... )
          CASE "c"
          CASE "s"
             IF nLen == 0
-               nLen := Len( hb_cStr( aPar[nPar] ) )
+               nLen := Len( hb_CStr( aPar[ nPar ] ) )
             ENDIF
-            cReturn  += PadL( hb_cStr( aPar[nPar++] ), nLen )
+            cReturn += PadL( hb_CStr( aPar[ nPar++ ] ), nLen )
             nLen  := 0
             l0    := .F.
             lSign := .F.

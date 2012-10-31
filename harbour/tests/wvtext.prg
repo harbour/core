@@ -30,8 +30,12 @@ PROCEDURE Main()
 
    LOCAL nMSec
 
-#if defined( __PLATFORM__WINDOWS ) .AND. defined( __HBSCRIPT__HBSHELL )
-   hbshell_gtSelect( "GTWVT" )
+#if defined( __HBSCRIPT__HBSHELL )
+   #if defined( __PLATFORM__WINDOWS )
+      hbshell_gtSelect( "GTWVT" )
+   #elif defined( __PLATFORM__UNIX )
+      hbshell_gtSelect( "GTXWC" )
+   #endif
 #endif
 
    AFill( aKeys, 0 )
@@ -39,7 +43,7 @@ PROCEDURE Main()
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
    hb_gtInfo( HB_GTI_FONTWIDTH, nWidth  )
    hb_gtInfo( HB_GTI_FONTSIZE , nHeight )
-   hb_gtInfo( HB_GTI_WINTITLE , "GTWVT-Test (Resizable by Font)" )
+   hb_gtInfo( HB_GTI_WINTITLE , "GT-Test (Resizable by Font)" )
    hb_gtInfo( HB_GTI_ALTENTER, .T. )  // allow alt-enter for full screen
    SetCursor( SC_NONE )
 
@@ -221,7 +225,7 @@ PROCEDURE Main()
 
       CASE nKey == K_F9
          hb_gtInfo( HB_GTI_RESIZEMODE, iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT, HB_GTI_RESIZEMODE_ROWS ) )
-         hb_gtInfo( HB_GTI_WINTITLE , "GTWVT-Test (Resizable by " + iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, "ROWS", "FONT" ) + ")" )
+         hb_gtInfo( HB_GTI_WINTITLE , "GT-Test (Resizable by " + iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, "ROWS", "FONT" ) + ")" )
          DispScreen()
 
       CASE nKey == K_F10
@@ -393,7 +397,7 @@ PROCEDURE thFunc()
    s_nZy += 20
 
    /* allocate own GT driver */
-   hb_gtReload( "WVT" )
+   hb_gtReload( hb_gtVersion( 0 ) )
    hb_gtInfo( HB_GTI_PALETTE, 8, RGB( 120, 200, 240 ) )
 
    IF ( s_nBrowser % 2 ) != 0

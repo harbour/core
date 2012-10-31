@@ -60,12 +60,13 @@ proc main()
    Alert( "Database path:;;" + cPath )
 
    rddSetDefault("DBFCDX")
-   if !hb_dirExists( cPath )
+   if ! hb_dirExists( cPath )
       hb_dirCreate( cPath )
    endif
-   dbCreate( cPath + "mydata", { { "F1", "C", 10, 0 }, ;
-                                 { "F2", "=",  8, 0 }, ;
-                                 { "FX", "M",  4, 0 } } )
+   dbCreate( cPath + "mydata", { ;
+      { "F1", "C", 10, 0 }, ;
+      { "F2", "=",  8, 0 }, ;
+      { "FX", "M",  4, 0 } } )
    use ( cPath + "mydata" )
    index on F1 tag T1
    index on F2 tag T2

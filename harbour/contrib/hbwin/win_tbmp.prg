@@ -75,12 +75,14 @@ CREATE CLASS WIN_BMP
                                         // See WinApi StretchDIBits()
    VAR BitMap   INIT ""
    VAR FileName INIT ""
+
 ENDCLASS
 
 METHOD New() CLASS WIN_BMP
    RETURN Self
 
 METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
+
    ::FileName := cFileName
    ::Bitmap := win_LoadBitMapFile( ::FileName )
    IF Empty( ::Bitmap )
@@ -89,11 +91,12 @@ METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
    ELSE
       ::Type := win_bitmapType( ::Bitmap )
       IF HB_ISARRAY( aDimXY )
-        ::DimXY := aDimXY
+         ::DimXY := aDimXY
       ELSEIF ! win_BitMapDimensions( ::Bitmap, @::DimXY[ 1 ], @::DimXY[ 2 ] )
-        ::DimXY := { 1, 1 } // Driver may use the original dimensions
+         ::DimXY := { 1, 1 } // Driver may use the original dimensions
       ENDIF
    ENDIF
+
    RETURN ::Type != HB_WIN_BITMAP_UNKNOWN
 
 METHOD Create() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
@@ -106,7 +109,9 @@ METHOD IsSupported( oPrn, /* @ */ nError ) CLASS WIN_BMP
    RETURN ( nError := win_BitmapIsSupported( oPrn:hPrinterDc, ::Bitmap ) ) == 0
 
 METHOD Draw( oPrn, aRectangle, /* @ */ nError ) CLASS WIN_BMP // Pass a WIN_PRN object reference & Rectangle array
+
    IF HB_ISARRAY( aRectangle )
       ::Rect := aRectangle
    ENDIF
+
    RETURN iif( ::IsSupported( oPrn, @nError ), oPrn:DrawBitMap( Self ), .F. )

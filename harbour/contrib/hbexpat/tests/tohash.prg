@@ -29,6 +29,7 @@ REQUEST HB_CODEPAGE_UTF8
 REQUEST HB_CODEPAGE_UTF8EX
 
 PROCEDURE Main( cFileName )
+
    LOCAL p := XML_ParserCreate()
    LOCAL aUserData
    LOCAL aNode
@@ -73,9 +74,9 @@ PROCEDURE Main( cFileName )
    XML_SetUnknownEncodingHandler( p, {| x, e, i | cb_unknownencoding( x, e, i ) } )
 
    IF XML_Parse( p, MemoRead( cFileName ), .T. ) == HB_XML_STATUS_ERROR
-      OutErr( hb_StrFormat( e"Parse error at line %s:\n%s\n",;
-                 hb_ntos( XML_GetCurrentLineNumber( p ) ),;
-                 XML_ErrorString( XML_GetErrorCode( p ) ) ) )
+      OutErr( hb_StrFormat( e"Parse error at line %s:\n%s\n", ;
+         hb_ntos( XML_GetCurrentLineNumber( p ) ), ;
+         XML_ErrorString( XML_GetErrorCode( p ) ) ) )
       ErrorLevel( -1 )
       RETURN
    ENDIF
@@ -84,7 +85,8 @@ PROCEDURE Main( cFileName )
 
    RETURN
 
-PROCEDURE DUMP( hTree, n )
+STATIC PROCEDURE DUMP( hTree, n )
+
    LOCAL aEl
    LOCAL aNode
 
@@ -97,8 +99,10 @@ PROCEDURE DUMP( hTree, n )
 
    RETURN
 
-FUNCTION DUMPATTR( hAttr )
+STATIC FUNCTION DUMPATTR( hAttr )
+
    LOCAL s := "", cValue
+
    IF ! Empty( hAttr )
       s += " ("
       FOR EACH cValue IN hAttr
@@ -106,9 +110,11 @@ FUNCTION DUMPATTR( hAttr )
       NEXT
       s := RTrim( s ) + ")"
    ENDIF
+
    RETURN s
 
-FUNCTION cb_unknownencoding( xEData, cEncoding, aMap )
+STATIC FUNCTION cb_unknownencoding( xEData, cEncoding, aMap )
+
    LOCAL aMyMap
 
    HB_SYMBOL_UNUSED( xEData )
@@ -121,7 +127,8 @@ FUNCTION cb_unknownencoding( xEData, cEncoding, aMap )
 
    RETURN HB_XML_STATUS_ERROR
 
-PROCEDURE cb_start( aUserData, cElement, aAttrList )
+STATIC PROCEDURE cb_start( aUserData, cElement, aAttrList )
+
    LOCAL aAttr
    LOCAL aNode
    LOCAL aNewNode
@@ -150,13 +157,13 @@ PROCEDURE cb_start( aUserData, cElement, aAttrList )
 
    RETURN
 
-PROCEDURE cb_end( aUserData )
+STATIC PROCEDURE cb_end( aUserData )
 
    aUserData[ _D_aNode ] := aUserData[ _D_aNode ][ _N_aParent ]
 
    RETURN
 
-PROCEDURE cb_data( aUserData, cData )
+STATIC PROCEDURE cb_data( aUserData, cData )
 
    aUserData[ _D_aNode ][ _N_xValue ] += cData
 

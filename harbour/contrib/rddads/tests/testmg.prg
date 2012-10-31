@@ -59,7 +59,7 @@
 REQUEST ADS
 
 #if defined( __HBDYNLOAD__RDDADS__ )
-#  include "rddads.hbx"
+#include "rddads.hbx"
 #endif
 
 PROCEDURE Main()
@@ -211,7 +211,6 @@ PROCEDURE Main()
       ? aRay[ 23 ], " reserved                      "
       ? aRay[ 24 ], " NT Service IP send port #     "
       ? aRay[ 25 ], " NT Service IP rcv port #      "
-//    ? aRay[ 26 ], " reserved                      "
    ENDIF
 
    WAIT

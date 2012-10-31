@@ -42,7 +42,7 @@
 FUNCTION WvtMyBrowse()
 
    IF hb_mtvm()
-      hb_threadStart( {| oCrt | oCrt := WvgCrt():new( , , { -1, -2 }, { 34,69 }, , .T. ), ;
+      hb_threadStart( {| oCrt | oCrt := WvgCrt():new( , , { -1, -2 }, { 34, 69 }, , .T. ), ;
          oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS, ;
          oCrt:icon := GetResource( "dia_excl.ico" ), ;
          oCrt:create(), ;
@@ -61,8 +61,8 @@ FUNCTION WvtMyBrowse()
 
 FUNCTION ExecBrowser( oCrt )
 
-   LOCAL nKey, bBlock, oBrowse , aLastPaint, i, pGT
-   LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr, info_ //, oLB
+   LOCAL nKey, bBlock, oBrowse, aLastPaint, i, pGT
+   LOCAL cFileIndex, cFileDbf, cRDD, nIndex, oTBar, cScr, info_ // , oLB
    LOCAL lEnd       := .F.
    LOCAL aBlocks    := {}
    LOCAL nTop       :=  4
@@ -534,7 +534,7 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
          oPB:create( , , { {|| -MaxRow() }, -nOff }, { -1, -aW[ i ] } )
       ENDIF
       oPB:activate := aAct[ i ]
-      oPB:setColorFG( RGB( 0,255,0 ) )
+      oPB:setColorFG( RGB( 0, 255, 0 ) )
       oPB:tooltipText := aPmt[ i ]
 
       nOff += aW[ i ] + nG
@@ -605,7 +605,7 @@ STATIC FUNCTION BrwBuildToolBar( oCrt )
    oTBar:style        := WVGTOOLBAR_STYLE_FLAT
    oTBar:borderStyle  := WVGFRAME_RECT
 
-   oTBar:buttonWidth  := 40 //28
+   oTBar:buttonWidth  := 40 // 28
    oTBar:buttonHeight := 26
 
    oTBar:imageWidth   := 26
@@ -793,11 +793,11 @@ STATIC FUNCTION TBNext()
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
-   IF EOF()
+   IF Eof()
       lMoved := .F.
    ELSE
       dbSkip( 1 )
-      IF EOF()
+      IF Eof()
          lMoved := .F.
          dbGoto( nSaveRecNum )
       ENDIF
@@ -814,7 +814,7 @@ STATIC FUNCTION TBPrev()
 
    dbSkip( -1 )
 
-   IF BOF()
+   IF Bof()
       dbGoto( nSaveRecNum )
       lMoved := .F.
    ENDIF
@@ -1032,7 +1032,7 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
 
    FOR i := 1 TO Len( aFields )
       bBlock := VouBlockField( aFields[ i ] )
-      oBrowse:AddColumn( TBColumnNew( info_[ aFields[ i ],1 ], bBlock ) )
+      oBrowse:AddColumn( TBColumnNew( info_[ aFields[ i ], 1 ], bBlock ) )
    NEXT
 
    oBrowse:configure()

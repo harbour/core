@@ -53,7 +53,7 @@
  */
 
 #ifndef __HARBOUR__
-   #define hb_ntos( n ) LTrim( Str( n ) )
+#define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
 PROCEDURE Main()
@@ -67,11 +67,11 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? [  charshr(chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+]
-   ? [           chr(64)+chr(128), 3) == ]
-   ? [  chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16) ? -->]
+   ? '  charshr(chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+'
+   ? '           chr(64)+chr(128), 3) == '
+   ? '  chr(0)+chr(0)+chr(0)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16) ? -->'
 
-   ? [  ]
+   ? '  '
    cStr := charshr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
    FOR ni := 1 TO Len( cStr )
       ?? "chr(" + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + ")"

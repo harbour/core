@@ -21,14 +21,14 @@
    $DESCRIPTION$
       Can be used for bit-wise byte manipulation.  In effect, this is a
       bit-by-bit XOR operation.  Equivalent to XOR assembler instruction.
-  
+
       This function is presented to illustrate that bit-wise operations
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
       This code performs a bit-wise XOR on two bytes represented
       by Chr( 32 ) and Chr( 55 ):
-  
+
            cNewByte := FT_BYTEXOR( Chr( 32 ), Chr( 55 ) )
            ? Asc( cNewByte )     // result: 23
            ? cNewByte            // result: non-printable character

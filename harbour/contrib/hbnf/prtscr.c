@@ -32,7 +32,7 @@ HB_FUNC( FT_PRTSCR )
 {
 #if defined( HB_OS_DOS )
 
-   #define pbyte *( ( char * ) 0x00400100 )
+   #define pbyte  *( ( char * ) 0x00400100 )
 
    if( HB_ISLOG( 1 ) )
       pbyte = hb_parl( 1 ) ? 0 : 1;

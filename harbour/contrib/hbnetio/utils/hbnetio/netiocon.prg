@@ -33,6 +33,7 @@
 #include "hbgtinfo.ch"
 
 PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
+
    LOCAL GetList := {}
    LOCAL hCommands
    LOCAL nSavedRow
@@ -54,8 +55,8 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL netclictx
    LOCAL netcliID
 
-   LOCAL hConIO := {;
-      "displine"  => {| c | hbnetiocon_ToConsole( c ) } ,;
+   LOCAL hConIO := { ;
+      "displine"  => {| c | hbnetiocon_ToConsole( c ) },;
       "gethidden" => {|| hbnetiocon_GetHidden() } }
 
    Set( _SET_CONFIRM, .F. )
@@ -77,8 +78,8 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    nHistIndex := Len( aHistory ) + 1
 
    hCommands  := { ;
-      "?"    => { "", "Synonym for 'help'." , {|| ShowHelp( hCommands ), Eval( netclictrl[ "cmd" ], netclictx, "?" ) } } ,;
-      "help" => { "", "Display this help."  , {|| ShowHelp( hCommands ), Eval( netclictrl[ "cmd" ], netclictx, "?" ) } } ,;
+      "?"    => { "", "Synonym for 'help'." , {|| ShowHelp( hCommands ), Eval( netclictrl[ "cmd" ], netclictx, "?" ) } }, ;
+      "help" => { "", "Display this help."  , {|| ShowHelp( hCommands ), Eval( netclictrl[ "cmd" ], netclictx, "?" ) } }, ;
       "quit" => { "", "Exit console."       , {|| lQuit := .T. } } }
 
    lQuit := .F.
@@ -94,19 +95,19 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 
       SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
 
-      bKeyIns   := SetKey( K_INS,;
-         {|| SetCursor( iif( ReadInsert( ! ReadInsert() ),;
+      bKeyIns   := SetKey( K_INS, ;
+         {|| SetCursor( iif( ReadInsert( ! ReadInsert() ), ;
                           SC_NORMAL, SC_INSERT ) ) } )
-      bKeyUp    := SetKey( K_UP,;
-         {|| iif( nHistIndex > 1,;
-                  cCommand := PadR( aHistory[ --nHistIndex ], Len( cCommand ) ), ),;
+      bKeyUp    := SetKey( K_UP, ;
+         {|| iif( nHistIndex > 1, ;
+                  cCommand := PadR( aHistory[ --nHistIndex ], Len( cCommand ) ), ), ;
                   ManageCursor( cCommand ) } )
-      bKeyDown  := SetKey( K_DOWN,;
-         {|| cCommand := PadR( iif( nHistIndex < Len( aHistory ),;
-             aHistory[ ++nHistIndex ],;
-             ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ),;
+      bKeyDown  := SetKey( K_DOWN, ;
+         {|| cCommand := PadR( iif( nHistIndex < Len( aHistory ), ;
+             aHistory[ ++nHistIndex ], ;
+             ( nHistIndex := Len( aHistory ) + 1, "" ) ), Len( cCommand ) ), ;
                   ManageCursor( cCommand ) } )
-      bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE )})
+      bKeyPaste := SetKey( K_ALT_V, {|| hb_gtInfo( HB_GTI_CLIPBOARDPASTE ) } )
 
       bKeyTab   := SetKey( K_TAB, {|| CompleteCmd( @cCommand, hCommands ) } )
 
@@ -164,15 +165,16 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
 /* Adjusted the positioning of cursor on navigate through history. [vailtom] */
 STATIC PROCEDURE ManageCursor( cCommand )
 
-   hb_KeyPut( K_HOME )
+   hb_keyPut( K_HOME )
    IF ! Empty( cCommand )
-      hb_KeyPut( K_END )
+      hb_keyPut( K_END )
    ENDIF
 
    RETURN
 
 /* Complete the command line, based on the first characters that the user typed. [vailtom] */
 STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
+
    LOCAL s := Lower( AllTrim( cCommand ) )
    LOCAL n
 
@@ -190,6 +192,7 @@ STATIC PROCEDURE CompleteCmd( cCommand, hCommands )
    RETURN
 
 STATIC PROCEDURE ShowHelp( hCommands )
+
    LOCAL aTexts := {}
    LOCAL n, c, m
 
@@ -230,10 +233,13 @@ STATIC PROCEDURE ShowHelp( hCommands )
    RETURN
 
 STATIC PROCEDURE hbnetiocon_ToConsole( cText )
+
    QQOut( cText + hb_eol() )
+
    RETURN
 
 STATIC FUNCTION hbnetiocon_GetHidden()
+
    LOCAL GetList := {}
    LOCAL cPassword := Space( 128 )
    LOCAL nSavedRow

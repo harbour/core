@@ -120,7 +120,7 @@ PROCEDURE HB_StandardLogAdd( oChannel )
 
 PROCEDURE HB_CloseStandardLog()
 
-// If the logger is NIL also the mutex is NIL
+   // If the logger is NIL also the mutex is NIL
    IF s_StdLogger != NIL
 #ifdef HB_THREAD_SUPPORT
       hb_mutexLock( s_StdLogMutex )
@@ -634,7 +634,7 @@ METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
       ::cDBFName := iif( !Empty( cDrive ), cDrive + ":\", "" ) + ;
          iif( !Empty( cPath ), cPath + "\", "" ) + ;
          cName + cExt
-      //__OutDebug( "::cDBFName", ::cDBFName )
+      // __OutDebug( "::cDBFName", ::cDBFName )
    ENDIF
 
    IF HB_ISSTRING( cIndexName )
@@ -645,7 +645,7 @@ METHOD New( nLevel, cDBFName, cIndexName, aStruct, cDriver ) CLASS HB_LogDbf
       ::cIndexName := iif( !Empty( cDrive ), cDrive + ":\", "" ) + ;
          iif( !Empty( cPath ), cPath + "\", "" ) + ;
          cName + cExt
-      //__OutDebug( "::cCDXName", ::cCDXName )
+      // __OutDebug( "::cCDXName", ::cCDXName )
    ENDIF
 
    IF aStruct != NIL
@@ -676,7 +676,7 @@ METHOD Open( cProgName ) CLASS HB_LogDbf
       INDEX ON Str( FIELD->priority, 2 ) + DToS( FIELD->date ) + FIELD->time + FIELD->MESSAGE TAG "priority" TO ( ::cIndexName )
       LogDbf->( dbCloseArea() )
    ENDIF
-// __OutDebug( "::cDriver, ::cDBFName", ::cDriver, ::cDBFName )
+   // __OutDebug( "::cDriver, ::cDBFName", ::cDriver, ::cDBFName )
    dbUseArea( .T., ::cDriver, ::cDBFName, "LogDbf", .T. )
    SET INDEX TO ( ::cIndexName )
 

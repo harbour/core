@@ -66,39 +66,42 @@ FUNCTION gdImageEllipse( im, cx, cy, w, h, color )
    RETURN gdImageArc( im, cx, cy, w, h, 0, 360, color )
 
 FUNCTION gdImageFTWidth( fontname, ptsize, angle )
+
    LOCAL nWidth := 0
    LOCAL cErr
    LOCAL aRect := Array( 8 )
 
    hb_default( @fontname, "Arial" )
-   hb_default( @ptsize  , 8 )
-   hb_default( @angle   , 0 )
+   hb_default( @ptsize, 8 )
+   hb_default( @angle, 0 )
 
    cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
 
    IF cErr == ""
-      nWidth := aRect[3] - aRect[1]
+      nWidth := aRect[ 3 ] - aRect[ 1 ]
    ENDIF
 
    RETURN nWidth
 
 FUNCTION gdImageFTHeight( fontname, ptsize, angle )
+
    LOCAL nWidth := 0
    LOCAL cErr
    LOCAL aRect := Array( 8 )
 
    hb_default( @fontname, "Arial" )
-   hb_default( @ptsize  , 8 )
-   hb_default( @angle   , 0 )
+   hb_default( @ptsize, 8 )
+   hb_default( @angle, 0 )
 
    cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, "M" )
    IF cErr == ""
-      nWidth := aRect[2] - aRect[8]
+      nWidth := aRect[ 2 ] - aRect[ 8 ]
    ENDIF
 
    RETURN nWidth
 
 FUNCTION gdImageFTSize( string, fontname, ptsize, angle )
+
    LOCAL nWidth  := 0
    LOCAL nHeight := 0
    LOCAL nX, nY
@@ -106,38 +109,42 @@ FUNCTION gdImageFTSize( string, fontname, ptsize, angle )
    LOCAL aRect := Array( 8 )
 
    hb_default( @fontname, "Arial" )
-   hb_default( @ptsize  , 8 )
-   hb_default( @angle   , 0 )
+   hb_default( @ptsize, 8 )
+   hb_default( @angle, 0 )
 
    cErr := gdImageStringFTEx( , @aRect, 0, fontname, ptsize, angle, 0, 0, string )
 
    IF cErr == ""
-      nWidth  := aRect[3] - aRect[1]
-      nHeight := aRect[2] - aRect[8]
-      nX      := aRect[1]
-      nY      := aRect[2]
+      nWidth  := aRect[ 3 ] - aRect[ 1 ]
+      nHeight := aRect[ 2 ] - aRect[ 8 ]
+      nX      := aRect[ 1 ]
+      nY      := aRect[ 2 ]
    ENDIF
 
    RETURN { nWidth, nHeight, nX, nY }
 
 FUNCTION gdImageStringFT( im, fg, fontname, ptsize, angle, x, y, string, ;
-                          linespacing, charmap, resolution )
+      linespacing, charmap, resolution )
+
    LOCAL cErr
-   LOCAL aRect := Array(8)
+   LOCAL aRect := Array( 8 )
+
    cErr := gdImageStringFTEx( , @aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
    IF cErr == ""
       cErr := gdImageStringFTEx( im, aRect, fg, fontname, ptsize, angle, x, y, string, linespacing, charmap, resolution )
    ENDIF
+
    RETURN cErr
 
 FUNCTION gdImageFromFile( cFile )
+
    LOCAL cPath, cName, cExt, cDrive
    LOCAL cType, cMime
    LOCAL hFile := { => }
    LOCAL oImage
 
    IF hb_FileExists( cFile )
-      HB_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
+      hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
 
       SWITCH Lower( cExt )
       CASE ".jpg"
@@ -181,6 +188,7 @@ FUNCTION gdImageFromFile( cFile )
    RETURN { oImage, hFile, cType, cMime }
 
 FUNCTION gdImageToString( oImage )
+
    LOCAL cString
 
    IF HB_ISOBJECT( oImage ) .AND. ( oImage:ClassName == "GDIMAGE" .OR. oImage:IsDerivedFrom( "GDIMAGE" ) )
@@ -198,9 +206,11 @@ FUNCTION gdImageToString( oImage )
          ENDSWITCH
       ENDIF
    ENDIF
+
    RETURN cString
 
 PROCEDURE gdImageToFile( oImage, cFile )
+
    LOCAL cString, cExt
 
    IF ! HB_ISSTRING( cFile )

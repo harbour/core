@@ -142,8 +142,8 @@ METHOD Clear() CLASS HBDbWindow
 
 METHOD Hide() CLASS HBDbWindow
 
-   RestScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
-               ::nRight + iif( ::lShadow, 2, 0 ), ::cBackImage )
+   RestScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ), ;
+      ::nRight + iif( ::lShadow, 2, 0 ), ::cBackImage )
    ::cBackImage := NIL
    ::lVisible := .F.
 
@@ -152,7 +152,7 @@ METHOD Hide() CLASS HBDbWindow
 METHOD IsOver( nRow, nCol ) CLASS HBDbWindow
 
    RETURN nRow >= ::nTop .AND. nRow <= ::nBottom .AND. ;
-          nCol >= ::nLeft .AND. nCol <= ::nRight
+      nCol >= ::nLeft .AND. nCol <= ::nRight
 
 METHOD ScrollUp( nLines ) CLASS HBDbWindow
 
@@ -172,8 +172,8 @@ METHOD SetCaption( cCaption ) CLASS HBDbWindow
 METHOD ShowCaption() CLASS HBDbWindow
 
    IF ! Empty( ::cCaption )
-      hb_dispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
-         ( ( Len( ::cCaption ) + 2 ) / 2 ),;
+      hb_DispOutAt( ::nTop, ::nLeft + ( ( ::nRight - ::nLeft ) / 2 ) - ;
+         ( ( Len( ::cCaption ) + 2 ) / 2 ), ;
          " " + ::cCaption + " ", ::cColor )
    ENDIF
 
@@ -197,8 +197,8 @@ METHOD Refresh() CLASS HBDbWindow
 
    DispBegin()
 
-   hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, iif( ::lFocused, HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ), ::cColor )
-   hb_dispOutAtBox( ::nTop, ::nLeft + 1, hb_UTF8ToStrBox( "[■]" ), ::cColor )
+   hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, iif( ::lFocused, HB_B_DOUBLE_UNI, HB_B_SINGLE_UNI ), ::cColor )
+   hb_DispOutAtBox( ::nTop, ::nLeft + 1, hb_UTF8ToStrBox( "[■]" ), ::cColor )
 
    ::ShowCaption( ::cCaption )
 
@@ -211,13 +211,14 @@ METHOD Refresh() CLASS HBDbWindow
    RETURN NIL
 
 METHOD Show( lFocused ) CLASS HBDbWindow
+
    LOCAL nRow := Row()
    LOCAL nCol := Col()
 
    hb_default( @lFocused, ::lFocused )
 
-   ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ),;
-                               ::nRight + iif( ::lShadow, 2, 0 ) )
+   ::cBackImage := SaveScreen( ::nTop, ::nLeft, ::nBottom + iif( ::lShadow, 1, 0 ), ;
+      ::nRight + iif( ::lShadow, 2, 0 ) )
    SetColor( ::cColor )
    hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight )
    ::SetFocus( lFocused )
@@ -280,7 +281,7 @@ METHOD LDblClick( nMRow, nMCol ) CLASS HBDbWindow
 
    RETURN NIL
 
-METHOD Move() Class HBDbWindow
+METHOD Move() CLASS HBDbWindow
 
    LOCAL nOldTop    := ::nTop
    LOCAL nOldLeft   := ::nLeft
@@ -290,7 +291,7 @@ METHOD Move() Class HBDbWindow
 
    DO WHILE .T.
       RestScreen( ,,,, ::cBackImage )
-      hb_dispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " " )
+      hb_DispBox( ::nTop, ::nLeft, ::nRight, ::nBottom, Replicate( hb_UTF8ToStrBox( "░" ), 8 ) + " " )
 
       nKey := Inkey( 0 )
 

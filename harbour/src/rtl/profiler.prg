@@ -99,7 +99,7 @@
 #include "hbclass.ch"
 #include "fileio.ch"
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileEntity
 
 CREATE CLASS HBProfileEntity
@@ -119,7 +119,7 @@ CREATE CLASS HBProfileEntity
 
 ENDCLASS
 
-/////
+//
 
 METHOD init( cName, aInfo ) CLASS HBProfileEntity
 
@@ -145,7 +145,7 @@ METHOD describe() CLASS HBProfileEntity
 
    RETURN "Base Entity"
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileFunction
 
 CREATE CLASS HBProfileFunction INHERIT HBProfileEntity
@@ -156,13 +156,13 @@ CREATE CLASS HBProfileFunction INHERIT HBProfileEntity
 
 ENDCLASS
 
-/////
+//
 
 METHOD describe() CLASS HBProfileFunction
 
    RETURN "Function"
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileMethod
 
 CREATE CLASS HBProfileMethod INHERIT HBProfileEntity
@@ -173,13 +173,13 @@ CREATE CLASS HBProfileMethod INHERIT HBProfileEntity
 
 ENDCLASS
 
-/////
+//
 
 METHOD describe() CLASS HBProfileMethod
 
    RETURN "Method"
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileOPCode
 
 CREATE CLASS HBProfileOPCode INHERIT HBProfileEntity
@@ -190,13 +190,13 @@ CREATE CLASS HBProfileOPCode INHERIT HBProfileEntity
 
 ENDCLASS
 
-/////
+//
 
 METHOD describe() CLASS HBProfileOPCode
 
    RETURN "OPCode"
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfile
 
 CREATE CLASS HBProfile
@@ -225,7 +225,7 @@ CREATE CLASS HBProfile
 
 ENDCLASS
 
-/////
+//
 
 METHOD init() CLASS HBProfile
 
@@ -416,7 +416,7 @@ METHOD totalSeconds() CLASS HBProfile
 
    RETURN nSeconds
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileLowLevel
 
 CREATE CLASS HBProfileLowLevel INHERIT HBProfile
@@ -431,7 +431,7 @@ CREATE CLASS HBProfileLowLevel INHERIT HBProfile
 
 ENDCLASS
 
-/////
+//
 
 METHOD gather() CLASS HBProfileLowLevel
 
@@ -464,7 +464,7 @@ METHOD gatherOPCodes() CLASS HBProfileLowLevel
 
    RETURN Self
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileReport
 
 CREATE CLASS HBProfileReport
@@ -486,7 +486,7 @@ CREATE CLASS HBProfileReport
 
 ENDCLASS
 
-/////
+//
 
 METHOD init( oProfile ) CLASS HBProfileReport
 
@@ -545,7 +545,7 @@ METHOD generate( bFilter ) CLASS HBProfileReport
 
    RETURN Self
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileReportToFile
 
 CREATE CLASS HBProfileReportToFile INHERIT HBProfileReport
@@ -562,7 +562,7 @@ CREATE CLASS HBProfileReportToFile INHERIT HBProfileReport
 
 ENDCLASS
 
-/////
+//
 
 METHOD writeLines( aLines ) CLASS HBProfileReportToFile
 
@@ -591,7 +591,7 @@ METHOD generate( bFilter, cFile ) CLASS HBProfileReportToFile
 
    RETURN Self
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileReportToArray
 
 CREATE CLASS HBProfileReportToArray INHERIT HBProfileReport
@@ -608,7 +608,7 @@ CREATE CLASS HBProfileReportToArray INHERIT HBProfileReport
 
 ENDCLASS
 
-/////
+//
 
 METHOD writeLines( aLines ) CLASS HBProfileReportToArray
 
@@ -623,7 +623,7 @@ METHOD generate( bFilter ) CLASS HBProfileReportToArray
 
    RETURN ::aReport
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileReportToString
 
 CREATE CLASS HBProfileReportToString INHERIT HBProfileReportToArray
@@ -634,7 +634,7 @@ CREATE CLASS HBProfileReportToString INHERIT HBProfileReportToArray
 
 ENDCLASS
 
-/////
+//
 
 METHOD generate( bFilter ) CLASS HBProfileReportToString
 
@@ -644,7 +644,7 @@ METHOD generate( bFilter ) CLASS HBProfileReportToString
 
    RETURN cReport
 
-////////////////////////////////////////////////////////////////////////////
+// ---------------------------------------------------------
 // Class: HBProfileReportToTBrowse
 
 CREATE CLASS HBProfileReportToTBrowse INHERIT HBProfileReportToArray
@@ -664,7 +664,7 @@ CREATE CLASS HBProfileReportToTBrowse INHERIT HBProfileReportToArray
 
 ENDCLASS
 
-/////
+//
 
 METHOD emitHeader() CLASS HBProfileReportToTBrowse
 

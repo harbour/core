@@ -74,10 +74,11 @@ ANNOUNCE FCOMMA
  * always done by low level USRRDD code
  */
 STATIC FUNCTION FCM_INIT( nRDD )
-   LOCAL aRData := ARRAY( 10 )
+
+   LOCAL aRData := Array( 10 )
 
    /* Set in our private RDD ITEM the array with HB_F*() work are numbers */
-   AFILL( aRData, -1 )
+   AFill( aRData, -1 )
    USRRDD_RDDDATA( nRDD, aRData )
 
    RETURN HB_SUCCESS
@@ -90,6 +91,7 @@ STATIC FUNCTION FCM_INIT( nRDD )
  * always done by low level USRRDD code
  */
 STATIC FUNCTION FCM_NEW( pWA )
+
    LOCAL aWData := { -1, .F., .F. }
 
    /*
@@ -98,43 +100,48 @@ STATIC FUNCTION FCM_NEW( pWA )
     * we have to emulate it and there is no phantom record so we
     * cannot return EOF flag directly.
     */
+
    USRRDD_AREADATA( pWA, aWData )
 
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_CREATE( nWA, aOpenInfo )
+
    LOCAL oError := ErrorNew()
 
    oError:GenCode     := EG_CREATE
    oError:SubCode     := 1004
-   oError:Description := HB_LANGERRMSG( EG_CREATE ) + " (" + ;
-                         HB_LANGERRMSG( EG_UNSUPPORTED ) + ")"
+   oError:Description := hb_langErrMsg( EG_CREATE ) + " (" + ;
+      hb_langErrMsg( EG_UNSUPPORTED ) + ")"
    oError:FileName    := aOpenInfo[ UR_OI_NAME ]
    oError:CanDefault  := .T.
    UR_SUPER_ERROR( nWA, oError )
+
    RETURN HB_FAILURE
 
 STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
+
    LOCAL cName, nMode, nSlot, nHandle, aRData, aWData, aField, oError, nResult
 
    /* When there is no ALIAS we will create new one using file name */
    IF aOpenInfo[ UR_OI_ALIAS ] == NIL
-      HB_FNAMESPLIT( aOpenInfo[ UR_OI_NAME ], , @cName )
+      hb_FNameSplit( aOpenInfo[ UR_OI_NAME ], , @cName )
       aOpenInfo[ UR_OI_ALIAS ] := cName
    ENDIF
 
-   nMode := iif( aOpenInfo[ UR_OI_SHARED ], FO_SHARED, FO_EXCLUSIVE ) + ;
-            iif( aOpenInfo[ UR_OI_READONLY ], FO_READ, FO_READWRITE )
+   nMode := ;
+      iif( aOpenInfo[ UR_OI_SHARED ], FO_SHARED, FO_EXCLUSIVE ) + ;
+      iif( aOpenInfo[ UR_OI_READONLY ], FO_READ, FO_READWRITE )
 
    aRData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
    aWData := USRRDD_AREADATA( nWA )
-   nSlot := ASCAN( aRData, -1 )
+   nSlot := AScan( aRData, -1 )
 
    IF nSlot == 0
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1000
-      oError:Description := HB_LANGERRMSG( EG_OPEN ) + ", no free slots"
+      oError:Description := hb_langErrMsg( EG_OPEN ) + ", no free slots"
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
       oError:CanDefault  := .T.
       UR_SUPER_ERROR( nWA, oError )
@@ -147,9 +154,9 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
       oError := ErrorNew()
       oError:GenCode     := EG_OPEN
       oError:SubCode     := 1001
-      oError:Description := HB_LANGERRMSG( EG_OPEN )
+      oError:Description := hb_langErrMsg( EG_OPEN )
       oError:FileName    := aOpenInfo[ UR_OI_NAME ]
-      oError:OsCode      := fError()
+      oError:OsCode      := FError()
       oError:CanDefault  := .T.
 
       UR_SUPER_ERROR( nWA, oError )
@@ -161,7 +168,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
 
    /* Set one field called LINE to access current record buffer */
    UR_SUPER_SETFIELDEXTENT( nWA, 1 )
-   aField := ARRAY( UR_FI_SIZE )
+   aField := Array( UR_FI_SIZE )
    aField[ UR_FI_NAME ]    := "LINE"
    aField[ UR_FI_TYPE ]    := HB_FT_STRING
    aField[ UR_FI_TYPEEXT ] := 0
@@ -179,6 +186,7 @@ STATIC FUNCTION FCM_OPEN( nWA, aOpenInfo )
    RETURN nResult
 
 STATIC FUNCTION FCM_CLOSE( nWA )
+
    LOCAL aRData, nSlot := USRRDD_AREADATA( nWA )[ 1 ]
 
    IF nSlot >= 0
@@ -187,9 +195,11 @@ STATIC FUNCTION FCM_CLOSE( nWA )
       aRData := USRRDD_RDDDATA( USRRDD_ID( nWA ) )
       aRData[ nSlot ] := -1
    ENDIF
+
    RETURN UR_SUPER_CLOSE( nWA )
 
 STATIC FUNCTION FCM_GETVALUE( nWA, nField, xValue )
+
    LOCAL aWData := USRRDD_AREADATA( nWA )
 
    IF nField == 1
@@ -202,49 +212,60 @@ STATIC FUNCTION FCM_GETVALUE( nWA, nField, xValue )
       ENDIF
       RETURN HB_SUCCESS
    ENDIF
+
    RETURN HB_FAILURE
 
 STATIC FUNCTION FCM_GOTO( nWA, nRecord )
+
    LOCAL aWData := USRRDD_AREADATA( nWA )
+
    HB_FSELECT( aWData[ 1 ] )
    IF nRecord <= 0
       aWData[ 2 ] := aWData[ 3 ] := .T.
    ELSEIF nRecord == 1
       HB_FGOTOP()
-      aWData[ 2 ] := aWData[ 3 ] := HB_FEOF()
+      aWData[ 2 ] := aWData[ 3 ] := hb_FEof()
    ELSE
-      HB_FSKIP(0) /* Clear the EOF flag inside HB_F* engin
+      HB_FSKIP( 0 ) /* Clear the EOF flag inside HB_F* engin
                      - it's not done automatically in HB_FGOBOTTOM() :-( */
       HB_FGOTO( nRecord )
       aWData[ 2 ] := HB_FRECNO() == 0
-      aWData[ 3 ] := HB_FEOF()
+      aWData[ 3 ] := hb_FEof()
    ENDIF
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_GOTOID( nWA, nRecord )
    RETURN FCM_GOTO( nWA, nRecord )
 
 STATIC FUNCTION FCM_GOTOP( nWA )
+
    LOCAL aWData := USRRDD_AREADATA( nWA )
+
    HB_FSELECT( aWData[ 1 ] )
    HB_FGOTOP()
-   aWData[ 2 ] := aWData[ 3 ] := HB_FEOF()
+   aWData[ 2 ] := aWData[ 3 ] := hb_FEof()
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_GOBOTTOM( nWA )
+
    LOCAL aWData := USRRDD_AREADATA( nWA )
+
    HB_FSELECT( aWData[ 1 ] )
    IF HB_FLASTREC() == 0
       aWData[ 2 ] := aWData[ 3 ] := .T.
    ELSE
-      HB_FSKIP(0) /* Clear the EOF flag inside HB_F* engin
+      HB_FSKIP( 0 ) /* Clear the EOF flag inside HB_F* engin
                      - it's not done automatically in HB_FGOBOTTOM() :-( */
       HB_FGOBOTTOM()
       aWData[ 2 ] := aWData[ 3 ] := .F.
    ENDIF
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
+
    LOCAL aWData
 
    IF nRecords != 0
@@ -260,43 +281,57 @@ STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
       IF nRecords < 0 .AND. HB_FRECNO() <= -nRecords
          HB_FGOTOP()
          aWData[ 2 ] := .T.
-         aWData[ 3 ] := HB_FEOF()
+         aWData[ 3 ] := hb_FEof()
       ELSEIF nRecords != 0
          HB_FSKIP( nRecords )
          aWData[ 2 ] := .F.
-         aWData[ 3 ] := HB_FEOF()
+         aWData[ 3 ] := hb_FEof()
       ENDIF
    ENDIF
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_BOF( nWA, lBof )
+
    LOCAL aWData := USRRDD_AREADATA( nWA )
+
    lBof := aWData[ 2 ]
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_EOF( nWA, lEof )
+
    LOCAL aWData := USRRDD_AREADATA( nWA )
+
    lEof := aWData[ 3 ]
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_DELETED( nWA, lDeleted )
+
    HB_SYMBOL_UNUSED( nWA )
    lDeleted := .F.
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_RECID( nWA, nRecNo )
+
    LOCAL aWData := USRRDD_AREADATA( nWA )
+
    HB_FSELECT( aWData[ 1 ] )
    IF aWData[ 3 ]
       nRecNo := HB_FLASTREC() + 1
    ELSE
       nRecNo := HB_FRECNO()
    ENDIF
+
    RETURN HB_SUCCESS
 
 STATIC FUNCTION FCM_RECCOUNT( nWA, nRecords )
+
    HB_FSELECT( USRRDD_AREADATA( nWA )[ 1 ] )
    nRecords := HB_FLASTREC()
+
    RETURN HB_SUCCESS
 
 /*
@@ -304,6 +339,7 @@ STATIC FUNCTION FCM_RECCOUNT( nWA, nRecords )
  * format: <RDDNAME>_GETFUNCTABLE
  */
 FUNCTION FCOMMA_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
+
    LOCAL cSuperRDD := NIL     /* NO SUPER RDD */
    LOCAL aMyFunc[ UR_METHODCOUNT ]
 
@@ -325,8 +361,10 @@ FUNCTION FCOMMA_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_GETVALUE ] := ( @FCM_GETVALUE() )
 
    RETURN USRRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, ;
-                               cSuperRDD, aMyFunc )
+      cSuperRDD, aMyFunc )
 
 INIT PROCEDURE FCOMMA_INIT()
+
    rddRegister( "FCOMMA", RDT_FULL )
+
    RETURN

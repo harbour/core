@@ -83,27 +83,28 @@ METHOD MemoInit( xUDF ) CLASS XHB_TMemoEditor
 
    __defaultNIL( @xUDF, NIL )
 
-   ::aEditKeys := { K_DOWN,;
-                    K_UP,;
-                    K_LEFT,;
-                    K_RIGHT,;
-                    K_CTRL_LEFT,;
-                    K_CTRL_RIGHT,;
-                    K_HOME,;
-                    K_END,;
-                    K_CTRL_HOME,;
-                    K_CTRL_END,;
-                    K_PGUP,;
-                    K_PGDN,;
-                    K_CTRL_PGUP,;
-                    K_CTRL_PGDN,;
-                    K_RETURN,;
-                    K_ENTER,;
-                    K_DEL,;
-                    K_BS,;
-                    K_CTRL_BS,;
-                    K_TAB,;
-                    K_SH_TAB  }
+   ::aEditKeys := { ;
+      K_DOWN, ;
+      K_UP, ;
+      K_LEFT, ;
+      K_RIGHT, ;
+      K_CTRL_LEFT, ;
+      K_CTRL_RIGHT, ;
+      K_HOME, ;
+      K_END, ;
+      K_CTRL_HOME, ;
+      K_CTRL_END, ;
+      K_PGUP, ;
+      K_PGDN, ;
+      K_CTRL_PGUP, ;
+      K_CTRL_PGDN, ;
+      K_RETURN, ;
+      K_ENTER, ;
+      K_DEL, ;
+      K_BS, ;
+      K_CTRL_BS, ;
+      K_TAB, ;
+      K_SH_TAB  }
 
    ::aAsciiKeys := Array( 255 - 31 ) // asc codes greater than space.
    AEval( ::aAsciiKeys, {| c, i | iif( Empty( c ), ::aAsciiKeys[ i ] := i + 31, ) } )
@@ -174,7 +175,7 @@ METHOD Edit() CLASS XHB_TMemoEditor
          nNextKey := 0
       ENDIF
 
-      IF nNextKey == 0 .AND. ( ::bKeyBlock := Setkey( nKey ) ) != NIL
+      IF nNextKey == 0 .AND. ( ::bKeyBlock := SetKey( nKey ) ) != NIL
 
          Eval( ::bKeyBlock, ::ProcName, ::ProcLine, ReadVar() )
 
@@ -214,19 +215,19 @@ METHOD Edit() CLASS XHB_TMemoEditor
 
       IF ::bKeyBlock == NIL
 
-         IF ( AScan( ::aEditKeys, nKey ) > 0 .OR.;
-              AScan( ::aAsciiKeys, nKey ) > 0 .OR.;
-              AScan( ::aConfigurableKeys, nKey ) > 0 .OR.;
-              AScan( ::aExtKeys, nKey ) > 0 .OR.;
-              ( nKey == K_INS .AND. !::ExistUdf() ) .OR.;
+         IF ( AScan( ::aEditKeys, nKey ) > 0 .OR. ;
+              AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
+              AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
+              AScan( ::aExtKeys, nKey ) > 0 .OR. ;
+              ( nKey == K_INS .AND. !::ExistUdf() ) .OR. ;
               ( nKey == K_ESC .AND. !::ExistUdf() ) )
 
             ::Super:Edit( nKey )
 
-         ELSEIF AScan( ::aConfigurableKeys, nKey ) == 0 .AND.;
-                AScan( ::aExtKeys, nKey ) == 0 .AND.;
-                ( nKey > 255 .OR. nKey < 0 ) .OR.;
-                ( nKey == K_INS .AND. ::lEditAllow .AND. ::ExistUdf() ) .OR.;
+         ELSEIF AScan( ::aConfigurableKeys, nKey ) == 0 .AND. ;
+                AScan( ::aExtKeys, nKey ) == 0 .AND. ;
+                ( nKey > 255 .OR. nKey < 0 ) .OR. ;
+                ( nKey == K_INS .AND. ::lEditAllow .AND. ::ExistUdf() ) .OR. ;
                 ( nKey == K_ESC .AND. ::ExistUdf() )
 
             ::KeyboardHook( nKey )
@@ -237,13 +238,13 @@ METHOD Edit() CLASS XHB_TMemoEditor
 
       IF ::ExistUdf()
 
-         IF AScan( ::aEditKeys, nKey ) > 0 .OR.;
-            AScan( ::aAsciiKeys, nKey ) > 0 .OR.;
-            AScan( ::aConfigurableKeys, nKey ) > 0 .OR.;
-            AScan( ::aExtKeys, nKey ) > 0 .OR.;
+         IF AScan( ::aEditKeys, nKey ) > 0 .OR. ;
+            AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
+            AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
+            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
             nKey == K_F1
 
-            IF NextKey() == 0 .AND.;
+            IF NextKey() == 0 .AND. ;
                AScan( ::aConfigurableKeys, nKey ) == 0 .AND. nKey != K_F1
 
                nUdfReturn := ::CallUdf( ME_IDLE )
@@ -293,6 +294,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
                    A little trick to be able to handle a nUdfReturn with value of NIL
                    like it had a value of ME_DEFAULT
    */
+
    __defaultNIL( @nUdfReturn, ME_DEFAULT )
    __defaultNIL( @lEdited, .F. )
 
@@ -305,58 +307,58 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
 
       // HBEditor is not able to handle keys with a value higher than 256 or lower than 1
       //
-      if !lEdited .AND.;
-         ( AScan( ::aAsciiKeys, nKey ) > 0 .OR.;
-           AScan( { K_ALT_W, K_CTRL_W }, nKey ) > 0 .OR.;
-           AScan( ::aExtKeys, nKey ) > 0 .OR.;
-           nKey == K_ESC .OR.;
-           nKey == K_INS .OR.;
+      IF !lEdited .AND. ;
+         ( AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
+           AScan( { K_ALT_W, K_CTRL_W }, nKey ) > 0 .OR. ;
+           AScan( ::aExtKeys, nKey ) > 0 .OR. ;
+           nKey == K_ESC .OR. ;
+           nKey == K_INS .OR. ;
            AScan( ::aMouseKeys, nKey ) > 0 )
 
          ::Super:Edit( nKey )
 
-      endif
-      exit
+      ENDIF
+      EXIT
 
    CASE ME_IGNORE    // (32)
 
       // Ignore unknow key, only check insert state.
       ::DisplayInsert( ::lInsert() )
-      exit
+      EXIT
 
    CASE ME_DATA      // (33)
 
-      if !lEdited .AND.;
-         ( AScan( ::aAsciiKeys, nKey ) > 0 .OR.;
-           AScan( ::aExtKeys, nKey ) > 0 .OR.;
-           nKey == K_ESC .OR.;
-           nKey== K_INS )
+      IF !lEdited .AND. ;
+         ( AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
+           AScan( ::aExtKeys, nKey ) > 0 .OR. ;
+           nKey == K_ESC .OR. ;
+           nKey == K_INS )
 
          ::Super:Edit( nKey )
 
-      endif
-      exit
+      ENDIF
+      EXIT
 
    CASE ME_TOGGLEWRAP   // (34)
       ::lWordWrap := ! ::lWordWrap
-      exit
+      EXIT
 
    CASE ME_TOGGLESCROLL  // (35)
       ::lVerticalScroll := ! ::lVerticalScroll
-      exit
+      EXIT
 
    CASE ME_WORDRIGHT    // (100)
       ::WordRight()
-      exit
+      EXIT
 
    CASE ME_BOTTOMRIGHT  // (101)
       ::Bottom()
       ::End()
-      exit
+      EXIT
 
    CASE ME_PASTE        // (110)
       // see inkey.ch
-      exit
+      EXIT
 
    OTHERWISE            // ME_UNKEY (1 TO 31)
 
@@ -400,19 +402,20 @@ METHOD CallUdf( nMode ) CLASS XHB_TMemoEditor
    RETURN xResult
 
 //                  Prg Level Call of MemoEdit()
-//-------------------------------------------------------------------//
+// -------------------------------------------------------------------//
 
-FUNCTION xhb_MemoEdit( cString,;
-                       nTop, nLeft,;
-                       nBottom, nRight,;
-                       lEditMode,;
-                       xUDF,;
-                       nLineLength,;
-                       nTabSize,;
-                       nTextBuffRow,;
-                       nTextBuffColumn,;
-                       nWindowRow,;
-                       nWindowColumn )
+FUNCTION xhb_MemoEdit( ;
+      cString, ;
+      nTop, nLeft, ;
+      nBottom, nRight, ;
+      lEditMode, ;
+      xUDF, ;
+      nLineLength, ;
+      nTabSize, ;
+      nTextBuffRow, ;
+      nTextBuffColumn, ;
+      nWindowRow, ;
+      nWindowColumn )
 
    LOCAL oEd
 
@@ -434,50 +437,50 @@ FUNCTION xhb_MemoEdit( cString,;
 
    // 2006/JUL/22 - E.F. Check argument types.
    //
-   IF !HB_ISNIL( cString ) .AND. ! HB_ISSTRING( cString ) .AND. ! HB_IsMemo( cString )
-      Throw( ErrorNew( "BASE", 0, 1127, "<cString> Argument type error", Procname() ) )
+   IF !HB_ISNIL( cString ) .AND. ! HB_ISSTRING( cString ) .AND. ! HB_ISMEMO( cString )
+      Throw( ErrorNew( "BASE", 0, 1127, "<cString> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nTop ) .AND. !HB_ISNUMERIC( nTop )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTop> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nTop> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nLeft ) .AND. !HB_ISNUMERIC( nLeft )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nLeft> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nLeft> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nRight ) .AND. !HB_ISNUMERIC( nRight )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nRight> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nRight> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nBottom ) .AND. !HB_ISNUMERIC( nBottom )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nBottom> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nBottom> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( lEditMode ) .AND. !HB_ISLOGICAL( lEditMode )
-      Throw( ErrorNew( "BASE", 0, 1127, "<lEditMode> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<lEditMode> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( xUDF ) .AND.  ( !HB_ISSTRING( xUDF ) .AND. !HB_ISLOGICAL( xUDF ) )
-      Throw( ErrorNew( "BASE", 0, 1127, "<cUserFunction> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<cUserFunction> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nLineLength ) .AND. !HB_ISNUMERIC( nLineLength )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nLineLength> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nLineLength> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nTabSize ) .AND. !HB_ISNUMERIC( nTabSize )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTabSize> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nTabSize> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nTextBuffRow ) .AND. !HB_ISNUMERIC( nTextBuffRow )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffRow> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffRow> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nTextBuffColumn ) .AND. !HB_ISNUMERIC( nTextBuffColumn )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffColumn> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffColumn> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nWindowRow ) .AND. !HB_ISNUMERIC( nWindowRow )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nWindowRow> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nWindowRow> Argument type error", ProcName() ) )
    ENDIF
    IF !HB_ISNIL( nWindowColumn ) .AND. !HB_ISNUMERIC( nWindowColumn )
-      Throw( ErrorNew( "BASE", 0, 1127, "<nWindowColumn> Argument type error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nWindowColumn> Argument type error", ProcName() ) )
    ENDIF
 
 
    // 2006/JUL/22 - E.F. To avoid run time error.
    IF nTop > nBottom .OR. nLeft > nRight
-      Throw( ErrorNew( "BASE", 0, 1127, "<nTop,nLeft,nRight,nBottom> Argument error", Procname() ) )
+      Throw( ErrorNew( "BASE", 0, 1127, "<nTop,nLeft,nRight,nBottom> Argument error", ProcName() ) )
    ENDIF
 
    IF HB_ISSTRING( xUDF ) .AND. Empty( xUDF )
@@ -487,15 +490,15 @@ FUNCTION xhb_MemoEdit( cString,;
    /* 24/10/2005 - <maurilio.longo@libero.it>
                    Clipper MemoEdit() converts Tabs into spaces
    */
-   oEd := XHB_TMemoEditor():New( StrTran( cString, Chr( 9 ), Space( nTabSize ) ),;
-                                 nTop, nLeft, nBottom, nRight,;
-                                 lEditMode,;
-                                 nLineLength,;
-                                 nTabSize,;
-                                 nTextBuffRow,;
-                                 nTextBuffColumn,;
-                                 nWindowRow,;
-                                 nWindowColumn )
+   oEd := XHB_TMemoEditor():New( StrTran( cString, Chr( 9 ), Space( nTabSize ) ), ;
+      nTop, nLeft, nBottom, nRight, ;
+      lEditMode, ;
+      nLineLength, ;
+      nTabSize, ;
+      nTextBuffRow, ;
+      nTextBuffColumn, ;
+      nWindowRow, ;
+      nWindowColumn )
 
    oEd:ProcName := ProcName( 1 )
    oEd:ProcLine := ProcLine( 1 )

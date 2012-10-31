@@ -36,7 +36,7 @@
    $EXAMPLES$
       // Payment of 1000 per year for 10 years at a interest rate
       // of 5 per cent per year
-  
+
       ? fv( 1000, 0.05, 10 ) // --> 12577.893
    $TESTS$
       fv( 1000, 0.00, 10 ) == 10000.0
@@ -87,7 +87,7 @@
       // at a interest rate of 0.5% per month (6% per year), so instead
       // of 6000 Dollars (the amount you will pay back) the bank will pay
       // you
-  
+
       ? pv( 100, 0.005, 60 ) // --> 5172.56
    $TESTS$
       pv( 100, 0.0, 60 )   == 6000.0
@@ -136,7 +136,7 @@
       // You get a loan of 5172.56 at a interest rate of 0.5% per
       // month (6% per year).
       // For 5 years, you have to pay back every month
-  
+
       ? payment( 5172.56, 0.005, 60 ) // --> 100.00
    $TESTS$
       payment( 5172.56, 0.0, 60 )   == 86.21
@@ -180,7 +180,7 @@
       debt in period <nPeriod> = ((debt in period <nPeriod>-1)-<nPayment>)*(1+<nInterest>/100)
                                  -> has to be 0, so
       <nPeriods> = -log(1-<nLoan>*(<nInterest>/100)/<nPayment>)/log(1+<nInterest>/100))
-  
+
       Note, however that in the case of nPayment <= <nLoan>*(<nInterest>/100),
       one would need infinite time to pay the loan back. The functions does
       then return -1.
@@ -188,9 +188,9 @@
       // You get a loan of 5172.56 at a interest rate of 0.5% per
       // month (6% per year).
       // You can afford to pay 100 back every month, so you need
-  
+
       ? periods( 5172.56, 100, 0.005 ) // --> 60.0
-  
+
       // months to cancel the loan.
    $TESTS$
       periods( 5172.56, 100, 0.005 ) == 60.0
@@ -227,18 +227,18 @@
       RATE() calculates the rate of interest per period for the given
       loan, payment per periods and number of periods. This is done with
       the same equation used in the PAYMENT() or PERIODS() function:
-  
+
       <nPayment> = <nLoan>*(<nInterest>/100)/(1-(1+<nInterest>/100)^(-<nPeriods>))
-  
+
       However, this equation can not be solved for <nInterest> in a "closed"
       manner, i.e. <nInterest> = ..., so that the result can only be estimated.
    $EXAMPLES$
       // You get a loan of 5172.56, pay 100 back every month for
       // 5 years (60 months). The effective interest rate per
       // period (=month) is
-  
+
       ? rate( 5172.56, 100, 60 ) // --> 0.005
-  
+
    $TESTS$
       rate( 5172.56, 100, 60.0 ) == 0.005
       rate( 6000.0, 100, 60.0 ) == 0.0

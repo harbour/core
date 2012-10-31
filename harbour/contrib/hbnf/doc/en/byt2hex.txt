@@ -19,7 +19,7 @@
       faulty.
    $DESCRIPTION$
       Can be used to show results of bit manipulation, both before and after.
-  
+
       This function is presented to illustrate that bit-wise operations
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
@@ -27,10 +27,10 @@
       These three code lines perform a bitwise AND on bytes with values of
       Chr(20) and Chr(36), and deliver the result as a string in hexadecimal
       format, using 'h' to signify hexadecimal.
-  
+
            ? FT_BYT2HEX( Chr( 20 ) )         // byte1: '14h'
            ? FT_BYT2HEX( Chr( 36 ) )         // byte2: '24h'
-  
+
            ? FT_BYT2HEX( FT_BYTEAND( Chr( 20 ), Chr( 36 ) ) )
                               // result: '04h'
    $SEEALSO$

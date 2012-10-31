@@ -13,7 +13,7 @@
       FT_BITCLR( <cByte>, <nBitPos> ) -> cByte
    $ARGUMENTS$
       <cByte> is a character from Chr(0) to Chr(255).
-  
+
       <nBitPos> is a number from 0 to 7 conforming to standard
       right-to-left bit numbering convention and representing the
       position of the bit within the byte.
@@ -24,19 +24,19 @@
       In effect, ANDs argument byte with a byte that has all bits set except
       the target bit.  If bit is already clear (0), it remains clear.
       Note: Calls FT_ISBIT() which is also in this Library.
-  
+
       This function is presented to illustrate that bit-wise operations
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
       This code would clear bit 4 in a byte represented by Chr( 115 ):
-  
+
         cNewByte := FT_BITCLR( Chr( 115 ), 4 )
         ? Asc( cNewbyte )         // result: 99
         ? cNewByte                // result: "c"
-  
+
       This code would clear bit 5 in the byte represented by letter "A":
-  
+
         FT_BITCLR( "A", 5 )       // result: "A", since
                                   // bit 5 already clear
    $SEEALSO$

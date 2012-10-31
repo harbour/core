@@ -16,6 +16,7 @@
 #define CRLF Chr( 13 ) + Chr( 10 )
 
 PROCEDURE Main()
+
    LOCAL ssl_ctx
    LOCAL ssl
    LOCAL cipher

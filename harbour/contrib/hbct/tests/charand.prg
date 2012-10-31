@@ -62,8 +62,8 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests:"
 
-   ? [  charand("012345678", chr(254)) == "002244668" ? --> "] + charand( "012345678", Chr( 254 ) ) + ["]
-   ? [  charand("012345678", chr(254)+chr(252)) == "002044648" ? --> "] + charand( "012345678", Chr( 254 ) + Chr( 252 ) ) + ["]
+   ? '  charand("012345678", chr(254)) == "002244668" ? --> "' + charand( "012345678", Chr( 254 ) ) + '"'
+   ? '  charand("012345678", chr(254)+chr(252)) == "002044648" ? --> "' + charand( "012345678", Chr( 254 ) + Chr( 252 ) ) + '"'
 
    ? "End test of CHARAND()"
    ?

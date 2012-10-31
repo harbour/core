@@ -56,36 +56,36 @@ FUNCTION RunShell( cCommand, cProgram, lAsync, lBackground )
    HB_SYMBOL_UNUSED( lBackground )
 
    IF ! HB_ISSTRING( cProgram )
-      #if defined( __PLATFORM__UNIX )
-         cProgram := hb_getenv( "SHELL" )
-      #elif defined( __PLATFORM__OS2 )
-         cProgram := hb_getenv( "OS2_SHELL" )
-      #else
-         cProgram := hb_getenv( "COMSPEC" )
-      #endif
+#if defined( __PLATFORM__UNIX )
+      cProgram := hb_GetEnv( "SHELL" )
+#elif defined( __PLATFORM__OS2 )
+      cProgram := hb_GetEnv( "OS2_SHELL" )
+#else
+      cProgram := hb_GetEnv( "COMSPEC" )
+#endif
       IF Empty( cProgram )
-         #if defined( __PLATFORM__WINDOWS )
-            IF hb_osIsWinNT()
-               cProgram := "cmd.exe"
-            ELSE
-               cProgram := "command.com"
-            ENDIF
-         #elif defined( __PLATFORM__DOS )
-            cProgram := "command.com"
-         #elif defined( __PLATFORM__OS2 )
+#if defined( __PLATFORM__WINDOWS )
+         IF hb_osIsWinNT()
             cProgram := "cmd.exe"
-         #else
-            cProgram := ""
-         #endif
+         ELSE
+            cProgram := "command.com"
+         ENDIF
+#elif defined( __PLATFORM__DOS )
+         cProgram := "command.com"
+#elif defined( __PLATFORM__OS2 )
+         cProgram := "cmd.exe"
+#else
+         cProgram := ""
+#endif
       ENDIF
    ENDIF
 
    IF HB_ISSTRING( cCommand )
-      #if defined( __PLATFORM__UNIX )
-         cProgram += " " + cCommand
-      #else
-         cProgram += " /c " + cCommand
-      #endif
+#if defined( __PLATFORM__UNIX )
+      cProgram += " " + cCommand
+#else
+      cProgram += " /c " + cCommand
+#endif
    ENDIF
 
    RETURN hb_processRun( LTrim( cProgram ), NIL, NIL, NIL, lAsync )

@@ -13,14 +13,14 @@
       FT_VIDSTR( <nRow>, <nCol>, <cString> [, <nColor> ] ) -> NIL
    $ARGUMENTS$
       <nRow> and <nCol> are the screen coordinates.
-  
+
       <cString> is the string to be printed on the screen.
-  
+
       <nColor> is an integer representing the color attribute.
       The formula is:
-  
+
         nFore + ( nBack * 16 )
-  
+
       FT_VIDSTR() will display the string in the current color if
       <nColor> is not passed.
    $RETURNS$
@@ -32,10 +32,10 @@
       screen prints where speed is important.
    $EXAMPLES$
       FT_VIDSTR( 10, 20, "Enter Name :", 165 )
-  
+
       This example will print the specified text at coordinates 10, 20
       in bright white on top of Magenta.
-  
+
    $END$
  */
 
@@ -50,12 +50,12 @@
       FT_WRTChr( <nRow>, <nCol>, <cChar>, <nColor> ) -> NIL
    $ARGUMENTS$
       <nRow> and <nCol> are the screen coordinates.
-  
+
       <cChar> is the single character to print on the screen.
-  
+
       <nColor> is an integer representing the color attribute.
       The formula is:
-  
+
          nFore + ( nBack * 16 )
    $RETURNS$
       NIL
@@ -71,11 +71,11 @@
             FT_WRTChr( nX, nY, "∙", ( nX - 1 ) + ( nY * 16 ) )
          NEXT
       NEXT
-  
+
       This example will write the ASCII character 249 to every location
       on screen in every possible color combination.  It will recognize
       the status of SetBlink().  It uses direct video writes for speed.
-  
+
    $END$
  */
 
@@ -91,12 +91,12 @@
    $ARGUMENTS$
       <nTRow>, <nLCol>, <nBRow> and  <nRCol> are the screen coordinates
       to clear.
-  
+
       <nColor> is an integer representing the color attribute.
       The formula is:
-  
+
         nFore + ( nBack * 16 )
-  
+
       The default is black.
    $RETURNS$
       NIL
@@ -104,10 +104,10 @@
       This is a high speed function to clear the screen at the given
       coordinates with the given color attribute.  This does not change
       Clipper's color settings.  It uses direct video writes for speed.
-  
+
    $EXAMPLES$
       FT_CLS( 0, 0, MaxRow(), MaxCol(), 165 )
-  
+
       This example will clear the entire screen with the colors
       bright white on magenta.
    $END$
@@ -125,10 +125,10 @@
    $ARGUMENTS$
       <nTRow>, <nLCol>, <nBRow>, and <nRCol> are the coordinates of the
       screen region.
-  
+
       <nColor> is an integer representing the new color attribute.
       The formula is:
-  
+
           nFore + ( nBack * 16 )
    $RETURNS$
       NIL
@@ -138,7 +138,7 @@
       video writes.
    $EXAMPLES$
       FT_SETATTR( 0, 0, MaxRow(), MaxCol(), 95 )
-  
+
       This example will change the entire screen's colors to bright white on
       magenta without changing or overwriting any text on the screen.
    $END$
@@ -165,7 +165,7 @@
       containing multiple color combinations.
    $EXAMPLES$
       FT_REVATTR( 0, 0, MaxRow(), MaxCol() )
-  
+
       This example will change the entire screen's colors to their reverse
       attributes without changing  or overwriting any text.
    $END$
@@ -191,7 +191,7 @@
       only one character on screen and hence is faster and uses less memory.
    $EXAMPLES$
       FT_REVCHR( 10, 20 )
-  
+
       This example will change the text and background at 10, 20 to it's
       reverse color attributes without changing or overwriting the
       character itself.

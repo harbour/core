@@ -144,13 +144,13 @@
    $SYNTAX$
       NUMTOKEN( <cString>, [<cTokenizer>], [<nSkipWidth>] ) -> nTokenCount
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
-  
+
    $EXAMPLES$
-  
+
    $TESTS$
       numtoken( "Hello, World!" ) ==  2
       numtoken( "This is good. See you! How do you do?", ".!?" ) == 3
@@ -319,7 +319,7 @@
    $EXAMPLES$
       see TOKEN() function
    $TESTS$
-  
+
    $STATUS$
       Ready
    $COMPLIANCE$

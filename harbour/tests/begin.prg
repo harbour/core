@@ -50,7 +50,7 @@ PROCEDURE Main()
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 5"
-      Break1( )
+      Break1()
       ? "  Recovering in 5 using....", oLocal
    END SEQUENCE
    ? "After SEQUENCE 5"
@@ -58,7 +58,7 @@ PROCEDURE Main()
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 6"
-      Break1( )
+      Break1()
    RECOVER USING m_oMemvar
       ? "  Recovering in 6 using... ", m_oMemvar
    END SEQUENCE
@@ -67,7 +67,7 @@ PROCEDURE Main()
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 7"
-      Break2( )
+      Break2()
    RECOVER USING m_oMemvar
       ? "  Recovering in 7 using... ", m_oMemvar
    END SEQUENCE
@@ -89,7 +89,7 @@ PROCEDURE Break2()
 
    BEGIN SEQUENCE
       ? " Inside SEQUENCE 8"
-      Break3( )
+      Break3()
    RECOVER USING m_oMemvar
       ? "  Recovering in 8 using...", Eval( m_oMemvar, " eval in 8" )
       Break( "BREAK from recovery code" )

@@ -485,17 +485,17 @@ STATIC FUNCTION Page_Text( pdf )
    page := HPDF_AddPage( pdf )
    HPDF_Page_SetSize( page, HPDF_PAGE_SIZE_A5, HPDF_PAGE_PORTRAIT )
 
-   //print_grid( pdf, page )
+   // print_grid( pdf, page )
 
    // page_height := HPDF_Page_GetHeight( page )
 
    font := HPDF_GetFont( pdf, "Helvetica", NIL )
    HPDF_Page_SetTextLeading( page, 20 )
 
-   #define rLEFT   1
-   #define rTOP    2
-   #define rRIGHT  3
-   #define rBOTTOM 4
+#define rLEFT   1
+#define rTOP    2
+#define rRIGHT  3
+#define rBOTTOM 4
 
    /* text_rect method */
 
@@ -647,7 +647,7 @@ STATIC FUNCTION Page_Text( pdf )
    HPDF_Page_Circle( page, 210, 190, 113 )
    HPDF_Page_Stroke( page )
 
-   angle1 := 360 / ( Len(SAMP_TXT ) )
+   angle1 := 360 / ( Len( SAMP_TXT ) )
    angle2 := 180
 
    HPDF_Page_BeginText( page )
@@ -682,7 +682,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
    LOCAL page_title := "Text Demo"
 
    /* set compression mode */
-   //HPDF_SetCompressionMode( pdf, HPDF_COMP_ALL )
+   // HPDF_SetCompressionMode( pdf, HPDF_COMP_ALL )
 
    /* create default-font */
    font := HPDF_GetFont( pdf, "Helvetica", NIL )
@@ -691,7 +691,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
    page := HPDF_AddPage( pdf )
 
    /* draw grid to the page */
-   //print_grid( pdf, page )
+   // print_grid( pdf, page )
 
    /* print the lines of the page.
    HPDF_Page_SetLineWidth( page, 1 )
@@ -760,8 +760,8 @@ STATIC FUNCTION Page_TextScaling( pdf )
    HPDF_Page_MoveTextPos( page, 0, - 25 )
 
    FOR i := 1 TO len
-      r := i /len
-      b := 1 - ( i /len )
+      r := i / len
+      b := 1 - ( i / len )
       buf := SubStr( samp_text, i, 1 )
 
       HPDF_Page_SetRGBFill( page, r, 0.0, b )
@@ -770,8 +770,8 @@ STATIC FUNCTION Page_TextScaling( pdf )
    HPDF_Page_MoveTextPos( page, 0, - 25 )
 
    FOR i := 1 TO len
-      b := i /len
-      g := 1 - ( i /len )
+      b := i / len
+      g := 1 - ( i / len )
       buf := SubStr( samp_text, i, 1 )
 
       HPDF_Page_SetRGBFill( page, 0.0, g, b )
@@ -925,7 +925,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
    HPDF_Page_TextOut( page, 60, 60, samp_text2 )
    HPDF_Page_EndText( page )
 
-   //HPDF_SetCompressionMode( pdf, nComp )
+   // HPDF_SetCompressionMode( pdf, nComp )
 
    RETURN NIL
 
@@ -1024,7 +1024,7 @@ STATIC FUNCTION Page_CodePages( pdf )
       HPDF_Page_SetWidth( page, PAGE_WIDTH )
       HPDF_Page_SetHeight( page, PAGE_HEIGHT )
 
-      outline := HPDF_CreateOutline( pdf, root, encodings[i], NIL )
+      outline := HPDF_CreateOutline( pdf, root, encodings[ i ], NIL )
       dst := HPDF_Page_CreateDestination( page )
       HPDF_Destination_SetXYZ( dst, 0, HPDF_Page_GetHeight( page ), 1 )
 
@@ -1037,16 +1037,16 @@ STATIC FUNCTION Page_CodePages( pdf )
       HPDF_Page_BeginText( page )
       HPDF_Page_SetFontAndSize( page, font, 20 )
       HPDF_Page_MoveTextPos( page, 40, PAGE_HEIGHT - 50 )
-      HPDF_Page_ShowText( page, encodings[i] )
+      HPDF_Page_ShowText( page, encodings[ i ] )
       HPDF_Page_ShowText( page, " Encoding" )
       HPDF_Page_EndText( page )
 
-      IF encodings[i] == "Symbol-Set"
+      IF encodings[ i ] == "Symbol-Set"
          font2 := HPDF_GetFont( pdf, "Symbol", NIL )
-      ELSEIF encodings[i] == "ZapfDingbats-Set"
+      ELSEIF encodings[ i ] == "ZapfDingbats-Set"
          font2 := HPDF_GetFont( pdf, "ZapfDingbats", NIL )
       ELSE
-         font2 := HPDF_GetFont( pdf, font_name, encodings[i] )
+         font2 := HPDF_GetFont( pdf, font_name, encodings[ i ] )
       ENDIF
 
       HPDF_Page_SetFontAndSize( page, font2, 14 )
@@ -1140,7 +1140,7 @@ STATIC FUNCTION Page_Graphics( pdf )
    HPDF_Page_SetWidth( page, 200 )
 
    /* draw grid to the page */
-   //print_grid( pdf, page )
+   // print_grid( pdf, page )
 
    /* draw pie chart
     *
@@ -1198,14 +1198,14 @@ STATIC FUNCTION Page_Graphics( pdf )
 
 STATIC FUNCTION Page_Annotation( pdf )
 
-   LOCAL rect1 := { 50 , 350, 150, 400 }
+   LOCAL rect1 := { 50, 350, 150, 400 }
    LOCAL rect2 := { 210, 350, 350, 400 }
-   LOCAL rect3 := { 50 , 250, 150, 300 }
+   LOCAL rect3 := { 50, 250, 150, 300 }
    LOCAL rect4 := { 210, 250, 350, 300 }
-   LOCAL rect5 := { 50 , 150, 150, 200 }
+   LOCAL rect5 := { 50, 150, 150, 200 }
    LOCAL rect6 := { 210, 150, 350, 200 }
-   LOCAL rect7 := { 50 , 50 , 150, 100 }
-   LOCAL rect8 := { 210, 50 , 350, 100 }
+   LOCAL rect7 := { 50, 50, 150, 100 }
+   LOCAL rect8 := { 210, 50, 350, 100 }
 
    LOCAL page, font, encoding, annot
 

@@ -18,11 +18,11 @@
    $DESCRIPTION$
       FT_SYSMEM() simply reports the amount of conventional memory
       (up to 640K) installed.
-  
+
       FT_SYSMEM() uses DOS interrupt 12h to get this information.
       For information, refer to Peter Norton's _Programmer's Guide
       to the IBM PC_ (Brady).
-  
+
    $EXAMPLES$
       ? "Conventional memory installed: " + Str( FT_SYSMEM() ) + "K"
    $END$

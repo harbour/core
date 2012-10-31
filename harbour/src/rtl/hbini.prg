@@ -76,12 +76,10 @@
 
 #include "fileio.ch"
 
-
 STATIC s_cLineComment := ";"
 STATIC s_cHalfLineComment := "#"
 
-
-PROCEDURE hb_IniSetComment( cLc, cHlc )
+PROCEDURE hb_iniSetComment( cLc, cHlc )
 
    IF HB_ISSTRING( cLc )
       s_cLineComment := cLc
@@ -93,7 +91,8 @@ PROCEDURE hb_IniSetComment( cLc, cHlc )
 
    RETURN
 
-FUNCTION HB_IniNew( lAutoMain )
+FUNCTION hb_iniNew( lAutoMain )
+
    LOCAL hIni := { => }
 
    hb_HKeepOrder( hIni, .T. )
@@ -109,10 +108,12 @@ FUNCTION HB_IniNew( lAutoMain )
 
    RETURN hIni
 
-FUNCTION hb_IniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
-   RETURN hb_IniReadStr( iif( HB_ISSTRING( cFileSpec ), hb_IniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
+FUNCTION hb_iniRead( cFileSpec, lKeyCaseSens, cSplitters, lAutoMain )
 
-FUNCTION hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
+   RETURN hb_iniReadStr( iif( HB_ISSTRING( cFileSpec ), hb_IniFileLow( cFileSpec ), "" ), lKeyCaseSens, cSplitters, lAutoMain )
+
+FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
+
    LOCAL hIni := { => }
 
    hb_HKeepOrder( hIni, .T. )
@@ -141,10 +142,11 @@ FUNCTION hb_IniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
    RETURN hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
 
 STATIC FUNCTION hb_IniFileLow( cFileSpec )
+
    LOCAL cFile, nLen
    LOCAL hFile
    LOCAL cData
-   LOCAL aFiles := hb_aTokens( cFileSpec, hb_OSPathListSeparator() )
+   LOCAL aFiles := hb_ATokens( cFileSpec, hb_osPathListSeparator() )
 
    IF Empty( aFiles )
       aFiles := { cFileSpec }
@@ -173,6 +175,7 @@ STATIC FUNCTION hb_IniFileLow( cFileSpec )
    RETURN cData
 
 STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMain )
+
    LOCAL nLen
    LOCAL aKeyVal, hCurrentSection
    LOCAL nLineEnd
@@ -289,13 +292,13 @@ STATIC FUNCTION hb_IniStringLow( hIni, cData, lKeyCaseSens, cSplitters, lAutoMai
 
    RETURN hIni
 
+FUNCTION hb_iniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
-FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
    LOCAL hFile
    LOCAL lClose
    LOCAL cBuffer
 
-   cBuffer := hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
+   cBuffer := hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
    // if cBuffer == NIL I have to stop here
    IF ! HB_ISSTRING( cBuffer )
@@ -329,7 +332,8 @@ FUNCTION hb_IniWrite( xFileName, hIni, cCommentBegin, cCommentEnd, lAutoMain )
 
    RETURN .T.
 
-FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
+FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
+
    LOCAL cNewLine := hb_eol()
    LOCAL cSection
    LOCAL cBuffer := ""
@@ -355,14 +359,14 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
    IF lAutoMain
       /* When automain is on, write the main section */
       hb_HEval( hIni[ "MAIN" ], ;
-               {| cKey, xVal | cBuffer += hb_CStr( cKey ) + " = " + ;
-                                             hb_CStr( xVal ) + cNewLine } )
+         {| cKey, xVal | cBuffer += hb_CStr( cKey ) + " = " + ;
+         hb_CStr( xVal ) + cNewLine } )
 
    ELSE
       /* When automain is off, just write all the toplevel variables. */
-      hb_HEval( hIni, {| cKey, xVal | iif( ! HB_ISHASH( xVal ),;
-                cBuffer += hb_CStr( cKey ) + " = " + ;
-                           hb_CStr( xVal ) + cNewLine, /* nothing */ ) } )
+      hb_HEval( hIni, {| cKey, xVal | iif( ! HB_ISHASH( xVal ), ;
+         cBuffer += hb_CStr( cKey ) + " = " + ;
+         hb_CStr( xVal ) + cNewLine, /* nothing */ ) } )
    ENDIF
 
    FOR EACH cSection IN hIni
@@ -383,8 +387,8 @@ FUNCTION hb_IniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
       cBuffer += cNewLine + "[" + hb_CStr( cSection:__enumKey ) + "]" + cNewLine
 
       hb_HEval( cSection, ;
-                {| cKey, xVal | cBuffer += hb_CStr( cKey ) + "=" + ;
-                                           hb_CStr( xVal ) + cNewLine } )
+         {| cKey, xVal | cBuffer += hb_CStr( cKey ) + "=" + ;
+         hb_CStr( xVal ) + cNewLine } )
    NEXT
 
    IF HB_ISSTRING( cCommentEnd ) .AND. ! Empty( cCommentEnd )

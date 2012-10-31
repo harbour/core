@@ -27,48 +27,48 @@
 /*  cursor movement.  for example ctrl-x is 0x18 and it's mapped */
 /*  to the down arrow.                                           */
 
-#define UP    5       /* Ctrl-e */
-#define DN    24      /* Ctrl-x */
-#define LFT   19      /* Ctrl-s */
-#define RGT   4       /* Ctrl-d */
-#define CLFT  1       /* Ctrl-a */
-#define CRGT  6       /* Ctrl-f */
-#define HOME  210
-#define ENND  211
-#define PGUP  18      /* Ctrl-r */
-#define PGDN  3       /* Ctrl-c */
-#define INS   22      /* Ctrl-v */
-#define DEL   7       /* Ctrl-g */
-#define ESC   27      /* escape */
-#define RET   13      /* return */
-#define TAB   9       /* horiz. tab */
-#define BKSP  8       /* backspace  */
-#define CTRLA 1       /* Ctrl-a */
-#define CTRLB 2       /* Ctrl-b */
-#define CTRLC 3       /* Ctrl-c */
-#define CTRLD 4       /* Ctrl-d */
-#define CTRLE 5       /* Ctrl-e */
-#define CTRLF 6       /* Ctrl-f */
-#define CTRLG 7       /* Ctrl-g */
-#define CTRLH 8       /* Ctrl-h */
-#define CTRLI 9       /* Ctrl-i */
-#define CTRLJ 10      /* Ctrl-j */
-#define CTRLK 11      /* Ctrl-k */
-#define CTRLL 12      /* Ctrl-l */
-#define CTRLM 13      /* Ctrl-m */
-#define CTRLN 14      /* Ctrl-n */
-#define CTRLO 15      /* Ctrl-o */
-#define CTRLP 16      /* Ctrl-p */
-#define CTRLQ 17      /* Ctrl-q */
-#define CTRLR 18      /* Ctrl-r */
-#define CTRLS 19      /* Ctrl-s */
-#define CTRLT 20      /* Ctrl-t */
-#define CTRLU 21      /* Ctrl-u */
-#define CTRLV 22      /* Ctrl-v */
-#define CTRLW 23      /* Ctrl-w */
-#define CTRLX 24      /* Ctrl-x */
-#define CTRLY 25      /* Ctrl-y */
-#define CTRLZ 26      /* Ctrl-z */
+#define UP     5      /* Ctrl-e */
+#define DN     24     /* Ctrl-x */
+#define LFT    19     /* Ctrl-s */
+#define RGT    4      /* Ctrl-d */
+#define CLFT   1      /* Ctrl-a */
+#define CRGT   6      /* Ctrl-f */
+#define HOME   210
+#define ENND   211
+#define PGUP   18     /* Ctrl-r */
+#define PGDN   3      /* Ctrl-c */
+#define INS    22     /* Ctrl-v */
+#define DEL    7      /* Ctrl-g */
+#define ESC    27     /* escape */
+#define RET    13     /* return */
+#define TAB    9      /* horiz. tab */
+#define BKSP   8      /* backspace  */
+#define CTRLA  1      /* Ctrl-a */
+#define CTRLB  2      /* Ctrl-b */
+#define CTRLC  3      /* Ctrl-c */
+#define CTRLD  4      /* Ctrl-d */
+#define CTRLE  5      /* Ctrl-e */
+#define CTRLF  6      /* Ctrl-f */
+#define CTRLG  7      /* Ctrl-g */
+#define CTRLH  8      /* Ctrl-h */
+#define CTRLI  9      /* Ctrl-i */
+#define CTRLJ  10     /* Ctrl-j */
+#define CTRLK  11     /* Ctrl-k */
+#define CTRLL  12     /* Ctrl-l */
+#define CTRLM  13     /* Ctrl-m */
+#define CTRLN  14     /* Ctrl-n */
+#define CTRLO  15     /* Ctrl-o */
+#define CTRLP  16     /* Ctrl-p */
+#define CTRLQ  17     /* Ctrl-q */
+#define CTRLR  18     /* Ctrl-r */
+#define CTRLS  19     /* Ctrl-s */
+#define CTRLT  20     /* Ctrl-t */
+#define CTRLU  21     /* Ctrl-u */
+#define CTRLV  22     /* Ctrl-v */
+#define CTRLW  23     /* Ctrl-w */
+#define CTRLX  24     /* Ctrl-x */
+#define CTRLY  25     /* Ctrl-y */
+#define CTRLZ  26     /* Ctrl-z */
 
 /* the following values are mapped into > 128 so that the cannot */
 /*  be mistaken for an actual keypress, keyin() performs all of  */

@@ -203,7 +203,7 @@ FUNCTION MenuItem( cCaption, boData, nShortcut, cMessage, nID )
 
 #ifdef HB_CLP_UNDOC
 
-FUNCTION __miColumn( o, nColumn )
+FUNCTION __MIColumn( o, nColumn )
 
    IF HB_ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
 
@@ -216,7 +216,7 @@ FUNCTION __miColumn( o, nColumn )
 
    RETURN -1
 
-FUNCTION __miRow( o, nRow )
+FUNCTION __MIRow( o, nRow )
 
    IF HB_ISOBJECT( o ) .AND. o:ClassName() == "MENUITEM"
 

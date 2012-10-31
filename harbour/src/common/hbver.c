@@ -392,7 +392,14 @@ char * hb_verPlatform( void )
 
                   if( GetVersionEx( ( OSVERSIONINFO * ) &osVerEx ) )
                   {
-                     if( osVer.dwMinorVersion == 1 )
+                     if( osVer.dwMinorVersion == 2 )
+                     {
+                        if( osVerEx.wProductType == VER_NT_WORKSTATION )
+                           pszName = " 8";
+                        else
+                           pszName = " Server 2012";
+                     }
+                     else if( osVer.dwMinorVersion == 1 )
                      {
                         if( osVerEx.wProductType == VER_NT_WORKSTATION )
                            pszName = " 7";
@@ -476,7 +483,7 @@ char * hb_verPlatform( void )
             int i;
 
             /* Skip the leading spaces (Win95B, Win98) */
-            for( i = 0; pszCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) pszCSDVersion[ i ] ); i++ ) {};
+            for( i = 0; pszCSDVersion[ i ] != '\0' && HB_ISSPACE( ( int ) pszCSDVersion[ i ] ); i++ );
 
             if( pszCSDVersion[ i ] != '\0' )
             {
@@ -539,7 +546,7 @@ static void s_hb_winVerInit( void )
       s_fWinVista = osvi.dwMajorVersion >= 6;
       s_fWin2K3 = s_fWinVista;
       s_fWin2K = osvi.dwMajorVersion >= 5;
-      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4); */
+      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
       s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
 
 #if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && \
@@ -1093,5 +1100,5 @@ char * hb_verBuildDate( void )
    pszDate = ( char * ) hb_xgrab( 64 );
    hb_snprintf( pszDate, 64, "%s %s", __DATE__, __TIME__ );
 
-   return  pszDate;
+   return pszDate;
 }

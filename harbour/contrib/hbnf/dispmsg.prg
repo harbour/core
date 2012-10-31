@@ -29,6 +29,7 @@
 #include "setcurs.ch"
 
 // beginning of demo program
+
 FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    LOCAL xRtnVal := .F.

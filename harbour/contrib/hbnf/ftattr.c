@@ -28,16 +28,16 @@
 
 HB_FUNC( FT_SAVEATT )
 {
-   int      iTop     = hb_parni( 1 );  /* Defaults to zero on bad type */
-   int      iLeft    = hb_parni( 2 );  /* Defaults to zero on bad type */
-   int      iMaxRow  = hb_gtMaxRow();
-   int      iMaxCol  = hb_gtMaxCol();
-   int      iBottom  = hb_parnidef( 3, iMaxRow );
-   int      iRight   = hb_parnidef( 4, iMaxRow );
+   int iTop    = hb_parni( 1 );        /* Defaults to zero on bad type */
+   int iLeft   = hb_parni( 2 );        /* Defaults to zero on bad type */
+   int iMaxRow = hb_gtMaxRow();
+   int iMaxCol = hb_gtMaxCol();
+   int iBottom = hb_parnidef( 3, iMaxRow );
+   int iRight  = hb_parnidef( 4, iMaxRow );
 
-   HB_SIZE  nSize;
-   char *   pBuffer;
-   char *   pAttrib;
+   HB_SIZE nSize;
+   char *  pBuffer;
+   char *  pAttrib;
 
    if( iTop < 0 )
       iTop = 0;
@@ -50,8 +50,8 @@ HB_FUNC( FT_SAVEATT )
 
    if( iTop <= iBottom && iLeft <= iRight )
    {
-      nSize    = ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
-      pBuffer  = pAttrib = ( char * ) hb_xgrab( nSize + 1 );
+      nSize   = ( iBottom - iTop + 1 ) * ( iRight - iLeft + 1 );
+      pBuffer = pAttrib = ( char * ) hb_xgrab( nSize + 1 );
       while( iTop <= iBottom )
       {
          int iCol = iLeft;
@@ -100,13 +100,13 @@ HB_FUNC( FT_RESTATT )
 
    if( nLen )
    {
-      int          iTop     = hb_parni( 1 );  /* Defaults to zero on bad type */
-      int          iLeft    = hb_parni( 2 );  /* Defaults to zero on bad type */
-      int          iMaxRow  = hb_gtMaxRow();
-      int          iMaxCol  = hb_gtMaxCol();
-      int          iBottom  = hb_parnidef( 3, iMaxRow );
-      int          iRight   = hb_parnidef( 4, iMaxCol );
-      const char * pAttrib  = hb_parc( 5 );
+      int iTop    = hb_parni( 1 );            /* Defaults to zero on bad type */
+      int iLeft   = hb_parni( 2 );            /* Defaults to zero on bad type */
+      int iMaxRow = hb_gtMaxRow();
+      int iMaxCol = hb_gtMaxCol();
+      int iBottom = hb_parnidef( 3, iMaxRow );
+      int iRight  = hb_parnidef( 4, iMaxCol );
+      const char * pAttrib = hb_parc( 5 );
 
       if( iTop < 0 )
          iTop = 0;

@@ -21,7 +21,7 @@
    $DESCRIPTION$
       Can be used for any bit-wise masking operation.  In effect, this is a
       bit-by-bit AND operation.  Equivalent to AND assembler instruction.
-  
+
       This function is presented to illustrate that bit-wise operations
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
@@ -29,7 +29,7 @@
       This code would mask out the high nibble (four most significant bits)
       of the byte represented by Chr(123) and leave the low nibble bits as in
       the parameter byte.
-  
+
            cNewbyte := FT_BYTEAND( Chr( 123 ), Chr( 15 ) )
            ? Asc( cNewByte )  // result: 11
            ? cNewByte         // result: non-printable character

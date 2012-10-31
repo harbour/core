@@ -68,8 +68,10 @@ CREATE CLASS HBBlat
 
    EXPORTED:
    // Installation
-   VAR lSaveSettings           AS LOGICAL INIT .F.             // store common settings to the Windows Registry.  Takes the
-                                                               // same parameters as -install, and is only for SMTP settings.
+   VAR lSaveSettings           AS LOGICAL INIT .F.
+
+   // store common settings to the Windows Registry.  Takes the
+   // same parameters as -install, and is only for SMTP settings.
    METHOD SaveSettings( ... )  INLINE ::Install( "SMTP", ... )
    //VAR lInstall                AS LOGICAL INIT .F.
    METHOD Install( cService, cServerAddress, cSenderEmailAddress, nTries, nPort, cProfile, cUsername, cPassword ) VIRTUAL // TODO
@@ -207,6 +209,7 @@ CREATE CLASS HBBlat
 ENDCLASS
 
 METHOD Send() CLASS HBBlat
+
    ::Check()
 
    IF ::nError == BLAT_SUCCESS
@@ -227,7 +230,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
    // Not using registry, so every parameter has to be explicity set
    // No control apart from existence
 
-   IF !::lChecked
+   IF ! ::lChecked
 
       ::cCommand := ""
 
@@ -238,7 +241,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::nError := BLAT_ERR_MISSING_TO
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TO )
          AAdd( ::aErrors, { ::nError, ::cError } )
-         IF !::lIgnoreErrors
+         IF ! ::lIgnoreErrors
             RETURN
          ENDIF
       ELSE
@@ -249,11 +252,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // tofile - optional
       IF HB_ISSTRING( ::cTOFile )
-         IF !hb_FileExists( ::cTOFile )
+         IF ! hb_FileExists( ::cTOFile )
             ::nError := BLAT_ERR_MISSING_TOFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TOFILE ) + ": " + ::cToFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -268,11 +271,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // ccfile - optional
       IF HB_ISSTRING( ::cCCFile )
-         IF !hb_FileExists( ::cCCFile )
+         IF ! hb_FileExists( ::cCCFile )
             ::nError := BLAT_ERR_MISSING_CCFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_CCFILE ) + ": " + ::cCCFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -287,11 +290,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // bccfile - optional
       IF HB_ISSTRING( ::cBCCFile )
-         IF !hb_FileExists( ::cBCCFile )
+         IF ! hb_FileExists( ::cBCCFile )
             ::nError := BLAT_ERR_MISSING_BCCFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BCCFILE ) + ": " + ::cBCCFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -321,11 +324,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cSubjectFile - optional
       IF HB_ISSTRING( ::cSubjectFile )
-         IF !hb_FileExists( ::cSubjectFile )
+         IF ! hb_FileExists( ::cSubjectFile )
             ::nError := BLAT_ERR_MISSING_SUBJECTFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SUBJECTFILE ) + ": " + ::cSubjectFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -335,11 +338,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // bodyfile - optional
       IF HB_ISSTRING( ::cBodyFile )
-         IF !hb_FileExists( ::cBodyFile )
+         IF ! hb_FileExists( ::cBodyFile )
             ::nError := BLAT_ERR_MISSING_BODYFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODYFILE ) + ": " + ::cBodyFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -352,18 +355,18 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::nError := BLAT_ERR_MISSING_BODY
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODY )
          AAdd( ::aErrors, { ::nError, ::cError } )
-         IF !::lIgnoreErrors
+         IF ! ::lIgnoreErrors
             RETURN
          ENDIF
       ELSE
          IF HB_ISSTRING( ::cBody )
             ::cCommand += ' -body "' + ::cBody + '"'
          ELSE
-            IF !hb_FileExists( ::cBodyFile )
+            IF ! hb_FileExists( ::cBodyFile )
                ::nError := BLAT_ERR_MISSING_BODYFILE
                ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_BODYFILE ) + ": " + ::cBodyFile
                AAdd( ::aErrors, { ::nError, ::cError } )
-               IF !::lIgnoreErrors
+               IF ! ::lIgnoreErrors
                   RETURN
                ENDIF
             ELSE
@@ -374,11 +377,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cSignatureFile
       IF HB_ISSTRING( ::cSignatureFile )
-         IF !hb_FileExists( ::cSignatureFile )
+         IF ! hb_FileExists( ::cSignatureFile )
             ::nError := BLAT_ERR_MISSING_SIGNATUREFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SIGNATUREFILE ) + ": " + ::cSignatureFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -388,11 +391,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cTagFile
       IF HB_ISSTRING( ::cTagFile )
-         IF !hb_FileExists( ::cTagFile )
+         IF ! hb_FileExists( ::cTagFile )
             ::nError := BLAT_ERR_MISSING_TAGFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TAGFILE ) + ": " + ::cTagFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -402,11 +405,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cPostScriptumFile - optional
       IF HB_ISSTRING( ::cPostScriptumFile )
-         IF !hb_FileExists( ::cPostScriptumFile )
+         IF ! hb_FileExists( ::cPostScriptumFile )
             ::nError := BLAT_ERR_MISSING_PSFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_PSFILE ) + ": " + ::cPostScriptumFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -431,7 +434,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::nError := BLAT_ERR_MISSING_SERVERSMTP
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_SERVERSMTP )
          AAdd( ::aErrors, { ::nError, ::cError } )
-         IF !::lIgnoreErrors
+         IF ! ::lIgnoreErrors
             RETURN
          ENDIF
       ELSE
@@ -463,7 +466,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
          ::nError := BLAT_ERR_MISSING_FROM
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_FROM )
          AAdd( ::aErrors, { ::nError, ::cError } )
-         IF !::lIgnoreErrors
+         IF ! ::lIgnoreErrors
             RETURN
          ENDIF
       ELSE
@@ -569,7 +572,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // No Blat Home Page
       // Add only if ::lNoBlatXHeader is .F.
-      IF !::lNoBlatXHeader
+      IF ! ::lNoBlatXHeader
          IF ::lNoBlatHomePage
             ::cCommand += " -noh"
          ENDIF
@@ -602,14 +605,14 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cDSN
       IF HB_ISSTRING( ::cDSN )
-         IF ( "n" $ Lower( ::cDSN ) .OR. "s" $ Lower( ::cDSN ) .OR. ;
-              "f" $ Lower( ::cDSN ) .OR. "d" $ Lower( ::cDSN ) )
+         IF "n" $ Lower( ::cDSN ) .OR. "s" $ Lower( ::cDSN ) .OR. ;
+            "f" $ Lower( ::cDSN ) .OR. "d" $ Lower( ::cDSN )
             ::cCommand += " -dsn " + ::cDSN
          ELSE
             ::nError := BLAT_ERR_WRONG_DSN
             ::cError := ::TranslateBlatError( BLAT_ERR_WRONG_DSN ) + ": " + ::cDSN
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ENDIF
@@ -640,7 +643,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
       // Attachment and encoding options --------
 
       // Attach Binary Files
-      IF !Empty( ::aAttachBinFiles )
+      IF ! Empty( ::aAttachBinFiles )
          IF HB_ISSTRING( ::cAttachBinFiles )
             ::cAttachBinFiles += ","
          ELSE
@@ -653,7 +656,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // Attach Text Files
-      IF !Empty( ::aAttachTextFiles )
+      IF ! Empty( ::aAttachTextFiles )
          IF HB_ISSTRING( ::cAttachTextFiles )
             ::cAttachTextFiles += ","
          ELSE
@@ -666,7 +669,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // Attach INLINE Files
-      IF !Empty( ::aAttachInlineFiles )
+      IF ! Empty( ::aAttachInlineFiles )
          IF HB_ISSTRING( ::cAttachInlineFiles )
             ::cAttachInlineFiles += ","
          ELSE
@@ -679,7 +682,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
       ENDIF
 
       // Attach Html Embedded Files
-      IF !Empty( ::aHtmlEmbeddedFiles )
+      IF ! Empty( ::aHtmlEmbeddedFiles )
          IF HB_ISSTRING( ::cHtmlEmbeddedFiles )
             ::cHtmlEmbeddedFiles += ","
          ELSE
@@ -693,11 +696,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cAttachListBinFile - optional
       IF HB_ISSTRING( ::cAttachListBinFile )
-         IF !hb_FileExists( ::cAttachListBinFile )
+         IF ! hb_FileExists( ::cAttachListBinFile )
             ::nError := BLAT_ERR_MISSING_ATTACHLISTBINFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTBINFILE ) + ": " + ::cAttachListBinFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -707,11 +710,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cAttachListTextFile - optional
       IF HB_ISSTRING( ::cAttachListTextFile )
-         IF !hb_FileExists( ::cAttachListTextFile )
+         IF ! hb_FileExists( ::cAttachListTextFile )
             ::nError := BLAT_ERR_MISSING_ATTACHLISTTEXTFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTTEXTFILE ) + ": " + ::cAttachListTextFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -721,11 +724,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cAttachListEmbeddedFile - optional
       IF HB_ISSTRING( ::cAttachListEmbeddedFile )
-         IF !hb_FileExists( ::cAttachListEmbeddedFile )
+         IF ! hb_FileExists( ::cAttachListEmbeddedFile )
             ::nError := BLAT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE ) + ": " + ::cAttachListEmbeddedFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -765,11 +768,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cAlternateTextFile - optional
       IF HB_ISSTRING( ::cAlternateTextFile )
-         IF !hb_FileExists( ::cAlternateTextFile )
+         IF ! hb_FileExists( ::cAlternateTextFile )
             ::nError := BLAT_ERR_MISSING_ALTERNATETEXTFILE
             ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_ALTERNATETEXTFILE ) + ": " + ::cAlternateTextFile
             AAdd( ::aErrors, { ::nError, ::cError } )
-            IF !::lIgnoreErrors
+            IF ! ::lIgnoreErrors
                RETURN
             ENDIF
          ELSE
@@ -898,8 +901,6 @@ METHOD PROCEDURE Check() CLASS HBBlat
       ENDIF
 
 
-      //--------------------------------------------------
-
       // Check done
       ::lChecked := .T.
 
@@ -908,9 +909,11 @@ METHOD PROCEDURE Check() CLASS HBBlat
    RETURN
 
 METHOD GetCommand() CLASS HBBlat
-   IF !::lChecked
+
+   IF ! ::lChecked
       ::Check()
    ENDIF
+
    RETURN ::cCommand
 
 METHOD Error() CLASS HBBlat
@@ -929,32 +932,32 @@ METHOD BlatErrorString() CLASS HBBlat
    RETURN ::cBlatError
 
 METHOD TranslateBlatError( nErr ) CLASS HBBlat
+
    LOCAL cError, nPos
    // TODO: add function that returns language error array
    LOCAL aErrors := { ;
-                      { BLAT_ERR_UNKNONW                        , BLAT_TEXT_ERR_UNKNOWN                        } ,;
-                      { BLAT_SUCCESS                            , BLAT_TEXT_SUCCESS                            } ,;
-                      { BLAT_ERR_MESSAGE_NOT_ACCEPTED           , BLAT_TEXT_ERR_MESSAGE_NOT_ACCEPTED           } ,;
-                      { BLAT_ERR_MISSING_FROM                   , BLAT_TEXT_ERR_MISSING_FROM                   } ,;
-                      { BLAT_ERR_MISSING_TO                     , BLAT_TEXT_ERR_MISSING_TO                     } ,;
-                      { BLAT_ERR_MISSING_TOFILE                 , BLAT_TEXT_ERR_MISSING_TOFILE                 } ,;
-                      { BLAT_ERR_MISSING_BODY                   , BLAT_TEXT_ERR_MISSING_BODY                   } ,;
-                      { BLAT_ERR_MISSING_BODYFILE               , BLAT_TEXT_ERR_MISSING_BODYFILE               } ,;
-                      { BLAT_ERR_MISSING_SERVERSMTP             , BLAT_TEXT_ERR_MISSING_SERVERSMTP             } ,;
-                      { BLAT_ERR_MISSING_SUBJECTFILE            , BLAT_TEXT_ERR_MISSING_SUBJECTFILE            } ,;
-                      { BLAT_ERR_MISSING_CCFILE                 , BLAT_TEXT_ERR_MISSING_CCFILE                 } ,;
-                      { BLAT_ERR_MISSING_BCCFILE                , BLAT_TEXT_ERR_MISSING_BCCFILE                } ,;
-                      { BLAT_ERR_MISSING_PSFILE                 , BLAT_TEXT_ERR_MISSING_PSFILE                 } ,;
-                      { BLAT_ERR_MISSING_ATTACHLISTBINFILE      , BLAT_TEXT_ERR_MISSING_ATTACHLISTBINFILE      } ,;
-                      { BLAT_ERR_MISSING_ATTACHLISTTEXTFILE     , BLAT_TEXT_ERR_MISSING_ATTACHLISTTEXTFILE     } ,;
-                      { BLAT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE , BLAT_TEXT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE } ,;
-                      { BLAT_ERR_MISSING_ALTERNATETEXTFILE      , BLAT_TEXT_ERR_MISSING_ALTERNATETEXTFILE      } ,;
-                      { BLAT_ERR_MISSING_SIGNATUREFILE          , BLAT_TEXT_ERR_MISSING_SIGNATUREFILE          } ,;
-                      { BLAT_ERR_MISSING_TAGFILE                , BLAT_TEXT_ERR_MISSING_TAGFILE                } ,;
-                      { BLAT_ERR_WRONG_DSN                      , BLAT_TEXT_ERR_WRONG_DSN                      } ,;
-                      { BLAT_ERR_LOGICAL_EXPECTED               , BLAT_TEXT_ERR_LOGICAL_EXPECTED               } ,;
-                      { BLAT_ERR_STRING_EXPECTED                , BLAT_TEXT_ERR_STRING_EXPECTED                }  ;
-                    }
+      { BLAT_ERR_UNKNONW                        , BLAT_TEXT_ERR_UNKNOWN                        }, ;
+      { BLAT_SUCCESS                            , BLAT_TEXT_SUCCESS                            }, ;
+      { BLAT_ERR_MESSAGE_NOT_ACCEPTED           , BLAT_TEXT_ERR_MESSAGE_NOT_ACCEPTED           }, ;
+      { BLAT_ERR_MISSING_FROM                   , BLAT_TEXT_ERR_MISSING_FROM                   }, ;
+      { BLAT_ERR_MISSING_TO                     , BLAT_TEXT_ERR_MISSING_TO                     }, ;
+      { BLAT_ERR_MISSING_TOFILE                 , BLAT_TEXT_ERR_MISSING_TOFILE                 }, ;
+      { BLAT_ERR_MISSING_BODY                   , BLAT_TEXT_ERR_MISSING_BODY                   }, ;
+      { BLAT_ERR_MISSING_BODYFILE               , BLAT_TEXT_ERR_MISSING_BODYFILE               }, ;
+      { BLAT_ERR_MISSING_SERVERSMTP             , BLAT_TEXT_ERR_MISSING_SERVERSMTP             }, ;
+      { BLAT_ERR_MISSING_SUBJECTFILE            , BLAT_TEXT_ERR_MISSING_SUBJECTFILE            }, ;
+      { BLAT_ERR_MISSING_CCFILE                 , BLAT_TEXT_ERR_MISSING_CCFILE                 }, ;
+      { BLAT_ERR_MISSING_BCCFILE                , BLAT_TEXT_ERR_MISSING_BCCFILE                }, ;
+      { BLAT_ERR_MISSING_PSFILE                 , BLAT_TEXT_ERR_MISSING_PSFILE                 }, ;
+      { BLAT_ERR_MISSING_ATTACHLISTBINFILE      , BLAT_TEXT_ERR_MISSING_ATTACHLISTBINFILE      }, ;
+      { BLAT_ERR_MISSING_ATTACHLISTTEXTFILE     , BLAT_TEXT_ERR_MISSING_ATTACHLISTTEXTFILE     }, ;
+      { BLAT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE , BLAT_TEXT_ERR_MISSING_ATTACHLISTEMBEDDEDFILE }, ;
+      { BLAT_ERR_MISSING_ALTERNATETEXTFILE      , BLAT_TEXT_ERR_MISSING_ALTERNATETEXTFILE      }, ;
+      { BLAT_ERR_MISSING_SIGNATUREFILE          , BLAT_TEXT_ERR_MISSING_SIGNATUREFILE          }, ;
+      { BLAT_ERR_MISSING_TAGFILE                , BLAT_TEXT_ERR_MISSING_TAGFILE                }, ;
+      { BLAT_ERR_WRONG_DSN                      , BLAT_TEXT_ERR_WRONG_DSN                      }, ;
+      { BLAT_ERR_LOGICAL_EXPECTED               , BLAT_TEXT_ERR_LOGICAL_EXPECTED               }, ;
+      { BLAT_ERR_STRING_EXPECTED                , BLAT_TEXT_ERR_STRING_EXPECTED                } }
 
    nPos := AScan( aErrors, {| e | e[ 1 ] == nErr }, 2 )
    IF nPos == 0
@@ -981,6 +984,7 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
    RETURN cError
 
 STATIC FUNCTION ArrayToString( aArray )
+
    LOCAL cString := ""
    LOCAL nLen    := Len( aArray )
    LOCAL cElem

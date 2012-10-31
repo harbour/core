@@ -66,8 +66,8 @@ PROCEDURE Main()
    NEXT
 
    // The call to str( infinity(.T.) ), generate a GPF.
-// ?? Str( infinity( .T. ) ) + Str( mantissa( infinity( .T. ) ) ) + Str( exponent( infinity( .T. ) ) )
-// ?? Str( infinity( .T. ) )
+   // ?? Str( infinity( .T. ) ) + Str( mantissa( infinity( .T. ) ) ) + Str( exponent( infinity( .T. ) ) )
+   // ?? Str( infinity( .T. ) )
 
    ?? "       infinity(.T.): " + Str( mantissa( infinity( .T. ) ), 20, 15 ) + " "
    ? Str( exponent( infinity( .T. ) ), 4 )

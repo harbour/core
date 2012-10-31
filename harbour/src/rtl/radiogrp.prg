@@ -177,9 +177,9 @@ METHOD display() CLASS RADIOGROUP
    ENDIF
 
    IF !Empty( cSelBox )
-      hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
+      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
    ELSEIF !Empty( cUnSelBox )
-      hb_dispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cUnSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
+      hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cUnSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
    ENDIF
 
    IF !Empty( cCaption := ::cCaption )
@@ -192,10 +192,10 @@ METHOD display() CLASS RADIOGROUP
          ENDIF
       ENDIF
 
-      hb_dispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, 1 ) )
+      hb_DispOutAt( ::nCapRow, ::nCapCol, cCaption, hb_ColorIndex( ::cColorSpec, 1 ) )
 
       IF nPos != 0
-         hb_dispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
+         hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), hb_ColorIndex( ::cColorSpec, 2 ) )
       ENDIF
 
    ENDIF
@@ -213,7 +213,7 @@ METHOD getAccel( xValue ) CLASS RADIOGROUP
    IF HB_ISSTRING( xValue )
       cValue := xValue
    ELSEIF HB_ISNUMERIC( xValue )
-      cValue := hb_KeyChar( xValue )
+      cValue := hb_keyChar( xValue )
    ELSE
       RETURN 0
    ENDIF
@@ -386,6 +386,7 @@ METHOD setFocus() CLASS RADIOGROUP
    RETURN Self
 
 METHOD nextItem() CLASS RADIOGROUP
+
    LOCAL nValue
 
    IF ::lHasFocus .AND. ::nItemCount > 0
@@ -478,6 +479,7 @@ METHOD setStyle( cStyle ) CLASS RADIOGROUP
    RETURN Self
 
 METHOD changeButton( nUnselect, nSelect ) CLASS RADIOGROUP
+
    LOCAL nOldMCur := MSetCursor( .F. )
 
    IF nUnselect != nSelect
@@ -551,7 +553,7 @@ METHOD coldBox( cColdBox ) CLASS RADIOGROUP
 METHOD colorSpec( cColorSpec ) CLASS RADIOGROUP
 
    IF cColorSpec != NIL
-      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
+      ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
          {|| !Empty( hb_ColorIndex( cColorSpec, 2 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 3 ) ) } )
    ENDIF
 
@@ -642,9 +644,10 @@ METHOD New( nTop, nLeft, nBottom, nRight ) CLASS RADIOGROUP
       ::cColorSpec := "W/N,W/N,W+/N"
    ELSE
       cColor := SetColor()
-      ::cColorSpec := hb_ColorIndex( cColor, CLR_BORDER     ) + "," + ;
-                      hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
-                      hb_ColorIndex( cColor, CLR_BACKGROUND )
+      ::cColorSpec := ;
+         hb_ColorIndex( cColor, CLR_BORDER     ) + "," + ;
+         hb_ColorIndex( cColor, CLR_STANDARD   ) + "," + ;
+         hb_ColorIndex( cColor, CLR_BACKGROUND )
    ENDIF
 
    RETURN Self

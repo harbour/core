@@ -140,7 +140,7 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
          WVG_SetBkMode( aNM[ 1 ], 1 )
-         WVG_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[1], ::currentSize()[2] }, ::hBrushBG )
+         WVG_FillRect( aNM[ 1 ], { 0, 0, ::currentSize()[ 1 ], ::currentSize()[ 2 ] }, ::hBrushBG )
          RETURN EVENT_HANDELLED
       ENDIF
 

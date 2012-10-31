@@ -6,26 +6,28 @@
 #include "inkey.ch"
 
 PROCEDURE Main()
-   LOCAL cGt
 
-#if defined( __PLATFORM__WINDOWS ) .AND. defined( __HBSCRIPT__HBSHELL )
-   hbshell_gtSelect( "GTWVT" )
+#if defined( __HBSCRIPT__HBSHELL )
+   #if defined( __PLATFORM__WINDOWS )
+      hbshell_gtSelect( "GTWVT" )
+   #elif defined( __PLATFORM__UNIX )
+      hbshell_gtSelect( "GTXWC" )
+   #endif
 #endif
 
-   cGt := HB_GtVersion( 0 )
-   IF cGt == "WVT"
-      HB_GtInfo( HB_GTI_FONTNAME, "Lucida Console" )
+   IF hb_gtInfo( HB_GTI_ISGRAPHIC )
+      hb_gtInfo( HB_GTI_FONTNAME, "Lucida Console" )
    ELSE
-      ? "launch me under GTWVT"
+      ? "launch me under a graphical GT"
       QUIT
    ENDIF
 
-   ? "GTWVT test"
+   ? "GT" + hb_gtVersion( 0 ) + " test"
 
-   ?  HB_GtInfo( HB_GTI_ISFULLSCREEN, .T. ), "we should be on full screen"
+   ?  hb_gtInfo( HB_GTI_ISFULLSCREEN, .T. ), "we should be on full screen"
    WAIT
-   ?  HB_GtInfo( HB_GTI_ISFULLSCREEN, .F. ), "we should be windowed"
-   ?  HB_GtInfo( HB_GTI_ALTENTER, .T. ), "Alt+Enter is now enabled, try it"
+   ?  hb_gtInfo( HB_GTI_ISFULLSCREEN, .F. ), "we should be windowed"
+   ?  hb_gtInfo( HB_GTI_ALTENTER, .T. ), "Alt+Enter is now enabled, try it"
    DO WHILE Inkey( 0 ) != K_ESC
       ? Row()
    ENDDO

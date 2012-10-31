@@ -8,21 +8,21 @@
    $CATEGORY$
       CT3 miscellaneous functions
    $ONELINER$
-  
+
    $SYNTAX$
       XTOC( <expValue> ) --> cValue
-  
+
    $ARGUMENTS$
       <expValue> Designate an expression of some of the following data
       type: NUMBER, CHARACTER, DATE, LOGICAL.
-  
+
    $RETURNS$
       XTOC() return a string with the representation of data type of
       expValue.
-  
+
    $DESCRIPTION$
       Each data type always returns a string with a particular fixed length:
-  
+
       -----------------------------------------------------------
       Data Type    Result Length      Similar function
       -----------------------------------------------------------
@@ -31,16 +31,16 @@
       Date         8                  DTOS()
       String       Unchanged
       -----------------------------------------------------------
-  
+
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       All
    $FILES$

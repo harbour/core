@@ -85,13 +85,13 @@
 HB_FUNC( FT_SETTIME )
 {
 #if defined( HB_OS_DOS )
-   int iHour, iMinute, iSeconds;
+   int        iHour, iMinute, iSeconds;
    union REGS regs;
 
    if( HB_ISCHAR( 1 ) )
    {
       const char * pszTime = hb_parc( 1 );
-      HB_SIZE nLen = strlen( pszTime );
+      HB_SIZE      nLen    = strlen( pszTime );
 
       if( nLen >= 1 )
          iHour = ( int ) hb_strVal( pszTime, nLen );
@@ -104,7 +104,7 @@ HB_FUNC( FT_SETTIME )
    {
       int iYear, iMonth, iDay, iMillisec;
       hb_timeStampGetLocal( &iYear, &iMonth, &iDay,
-         &iHour, &iMinute, &iSeconds, &iMillisec );
+                            &iHour, &iMinute, &iSeconds, &iMillisec );
    }
 
    regs.h.ah = 45;

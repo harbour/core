@@ -111,10 +111,10 @@ PROCEDURE __dbgShowWorkAreas()
    aBrw[ 1 ]:ColorSpec     := oDlg:cColor
    aBrw[ 1 ]:GoTopBlock    := {|| aBrw[ 1 ]:Cargo := n1 := 1 }
    aBrw[ 1 ]:GoBottomBlock := {|| aBrw[ 1 ]:Cargo := n1 := Len( aAlias ) }
-   aBrw[ 1 ]:SkipBlock     := {| nSkip, nPos | nPos := n1,;
-                                 aBrw[ 1 ]:Cargo := n1 := iif( nSkip > 0, Min( Len( aAlias ), n1 + nSkip ),;
-                                         Max( 1, n1 + nSkip ) ),;
-                                 n1 - nPos }
+   aBrw[ 1 ]:SkipBlock     := {| nSkip, nPos | nPos := n1, ;
+      aBrw[ 1 ]:Cargo := n1 := iif( nSkip > 0, Min( Len( aAlias ), n1 + nSkip ), ;
+      Max( 1, n1 + nSkip ) ), ;
+      n1 - nPos }
 
    aBrw[ 1 ]:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( aAlias[ n1 ][ 2 ], 11 ) } ) )
 
@@ -131,9 +131,9 @@ PROCEDURE __dbgShowWorkAreas()
    aBrw[ 2 ]:GoTopBlock    := {|| aBrw[ 2 ]:Cargo := n2 := 1 }
    aBrw[ 2 ]:GoBottomBlock := {|| aBrw[ 2 ]:Cargo := n2 := Len( aInfo ) }
    aBrw[ 2 ]:SkipBlock     := {| nSkip, nPos | nPos := n2, ;
-                               aBrw[ 2 ]:Cargo := n2 := iif( nSkip > 0, Min( Len( aInfo ), n2 + nSkip ), ;
-                                                                        Max( 1, n2 + nSkip ) ), ;
-                               n2 - nPos }
+      aBrw[ 2 ]:Cargo := n2 := iif( nSkip > 0, Min( Len( aInfo ), n2 + nSkip ), ;
+      Max( 1, n2 + nSkip ) ), ;
+      n2 - nPos }
 
    aBrw[ 2 ]:AddColumn( oCol := HBDbColumnNew( "", {|| PadR( aInfo[ n2 ], 38 ) } ) )
 
@@ -141,7 +141,7 @@ PROCEDURE __dbgShowWorkAreas()
 
    /* Struc browse */
 
-   aStruc := ( aAlias[ n1 ][ 1 ] )->( DbStruct() )
+   aStruc := ( aAlias[ n1 ][ 1 ] )->( dbStruct() )
 
    aBrw[ 3 ] := HBDbBrowser():new( oDlg:nTop + 1, oDlg:nLeft + 52, oDlg:nBottom - 1, oDlg:nLeft + 70 )
 
@@ -149,14 +149,14 @@ PROCEDURE __dbgShowWorkAreas()
    aBrw[ 3 ]:ColorSpec     := oDlg:cColor
    aBrw[ 3 ]:GoTopBlock    := {|| aBrw[ 3 ]:Cargo := n3 := 1 }
    aBrw[ 3 ]:GoBottomBlock := {|| aBrw[ 3 ]:Cargo := n3 := Len( aStruc ) }
-   aBrw[ 3 ]:SkipBlock     := {| nSkip, nPos | nPos := n3,;
-                                 aBrw[ 3 ]:Cargo := n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ),;
-                                         Max( 1, n3 + nSkip ) ), n3 - nPos }
+   aBrw[ 3 ]:SkipBlock     := {| nSkip, nPos | nPos := n3, ;
+      aBrw[ 3 ]:Cargo := n3 := iif( nSkip > 0, Min( Len( aStruc ), n3 + nSkip ), ;
+      Max( 1, n3 + nSkip ) ), n3 - nPos }
 
    aBrw[ 3 ]:AddColumn( HBDbColumnNew( "", {|| PadR( aStruc[ n3, 1 ], 11 ) + ;
-                                               aStruc[ n3, 2 ] + ;
-                                               Str( aStruc[ n3, 3 ], 4 ) + ;
-                                               Str( aStruc[ n3, 4 ], 3 ) } ) )
+      aStruc[ n3, 2 ] + ;
+      Str( aStruc[ n3, 3 ], 4 ) + ;
+      Str( aStruc[ n3, 4 ], 3 ) } ) )
 
    /* Show dialog */
 
@@ -170,31 +170,31 @@ STATIC PROCEDURE DlgWorkAreaPaint( oDlg, aBrw )
 
    /* Display captions */
 
-   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 5, " Area ", oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 28, " Status ", oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop, oDlg:nLeft + 56, " Structure ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop, oDlg:nLeft + 5, " Area ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop, oDlg:nLeft + 28, " Status ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop, oDlg:nLeft + 56, " Structure ", oDlg:cColor )
 
    /* Display separator lines */
 
-   hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 12, oDlg:nBottom - 1, oDlg:nLeft + 12, HB_B_SINGLE_UNI, oDlg:cColor )
-   hb_dispOutAtBox( oDlg:nTop, oDlg:nLeft + 12, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
-   hb_dispOutAtBox( oDlg:nBottom, oDlg:nLeft + 12, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
+   hb_DispBox( oDlg:nTop + 1, oDlg:nLeft + 12, oDlg:nBottom - 1, oDlg:nLeft + 12, HB_B_SINGLE_UNI, oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nTop, oDlg:nLeft + 12, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nBottom, oDlg:nLeft + 12, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
 
-   hb_dispBox( oDlg:nTop + 1, oDlg:nLeft + 51, oDlg:nBottom - 1, oDlg:nLeft + 51, HB_B_SINGLE_UNI, oDlg:cColor )
-   hb_dispOutAtBox( oDlg:nTop, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
-   hb_dispOutAtBox( oDlg:nBottom, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
+   hb_DispBox( oDlg:nTop + 1, oDlg:nLeft + 51, oDlg:nBottom - 1, oDlg:nLeft + 51, HB_B_SINGLE_UNI, oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nTop, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┬" ), oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nBottom, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┴" ), oDlg:cColor )
 
-   hb_dispBox( oDlg:nTop + 6, oDlg:nLeft + 13, oDlg:nTop + 6, oDlg:nLeft + 50, HB_B_SINGLE_UNI, oDlg:cColor )
-   hb_dispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 12, hb_UTF8ToStrBox( "├" ), oDlg:cColor )
-   hb_dispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┤" ), oDlg:cColor )
+   hb_DispBox( oDlg:nTop + 6, oDlg:nLeft + 13, oDlg:nTop + 6, oDlg:nLeft + 50, HB_B_SINGLE_UNI, oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 12, hb_UTF8ToStrBox( "├" ), oDlg:cColor )
+   hb_DispOutAtBox( oDlg:nTop + 6, oDlg:nLeft + 51, hb_UTF8ToStrBox( "┤" ), oDlg:cColor )
 
    /* Display labels */
 
-   hb_dispOutAt( oDlg:nTop + 1, oDlg:nLeft + 13, "Alias:                Record:         ", oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 2, oDlg:nLeft + 13, "   BOF:         Deleted:              ", oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 3, oDlg:nLeft + 13, "   EOF:           Found:              ", oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 4, oDlg:nLeft + 13, "Filter:                               ", oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 5, oDlg:nLeft + 13, "   Key:                               ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 13, "Alias:                Record:         ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 13, "   BOF:         Deleted:              ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 13, "   EOF:           Found:              ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 13, "Filter:                               ", oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 13, "   Key:                               ", oDlg:cColor )
 
    /* Stabilize browse */
 
@@ -243,7 +243,7 @@ STATIC PROCEDURE DlgWorkAreaKey( nKey, oDlg, aBrw, aAlias, aStruc, aInfo )
          aBrw[ 3 ]:GoTop()
          aBrw[ 3 ]:Invalidate()
          aBrw[ 3 ]:ForceStable()
-         aStruc := ( aAlias[ aBrw[ 1 ]:Cargo ][ 1 ] )->( DbStruct() )
+         aStruc := ( aAlias[ aBrw[ 1 ]:Cargo ][ 1 ] )->( dbStruct() )
          aBrw[ 3 ]:Configure()
          aBrw[ 3 ]:Invalidate()
          aBrw[ 3 ]:RefreshAll()
@@ -309,21 +309,21 @@ STATIC FUNCTION DbfInfo( aInfo )
 
    aInfo := {}
 
-   AAdd( aInfo, "[" + hb_NToS( Select( Alias() ) ) + "] " + Alias() )
+   AAdd( aInfo, "[" + hb_ntos( Select( Alias() ) ) + "] " + Alias() )
    AAdd( aInfo, Space( 4 ) + "Current Driver" )
    AAdd( aInfo, Space( 8 ) + rddName() )
    AAdd( aInfo, Space( 4 ) + "Workarea Information" )
-   AAdd( aInfo, Space( 8 ) + "Select Area: " + hb_NToS( Select() ) )
-   AAdd( aInfo, Space( 8 ) + "Record Size: " + hb_NToS( Recsize() ) )
-   AAdd( aInfo, Space( 8 ) + "Header Size: " + hb_NToS( Header() ) )
-   AAdd( aInfo, Space( 8 ) + "Field Count: " + hb_NToS( FCount() ) )
-   AAdd( aInfo, Space( 8 ) + "Last Update: " + DToC( lUpdate() ) )
-   AAdd( aInfo, Space( 8 ) + "Index order: " + hb_NToS( IndexOrd() ) )
+   AAdd( aInfo, Space( 8 ) + "Select Area: " + hb_ntos( Select() ) )
+   AAdd( aInfo, Space( 8 ) + "Record Size: " + hb_ntos( RecSize() ) )
+   AAdd( aInfo, Space( 8 ) + "Header Size: " + hb_ntos( Header() ) )
+   AAdd( aInfo, Space( 8 ) + "Field Count: " + hb_ntos( FCount() ) )
+   AAdd( aInfo, Space( 8 ) + "Last Update: " + DToC( LUpdate() ) )
+   AAdd( aInfo, Space( 8 ) + "Index order: " + hb_ntos( IndexOrd() ) )
    AAdd( aInfo, Space( 4 ) + "Current Record" )
 
    FOR nFor := 1 TO FCount()
 
-      xValue := __Dbg():GetExprValue( "FieldGet(" + hb_NToS( nFor ) + ")" )
+      xValue := __Dbg():GetExprValue( "FieldGet(" + hb_ntos( nFor ) + ")" )
       xType  := ValType( xValue )
 
       SWITCH xType
@@ -332,13 +332,13 @@ STATIC FUNCTION DbfInfo( aInfo )
          cValue := xValue
          EXIT
       CASE "N"
-         cValue := hb_NToS( xValue )
-          EXIT
+         cValue := hb_ntos( xValue )
+         EXIT
       CASE "D"
          cValue := DToC( xValue )
          EXIT
       CASE "T"
-         cValue := hb_TsToStr( xValue )
+         cValue := hb_TSToStr( xValue )
          EXIT
       CASE "L"
          cValue := iif( xValue, ".T.", ".F." )
@@ -374,17 +374,17 @@ STATIC PROCEDURE UpdateInfo( oDlg, cAlias )
 
    dbSelectArea( cAlias )
 
-   hb_dispOutAt( oDlg:nTop + 1, oDlg:nLeft + 20, PadR( cAlias, 11 ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 1, oDlg:nLeft + 42,;
-                 PadR( hb_NToS( RecNo() ) + "/" + hb_NToS( LastRec() ), 9 ),;
-                 oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 20, PadR( cAlias, 11 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 1, oDlg:nLeft + 42, ;
+      PadR( hb_ntos( RecNo() ) + "/" + hb_ntos( LastRec() ), 9 ), ;
+      oDlg:cColor )
 
-   hb_dispOutAt( oDlg:nTop + 2, oDlg:nLeft + 21, iif( Bof(), "Yes", "No " ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 2, oDlg:nLeft + 38, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 3, oDlg:nLeft + 21, iif( Eof(), "Yes", "No " ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 3, oDlg:nLeft + 38, iif( Found(), "Yes", "No " ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 4, oDlg:nLeft + 21, PadR( dbFilter(), 29 ), oDlg:cColor )
-   hb_dispOutAt( oDlg:nTop + 5, oDlg:nLeft + 21, PadR( ordKey(), 29 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 21, iif( Bof(), "Yes", "No " ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 2, oDlg:nLeft + 38, iif( Deleted(), "Yes", "No " ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 21, iif( Eof(), "Yes", "No " ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 3, oDlg:nLeft + 38, iif( Found(), "Yes", "No " ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 4, oDlg:nLeft + 21, PadR( dbFilter(), 29 ), oDlg:cColor )
+   hb_DispOutAt( oDlg:nTop + 5, oDlg:nLeft + 21, PadR( ordKey(), 29 ), oDlg:cColor )
 
    dbSelectArea( nOldArea )
 

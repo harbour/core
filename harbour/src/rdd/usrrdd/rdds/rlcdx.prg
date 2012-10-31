@@ -183,6 +183,7 @@ STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
    LOCAL aWData, nResult, xRecId, i
 
    /* Never unlock other records, they have to be explicitly unlocked */
+
    lUnlockAll := .F.
 
    nResult := UR_SUPER_APPEND( nWA, lUnlockAll )
@@ -196,7 +197,7 @@ STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
          IF ( i := AScan( aWData[ 2 ], {| x | x[ 1 ] == xRecID } ) ) != 0
             ++aWData[ 2, i, 2 ]
          ELSE
-            AADD( aWData[ 2 ], { xRecID, 1 } )
+            AAdd( aWData[ 2 ], { xRecID, 1 } )
          ENDIF
       ENDIF
    ENDIF
@@ -204,6 +205,7 @@ STATIC FUNCTION RLCDX_APPEND( nWA, lUnlockAll )
    RETURN nResult
 
 /* Force linking DBFCDX from which our RDD inherits */
+
 REQUEST DBFCDX
 
 /*

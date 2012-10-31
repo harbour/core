@@ -8,7 +8,7 @@
 
 MEMVAR session, server, get, post
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWMain
 
@@ -44,7 +44,7 @@ METHOD Add( oWidget ) CLASS UWMain
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWLayoutGrid
 
@@ -97,11 +97,11 @@ METHOD Add( oWidget, nRow, nCol ) CLASS UWLayoutGrid
          AEval( Self:aChilds, {| x | AAdd( x, {} ) } )
       NEXT
    ENDIF
-   AAdd( Self:aChilds[nRow, nCol], oWidget )
+   AAdd( Self:aChilds[ nRow, nCol ], oWidget )
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWHtml
 
@@ -125,7 +125,7 @@ METHOD Paint() CLASS UWHtml
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWLabel
 
@@ -155,7 +155,7 @@ METHOD Paint() CLASS UWLabel
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWForm
 
@@ -190,7 +190,7 @@ METHOD Paint() CLASS UWForm
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWInput
 
@@ -221,7 +221,7 @@ METHOD Paint() CLASS UWInput
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWPassword
 
@@ -247,7 +247,7 @@ METHOD Paint() CLASS UWPassword
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWSubmit
 
@@ -274,7 +274,7 @@ METHOD Paint() CLASS UWSubmit
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWSeparator
 
@@ -294,7 +294,7 @@ METHOD Paint() CLASS UWSeparator
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWMenu
 
@@ -326,13 +326,13 @@ METHOD Paint() CLASS UWMenu
       IF nI != 1
          UWrite( '&nbsp;|&nbsp;' )
       ENDIF
-      UWrite( '<a href="' + Self:aItems[nI, 2] + '">' + UHtmlEncode( Self:aItems[nI, 1] ) + '</a>' )
+      UWrite( '<a href="' + Self:aItems[ nI, 2 ] + '">' + UHtmlEncode( Self:aItems[ nI, 1 ] ) + '</a>' )
    NEXT
    UWrite( '</div>' )
 
    RETURN Self
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWBrowse
 
@@ -363,23 +363,23 @@ METHOD Output() CLASS UWBrowse
 
    cRet += '<table class="ubr"><tr>'
 
-// Header
+   // Header
    cRet += '<tr>'
    FOR nI := 1 TO Len( Self:aColumns )
-      cRet += '<th>' + UHtmlEncode( Self:aColumns[nI, 2] ) + '</th>'
+      cRet += '<th>' + UHtmlEncode( Self:aColumns[ nI, 2 ] ) + '</th>'
    NEXT
    cRet += '</tr>'
 
-// Body
+   // Body
    nPos := 0
    dbGoTop()
    IF Self:nPageSize > 0 .AND. Self:nPos > 0
       dbSkip( Self:nPos )
    ENDIF
-   DO WHILE ! EOF()
+   DO WHILE ! Eof()
       cRet += '<tr>'
       FOR nI := 1 TO Len( Self:aColumns )
-         xField := Self:aColumns[nI, 3]
+         xField := Self:aColumns[ nI, 3 ]
          IF HB_ISSTRING( xField )
             xI := FieldGet( FieldPos( xField ) )
          ELSEIF HB_ISBLOCK( xField )
@@ -391,7 +391,7 @@ METHOD Output() CLASS UWBrowse
          CASE "D"  ; xI := DToC( xI ); EXIT
          OTHERWISE ; xI := "VALTYPE()==" + ValType( xI )
          ENDSWITCH
-         IF ! Self:aColumns[nI, 4]
+         IF ! Self:aColumns[ nI, 4 ]
             xI := UHtmlEncode( xI )
          ENDIF
          cRet += '<td><nobr>' + xI + '</nobr></td>'
@@ -403,8 +403,8 @@ METHOD Output() CLASS UWBrowse
       ENDIF
    ENDDO
    cRet += '</table>'
-   IF ! EOF() .OR. Self:nPos > 0
-      cUrl := server["REQUEST_URI"]
+   IF ! Eof() .OR. Self:nPos > 0
+      cUrl := server[ "REQUEST_URI" ]
       IF ( nI := At( "?_ucs=", cUrl ) ) == 0
          nI := At( "&_ucs=", cUrl )
       ENDIF
@@ -419,7 +419,7 @@ METHOD Output() CLASS UWBrowse
       ENDIF
       cUrl += iif( "?" $ cUrl, "&", "?" ) + "_pos="
       cRet := '<br>' + cRet
-      IF ! EOF()
+      IF ! Eof()
          cI := cUrl + hb_ntos( Self:nPos + Self:nPageSize )
          cRet := '<a href="' + iif( lValidate, UUrlChecksum( cI ), cI ) + '">&gt;&gt;</a>' + cRet
       ENDIF
@@ -431,7 +431,7 @@ METHOD Output() CLASS UWBrowse
 
    RETURN cRet
 
-//============================================================
+// ============================================================
 
 CREATE CLASS UWOption
 
@@ -451,7 +451,7 @@ FUNC UWOptionNew()
 
 METHOD Add( cTitle, cCode, lRaw ) CLASS UWOption
 
-   AAdd( Self:aOption, { iif( ! Empty(lRaw ), cTitle, UHtmlEncode(cTitle ) ), cCode } )
+   AAdd( Self:aOption, { iif( ! Empty( lRaw ), cTitle, UHtmlEncode( cTitle ) ), cCode } )
 
    RETURN Self
 
@@ -505,18 +505,18 @@ PROCEDURE UProcWidgets( cURL, aMap )
       lRet := .T.
       // Enter procedures
       DO WHILE nI <= Len( aURL )
-         cI := uhttpd_join( "/", ASize( AClone(aURL ), nI ) )
+         cI := uhttpd_join( "/", ASize( AClone( aURL ), nI ) )
          IF hb_HHasKey( aMap, cI )
             session[ "_uthis" ] := { "idhash" => { => } }
-            IF ( lRet := Eval( aMap[cI], "INIT" ) ) == .T.
-               AAdd( aStack, { aURL[nI], aMap[cI], session[ "_uthis" ] } )
+            IF ( lRet := Eval( aMap[ cI ], "INIT" ) ) == .T.
+               AAdd( aStack, { aURL[ nI ], aMap[ cI ], session[ "_uthis" ] } )
                session[ "_uthis" ] := NIL
             ELSE
                session[ "_uthis" ] := NIL
                EXIT
             ENDIF
          ELSE
-            AAdd( aStack, { aURL[nI], NIL, NIL } )
+            AAdd( aStack, { aURL[ nI ], NIL, NIL } )
          ENDIF
          nI++
       ENDDO

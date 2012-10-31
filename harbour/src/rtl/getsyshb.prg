@@ -51,6 +51,7 @@
  */
 
 FUNCTION hb_GetReadVar( oGet )
+
    LOCAL cName := hb_asciiUpper( oGet:name )
    LOCAL xSubScript
 
@@ -67,7 +68,7 @@ FUNCTION hb_GetReadVar( oGet )
             cName += '[t"' + hb_TSToStr( xSubScript, .T. ) + '"]'
             EXIT
          OTHERWISE
-            cName += "[" + hb_NToS( xSubScript ) + "]"
+            cName += "[" + hb_ntos( xSubScript ) + "]"
          ENDSWITCH
       NEXT
    ENDIF

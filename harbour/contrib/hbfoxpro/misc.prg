@@ -71,6 +71,7 @@ FUNCTION SYS( nValue, xPar1 )
    RETURN NIL
 
 STATIC FUNCTION AFillNested( aValue, xVal )
+
    LOCAL item
 
    FOR EACH item IN aValue

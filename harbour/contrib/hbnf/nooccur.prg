@@ -26,6 +26,7 @@
 FUNCTION FT_NOOCCUR( cCheckFor, cCheckIn, lIgnoreCase )
 
    // Is Case Important?
+
    IF ! HB_ISLOGICAL( lIgnoreCase ) .OR. lIgnoreCase
       cCheckFor := Upper( cCheckFor )
       cCheckIn  := Upper( cCheckIn  )

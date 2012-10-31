@@ -8,11 +8,11 @@
 
 #require "hbmisc"
 
-PROCEDURE main( cParam )
+PROCEDURE Main( cParam )
 
    LOCAL h
 
-   IF ! hb_MTVM()
+   IF ! hb_mtvm()
       ? "This sample should be compiled using MultiThread"
       RETURN
    ENDIF
@@ -32,7 +32,7 @@ PROCEDURE main( cParam )
    ENDIF
 
    IF "C" $ Upper( cParam )
-      ? HB_VALTOEXP( hb_UDPDS_Find( 39999, "UDPDSDemo" ) )
+      ? hb_ValToExp( hb_UDPDS_Find( 39999, "UDPDSDemo" ) )
    ENDIF
 
    IF "S" $ Upper( cParam )

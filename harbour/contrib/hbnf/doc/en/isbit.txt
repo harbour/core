@@ -13,7 +13,7 @@
       FT_ISBIT( <cByte>, <nBitPos> ) -> lResult
    $ARGUMENTS$
       <cByte> is a character from Chr(0) to Chr(255)
-  
+
       <nBitPos> is a number from 0 to 7 conforming to standard right-to-left
                 bit-numbering convention and representing the position of the
                 bit within the byte.
@@ -24,20 +24,20 @@
       Tests for status of any selected bit in the byte passed as a parameter.
       Byte must be presented in Chr() form, as a literal constant, or as the
       one-byte character result of an expression.
-  
+
       This function is presented to illustrate that bit-wise operations
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
       This code tests whether bit 3 is set in the byte represented by
       Chr( 107 ):
-  
+
        lBitflag := FT_ISBIT( Chr( 107 ), 3 )
        ? lBitflag                  // result: .T.
-  
+
        This code tests whether bit 5 is set in the byte represented by ASCII
        65 (letter "A")
-  
+
        ? FT_ISBIT( "A", 5 )        // result: .F.
    $SEEALSO$
       FT_BITSET() FT_BITCLR()

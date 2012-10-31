@@ -176,14 +176,14 @@ STATIC FUNCTION New( cClassName, xSuper, sClassFunc, lModuleFriendly )
    ELSEIF Empty( xSuper )
       ::asSuper := {}
    ELSEIF HB_ISSTRING( xSuper )
-      ::asSuper := { __DynsN2Sym( xSuper ) }
+      ::asSuper := { __dynSN2Sym( xSuper ) }
    ELSEIF HB_ISARRAY( xSuper )
       ::asSuper := {}
       FOR EACH i IN xSuper
          IF HB_ISSYMBOL( i )
             AAdd( ::asSuper, i )
          ELSEIF HB_ISSTRING( i ) .AND. ! Empty( i )
-            AAdd( ::asSuper, __DynsN2Sym( i ) )
+            AAdd( ::asSuper, __dynSN2Sym( i ) )
          ENDIF
       NEXT
    ENDIF
@@ -230,14 +230,14 @@ STATIC PROCEDURE Create( /* MetaClass */ )
          __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
       ENDIF
    ENDIF
-   __clsAddMsg( hClass, "REALCLASS" , 0, HB_OO_MSG_REALCLASS, 0     , HB_OO_CLSTP_EXPORTED )
+   __clsAddMsg( hClass, "REALCLASS", 0, HB_OO_MSG_REALCLASS, 0, HB_OO_CLSTP_EXPORTED )
 
    // We will work here on the MetaClass object to add the Class Method
    // as needed
-   //FOR EACH n IN ::aClsMethods
+   // FOR EACH n IN ::aClsMethods
    // // do it
-   //NEXT
-   ////
+   // NEXT
+   // //
 
    /* local messages... */
 
@@ -253,7 +253,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
                    HB_OO_MSG_METHOD, NIL, n[ HB_OO_MTHD_SCOPE ] )
    NEXT
 
-   nClassBegin := __CLS_CNTCLSDATA( hClass )
+   nClassBegin := __cls_CntClsData( hClass )
    FOR EACH n IN ::aClsDatas
       __clsAddMsg( hClass, n[ HB_OO_CLSD_SYMBOL ]      , n:__enumIndex() + nClassBegin,;
                    HB_OO_MSG_CLSACCESS, n[ HB_OO_CLSD_VALUE ], n[ HB_OO_CLSD_SCOPE ] )
@@ -297,6 +297,7 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    RETURN
 
 STATIC FUNCTION Instance()
+
    LOCAL Self := QSelf()
 
    RETURN __clsInst( ::hClass )
@@ -336,11 +337,11 @@ STATIC PROCEDURE AddData( cData, xInit, cType, nScope, lNoinit )
 
 STATIC PROCEDURE AddMultiData( cType, xInit, nScope, aData, lNoInit )
 
-   LOCAL data
+   LOCAL cData
 
-   FOR EACH data IN aData
-      IF HB_ISSTRING( data )
-         QSelf():AddData( data, xInit, cType, nScope, lNoInit )
+   FOR EACH cData IN aData
+      IF HB_ISSTRING( cData )
+         QSelf():AddData( cData, xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
 
@@ -383,11 +384,11 @@ STATIC PROCEDURE AddClassData( cData, xInit, cType, nScope, lNoInit )
 
 STATIC PROCEDURE AddMultiClsData( cType, xInit, nScope, aData, lNoInit )
 
-   LOCAL data
+   LOCAL cData
 
-   FOR EACH data IN aData
-      IF HB_ISSTRING( data )
-         QSelf():AddClassData( data, xInit, cType, nScope, lNoInit )
+   FOR EACH cData IN aData
+      IF HB_ISSTRING( cData )
+         QSelf():AddClassData( cData, xInit, cType, nScope, lNoInit )
       ENDIF
    NEXT
 
@@ -443,7 +444,7 @@ STATIC PROCEDURE AddFriendClass( ... )
 
    LOCAL Self := QSelf()
 
-   AEval( HB_AParams(), {| sClass | AAdd( ::asFriendClass, sClass ) } )
+   AEval( hb_AParams(), {| sClass | AAdd( ::asFriendClass, sClass ) } )
 
    RETURN
 
@@ -451,7 +452,7 @@ STATIC PROCEDURE AddFriendFunc( ... )
 
    LOCAL Self := QSelf()
 
-   AEval( HB_AParams(), {| sFunc | AAdd( ::asFriendFunc, sFunc ) } )
+   AEval( hb_AParams(), {| sFunc | AAdd( ::asFriendFunc, sFunc ) } )
 
    RETURN
 

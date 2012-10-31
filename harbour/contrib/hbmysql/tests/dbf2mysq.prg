@@ -102,13 +102,13 @@ PROCEDURE Main( ... )
       CASE cTok == "-c"
          lCreateTable := .T.
 
-         OTHERWISE
+      OTHERWISE
          help()
          QUIT
       ENDCASE
    ENDDO
 
-   dbUseArea( .T., , cFile, "dbffile", , .T. )
+   dbUseArea( .T.,, cFile, "dbffile",, .T. )
    aDbfStruct := dbffile->( dbStruct() )
 
    oServer := TMySQLServer():New( cHostName, cUser, cPassWord )
@@ -124,7 +124,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    IF lCreateTable
-      IF hb_AScan( oServer:ListTables(), cTable, , , .T. ) > 0
+      IF hb_AScan( oServer:ListTables(), cTable,,, .T. ) > 0
          oServer:DeleteTable( cTable )
          IF oServer:NetErr()
             ? oServer:Error()
@@ -150,7 +150,7 @@ PROCEDURE Main( ... )
       oRecord := oTable:GetBlankRow()
 
       FOR i := 1 TO dbffile->( FCount() )
-         oRecord:FieldPut( i, dbffile->( FieldGet(i ) ) )
+         oRecord:FieldPut( i, dbffile->( FieldGet( i ) ) )
       NEXT
 
       oTable:Append( oRecord )
@@ -162,7 +162,7 @@ PROCEDURE Main( ... )
 
       DevPos( Row(), 1 )
       IF ( dbffile->( RecNo() ) % 100 ) == 0
-         DevOut( "imported recs: " + hb_ntos( dbffile->(RecNo() ) ) )
+         DevOut( "imported recs: " + hb_ntos( dbffile->( RecNo() ) ) )
       ENDIF
    ENDDO
 

@@ -98,7 +98,7 @@ PROCEDURE Main( cPortName )
       ?
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
-                 ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
+            ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
          ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
@@ -107,7 +107,7 @@ PROCEDURE Main( cPortName )
       ?
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
-                 ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
+            ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
          ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
@@ -140,7 +140,7 @@ PROCEDURE Main( cPortName )
       Inkey( 0 )
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
-                 ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
+            ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
          ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
@@ -152,7 +152,7 @@ PROCEDURE Main( cPortName )
       ? "InQueue should be zero"
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
-                 ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
+            ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
          ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
@@ -202,7 +202,7 @@ PROCEDURE Main( cPortName )
       ENDIF
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
-                 ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
+            ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
          ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF
@@ -230,7 +230,7 @@ PROCEDURE Main( cPortName )
       ? "If it's on then no Hold status should be on, IF off then probably CTS and DSR"
       IF oWinPort:QueueStatus( @lCTSHold, @lDSRHold, @lDCDHold, @lXoffHold, @lXoffSent, @nInQueue, @nOutQueue )
          ? "QueueStatus() : CTSHold", lCtsHold, ", DSRHold", lDsrHold, ", DCDHold", lDCDHold, ", XoffHold", lXoffHold, ;
-                 ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
+            ", Xoff Sent ", lXoffSent, ", InQueue ", nInQueue, ", nOutQueue ", nOutQueue
       ELSE
          ? "QueueStatus() failed :", oWinPort:ErrorText()
       ENDIF

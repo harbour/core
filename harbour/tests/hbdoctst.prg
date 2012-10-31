@@ -14,6 +14,7 @@
 #include "simpleio.ch"
 
 PROCEDURE Main( cRoot )
+
    LOCAL aEntry
    LOCAL cName
 
@@ -77,7 +78,7 @@ PROCEDURE Main( cRoot )
          NEXT
 
          IF ! Empty( aEntry )
-            ? __hbdoc_savehbd( cName, aEntry ), cName, Len( aEntry ), tModified
+            ? __hbdoc_SaveHBD( cName, aEntry ), cName, Len( aEntry ), tModified
          ENDIF
       ENDIF
    NEXT
@@ -85,6 +86,7 @@ PROCEDURE Main( cRoot )
    RETURN
 
 STATIC FUNCTION DirGetName( cDir )
+
    LOCAL cName
 
    cDir := hb_DirSepDel( cDir )

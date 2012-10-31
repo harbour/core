@@ -17,16 +17,17 @@ PROCEDURE Main( nPass )
       nPass := Val( nPass )
    ENDIF
 
-   ? "Testing aSort with " + hb_ntos( nPass ) + " loops."
+   ? "Testing ASort() with " + hb_ntos( nPass ) + " loops."
    ?
    aTest := aMkArray( nPass )
    aOrig := AClone( aTest )
 
    SET DATE ANSI
+   SET CENTURY ON
 
    ? "Original.....:", aDump( aOrig )
-   ? "Asort.c......:", aDump( ASort( aTest ) )
-// ? "Asort.c.block:", aDump( aSort( aTest, , , {| x, y | x < y } ) )
+   ? "asort.c......:", aDump( ASort( aTest ) )
+// ? "asort.c.block:", aDump( ASort( aTest,,, {| x, y | x < y } ) )
 
    RETURN
 

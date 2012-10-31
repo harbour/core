@@ -36,7 +36,7 @@
 #include "setcurs.ch"
 #include "hbclass.ch"
 
-//WPAINTOBJ types
+// WPAINTOBJ types
 #define WPAINTOBJ_LABEL                  1
 #define WPAINTOBJ_SHADEDRECT             2
 #define WPAINTOBJ_TEXTBOX                3
@@ -61,16 +61,16 @@
 #define WPAINTOBJ_LINEEX                22
 #define WPAINTOBJ_OUTLINEEX             23
 
-//WCTRLOBJ types
+// WCTRLOBJ types
 #define WCTRLOBJ_PUSHBUTTON             1001
 #define WCTRLOBJ_VSCROLLBAR             1002
 #define WCTRLOBJ_HSCROLLBAR             1003
 #define WCTRLOBJ_COMBOBOX               1004
 
-//OBJECT OPERATION
-#define WOBJ_ADD_OVERWRITE      1   //overwrite if exists
-#define WOBJ_ADD_APPEND         2   //append even if exists (the same id can coexist)
-#define WOBJ_ADD_NEWONLY        3   //cancel if exists
+// OBJECT OPERATION
+#define WOBJ_ADD_OVERWRITE      1   // overwrite if exists
+#define WOBJ_ADD_APPEND         2   // append even if exists (the same id can coexist)
+#define WOBJ_ADD_NEWONLY        3   // cancel if exists
 
 STATIC s_aPObjList := {}
 
@@ -113,7 +113,7 @@ PROCEDURE Main()
 
       cpict := AllTrim( cpict )
 
-      //wvw_loadpicture( 1, cpict ) //20060707
+      // wvw_loadpicture( 1, cpict ) //20060707
 
       SetCursor( SC_NONE )
       DispBegin()
@@ -151,23 +151,23 @@ PROCEDURE Main()
 
       // delete all image objects
       wg_DelWPaintObj( 0, WPAINTOBJ_IMAGE, NIL )
-   ENDDO //while .T.
+   ENDDO // WHILE .T.
    SetCursor( SC_NORMAL )
 
    RETURN
 
-//************** simple wpaint organizer *******
+// ************** simple wpaint organizer *******
 
 /*********************************************************/
 
 CREATE CLASS wGUIObj
 
-   VAR nWinNum                      //parent window's number
-   VAR lVisible                     //is the object visible
-   VAR nType                        //Type
-   VAR cId                          //Id
-   VAR nRow1, nCol1, nRow2, nCol2   //mouse object region
-   VAR aOffTLBR                     //offset in pixels
+   VAR nWinNum                      // parent window's number
+   VAR lVisible                     // is the object visible
+   VAR nType                        // Type
+   VAR cId                          // Id
+   VAR nRow1, nCol1, nRow2, nCol2   // mouse object region
+   VAR aOffTLBR                     // offset in pixels
 
 ENDCLASS
 
@@ -229,7 +229,7 @@ METHOD Draw() CLASS wPaintObj
       // lBoxErrMessage()
    ENDCASE
 
-   RETURN NIL  //DRAW()
+   RETURN NIL  // DRAW()
 
 // undraw the object
 // normally this is called with ::lVisible == .F.,
@@ -261,7 +261,7 @@ METHOD Undraw() CLASS wPaintObj
    RestScreen( nRow1, nCol1, nRow2, nCol2, cScreen )
    DispEnd()
 
-   RETURN NIL //undraw()
+   RETURN NIL // undraw()
 
 METHOD Hide() CLASS wPaintObj
 
@@ -286,6 +286,7 @@ METHOD Show() CLASS wPaintObj
 FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 
    LOCAL i
+
    hb_default( @nObjNum, 0 )
    hb_default( @lStrict, .F. )
 
@@ -302,7 +303,8 @@ FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 
    LOCAL i
-   LOCAL nLen, aRect //20050720
+   LOCAL nLen, aRect // 20050720
+
    hb_default( @lStrict, .F. )
    hb_default( @nOperation, WOBJ_ADD_OVERWRITE )
 
@@ -317,8 +319,8 @@ FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 
    IF i > 0
       // so we are about to overwrite now...
-      //::Hide() is ideal, but it can be slow
-      //let's do it only of user want strict/perfect operation
+      // ::Hide() is ideal, but it can be slow
+      // let's do it only of user want strict/perfect operation
       IF lStrict
          s_aPObjList[ nWinNum + 1 ][ i ]:Hide()
       ELSE
@@ -335,12 +337,12 @@ FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
       oWPaint:draw()
    ENDIF
 
-   RETURN oWPaint:cId //20040811 was .T.
+   RETURN oWPaint:cId // 20040811 was .T.
 
 // deletes a WPaint object oWPaint from window nWinNum
 // returns number of object deleted.
 //
-//NOTE: if cId is NIL, delete all object of type nType
+// NOTE: if cId is NIL, delete all object of type nType
 FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
 
    LOCAL i

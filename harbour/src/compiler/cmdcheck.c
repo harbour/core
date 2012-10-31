@@ -64,11 +64,11 @@
 /* 76543210765432107654321076543210
    |.......|.......|.......|.......
    |____|                               Year    6 bits
-         |__|                           Month   4 bits
-             |___|                      Day     5 bits
-                  |___|                 Hour    5 bits
-                       |____|           Minute  6 bits
-                             |____|     Second  6 bits */
+   .     |__|                           Month   4 bits
+   .         |___|                      Day     5 bits
+   .              |___|                 Hour    5 bits
+   .                   |____|           Minute  6 bits
+   .                         |____|     Second  6 bits */
 
 static HB_ULONG PackDateTime( void )
 {

@@ -109,7 +109,7 @@ FUNCTION TIP_CHECKSID( cSID, cCRCKey )
 
    /* Calculate the key */
    FOR n := 1 TO nLenSID
-      nRand := At( SubStr( cSID, n, 1), cBaseKeys )
+      nRand := At( SubStr( cSID, n, 1 ), cBaseKeys )
       nKey  += nRand
    NEXT
 
@@ -124,6 +124,7 @@ FUNCTION TIP_CHECKSID( cSID, cCRCKey )
    RETURN Right( cSID, 5 ) == cSIDCRC
 
 FUNCTION TIP_DATETOGMT( dDate, cTime )
+
    LOCAL cStr
    LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd-mm-yy" )
    LOCAL nDay, nMonth, nYear, nDoW
@@ -135,11 +136,11 @@ FUNCTION TIP_DATETOGMT( dDate, cTime )
 
    nDay   := Day( dDate )
    nMonth := Month( dDate )
-   nYear  := Year( dDate)
-   nDoW   := Dow( dDate )
+   nYear  := Year( dDate )
+   nDoW   := DoW( dDate )
 
    cStr := aDays[ nDow ] + ", " + StrZero( nDay, 2 ) + "-" + aMonths[ nMonth ] + "-" + ;
-           Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
+      Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
 
    Set( _SET_DATEFORMAT, cOldDateFormat )
 

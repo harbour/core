@@ -31,6 +31,7 @@
 #define _SERVICE_NAME "Harbour_NetIO_Service"
 
 PROCEDURE WinMain( ... )
+
    LOCAL cMode := hb_PValue( 1 )
 
    LOCAL cMsg, nError
@@ -86,6 +87,7 @@ PROCEDURE WinMain( ... )
    RETURN
 
 PROCEDURE hbnetio_WinServiceEntry( ... )
+
 // LOCAL bSignal := {|| win_serviceGetStatus() != WIN_SERVICE_RUNNING }
 
    netiosrv_Main( .F., ... ) /* Non-interactive */

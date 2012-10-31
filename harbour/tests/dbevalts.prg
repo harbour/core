@@ -3,6 +3,7 @@
  */
 
 PROCEDURE Main()
+
    LOCAL nCount
 
    USE test

@@ -88,7 +88,7 @@ PROCEDURE Main( cArg )
 
    oServer:Destroy()
 
-   DO WHILE !wn->(Eof())
+   DO WHILE !wn->( Eof() )
 
       oQuery2 := oServer:Query( "SELECT * from test where CODF='" + wn->CODF + "' and CODP='" + wn->CODP + "'" )
 

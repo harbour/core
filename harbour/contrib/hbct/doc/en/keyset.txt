@@ -8,29 +8,29 @@
    $CATEGORY$
       CT3 switch and state functions
    $ONELINER$
-  
+
    $SYNTAX$
       KSETINS( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       DOS
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -40,29 +40,29 @@
    $CATEGORY$
       CT3 switch and state functions
    $ONELINER$
-  
+
    $SYNTAX$
       KSETCAPS( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       DOS
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -72,29 +72,29 @@
    $CATEGORY$
       CT3 switch and state functions
    $ONELINER$
-  
+
    $SYNTAX$
       KSETNUM( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       DOS
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */
 
@@ -104,28 +104,28 @@
    $CATEGORY$
       CT3 switch and state functions
    $ONELINER$
-  
+
    $SYNTAX$
       KSETSCROLL( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
-  
+
    $RETURNS$
-  
+
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-  
+
    $TESTS$
-  
+
    $STATUS$
       Started
    $COMPLIANCE$
-  
+
    $PLATFORMS$
       DOS
    $FILES$
       Library is libct.
    $SEEALSO$
-  
+
    $END$
  */
