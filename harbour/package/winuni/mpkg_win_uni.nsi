@@ -102,6 +102,7 @@ Section "Main components" hb_main
   File "$%HB_ABSROOT%bin\hbrun.exe"
   File "$%HB_ABSROOT%bin\hbtest.exe"
   File /nonfatal "$%HB_ABSROOT%bin\*.hb"
+  File /nonfatal "$%HB_ABSROOT%bin\*.ucf"
   File /nonfatal "$%HB_ABSROOT%bin\hbmk.hbc"
   File "$%HB_ABSROOT%bin\upx*.*"
 
