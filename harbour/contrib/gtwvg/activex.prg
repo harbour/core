@@ -136,7 +136,7 @@ METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::style      := WS_CHILD + WS_VISIBLE + WS_CLIPCHILDREN + WS_CLIPSIBLINGS
    ::exStyle    := WS_EX_CLIENTEDGE
    ::objType    := objTypeActiveX
-   ::className  := 'WIN_OLEAUTO'
+   ::className  := "WIN_OLEAUTO"
 
    RETURN Self
 

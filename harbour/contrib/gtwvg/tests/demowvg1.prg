@@ -203,7 +203,7 @@ FUNCTION DoModalDialog()
    oCrt:lModal      := .T.
    oCrt:resizable   := .F.
    oCrt:closable    := .F.
-   oCrt:title       := 'Modal Dialog!'
+   oCrt:title       := "Modal Dialog!"
    oCrt:icon        := hb_DirBase() + "vr_1.ico"
 
    oCrt:Create()
@@ -212,10 +212,10 @@ FUNCTION DoModalDialog()
    AAdd( aPaint, { "Box_V", {|| Wvt_DrawBoxRaised( 1, 2, 11, 47 ) }, NIL, { WVT_BLOCK_BOX,  0, 0, MaxRow(), MaxCol() } } )
    WvtSetPaint( aPaint )
 
-   SetColor( 'N/W' )
+   SetColor( "N/W" )
    CLS
    DO WHILE .T.
-      nSel := Alert( 'A modal window !;Click on parent window;Move this window', { 'OK' } )
+      nSel := Alert( "A modal window !;Click on parent window;Move this window", { "OK" } )
       IF nSel == 0 .OR. nSel == 1
          EXIT
       ENDIF

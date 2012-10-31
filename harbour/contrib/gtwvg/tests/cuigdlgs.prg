@@ -39,10 +39,10 @@ PROCEDURE ExecGCUI()
 PROCEDURE GCUIConsole( oCrt )
 
    LOCAL dDate      := Date()
-   LOCAL cName      := PadR( 'Some Usefule Name', 35 )
-   LOCAL cAdd1      := PadR( 'Linda Goldman Avenue', 35 )
-   LOCAL cAdd2      := PadR( 'Excellent Street'    , 35 )
-   LOCAL cAdd3      := PadR( 'Suit #415'           , 35 )
+   LOCAL cName      := PadR( "Some Usefule Name", 35 )
+   LOCAL cAdd1      := PadR( "Linda Goldman Avenue", 35 )
+   LOCAL cAdd2      := PadR( "Excellent Street"    , 35 )
+   LOCAL cAdd3      := PadR( "Suit #415"           , 35 )
    LOCAL nSlry      := 9000
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
@@ -93,9 +93,9 @@ PROCEDURE GCUIConsole( oCrt )
    //
    Wvg_BoxGroupRaised( 2, 4, 17, 47, { -7, -7, 7, 7 } )
    //
-   hTxt := Wvg_TextBox( 3, 57, 16, 75, { 10, 10, -10, -10 }, 'This is first TextBox Line!', 2, 2 )
+   hTxt := Wvg_TextBox( 3, 57, 16, 75, { 10, 10, -10, -10 }, "This is first TextBox Line!", 2, 2 )
    //
-   Wvg_Image( 15, 36, 16, 42, { -3, -3, 3, 3 }, GOBJ_IMAGESOURCE_FILE, GetResource( 'Vouch1.bmp' ) )
+   Wvg_Image( 15, 36, 16, 42, { -3, -3, 3, 3 }, GOBJ_IMAGESOURCE_FILE, GetResource( "Vouch1.bmp" ) )
    Wvg_BoxRaised( 15, 36, 16, 42, { -2, -2, 2, 2 } )
    //
    Wvg_ShadedRect( 1, 54, 18, 79, { -5, -5, 5, 5 }, 0, { 65000, 21000, 7000, 56000 }, { 255, 32255, 16000, 32500 } )
@@ -108,8 +108,7 @@ PROCEDURE GCUIConsole( oCrt )
    // Issue the read
    READ
 
-   // Alert( 'How did you like the "Alert" replacement?', { 'WOW','OK','OOps'} )
-   My_Alert( 'How did you like the "Alert" replacement?', { 'WOW', 'OK', 'OOps' } )
+   My_Alert( "How did you like the "Alert" replacement?", { "WOW", "OK", "OOps" } )
 
    RETURN
 
@@ -121,16 +120,16 @@ STATIC FUNCTION FetchText( nMode )
 
    DO CASE
    CASE nMode == 1
-      cText := 'Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! '
-      cText += 'Enjoy it.'
+      cText := "Do you know Harbour is gaining a popularity what Clipper enjoyed at one time! "
+      cText += "Enjoy it."
    CASE nMode == 2
-      cText := 'Do you know Harbour can host pure console, cui+gui console, pure gui consoles applications? '
-      cText += 'This demonstration is a proof of that.'
+      cText := "Do you know Harbour can host pure console, cui+gui console, pure gui consoles applications? "
+      cText += "This demonstration is a proof of that."
    CASE nMode == 3
-      cText := 'Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! '
-      cText += 'And is FREE.'
+      cText := "Do you know Harbour is a multi-gt, multi-window, multi-thread compiler far superior than others in the market! "
+      cText += "And is FREE."
    CASE nMode == 4
-      cText := 'Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!'
+      cText := "Enjoy and contribute to the project any way you can. Develop, Debug, Support, and spread a word of mouth!"
    ENDCASE
 
    RETURN cText

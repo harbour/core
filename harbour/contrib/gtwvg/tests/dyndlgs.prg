@@ -74,27 +74,27 @@ FUNCTION DynWinDialog( nInfo )
 /*
    // Bitmap
    nStyle := WS_CHILD + WS_VISIBLE + SS_BITMAP + SS_REALSIZEIMAGE
-   aDlg   := Wvt_AddDlgItem( aDlg, 18, 41, 2,8, {-3,0,3}, ID_STA_IMAGE, "STATIC" , nStyle, "" )
+   aDlg   := Wvt_AddDlgItem( aDlg, 18, 41, 2,8, { -3, 0, 3 }, ID_STA_IMAGE, "STATIC" , nStyle, "" )
 */
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_AUTOCHECKBOX
    aDlg   := Wvt_AddDlgItem( aDlg, 18, 15,  1, 10, {}, ID_CHK_SATIS , "BUTTON" , nStyle, "Satisfied?" )
 
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + ES_RIGHT + ES_READONLY
-   aDlg   := Wvt_AddDlgItem( aDlg, 18, 30, 1,  7, { 3 }, ID_EDT_TIME , "EDIT" , nStyle, "" )
+   aDlg   := Wvt_AddDlgItem( aDlg, 18, 30,  1,  7, { 3 }, ID_EDT_TIME , "EDIT" , nStyle, "" )
 
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + LBS_NOTIFY + WS_VSCROLL + WS_BORDER
-   aDlg   := Wvt_AddDlgItem( aDlg, 1, 41,  4, 17, {}, ID_LST_LIST  , "LISTBOX", nStyle, "ListBox"  )
+   aDlg   := Wvt_AddDlgItem( aDlg,  1, 41,  4, 17, {}, ID_LST_LIST  , "LISTBOX", nStyle, "ListBox"  )
 
    nStyle := WS_CHILD + WS_VISIBLE + SS_LEFT
-   aDlg   := Wvt_AddDlgItem( aDlg, 4, 41,  1, 17, { 3, 0, 0, 0 }, -1    , "STATIC" , nStyle, "Degree"     )
+   aDlg   := Wvt_AddDlgItem( aDlg,  4, 41,  1, 17, { 3, 0, 0, 0 }, -1    , "STATIC" , nStyle, "Degree"     )
    nStyle := WS_VISIBLE + WS_TABSTOP + CBS_DROPDOWNLIST + WS_BORDER + WS_VSCROLL
-   aDlg   := Wvt_AddDlgItem( aDlg, 5, 41,  6, 17, {}, ID_CMB_COMBO , "COMBOBOX" , nStyle, "Combo" )
+   aDlg   := Wvt_AddDlgItem( aDlg,  5, 41,  6, 17, {}, ID_CMB_COMBO , "COMBOBOX" , nStyle, "Combo" )
 
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_GROUPBOX
-   aDlg   := Wvt_AddDlgItem( aDlg, 7, 41,  4, 17, { 0, 0, 4, 0 }, ID_GRP_COMP, "BUTTON" , nStyle, "Compiler" )
+   aDlg   := Wvt_AddDlgItem( aDlg,  7, 41,  4, 17, { 0, 0, 4, 0 }, ID_GRP_COMP, "BUTTON" , nStyle, "Compiler" )
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + BS_AUTORADIOBUTTON
-   aDlg   := Wvt_AddDlgItem( aDlg, 8, 43,  1, 14, {}, ID_RDO_XH    , "BUTTON" , nStyle, "Harbour"  )
-   aDlg   := Wvt_AddDlgItem( aDlg, 9, 43,  1, 14, {}, ID_RDO_CLIP  , "BUTTON" , nStyle, "Clipper"  )
+   aDlg   := Wvt_AddDlgItem( aDlg,  8, 43,  1, 14, {}, ID_RDO_XH    , "BUTTON" , nStyle, "Harbour"  )
+   aDlg   := Wvt_AddDlgItem( aDlg,  9, 43,  1, 14, {}, ID_RDO_CLIP  , "BUTTON" , nStyle, "Clipper"  )
    aDlg   := Wvt_AddDlgItem( aDlg, 10, 43,  1, 14, {}, ID_RDO_XBASE , "BUTTON" , nStyle, "Xbase++"  )
 
    nStyle := WS_CHILD + WS_VISIBLE + SS_LEFT
@@ -152,7 +152,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       DO CASE
 
       CASE wParam == ID_CHK_SATIS
-         lClicked := ( WVG_IsDlgButtonChecked( hDlg,ID_CHK_SATIS ) == 1 )
+         lClicked := ( WVG_IsDlgButtonChecked( hDlg, ID_CHK_SATIS ) == 1 )
          WVG_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
 
       CASE wParam == ID_RDO_XH
@@ -190,11 +190,11 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       EXIT
 
    CASE WM_CTLCOLOREDIT
-      IF ( WVG_GetDlgItem( hDlg, ID_MLE ) == lParam )
+      IF WVG_GetDlgItem( hDlg, ID_MLE ) == lParam
          WVG_SetTextColor( wParam, RGB( 0, 0, 255 ) )
          WVG_SetBkColor( wParam, RGB( 255, 255, 200 ) )
          RETURN 1
-      ELSEIF ( WVG_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam )
+      ELSEIF WVG_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam
          WVG_SetTextColor( wParam, RGB( 255, 255, 255 ) )
          WVG_SetBkColor( wParam, RGB( 10, 200, 45 ) )
          RETURN 1
@@ -202,7 +202,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       EXIT
 
    CASE WM_CTLCOLORSTATIC
-      IF ( WVG_GetDlgItem( hDlg, ID_STA_TEXT ) == lParam )
+      IF WVG_GetDlgItem( hDlg, ID_STA_TEXT ) == lParam
          WVG_SetTextColor( wParam, RGB( 255, 255, 255 ) )
          RETURN 1
       ENDIF

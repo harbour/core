@@ -39,7 +39,7 @@ FUNCTION demoxbp()
    oCrt:icon := GetResource( "vr_1.ico" )
    oCrt:create()
 
-   oCrt:setFontCompoundName( '12.Courier italic' )
+   oCrt:setFontCompoundName( "12.Courier italic" )
 
    oDA := oCrt:drawingArea
 
@@ -53,17 +53,17 @@ FUNCTION demoxbp()
    oSBar   := WvgStatusBar():new( oCrt ):create( , , , , , .T. )
    oSBar:panelClick := {| oPanel | WVG_MessageBox( , oPanel:caption ) }
    oPanel  := oSBar:getItem( 1 )
-   oPanel:caption := 'My Root Panel'
+   oPanel:caption := "My Root Panel"
    oPanel1 := oSBar:addItem()
-   oPanel1:caption := 'Ready'
+   oPanel1:caption := "Ready"
    oPanel2 := oSBar:addItem()
-   oPanel2:caption := 'Click on any part!'
+   oPanel2:caption := "Click on any part!"
 
    // --------------------------- Static ------------------------------\\
    oStatic := WvgStatic():new( oDA )
    oStatic:type    := WVGSTATIC_TYPE_TEXT
    oStatic:options := WVGSTATIC_TEXT_CENTER
-   oStatic:caption := Chr( 13 ) + 'Implemented   Xbase++ Parts'
+   oStatic:caption := Chr( 13 ) + "Implemented   Xbase++ Parts"
 
    oStatic:create( , , { 0, oTBar:currentSize()[ 2 ] + 3 }, { 120, oCrt:currentSize()[ 2 ] - ;
       oTBar:currentSize()[ 2 ] - oSBar:currentSize()[ 2 ] - 4 }, , .T. )
@@ -76,32 +76,32 @@ FUNCTION demoxbp()
    oListBox:setColorFG( RGB( 218, 61, 34 ) )
 // oListBox:setColorBG( RGB( 250,244,182 ) )
 
-   AAdd( aParts, 'XbpDialog'        )
-   AAdd( aParts, 'XbpMenuBar'       )
-   AAdd( aParts, 'XbpToolBar'       )
-   AAdd( aParts, 'XbpToolBarButton' )
-   AAdd( aParts, 'XbpStatusBar'     )
-   AAdd( aParts, 'XbpStatic'        )
-   AAdd( aParts, 'XbpTreeView'      )
-   AAdd( aParts, 'XbpTreeViewItem'  )
-   AAdd( aParts, 'XbpActiveXControl' )
-   AAdd( aParts, 'XbpListBox'       )
-   AAdd( aParts, 'XbpPushButton'    )
-   AAdd( aParts, 'XbpCheckBox'      )
-   AAdd( aParts, 'XbpRadioButton'   )
-   AAdd( aParts, 'Xbp3State'        )
-   AAdd( aParts, 'XbpSLE'           )
-   AAdd( aParts, 'XbpMLE'           )
-   AAdd( aParts, 'XbpHTMLViewer'    )
-   AAdd( aParts, 'XbpSysWindow'     )
-   AAdd( aParts, 'XbpFontDialog'    )
-   AAdd( aParts, 'XbpFont'          )
-   AAdd( aParts, '-------------'    )
-   AAdd( aParts, 'DataRef'          )
+   AAdd( aParts, "XbpDialog"        )
+   AAdd( aParts, "XbpMenuBar"       )
+   AAdd( aParts, "XbpToolBar"       )
+   AAdd( aParts, "XbpToolBarButton" )
+   AAdd( aParts, "XbpStatusBar"     )
+   AAdd( aParts, "XbpStatic"        )
+   AAdd( aParts, "XbpTreeView"      )
+   AAdd( aParts, "XbpTreeViewItem"  )
+   AAdd( aParts, "XbpActiveXControl" )
+   AAdd( aParts, "XbpListBox"       )
+   AAdd( aParts, "XbpPushButton"    )
+   AAdd( aParts, "XbpCheckBox"      )
+   AAdd( aParts, "XbpRadioButton"   )
+   AAdd( aParts, "Xbp3State"        )
+   AAdd( aParts, "XbpSLE"           )
+   AAdd( aParts, "XbpMLE"           )
+   AAdd( aParts, "XbpHTMLViewer"    )
+   AAdd( aParts, "XbpSysWindow"     )
+   AAdd( aParts, "XbpFontDialog"    )
+   AAdd( aParts, "XbpFont"          )
+   AAdd( aParts, "-------------"    )
+   AAdd( aParts, "DataRef"          )
 
    AEval( aParts, {| e | oListBox:addItem( e ) } )
    oListBox:itemSelected := {|| WVG_MessageBox( , oListBox:getCurItem() ) }
-   oListBox:setData( 3 )    // show selected 'XbpToolBar'
+   oListBox:setData( 3 )    // show selected "XbpToolBar"
 
    // --------------------------- PushButton --------------------------\\
    oXbp := WvgPushButton():new( oStatic )
@@ -142,24 +142,24 @@ FUNCTION demoxbp()
    oTree:setData( oItem2 )
 
    // --------------------------- Active-X ---------------------------\\
-   hb_gtInfo( HB_GTI_WINTITLE, 'http://www.harbour.vouch.info' )
+   hb_gtInfo( HB_GTI_WINTITLE, "http://www.harbour.vouch.info" )
 #if 0
    oCom := WvgActiveXControl():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
-   oCom:CLSID := 'Shell.Explorer.2'
-   oCom:mapEvent( 269, {|| QOut( ' E X P L O R E R - 2 6 9' ) } )
+   oCom:CLSID := "Shell.Explorer.2"
+   oCom:mapEvent( 269, {|| QOut( " E X P L O R E R - 2 6 9" ) } )
 #else
    oCom := WvgHTMLViewer():New( oDA, , { 0, 0 }, { 100, 100 }, , .T. )
    oCom:beforeNavigate := {| cURL, x, oHTML | x := x, oHTML := oHTML, oPanel:caption := cURL }
    oCom:statusTextChange := {| cText | oPanel:caption := cText }
-   oCom:mapEvent( 112, {|| oPanel:caption := ' E X P L O R E R - 2 6 9' } )
+   oCom:mapEvent( 112, {|| oPanel:caption := " E X P L O R E R - 2 6 9" } )
 #endif
    oCom:create()
-   oCom:Navigate( 'http://www.harbour.vouch.info' )
+   oCom:Navigate( "http://www.harbour.vouch.info" )
 
    oAddr := WvgSLE():new()
    oAddr:bufferLength := 500
    oAddr:border       := .T.
-   cNavigate          := 'http://www.harbour.vouch.info'
+   cNavigate          := "http://www.harbour.vouch.info"
    oAddr:dataLink     := {| x | iif( x == NIL, cNavigate, cNavigate := x ) }
    oAddr:setColorFG( RGB( 0, 0, 255   ) )
    oAddr:setColorBG( RGB( 0, 255, 255 ) )
@@ -184,7 +184,7 @@ FUNCTION demoxbp()
    oRadio  := WvgRadioButton():new( oStatic2, , { 10, 10 }, { 100, 15 } )
    oRadio:caption   := "Com 1"
    oRadio:selection := .T.
-   oRadio:selected  := {| m1, m2, obj | m1 := m1, m2 := m2, WVG_MessageBox( , obj:caption + iif( obj:selection, '< S >', '< N >' ) ) }
+   oRadio:selected  := {| m1, m2, obj | m1 := m1, m2 := m2, WVG_MessageBox( , obj:caption + iif( obj:selection, "< S >", "< N >" ) ) }
    oRadio:create()
 
    oRadio  := WvgRadioButton():new( oStatic2, , { 10, 35 }, { 100, 15 } )
@@ -192,9 +192,9 @@ FUNCTION demoxbp()
    oRadio:create()
 
    oCheck  := WvgCheckBox():New( oStatic2, , { 10, 70 }, { 100, 15 }, , .T. )
-   oCheck:caption   := 'Checkbox A'
+   oCheck:caption   := "Checkbox A"
    oCheck:create()
-   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, WVG_MessageBox( , iif( o:getData(), 'I am selected', 'I am not selected' ) ) }
+   oCheck:selected  := {| m1, m2, o | m1 := m1, m2 := m2, WVG_MessageBox( , iif( o:getData(), "I am selected", "I am not selected" ) ) }
 
    // Create first 3State button, passing the position to :create()
    oXbp    := Wvg3State():new()
@@ -232,7 +232,7 @@ FUNCTION demoxbp()
    oXbp:killInputFocus := {| x, y, oSLE | x := x, y := y, oSLE:getData(), oPanel:caption := "cVarB =" + cVarB }
 
    // Read file into LOCAL variable
-   cText   := MemoRead( GetResource( 'gtwvg.hbc' ) )
+   cText   := MemoRead( GetResource( "gtwvg.hbc" ) )
    // Create MLE, specify position using :create() and
    // assign data code block accessing LOCAL variable
    oMLE    := WvgMLE():new()
@@ -244,11 +244,11 @@ FUNCTION demoxbp()
    oMLE:setData()
 
    // --------------------------- Misc Config ------------------------\\
-   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == 'Hide', oStatic:hide(), NIL ), ;
-      iif( oBtn:caption == 'Show', oStatic:show(), NIL ), ;
-      iif( oBtn:caption == 'Tools', oStatic2:show():toFront(), NIL ), ;
-      iif( oBtn:caption == 'FontDlg', ExeFontDialogXbp( oCrt ), NIL ), ;
-      iif( oBtn:caption $ 'Hide,Show', oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ), ;
+   oTBar:buttonClick := {| oBtn | iif( oBtn:caption == "Hide", oStatic:hide(), NIL ), ;
+      iif( oBtn:caption == "Show", oStatic:show(), NIL ), ;
+      iif( oBtn:caption == "Tools", oStatic2:show():toFront(), NIL ), ;
+      iif( oBtn:caption == "FontDlg", ExeFontDialogXbp( oCrt ), NIL ), ;
+      iif( oBtn:caption $ "Hide,Show", oCrt:sendMessage( WM_SIZE, 0, 0 ), NIL ), ;
       oPanel2:caption := "Button [ " + oBtn:caption + " ] clicked!" }
 
    oCrt:resize := {|| ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr ) }
@@ -359,15 +359,15 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    oTBar:create()
 
-   oTBar:addItem( "New"       , hb_DirBase() + 'v_new.bmp'    )
-   oTBar:addItem( "Select"    , hb_DirBase() + 'v_selct1.bmp' )
+   oTBar:addItem( "New"       , hb_DirBase() + "v_new.bmp"    )
+   oTBar:addItem( "Select"    , hb_DirBase() + "v_selct1.bmp" )
    oTBar:addItem()
-   oTBar:addItem( "FontDlg"   , hb_DirBase() + 'v_calend.bmp' )
-   oTBar:addItem( "Tools"     , hb_DirBase() + 'v_lock.bmp'   )
-   oTBar:addItem( "Index"     , hb_DirBase() + 'v_index.bmp'  )
+   oTBar:addItem( "FontDlg"   , hb_DirBase() + "v_calend.bmp" )
+   oTBar:addItem( "Tools"     , hb_DirBase() + "v_lock.bmp"   )
+   oTBar:addItem( "Index"     , hb_DirBase() + "v_index.bmp"  )
    oTBar:addItem()
-   oTBar:addItem( "Show"      , hb_DirBase() + 'v_clclt.bmp'  )
-   oTBar:addItem( "Hide"      , hb_DirBase() + 'v_notes1.bmp' )
+   oTBar:addItem( "Show"      , hb_DirBase() + "v_clclt.bmp"  )
+   oTBar:addItem( "Hide"      , hb_DirBase() + "v_notes1.bmp" )
 
    RETURN oTBar
 
@@ -411,14 +411,14 @@ STATIC FUNCTION ExeFontDialogXbp( oCrt )
 
    oFontDlg := WvgFontDialog():new( oCrt )
 
-   oFontDlg:title            := 'Select a Screen Font'
+   oFontDlg:title            := "Select a Screen Font"
    oFontDlg:aPos             := { 150, 150 }
    oFontDlg:buttonApply      := .T.
    oFontDlg:activateApply    := {|| NIL }
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .F.
-// oFontDlg:activateOk       := {|| WVG_MessageBox( , 'activateOK Event Handelled in Windows!' ) }
+// oFontDlg:activateOk       := {|| WVG_MessageBox( , "activateOK Event Handelled in Windows!" ) }
    oFontDlg:nominalPointSize := 12
 
 // oFontDlg:size             := .F.

@@ -27,7 +27,7 @@ FUNCTION MyAlert( cMsg, aOpt )
    oCrt:create()
    oCrt:resizable := .T.
 
-   SetColor( 'N/W' )
+   SetColor( "N/W" )
    CLS
    hb_gtInfo( HB_GTI_WINTITLE, cMsg )
 
@@ -83,7 +83,7 @@ FUNCTION Just_Alert( cMsg, aOpt )
       [ <lCenter:CENTER>   ] ;
       [ AT <nRow>,<nCol>   ] ;
       [ <lNoTitleBar:NOTITLEBAR> ] ;
-      INTO < oCrt > ;
+      INTO <oCrt> ;
       => ;
       <oCrt > := CreateOCrt( <nTop>, <nLeft>, <nBottom>, <nRight>, <ttl>, <icon>, ;
       <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
@@ -151,7 +151,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    //                        Create a new Window
    //
-   B_CRT nTop, nLeft, nBottom - 1, nRight MODAL ICON "dia_excl.ico" TITLE '  ' + cCaption INTO oCrt
+   B_CRT nTop, nLeft, nBottom - 1, nRight MODAL ICON "dia_excl.ico" TITLE "  " + cCaption INTO oCrt
 
    nTop    := -1
    nLeft   := 0
@@ -169,7 +169,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    ENDIF
 
    SetCursor( 0 )
-   SetColor( 'N/W' )
+   SetColor( "N/W" )
    CLS
 
    DispBegin()
@@ -288,8 +288,8 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 
    LOCAL oCrt, aPos
 
-   hb_default( @cTitle      , 'Info' )
-   hb_default( @xIcon       , 'VW_DFT' )
+   hb_default( @cTitle      , "Info" )
+   hb_default( @xIcon       , "VW_DFT" )
    hb_default( @lModal      , .T. )
    hb_default( @lHidden     , .F. )
    hb_default( @lCenter     , .F. )
@@ -308,11 +308,11 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
    IF HB_ISNUMERIC( xIcon )
       hb_gtInfo( HB_GTI_ICONRES, xIcon )
    ELSE
-      IF ( '.ico' $ Lower( xIcon ) )
+      IF ( ".ico" $ Lower( xIcon ) )
          hb_gtInfo( HB_GTI_ICONFILE, xIcon )
       ELSE
-         IF '.bmp' $ Lower( xIcon )
-            xIcon := 'VW_DFT'
+         IF ".bmp" $ Lower( xIcon )
+            xIcon := "VW_DFT"
          ENDIF
          hb_gtInfo( HB_GTI_ICONRES, xIcon )
       ENDIF
@@ -320,7 +320,7 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 
    hb_gtInfo( HB_GTI_WINTITLE, cTitle )
 
-   SetColor( 'N/W' )
+   SetColor( "N/W" )
    CLS
 
    RETURN oCrt
@@ -341,12 +341,12 @@ FUNCTION DoModalWindow()
    oCrt:lModal      := .T.
    oCrt:resizable   := .F.
    oCrt:closable    := .F.
-   oCrt:title       := 'Information! [R:4 C:8]'
+   oCrt:title       := "Information! [R:4 C:8]"
 
-   oCrt:rbUp        := {|| hb_DispOutAt( MaxRow(), 0, PadC( 'rbUp', MaxCol() + 1 ), 'W+/R*' ) }
-   oCrt:lbUp        := {|| hb_DispOutAt( MaxRow(), 0, PadC( 'lbUp', MaxCol() + 1 ), 'W+/B*' ) }
-   oCrt:leave       := {|| hb_DispOutAt( MaxRow(), 0, PadC( 'Leaving', MaxCol() + 1 ), 'W+/RB' ) }
-   oCrt:enter       := {|| hb_DispOutAt( MaxRow(), 0, PadC( 'Entering', MaxCol() + 1 ), 'W+/B' ) }
+   oCrt:rbUp        := {|| hb_DispOutAt( MaxRow(), 0, PadC( "rbUp", MaxCol() + 1 ), "W+/R*" ) }
+   oCrt:lbUp        := {|| hb_DispOutAt( MaxRow(), 0, PadC( "lbUp", MaxCol() + 1 ), "W+/B*" ) }
+   oCrt:leave       := {|| hb_DispOutAt( MaxRow(), 0, PadC( "Leaving", MaxCol() + 1 ), "W+/RB" ) }
+   oCrt:enter       := {|| hb_DispOutAt( MaxRow(), 0, PadC( "Entering", MaxCol() + 1 ), "W+/B" ) }
 
    oCrt:Create()
    oCrt:show()
@@ -355,10 +355,10 @@ FUNCTION DoModalWindow()
 
    // Here goes the Clipper Code
    //
-   SetColor( 'N/W' )
+   SetColor( "N/W" )
    CLS
    DO WHILE .T.
-      nSel := Just_Alert( 'I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window', { 'OK' } )
+      nSel := Just_Alert( "I am in modal window !;< Try: MMove LBUp RBUp >;Click Parent Window", { "OK" } )
 
       IF nSel == 0  .OR. nSel == 1
          EXIT

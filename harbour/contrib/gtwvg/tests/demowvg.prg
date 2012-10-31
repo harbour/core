@@ -219,7 +219,7 @@ PROCEDURE WvtConsoleGets( nMode )
    hb_default( @nMode, 0 )
 
    IF hb_mtvm()
-      hb_threadStart( {| oCrt | hb_gtReload( 'WVT' ), ;
+      hb_threadStart( {| oCrt | hb_gtReload( "WVT" ), ;
          oCrt := hb_gtSelect(), ;
          iif( nMode == 0, WvtNextGetsConsole(), GoogleMap() ), ;
          oCrt := NIL } )
@@ -268,7 +268,7 @@ PROCEDURE WvtNextGetsConsole()
 PROCEDURE WvtNextGets()
 
    IF hb_mtvm()
-      hb_threadStart( {|| hb_gtReload( 'WVG' ), Wvt_setFont( 'Terminal', 20 ), ;
+      hb_threadStart( {|| hb_gtReload( "WVG" ), Wvt_setFont( "Terminal", 20 ), ;
          hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
    ELSE
       WvtNextGets_X()
@@ -552,9 +552,9 @@ STATIC FUNCTION GoogleMap()
    LOCAL getlist := {}
 
    SetMode( 22, 65 )
-   SetColor( 'N/W,N/GR*,,,N/W*' )
+   SetColor( "N/W,N/GR*,,,N/W*" )
    cls
-   hb_gtInfo( HB_GTI_WINTITLE, 'Google Maps' )
+   hb_gtInfo( HB_GTI_WINTITLE, "Google Maps" )
 
    mfrom1  := mto1  := Space( 20 )
    mfrom2  := mto2  := Space( 40 )

@@ -344,8 +344,8 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
    HB_SYMBOL_UNUSED( oBrw )
 
    oCom := WvgActiveXControl():new( oCrt, , { -24, -13 }, { {|| -( MaxRow() - 1 - 24 ) }, {|| -( MaxCol() - 1 - 13 ) } }, , .F. )
-   oCom:CLSID := 'Shell.Explorer.2'
-// oCom:mapEvent( 269, {|| uiDebug( ' E X P L O R E R - 2 6 9' ) } )
+   oCom:CLSID := "Shell.Explorer.2"
+// oCom:mapEvent( 269, {|| uiDebug( " E X P L O R E R - 2 6 9" ) } )
    oCom:create()
    oCom:navigate( "http://hbide.vouch.info" )
 
@@ -571,18 +571,18 @@ STATIC FUNCTION BrwBuildMenu( oCrt )
    oMenu := oCrt:menubar()
 
    oSMenu := WvgMenu():new( oMenu ):create()
-   oSMenu:addItem( { '~First' , {|| Alert( 'First'  ) } } )
-   oSMenu:addItem( { '~Second', {|| Alert( 'Second' ) } } )
+   oSMenu:addItem( { "~First" , {|| Alert( "First"  ) } } )
+   oSMenu:addItem( { "~Second", {|| Alert( "Second" ) } } )
    oSMenu:addItem()
-   oSMenu:addItem( { '~Third' , {|| Alert( 'Third'  ) } } )
-   oMenu:addItem( { oSMenu, '~Hello' } )
+   oSMenu:addItem( { "~Third" , {|| Alert( "Third"  ) } } )
+   oMenu:addItem( { oSMenu, "~Hello" } )
 
    oSMenu := WvgMenu():new( oMenu ):create()
-   oSMenu:addItem( { '~First' , {|| Alert( 'First'  ) } } )
-   oSMenu:addItem( '-' )
-   oSMenu:addItem( { '~Second', {|| Alert( 'Second' ) } } )
-   oSMenu:addItem( { '~Third' , {|| Alert( 'Third'  ) } } )
-   oMenu:addItem( { oSMenu, '~MyFriends' } )
+   oSMenu:addItem( { "~First" , {|| Alert( "First"  ) } } )
+   oSMenu:addItem( "-" )
+   oSMenu:addItem( { "~Second", {|| Alert( "Second" ) } } )
+   oSMenu:addItem( { "~Third" , {|| Alert( "Third"  ) } } )
+   oMenu:addItem( { oSMenu, "~MyFriends" } )
 
    oSMenu := WvgMenu():new( oMenu ):create()
    oSMenu:title := "~Procedural"
@@ -616,13 +616,13 @@ STATIC FUNCTION BrwBuildToolBar( oCrt )
    // After setting properties, create toolbar.
    oTBar:create()
 
-   oTBar:addItem( "New"       , hb_DirBase() + 'v_new.bmp'   , , , , , , nRGB )
-   oTBar:addItem( "Select"    , hb_DirBase() + 'v_selct1.bmp', , , , , , nRGB )
-   oTBar:addItem( "Calendar"  , hb_DirBase() + 'v_calend.bmp', , , , , , nRGB )
-   oTBar:addItem( "Tools"     , hb_DirBase() + 'v_lock.bmp'  , , , , , , nRGB )
-   oTBar:addItem( "Index"     , hb_DirBase() + 'v_index.bmp' , , , , , , nRGB )
-   oTBar:addItem( "Show"      , hb_DirBase() + 'v_clclt.bmp' , , , , , , nRGB )
-   oTBar:addItem( "Hide"      , hb_DirBase() + 'v_notes1.bmp', , , , , , nRGB )
+   oTBar:addItem( "New"       , hb_DirBase() + "v_new.bmp"   , , , , , , nRGB )
+   oTBar:addItem( "Select"    , hb_DirBase() + "v_selct1.bmp", , , , , , nRGB )
+   oTBar:addItem( "Calendar"  , hb_DirBase() + "v_calend.bmp", , , , , , nRGB )
+   oTBar:addItem( "Tools"     , hb_DirBase() + "v_lock.bmp"  , , , , , , nRGB )
+   oTBar:addItem( "Index"     , hb_DirBase() + "v_index.bmp" , , , , , , nRGB )
+   oTBar:addItem( "Show"      , hb_DirBase() + "v_clclt.bmp" , , , , , , nRGB )
+   oTBar:addItem( "Hide"      , hb_DirBase() + "v_notes1.bmp", , , , , , nRGB )
 
    RETURN oTBar
 

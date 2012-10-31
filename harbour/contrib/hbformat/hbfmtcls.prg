@@ -86,6 +86,7 @@ CREATE CLASS HBFORMATCODE
 
    VAR nEol           INIT  0       // Eol: -1 - no change, 0 - OS default, 1 - DOS, 2 - UNIX
    VAR lFCaseLow      INIT .F.      // If true, convert file name to lower case
+   VAR lNoTabs        INIT .T.      // If true, converts all tabs to spaces
    VAR lIndent        INIT .T.      // If true, indent code
    VAR lCase          INIT .T.      // If true, make case conversion
    VAR lSpaces        INIT .T.      // If true, reformat spaces
@@ -109,12 +110,12 @@ CREATE CLASS HBFORMATCODE
    VAR nLineRet       INIT   1      // -1 - no change, 1 - insert empty line before return, 2 - remove it
    VAR nLineVar       INIT   1      // -1 - no change, 1 - insert empty line before variables declaration, 2 - remove it
    VAR nLineCode      INIT   1      // -1 - no change, 1 - insert empty line before code in function, 2 - remove it
-   VAR nBr4Comma      INIT   8      // Max level of nesting in brackets, while space is added after a comma
-   VAR nBr4Brac       INIT   8      // Max level of nesting in brackets, while space is added after/before a bracket
+   VAR nBr4Comma      INIT   1      // Max level of nesting in brackets, while space is added after a comma
+   VAR nBr4Brac       INIT   2      // Max level of nesting in brackets, while space is added after/before a bracket
    VAR cHBXList       INIT ""
 
-   VAR cExtSave       INIT ""      // Extension for a formatted file ( "" - replace original )
-   VAR cExtBack       INIT ".bak"  // Extension for a backup file
+   VAR cExtSave       INIT ""       // Extension for a formatted file ( "" - replace original )
+   VAR cExtBack       INIT ".bak"   // Extension for a backup file
 
    VAR cCommands      INIT ","
    VAR cClauses       INIT ","
@@ -169,19 +170,19 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
    IF !( Right( ::cCommands, 1 ) == "," )
       ::cCommands += ","
    ENDIF
-   ::cCommands += "IF,ELSE,ELSEIF,END,ENDIF,DO,WHILE,ENDDO,WITH,CASE,OTHERWISE,ENDCASE,BEGIN,ANNOUNCE,REQUEST,THREAD,DYNAMIC,EXTERNAL," + ;
-                  "FUNCTION,PROCEDURE,RETURN,CLASS,ENDCLASS,METHOD,DATA,LOCAL,PRIVATE,PUBLIC,STATIC,FIELD,MEMVAR,PARAMETERS,DECLARE," + ;
-                  "ACCEPT,APPEND,AVERAGE,CLEAR,CLOSE,COMMIT,CONTINUE,COPY,COUNT,CREATE,DEFAULT," + ;
-                  "DELETE,DISPLAY,EJECT,ERASE,EXIT,FOR,GO,GOTO,INDEX,INIT,INPUT,JOIN,KEYBOARD,LABEL,LIST,LOCATE," + ;
-                  "LOOP,MENU,NEXT,PACK,PRINT,QUIT,READ,RECALL,REINDEX,RELEASE,RENAME,REQUEST,REPLACE,RESTORE," + ;
-                  "RUN,SAVE,SEEK,SELECT,SET,SKIP,SORT,STORE,SUM,TEXT,TOTAL,UNLOCK,USE,VAR,WAIT,ZAP,"
+   ::cCommands += "IF,ELSEIF,ELSE,ENDIF,END,DO,WHILE,ENDDO,WITH,CASE,OTHERWISE,ENDCASE,BEGIN," +;
+                  "FUNCTION,PROCEDURE,RETURN,CLASS,ENDCLASS,METHOD,DATA,LOCAL,PRIVATE,PUBLIC,STATIC,FIELD,MEMVAR,PARAMETERS,DECLARE," +;
+                  "ACCEPT,APPEND,AVERAGE,CLEAR,CLOSE,COMMIT,CONTINUE,COPY,COUNT,CREATE,DEFAULT," +;
+                  "DELETE,DISPLAY,EJECT,ERASE,EXIT,FOR,GO,GOTO,INDEX,INPUT,JOIN,KEYBOARD,LABEL,LIST,LOCATE," +;
+                  "LOOP,MENU,NEXT,PACK,PRINT,QUIT,READ,RECALL,REINDEX,RELEASE,RENAME,REQUEST,REPLACE,RESTORE," +;
+                  "RUN,SAVE,SEEK,SELECT,SET,SKIP,SORT,STORE,SUM,TEXT,TOTAL,UNLOCK,USE,WAIT,ZAP,"
 
    IF !( Right( ::cClauses, 1 ) == "," )
       ::cClauses += ","
    ENDIF
-   ::cClauses += "ADDITIVE,ALIAS,ALL,BLANK,BOTTOM,BOX,COLOR,DATE,DELETED,EACH,EXTENDED,EXCLUSIVE,FROM,GET," + ;
-                 "RANGE,READONLY,REST,SAY,SCREEN,ALTERNATE,BELL,CENTURY,CONFIRM,CONSOLE,CURSOR,DECIMALS,DELIMITERS,DEVICE,EPOCH,ESCAPE," + ;
-                 "EXACT,EXCLUSIVE,FILTER,FIXED,FORMAT,INHERIT,INTENSITY,KEY,LIKE,MARGIN,MESSAGE,NEW,NIL,OFF,ON,ORDER,PATH,PICTURE,PRINTER,PROMPT," + ;
+   ::cClauses += "ADDITIVE,ALIAS,ALL,BLANK,BOTTOM,BOX,COLOR,DATE,DELETED,EACH,EXTENDED,EXCLUSIVE,FROM,GET," +;
+                 "RANGE,READONLY,REST,SAY,SCREEN,ALTERNATE,BELL,CENTURY,CONFIRM,CONSOLE,CURSOR,DECIMALS,DELIMITERS,DEVICE,EPOCH,ESCAPE," +;
+                 "EXACT,EXCLUSIVE,FILTER,FIXED,FORMAT,INTENSITY,KEY,LIKE,MARGIN,MESSAGE,NEW,OFF,ON,ORDER,PATH,PICTURE,PRINTER,PROMPT," +;
                  "PROTECTED,RELATION,SCOREBOARD,SEQUENCE,SOFTSEEK,STEP,STRUCTURE,TYPEAHEAD,UNIQUE,WRAP,TAG,TO,TOP,VALID,WHEN,"
 
    IF !( Right( ::cFunctions, 1 ) == "," )
@@ -201,6 +202,9 @@ METHOD New( aParams, cIniName ) CLASS HBFORMATCODE
       ::cEol := Chr( 13 ) + Chr( 10 )
    ELSEIF ::nEol == 0
       ::cEol := hb_eol()
+   ENDIF
+   IF ::lIndent
+      ::lNoTabs := .T.
    ENDIF
 
    RETURN Self
@@ -251,7 +255,7 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
          LOOP
       ENDIF
       IF lComment
-         IF ( nPos := At( "*/", aFile[ i ] ) ) != 0
+         IF ( nPos := FindNotQuoted( "*/", aFile[ i ] ) ) != 0
             lComment := .F.
             IF ! Empty( cToken1 := SubStr( aFile[ i ], nPos + 2 ) )
                aFile[ i ] := Left( aFile[ i ], nPos + 1 )
@@ -289,22 +293,19 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                cLineAll := Left( cLineAll, nPos - 1 ) + "//" + SubStr( cLineAll, nPos + 2 )
             ENDIF
          ENDIF
-         IF nPosComment > 0
-            nPos := nPosComment + iif( SubStr( cLineAll, nPosComment, 1) == "*", 1, 2 )
-            if SubStr( cLineAll, nPos, 1 ) != " "
-               cLineAll := Left( cLineAll, nPos - 1) + " " + SubStr( cLineAll, nPos )
-            endif
-         endif
          IF ( nPos := FindNotQuoted( "/*", cLineAll ) ) != 0 .AND. ( nPosComment == 0 .OR. nPosComment > nPos )
             nPosComment := nPos
-            IF hb_At( "*/", cLineAll, nPos + 2 ) == 0
+            IF ( nPos := FindNotQuoted( "*/", cLineAll, nPos + 2 ) ) != 0
+               IF ! Empty( cToken1 := SubStr( cLineAll, nPos + 2 ) )
+                  cLineAll := Left( cLineAll, nPos + 1 )
+                  nLen := rf_AINS( aFile, i + 1, cToken1 )
+                  iDelta++
+               ENDIF
+            ELSE
                lComment := .T.
             ENDIF
          ENDIF
-         IF nPosComment == 1 .AND. nDeep == 0 .AND. nState == RF_STATE_RET
-            nState := 0
-         ENDIF
-         IF ! lPragmaDump .AND. ::lIndent .AND. ! lComment
+         IF ! lPragmaDump .AND. ::lIndent .AND. ( ! lComment .OR. nPosComment > 1 )
             aFile[ i ] := cLineAll
             IF ! lContinue
                nPosSep := 1
@@ -334,12 +335,10 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                   ENDIF
                   cToken2 := Lower( hb_tokenGet( cLine, 2 ) )
                   IF Left( cToken1, 1 ) == "#"
-                  ELSEIF nLenToken >= 4 .AND. ( ;
-                        ( LEFTEQUAL( "static", cToken1 ) .AND. ( LEFTEQUAL( "function", cToken2 ) .OR. LEFTEQUAL( "procedure", cToken2 ) ) ) .OR. ;
-                        ( Len( cToken2 ) >= 4 .AND. LEFTEQUAL( "procedure", cToken2 ) .AND. ( "init" == cToken1 .OR. "exit" == cToken1 ) ) .OR. ;
-                        LEFTEQUAL( "function", cToken1 ) .OR. ;
-                        LEFTEQUAL( "procedure", cToken1 ) .OR. ;
-                        ( "method" == cToken1 .AND. ! lClass ) .OR. ;
+                  ELSEIF nLenToken >= 4 .AND. ( ( LEFTEQUAL( "static", cToken1 ) .AND. ;
+                        ( LEFTEQUAL( "function", cToken2 ) .OR. LEFTEQUAL( "procedure", cToken2 ) ) ) .OR. ;
+                        LEFTEQUAL( "function", cToken1 ) .OR. LEFTEQUAL( "procedure", cToken1 ) ;
+                        .OR. ( "method" == cToken1 .AND. ! lClass ) .OR. ;
                         ( "class" == cToken1 .AND. ! lClass ) .OR. ;
                         ( "create" == cToken1 .AND. "class" == cToken2 .AND. ! lClass ) )
                      IF nDeep == 0
@@ -353,13 +352,6 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                         ::cLineErr := cLine
                         RETURN .F.
                      ENDIF
-                  ELSEIF nLenToken >= 4 .AND. ( ;
-                        LEFTEQUAL( "request", cToken1 ) .OR. ;
-                        LEFTEQUAL( "announce", cToken1 ) .OR. ;
-                        LEFTEQUAL( "dynamic", cToken1 ) .OR. ;
-                        LEFTEQUAL( "external", cToken1 ) .OR. ;
-                        LEFTEQUAL( "thread", cToken1 ) )
-                     nState := 0
                   ELSEIF nLenToken >= 4 .AND. ( ;
                         LEFTEQUAL( "local", cToken1 ) .OR. ;
                         LEFTEQUAL( "private", cToken1 ) .OR. ;
@@ -378,7 +370,7 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                         nState := RF_STATE_RET
                      ENDIF
                   ELSE
-                     IF nState > 0
+                     IF !( cToken1 == "request" )
                         nState := RF_STATE_CODE
                      ENDIF
                      IF ( nContrState := Ascan( ::aContr, ;
@@ -421,11 +413,15 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                      IF Left( cLine, 1 ) == "#" .AND. ! ::lIndDrt
                         nIndent := 0
                      ENDIF
+                     IF Left( cLine, 2 ) == "//" .AND. nDeep == 0
+                        nIndent := 0
+                     ENDIF
                      cLineAll := Space( nIndent ) + ::FormatLine( cLine )
-                     IF i > 1 .AND. ( ( nState == RF_STATE_RET .AND. ::nLineRet > 0 .AND. nStatePrev != RF_STATE_FUNC ) .OR. ;
-                                      ( nState == RF_STATE_FUNC .AND. ::nLineFnc > 0 .AND. nStatePrev > 0 ) .OR. ;
-                                      ( nState == RF_STATE_VAR .AND. nStatePrev != nState .AND. ::nLineVar > 0 ) .OR. ;
-                                      ( nState == RF_STATE_CODE .AND. nStatePrev != nState .AND. ::nLineCode > 0 ) )
+
+                     IF i > 1 .AND. ( ( nState == RF_STATE_RET .AND. ::nLineRet > 0 ) .OR. ;
+                           ( nState == RF_STATE_FUNC .AND. ::nLineFnc > 0 ) .OR. ;
+                           ( nState == RF_STATE_VAR .AND. nStatePrev != nState .AND. ::nLineVar > 0 ) .OR. ;
+                           ( nState == RF_STATE_CODE .AND. nStatePrev != nState .AND. ::nLineCode > 0 ) )
                         nPos := i - 1
                         IF ( nState == RF_STATE_RET  .AND. ::nLineRet == 1 ) .OR. ;
                            ( nState == RF_STATE_FUNC .AND. ::nLineFnc == 1 ) .OR. ;
@@ -449,11 +445,8 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                   ELSE
                      cLineAll += ::FormatLine( cLine )
                   ENDIF
-                  IF nState == RF_STATE_RET
-                     IF lClass
-                        lClass := .F.
-                     ENDIF
-                     nState := 0
+                  IF lClass .AND. nState == RF_STATE_RET
+                     lClass := .F.
                   ENDIF
                   IF nPosSep == 0 .OR. nPosSep == Len( aFile[ i ] )
                      EXIT
@@ -555,16 +548,8 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
                cSymb := c
                nState := FL_STATE_QUOTED
             ELSEIF c == "["
-               IF nState == FL_STATE_STRING .OR. nState == FL_STATE_ANY
-                  IF nEnd == nBegin
-                     nEnd := i
-                  ENDIF
-                  ::ConvertCmd( @cLine, nBegin, nEnd )
-                  nA := i
-               ELSE
-                  nState := FL_STATE_SQBR
-               ENDIF
-            ELSEIF c == "/" .AND. ( SubStr( cLine, i + 1, 1 ) $ "*/" )
+               nState := FL_STATE_SQBR
+            ELSEIF c == "/" .AND. ( ( c := SubStr( cLine, i + 1, 1 ) ) == "/" .OR. c == "*" )
                IF nState == FL_STATE_STRING
                   IF nEnd == nBegin
                      nEnd := i
@@ -579,16 +564,6 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
                   i++
                ENDDO
                i--
-               IF ( SubStr( cLine, i + 1, 1 ) == "," .AND. ! SubStr( cLine, nEnd - 1, 1 ) $ "(," ) .OR. ;
-                     "*" + SubStr( cLine, nEnd - 1, 1 ) + SubStr( cLine, i + 1, 1 ) + "*" $ "*{}*()*][*{|*||*" .OR. ;
-                     SubStr( cLine, i + 1, 2 ) == "->" .OR. ;
-                     SubStr( cLine, nEnd - 2, 2 ) == "->" .OR. ;
-                     ( nState == FL_STATE_STRING .AND. ( SubStr( cLine, i + 1, 1 ) == "[" .OR. "*" + SubStr( cLine, i + 1, 3 ) + "*" $ "*-- *++ *" ) ) .OR. ;
-                     ( nState != FL_STATE_STRING .AND. "*" + SubStr( cLine, nEnd - 3, 3 ) + "*" $ "* --* ++*" )
-                  cLine := Left( cLine, nEnd - 1 ) + SubStr( cLine, i + 1 )
-                  nLen  := Len( cLine )
-                  i := nEnd
-               ENDIF
             ELSEIF c == "(" .OR. c == "{"
                aBrackets[ iif( c == "(", 1, 2 ) ]++
                IF nState == FL_STATE_STRING
@@ -600,7 +575,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
                   ENDIF
                ENDIF
                IF ::lSpaces .AND. aBrackets[ iif( c == "(", 1, 2 ) ] <= ::nBr4Brac .AND. ;
-                     i < nLen .AND. !( SubStr( cLine, i + 1, 1 ) $ iif( c == "(", " )", " |}" ) )
+                     i < nLen .AND. !( SubStr( cLine, i + 1, 1 ) $ iif( c == "(", " )", " |} " ) )
                   nA := i
                ENDIF
                nState := FL_STATE_ANY
@@ -642,24 +617,9 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
                IF SubStr( cLine, i + 1, 1 ) $ cOperators
                   i++
                ENDIF
-               IF c == "-" // .AND. SubStr( cLine, i + 1, 1 ) $ "1234567890"
-                  IF nState == FL_STATE_STRING
-                     IF ::ConvertCmd( @cLine, nBegin, nEnd )
-                        nState := FL_STATE_ANY
-                     ELSE
-                        nA := i
-                        nState := FL_STATE_OP
-                     ENDIF
-                  ELSEIF nState == FL_STATE_OP
-                     nState := FL_STATE_ANY
-                  ENDIF
-               ELSE
-                  nA := i
-                  nState := FL_STATE_OP
-               ENDIF
-            ELSEIF c == "|" .AND. SubStr( cLine, i + 1, 1 ) != "|"
                nA := i
-            ELSEIF c == ")" .OR. c == "}" .OR. c == "]"
+               nState := FL_STATE_OP
+            ELSEIF c == ")" .OR. c == "}"
                IF ::lSpaces .AND. aBrackets[ iif( c == "(", 1, 2 ) ] <= ::nBr4Brac .AND. ;
                      i > 1 .AND. !( SubStr( cLine, i - 1, 1 ) $ " ({" )
                   nB := i
@@ -673,7 +633,7 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
                lFirst := .F.
             ENDIF
             IF !( "|" + SubStr( cLine, nB, 2 ) + "|" $ "|--|++|->|" )
-               IF nA != 0 .AND. ::lSpaces .AND. nA < nLen .AND. !( SubStr( cLine, nA + 1, 1 ) $ " ," )
+               IF nA != 0 .AND. ::lSpaces .AND. nA < nLen .AND. !( SubStr( cLine, nA + 1, 1 ) == " " )
                   cLine := Left( cLine, nA ) + " " + SubStr( cLine, nA + 1 )
                   nLen++
                   i++

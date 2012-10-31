@@ -32,7 +32,7 @@ FUNCTION DialogWvgClassesOne( nMode )
       ELSE
          bBlock := {| oCrt | ;
             oCrt := WvgCrt():New( , , { -1, -1 }, { 54, 184 }, , .F. ), ;
-            oCrt:fontName   := 'Courier', ;
+            oCrt:fontName   := "Courier", ;
             oCrt:fontHeight := 13, ;
             oCrt:fontWidth  := 0, ;
             oCrt:Create(), ;
@@ -85,7 +85,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    AAdd( aImg_, GetResource( "v_index.bmp"  ) )
    AAdd( aImg_, GetResource( "v_notes1.bmp" ) )
    AAdd( aImg_, GetResource( "v_selct1.bmp" ) )
-   ? '.'
+   ? "."
    Wvt_ShowWindow( 1 )
    nWinRows  := 55
    nWinCols  := 185

@@ -53,7 +53,7 @@ cd _hb_web_src
 
 echo Downloading sources...
 
-svn export -q --native-eol LF http://svn.code.sf.net/p/harbour-project/code/trunk/harbour/website
+svn export -q --native-eol LF http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/website
 
 echo Updating website...
 
