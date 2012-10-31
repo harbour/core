@@ -150,8 +150,8 @@ typedef struct
 } HB_CONDATA, * PHB_CONDATA;
 
 /* MT macros */
-#define HB_NETIO_LOCK         hb_threadEnterCriticalSection( &s_netioMtx );
-#define HB_NETIO_UNLOCK       hb_threadLeaveCriticalSection( &s_netioMtx );
+#define HB_NETIO_LOCK()       hb_threadEnterCriticalSection( &s_netioMtx )
+#define HB_NETIO_UNLOCK()     hb_threadLeaveCriticalSection( &s_netioMtx )
 static HB_CRITICAL_NEW( s_netioMtx );
 
 static HB_TSD_NEW( s_conData, sizeof( HB_CONDATA ), NULL, NULL );
@@ -587,19 +587,19 @@ static void s_fileConRegister( PHB_CONCLI conn )
 {
    PHB_CONCLI * connPtr;
 
-   HB_NETIO_LOCK
+   HB_NETIO_LOCK();
    connPtr = &s_connections;
    while( *connPtr )
       connPtr = &( *connPtr )->next;
    *connPtr = conn;
-   HB_NETIO_UNLOCK
+   HB_NETIO_UNLOCK();
 }
 
 static void s_fileConClose( PHB_CONCLI conn )
 {
    if( hb_atomic_dec( &conn->used ) )
    {
-      HB_NETIO_LOCK
+      HB_NETIO_LOCK();
       if( hb_atomic_get( &conn->used ) == 0 )
       {
          PHB_CONCLI * connPtr = &s_connections;
@@ -615,7 +615,7 @@ static void s_fileConClose( PHB_CONCLI conn )
       }
       else
          conn = NULL;   /* reused by other thread */
-      HB_NETIO_UNLOCK
+      HB_NETIO_UNLOCK();
 
       if( conn )
          s_fileConFree( conn );
@@ -626,7 +626,7 @@ static PHB_CONCLI s_fileConFind( const char * pszServer, int iPort )
 {
    PHB_CONCLI conn;
 
-   HB_NETIO_LOCK
+   HB_NETIO_LOCK();
    conn = s_connections;
    while( conn )
    {
@@ -637,7 +637,7 @@ static PHB_CONCLI s_fileConFind( const char * pszServer, int iPort )
       }
       conn = conn->next;
    }
-   HB_NETIO_UNLOCK
+   HB_NETIO_UNLOCK();
 
    return conn;
 }
@@ -646,7 +646,7 @@ static HB_BOOL s_fileUsrDisconnect( const char * pszServer, int iPort )
 {
    PHB_CONCLI conn, connClose = NULL;
 
-   HB_NETIO_LOCK
+   HB_NETIO_LOCK();
    conn = s_connections;
    while( conn )
    {
@@ -661,7 +661,7 @@ static HB_BOOL s_fileUsrDisconnect( const char * pszServer, int iPort )
       }
       conn = conn->next;
    }
-   HB_NETIO_UNLOCK
+   HB_NETIO_UNLOCK();
 
    if( connClose )
       s_fileConClose( connClose );
@@ -902,7 +902,7 @@ static PHB_CONCLI s_fileConnect( const char ** pFilename,
 
    if( conn != NULL && s_defaultInit )
    {
-      HB_NETIO_LOCK
+      HB_NETIO_LOCK();
       if( s_defaultInit )
       {
          hb_strncpy( s_defaultConn.server, pszIpAddres,
@@ -916,7 +916,7 @@ static PHB_CONCLI s_fileConnect( const char ** pFilename,
             memcpy( s_defaultConn.passwd, pszPasswd, iPassLen );
          s_defaultInit = HB_FALSE;
       }
-      HB_NETIO_UNLOCK
+      HB_NETIO_UNLOCK();
    }
 
    hb_xfree( pszIpAddres );

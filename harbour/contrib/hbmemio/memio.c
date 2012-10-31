@@ -125,8 +125,8 @@ static HB_ERRCODE  s_error;
 
 static HB_CRITICAL_NEW( s_mtx );
 
-#define HB_MEMFSMT_LOCK        hb_threadEnterCriticalSection( &s_mtx );
-#define HB_MEMFSMT_UNLOCK      hb_threadLeaveCriticalSection( &s_mtx );
+#define HB_MEMFSMT_LOCK()      hb_threadEnterCriticalSection( &s_mtx )
+#define HB_MEMFSMT_UNLOCK()    hb_threadLeaveCriticalSection( &s_mtx )
 
 static void memfsInodeFree( PHB_MEMFS_INODE pInode );
 
@@ -308,9 +308,9 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsFileExists( const char * szName )
 {
    HB_BOOL bRet;
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
    bRet = memfsInodeFind( szName, NULL ) != 0;
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    return bRet;
 }
 
@@ -320,10 +320,10 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsDelete( const char * szName )
    PHB_MEMFS_INODE pInode;
    HB_ULONG ulFile;
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
    if( ( ulFile = memfsInodeFind( szName, NULL ) ) == 0 )
    {
-      HB_MEMFSMT_UNLOCK
+      HB_MEMFSMT_UNLOCK();
       return HB_FALSE;
    }
    pInode = s_fs.pInodes[ ulFile - 1 ];
@@ -335,7 +335,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsDelete( const char * szName )
 
    if( --pInode->uiCount == 0 )
       memfsInodeFree( pInode );
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    return HB_TRUE;
 }
 
@@ -344,22 +344,22 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewN
 {
    HB_ULONG ulInode;
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
    if( ( ulInode = memfsInodeFind( szName, NULL ) ) == 0 )
    {
-      HB_MEMFSMT_UNLOCK
+      HB_MEMFSMT_UNLOCK();
       /* File not found */
       return HB_FALSE;
    }
    if( memfsInodeFind( szNewName, NULL ) )
    {
-      HB_MEMFSMT_UNLOCK
+      HB_MEMFSMT_UNLOCK();
       /* File already exists */
       return HB_FALSE;
    }
    hb_xfree( s_fs.pInodes[ ulInode - 1 ]->szName );
    s_fs.pInodes[ ulInode - 1 ]->szName = hb_strdup( szNewName );
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    return HB_TRUE;
 }
 
@@ -382,7 +382,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
                ( ( uiFlags & 0xf0 ) == FO_DENYWRITE ? FOX_DENYWRITE :
                  ( ( uiFlags & 0xf0 ) == FO_DENYREAD ? FOX_DENYREAD : FOX_DENYNONE ) ) );
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
 
    ulInode = memfsInodeFind( szName, NULL );
 
@@ -443,7 +443,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
 
    if( !pFile )
    {
-      HB_MEMFSMT_UNLOCK
+      HB_MEMFSMT_UNLOCK();
       return FS_ERROR;
    }
    pFile->pInode->uiDeny |= uiFlags & FOX_DENYFLAGS;
@@ -454,7 +454,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
 
    pFile->uiFlags = uiFlags;
    hFile = memfsHandleAlloc( pFile );
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    return hFile;
 }
 
@@ -464,10 +464,10 @@ HB_MEMFS_EXPORT void hb_memfsClose( HB_FHANDLE hFile )
    PHB_MEMFS_FILE   pFile;
    PHB_MEMFS_INODE  pInode;
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
    {
-      HB_MEMFSMT_UNLOCK
+      HB_MEMFSMT_UNLOCK();
       return; /* invalid handle */
    }
    s_fs.pFiles[ hFile - 1 ] = NULL;
@@ -485,7 +485,7 @@ HB_MEMFS_EXPORT void hb_memfsClose( HB_FHANDLE hFile )
          pInode->uiCountWrite--;
       pInode->uiDeny ^= pFile->uiFlags & FOX_DENYFLAGS;
    }
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    hb_xfree( pFile );
 }
 
@@ -506,14 +506,14 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, HB_SIZE 
    if( llOffset < 0 || pInode->llSize <= llOffset )
       return 0;
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
    if( pInode->llSize >= llOffset + ( HB_FOFFSET ) nCount )
       nRead = nCount;
    else
       nRead = ( HB_SIZE ) ( pInode->llSize - llOffset );
 
    memcpy( pBuff, pInode->pData + ( HB_SIZE ) llOffset, nRead );
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    pFile->llPos = llOffset + ( HB_FOFFSET ) nCount;
    return nRead;
 }
@@ -534,7 +534,7 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, H
    if( llOffset < 0 )
       return 0;
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
 
    /* Reallocate if neccesary */
    if( pInode->llAlloc < llOffset + ( HB_FOFFSET ) nCount )
@@ -553,7 +553,7 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, H
    if( pInode->llSize < llOffset + ( HB_FOFFSET ) nCount )
       pInode->llSize = llOffset + ( HB_FOFFSET ) nCount;
 
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    pFile->llPos = llOffset + ( HB_FOFFSET ) nCount;
    return nCount;
 }
@@ -588,7 +588,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
    if( llOffset < 0 )
       return HB_FALSE;
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
 
    /* Reallocate if neccesary */
    if( pInode->llAlloc < llOffset )
@@ -611,7 +611,7 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
    memset( pInode->pData + ( HB_SIZE ) llOffset, 0, ( HB_SIZE ) ( pInode->llAlloc - llOffset ) );
 
    pInode->llSize = llOffset;
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    return HB_TRUE;
 }
 
@@ -626,7 +626,7 @@ HB_MEMFS_EXPORT HB_FOFFSET hb_memfsSeek( HB_FHANDLE hFile, HB_FOFFSET llOffset, 
       return 0; /* invalid handle */
    pInode = pFile->pInode;
 
-   HB_MEMFSMT_LOCK
+   HB_MEMFSMT_LOCK();
    if( uiFlags & FS_END )
       llPos = pInode->llSize + llOffset;
    else if( uiFlags & FS_RELATIVE )
@@ -640,7 +640,7 @@ HB_MEMFS_EXPORT HB_FOFFSET hb_memfsSeek( HB_FHANDLE hFile, HB_FOFFSET llOffset, 
    if( llPos > pInode->llSize )
       llPos = pInode->llSize;
 
-   HB_MEMFSMT_UNLOCK
+   HB_MEMFSMT_UNLOCK();
    pFile->llPos = llPos;
    return llPos;
 }

@@ -105,8 +105,8 @@ static HB_GT_FUNCS   SuperTable;
 #define HB_GTWVT_GET(p) ( ( PHB_GTWVT ) HB_GTLOCAL( p ) )
 
 static HB_CRITICAL_NEW( s_wvtMtx );
-#define HB_WVT_LOCK     hb_threadEnterCriticalSection( &s_wvtMtx );
-#define HB_WVT_UNLOCK   hb_threadLeaveCriticalSection( &s_wvtMtx );
+#define HB_WVT_LOCK()   hb_threadEnterCriticalSection( &s_wvtMtx )
+#define HB_WVT_UNLOCK() hb_threadLeaveCriticalSection( &s_wvtMtx )
 
 #if ( ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) ) || \
       defined( __DMC__ ) ) && !defined( HB_ARCH_64BIT )
@@ -189,7 +189,7 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
    int iCount = s_wvtCount, iPos = 0;
    PHB_GTWVT pWVT = NULL;
 
-   HB_WVT_LOCK
+   HB_WVT_LOCK();
 
    while( iCount && iPos < WVT_MAX_WINDOWS )
    {
@@ -205,7 +205,7 @@ static PHB_GTWVT hb_gt_wvt_Find( HWND hWnd )
       ++iPos;
    }
 
-   HB_WVT_UNLOCK
+   HB_WVT_UNLOCK();
 
    return pWVT;
 }
@@ -214,7 +214,7 @@ static HB_BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
 {
    HB_BOOL fOK = HB_FALSE;
 
-   HB_WVT_LOCK
+   HB_WVT_LOCK();
 
    if( s_wvtCount < WVT_MAX_WINDOWS )
    {
@@ -238,7 +238,7 @@ static HB_BOOL hb_gt_wvt_Alloc( PHB_GTWVT pWVT )
       while( iPos < WVT_MAX_WINDOWS );
    }
 
-   HB_WVT_UNLOCK
+   HB_WVT_UNLOCK();
 
    return fOK;
 }
@@ -247,7 +247,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 {
    int iIndex;
 
-   HB_WVT_LOCK
+   HB_WVT_LOCK();
    s_wvtWindows[ pWVT->iHandle ] = NULL;
    if( --s_wvtCount == 0 )
    {
@@ -342,7 +342,7 @@ static void hb_gt_wvt_Free( PHB_GTWVT pWVT )
 
    hb_xfree( pWVT );
 
-   HB_WVT_UNLOCK
+   HB_WVT_UNLOCK();
 }
 
 static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
