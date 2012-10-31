@@ -31,14 +31,12 @@ PROCEDURE Main()
       hb_gtInfo( HB_GTI_FONTSIZE, 24 )
    ENDIF
 
-   OutStd( hb_gtVersion( 1 ) + hb_eol() )
-
    nFontHeight := hb_gtInfo( HB_GTI_FONTSIZE )
    nFontWidth := hb_gtInfo( HB_GTI_FONTWIDTH )
 
    SetColor( "n/w" )
    @ 0, 0 SAY Space( MaxCol() + 1 )
-   @ 1, 0 SAY PadC( WELCOME, MaxCol() + 1 )
+   @ 1, 0 SAY PadC( WELCOME + " (" + hb_gtVersion( 0 ) + ")", MaxCol() + 1 )
    @ 2, 0 SAY Space( MaxCol() + 1 )
 
    hb_gtInfo( HB_GTI_WINTITLE, "Cross-GT, multiplatform graphics demo" )
