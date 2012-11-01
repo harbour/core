@@ -55,7 +55,7 @@ FUNCTION InitScrlBar()
       AAdd( aFileList, tmpFileList[ i ][ F_NAME ] )
    NEXT
 
-   filesScroll := ScrollBar( 06, 14, 60, NIL, 1 )
+   filesScroll := ScrollBar( 6, 14, 60, NIL, 1 )
 
    filesScroll:total := Len( aFileList )
 
@@ -64,7 +64,7 @@ FUNCTION InitScrlBar()
 
    filesScroll:display()
 
-   i := AChoice( 06, 29, 14, 59, aFileList, , {| modo | updateFilesScroll( modo, aFileList, filesScroll ) } )
+   i := AChoice( 6, 29, 14, 59, aFileList, , {| modo | updateFilesScroll( modo, aFileList, filesScroll ) } )
 
    @ 23, 0 SAY iif( i < 1, "", aFileList[ i ] ) COLOR "N/W*"
    SET COLOR TO

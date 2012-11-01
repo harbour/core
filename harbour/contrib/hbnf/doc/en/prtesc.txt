@@ -25,7 +25,7 @@
       this function convert that code to the format that the printer
       needs to receive.
    $EXAMPLES$
-      cSetup = "\015"          // default = Epson compressed print
+      cSetup := "\015"         // default = Epson compressed print
       UserInput( @cSetup )     // Let user modify setup code
       SET DEVICE TO PRINT      // get ready to print
       ?? FT_ESCCODE( cSetup )  // Output the converted code

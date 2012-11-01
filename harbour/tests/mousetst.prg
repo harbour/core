@@ -21,7 +21,7 @@ PROCEDURE Main()
       QUIT
    ENDIF
 
-   @  0, 0 TO MaxRow(), MaxCol() DOUBLE
+   @ 0, 0 TO MaxRow(), MaxCol() DOUBLE
    @ MaxRow() - 2,  0 TO MaxRow(), 18 DOUBLE
    @ MaxRow() - 1,  2 SAY "Y:"
    @ MaxRow() - 1, 10 SAY "X:"
@@ -240,7 +240,7 @@ PROCEDURE TEST2( nR, nC )
 
    SET CURSOR ON
 
-   @ 20, 01 SAY "MOUSE TEST FINISH!"
+   @ 20, 1 SAY "MOUSE TEST FINISH!"
    ?
 
    RETURN

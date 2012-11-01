@@ -255,7 +255,7 @@ STATIC FUNCTION _ftColours( aOpt, aClrPal, lColour )
    ENDDO
 
    // .... restore the lower 1/2 of screen, and colour
-   RestScreen( 18, 00, MaxRow(), MaxCol(), cScrSav )
+   RestScreen( 18, 0, MaxRow(), MaxCol(), cScrSav )
    SetColor( cColour )
 
    RETURN aOpt
@@ -282,7 +282,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE "T"    // Title
       SetColor( aClr[ 1 ] )
-      hb_DispOutAt( 20, 08, PadC( "This is an example of how the text shall look", 63 ) )
+      hb_DispOutAt( 20, 8, PadC( "This is an example of how the text shall look", 63 ) )
       EXIT
 
    CASE "M"    // Menus

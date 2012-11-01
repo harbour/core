@@ -561,10 +561,10 @@ STATIC FUNCTION GoogleMap()
    mfrom3  := mto3  := Space( 50 )
 
    WHILE .T.
-      @ 05, 01 SAY "FROM :"
-      @ 07, 01 SAY "State ...:" GET mfrom1  PICTURE "@!"
-      @ 08, 01 SAY "City ....:" GET mfrom2  PICTURE "@!"
-      @ 09, 01 SAY "Street ..:" GET mfrom3  PICTURE "@!"
+      @  5, 01 SAY "FROM :"
+      @  7, 01 SAY "State ...:" GET mfrom1  PICTURE "@!"
+      @  8, 01 SAY "City ....:" GET mfrom2  PICTURE "@!"
+      @  9, 01 SAY "Street ..:" GET mfrom3  PICTURE "@!"
       @ 11, 01 SAY "TO :"
       @ 13, 01 SAY "State ...:" GET mto1    PICTURE "@!"
       @ 14, 01 SAY "City ....:" GET mto2    PICTURE "@!"

@@ -927,7 +927,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    oFunc := ::oServer:Find( cFuncName )
    IF Empty( oFunc )
       // signal error
-      ::oServer:OnFunctionError( Self, cFuncName, 00 )
+      ::oServer:OnFunctionError( Self, cFuncName, 0 )
       hb_inetSendAll( ::skRemote, "XHBR4000" )
       RETURN .T.
    ENDIF
@@ -935,7 +935,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    // check for level
    IF oFunc:nAuthLevel > ::nAuthLevel
       // signal error
-      ::oServer:OnFunctionError( Self, cFuncName, 01 )
+      ::oServer:OnFunctionError( Self, cFuncName, 1 )
       hb_inetSendAll( ::skRemote, "XHBR4001" )
       RETURN .T.
    ENDIF
@@ -943,7 +943,7 @@ METHOD LaunchFunction( cFuncName, aParams, nMode, aDesc ) CLASS tRPCServeCon
    // check for parameters
    IF aParams == NIL .OR. ! oFunc:CheckTypes( aParams )
       // signal error
-      ::oServer:OnFunctionError( Self, cFuncName, 02 )
+      ::oServer:OnFunctionError( Self, cFuncName, 2 )
       hb_inetSendAll( ::skRemote, "XHBR4002" )
       RETURN .T.
    ENDIF

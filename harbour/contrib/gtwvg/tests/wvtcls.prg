@@ -246,11 +246,12 @@ STATIC FUNCTION MyDialogOne( oCrt )
    nGetCol := 20
    nSayCol := 7
    nGetRow := 7
-   bBlock1 := {|| oCon:Say( nGetRow + 00, nSayCol, "First Name"  , "N/W" ), ;
-      oCon:Say( nGetRow + 02, nSayCol, "Last Name "  , "N/W" ), ;
-      oCon:Say( nGetRow + 04, nSayCol, "Street"      , "N/W" ), ;
-      oCon:Say( nGetRow + 06, nSayCol, "City"        , "W+/W" ), ;
-      oCon:Say( nGetRow + 08, nSayCol, "State"       , "N/W" ), ;
+   bBlock1 := {|| ;
+      oCon:Say( nGetRow +  0, nSayCol, "First Name"  , "N/W" ), ;
+      oCon:Say( nGetRow +  2, nSayCol, "Last Name "  , "N/W" ), ;
+      oCon:Say( nGetRow +  4, nSayCol, "Street"      , "N/W" ), ;
+      oCon:Say( nGetRow +  6, nSayCol, "City"        , "W+/W" ), ;
+      oCon:Say( nGetRow +  8, nSayCol, "State"       , "N/W" ), ;
       oCon:Say( nGetRow + 10, nSayCol, "Zip"         , "B+/W" ), ;
       oCon:Say( nGetRow + 12, nSayCol, "Date Hired"  , "B+/W" ), ;
       oCon:Say( nGetRow + 14, nSayCol, "Married"     , "B+/W" ), ;
@@ -259,17 +260,25 @@ STATIC FUNCTION MyDialogOne( oCrt )
       oCon:Say( nGetRow + 20, nSayCol, "Notes",      , "B+/W" ) ;
       }
 
-   aGets_ := { PadR( "Pritpal", 20 ), PadR( "Bedi", 20 ), PadR( "60, New Professor Colony", 30 ), ;
+   aGets_ := { ;
+      PadR( "Pritpal", 20 ), ;
+      PadR( "Bedi", 20 ), ;
+      PadR( "60, New Professor Colony", 30 ), ;
       PadR( "Ludhiana, INDIA", 30 ), ;
-      "PB", PadR( "141004", 10 ), SToD( "20040622" ), .T., 48, 17000, ;
+      "PB", ;
+      PadR( "141004", 10 ), ;
+      SToD( "20040622" ), ;
+      .T., ;
+      48, ;
+      17000, ;
       PadR( "Wvtgui is a classical example of Harbour capabilities...", 65 ) }
 
    oGet1 := WvtGets():New( oDlg, , 4, 2, 37, 62 )
-   oGet1:AddGets( nGetRow + 00, nGetCol, aGets_[ 1 ], "@ "       , "N/W*,N/GR*" )
-   oGet1:AddGets( nGetRow + 02, nGetCol, aGets_[ 2 ], "@ "       , "N/W*,N/GR*" )
-   oGet1:AddGets( nGetRow + 04, nGetCol, aGets_[ 3 ], "@ "       , "N/W*,N/GR*" )
-   oGet1:AddGets( nGetRow + 06, nGetCol, aGets_[ 4 ], "@ "       , "N/W*,N/GR*" )
-   oGet1:AddGets( nGetRow + 08, nGetCol, aGets_[ 5 ], "@ "       , "N/W*,N/GR*" )
+   oGet1:AddGets( nGetRow +  0, nGetCol, aGets_[ 1 ], "@ "       , "N/W*,N/GR*" )
+   oGet1:AddGets( nGetRow +  2, nGetCol, aGets_[ 2 ], "@ "       , "N/W*,N/GR*" )
+   oGet1:AddGets( nGetRow +  4, nGetCol, aGets_[ 3 ], "@ "       , "N/W*,N/GR*" )
+   oGet1:AddGets( nGetRow +  6, nGetCol, aGets_[ 4 ], "@ "       , "N/W*,N/GR*" )
+   oGet1:AddGets( nGetRow +  8, nGetCol, aGets_[ 5 ], "@ "       , "N/W*,N/GR*" )
    oGet1:AddGets( nGetRow + 10, nGetCol, aGets_[ 6 ], "@ "       , "N/W*,N/GR*" )
    oGet1:AddGets( nGetRow + 12, nGetCol, aGets_[ 7 ], "@ "       , "N/W*,N/GR*" )
    oGet1:AddGets( nGetRow + 14, nGetCol, aGets_[ 8 ], "@Y"       , "N/W*,N/GR*" )

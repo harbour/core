@@ -84,7 +84,7 @@ PROCEDURE Main()
          QQOut( PadR( cName, 18, "." ) + FT_METAPH( cName ) ) ;
       } )
 
-   SetPos( 21, 00 )
+   SetPos( 21, 0 )
 
    RETURN
 

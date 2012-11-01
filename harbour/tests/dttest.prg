@@ -32,17 +32,17 @@ PROCEDURE Main()
    ? " ValType( hb_DateTime( 1974, 31, 5, NIL, NIL, NIL ) ) =>", ValType( hb_DateTime( 1974, 31, 5, NIL, NIL, NIL ) )
    ?
 
-   ? " ValType( hb_DateTime( 2001, 10, 13, 18, 42, 16  ) ) =>", ValType( hb_DateTime( 2001, 10, 13, 18, 42, 16  ) )
+   ? " ValType( hb_DateTime( 2001, 10, 13, 18, 42, 16 ) ) =>", ValType( hb_DateTime( 2001, 10, 13, 18, 42, 16 ) )
    ?
 
-   ? " ValType( hb_DateTime( NIL, NIL, NIL, 10, 36, 05  ) )     =>", ValType( hb_DateTime( NIL, NIL, NIL, 10, 36, 05  ) )
-   ? "          hb_DateTime( NIL, NIL, NIL, 10, 36, 05  )       =>",          hb_DateTime( NIL, NIL, NIL, 10, 36, 05  )
+   ? " ValType( hb_DateTime( NIL, NIL, NIL, 10, 36, 5 ) )     =>", ValType( hb_DateTime( NIL, NIL, NIL, 10, 36, 5 ) )
+   ? "          hb_DateTime( NIL, NIL, NIL, 10, 36, 5 )       =>",          hb_DateTime( NIL, NIL, NIL, 10, 36, 5 )
    ?
 
-   ? " ValType( hb_DateTime( NIL, NIL, NIL, 10, 36, 05, 176 ) ) =>", ValType( hb_DateTime( NIL, NIL, NIL, 10, 36, 05, 176  ) )
-   ? "          hb_DateTime( NIL, NIL, NIL, 10, 36, 05, 176 )   =>",          hb_DateTime( NIL, NIL, NIL, 10, 36, 05, 176  )
+   ? " ValType( hb_DateTime( NIL, NIL, NIL, 10, 36, 5, 176 ) ) =>", ValType( hb_DateTime( NIL, NIL, NIL, 10, 36, 5, 176 ) )
+   ? "          hb_DateTime( NIL, NIL, NIL, 10, 36, 5, 176 )   =>",          hb_DateTime( NIL, NIL, NIL, 10, 36, 5, 176 )
 
-   ? " ValType( hb_DateTime( 0, 0, 0, 10, 36, 05, 176 ) ) =>", ValType( hb_DateTime( 0, 0, 0, 10, 36, 05, 176  ) )
-   ? "          hb_DateTime( 0, 0, 0, 10, 36, 05, 176 )   =>",          hb_DateTime( 0, 0, 0, 10, 36, 05, 176  )
+   ? " ValType( hb_DateTime( 0, 0, 0, 10, 36, 5, 176 ) ) =>", ValType( hb_DateTime( 0, 0, 0, 10, 36, 5, 176 ) )
+   ? "          hb_DateTime( 0, 0, 0, 10, 36, 5, 176 )   =>",          hb_DateTime( 0, 0, 0, 10, 36, 5, 176 )
 
    RETURN

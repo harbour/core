@@ -66,8 +66,8 @@
       where speed is important.  It is faster and requires less memory than
       FT_VIDSTR().  A working example is contained in clrtable.prg.
    $EXAMPLES$
-      FOR nX = 1 to MaxRow()
-         FOR nY = 1 to MaxCol()
+      FOR nX := 1 to MaxRow()
+         FOR nY := 1 to MaxCol()
             FT_WRTChr( nX, nY, "∙", ( nX - 1 ) + ( nY * 16 ) )
          NEXT
       NEXT

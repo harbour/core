@@ -32,10 +32,10 @@
       The following example uses FT_SAVRGN() and FT_RSTRGN() to save
       and restore a portion of the screen.
 
-      @ 00, 00, 24, 79 BOX "111111111"       // fill the screen with 1's
-      cScreen = FT_SAVRGN(10, 10, 20, 30)    // save a region
-      @ 00, 00, 24, 79 BOX "222222222"       // fill the screen with 2's
-      FT_RSTRGN(cScreen)                     // restore the 1's region
+      @ 0, 0, 24, 79 BOX "111111111"          // fill the screen with 1's
+      cScreen := FT_SAVRGN( 10, 10, 20, 30 )  // save a region
+      @ 0, 0, 24, 79 BOX "222222222"          // fill the screen with 2's
+      FT_RSTRGN( cScreen )                    // restore the 1's region
    $SEEALSO$
       FT_RSTRGN() FT_RGNSTACK()
    $END$
@@ -74,14 +74,14 @@
       The following example uses FT_RSTRGN() to restore a saved portion
       of the screen to different locations.
 
-      @ 00, 00, 24, 79 BOX "111111111"      // fill the screen with 1's
-      cScreen = FT_SAVRGN(10, 10, 20, 30)   // save a region
-      @ 00, 00, 24, 79 BOX "222222222"      // fill the screen with 2's
-      FT_RSTRGN(cScreen)                    // restore the 1's region
-      @ 00, 00, 24, 79 BOX "222222222"      // fill the screen with 2's
-      FT_RSTRGN(cScreen, 15, 15)            // restore to a different location
-      @ 00, 00, 24, 79 BOX "222222222"      // fill the screen with 2's
-      FT_RSTRGN(cScreen, 20, 60)            // restore to a different location
+      @ 0, 0, 24, 79 BOX "111111111"         // fill the screen with 1's
+      cScreen := FT_SAVRGN( 10, 10, 20, 30 ) // save a region
+      @ 0, 0, 24, 79 BOX "222222222"         // fill the screen with 2's
+      FT_RSTRGN( cScreen )                   // restore the 1's region
+      @ 0, 0, 24, 79 BOX "222222222"         // fill the screen with 2's
+      FT_RSTRGN( cScreen, 15, 15 )           // restore to a different location
+      @ 0, 0, 24, 79 BOX "222222222"         // fill the screen with 2's
+      FT_RSTRGN( cScreen, 20, 60 )           // restore to a different location
    $SEEALSO$
       FT_SAVRGN() FT_RGNSTACK()
    $END$
@@ -138,15 +138,15 @@
       The following example uses FT_RGNSTACK() to save and restore various
       sections of the screen.
 
-      @ 00, 00, 24, 79 BOX "111111111"           // fill the screen with 1's
-      FT_RGNSTACK( "push", 10, 05, 15, 15 )      // push a region
-      @ 00, 00, 24, 79 BOX "222222222"           // fill the screen with 2's
+      @ 0, 0, 24, 79 BOX "111111111"             // fill the screen with 1's
+      FT_RGNSTACK( "push", 10,  5, 15, 15 )      // push a region
+      @ 0, 0, 24, 79 BOX "222222222"             // fill the screen with 2's
       FT_RGNSTACK( "push", 10, 20, 15, 30 )      // push a region
-      @ 00, 00, 24, 79 BOX "333333333"           // fill the screen with 3's
+      @ 0, 0, 24, 79 BOX "333333333"             // fill the screen with 3's
       FT_RGNSTACK( "push", 10, 35, 15, 45 )      // push a region
-      @ 00, 00, 24, 79 BOX "444444444"           // fill the screen with 4's
+      @ 0, 0, 24, 79 BOX "444444444"             // fill the screen with 4's
       FT_RGNSTACK( "push", 10, 50, 15, 60 )      // push a region
-      @ 00, 00, 24, 79 BOX "555555555"           // fill the screen with 5's
+      @ 0, 0, 24, 79 BOX "555555555"             // fill the screen with 5's
       FT_RGNSTACK( "push", 10, 65, 15, 75 )      // push a region
       CLEAR
       FT_RGNSTACK( "pop" )        // restore the 5's region

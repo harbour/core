@@ -282,7 +282,7 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
    ENDIF
 
    nSize := iif( nLen < 8192, nLen * 2, Int( nLen * 1.5 ) )
-   oEdit := EditorNew( 01, 00, 23, 79, nLineLen, "---      ", cOutput, , ;
+   oEdit := EditorNew( 1, 0, 23, 79, nLineLen, "---      ", cOutput, , ;
       nSize, nEscape )
 
    IF nHandle > 0

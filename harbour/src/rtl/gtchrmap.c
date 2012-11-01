@@ -84,20 +84,20 @@ static void chrmap_dotctrl( int * piTransTbl )
 
 static void chrmap_ascictrl( int * piTransTbl )
 {
-   piTransTbl[ 04] = HB_CHRMAP( 1, '#' );
-   piTransTbl[ 16] = HB_CHRMAP( 1, '>' );
-   piTransTbl[ 17] = HB_CHRMAP( 1, '<' );
-   piTransTbl[ 30] = HB_CHRMAP( 1, '^' );
-   piTransTbl[ 31] = HB_CHRMAP( 1, 'v' );
-   piTransTbl[ 24] = HB_CHRMAP( 1, '^' );
-   piTransTbl[ 25] = HB_CHRMAP( 1, 'v' );
-   piTransTbl[ 26] = HB_CHRMAP( 1, '>' );
-   piTransTbl[ 27] = HB_CHRMAP( 1, '<' );
+   piTransTbl[  4 ] = HB_CHRMAP( 1, '#' );
+   piTransTbl[ 16 ] = HB_CHRMAP( 1, '>' );
+   piTransTbl[ 17 ] = HB_CHRMAP( 1, '<' );
+   piTransTbl[ 30 ] = HB_CHRMAP( 1, '^' );
+   piTransTbl[ 31 ] = HB_CHRMAP( 1, 'v' );
+   piTransTbl[ 24 ] = HB_CHRMAP( 1, '^' );
+   piTransTbl[ 25 ] = HB_CHRMAP( 1, 'v' );
+   piTransTbl[ 26 ] = HB_CHRMAP( 1, '>' );
+   piTransTbl[ 27 ] = HB_CHRMAP( 1, '<' );
 }
 
 static void chrmap_acscbox( int * piTransTbl )
 {
-   piTransTbl[  04 ] = HB_CHRMAP( 5, '`' ); /* ACS_DIAMOND */
+   piTransTbl[   4 ] = HB_CHRMAP( 5, '`' ); /* ACS_DIAMOND */
    piTransTbl[  16 ] = HB_CHRMAP( 5, '+' ); /* ACS_RARROW */
    piTransTbl[  17 ] = HB_CHRMAP( 5, ',' ); /* ACS_LARROW */
    piTransTbl[  24 ] = HB_CHRMAP( 5, '-' ); /* ACS_UARROW */
