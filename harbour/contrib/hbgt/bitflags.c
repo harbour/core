@@ -28,11 +28,11 @@
 
 #include "hbapi.h"
 
-#define _GT_MAX( x, y ) ( x > y ? x : y )
+#define _GT_MAX( x, y )  ( x > y ? x : y )
 
 HB_FUNC( GT_NEWFLAG )
 {
-   char * FlagString;
+   char *   FlagString;
    unsigned ByteCount;
    unsigned FlagCount = 1;
    unsigned Byte;
@@ -64,9 +64,9 @@ HB_FUNC( GT_NEWFLAG )
 
 HB_FUNC( GT_SETFLAG )
 {
-   char * FlagString;
+   char *   FlagString;
    unsigned StartBit = 1;
-   unsigned EndBit = 1;
+   unsigned EndBit   = 1;
    unsigned BitCount;
    unsigned BitPointer;
    unsigned BytePointer;
@@ -107,9 +107,9 @@ HB_FUNC( GT_SETFLAG )
 
 HB_FUNC( GT_CLRFLAG )
 {
-   char * FlagString;
+   char *   FlagString;
    unsigned StartBit = 1;
-   unsigned EndBit = 1;
+   unsigned EndBit   = 1;
    unsigned BitCount;
    unsigned BitPointer;
    unsigned BytePointer;
@@ -151,11 +151,11 @@ HB_FUNC( GT_CLRFLAG )
 HB_FUNC( GT_ISFLAG  )
 {
 
-   HB_BOOL FlagStatus = HB_FALSE;
-   unsigned Bit = 1;
+   HB_BOOL  FlagStatus = HB_FALSE;
+   unsigned Bit        = 1;
    unsigned BitPointer;
    unsigned BytePointer;
-   char * FlagString;
+   char *   FlagString;
 
    if( HB_ISCHAR( 1 ) )
    {

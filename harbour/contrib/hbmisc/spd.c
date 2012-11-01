@@ -57,9 +57,9 @@
 
 static void STAItm( PHB_ITEM pItmPar )
 {
-   HB_UINT        i, ulItmPar = ( HB_UINT ) hb_itemGetCLen( pItmPar );
-   const char *   cItmPar = hb_itemGetCPtr( pItmPar ), * c;
-   char *         cRes;
+   HB_UINT      i, ulItmPar = ( HB_UINT ) hb_itemGetCLen( pItmPar );
+   const char * cItmPar = hb_itemGetCPtr( pItmPar ), * c;
+   char *       cRes;
 
    for( i = 3, c = cItmPar; *c; c++ )
    {
@@ -67,7 +67,7 @@ static void STAItm( PHB_ITEM pItmPar )
          i++;                 /* Count ' Tokens */
    }
    cRes = ( char * ) hb_xgrab( ulItmPar + i * sizeof( char ) );
-   i = 0; c = cItmPar; cRes[ i++ ] = '\'';
+   i    = 0; c = cItmPar; cRes[ i++ ] = '\'';
    while( *c )
    {
       if( *c == '\'' )
@@ -88,19 +88,19 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
    {
       switch( iCOut )
       {
-      case 'p':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetPtr( pItmPar ) );
-         break;
-      case 's': case 'S':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetCPtr( pItmPar ) );
-         break;
-      case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetND( pItmPar ) );
-         break;
-      /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
-      default:
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec,
-                          HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
+         case 'p':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetPtr( pItmPar ) );
+            break;
+         case 's': case 'S':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetCPtr( pItmPar ) );
+            break;
+         case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec, hb_itemGetND( pItmPar ) );
+            break;
+         /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
+         default:
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iIndWidth, iIndPrec,
+                             HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
       }
    }
    else if( IsIndW || IsIndP )
@@ -109,38 +109,38 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
 
       switch( iCOut )
       {
-      case 'p':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetPtr( pItmPar ) );
-         break;
-      case 's': case 'S':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetCPtr( pItmPar ) );
-         break;
-      case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetND( pItmPar ) );
-         break;
-      /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
-      default:
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd,
-                          HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
+         case 'p':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetPtr( pItmPar ) );
+            break;
+         case 's': case 'S':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetCPtr( pItmPar ) );
+            break;
+         case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd, hb_itemGetND( pItmPar ) );
+            break;
+         /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
+         default:
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, iInd,
+                             HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
       }
    }
    else
    {
       switch( iCOut )
       {
-      case 'p':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetPtr( pItmPar ) );
-         break;
-      case 's': case 'S':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetCPtr( pItmPar ) );
-         break;
-      case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetND( pItmPar ) );
-         break;
-      /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
-      default:
-         s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm,
-                          HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
+         case 'p':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetPtr( pItmPar ) );
+            break;
+         case 's': case 'S':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetCPtr( pItmPar ) );
+            break;
+         case 'e': case 'E': case 'f': case 'g': case 'G': case 'a': case 'A':
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm, hb_itemGetND( pItmPar ) );
+            break;
+         /* case 'c': case 'C': case 'd': case 'i': case 'o': case 'u': case 'x': case 'X': */
+         default:
+            s = hb_snprintf( cBuffer, ulMaxBuf, cParFrm,
+                             HB_IS_LONG( pItmPar ) ? hb_itemGetNL( pItmPar ) : hb_itemGetNI( pItmPar ) );
       }
    }
    return s;
@@ -188,19 +188,19 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
 * Processing %% and n converter Position.
 *******************************************************************************/
 
-#define DK_INCRES          1024
-#define DK_INCBUF          512
-#define DK_BLKBUF          HB_MAX_DOUBLE_LENGTH /* Expense of DK_INCBUF */
-#define DK_EMPTYDATE       "'0001-01-01 BC'"
-#define DK_EMPTYDATETIME   "'0001-01-01 00:00:00 BC'"
+#define DK_INCRES         1024
+#define DK_INCBUF         512
+#define DK_BLKBUF         HB_MAX_DOUBLE_LENGTH  /* Expense of DK_INCBUF */
+#define DK_EMPTYDATE      "'0001-01-01 BC'"
+#define DK_EMPTYDATETIME  "'0001-01-01 00:00:00 BC'"
 
 HB_FUNC( SQL_SPRINTF )
 {
-   HB_UINT        ulItmFrm;
-   const char *   cItmFrm;
-   char *         cRes;
-   int            argc = hb_pcount() - 1;
-   PHB_ITEM       pItmFrm = hb_param( 1, HB_IT_STRING );
+   HB_UINT      ulItmFrm;
+   const char * cItmFrm;
+   char *       cRes;
+   int          argc    = hb_pcount() - 1;
+   PHB_ITEM     pItmFrm = hb_param( 1, HB_IT_STRING );
 
    if( ! pItmFrm || ( cItmFrm = hb_itemGetCPtr( pItmFrm ) ) == NULL )
    {
@@ -220,15 +220,15 @@ HB_FUNC( SQL_SPRINTF )
    {
       static const char s_szToken[] = "stTcdiouxXaAeEfgGpnSC";
 
-      PHB_ITEM       pItmPar, pItmCpy;
-      char *         cIntMod, * cBuffer, * cParFrm;
-      const char *   c;
-      int            p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
-      HB_UINT        s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes =
+      PHB_ITEM     pItmPar, pItmCpy;
+      char *       cIntMod, * cBuffer, * cParFrm;
+      const char * c;
+      int          p, arg, iCOut, IsType, IsIndW, IsIndP, iIndWidth, iIndPrec, iErrorPar = 0;
+      HB_UINT      s, f, i, ulWidth, ulParPos = 0, ulResPos = 0, ulMaxBuf = DK_INCBUF, ulMaxRes =
          DK_INCRES;
 
       cIntMod = NULL;
-      cRes = ( char * ) hb_xgrab( ulMaxRes );
+      cRes    = ( char * ) hb_xgrab( ulMaxRes );
       cBuffer = ( char * ) hb_xgrab( ulMaxBuf );
       cParFrm = ( char * ) hb_xgrab( ulItmFrm + sizeof( char ) );
 
@@ -280,16 +280,16 @@ HB_FUNC( SQL_SPRINTF )
                if( ulWidth && IsIndP && ! iIndPrec )
                {
                   iIndPrec = ulWidth;
-                  iCOut = '*';
+                  iCOut    = '*';
                }
                else if( ulWidth && IsIndW && ! iIndWidth )
                {
                   iIndWidth = ulWidth;
-                  ulWidth = 0; iCOut = '*';
+                  ulWidth   = 0; iCOut = '*';
                }
                else if( ulWidth && ! arg )
                {
-                  arg = ulWidth;
+                  arg     = ulWidth;
                   ulWidth = 0; iCOut = '%';
                }
                else
@@ -397,10 +397,9 @@ HB_FUNC( SQL_SPRINTF )
             iErrorPar = 1; break;
          }
 
-         if( ! iCOut || iCOut == 'n' )  /* Par Text Out */
-
+         if( ! iCOut || iCOut == 'n' )      /* Par Text Out */
          {
-            for( f = i, i = 0; i < f; i++ )  /* Change %% with % */
+            for( f = i, i = 0; i < f; i++ ) /* Change %% with % */
             {
                if( cParFrm[ i ] == '%' && cParFrm[ i + 1 ] == '%' )
                {
@@ -431,13 +430,12 @@ HB_FUNC( SQL_SPRINTF )
             if( ( f = i + sizeof( char ) ) > ulMaxBuf )
             {
                ulMaxBuf += f + DK_INCBUF;
-               cBuffer = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
+               cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
             }
             hb_strncpy( cBuffer, cParFrm, i ); s = i;
 
          }
          else     /* Par Item sprintf() Out */
-
          {
 #        ifdef HB_IT_NULL
             if( ( HB_IS_NIL( pItmPar ) || HB_IS_NULL( pItmPar ) ) )
@@ -457,7 +455,7 @@ HB_FUNC( SQL_SPRINTF )
                if( ( f = i + 8 ) > ulMaxBuf )   /* size of "DEFAULT" == 8 */
                {
                   ulMaxBuf += f + DK_INCBUF;
-                  cBuffer = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
+                  cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
                }
                pItmCpy = hb_itemNew( NULL );
 #           ifdef HB_IT_NULL
@@ -488,7 +486,7 @@ HB_FUNC( SQL_SPRINTF )
                if( ( f = i + HB_MAX( ulWidth, f ) ) > ulMaxBuf )
                {
                   ulMaxBuf += f + DK_INCBUF;
-                  cBuffer = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
+                  cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
                }
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec,
                           pItmPar );
@@ -498,8 +496,8 @@ HB_FUNC( SQL_SPRINTF )
             }
             else if( HB_IS_DATETIME( pItmPar ) && iCOut == 's' )
             {
-               long  lDate, lTime;
-               char  cDTBuf[ 9 ], cDTFrm[ 27 ];
+               long lDate, lTime;
+               char cDTBuf[ 9 ], cDTFrm[ 27 ];
 
                if( s )  /* Internal Modifier */
                {
@@ -540,7 +538,7 @@ HB_FUNC( SQL_SPRINTF )
                if( ( f = i + HB_MAX( ulWidth, 29 ) ) > ulMaxBuf )
                {
                   ulMaxBuf += f + DK_INCBUF;
-                  cBuffer = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
+                  cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
                }
                pItmCpy = hb_itemNew( NULL );
                hb_itemPutC( pItmCpy, cDTFrm );
@@ -586,7 +584,7 @@ HB_FUNC( SQL_SPRINTF )
                    ulMaxBuf )
                {
                   ulMaxBuf += f + DK_INCBUF;   /* size of "FALSE" == 6 */
-                  cBuffer = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
+                  cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
                }
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec,
                           pItmPar );
@@ -596,18 +594,18 @@ HB_FUNC( SQL_SPRINTF )
             }
             else if( iCOut == 's' )
             {
-               char *         cStr = hb_itemStr( pItmPar, NULL, NULL );
-               const char *   cTrimStr;
+               char * cStr = hb_itemStr( pItmPar, NULL, NULL );
+               const char * cTrimStr;
 
                if( cStr )
                {
                   HB_SIZE nLen = strlen( cStr );
                   cTrimStr = hb_strLTrim( cStr, &nLen );
-                  f = ( HB_UINT ) nLen;
+                  f        = ( HB_UINT ) nLen;
                   if( ( f = i + HB_MAX( ulWidth, f ) ) > ulMaxBuf )
                   {
                      ulMaxBuf += f + DK_INCBUF;
-                     cBuffer = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
+                     cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
                   }
                   pItmCpy = hb_itemNew( NULL );
                   hb_itemPutCL( pItmCpy, cTrimStr, f );
@@ -626,7 +624,7 @@ HB_FUNC( SQL_SPRINTF )
                if( ( f = i + HB_MAX( ulWidth, DK_BLKBUF ) ) > ulMaxBuf )
                {
                   ulMaxBuf += f + DK_INCBUF;
-                  cBuffer = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
+                  cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
                }
                s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec,
                           pItmPar );
@@ -641,7 +639,7 @@ HB_FUNC( SQL_SPRINTF )
          if( ( f = s + ulResPos + sizeof( char ) ) > ulMaxRes )
          {
             ulMaxRes += f + DK_INCRES;
-            cRes = ( char * ) hb_xrealloc( cRes, ulMaxRes );
+            cRes      = ( char * ) hb_xrealloc( cRes, ulMaxRes );
          }
 
          hb_strncpy( cRes + ulResPos, cBuffer, s ); ulResPos += s;

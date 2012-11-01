@@ -63,8 +63,8 @@ HB_FUNC( CUPSGETDEFAULT )
 HB_FUNC( CUPSGETDESTS )
 {
    cups_dest_t * dest_list;
-   int num_dests = cupsGetDests( &dest_list );
-   PHB_ITEM pArray = hb_itemArrayNew( ( HB_SIZE ) num_dests );
+   int      num_dests = cupsGetDests( &dest_list );
+   PHB_ITEM pArray    = hb_itemArrayNew( ( HB_SIZE ) num_dests );
 
    if( num_dests > 0 )
    {
@@ -84,7 +84,7 @@ HB_FUNC( CUPSPRINTFILE )
 {
    PHB_ITEM pOptions = hb_param( 4, HB_IT_HASH | HB_IT_ARRAY );
 
-   int num_options = 0;
+   int num_options         = 0;
    cups_option_t * options = NULL;
 
    if( pOptions )

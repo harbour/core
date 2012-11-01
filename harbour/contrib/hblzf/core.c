@@ -108,10 +108,10 @@ HB_FUNC( HB_LZF_COMPRESS )
 
       if( in_len )
       {
-         PHB_ITEM       pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
-         const char *   in_data = hb_itemGetCPtr( pArg );
-         char *         out_data;
-         HB_SIZE        out_len;
+         PHB_ITEM     pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+         const char * in_data = hb_itemGetCPtr( pArg );
+         char *       out_data;
+         HB_SIZE      out_len;
 
          if( pBuffer )
          {
@@ -172,10 +172,10 @@ HB_FUNC( HB_LZF_DECOMPRESS )
 
       if( in_len )
       {
-         PHB_ITEM       pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
-         const char *   in_data = hb_itemGetCPtr( pArg );
-         char *         buffer;
-         HB_SIZE        buffer_size;
+         PHB_ITEM     pBuffer = HB_ISBYREF( 2 ) ? hb_param( 2, HB_IT_STRING ) : NULL;
+         const char * in_data = hb_itemGetCPtr( pArg );
+         char *       buffer;
+         HB_SIZE      buffer_size;
 
          if( pBuffer )
          {
@@ -197,7 +197,7 @@ HB_FUNC( HB_LZF_DECOMPRESS )
             do
             {
                buffer_size <<= 1;
-               buffer = ( char * ) hb_xrealloc( buffer, buffer_size + 1 );
+               buffer        = ( char * ) hb_xrealloc( buffer, buffer_size + 1 );
 
                uiResult = lzf_decompress( in_data, ( unsigned int ) in_len, buffer, ( unsigned int ) buffer_size );
             }
@@ -214,7 +214,7 @@ HB_FUNC( HB_LZF_DECOMPRESS )
                   hb_storni( HB_LZF_DATA_CORRUPTED, 3 );
                else
 #endif
-                  hb_storni( HB_LZF_OK, 3 );
+               hb_storni( HB_LZF_OK, 3 );
 
                if( ! pBuffer )
                   hb_xfree( buffer );

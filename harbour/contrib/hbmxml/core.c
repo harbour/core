@@ -60,10 +60,10 @@
 #include "mxml.h"
 #include "config.h"
 
-#define BUFFER_SIZE     8192
+#define BUFFER_SIZE    8192
 
-#define MXML_ERR_ARGS   ( hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, \
-                                                HB_ERR_ARGS_BASEPARAMS ) )
+#define MXML_ERR_ARGS  ( hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, \
+                                               HB_ERR_ARGS_BASEPARAMS ) )
 
 typedef struct /* placeholder for mxml_node_t */
 {
@@ -77,7 +77,7 @@ typedef struct
    PHB_ITEM type_cb;
    PHB_ITEM save_cb;
    PHB_ITEM sax_cb;
-   void * hText;
+   void *   hText;
 } HB_CBS_VAR;
 
 typedef struct
@@ -97,7 +97,7 @@ static void hb_cbs_var_init( void * cargo )
 
    pCbs->type_cb = NULL;
    pCbs->save_cb = NULL;
-   pCbs->sax_cb = NULL;
+   pCbs->sax_cb  = NULL;
 }
 
 static void hb_custom_cbs_var_init( void * cargo )
@@ -191,6 +191,7 @@ static HBMXML_NODE * mxml_node_new( mxml_node_t * node, int iNew )
 {
    HBMXML_NODE * pHbnode = ( HBMXML_NODE * ) hb_gcAllocate( sizeof( HBMXML_NODE ),
                                                             &s_gc_mxml_nodeFuncs );
+
    pHbnode->node = node;
    if( iNew == 0 )
       mxmlRetain( node );
@@ -240,6 +241,7 @@ static mxml_index_t ** mxml_index_new( mxml_index_t * index )
 {
    mxml_index_t ** ppMxml_index = ( mxml_index_t ** ) hb_gcAllocate( sizeof( mxml_index_t * ),
                                                                      &s_gc_mxml_indexFuncs );
+
    *ppMxml_index = index;
 
    return ppMxml_index;
@@ -271,10 +273,10 @@ HB_FUNC( HB_MXMLVERSION )
 
 HB_FUNC( MXMLADD )
 {
-   mxml_node_t *  parent = mxml_node_param( 1 );
-   int            where = hb_parnidef( 2, MXML_ADD_BEFORE );
-   mxml_node_t *  child = mxml_node_param( 3 );
-   mxml_node_t *  node  = mxml_node_param( 4 );
+   mxml_node_t * parent = mxml_node_param( 1 );
+   int where = hb_parnidef( 2, MXML_ADD_BEFORE );
+   mxml_node_t * child = mxml_node_param( 3 );
+   mxml_node_t * node  = mxml_node_param( 4 );
 
    if( parent && node )
    {
@@ -330,8 +332,8 @@ HB_FUNC( MXMLELEMENTSETATTR )
 
    if( node )
    {
-      void *   hName;
-      void *   hValue;
+      void * hName;
+      void * hValue;
 
       mxmlElementSetAttr( node, hb_parstr_utf8( 2, &hName, NULL ), hb_parstr_utf8( 3, &hValue, NULL ) );
 
@@ -368,11 +370,11 @@ HB_FUNC( MXMLENTITYGETVALUE )
 
 HB_FUNC( MXMLFINDELEMENT )
 {
-   void *         hName;
-   void *         hAttr;
-   void *         hValue;
-   mxml_node_t *  node = mxml_node_param( 1 );
-   mxml_node_t *  top = mxml_node_param( 2 );
+   void * hName;
+   void * hAttr;
+   void * hValue;
+   mxml_node_t * node = mxml_node_param( 1 );
+   mxml_node_t * top  = mxml_node_param( 2 );
 
    if( node && top )
    {
@@ -396,8 +398,8 @@ HB_FUNC( MXMLFINDELEMENT )
 
 HB_FUNC( MXMLFINDPATH )
 {
-   void *         hPath;
-   mxml_node_t *  node = mxml_node_param( 1 );
+   void * hPath;
+   mxml_node_t * node = mxml_node_param( 1 );
 
    if( node )
    {
@@ -633,11 +635,11 @@ HB_FUNC( MXMLINDEXFIND )
 
    if( index )
    {
-      void *         hElement;
-      void *         hValue;
-      mxml_node_t *  nodef = mxmlIndexFind( index,
-                                            hb_parstr_utf8( 2, &hElement, NULL ),
-                                            hb_parstr_utf8( 3, &hValue, NULL ) );
+      void * hElement;
+      void * hValue;
+      mxml_node_t * nodef = mxmlIndexFind( index,
+                                           hb_parstr_utf8( 2, &hElement, NULL ),
+                                           hb_parstr_utf8( 3, &hValue, NULL ) );
 
       hb_strfree( hElement );
       hb_strfree( hValue );
@@ -684,8 +686,8 @@ HB_FUNC( MXMLINDEXNEW )
 
    if( node )
    {
-      void *         hElement;
-      void *         hAttribute;
+      void * hElement;
+      void * hAttribute;
       mxml_index_t * index = mxmlIndexNew( node,
                                            hb_parstr_utf8( 2, &hElement, NULL ),
                                            hb_parstr_utf8( 3, &hAttribute, NULL ) );
@@ -747,10 +749,10 @@ static mxml_type_t type_cb( mxml_node_t * node )
 
 HB_FUNC( MXMLLOADFILE )
 {
-   void *         hFree;
+   void * hFree;
    mxml_node_t *  node_top;
    mxml_node_t *  node;
-   mxml_load_cb_t cb = MXML_NO_CALLBACK;
+   mxml_load_cb_t cb   = MXML_NO_CALLBACK;
    HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
    FILE *         file;
 
@@ -778,13 +780,13 @@ HB_FUNC( MXMLLOADFILE )
    {
       switch( hb_parni( 3 ) )
       {
-      case 0:  cb = MXML_NO_CALLBACK;       break;
-      case 1:  cb = MXML_INTEGER_CALLBACK;  break;
-      case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
-      case 3:  cb = MXML_REAL_CALLBACK;     break;
-      case 4:  cb = MXML_TEXT_CALLBACK;     break;
-      case 5:  cb = MXML_IGNORE_CALLBACK;   break;
-      default: cb = MXML_NO_CALLBACK;
+         case 0:  cb = MXML_NO_CALLBACK;       break;
+         case 1:  cb = MXML_INTEGER_CALLBACK;  break;
+         case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
+         case 3:  cb = MXML_REAL_CALLBACK;     break;
+         case 4:  cb = MXML_TEXT_CALLBACK;     break;
+         case 5:  cb = MXML_IGNORE_CALLBACK;   break;
+         default: cb = MXML_NO_CALLBACK;
       }
    }
 
@@ -809,10 +811,10 @@ HB_FUNC( MXMLLOADFILE )
 
 HB_FUNC( MXMLLOADSTRING )
 {
-   void *         hFree;
+   void * hFree;
    mxml_node_t *  node_top;
    mxml_node_t *  node;
-   mxml_load_cb_t cb = MXML_NO_CALLBACK;
+   mxml_load_cb_t cb   = MXML_NO_CALLBACK;
    HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
 
@@ -840,13 +842,13 @@ HB_FUNC( MXMLLOADSTRING )
    {
       switch( hb_parni( 3 ) )
       {
-      case 0:  cb = MXML_NO_CALLBACK;       break;
-      case 1:  cb = MXML_INTEGER_CALLBACK;  break;
-      case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
-      case 3:  cb = MXML_REAL_CALLBACK;     break;
-      case 4:  cb = MXML_TEXT_CALLBACK;     break;
-      case 5:  cb = MXML_IGNORE_CALLBACK;   break;
-      default: cb = MXML_NO_CALLBACK;
+         case 0:  cb = MXML_NO_CALLBACK;       break;
+         case 1:  cb = MXML_INTEGER_CALLBACK;  break;
+         case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
+         case 3:  cb = MXML_REAL_CALLBACK;     break;
+         case 4:  cb = MXML_TEXT_CALLBACK;     break;
+         case 5:  cb = MXML_IGNORE_CALLBACK;   break;
+         default: cb = MXML_NO_CALLBACK;
       }
    }
 
@@ -862,8 +864,8 @@ HB_FUNC( MXMLLOADSTRING )
 
 HB_FUNC( MXMLNEWCDATA )
 {
-   void *         hString;
-   mxml_node_t *  node;
+   void * hString;
+   mxml_node_t * node;
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
    {
@@ -894,8 +896,8 @@ HB_FUNC( MXMLNEWCDATA )
 
 HB_FUNC( MXMLNEWELEMENT )
 {
-   void *         hName;
-   mxml_node_t *  node;
+   void * hName;
+   mxml_node_t * node;
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
    {
@@ -953,8 +955,8 @@ HB_FUNC( MXMLNEWINTEGER )
 
 HB_FUNC( MXMLNEWOPAQUE )
 {
-   void *         hOpaque;
-   mxml_node_t *  node;
+   void * hOpaque;
+   mxml_node_t * node;
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
    {
@@ -1012,8 +1014,8 @@ HB_FUNC( MXMLNEWREAL )
 
 HB_FUNC( MXMLNEWTEXT )
 {
-   void *         hString;
-   mxml_node_t *  node;
+   void * hString;
+   mxml_node_t * node;
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
    {
@@ -1170,13 +1172,13 @@ static void sax_cb( mxml_node_t * node, mxml_sax_event_t event, void * data )
 
 HB_FUNC( MXMLSAXLOADFILE )
 {
-   void *         hFree;
+   void * hFree;
    mxml_node_t *  node_top;
    mxml_node_t *  node;
-   mxml_load_cb_t cb = MXML_NO_CALLBACK;
+   mxml_load_cb_t cb     = MXML_NO_CALLBACK;
    mxml_sax_cb_t  cb_sax = MXML_NO_CALLBACK;
-   PHB_ITEM       pData = ( hb_pcount() > 4 ) ? hb_param( 5, HB_IT_ANY ) : NULL;
-   HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+   PHB_ITEM       pData  = ( hb_pcount() > 4 ) ? hb_param( 5, HB_IT_ANY ) : NULL;
+   HB_CBS_VAR *   pCbs   = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
    FILE *         file;
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
@@ -1203,20 +1205,20 @@ HB_FUNC( MXMLSAXLOADFILE )
    {
       switch( hb_parni( 3 ) )
       {
-      case 0:  cb = MXML_NO_CALLBACK;       break;
-      case 1:  cb = MXML_INTEGER_CALLBACK;  break;
-      case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
-      case 3:  cb = MXML_REAL_CALLBACK;     break;
-      case 4:  cb = MXML_TEXT_CALLBACK;     break;
-      case 5:  cb = MXML_IGNORE_CALLBACK;   break;
-      default: cb = MXML_NO_CALLBACK;
+         case 0:  cb = MXML_NO_CALLBACK;       break;
+         case 1:  cb = MXML_INTEGER_CALLBACK;  break;
+         case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
+         case 3:  cb = MXML_REAL_CALLBACK;     break;
+         case 4:  cb = MXML_TEXT_CALLBACK;     break;
+         case 5:  cb = MXML_IGNORE_CALLBACK;   break;
+         default: cb = MXML_NO_CALLBACK;
       }
    }
 
    if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
    {
       pCbs->sax_cb = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
-      cb_sax = sax_cb;
+      cb_sax       = sax_cb;
    }
 
    file = hb_fopen( hb_parstr_utf8( 2, &hFree, NULL ), "rb" );
@@ -1230,7 +1232,7 @@ HB_FUNC( MXMLSAXLOADFILE )
    }
 
    pCbs->type_cb = NULL;
-   pCbs->sax_cb = NULL;
+   pCbs->sax_cb  = NULL;
 
    hb_strfree( hFree );
 }
@@ -1245,13 +1247,13 @@ HB_FUNC( MXMLSAXLOADFILE )
 
 HB_FUNC( MXMLSAXLOADSTRING )
 {
-   void *         hFree;
+   void * hFree;
    mxml_node_t *  node_top;
    mxml_node_t *  node;
-   mxml_load_cb_t cb = MXML_NO_CALLBACK;
+   mxml_load_cb_t cb     = MXML_NO_CALLBACK;
    mxml_sax_cb_t  cb_sax = MXML_NO_CALLBACK;
-   PHB_ITEM       pData = ( hb_pcount() > 4 ) ? hb_param( 5, HB_IT_ANY ) : NULL;
-   HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
+   PHB_ITEM       pData  = ( hb_pcount() > 4 ) ? hb_param( 5, HB_IT_ANY ) : NULL;
+   HB_CBS_VAR *   pCbs   = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
    const char *   s;
 
    if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
@@ -1278,20 +1280,20 @@ HB_FUNC( MXMLSAXLOADSTRING )
    {
       switch( hb_parni( 3 ) )
       {
-      case 0:  cb = MXML_NO_CALLBACK;       break;
-      case 1:  cb = MXML_INTEGER_CALLBACK;  break;
-      case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
-      case 3:  cb = MXML_REAL_CALLBACK;     break;
-      case 4:  cb = MXML_TEXT_CALLBACK;     break;
-      case 5:  cb = MXML_IGNORE_CALLBACK;   break;
-      default: cb = MXML_NO_CALLBACK;
+         case 0:  cb = MXML_NO_CALLBACK;       break;
+         case 1:  cb = MXML_INTEGER_CALLBACK;  break;
+         case 2:  cb = MXML_OPAQUE_CALLBACK;   break;
+         case 3:  cb = MXML_REAL_CALLBACK;     break;
+         case 4:  cb = MXML_TEXT_CALLBACK;     break;
+         case 5:  cb = MXML_IGNORE_CALLBACK;   break;
+         default: cb = MXML_NO_CALLBACK;
       }
    }
 
    if( HB_ISBLOCK( 4 ) || HB_ISSYMBOL( 4 ) )
    {
       pCbs->sax_cb = hb_param( 4, HB_IT_BLOCK | HB_IT_SYMBOL );
-      cb_sax = sax_cb;
+      cb_sax       = sax_cb;
    }
 
    s = hb_parstr_utf8( 2, &hFree, NULL );
@@ -1303,7 +1305,7 @@ HB_FUNC( MXMLSAXLOADSTRING )
    }
 
    pCbs->type_cb = NULL;
-   pCbs->sax_cb = NULL;
+   pCbs->sax_cb  = NULL;
 
    hb_strfree( hFree );
 }
@@ -1352,10 +1354,10 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
 
    if( node )
    {
-      mxml_save_cb_t cb = MXML_NO_CALLBACK;
+      mxml_save_cb_t cb   = MXML_NO_CALLBACK;
       HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
-      char           buffer[ BUFFER_SIZE ];
-      int            bytes;
+      char buffer[ BUFFER_SIZE ];
+      int  bytes;
 
       if( HB_ISBLOCK( 2 ) || HB_ISSYMBOL( 2 ) )
       {
@@ -1363,7 +1365,7 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
          cb = save_cb;
       }
 
-      bytes = mxmlSaveString( node, buffer, BUFFER_SIZE, cb );
+      bytes         = mxmlSaveString( node, buffer, BUFFER_SIZE, cb );
       pCbs->save_cb = NULL;
       if( pCbs->hText )
       {
@@ -1394,13 +1396,13 @@ HB_FUNC( MXMLSAVEALLOCSTRING )
 
 HB_FUNC( MXMLSAVEFILE )
 {
-   mxml_node_t *  node = mxml_node_param( 1 );
-   FILE *         file;
-   void *         hFree;
+   mxml_node_t * node = mxml_node_param( 1 );
+   FILE *        file;
+   void *        hFree;
 
    if( node && HB_ISCHAR( 2 ) )
    {
-      mxml_save_cb_t cb = MXML_NO_CALLBACK;
+      mxml_save_cb_t cb   = MXML_NO_CALLBACK;
       HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
       if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
@@ -1432,19 +1434,19 @@ HB_FUNC( MXMLSAVEFILE )
 
 HB_FUNC( MXMLSAVESTRING )
 {
-   mxml_node_t *  node = mxml_node_param( 1 );
-   PHB_ITEM       pBuffer = hb_param( 2, HB_IT_STRING );
+   mxml_node_t * node    = mxml_node_param( 1 );
+   PHB_ITEM      pBuffer = hb_param( 2, HB_IT_STRING );
 
    if( node )
    {
-      mxml_save_cb_t cb = MXML_NO_CALLBACK;
+      mxml_save_cb_t cb   = MXML_NO_CALLBACK;
       HB_CBS_VAR *   pCbs = ( HB_CBS_VAR * ) hb_stackGetTSD( &s_cbs_var );
 
       if( pBuffer && HB_ISBYREF( 2 ) && hb_parcsiz( 2 ) > 0 )
       {
-         char *   buffer;
-         HB_SIZE  buffer_size;
-         int      bytes;
+         char *  buffer;
+         HB_SIZE buffer_size;
+         int     bytes;
 
          if( hb_itemGetWriteCL( pBuffer, &buffer, &buffer_size ) )
          {
@@ -1649,8 +1651,8 @@ HB_FUNC( MXMLSETWRAPMARGIN )
 
 HB_FUNC( MXMLWALKNEXT )
 {
-   mxml_node_t *  node = mxml_node_param( 1 );
-   mxml_node_t *  top = mxml_node_param( 2 );
+   mxml_node_t * node = mxml_node_param( 1 );
+   mxml_node_t * top  = mxml_node_param( 2 );
 
    if( node && top )
    {
@@ -1666,8 +1668,8 @@ HB_FUNC( MXMLWALKNEXT )
 
 HB_FUNC( MXMLWALKPREV )
 {
-   mxml_node_t *  node = mxml_node_param( 1 );
-   mxml_node_t *  top = mxml_node_param( 2 );
+   mxml_node_t * node = mxml_node_param( 1 );
+   mxml_node_t * top  = mxml_node_param( 2 );
 
    if( node && top )
    {
@@ -1715,9 +1717,9 @@ HB_FUNC( MXMLNEWCUSTOM )
 {
    if( hb_pcount() > 1 )
    {
-      PHB_ITEM       pItem = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
-      mxml_node_t *  parent = MXML_NO_PARENT;
-      mxml_node_t *  node = NULL;
+      PHB_ITEM      pItem  = hb_itemClone( hb_param( 2, HB_IT_ANY ) );
+      mxml_node_t * parent = MXML_NO_PARENT;
+      mxml_node_t * node   = NULL;
 
       if( HB_ISNIL( 1 ) || ( HB_ISNUM( 1 ) && hb_parni( 1 ) == MXML_NO_PARENT ) )
          node = mxmlNewCustom( MXML_NO_PARENT, pItem, custom_destroy_cb );
@@ -1810,9 +1812,9 @@ static char * custom_save_cb( mxml_node_t * node )
 
       if( pCallback && hb_vmRequestReenter() )
       {
-         char *         pszResult;
-         const char *   pszText;
-         void *         hText;
+         char * pszResult;
+         const char * pszText;
+         void *       hText;
 
          hb_vmPushEvalSym();
          hb_vmPush( pCallback );
@@ -1820,7 +1822,7 @@ static char * custom_save_cb( mxml_node_t * node )
 
          hb_vmSend( 1 );
 
-         pszText = hb_parstr_utf8( -1, &hText, NULL );
+         pszText   = hb_parstr_utf8( -1, &hText, NULL );
          pszResult = pszText ? strdup( pszText ) : NULL;
          hb_strfree( hText );
 
@@ -1892,10 +1894,10 @@ HB_FUNC( HB_MXMLGETATTRSARRAY )
 
    if( node && mxmlGetType( node ) == MXML_ELEMENT )
    {
-      PHB_ITEM       pAttrs = hb_itemArrayNew( 0 ),
-                     pAttr = hb_itemNew( NULL );
-      int            i;
-      mxml_attr_t *  attr;
+      PHB_ITEM pAttrs = hb_itemArrayNew( 0 ),
+               pAttr  = hb_itemNew( NULL );
+      int i;
+      mxml_attr_t * attr;
 
       for( i = node->value.element.num_attrs, attr = node->value.element.attrs;
            i > 0;
@@ -1922,11 +1924,11 @@ HB_FUNC( HB_MXMLGETATTRS )
 
    if( node && mxmlGetType( node ) == MXML_ELEMENT )
    {
-      PHB_ITEM       pAttrs = hb_hashNew( hb_itemNew( NULL ) ),
-                     pKey = NULL,
-                     pValue = NULL;
-      int            i;
-      mxml_attr_t *  attr;
+      PHB_ITEM pAttrs = hb_hashNew( hb_itemNew( NULL ) ),
+               pKey   = NULL,
+               pValue = NULL;
+      int i;
+      mxml_attr_t * attr;
 
       hb_hashSetFlags( pAttrs, HB_HASH_KEEPORDER );
 
@@ -1934,7 +1936,7 @@ HB_FUNC( HB_MXMLGETATTRS )
            i > 0;
            i--, attr++ )
       {
-         pKey = hb_itemPutStrUTF8( pKey, attr->name );
+         pKey   = hb_itemPutStrUTF8( pKey, attr->name );
          pValue = hb_itemPutStrUTF8( pValue, attr->value );
 
          hb_hashAdd( pAttrs, pKey, pValue );

@@ -53,8 +53,8 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#define HB_STRFORMAT_PARNUM_MAX_ 9
-#define POS_TO_PAR( pos ) ( pos + 2 )
+#define HB_STRFORMAT_PARNUM_MAX_  9
+#define POS_TO_PAR( pos )  ( pos + 2 )
 
 typedef struct
 {
@@ -73,14 +73,14 @@ HB_FUNC( STRFORMAT )
 
    if( nParNum >= 1 )
    {
-      const char * pszMask = hb_parcx( 1 );
-      HB_SIZE nMaskLen = hb_parclen( 1 );
-      HB_SIZE nMaskPos;
-      int nPos;
+      const char * pszMask  = hb_parcx( 1 );
+      HB_SIZE      nMaskLen = hb_parclen( 1 );
+      HB_SIZE      nMaskPos;
+      int          nPos;
 
       HB_SIZE nRetValLen;
-      char * pszRetVal;
-      char * pszRetValSave;
+      char *  pszRetVal;
+      char *  pszRetValSave;
 
       STRPAR strpar[ HB_STRFORMAT_PARNUM_MAX_ ];
 
@@ -101,14 +101,14 @@ HB_FUNC( STRFORMAT )
 
             if( pszMask[ nMaskPos ] == '%' )
                nRetValLen++;
-            else if( pszMask[ nMaskPos ] >= '1' && pszMask[ nMaskPos ] <= ( int )( nParNum + '0' ) )
+            else if( pszMask[ nMaskPos ] >= '1' && pszMask[ nMaskPos ] <= ( int ) ( nParNum + '0' ) )
             {
                nPos = pszMask[ nMaskPos ] - '1';
 
                strpar[ nPos ].raw = hb_itemString( hb_param( POS_TO_PAR( nPos ), HB_IT_ANY ), &strpar[ nPos ].nLen, &strpar[ nPos ].bFreeReq );
 
                /* AllTrim() */
-               strpar[ nPos ].nLen = hb_strRTrimLen( strpar[ nPos ].raw, strpar[ nPos ].nLen, HB_FALSE );
+               strpar[ nPos ].nLen   = hb_strRTrimLen( strpar[ nPos ].raw, strpar[ nPos ].nLen, HB_FALSE );
                strpar[ nPos ].buffer = hb_strLTrim( strpar[ nPos ].raw, &strpar[ nPos ].nLen );
 
                nRetValLen += strpar[ nPos ].nLen;

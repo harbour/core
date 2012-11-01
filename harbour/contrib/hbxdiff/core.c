@@ -60,14 +60,14 @@
 
 #include "xdiff.h"
 
-#define HB_MMF_SIGN                          8000001
+#define HB_MMF_SIGN                         8000001
 
-#define HB_ERR_MEMSTRU_NOT_MEM_BLOCK         4001
-#define HB_ERR_MEMSTRU_WRONG_MEMSTRU_BLOCK   4002
-#define HB_ERR_MEMSTRU_DESTROYED             4003
+#define HB_ERR_MEMSTRU_NOT_MEM_BLOCK        4001
+#define HB_ERR_MEMSTRU_WRONG_MEMSTRU_BLOCK  4002
+#define HB_ERR_MEMSTRU_DESTROYED            4003
 
-#define XDLT_STD_BLKSIZE ( 1024 * 8 )
-#define XDLT_MAX_LINE_SIZE 80
+#define XDLT_STD_BLKSIZE                    ( 1024 * 8 )
+#define XDLT_MAX_LINE_SIZE                  80
 
 static PHB_ITEM hb_mmf_itemPut( PHB_ITEM pItem, void * pMemAddr, int iType );
 static void *   hb_mmf_itemGet( PHB_ITEM pItem, int iType, HB_BOOL fError );
@@ -83,7 +83,7 @@ typedef struct
 
 typedef struct
 {
-   int type;
+   int      type;
    HB_MMF * hb_mmf;
 } HB_MMF_HOLDER, * PHB_MMF_HOLDER;
 
@@ -126,7 +126,7 @@ static PHB_ITEM hb_mmf_itemPut( PHB_ITEM pItem, void * pMemAddr, int iType )
    pStructHolder = ( PHB_MMF_HOLDER ) hb_gcAllocate( sizeof( HB_MMF_HOLDER ),
                                                      &s_gc_xdiffFuncs );
    pStructHolder->hb_mmf = ( HB_MMF * ) pMemAddr;
-   pStructHolder->type = iType;
+   pStructHolder->type   = iType;
 
    return hb_itemPutPtrGC( pItem, pStructHolder );
 }
@@ -135,7 +135,7 @@ static void * hb_mmf_itemGet( PHB_ITEM pItem, int iType, HB_BOOL fError )
 {
    PHB_MMF_HOLDER pStructHolder = ( PHB_MMF_HOLDER ) hb_itemGetPtrGC( pItem,
                                                                       &s_gc_xdiffFuncs );
-   int            iError = 0;
+   int iError = 0;
 
    HB_SYMBOL_UNUSED( iError );
 
@@ -340,8 +340,8 @@ HB_FUNC( XDL_MMFILE_CMP )
 
 HB_FUNC( XDL_MMFILE_COMPACT )
 {
-   HB_MMF *    phb_mmfo = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
-   mmfile_t *  mmfc = ( mmfile_t * ) hb_xgrab( sizeof( mmfile_t ) );
+   HB_MMF *   phb_mmfo = ( HB_MMF * ) hb_mmf_param( 1, HB_MMF_SIGN, HB_TRUE );
+   mmfile_t * mmfc     = ( mmfile_t * ) hb_xgrab( sizeof( mmfile_t ) );
 
    if( xdl_mmfile_compact( phb_mmfo->mmf, mmfc, hb_parnldef( 1, XDLT_STD_BLKSIZE ),
                            ( unsigned long ) hb_parnl( 3 ) ) == 0 )
@@ -387,8 +387,8 @@ static int xdlt_outb( void * priv, mmbuffer_t * mb, int nbuf )
 
    if( pCallback && hb_vmRequestReenter() )
    {
-      int   iResult;
-      int   i;
+      int iResult;
+      int i;
 
       hb_vmPushEvalSym();
       hb_vmPush( pCallback );
@@ -416,11 +416,11 @@ HB_FUNC( XDL_DIFF )
 
    if( phb_mmf1 && phb_mmf1->mmf && phb_mmf2 && phb_mmf2->mmf )
    {
-      xpparam_t      xpp;
-      xdemitconf_t   xecfg;
-      xdemitcb_t     ecb;
+      xpparam_t    xpp;
+      xdemitconf_t xecfg;
+      xdemitcb_t   ecb;
 
-      xpp.flags = ( unsigned long ) hb_parnldef( 3, 0 );
+      xpp.flags    = ( unsigned long ) hb_parnldef( 3, 0 );
       xecfg.ctxlen = hb_parnldef( 4, 3 );
 
       if( HB_ISNUM( 5 ) )
@@ -457,9 +457,9 @@ HB_FUNC( XDL_PATCH )
    {
       if( HB_ISNUM( 4 ) && HB_ISNUM( 5 ) )
       {
-         int         mode = hb_parnidef( 3, XDL_PATCH_NORMAL );
-         xdemitcb_t  ecb;
-         xdemitcb_t  rjecb;
+         int        mode = hb_parnidef( 3, XDL_PATCH_NORMAL );
+         xdemitcb_t ecb;
+         xdemitcb_t rjecb;
 
          ecb.priv = hb_parHandlePtr( 4 );
          ecb.outf = xdlt_outf;
@@ -490,8 +490,8 @@ HB_FUNC( XDL_BDIFF )
 
    if( phb_mmf1 && phb_mmf1->mmf && phb_mmf2 && phb_mmf2->mmf )
    {
-      bdiffparam_t   bdp;
-      xdemitcb_t     ecb;
+      bdiffparam_t bdp;
+      xdemitcb_t   ecb;
 
       bdp.bsize = hb_parnldef( 3, 32 ); /* from 16 to 64 */
 
@@ -627,9 +627,9 @@ static void xdiff_init( void )
 {
    memallocator_t malt;
 
-   malt.priv = NULL;
-   malt.malloc = wf_malloc;
-   malt.free = wf_free;
+   malt.priv    = NULL;
+   malt.malloc  = wf_malloc;
+   malt.free    = wf_free;
    malt.realloc = wf_realloc;
    xdl_set_allocator( &malt );
 }
@@ -641,6 +641,6 @@ HB_CALL_ON_STARTUP_END( _xdiff_init_ )
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup _xdiff_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _xdiff_init_ )
+   #define HB_DATASEG_BODY  HB_DATASEG_FUNC( _xdiff_init_ )
    #include "hbiniseg.h"
 #endif

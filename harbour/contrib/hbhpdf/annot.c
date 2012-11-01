@@ -55,14 +55,14 @@
    HPDF_ANNOT_INVERT_BOX          2     Invert the contents of the area of annotation.
    HPDF_ANNOT_INVERT_BORDER       3     Invert the annotation's border.
    HPDF_ANNOT_DOWN_APPEARANCE     4     Dent the annotation.
-*/
+ */
 HB_FUNC( HPDF_LINKANNOT_SETHIGHLIGHTMODE )
 {
    hb_retnl( ( long ) HPDF_LinkAnnot_SetHighlightMode( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_AnnotHighlightMode ) hb_parni( 2 ) ) );
 }
 
 /* HPDF_LinkAnnot_SetBorderStyle( hAnnot, nWidth, nDashOn, nDashOff ) -> hStatus
-*/
+ */
 HB_FUNC( HPDF_LINKANNOT_SETBORDERSTYLE )
 {
    hb_retnl( ( long ) HPDF_LinkAnnot_SetBorderStyle( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ), ( HPDF_UINT16 ) hb_parni( 3 ), ( HPDF_UINT16 ) hb_parni( 4 ) ) );
@@ -77,25 +77,25 @@ HB_FUNC( HPDF_LINKANNOT_SETBORDERSTYLE )
    HPDF_ANNOT_ICON_NEW_PARAGRAPH
    HPDF_ANNOT_ICON_PARAGRAPH
    HPDF_ANNOT_ICON_INSERT
-*/
+ */
 HB_FUNC( HPDF_TEXTANNOT_SETICON )
 {
    hb_retnl( ( long ) HPDF_TextAnnot_SetIcon( ( HPDF_Annotation ) hb_parptr( 1 ), ( HPDF_AnnotIcon ) hb_parni( 2 ) ) );
 }
 
 /* HPDF_TextAnnot_SetOpened( hAnnot, lOpened ) -> hStatus
-*/
+ */
 HB_FUNC( HPDF_TEXTANNOT_SETOPENED )
 {
    hb_retnl( ( long ) HPDF_TextAnnot_SetOpened( ( HPDF_Annotation ) hb_parptr( 1 ), hb_parl( 2 ) ? HPDF_TRUE : HPDF_FALSE ) );
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateFreeTextAnnot  (HPDF_Page       page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateFreeTextAnnot  (HPDF_Page       page,
                         HPDF_Rect       rect,
                         const char     *text,
                         HPDF_Encoder    encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATEFREETEXTANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -112,11 +112,11 @@ HB_FUNC( HPDF_PAGE_CREATEFREETEXTANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateLineAnnot  (HPDF_Page       page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateLineAnnot  (HPDF_Page       page,
                      const char     *text,
                      HPDF_Encoder    encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATELINEANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -126,13 +126,13 @@ HB_FUNC( HPDF_PAGE_CREATELINEANNOT )
 #endif
 }
 /*
-HPDF_Annotation
-HPDF_Page_CreateTextMarkupAnnot (HPDF_Page     page,
+   HPDF_Annotation
+   HPDF_Page_CreateTextMarkupAnnot (HPDF_Page     page,
                         HPDF_Rect      rect,
                         const char     *text,
                         HPDF_Encoder   encoder,
                         HPDF_AnnotType subType);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATETEXTMARKUPANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -149,12 +149,12 @@ HB_FUNC( HPDF_PAGE_CREATETEXTMARKUPANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateHighlightAnnot  (HPDF_Page   page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateHighlightAnnot  (HPDF_Page   page,
                         HPDF_Rect    rect,
                         const char   *text,
                         HPDF_Encoder encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATEHIGHLIGHTANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -171,12 +171,12 @@ HB_FUNC( HPDF_PAGE_CREATEHIGHLIGHTANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateUnderlineAnnot (HPDF_Page    page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateUnderlineAnnot (HPDF_Page    page,
                         HPDF_Rect    rect,
                         const char   *text,
                         HPDF_Encoder encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATEUNDERLINEANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -193,12 +193,12 @@ HB_FUNC( HPDF_PAGE_CREATEUNDERLINEANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateSquigglyAnnot  (HPDF_Page    page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateSquigglyAnnot  (HPDF_Page    page,
                         HPDF_Rect    rect,
                         const char   *text,
                         HPDF_Encoder encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATESQUIGGLYANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -215,12 +215,12 @@ HB_FUNC( HPDF_PAGE_CREATESQUIGGLYANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateStrikeOutAnnot  (HPDF_Page   page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateStrikeOutAnnot  (HPDF_Page   page,
                         HPDF_Rect    rect,
                         const char   *text,
                         HPDF_Encoder encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATESTRIKEOUTANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -237,11 +237,11 @@ HB_FUNC( HPDF_PAGE_CREATESTRIKEOUTANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreatePopupAnnot  ( HPDF_Page    page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreatePopupAnnot  ( HPDF_Page    page,
                         HPDF_Rect          rect,
                         HPDF_Annotation      parent);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATEPOPUPANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -258,13 +258,13 @@ HB_FUNC( HPDF_PAGE_CREATEPOPUPANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateStampAnnot  (   HPDF_Page           page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateStampAnnot  (   HPDF_Page           page,
                         HPDF_Rect           rect,
                         HPDF_StampAnnotName name,
                         const char*         text,
                         HPDF_Encoder      encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATESTAMPANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -281,12 +281,12 @@ HB_FUNC( HPDF_PAGE_CREATESTAMPANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateSquareAnnot (HPDF_Page          page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateSquareAnnot (HPDF_Page          page,
                       HPDF_Rect          rect,
                       const char         *text,
                       HPDF_Encoder       encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATESQUAREANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -303,12 +303,12 @@ HB_FUNC( HPDF_PAGE_CREATESQUAREANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_Annotation)
-HPDF_Page_CreateCircleAnnot (HPDF_Page          page,
+   HPDF_EXPORT(HPDF_Annotation)
+   HPDF_Page_CreateCircleAnnot (HPDF_Page          page,
                       HPDF_Rect          rect,
                       const char         *text,
                       HPDF_Encoder       encoder);
-*/
+ */
 HB_FUNC( HPDF_PAGE_CREATECIRCLEANNOT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -325,9 +325,9 @@ HB_FUNC( HPDF_PAGE_CREATECIRCLEANNOT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_Annot_SetRGBColor (HPDF_Annotation annot, HPDF_RGBColor color);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_Annot_SetRGBColor (HPDF_Annotation annot, HPDF_RGBColor color);
+ */
 HB_FUNC( HPDF_ANNOT_SETRGBCOLOR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -343,9 +343,9 @@ HB_FUNC( HPDF_ANNOT_SETRGBCOLOR )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_Annot_SetCMYKColor (HPDF_Annotation annot, HPDF_CMYKColor color);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_Annot_SetCMYKColor (HPDF_Annotation annot, HPDF_CMYKColor color);
+ */
 HB_FUNC( HPDF_ANNOT_SETCMYKCOLOR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -362,9 +362,9 @@ HB_FUNC( HPDF_ANNOT_SETCMYKCOLOR )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_Annot_SetGrayColor (HPDF_Annotation annot, HPDF_REAL color);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_Annot_SetGrayColor (HPDF_Annotation annot, HPDF_REAL color);
+ */
 HB_FUNC( HPDF_ANNOT_SETGRAYCOLOR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -374,9 +374,9 @@ HB_FUNC( HPDF_ANNOT_SETGRAYCOLOR )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_Annot_SetNoColor (HPDF_Annotation annot);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_Annot_SetNoColor (HPDF_Annotation annot);
+ */
 HB_FUNC( HPDF_ANNOT_SETNOCOLOR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -386,9 +386,9 @@ HB_FUNC( HPDF_ANNOT_SETNOCOLOR )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetTitle (HPDF_Annotation annot, const char* name);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetTitle (HPDF_Annotation annot, const char* name);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETTITLE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -398,9 +398,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETTITLE )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetSubject (HPDF_Annotation annot, const char* name);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetSubject (HPDF_Annotation annot, const char* name);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETSUBJECT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -410,9 +410,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETSUBJECT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetCreationDate (HPDF_Annotation annot, HPDF_Date value);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetCreationDate (HPDF_Annotation annot, HPDF_Date value);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETCREATIONDATE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -434,9 +434,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETCREATIONDATE )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetTransparency (HPDF_Annotation annot, HPDF_REAL value);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetTransparency (HPDF_Annotation annot, HPDF_REAL value);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETTRANSPARENCY )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -446,9 +446,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETTRANSPARENCY )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetIntent (HPDF_Annotation  annot, HPDF_AnnotIntent  intent);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetIntent (HPDF_Annotation  annot, HPDF_AnnotIntent  intent);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETINTENT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -458,9 +458,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETINTENT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetPopup (HPDF_Annotation annot, HPDF_Annotation popup);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetPopup (HPDF_Annotation annot, HPDF_Annotation popup);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETPOPUP )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -470,9 +470,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETPOPUP )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetRectDiff (HPDF_Annotation  annot, HPDF_Rect  rect);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetRectDiff (HPDF_Annotation  annot, HPDF_Rect  rect);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETRECTDIFF )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -489,9 +489,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETRECTDIFF )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetCloudEffect (HPDF_Annotation  annot, HPDF_INT cloudIntensity);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetCloudEffect (HPDF_Annotation  annot, HPDF_INT cloudIntensity);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETCLOUDEFFECT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -501,9 +501,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETCLOUDEFFECT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetInteriorRGBColor (HPDF_Annotation  annot, HPDF_RGBColor color);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetInteriorRGBColor (HPDF_Annotation  annot, HPDF_RGBColor color);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETINTERIORRGBCOLOR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -519,9 +519,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETINTERIORRGBCOLOR )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetInteriorCMYKColor (HPDF_Annotation  annot, HPDF_CMYKColor color);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetInteriorCMYKColor (HPDF_Annotation  annot, HPDF_CMYKColor color);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETINTERIORCMYKCOLOR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -538,9 +538,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETINTERIORCMYKCOLOR )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetInteriorGrayColor (HPDF_Annotation  annot, HPDF_REAL color);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetInteriorGrayColor (HPDF_Annotation  annot, HPDF_REAL color);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETINTERIORGRAYCOLOR )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -550,9 +550,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETINTERIORGRAYCOLOR )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_MarkupAnnot_SetInteriorTransparent (HPDF_Annotation  annot);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_MarkupAnnot_SetInteriorTransparent (HPDF_Annotation  annot);
+ */
 HB_FUNC( HPDF_MARKUPANNOT_SETINTERIORTRANSPARENT )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -562,9 +562,9 @@ HB_FUNC( HPDF_MARKUPANNOT_SETINTERIORTRANSPARENT )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_TextMarkupAnnot_SetQuadPoints ( HPDF_Annotation annot, HPDF_Point lb, HPDF_Point rb, HPDF_Point rt, HPDF_Point lt);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_TextMarkupAnnot_SetQuadPoints ( HPDF_Annotation annot, HPDF_Point lb, HPDF_Point rb, HPDF_Point rt, HPDF_Point lt);
+ */
 HB_FUNC( HPDF_TEXTMARKUPANNOT_SETQUADPOINTS )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -591,12 +591,12 @@ HB_FUNC( HPDF_TEXTMARKUPANNOT_SETQUADPOINTS )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_Annot_Set3DView  ( HPDF_MMgr mmgr,
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_Annot_Set3DView  ( HPDF_MMgr mmgr,
                    HPDF_Annotation   annot,
                    HPDF_Annotation   annot3d,
                    HPDF_Dict         view);
-*/
+ */
 HB_FUNC( HPDF_ANNOT_SET3DVIEW )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -606,10 +606,10 @@ HB_FUNC( HPDF_ANNOT_SET3DVIEW )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_PopupAnnot_SetOpened  (HPDF_Annotation   annot,
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_PopupAnnot_SetOpened  (HPDF_Annotation   annot,
                             HPDF_BOOL         opened);
-*/
+ */
 HB_FUNC( HPDF_POPUPANNOT_SETOPENED )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -619,9 +619,9 @@ HB_FUNC( HPDF_POPUPANNOT_SETOPENED )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_FreeTextAnnot_SetLineEndingStyle (HPDF_Annotation annot, HPDF_LineAnnotEndingStyle startStyle, HPDF_LineAnnotEndingStyle endStyle);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_FreeTextAnnot_SetLineEndingStyle (HPDF_Annotation annot, HPDF_LineAnnotEndingStyle startStyle, HPDF_LineAnnotEndingStyle endStyle);
+ */
 HB_FUNC( HPDF_FREETEXTANNOT_SETLINEENDINGSTYLE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -631,9 +631,9 @@ HB_FUNC( HPDF_FREETEXTANNOT_SETLINEENDINGSTYLE )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_FreeTextAnnot_Set3PointCalloutLine (HPDF_Annotation annot, HPDF_Point startPoint, HPDF_Point kneePoint, HPDF_Point endPoint);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_FreeTextAnnot_Set3PointCalloutLine (HPDF_Annotation annot, HPDF_Point startPoint, HPDF_Point kneePoint, HPDF_Point endPoint);
+ */
 HB_FUNC( HPDF_FREETEXTANNOT_SET3POINTCALLOUTLINE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -656,9 +656,9 @@ HB_FUNC( HPDF_FREETEXTANNOT_SET3POINTCALLOUTLINE )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_FreeTextAnnot_Set2PointCalloutLine (HPDF_Annotation annot, HPDF_Point startPoint, HPDF_Point endPoint);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_FreeTextAnnot_Set2PointCalloutLine (HPDF_Annotation annot, HPDF_Point startPoint, HPDF_Point endPoint);
+ */
 HB_FUNC( HPDF_FREETEXTANNOT_SET2POINTCALLOUTLINE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -677,9 +677,9 @@ HB_FUNC( HPDF_FREETEXTANNOT_SET2POINTCALLOUTLINE )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_FreeTextAnnot_SetDefaultStyle (HPDF_Annotation  annot, const char* style);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_FreeTextAnnot_SetDefaultStyle (HPDF_Annotation  annot, const char* style);
+ */
 HB_FUNC( HPDF_FREETEXTANNOT_SETDEFAULTSTYLE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -689,11 +689,11 @@ HB_FUNC( HPDF_FREETEXTANNOT_SETDEFAULTSTYLE )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_LineAnnot_SetPosition (HPDF_Annotation annot,
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_LineAnnot_SetPosition (HPDF_Annotation annot,
                      HPDF_Point startPoint, HPDF_LineAnnotEndingStyle startStyle,
                      HPDF_Point endPoint, HPDF_LineAnnotEndingStyle endStyle);
-*/
+ */
 HB_FUNC( HPDF_LINEANNOT_SETPOSITION )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -712,9 +712,9 @@ HB_FUNC( HPDF_LINEANNOT_SETPOSITION )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_LineAnnot_SetLeader (HPDF_Annotation annot, HPDF_INT leaderLen, HPDF_INT leaderExtLen, HPDF_INT leaderOffsetLen);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_LineAnnot_SetLeader (HPDF_Annotation annot, HPDF_INT leaderLen, HPDF_INT leaderExtLen, HPDF_INT leaderOffsetLen);
+ */
 HB_FUNC( HPDF_LINEANNOT_SETLEADER )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -724,9 +724,9 @@ HB_FUNC( HPDF_LINEANNOT_SETLEADER )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_LineAnnot_SetCaption (HPDF_Annotation annot, HPDF_BOOL showCaption, HPDF_LineAnnotCapPosition position, HPDF_INT horzOffset, HPDF_INT vertOffset);
-*/
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_LineAnnot_SetCaption (HPDF_Annotation annot, HPDF_BOOL showCaption, HPDF_LineAnnotCapPosition position, HPDF_INT horzOffset, HPDF_INT vertOffset);
+ */
 HB_FUNC( HPDF_LINEANNOT_SETCAPTION )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )
@@ -736,14 +736,14 @@ HB_FUNC( HPDF_LINEANNOT_SETCAPTION )
 #endif
 }
 /*
-HPDF_EXPORT(HPDF_STATUS)
-HPDF_Annotation_SetBorderStyle  (HPDF_Annotation  annot,
+   HPDF_EXPORT(HPDF_STATUS)
+   HPDF_Annotation_SetBorderStyle  (HPDF_Annotation  annot,
                                  HPDF_BSSubtype   subtype,
                                  HPDF_REAL        width,
                                  HPDF_UINT16      dash_on,
                                  HPDF_UINT16      dash_off,
                                  HPDF_UINT16      dash_phase);
-*/
+ */
 HB_FUNC( HPDF_ANNOTATION_SETBORDERSTYLE )
 {
 #if HB_HPDF_VERS( 2, 2, 0 )

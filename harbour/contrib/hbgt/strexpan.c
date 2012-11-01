@@ -22,17 +22,17 @@
 HB_FUNC( GT_STREXPAND )
 {
    const char * in;
-   char * out;
-   int nIns = 1;
+   char *       out;
+   int          nIns   = 1;
    const char * insert = " ";
-   HB_ISIZ len;
-   HB_ISIZ i, p;
-   int j;
+   HB_ISIZ      len;
+   HB_ISIZ      i, p;
+   int          j;
 
    if( HB_ISCHAR( 1 ) && ( HB_ISNUM( 2 ) || hb_pcount() < 2 ) && ( HB_ISCHAR( 3 ) || hb_pcount() < 3 ) )
    {
-      in    = hb_parc( 1 );
-      len   = hb_parclen( 1 );
+      in  = hb_parc( 1 );
+      len = hb_parclen( 1 );
 
       if( HB_ISNUM( 2 ) )
          nIns = hb_parni( 2 );

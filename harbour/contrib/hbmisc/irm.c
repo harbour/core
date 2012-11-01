@@ -20,9 +20,9 @@
 
 typedef struct
 {
-   HB_BYTE *  pBits;
-   HB_ULONG   ulSize;      /* in bits */
-   HB_ULONG   ulAlloc;     /* in bits */
+   HB_BYTE * pBits;
+   HB_ULONG  ulSize;       /* in bits */
+   HB_ULONG  ulAlloc;      /* in bits */
 } HB_IRMMAP, * PHB_IRMMAP;
 
 
@@ -33,9 +33,9 @@ PHB_IRMMAP hb_irmMapAlloc( HB_ULONG ulSize )
    if( ulSize == 0 )
       ulSize = 256;
 
-   pMap->ulSize = ulSize;
+   pMap->ulSize  = ulSize;
    pMap->ulAlloc = ( ulSize + 7 ) & ~7UL;
-   pMap->pBits = ( HB_BYTE * ) hb_xgrab( pMap->ulAlloc >> 3 );
+   pMap->pBits   = ( HB_BYTE * ) hb_xgrab( pMap->ulAlloc >> 3 );
    memset( pMap->pBits, 0, pMap->ulAlloc >> 3 );
    return pMap;
 }
@@ -143,7 +143,8 @@ HB_ULONG hb_irmMapCount( PHB_IRMMAP pMap )
 static HB_GARBAGE_FUNC( hb_irmMapDestroy )
 {
    PHB_IRMMAP * ppMap = ( PHB_IRMMAP * ) Cargo;
-   hb_irmMapFree( * ppMap );
+
+   hb_irmMapFree( *ppMap );
 }
 
 
@@ -158,8 +159,8 @@ static PHB_IRMMAP hb_irmMapParam( int iParam )
 {
    PHB_IRMMAP * ppMap = ( PHB_IRMMAP * ) hb_parptrGC( &s_irmMapFuncs, iParam );
 
-   if( ppMap && * ppMap )
-      return * ppMap;
+   if( ppMap && *ppMap )
+      return *ppMap;
 
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    return NULL;
@@ -185,11 +186,11 @@ static void hb_irmMapMarkCallback( HB_ULONG ulRecNo, unsigned char * pKey, unsig
  */
 PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
 {
-   PHB_IRMMAP     pMap, * pMapArray;
-   const char *   szOper;
-   HB_ULONG       ulLen, ulSize, ul, ul2;
-   AREAP          pArea;
-   DBORDERINFO    dboi;
+   PHB_IRMMAP   pMap, * pMapArray;
+   const char * szOper;
+   HB_ULONG     ulLen, ulSize, ul, ul2;
+   AREAP        pArea;
+   DBORDERINFO  dboi;
 
    if( HB_IS_ARRAY( pItem ) && ( szOper = hb_arrayGetCPtr( pItem, 1 ) ) != NULL )
    {
@@ -235,10 +236,10 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
             SELF_RECCOUNT( pArea, &ulSize );
             pMap = hb_irmMapAlloc( ulSize );
 
-            dboi.itmOrder = hb_arrayGetItemPtr( pItem, 2 );
+            dboi.itmOrder    = hb_arrayGetItemPtr( pItem, 2 );
             dboi.atomBagName = hb_arrayGetItemPtr( pItem, 3 );
-            dboi.itmResult = hb_itemNew( NULL );
-            dboi.itmNewVal = hb_itemArrayNew( DBRMI_SIZE );
+            dboi.itmResult   = hb_itemNew( NULL );
+            dboi.itmNewVal   = hb_itemArrayNew( DBRMI_SIZE );
             hb_arraySetPtr( dboi.itmNewVal, DBRMI_FUNCTION, ( void * ) hb_irmMapMarkCallback );
             hb_arraySetPtr( dboi.itmNewVal, DBRMI_PARAM, ( void * ) pMap );
             if( ! strcmp( szOper, "=" ) )
@@ -282,10 +283,11 @@ PHB_IRMMAP hb_irmExecute( PHB_ITEM pItem )
 HB_FUNC( IRMEXECUTE )
 {
    PHB_IRMMAP pMap = hb_irmExecute( hb_param( 1, HB_IT_ANY ) );
+
    if( pMap )
    {
-      PHB_IRMMAP *  ppMap = ( PHB_IRMMAP * ) hb_gcAllocate( sizeof( PHB_IRMMAP ), &s_irmMapFuncs );
-      * ppMap = pMap;
+      PHB_IRMMAP * ppMap = ( PHB_IRMMAP * ) hb_gcAllocate( sizeof( PHB_IRMMAP ), &s_irmMapFuncs );
+      *ppMap = pMap;
       hb_retptrGC( ppMap );
    }
 }
@@ -338,6 +340,7 @@ HB_FUNC( IRMMAPSKIP )
 HB_FUNC( IRMMAPCOUNT )
 {
    PHB_IRMMAP pMap = hb_irmMapParam( 1 );
+
    if( pMap )
       hb_retnl( hb_irmMapCount( pMap ) );
 }

@@ -50,9 +50,9 @@
 #include "hbhpdf.h"
 
 /*
-HPDF_STATUS
-HPDF_PDFA_SetPDFAConformance (HPDF_Doc pdf,HPDF_PDFAType pdfatype)
-*/
+   HPDF_STATUS
+   HPDF_PDFA_SetPDFAConformance (HPDF_Doc pdf,HPDF_PDFAType pdfatype)
+ */
 HB_FUNC( HPDF_PDFA_SETPDFACONFORMANCE )
 {
 /* TOFIX: These functions are not exported from libharu. Until we find

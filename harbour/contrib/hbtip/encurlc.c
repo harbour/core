@@ -56,17 +56,17 @@
 
 HB_FUNC( TIP_URLENCODE )
 {
-   const char * cData = hb_parc( 1 );
-   HB_ISIZ nLen = hb_parclen( 1 );
-   HB_BOOL bComplete = hb_parldef( 2, HB_TRUE );
-   char * cRet;
-   HB_ISIZ nPos = 0, nPosRet = 0, nVal;
-   char cElem;
+   const char * cData     = hb_parc( 1 );
+   HB_ISIZ      nLen      = hb_parclen( 1 );
+   HB_BOOL      bComplete = hb_parldef( 2, HB_TRUE );
+   char *       cRet;
+   HB_ISIZ      nPos = 0, nPosRet = 0, nVal;
+   char         cElem;
 
    if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+                     HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
@@ -119,15 +119,15 @@ HB_FUNC( TIP_URLENCODE )
 HB_FUNC( TIP_URLDECODE )
 {
    const char * cData = hb_parc( 1 );
-   HB_ISIZ nLen = hb_parclen( 1 );
-   char * cRet;
-   HB_ISIZ nPos = 0, nPosRet = 0;
-   char cElem;
+   HB_ISIZ      nLen  = hb_parclen( 1 );
+   char *       cRet;
+   HB_ISIZ      nPos = 0, nPosRet = 0;
+   char         cElem;
 
    if( ! cData )
    {
       hb_errRT_BASE( EG_ARG, 3012, NULL,
-         HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+                     HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
       return;
    }
 
@@ -153,7 +153,7 @@ HB_FUNC( TIP_URLDECODE )
          if( nPos < nLen - 2 )
          {
             cElem = cData[ ++nPos ];
-            cRet[ nPosRet ] = cElem < 'A' ? cElem - '0' : cElem - 'A' + 10;
+            cRet[ nPosRet ]  = cElem < 'A' ? cElem - '0' : cElem - 'A' + 10;
             cRet[ nPosRet ] *= 16;
 
             cElem = cData[ ++nPos ];

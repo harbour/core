@@ -10,13 +10,13 @@ static const char * hb_strtoken( const char * szText,
                                  char cDelimiter,
                                  HB_ISIZ * pnLen )
 {
-   HB_ISIZ  nStart;
-   HB_ISIZ  nEnd = 0;
-   HB_ISIZ  nCounter = 0;
+   HB_ISIZ nStart;
+   HB_ISIZ nEnd     = 0;
+   HB_ISIZ nCounter = 0;
 
    HB_TRACE( HB_TR_DEBUG,
              ( "hb_strtoken(%s, %" HB_PFS "d, %" HB_PFS "d, %d, %p)", szText, nText, nIndex,
-    ( int ) cDelimiter, pnLen ) );
+               ( int ) cDelimiter, pnLen ) );
 
    do
    {
@@ -60,10 +60,10 @@ static const char * hb_strtoken( const char * szText,
 /* returns the nth occurence of a substring within a token-delimited string */
 HB_FUNC( STRTOKEN )
 {
-   const char *   szText;
-   HB_ISIZ        nIndex = hb_parns( 2 );
-   char           cDelimiter = *hb_parc( 3 );
-   HB_ISIZ        nLen;
+   const char * szText;
+   HB_ISIZ      nIndex     = hb_parns( 2 );
+   char         cDelimiter = *hb_parc( 3 );
+   HB_ISIZ      nLen;
 
    if( ! cDelimiter )
       cDelimiter = ' ';
@@ -77,8 +77,8 @@ HB_FUNC( STRTOKEN )
 /* debug function to dump the ASCII values of an entire string */
 HB_FUNC( STRDUMP )
 {
-   const char *   szText = hb_parc( 1 );
-   HB_ISIZ        i, nLength = hb_parclen( 1 );
+   const char * szText = hb_parc( 1 );
+   HB_ISIZ      i, nLength = hb_parclen( 1 );
 
    for( i = 0; i < nLength; i++ )
       printf( "%d ", szText[ i ] );
@@ -89,9 +89,9 @@ HB_FUNC( ROT13 )
 {
    if( HB_ISCHAR( 1 ) )
    {
-      const char *   szText = hb_parc( 1 );
-      HB_SIZE        i, nLen = hb_parclen( 1 );
-      char *         szResult = ( char * ) hb_xgrab( nLen + 1 );
+      const char * szText = hb_parc( 1 );
+      HB_SIZE      i, nLen = hb_parclen( 1 );
+      char *       szResult = ( char * ) hb_xgrab( nLen + 1 );
 
       for( i = 0; i < nLen; i++ )
       {

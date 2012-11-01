@@ -22,8 +22,8 @@
 HB_FUNC( GT_STRCOUNT )
 {
    const char * s1, * s2;
-   HB_ISIZ count, p1, p2, l1, l2;
-   int match;
+   HB_ISIZ      count, p1, p2, l1, l2;
+   int          match;
 
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {

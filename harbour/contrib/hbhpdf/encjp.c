@@ -50,7 +50,7 @@
 #include "hbhpdf.h"
 
 /* HPdf_UseJPEncodings( hDoc ) -> hStatus
-*/
+ */
 HB_FUNC( HPDF_USEJPENCODINGS )
 {
    hb_retnl( ( long ) HPDF_UseJPEncodings( hb_HPDF_Doc_par( 1 ) ) );

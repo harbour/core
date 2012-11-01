@@ -49,7 +49,7 @@
  * whether to permit this exception to apply to your modifications.
  * If you do not wish that, delete this exception notice.
  *
-*/
+ */
 
 /*
  * The following parts are Copyright of the individual authors.
@@ -81,17 +81,17 @@
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )
 
-   /* NOTE: Workaround for OpenWatcom's (tested with 1.9) odbc32.lib implib
-            missing the entry for wide version of one function,
-            so we turn off UNICODE, until its fixed in OpenWatcom:
-               Error! E2028: _SQLSetStmtAttrW@16 is an undefined reference
-            [vszakats] */
+/* NOTE: Workaround for OpenWatcom's (tested with 1.9) odbc32.lib implib
+         missing the entry for wide version of one function,
+         so we turn off UNICODE, until its fixed in OpenWatcom:
+            Error! E2028: _SQLSetStmtAttrW@16 is an undefined reference
+         [vszakats] */
 #  if defined( __WATCOMC__ ) && defined( UNICODE )
 #     undef UNICODE
 #  endif
 
 #  include <windows.h>
-   /* Required for WIN32_LEAN_AND_MEAN mode */
+/* Required for WIN32_LEAN_AND_MEAN mode */
 #  if ! defined( WIN32 )
 #     define WIN32
 #  endif
@@ -100,43 +100,44 @@
 #include <sql.h>
 #include <sqlext.h>
 
-#if !defined( HB_OS_WIN )
-#  if !defined( SQLLEN ) && !defined( SQLTCHAR )
-      typedef unsigned char   SQLTCHAR;
+#if ! defined( HB_OS_WIN )
+#  if ! defined( SQLLEN ) && ! defined( SQLTCHAR )
+typedef unsigned char SQLTCHAR;
 #  endif
 #endif
 
 #ifndef SQL_NO_DATA
-#  define SQL_NO_DATA     SQL_NO_DATA_FOUND
+#  define SQL_NO_DATA  SQL_NO_DATA_FOUND
 #endif
 
 #if defined( UNICODE )
-   #define O_HB_PARSTR( n, h, len )                hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len )
-   #define O_HB_PARSTRDEF( n, h, len )             hb_wstrnull( hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len ) )
-   #define O_HB_STORSTR( str, n )                  hb_storstr_u16( HB_CDP_ENDIAN_NATIVE, str, n )
-   #define O_HB_STORSTRLEN( str, len, n )          hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, str, len, n )
-   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define O_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define O_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define O_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
-   #define O_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define O_HB_CHAR HB_WCHAR
+   #define O_HB_PARSTR( n, h, len )                 hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len )
+   #define O_HB_PARSTRDEF( n, h, len )              hb_wstrnull( hb_parstr_u16( n, HB_CDP_ENDIAN_NATIVE, h, len ) )
+   #define O_HB_STORSTR( str, n )                   hb_storstr_u16( HB_CDP_ENDIAN_NATIVE, str, n )
+   #define O_HB_STORSTRLEN( str, len, n )           hb_storstrlen_u16( HB_CDP_ENDIAN_NATIVE, str, len, n )
+   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define O_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define O_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define O_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
+   #define O_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define O_HB_CHAR  HB_WCHAR
 #else
-   #define O_HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
-   #define O_HB_PARSTRDEF( n, h, len )             hb_strnull( hb_parstr( n, hb_setGetOSCP(), h, len ) )
-   #define O_HB_STORSTR( str, n )                  hb_storstr( hb_setGetOSCP(), str, n )
-   #define O_HB_STORSTRLEN( str, len, n )          hb_storstrlen( hb_setGetOSCP(), str, len, n )
-   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
-   #define O_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
-   #define O_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define O_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define O_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
-   #define O_HB_CHAR char
+   #define O_HB_PARSTR( n, h, len )                 hb_parstr( n, hb_setGetOSCP(), h, len )
+   #define O_HB_PARSTRDEF( n, h, len )              hb_strnull( hb_parstr( n, hb_setGetOSCP(), h, len ) )
+   #define O_HB_STORSTR( str, n )                   hb_storstr( hb_setGetOSCP(), str, n )
+   #define O_HB_STORSTRLEN( str, len, n )           hb_storstrlen( hb_setGetOSCP(), str, len, n )
+   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
+   #define O_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
+   #define O_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
+   #define O_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
+   #define O_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
+   #define O_HB_CHAR  char
 #endif
 
 HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
 {
    SQLHENV hEnv;
+
    hb_retni( SQLAllocEnv( &hEnv ) );
    hb_storptr( ( void * ) hEnv, 1 );
 }
@@ -144,6 +145,7 @@ HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
 HB_FUNC( SQLALLOCCONNECT ) /* hEnv, @hDbc --> nRetCode */
 {
    SQLHDBC hDbc;
+
    hb_retni( SQLAllocConnect( ( SQLHENV ) hb_parptr( 1 ), &hDbc ) );
    hb_storptr( ( void * ) hDbc, 2 );
 }
@@ -151,9 +153,9 @@ HB_FUNC( SQLALLOCCONNECT ) /* hEnv, @hDbc --> nRetCode */
 HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
 {
    SQLSMALLINT iLen;
-   SQLRETURN ret;
-   void * hConnStr;
-   SQLTCHAR buffer[ 1024 ];
+   SQLRETURN   ret;
+   void *      hConnStr;
+   SQLTCHAR    buffer[ 1024 ];
 
    buffer[ 0 ] = '\0';
 
@@ -181,13 +183,13 @@ HB_FUNC( SQLCONNECT ) /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
    void * hUser;
    void * hPass;
 
-   ret =  SQLConnect( ( SQLHDBC ) hb_parptr( 1 ),
-                      ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hDSN, NULL ),
-                      ( SQLSMALLINT ) hb_parclen( 2 ),
-                      ( SQLTCHAR * ) O_HB_PARSTRDEF( 3, &hUser, NULL ),
-                      ( SQLSMALLINT ) hb_parclen( 3 ),
-                      ( SQLTCHAR * ) O_HB_PARSTRDEF( 4, &hPass, NULL ),
-                      ( SQLSMALLINT ) hb_parclen( 4 ) );
+   ret = SQLConnect( ( SQLHDBC ) hb_parptr( 1 ),
+                     ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hDSN, NULL ),
+                     ( SQLSMALLINT ) hb_parclen( 2 ),
+                     ( SQLTCHAR * ) O_HB_PARSTRDEF( 3, &hUser, NULL ),
+                     ( SQLSMALLINT ) hb_parclen( 3 ),
+                     ( SQLTCHAR * ) O_HB_PARSTRDEF( 4, &hPass, NULL ),
+                     ( SQLSMALLINT ) hb_parclen( 4 ) );
 
    hb_strfree( hDSN );
    hb_strfree( hUser );
@@ -214,6 +216,7 @@ HB_FUNC( SQLFREEENV ) /* hEnv --> nRetCode */
 HB_FUNC( SQLALLOCSTMT ) /* hDbc, @hStmt --> nRetCode */
 {
    SQLHSTMT hStmt;
+
    hb_retni( SQLAllocStmt( ( SQLHDBC ) hb_parptr( 1 ), &hStmt ) );
    hb_storptr( ( void * ) hStmt, 2 );
 }
@@ -227,6 +230,7 @@ HB_FUNC( SQLFREESTMT ) /* hStmt, nType --> nRetCode */
 HB_FUNC( SQLEXECDIRECT ) /* hStmt, cStatement --> nRetCode */
 {
    void * hStatement;
+
    hb_retni( SQLExecDirect( ( SQLHSTMT ) hb_parptr( 1 ),
                             ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hStatement, NULL ),
                             ( SQLINTEGER ) hb_parclen( 2 ) ) );
@@ -240,20 +244,20 @@ HB_FUNC( SQLFETCH ) /* hStmt --> nRetCode */
 
 HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
 {
-   SQLLEN nLen;
-   SQLLEN nInitBuff;
-   SQLLEN nBuffLen = 0;
-   char * buffer;
-   char * outbuf = NULL;
-   SQLSMALLINT iType = ( SQLSMALLINT ) hb_parnidef( 3, SQL_BINARY );
-   int iReallocs = 0;
-   SQLRETURN result;
+   SQLLEN      nLen;
+   SQLLEN      nInitBuff;
+   SQLLEN      nBuffLen = 0;
+   char *      buffer;
+   char *      outbuf    = NULL;
+   SQLSMALLINT iType     = ( SQLSMALLINT ) hb_parnidef( 3, SQL_BINARY );
+   int         iReallocs = 0;
+   SQLRETURN   result;
 
    nLen = ( SQLLEN ) hb_parnint( 4 );
    if( nLen <= 0 )
       nLen = 64;
    nInitBuff = nLen;
-   buffer = ( char * ) hb_xgrab( ( HB_SIZE ) nLen + 1 );
+   buffer    = ( char * ) hb_xgrab( ( HB_SIZE ) nLen + 1 );
 
    result = ! SQL_NO_DATA;
    while( result != SQL_NO_DATA )
@@ -277,9 +281,9 @@ HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
          {
             /* data right truncated! */
             nBuffLen = nLen;
-            outbuf = ( char * ) hb_xgrab( ( HB_SIZE ) nBuffLen + 1 );
+            outbuf   = ( char * ) hb_xgrab( ( HB_SIZE ) nBuffLen + 1 );
             hb_strncpy( outbuf, buffer, nLen );
-            nLen = nLen - nInitBuff + 2;
+            nLen   = nLen - nInitBuff + 2;
             buffer = ( char * ) hb_xrealloc( buffer, ( HB_SIZE ) nLen );
             iReallocs++;
          }
@@ -327,7 +331,7 @@ HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType,
    if( iLen <= 0 )
       iLen = 64;
 
-   buffer = ( SQLTCHAR * ) hb_xgrab( iLen * sizeof( SQLTCHAR ) );
+   buffer      = ( SQLTCHAR * ) hb_xgrab( iLen * sizeof( SQLTCHAR ) );
    buffer[ 0 ] = '\0';
 
    hb_retni( SQLDescribeCol( ( SQLHSTMT ) hb_parptr( 1 ),
@@ -354,17 +358,18 @@ HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @n
 {
    SQLSMALLINT iLen    = ( SQLSMALLINT ) hb_parni( 5 );
    SQLSMALLINT iBufLen = ( SQLUSMALLINT ) hb_parni( 6 );
+
 #if ODBCVER >= 0x0300
-   SQLLEN      nNumPtr = ( SQLLEN ) hb_parnint( 7 );
+   SQLLEN nNumPtr = ( SQLLEN ) hb_parnint( 7 );
 #else
-   SQLINTEGER  nNumPtr = ( SQLINTEGER ) hb_parnl( 7 );
+   SQLINTEGER nNumPtr = ( SQLINTEGER ) hb_parnl( 7 );
 #endif
    char * buffer;
 
    if( iLen <= 0 )
       iLen = 64;
 
-   buffer = ( char * ) hb_xgrab( iLen );
+   buffer      = ( char * ) hb_xgrab( iLen );
    buffer[ 0 ] = '\0';
 
 #if ODBCVER >= 0x0300
@@ -405,12 +410,12 @@ HB_FUNC( SQLFETCHSCROLL )
 
 HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
 {
-   SQLINTEGER lError;
+   SQLINTEGER  lError;
    SQLSMALLINT iLen;
-   SQLTCHAR buffer[ 256 ];
-   SQLTCHAR szErrorMsg[ SQL_MAX_MESSAGE_LENGTH + 1 ];
+   SQLTCHAR    buffer[ 256 ];
+   SQLTCHAR    szErrorMsg[ SQL_MAX_MESSAGE_LENGTH + 1 ];
 
-   buffer[ 0 ] = '\0';
+   buffer[ 0 ]     = '\0';
    szErrorMsg[ 0 ] = '\0';
    iLen = 0;
 
@@ -430,9 +435,9 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
 
 HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nError, @cErrorMsg */
 {
-   SQLTCHAR szSQLState[ 5 + 1 ];
-   SQLINTEGER lError;
-   SQLTCHAR szErrorMsg[ SQL_MAX_MESSAGE_LENGTH + 1 ];
+   SQLTCHAR    szSQLState[ 5 + 1 ];
+   SQLINTEGER  lError;
+   SQLTCHAR    szErrorMsg[ SQL_MAX_MESSAGE_LENGTH + 1 ];
    SQLSMALLINT iLen;
 
    szSQLState[ 0 ] = '\0';
@@ -441,7 +446,7 @@ HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nErro
 
    hb_retni( SQLGetDiagRec( ( SQLSMALLINT ) hb_parni( 1 ),
                             ( SQLHANDLE ) ( HB_PTRUINT ) hb_parptr( 2 ),
-                            ( SQLSMALLINT) hb_parni( 3 ),
+                            ( SQLSMALLINT ) hb_parni( 3 ),
                             ( SQLTCHAR * ) szSQLState,
                             ( SQLINTEGER * ) &lError,
                             ( SQLTCHAR * ) szErrorMsg,
@@ -465,8 +470,9 @@ HB_FUNC( SQLROWCOUNT )
 
 HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
 {
-   char buffer[ 512 ];
+   char        buffer[ 512 ];
    SQLSMALLINT iLen = 0;
+
    buffer[ 0 ] = '\0';
 
    hb_retni( SQLGetInfo( ( SQLHDBC ) hb_parptr( 1 ),
@@ -563,9 +569,10 @@ HB_FUNC( SQLROLLBACK ) /* hEnv, hDbc */
 HB_FUNC( SQLPREPARE ) /* hStmt, cStatement --> nRetCode */
 {
    void * hStatement;
+
    hb_retni( SQLPrepare( ( SQLHSTMT ) hb_parptr( 1 ),
                          ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hStatement, NULL ),
-                         ( SQLINTEGER  ) SQL_NTS ) );
+                         ( SQLINTEGER ) SQL_NTS ) );
    hb_strfree( hStatement );
 }
 
@@ -582,6 +589,7 @@ HB_FUNC( SQLMORERESULTS ) /* hEnv, hDbc */
 HB_FUNC( SQLBINDPARAMETER ) /* nStatementHandle, nParameterNumber, nParameterType, ColumnSize, DecimalDigits, @ParamValue, @ParamLength --> nRetCode */
 {
    SQLLEN nLen = ( SQLLEN ) hb_parnint( 7 );
+
    hb_retni( SQLBindParameter( ( SQLHSTMT ) hb_parptr( 1 ),
                                ( SQLUSMALLINT ) hb_parni( 2 ),
                                ( SQLSMALLINT ) SQL_PARAM_OUTPUT,
@@ -600,7 +608,7 @@ HB_FUNC( HB_ODBCSTOD )
    if( hb_parclen( 1 ) >= 10 )
    {
       const char * szSqlDate = hb_parc( 1 );  /* YYYY-MM-DD */
-      char szHrbDate[ 9 ];                    /* YYYYMMDD */
+      char         szHrbDate[ 9 ];            /* YYYYMMDD */
 
       szHrbDate[ 0 ] = szSqlDate[ 0 ];
       szHrbDate[ 1 ] = szSqlDate[ 1 ];

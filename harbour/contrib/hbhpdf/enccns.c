@@ -50,7 +50,7 @@
 #include "hbhpdf.h"
 
 /* HPdf_UseCNSEncodings( hDoc ) -> hStatus
-*/
+ */
 HB_FUNC( HPDF_USECNSENCODINGS )
 {
    hb_retnl( ( long ) HPDF_UseCNSEncodings( hb_HPDF_Doc_par( 1 ) ) );

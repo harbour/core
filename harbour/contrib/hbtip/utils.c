@@ -70,16 +70,16 @@
 #include "hbdate.h"
 
 /************************************************************
-* Useful internet timestamp based on RFC822
-*/
+ * Useful internet timestamp based on RFC822
+ */
 
 HB_FUNC( TIP_TIMESTAMP )
 {
-   static const char * s_days[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+   static const char * s_days[]   = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
    static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
 
    char szRet[ 64 ];
-   int iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
+   int  iYear, iMonth, iDay, iHour, iMinute, iSecond, iMSec;
    long lOffset = hb_timeUTCOffset();
 
    if( HB_ISDATE( 1 ) )
@@ -97,9 +97,9 @@ HB_FUNC( TIP_TIMESTAMP )
    {
       HB_ULONG ulHour = hb_parnl( 2 );
 
-      iHour   = ( int )   ( ulHour / 3600 );
+      iHour   = ( int ) ( ulHour / 3600 );
       iMinute = ( int ) ( ( ulHour % 3600 ) / 60 );
-      iSecond = ( int )   ( ulHour % 60 );
+      iSecond = ( int ) ( ulHour % 60 );
    }
 
    hb_snprintf( szRet, sizeof( szRet ), "%s, %d %s %d %02d:%02d:%02d %+03d%02d",
@@ -116,141 +116,141 @@ HB_FUNC( TIP_TIMESTAMP )
 
 typedef struct tag_mime
 {
-   HB_ISIZ pos;               /* Position in stream from which the match begins */
-   const char * pattern;      /* String to match */
-   const char * mime_type;    /* Mimetype if complete */
-   int next;                  /* following entry to determine a mimetype, relative to current position (or 0) */
-   int alternate;             /* alternative entry to determine a mimetype, relative to current position (or 0) */
-   short unsigned int flags;  /* flags for confrontation */
+   HB_ISIZ            pos;       /* Position in stream from which the match begins */
+   const char *       pattern;   /* String to match */
+   const char *       mime_type; /* Mimetype if complete */
+   int                next;      /* following entry to determine a mimetype, relative to current position (or 0) */
+   int                alternate; /* alternative entry to determine a mimetype, relative to current position (or 0) */
+   short unsigned int flags;     /* flags for confrontation */
 } MIME_ENTRY;
 
-#define MIME_FLAG_TRIMSPACES    0x0001
-#define MIME_FLAG_TRIMTABS      0x0002
-#define MIME_FLAG_CASEINSENS    0x0004
-#define MIME_FLAG_CONTINUE      0x0008
-#define MIME_TABLE_SIZE         71
+#define MIME_FLAG_TRIMSPACES  0x0001
+#define MIME_FLAG_TRIMTABS    0x0002
+#define MIME_FLAG_CASEINSENS  0x0004
+#define MIME_FLAG_CONTINUE    0x0008
+#define MIME_TABLE_SIZE       71
 
 static const MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 {
    /* Dos/win executable */
-   /*  0*/ { 0, "MZ", "application/x-dosexec", 0, 0, 0 },
+   /*  0*/ { 0,  "MZ",                                "application/x-dosexec",         0, 0, 0                                                                },
 
    /* ELF file */
-   /*  1*/ { 0, "\177ELF", NULL, 1, 0, 0 },
-   /*  2*/ { 4, "\x00", NULL, 3, 1, MIME_FLAG_CONTINUE },
-   /*  3*/ { 4, "\x01", NULL, 2, 1, MIME_FLAG_CONTINUE },
-   /*  4*/ { 4, "\x02", NULL, 1, 0, MIME_FLAG_CONTINUE },
-   /*  5*/ { 5, "\x00", NULL, 2, 1, MIME_FLAG_CONTINUE },
-   /*  6*/ { 5, "\x01", NULL, 1, 0, MIME_FLAG_CONTINUE },
-   /*  7*/ { 16, "\x00", "application/x-object", 0, 1, MIME_FLAG_CONTINUE },
-   /*  8*/ { 16, "\x01", "application/x-object", 0, 1, MIME_FLAG_CONTINUE },
-   /*  9*/ { 16, "\x02", "application/x-executable", 0, 1, MIME_FLAG_CONTINUE },
-   /* 10*/ { 16, "\x03", "application/x-sharedlib", 0, 1, MIME_FLAG_CONTINUE },
-   /* 11*/ { 16, "\x04", "application/x-coredump", 0, 0, MIME_FLAG_CONTINUE },
+   /*  1*/ { 0,  "\177ELF",                           NULL,                            1, 0, 0                                                                },
+   /*  2*/ { 4,  "\x00",                              NULL,                            3, 1, MIME_FLAG_CONTINUE                                               },
+   /*  3*/ { 4,  "\x01",                              NULL,                            2, 1, MIME_FLAG_CONTINUE                                               },
+   /*  4*/ { 4,  "\x02",                              NULL,                            1, 0, MIME_FLAG_CONTINUE                                               },
+   /*  5*/ { 5,  "\x00",                              NULL,                            2, 1, MIME_FLAG_CONTINUE                                               },
+   /*  6*/ { 5,  "\x01",                              NULL,                            1, 0, MIME_FLAG_CONTINUE                                               },
+   /*  7*/ { 16, "\x00",                              "application/x-object",          0, 1, MIME_FLAG_CONTINUE                                               },
+   /*  8*/ { 16, "\x01",                              "application/x-object",          0, 1, MIME_FLAG_CONTINUE                                               },
+   /*  9*/ { 16, "\x02",                              "application/x-executable",      0, 1, MIME_FLAG_CONTINUE                                               },
+   /* 10*/ { 16, "\x03",                              "application/x-sharedlib",       0, 1, MIME_FLAG_CONTINUE                                               },
+   /* 11*/ { 16, "\x04",                              "application/x-coredump",        0, 0, MIME_FLAG_CONTINUE                                               },
 
    /* Shell script */
-   /* 12*/ { 0, "#!/bin/sh", "application/x-shellscript", 0, 0, 0 },
-   /* 13*/ { 0, "#! /bin/sh", "application/x-shellscript", 0, 0, 0 },
-   /* 14*/ { 0, "#!/bin/csh", "application/x-shellscript", 0, 0, 0 },
-   /* 15*/ { 0, "#! /bin/csh", "application/x-shellscript", 0, 0, 0 },
-   /* 16*/ { 0, "#!/bin/ksh", "application/x-shellscript", 0, 0, 0 },
-   /* 17*/ { 0, "#! /bin/ksh", "application/x-shellscript", 0, 0, 0 },
-   /* 18*/ { 0, "#!/bin/tcsh", "application/x-shellscript", 0, 0, 0 },
-   /* 19*/ { 0, "#! /bin/tcsh", "application/x-shellscript", 0, 0, 0 },
-   /* 20*/ { 0, "#!/usr/local/bin/tcsh", "application/x-shellscript", 0, 0, 0 },
-   /* 21*/ { 0, "#! /usr/local/bin/tcsh", "application/x-shellscript", 0, 0, 0 },
-   /* 22*/ { 0, "#!/bin/bash", "application/x-shellscript", 0, 0, 0},
-   /* 23*/ { 0, "#! /bin/bash", "application/x-shellscript", 0, 0, 0 },
-   /* 24*/ { 0, "#!/usr/local/bin/bash", "application/x-shellscript", 0, 0, 0 },
-   /* 25*/ { 0, "#! /usr/local/bin/bash", "application/x-shellscript", 0, 0, 0 },
+   /* 12*/ { 0,  "#!/bin/sh",                         "application/x-shellscript",     0, 0, 0                                                                },
+   /* 13*/ { 0,  "#! /bin/sh",                        "application/x-shellscript",     0, 0, 0                                                                },
+   /* 14*/ { 0,  "#!/bin/csh",                        "application/x-shellscript",     0, 0, 0                                                                },
+   /* 15*/ { 0,  "#! /bin/csh",                       "application/x-shellscript",     0, 0, 0                                                                },
+   /* 16*/ { 0,  "#!/bin/ksh",                        "application/x-shellscript",     0, 0, 0                                                                },
+   /* 17*/ { 0,  "#! /bin/ksh",                       "application/x-shellscript",     0, 0, 0                                                                },
+   /* 18*/ { 0,  "#!/bin/tcsh",                       "application/x-shellscript",     0, 0, 0                                                                },
+   /* 19*/ { 0,  "#! /bin/tcsh",                      "application/x-shellscript",     0, 0, 0                                                                },
+   /* 20*/ { 0,  "#!/usr/local/bin/tcsh",             "application/x-shellscript",     0, 0, 0                                                                },
+   /* 21*/ { 0,  "#! /usr/local/bin/tcsh",            "application/x-shellscript",     0, 0, 0                                                                },
+   /* 22*/ { 0,  "#!/bin/bash",                       "application/x-shellscript",     0, 0, 0                                                                },
+   /* 23*/ { 0,  "#! /bin/bash",                      "application/x-shellscript",     0, 0, 0                                                                },
+   /* 24*/ { 0,  "#!/usr/local/bin/bash",             "application/x-shellscript",     0, 0, 0                                                                },
+   /* 25*/ { 0,  "#! /usr/local/bin/bash",            "application/x-shellscript",     0, 0, 0                                                                },
 
    /* Java object code*/
-   /* 26*/ { 0, "\xCA\xFE\xBA\xBE", "application/java", 0, 0, 0 },
+   /* 26*/ { 0,  "\xCA\xFE\xBA\xBE",                  "application/java",              0, 0, 0                                                                },
 
    /* Perl */
-   /* 27*/ { 0, "#!/bin/perl", "application/x-perl", 0, 0, 0 },
-   /* 28*/ { 0, "#! /bin/perl", "application/x-perl", 0, 0, 0 },
-   /* 29*/ { 0, "eval \"exec /bin/perl", "application/x-perl", 0, 0, 0 },
-   /* 30*/ { 0, "#!/usr/bin/perl", "application/x-perl", 0, 0, 0 },
-   /* 31*/ { 0, "#! /usr/bin/perl", "application/x-perl", 0, 0, 0 },
-   /* 32*/ { 0, "eval \"exec /usr/bin/perl", "application/x-perl", 0, 0, 0 },
-   /* 33*/ { 0, "#!/usr/local/bin/perl", "application/x-perl", 0, 0, 0 },
-   /* 34*/ { 0, "#! /usr/local/bin/perl", "application/x-perl", 0, 0, 0 },
-   /* 35*/ { 0, "eval \"exec /usr/local/bin/perl", "application/x-perl", 0, 0, 0 },
+   /* 27*/ { 0,  "#!/bin/perl",                       "application/x-perl",            0, 0, 0                                                                },
+   /* 28*/ { 0,  "#! /bin/perl",                      "application/x-perl",            0, 0, 0                                                                },
+   /* 29*/ { 0,  "eval \"exec /bin/perl",             "application/x-perl",            0, 0, 0                                                                },
+   /* 30*/ { 0,  "#!/usr/bin/perl",                   "application/x-perl",            0, 0, 0                                                                },
+   /* 31*/ { 0,  "#! /usr/bin/perl",                  "application/x-perl",            0, 0, 0                                                                },
+   /* 32*/ { 0,  "eval \"exec /usr/bin/perl",         "application/x-perl",            0, 0, 0                                                                },
+   /* 33*/ { 0,  "#!/usr/local/bin/perl",             "application/x-perl",            0, 0, 0                                                                },
+   /* 34*/ { 0,  "#! /usr/local/bin/perl",            "application/x-perl",            0, 0, 0                                                                },
+   /* 35*/ { 0,  "eval \"exec /usr/local/bin/perl",   "application/x-perl",            0, 0, 0                                                                },
 
    /* Python */
-   /* 36*/ { 0, "#!/bin/python", "application/x-python", 0, 0, 0 },
-   /* 37*/ { 0, "#! /bin/python", "application/x-python", 0, 0, 0 },
-   /* 38*/ { 0, "eval \"exec /bin/python", "application/x-python", 0, 0, 0 },
-   /* 39*/ { 0, "#!/usr/bin/python", "application/x-python", 0, 0, 0 },
-   /* 40*/ { 0, "#! /usr/bin/python", "application/x-python", 0, 0, 0 },
-   /* 41*/ { 0, "eval \"exec /usr/bin/python", "application/x-python", 0, 0, 0 },
-   /* 42*/ { 0, "#!/usr/local/bin/python", "application/x-python", 0, 0, 0 },
-   /* 43*/ { 0, "#! /usr/local/bin/python", "application/x-python", 0, 0, 0 },
-   /* 44*/ { 0, "eval \"exec /usr/local/bin/python", "application/x-python", 0, 0, 0 },
+   /* 36*/ { 0,  "#!/bin/python",                     "application/x-python",          0, 0, 0                                                                },
+   /* 37*/ { 0,  "#! /bin/python",                    "application/x-python",          0, 0, 0                                                                },
+   /* 38*/ { 0,  "eval \"exec /bin/python",           "application/x-python",          0, 0, 0                                                                },
+   /* 39*/ { 0,  "#!/usr/bin/python",                 "application/x-python",          0, 0, 0                                                                },
+   /* 40*/ { 0,  "#! /usr/bin/python",                "application/x-python",          0, 0, 0                                                                },
+   /* 41*/ { 0,  "eval \"exec /usr/bin/python",       "application/x-python",          0, 0, 0                                                                },
+   /* 42*/ { 0,  "#!/usr/local/bin/python",           "application/x-python",          0, 0, 0                                                                },
+   /* 43*/ { 0,  "#! /usr/local/bin/python",          "application/x-python",          0, 0, 0                                                                },
+   /* 44*/ { 0,  "eval \"exec /usr/local/bin/python", "application/x-python",          0, 0, 0                                                                },
 
    /* Unix compress (.z) */
-   /* 45*/ { 0, "\x1F\x9D", "application/x-compress", 0, 0, 0 },
+   /* 45*/ { 0,  "\x1F\x9D",                          "application/x-compress",        0, 0, 0                                                                },
 
    /* Unix gzip */
-   /* 46*/ { 0, "\x1F\x8B", "application/x-gzip", 0, 0, 0 },
+   /* 46*/ { 0,  "\x1F\x8B",                          "application/x-gzip",            0, 0, 0                                                                },
 
    /* PKzip */
    /* 47 { 0, "PK\x03\x04", "application/x-zip", 0, 0, 0 }, 2010-12-15 support of xlsx/ods */
 
    /* xml */
-   /* 48*/ { 0, "<?xml", "text/xml", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 48*/ { 0,  "<?xml",                             "text/xml",                      0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
 
    /* html */
-   /* 49*/ { 0, "<html", "text/html", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 50*/ { 0, "<title", "text/html", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 51*/ { 0, "<head", "text/html", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 52*/ { 0, "<body", "text/html", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 53*/ { 0, "<!--", "text/html", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS },
-   /* 54*/ { 0, "<h", "text/html", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
-   /* 55*/ { 0, "<!", "text/html", 0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 49*/ { 0,  "<html",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 50*/ { 0,  "<title",                            "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 51*/ { 0,  "<head",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 52*/ { 0,  "<body",                             "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 53*/ { 0,  "<!--",                              "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS                        },
+   /* 54*/ { 0,  "<h",                                "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
+   /* 55*/ { 0,  "<!",                                "text/html",                     0, 0, MIME_FLAG_TRIMSPACES | MIME_FLAG_TRIMTABS | MIME_FLAG_CASEINSENS },
 
    /* Postscript */
-   /* 56*/ { 0, "%!", "application/postscript", 0, 0, 0 },
-   /* 57*/ { 0, "\x04%!", "application/postscript", 0, 0, 0 },
+   /* 56*/ { 0,  "%!",                                "application/postscript",        0, 0, 0                                                                },
+   /* 57*/ { 0,  "\x04%!",                            "application/postscript",        0, 0, 0                                                                },
 
    /* PDF */
-   /* 58*/ { 0, "%PDF-", "application/pdf", 0, 0, 0 },
+   /* 58*/ { 0,  "%PDF-",                             "application/pdf",               0, 0, 0                                                                },
 
    /* DVI */
-   /* 59*/ { 0, "\xF7\x02", "application/dvi", 0, 0, 0 },
+   /* 59*/ { 0,  "\xF7\x02",                          "application/dvi",               0, 0, 0                                                                },
 
    /* PNG image */
-   /* 60*/ { 0, "\x89PNG", "image/png", 0, 0, 0 },
+   /* 60*/ { 0,  "\x89PNG",                           "image/png",                     0, 0, 0                                                                },
 
    /* XPM image */
-   /* 61*/ { 0, "/* XPM", "image/x-xpm", 0, 0, 0 },
+   /* 61*/ { 0,  "/* XPM",                            "image/x-xpm",                   0, 0, 0                                                                },
 
    /* TIFF image */
-   /* 62*/ { 0, "II", "image/tiff", 0, 0, 0 },
-   /* 63*/ { 0, "MM", "image/tiff", 0, 0, 0 },
+   /* 62*/ { 0,  "II",                                "image/tiff",                    0, 0, 0                                                                },
+   /* 63*/ { 0,  "MM",                                "image/tiff",                    0, 0, 0                                                                },
 
    /* GIF image */
-   /* 64*/ { 0, "GIF89z", "image/x-compressed-gif", 0, 0, 0 },
-   /* 65*/ { 0, "GIF", "image/gif", 0, 0, 0 },
+   /* 64*/ { 0,  "GIF89z",                            "image/x-compressed-gif",        0, 0, 0                                                                },
+   /* 65*/ { 0,  "GIF",                               "image/gif",                     0, 0, 0                                                                },
 
    /* JPEG image */
-   /* 66*/ { 0, "\xFF\xD8", "image/jpeg", 0, 0, 0 },
+   /* 66*/ { 0,  "\xFF\xD8",                          "image/jpeg",                    0, 0, 0                                                                },
 
    /* ICO image */
-   /* 67*/ { 2, "\x01\x00", "image/x-icon", 0, 0, 0 },
+   /* 67*/ { 2,  "\x01\x00",                          "image/x-icon",                  0, 0, 0                                                                },
 
    /* OGG file */
-   /* 68*/ { 0, "OggS", "application/ogg", 0, 0, 0 },
+   /* 68*/ { 0,  "OggS",                              "application/ogg",               0, 0, 0                                                                },
 
    /* FLV file */
-   /* 69*/ { 0, "FLV", "video/x-flv", 0, 0, 0 },
+   /* 69*/ { 0,  "FLV",                               "video/x-flv",                   0, 0, 0                                                                },
 
    /* SWF compressed file */
-   /* 70*/ { 0, "CWS", "application/x-shockwave-flash", 0, 0, 0 },
+   /* 70*/ { 0,  "CWS",                               "application/x-shockwave-flash", 0, 0, 0                                                                },
 
    /* SWF uncompressed file */
-   /* 71*/ { 0, "FWS", "application/x-shockwave-flash", 0, 0, 0 }
+   /* 71*/ { 0,  "FWS",                               "application/x-shockwave-flash", 0, 0, 0                                                                }
 
 };
 
@@ -258,70 +258,70 @@ static const MIME_ENTRY s_mimeTable[ MIME_TABLE_SIZE ] =
 
 typedef struct tag_mime_ext
 {
-   const char * pattern;      /* Extension to match */
-   const char * mime_type;    /* Mimetype if complete */
-   HB_USHORT flags;  /* flags for confrontation */
+   const char * pattern;   /* Extension to match */
+   const char * mime_type; /* Mimetype if complete */
+   HB_USHORT    flags;     /* flags for confrontation */
 } EXT_MIME_ENTRY;
 
-#define EXT_MIME_TABLE_SIZE 24
+#define EXT_MIME_TABLE_SIZE  24
 
 static EXT_MIME_ENTRY s_extMimeTable[ EXT_MIME_TABLE_SIZE ] =
 {
    /* Dos/win executable */
-   /*  0*/ { "EXE", "application/x-dosexec", MIME_FLAG_CASEINSENS },
+   /*  0*/ { "EXE",   "application/x-dosexec",                                             MIME_FLAG_CASEINSENS },
 
    /* HTML file */
-   /*  1*/ { "HTM", "text/html", MIME_FLAG_CASEINSENS },
-   /*  2*/ { "HTML", "text/html", MIME_FLAG_CASEINSENS },
+   /*  1*/ { "HTM",   "text/html",                                                         MIME_FLAG_CASEINSENS },
+   /*  2*/ { "HTML",  "text/html",                                                         MIME_FLAG_CASEINSENS },
 
    /* XLS file */
-   /*  3*/ { "xls", "application/vnd.ms-excel", MIME_FLAG_CASEINSENS },
+   /*  3*/ { "xls",   "application/vnd.ms-excel",                                          MIME_FLAG_CASEINSENS },
 
    /* XML file */
-   /*  4*/ { "XML", "text/xml", MIME_FLAG_CASEINSENS },
+   /*  4*/ { "XML",   "text/xml",                                                          MIME_FLAG_CASEINSENS },
 
    /* text file */
-   /*  5*/ { "TXT", "text/txt", MIME_FLAG_CASEINSENS },
+   /*  5*/ { "TXT",   "text/txt",                                                          MIME_FLAG_CASEINSENS },
 
    /* PDF file */
-   /*  6*/ { "pdf", "application/pdf", MIME_FLAG_CASEINSENS },
+   /*  6*/ { "pdf",   "application/pdf",                                                   MIME_FLAG_CASEINSENS },
 
    /* PS file */
-   /*  7*/ { "ps", "application/postscript", MIME_FLAG_CASEINSENS },
+   /*  7*/ { "ps",    "application/postscript",                                            MIME_FLAG_CASEINSENS },
 
    /* C source */
-   /*  8*/ { "c", "text/x-c", MIME_FLAG_CASEINSENS },
-   /*  9*/ { "c++", "text/x-c++", MIME_FLAG_CASEINSENS },
-   /* 10*/ { "cpp", "text/x-c++", MIME_FLAG_CASEINSENS },
-   /* 11*/ { "cxx", "text/x-c++", MIME_FLAG_CASEINSENS },
-   /* 12*/ { "h", "text/x-c-header", MIME_FLAG_CASEINSENS },
-   /* 13*/ { "hpp", "text/x-c++-header", MIME_FLAG_CASEINSENS },
-   /* 14*/ { "hxx", "text/x-c++-header", MIME_FLAG_CASEINSENS },
+   /*  8*/ { "c",     "text/x-c",                                                          MIME_FLAG_CASEINSENS },
+   /*  9*/ { "c++",   "text/x-c++",                                                        MIME_FLAG_CASEINSENS },
+   /* 10*/ { "cpp",   "text/x-c++",                                                        MIME_FLAG_CASEINSENS },
+   /* 11*/ { "cxx",   "text/x-c++",                                                        MIME_FLAG_CASEINSENS },
+   /* 12*/ { "h",     "text/x-c-header",                                                   MIME_FLAG_CASEINSENS },
+   /* 13*/ { "hpp",   "text/x-c++-header",                                                 MIME_FLAG_CASEINSENS },
+   /* 14*/ { "hxx",   "text/x-c++-header",                                                 MIME_FLAG_CASEINSENS },
 
    /* Java */
-   /* 15*/ { "class", "application/java", 0 }, /* case sensitive! */
-   /* 16*/ { "java", "text/java", 0 },
+   /* 15*/ { "class", "application/java",                                                  0                    }, /* case sensitive! */
+   /* 16*/ { "java",  "text/java",                                                         0                    },
 
    /* RTF file */
-   /* 17*/ { "rtf", "application/rtf", MIME_FLAG_CASEINSENS },
+   /* 17*/ { "rtf",   "application/rtf",                                                   MIME_FLAG_CASEINSENS },
 
    /* CSV file */
-   /* 18*/ { "csv", "text/csv", MIME_FLAG_CASEINSENS },
+   /* 18*/ { "csv",   "text/csv",                                                          MIME_FLAG_CASEINSENS },
 
    /* CSS file */
-   /* 19*/ { "css", "text/css", MIME_FLAG_CASEINSENS },
+   /* 19*/ { "css",   "text/css",                                                          MIME_FLAG_CASEINSENS },
 
    /* JS file */
-   /* 20*/ { "js", "application/x-javascript", MIME_FLAG_CASEINSENS },
+   /* 20*/ { "js",    "application/x-javascript",                                          MIME_FLAG_CASEINSENS },
 
    /* ODS file */
-   /* 21*/ { "ods", "application/vnd.oasis.opendocument.spreadsheet", MIME_FLAG_CASEINSENS },
+   /* 21*/ { "ods",   "application/vnd.oasis.opendocument.spreadsheet",                    MIME_FLAG_CASEINSENS },
 
    /* XLSX file */
-   /* 22*/ { "xlsx", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", MIME_FLAG_CASEINSENS },
+   /* 22*/ { "xlsx",  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", MIME_FLAG_CASEINSENS },
 
    /* ZIP file */
-   /* 23*/ { "zip", "application/x-zip", MIME_FLAG_CASEINSENS }
+   /* 23*/ { "zip",   "application/x-zip",                                                 MIME_FLAG_CASEINSENS }
 
 };
 
@@ -349,7 +349,7 @@ static const char * s_findExtMimeType( const char * cExt )
 static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, int iElem )
 {
    const MIME_ENTRY * elem = s_mimeTable + iElem;
-   HB_ISIZ nPos = elem->pos;
+   HB_ISIZ nPos     = elem->pos;
    HB_ISIZ nDataLen = strlen( elem->pattern );
 
    /* allow \0 to be used for matches */
@@ -358,9 +358,9 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
 
    /* trim spaces if required */
    while( nPos < nLen &&
-      ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
-         cData[ nPos ] == ' ' || cData[ nPos ] == '\r' || cData[ nPos ] == '\n' ) ) ||
-         ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ nPos ] == '\t' ) ) )
+          ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
+                 cData[ nPos ] == ' ' || cData[ nPos ] == '\r' || cData[ nPos ] == '\n' ) ) ||
+            ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ nPos ] == '\t' ) ) )
    {
       nPos++;
    }
@@ -380,7 +380,7 @@ static const char * s_findMimeStringInTree( const char * cData, HB_ISIZ nLen, in
       }
       else
       {
-         if( ( *elem->pattern == 0 && cData[ nPos ] == 0) || strncmp( cData + nPos, elem->pattern, nDataLen ) == 0 )
+         if( ( *elem->pattern == 0 && cData[ nPos ] == 0 ) || strncmp( cData + nPos, elem->pattern, nDataLen ) == 0 )
          {
             if( elem->next != 0 )
                return s_findMimeStringInTree( cData, nLen, iElem + elem->next );
@@ -404,7 +404,7 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
    for( iCount = 0; iCount < MIME_TABLE_SIZE; iCount++ )
    {
       const MIME_ENTRY * elem = s_mimeTable + iCount;
-      HB_ISIZ nPos = elem->pos;
+      HB_ISIZ nPos     = elem->pos;
       HB_ISIZ nDataLen = strlen( elem->pattern );
 
       if( ( elem->flags & MIME_FLAG_CONTINUE ) == MIME_FLAG_CONTINUE )
@@ -412,9 +412,9 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
 
       /* trim spaces if required */
       while( nPos < nLen &&
-         ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
-             cData[ nPos ] == ' ' || cData[ nPos ] == '\r' || cData[ nPos ] == '\n' ) ) ||
-           ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ nPos ] == '\t' ) ) )
+             ( ( ( elem->flags & MIME_FLAG_TRIMSPACES ) == MIME_FLAG_TRIMSPACES && (
+                    cData[ nPos ] == ' ' || cData[ nPos ] == '\r' || cData[ nPos ] == '\n' ) ) ||
+               ( ( elem->flags & MIME_FLAG_TRIMTABS ) == MIME_FLAG_TRIMSPACES && cData[ nPos ] == '\t' ) ) )
       {
          nPos++;
       }
@@ -452,8 +452,8 @@ static const char * s_findStringMimeType( const char * cData, HB_ISIZ nLen )
 
 static const char * s_findFileMimeType( HB_FHANDLE fileIn )
 {
-   char buf[ 512 ];
-   int iLen;
+   char       buf[ 512 ];
+   int        iLen;
    HB_FOFFSET nPos;
 
    nPos = hb_fsSeekLarge( fileIn, 0, FS_RELATIVE );
@@ -475,15 +475,15 @@ HB_FUNC( TIP_FILEMIMETYPE )
 
    if( pFile )
    {
-      HB_FHANDLE fileIn;
-      const char * ext_type = NULL;
+      HB_FHANDLE   fileIn;
+      const char * ext_type   = NULL;
       const char * magic_type = NULL;
 
       if( HB_IS_STRING( pFile ) )
       {
          /* decode the extension */
          const char * fname = hb_itemGetCPtr( pFile );
-         HB_ISIZ nPos = strlen( fname ) - 1;
+         HB_ISIZ      nPos  = strlen( fname ) - 1;
 
          while( nPos >= 0 && fname[ nPos ] != '.' )
             nPos--;
@@ -500,14 +500,14 @@ HB_FUNC( TIP_FILEMIMETYPE )
       }
       else
       {
-         fileIn = ( HB_FHANDLE ) hb_itemGetNInt( pFile );
+         fileIn     = ( HB_FHANDLE ) hb_itemGetNInt( pFile );
          magic_type = s_findFileMimeType( fileIn );
       }
 
       if( magic_type )
          hb_retc_const( magic_type );
       else
-         hb_retc_const( ext_type ? ext_type : "unknown" ); /* "unknown" is a valid MIME type */
+         hb_retc_const( ext_type ? ext_type : "unknown" );  /* "unknown" is a valid MIME type */
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -528,18 +528,18 @@ HB_FUNC( TIP_MIMETYPE )
 }
 
 /*
- Case insensitive string comparison to optimize this expression:
- IF Lower( <cSubStr> ) == Lower( SubStr( <cString>, <nStart>, Len( <cSubStr> ) ) )
-  <cString> must be provided as a pointer to the character string containing a substring
-  <nStart> is the numeric position to start comparison in <cString>
-  <cSubStr> is the character string to compare with characters in <cString>, beginning at <nStart>
-*/
+   Case insensitive string comparison to optimize this expression:
+   IF Lower( <cSubStr> ) == Lower( SubStr( <cString>, <nStart>, Len( <cSubStr> ) ) )
+   <cString> must be provided as a pointer to the character string containing a substring
+   <nStart> is the numeric position to start comparison in <cString>
+   <cSubStr> is the character string to compare with characters in <cString>, beginning at <nStart>
+ */
 
 HB_FUNC( __TIP_PSTRCOMPI )
 {
-   PHB_ITEM pString  = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pStart   = hb_param( 2, HB_IT_NUMERIC );
-   PHB_ITEM pSubstr  = hb_param( 3, HB_IT_STRING );
+   PHB_ITEM pString = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pStart  = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pSubstr = hb_param( 3, HB_IT_STRING );
 
    if( pString && pStart && pSubstr )
       hb_retl( hb_strnicmp( hb_itemGetCPtr( pString ) + hb_itemGetNS( pStart ) - 1,
@@ -558,10 +558,10 @@ HB_FUNC( TIP_HTMLSPECIALCHARS )
       if( nLen )
       {
          const char * pszData = hb_parc( 1 );
-         char * cRet;
-         HB_ISIZ nPos = 0;
-         HB_ISIZ nPosRet = 0;
-         HB_BYTE cElem;
+         char *       cRet;
+         HB_ISIZ      nPos    = 0;
+         HB_ISIZ      nPosRet = 0;
+         HB_BYTE      cElem;
 
          while( nLen && HB_ISSPACE( pszData[ nLen - 1 ] ) )
             nLen--;
@@ -662,10 +662,10 @@ HB_FUNC( TIP_JSONSPECIALCHARS )
       if( nLen )
       {
          const char * pszData = hb_parc( 1 );
-         char * cRet;
-         HB_ISIZ nPos = 0;
-         HB_ISIZ nPosRet = 0;
-         HB_BYTE cElem;
+         char *       cRet;
+         HB_ISIZ      nPos    = 0;
+         HB_ISIZ      nPosRet = 0;
+         HB_BYTE      cElem;
 
          while( nLen && HB_ISSPACE( pszData[ nLen - 1 ] ) )
             nLen--;

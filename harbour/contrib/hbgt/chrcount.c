@@ -22,20 +22,20 @@
 HB_FUNC( GT_CHRCOUNT )
 {
    const char * s1, * s2;
-   HB_ISIZ count, pos2, len;
+   HB_ISIZ      count, pos2, len;
 
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      s1    = hb_parc( 1 );
-      s2    = hb_parc( 2 );
-      len   = hb_parclen( 2 );
+      s1  = hb_parc( 1 );
+      s2  = hb_parc( 2 );
+      len = hb_parclen( 2 );
 
       /* loop through s2 matching passed character (s1) with
          each character of s1 */
       for( count = 0, pos2 = 1; pos2 <= len; s2++, pos2++ )
          if( *s1 == *s2 )  /* character matches s1 */
             count++;
-                           /* increment counter */
+      /* increment counter */
 
       hb_retns( count );   /* return result */
    }

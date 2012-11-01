@@ -94,7 +94,7 @@ HB_CALL_ON_STARTUP_END( _hb_mlzo_init_ )
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup _hb_mlzo_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY HB_DATASEG_FUNC( _hb_mlzo_init_ )
+   #define HB_DATASEG_BODY  HB_DATASEG_FUNC( _hb_mlzo_init_ )
    #include "hbiniseg.h"
 #endif
 
@@ -119,8 +119,8 @@ HB_FUNC( HB_LZO1X_1_COMPRESS )
 
    if( src )
    {
-      lzo_uint    src_len = ( lzo_uint ) hb_parclen( 1 );
-      lzo_bytep   dst     = NULL;
+      lzo_uint  src_len = ( lzo_uint ) hb_parclen( 1 );
+      lzo_bytep dst     = NULL;
 
       if( src_len > 0 )
          dst = ( lzo_bytep ) hb_xalloc( HB_MAX( hb_lzo_compressbound( src_len ),
@@ -129,13 +129,13 @@ HB_FUNC( HB_LZO1X_1_COMPRESS )
          hb_storni( LZO_E_OUT_OF_MEMORY, 3 );  /* out of memory */
       else
       {
-         lzo_uint    dst_len;
-         lzo_voidp   wrkmem  = ( lzo_voidp ) hb_xalloc( LZO1X_1_MEM_COMPRESS );
-         int         r;
+         lzo_uint  dst_len;
+         lzo_voidp wrkmem = ( lzo_voidp ) hb_xalloc( LZO1X_1_MEM_COMPRESS );
+         int       r;
 
          if( wrkmem == NULL )
          {
-            r = LZO_E_OUT_OF_MEMORY; /* out of memory */
+            r       = LZO_E_OUT_OF_MEMORY; /* out of memory */
             dst_len = 0;
          }
          else
@@ -179,9 +179,9 @@ HB_FUNC( HB_LZO1X_DECOMPRESS )
 
    if( src )
    {
-      lzo_uint    src_len = ( lzo_uint ) hb_parclen( 1 );
-      lzo_bytep   dst     = NULL;
-      lzo_uint    dst_len;
+      lzo_uint  src_len = ( lzo_uint ) hb_parclen( 1 );
+      lzo_bytep dst     = NULL;
+      lzo_uint  dst_len;
 
       if( hb_parns( 2 ) > 0 )
          dst = ( lzo_bytep ) hb_xalloc( hb_parns( 2 ) );
@@ -214,9 +214,9 @@ HB_FUNC( HB_LZO1X_DECOMPRESS_SAFE )
 
    if( src )
    {
-      lzo_uint    src_len = ( lzo_uint ) hb_parclen( 1 );
-      lzo_bytep   dst     = NULL;
-      lzo_uint    dst_len = ( lzo_uint ) hb_parns( 2 );
+      lzo_uint  src_len = ( lzo_uint ) hb_parclen( 1 );
+      lzo_bytep dst     = NULL;
+      lzo_uint  dst_len = ( lzo_uint ) hb_parns( 2 );
 
       if( dst_len > 0 )
          dst = ( lzo_bytep ) hb_xalloc( dst_len );

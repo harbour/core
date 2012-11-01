@@ -53,7 +53,7 @@
 #include "hbapifs.h"
 #include "hbstack.h"
 
-#define _B_SIZE   4096
+#define _B_SIZE         4096
 
 /* up this number if you need more than 10 text file areas */
 #define TEXT_WORKAREAS  10
@@ -83,8 +83,8 @@ HB_FUNC( HB_FUSE )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_fttext );
 
-   PHB_ITEM arg1_it  = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM arg2_it  = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM arg1_it = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM arg2_it = hb_param( 2, HB_IT_NUMERIC );
    int      open_flags;
 
    if( arg1_it )
@@ -94,24 +94,24 @@ HB_FUNC( HB_FUSE )
       else
          open_flags = 0;
 
-      ft_text->handles[ ft_text->area ]   = hb_fsOpen( hb_parc( 1 ), ( HB_USHORT ) open_flags );
-      ft_text->offset[ ft_text->area ]    = 0;
-      ft_text->recno[ ft_text->area ]     = 1;
-      ft_text->lastbyte[ ft_text->area ]  = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0, FS_END );
-      ft_text->isEof[ ft_text->area ]     = ( ft_text->lastbyte[ ft_text->area ] == 0 );
+      ft_text->handles[ ft_text->area ]  = hb_fsOpen( hb_parc( 1 ), ( HB_USHORT ) open_flags );
+      ft_text->offset[ ft_text->area ]   = 0;
+      ft_text->recno[ ft_text->area ]    = 1;
+      ft_text->lastbyte[ ft_text->area ] = hb_fsSeekLarge( ft_text->handles[ ft_text->area ], 0, FS_END );
+      ft_text->isEof[ ft_text->area ]    = ( ft_text->lastbyte[ ft_text->area ] == 0 );
       hb_retnint( ft_text->handles[ ft_text->area ] );
    }
    else
    {
       hb_fsClose( ft_text->handles[ ft_text->area ] );
       hb_retnint( 1 );
-      ft_text->recno[ ft_text->area ]     = 0;
-      ft_text->offset[ ft_text->area ]    = 0;
-      ft_text->handles[ ft_text->area ]   = 0;
-      ft_text->last_rec[ ft_text->area ]  = 0;
-      ft_text->last_off[ ft_text->area ]  = 0;
-      ft_text->lastbyte[ ft_text->area ]  = 0;
-      ft_text->isEof[ ft_text->area ]     = HB_FALSE;
+      ft_text->recno[ ft_text->area ]    = 0;
+      ft_text->offset[ ft_text->area ]   = 0;
+      ft_text->handles[ ft_text->area ]  = 0;
+      ft_text->last_rec[ ft_text->area ] = 0;
+      ft_text->last_off[ ft_text->area ] = 0;
+      ft_text->lastbyte[ ft_text->area ] = 0;
+      ft_text->isEof[ ft_text->area ]    = HB_FALSE;
    }
 }
 
@@ -126,10 +126,10 @@ HB_FUNC( HB_FRECNO )
 
 static long hb_hbfskip( PFT_TEXT ft_text, char * buffer, HB_SIZE bufsize, int recs )
 {
-   HB_FOFFSET  read_pos;
-   HB_ISIZ     read_len;
-   HB_ISIZ     x;
-   int         y;
+   HB_FOFFSET read_pos;
+   HB_ISIZ    read_len;
+   HB_ISIZ    x;
+   int        y;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_hbfskip(%p, %p, %d)", ft_text, buffer, recs ) );
 
@@ -152,7 +152,7 @@ static long hb_hbfskip( PFT_TEXT ft_text, char * buffer, HB_SIZE bufsize, int re
 
          if( ( ft_text->offset[ ft_text->area ] + x + 2 ) < ft_text->lastbyte[ ft_text->area ] )
          {
-            ft_text->isEof[ ft_text->area ]  = HB_FALSE;
+            ft_text->isEof[ ft_text->area ]   = HB_FALSE;
             ft_text->offset[ ft_text->area ] += ( x + 2 );
             ft_text->recno[ ft_text->area ]  += 1;
          }
@@ -224,8 +224,8 @@ HB_FUNC( HB_FREADLN )
 
    char * buffer = ( char * ) hb_xgrab( _B_SIZE );
 
-   HB_ISIZ  x;
-   HB_ISIZ  read;
+   HB_ISIZ x;
+   HB_ISIZ read;
 
    hb_fsSeekLarge( ft_text->handles[ ft_text->area ], ft_text->offset[ ft_text->area ], FS_SET );
 
@@ -298,9 +298,9 @@ HB_FUNC( HB_FGOBOTTOM )
    {
       char * buffer = ( char * ) hb_xgrab( _B_SIZE );
 
-      HB_ISIZ     loc   = 0;
-      HB_ISIZ     len;
-      HB_FOFFSET  last  = ft_text->offset[ ft_text->area ];
+      HB_ISIZ    loc = 0;
+      HB_ISIZ    len;
+      HB_FOFFSET last = ft_text->offset[ ft_text->area ];
 
       do
       {
@@ -315,10 +315,10 @@ HB_FUNC( HB_FGOBOTTOM )
                 ( ( *( buffer + x ) == 10 ) && ( *( buffer + x + 1 ) == 13 ) ) ||
                 ( x - loc > _B_SIZE ) )
             {
-               last  = ft_text->offset[ ft_text->area ] + loc;
+               last = ft_text->offset[ ft_text->area ] + loc;
                ft_text->recno[ ft_text->area ]++;
                ++x;
-               loc   = x + 1;
+               loc = x + 1;
             }
          }
          ft_text->offset[ ft_text->area ] += loc;
@@ -326,8 +326,8 @@ HB_FUNC( HB_FGOBOTTOM )
       }
       while( len == _B_SIZE );
 
-      ft_text->last_rec[ ft_text->area ]  = --ft_text->recno[ ft_text->area ];
-      ft_text->last_off[ ft_text->area ]  = last;
+      ft_text->last_rec[ ft_text->area ] = --ft_text->recno[ ft_text->area ];
+      ft_text->last_off[ ft_text->area ] = last;
 
       hb_xfree( buffer );
    }
@@ -346,13 +346,13 @@ HB_FUNC( HB_FLASTREC )
 {
    PFT_TEXT ft_text = ( PFT_TEXT ) hb_stackGetTSD( &s_fttext );
 
-   long        old_rec;
-   HB_FOFFSET  old_offset;
-   HB_BOOL     bIsEof;
+   long       old_rec;
+   HB_FOFFSET old_offset;
+   HB_BOOL    bIsEof;
 
-   old_rec     = ft_text->recno[ ft_text->area ];
-   old_offset  = ft_text->offset[ ft_text->area ];
-   bIsEof      = ft_text->isEof[ ft_text->area ];
+   old_rec    = ft_text->recno[ ft_text->area ];
+   old_offset = ft_text->offset[ ft_text->area ];
+   bIsEof     = ft_text->isEof[ ft_text->area ];
 
    HB_FUNC_EXEC( HB_FGOBOTTOM );
    hb_retnl( ft_text->last_rec[ ft_text->area ] );
@@ -406,9 +406,9 @@ HB_FUNC( HB_FREADANDSKIP )
 
    char * buffer = ( char * ) hb_xgrab( _B_SIZE );
 
-   HB_ISIZ  x        = 0;
-   HB_ISIZ  read;
-   HB_BOOL  bInField = HB_FALSE, bHasCRLF = HB_FALSE;
+   HB_ISIZ x = 0;
+   HB_ISIZ read;
+   HB_BOOL bInField = HB_FALSE, bHasCRLF = HB_FALSE;
 
    hb_fsSeekLarge( ft_text->handles[ ft_text->area ], ft_text->offset[ ft_text->area ], FS_SET );
    read = hb_fsReadLarge( ft_text->handles[ ft_text->area ], buffer, _B_SIZE );
@@ -431,7 +431,7 @@ HB_FUNC( HB_FREADANDSKIP )
       if( ( ( *( buffer + x ) == 13 ) && x < read - 1 && ( *( buffer + x + 1 ) == 10 ) ) ||
           ( ( *( buffer + x ) == 10 ) && x < read - 1 && ( *( buffer + x + 1 ) == 13 ) ) )
       {
-         x        += 2;
+         x       += 2;
          bHasCRLF = HB_TRUE;
          break;
       }
@@ -439,15 +439,15 @@ HB_FUNC( HB_FREADANDSKIP )
    }
 
    ft_text->offset[ ft_text->area ] = ft_text->offset[ ft_text->area ] + x;
-   ft_text->recno[ ft_text->area ]  += 1;
+   ft_text->recno[ ft_text->area ] += 1;
    /* See if there's more to read */
    if( ! ft_text->isEof[ ft_text->area ] )
    {
 #if defined( __DCC__ ) /* NOTE: Workaround for vxworks/diab/x86 5.8.0.0 compiler bug. */
       HB_BOOL f = ( ft_text->lastbyte[ ft_text->area ] <= ft_text->offset[ ft_text->area ] + 1 );
-      ft_text->isEof[ ft_text->area ]  = f;
+      ft_text->isEof[ ft_text->area ] = f;
 #else
-      ft_text->isEof[ ft_text->area ]  = ( ft_text->lastbyte[ ft_text->area ] <= ft_text->offset[ ft_text->area ] + 1 );
+      ft_text->isEof[ ft_text->area ] = ( ft_text->lastbyte[ ft_text->area ] <= ft_text->offset[ ft_text->area ] + 1 );
 #endif
    }
 

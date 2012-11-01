@@ -69,18 +69,18 @@
 #include "hbdate.h"
 
 static const int s_daysinmonth[ 12 ] =
-   { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+{ 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 static HB_BOOL hb_isleapyear( int iYear )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_isleapyear(%d)", iYear));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_isleapyear(%d)", iYear ) );
 
    return ( iYear % 4 == 0 && iYear % 100 != 0 ) || ( iYear % 400 == 0 );
 }
 
 static int hb_daysinmonth( int iYear, int iMonth )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_daysinmonth(%d, %d)", iYear, iMonth));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_daysinmonth(%d, %d)", iYear, iMonth ) );
 
    if( iMonth > 0 && iMonth < 13 )
       return s_daysinmonth[ iMonth - 1 ] +
@@ -94,7 +94,7 @@ static int hb_doy( int iYear, int iMonth, int iDay )
    int i;
    int iDoy = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_doy(%d, %d, %d)", iYear, iMonth, iDay));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_doy(%d, %d, %d)", iYear, iMonth, iDay ) );
 
    for( i = 1; i < iMonth; i++ )
       iDoy += hb_daysinmonth( iYear, i );
@@ -106,10 +106,10 @@ static int hb_woy( int iYear, int iMonth, int iDay, HB_BOOL bISO )
 {
    int iWeek, n;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_woy(%d, %d, %d, %d)", iYear, iMonth, iDay, (int) bISO));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_woy(%d, %d, %d, %d)", iYear, iMonth, iDay, ( int ) bISO ) );
 
-   iDay = hb_doy( iYear, iMonth, iDay );
-   n = ( ( ( 1 - ( bISO ? 1 : 0 ) ) % 7 ) ) - 1;
+   iDay  = hb_doy( iYear, iMonth, iDay );
+   n     = ( ( ( 1 - ( bISO ? 1 : 0 ) ) % 7 ) ) - 1;
    iDay += ( n > 0 ) ? 1 : 0;
    iWeek = iDay / 7;
    if( bISO )
@@ -123,7 +123,7 @@ static int hb_woy( int iYear, int iMonth, int iDay, HB_BOOL bISO )
 HB_FUNC( AMONTHS )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( 12 );    /* Create array */
-   int i;
+   int      i;
 
    for( i = 0; i < 12; i++ )
       hb_arraySetC( pReturn, i + 1, hb_langDGetItem( HB_LANG_ITEM_BASE_MONTH + i ) );
@@ -134,7 +134,7 @@ HB_FUNC( AMONTHS )
 HB_FUNC( ADAYS )
 {
    PHB_ITEM pReturn = hb_itemArrayNew( 7 );    /* Create array */
-   int i;
+   int      i;
 
    for( i = 0; i < 7; i++ )
       hb_arraySetC( pReturn, i + 1, hb_langDGetItem( HB_LANG_ITEM_BASE_DAY + i ) );

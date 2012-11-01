@@ -62,11 +62,11 @@
 HB_FUNC( BUBBLEBABBLEENCODE )
 {
    static const char * s_szConsonants = "bcdfghklmnprstvzx";
-   static const char * s_szVowels = "aeiouy";
+   static const char * s_szVowels     = "aeiouy";
 
-   const char * pszInput = hb_parcx( 1 );
-   HB_ISIZ nInputLen = hb_parclen( 1 );
-   char * pszResult = ( char * ) hb_xgrab( ( nInputLen * 4 ) + 1 );
+   const char * pszInput  = hb_parcx( 1 );
+   HB_ISIZ      nInputLen = hb_parclen( 1 );
+   char *       pszResult = ( char * ) hb_xgrab( ( nInputLen * 4 ) + 1 );
 
    HB_ISIZ nPos = 0;
    HB_ISIZ i;
@@ -107,7 +107,7 @@ HB_FUNC( BUBBLEBABBLEENCODE )
    }
 
    pszResult[ nPos++ ] = 'x';
-   pszResult[ nPos ] = '\0';
+   pszResult[ nPos ]   = '\0';
 
    hb_retc_buffer( pszResult );
 }

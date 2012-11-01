@@ -13,9 +13,9 @@
 
 int _GT_Internal_StringAsInt( char * String, HB_ISIZ Start, HB_ISIZ End )
 {
-   int Decimal = 1;
-   int Value = 0;
-   HB_ISIZ  Digit;
+   int     Decimal = 1;
+   int     Value   = 0;
+   HB_ISIZ Digit;
 
    HB_TRACE( HB_TR_DEBUG, ( "_GT_Internal_StringAsInt(%s, %" HB_PFS "d, %" HB_PFS "d)", String, Start, End ) );
 
@@ -23,8 +23,8 @@ int _GT_Internal_StringAsInt( char * String, HB_ISIZ Start, HB_ISIZ End )
    {
       if( HB_ISDIGIT( String[ Digit ] ) )
       {
-         Value    += ( String[ Digit ] - 0x30 ) * Decimal;
-         Decimal  *= 0xA;
+         Value   += ( String[ Digit ] - 0x30 ) * Decimal;
+         Decimal *= 0xA;
       }
    }
    return Value;

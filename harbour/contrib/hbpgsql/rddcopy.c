@@ -63,10 +63,10 @@
 
 typedef struct
 {
-   char * buffer;
-   int position;
-   int length;
-   HB_BOOL str_trim;
+   char *   buffer;
+   int      position;
+   int      length;
+   HB_BOOL  str_trim;
    PGconn * connection;
 } pgCopyContext;
 
@@ -75,17 +75,17 @@ static HB_BOOL addToContext( pgCopyContext * context, const char c )
 {
    if( context->position == context->length )
    {
-      if( PQputCopyData(context->connection, context->buffer, context->position) == -1 )
+      if( PQputCopyData( context->connection, context->buffer, context->position ) == -1 )
          return HB_FALSE;
 
       context->position = 0;
    }
-   context->buffer[context->position++] = ( HB_BYTE ) c;
+   context->buffer[ context->position++ ] = ( HB_BYTE ) c;
    return HB_TRUE;
 }
 static HB_BOOL addStrToContext( pgCopyContext * context, const char * str )
 {
-   while( * str )
+   while( *str )
    {
       if( context->position == context->length )
       {
@@ -94,18 +94,19 @@ static HB_BOOL addStrToContext( pgCopyContext * context, const char * str )
 
          context->position = 0;
       }
-      context->buffer[ context->position++ ] = ( HB_BYTE ) * str++;
+      context->buffer[ context->position++ ] = ( HB_BYTE ) *str++;
    }
    return HB_TRUE;
 }
 static HB_BOOL addStrnToContext( pgCopyContext * context, const char * str, HB_SIZE size )
 {
    HB_SIZE nSize = 0;
+
    while( nSize < size )
    {
       if( context->connection == NULL || context->position == context->length )
       {
-         if( PQputCopyData(context->connection, context->buffer, context->position) == -1 )
+         if( PQputCopyData( context->connection, context->buffer, context->position ) == -1 )
             return HB_FALSE;
          context->position = 0;
       }
@@ -122,8 +123,8 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
       case HB_IT_STRING:
       case HB_IT_MEMO:
       {
-         HB_SIZE nLen = hb_itemGetCLen( pValue );
-         HB_SIZE nCnt = 0;
+         HB_SIZE      nLen  = hb_itemGetCLen( pValue );
+         HB_SIZE      nCnt  = 0;
          const char * szVal = hb_itemGetCPtr( pValue );
 
          if( ! addStrToContext( context, szQuote ) )
@@ -195,7 +196,7 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
       }
 
       case HB_IT_LOGICAL:
-        /* if(! addStrToContext( context, szQuote ) || ! addToContext( context, hb_itemGetL( pValue ) ? 'Y' : 'N' ) || ! addStrToContext( context, szQuote ) ) */
+         /* if(! addStrToContext( context, szQuote ) || ! addToContext( context, hb_itemGetL( pValue ) ? 'Y' : 'N' ) || ! addStrToContext( context, szQuote ) ) */
          if( ! addToContext( context, hb_itemGetL( pValue ) ? 'Y' : 'N' ) )
             return HB_FALSE;
          break;
@@ -205,7 +206,7 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
       case HB_IT_DOUBLE:
       {
          char szResult[ HB_MAX_DOUBLE_LENGTH ];
-         int iSize, iWidth, iDec;
+         int  iSize, iWidth, iDec;
 
          hb_itemGetNLen( pValue, &iWidth, &iDec );
          iSize = ( iDec > 0 ? iWidth + 1 + iDec : iWidth );
@@ -221,8 +222,8 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
                return HB_FALSE;
          }
          else
-            if( ! addToContext( context, '0' ) )
-               return HB_FALSE;
+         if( ! addToContext( context, '0' ) )
+            return HB_FALSE;
          break;
       }
       /* an "M" field or the other, might be a "V" in SixDriver */
@@ -237,34 +238,34 @@ static HB_BOOL exportBufSqlVar( pgCopyContext * context, PHB_ITEM pValue, const 
 HB_FUNC( HB_PQCOPYFROMWA )
 {
 #if PG_VERSION_NUM >= 80000
-   PGconn * pConn        = hb_PGconn_par( 1 );
-   const char * szTable  = hb_parcx( 2 );
-   PHB_ITEM pWhile       = hb_param( 3, HB_IT_BLOCK );
-   PHB_ITEM pFor         = hb_param( 4, HB_IT_BLOCK );
-   PHB_ITEM pFields      = hb_param( 5, HB_IT_ARRAY );
-   HB_ULONG nCount       = hb_parnldef( 6, 0 );
-   HB_BOOL str_rtrim     = hb_parldef( 7, HB_TRUE );
-   HB_ULONG nBufLen      = hb_parnldef( 8, 1 );
-   HB_USHORT uiFields;
-   HB_ULONG uiRecCount = 0;
+   PGconn *     pConn     = hb_PGconn_par( 1 );
+   const char * szTable   = hb_parcx( 2 );
+   PHB_ITEM     pWhile    = hb_param( 3, HB_IT_BLOCK );
+   PHB_ITEM     pFor      = hb_param( 4, HB_IT_BLOCK );
+   PHB_ITEM     pFields   = hb_param( 5, HB_IT_ARRAY );
+   HB_ULONG     nCount    = hb_parnldef( 6, 0 );
+   HB_BOOL      str_rtrim = hb_parldef( 7, HB_TRUE );
+   HB_ULONG     nBufLen   = hb_parnldef( 8, 1 );
+   HB_USHORT    uiFields;
+   HB_ULONG     uiRecCount = 0;
    /* HB_ULONG uiRecNo = 0;
       DBORDERINFO pInfo;
       int iOrd; */
-   HB_BOOL bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
-   HB_BOOL bEof = HB_FALSE;
-   AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
-   PHB_ITEM pItem;
-   HB_USHORT uiFieldCopy = 0;
-   HB_USHORT uiIter;
-   pgCopyContext * context;
-   char * szInit;
+   HB_BOOL             bNoFieldPassed = ( pFields == NULL || hb_arrayLen( pFields ) == 0 );
+   HB_BOOL             bEof  = HB_FALSE;
+   AREAP               pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+   PHB_ITEM            pItem;
+   HB_USHORT           uiFieldCopy = 0;
+   HB_USHORT           uiIter;
+   pgCopyContext *     context;
+   char *              szInit;
    static const char * s_szQuote = "\"";
-   static const char * s_szEsc = "\"";
+   static const char * s_szEsc   = "\"";
    static const char * s_szDelim = ",";
-   char * szFields = NULL;
-   char * szTmp = NULL;
-   PGresult * pgResult = NULL;
-   HB_BOOL bFail = HB_FALSE;
+   char *              szFields  = NULL;
+   char *              szTmp     = NULL;
+   PGresult *          pgResult  = NULL;
+   HB_BOOL             bFail     = HB_FALSE;
 
    if( pArea )
    {
@@ -273,20 +274,20 @@ HB_FUNC( HB_PQCOPYFROMWA )
       context = ( pgCopyContext * ) hb_xgrab( sizeof( pgCopyContext ) );
       memset( context, 0, sizeof( pgCopyContext ) );
 
-      context->buffer = ( char * ) hb_xgrab( sizeof( char ) * nBufLen * 1400 );
-      context->position = 0;
-      context->length = sizeof( char ) * nBufLen * 1400;
-      context->str_trim = str_rtrim;
+      context->buffer     = ( char * ) hb_xgrab( sizeof( char ) * nBufLen * 1400 );
+      context->position   = 0;
+      context->length     = sizeof( char ) * nBufLen * 1400;
+      context->str_trim   = str_rtrim;
       context->connection = pConn;
 
       SELF_FIELDCOUNT( pArea, &uiFields );
 
       if( ! bNoFieldPassed )
       {
-         szFields = ( char * ) hb_xgrab( sizeof( char ) * 2 );
+         szFields      = ( char * ) hb_xgrab( sizeof( char ) * 2 );
          szFields[ 0 ] = '(';
          szFields[ 1 ] = '\0';
-         uiFieldCopy = ( HB_USHORT ) hb_arrayLen( pFields );
+         uiFieldCopy   = ( HB_USHORT ) hb_arrayLen( pFields );
 
          for( uiIter = 1; uiIter <= uiFieldCopy; uiIter++ )
          {
@@ -387,7 +388,7 @@ HB_FUNC( HB_PQCOPYFROMWA )
             if( bFail )
                break;
 
-            context->position--; /* overwrite last comma with newline */
+            context->position--;                         /* overwrite last comma with newline */
             if( ! addStrnToContext( context, "\n", 1 ) ) /* PostgreSQL handles both \r\n & \n, use shorter */
             {
                bFail = HB_TRUE;
@@ -398,34 +399,34 @@ HB_FUNC( HB_PQCOPYFROMWA )
          }
 
          if( SELF_SKIP( pArea, 1 ) != HB_SUCCESS )
-             break;
+            break;
       }
 
       while( HB_TRUE )
       {
          if( bFail )
          {
-             PQputCopyEnd( context->connection, "export buffer problems" );
-             hb_retl( HB_FALSE );
-             break;
+            PQputCopyEnd( context->connection, "export buffer problems" );
+            hb_retl( HB_FALSE );
+            break;
          }
 
          if( ! addStrnToContext( context, "\\.\n", 3 ) ) /* end CSV transfer */
          {
-             hb_retl( HB_FALSE );
-             break;
+            hb_retl( HB_FALSE );
+            break;
          }
 
          if( PQputCopyData( context->connection, context->buffer, context->position ) == -1 )
          {
-             hb_retl( HB_FALSE );
-             break;
+            hb_retl( HB_FALSE );
+            break;
          }
 
          if( PQputCopyEnd( context->connection, NULL ) == -1 )
          {
-             hb_retl( HB_FALSE );
-             break;
+            hb_retl( HB_FALSE );
+            break;
          }
 
          pgResult = PQgetResult( context->connection );
@@ -440,8 +441,8 @@ HB_FUNC( HB_PQCOPYFROMWA )
 
          if( bFail )
          {
-             hb_retl( HB_FALSE );
-             break;
+            hb_retl( HB_FALSE );
+            break;
          }
 
          hb_retl( HB_TRUE );

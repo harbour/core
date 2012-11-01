@@ -55,7 +55,7 @@
 #if defined( HB_OS_WIN ) && ! defined( _Windows )
 #  define _Windows
 #  include <windows.h>
-#  define GSDLLEXPORT __declspec( dllimport )
+#  define GSDLLEXPORT  __declspec( dllimport )
 #endif
 
 #include "ierrors.h"
@@ -63,15 +63,15 @@
 
 HB_FUNC( HB_GS )
 {
-   HB_BOOL bResult = HB_FALSE;
-   PHB_ITEM pParam = hb_param( 1, HB_IT_ARRAY );
+   HB_BOOL  bResult = HB_FALSE;
+   PHB_ITEM pParam  = hb_param( 1, HB_IT_ARRAY );
 
    if( pParam )
    {
-      void * minst;
-      int gsargc = ( int ) hb_arrayLen( pParam ) + 1;
-      int pos;
-      int code, code1;
+      void *  minst;
+      int     gsargc = ( int ) hb_arrayLen( pParam ) + 1;
+      int     pos;
+      int     code, code1;
       char ** gsargv = ( char ** ) hb_xgrab( gsargc * sizeof( const char * ) );
 
       gsargv[ 0 ] = ( char * ) "hbgs"; /* actual value doesn't matter */

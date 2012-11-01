@@ -59,10 +59,10 @@ static HB_GARBAGE_FUNC( magic_gc_close )
 {
    void ** ph = ( void ** ) Cargo;
 
-   if( ph && * ph )
+   if( ph && *ph )
    {
-      magic_close( ( magic_t ) * ph );
-      * ph = NULL;
+      magic_close( ( magic_t ) *ph );
+      *ph = NULL;
    }
 }
 
@@ -75,14 +75,14 @@ static magic_t magic_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcmagic_gcfuncs, iParam );
 
-   return ph ? ( magic_t ) * ph : NULL;
+   return ph ? ( magic_t ) *ph : NULL;
 }
 
 HB_FUNC( MAGIC_OPEN )
 {
    void ** ph = ( void ** ) hb_gcAllocate( sizeof( magic_t ), &s_gcmagic_gcfuncs );
 
-   * ph = magic_open( hb_parnidef( 1, MAGIC_NONE ) );
+   *ph = magic_open( hb_parnidef( 1, MAGIC_NONE ) );
    hb_retptrGC( ph );
 }
 

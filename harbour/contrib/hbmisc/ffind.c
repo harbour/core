@@ -57,13 +57,13 @@ static HB_GARBAGE_FUNC( PHB_FFIND_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      hb_fsFindClose( ( PHB_FFIND ) * ph );
+      hb_fsFindClose( ( PHB_FFIND ) *ph );
 
       /* set pointer to NULL just in case */
-      * ph = NULL;
+      *ph = NULL;
    }
 }
 
@@ -77,7 +77,7 @@ static PHB_FFIND PHB_FFIND_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcPHB_FFIND_funcs, iParam );
 
-   return ph ? ( PHB_FFIND ) * ph : NULL;
+   return ph ? ( PHB_FFIND ) *ph : NULL;
 }
 
 HB_FUNC( FILEFINDFIRST )
@@ -90,7 +90,7 @@ HB_FUNC( FILEFINDFIRST )
 
       PHB_FFIND ffind = hb_fsFindFirst( pszFileName, hb_parnldef( 3, HB_FA_ALL ) );
 
-      * ph = ( void * ) ffind;
+      *ph = ( void * ) ffind;
 
       hb_storptrGC( ph, 2 );
 
