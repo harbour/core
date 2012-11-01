@@ -96,7 +96,7 @@ HB_FUNC( EVP_PKEY_FREE )
 HB_FUNC( EVP_BYTESTOKEY )
 {
    const EVP_CIPHER * cipher = hb_EVP_CIPHER_par( 1 );
-   const EVP_MD * md = hb_EVP_MD_par( 2 );
+   const EVP_MD *     md     = hb_EVP_MD_par( 2 );
 
    if( cipher && md && ( ! HB_ISCHAR( 3 ) || hb_parclen( 3 ) == 8 ) )
    {

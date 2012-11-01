@@ -59,14 +59,14 @@
 HB_FUNC( XHB_HASHERROR )
 {
    const char * szMessage = hb_itemGetSymbol( hb_stackBaseItem() )->szName;
-   int iPCount = hb_pcount();
+   int          iPCount   = hb_pcount();
 
    if( iPCount == 1 )
    {
-      if( szMessage[ 0 ] == '_' )
-      {  /* ASSIGN */
+      if( szMessage[ 0 ] == '_' ) /* ASSIGN */
+      {
          PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), szMessage + 1 );
-         PHB_ITEM pDest = hb_hashGetItemPtr( hb_stackSelfItem(), pIndex, HB_HASH_AUTOADD_ASSIGN );
+         PHB_ITEM pDest  = hb_hashGetItemPtr( hb_stackSelfItem(), pIndex, HB_HASH_AUTOADD_ASSIGN );
          hb_stackPop();
          if( pDest )
          {
@@ -77,8 +77,8 @@ HB_FUNC( XHB_HASHERROR )
          }
       }
    }
-   else if( iPCount == 0 )
-   {  /* ACCESS */
+   else if( iPCount == 0 ) /* ACCESS */
+   {
       PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), szMessage );
       PHB_ITEM pValue = hb_hashGetItemPtr( hb_stackSelfItem(), pIndex, HB_HASH_AUTOADD_ACCESS );
       hb_stackPop();
@@ -98,7 +98,7 @@ HB_FUNC( XHB_HASHERROR )
 HB_FUNC( XHB_INCLUDE )
 {
    PHB_ITEM pSelf = hb_stackSelfItem();
-   PHB_ITEM pKey = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pKey  = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_ARRAY( pSelf ) )
    {
@@ -118,19 +118,19 @@ HB_FUNC( XHB_INCLUDE )
 
 HB_FUNC( XHB_EEQUAL )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      double dValue = hb_itemGetND( pSelf );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+      double   dValue = hb_itemGetND( pSelf );
       hb_retl( dValue == ( double ) uc );
    }
    else if( hb_itemGetCLen( pSelf ) == 1 && pValue && HB_IS_NUMERIC( pValue ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dValue = hb_itemGetND( pValue );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc == dValue );
    }
    else if( HB_IS_BLOCK( pSelf ) && HB_IS_BLOCK( pValue ) )
@@ -147,19 +147,19 @@ HB_FUNC( XHB_EEQUAL )
 
 HB_FUNC( XHB_EQUAL )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      double dValue = hb_itemGetND( pSelf );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+      double   dValue = hb_itemGetND( pSelf );
       hb_retl( dValue == ( double ) uc );
    }
    else if( hb_itemGetCLen( pSelf ) == 1 && pValue && HB_IS_NUMERIC( pValue ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dValue = hb_itemGetND( pValue );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc == dValue );
    }
    else if( HB_IS_HASH( pSelf ) && HB_IS_HASH( pValue ) )
@@ -176,19 +176,19 @@ HB_FUNC( XHB_EQUAL )
 
 HB_FUNC( XHB_NOTEQUAL )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      double dValue = hb_itemGetND( pSelf );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+      double   dValue = hb_itemGetND( pSelf );
       hb_retl( dValue != ( double ) uc );
    }
    else if( hb_itemGetCLen( pSelf ) == 1 && pValue && HB_IS_NUMERIC( pValue ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dValue = hb_itemGetND( pValue );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc != dValue );
    }
    else if( HB_IS_HASH( pSelf ) && HB_IS_HASH( pValue ) )
@@ -205,19 +205,19 @@ HB_FUNC( XHB_NOTEQUAL )
 
 HB_FUNC( XHB_LESS )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      double dValue = hb_itemGetND( pSelf );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+      double   dValue = hb_itemGetND( pSelf );
       hb_retl( dValue < ( double ) uc );
    }
    else if( hb_itemGetCLen( pSelf ) == 1 && pValue && HB_IS_NUMERIC( pValue ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dValue = hb_itemGetND( pValue );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc < dValue );
    }
    else
@@ -230,19 +230,19 @@ HB_FUNC( XHB_LESS )
 
 HB_FUNC( XHB_LESSEQ )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      double dValue = hb_itemGetND( pSelf );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+      double   dValue = hb_itemGetND( pSelf );
       hb_retl( dValue <= ( double ) uc );
    }
    else if( hb_itemGetCLen( pSelf ) == 1 && pValue && HB_IS_NUMERIC( pValue ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dValue = hb_itemGetND( pValue );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc <= dValue );
    }
    else
@@ -255,19 +255,19 @@ HB_FUNC( XHB_LESSEQ )
 
 HB_FUNC( XHB_GREATER )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      double dValue = hb_itemGetND( pSelf );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+      double   dValue = hb_itemGetND( pSelf );
       hb_retl( dValue > ( double ) uc );
    }
    else if( hb_itemGetCLen( pSelf ) == 1 && pValue && HB_IS_NUMERIC( pValue ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dValue = hb_itemGetND( pValue );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc > dValue );
    }
    else
@@ -280,19 +280,19 @@ HB_FUNC( XHB_GREATER )
 
 HB_FUNC( XHB_GREATEREQ )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      double dValue = hb_itemGetND( pSelf );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+      double   dValue = hb_itemGetND( pSelf );
       hb_retl( dValue >= ( double ) uc );
    }
    else if( hb_itemGetCLen( pSelf ) == 1 && pValue && HB_IS_NUMERIC( pValue ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dValue = hb_itemGetND( pValue );
+      HB_UCHAR uc     = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dValue = hb_itemGetND( pValue );
       hb_retl( ( double ) uc >= dValue );
    }
    else
@@ -309,15 +309,15 @@ HB_FUNC( XHB_GREATEREQ )
  * data from tail
  */
 #undef HB_IS_VALID_INDEX
-#define HB_IS_VALID_INDEX( idx, max )  ( ( ( HB_ISIZ ) (idx) < 0 ? (idx) += (max) + 1 : (idx) ) > 0 && ( HB_SIZE ) (idx) <= (max) )
+#define HB_IS_VALID_INDEX( idx, max )  ( ( ( HB_ISIZ ) ( idx ) < 0 ? ( idx ) += ( max ) + 1 : ( idx ) ) > 0 && ( HB_SIZE ) ( idx ) <= ( max ) )
 
 HB_FUNC( XHB_INDEX )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pIndex = hb_param( 1, HB_IT_ANY );
 
-   if( hb_pcount() == 2 )
-   {  /* ASSIGN */
+   if( hb_pcount() == 2 ) /* ASSIGN */
+   {
       PHB_ITEM pValue = hb_param( 2, HB_IT_ANY );
       if( HB_IS_NUMERIC( pIndex ) )
       {
@@ -358,8 +358,8 @@ HB_FUNC( XHB_INDEX )
 
       hb_itemReturn( pSelf );
    }
-   else
-   {  /* ACCESS */
+   else /* ACCESS */
+   {
       if( HB_IS_NUMERIC( pIndex ) )
       {
          HB_SIZE nIndex = hb_itemGetNS( pIndex );
@@ -393,14 +393,14 @@ HB_FUNC( XHB_INDEX )
 
 HB_FUNC( XHB_PLUS )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      int iDec;
-      double dValue = hb_itemGetNDDec( pSelf, &iDec );
+      int      iDec;
+      double   dValue = hb_itemGetNDDec( pSelf, &iDec );
       hb_retnlen( dValue + uc, 0, iDec  );
    }
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
@@ -426,14 +426,14 @@ HB_FUNC( XHB_PLUS )
 
 HB_FUNC( XHB_MINUS )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      int iDec;
-      double dValue = hb_itemGetNDDec( pSelf, &iDec );
+      int      iDec;
+      double   dValue = hb_itemGetNDDec( pSelf, &iDec );
       hb_retnlen( dValue - uc, 0, iDec  );
    }
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
@@ -497,29 +497,29 @@ HB_FUNC( XHB_DEC )
 
 HB_FUNC( XHB_MULT )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
    {
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
-      int iDec;
-      double dValue = hb_itemGetNDDec( pSelf, &iDec );
+      int      iDec;
+      double   dValue = hb_itemGetNDDec( pSelf, &iDec );
       hb_retndlen( dValue * uc, 0, iDec );
    }
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
             pValue && HB_IS_NUMERIC( pValue ) )
    {
       HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      int iDec;
-      double dValue = hb_itemGetNDDec( pValue, &iDec );
+      int      iDec;
+      double   dValue = hb_itemGetNDDec( pValue, &iDec );
       hb_retndlen( ( double ) uc * dValue, 0, iDec );
    }
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 &&
             hb_itemGetCLen( pValue ) == 1 )
    {
       HB_UCHAR uc1 = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ],
-            uc2 = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+               uc2 = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
       hb_retnint( uc1 * uc2 );
    }
    else
@@ -532,7 +532,7 @@ HB_FUNC( XHB_MULT )
 
 HB_FUNC( XHB_DIV )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
@@ -550,9 +550,9 @@ HB_FUNC( XHB_DIV )
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 && pValue &&
             ( HB_IS_NUMERIC( pValue ) || hb_itemGetCLen( pValue ) == 1 ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dDivisor = HB_IS_NUMERIC( pValue ) ? hb_itemGetND( pValue ) :
-                        ( double ) ( ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ] );
+      HB_UCHAR uc       = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dDivisor = HB_IS_NUMERIC( pValue ) ? hb_itemGetND( pValue ) :
+                          ( double ) ( ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ] );
 
       if( dDivisor == 0 )
       {
@@ -573,7 +573,7 @@ HB_FUNC( XHB_DIV )
 
 HB_FUNC( XHB_MOD )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
@@ -591,9 +591,9 @@ HB_FUNC( XHB_MOD )
    else if( HB_IS_STRING( pSelf ) && hb_itemGetCLen( pSelf ) == 1 && pValue &&
             ( HB_IS_NUMERIC( pValue ) || hb_itemGetCLen( pValue ) == 1 ) )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
-      double dDivisor = HB_IS_NUMERIC( pValue ) ? hb_itemGetND( pValue ) :
-                        ( double ) ( ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ] );
+      HB_UCHAR uc       = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ];
+      double   dDivisor = HB_IS_NUMERIC( pValue ) ? hb_itemGetND( pValue ) :
+                          ( double ) ( ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ] );
 
       if( dDivisor == 0 )
       {
@@ -614,7 +614,7 @@ HB_FUNC( XHB_MOD )
 
 HB_FUNC( XHB_POW )
 {
-   PHB_ITEM pSelf = hb_stackSelfItem();
+   PHB_ITEM pSelf  = hb_stackSelfItem();
    PHB_ITEM pValue = hb_param( 1, HB_IT_ANY );
 
    if( HB_IS_NUMERIC( pSelf ) && hb_itemGetCLen( pValue ) == 1 )
@@ -632,7 +632,7 @@ HB_FUNC( XHB_POW )
             hb_itemGetCLen( pValue ) == 1 )
    {
       HB_UCHAR uc1 = ( HB_UCHAR ) hb_itemGetCPtr( pSelf )[ 0 ],
-            uc2 = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
+               uc2 = ( HB_UCHAR ) hb_itemGetCPtr( pValue )[ 0 ];
       hb_retnd( pow( ( double ) uc1, ( double ) uc2 ) );
    }
    else

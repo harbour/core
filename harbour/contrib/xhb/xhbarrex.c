@@ -55,7 +55,7 @@
 /* ASIZEALLOC( <array>, <num> ) -> <array> - Set the pre-alloc step. */
 HB_FUNC( ASIZEALLOC )
 {
-   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pArray    = hb_param( 1, HB_IT_ARRAY );
    PHB_ITEM pPreAlloc = hb_param( 2, HB_IT_NUMERIC );
 
    if( pArray && pPreAlloc )

@@ -66,7 +66,7 @@
 typedef struct
 {
    PHB_ITEM pLibraryHandle;
-   HB_BOOL  bFreeLibrary;   /* Free library handle on destroy? */
+   HB_BOOL  bFreeLibrary; /* Free library handle on destroy? */
    int      iFuncFlags;
    void *   pFunctionPtr; /* Function Address */
 } HB_DLLEXEC, * PHB_DLLEXEC;
@@ -105,9 +105,9 @@ HB_FUNC_TRANSLATE( DLLUNLOAD, HB_LIBFREE )
 
 HB_FUNC( DLLCALL )
 {
-   PHB_ITEM pLibrary = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pLibrary       = hb_param( 1, HB_IT_ANY );
    PHB_ITEM pLibraryHandle = NULL;
-   HB_BOOL bFreeLibrary = HB_FALSE;
+   HB_BOOL  bFreeLibrary   = HB_FALSE;
 
    if( HB_IS_STRING( pLibrary ) )
    {
@@ -120,8 +120,8 @@ HB_FUNC( DLLCALL )
 
    if( pLibraryHandle )
    {
-      int iXPPFlags = hb_parni( 2 );
-      int iFuncFlags = 0;
+      int    iXPPFlags    = hb_parni( 2 );
+      int    iFuncFlags   = 0;
       void * pFunctionPtr = hb_libSymAddr( pLibraryHandle, hb_parcx( 3 ) );
 
       if( ( iXPPFlags & DLL_CDECL ) != 0 )
@@ -147,8 +147,8 @@ HB_FUNC( DLLCALL )
 
 HB_FUNC( DLLPREPARECALL )
 {
-   PHB_DLLEXEC xec = ( PHB_DLLEXEC ) hb_gcAllocate( sizeof( HB_DLLEXEC ), &s_gcDllFuncs );
-   PHB_ITEM pLibrary = hb_param( 1, HB_IT_ANY );
+   PHB_DLLEXEC  xec      = ( PHB_DLLEXEC ) hb_gcAllocate( sizeof( HB_DLLEXEC ), &s_gcDllFuncs );
+   PHB_ITEM     pLibrary = hb_param( 1, HB_IT_ANY );
    const char * pszErrorText;
 
    memset( xec, 0, sizeof( HB_DLLEXEC ) );

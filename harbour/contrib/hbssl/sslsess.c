@@ -60,13 +60,13 @@ static HB_GARBAGE_FUNC( SSL_SESSION_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      SSL_SESSION_free( ( SSL_SESSION * ) * ph );
+      SSL_SESSION_free( ( SSL_SESSION * ) *ph );
 
       /* set pointer to NULL just in case */
-      * ph = NULL;
+      *ph = NULL;
    }
 }
 
@@ -85,7 +85,7 @@ SSL_SESSION * hb_SSL_SESSION_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcSSL_SESSION_funcs, iParam );
 
-   return ph ? ( SSL_SESSION * ) * ph : NULL;
+   return ph ? ( SSL_SESSION * ) *ph : NULL;
 }
 
 HB_FUNC( SSL_SESSION_NEW )
@@ -94,7 +94,7 @@ HB_FUNC( SSL_SESSION_NEW )
 
    SSL_SESSION * session = SSL_SESSION_new();
 
-   * ph = ( void * ) session;
+   *ph = ( void * ) session;
 
    hb_retptrGC( ph );
 }
@@ -183,12 +183,12 @@ HB_FUNC( SSL_SESSION_HASH )
 }
 
 /*
-char *SSL_SESSION_get_app_data(SSL_SESSION *s);
-char *SSL_SESSION_get_ex_data(const SSL_SESSION *s, int idx);
-void SSL_SESSION_set_app_data(SSL_SESSION *s, char *a);
-int SSL_SESSION_set_ex_data(SSL_SESSION *s, int idx, char *arg);
+   char *SSL_SESSION_get_app_data(SSL_SESSION *s);
+   char *SSL_SESSION_get_ex_data(const SSL_SESSION *s, int idx);
+   void SSL_SESSION_set_app_data(SSL_SESSION *s, char *a);
+   int SSL_SESSION_set_ex_data(SSL_SESSION *s, int idx, char *arg);
 
-int SSL_SESSION_get_ex_new_index(long argl, char *argp, int (*new_func)(void), int (*dup_func)(void), void (*free_func)(void))
-int SSL_SESSION_print(BIO *bp, const SSL_SESSION *x);
-int SSL_SESSION_print_fp(FILE *fp, const SSL_SESSION *x);
-*/
+   int SSL_SESSION_get_ex_new_index(long argl, char *argp, int (*new_func)(void), int (*dup_func)(void), void (*free_func)(void))
+   int SSL_SESSION_print(BIO *bp, const SSL_SESSION *x);
+   int SSL_SESSION_print_fp(FILE *fp, const SSL_SESSION *x);
+ */

@@ -61,10 +61,10 @@
 /* Escaping delimited strings. Need to be cleaned/optimized/improved */
 static char * hb_strescape( const char * szInput, HB_ISIZ nLen, const char * cDelim )
 {
-   HB_ISIZ nCnt = 0;
+   HB_ISIZ      nCnt = 0;
    const char * szChr;
-   char * szEscape;
-   char * szReturn;
+   char *       szEscape;
+   char *       szReturn;
 
    szReturn = szEscape = ( char * ) hb_xgrab( nLen * 2 + 4 );
 
@@ -123,10 +123,8 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
       }
       /* an "L" field */
       case HB_IT_LOGICAL:
-      {
          hb_fsWriteLarge( handle, ( hb_itemGetL( pValue ) ? "T" : "F" ), 1 );
          break;
-      }
       /* an "N" field */
       case HB_IT_INTEGER:
       case HB_IT_LONG:
@@ -136,7 +134,7 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
 
          if( szResult )
          {
-            HB_SIZE nLen = strlen( szResult );
+            HB_SIZE      nLen      = strlen( szResult );
             const char * szTrimmed = hb_strLTrim( szResult, &nLen );
 
             hb_fsWriteLarge( handle, szTrimmed, strlen( szTrimmed ) );
@@ -146,7 +144,7 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
       }
       /* an "M" field or the other, might be a "V" in SixDriver */
       default:
-      /* We do not want MEMO contents */
+         /* We do not want MEMO contents */
          return HB_FALSE;
    }
    return HB_TRUE;
@@ -154,25 +152,25 @@ static HB_BOOL hb_ExportVar( HB_FHANDLE handle, PHB_ITEM pValue, const char * cD
 
 HB_FUNC( DBF2TEXT )
 {
-   PHB_ITEM pWhile   = hb_param( 1, HB_IT_BLOCK );
-   PHB_ITEM pFor     = hb_param( 2, HB_IT_BLOCK );
-   PHB_ITEM pFields  = hb_param( 3, HB_IT_ARRAY );
+   PHB_ITEM pWhile  = hb_param( 1, HB_IT_BLOCK );
+   PHB_ITEM pFor    = hb_param( 2, HB_IT_BLOCK );
+   PHB_ITEM pFields = hb_param( 3, HB_IT_ARRAY );
 
    const char * cDelim = hb_parc( 4 );
-   HB_FHANDLE handle = ( HB_FHANDLE ) hb_parnint( 5 );
-   const char * cSep = hb_parc( 6 );
-   int nCount        = hb_parni( 7 );
-   PHB_CODEPAGE cdp  = hb_cdpFind( hb_parcx( 8 ) );
+   HB_FHANDLE   handle = ( HB_FHANDLE ) hb_parnint( 5 );
+   const char * cSep   = hb_parc( 6 );
+   int          nCount = hb_parni( 7 );
+   PHB_CODEPAGE cdp    = hb_cdpFind( hb_parcx( 8 ) );
 
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
    /* Export DBF content to text file */
 
-   HB_ISIZ nSepLen;
+   HB_ISIZ   nSepLen;
    HB_USHORT uiFields = 0;
    HB_USHORT ui;
-   PHB_ITEM pTmp;
-   HB_BOOL bWriteSep = HB_FALSE;
+   PHB_ITEM  pTmp;
+   HB_BOOL   bWriteSep = HB_FALSE;
 
    HB_BOOL bEof = HB_TRUE;
    HB_BOOL bBof = HB_TRUE;
@@ -203,7 +201,7 @@ HB_FUNC( DBF2TEXT )
       nSepLen = hb_parclen( 6 );
    else
    {
-      cSep = ",";
+      cSep    = ",";
       nSepLen = 1;
    }
 
@@ -226,7 +224,7 @@ HB_FUNC( DBF2TEXT )
          /* User does not request fields, copy all fields */
          if( bNoFieldPassed )
          {
-            for( ui = 1; ui <= uiFields; ui ++ )
+            for( ui = 1; ui <= uiFields; ui++ )
             {
                if( bWriteSep )
                   hb_fsWriteLarge( handle, cSep, nSepLen );

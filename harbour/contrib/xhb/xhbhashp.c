@@ -59,9 +59,9 @@
 
 HB_FUNC( HSETPARTITION )
 {
-   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pLevel = hb_param( 3, HB_IT_NUMERIC );
-   HB_UINT uiLevel = pLevel ? hb_itemGetNI( pLevel ) : 1;
+   PHB_ITEM pHash   = hb_param( 1, HB_IT_HASH );
+   PHB_ITEM pLevel  = hb_param( 3, HB_IT_NUMERIC );
+   HB_UINT  uiLevel = pLevel ? hb_itemGetNI( pLevel ) : 1;
 
    if( ! pHash )
       hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

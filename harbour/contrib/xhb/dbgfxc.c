@@ -64,6 +64,7 @@ static HB_BOOL s_bEmptyLogFile  = HB_TRUE;
 HB_BOOL hb_ToOutDebugOnOff( HB_BOOL bOnOff )
 {
    HB_BOOL bOld = s_bToOutputDebug;
+
    s_bToOutputDebug = bOnOff;
    return bOld;
 }
@@ -86,6 +87,7 @@ void hb_ToOutDebug( const char * sTraceMsg, ... )
 HB_BOOL hb_ToLogFileOnOff( HB_BOOL bOnOff )
 {
    HB_BOOL bOld = s_bToLogFile;
+
    s_bToLogFile = bOnOff;
    return bOld;
 }
@@ -93,6 +95,7 @@ HB_BOOL hb_ToLogFileOnOff( HB_BOOL bOnOff )
 HB_BOOL hb_EmptyLogFile( HB_BOOL bOnOff )
 {
    HB_BOOL bOld = s_bEmptyLogFile;
+
    s_bEmptyLogFile = bOnOff;
    return bOld;
 }

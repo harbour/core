@@ -69,7 +69,7 @@ extern HB_EXPORT HB_BOOL hb_ToLogFileOnOff( HB_BOOL bOnOff );
 extern HB_EXPORT HB_BOOL hb_EmptyLogFile( HB_BOOL bOnOff );
 extern HB_EXPORT void hb_ToLogFile( const char * sFile, const char * sTraceMsg, ... );
 
-#define hb_seconds() hb_dateSeconds()
+#define hb_seconds()  hb_dateSeconds()
 
 HB_EXTERN_END
 

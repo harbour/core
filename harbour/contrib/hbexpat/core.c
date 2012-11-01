@@ -120,7 +120,7 @@ typedef struct _HB_EXPAT
          \
          hb_expat_setvar( hb_expat, _VAR_b##_name_, hb_param( 2, HB_IT_BLOCK | HB_IT_SYMBOL ) ); \
          \
-         XML_Set##_name_ ( hb_expat->parser, hb_expat->pVar[ _VAR_b##_name_ ] ? hb_expat_##_name_ : NULL ); \
+         XML_Set##_name_ /* do not delete this */ ( hb_expat->parser, hb_expat->pVar[ _VAR_b##_name_ ] ? hb_expat_##_name_ : NULL ); \
          \
          hb_ret(); \
       } \

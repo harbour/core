@@ -63,13 +63,13 @@ static HB_GARBAGE_FUNC( EVP_ENCODE_CTX_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      hb_xfree( * ph );
+      hb_xfree( *ph );
 
       /* set pointer to NULL just in case */
-      * ph = NULL;
+      *ph = NULL;
    }
 }
 
@@ -88,7 +88,7 @@ static EVP_ENCODE_CTX * hb_EVP_ENCODE_CTX_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcEVP_ENCODE_CTX_funcs, iParam );
 
-   return ph ? ( EVP_ENCODE_CTX * ) * ph : NULL;
+   return ph ? ( EVP_ENCODE_CTX * ) *ph : NULL;
 }
 
 HB_FUNC( HB_EVP_ENCODE_CTX_CREATE )
@@ -97,7 +97,7 @@ HB_FUNC( HB_EVP_ENCODE_CTX_CREATE )
 
    EVP_ENCODE_CTX * ctx = ( EVP_ENCODE_CTX * ) hb_xgrab( sizeof( EVP_ENCODE_CTX ) );
 
-   * ph = ctx;
+   *ph = ctx;
 
    hb_retptrGC( ph );
 }

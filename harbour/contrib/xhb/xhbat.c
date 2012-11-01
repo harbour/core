@@ -61,11 +61,11 @@ static HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char
 {
    char cLastChar = ' ';
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_AtSkipStrings(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_AtSkipStrings(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen ) );
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
-      HB_SIZE nPos = 0;
+      HB_SIZE nPos    = 0;
       HB_SIZE nSubPos = 0;
 
       while( nPos < nLen && nSubPos < nSubLen )
@@ -132,7 +132,7 @@ static HB_SIZE hb_AtSkipStrings( const char * szSub, HB_SIZE nSubLen, const char
          {
             /* Go back to the first character after the first match,
                or else tests like "22345" $ "012223456789" will fail. */
-            nPos -= ( nSubPos - 1 );
+            nPos   -= ( nSubPos - 1 );
             nSubPos = 0;
          }
          else
@@ -178,11 +178,11 @@ HB_FUNC( ATSKIPSTRINGS ) /* cFind, cWhere, nStart */
 /* Case insensitive hb_strAt() function */
 static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strAtI(%s, %" HB_PFS "u, %s, %" HB_PFS "u)", szSub, nSubLen, szText, nLen ) );
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
-      HB_SIZE nPos = 0;
+      HB_SIZE nPos    = 0;
       HB_SIZE nSubPos = 0;
 
       while( nPos < nLen && nSubPos < nSubLen )
@@ -196,7 +196,7 @@ static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szTe
          {
             /* Go back to the first character after the first match,
                or else tests like "22345" $ "012223456789" will fail. */
-            nPos -= ( nSubPos - 1 );
+            nPos   -= ( nSubPos - 1 );
             nSubPos = 0;
          }
          else
@@ -211,17 +211,17 @@ static HB_SIZE hb_strAtI( const char * szSub, HB_SIZE nSubLen, const char * szTe
 /* Case insensitive At() function */
 HB_FUNC( ATI )
 {
-   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pSub  = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
 
    if( pText && pSub )
    {
       PHB_ITEM pStart = hb_param( 3, HB_IT_NUMERIC );
-      PHB_ITEM pEnd = hb_param( 4, HB_IT_NUMERIC );
-      HB_ISIZ nLen = hb_itemGetCLen( pText );
-      HB_ISIZ nStart = pStart ? hb_itemGetNS( pStart ) : 1;
-      HB_ISIZ nEnd = pEnd ? hb_itemGetNS( pEnd ) : nLen;
-      HB_SIZE nPos;
+      PHB_ITEM pEnd   = hb_param( 4, HB_IT_NUMERIC );
+      HB_ISIZ  nLen   = hb_itemGetCLen( pText );
+      HB_ISIZ  nStart = pStart ? hb_itemGetNS( pStart ) : 1;
+      HB_ISIZ  nEnd   = pEnd ? hb_itemGetNS( pEnd ) : nLen;
+      HB_SIZE  nPos;
 
       if( nStart < 0 )
       {

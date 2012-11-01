@@ -57,7 +57,7 @@
  */
 
 /*
-FPARSE( cFile, cDelimiter ) -> array
+   FPARSE( cFile, cDelimiter ) -> array
 
    Purpose:
       Parse a delimited text file.
@@ -70,7 +70,7 @@ FPARSE( cFile, cDelimiter ) -> array
       Upon success -> Two dimensional array, of which each element contains
                       the results of parsing
       Upon error   -> An empty array
-*/
+ */
 
 #include "hbapi.h"
 #include "hbapifs.h"
@@ -78,7 +78,7 @@ FPARSE( cFile, cDelimiter ) -> array
 #include "hbfast.h"
 
 /* adjustable, but this should be sufficient in normal situation */
-#define MAX_READ 4096
+#define MAX_READ  4096
 
 static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter, int * iWord )
 {
@@ -88,9 +88,9 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
 
       if( nLen > 0 )
       {
-         PHB_ITEM pTemp = hb_itemNew( NULL );
-         HB_ISIZ i = 0;
-         int word_count = 0;
+         PHB_ITEM pTemp      = hb_itemNew( NULL );
+         HB_ISIZ  i          = 0;
+         int      word_count = 0;
          /* booked enough memory */
          char * szResult = ( char * ) hb_xgrab( nLen + 1 );
 
@@ -145,7 +145,7 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
                   }
                }
                word_count++;
-               hb_arrayAddForward( pReturn, hb_itemPutC( pTemp, szResult ));
+               hb_arrayAddForward( pReturn, hb_itemPutC( pTemp, szResult ) );
             }
             /* delimiter found */
             else if( szText[ i ] == iDelimiter )
@@ -262,10 +262,10 @@ static void hb_ParseLine( PHB_ITEM pReturn, const char * szText, int iDelimiter,
 
 static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharCount, int * iWord )
 {
-   char * buffer, * bufptr;
+   char *  buffer, * bufptr;
    char ** token_list;
-   char last_char = '\0';
-   int word_count = 0, word_nbr;
+   char    last_char  = '\0';
+   int     word_count = 0, word_nbr;
 
    buffer = ( char * ) hb_xgrab( iCharCount + 1 );
 
@@ -299,13 +299,13 @@ static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharC
 
    *bufptr = '\0';
 
-   token_list = ( char ** ) hb_xgrab( sizeof( char * ) * ( word_count + 2 ) );
+   token_list      = ( char ** ) hb_xgrab( sizeof( char * ) * ( word_count + 2 ) );
    token_list[ 0 ] = buffer;
    token_list++;
 
    bufptr = buffer;
 
-   for(word_nbr = 0; word_nbr < word_count; word_nbr++)
+   for( word_nbr = 0; word_nbr < word_count; word_nbr++ )
    {
       token_list[ word_nbr ] = bufptr;
       bufptr += strlen( bufptr ) + 1;
@@ -318,7 +318,7 @@ static char ** hb_tokensplit( const char * string, HB_BYTE delimiter, int iCharC
    return token_list;
 }
 
-static HB_BOOL file_read( FILE *stream, char *string, int *iCharCount )
+static HB_BOOL file_read( FILE * stream, char * string, int * iCharCount )
 {
    int ch, cnbr = 0;
 
@@ -330,7 +330,7 @@ static HB_BOOL file_read( FILE *stream, char *string, int *iCharCount )
 
       if( ( ch == '\n' ) || ( ch == EOF ) || ( ch == 26 ) )
       {
-         *iCharCount = cnbr;
+         *iCharCount    = cnbr;
          string[ cnbr ] = '\0';
          return ch == '\n' || cnbr;
       }
@@ -344,7 +344,7 @@ static HB_BOOL file_read( FILE *stream, char *string, int *iCharCount )
 
       if( cnbr >= MAX_READ )
       {
-         *iCharCount = cnbr;
+         *iCharCount        = cnbr;
          string[ MAX_READ ] = '\0';
          return HB_TRUE;
       }
@@ -353,18 +353,18 @@ static HB_BOOL file_read( FILE *stream, char *string, int *iCharCount )
 
 HB_FUNC( FPARSE )
 {
-   FILE * inFile;
-   PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
+   FILE *   inFile;
+   PHB_ITEM pSrc   = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pDelim = hb_param( 2, HB_IT_STRING );
    PHB_ITEM pArray;
    PHB_ITEM pItem;
-   char * string;
-   char ** tokens;
-   int iToken, iCharCount = 0;
-   HB_BYTE nByte;
+   char *   string;
+   char **  tokens;
+   int      iToken, iCharCount = 0;
+   HB_BYTE  nByte;
 
    /* file parameter correctly passed */
-   if( !pSrc )
+   if( ! pSrc )
    {
       hb_reta( 0 );
       return;
@@ -380,7 +380,7 @@ HB_FUNC( FPARSE )
    inFile = hb_fopen( hb_itemGetCPtr( pSrc ), "r" );
 
    /* return empty array on failure */
-   if( !inFile )
+   if( ! inFile )
    {
       hb_reta( 0 );
       return;
@@ -391,7 +391,7 @@ HB_FUNC( FPARSE )
 
    /* the main array */
    pArray = hb_itemArrayNew( 0 );
-   pItem = hb_itemNew( NULL );
+   pItem  = hb_itemNew( NULL );
 
    /* book memory for line to read */
    string = ( char * ) hb_xgrab( MAX_READ + 1 );
@@ -431,17 +431,17 @@ HB_FUNC( FPARSE )
 
 HB_FUNC( FPARSEEX )
 {
-   FILE * inFile;
-   PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
+   FILE *   inFile;
+   PHB_ITEM pSrc   = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pDelim = hb_param( 2, HB_IT_STRING );
    PHB_ITEM pArray;
    PHB_ITEM pSubArray;
-   char * string;
-   int iCharCount = 0;
-   HB_BYTE nByte;
+   char *   string;
+   int      iCharCount = 0;
+   HB_BYTE  nByte;
 
    /* file parameter correctly passed */
-   if( !pSrc )
+   if( ! pSrc )
    {
       hb_reta( 0 );
       return;
@@ -457,7 +457,7 @@ HB_FUNC( FPARSEEX )
    inFile = hb_fopen( hb_itemGetCPtr( pSrc ), "r" );
 
    /* return empty array on failure */
-   if( !inFile )
+   if( ! inFile )
    {
       hb_reta( 0 );
       return;
@@ -467,7 +467,7 @@ HB_FUNC( FPARSEEX )
    nByte = pDelim ? ( HB_BYTE ) hb_itemGetCPtr( pDelim )[ 0 ] : ( HB_BYTE ) ',';
 
    /* the main array */
-   pArray = hb_itemArrayNew( 0 );
+   pArray    = hb_itemArrayNew( 0 );
    pSubArray = hb_itemNew( NULL );
 
    /* book memory for line to read */
@@ -497,16 +497,16 @@ HB_FUNC( FPARSEEX )
 
 HB_FUNC( FWORDCOUNT )
 {
-   FILE * inFile;
+   FILE *   inFile;
    PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
-   char *string;
-   char **tokens;
-   int iCharCount = 0;
-   HB_BYTE nByte = ' ';
-   HB_SIZE nWordCount = 0;
+   char *   string;
+   char **  tokens;
+   int      iCharCount = 0;
+   HB_BYTE  nByte      = ' ';
+   HB_SIZE  nWordCount = 0;
 
    /* file parameter correctly passed */
-   if( !pSrc )
+   if( ! pSrc )
    {
       hb_retns( 0 );
       return;
@@ -522,7 +522,7 @@ HB_FUNC( FWORDCOUNT )
    inFile = hb_fopen( hb_itemGetCPtr( pSrc ), "r" );
 
    /* return 0 on failure */
-   if( !inFile )
+   if( ! inFile )
    {
       hb_retns( 0 );
       return;
@@ -556,13 +556,13 @@ HB_FUNC( FWORDCOUNT )
 
 HB_FUNC( FLINECOUNT )
 {
-   FILE * inFile;
-   PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
-   HB_SIZE nLineCount = 0;
-   int ch;
+   FILE *   inFile;
+   PHB_ITEM pSrc       = hb_param( 1, HB_IT_STRING );
+   HB_SIZE  nLineCount = 0;
+   int      ch;
 
    /* file parameter correctly passed */
-   if( !pSrc )
+   if( ! pSrc )
    {
       hb_retns( 0 );
       return;
@@ -578,7 +578,7 @@ HB_FUNC( FLINECOUNT )
    inFile = hb_fopen( hb_itemGetCPtr( pSrc ), "r" );
 
    /* return 0 on failure */
-   if( !inFile )
+   if( ! inFile )
    {
       hb_retns( 0 );
       return;
@@ -602,13 +602,13 @@ HB_FUNC( FLINECOUNT )
 
 HB_FUNC( FCHARCOUNT )
 {
-   FILE * inFile;
-   PHB_ITEM pSrc = hb_param( 1, HB_IT_STRING );
-   HB_SIZE nResult = 0;
-   int ch;
+   FILE *   inFile;
+   PHB_ITEM pSrc    = hb_param( 1, HB_IT_STRING );
+   HB_SIZE  nResult = 0;
+   int      ch;
 
    /* file parameter correctly passed */
-   if( !pSrc )
+   if( ! pSrc )
    {
       hb_retns( 0 );
       return;
@@ -624,7 +624,7 @@ HB_FUNC( FCHARCOUNT )
    inFile = hb_fopen( hb_itemGetCPtr( pSrc ), "r" );
 
    /* return 0 on failure */
-   if( !inFile )
+   if( ! inFile )
    {
       hb_retns( 0 );
       return;
@@ -635,13 +635,13 @@ HB_FUNC( FCHARCOUNT )
    {
       switch( ch )
       {
-        case '\n':
-        case '\r':
-        case ' ':
-        case '\t':
-           break;
-        default:
-           nResult++;
+         case '\n':
+         case '\r':
+         case ' ':
+         case '\t':
+            break;
+         default:
+            nResult++;
       }
    }
 
@@ -654,8 +654,8 @@ HB_FUNC( FCHARCOUNT )
 
 HB_FUNC( FPARSELINE )
 {
-   PHB_ITEM pArray;
-   HB_ISIZ nWords = 0;
+   PHB_ITEM     pArray;
+   HB_ISIZ      nWords = 0;
    const char * szText;
 
    pArray = hb_itemArrayNew( 0 );
@@ -664,7 +664,7 @@ HB_FUNC( FPARSELINE )
    if( szText )
    {
       const char * szDelim = hb_parc( 2 );
-      int iWords = 0;
+      int          iWords  = 0;
       hb_ParseLine( pArray, szText, szDelim ? ( unsigned char ) *szDelim : ',', &iWords );
       nWords = iWords;
    }

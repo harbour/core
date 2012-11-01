@@ -54,7 +54,7 @@
    to be managed from the main thread. Every thread may use it,
    but only the main thread should be allowed to activate the
    debug window.
-*/
+ */
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -67,7 +67,7 @@
    #include "hbwinuni.h"
 #endif
 
-#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
+#if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS )
 
 #include <errno.h>
 #include <unistd.h>
@@ -77,17 +77,17 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 
-static int s_iDebugFd = 0;
+static int  s_iDebugFd = 0;
 static char s_szDebugName[ 128 ];
-static int s_iUseDebugName = 0;
-static int s_iXtermPid = 0;
+static int  s_iUseDebugName = 0;
+static int  s_iXtermPid     = 0;
 
 static void debugInit( void )
 {
-   int iPid, iFifoResult;
-   char szDebugTitle[ 30 ];
+   int       iPid, iFifoResult;
+   char      szDebugTitle[ 30 ];
    PHB_FNAME pFileName = NULL;
-   char szDebugName[ 128 ];
+   char      szDebugName[ 128 ];
 
    if( ! s_iUseDebugName )
    {
@@ -112,7 +112,7 @@ static void debugInit( void )
       iPid = fork();
       if( iPid != 0 )
       {
-         s_iDebugFd = open( szDebugName, O_WRONLY );
+         s_iDebugFd  = open( szDebugName, O_WRONLY );
          s_iXtermPid = iPid;
       }
       else
@@ -142,15 +142,15 @@ HB_BOOL hb_OutDebugName( PHB_ITEM pName )
 {
    HB_BOOL bRet;
 
-#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
-   if( s_iDebugFd == 0 && pName != NULL)
+#if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS )
+   if( s_iDebugFd == 0 && pName != NULL )
    {
       hb_strncpy( s_szDebugName, hb_itemGetCPtr( pName ), sizeof( s_szDebugName ) - 1 );
       s_iUseDebugName = 1;
 
       bRet = HB_TRUE;
    }
-   else if( pName == NULL)
+   else if( pName == NULL )
    {
       s_iUseDebugName = 0;
       bRet = HB_TRUE;
@@ -169,7 +169,7 @@ HB_BOOL hb_OutDebugName( PHB_ITEM pName )
 
 void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
 {
-#if defined( HB_OS_UNIX ) && !defined( HB_OS_VXWORKS )
+#if defined( HB_OS_UNIX ) && ! defined( HB_OS_VXWORKS )
    int iStatus, iPid;
 
    /* Are we under X? */
@@ -185,7 +185,7 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
       /* Chech if display process has terminated in the meanwhile */
       if( ! s_iUseDebugName )
       {
-         iPid = waitpid( s_iXtermPid, &iStatus,  WNOHANG );
+         iPid = waitpid( s_iXtermPid, &iStatus, WNOHANG );
          if( iPid == s_iXtermPid || iPid == -1 )
          {
             s_iXtermPid = 0;
@@ -206,13 +206,15 @@ void hb_OutDebug( const char * szMsg, HB_SIZE nMsgLen )
          {
             if( ( HB_SIZE ) write( s_iDebugFd, szMsg, nMsgLen ) == nMsgLen )
             {
-               tv.tv_sec = 0;
+               tv.tv_sec  = 0;
                tv.tv_usec = 100000;
                FD_ZERO( &wrds );
                FD_SET( s_iDebugFd, &wrds );
                if( select( s_iDebugFd + 1, NULL, &wrds, NULL, &tv ) > 0 )
                {
-                  if( write( s_iDebugFd, "\n", 1 ) != 1 ) {}
+                  if( write( s_iDebugFd, "\n", 1 ) != 1 )
+                  {
+                  }
                }
             }
          }

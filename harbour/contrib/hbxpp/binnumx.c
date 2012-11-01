@@ -56,8 +56,8 @@
 
 HB_FUNC( BIN2U )
 {
-   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
-   HB_U32 uiResult = 0;
+   PHB_ITEM pItem    = hb_param( 1, HB_IT_STRING );
+   HB_U32   uiResult = 0;
 
    if( pItem )
    {
@@ -76,23 +76,25 @@ HB_FUNC( BIN2U )
 
 HB_FUNC( U2BIN )
 {
-   char szResult[ 4 ];
+   char   szResult[ 4 ];
    HB_U32 uiValue = ( HB_U32 ) hb_parnint( 1 );
+
    HB_PUT_LE_UINT32( szResult, uiValue );
    hb_retclen( szResult, 4 );
 }
 
 HB_FUNC( W2BIN )
 {
-   char szResult[ 2 ];
+   char   szResult[ 2 ];
    HB_U16 uiValue = ( HB_U16 ) hb_parni( 1 );
+
    HB_PUT_LE_UINT16( szResult, uiValue );
    hb_retclen( szResult, 2 );
 }
 
 HB_FUNC( F2BIN )
 {
-   char buf[ sizeof( double ) ];
+   char   buf[ sizeof( double ) ];
    double d = hb_parnd( 1 );
 
    HB_PUT_LE_DOUBLE( buf, d );

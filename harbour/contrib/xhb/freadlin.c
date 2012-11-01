@@ -56,16 +56,16 @@
 #include "hbapiitm.h"
 #include "hbapierr.h"
 
-#define READING_BLOCK      4096
+#define READING_BLOCK  4096
 
 static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const char ** pTerm, HB_ISIZ * pnTermSizes, HB_ISIZ nTerms, HB_BOOL * pbFound, HB_BOOL * pbEOF )
 {
    HB_ISIZ nPosTerm = 0, nPos, nPosition;
-   int nTries;
+   int     nTries;
    HB_ISIZ nRead = 0, nOffset, nSize;
-   char * pBuff;
+   char *  pBuff;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, pTerm, pnTermSizes, nTerms, pbFound, pbEOF ));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsReadLine(%p, %" HB_PFS "d, %p, %p, %" HB_PFS "d, %p, %p)", ( void * ) ( HB_PTRDIFF ) hFileHandle, *plBuffLen, pTerm, pnTermSizes, nTerms, pbFound, pbEOF ) );
 
    *pbFound = HB_FALSE;
    *pbEOF   = HB_FALSE;
@@ -83,8 +83,8 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
       if( nTries > 0 )
       {
          /* pBuff can be enlarged to hold the line as needed.. */
-         nSize = ( *plBuffLen * ( nTries + 1 ) ) + 1;
-         pBuff = ( char * ) hb_xrealloc( pBuff, nSize );
+         nSize    = ( *plBuffLen * ( nTries + 1 ) ) + 1;
+         pBuff    = ( char * ) hb_xrealloc( pBuff, nSize );
          nOffset += nRead;
       }
 
@@ -164,22 +164,22 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
 
 HB_FUNC( HB_FREADLINE )
 {
-   PHB_ITEM pTerm1;
-   HB_FHANDLE hFileHandle  = ( HB_FHANDLE ) hb_parnint( 1 );
+   PHB_ITEM      pTerm1;
+   HB_FHANDLE    hFileHandle = ( HB_FHANDLE ) hb_parnint( 1 );
    const char ** Term;
-   char * pBuffer;
-   HB_ISIZ * pnTermSizes;
-   HB_ISIZ nSize = hb_parns( 4 );
-   HB_ISIZ i, nTerms;
-   HB_BOOL bFound, bEOF;
+   char *        pBuffer;
+   HB_ISIZ *     pnTermSizes;
+   HB_ISIZ       nSize = hb_parns( 4 );
+   HB_ISIZ       i, nTerms;
+   HB_BOOL       bFound, bEOF;
 
-   if( ( !HB_ISBYREF( 2 ) ) || ( !HB_ISNUM( 1 ) ) )
+   if( ( ! HB_ISBYREF( 2 ) ) || ( ! HB_ISNUM( 1 ) ) )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
-         hb_paramError( 1 ),
-         hb_paramError( 2 ),
-         hb_paramError( 3 ),
-         hb_paramError( 4 ) );
+                            hb_paramError( 1 ),
+                            hb_paramError( 2 ),
+                            hb_paramError( 3 ),
+                            hb_paramError( 4 ) );
       return;
    }
 
@@ -193,14 +193,14 @@ HB_FUNC( HB_FREADLINE )
          if( nTerms <= 0 )
          {
             hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, 4,
-               hb_paramError( 1 ),
-               hb_paramError( 2 ),
-               hb_paramError( 3 ),
-               hb_paramError( 4 ) );
+                                  hb_paramError( 1 ),
+                                  hb_paramError( 2 ),
+                                  hb_paramError( 3 ),
+                                  hb_paramError( 4 ) );
             return;
          }
 
-         Term = ( const char ** ) hb_xgrab( sizeof( char * ) * nTerms );
+         Term        = ( const char ** ) hb_xgrab( sizeof( char * ) * nTerms );
          pnTermSizes = ( HB_ISIZ * ) hb_xgrab( sizeof( HB_ISIZ ) * nTerms );
 
          for( i = 0; i < nTerms; i++ )

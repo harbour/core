@@ -63,8 +63,8 @@ HB_FUNC( ASPLICE )
 
    if( pArray )
    {
-      HB_SIZE nStart, nRemove, nIndex;
-      HB_SIZE nLen = hb_arrayLen( pArray );
+      HB_SIZE  nStart, nRemove, nIndex;
+      HB_SIZE  nLen    = hb_arrayLen( pArray );
       PHB_ITEM pReturn = hb_stackReturnItem();
 
       if( nLen == 0 )
@@ -76,7 +76,7 @@ HB_FUNC( ASPLICE )
       if( HB_ISNUM( 2 ) )
          nStart = hb_parns( 2 );
       else
-         nStart = nLen + ( hb_pcount() > 3 && !HB_ISNUM( 3 ) ? 1 : 0 );
+         nStart = nLen + ( hb_pcount() > 3 && ! HB_ISNUM( 3 ) ? 1 : 0 );
 
       if( HB_ISNUM( 3 ) )
          nRemove = hb_parns( 3 );
@@ -111,7 +111,7 @@ HB_FUNC( ASPLICE )
 
          if( ( HB_SIZE ) nAdd > nRemove )
          {
-            HB_SIZE nMore = nAdd - nRemove;
+            HB_SIZE nMore  = nAdd - nRemove;
             HB_SIZE nShift = nLen - ( nStart + nRemove );
 
             hb_arraySize( pArray, nLen + nMore );

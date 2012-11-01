@@ -65,11 +65,11 @@
 
 static PHB_SYMB s_xHbFunc = NULL;
 
-LONG WINAPI PRGUnhandledExceptionFilter( EXCEPTION_POINTERS *ExceptionInfo )
+LONG WINAPI PRGUnhandledExceptionFilter( EXCEPTION_POINTERS * ExceptionInfo )
 {
    if( s_xHbFunc )
    {
-      HB_ITEM Exception;
+      HB_ITEM  Exception;
       PHB_DYNS pDyn = hb_dynsymFind( "HB_CSTRUCTURE" );
 
       Exception.type = HB_IT_NIL;
@@ -89,7 +89,7 @@ LONG WINAPI PRGUnhandledExceptionFilter( EXCEPTION_POINTERS *ExceptionInfo )
 
             hb_itemMove( &Exception, hb_stackReturnItem() );
 
-            hb_itemPutCLStatic( &Buffer, (char *) ExceptionInfo, sizeof( EXCEPTION_POINTERS ) );
+            hb_itemPutCLStatic( &Buffer, ( char * ) ExceptionInfo, sizeof( EXCEPTION_POINTERS ) );
 
             Adopt.type = HB_IT_LOGICAL;
             Adopt.item.asLogical.value = HB_FALSE;

@@ -63,13 +63,13 @@ static HB_GARBAGE_FUNC( EVP_PKEY_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      EVP_PKEY_free( ( EVP_PKEY * ) * ph );
+      EVP_PKEY_free( ( EVP_PKEY * ) *ph );
 
       /* set pointer to NULL just in case */
-      * ph = NULL;
+      *ph = NULL;
    }
 }
 
@@ -88,7 +88,7 @@ EVP_PKEY * hb_EVP_PKEY_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcEVP_PKEY_funcs, iParam );
 
-   return ph ? ( EVP_PKEY * ) * ph : NULL;
+   return ph ? ( EVP_PKEY * ) *ph : NULL;
 }
 
 HB_FUNC( EVP_PKEY_NEW )
@@ -97,7 +97,7 @@ HB_FUNC( EVP_PKEY_NEW )
 
    EVP_PKEY * ctx = EVP_PKEY_new();
 
-   * ph = ctx;
+   *ph = ctx;
 
    hb_retptrGC( ph );
 }
@@ -153,7 +153,7 @@ HB_FUNC( EVP_PKEY_ASSIGN_RSA )
    if( hb_EVP_PKEY_is( 1 ) && HB_ISPOINTER( 2 ) )
    {
       EVP_PKEY * pkey = hb_EVP_PKEY_par( 1 );
-      RSA * key = ( RSA * ) hb_parptr( 2 );
+      RSA *      key  = ( RSA * ) hb_parptr( 2 );
 
       if( pkey && key )
          hb_retni( EVP_PKEY_assign_RSA( pkey, key ) );
@@ -171,7 +171,7 @@ HB_FUNC( EVP_PKEY_ASSIGN_DSA )
    if( hb_EVP_PKEY_is( 1 ) && HB_ISPOINTER( 2 ) )
    {
       EVP_PKEY * pkey = hb_EVP_PKEY_par( 1 );
-      DSA * key = ( DSA * ) hb_parptr( 2 );
+      DSA *      key  = ( DSA * ) hb_parptr( 2 );
 
       if( pkey && key )
          hb_retni( EVP_PKEY_assign_DSA( pkey, key ) );
@@ -189,7 +189,7 @@ HB_FUNC( EVP_PKEY_ASSIGN_DH )
    if( hb_EVP_PKEY_is( 1 ) && HB_ISPOINTER( 2 ) )
    {
       EVP_PKEY * pkey = hb_EVP_PKEY_par( 1 );
-      DH * key = ( DH * ) hb_parptr( 2 );
+      DH *       key  = ( DH * ) hb_parptr( 2 );
 
       if( pkey && key )
          hb_retni( EVP_PKEY_assign_DH( pkey, key ) );
@@ -203,44 +203,44 @@ HB_FUNC( EVP_PKEY_ASSIGN_DH )
 
 #if 0
 
-int EVP_PKEY_set1_RSA(EVP_PKEY *pkey,RSA *key);
-int EVP_PKEY_set1_DSA(EVP_PKEY *pkey,DSA *key);
-int EVP_PKEY_set1_DH(EVP_PKEY *pkey,DH *key);
-int EVP_PKEY_set1_EC_KEY(EVP_PKEY *pkey,EC_KEY *key);
+int EVP_PKEY_set1_RSA( EVP_PKEY * pkey, RSA * key );
+int EVP_PKEY_set1_DSA( EVP_PKEY * pkey, DSA * key );
+int EVP_PKEY_set1_DH( EVP_PKEY * pkey, DH * key );
+int EVP_PKEY_set1_EC_KEY( EVP_PKEY * pkey, EC_KEY * key );
 
-RSA *    EVP_PKEY_get1_RSA(EVP_PKEY *pkey);
-DSA *    EVP_PKEY_get1_DSA(EVP_PKEY *pkey);
-DH *     EVP_PKEY_get1_DH(EVP_PKEY *pkey);
-EC_KEY * EVP_PKEY_get1_EC_KEY(EVP_PKEY *pkey);
+RSA *    EVP_PKEY_get1_RSA( EVP_PKEY * pkey );
+DSA *    EVP_PKEY_get1_DSA( EVP_PKEY * pkey );
+DH *     EVP_PKEY_get1_DH( EVP_PKEY * pkey );
+EC_KEY * EVP_PKEY_get1_EC_KEY( EVP_PKEY * pkey );
 
 /* These changed in 0.9.9 to something different, they weren't probably documented before. */
 int EVP_PKEY_decrypt( unsigned char * dec_key, const unsigned char * enc_key, int enc_key_len, EVP_PKEY * private_key );
-int EVP_PKEY_encrypt( unsigned char * enc_key, const unsigned char * key    , int key_len    , EVP_PKEY * pub_key     );
+int EVP_PKEY_encrypt( unsigned char * enc_key, const unsigned char * key, int key_len, EVP_PKEY * pub_key     );
 
 /* 1.0.0 */
-int EVP_PKEY_sign_init(EVP_PKEY_CTX *ctx);
-int EVP_PKEY_sign(EVP_PKEY_CTX *ctx,
-			unsigned char *sig, size_t *siglen,
-			const unsigned char *tbs, size_t tbslen);
+int EVP_PKEY_sign_init( EVP_PKEY_CTX * ctx );
+int EVP_PKEY_sign( EVP_PKEY_CTX * ctx,
+                   unsigned char * sig, size_t * siglen,
+                   const unsigned char * tbs, size_t tbslen );
 
-int EVP_PKEY_verify_init(EVP_PKEY_CTX *ctx);
-int EVP_PKEY_verify(EVP_PKEY_CTX *ctx,
-			const unsigned char *sig, size_t siglen,
-			const unsigned char *tbs, size_t tbslen);
+int EVP_PKEY_verify_init( EVP_PKEY_CTX * ctx );
+int EVP_PKEY_verify( EVP_PKEY_CTX * ctx,
+                     const unsigned char * sig, size_t siglen,
+                     const unsigned char * tbs, size_t tbslen );
 
-int EVP_PKEY_verify_recover_init(EVP_PKEY_CTX *ctx);
-int EVP_PKEY_verify_recover(EVP_PKEY_CTX *ctx,
-			unsigned char *rout, size_t *routlen,
-			const unsigned char *sig, size_t siglen);
+int EVP_PKEY_verify_recover_init( EVP_PKEY_CTX * ctx );
+int EVP_PKEY_verify_recover( EVP_PKEY_CTX * ctx,
+                             unsigned char * rout, size_t * routlen,
+                             const unsigned char * sig, size_t siglen );
 
-int EVP_PKEY_encrypt_init(EVP_PKEY_CTX *ctx);
-int EVP_PKEY_encrypt(EVP_PKEY_CTX *ctx,
-			unsigned char *out, size_t *outlen,
-			const unsigned char *in, size_t inlen);
+int EVP_PKEY_encrypt_init( EVP_PKEY_CTX * ctx );
+int EVP_PKEY_encrypt( EVP_PKEY_CTX * ctx,
+                      unsigned char * out, size_t * outlen,
+                      const unsigned char * in, size_t inlen );
 
-int EVP_PKEY_decrypt_init(EVP_PKEY_CTX *ctx);
-int EVP_PKEY_decrypt(EVP_PKEY_CTX *ctx,
-			unsigned char *out, size_t *outlen,
-			const unsigned char *in, size_t inlen);
+int EVP_PKEY_decrypt_init( EVP_PKEY_CTX * ctx );
+int EVP_PKEY_decrypt( EVP_PKEY_CTX * ctx,
+                      unsigned char * out, size_t * outlen,
+                      const unsigned char * in, size_t inlen );
 
 #endif

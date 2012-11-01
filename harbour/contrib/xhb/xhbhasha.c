@@ -89,11 +89,11 @@ static HB_BOOL s_isHashAA( PHB_ITEM pHash )
 HB_FUNC( HAAGETKEYAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pPos = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pPos  = hb_param( 2, HB_IT_NUMERIC );
 
-   if( !pHash || !pPos )
+   if( ! pHash || ! pPos )
       s_errRT_hashArg();
-   else if( !s_isHashAA( pHash ) )
+   else if( ! s_isHashAA( pHash ) )
       s_errRT_hashAA();
    else
    {
@@ -109,11 +109,11 @@ HB_FUNC( HAAGETKEYAT )
 HB_FUNC( HAAGETVALUEAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pPos = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pPos  = hb_param( 2, HB_IT_NUMERIC );
 
-   if( !pHash || !pPos )
+   if( ! pHash || ! pPos )
       s_errRT_hashArg();
-   else if( !s_isHashAA( pHash ) )
+   else if( ! s_isHashAA( pHash ) )
       s_errRT_hashAA();
    else
    {
@@ -128,13 +128,13 @@ HB_FUNC( HAAGETVALUEAT )
 /* HAASETVALUEAT( <hValue>, <nPos>, <value> ) -> NIL */
 HB_FUNC( HAASETVALUEAT )
 {
-   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pPos = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pHash  = hb_param( 1, HB_IT_HASH );
+   PHB_ITEM pPos   = hb_param( 2, HB_IT_NUMERIC );
    PHB_ITEM pValue = hb_param( 3, HB_IT_ANY );
 
-   if( !pHash || !pPos || !pValue )
+   if( ! pHash || ! pPos || ! pValue )
       s_errRT_hashArg();
-   else if( !s_isHashAA( pHash ) )
+   else if( ! s_isHashAA( pHash ) )
       s_errRT_hashAA();
    else
    {
@@ -150,13 +150,13 @@ HB_FUNC( HAASETVALUEAT )
 HB_FUNC( HAADELAT )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pPos = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pPos  = hb_param( 2, HB_IT_NUMERIC );
 
-   if( !pHash || !pPos )
+   if( ! pHash || ! pPos )
       s_errRT_hashArg();
-   else if( !s_isHashAA( pHash ) )
+   else if( ! s_isHashAA( pHash ) )
       s_errRT_hashAA();
-   else if( !hb_hashDelAt( pHash, hb_itemGetNS( pPos ) ) )
+   else if( ! hb_hashDelAt( pHash, hb_itemGetNS( pPos ) ) )
       s_errRT_hashBound();
 }
 
@@ -164,11 +164,11 @@ HB_FUNC( HAADELAT )
 HB_FUNC( HAAGETPOS )
 {
    PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
-   PHB_ITEM pKey = hb_param( 2, HB_IT_HASHKEY );
+   PHB_ITEM pKey  = hb_param( 2, HB_IT_HASHKEY );
 
-   if( !pHash || !pKey )
+   if( ! pHash || ! pKey )
       s_errRT_hashArg();
-   else if( !s_isHashAA( pHash ) )
+   else if( ! s_isHashAA( pHash ) )
       s_errRT_hashAA();
    else
    {
@@ -201,7 +201,7 @@ HB_FUNC( HGETVAAPOS )
 
    if( pHash )
    {
-      HB_SIZE n, nLen = hb_hashLen( pHash );
+      HB_SIZE  n, nLen = hb_hashLen( pHash );
       PHB_ITEM pArray = hb_itemArrayNew( nLen );
 
       for( n = 1; n <= nLen; ++n )
@@ -215,7 +215,7 @@ HB_FUNC( HGETVAAPOS )
 /* HSETAACOMPATIBILITY( <hValue>, <lAACompat> ) -> <lDone> */
 HB_FUNC( HSETAACOMPATIBILITY )
 {
-   PHB_ITEM pHash = hb_param( 1, HB_IT_HASH );
+   PHB_ITEM pHash  = hb_param( 1, HB_IT_HASH );
    PHB_ITEM pValue = hb_param( 2, HB_IT_LOGICAL );
 
    if( pHash && pValue && hb_hashLen( pHash ) == 0 )

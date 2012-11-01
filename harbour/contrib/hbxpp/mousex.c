@@ -75,7 +75,7 @@ HB_FUNC( SETMOUSE )
    {
       int iRow = 0, iCol = 0;
 
-      if( !fRow || !fCol )
+      if( ! fRow || ! fCol )
          hb_mouseGetPos( &iRow, &iCol );
 
       if( fRow )

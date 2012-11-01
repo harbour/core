@@ -254,7 +254,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
    bSignalEnabled = HB_TRUE;
    /*s_serviceSetHBSig();*/
 
-   /* TODO
+   #if 0
    if( uiSig != HB_SIGNAL_UNKNOWN )
    {
       if( sa_oldAction[ sig ].sa_flags & SA_SIGINFO )
@@ -262,7 +262,7 @@ static void s_signalHandler( int sig, siginfo_t * info, void * v )
       else
          sa_oldAction[ sig ].sa_handler( sig );
    }
-   */
+   #endif
 }
 
 /* 2003 - <maurilio.longo@libero.it>
@@ -1107,13 +1107,13 @@ HB_FUNC( HB_SERVICEGENERATEFPE )
 
 #else
 
-HB_FUNC( HB_STARTSERVICE ) {;}
-HB_FUNC( HB_ISSERVICE ) {;}
-HB_FUNC( HB_SERVICELOOP ) {;}
-HB_FUNC( HB_PUSHSIGNALHANDLER ) {;}
-HB_FUNC( HB_POPSIGNALHANDLER ) {;}
-HB_FUNC( HB_SIGNALDESC ) {;}
-HB_FUNC( HB_SERVICEGENERATEFAULT ) {;}
-HB_FUNC( HB_SERVICEGENERATEFPE ) {;}
+HB_FUNC( HB_STARTSERVICE ) {}
+HB_FUNC( HB_ISSERVICE ) {}
+HB_FUNC( HB_SERVICELOOP ) {}
+HB_FUNC( HB_PUSHSIGNALHANDLER ) {}
+HB_FUNC( HB_POPSIGNALHANDLER ) {}
+HB_FUNC( HB_SIGNALDESC ) {}
+HB_FUNC( HB_SERVICEGENERATEFAULT ) {}
+HB_FUNC( HB_SERVICEGENERATEFPE ) {}
 
 #endif

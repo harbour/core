@@ -59,7 +59,7 @@
 static HB_ERRCODE s_waList( AREAP pArea, void * Cargo )
 {
    PHB_ITEM pArray = ( PHB_ITEM ) Cargo;
-   HB_SIZE nLen = hb_arrayLen( pArray ) + 1;
+   HB_SIZE  nLen   = hb_arrayLen( pArray ) + 1;
 
    hb_arraySize( pArray, nLen );
    hb_arraySetC( pArray, nLen, hb_dynsymName( ( PHB_DYNS ) pArea->atomAlias ) );

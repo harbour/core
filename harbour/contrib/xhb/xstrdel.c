@@ -58,24 +58,24 @@ HB_FUNC( STRDEL )
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
       const char * szText = hb_parcx( 1 );
-      HB_SIZE nText = hb_parclen( 1 );
-      HB_SIZE nDel = hb_parclen( 2 );
+      HB_SIZE      nText  = hb_parclen( 1 );
+      HB_SIZE      nDel   = hb_parclen( 2 );
 
       if( nDel > 0 && nText > 0 )
       {
-         const char * szDel = hb_parcx( 2 );
-         HB_SIZE nPosTxt = 0;
-         HB_SIZE nResult = 0;
-         HB_SIZE nPosDel = 0;
-         char * szResult = ( char * ) hb_xgrab( nText + 1 );
+         const char * szDel    = hb_parcx( 2 );
+         HB_SIZE      nPosTxt  = 0;
+         HB_SIZE      nResult  = 0;
+         HB_SIZE      nPosDel  = 0;
+         char *       szResult = ( char * ) hb_xgrab( nText + 1 );
 
-         for( ; ( nPosDel < nText && nPosDel < nDel ); nPosDel++ )
+         for(; ( nPosDel < nText && nPosDel < nDel ); nPosDel++ )
          {
             if( szDel[ nPosDel ] != ' ' )
             {
                hb_xmemcpy( szResult + nResult, szText + nPosTxt, nPosDel - nPosTxt );
                nResult += nPosDel - nPosTxt;
-               nPosTxt = nPosDel + 1;
+               nPosTxt  = nPosDel + 1;
             }
          }
          hb_xmemcpy( szResult + nResult, szText + nPosTxt, nText - nPosTxt );

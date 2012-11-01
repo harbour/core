@@ -116,7 +116,7 @@ HB_FUNC( ERR_REASON_ERROR_STRING )
 HB_FUNC( ERR_GET_ERROR_LINE )
 {
    const char * file = NULL;
-   int line = 0;
+   int          line = 0;
 
    hb_retnint( ERR_get_error_line( &file, &line ) );
 
@@ -127,7 +127,7 @@ HB_FUNC( ERR_GET_ERROR_LINE )
 HB_FUNC( ERR_PEEK_ERROR_LINE )
 {
    const char * file = NULL;
-   int line = 0;
+   int          line = 0;
 
    hb_retnint( ERR_peek_error_line( &file, &line ) );
 
@@ -138,7 +138,7 @@ HB_FUNC( ERR_PEEK_ERROR_LINE )
 HB_FUNC( ERR_PEEK_LAST_ERROR_LINE )
 {
    const char * file = NULL;
-   int line = 0;
+   int          line = 0;
 
    hb_retnint( ERR_peek_last_error_line( &file, &line ) );
 
@@ -148,10 +148,10 @@ HB_FUNC( ERR_PEEK_LAST_ERROR_LINE )
 
 HB_FUNC( ERR_GET_ERROR_LINE_DATA )
 {
-   const char * file = NULL;
-   int line = 0;
-   const char * data = NULL;
-   int flags = 0;
+   const char * file  = NULL;
+   int          line  = 0;
+   const char * data  = NULL;
+   int          flags = 0;
 
    hb_retnint( ERR_get_error_line_data( &file, &line, &data, &flags ) );
 
@@ -163,10 +163,10 @@ HB_FUNC( ERR_GET_ERROR_LINE_DATA )
 
 HB_FUNC( ERR_PEEK_ERROR_LINE_DATA )
 {
-   const char * file = NULL;
-   int line = 0;
-   const char * data = NULL;
-   int flags = 0;
+   const char * file  = NULL;
+   int          line  = 0;
+   const char * data  = NULL;
+   int          flags = 0;
 
    hb_retnint( ERR_peek_error_line_data( &file, &line, &data, &flags ) );
 
@@ -178,10 +178,10 @@ HB_FUNC( ERR_PEEK_ERROR_LINE_DATA )
 
 HB_FUNC( ERR_PEEK_LAST_ERROR_LINE_DATA )
 {
-   const char * file = NULL;
-   int line = 0;
-   const char * data = NULL;
-   int flags = 0;
+   const char * file  = NULL;
+   int          line  = 0;
+   const char * data  = NULL;
+   int          flags = 0;
 
    hb_retnint( ERR_peek_last_error_line_data( &file, &line, &data, &flags ) );
 

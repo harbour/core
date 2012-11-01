@@ -60,10 +60,10 @@
 
 static HB_ULONG hb_TimeStrToSec( const char * pszTime )
 {
-   HB_SIZE nLen;
+   HB_SIZE  nLen;
    HB_ULONG ulTime = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_TimeStrToSec(%s)", pszTime));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_TimeStrToSec(%s)", pszTime ) );
 
    nLen = strlen( pszTime );
 
@@ -94,19 +94,19 @@ HB_FUNC( TIMEOFDAY )
    }
    else
    {
-      int iSeconds = hb_parni(1);
-      iSeconds %= 3600*24;
+      int iSeconds = hb_parni( 1 );
+      iSeconds %= 3600 * 24;
       hb_snprintf( szResult, sizeof( szResult ), "%02d:%02d:%02d",
-                   iSeconds/3600 , (iSeconds % 3600)/60, iSeconds % 60 );
+                   iSeconds / 3600, ( iSeconds % 3600 ) / 60, iSeconds % 60 );
    }
    hb_retclen( szResult, 8 );
 }
 
 HB_FUNC( HMS2D )
 {
-   int iHour = hb_parni( 1 );
-   int iMin = hb_parni( 2 );
-   double dSec = hb_parnd( 3 );
+   int    iHour = hb_parni( 1 );
+   int    iMin  = hb_parni( 2 );
+   double dSec  = hb_parnd( 3 );
 
    hb_retnd( hb_timeEncode( iHour, iMin, ( int ) dSec, ( int ) ( ( ( double ) ( dSec - ( double ) ( ( int ) dSec ) ) ) * 1000 ) ) );
 }

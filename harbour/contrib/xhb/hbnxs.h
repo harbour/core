@@ -52,24 +52,24 @@
  */
 
 /***************************************************************
-* NXS aglorithm is FREE SOFTWARE. It can be reused for any
-* purpose, provided that this copiright notice is still present
-* in the software.
-*
-* This program is distributed WITHOUT ANY WARRANTY that it can
-* fit any particular need.
-*
-* NXS author is Giancarlo Niccolai <giancarlo@niccolai.ws>
-*
-* Adler 32 CRC is copyrighted by Martin Adler
-**************************************************************/
+ * NXS aglorithm is FREE SOFTWARE. It can be reused for any
+ * purpose, provided that this copiright notice is still present
+ * in the software.
+ *
+ * This program is distributed WITHOUT ANY WARRANTY that it can
+ * fit any particular need.
+ *
+ * NXS author is Giancarlo Niccolai <giancarlo@niccolai.ws>
+ *
+ * Adler 32 CRC is copyrighted by Martin Adler
+ **************************************************************/
 
 #ifndef HBNXS_H
 #define HBNXS_H
 
 #include "hbdefs.h"
 
-#define NXS_MAX_KEYLEN 256
+#define NXS_MAX_KEYLEN  256
 
 void nxs_crypt(
    const unsigned char * source, HB_SIZE srclen,
@@ -98,7 +98,7 @@ void nxs_partial_unscramble(
 
 void nxs_unscramble(
    unsigned char * cipher, HB_SIZE cypherlen,
-   const unsigned char * key, HB_SIZE keylen);
+   const unsigned char * key, HB_SIZE keylen );
 
 void nxs_xorcode(
    unsigned char * cipher, HB_SIZE cipherlen,

@@ -77,8 +77,10 @@ HB_FUNC( EXECNAME )
          if( pFileName->szPath )
          {
             hb_xfree( pszBaseName );
-            pszBaseName = hb_xstrcpy( NULL, pFileName->szName,
-                                            pFileName->szExtension, NULL );
+            pszBaseName = hb_xstrcpy( NULL,
+                                      pFileName->szName,
+                                      pFileName->szExtension,
+                                      NULL );
          }
          hb_xfree( pFileName );
       }
