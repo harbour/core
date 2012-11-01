@@ -168,8 +168,9 @@ EXTERNAL HB_GT_CGI_DEFAULT
 EXTERNAL hbmk_KEYW
 
 /* needed for -u */
-#undef HB_SYMBOL_UNUSED
+#ifndef HB_SYMBOL_UNUSED
 #define HB_SYMBOL_UNUSED( symbol )  ( ( symbol ) )
+#endif
 
 #define _SELF_NAME_             "hbmk2"
 

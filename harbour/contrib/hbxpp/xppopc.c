@@ -60,8 +60,7 @@
  * in Xbase++ compatibility mode where negative indexes are used to access
  * data from tail
  */
-#undef HB_IS_VALID_INDEX
-#define HB_IS_VALID_INDEX( idx, max )  ( ( ( HB_ISIZ ) ( idx ) < 0 ? ( idx ) += ( max ) + 1 : ( idx ) ) > 0 && ( HB_SIZE ) ( idx ) <= ( max ) )
+#define XHB_IS_VALID_INDEX( idx, max )  ( ( ( HB_ISIZ ) ( idx ) < 0 ? ( idx ) += ( max ) + 1 : ( idx ) ) > 0 && ( HB_SIZE ) ( idx ) <= ( max ) )
 
 HB_FUNC( XPP_INDEX )
 {
@@ -77,7 +76,7 @@ HB_FUNC( XPP_INDEX )
          if( HB_IS_ARRAY( pSelf ) )
          {
             HB_SIZE nLen = hb_arrayLen( pSelf );
-            if( HB_IS_VALID_INDEX( nIndex, nLen ) )
+            if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
                hb_itemMoveRef( hb_arrayGetItemPtr( pSelf, nIndex ), pValue );
             else
                hb_errRT_BASE( EG_BOUND, 1012, "Error in array index", hb_langDGetErrorDesc( EG_ARRASSIGN ), 1, pIndex );
@@ -85,7 +84,7 @@ HB_FUNC( XPP_INDEX )
          else if( HB_IS_STRING( pSelf ) )
          {
             HB_SIZE nLen = hb_itemGetCLen( pSelf );
-            if( HB_IS_VALID_INDEX( nIndex, nLen ) )
+            if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
             {
                char cValue = HB_IS_STRING( pValue ) ? hb_itemGetCPtr( pValue )[ 0 ] :
                              ( char ) hb_itemGetNI( pValue );
@@ -118,7 +117,7 @@ HB_FUNC( XPP_INDEX )
          if( HB_IS_ARRAY( pSelf ) )
          {
             HB_SIZE nLen = hb_arrayLen( pSelf );
-            if( HB_IS_VALID_INDEX( nIndex, nLen ) )
+            if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
                hb_itemReturn( hb_arrayGetItemPtr( pSelf, nIndex ) );
             else
                hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );  /* TODO: Emulate exact XPP error msg */
@@ -126,7 +125,7 @@ HB_FUNC( XPP_INDEX )
          else if( HB_IS_STRING( pSelf ) )
          {
             HB_SIZE nLen = hb_itemGetCLen( pSelf );
-            if( HB_IS_VALID_INDEX( nIndex, nLen ) )
+            if( XHB_IS_VALID_INDEX( nIndex, nLen ) )
                hb_retclen( hb_itemGetCPtr( pSelf ) + nIndex - 1, 1 );
             else
                hb_errRT_BASE( EG_BOUND, 1132, NULL, hb_langDGetErrorDesc( EG_ARRACCESS ), 2, pSelf, pIndex );  /* TODO: Emulate exact XPP error msg */

@@ -87,38 +87,28 @@ CREATE CLASS Entry
       { "END",          "End" } ;
    }
 
-#define S TPL_START
-#define E TPL_END
-#define T TPL_TEMPLATE
-#define R TPL_REQUIRED
-#define O TPL_OPTIONAL
-#define P TPL_PREFORMATTED
-#define U TPL_OUTPUT
-#define x 0
+#define _S TPL_START
+#define _E TPL_END
+#define _T TPL_TEMPLATE
+#define _R TPL_REQUIRED
+#define _O TPL_OPTIONAL
+#define _P TPL_PREFORMATTED
+#define _U TPL_OUTPUT
 
    // this is best viewed with a fixed-width font
    // the columns of this array correspond to the elements of Fields
    CLASS VAR Templates AS ARRAY INIT { ;
-      { "Template"      , { S, T, x+U, x, O  , x+U, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x+U, x  +U, x  +U, x+U, x+U, x+U, x+U, x+U, E } }, ;
-      { "Document"      , { S, T, R+U, R, O+U, O+U, x+U, x+U, x+U, R+U, x+U, x+U, x+U, x+U, x  +U, x  +U, x+U, x+U, O+U, O+U, O+U, E } }, ;
-      { "Function"      , { S, T, R+U, R, R  , O+U, O+U, O+U, O+U, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
-      { "C Function"    , { S, T, R+U, R, R  , O+U, O+U, O+U, O+U, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
-      { "Procedure"     , { S, T, R+U, R, R  , O+U, O+U, O+U,   x, O+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
-      { "Command"       , { S, T, R+U, R, R  , O+U, R+U, R+U, x+U, R+U, x+U, x+U, x+U, x+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
-      { "Class"         , { S, T, R+U, R, R  , O+U, R+U, R+U, R+U, R+U, O+U, O+U, O+U, O+U, P+O+U, P+O+U, O+U, O+U, O+U, O+U, O+U, E } }, ;
-      { "Class method"  , { S, T, R+U, R, R  , O+U, R+U, R+U, R+U, R+U, x+U, x+U, x+U, x+U, P+O+U, x  +U, x+U, x+U, x+U, x+U, O+U, E } }, ;
-      { "Class data"    , { S, T, R+U, R, R  , O+U, R+U, x+U, x+U, R+U, x+U, x+U, x+U, x+U, P+O+U, x  +U, x+U, x+U, x+U, x+U, O+U, E } }, ;
-      { "Run time error", { S, T, R+U, R, x  , O+U, x+U, x+U, x+U, R+U, x+U, x+U, x+U, x+U, P+O+U, x  +U, x+U, O+U, x+U, x+U, O+U, E } }, ;
+      { "Template"      , { _S, _T,  0+_U,  0, _O   ,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0   +_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U,  0+_U, _E } }, ;
+      { "Document"      , { _S, _T, _R+_U, _R, _O+_U, _O+_U,  0+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U,  0   +_U,  0   +_U,  0+_U,  0+_U, _O+_U, _O+_U, _O+_U, _E } }, ;
+      { "Function"      , { _S, _T, _R+_U, _R, _R   , _O+_U, _O+_U, _O+_U, _O+_U, _O+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E } }, ;
+      { "C Function"    , { _S, _T, _R+_U, _R, _R   , _O+_U, _O+_U, _O+_U, _O+_U, _O+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E } }, ;
+      { "Procedure"     , { _S, _T, _R+_U, _R, _R   , _O+_U, _O+_U, _O+_U,     0, _O+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E } }, ;
+      { "Command"       , { _S, _T, _R+_U, _R, _R   , _O+_U, _R+_U, _R+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E } }, ;
+      { "Class"         , { _S, _T, _R+_U, _R, _R   , _O+_U, _R+_U, _R+_U, _R+_U, _R+_U, _O+_U, _O+_U, _O+_U, _O+_U, _P+_O+_U, _P+_O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _O+_U, _E } }, ;
+      { "Class method"  , { _S, _T, _R+_U, _R, _R   , _O+_U, _R+_U, _R+_U, _R+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U, _O+_U, _E } }, ;
+      { "Class data"    , { _S, _T, _R+_U, _R, _R   , _O+_U, _R+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U,  0+_U,  0+_U,  0+_U, _O+_U, _E } }, ;
+      { "Run time error", { _S, _T, _R+_U, _R,  0   , _O+_U,  0+_U,  0+_U,  0+_U, _R+_U,  0+_U,  0+_U,  0+_U,  0+_U, _P+_O+_U,  0   +_U,  0+_U, _O+_U,  0+_U,  0+_U, _O+_U, _E } }, ;
    }
-
-#undef S
-#undef E
-#undef T
-#undef R
-#undef O
-#undef P
-#undef U
-#undef x
 
    METHOD New( cType ) CONSTRUCTOR
    METHOD IsField( c, nType )

@@ -106,6 +106,10 @@ REQUEST HB_GT_CGI_DEFAULT
 
 #define BASE_DIR ".." + hb_ps() + ".." + hb_ps()
 
+#define OnOrOff( b )   iif( b, "excluded", "included" )
+#define YesOrNo( b )   iif( b, "yes", "no" )
+#define IsDefault( b ) iif( b, "; default", "" )
+
 STATIC sc_aExclusions := { "class_tp.txt", "hdr_tpl.txt" }
 
 MEMVAR p_hsSwitches
@@ -918,10 +922,6 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
 
    LOCAL nMode := 1
 
-#define OnOrOff( b )   iif( b, "excluded", "included" )
-#define YesOrNo( b )   iif( b, "yes", "no" )
-#define IsDefault( b ) iif( b, "; default", "" )
-
    LOCAL aHelp
 
    DO CASE
@@ -988,9 +988,6 @@ PROCEDURE ShowHelp( cExtraMessage, aArgs )
       RETURN
 
    ENDCASE
-
-#undef OnOrOff
-#undef YesOrNo
 
    // using hbmk2 style
    AEval( aHelp, {| x | ShowSubHelp( x, @nMode, 0 ) } )

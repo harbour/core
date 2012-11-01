@@ -57,7 +57,7 @@
    For performance NOT using OS indpendant R/T function,
    this define only used in ValTpPrg() which currently only used in win32.
  */
-#undef CRLF
+
 #define CRLF Chr( 13 ) + Chr( 10 )
 
 #xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
