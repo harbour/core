@@ -30,13 +30,17 @@
 
 PROCEDURE Main( ... )
 
-   WalkDir( hb_DirBase() + ".." + hb_ps(), { ... } )
+   WalkDir( hb_DirBase() + ".." + hb_ps() + "include", { ... } )
+   WalkDir( hb_DirBase() + ".." + hb_ps() + "contrib", { ... } )
+   WalkDir( hb_DirBase() + ".." + hb_ps() + "addons" , { ... } )
 
    RETURN
 
 STATIC PROCEDURE WalkDir( cDir, aContains )
 
    LOCAL aFile
+
+   cDir := hb_DirSepAdd( PathSepToSelf( cDir ) )
 
    FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
       IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
