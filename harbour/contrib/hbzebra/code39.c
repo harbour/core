@@ -101,7 +101,8 @@ static const HB_UCHAR s_code[] =
    0x2A,   /* $ */
    0x8A,   /* / */
    0xA2,   /* + */
-   0xA8 }; /* % */
+   0xA8    /* % */
+};
 
 static int _code39_charno( char ch )
 {
@@ -208,6 +209,7 @@ PHB_ZEBRA hb_zebra_create_code39( const char * szCode, HB_SIZE nLen, int iFlags 
 HB_FUNC( HB_ZEBRA_CREATE_CODE39 )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_code39( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

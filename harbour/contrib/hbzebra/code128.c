@@ -161,20 +161,21 @@ static const unsigned short s_code[] = {
    01657,   /*  FNC1 FNC1 FNC1 102 */
    00413,   /*  Start Code A   103 */
    00113,   /*  Start Code B   104 */
-   00713};  /*  Start Code C   105 */
+   00713    /*  Start Code C   105 */
+};
 
-#define CODESET_A       0
-#define CODESET_B       1
+#define CODESET_A  0
+#define CODESET_B  1
 
-#define START_A       103
-#define START_B       104
-#define START_C       105
+#define START_A    103
+#define START_B    104
+#define START_C    105
 
-#define SELECT_A      101
-#define SELECT_B      100
-#define SELECT_C       99
+#define SELECT_A   101
+#define SELECT_B   100
+#define SELECT_C   99
 
-#define SHIFT_AB       98
+#define SHIFT_AB   98
 
 
 static int _code128_charno( char ch, int iCodeSet )
@@ -390,6 +391,7 @@ PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags
 HB_FUNC( HB_ZEBRA_CREATE_CODE128 )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_code128( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

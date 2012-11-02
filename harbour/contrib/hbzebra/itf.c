@@ -59,7 +59,7 @@ static const char s_code[] = { 0x0C, 0x11, 0x12, 0x03, 0x14, 0x05, 0x06, 0x18, 0
 
 static char _itf_checksum( const char * szCode )
 {
-   int   i, sum = 0;
+   int i, sum = 0;
 
    for( i = 0; szCode[ i ]; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
@@ -83,12 +83,12 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
          return pZebra;
       }
    }
-   if( ( iLen + (iFlags & HB_ZEBRA_FLAG_CHECKSUM ? 1 : 0 ) ) & 1 )
+   if( ( iLen + ( iFlags & HB_ZEBRA_FLAG_CHECKSUM ? 1 : 0 ) ) & 1 )
    {
-     pZebra->szCode = ( char * ) hb_xgrab( iLen + 2 );
-     pZebra->szCode[ 0 ] = '0';
-     hb_xmemcpy( pZebra->szCode + 1, szCode, iLen );
-     pZebra->szCode[ iLen + 1 ] = '\0';
+      pZebra->szCode = ( char * ) hb_xgrab( iLen + 2 );
+      pZebra->szCode[ 0 ] = '0';
+      hb_xmemcpy( pZebra->szCode + 1, szCode, iLen );
+      pZebra->szCode[ iLen + 1 ] = '\0';
    }
    else
    {
@@ -150,6 +150,7 @@ PHB_ZEBRA hb_zebra_create_itf( const char * szCode, HB_SIZE nLen, int iFlags )
 HB_FUNC( HB_ZEBRA_CREATE_ITF )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_itf( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

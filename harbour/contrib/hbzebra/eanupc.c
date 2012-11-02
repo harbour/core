@@ -63,7 +63,7 @@ static const char s_gcode[] = { 0x72, 0x66, 0x6C, 0x42, 0x5C, 0x4E, 0x50, 0x44, 
 
 static char _ean13_checksum( const char * szCode )
 {
-   int   i, sum = 0;
+   int i, sum = 0;
 
    for( i = 0; i < 12; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 3 : 1 );
@@ -72,7 +72,7 @@ static char _ean13_checksum( const char * szCode )
 
 static char _ean8_checksum( const char * szCode )
 {
-   int   i, sum = 0;
+   int i, sum = 0;
 
    for( i = 0; i < 7; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
@@ -81,7 +81,7 @@ static char _ean8_checksum( const char * szCode )
 
 static char _upca_checksum( const char * szCode )
 {
-   int   i, sum = 0;
+   int i, sum = 0;
 
    for( i = 0; i < 11; i++ )
       sum += ( szCode[ i ] - '0' ) * ( i & 1 ? 1 : 3 );
@@ -98,32 +98,32 @@ static char _upce_checksum( const char * szCode )
    szExp[ 2 ] = szCode[ 1 ];
    if( szCode[ 5 ] == '0' || szCode[ 5 ] == '1' || szCode[ 5 ] == '2' )
    {
-      szExp[ 3 ] = szCode[ 5 ];
-      szExp[ 4 ] = szExp[ 5 ] = szExp[ 6 ] = szExp[ 7 ] = '0';
-      szExp[ 8 ] = szCode[ 2 ];
-      szExp[ 9 ] = szCode[ 3 ];
+      szExp[ 3 ]  = szCode[ 5 ];
+      szExp[ 4 ]  = szExp[ 5 ] = szExp[ 6 ] = szExp[ 7 ] = '0';
+      szExp[ 8 ]  = szCode[ 2 ];
+      szExp[ 9 ]  = szCode[ 3 ];
       szExp[ 10 ] = szCode[ 4 ];
    }
    else if( szCode[ 5 ] == '3' )
    {
-      szExp[ 3 ] = szCode[ 2 ];
-      szExp[ 4 ] = szExp[ 5 ] = szExp[ 6 ] = szExp[ 7 ] = szExp[ 8 ] = '0';
-      szExp[ 9 ] = szCode[ 3 ];
+      szExp[ 3 ]  = szCode[ 2 ];
+      szExp[ 4 ]  = szExp[ 5 ] = szExp[ 6 ] = szExp[ 7 ] = szExp[ 8 ] = '0';
+      szExp[ 9 ]  = szCode[ 3 ];
       szExp[ 10 ] = szCode[ 4 ];
    }
    else if( szCode[ 5 ] == '4' )
    {
-      szExp[ 3 ] = szCode[ 2 ];
-      szExp[ 4 ] = szCode[ 3 ];
-      szExp[ 5 ] = szExp[ 6 ] = szExp[ 7 ] = szExp[ 8 ] = szExp[ 9 ] = '0';
+      szExp[ 3 ]  = szCode[ 2 ];
+      szExp[ 4 ]  = szCode[ 3 ];
+      szExp[ 5 ]  = szExp[ 6 ] = szExp[ 7 ] = szExp[ 8 ] = szExp[ 9 ] = '0';
       szExp[ 10 ] = szCode[ 4 ];
    }
    else
    {
-      szExp[ 3 ] = szCode[ 2 ];
-      szExp[ 4 ] = szCode[ 3 ];
-      szExp[ 5 ] = szCode[ 4 ];
-      szExp[ 6 ] = szExp[ 7 ] = szExp[ 8 ] = szExp[ 9 ] = '0';
+      szExp[ 3 ]  = szCode[ 2 ];
+      szExp[ 4 ]  = szCode[ 3 ];
+      szExp[ 5 ]  = szCode[ 4 ];
+      szExp[ 6 ]  = szExp[ 7 ] = szExp[ 8 ] = szExp[ 9 ] = '0';
       szExp[ 10 ] = szCode[ 5 ];
    }
    return _upca_checksum( szExp );
@@ -131,8 +131,8 @@ static char _upce_checksum( const char * szCode )
 
 PHB_ZEBRA hb_zebra_create_ean13( const char * szCode, HB_SIZE nLen, int iFlags )
 {
-   PHB_ZEBRA  pZebra;
-   int        i, iLen = ( int ) nLen;
+   PHB_ZEBRA pZebra;
+   int       i, iLen = ( int ) nLen;
 
    HB_SYMBOL_UNUSED( iFlags );
 
@@ -386,6 +386,7 @@ PHB_ZEBRA hb_zebra_create_upce( const char * szCode, HB_SIZE nLen, int iFlags )
 HB_FUNC( HB_ZEBRA_CREATE_EAN13 )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_ean13( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
@@ -397,6 +398,7 @@ HB_FUNC( HB_ZEBRA_CREATE_EAN13 )
 HB_FUNC( HB_ZEBRA_CREATE_EAN8 )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_ean8( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
@@ -408,6 +410,7 @@ HB_FUNC( HB_ZEBRA_CREATE_EAN8 )
 HB_FUNC( HB_ZEBRA_CREATE_UPCA )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_upca( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
@@ -419,6 +422,7 @@ HB_FUNC( HB_ZEBRA_CREATE_UPCA )
 HB_FUNC( HB_ZEBRA_CREATE_UPCE )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_upce( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

@@ -69,7 +69,7 @@
 
 #include "expat.h"
 
-#define HB_EXPAT_VERS( ma, mi, mu ) ( XML_MAJOR_VERSION > ma || ( XML_MAJOR_VERSION == ma && ( XML_MINOR_VERSION > mi || ( XML_MINOR_VERSION == mi && XML_MICRO_VERSION >= mu ) ) ) )
+#define HB_EXPAT_VERS( ma, mi, mu )  ( XML_MAJOR_VERSION > ma || ( XML_MAJOR_VERSION == ma && ( XML_MINOR_VERSION > mi || ( XML_MINOR_VERSION == mi && XML_MICRO_VERSION >= mu ) ) ) )
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -107,7 +107,7 @@
 typedef struct _HB_EXPAT
 {
    XML_Parser parser;
-   PHB_ITEM pVar[ _VAR_LEN_ ];
+   PHB_ITEM   pVar[ _VAR_LEN_ ];
 } HB_EXPAT, * PHB_EXPAT;
 
 /* Skeleton wrapper for all single handler setters */
@@ -676,13 +676,14 @@ static void PHB_EXPAT_free( PHB_EXPAT hb_expat, HB_BOOL bFree )
 static HB_GARBAGE_FUNC( PHB_EXPAT_release )
 {
    PHB_EXPAT * hb_expat_ptr = ( PHB_EXPAT * ) Cargo;
+
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( hb_expat_ptr && * hb_expat_ptr )
+   if( hb_expat_ptr && *hb_expat_ptr )
    {
-      PHB_EXPAT hb_expat = * hb_expat_ptr;
+      PHB_EXPAT hb_expat = *hb_expat_ptr;
 
       /* set pointer to NULL to avoid multiple freeing */
-      * hb_expat_ptr = NULL;
+      *hb_expat_ptr = NULL;
 
       /* Destroy the object */
       PHB_EXPAT_free( hb_expat, HB_TRUE );
@@ -693,9 +694,9 @@ static HB_GARBAGE_FUNC( PHB_EXPAT_mark )
 {
    PHB_EXPAT * hb_expat_ptr = ( PHB_EXPAT * ) Cargo;
 
-   if( hb_expat_ptr && * hb_expat_ptr )
+   if( hb_expat_ptr && *hb_expat_ptr )
    {
-      PHB_EXPAT hb_expat = * hb_expat_ptr;
+      PHB_EXPAT hb_expat = *hb_expat_ptr;
       HB_UINT tmp;
 
       for( tmp = 0; tmp < HB_SIZEOFARRAY( hb_expat->pVar ); ++tmp )
@@ -721,7 +722,7 @@ static PHB_EXPAT PHB_EXPAT_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcEXPATFuncs, iParam );
 
-   return ph ? ( PHB_EXPAT ) * ph : NULL;
+   return ph ? ( PHB_EXPAT ) *ph : NULL;
 }
 
 static void hb_expat_setvar( PHB_EXPAT hb_expat, int iHandler, PHB_ITEM pBlock )
@@ -773,10 +774,10 @@ HB_FUNC( XML_PARSERCREATE )
 
       XML_SetUserData( hb_expat->parser, hb_expat );
 
-      * ph = hb_expat;
+      *ph = hb_expat;
    }
    else
-      * ph = NULL;
+      *ph = NULL;
 
    hb_retptrGC( ph );
 }
@@ -809,12 +810,12 @@ HB_FUNC( XML_PARSERFREE )
    {
       void ** ph = ( void ** ) hb_parptrGC( &s_gcEXPATFuncs, 1 );
 
-      if( ph && * ph )
+      if( ph && *ph )
       {
-         PHB_EXPAT hb_expat = ( PHB_EXPAT ) * ph;
+         PHB_EXPAT hb_expat = ( PHB_EXPAT ) *ph;
 
          /* set pointer to NULL to avoid multiple freeing */
-         * ph = NULL;
+         *ph = NULL;
 
          /* Destroy the object */
          PHB_EXPAT_free( hb_expat, HB_TRUE );

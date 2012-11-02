@@ -57,7 +57,7 @@
 
 static char _msi_checksum( const char * szCode )
 {
-   int   i, j = 1, k, sum = 0;
+   int i, j = 1, k, sum = 0;
 
    /* Luhn algorithm */
    for( i = ( int ) strlen( szCode ) - 1; i >= 0; i-- )
@@ -163,6 +163,7 @@ PHB_ZEBRA hb_zebra_create_msi( const char * szCode, HB_SIZE nLen, int iFlags )
 HB_FUNC( HB_ZEBRA_CREATE_MSI )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_msi( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

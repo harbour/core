@@ -69,7 +69,7 @@
    Online decoder:
      http://www.datasymbol.com/barcode-recognition-sdk/barcode-reader/online-barcode-decoder.html
 
-*/
+ */
 
 #include "hbzebra.h"
 #include "hbapiitm.h"
@@ -81,17 +81,17 @@
 #define PAIR_OF_DIGITS        130  /* 00..99 encoded as 130..229 */
 #define SHIFT_EXTENDED_ASCII  235  /* Shift to extended ASCII for 1 character */
 
-#define SIZE_COUNT  30
+#define SIZE_COUNT            30
 
 typedef struct
 {
-   int    iRow;
-   int    iCol;
-   int    iRegionRow;
-   int    iRegionCol;
-   int    iDataSize;
-   int    iBlockSize;
-   int    iBlockErrorSize;
+   int iRow;
+   int iCol;
+   int iRegionRow;
+   int iRegionCol;
+   int iDataSize;
+   int iBlockSize;
+   int iBlockErrorSize;
 } DATAMATRIX_SIZE, * PDATAMATRIX_SIZE;
 
 
@@ -136,6 +136,7 @@ static int _datamatrix_isdigit( char ch )
 static int _datamatrix_encode( const char * szCode, int iLen, unsigned char * pCW )
 {
    int i, iPos = 0;
+
    for( i = 0; i < iLen; i++ )
    {
       if( _datamatrix_isdigit( szCode[ i ] ) && i < iLen - 1 && _datamatrix_isdigit( szCode[ i + 1 ] ) )
@@ -158,7 +159,7 @@ static int _datamatrix_encode( const char * szCode, int iLen, unsigned char * pC
 
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pEC, int iECLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
-   int   i, j;
+   int i, j;
    unsigned char iM;
 
    for( i = 0; i < iECLen; i++ )
@@ -405,7 +406,7 @@ static void _datamatrix_do_placement( PHB_BITBUFFER pBits, unsigned char * pCW, 
 
 PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFlags )
 {
-   PHB_ZEBRA  pZebra;
+   PHB_ZEBRA pZebra;
    const DATAMATRIX_SIZE * pSize;
    unsigned char * pCW;
    int        i, j, iDataCount, iErrorSize, iLen = ( int ) nLen;
@@ -463,7 +464,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 #if 0
    for( i = 0; i < pSize->iDataSize + iErrorSize; i++ )
    {
-      HB_TRACE( HB_TR_ALWAYS, ("cw=%d", pCW[ i ] ));
+      HB_TRACE( HB_TR_ALWAYS, ( "cw=%d", pCW[ i ] ) );
    }
 #endif
 
@@ -501,6 +502,7 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 HB_FUNC( HB_ZEBRA_CREATE_DATAMATRIX )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_datamatrix( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

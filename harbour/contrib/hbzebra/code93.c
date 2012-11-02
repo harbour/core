@@ -103,7 +103,8 @@ static const char s_code[] = {
    0x5B,  /* (%) 44 */
    0x6B,  /* (/) 45 */
    0x4C,  /* (+) 46 */
-   0x7A};  /* Start/Stop 47 */
+   0x7A   /* Start/Stop 47 */
+};
 
 static int _code93_charno( char ch )
 {
@@ -261,6 +262,7 @@ PHB_ZEBRA hb_zebra_create_code93( const char * szCode, HB_SIZE nLen, int iFlags 
 HB_FUNC( HB_ZEBRA_CREATE_CODE93 )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_code93( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

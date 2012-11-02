@@ -66,7 +66,8 @@ static const char s_code[] = {
    0x09,  /* 8 */
    0x01,  /* 9 */
    0x04,  /* - 10 */
-   0x0C};  /* Start/Stop 11 */
+   0x0C   /* Start/Stop 11 */
+};
 
 static int _code11_charno( char ch )
 {
@@ -165,6 +166,7 @@ PHB_ZEBRA hb_zebra_create_code11( const char * szCode, HB_SIZE nLen, int iFlags 
 HB_FUNC( HB_ZEBRA_CREATE_CODE11 )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_code11( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

@@ -56,24 +56,24 @@
      JIS-X-0510  QR Code standard in Japaneese language :)
        http://sourceforge.jp/projects/qrcode/docs/qrcode_specification_ja/en/1/qrcode_specification_ja.pdf
 
-http://en.wikipedia.org/wiki/QR_Code
-http://www.denso-wave.com/qrcode/index-e.html
-http://www.itsc.org.sg/pdf/synthesis08/Three_QR_Code.pdf
-http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
-http://www.swetake.com/qr/index-e.html
-http://www.codeproject.com/KB/cs/qrcode.aspx
-http://sourceforge.jp/projects/reedsolomon
-http://twit88.com/home/
-http://qrcode.sourceforge.jp/
-http://zxing.org/w/decode.jspx                          Online decoder
-http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
-http://www.thonky.com/qr-code-tutorial/                 Tutorial
-http://code.google.com/p/zxing/                         Java library
-http://goqr.me/                                         Online encode
-http://www.pclviewer.com/rs2/calculator.html            Reed-solomon ECC calculator
-http://raidenii.net/files/datasheets/misc/qr_code.pdf
+   http://en.wikipedia.org/wiki/QR_Code
+   http://www.denso-wave.com/qrcode/index-e.html
+   http://www.itsc.org.sg/pdf/synthesis08/Three_QR_Code.pdf
+   http://www.qrme.co.uk/qr-code-resources/understanding-a-qr-code.html
+   http://www.swetake.com/qr/index-e.html
+   http://www.codeproject.com/KB/cs/qrcode.aspx
+   http://sourceforge.jp/projects/reedsolomon
+   http://twit88.com/home/
+   http://qrcode.sourceforge.jp/
+   http://zxing.org/w/decode.jspx                          Online decoder
+   http://blog.qr4.nl/Online-QR-Code_Decoder.aspx          Online decoder (not all codes are decoded)
+   http://www.thonky.com/qr-code-tutorial/                 Tutorial
+   http://code.google.com/p/zxing/                         Java library
+   http://goqr.me/                                         Online encode
+   http://www.pclviewer.com/rs2/calculator.html            Reed-solomon ECC calculator
+   http://raidenii.net/files/datasheets/misc/qr_code.pdf
 
-*/
+ */
 
 #include "hbzebra.h"
 #include "hbapi.h"
@@ -84,21 +84,21 @@ http://raidenii.net/files/datasheets/misc/qr_code.pdf
 
 typedef struct
 {
-   unsigned char  uiCount;
-   unsigned char  uiData;
-   unsigned char  uiECC;
+   unsigned char uiCount;
+   unsigned char uiData;
+   unsigned char uiECC;
 } QRBLOCKPARAM;
 
 typedef struct
 {
-   unsigned int    uiECC;
-   QRBLOCKPARAM    block[ 2 ];
+   unsigned int uiECC;
+   QRBLOCKPARAM block[ 2 ];
 } QRLEVEL, * PQRLEVEL;
 
 typedef struct
 {
-   unsigned int    uiTotal;       /* total number of codewords */
-   QRLEVEL         level[ 4 ];
+   unsigned int uiTotal;          /* total number of codewords */
+   QRLEVEL      level[ 4 ];
 } QRVERSION, * PQRVERSION;
 
 static const QRVERSION s_version[] =
@@ -266,12 +266,12 @@ static const QRVERSION s_version[] =
 };
 
 
-static const unsigned char s_rev[256] =
+static const unsigned char s_rev[ 256 ] =
 {
-#define R2(n)      n,     n + 2*64,     n + 1*64,     n + 3*64
-#define R4(n)  R2(n), R2(n + 2*16), R2(n + 1*16), R2(n + 3*16)
-#define R6(n)  R4(n), R4(n + 2*4 ), R4(n + 1*4 ), R4(n + 3*4 )
-    R6(0), R6(2), R6(1), R6(3)
+#define R2( n )  n,       n + 2 * 64,       n + 1 * 64,       n + 3 * 64
+#define R4( n )  R2( n ), R2( n + 2 * 16 ), R2( n + 1 * 16 ), R2( n + 3 * 16 )
+#define R6( n )  R4( n ), R4( n + 2 * 4 ),  R4( n + 1 * 4 ),  R4( n + 3 * 4 )
+   R6( 0 ), R6( 2 ), R6( 1 ), R6( 3 )
 };
 
 
@@ -357,7 +357,8 @@ static unsigned char * s_align[ 40 ] = {
    s_align37,
    s_align38,
    s_align39,
-   s_align40 };
+   s_align40
+};
 
 
 #ifdef DEBUG_CODE
@@ -369,26 +370,26 @@ static int _qr_check_version_table( void )
 
    for( iV = 1; iV <= 40; iV++ )
    {
-      pQRVersion = & s_version[ iV - 1 ];
+      pQRVersion = &s_version[ iV - 1 ];
       for( iL = 0; iL < 4; iL++ )
       {
          uiSumE = ( unsigned int ) ( pQRVersion->level[ iL ].block[ 0 ].uiCount ) * ( pQRVersion->level[ iL ].block[ 0 ].uiECC ) +
                   ( unsigned int ) ( pQRVersion->level[ iL ].block[ 1 ].uiCount ) * ( pQRVersion->level[ iL ].block[ 1 ].uiECC );
          if( uiSumE != pQRVersion->level[ iL ].uiECC )
-            return iV + 10000 + (iL + 1) * 1000;
+            return iV + 10000 + ( iL + 1 ) * 1000;
 
          uiSumD = ( unsigned int ) ( pQRVersion->level[ iL ].block[ 0 ].uiCount ) * ( pQRVersion->level[ iL ].block[ 0 ].uiData ) +
                   ( unsigned int ) ( pQRVersion->level[ iL ].block[ 1 ].uiCount ) * ( pQRVersion->level[ iL ].block[ 1 ].uiData );
          if( uiSumD + uiSumE != pQRVersion->uiTotal )
-            return iV + 20000 + (iL + 1) * 1000;
+            return iV + 20000 + ( iL + 1 ) * 1000;
 
          if( pQRVersion->level[ iL ].block[ 1 ].uiCount > 0 )
          {
             if( pQRVersion->level[ iL ].block[ 0 ].uiData > pQRVersion->level[ iL ].block[ 1 ].uiData )
-               return iV + 30000 + (iL + 1) * 1000;
+               return iV + 30000 + ( iL + 1 ) * 1000;
 
             if( pQRVersion->level[ iL ].block[ 0 ].uiECC != pQRVersion->level[ iL ].block[ 1 ].uiECC )
-               return iV + 40000 + (iL + 1) * 1000;
+               return iV + 40000 + ( iL + 1 ) * 1000;
          }
       }
    }
@@ -397,7 +398,7 @@ static int _qr_check_version_table( void )
 
 HB_FUNC( _QR_CHECK_VERSION_TABLE )
 {
-  hb_retni( _qr_check_version_table() );
+   hb_retni( _qr_check_version_table() );
 }
 #endif
 
@@ -451,13 +452,13 @@ static int _qr_format_crc( int iLevel, int iMask )
 #ifdef DEBUG_CODE
 HB_FUNC( _QR_VERSION_CRC )
 {
-  hb_retni( _qr_version_crc( hb_parni( 1 ) ) );
+   hb_retni( _qr_version_crc( hb_parni( 1 ) ) );
 }
 
 
 HB_FUNC( _QR_FORMAT_CRC )
 {
-  hb_retni( _qr_format_crc( hb_parni( 1 ), hb_parni( 2 ) ) );
+   hb_retni( _qr_format_crc( hb_parni( 1 ), hb_parni( 2 ) ) );
 }
 #endif
 
@@ -471,7 +472,7 @@ static int _qr_versionlength( int iVersion )
 static int _qr_fixed( int iVersion, int iRow, int iCol )
 {
    int iLength = _qr_versionlength( iVersion );
-   unsigned char * pi, *pj;
+   unsigned char * pi, * pj;
 
    /* position detection markers and versino info */
    if( iRow < 9 && iCol < 9 )
@@ -573,12 +574,12 @@ static PHB_BITBUFFER _qr_interlace( PHB_BITBUFFER pData, unsigned char * pECC, i
 #ifdef DEBUG_CODE
    if( uiDst != pVersion->uiTotal )
    {
-      HB_TRACE( HB_TR_ALWAYS, ("ERROR!!! uiDst:%d  pVersion->uiTotal:%d", uiDst, pVersion->uiTotal) ) ;
+      HB_TRACE( HB_TR_ALWAYS, ( "ERROR!!! uiDst:%d  pVersion->uiTotal:%d", uiDst, pVersion->uiTotal ) );
    }
 
    for( uiPos = 0; uiPos < pVersion->uiTotal; uiPos++ )
    {
-      HB_TRACE( HB_TR_ALWAYS, ("interlaced:%3d %02X", ( int ) s_rev[ ( unsigned char ) pRetBuf[ uiPos ] ], ( int ) s_rev[ ( unsigned char ) pRetBuf[ uiPos ] ]) ) ;
+      HB_TRACE( HB_TR_ALWAYS, ( "interlaced:%3d %02X", ( int ) s_rev[ ( unsigned char ) pRetBuf[ uiPos ] ], ( int ) s_rev[ ( unsigned char ) pRetBuf[ uiPos ] ] ) );
    }
 #endif
    return pRet;
@@ -680,7 +681,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
       return 0; /* Too large */
 
 #ifdef DEBUG_CODE
-   HB_TRACE( HB_TR_ALWAYS, ("iMode:%d iLen:%" HB_PFS "d iDataLen:%d iVersion:%d", iMode, iLen, iDataLen, iVersion) ) ;
+   HB_TRACE( HB_TR_ALWAYS, ( "iMode:%d iLen:%" HB_PFS "d iDataLen:%d iVersion:%d", iMode, iLen, iDataLen, iVersion ) );
 #endif
 
    /* Encode */
@@ -734,7 +735,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 #ifdef DEBUG_CODE
    for( m = 0; m < iDataLen; m++ )
    {
-      HB_TRACE( HB_TR_ALWAYS, ("data:%3d %02X", s_rev[ *( hb_bitbuffer_buffer( pData ) + m ) ], s_rev[ *( hb_bitbuffer_buffer( pData ) + m ) ] ) );
+      HB_TRACE( HB_TR_ALWAYS, ( "data:%3d %02X", s_rev[ *( hb_bitbuffer_buffer( pData ) + m ) ], s_rev[ *( hb_bitbuffer_buffer( pData ) + m ) ] ) );
    }
 #endif
    return iVersion;
@@ -743,7 +744,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 
 static void _reed_solomon_encode( unsigned char * pData, int iDataLen, unsigned char * pECC, int iECCLen, int * pPoly, int * pExp, int * pLog, int iMod )
 {
-   int   i, j;
+   int i, j;
    unsigned char iM;
 
    for( i = 0; i < iECCLen; i++ )
@@ -820,7 +821,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 #ifdef DEBUG_CODE
    for( i = 0; i <= iECCLen; i++ )
    {
-      HB_TRACE( HB_TR_ALWAYS, ("POLY[%3d %02X]:%3d %02X", i, i, pPoly[ i ], pPoly[ i ]) ) ;
+      HB_TRACE( HB_TR_ALWAYS, ( "POLY[%3d %02X]:%3d %02X", i, i, pPoly[ i ], pPoly[ i ] ) );
    }
 #endif
 
@@ -835,9 +836,9 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
       pDataBuf += pLevel->block[ 0 ].uiData;
       for( i = 0; i < iECCLen / 2; i++ )
       {
-        ui2 = pECCPtr[ i ];
-        pECCPtr[ i ] = pECCPtr[ iECCLen - 1 - i ];
-        pECCPtr[ iECCLen - 1 - i ] = ui2;
+         ui2 = pECCPtr[ i ];
+         pECCPtr[ i ] = pECCPtr[ iECCLen - 1 - i ];
+         pECCPtr[ iECCLen - 1 - i ] = ui2;
       }
       pECCPtr += iECCLen;
    }
@@ -848,9 +849,9 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
       pDataBuf += pLevel->block[ 1 ].uiData;
       for( i = 0; i < iECCLen / 2; i++ )
       {
-        ui2 = pECCPtr[ i ];
-        pECCPtr[ i ] = pECCPtr[ iECCLen - 1 - i ];
-        pECCPtr[ iECCLen - 1 - i ] = ui2;
+         ui2 = pECCPtr[ i ];
+         pECCPtr[ i ] = pECCPtr[ iECCLen - 1 - i ];
+         pECCPtr[ iECCLen - 1 - i ] = ui2;
       }
       pECCPtr += iECCLen;
    }
@@ -863,7 +864,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
    iECCLen = pLevel->block[ 0 ].uiECC * ( pLevel->block[ 0 ].uiCount + pLevel->block[ 1 ].uiCount );
    for( i = 0; i < iECCLen; i++ )
    {
-      HB_TRACE( HB_TR_ALWAYS, ("ecc:%3d %02X", ( int )( unsigned char ) pECC[ i ], ( int )( unsigned char ) pECC[ i ]) ) ;
+      HB_TRACE( HB_TR_ALWAYS, ( "ecc:%3d %02X", ( int ) ( unsigned char ) pECC[ i ], ( int ) ( unsigned char ) pECC[ i ] ) );
    }
 #endif
    return pECC;
@@ -1164,7 +1165,7 @@ static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
       _qr_mask_pattern( pBits, iVersion, i );
       iPenalty = _qr_penalty( pBits, iVersion );
 #ifdef DEBUG_CODE
-      HB_TRACE( HB_TR_ALWAYS, ("mask:%d penalty:%d", i, iPenalty) );
+      HB_TRACE( HB_TR_ALWAYS, ( "mask:%d penalty:%d", i, iPenalty ) );
 #endif
       if( i == 0 || iPenalty < iPenaltyMin )
       {
@@ -1174,9 +1175,9 @@ static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
       _qr_mask_pattern( pBits, iVersion, i );
    }
 #ifdef DEBUG_CODE
-   HB_TRACE( HB_TR_ALWAYS, ("mask:%d", iMaskMin) );
+   HB_TRACE( HB_TR_ALWAYS, ( "mask:%d", iMaskMin ) );
 //   iMaskMin = 0;
-   HB_TRACE( HB_TR_ALWAYS, ("mask applied:%d", iMaskMin) );
+   HB_TRACE( HB_TR_ALWAYS, ( "mask applied:%d", iMaskMin ) );
 #endif
    _qr_mask_pattern( pBits, iVersion, iMaskMin );
    return iMaskMin;
@@ -1224,9 +1225,9 @@ static void _qr_draw_version_format( PHB_BITBUFFER pBits, int iVersion, int iLev
    /* _qr_fixed() test code */
    for( i = 0; i < iLen; i++ )
    {
-     int j;
-     for( j = 0; j < iLen; j++ )
-        hb_bitbuffer_set( pBits, i * iLen + j, _qr_fixed( iVersion, i, j ) );
+      int j;
+      for( j = 0; j < iLen; j++ )
+         hb_bitbuffer_set( pBits, i * iLen + j, _qr_fixed( iVersion, i, j ) );
    }
 #endif
 }
@@ -1265,14 +1266,14 @@ PHB_ZEBRA hb_zebra_create_qrcode( const char * szCode, HB_SIZE nLen, int iFlags 
    }
 
 #ifdef DEBUG_CODE
-   HB_TRACE( HB_TR_ALWAYS, ("qr1 iLevel:%d", iLevel) );
+   HB_TRACE( HB_TR_ALWAYS, ( "qr1 iLevel:%d", iLevel ) );
 #endif
 
    pData = hb_bitbuffer_create();
    iVersion = _qr_dataencode( szCode, nLen, pData, iLevel );
 
 #ifdef DEBUG_CODE
-   HB_TRACE( HB_TR_ALWAYS, ("qr3 iVersion:%d", iVersion) );
+   HB_TRACE( HB_TR_ALWAYS, ( "qr3 iVersion:%d", iVersion ) );
 #endif
 
    if( iVersion == 0 )
@@ -1298,7 +1299,7 @@ PHB_ZEBRA hb_zebra_create_qrcode( const char * szCode, HB_SIZE nLen, int iFlags 
 
    iMask = _qr_mask( pZebra->pBits, iVersion );
 
-   _qr_draw_version_format(pZebra->pBits, iVersion, iLevel, iMask );
+   _qr_draw_version_format( pZebra->pBits, iVersion, iLevel, iMask );
    return pZebra;
 }
 
@@ -1306,6 +1307,7 @@ PHB_ZEBRA hb_zebra_create_qrcode( const char * szCode, HB_SIZE nLen, int iFlags 
 HB_FUNC( HB_ZEBRA_CREATE_QRCODE )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_qrcode( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );

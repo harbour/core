@@ -173,6 +173,7 @@ PHB_ZEBRA hb_zebra_create_codabar( const char * szCode, HB_SIZE nLen, int iFlags
 HB_FUNC( HB_ZEBRA_CREATE_CODABAR )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
    {
       hb_zebra_ret( hb_zebra_create_codabar( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
