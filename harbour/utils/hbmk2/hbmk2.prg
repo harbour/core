@@ -12274,7 +12274,7 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
    LOCAL cOldCP
 
    cOldCP := hb_cdpSelect( "EN" )
-   IF ! Empty( pRegex := hb_regexComp( "HB_FUN_([A-Z][A-Z0-9_]*)", .T., .T. ) )
+   IF ! Empty( pRegex := hb_regexComp( "HB_FUN_([A-Z_][A-Z_0-9]*)", .T., .T. ) )
       aList := hb_regexAll( pRegex, StrTran( cString, Chr( 13 ) ),,,,, .T. )
       FOR EACH tmp IN aList
          tmp := tmp[ 2 ]
