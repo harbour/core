@@ -143,7 +143,7 @@ HB_FUNC( DRIVETYPE )
          iType = 5;           /* Network Drive - xHarbour extension */
          break;
       default:
-         iType = 9;           /* Unknow Drive - xHarbour extension */
+         iType = 9;           /* Unknown Drive - xHarbour extension */
          break;
    }
    hb_retni( iType );

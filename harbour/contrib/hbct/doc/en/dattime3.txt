@@ -19,7 +19,7 @@
       WAITPERIOD() returns .T., if the time span designated at initialization
       has not elapsed.
    $DESCRIPTION$
-      This function sets a time span for a xHarbour DO WHILE loop to run.
+      This function sets a time span for a DO WHILE loop to run.
       The function must initialize prior to the loop, since you must specify
       the <nDelay> parameter in 1/100th seconds.  Subsequently, the function
       can be implemented without a parameter for additional loop conditions.
@@ -137,7 +137,7 @@
       The FUNCTION RETURNs .T. when the time is set successfully.
    $DESCRIPTION$
       When you use this FUNCTION to convert the time into the system time from
-      within your xHarbour application, all files acquire this time with
+      within your application, all files acquire this time with
       each write procedure.
    $EXAMPLES$
       Set the system time in each case; but the hardware clock only
@@ -188,8 +188,7 @@
       SETDATE() RETURNs .T. when the date is successfully set.
    $DESCRIPTION$
       When you use this FUNCTION to set the system date from within your
-      xHarbour application, all files acquire this date with each write
-      procedure.
+      application, all files acquire this date with each write procedure.
    $EXAMPLES$
       Set the system date in each case; but the hardware clock only
       on an AT:

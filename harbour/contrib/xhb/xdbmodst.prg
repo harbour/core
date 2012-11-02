@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * dbModifyStructure( <cFile> )           -> lSuccess
+ * dbModifyStructure( <cFile> ) -> lSuccess
  *
  * Copyright 2009 Ron Pinkas <Ron.Pinkas at xHarbour.com>
  * www - http://harbour-project.org
@@ -59,11 +59,7 @@
 #define EG_RENAME       26
 #endif
 
-#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr>), Break( <oErr> ) )
-
-/*
-  xHarbour extensions by Ron Pinkas
- */
+#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 FUNCTION dbModifyStructure( cFile )
 
@@ -81,7 +77,6 @@ FUNCTION dbModifyStructure( cFile )
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
 
       // Open exclusively, get name info, and create the structure db.
-      // -----------------------
       USE ( cFile ) ALIAS ModifySource EXCLUSIVE NEW
       nSourceArea := Select()
 
@@ -95,22 +90,19 @@ FUNCTION dbModifyStructure( cFile )
       cNewFile       := cTable + ".new." + cDateTime + cExt
 
       COPY STRUCTURE EXTENDED TO ( cStructureFile )
-      // -----------------------
 
       // Let user modify the structure.
-      // -----------------------
       USE ( cStructureFile ) ALIAS NewStructure EXCLUSIVE NEW
 
       Browse( 0, 0, Min( 20, MaxRow() - 1 ), Min( MaxCol() - 30, 50 ) )
 
+      PACK
       CLOSE
 
       CREATE ( cNewFile ) FROM ( cStructureFile ) ALIAS NEW_MODIFIED NEW
-      // -----------------------
 
 
       // Import data into the new file, and close it
-      // -----------------------
       lRet := dbImport( nSourceArea )
       CLOSE
 
@@ -118,10 +110,8 @@ FUNCTION dbModifyStructure( cFile )
       CLOSE
 
       SELECT ( nPresetArea )
-      // -----------------------
 
       // Rename original as backup, and new file as the new original.
-      // -----------------------
       IF lRet
          IF FRename( cFile, cBakFile ) == -1
             BREAK
@@ -146,13 +136,12 @@ FUNCTION dbModifyStructure( cFile )
             ENDIF
          ENDIF
       ENDIF
-      // -----------------------
 
    RECOVER USING oErr
       IF oErr:ClassName == "ERROR"
          IF oErr:genCode == EG_RENAME
             // This kind of error must be reported
-            lRet := Throw( oErr )
+            lRet := THROW( oErr )
          ELSE
             lRet := .F.
          ENDIF
@@ -176,11 +165,9 @@ FUNCTION dbMerge( xSource, lAppend )
    LOCAL cField, xField
    LOCAL nSourcePos, aTranslate := {}, aTranslation
 
-// LOCAL oErr
    LOCAL cTargetType
 
    // Safety
-   // -----------------------
    IF LastRec() > 0
       IF ! lAppend
          RETURN .F.
@@ -188,7 +175,6 @@ FUNCTION dbMerge( xSource, lAppend )
    ENDIF
 
    // Validate args
-   // -----------------------
    IF HB_ISSTRING( xSource )
       nArea := Select()
 
@@ -208,7 +194,6 @@ FUNCTION dbMerge( xSource, lAppend )
    ENDIF
 
    // Create translation plan
-   // -----------------------
    aFields := Array( FCount() )
    AFields( aFields )
 
@@ -228,7 +213,7 @@ FUNCTION dbMerge( xSource, lAppend )
 
             // Ok to process
             AAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | xSource } } )
-         RECOVER // USING oErr
+         RECOVER
             cTargetType := ValType( FieldGet( cField:__EnumIndex() ) )
 
             BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
@@ -240,7 +225,7 @@ FUNCTION dbMerge( xSource, lAppend )
 
                // Ok to process
                AAdd( aTranslate, { cField:__EnumIndex(), nSourcePos, {| xSource | ValToType( xSource, cTargetType ) } } )
-            RECOVER // USING oErr
+            RECOVER
                // TraceLog( oErr:Description, oErr:Operation )
             END SEQUENCE
          END SEQUENCE
@@ -248,16 +233,14 @@ FUNCTION dbMerge( xSource, lAppend )
    NEXT
 
    // Reset
-   // -----------------------
    IF LastRec() == 1 .AND. ! lAppend
       DELETE
       ZAP
    ENDIF
 
    // Process
-   // -----------------------
    nRecNo := ( nSource )->( RecNo() )
-   ( nSource )->( dbGoTop( 1 ) )
+   ( nSource )->( dbGoTop() )
 
    WHILE ! ( nSource )->( Eof() )
       APPEND BLANK
@@ -272,7 +255,6 @@ FUNCTION dbMerge( xSource, lAppend )
    ( nSource )->( dbGoto( nRecNo ) )
 
    // Reset
-   // -----------------------
    IF ! Empty( nArea )
       SELECT ( nSource )
       CLOSE

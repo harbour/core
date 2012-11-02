@@ -126,11 +126,11 @@ PROCEDURE Main( ... )
 
          IF hb_DirBuild( PathSepToSelf( GetEnvC( "HB_INSTALL_MAN" ) ) + hb_ps() + "man1" )
             FOR EACH tmp IN { ;
-                  "src/main/harbour.1", ;
-                  "src/pp/hbpp.1", ;
-                  "utils/hbmk2/hbmk2.1", ;
-                  "utils/hbtest/hbtest.1", ;
-                  "contrib/hbrun/hbrun.1" }
+               "src/main/harbour.1", ;
+               "src/pp/hbpp.1", ;
+               "utils/hbmk2/hbmk2.1", ;
+               "utils/hbtest/hbtest.1", ;
+               "contrib/hbrun/hbrun.1" }
                mk_hb_FCopy( tmp, GetEnvC( "HB_INSTALL_MAN" ) + hb_ps() + "man1" + hb_ps(), .T. )
             NEXT
          ELSE
@@ -193,11 +193,20 @@ PROCEDURE Main( ... )
 
       /* Creating docs for core */
 
-      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_DOC" ) ) .AND. ! tmp == "no"
+      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_DOC" ) ) .AND. !( tmp == "no" )
 
          OutStd( "! Compiling core documentation (.hbd)..." + hb_eol() )
 
          mk_hbd_core( "." + hb_ps(), tmp )
+      ENDIF
+
+      /* Creating compressed archives of available contrib functions */
+
+      IF ! Empty( tmp := GetEnvC( "HB_INSTALL_BIN" ) )
+
+         OutStd( "! Compiling list of contrib functions (.hbr)..." + hb_eol() )
+
+         mk_hbr( tmp )
       ENDIF
 
       /* Creating install packages */
@@ -512,6 +521,49 @@ STATIC FUNCTION GetEnvC( cEnvVar )
    ENDIF
 
    RETURN s_hEnvCache[ cEnvVar ] := GetEnv( cEnvVar )
+
+PROCEDURE mk_hbr( cDestDir )
+
+   LOCAL hAll := { => }
+
+   LOCAL cDir := "contrib" + hb_ps()
+   LOCAL aFile
+   LOCAL cFileName
+
+   FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
+      IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
+      ELSEIF "D" $ aFile[ F_ATTR ]
+         IF hb_FileExists( cFileName := cDir + aFile[ F_NAME ] + hb_ps() + aFile[ F_NAME ] + ".hbx" )
+            LoadHBX( cFileName, hAll )
+         ENDIF
+      ENDIF
+   NEXT
+
+   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "hbmk2.hbr", hb_ZCompress( hb_Serialize( hAll ) ) )
+
+   RETURN
+
+STATIC FUNCTION LoadHBX( cFileName, hAll )
+
+   LOCAL cName := StrTran( cFileName, "\", "/" )
+
+   LOCAL cFile
+   LOCAL pRegex
+   LOCAL tmp
+   LOCAL aDynamic := {}
+
+   IF ! Empty( cFile := hb_MemoRead( cFileName ) ) .AND. ;
+      ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
+      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+         IF tmp[ 2 ] $ hAll
+            hAll[ tmp[ 2 ] ] += "," + cName
+         ELSE
+            hAll[ tmp[ 2 ] ] := cName
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN aDynamic
 
 #define _HB_FUNC_INCLUDE_ "HB_FUNC_INCLUDE"
 #define _HB_FUNC_EXCLUDE_ "HB_FUNC_EXCLUDE"

@@ -322,7 +322,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
 
    CASE ME_IGNORE    // (32)
 
-      // Ignore unknow key, only check insert state.
+      // Ignore unknown key, only check insert state.
       ::DisplayInsert( ::lInsert() )
       EXIT
 

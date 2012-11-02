@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *
  * Copyright 2011 Fausto Di Creddo Trautwein, ftwein@yahoo.com.br
- * www - http://www.xharbour.org http://harbour-project.org
+ * www - http://harbour-project.org
  *
  * Thanks to Robert F Greer, PHP original version
  * http://sourceforge.net/projects/excelwriterxml/

@@ -12239,14 +12239,17 @@ STATIC PROCEDURE AdviseMissingLibs( hbmk, cOutput )
 
    FOR EACH tmp IN hNeeded
       aLib := LibReferenceToOption( tmp:__enumKey() )
-      _hbmk_OutStd( hbmk, hb_StrFormat( "Hint: Add option '%1$s'%2$s for missing function(s): %3$s", ;
+      _hbmk_OutStd( hbmk, hb_StrFormat( ;
+         iif( aLib[ 2 ], ;
+            I_( "Hint: Add option '%1$s' for missing function(s): %2$s" ), ;
+            I_( "Hint: Install package %3$s and add option '%1$s' for missing function(s): %2$s" ) ), ;
          aLib[ 1 ], ;
-         iif( aLib[ 2 ], "", " (not installed)" ), ;
-         ArrayToList( tmp, ", ",,,, "()" ) ) )
+         ArrayToList( tmp, ", ",,,, "()" ), ;
+         hb_FNameName( aLib[ 1 ] ) ) )
    NEXT
 
    IF ! Empty( aFunction )
-      _hbmk_OutStd( hbmk, hb_StrFormat( "Error: Referenced, missing, but unknown function(s): %1$s", ArrayToList( aFunction, ", ",,,, "()" ) ) )
+      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Error: Referenced, missing, but unknown function(s): %1$s" ), ArrayToList( aFunction, ", ",,,, "()" ) ) )
    ENDIF
 
    RETURN
