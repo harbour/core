@@ -28,37 +28,40 @@
 
 #include "directry.ch"
 
-PROCEDURE Main( cContains )
+PROCEDURE Main( ... )
 
-   WalkDir( hb_DirBase() + ".." + hb_ps(), cContains )
+   WalkDir( hb_DirBase() + ".." + hb_ps(), { ... } )
 
    RETURN
 
-STATIC PROCEDURE WalkDir( cDir, cContains )
+STATIC PROCEDURE WalkDir( cDir, aContains )
 
    LOCAL aFile
 
    FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
       IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
       ELSEIF "D" $ aFile[ F_ATTR ]
-         WalkDir( cDir + aFile[ F_NAME ] + hb_ps(), cContains )
+         WalkDir( cDir + aFile[ F_NAME ] + hb_ps(), aContains )
       ELSEIF hb_FNameExt( aFile[ F_NAME ] ) == ".hbx"
-         ProcessFile( cDir + aFile[ F_NAME ], cContains )
+         ProcessFile( cDir + aFile[ F_NAME ], aContains )
       ENDIF
    NEXT
 
    RETURN
 
-STATIC PROCEDURE ProcessFile( cFileName, cContains )
+STATIC FUNCTION PathSepToSelf( cFileName )
+   RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
+
+STATIC PROCEDURE ProcessFile( cFileName, aContains )
 
    LOCAL cDynamic
    LOCAL lFirst := .T.
 
    FOR EACH cDynamic IN __hb_extern_get_exception_list( cFileName )
-      IF cContains == NIL .OR. Upper( cContains ) $ Upper( cDynamic )
+      IF Empty( aContains ) .OR. AScan( aContains, {| tmp | Upper( tmp ) $ Upper( cDynamic ) } ) > 0
          IF lFirst
             lFirst := .F.
-            OutStd( cFileName + hb_eol() )
+            OutStd( PathSepToSelf( cFileName ) + hb_eol() )
          ENDIF
          OutStd( "   " + cDynamic + "()" + hb_eol() )
       ENDIF

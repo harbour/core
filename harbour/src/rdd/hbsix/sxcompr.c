@@ -377,7 +377,7 @@ static void hb_LZSSxNodeInsert( PHB_LZSSX_COMPR pCompr, int r )
    pCompr->right[ r ] = pCompr->left[ r ] = DUMMYNODE;
    pCompr->match_length = 0;
 
-   for( ; ; )
+   for( ;; )
    {
       if( cmp >= 0 )
       {

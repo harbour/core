@@ -110,7 +110,7 @@ HB_BOOL hb_lppSend( PHB_LPP pSocket, const void * data, HB_SIZE len, HB_MAXINT t
    if( timeout > 0 )
       nTime = ( HB_MAXINT ) hb_dateMilliSeconds() + timeout;
 
-   for( ; ; )
+   for( ;; )
    {
       if( pSocket->nSendLen - pSocket->nSendPos < ( HB_SIZE ) LONG_MAX )
          lSend = ( long ) ( pSocket->nSendLen - pSocket->nSendPos );
@@ -156,7 +156,7 @@ HB_BOOL hb_lppRecv( PHB_LPP pSocket, void ** data, HB_SIZE * len, HB_MAXINT time
    if( timeout > 0 )
       nTime = ( HB_MAXINT ) hb_dateMilliSeconds() + timeout;
 
-   for( ; ; )
+   for( ;; )
    {
       if( ! pSocket->fRecvHasSize )
       {

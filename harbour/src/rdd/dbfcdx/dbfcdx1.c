@@ -4365,7 +4365,7 @@ static void hb_cdxTagGoTop( LPCDXTAG pTag )
    else
       hb_cdxTagKeyRead( pTag, TOP_RECORD );
 
-   for( ; ; )
+   for( ;; )
    {
       if( pTag->CurKey->rec == 0 || pTag->TagEOF || ! hb_cdxBottomScope( pTag ) )
       {
@@ -4398,7 +4398,7 @@ static void hb_cdxTagGoBottom( LPCDXTAG pTag )
    else
       hb_cdxTagKeyRead( pTag, BTTM_RECORD );
 
-   for( ; ; )
+   for( ;; )
    {
       if( pTag->CurKey->rec == 0 || pTag->TagBOF || ! hb_cdxTopScope( pTag ) )
       {

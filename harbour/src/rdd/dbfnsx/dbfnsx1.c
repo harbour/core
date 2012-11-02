@@ -1407,7 +1407,7 @@ static LPPAGEINFO hb_nsxPageGetBuffer( LPTAGINFO pTag, HB_ULONG ulPage )
    else
    {
       HB_ULONG ul = pIndex->ulPageLast;
-      for( ; ; )
+      for( ;; )
       {
          if( ++ul >= pIndex->ulPagesDepth )
             ul = 0;

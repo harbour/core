@@ -496,7 +496,7 @@ static int hb_sln_isUTF8( int iStdOut, int iStdIn )
          n = j = x = y = 0;
          /* wait up to 2 seconds for answer */
          end_timer = hb_dateMilliSeconds() + 2000;
-         for( ; ; )
+         for( ;; )
          {
             /* loking for cursor position in "\033[%d;%dR" */
             while( j < n && rdbuf[ j ] != '\033' )
