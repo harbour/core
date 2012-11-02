@@ -1323,6 +1323,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    LOCAL lHBMAINDLLP
 
+   LOCAL cStdOut, cStdErr
+
    IF s_cSecToken == NIL
       s_cSecToken := StrZero( hb_rand32(), 10, 0 )
    ENDIF
@@ -6589,7 +6591,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand,, @cStdOut, @cStdErr ) ) != 0
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running linker. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6597,6 +6599,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
                      hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
+                  AdviseMissingLibs( hbmk, cStdErr + hb_eol() + cStdOut )
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -6702,7 +6705,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand,, @cStdOut, @cStdErr ) ) != 0
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6710,6 +6713,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
                      hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
+                  AdviseMissingLibs( hbmk, cStdErr + hb_eol() + cStdOut )
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -12201,6 +12205,144 @@ STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
    ENDIF
 
    RETURN cString
+
+STATIC PROCEDURE AdviseMissingLibs( hbmk, cOutput )
+
+   LOCAL hAll := GetListOfFunctionsKnown()
+   LOCAL aFunction := ExtractHarbourSymbols( cOutput )
+   LOCAL cFunction
+   LOCAL aLib
+   LOCAL cLib
+   LOCAL tmp
+
+   LOCAL hNeeded := { => }
+
+   FOR EACH cFunction IN aFunction DESCEND
+      IF cFunction $ hAll
+         FOR EACH cLib IN hb_ATokens( hAll[ cFunction ], "," )
+            IF !( cLib $ hNeeded )
+               hNeeded[ cLib ] := {}
+            ENDIF
+            AAddNew( hNeeded[ cLib ], cFunction )
+         NEXT
+         hb_ADel( aFunction, cFunction:__enumIndex(), .T. )
+      ENDIF
+   NEXT
+
+   FOR EACH tmp IN hNeeded
+      aLib := LibReferenceToOption( tmp:__enumKey() )
+      _hbmk_OutStd( hbmk, hb_StrFormat( "Hint: Add option '%1$s'%2$s for missing function(s): %3$s", ;
+         aLib[ 1 ], ;
+         iif( aLib[ 2 ], "", " (not installed)" ), ;
+         ArrayToList( tmp, ", ",,,, "()" ) ) )
+   NEXT
+
+   IF ! Empty( aFunction )
+      _hbmk_OutStd( hbmk, hb_StrFormat( "Error: Referenced, missing, but unknown function(s): %1$s", ArrayToList( aFunction, ", ",,,, "()" ) ) )
+   ENDIF
+
+   RETURN
+
+STATIC FUNCTION LibReferenceToOption( cLib )
+
+   LOCAL lInstalled
+   LOCAL cRoot := hb_DirBase() + ".." + hb_ps()
+
+   IF Left( cLib, 1 ) == "("
+      cLib := "-l" + SubStr( cLib, 2, Len( cLib ) - 2 )
+      lInstalled := .T.
+   ELSE
+      lInstalled := hb_FileExists( cRoot + hb_ps() + hb_FNameExtSet( PathSepToSelf( cLib ), ".hbc" ) )
+      /* detect autofind libs */
+      IF ( Left( cLib, Len( "contrib" + "/" ) ) == "contrib" + "/" .AND. ;
+           "contrib" + "/" + hb_FNameName( cLib ) + "/" + hb_FNameName( cLib ) + ".hbx" == cLib ) .OR. ;
+         ( Left( cLib, Len( "addons" + "/" ) ) == "addons" + "/" .AND. ;
+           "addons" + "/" + hb_FNameName( cLib ) + "/" + hb_FNameName( cLib ) + ".hbx" == cLib )
+         cLib := hb_FNameName( cLib ) + ".hbc"
+      ELSE
+         cLib := hb_FNameExtSet( PathSepToSelf( cLib ), ".hbc" )
+      ENDIF
+   ENDIF
+
+   RETURN { cLib, lInstalled }
+
+STATIC FUNCTION ExtractHarbourSymbols( cString )
+
+   LOCAL aList
+   LOCAL pRegex
+   LOCAL tmp
+   LOCAL cOldCP
+
+   cOldCP := hb_cdpSelect( "EN" )
+   IF ! Empty( pRegex := hb_regexComp( "HB_FUN_([A-Z][A-Z0-9_]*)", .T., .T. ) )
+      aList := hb_regexAll( pRegex, StrTran( cString, Chr( 13 ) ),,,,, .T. )
+      FOR EACH tmp IN aList
+         tmp := tmp[ 2 ]
+      NEXT
+   ELSE
+      aList := {}
+   ENDIF
+   hb_cdpSelect( cOldCP )
+
+   RETURN aList
+
+STATIC FUNCTION GetListOfFunctionsKnown()
+   LOCAL cRoot := hb_DirBase() + ".." + hb_ps()
+   LOCAL cFileName := hb_DirBase() + "hbmk2.hbr"
+
+   LOCAL hAll := iif( hb_FileExists( cFileName ), hb_Deserialize( hb_ZUncompress( hb_MemoRead( cFileName ) ) ), { => } )
+
+   IF ! HB_ISHASH( hAll )
+      hAll := { => }
+   ENDIF
+
+   hAll[ "HB_COMPILE" ] := ;
+   hAll[ "HB_COMPILEBUF" ] := ;
+   hAll[ "HB_COMPILEFROMBUFF" ] := "(hbcplr)"
+
+   GetListOfFunctionsKnownWalkDir( cRoot + "contrib", cRoot, hAll )
+   GetListOfFunctionsKnownWalkDir( cRoot + "addons", cRoot, hAll )
+
+   RETURN hAll
+
+STATIC PROCEDURE GetListOfFunctionsKnownWalkDir( cDir, cRoot, hAll )
+
+   LOCAL aFile
+
+   cDir := hb_DirSepAdd( PathSepToSelf( cDir ) )
+
+   FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
+      IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
+      ELSEIF "D" $ aFile[ F_ATTR ]
+         GetListOfFunctionsKnownWalkDir( cDir + aFile[ F_NAME ] + hb_ps(), cRoot, hAll )
+      ELSEIF hb_FNameExt( aFile[ F_NAME ] ) == ".hbx"
+         GetListOfFunctionsKnownProcessHBX( cDir + aFile[ F_NAME ], cRoot, hAll )
+      ENDIF
+   NEXT
+
+   RETURN
+
+STATIC FUNCTION GetListOfFunctionsKnownProcessHBX( cFileName, cRoot, hAll )
+
+   LOCAL cName := StrTran( SubStr( cFileName, Len( cRoot ) + 1 ), "\", "/" )
+
+   LOCAL cFile
+   LOCAL pRegex
+   LOCAL tmp
+   LOCAL aDynamic := {}
+
+   IF ! Empty( cFile := hb_MemoRead( cFileName ) ) .AND. ;
+      ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
+      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+         IF tmp[ 2 ] $ hAll
+            hAll[ tmp[ 2 ] ] += "," + cName
+         ELSE
+            hAll[ tmp[ 2 ] ] := cName
+         ENDIF
+      NEXT
+   ENDIF
+
+   RETURN aDynamic
 
 STATIC FUNCTION mk_extern( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex, cOutputName )
 

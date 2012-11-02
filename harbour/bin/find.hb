@@ -30,9 +30,11 @@
 
 PROCEDURE Main( ... )
 
-   WalkDir( hb_DirBase() + ".." + hb_ps() + "include", { ... } )
-   WalkDir( hb_DirBase() + ".." + hb_ps() + "contrib", { ... } )
-   WalkDir( hb_DirBase() + ".." + hb_ps() + "addons" , { ... } )
+   LOCAL cRoot := hb_DirBase() + ".." + hb_ps()
+
+   WalkDir( cRoot + "include", { ... } )
+   WalkDir( cRoot + "contrib", { ... } )
+   WalkDir( cRoot + "addons" , { ... } )
 
    RETURN
 
@@ -61,7 +63,7 @@ STATIC PROCEDURE ProcessFile( cFileName, aContains )
    LOCAL cDynamic
    LOCAL lFirst := .T.
 
-   FOR EACH cDynamic IN __hb_extern_get_exception_list( cFileName )
+   FOR EACH cDynamic IN LoadHBX( cFileName )
       IF Empty( aContains ) .OR. AScan( aContains, {| tmp | Upper( tmp ) $ Upper( cDynamic ) } ) > 0
          IF lFirst
             lFirst := .F.
@@ -73,14 +75,14 @@ STATIC PROCEDURE ProcessFile( cFileName, aContains )
 
    RETURN
 
-STATIC FUNCTION __hb_extern_get_exception_list( cInputName )
+STATIC FUNCTION LoadHBX( cInputName )
 
    LOCAL cFile
    LOCAL pRegex
    LOCAL tmp
    LOCAL aDynamic := {}
 
-   IF ! Empty( cFile := MemoRead( cInputName ) ) .AND. ;
+   IF ! Empty( cFile := hb_MemoRead( cInputName ) ) .AND. ;
       ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
       FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
          AAdd( aDynamic, tmp[ 2 ] )
