@@ -25,14 +25,14 @@
    $EXAMPLES$
       dDate := SToD( "19900915" )
 
-      ? DOW( dDate )               // 7
-      ? CDOW( dDate )              // Saturday
+      ? DoW( dDate )               // 7
+      ? CDoW( dDate )              // Saturday
       ? FT_DAYTOBOW( dDate )       // 6
 
       // change beginning of week to Friday  (yeah!)
       FT_DATECNFG( , 6 )
-      ? DOW( dDate )               // 7
-      ? CDOW( dDate )              // Saturday
+      ? DoW( dDate )               // 7
+      ? CDoW( dDate )              // Saturday
       ? FT_DAYTOBOW( dDate )       // 1
    $SEEALSO$
       FT_DATECNFG() FT_ACCTWEEK() FT_WEEK()

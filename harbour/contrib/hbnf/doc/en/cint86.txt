@@ -99,8 +99,8 @@
       it might be useful.  cpmiInt86() is part of the CPMI API.  See the
       CPMI documentation for more information.
    $EXAMPLES$
-      * This example shows how to call the DOS "create file" service.  Take
-      * special note of how to set up string parameters.
+      // This example shows how to call the DOS "create file" service.  Take
+      // special note of how to set up string parameters.
 
       #include "ftint86.ch"
 
@@ -108,17 +108,17 @@
       aRegs[ AX ] := makehi( 60 )  // DOS service, create file
       aRegs[ CX ] := 0             // Specify file attribute
 
-      * Pay attention here, this is crucial.  Note how to set up the string
-      * so it appears in DS:DX.
+      // Pay attention here, this is crucial.  Note how to set up the string
+      // so it appears in DS:DX.
 
       aRegs[ DS ] := "C:\misc\myfile.xxx"
       aRegs[ DX ] := REG_DS
       FT_INT86( 33, aRegs )        // Make the call to the DOS interrupt
 
 
-      * This example shows how to call the DOS "get current directory"
-      * service.  This one also uses a string parameter, but note that it
-      * uses a different offset register.
+      // This example shows how to call the DOS "get current directory"
+      // service.  This one also uses a string parameter, but note that it
+      // uses a different offset register.
 
       #include "ftint86.ch"
 
@@ -126,8 +126,8 @@
       aRegs[ AX ] := makehi( 71 )
       aRegs[ DX ] := 0           // Choose default drive
 
-      * This service requires a 64-byte buffer whose address is in DS:SI.  DOS
-      * will fill the buffer with the current directory.
+      // This service requires a 64-byte buffer whose address is in DS:SI.  DOS
+      // will fill the buffer with the current directory.
 
       aRegs[ DS ] := Space( 64 )
       aRegs[ SI ] := REG_DS
@@ -137,8 +137,8 @@
 
 
 
-      * For the sake of completeness, here's an example that doesn't use a
-      * string.  This one changes the video mode.
+      // For the sake of completeness, here's an example that doesn't use a
+      // string.  This one changes the video mode.
 
       #include "ftint86.ch"
 

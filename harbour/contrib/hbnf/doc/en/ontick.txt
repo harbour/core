@@ -42,7 +42,6 @@
          SetPos( nRow, nCol )
 
          RETURN
-
    $SEEALSO$
 
    $END$

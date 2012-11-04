@@ -24,7 +24,4 @@ PROCEDURE Main()
 
    gdImagePng( im2, IMAGES_OUT + "gdtest_squared.png" )
 
-   gdImageDestroy( im )
-   gdImageDestroy( im2 )
-
    RETURN

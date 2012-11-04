@@ -24,7 +24,7 @@
       Handles dates with CENTURY ON|OFF, to allow for 21st century.
       Date validation must be external to this function.
    $EXAMPLES$
-      These code fragments find the week number, given a date.
+      // These code fragments find the week number, given a date.
 
       // literal character date
       dDate  := SToD( "19910101" )
@@ -63,7 +63,7 @@
       Handles dates with CENTURY ON|OFF, to allow for 21st century.
       Date validation must be external to this function.
    $EXAMPLES$
-      These code fragments find the day number, given a date.
+      // These code fragments find the day number, given a date.
 
       // literal character date
       dDate  := SToD( "19910101" )
@@ -81,7 +81,7 @@
       // last day of year
       nDayNum := FT_DOY( SToD( "19911231" ) ) // result: 365
 
-      For a demonstration of this function, compile and link the
-      program woy.prg in the Nanforum Toolkit source code.
+      // For a demonstration of this function, compile and link the
+      // program woy.prg in the Nanforum Toolkit source code.
    $END$
  */

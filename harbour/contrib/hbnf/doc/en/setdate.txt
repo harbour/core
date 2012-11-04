@@ -28,8 +28,8 @@
       the DOS Set Date service (Interrupt 33, service 43).
 
    $EXAMPLES$
-      The following program takes a date from the command line and sets
-      the DOS system date:
+      // The following program takes a date from the command line and sets
+      // the DOS system date:
 
       PROCEDURE Main( cDate )
 
@@ -39,6 +39,5 @@
          ? "Today is now: " + DToC( Date() )
 
          RETURN
-
    $END$
  */

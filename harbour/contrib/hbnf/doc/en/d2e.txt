@@ -24,11 +24,11 @@
       a string representing the equivalent in scientific
       notation is returned.
    $EXAMPLES$
-      ? FT_D2E( 12.345, 2 )     -> 1.23E1
+      ? FT_D2E( 12.345, 2 )     // -> 1.23E1
 
-      ? FT_D2E( -12.345, 3 )    -> -1.235E1
+      ? FT_D2E( -12.345, 3 )    // -> -1.235E1
 
-      ? FT_D2E( 0.00000543, 2 ) -> 5.43E-6
+      ? FT_D2E( 0.00000543, 2 ) // -> 5.43E-6
    $SEEALSO$
       FT_E2D()
    $END$

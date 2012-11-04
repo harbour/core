@@ -66,9 +66,6 @@ PROCEDURE Main()
    /* saving the image */
    gdImageJpeg( im, IMAGES_OUT + "antialiasedpal.jpg" )
 
-   /* Destroy it */
-   gdImageDestroy( im )
-
    /* ***** DRAW A LINE IN A TRUE COLOR IMAGE ***** */
 
    /* First we create a true color image */
@@ -92,9 +89,6 @@ PROCEDURE Main()
 
    /* saving the image */
    gdImageJpeg( im, IMAGES_OUT + "antialiasedtrue.jpg" )
-
-   /* Destroy it */
-   gdImageDestroy( im )
 
    ?
    ? "Look at " + IMAGES_OUT + " folder for output images"

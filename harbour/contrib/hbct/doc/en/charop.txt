@@ -126,7 +126,7 @@
       the return value can be omitted.
    $EXAMPLES$
       ? charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) // --> Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
-      ? charnot( charnot( "This is a test!" ) ) --> "This is a test!"
+      ? charnot( charnot( "This is a test!" ) ) // --> "This is a test!"
    $TESTS$
       charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) == Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
       charnot( charnot( "This is a test!" ) ) == "This is a test!"

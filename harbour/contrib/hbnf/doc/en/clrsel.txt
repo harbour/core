@@ -79,23 +79,22 @@
       LOCAL lColour := IsColor()
       LOCAL cChr    := Chr( 254 ) + Chr( 254 )
 
-      SET SCOREBOARD Off
-      SETBLINK( .F. )       // Allow bright backgrounds
+      SET SCOREBOARD OFF
+      SetBlink( .F. )       // Allow bright backgrounds
 
-      *.... a typical application might have the following different settings
-      *     normally these would be stored in a .dbf/.dbv
-      aClrs := {;
-         { "Desktop",        "N/BG",                         "D", "▒" }, ;
-         { "Title",          "N/W",                          "T"      }, ;
-         { "Top Menu",       "N/BG,N/W,W+/BG,W+/N,GR+/N",    "M"      }, ;
-         { "Sub Menu",       "W+/N*,GR+/N*,GR+/N*,W+/R,G+/R","M"      }, ;
-         { "Standard Gets",  "W/B,  W+/N,,, W/N",            "G"      }, ;
-         { "Nested Gets",    "N/BG, W+/N,,, W/N",            "G"      }, ;
-         { "Help",           "N/G,  W+/N,,, W/N",            "W"      }, ;
-         { "Error Messages", "W+/R*,N/GR*,,,N/R*",           "W"      }, ;
-         { "Database Query", "N/BG, N/GR*,,,N+/BG",          "B"      }, ;
-         { "Pick List",      "N/GR*,W+/B,,, BG/GR*",         "A"      }  ;
-               }
+      // .... a typical application might have the following different settings
+      //      normally these would be stored in a .dbf/.dbv
+      aClrs := { ;
+         { "Desktop",        "N/BG",                          "D", "▒" }, ;
+         { "Title",          "N/W",                           "T"      }, ;
+         { "Top Menu",       "N/BG,N/W,W+/BG,W+/N,GR+/N",     "M"      }, ;
+         { "Sub Menu",       "W+/N*,GR+/N*,GR+/N*,W+/R,G+/R", "M"      }, ;
+         { "Standard Gets",  "W/B,  W+/N,,, W/N",             "G"      }, ;
+         { "Nested Gets",    "N/BG, W+/N,,, W/N",             "G"      }, ;
+         { "Help",           "N/G,  W+/N,,, W/N",             "W"      }, ;
+         { "Error Messages", "W+/R*,N/GR*,,,N/R*",            "W"      }, ;
+         { "Database Query", "N/BG, N/GR*,,,N+/BG",           "B"      }, ;
+         { "Pick List",      "N/GR*,W+/B,,, BG/GR*",          "A"      } }
 
       aClrs := FT_ClrSel( aClrs, lColour, cChr )
    $END$

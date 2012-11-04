@@ -40,7 +40,6 @@
          oHtm:Close()
 
          RETURN
-      r>
    $STATUS$
       R
    $COMPLIANCE$

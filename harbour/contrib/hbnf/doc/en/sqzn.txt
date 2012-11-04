@@ -24,9 +24,9 @@
       the original number from the compressed string.
 
    $EXAMPLES$
-      REPLACE TRANS->cust_id WITH FT_SQZN( mcust_id, 8 ),;
-              TRANS->amount  WITH FT_SQZN( mamount, 12, 2 )
-
+      REPLACE ;
+         TRANS->cust_id WITH FT_SQZN( mcust_id, 8 ), ;
+         TRANS->amount  WITH FT_SQZN( mamount, 12, 2 )
    $SEEALSO$
       FT_UNSQZN()
    $INCLUDE$
@@ -61,9 +61,8 @@
       requirements for numeric fields in a database file.
 
    $EXAMPLES$
-      mcust_id := FT_UNSQZN( TRANS->cust_id, 8 ),;
+      mcust_id := FT_UNSQZN( TRANS->cust_id, 8 )
       mamount  := FT_UNSQZN( TRANS->amount, 12, 2 )
-
    $SEEALSO$
       FT_SQZN()
    $INCLUDE$

@@ -87,10 +87,6 @@ PROCEDURE Main()
    gdImageGifAnimEnd( IMAGES_OUT + "anim2.gif" )
    /* Close file */
    FClose( hFile )
-   /* Destroy images */
-   gdImageDestroy( im )
-   gdImageDestroy( im2 )
-   gdImageDestroy( im3 )
 
    ?
    ? "Look at " + IMAGES_OUT + " folder for output images"

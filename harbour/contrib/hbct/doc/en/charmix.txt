@@ -35,8 +35,8 @@
    $TESTS$
       CHARMIX( "ABC", "123" )  == "A1B2C3"
       CHARMIX( "ABCDE", "12" ) == "A1B2C1D2E1"
-      CHARMIX( "AB", "12345") == "A1B2"
-      CHARMIX( "HELLO", " " )   == "H E L L O "
+      CHARMIX( "AB", "12345" ) == "A1B2"
+      CHARMIX( "HELLO", " " )  == "H E L L O "
       CHARMIX( "HELLO", "" )   == "HELLO"
    $STATUS$
       Ready

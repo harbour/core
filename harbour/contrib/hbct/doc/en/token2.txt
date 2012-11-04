@@ -64,7 +64,7 @@
                                        // since the string must not be copied
       tokeninit()                      // rewind counter of global TE to 1
       tokeninit( "1,2,3", "," , 1 )    // tokenize constant string, store in global TE
-      tokeninit( cString, , 1, @cTE1)  // tokenize cString and store TE in
+      tokeninit( cString, , 1, @cTE1 ) // tokenize cString and store TE in
                                        // cTE1 only without overriding global TE
       tokeninit( cString, , 1, cTE1 )  // tokenize cString and store TE in
                                        // GLOBAL TE since 4th parameter is

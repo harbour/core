@@ -71,25 +71,25 @@
       and/or column can be specified by the programmer.  It also centers
       each line of the message within the box.
    $EXAMPLES$
-      The following example displays a simple two-line message
-      and returns immediately to the calling routine.
+      // The following example displays a simple two-line message
+      // and returns immediately to the calling routine.
 
-         FT_DISPMSG( { { "Printing Report"                    , ;
-                         "Press [ESC] To Interrupt" }         , ;
-                       { "W+/B*", "W/B", "GR+/B" } } )
+      FT_DISPMSG( { { "Printing Report", ;
+         "Press [ESC] To Interrupt" }, ;
+         { "W+/B*", "W/B", "GR+/B" } } )
 
-      The next example displays a message and waits for a key press.
+      // The next example displays a message and waits for a key press.
 
-         FT_DISPMSG( { { "Press [D] To Confirm Deletion"      , ;
-                         "Or Any Other Key To Abort" }        , ;
-                       { "W+/B", "W+/B", "GR+/B" } }          , ;
-                       "D" )
+      FT_DISPMSG( { { "Press [D] To Confirm Deletion", ;
+         "Or Any Other Key To Abort" }, ;
+         { "W+/B", "W+/B", "GR+/B" } }, ;
+         "D" )
 
-      The next example displays a one-line message centered on row 5
-      and returns to the calling procedure.
+      // The next example displays a one-line message centered on row 5
+      // and returns to the calling procedure.
 
-         FT_DISPMSG( { { "Please Do Not Interrupt" }   , ;
-                       { "W+/B", "GR+/B" } }           , ;
-                       , 5, )
+      FT_DISPMSG( { { "Please Do Not Interrupt" }, ;
+         { "W+/B", "GR+/B" } }, ;
+         , 5, )
    $END$
  */

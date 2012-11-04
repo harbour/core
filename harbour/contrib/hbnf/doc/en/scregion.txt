@@ -29,8 +29,8 @@
       FT_SAVRGN() calls Clipper's SAVESCREEN().  Refer to the Clipper
       documentation for more information regarding this function.
    $EXAMPLES$
-      The following example uses FT_SAVRGN() and FT_RSTRGN() to save
-      and restore a portion of the screen.
+      // The following example uses FT_SAVRGN() and FT_RSTRGN() to save
+      // and restore a portion of the screen.
 
       @ 0, 0, 24, 79 BOX "111111111"          // fill the screen with 1's
       cScreen := FT_SAVRGN( 10, 10, 20, 30 )  // save a region
@@ -71,8 +71,8 @@
       FT_RSTRGN() calls Clipper's RESTSCREEN().  Refer to the Clipper
       documentation for more information regarding this function.
    $EXAMPLES$
-      The following example uses FT_RSTRGN() to restore a saved portion
-      of the screen to different locations.
+      // The following example uses FT_RSTRGN() to restore a saved portion
+      // of the screen to different locations.
 
       @ 0, 0, 24, 79 BOX "111111111"         // fill the screen with 1's
       cScreen := FT_SAVRGN( 10, 10, 20, 30 ) // save a region
@@ -135,8 +135,8 @@
       FT_RGNSTACK() calls FT_SAVRGN() and FT_RSTRGN().  Refer to the
       documentation for these two functions for more information.
    $EXAMPLES$
-      The following example uses FT_RGNSTACK() to save and restore various
-      sections of the screen.
+      // The following example uses FT_RGNSTACK() to save and restore various
+      // sections of the screen.
 
       @ 0, 0, 24, 79 BOX "111111111"             // fill the screen with 1's
       FT_RGNSTACK( "push", 10,  5, 15, 15 )      // push a region

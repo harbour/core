@@ -24,15 +24,15 @@
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
-      These three code lines perform a bitwise AND on bytes with values of
-      Chr(20) and Chr(36), and deliver the result as a string in hexadecimal
-      format, using 'h' to signify hexadecimal.
+      // These three code lines perform a bitwise AND on bytes with values of
+      // Chr( 20 ) and Chr( 36 ), and deliver the result as a string in hexadecimal
+      // format, using 'h' to signify hexadecimal.
 
-           ? FT_BYT2HEX( Chr( 20 ) )         // byte1: '14h'
-           ? FT_BYT2HEX( Chr( 36 ) )         // byte2: '24h'
+      ? FT_BYT2HEX( Chr( 20 ) )         // byte1: '14h'
+      ? FT_BYT2HEX( Chr( 36 ) )         // byte2: '24h'
 
-           ? FT_BYT2HEX( FT_BYTEAND( Chr( 20 ), Chr( 36 ) ) )
-                              // result: '04h'
+      ? FT_BYT2HEX( FT_BYTEAND( Chr( 20 ), Chr( 36 ) ) )
+      // result: '04h'
    $SEEALSO$
       FT_BYT2BIT()
    $END$

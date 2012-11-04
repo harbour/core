@@ -20,9 +20,9 @@
       the Ctrl key is pressed, such as during a MemoEdit().
    $EXAMPLES$
       IF FT_CTRL()
-         @ 24, 0 say "Ctrl"
+         @ 24, 0 SAY "Ctrl"
       ELSE
-         @ 24, 0 say "    "
+         @ 24, 0 SAY "    "
       ENDIF
    $SEEALSO$
       FT_CAPLOCK() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT() FT_ALT()

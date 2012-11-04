@@ -78,10 +78,12 @@
       stored in <cString>, too. By setting the CSETREF()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charshl( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 )
+      ? charshl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
+                 Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(0)+Chr(0)+Chr(0)
    $TESTS$
-      charshl( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 ) == Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(0)+Chr(0)+Chr(0)
+      charshl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
+               Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -124,10 +126,10 @@
       stored in <cString>, too. By setting the CSETREF()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charshr( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 )
+      ? charshr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(0)+Chr(0)+Chr(0)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
    $TESTS$
-      charshr( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 ) == Chr(0)+Chr(0)+Chr(0)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
+      charshr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -170,10 +172,10 @@
       stored in <cString>, too. By setting the CSETREF()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charrll( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 )
+      ? charrll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)
    $TESTS$
-      charrll( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 ) == Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)
+      charrll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -216,10 +218,10 @@
       stored in <cString>, too. By setting the CSETREF()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charrlr( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 )
+      ? charrlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
    $TESTS$
-      charrlr( Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128), 3 ) == Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
+      charrlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 )
    $STATUS$
       Ready
    $COMPLIANCE$

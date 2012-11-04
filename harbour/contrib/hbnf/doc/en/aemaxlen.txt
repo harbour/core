@@ -35,13 +35,13 @@
       FT_AEMAXLEN( aArray, 2 )       // Measure the 2nd dimension of an Array
 
       FT_AEMAXLEN( aArray, 2, , 9 )  // Measure Elements 1-9 of the
-                                        2nd dimension or subarray
+                                     // 2nd dimension or subarray
 
       FT_AEMAXLEN( aArray, 3, 5, 9 ) // Measure Elements 5-9 of the
-                                        3rd dimension or subarray
+                                     // 3rd dimension or subarray
 
       FT_AEMAXLEN( aArray, 3, 5 )    // Measure Elements 5 to last in the
-                                        3rd dimension or subarray
+                                     // 3rd dimension or subarray
    $SEEALSO$
       FT_AEMINLEN()
    $END$

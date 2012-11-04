@@ -70,24 +70,19 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageCreate( 64, 64 )
 
-        pImage := gdImageCreate( 64, 64 )
-        // Use here image
-        .........
-        gdImageDestroy( pImage )
+         // Use image here
 
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreateTrueColor()
+      gdImageCreateTrueColor()
    $END$
  */
 
@@ -114,24 +109,19 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageCreateTrueColor( 64, 64 )
 
-        pImage := gdImageCreateTrueColor( 64, 64 )
-        // Use here image
-        .........
-        gdImageDestroy( pImage )
+         // Use image here
 
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate()
+      gdImageCreate()
    $END$
  */
 
@@ -156,22 +146,17 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageCreateTrueColor( 64, 64 )
 
-        pImage := gdImageCreateTrueColor( 64, 64 )
-        // Use here image
-        .........
-        gdImageDestroy( pImage )
+         // Use image here
 
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
       gdImageCreate(), gdImageCreateTrueColor()
    $END$
@@ -216,24 +201,19 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromJpeg( "myimage.jpg" )
 
-        pImage := gdImageFromJpeg( "myimage.jpg" )
-        // Use here image
-        .........
-        gdImageDestroy( pImage )
+         // Use image here
 
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageDestroy(), gdImageFromGif(), gdImageFromPng(), gdImageFromGD(), gdImageFromWBmp()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromGif(), gdImageFromPng(), gdImageFromGD(), gdImageFromWBmp()
    $END$
  */
 
@@ -276,24 +256,19 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromGif( "myimage.gif" )
 
-        pImage := gdImageFromGif( "myimage.gif" )
-        // Use here image
-        .........
-        gdImageDestroy( pImage )
+         // Use image here
 
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageDestroy(), gdImageFromJpeg(), gdImageFromPng(), gdImageFromGD(), gdImageFromWBmp()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromJpeg(), gdImageFromPng(), gdImageFromGD(), gdImageFromWBmp()
    $END$
  */
 
@@ -336,24 +311,19 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromPng( "myimage.png" )
 
-        pImage := gdImageFromPng( "myimage.png" )
-        // Use here image
-        .........
-        gdImageDestroy( pImage )
+         // Use image here
 
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageDestroy(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromGD(), gdImageFromWBmp()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromGD(), gdImageFromWBmp()
    $END$
  */
 
@@ -396,24 +366,19 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromGD( "myimage.gd" )
 
-        pImage := gdImageFromGD( "myimage.gd" )
-        // Use here image
-        .........
-        gdImageDestroy( pImage )
+         // Use image here
 
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageDestroy(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromPng(), gdImageFromWBmp()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromPng(), gdImageFromWBmp()
    $END$
  */
 
@@ -456,24 +421,19 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromWBmp( "myimage.wbmp" )
 
-        pImage := gdImageFromWBmp( "myimage.wbmp" )
-        // Use here image
-        .........
-        gdImageDestroy( pImage )
+         // Use image here
 
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor(), gdImageDestroy(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromPng(), gdImageFromGD()
+      gdImageCreate(), gdImageCreateTrueColor(), gdImageFromJpeg(), gdImageFromGif(), gdImageFromPng(), gdImageFromGD()
    $END$
  */
 
@@ -507,26 +467,20 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromGif( "myimage.gif" )
 
-        pImage := gdImageFromGif( "myimage.gif" )
+         // Image conversion
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Image conversion
-        gdImageJpeg( pImage, "myimage.jpg" )
-
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageFromGif()
+      gdImageFromGif()
    $END$
  */
 
@@ -558,26 +512,20 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromJpeg( "myimage.jpg" )
 
-        pImage := gdImageFromJpeg( "myimage.jpg" )
+         // Image conversion
+         gdImageGif( pImage, "myimage.gif" )
 
-        // Image conversion
-        gdImageGif( pImage, "myimage.gif" )
-
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageFromJpeg()
+      gdImageFromJpeg()
    $END$
  */
 
@@ -611,26 +559,20 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromGif( "myimage.gif" )
 
-        pImage := gdImageFromGif( "myimage.gif" )
+         // Image conversion
+         gdImagePng( pImage, "myimage.png" )
 
-        // Image conversion
-        gdImagePng( pImage, "myimage.png" )
-
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageFromGif()
+      gdImageFromGif()
    $END$
  */
 
@@ -662,26 +604,20 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
+         LOCAL pImage := gdImageFromGif( "myimage.gif" )
 
-        pImage := gdImageFromGif( "myimage.gif" )
+         // Image conversion
+         gdImageGd( pImage, "myimage.gd" )
 
-        // Image conversion
-        gdImageGd( pImage, "myimage.gd" )
-
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageFromGif()
+      gdImageFromGif()
    $END$
  */
 
@@ -714,38 +650,33 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL white, black
+         LOCAL pImage
+         LOCAL white, black
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate background
-        white := gdImageColorAllocate(pImage, 255, 255, 255)
+         // Allocate background
+         white := gdImageColorAllocate( pImage, 255, 255, 255 )
 
-        // Allocate drawing color
-        black := gdImageColorAllocate(pImage, 0, 0, 0)
+         // Allocate drawing color
+         black := gdImageColorAllocate( pImage, 0, 0, 0 )
 
-        // Draw a rectangle
-        gdImageRectangle(pImage, 0, 0, 99, 99, black)
+         // Draw a rectangle
+         gdImageRectangle( pImage, 0, 0, 99, 99, black )
 
-        // Save the image with black as foreground color
-        gdImageWBmp( pImage, "myimage.wbmp", black )
+         // Save the image with black as foreground color
+         gdImageWBmp( pImage, "myimage.wbmp", black )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageRectangle(), gdColorAllocate()
+      gdImageCreate(), gdImageRectangle(), gdColorAllocate()
    $END$
  */
 
@@ -772,35 +703,30 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL white
+         LOCAL pImage
+         LOCAL white
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        white := gdImageColorAllocate(pImage, 255, 255, 255)
+         // Allocate color
+         white := gdImageColorAllocate( pImage, 255, 255, 255 )
 
-        // Draw a pixel
-        gdImageSetPixel(pImage, 50, 50, white)
+         // Draw a pixel
+         gdImageSetPixel( pImage, 50, 50, white )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -830,35 +756,30 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
+         LOCAL pImage
+         LOCAL blue
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw a line
-        gdImageLine(pImage, 10, 10, 90, 90, blue)
+         // Draw a line
+         gdImageLine( pImage, 10, 10, 90, 90, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -888,35 +809,30 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
+         LOCAL pImage
+         LOCAL blue
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw a dashed line
-        gdImageDashedLine(pImage, 10, 10, 90, 90, blue)
+         // Draw a dashed line
+         gdImageDashedLine( pImage, 10, 10, 90, 90, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -945,40 +861,34 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
-        LOCAL aVerticies := { ;
-                              { 50,  0 } ,;
-                              { 99, 99 } ,;
-                              {  0, 99 }  ;
-                            }
+         LOCAL pImage
+         LOCAL blue
+         LOCAL aVerticies := { ;
+            { 50,  0 }, ;
+            { 99, 99 }, ;
+            {  0, 99 } }
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw a polygon
-        gdImagePolygon(pImage, aVerticies, blue)
+         // Draw a polygon
+         gdImagePolygon( pImage, aVerticies, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -1008,40 +918,34 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
-        LOCAL aVerticies := { ;
-                              { 50,  0 } ,;
-                              { 99, 99 } ,;
-                              {  0, 99 }  ;
-                            }
+         LOCAL pImage
+         LOCAL blue
+         LOCAL aVerticies := { ;
+            { 50,  0 }, ;
+            { 99, 99 }, ;
+            {  0, 99 } }
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draws an open polygon
-        gdImageOpenPolygon(pImage, aVerticies, blue)
+         // Draws an open polygon
+         gdImageOpenPolygon( pImage, aVerticies, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -1071,35 +975,30 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
+         LOCAL pImage
+         LOCAL blue
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw a rectangle
-        gdImageRectangle(pImage, 10, 10, 50, 50, blue)
+         // Draw a rectangle
+         gdImageRectangle( pImage, 10, 10, 50, 50, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -1128,40 +1027,34 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
-        LOCAL aVerticies := { ;
-                              { 50,  0 } ,;
-                              { 99, 99 } ,;
-                              {  0, 99 }  ;
-                            }
+         LOCAL pImage
+         LOCAL blue
+         LOCAL aVerticies := { ;
+            { 50,  0 }, ;
+            { 99, 99 }, ;
+            {  0, 99 } }
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw a filled polygon
-        gdImageFilledPolygon(pImage, aVerticies, blue)
+         // Draw a filled polygon
+         gdImageFilledPolygon( pImage, aVerticies, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -1191,35 +1084,30 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
+         LOCAL pImage
+         LOCAL blue
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw a filled rectangle
-        gdImageFilledRectangle(pImage, 10, 10, 50, 50, blue)
+         // Draw a filled rectangle
+         gdImageFilledRectangle( pImage, 10, 10, 50, 50, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -1255,35 +1143,30 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
+         LOCAL pImage
+         LOCAL blue
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw an ellipse
-        gdImageArc(pImage, 50, 25, 98, 48, 0, 360, blue)
+         // Draw an ellipse
+         gdImageArc( pImage, 50, 25, 98, 48, 0, 360, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -1339,35 +1222,30 @@
       #include "gd.ch"
 
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
+         LOCAL pImage
+         LOCAL blue
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw an ellipse
-        gdImageFilledArc(pImage, 50, 25, 98, 48, 0, 360, blue, gdArc)
+         // Draw an ellipse
+         gdImageFilledArc( pImage, 50, 25, 98, 48, 0, 360, blue, gdArc )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -1397,35 +1275,30 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue
+         LOCAL pImage
+         LOCAL blue
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        // Draw an ellipse
-        gdImageFilledEllipse(pImage, 50, 25, 98, 48, blue)
+         // Draw an ellipse
+         gdImageFilledEllipse( pImage, 50, 25, 98, 48, blue )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg()
    $END$
  */
 
@@ -1455,39 +1328,34 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue, red
+         LOCAL pImage
+         LOCAL blue, red
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
-        red  := gdImageColorAllocate(pImage, 255, 0, 0)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
+         red  := gdImageColorAllocate( pImage, 255, 0, 0 )
 
-        // Draw an ellipse
-        gdImageArc(pImage, 50, 25, 98, 48, 0, 360, blue)
+         // Draw an ellipse
+         gdImageArc( pImage, 50, 25, 98, 48, 0, 360, blue )
 
-        // Fill the ellipse
-        gdImageFillToBorder(pImage, 50, 50, blue, red)
+         // Fill the ellipse
+         gdImageFillToBorder( pImage, 50, 50, blue, red )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageArc()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageArc()
    $END$
  */
 
@@ -1521,39 +1389,34 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue, red
+         LOCAL pImage
+         LOCAL blue, red
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
-        red  := gdImageColorAllocate(pImage, 255, 0, 0)
+         // Allocate color
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
+         red  := gdImageColorAllocate( pImage, 255, 0, 0 )
 
-        // Draw an ellipse
-        gdImageArc(pImage, 50, 25, 98, 48, 0, 360, blue)
+         // Draw an ellipse
+         gdImageArc( pImage, 50, 25, 98, 48, 0, 360, blue )
 
-        // Fill the ellipse
-        gdImageFill(pImage, 50, 50, red)
+         // Fill the ellipse
+         gdImageFill( pImage, 50, 50, red )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageArc()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageArc()
    $END$
  */
 
@@ -1597,39 +1460,34 @@
       #include "gd.ch"
 
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL blue, red
+         LOCAL pImage
+         LOCAL blue, red
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        /* Background color (first allocated) */
-        blue := gdImageColorAllocate(pImage, 0, 0, 255)
-        red  := gdImageColorAllocate(pImage, 255, 0, 0)
+         // Allocate color
+         /* Background color (first allocated) */
+         blue := gdImageColorAllocate( pImage, 0, 0, 255 )
+         red  := gdImageColorAllocate( pImage, 255, 0, 0 )
 
-        gdImageSetAntiAliased(pImage, blue)
+         gdImageSetAntiAliased( pImage, blue )
 
-        // Draw a smooth line
-        gdImageLine(pImage, 0, 0, 99, 9, gdAntiAliased)
+         // Draw a smooth line
+         gdImageLine( pImage, 0, 0, 99, 9, gdAntiAliased )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine(), gdAntiAliased, gdSetAntiAliasedDontBlend()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine(), gdAntiAliased, gdSetAntiAliasedDontBlend()
    $END$
  */
 
@@ -1660,43 +1518,38 @@
       #include "gd.ch"
 
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL black, white, blue
+         LOCAL pImage
+         LOCAL black, white, blue
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color
-        /* Background color (first allocated) */
-        black := gdImageColorAllocate(pImage, 0, 0, 0)
-        white := gdImageColorAllocate(pImage, 255, 255, 255)
-        blue  := gdImageColorAllocate(pImage, 0, 0, 255)
+         // Allocate color
+         /* Background color (first allocated) */
+         black := gdImageColorAllocate( pImage, 0, 0, 0 )
+         white := gdImageColorAllocate( pImage, 255, 255, 255 )
+         blue  := gdImageColorAllocate( pImage, 0, 0, 255 )
 
-        gdImageSetAntiAliased(pImage, blue)
+         gdImageSetAntiAliased( pImage, blue )
 
-        // The portion of the line that crosses this white rectangle will not be blended smoothly
-        gdImageSetAntiAliasedDontBlend(pImage, white)
+         // The portion of the line that crosses this white rectangle will not be blended smoothly
+         gdImageSetAntiAliasedDontBlend( pImage, white )
 
-        // Draw a smooth line
-        gdImageLine(pImage, 0, 0, 99, 9, gdAntiAliased)
+         // Draw a smooth line
+         gdImageLine( pImage, 0, 0, 99, 9, gdAntiAliased )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine(), gdAntiAliased, gdSetAntiAlias()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine(), gdAntiAliased, gdSetAntiAlias()
    $END$
  */
 
@@ -1738,46 +1591,38 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage, pBrush
-        LOCAL blue, red
+         LOCAL pImage, pBrush
+         LOCAL blue, red
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Open the brush PNG. For best results, portions of the brush that should be transparent
-        // (ie, not part of the brush shape) should have the transparent color index.
-        pBrush := gdImageCreateFromPng( "mybrush.png" )
+         // Open the brush PNG. For best results, portions of the brush that should be transparent
+         // (ie, not part of the brush shape) should have the transparent color index.
+         pBrush := gdImageCreateFromPng( "mybrush.png" )
 
-        // Allocate color  (background color is the first allocate)
-        black := gdImageColorAllocate(pImage, 0, 0, 0)
+         // Allocate color  (background color is the first allocate)
+         black := gdImageColorAllocate( pImage, 0, 0, 0 )
 
-        // Set the brush
-        gdImageSetBrush(pImage, pBrush)
+         // Set the brush
+         gdImageSetBrush( pImage, pBrush )
 
-        // Draw a line from the upper left corner to the lower
-        // right corner using the brush.
-        gdImageLine(pImage, 0, 0, 99, 99, gdBrushed)
+         // Draw a line from the upper left corner to the lower
+         // right corner using the brush.
+         gdImageLine( pImage, 0, 0, 99, 99, gdBrushed )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-        // Destroy the brush image
-        gdImageDestroy( pBrush )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine()
    $END$
  */
 
@@ -1818,47 +1663,39 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-        LOCAL pImage, pTile
-        LOCAL blue, red
+         LOCAL pImage, pTile
+         LOCAL blue, red
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Open the tile PNG. For best results, portions of the
-        // tile that should be transparent (ie, allowing the
-        // background to shine through) should have the transparent
-        // color index.
-        pTile := gdImageCreateFromPng( "mytile.png" )
+         // Open the tile PNG. For best results, portions of the
+         // tile that should be transparent (ie, allowing the
+         // background to shine through) should have the transparent
+         // color index.
+         pTile := gdImageCreateFromPng( "mytile.png" )
 
-        // Allocate color  (background color is the first allocate)
-        black := gdImageColorAllocate(pImage, 0, 0, 0)
+         // Allocate color  (background color is the first allocate)
+         black := gdImageColorAllocate( pImage, 0, 0, 0 )
 
-        // Set the tile
-        gdImageSetTile(pImage, pTile)
+         // Set the tile
+         gdImageSetTile( pImage, pTile )
 
-        // Fill an area using the tile
-        gdImageFilledRectangle(pImage, 25, 25, 75, 75, gdTiled)
+         // Fill an area using the tile
+         gdImageFilledRectangle( pImage, 25, 25, 75, 75, gdTiled )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-        // Destroy the tile image
-        gdImageDestroy( pTile )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageFilledRectangle()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageFilledRectangle()
    $END$
  */
 
@@ -1903,55 +1740,50 @@
       #include "gd.ch"
 
       PROCEDURE Main()
-        LOCAL pImage, aStyleDotted := {}, aStyleDashed := {}
-        LOCAL black, red
+         LOCAL pImage, aStyleDotted := {}, aStyleDashed := {}
+         LOCAL black, red
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color  (background color is the first allocate)
-        black := gdImageColorAllocate(pImage, 0, 0, 0)
-        red   := gdImageColorAllocate(pImage, 255, 0, 0)
+         // Allocate color  (background color is the first allocate)
+         black := gdImageColorAllocate( pImage, 0, 0, 0 )
+         red   := gdImageColorAllocate( pImage, 255, 0, 0 )
 
-        // Set up dotted style. Leave every other pixel alone.
-        aAdd( aStyleDotted, red )
-        aAdd( aStyleDotted, gdTransparent )
+         // Set up dotted style. Leave every other pixel alone.
+         aAdd( aStyleDotted, red )
+         aAdd( aStyleDotted, gdTransparent )
 
-        // Set up dashed style. Three on, three off.
-        aAdd( aStyleDashed, red )
-        aAdd( aStyleDashed, red )
-        aAdd( aStyleDashed, red )
-        aAdd( aStyleDashed, gdTransparent )
-        aAdd( aStyleDashed, gdTransparent )
-        aAdd( aStyleDashed, gdTransparent )
+         // Set up dashed style. Three on, three off.
+         aAdd( aStyleDashed, red )
+         aAdd( aStyleDashed, red )
+         aAdd( aStyleDashed, red )
+         aAdd( aStyleDashed, gdTransparent )
+         aAdd( aStyleDashed, gdTransparent )
+         aAdd( aStyleDashed, gdTransparent )
 
-        // Set dotted style.
-        gdImageSetStyle(pImage, aStyleDotted)
+         // Set dotted style.
+         gdImageSetStyle( pImage, aStyleDotted )
 
-        // Draw a line from the upper left corner to the lower right corner.
-        gdImageLine(pImage, 0, 0, 99, 99, gdStyled)
+         // Draw a line from the upper left corner to the lower right corner.
+         gdImageLine( pImage, 0, 0, 99, 99, gdStyled )
 
-        // Now the dashed line.
-        gdImageSetStyle(pImage, aStyleDashed)
-        gdImageLine(pimage, 0, 99, 0, 99, gdStyled)
+         // Now the dashed line.
+         gdImageSetStyle( pImage, aStyleDashed )
+         gdImageLine( pimage, 0, 99, 0, 99, gdStyled )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine()
    $END$
  */
 
@@ -1977,38 +1809,33 @@
       #include "gd.ch"
 
       PROCEDURE Main()
-        LOCAL pImage
-        LOCAL black, white
+         LOCAL pImage
+         LOCAL black, white
 
-        // Create an image in memory
-        pImage := gdImageCreate( 100, 100 )
+         // Create an image in memory
+         pImage := gdImageCreate( 100, 100 )
 
-        // Allocate color  (background color is the first allocate)
-        black := gdImageColorAllocate(pImage, 0, 0, 0)
-        white := gdImageColorAllocate(pImage, 255, 255, 255)
+         // Allocate color  (background color is the first allocate)
+         black := gdImageColorAllocate( pImage, 0, 0, 0 )
+         white := gdImageColorAllocate( pImage, 255, 255, 255 )
 
-        // Set thickness.
-        gdImageSetThickness(pImage, 4)
+         // Set thickness.
+         gdImageSetThickness( pImage, 4 )
 
-        // Draw a fat line from the upper left corner to the lower right corner.
-        gdImageLine(pImage, 0, 0, 99, 99, white)
+         // Draw a fat line from the upper left corner to the lower right corner.
+         gdImageLine( pImage, 0, 0, 99, 99, white )
 
-        // Save the image
-        gdImageJpeg( pImage, "myimage.jpg" )
+         // Save the image
+         gdImageJpeg( pImage, "myimage.jpg" )
 
-        // Destroy the image
-        gdImageDestroy( pImage )
-
-      RETURN
+         RETURN
    $STATUS$
       R
    $COMPLIANCE$
       GD Library
    $PLATFORMS$
       All
-   $FILES$
-      gdwrp.c
    $SEEALSO$
-      gdImageDestroy(), gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine()
+      gdImageCreate(), gdImageColorAllocate(), gdImageJpeg(), gdImageLine()
    $END$
  */

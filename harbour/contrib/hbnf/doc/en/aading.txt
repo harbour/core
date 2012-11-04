@@ -36,15 +36,15 @@
       aList2 := { "apple ", "banana", "PEAR" }
 
       FT_AADDITION( aList1, aList2 )
-           // ignores spaces, sensitive to case
-           // returns { "apple", "orange", "pear", "banana", "PEAR" }
+      // ignores spaces, sensitive to case
+      // returns { "apple", "orange", "pear", "banana", "PEAR" }
 
       FT_AADDITION( aList1, aList2, , .F. )
-           // ignores spaces, not sensitive to case
-           // returns { "apple", "orange", "pear", "banana" }
+      // ignores spaces, not sensitive to case
+      // returns { "apple", "orange", "pear", "banana" }
 
-      FT_AADDITION( aList1, aList2, .F., .F. )
-           // sensitive to spaces, not sensitive to case
-           // returns { "apple", "orange", "pear", "apple ", "banana" }
+      FT_AADDITION( aList1, aList2, .F. , .F. )
+      // sensitive to spaces, not sensitive to case
+      // returns { "apple", "orange", "pear", "apple ", "banana" }
    $END$
  */

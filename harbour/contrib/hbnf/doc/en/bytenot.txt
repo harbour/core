@@ -27,10 +27,10 @@
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
-      This code performs a bitwise NOT on byte represented by Chr( 32 ):
+      // This code performs a bitwise NOT on byte represented by Chr( 32 ):
 
-           cNewByte := FT_BYTENOT( Chr( 32 ) )
-           ? Asc( cNewByte )     // result: 223
+      cNewByte := FT_BYTENOT( Chr( 32 ) )
+      ? Asc( cNewByte )     // result: 223
    $SEEALSO$
       FT_BYTEOR() FT_BYTEXOR() FT_BYTENEG() FT_BYTEAND()
    $END$

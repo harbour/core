@@ -66,8 +66,9 @@
 
       // fill color array
       // Box Border, Menu Options, Menu Bar, Current Selection, Unselected
-      aColors := iif( lColor, { "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;
-                              { "W+/N", "W+/N", "W/N", "N/W","W/N" } )
+      aColors := iif( lColor, ;
+         { "W+/G", "N/G", "N/G", "N/W", "N+/G" }, ;
+         { "W+/N", "W+/N", "W/N", "N/W", "W/N" } )
 
       // array for first pulldown menu
       FT_FILL( aOptions[ 1 ], "A. Execute A Dummy Procedure" , {|| fubar() }, .T. )
@@ -83,32 +84,32 @@
       FT_FILL( aOptions[ 3 ], "B. Display Invoice Totals"    , {|| .T. },     .T. )
       FT_FILL( aOptions[ 3 ], "C. Exit To DOS"               , {|| .F. },     .T. )
 
-      Call FT_FILL() once for each item on each pulldown menu, passing it
-      three parameters:
+      // Call FT_FILL() once for each item on each pulldown menu, passing it
+      // three parameters:
 
-         FT_FILL( <cMenuSelection>, <bCodeBlock>, <lSelectable>
+      FT_FILL( <cMenuSelection>, <bCodeBlock>, <lSelectable>
 
-      <cMenuSelection> is a character string which will be displayed on
-       the pulldown menu.
+      // <cMenuSelection> is a character string which will be displayed on
+      // the pulldown menu.
 
-      <bCodeBlock> should contain one of the following:
+      // <bCodeBlock> should contain one of the following:
 
-         A function name to execute, which in turn should return .T. or .F.
-         FT_MENU1 WILL RETURN CONTROL TO THE CALLING PROGRAM IF .F. IS
-         RETURNED OR CONTINUE IF .T. IS RETURNED.
+      //   A function name to execute, which in turn should return .T. or .F.
+      //   FT_MENU1 WILL RETURN CONTROL TO THE CALLING PROGRAM IF .F. IS
+      //   RETURNED OR CONTINUE IF .T. IS RETURNED.
 
-         .F. WHICH WILL CAUSE FT_MENU1 TO RETURN CONTROL TO THE CALLING
-         PROGRAM.
+      //   .F. WHICH WILL CAUSE FT_MENU1 TO RETURN CONTROL TO THE CALLING
+      //   PROGRAM.
 
-         .T. WHICH WILL DO NOTHING.  THIS ALLOWS THE DEVELOPER TO DESIGN A
-         SKELETON MENU STRUCTURE PRIOR TO COMPLETING ALL OF THE SUBROUTINES.
+      //   .T. WHICH WILL DO NOTHING.  THIS ALLOWS THE DEVELOPER TO DESIGN A
+      //   SKELETON MENU STRUCTURE PRIOR TO COMPLETING ALL OF THE SUBROUTINES.
 
       // CALL FT_MENU1
       FT_MENU1( aBar, aOptions, aColors, 0 )
 
-      NOTE: FT_MENU1() disables Alt-C and Alt-D in order to make them
-            available for the menu bar.  It enables Alt-D and resets
-            Alt-C to its previous state prior to calling each function.
+      // NOTE: FT_MENU1() disables Alt-C and Alt-D in order to make them
+      //       available for the menu bar.  It enables Alt-D and resets
+      //       Alt-C to its previous state prior to calling each function.
    $SEEALSO$
       FT_FILL()
    $END$

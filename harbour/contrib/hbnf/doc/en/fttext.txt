@@ -108,7 +108,6 @@
       nFile2 := FT_FUSE( "temp.h" )
 
       ? FT_FLASTRE()                 // no. of lines in temp.h
-
    $SEEALSO$
       FT_FUSE()
    $END$
@@ -150,7 +149,6 @@
       FT_FGOTOP()              // go back to top
 
       ? FT_FRECNO()            // 1
-
    $SEEALSO$
       FT_FSELECT() FT_FUSE() FT_FRECNO() FT_FGOBOT()
    $END$
@@ -183,10 +181,9 @@
    $EXAMPLES$
       IF ft_fUse( "text.c" ) < 0     // open text file
          err := ft_fError()
-         ? 'Error opening file "rext.c", error code (' + ;
-                   hb_ntos( err ) + ')'
+         ? "Error opening file 'text.c', error code (" + ;
+            hb_ntos( err ) + ")"
       ENDIF
-
    $SEEALSO$
 
    $END$
@@ -228,7 +225,6 @@
       FT_FGOTOP()              // go back to top
 
       ? FT_FRECNO()            // 1
-
    $SEEALSO$
       FT_FSELECT() FT_FUSE() FT_FGOTOP() FT_FGOBOT()
    $END$
@@ -265,7 +261,6 @@
       FT_FGOBOT()
 
       ? FT_FREADLN()
-
    $SEEALSO$
       FT_FSELECT() FT_FUSE() FT_FGOTOP() FT_FRECNO() FT_FREADLN()
    $END$
@@ -314,8 +309,6 @@
          FT_FSKIP()
 
       ENDDO
-
-
    $SEEALSO$
       FT_FRECNO() FT_FGOTOP()
    $END$
@@ -364,7 +357,6 @@
          FT_FSKIP()
 
       ENDDO
-
    $SEEALSO$
       FT_FUSE() FT_FWRITELN() FT_FRECNO() FT_FGOTOP()
    $END$
@@ -402,7 +394,6 @@
       FT_FUSE( "test.txt" )
 
       FT_FDELETE( 4 )
-
    $SEEALSO$
       FT_FAPPEND() FT_FRECNO() FT_FINSERT()
    $END$
@@ -445,7 +436,6 @@
       ft_fGoTo( 10 )
 
       ft_fInsert( 5 )
-
    $SEEALSO$
       FT_FAPPEND() FT_FRECNO() FT_FDELETE() FT_FLASTRE()
    $END$
@@ -498,7 +488,6 @@
       FT_FAPPEND()
 
       ? FT_FRECNO()           // displays 6
-
    $SEEALSO$
       FT_FRECNO() FT_FDELETE() FT_FINSERT() FT_FLASTRE()
    $END$
@@ -548,14 +537,13 @@
 
       FT_FUSE( "config.sys" )
 
-      DO WHILE UPPER( FT_FREADLN() ) != "FILES=" .AND. !F_FEOF()
+      DO WHILE Upper( FT_FREADLN() ) != "FILES=" .AND. !F_FEOF()
 
          FT_FSKIP()
 
       ENDDO
 
       FT_FWRITELN( "FILES=30", FT_FEOF() )
-
    $SEEALSO$
       FT_FREADLN() FT_FRECNO() FT_FINSERT() FT_FDELETE()
    $END$
@@ -588,7 +576,6 @@
       FT_FUSE( "text.c" )
 
       ? FT_FLASTRE()
-
    $SEEALSO$
       FT_FUSE() FT_FRECNO()
    $END$
@@ -624,7 +611,6 @@
       FT_FSKIP()
 
       ? FT_FEOF()        // .T.
-
    $SEEALSO$
       FT_FUSE() FT_FSKIP()
    $END$
@@ -662,7 +648,6 @@
       FT_FSKIP( -1 )
 
       ? FT_FBOF()        // .T.
-
    $SEEALSO$
       FT_FSKIP() FT_EOF() FT_GOTOP()
    $END$
@@ -707,10 +692,9 @@
 
       ft_fUse( "fttext.c" )
 
-      ft_fGoTo(5)
+      ft_fGoTo( 5 )
 
       cText := ft_fReadLN()
-
    $SEEALSO$
       FT_FRECNO() FT_FGOTOP() FT_FREADLN()
    $END$

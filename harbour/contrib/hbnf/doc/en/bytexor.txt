@@ -26,12 +26,12 @@
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
-      This code performs a bit-wise XOR on two bytes represented
-      by Chr( 32 ) and Chr( 55 ):
+      // This code performs a bit-wise XOR on two bytes represented
+      // by Chr( 32 ) and Chr( 55 ):
 
-           cNewByte := FT_BYTEXOR( Chr( 32 ), Chr( 55 ) )
-           ? Asc( cNewByte )     // result: 23
-           ? cNewByte            // result: non-printable character
+      cNewByte := FT_BYTEXOR( Chr( 32 ), Chr( 55 ) )
+      ? Asc( cNewByte )     // result: 23
+      ? cNewByte            // result: non-printable character
    $SEEALSO$
       FT_BYTEOR() FT_BYTENOT() FT_BYTENEG() FT_BYTEAND()
    $END$

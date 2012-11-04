@@ -43,8 +43,7 @@
       empty tokens, simply look if the character at the returned position
       is within the tokenizer list.
    $EXAMPLES$
-      attoken( "Hello, World!" ) // --> 8  // empty strings after tokenizer
-                                           // are not a token !
+      attoken( "Hello, World!" ) // --> 8 (empty strings after tokenizer are not a token !)
    $TESTS$
       attoken( "Hello, World!" ) == 8
       attoken( "Hello, World!",, 2 ) == 8

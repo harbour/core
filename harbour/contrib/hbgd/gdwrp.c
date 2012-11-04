@@ -717,6 +717,8 @@ HB_FUNC( GDIMAGEGD ) /* original: void gdImageGD(gdImagePtr im, FILE *out) */
 }
 
 
+#if defined( HB_LEGACY_LEVEL4 )
+
 /* - */
 
 /*
@@ -726,6 +728,8 @@ HB_FUNC( GDIMAGEGD ) /* original: void gdImageGD(gdImagePtr im, FILE *out) */
 HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 {
 }
+
+#endif
 
 /* - */
 

@@ -302,7 +302,6 @@
       ENDIF
       // Processing, then:
       FT_NWSEMUNLOCK( nHandle )
-
    $SEEALSO$
       FT_NWSEMOPEN() FT_NWSEMEX() FT_NWSEMWAIT() FT_NWSEMSIG() FT_NWSEMUNLOCK()
    $END$
@@ -342,7 +341,6 @@
       ENDIF
       // Processing, then:
       FT_NWSEMUNLOCK( nHandle )
-
    $SEEALSO$
       FT_NWSEMOPEN() FT_NWSEMEX() FT_NWSEMWAIT() FT_NWSEMSIG() FT_NWSEMLOCK()
    $END$

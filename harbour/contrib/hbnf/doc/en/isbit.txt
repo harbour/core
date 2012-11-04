@@ -29,16 +29,16 @@
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
-      This code tests whether bit 3 is set in the byte represented by
-      Chr( 107 ):
+      // This code tests whether bit 3 is set in the byte represented by
+      // Chr( 107 ):
 
-       lBitflag := FT_ISBIT( Chr( 107 ), 3 )
-       ? lBitflag                  // result: .T.
+      lBitflag := FT_ISBIT( Chr( 107 ), 3 )
+      ? lBitflag                  // result: .T.
 
-       This code tests whether bit 5 is set in the byte represented by ASCII
-       65 (letter "A")
+      // This code tests whether bit 5 is set in the byte represented by ASCII
+      // 65 (letter "A")
 
-       ? FT_ISBIT( "A", 5 )        // result: .F.
+      ? FT_ISBIT( "A", 5 )        // result: .F.
    $SEEALSO$
       FT_BITSET() FT_BITCLR()
    $END$

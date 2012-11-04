@@ -97,10 +97,6 @@ PROCEDURE Main()
    gdImagePng( im2, IMAGES_OUT + "conv_tst.png" )
    gdImageJpeg( im2, IMAGES_OUT + "conv_tst.jpg" )
 
-   /* Destroy images in memory */
-   gdImageDestroy( im )
-   gdImageDestroy( im2 )
-
    ?
    ? "Look at " + IMAGES_OUT + " folder for output images"
    ?

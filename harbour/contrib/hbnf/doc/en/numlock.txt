@@ -27,7 +27,7 @@
          ? "NumLock is active"
       ENDIF
 
-      Another one, slightly strange, courtesy of Glenn Scott:
+      // Another one, slightly strange, courtesy of Glenn Scott:
 
       #include "inkey.ch"
 

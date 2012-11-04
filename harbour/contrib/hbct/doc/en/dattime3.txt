@@ -33,11 +33,11 @@
       incorrect.  The passing of midnight (the time resets to the 0 value)
       is taken into account.
    $EXAMPLES$
-      Run a loop for 5 seconds:
+      // Run a loop for 5 seconds:
 
       WAITPERIOD( 500 )             // Initialization, 5 seconds
       DO WHILE <cond1> .AND. <cond2> .AND. WAITPERIOD()
-         *...
+         // ...
       ENDDO
    $TESTS$
 
@@ -86,20 +86,20 @@
       check with TIMEVALID(), then they must be TRIMmed prior to the use of
       TIMEVALID() (see following Examples).
    $EXAMPLES$
-      Using the VALID clause with TRIM, all valid times are
-      accepted, even IF no seconds or minutes are specIFied:
+      // Using the VALID clause with TRIM, all valid times are
+      // accepted, even IF no seconds or minutes are specIFied:
 
-      cBegin := SPACE( 11 )
+      cBegin := Space( 11 )
       @ 5, 10 SAY "Please input time for beginning work:";
-      GET cBegin VALID TIMEVALID( RTRIM( cBegin ) )
+         GET cBegin VALID TIMEVALID( RTrim( cBegin ) )
       READ
 
-      Using a VALID clause without TRIM, hours and minutes must be
-      specified, so that TIMEVALID() can confirm a valid time:
+      // Using a VALID clause without TRIM, hours and minutes must be
+      // specified, so that TIMEVALID() can confirm a valid time:
 
-      cBegin := SPACE( 5 )
+      cBegin := Space( 5 )
       @ 5, 10 SAY "Please input time for beginning work:";
-      GET cBegin VALID TIMEVALID( cBegin )
+         GET cBegin VALID TIMEVALID( cBegin )
       READ
    $TESTS$
 
@@ -140,8 +140,8 @@
       within your application, all files acquire this time with
       each write procedure.
    $EXAMPLES$
-      Set the system time in each case; but the hardware clock only
-      on an AT:
+      // Set the system time in each case; but the hardware clock only
+      // on an AT:
 
       cNewTime := "10:20:00"
       IF ISAT()
@@ -190,8 +190,8 @@
       When you use this FUNCTION to set the system date from within your
       application, all files acquire this date with each write procedure.
    $EXAMPLES$
-      Set the system date in each case; but the hardware clock only
-      on an AT:
+      // Set the system date in each case; but the hardware clock only
+      // on an AT:
 
       dNewDate := SToD( "19910730" )
       IF ISAT()

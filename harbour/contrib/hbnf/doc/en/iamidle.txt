@@ -29,12 +29,11 @@
          FT_IAmIdle()         // Wait for ESC and announce idleness
       ENDDO
 
-      * Here's another way to do it:
+      // Here's another way to do it:
 
       FT_OnIdle( {|| FT_IAmIdle() } )
 
-      Inkey( 0 )              // Automatically reports idleness until key
-                              // is pressed!
+      Inkey( 0 )              // Automatically reports idleness until key is pressed!
    $SEEALSO$
       FT_OnIdle()
    $END$

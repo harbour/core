@@ -63,17 +63,18 @@
          The text is white on black.
          The box is centered both vertically and horizontally.
    $EXAMPLES$
-      The following displays a two-line box with default settings:
+      // The following displays a two-line box with default settings:
 
-        FT_XBOX( ,,,,,,, "This is a test", "of the XBOX() function" )
+      FT_XBOX( ,,,,,,, "This is a test", "of the XBOX() function" )
 
-      The following uses all optional parameters and displays a three-line
-      box.  The box is left-justified with a double border.  It has a yellow
-      on red border and white on blue text.  The function will wait for a
-      keypress before returning control to the calling routine.
+      // The following uses all optional parameters and displays a three-line
+      // box.  The box is left-justified with a double border.  It has a yellow
+      // on red border and white on blue text.  The function will wait for a
+      // keypress before returning control to the calling routine.
 
-        FT_XBOX( "L", "W", "D", "GR+/R", "W/B", 5, 10, "It is so nice",;
-                        "to not have to do the messy chore",;
-                        "of calculating the box size!" )
+      FT_XBOX( "L", "W", "D", "GR+/R", "W/B", 5, 10, ;
+         "It is so nice", ;
+         "to not have to do the messy chore", ;
+         "of calculating the box size!" )
    $END$
  */

@@ -32,9 +32,9 @@
    $EXAMPLES$
       DO WHILE Whatever      // Some batch process
 
-        Something()          // Create 'n' discard a bunch of stuff
+         Something()          // Create 'n' discard a bunch of stuff
 
-        FT_Idle()            // Take out the garbage
+         FT_Idle()            // Take out the garbage
 
       ENDDO
    $SEEALSO$

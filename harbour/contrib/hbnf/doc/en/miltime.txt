@@ -104,8 +104,8 @@
 
       FT_CIV2MIL( "12:00 m" ) // 0000
 
-      Caution:  leading blanks are irrelevant; p,a,n,m must be preceded by
-                one and only one space.
+      // Caution: leading blanks are irrelevant; p,a,n,m must be preceded by
+      //          one and only one space.
    $SEEALSO$
       FT_MIL2CIV() FT_SYS2MIL() FT_MIL2MIN() FT_MIN2MIL()
    $END$

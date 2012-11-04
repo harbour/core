@@ -29,17 +29,17 @@
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
-      This code would set bit 4 in a byte represented by Chr( 107 ):
+      // This code would set bit 4 in a byte represented by Chr( 107 ):
 
-           cNewbyte := FT_BITSET( Chr( 107 ), 4 )
-           ? Asc( cNewbyte )             // result: 123
-           ? cNewbyte                    // result: "{"
+      cNewbyte := FT_BITSET( Chr( 107 ), 4 )
+      ? Asc( cNewbyte )             // result: 123
+      ? cNewbyte                    // result: "{"
 
 
-      This code would set bit 5 in the byte represented by the letter "A".
+      // This code would set bit 5 in the byte represented by the letter "A".
 
-           ? FT_BITSET( "A", 5 )         // result: "a"
-                                         // bit 5 set
+      ? FT_BITSET( "A", 5 )         // result: "a"
+                                    // bit 5 set
    $SEEALSO$
       FT_BITCLR() FT_ISBIT()
    $END$

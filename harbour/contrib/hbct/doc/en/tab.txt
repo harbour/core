@@ -32,13 +32,13 @@
    $EXAMPLES$
 
    $TESTS$
-      tabexpand("-"+Chr(9)+"!")             == "-       !"
-      tabexpand("----"+Chr(9) +"!")         == "----    !"
-      tabexpand("-"+Chr(9)+"!",, "+")       == "-+++++++!"
-      tabexpand("-"+Chr(9)+ "!", 4)         == "-   !"
-      tabexpand("----"+Chr(9)+ "!", 8)      == "----    !"
-      tabexpand("----"+Chr(9)+ "!", 8, "+") == "----++++!"
-      tabexpand("-"+Chr(9)+"!"+hb_eol()+"----"+Chr(9)+ "!",, "+") == "-+++++++!"+hb_eol()+"----++++!"
+      tabexpand( "-" + Chr( 9 ) + "!" )             == "-       !"
+      tabexpand( "----" + Chr( 9 ) + "!" )         == "----    !"
+      tabexpand( "-" + Chr( 9 ) + "!", , "+" )       == "-+++++++!"
+      tabexpand( "-" + Chr( 9 ) + "!", 4 )         == "-   !"
+      tabexpand( "----" + Chr( 9 ) + "!", 8 )      == "----    !"
+      tabexpand( "----" + Chr( 9 ) + "!", 8, "+" ) == "----++++!"
+      tabexpand( "-" + Chr( 9 ) + "!" + hb_eol() + "----" + Chr( 9 ) + "!", , "+" ) == "-+++++++!" + hb_eol() + "----++++!"
    $STATUS$
       Started
    $COMPLIANCE$

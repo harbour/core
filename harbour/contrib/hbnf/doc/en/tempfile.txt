@@ -34,16 +34,16 @@
 
       This function requires FT_INT86().
    $EXAMPLES$
-      Create a unique file in the root of the current drive:
+      // Create a unique file in the root of the current drive:
 
-             myFile := FT_TEMPFIL()
+      myFile := FT_TEMPFIL()
 
-      Create a unique file in the current directory and hide it:
+      // Create a unique file in the current directory and hide it:
 
-             myFile := FT_TEMPFIL( "." + hb_ps(), .T. )
+      myFile := FT_TEMPFIL( "." + hb_ps(), .T. )
 
-      Create a unique file on another drive, but do not hide it:
+      // Create a unique file on another drive, but do not hide it:
 
-             myFile := FT_TEMPFIL( "E:\nanfor\src\" )
+      myFile := FT_TEMPFIL( "E:\nanfor\src\" )
    $END$
  */

@@ -50,8 +50,8 @@
    $EXAMPLES$
       @ 4, 9 TO 11, 71
 
-      FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15,;
-                  "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
+      FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15, ;
+         "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
 
       cKey := FT_DISPFILE()
 

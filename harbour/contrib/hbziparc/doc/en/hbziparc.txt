@@ -257,7 +257,7 @@
          nLen   := Len( aFiles )
          aGauge := GaugeNew( 5, 5, 7, 40, "W/B", "W+/B", "." )
          GaugeDisplay( aGauge )
-         hb_ZipFileByTDSpan( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen) },, "hello",, 6585452 )
+         hb_ZipFileByTDSpan( "test33.zip", aFiles, 9, {| cFile, nPos | GaugeUpdate( aGauge, nPos / nLen ) },, "hello",, 6585452 )
          RETURN
    $STATUS$
       R

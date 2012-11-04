@@ -33,9 +33,8 @@
    $EXAMPLES$
       FT_VIDSTR( 10, 20, "Enter Name :", 165 )
 
-      This example will print the specified text at coordinates 10, 20
-      in bright white on top of Magenta.
-
+      // This example will print the specified text at coordinates 10, 20
+      // in bright white on top of Magenta.
    $END$
  */
 
@@ -66,16 +65,15 @@
       where speed is important.  It is faster and requires less memory than
       FT_VIDSTR().  A working example is contained in clrtable.prg.
    $EXAMPLES$
-      FOR nX := 1 to MaxRow()
-         FOR nY := 1 to MaxCol()
+      FOR nX := 1 TO MaxRow()
+         FOR nY := 1 TO MaxCol()
             FT_WRTChr( nX, nY, "∙", ( nX - 1 ) + ( nY * 16 ) )
          NEXT
       NEXT
 
-      This example will write the ASCII character 249 to every location
-      on screen in every possible color combination.  It will recognize
-      the status of SetBlink().  It uses direct video writes for speed.
-
+      This example will write the ASCII character 249 TO every location
+      ON SCREEN in every possible COLOR combination.  It will recognize
+      the status of SetBlink().  It uses direct video writes FOR speed.
    $END$
  */
 
@@ -108,8 +106,8 @@
    $EXAMPLES$
       FT_CLS( 0, 0, MaxRow(), MaxCol(), 165 )
 
-      This example will clear the entire screen with the colors
-      bright white on magenta.
+      // This example will clear the entire screen with the colors
+      // bright white on magenta.
    $END$
  */
 
@@ -139,8 +137,8 @@
    $EXAMPLES$
       FT_SETATTR( 0, 0, MaxRow(), MaxCol(), 95 )
 
-      This example will change the entire screen's colors to bright white on
-      magenta without changing or overwriting any text on the screen.
+      // This example will change the entire screen's colors to bright white on
+      // magenta without changing or overwriting any text on the screen.
    $END$
  */
 
@@ -166,8 +164,8 @@
    $EXAMPLES$
       FT_REVATTR( 0, 0, MaxRow(), MaxCol() )
 
-      This example will change the entire screen's colors to their reverse
-      attributes without changing  or overwriting any text.
+      // This example will change the entire screen's colors to their reverse
+      // attributes without changing  or overwriting any text.
    $END$
  */
 
@@ -192,8 +190,8 @@
    $EXAMPLES$
       FT_REVCHR( 10, 20 )
 
-      This example will change the text and background at 10, 20 to it's
-      reverse color attributes without changing or overwriting the
-      character itself.
+      // This example will change the text and background at 10, 20 to it's
+      // reverse color attributes without changing or overwriting the
+      // character itself.
    $END$
  */

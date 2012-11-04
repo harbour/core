@@ -71,6 +71,5 @@
    $EXAMPLES$
       aCurInfo := getVCur( 1 )    // Get info on cursor pos in page 1
       ? "Row: " + Str( aCurInfo[ 3 ] ) + "  Col: " + Str( aCurInfo[ 4 ] )
-
    $END$
  */

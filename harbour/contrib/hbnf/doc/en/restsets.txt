@@ -21,7 +21,7 @@
       supported: FILTER, FORMAT, FUNCTION, INDEX, KEYS, MODE, ORDER,
       PROCEDURE, RELATION, TYPEAHEAD
    $EXAMPLES$
-      FT_RESTSETS(aOldSets)
+      FT_RESTSETS( aOldSets )
    $INCLUDE$
       set.ch
    $SEEALSO$

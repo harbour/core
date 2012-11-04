@@ -129,10 +129,10 @@
       i.e. 10^<nLogarithm> == <nNumber>.
    $EXAMPLES$
       ? log10( 10.0 )         // --> 1.0
-      ? log10( sqrt( 10.0 ) ) // --> 0.5
+      ? log10( Sqrt( 10.0 ) ) // --> 0.5
    $TESTS$
       log10( 10.0 )         == 1.0
-      log10( sqrt( 10.0 ) ) == 0.5
+      log10( Sqrt( 10.0 ) ) == 0.5
    $STATUS$
       Ready
    $COMPLIANCE$

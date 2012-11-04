@@ -71,7 +71,6 @@
          NEXT
          USE
          RETURN
-      xed>
    $STATUS$
       R
    $COMPLIANCE$
@@ -109,7 +108,7 @@
          NEXT
          USE
          RETURN
-      xed>
+         xed >
    $STATUS$
       R
    $COMPLIANCE$

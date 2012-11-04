@@ -26,8 +26,8 @@
       are possible with Clipper code.  For greater speed, write .c or
       .asm versions and use the Clipper Extend system.
    $EXAMPLES$
-      This code performs a bit-wise OR on two bytes represented
-      by Chr( 20 ) and Chr( 10 ):
+      // This code performs a bit-wise OR on two bytes represented
+      // by Chr( 20 ) and Chr( 10 ):
 
       cNewByte := FT_BYTEOR( Chr( 20 ), Chr( 10 ) )
       ? Asc( cNewByte )  // result: 30

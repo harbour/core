@@ -66,7 +66,6 @@
       ? aRetVal[ 6 ]      // Result: Saturday
       ? aRetVal[ 7 ]      // Result:        110
       ? aRetVal[ 8 ]      // Result: 12:45:20
-
    $SEEALSO$
       FT_DAYOFYR()
 

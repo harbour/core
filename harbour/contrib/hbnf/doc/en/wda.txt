@@ -39,7 +39,6 @@
       dPost := SToD( "19910101" )
       dPost += FT_ADDWKDY( dPost, 5 )   // returns 7 true days
       ? dPost                           //  01/08/91
-
    $SEEALSO$
       FT_WORKDAYS()
    $END$

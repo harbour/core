@@ -86,7 +86,6 @@ PROCEDURE DrawFlake( lOpenPoly )
    ENDIF
 
    gdImagePng( gdImage, IMAGES_OUT + cImageName )
-   gdImageDestroy( gdImage )
 
    RETURN
 

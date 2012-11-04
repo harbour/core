@@ -24,6 +24,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
+
    $PLATFORMS$
       DJGPP
    $FILES$
@@ -63,6 +64,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
+
    $PLATFORMS$
       DJGPP
    $FILES$
@@ -94,6 +96,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
+
    $PLATFORMS$
       DJGPP
    $FILES$
@@ -131,6 +134,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
+
    $PLATFORMS$
       DJGPP
    $FILES$

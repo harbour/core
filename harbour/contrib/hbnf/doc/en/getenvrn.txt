@@ -41,26 +41,26 @@
       program error occurs.  If the value of ONE SPECIFIC variable is
       desired, use Clipper's built-in GETE() function.
    $EXAMPLES$
-      Get the environment in text form and browse it:
+      // Get the environment in text form and browse it:
 
-         cEnvBlock   := ""
-         nNumStrings := FT_GETE( @cEnvBlock )
-         @ 0, 0 TO MaxRow() - 1, MaxCol()
-         @ MaxRow(), 0 SAY 'Browse strings, press ESC to exit...'
-         MemoWrit( cEnvBlock, 1, 1, MaxRow() - 2, MaxCol() - 1, .F. )
+      cEnvBlock   := ""
+      nNumStrings := FT_GETE( @cEnvBlock )
+      @ 0, 0 TO MaxRow() - 1, MaxCol()
+      @ MaxRow(), 0 SAY 'Browse strings, press ESC to exit...'
+      MemoWrit( cEnvBlock, 1, 1, MaxRow() - 2, MaxCol() - 1, .F. )
 
-      Get the environment in text form and write it to a file:
+      // Get the environment in text form and write it to a file:
 
-         cEnvBlock := ""
-         FT_GETE( @cEnvBlock )
-         MEMOWRIT( "environ.txt", cEnvBlock )
+      cEnvBlock := ""
+      FT_GETE( @cEnvBlock )
+      MemoWrit( "environ.txt", cEnvBlock )
 
-      Get the environment in Array form:
+      // Get the environment in Array form:
 
-         aEnvArray := Array( FT_GETE() )
-         FT_GETE( aEnvArray )
-         ? aEnvArray[ 1 ]       // "COMSPEC=C:\command.com"
-         ? aEnvArray[ 2 ]       // "PATH=C:\;C:\util;C:\harbour"
-           ... etc ...
+      aEnvArray := Array( FT_GETE() )
+      FT_GETE( aEnvArray )
+      ? aEnvArray[ 1 ]       // "COMSPEC=C:\command.com"
+      ? aEnvArray[ 2 ]       // "PATH=C:\;C:\util;C:\harbour"
+      ... etc ...
    $END$
  */

@@ -63,7 +63,7 @@
       ? sin( 1.0 ) // --> 0.8414...
    $TESTS$
       sin( 0.0 ) == 0.0
-      sin( PI() / 4 ) == sqrt( 1 / 2 )
+      sin( PI() / 4 ) == Sqrt( 1 / 2 )
       sin( PI() / 2 ) == 1.0
       sin( PI() ) == 0.0
    $STATUS$
@@ -102,8 +102,8 @@
       ? cos( 0.0 ) // --> 1.0
       ? cos( 1.0 ) // --> 0.5403...
    $TESTS$
-      cos( 0.0) == 1.0
-      cos( PI() / 4 ) == sqrt( 1 / 2 )
+      cos( 0.0 ) == 1.0
+      cos( PI() / 4 ) == Sqrt( 1 / 2 )
       cos( PI() / 2 ) == 0.0
       cos( PI() ) == -1.0
    $STATUS$
@@ -222,7 +222,7 @@
       ? asin( 0.5 ) // --> 0.5235...
    $TESTS$
       asin( 0.0 ) == 0.0
-      asin( sqrt( 1 / 2 ) ) == PI() / 4
+      asin( Sqrt( 1 / 2 ) ) == PI() / 4
       asin( 1.0 ) == PI() / 2
       asin( 0.0 ) == 0.0  // and not PI(), since the smallest angle is returned !
    $STATUS$
@@ -263,7 +263,7 @@
       ? acos( 0.5 ) // --> 1.04719...
    $TESTS$
       acos( 0.0 ) == PI() / 2
-      acos( sqrt( 1 / 2 ) ) == PI() / 4
+      acos( Sqrt( 1 / 2 ) ) == PI() / 4
       acos( 1.0 ) == 0.0
       acos( -1.0 ) == PI()
       acos( 0.0 ) == PI() / 2  // and not -PI()/2, although cos (-PI()/2) == 0.0 !
@@ -345,11 +345,11 @@
       see DTOR() if you need to convert it into degress).
    $EXAMPLES$
       ? atn2( 0.0, 1.0 ) // --> 0.0
-      ? atn2( sqrt( 1 / 2 ), sqrt( 1 / 2 ) ) // --> PI() / 4
+      ? atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) // --> PI() / 4
    $TESTS$
       atn2( 0.0, 1.0 ) == 0.0
-      atn2( sqrt( 1 / 2 ), sqrt( 1 / 2 ) ) == PI() / 4
-      atn2( -sqrt( 1 / 2 ), -sqrt( 1 / 2 ) ) == -3 / 4 * PI()  // atan() would return PI() / 4 !
+      atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) == PI() / 4
+      atn2( -Sqrt( 1 / 2 ), -Sqrt( 1 / 2 ) ) == -3 / 4 * PI()  // atan() would return PI() / 4 !
    $STATUS$
       Ready
    $COMPLIANCE$

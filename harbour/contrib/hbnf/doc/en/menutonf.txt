@@ -133,7 +133,7 @@
 
       // Prompt with pinpoint message control
       @  7, 1 PROMPT "Menu choice #4" MESSAGE "Drop Dead" ;
-                      MSGROW 22 MSGCOL 4 MSGCOLOR "GR+/N"
+         MSGROW 22 MSGCOL 4 MSGCOLOR "GR+/N"
 
       // Prompt with a trigger character ("#" character)
       @ 11, 1 PROMPT "Menu choice #6" TRIGGER 13
@@ -186,8 +186,7 @@
 
       // Simple command
 
-      MENU TO memvar
-
+         MENU TO MEMVAR
    $INCLUDE$
       ftmenuto.ch
    $SEEALSO$

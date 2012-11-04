@@ -76,16 +76,16 @@
    $EXAMPLES$
       cSetUp := "27,116,1"
       SET PRINT ON
-      ? FT_PChr( cSetUp )      ->  (Chr(27)+Chr(116)+Chr(1))
+      ? FT_PChr( cSetUp )        // -> (Chr(27)+Chr(116)+Chr(1))
                                            <select Epson char. graphics>
 
-      ? FT_PChr( '27,"x",0' )  ->  (Chr(27)+Chr(120)+Chr(0))
+      ? FT_PChr( '27,"x",0' )    // -> (Chr(27)+Chr(120)+Chr(0))
                                         <Epson draft mode>
 
-      ? FT_PChr( '&1B,"E"'  )  ->  (Chr(27)+Chr(69))   <HP reset>
+      ? FT_PChr( '&1B,"E"'  )    // -> (Chr(27)+Chr(69))   <HP reset>
 
-      ? FT_PChr( "/ELITE,/NLQ" ) ->(Chr(27)+Chr(77)+Chr(27)+Chr(120)+Chr(1))
-                               <Epson elite & near letter quality>
+      ? FT_PChr( "/ELITE,/NLQ" ) // -> (Chr(27)+Chr(77)+Chr(27)+Chr(120)+Chr(1))
+                                 //     <Epson elite & near letter quality>
    $SEEALSO$
 
    $END$

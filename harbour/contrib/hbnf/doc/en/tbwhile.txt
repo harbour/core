@@ -59,9 +59,9 @@
       This is a demonstration of TBrowse with a WHILE condition for an
       indexed database.
    $EXAMPLES$
-      * This example will only show those people with last name of "JONES"
-      * in the TBNames.dbf which contains at least the fields:
-      * Last, First, City AND is indexed on Last + First.
+      // This example will only show those people with last name of "JONES"
+      // in the TBNames.dbf which contains at least the fields:
+      // Last, First, City AND is indexed on Last + First.
       LOCAL nRecSel    := 0
       LOCAL aFields    := {}
       LOCAL bWhile     := {|| TBNames->Last = "JONES" }
@@ -73,8 +73,8 @@
 
       USE TBNames INDEX TBNames NEW // indexed on Last + First
 
-      * Pass Heading as character and Field as Block including Alias
-      * To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
+      // Pass Heading as character and Field as Block including Alias
+      // To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
       AAdd( aFields, { "Last Name" , {|| TBNames->Last }  } )
       AAdd( aFields, { "First Name", {|| TBNames->First } } )
       AAdd( aFields, { "City"      , {|| TBNames->City }  } )
@@ -84,7 +84,7 @@
          ? "Sorry, NO Records Were Selected"
       ELSE
          ? "You Selected: " + TBNames->Last + " " + ;
-           TBNames->First + " " + TBNames->City
+            TBNames->First + " " + TBNames->City
       ENDIF
    $END$
  */
