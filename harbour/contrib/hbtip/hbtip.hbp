@@ -34,5 +34,4 @@ thtml.prg
 url.prg
 
 -env:HB_DYNBIND_OPENSSL=yes
-
 hbssl.hbc
