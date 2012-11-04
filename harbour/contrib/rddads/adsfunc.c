@@ -62,15 +62,15 @@
 #include "rddsys.ch"
 #include "rddads.h"
 
-#define HARBOUR_MAX_RDD_FILTER_LENGTH     256
-#define MAX_STR_LEN                       255
-#define ADS_MAX_PARAMDEF_LEN              2048
+#define HARBOUR_MAX_RDD_FILTER_LENGTH  256
+#define MAX_STR_LEN                    255
+#define ADS_MAX_PARAMDEF_LEN           2048
 
-int       hb_ads_iFileType = ADS_CDX;
-int       hb_ads_iLockType = ADS_PROPRIETARY_LOCKING;
-int       hb_ads_iCheckRights = ADS_CHECKRIGHTS;
-int       hb_ads_iCharType = ADS_ANSI;
-HB_BOOL   hb_ads_bTestRecLocks = HB_FALSE;             /* Debug Implicit locks */
+int     hb_ads_iFileType     = ADS_CDX;
+int     hb_ads_iLockType     = ADS_PROPRIETARY_LOCKING;
+int     hb_ads_iCheckRights  = ADS_CHECKRIGHTS;
+int     hb_ads_iCharType     = ADS_ANSI;
+HB_BOOL hb_ads_bTestRecLocks = HB_FALSE;               /* Debug Implicit locks */
 
 #ifdef ADS_USE_OEM_TRANSLATION
 
@@ -134,13 +134,13 @@ void hb_adsOemAnsiFree( char * pszSrc )
 
 typedef struct
 {
-   ADSHANDLE   hConnect;
-#if !defined( ADS_LINUX )
-   PHB_ITEM    pCallBack;
+   ADSHANDLE hConnect;
+#if ! defined( ADS_LINUX )
+   PHB_ITEM pCallBack;
 #endif /* !ADS_LINUX */
 } HB_ADSDATA, * PHB_ADSDATA;
 
-#if !defined( ADS_LINUX ) || defined( HB_ADS_TSD_CONNECTION )
+#if ! defined( ADS_LINUX ) || defined( HB_ADS_TSD_CONNECTION )
 
 static void hb_adsThreadRelease( void * cargo )
 {
@@ -148,22 +148,22 @@ static void hb_adsThreadRelease( void * cargo )
 
    if( pAdsData->hConnect )
       AdsDisconnect( pAdsData->hConnect );
-#if !defined( ADS_LINUX )
+#if ! defined( ADS_LINUX )
    if( pAdsData->pCallBack )
       hb_itemRelease( pAdsData->pCallBack );
 #endif /* !ADS_LINUX */
 }
 
 static HB_TSD_NEW( s_adsData, sizeof( HB_ADSDATA ), NULL, hb_adsThreadRelease );
-#define HB_ADS_THREAD_DATA    ( ( PHB_ADSDATA ) hb_stackGetTSD( &s_adsData ) )
+#define HB_ADS_THREAD_DATA   ( ( PHB_ADSDATA ) hb_stackGetTSD( &s_adsData ) )
 
 #endif
 
 #ifdef HB_ADS_TSD_CONNECTION
-   #define HB_ADS_CONN_DATA   HB_ADS_THREAD_DATA
+   #define HB_ADS_CONN_DATA  HB_ADS_THREAD_DATA
 #else
-   static HB_ADSDATA s_ads_data;
-   #define HB_ADS_CONN_DATA   (&s_ads_data)
+static HB_ADSDATA s_ads_data;
+   #define HB_ADS_CONN_DATA  ( &s_ads_data )
 #endif
 
 ADSHANDLE hb_ads_getConnection( void )
@@ -173,13 +173,13 @@ ADSHANDLE hb_ads_getConnection( void )
 
 ADSHANDLE hb_ads_defConnection( ADSHANDLE hConnect, const char * szName )
 {
-   if( !hConnect )
+   if( ! hConnect )
    {
       PHB_ADSDATA pAdsData = HB_ADS_CONN_DATA;
 
       hConnect = pAdsData->hConnect;
 #ifdef HB_ADS_TSD_CONNECTION
-      if( !hConnect )
+      if( ! hConnect )
       {
          if( AdsConnect( ( UNSIGNED8 * ) szName, &hConnect ) == AE_SUCCESS )
             pAdsData->hConnect = hConnect;
@@ -204,7 +204,7 @@ static void hb_ads_clrConnection( ADSHANDLE hConnect )
       pAdsData->hConnect = 0;
 }
 
-#if !defined( ADS_LINUX )
+#if ! defined( ADS_LINUX )
 static PHB_ITEM hb_ads_getCallBack( void )
 {
    return HB_ADS_THREAD_DATA->pCallBack;
@@ -292,7 +292,7 @@ HB_FUNC( ADSISSERVERLOADED )
    UNSIGNED16 pbLoaded = 0;
 
    hb_retni( HB_ISCHAR( 1 ) && AdsIsServerLoaded( ( UNSIGNED8 * ) hb_parcx( 1 ),
-                                               &pbLoaded ) == AE_SUCCESS ? pbLoaded : 0 );
+                                                  &pbLoaded ) == AE_SUCCESS ? pbLoaded : 0 );
 }
 
 HB_FUNC( ADSGETCONNECTIONTYPE )
@@ -312,10 +312,10 @@ HB_FUNC( ADSGETCONNECTIONTYPE )
                connected to ADS_REMOTE_SERVER, ADS_AIS_SERVER, or ADS_LOCAL_SERVER. */
 
       if( AdsGetConnectionType( hConnToCheck, &pusConnectType ) != AE_SUCCESS )
-         pusConnectType = AE_INVALID_CONNECTION_HANDLE; /* It may have set an error value, or leave as 0. */
+         pusConnectType = AE_INVALID_CONNECTION_HANDLE;  /* It may have set an error value, or leave as 0. */
    }
    else
-      pusConnectType = AE_NO_CONNECTION; /* AE_INVALID_CONNECTION_HANDLE; */
+      pusConnectType = AE_NO_CONNECTION;  /* AE_INVALID_CONNECTION_HANDLE; */
 
    hb_retni( pusConnectType );
 }
@@ -331,7 +331,7 @@ HB_FUNC( ADSGETMEMODATATYPE )
 {
    UNSIGNED8 * pszFieldName = ( UNSIGNED8 * ) hb_parc( 1 );
 
-   if( !pszFieldName )
+   if( ! pszFieldName )
       pszFieldName = ADSFIELD( hb_parni( 1 ) );
 
    if( pszFieldName )
@@ -394,7 +394,7 @@ HB_FUNC( ADSGETSERVERTIME )
 #if HB_TR_LEVEL >= HB_TR_DEBUG
    else
    {
-      HB_TRACE(HB_TR_DEBUG, ("AdsGetServerTime() error"));
+      HB_TRACE( HB_TR_DEBUG, ( "AdsGetServerTime() error" ) );
    }
 #endif
 }
@@ -531,7 +531,7 @@ HB_FUNC( ADSSETDELETED )
    hb_retl( pbShowDeleted == 0 );
 
    if( HB_ISLOG( 1 ) )
-      AdsShowDeleted( ( UNSIGNED16 ) !hb_parl( 1 ) /* usShowDeleted */ );
+      AdsShowDeleted( ( UNSIGNED16 ) ! hb_parl( 1 ) /* usShowDeleted */ );
 }
 
 HB_FUNC( ADSSETEXACT )
@@ -548,7 +548,7 @@ HB_FUNC( ADSSETEXACT )
 
 HB_FUNC( ADSBLOB2FILE )
 {
-   const char * szFileName = hb_parcx( 1 );
+   const char * szFileName  = hb_parcx( 1 );
    const char * szFieldName = hb_parcx( 2 );
 
    if( *szFileName && *szFieldName )
@@ -568,7 +568,7 @@ HB_FUNC( ADSBLOB2FILE )
 
 HB_FUNC( ADSFILE2BLOB )
 {
-   const char * szFileName = hb_parcx( 1 );
+   const char * szFileName  = hb_parcx( 1 );
    const char * szFieldName = hb_parcx( 2 );
 
    if( *szFileName && *szFieldName )
@@ -718,7 +718,7 @@ HB_FUNC( ADSKEYCOUNT )
 
                   AdsAtEOF( pArea->hTable, &u16eof );
 
-                  while( AdsSkip( hIndex, 1 ) != AE_NO_CURRENT_RECORD && !u16eof )
+                  while( AdsSkip( hIndex, 1 ) != AE_NO_CURRENT_RECORD && ! u16eof )
                   {
                      AdsAtEOF( pArea->hTable, &u16eof );
                      pulKey++;
@@ -859,9 +859,9 @@ HB_FUNC( ADSGETAOF )
       UNSIGNED8 * pucFilter2 = NULL;
       UNSIGNED16  usLen = sizeof( pucFilter );
 
-      UNSIGNED32  ulRetVal = AdsGetAOF( pArea->hTable,
-                                        pucFilter,
-                                        &usLen );
+      UNSIGNED32 ulRetVal = AdsGetAOF( pArea->hTable,
+                                       pucFilter,
+                                       &usLen );
 
       if( usLen > HARBOUR_MAX_RDD_FILTER_LENGTH )
       {
@@ -1044,7 +1044,7 @@ HB_FUNC( ADSGETFILTER )
       }
       else
       {
-         HB_TRACE(HB_TR_DEBUG, ("adsGetFilter() error %lu", ( HB_ULONG ) ulRetVal));
+         HB_TRACE( HB_TR_DEBUG, ( "adsGetFilter() error %lu", ( HB_ULONG ) ulRetVal ) );
          hb_retc_null();
       }
 
@@ -1301,7 +1301,7 @@ HB_FUNC( ADSEXECUTESQLDIRECT )
       }
       else
       {
-         HB_TRACE(HB_TR_DEBUG, ("AdsExecuteSQLDirect() error"));
+         HB_TRACE( HB_TR_DEBUG, ( "AdsExecuteSQLDirect() error" ) );
          hb_retl( HB_FALSE );
       }
    }
@@ -1320,7 +1320,7 @@ HB_FUNC( ADSPREPARESQL )
          hb_retl( HB_TRUE );
       else
       {
-         HB_TRACE(HB_TR_DEBUG, ("AdsPrepareSQL() error"));
+         HB_TRACE( HB_TR_DEBUG, ( "AdsPrepareSQL() error" ) );
          hb_retl( HB_FALSE );
       }
    }
@@ -1355,7 +1355,7 @@ HB_FUNC( ADSEXECUTESQL )
       }
       else
       {
-         HB_TRACE(HB_TR_DEBUG, ("AdsExecuteSQL() error"));
+         HB_TRACE( HB_TR_DEBUG, ( "AdsExecuteSQL() error" ) );
          hb_retl( HB_FALSE );
       }
    }
@@ -1435,10 +1435,11 @@ HB_FUNC( ADSCONVERTTABLE )
       hb_errRT_DBCMD( EG_NOTABLE, 2001, NULL, HB_ERR_FUNCNAME );
 }
 
-#if !defined( ADS_LINUX )
+#if ! defined( ADS_LINUX )
 UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
 {
    PHB_ITEM pCallBack = hb_ads_getCallBack();
+
    if( pCallBack )
    {
       PHB_ITEM pPercentDone = hb_itemPutNI( NULL, usPercentDone );
@@ -1451,7 +1452,7 @@ UNSIGNED32 WINAPI hb_adsShowPercentageCB( UNSIGNED16 usPercentDone )
 #if HB_TR_LEVEL >= HB_TR_DEBUG
    else
    {
-      HB_TRACE(HB_TR_DEBUG, ("hb_adsShowPercentageCB(%d) called with no codeblock set.", usPercentDone ));
+      HB_TRACE( HB_TR_DEBUG, ( "hb_adsShowPercentageCB(%d) called with no codeblock set.", usPercentDone ) );
    }
 #endif
 
@@ -1463,7 +1464,7 @@ HB_FUNC( ADSREGCALLBACK )
 {
    HB_BOOL fResult = HB_FALSE;
 
-#if !defined( ADS_LINUX )
+#if ! defined( ADS_LINUX )
    /* NOTE: current implementation is not thread safe.
             ADS can register multiple callbacks, but one per thread/connection.
             To be thread safe, we need multiple connections.
@@ -1488,7 +1489,7 @@ HB_FUNC( ADSREGCALLBACK )
 
 HB_FUNC( ADSCLRCALLBACK )
 {
-#if !defined( ADS_LINUX )
+#if ! defined( ADS_LINUX )
    hb_ads_setCallBack( NULL );
    hb_retnl( AdsClearProgressCallback() );
 #else
@@ -1620,7 +1621,7 @@ HB_FUNC( ADSROLLBACK )
    set the number of records to read ahead, for the current work area
    Call:    ADSCACHERECORDS( nRecords )
    Returns: True if successful
-*/
+ */
 HB_FUNC( ADSCACHERECORDS )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
@@ -1633,10 +1634,10 @@ HB_FUNC( ADSCACHERECORDS )
 }
 
 /*
-  Reindex all tags of the currently selected table
-  Returns true if successful, false if fails.
-  Error code available by calling AdsGetLastError()
-*/
+   Reindex all tags of the currently selected table
+   Returns true if successful, false if fails.
+   Error code available by calling AdsGetLastError()
+ */
 HB_FUNC( ADSREINDEX )
 {
    ADSAREAP pArea = hb_adsGetWorkAreaPointer();
@@ -1713,6 +1714,7 @@ HB_FUNC( ADSISEMPTY )
 HB_FUNC( ADSGETNUMACTIVELINKS )         /* Only valid for a DataDict */
 {
    UNSIGNED16 pusNumLinks = 0;
+
 #if ADS_LIB_VERSION >= 620
    ADSHANDLE hConnect = HB_ADS_PARCONNECTION( 1 );
 
@@ -1963,13 +1965,11 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       case ADS_DD_TEMP_TABLE_PATH:
       case ADS_DD_ADMIN_PASSWORD:
       case ADS_DD_ENCRYPT_TABLE_PASSWORD:
-      {
          ulRetVal = AdsDDSetDatabaseProperty( hConnect,
                                               ulProperty,
                                               HB_IS_STRING( pParam ) ? ( VOID * ) hb_itemGetCPtr( pParam ) : NULL,
                                               ( UNSIGNED16 ) hb_itemGetCLen( pParam ) + 1 );
          break;
-      }
       /* String properties (NULL not accepted) */
 #if ADS_LIB_VERSION >= 710
       case ADS_DD_FTS_DELIMITERS:
@@ -1977,13 +1977,11 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
       case ADS_DD_FTS_DROP_CHARS:
       case ADS_DD_FTS_CONDITIONAL_CHARS:
       case ADS_DD_LOGINS_DISABLED_ERRSTR:
-      {
          ulRetVal = AdsDDSetDatabaseProperty( hConnect,
                                               ulProperty,
                                               ( VOID * ) hb_itemGetCPtr( pParam ),
                                               ( UNSIGNED16 ) hb_itemGetCLen( pParam ) + 1 );
          break;
-      }
 #endif
       /* Boolean properties */
 #if ADS_LIB_VERSION >= 600
@@ -2038,10 +2036,8 @@ HB_FUNC( ADSDDSETDATABASEPROPERTY )
          break;
       }
       default:
-      {
          ulRetVal = ( UNSIGNED32 ) ~AE_SUCCESS;
          break;
-      }
    }
 
    hb_retl( ulRetVal == AE_SUCCESS );
@@ -2083,7 +2079,7 @@ HB_FUNC( ADSDDGETUSERPROPERTY )
              If the optional last 3 parameters are supplied, then it queries the
              requested user property and returns it in the buffer. This is useful
              fo example to get the groups of which the user is a member
-*/
+ */
 HB_FUNC( ADSTESTLOGIN )
 {
 #if ADS_LIB_VERSION >= 600

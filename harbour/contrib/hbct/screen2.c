@@ -129,7 +129,7 @@ HB_FUNC( SAYSPREAD )
 
          nPos = nLen >> 1;
          nLen = nLen & 1;
-         if( !nLen )
+         if( ! nLen )
          {
             nLen = 2;
             --nPos;

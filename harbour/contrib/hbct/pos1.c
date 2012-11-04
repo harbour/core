@@ -58,19 +58,19 @@
 #include "ct.h"
 
 /* defines */
-#define DO_POS1_POSALPHA       0
-#define DO_POS1_POSLOWER       1
-#define DO_POS1_POSRANGE       2
-#define DO_POS1_POSUPPER       3
+#define DO_POS1_POSALPHA  0
+#define DO_POS1_POSLOWER  1
+#define DO_POS1_POSRANGE  2
+#define DO_POS1_POSUPPER  3
 
 /* helper function for the posxxx() functions */
 static void do_pos1( int iSwitch )
 {
-   if( HB_ISCHAR( 1 ) &&                     /* all functions need string as 1st param */
+   if( HB_ISCHAR( 1 ) &&                  /* all functions need string as 1st param */
        ( iSwitch != DO_POS1_POSRANGE ||   /* that's the only condition for all funcs _except_ POSRANGE */
          ( iSwitch == DO_POS1_POSRANGE && /* In addition, POSRANGE needs .. */
-           HB_ISCHAR( 2 ) &&                 /* .. string as 2nd .. */
-           HB_ISCHAR( 3 ) ) ) )              /* .. and 3rd param */
+           HB_ISCHAR( 2 ) &&              /* .. string as 2nd .. */
+           HB_ISCHAR( 3 ) ) ) )           /* .. and 3rd param */
    {
       const unsigned char * pcString, * puc;
       HB_SIZE sStrLen;
@@ -141,7 +141,7 @@ static void do_pos1( int iSwitch )
                break;
          }
 
-         if( ( iMode && !iDoRet ) || ( !iMode && iDoRet ) )
+         if( ( iMode && ! iDoRet ) || ( ! iMode && iDoRet ) )
          {
             hb_retns( puc - pcString + 1 );
             return;

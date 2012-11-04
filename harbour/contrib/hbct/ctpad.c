@@ -55,8 +55,8 @@
 #include "ct.h"
 
 /* defines */
-#define DO_PAD_PADLEFT     0
-#define DO_PAD_PADRIGHT    1
+#define DO_PAD_PADLEFT   0
+#define DO_PAD_PADRIGHT  1
 
 /* helper function for the pad functions */
 static void do_pad( int iSwitch )

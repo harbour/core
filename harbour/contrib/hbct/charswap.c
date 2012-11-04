@@ -57,9 +57,9 @@
 #include "ct.h"
 
 /* defines */
-#define DO_CHARSWAP_CHARSWAP          0
-#define DO_CHARSWAP_WORDSWAP          1
-#define DO_CHARSWAP_WORDSWAP_CHARSWAP 2
+#define DO_CHARSWAP_CHARSWAP           0
+#define DO_CHARSWAP_WORDSWAP           1
+#define DO_CHARSWAP_WORDSWAP_CHARSWAP  2
 
 /* helper function for the charswap and wordswap functions */
 static void do_charswap( int iSwitch )

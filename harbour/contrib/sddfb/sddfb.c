@@ -71,8 +71,8 @@ typedef struct
 
 typedef struct
 {
-   isc_tr_handle hTrans;
-   isc_stmt_handle hStmt;
+   isc_tr_handle    hTrans;
+   isc_stmt_handle  hStmt;
    XSQLDA ISC_FAR * pSqlda;
 } SDDDATA;
 
@@ -112,7 +112,9 @@ static void hb_firebirddd_init( void * cargo )
 HB_FUNC_TRANSLATE( SDDFB, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( firebirddd__InitSymbols )
-{ "SDDFB", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( SDDFB ) }, NULL },
+{
+   "SDDFB", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( SDDFB ) }, NULL
+},
 HB_INIT_SYMBOLS_END( firebirddd__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_firebirddd_init_ )
@@ -123,7 +125,7 @@ HB_CALL_ON_STARTUP_END( _hb_firebirddd_init_ )
    #pragma startup firebirddd__InitSymbols
    #pragma startup _hb_firebirddd_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY HB_DATASEG_FUNC( firebirddd__InitSymbols ) \
+   #define HB_DATASEG_BODY  HB_DATASEG_FUNC( firebirddd__InitSymbols ) \
    HB_DATASEG_FUNC( _hb_firebirddd_init_ )
    #include "hbiniseg.h"
 #endif
@@ -132,8 +134,8 @@ HB_CALL_ON_STARTUP_END( _hb_firebirddd_init_ )
 /* ===================================================================================== */
 static HB_USHORT hb_errRT_FireBirdDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   HB_USHORT   uiAction;
-   PHB_ITEM    pError;
+   HB_USHORT uiAction;
+   PHB_ITEM  pError;
 
    pError   = hb_errRT_New( ES_ERROR, "SDDFB", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
@@ -145,30 +147,30 @@ static HB_USHORT hb_errRT_FireBirdDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCo
 
 static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   ISC_STATUS_ARRAY  status;
-   isc_db_handle     hDb = ( isc_db_handle ) 0;
-   char              parambuf[ 520 ];
-   int               i;
-   unsigned int      ul;
+   ISC_STATUS_ARRAY status;
+   isc_db_handle    hDb = ( isc_db_handle ) 0;
+   char parambuf[ 520 ];
+   int  i;
+   unsigned int ul;
 
-   i                 = 0;
-   parambuf[ i++ ]   = isc_dpb_version1;
+   i = 0;
+   parambuf[ i++ ] = isc_dpb_version1;
 
-   parambuf[ i++ ]   = isc_dpb_user_name;
-   ul                = ( unsigned int ) hb_arrayGetCLen( pItem, 3 );
+   parambuf[ i++ ] = isc_dpb_user_name;
+   ul = ( unsigned int ) hb_arrayGetCLen( pItem, 3 );
    if( ul > 255 )
       ul = 255;
-   parambuf[ i++ ]   = ( char ) ul;
+   parambuf[ i++ ] = ( char ) ul;
    memcpy( parambuf + i, hb_arrayGetCPtr( pItem, 3 ), ul );
-   i                 += ul;
+   i += ul;
 
-   parambuf[ i++ ]   = isc_dpb_password;
-   ul                = ( unsigned int ) hb_arrayGetCLen( pItem, 4 );
+   parambuf[ i++ ] = isc_dpb_password;
+   ul = ( unsigned int ) hb_arrayGetCLen( pItem, 4 );
    if( ul > 255 )
       ul = 255;
-   parambuf[ i++ ]   = ( char ) ul;
+   parambuf[ i++ ] = ( char ) ul;
    memcpy( parambuf + i, hb_arrayGetCPtr( pItem, 4 ), ul );
-   i                 += ul;
+   i += ul;
 
    if( isc_attach_database( status, ( short ) hb_arrayGetCLen( pItem, 5 ), hb_arrayGetCPtr( pItem, 5 ),
                             &hDb, ( short ) i, parambuf ) )
@@ -176,7 +178,7 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       /* TODO: error code in status[1]; */
       return HB_FAILURE;
    }
-   pConnection->pSDDConn                        = hb_xgrab( sizeof( SDDCONN ) );
+   pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
    ( ( SDDCONN * ) pConnection->pSDDConn )->hDb = hDb;
 /*   HB_TRACE( HB_TR_ALWAYS, ("hDb=%d", hDb) ); */
    return HB_SUCCESS;
@@ -203,21 +205,21 @@ static HB_ERRCODE fbExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
 static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 {
-   isc_db_handle *   phDb     = &( ( SDDCONN * ) pArea->pConnection->pSDDConn )->hDb;
-   SDDDATA *         pSDDData;
-   ISC_STATUS_ARRAY  status;
-   isc_tr_handle     hTrans   = ( isc_tr_handle ) 0;
-   isc_stmt_handle   hStmt    = ( isc_stmt_handle ) 0;
-   XSQLDA ISC_FAR *  pSqlda;
-   XSQLVAR *         pVar;
-   PHB_ITEM          pItemEof, pItem;
-   DBFIELDINFO       pFieldInfo;
-   HB_BOOL           bError;
-   HB_USHORT         uiFields, uiCount;
-   int               iType;
+   isc_db_handle *  phDb = &( ( SDDCONN * ) pArea->pConnection->pSDDConn )->hDb;
+   SDDDATA *        pSDDData;
+   ISC_STATUS_ARRAY status;
+   isc_tr_handle    hTrans = ( isc_tr_handle ) 0;
+   isc_stmt_handle  hStmt  = ( isc_stmt_handle ) 0;
+   XSQLDA ISC_FAR * pSqlda;
+   XSQLVAR *        pVar;
+   PHB_ITEM         pItemEof, pItem;
+   DBFIELDINFO      pFieldInfo;
+   HB_BOOL          bError;
+   HB_USHORT        uiFields, uiCount;
+   int iType;
 
-   pArea->pSDDData   = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
-   pSDDData          = ( SDDDATA * ) pArea->pSDDData;
+   pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
+   pSDDData        = ( SDDDATA * ) pArea->pSDDData;
 
    memset( &status, 0, sizeof( status ) );
 
@@ -236,9 +238,9 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   pSqlda            = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( 1 ) );
-   pSqlda->sqln      = 1;
-   pSqlda->version   = 1;
+   pSqlda          = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( 1 ) );
+   pSqlda->sqln    = 1;
+   pSqlda->version = 1;
 
    if( isc_dsql_prepare( status, &hTrans, &hStmt, 0, pArea->szQuery, SQL_DIALECT_V5, pSqlda ) )
    {
@@ -250,11 +252,11 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
    }
    if( pSqlda->sqld > pSqlda->sqln )
    {
-      uiFields          = pSqlda->sqld;
+      uiFields = pSqlda->sqld;
       hb_xfree( pSqlda );
-      pSqlda            = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( uiFields ) );
-      pSqlda->sqln      = uiFields;
-      pSqlda->version   = 1;
+      pSqlda          = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( uiFields ) );
+      pSqlda->sqln    = uiFields;
+      pSqlda->version = 1;
 
       if( isc_dsql_describe( status, &hStmt, SQL_DIALECT_V5, pSqlda ) )
       {
@@ -266,16 +268,16 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
       }
    }
 
-   pSDDData->hTrans  = hTrans;
-   pSDDData->hStmt   = hStmt;
-   pSDDData->pSqlda  = pSqlda;
+   pSDDData->hTrans = hTrans;
+   pSDDData->hStmt  = hStmt;
+   pSDDData->pSqlda = pSqlda;
 
-   uiFields          = pSqlda->sqld;
+   uiFields = pSqlda->sqld;
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
-   pItemEof          = hb_itemArrayNew( uiFields );
+   pItemEof = hb_itemArrayNew( uiFields );
 
-   bError            = HB_FALSE;
+   bError = HB_FALSE;
    for( uiCount = 0, pVar = pSqlda->sqlvar; uiCount < uiFields; uiCount++, pVar++ )
    {
       /* FIXME: if pVar->sqlname is ended with 0 byte then this hb_strndup()
@@ -284,11 +286,11 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
        *        is enough.
        */
       char * szOurName = hb_strndup( pVar->sqlname, pVar->sqlname_length );
-      pFieldInfo.atomName  = szOurName;
+      pFieldInfo.atomName = szOurName;
 
-      pFieldInfo.uiDec     = 0;
+      pFieldInfo.uiDec = 0;
 
-      iType                = pVar->sqltype & ~1;
+      iType = pVar->sqltype & ~1;
       switch( iType )
       {
          case SQL_TEXT:
@@ -301,7 +303,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
             pFieldInfo.uiType = HB_FT_STRING;
             pFieldInfo.uiLen  = pVar->sqllen;
             /* pVar->sqltype = SQL_TEXT;  Coercing */
-            pVar->sqldata     = ( char * ) hb_xgrab( sizeof( char ) * pVar->sqllen + 2 );
+            pVar->sqldata = ( char * ) hb_xgrab( sizeof( char ) * pVar->sqllen + 2 );
             break;
 
          case SQL_SHORT:
@@ -348,11 +350,11 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
             {
                char * pStr;
 
-               pStr                       = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
+               pStr = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ]   = '\0';
+               pStr[ pFieldInfo.uiLen ] = '\0';
 
-               pItem                      = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
                hb_xfree( pStr );
                break;
             }
@@ -382,8 +384,8 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
                break;
 
             default:
-               pItem    = hb_itemNew( NULL );
-               bError   = HB_TRUE;
+               pItem  = hb_itemNew( NULL );
+               bError = HB_TRUE;
                break;
          }
 
@@ -414,15 +416,15 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   pArea->ulRecCount       = 0;
+   pArea->ulRecCount = 0;
 
-   pArea->pRow             = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
-   pArea->pRowFlags        = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
+   pArea->pRow      = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
-   pArea->ulRecMax         = SQLDD_ROWSET_INIT;
+   pArea->ulRecMax = SQLDD_ROWSET_INIT;
 
-   *pArea->pRow            = pItemEof;
-   pArea->pRowFlags[ 0 ]   = SQLDD_FLAG_CACHED;
+   *pArea->pRow = pItemEof;
+   pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
    return HB_SUCCESS;
 }
@@ -430,8 +432,8 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
 static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
 {
-   SDDDATA *         pSDDData = ( SDDDATA * ) pArea->pSDDData;
-   ISC_STATUS_ARRAY  status;
+   SDDDATA *        pSDDData = ( SDDDATA * ) pArea->pSDDData;
+   ISC_STATUS_ARRAY status;
 
    if( pSDDData )
    {
@@ -456,18 +458,18 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
 
 static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
-   SDDDATA *         pSDDData = ( SDDDATA * ) pArea->pSDDData;
-   ISC_STATUS_ARRAY  status;
-   XSQLVAR *         pVar;
-   PHB_ITEM          pItem, pArray;
-   HB_USHORT         ui;
-   ISC_STATUS        lErr;
-   short             iType;
+   SDDDATA *        pSDDData = ( SDDDATA * ) pArea->pSDDData;
+   ISC_STATUS_ARRAY status;
+   XSQLVAR *        pVar;
+   PHB_ITEM         pItem, pArray;
+   HB_USHORT        ui;
+   ISC_STATUS       lErr;
+   short iType;
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
-      isc_stmt_handle * phStmt   = &pSDDData->hStmt;
-      isc_tr_handle *   phTr     = &pSDDData->hTrans;
+      isc_stmt_handle * phStmt = &pSDDData->hStmt;
+      isc_tr_handle *   phTr   = &pSDDData->hTrans;
 
       lErr = isc_dsql_fetch( status, phStmt, SQL_DIALECT_V5, pSDDData->pSqlda );
 
@@ -477,7 +479,7 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
          for( ui = 1; ui <= pArea->area.uiFieldCount; ui++ )
          {
             pVar  = ( XSQLVAR * ) pSDDData->pSqlda;
-            pVar  += ( ui - 1 );
+            pVar += ( ui - 1 );
 
             if( ( pVar->sqltype & 1 ) && ( *pVar->sqlind < 0 ) )
                continue;  /* NIL value */
@@ -519,14 +521,14 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
          if( pArea->ulRecCount + 1 <= pArea->ulRecMax )
          {
-            pArea->pRow       = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
-            pArea->pRowFlags  = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
-            pArea->ulRecMax   += SQLDD_ROWSET_RESIZE;
+            pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
+            pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
+            pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
          }
 
          pArea->ulRecCount++;
-         pArea->pRow[ pArea->ulRecCount ]       = pArray;
-         pArea->pRowFlags[ pArea->ulRecCount ]  = SQLDD_FLAG_CACHED;
+         pArea->pRow[ pArea->ulRecCount ]      = pArray;
+         pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
       }
       else if( lErr == 100L )
       {
@@ -543,10 +545,10 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_COMMIT, "Transaction commit error", NULL, ( HB_ERRCODE ) isc_sqlcode( status ) );
             return HB_FAILURE;
          }
-         pSDDData->hTrans  = ( isc_tr_handle ) 0;
+         pSDDData->hTrans = ( isc_tr_handle ) 0;
 
          hb_xfree( pSDDData->pSqlda );  /* TODO: free is more complex */
-         pSDDData->pSqlda  = NULL;
+         pSDDData->pSqlda = NULL;
 
       }
       else
@@ -558,15 +560,15 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
-      pArea->pRecord       = pArea->pRow[ 0 ];
-      pArea->bRecordFlags  = pArea->pRowFlags[ 0 ];
-      pArea->fPositioned   = HB_FALSE;
+      pArea->pRecord      = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
+      pArea->fPositioned  = HB_FALSE;
    }
    else
    {
-      pArea->pRecord       = pArea->pRow[ ulRecNo ];
-      pArea->bRecordFlags  = pArea->pRowFlags[ ulRecNo ];
-      pArea->fPositioned   = HB_TRUE;
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
+      pArea->fPositioned  = HB_TRUE;
    }
    return HB_SUCCESS;
 }

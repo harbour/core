@@ -309,7 +309,7 @@ HB_FUNC( TABPACK )
             sTabIndex = 0;
             sIndex++;
          }
-         else if( cChar == HB_CHAR_SOFT1 && !iIgnore141 )
+         else if( cChar == HB_CHAR_SOFT1 && ! iIgnore141 )
          {
             /* soft carriage return */
 

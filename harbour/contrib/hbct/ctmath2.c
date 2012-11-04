@@ -194,9 +194,9 @@ HB_FUNC( LOG10 )
             /* math exception is up to the Harbour function, so do this as Clipper compatible as possible */
             switch( hb_exc.type )
             {
-               case HB_MATH_ERR_SING:       /* argument to log was 0.0 */
-               case HB_MATH_ERR_DOMAIN:     /* argument to log was < 0.0 */
-                  hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
+               case HB_MATH_ERR_SING:               /* argument to log was 0.0 */
+               case HB_MATH_ERR_DOMAIN:             /* argument to log was < 0.0 */
+                  hb_retndlen( -HUGE_VAL, -1, -1 ); /* return -infinity */
                   break;
 
                default:

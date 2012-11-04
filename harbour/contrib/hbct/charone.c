@@ -57,8 +57,8 @@
 #include "ct.h"
 
 /* defines */
-#define DO_CHARONE_CHARONE     0
-#define DO_CHARONE_WORDONE     1
+#define DO_CHARONE_CHARONE  0
+#define DO_CHARONE_WORDONE  1
 
 /* helper function for the *one functions */
 static void do_charone( int iSwitch )
@@ -107,8 +107,8 @@ static void do_charone( int iSwitch )
                      pcRet[ sRetStrLen++ ] = cCurrent;
                   }
                   else if( pcDeleteSet != NULL &&
-                           !ct_at_exact_forward( pcDeleteSet, sDeleteSetLen,
-                                                 pcSub, 1, NULL ) )
+                           ! ct_at_exact_forward( pcDeleteSet, sDeleteSetLen,
+                                                  pcSub, 1, NULL ) )
                   {
                      pcRet[ sRetStrLen++ ] = cCurrent;
                   }
@@ -139,7 +139,7 @@ static void do_charone( int iSwitch )
 
                for( pcSub = pcString + 2; pcSub < pcString + sStrLen - 1; pcSub += 2 )
                {
-                  if( !( pcSub[ 0 ] == cCurrent1 && pcSub[ 1 ] == cCurrent2 ) )
+                  if( ! ( pcSub[ 0 ] == cCurrent1 && pcSub[ 1 ] == cCurrent2 ) )
                   {
                      cCurrent1 = pcSub[ 0 ];
                      cCurrent2 = pcSub[ 1 ];

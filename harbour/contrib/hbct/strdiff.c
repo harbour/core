@@ -55,7 +55,7 @@
 #include "ct.h"
 #include <limits.h>
 
-#define MATRIXELEMENT( __row, __col ) *( piPenalty + ( ( __row ) * ( sStrLen2 + 1 ) ) + ( __col ) )
+#define MATRIXELEMENT( __row, __col )  *( piPenalty + ( ( __row ) * ( sStrLen2 + 1 ) ) + ( __col ) )
 
 static int min3( int a, int b, int c )
 {
@@ -71,34 +71,34 @@ HB_FUNC( STRDIFF )
    if( HB_ISCHAR( 1 ) || HB_ISCHAR( 2 ) )
    {
       /* get parameters */
-      const char *   pcStr1, * pcStr2;
-      HB_SIZE        sStrLen1, sStrLen2;
-      int            iReplace, iDelete, iInsert;
-      int            iAtLike = ct_getatlike();
-      char           cAtLike = ct_getatlikechar();
-      int *          piPenalty;
-      HB_SIZE        sRowCnt, sColCnt;
+      const char * pcStr1, * pcStr2;
+      HB_SIZE      sStrLen1, sStrLen2;
+      int          iReplace, iDelete, iInsert;
+      int          iAtLike = ct_getatlike();
+      char         cAtLike = ct_getatlikechar();
+      int *        piPenalty;
+      HB_SIZE      sRowCnt, sColCnt;
 
       if( HB_ISCHAR( 1 ) )
       {
-         pcStr1     = hb_parc( 1 );
-         sStrLen1   = hb_parclen( 1 );
+         pcStr1   = hb_parc( 1 );
+         sStrLen1 = hb_parclen( 1 );
       }
       else
       {
-         pcStr1     = "";
-         sStrLen1   = 0;
+         pcStr1   = "";
+         sStrLen1 = 0;
       }
 
       if( HB_ISCHAR( 2 ) )
       {
-         pcStr2     = hb_parc( 2 );
-         sStrLen2   = hb_parclen( 2 );
+         pcStr2   = hb_parc( 2 );
+         sStrLen2 = hb_parclen( 2 );
       }
       else
       {
-         pcStr2     = "";
-         sStrLen2   = 0;
+         pcStr2   = "";
+         sStrLen2 = 0;
       }
 
       /* check for memory consumption */
@@ -133,10 +133,10 @@ HB_FUNC( STRDIFF )
       else
          iInsert = 1;
 
-      piPenalty              = ( int * ) hb_xgrab( ( sStrLen1 + 1 ) *
-                                                   ( sStrLen2 + 1 ) * sizeof( int ) );
+      piPenalty = ( int * ) hb_xgrab( ( sStrLen1 + 1 ) *
+                                      ( sStrLen2 + 1 ) * sizeof( int ) );
 
-      MATRIXELEMENT( 0, 0 )  = 0;
+      MATRIXELEMENT( 0, 0 ) = 0;
       for( sColCnt = 0; sColCnt <= sStrLen2 - 1; sColCnt++ )
       {
          MATRIXELEMENT( 0, sColCnt + 1 ) = MATRIXELEMENT( 0, sColCnt ) + iInsert;

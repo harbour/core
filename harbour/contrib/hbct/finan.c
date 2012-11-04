@@ -314,14 +314,14 @@ HB_FUNC( RATE )
 
          if( dAux > dPayment )
          {
-            j = j - dScale;
+            j -= dScale;
             dScale = dScale * 0.10;
 
             if( ( dAux - dPayment ) < dEpsilon )
                break;
          }
          else
-            j = j + dScale;
+            j += dScale;
 
       }                         /* endwhile */
 

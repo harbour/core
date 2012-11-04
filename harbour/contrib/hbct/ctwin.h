@@ -53,18 +53,18 @@
 #ifndef HB_CTWIN_H_
 #define HB_CTWIN_H_
 
-#define HB_CTW_UNDEF          -1
-#define HB_CTW_HIDDEN         0
-#define HB_CTW_VISIBLE        1
+#define HB_CTW_UNDEF         -1
+#define HB_CTW_HIDDEN        0
+#define HB_CTW_VISIBLE       1
 
-#define HB_CTW_SHADOW_OFF     -1
-#define HB_CTW_SHADOW_UNDEF   -2
-#define HB_CTW_SHADOW_EXT     -3
-#define HB_CTW_SHADOW_EXT2    -4
+#define HB_CTW_SHADOW_OFF    -1
+#define HB_CTW_SHADOW_UNDEF  -2
+#define HB_CTW_SHADOW_EXT    -3
+#define HB_CTW_SHADOW_EXT2   -4
 
-#define HB_CTW_BOTTOM         0
-#define HB_CTW_DEFAULT        1
-#define HB_CTW_TOP            2
+#define HB_CTW_BOTTOM        0
+#define HB_CTW_DEFAULT       1
+#define HB_CTW_TOP           2
 
 HB_EXTERN_BEGIN
 

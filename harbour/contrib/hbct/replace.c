@@ -55,9 +55,9 @@
 #include "ct.h"
 
 /* defines */
-#define DO_REPLACE_REPLALL      0
-#define DO_REPLACE_REPLLEFT     1
-#define DO_REPLACE_REPLRIGHT    2
+#define DO_REPLACE_REPLALL    0
+#define DO_REPLACE_REPLLEFT   1
+#define DO_REPLACE_REPLRIGHT  2
 
 static const HB_ERRCODE sulErrorSubcodes[] = {
    CT_ERROR_REPLALL,

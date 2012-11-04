@@ -56,57 +56,57 @@
    #include <windows.h>
 #endif
 
-#if !defined( WIN32 ) && defined( HB_OS_WIN )
+#if ! defined( WIN32 ) && defined( HB_OS_WIN )
    #define WIN32
 #endif
-#if !defined( unix ) && defined( HB_OS_UNIX )
+#if ! defined( unix ) && defined( HB_OS_UNIX )
    #define unix
 #endif
-#if !defined( x64 ) && defined( HB_ARCH_64BIT )
+#if ! defined( x64 ) && defined( HB_ARCH_64BIT )
    #define x64
 #endif
 #if defined( __WATCOMC__ ) || defined( __LCC__ ) || ( defined( __MINGW32__ ) && ! defined( _declspec ) )
-   #define _declspec( dllexport ) __declspec( dllexport )
+   #define _declspec( dllexport )  __declspec( dllexport )
 #endif
 
 #include "ace.h"
 
 /* Autodetect ACE version. */
 #if   defined( ADS_GET_FORMAT_WEB )
-   #define _ADS_LIB_VERSION 1100 /* or upper */
+   #define _ADS_LIB_VERSION  1100 /* or upper */
 #elif defined( ADS_GET_UTF8 )
-   #define _ADS_LIB_VERSION 1010
+   #define _ADS_LIB_VERSION  1010
 #elif defined( ADS_DEFAULT_SQL_TIMEOUT )
-   #define _ADS_LIB_VERSION 1000
+   #define _ADS_LIB_VERSION  1000
 #elif defined( DANISH_ADS_CS_AS_1252 )
-   #define _ADS_LIB_VERSION 910
+   #define _ADS_LIB_VERSION  910
 #elif defined( ADS_NOTIFICATION_CONNECTION )
-   #define _ADS_LIB_VERSION 900
+   #define _ADS_LIB_VERSION  900
 #elif defined( ADS_UDP_IP_CONNECTION )
-   #define _ADS_LIB_VERSION 810
+   #define _ADS_LIB_VERSION  810
 #elif defined( ADS_REPLICATION_CONNECTION )
-   #define _ADS_LIB_VERSION 800
+   #define _ADS_LIB_VERSION  800
 #elif defined( ADS_NOT_AUTO_OPEN )
-   #define _ADS_LIB_VERSION 710
+   #define _ADS_LIB_VERSION  710
 #elif defined( ADS_FTS_INDEX_ORDER )
-   #define _ADS_LIB_VERSION 700
+   #define _ADS_LIB_VERSION  700
 #elif defined( ADS_COMPRESS_ALWAYS )
-   #define _ADS_LIB_VERSION 620
+   #define _ADS_LIB_VERSION  620
 #elif defined( ADS_READ_ALL_COLUMNS )
-   #define _ADS_LIB_VERSION 610
+   #define _ADS_LIB_VERSION  610
 #elif defined( ADS_USER_DEFINED )
-   #define _ADS_LIB_VERSION 600
+   #define _ADS_LIB_VERSION  600
 #else
-   #define _ADS_LIB_VERSION 500
+   #define _ADS_LIB_VERSION  500
 #endif
 
 /* Make sure to not allow a manual override requesting
    a higher version than the one of ACE. [vszakats] */
-#if !defined( ADS_LIB_VERSION )
-   #define ADS_LIB_VERSION _ADS_LIB_VERSION
+#if ! defined( ADS_LIB_VERSION )
+   #define ADS_LIB_VERSION   _ADS_LIB_VERSION
 #elif ADS_LIB_VERSION > _ADS_LIB_VERSION
    #undef ADS_LIB_VERSION
-   #define ADS_LIB_VERSION _ADS_LIB_VERSION
+   #define ADS_LIB_VERSION   _ADS_LIB_VERSION
 #endif
 
 HB_EXTERN_BEGIN
@@ -143,12 +143,12 @@ typedef struct _ADSAREA_
    HB_BYTE * pRecord;             /* Buffer of record data */
    HB_ULONG  maxFieldLen;         /* Max field length in table record */
 
-   HB_BOOL   fPositioned;         /* HB_TRUE if we are not at phantom record */
-   HB_BOOL   fShared;             /* Shared file */
-   HB_BOOL   fReadonly;           /* Read only file */
-   HB_BOOL   fFLocked;            /* HB_TRUE if file is locked */
+   HB_BOOL fPositioned;           /* HB_TRUE if we are not at phantom record */
+   HB_BOOL fShared;               /* Shared file */
+   HB_BOOL fReadonly;             /* Read only file */
+   HB_BOOL fFLocked;              /* HB_TRUE if file is locked */
 
-   int       iFileType;           /* adt/cdx/ntx/vfp */
+   int iFileType;                 /* adt/cdx/ntx/vfp */
 
    ADSHANDLE hTable;
    ADSHANDLE hOrdCurrent;
@@ -157,17 +157,18 @@ typedef struct _ADSAREA_
 
 typedef ADSAREA * ADSAREAP;
 
-#define SELF_RESETREL( p )    if( (p)->lpdbPendingRel ) \
-                              { \
-                                 if( (p)->lpdbPendingRel->isScoped && \
-                                    !(p)->lpdbPendingRel->isOptimized ) \
-                                    SELF_FORCEREL( &(p)->area ); \
-                                 else \
-                                    (p)->lpdbPendingRel = NULL; \
-                              }
+#define SELF_RESETREL( p )  \
+   if( ( p )->lpdbPendingRel ) \
+   { \
+      if( ( p )->lpdbPendingRel->isScoped && \
+          ! ( p )->lpdbPendingRel->isOptimized ) \
+         SELF_FORCEREL( &( p )->area ); \
+      else \
+         ( p )->lpdbPendingRel = NULL; \
+   }
 
 
-#define HB_RDD_ADS_VERSION_STRING "ADS RDD 1.4"
+#define HB_RDD_ADS_VERSION_STRING  "ADS RDD 1.4"
 
 #if defined( HB_OS_WIN )
 #  define ADS_USE_OEM_TRANSLATION
@@ -175,17 +176,17 @@ typedef ADSAREA * ADSAREAP;
 #  undef ADS_USE_OEM_TRANSLATION
 #endif
 
-#define HB_ADS_PARCONNECTION( n )      ( ( ADSHANDLE ) hb_parnintdef( n, hb_ads_getConnection() ) )
-#define HB_ADS_RETCONNECTION( h )      hb_retnint( h )
-#define HB_ADS_GETCONNECTION( p )      ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNInt( p ) : hb_ads_getConnection() )
-#define HB_ADS_PUTCONNECTION( p, h )   hb_itemPutNInt( ( p ), ( ADSHANDLE ) ( h ) )
-#define HB_ADS_DEFCONNECTION( h, s )   hb_ads_defConnection( ( h ), ( s ) )
+#define HB_ADS_PARCONNECTION( n )     ( ( ADSHANDLE ) hb_parnintdef( n, hb_ads_getConnection() ) )
+#define HB_ADS_RETCONNECTION( h )     hb_retnint( h )
+#define HB_ADS_GETCONNECTION( p )     ( ( hb_itemType( p ) & HB_IT_NUMERIC ) ? ( ADSHANDLE ) hb_itemGetNInt( p ) : hb_ads_getConnection() )
+#define HB_ADS_PUTCONNECTION( p, h )  hb_itemPutNInt( ( p ), ( ADSHANDLE ) ( h ) )
+#define HB_ADS_DEFCONNECTION( h, s )  hb_ads_defConnection( ( h ), ( s ) )
 
-extern int        hb_ads_iFileType; /* current global setting */
-extern int        hb_ads_iLockType;
-extern int        hb_ads_iCheckRights;
-extern int        hb_ads_iCharType;
-extern HB_BOOL    hb_ads_bTestRecLocks;
+extern int     hb_ads_iFileType;    /* current global setting */
+extern int     hb_ads_iLockType;
+extern int     hb_ads_iCheckRights;
+extern int     hb_ads_iCharType;
+extern HB_BOOL hb_ads_bTestRecLocks;
 
 extern ADSHANDLE  hb_ads_getConnection( void );
 extern ADSHANDLE  hb_ads_defConnection( ADSHANDLE hConnect, const char * szName );
@@ -213,8 +214,8 @@ extern ADSAREAP   hb_adsGetWorkAreaPointer( void );
                                          UNSIGNED32 * pulLen );
 
 #else
-#  define hb_adsOemToAnsi( s, l )     ( ( char * ) ( s ) )
-#  define hb_adsAnsiToOem( s, l )     ( ( char * ) ( s ) )
+#  define hb_adsOemToAnsi( s, l )  ( ( char * ) ( s ) )
+#  define hb_adsAnsiToOem( s, l )  ( ( char * ) ( s ) )
 #  define hb_adsOemAnsiFree( s )
 #endif
 

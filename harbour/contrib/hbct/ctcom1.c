@@ -387,6 +387,7 @@ HB_FUNC( COM_INIT )
 HB_FUNC( COM_OPEN )
 {
    int iPort = hb_parni( 1 );
+
    /* TODO: add support for <nBufferIn> */
    /* TODO: add support for <nBufferOut> */
    /* TODO: add support for <lTrapMode> */

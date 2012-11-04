@@ -131,7 +131,9 @@ static void hb_pgsqldd_init( void * cargo )
 HB_FUNC_TRANSLATE( SDDPG, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( sddpostgre__InitSymbols )
-{ "SDDPG", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( SDDPG ) }, NULL },
+{
+   "SDDPG", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( SDDPG ) }, NULL
+},
 HB_INIT_SYMBOLS_END( sddpostgre__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_sddpostgre_init_ )
@@ -142,7 +144,8 @@ HB_CALL_ON_STARTUP_END( _hb_sddpostgre_init_ )
    #pragma startup sddpostgre__InitSymbols
    #pragma startup _hb_sddpostgre_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY HB_DATASEG_FUNC( sddpostgre__InitSymbols ) \
+   #define HB_DATASEG_BODY  \
+   HB_DATASEG_FUNC( sddpostgre__InitSymbols ) \
    HB_DATASEG_FUNC( _hb_sddpostgre_init_ )
    #include "hbiniseg.h"
 #endif
@@ -151,8 +154,8 @@ HB_CALL_ON_STARTUP_END( _hb_sddpostgre_init_ )
 /* ===================================================================================== */
 static HB_USHORT hb_errRT_PostgreSQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   HB_USHORT   uiAction;
-   PHB_ITEM    pError;
+   HB_USHORT uiAction;
+   PHB_ITEM  pError;
 
    pError   = hb_errRT_New( ES_ERROR, "SDDPG", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
@@ -182,8 +185,8 @@ static HB_ERRCODE pgsqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       PQfinish( pConn );
       return HB_FAILURE;
    }
-   pConnection->pSDDConn                           = hb_xgrab( sizeof( SDDCONN ) );
-   ( ( SDDCONN * ) pConnection->pSDDConn )->pConn  = pConn;
+   pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
+   ( ( SDDCONN * ) pConnection->pSDDConn )->pConn = pConn;
    return HB_SUCCESS;
 }
 
@@ -241,10 +244,10 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
    HB_BOOL        bError;
    DBFIELDINFO    pFieldInfo;
 
-   pArea->pSDDData   = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
-   pSDDData          = ( SDDDATA * ) pArea->pSDDData;
+   pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
+   pSDDData        = ( SDDDATA * ) pArea->pSDDData;
 
-   pResult           = PQexec( pConn, pArea->szQuery );
+   pResult = PQexec( pConn, pArea->szQuery );
    if( ! pResult )
    {
       hb_errRT_PostgreSQLDD( EG_OPEN, ESQLDD_LOWMEMORY, "Query failed", NULL, 0 );  /* Low memory, etc */
@@ -261,17 +264,17 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
 
    pSDDData->pResult = pResult;
 
-   uiFields          = ( HB_USHORT ) PQnfields( pResult );
+   uiFields = ( HB_USHORT ) PQnfields( pResult );
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
-   pItemEof          = hb_itemArrayNew( uiFields );
-   pItem             = hb_itemNew( NULL );
+   pItemEof = hb_itemArrayNew( uiFields );
+   pItem    = hb_itemNew( NULL );
 
-   bError            = HB_FALSE;
+   bError = HB_FALSE;
    for( uiCount = 0; uiCount < uiFields; uiCount++ )
    {
-      pFieldInfo.atomName  = PQfname( pResult, ( int ) uiCount );
-      pFieldInfo.uiDec     = 0;
+      pFieldInfo.atomName = PQfname( pResult, ( int ) uiCount );
+      pFieldInfo.uiDec    = 0;
 
       switch( PQftype( pResult, ( int ) uiCount ) )
       {
@@ -380,7 +383,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          default:
             pFieldInfo.uiType = 0;
             pFieldInfo.uiLen  = 0;
-            bError            = HB_TRUE;
+            bError = HB_TRUE;
             break;
       }
       /* printf( "field:%s \ttype:%d \tsize:%d \tformat:%d \tmod:%d err=%d\n", pFieldInfo.atomName, PQftype( pResult, ( int ) uiCount ), PQfsize( pResult, uiCount ), PQfformat( pResult, uiCount ) , PQfmod( pResult, uiCount ), bError ); */
@@ -393,9 +396,9 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
             {
                char * pStr;
 
-               pStr                       = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
+               pStr = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ]   = '\0';
+               pStr[ pFieldInfo.uiLen ] = '\0';
 
                hb_itemPutCL( pItem, pStr, pFieldInfo.uiLen );
                hb_xfree( pStr );
@@ -458,15 +461,15 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   pArea->ulRecCount       = ( HB_ULONG ) PQntuples( pResult );
+   pArea->ulRecCount = ( HB_ULONG ) PQntuples( pResult );
 
-   pArea->pRow             = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags        = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
+   pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
 
-   *pArea->pRow            = pItemEof;
-   pArea->pRowFlags[ 0 ]   = SQLDD_FLAG_CACHED;
-   pArea->fFetched         = HB_TRUE;
+   *pArea->pRow = pItemEof;
+   pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
+   pArea->fFetched       = HB_TRUE;
 
    return HB_SUCCESS;
 }
@@ -490,22 +493,22 @@ static HB_ERRCODE pgsqlClose( SQLBASEAREAP pArea )
 
 static HB_ERRCODE pgsqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
-   SDDDATA *   pSDDData = ( SDDDATA * ) pArea->pSDDData;
-   LPFIELD     pField;
-   char *      pValue;
-   HB_BOOL     bError;
-   PHB_ITEM    pError;
-   HB_SIZE     ulLen;
+   SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
+   LPFIELD   pField;
+   char *    pValue;
+   HB_BOOL   bError;
+   PHB_ITEM  pError;
+   HB_SIZE   ulLen;
 
-   bError   = HB_FALSE;
+   bError = HB_FALSE;
    uiIndex--;
-   pField   = pArea->area.lpFields + uiIndex;
+   pField = pArea->area.lpFields + uiIndex;
 
    if( PQgetisnull( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex ) )
       return HB_SUCCESS;
 
-   pValue   = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
-   ulLen    = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
+   pValue = PQgetvalue( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
+   ulLen  = ( HB_SIZE ) PQgetlength( pSDDData->pResult, pArea->ulRecNo - 1, uiIndex );
 
 /*   printf( "fieldget recno:%d index:%d value:%s len:%d\n", pArea->ulRecNo, uiIndex, pValue, ulLen ); */
 

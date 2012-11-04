@@ -57,19 +57,19 @@
 #  include <unistd.h>
 #  if defined( HB_OS_DARWIN )
 #     include <crt_externs.h>
-#     define environ (*_NSGetEnviron())
-#  elif !defined( __WATCOMC__ )
+#     define environ  ( *_NSGetEnviron() )
+#  elif ! defined( __WATCOMC__ )
       extern char ** environ;
 #  endif
 #elif defined( HB_OS_DOS )
 #  if defined( __DJGPP__ )
       extern char ** environ;
-#  elif !defined( __WATCOMC__ )
+#  elif ! defined( __WATCOMC__ )
 #     define environ _environ
       extern char ** _environ;
 #  endif
 #elif defined( HB_OS_OS2 )
-#  if !defined( __WATCOMC__ )
+#  if ! defined( __WATCOMC__ )
       extern char ** environ;
 #  endif
 #elif defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
@@ -127,7 +127,9 @@ HB_FUNC( ENVPARAM )
          for( lpEnv = lpEnviron, lpDst = lpResult; *lpEnv; lpEnv++ )
          {
             do
+            {
                *lpDst++ = *lpEnv++;
+            }
             while( *lpEnv );
             *lpDst++ = '\r';
             *lpDst++ = '\n';

@@ -124,7 +124,7 @@ HB_FUNC( ADSMGGETINSTALLINFO )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_INSTALL_INFO ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetInstallInfo()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetInstallInfo()" ) );
 #endif
 }
 
@@ -234,7 +234,7 @@ HB_FUNC( ADSMGGETACTIVITYINFO )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_ACTIVITY_INFO ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetActivityInfo()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetActivityInfo()" ) );
 #endif
 }
 
@@ -265,7 +265,7 @@ HB_FUNC( ADSMGGETCOMMSTATS )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_COMM_STATS ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetCommStats()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetCommStats()" ) );
 #endif
 }
 
@@ -355,10 +355,10 @@ HB_FUNC( ADSMGGETCONFIGINFO )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usConfigValuesStructSize > sizeof( ADS_MGMT_CONFIG_PARAMS ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetConfigInfo()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetConfigInfo()" ) );
 
    if( usConfigMemoryStructSize > sizeof( ADS_MGMT_CONFIG_MEMORY ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetConfigInfo()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetConfigInfo()" ) );
 #endif
 }
 
@@ -417,7 +417,7 @@ HB_FUNC( ADSMGGETUSERNAMES )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_USER_INFO ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetUserNames()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetUserNames()" ) );
 #endif
 }
 
@@ -446,16 +446,16 @@ HB_FUNC( ADSMGGETLOCKOWNER )
                           &pusLockType ) == AE_SUCCESS )
    {
       hb_reta( 5 );
-      hb_storvc( ( char * ) pstUserInfo->aucUserName , -1, 1 ); /* Machine name under NT */
+      hb_storvc( ( char * ) pstUserInfo->aucUserName, -1, 1 );       /* Machine name under NT */
       hb_storvnl( ( UNSIGNED16 ) pstUserInfo->usConnNumber, -1, 2 ); /* NetWare conn # (NLM only) */
 #if ADS_LIB_VERSION >= 600
-      hb_storvc( ( char * ) pstUserInfo->aucAuthUserName, -1, 3 ); /* logon name with Data Dictionary */
-      hb_storvc( ( char * ) pstUserInfo->aucAddress, -1, 4 ); /* IP adddress */
+      hb_storvc( ( char * ) pstUserInfo->aucAuthUserName, -1, 3 );   /* logon name with Data Dictionary */
+      hb_storvc( ( char * ) pstUserInfo->aucAddress, -1, 4 );        /* IP adddress */
 #else
-      hb_storvc( NULL, -1, 3 ); /* logon name with Data Dictionary */
-      hb_storvc( NULL, -1, 4 ); /* IP adddress */
+      hb_storvc( NULL, -1, 3 );                                      /* logon name with Data Dictionary */
+      hb_storvc( NULL, -1, 4 );                                      /* IP adddress */
 #endif
-      hb_storvnl( pusLockType, -1, 5 );                /* type of lock */
+      hb_storvnl( pusLockType, -1, 5 );                              /* type of lock */
    }
    else
       hb_reta( 0 );
@@ -464,7 +464,7 @@ HB_FUNC( ADSMGGETLOCKOWNER )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_USER_INFO ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetLockOwner()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetLockOwner()" ) );
 #endif
 }
 
@@ -498,7 +498,7 @@ HB_FUNC( ADSMGGETOPENTABLES ) /* nMaxNumberOfFilesToReturn, cUserName, nConnecti
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_TABLE_INFO ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetOpenTables()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetOpenTables()" ) );
 #endif
 }
 
@@ -536,7 +536,7 @@ HB_FUNC( ADSMGGETOPENTABLES2 ) /* nMaxNumberOfFilesToReturn, cUserName, nConnect
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_TABLE_INFO ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetOpenTables()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetOpenTables()" ) );
 #endif
 }
 
@@ -569,7 +569,7 @@ HB_FUNC( ADSMGGETOPENINDEXES ) /* nMaxNumberOfFilesToReturn, cTableName, cUserNa
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_INDEX_INFO ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetOpenIndexes()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetOpenIndexes()" ) );
 #endif
 }
 
@@ -602,7 +602,7 @@ HB_FUNC( ADSMGGETLOCKS )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_RECORD_INFO ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetLocks()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetLocks()" ) );
 #endif
 }
 
@@ -645,6 +645,6 @@ HB_FUNC( ADSMGGETWORKERTHREADACTIVITY )
 
 #if HB_TR_LEVEL >= HB_TR_INFO
    if( usStructSize > sizeof( ADS_MGMT_THREAD_ACTIVITY ) )
-      HB_TRACE(HB_TR_INFO, ("%s returned extra data; available with newer client lib.", "AdsMgGetWorkerThreadActivity()"));
+      HB_TRACE( HB_TR_INFO, ( "%s returned extra data; available with newer client lib.", "AdsMgGetWorkerThreadActivity()" ) );
 #endif
 }

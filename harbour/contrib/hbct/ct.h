@@ -54,7 +54,7 @@
 
 
 #ifndef _CT_H
-#define _CT_H 1
+#define _CT_H  1
 
 #include "hbapi.h"
 #include "hbapiitm.h"
@@ -67,7 +67,7 @@
 
 #include "cterror.ch"
 
-#define CT_SUBSYSTEM "CT"
+#define CT_SUBSYSTEM            "CT"
 
 #define CT_ARGERR_WHOCARES      ES_WHOCARES
 #define CT_ARGERR_WARNING       ES_WARNING
@@ -103,10 +103,10 @@ extern HB_BOOL ct_numParam( int iParam, HB_MAXINT * plNum );
 
 /* CT subsystem error throwing functions */
 extern HB_USHORT ct_error( HB_USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
-                           const char *szDescription, const char *szOperation, HB_ERRCODE uiOsCode, HB_USHORT uiFlags, HB_ULONG uiArgCount, ... );
+                           const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, HB_USHORT uiFlags, HB_ULONG uiArgCount, ... );
 
 extern PHB_ITEM ct_error_subst( HB_USHORT uiSeverity, HB_ERRCODE ulGenCode, HB_ERRCODE ulSubCode,
-                                const char *szDescription, const char *szOperation, HB_ERRCODE uiOsCode, HB_USHORT uiFlags, HB_ULONG uiArgCount, ... );
+                                const char * szDescription, const char * szOperation, HB_ERRCODE uiOsCode, HB_USHORT uiFlags, HB_ULONG uiArgCount, ... );
 
 /* set argument error behaviour */
 extern void ct_setargerrormode( int iMode );

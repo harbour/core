@@ -59,8 +59,8 @@
 
 #include "ct.h"
 
-#define DO_CHAREVOD_CHAREVEN   0
-#define DO_CHAREVOD_CHARODD    1
+#define DO_CHAREVOD_CHAREVEN  0
+#define DO_CHAREVOD_CHARODD   1
 
 /* helper function */
 static void do_charevod( int iSwitch )

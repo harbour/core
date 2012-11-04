@@ -92,7 +92,7 @@ HB_FUNC( COM_CRC )
       HB_MAXUINT nPolynomial = ( HB_MAXUINT ) hb_parnint( 3 );
 
       if( nPolynomial == 0 )
-         nPolynomial = 0x11021; /* CRC_16_X25 */
+         nPolynomial = 0x11021;  /* CRC_16_X25 */
 
       /* NOTE: warning this function is not bug compatible with CT3.
        *       It fixes few problems in original CT3 implementation
@@ -111,6 +111,7 @@ HB_FUNC( COM_CRC )
 static char s_xmoblock_sum( const char * szData, HB_SIZE nLen )
 {
    unsigned char uc = 0;
+
    while( nLen-- )
       uc += ( unsigned char ) *szData++;
    return ( char ) uc;

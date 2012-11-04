@@ -80,7 +80,7 @@ HB_BOOL ct_numParam( int iParam, HB_MAXINT * plNum )
          *plNum = ( *plNum << 4 ) | c;
          iParam = 0;
       }
-      if( !iParam )
+      if( ! iParam )
          return HB_TRUE;
    }
    else if( HB_ISNUM( iParam ) )

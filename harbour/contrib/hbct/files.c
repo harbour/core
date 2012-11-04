@@ -86,8 +86,8 @@
 
 typedef struct
 {
-   PHB_FFIND   ffind;
-   HB_FATTR    ulAttr;
+   PHB_FFIND ffind;
+   HB_FATTR  ulAttr;
 } HB_FFDATA, * PHB_FFDATA;
 
 static void hb_fileFindRelease( void * cargo )
@@ -100,7 +100,7 @@ static void hb_fileFindRelease( void * cargo )
 
 static HB_TSD_NEW( s_FFData, sizeof( HB_FFDATA ), NULL, hb_fileFindRelease );
 
-#define HB_GET_FFDATA() ( ( PHB_FFDATA ) hb_stackGetTSD( &s_FFData ) )
+#define HB_GET_FFDATA()  ( ( PHB_FFDATA ) hb_stackGetTSD( &s_FFData ) )
 
 static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
 {
@@ -121,11 +121,11 @@ static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
          if( HB_ISNUM( 2 ) )
             ulAttr = ( HB_FATTR ) hb_parnl( 2 );
          pFFData->ulAttr = hb_parl( 3 ) ? ulAttr : HB_FA_ALL;
-         pFFData->ffind = hb_fsFindFirst( szFile, ulAttr );
+         pFFData->ffind  = hb_fsFindFirst( szFile, ulAttr );
          while( pFFData->ffind && pFFData->ulAttr &&
                 pFFData->ffind->attr != pFFData->ulAttr )
          {
-            if( !hb_fsFindNext( pFFData->ffind ) )
+            if( ! hb_fsFindNext( pFFData->ffind ) )
             {
                hb_fsFindClose( pFFData->ffind );
                pFFData->ffind = NULL;
@@ -137,7 +137,7 @@ static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
    {
       do
       {
-         if( !hb_fsFindNext( pFFData->ffind ) )
+         if( ! hb_fsFindNext( pFFData->ffind ) )
          {
             hb_fsFindClose( pFFData->ffind );
             pFFData->ffind = NULL;
@@ -219,7 +219,7 @@ HB_FUNC( SETFDATI )
             pTime = hb_param( 2, HB_IT_STRING );
             pDate = hb_param( 3, HB_IT_DATE );
          }
-         lJulian   = pDate ? hb_itemGetDL( pDate ) : -1;
+         lJulian = pDate ? hb_itemGetDL( pDate ) : -1;
          if( pTime )
          {
             int hour = 0, minute = 0, second = 0, msec = 0;
@@ -279,14 +279,14 @@ HB_FUNC( FILEDELETE )
 HB_FUNC( FILEMOVE )
 {
    hb_retnint( hb_fsRename( hb_parcx( 1 ),
-                            hb_parcx( 2 ) ) ? 0 : - ( HB_MAXINT ) hb_fsOsError() );
+                            hb_parcx( 2 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
 }
 
 HB_FUNC_TRANSLATE( RENAMEFILE, FILEMOVE )
 
 HB_FUNC( DELETEFILE )
 {
-   hb_retnint( hb_fsDelete( hb_parcx( 1 ) ) ? 0 : - ( HB_MAXINT ) hb_fsOsError() );
+   hb_retnint( hb_fsDelete( hb_parcx( 1 ) ) ? 0 : -( HB_MAXINT ) hb_fsOsError() );
 }
 
 HB_FUNC( FILESMAX )

@@ -63,7 +63,7 @@ typedef int my_socket;
 #include "mysql.h"
 
 #ifndef MYSQL_TYPE_NEWDECIMAL
-#define MYSQL_TYPE_NEWDECIMAL 246
+#define MYSQL_TYPE_NEWDECIMAL  246
 #endif
 
 
@@ -74,8 +74,8 @@ typedef struct
 
 typedef struct
 {
-   MYSQL_RES * pResult;
-   MYSQL_ROW pNatRecord;
+   MYSQL_RES *     pResult;
+   MYSQL_ROW       pNatRecord;
    unsigned long * pNatLength;
 } SDDDATA;
 
@@ -119,7 +119,9 @@ static void hb_mysqldd_init( void * cargo )
 HB_FUNC_TRANSLATE( SDDMY, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( mysqldd__InitSymbols )
-{ "SDDMY", { HB_FS_PUBLIC }, { HB_FUNCNAME( SDDMY ) }, NULL },
+{
+   "SDDMY", { HB_FS_PUBLIC }, { HB_FUNCNAME( SDDMY ) }, NULL
+},
 HB_INIT_SYMBOLS_END( mysqldd__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_mysqldd_init_ )
@@ -130,7 +132,7 @@ HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
    #pragma startup mysqldd__InitSymbols
    #pragma startup _hb_mysqldd_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY HB_DATASEG_FUNC( mysqldd__InitSymbols ) \
+   #define HB_DATASEG_BODY  HB_DATASEG_FUNC( mysqldd__InitSymbols ) \
    HB_DATASEG_FUNC( _hb_mysqldd_init_ )
    #include "hbiniseg.h"
 #endif
@@ -139,8 +141,8 @@ HB_CALL_ON_STARTUP_END( _hb_mysqldd_init_ )
 /*=====================================================================================*/
 static HB_USHORT hb_errRT_MySQLDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   HB_USHORT   uiAction;
-   PHB_ITEM    pError;
+   HB_USHORT uiAction;
+   PHB_ITEM  pError;
 
    pError   = hb_errRT_New( ES_ERROR, "SDDMY", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
@@ -169,7 +171,7 @@ static HB_ERRCODE mysqlConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       mysql_close( pMySql );
       return HB_FAILURE;
    }
-   pConnection->pSDDConn                           = hb_xgrab( sizeof( SDDCONN ) );
+   pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
    ( ( SDDCONN * ) pConnection->pSDDConn )->pMySql = pMySql;
    return HB_SUCCESS;
 }
@@ -185,10 +187,10 @@ static HB_ERRCODE mysqlDisconnect( SQLDDCONNECTION * pConnection )
 
 static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   MYSQL *     pMySql   = ( ( SDDCONN * ) pConnection->pSDDConn )->pMySql;
+   MYSQL *     pMySql = ( ( SDDCONN * ) pConnection->pSDDConn )->pMySql;
    MYSQL_RES * pResult;
    HB_ULONG    ulAffectedRows;
-   PHB_ITEM    pNewID   = NULL;
+   PHB_ITEM    pNewID = NULL;
 
    if( mysql_real_query( pMySql, hb_itemGetCPtr( pItem ), ( unsigned long ) hb_itemGetCLen( pItem ) ) )
    {
@@ -228,19 +230,19 @@ static HB_ERRCODE mysqlExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 
 static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 {
-   MYSQL *        pMySql = ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pMySql;
-   SDDDATA *      pSDDData;
-   PHB_ITEM       pItemEof, pItem;
-   HB_ULONG       ulIndex;
-   HB_USHORT      uiFields, uiCount;
-   HB_ERRCODE     errCode = 0;
-   HB_BOOL        bError;
-   DBFIELDINFO    pFieldInfo;
-   MYSQL_FIELD *  pMyField;
-   void **        pRow;
+   MYSQL *       pMySql = ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pMySql;
+   SDDDATA *     pSDDData;
+   PHB_ITEM      pItemEof, pItem;
+   HB_ULONG      ulIndex;
+   HB_USHORT     uiFields, uiCount;
+   HB_ERRCODE    errCode = 0;
+   HB_BOOL       bError;
+   DBFIELDINFO   pFieldInfo;
+   MYSQL_FIELD * pMyField;
+   void **       pRow;
 
-   pArea->pSDDData   = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
-   pSDDData          = ( SDDDATA * ) pArea->pSDDData;
+   pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
+   pSDDData        = ( SDDDATA * ) pArea->pSDDData;
 
    if( mysql_real_query( pMySql, pArea->szQuery, ( unsigned long ) strlen( pArea->szQuery ) ) )
    {
@@ -261,14 +263,14 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   bError   = HB_FALSE;
+   bError = HB_FALSE;
    for( uiCount = 0; uiCount < uiFields; uiCount++ )
    {
-      pMyField             = mysql_fetch_field_direct( pSDDData->pResult, uiCount );
+      pMyField = mysql_fetch_field_direct( pSDDData->pResult, uiCount );
 
-      pFieldInfo.atomName  = pMyField->name;
-      pFieldInfo.uiLen     = ( HB_USHORT ) pMyField->length;
-      pFieldInfo.uiDec     = 0;
+      pFieldInfo.atomName = pMyField->name;
+      pFieldInfo.uiLen    = ( HB_USHORT ) pMyField->length;
+      pFieldInfo.uiDec    = 0;
 
       switch( pMyField->type )
       {
@@ -327,8 +329,8 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
  */
 
          default:
-            bError            = HB_TRUE;
-            errCode           = ( HB_ERRCODE ) pMyField->type;
+            bError  = HB_TRUE;
+            errCode = ( HB_ERRCODE ) pMyField->type;
             pFieldInfo.uiType = 0;
             break;
       }
@@ -341,11 +343,11 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
             {
                char * pStr;
 
-               pStr                       = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
+               pStr = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ]   = '\0';
+               pStr[ pFieldInfo.uiLen ] = '\0';
 
-               pItem                      = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
                hb_xfree( pStr );
                break;
             }
@@ -376,8 +378,8 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
                break;
 
             default:
-               pItem    = hb_itemNew( NULL );
-               bError   = HB_TRUE;
+               pItem  = hb_itemNew( NULL );
+               bError = HB_TRUE;
                break;
          }
 
@@ -405,17 +407,17 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   pArea->ulRecCount       = ( HB_ULONG ) mysql_num_rows( pSDDData->pResult );
+   pArea->ulRecCount = ( HB_ULONG ) mysql_num_rows( pSDDData->pResult );
 
-   pArea->pRow             = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
-   pArea->pRowFlags        = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
+   pArea->pRow      = ( void ** ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, ( pArea->ulRecCount + 1 ) * sizeof( HB_BYTE ) );
-   pArea->ulRecMax         = pArea->ulRecCount + 1;
+   pArea->ulRecMax = pArea->ulRecCount + 1;
 
-   pRow                    = pArea->pRow;
+   pRow = pArea->pRow;
 
-   *pRow                   = pItemEof;
-   pArea->pRowFlags[ 0 ]   = SQLDD_FLAG_CACHED;
+   *pRow = pItemEof;
+   pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
    pRow++;
    for( ulIndex = 1; ulIndex <= pArea->ulRecCount; ulIndex++ )
@@ -451,15 +453,15 @@ static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
-      pArea->pRecord       = pArea->pRow[ 0 ];
-      pArea->bRecordFlags  = pArea->pRowFlags[ 0 ];
+      pArea->pRecord      = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
 
-      pArea->fPositioned   = HB_FALSE;
+      pArea->fPositioned = HB_FALSE;
    }
    else
    {
-      pArea->pRecord       = pArea->pRow[ ulRecNo ];
-      pArea->bRecordFlags  = pArea->pRowFlags[ ulRecNo ];
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
 
       if( ! ( pArea->bRecordFlags & SQLDD_FLAG_CACHED ) )
       {
@@ -476,20 +478,20 @@ static HB_ERRCODE mysqlGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
 static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
-   SDDDATA *   pSDDData = ( SDDDATA * ) pArea->pSDDData;
-   LPFIELD     pField;
-   char *      pValue;
-   char        szBuffer[ 64 ];
-   HB_BOOL     bError;
-   PHB_ITEM    pError;
-   HB_SIZE     ulLen;
+   SDDDATA * pSDDData = ( SDDDATA * ) pArea->pSDDData;
+   LPFIELD   pField;
+   char *    pValue;
+   char      szBuffer[ 64 ];
+   HB_BOOL   bError;
+   PHB_ITEM  pError;
+   HB_SIZE   ulLen;
 
-   bError   = HB_FALSE;
+   bError = HB_FALSE;
    uiIndex--;
-   pField   = pArea->area.lpFields + uiIndex;
+   pField = pArea->area.lpFields + uiIndex;
 
-   pValue   = pSDDData->pNatRecord[ uiIndex ];
-   ulLen    = pSDDData->pNatLength[ uiIndex ];
+   pValue = pSDDData->pNatRecord[ uiIndex ];
+   ulLen  = pSDDData->pNatLength[ uiIndex ];
 
    /* NULL => NIL (?) */
    if( ! pValue )
@@ -582,14 +584,14 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       {
          char szTimeStamp[ 15 ];
 
-         szTimeStamp[ 0 ]  = pValue[ 0 ];
-         szTimeStamp[ 1 ]  = pValue[ 1 ];
-         szTimeStamp[ 2 ]  = pValue[ 2 ];
-         szTimeStamp[ 3 ]  = pValue[ 3 ];
-         szTimeStamp[ 4 ]  = pValue[ 5 ];
-         szTimeStamp[ 5 ]  = pValue[ 6 ];
-         szTimeStamp[ 6 ]  = pValue[ 8 ];
-         szTimeStamp[ 7 ]  = pValue[ 9 ];
+         szTimeStamp[ 0 ] = pValue[ 0 ];
+         szTimeStamp[ 1 ] = pValue[ 1 ];
+         szTimeStamp[ 2 ] = pValue[ 2 ];
+         szTimeStamp[ 3 ] = pValue[ 3 ];
+         szTimeStamp[ 4 ] = pValue[ 5 ];
+         szTimeStamp[ 5 ] = pValue[ 6 ];
+         szTimeStamp[ 6 ] = pValue[ 8 ];
+         szTimeStamp[ 7 ] = pValue[ 9 ];
 
          szTimeStamp[ 8 ]  = pValue[ 11 ];
          szTimeStamp[ 9 ]  = pValue[ 12 ];
@@ -606,14 +608,14 @@ static HB_ERRCODE mysqlGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM
       {
          char szTimeStamp[ 15 ];
 
-         szTimeStamp[ 0 ]  = '0';
-         szTimeStamp[ 1 ]  = '0';
-         szTimeStamp[ 2 ]  = '0';
-         szTimeStamp[ 3 ]  = '0';
-         szTimeStamp[ 4 ]  = '0';
-         szTimeStamp[ 5 ]  = '0';
-         szTimeStamp[ 6 ]  = '0';
-         szTimeStamp[ 7 ]  = '0';
+         szTimeStamp[ 0 ] = '0';
+         szTimeStamp[ 1 ] = '0';
+         szTimeStamp[ 2 ] = '0';
+         szTimeStamp[ 3 ] = '0';
+         szTimeStamp[ 4 ] = '0';
+         szTimeStamp[ 5 ] = '0';
+         szTimeStamp[ 6 ] = '0';
+         szTimeStamp[ 7 ] = '0';
 
          szTimeStamp[ 8 ]  = pValue[ 0 ];
          szTimeStamp[ 9 ]  = pValue[ 1 ];

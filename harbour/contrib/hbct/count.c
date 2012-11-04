@@ -55,8 +55,8 @@
 #include "ct.h"
 
 /* defines */
-#define DO_COUNT_COUNTLEFT     0
-#define DO_COUNT_COUNTRIGHT    1
+#define DO_COUNT_COUNTLEFT   0
+#define DO_COUNT_COUNTRIGHT  1
 
 /* helper function for the countxxx functions */
 static void do_count( int iSwitch )

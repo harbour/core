@@ -65,13 +65,13 @@
 
 /* static functions for token environment management */
 
-#define TOKEN_ENVIRONMENT_STEP 100
+#define TOKEN_ENVIRONMENT_STEP  100
 
 typedef struct _TOKEN_POSITION
 {
    HB_SIZE sStartPos;            /* relative 0-based index of first char of token */
    HB_SIZE sEndPos;              /* relative 0-based index of first char BEHIND token,
-                                   so that length = sEndPos-sStartPos */
+                                    so that length = sEndPos-sStartPos */
 } TOKEN_POSITION;
 typedef TOKEN_POSITION * TOKEN_ENVIRONMENT;
 
@@ -175,7 +175,8 @@ static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
 /* decrement tokenizing pointer by one */
 
 /* sTokEnvDecPtr currently not used ! */
-/* static int sTokEnvDecPtr( TOKEN_ENVIRONMENT env )
+#if 0
+static int sTokEnvDecPtr( TOKEN_ENVIRONMENT env )
 {
    if( env[ 1 ].sStartPos <= 0 )
       return 0;
@@ -184,7 +185,8 @@ static int sTokEnvSetPtr( TOKEN_ENVIRONMENT env, HB_SIZE sCnt )
       env[ 1 ].sStartPos--;
       return 1;
    }
-} */
+}
+#endif
 
 /* get value of tokenizing pointer */
 static HB_SIZE sTokEnvGetPtr( TOKEN_ENVIRONMENT env )
@@ -230,7 +232,7 @@ static void sTokExit( void * cargo )
 
 static void sTokSet( TOKEN_ENVIRONMENT env )
 {
-   if( !s_fInit && env )
+   if( ! s_fInit && env )
    {
       hb_vmAtExit( sTokExit, NULL );
       s_fInit = HB_TRUE;
@@ -320,7 +322,7 @@ HB_FUNC( TOKENINIT )
          else
             sTokenPosition.sEndPos = pc - pcString;
 
-         if( !sTokEnvAddPos( &sTokenEnvironment, &sTokenPosition ) )
+         if( ! sTokEnvAddPos( &sTokenEnvironment, &sTokenPosition ) )
          {
             int iArgErrorMode = ct_getargerrormode();
 

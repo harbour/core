@@ -59,11 +59,11 @@
 
 #include <sqlite3.h>
 
-#define S_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrUTF8( arr, n, phstr, plen )
-#define S_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrUTF8( itm, str, len )
-#define S_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrUTF8( itm, phstr, plen )
-#define S_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrUTF8( itm, str )
-#define S_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenUTF8( itm, str, len )
+#define S_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrUTF8( arr, n, phstr, plen )
+#define S_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrUTF8( itm, str, len )
+#define S_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrUTF8( itm, phstr, plen )
+#define S_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrUTF8( itm, str )
+#define S_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenUTF8( itm, str, len )
 
 typedef struct
 {
@@ -72,7 +72,7 @@ typedef struct
 
 typedef struct
 {
-   sqlite3_stmt *  pStmt;
+   sqlite3_stmt * pStmt;
 } SDDDATA;
 
 static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
@@ -87,14 +87,14 @@ static SDDNODE sqlt3dd =
 {
    NULL,
    "SQLITE3",
-   ( SDDFUNC_CONNECT )    sqlite3Connect,
+   ( SDDFUNC_CONNECT ) sqlite3Connect,
    ( SDDFUNC_DISCONNECT ) sqlite3Disconnect,
-   ( SDDFUNC_EXECUTE )    sqlite3Execute,
-   ( SDDFUNC_OPEN )       sqlite3Open,
-   ( SDDFUNC_CLOSE )      sqlite3Close,
-   ( SDDFUNC_GOTO )       sqlite3GoTo,
-   ( SDDFUNC_GETVALUE )   NULL,
-   ( SDDFUNC_GETVARLEN )  NULL
+   ( SDDFUNC_EXECUTE ) sqlite3Execute,
+   ( SDDFUNC_OPEN ) sqlite3Open,
+   ( SDDFUNC_CLOSE ) sqlite3Close,
+   ( SDDFUNC_GOTO ) sqlite3GoTo,
+   ( SDDFUNC_GETVALUE ) NULL,
+   ( SDDFUNC_GETVARLEN ) NULL
 };
 
 
@@ -125,20 +125,23 @@ static void hb_sqlt3dd_exit( void * cargo )
 HB_FUNC_TRANSLATE( SDDSQLITE3, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( sqlt3dd__InitSymbols )
-{ "SDDSQLITE3", {HB_FS_PUBLIC}, {HB_FUNCNAME( SDDSQLITE3 )}, NULL },
+{
+   "SDDSQLITE3", { HB_FS_PUBLIC }, { HB_FUNCNAME( SDDSQLITE3 ) }, NULL
+},
 HB_INIT_SYMBOLS_END( sqlt3dd__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_sqlt3dd_init_ )
-   hb_vmAtInit( hb_sqlt3dd_init, NULL );
-   hb_vmAtExit( hb_sqlt3dd_exit, NULL );
+hb_vmAtInit( hb_sqlt3dd_init, NULL );
+hb_vmAtExit( hb_sqlt3dd_exit, NULL );
 HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup sqlt3dd__InitSymbols
    #pragma startup _hb_sqlt3dd_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( sqlt3dd__InitSymbols ) \
-                              HB_DATASEG_FUNC( _hb_sqlt3dd_init_ )
+   #define HB_DATASEG_BODY \
+   HB_DATASEG_FUNC( sqlt3dd__InitSymbols ) \
+   HB_DATASEG_FUNC( _hb_sqlt3dd_init_ )
    #include "hbiniseg.h"
 #endif
 
@@ -147,9 +150,9 @@ HB_CALL_ON_STARTUP_END( _hb_sqlt3dd_init_ )
 static HB_USHORT hb_errRT_SQLT3DD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
-   PHB_ITEM pError;
+   PHB_ITEM  pError;
 
-   pError = hb_errRT_New( ES_ERROR, "SDDSQLITE3", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
+   pError   = hb_errRT_New( ES_ERROR, "SDDSQLITE3", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
    hb_itemRelease( pError );
    return uiAction;
@@ -185,7 +188,7 @@ static char * sqlite3GetError( sqlite3 * pDb, HB_ERRCODE * pErrCode )
 static HB_ERRCODE sqlite3Connect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    sqlite3 * db;
-   void * hConn;
+   void *    hConn;
 
    if( sqlite3_open( S_HB_ARRAYGETSTR( pItem, 2, &hConn, NULL ), &db ) == SQLITE_OK )
    {
@@ -211,12 +214,12 @@ static HB_ERRCODE sqlite3Disconnect( SQLDDCONNECTION * pConnection )
 
 static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   sqlite3 * pDb = ( ( SDDCONN * ) pConnection->pSDDConn )->pDb;
+   sqlite3 *  pDb = ( ( SDDCONN * ) pConnection->pSDDConn )->pDb;
    HB_ERRCODE errCode;
-   int iRow, iCol;
-   void * hStatement;
-   char ** pResult = NULL;
-   char * pszErrMsg = NULL;
+   int        iRow, iCol;
+   void *     hStatement;
+   char **    pResult   = NULL;
+   char *     pszErrMsg = NULL;
 
    if( sqlite3_get_table( pDb, S_HB_ITEMGETSTR( pItem, &hStatement, NULL ), &pResult, &iRow, &iCol, &pszErrMsg ) != SQLITE_OK )
    {
@@ -238,22 +241,22 @@ static HB_ERRCODE sqlite3Execute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem 
 
 static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 {
-   sqlite3 * pDb = ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pDb;
-   sqlite3_stmt * st = NULL;
-   SDDDATA * pSDDData;
-   const char * pszQuery;
-   HB_SIZE nQueryLen;
-   void * hQuery;
-   HB_USHORT uiFields, uiIndex;
-   PHB_ITEM pItemEof, pItem;
-   HB_ERRCODE errCode;
-   char * szError;
-   HB_BOOL bError;
+   sqlite3 *      pDb = ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pDb;
+   sqlite3_stmt * st  = NULL;
+   SDDDATA *      pSDDData;
+   const char *   pszQuery;
+   HB_SIZE        nQueryLen;
+   void *         hQuery;
+   HB_USHORT      uiFields, uiIndex;
+   PHB_ITEM       pItemEof, pItem;
+   HB_ERRCODE     errCode;
+   char *         szError;
+   HB_BOOL        bError;
 
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
-   pSDDData = ( SDDDATA * ) pArea->pSDDData;
+   pSDDData        = ( SDDDATA * ) pArea->pSDDData;
 
-   pItem = hb_itemPutC( NULL, pArea->szQuery );
+   pItem    = hb_itemPutC( NULL, pArea->szQuery );
    pszQuery = S_HB_ITEMGETSTR( pItem, &hQuery, &nQueryLen );
 
    if( sqlite3_prepare_v2( pDb, pszQuery, ( int ) nQueryLen, &st, NULL ) != SQLITE_OK )
@@ -289,7 +292,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    /* HB_TRACE( HB_TR_ALWAYS, ("fieldcount=%d", iNameLen) ); */
 
    errCode = 0;
-   bError = HB_FALSE;
+   bError  = HB_FALSE;
    for( uiIndex = 0; uiIndex < uiFields; ++uiIndex )
    {
       DBFIELDINFO pFieldInfo;
@@ -306,7 +309,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       iDataType = sqlite3_column_type( st, uiIndex );
 
       iSize = sqlite3_column_bytes( st, uiIndex );
-      iDec = 0;
+      iDec  = 0;
 
       pFieldInfo.uiLen = ( HB_USHORT ) iSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;
@@ -330,7 +333,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 
          default:
             /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", iDataType) ); */
-            bError = HB_TRUE;
+            bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) iDataType;
             pFieldInfo.uiType = 0;
             pFieldInfo.uiType = HB_FT_STRING;
@@ -362,7 +365,7 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
                break;
 
             default:
-               pItem = hb_itemNew( NULL );
+               pItem  = hb_itemNew( NULL );
                bError = HB_TRUE;
          }
 
@@ -388,14 +391,14 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
    }
 
    pArea->ulRecCount = 0;
-   pArea->ulRecMax = SQLDD_ROWSET_INIT;
+   pArea->ulRecMax   = SQLDD_ROWSET_INIT;
 
    pArea->pRow = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
    memset( pArea->pRow, 0, SQLDD_ROWSET_INIT * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
 
-   pArea->pRow[ 0 ] = pItemEof;
+   pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
    pSDDData->pStmt = st;
@@ -425,7 +428,7 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
-      PHB_ITEM pArray;
+      PHB_ITEM  pArray;
       HB_USHORT ui;
 
       if( sqlite3_step( st ) != SQLITE_ROW )
@@ -438,8 +441,8 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
       for( ui = 0; ui < pArea->area.uiFieldCount; ++ui )
       {
-         PHB_ITEM pItem = NULL;
-         LPFIELD pField = pArea->area.lpFields + ui;
+         PHB_ITEM pItem  = NULL;
+         LPFIELD  pField = pArea->area.lpFields + ui;
 
          switch( pField->uiType )
          {
@@ -472,27 +475,27 @@ static HB_ERRCODE sqlite3GoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       }
       if( pArea->ulRecCount + 1 <= pArea->ulRecMax )
       {
-         pArea->pRow = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
+         pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
          pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
          pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
       }
 
       pArea->ulRecCount++;
-      pArea->pRow[ pArea->ulRecCount ] = pArray;
+      pArea->pRow[ pArea->ulRecCount ]      = pArray;
       pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
    }
 
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
-      pArea->pRecord = pArea->pRow[ 0 ];
+      pArea->pRecord      = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
-      pArea->fPositioned = HB_FALSE;
+      pArea->fPositioned  = HB_FALSE;
    }
    else
    {
-      pArea->pRecord = pArea->pRow[ ulRecNo ];
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
       pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
-      pArea->fPositioned = HB_TRUE;
+      pArea->fPositioned  = HB_TRUE;
    }
    return HB_SUCCESS;
 }

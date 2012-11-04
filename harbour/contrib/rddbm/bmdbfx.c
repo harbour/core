@@ -114,7 +114,7 @@ HB_FUNC( BM_DBSEEKWILD )
                fUnlock = HB_FALSE;
             OrderInfo.itmNewVal = NULL;
 
-            if( !fCont )
+            if( ! fCont )
             {
                const char * szKey;
 
@@ -134,7 +134,7 @@ HB_FUNC( BM_DBSEEKWILD )
                }
             }
 
-            if( !fFound && errCode == HB_SUCCESS )
+            if( ! fFound && errCode == HB_SUCCESS )
             {
                OrderInfo.itmNewVal = hb_param( 1, HB_IT_STRING );
                errCode = SELF_ORDINFO( pArea, fBack ? DBOI_SKIPWILDBACK :
@@ -171,7 +171,7 @@ HB_FUNC( BM_DBSEEKWILD )
 
          hb_itemRelease( OrderInfo.itmResult );
 
-         if( !fFound && !fSoft && errCode == HB_SUCCESS )
+         if( ! fFound && ! fSoft && errCode == HB_SUCCESS )
             SELF_GOTO( pArea, 0 );
 
          if( pArray )
@@ -194,26 +194,30 @@ HB_FUNC( BM_TURBO )
 
 typedef struct
 {
-   HB_U32   maxrec;
-   HB_U32   map[ 1 ];
+   HB_U32 maxrec;
+   HB_U32 map[ 1 ];
 } BM_FILTER, * PBM_FILTER;
 
-#define BM_GETFILTER( p )     ( ( PBM_FILTER ) ( p )->dbfi.lpvCargo )
-#define BM_ITEMSIZE( n )      ( ( ( n ) + 31 ) >> 5 )
-#define BM_BYTESIZE( n )      ( ( ( ( n ) + 31 ) >> 5 ) * sizeof( HB_U32 ) )
+#define BM_GETFILTER( p )  ( ( PBM_FILTER ) ( p )->dbfi.lpvCargo )
+#define BM_ITEMSIZE( n )   ( ( ( n ) + 31 ) >> 5 )
+#define BM_BYTESIZE( n )   ( ( ( ( n ) + 31 ) >> 5 ) * sizeof( HB_U32 ) )
 
-#define BM_SETREC( p, r )     do { if( (r) > 0 && (r) <= (p)->maxrec ) \
-                                    (p)->map[((r)-1)>>5] |= (1<<(((r)-1)&0x1f)); \
-                                 } while(0)
-#define BM_CLRREC( p, r )     do { if( (r) > 0 && (r) <= (p)->maxrec ) \
-                                    (p)->map[((r)-1)>>5] &= ~(1<<(((r)-1)&0x1f)); \
-                                 } while(0)
-#define BM_GETREC( p, r )     ( ( (r) > 0 && (r) <= (p)->maxrec ) && \
-                                ( (p)->map[((r)-1)>>5] & (1<<(((r)-1)&0x1f)) ) != 0 )
+#define BM_SETREC( p, r )  \
+   do { if( ( r ) > 0 && ( r ) <= ( p )->maxrec ) \
+           ( p )->map[ ( ( r ) - 1 ) >> 5 ] |= ( 1 << ( ( ( r ) - 1 ) & 0x1f ) ); \
+   } while( 0 )
 
-#define SUPERTABLE            ( hb_bmGetRdd( pArea->rddID ) )
+#define BM_CLRREC( p, r )  \
+   do { if( ( r ) > 0 && ( r ) <= ( p )->maxrec ) \
+           ( p )->map[ ( ( r ) - 1 ) >> 5 ] &= ~( 1 << ( ( ( r ) - 1 ) & 0x1f ) ); \
+   } while( 0 )
 
-#define BM_RDD_MAX      8
+#define BM_GETREC( p, r )  ( ( ( r ) > 0 && ( r ) <= ( p )->maxrec ) && \
+                             ( ( p )->map[ ( ( r ) - 1 ) >> 5 ] & ( 1 << ( ( ( r ) - 1 ) & 0x1f ) ) ) != 0 )
+
+#define SUPERTABLE  ( hb_bmGetRdd( pArea->rddID ) )
+
+#define BM_RDD_MAX  8
 
 static HB_USHORT s_uiRdds[ BM_RDD_MAX ];
 static int s_iRddCount = 0;
@@ -263,21 +267,21 @@ static HB_BOOL hb_bmCheckRecordFilter( AREAP pArea, HB_ULONG ulRecNo )
          if( fDeleted )
             SELF_DELETED( pArea, &lResult );
 
-         if( !lResult && pArea->dbfi.itmCobExpr )
+         if( ! lResult && pArea->dbfi.itmCobExpr )
          {
             PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
             lResult = HB_IS_LOGICAL( pResult ) && !hb_itemGetL( pResult );
          }
       }
    }
-   return !lResult;
+   return ! lResult;
 }
 
 static AREAP hb_bmGetCurrentWorkArea( void )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
 
-   if( !pArea )
+   if( ! pArea )
       hb_errRT_DBCMD( EG_NOTABLE, EDBCMD_NOTABLE, NULL, HB_ERR_FUNCNAME );
    else if( hb_bmGetRdd( pArea->rddID ) == NULL )
    {
@@ -292,7 +296,7 @@ static PHB_ITEM hb_bmGetArrayParam( int iParam )
 {
    PHB_ITEM pArray = hb_param( iParam, HB_IT_ARRAY );
 
-   if( !pArray )
+   if( ! pArray )
       hb_errRT_DBCMD( EG_ARG, EDBCMD_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
 
    return pArray;
@@ -456,19 +460,19 @@ static HB_BOOL hb_bmEvalFilter( AREAP pArea, HB_BOOL fUpdate )
    if( pBM )
    {
       SELF_RECNO( pArea, &ulRecNo );
-      if( !fUpdate && ! BM_GETREC( pBM, ulRecNo ) )
+      if( ! fUpdate && ! BM_GETREC( pBM, ulRecNo ) )
          return HB_FALSE;
    }
 
    if( pArea->dbfi.itmCobExpr )
    {
       PHB_ITEM pResult = hb_vmEvalBlock( pArea->dbfi.itmCobExpr );
-      fResult = !HB_IS_LOGICAL( pResult ) || hb_itemGetL( pResult );
+      fResult = ! HB_IS_LOGICAL( pResult ) || hb_itemGetL( pResult );
    }
    if( fResult && hb_setGetDeleted() )
    {
       SELF_DELETED( pArea, &fResult );
-      fResult = !fResult;
+      fResult = ! fResult;
    }
 
    if( pBM )
@@ -497,12 +501,12 @@ static HB_ERRCODE hb_bmSkipFilter( AREAP pArea, HB_LONG lUpDown )
    HB_BOOL fBottom;
    HB_ERRCODE errCode;
 
-   if( !hb_setGetDeleted() && pArea->dbfi.itmCobExpr == NULL && ! BM_GETFILTER( pArea ) )
+   if( ! hb_setGetDeleted() && pArea->dbfi.itmCobExpr == NULL && ! BM_GETFILTER( pArea ) )
       return HB_SUCCESS;
 
    lUpDown = ( lUpDown < 0  ? -1 : 1 );
    fBottom = pArea->fBottom;
-   while( !pArea->fBof && !pArea->fEof && !hb_bmEvalFilter( pArea, HB_FALSE ) )
+   while( ! pArea->fBof && ! pArea->fEof && ! hb_bmEvalFilter( pArea, HB_FALSE ) )
    {
       errCode = SELF_SKIPRAW( pArea, lUpDown );
       if( errCode != HB_SUCCESS )
@@ -543,7 +547,7 @@ static HB_ERRCODE hb_bmCountScope( AREAP pArea, void * pPtr, HB_LONG * plRec )
    {
       PBM_FILTER pBM = BM_GETFILTER( pArea );
 
-      if( pBM && pArea->dbfi.fFilter && !BM_GETREC( pBM, ( HB_ULONG ) *plRec ) )
+      if( pBM && pArea->dbfi.fFilter && ! BM_GETREC( pBM, ( HB_ULONG ) *plRec ) )
          *plRec = 0;
 
       return HB_SUCCESS;
@@ -741,13 +745,13 @@ static void hb_bmGetFuncTable( const char * szSuper )
    uiRddId = ( HB_USHORT ) hb_parni( 4 );
    puiSuperRddId = ( HB_USHORT * ) hb_parptr( 5 );
 
-   HB_TRACE(HB_TR_DEBUG, ("BM%s_GETFUNCTABLE(%p, %p, %p, %hu, %p)", szSuper, puiCount, pTable, pSuperTable, uiRddId, puiSuperRddId));
+   HB_TRACE( HB_TR_DEBUG, ( "BM%s_GETFUNCTABLE(%p, %p, %p, %hu, %p)", szSuper, puiCount, pTable, pSuperTable, uiRddId, puiSuperRddId ) );
 
    if( puiCount && pTable && pSuperTable && puiSuperRddId )
    {
       HB_ERRCODE errCode;
 
-      * puiCount = RDDFUNCSCOUNT;
+      *puiCount = RDDFUNCSCOUNT;
       errCode = hb_rddInheritEx( pTable, &bmTable, pSuperTable, szSuper, puiSuperRddId );
       if( errCode == HB_SUCCESS )
          hb_bmSetRdd( uiRddId );
@@ -764,7 +768,7 @@ static void hb_bmRddInit( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 
    fError = hb_rddRegister( "DBF", RDT_FULL ) > 1;
-   if( !fError )
+   if( ! fError )
    {
       hb_rddRegister( "DBFFPT", RDT_FULL );
       if( hb_rddRegister( "DBFCDX", RDT_FULL ) <= 1 )
@@ -772,12 +776,12 @@ static void hb_bmRddInit( void * cargo )
          if( hb_rddRegister( "BMDBFCDX", RDT_FULL ) > 1 )
             fError = HB_TRUE;
       }
-      if( !fError && hb_rddRegister( "DBFNTX", RDT_FULL ) <= 1 )
+      if( ! fError && hb_rddRegister( "DBFNTX", RDT_FULL ) <= 1 )
       {
          if( hb_rddRegister( "BMDBFNTX", RDT_FULL ) > 1 )
             fError = HB_TRUE;
       }
-      if( !fError && hb_rddRegister( "DBFNSX", RDT_FULL ) <= 1 )
+      if( ! fError && hb_rddRegister( "DBFNSX", RDT_FULL ) <= 1 )
       {
          if( hb_rddRegister( "BMDBFNSX", RDT_FULL ) > 1 )
             fError = HB_TRUE;

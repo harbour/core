@@ -90,7 +90,7 @@ HB_FUNC( NUMAT )
       else
       {
          pcString += sIgnore;
-         sStrLen -= sIgnore;
+         sStrLen  -= sIgnore;
       }
 
       nCounter = 0;

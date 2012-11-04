@@ -111,7 +111,7 @@ HB_FUNC( CHARUNPACK )
       HB_SIZE buf_size = 32768;
       HB_SIZE i;
 
-      if( !( in[ 0 ] == 158 && in[ 1 ] == 158 ) )
+      if( ! ( in[ 0 ] == 158 && in[ 1 ] == 158 ) )
       {
          hb_retclen( ( char * ) in, len );
          return;

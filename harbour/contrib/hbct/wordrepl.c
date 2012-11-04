@@ -105,7 +105,7 @@ HB_FUNC( WORDREPL )
             if( iMode )
             {
                /* always replace */
-               *( pcRet + ( pc - pcString ) ) = *( pcReplace + sReplIndex );
+               *( pcRet + ( pc - pcString ) )     = *( pcReplace + sReplIndex );
                *( pcRet + ( pc - pcString ) + 1 ) = *( pcReplace + sReplIndex + 1 );
 
                if( iMultiPass )
@@ -118,7 +118,7 @@ HB_FUNC( WORDREPL )
                /* replace only if pc is an even position */
                if( ( ( pc - pcString ) % 2 ) == 0 )
                {
-                  *( pcRet + ( pc - pcString ) ) = *( pcReplace + sReplIndex );
+                  *( pcRet + ( pc - pcString ) )     = *( pcReplace + sReplIndex );
                   *( pcRet + ( pc - pcString ) + 1 ) = *( pcReplace + sReplIndex + 1 );
                   /* parse pcString in steps of two characters */
                   pc += 2;

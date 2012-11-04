@@ -173,7 +173,7 @@ void ct_charop( int iMode )
 
          /* ADD */
          case CT_CHAROP_CHARADD:
-         {
+
             if( HB_ISCHAR( 2 ) )
             {
                const char * pucString2 = hb_parc( 2 );
@@ -195,11 +195,10 @@ void ct_charop( int iMode )
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
-         }
 
          /* SUB */
          case CT_CHAROP_CHARSUB:
-         {
+
             if( HB_ISCHAR( 2 ) )
             {
                const char * pucString2 = hb_parc( 2 );
@@ -221,11 +220,10 @@ void ct_charop( int iMode )
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
-         }
 
          /* AND */
          case CT_CHAROP_CHARAND:
-         {
+
             if( HB_ISCHAR( 2 ) )
             {
                const char * pucString2 = hb_parc( 2 );
@@ -246,11 +244,10 @@ void ct_charop( int iMode )
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
-         }
 
          /* OR */
          case CT_CHAROP_CHAROR:
-         {
+
             if( HB_ISCHAR( 2 ) )
             {
                const char * pucString2 = hb_parc( 2 );
@@ -271,11 +268,10 @@ void ct_charop( int iMode )
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
-         }
 
          /* XOR */
          case CT_CHAROP_CHARXOR:
-         {
+
             if( HB_ISCHAR( 2 ) )
             {
                const char * pucString2 = hb_parc( 2 );
@@ -296,7 +292,6 @@ void ct_charop( int iMode )
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
-         }
       }  /* endswitch( iMode ) */
 
       if( HB_ISBYREF( 1 ) )

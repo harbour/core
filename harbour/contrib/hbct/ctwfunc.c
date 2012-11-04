@@ -101,14 +101,14 @@ HB_FUNC( SETCLEARB )
    {
       int iChar = hb_parni( 1 );
       PHB_CODEPAGE cdp = hb_vmCDP();
-      if( !HB_CDP_ISCHARUNI( cdp ) )
+      if( ! HB_CDP_ISCHARUNI( cdp ) )
          iChar = hb_cdpGetU16( cdp, ( HB_UCHAR ) iChar );
       usNew = ( HB_USHORT ) iChar;
    }
    else if( HB_ISCHAR( 1 ) )
       usNew = hb_cdpTextGetU16( hb_vmCDP(), hb_parc( 1 ), hb_parclen( 1 ) );
    else
-      usNew = ' '; /* CT uses 255 => U+00A0 in CP437 */
+      usNew = ' ';  /* CT uses 255 => U+00A0 in CP437 */
 
    hb_gtSetClearChar( usNew );
 
@@ -120,7 +120,7 @@ HB_FUNC( GETCLEARB )
    int iChar = hb_gtGetClearChar();
    PHB_CODEPAGE cdp = hb_vmCDP();
 
-   if( !HB_CDP_ISCHARUNI( cdp ) )
+   if( ! HB_CDP_ISCHARUNI( cdp ) )
    {
       HB_UCHAR uc = hb_cdpGetUC( cdp, ( HB_WCHAR ) iChar, 0 );
       if( uc )
@@ -203,25 +203,26 @@ HB_FUNC( WNUM )
 HB_FUNC( WBOX )
 {
    static const HB_WCHAR s_pWBoxFrames[ 16 ][ 9 ] = {
-            HB_B_DOUBLE_W,          /* 0  WB_DOUBLE_CLEAR */
-            HB_B_SINGLE_W,          /* 1  WB_SINGLE_CLEAR */
-            HB_B_DOUBLE_SINGLE_W,   /* 2  WB_DOUBLE_SINGLE_CLEAR */
-            HB_B_SINGLE_DOUBLE_W,   /* 3  WB_SINGLE_DOUBLE_CLEAR */
+      HB_B_DOUBLE_W,          /* 0  WB_DOUBLE_CLEAR */
+      HB_B_SINGLE_W,          /* 1  WB_SINGLE_CLEAR */
+      HB_B_DOUBLE_SINGLE_W,   /* 2  WB_DOUBLE_SINGLE_CLEAR */
+      HB_B_SINGLE_DOUBLE_W,   /* 3  WB_SINGLE_DOUBLE_CLEAR */
 
-            HB_B_DOUBLE_W,          /* 4  WB_DOUBLE */
-            HB_B_SINGLE_W,          /* 5  WB_SINGLE */
-            HB_B_DOUBLE_SINGLE_W,   /* 6  WB_DOUBLE_SINGLE */
-            HB_B_SINGLE_DOUBLE_W,   /* 7  WB_SINGLE_DOUBLE */
+      HB_B_DOUBLE_W,          /* 4  WB_DOUBLE */
+      HB_B_SINGLE_W,          /* 5  WB_SINGLE */
+      HB_B_DOUBLE_SINGLE_W,   /* 6  WB_DOUBLE_SINGLE */
+      HB_B_SINGLE_DOUBLE_W,   /* 7  WB_SINGLE_DOUBLE */
 
-            HB_B_HALF_FULL_W,       /* 8  WB_HALF_FULL_CLEAR */
-            HB_B_HALF_W,            /* 9  WB_HALF_CLEAR */
-            HB_B_FULL_HALF_W,       /* 10 WB_FULL_HALF_CLEAR */
-            HB_B_FULL_W,            /* 11 WB_FULL_CLEAR */
+      HB_B_HALF_FULL_W,       /* 8  WB_HALF_FULL_CLEAR */
+      HB_B_HALF_W,            /* 9  WB_HALF_CLEAR */
+      HB_B_FULL_HALF_W,       /* 10 WB_FULL_HALF_CLEAR */
+      HB_B_FULL_W,            /* 11 WB_FULL_CLEAR */
 
-            HB_B_HALF_FULL_W,       /* 12 WB_HALF_FULL */
-            HB_B_HALF_W,            /* 13 WB_HALF */
-            HB_B_FULL_HALF_W,       /* 14 WB_FULL_HALF */
-            HB_B_FULL_W };          /* 15 WB_FULL */
+      HB_B_HALF_FULL_W,       /* 12 WB_HALF_FULL */
+      HB_B_HALF_W,            /* 13 WB_HALF */
+      HB_B_FULL_HALF_W,       /* 14 WB_FULL_HALF */
+      HB_B_FULL_W
+   };                         /* 15 WB_FULL */
 
    HB_WCHAR szBoxBuf[ 10 ];
    PHB_ITEM pBoxFrame = hb_param( 1, HB_IT_STRING );
@@ -392,7 +393,7 @@ HB_FUNC( HBCT_MAXCOL ) /* Return the maximum screen/window column number (zero o
    change current window handle to <nHandle>
    if <nHandle> is not used by other window
    or is current window.
-*/
+ */
 HB_FUNC( WALIAS )
 {
    int iWindow = hb_parnidef( 1, -1 );
@@ -416,7 +417,7 @@ HB_FUNC( WALIAS )
 
    Warning: this is compatibility only function
             which works correctly only for 255 windows.
-*/
+ */
 
 HB_FUNC( WLIST )
 {

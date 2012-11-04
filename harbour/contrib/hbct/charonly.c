@@ -59,10 +59,10 @@
 #include "ct.h"
 
 /* defines */
-#define DO_CHARONLY_CHARONLY    0
-#define DO_CHARONLY_WORDONLY    1
-#define DO_CHARONLY_CHARREM     2
-#define DO_CHARONLY_WORDREM     3
+#define DO_CHARONLY_CHARONLY  0
+#define DO_CHARONLY_WORDONLY  1
+#define DO_CHARONLY_CHARREM   2
+#define DO_CHARONLY_WORDREM   3
 
 /* helper function for the *one functions */
 static void do_charonly( int iSwitch )

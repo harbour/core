@@ -63,35 +63,35 @@
 #include <ocilib.h>
 
 #if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE )
-   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define M_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define M_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define M_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
-   #define M_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define M_HB_CHAR HB_WCHAR
+   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define M_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define M_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define M_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
+   #define M_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define M_HB_CHAR  HB_WCHAR
 #else
-   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
-   #define M_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
-   #define M_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define M_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define M_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
-   #define M_HB_CHAR char
+   #define M_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
+   #define M_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
+   #define M_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
+   #define M_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
+   #define M_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
+   #define M_HB_CHAR  char
 #endif
 
 #if defined( OCI_CHARSET_UNICODE ) || defined( OCI_CHARSET_WIDE ) || defined( OCI_CHARSET_MIXED )
-   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define D_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define D_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define D_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
-   #define D_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define D_HB_CHAR HB_WCHAR
+   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define D_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define D_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define D_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
+   #define D_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define D_HB_CHAR  HB_WCHAR
 #else
-   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
-   #define D_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
-   #define D_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define D_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define D_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
-   #define D_HB_CHAR char
+   #define D_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
+   #define D_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
+   #define D_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
+   #define D_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
+   #define D_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
+   #define D_HB_CHAR  char
 #endif
 
 
@@ -118,14 +118,14 @@ static SDDNODE ocidd =
 {
    NULL,
    "OCILIB",
-   ( SDDFUNC_CONNECT )    ocilibConnect,
+   ( SDDFUNC_CONNECT ) ocilibConnect,
    ( SDDFUNC_DISCONNECT ) ocilibDisconnect,
-   ( SDDFUNC_EXECUTE )    ocilibExecute,
-   ( SDDFUNC_OPEN )       ocilibOpen,
-   ( SDDFUNC_CLOSE )      ocilibClose,
-   ( SDDFUNC_GOTO )       ocilibGoTo,
-   ( SDDFUNC_GETVALUE )   NULL,
-   ( SDDFUNC_GETVARLEN )  NULL
+   ( SDDFUNC_EXECUTE ) ocilibExecute,
+   ( SDDFUNC_OPEN ) ocilibOpen,
+   ( SDDFUNC_CLOSE ) ocilibClose,
+   ( SDDFUNC_GOTO ) ocilibGoTo,
+   ( SDDFUNC_GETVALUE ) NULL,
+   ( SDDFUNC_GETVARLEN ) NULL
 };
 
 
@@ -152,20 +152,23 @@ static void hb_ocidd_exit( void * cargo )
 HB_FUNC_TRANSLATE( SDDOCI, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( ocidd__InitSymbols )
-{ "SDDOCI", {HB_FS_PUBLIC}, {HB_FUNCNAME( SDDOCI )}, NULL },
+{
+   "SDDOCI", { HB_FS_PUBLIC }, { HB_FUNCNAME( SDDOCI ) }, NULL
+},
 HB_INIT_SYMBOLS_END( ocidd__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_ocidd_init_ )
-   hb_vmAtInit( hb_ocidd_init, NULL );
-   hb_vmAtExit( hb_ocidd_exit, NULL );
+hb_vmAtInit( hb_ocidd_init, NULL );
+hb_vmAtExit( hb_ocidd_exit, NULL );
 HB_CALL_ON_STARTUP_END( _hb_ocidd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup ocidd__InitSymbols
    #pragma startup _hb_ocidd_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( ocidd__InitSymbols ) \
-                              HB_DATASEG_FUNC( _hb_ocidd_init_ )
+   #define HB_DATASEG_BODY  \
+   HB_DATASEG_FUNC( ocidd__InitSymbols ) \
+   HB_DATASEG_FUNC( _hb_ocidd_init_ )
    #include "hbiniseg.h"
 #endif
 
@@ -174,9 +177,9 @@ HB_CALL_ON_STARTUP_END( _hb_ocidd_init_ )
 static HB_USHORT hb_errRT_OCIDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
    HB_USHORT uiAction;
-   PHB_ITEM pError;
+   PHB_ITEM  pError;
 
-   pError = hb_errRT_New( ES_ERROR, "SDDOCI", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
+   pError   = hb_errRT_New( ES_ERROR, "SDDOCI", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
    hb_itemRelease( pError );
    return uiAction;
@@ -188,7 +191,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    OCI_Error * err = OCI_GetLastError();
 
    char * szRet;
-   int iNativeErr;
+   int    iNativeErr;
 
    if( err )
    {
@@ -200,7 +203,7 @@ static char * ocilibGetError( HB_ERRCODE * pErrCode )
    }
    else
    {
-      szRet = hb_strdup( "Unable to get error message" );
+      szRet      = hb_strdup( "Unable to get error message" );
       iNativeErr = 9999;
    }
 
@@ -252,9 +255,9 @@ static HB_ERRCODE ocilibDisconnect( SQLDDCONNECTION * pConnection )
 static HB_ERRCODE ocilibExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
    OCI_Statement * st = OCI_StatementCreate( ( ( SDDCONN * ) pConnection->pSDDConn )->pConn );
-   void * hStatement;
-   char * szError;
-   HB_ERRCODE errCode;
+   void *          hStatement;
+   char *          szError;
+   HB_ERRCODE      errCode;
 
    if( ! st )
    {
@@ -288,16 +291,16 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 {
    OCI_Statement * st = OCI_StatementCreate( ( ( SDDCONN * ) pArea->pConnection->pSDDConn )->pConn );
    OCI_Resultset * rs;
-   SDDDATA * pSDDData;
-   void * hQuery;
-   HB_USHORT uiFields, uiIndex;
-   PHB_ITEM pItemEof, pItem;
-   HB_ERRCODE errCode;
-   char * szError;
-   HB_BOOL bError;
+   SDDDATA *       pSDDData;
+   void *          hQuery;
+   HB_USHORT       uiFields, uiIndex;
+   PHB_ITEM        pItemEof, pItem;
+   HB_ERRCODE      errCode;
+   char *          szError;
+   HB_BOOL         bError;
 
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
-   pSDDData = ( SDDDATA * ) pArea->pSDDData;
+   pSDDData        = ( SDDDATA * ) pArea->pSDDData;
 
    if( ! st )
    {
@@ -331,12 +334,12 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    SELF_SETFIELDEXTENT( ( AREAP ) pArea, uiFields );
 
    pItemEof = hb_itemArrayNew( uiFields );
-   pItem = hb_itemNew( NULL );
+   pItem    = hb_itemNew( NULL );
 
    /* HB_TRACE( HB_TR_ALWAYS, ("fieldcount=%d", iNameLen) ); */
 
    errCode = 0;
-   bError = HB_FALSE;
+   bError  = HB_FALSE;
    for( uiIndex = 0; uiIndex < uiFields; ++uiIndex )
    {
       DBFIELDINFO pFieldInfo;
@@ -347,8 +350,8 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 
       unsigned int uiDataType;
       unsigned int uiSize;
-      int iDec;
-      HB_BOOL bNullable;
+      int          iDec;
+      HB_BOOL      bNullable;
 
       if( ! col )
       {
@@ -365,9 +368,9 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       pFieldInfo.atomName = hb_itemGetCPtr( pName );
 
       uiDataType = OCI_ColumnGetType( col );
-      uiSize = OCI_ColumnGetSize( col );
-      iDec = OCI_ColumnGetPrecision( col );
-      bNullable = ( HB_BOOL ) OCI_ColumnGetNullable( col );
+      uiSize     = OCI_ColumnGetSize( col );
+      iDec       = OCI_ColumnGetPrecision( col );
+      bNullable  = ( HB_BOOL ) OCI_ColumnGetNullable( col );
 
       if( bNullable )
          pFieldInfo.uiFlags |= HB_FF_NULLABLE;
@@ -410,7 +413,7 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
 
          default:
             /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", uiDataType) ); */
-            bError = HB_TRUE;
+            bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) uiDataType;
             pFieldInfo.uiType = 0;
             pFieldInfo.uiType = HB_FT_STRING;
@@ -492,14 +495,14 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    }
 
    pArea->ulRecCount = 0;
-   pArea->ulRecMax = SQLDD_ROWSET_INIT;
+   pArea->ulRecMax   = SQLDD_ROWSET_INIT;
 
    pArea->pRow = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
    memset( pArea->pRow, 0, SQLDD_ROWSET_INIT * sizeof( void * ) );
    pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
 
-   pArea->pRow[ 0 ] = pItemEof;
+   pArea->pRow[ 0 ]      = pItemEof;
    pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
    pSDDData->pStmt = st;
@@ -530,7 +533,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
-      PHB_ITEM pArray;
+      PHB_ITEM  pArray;
       HB_USHORT ui;
 
       if( ! OCI_FetchNext( rs ) )
@@ -543,8 +546,8 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
       for( ui = 1; ui <= pArea->area.uiFieldCount; ++ui )
       {
-         PHB_ITEM pItem = NULL;
-         LPFIELD pField = pArea->area.lpFields + ui - 1;
+         PHB_ITEM pItem  = NULL;
+         LPFIELD  pField = pArea->area.lpFields + ui - 1;
 
          switch( pField->uiType )
          {
@@ -561,7 +564,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   const dtext * val;
                   if( ( val = OCI_GetString( rs, ui ) ) != NULL )
-                     pItem = D_HB_ITEMPUTSTRLEN( NULL, val, ( HB_SIZE ) dtslen( val ) ); /* TODO: Pad it to pField->uiLen size with spaces? */
+                     pItem = D_HB_ITEMPUTSTRLEN( NULL, val, ( HB_SIZE ) dtslen( val ) );  /* TODO: Pad it to pField->uiLen size with spaces? */
                }
                break;
 
@@ -606,15 +609,14 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             case HB_FT_CURDOUBLE:
             case HB_FT_FLOAT:
             case HB_FT_DOUBLE:
-            {
+
                pItem = hb_itemPutNDLen( NULL, OCI_GetDouble( rs, ui ), pField->uiLen, pField->uiDec );
                break;
-            }
 
             case HB_FT_DATE:
             {
                OCI_Date * date = OCI_GetDate( rs, ui );
-               int iYear, iMonth, iDay;
+               int        iYear, iMonth, iDay;
                if( date && OCI_DateGetDate( date, &iYear, &iMonth, &iDay ) )
                   pItem = hb_itemPutD( NULL, iYear, iMonth, iDay );
                break;
@@ -623,7 +625,7 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             case HB_FT_TIME:
             {
                OCI_Date * date = OCI_GetDate( rs, ui );
-               int iYear, iMonth, iDay, iHour, iMin, iSec;
+               int        iYear, iMonth, iDay, iHour, iMin, iSec;
 
                if( date && OCI_DateGetDateTime( date, &iYear, &iMonth, &iDay, &iHour, &iMin, &iSec ) )
                   pItem = hb_itemPutTDT( NULL, hb_dateEncode( iYear, iMonth, iDay ),
@@ -650,27 +652,27 @@ static HB_ERRCODE ocilibGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       }
       if( pArea->ulRecCount + 1 <= pArea->ulRecMax )
       {
-         pArea->pRow = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
+         pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
          pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
          pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
       }
 
       pArea->ulRecCount++;
-      pArea->pRow[ pArea->ulRecCount ] = pArray;
+      pArea->pRow[ pArea->ulRecCount ]      = pArray;
       pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
    }
 
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
-      pArea->pRecord = pArea->pRow[ 0 ];
+      pArea->pRecord      = pArea->pRow[ 0 ];
       pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
-      pArea->fPositioned = HB_FALSE;
+      pArea->fPositioned  = HB_FALSE;
    }
    else
    {
-      pArea->pRecord = pArea->pRow[ ulRecNo ];
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
       pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
-      pArea->fPositioned = HB_TRUE;
+      pArea->fPositioned  = HB_TRUE;
    }
    return HB_SUCCESS;
 }

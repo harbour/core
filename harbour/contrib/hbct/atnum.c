@@ -58,9 +58,9 @@
 
 #include "ct.h"
 
-#define DO_ATNUM_AFTERATNUM      0
-#define DO_ATNUM_BEFORATNUM      1
-#define DO_ATNUM_ATNUM           2
+#define DO_ATNUM_AFTERATNUM  0
+#define DO_ATNUM_BEFORATNUM  1
+#define DO_ATNUM_ATNUM       2
 
 /* helper function */
 static void do_atnum( int iSwitch )

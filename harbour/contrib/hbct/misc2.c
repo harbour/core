@@ -91,7 +91,7 @@ HB_FUNC( COMPLEMENT )
          hb_retndlen( -dValue, iWidth, iDec );
       }
       else if( HB_IS_LOGICAL( pItem ) )
-         hb_retl( !hb_itemGetL( pItem ) );
+         hb_retl( ! hb_itemGetL( pItem ) );
       else
          hb_ret();
    }

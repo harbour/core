@@ -58,21 +58,24 @@
 
 #include "hbtrace.h"
 
-#define SUPERTABLE               ( &sqlbaseSuper )
+#define SUPERTABLE              ( &sqlbaseSuper )
 
-#define CONNECTION_LIST_EXPAND   4
+#define CONNECTION_LIST_EXPAND  4
 
-static HB_USHORT           s_rddidSQLBASE          = 0;
-static SQLDDCONNECTION **  s_pConnection           = NULL;
-static HB_ULONG            s_ulConnectionCount     = 0;
-static HB_ULONG            s_ulConnectionCurrent   = 0;
-static char *              s_szError               = NULL;
-static HB_ERRCODE          s_errCode               = 0;
-static char *              s_szQuery               = NULL;
-static PHB_ITEM            s_pItemNewID            = NULL;
-static unsigned long       s_ulAffectedRows        = 0;
+static HB_USHORT s_rddidSQLBASE = 0;
 
-static RDDFUNCS            sqlbaseSuper;
+static SQLDDCONNECTION ** s_pConnection = NULL;
+static HB_ULONG s_ulConnectionCount     = 0;
+static HB_ULONG s_ulConnectionCurrent   = 0;
+
+static char *     s_szError = NULL;
+static HB_ERRCODE s_errCode = 0;
+
+static char *        s_szQuery        = NULL;
+static PHB_ITEM      s_pItemNewID     = NULL;
+static unsigned long s_ulAffectedRows = 0;
+
+static RDDFUNCS sqlbaseSuper;
 
 
 void hb_rddsqlSetError( HB_ERRCODE errCode, const char * szError, const char * szQuery, PHB_ITEM pItem, unsigned long ulAffectedRows )
@@ -106,13 +109,13 @@ void hb_rddsqlSetError( HB_ERRCODE errCode, const char * szError, const char * s
 
 static HB_ERRCODE hb_errRT_SQLBASE( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation )
 {
-   PHB_ITEM    pError;
-   HB_ERRCODE  iRet = HB_FAILURE;
+   PHB_ITEM   pError;
+   HB_ERRCODE iRet = HB_FAILURE;
 
    if( hb_vmRequestQuery() == 0 )
    {
-      pError   = hb_errRT_New( ES_ERROR, "SQLBASE", errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
-      iRet     = hb_errLaunch( pError );
+      pError = hb_errRT_New( ES_ERROR, "SQLBASE", errGenCode, errSubCode, szDescription, szOperation, 0, EF_NONE );
+      iRet   = hb_errLaunch( pError );
       hb_itemRelease( pError );
    }
    return iRet;
@@ -190,17 +193,17 @@ static HB_ERRCODE sddGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
-      pArea->pRecord       = pArea->pRow[ 0 ];
-      pArea->bRecordFlags  = pArea->pRowFlags[ 0 ];
+      pArea->pRecord      = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
 
-      pArea->fPositioned   = HB_FALSE;
+      pArea->fPositioned = HB_FALSE;
    }
    else
    {
-      pArea->pRecord       = pArea->pRow[ ulRecNo ];
-      pArea->bRecordFlags  = pArea->pRowFlags[ ulRecNo ];
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
 
-      pArea->fPositioned   = HB_TRUE;
+      pArea->fPositioned = HB_TRUE;
    }
    return HB_SUCCESS;
 }
@@ -276,8 +279,8 @@ static HB_ERRCODE sqlbaseGoBottom( SQLBASEAREAP pArea )
    if( ! pArea->fFetched && pArea->pSDD->GoTo( pArea, ( HB_ULONG ) -1 ) == HB_FAILURE )
       return HB_FAILURE;
 
-   pArea->area.fTop     = HB_FALSE;
-   pArea->area.fBottom  = HB_TRUE;
+   pArea->area.fTop    = HB_FALSE;
+   pArea->area.fBottom = HB_TRUE;
 
    if( SELF_GOTO( ( AREAP ) pArea, pArea->ulRecCount ) != HB_SUCCESS )
       return HB_FAILURE;
@@ -296,13 +299,13 @@ static HB_ERRCODE sqlbaseGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 
    if( pArea->fPositioned )
    {
-      pArea->ulRecNo    = ulRecNo;
-      pArea->area.fBof  = pArea->area.fEof = HB_FALSE;
+      pArea->ulRecNo   = ulRecNo;
+      pArea->area.fBof = pArea->area.fEof = HB_FALSE;
    }
    else
    {
-      pArea->ulRecNo    = pArea->ulRecCount + 1;
-      pArea->area.fBof  = pArea->area.fEof = HB_TRUE;
+      pArea->ulRecNo   = pArea->ulRecCount + 1;
+      pArea->area.fBof = pArea->area.fEof = HB_TRUE;
    }
    pArea->area.fFound = HB_FALSE;
 
@@ -331,8 +334,8 @@ static HB_ERRCODE sqlbaseGoToId( SQLBASEAREAP pArea, PHB_ITEM pItem )
 
 static HB_ERRCODE sqlbaseGoTop( SQLBASEAREAP pArea )
 {
-   pArea->area.fTop     = HB_TRUE;
-   pArea->area.fBottom  = HB_FALSE;
+   pArea->area.fTop    = HB_TRUE;
+   pArea->area.fBottom = HB_FALSE;
 
    if( SELF_GOTO( ( AREAP ) pArea, 1 ) == HB_FAILURE )
       return HB_FAILURE;
@@ -362,8 +365,8 @@ static HB_ERRCODE sqlbaseSkip( SQLBASEAREAP pArea, HB_LONG lToSkip )
    /* Move first record and set Bof flag */
    if( errCode == HB_SUCCESS && pArea->area.fBof && lToSkip < 0 )
    {
-      errCode           = SELF_GOTOP( ( AREAP ) pArea );
-      pArea->area.fBof  = HB_TRUE;
+      errCode = SELF_GOTOP( ( AREAP ) pArea );
+      pArea->area.fBof = HB_TRUE;
    }
 
    if( lToSkip < 0 )
@@ -391,19 +394,19 @@ static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, HB_LONG lToSkip )
       HB_BOOL bBof, bEof;
 
       /* Save flags */
-      bBof              = pArea->area.fBof;
-      bEof              = pArea->area.fEof;
+      bBof = pArea->area.fBof;
+      bEof = pArea->area.fEof;
 
-      errCode           = SELF_GOTO( ( AREAP ) pArea, pArea->ulRecNo );
+      errCode = SELF_GOTO( ( AREAP ) pArea, pArea->ulRecNo );
 
       /* Restore flags */
-      pArea->area.fBof  = bBof;
-      pArea->area.fEof  = bEof;
+      pArea->area.fBof = bBof;
+      pArea->area.fEof = bEof;
    }
    else if( lToSkip < 0 && ( HB_ULONG ) ( -lToSkip ) >= pArea->ulRecNo )
    {
-      errCode           = SELF_GOTO( ( AREAP ) pArea, 1 );
-      pArea->area.fBof  = HB_TRUE;
+      errCode = SELF_GOTO( ( AREAP ) pArea, 1 );
+      pArea->area.fBof = HB_TRUE;
    }
    else
    {
@@ -427,15 +430,15 @@ static HB_ERRCODE sqlbaseAppend( SQLBASEAREAP pArea, HB_BOOL bUnLockAll )
 
    if( pArea->ulRecCount + 1 >= pArea->ulRecMax )
    {
-      pArea->pRow       = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
-      pArea->pRowFlags  = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
-      pArea->ulRecMax   += SQLDD_ROWSET_RESIZE;
+      pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
+      pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
+      pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
    }
 
-   pArea->fAppend    = pArea->fPositioned = HB_TRUE;
+   pArea->fAppend = pArea->fPositioned = HB_TRUE;
    pArea->ulRecCount++;
-   pArea->ulRecNo    = pArea->ulRecCount;
-   pArea->area.fBof  = pArea->area.fEof = pArea->area.fFound = HB_FALSE;
+   pArea->ulRecNo   = pArea->ulRecCount;
+   pArea->area.fBof = pArea->area.fEof = pArea->area.fFound = HB_FALSE;
    return HB_SUCCESS;
 }
 
@@ -496,10 +499,10 @@ static HB_ERRCODE sqlbaseGoCold( SQLBASEAREAP pArea )
       {
          hb_itemRelease( ( PHB_ITEM ) ( pArea->pRow[ pArea->ulRecNo ] ) );
       }
-      pArea->pRow[ pArea->ulRecNo ]       = pArea->pRecord;
-      pArea->pRowFlags[ pArea->ulRecNo ]  = pArea->bRecordFlags;
-      pArea->fRecordChanged               = HB_FALSE;
-      pArea->fAppend                      = HB_FALSE;
+      pArea->pRow[ pArea->ulRecNo ]      = pArea->pRecord;
+      pArea->pRowFlags[ pArea->ulRecNo ] = pArea->bRecordFlags;
+      pArea->fRecordChanged = HB_FALSE;
+      pArea->fAppend        = HB_FALSE;
    }
    return HB_SUCCESS;
 }
@@ -507,8 +510,8 @@ static HB_ERRCODE sqlbaseGoCold( SQLBASEAREAP pArea )
 
 static HB_ERRCODE sqlbaseGoHot( SQLBASEAREAP pArea )
 {
-   PHB_ITEM    pArray, pItem;
-   HB_USHORT   us;
+   PHB_ITEM  pArray, pItem;
+   HB_USHORT us;
 
    pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
    for( us = 1; us <= pArea->area.uiFieldCount; us++ )
@@ -518,17 +521,17 @@ static HB_ERRCODE sqlbaseGoHot( SQLBASEAREAP pArea )
          hb_arraySetForward( pArray, us, pItem );
       hb_itemRelease( pItem );
    }
-   pArea->pRecord          = pArray;
-   pArea->bRecordFlags     |= SQLDD_FLAG_CACHED;
-   pArea->fRecordChanged   = HB_TRUE;
+   pArea->pRecord        = pArray;
+   pArea->bRecordFlags  |= SQLDD_FLAG_CACHED;
+   pArea->fRecordChanged = HB_TRUE;
    return HB_SUCCESS;
 }
 
 
 static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem )
 {
-   LPFIELD     pField;
-   HB_ERRCODE  errCode;
+   LPFIELD    pField;
+   HB_ERRCODE errCode;
 
    if( uiIndex == 0 || uiIndex > pArea->area.uiFieldCount )
       return HB_FAILURE;
@@ -539,8 +542,8 @@ static HB_ERRCODE sqlbasePutValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
    if( ! pArea->fRecordChanged && SELF_GOHOT( ( AREAP ) pArea ) == HB_FAILURE )
       return HB_FAILURE;
 
-   errCode  = HB_SUCCESS;
-   pField   = pArea->area.lpFields + ( uiIndex - 1 );
+   errCode = HB_SUCCESS;
+   pField  = pArea->area.lpFields + ( uiIndex - 1 );
 
    if( ( ( HB_IS_MEMO( pItem ) || HB_IS_STRING( pItem ) ) && ( pField->uiType == HB_FT_STRING || pField->uiType == HB_FT_MEMO ) ) ||
        ( HB_IS_DATE( pItem ) && pField->uiType == HB_FT_DATE ) ||
@@ -599,8 +602,8 @@ static HB_ERRCODE sqlbaseRecNo( SQLBASEAREAP pArea, HB_ULONG * ulRecNo )
 
 static HB_ERRCODE sqlbaseRecId( SQLBASEAREAP pArea, PHB_ITEM pRecNo )
 {
-   HB_ERRCODE  errCode;
-   HB_ULONG    ulRecNo;
+   HB_ERRCODE errCode;
+   HB_ULONG   ulRecNo;
 
    errCode = SELF_RECNO( ( AREAP ) pArea, &ulRecNo );
    hb_itemPutNInt( pRecNo, ulRecNo );
@@ -632,8 +635,8 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
       }
       hb_xfree( pArea->pRow );
       hb_xfree( pArea->pRowFlags );
-      pArea->pRow       = NULL;
-      pArea->pRowFlags  = NULL;
+      pArea->pRow      = NULL;
+      pArea->pRowFlags = NULL;
    }
 
    if( pArea->szQuery )
@@ -653,9 +656,9 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
 
 static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 {
-   PHB_ITEM    pItemEof, pItem;
-   HB_USHORT   uiCount;
-   HB_BOOL     bError;
+   PHB_ITEM  pItemEof, pItem;
+   HB_USHORT uiCount;
+   HB_BOOL   bError;
 
    pArea->ulConnection = pOpenInfo->ulConnection ? pOpenInfo->ulConnection : s_ulConnectionCurrent;
 
@@ -668,9 +671,9 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    if( pArea->ulConnection )
    {
-      pArea->pConnection   = s_pConnection[ pArea->ulConnection - 1 ];
+      pArea->pConnection = s_pConnection[ pArea->ulConnection - 1 ];
       pArea->pConnection->uiAreaCount++;
-      pArea->pSDD          = pArea->pConnection->pSDD;
+      pArea->pSDD = pArea->pConnection->pSDD;
    }
    else
    {
@@ -679,7 +682,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
 
    pItemEof = hb_itemArrayNew( pArea->area.uiFieldCount );
 
-   bError   = HB_FALSE;
+   bError = HB_FALSE;
    for( uiCount = 0; uiCount < pArea->area.uiFieldCount; uiCount++ )
    {
       LPFIELD pField = pArea->area.lpFields + uiCount;
@@ -690,11 +693,11 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
          {
             char * pStr;
 
-            pStr                    = ( char * ) hb_xgrab( pField->uiLen + 1 );
+            pStr = ( char * ) hb_xgrab( pField->uiLen + 1 );
             memset( pStr, ' ', pField->uiLen );
-            pStr[ pField->uiLen ]   = '\0';
+            pStr[ pField->uiLen ] = '\0';
 
-            pItem                   = hb_itemPutCL( NULL, pStr, pField->uiLen );
+            pItem = hb_itemPutCL( NULL, pStr, pField->uiLen );
             hb_xfree( pStr );
             break;
          }
@@ -734,8 +737,8 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
             break;
 
          default:
-            pItem    = hb_itemNew( NULL );
-            bError   = HB_TRUE;
+            pItem  = hb_itemNew( NULL );
+            bError = HB_TRUE;
             break;
       }
 
@@ -755,15 +758,15 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
       return HB_FAILURE;
    }
 
-   pArea->ulRecCount       = 0;
+   pArea->ulRecCount = 0;
 
-   pArea->pRow             = ( void ** ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( void * ) );
-   pArea->pRowFlags        = ( HB_BYTE * ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( HB_BYTE ) );
-   pArea->ulRecMax         = SQLDD_ROWSET_RESIZE;
+   pArea->pRow      = ( void ** ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( void * ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xalloc( SQLDD_ROWSET_RESIZE * sizeof( HB_BYTE ) );
+   pArea->ulRecMax  = SQLDD_ROWSET_RESIZE;
 
-   *( pArea->pRow )        = pItemEof;
-   pArea->pRowFlags[ 0 ]   = SQLDD_FLAG_CACHED;
-   pArea->fFetched         = HB_TRUE;
+   *( pArea->pRow )      = pItemEof;
+   pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
+   pArea->fFetched       = HB_TRUE;
 
    if( SUPER_CREATE( ( AREAP ) pArea, pOpenInfo ) != HB_SUCCESS )
    {
@@ -808,14 +811,14 @@ static HB_ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
       /* This should not happen (in __dbTrans()), because RDD is registered with RDT_FULL */
       return HB_FAILURE;
 
-   pArea->pConnection   = s_pConnection[ pArea->ulConnection - 1 ];
+   pArea->pConnection = s_pConnection[ pArea->ulConnection - 1 ];
    pArea->pConnection->uiAreaCount++;
-   pArea->pSDD          = pArea->pConnection->pSDD;
+   pArea->pSDD = pArea->pConnection->pSDD;
 
    /* filename is a query */
-   pArea->szQuery       = hb_strdup( pOpenInfo->abName );
+   pArea->szQuery = hb_strdup( pOpenInfo->abName );
 
-   errCode              = pArea->pSDD->Open( pArea );
+   errCode = pArea->pSDD->Open( pArea );
 
    if( errCode == HB_SUCCESS )
    {
@@ -882,8 +885,8 @@ static HB_ERRCODE sqlbaseForceRel( SQLBASEAREAP pArea )
    {
       LPDBRELINFO lpdbPendingRel;
 
-      lpdbPendingRel          = pArea->lpdbPendingRel;
-      pArea->lpdbPendingRel   = NULL;
+      lpdbPendingRel        = pArea->lpdbPendingRel;
+      pArea->lpdbPendingRel = NULL;
       return SELF_RELEVAL( ( AREAP ) pArea, lpdbPendingRel );
    }
    return HB_SUCCESS;
@@ -929,9 +932,9 @@ static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
          }
       }
       hb_xfree( s_pConnection );
-      s_pConnection           = NULL;
-      s_ulConnectionCount     = 0;
-      s_ulConnectionCurrent   = 0;
+      s_pConnection         = NULL;
+      s_ulConnectionCount   = 0;
+      s_ulConnectionCurrent = 0;
       if( s_szError )
       {
          hb_xfree( s_szError );
@@ -952,7 +955,7 @@ static HB_ERRCODE sqlbaseExit( LPRDDNODE pRDD )
 
 static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulConnect, PHB_ITEM pItem )
 {
-   HB_ULONG          ulConn;
+   HB_ULONG ulConn;
    SQLDDCONNECTION * pConn;
 
    HB_SYMBOL_UNUSED( pRDD );
@@ -997,9 +1000,9 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
 
       case RDDI_CONNECT:
       {
-         PSDDNODE       pNode = NULL;
-         HB_ULONG       ul;
-         const char *   pStr;
+         PSDDNODE     pNode = NULL;
+         HB_ULONG     ul;
+         const char * pStr;
 
          pStr = hb_arrayGetCPtr( pItem, 1 );
          if( pStr )
@@ -1035,12 +1038,12 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
                   s_pConnection = ( SQLDDCONNECTION ** ) hb_xgrab( sizeof( SQLDDCONNECTION * ) * CONNECTION_LIST_EXPAND );
 
                memset( s_pConnection + s_ulConnectionCount, 0, sizeof( SQLDDCONNECTION * ) * CONNECTION_LIST_EXPAND );
-               ul                   = s_ulConnectionCount;
-               s_ulConnectionCount  += CONNECTION_LIST_EXPAND;
+               ul = s_ulConnectionCount;
+               s_ulConnectionCount += CONNECTION_LIST_EXPAND;
             }
-            s_pConnection[ ul ]     = pConn;
+            s_pConnection[ ul ] = pConn;
             ul++;
-            s_ulConnectionCurrent   = ul;
+            s_ulConnectionCurrent = ul;
          }
          else
          {
@@ -1112,106 +1115,106 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
 
 static RDDFUNCS sqlbaseTable =
 {
-   ( DBENTRYP_BP ) NULL,               /* sqlbaseBof */
-   ( DBENTRYP_BP ) NULL,               /* sqlbaseEof */
-   ( DBENTRYP_BP ) NULL,               /* sqlbaseFound */
+   ( DBENTRYP_BP ) NULL,             /* sqlbaseBof */
+   ( DBENTRYP_BP ) NULL,             /* sqlbaseEof */
+   ( DBENTRYP_BP ) NULL,             /* sqlbaseFound */
    ( DBENTRYP_V ) sqlbaseGoBottom,
    ( DBENTRYP_UL ) sqlbaseGoTo,
    ( DBENTRYP_I ) sqlbaseGoToId,
    ( DBENTRYP_V ) sqlbaseGoTop,
-   ( DBENTRYP_BIB ) NULL,              /* sqlbaseSeek */
+   ( DBENTRYP_BIB ) NULL,            /* sqlbaseSeek */
    ( DBENTRYP_L ) sqlbaseSkip,
-   ( DBENTRYP_L ) NULL,                /* sqlbaseSkipFilter */
+   ( DBENTRYP_L ) NULL,              /* sqlbaseSkipFilter */
    ( DBENTRYP_L ) sqlbaseSkipRaw,
-   ( DBENTRYP_VF ) NULL,               /* sqlbaseAddField */
+   ( DBENTRYP_VF ) NULL,             /* sqlbaseAddField */
    ( DBENTRYP_B ) sqlbaseAppend,
-   ( DBENTRYP_I ) NULL,                /* sqlbaseCreateFields */
+   ( DBENTRYP_I ) NULL,              /* sqlbaseCreateFields */
    ( DBENTRYP_V ) sqlbaseDeleteRec,
    ( DBENTRYP_BP ) sqlbaseDeleted,
-   ( DBENTRYP_SP ) NULL,               /* sqlbaseFieldCount */
-   ( DBENTRYP_VF ) NULL,               /* sqlbaseFieldDisplay */
-   ( DBENTRYP_SSI ) NULL,              /* sqlbaseFieldInfo */
-   ( DBENTRYP_SCP ) NULL,              /* sqlbaseFieldName */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseFlush */
-   ( DBENTRYP_PP ) NULL,               /* sqlbaseGetRec */
+   ( DBENTRYP_SP ) NULL,             /* sqlbaseFieldCount */
+   ( DBENTRYP_VF ) NULL,             /* sqlbaseFieldDisplay */
+   ( DBENTRYP_SSI ) NULL,            /* sqlbaseFieldInfo */
+   ( DBENTRYP_SCP ) NULL,            /* sqlbaseFieldName */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseFlush */
+   ( DBENTRYP_PP ) NULL,             /* sqlbaseGetRec */
    ( DBENTRYP_SI ) sqlbaseGetValue,
    ( DBENTRYP_SVL ) sqlbaseGetVarLen,
    ( DBENTRYP_V ) sqlbaseGoCold,
    ( DBENTRYP_V ) sqlbaseGoHot,
-   ( DBENTRYP_P ) NULL,                /* sqlbasePutRec */
+   ( DBENTRYP_P ) NULL,              /* sqlbasePutRec */
    ( DBENTRYP_SI ) sqlbasePutValue,
    ( DBENTRYP_V ) sqlbaseRecall,
    ( DBENTRYP_ULP ) sqlbaseRecCount,
-   ( DBENTRYP_ISI ) NULL,              /* sqlbaseRecInfo */
+   ( DBENTRYP_ISI ) NULL,            /* sqlbaseRecInfo */
    ( DBENTRYP_ULP ) sqlbaseRecNo,
    ( DBENTRYP_I ) sqlbaseRecId,
-   ( DBENTRYP_S ) NULL,                /* sqlbaseSetFieldExtent */
-   ( DBENTRYP_CP ) NULL,               /* sqlbaseAlias */
+   ( DBENTRYP_S ) NULL,              /* sqlbaseSetFieldExtent */
+   ( DBENTRYP_CP ) NULL,             /* sqlbaseAlias */
    ( DBENTRYP_V ) sqlbaseClose,
    ( DBENTRYP_VO ) sqlbaseCreate,
    ( DBENTRYP_SI ) sqlbaseInfo,
-   ( DBENTRYP_V ) NULL,                /* sqlbaseNewArea */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseNewArea */
    ( DBENTRYP_VO ) sqlbaseOpen,
-   ( DBENTRYP_V ) NULL,                /* sqlbaseRelease */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseRelease */
    ( DBENTRYP_SP ) sqlbaseStructSize,
-   ( DBENTRYP_CP ) NULL,               /* sqlbaseSysName */
-   ( DBENTRYP_VEI ) NULL,              /* sqlbaseEval */
-   ( DBENTRYP_V ) NULL,                /* sqlbasePack */
-   ( DBENTRYP_LSP ) NULL,              /* sqlbasePackRec */
-   ( DBENTRYP_VS ) NULL,               /* sqlbaseSort */
-   ( DBENTRYP_VT ) NULL,               /* sqlbaseTrans */
-   ( DBENTRYP_VT ) NULL,               /* sqlbaseTransRec */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseZap */
-   ( DBENTRYP_VR ) NULL,               /* sqlbaseChildEnd */
-   ( DBENTRYP_VR ) NULL,               /* sqlbaseChildStart */
-   ( DBENTRYP_VR ) NULL,               /* sqlbaseChildSync */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseSyncChildren */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseClearRel */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseForceRel */
-   ( DBENTRYP_SSP ) NULL,              /* sqlbaseRelArea */
-   ( DBENTRYP_VR ) NULL,               /* sqlbaseRelEval */
-   ( DBENTRYP_SI ) NULL,               /* sqlbaseRelText */
-   ( DBENTRYP_VR ) NULL,               /* sqlbaseSetRel */
-   ( DBENTRYP_VOI ) NULL,              /* sqlbaseOrderListAdd */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseOrderListClear */
-   ( DBENTRYP_VOI ) NULL,              /* sqlbaseOrderListDelete */
-   ( DBENTRYP_VOI ) NULL,              /* sqlbaseOrderListFocus */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseOrderListRebuild */
-   ( DBENTRYP_VOO ) NULL,              /* sqlbaseOrderCondition */
-   ( DBENTRYP_VOC ) NULL,              /* sqlbaseOrderCreate */
-   ( DBENTRYP_VOI ) NULL,              /* sqlbaseOrderDestroy */
-   ( DBENTRYP_SVOI ) NULL,             /* sqlbaseOrderInfo */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseClearFilter */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseClearLocate */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseClearScope */
-   ( DBENTRYP_VPLP ) NULL,             /* sqlbaseCountScope */
-   ( DBENTRYP_I ) NULL,                /* sqlbaseFilterText */
-   ( DBENTRYP_SI ) NULL,               /* sqlbaseScopeInfo */
-   ( DBENTRYP_VFI ) NULL,              /* sqlbaseSetFilter */
-   ( DBENTRYP_VLO ) NULL,              /* sqlbaseSetLocate */
-   ( DBENTRYP_VOS ) NULL,              /* sqlbaseSetScope */
-   ( DBENTRYP_VPL ) NULL,              /* sqlbaseSkipScope */
-   ( DBENTRYP_B ) NULL,                /* sqlbaseLocate */
-   ( DBENTRYP_CC ) NULL,               /* sqlbaseCompile */
-   ( DBENTRYP_I ) NULL,                /* sqlbaseError */
-   ( DBENTRYP_I ) NULL,                /* sqlbaseEvalBlock */
-   ( DBENTRYP_VSP ) NULL,              /* sqlbaseRawLock */
-   ( DBENTRYP_VL ) NULL,               /* sqlbaseLock */
-   ( DBENTRYP_I ) NULL,                /* sqlbaseUnLock */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseCloseMemFile */
-   ( DBENTRYP_VO ) NULL,               /* sqlbaseCreateMemFile */
-   ( DBENTRYP_SCCS ) NULL,             /* sqlbaseGetValueFile */
-   ( DBENTRYP_VO ) NULL,               /* sqlbaseOpenMemFile */
-   ( DBENTRYP_SCCS ) NULL,             /* sqlbasePutValueFile */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseReadDBHeader */
-   ( DBENTRYP_V ) NULL,                /* sqlbaseWriteDBHeader */
+   ( DBENTRYP_CP ) NULL,             /* sqlbaseSysName */
+   ( DBENTRYP_VEI ) NULL,            /* sqlbaseEval */
+   ( DBENTRYP_V ) NULL,              /* sqlbasePack */
+   ( DBENTRYP_LSP ) NULL,            /* sqlbasePackRec */
+   ( DBENTRYP_VS ) NULL,             /* sqlbaseSort */
+   ( DBENTRYP_VT ) NULL,             /* sqlbaseTrans */
+   ( DBENTRYP_VT ) NULL,             /* sqlbaseTransRec */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseZap */
+   ( DBENTRYP_VR ) NULL,             /* sqlbaseChildEnd */
+   ( DBENTRYP_VR ) NULL,             /* sqlbaseChildStart */
+   ( DBENTRYP_VR ) NULL,             /* sqlbaseChildSync */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseSyncChildren */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseClearRel */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseForceRel */
+   ( DBENTRYP_SSP ) NULL,            /* sqlbaseRelArea */
+   ( DBENTRYP_VR ) NULL,             /* sqlbaseRelEval */
+   ( DBENTRYP_SI ) NULL,             /* sqlbaseRelText */
+   ( DBENTRYP_VR ) NULL,             /* sqlbaseSetRel */
+   ( DBENTRYP_VOI ) NULL,            /* sqlbaseOrderListAdd */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseOrderListClear */
+   ( DBENTRYP_VOI ) NULL,            /* sqlbaseOrderListDelete */
+   ( DBENTRYP_VOI ) NULL,            /* sqlbaseOrderListFocus */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseOrderListRebuild */
+   ( DBENTRYP_VOO ) NULL,            /* sqlbaseOrderCondition */
+   ( DBENTRYP_VOC ) NULL,            /* sqlbaseOrderCreate */
+   ( DBENTRYP_VOI ) NULL,            /* sqlbaseOrderDestroy */
+   ( DBENTRYP_SVOI ) NULL,           /* sqlbaseOrderInfo */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseClearFilter */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseClearLocate */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseClearScope */
+   ( DBENTRYP_VPLP ) NULL,           /* sqlbaseCountScope */
+   ( DBENTRYP_I ) NULL,              /* sqlbaseFilterText */
+   ( DBENTRYP_SI ) NULL,             /* sqlbaseScopeInfo */
+   ( DBENTRYP_VFI ) NULL,            /* sqlbaseSetFilter */
+   ( DBENTRYP_VLO ) NULL,            /* sqlbaseSetLocate */
+   ( DBENTRYP_VOS ) NULL,            /* sqlbaseSetScope */
+   ( DBENTRYP_VPL ) NULL,            /* sqlbaseSkipScope */
+   ( DBENTRYP_B ) NULL,              /* sqlbaseLocate */
+   ( DBENTRYP_CC ) NULL,             /* sqlbaseCompile */
+   ( DBENTRYP_I ) NULL,              /* sqlbaseError */
+   ( DBENTRYP_I ) NULL,              /* sqlbaseEvalBlock */
+   ( DBENTRYP_VSP ) NULL,            /* sqlbaseRawLock */
+   ( DBENTRYP_VL ) NULL,             /* sqlbaseLock */
+   ( DBENTRYP_I ) NULL,              /* sqlbaseUnLock */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseCloseMemFile */
+   ( DBENTRYP_VO ) NULL,             /* sqlbaseCreateMemFile */
+   ( DBENTRYP_SCCS ) NULL,           /* sqlbaseGetValueFile */
+   ( DBENTRYP_VO ) NULL,             /* sqlbaseOpenMemFile */
+   ( DBENTRYP_SCCS ) NULL,           /* sqlbasePutValueFile */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseReadDBHeader */
+   ( DBENTRYP_V ) NULL,              /* sqlbaseWriteDBHeader */
    ( DBENTRYP_R ) sqlbaseInit,
    ( DBENTRYP_R ) sqlbaseExit,
-   ( DBENTRYP_RVVL ) NULL,             /* sqlbaseDrop */
-   ( DBENTRYP_RVVL ) NULL,             /* sqlbaseExists */
-   ( DBENTRYP_RVVVL ) NULL,            /* sqlbaseRename */
+   ( DBENTRYP_RVVL ) NULL,           /* sqlbaseDrop */
+   ( DBENTRYP_RVVL ) NULL,           /* sqlbaseExists */
+   ( DBENTRYP_RVVVL ) NULL,          /* sqlbaseRename */
    ( DBENTRYP_RSLV ) sqlbaseRddInfo,
-   ( DBENTRYP_SVP ) NULL               /* sqlbaseWhoCares */
+   ( DBENTRYP_SVP ) NULL             /* sqlbaseWhoCares */
 };
 
 
@@ -1274,7 +1277,7 @@ HB_CALL_ON_STARTUP_END( _hb_sqlbase_init_ )
    #pragma startup sqlbase__InitSymbols
    #pragma startup _hb_sqlbase_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY HB_DATASEG_FUNC( sqlbase__InitSymbols ) \
+   #define HB_DATASEG_BODY  HB_DATASEG_FUNC( sqlbase__InitSymbols ) \
    HB_DATASEG_FUNC( _hb_sqlbase_init_ )
    #include "hbiniseg.h"
 #endif

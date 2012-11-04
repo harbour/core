@@ -59,7 +59,7 @@
 #include "ctstrfil.h"
 
 static HB_FATTR s_nFileAttr = HB_FA_NORMAL;
-static HB_BOOL s_bSafety = HB_FALSE;
+static HB_BOOL  s_bSafety   = HB_FALSE;
 
 void ct_setfcreate( HB_FATTR nFileAttr )
 {
@@ -114,7 +114,7 @@ static HB_SIZE ct_StrFile( const char * pFileName, const char * pcStr, HB_SIZE n
       hFile = hb_fsOpen( pFileName, FO_READWRITE );
       bOpen = HB_TRUE;
    }
-   else if( !bFile || !ct_getsafety() )
+   else if( ! bFile || ! ct_getsafety() )
       hFile = hb_fsCreate( pFileName, ct_getfcreate() );
    else
       hFile = FS_ERROR;

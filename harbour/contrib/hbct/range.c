@@ -89,7 +89,7 @@ HB_FUNC( RANGEREM )
          else
             iBool &= ( ( *pc ) <= ucChar2 );
 
-         if( !iBool )
+         if( ! iBool )
          {
             *( pcRet + sRetIndex ) = *pc;
             sRetIndex++;

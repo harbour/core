@@ -62,61 +62,61 @@
 #include "hbinit.h"
 
 /******************************************************
-*
-*  Memory file system
-*
-*******************************************************/
+ *
+ *  Memory file system
+ *
+ *******************************************************/
 
 /* change this define for public hb_memfs*() API */
 #ifdef HB_MEMFS_PUBLIC_API
 #define HB_MEMFS_EXPORT
 #else
-#define HB_MEMFS_EXPORT static
+#define HB_MEMFS_EXPORT    static
 #endif
 
 #define HB_MEMFS_INITSIZE  16
 
 /* File access flags */
-#define FOX_READ        1
-#define FOX_WRITE       2
-#define FOX_READWRITE   3
+#define FOX_READ           1
+#define FOX_WRITE          2
+#define FOX_READWRITE      3
 
 /* File sharing flags */
-#define FOX_DENYNONE    0
-#define FOX_DENYREAD   16
-#define FOX_DENYWRITE  32
-#define FOX_EXCLUSIVE  48
-#define FOX_DENYFLAGS  48
+#define FOX_DENYNONE       0
+#define FOX_DENYREAD       16
+#define FOX_DENYWRITE      32
+#define FOX_EXCLUSIVE      48
+#define FOX_DENYFLAGS      48
 
 
 typedef struct _HB_MEMFS_INODE
 {
-   HB_FOFFSET     llSize;
-   HB_FOFFSET     llAlloc;
-   char *         pData;
-   char *         szName;
-   unsigned int   uiCount;
-   unsigned int   uiCountRead, uiCountWrite;
-   HB_USHORT      uiDeny;
+   HB_FOFFSET   llSize;
+   HB_FOFFSET   llAlloc;
+   char *       pData;
+   char *       szName;
+   unsigned int uiCount;
+   unsigned int uiCountRead, uiCountWrite;
+   HB_USHORT    uiDeny;
 } HB_MEMFS_INODE, * PHB_MEMFS_INODE;
 
 
 typedef struct _HB_MEMFS_FILE
 {
-   PHB_MEMFS_INODE  pInode;
-   HB_FOFFSET       llPos;
-   HB_USHORT        uiFlags;
+   PHB_MEMFS_INODE pInode;
+   HB_FOFFSET      llPos;
+   HB_USHORT       uiFlags;
 } HB_MEMFS_FILE, * PHB_MEMFS_FILE;
 
 
 typedef struct _HB_MEMFS_FS
 {
-   HB_ULONG           ulInodeCount;
-   HB_ULONG           ulInodeAlloc;
-   PHB_MEMFS_INODE *  pInodes;
-   HB_ULONG           ulFileAlloc;
-   HB_ULONG           ulFileLast;
-   PHB_MEMFS_FILE *   pFiles;
+   HB_ULONG ulInodeCount;
+   HB_ULONG ulInodeAlloc;
+   PHB_MEMFS_INODE * pInodes;
+   HB_ULONG          ulFileAlloc;
+   HB_ULONG          ulFileLast;
+   PHB_MEMFS_FILE *  pFiles;
 } HB_MEMFS_FS, * PHB_MEMFS_FS;
 
 
@@ -125,8 +125,8 @@ static HB_ERRCODE  s_error;
 
 static HB_CRITICAL_NEW( s_mtx );
 
-#define HB_MEMFSMT_LOCK()      hb_threadEnterCriticalSection( &s_mtx )
-#define HB_MEMFSMT_UNLOCK()    hb_threadLeaveCriticalSection( &s_mtx )
+#define HB_MEMFSMT_LOCK()    hb_threadEnterCriticalSection( &s_mtx )
+#define HB_MEMFSMT_UNLOCK()  hb_threadLeaveCriticalSection( &s_mtx )
 
 static void memfsInodeFree( PHB_MEMFS_INODE pInode );
 
@@ -191,7 +191,7 @@ static HB_ULONG memfsInodeFind( const char * szName, HB_ULONG * pulPos )
 }
 
 
-static PHB_MEMFS_INODE memfsInodeAlloc( const char* szName )
+static PHB_MEMFS_INODE memfsInodeAlloc( const char * szName )
 {
    PHB_MEMFS_INODE pInode = ( PHB_MEMFS_INODE ) hb_xgrab( sizeof( HB_MEMFS_INODE ) );
    HB_ULONG ulInode = 0;
@@ -239,7 +239,7 @@ static void memfsInodeFree( PHB_MEMFS_INODE pInode )
 
 static PHB_MEMFS_FILE memfsFileAlloc( PHB_MEMFS_INODE pInode )
 {
-   PHB_MEMFS_FILE  pFile = ( PHB_MEMFS_FILE ) hb_xgrab( sizeof( HB_MEMFS_FILE ) );
+   PHB_MEMFS_FILE pFile = ( PHB_MEMFS_FILE ) hb_xgrab( sizeof( HB_MEMFS_FILE ) );
 
    pFile->pInode = pInode;
    pFile->llPos = 0;
@@ -366,16 +366,16 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsRename( const char * szName, const char * szNewN
 
 HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags )
 {
-   PHB_MEMFS_FILE  pFile = NULL;
-   HB_FHANDLE      hFile;
-   HB_ULONG        ulInode;
-   HB_ERRCODE      uiError = 0;
+   PHB_MEMFS_FILE pFile = NULL;
+   HB_FHANDLE     hFile;
+   HB_ULONG       ulInode;
+   HB_ERRCODE     uiError = 0;
 
    /*
-     Recalculate flags. Bit should indicate feature: 1=read, 2=write, 16=denyread, 32=denywrite.
-     So, 3=readwrite, 48=exclusive.
-     Compatibility mode == DenyNone.
-   */
+      Recalculate flags. Bit should indicate feature: 1=read, 2=write, 16=denyread, 32=denywrite.
+      So, 3=readwrite, 48=exclusive.
+      Compatibility mode == DenyNone.
+    */
    uiFlags = ( uiFlags & ( FO_CREAT | FO_TRUNC | FO_EXCL ) ) |
              ( uiFlags & FO_READWRITE ? FOX_READWRITE : ( uiFlags & FO_WRITE ? FOX_WRITE : FOX_READ ) ) |
              ( ( uiFlags & 0xf0 ) == FO_EXCLUSIVE ? FOX_EXCLUSIVE :
@@ -441,7 +441,7 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
 
    s_error = uiError;
 
-   if( !pFile )
+   if( ! pFile )
    {
       HB_MEMFSMT_UNLOCK();
       return FS_ERROR;
@@ -461,8 +461,8 @@ HB_MEMFS_EXPORT HB_FHANDLE hb_memfsOpen( const char * szName, HB_USHORT uiFlags 
 
 HB_MEMFS_EXPORT void hb_memfsClose( HB_FHANDLE hFile )
 {
-   PHB_MEMFS_FILE   pFile;
-   PHB_MEMFS_INODE  pInode;
+   PHB_MEMFS_FILE  pFile;
+   PHB_MEMFS_INODE pInode;
 
    HB_MEMFSMT_LOCK();
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
@@ -492,16 +492,16 @@ HB_MEMFS_EXPORT void hb_memfsClose( HB_FHANDLE hFile )
 
 HB_MEMFS_EXPORT HB_SIZE hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, HB_SIZE nCount, HB_FOFFSET llOffset )
 {
-   PHB_MEMFS_FILE   pFile;
-   PHB_MEMFS_INODE  pInode;
-   HB_SIZE          nRead;
+   PHB_MEMFS_FILE  pFile;
+   PHB_MEMFS_INODE pInode;
+   HB_SIZE         nRead;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
-      return 0; /* invalid handle */
+      return 0;  /* invalid handle */
    pInode = pFile->pInode;
 
    if( ( pFile->uiFlags & FOX_READ ) == 0 )
-      return 0; /* access denied */
+      return 0;  /* access denied */
 
    if( llOffset < 0 || pInode->llSize <= llOffset )
       return 0;
@@ -521,15 +521,15 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsReadAt( HB_FHANDLE hFile, void * pBuff, HB_SIZE 
 
 HB_MEMFS_EXPORT HB_SIZE hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, HB_SIZE nCount, HB_FOFFSET llOffset )
 {
-   PHB_MEMFS_FILE   pFile;
-   PHB_MEMFS_INODE  pInode;
+   PHB_MEMFS_FILE  pFile;
+   PHB_MEMFS_INODE pInode;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
-      return 0; /* invalid handle */
+      return 0;  /* invalid handle */
    pInode = pFile->pInode;
 
    if( ( pFile->uiFlags & FOX_WRITE ) == 0 )
-      return 0; /* access denied */
+      return 0;  /* access denied */
 
    if( llOffset < 0 )
       return 0;
@@ -539,7 +539,7 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsWriteAt( HB_FHANDLE hFile, const void * pBuff, H
    /* Reallocate if neccesary */
    if( pInode->llAlloc < llOffset + ( HB_FOFFSET ) nCount )
    {
-      HB_FOFFSET  llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
+      HB_FOFFSET llNewAlloc = pInode->llAlloc + ( pInode->llAlloc >> 1 );
 
       if( llNewAlloc < llOffset + ( HB_FOFFSET ) nCount )
          llNewAlloc = llOffset + ( HB_FOFFSET ) nCount;
@@ -574,16 +574,16 @@ HB_MEMFS_EXPORT HB_SIZE hb_memfsWrite( HB_FHANDLE hFile, const void * pBuff, HB_
 
 HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 {
-   PHB_MEMFS_FILE   pFile;
-   PHB_MEMFS_INODE  pInode;
-   HB_FOFFSET       llNewAlloc;
+   PHB_MEMFS_FILE  pFile;
+   PHB_MEMFS_INODE pInode;
+   HB_FOFFSET      llNewAlloc;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
-      return HB_FALSE; /* invalid handle */
+      return HB_FALSE;  /* invalid handle */
    pInode = pFile->pInode;
 
    if( ( pFile->uiFlags & FOX_WRITE ) == 0 )
-      return HB_FALSE; /* access denied */
+      return HB_FALSE;  /* access denied */
 
    if( llOffset < 0 )
       return HB_FALSE;
@@ -618,12 +618,12 @@ HB_MEMFS_EXPORT HB_BOOL hb_memfsTruncAt( HB_FHANDLE hFile, HB_FOFFSET llOffset )
 
 HB_MEMFS_EXPORT HB_FOFFSET hb_memfsSeek( HB_FHANDLE hFile, HB_FOFFSET llOffset, HB_USHORT uiFlags )
 {
-   PHB_MEMFS_FILE   pFile;
-   PHB_MEMFS_INODE  pInode;
-   HB_FOFFSET       llPos;
+   PHB_MEMFS_FILE  pFile;
+   PHB_MEMFS_INODE pInode;
+   HB_FOFFSET      llPos;
 
    if( ( pFile = memfsHandleToFile( hFile ) ) == NULL )
-      return 0; /* invalid handle */
+      return 0;  /* invalid handle */
    pInode = pFile->pInode;
 
    HB_MEMFSMT_LOCK();
@@ -650,14 +650,12 @@ HB_MEMFS_EXPORT void hb_memfsFlush( HB_FHANDLE hFile, HB_BOOL fDirty )
 {
    HB_SYMBOL_UNUSED( hFile );
    HB_SYMBOL_UNUSED( fDirty );
-   return;
 }
 
 
 HB_MEMFS_EXPORT void hb_memfsCommit( HB_FHANDLE hFile )
 {
    HB_SYMBOL_UNUSED( hFile );
-   return;
 }
 
 
@@ -680,13 +678,13 @@ HB_MEMFS_EXPORT int hb_memfsLockTest( HB_FHANDLE hFile, HB_FOFFSET ulStart, HB_F
 }
 
 /******************************************************
-*
-*  I/O Driver for Memory file system
-*
-*******************************************************/
+ *
+ *  I/O Driver for Memory file system
+ *
+ *******************************************************/
 
-#define FILE_PREFIX     "mem:"
-#define FILE_PREFIX_LEN strlen( FILE_PREFIX )
+#define FILE_PREFIX      "mem:"
+#define FILE_PREFIX_LEN  strlen( FILE_PREFIX )
 
 typedef struct _HB_FILE
 {
@@ -749,7 +747,8 @@ static PHB_FILE s_fileOpen( const char * szName, const char * szDefExt, HB_USHOR
    hb_strncpy( szNameNew, szName + FILE_PREFIX_LEN, HB_PATH_MAX );
 
    nLen = strlen( szNameNew );
-   do {
+   do
+   {
       if( nLen == 0 || strchr( HB_OS_PATH_DELIM_CHR_LIST, szNameNew[ nLen - 1 ] ) )
       {
          hb_strncat( szNameNew, szDefExt, HB_PATH_MAX );
@@ -891,6 +890,6 @@ HB_CALL_ON_STARTUP_END( _hb_file_memio_init_ )
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup _hb_file_memio_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_file_memio_init_ )
+   #define HB_DATASEG_BODY  HB_DATASEG_FUNC( _hb_file_memio_init_ )
    #include "hbiniseg.h"
 #endif

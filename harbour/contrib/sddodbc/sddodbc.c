@@ -77,19 +77,19 @@ typedef unsigned char SQLTCHAR;
 #endif
 
 #if defined( UNICODE )
-   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define O_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define O_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
-   #define O_HB_ITEMPUTSTR( itm, str )             hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
-   #define O_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
-   #define O_HB_CHAR HB_WCHAR
+   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStrU16( arr, n, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define O_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStrU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define O_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStrU16( itm, HB_CDP_ENDIAN_NATIVE, phstr, plen )
+   #define O_HB_ITEMPUTSTR( itm, str )              hb_itemPutStrU16( itm, HB_CDP_ENDIAN_NATIVE, str )
+   #define O_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLenU16( itm, HB_CDP_ENDIAN_NATIVE, str, len )
+   #define O_HB_CHAR  HB_WCHAR
 #else
-   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen ) hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
-   #define O_HB_ITEMCOPYSTR( itm, str, len )       hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
-   #define O_HB_ITEMGETSTR( itm, phstr, plen )     hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
-   #define O_HB_ITEMPUTSTR( itm, str )             hb_itemPutStr( itm, hb_setGetOSCP(), str )
-   #define O_HB_ITEMPUTSTRLEN( itm, str, len )     hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
-   #define O_HB_CHAR char
+   #define O_HB_ARRAYGETSTR( arr, n, phstr, plen )  hb_arrayGetStr( arr, n, hb_setGetOSCP(), phstr, plen )
+   #define O_HB_ITEMCOPYSTR( itm, str, len )        hb_itemCopyStr( itm, hb_setGetOSCP(), str, len )
+   #define O_HB_ITEMGETSTR( itm, phstr, plen )      hb_itemGetStr( itm, hb_setGetOSCP(), phstr, plen )
+   #define O_HB_ITEMPUTSTR( itm, str )              hb_itemPutStr( itm, hb_setGetOSCP(), str )
+   #define O_HB_ITEMPUTSTRLEN( itm, str, len )      hb_itemPutStrLen( itm, hb_setGetOSCP(), str, len )
+   #define O_HB_CHAR  char
 #endif
 
 
@@ -141,7 +141,9 @@ static void hb_odbcdd_init( void * cargo )
 HB_FUNC_TRANSLATE( SDDODBC, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( odbcdd__InitSymbols )
-{ "SDDODBC", { HB_FS_PUBLIC }, { HB_FUNCNAME( SDDODBC ) }, NULL },
+{
+   "SDDODBC", { HB_FS_PUBLIC }, { HB_FUNCNAME( SDDODBC ) }, NULL
+},
 HB_INIT_SYMBOLS_END( odbcdd__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_odbcdd_init_ )
@@ -152,7 +154,8 @@ HB_CALL_ON_STARTUP_END( _hb_odbcdd_init_ )
    #pragma startup odbcdd__InitSymbols
    #pragma startup _hb_odbcdd_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY HB_DATASEG_FUNC( odbcdd__InitSymbols ) \
+   #define HB_DATASEG_BODY  \
+   HB_DATASEG_FUNC( odbcdd__InitSymbols ) \
    HB_DATASEG_FUNC( _hb_odbcdd_init_ )
    #include "hbiniseg.h"
 #endif
@@ -161,8 +164,8 @@ HB_CALL_ON_STARTUP_END( _hb_odbcdd_init_ )
 /*=====================================================================================*/
 static HB_USHORT hb_errRT_ODBCDD( HB_ERRCODE errGenCode, HB_ERRCODE errSubCode, const char * szDescription, const char * szOperation, HB_ERRCODE errOsCode )
 {
-   HB_USHORT   uiAction;
-   PHB_ITEM    pError;
+   HB_USHORT uiAction;
+   PHB_ITEM  pError;
 
    pError   = hb_errRT_New( ES_ERROR, "SDDODBC", errGenCode, errSubCode, szDescription, szOperation, errOsCode, EF_NONE );
    uiAction = hb_errLaunch( pError );
@@ -182,10 +185,10 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
    {
       PHB_ITEM pRet;
 
-      szError[ 5 ]   = ' ';
+      szError[ 5 ] = ' ';
 
-      pRet           = O_HB_ITEMPUTSTR( NULL, ( O_HB_CHAR * ) szError );
-      szRet          = hb_strdup( hb_itemGetCPtr( pRet ) );
+      pRet  = O_HB_ITEMPUTSTR( NULL, ( O_HB_CHAR * ) szError );
+      szRet = hb_strdup( hb_itemGetCPtr( pRet ) );
       hb_itemRelease( pRet );
    }
    else
@@ -201,10 +204,10 @@ static char * odbcGetError( SQLHENV hEnv, SQLHDBC hConn, SQLHSTMT hStmt, HB_ERRC
 
 static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   SQLHENV     hEnv     = NULL;
-   SQLHDBC     hConnect = NULL;
-   char *      szError;
-   HB_ERRCODE  errCode;
+   SQLHENV    hEnv     = NULL;
+   SQLHDBC    hConnect = NULL;
+   char *     szError;
+   HB_ERRCODE errCode;
 
    if( SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv ) ) )
    {
@@ -228,9 +231,9 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
                                               SQL_DRIVER_NOPROMPT ) ) )
          {
             hb_strfree( hConnStr );
-            pConnection->pSDDConn                           = hb_xgrab( sizeof( SDDCONN ) );
-            ( ( SDDCONN * ) pConnection->pSDDConn )->hConn  = hConnect;
-            ( ( SDDCONN * ) pConnection->pSDDConn )->hEnv   = hEnv;
+            pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
+            ( ( SDDCONN * ) pConnection->pSDDConn )->hConn = hConnect;
+            ( ( SDDCONN * ) pConnection->pSDDConn )->hEnv  = hEnv;
             return HB_SUCCESS;
          }
          else
@@ -274,12 +277,12 @@ static HB_ERRCODE odbcDisconnect( SQLDDCONNECTION * pConnection )
 
 static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
 {
-   SDDCONN *   pSDDConn = ( SDDCONN * ) pConnection->pSDDConn;
-   void *      hStatement;
-   SQLHSTMT    hStmt;
-   SQLLEN      iCount;
-   char *      szError;
-   HB_ERRCODE  errCode;
+   SDDCONN *  pSDDConn = ( SDDCONN * ) pConnection->pSDDConn;
+   void *     hStatement;
+   SQLHSTMT   hStmt;
+   SQLLEN     iCount;
+   char *     szError;
+   HB_ERRCODE errCode;
 
    if( ! SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_STMT, pSDDConn->hConn, &hStmt ) ) )
    {
@@ -327,8 +330,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    HB_ERRCODE  errCode;
    char *      szError;
 
-   pArea->pSDDData   = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
-   pSDDData          = ( SDDDATA * ) pArea->pSDDData;
+   pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
+   pSDDData        = ( SDDDATA * ) pArea->pSDDData;
 
    if( ! SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_STMT, pSDDConn->hConn, &hStmt ) ) )
    {
@@ -374,13 +377,13 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
    /* HB_TRACE( HB_TR_ALWAYS, ("fieldcount=%d", iNameLen) ); */
 
-   errCode  = 0;
-   bError   = HB_FALSE;
+   errCode = 0;
+   bError  = HB_FALSE;
    for( uiIndex = 0; uiIndex < uiFields; uiIndex++ )
    {
       DBFIELDINFO pFieldInfo;
 
-      PHB_ITEM    pName;
+      PHB_ITEM pName;
 
       SQLTCHAR    cName[ 256 ];
       SQLULEN     uiSize;
@@ -396,8 +399,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          return HB_FAILURE;
       }
 
-      pName                      = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) cName, iNameLen );
-      pFieldInfo.atomName        = hb_itemGetCPtr( pName );
+      pName = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) cName, iNameLen );
+      pFieldInfo.atomName = hb_itemGetCPtr( pName );
 
       /*
          We do mapping of many SQL types to one Harbour field type here, so, we need store
@@ -408,9 +411,9 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
          or introduce our own unsigned SQL types.
          [Mindaugas]
        */
-      pFieldInfo.uiTypeExtended  = ( HB_USHORT ) iDataType;
-      pFieldInfo.uiLen           = ( HB_USHORT ) uiSize;
-      pFieldInfo.uiDec           = iDec;
+      pFieldInfo.uiTypeExtended = ( HB_USHORT ) iDataType;
+      pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
+      pFieldInfo.uiDec = iDec;
 
       /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d null=%d", pFieldInfo.atomName, iDataType, uiSize, iDec, iNull ) ); */
 
@@ -427,8 +430,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
          case SQL_VARBINARY:
          case SQL_LONGVARBINARY:
-            pFieldInfo.uiType    = HB_FT_STRING;
-            pFieldInfo.uiFlags   = HB_FF_BINARY;
+            pFieldInfo.uiType  = HB_FT_STRING;
+            pFieldInfo.uiFlags = HB_FF_BINARY;
             break;
 
          case SQL_TINYINT:
@@ -471,8 +474,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
          default:
             /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", iDataType) ); */
-            bError            = HB_TRUE;
-            errCode           = ( HB_ERRCODE ) iDataType;
+            bError  = HB_TRUE;
+            errCode = ( HB_ERRCODE ) iDataType;
             pFieldInfo.uiType = 0;
             pFieldInfo.uiType = HB_FT_STRING;
             break;
@@ -486,11 +489,11 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             {
                char * pStr;
 
-               pStr                       = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
+               pStr = ( char * ) hb_xgrab( ( HB_SIZE ) pFieldInfo.uiLen + 1 );
                memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ]   = '\0';
+               pStr[ pFieldInfo.uiLen ] = '\0';
 
-               pItem                      = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
                hb_xfree( pStr );
                break;
             }
@@ -531,8 +534,8 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
                break;
 
             default:
-               pItem    = hb_itemNew( NULL );
-               bError   = HB_TRUE;
+               pItem  = hb_itemNew( NULL );
+               bError = HB_TRUE;
                break;
          }
 
@@ -557,18 +560,18 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       return HB_FAILURE;
    }
 
-   pArea->ulRecCount       = 0;
-   pArea->ulRecMax         = SQLDD_ROWSET_INIT;
+   pArea->ulRecCount = 0;
+   pArea->ulRecMax   = SQLDD_ROWSET_INIT;
 
-   pArea->pRow             = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
+   pArea->pRow = ( void ** ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( void * ) );
    memset( pArea->pRow, 0, SQLDD_ROWSET_INIT * sizeof( void * ) );
-   pArea->pRowFlags        = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
+   pArea->pRowFlags = ( HB_BYTE * ) hb_xgrab( SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
    memset( pArea->pRowFlags, 0, SQLDD_ROWSET_INIT * sizeof( HB_BYTE ) );
 
-   pArea->pRow[ 0 ]        = pItemEof;
-   pArea->pRowFlags[ 0 ]   = SQLDD_FLAG_CACHED;
+   pArea->pRow[ 0 ]      = pItemEof;
+   pArea->pRowFlags[ 0 ] = SQLDD_FLAG_CACHED;
 
-   pSDDData->hStmt         = hStmt;
+   pSDDData->hStmt = hStmt;
    return HB_SUCCESS;
 }
 
@@ -591,12 +594,12 @@ static HB_ERRCODE odbcClose( SQLBASEAREAP pArea )
 
 static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
 {
-   SQLHSTMT    hStmt = ( ( SDDDATA * ) pArea->pSDDData )->hStmt;
-   SQLRETURN   res;
-   SQLLEN      iLen;
-   PHB_ITEM    pArray, pItem;
-   LPFIELD     pField;
-   HB_USHORT   ui;
+   SQLHSTMT  hStmt = ( ( SDDDATA * ) pArea->pSDDData )->hStmt;
+   SQLRETURN res;
+   SQLLEN    iLen;
+   PHB_ITEM  pArray, pItem;
+   LPFIELD   pField;
+   HB_USHORT ui;
 
    while( ulRecNo > pArea->ulRecCount && ! pArea->fFetched )
    {
@@ -609,10 +612,10 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
       for( ui = 1; ui <= pArea->area.uiFieldCount; ui++ )
       {
-         iLen     = SQL_NULL_DATA;
-         pItem    = NULL;
-         res      = 0;
-         pField   = pArea->area.lpFields + ui - 1;
+         iLen   = SQL_NULL_DATA;
+         pItem  = NULL;
+         res    = 0;
+         pField = pArea->area.lpFields + ui - 1;
          switch( pField->uiType )
          {
             case HB_FT_STRING:
@@ -620,7 +623,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                SQLSMALLINT iTargetType;
                char        buffer[ 2 ];
 
-               iLen        = 0;
+               iLen = 0;
 
 #if defined( UNICODE )
                iTargetType = SQL_C_WCHAR;
@@ -636,7 +639,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                      if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, iTargetType, val, iLen + sizeof( O_HB_CHAR ), &iLen ) ) )
                      {
 #if defined( UNICODE )
-                        iLen  /= 2;
+                        iLen /= 2;
 #endif
                         pItem = O_HB_ITEMPUTSTRLEN( NULL, ( O_HB_CHAR * ) val, ( HB_SIZE ) iLen );
                      }
@@ -755,27 +758,27 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       }
       if( pArea->ulRecCount + 1 <= pArea->ulRecMax )
       {
-         pArea->pRow       = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
-         pArea->pRowFlags  = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
-         pArea->ulRecMax   += SQLDD_ROWSET_RESIZE;
+         pArea->pRow      = ( void ** ) hb_xrealloc( pArea->pRow, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( void * ) );
+         pArea->pRowFlags = ( HB_BYTE * ) hb_xrealloc( pArea->pRowFlags, ( pArea->ulRecMax + SQLDD_ROWSET_RESIZE ) * sizeof( HB_BYTE ) );
+         pArea->ulRecMax += SQLDD_ROWSET_RESIZE;
       }
 
       pArea->ulRecCount++;
-      pArea->pRow[ pArea->ulRecCount ]       = pArray;
-      pArea->pRowFlags[ pArea->ulRecCount ]  = SQLDD_FLAG_CACHED;
+      pArea->pRow[ pArea->ulRecCount ]      = pArray;
+      pArea->pRowFlags[ pArea->ulRecCount ] = SQLDD_FLAG_CACHED;
    }
 
    if( ulRecNo == 0 || ulRecNo > pArea->ulRecCount )
    {
-      pArea->pRecord       = pArea->pRow[ 0 ];
-      pArea->bRecordFlags  = pArea->pRowFlags[ 0 ];
-      pArea->fPositioned   = HB_FALSE;
+      pArea->pRecord      = pArea->pRow[ 0 ];
+      pArea->bRecordFlags = pArea->pRowFlags[ 0 ];
+      pArea->fPositioned  = HB_FALSE;
    }
    else
    {
-      pArea->pRecord       = pArea->pRow[ ulRecNo ];
-      pArea->bRecordFlags  = pArea->pRowFlags[ ulRecNo ];
-      pArea->fPositioned   = HB_TRUE;
+      pArea->pRecord      = pArea->pRow[ ulRecNo ];
+      pArea->bRecordFlags = pArea->pRowFlags[ ulRecNo ];
+      pArea->fPositioned  = HB_TRUE;
    }
    return HB_SUCCESS;
 }

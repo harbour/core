@@ -182,7 +182,7 @@ HB_FUNC( SETFONT )
    int count = 256;
    int height = 16;
 
-   if( !area )
+   if( ! area )
       area = 1;
    if( HB_ISNUM( 3 ) )
       offset = hb_parni( 3 );
@@ -193,7 +193,7 @@ HB_FUNC( SETFONT )
 
 #if defined( __DJGPP__ )
 #  ifndef __tb_size
-#     define __tb_size _go32_info_block.size_of_transfer_buffer
+#     define __tb_size  _go32_info_block.size_of_transfer_buffer
 #  endif
    {
       __dpmi_regs r;

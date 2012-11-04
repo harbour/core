@@ -67,15 +67,15 @@ static const HB_SIZE sc_sSeparatorStrLen = 26;
 
 /* static data */
 /* even if these are chars, variable must be int, since we need an extra -1 */
-static int s_iPreSeparator = -1;     /* TODO: make this threadsafe */
+static int s_iPreSeparator  = -1;    /* TODO: make this threadsafe */
 static int s_iPostSeparator = -1;    /* TODO: make this threadsafe */
 
 /* defines */
-#define DO_TOKEN1_TOKEN         0
-#define DO_TOKEN1_NUMTOKEN      1
-#define DO_TOKEN1_ATTOKEN       2
-#define DO_TOKEN1_TOKENLOWER    3
-#define DO_TOKEN1_TOKENUPPER    4
+#define DO_TOKEN1_TOKEN       0
+#define DO_TOKEN1_NUMTOKEN    1
+#define DO_TOKEN1_ATTOKEN     2
+#define DO_TOKEN1_TOKENLOWER  3
+#define DO_TOKEN1_TOKENUPPER  4
 
 /* helper function for the token function group I */
 static void do_token1( int iSwitch )
@@ -280,12 +280,12 @@ static void do_token1( int iSwitch )
          {
             if( nSkip == HB_SIZE_MAX )
             {
-               const char *t;
+               const char * t;
                HB_BOOL bLast = HB_TRUE;
 
                for( t = pc + 1; t < pcString + sStrLen; t++ )
                {
-                  if( !memchr( pcSeparatorStr, *t, sSeparatorStrLen ) )
+                  if( ! memchr( pcSeparatorStr, *t, sSeparatorStrLen ) )
                   {
                      bLast = HB_FALSE;
                      break;
@@ -381,7 +381,7 @@ static void do_token1( int iSwitch )
 
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
-            else if( !iNoRef )
+            else if( ! iNoRef )
                hb_retc_null();
             else
                hb_retl( HB_FALSE );
@@ -404,7 +404,7 @@ static void do_token1( int iSwitch )
             }
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
-            else if( !iNoRef )
+            else if( ! iNoRef )
                hb_retc_null();
             else
                hb_retl( HB_FALSE );

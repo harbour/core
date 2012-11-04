@@ -89,7 +89,7 @@ HB_FUNC( CTON )
             break;
          if( iDigit >= iBase )
             break;
-         if( nValue > ( nMax  - iDigit ) / iBase )
+         if( nValue > ( nMax - iDigit ) / iBase )
          {
             nValue = 0;
             break;

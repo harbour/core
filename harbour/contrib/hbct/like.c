@@ -55,8 +55,9 @@
 
 HB_FUNC( LIKE )
 {
-   const char * szPattern = hb_parc( 1 ),
-              * szString  = hb_parc( 2 );
+   const char * szPattern = hb_parc( 1 );
+   const char * szString  = hb_parc( 2 );
+
    hb_retl( szPattern && szString &&
             hb_strMatchWildExact( szString, szPattern ) );
 }

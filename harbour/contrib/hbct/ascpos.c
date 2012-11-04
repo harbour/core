@@ -57,8 +57,8 @@
 #include "ct.h"
 
 /* defines */
-#define DO_ASCPOS_ASCPOS    0
-#define DO_ASCPOS_VALPOS    1
+#define DO_ASCPOS_ASCPOS  0
+#define DO_ASCPOS_VALPOS  1
 
 /* helper function */
 static void do_ascpos( int iSwitch )

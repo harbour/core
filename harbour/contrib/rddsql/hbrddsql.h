@@ -61,18 +61,18 @@
 #include "hbrddsql.ch"
 
 /*
-====================================================================
-  SQLBASE
-====================================================================
-*/
+   ====================================================================
+   SQLBASE
+   ====================================================================
+ */
 
-#define MAX_FIELD_NAME          64
+#define MAX_FIELD_NAME       64
 
-#define SQLDD_ROWSET_INIT      256
-#define SQLDD_ROWSET_RESIZE     64
+#define SQLDD_ROWSET_INIT    256
+#define SQLDD_ROWSET_RESIZE  64
 
-#define SQLDD_FLAG_DELETED       1
-#define SQLDD_FLAG_CACHED        2
+#define SQLDD_FLAG_DELETED   1
+#define SQLDD_FLAG_CACHED    2
 
 
 typedef struct _SQLBASEAREA
@@ -83,77 +83,77 @@ typedef struct _SQLBASEAREA
     *  SQLBASE additions to the workarea structure
     */
 
-   LPDBRELINFO                lpdbPendingRel;
+   LPDBRELINFO lpdbPendingRel;
 
-   HB_ULONG                   ulConnection;
-   struct _SQLDDCONNECTION *  pConnection;
-   struct _SDDNODE *          pSDD;
+   HB_ULONG ulConnection;
+   struct _SQLDDCONNECTION * pConnection;
+   struct _SDDNODE *         pSDD;
 
-   char *                     szQuery;       /* SQL query */
+   char * szQuery;                           /* SQL query */
 
-   HB_ULONG                   ulRecNo;       /* Current record number */
-   HB_ULONG                   ulRecCount;    /* Total records */
-   HB_ULONG                   ulRecMax;      /* Size of pRow, pRowFlags buffer */
+   HB_ULONG ulRecNo;                         /* Current record number */
+   HB_ULONG ulRecCount;                      /* Total records */
+   HB_ULONG ulRecMax;                        /* Size of pRow, pRowFlags buffer */
 
-   void **                    pRow;          /* array of native pointers or cached PHB_ITEM */
-   HB_BYTE *                  pRowFlags;
+   void ** pRow;                             /* array of native pointers or cached PHB_ITEM */
+   HB_BYTE * pRowFlags;
 
-   void *                     pRecord;       /* current record */
-   HB_BYTE                    bRecordFlags;
+   void *  pRecord;                          /* current record */
+   HB_BYTE bRecordFlags;
 
-   HB_BOOL                    fFetched;
-   HB_BOOL                    fPositioned;
-   HB_BOOL                    fAppend;
-   HB_BOOL                    fRecordChanged;
+   HB_BOOL fFetched;
+   HB_BOOL fPositioned;
+   HB_BOOL fAppend;
+   HB_BOOL fRecordChanged;
 
-   void *                     pSDDData;      /* SDD specific data */
+   void * pSDDData;                          /* SDD specific data */
 } SQLBASEAREA, * SQLBASEAREAP;
 
 
 typedef struct _SQLDDCONNECTION
 {
-   struct _SDDNODE *    pSDD;
-   unsigned int         uiAreaCount;
+   struct _SDDNODE * pSDD;
+   unsigned int      uiAreaCount;
 
-   void *               pSDDConn;            /* SDD specific data */
+   void * pSDDConn;                          /* SDD specific data */
 } SQLDDCONNECTION;
 
 
 /*
-====================================================================
-  SQLMIX
-====================================================================
-*/
+   ====================================================================
+   SQLMIX
+   ====================================================================
+ */
 
-#define MIX_MAXKEYLEN        1024
-#define MIX_MAXTAGNAMELEN      16
+#define MIX_MAXKEYLEN      1024
+#define MIX_MAXTAGNAMELEN  16
 
 
-#define MIX_NODE_ORDER         2    /* >=2 */
+#define MIX_NODE_ORDER     2        /* >=2 */
 
 
 typedef struct _MIXKEY
 {
-   HB_ULONG  rec;
-   HB_BYTE   notnul;
-   HB_BYTE   val[ 1 ];
+   HB_ULONG rec;
+   HB_BYTE  notnul;
+   HB_BYTE  val[ 1 ];
 } MIXKEY, * PMIXKEY;
 
 
 typedef struct _MIXNODE
 {
-   unsigned int          Leaf;
-   unsigned int          KeyCount;
-   struct _MIXNODE *     Parent;
-   struct _MIXNODE *     Child[ MIX_NODE_ORDER + 1 ];
+   unsigned int Leaf;
+   unsigned int KeyCount;
+   struct _MIXNODE * Parent;
+   struct _MIXNODE * Child[ MIX_NODE_ORDER + 1 ];
 } MIXNODE, * PMIXNODE;
 
 
 typedef struct _MIXNODELEAF
 {
-   unsigned int          Leaf;
-   unsigned int          KeyCount;
-   struct _MIXNODE *     Parent;
+   unsigned int Leaf;
+   unsigned int KeyCount;
+   struct _MIXNODE * Parent;
 } MIXNODELEAF, * PMIXNODELEAF;
 
 
@@ -167,24 +167,24 @@ typedef struct _MIXTAG
    PHB_ITEM             pKeyItem;
    PHB_ITEM             pForItem;
 
-   HB_BYTE              bType;
-   unsigned int         uiKeyLen;            /* Length of key */
-   unsigned int         uiTotalLen;          /* Total length of key structure */
+   HB_BYTE      bType;
+   unsigned int uiKeyLen;                    /* Length of key */
+   unsigned int uiTotalLen;                  /* Total length of key structure */
 
-   HB_BOOL              fEof;
-   HB_BOOL              fBof;
-   HB_BOOL              fCustom;
+   HB_BOOL fEof;
+   HB_BOOL fBof;
+   HB_BOOL fCustom;
 
-   PMIXNODE             Root;
+   PMIXNODE Root;
 
-   PMIXKEY              CurKey;
-   PMIXNODE             CurNode;
-   unsigned int         CurPos;
+   PMIXKEY      CurKey;
+   PMIXNODE     CurNode;
+   unsigned int CurPos;
 
-   PMIXKEY              HotKey;
-   HB_BOOL              HotFor;
+   PMIXKEY HotKey;
+   HB_BOOL HotFor;
 
-   PHB_CODEPAGE         pCodepage;  /* National sorttable for character key tags, NULL otherwise */
+   PHB_CODEPAGE pCodepage;          /* National sorttable for character key tags, NULL otherwise */
 } MIXTAG, * PMIXTAG;
 
 
@@ -204,51 +204,51 @@ typedef struct _SQLMIXAREA
 
 
 /*
-====================================================================
-  SQLDD
-====================================================================
-*/
+   ====================================================================
+   SQLDD
+   ====================================================================
+ */
 
-typedef HB_ERRCODE (* SDDFUNC_CONNECT    )( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
-typedef HB_ERRCODE (* SDDFUNC_DISCONNECT )( SQLDDCONNECTION * pConnection );
-typedef HB_ERRCODE (* SDDFUNC_EXECUTE    )( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
-typedef HB_ERRCODE (* SDDFUNC_OPEN       )( SQLBASEAREAP pArea );
-typedef HB_ERRCODE (* SDDFUNC_CLOSE      )( SQLBASEAREAP pArea );
-typedef HB_ERRCODE (* SDDFUNC_GOTO       )( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
-typedef HB_ERRCODE (* SDDFUNC_GETVALUE   )( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
-typedef HB_ERRCODE (* SDDFUNC_GETVARLEN  )( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength );
+typedef HB_ERRCODE ( *SDDFUNC_CONNECT )( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
+typedef HB_ERRCODE ( *SDDFUNC_DISCONNECT )( SQLDDCONNECTION * pConnection );
+typedef HB_ERRCODE ( *SDDFUNC_EXECUTE )( SQLDDCONNECTION * pConnection, PHB_ITEM pItem );
+typedef HB_ERRCODE ( *SDDFUNC_OPEN )( SQLBASEAREAP pArea );
+typedef HB_ERRCODE ( *SDDFUNC_CLOSE )( SQLBASEAREAP pArea );
+typedef HB_ERRCODE ( *SDDFUNC_GOTO )( SQLBASEAREAP pArea, HB_ULONG ulRecNo );
+typedef HB_ERRCODE ( *SDDFUNC_GETVALUE )( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem );
+typedef HB_ERRCODE ( *SDDFUNC_GETVARLEN )( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength );
 
 
 typedef struct _SDDNODE
 {
-   struct _SDDNODE *    pNext;
+   struct _SDDNODE * pNext;
 
-   const char *         Name;
-   SDDFUNC_CONNECT      Connect;
-   SDDFUNC_DISCONNECT   Disconnect;
-   SDDFUNC_EXECUTE      Execute;
-   SDDFUNC_OPEN         Open;
-   SDDFUNC_CLOSE        Close;
-   SDDFUNC_GOTO         GoTo;
-   SDDFUNC_GETVALUE     GetValue;
-   SDDFUNC_GETVARLEN    GetVarLen;
+   const char *       Name;
+   SDDFUNC_CONNECT    Connect;
+   SDDFUNC_DISCONNECT Disconnect;
+   SDDFUNC_EXECUTE    Execute;
+   SDDFUNC_OPEN       Open;
+   SDDFUNC_CLOSE      Close;
+   SDDFUNC_GOTO       GoTo;
+   SDDFUNC_GETVALUE   GetValue;
+   SDDFUNC_GETVARLEN  GetVarLen;
 } SDDNODE, * PSDDNODE;
 
 
 /* Error subcodes */
-#define ESQLDD_NOTCONNECTED        1901
-#define ESQLDD_INVALIDFIELD        1902
-#define ESQLDD_INVALIDQUERY        1903
-#define ESQLDD_START               1904
-#define ESQLDD_COMMIT              1905
-#define ESQLDD_STMTALLOC           1906
-#define ESQLDD_STMTDESCR           1907
-#define ESQLDD_STMTFREE            1908
-#define ESQLDD_FETCH               1909
-#define ESQLDD_LOWMEMORY           1910
-#define ESQLDD_NULLSDD             1911
-#define ESQLDD_CONNALLOC           1912
-#define ESQLDD_ENVALLOC            1913
+#define ESQLDD_NOTCONNECTED  1901
+#define ESQLDD_INVALIDFIELD  1902
+#define ESQLDD_INVALIDQUERY  1903
+#define ESQLDD_START         1904
+#define ESQLDD_COMMIT        1905
+#define ESQLDD_STMTALLOC     1906
+#define ESQLDD_STMTDESCR     1907
+#define ESQLDD_STMTFREE      1908
+#define ESQLDD_FETCH         1909
+#define ESQLDD_LOWMEMORY     1910
+#define ESQLDD_NULLSDD       1911
+#define ESQLDD_CONNALLOC     1912
+#define ESQLDD_ENVALLOC      1913
 
 HB_EXTERN_BEGIN
 

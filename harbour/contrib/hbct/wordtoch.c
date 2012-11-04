@@ -90,7 +90,7 @@ HB_FUNC( WORDTOCHAR )
 
          *( pcRet + sRetIndex + 1 ) = *( pcString + sIndex + 1 );
 
-         if( !iNoReplace &&
+         if( ! iNoReplace &&
              ( ( pc = ct_at_exact_forward( pcSearch, sSearchLen,
                                            pcRet + sRetIndex, 2,
                                            &sMatchStrLen ) ) != NULL ) &&
@@ -102,7 +102,7 @@ HB_FUNC( WORDTOCHAR )
 
             *( pcRet + sRetIndex ) = *( pcReplace + sReplIndex );
 
-            if( !iMultiPass )
+            if( ! iMultiPass )
                iNoReplace = 1;  /* just copy next char without searching & replacing */
          }
          else

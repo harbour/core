@@ -55,9 +55,9 @@
 #include "ct.h"
 
 /* defines */
-#define DO_REMOVE_REMALL      0
-#define DO_REMOVE_REMLEFT     1
-#define DO_REMOVE_REMRIGHT    2
+#define DO_REMOVE_REMALL    0
+#define DO_REMOVE_REMLEFT   1
+#define DO_REMOVE_REMRIGHT  2
 
 static const HB_ERRCODE sulErrorSubcodes[] = {
    CT_ERROR_REMALL,

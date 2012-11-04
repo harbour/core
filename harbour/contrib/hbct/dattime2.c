@@ -87,11 +87,11 @@ static int ct_daysinmonth( int iMonth, HB_BOOL bLeap )
 
 static int ct_daystomonth( int iMonth, HB_BOOL bLeap )
 {
-   static const int iMonthes[] =
-               { 0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
+   static const int iMonthes[] = {
+      0, 31, 59, 90, 120, 151, 181, 212, 243, 273, 304, 334 };
 
-   return ( ( iMonth < 1 && iMonth > 12 ) ? 0 : iMonthes[ iMonth - 1 ] +
-            ( ( bLeap && iMonth > 2 ) ? 1 : 0 ) );
+   return ( iMonth < 1 && iMonth > 12 ) ? 0 : iMonthes[ iMonth - 1 ] +
+          ( ( bLeap && iMonth > 2 ) ? 1 : 0 );
 }
 
 static int ct_doy( long lDate )
@@ -410,7 +410,7 @@ HB_FUNC( WEEK )
       lDate = hb_dateEncode( iYear, iMonth, iDay );
    }
 
-   if( !lDate )
+   if( ! lDate )
    {
       iWeek = 0;
    }

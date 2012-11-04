@@ -60,55 +60,55 @@
 #include "hbnetio.ch"
 
 /* file name prefix used by this file IO implementation */
-#define NETIO_FILE_PREFIX     "net:"
-#define NETIO_FILE_PREFIX_LEN strlen( NETIO_FILE_PREFIX )
+#define NETIO_FILE_PREFIX      "net:"
+#define NETIO_FILE_PREFIX_LEN  strlen( NETIO_FILE_PREFIX )
 
 /* default server address, port and timeout */
-#define NETIO_DEFAULT_SERVER  "127.0.0.1"
-#define NETIO_DEFAULT_PORT    2941
-#define NETIO_DEFAULT_TIMEOUT -1
+#define NETIO_DEFAULT_SERVER   "127.0.0.1"
+#define NETIO_DEFAULT_PORT     2941
+#define NETIO_DEFAULT_TIMEOUT  -1
 
 /* message size */
-#define NETIO_MSGLEN          24
+#define NETIO_MSGLEN           24
 
 /* maximal number of open files per connection */
-#define NETIO_FILES_MAX       8192
+#define NETIO_FILES_MAX        8192
 
 /* maximal length of server name */
-#define NETIO_SERVERNAME_MAX  256
+#define NETIO_SERVERNAME_MAX   256
 
 /* maximal length of password */
-#define NETIO_PASSWD_MAX      64
+#define NETIO_PASSWD_MAX       64
 
 /* login string */
-#define NETIO_LOGINSTRID      "HarbourFileTcpIpServer\007"
+#define NETIO_LOGINSTRID       "HarbourFileTcpIpServer\007"
 
 /* messages */
-#define NETIO_LOGIN           1
-#define NETIO_EXISTS          2
-#define NETIO_DELETE          3
-#define NETIO_RENAME          4
-#define NETIO_COMMIT          5
-#define NETIO_SIZE            6
-#define NETIO_TRUNC           7
-#define NETIO_READ            8
-#define NETIO_WRITE           9
-#define NETIO_LOCK            10
-#define NETIO_UNLOCK          11
-#define NETIO_OPEN            12
-#define NETIO_CLOSE           13
-#define NETIO_ERROR           14
-#define NETIO_SYNC            15
-#define NETIO_PROCIS          16
-#define NETIO_PROC            17
-#define NETIO_PROCW           18
-#define NETIO_FUNC            19
-#define NETIO_FUNCCTRL        20
-#define NETIO_SRVITEM         21
-#define NETIO_SRVDATA         22
-#define NETIO_SRVCLOSE        23
-#define NETIO_TESTLOCK        24
-#define NETIO_CONNECTED       0x4321DEAD
+#define NETIO_LOGIN            1
+#define NETIO_EXISTS           2
+#define NETIO_DELETE           3
+#define NETIO_RENAME           4
+#define NETIO_COMMIT           5
+#define NETIO_SIZE             6
+#define NETIO_TRUNC            7
+#define NETIO_READ             8
+#define NETIO_WRITE            9
+#define NETIO_LOCK             10
+#define NETIO_UNLOCK           11
+#define NETIO_OPEN             12
+#define NETIO_CLOSE            13
+#define NETIO_ERROR            14
+#define NETIO_SYNC             15
+#define NETIO_PROCIS           16
+#define NETIO_PROC             17
+#define NETIO_PROCW            18
+#define NETIO_FUNC             19
+#define NETIO_FUNCCTRL         20
+#define NETIO_SRVITEM          21
+#define NETIO_SRVDATA          22
+#define NETIO_SRVCLOSE         23
+#define NETIO_TESTLOCK         24
+#define NETIO_CONNECTED        0x4321DEAD
 
 /* messages format */
 /* { NETIO_LOGIN,    len[ 2 ]... } + loginstr[ len ] -> { NETIO_LOGIN, NETIO_CONNECTED[ 4 ], ... } */

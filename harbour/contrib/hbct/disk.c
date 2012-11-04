@@ -82,7 +82,7 @@ HB_FUNC( DIRMAKE )
    if( hb_fsMkDir( hb_parcx( 1 ) ) )
       hb_retni( 0 );
    else
-      hb_retnint( - ( HB_MAXINT ) hb_fsOsError() );
+      hb_retnint( -( HB_MAXINT ) hb_fsOsError() );
 }
 
 HB_FUNC( DIRNAME )
