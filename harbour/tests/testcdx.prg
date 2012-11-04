@@ -43,7 +43,7 @@ PROCEDURE Main()
 //    Inkey( 0 )
    ENDDO
 
-   FErase( "testcdx.cdx" )
+   hb_dbDrop( "testcdx.cdx" )
 
    Select( "TESTCDX" )
    ordCreate( "testcdx", "Character", "CHARACTER", FIELD->CHARACTER, .F. )

@@ -47,8 +47,8 @@ PROCEDURE Main()
    SET CENTURY ON
 
 
-   IF ! hb_FileExists( "users.dbf" )
-      FErase( "users.cdx" )
+   IF ! hb_dbExists( "users.dbf" )
+      hb_dbDrop( "users.cdx" )
       dbCreate( "users", { { "USER", "C", 16, 0 }, { "PASSWORD", "C", 16, 0 }, { "NAME", "C", 50, 0 } }, , .T., "user" )
       dbAppend()
       FIELD->USER := "demo"
@@ -56,29 +56,29 @@ PROCEDURE Main()
       FIELD->NAME := "Demo"
       ordCreate( "users", "user", "USER" )
       dbCloseArea()
-   ELSEIF ! hb_FileExists( "users.cdx" )
+   ELSEIF ! hb_dbExists( "users.cdx" )
       dbUseArea( .T., , "users", , .F., .F. )
       ordCreate( "users", "user", "USER" )
       dbCloseArea()
    ENDIF
 
-   IF ! hb_FileExists( "carts.dbf" )
-      FErase( "carts.cdx" )
+   IF ! hb_dbExists( "carts.dbf" )
+      hb_dbDrop( "carts.cdx" )
       dbCreate( "carts", { { "USER", "C", 16, 0 }, { "CODE", "C", 16, 0 }, { "AMOUNT", "N", 6, 0 }, { "TOTAL", "N", 9, 2 } }, , .T., "cart" )
       ordCreate( "carts", "user", "USER+CODE" )
       dbCloseArea()
-   ELSEIF ! hb_FileExists( "carts.cdx" )
+   ELSEIF ! hb_dbExists( "carts.cdx" )
       dbUseArea( .T., , "carts", , .F., .F. )
       ordCreate( "carts", "user", "USER+CODE" )
       dbCloseArea()
    ENDIF
 
-   IF ! hb_FileExists( "items.dbf" )
-      FErase( "items.cdx" )
+   IF ! hb_dbExists( "items.dbf" )
+      hb_dbDrop( "items.cdx" )
       dbCreate( "items", { { "CODE", "C", 16, 0 }, { "TITLE", "C", 80, 0 }, { "PRICE", "N", 9, 2 } }, , .T., "items" )
       ordCreate( "items", "code", "CODE" )
       dbCloseArea()
-   ELSEIF ! hb_FileExists( "item.cdx" )
+   ELSEIF ! hb_dbExists( "item.cdx" )
       dbUseArea( .T., , "items", , .F., .F. )
       ordCreate( "items", "code", "CODE" )
       dbCloseArea()

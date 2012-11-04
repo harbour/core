@@ -96,9 +96,9 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDCASE
 
    // Delete test_?.* since may be changing RDD flavors (avoid conflicts)
-   AEval( Directory( "test_?.*" ), {| a | FErase( a[ F_NAME ] ) } )
+   AEval( Directory( "test_?.*" ), {| a | hb_dbDrop( a[ F_NAME ] ) } )
 
-   IF hb_FileExists( "test_2.dbf" )
+   IF hb_dbExists( "test_2.dbf" )
       NotifyUser( "Cannot delete test_2.dbf" )
    ENDIF
 
@@ -111,7 +111,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       { "LOG",  "L",  1, 0 }, ;
       { "MEMO", "M", 10, 0 } } )
 
-   IF ! hb_FileExists( "test_2.dbf" )
+   IF ! hb_dbExists( "test_2.dbf" )
       NotifyUser( "Failed to create test_2.dbf" )
    ENDIF
 
