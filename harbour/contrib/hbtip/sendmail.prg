@@ -253,10 +253,8 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
                lAuthLogin := .T.
             ELSEIF "PLAIN" $ oInMail:cReply
                lAuthPlain := .T.
-#if defined( HB_HAS_OPENSSL )
-            ELSEIF "STARTTLS" $ oInMail:cReply
+            ELSEIF oInMail:HasSSL() .AND. "STARTTLS" $ oInMail:cReply
                lAuthTLS := .T.
-#endif
             ELSEIF Left( oInMail:cReply, 4 ) == "250 "
                EXIT
             ENDIF

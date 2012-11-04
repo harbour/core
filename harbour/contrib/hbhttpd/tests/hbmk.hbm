@@ -3,5 +3,6 @@
 #
 
 hbhttpd.hbc
+hbssl.hbc
 
 -w3 -es2

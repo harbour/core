@@ -307,18 +307,18 @@
          VAR    hWnd, nOldProc
          METHOD New( ) CONSTRUCTOR
          METHOD Capture() INLINE  SetCapture( ::hWnd )
-         METHOD End() BLOCK  {| Self, lEnd | iif( lEnd := ::lValid(),;
-                                 ::PostMsg( WM_CLOSE ), ), lEnd }
+         METHOD End() BLOCK  {| Self, lEnd | iif( lEnd := ::lValid(), ;
+            ::PostMsg( WM_CLOSE ), ), lEnd }
          METHOD EraseBkGnd( hDC )
          METHOD cTitle( cNewTitle ) SETGET
          METHOD Close() VIRTUAL
       ENDCLASS
 
       METHOD New( ) CLASS TWindow
-         local nVar, cStr
+         LOCAL nVar, cStr
          ... <code> ...
          ... <code> ...
-      RETURN Self
+         RETURN Self
    $TESTS$
       TestOp.prg
    $STATUS$

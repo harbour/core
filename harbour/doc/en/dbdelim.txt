@@ -67,7 +67,7 @@
       // Copy delinquent accounts into a delimited text file.
       USE ACCOUNTS NEW
       COPY TO overdue DELIMITED FOR !Empty( accounts->duedate ) ;
-      .AND. DATE() - accounts->duedate > 30
+         .AND. Date() - accounts->duedate > 30
       // Import new customer records.
       USE CUSTOMER NEW
       APPEND FROM customer DELIMITED

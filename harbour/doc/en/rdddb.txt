@@ -298,7 +298,7 @@
       open work areas.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL cName := SPACE( 40 )
+         LOCAL cName := Space( 40 )
          LOCAL nId := 0
          USE test EXCLUSIVE NEW
          //
@@ -306,11 +306,11 @@
          @ 11, 10 GET nId
          READ
          //
-         IF UPDATED()
+         IF Updated()
             APPEND BLANK
             REPLACE tests->Name WITH cName
             REPLACE tests->Id WITH nId
-            tests->( DBCOMMIT() )
+            tests->( dbCommit() )
          ENDIF
          RETURN
    $STATUS$
@@ -343,7 +343,7 @@
       open work areas.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL cName := SPACE( 40 )
+         LOCAL cName := Space( 40 )
          LOCAL nId := 0
          USE test EXCLUSIVE NEW
          USE testid NEW INDEX testid
@@ -352,16 +352,16 @@
          @ 11, 10 GET nId
          READ
          //
-         IF UPDATED()
+         IF Updated()
             APPEND BLANK
             REPLACE tests->Name WITH cName
             REPLACE tests->Id WITH nId
-            IF ! testid->( DBSEEK( nId ) )
+            IF ! testid->( dbSeek( nId ) )
                APPEND BLANK
                REPLACE tests->Id WITH nId
             ENDIF
          ENDIF
-         DBCOMMITALL()
+         dbCommitAll()
          RETURN
    $STATUS$
       R
@@ -443,13 +443,14 @@
       database.
    $EXAMPLES$
       PROCEDURE Main()
-         LOCAL nI, aStruct := { { "CHARACTER", "C", 25, 0 }, ;
-                                { "NUMERIC",   "N",  8, 0 }, ;
-                                { "DOUBLE",    "N",  8, 2 }, ;
-                                { "DATE",      "D",  8, 0 }, ;
-                                { "LOGICAL",   "L",  1, 0 }, ;
-                                { "MEMO1",     "M", 10, 0 }, ;
-                                { "MEMO2",     "M", 10, 0 } }
+         LOCAL nI, aStruct := { ;
+            { "CHARACTER", "C", 25, 0 }, ;
+            { "NUMERIC",   "N",  8, 0 }, ;
+            { "DOUBLE",    "N",  8, 2 }, ;
+            { "DATE",      "D",  8, 0 }, ;
+            { "LOGICAL",   "L",  1, 0 }, ;
+            { "MEMO1",     "M", 10, 0 }, ;
+            { "MEMO2",     "M", 10, 0 } }
 
          REQUEST DBFCDX
 
@@ -492,9 +493,9 @@
    $EXAMPLES$
       nId := 10
       USE testid INDEX testid NEW
-      IF testid->( DBSEEK( nId ) )
-         IF testid->( RLOCK() )
-            DBDELETE()
+      IF testid->( dbSeek( nId ) )
+         IF testid->( RLock() )
+            dbDelete()
          ENDIF
       ENDIF
       USE
@@ -535,8 +536,8 @@
       SET FILTER TO Id == 1
       SELECT Test
       //
-      ? DBFILTER()
-      ? testid->( DBFILTER() )
+      ? dbFilter()
+      ? testid->( dbFilter() )
    $STATUS$
       R
    $COMPLIANCE$
@@ -569,10 +570,10 @@
       is present, the value of the record pointer will be LASTREC().
    $EXAMPLES$
       USE tests
-      DBGOTOP()
-      ? RECNO()
-      DBGOBOTTOM()
-      ? RECNO()
+      dbGoTop()
+      ? RecNo()
+      dbGoBottom()
+      ? RecNo()
       USE
    $STATUS$
       R
@@ -614,14 +615,14 @@
       Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
       the database and index buffers. This is the same as a DBSKIP(0) call.
    $EXAMPLES$
-      The following example uses DBGOTO() to iteratively process
+      The following example uses dbGoto() TO iteratively process
       every fourth record:
 
-      DBUSEAREA( .T., "DBFNTX", "sales", "sales", .T. )
+      dbUseArea( .T., "DBFNTX", "sales", "sales", .T. )
       //
       // toggle every fourth record
-      DO WHILE ! EOF()
-         DBGOTO( RECNO() + 4 )
+      DO WHILE ! Eof()
+         dbGoto( RecNo() + 4 )
          sales->Group := "Bear"
       ENDDO
    $STATUS$
@@ -656,10 +657,10 @@
       is present, the value of RECNO() will be 1.
    $EXAMPLES$
       USE tests
-      DBGOTOP()
-      ? RECNO()
-      DBGOBOTTOM()
-      ? RECNO()
+      dbGoTop()
+      ? RecNo()
+      dbGoBottom()
+      ? RecNo()
       USE
    $STATUS$
       R
@@ -695,11 +696,11 @@
       with DBRECALL().
    $EXAMPLES$
       USE test NEW
-      DBGOTO( 10 )
-      DBDELETE()
-      ? DELETED()
-      DBRECALL()
-      ? DELETED()
+      dbGoto( 10 )
+      dbDelete()
+      ? Deleted()
+      dbRecall()
+      ? Deleted()
       USE
    $STATUS$
       R
@@ -740,9 +741,9 @@
       PROCEDURE Main()
          LOCAL x := 0
          USE tests NEW
-         FOR x := 1 TO reccount()
-            IF ! DBRLOCK()
-               DBUNLOCK()
+         FOR x := 1 TO RecCount()
+            IF ! dbRLock()
+               dbUnlock()
             ENDIF
          NEXT
          USE
@@ -782,11 +783,11 @@
          LOCAL aList := {}
          LOCAL x := 0
          USE tests NEW
-         DBGOTO( 10 )
-         RLOCK()
-         DBGOTO( 100 )
-         RLOCK()
-         aList := DBRLOCKLIST()
+         dbGoto( 10 )
+         RLock()
+         dbGoto( 100 )
+         RLock()
+         aList := dbRLockList()
          FOR x := 1 TO Len( aList )
             ? aList[ x ]
          NEXT
@@ -826,10 +827,10 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE tests NEW
-         DBGOTO( 10 )
-         IF RLOCK()
+         dbGoto( 10 )
+         IF RLock()
             ? tests->ID
-            DBRUNLOCK()
+            dbRUnlock()
          ENDIF
          USE
          RETURN
@@ -890,19 +891,19 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE tests NEW INDEX tests
-         DBGOTO( 10 )
+         dbGoto( 10 )
          nId := tests->nId
-         IF tests->( DBSEEK( nId ) )
-            IF RLOCK()
+         IF tests->( dbSeek( nId ) )
+            IF RLock()
                ? tests->Name
-               DBRUNLOCK()
+               dbRUnlock()
             ENDIF
          ENDIF
          USE
          RETURN
 
       ACCEPT "Employee name: " TO cName
-      IF Employee->( DBSEEK( cName ) )
+      IF Employee->( dbSeek( cName ) )
          Employee->( ViewRecord() )
       ELSE
          ? "Not found"
@@ -948,13 +949,13 @@
          LOCAL nId
          USE tests NEW INDEX tests
          USE tests1 NEW INDEX tests1
-         DBSELECTAREA( 1 )
+         dbSelectArea( 1 )
          nId := tests->Id
-         DBSELECTAREA( 2 )
-         IF DBSEEK( nId )
+         dbSelectArea( 2 )
+         IF dbSeek( nId )
             ? tests1->cName
          ENDIF
-         DBCLOSEALL()
+         dbCloseAll()
          RETURN
    $STATUS$
       R
@@ -991,7 +992,7 @@
       used to activate and manage the work area. If the specified driver is
       not avaliable,this function will have no effect.
    $EXAMPLES$
-      DBSETDRIVER("ADS")
+      dbSetDriver( "ADS" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -1027,10 +1028,10 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE tests NEW
-         DBGOTOP()
-         DO WHILE ! EOF()
+         dbGoTop()
+         DO WHILE ! Eof()
             ? tests->Id, tests->Name
-            DBSKIP()
+            dbSkip()
          ENDDO
          USE
          RETURN
@@ -1072,8 +1073,8 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE tests NEW
-         DBSETFILTER( {|| tests->Id <100 }, "tests->Id <100" )
-         DBGOTOP()
+         dbSetFilter( {|| tests->Id < 100 }, "tests->Id <100" )
+         dbGoTop()
    $STATUS$
       R
    $COMPLIANCE$
@@ -1113,7 +1114,7 @@
          LOCAL aStru, x
          USE tests NEW
          aStru := dbStruct()
-         FOR x := 1 TO LEN( aStru )
+         FOR x := 1 TO Len( aStru )
             ? aStru[ x ][ DBS_NAME ]
          NEXT
          USE
@@ -1150,11 +1151,11 @@
    $EXAMPLES$
       nId := 10
       USE testid INDEX testid NEW
-      IF testid->( DBSEEK( nId ) )
-         IF testid->( RLOCK() )
-            DBDELETE()
+      IF testid->( dbSeek( nId ) )
+         IF testid->( RLock() )
+            dbDelete()
          ELSE
-            DBUNLOCK()
+            dbUnlock()
          ENDIF
       ENDIF
       USE
@@ -1188,14 +1189,14 @@
       nId := 10
       USE tests INDEX testid NEW
       USE tests1 INDEX tests NEW
-      IF testid->( DBSEEK( nId ) )
-         IF testid->( RLOCK() )
-            DBDELETE()
+      IF testid->( dbSeek( nId ) )
+         IF testid->( RLock() )
+            dbDelete()
          ELSE
-            DBUNLOCK()
+            dbUnlock()
          ENDIF
       ELSE
-         DBUNLOCKALL()
+         dbUnlockAll()
       ENDIF
       USE
    $STATUS$
@@ -1259,7 +1260,7 @@
       If it is not specified, the file will he opened in normal read-write
       mode.
    $EXAMPLES$
-      DBUSEAREA( .T.,, "tests" )
+      dbUseArea( .T.,, "tests" )
    $STATUS$
       R
    $COMPLIANCE$

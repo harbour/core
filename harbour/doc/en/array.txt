@@ -483,8 +483,8 @@
       array <aTarget> remains constant.
    $EXAMPLES$
       LOCAL nCount := 2, nStart := 1, aOne, aTwo
-      aOne := { "HARBOUR", " is ", "POWER"}
-      aTwo := { "CLIPPER", " was ", "POWER"}
+      aOne := { "HARBOUR", " is ", "POWER" }
+      aTwo := { "CLIPPER", " was ", "POWER" }
       ACopy( aOne, aTwo, nStart, nCount )
    $STATUS$
       R
@@ -522,7 +522,7 @@
       original array <aSource>
    $EXAMPLES$
       LOCAL aOne, aTwo
-      aOne := { "Harbour"," is ","POWER" }
+      aOne := { "Harbour", " is ", "POWER" }
       aTwo := AClone( aOne )       // Result: aTwo is {"Harbour"," is ","POWER"}
       aOne[ 1 ] := "The Harbour Compiler"
       // Result:

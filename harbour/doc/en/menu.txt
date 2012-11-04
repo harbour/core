@@ -292,10 +292,10 @@
       CLS
       SET MESSAGE TO MaxRow() / 2 CENTER
       SET WRAP ON
-      @ 0           , 0           PROMPT "1. Upper left"   MESSAGE " One "
-      @ 0           , MaxCol()-16 PROMPT "2. Upper right"  MESSAGE " Two "
-      @ MaxRow() - 1, MaxCol()-16 PROMPT "3. Bottom right" MESSAGE "Three"
-      @ MaxRow() - 1, 0           PROMPT "4. Bottom left"  MESSAGE "Four "
+      @ 0           , 0             PROMPT "1. Upper left"   MESSAGE " One "
+      @ 0           , MaxCol() - 16 PROMPT "2. Upper right"  MESSAGE " Two "
+      @ MaxRow() - 1, MaxCol() - 16 PROMPT "3. Bottom right" MESSAGE "Three"
+      @ MaxRow() - 1, 0             PROMPT "4. Bottom left"  MESSAGE "Four "
       MENU TO nChoice
       SetPos( MaxRow() / 2, MaxCol() / 2 - 10 )
       IF nChoice == 0

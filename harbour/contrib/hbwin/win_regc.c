@@ -57,20 +57,20 @@ static HKEY hb_regkeyconv( HB_PTRUINT nKey )
 {
    switch( nKey )
    {
-   case 1:
-      return ( HKEY ) HKEY_CLASSES_ROOT;
-   /* NOTE: In xhb, zero value means HKEY_LOCAL_MACHINE. */
-   case 0:
-   case 2:
-      return ( HKEY ) HKEY_CURRENT_USER;
+      case 1:
+         return ( HKEY ) HKEY_CLASSES_ROOT;
+      /* NOTE: In xhb, zero value means HKEY_LOCAL_MACHINE. */
+      case 0:
+      case 2:
+         return ( HKEY ) HKEY_CURRENT_USER;
 #if ! defined( HB_OS_WIN_CE )
-   case 3:
-      return ( HKEY ) HKEY_CURRENT_CONFIG;
+      case 3:
+         return ( HKEY ) HKEY_CURRENT_CONFIG;
 #endif
-   case 4:
-      return ( HKEY ) HKEY_LOCAL_MACHINE;
-   case 5:
-      return ( HKEY ) HKEY_USERS;
+      case 4:
+         return ( HKEY ) HKEY_LOCAL_MACHINE;
+      case 5:
+         return ( HKEY ) HKEY_USERS;
    }
 
    return ( HKEY ) nKey;
@@ -144,7 +144,7 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
                                  &dwSize ) == ERROR_SUCCESS )
             {
                #if defined( UNICODE )
-                  dwSize >>= 1;
+               dwSize >>= 1;
                #endif
 
                HB_STORSTRLEN( ( LPTSTR ) lpValue, dwSize, 5 );
@@ -226,7 +226,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
       ++nValueLen;
 
       #if defined( UNICODE )
-         nValueLen *= 2;
+      nValueLen *= 2;
       #endif
 
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),

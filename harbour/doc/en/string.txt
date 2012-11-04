@@ -42,8 +42,8 @@
       in <cString> is an alphabetic character. If not, the function will
       return a logical false (.F.).
    $EXAMPLES$
-      ? 'isalpha( "hello" ) = ', isalpha( "hello" )
-      ? 'isalpha( "12345" ) = ', isalpha( "12345" )
+      ? 'isalpha( "hello" ) = ', IsAlpha( "hello" )
+      ? 'isalpha( "12345" ) = ', IsAlpha( "12345" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -80,8 +80,8 @@
       function will return a logical true (.T.); otherwise, it will
       return a logical false (.F.).
    $EXAMPLES$
-      ? ISDIGIT( "12345" )      // .T.
-      ? ISDIGIT( "abcde" )      // .F.
+      ? IsDigit( "12345" )      // .T.
+      ? IsDigit( "abcde" )      // .F.
    $STATUS$
       R
    $COMPLIANCE$
@@ -118,8 +118,8 @@
       function will return a logical true (.T.); otherwise, it will
       return a logical false (.F.).
    $EXAMPLES$
-      ? ISUPPER( "Abcde" )    // .T.
-      ? ISUPPER( "abcde" )    // .F.
+      ? IsUpper( "Abcde" )    // .T.
+      ? IsUpper( "abcde" )    // .F.
    $STATUS$
       R
    $COMPLIANCE$
@@ -156,8 +156,8 @@
       function will return a logical true (.T.); otherwise, it will
       return a logical false (.F.).
    $EXAMPLES$
-      ? islower( "ABCde" )      // .F.
-      ? islower( "aBCde" )      // .T.
+      ? IsLower( "ABCde" )      // .F.
+      ? IsLower( "aBCde" )      // .T.
    $STATUS$
       R
    $COMPLIANCE$
@@ -192,7 +192,7 @@
    $DESCRIPTION$
       This function trims the leading space blank
    $EXAMPLES$
-      ? LTRIM( "HELLO     " )
+      ? LTrim( "HELLO     " )
    $STATUS$
       R
    $COMPLIANCE$
@@ -319,7 +319,7 @@
 
       SUBSTR( <cString>, 1, <nLen> )
    $EXAMPLES$
-      ? LEFT( "HELLO HARBOUR", 5 )    // HELLO
+      ? Left( "HELLO HARBOUR", 5 )    // HELLO
    $STATUS$
       R
    $COMPLIANCE$
@@ -360,7 +360,7 @@
 
       SUBSTR( <cString>, LEN( <cString> ) - <nLen> + 1, <nLen> )
    $EXAMPLES$
-      ? RIGHT( "HELLO HARBOUR", 5 )     // RBOUR
+      ? Right( "HELLO HARBOUR", 5 )     // RBOUR
    $STATUS$
       R
    $COMPLIANCE$
@@ -407,9 +407,9 @@
       characters from <nStart> to the end of the string is less than <nLen>
       the rest are ignored.
    $EXAMPLES$
-      ? SUBSTR( "HELLO HARBOUR" ,  7, 4 )      // HARB
-      ? SUBSTR( "HELLO HARBOUR" , -3, 3 )      // OUR
-      ? SUBSTR( "HELLO HARBOUR" ,  7    )      // HARBOUR
+      ? SubStr( "HELLO HARBOUR" ,  7, 4 )      // HARB
+      ? SubStr( "HELLO HARBOUR" , -3, 3 )      // OUR
+      ? SubStr( "HELLO HARBOUR" ,  7    )      // HARBOUR
    $STATUS$
       R
    $COMPLIANCE$
@@ -564,8 +564,8 @@
 
       The STRZERO() function was part of the CA-Cl*pper samples.
    $EXAMPLES$
-      ? STRZERO( 10, 6, 2 ) // "010.00"
-      ? STRZERO( -10, 8, 2 ) // "-0010.00"
+      ? StrZero( 10, 6, 2 ) // "010.00"
+      ? StrZero( -10, 8, 2 ) // "-0010.00"
    $TESTS$
       see the regression test suit for comprehensive tests.
    $STATUS$
@@ -600,16 +600,16 @@
    $DESCRIPTION$
       HB_VALTOSTR can be used to convert any scalar value to a string.
    $EXAMPLES$
-      ? HB_VALTOSTR( 4 )
-      ? HB_VALTOSTR( "String" )
+      ? hb_ValToStr( 4 )
+      ? hb_ValToStr( "String" )
    $TESTS$
-      ? HB_VALTOSTR( 4 ) == "         4"
-      ? HB_VALTOSTR( 4.0 / 2 ) == "         2.00"
-      ? HB_VALTOSTR( "String" ) == "String"
-      ? HB_VALTOSTR( STOD( "20010101" ) ) == "01/01/01"
-      ? HB_VALTOSTR( NIL ) == "NIL"
-      ? HB_VALTOSTR( .F. ) == ".F."
-      ? HB_VALTOSTR( .T. ) == ".T."
+      ? hb_ValToStr( 4 ) == "         4"
+      ? hb_ValToStr( 4.0 / 2 ) == "         2.00"
+      ? hb_ValToStr( "String" ) == "String"
+      ? hb_ValToStr( SToD( "20010101" ) ) == "01/01/01"
+      ? hb_ValToStr( NIL ) == "NIL"
+      ? hb_ValToStr( .F. ) == ".F."
+      ? hb_ValToStr( .T. ) == ".T."
    $STATUS$
       R
    $COMPLIANCE$
@@ -644,13 +644,13 @@
       size of a hash table. If it is used with a multidimensional array it
       returns the size of the first dimension.
    $EXAMPLES$
-      ? LEN( "Harbour" )           // 7
-      ? LEN( { "One", "Two" } )    // 2
+      ? Len( "Harbour" )           // 7
+      ? Len( { "One", "Two" } )    // 2
    $TESTS$
       PROCEDURE Main()
          LOCAL cName := ""
          ACCEPT "Enter your name: " TO cName
-         ? LEN( cName )
+         ? Len( cName )
          RETURN
    $STATUS$
       R
@@ -685,17 +685,17 @@
       This function checks if an expression has empty value and returns a
       logical indicating whether it the expression is empty or not.
    $EXAMPLES$
-      ? EMPTY( "I'm not empty" )    // .F.
+      ? Empty( "I'm not empty" )    // .F.
    $TESTS$
       PROCEDURE Main()
-         ? EMPTY( NIL )             // .T.
-         ? EMPTY( 0 )               // .T.
-         ? EMPTY( .F. )             // .T.
-         ? EMPTY( "" )              // .T.
-         ? EMPTY( 1 )               // .F.
-         ? EMPTY( .T. )             // .F.
-         ? EMPTY( "smile" )         // .F.
-         ? EMPTY( Date() )          // .F.
+         ? Empty( NIL )             // .T.
+         ? Empty( 0 )               // .T.
+         ? Empty( .F. )             // .T.
+         ? Empty( "" )              // .T.
+         ? Empty( 1 )               // .F.
+         ? Empty( .T. )             // .F.
+         ? Empty( "smile" )         // .F.
+         ? Empty( Date() )          // .F.
          RETURN
    $STATUS$
       R
@@ -730,9 +730,9 @@
       useful to build descending indexes.
    $EXAMPLES$
       // Seek for Smith in a descending index
-      SEEK DESCEND( "SMITH" )
+      SEEK Descend( "SMITH" )
    $TESTS$
-      DATA->( DBSEEK( DESCEND( "SMITH" ) ) )
+      DATA->( dbSeek( Descend( "SMITH" ) ) )
       will seek "SMITH" into a descending index.
    $STATUS$
       R
@@ -767,8 +767,8 @@
       to its lowercased representation. Any non alphabetic character withing
       <cString> will remain unchanged.
    $EXAMPLES$
-      ? LOWER( "HARBOUR" )      // harbour
-      ? LOWER( "Hello All" )    // hello all
+      ? Lower( "HARBOUR" )      // harbour
+      ? Lower( "Hello All" )    // hello all
    $STATUS$
       R
    $COMPLIANCE$
@@ -803,8 +803,8 @@
       This function converts all alpha characters in <cString> to upper
       case values and returns that formatted character expression.
    $EXAMPLES$
-      ? UPPER( "harbour" )       // HARBOUR
-      ? UPPER( "Harbour" )       // HARBOUR
+      ? Upper( "harbour" )       // HARBOUR
+      ? Upper( "Harbour" )       // HARBOUR
    $STATUS$
       R
    $COMPLIANCE$
@@ -844,8 +844,8 @@
       The CHR() function may be used for printing special codes as well
       as normal and graphics character codes.
    $EXAMPLES$
-      ? CHR( 32 )
-      ? chr( 215 )
+      ? Chr( 32 )
+      ? Chr( 215 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -880,8 +880,8 @@
       This function return the ASCII value of the leftmost character of
       any character expression passed as <cCharacter>.
    $EXAMPLES$
-      ? ASC( "A" )
-      ? ASC( "¹" )
+      ? Asc( "A" )
+      ? Asc( "¹" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -927,9 +927,9 @@
       truncate the string <xVal> from the leftmost side to the length of
       <nWidth>.
    $EXAMPLES$
-      ? PADC( "Harbour", 20 )
-      ? PADC( 34.5142, 20 )
-      ? PADC( Date(), 35 )
+      ? PadC( "Harbour", 20 )
+      ? PadC( 34.5142, 20 )
+      ? PadC( Date(), 35 )
    $TESTS$
       See Examples
    $STATUS$
@@ -977,9 +977,9 @@
       truncate the string <xVal> from the leftmost side to the length of
       <nWidth>.
    $EXAMPLES$
-      ? PADL( "Harbour", 20 )
-      ? PADL( 34.5142, 20 )
-      ? PADL( Date(), 35 )
+      ? PadL( "Harbour", 20 )
+      ? PadL( 34.5142, 20 )
+      ? PadL( Date(), 35 )
    $TESTS$
       See examples
    $STATUS$
@@ -1027,9 +1027,9 @@
       truncate the string <xVal> from the leftmost side to the length of
       <nWidth>.
    $EXAMPLES$
-      ? PADR( "Harbour", 20 )
-      ? PADR( 34.5142, 20 )
-      ? PADR( Date(), 35 )
+      ? PadR( "Harbour", 20 )
+      ? PadR( 34.5142, 20 )
+      ? PadR( Date(), 35 )
    $TESTS$
       See examples
    $STATUS$
@@ -1066,10 +1066,10 @@
       This function returns the string <cExpression> will all leading and
       trailing blank spaces removed.
    $EXAMPLES$
-      ? ALLTRIM( "HELLO HARBOUR" )
-      ? ALLTRIM( "     HELLO HARBOUR" )
-      ? ALLTRIM( "HELLO HARBOUR     " )
-      ? ALLTRIM( "     HELLO HARBOUR     " )
+      ? AllTrim( "HELLO HARBOUR" )
+      ? AllTrim( "     HELLO HARBOUR" )
+      ? AllTrim( "HELLO HARBOUR     " )
+      ? AllTrim( "     HELLO HARBOUR     " )
    $TESTS$
       See Examples
    $STATUS$
@@ -1110,10 +1110,10 @@
       Together with LTRIM(), this function equated to the ALLTRIM()
       function.
    $EXAMPLES$
-      ? RTRIM( "HELLO" )              //  "HELLO"
-      ? RTRIM( "" )                   //  ""
-      ? RTRIM( "UA   " )              //  "UA"
-      ? RTRIM( "   UA" )              //  "   UA"
+      ? RTrim( "HELLO" )              //  "HELLO"
+      ? RTrim( "" )                   //  ""
+      ? RTrim( "UA   " )              //  "UA"
+      ? RTrim( "   UA" )              //  "   UA"
    $TESTS$
       See Examples
    $STATUS$
@@ -1154,10 +1154,10 @@
       Together with LTRIM(), this function equated to the ALLTRIM()
       function.
    $EXAMPLES$
-      ? TRIM( "HELLO" )     //  "HELLO"
-      ? TRIM( "" )          //   ""
-      ? TRIM( "UA   " )     //   "UA"
-      ? TRIM( "   UA" )     //   "   UA"
+      ? Trim( "HELLO" )     //  "HELLO"
+      ? Trim( "" )          //   ""
+      ? Trim( "UA   " )     //   "UA"
+      ? Trim( "   UA" )     //   "   UA"
    $TESTS$
       See Examples
    $STATUS$
@@ -1200,8 +1200,8 @@
 
       A value of 0 for <nSize> will return a NULL string.
    $EXAMPLES$
-      ? REPLICATE( "a", 10 )      // aaaaaaaaaa
-      ? REPLICATE( "b", 100000 )
+      ? Replicate( "a", 10 )      // aaaaaaaaaa
+      ? Replicate( "b", 100000 )
    $TESTS$
       See Examples
    $STATUS$
@@ -1247,7 +1247,7 @@
          LOCAL cString := Space( 20 )  // Create an character memory variable
                                        // with length 20
          ? Len( cString )      // 20
-         cBigString := space( 100000 ) // create a memory variable with 100000
+         cBigString := Space( 100000 ) // create a memory variable with 100000
                                        // blank spaces
          ? Len( cBigString )
          USE tests NEW
@@ -1261,9 +1261,9 @@
 
          IF ! Empty( Alias() )
             nRecord := RecNo()
-            dbgoto( 0 )
+            dbGoto( 0 )
             IF ValType( xField ) == "C"
-               xField := AScan( dbstruct(), {| aFields | aFields[ 1 ] == Upper( xfield ) } )
+               xField := AScan( dbStruct(), {| aFields | aFields[ 1 ] == Upper( xfield ) } )
             ELSE
                DEFAULT xField TO 0
                IF xField < 1 .OR. xField > FCount()
@@ -1273,7 +1273,7 @@
             IF !( xfield == 0 )
                xRetvalue := FieldGet( xfield )
             ENDIF
-            dbgoto( nrecord )
+            dbGoto( nrecord )
          ENDIF
          RETURN xRetvalue
    $TESTS$
@@ -1314,7 +1314,7 @@
 
       This functions is the oppose of the STR() function.
    $EXAMPLES$
-      ? VAL( "31421" ) // 31421
+      ? Val( "31421" ) // 31421
    $TESTS$
       See regression test
    $STATUS$
@@ -1367,9 +1367,9 @@
       in <cString> are to the replaced. The default of <nOccurrences> is
       all occurrences.
    $EXAMPLES$
-      ? STRTRAN( "Harbour  Power", "  ", " " )   // Harbour Power
-               // Harbour Power The future  of  xBase
-      ? STRTRAN( "Harbour  Power  The Future  of  xBase", "  ", " " ,, 2 )
+      ? StrTran( "Harbour  Power", "  ", " " )   // Harbour Power
+      // Harbour Power The future  of  xBase
+      ? StrTran( "Harbour  Power  The Future  of  xBase", "  ", " " , , 2 )
    $TESTS$
       See regression test
    $STATUS$

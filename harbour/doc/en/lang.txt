@@ -44,10 +44,10 @@
       REQUEST HB_LANG_ES
       PROCEDURE Main()
          // English: Argument error
-         ? "English:", HB_LANGERRMSG( EG_ARG )
-          "ES" )
+         ? "English:", hb_langErrMsg( EG_ARG )
+         hb_langSelect( "ES" )
          // Spanish: Error de argumento
-         ? "Spanish:", HB_LANGERRMSG( EG_ARG )
+         ? "Spanish:", hb_langErrMsg( EG_ARG )
          RETURN
    $STATUS$
       R
@@ -91,10 +91,10 @@
       REQUEST HB_LANG_ES
       PROCEDURE Main()
          // English: Monday
-         ? "English:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
-          "ES" )
+         ? "English:", hb_langMessage( HB_LANG_ITEM_BASE_DAY + 1 )
+         hb_langSelect( "ES" )
          // Spanish: Lunes
-         ? "Spanish:", HB_LANGMESSAGE( HB_LANG_ITEM_BASE_DAY + 1 )
+         ? "Spanish:", hb_langMessage( HB_LANG_ITEM_BASE_DAY + 1 )
          RETURN
    $STATUS$
       R
@@ -135,16 +135,16 @@
       REQUEST HB_LANG_ES
       PROCEDURE Main()
          hb_langSelect( "pt" )       // Default language is now Portuguese
-         ? CDOW( Date() )            //Segunda-feira
+         ? CDoW( Date() )            //Segunda-feira
          ? "Current language is ", hb_langName()             // Portuguese
          ? "Old language id selected is ", hb_langSelect()   // PT
          hb_langSelect( "ro" )       // Default language is now Romanian
-         ? CMONTH( Date() )          // Mai
+         ? CMonth( Date() )          // Mai
          ? "Old language id selected is ", hb_langSelect()   // RO
          hb_langSelect( "es" )       // Default language is now Spanish
-         ? "Current language is ",hb_langName()              // Spanish
-         ? CMONTH( Date() )          // Mayo
-         ? CDOW( Date() )            // Lunes
+         ? "Current language is ", hb_langName()              // Spanish
+         ? CMonth( Date() )          // Mayo
+         ? CDoW( Date() )            // Lunes
          RETURN
    $TESTS$
       See tests/langapi.prg, tests/langmsg.prg
@@ -235,15 +235,15 @@
       REQUEST HB_LANG_RO
       REQUEST HB_LANG_ES
       PROCEDURE Main()
-         HB_LANGSELECT( "pt" )       // Default language is now Portuguese
-         ? CDOW( Date() )            // Segunda-feira
-         ? "Old language id selected is ", HB_LANGSELECT()   // PT
-         HB_LANGSELECT( "ro" )       // Default language is now Romanian
-         ? CMONTH( Date() )          // Mai
-         ? "Old language id selected is ", HB_LANGSELECT()   // RO
-         HB_LANGSELECT( "es" )       // Default language is now Spanish
-         ? CMONTH( Date() )          // Mayo
-         ? CDOW( Date() )            // Lunes
+         hb_langSelect( "pt" )       // Default language is now Portuguese
+         ? CDoW( Date() )            // Segunda-feira
+         ? "Old language id selected is ", hb_langSelect()   // PT
+         hb_langSelect( "ro" )       // Default language is now Romanian
+         ? CMonth( Date() )          // Mai
+         ? "Old language id selected is ", hb_langSelect()   // RO
+         hb_langSelect( "es" )       // Default language is now Spanish
+         ? CMonth( Date() )          // Mayo
+         ? CDoW( Date() )            // Lunes
          RETURN
    $TESTS$
       See tests/langapi.prg, tests/langmsg.prg

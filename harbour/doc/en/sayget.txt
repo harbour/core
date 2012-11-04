@@ -133,11 +133,11 @@
          LOCAL cVar := Space( 50 )
          LOCAL nId := 0
          CLS
-         @ 3,1 SAY "Name" GET cVar PICTURE "@!S 30"
-         @ 4,1 SAY "Id"   GET nId  PICTURE "999.999"
+         @ 3, 1 SAY "Name" GET cVar PICTURE "@!S 30"
+         @ 4, 1 SAY "Id"   GET nId  PICTURE "999.999"
          READ
-         ? "The name you entered is",cVar
-         ? "The id you entered is",nId
+         ? "The name you entered is", cVar
+         ? "The id you entered is", nId
          RETURN
    $TESTS$
       See Examples

@@ -153,13 +153,13 @@
       aClassData := __objGetMsgList( oB, .T., HB_MSGLISTCLASS )
       aMethod    := __objGetMsgList( oB, .F. )
       FOR i := 1 TO Len( aData )
-          ? "VAR name:", aData[ i ]
+         ? "VAR name:", aData[ i ]
       NEXT
       FOR i := 1 TO Len( aClassData )
-          ? "CLASS VAR name:", aClassData[ i ]
+         ? "CLASS VAR name:", aClassData[ i ]
       NEXT
       FOR i := 1 TO Len( aMethod )
-          ? "METHOD name:", aMethod[ i ]
+         ? "METHOD name:", aMethod[ i ]
       NEXT
    $STATUS$
       R
@@ -201,7 +201,7 @@
       oB := TBrowseNew( 0, 0, 24, 79 )
       aMethod := __objGetMethodList( oB )
       FOR i := 1 TO Len( aMethod )
-          ? "METHOD name:", aMethod[ i ]
+         ? "METHOD name:", aMethod[ i ]
       NEXT
    $STATUS$
       R
@@ -246,8 +246,8 @@
       // show information about TBrowse class
       oB := TBrowseNew( 0, 0, 24, 79 )
       aData := __objGetValueList( oB )
-      FOR i := 1 TO len( aData )
-          ? "VAR name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
+      FOR i := 1 TO Len( aData )
+         ? "VAR name:", aData[ i, HB_OO_DATA_SYMBOL ], ;
             "   value=", aData[ i, HB_OO_DATA_VALUE  ]
       NEXT
    $STATUS$

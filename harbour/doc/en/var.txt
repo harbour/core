@@ -137,7 +137,7 @@
       PROCEDURE Main()
          PRIVATE mPrivate
 
-         mPrivate :="PRIVATE from MAIN()"
+         mPrivate := "PRIVATE from MAIN()"
          ? mPrivate     //PRIVATE from MAIN()
          Test()
          ? mPrivate     //PRIVATE from MAIN()
@@ -398,14 +398,14 @@
 
          nCnt := __mvDBGINFO( HB_MV_PRIVATE ) + 1
          FOR i := 1 TO nCnt
-           xVal := __mvDBGINFO( HB_MV_PRIVATE, i, @cName )
-           ? i, "=", cName, xVal
+            xVal := __mvDBGINFO( HB_MV_PRIVATE, i, @cName )
+            ? i, "=", cName, xVal
          NEXT
 
          nCnt := __mvDBGINFO( HB_MV_PUBLIC ) + 1
          FOR i := 1 TO nCnt
-           xVal := __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
-           ? i, "=", cName, xVal
+            xVal := __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
+            ? i, "=", cName, xVal
          NEXT
 
          RETURN
@@ -443,11 +443,11 @@
       STATIC  TheStatic
       PUBLIC  ThePublic
       PRIVATE ThePrivate
-      ? __MVEXIST( "NotExist"   )        // .F.
-      ? __MVEXIST( "TheLocal"   )        // .F.
-      ? __MVEXIST( "TheStatic"  )        // .F.
-      ? __MVEXIST( "ThePublic"  )        // .T.
-      ? __MVEXIST( "ThePrivate" )        // .T.
+      ? __mvExist( "NotExist"   )        // .F.
+      ? __mvExist( "TheLocal"   )        // .F.
+      ? __mvExist( "TheStatic"  )        // .F.
+      ? __mvExist( "ThePublic"  )        // .T.
+      ? __mvExist( "ThePrivate" )        // .T.
    $STATUS$
       R
    $COMPLIANCE$
@@ -481,11 +481,11 @@
       this variable exists otherwise it generates a runtime error.
       The variable is specified by its name passed as the function parameter.
    $EXAMPLES$
-      FUNCTION MEMVARBLOCK( cMemvar )
+      FUNCTION MemVarBlock( cMemvar )
          RETURN {| x | ;
-            iif( PCOUNT() == 0, ;
-               __MVGET( cMemvar ),;
-               __MVPUT( cMemvar, x ) ) }
+            iif( PCount() == 0, ;
+               __mvGet( cMemvar ), ;
+               __mvPut( cMemvar, x ) ) }
    $STATUS$
       R
    $COMPLIANCE$
@@ -523,11 +523,11 @@
       parameter.
       If a value is not specified then the NIL is assumed
    $EXAMPLES$
-      FUNCTION MEMVARBLOCK( cMemvar )
+      FUNCTION MemVarBlock( cMemvar )
          RETURN {| x | ;
-            iif( PCOUNT() == 0, ;
-               __MVGET( cMemvar ),;
-               __MVPUT( cMemvar, x ) ) }
+            iif( PCount() == 0, ;
+               __mvGet( cMemvar ), ;
+               __mvPut( cMemvar, x ) ) }
    $STATUS$
       R
    $COMPLIANCE$
@@ -569,9 +569,9 @@
          LOCAL cbSetGet
          PUBLIC xPublic
 
-         cbSetGet := MEMVARBLOCK( "xPublic" )
-         EVAL( cbSetGet, "new value" )
-         ? "Value of xPublic variable", EVAL( cbSetGet )
+         cbSetGet := MemVarBlock( "xPublic" )
+         Eval( cbSetGet, "new value" )
+         ? "Value of xPublic variable", Eval( cbSetGet )
 
          RETURN
    $STATUS$
@@ -619,11 +619,11 @@
    $EXAMPLES$
       // open a file named Test that have a field named "name"
       LOCAL bField
-      bFiled := FIELDBLOCK( "name" )
+      bFiled := FieldBlock( "name" )
       USE Test
-      ? "Original value of field 'name' :", EVAL( bField )
-      EVAL( bField, "Mr X new name" )
-      ? "New value for the field 'name' :", EVAL( bField )
+      ? "Original value of field 'name' :", Eval( bField )
+      Eval( bField, "Mr X new name" )
+      ? "New value for the field 'name' :", Eval( bField )
    $STATUS$
       R
    $COMPLIANCE$
@@ -673,7 +673,7 @@
    $EXAMPLES$
       LOCAL bField
       // this block work on the field "name" that exist on work area 2
-      bFiled := FIELDBLOCK( "name", 2 )
+      bFiled := FieldBlock( "name", 2 )
       // open a file named One in work area 1
       // that have a field named "name"
       SELECT 1
@@ -684,8 +684,8 @@
       USE two
       SELECT 1
       ? "Original names: ", One->name, Two->name
-      ? "Name value for file Two :", EVAL( bField )
-      EVAL( bField, "Two has new name" )
+      ? "Name value for file Two :", Eval( bField )
+      Eval( bField, "Two has new name" )
       ? "and now: ", One->name, Two->name
    $STATUS$
       R
@@ -757,22 +757,22 @@
       argument with a valid Harbour expression - the data type of this
       expression is returned.
    $EXAMPLES$
-      ? TYPE( "{ 1, 2 }" )                                // prints "A"
-      ? TYPE( "iif( .T., SubStr( "TYPE", 2, 1 ), .F. )" ) // prints "C"
-      ? TYPE( "At( "OK", MyUDF() ) > 0" )                 // prints "UI"
-      ? TYPE( "{ 1, 2 }[ 5 ]" )                           // prints "UE"
+      ? Type( "{ 1, 2 }" )                                // prints "A"
+      ? Type( "iif( .T., SubStr( "TYPE", 2, 1 ), .F. )" ) // prints "C"
+      ? Type( "At( "OK", MyUDF() ) > 0" )                 // prints "UI"
+      ? Type( "{ 1, 2 }[ 5 ]" )                           // prints "UE"
 
       //--------------------------------------------------------
 
       LOCAL c
       PRIVATE a := "A", b := "B"
-      ? TYPE( "a + b + c" )     // prints: "U" ('C' variable is a local one)
+      ? Type( "a + b + c" )     // prints: "U" ('C' variable is a local one)
 
       //--------------------------------------------------------
 
       LOCAL cFilter := Space( 60 )
       ACCEPT "Enter filter expression:" TO cFilter
-      IF TYPE( cFilter ) $ "CDLMN"
+      IF Type( cFilter ) $ "CDLMN"
          // this is a valid expression
          SET FILTER TO &cFilter
       ENDIF
@@ -848,7 +848,7 @@
          ? ValType( .T. )          // "L"
          ? ValType( 1 )            // "N"
          ? ValType( TBrowse() )    // "O"
-         ? ValType( hb_idleadd() ) // "P" Harbour extension
+         ? ValType( hb_idleAdd() ) // "P" Harbour extension
          ? ValType( @QOut() )      // "S" Harbour extension
          ? ValType( NIL )          // "U"
          RETURN

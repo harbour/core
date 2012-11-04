@@ -111,8 +111,8 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          return HB_FALSE;
       }
 
-     /* Tell all open programs that this change occurred.
-        Allow each program 1 second to handle this message. */
+      /* Tell all open programs that this change occurred.
+         Allow each program 1 second to handle this message. */
       SendMessageTimeout( HWND_BROADCAST, WM_SETTINGCHANGE, 0L, ( LPARAM ) ( LPCTSTR ) TEXT( "windows" ), SMTO_NORMAL, 1000, NULL );
    }
    /* If Windows NT, use the SetDefaultPrinter API for Windows 2000,
@@ -140,7 +140,7 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
             return HB_FALSE;
          }
 
-         bFlag = ( * fnSetDefaultPrinter )( lpPrinterName );
+         bFlag = ( *fnSetDefaultPrinter )( lpPrinterName );
          FreeLibrary( hWinSpool );
          if( ! bFlag )
             return HB_FALSE;

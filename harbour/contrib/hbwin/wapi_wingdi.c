@@ -208,15 +208,15 @@ LOGFONT * hbwapi_par_LOGFONT( LOGFONT * p, int iParam, HB_BOOL bMandatory )
    }
    else if( pStru && HB_IS_ARRAY( pStru ) && hb_arrayLen( pStru ) >= 14 )
    {
-      p->lfHeight         = ( LONG ) hb_arrayGetNL( pStru,  1 );
-      p->lfWidth          = ( LONG ) hb_arrayGetNL( pStru,  2 );
-      p->lfEscapement     = ( LONG ) hb_arrayGetNL( pStru,  3 );
-      p->lfOrientation    = ( LONG ) hb_arrayGetNL( pStru,  4 );
-      p->lfWeight         = ( LONG ) hb_arrayGetNL( pStru,  5 );
-      p->lfItalic         = ( BYTE ) hb_arrayGetNI( pStru,  6 );
-      p->lfUnderline      = ( BYTE ) hb_arrayGetNI( pStru,  7 );
-      p->lfStrikeOut      = ( BYTE ) hb_arrayGetNI( pStru,  8 );
-      p->lfCharSet        = ( BYTE ) hb_arrayGetNI( pStru,  9 );
+      p->lfHeight         = ( LONG ) hb_arrayGetNL( pStru, 1 );
+      p->lfWidth          = ( LONG ) hb_arrayGetNL( pStru, 2 );
+      p->lfEscapement     = ( LONG ) hb_arrayGetNL( pStru, 3 );
+      p->lfOrientation    = ( LONG ) hb_arrayGetNL( pStru, 4 );
+      p->lfWeight         = ( LONG ) hb_arrayGetNL( pStru, 5 );
+      p->lfItalic         = ( BYTE ) hb_arrayGetNI( pStru, 6 );
+      p->lfUnderline      = ( BYTE ) hb_arrayGetNI( pStru, 7 );
+      p->lfStrikeOut      = ( BYTE ) hb_arrayGetNI( pStru, 8 );
+      p->lfCharSet        = ( BYTE ) hb_arrayGetNI( pStru, 9 );
       p->lfOutPrecision   = ( BYTE ) hb_arrayGetNI( pStru, 10 );
       p->lfClipPrecision  = ( BYTE ) hb_arrayGetNI( pStru, 11 );
       p->lfQuality        = ( BYTE ) hb_arrayGetNI( pStru, 12 );
@@ -542,19 +542,21 @@ HB_FUNC( WAPI_TEXTOUT )
       LPCTSTR lpData = HB_PARSTR( 4, &hData, &nDataLen );
 
 #if ! defined( HB_OS_WIN_CE )
-      hb_retl( TextOut( hDC, hb_parni( 2 ) /* iRow */,
-                             hb_parni( 3 ) /* iCol */,
-                             lpData,
-                             ( int ) nDataLen ) );
+      hb_retl( TextOut( hDC, 
+                        hb_parni( 2 ) /* iRow */,
+                        hb_parni( 3 ) /* iCol */,
+                        lpData,
+                        ( int ) nDataLen ) );
 #else
       /* Emulating TextOut() using ExtTextOut(). [vszakats] */
-      hb_retl( ExtTextOut( hDC, hb_parni( 2 ) /* iRow */,
-                                hb_parni( 3 ) /* iCol */,
-                                0,
-                                NULL,
-                                lpData,
-                                ( UINT ) nDataLen,
-                                NULL ) );
+      hb_retl( ExtTextOut( hDC, 
+                           hb_parni( 2 ) /* iRow */,
+                           hb_parni( 3 ) /* iCol */,
+                           0,
+                           NULL,
+                           lpData,
+                           ( UINT ) nDataLen,
+                           NULL ) );
 #endif
 
       hb_strfree( hData );
@@ -599,13 +601,14 @@ HB_FUNC( WAPI_EXTTEXTOUT )
          lpFontWidths = NULL;
 
 
-      hb_retl( ExtTextOut( hDC, hb_parni( 2 ) /* iRow */,
-                                hb_parni( 3 ) /* iCol */,
-                                ( UINT ) hb_parni( 4 ) /* fuOptions */,
-                                hbwapi_par_RECT( &rect, 5, HB_FALSE ),
-                                lpData,
-                                ( UINT ) nDataLen,
-                                lpFontWidths ) );
+      hb_retl( ExtTextOut( hDC, 
+                           hb_parni( 2 ) /* iRow */,
+                           hb_parni( 3 ) /* iCol */,
+                           ( UINT ) hb_parni( 4 ) /* fuOptions */,
+                           hbwapi_par_RECT( &rect, 5, HB_FALSE ),
+                           lpData,
+                           ( UINT ) nDataLen,
+                           lpFontWidths ) );
 
       if( lpFontWidths )
          hb_xfree( lpFontWidths );
@@ -682,6 +685,7 @@ HB_FUNC( WAPI_CREATEPEN )
 HB_FUNC( WAPI_CREATESOLIDBRUSH )
 {
    HBRUSH h = CreateSolidBrush( ( COLORREF ) hb_parnl( 1 ) /* crColor */ );
+
 #if defined( HB_OS_WIN_CE )
    hbwapi_SetLastError( GetLastError() );
 #endif
@@ -753,7 +757,7 @@ HB_FUNC( WAPI_SELECTOBJECT )
       if( bRegion )
          hb_retnint( ( HB_PTRDIFF ) SelectObject( hDC, h ) );
       else
-         hb_retl( SelectObject( hDC, h ) != NULL ); /* NOTE: We don't return a raw pointer. */
+         hb_retl( SelectObject( hDC, h ) != NULL );  /* NOTE: We don't return a raw pointer. */
    }
    else
       hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

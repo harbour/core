@@ -60,7 +60,7 @@
    #include <winspool.h>
 #endif
 
-#define _ENUMPRN_FLAGS_             ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
+#define _ENUMPRN_FLAGS_  ( PRINTER_ENUM_LOCAL | PRINTER_ENUM_CONNECTIONS )
 
 #if ! defined( HB_OS_WIN_CE )
 static HB_BOOL hb_IsLegacyDevice( const char * pszPrinterName )
@@ -187,7 +187,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
             If Level is 2 or 5, Name is a pointer to a null-terminated string that specifies
             the name of a server whose printers are to be enumerated.
             If this string is NULL, then the function enumerates the printers installed on the local machine.
-      */
+       */
       DWORD dwNeeded = 0, dwReturned = 0;
 
       if( EnumPrinters( PRINTER_ENUM_DEFAULT, NULL, 2, NULL, 0, &dwNeeded, &dwReturned ) )
@@ -422,9 +422,9 @@ HB_FUNC( WIN_PRINTFILERAW )
                      while( nWritten < nRead )
                      {
                         DWORD dwWritten = 0;
-                        if( !WritePrinter( hPrinter, &pbyBuffer[ nWritten ],
-                                           ( DWORD ) ( nRead - nWritten ),
-                                           &dwWritten ) )
+                        if( ! WritePrinter( hPrinter, &pbyBuffer[ nWritten ],
+                                            ( DWORD ) ( nRead - nWritten ),
+                                            &dwWritten ) )
                         {
                            iResult = -7;
                            break;
@@ -470,17 +470,18 @@ HB_FUNC( WIN_PRINTFILERAW )
 
 /* Positions for WIN_PRINTERLIST() array */
 
-#define HB_WINPRN_NAME         1
-#define HB_WINPRN_PORT         2
-#define HB_WINPRN_TYPE         3
-#define HB_WINPRN_DRIVER       4
-#define HB_WINPRN_SHARE        5
-#define HB_WINPRN_SERVER       6
-#define HB_WINPRN_LEN_         6
+#define HB_WINPRN_NAME    1
+#define HB_WINPRN_PORT    2
+#define HB_WINPRN_TYPE    3
+#define HB_WINPRN_DRIVER  4
+#define HB_WINPRN_SHARE   5
+#define HB_WINPRN_SERVER  6
+#define HB_WINPRN_LEN_    6
 
 HB_FUNC( WIN_PRINTERLIST )
 {
    PHB_ITEM pPrinterArray = hb_itemArrayNew( 0 );
+
 #if ! defined( HB_OS_WIN_CE )
    HB_BOOL bPrinterNamesOnly = ! hb_parl( 1 );
    HB_BOOL bLocalPrintersOnly = hb_parl( 2 );

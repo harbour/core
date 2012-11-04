@@ -49,7 +49,7 @@
       FUNCTION TestObject()
          LOCAL oObject
 
-         oObject := HBClass():New("TMyClass")
+         oObject := HBClass():New( "TMyClass" )
          oObject:End()
 
          RETURN NIL

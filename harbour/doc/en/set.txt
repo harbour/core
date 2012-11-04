@@ -636,7 +636,7 @@
       return-parameter
    $EXAMPLES$
       LOCAL bOldF10, bOldF10Cond
-      bOldF10 := HB_SetKeyGet( K_F10, @bOldF10Cond )
+      bOldF10 := hb_SetKeyGet( K_F10, @bOldF10Cond )
       ... // some other processing
       SetKey( K_F10, bOldF10, bOldF10Cond )
    $TESTS$
@@ -678,9 +678,9 @@
       returned from a previous call to SetKeySave() - to restore that list,
       or the value of NIL to clear the current list.
    $EXAMPLES$
-      LOCAL aKeys := HB_SetKeySave( NIL )  // removes all current set=keys
+      LOCAL aKeys := hb_SetKeySave( NIL )  // removes all current set=keys
       ... // some other processing
-      HB_SetKeySave( aKeys )
+      hb_SetKeySave( aKeys )
    $TESTS$
       None definable
    $STATUS$
@@ -726,11 +726,11 @@
       ACCEPT, INPUT, READ, and WAIT
    $EXAMPLES$
       // within ReadModal()
-      IF HB_SetKeyCheck( K_ALT_X, GetActive() )
+      IF hb_SetKeyCheck( K_ALT_X, GetActive() )
          ... // some other processing
       ENDIF
       // within TBrowse handler
-      CASE HB_SetKeyCheck( nInkey, oTBrowse )
+      CASE hb_SetKeyCheck( nInkey, oTBrowse )
          RETURN
       CASE nInKey == K_ESC
          ... // some other processing
@@ -775,17 +775,17 @@
       A group of keys may be assigned the same code block/condition block
       by using an array of key values in place on the first parameter.
    $EXAMPLES$
-      LOCAL bOldF10 := setKey( K_F10, {|| Yahoo() } )
+      LOCAL bOldF10 := SetKey( K_F10, {|| Yahoo() } )
       ... // some other processing
       SET KEY K_F10 TO bOldF10
       ... // some other processing
       bBlock := SetKey( K_SPACE )
       IF bBlock != NIL ...
 
-      // make F10 exit current get, but only if in a get - ignores other
-      // wait-states such as menus, achoices, etc...
-      SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
-       {|| GetActive() != NIL } )
+         // make F10 exit current get, but only if in a get - ignores other
+         // wait-states such as menus, achoices, etc...
+         SetKey( K_F10, {|| GetActive():State := GE_WRITE }, ;
+            {|| GetActive() != NIL } )
    $TESTS$
       None definable
    $STATUS$
@@ -1442,7 +1442,7 @@
    $EXAMPLES$
       SET BELL ON
       cDummy := Space( 20 )
-      @ 3,2 GET cDummy
+      @ 3, 2 GET cDummy
       READ
       SET BELL OFF
    $STATUS$

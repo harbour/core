@@ -64,7 +64,7 @@
          etc....
 
    Peter Rees 21 January 2004 <peter@rees.co.nz>
-*/
+ */
 
 #include "hbwin.h"
 #include "hbwapi.h"
@@ -77,7 +77,7 @@
 
    #if defined( __POCC__ )
       #ifndef FONTENUMPROC
-      #define FONTENUMPROC FONTENUMPROCW
+      #define FONTENUMPROC  FONTENUMPROCW
       #endif
    #endif
 #else
@@ -663,9 +663,9 @@ HB_FUNC( WIN_FILLRECT )
       HBRUSH hBrush = CreateSolidBrush( ( COLORREF ) hb_parnl( 6 ) );
       RECT rct;
 
-      rct.left = hb_parnl( 2 );
-      rct.top = hb_parnl( 3 );
-      rct.right = hb_parnl( 4 );
+      rct.left   = hb_parnl( 2 );
+      rct.top    = hb_parnl( 3 );
+      rct.right  = hb_parnl( 4 );
       rct.bottom = hb_parnl( 5 );
 
       if( FillRect( hDC, &rct, hBrush ) )
@@ -688,12 +688,12 @@ HB_FUNC( WIN_LINETO )
 
 HB_FUNC( WIN_RECTANGLE )
 {
-   HDC hDC = hbwapi_par_HDC( 1 );
-   int x1 = hb_parni( 2 );
-   int y1 = hb_parni( 3 );
-   int x2 = hb_parni( 4 );
-   int y2 = hb_parni( 5 );
-   int iWidth = hb_parni( 6 );
+   HDC hDC     = hbwapi_par_HDC( 1 );
+   int x1      = hb_parni( 2 );
+   int y1      = hb_parni( 3 );
+   int x2      = hb_parni( 4 );
+   int y2      = hb_parni( 5 );
+   int iWidth  = hb_parni( 6 );
    int iHeight = hb_parni( 7 );
 
    if( iWidth && iHeight )

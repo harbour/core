@@ -132,17 +132,17 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
          }
          else
          {
-            HB_TRACE( HB_TR_DEBUG, ("HVM stack not available") );
+            HB_TRACE( HB_TR_DEBUG, ( "HVM stack not available" ) );
          }
       }
       else
       {
-         HB_TRACE( HB_TR_DEBUG, ("Harbour service entry function not found") );
+         HB_TRACE( HB_TR_DEBUG, ( "Harbour service entry function not found" ) );
       }
    }
    else
    {
-      HB_TRACE( HB_TR_DEBUG, ("Error registering service") );
+      HB_TRACE( HB_TR_DEBUG, ( "Error registering service" ) );
    }
 }
 
@@ -218,20 +218,20 @@ HB_FUNC( WIN_SERVICEINSTALL )
          LPCTSTR lpServiceName = HB_PARSTRDEF( 1, &hServiceName, NULL );
          LPCTSTR lpDisplayName = HB_PARSTRDEF( 2, &hDisplayName, NULL );
 
-         schSrv = CreateService( schSCM,                       /* SCM database */
-                                 lpServiceName,                /* name of service */
-                                 lpDisplayName,                /* service name to display */
-                                 SERVICE_ALL_ACCESS,           /* desired access */
-                                 SERVICE_WIN32_OWN_PROCESS,    /* service type */
+         schSrv = CreateService( schSCM,                    /* SCM database */
+                                 lpServiceName,             /* name of service */
+                                 lpDisplayName,             /* service name to display */
+                                 SERVICE_ALL_ACCESS,        /* desired access */
+                                 SERVICE_WIN32_OWN_PROCESS, /* service type */
                                  HB_ISNUM( 4 ) ? ( DWORD ) hb_parnl( 4 ) : SERVICE_DEMAND_START,
-                                                               /* start type */
-                                 SERVICE_ERROR_NORMAL,         /* error control type */
-                                 lpPath,                       /* path to service's binary */
-                                 NULL,                         /* no load ordering group */
-                                 NULL,                         /* no tag identifier */
-                                 NULL,                         /* no dependencies */
-                                 NULL,                         /* LocalSystem account */
-                                 NULL );                       /* no password */
+                                                            /* start type */
+                                 SERVICE_ERROR_NORMAL,      /* error control type */
+                                 lpPath,                    /* path to service's binary */
+                                 NULL,                      /* no load ordering group */
+                                 NULL,                      /* no tag identifier */
+                                 NULL,                      /* no dependencies */
+                                 NULL,                      /* LocalSystem account */
+                                 NULL );                    /* no password */
 
          if( schSrv )
          {
@@ -260,6 +260,7 @@ HB_FUNC( WIN_SERVICEINSTALL )
 HB_FUNC( WIN_SERVICEDELETE )
 {
    HB_BOOL bRetVal = HB_FALSE;
+
 #if ! defined( HB_OS_WIN_CE )
    SC_HANDLE schSCM = OpenSCManager( NULL, NULL, SC_MANAGER_ALL_ACCESS );
 
@@ -295,6 +296,7 @@ HB_FUNC( WIN_SERVICEDELETE )
 HB_FUNC( WIN_SERVICESTART )
 {
    HB_BOOL bRetVal = HB_FALSE;
+
 #if ! defined( HB_OS_WIN_CE )
    PHB_ITEM pEntryFunc;
 

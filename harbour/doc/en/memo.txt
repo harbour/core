@@ -47,9 +47,9 @@
       Returns a string/memo with carriage return chars converted to
       specified chars.
    $EXAMPLES$
-      ? MEMOTRAN( DATA->CNOTES )
+      ? MemoTran( DATA->CNOTES )
    $TESTS$
-      @ 1, 1 SAY MEMOTRAN( Data->CNOTES )
+      @ 1, 1 SAY MemoTran( Data->CNOTES )
       will display converted string starting on row two, column two of the
       current device.
    $STATUS$
@@ -84,9 +84,9 @@
       Returns a string/memo with soft carriage return chars converted to
       hard carriage return chars.
    $EXAMPLES$
-      ? HARDCR( Data->CNOTES )
+      ? HardCR( Data->CNOTES )
    $TESTS$
-      @ 1, 1 SAY HARDCR( Data->CNOTES )
+      @ 1, 1 SAY HardCR( Data->CNOTES )
       will display converted string starting on row two, column two of the
       current device.
    $STATUS$
@@ -143,16 +143,16 @@
       mode and shared.  If the file is used in mode exclusive by another
       process, the function will returns a null string ("").
    $EXAMPLES$
-      *  This example uses MEMOREAD() to assign the contents of a text
-      *  file to a character variable for later search
+      //  This example uses MEMOREAD() to assign the contents of a text
+      //  file to a character variable for later search
 
-         cFile   := "account.prg"
-         cString := MEMOREAD( cFile )
-         cCopyright := "Melina"
+      cFile   := "account.prg"
+      cString := MemoRead( cFile )
+      cCopyright := "Melina"
 
-         IF At( "Melina", cString ) == 0            // check for copyright
-            MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
-         ENDIF
+      IF At( "Melina", cString ) == 0            // check for copyright
+         MemoWrit( cFile, cCopyright + cString ) // if not, add it!
+      ENDIF
    $STATUS$
       R
    $COMPLIANCE$
@@ -213,16 +213,16 @@
       HB_MEMOREAD() is identical to MEMOREAD() except it won't truncate the
       last byte (on non-UNIX compatible systems) if it's a EOF char.
    $EXAMPLES$
-      *  This example uses HB_MEMOREAD() to assign the contents of a text
-      *  file to a character variable for later search
+      //  This example uses HB_MEMOREAD() to assign the contents of a text
+      //  file to a character variable for later search
 
-         cFile   := "account.prg"
-         cString := HB_MEMOREAD( cFile )
-         cCopyright := "Melina"
+      cFile   := "account.prg"
+      cString := hb_MemoRead( cFile )
+      cCopyright := "Melina"
 
-         IF At( "Melina", cString ) == 0               // check for copyright
-            HB_MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
-         ENDIF
+      IF At( "Melina", cString ) == 0               // check for copyright
+         hb_MemoWrit( cFile, cCopyright + cString ) // if not, add it!
+      ENDIF
    $STATUS$
       R
    $COMPLIANCE$
@@ -275,15 +275,15 @@
 
       Note that MEMOWRIT() do not use the directory settings SET DEFAULT.
    $EXAMPLES$
-      *  This example uses MEMOWRIT() to write the contents of a character
-         variable to a text file.
+      //  This example uses MEMOWRIT() to write the contents of a character
+      // variable to a text file.
 
-         cFile   := "account.prg"
-         cString := MEMOREAD( cFile )
+      cFile   := "account.prg"
+      cString := MemoRead( cFile )
 
-         IF At( "Melina", cString ) == 0            // check for copyright
-            MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
-         ENDIF
+      IF At( "Melina", cString ) == 0            // check for copyright
+         MemoWrit( cFile, cCopyright + cString ) // if not, add it!
+      ENDIF
    $STATUS$
       R
    $COMPLIANCE$
@@ -348,16 +348,16 @@
       HB_MEMOWRIT() vs MEMOWRIT():
       HB_MEMOWRIT() never writes the obsolete EOF char at the end of the file.
    $EXAMPLES$
-      *  This example uses HB_MEMOWRIT() to write the contents of a character
-      *  variable to a text file.
+      //  This example uses HB_MEMOWRIT() to write the contents of a character
+      //  variable to a text file.
 
-         cFile   := "account.prg"
-         cString := HB_MEMOREAD( cFile )
-         cCopyright := "Melina"
+      cFile   := "account.prg"
+      cString := hb_MemoRead( cFile )
+      cCopyright := "Melina"
 
-         IF At( "Melina", cString ) == 0               // check for copyright
-            HB_MEMOWRIT( cFile, cCopyright + cString ) // if not, add it!
-         ENDIF
+      IF At( "Melina", cString ) == 0               // check for copyright
+         hb_MemoWrit( cFile, cCopyright + cString ) // if not, add it!
+      ENDIF
    $STATUS$
       R
    $COMPLIANCE$

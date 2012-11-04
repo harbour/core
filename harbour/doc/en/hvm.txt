@@ -210,7 +210,7 @@
       PROCEDURE Test( xExp )
          IF PCount() == 0
             ? "This function needs a parameter"
-         ELS
+         ELSE
             ? xExp
          ENDIF
          RETURN

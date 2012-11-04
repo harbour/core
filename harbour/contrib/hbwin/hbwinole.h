@@ -77,8 +77,8 @@
  * compilers where nameless unions are default
  */
 #if defined( __BORLANDC__ ) || \
-   ( defined( __WATCOMC__ ) && !defined( __cplusplus ) )
-#     if !defined( NONAMELESSUNION )
+   ( defined( __WATCOMC__ ) && ! defined( __cplusplus ) )
+#     if ! defined( NONAMELESSUNION )
 #        define NONAMELESSUNION
 #     endif
 #endif
@@ -90,39 +90,39 @@
 /* MinGW is lacking a number of variant accessors
  */
 #if defined( __MINGW32__ )
-#  if !defined( V_I1REF )
-#     define V_I1REF( x )     V_UNION( x, pcVal )
+#  if ! defined( V_I1REF )
+#     define V_I1REF( x )    V_UNION( x, pcVal )
 #  endif
-#  if !defined( V_UI2REF )
-#     define V_UI2REF( x )    V_UNION( x, puiVal )
+#  if ! defined( V_UI2REF )
+#     define V_UI2REF( x )   V_UNION( x, puiVal )
 #  endif
-#  if !defined( V_INT )
-#     define V_INT( x )       V_UNION( x, intVal )
+#  if ! defined( V_INT )
+#     define V_INT( x )      V_UNION( x, intVal )
 #  endif
-#  if !defined( V_INTREF )
-#     define V_INTREF( x )    V_UNION( x, pintVal )
+#  if ! defined( V_INTREF )
+#     define V_INTREF( x )   V_UNION( x, pintVal )
 #  endif
-#  if !defined( V_UINT )
-#     define V_UINT( x )      V_UNION( x, uintVal )
+#  if ! defined( V_UINT )
+#     define V_UINT( x )     V_UNION( x, uintVal )
 #  endif
-#  if !defined( V_UINTREF )
-#     define V_UINTREF( x )   V_UNION( x, puintVal )
+#  if ! defined( V_UINTREF )
+#     define V_UINTREF( x )  V_UNION( x, puintVal )
 #  endif
 #endif
 
 #if defined( NONAMELESSUNION )
-#  define HB_WIN_U1( x, y )   ( x )->n1.y
-#  define HB_WIN_U2( x, y )   ( x )->n1.n2.y
-#  define HB_WIN_U3( x, y )   ( x )->n1.n2.n3.y
+#  define HB_WIN_U1( x, y )  ( x )->n1.y
+#  define HB_WIN_U2( x, y )  ( x )->n1.n2.y
+#  define HB_WIN_U3( x, y )  ( x )->n1.n2.n3.y
 #else
-#  define HB_WIN_U1( x, y )   ( x )->y
-#  define HB_WIN_U2( x, y )   ( x )->y
-#  define HB_WIN_U3( x, y )   ( x )->y
+#  define HB_WIN_U1( x, y )  ( x )->y
+#  define HB_WIN_U2( x, y )  ( x )->y
+#  define HB_WIN_U3( x, y )  ( x )->y
 #endif
 
 /* macros used to hide type of interface: C or C++
  */
-#if defined( __cplusplus ) && !defined( CINTERFACE ) && \
+#if defined( __cplusplus ) && ! defined( CINTERFACE ) && \
    ( defined( __BORLANDC__ ) || \
      defined( __DMC__ ) || \
      defined( _MSC_VER ) || \
@@ -142,34 +142,34 @@
 
 HB_EXTERN_BEGIN
 
-typedef HB_BOOL ( * HB_OLEOBJ_FUNC )( VARIANT*, PHB_ITEM );
-typedef void ( * HB_OLE_DESTRUCTOR_FUNC )( void * );
+typedef HB_BOOL ( *HB_OLEOBJ_FUNC )( VARIANT *, PHB_ITEM );
+typedef void ( *HB_OLE_DESTRUCTOR_FUNC )( void * );
 
-extern HB_EXPORT HB_BOOL    hb_oleInit( void );
-extern HB_EXPORT HRESULT    hb_oleGetError( void );
-extern HB_EXPORT void       hb_oleSetError( HRESULT lOleError );
-extern HB_EXPORT void       hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch * pdispVal, HB_USHORT uiClass );
-extern HB_EXPORT IDispatch* hb_oleItemGetDispatch( PHB_ITEM pItem );
-extern HB_EXPORT void       hb_oleVariantToItem( PHB_ITEM pItem, VARIANT * pVariant );
-extern HB_EXPORT void       hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT* pVariant, HB_USHORT uiClass );
-extern HB_EXPORT void       hb_oleItemToVariant( VARIANT * pVariant, PHB_ITEM pItem );
-extern HB_EXPORT void       hb_oleItemToVariantEx( VARIANT * pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
-extern HB_EXPORT void       hb_oleVariantUpdate( VARIANT * pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
-extern HB_EXPORT VARIANT *  hb_oleItemGetVariant( PHB_ITEM pItem );
-extern HB_EXPORT PHB_ITEM   hb_oleItemPutVariant( PHB_ITEM pItem, VARIANT * pVariant, HB_BOOL fMove );
-extern HB_EXPORT IDispatch* hb_oleParam( int iParam );
-extern HB_EXPORT IDispatch* hb_oleItemGet( PHB_ITEM pItem );
-extern HB_EXPORT PHB_ITEM   hb_oleItemPut( PHB_ITEM pItem, IDispatch * pDisp );
-extern HB_EXPORT PHB_ITEM   hb_oleItemGetCallBack( PHB_ITEM pItem );
-extern HB_EXPORT void       hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM * pCallBack );
-extern HB_EXPORT HB_BOOL    hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
+extern HB_EXPORT HB_BOOL     hb_oleInit( void );
+extern HB_EXPORT HRESULT     hb_oleGetError( void );
+extern HB_EXPORT void        hb_oleSetError( HRESULT lOleError );
+extern HB_EXPORT void        hb_oleDispatchToItem( PHB_ITEM pItem, IDispatch * pdispVal, HB_USHORT uiClass );
+extern HB_EXPORT IDispatch * hb_oleItemGetDispatch( PHB_ITEM pItem );
+extern HB_EXPORT void        hb_oleVariantToItem( PHB_ITEM pItem, VARIANT * pVariant );
+extern HB_EXPORT void        hb_oleVariantToItemEx( PHB_ITEM pItem, VARIANT * pVariant, HB_USHORT uiClass );
+extern HB_EXPORT void        hb_oleItemToVariant( VARIANT * pVariant, PHB_ITEM pItem );
+extern HB_EXPORT void        hb_oleItemToVariantEx( VARIANT * pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
+extern HB_EXPORT void        hb_oleVariantUpdate( VARIANT * pVariant, PHB_ITEM pItem, HB_OLEOBJ_FUNC pObjFunc );
+extern HB_EXPORT VARIANT *   hb_oleItemGetVariant( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM    hb_oleItemPutVariant( PHB_ITEM pItem, VARIANT * pVariant, HB_BOOL fMove );
+extern HB_EXPORT IDispatch * hb_oleParam( int iParam );
+extern HB_EXPORT IDispatch * hb_oleItemGet( PHB_ITEM pItem );
+extern HB_EXPORT PHB_ITEM    hb_oleItemPut( PHB_ITEM pItem, IDispatch * pDisp );
+extern HB_EXPORT PHB_ITEM    hb_oleItemGetCallBack( PHB_ITEM pItem );
+extern HB_EXPORT void        hb_oleItemSetCallBack( PHB_ITEM pItem, PHB_ITEM * pCallBack );
+extern HB_EXPORT HB_BOOL     hb_oleDispInvoke( PHB_SYMB pSym, PHB_ITEM pObject, PHB_ITEM pParam,
                                               DISPPARAMS * pParams, VARIANT * pVarResult,
                                               HB_OLEOBJ_FUNC pObjFunc, HB_USHORT uiClass );
-extern HB_EXPORT void       hb_oleItemSetDestructor( PHB_ITEM pItem, HB_OLE_DESTRUCTOR_FUNC pFunc, void * cargo );
+extern HB_EXPORT void        hb_oleItemSetDestructor( PHB_ITEM pItem, HB_OLE_DESTRUCTOR_FUNC pFunc, void * cargo );
 
 /* activex control */
-extern HB_EXPORT HB_BOOL    hb_oleAxInit( void );
-extern HB_EXPORT PHB_ITEM   hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
+extern HB_EXPORT HB_BOOL     hb_oleAxInit( void );
+extern HB_EXPORT PHB_ITEM    hb_oleAxControlNew( PHB_ITEM pItem, HWND hWnd );
 
 HB_EXTERN_END
 

@@ -66,7 +66,7 @@
 #include "hbapiitm.h"
 
 #ifndef QS_ALLPOSTMESSAGE
-#define QS_ALLPOSTMESSAGE   0x0100
+#define QS_ALLPOSTMESSAGE  0x0100
 #endif
 
 HB_FUNC( WIN_RUNDETACHED )
@@ -87,26 +87,26 @@ HB_FUNC( WIN_RUNDETACHED )
 #endif
 
    if( CreateProcess(
-         HB_PARSTR( 1, &hCommandName, NULL ),                  /* Command name */
-         HB_STRUNSHARE( &hCommandLine, lpCommandRO, nLen ),    /* Command line (Unicode version needs an non-const buffer) */
-         NULL,                                                 /* Process handle not inheritable */
-         NULL,                                                 /* Thread handle not inheritable */
-         FALSE,                                                /* Set handle inheritance to FALSE */
+          HB_PARSTR( 1, &hCommandName, NULL ),                  /* Command name */
+          HB_STRUNSHARE( &hCommandLine, lpCommandRO, nLen ),    /* Command line (Unicode version needs an non-const buffer) */
+          NULL,                                                 /* Process handle not inheritable */
+          NULL,                                                 /* Thread handle not inheritable */
+          FALSE,                                                /* Set handle inheritance to FALSE */
 #if ! defined( HB_OS_WIN_CE )
-         hb_parl( 4 ) ? CREATE_NO_WINDOW : CREATE_NEW_CONSOLE, /* Creation flags */
+          hb_parl( 4 ) ? CREATE_NO_WINDOW : CREATE_NEW_CONSOLE, /* Creation flags */
 #else
-         CREATE_NEW_CONSOLE,                                   /* Creation flags */
+          CREATE_NEW_CONSOLE,                                   /* Creation flags */
 #endif
-         NULL,                                                 /* Use parent's environment block */
-         NULL,                                                 /* Use parent's starting directory */
+          NULL,                                                 /* Use parent's environment block */
+          NULL,                                                 /* Use parent's starting directory */
 #if ! defined( HB_OS_WIN_CE )
-         &si,                                                  /* Pointer to STARTUPINFO structure */
-         &pi )                                                 /* Pointer to PROCESS_INFORMATION structure */
+          &si,                                                  /* Pointer to STARTUPINFO structure */
+          &pi )                                                 /* Pointer to PROCESS_INFORMATION structure */
 #else
-         NULL,                                                 /* Pointer to STARTUPINFO structure */
-         NULL )                                                /* Pointer to PROCESS_INFORMATION structure */
+          NULL,                                                 /* Pointer to STARTUPINFO structure */
+          NULL )                                                /* Pointer to PROCESS_INFORMATION structure */
 #endif
-      )
+       )
    {
       hb_retl( HB_TRUE );
 
@@ -170,10 +170,10 @@ HB_FUNC( WIN_GETCOMMANDLINEPARAM )
 
    /* Skip application path */
    pos = 0;
-   while( lpCmdLine[ pos ] && ( fQuote || !HB_ISSPACE( lpCmdLine[ pos ] ) ) )
+   while( lpCmdLine[ pos ] && ( fQuote || ! HB_ISSPACE( lpCmdLine[ pos ] ) ) )
    {
       if( lpCmdLine[ pos ] == '"' )
-         fQuote = !fQuote;
+         fQuote = ! fQuote;
       pos++;
    }
    while( HB_ISSPACE( lpCmdLine[ pos ] ) )
@@ -280,17 +280,13 @@ HB_FUNC( WIN_SYSREFRESH )
          switch( msg.message )
          {
             case WM_CLOSE:
-            {
                CloseHandle( hDummyEvent );
                hb_retni( 1 );
                return;
-            }
             case WM_QUIT:
-            {
                CloseHandle( hDummyEvent );
                hb_retnint( msg.wParam );
                return;
-            }
 #if 0
             case WM_LBUTTONDOWN:
             case WM_RBUTTONDOWN:
@@ -321,7 +317,7 @@ HB_FUNC( WIN_QPCOUNTER2SEC )
    if( s_dFrequence == 0 )
    {
       LARGE_INTEGER frequency;
-      if( !QueryPerformanceFrequency( &frequency ) )
+      if( ! QueryPerformanceFrequency( &frequency ) )
       {
          hb_retnd( 0 );
          return;

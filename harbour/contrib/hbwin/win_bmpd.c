@@ -59,14 +59,14 @@
 
 /* .jpeg size detection code. [vszakats] */
 
-#define _JPEG_RET_OK                0
-#define _JPEG_RET_OVERRUN           1
-#define _JPEG_RET_INVALID           2
-#define _JPEG_RET_UNSUPPORTED       3
+#define _JPEG_RET_OK           0
+#define _JPEG_RET_OVERRUN      1
+#define _JPEG_RET_INVALID      2
+#define _JPEG_RET_UNSUPPORTED  3
 
-#define _JPEG_CS_GRAY               1
-#define _JPEG_CS_RGB                2
-#define _JPEG_CS_CMYK               3
+#define _JPEG_CS_GRAY          1
+#define _JPEG_CS_RGB           2
+#define _JPEG_CS_CMYK          3
 
 static int hb_jpeg_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int * piHeight, int * piWidth, int * piColorSpace, int * piBPC )
 {
@@ -170,13 +170,13 @@ static int hb_jpeg_get_param( const HB_BYTE * buffer, HB_SIZE nBufferSize, int *
 
 #if defined( HB_HAS_PNG ) && defined( HB_HAS_ZLIB )
 
-#define _PNG_RET_OK                 0
-#define _PNG_RET_ERR_INVALID1       1
-#define _PNG_RET_ERR_INVALID2       2
-#define _PNG_RET_ERR_INIT1          3
-#define _PNG_RET_ERR_INIT2          4
-#define _PNG_RET_ERR_INIT3          5
-#define _PNG_RET_ERR_READ           6
+#define _PNG_RET_OK            0
+#define _PNG_RET_ERR_INVALID1  1
+#define _PNG_RET_ERR_INVALID2  2
+#define _PNG_RET_ERR_INIT1     3
+#define _PNG_RET_ERR_INIT2     4
+#define _PNG_RET_ERR_INIT3     5
+#define _PNG_RET_ERR_READ      6
 
 typedef struct
 {

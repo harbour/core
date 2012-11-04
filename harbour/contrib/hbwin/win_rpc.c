@@ -57,15 +57,15 @@
 #  include <rpc.h>
 #endif
 
-HB_FUNC( WIN_UUIDCREATESTRING ) 
+HB_FUNC( WIN_UUIDCREATESTRING )
 {
 #if ! defined( HB_OS_WIN_CE )
    typedef RPC_STATUS ( RPC_ENTRY * _HB_UUIDCREATE )( UUID * );
    typedef RPC_STATUS ( RPC_ENTRY * _HB_UUIDTOSTRING )( UUID *, unsigned char ** );
    typedef RPC_STATUS ( RPC_ENTRY * _HB_RPCSTRINGFREE )( unsigned char ** );
 
-   static _HB_UUIDCREATE    s_pUuidCreate = NULL;
-   static _HB_UUIDTOSTRING  s_pUuidToString = NULL;
+   static _HB_UUIDCREATE    s_pUuidCreate    = NULL;
+   static _HB_UUIDTOSTRING  s_pUuidToString  = NULL;
    static _HB_RPCSTRINGFREE s_pRpcStringFree = NULL;
 
    if( ! s_pUuidCreate )

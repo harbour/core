@@ -7,11 +7,19 @@
  * www - http://harbour-project.org
  */
 
+#require "hbssl"
 #require "hbtip"
+
+REQUEST __HBEXTERN__HBSSL__
 
 #include "simpleio.ch"
 
 PROCEDURE Main( cFrom, cPassword, cTo )
+
+   IF ! tip_SSL()
+      ? "Error: Requires SSL support"
+      RETURN
+   ENDIF
 
    hb_default( @cFrom    , "<myname@gmail.com>" )
    hb_default( @cPassword, "<mypassword>" )

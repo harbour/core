@@ -58,14 +58,14 @@
       returned by MAXROW() and MAXCOL().
    $EXAMPLES$
       // The first example change to a 12 lines of display mode:
-      IF SetMode( 12, 40)
+      IF SetMode( 12, 40 )
          ? "Hey man are you blind ?"
       ELSE
          ? "Mom bring me my glasses!"
       ENDIF
 
       // Next example change to a 50 lines mode:
-      IF SETMODE( 50, 80)
+      IF SetMode( 50, 80 )
          ? "This wonderful mode was successfully set"
       ELSE
          ? "Wait. this monitor are not made in rubber !"

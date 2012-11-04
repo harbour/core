@@ -132,8 +132,8 @@ HB_FUNC( WCE_SIMWRITEPHONEBOOKENTRY ) /* hSim, nLocation, nPos, cNumber, cName, 
    void * hAddress;
    void * hText;
 
-   PhoneEntry.cbSize        = sizeof( SIMPHONEBOOKENTRY );
-   PhoneEntry.dwParams      = SIM_PARAM_PBE_ALL;
+   PhoneEntry.cbSize   = sizeof( SIMPHONEBOOKENTRY );
+   PhoneEntry.dwParams = SIM_PARAM_PBE_ALL;
    wcsncpy( PhoneEntry.lpszAddress, HB_PARSTRDEF( 4, &hAddress, NULL ), MAX_LENGTH_ADDRESS );
    wcsncpy( PhoneEntry.lpszText   , HB_PARSTRDEF( 5, &hText   , NULL ), MAX_LENGTH_PHONEBOOKENTRYTEXT );
    PhoneEntry.dwAddressType = ( DWORD ) hb_parnl( 7 );

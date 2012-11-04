@@ -9,6 +9,11 @@ openssl x509 -req -days 730 -in certrequest.csr -signkey privatekey.pem -out cer
 openssl x509 -in certificate.pem -text -noout
 */
 
+#require "hbssl"
+#require "hbhttpd"
+
+REQUEST __HBEXTERN__HBSSL__
+
 REQUEST DBFCDX
 
 MEMVAR server, get, post, cookie, session
@@ -38,7 +43,8 @@ PROCEDURE Main()
    ENDIF
 
    rddSetDefault( "DBFCDX" )
-   SET( _SET_DATEFORMAT, "yyyy-mm-dd" )
+   SET DATE ANSI
+   SET CENTURY ON
 
 
    IF ! hb_FileExists( "users.dbf" )

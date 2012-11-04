@@ -105,9 +105,9 @@
 #endif
 
 #if defined( NONAMELESSUNION )
-#  define HB_WIN_V_UNION( x, z ) ( ( x ).DUMMYUNIONNAME.z )
+#  define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
 #else
-#  define HB_WIN_V_UNION( x, z ) ( ( x ).z )
+#  define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
 #if ! defined( GCLP_HBRBACKGROUND )
@@ -118,13 +118,13 @@
 
 /*-*/
 
-#define wvg_parwparam( n )    ( ( WPARAM )   ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parlparam( n )    ( ( LPARAM )   ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhandle( n )    ( ( HANDLE )   ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhwnd( n )      ( ( HWND )     ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parwndproc( n )   ( ( WNDPROC )  ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhbrush( n )    ( ( HBRUSH )   ( HB_PTRDIFF ) hb_parnint( n ) )
-#define wvg_parhdc( n )       ( ( HDC )      ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parwparam( n )    ( ( WPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parlparam( n )    ( ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhandle( n )    ( ( HANDLE ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhwnd( n )      ( ( HWND ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parwndproc( n )   ( ( WNDPROC ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhbrush( n )    ( ( HBRUSH ) ( HB_PTRDIFF ) hb_parnint( n ) )
+#define wvg_parhdc( n )       ( ( HDC ) ( HB_PTRDIFF ) hb_parnint( n ) )
 #define wvg_parcolor( n )     ( ( COLORREF ) ( HB_PTRDIFF ) hb_parnint( n ) )
 
 #define wvg_rethandle( n )    ( hb_retnint( ( HB_PTRDIFF ) n ) )
@@ -163,11 +163,11 @@ HB_FUNC( WVG_HINSTANCE )
 
 static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
 {
-   BITMAPFILEHEADER  bmfh;
-   BITMAPINFO *      pbmi;
-   HB_BOOL           bSuccess;
-   DWORD             dwPackedDibSize, dwBytesRead;
-   HANDLE            hFile;
+   BITMAPFILEHEADER bmfh;
+   BITMAPINFO *     pbmi;
+   HB_BOOL          bSuccess;
+   DWORD  dwPackedDibSize, dwBytesRead;
+   HANDLE hFile;
 
    hFile = CreateFile( szFileName, GENERIC_READ, FILE_SHARE_READ, NULL,
                        OPEN_EXISTING, FILE_FLAG_SEQUENTIAL_SCAN, NULL );
@@ -184,11 +184,11 @@ static BITMAPINFO * PackedDibLoad( LPCTSTR szFileName )
       return NULL;
    }
 
-   dwPackedDibSize  = bmfh.bfSize - sizeof( BITMAPFILEHEADER );
+   dwPackedDibSize = bmfh.bfSize - sizeof( BITMAPFILEHEADER );
 
-   pbmi             = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
+   pbmi = ( BITMAPINFO * ) hb_xgrab( dwPackedDibSize );
 
-   bSuccess         = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
+   bSuccess = ReadFile( hFile, pbmi, dwPackedDibSize, &dwBytesRead, NULL );
    CloseHandle( hFile );
 
    if( ! bSuccess || ( dwBytesRead != dwPackedDibSize ) )
@@ -302,8 +302,8 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
          {
             int iWidth, iHeight;
             {
-               BITMAPINFO *   pPackedDib = NULL;
-               HDC            hdc;
+               BITMAPINFO * pPackedDib = NULL;
+               HDC          hdc;
 
                if( ! bMap3Dcolors )
                   pPackedDib = PackedDibLoad( szBitmap );
@@ -353,18 +353,18 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
 
                   if( iExpWidth != iWidth || iExpHeight != iHeight )
                   {
-                     HDC      hdcSource, hdcTarget;
-                     HBITMAP  hBitmap2;
-                     HB_BOOL  bResult;
+                     HDC     hdcSource, hdcTarget;
+                     HBITMAP hBitmap2;
+                     HB_BOOL bResult;
 
-                     hdcSource  = CreateCompatibleDC( hdc );
+                     hdcSource = CreateCompatibleDC( hdc );
                      SelectObject( hdcSource, hBitmap );
 
-                     hdcTarget  = CreateCompatibleDC( hdc );
-                     hBitmap2   = CreateCompatibleBitmap( hdcSource, iExpWidth, iExpHeight );
+                     hdcTarget = CreateCompatibleDC( hdc );
+                     hBitmap2  = CreateCompatibleBitmap( hdcSource, iExpWidth, iExpHeight );
                      SelectObject( hdcTarget, hBitmap2 );
 
-                     bResult    = StretchBlt(
+                     bResult = StretchBlt(
                         hdcTarget,                       /* handle to destination DC                 */
                         0,                               /* x-coord of destination upper-left corner */
                         0,                               /* y-coord of destination upper-left corner */
@@ -417,8 +417,8 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
       break;
       case 2: /* loading from resourceid */
       {
-         UINT  uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
-         char  szResname[ MAX_PATH + 1 ];
+         UINT uiOptions = bMap3Dcolors ? LR_LOADMAP3DCOLORS : LR_DEFAULTCOLOR;
+         char szResname[ MAX_PATH + 1 ];
 
          hb_snprintf( szResname, sizeof( szResname ), "?%u", uiBitmap );
 
@@ -443,7 +443,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
 HB_FUNC( WVG_PREPAREBITMAPFROMFILE )
 {
    HBITMAP hBitmap;
-   void * hText;
+   void *  hText;
 
    hBitmap = hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 0 );
@@ -468,7 +468,7 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCEID )
 HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
 {
    HBITMAP hBitmap;
-   void * hText;
+   void *  hText;
 
    hBitmap = hPrepareBitmap( HB_PARSTR( 1, &hText, NULL ), 0, hb_parni( 2 ), hb_parni( 3 ), hb_parl( 4 ),
                              ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ), 1 );
@@ -479,8 +479,8 @@ HB_FUNC( WVG_PREPAREBITMAPFROMRESOURCENAME )
 
 HB_FUNC( WVG_STATUSBARCREATEPANEL )
 {
-   HWND  hWndSB  = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   int   iMode   = hb_parni( 2 );
+   HWND hWndSB = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   int  iMode  = hb_parni( 2 );
 
    if( hWndSB == NULL || ! IsWindow( hWndSB ) )
    {
@@ -492,16 +492,16 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
    {
       case 0:
       {
-         int   ptArray[ WIN_STATUSBAR_MAX_PARTS ];
-         int   iParts;
-         RECT  rc = { 0, 0, 0, 0 };
-         int   n;
-         int   width;
+         int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
+         int  iParts;
+         RECT rc = { 0, 0, 0, 0 };
+         int  n;
+         int  width;
 
-         iParts  = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+         iParts = ( int ) SendMessage( hWndSB, SB_GETPARTS, ( WPARAM ) WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
 
          GetClientRect( hWndSB, &rc );
-         width   = ( int ) ( rc.right / ( iParts + 1 ) );
+         width = ( int ) ( rc.right / ( iParts + 1 ) );
          for( n = 0; n < iParts; n++ )
             ptArray[ n ] = ( width * ( n + 1 ) );
 
@@ -515,8 +515,8 @@ HB_FUNC( WVG_STATUSBARCREATEPANEL )
       }
       case -1:
       {
-         RECT  rc = { 0, 0, 0, 0 };
-         int   ptArray[ WIN_STATUSBAR_MAX_PARTS ];
+         RECT rc = { 0, 0, 0, 0 };
+         int  ptArray[ WIN_STATUSBAR_MAX_PARTS ];
 
          if( GetClientRect( hWndSB, &rc ) )
          {
@@ -541,14 +541,14 @@ HB_FUNC( WVG_STATUSBARSETTEXT )
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
-      int      iPart = hb_parnidef( 2, 1 );
-      TCHAR    szText[ 1024 ];
-      int      iFlags;
-      void *   hCaption;
+      int    iPart = hb_parnidef( 2, 1 );
+      TCHAR  szText[ 1024 ];
+      int    iFlags;
+      void * hCaption;
 
-      iPart     -= 1;       /* Zero based */
+      iPart -= 1;           /* Zero based */
 
-      iFlags     = ( int ) HIWORD( SendMessage( hWndSB, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) szText ) );
+      iFlags = ( int ) HIWORD( SendMessage( hWndSB, SB_GETTEXT, ( WPARAM ) iPart, ( LPARAM ) szText ) );
 
       SendMessage( hWndSB, SB_SETTEXT, ( WPARAM ) iPart | iFlags, ( LPARAM ) HB_PARSTR( 3, &hCaption, NULL ) );
 
@@ -565,12 +565,12 @@ HB_FUNC( WVG_STATUSBARREFRESH )
 
    if( hWndSB && IsWindow( hWndSB ) )
    {
-      int   ptArray[ WIN_STATUSBAR_MAX_PARTS ];
-      int   iParts, i;
+      int ptArray[ WIN_STATUSBAR_MAX_PARTS ];
+      int iParts, i;
 
-      iParts                 = SendMessage( hWndSB, SB_GETPARTS, WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
+      iParts = SendMessage( hWndSB, SB_GETPARTS, WIN_STATUSBAR_MAX_PARTS, ( LPARAM ) ( LPINT ) ptArray );
 
-      ptArray[ iParts - 1 ]  = -1;
+      ptArray[ iParts - 1 ] = -1;
 
       if( SendMessage( hWndSB, SB_SETPARTS, iParts, ( LPARAM ) ( LPINT ) ptArray ) )
       {
@@ -588,8 +588,8 @@ HB_FUNC( WVG_STATUSBARREFRESH )
  */
 HB_FUNC( WVG_GETNMHDRINFO )
 {
-   LPNMHDR  lpnmh      = ( LPNMHDR ) wvg_parlparam( 1 );
-   PHB_ITEM pEvParams  = hb_itemNew( NULL );
+   LPNMHDR  lpnmh     = ( LPNMHDR ) wvg_parlparam( 1 );
+   PHB_ITEM pEvParams = hb_itemNew( NULL );
 
    hb_arrayNew( pEvParams, 3 );
 
@@ -605,9 +605,9 @@ HB_FUNC( WVG_GETNMHDRINFO )
  */
 HB_FUNC( WVG_GETNMMOUSEINFO )
 {
-   LPNMMOUSE   nmm        = ( LPNMMOUSE ) wvg_parlparam( 1 );
-   NMHDR       nmh        = nmm->hdr;
-   PHB_ITEM    pEvParams  = hb_itemNew( NULL );
+   LPNMMOUSE nmm       = ( LPNMMOUSE ) wvg_parlparam( 1 );
+   NMHDR     nmh       = nmm->hdr;
+   PHB_ITEM  pEvParams = hb_itemNew( NULL );
 
    hb_arrayNew( pEvParams, 4 );
 
@@ -624,10 +624,10 @@ HB_FUNC( WVG_GETNMMOUSEINFO )
  */
 HB_FUNC( WVG_GETNMTREEVIEWINFO )
 {
-   LPNMTREEVIEW   pnmtv      = ( LPNMTREEVIEW ) wvg_parlparam( 1 );
-   NMHDR          nmh        = pnmtv->hdr;
+   LPNMTREEVIEW pnmtv = ( LPNMTREEVIEW ) wvg_parlparam( 1 );
+   NMHDR        nmh   = pnmtv->hdr;
 
-   PHB_ITEM       pEvParams  = hb_itemNew( NULL );
+   PHB_ITEM pEvParams = hb_itemNew( NULL );
 
    hb_arrayNew( pEvParams, 4 );
 
@@ -644,33 +644,33 @@ HB_FUNC( WVG_GETNMTREEVIEWINFO )
  */
 HB_FUNC( WVG_TREEVIEW_GETSELECTIONINFO )
 {
-   LPNMTREEVIEW   pnmtv      = ( LPNMTREEVIEW ) wvg_parlparam( 2 );
-   HTREEITEM      hSelected  = pnmtv->itemNew.hItem;
+   LPNMTREEVIEW pnmtv     = ( LPNMTREEVIEW ) wvg_parlparam( 2 );
+   HTREEITEM    hSelected = pnmtv->itemNew.hItem;
 
    if( hSelected != NULL )
    {
-      TCHAR       text[ MAX_PATH + 1 ];
-      TCHAR       Parent[ MAX_PATH + 1 ];
-      TV_ITEM     item;
-      HTREEITEM   hParent;
+      TCHAR     text[ MAX_PATH + 1 ];
+      TCHAR     Parent[ MAX_PATH + 1 ];
+      TV_ITEM   item;
+      HTREEITEM hParent;
 
       hb_stornint( ( HB_PTRDIFF ) hSelected, 6 );
 
-      item.mask        = TVIF_HANDLE | TVIF_TEXT | TVIF_IMAGE;
-      item.hItem       = hSelected;
-      item.pszText     = text;
-      item.cchTextMax  = MAX_PATH;
+      item.mask       = TVIF_HANDLE | TVIF_TEXT | TVIF_IMAGE;
+      item.hItem      = hSelected;
+      item.pszText    = text;
+      item.cchTextMax = MAX_PATH;
 
       if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
          HB_STORSTR( text, 4 );
 
-      hParent          = TreeView_GetParent( wvg_parhwnd( 1 ), hSelected );
+      hParent = TreeView_GetParent( wvg_parhwnd( 1 ), hSelected );
       hb_stornint( ( HB_PTRDIFF ) hParent, 5 );
 
-      item.mask        = TVIF_HANDLE | TVIF_TEXT;
-      item.hItem       = hParent;
-      item.pszText     = Parent;
-      item.cchTextMax  = MAX_PATH;
+      item.mask       = TVIF_HANDLE | TVIF_TEXT;
+      item.hItem      = hParent;
+      item.pszText    = Parent;
+      item.cchTextMax = MAX_PATH;
 
       if( TreeView_GetItem( wvg_parhwnd( 1 ), &item ) )
          HB_STORSTR( Parent, 3 );
@@ -686,16 +686,16 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
    TVINSERTSTRUCT tvis;
    void *         hText;
 
-   tvis.hInsertAfter                        = TVI_LAST;
-   HB_WIN_V_UNION( tvis, item.mask )        = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
-   HB_WIN_V_UNION( tvis, item.cchTextMax )  = MAX_PATH + 1;
-   HB_WIN_V_UNION( tvis, item.stateMask )   = TVIS_BOLD | TVIS_CUT | TVIS_DROPHILITED |
-                                              TVIS_EXPANDEDONCE | TVIS_SELECTED | TVIS_EXPANDPARTIAL |
-                                              TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK;
+   tvis.hInsertAfter = TVI_LAST;
+   HB_WIN_V_UNION( tvis, item.mask )       = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_STATE;
+   HB_WIN_V_UNION( tvis, item.cchTextMax ) = MAX_PATH + 1;
+   HB_WIN_V_UNION( tvis, item.stateMask )  = TVIS_BOLD | TVIS_CUT | TVIS_DROPHILITED |
+                                             TVIS_EXPANDEDONCE | TVIS_SELECTED | TVIS_EXPANDPARTIAL |
+                                             TVIS_OVERLAYMASK | TVIS_STATEIMAGEMASK | TVIS_USERMASK;
 
-   HB_WIN_V_UNION( tvis, item.state )    = 0;     /* TVI_BOLD */
-   tvis.hParent                          = HB_ISNUM( 2 ) ? ( HTREEITEM ) wvg_parhandle( 2 ) : NULL;
-   HB_WIN_V_UNION( tvis, item.pszText )  = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
+   HB_WIN_V_UNION( tvis, item.state ) = 0;        /* TVI_BOLD */
+   tvis.hParent = HB_ISNUM( 2 ) ? ( HTREEITEM ) wvg_parhandle( 2 ) : NULL;
+   HB_WIN_V_UNION( tvis, item.pszText ) = ( LPTSTR ) HB_PARSTRDEF( 3, &hText, NULL );
 
    hb_retnint( ( HB_PTRDIFF ) TreeView_InsertItem( wvg_parhwnd( 1 ), &tvis ) );
 
@@ -706,10 +706,10 @@ HB_FUNC( WVG_TREEVIEW_ADDITEM )
 
 HB_FUNC( WVG_TREEVIEW_SHOWEXPANDED )
 {
-   HWND        hwnd    = wvg_parhwnd( 1 );
-   HTREEITEM   hroot, hitem, hitem1, hitem2, hitem3;
-   int         iExpand = ( hb_parl( 2 ) ? TVE_EXPAND : TVE_COLLAPSE );
-   int         iLevels = hb_parni( 3 ) <= 0 ? 5 : hb_parni( 3 );
+   HWND      hwnd = wvg_parhwnd( 1 );
+   HTREEITEM hroot, hitem, hitem1, hitem2, hitem3;
+   int       iExpand = ( hb_parl( 2 ) ? TVE_EXPAND : TVE_COLLAPSE );
+   int       iLevels = hb_parni( 3 ) <= 0 ? 5 : hb_parni( 3 );
 
    hroot = TreeView_GetRoot( hwnd );
    if( hroot )
@@ -809,14 +809,14 @@ PHB_ITEM wvg_logfontTOarray( LPLOGFONT lf, HB_BOOL bEmpty )
 
 BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-   HB_BOOL  bret    = HB_FALSE;
-   HB_BOOL  binit   = HB_FALSE;
+   HB_BOOL  bret  = HB_FALSE;
+   HB_BOOL  binit = HB_FALSE;
    PHB_ITEM block;
 
    if( msg == WM_INITDIALOG )
    {
-      CHOOSEFONT *   cf      = ( CHOOSEFONT * ) lParam;
-      PHB_ITEM       pBlock  = ( PHB_ITEM ) hb_itemNew( ( PHB_ITEM ) cf->lCustData );
+      CHOOSEFONT * cf     = ( CHOOSEFONT * ) lParam;
+      PHB_ITEM     pBlock = ( PHB_ITEM ) hb_itemNew( ( PHB_ITEM ) cf->lCustData );
       SetProp( hwnd, TEXT( "DIALOGPROC" ), pBlock );
       binit = HB_TRUE;
    }
@@ -854,12 +854,12 @@ BOOL CALLBACK WvgDialogProcChooseFont( HWND hwnd, UINT msg, WPARAM wParam, LPARA
 HB_FUNC( WVG_CHOOSEFONT )
 {
 #if ! defined( HB_OS_WIN_CE )
-   CHOOSEFONT  cf;   /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
-   LOGFONT     lf;   /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
-   DWORD       Flags;
-   LONG        PointSize  = 0;
-   HWND        hWnd       = wvg_parhwnd( 1 );
-   TCHAR       szStyle[ MAX_PATH + 1 ];
+   CHOOSEFONT cf;    /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
+   LOGFONT    lf;    /* = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0 }; */
+   DWORD      Flags;
+   LONG       PointSize = 0;
+   HWND       hWnd      = wvg_parhwnd( 1 );
+   TCHAR      szStyle[ MAX_PATH + 1 ];
 
    if( HB_ISCHAR( 3 ) )
    {
@@ -883,15 +883,15 @@ HB_FUNC( WVG_CHOOSEFONT )
    lf.lfQuality        = DEFAULT_QUALITY;
    lf.lfPitchAndFamily = FF_DONTCARE;
 
-   Flags               = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
+   Flags = CF_EFFECTS | CF_SHOWHELP | CF_APPLY | CF_INITTOLOGFONTSTRUCT | CF_ENABLEHOOK;
 
    #if 0
-   Flags              |= CF_TTONLY;
-   Flags              |= CF_FIXEDPITCHONLY;
-   Flags              |= CF_SCALABLEONLY;
-   Flags              |= CF_NOVECTORFONTS;
-   Flags              |= CF_NOSCRIPTSEL;
-   Flags              |= CF_NOSIMULATIONS; /* ::synthesizeFonts  == .f. */
+   Flags |= CF_TTONLY;
+   Flags |= CF_FIXEDPITCHONLY;
+   Flags |= CF_SCALABLEONLY;
+   Flags |= CF_NOVECTORFONTS;
+   Flags |= CF_NOSCRIPTSEL;
+   Flags |= CF_NOSIMULATIONS;              /* ::synthesizeFonts  == .f. */
    #endif
 
    if( hb_parl( 5 ) )
@@ -899,28 +899,28 @@ HB_FUNC( WVG_CHOOSEFONT )
    if( hb_parl( 6 ) )
       Flags = Flags | CF_PRINTERFONTS;
 
-   cf.lStructSize      = sizeof( CHOOSEFONT );
-   cf.hwndOwner        = hWnd;
-   cf.hDC              = ( HDC ) NULL;      /* only when ::oPrinterPS is defined */
-   cf.lpLogFont        = &lf;
-   cf.iPointSize       = PointSize;
-   cf.Flags            = Flags;
-   cf.rgbColors        = RGB( 0, 0, 0 );
+   cf.lStructSize = sizeof( CHOOSEFONT );
+   cf.hwndOwner   = hWnd;
+   cf.hDC         = ( HDC ) NULL;           /* only when ::oPrinterPS is defined */
+   cf.lpLogFont   = &lf;
+   cf.iPointSize  = PointSize;
+   cf.Flags       = Flags;
+   cf.rgbColors   = RGB( 0, 0, 0 );
 
-   cf.lCustData        = ( HB_PTRDIFF ) hb_param( 2, HB_IT_BLOCK );
-   cf.lpfnHook         = ( LPCFHOOKPROC ) WvgDialogProcChooseFont;
+   cf.lCustData = ( HB_PTRDIFF ) hb_param( 2, HB_IT_BLOCK );
+   cf.lpfnHook  = ( LPCFHOOKPROC ) WvgDialogProcChooseFont;
 
-   cf.lpTemplateName   = ( LPTSTR ) NULL;
-   cf.hInstance        = ( HINSTANCE ) NULL;
-   cf.lpszStyle        = ( LPTSTR ) szStyle;
-   cf.nFontType        = SCREEN_FONTTYPE;   /* ?? */
-   cf.nSizeMin         = 0;
-   cf.nSizeMax         = 0;
+   cf.lpTemplateName = ( LPTSTR ) NULL;
+   cf.hInstance      = ( HINSTANCE ) NULL;
+   cf.lpszStyle      = ( LPTSTR ) szStyle;
+   cf.nFontType      = SCREEN_FONTTYPE;     /* ?? */
+   cf.nSizeMin       = 0;
+   cf.nSizeMax       = 0;
 
    if( ChooseFont( &cf ) )
    {
-      PHB_ITEM aFont   = wvg_logfontTOarray( &lf, HB_FALSE );
-      PHB_ITEM aInfo   = hb_itemNew( NULL );
+      PHB_ITEM aFont = wvg_logfontTOarray( &lf, HB_FALSE );
+      PHB_ITEM aInfo = hb_itemNew( NULL );
 
       hb_arrayNew( aInfo, 4 );
       hb_arraySetNI( aInfo, 1, cf.iPointSize );
@@ -972,9 +972,9 @@ HB_FUNC( WVG_FONTCREATE )
       lf.lfHeight         = ( LONG ) hb_arrayGetNL( aFont, 2 );
       lf.lfWidth          = ( LONG ) hb_arrayGetNL( aFont, 3 );
       lf.lfWeight         = ( LONG ) hb_arrayGetNL( aFont, 4 );
-      lf.lfItalic         = ( BYTE ) hb_arrayGetL ( aFont, 5 );
-      lf.lfUnderline      = ( BYTE ) hb_arrayGetL ( aFont, 6 );
-      lf.lfStrikeOut      = ( BYTE ) hb_arrayGetL ( aFont, 7 );
+      lf.lfItalic         = ( BYTE ) hb_arrayGetL( aFont, 5 );
+      lf.lfUnderline      = ( BYTE ) hb_arrayGetL( aFont, 6 );
+      lf.lfStrikeOut      = ( BYTE ) hb_arrayGetL( aFont, 7 );
       lf.lfCharSet        = ( BYTE ) hb_arrayGetNI( aFont, 8 );
       lf.lfEscapement     = ( BYTE ) hb_arrayGetNI( aFont, 9 );
       lf.lfOrientation    = ( BYTE ) hb_arrayGetNI( aFont, 10 );
@@ -984,7 +984,7 @@ HB_FUNC( WVG_FONTCREATE )
       lf.lfPitchAndFamily = ( BYTE ) hb_arrayGetNI( aFont, 14 );
    }
 
-   hFont               = CreateFontIndirect( &lf );
+   hFont = CreateFontIndirect( &lf );
 
    if( hFont )
    {
@@ -1044,10 +1044,10 @@ HB_FUNC( WVG_SETCURRENTBRUSH )
  */
 HB_FUNC( WVG_ADDTOOLBARBUTTON )
 {
-   TBBUTTON    tbb;
-   HB_BOOL     bSuccess;
-   HWND        hWndTB     = hbwapi_par_raw_HWND( 1 );
-   int         iCommand   = hb_parni( 4 );
+   TBBUTTON tbb;
+   HB_BOOL  bSuccess;
+   HWND     hWndTB   = hbwapi_par_raw_HWND( 1 );
+   int      iCommand = hb_parni( 4 );
 
    switch( hb_parni( 5 ) )
    {
@@ -1074,7 +1074,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          tbb.iString   = iNewString;
 
          /* TOFIX: Convertion of LRESULT to HB_BOOL */
-         bSuccess      = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+         bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
 #if ! defined( HB_OS_WIN_CE )
          SendMessage( hWndTB, TB_SETPADDING, ( WPARAM ) 0, ( LPARAM ) MAKELPARAM(  10, 10 ) );
 #endif
@@ -1094,7 +1094,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          tbb.iString   = 0;
 
          /* TOFIX: Convertion of LRESULT to HB_BOOL */
-         bSuccess      = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
+         bSuccess = ( HB_BOOL ) SendMessage( hWndTB, TB_ADDBUTTONS, ( WPARAM ) 1, ( LPARAM ) ( LPTBBUTTON ) &tbb );
          hb_retl( bSuccess );
          return;
    }
@@ -1107,7 +1107,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
 HB_FUNC( WVG_REGISTERCLASS_BYNAME )
 {
    WNDCLASS wndclass;
-   void * hClass;
+   void *   hClass;
 
    memset( &wndclass, 0, sizeof( WNDCLASS ) );
    wndclass.style         = CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS;
@@ -1134,10 +1134,10 @@ HB_FUNC( WVG_FILLRECT )
 {
    RECT rc;
 
-   rc.left    = hb_parvni( 2, 1 );
-   rc.top     = hb_parvni( 2, 2 );
-   rc.right   = hb_parvni( 2, 3 );
-   rc.bottom  = hb_parvni( 2, 4 );
+   rc.left   = hb_parvni( 2, 1 );
+   rc.top    = hb_parvni( 2, 2 );
+   rc.right  = hb_parvni( 2, 3 );
+   rc.bottom = hb_parvni( 2, 4 );
 
    FillRect( wvg_parhdc( 1 ), &rc, wvg_parhbrush( 3 ) );
 }
@@ -1149,10 +1149,10 @@ HB_FUNC( WVG_BEGINMOUSETRACKING )
 #if ! defined( HB_OS_WIN_CE )
    TRACKMOUSEEVENT tmi;
 
-   tmi.cbSize       = sizeof( TRACKMOUSEEVENT );
-   tmi.dwFlags      = TME_LEAVE | TME_HOVER;
-   tmi.hwndTrack    = hbwapi_par_raw_HWND( 1 );
-   tmi.dwHoverTime  = 1;
+   tmi.cbSize      = sizeof( TRACKMOUSEEVENT );
+   tmi.dwFlags     = TME_LEAVE | TME_HOVER;
+   tmi.hwndTrack   = hbwapi_par_raw_HWND( 1 );
+   tmi.dwHoverTime = 1;
    hbwapi_ret_L( _TrackMouseEvent( &tmi ) );
 #else
    hbwapi_ret_L( FALSE );
@@ -1194,8 +1194,8 @@ LRESULT CALLBACK ControlWindowProcedure( HWND hwnd, UINT msg, WPARAM wParam, LPA
 HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 {
    WNDPROC  oldProc;
-   HWND     hWnd    = hbwapi_par_raw_HWND( 1 );
-   PHB_ITEM pBlock  = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
+   HWND     hWnd   = hbwapi_par_raw_HWND( 1 );
+   PHB_ITEM pBlock = hb_itemNew( hb_param( 2, HB_IT_BLOCK ) );
 
    SetProp( hWnd, TEXT( "BLOCKCALLBACK" ), pBlock );
 
@@ -1212,8 +1212,8 @@ HB_FUNC( WVG_SETWINDOWPROCBLOCK )
 
 HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 {
-   HWND     hWnd    = hbwapi_par_raw_HWND( 1 );
-   PHB_ITEM pBlock  = ( PHB_ITEM ) RemoveProp( hWnd, TEXT( "BLOCKCALLBACK" ) );
+   HWND     hWnd   = hbwapi_par_raw_HWND( 1 );
+   PHB_ITEM pBlock = ( PHB_ITEM ) RemoveProp( hWnd, TEXT( "BLOCKCALLBACK" ) );
 
    if( pBlock )
       hb_itemRelease( pBlock );
@@ -1222,7 +1222,7 @@ HB_FUNC( WVG_RELEASEWINDOWPROCBLOCK )
 /*-*/
 /*
    WVG_CreateTooltipWindow( hControl ) -> hWndTT
-*/
+ */
 HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 {
    HWND     hwndTip;
@@ -1257,7 +1257,7 @@ HB_FUNC( WVG_CREATETOOLTIPWINDOW )
 HB_FUNC( WVG_SETTOOLTIPTEXT )
 {
    TOOLINFO toolInfo;
-   void * hText;
+   void *   hText;
 
    memset( &toolInfo, 0, sizeof( toolInfo ) );
    toolInfo.cbSize   = sizeof( toolInfo );

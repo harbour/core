@@ -36,8 +36,8 @@
       If a NULL date is passed to the function, the value of the function
       will be a NULL byte.
    $EXAMPLES$
-      ? CDOW( Date() )
-      IF CDOW( Date() + 10 ) == "Sunday"
+      ? CDoW( Date() )
+      IF CDoW( Date() + 10 ) == "Sunday"
          ? "This is a sunny day."
       ENDIF
    $STATUS$
@@ -77,7 +77,7 @@
       will be a NULL byte.
    $EXAMPLES$
       ? CMonth( Date() )
-      IF CMonth( Date() + 10 ) =="March"
+      IF CMonth( Date() + 10 ) == "March"
          ? "Have you done your system BACKUP?"
       ENDIF
    $STATUS$
@@ -115,7 +115,7 @@
    $EXAMPLES$
       ? Date()
    $TESTS$
-      ? "Today is ",Day(Date())," of ",cMonth(Date())," of ",Year(Date())
+      ? "Today is ", Day( Date() ), " of ", CMonth( Date() ), " of ", Year( Date() )
    $STATUS$
       R
    $COMPLIANCE$
@@ -261,8 +261,8 @@
       This function returns the number representing the day of the week
       for the date expressed as <dDate>.
    $EXAMPLES$
-      ? DOW( Date() )
-      ? DOW( Date() - 6584 )
+      ? DoW( Date() )
+      ? DoW( Date() - 6584 )
    $STATUS$
       R
    $COMPLIANCE$

@@ -75,17 +75,25 @@ STATIC PROCEDURE ProcessFile( cFileName, aContains )
 
    RETURN
 
-STATIC FUNCTION LoadHBX( cInputName )
+STATIC FUNCTION LoadHBX( cFileName )
 
    LOCAL cFile
    LOCAL pRegex
    LOCAL tmp
    LOCAL aDynamic := {}
+   LOCAL cFilter
 
-   IF ! Empty( cFile := hb_MemoRead( cInputName ) ) .AND. ;
-      ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
-      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
-         AAdd( aDynamic, tmp[ 2 ] )
+   IF ! Empty( cFile := hb_MemoRead( cFileName ) )
+
+      FOR EACH cFilter IN { ;
+         "^DYNAMIC ([a-zA-Z0-9_]*)$", ;
+         "ANNOUNCE ([a-zA-Z0-9_]*)$" }
+
+         IF ! Empty( pRegex := hb_regexComp( cFilter, .T., .T. ) )
+            FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+               AAdd( aDynamic, tmp[ 2 ] )
+            NEXT
+         ENDIF
       NEXT
    ENDIF
 

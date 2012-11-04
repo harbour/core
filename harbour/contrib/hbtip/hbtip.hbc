@@ -2,13 +2,8 @@
 # $Id$
 #
 
-# Set HB_TIP_OPENSSL envvar to 'yes' or use -env:HB_TIP_OPENSSL=yes
-# hbmk2 option to switch to the SSL-enabled version of this library.
-
 description=TCP/IP-specific communication protocol functions
 
 incpaths=.
 
-{!HB_TIP_OPENSSL|dos}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
-{HB_TIP_OPENSSL&!dos}libs=${_HB_DYNPREF}${hb_name}ssl${_HB_DYNSUFF}
-{HB_TIP_OPENSSL&!dos}libs=hbssl.hbc
+libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

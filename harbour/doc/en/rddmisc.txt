@@ -161,10 +161,10 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE tests NEW
-         DBGOTOP()
-         ? "Is Eof()", EOF()
-         DBGOBOTTOM()
-         ? "Is Eof()", EOF()
+         dbGoTop()
+         ? "Is Eof()", Eof()
+         dbGoBottom()
+         ? "Is Eof()", Eof()
          USE
          RETURN
    $STATUS$
@@ -237,10 +237,10 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE test NEW
-         DBGOTO()
-         DBDELETE()
-         ? "Is Record Deleted", Test->( DELETED() )
-         DBRECALL()
+         dbGoto()
+         dbDelete()
+         ? "Is Record Deleted", Test->( Deleted() )
+         dbRecall()
          USE
          RETURN
    $STATUS$
@@ -278,10 +278,10 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE tests NEW
-         DBGOTOP()
-         ? "Is Eof()", EOF()
-         DBGOBOTTOM()
-         ? "Is Eof()", EOF()
+         dbGoTop()
+         ? "Is Eof()", Eof()
+         dbGoBottom()
+         ? "Is Eof()", Eof()
          USE
          RETURN
    $STATUS$
@@ -317,7 +317,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE tests NEW
-         ? "This database have", tests->( FCOUNT() ), "Fields"
+         ? "This database have", tests->( FCount() ), "Fields"
          USE
          RETURN
    $STATUS$
@@ -396,7 +396,7 @@
       PROCEDURE Main()
          LOCAL x
          USE tests NEW
-         FOR x := 1 TO tests->( FCOUNT() )
+         FOR x := 1 TO tests->( FCount() )
             ? "Field Name", FieldName( x )
          NEXT
          USE
@@ -437,7 +437,7 @@
    $EXAMPLES$
       PROCEDURE Main()
          USE test NEW
-         ? test->( FIELDPOS( "ID" ) )
+         ? test->( FieldPos( "ID" ) )
          USE
          RETURN
    $STATUS$
@@ -478,7 +478,7 @@
       the function will return a NIL data type
    $EXAMPLES$
       USE tests NEW
-      FIELDPUT( 1, "Mr. Jones" )
+      FieldPut( 1, "Mr. Jones" )
       USE
    $STATUS$
       R
@@ -513,8 +513,8 @@
       database. This function will also unlock all records locks placed
       by the same network station.
    $EXAMPLES$
-      USE tests New
-      IF FLOCK()
+      USE tests NEW
+      IF FLock()
          SUM tests->Ammount
       ENDIF
       USE
@@ -555,7 +555,7 @@
       nId := 100
       USE tests NEW INDEX tests
       SEEK nId
-      IF FOUND()
+      IF Found()
          ? tests->Name
       ENDIF
       USE
@@ -629,7 +629,7 @@
       return a 0 value as well.
    $EXAMPLES$
       USE tests NEW
-      ? LASTREC(), RECCOUNT()
+      ? LastRec(), RecCount()
    $TESTS$
 
    $STATUS$
@@ -719,10 +719,10 @@
    $EXAMPLES$
       USE test NEW INDEX test
       IF ! NetErr()
-          SEEK test->Name := "HARBOUR"
-          IF Found()
-             ? test->Name
-          ENDIF
+         SEEK test->Name := "HARBOUR"
+         IF Found()
+            ? test->Name
+         ENDIF
       ENDIF
       USE
    $STATUS$
@@ -803,10 +803,10 @@
       file, the value of this function will be 1.
    $EXAMPLES$
       USE tests NEW
-      DBGOTOP()
-      RECNO()            // Returns 1
-      DBGOTO( 50 )
-      RECNO()            // Returns 50
+      dbGoTop()
+      RecNo()            // Returns 1
+      dbGoto( 50 )
+      RecNo()            // Returns 50
    $TESTS$
 
    $STATUS$
@@ -844,10 +844,10 @@
       will be 0.
    $EXAMPLES$
       USE tests NEW
-      DBGOTOP()
-      RECSIZE()            // Returns 1
-      DBGOTO( 50 )
-      RECSIZE()
+      dbGoTop()
+      RecSize()            // Returns 1
+      dbGoto( 50 )
+      RecSize()
    $TESTS$
 
    $STATUS$
@@ -899,9 +899,9 @@
    $EXAMPLES$
       nId := 10
       USE testid INDEX testid NEW
-      IF testid->( DBSEEK( nId ) )
-         IF testid->( RLOCK() )
-            DBDELETE()
+      IF testid->( dbSeek( nId ) )
+         IF testid->( RLock() )
+            dbDelete()
          ENDIF
       ENDIF
       USE
@@ -984,12 +984,12 @@
    $EXAMPLES$
       USE tests NEW
       USE names NEW
-      ? USED()    // .T.
-      ? TESTS->( USED() ) //.T.
+      ? Used()    // .T.
+      ? TESTS->( Used() ) //.T.
       CLOSE
-      ? USED()  // .F.
+      ? Used()  // .F.
       SELECT tests
-      ? USED() //.T.
+      ? Used() //.T.
    $TESTS$
 
    $STATUS$
@@ -1028,7 +1028,7 @@
       on the first record in the database.
    $EXAMPLES$
       USE tests NEW INDEX tests
-      DBGOTO( 10 )
+      dbGoto( 10 )
       DELETE NEXT 10
       PACK
       USE

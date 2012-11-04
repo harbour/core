@@ -84,7 +84,7 @@
 #endif
 
 #if ! defined( CB_GETCOMBOBOXINFO )
-#  define CB_GETCOMBOBOXINFO    0x0164
+#  define CB_GETCOMBOBOXINFO     0x0164
 #endif
 
 #define WIN_STATUSBAR_MAX_PARTS  256
@@ -124,8 +124,8 @@ static HINSTANCE wvg_hInstance( void )
 
 HB_FUNC( WVG_SENDMESSAGE )
 {
-   void * hText = NULL;
-   HB_SIZE nLen = 0;
+   void *  hText  = NULL;
+   HB_SIZE nLen   = 0;
    LPCTSTR lpText = HB_PARSTR( 4, &hText, &nLen );
 
    if( lpText && HB_ISBYREF( 4 ) )
@@ -145,14 +145,14 @@ HB_FUNC( WVG_SENDMESSAGE )
 
 HB_FUNC( WVG_SENDDLGITEMMESSAGE )
 {
-   PHB_ITEM pText   = hb_param( 5, HB_IT_STRING );
-   char *   cText   = NULL;
-   HB_ISIZ  iLen    = 0;
+   PHB_ITEM pText = hb_param( 5, HB_IT_STRING );
+   char *   cText = NULL;
+   HB_ISIZ  iLen  = 0;
 
    if( pText )
    {
-      iLen    = hb_itemGetCLen( pText );
-      cText   = ( char * ) hb_xgrab( iLen + 1 );
+      iLen  = hb_itemGetCLen( pText );
+      cText = ( char * ) hb_xgrab( iLen + 1 );
       hb_xmemcpy( cText, hb_itemGetCPtr( pText ), iLen + 1 );
    }
 
@@ -261,6 +261,7 @@ HB_FUNC( WVG_GETDIALOGBASEUNITS )
 HB_FUNC( WVG_SETDLGITEMTEXT )
 {
    void * hText;
+
    SetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), HB_PARSTR( 3, &hText, NULL ) );
    hb_strfree( hText );
 }
@@ -269,9 +270,9 @@ HB_FUNC( WVG_SETDLGITEMTEXT )
 
 HB_FUNC( WVG_GETDLGITEMTEXT )
 {
-   int      iLen    = ( int ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
-   LPTSTR   cText   = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
-   UINT     iResult;
+   int    iLen  = ( int ) SendMessage( GetDlgItem( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ) ), WM_GETTEXTLENGTH, 0, 0 ) + 1;
+   LPTSTR cText = ( LPTSTR ) hb_xgrab( iLen * sizeof( TCHAR ) );
+   UINT   iResult;
 
    iResult = GetDlgItemText( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),   /* handle of dialog box */
                              hb_parni( 2 ),                             /* identifier of control      */
@@ -324,6 +325,7 @@ HB_FUNC( WVG_MESSAGEBOX )
    HWND   hWnd = HB_ISNUM( 1 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ) : GetActiveWindow();
    void * hMsg;
    void * hTitle;
+
    hb_retni( MessageBox( hWnd, HB_PARSTR( 2, &hMsg, NULL ), HB_PARSTR( 3, &hTitle, NULL ), hb_parnidef( 4, MB_OK ) ) );
    hb_strfree( hMsg );
    hb_strfree( hTitle );
@@ -337,10 +339,10 @@ HB_FUNC( WVG_INVALIDATERECT )
    {
       RECT rc = { 0, 0, 0, 0 };
 
-      rc.left    = hb_parvni( 2, 1 );
-      rc.top     = hb_parvni( 2, 2 );
-      rc.right   = hb_parvni( 2, 3 );
-      rc.bottom  = hb_parvni( 2, 4 );
+      rc.left   = hb_parvni( 2, 1 );
+      rc.top    = hb_parvni( 2, 2 );
+      rc.right  = hb_parvni( 2, 3 );
+      rc.bottom = hb_parvni( 2, 4 );
 
       hb_retl( InvalidateRect( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ), &rc, TRUE ) );
    }
@@ -379,10 +381,10 @@ HB_FUNC( WVG_LOADICON )
  */
 HB_FUNC( WVG_LOADIMAGE )
 {
-   HANDLE   hImage     = 0;
-   void *   hBuffer;
-   LPCTSTR  lpBuffer   = HB_PARSTR( 1, &hBuffer, NULL );
-   int      iSource    = hb_parni( 2 );
+   HANDLE  hImage = 0;
+   void *  hBuffer;
+   LPCTSTR lpBuffer = HB_PARSTR( 1, &hBuffer, NULL );
+   int     iSource  = hb_parni( 2 );
 
    switch( iSource )
    {
@@ -430,6 +432,7 @@ HB_FUNC( WVG_GETCLIENTRECT )
 HB_FUNC( WVG_DRAWIMAGE )
 {
    void * hImage;
+
    hb_retl( hb_wvt_DrawImage( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), hb_parni( 2 ), hb_parni( 3 ),
                               hb_parni( 4 ), hb_parni( 5 ), HB_PARSTR( 6, &hImage, NULL ) ) );
    hb_strfree( hImage );
@@ -468,14 +471,14 @@ HB_FUNC( WVG_CREATEBRUSH )
  */
 HB_FUNC( WVG_DRAWTEXT )
 {
-   RECT     rc         = { 0, 0, 0, 0 };
-   void *   hBuffer;
-   LPCTSTR  lpBuffer   = HB_PARSTR( 2, &hBuffer, NULL );
+   RECT    rc = { 0, 0, 0, 0 };
+   void *  hBuffer;
+   LPCTSTR lpBuffer = HB_PARSTR( 2, &hBuffer, NULL );
 
-   rc.left    = hb_parvni( 3, 1 );
-   rc.top     = hb_parvni( 3, 2 );
-   rc.right   = hb_parvni( 3, 3 );
-   rc.bottom  = hb_parvni( 3, 4 );
+   rc.left   = hb_parvni( 3, 1 );
+   rc.top    = hb_parvni( 3, 2 );
+   rc.right  = hb_parvni( 3, 3 );
+   rc.bottom = hb_parvni( 3, 4 );
 
    hb_retl( DrawText( ( HDC ) ( HB_PTRDIFF ) hb_parnint( 1 ), lpBuffer, lstrlen( lpBuffer ), &rc, hb_parni( 4 ) ) );
    hb_strfree( hBuffer );
@@ -540,6 +543,7 @@ HB_FUNC( WVG_SETFOREGROUNDWINDOW )
 HB_FUNC( WVG_SETWINDOWTEXT )
 {
    void * hText;
+
    SetWindowText( wvg_parhwnd( 1 ), HB_PARSTR( 2, &hText, NULL ) );
    hb_strfree( hText );
 }
@@ -639,13 +643,13 @@ HB_FUNC( WVG_NOT )
 
 HB_FUNC( WVG_TRACKPOPUPMENU )
 {
-   HMENU hMenu   = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   UINT  uFlags  = hb_parnldef( 2, TPM_CENTERALIGN | TPM_RETURNCMD );
-   int   x       = hb_parni( 3 );
-   int   y       = hb_parni( 4 );
-   HWND  hWnd    = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : GetActiveWindow();
+   HMENU hMenu  = ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   UINT  uFlags = hb_parnldef( 2, TPM_CENTERALIGN | TPM_RETURNCMD );
+   int   x      = hb_parni( 3 );
+   int   y      = hb_parni( 4 );
+   HWND  hWnd   = HB_ISNUM( 5 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 5 ) : GetActiveWindow();
 
-   POINT xy      = { 0, 0 };
+   POINT xy = { 0, 0 };
 
    if( ! HB_ISNUM( 3 ) )
    {
@@ -671,11 +675,11 @@ HB_FUNC( WVG_CHOOSECOLOR )
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( crCustClr ); i++ )
       crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE ) );
 
-   cc.lStructSize   = sizeof( CHOOSECOLOR );
-   cc.hwndOwner     = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
-   cc.rgbResult     = ( COLORREF ) hb_parnl( 1 );
-   cc.lpCustColors  = crCustClr;
-   cc.Flags         = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
+   cc.lStructSize  = sizeof( CHOOSECOLOR );
+   cc.hwndOwner    = HB_ISNUM( 4 ) ? ( HWND ) ( HB_PTRDIFF ) hb_parnint( 4 ) : NULL;
+   cc.rgbResult    = ( COLORREF ) hb_parnl( 1 );
+   cc.lpCustColors = crCustClr;
+   cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
    if( ChooseColor( &cc ) )
       hb_retnl( cc.rgbResult );
@@ -687,10 +691,10 @@ HB_FUNC( WVG_CHOOSECOLOR )
 
 HB_FUNC( WVG_FINDWINDOW )
 {
-   HWND     hwnd;
-   void *   hText;
+   HWND   hwnd;
+   void * hText;
 
-   hwnd    = FindWindow( NULL, HB_PARSTR( 1, &hText, NULL ) );
+   hwnd = FindWindow( NULL, HB_PARSTR( 1, &hText, NULL ) );
    hb_strfree( hText );
 
    if( hwnd )
@@ -712,20 +716,20 @@ HB_FUNC( WVG_SLEEP )
 
 HB_FUNC( WVG_SETMENU )
 {
-   HWND     hWnd = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   HWND hWnd = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
 
    #if 1
-   HB_BOOL  bSet;
-   RECT     wi   = { 0, 0, 0, 0 };
-   RECT     ci   = { 0, 0, 0, 0 };
-   int      height, width;
+   HB_BOOL bSet;
+   RECT    wi = { 0, 0, 0, 0 };
+   RECT    ci = { 0, 0, 0, 0 };
+   int     height, width;
 
    bSet = SetMenu( hWnd, ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
 
    GetWindowRect( hWnd, &wi );
    GetClientRect( hWnd, &ci );
-   height  = ( ci.bottom - ci.top );
-   width   = ( ci.right - ci.left );
+   height = ( ci.bottom - ci.top );
+   width  = ( ci.right - ci.left );
 
    width  += ( wi.right - wi.left - ci.right );
    height += ( wi.bottom - wi.top - ci.bottom );
@@ -787,7 +791,7 @@ HB_FUNC( WVG_INSERTMENU )
    else /* It is a SEPARATOR or Submenu */
    {
       LPCTSTR lpszCaption = ( LPCTSTR ) ( HB_PTRDIFF ) hb_parnint( 5 );
-      hb_retl( InsertMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ),  ( UINT ) hb_parni( 2 ),
+      hb_retl( InsertMenu( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ),
                            flags, ( HB_PTRDIFF ) hb_parnint( 4 ), ( LPCTSTR ) lpszCaption ) );
    }
 }
@@ -829,7 +833,7 @@ HB_FUNC( WVG_ISMENUITEMCHECKED )
 
    memset( &lpmii, 0, sizeof( MENUITEMINFO ) );
    lpmii.cbSize = sizeof( MENUITEMINFO );
-   lpmii.fMask = MIIM_STATE;
+   lpmii.fMask  = MIIM_STATE;
 
    lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
    if( lSuccess )
@@ -848,7 +852,7 @@ HB_FUNC( WVG_ISMENUITEMENABLED )
    MENUITEMINFO lpmii;
 
    lpmii.cbSize = sizeof( MENUITEMINFO );
-   lpmii.fMask = MIIM_STATE;
+   lpmii.fMask  = MIIM_STATE;
 
    lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
    if( lSuccess )
@@ -863,11 +867,11 @@ HB_FUNC( WVG_SETMENUITEM )
 {
    BOOL lSuccess;
    MENUITEMINFO lpmii;
-   void * hText = NULL;
+   void *       hText = NULL;
 
    memset( &lpmii, 0, sizeof( MENUITEMINFO ) );
    lpmii.cbSize = sizeof( MENUITEMINFO );
-   lpmii.fMask = hb_parl( 5 ) ? MIIM_STRING : MIIM_SUBMENU;
+   lpmii.fMask  = hb_parl( 5 ) ? MIIM_STRING : MIIM_SUBMENU;
    if( hb_parl( 5 ) )
       lpmii.dwTypeData = ( LPTSTR ) HB_PARSTR( 4, &hText, NULL );
 
@@ -934,6 +938,7 @@ HB_FUNC( WVG_CREATEWINDOWEX )
 HB_FUNC( WVG_SENDMESSAGETEXT )
 {
    void * hBuffer;
+
    SendMessage( ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 ),
                 hb_parni( 2 ),
                 ( WPARAM ) hb_parni( 3 ),
@@ -956,9 +961,9 @@ HB_FUNC( WVG_GETMESSAGETEXT )
 
 HB_FUNC( WVG_SETWNDPROC )
 {
-   HWND     hWnd    = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
-   WNDPROC  wndProc = ( WNDPROC ) ( HB_PTRDIFF ) hb_parnint( 2 );
-   WNDPROC  oldProc;
+   HWND    hWnd    = ( HWND ) ( HB_PTRDIFF ) hb_parnint( 1 );
+   WNDPROC wndProc = ( WNDPROC ) ( HB_PTRDIFF ) hb_parnint( 2 );
+   WNDPROC oldProc;
 
 #if ( defined( _MSC_VER ) && ( _MSC_VER <= 1200 || defined( HB_OS_WIN_CE ) ) || defined( __DMC__ ) ) && ! defined( HB_ARCH_64BIT )
    oldProc = ( WNDPROC ) SetWindowLong( hWnd, GWL_WNDPROC, ( long ) wndProc );
@@ -1201,7 +1206,7 @@ HB_FUNC( WVG_POSTMESSAGE )
 HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
 {
 #if ( _WIN32_WINNT >= 0x0500 )
-   HINSTANCE                     h;
+   HINSTANCE h;
    wvtSetLayeredWindowAttributes pfnLayered;
 
    h = GetModuleHandle( TEXT( "user32.dll" ) );
@@ -1230,8 +1235,8 @@ HB_FUNC( WVG_SETLAYEREDWINDOWATTRIBUTES )
 HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 {
 /* #if ! defined( HB_OS_WIN_CE ) */
-   HWND  hTB  = hbwapi_par_raw_HWND( 1 );
-   int   msg  = hbwapi_par_INT( 2 );
+   HWND hTB = hbwapi_par_raw_HWND( 1 );
+   int  msg = hbwapi_par_INT( 2 );
 
    switch( msg )
    {
@@ -1241,9 +1246,9 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 
          tbab.hInst = NULL;
 #if ( _WIN32_IE >= 0x0500 )
-         tbab.nID   = ( UINT_PTR ) hbwapi_par_raw_HBITMAP( 3 );
+         tbab.nID = ( UINT_PTR ) hbwapi_par_raw_HBITMAP( 3 );
 #else
-         tbab.nID   = ( UINT ) hbwapi_par_raw_HBITMAP( 3 );
+         tbab.nID = ( UINT ) hbwapi_par_raw_HBITMAP( 3 );
 #endif
          hbwapi_ret_NI( ( int ) SendMessage( hTB, TB_ADDBITMAP, ( WPARAM ) 1, ( LPARAM ) &tbab ) );
          break;
@@ -1385,11 +1390,11 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
          break;
       case TB_GETCOLORSCHEME:
       {
-         PHB_ITEM info = hb_itemArrayNew( 2 );
+         PHB_ITEM    info = hb_itemArrayNew( 2 );
          COLORSCHEME colorScheme;
 
          colorScheme.dwSize = sizeof( COLORSCHEME );
-         SendMessage( hTB, TB_GETCOLORSCHEME, ( WPARAM ) 0, ( LPARAM ) & colorScheme );
+         SendMessage( hTB, TB_GETCOLORSCHEME, ( WPARAM ) 0, ( LPARAM ) &colorScheme );
 
          hb_arraySetNInt( info, 1, colorScheme.clrBtnHighlight );
          hb_arraySetNInt( info, 2, colorScheme.clrBtnShadow );
@@ -1418,8 +1423,8 @@ HB_FUNC( WVG_SENDTOOLBARMESSAGE )
 
 HB_FUNC( WVG_SENDEDITCONTROLMESSAGE )
 {
-   HWND hED  = hbwapi_par_raw_HWND( 1 );
-   int  msg  = hbwapi_par_INT( 2 );
+   HWND hED = hbwapi_par_raw_HWND( 1 );
+   int  msg = hbwapi_par_INT( 2 );
 
    switch( msg )
    {
@@ -1437,197 +1442,197 @@ HB_FUNC( WVG_SENDEDITCONTROLMESSAGE )
 
 HB_FUNC( WVG_SENDCBMESSAGE )
 {
-   HWND  hCB  = hbwapi_par_raw_HWND( 1 );
-   int   msg  = hbwapi_par_INT( 2 );
+   HWND   hCB   = hbwapi_par_raw_HWND( 1 );
+   int    msg   = hbwapi_par_INT( 2 );
    void * hText = NULL;
 
    switch( msg )
    {
-   case CB_ADDSTRING              : // Adds a string to the list box of a combo box. If the combo box does not have the CBS_SORT style, the string is added to the end of the list. Otherwise, the string is inserted into the list, and the list is sorted.
-      hb_retnint( SendMessage( hCB, CB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) ( LPCTSTR ) HB_PARSTR( 3, &hText, NULL ) ) );
-      break;
-   case CB_DELETESTRING           : // Deletes a string in the list box of a combo box.
-      hb_retnint( SendMessage( hCB, CB_DELETESTRING, hb_parni( 3 ), 0 ) );
-      break;
-   case CB_DIR                    : // Adds names to the list displayed by the combo box. The message adds the names of directories and files that match a specified string and set of file attributes. CB_DIR can also add mapped drive letters to the list.
-      hb_retnint( SendMessage( hCB, CB_DIR, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
-      break;
-   case CB_FINDSTRING             : // Searches the list box of a combo box for an item beginning with the characters in a specified string.
-      hb_retnint( SendMessage( hCB, CB_FINDSTRING, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
-      break;
-   case CB_FINDSTRINGEXACT        : // Finds the first list box string in a combo box that matches the string specified in the lParam parameter.
-      hb_retnint( SendMessage( hCB, CB_FINDSTRINGEXACT, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
-      break;
-   case CB_GETCOMBOBOXINFO        : // Gets information about the specified combo box.
-   {
-      COMBOBOXINFO cbi;
-      PHB_ITEM pCbi = hb_itemNew( NULL );
-      PHB_ITEM pRc1 = hb_itemNew( NULL );
-      PHB_ITEM pRc2 = hb_itemNew( NULL );
-
-      memset( &cbi, 0, sizeof( COMBOBOXINFO ) );
-      cbi.cbSize = sizeof( COMBOBOXINFO );
-
-      if( GetComboBoxInfo( hCB, &cbi ) )
+      case CB_ADDSTRING:            // Adds a string to the list box of a combo box. If the combo box does not have the CBS_SORT style, the string is added to the end of the list. Otherwise, the string is inserted into the list, and the list is sorted.
+         hb_retnint( SendMessage( hCB, CB_ADDSTRING, ( WPARAM ) NULL, ( LPARAM ) ( LPCTSTR ) HB_PARSTR( 3, &hText, NULL ) ) );
+         break;
+      case CB_DELETESTRING:         // Deletes a string in the list box of a combo box.
+         hb_retnint( SendMessage( hCB, CB_DELETESTRING, hb_parni( 3 ), 0 ) );
+         break;
+      case CB_DIR:                  // Adds names to the list displayed by the combo box. The message adds the names of directories and files that match a specified string and set of file attributes. CB_DIR can also add mapped drive letters to the list.
+         hb_retnint( SendMessage( hCB, CB_DIR, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
+         break;
+      case CB_FINDSTRING:           // Searches the list box of a combo box for an item beginning with the characters in a specified string.
+         hb_retnint( SendMessage( hCB, CB_FINDSTRING, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
+         break;
+      case CB_FINDSTRINGEXACT:      // Finds the first list box string in a combo box that matches the string specified in the lParam parameter.
+         hb_retnint( SendMessage( hCB, CB_FINDSTRINGEXACT, ( WPARAM ) hb_parni( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
+         break;
+      case CB_GETCOMBOBOXINFO:      // Gets information about the specified combo box.
       {
-         hb_arrayNew( pCbi, 6 );
-         hb_arrayNew( pRc1, 4 );
-         hb_arrayNew( pRc2, 4 );
+         COMBOBOXINFO cbi;
+         PHB_ITEM     pCbi = hb_itemNew( NULL );
+         PHB_ITEM     pRc1 = hb_itemNew( NULL );
+         PHB_ITEM     pRc2 = hb_itemNew( NULL );
 
-         hb_arraySetNI( pRc1, 1, cbi.rcItem.left );
-         hb_arraySetNI( pRc1, 2, cbi.rcItem.top );
-         hb_arraySetNI( pRc1, 3, cbi.rcItem.right );
-         hb_arraySetNI( pRc1, 4, cbi.rcItem.bottom );
+         memset( &cbi, 0, sizeof( COMBOBOXINFO ) );
+         cbi.cbSize = sizeof( COMBOBOXINFO );
 
-         hb_arraySet( pCbi, 1, pRc1 );
+         if( GetComboBoxInfo( hCB, &cbi ) )
+         {
+            hb_arrayNew( pCbi, 6 );
+            hb_arrayNew( pRc1, 4 );
+            hb_arrayNew( pRc2, 4 );
 
-         hb_arraySetNI( pRc2, 1, cbi.rcButton.left );
-         hb_arraySetNI( pRc2, 2, cbi.rcButton.top );
-         hb_arraySetNI( pRc2, 3, cbi.rcButton.right );
-         hb_arraySetNI( pRc2, 4, cbi.rcButton.bottom );
+            hb_arraySetNI( pRc1, 1, cbi.rcItem.left );
+            hb_arraySetNI( pRc1, 2, cbi.rcItem.top );
+            hb_arraySetNI( pRc1, 3, cbi.rcItem.right );
+            hb_arraySetNI( pRc1, 4, cbi.rcItem.bottom );
 
-         hb_arraySet( pCbi, 2, pRc2 );
+            hb_arraySet( pCbi, 1, pRc1 );
 
-         hb_arraySetNInt( pCbi, 3, cbi.stateButton );
-         hb_arraySetNInt( pCbi, 4, ( HB_PTRDIFF ) cbi.hwndCombo );
-         hb_arraySetNInt( pCbi, 5, ( HB_PTRDIFF ) cbi.hwndItem );
-         hb_arraySetNInt( pCbi, 6, ( HB_PTRDIFF ) cbi.hwndList );
+            hb_arraySetNI( pRc2, 1, cbi.rcButton.left );
+            hb_arraySetNI( pRc2, 2, cbi.rcButton.top );
+            hb_arraySetNI( pRc2, 3, cbi.rcButton.right );
+            hb_arraySetNI( pRc2, 4, cbi.rcButton.bottom );
 
-         hb_itemReturnRelease( pCbi );
-         hb_itemRelease( pRc1 );
-         hb_itemRelease( pRc2 );
+            hb_arraySet( pCbi, 2, pRc2 );
+
+            hb_arraySetNInt( pCbi, 3, cbi.stateButton );
+            hb_arraySetNInt( pCbi, 4, ( HB_PTRDIFF ) cbi.hwndCombo );
+            hb_arraySetNInt( pCbi, 5, ( HB_PTRDIFF ) cbi.hwndItem );
+            hb_arraySetNInt( pCbi, 6, ( HB_PTRDIFF ) cbi.hwndList );
+
+            hb_itemReturnRelease( pCbi );
+            hb_itemRelease( pRc1 );
+            hb_itemRelease( pRc2 );
+         }
+         break;
       }
-      break;
-   }
-   case CB_GETCOUNT               : // Gets the number of items in the list box of a combo box.
-      hb_retnint( SendMessage( hCB, CB_GETCOUNT, 0, 0 ) );
-      break;
+      case CB_GETCOUNT:             // Gets the number of items in the list box of a combo box.
+         hb_retnint( SendMessage( hCB, CB_GETCOUNT, 0, 0 ) );
+         break;
 #if defined( CB_GETCUEBANNER )
-   case CB_GETCUEBANNER           : // Gets the cue banner text displayed in the edit control of a combo box. Send this message explicitly or by using the ComboBox_GetCueBannerText macro.
-      break;
+      case CB_GETCUEBANNER:         // Gets the cue banner text displayed in the edit control of a combo box. Send this message explicitly or by using the ComboBox_GetCueBannerText macro.
+         break;
 #endif
-   case CB_GETCURSEL              : // An application sends a CB_GETCURSEL message to retrieve the index of the currently selected item, if any, in the list box of a combo box.
-      hb_retnint( SendMessage( hCB, CB_GETCURSEL, 0, 0 ) );
-      break;
-   case CB_GETDROPPEDCONTROLRECT  : // An application sends a CB_GETDROPPEDCONTROLRECT message to retrieve the screen coordinates of a combo box in its dropped-down state.
-   {
-      RECT rc;
-      PHB_ITEM pRect = hb_itemNew( NULL );
+      case CB_GETCURSEL:            // An application sends a CB_GETCURSEL message to retrieve the index of the currently selected item, if any, in the list box of a combo box.
+         hb_retnint( SendMessage( hCB, CB_GETCURSEL, 0, 0 ) );
+         break;
+      case CB_GETDROPPEDCONTROLRECT: // An application sends a CB_GETDROPPEDCONTROLRECT message to retrieve the screen coordinates of a combo box in its dropped-down state.
+      {
+         RECT     rc;
+         PHB_ITEM pRect = hb_itemNew( NULL );
 
-      SendMessage( hCB, CB_GETDROPPEDCONTROLRECT, 0, ( LPARAM ) &rc );
+         SendMessage( hCB, CB_GETDROPPEDCONTROLRECT, 0, ( LPARAM ) &rc );
 
-      hb_arrayNew( pRect, 4 );
-      hb_arraySetNI( pRect, 1, rc.left );
-      hb_arraySetNI( pRect, 2, rc.top );
-      hb_arraySetNI( pRect, 3, rc.right );
-      hb_arraySetNI( pRect, 4, rc.bottom );
+         hb_arrayNew( pRect, 4 );
+         hb_arraySetNI( pRect, 1, rc.left );
+         hb_arraySetNI( pRect, 2, rc.top );
+         hb_arraySetNI( pRect, 3, rc.right );
+         hb_arraySetNI( pRect, 4, rc.bottom );
 
-      hb_itemReturnRelease( pRect );
-      break;
-   }
-   case CB_GETDROPPEDSTATE        : // Determines whether the list box of a combo box is dropped down.
-      hb_retnint( SendMessage( hCB, CB_GETDROPPEDSTATE, 0, 0 ) );
-      break;
-   case CB_GETDROPPEDWIDTH        : // Gets the minimum allowable width, in pixels, of the list box of a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
-      hb_retnint( SendMessage( hCB, CB_GETDROPPEDWIDTH, 0, 0 ) );
-      break;
-   case CB_GETEDITSEL             : // Gets the starting and ending character positions of the current selection in the edit control of a combo box.
-   {
-      DWORD range = ( DWORD ) SendMessage( hCB, CB_GETEDITSEL, ( WPARAM ) NULL, ( LPARAM ) NULL );
-      PHB_ITEM pRng = hb_itemNew( NULL );
+         hb_itemReturnRelease( pRect );
+         break;
+      }
+      case CB_GETDROPPEDSTATE:      // Determines whether the list box of a combo box is dropped down.
+         hb_retnint( SendMessage( hCB, CB_GETDROPPEDSTATE, 0, 0 ) );
+         break;
+      case CB_GETDROPPEDWIDTH:      // Gets the minimum allowable width, in pixels, of the list box of a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
+         hb_retnint( SendMessage( hCB, CB_GETDROPPEDWIDTH, 0, 0 ) );
+         break;
+      case CB_GETEDITSEL:           // Gets the starting and ending character positions of the current selection in the edit control of a combo box.
+      {
+         DWORD    range = ( DWORD ) SendMessage( hCB, CB_GETEDITSEL, ( WPARAM ) NULL, ( LPARAM ) NULL );
+         PHB_ITEM pRng  = hb_itemNew( NULL );
 
-      hb_arrayNew( pRng, 2 );
-      hb_arraySetNI( pRng, 1, LOWORD( range ) );
-      hb_arraySetNI( pRng, 1, HIWORD( range ) );
-      hb_itemReturnRelease( pRng );
+         hb_arrayNew( pRng, 2 );
+         hb_arraySetNI( pRng, 1, LOWORD( range ) );
+         hb_arraySetNI( pRng, 1, HIWORD( range ) );
+         hb_itemReturnRelease( pRng );
 
-      break;
-   }
-   case CB_GETEXTENDEDUI          : // Determines whether a combo box has the default user interface or the extended user interface.
-      hb_retnint( SendMessage( hCB, CB_GETEXTENDEDUI, 0, 0 ) );
-      break;
-   case CB_GETHORIZONTALEXTENT    : // Gets the width, in pixels, that the list box can be scrolled horizontally (the scrollable width). This is applicable only if the list box has a horizontal scroll bar.
-      hb_retnint( SendMessage( hCB, CB_GETHORIZONTALEXTENT, 0, 0 ) );
-      break;
-   case CB_GETITEMDATA            : // An application sends a CB_GETITEMDATA message to a combo box to retrieve the application-supplied value associated with the specified item in the combo box.
-      hb_retnint( SendMessage( hCB, CB_GETITEMDATA, ( WPARAM ) hb_parnint( 3 ), 0 ) );
-      break;
-   case CB_GETITEMHEIGHT          : // Determines the height of list items or the selection field in a combo box.
-      hb_retnint( SendMessage( hCB, CB_GETITEMHEIGHT, 0, 0 ) );
-      break;
-   case CB_GETLBTEXT              : // Gets a string from the list of a combo box.
-   {
-      HB_ISIZ iSize = SendMessage( hCB, CB_GETLBTEXTLEN, ( WPARAM ) hb_parnint( 3 ), 0 );
-      LPTSTR text = ( LPTSTR ) hb_xgrab( iSize + 1 );
-      SendMessage( hCB, CB_GETLBTEXT, iSize, ( LPARAM ) text );
-      HB_RETSTR( text );
-      hb_xfree( text );
-      break;
-   }
-   case CB_GETLBTEXTLEN           : // Gets the length, in characters, of a string in the list of a combo box.
-      hb_retnint( SendMessage( hCB, CB_GETLBTEXTLEN, ( WPARAM ) hb_parnint( 3 ), 0 ) );
-      break;
-   case CB_GETLOCALE              : // Gets the current locale of the combo box. The locale is used to determine the correct sorting order of displayed text for combo boxes with the CBS_SORT style and text added by using the CB_ADDSTRING message.
+         break;
+      }
+      case CB_GETEXTENDEDUI:        // Determines whether a combo box has the default user interface or the extended user interface.
+         hb_retnint( SendMessage( hCB, CB_GETEXTENDEDUI, 0, 0 ) );
+         break;
+      case CB_GETHORIZONTALEXTENT:  // Gets the width, in pixels, that the list box can be scrolled horizontally (the scrollable width). This is applicable only if the list box has a horizontal scroll bar.
+         hb_retnint( SendMessage( hCB, CB_GETHORIZONTALEXTENT, 0, 0 ) );
+         break;
+      case CB_GETITEMDATA:          // An application sends a CB_GETITEMDATA message to a combo box to retrieve the application-supplied value associated with the specified item in the combo box.
+         hb_retnint( SendMessage( hCB, CB_GETITEMDATA, ( WPARAM ) hb_parnint( 3 ), 0 ) );
+         break;
+      case CB_GETITEMHEIGHT:        // Determines the height of list items or the selection field in a combo box.
+         hb_retnint( SendMessage( hCB, CB_GETITEMHEIGHT, 0, 0 ) );
+         break;
+      case CB_GETLBTEXT:            // Gets a string from the list of a combo box.
+      {
+         HB_ISIZ iSize = SendMessage( hCB, CB_GETLBTEXTLEN, ( WPARAM ) hb_parnint( 3 ), 0 );
+         LPTSTR  text  = ( LPTSTR ) hb_xgrab( iSize + 1 );
+         SendMessage( hCB, CB_GETLBTEXT, iSize, ( LPARAM ) text );
+         HB_RETSTR( text );
+         hb_xfree( text );
+         break;
+      }
+      case CB_GETLBTEXTLEN:         // Gets the length, in characters, of a string in the list of a combo box.
+         hb_retnint( SendMessage( hCB, CB_GETLBTEXTLEN, ( WPARAM ) hb_parnint( 3 ), 0 ) );
+         break;
+      case CB_GETLOCALE:            // Gets the current locale of the combo box. The locale is used to determine the correct sorting order of displayed text for combo boxes with the CBS_SORT style and text added by using the CB_ADDSTRING message.
 #if ( _WIN32_IE >= 0x0600 )
-   case CB_GETMINVISIBLE          : // Gets the minimum number of visible items in the drop-down list of a combo box.
-      hb_retnint( SendMessage( hCB, CB_GETMINVISIBLE, 0, 0 ) );
-      break;
+      case CB_GETMINVISIBLE:        // Gets the minimum number of visible items in the drop-down list of a combo box.
+         hb_retnint( SendMessage( hCB, CB_GETMINVISIBLE, 0, 0 ) );
+         break;
 #endif
-   case CB_GETTOPINDEX            : // An application sends the CB_GETTOPINDEX message to retrieve the zero-based index of the first visible item in the list box portion of a combo box. Initially, the item with index 0 is at the top of the list box, but if the list box contents have been scrolled, another item may be at the top.
-      hb_retnint( SendMessage( hCB, CB_GETTOPINDEX, 0, 0 ) );
-      break;
-   case CB_INITSTORAGE            : // An application sends the CB_INITSTORAGE message before adding a large number of items to the list box portion of a combo box. This message allocates memory for storing list box items.
-      break;
-   case CB_INSERTSTRING           : // Inserts a string or item data into the list of a combo box. Unlike the CB_ADDSTRING message, the CB_INSERTSTRING message does not cause a list with the CBS_SORT style to be sorted.
-      hb_retnint( SendMessage( hCB, CB_INSERTSTRING, ( WPARAM ) hb_parnint( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
-      break;
-   case CB_LIMITTEXT              : // Limits the length of the text the user may type into the edit control of a combo box.
-      SendMessage( hCB, CB_LIMITTEXT, hb_parni( 3 ), 0 );
-      break;
-   case CB_RESETCONTENT           : // Removes all items from the list box and edit control of a combo box.
-      SendMessage( hCB, CB_RESETCONTENT, 0, 0 );
-      break;
-   case CB_SELECTSTRING           : // Searches the list of a combo box for an item that begins with the characters in a specified string. If a matching item is found, it is selected and copied to the edit control.
-      hb_retnint( SendMessage( hCB, CB_SELECTSTRING, ( WPARAM ) hb_parnint( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
-      break;
+      case CB_GETTOPINDEX:          // An application sends the CB_GETTOPINDEX message to retrieve the zero-based index of the first visible item in the list box portion of a combo box. Initially, the item with index 0 is at the top of the list box, but if the list box contents have been scrolled, another item may be at the top.
+         hb_retnint( SendMessage( hCB, CB_GETTOPINDEX, 0, 0 ) );
+         break;
+      case CB_INITSTORAGE:          // An application sends the CB_INITSTORAGE message before adding a large number of items to the list box portion of a combo box. This message allocates memory for storing list box items.
+         break;
+      case CB_INSERTSTRING:         // Inserts a string or item data into the list of a combo box. Unlike the CB_ADDSTRING message, the CB_INSERTSTRING message does not cause a list with the CBS_SORT style to be sorted.
+         hb_retnint( SendMessage( hCB, CB_INSERTSTRING, ( WPARAM ) hb_parnint( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
+         break;
+      case CB_LIMITTEXT:            // Limits the length of the text the user may type into the edit control of a combo box.
+         SendMessage( hCB, CB_LIMITTEXT, hb_parni( 3 ), 0 );
+         break;
+      case CB_RESETCONTENT:         // Removes all items from the list box and edit control of a combo box.
+         SendMessage( hCB, CB_RESETCONTENT, 0, 0 );
+         break;
+      case CB_SELECTSTRING:         // Searches the list of a combo box for an item that begins with the characters in a specified string. If a matching item is found, it is selected and copied to the edit control.
+         hb_retnint( SendMessage( hCB, CB_SELECTSTRING, ( WPARAM ) hb_parnint( 3 ), ( LPARAM ) HB_PARSTR( 4, &hText, NULL ) ) );
+         break;
 #if defined( CB_SETCUEBANNER )
-   case CB_SETCUEBANNER           : // Sets the cue banner text that is displayed for the edit control of a combo box.
-      break;
+      case CB_SETCUEBANNER:         // Sets the cue banner text that is displayed for the edit control of a combo box.
+         break;
 #endif
-   case CB_SETCURSEL              : // An application sends a CB_SETCURSEL message to select a string in the list of a combo box. If necessary, the list scrolls the string into view. The text in the edit control of the combo box changes to reflect the new selection, and any previous selection in the list is removed.
-      hb_retnint( SendMessage( hCB, CB_SETCURSEL, ( WPARAM ) hb_parnint( 3 ), 0 ) );
-      break;
-   case CB_SETDROPPEDWIDTH        : // An application sends the CB_SETDROPPEDWIDTH message to set the maximum allowable width, in pixels, of the list box of a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
-      hb_retnint( SendMessage( hCB, CB_SETDROPPEDWIDTH, ( WPARAM ) hb_parnint( 3 ), 0 ) );
-      break;
-   case CB_SETEDITSEL             : // An application sends a CB_SETEDITSEL message to select characters in the edit control of a combo box.
-      break;
-   case CB_SETEXTENDEDUI          : // An application sends a CB_SETEXTENDEDUI message to select either the default UI or the extended UI for a combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
-      SendMessage( hCB, CB_SETEXTENDEDUI, hb_parl( 3 ), 0 );
-      break;
-   case CB_SETHORIZONTALEXTENT    : // An application sends the CB_SETHORIZONTALEXTENT message to set the width, in pixels, by which a list box can be scrolled horizontally (the scrollable width). If the width of the list box is smaller than this value, the horizontal scroll bar horizontally scrolls items in the list box. If the width of the list box is equal to or greater than this value, the horizontal scroll bar is hidden or, if the combo box has the CBS_DISABLENOSCROLL style, disabled.
-      SendMessage( hCB, CB_SETHORIZONTALEXTENT, hb_parl( 3 ), 0 );
-      break;
-   case CB_SETITEMDATA            : // An application sends a CB_SETITEMDATA message to set the value associated with the specified item in a combo box.
-      SendMessage( hCB, CB_SETITEMDATA, hb_parl( 3 ), ( LPARAM ) hb_parnint( 4 ) );
-      break;
-   case CB_SETITEMHEIGHT          : // An application sends a CB_SETITEMHEIGHT message to set the height of list items or the selection field in a combo box.
-      hb_retnint( SendMessage( hCB, CB_SETITEMHEIGHT, ( WPARAM ) hb_parnint( 3 ), 0 ) );
-      break;
-   case CB_SETLOCALE              : // An application sends a CB_SETLOCALE message to set the current locale of the combo box. If the combo box has the CBS_SORT style and strings are added using CB_ADDSTRING, the locale of a combo box affects how list items are sorted.
-      hb_retnint( SendMessage( hCB, CB_SETLOCALE, ( WPARAM ) hb_parnint( 3 ), 0 ) );
-      break;
+      case CB_SETCURSEL:            // An application sends a CB_SETCURSEL message to select a string in the list of a combo box. If necessary, the list scrolls the string into view. The text in the edit control of the combo box changes to reflect the new selection, and any previous selection in the list is removed.
+         hb_retnint( SendMessage( hCB, CB_SETCURSEL, ( WPARAM ) hb_parnint( 3 ), 0 ) );
+         break;
+      case CB_SETDROPPEDWIDTH:      // An application sends the CB_SETDROPPEDWIDTH message to set the maximum allowable width, in pixels, of the list box of a combo box with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
+         hb_retnint( SendMessage( hCB, CB_SETDROPPEDWIDTH, ( WPARAM ) hb_parnint( 3 ), 0 ) );
+         break;
+      case CB_SETEDITSEL:           // An application sends a CB_SETEDITSEL message to select characters in the edit control of a combo box.
+         break;
+      case CB_SETEXTENDEDUI:        // An application sends a CB_SETEXTENDEDUI message to select either the default UI or the extended UI for a combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
+         SendMessage( hCB, CB_SETEXTENDEDUI, hb_parl( 3 ), 0 );
+         break;
+      case CB_SETHORIZONTALEXTENT:  // An application sends the CB_SETHORIZONTALEXTENT message to set the width, in pixels, by which a list box can be scrolled horizontally (the scrollable width). If the width of the list box is smaller than this value, the horizontal scroll bar horizontally scrolls items in the list box. If the width of the list box is equal to or greater than this value, the horizontal scroll bar is hidden or, if the combo box has the CBS_DISABLENOSCROLL style, disabled.
+         SendMessage( hCB, CB_SETHORIZONTALEXTENT, hb_parl( 3 ), 0 );
+         break;
+      case CB_SETITEMDATA:          // An application sends a CB_SETITEMDATA message to set the value associated with the specified item in a combo box.
+         SendMessage( hCB, CB_SETITEMDATA, hb_parl( 3 ), ( LPARAM ) hb_parnint( 4 ) );
+         break;
+      case CB_SETITEMHEIGHT:        // An application sends a CB_SETITEMHEIGHT message to set the height of list items or the selection field in a combo box.
+         hb_retnint( SendMessage( hCB, CB_SETITEMHEIGHT, ( WPARAM ) hb_parnint( 3 ), 0 ) );
+         break;
+      case CB_SETLOCALE:            // An application sends a CB_SETLOCALE message to set the current locale of the combo box. If the combo box has the CBS_SORT style and strings are added using CB_ADDSTRING, the locale of a combo box affects how list items are sorted.
+         hb_retnint( SendMessage( hCB, CB_SETLOCALE, ( WPARAM ) hb_parnint( 3 ), 0 ) );
+         break;
 #if ( _WIN32_IE >= 0x0600 )
-   case CB_SETMINVISIBLE          : // An application sends a CB_SETMINVISIBLE message to set the minimum number of visible items in the drop-down list of a combo box.
-      hb_retl( SendMessage( hCB, CB_SETMINVISIBLE, ( WPARAM ) hb_parnint( 3 ), 0 ) );
-      break;
+      case CB_SETMINVISIBLE:        // An application sends a CB_SETMINVISIBLE message to set the minimum number of visible items in the drop-down list of a combo box.
+         hb_retl( SendMessage( hCB, CB_SETMINVISIBLE, ( WPARAM ) hb_parnint( 3 ), 0 ) );
+         break;
 #endif
-   case CB_SETTOPINDEX            : // An application sends the CB_SETTOPINDEX message to ensure that a particular item is visible in the list box of a combo box. The system scrolls the list box contents so that either the specified item appears at the top of the list box or the maximum scroll range has been reached.
-      hb_retl( SendMessage( hCB, CB_SETTOPINDEX, ( WPARAM ) hb_parnint( 3 ), 0 ) ? FALSE : TRUE );
-      break;
-   case CB_SHOWDROPDOWN           : // An application sends a CB_SHOWDROPDOWN message to show or hide the list box of a combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
-      SendMessage( hCB, CB_SHOWDROPDOWN, hb_parl( 3 ), 0 );
-      break;
+      case CB_SETTOPINDEX:          // An application sends the CB_SETTOPINDEX message to ensure that a particular item is visible in the list box of a combo box. The system scrolls the list box contents so that either the specified item appears at the top of the list box or the maximum scroll range has been reached.
+         hb_retl( SendMessage( hCB, CB_SETTOPINDEX, ( WPARAM ) hb_parnint( 3 ), 0 ) ? FALSE : TRUE );
+         break;
+      case CB_SHOWDROPDOWN:         // An application sends a CB_SHOWDROPDOWN message to show or hide the list box of a combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
+         SendMessage( hCB, CB_SHOWDROPDOWN, hb_parl( 3 ), 0 );
+         break;
    }
 
    if( hText )

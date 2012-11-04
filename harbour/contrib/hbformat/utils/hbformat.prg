@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbformat"
+
 #include "directry.ch"
 
 ANNOUNCE HB_GTSYS

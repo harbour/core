@@ -265,7 +265,7 @@
       aOptions := { "Ok", "www.jobs.com", "Oops" }
 
       // show message and let end user select panic level
-      nChoice := ALERT( cMessage, aOptions )
+      nChoice := Alert( cMessage, aOptions )
       DO CASE
       CASE nChoice == 0
          // do nothing, blame it on some one else
@@ -461,7 +461,7 @@
       using the default transformation for the type of expression.
    $EXAMPLES$
       // Output a negative dollar amount using debit notation.
-      DEVOUTPICT( -1.25, "@D$ 99,999.99 )
+      DevOutPict( -1.25, "@D$ 99,999.99 )
    $TESTS$
       @ 3, 1 SAY -1.25 PICTURE "@D$ 99,999.99"
       will display "$(     1.25)" starting on row four, column two of the
@@ -644,10 +644,10 @@
       redirected according with the screen driver, and OUTSTD() send its
       output to the standard output device (STDOUT) and can be redirected.
    $EXAMPLES$
-      OUTSTD( "Hello" )            // Result: Hello
+      OutStd( "Hello" )            // Result: Hello
 
-      OUTSTD( 1, .T., NIL, "A" )
-      OUTSTD( "B" )                // Result:          1 .T. NIL AB
+      OutStd( 1, .T., NIL, "A" )
+      OutStd( "B" )                // Result:          1 .T. NIL AB
    $TESTS$
 
    $STATUS$
@@ -698,7 +698,7 @@
       the HB_CLP_UNDOC flag.
    $EXAMPLES$
       // write error log information
-      OUTERR( DATE(), TIME(), "Core meltdown detected" )
+      OutErr( Date(), Time(), "Core meltdown detected" )
    $TESTS$
 
    $STATUS$
@@ -741,19 +741,19 @@
 
       On compile time this command is translated into __EJECT() function.
    $EXAMPLES$
-      Use Clientes New
-      Set Device to Printer
-      CurPos:=0
-      While !Eof()
-      ? Clientes->nome,Clientes->endereco
-      Curpos++
-      if Curpos >59
-          Curpos:=0
-          Eject
-      Endif
-      Enddo
-      Set Device to Screen
-      Use
+      USE Clientes NEW
+      SET DEVICE TO PRINTER
+      CurPos := 0
+      WHILE !Eof()
+         ? Clientes->nome, Clientes->endereco
+         Curpos++
+         IF Curpos > 59
+            Curpos := 0
+            EJECT
+         ENDIF
+      ENDDO
+      SET DEVICE TO SCREEN
+      USE
    $TESTS$
       See examples
    $STATUS$
@@ -859,7 +859,7 @@
       This function returns the current cursor column position. The value
       for this function can range between 0 and MAXCOL().
    $EXAMPLES$
-      ? MAXCol()
+      ? MaxCol()
    $STATUS$
       R
    $COMPLIANCE$
@@ -895,7 +895,7 @@
       This function returns the current cursor row location. The value
       for this function can range between 0 and MAXCOL().
    $EXAMPLES$
-      ? MAXROW()
+      ? MaxRow()
    $STATUS$
       R
    $COMPLIANCE$

@@ -86,6 +86,7 @@ HB_FUNC( WAPI_GETCURRENTTHREADID )
 HB_FUNC( WAPI_WAITFORSINGLEOBJECT )
 {
    DWORD dwResult = WaitForSingleObject( hbwapi_par_raw_HANDLE( 1 ), ( DWORD ) hb_parnl( 2 ) );
+
    hbwapi_SetLastError( GetLastError() );
    hb_retnl( dwResult );
 }
@@ -199,6 +200,7 @@ HB_FUNC( WAPI_GETLASTERROR )
 HB_FUNC( WAPI_SETLASTERROR )
 {
    DWORD dwLastError = ( DWORD ) hb_parnl( 1 );
+
    SetLastError( dwLastError );
    hbwapi_SetLastError( dwLastError );
 }
@@ -222,6 +224,7 @@ HB_FUNC( WAPI_LOADLIBRARY )
 HB_FUNC( WAPI_FREELIBRARY )
 {
    BOOL bResult = FreeLibrary( ( HMODULE ) hb_parptr( 1 ) );
+
    hbwapi_SetLastError( GetLastError() );
    hbwapi_ret_L( bResult );
 }
@@ -231,7 +234,7 @@ HB_FUNC( WAPI_GETPROCADDRESS )
    FARPROC pProc;
    DWORD dwLastError;
    pProc = GetProcAddress( ( HMODULE ) hb_parptr( 1 ), HB_ISCHAR( 2 ) ?
-                  hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
+                           hb_parc( 2 ) : ( LPCSTR ) ( HB_PTRDIFF ) hb_parnint( 2 ) );
    dwLastError = GetLastError();
    hbwapi_SetLastError( dwLastError );
    hb_retptr( ( void * ) ( HB_PTRDIFF ) pProc );
@@ -306,7 +309,7 @@ HB_FUNC( WAPI_MULDIV )
    hb_retni( MulDiv( hb_parni( 1 ), hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
-#if !defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
 
 /* WinCE does not support GetShortPathName()/GetLongPathName() functions */
 
@@ -337,7 +340,7 @@ static void s_getPathName( _HB_GETPATHNAME getPathName )
          }
 
          length = getPathName( lpszLongPath, lpszShortPath, cchBuffer );
-         if( !fSize && length > cchBuffer )  /* default buffer size was too small */
+         if( ! fSize && length > cchBuffer )  /* default buffer size was too small */
          {
             cchBuffer = length;
             lpszShortPath = ( LPTSTR ) hb_xgrab( cchBuffer * sizeof( TCHAR ) );
@@ -362,7 +365,7 @@ static void s_getPathName( _HB_GETPATHNAME getPathName )
 
 HB_FUNC( WAPI_GETSHORTPATHNAME )
 {
-#if !defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
    s_getPathName( GetShortPathName );
 #else
    {
@@ -375,20 +378,20 @@ HB_FUNC( WAPI_GETSHORTPATHNAME )
 
 HB_FUNC( WAPI_GETLONGPATHNAME )
 {
-#if !defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
    static _HB_GETPATHNAME s_getPathNameAddr = NULL;
 
-   if( !s_getPathNameAddr )
+   if( ! s_getPathNameAddr )
    {
       s_getPathNameAddr = ( _HB_GETPATHNAME )
 #if defined( UNICODE )
-                    GetProcAddress( GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
-                                    "GetLongPathNameW" );
+                          GetProcAddress( GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
+                                          "GetLongPathNameW" );
 #else
-                    GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-                                    "GetLongPathNameA" );
+                          GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+                                          "GetLongPathNameA" );
 #endif
-      if( !s_getPathNameAddr )
+      if( ! s_getPathNameAddr )
          s_getPathNameAddr = GetShortPathName;
    }
    s_getPathName( s_getPathNameAddr );
@@ -458,6 +461,7 @@ HB_FUNC( WAPI_QUERYPERFORMANCECOUNTER )
 {
    LARGE_INTEGER counter;
    BOOL result = QueryPerformanceCounter( &counter );
+
    if( result )
       hb_stornint( HBWAPI_GET_LARGEUINT( counter ), 1 );
    hb_retl( result != 0 );
@@ -467,6 +471,7 @@ HB_FUNC( WAPI_QUERYPERFORMANCEFREQUENCY )
 {
    LARGE_INTEGER frequency;
    BOOL result = QueryPerformanceFrequency( &frequency );
+
    if( result )
       hb_stornint( HBWAPI_GET_LARGEUINT( frequency ), 1 );
    hb_retl( result != 0 );

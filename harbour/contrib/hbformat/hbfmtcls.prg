@@ -139,8 +139,10 @@ CREATE CLASS HBFORMATCODE
    METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly )
    METHOD ConvertFnc( cLine, nBegin, nEnd )
    METHOD ConvertBool( cLine, nBegin, nEnd )
+   METHOD Source2Array( cSource )
+   METHOD Array2Source( aSource )
    METHOD File2Array( cFileName )
-   METHOD Array2File( cFileName, aFile )
+   METHOD Array2File( cFileName, aSource )
 
 ENDCLASS
 
@@ -807,27 +809,49 @@ METHOD ReadIni( cIniName ) CLASS HBFORMATCODE
 
    RETURN ::nErr == 0
 
-METHOD File2Array( cFileName ) CLASS HBFORMATCODE
+METHOD Source2Array( cSource ) CLASS HBFORMATCODE
 
-   LOCAL aFile
-
-   IF hb_FileExists( cFileName )
-      aFile := hb_ATokens( StrTran( MemoRead( cFileName ), Chr( 13 ) + Chr( 10 ), Chr( 10 ) ), Chr( 10 ) )
-      IF ::nEol < 0
-         IF Chr( 13 ) + Chr( 10 ) $ MemoRead( cFileName )
-            ::cEol := Chr( 13 ) + Chr( 10 )
-         ELSE
-            ::cEol := Chr( 10 )
-         ENDIF
+   IF ::nEol < 0
+      IF Chr( 13 ) + Chr( 10 ) $ cSource
+         ::cEol := Chr( 13 ) + Chr( 10 )
+      ELSE
+         ::cEol := Chr( 10 )
       ENDIF
    ENDIF
 
-   RETURN aFile
+   RETURN hb_ATokens( StrTran( cSource, Chr( 13 ) + Chr( 10 ), Chr( 10 ) ), Chr( 10 ) )
 
-METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
+METHOD Array2Source( aSource ) CLASS HBFORMATCODE
 
-   LOCAL i, nLen := Len( aFile ), cName, cBakName, cPath
-   LOCAL cFile
+   LOCAL nLen := Len( aSource ), i
+   LOCAL cSource := ""
+
+   FOR i := 1 TO nLen
+      IF aSource[ i ] == NIL
+         EXIT
+      ENDIF
+      IF i < nLen .OR. ! Empty( aSource[ i ] )
+         cSource += aSource[ i ] + ::cEol
+      ENDIF
+   NEXT
+
+   DO WHILE Right( cSource, Len( ::cEol ) * 2 ) == Replicate( ::cEol, 2 )
+      cSource := hb_StrShrink( cSource, Len( ::cEol ) )
+   ENDDO
+
+   RETURN cSource
+
+METHOD File2Array( cFileName ) CLASS HBFORMATCODE
+
+   IF hb_FileExists( cFileName )
+      RETURN ::String2Array( MemoRead( cFileName ) )
+   ENDIF
+
+   RETURN NIL
+
+METHOD Array2File( cFileName, aSource ) CLASS HBFORMATCODE
+
+   LOCAL i, cName, cBakName, cPath
 
    cName := iif( ( i := RAt( ".", cFileName ) ) == 0, cFileName, SubStr( cFileName, 1, i - 1 ) )
    IF Empty( ::cExtSave )
@@ -847,21 +871,7 @@ METHOD Array2File( cFileName, aFile ) CLASS HBFORMATCODE
       cFileName := cPath + Lower( iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) ) )
    ENDIF
 
-   cFile := ""
-   FOR i := 1 TO nLen
-      IF aFile[ i ] == NIL
-         EXIT
-      ENDIF
-      IF i < nLen .OR. ! Empty( aFile[ i ] )
-         cFile += aFile[ i ] + ::cEol
-      ENDIF
-   NEXT
-
-   DO WHILE Right( cFile, Len( ::cEol ) * 2 ) == Replicate( ::cEol, 2 )
-      cFile := hb_StrShrink( cFile, Len( ::cEol ) )
-   ENDDO
-
-   RETURN hb_MemoWrit( cFileName, cFile )
+   RETURN hb_MemoWrit( cFileName, ::Array2String( aSource ) )
 
 STATIC FUNCTION rf_AINS( arr, nItem, cItem )
 

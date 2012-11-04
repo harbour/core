@@ -70,16 +70,16 @@
 
 #include <mapi.h>
 
-#if !defined( MAPI_RECEIPT_REQUESTED )
+#if ! defined( MAPI_RECEIPT_REQUESTED )
 #  if defined( MAPI_RECIPIENT_REQUESTED )
-#     define MAPI_RECEIPT_REQUESTED MAPI_RECIPIENT_REQUESTED
+#     define MAPI_RECEIPT_REQUESTED  MAPI_RECIPIENT_REQUESTED
 #  else
-#     define MAPI_RECEIPT_REQUESTED 0x00000002L
+#     define MAPI_RECEIPT_REQUESTED  0x00000002L
 #  endif
 #endif
 
 #if defined( __WATCOMC__ ) || defined( __CYGWIN__ )
-typedef ULONG ( PASCAL * LPMAPISENDMAIL ) ( LHANDLE, ULONG, lpMapiMessage, FLAGS, ULONG );
+typedef ULONG ( PASCAL * LPMAPISENDMAIL )( LHANDLE, ULONG, lpMapiMessage, FLAGS, ULONG );
 #endif
 
 HB_FUNC( WIN_MAPISENDMAIL )
@@ -91,17 +91,17 @@ HB_FUNC( WIN_MAPISENDMAIL )
 
    if( ( hMapiDll = hbwapi_LoadLibrarySystem(
 #if defined( HB_UNICODE_ORI ) || defined( UNICODE )
-                                              ( LPCTSTR ) L"mapi32.dll"
+            ( LPCTSTR ) L"mapi32.dll"
 #else
-                                              ( LPCTSTR ) "mapi32.dll"
+            ( LPCTSTR ) "mapi32.dll"
 #endif
-                                            ) ) >= ( HINSTANCE ) 32 )
+            ) ) >= ( HINSTANCE ) 32 )
    {
       LPMAPISENDMAIL MAPISendMail = ( LPMAPISENDMAIL ) GetProcAddress( hMapiDll, "MAPISendMail" );
 
       if( MAPISendMail )
       {
-         PHB_ITEM pFrom = hb_param( 8, HB_IT_ARRAY );
+         PHB_ITEM pFrom     = hb_param( 8, HB_IT_ARRAY );
          PHB_ITEM pRecpList = hb_param( 9, HB_IT_ARRAY );
          PHB_ITEM pFileList = hb_param( 10, HB_IT_ARRAY );
 
@@ -110,11 +110,11 @@ HB_FUNC( WIN_MAPISENDMAIL )
          HB_SIZE i;
 
          void ** hString;
-         int iString = 0;
+         int     iString = 0;
 
-         MapiMessage note;
+         MapiMessage   note;
          MapiRecipDesc origin;
-         FLAGS flags;
+         FLAGS         flags;
 
          memset( &note, 0, sizeof( note ) );
          memset( &origin, 0, sizeof( origin ) );
@@ -135,7 +135,7 @@ HB_FUNC( WIN_MAPISENDMAIL )
          if( nFileCount )
          {
             note.lpFiles = ( MapiFileDesc * ) hb_xgrab( nFileCount * sizeof( MapiFileDesc ) );
-            memset( note.lpFiles , 0, nFileCount * sizeof( MapiFileDesc  ) );
+            memset( note.lpFiles, 0, nFileCount * sizeof( MapiFileDesc ) );
          }
 
          if( hb_parl( 6 ) )
@@ -189,7 +189,7 @@ HB_FUNC( WIN_MAPISENDMAIL )
             }
             else if( HB_IS_STRING( pItem ) )
             {
-               note.lpRecips[ note.nRecipCount ].lpszName = ( LPSTR ) HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL );
+               note.lpRecips[ note.nRecipCount ].lpszName     = ( LPSTR ) HB_ITEMGETSTR( pItem, &hString[ iString++ ], NULL );
                note.lpRecips[ note.nRecipCount ].ulRecipClass = MAPI_TO;
 
                ++note.nRecipCount;

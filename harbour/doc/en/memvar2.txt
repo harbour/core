@@ -102,8 +102,8 @@
          n := iif( lVar, "A", 3 )
          n := 2
          n := "a"
-         n := seconds() + 2
-         n := int( seconds() + 2 )
+         n := Seconds() + 2
+         n := Int( Seconds() + 2 )
          RETURN
    $TESTS$
       See tests/testwarn.prg for more examples
@@ -154,8 +154,8 @@
          n := iif( lVar, "A", 3 )
          n := 2
          n := "a"
-         n := seconds() + 2
-         n := int( seconds() + 2 )
+         n := Seconds() + 2
+         n := Int( Seconds() + 2 )
          y := n
          ? y
          RETURN

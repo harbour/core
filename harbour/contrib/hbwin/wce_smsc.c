@@ -54,7 +54,7 @@
 
 #if defined( HB_OS_WIN_CE ) && \
    ! defined( __MINGW32__ ) && \
-   !( ! defined( __cplusplus ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
+   ! ( ! defined( __cplusplus ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1310 ) ) )
 #  include <sms.h>
 #  define __HB_COMPONENT_SUPPORTED__
 #endif
@@ -93,8 +93,8 @@ HB_FUNC( WCE_SMSSENDMESSAGE ) /* cMessage, cNumber */
 
          /* Set up provider specific data */
          tpsd.dwMessageOptions = PS_MESSAGE_OPTION_NONE;
-         tpsd.psMessageClass = PS_MESSAGE_CLASS0;
-         tpsd.psReplaceOption = PSRO_NONE;
+         tpsd.psMessageClass   = PS_MESSAGE_CLASS0;
+         tpsd.psReplaceOption  = PSRO_NONE;
 
          /* Send the message, indicating success or failure */
          hb_retnl( SmsSendMessage( smshHandle,

@@ -56,14 +56,15 @@
 
 static struct
 {
-   HANDLE       hPort;
-   int          iFunction;
-   DWORD        dwError;
+   HANDLE hPort;
+   int    iFunction;
+   DWORD  dwError;
 } s_PortData[ 256 ];
 
 static void hb_wincom_init( void )
 {
    int i;
+
    for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_PortData ); i++ )
       s_PortData[ i ].hPort = INVALID_HANDLE_VALUE;
 }
@@ -632,9 +633,9 @@ static int hb_win_ComSetTimeouts( HANDLE hCommPort, LPCOMMTIMEOUTS Timeouts, DWO
       For each write operation, this value is multiplied by the number of bytes to be written. */
    if( Timeouts->WriteTotalTimeoutMultiplier == ( DWORD ) -1 )
    {
-       /* float of 1.0 makes whole expression float */
-       NewTimeouts.WriteTotalTimeoutMultiplier = HB_MIN( 1, ( DWORD ) ( ( 1.0 / dwBaudRate ) *
-           ( iByteSize + 1 + ( iParity == NOPARITY ? 0 : 1 ) + ( iStopBits == ONESTOPBIT ? 1 : iStopBits == ONE5STOPBITS ? 1.5 : 2 ) ) * 1000 ) );
+      /* float of 1.0 makes whole expression float */
+      NewTimeouts.WriteTotalTimeoutMultiplier = HB_MIN( 1, ( DWORD ) ( ( 1.0 / dwBaudRate ) *
+          ( iByteSize + 1 + ( iParity == NOPARITY ? 0 : 1 ) + ( iStopBits == ONESTOPBIT ? 1 : iStopBits == ONE5STOPBITS ? 1.5 : 2 ) ) * 1000 ) );
    }
    /* Constant, in milliseconds, used to calculate the total time-out period for write operations.
       For each write operation, this value is added to the product of the WriteTotalTimeoutMultiplier member and the number of bytes to be written. */
@@ -883,6 +884,6 @@ HB_CALL_ON_STARTUP_END( _hb_wincom_init_ )
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup _hb_wincom_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( _hb_wincom_init_ )
+   #define HB_DATASEG_BODY  HB_DATASEG_FUNC( _hb_wincom_init_ )
    #include "hbiniseg.h"
 #endif

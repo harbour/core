@@ -40,11 +40,11 @@
       This function replaces the Indexord() function.
    $EXAMPLES$
       USE tests NEW VIA "DBFNTX"
-      ? ORDBAGEXT()      //  Returns .ntx
-      DBCLOSEAREA()
+      ? ordBagExt()      //  Returns .ntx
+      dbCloseArea()
       USE tests NEW VIA "DBFCDX"
-      ? ORDBAGEXT()      //  Returns .cdx
-      DBCLOSEAREA()
+      ? ordBagExt()      //  Returns .cdx
+      dbCloseArea()
    $STATUS$
       S
    $COMPLIANCE$
@@ -88,9 +88,9 @@
    $EXAMPLES$
       USE tests VIA "DBFCDX" NEW
       SET INDEX TO tests
-      ORDBAGNAME( "TeName" )        // Returns: Customer
-      ORDBAGNAME( "TeLast" )        // Returns: Customer
-      ORDBAGNAME( "teZip" )         // Returns: Customer
+      ordBagName( "TeName" )        // Returns: Customer
+      ordBagName( "TeLast" )        // Returns: Customer
+      ordBagName( "teZip" )         // Returns: Customer
       SET ORDER TO TAG TeName
       ? OrderBagName()              // Returns: Custumer
    $TESTS$
@@ -215,10 +215,10 @@
       name in the order list in the current or specified work area.
    $EXAMPLES$
       USE tests VIA "DBFNDX" NEW
-      ORDCREATE( "FNAME",, "Tests->fName" )
+      ordCreate( "FNAME",, "Tests->fName" )
 
       USE tests VIA "DBFCDX" NEW
-      ORDCREATE( , "lName", "tests->lName" )
+      ordCreate( , "lName", "tests->lName" )
    $TESTS$
       See examples
    $STATUS$
@@ -266,7 +266,7 @@
       and RDDADS drivers).
    $EXAMPLES$
       USE tests VIA "DBFCDX" NEW
-      OrdDestroy( "lName", "tests" )
+      ordDestroy( "lName", "tests" )
    $TESTS$
       See examples
    $STATUS$
@@ -316,7 +316,7 @@
          TO tests          ;
          FOR tests->ID > 100
 
-      ORDFOR( "tests" )      // Returns: tests->ID > 100
+      ordFor( "tests" )      // Returns: tests->ID > 100
    $TESTS$
       See examples
    $STATUS$
@@ -363,10 +363,9 @@
          FOR tests->fName > "CK"
       INDEX ON tests->Id TO TestId
 
-      ORDKEY( "tests" )      // Returns: tests->fName
+      ordKey( "tests" )      // Returns: tests->fName
       SET ORDER TO 2
-      ORDKEY()               // Returns: tests->Id
-
+      ordKey()               // Returns: tests->Id
    $STATUS$
       S
    $COMPLIANCE$
@@ -405,7 +404,7 @@
       ".ntx". This is controled by the particular database driver that is
       linked with the application.
    $EXAMPLES$
-      IF INDEXEXT() == ".ntx"
+      IF IndexExt() == ".ntx"
          ? "Current driver being used is DBFNTX"
       ENDIF
    $STATUS$
@@ -449,7 +448,7 @@
       byte will be returned.
    $EXAMPLES$
       USE tests NEW INDEX test1
-      ? INDEXKEY( 1 )
+      ? IndexKey( 1 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -487,8 +486,8 @@
       the database,which therefore is in the natural order.
    $EXAMPLES$
       USE tests NEW INDEX test1
-      IF INDEXORD() > 0
-         ? "Current order is", INDEXORD()
+      IF IndexOrd() > 0
+         ? "Current order is", IndexOrd()
       ENDIF
    $STATUS$
       R

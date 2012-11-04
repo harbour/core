@@ -551,14 +551,22 @@ STATIC FUNCTION LoadHBX( cFileName, hAll )
    LOCAL pRegex
    LOCAL tmp
    LOCAL aDynamic := {}
+   LOCAL cFilter
 
-   IF ! Empty( cFile := hb_MemoRead( cFileName ) ) .AND. ;
-      ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
-      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
-         IF tmp[ 2 ] $ hAll
-            hAll[ tmp[ 2 ] ] += "," + cName
-         ELSE
-            hAll[ tmp[ 2 ] ] := cName
+   IF ! Empty( cFile := hb_MemoRead( cFileName ) )
+
+      FOR EACH cFilter IN { ;
+         "^DYNAMIC ([a-zA-Z0-9_]*)$", ;
+         "ANNOUNCE ([a-zA-Z0-9_]*)$" }
+
+         IF ! Empty( pRegex := hb_regexComp( cFilter, .T., .T. ) )
+            FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+               IF tmp[ 2 ] $ hAll
+                  hAll[ tmp[ 2 ] ] += "," + cName
+               ELSE
+                  hAll[ tmp[ 2 ] ] := cName
+               ENDIF
+            NEXT
          ENDIF
       NEXT
    ENDIF

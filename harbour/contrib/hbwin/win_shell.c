@@ -52,13 +52,13 @@
  */
 
 #undef _WIN32_IE
-#define _WIN32_IE 0x0500 /* request Windows 2000 features for NOTIFYICONDATA */
+#define _WIN32_IE  0x0500 /* request Windows 2000 features for NOTIFYICONDATA */
 
 #include "hbwapi.h"
 #include "hbapiitm.h"
 
 #if defined( __BORLANDC__ )
-#  if !defined( NONAMELESSUNION )
+#  if ! defined( NONAMELESSUNION )
 #     define NONAMELESSUNION
 #  endif
 #  if defined( DUMMYUNIONNAME )
@@ -81,9 +81,9 @@
 #include <shellapi.h>
 
 #if defined( NONAMELESSUNION )
-#  define HB_WIN_V_UNION( x, z )       ((x).DUMMYUNIONNAME.z)
+#  define HB_WIN_V_UNION( x, z )  ( ( x ).DUMMYUNIONNAME.z )
 #else
-#  define HB_WIN_V_UNION( x, z )       ((x).z)
+#  define HB_WIN_V_UNION( x, z )  ( ( x ).z )
 #endif
 
 /* WIN_ShellNotifyIcon( [<hWnd>], [<nUID>], [<nMessage>], [<hIcon>],
@@ -109,7 +109,7 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
       tnid.uFlags |= NIF_TIP;
 
    #if defined( NIF_INFO ) /* did the headers provide Windows 2000 features? */
-   if( hb_iswin2k() ) /* are we running on Windows 2000 or above? */
+   if( hb_iswin2k() )      /* are we running on Windows 2000 or above? */
    {
       if( HB_ITEMCOPYSTR( hb_param( 7, HB_IT_ANY ), tnid.szInfo, HB_SIZEOFARRAY( tnid.szInfo ) ) > 0 )
          tnid.uFlags |= NIF_INFO;
@@ -130,7 +130,7 @@ HB_FUNC( WIN_SHELLNOTIFYICON )
 /* Details:
       http://msdn.microsoft.com/en-us/library/bb762164(VS.85).aspx
       http://msdn.microsoft.com/en-us/library/bb759795(v=VS.85).aspx
-*/
+ */
 
 #if ! defined( HB_OS_WIN_CE )
 
@@ -218,6 +218,7 @@ static LPTSTR s_StringList( int iParam )
 HB_FUNC( WIN_SHFILEOPERATION )
 {
    int iRetVal;
+
 #if defined( HB_OS_WIN_CE )
    iRetVal = -1;
 #else

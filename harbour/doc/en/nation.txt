@@ -38,7 +38,7 @@
       according to the msgxxx module used.   </par>
    $EXAMPLES$
       // Wait until user enters Y
-      DO WHILE ! ISAFFIRM( cYesNo )
+      DO WHILE ! IsAffirm( cYesNo )
          ACCEPT "Sure: " TO cYesNo
       ENDDO
    $STATUS$
@@ -75,7 +75,7 @@
       according to the msgxxx module used.   </par>
    $EXAMPLES$
       // Wait until user enters N
-      DO WHILE ! ISNEGATIVE( cYesNo )
+      DO WHILE ! IsNegative( cYesNo )
          ACCEPT "Sure: " TO cYesNo
       ENDDO
    $STATUS$
@@ -113,8 +113,8 @@
    $EXAMPLES$
       // Displays "Sure Y/N: "  and waits until user enters Y
       // Y/N is the string for NATIONMSG( 12 ) with default natmsg module.
-      DO WHILE ! ISAFFIRM( cYesNo )
-         ACCEPT "Sure " + NATIONMSG( 12 ) + ": " TO cYesNo
+      DO WHILE ! IsAffirm( cYesNo )
+         ACCEPT "Sure " + NationMsg( 12 ) + ": " TO cYesNo
       ENDDO
    $STATUS$
       C

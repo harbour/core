@@ -61,35 +61,35 @@
 
 #include <windows.h>
 
-#define HB_WIN_COM_FUN_CREATEFILE            1
-#define HB_WIN_COM_FUN_GETCOMMSTATE          2
-#define HB_WIN_COM_FUN_SETCOMMSTATE          3
-#define HB_WIN_COM_FUN_SETUPCOMM             4
-#define HB_WIN_COM_FUN_GETCOMMTIMEOUTS       5
-#define HB_WIN_COM_FUN_SETCOMMTIMEOUTS       6
-#define HB_WIN_COM_FUN_CLOSEHANDLE           7
-#define HB_WIN_COM_FUN_WRITEFILE             8
-#define HB_WIN_COM_FUN_READFILE              9
-#define HB_WIN_COM_FUN_GETCOMMMODEMSTATUS    10    /* win_com:Status() */
-#define HB_WIN_COM_FUN_PURGECOMM             11
-#define HB_WIN_COM_FUN_CLEARCOMMERROR        12    /* win_com:QueueStatus() */
-#define HB_WIN_COM_FUN_ESCAPECOMMFUNCTION    13
-#define HB_WIN_COM_FUN_GETCOMMPROPERTIES     14
-#define HB_WIN_COM_FUN_MAX                   14
+#define HB_WIN_COM_FUN_CREATEFILE          1
+#define HB_WIN_COM_FUN_GETCOMMSTATE        2
+#define HB_WIN_COM_FUN_SETCOMMSTATE        3
+#define HB_WIN_COM_FUN_SETUPCOMM           4
+#define HB_WIN_COM_FUN_GETCOMMTIMEOUTS     5
+#define HB_WIN_COM_FUN_SETCOMMTIMEOUTS     6
+#define HB_WIN_COM_FUN_CLOSEHANDLE         7
+#define HB_WIN_COM_FUN_WRITEFILE           8
+#define HB_WIN_COM_FUN_READFILE            9
+#define HB_WIN_COM_FUN_GETCOMMMODEMSTATUS  10      /* win_com:Status() */
+#define HB_WIN_COM_FUN_PURGECOMM           11
+#define HB_WIN_COM_FUN_CLEARCOMMERROR      12      /* win_com:QueueStatus() */
+#define HB_WIN_COM_FUN_ESCAPECOMMFUNCTION  13
+#define HB_WIN_COM_FUN_GETCOMMPROPERTIES   14
+#define HB_WIN_COM_FUN_MAX                 14
 
-#define HB_WIN_COM_DBGBASIC                  0x01
-#define HB_WIN_COM_DBGFLOW                   0x02
-#define HB_WIN_COM_DBGXTRAFLOW               0x04
-#define HB_WIN_COM_DBGOTHER                  0x08
-#define HB_WIN_COM_DBGTIMEOUTS               0x10
-#define HB_WIN_COM_DBGQUEUE                  0x20
-#define HB_WIN_COM_DBGALL                    0x3F
+#define HB_WIN_COM_DBGBASIC                0x01
+#define HB_WIN_COM_DBGFLOW                 0x02
+#define HB_WIN_COM_DBGXTRAFLOW             0x04
+#define HB_WIN_COM_DBGOTHER                0x08
+#define HB_WIN_COM_DBGTIMEOUTS             0x10
+#define HB_WIN_COM_DBGQUEUE                0x20
+#define HB_WIN_COM_DBGALL                  0x3F
 
 /* hbwin_bitmapType() return values */
-#define HB_WIN_BITMAP_UNKNOWN                0
-#define HB_WIN_BITMAP_BMP                    1
-#define HB_WIN_BITMAP_JPEG                   2
-#define HB_WIN_BITMAP_PNG                    3
+#define HB_WIN_BITMAP_UNKNOWN              0
+#define HB_WIN_BITMAP_BMP                  1
+#define HB_WIN_BITMAP_JPEG                 2
+#define HB_WIN_BITMAP_PNG                  3
 
 HB_EXTERN_BEGIN
 

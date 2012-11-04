@@ -58,13 +58,13 @@
 #include "hbapiitm.h"
 
 #ifndef QUERYESCSUPPORT
-#define QUERYESCSUPPORT 8
+#define QUERYESCSUPPORT  8
 #endif
 #ifndef BI_JPEG
-#define BI_JPEG         4
+#define BI_JPEG          4
 #endif
 #ifndef BI_PNG
-#define BI_PNG          5
+#define BI_PNG           5
 #endif
 
 /* Functions for loading & printing bitmaps */
@@ -123,10 +123,10 @@ HB_FUNC( WIN_LOADBITMAPFILE )
 
 /* Some compilers don't implement these define [jarabal] */
 #ifndef CHECKJPEGFORMAT
-#define CHECKJPEGFORMAT    4119
+#define CHECKJPEGFORMAT  4119
 #endif
 #ifndef CHECKPNGFORMAT
-#define CHECKPNGFORMAT     4120
+#define CHECKPNGFORMAT   4120
 #endif
 
 static int hbwin_bitmapIsSupported( HDC hDC, int iType, const void * pImgBuf, HB_SIZE nSize )
@@ -185,23 +185,23 @@ HB_FUNC( WIN_DRAWBITMAP )
              [vszakats] */
    if( hbwin_bitmapIsSupported( hDC, iType, pbmfh, nSize ) == 0 )
    {
-      int iWidth = hb_parni( 7 );
+      int iWidth  = hb_parni( 7 );
       int iHeight = hb_parni( 8 );
 
       if( iType == HB_WIN_BITMAP_BMP )
       {
-         pbmi = ( BITMAPINFO * ) ( pbmfh + 1 );
+         pbmi  = ( BITMAPINFO * ) ( pbmfh + 1 );
          pBits = ( BYTE * ) pbmfh + pbmfh->bfOffBits;
 
          /* Remember there are 2 types of BitMap File */
          if( pbmi->bmiHeader.biSize == sizeof( BITMAPCOREHEADER ) )
          {
-            iWidth = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
+            iWidth  = ( ( BITMAPCOREHEADER * ) pbmi )->bcWidth;
             iHeight = ( ( BITMAPCOREHEADER * ) pbmi )->bcHeight;
          }
          else
          {
-            iWidth = pbmi->bmiHeader.biWidth;
+            iWidth  = pbmi->bmiHeader.biWidth;
             iHeight = abs( pbmi->bmiHeader.biHeight );
          }
       }

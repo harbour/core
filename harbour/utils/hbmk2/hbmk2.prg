@@ -1329,7 +1329,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    LOCAL lHBMAINDLLP
 
-   LOCAL cStdOut, cStdErr
+#ifdef _HBMK_LIB_HINTS_
+   LOCAL cStdErr
+#endif
 
    IF s_cSecToken == NIL
       s_cSecToken := StrZero( hb_rand32(), 10, 0 )
@@ -6597,7 +6599,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand,, @cStdOut, @cStdErr ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand /* ,,, @cStdErr */ ) ) != 0
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running linker. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6605,7 +6607,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
                      hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
-                  AdviseMissingLibs( hbmk, cStdErr + hb_eol() + cStdOut )
+#ifdef _HBMK_LIB_HINTS_
+                  AdviseMissingLibs( hbmk, cStdErr )
+#endif
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -6711,7 +6715,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand,, @cStdOut, @cStdErr ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand /* ,,, @cStdErr */ ) ) != 0
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6719,7 +6723,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
                      hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
-                  AdviseMissingLibs( hbmk, cStdErr + hb_eol() + cStdOut )
+#ifdef _HBMK_LIB_HINTS_
+                  AdviseMissingLibs( hbmk, cStdErr )
+#endif
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -12212,6 +12218,8 @@ STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
 
    RETURN cString
 
+#ifdef _HBMK_LIB_HINTS_
+
 STATIC PROCEDURE AdviseMissingLibs( hbmk, cOutput )
 
    LOCAL hAll := GetListOfFunctionsKnown( hbmk )
@@ -12339,19 +12347,29 @@ STATIC FUNCTION GetListOfFunctionsKnownLoadHBX( cFileName, cRoot, hAll )
    LOCAL pRegex
    LOCAL tmp
    LOCAL aDynamic := {}
+   LOCAL cFilter
 
-   IF ! Empty( cFile := hb_MemoRead( cFileName ) ) .AND. ;
-      ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
-      FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
-         IF tmp[ 2 ] $ hAll
-            hAll[ tmp[ 2 ] ] += "," + cName
-         ELSE
-            hAll[ tmp[ 2 ] ] := cName
+   IF ! Empty( cFile := hb_MemoRead( cFileName ) )
+
+      FOR EACH cFilter IN { ;
+         "^DYNAMIC ([a-zA-Z0-9_]*)$", ;
+         "ANNOUNCE ([a-zA-Z0-9_]*)$" }
+
+         IF ! Empty( pRegex := hb_regexComp( cFilter, .T., .T. ) )
+            FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
+               IF tmp[ 2 ] $ hAll
+                  hAll[ tmp[ 2 ] ] += "," + cName
+               ELSE
+                  hAll[ tmp[ 2 ] ] := cName
+               ENDIF
+            NEXT
          ENDIF
       NEXT
    ENDIF
 
    RETURN aDynamic
+
+#endif
 
 STATIC FUNCTION mk_extern( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex, cOutputName )
 

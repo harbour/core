@@ -55,6 +55,7 @@
 HB_FUNC( WAPI_ADDFONTRESOURCE )
 {
    void * hFileName;
+
    hb_retni( AddFontResource( HB_PARSTRDEF( 1, &hFileName, NULL ) ) );
    hb_strfree( hFileName );
 }
@@ -62,6 +63,7 @@ HB_FUNC( WAPI_ADDFONTRESOURCE )
 HB_FUNC( WAPI_REMOVEFONTRESOURCE )
 {
    void * hFileName;
+
    hb_retni( RemoveFontResource( HB_PARSTRDEF( 1, &hFileName, NULL ) ) );
    hb_strfree( hFileName );
 }

@@ -539,7 +539,7 @@
             cB := cLine
          ELSE
             cB := SubStr( cLine, 1, nEol - 1 )
-            FSEEK( nH, nSavePos + nEol + 1, FS_SET )
+            FSeek( nH, nSavePos + nEol + 1, FS_SET )
          ENDIF
          RETURN nNumRead != 0
    $STATUS$
@@ -918,7 +918,7 @@
       directory is the root, the value of the function will be a NULL
       byte.
    $EXAMPLES$
-      ? Curdir()
+      ? CurDir()
    $STATUS$
       R
    $COMPLIANCE$

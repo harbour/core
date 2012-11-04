@@ -7,9 +7,9 @@
 #include "hbsocket.ch"
 #include "hbthread.ch"
 
-#ifdef HB_HAS_OPENSSL
 #include "hbssl.ch"
-#endif
+#undef __HBEXTREQ__
+#include "hbssl.hbx"
 
 #pragma -km+
 
@@ -35,7 +35,7 @@ MEMVAR server, get, post, cookie, session, httpd
 CREATE CLASS UHttpd MODULE FRIENDLY
 
    EXPORTED:
-   METHOD RUN( hConfig )
+   METHOD Run( hConfig )
    METHOD Stop()
 
    VAR cError INIT ""
@@ -55,6 +55,8 @@ CREATE CLASS UHttpd MODULE FRIENDLY
 
    VAR lStop
 
+   VAR lHasSSL INIT hb_IsFunction( "__HBEXTERN__HBSSL__" )
+
    METHOD LogAccess()
    METHOD LogError( cError )
 
@@ -64,7 +66,7 @@ FUNCTION UHttpdNew()
 
    RETURN UHttpd()
 
-METHOD RUN( hConfig ) CLASS UHttpd
+METHOD Run( hConfig ) CLASS UHttpd
 
    LOCAL hSocket, nI, aI, xValue, aThreads, nJobs, nWorkers
 
@@ -96,26 +98,26 @@ METHOD RUN( hConfig ) CLASS UHttpd
 
 
    IF Self:hConfig[ "SSL" ]
-#ifdef HB_HAS_OPENSSL
-      SSL_INIT()
-      DO WHILE RAND_STATUS() != 1
-         RAND_add( Str( hb_Random(), 18, 15 ) + Str( hb_milliSeconds(), 20 ), 1 )
-      ENDDO
+      IF Self:lHasSSL
+         SSL_INIT()
+         DO WHILE RAND_STATUS() != 1
+            RAND_add( Str( hb_Random(), 18, 15 ) + Str( hb_milliSeconds(), 20 ), 1 )
+         ENDDO
 
-      Self:hSSLCtx := SSL_CTX_NEW( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
-      SSL_CTX_SET_OPTIONS( Self:hSSLCtx, HB_SSL_OP_NO_TLSv1 )
-      IF SSL_CTX_USE_PRIVATEKEY_FILE( Self:hSSLCtx, Self:hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
-         Self:cError := "Invalid private key file"
+         Self:hSSLCtx := SSL_CTX_NEW( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
+         SSL_CTX_SET_OPTIONS( Self:hSSLCtx, HB_SSL_OP_NO_TLSv1 )
+         IF SSL_CTX_USE_PRIVATEKEY_FILE( Self:hSSLCtx, Self:hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+            Self:cError := "Invalid private key file"
+            RETURN .F.
+         ENDIF
+         IF SSL_CTX_USE_CERTIFICATE_FILE( Self:hSSLCtx, Self:hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+            Self:cError := "Invalid certificate file"
+            RETURN .F.
+         ENDIF
+      ELSE
+         Self:cError := "SSL not supported"
          RETURN .F.
       ENDIF
-      IF SSL_CTX_USE_CERTIFICATE_FILE( Self:hSSLCtx, Self:hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
-         Self:cError := "Invalid certificate file"
-         RETURN .F.
-      ENDIF
-#else
-      Self:cError := "SSL not supported"
-      RETURN .F.
-#endif
    ENDIF
 
    IF Self:hConfig[ "Port" ] < 1 .OR. Self:hConfig[ "Port" ] > 65535
@@ -324,8 +326,6 @@ STATIC FUNCTION ParseFirewallFilter( cFilter, aFilter )
 
    RETURN .T.
 
-#ifdef HB_HAS_OPENSSL
-
 STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
 
    LOCAL nErr, nLen
@@ -425,14 +425,10 @@ STATIC FUNCTION MY_SSL_ACCEPT( hConfig, hSSL, hSocket, nTimeout )
 
    RETURN nErr
 
-#endif
-
 STATIC FUNCTION ProcessConnection( oServer )
 
    LOCAL hSocket, cRequest, aI, nLen, nErr, nTime, nReqLen, cBuf, aServer
-#ifdef HB_HAS_OPENSSL
    LOCAL hSSL
-#endif
 
    ErrorBlock( {| o | UErrorHandler( o, oServer ) } )
 
@@ -471,8 +467,7 @@ STATIC FUNCTION ProcessConnection( oServer )
          LOOP
       ENDIF
 
-#ifdef HB_HAS_OPENSSL
-      IF oServer:hConfig[ "SSL" ]
+      IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
          hSSL := SSL_NEW( oServer:hSSLCtx )
          SSL_SET_MODE( hSSL, hb_bitOr( SSL_GET_MODE( hSSL ), HB_SSL_MODE_ENABLE_PARTIAL_WRITE ) )
          hb_socketSetBlockingIO( hSocket, .F. )
@@ -510,7 +505,6 @@ STATIC FUNCTION ProcessConnection( oServer )
          aServer[ "SSL_SERVER_I_DN" ] := X509_NAME_ONELINE( X509_GET_ISSUER_NAME( SSL_GET_CERTIFICATE( hSSL ) ) )
          aServer[ "SSL_SERVER_S_DN" ] := X509_NAME_ONELINE( X509_GET_SUBJECT_NAME( SSL_GET_CERTIFICATE( hSSL ) ) )
       ENDIF
-#endif
 
       /* loop for processing connection */
 
@@ -523,18 +517,15 @@ STATIC FUNCTION ProcessConnection( oServer )
          nTime := hb_Milliseconds()
          cBuf := Space( 4096 )
          DO WHILE At( CR_LF + CR_LF, cRequest ) == 0
-#ifdef HB_HAS_OPENSSL
-            IF oServer:hConfig[ "SSL" ]
+            IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
                nLen := MY_SSL_READ( oServer:hConfig, hSSL, hSocket, @cBuf, 1000, @nErr )
             ELSE
-#endif
                nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 )
                IF nLen < 0
                   nErr := hb_socketGetError()
                ENDIF
-#ifdef HB_HAS_OPENSSL
             ENDIF
-#endif
+
             IF nLen > 0
                cRequest += hb_BLeft( cBuf, nLen )
             ELSEIF nLen == 0
@@ -583,18 +574,15 @@ STATIC FUNCTION ProcessConnection( oServer )
             nTime := hb_Milliseconds()
             cBuf := Space( 4096 )
             DO WHILE Len( cRequest ) < nReqLen
-#ifdef HB_HAS_OPENSSL
-               IF oServer:hConfig[ "SSL" ]
+               IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
                   nLen := MY_SSL_READ( oServer:hConfig, hSSL, hSocket, @cBuf, 1000, @nErr )
                ELSE
-#endif
                   nLen := hb_socketRecv( hSocket, @cBuf,,, 1000 )
                   IF nLen < 0
                      nErr := hb_socketGetError()
                   ENDIF
-#ifdef HB_HAS_OPENSSL
                ENDIF
-#endif
+
                IF nLen > 0
                   cRequest += hb_BLeft( cBuf, nLen )
                ELSEIF nLen == 0
@@ -649,18 +637,15 @@ STATIC FUNCTION ProcessConnection( oServer )
          cBuf := MakeResponse( oServer:hConfig )
 
          DO WHILE hb_BLen( cBuf ) > 0 .AND. ! oServer:lStop
-#ifdef HB_HAS_OPENSSL
-            IF oServer:hConfig[ "SSL" ]
+            IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
                nLen := MY_SSL_WRITE( oServer:hConfig, hSSL, hSocket, cBuf, 1000, @nErr )
             ELSE
-#endif
                nLen := hb_socketSend( hSocket, cBuf,,, 1000 )
                IF nLen < 0
                   nErr := hb_socketGetError()
                ENDIF
-#ifdef HB_HAS_OPENSSL
             ENDIF
-#endif
+
             IF nLen < 0
                Eval( oServer:hConfig[ "Trace" ], "send error:", nErr, hb_socketErrorString( nErr ) )
                EXIT
@@ -680,9 +665,10 @@ STATIC FUNCTION ProcessConnection( oServer )
          ENDIF
       ENDDO
 
-#ifdef HB_HAS_OPENSSL
-      hSSL := NIL
-#endif
+      IF oServer:lHasSSL
+         hSSL := NIL
+      ENDIF
+
       Eval( oServer:hConfig[ "Trace" ], "Close connection1", hSocket )
       hb_socketShutdown( hSocket )
       hb_socketClose( hSocket )
@@ -1648,7 +1634,7 @@ STATIC FUNCTION compile_file( cFileName, hConfig )
    IF cFileName == NIL
       cFileName := MEMVAR->server[ "SCRIPT_NAME" ]
    ENDIF
-   cFileName := UOsFileName( hb_DirBase() + "/tpl/" + cFileName + ".tpl" )
+   cFileName := UOsFileName( hb_DirBase() + "tpl/" + cFileName + ".tpl" )
    IF hb_FileExists( cFileName )
       cTpl := hb_MemoRead( cFileName )
       BEGIN SEQUENCE

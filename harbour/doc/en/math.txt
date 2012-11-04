@@ -46,9 +46,9 @@
 
          ? nNumber - nNumber1
          ? nNumber1 - nNumber
-         ? ABS( nNumber - nNumber1 )
-         ? ABS( nNumber1 - nNumber )
-         ? ABS( -1 * 345 )
+         ? Abs( nNumber - nNumber1 )
+         ? Abs( nNumber1 - nNumber )
+         ? Abs( -1 * 345 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -83,7 +83,7 @@
       This function returns the value of e raised to the power of
       <nNumber>.  It is the inverse of LOG().
    $EXAMPLES$
-      ? EXP(45)
+      ? Exp( 45 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -121,8 +121,8 @@
       point.
    $EXAMPLES$
       SET DECIMAL TO 5
-      ? INT( 632512.62541 )
-      ? INT( 845414111.91440 )
+      ? Int( 632512.62541 )
+      ? Int( 845414111.91440 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -159,7 +159,7 @@
       which is depicted on the display device as a series of asterisks.
       This function is the inverse of EXP().
    $EXAMPLES$
-      ? LOG( 632512 )
+      ? Log( 632512 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -200,8 +200,8 @@
       are date data types, the return value will be a date data type as
       well. It will be the later of the two dates passed to it.
    $EXAMPLES$
-      ? MAX( 214514214, 6251242142 )
-      ? MAX( STOD( "20001111" ), STOD( "20140621" ) )
+      ? Max( 214514214, 6251242142 )
+      ? Max( SToD( "20001111" ), SToD( "20140621" ) )
    $STATUS$
       R
    $COMPLIANCE$
@@ -239,8 +239,8 @@
       <xValue> and <xValue1> must be the same data type. If numeric, the
       smaller number is returned. If dates, the earlier date is returned.
    $EXAMPLES$
-      ? MIN( 214514214, 6251242142 )
-      ? MIN( STOD( "20001111" ), STOD( "20140621" ) )
+      ? Min( 214514214, 6251242142 )
+      ? Min( SToD( "20001111" ), SToD( "20140621" ) )
    $STATUS$
       R
    $COMPLIANCE$
@@ -317,8 +317,8 @@
       will always return a 0.
    $EXAMPLES$
       SET DECIMAL TO 5
-      ? SQRT( 632512.62541 )
-      ? SQRT( 845414111.91440 )
+      ? Sqrt( 632512.62541 )
+      ? Sqrt( 845414111.91440 )
    $STATUS$
       R
    $COMPLIANCE$
@@ -358,8 +358,8 @@
       whole numbers. Numbers from 5 through 9 will be rounded up, all
       others will be rounded down.
    $EXAMPLES$
-      ? ROUND( 632512.62541, 5 )
-      ? ROUND( 845414111.91440, 3 )
+      ? Round( 632512.62541, 5 )
+      ? Round( 845414111.91440, 3 )
    $STATUS$
       R
    $COMPLIANCE$
