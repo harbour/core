@@ -24,47 +24,49 @@ PROCEDURE Main()
    FIELD last, first
 
    IF ! hb_dbExists( "tbnames.dbf" )
-      MAKE_DBF()
+      make_dbf()
    ENDIF
 
-   USE TBNames
+   USE tbnames
 
    IF ! hb_dbExists( "tbnames.ntx" )
-      INDEX ON last + first TO TBNAMES
+      INDEX ON last + first TO tbnames
    ENDIF
 
-   SET INDEX TO TBNAMES
+   SET INDEX TO tbnames
 
    // Pass Heading as character and Field as Block including Alias
    // To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
 
-   AAdd( aFields, { "Last Name" , {|| TBNames->Last }  } )
-   AAdd( aFields, { "First Name", {|| TBNames->First } } )
-   AAdd( aFields, { "City"      , {|| TBNames->City }  } )
+   AAdd( aFields, { "Last Name" , {|| tbnames->Last }  } )
+   AAdd( aFields, { "First Name", {|| tbnames->First } } )
+   AAdd( aFields, { "City"      , {|| tbnames->City }  } )
 
    cOldColor := SetColor( "N/BG" )
    CLS
    @ 5, 10 SAY "Enter First Letter Of Last Name:" GET cKey PICTURE "!"
    READ
 
-   // TBNames->Last = cKey is the Conditional Block passed to this function
+   // tbnames->Last = cKey is the Conditional Block passed to this function
    // you can make it as complicated as you want, but you would then
    // have to modify TBWhileSet() to find first and last records
    // matching your key.
-   nRecSel := FT_BRWSWHL( aFields, {|| TBNames->Last = cKey }, cKey, nFreeze, ;
+   nRecSel := FT_BRWSWHL( aFields, {|| tbnames->Last = cKey }, cKey, nFreeze, ;
       lSaveScrn, cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 )
    // Note you can use Compound Condition
    // such as cLast =: "Pierce            " and cFirst =: "Hawkeye  "
    // by changing above block to:
-   //    {|| TBNames->Last = cLast .AND. TBNames->First = cFirst }
+   //    {|| tbnames->Last = cLast .AND. tbnames->First = cFirst }
    // and setting cKey := cLast + cFirst
 
    ?
    IF nRecSel == 0
       ? "Sorry, NO Records Were Selected"
    ELSE
-      ? "You Selected " + TBNames->Last + " " + ;
-         TBNames->First + " " + TBNames->City
+      ? "You Selected " + ;
+         tbnames->Last + " " + ;
+         tbnames->First + " " + ;
+         tbnames->City
    ENDIF
    ?
 
@@ -92,7 +94,7 @@ STATIC FUNCTION make_dbf()
       { "OLEANDAR", "JILL", "425 FLORAL PARK DRIVE", "FLORAL PARK", "NY", "10093"       }, ;
       { "SUGARMAN", "CANDY", "1541 SWEETHEART ROAD", "HERSHEY", "PA", "10132"           } }
 
-   dbCreate( "TBNAMES", { ;
+   dbCreate( "tbnames", { ;
       { "LAST ", "C", 18, 0, }, ;
       { "FIRST", "C",  9, 0, }, ;
       { "ADDR ", "C", 28, 0, }, ;
