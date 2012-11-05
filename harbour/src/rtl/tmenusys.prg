@@ -538,7 +538,7 @@ METHOD PopAll() CLASS HBMenuSys
 
 /***
 *
-*  Eval() the Data block if selected MenuItem is !IsPopUp.
+*  Eval() the Data block if selected MenuItem is ! IsPopUp.
 *
 ***/
 METHOD Execute() CLASS HBMenuSys
@@ -546,7 +546,7 @@ METHOD Execute() CLASS HBMenuSys
    LOCAL oNewMenu := ::oMenu:getItem( ::oMenu:current )
    LOCAL lPas := .T.
 
-   // Execute the Data block if selected MenuItem is !IsPopUp:
+   // Execute the Data block if selected MenuItem is ! IsPopUp:
    IF HB_ISOBJECT( oNewMenu ) .AND. ! oNewMenu:IsPopUp
 
       IF ::oMenu:ClassName() $ "TOPBARMENU|POPUPMENU|HB_POPUPMENU"

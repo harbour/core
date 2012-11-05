@@ -148,7 +148,7 @@ METHOD MoveCursor( nSkip )
    LOCAL nSkipped
 
    nSkipped := ::GoTo( ::rowPos + ::nFirstVisible - 1 + nSkip )
-   IF !::hitBottom .OR. Abs( nSkipped ) > 0
+   IF ! ::hitBottom .OR. Abs( nSkipped ) > 0
       IF iif( nSkipped > 0, ::rowPos + nSkipped <= ::rowCount, ::rowPos + nSkipped >= 1 )
          ::RefreshCurrent()
          ::rowPos += nSkipped
@@ -165,12 +165,12 @@ METHOD ForceStable()
 
    LOCAL nRow, nCol, xData, oCol, nColX, nWid, aClr, nClr
 
-   IF !::lConfigured
+   IF ! ::lConfigured
       ::Configure()
    ENDIF
    DispBegin()
    FOR nRow := 1 TO ::rowCount
-      IF !::aRowState[ nRow ]
+      IF ! ::aRowState[ nRow ]
          ::GoTo( ::nFirstVisible + nRow - 1 )
          IF ::hitBottom
             hb_DispOutAt( ::nTop + nRow - 1, ::nLeft, Space( ::nRight - ::nLeft + 1 ), ::aColorSpec[ 1 ] )
@@ -222,7 +222,7 @@ METHOD GoTo( nRow )
 
 METHOD GoBottom()
 
-   DO WHILE !::hitBottom
+   DO WHILE ! ::hitBottom
       ::PageDown()
    ENDDO
 

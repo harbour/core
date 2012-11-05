@@ -145,12 +145,12 @@ PROCEDURE Main()
    Inkey( 0 )
    CLS
 
-   ? "WHILE !TESTDBF->( EOF() )"
+   ? "WHILE ! TESTDBF->( Eof() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
    ? ""
-   WHILE !TESTDBF->( Eof() )
+   WHILE ! TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
@@ -162,7 +162,7 @@ PROCEDURE Main()
    ? "SET FILTER TO TESTDBF->AGE == 21"
    ? "? TESTDBF->( dbFilter() )"
    ? "TESTDBF->( dbGoTop() )"
-   ? "WHILE !TESTDBF->( EOF() )"
+   ? "WHILE ! TESTDBF->( Eof() )"
    ? "   ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )"
    ? "   TESTDBF->( dbSkip() )"
    ? "ENDDO"
@@ -171,7 +171,7 @@ PROCEDURE Main()
    SET FILTER TO TESTDBF->AGE == 21
    ? TESTDBF->( dbFilter() )
    TESTDBF->( dbGoTop() )
-   WHILE !TESTDBF->( Eof() )
+   WHILE ! TESTDBF->( Eof() )
       ? TESTDBF->FIRST, TESTDBF->AGE, TESTDBF->( RecNo() )
       TESTDBF->( dbSkip() )
    ENDDO
@@ -234,7 +234,7 @@ PROCEDURE Main()
    ? 'Select( "TESTDBF" )'
    ? "SET FILTER TO TESTDBF->SALARY > 120000"
    ? "TESTDBF->( dbGoTop() )"
-   ? "WHILE !TESTDBF->( EOF() )"
+   ? "WHILE ! TESTDBF->( Eof() )"
    ? "   NEWRDD->( dbAppend() )"
    ? "   NEWRDD->FIRST_NAME := TESTDBF->FIRST"
    ? "   NEWRDD->AGE := TESTDBF->AGE"
@@ -260,7 +260,7 @@ PROCEDURE Main()
    SELECT( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 120000
    TESTDBF->( dbGoTop() )
-   WHILE !TESTDBF->( Eof() )
+   WHILE ! TESTDBF->( Eof() )
       NEWRDD->( dbAppend() )
       NEWRDD->FIRST_NAME := TESTDBF->FIRST
       NEWRDD->AGE := TESTDBF->AGE

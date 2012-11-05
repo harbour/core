@@ -91,11 +91,11 @@ FUNCTION IsShortcut( oMenu, nKey, nID )
 
       RETURN IsQuick( oMenu, nKey, @nID )
 
-   // Test and assign top menu item shortCut, enabled, and !PopUp:
+   // Test and assign top menu item shortCut, enabled, and ! PopUp:
    // Changed by enclosing assignment before ':Enabled':
    ELSEIF ( nShortCut := oMenu:getShortCt( nKey ) ) > 0 .AND. ;
           ( oItem := oMenu:getItem( nShortcut ) ):enabled .AND. ;
-          !oItem:isPopUp()
+          ! oItem:isPopUp()
 
       oMenu:select( nShortCut )
       Eval( oItem:data, oItem )

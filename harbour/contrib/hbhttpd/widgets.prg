@@ -353,7 +353,7 @@ FUNC UWBrowseNew()
 
 METHOD AddColumn( nID, cTitle, cField, lRaw ) CLASS UWBrowse
 
-   AAdd( Self:aColumns, { nID, cTitle, cField, !Empty( lRaw ) } )
+   AAdd( Self:aColumns, { nID, cTitle, cField, ! Empty( lRaw ) } )
 
    RETURN Self
 

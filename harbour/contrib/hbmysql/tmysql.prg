@@ -430,7 +430,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
       // DAVID: ::nCurRow := Max( ::nCurRow + nRows, 1 )
       IF ( ( ::RecNo() + nRows ) + 0 ) < 1
          nRows := - ::RecNo() + 1
-         // Clipper: only SKIP movement can set BOF() to .T.
+         // Clipper: only SKIP movement can set Bof() to .T.
          ::lBof := .T.  // Try to skip before first record
       ENDIF
    ELSE
@@ -445,7 +445,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
    ::nCurRow := ::nCurRow + nRows
 
    // DAVID: maintain ::bof() true until next movement
-   // Clipper: only SKIP movement can set BOF() to .T.
+   // Clipper: only SKIP movement can set Bof() to .T.
    lbof := ::Bof()
 
 // mysql_data_seek( ::nResultHandle, ::nCurRow - 1 )
@@ -556,8 +556,8 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 
             OTHERWISE
 
-               // DAVID: Alert( "Unknown type from SQL Server Field: " + hb_NToS( i ) + " is type " + hb_NToS( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] ) )
-               // ? "Unknown type from SQL Server Field: " + hb_NToS( i ) + " is type " + hb_NToS( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] )
+               // DAVID: Alert( "Unknown type from SQL Server Field: " + hb_ntos( i ) + " is type " + hb_ntos( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] ) )
+               // ? "Unknown type from SQL Server Field: " + hb_ntos( i ) + " is type " + hb_ntos( ::aFieldStruct[ i ][ MYSQL_FS_TYPE ] )
 
             ENDSWITCH
 
@@ -1429,9 +1429,9 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
       CASE "N"
          /*
          IF aStruct[ i ][ DBS_DEC ] == 0
-            ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " int(" + hb_NToS( aStruct[ i ][ DBS_LEN ] ) + ")" + Eval( cNN, aStruct[ i ] ) + iif( aStruct[ i ][ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + iif( aStruct[ i ][ DBS_NAME ] == cAuto, " auto_increment ", "" ) + ","
+            ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " int(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + ")" + Eval( cNN, aStruct[ i ] ) + iif( aStruct[ i ][ DBS_NAME ] == cPrimaryKey, " NOT NULL ", "" ) + iif( aStruct[ i ][ DBS_NAME ] == cAuto, " auto_increment ", "" ) + ","
          ELSE
-            ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " real(" + hb_NToS( aStruct[ i ][ DBS_LEN ] ) + "," + hb_NToS( aStruct[ i ][ DBS_DEC ] ) + ")" + Eval( cNN, aStruct[ i ] ) + ","
+            ::cCreateQuery += aStruct[ i ][ DBS_NAME ] + " real(" + hb_ntos( aStruct[ i ][ DBS_LEN ] ) + "," + hb_ntos( aStruct[ i ][ DBS_DEC ] ) + ")" + Eval( cNN, aStruct[ i ] ) + ","
          ENDIF
          */
          IF aStruct[ i ][ DBS_DEC ] == 0 .AND. aStruct[ i ][ DBS_LEN ] <= 18

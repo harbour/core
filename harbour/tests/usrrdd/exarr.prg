@@ -111,7 +111,7 @@ PROCEDURE Main()
    field->birthday := SToD( "19400101" )
    field->age      := 66
 
-   WHILE !Eof()
+   WHILE ! Eof()
       ? RecNo(), '"' + FIELD->NAME + '"'
       IF RecNo() == 20
          Inkey( 0 )
@@ -125,7 +125,7 @@ PROCEDURE Main()
    ? "ALIAS", Alias(), "RECNO", RecNo(), ;
       "BOF", Bof(), "EOF", Eof(), "LASTREC", LastRec()
    WAIT
-   WHILE !Bof()
+   WHILE ! Bof()
       ? RecNo(), '[' + FIELD->NAME + ']'
       IF RecNo() == LastRec() - 20
          Inkey( 0 )

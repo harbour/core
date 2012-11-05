@@ -45,7 +45,7 @@ PROCEDURE Main()
 
    ?
    ? "Basic copy loop using the default Run() from TTextFile"
-   DO WHILE !oFrom:lEoF
+   DO WHILE ! oFrom:lEoF
       cOut := oFrom:Run()
       ? cOut
       oTo:Run( cOut )
@@ -312,4 +312,4 @@ STATIC FUNCTION GOTO( nLine )
       ENDDO
    ENDIF
 
-   RETURN !::lEoF
+   RETURN ! ::lEoF

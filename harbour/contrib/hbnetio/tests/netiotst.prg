@@ -50,8 +50,8 @@ proc main()
    ?
 
    lExists := netio_funcexec( "HB_DirExists", "./data" )
-   ? "Directory './data'", iif( !lExists, "not exists", "exists" )
-   if !lExists
+   ? "Directory './data'", iif( ! lExists, "not exists", "exists" )
+   if ! lExists
       ? "Creating directory './data' ->", ;
        iif( netio_funcexec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
    endif
@@ -116,7 +116,7 @@ proc testdb( cName )
    next
    ordSetFocus( 1 )
    dbgotop()
-   while !eof()
+   while ! eof()
       if ! field->F1 == field->F2
          ? "error at record:", recno()
          ? "  ! '" + field->F1 + "' == '" + field->F2 + "'"

@@ -138,7 +138,7 @@
    $EXAMPLES$
       FT_FUSE( "text.c" )      // open text file
 
-      DO WHILE !FT_FEOF()
+      DO WHILE ! FT_FEOF()
 
          ? FT_FREADLN()        // read thru file
 
@@ -537,7 +537,7 @@
 
       FT_FUSE( "config.sys" )
 
-      DO WHILE Upper( FT_FREADLN() ) != "FILES=" .AND. !F_FEOF()
+      DO WHILE Upper( FT_FREADLN() ) != "FILES=" .AND. ! F_FEOF()
 
          FT_FSKIP()
 

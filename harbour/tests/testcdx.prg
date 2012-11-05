@@ -22,7 +22,7 @@ PROCEDURE Main()
    Select( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 140000
    TESTDBF->( dbGoTop() )
-// WHILE !TESTDBF->( Eof() )
+// WHILE ! TESTDBF->( Eof() )
 //    TESTCDX->( dbAppend() )
 //    TESTCDX->CHARACTER := TESTDBF->FIRST
 //    TESTCDX->NUMERIC := TESTDBF->SALARY
@@ -34,8 +34,8 @@ PROCEDURE Main()
 
    ? TESTCDX->( RecCount() )
    TESTCDX->( dbGoTop() )
-   ? TESTCDX->( EOF() )
-   WHILE !TESTCDX->( EOF() )
+   ? TESTCDX->( Eof() )
+   WHILE ! TESTCDX->( Eof() )
       ? TESTCDX->( RecNo() ), TESTCDX->NUMERIC
       ? TESTCDX->MEMO
       TESTCDX->( dbSkip() )

@@ -134,7 +134,7 @@ METHOD isShortCut( nKey, nID ) CLASS hb_POPUPMENU
    LOCAL i
 
    DO CASE
-   // Test and assign top menu item shortCut, enabled, and !PopUp:
+   // Test and assign top menu item shortCut, enabled, and ! PopUp:
    // Changed by enclosing assignment before ':Enabled':
    CASE ( ( nShortCut := ::getShortCt( nKey ) ) > 0 ) .AND. ;
           ( ( oItem := ::getItem( nShortcut ) ):enabled ) .AND. ;

@@ -68,7 +68,7 @@ FUNCTION dbReindex()
 
 PROCEDURE dbSetOrder( nOrderNum )
 
-   IF HB_ISSTRING( nOrderNum ) .AND. !Empty( Val( nOrderNum ) )
+   IF HB_ISSTRING( nOrderNum ) .AND. ! Empty( Val( nOrderNum ) )
       nOrderNum := Val( nOrderNum )
    ENDIF
 

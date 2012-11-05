@@ -55,28 +55,28 @@ Class TMySQLQuery -------------------------------------------
 
 - Method TMySQLQuery:Bof()
   Change in definition to reproduce Clipper behaviour
-  BOF() true is applied when is tryed an movement before of first logical record,
+  Bof() true is applied when is tryed an movement before of first logical record,
   and must not be used to indicate record pointer is placed on record 1
   Previous definition cause processes like this:
-     WHILE ! oQuery:BOF()
-       ...
-       oQuery:SKIP(-1)
+     WHILE ! oQuery:Bof()
+        ...
+        oQuery:SKIP( -1 )
      ENDD
   do not show record 1
   With new definition this behaviour are corrected
 
 - Method TMySQLQuery:Eof()
   Change in definition to reproduce Clipper behaviour
-  EOF() true is applied when is tryed an movement beyond of last logical record,
+  Eof() true is applied when is tryed an movement beyond of last logical record,
   and must not be used to indicate record pointer is placed on last record
   Previous definition cause processes like this:
-     WHILE ! oQuery:EOF()
-       ...
-       oQuery:SKIP()
-     ENDD
+     WHILE ! oQuery:Eof()
+        ...
+        oQuery:SKIP()
+     ENDDO
   do not show last record
   With new definition this behaviour are corrected
-  With EOF() true, record pointer is placed in LASTREC()+1
+  With Eof() true, record pointer is placed in LASTREC()+1
 
 - TMySQLQuery:New()
   Application of TMySQLQuery:lBof, TMySQLQuery:lEof, TMySQLQuery:lFieldAsData,
@@ -85,7 +85,7 @@ Class TMySQLQuery -------------------------------------------
 - TMySQLQuery:Skip()
   Application of TMySQLQuery:lBof, TMySQLQuery:lEof to determinate movements
   before of first and beyond of last logical records
-  Only SKIP movement can set BOF() true
+  Only SKIP movement can set Bof() true
 
 - TMySQLQuery:Skip()
   Apply NIL for return.  DBSKIP() return NIL
@@ -94,7 +94,7 @@ Class TMySQLQuery -------------------------------------------
   Application of TMySQLQuery:lBof, TMySQLQuery:lEof, TMySQLQuery:lFieldAsData,
   TMySQLQuery:aRow
   = TMySQLQuery:aRow is used in place of local variable aRow
-  = Default row is applied to TMySQLQuery:nCurRow, in place to move record pointer 
+  = Default row is applied to TMySQLQuery:nCurRow, in place to move record pointer
   position
   = TMySQLQuery:lBof, TMySQLQuery:lEof are determinated
     TMySQLQuery:bof(): pointer is placed in row 1
@@ -124,18 +124,18 @@ Class TMySQLTable -------------------------------------------
 - Method TMySQLTable:Update()
   = Parameters added:
   + lOldRecord: Use original values of record for locate it
-  + lRefresh: refresh query to MySQL server to update information 
+  + lRefresh: refresh query to MySQL server to update information
   selected for Client program
 
 - Method TMySQLTable:Delete()
   = Parameters added:
   + lOldRecord: Use original values of record for locate it
-  + lRefresh: refresh query to MySQL server to update information 
+  + lRefresh: refresh query to MySQL server to update information
   selected for Client program
 
 - Method TMySQLTable:Append()
   = Parameters added:
-  + lRefresh: refresh query to MySQL server to update information 
+  + lRefresh: refresh query to MySQL server to update information
   selected for Client program
 
 - Method TMySQLTable:GetBlankRow()
@@ -155,13 +155,13 @@ Class TMySQLTable -------------------------------------------
     In case of lOldRecord application:
     * Using current row: Use values of TMySQLQuery:aOldValue
     * Using given row: Use values of TMySQLRow:aOriValue
-    Locating is based in matching of values of ALL fields, 
+    Locating is based in matching of values of ALL fields,
     using original values of row
     WARNING: If there are more than one row matching in ALL fields, then
     all this rows with common values will be changed
 
-    This approach is applied to help in row locating when there are not indexes, 
-    or primary key are not enought to determinate record unicity. 
+    This approach is applied to help in row locating when there are not indexes,
+    or primary key are not enought to determinate record unicity.
     But, can not be guaranted record correspondence if there are many equals
     This is an alternative to use of TMySQLRow/TMySQLTable:MakePrimaryKeyWhere(), because
     this last is based in fields belonging to an primary key
@@ -171,7 +171,7 @@ Class TMySQLTable -------------------------------------------
     Is very convenient in case of information changes
 
   = Same record pointer is keep
-  
+
   = For an given row, TMySQLRow:aOriValue is updated with current values of
   TMySQLRow:aRow
 
@@ -182,13 +182,13 @@ Class TMySQLTable -------------------------------------------
     In case of lOldRecord application:
     * Using current row: Use values of TMySQLQuery:aOldValue
     * Using given row: Use values of TMySQLRow:aOriValue
-    Locating is based in matching of values of ALL fields, 
+    Locating is based in matching of values of ALL fields,
     using original values of row
     WARNING: If there are more than one row matching in ALL fields, then
     all this rows with common values will be changed
 
-    This approach is applied to help in row locating when there are not indexes, 
-    or primary key are not enought to determinate record unicity. 
+    This approach is applied to help in row locating when there are not indexes,
+    or primary key are not enought to determinate record unicity.
     But, can not be guaranted record correspondence if there are many equals
     This is an alternative to use of TMySQLRow/TMySQLTable:MakePrimaryKeyWhere(), because
     this last is based in fields belonging to an primary key
@@ -198,7 +198,7 @@ Class TMySQLTable -------------------------------------------
     Is very convenient in case of information changes
 
   = Same record pointer is keep
-  
+
   = For an given row, TMySQLRow:aOriValue is updated with current values of
   TMySQLRow:aRow
 
@@ -243,6 +243,5 @@ Class TMySQLTable -------------------------------------------
 Program TSqlBrw.prg ************************************
 
 - Skipper()
-  Modification of movement control in order to apply new definitions of 
+  Modification of movement control in order to apply new definitions of
   TMySQLQuery:Bof() and TMySQLQuery:Eof()
-

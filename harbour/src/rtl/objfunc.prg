@@ -184,7 +184,7 @@ FUNCTION __objAddMethod( oObject, cSymbol, nFuncPtr )
 
    IF ! HB_ISOBJECT( oObject ) .OR. ! HB_ISSTRING( cSymbol ) .OR. ! HB_ISSYMBOL( nFuncPtr )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
-   ELSEIF !__objHasMsg( oObject, cSymbol )
+   ELSEIF ! __objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, nFuncPtr, HB_OO_MSG_METHOD, NIL, 1 )
    ENDIF
 
@@ -194,7 +194,7 @@ FUNCTION __objAddInline( oObject, cSymbol, bInline )
 
    IF ! HB_ISOBJECT( oObject ) .OR. ! HB_ISSTRING( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
-   ELSEIF !__objHasMsg( oObject, cSymbol )
+   ELSEIF ! __objHasMsg( oObject, cSymbol )
       __clsAddMsg( oObject:ClassH, cSymbol, bInline, HB_OO_MSG_INLINE, NIL, 1 )
    ENDIF
 
@@ -206,7 +206,7 @@ FUNCTION __objAddData( oObject, cSymbol )
 
    IF ! HB_ISOBJECT( oObject ) .OR. ! HB_ISSTRING( cSymbol )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
-   ELSEIF !__objHasMsg( oObject, cSymbol ) .AND. !__objHasMsg( oObject, "_" + cSymbol )
+   ELSEIF ! __objHasMsg( oObject, cSymbol ) .AND. ! __objHasMsg( oObject, "_" + cSymbol )
       hClass := oObject:ClassH
       nSeq   := __cls_IncData( hClass )         // Allocate new Seq#
       __clsAddMsg( hClass,       cSymbol, nSeq, HB_OO_MSG_ACCESS, NIL, 1 )

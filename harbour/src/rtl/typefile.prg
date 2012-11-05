@@ -120,7 +120,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
       oErr:OsCode      := FError()
       oErr:tries       := ++nRetries
       xRecover := Eval( ErrorBlock(), oErr )
-      IF HB_ISLOGICAL( xRecover ) .AND. !xRecover      /* user select "Default" */
+      IF HB_ISLOGICAL( xRecover ) .AND. ! xRecover      /* user select "Default" */
          RETURN
       ENDIF
    ENDDO

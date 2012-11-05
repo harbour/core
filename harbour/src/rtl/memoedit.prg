@@ -219,7 +219,7 @@ METHOD HandleUserKey( nKey, nUserKey ) CLASS HBMemoEditor
       ENDIF
 
    CASE nUserKey == ME_TOGGLEWRAP
-      ::lWordWrap := !::lWordWrap
+      ::lWordWrap := ! ::lWordWrap
 
    CASE nUserKey == ME_TOGGLESCROLL
       // TODO: HBEditor does not support vertical scrolling of text inside window without moving cursor position

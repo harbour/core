@@ -640,7 +640,7 @@ FUNCTION HB_SToD( cDate )
    LOCAL cOldDateFormat
    LOCAL dDate
 
-   IF ValType( cDate ) == "C" .AND. !Empty( cDate )
+   IF ValType( cDate ) == "C" .AND. ! Empty( cDate )
       cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
 
       dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;

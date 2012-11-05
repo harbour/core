@@ -177,10 +177,10 @@ some framework/toolkit on top of basic uhttp server to allow a quick
 application development. UWidgets is used for this purpose. It allows
 to use some objects (browse, etc.) instead of plain:
     UWrite('<table>')
-    DO WHILE ! EOF()
-      UWrite('<tr><td>' + FIELD->NAME + '</td><td align="right">' +
-             STR(FIELD->AGE) + '</td></tr>')
-      DBSKIP()
+    DO WHILE ! Eof()
+       UWrite( '<tr><td>' + FIELD->NAME + '</td><td align="right">' +
+               Str( FIELD->AGE ) + '</td></tr>' )
+       dbSkip()
     ENDDO
     UWrite('</table>')
 
@@ -206,16 +206,16 @@ event/method. Handler has a structure:
 
 STATIC FUNC proc_handler(cMethod)
    IF cMethod == "INIT"
-     // This code is executed on entering URL (first call to this URL)
-     // Here we open databases used to process queries
+      // This code is executed on entering URL (first call to this URL)
+      // Here we open databases used to process queries
    ELSEIF cMethod == "POST"
-     // Process HTTP POST request
+      // Process HTTP POST request
    ELSEIF cMethod == "GET"
-     // Process HTTP GET request
+      // Process HTTP GET request
    ELSEIF cMethod == "EXIT"
-     // This code is executed on leaving URL (before first call to
-     // another URL)
-     // Here we close databases opened in INIT method, etc.
+      // This code is executed on leaving URL (before first call to
+      // another URL)
+      // Here we close databases opened in INIT method, etc.
    ENDIF
 RETURN .T.
 
@@ -236,7 +236,7 @@ GUI applications to web easier.
 The widgets are created on INIT method. The main widget is UWMain
 object. Creation of widgets is done using a function following
 Clipper convention: <object_name>New(). So,
-    oM := UWMainNew()
+     oM := UWMainNew()
 creates a main widget of web page. This main widget acts as a
 layout/container in for example, GTK+ library. It has :Add() method
 and other widgets can be included inside of it. Ex.,
@@ -263,16 +263,16 @@ methods are called only after you request of new page.
 Ex.,
 
 GET request "items" executes:
-   page_items("INIT")
-   page_items("GET")
+   page_items( "INIT" )
+   page_items( "GET" )
 
 Next GET request "items" executes:
-   page_items("GET")
+   page_items( "GET" )
 
 If you issue a GET "account" request, it will execute:
-   page_items("EXIT")
-   page_account("INIT")
-   page_account("GET")
+   page_items( "EXIT" )
+   page_account( "INIT" )
+   page_account( "GET" )
 
 A tree structure of URL is transfered into page handles INIT, EXIT
 logic. It helps make some feeling of modal structure of handler. I call
@@ -280,7 +280,7 @@ it "modal" because of idea how event are processed in event handlers of
 modal dialogs. Let's have event handler function items_handler() for
 items dialog, and items_edit_handler() function for item_edit dialog.
 
-   PROC items_handler()
+   PROCEDURE items_handler()
       ...
 
       IF event = "edit button pressed"
@@ -290,7 +290,7 @@ items dialog, and items_edit_handler() function for item_edit dialog.
          destroy_dialog( dialog )
       ENDIF
       ...
-   RETURN
+      RETURN
 
 during process_event_loop() events are processed inside
 items_edit_handler() function, and this event handler can access
@@ -300,23 +300,23 @@ The similar effect was tried to reach in page hadlers. Let's continue our
 sample (last query was "account").
 
 GET request for "items" executes:
-   page_account("EXIT")
-   page_items("INIT")
-   page_items("GET")
+   page_account( "EXIT" )
+   page_items( "INIT" )
+   page_items( "GET" )
 
 GET request for "items/edit" executes:
-   page_items_edit("INIT")  // no page_items("EXIT") !!!
-   page_items_edit("GET")
+   page_items_edit( "INIT" )  // no page_items( "EXIT" ) !!!
+   page_items_edit( "GET" )
 
 GET request for "account" executes:
-   page_items_edit("EXIT")
-   page_items("EXIT")
-   page_account("INIT")
-   page_account("GET")
+   page_items_edit( "EXIT" )
+   page_items( "EXIT" )
+   page_account( "INIT" )
+   page_account( "GET" )
 
 GET request for "account/edit" executes:
-   page_account_edit("INIT")
-   page_account_edit("GET")
+   page_account_edit( "INIT" )
+   page_account_edit( "GET" )
 etc...
 
 

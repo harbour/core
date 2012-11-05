@@ -245,7 +245,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ELSE
       cHostCP := Upper( cHostCP )
    ENDIF
-   lBoxChar := !Empty( lBoxChar )
+   lBoxChar := ! Empty( lBoxChar )
    hb_cdpSelect( cHostCP )
    hb_SetTermCP( cTermCP, cHostCP, lBoxChar )
 #else

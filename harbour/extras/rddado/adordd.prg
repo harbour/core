@@ -695,14 +695,14 @@ STATIC FUNCTION ADO_ORDINFO( nWA, nIndex, aOrderInfo )
 
    DO CASE
    CASE nIndex == DBOI_EXPRESSION
-      IF ! Empty( aWAData[ WA_CATALOG ] ) .AND. !Empty( aOrderInfo[ UR_ORI_TAG ] ) .AND. ;
+      IF ! Empty( aWAData[ WA_CATALOG ] ) .AND. ! Empty( aOrderInfo[ UR_ORI_TAG ] ) .AND. ;
             aOrderInfo[ UR_ORI_TAG ] < aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
          aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
       ELSE
          aOrderInfo[ UR_ORI_RESULT ] := ""
       ENDIF
    CASE nIndex == DBOI_NAME
-      IF ! Empty( aWAData[ WA_CATALOG ] ) .AND. !Empty( aOrderInfo[ UR_ORI_TAG ] ) .AND. ;
+      IF ! Empty( aWAData[ WA_CATALOG ] ) .AND. ! Empty( aOrderInfo[ UR_ORI_TAG ] ) .AND. ;
             aOrderInfo[ UR_ORI_TAG ] < aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes:Count
          aOrderInfo[ UR_ORI_RESULT ] := aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes( aOrderInfo[ UR_ORI_TAG ] ):Name
       ELSE

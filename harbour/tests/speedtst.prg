@@ -198,7 +198,7 @@ proc main( _p01, _p02, _p03, _p04, _p05, _p06, _p07, _p08, _p09, _p10, ;
             cParam := cMemTests
          endif
          for i := 1 to N_TESTS
-            if !strzero( i, 3 ) $ cParam
+            if ! strzero( i, 3 ) $ cParam
                cExclude += strzero( i, 3 ) + " "
             endif
          next
@@ -506,7 +506,7 @@ create_db()
 //x := seconds() + 5; while x > seconds(); enddo
 
 #ifdef __MT__
-if !hb_mtvm()
+if ! hb_mtvm()
 #else
 if .t.
 #endif
@@ -533,7 +533,7 @@ endif
 
 ? "THREADS:", iif( nMT < 0, "all->" + ltrim( str( N_TESTS ) ), ltrim( str( nMT ) ) )
 ? "N_LOOPS:", ltrim( str( N_LOOPS ) )
-if !empty( cExclude )
+if ! empty( cExclude )
    ? "excluded tests:", cExclude
 endif
 
@@ -563,7 +563,7 @@ nTimeTotST := nTimeTotMT := 0
       next
       for i:=1 to N_TESTS
          cTest := strzero( i, 3 )
-         if !cTest $ cExclude
+         if ! cTest $ cExclude
 
             /* linear execution */
             nTimeST := seconds()
@@ -599,7 +599,7 @@ nTimeTotST := nTimeTotMT := 0
       aThreads := array( N_TESTS )
       for i:=1 to N_TESTS
          cNum := strzero( i, 3 )
-         if !cNum $ cExclude
+         if ! cNum $ cExclude
             aThreads[ i ] := hb_threadStart( "t" + cNum )
          endif
       next
@@ -616,7 +616,7 @@ nTimeTotST := nTimeTotMT := 0
          aThreads[ i ] := hb_threadStart( "thTest", mtxJobs, aResults )
       next
       for i:=1 to N_TESTS
-         if !strzero( i, 3 ) $ cExclude
+         if ! strzero( i, 3 ) $ cExclude
             hb_mutexNotify( mtxJobs, i )
          endif
       next
@@ -633,7 +633,7 @@ nTimeTotST := nTimeTotMT := 0
    else
       for i:=1 to N_TESTS
          cNum := strzero( i, 3 )
-         if !cNum $ cExclude
+         if ! cNum $ cExclude
             ? dsp_result( &( "t" + cNum )(), nLoopOverHead )
          endif
       next
@@ -641,7 +641,7 @@ nTimeTotST := nTimeTotMT := 0
 #else
    for i:=1 to N_TESTS
       cNum := strzero( i, 3 )
-      if !cNum $ cExclude
+      if ! cNum $ cExclude
          ? dsp_result( &( "t" + cNum )(), nLoopOverHead )
       endif
    next

@@ -187,7 +187,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    // Now check each and every record for accuracy
 
-   DO WHILE ! EOF()
+   DO WHILE ! Eof()
 
       // TEST: Field access
 
@@ -286,13 +286,13 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    SET EXACT ON
    LOCATE for FIELD->CHAR = "J RECORD"
-   IF ! EOF()
+   IF ! Eof()
       NotifyUser( "LOCATE with EXACT ON failed" )
    ENDIF
 
    SET EXACT OFF
    LOCATE for FIELD->CHAR = "J RECORD"
-   IF EOF()
+   IF Eof()
       NotifyUser( "LOCATE with EXACT OFF failed" )
    ENDIF
 

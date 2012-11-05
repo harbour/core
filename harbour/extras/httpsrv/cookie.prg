@@ -75,7 +75,7 @@ CLASS uhttpd_Cookie
    METHOD DeleteAllCookies()
    METHOD GetCookie()
    METHOD IsCookie( cCookieName )  INLINE ::GetCookie( cCookieName ) != NIL
-   METHOD IsCookies()      INLINE !Empty( ::aaCookieToSet )
+   METHOD IsCookies()      INLINE ! Empty( ::aaCookieToSet )
    METHOD SetCookieDefaults()
 
 ENDCLASS

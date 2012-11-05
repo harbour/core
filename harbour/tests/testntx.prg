@@ -17,7 +17,7 @@ PROCEDURE Main()
    ? IndexKey()
    Inkey( 0 )
    GO TOP
-   DO WHILE !Eof()
+   DO WHILE ! Eof()
       ? ++i, Last, First
       SKIP
    ENDDO
@@ -26,7 +26,7 @@ PROCEDURE Main()
    Inkey( 0 )
    SKIP -1
 
-   DO WHILE !Bof()
+   DO WHILE ! Bof()
       ? i-- , Last, First
       SKIP -1
    ENDDO
@@ -36,7 +36,7 @@ PROCEDURE Main()
    ? IndexKey()
    Inkey( 0 )
    GO TOP
-   DO WHILE !Eof()
+   DO WHILE ! Eof()
       ? ++i, Last, First
       SKIP
    ENDDO
@@ -45,7 +45,7 @@ PROCEDURE Main()
    Inkey( 0 )
    SKIP -1
 
-   DO WHILE !Bof()
+   DO WHILE ! Bof()
       ? i-- , Last, First
       SKIP -1
    ENDDO
@@ -55,7 +55,7 @@ PROCEDURE Main()
    ? IndexKey()
    Inkey( 0 )
    GO TOP
-   DO WHILE !Eof()
+   DO WHILE ! Eof()
       ? ++i, Last, First
       SKIP
    ENDDO
@@ -64,7 +64,7 @@ PROCEDURE Main()
    Inkey( 0 )
    SKIP -1
 
-   DO WHILE !Bof()
+   DO WHILE ! Bof()
       ? i-- , Last, First
       SKIP -1
    ENDDO

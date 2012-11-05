@@ -272,7 +272,7 @@ METHOD EditField() CLASS TBrowseSQL
          ::oCurRow:FieldPut( oCol:nFieldNum, cMemo )
 
          /* NOTE: To do in a better way */
-         IF !::oQuery:Update( ::oCurRow )
+         IF ! ::oQuery:Update( ::oCurRow )
             Alert( Left( ::oQuery:Error(), 60 ) )
          ENDIF
       ENDIF
@@ -301,7 +301,7 @@ METHOD EditField() CLASS TBrowseSQL
 
    endif
 
-   IF !::oQuery:Refresh()
+   IF ! ::oQuery:Refresh()
       Alert( ::oQuery:Error() )
    ENDIF
 
@@ -337,7 +337,7 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
 
    DO WHILE lKeepGoing
 
-      DO WHILE !::Stabilize() .AND. NextKey() == 0
+      DO WHILE ! ::Stabilize() .AND. NextKey() == 0
       ENDDO
 
       nKey := Inkey( 0 )
@@ -399,7 +399,7 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
             IF ! ::oQuery:Delete( ::oCurRow )
                Alert( "not deleted " + ::oQuery:Error() )
             ENDIF
-            IF !::oQuery:Refresh()
+            IF ! ::oQuery:Refresh()
                Alert( ::oQuery:Error() )
             ENDIF
 

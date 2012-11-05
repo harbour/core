@@ -210,7 +210,7 @@ HB_FUNC( DBF2TEXT )
    while( ( nCount == -1 || nCount > 0 ) &&
           ( ! pWhile || hb_itemGetL( hb_vmEvalBlock( pWhile ) ) ) )
    {
-      /* While !BOF() .AND. !EOF() */
+      /* WHILE ! Bof() .AND. ! Eof() */
       SELF_EOF( pArea, &bEof );
       SELF_BOF( pArea, &bBof );
 

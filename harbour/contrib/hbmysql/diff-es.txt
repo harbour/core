@@ -55,28 +55,28 @@ Clase TMySQLQuery -------------------------------------------
 
 - Metodo TMySQLQuery:Bof()
   Cambio en la definicion para reproducir el comportamiento con Clipper
-  BOF() verdadero se aplica cuando se intenta ir antes del primer registro logico,
+  Bof() verdadero se aplica cuando se intenta ir antes del primer registro logico,
   y no debe usarse para indicar que el puntero esta en el registro 1
   La definicion anterior causa que procesos como:
-     WHILE ! oQuery:BOF()
-       ...
-       oQuery:SKIP(-1)
+     WHILE ! oQuery:Bof()
+        ...
+        oQuery:SKIP( -1 )
      ENDD
   no muestren el registro 1
   Con la nueva definicion se corrige este comportamiento
 
 - Metodo TMySQLQuery:Eof()
   Cambio en la definicion para reproducir el comportamiento con Clipper
-  EOF() verdadero se aplica cuando se intenta ir despues del ultimo registro logico,
+  Eof() verdadero se aplica cuando se intenta ir despues del ultimo registro logico,
   y no debe usarse para indicar que el puntero esta en el ultimo registro
   La definicion anterior causa que procesos como:
-     WHILE ! oQuery:EOF()
-       ...
-       oQuery:SKIP()
-     ENDD
+     WHILE ! oQuery:Eof()
+        ...
+        oQuery:SKIP()
+     ENDDO
   no muestren el ultimo registro
   Con la nueva definicion se corrige este comportamiento
-  Con EOF() verdadero, el puntero de registro se ubica en LASTREC()+1
+  Con Eof() verdadero, el puntero de registro se ubica en LASTREC()+1
 
 - TMySQLQuery:New()
   Aplicacion de TMySQLQuery:lBof, TMySQLQuery:lEof, TMySQLQuery:lFieldAsData,
@@ -85,7 +85,7 @@ Clase TMySQLQuery -------------------------------------------
 - TMySQLQuery:Skip()
   Aplicacion de TMySQLQuery:lBof, TMySQLQuery:lEof para determinar movimientos
   antes del primer y despues del ultimo registros logicos
-  Solamente el movimiento con SKIP puede establecer BOF() verdadero
+  Solamente el movimiento con SKIP puede establecer Bof() verdadero
 
 - TMySQLQuery:Skip()
   Aplicar NIL para retorno.  DBSKIP() retorna NIL
@@ -94,7 +94,7 @@ Clase TMySQLQuery -------------------------------------------
   Aplicacion de TMySQLQuery:lBof, TMySQLQuery:lEof, TMySQLQuery:lFieldAsData,
   TMySQLQuery:aRow
   = Se usar TMySQLQuery:aRow en lugar de la variable local aRow
-  = La fila por omision se aplica a TMySQLQuery:nCurRow, en lugar de mover la 
+  = La fila por omision se aplica a TMySQLQuery:nCurRow, en lugar de mover la
   posicion del puntero
   = Se determinan TMySQLQuery:lBof, TMySQLQuery:lEof
     TMySQLQuery:bof(): el puntero queda ubicado en fila 1
@@ -156,13 +156,13 @@ Clase TMySQLTable -------------------------------------------
     En caso de aplicar lOldRecord:
     * Usando fila actual: Utiliza los valores TMySQLQuery:aOldValue
     * Usando fila proporcionada: Utiliza los valores TMySQLRow:aOriValue
-    La localizacion se basa en la coincidencia de valores de TODOS los campos, 
+    La localizacion se basa en la coincidencia de valores de TODOS los campos,
     usando los valores originales de la fila
     ADVERTENCIA: Si hay mas de una fila que coincida en TODOS los campos, entonces
     todas estas filas con valores comunes seran cambiadas
 
     Se aplico esta aproximacion para auxiliar en la localizacion de filas cuando
-    no existen indices, o la llave primaria es insuficiente para determinar la 
+    no existen indices, o la llave primaria es insuficiente para determinar la
     unicidad del registro. Sin embargo, no se puede garantizar la correspondencia
     del registro si existen varios iguales
     Es una alternativa al uso de TMySQLRow/TMySQLTable:MakePrimaryKeyWhere(), ya que
@@ -173,7 +173,7 @@ Clase TMySQLTable -------------------------------------------
     para el programa Cliente. Es muy conveniente en caso de modificacion de informacion
 
   = Se mantiene el mismo apuntador de registro
-  
+
   = Para una fila proporcionada, se actualiza TMySQLRow:aOriValue con los valores
   actuales de TMySQLRow:aRow
 
@@ -190,7 +190,7 @@ Clase TMySQLTable -------------------------------------------
     todas estas filas con valores comunes seran cambiadas
 
     Se aplico esta aproximacion para auxiliar en la localizacion de filas cuando
-    no existen indices, o la llave primaria es insuficiente para determinar la 
+    no existen indices, o la llave primaria es insuficiente para determinar la
     unicidad del registro. Sin embargo, no se puede garantizar la correspondencia
     del registro si existen varios iguales
     Es una alternativa al uso de TMySQLRow/TMySQLTable:MakePrimaryKeyWhere(), ya que
@@ -201,7 +201,7 @@ Clase TMySQLTable -------------------------------------------
     para el programa Cliente. Es muy conveniente en caso de modificacion de informacion
 
   = Se mantiene el mismo apuntador de registro
-  
+
   = Para una fila proporcionada, se actualiza TMySQLRow:aOriValue con los valores
   actuales de TMySQLRow:aRow
 
@@ -216,10 +216,10 @@ Clase TMySQLTable -------------------------------------------
   = Se ubica el apuntador en TMySQLTable:lastrec()+1, antes de renovar la consulta
     Observacion: a pesar de reiteradas pruebas, no se pudo determinar en que manera
     establece el servidor MySQL la posicion de la fila insertada. Sin usar indices, en
-    ocasiones la insertaba adjunta al puntero actual, en tanto que en otras ocasiones 
+    ocasiones la insertaba adjunta al puntero actual, en tanto que en otras ocasiones
     la insertaba en posiciones ubicadas a 1200 o 1300 filas con respecto al puntero
     actual, o al final de la tabla (alrededor de 2880 filas)
-  
+
   = Para una fila proporcionada, se actualiza TMySQLRow:aOriValue con los valores
   actuales de TMySQLRow:aRow
   Ademas, se inicializan TMySQLRow:aDirty y TMySQLRow:aOldValue
@@ -248,4 +248,3 @@ Programa TSqlBrw.prg ************************************
 - Skipper()
   Modificacion del control de movimiento para aplicar las nuevas definiciones para
   TMySQLQuery:Bof() y TMySQLQuery:Eof()
-

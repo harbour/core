@@ -79,7 +79,7 @@ PROCEDURE Main()
          ELSE
             wboard( 5, 5, 20, 75 )
          ENDIF
-         lBoard := !lBoard
+         lBoard := ! lBoard
       ELSEIF k == hb_keyCode( "P" ) .OR. k == hb_keyCode( "P" )
          y := wfrow()
          x := wfcol()
@@ -88,7 +88,7 @@ PROCEDURE Main()
          @ y, x SAY "THIS IS WINDOW 0 OUTPUT"
          wselect( i )
       ELSEIF k == K_INS
-         lFlag := !lFlag
+         lFlag := ! lFlag
          SetCursor( iif( lFlag, 3, 1 ) )
       ELSEIF k == K_DEL
          SetCursor( SC_NONE )

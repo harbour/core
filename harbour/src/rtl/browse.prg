@@ -405,7 +405,7 @@ STATIC PROCEDURE FreshOrder( oBrw )
    oBrw:ForceStable()
 
    IF nRec != LastRec() + 1
-      DO WHILE RecNo() != nRec .AND. !Bof()
+      DO WHILE RecNo() != nRec .AND. ! Bof()
          oBrw:Up()
          oBrw:ForceStable()
       ENDDO

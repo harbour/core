@@ -54,13 +54,13 @@ proc main( cdp, info, unicode )
          exit
       endif
    next
-   if !lSort
+   if ! lSort
       ? "simple byte sorting !!!"
    endif
    lBin := lWarn := lMixed := .f.
    cUp := cLo := cOrd := ""
    for i := 1 to len( a )
-      if i < len(a) .and. a[i] > a[ i + 1 ] .and. !isalpha( chr( a[ i ] ) )
+      if i < len(a) .and. a[i] > a[ i + 1 ] .and. ! isalpha( chr( a[ i ] ) )
          ? "non alpha character " + charval( chr( a[ i ] ) ) + ;
            " sorted in non ASCII order !!!"
          lBin := lWarn := .t.
@@ -70,7 +70,7 @@ proc main( cdp, info, unicode )
          if c + chr( 0 ) > chr( a[ i + 1 ] ) + chr( 0 )
             ? "character " + charis( c ) + " is wrongly sorted"
             lBin := lWarn := .t.
-         elseif !lEqual .and. c + chr( 0 ) = chr( a[ i + 1 ] ) + chr( 0 )
+         elseif ! lEqual .and. c + chr( 0 ) = chr( a[ i + 1 ] ) + chr( 0 )
             ? "character " + charis( c ) + " and " + chr( a[ i + 1 ] ) + ;
               " have the same weight"
             lWarn := .t.
@@ -97,7 +97,7 @@ proc main( cdp, info, unicode )
                ? "character " + charis( c ) + ;
                  " is the same as upper and lower"
                lWarn := .t.
-            elseif !islower( lower( c ) )
+            elseif ! islower( lower( c ) )
                ? "character " + charis( c ) + ;
                  " has lower character " + charis( lower( c ) ) + ;
                  " not marked as lower"
@@ -113,7 +113,7 @@ proc main( cdp, info, unicode )
                ? "character " + charis( c ) + ;
                  " is the same as upper and lower"
                lWarn := .t.
-            elseif !isupper( upper( c ) )
+            elseif ! isupper( upper( c ) )
                ? "character " + charis( c ) + ;
                  " has upper character " + charis( upper( c ) ) + ;
                  " not marked as upper"
@@ -200,7 +200,7 @@ proc main( cdp, info, unicode )
                   endif
                endif
             elseif c $ cLo2
-               if !lIsLo
+               if ! lIsLo
                   if lIsUp
                      cOrd2 += cLo2
                   endif
@@ -243,7 +243,7 @@ proc main( cdp, info, unicode )
          ? "letters case are mixed"
          lMixed := .t.
       endif
-      if ! cOrd == cOrd2 .and. lSort .and. !lMixed
+      if ! cOrd == cOrd2 .and. lSort .and. ! lMixed
          ? "letters are not sorted continuously"
          lBin := lWarn := .t.
       endif
@@ -266,7 +266,7 @@ proc main( cdp, info, unicode )
    ? replicate( "=", 50 )
    ?
 
-   if !empty( cdp )
+   if ! empty( cdp )
       write_file( "cp" + lower( cdp ) + ".c", ;
                   genCP( cdp, info, unicode, lBin, lWarn, lMixed, cUp, cLo ) )
    endif
@@ -285,10 +285,10 @@ static function pad_letters( cUp, cLo, lBin )
       if upper( cL ) == cU .and. lower( cU ) == cL
          ++i
          ++j
-      elseif cL == "" .or. ( ! cU == "" .and. !islower( lower( cU ) ) )
+      elseif cL == "" .or. ( ! cU == "" .and. ! islower( lower( cU ) ) )
          cL := " "
          ++i
-      elseif cU == "" .or. !isupper( upper( cL ) )
+      elseif cU == "" .or. ! isupper( upper( cL ) )
          cU := " "
          ++j
       elseif upper( cL ) $ substr( cUp, i + 1 )
@@ -298,8 +298,8 @@ static function pad_letters( cUp, cLo, lBin )
          cU := upper( cL )
          ++j
       endif
-      if !lBin .and. ( cU == " " .or. cU $ cUp2 ) .and. ;
-                     ( cL == " " .or. cL $ cLo2 )
+      if ! lBin .and. ( cU == " " .or. cU $ cUp2 ) .and. ;
+                      ( cL == " " .or. cL $ cLo2 )
          lBin := .t.
       endif
       cUp2 += cU
@@ -428,7 +428,7 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
       '#define HB_CP_ID        $1' + EOL + ;
       '#define HB_CP_INFO      "$2"' + EOL + ;
       '#define HB_CP_UNITB     HB_UNITB_$3' + EOL
-   if !lBin
+   if ! lBin
       cDef += ;
          '#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE' + EOL
       if lMixed
@@ -452,7 +452,7 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
          'static const unsigned char s_lower[ 256 ] = { $l };' + EOL + ;
          'static const unsigned char s_sort [ 256 ] = { $s };' + EOL + ;
          EOL
-      if !lBin
+      if ! lBin
          cDef += ;
             '#endif' + EOL + EOL
       endif

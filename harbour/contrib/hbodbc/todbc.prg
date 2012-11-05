@@ -531,7 +531,7 @@ METHOD Next() CLASS TODBC
       IF ::nRecNo > ::nRecCount
          ::nRecCount := ::nRecNo
       ENDIF
-   ELSEIF nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == ::nRecCount // permit skip on last row, so that EOF() can work properly
+   ELSEIF nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == ::nRecCount // permit skip on last row, so that Eof() can work properly
       ::nRecno := ::nRecno + 1
    ELSE
       // TODO: Error handling

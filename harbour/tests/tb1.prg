@@ -123,7 +123,7 @@ PROCEDURE Main()
    oBrw:goBottom()
 
    WHILE .T.
-      WHILE !oBrw:stabilize() .AND. NextKey() == 0
+      WHILE ! oBrw:stabilize() .AND. NextKey() == 0
       ENDDO
       nKey := Inkey( 0 )
       IF nKey == K_ESC

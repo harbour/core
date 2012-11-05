@@ -744,7 +744,7 @@
       USE Clientes NEW
       SET DEVICE TO PRINTER
       CurPos := 0
-      WHILE !Eof()
+      WHILE ! Eof()
          ? Clientes->nome, Clientes->endereco
          Curpos++
          IF Curpos > 59

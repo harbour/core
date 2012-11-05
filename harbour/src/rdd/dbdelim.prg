@@ -85,7 +85,7 @@ FUNCTION __dbDelim( lExport, cFile, cDelimArg, aFields, bFor, bWhile, nNext, nRe
       ENDIF
       dbSelectArea( nSrcArea )
    ELSE
-      IF !__dbOpenSDF( cFile, aStruct, cRDD, .T., "", cDelimArg )
+      IF ! __dbOpenSDF( cFile, aStruct, cRDD, .T., "", cDelimArg )
          RETURN .F.
       ENDIF
       nSrcArea := Select()

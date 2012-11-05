@@ -241,7 +241,7 @@ return cStr
   else
     s1 := s2 := ""
   endif
-  if !empty( aExState ) .and. lOK
+  if ! empty( aExState ) .and. lOK
     for i := 1 to len( aExState )
       if ! valtype( aState[ i ] ) == valtype( aExState[ i ] ) .or. ! aState[ i ] == aExState[ i ]
         lOK := ( .F. )
@@ -251,7 +251,7 @@ return cStr
   endif
   ?
   ?? iif( lOK, "OK  ", "ERR " ) + cAction + " => " + s1 + itm2str( aState )
-  if !lOK
+  if ! lOK
     ?
     ?? "    " + cAction + " => " + s2 + itm2str( aExState )
     s_nErrors++

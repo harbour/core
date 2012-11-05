@@ -72,11 +72,11 @@ PART-2: WINDOW DEPENDENT (additional nWinNum parameter)
   Notes:
 
   nWinNum parameter passed as NIL will be translated by gtwvw into :
-    if !MainCoordMode
+    IF ! MainCoordMode
        Current Window
-    else
+    ELSE
        Topmost Window
-    endif
+    ENDIF
 
   Since gtwvt application can't be in MainCoordMode,
   the following approach makes these functions work on current window.
@@ -149,9 +149,9 @@ PART-2: WINDOW DEPENDENT (additional nWinNum parameter)
    in gtwvw no pending rect is reflected as {y1,x1,y2,x2} where y1 > y2 or x1 > x2
    thus we need some temporary var to check this exception
 */
-#xtranslate WVT_GETPAINTRECT        ([<vlist,...>])    =>  (  _wvwtemp_ := WVW_GETPAINTRECT (NIL [, <vlist>])  ;
-                                                           , iif(_wvwtemp_\[1\] > _wvwtemp_\[3\] .or. _wvwtemp_\[2\] > _wvwtemp_\[4\], ;
-                                                                 {0,0,0,0}, _wvwtemp_ ) )
+#xtranslate WVT_GETPAINTRECT        ([<vlist,...>])    =>  ( _wvwtemp_ := WVW_GETPAINTRECT( NIL [, <vlist>])  ;
+                                                           , iif(_wvwtemp_\[1\] > _wvwtemp_\[3\] .OR. _wvwtemp_\[2\] > _wvwtemp_\[4\], ;
+                                                                 { 0, 0, 0, 0 }, _wvwtemp_ ) )
 
 #xtranslate WVT_SETPOINTER          ([<vlist,...>])    =>  WVW_SETPOINTER          (NIL [, <vlist>])
 #xtranslate WVT_DRAWPICTURE         ([<vlist,...>])    =>  WVW_DRAWPICTURE         (NIL [, <vlist>])
@@ -243,13 +243,13 @@ PART-3: RESERVED FUNCTION NAMES ("callback" prg functions, called by gtwvw)
 
   Typically your WVT_xxx function will need adjustment like below:
 
-      function WVT_xxx(...)
-      local nOldWin := wvw_nsetcurwindow(nWinNum) //<-- add this
+      FUNCTION WVT_xxx(...)
+         LOCAL nOldWin := wvw_nsetcurwindow( nWinNum ) //<-- add this
 
          ...existing code...
 
-         wvw_nsetcurwindow(nOldWin) //<--add this
-      return NIL
+         wvw_nsetcurwindow( nOldWin ) //<--add this
+         RETURN NIL
 
   Although the above may be enough, each individual function may need careful review
   to make sure it follows gtwvw convention. For example, if you have multiple
@@ -267,24 +267,24 @@ PART-3: RESERVED FUNCTION NAMES ("callback" prg functions, called by gtwvw)
 
 */
 
-#xtranslate FUNCTION WVT_PAINT([<vlist,...>]) => FUNCTION WVW_PAINT(nWinNum [,<vlist>])
-#xtranslate PROCEDURE WVT_PAINT([<vlist,...>]) => PROCEDURE WVW_PAINT(nWinNum [,<vlist>])
-#xtranslate WVT_PAINT([<vlist,...>]) => WVW_PAINT(NIL [,<vlist>])
+#xtranslate FUNCTION WVT_PAINT([<vlist,...>]) => FUNCTION WVW_PAINT( nWinNum [,<vlist>] )
+#xtranslate PROCEDURE WVT_PAINT([<vlist,...>]) => PROCEDURE WVW_PAINT( nWinNum [,<vlist>] )
+#xtranslate WVT_PAINT([<vlist,...>]) => WVW_PAINT( NIL [,<vlist>] )
 
-#xtranslate FUNCTION WVT_SETFOCUS([<vlist,...>])  => FUNCTION WVW_SETFOCUS(nWinNum [,<vlist>])
-#xtranslate PROCEDURE WVT_SETFOCUS([<vlist,...>])  => PROCEDURE WVW_SETFOCUS(nWinNum [,<vlist>])
-#xtranslate WVT_SETFOCUS([<vlist,...>]) => WVW_SETFOCUS(NIL [,<vlist>])
+#xtranslate FUNCTION WVT_SETFOCUS([<vlist,...>])  => FUNCTION WVW_SETFOCUS( nWinNum [,<vlist>] )
+#xtranslate PROCEDURE WVT_SETFOCUS([<vlist,...>])  => PROCEDURE WVW_SETFOCUS( nWinNum [,<vlist>] )
+#xtranslate WVT_SETFOCUS([<vlist,...>]) => WVW_SETFOCUS( NIL [,<vlist>] )
 
-#xtranslate FUNCTION WVT_KILLFOCUS([<vlist,...>]) => FUNCTION WVW_KILLFOCUS(nWinNum [,<vlist>])
-#xtranslate PROCEDURE WVT_KILLFOCUS([<vlist,...>]) => PROCEDURE WVW_KILLFOCUS(nWinNum [,<vlist>])
-#xtranslate WVT_KILLFOCUS([<vlist,...>]) => WVW_KILLFOCUS(NIL [,<vlist>])
+#xtranslate FUNCTION WVT_KILLFOCUS([<vlist,...>]) => FUNCTION WVW_KILLFOCUS( nWinNum [,<vlist>] )
+#xtranslate PROCEDURE WVT_KILLFOCUS([<vlist,...>]) => PROCEDURE WVW_KILLFOCUS( nWinNum [,<vlist>] )
+#xtranslate WVT_KILLFOCUS([<vlist,...>]) => WVW_KILLFOCUS( NIL [,<vlist>] )
 
-#xtranslate FUNCTION WVT_MOUSE([<vlist,...>]) => FUNCTION WVW_MOUSE(nWinNum [,<vlist>])
-#xtranslate PROCEDURE WVT_MOUSE([<vlist,...>]) => PROCEDURE WVW_MOUSE(nWinNum [,<vlist>])
-#xtranslate WVT_MOUSE([<vlist,...>]) => WVW_MOUSE(NIL [,<vlist>])
+#xtranslate FUNCTION WVT_MOUSE([<vlist,...>]) => FUNCTION WVW_MOUSE( nWinNum [,<vlist>] )
+#xtranslate PROCEDURE WVT_MOUSE([<vlist,...>]) => PROCEDURE WVW_MOUSE( nWinNum [,<vlist>] )
+#xtranslate WVT_MOUSE([<vlist,...>]) => WVW_MOUSE( NIL [,<vlist>] )
 
-#xtranslate FUNCTION WVT_TIMER() => FUNCTION WVW_TIMER(nWinNum, hWnd, message, wParam, lParam)
-#xtranslate PROCEDURE WVT_TIMER() => PROCEDURE WVW_TIMER(nWinNum, hWnd, message, wParam, lParam)
+#xtranslate FUNCTION WVT_TIMER() => FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
+#xtranslate PROCEDURE WVT_TIMER() => PROCEDURE WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
 /* Currently WVT_TIMER is never called by GTWVT.
    There should never be any existing usage of this function.
 */

@@ -45,7 +45,7 @@ proc main()
    nUppers := nLowers := 0
 
    for each cLine in hb_aTokens( hb_memoRead( "UnicodeData.txt" ), hb_eol() )
-      if !empty( cLine )
+      if ! empty( cLine )
          aLine := hb_aTokens( cLine, ";" )
          if len( aLine ) == 15
             nCode   := hb_hexToNum( aLine[ 1 ] )
@@ -60,7 +60,7 @@ proc main()
                      ? "title + upper, line:", cLine:__enumIndex()
                   endif
                elseif nLower != 0
-                  if "Lt" $ cGenCat .or. !lConvAll
+                  if "Lt" $ cGenCat .or. ! lConvAll
                      nLower := 0
                   elseif nWarning >= 2
                      ? "lower for non upper, line:", cLine:__enumIndex()
@@ -72,7 +72,7 @@ proc main()
                   endif
                   nFlags := hb_bitOR( nFlags, HB_CDP_ALPHA, HB_CDP_LOWER )
                elseif nUpper != 0
-                  if "Lt" $ cGenCat .or. !lConvAll
+                  if "Lt" $ cGenCat .or. ! lConvAll
                      nUpper := 0
                   elseif nWarning >= 2
                      ? "upper for non lower, line:", cLine:__enumIndex()

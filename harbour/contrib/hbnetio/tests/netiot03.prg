@@ -67,11 +67,11 @@ proc main()
    nSec := seconds() + 3
    while seconds() < nSec
       xData := NETIO_GETDATA( nStream1 )
-      if !empty( xData )
+      if ! empty( xData )
          ? hb_valToExp( xData )
       endif
       xData := NETIO_GETDATA( nStream2 )
-      if !empty( xData )
+      if ! empty( xData )
          ?? "", hb_valToExp( xData )
       endif
    enddo
@@ -81,8 +81,8 @@ proc main()
    wait
 
    lExists := netio_funcexec( "HB_DirExists", "./data" )
-   ? "Directory './data'", iif( !lExists, "not exists", "exists" )
-   if !lExists
+   ? "Directory './data'", iif( ! lExists, "not exists", "exists" )
+   if ! lExists
       ? "Creating directory './data' ->", ;
        iif( netio_funcexec( "hb_DirCreate", "./data" ) == -1, "error", "OK" )
    endif
@@ -150,7 +150,7 @@ proc testdb( cName )
    next
    ordSetFocus( 1 )
    dbgotop()
-   while !eof()
+   while ! eof()
       if ! field->F1 == field->F2
          ? "error at record:", recno()
          ? "  ! '" + field->F1 + "' == '" + field->F2 + "'"
@@ -178,7 +178,7 @@ return nStream
 
 static func rpc_timer( pConnSock, nStream )
    while .t.
-      if !netio_srvSendItem( pConnSock, nStream, time() )
+      if ! netio_srvSendItem( pConnSock, nStream, time() )
          ? "CLOSED STREAM:", nStream
          exit
       endif
@@ -189,7 +189,7 @@ return nil
 static func rpc_charstream( pConnSock, nStream )
    local n := 0
    while .t.
-      if !netio_srvSendData( pConnSock, nStream, chr( asc( "A" ) + n ) )
+      if ! netio_srvSendData( pConnSock, nStream, chr( asc( "A" ) + n ) )
          ? "CLOSED STREAM:", nStream
          exit
       endif

@@ -22,10 +22,10 @@ emulated by creating additional table columns to store delete flag. Some
 record and file locks in DBF style. The idea of SQL query is also lost. If
 you do a simple loop
 
- DBUSEAREA(, "select * from my_table")
- DO WHILE ! EOF()
-   somefunc( FIELD->some_sql_field )
-   DBSKIP()
+ dbUseArea(, "select * from my_table" )
+ DO WHILE ! Eof()
+    somefunc( FIELD->some_sql_field )
+    dbSkip()
  ENDDO
 
 RDD usualy will read SQL rows in portions, let's say 100 records per query.
@@ -59,7 +59,7 @@ queries should be made explicitly by programmer. SSI gives access to query
 result via RDD interface, it does not tries to emulate DBF and be
 "plug-and-play" solution for DBF to SQL migration. If you do
 
- DBUSEAREA(, "select * from my_table")
+ dbUseArea(, "select * from my_table")
 
 all query (it could contain millions of records!) will be cached.
 
@@ -70,15 +70,15 @@ all query (it could contain millions of records!) will be cached.
  about additional DELETED column, _RECNO in the end of index expression, etc.
  Access of SQL database of other applications is sometimes not possible.
 
-- It's query oriented. That means a simple DO WHILE ! EOF() loop will iterate
+- It's query oriented. That means a simple DO WHILE ! Eof() loop will iterate
  each records once and only once. This is not true for "plug-and-play" SQL
  drivers, if indexing is used. Just like in the case of loop over DBF file.
  It is not guaranteed that all records are included! Yes! If key value of the
  first record in index is changed to be the last record in index during the
- phase of record processing, DO WHILE ! EOF() loop will iterate only this
+ phase of record processing, DO WHILE ! Eof() loop will iterate only this
  single records even if the database contains millions of records. Your sould
  do FLOCK() on DBF to guarantee the records are not changed. Do you use FLOCK()
- before readonly DO WHILE ! EOF() loops? :)
+ before readonly DO WHILE ! Eof() loops? :)
 
 
 

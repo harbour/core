@@ -48,7 +48,7 @@ PROCEDURE Main()
    cls
    @ 2, 1 SAY " --Visky--   --Vodka--   --Grapa--"
    @ 3, 14 SAY "--Water--"
-   DO WHILE !lExit
+   DO WHILE ! lExit
 
       DO CASE
       CASE nCounter == 1

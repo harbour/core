@@ -41,6 +41,6 @@ STATIC PROCEDURE _TEST( a, cChkOK )
    LOCAL x := AMF3_ENCODE( a )
    LOCAL cChk := hb_StrToHex( I2Bin( hb_CRC( x ) ) )
 
-   ? PadL( hb_ValToExp( a ), 18 ), hb_StrToHex( x, " " ), "CHECKSUM", cChk, iif( !Empty( cChkOK ) .AND. !( cChk == cChkOK ), "!TEST FAILED!, should be " + cChkOK, " " )
+   ? PadL( hb_ValToExp( a ), 18 ), hb_StrToHex( x, " " ), "CHECKSUM", cChk, iif( ! Empty( cChkOK ) .AND. !( cChk == cChkOK ), "!TEST FAILED!, should be " + cChkOK, " " )
 
    RETURN

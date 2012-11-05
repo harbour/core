@@ -188,9 +188,9 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add either filename or operation
    DO CASE
-   CASE !Empty( oError:filename )
+   CASE ! Empty( oError:filename )
       cMessage += ": " + oError:filename
-   CASE !Empty( oError:operation )
+   CASE ! Empty( oError:operation )
       cMessage += ": " + oError:operation
    ENDCASE
 

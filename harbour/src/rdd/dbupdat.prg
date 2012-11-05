@@ -65,7 +65,7 @@ FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
 
       dbSelectArea( cAlias )
       dbGoTop()
-      DO WHILE !Eof()
+      DO WHILE ! Eof()
 
          xKey := Eval( bKey )
 
@@ -75,11 +75,11 @@ FUNCTION __dbUpdate( cAlias, bKey, lRandom, bAssign )
                Eval( bAssign )
             ENDIF
          ELSE
-            DO WHILE Eval( bKey ) < xKey .AND. !Eof()
+            DO WHILE Eval( bKey ) < xKey .AND. ! Eof()
                dbSkip()
             ENDDO
 
-            IF Eval( bKey ) == xKey .AND. !Eof()
+            IF Eval( bKey ) == xKey .AND. ! Eof()
                Eval( bAssign )
             ENDIF
          ENDIF

@@ -79,11 +79,11 @@ FUNCTION __dbJoin( cAlias, cFile, aFields, bFor, cRDD, nConnection, cCodePage )
 
       dbSelectArea( nMaster )
       dbGoTop()
-      DO WHILE !Eof()
+      DO WHILE ! Eof()
 
          dbSelectArea( nDetail )
          dbGoTop()
-         DO WHILE !Eof()
+         DO WHILE ! Eof()
 
             dbSelectArea( nMaster )
             IF Eval( bFor )

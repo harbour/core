@@ -40,7 +40,7 @@ PROCEDURE Main()
    // Copy the last 10 records again.
    GO BOTTOM
    SKIP -9
-   COPY TO test6 SDF WHILE !Eof()
+   COPY TO test6 SDF WHILE ! Eof()
 
    // Copy only some of the last 10 records.
    GO BOTTOM

@@ -110,7 +110,7 @@ FUNCTION BrowseODBC( nTop, nLeft, nBottom, nRight, oDataSource )
    DO WHILE ! lExit
 
       IF nKey == 0
-         DO WHILE !oBrw:stabilize() .AND. NextKey() == 0
+         DO WHILE ! oBrw:stabilize() .AND. NextKey() == 0
          ENDDO
       ENDIF
 

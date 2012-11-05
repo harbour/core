@@ -42,7 +42,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    ELSE
       cHostCP := Upper( cHostCP )
    ENDIF
-   lBoxChar := !Empty( lBoxChar )
+   lBoxChar := ! Empty( lBoxChar )
 
    hb_gtInfo( HB_GTI_FONTNAME, "fixed" )
    hb_gtInfo( HB_GTI_FONTWIDTH, 9 )

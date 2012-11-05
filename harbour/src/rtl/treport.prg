@@ -698,7 +698,7 @@ METHOD ExecuteReport() CLASS HBReportForm
          // page eject after group
 
          //  put CRFF after group
-         IF nGroup == 1 .AND. !::lFirstPass .AND. !lAnySubTotals
+         IF nGroup == 1 .AND. ! ::lFirstPass .AND. ! lAnySubTotals
             IF ::aReportData[ RPT_GROUPS, nGroup, RGT_AEJECT ]
                ::nLinesLeft  := 0
             ENDIF
@@ -1194,7 +1194,7 @@ STATIC FUNCTION Occurs( cSearch, cTarget )
 
    LOCAL nPos, nCount := 0
 
-   DO WHILE !Empty( cTarget )
+   DO WHILE ! Empty( cTarget )
       IF ( nPos := At( cSearch, cTarget ) ) != 0
          nCount++
          cTarget := SubStr( cTarget, nPos + 1 )

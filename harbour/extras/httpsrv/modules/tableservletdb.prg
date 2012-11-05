@@ -183,7 +183,7 @@ METHOD READ() CLASS TableManager
 
       table->( dbGoTop() )
       // n := 0
-      DO WHILE table->( !Eof() ) // .AND. ++n < 50
+      DO WHILE table->( ! Eof() ) // .AND. ++n < 50
 
          hMap := { => }
          hMap[ "recno"   ] := StrZero( table->( RecNo() ), 4 )

@@ -263,8 +263,8 @@ METHOD bitmaps( aBitmaps ) CLASS SCROLLBAR
 METHOD colorSpec( cColorSpec ) CLASS SCROLLBAR
 
    IF HB_ISSTRING( cColorSpec ) .AND. ;
-      !Empty( hb_ColorIndex( cColorSpec, 1 ) ) .AND. ;
-       Empty( hb_ColorIndex( cColorSpec, 2 ) )
+      ! Empty( hb_ColorIndex( cColorSpec, 1 ) ) .AND. ;
+      Empty( hb_ColorIndex( cColorSpec, 2 ) )
 
       ::cColorSpec := cColorSpec
    ENDIF
@@ -383,7 +383,7 @@ METHOD CalcThumbPos() CLASS SCROLLBAR
       RETURN .F.
    ENDIF
 
-   IF !::lOverride
+   IF ! ::lOverride
       ::nThumbPos := Min( Max( Round( ::nCurrent * ( ( nBarLength - 1 ) / nTotal ) + 1, 0 ), 1 ), nBarLength )
    ENDIF
 

@@ -237,7 +237,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
       // The Basics ----------------------------------
 
       // to
-      IF ! HB_ISSTRING( ::cTO ) .AND. ! HB_ISSTRING( ::cTOFile ) .AND. !::lToUndiscloseRecipients
+      IF ! HB_ISSTRING( ::cTO ) .AND. ! HB_ISSTRING( ::cTOFile ) .AND. ! ::lToUndiscloseRecipients
          ::nError := BLAT_ERR_MISSING_TO
          ::cError := ::TranslateBlatError( BLAT_ERR_MISSING_TO )
          AAdd( ::aErrors, { ::nError, ::cError } )

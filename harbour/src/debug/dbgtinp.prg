@@ -126,7 +126,7 @@ METHOD newPos( nRow, nCol ) CLASS HbDbInput
 
 METHOD setFocus() CLASS HbDbInput
 
-   IF !::lFocus
+   IF ! ::lFocus
       ::lFocus := .T.
       ::display()
    ENDIF
@@ -206,7 +206,7 @@ METHOD applyKey( nKey ) CLASS HbDbInput
       ::nPos := 1
       EXIT
    CASE K_INS
-      Set( _SET_INSERT, !Set( _SET_INSERT ) )
+      Set( _SET_INSERT, ! Set( _SET_INSERT ) )
       EXIT
    OTHERWISE
       IF !( hb_keyChar( nKey ) == "" )

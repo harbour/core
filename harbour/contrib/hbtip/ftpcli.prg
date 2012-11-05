@@ -416,7 +416,7 @@ METHOD UserCommand( cCommand, lPasv, lReadPort, lGetReply ) CLASS tIPClientFTP
    hb_default( @lReadPort, .T. )
    hb_default( @lGetReply, .F. )
 
-   IF ::bUsePasv .AND. lPasv .AND. !::Pasv()
+   IF ::bUsePasv .AND. lPasv .AND. ! ::Pasv()
       RETURN .F.
    ENDIF
 

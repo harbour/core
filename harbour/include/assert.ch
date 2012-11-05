@@ -65,7 +65,7 @@
          IF !( <exp> )                                                  ;
        ;    OutStd(                                                     ;
                     hb_eol() + ProcName( 0 ) +                          ;
-                    "(" + hb_NToS( ProcLine() ) + ")" +                 ;
+                    "(" + hb_ntos( ProcLine() ) + ")" +                 ;
                     "  Assertion failed: " +                            ;
                     iif( <.msg.>, <msg>, <"exp"> )                      ;
                   )                                                     ;

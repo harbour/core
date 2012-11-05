@@ -106,7 +106,7 @@ METHOD ReadLine() CLASS TFileRead
    ELSE
       // Is there a whole line in the readahead buffer?
       nPos := ::EOL_pos()
-      WHILE ( nPos <= 0 .OR. nPos > Len( ::cBuffer ) - 3 ) .AND. !::lEOF
+      WHILE ( nPos <= 0 .OR. nPos > Len( ::cBuffer ) - 3 ) .AND. ! ::lEOF
          // Either no or maybe, but there is possibly more to be read.
          // Maybe means that we found either a CR or an LF, but we don't
          // have enough characters to discriminate between the three types
@@ -217,7 +217,7 @@ METHOD MoreToRead() CLASS TFileRead
    // Returns .T. if there is more to be read from either the file or the
    // readahead buffer. Only when both are exhausted is there no more to read.
 
-   RETURN !::lEOF .OR. !Empty( ::cBuffer )
+   RETURN ! ::lEOF .OR. ! Empty( ::cBuffer )
 
 METHOD Error() CLASS TFileRead
 

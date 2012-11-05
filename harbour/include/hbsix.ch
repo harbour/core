@@ -83,7 +83,7 @@
          [Sx_SetTrigger( TRIGGER_PENDING, <trig>, <rdd> ); ] <-trig-> ;
          [Sx_SetPass( <pass>, 1, <rdd> ); ] <-pass-> ;
          dbUseArea( <.nw.>, <rdd>, <(db)>, <(a)>, ;
-                    if(<.sh.> .or. <.ex.>, !<.ex.>, NIL), <.ro.> [, <cp>] ) ;
+                    iif(<.sh.> .or. <.ex.>, ! <.ex.>, NIL), <.ro.> [, <cp>] ) ;
          [; dbSetIndex( <(index1)> )] ;
          [; dbSetIndex( <(indexN)> )]
 

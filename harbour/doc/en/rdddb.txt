@@ -874,7 +874,7 @@
       true (.T.), and the value of EOF() wilI be a logical false (.F.). If
       no item is found. then the function will return a logical false, the
       value of FOUND( ) will be a logical false (.F.), and the value of
-      EOF( ) will be a logical true (.T.).
+      EOF() will be a logical true (.T.).
 
       This function always "rewinds" the database pointer and starts the
       search from the top of the file.

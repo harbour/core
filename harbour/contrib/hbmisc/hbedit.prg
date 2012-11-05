@@ -468,7 +468,7 @@ STATIC PROCEDURE EditorKeys( oEdit, nKey )
       NEXT
 
    CASE nKey == K_INS
-      oEdit[ E_INSERT ] := !oEdit[ E_INSERT ]
+      oEdit[ E_INSERT ] := ! oEdit[ E_INSERT ]
       Set( _SET_INSERT, oEdit[ E_INSERT ] )
       SetCursor( iif( oEdit[ E_INSERT ], SC_NORMAL, SC_SPECIAL1 ) )
 //    SayInsert()

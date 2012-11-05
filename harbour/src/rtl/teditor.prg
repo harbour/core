@@ -475,7 +475,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
 
    SWITCH nKey
    CASE K_DOWN
-      IF !::lEditAllow
+      IF ! ::lEditAllow
          DO WHILE ::Row() < ::nBottom .AND. ::nRow < ::naTextLen
             ::nRow++
             ::SetPos( ::Row() + 1, ::Col() )
@@ -989,7 +989,7 @@ METHOD BrowseText( nPassedKey )
       IF nKey == K_ESC
          ::lExitEdit := .T.
       ELSE
-         IF !::MoveCursor( nKey )
+         IF ! ::MoveCursor( nKey )
             ::KeyboardHook( nKey )
          ENDIF
       ENDIF
@@ -1128,7 +1128,7 @@ STATIC FUNCTION Text2Array( cString, nWordWrapCol )
 
       IF nWordWrapCol != NIL .AND. Len( cLine ) > nWordWrapCol
 
-         DO WHILE !Empty( cLine )
+         DO WHILE ! Empty( cLine )
 
             // Split line at nWordWrapCol boundary
             IF Len( cLine ) > nWordWrapCol

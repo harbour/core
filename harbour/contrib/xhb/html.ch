@@ -253,8 +253,8 @@
           OF <oHtm>                  ;
           =>                         ;
           <oHtm>:newTableCell( __HTML_ALING__ [<aln>], <cColor>, <cFont>, ;
-                               <nSize>, <cFntColor>, <nHeight>,      ;
-                               <img>, <width>, !<.nowrap.>,          ;
+                               <nSize>, <cFntColor>, <nHeight>, ;
+                               <img>, <width>, ! <.nowrap.>, ;
                                <cspan>, <rspan> ,__HTML_ALING__ [<valn>], <clrdrk>, <clrlt>, <bclrlt>, <cClass>)
 
 
@@ -274,7 +274,7 @@
           =>                         ;
           <oHtm>:newTableCell( __HTML_ALING__ [<aln>], <cColor>, <cFont>, ;
                                <nSize>, <cFntColor>, <nHeight>, ;
-                               <img>, <width>, !<.nowrap.>,;
+                               <img>, <width>, ! <.nowrap.>, ;
                                <cspan>, <rspan> )
 
 
@@ -307,7 +307,7 @@
           =>                   ;
           <oHtm>:SetFont( [<(cFont)>], [<.bold.>], ;
                           [<.itl.>], [<.uln.>], ;
-                          [<s>], [<c>],!<.lset.> )
+                          [<s>], [<c>], ! <.lset.> )
 
 
 #xCommand START FONT [<cFont>] ;
@@ -321,7 +321,7 @@
           =>                   ;
           <oHtm>:StartFont( [<(cFont)>], [<.bold.>], ;
                           [<.itl.>], [<.uln.>], ;
-                          [<s>], [<c>] ,!<.lset.> )
+                          [<s>], [<c>], ! <.lset.> )
 
 
 #xCommand FONTEND[<cFont>]   ;
@@ -505,8 +505,8 @@
           OF <oFrm>                                    ;
           =>                                           ;
           <oFrm>:frame( [<name>], [<url>],             ;
-                        !<.brd.>, !<.res.>, [<.scr.>], ;
-                        [<mw>], [<mh>], [<target>],    ;
+                        ! <.brd.>, ! <.res.>, [<.scr.>], ;
+                        [<mw>], [<mh>], [<target>], ;
                         __HTML_SCROLL__ [<scrl>] )
 
 #xCommand ENDSET <oFrm>        => <oFrm>:EndSet()
@@ -587,7 +587,7 @@
           [ALIGN <align>]             ;
           OF <oHtm>                   ;
           =>                          ;
-          <oHtm>:iFrame( <name>, <url>, !<.brd.>, ;
+          <oHtm>:iFrame( <name>, <url>, ! <.brd.>, ;
                          <mwidth>, <mheight>, ;
                          <.scr.>, <align>, ;
                          <width>, <height> )

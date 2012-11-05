@@ -70,7 +70,7 @@ PROCEDURE Main()
       ENDIF
    ENDDO
 #else
-   WHILE !lEnd
+   WHILE ! lEnd
       oBrowse:ForceStable()
 
       nKey := Inkey( 0 )

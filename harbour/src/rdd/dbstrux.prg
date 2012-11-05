@@ -114,7 +114,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
       hb_FNameSplit( cFileName, NIL, @cAlias )
    ENDIF
 
-   IF Used() .AND. !lNew
+   IF Used() .AND. ! lNew
       dbCloseArea()
    ENDIF
 

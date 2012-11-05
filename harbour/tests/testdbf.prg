@@ -94,7 +94,7 @@ PROCEDURE Main()
    Inkey( 0 )
 
    MYALIAS->( dbGoTop() )
-   DO WHILE !MYALIAS->( EOF() )
+   DO WHILE ! MYALIAS->( Eof() )
       ? MYALIAS->NUMERIC
       MYALIAS->( dbSkip() )
    ENDDO
@@ -106,7 +106,7 @@ PROCEDURE Main()
    Inkey( 0 )
 
    MYALIAS->( dbGoTop() )
-   DO WHILE !MYALIAS->( EOF() )
+   DO WHILE ! MYALIAS->( Eof() )
       ? MYALIAS->NUMERIC
       MYALIAS->( dbSkip() )
    ENDDO
@@ -120,7 +120,7 @@ PROCEDURE Main()
    MYALIAS->( dbSetFilter( {|| MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
       "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
    MYALIAS->( dbGoTop() )
-   DO WHILE !MYALIAS->( EOF() )
+   DO WHILE ! MYALIAS->( Eof() )
       ? MYALIAS->NUMERIC
       MYALIAS->( dbSkip() )
    ENDDO
@@ -135,7 +135,7 @@ PROCEDURE Main()
    MYALIAS->( dbSetFilter( {|| MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8 }, ;
       "MYALIAS->NUMERIC > 2 .AND. MYALIAS->NUMERIC < 8" ) )
    MYALIAS->( dbGoTop() )
-   DO WHILE !MYALIAS->( EOF() )
+   DO WHILE ! MYALIAS->( Eof() )
       ? MYALIAS->NUMERIC
       MYALIAS->( dbSkip() )
    ENDDO
@@ -157,7 +157,7 @@ PROCEDURE Main()
    Inkey( 0 )
    ? "Value of fields:"
    MYALIAS->( dbGoTop() )
-   DO WHILE !MYALIAS->( EOF() )
+   DO WHILE ! MYALIAS->( Eof() )
       ? MYALIAS->NUMERIC
       MYALIAS->( dbSkip() )
    ENDDO

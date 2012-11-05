@@ -309,14 +309,14 @@
       => IF AdsIsServerLoaded( <(db)> ) > 0                                ;
        ;    dbUseArea(                                                     ;
                       <.new.>, <rdd>, <(db)>, <(a)>,                       ;
-                      iif( <.sh.> .OR. <.ex.>, !<.ex.>, NIL ), <.ro.>      ;
+                      iif( <.sh.> .OR. <.ex.>, ! <.ex.>, NIL ), <.ro.>     ;
                      )                                                     ;
             [; dbSetIndex( <(index1)> )]                                   ;
             [; dbSetIndex( <(indexn)> )]                                   ;
        ; ELSE                                                              ;
        ;    dbUseArea(                                                     ;
                       <.new.>, <altrdd>, <(db)>, <(a)>,                    ;
-                      iif( <.sh.> .OR. <.ex.>, !<.ex.>, NIL ), <.ro.>      ;
+                      iif( <.sh.> .OR. <.ex.>, ! <.ex.>, NIL ), <.ro.>     ;
                      )                                                     ;
             [; dbSetIndex( <(index1)> )]                                   ;
             [; dbSetIndex( <(indexn)> )]                                   ;

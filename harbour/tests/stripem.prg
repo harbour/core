@@ -41,7 +41,7 @@ PROCEDURE Main( cFrom, cTo )
 // ? hb_ValToExp(  __objGetMethodList( oTo ) )
    oTo:New( cTo  , "W" )
 
-   DO WHILE !oFrom:EOF()
+   DO WHILE ! oFrom:Eof()
       cOut := oFrom:Run()
       IF ! Empty( cOut )
          oTo:Run( cOut )
