@@ -178,10 +178,10 @@ HB_FUNC( SP_RATE )
    const uchar * cFound;
    int nFound;
    const uchar * cWord;
-   int nWord;
-   int nMinLen;
-   int x;
-   int lim;
+   int     nWord;
+   int     nMinLen;
+   int     x;
+   int     lim;
    uchar * cRating = "nZZ";
 
    cFound   = _parc( 1 );
@@ -242,7 +242,7 @@ HB_FUNC( SP_RATE )
 
 HB_FUNC( C_METAFONE )
 {
-   char * sReturn;                  /* Pointer to the return string.   */
+   char *       sReturn;            /* Pointer to the return string.   */
    const char * sMeta;              /* Pointer to the passed string.   */
    unsigned int iRetLen;            /* Length of the return string.    */
    unsigned int iStrLen;            /* Length of the passed string.    */

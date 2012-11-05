@@ -47,8 +47,8 @@ HB_FUNC( LIBUSB_SET_DEBUG )
 /* Returns a list of USB devcices attached to your system. */
 HB_FUNC( LIBUSB_GET_DEVICE_LIST )
 {
-   libusb_device **  devicelist;
-   ssize_t           count;
+   libusb_device ** devicelist;
+   ssize_t          count;
 
    count = libusb_get_device_list( ( libusb_context * ) hb_parptr( 1 ), &devicelist );
 
@@ -66,11 +66,11 @@ HB_FUNC( LIBUSB_FREE_DEVICE_LIST )
 /* Gets the number of the bus that a device is attached to. */
 HB_FUNC( LIBUSB_GET_BUS_NUMBER )
 {
-   uint8_t           busnumber;
-   libusb_device **  devicelist;
+   uint8_t busnumber;
+   libusb_device ** devicelist;
 
-   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
-   busnumber   = libusb_get_bus_number( devicelist[ hb_parni( 2 ) ] );
+   devicelist = ( libusb_device ** ) hb_parptr( 1 );
+   busnumber  = libusb_get_bus_number( devicelist[ hb_parni( 2 ) ] );
 
    hb_retni( busnumber );
 }
@@ -78,11 +78,11 @@ HB_FUNC( LIBUSB_GET_BUS_NUMBER )
 /* Gets the address on the bus that a device is attached to. */
 HB_FUNC( LIBUSB_GET_DEVICE_ADDRESS )
 {
-   uint8_t           deviceaddress;
-   libusb_device **  devicelist;
+   uint8_t deviceaddress;
+   libusb_device ** devicelist;
 
-   devicelist     = ( libusb_device ** ) hb_parptr( 1 );
-   deviceaddress  = libusb_get_device_address( devicelist[ hb_parni( 2 ) ] );
+   devicelist    = ( libusb_device ** ) hb_parptr( 1 );
+   deviceaddress = libusb_get_device_address( devicelist[ hb_parni( 2 ) ] );
 
    hb_retni( deviceaddress );
 }
@@ -105,11 +105,11 @@ HB_FUNC( LIBUSB_GET_DEVICE_SPEED )
 /* Gets the maximum packet size for a particular endpoint in the active device configuration. */
 HB_FUNC( LIBUSB_GET_MAX_PACKET_SIZE )
 {
-   int               maxpacketsize;
-   libusb_device **  devicelist;
+   int maxpacketsize;
+   libusb_device ** devicelist;
 
-   devicelist     = ( libusb_device ** ) hb_parptr( 1 );
-   maxpacketsize  = libusb_get_max_packet_size( devicelist[ hb_parni( 2 ) ], ( unsigned char ) hb_parni( 3 ) );
+   devicelist    = ( libusb_device ** ) hb_parptr( 1 );
+   maxpacketsize = libusb_get_max_packet_size( devicelist[ hb_parni( 2 ) ], ( unsigned char ) hb_parni( 3 ) );
 
    hb_retni( maxpacketsize );
 }
@@ -117,11 +117,11 @@ HB_FUNC( LIBUSB_GET_MAX_PACKET_SIZE )
 /* Increments the reference count of a device. */
 HB_FUNC( LIBUSB_REF_DEVICE )
 {
-   libusb_device *   device;
-   libusb_device **  devicelist;
+   libusb_device *  device;
+   libusb_device ** devicelist;
 
-   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
-   device      = libusb_ref_device( devicelist[ hb_parni( 2 ) ] );
+   devicelist = ( libusb_device ** ) hb_parptr( 1 );
+   device     = libusb_ref_device( devicelist[ hb_parni( 2 ) ] );
 
    HB_SYMBOL_UNUSED( device );
 }
@@ -138,12 +138,12 @@ HB_FUNC( LIBUSB_UNREF_DEVICE )
 /* Open a device and obtain a device handle  */
 HB_FUNC( LIBUSB_OPEN )
 {
-   int                     success;
-   libusb_device_handle *  handle;
-   libusb_device **        devicelist;
+   int success;
+   libusb_device_handle * handle;
+   libusb_device **       devicelist;
 
-   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
-   success     = libusb_open( devicelist[ hb_parni( 2 ) ], &handle );
+   devicelist = ( libusb_device ** ) hb_parptr( 1 );
+   success    = libusb_open( devicelist[ hb_parni( 2 ) ], &handle );
 
    hb_storptr( success == 0 ? handle : NULL, 3 );
 
@@ -182,8 +182,8 @@ HB_FUNC( LIBUSB_GET_CONFIGURATION )
    int configuration;
    int success;
 
-   configuration  = 0;
-   success        = libusb_get_configuration( ( libusb_device_handle * ) hb_parptr( 1 ), &configuration );
+   configuration = 0;
+   success       = libusb_get_configuration( ( libusb_device_handle * ) hb_parptr( 1 ), &configuration );
 
    hb_storni( success == 0 ? configuration : 0, 2 );
 
@@ -282,12 +282,12 @@ HB_FUNC( LIBUSB_ATTACH_KERNEL_DRIVER )
 /* Get the USB descriptor for a given device. */
 HB_FUNC( LIBUSB_GET_DEVICE_DESCRIPTOR )
 {
-   struct libusb_device_descriptor  desc;
-   libusb_device **                 devicelist;
-   int                              success;
+   struct libusb_device_descriptor desc;
+   libusb_device **                devicelist;
+   int success;
 
-   devicelist  = ( libusb_device ** ) hb_parptr( 1 );
-   success     = libusb_get_device_descriptor( devicelist[ hb_parni( 2 ) ], &desc );
+   devicelist = ( libusb_device ** ) hb_parptr( 1 );
+   success    = libusb_get_device_descriptor( devicelist[ hb_parni( 2 ) ], &desc );
 
    hb_storptr( &desc, 3 );
    hb_storni( desc.idVendor, 4 );
@@ -302,9 +302,9 @@ HB_FUNC( LIBUSB_GET_DEVICE_DESCRIPTOR )
 /* Perform a USB bulk transfer. */
 HB_FUNC( LIBUSB_BULK_TRANSFER )
 {
-   int            success;
-   unsigned char  data[ 512 ];
-   int            transferred;
+   int success;
+   unsigned char data[ 512 ];
+   int transferred;
 
    success = libusb_bulk_transfer( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ), data, sizeof( data ), &transferred, hb_parni( 3 ) );
 
@@ -317,9 +317,9 @@ HB_FUNC( LIBUSB_BULK_TRANSFER )
 /* Perform a USB interrupt transfer. */
 HB_FUNC( LIBUSB_INTERRUPT_TRANSFER )
 {
-   int            success;
-   unsigned char  data[ 512 ];
-   int            transferred;
+   int success;
+   unsigned char data[ 512 ];
+   int transferred;
 
    success = libusb_interrupt_transfer( ( libusb_device_handle * ) hb_parptr( 1 ), ( unsigned char ) hb_parni( 2 ), data, sizeof( data ), &transferred, hb_parni( 3 ) );
 
