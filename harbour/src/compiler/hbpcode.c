@@ -30,7 +30,7 @@
 #include "hbcomp.h"
 #include "hbassert.h"
 
-#define HB_PSIZE_FUNC( func ) HB_PCODE_FUNC( func, HB_VOID_PTR )
+#define HB_PSIZE_FUNC( func )  HB_PCODE_FUNC( func, HB_VOID_PTR )
 
 /*
  * functions for variable size PCODE tracing
@@ -85,7 +85,7 @@ static HB_PSIZE_FUNC( hb_p_localname )
    nPCodePos += 3;
    while( pFunc->pCode[ nPCodePos++ ] ) {};
 
-   return ( nPCodePos - nStart );
+   return nPCodePos - nStart;
 }
 
 static HB_PSIZE_FUNC( hb_p_modulename )
@@ -96,7 +96,7 @@ static HB_PSIZE_FUNC( hb_p_modulename )
    nPCodePos++;
    while( pFunc->pCode[ nPCodePos++ ]) {};
 
-   return ( nPCodePos - nStart );
+   return nPCodePos - nStart;
 }
 
 static HB_PSIZE_FUNC( hb_p_staticname )
@@ -107,7 +107,7 @@ static HB_PSIZE_FUNC( hb_p_staticname )
    nPCodePos += 4;
    while( pFunc->pCode[ nPCodePos++ ] ) {};
 
-   return ( nPCodePos - nStart );
+   return nPCodePos - nStart;
 }
 
 static HB_PSIZE_FUNC( hb_p_threadstatics )
@@ -607,7 +607,7 @@ void hb_compGenPCode1( HB_BYTE byte, HB_COMP_DECL )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
+   if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
       pFunc->nPCodeSize = HB_PCODE_CHUNK;
@@ -623,7 +623,7 @@ void hb_compGenPCode2( HB_BYTE byte1, HB_BYTE byte2, HB_COMP_DECL )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
+   if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
       pFunc->nPCodeSize = HB_PCODE_CHUNK;
@@ -640,7 +640,7 @@ void hb_compGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_COMP_DECL
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
+   if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
       pFunc->nPCodeSize = HB_PCODE_CHUNK;
@@ -658,7 +658,7 @@ void hb_compGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
+   if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( HB_PCODE_CHUNK );
       pFunc->nPCodeSize = HB_PCODE_CHUNK;
@@ -677,7 +677,7 @@ void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
 {
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
-   if( ! pFunc->pCode )   /* has been created the memory block to hold the pcode ? */
+   if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
       pFunc->nPCodeSize = ( ( nSize / HB_PCODE_CHUNK ) + 1 ) * HB_PCODE_CHUNK;
       pFunc->pCode      = ( HB_BYTE * ) hb_xgrab( pFunc->nPCodeSize );

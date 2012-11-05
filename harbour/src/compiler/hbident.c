@@ -31,17 +31,17 @@
 #include "hbhash.h"
 #include "hbcomp.h"
 
-#define HB_IDENT_TABLE_SIZE    509UL
+#define HB_IDENT_TABLE_SIZE  509UL
 
 /* create a new identifier or return the existing one
-*/
+ */
 const char * hb_compIdentifierNew( HB_COMP_DECL, const char * szName, int iType )
 {
    const char * szIdent;
 
    szIdent = ( const char * ) hb_hashTableFind( HB_COMP_PARAM->pIdentifiers,
                                                 ( const void * ) szName );
-   if( !szIdent )
+   if( ! szIdent )
    {
       /*
        * In the future we may add direct support for static identifiers
@@ -89,7 +89,7 @@ static HB_HASH_FUNC( hb_comp_IdentDel )
 static HB_HASH_FUNC( hb_comp_IdentComp )
 {
    HB_SYMBOL_UNUSED( HashPtr );
-   return strcmp( ( const char * ) Value, ( const char * )Cargo );
+   return strcmp( ( const char * ) Value, ( const char * ) Cargo );
 }
 
 /* initialize the hash table for identifiers */

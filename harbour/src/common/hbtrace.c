@@ -64,17 +64,17 @@
 #if defined( HB_OS_WIN )
    #include <windows.h>
 #elif defined( HB_OS_UNIX ) && \
-      ! defined( __WATCOMC__ ) && \
-      ! defined( HB_OS_VXWORKS ) && \
-      ! defined( HB_OS_SYMBIAN )
+   ! defined( __WATCOMC__ ) && \
+   ! defined( HB_OS_VXWORKS ) && \
+   ! defined( HB_OS_SYMBIAN )
    #include <syslog.h>
 #endif
 
 #ifndef va_copy
 #  ifdef __va_copy
-#     define va_copy( dst, src )    __va_copy( dst, src )
+#     define va_copy( dst, src )  __va_copy( dst, src )
 #  else
-#     define va_copy( dst, src )    ( (dst) = (src) )
+#     define va_copy( dst, src )  ( ( dst ) = ( src ) )
 #  endif
 #endif
 
@@ -273,7 +273,7 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
    if( s_sysout > 0 )
    {
 #if ( defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE ) ) || \
-    ( defined( HB_OS_UNIX ) && \
+      ( defined( HB_OS_UNIX ) && \
       ! defined( __WATCOMC__ ) && \
       ! defined( HB_OS_VXWORKS ) && \
       ! defined( HB_OS_SYMBIAN ) )
@@ -309,9 +309,9 @@ static void hb_tracelog_( int level, const char * file, int line, const char * p
                          file, line, pszLevel, message );
 
          #if defined( UNICODE )
-            MultiByteToWideChar( CP_ACP, 0, ( LPCSTR ) memcpy( message, buf.psz, sizeof( message ) ), -1,
-                                 buf.lp, HB_SIZEOFARRAY( buf.lp ) );
-            buf.lp[ HB_SIZEOFARRAY( buf.lp ) - 1 ] = 0;
+         MultiByteToWideChar( CP_ACP, 0, ( LPCSTR ) memcpy( message, buf.psz, sizeof( message ) ), -1,
+                              buf.lp, HB_SIZEOFARRAY( buf.lp ) );
+         buf.lp[ HB_SIZEOFARRAY( buf.lp ) - 1 ] = 0;
          #endif
          OutputDebugString( buf.lp );
       }

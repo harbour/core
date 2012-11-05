@@ -302,7 +302,7 @@ static HB_BOOL hb_pp_CompilerSwitch( void * cargo, const char * szSwitch,
             default:
                fError = HB_TRUE;
          }
-         if( !fError && iFlag )
+         if( ! fError && iFlag )
          {
             if( fSet )
             {
@@ -411,7 +411,7 @@ void hb_compInitPP( HB_COMP_DECL, int argc, const char * const argv[],
       else if( ! HB_COMP_PARAM->fQuiet )
          hb_compOutStd( HB_COMP_PARAM, "Standard command definitions excluded.\n" );
 
-      hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, !HB_COMP_PARAM->fNoArchDefs );
+      hb_pp_initDynDefines( HB_COMP_PARAM->pLex->pPP, ! HB_COMP_PARAM->fNoArchDefs );
 
       /* Add /D and /undef: command line or envvar defines */
       hb_compChkDefines( HB_COMP_PARAM, argc, argv );

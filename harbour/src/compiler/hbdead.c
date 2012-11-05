@@ -65,11 +65,11 @@ typedef struct _HB_CODETRACE_INFO
    HB_BOOL   fFinished;
 } HB_CODETRACE_INFO, * PHB_CODETRACE_INFO;
 
-#define HB_CODETRACE_FUNC( func ) HB_PCODE_FUNC( func, PHB_CODETRACE_INFO )
+#define HB_CODETRACE_FUNC( func )  HB_PCODE_FUNC( func, PHB_CODETRACE_INFO )
 typedef HB_CODETRACE_FUNC( HB_CODETRACE_FUNC_ );
 typedef HB_CODETRACE_FUNC_ * PHB_CODETRACE_FUNC;
 
-#define HB_JUMPADDR_ALLOC     64
+#define HB_JUMPADDR_ALLOC  64
 
 
 static void hb_compCodeTraceAddJump( PHB_CODETRACE_INFO pInfo, HB_SIZE nPCodePos )
@@ -78,8 +78,8 @@ static void hb_compCodeTraceAddJump( PHB_CODETRACE_INFO pInfo, HB_SIZE nPCodePos
     * for easier detecting bugs in generated PCODE
     */
    /*
-   if( nPCodePos < pInfo->nPCodeSize && pInfo->pCodeMark[ nPCodePos ] == 0 )
-   */
+      if( nPCodePos < pInfo->nPCodeSize && pInfo->pCodeMark[ nPCodePos ] == 0 )
+    */
    if( pInfo->pCodeMark[ nPCodePos ] == 0 )
    {
       if( pInfo->nJumpSize == 0 )
@@ -604,9 +604,9 @@ void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
           * and we will have to update also the jump table, [druzus]
           */
          /*
-         pFunc->pCode[ nPos - nCount ] = pFunc->pCode[ nPos - 1 ];
-         pFunc->nPCodePos = pFunc->nPCodeSize = nPos - nCount + 1;
-         */
+            pFunc->pCode[ nPos - nCount ] = pFunc->pCode[ nPos - 1 ];
+            pFunc->nPCodePos = pFunc->nPCodeSize = nPos - nCount + 1;
+          */
          hb_compNOOPfill( pFunc, nPos - nCount, nCount, HB_FALSE, HB_TRUE );
       }
    }

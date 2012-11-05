@@ -70,12 +70,12 @@ int hb_compMainExt( int argc, const char * const argv[],
    HB_BOOL bAnyFiles = HB_FALSE;
    int i;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compMain()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compMain()" ) );
 
    if( pBufPtr && pnSize )
    {
-      * pBufPtr = NULL;
-      * pnSize = 0;
+      *pBufPtr = NULL;
+      *pnSize  = 0;
    }
 
    HB_COMP_PARAM = hb_comp_new();
@@ -91,7 +91,7 @@ int hb_compMainExt( int argc, const char * const argv[],
    /* Then check command line arguments
       This will override duplicated environment settings */
    hb_compChkCompilerSwitch( HB_COMP_PARAM, argc, argv );
-   if( !HB_COMP_PARAM->fExit )
+   if( ! HB_COMP_PARAM->fExit )
    {
       if( HB_COMP_PARAM->iTraceInclude == 0 &&
           HB_COMP_PARAM->iSyntaxCheckOnly == 2 )
@@ -143,9 +143,9 @@ int hb_compMainExt( int argc, const char * const argv[],
    else
    {
       /* Process all files passed via the command line. */
-      for( i = 1; i < argc && !HB_COMP_PARAM->fExit; i++ )
+      for( i = 1; i < argc && ! HB_COMP_PARAM->fExit; i++ )
       {
-         HB_TRACE(HB_TR_DEBUG, ("main LOOP(%i,%s)", i, argv[i]));
+         HB_TRACE( HB_TR_DEBUG, ( "main LOOP(%i,%s)", i, argv[ i ] ) );
          if( ! HB_ISOPTSEP( argv[ i ][ 0 ] ) )
          {
             bAnyFiles = HB_TRUE;
@@ -170,8 +170,8 @@ int hb_compMainExt( int argc, const char * const argv[],
 
    if( pBufPtr && pnSize && iStatus == EXIT_SUCCESS )
    {
-      * pBufPtr = HB_COMP_PARAM->pOutBuf;
-      * pnSize = HB_COMP_PARAM->nOutBufSize;
+      *pBufPtr = HB_COMP_PARAM->pOutBuf;
+      *pnSize  = HB_COMP_PARAM->nOutBufSize;
       HB_COMP_PARAM->pOutBuf = NULL;
       HB_COMP_PARAM->nOutBufSize = 0;
    }
@@ -195,7 +195,7 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
    FILE *inFile;
 
    pFileName = hb_fsFNameSplit( szClpFile );
-   if( !pFileName->szExtension )
+   if( ! pFileName->szExtension )
    {
       pFileName->szExtension = ".clp";
       hb_fsFNameMerge( szFile, pFileName );
@@ -203,13 +203,13 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
    }
 
    HB_COMP_PARAM->szFile = hb_compIdentifierNew( HB_COMP_PARAM, szClpFile, HB_IDENT_COPY );
-   if( !HB_COMP_PARAM->pFileName )
+   if( ! HB_COMP_PARAM->pFileName )
       HB_COMP_PARAM->pFileName = pFileName;
    else
       hb_xfree( pFileName );
 
    inFile = hb_fopen( szClpFile, "r" );
-   if( !inFile )
+   if( ! inFile )
    {
       /* TODO: Clipper compatible error */
       hb_snprintf( buffer, sizeof( buffer ),
@@ -233,10 +233,10 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
           */
          if( ch == '"' )
          {
-            while( ( ch = fgetc ( inFile ) ) != EOF && ch != '"' && ch != '\n' )
+            while( ( ch = fgetc( inFile ) ) != EOF && ch != '"' && ch != '\n' )
             {
                if( i < ( HB_PATH_MAX - 1 ) )
-                  szFile[ i++ ] = (char) ch;
+                  szFile[ i++ ] = ( char ) ch;
             }
             if( ch == '"' )
                continue;
@@ -257,7 +257,7 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
                ch = fgetc( inFile );
          }
          else if( i < ( HB_PATH_MAX - 1 ) )
-            szFile[ i++ ] = (char) ch;
+            szFile[ i++ ] = ( char ) ch;
       }
       while( ch != EOF );
 
@@ -297,7 +297,7 @@ static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, HB_
    HB_COMP_PARAM->symbols.iCount++;
 
    if( pwPos )
-      *pwPos = ( HB_USHORT ) ( HB_COMP_PARAM->symbols.iCount - 1 ); /* position number starts form 0 */
+      *pwPos = ( HB_USHORT ) ( HB_COMP_PARAM->symbols.iCount - 1 );  /* position number starts form 0 */
 
    return pSym;
 }
@@ -362,6 +362,7 @@ static void hb_compCheckDuplVars( HB_COMP_DECL, PVAR pVar, const char * szVarNam
 static HB_USHORT hb_compVarListAdd( PVAR * pVarLst, PVAR pVar )
 {
    HB_USHORT uiVar = 1;
+
    while( *pVarLst )
    {
       pVarLst = &( *pVarLst )->pNext;
@@ -382,7 +383,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
        ( HB_COMP_PARAM->iVarScope == VS_LOCAL ||
          HB_COMP_PARAM->iVarScope == ( VS_PRIVATE | VS_PARAMETER ) ) )
    {
-      if( HB_COMP_PARAM->iStartProc == 2 && pFunc->szName[0] &&
+      if( HB_COMP_PARAM->iStartProc == 2 && pFunc->szName[ 0 ] &&
           hb_compRegisterFunc( HB_COMP_PARAM, pFunc, HB_FALSE ) )
          pFunc->funFlags &= ~FUN_FILE_DECL;
       else
@@ -434,8 +435,8 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
       /* NOTE: Clipper warns if PARAMETER variable duplicates the MEMVAR
        * declaration
        */
-      if( !( HB_COMP_PARAM->iVarScope == VS_PRIVATE ||
-             HB_COMP_PARAM->iVarScope == VS_PUBLIC ) )
+      if( ! ( HB_COMP_PARAM->iVarScope == VS_PRIVATE ||
+              HB_COMP_PARAM->iVarScope == VS_PUBLIC ) )
          hb_compCheckDuplVars( HB_COMP_PARAM, pFunc->pMemvars, szVarName );
    }
    else if( pFunc->funFlags & FUN_EXTBLOCK )
@@ -502,7 +503,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
             /* variable declared in MEMVAR statement */
             break;
 
-         case( VS_PARAMETER | VS_PRIVATE ):
+         case ( VS_PARAMETER | VS_PRIVATE ):
             if( ++pFunc->wParamNum > pFunc->wParamCount )
                pFunc->wParamCount = pFunc->wParamNum;
 
@@ -869,7 +870,7 @@ const char * hb_compLocalVariableName( PFUNCTION pFunc, HB_USHORT wVar )
 {
    PVAR pVar;
 
-   if( pFunc->wParamCount && !( pFunc->funFlags & FUN_USES_LOCAL_PARAMS ) )
+   if( pFunc->wParamCount && ! ( pFunc->funFlags & FUN_USES_LOCAL_PARAMS ) )
       wVar -= pFunc->wParamCount;
    pVar = hb_compVariableGetVar( pFunc->pLocals, wVar );
 
@@ -1314,15 +1315,15 @@ PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char* szFromCl
 
 static int hb_compSort_HB_SIZE( const void * pLeft, const void * pRight )
 {
-    HB_SIZE nLeft  = *( ( const HB_SIZE * ) ( pLeft ) );
-    HB_SIZE nRight = *( ( const HB_SIZE * ) ( pRight ) );
+   HB_SIZE nLeft  = *( ( const HB_SIZE * ) ( pLeft ) );
+   HB_SIZE nRight = *( ( const HB_SIZE * ) ( pRight ) );
 
-    if( nLeft == nRight )
-       return 0 ;
-    else if( nLeft < nRight )
-       return -1;
-    else
-       return 1;
+   if( nLeft == nRight )
+      return 0;
+   else if( nLeft < nRight )
+      return -1;
+   else
+      return 1;
 }
 
 /* Jump Optimizer and dummy code eliminator */
@@ -1334,13 +1335,13 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
    HB_BOOL fLineStrip = HB_COMP_PARAM->fLineNumbers;
    int iPass;
 
-   if( ! HB_COMP_ISSUPPORTED(HB_COMPFLAG_OPTJUMP) )
+   if( ! HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) )
       return;
 
    hb_compOptimizePCode( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
    hb_compCodeTraceMarkDead( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast );
 
-   for( iPass = 0; iPass < 4 && !HB_COMP_PARAM->fExit; ++iPass )
+   for( iPass = 0; iPass < 4 && ! HB_COMP_PARAM->fExit; ++iPass )
    {
       HB_ISIZ nOffset;
 
@@ -1529,7 +1530,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
          {
             /* Adjusting preceding jumps that pooint to code beyond the current NOOP
                or trailing backward jumps pointing to lower address. */
-            for( nJump = 0; nJump < HB_COMP_PARAM->functions.pLast->nJumps ; nJump++ )
+            for( nJump = 0; nJump < HB_COMP_PARAM->functions.pLast->nJumps; nJump++ )
             {
                nJumpAddr = pJumps[ nJump ];
                switch( pCode[ nJumpAddr ] )
@@ -1621,7 +1622,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
       /* Second Scan, after all adjustements been made, we can copy the optimized code. */
       for( nNOOP = 0; nNOOP < HB_COMP_PARAM->functions.pLast->nNOOPs; nNOOP++ )
       {
-         nBytes2Copy = ( pNOOPs[ nNOOP ] - nNextByte ) ;
+         nBytes2Copy = ( pNOOPs[ nNOOP ] - nNextByte );
 
          memmove( pCode + nOptimized, pCode + nNextByte, nBytes2Copy );
 
@@ -1632,7 +1633,7 @@ static void hb_compOptimizeJumps( HB_COMP_DECL )
          nNextByte++;
       }
 
-      nBytes2Copy = ( HB_COMP_PARAM->functions.pLast->nPCodePos - nNextByte ) ;
+      nBytes2Copy = ( HB_COMP_PARAM->functions.pLast->nPCodePos - nNextByte );
       memmove( pCode + nOptimized, pCode + nNextByte, nBytes2Copy );
       nOptimized += nBytes2Copy;
 
@@ -1689,13 +1690,13 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
             {
                /*printf( "\nChecking: %s Used: %i\n", pVar->szName, pVar->iUsed );*/
 
-               if( ! ( pVar->iUsed & VU_USED ) && (pVar->iUsed & VU_INITIALIZED) )
+               if( ! ( pVar->iUsed & VU_USED ) && ( pVar->iUsed & VU_INITIALIZED ) )
                   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_VAL_NOT_USED, pVar->szName, NULL );
 
                /* May have been initialized in previous execution of the function.
                   else if( ( pVar->iUsed & VU_USED ) && ! ( pVar->iUsed & VU_INITIALIZED ) )
                   hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_NOT_INITIALIZED, pVar->szName, NULL );
-               */
+                */
                pVar = pVar->pNext;
             }
          }
@@ -1758,7 +1759,7 @@ static void hb_compOptimizeFrames( HB_COMP_DECL, PFUNCTION pFunc )
          /* Skip LOCALs frame only when function is not declared with
           * variable number of parameters (HB_P_[LARGE]VFRAME)
           */
-         bSkipFRAME = !pFunc->fVParams;
+         bSkipFRAME = ! pFunc->fVParams;
 
       /* Remove the frame pcodes if they are not needed */
       if( bSkipFRAME )
@@ -1793,6 +1794,7 @@ static void hb_compWarnUnusedVar( HB_COMP_DECL, const char * szFuncName,
                                   const char * szVarName, int iDeclLine )
 {
    char szFun[ HB_SYMBOL_NAME_LEN + 17 ];
+
    if( HB_COMP_PARAM->iErrorFmt == HB_ERRORFMT_CLIPPER )
       hb_snprintf( szFun, sizeof( szFun ), "%s(%i)", szFuncName, iDeclLine );
    else
@@ -1845,13 +1847,13 @@ static void hb_compFinalizeFunction( HB_COMP_DECL ) /* fixes all last defined fu
 
          /* Check if the function returned some value
           */
-         if( (pFunc->funFlags & FUN_WITH_RETURN) == 0 &&
-             (pFunc->funFlags & FUN_PROCEDURE) == 0 )
+         if( ( pFunc->funFlags & FUN_WITH_RETURN ) == 0 &&
+             ( pFunc->funFlags & FUN_PROCEDURE ) == 0 )
             hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_FUN_WITH_NO_RETURN,
                                pFunc->szName, NULL );
       }
 
-      if( !pFunc->bError )
+      if( ! pFunc->bError )
       {
          if( pFunc->wParamCount && ( pFunc->funFlags & FUN_USES_LOCAL_PARAMS ) == 0 )
          {
@@ -1885,12 +1887,12 @@ static PFUNCTION hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBO
    pFunc = ( PFUNCTION ) hb_xgrab( sizeof( _FUNC ) );
    memset( pFunc, 0, sizeof( _FUNC ) );
 
-   pFunc->szName          = szName;
-   pFunc->cScope          = cScope;
-   pFunc->iStaticsBase    = HB_COMP_PARAM->iStaticCnt;
-   pFunc->iEarlyEvalPass  = 0;
-   pFunc->fVParams        = HB_FALSE;
-   pFunc->bError          = HB_FALSE;
+   pFunc->szName         = szName;
+   pFunc->cScope         = cScope;
+   pFunc->iStaticsBase   = HB_COMP_PARAM->iStaticCnt;
+   pFunc->iEarlyEvalPass = 0;
+   pFunc->fVParams       = HB_FALSE;
+   pFunc->bError         = HB_FALSE;
 
    return pFunc;
 }
@@ -2026,7 +2028,7 @@ void hb_compExternAdd( HB_COMP_DECL, const char * szExternName, HB_SYMBOLSCOPE c
 static void hb_compAddFunc( HB_COMP_DECL, PFUNCTION pFunc )
 {
    while( HB_COMP_PARAM->functions.pLast &&
-          !HB_COMP_PARAM->functions.pLast->szName )
+          ! HB_COMP_PARAM->functions.pLast->szName )
    {
       PFUNCTION pBlock = HB_COMP_PARAM->functions.pLast;
       HB_COMP_PARAM->functions.pLast = pBlock->pOwner;
@@ -2099,7 +2101,7 @@ static void hb_compUpdateFunctionNames( HB_COMP_DECL )
             {
                if( pFunc == pSeek )
                   fGlobal = HB_TRUE;
-               else if( ( !fGlobal || ( pSeek->cScope & ( HB_FS_STATIC | HB_FS_INITEXIT ) ) == 0 ) &&
+               else if( ( ! fGlobal || ( pSeek->cScope & ( HB_FS_STATIC | HB_FS_INITEXIT ) ) == 0 ) &&
                    strcmp( pFunc->szName, pSeek->szName ) == 0 )
                   pFunc->iFuncSuffix++;
                pSeek = pSeek->pNext;
@@ -2138,7 +2140,7 @@ static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fErro
    }
    else
    {
-      if( !hb_compCheckReservedNames( HB_COMP_PARAM, pFunc->szName, fError ) )
+      if( ! hb_compCheckReservedNames( HB_COMP_PARAM, pFunc->szName, fError ) )
       {
          PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
          if( ! pSym )
@@ -2163,7 +2165,7 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
 
    hb_compFinalizeFunction( HB_COMP_PARAM );    /* fix all previous function returns offsets */
 
-   if( cScope & (HB_FS_INIT | HB_FS_EXIT) )
+   if( cScope & ( HB_FS_INIT | HB_FS_EXIT ) )
    {
       char szNewName[ HB_SYMBOL_NAME_LEN + 1 ];
       int iLen;
@@ -2190,8 +2192,8 @@ void hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cS
 
    HB_COMP_PARAM->ilastLineErr = 0; /* position of last syntax error (line number) */
 
-   hb_compGenPCode3( HB_P_FRAME, 0, 0, HB_COMP_PARAM );     /* frame for locals and parameters */
-   hb_compGenPCode3( HB_P_SFRAME, 0, 0, HB_COMP_PARAM );    /* frame for statics variables */
+   hb_compGenPCode3( HB_P_FRAME, 0, 0, HB_COMP_PARAM );  /* frame for locals and parameters */
+   hb_compGenPCode3( HB_P_SFRAME, 0, 0, HB_COMP_PARAM ); /* frame for statics variables */
 
    if( HB_COMP_PARAM->fDebugInfo )
       hb_compGenModuleName( HB_COMP_PARAM, szFunName );
@@ -2212,8 +2214,8 @@ static void hb_compAnnounce( HB_COMP_DECL, const char * szFunName )
     */
 
    /* check for reserved name
-   * NOTE: Clipper doesn't check for it
-   */
+    * NOTE: Clipper doesn't check for it
+    */
    hb_compCheckReservedNames( HB_COMP_PARAM, szFunName, HB_TRUE );
 
    pFunc = hb_compFunctionFind( HB_COMP_PARAM, szFunName, HB_FALSE );
@@ -2343,7 +2345,7 @@ static void hb_compPrepareJumps( HB_COMP_DECL )
 
 HB_SIZE hb_compGenJump( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( !HB_LIM_INT24( nOffset ) )
+   if( ! HB_LIM_INT24( nOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode4( HB_P_JUMPFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
@@ -2354,7 +2356,7 @@ HB_SIZE hb_compGenJump( HB_ISIZ nOffset, HB_COMP_DECL )
 
 HB_SIZE hb_compGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( !HB_LIM_INT24( nOffset ) )
+   if( ! HB_LIM_INT24( nOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode4( HB_P_JUMPFALSEFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
@@ -2365,7 +2367,7 @@ HB_SIZE hb_compGenJumpFalse( HB_ISIZ nOffset, HB_COMP_DECL )
 
 HB_SIZE hb_compGenJumpTrue( HB_ISIZ nOffset, HB_COMP_DECL )
 {
-   if( !HB_LIM_INT24( nOffset ) )
+   if( ! HB_LIM_INT24( nOffset ) )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_JUMP_TOO_LONG, NULL, NULL );
 
    hb_compGenPCode4( HB_P_JUMPTRUEFAR, HB_LOBYTE( nOffset ), HB_HIBYTE( nOffset ), ( HB_BYTE ) ( ( nOffset >> 16 ) & 0xFF ), HB_COMP_PARAM );
@@ -2427,7 +2429,7 @@ void hb_compStatmentStart( HB_COMP_DECL )
 
       if( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 )
       {
-         if( HB_COMP_PARAM->iStartProc == 2 && pFunc->szName[0] &&
+         if( HB_COMP_PARAM->iStartProc == 2 && pFunc->szName[ 0 ] &&
              hb_compRegisterFunc( HB_COMP_PARAM, pFunc, HB_FALSE ) )
             pFunc->funFlags &= ~FUN_FILE_DECL;
          else
@@ -2459,7 +2461,7 @@ void hb_compLinePushIfDebugger( HB_COMP_DECL )
          /* previous line contained RETURN/BREAK/LOOP/EXIT statement */
          hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_UNREACHABLE, NULL, NULL );
       }
-      HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );  /* clear RETURN flag */
+      HB_COMP_PARAM->functions.pLast->funFlags &= ~( /*FUN_WITH_RETURN |*/ FUN_BREAK_CODE );   /* clear RETURN flag */
    }
 }
 
@@ -2479,10 +2481,10 @@ void hb_compGenModuleName( HB_COMP_DECL, const char * szFunName )
 }
 
 #if 0
-void hb_compGenStaticName( const char *szVarName, HB_COMP_DECL )
+void hb_compGenStaticName( const char * szVarName, HB_COMP_DECL )
 {
-  if( HB_COMP_PARAM->fDebugInfo )
-  {
+   if( HB_COMP_PARAM->fDebugInfo )
+   {
       HB_BYTE bGlobal = 0;
       PFUNCTION pFunc;
       int iVar;
@@ -2491,7 +2493,7 @@ void hb_compGenStaticName( const char *szVarName, HB_COMP_DECL )
       {
          /* Variable declaration is outside of function/procedure body.
             File-wide static variable
-         */
+          */
          hb_compStaticDefStart( HB_COMP_PARAM );
          bGlobal = 1;
       }
@@ -2537,6 +2539,7 @@ static void hb_compGenVarPCode( HB_BYTE bPCode, const char * szVarName, HB_COMP_
 static void hb_compGenVariablePCode( HB_COMP_DECL, HB_BYTE bPCode, const char * szVarName )
 {
    HB_BOOL bGenCode;
+
    /*
     * NOTE:
     * Clipper always assumes a memvar variable if undeclared variable
@@ -2589,7 +2592,7 @@ static void hb_compGenFieldPCode( HB_COMP_DECL, HB_BYTE bPCode, PVAR pField )
 /* bIsObject = HB_TRUE if we are sending a message to real object
    bIsObject is HB_FALSE if we are sending a message to an object specified
    with WITH OBJECT statement.
-*/
+ */
 void hb_compGenMessage( const char * szMsgName, HB_BOOL bIsObject, HB_COMP_DECL )
 {
    HB_USHORT wSym;
@@ -2627,7 +2630,7 @@ void hb_compGenMessageData( const char * szMsg, HB_BOOL bIsObject, HB_COMP_DECL 
    hb_compGenMessage( hb_compIdentifierNew( HB_COMP_PARAM, szResult, HB_IDENT_COPY ), bIsObject, HB_COMP_PARAM );
 }
 
-static void hb_compCheckEarlyMacroEval( HB_COMP_DECL, const char *szVarName, int iScope )
+static void hb_compCheckEarlyMacroEval( HB_COMP_DECL, const char * szVarName, int iScope )
 {
    if( iScope == HB_VS_CBLOCAL_VAR ||
        /* iScope == HB_VS_LOCAL_VAR || */ /* codeblock parameters */
@@ -2678,7 +2681,7 @@ void hb_compGenPopVar( const char * szVarName, HB_COMP_DECL ) /* generates the p
              * if PARAMETERS statement will be used then it is safe to
              * use 2 bytes for LOCALNEAR
              */
-            if( HB_LIM_INT8( iVar ) && !HB_COMP_PARAM->functions.pLast->szName &&
+            if( HB_LIM_INT8( iVar ) && ! HB_COMP_PARAM->functions.pLast->szName &&
                 !( HB_COMP_PARAM->functions.pLast->funFlags & FUN_EXTBLOCK ) )
                hb_compGenPCode2( HB_P_POPLOCALNEAR, ( HB_BYTE ) iVar, HB_COMP_PARAM );
             else
@@ -2720,8 +2723,8 @@ void hb_compGenPopVar( const char * szVarName, HB_COMP_DECL ) /* generates the p
       }
    }
 
-   if( !pVar )
-   {  /* undeclared variable */
+   if( ! pVar ) /* undeclared variable */
+   {
       hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_POPVARIABLE, szVarName );
    }
 }
@@ -2758,7 +2761,7 @@ void hb_compGenPushVar( const char * szVarName, HB_COMP_DECL )
              * if PARAMETERS statement will be used then it is safe to
              * use 2 bytes for LOCALNEAR
              */
-            if( HB_LIM_INT8( iVar ) && !HB_COMP_PARAM->functions.pLast->szName &&
+            if( HB_LIM_INT8( iVar ) && ! HB_COMP_PARAM->functions.pLast->szName &&
                 !( HB_COMP_PARAM->functions.pLast->funFlags & FUN_EXTBLOCK ) )
                hb_compGenPCode2( HB_P_PUSHLOCALNEAR, ( HB_BYTE ) iVar, HB_COMP_PARAM );
             else
@@ -2790,8 +2793,8 @@ void hb_compGenPushVar( const char * szVarName, HB_COMP_DECL )
       }
    }
 
-   if( !pVar )
-   {  /* undeclared variable */
+   if( ! pVar ) /* undeclared variable */
+   {
       hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_PUSHVARIABLE, szVarName );
    }
 }
@@ -2978,7 +2981,7 @@ void hb_compGenPushFunCall( const char * szFunName, int iFlags, HB_COMP_DECL )
    HB_SYMBOL_UNUSED( iFlags );
 
    pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
-   if( !pSym )
+   if( ! pSym )
       pSym = hb_compSymbolAdd( HB_COMP_PARAM, szFunName, &wSym, HB_SYM_FUNCNAME );
 
    pSym->cScope |= HB_FS_USED;
@@ -3004,7 +3007,7 @@ void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP
    HB_USHORT wSym;
 
    pSym = hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
-   if( !pSym )
+   if( ! pSym )
       pSym = hb_compSymbolAdd( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
 
    if( bFunction )
@@ -3019,7 +3022,7 @@ void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP
 /* generates the pcode to push a long number on the virtual machine stack */
 void hb_compGenPushLong( HB_MAXINT nNumber, HB_COMP_DECL )
 {
-   if( !HB_COMP_PARAM->fSwitchCase )
+   if( ! HB_COMP_PARAM->fSwitchCase )
    {
       if( nNumber == 0 )
          hb_compGenPCode1( HB_P_ZERO, HB_COMP_PARAM );
@@ -3085,7 +3088,7 @@ void hb_compGenPushTimeStamp( long lDate, long lTime, HB_COMP_DECL )
 /* generates the pcode to push a string on the virtual machine stack */
 void hb_compGenPushString( const char * szText, HB_SIZE nStrLen, HB_COMP_DECL )
 {
-   if( HB_COMP_PARAM->iHidden && !HB_COMP_PARAM->fSwitchCase )
+   if( HB_COMP_PARAM->iHidden && ! HB_COMP_PARAM->fSwitchCase )
    {
       char * szTemp;
       --nStrLen;
@@ -3155,7 +3158,7 @@ static void hb_compRemovePCODE( HB_COMP_DECL, HB_SIZE nPos, HB_SIZE nCount,
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
    HB_SIZE n;
 
-   if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) || !fCanMove )
+   if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_OPTJUMP ) || ! fCanMove )
    {
       /*
        * We can safely remove the dead code when Jump Optimization
@@ -3279,7 +3282,7 @@ void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
 {
    --nStartPos;  /* HB_P_SEQBEGIN address */
 
-   if( !fUsualStmts && fCanMove && !HB_COMP_PARAM->fDebugInfo )
+   if( ! fUsualStmts && fCanMove && ! HB_COMP_PARAM->fDebugInfo )
    {
       nStartPos -= 4;
       if( nAlways )
@@ -3297,14 +3300,14 @@ void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
                              nStartPos, fCanMove );
       }
    }
-   else if( !nAlways )
+   else if( ! nAlways )
    {
       /* remove HB_P_SEQALWAYS opcode */
       hb_compRemovePCODE( HB_COMP_PARAM, nStartPos - 4, 4, fCanMove );
    }
    else
    {
-      if( !fRecover )
+      if( ! fRecover )
       {
          /* remove HB_P_SEQBEGIN and HB_P_SEQEND */
          hb_compRemovePCODE( HB_COMP_PARAM, nEndPos - 1, 4, fCanMove );
@@ -3318,7 +3321,7 @@ void hb_compSequenceFinish( HB_COMP_DECL, HB_SIZE nStartPos, HB_SIZE nEndPos,
       }
       /* empty always block? */
       if( HB_COMP_PARAM->functions.pLast->nPCodePos - nAlways == 5 &&
-          !HB_COMP_PARAM->fDebugInfo )
+          ! HB_COMP_PARAM->fDebugInfo )
       {
          /* remove HB_P_ALWAYSBEGIN and HB_P_ALWAYSEND opcodes */
          hb_compRemovePCODE( HB_COMP_PARAM, nAlways, 5, HB_TRUE );
@@ -3506,7 +3509,7 @@ static void hb_compLineNumberDefEnd( HB_COMP_DECL )
 
 /*
  * Start a new fake-function that will hold pcodes for a codeblock
-*/
+ */
 void hb_compCodeBlockStart( HB_COMP_DECL, int iEarlyEvalPass )
 {
    PFUNCTION pBlock;
@@ -3547,7 +3550,7 @@ void hb_compCodeBlockEnd( HB_COMP_DECL )
 
    hb_compGenPCode1( HB_P_ENDBLOCK, HB_COMP_PARAM ); /* finish the codeblock */
 
-   if( !pCodeblock->bError )
+   if( ! pCodeblock->bError )
    {
       if( pCodeblock->wParamCount && !( pCodeblock->funFlags & FUN_USES_LOCAL_PARAMS ) )
          /* PARAMETERs were used after LOCALs in extended codeblock
@@ -3793,7 +3796,7 @@ static void hb_compInitVars( HB_COMP_DECL )
 
 static void hb_compGenOutput( HB_COMP_DECL, int iLanguage )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compGenOutput()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compGenOutput()" ) );
 
    switch( iLanguage )
    {
@@ -3834,7 +3837,7 @@ static void hb_compPpoFile( HB_COMP_DECL, const char * szPrg, const char * szExt
 
 static void hb_compOutputFile( HB_COMP_DECL )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compOutputFile()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compOutputFile()" ) );
 
    HB_COMP_PARAM->pFileName->szPath = NULL;
    HB_COMP_PARAM->pFileName->szExtension = NULL;
@@ -3867,9 +3870,9 @@ static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
 
 void hb_compModuleAdd( HB_COMP_DECL, const char * szModuleName, HB_BOOL fForce )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compModuleAdd(%s,%d)", szModuleName, fForce));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compModuleAdd(%s,%d)", szModuleName, fForce ) );
 
-   if( !HB_COMP_PARAM->fSingleModule || fForce )
+   if( ! HB_COMP_PARAM->fSingleModule || fForce )
    {
       PHB_MODULE * pModule = &HB_COMP_PARAM->modules;
 
@@ -3896,7 +3899,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
    }
 
    while( HB_COMP_PARAM->functions.pLast &&
-          !HB_COMP_PARAM->functions.pLast->szName )
+          ! HB_COMP_PARAM->functions.pLast->szName )
    {
       PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
       HB_COMP_PARAM->functions.pLast = pFunc->pOwner;
@@ -4127,7 +4130,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    /* Initialize support variables */
    hb_compInitVars( HB_COMP_PARAM );
 
-   if( !szBuffer )
+   if( ! szBuffer )
    {
       if( szPrg[ 0 ] == '@' )
          iStatus = hb_compReadClpFile( HB_COMP_PARAM, szPrg + 1 );
@@ -4138,7 +4141,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    }
 
    pModule = HB_COMP_PARAM->modules;
-   while( iStatus == EXIT_SUCCESS && !HB_COMP_PARAM->fExit &&
+   while( iStatus == EXIT_SUCCESS && ! HB_COMP_PARAM->fExit &&
           ( pModule || szBuffer ) )
    {
       char szFileName[ HB_PATH_MAX ];     /* filename to parse */
@@ -4149,36 +4152,36 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
       hb_pp_reset( HB_COMP_PARAM->pLex->pPP );
       hb_compDeclaredReset( HB_COMP_PARAM );
 
-      if( !szBuffer )
+      if( ! szBuffer )
          szPrg = pModule->szName;
 
       if( pFileName && HB_COMP_PARAM->pFileName != pFileName )
          hb_xfree( pFileName );
       pFileName = hb_fsFNameSplit( szPrg );
-      if( !HB_COMP_PARAM->pFileName )
+      if( ! HB_COMP_PARAM->pFileName )
          HB_COMP_PARAM->pFileName = pFileName;
 
-      if( !pFileName->szName )
+      if( ! pFileName->szName )
       {
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADFILENAME, szPrg, NULL );
          iStatus = EXIT_FAILURE;
          break;
       }
 
-      if( !pFileName->szExtension )
+      if( ! pFileName->szExtension )
          pFileName->szExtension = ".prg";
       hb_fsFNameMerge( szFileName, pFileName );
 
       if( szBuffer )
       {
-         if( !hb_pp_inBuffer( HB_COMP_PARAM->pLex->pPP, szBuffer, strlen( szBuffer ), iStartLine ) )
+         if( ! hb_pp_inBuffer( HB_COMP_PARAM->pLex->pPP, szBuffer, strlen( szBuffer ), iStartLine ) )
          {
             hb_compOutErr( HB_COMP_PARAM, "Cannot create preprocessor buffer." );
             iStatus = EXIT_FAILURE;
             break;
          }
       }
-      else if( !hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, HB_FALSE, NULL, HB_FALSE ) )
+      else if( ! hb_pp_inFile( HB_COMP_PARAM->pLex->pPP, szFileName, HB_FALSE, NULL, HB_FALSE ) )
       {
          hb_snprintf( buffer, sizeof( buffer ),
                       "Cannot open %s, assumed external\n", szFileName );
@@ -4191,12 +4194,12 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
          fSkip = HB_TRUE;
       }
 
-      if( !fSkip )
+      if( ! fSkip )
       {
          if( HB_COMP_PARAM->fPPT )
          {
             hb_compPpoFile( HB_COMP_PARAM, szFileName, ".ppt", szPpoName );
-            if( !hb_pp_traceFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
+            if( ! hb_pp_traceFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
             {
                iStatus = EXIT_FAILURE;
                break;
@@ -4206,14 +4209,14 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
          if( HB_COMP_PARAM->fPPO )
          {
             hb_compPpoFile( HB_COMP_PARAM, szFileName, ".ppo", szPpoName );
-            if( !hb_pp_outFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
+            if( ! hb_pp_outFile( HB_COMP_PARAM->pLex->pPP, szPpoName, NULL ) )
             {
                iStatus = EXIT_FAILURE;
                break;
             }
          }
 
-#if !defined( HB_MODULES_MERGE )
+#if ! defined( HB_MODULES_MERGE )
          /* TODO: HRB format does not support yet multiple static functions
           *       with the same name. Such functionality needs extended .HRB
           *       file format.
@@ -4261,7 +4264,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
                                 HB_FS_PUBLIC, FUN_PROCEDURE | FUN_FILE_FIRST | ( HB_COMP_PARAM->iStartProc == 0 ? 0 : FUN_FILE_DECL ) );
          }
 
-         if( !HB_COMP_PARAM->fExit )
+         if( ! HB_COMP_PARAM->fExit )
          {
             int iExitLevel = HB_COMP_PARAM->iExitLevel;
             if( HB_COMP_PARAM->iSyntaxCheckOnly >= 2 )
@@ -4280,7 +4283,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
       else
          pModule = pModule->pNext;
 
-      while( pModule && !pModule->force &&
+      while( pModule && ! pModule->force &&
              hb_compIsModuleFunc( HB_COMP_PARAM, pModule->szName ) )
          pModule = pModule->pNext;
    }
@@ -4288,7 +4291,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    if( pFileName && HB_COMP_PARAM->pFileName != pFileName )
       hb_xfree( pFileName );
 
-   if( !HB_COMP_PARAM->fExit && iStatus == EXIT_SUCCESS )
+   if( ! HB_COMP_PARAM->fExit && iStatus == EXIT_SUCCESS )
    {
       /* Begin of finalization phase. */
 
@@ -4397,7 +4400,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
          pFunc = HB_COMP_PARAM->functions.pFirst;
 
-         while( pFunc && !HB_COMP_PARAM->fExit )
+         while( pFunc && ! HB_COMP_PARAM->fExit )
          {
             /* skip pseudo function frames used in automatically included
                files for file wide declarations */
@@ -4448,7 +4451,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    else
       fGenCode = HB_FALSE;
 
-   if( !fGenCode && !HB_COMP_PARAM->fExit &&
+   if( ! fGenCode && ! HB_COMP_PARAM->fExit &&
        HB_COMP_PARAM->iSyntaxCheckOnly == 0 )
       hb_compOutStd( HB_COMP_PARAM, "\nNo code generated.\n" );
 

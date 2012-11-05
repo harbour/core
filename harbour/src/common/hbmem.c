@@ -62,7 +62,7 @@
    only for hb_xmem* macro definition
 
    #if UINT_MAX != ULONG_MAX
-*/
+ */
 #ifndef hb_xmemcpy
 void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE nLen )
 {
@@ -71,7 +71,7 @@ void * hb_xmemcpy( void * pDestArg, void * pSourceArg, HB_SIZE nLen )
    HB_SIZE   nRemaining;
    int       iCopySize;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xmemcpy(%p, %p, %" HB_PFS "u)", pDestArg, pSourceArg, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xmemcpy(%p, %p, %" HB_PFS "u)", pDestArg, pSourceArg, nLen ) );
 
    pDest = ( HB_BYTE * ) pDestArg;
    pSource = ( HB_BYTE * ) pSourceArg;
@@ -106,7 +106,7 @@ void * hb_xmemset( void * pDestArg, int iFill, HB_SIZE nLen )
    HB_SIZE   nRemaining;
    int       iSetSize;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xmemset(%p, %d, %" HB_PFS "u)", pDestArg, iFill, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xmemset(%p, %d, %" HB_PFS "u)", pDestArg, iFill, nLen ) );
 
    pDest = ( HB_BYTE * ) pDestArg;
    nRemaining = nLen;

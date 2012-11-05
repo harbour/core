@@ -84,10 +84,10 @@
    #endif
 
    #ifndef VER_PLATFORM_WIN32_WINDOWS
-      #define VER_PLATFORM_WIN32_WINDOWS 1
+      #define VER_PLATFORM_WIN32_WINDOWS  1
    #endif
    #ifndef VER_PLATFORM_WIN32_CE
-      #define VER_PLATFORM_WIN32_CE 3
+      #define VER_PLATFORM_WIN32_CE       3
    #endif
 
 #elif defined( HB_OS_OS2 )
@@ -95,13 +95,13 @@
    #include <os2.h>
 #elif defined( HB_OS_DOS )
    #include <dos.h>
-#elif defined( HB_OS_UNIX ) && !defined( __CEGCC__ )
+#elif defined( HB_OS_UNIX ) && ! defined( __CEGCC__ )
    #include <sys/utsname.h>
 #endif
 
 const char * hb_verCPU( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_verCPU()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_verCPU()" ) );
 
 #if   defined( HB_CPU_X86 )
    return "x86";
@@ -172,7 +172,7 @@ static HB_BOOL s_win_iswow64( void )
 
 const char * hb_verHostCPU( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_verHostCPU()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_verHostCPU()" ) );
 
    if( s_win_iswow64() )
       return "x86-64";
@@ -217,9 +217,9 @@ int hb_verHostBitWidth( void )
 const char * hb_verPlatformMacro( void )
 {
 #if   defined( HB_OS_WIN_CE ) /* Must precede HB_OS_WIN */
-   return "WINCE"; /* TODO: Change this to WCE for consistency? */
+   return "WINCE";            /* TODO: Change this to WCE for consistency? */
 #elif defined( HB_OS_WIN )
-   return "WINDOWS"; /* TODO: Change this to WIN for consistency? */
+   return "WINDOWS";          /* TODO: Change this to WIN for consistency? */
 #elif defined( HB_OS_DOS )
    return "DOS";
 #elif defined( HB_OS_OS2 )
@@ -251,13 +251,13 @@ const char * hb_verPlatformMacro( void )
 
 /* NOTE: Must be larger than 128, which is the maximum size of
          osVer.szCSDVersion (Windows). [vszakats] */
-#define PLATFORM_BUF_SIZE 255
+#define PLATFORM_BUF_SIZE  255
 
 char * hb_verPlatform( void )
 {
    char * pszPlatform;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_verPlatform()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_verPlatform()" ) );
 
    pszPlatform = ( char * ) hb_xgrab( PLATFORM_BUF_SIZE + 1 );
 
@@ -379,7 +379,7 @@ char * hb_verPlatform( void )
             case VER_PLATFORM_WIN32_NT:
 
                #ifndef VER_NT_WORKSTATION
-               #define VER_NT_WORKSTATION 0x0000001
+               #define VER_NT_WORKSTATION  0x0000001
                #endif
 
                if( osVer.dwMajorVersion == 6 )
@@ -531,10 +531,10 @@ char * hb_verPlatform( void )
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
 static HB_BOOL s_fWinVista = HB_FALSE;
-static HB_BOOL s_fWin2K3 = HB_FALSE;
-static HB_BOOL s_fWin2K = HB_FALSE;
-static HB_BOOL s_fWinNT = HB_FALSE;
-static HB_BOOL s_fWin9x = HB_FALSE;
+static HB_BOOL s_fWin2K3   = HB_FALSE;
+static HB_BOOL s_fWin2K    = HB_FALSE;
+static HB_BOOL s_fWinNT    = HB_FALSE;
+static HB_BOOL s_fWin9x    = HB_FALSE;
 
 static void s_hb_winVerInit( void )
 {
@@ -544,13 +544,13 @@ static void s_hb_winVerInit( void )
    if( GetVersionEx( &osvi ) )
    {
       s_fWinVista = osvi.dwMajorVersion >= 6;
-      s_fWin2K3 = s_fWinVista;
-      s_fWin2K = osvi.dwMajorVersion >= 5;
-      s_fWinNT = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
-      s_fWin9x = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
+      s_fWin2K3   = s_fWinVista;
+      s_fWin2K    = osvi.dwMajorVersion >= 5;
+      s_fWinNT    = osvi.dwPlatformId == VER_PLATFORM_WIN32_NT; /* && osvi.dwMajorVersion >= 4 ); */
+      s_fWin9x    = osvi.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS;
 
-#if !defined( HB_OS_WIN_CE ) && !defined( __DMC__ ) && \
-    ( !defined( _MSC_VER ) || _MSC_VER >= 1400 )
+#if ! defined( HB_OS_WIN_CE ) && ! defined( __DMC__ ) && \
+      ( ! defined( _MSC_VER ) || _MSC_VER >= 1400 )
 
       if( ! s_fWin2K3 && osvi.dwMajorVersion == 5 && osvi.dwMinorVersion >= 2 )
       {
@@ -569,10 +569,10 @@ static void s_hb_winVerInit( void )
 static HB_BOOL s_fWinVerInit = HB_FALSE;
 
 static HB_BOOL s_fWinVista = HB_FALSE;
-static HB_BOOL s_fWin2K3 = HB_FALSE;
-static HB_BOOL s_fWin2K = HB_FALSE;
-static HB_BOOL s_fWinNT = HB_FALSE;
-static HB_BOOL s_fWin9x = HB_FALSE;
+static HB_BOOL s_fWin2K3   = HB_FALSE;
+static HB_BOOL s_fWin2K    = HB_FALSE;
+static HB_BOOL s_fWinNT    = HB_FALSE;
+static HB_BOOL s_fWin9x    = HB_FALSE;
 
 static void s_hb_winVerInit( void )
 {
@@ -580,8 +580,8 @@ static void s_hb_winVerInit( void )
 
    /* TODO */
    s_fWinVista = HB_FALSE;
-   s_fWin2K3 = s_fWinVista;
-   s_fWin2K = HB_FALSE;
+   s_fWin2K3   = s_fWinVista;
+   s_fWin2K    = HB_FALSE;
 
    /* Host OS detection: Windows NT family */
 
@@ -677,7 +677,7 @@ HB_BOOL hb_iswince( void )
 
 /* NOTE: The caller must free the returned buffer. [vszakats] */
 
-#define COMPILER_BUF_SIZE 80
+#define COMPILER_BUF_SIZE  80
 
 char * hb_verCompiler( void )
 {
@@ -690,7 +690,7 @@ char * hb_verCompiler( void )
    int iVerMicro = 0;
    int iElements = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_verCompiler()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_verCompiler()" ) );
 
    pszCompiler = ( char * ) hb_xgrab( COMPILER_BUF_SIZE );
    szSub[ 0 ] = '\0';
@@ -1062,13 +1062,13 @@ char * hb_verCompiler( void )
 /* NOTE:
    CA-Cl*pper 5.2e returns: "Clipper (R) 5.2e Intl. (x216)  (1995.02.07)"
    CA-Cl*pper 5.3b returns: "Clipper (R) 5.3b Intl. (Rev. 338) (1997.04.25)"
-*/
+ */
 
 char * hb_verHarbour( void )
 {
    char * pszVersion;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_verHarbour()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_verHarbour()" ) );
 
    pszVersion = ( char * ) hb_xgrab( 80 );
    hb_snprintf( pszVersion, 80, "Harbour %d.%d.%d%s (Rev. %d)",
@@ -1082,7 +1082,7 @@ char * hb_verPCode( void )
 {
    char * pszPCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_verPCode()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_verPCode()" ) );
 
    pszPCode = ( char * ) hb_xgrab( 24 );
    hb_snprintf( pszPCode, 24, "PCode version: %d.%d",
@@ -1095,7 +1095,7 @@ char * hb_verBuildDate( void )
 {
    char * pszDate;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_verBuildDate()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_verBuildDate()" ) );
 
    pszDate = ( char * ) hb_xgrab( 64 );
    hb_snprintf( pszDate, 64, "%s %s", __DATE__, __TIME__ );

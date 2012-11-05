@@ -31,10 +31,10 @@
 
 #include "hbcomp.h"
 
-#define SYM_NOLINK   0              /* symbol does not have to be linked */
-#define SYM_FUNC     1              /* function defined in this module   */
-#define SYM_EXTERN   2              /* function defined in other module  */
-#define SYM_DEFERRED 3              /* lately bound function             */
+#define SYM_NOLINK    0             /* symbol does not have to be linked */
+#define SYM_FUNC      1             /* function defined in this module   */
+#define SYM_EXTERN    2             /* function defined in other module  */
+#define SYM_DEFERRED  3             /* lately bound function             */
 
 static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * pulFunctions )
 {
@@ -42,14 +42,14 @@ static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * p
    PCOMSYMBOL pSym;
    HB_SIZE nSize;
 
-   * pulSymbols = * pulFunctions = 0;
+   *pulSymbols = *pulFunctions = 0;
 
    /* count total size */
    nSize = 10;  /* signature[4] + version[2] + symbols_number[4] */
    pSym = HB_COMP_PARAM->symbols.pFirst;
    while( pSym )
    {
-      ( * pulSymbols )++;
+      ( *pulSymbols )++;
       nSize += strlen( pSym->szName ) + 3; /* \0 + symscope[1] + symtype[1] */
       pSym = pSym->pNext;
    }
@@ -60,7 +60,7 @@ static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * p
    {
       if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
       {
-         ( * pulFunctions )++;
+         ( *pulFunctions )++;
          nSize += strlen( pFunc->szName ) + 5 + pFunc->nPCodePos; /* \0 + func_size[4] + function_body */
       }
       pFunc = pFunc->pNext;
@@ -77,9 +77,9 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize )
    HB_SIZE nLen;
    HB_BYTE * ptr;
 
-   * pnSize = hb_compHrbSize( HB_COMP_PARAM, &ulSymbols, &ulFunctions );
+   *pnSize = hb_compHrbSize( HB_COMP_PARAM, &ulSymbols, &ulFunctions );
    /* additional 0 byte is for passing buffer directly as string item */
-   ptr = * pBufPtr = ( HB_BYTE * ) hb_xgrab( * pnSize + 1 );
+   ptr = *pBufPtr = ( HB_BYTE * ) hb_xgrab( *pnSize + 1 );
 
    /* signature */
    *ptr++ = 0xC0;
@@ -112,9 +112,9 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize )
       else if( pSym->cScope & HB_FS_DEFERRED )
          *ptr++ = SYM_DEFERRED;  /* lately bound function */
       else if( pSym->iFunc )
-         *ptr++ = SYM_EXTERN; /* external function */
+         *ptr++ = SYM_EXTERN;    /* external function */
       else
-         *ptr++ = SYM_NOLINK; /* other symbol */
+         *ptr++ = SYM_NOLINK;    /* other symbol */
       pSym = pSym->pNext;
    }
 

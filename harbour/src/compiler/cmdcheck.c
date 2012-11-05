@@ -50,7 +50,7 @@
 
 /* TODO: Add support for this compiler switches
    -r -t || hb_getenv( "TMP" )
-*/
+ */
 
 
 /* NOTE: Making the date and time info to fit into 32 bits can only be done
@@ -76,12 +76,12 @@ static HB_ULONG PackDateTime( void )
    {
       struct
       {
-         HB_U32   second : 6;       /* bits:  0 -  5 */
-         HB_U32   minute : 6;       /* bits:  6 - 11 */
-         HB_U32   hour   : 5;       /* bits: 12 - 16 */
-         HB_U32   day    : 5;       /* bits: 16 - 21 */
-         HB_U32   month  : 4;       /* bits: 22 - 25 */
-         HB_U32   year   : 6;       /* bits: 26 - 31 */
+         HB_U32 second : 6;         /* bits:  0 -  5 */
+         HB_U32 minute : 6;         /* bits:  6 - 11 */
+         HB_U32 hour   : 5;         /* bits: 12 - 16 */
+         HB_U32 day    : 5;         /* bits: 16 - 21 */
+         HB_U32 month  : 4;         /* bits: 22 - 25 */
+         HB_U32 year   : 6;         /* bits: 26 - 31 */
       } ts;
       HB_U32 val;
    } u;
@@ -100,7 +100,7 @@ static HB_ULONG PackDateTime( void )
    return u.val;
 }
 
-static void hb_notSupportedInfo( HB_COMP_DECL, const char *szSwitch )
+static void hb_notSupportedInfo( HB_COMP_DECL, const char * szSwitch )
 {
    char buffer[ 512 ];
 
@@ -110,16 +110,16 @@ static void hb_notSupportedInfo( HB_COMP_DECL, const char *szSwitch )
    hb_compOutStd( HB_COMP_PARAM, buffer );
 }
 
-static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
+static void hb_compChkEnvironVar( HB_COMP_DECL, const char * szSwitch )
 {
-   if( szSwitch && !HB_COMP_PARAM->fExit )
+   if( szSwitch && ! HB_COMP_PARAM->fExit )
    {
-      const char *s = szSwitch;
+      const char * s = szSwitch;
 
       /* If szSwitch doesn't start with a HB_OSOPTSEP char
        * show an error
        */
-      if( !HB_ISOPTSEP( *s ) )
+      if( ! HB_ISOPTSEP( *s ) )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
       else
       {
@@ -140,9 +140,9 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                unsigned int i = 0;
                char *szOption = hb_strupr( hb_strdup( s ) );
 
-               while( i < strlen( szOption ) && !HB_ISOPTSEP( szOption[i] ) )
+               while( i < strlen( szOption ) && ! HB_ISOPTSEP( szOption[ i ] ) )
                   i++;
-               szOption[i] = '\0';
+               szOption[ i ] = '\0';
 
                if( strcmp( szOption, "BUILD" ) == 0 )
                   HB_COMP_PARAM->fBuildInfo = HB_TRUE;
@@ -167,9 +167,9 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                unsigned int i = 0;
                char *szOption = hb_strupr( hb_strdup( s ) );
 
-               while( i < strlen( szOption ) && !HB_ISOPTSEP( szOption[i] ) )
+               while( i < strlen( szOption ) && ! HB_ISOPTSEP( szOption[ i ] ) )
                   i++;
-               szOption[i] = '\0';
+               szOption[ i ] = '\0';
 
                if( strcmp( szOption, "CREDITS" ) == 0 ||
                    strcmp( szOption, "CREDIT" ) == 0 ||
@@ -260,12 +260,12 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                         hb_xfree( HB_COMP_PARAM->szDepExt );
                         HB_COMP_PARAM->szDepExt = NULL;
                      }
-                     if( s[2] == '-' )
+                     if( s[ 2 ] == '-' )
                         HB_COMP_PARAM->iTraceInclude = 0;
-                     else if( s[2] == '.' || s[2] == '\0' )
+                     else if( s[ 2 ] == '.' || s[ 2 ] == '\0' )
                      {
                         HB_COMP_PARAM->iTraceInclude = 2;
-                        if( s[2] != '\0' )
+                        if( s[ 2 ] != '\0' )
                            HB_COMP_PARAM->szDepExt = hb_strdup( s + 2 );
                      }
                      else
@@ -336,9 +336,9 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
             {
                int i = 1;
 
-               while( s[i] && !HB_COMP_PARAM->fExit )
+               while( s[ i ] && ! HB_COMP_PARAM->fExit )
                {
-                  switch( s[i++] )
+                  switch( s[ i++ ] )
                   {
                      case '?':
                         hb_compPrintLogo( HB_COMP_PARAM );
@@ -350,7 +350,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      case 'h':
                      case 'H':
                         /* default Harbour mode */
-                        if( s[i] == '-' )
+                        if( s[ i ] == '-' )
                         {
                            i++;
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_HARBOUR;
@@ -369,7 +369,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'x':
                      case 'X':
-                        if( s[i] == '-' )
+                        if( s[ i ] == '-' )
                         {
                            i++;
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_XBASE;
@@ -380,7 +380,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'i':
                      case 'I':
-                        if( s[i] == '-' )
+                        if( s[ i ] == '-' )
                         {
                            i++;
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_HB_INLINE;
@@ -391,7 +391,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'j':
                      case 'J':
-                        if( s[i] == '+' )
+                        if( s[ i ] == '+' )
                         {
                            i++;
                            HB_COMP_PARAM->supported |= HB_COMPFLAG_OPTJUMP;
@@ -402,7 +402,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'm':
                      case 'M':
-                        if( s[i] == '+' )
+                        if( s[ i ] == '+' )
                         {
                            i++;
                            HB_COMP_PARAM->supported |= HB_COMPFLAG_MACROTEXT;
@@ -413,7 +413,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'd':
                      case 'D':
-                        if( s[i] == '-' )
+                        if( s[ i ] == '-' )
                         {
                            i++;
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_MACRODECL;
@@ -424,7 +424,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'r':
                      case 'R':
-                        if( s[i] == '-' )
+                        if( s[ i ] == '-' )
                         {
                            i++;
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_RT_MACRO;
@@ -435,7 +435,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 's':
                      case 'S':
-                        if( s[i] == '-' )
+                        if( s[ i ] == '-' )
                         {
                            i++;
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_ARRSTR;
@@ -446,7 +446,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'o':
                      case 'O':
-                        if( s[i] == '-' )
+                        if( s[ i ] == '-' )
                         {
                            i++;
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_EXTOPT;
@@ -457,7 +457,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
                      case 'u':
                      case 'U':
-                        if( s[i] == '-' )
+                        if( s[ i ] == '-' )
                         {
                            i++;
                            HB_COMP_PARAM->supported &= ~HB_COMPFLAG_USERCP;
@@ -559,7 +559,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                   int iOverflow;
                   int iCycles = ( int ) hb_strValInt( s + 2, &iOverflow );
 
-                  if( !iOverflow && iCycles > 0 )
+                  if( ! iOverflow && iCycles > 0 )
                      HB_COMP_PARAM->iMaxTransCycles = iCycles;
                }
                else
@@ -581,7 +581,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
                      break;
                   case 'm':
                   case 'M':
-                     if( s[2] == '\0' )
+                     if( s[ 2 ] == '\0' )
                      {
                         HB_COMP_PARAM->iSyntaxCheckOnly = 2;
                         break;
@@ -599,29 +599,29 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
 
             case 'u':
             case 'U':
-               if( ( s[1] == 'N' || s[1] == 'n' ) &&
-                   ( s[2] == 'D' || s[2] == 'd' ) &&
-                   ( s[3] == 'E' || s[3] == 'e' ) &&
-                   ( s[4] == 'F' || s[4] == 'f' ) && s[5] == ':' )
+               if( ( s[ 1 ] == 'N' || s[ 1 ] == 'n' ) &&
+                   ( s[ 2 ] == 'D' || s[ 2 ] == 'd' ) &&
+                   ( s[ 3 ] == 'E' || s[ 3 ] == 'e' ) &&
+                   ( s[ 4 ] == 'F' || s[ 4 ] == 'f' ) && s[ 5 ] == ':' )
                {
                   /* NOTE: Ignore these -undef: switches (will be processed
                    *       separately) except -undef:.arch.
                    */
-                  if( s[6] == '.' &&
-                      (  s[7] == 'A' ||  s[7] == 'a' ) &&
-                      (  s[8] == 'R' ||  s[8] == 'r' ) &&
-                      (  s[9] == 'C' ||  s[9] == 'c' ) &&
-                      ( s[10] == 'H' || s[10] == 'h' ) &&
-                      s[11] == '.' )
+                  if( s[ 6 ] == '.' &&
+                      ( s[  7 ] == 'A' || s[  7 ] == 'a' ) &&
+                      ( s[  8 ] == 'R' || s[  8 ] == 'r' ) &&
+                      ( s[  9 ] == 'C' || s[  9 ] == 'c' ) &&
+                      ( s[ 10 ] == 'H' || s[ 10 ] == 'h' ) &&
+                      s[ 11 ] == '.' )
                   {
                      HB_COMP_PARAM->fNoArchDefs = HB_TRUE;
                   }
                   break;
                }
                /* extended definitions file (-u+<file>) */
-               if( s[1] == '+' )
+               if( s[ 1 ] == '+' )
                {
-                  if( s[2] )
+                  if( s[ 2 ] )
                   {
                      if( HB_COMP_PARAM->iStdChExt == 0 )
                         HB_COMP_PARAM->szStdChExt = ( char ** )
@@ -656,9 +656,9 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
             case 'w':
             case 'W':
                HB_COMP_PARAM->iWarnings = 1;
-               if( s[1] )
-               {                /*there is -w<0,1,2,3> probably */
-                  HB_COMP_PARAM->iWarnings = s[1] - '0';
+               if( s[ 1 ] )       /* there is -w<0,1,2,3> probably */
+               {
+                  HB_COMP_PARAM->iWarnings = s[ 1 ] - '0';
                   if( HB_COMP_PARAM->iWarnings < 0 || HB_COMP_PARAM->iWarnings > 3 )
                      hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, s, NULL );
                }
@@ -668,7 +668,7 @@ static void hb_compChkEnvironVar( HB_COMP_DECL, const char *szSwitch )
             case 'X':
             {
                unsigned int i = 1;
-               while( s[i] && !HB_ISOPTSEP( s[i] ) &&
+               while( s[ i ] && ! HB_ISOPTSEP( s[ i ] ) &&
                       i < sizeof( HB_COMP_PARAM->szPrefix ) - 1 )
                {
                   ++i;
@@ -721,28 +721,28 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
       /* Check all switches in command line
          They start with an OS_OPT_DELIMITER char
        */
-      for( i = 1; i < iArg && !HB_COMP_PARAM->fExit; i++ )
+      for( i = 1; i < iArg && ! HB_COMP_PARAM->fExit; i++ )
       {
-         const char * szSwitch = Args[i];
+         const char * szSwitch = Args[ i ];
 
-         if( !HB_ISOPTSEP( szSwitch[0] ) )
+         if( ! HB_ISOPTSEP( szSwitch[ 0 ] ) )
             continue;
 
-         if( szSwitch[0] == '-' )
+         if( szSwitch[ 0 ] == '-' )
          {
-            int j = 1;
-            char Switch[7];
+            int  j = 1;
+            char Switch[ 7 ];
 
-            Switch[0] = '-';
+            Switch[ 0 ] = '-';
 
-            while( szSwitch[j] && !HB_COMP_PARAM->fExit )
+            while( szSwitch[ j ] && ! HB_COMP_PARAM->fExit )
             {
-               Switch[1] = szSwitch[j];
+               Switch[ 1 ] = szSwitch[ j ];
 
-               if( szSwitch[j + 1] == '-' )
+               if( szSwitch[ j + 1 ] == '-' )
                {
-                  Switch[2] = '-';
-                  Switch[3] = '\0';
+                  Switch[ 2 ] = '-';
+                  Switch[ 3 ] = '\0';
 
                   hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
 
@@ -751,29 +751,29 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                }
                else
                {
-                  switch( Switch[1] )
+                  switch( Switch[ 1 ] )
                   {
                      case 'b':
                      case 'B':
-                        if( ( szSwitch[j + 1] == 'U' || szSwitch[j + 1] == 'u' ) &&
-                            ( szSwitch[j + 2] == 'I' || szSwitch[j + 2] == 'i' ) &&
-                            ( szSwitch[j + 3] == 'L' || szSwitch[j + 3] == 'l' ) &&
-                            ( szSwitch[j + 4] == 'D' || szSwitch[j + 4] == 'd' ) )
+                        if( ( szSwitch[ j + 1 ] == 'U' || szSwitch[ j + 1 ] == 'u' ) &&
+                            ( szSwitch[ j + 2 ] == 'I' || szSwitch[ j + 2 ] == 'i' ) &&
+                            ( szSwitch[ j + 3 ] == 'L' || szSwitch[ j + 3 ] == 'l' ) &&
+                            ( szSwitch[ j + 4 ] == 'D' || szSwitch[ j + 4 ] == 'd' ) )
                         {
-                           Switch[2] = 'U';
-                           Switch[3] = 'I';
-                           Switch[4] = 'L';
-                           Switch[5] = 'D';
-                           Switch[6] = '\0';
+                           Switch[ 2 ] = 'U';
+                           Switch[ 3 ] = 'I';
+                           Switch[ 4 ] = 'L';
+                           Switch[ 5 ] = 'D';
+                           Switch[ 6 ] = '\0';
 
                            hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
 
                            j += 5;
                            continue;
                         }
-                        else if( !szSwitch[j + 1] )
+                        else if( ! szSwitch[ j + 1 ] )
                         {
-                           Switch[2] = '\0';
+                           Switch[ 2 ] = '\0';
                            hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
                            j += 1;
                            continue;
@@ -782,24 +782,24 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'c':
                      case 'C':
-                        if( ( szSwitch[j + 1] == 'R' || szSwitch[j + 1] == 'r' ) &&
-                            ( szSwitch[j + 2] == 'E' || szSwitch[j + 2] == 'e' ) &&
-                            ( szSwitch[j + 3] == 'D' || szSwitch[j + 3] == 'd' ) )
+                        if( ( szSwitch[ j + 1 ] == 'R' || szSwitch[ j + 1 ] == 'r' ) &&
+                            ( szSwitch[ j + 2 ] == 'E' || szSwitch[ j + 2 ] == 'e' ) &&
+                            ( szSwitch[ j + 3 ] == 'D' || szSwitch[ j + 3 ] == 'd' ) )
                         {
-                           Switch[2] = 'R';
-                           Switch[3] = 'E';
-                           Switch[4] = 'D';
-                           Switch[5] = '\0';
+                           Switch[ 2 ] = 'R';
+                           Switch[ 3 ] = 'E';
+                           Switch[ 4 ] = 'D';
+                           Switch[ 5 ] = '\0';
 
                            j += 4;
 
-                           if( szSwitch[j] == 'I' || szSwitch[j] == 'i' )
+                           if( szSwitch[ j ] == 'I' || szSwitch[ j ] == 'i' )
                            {
                               j++;
-                              if( szSwitch[j] == 'T' || szSwitch[j] == 't' )
+                              if( szSwitch[ j ] == 'T' || szSwitch[ j ] == 't' )
                               {
                                  j++;
-                                 if( szSwitch[j] == 'S' || szSwitch[j] == 's' )
+                                 if( szSwitch[ j ] == 'S' || szSwitch[ j ] == 's' )
                                  {
                                     j++;
                                  }
@@ -809,7 +809,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         }
                         else
                         {
-                           Switch[2] = '\0';
+                           Switch[ 2 ] = '\0';
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, Switch, NULL );
                         }
                         continue;
@@ -825,26 +825,26 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'e':
                      case 'E':
-                        if( ( szSwitch[j + 1] == 'S' || szSwitch[j + 1] == 's' ) &&
-                              HB_ISDIGIT( szSwitch[j + 2] ) )
+                        if( ( szSwitch[ j + 1 ] == 'S' || szSwitch[ j + 1 ] == 's' ) &&
+                            HB_ISDIGIT( szSwitch[ j + 2 ] ) )
                         {
-                           Switch[2] = 'S';
-                           Switch[3] = szSwitch[j + 2];
-                           Switch[4] = '\0';
+                           Switch[ 2 ] = 'S';
+                           Switch[ 3 ] = szSwitch[ j + 2 ];
+                           Switch[ 4 ] = '\0';
 
                            hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
                            j += 3;
                         }
                         else
                         {
-                           Switch[2] = '\0';
+                           Switch[ 2 ] = '\0';
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, Switch, NULL );
                         }
                         continue;
 
                      case 'g':
                      case 'G':
-                        if( szSwitch[j + 1] == 'd' || szSwitch[j + 1] == 'D' )
+                        if( szSwitch[ j + 1 ] == 'd' || szSwitch[ j + 1 ] == 'D' )
                         {
                            szSwitch += ( j - 1 );
                            hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
@@ -853,20 +853,20 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         else
                         {
                            /* Required argument */
-                           Switch[2] = szSwitch[j + 1];
-                           if( Switch[2] )
+                           Switch[ 2 ] = szSwitch[ j + 1 ];
+                           if( Switch[ 2 ] )
                            {
-                              if( HB_ISDIGIT( szSwitch[j + 2] ) )
+                              if( HB_ISDIGIT( szSwitch[ j + 2 ] ) )
                               {
                                  /* Optional argument */
-                                 Switch[3] = szSwitch[j + 2];
-                                 Switch[4] = '\0';
+                                 Switch[ 3 ] = szSwitch[ j + 2 ];
+                                 Switch[ 4 ] = '\0';
                                  j += 3;
                               }
                               else
                               {
                                  /* No optional argument */
-                                 Switch[3] = '\0';
+                                 Switch[ 3 ] = '\0';
                                  j += 2;
                               }
                               hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
@@ -904,17 +904,17 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                      case 'n':
                      case 'N':
                         /* Required argument */
-                        if( szSwitch[j + 1] )
+                        if( szSwitch[ j + 1 ] )
                         {
                            /* Optional argument */
-                           Switch[2] = szSwitch[j + 1];
-                           Switch[3] = '\0';
+                           Switch[ 2 ] = szSwitch[ j + 1 ];
+                           Switch[ 3 ] = '\0';
                            j += 2;
                         }
                         else
                         {
                            /* No optional argument */
-                           Switch[2] = '\0';
+                           Switch[ 2 ] = '\0';
                            j += 1;
                         }
                         hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
@@ -931,7 +931,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'p':
                      case 'P':
-                        if( szSwitch[j + 1] )
+                        if( szSwitch[ j + 1 ] )
                         {
                            szSwitch += ( j - 1 );
                            hb_compChkEnvironVar( HB_COMP_PARAM, szSwitch );
@@ -941,7 +941,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         }
                         else
                         {
-                           Switch[2] = '\0';
+                           Switch[ 2 ] = '\0';
                            hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
                            j++;
                         }
@@ -949,10 +949,10 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'q':
                      case 'Q':
-                        if( HB_ISDIGIT( szSwitch[j + 1] ) )
+                        if( HB_ISDIGIT( szSwitch[ j + 1 ] ) )
                         {
-                           Switch[2] = szSwitch[j + 1];
-                           Switch[3] = '\0';
+                           Switch[ 2 ] = szSwitch[ j + 1 ];
+                           Switch[ 3 ] = '\0';
 
                            hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
 
@@ -961,7 +961,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         }
                         else
                         {
-                           Switch[2] = '\0';
+                           Switch[ 2 ] = '\0';
                            hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
                         }
 
@@ -976,12 +976,12 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                      case 's':
                      case 'S':
                         ++j;
-                        Switch[2] = Switch[3] = Switch[4] = '\0';
-                        if( szSwitch[j] == 'm' || szSwitch[j] == 'M' )
+                        Switch[ 2 ] = Switch[ 3 ] = Switch[ 4 ] = '\0';
+                        if( szSwitch[ j ] == 'm' || szSwitch[ j ] == 'M' )
                         {
-                           Switch[2] = szSwitch[j++];
-                           if( HB_ISDIGIT( szSwitch[j] ) || szSwitch[j] == '-' )
-                              Switch[3] = szSwitch[j++];
+                           Switch[ 2 ] = szSwitch[ j++ ];
+                           if( HB_ISDIGIT( szSwitch[ j ] ) || szSwitch[ j ] == '-' )
+                              Switch[ 3 ] = szSwitch[ j++ ];
                         }
                         hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
                         continue;
@@ -997,10 +997,10 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
                      case 'w':
                      case 'W':
-                        if( HB_ISDIGIT( szSwitch[j + 1] ) )
+                        if( HB_ISDIGIT( szSwitch[ j + 1 ] ) )
                         {
-                           Switch[2] = szSwitch[j + 1];
-                           Switch[3] = '\0';
+                           Switch[ 2 ] = szSwitch[ j + 1 ];
+                           Switch[ 3 ] = '\0';
 
                            hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
 
@@ -1009,7 +1009,7 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                         }
                         else
                         {
-                           Switch[2] = '\0';
+                           Switch[ 2 ] = '\0';
                            hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
                         }
 
@@ -1027,29 +1027,29 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
                      case '-':
                      {
                         int l = ++j;
-                        while( szSwitch[j] && !HB_ISOPTSEP( szSwitch[j] ) )
+                        while( szSwitch[ j ] && ! HB_ISOPTSEP( szSwitch[ j ] ) )
                            j++;
-                        if( szSwitch[l-1] == '-' && j-l == 7 &&
-                            memcmp( &szSwitch[l], "version", 7 ) == 0 )
+                        if( szSwitch[ l - 1 ] == '-' && j - l == 7 &&
+                            memcmp( &szSwitch[ l ], "version", 7 ) == 0 )
                         {
                            HB_COMP_PARAM->fLogo = HB_TRUE;
                            HB_COMP_PARAM->fQuiet = HB_TRUE;
                         }
-                        else if( szSwitch[l-1] == '-' && j-l == 4 &&
-                            memcmp( &szSwitch[l], "help", 4 ) == 0 )
+                        else if( szSwitch[ l - 1 ] == '-' && j - l == 4 &&
+                                 memcmp( &szSwitch[ l ], "help", 4 ) == 0 )
                         {
                            HB_COMP_PARAM->fLogo = HB_TRUE;
                            HB_COMP_PARAM->fQuiet = HB_FALSE;
                            HB_COMP_PARAM->fExit = HB_FALSE;
                         }
                         else
-                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, &szSwitch[l], NULL );
-                        if( szSwitch[j] )
+                           hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'F', HB_COMP_ERR_BADOPTION, &szSwitch[ l ], NULL );
+                        if( szSwitch[ j ] )
                            ++j;
                         continue;
                      }
                      default:
-                        Switch[2] = '\0';
+                        Switch[ 2 ] = '\0';
                         hb_compChkEnvironVar( HB_COMP_PARAM, Switch );
                   }
                }
@@ -1059,18 +1059,18 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
             continue;
          }
 
-         while( !HB_COMP_PARAM->fExit )
+         while( ! HB_COMP_PARAM->fExit )
          {
             int j = 1;
-            const char *szSwitch1 = szSwitch + j; /* hack to avoid what is seems a bug in 'Apple clang version 2.1 (tags/Apple/clang-163.7.1) (based on LLVM 3.0svn)' / XCode 4.1 [vszakats] */
+            const char * szSwitch1 = szSwitch + j; /* hack to avoid what is seems a bug in 'Apple clang version 2.1 (tags/Apple/clang-163.7.1) (based on LLVM 3.0svn)' / XCode 4.1 [vszakats] */
 
-            while( *szSwitch1 && !HB_ISOPTSEP( *szSwitch1 ) )
+            while( *szSwitch1 && ! HB_ISOPTSEP( *szSwitch1 ) )
             {
                j++;
                szSwitch1++;
             }
 
-            if( szSwitch[j] == '/' )
+            if( szSwitch[ j ] == '/' )
             {
                char * szTmp = hb_strndup( szSwitch, j );
                hb_compChkEnvironVar( HB_COMP_PARAM, szTmp );
@@ -1085,15 +1085,14 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
          }
       }
    }
-   else
-      /* Chech the environment variables */
+   else /* Check the environment variables */
    {
       /* NOTE: CLIPPERCMD enviroment variable
          is overriden if HARBOURCMD exists
        */
-      char *szStrEnv = hb_getenv( "HARBOURCMD" );
+      char * szStrEnv = hb_getenv( "HARBOURCMD" );
 
-      if( !szStrEnv || szStrEnv[0] == '\0' )
+      if( ! szStrEnv || szStrEnv[ 0 ] == '\0' )
       {
          if( szStrEnv )
             hb_xfree( szStrEnv );
@@ -1103,10 +1102,10 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
       if( szStrEnv )
       {
-         char *szSwitch, *szPtr;
+         char * szSwitch, * szPtr;
 
          szPtr = szStrEnv;
-         while( *szPtr && !HB_COMP_PARAM->fExit )
+         while( *szPtr && ! HB_COMP_PARAM->fExit )
          {
             while( *szPtr == ' ' )
                ++szPtr;
@@ -1131,25 +1130,25 @@ void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const Args[]
 
 void hb_compChkPaths( HB_COMP_DECL )
 {
-   char *szInclude = hb_getenv( "INCLUDE" );
+   char * szInclude = hb_getenv( "INCLUDE" );
 
    if( szInclude )
    {
-      if( szInclude[0] != '\0' )
+      if( szInclude[ 0 ] != '\0' )
          hb_pp_addSearchPath( HB_COMP_PARAM->pLex->pPP, szInclude, HB_FALSE );
       hb_xfree( szInclude );
    }
 }
 
-static void hb_compChkDefineSwitch( HB_COMP_DECL, const char *pszSwitch )
+static void hb_compChkDefineSwitch( HB_COMP_DECL, const char * pszSwitch )
 {
-   if( pszSwitch && HB_ISOPTSEP( pszSwitch[0] ) )
+   if( pszSwitch && HB_ISOPTSEP( pszSwitch[ 0 ] ) )
    {
-      if( pszSwitch[1] == 'd' || pszSwitch[1] == 'D' )
+      if( pszSwitch[ 1 ] == 'd' || pszSwitch[ 1 ] == 'D' )
       {
-         if( pszSwitch[2] )
+         if( pszSwitch[ 2 ] )
          {
-            char *szDefText = hb_strdup( pszSwitch + 2 ), *szAssign;
+            char * szDefText = hb_strdup( pszSwitch + 2 ), * szAssign;
 
             szAssign = strchr( szDefText, '=' );
             if( szAssign )
@@ -1158,23 +1157,23 @@ static void hb_compChkDefineSwitch( HB_COMP_DECL, const char *pszSwitch )
             hb_xfree( szDefText );
          }
       }
-      else if( ( pszSwitch[1] == 'U' || pszSwitch[1] == 'u' ) &&
-               ( pszSwitch[2] == 'N' || pszSwitch[2] == 'n' ) &&
-               ( pszSwitch[3] == 'D' || pszSwitch[3] == 'd' ) &&
-               ( pszSwitch[4] == 'E' || pszSwitch[4] == 'e' ) &&
-               ( pszSwitch[5] == 'F' || pszSwitch[5] == 'f' ) &&
-               pszSwitch[6] == ':' )
+      else if( ( pszSwitch[ 1 ] == 'U' || pszSwitch[ 1 ] == 'u' ) &&
+               ( pszSwitch[ 2 ] == 'N' || pszSwitch[ 2 ] == 'n' ) &&
+               ( pszSwitch[ 3 ] == 'D' || pszSwitch[ 3 ] == 'd' ) &&
+               ( pszSwitch[ 4 ] == 'E' || pszSwitch[ 4 ] == 'e' ) &&
+               ( pszSwitch[ 5 ] == 'F' || pszSwitch[ 5 ] == 'f' ) &&
+               pszSwitch[ 6 ] == ':' )
       {
          char *szDefText = hb_strdup( pszSwitch + 7 );
          unsigned int i = 0;
 
-         while( szDefText[i] && !HB_ISOPTSEP( szDefText[i] ) )
+         while( szDefText[ i ] && ! HB_ISOPTSEP( szDefText[ i ] ) )
          {
             i++;
          }
-         szDefText[i] = '\0';
+         szDefText[ i ] = '\0';
 
-         if( szDefText[0] )
+         if( szDefText[ 0 ] )
          {
             if( hb_stricmp( szDefText, ".ARCH." ) == 0 )
                hb_pp_delDefine( HB_COMP_PARAM->pLex->pPP, szDefText );
@@ -1190,9 +1189,9 @@ void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const Args[] )
    {
       /* NOTE: CLIPPERCMD enviroment variable is overriden
          if HARBOURCMD exists */
-      char *szStrEnv = hb_getenv( "HARBOURCMD" );
+      char * szStrEnv = hb_getenv( "HARBOURCMD" );
 
-      if( !szStrEnv || szStrEnv[0] == '\0' )
+      if( ! szStrEnv || szStrEnv[ 0 ] == '\0' )
       {
          if( szStrEnv )
             hb_xfree( szStrEnv );
@@ -1202,10 +1201,10 @@ void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const Args[] )
 
       if( szStrEnv )
       {
-         char *szSwitch, *szPtr;
+         char * szSwitch, * szPtr;
 
          szPtr = szStrEnv;
-         while( *szPtr && !HB_COMP_PARAM->fExit )
+         while( *szPtr && ! HB_COMP_PARAM->fExit )
          {
             while( *szPtr == ' ' )
                ++szPtr;
@@ -1234,6 +1233,6 @@ void hb_compChkDefines( HB_COMP_DECL, int iArg, const char * const Args[] )
       /* Check all switches in command line They start with an OS_OPT_DELIMITER
          char */
       for( i = 1; i < iArg; i++ )
-         hb_compChkDefineSwitch( HB_COMP_PARAM, Args[i] );
+         hb_compChkDefineSwitch( HB_COMP_PARAM, Args[ i ] );
    }
 }

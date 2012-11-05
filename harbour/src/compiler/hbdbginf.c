@@ -101,7 +101,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
 
             if( ulLine != 0 )
             {
-               if( !pInfo )
+               if( ! pInfo )
                {
                   int i;
 
@@ -117,7 +117,7 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
                         break;
                      pInfo = pInfo->pNext;
                   }
-                  if( !pInfo )
+                  if( ! pInfo )
                   {
                      pInfo = ( PHB_DEBUGINFO ) hb_xgrab( sizeof( HB_DEBUGINFO ) );
                      pInfo->pszModuleName = hb_strndup( pszModuleName, i );

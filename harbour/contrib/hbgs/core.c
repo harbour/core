@@ -88,7 +88,7 @@ HB_FUNC( HB_GS )
          code  = gsapi_init_with_args( minst, gsargc, gsargv );
          code1 = gsapi_exit( minst );
 
-         if( ( code == 0 ) || ( code == e_Quit ) )
+         if( code == 0 || code == e_Quit )
             code = code1;
 
          gsapi_delete_instance( minst );

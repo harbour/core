@@ -64,7 +64,7 @@ static void hb_pp_ErrorMessage( void * cargo, const char * const szMsgTable[],
                                 char cPrefix, int iCode,
                                 const char * szParam1, const char * szParam2 )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_pp_ErrorGen(%p, %p, %c, %d, %s, %s)", cargo, szMsgTable, cPrefix, iCode, szParam1, szParam2));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pp_ErrorGen(%p, %p, %c, %d, %s, %s)", cargo, szMsgTable, cPrefix, iCode, szParam1, szParam2 ) );
 
    HB_SYMBOL_UNUSED( cargo );
 
@@ -106,10 +106,10 @@ static HB_GARBAGE_FUNC( hb_pp_Destructor )
 {
    PHB_PP_STATE * pStatePtr = ( PHB_PP_STATE * ) Cargo;
 
-   if( * pStatePtr )
+   if( *pStatePtr )
    {
-      hb_pp_free( * pStatePtr );
-      * pStatePtr = NULL;
+      hb_pp_free( *pStatePtr );
+      *pStatePtr = NULL;
    }
 }
 
@@ -144,10 +144,10 @@ static void hb_pp_StdRules( PHB_ITEM ppItem )
 PHB_PP_STATE hb_pp_Param( int iParam )
 {
    PHB_PP_STATE * pStatePtr =
-                  ( PHB_PP_STATE * ) hb_parptrGC( &s_gcPPFuncs, iParam );
+      ( PHB_PP_STATE * ) hb_parptrGC( &s_gcPPFuncs, iParam );
 
    if( pStatePtr )
-      return * pStatePtr;
+      return *pStatePtr;
    else
       return NULL;
 }
@@ -180,7 +180,7 @@ HB_FUNC( __PP_INIT )
       if( szPath )
          hb_pp_addSearchPath( pState, szPath, HB_TRUE );
 
-      if( !szStdCh )
+      if( ! szStdCh )
          hb_pp_StdRules( ppItem );
       else if( *szStdCh )
          hb_pp_readRules( pState, szStdCh );

@@ -51,13 +51,13 @@
  */
 
 /*
-patterm format:
+   patterm format:
    '%' [<flags>*] [<field width>] [.<precision>] [<length modifier>]
        <conversion specifier>
  */
 
 /*
-The folowwing conversions are not explicitly supported:
+   The folowwing conversions are not explicitly supported:
       A, a
       E, e
       G, g
@@ -68,23 +68,23 @@ The folowwing conversions are not explicitly supported:
       S (or Ls)
    These are wide character conversions and needs locale settings.
 
-double conversion if not necessary can be disabled to not create unnencessary
-overhead and/or references to math library by
-   #define __NO_DOUBLE__
-It can be also greatly optimized anyhow it will increase dependences list and
-reduce portability.
-Internally 'long double' is used for all calculations. If some platforms do
-not support it then it can be eliminated by
-   #define __NO_LONGDOUBLE__
+   double conversion if not necessary can be disabled to not create unnencessary
+   overhead and/or references to math library by
+      #define __NO_DOUBLE__
+   It can be also greatly optimized anyhow it will increase dependences list and
+   reduce portability.
+   Internally 'long double' is used for all calculations. If some platforms do
+   not support it then it can be eliminated by
+      #define __NO_LONGDOUBLE__
 
-If positional parameters are not necessary then support for them can be
-disabled by
-   #define __NO_ARGPOS__
-In such case this code neither allocates memory nor extensively use stack
-as memory buffer. All conversions are done "on the fly". If memory
-allocations or stack size is not a problem then some parts can be easy
-optimized.
-*/
+   If positional parameters are not necessary then support for them can be
+   disabled by
+      #define __NO_ARGPOS__
+   In such case this code neither allocates memory nor extensively use stack
+   as memory buffer. All conversions are done "on the fly". If memory
+   allocations or stack size is not a problem then some parts can be easy
+   optimized.
+ */
 
 
 /* #define __NO_DOUBLE__ */
@@ -102,11 +102,11 @@ optimized.
 #include <sys/param.h>
 #endif
 
-#if defined( HB_LONG_DOUBLE_OFF ) && !defined( __NO_LONGDOUBLE__ )
+#if defined( HB_LONG_DOUBLE_OFF ) && ! defined( __NO_LONGDOUBLE__ )
 #  define __NO_LONGDOUBLE__
 #endif
 
-#if defined( HB_LONG_LONG_OFF ) && !defined( __NO_LONGLONG__ )
+#if defined( HB_LONG_LONG_OFF ) && ! defined( __NO_LONGLONG__ )
 #  define __NO_LONGLONG__
 #endif
 

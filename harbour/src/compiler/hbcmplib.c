@@ -67,7 +67,7 @@ static void s_pp_msg( void * cargo, int iErrorFmt, int iLine,
       PHB_ITEM pError;
 
       hb_snprintf( szMsgBuf, sizeof( szMsgBuf ), szText, szPar1, szPar2 );
-      if( !szModule || *szModule == 0 || strcmp( szModule, "{SOURCE}.prg" ) == 0 )
+      if( ! szModule || *szModule == 0 || strcmp( szModule, "{SOURCE}.prg" ) == 0 )
          hb_snprintf( szLine, sizeof( szLine ),
                       "line:%i", iLine );
       else
@@ -85,7 +85,7 @@ static int s_pp_openFile( void * cargo, char * szFileName,
                           HB_BOOL fBefore, HB_BOOL fSysFile, HB_BOOL fBinary,
                           HB_PATHNAMES * pIncludePaths,
                           HB_BOOL * pfNested, FILE ** file_ptr,
-                          const char ** pBufPtr, HB_SIZE *pnLen, HB_BOOL *pfFree )
+                          const char ** pBufPtr, HB_SIZE * pnLen, HB_BOOL * pfFree )
 {
    HB_SYMBOL_UNUSED( fSysFile );
    HB_SYMBOL_UNUSED( fBinary );
@@ -93,7 +93,7 @@ static int s_pp_openFile( void * cargo, char * szFileName,
    HB_SYMBOL_UNUSED( pfNested );
    HB_SYMBOL_UNUSED( file_ptr );
 
-   if( !fBefore )
+   if( ! fBefore )
    {
       HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
       PHB_ITEM pIncItem = ( PHB_ITEM ) HB_COMP_PARAM->cargo;
@@ -135,11 +135,11 @@ static void hb_compGenArgList( int iFirst, int iLast,
 
    if( pMsgFunc )
    {
-      * pMsgFunc = NULL;
+      *pMsgFunc = NULL;
       if( HB_ISLOG( iFirst ) )
       {
          if( hb_parl( iFirst ) )
-            * pMsgFunc = s_pp_msg;
+            *pMsgFunc = s_pp_msg;
          ++iFirst;
       }
    }
@@ -197,8 +197,8 @@ static void hb_compGenArgList( int iFirst, int iLast,
    }
    argv[ argc ] = NULL;
 
-   * pArgC = argc;
-   * pArgV = argv;
+   *pArgC = argc;
+   *pArgV = argv;
 }
 
 HB_FUNC( HB_COMPILE )

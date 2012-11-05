@@ -56,7 +56,7 @@
 
 #include "hbapi.h"
 
-#define ASIZE UCHAR_MAX
+#define ASIZE  UCHAR_MAX
 
 static void preBmBc( const char * needle, HB_ISIZ m, HB_ISIZ bmBc[] )
 {
@@ -161,9 +161,9 @@ HB_ISIZ hb_strAtTBM( const char * needle, HB_ISIZ m, const char * haystack, HB_I
             u = HB_MIN( m - shift, v );
          else
          {
-           if( turboShift < bcShift )
-              shift = HB_MAX( shift, u + 1 );
-           u = 0;
+            if( turboShift < bcShift )
+               shift = HB_MAX( shift, u + 1 );
+            u = 0;
          }
       }
       j += shift;

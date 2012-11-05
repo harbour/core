@@ -74,7 +74,7 @@
 #define HB_MEMSTR_BLOCK_MAX   256
 
 #ifndef HB_MEMFILER
-#  define HB_MEMFILER  0xff
+#  define HB_MEMFILER         0xff
 #endif
 
 typedef struct _HB_MEMINFO
@@ -86,17 +86,17 @@ typedef struct _HB_MEMINFO
 } HB_MEMINFO, * PHB_MEMINFO;
 
 #ifdef HB_ALLOC_ALIGNMENT
-#  define HB_MEMINFO_SIZE     ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
-                                ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT )
+#  define HB_MEMINFO_SIZE  ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
+                             ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT )
 #else
-#  define HB_MEMINFO_SIZE     sizeof( HB_MEMINFO )
+#  define HB_MEMINFO_SIZE  sizeof( HB_MEMINFO )
 #endif
 
-static PHB_MEMINFO s_pMemBlocks = NULL;
-static HB_ISIZ s_nMemoryBlocks = 0;      /* memory blocks used */
-static HB_ISIZ s_nMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
-static HB_ISIZ s_nMemoryMaxConsumed = 0; /* memory size consumed */
-static HB_ISIZ s_nMemoryConsumed = 0;    /* memory max size consumed */
+static PHB_MEMINFO s_pMemBlocks         = NULL;
+static HB_ISIZ     s_nMemoryBlocks      = 0; /* memory blocks used */
+static HB_ISIZ     s_nMemoryMaxBlocks   = 0; /* maximum number of used memory blocks */
+static HB_ISIZ     s_nMemoryMaxConsumed = 0; /* memory size consumed */
+static HB_ISIZ     s_nMemoryConsumed    = 0; /* memory max size consumed */
 
 #endif /* HB_FM_STATISTICS */
 
@@ -175,7 +175,7 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
 
       if( ( ( PHB_MEMINFO ) pResult )->pNextBlock )
          ( ( PHB_MEMINFO ) pResult )->pNextBlock->pPrevBlock = ( PHB_MEMINFO ) pResult;
-         s_nMemoryConsumed += ( nSize - nMemSize );
+      s_nMemoryConsumed += ( nSize - nMemSize );
 
       if( s_nMemoryMaxConsumed < s_nMemoryConsumed )
          s_nMemoryMaxConsumed = s_nMemoryConsumed;
@@ -270,22 +270,22 @@ static char * hb_memToStr( char * szBuffer, void * pMem, HB_SIZE nSize )
       /* format as string of original chars */
       for( i = 0; i < iSize; ++i )
          if( ( byMem[ i ] & 0x7f ) >= 0x20 )
-            * pDest++ = byMem[ i ];
+            *pDest++ = byMem[ i ];
          else
-            * pDest++ = '.';
+            *pDest++ = '.';
    }
    else
    {
-     /* format as hex */
+      /* format as hex */
       for( i = 0; i < iSize; ++i )
       {
          int iLo = byMem[ i ] & 0x0f, iHi = byMem[ i ] >> 4;
-         * pDest++ = '\\';
-         * pDest++ = iHi <= 9 ? '0' + iHi : 'A' - 10 + iHi;
-         * pDest++ = iLo <= 9 ? '0' + iLo : 'A' - 10 + iLo;
+         *pDest++ = '\\';
+         *pDest++ = iHi <= 9 ? '0' + iHi : 'A' - 10 + iHi;
+         *pDest++ = iLo <= 9 ? '0' + iLo : 'A' - 10 + iLo;
       }
    }
-   * pDest = '\0';
+   *pDest = '\0';
 
    return szBuffer;
 }
@@ -335,7 +335,7 @@ void hb_errInternal( HB_ERRCODE errCode, const char * szText, const char * szPar
 {
    char buffer[ 1024 ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2 ) );
 
    hb_conOutErr( hb_conNewLine(), 0 );
    hb_snprintf( buffer, sizeof( buffer ), "Unrecoverable error %d: ", errCode );
@@ -387,25 +387,25 @@ HB_SIZE hb_cdpTextPos( PHB_CODEPAGE cdp, const char * pText, HB_SIZE nSize, HB_S
 }
 
 HB_BOOL hb_cdpCharEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1, HB_SIZE * pnPos1,
-                                        const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
+                      const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
 {
    HB_SYMBOL_UNUSED( cdp );
 
    if( *pnPos1 < nLen1 && *pnPos2 < nLen2 )
-      return szText1[ ( * pnPos1 )++ ] == szText2[ ( * pnPos2 )++ ];
+      return szText1[ ( *pnPos1 )++ ] == szText2[ ( *pnPos2 )++ ];
    else
       return HB_FALSE;
 }
 
 HB_BOOL hb_cdpCharCaseEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1, HB_SIZE * pnPos1,
-                                            const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
+                          const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
 {
    HB_SYMBOL_UNUSED( cdp );
 
    if( *pnPos1 < nLen1 && *pnPos2 < nLen2 )
    {
-      HB_UCHAR uc1 = szText1[ ( * pnPos1 )++ ],
-               uc2 = szText2[ ( * pnPos2 )++ ];
+      HB_UCHAR uc1 = szText1[ ( *pnPos1 )++ ],
+               uc2 = szText2[ ( *pnPos2 )++ ];
       return HB_TOUPPER( uc1 ) == HB_TOUPPER( uc2 );
    }
    else
@@ -476,9 +476,9 @@ static HB_TRACEINFO s_traceInfo;
 void hb_traceset( int level, const char * file, int line, const char * proc )
 {
    s_traceInfo.level = level;
-   s_traceInfo.file = file;
-   s_traceInfo.line = line;
-   s_traceInfo.proc = proc;
+   s_traceInfo.file  = file;
+   s_traceInfo.line  = line;
+   s_traceInfo.proc  = proc;
 }
 
 PHB_TRACEINFO hb_traceinfo( void )
@@ -522,7 +522,7 @@ const char * hb_fsNameConv( const char * szFileName, char ** pszFree )
 
       if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
       {
-         char *p = ( char * ) szFileName;
+         char * p = ( char * ) szFileName;
          while( *p )
          {
             if( *p == s_cDirSep )
@@ -613,7 +613,7 @@ HB_WCHAR * hb_fsNameConvU16( const char * szFileName )
 
       if( s_cDirSep != HB_OS_PATH_DELIM_CHR )
       {
-         char *p = ( char * ) szFileName;
+         char * p = ( char * ) szFileName;
          while( *p )
          {
             if( *p == s_cDirSep )
@@ -701,31 +701,31 @@ void hb_compChkFileSwitches( int argc, char * argv[] )
 
    for( i = 1; i < argc; ++i )
    {
-      if( HB_ISOPTSEP( argv[i][0] ) && argv[i][1] == 'f' )
+      if( HB_ISOPTSEP( argv[ i ][ 0 ] ) && argv[ i ][ 1 ] == 'f' )
       {
          n = 0;
-         switch( argv[i][2] )
+         switch( argv[ i ][ 2 ] )
          {
             case 'n':
-               if( !argv[i][3] )
+               if( ! argv[ i ][ 3 ] )
                {
                   s_iFileCase = HB_SET_CASE_MIXED;
                   n = 3;
                }
-               else if( argv[i][3] == ':' )
+               else if( argv[ i ][ 3 ] == ':' )
                {
-                  if( argv[i][4] == 'u' )
+                  if( argv[ i ][ 4 ] == 'u' )
                   {
                      s_iFileCase = HB_SET_CASE_UPPER;
                      n = 5;
                   }
-                  else if( argv[i][4] == 'l' )
+                  else if( argv[ i ][ 4 ] == 'l' )
                   {
                      s_iFileCase = HB_SET_CASE_LOWER;
                      n = 5;
                   }
                }
-               else if( argv[i][3] == '-' )
+               else if( argv[ i ][ 3 ] == '-' )
                {
                   s_iFileCase = HB_SET_CASE_MIXED;
                   n = 4;
@@ -733,25 +733,25 @@ void hb_compChkFileSwitches( int argc, char * argv[] )
                break;
 
             case 'd':
-               if( !argv[i][3] )
+               if( ! argv[ i ][ 3 ] )
                {
                   s_iDirCase = HB_SET_CASE_MIXED;
                   n = 3;
                }
-               else if( argv[i][3] == ':' )
+               else if( argv[ i ][ 3 ] == ':' )
                {
-                  if( argv[i][4] == 'u' )
+                  if( argv[ i ][ 4 ] == 'u' )
                   {
                      s_iDirCase = HB_SET_CASE_UPPER;
                      n = 5;
                   }
-                  else if( argv[i][4] == 'l' )
+                  else if( argv[ i ][ 4 ] == 'l' )
                   {
                      s_iDirCase = HB_SET_CASE_LOWER;
                      n = 5;
                   }
                }
-               else if( argv[i][3] == '-' )
+               else if( argv[ i ][ 3 ] == '-' )
                {
                   s_iDirCase = HB_SET_CASE_MIXED;
                   n = 4;
@@ -759,30 +759,30 @@ void hb_compChkFileSwitches( int argc, char * argv[] )
                break;
 
             case 'p':
-               if( !argv[i][3] )
+               if( ! argv[ i ][ 3 ] )
                {
                   s_cDirSep = HB_OS_PATH_DELIM_CHR;
                   n = 3;
                }
-               else if( argv[i][3] == '-' )
+               else if( argv[ i ][ 3 ] == '-' )
                {
                   s_cDirSep = HB_OS_PATH_DELIM_CHR;
                   n = 4;
                }
-               else if( argv[i][3] == ':' && argv[i][4] )
+               else if( argv[ i ][ 3 ] == ':' && argv[ i ][ 4 ] )
                {
-                  s_cDirSep = argv[i][4];
+                  s_cDirSep = argv[ i ][ 4 ];
                   n = 5;
                }
                break;
 
             case 's':
-               if( !argv[i][3] )
+               if( ! argv[ i ][ 3 ] )
                {
                   s_fFnTrim = HB_TRUE;
                   n = 3;
                }
-               else if( argv[i][3] == '-' )
+               else if( argv[ i ][ 3 ] == '-' )
                {
                   s_fFnTrim = HB_FALSE;
                   n = 4;
@@ -791,11 +791,11 @@ void hb_compChkFileSwitches( int argc, char * argv[] )
          }
          if( n )
          {
-            argv[i] += n;
-            if( argv[i][0] )
+            argv[ i ] += n;
+            if( argv[ i ][ 0 ] )
                --i;
             else
-               argv[i] = ( char * ) "-";
+               argv[ i ] = ( char * ) "-";
          }
       }
    }

@@ -59,7 +59,7 @@ typedef struct HB_stru_fix_info
    HB_COMP_DECL;
 } HB_FIX_INFO, * HB_FIX_INFO_PTR;
 
-#define HB_FIX_FUNC( func ) HB_PCODE_FUNC( func, HB_FIX_INFO_PTR )
+#define HB_FIX_FUNC( func )  HB_PCODE_FUNC( func, HB_FIX_INFO_PTR )
 typedef HB_FIX_FUNC( HB_FIX_FUNC_ );
 typedef HB_FIX_FUNC_ * HB_FIX_FUNC_PTR;
 

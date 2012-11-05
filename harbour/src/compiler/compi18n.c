@@ -89,7 +89,7 @@ void hb_compI18nFree( HB_COMP_DECL )
    }
 }
 
-static int hb_compI18nCompare( PHB_I18NSTRING pString, const char* pText, const char* pContext )
+static int hb_compI18nCompare( PHB_I18NSTRING pString, const char * pText, const char * pContext )
 {
    int  i;
 
@@ -100,7 +100,7 @@ static int hb_compI18nCompare( PHB_I18NSTRING pString, const char* pText, const 
    return i;
 }
 
-static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char* szText, const char* szContext,
+static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char * szText, const char * szContext,
                                             const char * szModule, HB_UINT uiLine )
 {
    PHB_I18NTABLE  pI18n;
@@ -108,7 +108,7 @@ static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char* szText, co
    HB_UINT        uiLeft, uiRight, uiMiddle;
    int            iCompare;
 
-   if( !HB_COMP_PARAM->pI18n )
+   if( ! HB_COMP_PARAM->pI18n )
       HB_COMP_PARAM->pI18n = hb_compI18nCreate();
    pI18n = HB_COMP_PARAM->pI18n;
 
@@ -182,13 +182,13 @@ static PHB_I18NSTRING hb_compI18nAddSingle( HB_COMP_DECL, const char* szText, co
    return pString;
 }
 
-void hb_compI18nAdd( HB_COMP_DECL, const char* szText, const char* szContext,
+void hb_compI18nAdd( HB_COMP_DECL, const char * szText, const char * szContext,
                      const char * szModule, HB_UINT uiLine )
 {
    hb_compI18nAddSingle( HB_COMP_PARAM, szText, szContext, szModule, uiLine );
 }
 
-void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount, const char* szContext, const char * szModule, HB_UINT uiLine )
+void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount, const char * szContext, const char * szModule, HB_UINT uiLine )
 {
    PHB_I18NSTRING pString;
 
@@ -196,7 +196,7 @@ void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount
    if( ulCount == 1 )
    {
       /* set the same string as plural form to mark it as plural text */
-      if( !pString->uiPlurals )
+      if( ! pString->uiPlurals )
       {
          pString->szPlurals[ 0 ] = pString->szText;
          pString->uiPlurals = 1;
@@ -224,37 +224,37 @@ void hb_compI18nAddPlural( HB_COMP_DECL, const char ** szTexts, HB_ULONG ulCount
    }
 }
 
-static void hb_compI18nEscapeString( FILE* file, const char* szText )
+static void hb_compI18nEscapeString( FILE * file, const char * szText )
 {
-   while( * szText )
+   while( *szText )
    {
-      if( ( HB_UCHAR ) * szText < ' ' )
+      if( ( HB_UCHAR ) *szText < ' ' )
       {
-        if( * szText == '\t' )
-           fprintf( file, "\\t" );
-        else if( * szText == '\n' )
-           fprintf( file, "\\n" );
-        else if( * szText == '\r' )
-           fprintf( file, "\\r" );
-        else if( ( ( HB_UCHAR ) szText[ 1 ] >= '0' && ( HB_UCHAR ) szText[ 1 ] <= '9' ) ||
-                 ( ( HB_UCHAR ) szText[ 1 ] >= 'A' && ( HB_UCHAR ) szText[ 1 ] <= 'F' ) ||
-                 ( ( HB_UCHAR ) szText[ 1 ] >= 'a' && ( HB_UCHAR ) szText[ 1 ] <= 'f' ) )
-           fprintf( file, "\\%03o", * szText );
-        else
-           fprintf( file, "\\x%02X", * szText );
+         if( *szText == '\t' )
+            fprintf( file, "\\t" );
+         else if( *szText == '\n' )
+            fprintf( file, "\\n" );
+         else if( *szText == '\r' )
+            fprintf( file, "\\r" );
+         else if( ( ( HB_UCHAR ) szText[ 1 ] >= '0' && ( HB_UCHAR ) szText[ 1 ] <= '9' ) ||
+                  ( ( HB_UCHAR ) szText[ 1 ] >= 'A' && ( HB_UCHAR ) szText[ 1 ] <= 'F' ) ||
+                  ( ( HB_UCHAR ) szText[ 1 ] >= 'a' && ( HB_UCHAR ) szText[ 1 ] <= 'f' ) )
+            fprintf( file, "\\%03o", *szText );
+         else
+            fprintf( file, "\\x%02X", *szText );
       }
-      else if( * szText == '"' )
-        fprintf( file, "\\\"" );
-      else if( * szText == '\\' )
-        fprintf( file, "\\\\" );
+      else if( *szText == '"' )
+         fprintf( file, "\\\"" );
+      else if( *szText == '\\' )
+         fprintf( file, "\\\\" );
       else
-        fprintf( file, "%c", * szText );
+         fprintf( file, "%c", *szText );
 
       szText++;
    }
 }
 
-static char * hb_compI18nFileName( char* szBuffer, const char* szFileName )
+static char * hb_compI18nFileName( char * szBuffer, const char * szFileName )
 {
    HB_UINT ui = 0;
    char ch;
@@ -287,7 +287,7 @@ HB_BOOL hb_compI18nSave( HB_COMP_DECL, HB_BOOL fFinal )
    FILE*            file;
 
    pI18n = HB_COMP_PARAM->pI18n;
-   if( !pI18n )
+   if( ! pI18n )
       return HB_FALSE;
 
    FileName.szPath = FileName.szName = FileName.szExtension =

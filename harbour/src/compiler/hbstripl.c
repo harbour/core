@@ -58,7 +58,7 @@ HB_EXTERN_BEGIN
 
 typedef void HB_STRIP_INFO, * PHB_STRIP_INFO;
 
-#define HB_STRIP_FUNC( func ) HB_PCODE_FUNC( func, PHB_STRIP_INFO )
+#define HB_STRIP_FUNC( func )  HB_PCODE_FUNC( func, PHB_STRIP_INFO )
 typedef HB_STRIP_FUNC( HB_STRIP_FUNC_ );
 typedef HB_STRIP_FUNC_ * PHB_STRIP_FUNC;
 
@@ -73,7 +73,7 @@ static HB_STRIP_FUNC( hb_p_line )
          hb_compNOOPfill( pFunc, nPCodePos, 3, HB_FALSE, HB_FALSE );
          break;
       default:
-         if( !( ( HB_COMP_PTR ) cargo )->fDebugInfo )
+         if( ! ( ( HB_COMP_PTR ) cargo )->fDebugInfo )
          {
             HB_SIZE nNewPos = nPCodePos;
             switch( pFunc->pCode[ nPCodePos + 3 ] )

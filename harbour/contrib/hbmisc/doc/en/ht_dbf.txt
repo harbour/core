@@ -108,7 +108,6 @@
          NEXT
          USE
          RETURN
-         xed >
    $STATUS$
       R
    $COMPLIANCE$

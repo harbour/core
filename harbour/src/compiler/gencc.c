@@ -54,21 +54,25 @@
 #include "hbdate.h"
 #include "hbassert.h"
 
-#define HB_GENC_FUNC( func ) HB_PCODE_FUNC( func, PHB_LABEL_INFO )
+#define HB_GENC_FUNC( func )   HB_PCODE_FUNC( func, PHB_LABEL_INFO )
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
 typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
-#define HB_GENC_GETLABEL(l)   ( (l) < pFunc->nPCodePos ? cargo->pnLabels[ (l) ] : 0 )
+#define HB_GENC_GETLABEL( l )  ( ( l ) < pFunc->nPCodePos ? cargo->pnLabels[ ( l ) ] : 0 )
 
-#define HB_GENC_LABEL()       do { \
-                                 HB_SIZE nLab = HB_GENC_GETLABEL( nPCodePos ); \
-                                 if( nLab != 0 ) \
-                                    fprintf( cargo->yyc, "lab%05" HB_PFS "d: ;\n", nLab ); \
-                              } while( 0 )
+#define HB_GENC_LABEL()  \
+   do \
+   { \
+      HB_SIZE nLab = HB_GENC_GETLABEL( nPCodePos ); \
+      if( nLab != 0 ) \
+         fprintf( cargo->yyc, "lab%05" HB_PFS "d: ;\n", nLab ); \
+   } while( 0 )
 
-#define HB_GENC_ERROR(s)       do { \
-                                 fprintf( cargo->yyc, "\t#error: \"" s "\"\n" ); \
-                              } while( 0 )
+#define HB_GENC_ERROR( s )  \
+   do \
+   { \
+      fprintf( cargo->yyc, "\t#error: \"" s "\"\n" ); \
+   } while( 0 )
 
 void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen )
 {
@@ -106,9 +110,9 @@ static void hb_compGenCStrData( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen,
                                 int iMethod )
 {
 #ifdef __HB_CSTRING_SIZE_MAX
-   #if __HB_CSTRING_SIZE_MAX -0 < 1
+   #if __HB_CSTRING_SIZE_MAX - 0 < 1
       #undef __HB_CSTRING_SIZE_MAX
-      #define __HB_CSTRING_SIZE_MAX   4096
+      #define __HB_CSTRING_SIZE_MAX  4096
    #endif
    if( nLen > __HB_CSTRING_SIZE_MAX )
    {
@@ -1621,7 +1625,7 @@ static HB_GENC_FUNC( hb_p_seqend )
 
    if( nOffset == 4 ) /* no RECOVER clasue */
       fprintf( cargo->yyc, "\t} while( 0 );\n\tif( hb_xvmSeqEnd() ) break;\n" );
-   else /* RECOVER exists */
+   else               /* RECOVER exists */
       fprintf( cargo->yyc, "\tif( hb_xvmSeqEndTest() ) break;\n\tgoto lab%05" HB_PFS "d;\n\t} while( 0 );\n",
                HB_GENC_GETLABEL( nPCodePos + nOffset ) );
    cargo->iNestedBlock--;
@@ -1836,8 +1840,9 @@ static HB_GENC_FUNC( hb_p_switch )
          fprintf( cargo->yyc, "\t\tconst char * pszText;\n\t\tHB_SIZE nLen;\n" );
       if( fNum )
          fprintf( cargo->yyc, "\t\tlong lVal;\n" );
-      fprintf( cargo->yyc, "\t\tif( hb_xvmSwitchGet( &pSwitch ) ) break;\n"
-                           "\t\ttype = hb_itemType( pSwitch );\n" );
+      fprintf( cargo->yyc, 
+               "\t\tif( hb_xvmSwitchGet( &pSwitch ) ) break;\n"
+               "\t\ttype = hb_itemType( pSwitch );\n" );
       if( fStr )
       {
          fprintf( cargo->yyc, "\t\tpszText = ( type & HB_IT_STRING ) ? hb_itemGetCPtr( pSwitch ) : NULL;\n" );
@@ -1889,7 +1894,7 @@ static HB_GENC_FUNC( hb_p_switch )
       fprintf( cargo->yyc, "\t\t{\n\t\t\thb_stackPop();\n\t\t\tgoto lab%05" HB_PFS "d;\n\t\t}\n",
                HB_GENC_GETLABEL( nNewPos ) );
    }
-   if( !fDefault )
+   if( ! fDefault )
       fprintf( cargo->yyc, "\t\thb_stackPop();\n" );
    if( fStr || fNum )
       fprintf( cargo->yyc, "\t}\n" );

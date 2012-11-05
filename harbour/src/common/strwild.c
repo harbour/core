@@ -53,13 +53,13 @@
 #include "hbapi.h"
 #include "hbapicdp.h"
 
-#if defined( HB_OS_UNIX ) && !defined( HB_NO_FNMATCH )
+#if defined( HB_OS_UNIX ) && ! defined( HB_NO_FNMATCH )
 #  include <fnmatch.h>
 #endif
 
-#define HB_MAX_WILDPATTERN     256
+#define HB_MAX_WILDPATTERN  256
 
-static HB_BOOL hb_strMatchWildRaw( const char *szString, const char *szPattern,
+static HB_BOOL hb_strMatchWildRaw( const char * szString, const char * szPattern,
                                    HB_BOOL fExact, HB_BOOL fCase )
 {
    HB_BOOL fMatch = HB_TRUE, fAny = HB_FALSE;
@@ -71,7 +71,7 @@ static HB_BOOL hb_strMatchWildRaw( const char *szString, const char *szPattern,
    nPosP = nPosV = nAny = 0;
    nLen = strlen( szString );
    nSize = strlen( szPattern );
-   while( nPosP < nSize || ( fExact && !fAny && nPosV < nLen ) )
+   while( nPosP < nSize || ( fExact && ! fAny && nPosV < nLen ) )
    {
       if( nPosP < nSize && szPattern[ nPosP ] == '*' )
       {
@@ -134,7 +134,7 @@ static HB_BOOL hb_strMatchWildRaw( const char *szString, const char *szPattern,
    return fMatch;
 }
 
-static HB_BOOL hb_strMatchWildCDP( const char *szString, const char *szPattern,
+static HB_BOOL hb_strMatchWildCDP( const char * szString, const char * szPattern,
                                    HB_BOOL fExact, HB_BOOL fCase,
                                    PHB_CODEPAGE cdp )
 {
@@ -147,7 +147,7 @@ static HB_BOOL hb_strMatchWildCDP( const char *szString, const char *szPattern,
    nPosP = nPosV = nAny = 0;
    nLen = strlen( szString );
    nSize = strlen( szPattern );
-   while( nPosP < nSize || ( fExact && !fAny && nPosV < nLen ) )
+   while( nPosP < nSize || ( fExact && ! fAny && nPosV < nLen ) )
    {
       if( nPosP < nSize && szPattern[ nPosP ] == '*' )
       {
@@ -167,8 +167,8 @@ static HB_BOOL hb_strMatchWildCDP( const char *szString, const char *szPattern,
          }
          else if( fCase )
          {
-            if( !hb_cdpCharCaseEq( cdp, szString, nLen, &nPosV,
-                                        szPattern, nSize, &nPosP ) )
+            if( ! hb_cdpCharCaseEq( cdp, szString, nLen, &nPosV,
+                                    szPattern, nSize, &nPosP ) )
             {
                nPosV = nPV;
                nPosP = nPP;
@@ -176,8 +176,8 @@ static HB_BOOL hb_strMatchWildCDP( const char *szString, const char *szPattern,
          }
          else
          {
-            if( !hb_cdpCharEq( cdp, szString, nLen, &nPosV,
-                                    szPattern, nSize, &nPosP ) )
+            if( ! hb_cdpCharEq( cdp, szString, nLen, &nPosV,
+                                szPattern, nSize, &nPosP ) )
             {
                nPosV = nPV;
                nPosP = nPP;
@@ -236,7 +236,7 @@ static HB_BOOL hb_strMatchWildCDP( const char *szString, const char *szPattern,
    return fMatch;
 }
 
-HB_BOOL hb_strMatchWild( const char *szString, const char *szPattern )
+HB_BOOL hb_strMatchWild( const char * szString, const char * szPattern )
 {
    PHB_CODEPAGE cdp = hb_vmCDP();
 
@@ -246,7 +246,7 @@ HB_BOOL hb_strMatchWild( const char *szString, const char *szPattern )
       return hb_strMatchWildRaw( szString, szPattern, HB_FALSE, HB_FALSE );
 }
 
-HB_BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
+HB_BOOL hb_strMatchWildExact( const char * szString, const char * szPattern )
 {
    PHB_CODEPAGE cdp = hb_vmCDP();
 
@@ -256,7 +256,7 @@ HB_BOOL hb_strMatchWildExact( const char *szString, const char *szPattern )
       return hb_strMatchWildRaw( szString, szPattern, HB_TRUE, HB_FALSE );
 }
 
-HB_BOOL hb_strMatchCaseWildExact( const char *szString, const char *szPattern )
+HB_BOOL hb_strMatchCaseWildExact( const char * szString, const char * szPattern )
 {
    PHB_CODEPAGE cdp = hb_vmCDP();
 

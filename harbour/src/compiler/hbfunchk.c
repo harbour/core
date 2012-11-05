@@ -113,7 +113,7 @@ static const HB_FUNCINFO s_stdFunc[] =
    { "YEAR"      , 1,  1 }
 };
 
-#define HB_STD_FUNCOUNT    ( sizeof( s_stdFunc ) / sizeof( HB_FUNCINFO ) )
+#define HB_STD_FUNCOUNT  ( sizeof( s_stdFunc ) / sizeof( HB_FUNCINFO ) )
 
 HB_BOOL hb_compFunCallCheck( HB_COMP_DECL, const char * szFuncCall, int iArgs )
 {

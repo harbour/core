@@ -52,8 +52,8 @@
  *
  */
 
-#if !defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE 1
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
 #endif
 
 #define _HB_FFIND_INTERNAL_
@@ -75,7 +75,7 @@
       #include <sys/stat.h>
    #endif
    #include <dos.h>
-#if !defined( __WATCOMC__ )
+#if ! defined( __WATCOMC__ )
    #include <dir.h>
 #endif
    #include <time.h>
@@ -86,16 +86,16 @@
       struct find_t    entry;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
-   #define FA_ARCH      _A_ARCH
-   #define FA_DIREC     _A_SUBDIR
-   #define FA_HIDDEN    _A_HIDDEN
-   #define FA_RDONLY    _A_RDONLY
-   #define FA_LABEL     _A_VOLID
-   #define FA_SYSTEM    _A_SYSTEM
+   #define FA_ARCH    _A_ARCH
+   #define FA_DIREC   _A_SUBDIR
+   #define FA_HIDDEN  _A_HIDDEN
+   #define FA_RDONLY  _A_RDONLY
+   #define FA_LABEL   _A_VOLID
+   #define FA_SYSTEM  _A_SYSTEM
 
-   #define ff_name   name
-   #define ff_fsize  size
-   #define ff_attrib attrib
+   #define ff_name    name
+   #define ff_fsize   size
+   #define ff_attrib  attrib
 #else
    typedef struct
    {
@@ -137,22 +137,22 @@
       HB_BOOL           fLabelDone;
    } HB_FFIND_INFO, * PHB_FFIND_INFO;
 
-   #define _HB_WIN_MASKATTR     ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM )
+   #define _HB_WIN_MASKATTR                    ( FILE_ATTRIBUTE_DIRECTORY | FILE_ATTRIBUTE_HIDDEN | FILE_ATTRIBUTE_SYSTEM )
    #define _HB_WIN_MATCH() \
       ( \
          ( ( info->pFindFileData.dwFileAttributes & _HB_WIN_MASKATTR ) == 0 ) || \
          ( ( info->dwAttr & info->pFindFileData.dwFileAttributes & _HB_WIN_MASKATTR ) != 0 ) \
       )
 
-   #if defined( __DMC__)
-      #if !defined( FILE_ATTRIBUTE_ENCRYPTED )
-         #define FILE_ATTRIBUTE_ENCRYPTED       0x00004000L
+   #if defined( __DMC__ )
+      #if ! defined( FILE_ATTRIBUTE_ENCRYPTED )
+         #define FILE_ATTRIBUTE_ENCRYPTED      0x00004000L
       #endif
-      #if !defined( FILE_ATTRIBUTE_SPARSE_FILE )
-         #define FILE_ATTRIBUTE_SPARSE_FILE     0x00000200L
+      #if ! defined( FILE_ATTRIBUTE_SPARSE_FILE )
+         #define FILE_ATTRIBUTE_SPARSE_FILE    0x00000200L
       #endif
-      #if !defined( FILE_ATTRIBUTE_REPARSE_POINT )
-         #define FILE_ATTRIBUTE_REPARSE_POINT   0x00000400L
+      #if ! defined( FILE_ATTRIBUTE_REPARSE_POINT )
+         #define FILE_ATTRIBUTE_REPARSE_POINT  0x00000400L
       #endif
    #endif
 
@@ -178,7 +178,7 @@
 
 #endif
 
-#if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
@@ -197,7 +197,7 @@ HB_FATTR hb_fsAttrFromRaw( HB_FATTR raw_attr )
 {
    HB_FATTR nAttr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrFromRaw(%u)", raw_attr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrFromRaw(%u)", raw_attr ) );
 
 #if defined( HB_OS_DOS )
 
@@ -281,7 +281,7 @@ HB_FATTR hb_fsAttrToRaw( HB_FATTR nAttr )
 {
    HB_FATTR raw_attr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrToRaw(%u)", nAttr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrToRaw(%u)", nAttr ) );
 
 #if defined( HB_OS_DOS )
 
@@ -356,7 +356,7 @@ HB_FATTR hb_fsAttrEncode( const char * szAttr )
    char ch;
    HB_FATTR nAttr = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrEncode(%p)", szAttr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrEncode(%p)", szAttr ) );
 
    while( ( ch = ( char ) HB_TOUPPER( *pos ) ) != '\0' )
    {
@@ -386,7 +386,7 @@ char * hb_fsAttrDecode( HB_FATTR nAttr, char * szAttr )
 {
    char * ptr = szAttr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsAttrDecode(%u, %p)", nAttr, szAttr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsAttrDecode(%u, %p)", nAttr, szAttr ) );
 
    /* Using the same order as CA-Cl*pper did: RHSVDA. */
    if( nAttr & HB_FA_READONLY   ) *ptr++ = 'R';
@@ -410,13 +410,13 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 {
    HB_BOOL bFound;
 
-   int iYear = 0;
+   int iYear  = 0;
    int iMonth = 0;
-   int iDay = 0;
+   int iDay   = 0;
 
    int iHour = 0;
-   int iMin = 0;
-   int iSec = 0;
+   int iMin  = 0;
+   int iSec  = 0;
 
    HB_FATTR raw_attr = 0, nAttr = 0;
 
@@ -506,7 +506,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
          info->hFindFile = HDIR_CREATE;
          info->findCount = 128;
-         rc = DosAllocMem( (PPVOID) &info->entry, 4 * 1024, OBJ_TILE | PAG_COMMIT | PAG_WRITE );
+         rc = DosAllocMem( ( PPVOID ) &info->entry, 4 * 1024, OBJ_TILE | PAG_COMMIT | PAG_WRITE );
 
          if( rc == NO_ERROR )
          {
@@ -554,9 +554,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
          iMonth = info->next->fdateLastWrite.month;
          iDay   = info->next->fdateLastWrite.day;
 
-         iHour  = info->next->ftimeLastWrite.hours;
-         iMin   = info->next->ftimeLastWrite.minutes;
-         iSec   = info->next->ftimeLastWrite.twosecs;
+         iHour = info->next->ftimeLastWrite.hours;
+         iMin  = info->next->ftimeLastWrite.minutes;
+         iSec  = info->next->ftimeLastWrite.twosecs;
 
          if( info->next->oNextEntryOffset > 0 )
          {
@@ -577,8 +577,8 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
 
       bFound = HB_FALSE;
 
-#if !defined( HB_OS_WIN_CE )
-      if( ( ffind->attrmask & HB_FA_LABEL ) != 0 && !info->fLabelDone )
+#if ! defined( HB_OS_WIN_CE )
+      if( ( ffind->attrmask & HB_FA_LABEL ) != 0 && ! info->fLabelDone )
       {
          TCHAR lpVolName[ HB_PATH_MAX ];
          LPTSTR lpFileMask = NULL;
@@ -616,7 +616,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       }
 #endif
 
-      if( !bFound &&
+      if( ! bFound &&
           ( ffind->attrmask & ( HB_FA_LABEL | HB_FA_HIDDEN | HB_FA_SYSTEM |
                                 HB_FA_DIRECTORY ) ) != HB_FA_LABEL )
       {
@@ -785,9 +785,9 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
                iMonth = lt.tm_mon + 1;
                iDay   = lt.tm_mday;
 
-               iHour  = lt.tm_hour;
-               iMin   = lt.tm_min;
-               iSec   = lt.tm_sec;
+               iHour = lt.tm_hour;
+               iMin  = lt.tm_min;
+               iSec  = lt.tm_sec;
             }
             else
                bFound = HB_FALSE;
@@ -825,7 +825,7 @@ static HB_BOOL hb_fsFindNextLow( PHB_FFIND ffind )
       /* Do the conversions common for all platforms */
       ffind->szName[ sizeof( ffind->szName ) - 1 ] = '\0';
 
-#if !defined( HB_OS_WIN )
+#if ! defined( HB_OS_WIN )
       /* Convert from OS codepage */
       {
          char * pszFree = NULL;
@@ -919,7 +919,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
       {
          PHB_FFIND_INFO info = ( PHB_FFIND_INFO ) ffind->info;
 
-         if( !ffind->bFirst )
+         if( ! ffind->bFirst )
          {
             hb_vmUnlock();
 
@@ -927,7 +927,7 @@ void hb_fsFindClose( PHB_FFIND ffind )
 
 #  if defined( __WATCOMC__ )
             _dos_findclose( &info->entry );
-#  elif !defined( __DJGPP__ ) && !defined( __BORLANDC__ )
+#  elif ! defined( __DJGPP__ ) && ! defined( __BORLANDC__ )
             findclose( &info->entry );
 #  endif
 

@@ -180,7 +180,7 @@ HB_BOOL hb_getenv_buffer( const char * szName, char * szBuffer, int nSize )
    }
 #endif
 
-   if( !fRetVal && szBuffer != NULL && nSize != 0 )
+   if( ! fRetVal && szBuffer != NULL && nSize != 0 )
       szBuffer[ 0 ] = '\0';
 
    return fRetVal;
@@ -205,13 +205,13 @@ HB_BOOL hb_setenv( const char * szName, const char * szValue )
       return fResult;
    }
 #elif defined( _BSD_SOURCE ) || _POSIX_C_SOURCE >= 200112L || \
-      _XOPEN_SOURCE >= 600 || \
-      defined( __WATCOMC__ ) || defined( __DJGPP__ ) || \
-      defined( HB_OS_SUNOS ) || defined( HB_OS_BSD ) || \
-      defined( HB_OS_DARWIN ) || defined( HB_OS_BEOS ) || \
-      defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS ) || \
-      defined( HB_OS_CYGWIN ) || defined( HB_OS_MINIX ) || \
-      defined( HB_OS_ANDROID )
+   _XOPEN_SOURCE >= 600 || \
+   defined( __WATCOMC__ ) || defined( __DJGPP__ ) || \
+   defined( HB_OS_SUNOS ) || defined( HB_OS_BSD ) || \
+   defined( HB_OS_DARWIN ) || defined( HB_OS_BEOS ) || \
+   defined( HB_OS_QNX ) || defined( HB_OS_VXWORKS ) || \
+   defined( HB_OS_CYGWIN ) || defined( HB_OS_MINIX ) || \
+   defined( HB_OS_ANDROID )
    {
       HB_BOOL fResult;
       char * pszNameFree = NULL, * pszValueFree = NULL;

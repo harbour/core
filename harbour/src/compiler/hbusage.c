@@ -57,58 +57,58 @@
  */
 void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
 {
-   static const char * szOptions [] =
+   static const char * szOptions[] =
    {
-           "\nOptions:  %ca               automatic memvar declaration",
-           "\n          %cb               debug info",
-           "\n          %cbuild           display detailed version info",
-           "\n          %ccredits         display credits",
-           "\n          %cd<id>[=<val>]   #define <id>",
-           "\n          %ces[<level>]     set exit severity",
-           "\n          %cfn[:[l|u]|-]    set filename casing (l=lower u=upper)",
-           "\n          %cfd[:[l|u]|-]    set directory casing (l=lower u=upper)",
-           "\n          %cfp[:<char>]     set path separator",
-           "\n          %cfs[-]           turn filename space trimming on or off (default)",
-           "\n          %cg<type>         output type generated is <type> (see below)",
-           "\n          %cgc[<type>]      output type: C source (.c) (default)",
-           "\n                           <type>: 0=compact (default) 1=normal 2=verbose",
-           "\n                                   3=generate real C code",
-           "\n          %cgh              output type: Harbour Portable Object (.hrb)",
-           "\n          %cgd[.<destext>]  generate dependencies list into (.d) file",
-           "\n          %cge[<mode>]      error output <mode>: 0=Clipper (default)",
-           "\n                                                1=IDE friendly",
-           "\n          %ci<path>         #include file search path",
-           "\n          %ci[-|+]          disable/enable support for INCLUDE envvar",
-           "\n          %cj[<file>]       generate i18n gettext file (.pot)",
-           "\n          %ck               compilation mode (type -k? for more data)",
-           "\n          %cl               suppress line number information",
-           "\n          %cm               compile module only",
-           "\n          %cn[<type>]       no implicit starting procedure",
-           "\n                           <type>: 0=no implicit starting procedure",
-           "\n                                   1=no starting procedure at all",
-           "\n                                   2=add starting procedure if necessary",
-           "\n          %co<path>         object file drive and/or path",
-           "\n          %cp[<path>]       generate pre-processed output (.ppo) file",
-           "\n          %cp+              generate pre-processor trace (.ppt) file",
-           "\n          %cq               quiet",
-           "\n          %cq0              quiet and don't display program header",
-           "\n          %cq2              disable all output messages",
-           "\n          %cr:<max>         set maximum number of preprocessor iterations",
+      "\nOptions:  %ca               automatic memvar declaration",
+      "\n          %cb               debug info",
+      "\n          %cbuild           display detailed version info",
+      "\n          %ccredits         display credits",
+      "\n          %cd<id>[=<val>]   #define <id>",
+      "\n          %ces[<level>]     set exit severity",
+      "\n          %cfn[:[l|u]|-]    set filename casing (l=lower u=upper)",
+      "\n          %cfd[:[l|u]|-]    set directory casing (l=lower u=upper)",
+      "\n          %cfp[:<char>]     set path separator",
+      "\n          %cfs[-]           turn filename space trimming on or off (default)",
+      "\n          %cg<type>         output type generated is <type> (see below)",
+      "\n          %cgc[<type>]      output type: C source (.c) (default)",
+      "\n                           <type>: 0=compact (default) 1=normal 2=verbose",
+      "\n                                   3=generate real C code",
+      "\n          %cgh              output type: Harbour Portable Object (.hrb)",
+      "\n          %cgd[.<destext>]  generate dependencies list into (.d) file",
+      "\n          %cge[<mode>]      error output <mode>: 0=Clipper (default)",
+      "\n                                                1=IDE friendly",
+      "\n          %ci<path>         #include file search path",
+      "\n          %ci[-|+]          disable/enable support for INCLUDE envvar",
+      "\n          %cj[<file>]       generate i18n gettext file (.pot)",
+      "\n          %ck               compilation mode (type -k? for more data)",
+      "\n          %cl               suppress line number information",
+      "\n          %cm               compile module only",
+      "\n          %cn[<type>]       no implicit starting procedure",
+      "\n                           <type>: 0=no implicit starting procedure",
+      "\n                                   1=no starting procedure at all",
+      "\n                                   2=add starting procedure if necessary",
+      "\n          %co<path>         object file drive and/or path",
+      "\n          %cp[<path>]       generate pre-processed output (.ppo) file",
+      "\n          %cp+              generate pre-processor trace (.ppt) file",
+      "\n          %cq               quiet",
+      "\n          %cq0              quiet and don't display program header",
+      "\n          %cq2              disable all output messages",
+      "\n          %cr:<max>         set maximum number of preprocessor iterations",
 /* TODO:   "\n          %cr[<lib>]        request linker to search <lib> (or none)", */
-           "\n          %cs[m]            syntax check only [minimal for dependencies list]",
+      "\n          %cs[m]            syntax check only [minimal for dependencies list]",
 /* TODO:   "\n          %ct<path>         path for temp file creation", */
-           "\n          %cu[<file>]       use command def set in <file> (or none)",
-           "\n          %cu+<file>        add command def set from <file>",
-           "\n          %cundef:<id>      #undef <id>",
-           "\n          %cv               variables are assumed M->",
-           "\n          %cw[<level>]      set warning level number (0..3, default 1)",
-           "\n          %cx[<prefix>]     set symbol init function name prefix (for .c only)",
+      "\n          %cu[<file>]       use command def set in <file> (or none)",
+      "\n          %cu+<file>        add command def set from <file>",
+      "\n          %cundef:<id>      #undef <id>",
+      "\n          %cv               variables are assumed M->",
+      "\n          %cw[<level>]      set warning level number (0..3, default 1)",
+      "\n          %cx[<prefix>]     set symbol init function name prefix (for .c only)",
 #ifdef YYDEBUG
-           "\n          %cy               trace lex & yacc activity",
+      "\n          %cy               trace lex & yacc activity",
 #endif
-           "\n          %cz               suppress shortcutting (.and. & .or.)",
-           "\n          @<file>          compile list of modules in <file>",
-           "\n"
+      "\n          %cz               suppress shortcutting (.and. & .or.)",
+      "\n          @<file>          compile list of modules in <file>",
+      "\n"
    };
    char buffer[ 256 ];
    int iLine;
@@ -130,21 +130,21 @@ void hb_compPrintUsage( HB_COMP_DECL, const char * szSelf )
  */
 void hb_compPrintModes( HB_COMP_DECL )
 {
-   static const char * szOptions [] =
+   static const char * szOptions[] =
    {
-           "\nOptions:  c               clear all flags (strict Clipper mode)",
-           "\n          h[-]            Harbour mode",
-           "\n          o[-]            allow operator optimizations",
-           "\n          i[-]            enable support for HB_INLINE",
-           "\n          r[-]            runtime settings enabled",
-           "\n          s[-]            allow indexed assignment on all types",
-           "\n          x[-]            extended Xbase++ mode",
-           "\n          u[-]            strings in user encoding",
-           "\n          d[-]            accept macros with declared symbols",
-           "\n          m[+]            turn off macrotext substitution",
-           "\n          j[+]            turn off jump optimization in pcode",
-           "\n          ?               this info",
-           "\n"
+      "\nOptions:  c               clear all flags (strict Clipper mode)",
+      "\n          h[-]            Harbour mode",
+      "\n          o[-]            allow operator optimizations",
+      "\n          i[-]            enable support for HB_INLINE",
+      "\n          r[-]            runtime settings enabled",
+      "\n          s[-]            allow indexed assignment on all types",
+      "\n          x[-]            extended Xbase++ mode",
+      "\n          u[-]            strings in user encoding",
+      "\n          d[-]            accept macros with declared symbols",
+      "\n          m[+]            turn off macrotext substitution",
+      "\n          j[+]            turn off jump optimization in pcode",
+      "\n          ?               this info",
+      "\n"
    };
    static const int flags[] =
    {

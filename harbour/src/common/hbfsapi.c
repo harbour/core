@@ -58,11 +58,11 @@
 #if defined( HB_OS_WIN )
    #include <windows.h>
    #include "hbwinuni.h"
-   #if !defined( INVALID_FILE_ATTRIBUTES )
-      #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
+   #if ! defined( INVALID_FILE_ATTRIBUTES )
+      #define INVALID_FILE_ATTRIBUTES  ( ( DWORD ) -1 )
    #endif
-   #if !defined( FILE_ATTRIBUTE_DEVICE )
-      #define FILE_ATTRIBUTE_DEVICE       0x00000040
+   #if ! defined( FILE_ATTRIBUTE_DEVICE )
+      #define FILE_ATTRIBUTE_DEVICE    0x00000040
    #endif
 #elif defined( HB_OS_OS2 )
    #define INCL_DOSFILEMGR
@@ -73,7 +73,7 @@
    #include <sys/types.h>
    #include <sys/stat.h>
 #endif
-#if !defined( HB_OS_WIN )
+#if ! defined( HB_OS_WIN )
    #include <errno.h>
 #endif
 
@@ -88,7 +88,7 @@ void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
 
    while( *pSearchList )
    {
-      pSearchList = &(*pSearchList)->pNext;
+      pSearchList = &( *pSearchList )->pNext;
    }
 
    pPath = hb_strdup( szPath );
@@ -103,9 +103,9 @@ void hb_fsAddSearchPath( const char * szPath, HB_PATHNAMES ** pSearchList )
       fFree = HB_FALSE;
    }
    *pSearchList = ( HB_PATHNAMES * ) hb_xgrab( sizeof( HB_PATHNAMES ) );
-   (*pSearchList)->szPath = pPath;
-   (*pSearchList)->pNext  = NULL;
-   (*pSearchList)->fFree  = fFree;
+   ( *pSearchList )->szPath = pPath;
+   ( *pSearchList )->pNext  = NULL;
+   ( *pSearchList )->fFree  = fFree;
 }
 
 /*
@@ -134,14 +134,16 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 {
    PHB_FNAME pFileName;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameSplit(%s)", pszFileName));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFNameSplit(%s)", pszFileName ) );
 
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit: Filename: |%s|", pszFileName));
+   HB_TRACE( HB_TR_INFO, ( "hb_fsFNameSplit: Filename: |%s|", pszFileName ) );
 
    /* Grab memory, set defaults */
    pFileName = ( PHB_FNAME ) hb_xgrab( sizeof( HB_FNAME ) );
 
-   pFileName->szPath = pFileName->szName = pFileName->szExtension =
+   pFileName->szPath = 
+   pFileName->szName = 
+   pFileName->szExtension =
    pFileName->szDrive = NULL;
 
    if( pszFileName )
@@ -212,10 +214,10 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
       }
    }
 
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szPath: |%s|", pFileName->szPath));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:   szName: |%s|", pFileName->szName));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:    szExt: |%s|", pFileName->szExtension));
-   HB_TRACE(HB_TR_INFO, ("hb_fsFNameSplit:  szDrive: |%s|", pFileName->szDrive));
+   HB_TRACE( HB_TR_INFO, ( "hb_fsFNameSplit:   szPath: |%s|", pFileName->szPath ) );
+   HB_TRACE( HB_TR_INFO, ( "hb_fsFNameSplit:   szName: |%s|", pFileName->szName ) );
+   HB_TRACE( HB_TR_INFO, ( "hb_fsFNameSplit:    szExt: |%s|", pFileName->szExtension ) );
+   HB_TRACE( HB_TR_INFO, ( "hb_fsFNameSplit:  szDrive: |%s|", pFileName->szDrive ) );
 
    return pFileName;
 }
@@ -229,7 +231,7 @@ PHB_FNAME hb_fsFNameSplit( const char * pszFileName )
 /* This function joins path, name and extension into a string with a filename */
 char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFNameMerge(%p, %p)", pszFileName, pFileName));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFNameMerge(%p, %p)", pszFileName, pFileName ) );
 
    if( pszFileName && pFileName )
    {
@@ -281,11 +283,11 @@ char * hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName )
          hb_strncat( pszFileName, pFileName->szExtension, HB_PATH_MAX - 1 - 1 );
       }
 
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szPath: |%s|", pFileName->szPath));
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:   szName: |%s|", pFileName->szName));
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:    szExt: |%s|", pFileName->szExtension));
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge:  szDrive: |%s|", pFileName->szDrive));
-      HB_TRACE(HB_TR_INFO, ("hb_fsFNameMerge: Filename: |%s|", pszFileName));
+      HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:   szPath: |%s|", pFileName->szPath ) );
+      HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:   szName: |%s|", pFileName->szName ) );
+      HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:    szExt: |%s|", pFileName->szExtension ) );
+      HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge:  szDrive: |%s|", pFileName->szDrive ) );
+      HB_TRACE( HB_TR_INFO, ( "hb_fsFNameMerge: Filename: |%s|", pszFileName ) );
    }
 
    return pszFileName;
@@ -295,7 +297,7 @@ HB_BOOL hb_fsNameExists( const char * pszFileName )
 {
    HB_BOOL fExist = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsNameExists(%p)", pszFileName));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsNameExists(%p)", pszFileName ) );
 
    if( pszFileName != NULL )
    {
@@ -344,7 +346,7 @@ HB_BOOL hb_fsFileExists( const char * pszFileName )
 {
    HB_BOOL fExist = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsFileExists(%p)", pszFileName));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsFileExists(%p)", pszFileName ) );
 
    if( pszFileName != NULL )
    {
@@ -402,7 +404,7 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
 {
    HB_BOOL fExist = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsDirExists(%p)", pszDirName));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsDirExists(%p)", pszDirName ) );
 
    if( pszDirName != NULL )
    {
@@ -456,7 +458,7 @@ HB_BOOL hb_fsDirExists( const char * pszDirName )
 
 HB_BOOL hb_fsMaxFilesError( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsMaxFilesError()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsMaxFilesError()" ) );
 
 #if defined( HB_OS_WIN )
    return GetLastError() == ERROR_TOO_MANY_OPEN_FILES;

@@ -96,7 +96,7 @@ static HB_EXPR_PTR hb_compExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNew(%p,%i)", HB_COMP_PARAM, iType));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNew(%p,%i)", HB_COMP_PARAM, iType ) );
 
    pExpr = hb_compExprAlloc( HB_COMP_PARAM );
    pExpr->ExprType = iType;
@@ -117,7 +117,7 @@ static void hb_compExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
  */
 static void hb_compExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprFree()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprFree()" ) );
 
    HB_EXPR_USE( pExpr, HB_EA_DELETE );
    hb_compExprDealloc( HB_COMP_PARAM, pExpr );
@@ -149,6 +149,7 @@ void hb_compExprLstDealloc( HB_COMP_DECL )
 static HB_EXPR_PTR hb_compErrorType( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    const char * szDesc = hb_compExprDescription( pExpr );
+
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INVALID_TYPE, szDesc, NULL );
    return pExpr;
 }
@@ -156,6 +157,7 @@ static HB_EXPR_PTR hb_compErrorType( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 static HB_EXPR_PTR hb_compErrorSyntax( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    const char * szDesc = hb_compExprDescription( pExpr );
+
    hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_SYNTAX, szDesc, NULL );
    return pExpr;
 }
@@ -264,25 +266,25 @@ HB_COMP_PTR hb_comp_new( void )
                          HB_COMPFLAG_MACROTEXT |
                          HB_COMPFLAG_SHORTCUTS;
 
-      pComp->fSwitchCase      = HB_FALSE;
-      pComp->fPPO             = HB_FALSE;    /* flag indicating, is ppo output needed */
-      pComp->fLineNumbers     = HB_TRUE;     /* holds if we need pcodes with line numbers */
-      pComp->fAnyWarning      = HB_FALSE;    /* holds if there was any warning during the compilation process */
-      pComp->fAutoMemvarAssume= HB_FALSE;    /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
-      pComp->fForceMemvars    = HB_FALSE;    /* holds if memvars are assumed when accesing undeclared variable (-v)*/
-      pComp->fDebugInfo       = HB_FALSE;    /* holds if generate debugger required info */
-      pComp->fNoStartUp       = HB_FALSE;    /* C code generation embed HB_FS_FIRST or not */
-      pComp->fCredits         = HB_FALSE;    /* print credits */
-      pComp->fBuildInfo       = HB_FALSE;    /* print build info */
-      pComp->fLogo            = HB_TRUE;     /* print logo */
-      pComp->fSingleModule    = HB_FALSE;
-      pComp->fError           = HB_FALSE;
-      pComp->fINCLUDE         = HB_TRUE;
+      pComp->fSwitchCase       = HB_FALSE;
+      pComp->fPPO              = HB_FALSE;   /* flag indicating, is ppo output needed */
+      pComp->fLineNumbers      = HB_TRUE;    /* holds if we need pcodes with line numbers */
+      pComp->fAnyWarning       = HB_FALSE;   /* holds if there was any warning during the compilation process */
+      pComp->fAutoMemvarAssume = HB_FALSE;   /* holds if undeclared variables are automatically assumed MEMVAR (-a)*/
+      pComp->fForceMemvars     = HB_FALSE;   /* holds if memvars are assumed when accesing undeclared variable (-v)*/
+      pComp->fDebugInfo        = HB_FALSE;   /* holds if generate debugger required info */
+      pComp->fNoStartUp        = HB_FALSE;   /* C code generation embed HB_FS_FIRST or not */
+      pComp->fCredits          = HB_FALSE;   /* print credits */
+      pComp->fBuildInfo        = HB_FALSE;   /* print build info */
+      pComp->fLogo             = HB_TRUE;    /* print logo */
+      pComp->fSingleModule     = HB_FALSE;
+      pComp->fError            = HB_FALSE;
+      pComp->fINCLUDE          = HB_TRUE;
 
-      pComp->iSyntaxCheckOnly = 0;        /* syntax check only */
-      pComp->iStartProc       = 0;        /* no implicit starting procedure */
-      pComp->iWarnings        = 0;        /* enable parse warnings */
-      pComp->iErrorCount      = 0;        /* number of compile errors */
+      pComp->iSyntaxCheckOnly = 0;               /* syntax check only */
+      pComp->iStartProc       = 0;               /* no implicit starting procedure */
+      pComp->iWarnings        = 0;               /* enable parse warnings */
+      pComp->iErrorCount      = 0;               /* number of compile errors */
 
       pComp->iGenCOutput = HB_COMPGENC_COMPACT;  /* C code generation default mode */
       pComp->iExitLevel  = HB_EXITLEVEL_DEFAULT; /* holds if there was any warning during the compilation process */
@@ -352,7 +354,9 @@ void hb_comp_free( HB_COMP_PTR pComp )
    if( pComp->iStdChExt > 0 )
    {
       do
+      {
          hb_xfree( pComp->szStdChExt[ --pComp->iStdChExt ] );
+      }
       while( pComp->iStdChExt != 0 );
       hb_xfree( pComp->szStdChExt );
    }
