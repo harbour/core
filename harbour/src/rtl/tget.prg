@@ -294,7 +294,7 @@ METHOD display() CLASS GET
 
    /* Handle C5.3 caption. */
 
-   IF !Empty( ::cCaption )
+   IF ! Empty( ::cCaption )
 
       cCaption := ::cCaption
       IF ( nPos := At( "&", cCaption ) ) > 0
@@ -325,7 +325,7 @@ METHOD display() CLASS GET
 
    /* Display the GET */
 
-   IF !::lSuppDisplay .OR. nDispPos != ::nOldPos
+   IF ! ::lSuppDisplay .OR. nDispPos != ::nOldPos
 
       hb_DispOutAt( ::nRow, ::nCol, ;
                     iif( ::lHideInput, PadR( Replicate( SubStr( ::cStyle, 1, 1 ), Len( RTrim( cBuffer ) ) ), ::nDispLen ), SubStr( cBuffer, nDispPos, ::nDispLen ) ), ;
@@ -334,7 +334,7 @@ METHOD display() CLASS GET
       nRowPos := ::nRow
       nColPos := ::nCol + Min( ::nDispLen, Len( cBuffer ) )
 
-      IF Set( _SET_DELIMITERS ) .AND. !::hasFocus
+      IF Set( _SET_DELIMITERS ) .AND. ! ::hasFocus
 #ifdef HB_COMPAT_C53
          hb_DispOutAt( nRowPos, ::nCol - 1, SubStr( Set( _SET_DELIMCHARS ), 1, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
          hb_DispOutAt( nRowPos, nColPos   , SubStr( Set( _SET_DELIMCHARS ), 2, 1 ), hb_ColorIndex( ::cColorSpec, GET_CLR_UNSELECTED ) )
@@ -441,7 +441,7 @@ METHOD setFocus() CLASS GET
 
    LOCAL xVarGet
 
-   IF !::hasFocus
+   IF ! ::hasFocus
 
       xVarGet := ::xVarGet := ::varGet()
 
@@ -658,7 +658,7 @@ METHOD insert( cChar ) CLASS GET
             IF ::lPicComplex
                /* Calculating different nMaxEdit for ::lPicComplex */
                FOR nFor := ::nPos TO nMaxEdit
-                  IF !::IsEditable( nFor )
+                  IF ! ::IsEditable( nFor )
                      EXIT
                   ENDIF
                NEXT
@@ -721,7 +721,7 @@ METHOD wordLeft() CLASS GET
          DO WHILE nPos > 1 .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
             nPos--
          ENDDO
-         DO WHILE nPos > 1 .AND. ! ( SubStr( ::cBuffer, nPos, 1 ) == " " )
+         DO WHILE nPos > 1 .AND. !( SubStr( ::cBuffer, nPos, 1 ) == " " )
             nPos--
          ENDDO
 
@@ -749,7 +749,7 @@ METHOD wordRight() CLASS GET
 
          nPos := ::nPos
 
-         DO WHILE nPos < ::nMaxEdit .AND. ! ( SubStr( ::cBuffer, nPos, 1 ) == " " )
+         DO WHILE nPos < ::nMaxEdit .AND. !( SubStr( ::cBuffer, nPos, 1 ) == " " )
             nPos++
          ENDDO
          DO WHILE nPos < ::nMaxEdit .AND. SubStr( ::cBuffer, nPos, 1 ) == " "
@@ -1182,8 +1182,8 @@ METHOD PutMask( xValue, lEdit ) CLASS GET
 
    cBuffer := Transform( xValue, ;
                iif( Empty( cPicFunc ), ;
-                             iif( ::lPicBlankZero .AND. !::hasFocus, "@Z ", "" ), ;
-                  cPicFunc + iif( ::lPicBlankZero .AND. !::hasFocus, "Z"  , "" ) + " " ) ;
+                             iif( ::lPicBlankZero .AND. ! ::hasFocus, "@Z ", "" ), ;
+                  cPicFunc + iif( ::lPicBlankZero .AND. ! ::hasFocus, "Z"  , "" ) + " " ) ;
                + cPicMask )
 
    IF ::cType == "N"
@@ -1272,7 +1272,7 @@ METHOD unTransform() CLASS GET
                   lMinus := .T.
                ENDIF
             ENDIF
-            IF !lMinus
+            IF ! lMinus
                FOR nFor := 1 TO ::nMaxLen
                   IF ::IsEditable( nFor ) .AND. IsDigit( SubStr( cBuffer, nFor, 1 ) )
                      EXIT
@@ -1288,7 +1288,7 @@ METHOD unTransform() CLASS GET
             IF "D" $ ::cPicFunc .OR. ;
                "T" $ ::cPicFunc
                FOR nFor := ::FirstEditable() TO ::LastEditable()
-                  IF !::IsEditable( nFor )
+                  IF ! ::IsEditable( nFor )
                      cBuffer := Left( cBuffer, nFor - 1 ) + Chr( 1 ) + SubStr( cBuffer, nFor + 1 )
                   ENDIF
                NEXT
@@ -1631,7 +1631,7 @@ METHOD deleteLow() CLASS GET
    IF ::lPicComplex
       /* Calculating different nMaxLen for ::lPicComplex */
       FOR n := ::nPos TO nMaxLen
-         IF !::IsEditable( n )
+         IF ! ::IsEditable( n )
             EXIT
          ENDIF
       NEXT

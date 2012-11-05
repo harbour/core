@@ -295,7 +295,7 @@ METHOD wvtDialog:Create()
    ENDIF
 
    FOR i := 1 TO Len( ::aObjects )
-      IF !Empty( ::aObjects[ i ]:aPaint )
+      IF ! Empty( ::aObjects[ i ]:aPaint )
          FOR j := 1 TO Len( ::aObjects[ i ]:aPaint )
             wvg_SetPaint( ::cPaintBlockID, ::nPaintID++, ;
                ::aObjects[ i ]:aPaint[ j, 1 ], ::aObjects[ i ]:aPaint[ j, 2 ] )
@@ -579,7 +579,7 @@ METHOD wvtDialog:Inkey()
 
       IF ! ::lEventHandled
          IF ::nCurObj > 0
-            IF !Empty( ::aDialogKeys )
+            IF ! Empty( ::aDialogKeys )
                IF ( n := AScan( ::aDialogKeys, {| e_ | e_[ 1 ] == ::nKey } ) ) > 0
                   Eval( ::aDialogKeys[ n, 2 ], self, ::oCurObj )
                ENDIF
@@ -716,9 +716,9 @@ METHOD wvtDialog:ActivateMenu()
    LOCAL nMenu := Wvt_GetLastMenuEvent()
    LOCAL aMenuItem
 
-   IF !Empty( nMenu )
+   IF ! Empty( nMenu )
       IF HB_ISOBJECT( ::oMenu )
-         IF !Empty( aMenuItem := ::oMenu:FindMenuItemById( nMenu ) )
+         IF ! Empty( aMenuItem := ::oMenu:FindMenuItemById( nMenu ) )
             IF HB_ISBLOCK( aMenuItem[ WVT_MENU_ACTION ] )
                Eval( aMenuItem[ WVT_MENU_ACTION ] )
             ENDIF
@@ -966,7 +966,7 @@ METHOD WvtObject:CreatePopup()
 
    LOCAL i, nID
 
-   IF !Empty( ::aPopup ) .AND. ::hPopup == nil
+   IF ! Empty( ::aPopup ) .AND. ::hPopup == nil
       ::hPopup := Wvt_CreatePopupMenu()
 
       FOR i := 1 TO Len( ::aPopup )
@@ -3375,10 +3375,10 @@ METHOD wvtMenu:Create( cCaption )
 
 METHOD wvtMenu:Destroy()
 
-   IF !Empty( ::hMenu )
+   IF ! Empty( ::hMenu )
       ::DelAllItems()
 
-      IF !Wvt_DestroyMenu( ::hMenu )
+      IF ! Wvt_DestroyMenu( ::hMenu )
 #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {}, __FILE__ ) )
 #endif
@@ -3394,9 +3394,9 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
 
    LOCAL lResult := .F., aItem
 
-   IF !Empty( ::hMenu ) .AND. ( !Empty( cCaption ) .OR. !Empty( bAction ) )
+   IF ! Empty( ::hMenu ) .AND. ( ! Empty( cCaption ) .OR. ! Empty( bAction ) )
       IF HB_ISOBJECT( bAction )
-         cCaption := iif( !Empty( cCaption ), cCaption, bAction:Caption )
+         cCaption := iif( ! Empty( cCaption ), cCaption, bAction:Caption )
          aItem := { MF_POPUP, bAction:hMenu, cCaption, bAction }   /* bAction is a wvtMenu object reference */
       ELSEIF HB_ISBLOCK( bAction )
          aItem := { MF_STRING, ::MenuItemId++, cCaption, bAction } /* bAction is a code block to execute */
@@ -3408,7 +3408,7 @@ METHOD wvtMenu:AddItem( cCaption, bAction )
 #endif
       ENDIF
 
-      IF !Wvt_AppendMenu( ::hMenu, aItem[ WVT_MENU_TYPE ], aItem[ WVT_MENU_IDENTIFIER ], aItem[ WVT_MENU_CAPTION ] )
+      IF ! Wvt_AppendMenu( ::hMenu, aItem[ WVT_MENU_TYPE ], aItem[ WVT_MENU_IDENTIFIER ], aItem[ WVT_MENU_CAPTION ] )
 #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:AddItem()", "Add menu item", { cCaption, bAction }, __FILE__ ) )
 #endif
@@ -3462,7 +3462,7 @@ METHOD wvtMenu:EnableItem( nItemNum )
 
    LOCAL nPrevious := - 1
 
-   IF !Empty( ::hMenu ) .AND. !Empty( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
       nPrevious := Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
@@ -3474,7 +3474,7 @@ METHOD wvtMenu:DisableItem( nItemNum )
 
    LOCAL nPrevious := - 1
 
-   IF !Empty( ::hMenu ) .AND. !Empty( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
       nPrevious := Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 
@@ -3504,7 +3504,7 @@ METHOD wvtMenu:FindMenuItemById( nId )
 
    LOCAL x, aResult := {}
 
-   IF !Empty( nId )
+   IF ! Empty( nId )
       x := ::NumItems()
       DO WHILE x > 0 .AND. Empty( aResult )
          IF ::aItems[ x, WVT_MENU_TYPE ] == MF_POPUP

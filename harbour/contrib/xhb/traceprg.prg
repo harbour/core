@@ -84,7 +84,7 @@ FUNCTION xhb_setTraceFile( xFile, lAppend )
 
    IF HB_ISSTRING( xFile )
       s_cSET_TRACEFILE := xFile
-      IF !HB_ISLOGICAL( lAppend ) .OR. !lAppend
+      IF ! HB_ISLOGICAL( lAppend ) .OR. ! lAppend
          FClose( FCreate( s_cSET_TRACEFILE ) )
       ENDIF
    ENDIF
@@ -126,7 +126,7 @@ FUNCTION TraceLog( ... )
    cFile := Set( _SET_TRACEFILE )
    nLevel := Set( _SET_TRACESTACK )
 #else
-   IF !s_lSET_TRACE
+   IF ! s_lSET_TRACE
       RETURN .T.
    ENDIF
 

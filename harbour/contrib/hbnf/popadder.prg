@@ -214,7 +214,7 @@ FUNCTION FT_Adder()
             _ftDisplayTape( aAdder, nKey )
          ENDIF
          hb_DispOutAt( 4 + nTopOS, 8 + nAddSpace, cTotal )
-         IF !Empty( cMoveTotSubTot )
+         IF ! Empty( cMoveTotSubTot )
             _ftSetWinColor( W_CURR, W_SCREEN )
             hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, iif( cMoveTotSubTot == "T", "   <TOTAL>", ;
                "<SUBTOTAL>" ) )
@@ -449,7 +449,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
    nDecDigit :=  0
    lClAdder  := .F.                      // Reset the Clear flag
    IF lSubRtn                            // If this was the second time they
-      IF !lMultDiv
+      IF ! lMultDiv
          _ftSetWinColor( W_CURR, W_SCREEN )
          hb_DispOutAt( 6 + nTopOS, 18 + nAddSpace, "   <TOTAL>" )
          _ftSetWinColor( W_CURR, W_PROMPT )
@@ -474,7 +474,7 @@ STATIC FUNCTION _ftAddTotal( aAdder )
             lSubRtn := .F.
             _ftUpdateTrans( aAdder, .F., nNumTotal )
          ENDIF
-         IF !lMultDiv
+         IF ! lMultDiv
             lSubRtn := .T.                  // total key
          ENDIF
          IF nAddMode == 1                  // Add
@@ -532,7 +532,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
    ENDIF
    IF nKey == hb_keyCode( "+" )                 // Add
       nAddMode := 1
-      IF !lNewNum                         // They pressed + again to add the same
+      IF ! lNewNum                         // They pressed + again to add the same
          nNumTotal := nSavSubTot           // number without re-entering
       ENDIF
       _ftUpdateTrans( aAdder, .F., nNumTotal )
@@ -542,7 +542,7 @@ STATIC FUNCTION _ftAddSub( aAdder, nKey )
       nNumTotal  := 0
    ELSEIF nKey == hb_keyCode( "-" )          // Subtract
       nAddMode := 2
-      IF !lNewNum                         // They pressed + again to add the same
+      IF ! lNewNum                         // They pressed + again to add the same
          nNumTotal := nSavSubTot           // number without re-entering
          lNewNum   := .T.
       ENDIF

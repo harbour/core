@@ -212,10 +212,10 @@ METHOD WvgMenuBar:configure( oParent, aPresParams, lVisible )
 
 METHOD WvgMenuBar:destroy()
 
-   IF !Empty( ::hMenu )
+   IF ! Empty( ::hMenu )
       ::DelAllItems()
 
-      IF !WVG_DestroyMenu( ::hMenu )
+      IF ! WVG_DestroyMenu( ::hMenu )
 #if 0
          Throw( ErrorNew( "wvtMenu", 1000, "wvtMenu:Destroy()", "Destroy menu FAILED", {}, __FILE__ ) )
 #endif
@@ -374,7 +374,7 @@ METHOD WvgMenuBar:findMenuItemById( nId )
 
    LOCAL x, aResult := {}
 
-   IF !Empty( nId )
+   IF ! Empty( nId )
       x := ::numItems()
 
       DO WHILE x > 0 .AND. Empty( aResult )
@@ -397,7 +397,7 @@ METHOD WvgMenuBar:findMenuPosById( nId )
 
    LOCAL x, nPos
 
-   IF !Empty( nId )
+   IF ! Empty( nId )
       x := ::numItems()
 
       DO WHILE x > 0 .AND. Empty( nPos )
@@ -422,7 +422,7 @@ METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 
    __defaultNIL( @lCheck, .T. )
 
-   IF !Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
       nRet := WVG_CheckMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + iif( lCheck, MF_CHECKED, MF_UNCHECKED ) )
    ENDIF
 
@@ -434,7 +434,7 @@ METHOD WvgMenuBar:enableItem( nItemNum )
 
    LOCAL lSuccess := .F.
 
-   IF !Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. HB_ISNUMERIC( nItemNum )
       lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
    ENDIF
 
@@ -446,7 +446,7 @@ METHOD WvgMenuBar:disableItem( nItemNum )
 
    LOCAL lSuccess := .F.
 
-   IF !Empty( ::hMenu ) .AND. !Empty( nItemNum )
+   IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
       lSuccess := WVG_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
    ENDIF
 

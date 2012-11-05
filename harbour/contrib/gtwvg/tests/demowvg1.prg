@@ -98,7 +98,7 @@ STATIC FUNCTION ExecForm( aPaint )
    SetKey( K_F2, {|| DoModalDialog() } )
 
    @  6, nColGet SAY "< Date >"
-   @  9, nColGet SAY "<" + PadC( "Name"   , 33 ) + ">"
+   @  9, nColGet SAY "<" + PadC( "Name", 33 ) + ">"
    @ 12, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
    @ 16, 61      SAY "< Salary >"
    @  7, nColGet GET dDate WHEN  DispStatusMsg( "Date must be Valid" )

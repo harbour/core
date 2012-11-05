@@ -124,7 +124,7 @@ METHOD New( cInBuffer ) CLASS TCgi
       ENDIF
    ENDIF
 
-   IF !Empty( ::Query_String )
+   IF ! Empty( ::Query_String )
 
       ::aQueryFields := {}
 

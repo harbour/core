@@ -1482,7 +1482,7 @@ FUNCTION CallStack()
    LOCAL tmp := 1
    LOCAL cString := ""
 
-   DO WHILE !Empty( ProcName( tmp ) )
+   DO WHILE ! Empty( ProcName( tmp ) )
       cString += ProcName( tmp ) + " (" + hb_ntos( ProcLine( tmp ) ) + ") "
       tmp++
    ENDDO
@@ -1506,7 +1506,7 @@ PROCEDURE LogMe( nPCount, data, desc )
    ENDIF
    desc := s_cTest + " " + desc
 
-   IF !s_lCallBackStack
+   IF ! s_lCallBackStack
       cStack := ""
    ENDIF
 
@@ -1724,10 +1724,10 @@ STATIC FUNCTION ErrorMessage( oError )
       IF ValType( oError:description ) == "C"
          cMessage += oError:description + " "
       ENDIF
-      IF !Empty( oError:operation )
+      IF ! Empty( oError:operation )
          cMessage += oError:operation + " "
       ENDIF
-      IF !Empty( oError:filename )
+      IF ! Empty( oError:filename )
          cMessage += oError:filename + " "
       ENDIF
 
@@ -1758,7 +1758,7 @@ STATIC FUNCTION ErrorMessage( oError )
          ENDIF
       ENDIF
 
-      IF !Empty( oError:cargo )
+      IF ! Empty( oError:cargo )
          cMessage += " " + oError:cargo
       ENDIF
    ELSE
@@ -1780,7 +1780,7 @@ FUNCTION hb_SToD( cDate )
    LOCAL cOldDateFormat
    LOCAL dDate
 
-   IF ValType( cDate ) == "C" .AND. !Empty( cDate )
+   IF ValType( cDate ) == "C" .AND. ! Empty( cDate )
       cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
 
       dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;

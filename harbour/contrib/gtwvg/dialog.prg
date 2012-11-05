@@ -148,7 +148,7 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    hb_gtInfo( HB_GTI_CLOSABLE  , ::closable  )
    hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
 
-   IF !Empty( ::icon )
+   IF ! Empty( ::icon )
       IF HB_ISNUMERIC( ::icon )
          hb_gtInfo( HB_GTI_ICONRES, ::icon )
 
@@ -197,7 +197,7 @@ METHOD WvgDialog:destroy()
       AEval( ::aChildren, {| o | o:destroy() } )
    ENDIF
 
-   IF !Empty( ::hBrushBG )
+   IF ! Empty( ::hBrushBG )
       WVG_DeleteObject( ::hBrushBG )
    ENDIF
 

@@ -226,12 +226,12 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
          FOR ic := 1 TO Len( rowData )
             column := hb_HKeyAt( rowData, ic )
             cell   := hb_HValueAt( rowData, ic )
-            IF !Empty( cell[ "formula" ] )
+            IF ! Empty( cell[ "formula" ] )
                formula := 'ss:Formula="' + cell[ "formula" ] + '"'
             ELSE
                formula := ""
             ENDIF
-            IF !Empty( cell[ "style" ] )
+            IF ! Empty( cell[ "style" ] )
                style := 'ss:StyleID="' + cell[ "style" ] + '"'
             ELSE
                style := ""

@@ -77,7 +77,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
    LOCAL oColumn
    LOCAL aCol
 
-   IF !Used()
+   IF ! Used()
       RETURN .F.
    ELSEIF Eof()
       dbGoBottom()
@@ -106,7 +106,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
    IF HB_ISARRAY( acColumns )
       nColCount := 0
       FOR EACH aCol IN acColumns
-         IF HB_ISSTRING( aCol ) .AND. !Empty( aCol )
+         IF HB_ISSTRING( aCol ) .AND. ! Empty( aCol )
             nColCount++
          ELSE
             EXIT
@@ -158,9 +158,9 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
 
       oColumn := TBColumnNew( cHeading, bBlock )
 
-      IF HB_ISARRAY( xColumnSayPictures ) .AND. nPos <= Len( xColumnSayPictures ) .AND. HB_ISSTRING( xColumnSayPictures[ nPos ] ) .AND. !Empty( xColumnSayPictures[ nPos ] )
+      IF HB_ISARRAY( xColumnSayPictures ) .AND. nPos <= Len( xColumnSayPictures ) .AND. HB_ISSTRING( xColumnSayPictures[ nPos ] ) .AND. ! Empty( xColumnSayPictures[ nPos ] )
          oColumn:picture := xColumnSayPictures[ nPos ]
-      ELSEIF HB_ISSTRING( xColumnSayPictures ) .AND. !Empty( xColumnSayPictures )
+      ELSEIF HB_ISSTRING( xColumnSayPictures ) .AND. ! Empty( xColumnSayPictures )
          oColumn:picture := xColumnSayPictures
       ENDIF
 
@@ -297,10 +297,10 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
 
    LOCAL nAction
    LOCAL nMode := ;
-      iif( nKey != 0,                  DE_EXCEPT,    ;
-      iif( !lAppend .AND. IsDbEmpty(), DE_EMPTY,     ;
-      iif( oBrowse:hitBottom,          DE_HITBOTTOM, ;
-      iif( oBrowse:hitTop,             DE_HITTOP, DE_IDLE ) ) ) )
+      iif( nKey != 0,                   DE_EXCEPT,    ;
+      iif( ! lAppend .AND. IsDbEmpty(), DE_EMPTY,     ;
+      iif( oBrowse:hitBottom,           DE_HITBOTTOM, ;
+      iif( oBrowse:hitTop,              DE_HITTOP, DE_IDLE ) ) ) )
 
    oBrowse:forceStable()
 
@@ -311,11 +311,11 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
             replicating this behavior. */
    nAction := iif( HB_ISBLOCK( xUserFunc ), ;
                                  Eval( xUserFunc, nMode, oBrowse:colPos ), ;
-              iif( HB_ISSTRING( xUserFunc ) .AND. !Empty( xUserFunc ), ;
+              iif( HB_ISSTRING( xUserFunc ) .AND. ! Empty( xUserFunc ), ;
                                  &xUserFunc( nMode, oBrowse:colPos ), ;
               iif( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT ) ) )
 
-   IF !lAppend .AND. Eof() .AND. !IsDbEmpty()
+   IF ! lAppend .AND. Eof() .AND. ! IsDbEmpty()
       dbSkip( -1 )
    ENDIF
 
@@ -340,7 +340,7 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
          lAppend := .F.
 
          IF ( Set( _SET_DELETED ) .AND. Deleted() ) .OR. ;
-            ( !Empty( dbFilter() ) .AND. !&( dbFilter() ) )
+            ( ! Empty( dbFilter() ) .AND. ! &( dbFilter() ) )
             dbSkip()
          ENDIF
          IF Eof()
@@ -378,7 +378,7 @@ STATIC FUNCTION Skipped( nRecs, lAppend )
 
    IF LastRec() != 0
       IF nRecs == 0
-         IF Eof() .AND. !lAppend
+         IF Eof() .AND. ! lAppend
             dbSkip( -1 )
             nSkipped := -1
          ELSE

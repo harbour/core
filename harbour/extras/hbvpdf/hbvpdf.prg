@@ -52,7 +52,7 @@ FUNCTION pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )
       nRow := pdfM2Y( nRow )
       nCol := pdfM2X( nCol )
    ELSEIF cUnits == "R"
-      IF !lExact
+      IF ! lExact
          pdfCheckLine( nRow )
          nRow := nRow + t_aReport[ PDFTOP ]
       ENDIF
@@ -61,7 +61,7 @@ FUNCTION pdfAtSay( cString, nRow, nCol, cUnits, lExact, cId )
          nCol * 100.00 / t_aReport[ REPORTWIDTH ] * ;
          ( t_aReport[ PAGEX ] - pdfM2X( t_aReport[ PDFLEFT ] ) * 2 - 9.0 ) / 100.00
    ENDIF
-   IF !Empty( cString )
+   IF ! Empty( cString )
       cString := pdfStringB( cString )
       IF Right( cString, 1 ) == Chr( 255 ) // reverse
          cString := Left( cString, Len( cString ) - 1 )
@@ -281,7 +281,7 @@ FUNCTION pdfBox( x1, y1, x2, y2, nBorder, nShade, cUnits, cColor, cId )
 
    // version 0.02
    cBoxColor := ""
-   IF !Empty( cColor )
+   IF ! Empty( cColor )
       cBoxColor := " " + Chr_RGB( SubStr( cColor, 2, 1 ) ) + " " + ;
          Chr_RGB( SubStr( cColor, 3, 1 ) ) + " " + ;
          Chr_RGB( SubStr( cColor, 4, 1 ) ) + " rg "
@@ -382,7 +382,7 @@ FUNCTION pdfCenter( cString, nRow, nCol, cUnits, lExact, cId )
 
    nLen := pdfLen( cString ) / 2
    IF cUnits == "R"
-      IF !lExact
+      IF ! lExact
          pdfCheckLine( nRow )
          nRow := nRow + t_aReport[ PDFTOP ]
       ENDIF
@@ -820,7 +820,7 @@ FUNCTION pdfLen( cString )
       nArr := 3 // 0.04
    ENDIF
 
-   IF !Empty( t_aReport[ FONTWIDTH ] )
+   IF ! Empty( t_aReport[ FONTWIDTH ] )
       FOR nI := 1 TO nLen
          nWidth += t_aReport[ FONTWIDTH ][ nArr ][ ( Asc( SubStr( cString, nI, 1 ) ) - 32 ) * 4 + 1 + nAdd ] * 25.4 * t_aReport[ FONTSIZE ] / 720.00 / 100.00
       NEXT
@@ -863,7 +863,7 @@ FUNCTION pdfNewPage( _cPageSize, _cPageOrient, _nLpi, _cFontName, _nFontType, _n
    __defaultNIL( @_nFontType, pdfGetFontInfo( "TYPE" ) )
    __defaultNIL( @_nFontSize, t_aReport[ FONTSIZE ] )
 
-   IF !Empty( t_aReport[ PAGEBUFFER ] )
+   IF ! Empty( t_aReport[ PAGEBUFFER ] )
       pdfClosePage()
    ENDIF
 
@@ -1090,7 +1090,7 @@ FUNCTION pdfRJust( cString, nRow, nCol, cUnits, lExact, cId )
    nLen := pdfLen( cString )
 
    IF cUnits == "R"
-      IF !lExact
+      IF ! lExact
          pdfCheckLine( nRow )
          nRow := nRow + t_aReport[ PDFTOP ]
       ENDIF
@@ -1360,7 +1360,7 @@ FUNCTION pdfOpenHeader( cFile )
    LOCAL nAt // , nErrorCode:=0
 
    __defaultNIL( @cFile, "" )
-   IF !Empty( cFile )
+   IF ! Empty( cFile )
       cFile := AllTrim( cFile )
       IF Len( cFile ) > 12 .OR. ;
             At( ' ', cFile ) > 0 .OR. ;
@@ -1452,7 +1452,7 @@ FUNCTION pdfHeader( cFunction, cId, arr )
    LOCAL nId, nI, nLen, nIdLen
 
    nId := 0
-   IF !Empty( cId )
+   IF ! Empty( cId )
       cId := Upper( cId )
       nId := AScan( t_aReport[ HEADER ], {| arr | arr[ 3 ] == cId } )
    ENDIF
@@ -2434,9 +2434,9 @@ STATIC FUNCTION AllToken( cString, cDelimiter, nPointer, nAction )
    // nAction == 2 - attoken
 
    WHILE nPos <= nLen
-      IF !SubStr( cString, nPos, 1 ) $ cDelimiter
+      IF ! SubStr( cString, nPos, 1 ) $ cDelimiter
          nStart := nPos
-         WHILE nPos <= nLen .AND. !SubStr( cString, nPos, 1 ) $ cDelimiter
+         WHILE nPos <= nLen .AND. ! SubStr( cString, nPos, 1 ) $ cDelimiter
             ++nPos
          ENDDO
          ++nTokens

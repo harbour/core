@@ -87,7 +87,7 @@ PROCEDURE Main()
    wvw_showwindow( 0 )
 
    // wait until user click the close button
-   DO WHILE !lClosepermitted
+   DO WHILE ! lClosepermitted
       Inkey( 0.2 )
    ENDDO
    SetKey( K_F8, bSetKey )
@@ -254,7 +254,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
    nmincol := 99999
    FOR i := 1 TO nNumGets
       lmultiline := aEBGets[ i ][ __GET_LMULTILINE ]
-      IF !lmultiline
+      IF ! lmultiline
          nlen := Len( aEBGets[ i ][ __GET_CPICT ] )
       ELSE
          nlen := 30
@@ -303,7 +303,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
    wvw_ebsetfocus( nwinnum, aEBGets[ 1 ][ __GET_NEBID ] )
    nFocus := 1
    ch := Inkey( 0.5 )
-   DO WHILE !lDone
+   DO WHILE ! lDone
       IF HB_ISBLOCK( SetKey( ch ) )
          Eval( SetKey( ch ) )
       ELSEIF ch != 0
@@ -322,7 +322,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
                nFocus := nNumGets + 2
             ENDIF
          OTHERWISE
-            lchangefocus := .F. // !wvw_ebisfocused(nwinnum, aEBGets[nFocus][__GET_NEBID])
+            lchangefocus := .F. // ! wvw_ebisfocused(nwinnum, aEBGets[nFocus][__GET_NEBID])
          ENDCASE
          IF lchangefocus
             IF nFocus <= nNumGets
@@ -348,7 +348,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
 
    lClosepermitted := ( nwinnum == wvw_nnumwindows() - 1 )
    // wait until user click the close button
-   DO WHILE !lClosepermitted
+   DO WHILE ! lClosepermitted
       Inkey( 0.5 )
    ENDDO
 
@@ -376,7 +376,7 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
    ENDIF
    lchangefocus := .T.
    DO CASE
-   CASE ch == K_TAB .AND. !lShiftPressed()
+   CASE ch == K_TAB .AND. ! lShiftPressed()
       IF nFocus < ( nNumGets + 2 )  // incl buttons
          nFocus++
       ELSE
@@ -562,7 +562,7 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
 
    DO CASE
    CASE nEvent == EN_KILLFOCUS
-      IF !mlmultiline .AND. mcvaltype $ "ND"
+      IF ! mlmultiline .AND. mcvaltype $ "ND"
          ctext := wvw_ebgettext( nwinnum, nid )
          IF mcvaltype == "D" .AND. IsBadDate( ctext )
             // don't leave it in an invalid state
@@ -572,7 +572,7 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
          ENDIF
       ENDIF
    CASE nEvent == EN_SETFOCUS
-      IF !mlmultiline .AND. mcvaltype == "N"
+      IF ! mlmultiline .AND. mcvaltype == "N"
          ctext := wvw_ebgettext( nwinnum, nid )
          wvw_ebsettext( nwinnum, nId, Transform( GetValFromText( ctext, mcvaltype ), GetNumMask( mcpict, mcvaltype ) ) )
       ENDIF
@@ -583,7 +583,7 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
       ENDIF
       aEBGets[ nIndex ][ __GET_LFOCUSED ] := .T.
    CASE nEvent == EN_CHANGE
-      IF !mlmultiline
+      IF ! mlmultiline
          ProcessCharMask( nwinnum, nId, mcvaltype, mcpict )
       ENDIF
    ENDCASE
@@ -664,7 +664,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
       InBufferRight := Right( InBuffer, Len( InBuffer ) - icp )
 
       IF CharMaskTekstOK( InBufferLeft + " " + InBufferRight, mcvaltype, Mask ) .AND. ;
-            !CharMaskTekstOK( InBufferLeft + InBufferRight, mcvaltype, Mask )
+         ! CharMaskTekstOK( InBufferLeft + InBufferRight, mcvaltype, Mask )
          InBuffer := InBufferLeft + " " + InBufferRight
       ELSE
          InBuffer := InBufferLeft + InBufferRight
@@ -783,8 +783,8 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
             CB := SubStr( OutBuffer, icp + x, 1 )
             CM := SubStr( Mask, icp + x, 1 )
 
-            IF !IsDigit( CB ) .AND. !IsAlpha( CB ) .AND. ;
-                  ( !( CB == " " ) .OR. ( CB == " " .AND. CM == " " ) )
+            IF ! IsDigit( CB ) .AND. ! IsAlpha( CB ) .AND. ;
+               ( !( CB == " " ) .OR. ( CB == " " .AND. CM == " " ) )
                wvw_ebsetsel( mnwinnum, mnebid, icp + x, icp + x )
             ELSE
                EXIT

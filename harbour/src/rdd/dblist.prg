@@ -77,10 +77,10 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    /* Save SETs */
 
-   IF !Empty( lToPrint )
+   IF ! Empty( lToPrint )
       lOldPrinter := Set( _SET_PRINTER, .T. )
    ENDIF
-   IF !Empty( cToFileName )
+   IF ! Empty( cToFileName )
       hb_FNameSplit( cToFileName, @cPath, @cName, @cExt )
       IF Set( _SET_DEFEXTENSIONS ) .AND. Empty( cExt )
          cExt := ".txt"
@@ -111,10 +111,10 @@ PROCEDURE __dbList( lOff, abEval, lAll, bFor, bWhile, nNext, nRecord, lRest, lTo
 
    /* Restore SETs */
 
-   IF !Empty( lToPrint )
+   IF ! Empty( lToPrint )
       Set( _SET_PRINTER, lOldPrinter )
    ENDIF
-   IF !Empty( cToFileName )
+   IF ! Empty( cToFileName )
       Set( _SET_EXTRAFILE, cOldExtraFile )
       Set( _SET_EXTRA, lOldExtra )
    ENDIF

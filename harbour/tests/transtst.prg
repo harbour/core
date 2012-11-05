@@ -23,7 +23,7 @@ FUNCTION transtest( xVal, cPict, cExpect )
 
    LOCAL cResult := Transform( xVal, cPict )
 
-   IF !cResult == cExpect
+   IF ! cResult == cExpect
       s_stop := .T.
    ENDIF
 

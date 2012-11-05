@@ -224,7 +224,7 @@ PROCEDURE hb_SetBuffer( nWriteBuffer, nExtractBuffer, nReadBuffer )
    HB_SYMBOL_UNUSED( nWriteBuffer )
    HB_SYMBOL_UNUSED( nExtractBuffer )
 
-   IF !Empty( nReadBuffer )
+   IF ! Empty( nReadBuffer )
       t_nReadBuffer := Min( nReadBuffer, 32768 )
    ENDIF
 

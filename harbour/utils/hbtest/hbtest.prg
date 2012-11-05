@@ -558,10 +558,10 @@ STATIC FUNCTION ErrorMessage( oError )
    IF ValType( oError:description ) == "C"
       cMessage += oError:description + " "
    ENDIF
-   IF !Empty( oError:operation )
+   IF ! Empty( oError:operation )
       cMessage += "(" + oError:operation + ") "
    ENDIF
-   IF !Empty( oError:filename )
+   IF ! Empty( oError:filename )
       cMessage += "<" + oError:filename + "> "
    ENDIF
    IF ValType( oError:osCode ) == "N"
@@ -604,7 +604,7 @@ STATIC FUNCTION ListToNArray( cString )
    LOCAL aArray := {}
    LOCAL nPos
 
-   IF !Empty( cString )
+   IF ! Empty( cString )
       DO WHILE ( nPos := At( ",", cString ) ) > 0
          AAdd( aArray, Val( AllTrim( Left( cString, nPos - 1 ) ) ) )
          cString := SubStr( cString, nPos + 1 )

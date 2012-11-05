@@ -241,12 +241,12 @@ FUNCTION sx_TagCount( xIndex )
          IF nOrder != 0
             cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
          ENDIF
-      ELSEIF HB_ISSTRING( xIndex ) .AND. !Empty( xIndex )
+      ELSEIF HB_ISSTRING( xIndex ) .AND. ! Empty( xIndex )
          cIndex := xIndex
       ELSE
          cIndex := dbOrderInfo( DBOI_FULLPATH )
       ENDIF
-      IF !Empty( cIndex )
+      IF ! Empty( cIndex )
          nTags := ordCount( cIndex )
       ENDIF
    ENDIF
@@ -260,7 +260,7 @@ FUNCTION sx_Tags( xIndex )
    IF Used()
       IF HB_ISNUMERIC( xIndex )
          nOrder := sx_TagOrder( 1, xIndex )
-      ELSEIF HB_ISSTRING( xIndex ) .AND. !Empty( xIndex )
+      ELSEIF HB_ISSTRING( xIndex ) .AND. ! Empty( xIndex )
          nOrder := dbOrderInfo( DBOI_BAGORDER, xIndex )
       ELSE
          nOrder := ordNumber()
@@ -281,7 +281,7 @@ FUNCTION sx_SetTag( xTag, xIndex )
 
    IF Used() .AND. ValType( xTag ) $ "CN"
       IF HB_ISNUMERIC( xTag )
-         IF Empty( xIndex ) .OR. !ValType( xIndex ) $ "CN"
+         IF Empty( xIndex ) .OR. ! ValType( xIndex ) $ "CN"
             nOrder := xTag
          ELSEIF HB_ISSTRING( xIndex )
             IF xTag >= 1 .AND. xTag <= ordCount( xIndex )
@@ -291,7 +291,7 @@ FUNCTION sx_SetTag( xTag, xIndex )
             nOrder := sx_TagOrder( xTag, xIndex )
          ENDIF
       ELSE
-         IF Empty( xIndex ) .OR. !ValType( xIndex ) $ "CN"
+         IF Empty( xIndex ) .OR. ! ValType( xIndex ) $ "CN"
             nOrder := ordNumber( xTag )
          ELSEIF HB_ISSTRING( xIndex )
             nOrder := sx_TagOrder( xTag, xIndex )
@@ -338,7 +338,7 @@ FUNCTION sx_KillTag( xTag, xIndex )
                cIndex := dbOrderInfo( DBOI_FULLPATH,, nOrder )
             ENDIF
          ENDIF
-         IF !Empty( cIndex )
+         IF ! Empty( cIndex )
             IF ordBagClear( cIndex )
                lRet := FErase( cIndex ) != -1
             ENDIF
@@ -346,7 +346,7 @@ FUNCTION sx_KillTag( xTag, xIndex )
       ENDIF
    ELSE
       IF HB_ISNUMERIC( xTag )
-         IF Empty( xIndex ) .OR. !ValType( xIndex ) $ "CN"
+         IF Empty( xIndex ) .OR. ! ValType( xIndex ) $ "CN"
             nOrder := xTag
          ELSEIF HB_ISSTRING( xIndex )
             IF xTag >= 1 .AND. xTag <= ordCount( xIndex )
@@ -358,7 +358,7 @@ FUNCTION sx_KillTag( xTag, xIndex )
             nOrder := sx_TagOrder( xTag, xIndex )
          ENDIF
       ELSE
-         IF Empty( xIndex ) .OR. !ValType( xIndex ) $ "CN"
+         IF Empty( xIndex ) .OR. ! ValType( xIndex ) $ "CN"
             nOrder := ordNumber( xTag )
          ELSEIF HB_ISSTRING( xIndex )
             nOrder := sx_TagOrder( xTag, xIndex )
@@ -410,7 +410,7 @@ FUNCTION rdd_Info( xID )
    LOCAL aInfo, cRDD
 
    IF HB_ISNUMERIC( xID )
-      IF !Empty( Alias( xID ) )
+      IF ! Empty( Alias( xID ) )
          ( xID )->( rddName() )
       ENDIF
    ELSEIF HB_ISSTRING( xID )

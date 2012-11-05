@@ -118,7 +118,7 @@ FUNCTION SP_Add( cWord )
    // *DEBUG**
    @ 24, 30 SAY "At SP_ADD"
 
-   IF SP_Init() .AND. !Empty( AUXILIARY_DICTIONARY )
+   IF SP_Init() .AND. ! Empty( AUXILIARY_DICTIONARY )
       cWord      := Upper( AllTrim( cWord ) )
 
       //
@@ -249,7 +249,7 @@ FUNCTION SP_Check( cWord )
 
 #endif
 
-               IF !Empty( x )
+               IF ! Empty( x )
                   IF !( cLast == SubStr( cLookup, 1, 2 ) )
                      cBuf := Space( y )
                      FSeek( nHandle, x, FS_SET )
@@ -289,7 +289,7 @@ FUNCTION SP_Check( cWord )
    ELSE
       ok := .F.
    ENDIF
-   IF !ok .AND. EXTRA_CODE_BLOCK != NIL
+   IF ! ok .AND. EXTRA_CODE_BLOCK != NIL
       ok := Eval( EXTRA_CODE_BLOCK, cWord )
    ENDIF
 
@@ -317,7 +317,7 @@ STATIC FUNCTION sp_GetBuf( cLetters )
 
    IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
       x  := Bin2L( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
-      IF !Empty( x )
+      IF ! Empty( x )
          y    := Bin2W( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
          cBuf := Space( y )
          FSeek( nHandle, x + 4, FS_SET )
@@ -397,7 +397,7 @@ FUNCTION Sp_LoadAux( cFile )
    // *DEBUG**
    @ 24, 30 SAY "At SP_loadaux"
 
-   IF !Empty( cFile )
+   IF ! Empty( cFile )
       IF File( cFile )
          x := FOpen( cFile, FO_READ + FO_DENYNONE )
       ELSE
@@ -521,7 +521,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
    IF "'" $ cWord
       cHold := SP_Expand( cWord )
-      IF !Empty( cHold )
+      IF ! Empty( cHold )
          AAdd( aRet_, "A1AA" + cHold )
       ENDIF
    ENDIF
@@ -1118,7 +1118,7 @@ FUNCTION Sp_init
             aGlobal[ 2 ] += cOther
             isok     := .T.
          ENDIF
-         IF !Empty( AUXILIARY_DICTIONARY )
+         IF ! Empty( AUXILIARY_DICTIONARY )
             SP_LoadAux( AUXILIARY_DICTIONARY )
          ENDIF
       ENDIF
@@ -1127,13 +1127,15 @@ FUNCTION Sp_init
       ENDIF
 
       // * Thesaurus comented out as not needed
-      //  if !empty( THESAURUS_NAME )
-      //     if file( DICTIONARY_PATH+THESAURUS_NAME )
-      //        SP_OpenThes( DICTIONARY_PATH+THESAURUS_NAME )
-      //     elseif file( THESAURUS_NAME )
-      //        SP_OpenThes( THESAURUS_NAME )
-      //     endif
-      //  endif
+#if 0
+      IF ! Empty( THESAURUS_NAME )
+         IF File( DICTIONARY_PATH + THESAURUS_NAME )
+            SP_OpenThes( DICTIONARY_PATH + THESAURUS_NAME )
+         ELSEIF File( THESAURUS_NAME )
+            SP_OpenThes( THESAURUS_NAME )
+         ENDIF
+      ENDIF
+#endif
 
    ENDIF
 
@@ -1197,7 +1199,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       cDBF += ".DBF"
    ENDIF
 
-   IF !File( cDBF )
+   IF ! File( cDBF )
       RETURN -1
    ENDIF
 
@@ -1248,17 +1250,17 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( Chr( 0 ), NSIZE ) + Space( 10 ), NSIZE + 16 )
 
       FOR i := 1 TO 26
-         DO WHILE SubStr( DICT->word, 1, 1 ) == Chr( i + 64 ) .AND. !Eof()
+         DO WHILE SubStr( DICT->word, 1, 1 ) == Chr( i + 64 ) .AND. ! Eof()
             FOR j := 1 TO 26
                temp  := ""
                cBits := FOUR_BYTES
-               DO WHILE !IsAlpha( SubStr( DICT->word, 2, 1 ) ) .AND. !Eof()
+               DO WHILE ! IsAlpha( SubStr( DICT->word, 2, 1 ) ) .AND. ! Eof()
                   IF Len( AllTrim( DICT->word ) ) > 0
                      cOther += "|" + AllTrim( DICT->word )
                   ENDIF
                   skip + 1
                ENDDO
-               DO WHILE SubStr( DICT->word, 2, 1 ) == Chr( j + 64 ) .AND. !Eof()
+               DO WHILE SubStr( DICT->word, 2, 1 ) == Chr( j + 64 ) .AND. ! Eof()
                   IF Len( RTrim( DICT->word ) ) = 3
                      Bit( cBits, Asc( SubStr( DICT->word, 3, 1 ) ) -64, .T. )
                   ELSEIF Len( RTrim( DICT->word ) ) == 2
@@ -1272,7 +1274,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                      @ 10, 41 say ( nCurRec / nSize ) * 100   PICTURE "999.9%"   COLOR "W+/R"
                   ENDIF
                ENDDO
-               IF !Empty( temp ) .OR. cBits != FOUR_BYTES
+               IF ! Empty( temp ) .OR. cBits != FOUR_BYTES
 
                   nWhere := FSeek( nH, 0, FS_END )
 
@@ -1287,7 +1289,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       j := FSeek( nH, 0, FS_END )
       FSeek( nH, 2, FS_SET )
       FWrite( nH, L2Bin( j ), 4 )
-      IF !Empty( cOther )
+      IF ! Empty( cOther )
          FSeek( nH, j, FS_SET )
          cOther += "|"
          FWrite( nH, cOther, Len( cOther ) )
@@ -1351,7 +1353,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
       lTalk := .F.
    ENDIF
 
-   IF !File( cDictionary )
+   IF ! File( cDictionary )
       RETURN -1
    ENDIF
 
@@ -1361,7 +1363,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
    //  Read the dictionary file
    //
 
-   IF !SP_Init()
+   IF ! SP_Init()
       RETURN -2
    ENDIF
    //
@@ -1405,7 +1407,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
       FOR j := 1 TO 26
          temp := Chr( i + 64 ) + Chr( j + 64 )
          x  := Bin2L( SubStr( cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 1 ), 4 ) )
-         IF !Empty( x )
+         IF ! Empty( x )
             y    := Bin2W( SubStr( cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 5 ), 2 ) )
 
             IF lTalk
@@ -1428,7 +1430,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
             ENDIF
             cBuf := SubStr( cBuf, 5 )
             z    := 1
-            DO WHILE !Empty( cBuf )
+            DO WHILE ! Empty( cBuf )
                IF SubStr( cBuf, z, 1 ) >= Chr( 128 )
                   cWord := SubStr( cBuf, 1, z )
                   APPEND BLANK
@@ -1445,7 +1447,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
                   z++
                ENDIF
             ENDDO
-            IF !Empty( cWord )
+            IF ! Empty( cWord )
             ENDIF
             cWord := ""
          ENDIF

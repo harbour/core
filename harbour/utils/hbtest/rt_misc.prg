@@ -1095,7 +1095,7 @@ PROCEDURE Main_OPOVERL()
    TEST_LINE( oString % "TST"           , "Hello % TST"       )
    TEST_LINE( oString ^ "TST"           , "Hello ^ TST"       )
    TEST_LINE( oString ** "TST"          , "Hello ^ TST"       )
-   IF !TEST_OPT_Z()
+   IF ! TEST_OPT_Z()
    TEST_LINE( oString .AND. "TST"       , "Hello AND TST"     )
    TEST_LINE( oString .OR. "TST"        , "Hello OR TST"      )
    ENDIF

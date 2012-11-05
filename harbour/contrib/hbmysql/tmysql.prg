@@ -142,7 +142,7 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLRow
          ENDIF
 
          // Save starting value for this field
-         IF !::aDirty[ nNum ]
+         IF ! ::aDirty[ nNum ]
             ::aOldValue[ nNum ] := ::aRow[ nNum ]
             ::aDirty[ nNum ] := .T.
          ENDIF
@@ -186,8 +186,8 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
 
-      IF !lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
-                          ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
+      IF ! lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
+                           ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
          RETURN Set( _SET_DECIMALS )
       ELSE
          RETURN ::aFieldStruct[ nNum ][ MYSQL_FS_DECIMALS ]
@@ -345,7 +345,7 @@ METHOD New( nSocket, cQuery ) CLASS TMySQLQuery
    IF mysql_query( nSocket, cQuery ) == 0
 
       // save result set
-      IF !Empty( ::nResultHandle := mysql_store_result( nSocket ) )
+      IF ! Empty( ::nResultHandle := mysql_store_result( nSocket ) )
 
          ::nNumRows := mysql_num_rows( ::nResultHandle )
          ::nNumFields := mysql_num_fields( ::nResultHandle )
@@ -407,7 +407,7 @@ METHOD Refresh() CLASS TMySQLQuery
 
    ENDIF
 
-   RETURN !::lError
+   RETURN ! ::lError
 
 
 METHOD Skip( nRows ) CLASS TMySQLQuery
@@ -678,8 +678,8 @@ METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
    ENDIF
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
-      IF !lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
-                          ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
+      IF ! lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
+                           ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_DOUBLE )
          RETURN Set( _SET_DECIMALS )
       ELSE
          RETURN ::aFieldStruct[ nNum ][ MYSQL_FS_DECIMALS ]
@@ -833,7 +833,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
 
       // no Change
       IF Right( cUpdateQuery, 4 ) == "SET "
-         RETURN !::lError
+         RETURN ! ::lError
       ENDIF
 
       // remove last comma
@@ -925,7 +925,7 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
       ENDIF
    ENDIF
 
-   RETURN !::lError
+   RETURN ! ::lError
 
 
 // DAVID: lOldRecord, lRefresh added
@@ -1023,7 +1023,7 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
       ENDIF
    ENDIF
 
-   RETURN !::lError
+   RETURN ! ::lError
 
 
 // Adds a row with values passed into oRow
@@ -1259,7 +1259,7 @@ METHOD Refresh() CLASS TMySQLTABLE
       ::lError := .T.
    ENDIF
 
-   RETURN !::lError
+   RETURN ! ::lError
 
 
 // returns a WHERE x=y statement which uses primary key (if available)
@@ -1362,14 +1362,14 @@ METHOD sql_version() CLASS TMySQLServer
 
 
 // METHOD SelectDB( cDBName ) CLASS TMySQLServer
-// 
+//
 //   IF mysql_select_db( ::nSocket, cDBName ) == 0
 //      ::cDBName := cDBName
 //      RETURN .T.
 //   ELSE
 //      ::cDBName := ""
 //   ENDIF
-// 
+//
 //   RETURN .F.
 
 
@@ -1565,14 +1565,14 @@ METHOD Query( cQuery ) CLASS TMySQLServer
    i := 1
    nNumTables := 1
 
-   DO WHILE !( ( cToken := hb_tokenGet( cUpperQuery, i++, " " ) ) == "FROM" ) .AND. !Empty( cToken )
+   DO WHILE !( ( cToken := hb_tokenGet( cUpperQuery, i++, " " ) ) == "FROM" ) .AND. ! Empty( cToken )
    ENDDO
 
    // first token after "FROM" is a table name
    // NOTE: SubSelects ?
    cTableName := hb_tokenGet( cUpperQuery, i++, " " )
 
-   DO WHILE !( ( cToken := hb_tokenGet( cUpperQuery, i++, " " ) ) == "WHERE" ) .AND. !Empty( cToken )
+   DO WHILE !( ( cToken := hb_tokenGet( cUpperQuery, i++, " " ) ) == "WHERE" ) .AND. ! Empty( cToken )
       // do we have more than one table referenced ?
       IF cToken == "," .OR. cToken == "JOIN"
          nNumTables++

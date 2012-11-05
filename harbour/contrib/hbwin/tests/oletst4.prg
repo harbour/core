@@ -19,7 +19,7 @@ PROCEDURE Main()
 
    oObject := win_OleCreateObject( "MyOleObjServer" )
 
-   IF !Empty( oObject )
+   IF ! Empty( oObject )
       oTime := oObject:timer()
       ? "TIMER:"
       ? "      date:", oTime:date

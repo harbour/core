@@ -401,7 +401,7 @@ METHOD New( xElem, nStyle ) CLASS TXmlDocument
          ELSE
             ::Read( xElem, nStyle )
          ENDIF
-         IF !Empty( ::oRoot:oChild ) .AND. ::oRoot:oChild:cName == "xml"
+         IF ! Empty( ::oRoot:oChild ) .AND. ::oRoot:oChild:cName == "xml"
             ::cHeader := "<=xml " + ::oRoot:oChild:cData + "?>"
          ENDIF
          EXIT

@@ -103,7 +103,7 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
          cInd := cRefs := ""
          hRefs := { tmp => cInd }
       ELSEIF tmp $ hRefs
-         IF !cRefs == ""
+         IF !( cRefs == "" )
             cRefs += ","
          ENDIF
          cRefs += "{{" + cInd + "}," + hRefs[ tmp ] + "}"
@@ -135,7 +135,7 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
          cVal += "}"
       ENDIF
 
-      IF !Empty( cRefs ) .AND. cInd == ""
+      IF ! Empty( cRefs ) .AND. cInd == ""
          cVal := "__itemSetRef( " + cVal + ", {" + cRefs + "} )"
       ENDIF
       IF v == "O"

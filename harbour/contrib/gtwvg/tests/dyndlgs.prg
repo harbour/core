@@ -224,7 +224,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       IF Empty( SetIcons() )
          SetIcons( WVG_LoadIcon( "vr_1.ico" ) )
       ENDIF
-      IF !Empty( SetIcons() )
+      IF ! Empty( SetIcons() )
          WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, SetIcons()[ 1 ] )
       ENDIF
 

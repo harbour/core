@@ -188,7 +188,7 @@ METHOD executeUpdate( cSql ) CLASS hdbcSQLTStatement
 
 METHOD close() CLASS hdbcSQLTStatement
 
-   IF !HB_ISNIL( ::pRes )
+   IF ! HB_ISNIL( ::pRes )
 
       sqlite3_finalize( ::pRes )
 
@@ -235,7 +235,7 @@ METHOD new( pDB, cSql ) CLASS hdbcSQLTPreparedStatement
 
 METHOD executeQuery() CLASS hdbcSQLTPreparedStatement
 
-   IF !::lPrepared
+   IF ! ::lPrepared
       ::aParams := ASize( ::aParams, ::nParams )
       /* TODO */
    ENDIF
@@ -248,7 +248,7 @@ METHOD executeQuery() CLASS hdbcSQLTPreparedStatement
 
 METHOD executeUpdate() CLASS hdbcSQLTPreparedStatement
 
-   IF !::lPrepared
+   IF ! ::lPrepared
       ::aParams := ASize( ::aParams, ::nParams )
       /* TODO */
    ENDIF
@@ -263,7 +263,7 @@ METHOD setString( nParam, xValue ) CLASS hdbcSQLTPreparedStatement
 
    ::aParams[ nParam ] := xValue
 
-   IF !::lPrepared
+   IF ! ::lPrepared
       IF nParam > ::nParams
          ::nParams := nParam
       ENDIF
@@ -438,7 +438,7 @@ METHOD findColumn( cField ) CLASS hdbcSQLTResultSet
    LOCAL nCount
    LOCAL nMax
 
-   IF !HB_ISHASH( ::hColNames )
+   IF ! HB_ISHASH( ::hColNames )
       ::hColNames := { => }
       nMax := sqlite3_column_count( ::pRes )
       FOR nCount := 1 TO nMax

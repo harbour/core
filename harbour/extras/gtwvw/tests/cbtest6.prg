@@ -140,7 +140,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
    CASE nEvent == 3 // CBN_SETFOCUS
       i := AScan( GetList, {| x | x:Name == cVar } )
       IF i > 0
-         /* !oGet:HasFocus means
+         /* ! oGet:HasFocus means
           * CBN_SETFOCUS was NOT initiated from mouseclick
           * then we don't need to bother about setting focus to the
           * new GET. GetSys has already done that via CBreader().
@@ -203,7 +203,7 @@ FUNCTION CBreader( oGet )
    LOCAL nSelected, cSelected
    LOCAL oGetList := __GetListActive()
 
-   IF !wvw_cbIsFocused( NIL, oGet:cargo )
+   IF ! wvw_cbIsFocused( NIL, oGet:cargo )
       wvw_cbSetFocus( NIL, oGet:cargo )
    ENDIF
 
@@ -243,7 +243,7 @@ FUNCTION CBreader( oGet )
 
    ELSEIF nKey == K_LBUTTONDOWN .OR. nKey == K_LDBLCLK
       // is there any GET object hit?
-      IF !Empty( HitTest( oGetList:aGetList, MRow(), MCol(), NIL ) )
+      IF ! Empty( HitTest( oGetList:aGetList, MRow(), MCol(), NIL ) )
          oGet:exitState := GE_MOUSEHIT
       ELSE
          oGet:exitState := GE_NOEXIT

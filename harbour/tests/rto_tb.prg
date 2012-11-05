@@ -425,7 +425,7 @@ PROCEDURE LogMe( data, desc )
    ENDIF
    desc := s_cTest + " " + desc
 
-   IF !s_lCallBackStack
+   IF ! s_lCallBackStack
       cStack := ""
    ENDIF
 
@@ -736,11 +736,11 @@ STATIC FUNCTION ErrorMessage( oError )
       IF ValType( oError:description ) == "C"
          cMessage += oError:description + " "
       ENDIF
-      IF !Empty( oError:operation ) .AND. !s_lIgnoreErrOp
+      IF ! Empty( oError:operation ) .AND. ! s_lIgnoreErrOp
          /* NOTE: Clipping this to hide the difference in maximum symbol name length in error messages. [vszakats] */
          cMessage += Left( oError:operation, 9 ) + " "
       ENDIF
-      IF !Empty( oError:filename )
+      IF ! Empty( oError:filename )
          cMessage += oError:filename + " "
       ENDIF
 
@@ -794,7 +794,7 @@ FUNCTION hb_SToD( cDate )
    LOCAL cOldDateFormat
    LOCAL dDate
 
-   IF ValType( cDate ) == "C" .AND. !Empty( cDate )
+   IF ValType( cDate ) == "C" .AND. ! Empty( cDate )
       cOldDateFormat := Set( _SET_DATEFORMAT, "yyyy/mm/dd" )
 
       dDate := CToD( SubStr( cDate, 1, 4 ) + "/" +;
@@ -824,10 +824,10 @@ FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
 
    LOCAL oError
 
-   IF !( VALTYPE( xValue ) == cType ) .OR. ;
-      ( bValid != NIL .AND. !EVAL( bValid, oVar, xValue ) )
+   IF !( ValType( xValue ) == cType ) .OR. ;
+      ( bValid != NIL .AND. ! Eval( bValid, oVar, xValue ) )
       oError := ErrorNew()
-      oError:description := HB_LANGERRMSG( 1 )
+      oError:description := hb_langErrMsg( 1 )
       oError:gencode := 1
       oError:severity := 2
       oError:cansubstitute := .T.
@@ -835,8 +835,8 @@ FUNCTION __eInstVar53( oVar, cMethod, xValue, cType, nSubCode, bValid )
       HB_SYMBOL_UNUSED( cMethod )
       oError:subcode := nSubCode
       oError:args := { xValue }
-      xValue := EVAL( ERRORBLOCK(), oError )
-      IF !( VALTYPE( xValue ) == cType )
+      xValue := Eval( ErrorBlock(), oError )
+      IF !( ValType( xValue ) == cType )
          __errInHandler()
       ENDIF
    ENDIF

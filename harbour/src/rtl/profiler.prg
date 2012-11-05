@@ -265,7 +265,7 @@ METHOD gatherFunctions() CLASS HBProfile
       IF __dynSIsFun( n )
 
          // If we're not ignoring the symbol...
-         IF !::ignoreSymbol( cName := __dynSGetName( n ) )
+         IF ! ::ignoreSymbol( cName := __dynSGetName( n ) )
             // Yes, it is, add it to the profile.
             AAdd( ::aProfile, HBProfileFunction():new( cName, __dynSGetPRF( n ) ) )
          ENDIF
@@ -288,10 +288,10 @@ METHOD gatherMethods() CLASS HBProfile
    LOCAL nMember
 
    // For each class in the environment...
-   DO WHILE !Empty( cClass := __className( n ) )
+   DO WHILE ! Empty( cClass := __className( n ) )
 
       // If we're not ignoring the class' methods...
-      IF !::ignoreSymbol( cClass )
+      IF ! ::ignoreSymbol( cClass )
 
          // Collect class members.
          nMembers := Len( aMembers := __classSel( n ) )
@@ -299,7 +299,7 @@ METHOD gatherMethods() CLASS HBProfile
          FOR nMember := 1 TO nMembers
 
             // If we've got a member name...
-            IF !Empty( aMembers[ nMember ] )
+            IF ! Empty( aMembers[ nMember ] )
                // Add it to the profile.
                AAdd( ::aProfile, HBProfileMethod():new( cClass + ":" + aMembers[ nMember ], __GetMsgPrf( n, aMembers[ nMember ] ) ) )
             ENDIF

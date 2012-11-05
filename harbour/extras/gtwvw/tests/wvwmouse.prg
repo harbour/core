@@ -207,7 +207,7 @@ METHOD OnPress() CLASS WVWMouseButton
 
    // this is called when LEFT mouse button is pressed on the object
    LOCAL lWasPressed
-   IF !::lEnable  // 20040303
+   IF ! ::lEnable  // 20040303
       RETURN Self
    ENDIF
 
@@ -232,7 +232,7 @@ METHOD OnClick() CLASS WVWMouseButton
 
    // this is called when LEFT mouse button is clicked on the object
    // normally (or should it be restricted to be?) called from ::OnRelease()
-   IF !::lEnable  // 20040303
+   IF ! ::lEnable  // 20040303
       RETURN Self
    ENDIF
 
@@ -246,7 +246,7 @@ METHOD OnRelease() CLASS WVWMouseButton
 
    LOCAL lWasPressed := ::lPressed
 
-   IF !::lEnable  // 20040303
+   IF ! ::lEnable  // 20040303
       RETURN Self
    ENDIF
 
@@ -266,7 +266,7 @@ METHOD OnRelease() CLASS WVWMouseButton
 METHOD OnReleaseOut() CLASS WVWMouseButton
 
    // left button is released outside of mouse region
-   IF !::lEnable  // 20040303
+   IF ! ::lEnable  // 20040303
       RETURN Self
    ENDIF
 
@@ -283,7 +283,7 @@ METHOD OnReleaseOut() CLASS WVWMouseButton
 METHOD OnMouseOut() CLASS WVWMouseButton
 
    // mouse is moved from over the button outside
-   IF !::lEnable  // 20040303
+   IF ! ::lEnable  // 20040303
       RETURN Self
    ENDIF
 
@@ -301,7 +301,7 @@ METHOD OnMouseOut() CLASS WVWMouseButton
 METHOD OnMouseOver() CLASS WVWMouseButton
 
    // mouse is moved to over the button from outside
-   IF !::lEnable  // 20040303
+   IF ! ::lEnable  // 20040303
       RETURN Self
    ENDIF
 
@@ -321,10 +321,10 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
    LOCAL lMouseOver := ::lHover // 20040303,was: ( mrow() >= ::nrow1 .and. mrow() <= ::nrow2 .and. mcol() >= ::ncol1 .and. mcol() <= ::ncol2 )
    LOCAL lPressed := ::lPressed .AND. lMouseOver
    LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_getFontInfo( nWinNum ), NIL )
-   LOCAL nLabelColor := iif( !lPressed, rgb( 0, 0, 0 ), rgb( 96, 96, 96 ) )
+   LOCAL nLabelColor := iif( ! lPressed, rgb( 0, 0, 0 ), rgb( 96, 96, 96 ) )
    LOCAL lUseImage := HB_ISSTRING( ::cImage ) // 20040325
 
-   IF !::lVisible .OR. ::nType == _BUTTON_NONE
+   IF ! ::lVisible .OR. ::nType == _BUTTON_NONE
       SetCursor( nOldCursor ) // 20040303
       RETURN Self
    ENDIF
@@ -346,7 +346,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
       ENDIF
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
-         IF !Wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
+         IF ! Wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
             win_messagebox( NIL, "Button Failed Wvw_DrawImage(" + ::cImage + ")" )
          ENDIF
       ENDIF
@@ -364,7 +364,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
       ENDIF
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
-         IF !Wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
+         IF ! Wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
             win_messagebox( NIL, "Button Failed Wvw_DrawImage(" + ::cImage + ")" )
          ENDIF
       ENDIF
@@ -431,7 +431,7 @@ FUNCTION wvwm_SetKeyRepeater( lSet )
    LOCAL lWasSet := ( s_nkeyrepeater != NIL )
    IF lSet != NIL
       IF lSet
-         IF !lWasSet
+         IF ! lWasSet
             s_nkeyrepeater := hb_idleAdd( {|| xKeyRepeater() } )
          ENDIF
       ELSE
@@ -469,7 +469,7 @@ STATIC FUNCTION nButtonChecker( nkey, oMouseObj )
    ELSE
       // cursor is over current mouse object area
 
-      IF !oMouseObj:lHover
+      IF ! oMouseObj:lHover
          // user has just moved the cursor into over this button
          oMouseObj:OnMouseOver()
       ELSE

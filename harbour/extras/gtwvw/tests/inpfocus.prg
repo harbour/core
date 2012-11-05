@@ -49,7 +49,7 @@ PROCEDURE Main()
 
    LOCAL ch
 
-   IF !SetMode( 25, 80 )
+   IF ! SetMode( 25, 80 )
       wvw_messagebox( 0, "Cannot set to (25,80) screen", "Warning", MB_OK + MB_ICONEXCLAMATION )
    ENDIF
    SetColor( "W*/N+" )

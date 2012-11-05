@@ -155,7 +155,7 @@ METHOD addWindows( aArray, nRow ) CLASS HBDbObject
    oCol:ColorBlock := {|| { iif( ::Arrayindex == oBrwSets:Cargo, 2, 1 ), 2 } }
    oBrwSets:Freeze := 1
 
-   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( HB_ISSTRING( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. !::ArrayReference[ ::ArrayIndex, 3 ], ;
+   oBrwSets:AddColumn( oCol := HBDbColumnNew( "", {|| iif( HB_ISSTRING( ::ArrayReference[ ::ArrayIndex, 2 ] ) .AND. ! ::ArrayReference[ ::ArrayIndex, 3 ], ;
       ::ArrayReference[ ::ArrayIndex, 2 ], ;
       PadR( __dbgValToStr( __dbgObjGetValue( ::TheObj, ::ArrayReference[ ::arrayindex, 1 ] ) ), nWidth  - 12 ) ) } ) )
 
@@ -189,7 +189,7 @@ METHOD doGet( oBrowse, pItem, nSet ) CLASS HBDbObject
 
    // create a corresponding GET
    cValue := __dbgObjGetValue( ::TheObj, pitem[ nSet, 1 ], @lCanAcc )
-   IF !lCanAcc
+   IF ! lCanAcc
       __dbgAlert( cValue )
       RETURN NIL
    ENDIF
@@ -273,7 +273,7 @@ METHOD SetsKeyPressed( nKey, oBrwSets, nSets, aArray ) CLASS HBDbObject
          ELSEIF HB_ISOBJECT( aArray[ nSet, 2 ] )
             HBDbObject():New( aArray[ nSet, 2 ], ::pitems[ nSet, 1 ] )
          ELSEIF ( HB_ISSTRING( aArray[ nSet, 2 ] ) .AND. ;
-            !aArray[ nSet, 3 ] ) .OR. ;
+            ! aArray[ nSet, 3 ] ) .OR. ;
             HB_ISBLOCK( aArray[ nSet, 2 ] ) .OR. ;
             HB_ISPOINTER( aArray[ nSet, 2 ] )
             __dbgAlert( "Value cannot be edited" )

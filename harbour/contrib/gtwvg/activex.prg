@@ -180,7 +180,7 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
    ::oOLE:__hObj := hObj
    __AxDoVerb( ::pWnd, -4 )
 
-   IF !Empty( ::hEvents )
+   IF ! Empty( ::hEvents )
       ::oOle:__hSink := __AxRegisterHandler( ::oOle:__hObj, {| nEvent, ... | ::execEvent( nEvent, ... ) } )
    ENDIF
 

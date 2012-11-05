@@ -445,7 +445,7 @@ METHOD dispFrames() CLASS TBROWSE
 
    DispBegin()
 
-   IF ::lInvalid .AND. !Empty( ::cBorder )
+   IF ::lInvalid .AND. ! Empty( ::cBorder )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, ::cBorder, ::colorValue( _TBC_CLR_STANDARD ) )
    ENDIF
 
@@ -612,7 +612,7 @@ METHOD readRecord( nRow ) CLASS TBROWSE
    LOCAL nRowCount := ::rowCount
    LOCAL lRead := .F.
 
-   IF nRow >= 1 .AND. nRow <= nRowCount .AND. !::aCellStatus[ nRow ]
+   IF nRow >= 1 .AND. nRow <= nRowCount .AND. ! ::aCellStatus[ nRow ]
 
       IF nRow <= ::nLastRow
          nToMove := nRow - ::nBufferPos
@@ -752,7 +752,7 @@ METHOD stabilize() CLASS TBROWSE
       ::doConfigure()
    ENDIF
 
-   IF !::lStable .OR. ::lInvalid .OR. ::lFrames .OR. ::lRefresh .OR. ;
+   IF ! ::lStable .OR. ::lInvalid .OR. ::lFrames .OR. ::lRefresh .OR. ;
       ::nMoveOffset != 0 .OR. ::nBufferPos != ::nRowPos
 
       nRowCount := ::rowCount
@@ -779,7 +779,7 @@ METHOD stabilize() CLASS TBROWSE
 
       IF ::nLastScroll > 0
          FOR EACH lStat, lDisp IN ::aCellStatus, ::aDispStatus DESCEND
-            IF !lStat
+            IF ! lStat
                IF lRead
                   RETURN .F.
                ENDIF
@@ -791,7 +791,7 @@ METHOD stabilize() CLASS TBROWSE
          NEXT
       ELSE
          FOR EACH lStat, lDisp IN ::aCellStatus, ::aDispStatus
-            IF !lStat
+            IF ! lStat
                IF lRead
                   RETURN .F.
                ENDIF
@@ -849,14 +849,14 @@ METHOD forceStable() CLASS TBROWSE
     *       be changed. I'll change it in the future but first I will have
     *       to revert my stupid modifications in Harbour core code. Looking
     *       at old TBrowse implementation I replaced some:
-    *             DO WHILE !oBrw:stabilize(); ENDDO
+    *             DO WHILE ! oBrw:stabilize(); ENDDO
     *       with:
     *             oBrw:forceStable()
     *       In Clipper it's not the same because oBrw:forceStable()
     *       may not set cursor position and only ::stabilize() does it.
     *       [druzus]
     */
-   DO WHILE !::stabilize()
+   DO WHILE ! ::stabilize()
    ENDDO
 
    RETURN Self
@@ -1677,7 +1677,7 @@ STATIC PROCEDURE _SETVISIBLE( aColData, nWidth, nFrozen, nLeft, nRight )
                    aColData[ nRight ][ _TBCI_CELLWIDTH ] > 0
          lLeft  := nLeft > nFrozen .AND. nLeft <= nColCount .AND. ;
                    aColData[ nLeft ][ _TBCI_CELLWIDTH ] > 0
-         IF !lLeft
+         IF ! lLeft
             IF lRight
                IF ( nLeft := _PREVCOLUMN( aColData, nRight ) ) < nFrozen
                   nLeft := nRight
@@ -2285,7 +2285,7 @@ METHOD nTop( nTop ) CLASS TBROWSE
    IF nTop != NIL
 #ifdef HB_COMPAT_C53
       ::n_Top := __eInstVar53( Self, "NTOP", nTop, "N", 1001 )
-      IF !Empty( ::cBorder )
+      IF ! Empty( ::cBorder )
          ::n_Top++
       ENDIF
 #else
@@ -2295,7 +2295,7 @@ METHOD nTop( nTop ) CLASS TBROWSE
    ENDIF
 
 #ifdef HB_COMPAT_C53
-   IF !Empty( ::cBorder )
+   IF ! Empty( ::cBorder )
       RETURN ::n_Top - 1
    ENDIF
 #endif
@@ -2308,7 +2308,7 @@ METHOD nLeft( nLeft ) CLASS TBROWSE
    IF nLeft != NIL
 #ifdef HB_COMPAT_C53
       ::n_Left := __eInstVar53( Self, "NLEFT", nLeft, "N", 1001 )
-      IF !Empty( ::cBorder )
+      IF ! Empty( ::cBorder )
          ::n_Left++
       ENDIF
 #else
@@ -2318,7 +2318,7 @@ METHOD nLeft( nLeft ) CLASS TBROWSE
    ENDIF
 
 #ifdef HB_COMPAT_C53
-   IF !Empty( ::cBorder )
+   IF ! Empty( ::cBorder )
       RETURN ::n_Left - 1
    ENDIF
 #endif
@@ -2331,7 +2331,7 @@ METHOD nBottom( nBottom ) CLASS TBROWSE
    IF nBottom != NIL
       ::n_Bottom := __eInstVar53( Self, "NBOTTOM", nBottom, "N", 1001, {| o, x | x >= o:nTop } )
 #ifdef HB_COMPAT_C53
-      IF !Empty( ::cBorder )
+      IF ! Empty( ::cBorder )
          ::n_Bottom--
       ENDIF
 #endif
@@ -2339,7 +2339,7 @@ METHOD nBottom( nBottom ) CLASS TBROWSE
    ENDIF
 
 #ifdef HB_COMPAT_C53
-   IF !Empty( ::cBorder )
+   IF ! Empty( ::cBorder )
       RETURN ::n_Bottom + 1
    ENDIF
 #endif
@@ -2352,7 +2352,7 @@ METHOD nRight( nRight ) CLASS TBROWSE
    IF nRight != NIL
       ::n_Right := __eInstVar53( Self, "NRIGHT", nRight, "N", 1001, {| o, x | x >= o:nLeft } )
 #ifdef HB_COMPAT_C53
-      IF !Empty( ::cBorder )
+      IF ! Empty( ::cBorder )
          ::n_Right--
       ENDIF
 #endif
@@ -2360,7 +2360,7 @@ METHOD nRight( nRight ) CLASS TBROWSE
    ENDIF
 
 #ifdef HB_COMPAT_C53
-   IF !Empty( ::cBorder )
+   IF ! Empty( ::cBorder )
       RETURN ::n_Right + 1
    ENDIF
 #endif
@@ -2413,7 +2413,7 @@ METHOD hitTest( mRow, mCol ) CLASS TBROWSE
 
    nRet := HTNOWHERE
 
-   IF !Empty( ::cBorder )
+   IF ! Empty( ::cBorder )
       IF mRow == nTop - 1
          IF mCol == nLeft - 1
             nRet := HTTOPLEFT
@@ -2577,13 +2577,13 @@ METHOD border( cBorder ) CLASS TBROWSE
 
       IF Len( cBorder ) == 0 .OR. Len( cBorder ) == 8
 
-         IF Empty( ::cBorder ) .AND. !Empty( cBorder )
+         IF Empty( ::cBorder ) .AND. ! Empty( cBorder )
             ::n_Top++
             ::n_Left++
             ::n_Bottom--
             ::n_Right--
             ::configure( _TBR_CONF_COLUMNS )
-         ELSEIF !Empty( ::cBorder ) .AND. Empty( cBorder )
+         ELSEIF ! Empty( ::cBorder ) .AND. Empty( cBorder )
             ::n_Top--
             ::n_Left--
             ::n_Bottom++

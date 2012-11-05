@@ -313,7 +313,7 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
 
    HB_SYMBOL_UNUSED( xDummy )
 
-   IF !oGet:changed
+   IF ! oGet:changed
       RETURN .T.
    ENDIF
 

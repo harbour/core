@@ -149,7 +149,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
    oTopMenu:select( nSelection )
 
-   IF !( oTopMenu:ClassName() == "TOPBARMENU" ) .AND. !oTopMenu:isOpen
+   IF !( oTopMenu:ClassName() == "TOPBARMENU" ) .AND. ! oTopMenu:isOpen
       oTopMenu:open()
    ELSE
       oTopMenu:display()
@@ -181,7 +181,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
    ENDIF
 
-   IF !oTopMenu:getItem( nSelection ):enabled
+   IF ! oTopMenu:getItem( nSelection ):enabled
       RETURN 0
    ENDIF
 
@@ -207,7 +207,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
          IF lLeftDown
 
-            IF !::MHitTest( @oNewMenu, @nNewLevel, @nNewItem ) // ; hit nowhere.
+            IF ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem ) // ; hit nowhere.
 
             ELSEIF nNewLevel != ::nMenuLevel // ; menu level change.
 
@@ -331,7 +331,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
 
       CASE nKey == K_LBUTTONDOWN
 
-         IF !::MHitTest( @oNewMenu, @nNewLevel, @nNewItem )
+         IF ! ::MHitTest( @oNewMenu, @nNewLevel, @nNewItem )
 
             IF GetList != NIL .AND. HitTest( GetList, MRow(), MCol(), ::GetMsgArray() ) != 0
                GetActive():ExitState := GE_MOUSEHIT
@@ -395,7 +395,7 @@ METHOD Modal( nSelection, nMsgRow, nMsgLeft, nMsgRight, cMsgColor, GetList ) CLA
             ::oMenu:select( nNewItem )
             ::oMenu:display()
 
-            IF !::PushMenu()
+            IF ! ::PushMenu()
                ::ShowMsg( .F. )
                nReturn := ::execute()
                IF nReturn != 0
@@ -472,7 +472,7 @@ METHOD PushMenu() CLASS HBMenuSys
       ::aMenuList[ ++::nMenuLevel ] := ::oMenu
       ::oMenu:select( ::oMenu:getFirst() )
 
-      IF !::oMenu:isOpen
+      IF ! ::oMenu:isOpen
          ::oMenu:open()
       ENDIF
 
@@ -547,7 +547,7 @@ METHOD Execute() CLASS HBMenuSys
    LOCAL lPas := .T.
 
    // Execute the Data block if selected MenuItem is !IsPopUp:
-   IF HB_ISOBJECT( oNewMenu ) .AND. !oNewMenu:IsPopUp
+   IF HB_ISOBJECT( oNewMenu ) .AND. ! oNewMenu:IsPopUp
 
       IF ::oMenu:ClassName() $ "TOPBARMENU|POPUPMENU|HB_POPUPMENU"
          SetPos( ::nOldRow, ::nOldCol )
@@ -563,7 +563,7 @@ METHOD Execute() CLASS HBMenuSys
       // Display newly selected current menu item:
       IF ::oMenu:ClassName() $ "POPUPMENU|HB_POPUPMENU" .AND. ;
          ::nMenuLevel == 1 .AND. ;
-         !::oMenu:isOpen
+         ! ::oMenu:isOpen
 
          ::oMenu:open()
       ENDIF
@@ -630,7 +630,7 @@ METHOD ShowMsg( lMode ) CLASS HBMenuSys
 
       IF ::lMsgFlag .AND. ;
          ( nCurrent := ::oMenu:current ) != 0 .AND. ;
-         !Empty( cMsg := ::oMenu:getItem( nCurrent ):message )
+         ! Empty( cMsg := ::oMenu:getItem( nCurrent ):message )
 
          hb_DispOutAt( ::nMsgRow, ::nMsgLeft, PadC( cMsg, ::nMsgRight - ::nMsgLeft + 1 ), ::cMsgColor )
       ENDIF

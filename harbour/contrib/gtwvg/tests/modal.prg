@@ -130,7 +130,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    // place 2 spaces before and after the buttons
    nColCap   := Len( cCaption ) + 7  // " - "+"  "+caption+"  "
    nColTxt   := 0
-   IF !Empty( aText_ )
+   IF ! Empty( aText_ )
       AEval( aText_, {| e | nColTxt := Max( nColTxt, Len( e ) ) } )
    ENDIF
    nColTxt   += 6                   // for two spaces at both sides
@@ -178,7 +178,7 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    Wvg_BoxRaised( nTop, nLeft, nBottom, nRight )
 
    SetColor( pal_[ DLG_CLR_TEXT ] )
-   IF !Empty( aText_ )
+   IF ! Empty( aText_ )
       FOR  i := 1 TO Len( aText_ )
          @ nTop + 1 + i, nLeft SAY PadC( aText_[ i ], nRight - nLeft + 1 )
       NEXT
@@ -297,7 +297,7 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 
    aPos := iif( lCenter, { -1, -1 }, iif( nRow == NIL, { nT, nL }, { nRow, nCol } ) )
 
-   oCrt := WvgCrt():new( , , aPos, { nB - nT, nR - nL }, , !lHidden )
+   oCrt := WvgCrt():new( ,, aPos, { nB - nT, nR - nL },, ! lHidden )
    oCrt:lModal := lModal
    IF lRowCols
       oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS

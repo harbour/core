@@ -271,7 +271,7 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
       ::nLastExitState := 0
       oGet:setFocus()
 
-      DO WHILE oGet:exitState == GE_NOEXIT .AND. !::lKillRead
+      DO WHILE oGet:exitState == GE_NOEXIT .AND. ! ::lKillRead
          IF oGet:typeOut
             oGet:exitState := GE_ENTER
          ENDIF
@@ -280,7 +280,7 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
 //          oGet:exitState := GE_ENTER
 //       ENDIF
 
-         DO WHILE oGet:exitState == GE_NOEXIT .AND. !::lKillRead
+         DO WHILE oGet:exitState == GE_NOEXIT .AND. ! ::lKillRead
 #ifdef HB_COMPAT_C53
             SetCursor( iif( ::nSaveCursor == SC_NONE, SC_NORMAL, ::nSaveCursor ) )
             nKey := Inkey( 0 )
@@ -296,11 +296,11 @@ METHOD Reader( oMenu, aMsg ) CLASS HBGetList
          ENDDO
 
 #ifdef HB_COMPAT_C53
-         IF !::nLastExitState == GE_SHORTCUT .AND. ;
-            !::nLastExitState == GE_MOUSEHIT .AND. ;
-            !::GetPostValidate( oGet, aMsg )
+         IF ! ::nLastExitState == GE_SHORTCUT .AND. ;
+            ! ::nLastExitState == GE_MOUSEHIT .AND. ;
+            ! ::GetPostValidate( oGet, aMsg )
 #else
-         IF !::GetPostValidate( oGet, aMsg )
+         IF ! ::GetPostValidate( oGet, aMsg )
 #endif
             oGet:exitState := GE_NOEXIT
          ENDIF
@@ -888,7 +888,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
 
       ::nHitCode := 0
 
-      DO WHILE oGet:exitState == GE_NOEXIT .AND. !::lKillRead
+      DO WHILE oGet:exitState == GE_NOEXIT .AND. ! ::lKillRead
 
          // Check for initial typeout (no editable positions)
          IF oGUI:typeOut
@@ -896,7 +896,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
          ENDIF
 
          // Apply keystrokes until exit
-         DO WHILE oGet:exitState == GE_NOEXIT .AND. !::lKillRead
+         DO WHILE oGet:exitState == GE_NOEXIT .AND. ! ::lKillRead
             ::GUIApplyKey( oGet, oGUI, Inkey( 0 ), oMenu, aMsg )
 
             ::ShowGetMsg( oGet, aMsg )
@@ -904,7 +904,7 @@ METHOD GUIReader( oGet, oMenu, aMsg ) CLASS HBGetList
 
          IF ::nLastExitState != GE_SHORTCUT .AND. ;
             ::nLastExitState != GE_MOUSEHIT .AND. ;
-            !::GetPostValidate( oGet, aMsg )
+            ! ::GetPostValidate( oGet, aMsg )
             oGet:exitState := GE_NOEXIT
          ENDIF
       ENDDO
@@ -1105,7 +1105,7 @@ METHOD GUIApplyKey( oGet, oGUI, nKey, oMenu, aMsg ) CLASS HBGetList
          oGUI:Select( nButton )
 
       ELSEIF nButton == HTDROPBUTTON
-         IF !oGUI:IsOpen
+         IF ! oGUI:IsOpen
             oGUI:Open()
             lClose := .F.
          ENDIF
@@ -1156,7 +1156,7 @@ METHOD GUIPreValidate( oGet, oGUI, aMsg ) CLASS HBGetList
    IF ::lKillRead
       lWhen := .F.
       oGet:exitState := GE_ESCAPE
-   ELSEIF !lWhen
+   ELSEIF ! lWhen
       oGet:exitState := GE_WHEN
    ELSE
       oGet:exitState := GE_NOEXIT
@@ -1354,13 +1354,13 @@ METHOD TBReader( oGet, oMenu, aMsg ) CLASS HBGetList
 
       ::nHitcode := 0
 
-      DO WHILE oGet:exitState == GE_NOEXIT .AND. !::lKillRead
+      DO WHILE oGet:exitState == GE_NOEXIT .AND. ! ::lKillRead
 
          // Apply keystrokes until exit
-         DO WHILE oGet:exitState == GE_NOEXIT .AND. !::lKillRead
+         DO WHILE oGet:exitState == GE_NOEXIT .AND. ! ::lKillRead
             nKey := 0
 
-            DO WHILE !oTB:Stabilize() .AND. nKey == 0
+            DO WHILE ! oTB:Stabilize() .AND. nKey == 0
                nKey := Inkey()
             ENDDO
 
@@ -1385,7 +1385,7 @@ METHOD TBReader( oGet, oMenu, aMsg ) CLASS HBGetList
          // Disallow exit if the VALID condition is not satisfied
          IF ::nLastExitState == GE_SHORTCUT
          ELSEIF ::nLastExitState == GE_MOUSEHIT
-         ELSEIF !::GetPostValidate( oGet, aMsg )
+         ELSEIF ! ::GetPostValidate( oGet, aMsg )
             oGet:exitState := GE_NOEXIT
          ENDIF
 
@@ -1454,10 +1454,10 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
             // Test the current GUI-GET or Get PostValidation:
             lGUI := HB_ISOBJECT( ::aGetList[ ::nPos ]:control )
 
-            IF lGUI .AND. !::GUIPostValidate( ::aGetList[ ::nPos ], ::aGetList[ ::nPos ]:control, aMsg )
+            IF lGUI .AND. ! ::GUIPostValidate( ::aGetList[ ::nPos ], ::aGetList[ ::nPos ]:control, aMsg )
                RETURN 0
 
-            ELSEIF !lGUI .AND. !::GetPostValidate( ::aGetList[ ::nPos ], aMsg )
+            ELSEIF ! lGUI .AND. ! ::GetPostValidate( ::aGetList[ ::nPos ], aMsg )
                RETURN 0
 
             ENDIF
@@ -1465,11 +1465,11 @@ METHOD Accelerator( nKey, aMsg ) CLASS HBGetList
             // Test the next GUI-GET or Get PreValidation:
             lGUI := HB_ISOBJECT( oGet:control )
 
-            IF lGUI .AND. !::GUIPreValidate( oGet, oGet:control, aMsg )
+            IF lGUI .AND. ! ::GUIPreValidate( oGet, oGet:control, aMsg )
                // RETURN 0  // Commented out.
                RETURN nGet  // Changed.
 
-            ELSEIF !lGUI .AND. !::GetPreValidate( oGet, aMsg )
+            ELSEIF ! lGUI .AND. ! ::GetPreValidate( oGet, aMsg )
                // RETURN 0  // Commented out.
                RETURN nGet  // Changed.
 
@@ -1507,13 +1507,13 @@ METHOD HitTest( nMRow, nMCol, aMsg ) CLASS HBGetList
       // Test the current GUI-GET or Get PostValidation:
       lGUI := HB_ISOBJECT( ::aGetList[ ::nPos ]:control )
 
-      IF lGUI .AND. !::GUIPostValidate( ::aGetList[ ::nPos ], ::aGetList[ ::nPos ]:control, aMsg )
+      IF lGUI .AND. ! ::GUIPostValidate( ::aGetList[ ::nPos ], ::aGetList[ ::nPos ]:control, aMsg )
 
          ::nNextGet := 0
          // EXIT  // Commented out.
          RETURN 0  // Changed.
 
-      ELSEIF !lGUI .AND. !::GetPostValidate( ::aGetList[ ::nPos ], aMsg )
+      ELSEIF ! lGUI .AND. ! ::GetPostValidate( ::aGetList[ ::nPos ], aMsg )
 
          ::nNextGet := 0
          // EXIT  // Commented out.
@@ -1524,13 +1524,13 @@ METHOD HitTest( nMRow, nMCol, aMsg ) CLASS HBGetList
       // Test the next GUI-GET or Get PreValidation:
       lGUI := HB_ISOBJECT( ::aGetList[ ::nNextGet ]:control )
 
-      IF lGUI .AND. !::GUIPreValidate( ::aGetList[ ::nNextGet ], ::aGetList[ ::nNextGet ]:control, aMsg )
+      IF lGUI .AND. ! ::GUIPreValidate( ::aGetList[ ::nNextGet ], ::aGetList[ ::nNextGet ]:control, aMsg )
 
          ::nNextGet := 0
          // EXIT  // Commented out.
          RETURN ::nNextGet  // Changed.
 
-      ELSEIF !lGUI .AND. !::GetPreValidate( ::aGetList[ ::nNextGet ], aMsg )
+      ELSEIF ! lGUI .AND. ! ::GetPreValidate( ::aGetList[ ::nNextGet ], aMsg )
 
          ::nNextGet := 0
          // EXIT  // Commented out.
@@ -1623,13 +1623,13 @@ METHOD ShowGetMsg( oGet, aMsg ) CLASS HBGetList
    LOCAL cMsg
    LOCAL lMOldState
 
-   IF !Empty( aMsg ) .AND. aMsg[ MSGFLAG ]
+   IF ! Empty( aMsg ) .AND. aMsg[ MSGFLAG ]
 
       hb_default( @oGet, ::oGet )
 
       cMsg := iif( HB_ISOBJECT( oGet:control ), oGet:control:message, oGet:message )
 
-      IF !Empty( cMsg )
+      IF ! Empty( cMsg )
          lMOldState := MSetCursor( .F. )
          hb_DispOutAt( aMsg[ MSGROW ], aMsg[ MSGLEFT ], PadC( cMsg, aMsg[ MSGRIGHT ] - aMsg[ MSGLEFT ] + 1 ), aMsg[ MSGCOLOR ] )
          MSetCursor( lMOldState )
@@ -1649,7 +1649,7 @@ METHOD EraseGetMsg( aMsg ) CLASS HBGetList
    LOCAL nCol := Col()
    LOCAL lMOldState
 
-   IF !Empty( aMsg ) .AND. aMsg[ MSGFLAG ]
+   IF ! Empty( aMsg ) .AND. aMsg[ MSGFLAG ]
       lMOldState := MSetCursor( .F. )
       RestScreen( aMsg[ MSGROW ], aMsg[ MSGLEFT ], aMsg[ MSGROW ], aMsg[ MSGRIGHT ], ::cMsgSaveS )
       MSetCursor( lMOldState )

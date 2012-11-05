@@ -111,7 +111,7 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
    DO CASE
    CASE cType == "O"
 
-      IF !lAssocAsObj .AND. xVar:ClassName == "TASSOCIATIVEARRAY"
+      IF ! lAssocAsObj .AND. xVar:ClassName == "TASSOCIATIVEARRAY"
          cString += Space( nIndent ) + "Type='Associative' -> " + hb_eol()
          // Keys extraction.
          IF Len( xVar:Keys ) > 0

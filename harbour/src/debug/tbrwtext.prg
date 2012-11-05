@@ -148,7 +148,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, cFileName, cColors, lLineNumbers ) CLA
    ::oBrw:goBottomBlock := {|| ::nRow := ::nRows }
    ::oBrw:skipBlock := {| n | ::Skip( n ) }
 
-   IF !Empty( cFileName )
+   IF ! Empty( cFileName )
       ::LoadFile( cFileName )
    ENDIF
 
@@ -261,7 +261,7 @@ METHOD Search( cString, lCaseSensitive, nMode ) CLASS HBBrwText
    LOCAL lFound := .F.
    LOCAL n
 
-   IF !lCaseSensitive
+   IF ! lCaseSensitive
       cString := Upper( cString )
    ENDIF
 

@@ -149,7 +149,7 @@ STATIC FUNCTION proc_login()
       ordSetFocus( "user" )
       cUser := PadR( hb_HGetDef( post, "user", "" ), 16 )
       USessionStart()
-      IF !Empty( cUser ) .AND. dbSeek( cUser, .F. ) .AND. ! Deleted() .AND. ;
+      IF ! Empty( cUser ) .AND. dbSeek( cUser, .F. ) .AND. ! Deleted() .AND. ;
             PadR( hb_HGetDef( post, "password", "" ), 16 ) == FIELD->PASSWORD
          session[ "user" ] := cUser
          URedirect( "main" )

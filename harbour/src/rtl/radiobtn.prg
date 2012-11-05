@@ -113,7 +113,7 @@ ENDCLASS
 
 METHOD setFocus() CLASS RADIOBUTTN
 
-   IF !::lHasFocus
+   IF ! ::lHasFocus
       ::lHasFocus := .T.
       ::display()
 
@@ -128,7 +128,7 @@ METHOD select( lState ) CLASS RADIOBUTTN
 
    LOCAL lOldState := ::lBuffer
 
-   ::lBuffer := iif( HB_ISLOGICAL( lState ), lState, !::lBuffer )
+   ::lBuffer := iif( HB_ISLOGICAL( lState ), lState, ! ::lBuffer )
 
    IF lOldState != ::lBuffer .AND. ;
       HB_ISBLOCK( ::bSBlock )
@@ -166,7 +166,7 @@ METHOD display() CLASS RADIOBUTTN
       iif( ::lBuffer, SubStr( cStyle, 2, 1 ), SubStr( cStyle, 3, 1 ) ) + ;
       Right( cStyle, 1 ), cColor )
 
-   IF !Empty( cOldCaption := ::cCaption )
+   IF ! Empty( cOldCaption := ::cCaption )
 
       IF ( nPos := At( "&", cOldCaption ) ) == 0
       ELSEIF nPos == Len( cOldCaption )
@@ -280,7 +280,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOBUTTN
 
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
-         {|| !Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } )
+         {|| ! Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec

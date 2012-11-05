@@ -344,7 +344,7 @@ METHOD ExcelWriterXML_Style:alignHorizontal( halign )
 
 METHOD ExcelWriterXML_Style:alignRotate( rotate )
 
-   IF !HB_ISNUMERIC( rotate )
+   IF ! HB_ISNUMERIC( rotate )
       RETURN NIL
    ENDIF
    IF Abs( rotate ) > 90

@@ -21,7 +21,7 @@ PROCEDURE Main()
 
    oObject := win_OleCreateObject( "MyOleRPCServer" )
 
-   IF !Empty( oObject )
+   IF ! Empty( oObject )
       IF oObject:connect( NETSERVER, NETPORT,, NETPASSWD )
          ? "Connected to the server:", NETSERVER
          /* execute some functions on the server side and display

@@ -147,7 +147,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
 
    i := 2
 
-   DO WHILE !Empty( ProcName( i ) )
+   DO WHILE ! Empty( ProcName( i ) )
 
       cErrString += "Called from " + RTrim( ProcName( i ) ) + ;
          "(" + hb_ntos( ProcLine( i ) ) + ") <BR>" + CRLF()
@@ -227,10 +227,10 @@ STATIC FUNCTION ErrorMessage( e )
    ENDIF
 
    // add either filename or operation
-   IF !Empty( e:filename )
+   IF ! Empty( e:filename )
       cMessage += ": " + e:filename
 
-   ELSEIF !Empty( e:operation )
+   ELSEIF ! Empty( e:operation )
       cMessage += ": " + e:operation
 
    ENDIF

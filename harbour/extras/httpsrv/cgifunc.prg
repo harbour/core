@@ -91,7 +91,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
          // now check if variable already exists. If yes and I have already another element
          // with same name, then I will change it to an array
          IF ( hb_HPos( hHashVars, cName ) ) > 0
-            IF !HB_ISARRAY( hHashVars[ cName ] )
+            IF ! HB_ISARRAY( hHashVars[ cName ] )
                // Transform it to array
                hHashVars[ cName ] := { hHashVars[ cName ] }
             ENDIF
@@ -156,7 +156,7 @@ FUNCTION uhttpd_SplitUrl( cUrl )
       cProto := ""
    ENDIF
 
-   cUri += cProto + iif( !Empty( cProto ), "://", "" )
+   cUri += cProto + iif( ! Empty( cProto ), "://", "" )
 
    // Now we have:
    // [username:password@]hostname[:port][/path[/file[.ext]][?arg1=[value][&arg2=[value]]][#anchor]]
@@ -347,7 +347,7 @@ FUNCTION uhttpd_URLEncode( cString, lComplete )
            cChar == '/' .OR. cChar == ';' .OR. cChar == '_'
          cRet += cChar
 
-      CASE iif( !lComplete, cChar == ':' .OR. cChar == '?' .OR. cChar == '=', .F. )
+      CASE iif( ! lComplete, cChar == ':' .OR. cChar == '?' .OR. cChar == '=', .F. )
          cRet += cChar
 
       OTHERWISE
@@ -663,7 +663,7 @@ PROCEDURE uhttpd_Die( cError )
 
    IF cError != NIL // THEN OutStd( cError )
       // __OutDebug( "cError: ", cError )
-      // IF !oCGI:HeaderSent()
+      // IF ! oCGI:HeaderSent()
       //   oCGI:WriteLN( CRLF2BR( cError ), CRLF2BR( CRLF() ) )
       //   //oCGI:WriteLN( CRLF2BR( hb_dumpVar(TConfigure():hConfig) ) )
       // ENDIF
@@ -679,7 +679,7 @@ PROCEDURE uhttpd_Die( cError )
       oErr:fileName    := ""
       oErr:osCode      := 0
       lError := Eval( ErrorBlock(), oErr )
-      IF !HB_ISLOGICAL( lError ) .OR. lError
+      IF ! HB_ISLOGICAL( lError ) .OR. lError
          __errInHandler()
       ENDIF
       Break( oErr )
@@ -749,7 +749,7 @@ PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
    IF cLog != NIL
 
-      IF !lCreate .AND. hb_FileExists( cLog )
+      IF ! lCreate .AND. hb_FileExists( cLog )
          nHandle := FOpen( cLog, FO_READWRITE + FO_SHARED )
       ELSE
          nHandle := hb_FCreate( cLog, FC_NORMAL, FO_READWRITE + FO_SHARED )
@@ -789,7 +789,7 @@ FUNCTION uhttpd_SplitFileName( cFile )
 
    cSep := hb_ps()
 
-   hFile:FULLPATH := iif( !Empty( hFile:PATH ), iif( !( Right( hFile:PATH, Len( cSep ) ) == cSep ), hFile:PATH + cSep, hFile:PATH ), "" )
+   hFile:FULLPATH := iif( ! Empty( hFile:PATH ), iif( !( Right( hFile:PATH, Len( cSep ) ) == cSep ), hFile:PATH + cSep, hFile:PATH ), "" )
    hFile:UNC      := hFile:FULLPATH + hFile:FULLNAME
 
    RETURN hFile

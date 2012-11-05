@@ -219,7 +219,7 @@ PROCEDURE Main( ... )
    LOCAL nConsoleRows, nConsoleCols
    LOCAL nCmdConsoleRows, nCmdConsoleCols
 
-   IF !hb_mtvm()
+   IF ! hb_mtvm()
       ? "I need multhread support. Please, recompile me!"
       WAIT
       ErrorLevel( 2 )
@@ -708,7 +708,7 @@ STATIC FUNCTION AcceptConnections()
       ENDIF
 
       // Waiting a connection from main application loop
-      IF !lQuitRequest
+      IF ! lQuitRequest
          hb_mutexSubscribe( s_hmtxQueue,, @hSocket )
       ENDIF
 
@@ -972,7 +972,7 @@ STATIC FUNCTION ProcessConnection()
    // Here I remove this thread from thread queue as it is unnecessary, but only if there is not
    // an external quit request. In this case application is quitting and I cannot resize array
    // here to avoid race condition
-   IF !lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
+   IF ! lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
       // hb_ToOutDebug( "Len( s_aRunningThreads ) = %i\n\r", Len( s_aRunningThreads ) )
       IF ( nPos := AScan( s_aRunningThreads, hb_threadSelf() ) > 0 )
          hb_ADel( s_aRunningThreads, nPos, .T. )
@@ -1117,7 +1117,7 @@ STATIC FUNCTION ServiceConnection()
    // Here I remove this thread from thread queue as it is unnecessary, but only if there is not
    // an external quit request. In this case application is quitting and I cannot resize array
    // here to avoid race condition
-   IF !lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
+   IF ! lQuitRequest .AND. hb_mutexLock( s_hmtxBusy )
       IF ( nPos := AScan( s_aServiceThreads, hb_threadSelf() ) > 0 )
          hb_ADel( s_aServiceThreads, nPos, .T. )
          s_nServiceThreads := Len( s_aServiceThreads )
@@ -1217,7 +1217,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    IF hb_HPos( _HTTP_REQUEST, "Host" ) == 0
 
       // Try to determine Host name
-      IF !Empty( hUrl[ "HOST" ] )
+      IF ! Empty( hUrl[ "HOST" ] )
          _HTTP_REQUEST[ "Host" ] := hUrl[ "HOST" ]
       ELSE
          _HTTP_REQUEST[ "Host" ] := ""
@@ -1232,7 +1232,7 @@ STATIC FUNCTION ParseRequest( cRequest )
 
    // GET
    cFields := _SERVER[ "QUERY_STRING" ]
-   IF !Empty( cFields )
+   IF ! Empty( cFields )
       hVars := uhttpd_GetVars( cFields )
       hb_HMerge( _GET, hVars )
       hb_HMerge( _REQUEST, hVars )
@@ -1243,7 +1243,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    // POST
    IF "POST" $ Upper( _SERVER[ 'REQUEST_METHOD' ] )
       cFields := ATail( aRequest )
-      IF !Empty( cFields )
+      IF ! Empty( cFields )
          hVars := uhttpd_GetVars( cFields )
          hb_HMerge( _POST, hVars )
          hb_HMerge( _REQUEST, hVars )
@@ -1255,7 +1255,7 @@ STATIC FUNCTION ParseRequest( cRequest )
 
    // COOKIES
    cFields := _SERVER[ 'HTTP_COOKIE' ]
-   IF !Empty( cFields )
+   IF ! Empty( cFields )
       hVars := uhttpd_GetVars( cFields, ";" )
       hb_HMerge( _COOKIE, hVars )
       hb_HMerge( _REQUEST, hVars )
@@ -1862,7 +1862,7 @@ FUNCTION uhttpd_join( cSeparator, aData )
       CASE "C"
       CASE "M"; cRet += aData[ nI ]; EXIT
       CASE "N"; cRet += LTrim( Str( aData[ nI ] ) ); EXIT
-      CASE "D"; cRet += iif( !Empty( aData[ nI ] ), DToC( aData[ nI ] ), "" ); EXIT
+      CASE "D"; cRet += iif( ! Empty( aData[ nI ] ), DToC( aData[ nI ] ), "" ); EXIT
       ENDSWITCH
    NEXT
 
@@ -1959,7 +1959,7 @@ STATIC FUNCTION uproc_default()
             // Check for PATH_INFO: I will search if there is a physical file removing parts from right
             cBaseFile := cScript
             lFound := .F.
-            DO WHILE !Empty( cBaseFile )
+            DO WHILE ! Empty( cBaseFile )
 
                // hb_toOutDebug( "cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
 
@@ -1987,7 +1987,7 @@ STATIC FUNCTION uproc_default()
             // hb_toOutDebug( "Uscita: cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
 
             // Found a script file name
-            IF lFound .AND. !Empty( cPathInfo )
+            IF lFound .AND. ! Empty( cPathInfo )
                // Store PATH_INFO
                _SERVER[ "PATH_INFO" ]       := cPathInfo
                _SERVER[ "PATH_TRANSLATED" ] := cFileName
@@ -2065,7 +2065,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
@@ -2075,7 +2075,7 @@ STATIC PROCEDURE ShowServerStatus()
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 
@@ -2124,7 +2124,7 @@ STATIC PROCEDURE ShowFolder( cDir )
 
    // hb_ToOutDebug( "cDir = %s, nPos = %i, cParentDir = %s\n\r", cDir, nPos, cParentDir )
 
-   IF !Empty( cParentDir )
+   IF ! Empty( cParentDir )
       // Add parent directory
       hb_AIns( aDir, 1, { "<parent>", 0, "", "", "D" }, .T. )
    ENDIF
@@ -2163,7 +2163,7 @@ STATIC FUNCTION HRB_LoadFromFileEncrypted( cFile, cKey )
 // Reverse function to save is:
 PROCEDURE HRB_SaveToFileEncrypted( cHrbBody, cKey, cEncFileName )
    LOCAL cFile
-   IF !Empty( cHrbBody )
+   IF ! Empty( cHrbBody )
       cHrbBody := hb_zcompress( cHrbBody )
       cHrbBody := sx_encrypt( cHrbBody, cKey )
       hb_memowrit( cEncFileName, cHrbBody )
@@ -2340,7 +2340,7 @@ STATIC FUNCTION ParseIni( cConfig )
    // hb_ToOutDebug( "hDefault = %s\n\r", hb_ValToExp( hDefault ) )
 
    // Now read changes from ini file and modify only admited keys
-   IF !Empty( hIni )
+   IF ! Empty( hIni )
       FOR EACH cSection IN hIni:Keys
 
          cSection := Upper( cSection )
@@ -2390,12 +2390,12 @@ STATIC FUNCTION ParseIni( cConfig )
                            CASE cKey == "CONSOLE-COLS"
                               xVal := Val( cVal )
                            CASE cKey == "APPLICATION_ROOT"
-                              IF !Empty( cVal )
+                              IF ! Empty( cVal )
                                  // Change APP_DIR macro with current exe path
                                  xVal := cVal
                               ENDIF
                            CASE cKey == "DOCUMENT_ROOT"
-                              IF !Empty( cVal )
+                              IF ! Empty( cVal )
                                  // After will change APP_DIR macro with application dir
                                  // xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
                                  xVal := cVal
@@ -2403,13 +2403,13 @@ STATIC FUNCTION ParseIni( cConfig )
                            CASE cKey == "SCRIPTALIASMIXEDCASE"
                               xVal := cVal
                            CASE cKey == "SESSIONPATH"
-                              IF !Empty( cVal )
+                              IF ! Empty( cVal )
                                  // Change APP_DIR macro with current exe path
                                  // xVal := StrTran( cVal, "$(APP_DIR)", Exe_Path() )
                                  xVal := cVal
                               ENDIF
                            CASE cKey == "DIRECTORYINDEX"
-                              IF !Empty( cVal )
+                              IF ! Empty( cVal )
                                  xVal := uhttpd_split( " ", AllTrim( cVal ) )
                               ENDIF
                            ENDCASE
@@ -2632,9 +2632,9 @@ STATIC FUNCTION ErrorMessage( oError )
 
    // add either filename or operation
    DO CASE
-   CASE !Empty( oError:filename )
+   CASE ! Empty( oError:filename )
       cMessage += ": " + oError:filename
-   CASE !Empty( oError:operation )
+   CASE ! Empty( oError:operation )
       cMessage += ": " + oError:operation
    ENDCASE
 
@@ -2669,7 +2669,7 @@ STATIC FUNCTION Handler_Default( cFileName )
    ELSEIF hb_DirExists( uhttpd_OSFileName( cFileName ) )
 
       // If I'm here it's means that I have no page, so, if it is defined, I will display content folder
-      IF !s_lIndexes
+      IF ! s_lIndexes
          uhttpd_SetStatusCode( 403 )
          t_cErrorMsg := "Display file list not allowed"
       ELSE
@@ -2708,7 +2708,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
@@ -2718,7 +2718,7 @@ STATIC FUNCTION Handler_ServerStatus()
       uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
-      cThreads := "{ " + iif( !Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
+      cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
       uhttpd_Write( '<br>Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 
@@ -2739,20 +2739,20 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       // Lock HRB to avoid MT race conditions
-      IF !HRB_ACTIVATE_CACHE
+      IF ! HRB_ACTIVATE_CACHE
          cHRBBody := HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) )
       ENDIF
       IF hb_mutexLock( s_hmtxHRB )
          BEGIN SEQUENCE
             IF HRB_ACTIVATE_CACHE
                // caching modules
-               IF !hb_HHasKey( s_hHRBModules, cFileName )
+               IF ! hb_HHasKey( s_hHRBModules, cFileName )
                   hb_HSet( s_hHRBModules, cFileName, HRB_LoadFromFile( uhttpd_OSFileName( cFileName ) ) )
                ENDIF
                cHRBBody := s_hHRBModules[ cFileName ]
             ENDIF
             WriteToConsole( "Executing: " + cFileName )
-            IF !Empty( pHRB := hb_hrbLoad( cHRBBody ) )
+            IF ! Empty( pHRB := hb_hrbLoad( cHRBBody ) )
 
                // save current directory
                cCurPath := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
@@ -2823,7 +2823,7 @@ STATIC FUNCTION Handler_CgiScript( cFileName )
    ELSE
 
       uhttpd_SetHeader( "Content-Type", "text/html" )
-      IF !Empty( xResult )
+      IF ! Empty( xResult )
          uhttpd_Write( xResult )
       ELSE
          uhttpd_Write( "CGI Error" )

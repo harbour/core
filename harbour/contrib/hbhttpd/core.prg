@@ -964,13 +964,13 @@ STATIC FUNCTION GetErrorDesc( oErr )
    cRet := "ERRORLOG ============================================================" + hb_eol() + ;
       "Error: " + oErr:subsystem + "/" + ErrDescCode( oErr:genCode ) + "(" + hb_ntos( oErr:genCode ) + ") " + ;
       hb_ntos( oErr:subcode ) + hb_eol()
-   IF !Empty( oErr:filename );      cRet += "File: " + oErr:filename + hb_eol()
+   IF ! Empty( oErr:filename );      cRet += "File: " + oErr:filename + hb_eol()
    ENDIF
-   IF !Empty( oErr:description );   cRet += "Description: " + oErr:description + hb_eol()
+   IF ! Empty( oErr:description );   cRet += "Description: " + oErr:description + hb_eol()
    ENDIF
-   IF !Empty( oErr:operation );     cRet += "Operation: " + oErr:operation + hb_eol()
+   IF ! Empty( oErr:operation );     cRet += "Operation: " + oErr:operation + hb_eol()
    ENDIF
-   IF !Empty( oErr:osCode );        cRet += "OS error: " + hb_ntos( oErr:osCode ) + hb_eol()
+   IF ! Empty( oErr:osCode );        cRet += "OS error: " + hb_ntos( oErr:osCode ) + hb_eol()
    ENDIF
    IF HB_ISARRAY( oErr:args )
       cRet += "Arguments:" + hb_eol()
@@ -1511,14 +1511,14 @@ PROCEDURE UProcInfo()
    AEval( ASort( hb_HKeys( server ) ), {| X | UWrite( '<tr><td>' + X + '</td><td>' + UHtmlEncode( hb_CStr( server[ X ] ) ) + '</td></tr>' ) } )
    UWrite( '</table>' )
 
-   IF !Empty( get )
+   IF ! Empty( get )
       UWrite( '<h3>get</h3>' )
       UWrite( '<table border=1 cellspacing=0>' )
       AEval( ASort( hb_HKeys( get ) ), {| X | UWrite( '<tr><td>' + X + '</td><td>' + UHtmlEncode( hb_CStr( get[ X ] ) ) + '</td></tr>' ) } )
       UWrite( '</table>' )
    ENDIF
 
-   IF !Empty( post )
+   IF ! Empty( post )
       UWrite( '<h3>post</h3>' )
       UWrite( '<table border=1 cellspacing=0>' )
       AEval( ASort( hb_HKeys( post ) ), {| X | UWrite( '<tr><td>' + X + '</td><td>' + UHtmlEncode( hb_CStr( post[ X ] ) ) + '</td></tr>' ) } )

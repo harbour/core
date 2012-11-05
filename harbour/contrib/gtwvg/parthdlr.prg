@@ -408,7 +408,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       DO CASE
       CASE xParams[ 1 ] == 0                             /* menu selected */
          IF HB_ISOBJECT( ::oMenu )
-            IF !Empty( aMenuItem := ::oMenu:FindMenuItemById( xParams[ 2 ] ) )
+            IF ! Empty( aMenuItem := ::oMenu:FindMenuItemById( xParams[ 2 ] ) )
                IF HB_ISBLOCK( aMenuItem[ 2 ] )
                   Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
 
@@ -518,7 +518,7 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
       IF hWndCtrl == 0                            /* It is menu */
          IF HB_ISOBJECT( ::oMenu )
-            IF !Empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
+            IF ! Empty( aMenuItem := ::oMenu:FindMenuItemById( nCtrlID ) )
                IF HB_ISBLOCK( aMenuItem[ 2 ] )
                   Eval( aMenuItem[ 2 ], aMenuItem[ 1 ], NIL, aMenuItem[ 4 ] )
 

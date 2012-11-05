@@ -311,7 +311,7 @@ CREATE CLASS HBDebugger
    METHOD RestoreAppScreen()
    METHOD RestoreAppState()
    METHOD RestoreSettings()
-   METHOD RunAtStartup() INLINE ::lRunAtStartup := ::oPullDown:GetItemByIdent( "ALTD" ):checked := !::lRunAtStartup
+   METHOD RunAtStartup() INLINE ::lRunAtStartup := ::oPullDown:GetItemByIdent( "ALTD" ):checked := ! ::lRunAtStartup
    METHOD SaveAppScreen()
    METHOD SaveAppState()
    METHOD SaveSettings()
@@ -327,7 +327,7 @@ CREATE CLASS HBDebugger
    METHOD Sort() INLINE ASort( ::aVars,,, {| x, y | x[ 1 ] < y[ 1 ] } ), ;
       ::lSortVars := .T., ;
       iif( ::oBrwVars != NIL, ::oBrwVars:RefreshAll(), NIL ), ;
-      iif( ::oWndVars != NIL .AND. ::oWndVars:lVisible, iif( !::lGo .AND. ::oBrwVars != NIL, ::oBrwVars:ForceStable(), NIL ), NIL )
+      iif( ::oWndVars != NIL .AND. ::oWndVars:lVisible, iif( ! ::lGo .AND. ::oBrwVars != NIL, ::oBrwVars:ForceStable(), NIL ), NIL )
 
    METHOD Speed() INLINE ::nSpeed := ::InputBox( "Step delay (in tenths of a second)", ::nSpeed )
 
@@ -420,7 +420,7 @@ METHOD New() CLASS HBDebugger
 
 METHOD OpenDebuggerWindow() CLASS HBDebugger
 
-   IF !::lDebuggerWindowIsOpen
+   IF ! ::lDebuggerWindowIsOpen
       ::hUserWindow := hb_gtInfo( HB_GTI_GETWIN )
       IF ::hDebuggerWindow == NIL
          ::hDebuggerWindow := hb_gtInfo( HB_GTI_GETWIN, ;
@@ -870,7 +870,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
 
    CASE starts( "BP", cCommand )
       /* TODO: Support BP <cFuncName> */
-      IF !Empty( cParam )
+      IF ! Empty( cParam )
          IF ( n := At( " ", cParam ) ) > 0
             cParam1 := AllTrim( SubStr( cParam, n + 1 ) )
             cParam := Left( cParam, n - 1 )
@@ -903,7 +903,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
    CASE starts( "HELP", cCommand )
       ::ShowHelp()
 
-   CASE starts( "INPUT", cCommand ) .AND. !Empty( cParam )
+   CASE starts( "INPUT", cCommand ) .AND. ! Empty( cParam )
       ::DoScript( cParam )
 
    /* TODO: Support LIST BP|WP|TP */
@@ -996,7 +996,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       ::Resume()
 
    CASE starts( "SPEED", cCommand )
-      IF !Empty( cParam )
+      IF ! Empty( cParam )
          ::nSpeed := Val( cParam )
       ELSE
          ::nSpeed := 0
@@ -1009,7 +1009,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       ::TracepointAdd( cParam )
 
    CASE starts( "VIEW", cCommand )
-      IF !Empty( cParam ) .AND. starts( "CALLSTACK", Upper( cParam ) )
+      IF ! Empty( cParam ) .AND. starts( "CALLSTACK", Upper( cParam ) )
          ::Stack()
       ELSE
          cResult := "Command error"
@@ -1056,7 +1056,7 @@ METHOD DoCommand( cCommand ) CLASS HBDebugger
       hb_DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 1, ;
          Space( ::oWndCommand:nRight - ::oWndCommand:nLeft - 1 ), ;
          __DbgColors()[ 2 ] )
-      IF !Empty( cResult )
+      IF ! Empty( cResult )
          hb_DispOutAt( ::oWndCommand:nBottom - 1, ::oWndCommand:nLeft + 3, ;
             cResult, __DbgColors()[ 2 ] )
          ::oWndCommand:ScrollUp( 1 )
@@ -1188,7 +1188,7 @@ METHOD GetExprValue( xExpr, lValid ) CLASS HBDebugger
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       xResult := __dbgGetExprValue( ::pInfo, xExpr, @lValid )
-      IF !lValid
+      IF ! lValid
          xResult := "Syntax error"
       ENDIF
    RECOVER USING oErr
@@ -1596,7 +1596,7 @@ METHOD IsValidStopLine( cName, nLine ) CLASS HBDebugger
 
 METHOD LineNumbers( lLineNumbers ) CLASS HBDebugger
 
-   hb_default( @lLineNumbers, !::lLineNumbers )
+   hb_default( @lLineNumbers, ! ::lLineNumbers )
 
    ::lLineNumbers := lLineNumbers
    ::oPulldown:GetItemByIdent( "LINE" ):checked := ::lLineNumbers
@@ -1740,8 +1740,8 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
       IF ::lShowGlobals
          cName := ::aProcStack[ ::oBrwStack:Cargo ][ CSTACK_MODULE ]
          FOR n := 1 TO Len( ::aModules )
-            IF !::lShowAllGlobals
-               IF !hb_FileMatch( ::aModules[ n ][ MODULE_NAME ], cName )
+            IF ! ::lShowAllGlobals
+               IF ! hb_FileMatch( ::aModules[ n ][ MODULE_NAME ], cName )
                   LOOP
                ENDIF
             ENDIF
@@ -1749,7 +1749,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
             FOR m := 1 TO Len( aVars )
                AAdd( aBVars, aVars[ m ] )
             NEXT
-            IF !::lShowAllGlobals
+            IF ! ::lShowAllGlobals
                aVars := ::aModules[ n ][ MODULE_EXTERNGLOBALS ]
                FOR m := 1 TO Len( aVars )
                   AAdd( aBVars, aVars[ m ] )
@@ -1792,7 +1792,7 @@ METHOD LoadVars() CLASS HBDebugger // updates monitored variables
       ::oBrwVars:GoTop()
    ENDIF
    ::aVars := aBVars
-   IF ::lSortVars .AND. !Empty( ::aVars )
+   IF ::lSortVars .AND. ! Empty( ::aVars )
       ::Sort()
    ENDIF
 
@@ -1912,8 +1912,8 @@ METHOD Open() CLASS HBDebugger
       cFileName := aFiles[ nFileName ]
    ENDIF
 
-   IF !Empty( cFileName ) ;
-      .AND. ( ValType( ::cPrgName ) == "U" .OR. !hb_FileMatch( cFileName, ::cPrgName ) )
+   IF ! Empty( cFileName ) ;
+      .AND. ( ValType( ::cPrgName ) == "U" .OR. ! hb_FileMatch( cFileName, ::cPrgName ) )
 
       IF ! hb_FileExists( cFileName ) .AND. ! Empty( ::cPathForFiles )
          cRealName := ::LocatePrgPath( cFileName )
@@ -1957,7 +1957,7 @@ METHOD OpenPPO() CLASS HBDebugger
    IF Lower( cExt ) == ".ppo"
       ::cPrgName := hb_FNameMerge( cDir, cName, ".prg" )
       lSuccess := hb_FileExists( ::cPrgName )
-      ::lPPO := !lSuccess
+      ::lPPO := ! lSuccess
    ELSE
       ::cPrgName := hb_FNameMerge( cDir, cName, ".ppo" )
       lSuccess := hb_FileExists( ::cPrgName )
@@ -2304,7 +2304,7 @@ METHOD SaveSettings() CLASS HBDebugger
          cInfo += "Options mono " + hb_eol()
       ENDIF
 
-      IF !::lRunAtStartup
+      IF ! ::lRunAtStartup
          cInfo += "Options NoRunAtStartup " + hb_eol()
       ENDIF
 
@@ -2475,7 +2475,7 @@ METHOD ShowCodeLine( nProc ) CLASS HBDebugger
 
    // we only update the stack window and up a new browse
    // to view the code if we have just broken execution
-   IF !::lGo
+   IF ! ::lGo
       IF ::oWndStack != NIL
          ::oBrwStack:RefreshAll()
       ENDIF
@@ -2751,7 +2751,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
 
    LOCAL nAt
 
-   IF !::lActive
+   IF ! ::lActive
       RETURN NIL
    ENDIF
 
@@ -2760,7 +2760,7 @@ METHOD ToggleBreakPoint( nLine, cFileName ) CLASS HBDebugger
       nLine := ::oBrwText:RowPos
    ENDIF
 
-   IF !::IsValidStopLine( cFileName, nLine )
+   IF ! ::IsValidStopLine( cFileName, nLine )
       RETURN NIL
    ENDIF
 

@@ -88,7 +88,7 @@ PROCEDURE Main( ... )
       ? "Archive file:", cFileName
       HB_UnzipGlobalInfo( hUnzip, @nSize, @cComment )
       ? "Number of entires:", nSize
-      IF !Empty( cComment )
+      IF ! Empty( cComment )
          ? "global comment:", cComment
       ENDIF
       ? ""
@@ -98,7 +98,7 @@ PROCEDURE Main( ... )
       DO WHILE nErr == 0
          HB_UnzipFileInfo( hUnzip, @cFile, @dDate, @cTime, , , , @nSize, @nCompSize, @lCrypted, @cComment )
          ? PadR( cFile + iif( lCrypted, "*", "" ), 30 ), DToC( dDate ), cTime, nSize, nCompSize
-         IF !Empty( cComment )
+         IF ! Empty( cComment )
             ? "comment:", cComment
          ENDIF
 

@@ -124,10 +124,10 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
    IF hb_utf8Asc( cValue ) == _BOM_VALUE
       cValue := SubStr( cValue, Len( _UTF8_BOM ) + 1 )
    ENDIF
-   IF !hb_eol() == _I18N_EOL
+   IF ! hb_eol() == _I18N_EOL
       cValue := StrTran( cValue, hb_eol(), _I18N_EOL )
    ENDIF
-   IF !hb_eol() == Chr( 13 ) + Chr( 10 )
+   IF ! hb_eol() == Chr( 13 ) + Chr( 10 )
       cValue := StrTran( cValue, Chr( 13 ) + Chr( 10 ), _I18N_EOL )
    ENDIF
    aLines := hb_ATokens( cValue, _I18N_EOL )
@@ -231,7 +231,7 @@ FUNCTION __i18n_potArrayLoad( cFile, cErrorMsg )
             WHILE SubStr( cLine, n, 1 ) == " "
                ++n
             ENDDO
-            IF !SubStr( cLine, n, 1 ) == "]"
+            IF ! SubStr( cLine, n, 1 ) == "]"
                nIndex := -1
             ENDIF
             cLine := LTrim( SubStr( cLine, n + 1 ) )
@@ -339,7 +339,7 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
       "#" + cEol
    FOR EACH aItem IN aTrans
       cPOT += cEol
-      IF lSourceRef .AND. !Empty( aItem[ _I18N_SOURCE ] )
+      IF lSourceRef .AND. ! Empty( aItem[ _I18N_SOURCE ] )
          cPOT += "#: "
          cPOT += aItem[ _I18N_SOURCE ]
          cPOT += cEol
@@ -401,7 +401,7 @@ FUNCTION __i18n_potArrayToHash( aTrans, lEmpty, hI18N )
    hTrans := hI18N[ "CONTEXT" ]
 
    FOR EACH aItem IN aTrans
-      IF lEmpty .OR. !Empty( aItem[ _I18N_MSGSTR, 1 ] )
+      IF lEmpty .OR. ! Empty( aItem[ _I18N_MSGSTR, 1 ] )
          cContext := aItem[ _I18N_CONTEXT ]
          IF ! cContext $ hTrans
             hTrans[ cContext ] := hContext := { => }
@@ -465,7 +465,7 @@ FUNCTION __i18n_hashJoin( hTrans, hTrans2 )
       ELSE
          hDstCtx := hContext[ hCtx:__enumKey() ]
          FOR EACH xTrans IN hCtx
-            IF !Empty( xTrans ) .AND. ;
+            IF ! Empty( xTrans ) .AND. ;
                   ( ! xTrans:__enumKey() $ hDstCtx .OR. ;
                   Empty( hDstCtx[ xTrans:__enumKey() ] ) )
                hDstCtx[ xTrans:__enumKey() ] := iif( HB_ISARRAY( xTrans ), ;
@@ -500,7 +500,7 @@ FUNCTION __i18n_potArrayJoin( aTrans, aTrans2, hIndex )
          IF aItem[ _I18N_PLURAL ]
             aDest[ _I18N_PLURAL ] := .T.
          ENDIF
-         IF !Empty( aItem[ _I18N_SOURCE ] )
+         IF ! Empty( aItem[ _I18N_SOURCE ] )
             IF Empty( aDest[ _I18N_SOURCE ] )
                aDest[ _I18N_SOURCE ] := aItem[ _I18N_SOURCE ]
             ELSE
@@ -513,7 +513,7 @@ FUNCTION __i18n_potArrayJoin( aTrans, aTrans2, hIndex )
                NEXT
             ENDIF
          ENDIF
-         IF !Empty( aItem[ _I18N_MSGSTR ] ) .AND. ;
+         IF ! Empty( aItem[ _I18N_MSGSTR ] ) .AND. ;
             ( Empty( aDest[ _I18N_MSGSTR ] ) .OR. ;
             ( Len( aDest[ _I18N_MSGSTR ] ) == 1 .AND. ;
             Empty( aDest[ _I18N_MSGSTR, 1 ] ) ) )

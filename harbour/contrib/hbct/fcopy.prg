@@ -97,7 +97,7 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
    IF t_hSrcFile != F_ERROR
       hDstFile := FCreate( cDest )
       IF hDstFile != F_ERROR
-         DO WHILE !lDone
+         DO WHILE ! lDone
             nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
                lDone := .T.
@@ -112,7 +112,7 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
             ENDIF
          ENDDO
          FClose( hDstFile )
-         IF lDone .OR. !lMode
+         IF lDone .OR. ! lMode
             FClose( t_hSrcFile )
             t_hSrcFile := F_ERROR
          ENDIF
@@ -153,7 +153,7 @@ FUNCTION FILECCONT( cDest )
    IF t_hSrcFile != F_ERROR
       hDstFile := FCreate( cDest )
       IF hDstFile != F_ERROR
-         DO WHILE !lDone
+         DO WHILE ! lDone
             nSrcBytes := FRead( t_hSrcFile, @cBuffer, F_BLOCK )
             IF nSrcBytes == 0
                lDone := 0
@@ -198,7 +198,7 @@ FUNCTION FILEAPPEND( cSrc, cDest )
 
    hSrcFile := FOpen( cSrc, FO_READ )
    IF hSrcFile != F_ERROR
-      IF !hb_FileExists( cDest )
+      IF ! hb_FileExists( cDest )
          hDstFile := FCreate( cDest )
       ELSE
          hDstFile := FOpen( cDest, FO_WRITE )

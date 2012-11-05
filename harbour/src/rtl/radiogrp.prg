@@ -176,13 +176,13 @@ METHOD display() CLASS RADIOGROUP
       cUnSelBox := ::cHotBox
    ENDIF
 
-   IF !Empty( cSelBox )
+   IF ! Empty( cSelBox )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
-   ELSEIF !Empty( cUnSelBox )
+   ELSEIF ! Empty( cUnSelBox )
       hb_DispBox( ::nTop, ::nLeft, ::nBottom, ::nRight, cUnSelBox, hb_ColorIndex( ::cColorSpec, 0 ) )
    ENDIF
 
-   IF !Empty( cCaption := ::cCaption )
+   IF ! Empty( cCaption := ::cCaption )
 
       IF !( ( nPos := At( "&", cCaption ) ) == 0 )
          IF nPos == Len( cCaption )
@@ -356,7 +356,7 @@ METHOD setFocus() CLASS RADIOGROUP
 
    LOCAL nOldMCur
 
-   IF !::lHasFocus
+   IF ! ::lHasFocus
 
       ::nCursor := SetCursor( SC_NONE )
       ::lHasFocus := .T.
@@ -554,7 +554,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOGROUP
 
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
-         {|| !Empty( hb_ColorIndex( cColorSpec, 2 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 3 ) ) } )
+         {|| ! Empty( hb_ColorIndex( cColorSpec, 2 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 3 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec

@@ -221,7 +221,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       // ::oCGI:ToLogFile( "::cSID = " + hb_cStr( ::cSID ), "/pointtoit/tmp/log.txt" )
    ENDIF
 
-   IF !Empty( ::cSID ) .AND. !::CheckSID()
+   IF ! Empty( ::cSID ) .AND. ! ::CheckSID()
       // Check if the SID is NOT valid, someone altered it
       // ::oCGI:ToLogFile( "::cSID = " + hb_cStr( ::cSID ) + " SID is NOT valid, someone altered it", "/pointtoit/tmp/log.txt" )
       ::cSID      := NIL   // invalidate current SID, i'll generate a new one
@@ -229,7 +229,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       lDefine_SID := .T.
    ENDIF
 
-   IF !Empty( ::cSID ) .AND. !Empty( ::cReferrer_Check )
+   IF ! Empty( ::cSID ) .AND. ! Empty( ::cReferrer_Check )
       // TODO: fix
 
       // oUrl := TUrl():New( ::cReferrer_Check )
@@ -260,7 +260,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    ENDIF
 
    // Is use_cookies set to false?
-   IF !::lUse_Cookies .AND. lSendCookie
+   IF ! ::lUse_Cookies .AND. lSendCookie
       lDefine_SID := .T.
       lSendCookie := .F.
    ENDIF
@@ -281,7 +281,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    // Send caching headers
 
    // Start session
-   IF !::Open( ::cSavePath, ::cName )
+   IF ! ::Open( ::cSavePath, ::cName )
       uhttpd_Die( 'ERROR: Failed to open session file' )
    ENDIF
 
@@ -316,7 +316,7 @@ METHOD Destroy() CLASS uhttpd_Session
    ENDIF
 
    // Destroy session
-   IF !Eval( ::bDestroy, ::cSID )
+   IF ! Eval( ::bDestroy, ::cSID )
       RETURN .F.
    ENDIF
 
@@ -336,11 +336,11 @@ METHOD Close() CLASS uhttpd_Session
    cVal := ::Encode()
 
    // Save session
-   IF !::Write( ::cSID, cVal )
+   IF ! ::Write( ::cSID, cVal )
       uhttpd_Die( 'Session could not be saved.' )
    ENDIF
    // Close session
-   IF !Eval( ::bClose )
+   IF ! Eval( ::bClose )
       uhttpd_Die( 'Session could not be closed.' )
    ENDIF
    ::nActiveSessions--
@@ -479,7 +479,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
          AAdd( aNotSessionFlds, aField )
       ENDIF
    NEXT
-   IF !Empty( aNotSessionFlds )
+   IF ! Empty( aNotSessionFlds )
       FOR EACH aField IN aNotSessionFlds
          cFieldsNotInSession += aField[ 1 ] + "=" + aField[ 2 ] + "&"
       NEXT
@@ -558,7 +558,7 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
 
    // hb_toOutDebug( "cSID = %s, ::cSID = %s\n\r", hb_valtoexp( cSID ), hb_valtoexp( ::cSID ) )
 
-   IF !Empty( cSID )
+   IF ! Empty( cSID )
 
       /* Calculate the key */
       FOR n := 1 TO nLenSID - 5 // 5 = CRC Length
@@ -846,7 +846,7 @@ METHOD Encode() CLASS uhttpd_Session
 
    ENDIF
 
-   RETURN iif( !Empty( aSerial ), hb_Serialize( aSerial ), NIL )
+   RETURN iif( ! Empty( aSerial ), hb_Serialize( aSerial ), NIL )
 
 METHOD Decode( cData ) CLASS uhttpd_Session
 

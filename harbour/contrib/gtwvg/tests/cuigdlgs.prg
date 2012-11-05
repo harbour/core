@@ -41,8 +41,8 @@ PROCEDURE GCUIConsole( oCrt )
    LOCAL dDate      := Date()
    LOCAL cName      := PadR( "Some Usefule Name", 35 )
    LOCAL cAdd1      := PadR( "Linda Goldman Avenue", 35 )
-   LOCAL cAdd2      := PadR( "Excellent Street"    , 35 )
-   LOCAL cAdd3      := PadR( "Suit #415"           , 35 )
+   LOCAL cAdd2      := PadR( "Excellent Street", 35 )
+   LOCAL cAdd3      := PadR( "Suit #415", 35 )
    LOCAL nSlry      := 9000
    LOCAL nColGet    := 8
    LOCAL GetList    := {}
@@ -57,7 +57,7 @@ PROCEDURE GCUIConsole( oCrt )
    @ MaxRow(), 0 SAY PadC( "Navigate the Gets", MaxCol() + 1 ) COLOR "W+/B"
 
    @  2, nColGet SAY "< Date >"
-   @  5, nColGet SAY "<" + PadC( "Name"   , 33 ) + ">"
+   @  5, nColGet SAY "<" + PadC( "Name", 33 ) + ">"
    @  8, nColGet SAY "<" + PadC( "Address", 33 ) + ">"
    @ 15, nColGet SAY "< Salary >"
 

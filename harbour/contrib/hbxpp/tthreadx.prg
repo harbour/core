@@ -161,7 +161,7 @@ METHOD quit( xResult, nRestart ) CLASS THREAD
       IF PCOUNT() > 0
          ::result := xResult
       ENDIF
-      IF !HB_ISNUMERIC( nRestart ) .OR. nRestart != QUIT_RESTART
+      IF ! HB_ISNUMERIC( nRestart ) .OR. nRestart != QUIT_RESTART
          ::interval := NIL
       ENDIF
       QUIT
@@ -251,7 +251,7 @@ METHOD start( xAction, ... ) CLASS THREAD
                    *       it can be resumed
                    */
 
-                  IF !HB_ISNUMERIC( ::interval )
+                  IF ! HB_ISNUMERIC( ::interval )
                      EXIT
                   ENDIF
 

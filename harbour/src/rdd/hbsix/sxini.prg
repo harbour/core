@@ -104,7 +104,7 @@ FUNCTION _sx_IniInit( nArea )
    cFile := hb_FNameMerge( cPath, cName, ".ini", cDrive )
    hIni := hb_iniRead( cFile, .F.,, .F. )
 
-   IF !Empty( hIni )
+   IF ! Empty( hIni )
       IF hb_HHasKey( hIni, HB_SIX_SECTION )
          FOR EACH item IN hIni[ HB_SIX_SECTION ]
             SWITCH item:__enumKey()

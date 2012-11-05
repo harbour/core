@@ -92,7 +92,7 @@ PROCEDURE __dbgShowWorkAreas()
       RETURN
    ENDIF
 
-   IF !Used()
+   IF ! Used()
       dbSelectArea( aAlias[ 1 ][ 1 ] )
    ENDIF
 

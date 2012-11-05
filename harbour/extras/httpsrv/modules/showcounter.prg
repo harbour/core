@@ -69,7 +69,7 @@ FUNCTION HRBMAIN()
    IF hb_HHasKey( _REQUEST, "w" )
 
       cHtml := CreateCounter( hb_ntos( Val( _REQUEST[ "w" ] ) ) )
-      IF !Empty( cHtml )
+      IF ! Empty( cHtml )
          uhttpd_SetHeader( "Content-Type", "image/gif" )
          uhttpd_SetHeader( "Pragma", "no-cache" )
          uhttpd_SetHeader( "Content-Disposition", "inline; filename=counter" + hb_ntos( hb_RandomInt( 100 ) ) + ".gif" )

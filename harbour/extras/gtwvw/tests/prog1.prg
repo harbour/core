@@ -95,7 +95,7 @@ PROCEDURE xGet1()
 // @ 21,21 SAY "Inside the window" COLOR "R/W"
 // @ 23,0  SAY "Outside the window" COLOR "R/W"
 
-   DO WHILE !lDone
+   DO WHILE ! lDone
       @ 12, 22 SAY "Name    : " GET cName  PICT "@!K" WHEN lMessage( "Please enter your name" )
       @ 14, 22 SAY "Address : " GET cAddr  PICT "@!K" WHEN lMessage( "Please enter your address" )
       @ 16, 22 SAY "Phone   : " GET cPhone PICT "@K"  WHEN lMessage( "Please enter your phone number" )
@@ -151,7 +151,7 @@ FUNCTION xBrowse1()
 
    nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
 
-   WHILE !lEnd
+   WHILE ! lEnd
       oBrowse:ForceStable()
 
       lMessage( "Record #" + hb_ntos( RecNo() ) )
@@ -386,7 +386,7 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 #ifndef __GTWVW__
    // GTWVW doesn't need box or textual title
    hb_DispBox( r1, c1, r2, c2, wtype )
-   IF !Empty( ctitle )
+   IF ! Empty( ctitle )
       cTitle := " " + AllTrim( ctitle ) + " "
       hb_DispOutAt( r1, nCeiling( ( c2 + c1 - Len( cTitle ) ) / 2 ), cTitle )
    ENDIF

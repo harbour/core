@@ -338,15 +338,15 @@ body { color: #000000; background-color: #FFFFFF; }
 </SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-comment>/*
          cRes := ""
          FOR i := 1 TO len( ::cContent )
-            IF substr( ::cContent, i, 1 ) == "&lt;" .AND. ;
-               substr( ::cContent, i + 1, 1 ) == "#"
+            IF SubStr( ::cContent, i, 1 ) == "&lt;" .AND. ;
+               SubStr( ::cContent, i + 1, 1 ) == "#"
                lFlag := .t.
-            ELSEIF substr( ::cContent, i, 1 ) == "&gt;" .AND. lFlag
+            ELSEIF SubStr( ::cContent, i, 1 ) == "&gt;" .AND. lFlag
                lFlag := .f.
-            ELSEIF !lFlag
-               cRes += substr( ::cContent, i, 1 )
+            ELSEIF ! lFlag
+               cRes += SubStr( ::cContent, i, 1 )
             ENDIF
-         NEXT i
+         NEXT
 
          ::cContent := cRes
          */

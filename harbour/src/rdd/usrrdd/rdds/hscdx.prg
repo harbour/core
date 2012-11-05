@@ -112,7 +112,7 @@ STATIC FUNCTION _HSX_GOCOLD( nWA )
    IF nResult == HB_SUCCESS
       aWData := USRRDD_AREADATA( nWA )
       IF aWData[ 1 ]
-         IF !Empty( aWData[ 2 ] )
+         IF ! Empty( aWData[ 2 ] )
             nRecNo := RecNo()
             /* update HSX indexes */
             FOR EACH nHSX IN aWData[ 2 ]
@@ -164,8 +164,8 @@ FUNCTION HSX_CREATE( cFile, cExpr, nKeySize, nBufSize, lCase, nFiltSet )
 
    LOCAL aWData, nHsx := -1, nOpenMode
 
-   IF !Used()
-   ELSEIF !rddName() == "HSCDX"
+   IF ! Used()
+   ELSEIF ! rddName() == "HSCDX"
    ELSE
       aWData := USRRDD_AREADATA( Select() )
       nOpenMode := iif( dbInfo( DBI_SHARED ), 1, 0 ) + ;
@@ -184,8 +184,8 @@ FUNCTION HSX_OPEN( cFile, nBufSize )
 
    LOCAL aWData, nHsx, nOpenMode
 
-   IF !Used()
-   ELSEIF !rddName() == "HSCDX"
+   IF ! Used()
+   ELSEIF ! rddName() == "HSCDX"
    ELSE
       aWData := USRRDD_AREADATA( Select() )
       nOpenMode := iif( dbInfo( DBI_SHARED ), 1, 0 ) + ;

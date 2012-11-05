@@ -93,7 +93,7 @@ FUNCTION WvtPaintObjects()
       FOR i := 1 TO nBlocks
          lExe := .T.
 
-         IF aBlocks[ i, 3 ] != NIL .AND. !Empty( aBlocks[ i, 3 ] )
+         IF aBlocks[ i, 3 ] != NIL .AND. ! Empty( aBlocks[ i, 3 ] )
             /*  Check parameters against tlbr_ depending upon the
              *  type of object and attributes contained in aAttr
              */
@@ -331,11 +331,11 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nH  := nRows
    ENDIF
 
-   IF !HB_ISNUMERIC( nStyle )
-      nStyle := + WS_CAPTION    + WS_SYSMENU              ;
-         + WS_GROUP      + WS_TABSTOP + DS_SETFONT ;
-         + WS_THICKFRAME + WS_VISIBLE + WS_POPUP   ;
-         + DS_3DLOOK
+   IF ! HB_ISNUMERIC( nStyle )
+      nStyle := ;
+         WS_CAPTION + WS_SYSMENU + WS_GROUP      + ;
+         WS_TABSTOP + DS_SETFONT + WS_THICKFRAME + ;
+         WS_VISIBLE + WS_POPUP   + DS_3DLOOK
    ENDIF
 
    AAdd( aDlg[ 1 ], iif( Empty( nHelpId  ), 0, nHelpId  ) )

@@ -249,7 +249,7 @@ METHOD Create() CLASS WIN_PRN
             ::PaperLength, ::PaperWidth )
       ENDIF
 
-      IF !lResult
+      IF ! lResult
          ::hPrinterDC := NIL
       ELSE
          IF ::BkMode != NIL

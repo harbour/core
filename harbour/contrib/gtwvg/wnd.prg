@@ -685,7 +685,7 @@ METHOD WvgWindow:setFontCompoundName( xFont )
    IF HB_ISNUMERIC( cFont )
 
    ELSE
-      IF !Empty( xFont )
+      IF ! Empty( xFont )
          cFont := xFont
          s := Lower( cFont )
          n := AScan( aAttr, {| e | At( e, cFont ) > 0 } )

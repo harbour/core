@@ -92,7 +92,7 @@ PROCEDURE Main( ... )
    IF ! Empty( hZip )
       ? "Archive file:", cZipName
       FOR EACH cWild IN aWild
-         IF !Empty( cWild )
+         IF ! Empty( cWild )
             hb_FNameSplit( cWild, @cPath, @cFileName, @cExt )
             aDir := hb_DirScan( cPath, cFileName + cExt )
             FOR EACH aFile IN aDir

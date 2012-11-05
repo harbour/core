@@ -183,7 +183,7 @@ PROCEDURE Main()
    wvw_pbSetFont( , "Tahoma", 14 )
    nCursor := SetCursor( SC_NONE )
 
-   IF !SetDefaultWindowSize()
+   IF ! SetDefaultWindowSize()
       ldebug( "Cannot setDefaultWindowSize()" )
    ELSE
       ldebug( "Successfully setDefaultWindowSize()" )
@@ -399,7 +399,7 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
          Demo_Console( nTop + 2, nLeft + 2, nBottom + 4, nRight + 6 )
       ELSEIF ch == K_CTRL_E
          // toggle echoing output to prev window
-         lEchoing := !lEchoing
+         lEchoing := ! lEchoing
       ELSE
          // any other char goes here
          ?? hb_keyChar( ch )
@@ -586,7 +586,7 @@ FUNCTION DEMO_Browse()
    RefreshHXB( oBrowse, nCurWindow, nHScrollBar ) // 20040704
    RefreshVXB( oBrowse, nCurWindow, nVScrollBar ) // 20040704
 
-   WHILE !lEnd
+   WHILE ! lEnd
       nKey := Inkey( 0 )
 
       DO CASE
@@ -947,7 +947,7 @@ FUNCTION CreateToolbar( nWinNum )
 
    ldefault := lYesNo( "would you like to use default toolbar setting?" )
 
-   IF !ldefault
+   IF ! ldefault
       nSysBitmap := Alert( "Select toolbar button size", { "Small", "Big" } )
       nSysBitmap := iif( nSysBitmap == 0, 1, nSysBitmap )
       lDisplayText := Alert( "Display text in toolbar?", { "Yes", "No" } ) == 1

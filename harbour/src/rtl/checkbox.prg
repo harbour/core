@@ -116,7 +116,7 @@ ENDCLASS
 
 METHOD setFocus() CLASS CHECKBOX
 
-   IF !::lHasFocus
+   IF ! ::lHasFocus
       ::nCursor := SetCursor( SC_NONE )
       ::lHasFocus := .T.
       ::display()
@@ -132,7 +132,7 @@ METHOD select( lState ) CLASS CHECKBOX
 
    LOCAL lOldState := ::lBuffer
 
-   ::lBuffer := iif( HB_ISLOGICAL( lState ), lState, !::lBuffer )
+   ::lBuffer := iif( HB_ISLOGICAL( lState ), lState, ! ::lBuffer )
 
    IF lOldState != ::lBuffer
       ::display()
@@ -202,7 +202,7 @@ METHOD display() CLASS CHECKBOX
    hb_DispOutAt( ::nRow, ::nCol, Left( cStyle, 1 ), cColor )
    hb_DispOutAt( ::nRow, ::nCol + 2, Right( cStyle, 1 ), cColor )
 
-   IF !Empty( cCaption := ::cCaption )
+   IF ! Empty( cCaption := ::cCaption )
 
       IF ( nPos := At( "&", cCaption ) ) == 0
       ELSEIF nPos == Len( cCaption )
@@ -217,7 +217,7 @@ METHOD display() CLASS CHECKBOX
 
       hb_DispOutAt( ::nCapRow, ::nCapCol, cCaption, cColor )
 
-      IF !::lHasFocus .AND. nPos != 0
+      IF ! ::lHasFocus .AND. nPos != 0
          hb_DispOutAt( ::nCapRow, ::nCapCol + nPos - 1, SubStr( cCaption, nPos, 1 ), ;
             hb_ColorIndex( ::cColorSpec, 3 ) )
       ENDIF
@@ -275,7 +275,7 @@ METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
 
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
-         {|| !Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 4 ) ) } )
+         {|| ! Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 4 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec

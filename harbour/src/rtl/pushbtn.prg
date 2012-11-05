@@ -118,7 +118,7 @@ ENDCLASS
 
 METHOD setFocus() CLASS PUSHBUTTON
 
-   IF !::lHasFocus
+   IF ! ::lHasFocus
       ::lHasFocus := .T.
       ::display()
 
@@ -228,7 +228,7 @@ METHOD display() CLASS PUSHBUTTON
       cCaption := Stuff( cCaption, nPos, 1, "" )
    ENDIF
 
-   IF !Empty( cStyle )
+   IF ! Empty( cStyle )
 
       nCol++
 
@@ -241,7 +241,7 @@ METHOD display() CLASS PUSHBUTTON
       ENDIF
    ENDIF
 
-   IF !Empty( cCaption )
+   IF ! Empty( cCaption )
 
       hb_DispOutAt( nRow, nCol, cCaption, cColor )
 
@@ -286,7 +286,7 @@ METHOD colorSpec( cColorSpec ) CLASS PUSHBUTTON
 
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
-         {|| !Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 5 ) ) } )
+         {|| ! Empty( hb_ColorIndex( cColorSpec, 3 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 5 ) ) } )
    ENDIF
 
    RETURN ::cColorSpec

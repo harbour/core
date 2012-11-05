@@ -92,7 +92,7 @@ METHOD setCoors( nRow, nCol, lTop ) CLASS hb_POPUPMENU
          nDif     := ::nRight - MaxCol()
          ::nRight -= nDif
          ::nLeft  -= nDif
-         IF !lTop
+         IF ! lTop
             ::nTop++
             ::nBottom++
          ENDIF
@@ -156,7 +156,7 @@ METHOD isShortCut( nKey, nID ) CLASS hb_POPUPMENU
       // Loop to wrap around through TopMenu from Current Item:
       FOR i := 1 TO nTotal
          IF !( oItem := ::getItem( nItem ) ):enabled
-         ELSEIF !oItem:isPopUp()
+         ELSEIF ! oItem:isPopUp()
          ELSEIF oItem:data:isQuick( nKey, @nID )
             RETURN .T.
          ENDIF

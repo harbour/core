@@ -267,7 +267,7 @@ METHOD display() CLASS LISTBOX
    ENDIF
 
    IF ::lIsOpen
-      IF !Empty( cHotBox )
+      IF ! Empty( cHotBox )
 
          cColorScrl := hb_ColorIndex( ::cColorSpec, 4 )
          hb_Scroll( nTop, nLeft, ::nBottom, ::nRight,,, cColorScrl )
@@ -293,7 +293,7 @@ METHOD display() CLASS LISTBOX
       NEXT
    ENDIF
 
-   IF !Empty( cCaption := ::cCaption )
+   IF ! Empty( cCaption := ::cCaption )
 
       IF ( nPos := At( "&", cCaption ) ) == 0
       ELSEIF nPos == Len( cCaption )
@@ -909,8 +909,8 @@ METHOD colorSpec( cColorSpec ) CLASS LISTBOX
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
          iif( ::lDropDown, ;
-            {|| !Empty( hb_ColorIndex( cColorSpec, 7 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 8 ) ) }, ;
-            {|| !Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } ) )
+            {|| ! Empty( hb_ColorIndex( cColorSpec, 7 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 8 ) ) }, ;
+            {|| ! Empty( hb_ColorIndex( cColorSpec, 6 ) ) .AND. Empty( hb_ColorIndex( cColorSpec, 7 ) ) } ) )
    ENDIF
 
    RETURN ::cColorSpec
@@ -921,7 +921,7 @@ METHOD dropDown( lDropDown ) CLASS LISTBOX
 
       ::lDropDown := __eInstVar53( Self, "DROPDOWN", lDropDown, "L", 1001 )
 
-      IF !::lDropDown .AND. !::lIsOpen
+      IF ! ::lDropDown .AND. ! ::lIsOpen
          ::lIsOpen := .T.
       ENDIF
 
@@ -1075,7 +1075,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
    ::nLeft     := nLeft
    ::nCapCol   := nLeft
    ::nCapRow   := nTop
-   ::lIsOpen   := !lDropDown
+   ::lIsOpen   := ! lDropDown
    ::lDropDown := lDropDown
    ::aSaveScr  := { nTop + 1, nleft, nBottom, nRight, SaveScreen( nTop + 1, nLeft, nBottom, nRight ) }
 

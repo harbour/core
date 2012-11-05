@@ -114,7 +114,7 @@ STATIC FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, nPBid )
          wvw_pbEnable( nWinNum, nPBid, .F. )
       ENDIF
    CASE nEvent == 1 // CBN_SELCHANGE
-      IF !wvw_cbIsDropped( nWinNum, nId )
+      IF ! wvw_cbIsDropped( nWinNum, nId )
          // nIndex is 0-based
          IF nIndex == 0
             wvw_pbEnable( nWinNum, nPBid, .T. )

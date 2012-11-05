@@ -163,7 +163,7 @@ STATIC FUNCTION xhb_DefError( oError )
    ENDDO
 
    cMessage := ErrorMessage( oError )
-   IF !Empty( oError:osCode )
+   IF ! Empty( oError:osCode )
       cDOSError := "(DOS Error " + hb_ntos( oError:osCode ) + ")"
    ENDIF
 

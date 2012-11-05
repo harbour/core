@@ -243,7 +243,7 @@ METHOD ProcessCGI() CLASS THTML
 
       cQuery := ::GetCGIParam( CGI_QUERY_STRING )
 
-      IF !Empty( cQuery )
+      IF ! Empty( cQuery )
 
          ::aQueryFields := {}
 

@@ -289,7 +289,7 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
          oHtm:EndTableCell()
       NEXT
       oHtm:endTableRow()
-      IF !oquery:Eof()
+      IF ! oquery:Eof()
          oquery:skip()
       ENDIF
 

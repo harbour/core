@@ -106,7 +106,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
    ELSE
       IF nNext == NIL
          nNext := -1
-         IF !lRest
+         IF ! lRest
             dbGoTop()
          ENDIF
       ELSE
@@ -145,7 +145,7 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
       nNewArea := Select()
 
       dbSelectArea( nOldArea )
-      DO WHILE !Eof() .AND. nNext != 0 .AND. Eval( bWhileBlock )
+      DO WHILE ! Eof() .AND. nNext != 0 .AND. Eval( bWhileBlock )
 
          lDbTransRecord := .F.
 
@@ -153,11 +153,11 @@ FUNCTION __dbTotal( cFile, xKey, aFields,;
 
          xCurKey := Eval( bKeyBlock )
 
-         DO WHILE !Eof() .AND. nNext-- != 0 .AND. Eval( bWhileBlock ) .AND. ;
+         DO WHILE ! Eof() .AND. nNext-- != 0 .AND. Eval( bWhileBlock ) .AND. ;
                xCurKey == Eval( bKeyBlock )
 
             IF Eval( bForBlock )
-               IF !lDbTransRecord
+               IF ! lDbTransRecord
                   __dbTransRec( nNewArea, aNewDbStruct )
                   dbSelectArea( nOldArea )
                   lDbTransRecord := .T.

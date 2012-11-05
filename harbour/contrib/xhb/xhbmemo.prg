@@ -166,7 +166,7 @@ METHOD Edit() CLASS XHB_TMemoEditor
 
    nNextKey := 0
 
-   DO WHILE !::lExitEdit
+   DO WHILE ! ::lExitEdit
 
       IF nNextKey == 0
          nKey := Inkey( 0 )
@@ -219,8 +219,8 @@ METHOD Edit() CLASS XHB_TMemoEditor
               AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
               AScan( ::aConfigurableKeys, nKey ) > 0 .OR. ;
               AScan( ::aExtKeys, nKey ) > 0 .OR. ;
-              ( nKey == K_INS .AND. !::ExistUdf() ) .OR. ;
-              ( nKey == K_ESC .AND. !::ExistUdf() ) )
+              ( nKey == K_INS .AND. ! ::ExistUdf() ) .OR. ;
+              ( nKey == K_ESC .AND. ! ::ExistUdf() ) )
 
             ::Super:Edit( nKey )
 
@@ -307,7 +307,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
 
       // HBEditor is not able to handle keys with a value higher than 256 or lower than 1
       //
-      IF !lEdited .AND. ;
+      IF ! lEdited .AND. ;
          ( AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
            AScan( { K_ALT_W, K_CTRL_W }, nKey ) > 0 .OR. ;
            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
@@ -328,7 +328,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
 
    CASE ME_DATA      // (33)
 
-      IF !lEdited .AND. ;
+      IF ! lEdited .AND. ;
          ( AScan( ::aAsciiKeys, nKey ) > 0 .OR. ;
            AScan( ::aExtKeys, nKey ) > 0 .OR. ;
            nKey == K_ESC .OR. ;
@@ -437,43 +437,43 @@ FUNCTION xhb_MemoEdit( ;
 
    // 2006/JUL/22 - E.F. Check argument types.
    //
-   IF !HB_ISNIL( cString ) .AND. ! HB_ISSTRING( cString ) .AND. ! HB_ISMEMO( cString )
+   IF ! HB_ISNIL( cString ) .AND. ! HB_ISSTRING( cString ) .AND. ! HB_ISMEMO( cString )
       Throw( ErrorNew( "BASE", 0, 1127, "<cString> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nTop ) .AND. !HB_ISNUMERIC( nTop )
+   IF ! HB_ISNIL( nTop ) .AND. ! HB_ISNUMERIC( nTop )
       Throw( ErrorNew( "BASE", 0, 1127, "<nTop> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nLeft ) .AND. !HB_ISNUMERIC( nLeft )
+   IF ! HB_ISNIL( nLeft ) .AND. ! HB_ISNUMERIC( nLeft )
       Throw( ErrorNew( "BASE", 0, 1127, "<nLeft> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nRight ) .AND. !HB_ISNUMERIC( nRight )
+   IF ! HB_ISNIL( nRight ) .AND. ! HB_ISNUMERIC( nRight )
       Throw( ErrorNew( "BASE", 0, 1127, "<nRight> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nBottom ) .AND. !HB_ISNUMERIC( nBottom )
+   IF ! HB_ISNIL( nBottom ) .AND. ! HB_ISNUMERIC( nBottom )
       Throw( ErrorNew( "BASE", 0, 1127, "<nBottom> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( lEditMode ) .AND. !HB_ISLOGICAL( lEditMode )
+   IF ! HB_ISNIL( lEditMode ) .AND. ! HB_ISLOGICAL( lEditMode )
       Throw( ErrorNew( "BASE", 0, 1127, "<lEditMode> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( xUDF ) .AND.  ( !HB_ISSTRING( xUDF ) .AND. !HB_ISLOGICAL( xUDF ) )
+   IF ! HB_ISNIL( xUDF ) .AND. ! HB_ISSTRING( xUDF ) .AND. ! HB_ISLOGICAL( xUDF )
       Throw( ErrorNew( "BASE", 0, 1127, "<cUserFunction> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nLineLength ) .AND. !HB_ISNUMERIC( nLineLength )
+   IF ! HB_ISNIL( nLineLength ) .AND. ! HB_ISNUMERIC( nLineLength )
       Throw( ErrorNew( "BASE", 0, 1127, "<nLineLength> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nTabSize ) .AND. !HB_ISNUMERIC( nTabSize )
+   IF ! HB_ISNIL( nTabSize ) .AND. ! HB_ISNUMERIC( nTabSize )
       Throw( ErrorNew( "BASE", 0, 1127, "<nTabSize> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nTextBuffRow ) .AND. !HB_ISNUMERIC( nTextBuffRow )
+   IF ! HB_ISNIL( nTextBuffRow ) .AND. ! HB_ISNUMERIC( nTextBuffRow )
       Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffRow> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nTextBuffColumn ) .AND. !HB_ISNUMERIC( nTextBuffColumn )
+   IF ! HB_ISNIL( nTextBuffColumn ) .AND. ! HB_ISNUMERIC( nTextBuffColumn )
       Throw( ErrorNew( "BASE", 0, 1127, "<nTextBuffColumn> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nWindowRow ) .AND. !HB_ISNUMERIC( nWindowRow )
+   IF ! HB_ISNIL( nWindowRow ) .AND. ! HB_ISNUMERIC( nWindowRow )
       Throw( ErrorNew( "BASE", 0, 1127, "<nWindowRow> Argument type error", ProcName() ) )
    ENDIF
-   IF !HB_ISNIL( nWindowColumn ) .AND. !HB_ISNUMERIC( nWindowColumn )
+   IF ! HB_ISNIL( nWindowColumn ) .AND. ! HB_ISNUMERIC( nWindowColumn )
       Throw( ErrorNew( "BASE", 0, 1127, "<nWindowColumn> Argument type error", ProcName() ) )
    ENDIF
 
@@ -508,7 +508,7 @@ FUNCTION xhb_MemoEdit( ;
 
    // 2006/AUG/06 - E.F. Clipper's  <cUserFunction> in .T. or. F. is samething.
    //
-   IF !HB_ISLOGICAL( xUDF ) // .OR. cUserFunction
+   IF ! HB_ISLOGICAL( xUDF ) // .OR. cUserFunction
 
       oEd:Edit()
 
