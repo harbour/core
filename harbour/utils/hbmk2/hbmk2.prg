@@ -6604,7 +6604,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand /* ,,, @cStdErr */ ) ) != 0
+#ifdef _HBMK_LIB_HINTS_
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand,,, @cStdErr ) ) != 0
+#else
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand  ) ) != 0
+#endif
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running linker. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6720,7 +6724,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand /* ,,, @cStdErr */ ) ) != 0
+#ifdef _HBMK_LIB_HINTS_
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand,,, @cStdErr ) ) != 0
+#else
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand  ) ) != 0
+#endif
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -12312,13 +12320,13 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
 
 STATIC FUNCTION GetListOfFunctionsKnown( hbmk )
 
-   LOCAL cFileName := hb_DirBase() + _SELF_NAME_ + ".hbr" /* Experimental name. not final. */
+   LOCAL hAll := { => }
+   LOCAL aFile
 
-   LOCAL hAll := iif( hb_FileExists( cFileName ), hb_Deserialize( hb_ZUncompress( hb_MemoRead( cFileName ) ) ), { => } )
-
-   IF ! HB_ISHASH( hAll )
-      hAll := { => }
-   ENDIF
+   FOR EACH aFile IN Directory( hb_DirBase() + "*.hbr" )
+      /* TOFIX: To handle function names present in multiple containers */
+      hb_HMerge( hAll, hb_Deserialize( hb_ZUncompress( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) ) )
+   NEXT
 
    hAll[ "HB_COMPILE" ] := ;
    hAll[ "HB_COMPILEBUF" ] := ;
