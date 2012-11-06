@@ -49,11 +49,8 @@
  * If you do not wish that, delete this exception notice.
  *
  */
-/*-*/
-/*                               WvgParts.ch                            */
-/*-*/
 
-#ifndef  _WVG_CH
+#ifndef _WVG_CH
 
 #define _WVG_CH
 
@@ -85,7 +82,6 @@
 #define objTypeScrollBar                          21
 #define objTypeTabPage                            22
 
-/*-*/
 /*  NMHDR info */
 
 #define NMH_code                                  1
@@ -127,6 +123,7 @@
 #define WVGTOOLBAR_BUTTON_DEFAULT                 0
 
 /*      Statusbar Manipulation Constants         */
+
 #define WVGSTATUSBAR_AUTOSIZE_NONE                0
 #define WVGSTATUSBAR_AUTOSIZE_SPRING              1
 #define WVGSTATUSBAR_AUTOSIZE_CONTENTS            2
@@ -220,6 +217,4 @@
 #define WVGCOMBO_DROPDOWN                         2
 #define WVGCOMBO_DROPDOWNLIST                     3
 
-#endif /* #ifndef _WVG_CH */
-
-/*-*/
+#endif /* _WVG_CH */

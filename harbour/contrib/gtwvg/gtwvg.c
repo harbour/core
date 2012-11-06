@@ -2372,7 +2372,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
    return DefWindowProc( hWnd, message, wParam, lParam );
 }
 
-static HB_BOOL hb_gt_wvt_IsDialogMessage( PHB_GTWVT pWVT, LPMSG lpMsg )     /* Proprietory to GTWVG */
+static HB_BOOL hb_gt_wvt_IsDialogMessage( PHB_GTWVT pWVT, LPMSG lpMsg )     /* Proprietary to GTWVG */
 {
    int iIndex;
 
@@ -4609,32 +4609,3 @@ PHB_GTWVT hb_wvt_gtGetWVT( void )
    }
    return pWVT;
 }
-
-/*-*/
-
-HB_FUNC( WVG_GTINFOEX )
-{
-   if( HB_ISPOINTER( 1 ) && HB_ISNUM( 2 ) )
-   {
-      PHB_GT pGT = hb_gt_ItemBase( hb_param( 1, HB_IT_ANY ) );
-
-      if( pGT )
-      {
-         HB_GT_INFO gtInfo;
-
-         gtInfo.pNewVal  = hb_param( 3, HB_IT_ANY );
-         gtInfo.pNewVal2 = hb_param( 4, HB_IT_ANY );
-         gtInfo.pResult  = NULL;
-
-         HB_GTSELF_INFO( pGT, hb_parni( 2 ), &gtInfo );
-         hb_gt_BaseFree( pGT );
-
-         if( gtInfo.pResult )
-            hb_itemReturnRelease( gtInfo.pResult );
-      }
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-/*-*/

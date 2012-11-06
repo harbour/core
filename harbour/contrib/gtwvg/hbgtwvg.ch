@@ -53,9 +53,8 @@
 #ifndef _HBGTWVG_CH
 #define _HBGTWVG_CH
 
-/*-*/
 /*                 Extended GT Manipulation Constants                   */
-/*-*/
+
 #ifndef HB_GTE_ACTIVATE
    #define HB_GTE_ACTIVATE                1
    #define HB_GTE_SETFOCUS                2
@@ -192,7 +191,5 @@
 #define GOBJ_OBJTYPE_GRIDHORZ             20
 
 #define GOBJ_OBJTYPE_OBJECT               25  /* One of the above objects */
-
-/*-*/
 
 #endif /* _HBGTWVG_CH */
