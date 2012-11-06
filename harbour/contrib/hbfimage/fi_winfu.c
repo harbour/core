@@ -71,7 +71,6 @@
 
 /* Convert from FreeImage to HBITMAP */
 
-/* implementation: HBITMAP bitmap = FI_FiToBitmap( FIBITMAP *dib ); */
 HB_FUNC( FI_WINCONVTODIB )
 {
    if( hb_pcount() == 1 &&
@@ -108,7 +107,6 @@ HB_FUNC( FI_WINCONVTODIB )
 
 /* Convert from HBITMAP to FreeImage */
 
-/* implementation:  FIBITMAP *dib = FI_BitmapToFi( HBITMAP bitmap ); */
 HB_FUNC( FI_WINCONVFROMDIB )
 {
    if( hb_pcount() == 1 &&
@@ -153,7 +151,6 @@ HB_FUNC( FI_WINCONVFROMDIB )
 
 /* Draw an image in a window Box */
 
-/* implementation: int scanlines = FI_WinDraw( FIBITMAP *dib, HDC hDC, nTop, nLeft, nBottom, nRight ); */
 HB_FUNC( FI_WINDRAW )
 {
    if( hb_pcount() == 6 &&
@@ -205,12 +202,12 @@ HB_FUNC( FI_WINDRAW )
 
 #else
 
-HB_FUNC( FI_FITOBITMAP )
+HB_FUNC( FI_WINCONVTODIB )
 {
    hb_ret();
 }
 
-HB_FUNC( FI_BITMAPTOFI )
+HB_FUNC( FI_WINCONVFROMDIB )
 {
    hb_ret();
 }

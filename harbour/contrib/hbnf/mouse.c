@@ -58,7 +58,7 @@
 
 /* http://www.delorie.com/djgpp/doc/rbinter/ix/33/00.html */
 
-HB_FUNC( _MSET_SENSITIVE ) /* nHoriz, nVert, nDouble */
+HB_FUNC( _FT_MSETSENSITIVE )  /* nHoriz, nVert, nDouble */
 {
 #if defined( HB_OS_DOS )
    {

@@ -25,14 +25,14 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC HB_LZO1X_1_COMPRESS
-DYNAMIC HB_LZO1X_DECOMPRESS
-DYNAMIC HB_LZO1X_DECOMPRESS_SAFE
-DYNAMIC HB_LZO_COMPRESSBOUND
-DYNAMIC LZO_ADLER32
-DYNAMIC LZO_VERSION
-DYNAMIC LZO_VERSION_DATE
-DYNAMIC LZO_VERSION_STRING
+DYNAMIC hb_lzo1x_1_compress
+DYNAMIC hb_lzo1x_decompress
+DYNAMIC hb_lzo1x_decompress_safe
+DYNAMIC hb_lzo_compressbound
+DYNAMIC lzo_adler32
+DYNAMIC lzo_version
+DYNAMIC lzo_version_date
+DYNAMIC lzo_version_string
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBMLZO__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

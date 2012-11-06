@@ -25,20 +25,20 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC XDL_BDIFF
-DYNAMIC XDL_BDIFF_TGSIZE
-DYNAMIC XDL_BPATCH
-DYNAMIC XDL_DIFF
-DYNAMIC XDL_INIT_MMFILE
-DYNAMIC XDL_MMFILE_CMP
-DYNAMIC XDL_MMFILE_COMPACT
-DYNAMIC XDL_MMFILE_ISCOMPACT
-DYNAMIC XDL_MMFILE_SIZE
-DYNAMIC XDL_PATCH
-DYNAMIC XDL_RABDIFF
-DYNAMIC XDL_READ_MMFILE
-DYNAMIC XDL_SEEK_MMFILE
-DYNAMIC XDL_WRITE_MMFILE
+DYNAMIC xdl_bdiff
+DYNAMIC xdl_bdiff_tgsize
+DYNAMIC xdl_bpatch
+DYNAMIC xdl_diff
+DYNAMIC xdl_init_mmfile
+DYNAMIC xdl_mmfile_cmp
+DYNAMIC xdl_mmfile_compact
+DYNAMIC xdl_mmfile_iscompact
+DYNAMIC xdl_mmfile_size
+DYNAMIC xdl_patch
+DYNAMIC xdl_rabdiff
+DYNAMIC xdl_read_mmfile
+DYNAMIC xdl_seek_mmfile
+DYNAMIC xdl_write_mmfile
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBXDIFF__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -126,7 +126,7 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
    hb_default( @nDouble, nCurDouble )
 
    // Fill the registers
-   _mset_sensitive( nHoriz, nVert, nDouble )
+   _ft_MSetSensitive( nHoriz, nVert, nDouble )
 
    RETURN NIL
 

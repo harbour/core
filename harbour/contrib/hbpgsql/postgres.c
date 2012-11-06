@@ -435,7 +435,7 @@ HB_FUNC( PQEXECPARAMS )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( PQFCOUNT )
+HB_FUNC( PQFCOUNT )  /* not a direct wrapper */
 {
    PGresult * res = hb_PGresult_par( 1 );
 
@@ -452,7 +452,7 @@ HB_FUNC( PQFCOUNT )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( PQLASTREC )
+HB_FUNC( PQLASTREC )  /* not a direct wrapper */
 {
    PGresult * res = hb_PGresult_par( 1 );
 
@@ -523,7 +523,7 @@ HB_FUNC( PQGETLENGTH )
 #define HBPG_META_TABLECOL   6
 #define HBPG_META_LEN_       6
 
-HB_FUNC( PQMETADATA )
+HB_FUNC( PQMETADATA )  /* not a direct wrapper */
 {
    PGresult * res = hb_PGresult_par( 1 );
 
@@ -647,7 +647,7 @@ HB_FUNC( PQMETADATA )
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( PQRESULT2ARRAY )
+HB_FUNC( PQRESULT2ARRAY )  /* not a direct wrapper */
 {
    PGresult * res = hb_PGresult_par( 1 );
 
@@ -963,7 +963,7 @@ HB_FUNC( PQISNONBLOCKING )
  * Trace Connection handling functions
  */
 
-HB_FUNC( PQCREATETRACE )
+HB_FUNC( PQTRACECREATE )  /* not a direct wrapper */
 {
 #ifdef NODLL
    hb_FILE_ret( fopen( hb_parcx( 1 ), "w+b" ) );

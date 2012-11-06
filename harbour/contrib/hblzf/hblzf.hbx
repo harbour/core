@@ -25,11 +25,11 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC HB_LZF_COMPRESS
-DYNAMIC HB_LZF_COMPRESSBOUND
-DYNAMIC HB_LZF_DECOMPRESS
-DYNAMIC HB_LZF_OPTIMIZED_FOR_SPEED
-DYNAMIC HB_LZF_VERSION
+DYNAMIC hb_lzf_compress
+DYNAMIC hb_lzf_compressbound
+DYNAMIC hb_lzf_decompress
+DYNAMIC hb_lzf_optimized_for_speed
+DYNAMIC hb_lzf_version
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBLZF__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

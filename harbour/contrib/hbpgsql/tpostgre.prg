@@ -451,7 +451,7 @@ METHOD DeleteTable( cTable ) CLASS TPQserver
 
 METHOD TraceOn( cFile ) CLASS TPQserver
 
-   ::pTrace := PQcreatetrace( cFile )
+   ::pTrace := PQtracecreate( cFile )
 
    IF ::pTrace != NIL
       PQtrace( ::pDb, ::pTrace )

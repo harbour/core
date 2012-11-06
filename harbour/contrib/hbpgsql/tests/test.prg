@@ -28,7 +28,7 @@ PROCEDURE Main()
 
    ? "Blocking: ", PQisnonblocking( conn ), PQsetnonblocking( conn, .T. ), PQisnonblocking( conn )
 
-   pFile := PQcreatetrace( "trace.log" )
+   pFile := PQtracecreate( "trace.log" )
    PQtrace( conn, pFile )
 
    ? "Verbose: ", PQsetErrorVerbosity( conn, 2 )
