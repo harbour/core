@@ -25,9 +25,9 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC CUPSGETDEFAULT
-DYNAMIC CUPSGETDESTS
-DYNAMIC CUPSPRINTFILE
+DYNAMIC cupsGetDefault
+DYNAMIC cupsGetDests
+DYNAMIC cupsPrintFile
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBCUPS__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

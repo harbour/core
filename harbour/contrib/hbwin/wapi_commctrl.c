@@ -513,9 +513,9 @@ HB_FUNC( WAPI_TABCTRL_GETITEM )
 {
    TC_ITEM item;
 
-   hb_retl( TabCtrl_GetItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), &item ) );
+   hbwapi_ret_L( TabCtrl_GetItem( hbwapi_par_raw_HWND( 1 ), hbwapi_par_INT( 2 ), &item ) );
 
-   /* assign  item to param 3 */
+   /* assign item to param 3 */
 }
 
 HB_FUNC( WAPI_TABCTRL_GETITEMCOUNT )

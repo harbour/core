@@ -25,8 +25,8 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC HB_GS
-DYNAMIC HB_GSAPI_REVISION
+DYNAMIC hb_gs
+DYNAMIC hb_gsapi_revision
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBGS__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

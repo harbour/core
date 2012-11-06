@@ -782,7 +782,7 @@ HB_FUNC( XML_PARSERCREATE )
    hb_retptrGC( ph );
 }
 
-HB_FUNC( XML_PARSERESET )
+HB_FUNC( XML_PARSERRESET )
 {
    if( PHB_EXPAT_is( 1 ) )
    {
