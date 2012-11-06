@@ -93,7 +93,7 @@ HB_FUNC( MOD )
           * decimal places, it can be seen in code like:
           *    proc main()
           *       set fixed on
-          *       ? transform(mod( 12345, 0 ),"")
+          *       ? transform( mod( 12345, 0 ),"" )
           *    return
           *
           * [druzus]

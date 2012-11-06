@@ -16,7 +16,7 @@ PROCEDURE Main()
 
    LOCAL oMSCAL
 
-#if defined( __PLATFORM__WINDOWS ) .AND. defined( __HBSCRIPT__HBSHELL )
+#if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVT" )
 #endif
 
@@ -32,10 +32,10 @@ CREATE CLASS HActiveX
 
    VAR oOLE
    VAR hWnd
-   METHOD Init
-   METHOD Event
-   ERROR HANDLER OnError
-   DESTRUCTOR Close
+   METHOD Init( hWnd, cProgId, nTop, nLeft, nWidth, nHeight, cID )
+   METHOD Event( ... )
+   ERROR HANDLER OnError()
+   DESTRUCTOR Close()
 
 ENDCLASS
 
@@ -45,7 +45,9 @@ METHOD Init( hWnd, cProgId, nTop, nLeft, nWidth, nHeight, cID ) CLASS HActiveX
 
    win_axInit()
    ::hWnd := wapi_CreateWindowEx( 0, "AtlAxWin", cProgId, nStyle, nLeft, nTop, nWidth, nHeight, hWnd, 0 )
-   /* WAPI_SetWindowPos( ::hWnd, WIN_HWND_TOPMOST, 0, 0, 1, 1, hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_DRAWFRAME ) ) */
+#if 0
+   wapi_SetWindowPos( ::hWnd, WIN_HWND_TOPMOST, 0, 0, 1, 1, hb_bitOr( WIN_SWP_NOSIZE, WIN_SWP_DRAWFRAME ) )
+#endif
    ::oOLE := win_axGetControl( ::hWnd, {| event, ... | ::Event( event, ... ) }, cID )
 
    RETURN self

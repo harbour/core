@@ -338,7 +338,7 @@ STATIC PROCEDURE DispScreen()
 
 //
 
-#if defined( __PLATFORM__WINDOWS ) .AND. ! defined( __HBSCRIPT__HBSHELL )
+#if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
 
 PROCEDURE HB_GTSYS()
 

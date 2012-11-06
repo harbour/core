@@ -138,7 +138,7 @@ before the one in core code). So it's enough to write something like:
 
     ANNOUNCE RDDSYS
 or:
-    PROC RDDSYS; RETURN
+    PROCEDURE RDDSYS(); RETURN
 
 Both gives the same effect, and default RDD (DBFNTX) will not be linked.
 Exactly the same I've done in GT subsystem. HB_GTSYS() makes exactly
@@ -157,7 +157,7 @@ the same as for RDD and add to your code:
 
     ANNOUNCE HB_GTSYS
 or:
-    PROC HB_GTSYS; RETURN
+    PROCEDURE HB_GTSYS(); RETURN
 
 In such case your final application will not have any GT driver. If you
 want to use GTNUL as base, you should add:
@@ -175,19 +175,19 @@ For example, compile this code:
     /*** t.prg ***/
     REQUEST HB_GT_WIN
     REQUEST HB_GT_WVT
-    PROC MAIN()
-       ? HB_GTVERSION(), HB_GTVERSION(1)
-       TONE( 200, 3 )
-       TONE( 300, 3 )
-       TONE( 500, 3 )
-       INKEY( 0 )
-    RETURN
+    PROCEDURE Main()
+       ? hb_gtVersion(), hb_gtVersion( 1 )
+       Tone( 200, 3 )
+       Tone( 300, 3 )
+       Tone( 500, 3 )
+       Inkey( 0 )
+       RETURN
 
 and link it as Windows GUI application. Then simply execute:
 
-    t //GTWIN
+    t --hb:gtwin
 and:
-    t //GTWVT
+    t --hb:gtwvt
 
 Most of Windows linkers execute startup initialization code in the
 order of linked modules, so the first linked GT driver will be the
@@ -204,12 +204,12 @@ activated but GTNUL.
 
 It could be intentional, because if your application is linked with more
 GTs, then you can also set the default one when you start your
-application using //GT<name> switch, or HB_GT environment variable. So
-you can create GUI application which will set the default GT driver to
-NUL and will not activate GTWIN, and when you'll want to enable debug
+application using --hb:gt<name> switch, or HB_GT environment variable.
+So you can create GUI application which will set the default GT driver
+to NUL and will not activate GTWIN, and when you'll want to enable debug
 messages, you simply run:
 
-    myprog //GTWIN
+    myprog --hb:gtwin
 
 and debug messages will use the GTWIN console window. You can think of
 other situations when it could be useful to have full functional GT

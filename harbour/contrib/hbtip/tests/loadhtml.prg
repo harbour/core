@@ -8,7 +8,7 @@
 
 #require "hbtip"
 
-PROCEDURE Main
+PROCEDURE Main()
 
    LOCAL oHttp, cHtml, hQuery, aLink, oNode, oDoc
 
