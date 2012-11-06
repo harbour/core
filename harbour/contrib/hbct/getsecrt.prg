@@ -55,7 +55,7 @@
 
 #include "getexit.ch"
 
-FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
+FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
 
    LOCAL nCursorRow := Row()
    LOCAL nCursorCol := Col()
@@ -98,7 +98,9 @@ FUNCTION GETSECRET( cVar, nRow, nCol, lSay, xPrompt )
 
 STATIC FUNCTION _HIDE( cVar )
 
-/* RETURN RangeRepl( Asc( " " ) + 1, 255, cVar, "*" ) */
+#if 0
+   RETURN RangeRepl( Asc( " " ) + 1, 255, cVar, "*" )
+#endif
 
    RETURN PadR( Replicate( "*", Len( RTrim( cVar ) ) ), Len( cVar ) )
 

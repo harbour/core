@@ -61,8 +61,8 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  wordonly("AABBCCDD", "XXAAYYBBZZ") == "AABB" ? --> "' + wordonly( "AABBCCDD", "XXAAYYBBZZ" ) + '"'
-   ? '  wordonly("AABBCCDD", "XAAYYYBBZZ") == "BB" ? ----> "' + wordonly( "AABBCCDD", "XAAYYYBBZZ" ) + '"'
+   ? '  wordonly("AABBCCDD", "XXAAYYBBZZ") == "AABB" ? --> "' + WordOnly( "AABBCCDD", "XXAAYYBBZZ" ) + '"'
+   ? '  wordonly("AABBCCDD", "XAAYYYBBZZ") == "BB" ? ----> "' + WordOnly( "AABBCCDD", "XAAYYYBBZZ" ) + '"'
    ?
 
    ? "End test of WORDONLY()"

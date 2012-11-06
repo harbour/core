@@ -51,7 +51,7 @@
  *
  */
 
-FUNCTION SHOWTIME( nRow, nCol, lNoSec, cColor, l12, lAmPm )
+FUNCTION ShowTime( nRow, nCol, lNoSec, cColor, l12, lAmPm )
 
    THREAD STATIC t_hTimer := NIL
 

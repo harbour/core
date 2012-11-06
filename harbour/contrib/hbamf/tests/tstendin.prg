@@ -23,9 +23,9 @@ PROCEDURE Main()
    TEST 268435456000, "4271"
    TEST -1, "FE11"
    TEST 9007199254740990, "0009"
-   TEST AMF3_DECODE( AMF3_ENCODE( 9007199254740990 ) ), "0009"
+   TEST amf3_Decode( amf3_Encode( 9007199254740990 ) ), "0009"
    TEST 9007199254740991, "8918"
-   TEST AMF3_DECODE( AMF3_ENCODE( 9007199254740991 ) ), "8918"
+   TEST amf3_Decode( amf3_Encode( 9007199254740991 ) ), "8918"
    TEST 9007199254740991.00, "8918"
    TEST 6969.69, "10AF"
    TEST NIL, "F1E1"
@@ -38,7 +38,7 @@ PROCEDURE Main()
 
 STATIC PROCEDURE _TEST( a, cChkOK )
 
-   LOCAL x := AMF3_ENCODE( a )
+   LOCAL x := amf3_Encode( a )
    LOCAL cChk := hb_StrToHex( I2Bin( hb_CRC( x ) ) )
 
    ? PadL( hb_ValToExp( a ), 18 ), hb_StrToHex( x, " " ), "CHECKSUM", cChk, iif( ! Empty( cChkOK ) .AND. !( cChk == cChkOK ), "!TEST FAILED!, should be " + cChkOK, " " )

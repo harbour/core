@@ -50,7 +50,7 @@
  *
  */
 
-FUNCTION dsetkbios( lNewKeyboardMode )
+FUNCTION DSetKBIOS( lNewKeyboardMode )
 
    THREAD STATIC t_lKeyboardMode := .T.
 

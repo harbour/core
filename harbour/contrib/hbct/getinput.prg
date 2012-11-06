@@ -53,7 +53,7 @@
  *
  */
 
-FUNCTION GETINPUT( xVar, nRow, nCol, lSay, xPrompt )
+FUNCTION GetInput( xVar, nRow, nCol, lSay, xPrompt )
 
    LOCAL nCursorRow := Row()
    LOCAL nCursorCol := Col()

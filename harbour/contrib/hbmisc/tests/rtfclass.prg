@@ -83,9 +83,9 @@ METHOD write( csource ) CLASS TRtf
       { "-il" , "\ulnone\i0 "    }, ; /* turn italic_underline off */
       { "-u"  , "\ulnone "       } } /* turn underline off */
 
-   hb_fuse( csource )  // open source file
+   hb_FUse( csource )  // open source file
    WHILE ! hb_FEof()   // read the file line by line
-      cline := hb_freadln() + "\par"
+      cline := hb_FReadLn() + "\par"
       y     := Len( cline )
       FOR nchar := 1 TO y
          cchar := SubStr( cline, nchar, 1 )
@@ -123,9 +123,9 @@ METHOD write( csource ) CLASS TRtf
          ENDIF
       NEXT
       FWrite( ::nhandle, hb_eol() )
-      hb_fskip() // read next line
+      hb_FSkip() // read next line
    ENDDO
-   hb_fuse()
+   hb_FUse()
 
    RETURN self
 

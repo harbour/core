@@ -63,12 +63,12 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  tabexpand("-"+chr(9)+"!")             == "-       !" ? -> "' + tabexpand( "-" + Chr( 9 ) + "!" )            + '"'
-   ? '  tabexpand("----"+chr(9) +"!")         == "----    !" ? -> "' + tabexpand( "----" + Chr( 9 ) + "!" )         + '"'
-   ? '  tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!" ? -> "' + tabexpand( "-" + Chr( 9 ) + "!",, "+" )      + '"'
-   ? '  tabexpand("-"+chr(9)+ "!", 4)         == "-   !"     ? -> "' + tabexpand( "-" + Chr( 9 ) + "!", 4 )         + '"'
-   ? '  tabexpand("----"+chr(9)+ "!", 8)      == "----    !" ? -> "' + tabexpand( "----" + Chr( 9 ) + "!", 8 )      + '"'
-   ? '  tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!" ? -> "' + tabexpand( "----" + Chr( 9 ) + "!", 8, "+" ) + '"'
+   ? '  tabexpand("-"+chr(9)+"!")             == "-       !" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!" )            + '"'
+   ? '  tabexpand("----"+chr(9) +"!")         == "----    !" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!" )         + '"'
+   ? '  tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!",, "+" )      + '"'
+   ? '  tabexpand("-"+chr(9)+ "!", 4)         == "-   !"     ? -> "' + TabExpand( "-" + Chr( 9 ) + "!", 4 )         + '"'
+   ? '  tabexpand("----"+chr(9)+ "!", 8)      == "----    !" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!", 8 )      + '"'
+   ? '  tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!", 8, "+" ) + '"'
    ?
 
    ? "Tests with newline characters: ^J == LF, ^M == CR"
@@ -76,12 +76,12 @@ PROCEDURE Main()
    cStr := StrTran( cStr, Chr( 10 ), "^J" )
    cStr := StrTran( cStr, Chr( 13 ), "^M" )
    ? '  hb_eol() = "' + cStr + '"'
-   cStr := tabexpand( "-" + Chr( 9 ) + "!" + hb_eol() + "----" + Chr( 9 ) + "!", , "+" )
+   cStr := TabExpand( "-" + Chr( 9 ) + "!" + hb_eol() + "----" + Chr( 9 ) + "!", , "+" )
    cStr := StrTran( cStr, Chr( 10 ), "^J" )
    cStr := StrTran( cStr, Chr( 13 ), "^M" )
    ? '  tabexpand("-"+chr(9)+"!"+hb_eol()+"----"+chr(9)+ "!",, "+")'
    ? '     == "-+++++++!"+hb_eol()+"----++++!"  ? -> "' + cStr + '"'
-   cStr := tabexpand( "-" + Chr( 9 ) + "!$$--" + hb_eol() + "--" + Chr( 9 ) + "!", , "+", "$" )
+   cStr := TabExpand( "-" + Chr( 9 ) + "!$$--" + hb_eol() + "--" + Chr( 9 ) + "!", , "+", "$" )
    cStr := StrTran( cStr, Chr( 10 ), "^J" )
    cStr := StrTran( cStr, Chr( 13 ), "^M" )
    ? '  tabexpand("-"+chr(9)+"!$$--"+hb_eol()+--"+chr(9)+ "!",, "+", "$")'
@@ -90,9 +90,9 @@ PROCEDURE Main()
    ?
 
    ? "Tests with tab characters:"
-   ? '  tabexpand("-"+chr(9)+"-",,"+")      == "-+++++++-" ? -> "' + tabexpand( "-" + Chr( 9 ) + "-",, "+" ) + '"'
+   ? '  tabexpand("-"+chr(9)+"-",,"+")      == "-+++++++-" ? -> "' + TabExpand( "-" + Chr( 9 ) + "-",, "+" ) + '"'
    ? '  tabexpand("-"+chr(9)+"-",,"+",,"-")'
-   ? '                              == "++++++++^I+++++++" ? -> "' + StrTran( tabexpand( "-" + Chr( 9 ) + "-",, "+",, "-" ), Chr( 9 ), "^I" ) + '"'
+   ? '                              == "++++++++^I+++++++" ? -> "' + StrTran( TabExpand( "-" + Chr( 9 ) + "-",, "+",, "-" ), Chr( 9 ), "^I" ) + '"'
    ?
 
    ? "End test of TABEXPAND()"
@@ -106,9 +106,9 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests: ^I == tab character"
 
-   ? '  tabpack("AAAAAAA*",, "*")   == "AAAAAAA*"  ? -> "' + StrTran( tabpack( "AAAAAAA*",, "*" ), Chr( 9 ), "^I" )  + '"'
-   ? '  tabpack("AAAAA***",, "*")   == "AAAAA^I"   ? -> "' + StrTran( tabpack( "AAAAA***",, "*" ), Chr( 9 ), "^I" )  + '"'
-   ? '  tabpack("AAAAA*****",, "*") == "AAAAA^I**" ? -> "' + StrTran( tabpack( "AAAAA*****",, "*" ), Chr( 9 ), "^I" ) + '"'
+   ? '  tabpack("AAAAAAA*",, "*")   == "AAAAAAA*"  ? -> "' + StrTran( TabPack( "AAAAAAA*",, "*" ), Chr( 9 ), "^I" )  + '"'
+   ? '  tabpack("AAAAA***",, "*")   == "AAAAA^I"   ? -> "' + StrTran( TabPack( "AAAAA***",, "*" ), Chr( 9 ), "^I" )  + '"'
+   ? '  tabpack("AAAAA*****",, "*") == "AAAAA^I**" ? -> "' + StrTran( TabPack( "AAAAA*****",, "*" ), Chr( 9 ), "^I" ) + '"'
    ?
 
    ? "Tests with newline characters:"
@@ -118,7 +118,7 @@ PROCEDURE Main()
    ? '  hb_eol() = "' + cStr + '"'
 
    cStr := "ABCD+" + hb_eol() + "++---+++++"
-   cStr := tabpack( cStr, 4, "+" )
+   cStr := TabPack( cStr, 4, "+" )
    cStr := StrTran( cStr, Chr( 10 ), "^J" )
    cStr := StrTran( cStr, Chr( 13 ), "^M" )
    cStr := StrTran( cStr, Chr( 9 ), "^I" )
@@ -140,7 +140,7 @@ PROCEDURE Main()
    cStr := MemoEdit( , 1, 1, 9, 59,,, 59 )
    CLS
    ? "  Now printing the expanded text using a tab length of 4 and soft CRs"
-   cStr1 := tabexpand( cStr, 4, "+",,, .F. )
+   cStr1 := TabExpand( cStr, 4, "+",,, .F. )
    cStr1 := StrTran( cStr, Chr( 141 ), hb_eol() )
 
    FOR ni := 1 TO MLCount( cStr1, 59, 4, .T. )
@@ -148,7 +148,7 @@ PROCEDURE Main()
    NEXT
 
    QOut( "  Now printing the expanded text using a tab length of 4 but without soft CRs" )
-   cStr1 := tabexpand( cStr, 4, "+",,, .T. )
+   cStr1 := TabExpand( cStr, 4, "+",,, .T. )
 
    FOR ni := 1 TO MLCount( cStr1, 59, 4, .T. )
       ? "  " + Str( ni ) + ": " + MemoLine( cStr1, 59, ni, 4, .T. )

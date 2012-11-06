@@ -70,18 +70,18 @@ PROCEDURE Main()
    ? '  Tokenizing the string "' + cStr + '"'
    ? '    with skip width == 1 and ".,!" as tokenizer list:'
    ?
-   FOR ni := 1 TO numtoken( cStr, ".,!", 1 )
-      ? '    Token #' + hb_ntos( ni ) + '("' + token( cStr, ".,!", ni, 1 ) + ;
-         '") is tokenized by "' + tokensep( .F. ) + '" and "' + tokensep( .T. ) + '"'
+   FOR ni := 1 TO NumToken( cStr, ".,!", 1 )
+      ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".,!", ni, 1 ) + ;
+         '") is tokenized by "' + TokenSep( .F. ) + '" and "' + TokenSep( .T. ) + '"'
    NEXT
 
    ?
    ? '  Tokenizing the string "' + cStr + '"'
    ? '    with skip width == 3 and ".,!" as tokenizer list:'
    ?
-   FOR ni := 1 TO numtoken( cStr, ".,!", 3 )
-      ? '    Token #' + hb_ntos( ni ) + '("' + token( cStr, ".,!", ni, 3 ) + ;
-         '") is tokenized by "' + tokensep( .F. ) + '" and "' + tokensep( .T. ) + '"'
+   FOR ni := 1 TO NumToken( cStr, ".,!", 3 )
+      ? '    Token #' + hb_ntos( ni ) + '("' + Token( cStr, ".,!", ni, 3 ) + ;
+         '") is tokenized by "' + TokenSep( .F. ) + '" and "' + TokenSep( .T. ) + '"'
    NEXT
 
    ?

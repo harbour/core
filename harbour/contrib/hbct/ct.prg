@@ -54,7 +54,7 @@
 
 STATIC s_bInitialized := .F.
 
-FUNCTION CTINIT()
+FUNCTION ctinit()
 
    IF ! s_bInitialized
       s_bInitialized := ctcinit()
@@ -70,7 +70,7 @@ INIT PROCEDURE _CTINIT()
 
    RETURN
 
-FUNCTION CTEXIT()
+FUNCTION ctexit()
 
    IF s_bInitialized
       ctcexit()

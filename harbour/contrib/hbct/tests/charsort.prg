@@ -61,15 +61,15 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  charsort("qwert")                     == "eqrtw"      ? --> "' + charsort( "qwert" )                   + '"'
-   ? '  charsort("qwert", 2)                  == "erqwt"      ? --> "' + charsort( "qwert", 2 )                + '"'
-   ? '  charsort("b1a4a3a2a1", 2, 1)          == "a2a1a3a4b1" ? --> "' + charsort( "b1a4a3a2a1", 2, 1 )        + '"'
+   ? '  charsort("qwert")                     == "eqrtw"      ? --> "' + CharSort( "qwert" )                   + '"'
+   ? '  charsort("qwert", 2)                  == "erqwt"      ? --> "' + CharSort( "qwert", 2 )                + '"'
+   ? '  charsort("b1a4a3a2a1", 2, 1)          == "a2a1a3a4b1" ? --> "' + CharSort( "b1a4a3a2a1", 2, 1 )        + '"'
    ? '  NOTE : The order of equal elements(here the one beginning with the same char) is NOT determined !'
-   ? '  charsort("XXXqwert", 1, 1, 3)         == "XXXeqrtw"   ? --> "' + charsort( "XXXqwert", 1, 1, 3 )       + '"'
-   ? '  charsort("b1a4a3a2a1", 2, 1, 0, 1)    == "a1b1a2a3a4" ? --> "' + charsort( "b1a4a3a2a1", 2, 1, 0, 1 )  + '"'
+   ? '  charsort("XXXqwert", 1, 1, 3)         == "XXXeqrtw"   ? --> "' + CharSort( "XXXqwert", 1, 1, 3 )       + '"'
+   ? '  charsort("b1a4a3a2a1", 2, 1, 0, 1)    == "a1b1a2a3a4" ? --> "' + CharSort( "b1a4a3a2a1", 2, 1, 0, 1 )  + '"'
    ? '  NOTE : The order of equal elements(here the one ending with the same number) is NOT determined !'
-   ? '  charsort("384172852", 1, 1, 0, 0, 4)  == "134872852"  ? --> "' + charsort( "384172852", 1, 1, 0, 0, 4 ) + '"'
-   ? '  charsort("qwert",,,,,,.T.)            == "wtrqe"      ? --> "' + charsort( "qwert",,,,,, .T. )          + '"'
+   ? '  charsort("384172852", 1, 1, 0, 0, 4)  == "134872852"  ? --> "' + CharSort( "384172852", 1, 1, 0, 0, 4 ) + '"'
+   ? '  charsort("qwert",,,,,,.T.)            == "wtrqe"      ? --> "' + CharSort( "qwert",,,,,, .T. )          + '"'
    ?
 
    ? "End test of CHARSORT()"

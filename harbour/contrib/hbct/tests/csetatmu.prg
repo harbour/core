@@ -57,10 +57,10 @@ PROCEDURE Main()
    ctinit()
 
    ? "Begin test of CSETATMUPA()"
-   ? "  Default switch should be .F., is..................................", csetatmupa()
-   ? "  Setting switch to .T., return value should be .F., is.............", csetatmupa( .T. )
-   ? "  Switch setting should now be .T., is..............................", csetatmupa()
-   ? "  Setting switch to .F. again, return value should still be .T., is ", csetatmupa( .F. )
+   ? "  Default switch should be .F., is..................................", CSetAtMupa()
+   ? "  Setting switch to .T., return value should be .F., is.............", CSetAtMupa( .T. )
+   ? "  Switch setting should now be .T., is..............................", CSetAtMupa()
+   ? "  Setting switch to .F. again, return value should still be .T., is ", CSetAtMupa( .F. )
    ? "End test of CSETATMUPA()"
    ?
 

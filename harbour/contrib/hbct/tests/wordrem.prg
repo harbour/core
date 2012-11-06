@@ -61,8 +61,8 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  wordrem("abcd", "0ab1cd") == "0ab1" ? ----> "' + wordrem( "abcd", "0ab1cd" ) + '"'
-   ? '  wordrem("abcd", "ab0cd1") == "0cd1" ? ----> "' + wordrem( "abcd", "ab0cd1" ) + '"'
+   ? '  wordrem("abcd", "0ab1cd") == "0ab1" ? ----> "' + WordRem( "abcd", "0ab1cd" ) + '"'
+   ? '  wordrem("abcd", "ab0cd1") == "0cd1" ? ----> "' + WordRem( "abcd", "ab0cd1" ) + '"'
    ?
 
    ? "End test of WORDREM()"

@@ -206,7 +206,7 @@ METHOD Execute( cQuery ) CLASS TFbServer
    RETURN result
 
 METHOD Query( cQuery ) CLASS TFbServer
-   RETURN TFbQuery():New( ::db, cQuery, ::dialect )
+   RETURN TFBQuery():New( ::db, cQuery, ::dialect )
 
 METHOD TableExists( cTable ) CLASS TFbServer
 
@@ -242,7 +242,7 @@ METHOD ListTables() CLASS TFbServer
 
    IF HB_ISARRAY( qry )
       DO WHILE FBFetch( qry ) == 0
-         AAdd( result, FBGetdata( qry, 1 ) )
+         AAdd( result, FBGetData( qry, 1 ) )
       ENDDO
 
       FBFree( qry )
@@ -373,8 +373,8 @@ METHOD Delete( oRow, cWhere ) CLASS TFbServer
 
          cWhere := ""
          FOR i := 1 TO Len( aKeys )
-            nField := oRow:Fieldpos( aKeys[ i ] )
-            xField := oRow:Fieldget( nField )
+            nField := oRow:FieldPos( aKeys[ i ] )
+            xField := oRow:FieldGet( nField )
 
             cWhere += aKeys[ i ] + "=" + DataToSql( xField )
 
@@ -407,7 +407,7 @@ METHOD Append( oRow ) CLASS TFbServer
       FOR i := 1 TO oRow:FCount()
          IF oRow:Changed( i )
             // Send only changed field
-            cQuery += oRow:Fieldname( i ) + ","
+            cQuery += oRow:FieldName( i ) + ","
          ENDIF
       NEXT
 
@@ -441,8 +441,8 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
 
          cWhere := ""
          FOR i := 1 TO Len( aKeys )
-            nField := oRow:Fieldpos( aKeys[ i ] )
-            xField := oRow:Fieldget( nField )
+            nField := oRow:FieldPos( aKeys[ i ] )
+            xField := oRow:FieldGet( nField )
 
             cWhere += aKeys[ i ] + "=" + DataToSql( xField )
 
@@ -455,7 +455,7 @@ METHOD Update( oRow, cWhere ) CLASS TFbServer
       cQuery := "UPDATE " + aTables[ 1 ] + " SET "
       FOR i := 1 TO oRow:FCount()
          IF oRow:Changed( i )
-            cQuery += oRow:Fieldname( i ) + " = " + DataToSql( oRow:FieldGet( i ) ) + ","
+            cQuery += oRow:FieldName( i ) + " = " + DataToSql( oRow:FieldGet( i ) ) + ","
          ENDIF
       NEXT
 
@@ -742,7 +742,7 @@ METHOD Getrow() CLASS TFbQuery
          aRow[ i ] := ::FieldGet( i )
       NEXT
 
-      result := TFbRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
+      result := TFBRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
    ENDIF
 
    RETURN result
@@ -775,7 +775,7 @@ METHOD GetBlankRow() CLASS TFbQuery
          ENDSWITCH
       NEXT
 
-      result := TFbRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
+      result := TFBRow():New( aRow, ::aStruct, ::db, ::dialect, ::aTables )
    ENDIF
 
    RETURN result
@@ -934,7 +934,7 @@ STATIC FUNCTION KeyField( aTables, db, dialect )
 
       IF HB_ISARRAY( qry )
          DO WHILE FBFetch( qry ) == 0
-            AAdd( aKeys, RTrim( FBGetdata( qry, 1 ) ) )
+            AAdd( aKeys, RTrim( FBGetData( qry, 1 ) ) )
          ENDDO
 
          FBFree( qry )
@@ -1002,9 +1002,9 @@ STATIC FUNCTION StructConvert( aStru, db, dialect )
 
       DO WHILE FBFetch( qry ) == 0
          AAdd( aDomains, { ;
-            iif( FBGetdata( qry, 1 ) == NIL, "", FBGetdata( qry, 1 ) ), ;
-            iif( FBGetdata( qry, 2 ) == NIL, "", FBGetdata( qry, 2 ) ), ;
-            iif( FBGetdata( qry, 3 ) == NIL, "", FBGetdata( qry, 3 ) ) } )
+            iif( FBGetData( qry, 1 ) == NIL, "", FBGetData( qry, 1 ) ), ;
+            iif( FBGetData( qry, 2 ) == NIL, "", FBGetData( qry, 2 ) ), ;
+            iif( FBGetData( qry, 3 ) == NIL, "", FBGetData( qry, 3 ) ) } )
       ENDDO
 
       FBFree( qry )

@@ -78,11 +78,11 @@ PROCEDURE Main()
    ?
    ? "Standard behaviour"
    ? "  Call to addascii(5789676,1,2,.T.):"
-   cRet := addascii( 5789676, 1, 2, .T. )
+   cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -90,13 +90,13 @@ PROCEDURE Main()
    // CT_ARGERR_WHOCARES on argument error
    ?
    ? "CT_ARGERR_WHOCARES behaviour"
-   CSETARGERR( CT_ARGERR_WHOCARES )
+   CSetArgErr( CT_ARGERR_WHOCARES )
    ? "  Call to addascii(5789676,1,2,.T.):"
-   cRet := addascii( 5789676, 1, 2, .T. )
+   cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -104,13 +104,13 @@ PROCEDURE Main()
    // CT_ARGERR_WARNING on argument error
    ?
    ? "CT_ARGERR_WARNING behaviour"
-   CSETARGERR( CT_ARGERR_WARNING )
+   CSetArgErr( CT_ARGERR_WARNING )
    ? "  Call to addascii(5789676,1,2,.T.):"
-   cRet := addascii( 5789676, 1, 2, .T. )
+   cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -118,13 +118,13 @@ PROCEDURE Main()
    // CT_ARGERR_ERROR on argument error
    ?
    ? "CT_ARGERR_ERROR behaviour"
-   CSETARGERR( CT_ARGERR_ERROR )
+   CSetArgErr( CT_ARGERR_ERROR )
    ? "  Call to addascii(5789676,1,2,.T.):"
-   cRet := addascii( 5789676, 1, 2, .T. )
+   cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -132,13 +132,13 @@ PROCEDURE Main()
    // CT_ARGERR_CATASTROPHIC on argument error
    ?
    ? "CT_ARGERR_CATASTROPHIC behaviour"
-   CSETARGERR( CT_ARGERR_CATASTROPHIC )
+   CSetArgErr( CT_ARGERR_CATASTROPHIC )
    ? "  Call to addascii(5789676,1,2,.T.):"
-   cRet := addascii( 5789676, 1, 2, .T. )
+   cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -151,7 +151,7 @@ PROCEDURE Main()
    ?
    ? "Standard behaviour"
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -159,9 +159,9 @@ PROCEDURE Main()
    // CT_ARGERR_WHOCARES on argument error
    ?
    ? "CT_ARGERR_WHOCARES behaviour"
-   CSETARGERR( CT_ARGERR_WHOCARES )
+   CSetArgErr( CT_ARGERR_WHOCARES )
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -169,9 +169,9 @@ PROCEDURE Main()
    // CT_ARGERR_WARNING on argument error
    ?
    ? "CT_ARGERR_WARNING behaviour"
-   CSETARGERR( CT_ARGERR_WARNING )
+   CSetArgErr( CT_ARGERR_WARNING )
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -179,9 +179,9 @@ PROCEDURE Main()
    // CT_ARGERR_ERROR on argument error
    ?
    ? "CT_ARGERR_ERROR behaviour"
-   CSETARGERR( CT_ARGERR_ERROR )
+   CSetArgErr( CT_ARGERR_ERROR )
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
@@ -189,9 +189,9 @@ PROCEDURE Main()
    // CT_ARGERR_CATASTROPHIC on argument error
    ?
    ? "CT_ARGERR_CATASTROPHIC behaviour"
-   CSETARGERR( CT_ARGERR_CATASTROPHIC )
+   CSetArgErr( CT_ARGERR_CATASTROPHIC )
    ? "  Call to charadd('AA',.F.):"
-   cRet := charadd( "AA", .F. )
+   cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )

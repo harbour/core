@@ -62,8 +62,8 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests:"
 
-   ? '  charnolist(charnolist("Hello World !")) == " !HWdelor" ? -> "' + charnolist( charnolist( "Hello World !" ) ) + '"'
-   ? '  charnolist(charnolist(NIL)) == "" ? -> "' + charnolist( charnolist( NIL ) ) + '"'
+   ? '  charnolist(charnolist("Hello World !")) == " !HWdelor" ? -> "' + CharNoList( CharNoList( "Hello World !" ) ) + '"'
+   ? '  charnolist(charnolist(NIL)) == "" ? -> "' + CharNoList( CharNoList( NIL ) ) + '"'
 
    ? "End test of CHARNOLIST()"
    ?

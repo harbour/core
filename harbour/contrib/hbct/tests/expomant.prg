@@ -61,16 +61,16 @@ PROCEDURE Main()
    SET DECIMALS TO 15
 
    FOR n := 1 TO 1000
-      ? Str( n, 20, 15 ) + ": " + Str( mantissa( n ), 20, 15 ) + " " + Str( exponent( n ), 4 )
-      ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( exponent( Sqrt( n ) ), 4 )
+      ? Str( n, 20, 15 ) + ": " + Str( Mantissa( n ), 20, 15 ) + " " + Str( Exponent( n ), 4 )
+      ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( Mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( Exponent( Sqrt( n ) ), 4 )
    NEXT
 
    // The call to str( infinity(.T.) ), generate a GPF.
    // ?? Str( infinity( .T. ) ) + Str( mantissa( infinity( .T. ) ) ) + Str( exponent( infinity( .T. ) ) )
    // ?? Str( infinity( .T. ) )
 
-   ?? "       infinity(.T.): " + Str( mantissa( infinity( .T. ) ), 20, 15 ) + " "
-   ? Str( exponent( infinity( .T. ) ), 4 )
+   ?? "       infinity(.T.): " + Str( Mantissa( Infinity( .T. ) ), 20, 15 ) + " "
+   ? Str( Exponent( Infinity( .T. ) ), 4 )
 
    ctexit()
 

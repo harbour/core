@@ -59,9 +59,9 @@ PROCEDURE Main()
    ? "Begin test of ASCPOS()"
    ?
 
-   ? '  ascpos("0123456789") == 57   ? --> ' + Str( ascpos( "0123456789" ) )
-   ? '  ascpos("0123456789",1) == 48 ? --> ' + Str( ascpos( "0123456789", 1 ) )
-   ? '  ascpos("0123456789",11) == 0 ? --> ' + Str( ascpos( "0123456789", 11 ) )
+   ? '  ascpos("0123456789") == 57   ? --> ' + Str( AscPos( "0123456789" ) )
+   ? '  ascpos("0123456789",1) == 48 ? --> ' + Str( AscPos( "0123456789", 1 ) )
+   ? '  ascpos("0123456789",11) == 0 ? --> ' + Str( AscPos( "0123456789", 11 ) )
 
    ?
    ? "End test of ASCPOS()"

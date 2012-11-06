@@ -62,12 +62,12 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests:"
 
-   ? '  atrepl("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx" ? --> "' + atrepl( "ABC", "ABCDABCDABC", "xx" ) + '"'
-   ? '  atrepl("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW" ? --> "' + atrepl( "ABC", "ABCDABC", "ZYXW" ) + '"'
-   ? '  atrepl("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "' + atrepl( "ABC", "ABCDABCDABC", "xx", 2 ) + '"'
-   ? '  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "' + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + '"'
+   ? '  atrepl("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx" ) + '"'
+   ? '  atrepl("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW" ? --> "' + AtRepl( "ABC", "ABCDABC", "ZYXW" ) + '"'
+   ? '  atrepl("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) + '"'
+   ? '  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + '"'
    ? '  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T., 1) == "ABCDABCDxx" ? '
-   ? '          --> "' + atrepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) + '"'
+   ? '          --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) + '"'
 
    ? "End test of ATREPL()"
    ?

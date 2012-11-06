@@ -28,12 +28,14 @@ PROCEDURE Main( cValue, cBaseImage )
 
    LOCAL oI, oIDigits, nWidth, nHeight, nDigits, nNumWidth, oTemp
 
-// LOCAL black, blue, red, green, cyan, gray
+#if 0
+   LOCAL black, blue, red, green, cyan, gray
+#endif
    LOCAL aNumberImages := {}
    LOCAL n, nValue
 
    // A value if not passed
-   hb_default( @cValue    , Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
+   hb_default( @cValue, Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
    hb_default( @cBaseImage, "57chevy.gif" )
 
    IF ! hb_FileExists( IMAGES_IN + cBaseImage )
@@ -53,11 +55,11 @@ PROCEDURE Main( cValue, cBaseImage )
    ? "Value = ", cValue
 
    // Check output directory
-   /*
+#if 0
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-   */
+#endif
 
    /* Load a digits image in memory from file */
    oIDigits := GDImage():LoadFromGif( IMAGES_IN + cBaseImage )
@@ -97,14 +99,16 @@ PROCEDURE Main( cValue, cBaseImage )
    ? "Image dimensions: ", oI:Width(), oI:Height()
 
    /* Allocate drawing color */
-// black := oI:SetColor( 0, 0, 0 )
-// blue  := oI:SetColor( 0, 0, 255 )
-// red   := oI:SetColor( 255, 0, 0 )
-// green := oI:SetColor( 0, 255, 0 )
-// cyan  := oI:SetColor( 0, 255, 255 )
+#if 0
+   black := oI:SetColor( 0, 0, 0 )
+   blue  := oI:SetColor( 0, 0, 255 )
+   red   := oI:SetColor( 255, 0, 0 )
+   green := oI:SetColor( 0, 255, 0 )
+   cyan  := oI:SetColor( 0, 255, 255 )
 
    /* Draw rectangle */
-// oI:Rectangle( 0, 0, 200, 30, , blue )
+   oI:Rectangle( 0, 0, 200, 30, , blue )
+#endif
 
    /* Draw Digits */
    FOR n := 1 TO Len( cValue )

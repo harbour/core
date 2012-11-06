@@ -191,7 +191,7 @@ FUNCTION addmtest()
          c := .F.
       ELSE
 
-         @ 11, 39 SAY "The returned date is " + DToC( addmonth( dDate, mnth ) )
+         @ 11, 39 SAY "The returned date is " + DToC( AddMonth( dDate, mnth ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -235,7 +235,7 @@ FUNCTION bomtest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The returned date is " + DToC( bom( dDate ) )
+         @ 11, 10 SAY "The returned date is " + DToC( BoM( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -281,7 +281,7 @@ FUNCTION boqtest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The returned date is " + DToC( boq( dDate ) )
+         @ 11, 10 SAY "The returned date is " + DToC( BoQ( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -325,7 +325,7 @@ FUNCTION boytest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The returned date is " + DToC( boy( dDate ) )
+         @ 11, 10 SAY "The returned date is " + DToC( BoY( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -374,7 +374,7 @@ FUNCTION ctodowtest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The day number is " + Str( ctodow( Upper( AllTrim( cDow ) ) ) )
+         @ 11, 10 SAY "The day number is " + Str( CToDoW( Upper( AllTrim( cDow ) ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -424,7 +424,8 @@ FUNCTION ctomonthtest()
       IF nKey == K_ESC
          c := .F.
       ELSE
-         @ 11, 10 SAY "The day number is " + Str( ctomonth( cDom ) )
+         @ 11, 10 SAY "The day number is " + Str( CToMonth( cDom ) )
+
          SET CURSOR OFF
          Inkey( 0 )
          SET CURSOR ON
@@ -474,7 +475,7 @@ FUNCTION dInMonthtest()
 
       DO CASE
       CASE ValType( cMonth ) == "C" .AND. nmonth == 0
-         nMonth := ctomonth( cMonth )
+         nMonth := CToMonth( cMonth )
 
       CASE nMonth == 0  .OR. ;
             nMonth  > 12
@@ -489,7 +490,7 @@ FUNCTION dInMonthtest()
       ELSE
 
          @ 10, 40 SAY "The day number is " + ;
-            hb_ntos( daysInMonth( nMonth, IsAffirm( cLeap ) ) )
+            hb_ntos( DaysInMonth( nMonth, IsAffirm( cLeap ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -547,7 +548,7 @@ FUNCTION d2month()
          c := .F.
       ELSE
          @ 11, 10 SAY "The day number is " +  ;
-            hb_ntos( daystomonth( nMonth, IsAffirm( cLeap ) ) )
+            hb_ntos( DaysToMonth( nMonth, IsAffirm( cLeap ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -604,7 +605,7 @@ FUNCTION dmytest()
          c := .F.
       ELSE
          @ 12, 10 SAY "The date string returned is " + ;
-            LTrim( dmy( dDate, IsAffirm( cMode ) ) )
+            LTrim( DMY( dDate, IsAffirm( cMode ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -653,7 +654,7 @@ FUNCTION doytest()
          c := .F.
       ELSE
          @ 11, 10 SAY "The day of the date entered is " + ;
-            hb_ntos( doy( dDate ) )
+            hb_ntos( DoY( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -702,7 +703,7 @@ FUNCTION eomtest()
       ELSE
 
          @ 11, 10 SAY "The last date in the month is " + ;
-            LTrim( DToC( eom( dDate ) ) )
+            LTrim( DToC( EoM( dDate ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -750,7 +751,7 @@ FUNCTION eoqtest()
       ELSE
 
          @ 11, 10 SAY "The last date in the month is " + ;
-            LTrim( DToC( eoq( dDate ) ) )
+            LTrim( DToC( EoQ( dDate ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -799,7 +800,7 @@ FUNCTION eoytest()
       ELSE
 
          @ 11, 10 SAY "The last date in the year is " + ;
-            LTrim( DToC( eoy( dDate ) ) )
+            LTrim( DToC( EoY( dDate ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -848,7 +849,7 @@ FUNCTION isleaptest()
          c := .F.
       ELSE
 
-         IF isleap( dDate )
+         IF IsLeap( dDate )
             cResult := "TRUE "
          ELSE
             cResult := "FALSE"
@@ -913,7 +914,7 @@ FUNCTION lastdayomtest()
          iif( Empty( dDate ), dDate := Val( cMth ), dDate )
 
          @ 12, 10 SAY "The number of days in the month is " + ;
-            hb_ntos( lastdayom( dDate ) )
+            hb_ntos( LastDayOM( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -965,7 +966,7 @@ FUNCTION mdytest()
       ELSE
 
          @ 11, 10 SAY "The date string returned is " + ;
-            LTrim( mdy( dDate ) )
+            LTrim( MDY( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -1015,7 +1016,7 @@ FUNCTION ntocdowtest()
       ELSE
 
          @ 11, 10 SAY "The day selected is " + ;
-            PadR( ntocdow( Val( cDay ) ), 10 )
+            PadR( NToCDoW( Val( cDay ) ), 10 )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -1065,7 +1066,7 @@ FUNCTION ntocmthtest()
       ELSE
 
          @ 11, 10 SAY "The month selected is " + ;
-            PadR( ntocmonth( Val( cMonth ) ), 10 )
+            PadR( NToCMonth( Val( cMonth ) ), 10 )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -1114,7 +1115,7 @@ FUNCTION qtrtest()
       ELSE
 
          @  8, 10 SAY "The quarter number is " + ;
-            hb_ntos( quarter( dDate ) )
+            hb_ntos( Quarter( dDate ) )
 
          SET CURSOR OFF
          Inkey( 0 )
@@ -1246,7 +1247,7 @@ FUNCTION weektest()
       ELSE
 
          @ 8, 10 SAY "The week number is " + ;
-            hb_ntos( week( dDate, IsAffirm( cMode ) ) )
+            hb_ntos( Week( dDate, IsAffirm( cMode ) ) )
 
          SET CURSOR OFF
          Inkey( 0 )

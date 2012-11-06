@@ -59,15 +59,15 @@ PROCEDURE Main()
    ctinit()
 
    ? "Begin test of SETATLIKE()"
-   ? "  Default mode should be 0, is................................", setatlike()
-   ? "  Setting mode to 1, return value should be 0, is.............", setatlike( 1 )
-   ? "  Mode setting should now be 1, is............................", setatlike()
-   ? "  Setting mode to 0 again, return value should still be 1, is ", setatlike( 0 )
+   ? "  Default mode should be 0, is................................", SetAtLike()
+   ? "  Setting mode to 1, return value should be 0, is.............", SetAtLike( 1 )
+   ? "  Mode setting should now be 1, is............................", SetAtLike()
+   ? "  Setting mode to 0 again, return value should still be 1, is ", SetAtLike( 0 )
    ?
-   setatlike( , @cWildcard )
+   SetAtLike( , @cWildcard )
    ? "  Default wildcard character should be '?', is................", cWildcard
-   setatlike( , "#" )
-   setatlike( , @cWildcard )
+   SetAtLike( , "#" )
+   SetAtLike( , @cWildcard )
    ? "  Setting wildcard to '#' and calling SETATLIKE(,@cWildcard)"
    ? "    should yield '#' for cWildcard, does......................", cWildcard
    ? "End test of SETATLIKE()"

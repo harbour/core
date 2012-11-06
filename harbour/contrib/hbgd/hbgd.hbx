@@ -130,7 +130,7 @@ DYNAMIC gdImageToString
 DYNAMIC gdImageTrueColor
 DYNAMIC gdImageTrueColorPixel
 DYNAMIC gdImageTrueColorToPalette
-DYNAMIC gdImageWBMP
+DYNAMIC gdImageWBmp
 DYNAMIC gdTrueColor
 DYNAMIC gdTrueColorAlpha
 DYNAMIC gdVersion

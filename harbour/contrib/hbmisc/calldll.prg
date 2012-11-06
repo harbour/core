@@ -55,7 +55,7 @@
 STATIC s_hDLL := { => }
 STATIC s_mutex := hb_mutexCreate()
 
-PROCEDURE UNLOADALLDLL()
+PROCEDURE UnloadAllDll()
 
    hb_mutexLock( s_mutex )
    s_hDLL := { => }
@@ -63,8 +63,8 @@ PROCEDURE UNLOADALLDLL()
 
    RETURN
 
-FUNCTION CALLDLL32( cFunction, cLibrary, ... )
-   RETURN HB_DYNACALL1( cFunction, cLibrary, NIL, ... )
+FUNCTION CallDll32( cFunction, cLibrary, ... )
+   RETURN hb_DynaCall1( cFunction, cLibrary, NIL, ... )
 
 #if define( __PLATFORM__WINDOWS )
    /* Use Windows system .dll calling convention on Windows systems,
@@ -75,7 +75,7 @@ FUNCTION CALLDLL32( cFunction, cLibrary, ... )
 #  define _DEF_CALLCONV_ HB_DYN_CALLCONV_CDECL
 #endif
 
-FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
+FUNCTION hb_DynaCall1( cFunction, cLibrary, nCount, ... )
 
    LOCAL aParams
    LOCAL hHandle
@@ -103,8 +103,8 @@ FUNCTION HB_DYNACALL1( cFunction, cLibrary, nCount, ... )
 
    RETURN NIL
 
-FUNCTION STRPTR( x )
+FUNCTION StrPtr( x )
    RETURN x
 
-FUNCTION PTRSTR( x )
+FUNCTION PtrStr( x )
    RETURN x

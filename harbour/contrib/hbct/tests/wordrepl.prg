@@ -61,15 +61,15 @@ PROCEDURE Main()
 
    // simple tests
    ? "  Simple tests:"
-   ? '    wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"? --> "' + wordrepl( "CC", "AABBCCDDEE", "XX" ) + '"'
-   ? '    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? ------> "' + wordrepl( "aa", "1aaaa", "ba" )     + '"'
-   ? '    wordrepl("aa", "1aaaa", "ba", .T.) == "1baba" ? ------> "' + wordrepl( "aa", "1aaaa", "ba", .T. ) + '"'
+   ? '    wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"? --> "' + WordRepl( "CC", "AABBCCDDEE", "XX" ) + '"'
+   ? '    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? ------> "' + WordRepl( "aa", "1aaaa", "ba" )     + '"'
+   ? '    wordrepl("aa", "1aaaa", "ba", .T.) == "1baba" ? ------> "' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
    ?
 
    ? "  Testing CSETATMUPA(.T.) with lMode==.T.:"
-   csetatmupa( .T. )
-   ? '    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? --> "' + wordrepl( "aa", "1aaaa", "ba" )     + '"'
-   ? '    wordrepl("aa", "1aaaa", "ba", .T.) == "1bbba" ? --> "' + wordrepl( "aa", "1aaaa", "ba", .T. ) + '"'
+   CSetAtMupa( .T. )
+   ? '    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? --> "' + WordRepl( "aa", "1aaaa", "ba" )     + '"'
+   ? '    wordrepl("aa", "1aaaa", "ba", .T.) == "1bbba" ? --> "' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
    ?
 
    ? "End test of WORDREPL()"

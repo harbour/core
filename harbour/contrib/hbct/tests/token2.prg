@@ -78,24 +78,24 @@ PROCEDURE Main()
 
    // Some simple tests with global token environment
    ? '  Incremental tokenizing the string "' + cStr1 + '"'
-   ? '    tokeninit(@cStr1, ",", 1) == .T. ? ----> ' + ltoc( tokeninit( @cStr1, ",", 1 ) )
-   ? '    tokennum() == 6 ? ---------------------> ' + Str( tokennum() )
-   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
-   WHILE ! tokenend()
-      ? '      tokennext(@cStr1)  ------------------> "' + tokennext( @cStr1 ) + '"'
-      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
+   ? '    tokeninit(@cStr1, ",", 1) == .T. ? ----> ' + LToC( TokenInit( @cStr1, ",", 1 ) )
+   ? '    tokennum() == 6 ? ---------------------> ' + Str( TokenNum() )
+   ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
+   WHILE ! TokenEnd()
+      ? '      tokennext(@cStr1)  ------------------> "' + TokenNext( @cStr1 ) + '"'
+      ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
    ENDDO
    ?
-   ? '    rewind with tokeninit() == .T. ? ------> ' + ltoc( tokeninit() )
-   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
-   WHILE ! tokenend()
-      ? '      tokennext(@cStr1)  ------------------> "' + tokennext( @cStr1 ) + '"'
-      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
+   ? '    rewind with tokeninit() == .T. ? ------> ' + LToC( TokenInit() )
+   ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
+   WHILE ! TokenEnd()
+      ? '      tokennext(@cStr1)  ------------------> "' + TokenNext( @cStr1 ) + '"'
+      ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
    ENDDO
    ?
    ? '    access tokens directly with tokennext'
-   ? '      tokennext(@cStr1,2) == "BB" ? -------> "' + tokennext( @cStr1, 2 ) + '"'
-   ? '      tokennext(@cStr1,4) == "DDDD" ? -----> "' + tokennext( @cStr1, 4 ) + '"'
+   ? '      tokennext(@cStr1,2) == "BB" ? -------> "' + TokenNext( @cStr1, 2 ) + '"'
+   ? '      tokennext(@cStr1,4) == "DDDD" ? -----> "' + TokenNext( @cStr1, 4 ) + '"'
    ?
 
    ? "...Press any key..."
@@ -104,24 +104,24 @@ PROCEDURE Main()
 
    ? '  Incremental tokenizing the string "' + cStr3 + '" with the'
    ? '  token environment of cStr1 !'
-   ? '    rewind with tokeninit() == .T. ? ------> ' + ltoc( tokeninit() )
-   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
-   WHILE ! tokenend()
-      ? '      tokennext(@cStr3)  ------------------> "' + tokennext( @cStr3 ) + '"'
-      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
+   ? '    rewind with tokeninit() == .T. ? ------> ' + LToC( TokenInit() )
+   ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
+   WHILE ! TokenEnd()
+      ? '      tokennext(@cStr3)  ------------------> "' + TokenNext( @cStr3 ) + '"'
+      ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
    ENDDO
    ?
-   ? '    rewind with tokeninit() == .T. ? ------> ' + ltoc( tokeninit() )
-   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
-   WHILE ! tokenend()
-      ? '      start & end with tokenat(.F./.T.)-----> ' + Str( tokenat() ) + ' ' + Str( tokenat( .T. ) )
-      tokennext( @cStr1 )
-      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
+   ? '    rewind with tokeninit() == .T. ? ------> ' + LToC( TokenInit() )
+   ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
+   WHILE ! TokenEnd()
+      ? '      start & end with tokenat(.F./.T.)-----> ' + Str( TokenAt() ) + ' ' + Str( TokenAt( .T. ) )
+      TokenNext( @cStr1 )
+      ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
    ENDDO
    ?
    ? '    access tokens directly with tokenat'
-   ? '      tokenat( .F., 2 ) == 3 ? ---------------> ' + Str( tokenat( .F., 2 ) )
-   ? '      tokenat( .T., 4 ) == 14 ? --------------> ' + Str( tokenat( .T., 4 ) )
+   ? '      tokenat( .F., 2 ) == 3 ? ---------------> ' + Str( TokenAt( .F., 2 ) )
+   ? '      tokenat( .T., 4 ) == 14 ? --------------> ' + Str( TokenAt( .T., 4 ) )
    ?
 
    ? "...Press any key..."
@@ -129,21 +129,21 @@ PROCEDURE Main()
    Inkey( 0 )
 
    ? '  Save global token environment with savetoken'
-   cTE1 := savetoken()
+   cTE1 := SaveToken()
    ? '    tokeninit a different string, cStr4 := "' + cStr4 + '", with tokeninit()'
-   ? '    tokeninit( @cStr4, ":", 1 ) == .T. ? ----> ' + ltoc( tokeninit( @cStr4, ":", 1 ) )
-   ? '    tokennum() == 5 ? ---------------------> ' + Str( tokennum() )
-   ? '    tokennext() == "08" ? ------------------> "' + tokennext( @cStr4 ) + '"'
+   ? '    tokeninit( @cStr4, ":", 1 ) == .T. ? ----> ' + LToC( TokenInit( @cStr4, ":", 1 ) )
+   ? '    tokennum() == 5 ? ---------------------> ' + Str( TokenNum() )
+   ? '    tokennext() == "08" ? ------------------> "' + TokenNext( @cStr4 ) + '"'
    ? '    Now restore global token environment with resttoken and rewind it'
-   resttoken( cTE1 )
-   tokeninit()
-   ? '    tokennum() == 6 ? ----------------------> ' + Str( tokennum() )
-   ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
-   WHILE ! tokenend()
-      ? '      tokennext( @cStr1 ) -----------------> "' + tokennext( @cStr1 ) + '"'
-      ? '      tokenend() ? -------------------------> ' + ltoc( tokenend() )
+   RestToken( cTE1 )
+   TokenInit()
+   ? '    tokennum() == 6 ? ----------------------> ' + Str( TokenNum() )
+   ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
+   WHILE ! TokenEnd()
+      ? '      tokennext( @cStr1 ) -----------------> "' + TokenNext( @cStr1 ) + '"'
+      ? '      tokenend() ? -------------------------> ' + LToC( TokenEnd() )
    ENDDO
-   ? '  Release global TE with tokenexit() ----> ' + ltoc( tokenexit() )
+   ? '  Release global TE with tokenexit() ----> ' + LToC( TokenExit() )
    ?
 
    ? "...Press any key..."
@@ -153,17 +153,17 @@ PROCEDURE Main()
    ? '  Now tokenize cStr4 := "' + cStr4 + '" and'
    ? '  cStr5 := "' + cStr5 + '"'
    ? '  and store the token environment locally to cTE1 and cTE2:'
-   ? '    tokeninit( @cStr4, ":", 1, @cTE1 ) == .T. ? -> ' + ltoc( tokeninit( @cStr4, ":", 1, @cTE1 ) )
-   ? '    tokeninit( @cStr5, "+", 1, @cTE2 ) == .T. ? -> ' + ltoc( tokeninit( @cStr5, "+", 1, @cTE2 ) )
-   ? '    tokennum( @cTE1 ) == 5 ? --------------------> ' + Str( tokennum( @cTE1 ) )
-   ? '    tokennum( @cTE2 ) == 4 ? --------------------> ' + Str( tokennum( @cTE2 ) )
-   ? '        tokenend( @cTE1 ) ? ---------------------> ' + ltoc( tokenend( @cTE1 ) )
-   ? '        tokenend( @cTE2 ) ? ---------------------> ' + ltoc( tokenend( @cTE2 ) )
-   WHILE ! tokenend( @cTE1 ) .AND. ! tokenend( @cTE2 )
-      ? '      next train at ' + tokennext( cStr4,, @cTE1 ) + ":" + tokennext( cStr5,, @cTE2 )
+   ? '    tokeninit( @cStr4, ":", 1, @cTE1 ) == .T. ? -> ' + LToC( TokenInit( @cStr4, ":", 1, @cTE1 ) )
+   ? '    tokeninit( @cStr5, "+", 1, @cTE2 ) == .T. ? -> ' + LToC( TokenInit( @cStr5, "+", 1, @cTE2 ) )
+   ? '    tokennum( @cTE1 ) == 5 ? --------------------> ' + Str( TokenNum( @cTE1 ) )
+   ? '    tokennum( @cTE2 ) == 4 ? --------------------> ' + Str( TokenNum( @cTE2 ) )
+   ? '        tokenend( @cTE1 ) ? ---------------------> ' + LToC( TokenEnd( @cTE1 ) )
+   ? '        tokenend( @cTE2 ) ? ---------------------> ' + LToC( TokenEnd( @cTE2 ) )
+   WHILE ! TokenEnd( @cTE1 ) .AND. ! TokenEnd( @cTE2 )
+      ? '      next train at ' + TokenNext( cStr4,, @cTE1 ) + ":" + TokenNext( cStr5,, @cTE2 )
       ? '          compiled with tokennext( cStr4,, @cTE1 ) + ":" + tokennext( cStr5,, @cTE2 )'
-      ? '        tokenend( @cTE1 ) ? ---------------------> ' + ltoc( tokenend( @cTE1 ) )
-      ? '        tokenend( @cTE2 ) ? ---------------------> ' + ltoc( tokenend( @cTE2 ) )
+      ? '        tokenend( @cTE1 ) ? ---------------------> ' + LToC( TokenEnd( @cTE1 ) )
+      ? '        tokenend( @cTE2 ) ? ---------------------> ' + LToC( TokenEnd( @cTE2 ) )
    ENDDO
 
    ?

@@ -51,7 +51,7 @@
  *
  */
 
-FUNCTION TIMETOSEC( cTime )
+FUNCTION TimeToSec( cTime )
 
    LOCAL nSec := 0
    LOCAL nLen, i, aLim, aMod, nInd, n
@@ -81,7 +81,7 @@ FUNCTION TIMETOSEC( cTime )
 
    RETURN Round( nSec, 2 ) /* round FL val to be sure that you can compare it */
 
-FUNCTION SECTOTIME( nSec, lHundr )
+FUNCTION SecToTime( nSec, lHundr )
 
    LOCAL i, h, n
 
@@ -102,7 +102,7 @@ FUNCTION SECTOTIME( nSec, lHundr )
 
    RETURN h
 
-FUNCTION MILLISEC( nDelay )
+FUNCTION Millisec( nDelay )
 
    hb_idleSleep( nDelay / 1000 )
 

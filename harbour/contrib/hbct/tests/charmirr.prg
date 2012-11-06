@@ -61,9 +61,9 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  charmirr("racecar") == "racecar" ? ----------> "' + charmirr( "racecar" ) + '"'
-   ? '  charmirr("racecar  ", .T.) == "racecar  " ? -> "' + charmirr( "racecar  ", .T. ) + '"'
-   ? '  charmirr("racecar  ", .F.) == "  racecar" ? -> "' + charmirr( "racecar  ", .F. ) + '"'
+   ? '  charmirr("racecar") == "racecar" ? ----------> "' + CharMirr( "racecar" ) + '"'
+   ? '  charmirr("racecar  ", .T.) == "racecar  " ? -> "' + CharMirr( "racecar  ", .T. ) + '"'
+   ? '  charmirr("racecar  ", .F.) == "  racecar" ? -> "' + CharMirr( "racecar  ", .F. ) + '"'
 
    ? "End test of CHARMIRR()"
    ?

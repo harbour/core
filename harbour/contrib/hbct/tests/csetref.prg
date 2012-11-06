@@ -57,10 +57,10 @@ PROCEDURE Main()
    ctinit()
 
    ? "Begin test of CSETREF()"
-   ? "  Default switch should be .F., is..................................", csetref()
-   ? "  Setting switch to .T., return value should be .F., is.............", csetref( .T. )
-   ? "  Switch setting should now be .T., is..............................", csetref()
-   ? "  Setting switch to .F. again, return value should still be .T., is ", csetref( .F. )
+   ? "  Default switch should be .F., is..................................", CSetRef()
+   ? "  Setting switch to .T., return value should be .F., is.............", CSetRef( .T. )
+   ? "  Switch setting should now be .T., is..............................", CSetRef()
+   ? "  Setting switch to .F. again, return value should still be .T., is ", CSetRef( .F. )
    ? "End test of CSETREF()"
    ?
 

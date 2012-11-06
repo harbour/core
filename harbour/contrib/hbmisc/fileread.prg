@@ -28,8 +28,7 @@ CREATE CLASS TFileRead
    VAR nError                  // The current file error code
    VAR nLastOp                 // The last operation done (for error messages)
    VAR cBuffer                 // The readahead buffer
-   VAR nReadSize               // How much to add to the readahead buffer on
-                               // each read from the file
+   VAR nReadSize               // How much to add to the readahead buffer on each read from the file
 
    METHOD New( cFile, nSize )  // Create a new class instance
    METHOD Open( nMode )        // Open the file for reading

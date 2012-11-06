@@ -24,7 +24,9 @@ PROCEDURE Main( ... )
 
    LOCAL cImg, nPt, nWidth, nHeight, cPhoto
 
-// LOCAL cText
+#if 0
+   LOCAL cText
+#endif
 
    IF Empty( aParams )
       IF ! Empty( cQuery )
@@ -61,21 +63,27 @@ PROCEDURE Main( ... )
       NEXT
    ENDIF
 
-// __OutDebug( cQuery, ValToPrg( hParams ) )
+   // __OutDebug( cQuery, ValToPrg( hParams ) )
 
-// hb_default( @cText, "Testo di Prova" )
+#if 0
+   hb_default( @cText, "Testo di Prova" )
+#endif
    hb_default( @nPt, 30 )
 
    IF cImg != NIL
-      // OutJpg( cImg, nPt )
+#if 0
+      OutJpg( cImg, nPt )
+#endif
       OutPhoto( cImg, nWidth, nHeight )
 
    ELSEIF cPhoto != NIL
       StartHTML()
-      // OutHTML ValToPrg( hParams ) + "<br>"
-      // OutHTML ValToPrg( cParams ) + "<br>"
-      // OutHTML ValToPrg( cQuery ) + "<br>"
-      // OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
+#if 0
+      OutHTML ValToPrg( hParams ) + "<br>"
+      OutHTML ValToPrg( cParams ) + "<br>"
+      OutHTML ValToPrg( cQuery ) + "<br>"
+      OutHTML "<img src='test_out.exe?img=" + cPhoto + "&width=" + hb_ntos( nWidth ) + "&height=" + hb_ntos( nHeight ) + "'>" + "<br>"
+#endif
       OutHTML "<table border=1>"
       OutHTML "<tr><td align='center'>"
       OutHTML "<img src='test_out.exe?img=" + cPhoto + "'>" + "<br>"
@@ -91,8 +99,10 @@ PROCEDURE Main( ... )
       OutHTML "</td></tr>"
       OutHTML "</table>"
       OutHTML "<br>"
-      // OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
-      // OutHTML OS() + "<br>"
+#if 0
+      OutHTML "<img src='test_out.exe?img=" + cText + "_2&pt=" + hb_ntos( nPt ) + "'>" + "<br>"
+      OutHTML OS() + "<br>"
+#endif
       EndHTML()
    ELSE
       StartHTML()
@@ -139,7 +149,9 @@ PROCEDURE OutPhoto( cPhoto, nWidth, nHeight )
       oImage:Resize( nWidth, nHeight )
    ENDIF
 
-// __OutDebug( hb_dumpvar( oImage ) )
+#if 0
+   __OutDebug( hb_DumpVar( oImage ) )
+#endif
 
    WRITE "content-type: " + oImage:cMime + hb_eol()
    cType := oImage:cType
@@ -159,7 +171,7 @@ PROCEDURE OutJpg( cText, nPitch )
 
    LOCAL oI
 
-// LOCAL cyan
+   // LOCAL cyan
    LOCAL blue
    LOCAL aSize, nWidth, nHeight, nX, nY
 
@@ -169,16 +181,21 @@ PROCEDURE OutJpg( cText, nPitch )
    /* Create an image in memory */
    oI := GDImage( 400, 100 )
 
+#if 0
    /* Allocate background */
-// cyan  := oI:SetColor( 0, 255, 255 )
+   cyan := oI:SetColor( 0, 255, 255 )
 
    /* Allocate drawing color */
-// blue := oI:SetColor( 0, 0, 200 )
+   blue := oI:SetColor( 0, 0, 200 )
 
-// oI:SetTransparent( blue )
+   oI:SetTransparent( blue )
+#endif
+
    oI:SetFontName( "Verdana" ) // TOFIX
    oI:SetFontPitch( nPitch )
-// __OutDebug( oI:GetFTFontHeight() )
+#endif
+   __OutDebug( oI:GetFTFontHeight() )
+#endif
    aSize := oI:GetFTStringSize( cText )
    nWidth  := aSize[ 1 ]
    nHeight := aSize[ 2 ]
@@ -192,16 +209,18 @@ PROCEDURE OutJpg( cText, nPitch )
    oI:SetFontName( "Verdana" ) // TOFIX
    oI:SetFontPitch( nPitch )
    oI:SayFreeType( 0 - nX, 0 + nHeight - nY, cText, , , 0, blue )
-// oI:SayFreeType( 0, 0, cText, , , 0, blue )
+#endif
+   oI:SayFreeType( 0, 0, cText, , , 0, blue )
 
-// oI:Resize( nWidth, nHeight )
-// __OutDebug( "prima", oI:Width(), oI:Height() )
-// oI:Resize( 60, 40 )
-// __OutDebug( "dopo", oI:Width(), oI:Height() )
+   oI:Resize( nWidth, nHeight )
+   __OutDebug( "prima", oI:Width(), oI:Height() )
+   oI:Resize( 60, 40 )
+   __OutDebug( "dopo", oI:Width(), oI:Height() )
 
-// oI:SetFontLarge()
-// oI:SetColor( blue )
-// oI:Say( 0, 0, cText )
+   oI:SetFontLarge()
+   oI:SetColor( blue )
+   oI:Say( 0, 0, cText )
+#endif
 
    WRITE "content-type: image/jpeg" + hb_eol()
 
@@ -243,7 +262,7 @@ FUNCTION GetVars( cFields, cSeparator )
       ENDIF
       // Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
-// __OutDebug( hHashVars )
+   // __OutDebug( hHashVars )
 
    RETURN hHashVars
 
@@ -279,11 +298,11 @@ FUNCTION GetParams( aParams )
       ENDIF
       // Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
-// __OutDebug( hHashVars )
+   // __OutDebug( hHashVars )
 
    RETURN hHashVars
 
-//***********************************************************
+// ***********************************************************
 // Decoding URL
 // Can return both a string or a number
 //
@@ -292,7 +311,7 @@ FUNCTION URLDecode( cStr )
 
    LOCAL cRet := "", i, cCar
 
-// LOCAL lNumeric := .T.
+   // LOCAL lNumeric := .T.
 
    FOR i := 1 TO Len( cStr )
       cCar := cStr[ i ]
@@ -316,9 +335,9 @@ FUNCTION URLDecode( cStr )
       // ENDIF
    NEXT
 
-// IF lNumeric
-//    cRet := Val( cRet )
-// ENDIF
+   // IF lNumeric
+   //    cRet := Val( cRet )
+   // ENDIF
 
    RETURN cRet
 

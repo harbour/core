@@ -78,7 +78,7 @@ PROCEDURE Main()
    gdImageStringUp( im, font, 70, 15, "P", black )
    gdImageCharUp( im, font, 70, 30, "W", black )
 
-   gdImageStringFt( im, blue, "arial", 20, 30, 20, 90, "Test" )
+   gdImageStringFT( im, blue, "arial", 20, 30, 20, 90, "Test" )
 
    ? gdImageStringFTCircle( im, 120, 120, 50, 25, 0.8, "arial", 24, "Up", /*"Down"*/, red )
 

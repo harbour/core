@@ -61,11 +61,11 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  charmix("ABC", "123")  == "A1B2C3"     ? --> "' + charmix( "ABC", "123" )  + '"'
-   ? '  charmix("ABCDE", "12") == "A1B2C1D2E1" ? --> "' + charmix( "ABCDE", "12" ) + '"'
-   ? '  charmix("AB", "12345") == "A1B2"       ? --> "' + charmix( "AB", "12345" ) + '"'
-   ? '  charmix("HELLO", " ")  == "H E L L O " ? --> "' + charmix( "HELLO", " " )  + '"'
-   ? '  charmix("HELLO", "")   == "HELLO"      ? --> "' + charmix( "HELLO", "" )   + '"'
+   ? '  charmix("ABC", "123")  == "A1B2C3"     ? --> "' + CharMix( "ABC", "123" )  + '"'
+   ? '  charmix("ABCDE", "12") == "A1B2C1D2E1" ? --> "' + CharMix( "ABCDE", "12" ) + '"'
+   ? '  charmix("AB", "12345") == "A1B2"       ? --> "' + CharMix( "AB", "12345" ) + '"'
+   ? '  charmix("HELLO", " ")  == "H E L L O " ? --> "' + CharMix( "HELLO", " " )  + '"'
+   ? '  charmix("HELLO", "")   == "HELLO"      ? --> "' + CharMix( "HELLO", "" )   + '"'
    ?
 
    ? "End test of CHARMIX()"

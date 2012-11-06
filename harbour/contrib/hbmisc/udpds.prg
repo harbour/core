@@ -25,7 +25,7 @@
 
 /* Client */
 
-FUNCTION hb_UDPDS_Find( nPort, cName )
+FUNCTION hb_udpds_Find( nPort, cName )
 
    LOCAL hSocket, aRet, nEnd, nTime, cBuffer, nLen, aAddr
 
@@ -52,7 +52,7 @@ FUNCTION hb_UDPDS_Find( nPort, cName )
 
 /* Server */
 
-FUNCTION hb_UDPDS_Start( nPort, cName, cVersion )
+FUNCTION hb_udpds_Start( nPort, cName, cVersion )
 
    LOCAL hSocket
 
@@ -66,7 +66,7 @@ FUNCTION hb_UDPDS_Start( nPort, cName, cVersion )
 
    RETURN NIL
 
-PROCEDURE hb_UDPDS_Stop( hSocket )
+PROCEDURE hb_udpds_Stop( hSocket )
 
    hb_socketClose( hSocket )
 

@@ -72,7 +72,7 @@ PROCEDURE Main()
    ? '  chr(32)+chr(64)+chr(128)+chr(1)+chr(2)+chr(4)+chr(8)+chr(16) ? -->'
 
    ? '  '
-   cStr := charrlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
+   cStr := CharRlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
    FOR ni := 1 TO Len( cStr )
       ?? "chr(" + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + ")"
       IF ni < Len( cStr )

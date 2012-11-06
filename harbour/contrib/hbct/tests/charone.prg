@@ -61,11 +61,11 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  charone("112333a123")      == "123a123"? --> "' + charone( "112333a123" )      + '"'
-   ? '  charone("122333a123")      == "123a123"? --> "' + charone( "122333a123" )      + '"'
-   ? '  charone("A  B  CCCD")      == "A B CD"? ---> "' + charone( "A  B  CCCD" )      + '"'
-   ? '  charone(" ", "A  B  A  B") == "A B A B"? --> "' + charone( " ", "A  B  A  B" ) + '"'
-   ? '  charone("o", "122oooB12o") == "122oB12o"? -> "' + charone( "o", "122oooB12o" ) + '"'
+   ? '  charone("112333a123")      == "123a123"? --> "' + CharOne( "112333a123" )      + '"'
+   ? '  charone("122333a123")      == "123a123"? --> "' + CharOne( "122333a123" )      + '"'
+   ? '  charone("A  B  CCCD")      == "A B CD"? ---> "' + CharOne( "A  B  CCCD" )      + '"'
+   ? '  charone(" ", "A  B  A  B") == "A B A B"? --> "' + CharOne( " ", "A  B  A  B" ) + '"'
+   ? '  charone("o", "122oooB12o") == "122oB12o"? -> "' + CharOne( "o", "122oooB12o" ) + '"'
    ?
 
    ? "End test of CHARONE()"

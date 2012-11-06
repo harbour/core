@@ -80,7 +80,7 @@ THREAD STATIC t_fileTime
  * same name that causes GPF's.
  */
 
-FUNCTION FILECOPY( cSource, cDest, lMode )
+FUNCTION FileCopy( cSource, cDest, lMode )
 
    LOCAL hDstFile
    LOCAL cBuffer := Space( F_BLOCK )
@@ -116,10 +116,10 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
             FClose( t_hSrcFile )
             t_hSrcFile := F_ERROR
          ENDIF
-         t_fileDate := FILEDATE( cSource )
-         t_fileTime := FILETIME( cSource )
+         t_fileDate := FileDate( cSource )
+         t_fileTime := FileTime( cSource )
          IF t_lSetDaTi
-            SETFDATI( cDest, t_fileDate, t_fileTime )
+            SetFDaTi( cDest, t_fileDate, t_fileTime )
          ENDIF
       ELSE
          FClose( t_hSrcFile )
@@ -129,11 +129,11 @@ FUNCTION FILECOPY( cSource, cDest, lMode )
 
    RETURN nTotBytes
 
-FUNCTION FILECOPEN()
+FUNCTION FileCOpen()
 
    RETURN t_hSrcFile != F_ERROR
 
-FUNCTION FILECDATI( lNewMode )
+FUNCTION FileCDaTi( lNewMode )
 
    LOCAL lOldMode := t_lSetDaTi
 
@@ -143,7 +143,7 @@ FUNCTION FILECDATI( lNewMode )
 
    RETURN lOldMode
 
-FUNCTION FILECCONT( cDest )
+FUNCTION FileCCont( cDest )
 
    LOCAL hDstFile
    LOCAL cBuffer := Space( F_BLOCK )
@@ -173,14 +173,14 @@ FUNCTION FILECCONT( cDest )
             t_hSrcFile := F_ERROR
          ENDIF
          IF t_lSetDaTi
-            SETFDATI( cDest, t_fileDate, t_fileTime )
+            SetFDaTi( cDest, t_fileDate, t_fileTime )
          ENDIF
       ENDIF
    ENDIF
 
    RETURN nTotBytes
 
-FUNCTION FILECCLOSE()
+FUNCTION FileCCLose()
 
    IF t_hSrcFile != F_ERROR
       FClose( t_hSrcFile )
@@ -190,7 +190,7 @@ FUNCTION FILECCLOSE()
 
    RETURN .F.
 
-FUNCTION FILEAPPEND( cSrc, cDest )
+FUNCTION FileAppend( cSrc, cDest )
 
    LOCAL cBuffer := Space( F_BLOCK )
    LOCAL hSrcFile, hDstFile

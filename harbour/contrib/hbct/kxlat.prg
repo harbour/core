@@ -343,18 +343,18 @@ FUNCTION __hbct_key_n_to_c( nKey )
 
    RETURN hb_BChar( 0 ) + hb_BChar( 0 )
 
-FUNCTION setkxlat( cOrgKeyValue, cNewKeyValue )
+FUNCTION SetKXLat( cOrgKeyValue, cNewKeyValue )
 
    SWITCH PCount()
-   CASE 0 ; RETURN hbct_setkxlat()
-   CASE 1 ; RETURN hbct_setkxlat( __hbct_key_c_to_n( cOrgKeyValue ) )
+   CASE 0 ; RETURN hbct_SetKXLat()
+   CASE 1 ; RETURN hbct_SetKXLat( __hbct_key_c_to_n( cOrgKeyValue ) )
    ENDSWITCH
 
-   RETURN hbct_setkxlat( __hbct_key_c_to_n( cOrgKeyValue ), __hbct_key_c_to_n( cNewKeyValue ) )
+   RETURN hbct_SetKXLat( __hbct_key_c_to_n( cOrgKeyValue ), __hbct_key_c_to_n( cNewKeyValue ) )
 
-FUNCTION getkxlat( cKeyValue )
+FUNCTION GetKXLat( cKeyValue )
 
-   LOCAL xKey := hbct_getkxlat( __hbct_key_c_to_n( cKeyValue ) )
+   LOCAL xKey := hbct_GetKXLat( __hbct_key_c_to_n( cKeyValue ) )
 
    /* doc is unclear. should this return a numeric in these cases? */
    IF HB_ISNUMERIC( xKey )
@@ -363,7 +363,7 @@ FUNCTION getkxlat( cKeyValue )
 
    RETURN __hbct_key_n_to_c( xKey )
 
-FUNCTION setkxtab( cTrs )
+FUNCTION SetKXTab( cTrs )
 
    LOCAL hTrs := { => }
    LOCAL tmp
@@ -374,12 +374,12 @@ FUNCTION setkxtab( cTrs )
       NEXT
    ENDIF
 
-   RETURN hbct_setkxtab( hTrs )
+   RETURN hbct_SetKXTab( hTrs )
 
-FUNCTION getkxtab()
+FUNCTION GetKXTab()
 
    LOCAL cTrs := ""
-   LOCAL hTrs := hbct_getkxtab()
+   LOCAL hTrs := hbct_GetKXTab()
    LOCAL hKey
 
    FOR EACH hKey IN hTrs
@@ -390,7 +390,7 @@ FUNCTION getkxtab()
 
 /* Harbour extensions using standard numeric key values */
 
-FUNCTION hbct_setkxlat( nOrgKeyValue, nNewKeyValue )
+FUNCTION hbct_SetKXLat( nOrgKeyValue, nNewKeyValue )
 
    LOCAL lAccepted := .F.
 
@@ -431,7 +431,7 @@ FUNCTION hbct_setkxlat( nOrgKeyValue, nNewKeyValue )
 
    RETURN lAccepted
 
-FUNCTION hbct_getkxlat( nKeyValue )
+FUNCTION hbct_GetKXLat( nKeyValue )
 
    LOCAL nNewValue := 0
 
@@ -449,7 +449,7 @@ FUNCTION hbct_getkxlat( nKeyValue )
 
    RETURN nNewValue
 
-FUNCTION hbct_setkxtab( hTrs )
+FUNCTION hbct_SetKXTab( hTrs )
 
    LOCAL lAccepted := .F.
 
@@ -471,7 +471,7 @@ FUNCTION hbct_setkxtab( hTrs )
 
    RETURN lAccepted
 
-FUNCTION hbct_getkxtab()
+FUNCTION hbct_GetKXTab()
 
    LOCAL xRetVal
 

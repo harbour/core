@@ -18,12 +18,12 @@ PROCEDURE Main()
    LOCAL aWin := Array( 9 ), y, x, i, k, lFlag := .F., lBoard := .T.
 
    SetBlink( .F. )
-   wboard( 5, 5, 20, 75 )
-   wmode( .T., .T., .T., .T. )
-   wsetshadow( 7 )
-   setclearA( 10 * 16 + 14 )
-   setclearB( 35 )
-   DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "#", 9 ), ntocolor( 10 * 16 + 14 ) )
+   WBoard( 5, 5, 20, 75 )
+   WMode( .T., .T., .T., .T. )
+   WSetShadow( 7 )
+   SetClearA( 10 * 16 + 14 )
+   SetClearB( 35 )
+   DispBox( 0, 0, MaxRow(), MaxCol(), Replicate( "#", 9 ), NToColor( 10 * 16 + 14 ) )
    SetPos( 0, 0 )
    ? "GT driver: " + hb_gtVersion()
    ? hb_gtVersion( 1 )
@@ -39,22 +39,22 @@ PROCEDURE Main()
    ? "DEL - hide cursor "
    ? "arrows - window move "
 
-   setclearB( 61 )
+   SetClearB( 61 )
    FOR i := 1 TO Len( aWin )
       y := i + 2
       x := i * 4 + 10
-      SetColor( ntocolor( i * 16 + 15 ) + ",W+/B*" )
-      wsetshadow( i % 8 )
-      aWin[ i ] := wopen( y, x, y + 10, x + 20 )
-      wbox()
+      SetColor( NToColor( i * 16 + 15 ) + ",W+/B*" )
+      WSetShadow( i % 8 )
+      aWin[ i ] := WOpen( y, x, y + 10, x + 20 )
+      WBox()
 
       @ -1, 0 SAY "TITLE " + hb_ntos( aWin[ i ] )
       ? hb_ntos( Row() ) + ":" + hb_ntos( Col() ), "/", hb_ntos( MaxRow() ) + ":" + hb_ntos( MaxCol() ), ""
-      ? hb_ntos( wrow() ) + ":" + hb_ntos( wcol() ), "/", hb_ntos( MaxRow( .T. ) ) + ":" + hb_ntos( MaxCol( .T. ) ), ""
-      ? hb_ntos( wfrow() ) + ":" + hb_ntos( wfcol() ), "/", ;
-         hb_ntos( wflastrow() ) + ":" + hb_ntos( wflastcol() ), ""
-      ? hb_ntos( wfrow( .T. ) ) + ":" + hb_ntos( wfcol( .T. ) ), "/", ;
-         hb_ntos( wflastrow( .T. ) ) + ":" + hb_ntos( wflastcol( .T. ) ), ""
+      ? hb_ntos( WRow() ) + ":" + hb_ntos( WCol() ), "/", hb_ntos( MaxRow( .T. ) ) + ":" + hb_ntos( MaxCol( .T. ) ), ""
+      ? hb_ntos( WFRow() ) + ":" + hb_ntos( WFCol() ), "/", ;
+         hb_ntos( WFLastRow() ) + ":" + hb_ntos( WFLastCol() ), ""
+      ? hb_ntos( WFRow( .T. ) ) + ":" + hb_ntos( WFCol( .T. ) ), "/", ;
+         hb_ntos( WFLastRow( .T. ) ) + ":" + hb_ntos( WFLastCol( .T. ) ), ""
       ? "window:", hb_ntos( aWin[ i ] ), ""
       SetCursor( Int( i % 5 ) )
 
@@ -66,40 +66,40 @@ PROCEDURE Main()
       IF k == K_ESC
          EXIT
       ELSEIF k >= hb_keyCode( "1" ) .AND. k <= hb_keyCode( "9" )
-         wselect( aWin[ k - hb_keyCode( "0" ) ] )
+         WSelect( aWin[ k - hb_keyCode( "0" ) ] )
       ELSEIF k == hb_keyCode( "0" )
-         wselect( 0 )
+         WSelect( 0 )
       ELSEIF k == hb_keyCode( "C" ) .OR. k == hb_keyCode( "c" )
-         wclose()
+         WClose()
       ELSEIF k == hb_keyCode( "Q" ) .OR. k == hb_keyCode( "q" )
          CLS
       ELSEIF k == hb_keyCode( "B" ) .OR. k == hb_keyCode( "b" )
          IF lBoard
-            wboard( 0, 0, MaxRow( .T. ) - 1, MaxCol( .T. ) )
+            WBoard( 0, 0, MaxRow( .T. ) - 1, MaxCol( .T. ) )
          ELSE
-            wboard( 5, 5, 20, 75 )
+            WBoard( 5, 5, 20, 75 )
          ENDIF
          lBoard := ! lBoard
       ELSEIF k == hb_keyCode( "P" ) .OR. k == hb_keyCode( "P" )
-         y := wfrow()
-         x := wfcol()
-         i := wselect()
-         wselect( 0 )
+         y := WFRow()
+         x := WFCol()
+         i := WSelect()
+         WSelect( 0 )
          @ y, x SAY "THIS IS WINDOW 0 OUTPUT"
-         wselect( i )
+         WSelect( i )
       ELSEIF k == K_INS
          lFlag := ! lFlag
          SetCursor( iif( lFlag, 3, 1 ) )
       ELSEIF k == K_DEL
          SetCursor( SC_NONE )
       ELSEIF k == K_LEFT
-         wmove( wrow(), wcol() - 1 )
+         WMove( WRow(), WCol() - 1 )
       ELSEIF k == K_RIGHT
-         wmove( wrow(), wcol() + 1 )
+         WMove( WRow(), WCol() + 1 )
       ELSEIF k == K_UP
-         wmove( wrow() - 1, wcol() )
+         WMove( WRow() - 1, WCol() )
       ELSEIF k == K_DOWN
-         wmove( wrow() + 1, wcol() )
+         WMove( WRow() + 1, WCol() )
       ENDIF
       dspcord()
    ENDDO
@@ -108,11 +108,11 @@ PROCEDURE Main()
 
 STATIC PROCEDURE dspcord()
 
-   LOCAL mr := MRow(), mc := MCol(), r := wrow(), c := wcol(), w := wselect()
+   LOCAL mr := MRow(), mc := MCol(), r := WRow(), c := WCol(), w := WSelect()
 
-   wselect( 0 )
+   WSelect( 0 )
    @ MaxRow(), 0 SAY PadR( "WPOS(" + hb_ntos( r ) + "," + hb_ntos( c ) + ")" + ;
       iif( MPresent(), "MPOS(" + hb_ntos( mr ) + "," + hb_ntos( mc ) + ")", "" ), MaxCol() + 1 )
-   wselect( w )
+   WSelect( w )
 
    RETURN

@@ -64,20 +64,20 @@ PROCEDURE Main()
    // Some simple tests
    ? "  Simple tests:"
    ? '   tokenlower("Hello, World, here I am!")       == "hello, world, here i am!" ?'
-   ? '                                                -> "' + tokenlower( "Hello, World, here I am!" ) + '"'
+   ? '                                                -> "' + TokenLower( "Hello, World, here I am!" ) + '"'
    ? '   tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?'
-   ? '                                                -> "' + tokenlower( "Hello, World, here I am!",, 3 ) + '"'
+   ? '                                                -> "' + TokenLower( "Hello, World, here I am!",, 3 ) + '"'
    ? '   tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?'
-   ? '                                                -> "' + tokenlower( "Hello, World, here I am!", ",", 3 ) + '"'
+   ? '                                                -> "' + TokenLower( "Hello, World, here I am!", ",", 3 ) + '"'
    ? '   tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?'
-   ? '                                                -> "' + tokenlower( "Hello, World, here I am!", " W" ) + '"'
+   ? '                                                -> "' + TokenLower( "Hello, World, here I am!", " W" ) + '"'
    ?
 
    ? '  Lowercase the tokens in the string "' + cStr + '"'
    ? '            with csetref(.T.) and "@"'
-   csetref( .T. )
+   CSetRef( .T. )
    ?
-   ? '    --> return value of tokenlower(@cStr): ', tokenlower( @cStr )
+   ? '    --> return value of tokenlower(@cStr): ', TokenLower( @cStr )
    ? '    --> cStr is now: "' + cStr + '"'
 
    ?

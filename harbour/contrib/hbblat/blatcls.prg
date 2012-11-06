@@ -213,7 +213,7 @@ METHOD Send() CLASS HBBlat
    ::Check()
 
    IF ::nError == BLAT_SUCCESS
-      ::nBlatError := hb_BlatSend( ::cCommand )
+      ::nBlatError := hb_blatSend( ::cCommand )
       IF ::nBlatError != 0
          ::nError     := ::nBlatError
          ::cError     := BLAT_TEXT_ERROR
@@ -304,7 +304,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // nMaxNames
       IF HB_ISNUMERIC( ::nMaxNames ) .AND. ::nMaxNames > 0
-         ::cCommand += ' -maxNames ' + hb_ntos( ::nMaxNames )
+         ::cCommand += " -maxNames " + hb_ntos( ::nMaxNames )
       ENDIF
 
       // lToUndiscloseRecipients
@@ -332,7 +332,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
                RETURN
             ENDIF
          ELSE
-            ::cCommand += ' -sf ' + ::cSubjectFile
+            ::cCommand += " -sf " + ::cSubjectFile
          ENDIF
       ENDIF
 
@@ -385,7 +385,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
                RETURN
             ENDIF
          ELSE
-            ::cCommand += ' -sig ' + ::cSignatureFile
+            ::cCommand += " -sig " + ::cSignatureFile
          ENDIF
       ENDIF
 
@@ -399,7 +399,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
                RETURN
             ENDIF
          ELSE
-            ::cCommand += ' -tag ' + ::cTagFile
+            ::cCommand += " -tag " + ::cTagFile
          ENDIF
       ENDIF
 
@@ -413,7 +413,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
                RETURN
             ENDIF
          ELSE
-            ::cCommand += ' -ps ' + ::cPostScriptumFile
+            ::cCommand += " -ps " + ::cPostScriptumFile
          ENDIF
       ENDIF
 
@@ -475,72 +475,72 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cReplyTo
       IF HB_ISSTRING( ::cReplyTo )
-         ::cCommand += ' -replyto ' + ::cReplyTo
+         ::cCommand += " -replyto " + ::cReplyTo
       ENDIF
 
       // cReplyTo
       IF HB_ISSTRING( ::cReplyTo )
-         ::cCommand += ' -replyto ' + ::cReplyTo
+         ::cCommand += " -replyto " + ::cReplyTo
       ENDIF
 
       // cReturnPath
       IF HB_ISSTRING( ::cReturnPath )
-         ::cCommand += ' -returnpath ' + ::cReturnPath
+         ::cCommand += " -returnpath " + ::cReturnPath
       ENDIF
 
       // cSender
       IF HB_ISSTRING( ::cSender )
-         ::cCommand += ' -sender ' + ::cSender
+         ::cCommand += " -sender " + ::cSender
       ENDIF
 
       // nPortSMTP
       IF HB_ISNUMERIC( ::nPortSMTP ) .AND. ::nPortSMTP > 0
-         ::cCommand += ' -portSMTP ' + hb_ntos( ::nPortSMTP )
+         ::cCommand += " -portSMTP " + hb_ntos( ::nPortSMTP )
       ENDIF
 
       // nPortNNTP
       IF HB_ISNUMERIC( ::nPortNNTP ) .AND. ::nPortNNTP > 0
-         ::cCommand += ' -portNNTP ' + hb_ntos( ::nPortNNTP )
+         ::cCommand += " -portNNTP " + hb_ntos( ::nPortNNTP )
       ENDIF
 
       // nPortPOP3
       IF HB_ISNUMERIC( ::nPortPOP3 ) .AND. ::nPortPOP3 > 0
-         ::cCommand += ' -portPOP3 ' + hb_ntos( ::nPortPOP3 )
+         ::cCommand += " -portPOP3 " + hb_ntos( ::nPortPOP3 )
       ENDIF
 
       // nPortIMAP
       IF HB_ISNUMERIC( ::nPortIMAP ) .AND. ::nPortIMAP > 0
-         ::cCommand += ' -portIMAP ' + hb_ntos( ::nPortIMAP )
+         ::cCommand += " -portIMAP " + hb_ntos( ::nPortIMAP )
       ENDIF
 
       // cUserAUTH
       IF HB_ISSTRING( ::cUserAUTH )
-         ::cCommand += ' -u ' + ::cUserAUTH
+         ::cCommand += " -u " + ::cUserAUTH
       ENDIF
 
       // cPasswordAUTH
       IF HB_ISSTRING( ::cPasswordAUTH )
-         ::cCommand += ' -pw ' + ::cPasswordAUTH
+         ::cCommand += " -pw " + ::cPasswordAUTH
       ENDIF
 
       // cUserPOP3
       IF HB_ISSTRING( ::cUserPOP3 )
-         ::cCommand += ' -pu ' + ::cUserPOP3
+         ::cCommand += " -pu " + ::cUserPOP3
       ENDIF
 
       // cPasswordPOP3
       IF HB_ISSTRING( ::cPasswordPOP3 )
-         ::cCommand += ' -ppw ' + ::cPasswordPOP3
+         ::cCommand += " -ppw " + ::cPasswordPOP3
       ENDIF
 
       // cUserIMAP
       IF HB_ISSTRING( ::cUserIMAP )
-         ::cCommand += ' -iu ' + ::cUserIMAP
+         ::cCommand += " -iu " + ::cUserIMAP
       ENDIF
 
       // cPasswordIMAP
       IF HB_ISSTRING( ::cPasswordIMAP )
-         ::cCommand += ' -ipw ' + ::cPasswordIMAP
+         ::cCommand += " -ipw " + ::cPasswordIMAP
       ENDIF
 
       // lNoMD5
@@ -552,17 +552,17 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cOrganization
       IF HB_ISSTRING( ::cOrganization )
-         ::cCommand += ' -organization ' + ::cOrganization
+         ::cCommand += " -organization " + ::cOrganization
       ENDIF
 
       // cUserAgent
       IF HB_ISSTRING( ::cUserAgent )
-         ::cCommand += ' -ua ' + ::cUserAgent
+         ::cCommand += " -ua " + ::cUserAgent
       ENDIF
 
       // cXHeader
       IF HB_ISSTRING( ::cXHeader )
-         ::cCommand += ' -x ' + ::cXHeader
+         ::cCommand += " -x " + ::cXHeader
       ENDIF
 
       // NoBlatHeader
@@ -590,17 +590,17 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cCharSet
       IF HB_ISSTRING( ::cCharSet )
-         ::cCommand += ' -charset ' + ::cCharSet
+         ::cCommand += " -charset " + ::cCharSet
       ENDIF
 
       // cUserHeader1
       IF HB_ISSTRING( ::cUserHeader1 )
-         ::cCommand += ' -a1 ' + ::cUserHeader1
+         ::cCommand += " -a1 " + ::cUserHeader1
       ENDIF
 
       // cUserHeader2
       IF HB_ISSTRING( ::cUserHeader2 )
-         ::cCommand += ' -a2 ' + ::cUserHeader2
+         ::cCommand += " -a2 " + ::cUserHeader2
       ENDIF
 
       // cDSN
@@ -763,7 +763,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cAlternateText - optional
       IF HB_ISSTRING( ::cAlternateText )
-         ::cCommand += ' -alttext ' + ::cAlternateText
+         ::cCommand += " -alttext " + ::cAlternateText
       ENDIF
 
       // cAlternateTextFile - optional
@@ -802,7 +802,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cContentType - optional
       IF HB_ISSTRING( ::cContentType )
-         ::cCommand += ' -contentType ' + ::cContentType
+         ::cCommand += " -contentType " + ::cContentType
       ENDIF
 
       // NNTP specific options ------------------
@@ -838,7 +838,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cLogFile
       IF HB_ISSTRING( ::cLogFile )
-         ::cCommand += ' -log ' + ::cLogFile
+         ::cCommand += " -log " + ::cLogFile
       ENDIF
 
       // lLogTimestamp
@@ -872,7 +872,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cHostname
       IF HB_ISSTRING( ::cHostname )
-         ::cCommand += ' -hostname ' + ::cHostname
+         ::cCommand += " -hostname " + ::cHostname
       ENDIF
 
       // lRaw
@@ -887,7 +887,7 @@ METHOD PROCEDURE Check() CLASS HBBlat
 
       // cCommentChar
       IF HB_ISSTRING( ::cCommentChar )
-         ::cCommand += ' -comment ' + ::cCommentChar
+         ::cCommand += " -comment " + ::cCommentChar
       ENDIF
 
       // lSuperDebug
@@ -966,7 +966,7 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
       cError := aErrors[ nPos, 2 ]
    ENDIF
 
-   /*
+#if 0
    SWITCH nErr
    CASE BLAT_SUCCESS
       cError := BLAT_TEXT_SUCCESS
@@ -979,7 +979,7 @@ METHOD TranslateBlatError( nErr ) CLASS HBBlat
    OTHERWISE
       cError := BLAT_TEXT_ERR_UNKNOWN
    ENDSWITCH
-   */
+#endif
 
    RETURN cError
 

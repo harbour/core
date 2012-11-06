@@ -80,21 +80,21 @@ PROCEDURE Main()
 
    ? '  ATADJUST(":", aStr[ni], 21,,, ".") yields'
    FOR ni := 1 TO Len( aStr )
-      ? Space( 4 ) + atadjust( ":", aStr[ ni ], 21, 1,, "." )
+      ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 21, 1,, "." )
    NEXT
    ?
 
    ? '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields'
    FOR ni := 1 TO Len( aStr )
-      ? Space( 4 ) + atadjust( ":", aStr[ ni ], 10, 1,, "." )
+      ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 10, 1,, "." )
    NEXT
    ?
 
    ? '  SETATLIKE(CT_SETATLIKE_WILDCARD, ":")'
    ? '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields now'
-   setatlike( CT_SETATLIKE_WILDCARD, ":" )
+   SetAtLike( CT_SETATLIKE_WILDCARD, ":" )
    FOR ni := 1 TO Len( aStr )
-      ? Space( 4 ) + atadjust( ":", aStr[ ni ], 10, 1,, "." )
+      ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 10, 1,, "." )
    NEXT
    ?
 

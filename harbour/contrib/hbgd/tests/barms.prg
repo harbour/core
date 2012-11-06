@@ -14,16 +14,18 @@ PROCEDURE Main()
    LOCAL black  := { 0, 0, 0 }
    LOCAL white  := { 255, 255, 255 }
 
-// LOCAL blue   := { 0, 0, 255 }
-// LOCAL yellon := { 255, 255, 128 }
+#if 0
+   LOCAL blue   := { 0, 0, 255 }
+   LOCAL yellon := { 255, 255, 128 }
 
-// LOCAL red    := { 255, 0, 0 }
+   LOCAL red    := { 255, 0, 0 }
+
+   LOCAL nlower := 1, nhight := 50
+#endif
 
    LOCAL ccode13    := "P48WBQ7BX3M73X8V3WRT7F9JW"
    LOCAL ccode8     := "P48WBQ7BX3M73X8V3WRT7F9JW"
    LOCAL ccode128   := "P48WBQ7BX3M73X8V3WRT7F9JW"
-
-// LOCAL nlower := 1, nhight := 50
 
    /* here is the list of arguments
    1- Barcode Type 13,8  and 128

@@ -14,16 +14,16 @@
 
 PROCEDURE Main()
 
-   ? NUMLINE( "" ), 0
-   ? NUMLINE( "-" ), 1
-   ? NUMLINE( Replicate( "-", 80 ) ), 2
-   ? NUMLINE( Replicate( "-", 160 ) ), 3
-   ? NUMLINE( Replicate( "-", 100 ), 30 ), 4
-   ? NUMLINE( "-" + Chr( 13 ) + Chr( 10 ) ), 2
-   ? NUMLINE( "-" + Chr( 10 ) ), 2
-   ? NUMLINE( "-" + Chr( 13 ) + Chr( 10 ) + "=" ), 2
-   ? NUMLINE( "-" + Chr( 10 ) + "=" ), 2
-   ? NUMLINE( Replicate( "-", 100 ) + Chr( 13 ) + Chr( 10 ), 30 ), 5
-   ? NUMLINE( Replicate( "-", 100 ) + Chr( 10 ), 30 ), 5
+   ? NumLine( "" ), 0
+   ? NumLine( "-" ), 1
+   ? NumLine( Replicate( "-", 80 ) ), 2
+   ? NumLine( Replicate( "-", 160 ) ), 3
+   ? NumLine( Replicate( "-", 100 ), 30 ), 4
+   ? NumLine( "-" + Chr( 13 ) + Chr( 10 ) ), 2
+   ? NumLine( "-" + Chr( 10 ) ), 2
+   ? NumLine( "-" + Chr( 13 ) + Chr( 10 ) + "=" ), 2
+   ? NumLine( "-" + Chr( 10 ) + "=" ), 2
+   ? NumLine( Replicate( "-", 100 ) + Chr( 13 ) + Chr( 10 ), 30 ), 5
+   ? NumLine( Replicate( "-", 100 ) + Chr( 10 ), 30 ), 5
 
    RETURN

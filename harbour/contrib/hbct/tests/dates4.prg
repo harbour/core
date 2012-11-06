@@ -22,13 +22,13 @@ PROCEDURE Main()
 FUNCTION CheckDate( dDate )
 
    ? "Testing date:", dDate
-   ? "Days in month..:", daysinmonth( dDate )
-   ? "Day of year....:", doy( dDate )
-   ? "Begin of month.:", bom( dDate )
-   ? "End of month...:", eom( dDate )
-   ? "Week of month..:", wom( dDate )
-   ? "Begin of year..:", boy( dDate )
-   ? "End of year....:", eoy( dDate )
+   ? "Days in month..:", DaysInMonth( dDate )
+   ? "Day of year....:", DoY( dDate )
+   ? "Begin of month.:", BoM( dDate )
+   ? "End of month...:", EoM( dDate )
+   ? "Week of month..:", WoM( dDate )
+   ? "Begin of year..:", BoY( dDate )
+   ? "End of year....:", EoY( dDate )
    ?
 
    RETURN NIL

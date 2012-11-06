@@ -61,8 +61,8 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  charrem(" ", " 1  2  ") == "12"   ? ---> "' + charrem( " ", " 1  2  " ) + '"'
-   ? '  charrem("3y", "xyz123") == "xz12" ? ---> "' + charrem( "3y", "xyz123" ) + '"'
+   ? '  charrem(" ", " 1  2  ") == "12"   ? ---> "' + CharRem( " ", " 1  2  " ) + '"'
+   ? '  charrem("3y", "xyz123") == "xz12" ? ---> "' + CharRem( "3y", "xyz123" ) + '"'
    ?
 
    ? "End test of CHARREM()"

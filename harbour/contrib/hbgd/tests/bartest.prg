@@ -14,17 +14,19 @@ PROCEDURE Main()
    LOCAL black  := { 0, 0, 0 }
    LOCAL white  := { 255, 255, 255 }
 
-// LOCAL blue   := { 0, 0, 255 }
-// LOCAL yellon := { 255, 255, 128 }
+#if 0
+   LOCAL blue   := { 0, 0, 255 }
+   LOCAL yellon := { 255, 255, 128 }
 
-// LOCAL red    := { 255, 0, 0 }
+   LOCAL red    := { 255, 0, 0 }
+
+   LOCAL nlower := 1, nhight := 50
+#endif
 
    LOCAL ccode13    := "789136043666"
    LOCAL ccode8     := "0421000"
-// LOCAL ccode128   := "00011005100000000"
+   // LOCAL ccode128   := "00011005100000000"
    LOCAL ccode128   := "Code 128"
-
-// LOCAL nlower := 1, nhight := 50
 
    /* here is the list of arguments
    1- Barcode Type 13,8  and 128
@@ -55,7 +57,7 @@ PROCEDURE Main()
    bar:Finish( 2 )
 
    // EAN8
-   bar:= TCode():New( 8 )
+   bar := TCode():New( 8 )
 
    bar:Configure( 70, black, white, 2, 1 )
 
@@ -68,7 +70,7 @@ PROCEDURE Main()
    bar:ResizeImage()
 
    // EAN128
-   bar:= TCode():New( 128 )
+   bar := TCode():New( 128 )
 
    bar:Configure( 50, black, white, 2, 1 )
 

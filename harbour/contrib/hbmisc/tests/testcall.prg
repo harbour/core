@@ -19,7 +19,7 @@ PROCEDURE Main()
    LOCAL nFlags
 
    nFlags := -1
-   ? CALLDLL32( "InternetGetConnectedState", "wininet.dll", @nFlags, 0 )
+   ? CallDll32( "InternetGetConnectedState", "wininet.dll", @nFlags, 0 )
    ? nFlags
 
 #endif

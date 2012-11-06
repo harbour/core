@@ -63,7 +63,7 @@ FUNCTION AlloFree( lMode )
 
    RETURN Memory( iif( lMode, HB_MEM_CHAR, HB_MEM_BLOCK ) )
 
-FUNCTION CENTER( c, n, p, lMode )
+FUNCTION Center( c, n, p, lMode )
 
    LOCAL cRet
 
@@ -87,7 +87,7 @@ FUNCTION CENTER( c, n, p, lMode )
 
    RETURN iif( lMode, cRet, RTrim( cRet ) )
 
-FUNCTION CSETCURS( l )
+FUNCTION CSetCurs( l )
 
    IF ! HB_ISLOGICAL( l )
       RETURN SetCursor() != SC_NONE
@@ -95,19 +95,19 @@ FUNCTION CSETCURS( l )
 
    RETURN SetCursor( iif( l, SC_NORMAL, SC_NONE ) ) != SC_NONE
 
-FUNCTION CSETKEY( n )
+FUNCTION CSetKey( n )
 
    RETURN SetKey( n )
 
-FUNCTION CSETCENT( nCentury )
+FUNCTION CSetCent( nCentury )
 
    RETURN __SetCentury( nCentury )
 
-FUNCTION LTOC( l )
+FUNCTION LToC( l )
 
    RETURN iif( l, "T", "F" )
 
-FUNCTION DOSPARAM()
+FUNCTION DosParam()
 
    LOCAL cRet := ""
    LOCAL nCount := hb_argc(), i
@@ -118,6 +118,6 @@ FUNCTION DOSPARAM()
 
    RETURN cRet
 
-FUNCTION EXENAME()
+FUNCTION ExeName()
 
    RETURN hb_ProgName()

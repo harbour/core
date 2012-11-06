@@ -86,21 +86,21 @@ CREATE CLASS GDImage
    // Load From File
    METHOD LoadFromPng( cFile )             INLINE ::pImage := gdImageCreateFromPng( cFile )          , iif( ::pImage != NIL, Self, NIL )
    METHOD LoadFromJpeg( cFile )            INLINE ::pImage := gdImageCreateFromJpeg( cFile )         , iif( ::pImage != NIL, Self, NIL )
-   METHOD LoadFromWBmp( cFile )            INLINE ::pImage := gdImageCreateFromWBMP( cFile )         , iif( ::pImage != NIL, Self, NIL )
+   METHOD LoadFromWBmp( cFile )            INLINE ::pImage := gdImageCreateFromWBmp( cFile )         , iif( ::pImage != NIL, Self, NIL )
    METHOD LoadFromGd( cFile )              INLINE ::pImage := gdImageCreateFromGD( cFile )           , iif( ::pImage != NIL, Self, NIL )
    METHOD LoadFromGif( cFile )             INLINE ::pImage := gdImageCreateFromGif( cFile )          , iif( ::pImage != NIL, Self, NIL )
 
    // Load From a specific File handle
    METHOD InputPng( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromPng( nHandle, nSize ) , iif( ::pImage != NIL, Self, NIL )
    METHOD InputJpeg( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromJpeg( nHandle, nSize ), iif( ::pImage != NIL, Self, NIL )
-   METHOD InputWBmp( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromWBMP( nHandle, nSize ), iif( ::pImage != NIL, Self, NIL )
+   METHOD InputWBmp( nHandle, nSize )      INLINE ::pImage := gdImageCreateFromWBmp( nHandle, nSize ), iif( ::pImage != NIL, Self, NIL )
    METHOD InputGd( nHandle, nSize )        INLINE ::pImage := gdImageCreateFromGD( nHandle, nSize )  , iif( ::pImage != NIL, Self, NIL )
    METHOD InputGif( nHandle, nSize )       INLINE ::pImage := gdImageCreateFromGif( nHandle, nSize ) , iif( ::pImage != NIL, Self, NIL )
 
    // Create from an image pointer in memory
    METHOD CreateFromPng( pImage, nSize )   INLINE ::pImage := gdImageCreateFromPng( pImage, nSize )  , iif( ::pImage != NIL, Self, NIL )
    METHOD CreateFromJpeg( pImage, nSize )  INLINE ::pImage := gdImageCreateFromJpeg( pImage, nSize ) , iif( ::pImage != NIL, Self, NIL )
-   METHOD CreateFromWBmp( pImage, nSize )  INLINE ::pImage := gdImageCreateFromWBMP( pImage, nSize ) , iif( ::pImage != NIL, Self, NIL )
+   METHOD CreateFromWBmp( pImage, nSize )  INLINE ::pImage := gdImageCreateFromWBmp( pImage, nSize ) , iif( ::pImage != NIL, Self, NIL )
    METHOD CreateFromGd( pImage, nSize )    INLINE ::pImage := gdImageCreateFromGD( pImage, nSize )   , iif( ::pImage != NIL, Self, NIL )
    METHOD CreateFromGif( pImage, nSize )   INLINE ::pImage := gdImageCreateFromGif( pImage, nSize )  , iif( ::pImage != NIL, Self, NIL )
 
@@ -128,7 +128,7 @@ CREATE CLASS GDImage
    METHOD ToStringPng( nLevel )            INLINE gdImagePng( ::pImage, NIL, nLevel )
    METHOD ToStringJpeg( nLevel )           INLINE gdImageJpeg( ::pImage, NIL, nLevel )
    METHOD ToStringWBmp( nFG )              INLINE gdImageWBmp( ::pImage, NIL, nFG )
-   METHOD ToStringGd()                     INLINE gdImageGd( ::pImage, NIL )
+   METHOD ToStringGd()                     INLINE gdImageGD( ::pImage, NIL )
    METHOD ToStringGif()                    INLINE gdImageGif( ::pImage, NIL )
 
    METHOD ToString()                       INLINE gdImageToString( Self )
@@ -368,7 +368,7 @@ METHOD LoadFromFile( cFile ) CLASS GDImage
    LOCAL aLoad
 
    aLoad := gdImageFromFile( cFile )
-   //Self  := aLoad[ 1 ]:Clone()
+   // Self  := aLoad[ 1 ]:Clone()
    ::Destroy()
    Self := ::CloneDataFrom( aLoad[ 1 ] )
    // Self := __objClone( aLoad[1] )
@@ -557,8 +557,8 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
    hb_default( @lInside, .F. )
 
    IF ! lInside
-      nWidth  := ::Width * cos( nAngRad ) + ::Height * sin( nAngRad )
-      nHeight := ::Width * sin( nAngRad ) + ::Height * cos( nAngRad )
+      nWidth  := ::Width * Cos( nAngRad ) + ::Height * Sin( nAngRad )
+      nHeight := ::Width * Sin( nAngRad ) + ::Height * Cos( nAngRad )
    ELSE
       nWidth  := ::Width
       nHeight := ::Height

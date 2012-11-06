@@ -61,11 +61,11 @@ PROCEDURE Main()
 
    // simple tests
    ? "Simple tests:"
-   ? '  charrepl("1234", "1x2y3z", "abcd") ==            "axbycz" ? --> "' + charrepl( "1234", "1x2y3z", "abcd" )            + '"'
-   ? '  charrepl("abcdefghij", "jhfdb", "1234567890") == "08642"  ? --> "' + charrepl( "abcdefghij", "jhfdb", "1234567890" ) + '"'
-   ? '  charrepl("abcdefghij", "jhfdb", "12345") ==      "55542"  ? --> "' + charrepl( "abcdefghij", "jhfdb", "12345" )      + '"'
-   ? '  charrepl("1234", "1234", "234A") ==              "AAAA"   ? --> "' + charrepl( "1234", "1234", "234A" )              + '"'
-   ? '  charrepl("1234", "1234", "234A", .T.) ==         "234A"   ? --> "' + charrepl( "1234", "1234", "234A", .T. )         + '"'
+   ? '  charrepl("1234", "1x2y3z", "abcd") ==            "axbycz" ? --> "' + CharRepl( "1234", "1x2y3z", "abcd" )            + '"'
+   ? '  charrepl("abcdefghij", "jhfdb", "1234567890") == "08642"  ? --> "' + CharRepl( "abcdefghij", "jhfdb", "1234567890" ) + '"'
+   ? '  charrepl("abcdefghij", "jhfdb", "12345") ==      "55542"  ? --> "' + CharRepl( "abcdefghij", "jhfdb", "12345" )      + '"'
+   ? '  charrepl("1234", "1234", "234A") ==              "AAAA"   ? --> "' + CharRepl( "1234", "1234", "234A" )              + '"'
+   ? '  charrepl("1234", "1234", "234A", .T.) ==         "234A"   ? --> "' + CharRepl( "1234", "1234", "234A", .T. )         + '"'
    ?
 
    ? "End test of CHARREPL()"

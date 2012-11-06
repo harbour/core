@@ -457,8 +457,7 @@ METHOD VerticalBarChart() CLASS GDChart
 METHOD HorizontalBarChart() CLASS GDChart
 
    LOCAL hElement, nTot := 0
-// LOCAL nDegree := 0
-   LOCAL lFilled, /*lExtruded, nExtrude,*/ pTile
+   LOCAL lFilled, /* lExtruded, nExtrude, */ pTile
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -615,9 +614,9 @@ METHOD HorizontalBarChart() CLASS GDChart
       // nExtrude  := __HGetValue( hElement, "EXTRUDE" )
       pTile     := __HGetValue( hElement, "TILE" )
       // IF nExtrude != NIL
-      //   lExtruded := .T.
+      //    lExtruded := .T.
       // ELSE
-      //   lExtruded := .F.
+      //    lExtruded := .F.
       // ENDIF
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
@@ -652,8 +651,7 @@ METHOD HorizontalBarChart() CLASS GDChart
 METHOD LineChart() CLASS GDChart
 
    LOCAL hElement
-// LOCAL nDegree := 0
-   LOCAL /*lFilled, lExtruded, nExtrude,*/ pTile
+   LOCAL /* lFilled, lExtruded, nExtrude, */ pTile
    LOCAL colorp
    LOCAL nVal, nDim
    LOCAL nPosX, nPosY
@@ -794,8 +792,8 @@ METHOD LineChart() CLASS GDChart
 
    nCeiling := 10 ^ nCeiling
 
-   nMaxValue := ceiling( nMaxValue / nCeiling ) * nCeiling
-   nMinValue := iif( nMinValue < 0, -ceiling( Abs( nMinValue ) / nCeiling ) * nCeiling, ceiling( nMinValue / nCeiling ) * nCeiling )
+   nMaxValue := Ceiling( nMaxValue / nCeiling ) * nCeiling
+   nMinValue := iif( nMinValue < 0, -Ceiling( Abs( nMinValue ) / nCeiling ) * nCeiling, Ceiling( nMinValue / nCeiling ) * nCeiling )
 
    nTotRange := nMaxValue + iif( nMinValue < 0, Abs( nMinValue ), 0 )
 

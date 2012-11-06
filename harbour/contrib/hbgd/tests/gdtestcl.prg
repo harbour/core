@@ -100,7 +100,6 @@ PROCEDURE Main()
    oI:SetFontLarge()
    ? "Font Dims", oI:GetFontWidth(), oI:GetFontHeight()
    oI:SetColor( black )
-   //__OutDebug( "Font", font )
    oI:Say( 0, 0, "Test" )
    oI:Say( 0, 15, "P" )
    oI:Say( 0, 30, "W" )
@@ -168,19 +167,19 @@ PROCEDURE Main()
 
    // oI4:SetColor( black )
    // oI4:Say( 100, 10, "Valentina" )
-   #if defined( __PLATFORM__UNIX )
-      oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD power", "arib____", 40, 45 )
-   #else
-      nSecs := Seconds()
-      ? "start write"
-      FOR n := 0 TO 350 STEP 10
-         oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "             GD Font Power", "arial", 20, n )
-      NEXT
-      ? "end", Seconds() - nSecs
-      oI4:SetTransparent( blue )
-      oI4:SayFreeType( oI4:CenterWidth() - 4, oI4:CenterHeight() + 4, "GD", "verdana", 70, n, gray )
-      oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD", "verdana", 70, n, blue )
-   #endif
+#if defined( __PLATFORM__UNIX )
+   oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD power", "arib____", 40, 45 )
+#else
+   nSecs := Seconds()
+   ? "start write"
+   FOR n := 0 TO 350 STEP 10
+      oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "             GD Font Power", "arial", 20, n )
+   NEXT
+   ? "end", Seconds() - nSecs
+   oI4:SetTransparent( blue )
+   oI4:SayFreeType( oI4:CenterWidth() - 4, oI4:CenterHeight() + 4, "GD", "verdana", 70, n, gray )
+   oI4:SayFreeType( oI4:CenterWidth(), oI4:CenterHeight(), "GD", "verdana", 70, n, blue )
+#endif
    oI4:SaveJpeg( IMAGES_OUT + "writing.jpg" )
 
 

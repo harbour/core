@@ -22,38 +22,38 @@ inplementation of :
 PROCEDURE Main()
 
    // open a text file here
-   IF hb_fuse( __FILE__, 0 ) > 1
+   IF hb_FUse( __FILE__, 0 ) > 1
 
       DO WHILE ! hb_FEof()
-         ? "line " + Str( hb_frecno(), 2 ) + " " + hb_freadln()
-         hb_fskip( 1 )
+         ? "line " + Str( hb_FRecNo(), 2 ) + " " + hb_FReadLn()
+         hb_FSkip( 1 )
       ENDDO
       ?
       my_goto( 18 )
       my_goto( 2 )
 
-      hb_fgobottom()
+      hb_FGoBottom()
       ?
-      ? "after hb_fgobottom() now in line # " + hb_ntos( hb_frecno() )
+      ? "after hb_fgobottom() now in line # " + hb_ntos( hb_FRecNo() )
 
-      hb_fgotop()
+      hb_FGoTop()
       ?
-      ? "after hb_fgotop() now in line # " + hb_ntos( hb_frecno() )
+      ? "after hb_fgotop() now in line # " + hb_ntos( hb_FRecNo() )
 
       ?
-      ? "hb_flastrec() = " + hb_ntos( hb_flastrec() )
+      ? "hb_flastrec() = " + hb_ntos( hb_FLastRec() )
 
       // close the file
-      hb_fuse()
+      hb_FUse()
    ENDIF
 
    RETURN
 
 STATIC PROCEDURE my_goto( n_go )
 
-   hb_fgoto( n_go )
+   hb_FGoto( n_go )
    ?
    ? "after hb_fgoto(" + hb_ntos( n_go ) + ")"
-   ? "line " + hb_ntos( hb_frecno() ) + " is " + LTrim( hb_freadln() )
+   ? "line " + hb_ntos( hb_FRecNo() ) + " is " + LTrim( hb_FReadLn() )
 
    RETURN

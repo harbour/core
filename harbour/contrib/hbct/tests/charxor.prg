@@ -63,7 +63,7 @@ PROCEDURE Main()
    ? "Simple tests:"
    ? '  charxor(charxor("This is top secret !", "My Password"),'
    ? '           "My Password") == "This is top secret !" ? ->'
-   ? '  ' + charxor( charxor( "This is top secret !", "My Password" ), "My Password" )
+   ? '  ' + CharXor( CharXor( "This is top secret !", "My Password" ), "My Password" )
 
    ? "End test of CHARXOR()"
    ?

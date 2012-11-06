@@ -14,7 +14,7 @@
 
 #include "hbclass.ch"
 
-CREATE CLASS AMF_Obj
+CREATE CLASS amf_Obj
 
    METHOD New( hCachedData ) CONSTRUCTOR
    ERROR HANDLER noMessage
@@ -36,17 +36,17 @@ CREATE CLASS AMF_Obj
 
 END CLASS
 
-METHOD New( hCachedData ) CLASS AMF_Obj
+METHOD New( hCachedData ) CLASS amf_Obj
 
    ::hCachedData := hCachedData
 
    RETURN self
 
-METHOD noMessage( ... ) CLASS AMF_Obj
+METHOD noMessage( ... ) CLASS amf_Obj
 
    RETURN ::msgNotFound( __GetMessage(), ... )
 
-METHOD msgNotFound( cMessage, ... ) CLASS AMF_Obj
+METHOD msgNotFound( cMessage, ... ) CLASS amf_Obj
 
    IF PCount() == 1 .AND. !( hb_BLeft( cMessage, 1 ) == "_" )
       IF ! Empty( ::hCachedData ) .AND. hb_HHasKey( ::hCachedData, cMessage )
@@ -61,7 +61,7 @@ METHOD msgNotFound( cMessage, ... ) CLASS AMF_Obj
 
    RETURN NIL
 
-CREATE CLASS AMF_Raw
+CREATE CLASS amf_Raw
 
    METHOD New( cData ) CONSTRUCTOR
    METHOD GetData INLINE ::cData
@@ -71,7 +71,7 @@ CREATE CLASS AMF_Raw
 
 END CLASS
 
-METHOD New( cData ) CLASS AMF_Raw
+METHOD New( cData ) CLASS amf_Raw
 
    ::cData := cData
 

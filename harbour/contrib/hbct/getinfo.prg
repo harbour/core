@@ -55,7 +55,7 @@
 
 MEMVAR GetList
 
-FUNCTION SAVEGETS()
+FUNCTION SaveGets()
 
    LOCAL aGetList := GetList
 
@@ -63,21 +63,21 @@ FUNCTION SAVEGETS()
 
    RETURN aGetList
 
-FUNCTION RESTGETS( aGetList )
+FUNCTION RestGets( aGetList )
 
    RETURN ( GetList := aGetList ) != NIL
 
-FUNCTION COUNTGETS()
+FUNCTION CountGets()
 
    RETURN Len( GetList )
 
-FUNCTION CURRENTGET()
+FUNCTION CurrentGet()
 
    LOCAL oActive := GetActive()
 
    RETURN AScan( GetList, {| oGet | oGet == oActive } )
 
-FUNCTION GETFLDROW( nField )
+FUNCTION GetFldRow( nField )
 
    LOCAL oGet
 
@@ -89,7 +89,7 @@ FUNCTION GETFLDROW( nField )
 
    RETURN iif( oGet != NIL, oGet:Row, -1 )
 
-FUNCTION GETFLDCOL( nField )
+FUNCTION GetFldCol( nField )
 
    LOCAL oGet
 
@@ -101,7 +101,7 @@ FUNCTION GETFLDCOL( nField )
 
    RETURN iif( oGet != NIL, oGet:Col, -1 )
 
-FUNCTION GETFLDVAR( nField )
+FUNCTION GetFldVar( nField )
 
    LOCAL oGet
 

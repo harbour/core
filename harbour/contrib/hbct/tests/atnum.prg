@@ -70,37 +70,37 @@ PROCEDURE Main()
    // Some simple tests
    ? "  Simple tests:"
    ? '  atnum("..",cStr)     should be 18,'
-   ? '                          and is ', atnum( "..", cStr )
+   ? '                          and is ', AtNum( "..", cStr )
    ? '  atnum("..",cStr,2)   should be 8,'
-   ? '                          and is ', atnum( "..", cStr, 2 )
+   ? '                          and is ', AtNum( "..", cStr, 2 )
    ? '  atnum("..",cStr,2,2) should be 13,'
-   ? '                          and is ', atnum( "..", cStr, 2, 2 )
+   ? '                          and is ', AtNum( "..", cStr, 2, 2 )
    ?
 
    // Tests with CSetAtMuPa(.T.)
    ? "  Multi-Pass tests"
    ? "  Setting csetatmupa() to .T."
-   csetatmupa( .T. )
+   CSetAtMupa( .T. )
    ? '  atnum("..",cStr)     should be 18,'
-   ? '                          and is ', atnum( "..", cStr )
+   ? '                          and is ', AtNum( "..", cStr )
    ? '  atnum("..",cStr,2)   should be 2,'
-   ? '                          and is ', atnum( "..", cStr, 2 )
+   ? '                          and is ', AtNum( "..", cStr, 2 )
    ? '  atnum("..",cStr,2,2) should be 9,'
-   ? '                          and is ', atnum( "..", cStr, 2, 2 )
+   ? '                          and is ', AtNum( "..", cStr, 2, 2 )
    ? "  Setting csetatmupa() to .F."
-   csetatmupa( .F. )
+   CSetAtMupa( .F. )
    ?
 
    // Tests mit SetAtlike(1)
    ? "  SetAtLike tests"
    ? '  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")'
-   setatlike( CT_SETATLIKE_WILDCARD, "." )
+   SetAtLike( CT_SETATLIKE_WILDCARD, "." )
    ? '  atnum("..",cStr) should be 23,'
-   ? '                      and is ', atnum( "..", cStr )
+   ? '                      and is ', AtNum( "..", cStr )
    ? '  atnum("..",cStr,2,2) should be 5,'
-   ? '                          and is ', atnum( "..", cStr, 2, 2 )
+   ? '                          and is ', AtNum( "..", cStr, 2, 2 )
    ? '  atnum("..",cStr,2,10) should be 13,'
-   ? '                           and is ', atnum( "..", cStr, 2, 10 )
+   ? '                           and is ', AtNum( "..", cStr, 2, 10 )
    ?
 
    ? "End test of ATNUM()"

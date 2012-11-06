@@ -49,11 +49,11 @@
  *
  */
 
-FUNCTION SAVESETKEY()
+FUNCTION SaveSetKey()
 
    RETURN hb_SetKeySave()
 
-FUNCTION RESTSETKEY( aSavedTraps )
+FUNCTION RestSetKey( aSavedTraps )
 
    hb_SetKeySave( aSavedTraps )
 

@@ -22,16 +22,20 @@ PROCEDURE Main()
    LOCAL im, clone, rotated, rotatedEx, rescale, im2, im3
    LOCAL centerX, centerY, width, height
 
-// LOCAL bmpinfoheader
+#if 0
+   LOCAL bmpinfoheader
+   LOCAL bkcolor
+   LOCAL iccprofile
+   LOCAL appo
+#endif
    LOCAL bmpinfo
-// LOCAL bkcolor
-// LOCAL iccprofile
    LOCAL nH, nLen, cStr
-// LOCAL appo
 
-// ? "Press Alt-D + Enter to activate debug"
-// AltD( .T. )
-// Inkey( 0 )
+#if 0
+   ? "Press Alt-D + Enter to activate debug"
+   AltD( .T. )
+   Inkey( 0 )
+#endif
    AltD()
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
@@ -43,8 +47,10 @@ PROCEDURE Main()
 
    //
 
-   ? "Set Error Message:", fi_SetOutPutMessage( fi_Error() )
-   //? "Set Error Message:", fi_SetOutPutMessage( NIL )
+   ? "Set Error Message:", fi_SetOutputMessage( fi_Error() )
+#if 0
+   ? "Set Error Message:", fi_SetOutputMessage( NIL )
+#endif
 
    ? "Version          :", fi_GetVersion()
    ? "Copyright        :", fi_GetCopyrightMessage()
@@ -150,51 +156,56 @@ PROCEDURE Main()
    ? "Create ERROR     :"
    ? "Save GIF ?       :", fi_Save( FIF_GIF, im, IMAGES_OUT + "wrong.gif", 0 )
 
-// ? ValToPrg( fi_GetInfoHeader( im ) )
-// bmpinfoheader:Buffer( fi_GetInfoHeader( im ), .T. )
-// bmpinfoheader:Pointer( fi_GetInfoHeader( im ) )
-// ? "Header           :", ValToPrg( bmpinfoheader )
-// ? bmpinfoheader:SayMembers(" ", .T., .T. )
+#if 0
+   ? ValToPrg( fi_GetInfoHeader( im ) )
+   bmpinfoheader:Buffer( fi_GetInfoHeader( im ), .T. )
+   bmpinfoheader:Pointer( fi_GetInfoHeader( im ) )
+   ? "Header           :", ValToPrg( bmpinfoheader )
+   ? bmpinfoheader:SayMembers( " ", .T., .T. )
+#endif
 
-   //bmpinfo:Pointer( fi_GetInfo( im ) )
+#if 0
+   bmpinfo:Pointer( fi_GetInfo( im ) )
    bmpinfo := NIL // To fix warning
    ? "Info           :", ValToPrg( bmpinfo )
-// ? bmpinfo:SayMembers(" ", .T., .T. )
+   ? bmpinfo:SayMembers( " ", .T., .T. )
    ? "-----------------------------------------------------"
-// ? ValType( bmpinfo:Devalue() )
-// Tracelog( "bmpinfoheader", ValToPrg( bmpinfoheader ), ;
-// infoheader:SayMembers(, .T.), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_dumpvar( bmpinfoheader:Array() ), hb_dumpvar( bmpinfoheader:acMembers ) )
 
-// appo := bkcolor:Value()
-// ? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
-// ? fi_GetBackgroundColor( im, @bkcolor:Value() )
-// bkcolor:Buffer( appo )
-// ? bkcolor:SayMembers( " ", .T., .T. )
+   ? ValType( bmpinfo:Devalue() )
+   TraceLog( "bmpinfoheader", ValToPrg( bmpinfoheader ), ;
+      infoheader:SayMembers(, .T. ), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_DumpVar( bmpinfoheader:Array() ), hb_DumpVar( bmpinfoheader:acMembers ) )
 
-// bkcolor:rgbBlue := 205
-// ? fi_SetBackgroundColor( im, hb_String2Pointer( bkcolor:Value() ) )
-   Tracelog( "line 168" )
-// ? fi_SetBackgroundColor( im, bkcolor:Value() )
-   Tracelog( "line 170" )
-// ? bkcolor:SayMembers( " ", .T., .T. )
-   Tracelog( "line 162" )
-// ? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
-// ? fi_GetBackgroundColor( im, @bkcolor:Value() )
-// bkcolor:Buffer( appo )
-   Tracelog( "line 176" )
-// ? bkcolor:SayMembers( " ", .T., .T. )
+   appo := bkcolor:Value()
+   ? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
+   ? fi_GetBackgroundColor( im, @bkcolor:Value() )
+   bkcolor:Buffer( appo )
+   ? bkcolor:SayMembers( " ", .T., .T. )
 
-   Tracelog( "line 179" )
-// iccprofile:Pointer( fi_GetICCProfile( im ) )
-   Tracelog( "line 181" )
-// ? "Header           :", ValToPrg( iccprofile )
-   Tracelog( "line 183" )
-// ? iccprofile:SayMembers( " ", .T., .T. )
+   bkcolor:rgbBlue := 205
+   ? fi_SetBackgroundColor( im, hb_String2Pointer( bkcolor:Value() ) )
+   TraceLog( "line 168" )
+   ? fi_SetBackgroundColor( im, bkcolor:Value() )
+   TraceLog( "line 170" )
+   ? bkcolor:SayMembers( " ", .T., .T. )
+   TraceLog( "line 162" )
+   ? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
+   ? fi_GetBackgroundColor( im, @bkcolor:Value() )
+   bkcolor:Buffer( appo )
+   TraceLog( "line 176" )
+   ? bkcolor:SayMembers( " ", .T., .T. )
 
-// bmpinfoheader:Reset()
-// appo := NIL
-// bmpinfoheader := NIL
-// hb_GCAll( .T. )
+   TraceLog( "line 179" )
+   iccprofile:Pointer( fi_GetICCProfile( im ) )
+   TraceLog( "line 181" )
+   ? "Header           :", ValToPrg( iccprofile )
+   TraceLog( "line 183" )
+   ? iccprofile:SayMembers( " ", .T., .T. )
+
+   bmpinfoheader:Reset()
+   appo := NIL
+   bmpinfoheader := NIL
+   hb_gcAll( .T. )
+#endif
 
    ? "Unload images from memory"
    fi_Unload( im )
@@ -220,7 +231,7 @@ PROCEDURE Main()
    //
 
    ? "DeInitialise"
-   fi_Deinitialise()
+   fi_DeInitialise()
 
    ?
    ? "Look at " + IMAGES_OUT + " folder for output images"
