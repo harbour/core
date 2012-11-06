@@ -26,7 +26,7 @@
 #endif
 
 DYNAMIC HBFormatCode
-DYNAMIC __HBFORMAT_BUILDLISTOFFUNCTIONS
+DYNAMIC __hbformat_BuildListOfFunctions
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBFORMAT__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

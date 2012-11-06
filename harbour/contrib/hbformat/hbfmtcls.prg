@@ -274,20 +274,20 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
             ENDIF
          ENDIF
          IF nPosComment > 0
-            nPos := nPosComment + iif( SubStr( cLineAll, nPosComment, 1) == "*", 1, 2 )
-            if SubStr( cLineAll, nPos, 1 ) != " "
-               cLineAll := Left( cLineAll, nPos - 1) + " " + SubStr( cLineAll, nPos )
-            endif
-         endif
+            nPos := nPosComment + iif( SubStr( cLineAll, nPosComment, 1 ) == "*", 1, 2 )
+            IF SubStr( cLineAll, nPos, 1 ) != " "
+               cLineAll := Left( cLineAll, nPos - 1 ) + " " + SubStr( cLineAll, nPos )
+            ENDIF
+         ENDIF
          IF ( nPos := FindNotQuoted( "/*", cLineAll ) ) != 0 .AND. ( nPosComment == 0 .OR. nPosComment > nPos )
             nPosComment := nPos
             IF hb_At( "*/", cLineAll, nPos + 2 ) == 0
                lComment := .T.
             ENDIF
          ENDIF
-         if nPosComment == 1 .AND. nDeep == 0 .and. nState == RF_STATE_RET
+         IF nPosComment == 1 .AND. nDeep == 0 .AND. nState == RF_STATE_RET
             nState := 0
-         endif
+         ENDIF
          IF ! lPragmaDump .AND. ::lIndent .AND. ! lComment
             aFile[ i ] := cLineAll
             IF ! lContinue
@@ -365,7 +365,7 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                      IF nState > 0
                         nState := RF_STATE_CODE
                      ENDIF
-                     IF ( nContrState := Ascan( ::aContr, ;
+                     IF ( nContrState := AScan( ::aContr, ;
                            {| a | a[ 1 ] == cToken1 .AND. ( Empty( a[ 2 ] ) .OR. a[ 2 ] == cToken2 ) } ) ) != 0
                         IF Len( aDeep ) < ++nDeep
                            AAdd( aDeep, NIL )
@@ -375,7 +375,7 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                         IF ( nPos := AScan( ::aContr, {| a | a[ 4 ] == cToken1 } ) ) > 0 .OR. ;
                               cToken1 == "end"
                            IF nPos != 0 .AND. nDeep > 0 .AND. aDeep[ nDeep ] != nPos
-                              DO WHILE ( nPos := Ascan( ::aContr, {| a | a[ 4 ] == cToken1 }, ;
+                              DO WHILE ( nPos := AScan( ::aContr, {| a | a[ 4 ] == cToken1 }, ;
                                     nPos + 1 ) ) != 0 .AND. aDeep[ nDeep ] != nPos
                               ENDDO
                            ENDIF
@@ -436,7 +436,7 @@ METHOD Reformat( aFile ) CLASS HBFORMATCODE
                   IF nState == RF_STATE_RET
                      IF lClass
                         lClass := .F.
-                     endif
+                     ENDIF
                      nState := 0
                   ENDIF
                   IF nPosSep == 0 .OR. nPosSep == Len( aFile[ i ] )
@@ -852,7 +852,7 @@ METHOD Array2Source( aSource ) CLASS HBFORMATCODE
          EXIT
       ENDIF
       IF i < nLen .OR. ! Empty( aSource[ i ] )
-         cSource += aSource[ i ] + ::cEol
+         cSource += RTrim( aSource[ i ] ) + ::cEol
       ENDIF
    NEXT
 
