@@ -66,7 +66,7 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
    FOR EACH aFile IN Directory( hb_DirBase() + "*.hbr" )
       lAnyHBR := .T.
       FOR EACH cName IN hb_Deserialize( hb_ZUncompress( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
-         cFunctions += "," + cName
+         cFunctions += "," + cName:__enumKey()
       NEXT
    NEXT
 
