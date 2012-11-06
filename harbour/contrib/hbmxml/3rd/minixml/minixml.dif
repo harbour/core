@@ -1,0 +1,483 @@
+diff -urN minixml.orig/config.h minixml/config.h
+--- minixml.orig/config.h	2012-11-06 03:46:33.084020512 +0100
++++ minixml/config.h	2012-11-06 03:46:33.084020512 +0100
+@@ -1,6 +1,8 @@
+ /*
+- * "$Id: config.h.in 408 2010-09-19 05:26:46Z mike $"
+- *
++ * $Id: config.h 18162 2012-09-27 21:08:47Z vszakats $
++ */
++
++/*
+  * Configuration file for Mini-XML, a small XML-like file parsing library.
+  *
+  * Copyright 2003-2010 by Michael R Sweet.
+@@ -18,62 +20,89 @@
+  * Include necessary headers...
+  */
+ 
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <string.h>
+-#include <stdarg.h>
+-#include <ctype.h>
++#define _CRT_SECURE_NO_DEPRECATE
++#define _CRT_SECURE_NO_WARNINGS
+ 
++#include "hbdefs.h"
++#include "hb_io.h"
++
++#include "hbapi.h"
++#define HAVE_SNPRINTF 1
++#undef snprintf
++#define snprintf hb_snprintf
++
++#define HAVE_VSNPRINTF 1
++#undef vsnprintf
++#define vsnprintf hb_vsnprintf
++
++#if defined ( _MSC_VER )
++#define close      _close
++#define open       _open
++#define read       _read
++/* #define snprintf   _snprintf */
++#define strdup     _strdup
++/* #define vsnprintf  _vsnprintf */
++#define write      _write
++#endif
+ 
+ /*
+  * Version number...
+  */
+ 
+-#define MXML_VERSION	""
++#define MXML_VERSION "Mini-XML v2.7"
+ 
+ 
+ /*
+  * Inline function support...
+  */
+ 
+-#define inline
++#define inline _HB_INLINE_
+ 
+ 
+ /*
+  * Long long support...
+  */
+ 
+-#undef HAVE_LONG_LONG
++#ifndef __BORLANDC__
++#define HAVE_LONG_LONG 1
++#endif
+ 
+ 
+ /*
+  * Do we have the snprintf() and vsnprintf() functions?
+  */
+ 
+-#undef HAVE_SNPRINTF
+-#undef HAVE_VSNPRINTF
++/* #define HAVE_SNPRINTF 1 */
++/* #define HAVE_VSNPRINTF 1 */
+ 
+ 
+ /*
+  * Do we have the strXXX() functions?
+  */
+ 
+-#undef HAVE_STRDUP
++/* #define HAVE_STRDUP 1 */
+ 
+ 
+ /*
+  * Do we have threading support?
+  */
+ 
+-#undef HAVE_PTHREAD_H
++/* #undef HAVE_PTHREAD_H */
+ 
+ 
+ /*
+  * Define prototypes for string functions as needed...
+  */
+ 
++#  ifdef __cplusplus
++extern "C" {
++#  endif /* __cplusplus */
++
+ #  ifndef HAVE_STRDUP
+ extern char	*_mxml_strdup(const char *);
++#    if defined( strdup )
++#      undef strdup
++#    endif
+ #    define strdup _mxml_strdup
+ #  endif /* !HAVE_STRDUP */
+ 
+@@ -82,14 +111,20 @@
+ 
+ #  ifndef HAVE_SNPRINTF
+ extern int	_mxml_snprintf(char *, size_t, const char *, ...);
++#    if defined( snprintf )
++#      undef snprintf
++#    endif
+ #    define snprintf _mxml_snprintf
+ #  endif /* !HAVE_SNPRINTF */
+ 
+ #  ifndef HAVE_VSNPRINTF
+ extern int	_mxml_vsnprintf(char *, size_t, const char *, va_list);
++#    if defined( vsnprintf )
++#      undef vsnprintf
++#    endif
+ #    define vsnprintf _mxml_vsnprintf
+ #  endif /* !HAVE_VSNPRINTF */
+ 
+-/*
+- * End of "$Id: config.h.in 408 2010-09-19 05:26:46Z mike $".
+- */
++#  ifdef __cplusplus
++}
++#  endif /* __cplusplus */
+diff -urN minixml.orig/mxml_fil.c minixml/mxml_fil.c
+--- minixml.orig/mxml_fil.c	2012-11-06 03:46:33.092020512 +0100
++++ minixml/mxml_fil.c	2012-11-06 03:46:33.092020512 +0100
+@@ -329,8 +329,14 @@
+     return (-1);
+ 
+   if (col > 0)
++  {
++#ifdef _EOL_CRLF
++    if (mxml_fd_putc('\r', &buf) < 0)
++      return (-1);
++#endif
+     if (mxml_fd_putc('\n', &buf) < 0)
+       return (-1);
++  }
+ 
+  /*
+   * Flush and return...
+@@ -368,8 +374,14 @@
+     return (-1);
+ 
+   if (col > 0)
++  {
++#ifdef _EOL_CRLF
++    if (putc('\r', fp) < 0)
++      return (-1);
++#endif
+     if (putc('\n', fp) < 0)
+       return (-1);
++  }
+ 
+  /*
+   * Return 0 (success)...
+@@ -416,7 +428,12 @@
+     return (-1);
+ 
+   if (col > 0)
++  {
++#ifdef _EOL_CRLF
++    mxml_string_putc('\r', ptr);
++#endif
+     mxml_string_putc('\n', ptr);
++  }
+ 
+  /*
+   * Nul-terminate the buffer...
+@@ -1056,7 +1073,7 @@
+   while ((bytes = read(buf->fd, buf->buffer, sizeof(buf->buffer))) < 0)
+ #ifdef EINTR
+     if (errno != EAGAIN && errno != EINTR)
+-#else
++#elif defined( EAGAIN )
+     if (errno != EAGAIN)
+ #endif /* EINTR */
+       return (-1);
+@@ -2786,6 +2803,10 @@
+ 
+ 	  if (global->wrap > 0 && (col + width) > global->wrap)
+ 	  {
++#ifdef _EOL_CRLF
++	    if ((*putc_cb)('\r', p) < 0)
++	      return (-1);
++#endif
+ 	    if ((*putc_cb)('\n', p) < 0)
+ 	      return (-1);
+ 
+@@ -2896,6 +2917,10 @@
+ 	{
+ 	  if (global->wrap > 0 && col > global->wrap)
+ 	  {
++#ifdef _EOL_CRLF
++	    if ((*putc_cb)('\r', p) < 0)
++	      return (-1);
++#endif
+ 	    if ((*putc_cb)('\n', p) < 0)
+ 	      return (-1);
+ 
+@@ -2926,6 +2951,10 @@
+ 	{
+ 	  if (global->wrap > 0 && col > global->wrap)
+ 	  {
++#ifdef _EOL_CRLF
++	    if ((*putc_cb)('\r', p) < 0)
++	      return (-1);
++#endif
+ 	    if ((*putc_cb)('\n', p) < 0)
+ 	      return (-1);
+ 
+@@ -2949,6 +2978,10 @@
+ 	{
+ 	  if (global->wrap > 0 && col > global->wrap)
+ 	  {
++#ifdef _EOL_CRLF
++	    if ((*putc_cb)('\r', p) < 0)
++	      return (-1);
++#endif
+ 	    if ((*putc_cb)('\n', p) < 0)
+ 	      return (-1);
+ 
+diff -urN minixml.orig/mxml.h minixml/mxml.h
+--- minixml.orig/mxml.h	2012-11-06 03:46:33.100020512 +0100
++++ minixml/mxml.h	2012-11-06 03:46:33.100020512 +0100
+@@ -29,8 +29,16 @@
+ #  include <stdlib.h>
+ #  include <string.h>
+ #  include <ctype.h>
+-#  include <errno.h>
+-
++#  if defined( UNDER_CE ) || defined( __CEGCC__ ) || defined( __MINGW32CE__ ) || \
++      defined( _WINCE )
++#     include <io.h>
++#     if !defined( UNDER_CE )
++#        define UNDER_CE
++#     endif
++#     define strerror(e)      ""
++#  else
++#     include <errno.h>
++#  endif
+ 
+ /*
+  * Constants...
+diff -urN minixml.orig/mxml_nod.c minixml/mxml_nod.c
+--- minixml.orig/mxml_nod.c	2012-11-06 03:46:33.096020512 +0100
++++ minixml/mxml_nod.c	2012-11-06 03:46:33.096020512 +0100
+@@ -221,7 +221,11 @@
+   */
+ 
+   while (node->child)
+-    mxmlDelete(node->child);
++  {
++    mxml_node_t *child = node->child;
++    mxmlRemove(child);
++    mxmlRelease(child);
++  }
+ 
+  /*
+   * Now delete any node data...
+diff -urN minixml.orig/mxml_pri.c minixml/mxml_pri.c
+--- minixml.orig/mxml_pri.c	2012-11-06 03:46:33.096020512 +0100
++++ minixml/mxml_pri.c	2012-11-06 03:46:33.096020512 +0100
+@@ -1,5 +1,5 @@
+ /*
+- * "$Id: mxml-private.c 422 2010-11-07 22:55:11Z mike $"
++ * "$Id: mxml_pri.c 422 2010-11-07 22:55:11Z mike $"
+  *
+  * Private functions for Mini-XML, a small XML-like file parsing library.
+  *
+@@ -327,5 +327,5 @@
+ 
+ 
+ /*
+- * End of "$Id: mxml-private.c 422 2010-11-07 22:55:11Z mike $".
++ * End of "$Id: mxml_pri.c 422 2010-11-07 22:55:11Z mike $".
+  */
+diff -urN minixml.orig/mxml_pri.h minixml/mxml_pri.h
+--- minixml.orig/mxml_pri.h	2012-11-06 03:46:33.096020512 +0100
++++ minixml/mxml_pri.h	2012-11-06 03:46:33.096020512 +0100
+@@ -1,5 +1,5 @@
+ /*
+- * "$Id: mxml-private.h 408 2010-09-19 05:26:46Z mike $"
++ * "$Id: mxml_pri.h 408 2010-09-19 05:26:46Z mike $"
+  *
+  * Private definitions for Mini-XML, a small XML-like file parsing library.
+  *
+@@ -46,5 +46,5 @@
+ 
+ 
+ /*
+- * End of "$Id: mxml-private.h 408 2010-09-19 05:26:46Z mike $".
++ * End of "$Id: mxml_pri.h 408 2010-09-19 05:26:46Z mike $".
+  */
+diff -urN minixml.orig/mxml_set.c minixml/mxml_set.c
+--- minixml.orig/mxml_set.c	2012-11-06 03:46:33.100020512 +0100
++++ minixml/mxml_set.c	2012-11-06 03:46:33.100020512 +0100
+@@ -1,5 +1,5 @@
+ /*
+- * "$Id: mxml-set.c 441 2011-12-09 23:49:00Z mike $"
++ * "$Id: mxml-set.c 426 2011-01-01 23:42:17Z mike $"
+  *
+  * Node set functions for Mini-XML, a small XML-like file parsing library.
+  *
+@@ -37,7 +37,7 @@
+ /*
+  * 'mxmlSetCDATA()' - Set the element name of a CDATA node.
+  *
+- * The node is not changed if it (or its first child) is not a CDATA element node.
++ * The node is not changed if it is not a CDATA element node.
+  *
+  * @since Mini-XML 2.3@
+  */
+@@ -50,12 +50,6 @@
+   * Range check input...
+   */
+ 
+-  if (node && node->type == MXML_ELEMENT &&
+-      strncmp(node->value.element.name, "![CDATA[", 8) &&
+-      node->child && node->child->type == MXML_ELEMENT &&
+-      !strncmp(node->child->value.element.name, "![CDATA[", 8))
+-    node = node->child;
+-
+   if (!node || node->type != MXML_ELEMENT || !data ||
+       strncmp(node->value.element.name, "![CDATA[", 8))
+     return (-1);
+@@ -76,7 +70,7 @@
+ /*
+  * 'mxmlSetCustom()' - Set the data and destructor of a custom data node.
+  *
+- * The node is not changed if it (or its first child) is not a custom node.
++ * The node is not changed if it is not a custom node.
+  *
+  * @since Mini-XML 2.1@
+  */
+@@ -91,10 +85,6 @@
+   * Range check input...
+   */
+ 
+-  if (node && node->type == MXML_ELEMENT &&
+-      node->child && node->child->type == MXML_CUSTOM)
+-    node = node->child;
+-
+   if (!node || node->type != MXML_CUSTOM)
+     return (-1);
+ 
+@@ -145,7 +135,7 @@
+ /*
+  * 'mxmlSetInteger()' - Set the value of an integer node.
+  *
+- * The node is not changed if it (or its first child) is not an integer node.
++ * The node is not changed if it is not an integer node.
+  */
+ 
+ int					/* O - 0 on success, -1 on failure */
+@@ -156,10 +146,6 @@
+   * Range check input...
+   */
+ 
+-  if (node && node->type == MXML_ELEMENT &&
+-      node->child && node->child->type == MXML_INTEGER)
+-    node = node->child;
+-
+   if (!node || node->type != MXML_INTEGER)
+     return (-1);
+ 
+@@ -176,7 +162,7 @@
+ /*
+  * 'mxmlSetOpaque()' - Set the value of an opaque node.
+  *
+- * The node is not changed if it (or its first child) is not an opaque node.
++ * The node is not changed if it is not an opaque node.
+  */
+ 
+ int					/* O - 0 on success, -1 on failure */
+@@ -187,10 +173,6 @@
+   * Range check input...
+   */
+ 
+-  if (node && node->type == MXML_ELEMENT &&
+-      node->child && node->child->type == MXML_OPAQUE)
+-    node = node->child;
+-
+   if (!node || node->type != MXML_OPAQUE || !opaque)
+     return (-1);
+ 
+@@ -210,7 +192,7 @@
+ /*
+  * 'mxmlSetReal()' - Set the value of a real number node.
+  *
+- * The node is not changed if it (or its first child) is not a real number node.
++ * The node is not changed if it is not a real number node.
+  */
+ 
+ int					/* O - 0 on success, -1 on failure */
+@@ -221,10 +203,6 @@
+   * Range check input...
+   */
+ 
+-  if (node && node->type == MXML_ELEMENT &&
+-      node->child && node->child->type == MXML_REAL)
+-    node = node->child;
+-
+   if (!node || node->type != MXML_REAL)
+     return (-1);
+ 
+@@ -241,7 +219,7 @@
+ /*
+  * 'mxmlSetText()' - Set the value of a text node.
+  *
+- * The node is not changed if it (or its first child) is not a text node.
++ * The node is not changed if it is not a text node.
+  */
+ 
+ int					/* O - 0 on success, -1 on failure */
+@@ -253,10 +231,6 @@
+   * Range check input...
+   */
+ 
+-  if (node && node->type == MXML_ELEMENT &&
+-      node->child && node->child->type == MXML_TEXT)
+-    node = node->child;
+-
+   if (!node || node->type != MXML_TEXT || !string)
+     return (-1);
+ 
+@@ -277,7 +251,7 @@
+ /*
+  * 'mxmlSetTextf()' - Set the value of a text node to a formatted string.
+  *
+- * The node is not changed if it (or its first child) is not a text node.
++ * The node is not changed if it is not a text node.
+  */
+ 
+ int					/* O - 0 on success, -1 on failure */
+@@ -293,10 +267,6 @@
+   * Range check input...
+   */
+ 
+-  if (node && node->type == MXML_ELEMENT &&
+-      node->child && node->child->type == MXML_TEXT)
+-    node = node->child;
+-
+   if (!node || node->type != MXML_TEXT || !format)
+     return (-1);
+ 
+@@ -345,5 +315,5 @@
+ 
+ 
+ /*
+- * End of "$Id: mxml-set.c 441 2011-12-09 23:49:00Z mike $".
++ * End of "$Id: mxml-set.c 426 2011-01-01 23:42:17Z mike $".
+  */
+diff -urN minixml.orig/mxml_str.c minixml/mxml_str.c
+--- minixml.orig/mxml_str.c	2012-11-06 03:46:33.100020512 +0100
++++ minixml/mxml_str.c	2012-11-06 03:46:33.100020512 +0100
+@@ -28,6 +28,9 @@
+ 
+ #include "config.h"
+ 
++#ifndef HAVE_VSNPRINTF
++#  include <ctype.h>
++#endif
+ 
+ /*
+  * The va_copy macro is part of C99, but many compilers don't implement it.
