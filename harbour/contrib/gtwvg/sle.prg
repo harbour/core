@@ -93,7 +93,7 @@ CREATE CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   METHOD   CLEAR()
+   METHOD   clear()
    METHOD   copyMarked()
    METHOD   cutMarked()
    METHOD   delMarked()                           VIRTUAL

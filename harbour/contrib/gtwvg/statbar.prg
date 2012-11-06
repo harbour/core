@@ -100,7 +100,7 @@ CREATE CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
    METHOD   addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
    METHOD   delItem( nItemORcKey )
    METHOD   getItem( nItemORcKey )
-   METHOD   CLEAR()
+   METHOD   clear()
    METHOD   panelClick( xParam )                  SETGET
    METHOD   panelDblClick( xParam )               SETGET
 

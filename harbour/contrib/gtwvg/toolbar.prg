@@ -112,7 +112,7 @@ CREATE CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
    METHOD   delItem()
 
    METHOD   getItem()
-   METHOD   CLEAR()
+   METHOD   clear()
    METHOD   customize()
    METHOD   loadImageSet()
    METHOD   saveToolbar()

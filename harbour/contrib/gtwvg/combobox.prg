@@ -96,7 +96,7 @@ CREATE CLASS WvgComboBox  INHERIT  WvgWindow, WvgDataRef
    METHOD   sleSize()
 
    METHOD   addItem( cItem )
-   METHOD   CLEAR()                               INLINE ::sendCBMessage( CB_RESETCONTENT )
+   METHOD   clear()                               INLINE ::sendCBMessage( CB_RESETCONTENT )
    METHOD   delItem( nIndex )                     INLINE ::sendCBMessage( CB_DELETESTRING, nIndex - 1 )
    METHOD   getItem( nIndex )                     INLINE ::sendCBMessage( CB_GETLBTEXT, nIndex - 1 )
    METHOD   insItem( nIndex, cItem )              INLINE ::sendCBMessage( CB_INSERTSTRING, nIndex - 1, cItem )

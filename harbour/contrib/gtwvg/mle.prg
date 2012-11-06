@@ -99,11 +99,11 @@ CREATE CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   METHOD   CLEAR()
+   METHOD   clear()
    METHOD   copyMarked()
    METHOD   cutMarked()
    METHOD   deleteMarked()                        VIRTUAL
-   METHOD   DELETE()                              VIRTUAL
+   METHOD   delete()                              VIRTUAL
    METHOD   pasteMarked()                         VIRTUAL
    METHOD   queryFirstChar()                      VIRTUAL
    METHOD   queryMarked()                         VIRTUAL
