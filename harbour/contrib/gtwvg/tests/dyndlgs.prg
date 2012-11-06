@@ -145,71 +145,71 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
    SWITCH nMsg
 
    CASE WM_TIMER
-      WVG_SetDlgItemText( hDlg, ID_EDT_TIME, Time() )
+      Wvg_SetDlgItemText( hDlg, ID_EDT_TIME, Time() )
       EXIT
 
    CASE WM_COMMAND
       DO CASE
 
       CASE wParam == ID_CHK_SATIS
-         lClicked := ( WVG_IsDlgButtonChecked( hDlg, ID_CHK_SATIS ) == 1 )
-         WVG_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
+         lClicked := ( Wvg_IsDlgButtonChecked( hDlg, ID_CHK_SATIS ) == 1 )
+         Wvg_MessageBox( hDlg, iif( lClicked, "Satisfied", "UnSatisfied" ), "CheckBoxStatus" )
 
       CASE wParam == ID_RDO_XH
-         WVG_MessageBox( hDlg, "Harbour", "Compiler" )
+         Wvg_MessageBox( hDlg, "Harbour", "Compiler" )
 
       CASE wParam == ID_RDO_CLIP
-         WVG_MessageBox( hDlg, "Clipper", "Compiler" )
+         Wvg_MessageBox( hDlg, "Clipper", "Compiler" )
 
       CASE wParam == ID_RDO_XBASE
-         WVG_MessageBox( hDlg, "Xbase++", "Compiler" )
+         Wvg_MessageBox( hDlg, "Xbase++", "Compiler" )
 
       CASE wParam == ID_MNU_FILE
-         WVG_MessageBox( hDlg, "Execute Menu Action!", "File" )
+         Wvg_MessageBox( hDlg, "Execute Menu Action!", "File" )
 
       CASE wParam == ID_MNU_CONTROL
-         WVG_MessageBox( hDlg, "Controls are from Windows!", "Controls" )
+         Wvg_MessageBox( hDlg, "Controls are from Windows!", "Controls" )
 
-      CASE WVG_LOWORD( wParam ) == ID_LST_LIST
-         IF WVG_HIWORD( wParam ) == LBN_SELCHANGE
-            nIndex  := WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETCURSEL, 0, 0 )
+      CASE Wvg_LOWORD( wParam ) == ID_LST_LIST
+         IF Wvg_HIWORD( wParam ) == LBN_SELCHANGE
+            nIndex  := Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETCURSEL, 0, 0 )
             cPrompt := Space( 20 )
-            WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETTEXT, nIndex, @cPrompt )
-            WVG_MessageBox( hDlg, cPrompt, "ListBox" )
+            Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_LST_LIST ), LB_GETTEXT, nIndex, @cPrompt )
+            Wvg_MessageBox( hDlg, cPrompt, "ListBox" )
          ENDIF
 
-      CASE WVG_LOWORD( wParam ) == ID_CMB_COMBO
-         IF WVG_HIWORD( wParam ) == CBN_SELCHANGE
-            nIndex  := WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETCURSEL, 0, 0 )
+      CASE Wvg_LOWORD( wParam ) == ID_CMB_COMBO
+         IF Wvg_HIWORD( wParam ) == CBN_SELCHANGE
+            nIndex  := Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETCURSEL, 0, 0 )
             cPrompt := Space( 20 )
-            WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETLBTEXT, nIndex, @cPrompt )
-            WVG_MessageBox( hDlg, cPrompt, "Combo Box" )
+            Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_CMB_COMBO ), CB_GETLBTEXT, nIndex, @cPrompt )
+            Wvg_MessageBox( hDlg, cPrompt, "Combo Box" )
          ENDIF
 
       ENDCASE
       EXIT
 
    CASE WM_CTLCOLOREDIT
-      IF WVG_GetDlgItem( hDlg, ID_MLE ) == lParam
-         WVG_SetTextColor( wParam, RGB( 0, 0, 255 ) )
-         WVG_SetBkColor( wParam, RGB( 255, 255, 200 ) )
+      IF Wvg_GetDlgItem( hDlg, ID_MLE ) == lParam
+         Wvg_SetTextColor( wParam, RGB( 0, 0, 255 ) )
+         Wvg_SetBkColor( wParam, RGB( 255, 255, 200 ) )
          RETURN 1
-      ELSEIF WVG_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam
-         WVG_SetTextColor( wParam, RGB( 255, 255, 255 ) )
-         WVG_SetBkColor( wParam, RGB( 10, 200, 45 ) )
+      ELSEIF Wvg_GetDlgItem( hDlg, ID_EDT_TEXT ) == lParam
+         Wvg_SetTextColor( wParam, RGB( 255, 255, 255 ) )
+         Wvg_SetBkColor( wParam, RGB( 10, 200, 45 ) )
          RETURN 1
       ENDIF
       EXIT
 
    CASE WM_CTLCOLORSTATIC
-      IF WVG_GetDlgItem( hDlg, ID_STA_TEXT ) == lParam
-         WVG_SetTextColor( wParam, RGB( 255, 255, 255 ) )
+      IF Wvg_GetDlgItem( hDlg, ID_STA_TEXT ) == lParam
+         Wvg_SetTextColor( wParam, RGB( 255, 255, 255 ) )
          RETURN 1
       ENDIF
       EXIT
 
    CASE WM_INITDIALOG
-      WVG_SetTimer( hDlg, 5001, 1000 ) // 1 sec
+      Wvg_SetTimer( hDlg, 5001, 1000 ) // 1 sec
 
       IF Empty( aHFonts := SetFonts() )
          IF ( hFont := Wvt_CreateFont( "Times New Roman", 18 ) ) != 0
@@ -218,14 +218,14 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       ENDIF
 
       IF Len( aHFonts ) > 0
-         WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_MLE ), WM_SETFONT, ahFonts[ 1 ], 0 )
+         Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_MLE ), WM_SETFONT, ahFonts[ 1 ], 0 )
       ENDIF
 
       IF Empty( SetIcons() )
-         SetIcons( WVG_LoadIcon( "vr_1.ico" ) )
+         SetIcons( Wvg_LoadIcon( "vr_1.ico" ) )
       ENDIF
       IF ! Empty( SetIcons() )
-         WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, SetIcons()[ 1 ] )
+         Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_ICO_VOUCH ), STM_SETIMAGE, IMAGE_ICON, SetIcons()[ 1 ] )
       ENDIF
 
       /*
@@ -236,10 +236,10 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
          WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
       ENDIF
       */
-      WVG_SetDlgItemText( hDlg, ID_MLE      , GetEditText() )
-      WVG_CheckDlgButton( hDlg, ID_CHK_SATIS, .T.           )
+      Wvg_SetDlgItemText( hDlg, ID_MLE, GetEditText() )
+      Wvg_CheckDlgButton( hDlg, ID_CHK_SATIS, .T.           )
 
-      WVG_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
+      Wvg_CheckRadioButton( hDlg, ID_RDO_XH, ID_RDO_XBASE, ID_RDO_XH )
 
       Wvt_LBAddString( hDlg, ID_LST_LIST, "Harbour"   )
       Wvt_LBAddString( hDlg, ID_LST_LIST, "Gtwvt"     )
@@ -258,7 +258,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
       Wvt_CBSetCurSel( hDlg, ID_CMB_COMBO, 1 )
 
-      WVG_InvalidateRect( hDlg )
+      Wvg_InvalidateRect( hDlg )
 
       EXIT
 
@@ -267,7 +267,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
       // Each box will retrieve its own text.
       //
       /* cText := */
-      WVG_GetDlgItemText( hDlg, ID_MLE )
+      Wvg_GetDlgItemText( hDlg, ID_MLE )
       EXIT
    ENDSWITCH
 
@@ -359,14 +359,14 @@ FUNCTION DrawSlide( hDlg, nSlide )
 
    LOCAL hDC, aRect
 
-   hDC   := WVG_GetDC( hDlg )
-   aRect := WVG_GetClientRect( hDlg )
+   hDC   := Wvg_GetDC( hDlg )
+   aRect := Wvg_GetClientRect( hDlg )
 
-   Win_Rectangle( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - 10, aRect[ 4 ] - 10 )
-   WVG_DrawImage( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - aRect[ 1 ] - 20, ;
+   win_Rectangle( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - 10, aRect[ 4 ] - 10 )
+   Wvg_DrawImage( hDC, aRect[ 1 ] + 10, aRect[ 2 ] + 10, aRect[ 3 ] - aRect[ 1 ] - 20, ;
       aRect[ 4 ] - aRect[ 2 ] - 20, t_aSlides[ nSlide ] )
 
-   WVG_ReleaseDC( hDlg, hDC )
+   Wvg_ReleaseDC( hDlg, hDC )
 
    RETURN NIL
 

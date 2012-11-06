@@ -46,7 +46,7 @@ FUNCTION WvtMyBrowse()
          oCrt:resizeMode := HB_GTI_RESIZEMODE_ROWS, ;
          oCrt:icon := GetResource( "dia_excl.ico" ), ;
          oCrt:create(), ;
-         Wvt_SetGui( .T. ), ;
+         Wvt_SetGUI( .T. ), ;
          ExecBrowser( oCrt ), ;
          oCrt:destroy();
          } )
@@ -315,7 +315,7 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
    oTree:create( , , { -24, -1 }, { {|| -( MaxRow() - 1 - 24 ) }, -10 } )
    oTree:setColorFG( "W+" )
    oTree:setColorBG( "R*" )
-   oTree:itemSelected := {| oItem | WVG_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
+   oTree:itemSelected := {| oItem | Wvg_MessageBox( , iif( oItem != NIL, oItem:caption, "Some Problem" ) ) }
 
    oItem1 := oTree:rootItem:addItem( "First level A" )
 
@@ -1021,7 +1021,7 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    SELECT( cUseAlias )
    info_ := dbStruct()
 
-   oBrowse := TBrowseWVG():New( aTLBR[ 1 ], aTLBR[ 2 ], aTLBR[ 3 ], aTLBR[ 4 ] )
+   oBrowse := TBrowseWvg():New( aTLBR[ 1 ], aTLBR[ 2 ], aTLBR[ 3 ], aTLBR[ 4 ] )
 
    oBrowse:ColSep        := "  "
    oBrowse:HeadSep       := "__"

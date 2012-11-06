@@ -148,7 +148,7 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    ::WvgWindow:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   __defaultNIL( @cCLSID  , ::CLSID )
+   __defaultNIL( @cCLSID, ::CLSID )
    __defaultNIL( @cLicense, ::license )
 
    ::CLSID      := cCLSID
@@ -161,27 +161,27 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    ::hWnd := NIL
    ::nID  := ::oParent:GetControlId()
-   ::oOLE := Win_OleAuto()
+   ::oOLE := win_oleAuto()
 
-   Win_AxInit()
+   win_axInit()
 
-   hWnd := WAPI_CreateWindowEX( ::exStyle, "AtlAxWin", ::CLSID, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
-      ::aSize[ 1 ], ::aSize[ 2 ], Win_N2P( ::hContainer ), 0 )
+   hWnd := wapi_CreateWindowEx( ::exStyle, "AtlAxWin", ::CLSID, ::style, ::aPos[ 1 ], ::aPos[ 2 ], ;
+      ::aSize[ 1 ], ::aSize[ 2 ], win_N2P( ::hContainer ), 0 )
    IF Empty( hWnd )
       RETURN NIL
    ENDIF
-   ::hWnd := Win_P2N( hWnd )
+   ::hWnd := win_P2N( hWnd )
    ::pWnd := hWnd
 
-   hObj := __AxGetControl( ::pWnd )
+   hObj := __axGetControl( ::pWnd )
    IF Empty( hObj )
       RETURN NIL
    ENDIF
    ::oOLE:__hObj := hObj
-   __AxDoVerb( ::pWnd, -4 )
+   __axDoVerb( ::pWnd, -4 )
 
    IF ! Empty( ::hEvents )
-      ::oOle:__hSink := __AxRegisterHandler( ::oOle:__hObj, {| nEvent, ... | ::execEvent( nEvent, ... ) } )
+      ::oOle:__hSink := __axRegisterHandler( ::oOle:__hObj, {| nEvent, ... | ::execEvent( nEvent, ... ) } )
    ENDIF
 
 #if 0
@@ -262,8 +262,8 @@ METHOD WvgActiveXControl:OnError()
 METHOD WvgActiveXControl:Destroy()
 
    IF ! Empty( ::oOLE:__hObj )
-      IF WAPI_IsWindow( ::pWnd )
-         WAPI_DestroyWindow( ::pWnd )
+      IF wapi_IsWindow( ::pWnd )
+         wapi_DestroyWindow( ::pWnd )
       ENDIF
       ::oOle := NIL
       ::hWnd := NIL

@@ -164,7 +164,7 @@ FUNCTION WvtSetPaint( a_ )
 
 //
 
-FUNCTION wvg_SetPaint( cID, nAction, xData, aAttr )
+FUNCTION Wvg_SetPaint( cID, nAction, xData, aAttr )
 
    LOCAL n, n1, oldData
 
@@ -188,7 +188,7 @@ FUNCTION wvg_SetPaint( cID, nAction, xData, aAttr )
 
 //
 
-FUNCTION wvg_GetPaint( cID )
+FUNCTION Wvg_GetPaint( cID )
 
    LOCAL n
 
@@ -200,7 +200,7 @@ FUNCTION wvg_GetPaint( cID )
 
 //
 
-FUNCTION wvg_DelPaint( cID, nAction )
+FUNCTION Wvg_DelPaint( cID, nAction )
 
    LOCAL xData, n1, n
 
@@ -215,7 +215,7 @@ FUNCTION wvg_DelPaint( cID, nAction )
 
 //
 
-FUNCTION wvg_PurgePaint( cID, lDummy )
+FUNCTION Wvg_PurgePaint( cID, lDummy )
 
    LOCAL n, aPaint
 
@@ -234,7 +234,7 @@ FUNCTION wvg_PurgePaint( cID, lDummy )
 
 //
 
-FUNCTION wvg_InsertPaint( cID, aPaint, lSet )
+FUNCTION Wvg_InsertPaint( cID, aPaint, lSet )
 
    LOCAL n
 
@@ -263,7 +263,7 @@ FUNCTION wvg_InsertPaint( cID, aPaint, lSet )
 //
 //
 //
-   /* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
+/* nMode : 0 == Rows/cols - DEFAULT    1 == DlagUnits as from any standard dialog definition */
 
 FUNCTION Wvt_SetDlgCoMode( nMode )
 
@@ -299,9 +299,9 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       __defaultNIL( @aOffSet[ 3 ], 0 )
       __defaultNIL( @aOffSet[ 4 ], 0 )
 
-      nBaseUnits  := WVG_GetDialogBaseUnits()
-      nBaseUnitsX := WVG_LOWORD( nBaseUnits )
-      nBaseUnitsY := WVG_HIWORD( nBaseUnits )
+      nBaseUnits  := Wvg_GetDialogBaseUnits()
+      nBaseUnitsX := Wvg_LOWORD( nBaseUnits )
+      nBaseUnitsY := Wvg_HIWORD( nBaseUnits )
 
       nW := aFont[ 7 ] * nCols + aOffSet[ 4 ]
       nH := aFont[ 6 ] * nRows + aOffSet[ 3 ]
@@ -352,9 +352,9 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
 
    IF hb_bitAnd( nStyle, DS_SETFONT ) == DS_SETFONT
       AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nPointSize ), nPointSize, 8               ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nWeight    ), nWeight   , 400             ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISLOGICAL( lItalic    ), lItalic   , .F.             ) )
-      AAdd( aDlg[ 1 ], iif( HB_ISSTRING(  cFaceName  ), cFaceName , "MS Sans Serif" ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISNUMERIC( nWeight    ), nWeight, 400             ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISLOGICAL( lItalic    ), lItalic, .F.             ) )
+      AAdd( aDlg[ 1 ], iif( HB_ISSTRING(  cFaceName  ), cFaceName, "MS Sans Serif" ) )
    ENDIF
 
    RETURN aDlg
@@ -382,9 +382,9 @@ FUNCTION Wvt_AddDlgItem( aDlg, nTop, nLeft, nRows, nCols, aOffSet, ;
       __defaultNIL( @aOffSet[ 3 ], 0 )
       __defaultNIL( @aOffSet[ 4 ], 0 )
 
-      nBaseUnits  := WVG_GetDialogBaseUnits()
-      nBaseUnitsX := WVG_LOWORD( nBaseUnits )
-      nBaseUnitsY := WVG_HIWORD( nBaseUnits )
+      nBaseUnits  := Wvg_GetDialogBaseUnits()
+      nBaseUnitsX := Wvg_LOWORD( nBaseUnits )
+      nBaseUnitsY := Wvg_HIWORD( nBaseUnits )
 
       aXY := Wvt_GetXYFromRowCol( nTop, nLeft )
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
@@ -454,12 +454,12 @@ FUNCTION Wvt_CreateDialog( acnDlg, lOnTop, cbDlgProc, ncIcon, nTimerTicks, hMenu
       ENDIF
 
       IF HB_ISNUMERIC( nTimerTicks )
-         WVG_SetTimer( hDlg, 1001, nTimerTicks )
+         Wvg_SetTimer( hDlg, 1001, nTimerTicks )
 
       ENDIF
 
       IF hMenu != nil
-         WVG_SetMenu( hDlg, hMenu )
+         Wvg_SetMenu( hDlg, hMenu )
 
       ENDIF
 
@@ -511,7 +511,7 @@ cDefName: DEFAULT file name
 Returns:  If OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
 */
 
-FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
+FUNCTION Wvt_GetOpenFilename( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
 
    LOCAL cRet, aTmp, xRet, i
 
@@ -524,9 +524,9 @@ FUNCTION WVT_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
-   cRet := WIN_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
+   cRet := win_GetOpenFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
 
-   IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
+   IF Wvg_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
       xRet := {}
       IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]
@@ -556,7 +556,7 @@ nIndex:   Index position of types
 Returns:  FileName.
 */
 
-FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
+FUNCTION Wvt_GetSaveFilename( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
 
    LOCAL cRet, aTmp, xRet, i, cPath
 
@@ -568,9 +568,9 @@ FUNCTION WVT_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
-   cRet := WIN_GetSaveFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
+   cRet := win_GetSaveFileName( @nFlags, cTitle, cInitDir, cDefExt, acFilter, @nFilterIndex, /*nBufferSize*/, cDefName )
 
-   IF WVG_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
+   IF Wvg_And( nFlags, OFN_ALLOWMULTISELECT ) > 0
       xRet := {}
       IF ! Empty( aTmp := hb_ATokens( cRet, Chr( 0 ) ) )
          cPath := aTmp[ 1 ]
@@ -631,16 +631,16 @@ FUNCTION Wvt_SetIcon( ncIconRes, cIconName )
 FUNCTION Wvt_SetFont( cFontName, nSize, nWidth, nWeight, nQuality )
 
    __defaultNIL( @cFontName, hb_gtInfo( HB_GTI_FONTNAME    ) )
-   __defaultNIL( @nWidth   , hb_gtInfo( HB_GTI_FONTWIDTH   ) )
-   __defaultNIL( @nWeight  , hb_gtInfo( HB_GTI_FONTWEIGHT  ) )
-   __defaultNIL( @nQuality , hb_gtInfo( HB_GTI_FONTQUALITY ) )
-   __defaultNIL( @nSize    , hb_gtInfo( HB_GTI_FONTSIZE    ) )
+   __defaultNIL( @nWidth, hb_gtInfo( HB_GTI_FONTWIDTH   ) )
+   __defaultNIL( @nWeight, hb_gtInfo( HB_GTI_FONTWEIGHT  ) )
+   __defaultNIL( @nQuality, hb_gtInfo( HB_GTI_FONTQUALITY ) )
+   __defaultNIL( @nSize, hb_gtInfo( HB_GTI_FONTSIZE    ) )
 
    RETURN hb_gtInfo( HB_GTI_SETFONT, { cFontName, nSize, nWidth, nWeight, nQuality } )
 
 //
 
-FUNCTION Wvt_SetCodePage( nCodePage )
+FUNCTION Wvt_SetCodepage( nCodePage )
 
    RETURN hb_gtInfo( HB_GTI_CODEPAGE, nCodePage )
 
@@ -680,7 +680,7 @@ FUNCTION Wvt_GetRGBColor( nIndex )
 #define YELLOW         RGB( 0xFF,0xFF,0x00 )
 #define WHITE          RGB( 0xFF,0xFF,0xFF )
 
-FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
+FUNCTION Wvt_GetRGBColorBYString( cColor, nForeBack )
 
    LOCAL s, n, lEnh
    LOCAL nIndex := 0
@@ -743,7 +743,7 @@ FUNCTION Wvt_GetWindowHandle()
 
 FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
-   __defaultNIL( @lCenter , .T. )
+   __defaultNIL( @lCenter, .T. )
    __defaultNIL( @lRePaint, .F. )
 
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
@@ -752,7 +752,7 @@ FUNCTION Wvt_CenterWindow( lCenter, lRePaint )
 
 FUNCTION Wvt_WindowCentre( lCenter, lRePaint )
 
-   __defaultNIL( @lCenter , .T. )
+   __defaultNIL( @lCenter, .T. )
    __defaultNIL( @lRePaint, .F. )
 
    RETURN hb_gtInfo( HB_GTI_SPEC, HB_GTS_CENTERWINDOW, { lCenter, lRePaint } )
@@ -767,7 +767,7 @@ FUNCTION Wvt_ProcessMessages()
 
 //
 
-FUNCTION Wvt_KeyBoard( nKey )
+FUNCTION Wvt_Keyboard( nKey )
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_KEYBOARD, nKey )
 
@@ -794,7 +794,7 @@ FUNCTION Wvt_PasteFromClipboard()
    cText := hb_gtInfo( HB_GTI_CLIPBOARDDATA )
    IF ( nLen := Len( cText ) ) > 0
       FOR i := 1 TO nLen
-         Wvt_KeyBoard( Asc( SubStr( cText, i, 1 ) ) )
+         Wvt_Keyboard( Asc( SubStr( cText, i, 1 ) ) )
       NEXT
    ENDIF
 

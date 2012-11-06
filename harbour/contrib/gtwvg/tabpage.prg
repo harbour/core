@@ -142,7 +142,7 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
 
    __defaultNIL( @::caption, " " )
 
-   WAPI_TabCtrl_InsertItem( ::pWnd, 0, ::caption )
+   wapi_TabCtrl_InsertItem( ::pWnd, 0, ::caption )
 
    IF ::visible
       ::show()
@@ -186,7 +186,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
       ENDCASE
 
    CASE nMessage == HB_GTE_CTLCOLOR
-      RETURN WVG_GetStockObject( NULL_BRUSH )
+      RETURN Wvg_GetStockObject( NULL_BRUSH )
 
    ENDCASE
 

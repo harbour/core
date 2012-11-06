@@ -290,7 +290,7 @@ FUNCTION WvtWindowExpand( nUnits )
 
    s_nUnits += nUnits
 
-   Wvt_setFont( "Courier New", s_nUnits )
+   Wvt_SetFont( "Courier New", s_nUnits )
 
    RETURN .T.
 
@@ -546,7 +546,7 @@ FUNCTION uiDebug( ... )
 
    AEval( aP, {| e | s += hb_ValToStr( e ) + "   " } )
 
-   WAPI_OutputDebugString( s )
+   wapi_OutputDebugString( s )
 
    RETURN NIL
 

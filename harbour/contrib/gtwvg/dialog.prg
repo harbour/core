@@ -94,9 +94,9 @@ CREATE CLASS WvgDialog FROM WvgWindow
    METHOD   showModal()                           INLINE NIL
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
-   METHOD   calcClientRect()                      INLINE ::aRect := WVG_GetClientRect( ::hWnd ), ;
+   METHOD   calcClientRect()                      INLINE ::aRect := Wvg_GetClientRect( ::hWnd ), ;
       { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
-   METHOD   calcFrameRect()                       INLINE ::aRect := WVG_GetWindowRect( ::hWnd ), ;
+   METHOD   calcFrameRect()                       INLINE ::aRect := Wvg_GetWindowRect( ::hWnd ), ;
       { ::aRect[ 1 ], ::aRect[ 2 ], ;
       ::aRect[ 3 ] - ::aRect[ 1 ], ::aRect[ 4 ] - ::aRect[ 2 ] }
 
@@ -144,9 +144,9 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::hWnd := hb_gtInfo( HB_GTI_SPEC, HB_GTS_WINDOWHANDLE )
 
-   hb_gtInfo( HB_GTI_RESIZABLE , ::resizable )
-   hb_gtInfo( HB_GTI_CLOSABLE  , ::closable  )
-   hb_gtInfo( HB_GTI_WINTITLE  , ::title     )
+   hb_gtInfo( HB_GTI_RESIZABLE, ::resizable )
+   hb_gtInfo( HB_GTI_CLOSABLE, ::closable  )
+   hb_gtInfo( HB_GTI_WINTITLE, ::title     )
 
    IF ! Empty( ::icon )
       IF HB_ISNUMERIC( ::icon )
@@ -198,7 +198,7 @@ METHOD WvgDialog:destroy()
    ENDIF
 
    IF ! Empty( ::hBrushBG )
-      WVG_DeleteObject( ::hBrushBG )
+      Wvg_DeleteObject( ::hBrushBG )
    ENDIF
 
    ::pGT  := NIL
@@ -231,10 +231,10 @@ METHOD WvgDialog:setFrameState( nState )
 
 METHOD WvgDialog:getFrameState()
 
-   IF WVG_IsIconic( ::hWnd )
+   IF Wvg_IsIconic( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MINIMIZED
    ENDIF
-   IF WVG_IsZoomed( ::hWnd )
+   IF Wvg_IsZoomed( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MAXIMIZED
    ENDIF
 

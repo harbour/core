@@ -122,10 +122,10 @@ METHOD WvgDataRef:getData()
       ENDIF
 
    CASE ::className == "EDIT"
-      ::sl_editBuffer := WVG_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
+      ::sl_editBuffer := Wvg_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
 
    CASE ::className == "LISTBOX"
-      ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd ) + 1
+      ::sl_editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
 
 #if 0 /* This is contrary the documentation of Xbase++ */
       IF ::oParent:className == "COMBOBOX"
@@ -134,7 +134,7 @@ METHOD WvgDataRef:getData()
             AAdd( ::sl_editBuffer, ::getItem( i ) )
          NEXT
       ELSE
-         ::sl_editBuffer := WVG_LBGetCurSel( ::hWnd ) + 1
+         ::sl_editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
       ENDIF
 #endif
    ENDCASE
@@ -166,22 +166,22 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    CASE ::className == "LISTBOX"    /* Single Selection */
       IF HB_ISNUMERIC( ::sl_editBuffer )
-         RETURN WVG_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
+         RETURN Wvg_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
 
    CASE ::className == "SysTreeView32"
       IF ::sl_editBuffer != NIL .AND. ::sl_editBuffer:hItem != NIL
-         WVG_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
+         Wvg_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
    CASE ::className == "EDIT"
       IF HB_ISSTRING( ::sl_editBuffer )
-         WVG_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
+         Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
 
    CASE ::className == "SCROLLBAR"
       IF ::sl_editBuffer != NIL
-         WAPI_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .T. )
+         wapi_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .T. )
       ENDIF
 
    CASE ::className == "COMBOBOX"

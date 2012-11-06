@@ -114,9 +114,9 @@ CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
    VAR      textItemSelected                      INIT ""
 
    METHOD   getSelectionInfo( nlParam )
-   METHOD   setColorFG( nRGB )                    INLINE WVG_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
-   METHOD   setColorBG( nRGB )                    INLINE WVG_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
-   METHOD   setColorLines( nRGB )                 INLINE WVG_TreeView_SetLineColor( ::hWnd, nRGB )
+   METHOD   setColorFG( nRGB )                    INLINE Wvg_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
+   METHOD   setColorBG( nRGB )                    INLINE Wvg_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
+   METHOD   setColorLines( nRGB )                 INLINE Wvg_TreeView_SetLineColor( ::hWnd, nRGB )
    METHOD   showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
       iif( HB_ISNIL( lExpanded ), .F., lExpanded ), nLevels )
 
@@ -386,7 +386,7 @@ CREATE CLASS WvgTreeViewItem
    METHOD   configure()
    METHOD   destroy()
 
-   METHOD   expand( lExpand )                      INLINE WVG_TreeView_Expand( ::hTree, ::hItem, ;
+   METHOD   Expand( lExpand )                      INLINE Wvg_TreeView_Expand( ::hTree, ::hItem, ;
       iif( HB_ISLOGICAL( lExpand ), lExpand, .T. ) )
    METHOD   isExpanded()
    METHOD   setCaption( cCaption )

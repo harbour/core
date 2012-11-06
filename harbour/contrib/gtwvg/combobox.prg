@@ -90,7 +90,7 @@ CREATE CLASS WvgComboBox  INHERIT  WvgWindow, WvgDataRef
    METHOD   destroy()
    METHOD   handleEvent( nMessage, aNM )
 
-   METHOD   sendCBMessage( nMsg, wParam, lParam ) INLINE WVG_SendCBMessage( ::pWnd, nMsg, wParam, lParam )
+   METHOD   sendCBMessage( nMsg, wParam, lParam ) INLINE Wvg_SendCBMessage( ::pWnd, nMsg, wParam, lParam )
    METHOD   listBoxFocus( lFocus )
    METHOD   listBoxSize()
    METHOD   sleSize()
@@ -125,7 +125,9 @@ METHOD WvgComboBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::style       := WS_CHILD + WS_TABSTOP + WS_BORDER + WS_VSCROLL + CBS_NOINTEGRALHEIGHT + CBS_AUTOHSCROLL
-//::exStyle     := WS_EX_CLIENTEDGE
+#if 0
+   ::exStyle     := WS_EX_CLIENTEDGE
+#endif
 
    ::className   := "COMBOBOX"
    ::objType     := objTypeComboBox
@@ -164,12 +166,12 @@ METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
       ::oSLE := WvgSLE():new()
       ::oSLE:oParent := Self
       ::oSLE:hWnd := ::aInfo[ 5 ]
-      ::oSLE:pWnd := Win_N2P( ::aInfo[ 5 ] )
+      ::oSLE:pWnd := win_N2P( ::aInfo[ 5 ] )
 
       ::oListBox := WvgListBox():new()
       ::oListBox:oParent := Self
       ::oListBox:hWnd := ::aInfo[ 6 ]
-      ::oListBox:pWnd := Win_N2P( ::aInfo[ 6 ] )
+      ::oListBox:pWnd := win_N2P( ::aInfo[ 6 ] )
    ENDIF
 
    RETURN Self
@@ -213,7 +215,7 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ 1 ] == CBN_SELCHANGE
-         ::nCurSelected := ::editBuffer := WVG_LBGetCurSel( ::hWnd ) + 1
+         ::nCurSelected := ::editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
@@ -259,13 +261,13 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
+         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         WVG_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
+         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE

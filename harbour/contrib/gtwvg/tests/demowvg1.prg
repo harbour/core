@@ -38,7 +38,7 @@ PROCEDURE Main()
    SET DATE ANSI
    Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 
-   Wvt_SetGui( .T. )
+   Wvt_SetGUI( .T. )
    Wvt_SetFont( "Courier New", 18, 0, 0 )
    Wvt_SetMouseMove( .T. )
 
@@ -52,15 +52,15 @@ PROCEDURE Main()
 
    aPaint := {}
 
-   AAdd( aPaint, { "Label" , {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , rgb( 255,255,255 ), rgb( 198,198,198 ), "Arial", 26, , , , , .T., .T. ) }    , { WVT_BLOCK_LABEL,  1, 10,  3, 50 } } )
-   AAdd( aPaint, { "Box_1" , {|| Wvt_DrawBoxRaised( 4, 4, 20, 75 ) }                                                                                , { WVT_BLOCK_BOX  ,  4,  4, 20, 75 } } )
-   AAdd( aPaint, { "Box_2" , {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 61, 13, 70 } } )
-   AAdd( aPaint, { "Box_3" , {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) }                                                                               , { WVT_BLOCK_BOX  , 15, 59, 18, 72 } } )
-   AAdd( aPaint, { "Box_4" , {|| Wvt_DrawBoxGroup( 5, 6, 19, 44 ) }                                                                                 , { WVT_BLOCK_BOX  ,  5,  6, 19, 44 } } )
-   AAdd( aPaint, { "Image" , {|| Wvt_DrawImage( 8,62,12,69, IMAGE_VOUCH ) }                                                                         , { WVT_BLOCK_IMAGE,  8, 62, 12, 69 } } )
-   AAdd( aPaint, { "Box_5" , {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) }                                                                             , { WVT_BLOCK_BOX  ,  7, 48, 13, 55 } } )
-   AAdd( aPaint, { "Line_1", {|| Wvt_DrawLine( MaxRow() - 2,  0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) }          , NIL } )
-   AAdd( aPaint, { "Gets"  , {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) }, NIL } )
+   AAdd( aPaint, { "Label", {|| Wvt_DrawLabel( 1, 40, "Harbour Console GUI Demo", 6, , rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", 26, , , , , .T., .T. ) }, { WVT_BLOCK_LABEL,  1, 10,  3, 50 } } )
+   AAdd( aPaint, { "Box_1", {|| Wvt_DrawBoxRaised( 4, 4, 20, 75 ) }, { WVT_BLOCK_BOX,  4,  4, 20, 75 } } )
+   AAdd( aPaint, { "Box_2", {|| Wvt_DrawBoxRecessed( 7, 61, 13, 70 ) }, { WVT_BLOCK_BOX,  7, 61, 13, 70 } } )
+   AAdd( aPaint, { "Box_3", {|| Wvt_DrawBoxGroup( 15, 59, 18, 72 ) }, { WVT_BLOCK_BOX, 15, 59, 18, 72 } } )
+   AAdd( aPaint, { "Box_4", {|| Wvt_DrawBoxGroup( 5, 6, 19, 44 ) }, { WVT_BLOCK_BOX,  5,  6, 19, 44 } } )
+   AAdd( aPaint, { "Image", {|| Wvt_DrawImage( 8, 62, 12, 69, IMAGE_VOUCH ) }, { WVT_BLOCK_IMAGE,  8, 62, 12, 69 } } )
+   AAdd( aPaint, { "Box_5", {|| Wvt_DrawBoxRecessed( 7, 48, 13, 55 ) }, { WVT_BLOCK_BOX,  7, 48, 13, 55 } } )
+   AAdd( aPaint, { "Line_1", {|| Wvt_DrawLine( MaxRow() - 2,  0, MaxRow() - 2, MaxCol(), WVT_LINE_HORZ, WVT_LINE_RECESSED, WVT_LINE_BOTTOM ) }, NIL } )
+   AAdd( aPaint, { "Gets", {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) }, NIL } )
 
    ExecForm( aPaint )
 

@@ -43,7 +43,7 @@ DYNAMIC WvgHtmlViewer
 DYNAMIC WvgListBox
 DYNAMIC WvgMenu
 DYNAMIC WvgMenuBar
-DYNAMIC WvgMle
+DYNAMIC WvgMLE
 DYNAMIC WvgPartHandler
 DYNAMIC WvgPushButton
 DYNAMIC WvgRadioButton
@@ -60,7 +60,7 @@ DYNAMIC WvgToolBarButton
 DYNAMIC WvgTreeView
 DYNAMIC WvgTreeViewItem
 DYNAMIC WvgWindow
-DYNAMIC Wvg_AddToolbarButton
+DYNAMIC Wvg_AddToolBarButton
 DYNAMIC Wvg_And
 DYNAMIC Wvg_AppendMenu
 DYNAMIC Wvg_BeginMouseTracking
@@ -111,7 +111,7 @@ DYNAMIC Wvg_GetDialogBaseUnits
 DYNAMIC Wvg_GetDlgItem
 DYNAMIC Wvg_GetDlgItemText
 DYNAMIC Wvg_GetFocus
-DYNAMIC Wvg_GetMessagetExt
+DYNAMIC Wvg_GetMessageText
 DYNAMIC Wvg_GetNMHdrInfo
 DYNAMIC Wvg_GetNMMouseInfo
 DYNAMIC Wvg_GetNMTreeViewInfo
@@ -168,7 +168,7 @@ DYNAMIC Wvg_SendCBMessage
 DYNAMIC Wvg_SendDlgItemMessage
 DYNAMIC Wvg_SendEditControlMessage
 DYNAMIC Wvg_SendMessage
-DYNAMIC Wvg_SendMessagetExt
+DYNAMIC Wvg_SendMessageText
 DYNAMIC Wvg_SendToolBarMessage
 DYNAMIC Wvg_SetBkColor
 DYNAMIC Wvg_SetBkMode
@@ -297,7 +297,7 @@ DYNAMIC Wvt_GetOpenFilename
 DYNAMIC Wvt_GetPaintRect
 DYNAMIC Wvt_GetPalette
 DYNAMIC Wvt_GetRGBColor
-DYNAMIC Wvt_GetRGBColorBYString
+DYNAMIC Wvt_GetRGBColorByString
 DYNAMIC Wvt_GetSaveFilename
 DYNAMIC Wvt_GetScreenHeight
 DYNAMIC Wvt_GetScreenWidth
@@ -326,7 +326,7 @@ DYNAMIC Wvt_MessageBox
 DYNAMIC Wvt_Minimize
 DYNAMIC Wvt_PasteFromClipboard
 DYNAMIC Wvt_ProcessMessages
-DYNAMIC Wvt_RESetWindow
+DYNAMIC Wvt_ResetWindow
 DYNAMIC Wvt_RestScreen
 DYNAMIC Wvt_SaveScreen
 DYNAMIC Wvt_SetAltF4Close

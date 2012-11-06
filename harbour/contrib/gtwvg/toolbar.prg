@@ -187,7 +187,7 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    IF ! Empty( ::hWnd )
       ::SendToolbarMessage( TB_BUTTONSTRUCTSIZE )
-      ::hImageList := WAPI_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR32 + ILC_MASK, 0, 1 )
+      ::hImageList := wapi_ImageList_Create( ::imageWidth, ::imageHeight, ILC_COLOR32 + ILC_MASK, 0, 1 )
       ::SendToolbarMessage( TB_SETIMAGELIST, ::hImageList )
 
       ::SendToolbarMessage( TB_BUTTONSTRUCTSIZE )
@@ -254,19 +254,19 @@ METHOD WvgToolBar:destroy()
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
          IF ::aItems[ i, 2 ]:image != NIL
-            WVG_DeleteObject( ::aItems[ i, 2 ]:image )
+            Wvg_DeleteObject( ::aItems[ i, 2 ]:image )
          ENDIF
          IF ::aItems[ i, 2 ]:disabledImage != NIL
-            WVG_DeleteObject( ::aItems[ i, 2 ]:disabledImage )
+            Wvg_DeleteObject( ::aItems[ i, 2 ]:disabledImage )
          ENDIF
          IF ::aItems[ i, 2 ]:hotImage != NIL
-            WVG_DeleteObject( ::aItems[ i, 2 ]:hotImage )
+            Wvg_DeleteObject( ::aItems[ i, 2 ]:hotImage )
          ENDIF
       NEXT
    ENDIF
 
    IF ! Empty( ::hImageList )
-      WAPI_ImageList_Destroy( ::hImageList )
+      wapi_ImageList_Destroy( ::hImageList )
    ENDIF
 
    ::wvgWindow:destroy()
@@ -285,7 +285,7 @@ METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD WvgToolBar:sendToolbarMessage( nMsg, p1, p2 )
 
-   RETURN WVG_SendToolbarMessage( ::pWnd, nMsg, p1, p2 )
+   RETURN Wvg_SendToolBarMessage( ::pWnd, nMsg, p1, p2 )
 
 //
 
@@ -305,7 +305,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       ::lSized := .T.
    ENDIF
 
-   oBtn := WvgToolbarButton():new( cCaption, nStyle, cKey )
+   oBtn := WvgToolBarButton():new( cCaption, nStyle, cKey )
 
    oBtn:index   := ::numItems + 1
    oBtn:command := 100 + oBtn:index
@@ -324,7 +324,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       EXIT
 
    CASE "N"
-      pBitmap := Wvg_PrepareBitmapFromResourceID( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
+      pBitmap := Wvg_PrepareBitmapFromResourceId( xImage, ::imageWidth, ::imageHeight, .T., ::hWnd )
       EXIT
 
    CASE "P"
@@ -337,15 +337,15 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
       /* oBtn:image := pBitmap */
 
       IF HB_ISNUMERIC( nMapRGB )
-         nBtn := WAPI_ImageList_AddMasked( ::hImageList, pBitmap, nMapRGB )
+         nBtn := wapi_ImageList_AddMasked( ::hImageList, pBitmap, nMapRGB )
       ELSE
-         nBtn := WAPI_ImageList_Add( ::hImageList, pBitmap )
+         nBtn := wapi_ImageList_Add( ::hImageList, pBitmap )
       ENDIF
       IF ! HB_ISPOINTER( xImage )
-         WVG_DeleteObject( pBitmap )
+         Wvg_DeleteObject( pBitmap )
       ENDIF
 
-      WVG_AddToolbarButton( ::pWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
+      Wvg_AddToolBarButton( ::pWnd, nBtn, oBtn:caption, oBtn:command, 1, ::showToolTips )
 
       /* Set Button Size */
       ::SendToolbarMessage( TB_SETBUTTONSIZE, ::buttonWidth, ::buttonHeight )
@@ -356,7 +356,7 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 #endif
       ::sendToolbarMessage( TB_AUTOSIZE )
    ELSE
-      Wvg_AddToolbarButton( ::pWnd, , , oBtn:command, 3, .F. )
+      Wvg_AddToolBarButton( ::pWnd, , , oBtn:command, 3, .F. )
 
    ENDIF
 
@@ -500,9 +500,9 @@ ENDCLASS
 
 METHOD WvgToolBarButton:new( cCaption, nStyle, cKey )
 
-   __defaultNIL( @cCaption      , ::caption )
-   __defaultNIL( @nStyle        , ::style )
-   __defaultNIL( @cKey          , ::key )
+   __defaultNIL( @cCaption, ::caption )
+   __defaultNIL( @nStyle, ::style )
+   __defaultNIL( @cKey, ::key )
 
    ::caption        := cCaption
    ::style          := nStyle

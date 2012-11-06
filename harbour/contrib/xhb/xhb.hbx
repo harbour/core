@@ -384,7 +384,7 @@ DYNAMIC TCGIFile
 DYNAMIC ThreadGetCurrent
 DYNAMIC ThreadGetCurrentInternal
 DYNAMIC ThreadSleep
-DYNAMIC THROW
+DYNAMIC Throw
 DYNAMIC THtml
 DYNAMIC THtmlControl
 DYNAMIC THtmlForm
@@ -464,7 +464,7 @@ DYNAMIC xhb_SetTraceFile
 DYNAMIC xhb_SetTraceStack
 DYNAMIC xhb_TMemoEditor
 DYNAMIC xhb_Trim
-DYNAMIC xhb__KEYBOARD
+DYNAMIC xhb__Keyboard
 DYNAMIC XIsPrinter
 DYNAMIC _Array
 DYNAMIC _Block

@@ -225,9 +225,9 @@ METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFon
    ::oldMenuHandle       := Wvt_GetMenu()
    ::oldMenuBlock        := SetKey( Wvt_SetMenuKeyEvent() )
 
-   ::oldTooltipWidth     := Wvt_GetTooltipWidth()
-   ::oldTooltipBkColor   := Wvt_GetTooltipBkColor()
-   ::oldTooltipTextColor := Wvt_GetTooltipTextColor()
+   ::oldTooltipWidth     := Wvt_GetToolTipWidth()
+   ::oldTooltipBkColor   := Wvt_GetToolTipBKColor()
+   ::oldTooltipTextColor := Wvt_GetToolTipTextColor()
 
    ::nRows               := nRows
    ::nCols               := nCols
@@ -243,7 +243,7 @@ METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFon
    ::nKey                := 0
    ::cColor              := "N/W"
    ::nUseObj             := 0
-   ::lGui                := Wvt_SetGui( .F. )
+   ::lGui                := Wvt_SetGUI( .F. )
 
    RETURN Self
 
@@ -255,13 +255,13 @@ METHOD wvtDialog:Create()
 
    ::oldToolTipActive := Wvt_SetToolTipActive( .T. )
    IF ::nTooltipWidth != nil
-      Wvt_setTooltipWidth( ::nTooltipWidth )
+      Wvt_SetToolTipWidth( ::nTooltipWidth )
    ENDIF
    IF ::nTooltipBkColor != nil
-      Wvt_SetTooltipBkColor( ::nTooltipBkColor )
+      Wvt_SetToolTipBkColor( ::nTooltipBkColor )
    ENDIF
    IF ::nTooltipTextColor != nil
-      Wvt_SetTooltipTextColor( ::nTooltipTextColor )
+      Wvt_SetToolTipTextColor( ::nTooltipTextColor )
    ENDIF
 
    aPalette      := Wvt_GetPalette()
@@ -297,12 +297,12 @@ METHOD wvtDialog:Create()
    FOR i := 1 TO Len( ::aObjects )
       IF ! Empty( ::aObjects[ i ]:aPaint )
          FOR j := 1 TO Len( ::aObjects[ i ]:aPaint )
-            wvg_SetPaint( ::cPaintBlockID, ::nPaintID++, ;
+            Wvg_SetPaint( ::cPaintBlockID, ::nPaintID++, ;
                ::aObjects[ i ]:aPaint[ j, 1 ], ::aObjects[ i ]:aPaint[ j, 2 ] )
          NEXT
       ENDIF
    NEXT
-   WvtSetPaint( wvg_GetPaint( ::cPaintBlockID ) )
+   WvtSetPaint( Wvg_GetPaint( ::cPaintBlockID ) )
 
    IF AScan( ::aObjects, {| o | o:lTabStop } ) > 0
       ::lTabStops := .T.
@@ -328,11 +328,11 @@ METHOD wvtDialog:Destroy()
 
    AEval( ::aObjects, {| o | o:destroy() } )
 
-   Wvt_SetTooltip( 0, 0, 0, 0, "" )
-   Wvt_SetTooltipActive( ::oldToolTipActive )
-   Wvt_setTooltipWidth( ::oldTooltipWidth )
-   Wvt_SetTooltipBkColor( ::oldTooltipBkColor )
-   Wvt_SetTooltipTextColor( ::oldTooltipTextColor )
+   Wvt_SetToolTip( 0, 0, 0, 0, "" )
+   Wvt_SetToolTipActive( ::oldToolTipActive )
+   Wvt_SetToolTipWidth( ::oldTooltipWidth )
+   Wvt_SetToolTipBkColor( ::oldTooltipBkColor )
+   Wvt_SetToolTipTextColor( ::oldTooltipTextColor )
 
    /*  Here set mode is before setting the font  */
    SetMode( ::nOldRows, ::nOldCols )
@@ -351,9 +351,9 @@ METHOD wvtDialog:Destroy()
    SetKey( Wvt_SetMenuKeyEvent(), ::oldMenuBlock )
    RestScreen( 0, 0, MaxRow(), MaxCol(), ::cScreen )
    Wvt_RestScreen( 0, 0, MaxRow(), MaxCol(), ::aWvtScreen )
-   wvg_PurgePaint( ::cPaintBlockID )
+   Wvg_PurgePaint( ::cPaintBlockID )
    WvtSetPaint( ::aOldPnt )
-   Wvt_SetGui( ::lGui )
+   Wvt_SetGUI( ::lGui )
 
    RETURN NIL
 
@@ -495,13 +495,13 @@ METHOD wvtDialog:Inkey()
          ENDIF
 
          IF ::nObjOver == 0
-            Wvt_SetTooltip( 0, 0, 0, 0, "" )
+            Wvt_SetToolTip( 0, 0, 0, 0, "" )
 
          ELSEIF ::oObjOver:lActive
             ::oObjOver:SetTooltip()
 
          ELSE
-            Wvt_SetTooltip( 0, 0, 0, 0, "" )
+            Wvt_SetToolTip( 0, 0, 0, 0, "" )
 
          ENDIF
       ENDIF
@@ -949,7 +949,7 @@ METHOD WvtObject:Create()
 METHOD WvtObject:Destroy()
 
    IF ::hFont != nil
-      WVG_DeleteObject( ::hFont )
+      Wvg_DeleteObject( ::hFont )
       ::hFont := nil
    ENDIF
 
@@ -967,7 +967,7 @@ METHOD WvtObject:CreatePopup()
    LOCAL i, nID
 
    IF ! Empty( ::aPopup ) .AND. ::hPopup == nil
-      ::hPopup := Wvt_CreatePopupMenu()
+      ::hPopup := Wvt_CreatePOPUPMenu()
 
       FOR i := 1 TO Len( ::aPopup )
 
@@ -1064,7 +1064,7 @@ METHOD WvtBrowse:Create()
    ::nTop    := ::oBrw:nTop - 2
    ::nLeft   := ::oBrw:nLeft - 2
    ::nBottom := iif( ::lHSBar, ::oBrw:nBottom, ::oBrw:nBottom + 1 )
-   ::nRight  := iif( ::lVSBar, ::oBrw:nRight , ::oBrw:nRight + 2 )
+   ::nRight  := iif( ::lVSBar, ::oBrw:nRight, ::oBrw:nRight + 2 )
 #else
    ::nTop    := ::oBrw:nTop
    ::nLeft   := ::oBrw:nLeft
@@ -1078,11 +1078,11 @@ METHOD WvtBrowse:Create()
 
    ::Super:Create()
 
-   __defaultNIL( @::bTotalRecords , {|| ( ::cAlias )->( ordKeyCount() ) } )
+   __defaultNIL( @::bTotalRecords, {|| ( ::cAlias )->( ordKeyCount() ) } )
    __defaultNIL( @::bCurrentRecord, {|| ( ::cAlias )->( ordKeyNo()    ) } )
    ::SetVBar()
 
-   __defaultNIL( @::bTotalColumns , {|| ::oBrw:ColCount } )
+   __defaultNIL( @::bTotalColumns, {|| ::oBrw:ColCount } )
    __defaultNIL( @::bCurrentColumn, {|| ::oBrw:ColPos   } )
    ::SetHBar()
 
@@ -1260,7 +1260,7 @@ METHOD WvtBrowse:SetTooltip()
       ::Tooltip := cTip
    ENDIF
 
-   Wvt_SetTooltip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
+   Wvt_SetToolTip( ::nTop, ::nLeft, ::nBottom, ::nRight, ::Tooltip )
 
    RETURN Self
 
@@ -1346,10 +1346,10 @@ ENDCLASS
 
 METHOD WvtStatusBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
-   __defaultNIL( @nTop   , oParent:MaxRow() )
-   __defaultNIL( @nLeft  , 0 )
+   __defaultNIL( @nTop, oParent:MaxRow() )
+   __defaultNIL( @nLeft, 0 )
    __defaultNIL( @nBottom, oParent:MaxRow() )
-   __defaultNIL( @nRight , oParent:MaxCol() )
+   __defaultNIL( @nRight, oParent:MaxCol() )
 
    ::Super:New( oParent, DLG_OBJ_STATUSBAR, nID, nTop, nLeft, nBottom, nRight )
 
@@ -1554,10 +1554,10 @@ METHOD WvtLabel:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtLabel:Create( lConfg )
 
-   __defaultNIL( @lConfg      , .F. )
+   __defaultNIL( @lConfg, .F. )
 
-   __defaultNIL( @::nBottom   , ::nTop )
-   __defaultNIL( @::nRight    , ::nLeft + Len( ::Text ) )
+   __defaultNIL( @::nBottom, ::nTop )
+   __defaultNIL( @::nRight, ::nLeft + Len( ::Text ) )
    __defaultNIL( @::nTextColor, RGB( 0, 0, 0 ) )
 
    ::nTextColorHoverOff := ::nTextColor
@@ -1628,7 +1628,7 @@ METHOD WvtLabel:Configure()
    ::nBackColorHoverOff := ::nBackColor
 
    IF ::hFont != 0
-      WVG_DeleteObject( ::hFont )
+      Wvg_DeleteObject( ::hFont )
    ENDIF
 
    ::hFont := Wvt_CreateFont( ::cFont, ::nFontHeight, ::nFontWidth, ::nFontWeight, ::lItalic, ;
@@ -2460,7 +2460,7 @@ CREATE CLASS WvtScrollBar FROM WvtObject
    METHOD Configure( nTop, nLeft, nBottom, nRight )
    METHOD Refresh()
    METHOD HandleEvent( nKey )
-   METHOD setPos( nTotal, nCurrent )
+   METHOD SetPos( nTotal, nCurrent )
    METHOD GetPos()
    METHOD ThumbPos()
    METHOD SetTooltip()
@@ -2651,9 +2651,9 @@ METHOD wvtScrollbar:Refresh()
 
 //
 
-METHOD wvtScrollbar:setPos( nTotal, nCurrent )
+METHOD wvtScrollbar:SetPos( nTotal, nCurrent )
 
-   __defaultNIL( @nTotal  , Eval( ::bTotal   ) )
+   __defaultNIL( @nTotal, Eval( ::bTotal   ) )
    __defaultNIL( @nCurrent, Eval( ::bCurrent ) )
 
    ::nTotal   := nTotal
@@ -2768,7 +2768,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
                ::nCurrent := 1
             ENDIF
 
-            ::setPos( ::nTotal, ::nCurrent )
+            ::SetPos( ::nTotal, ::nCurrent )
 
             ::SetTooltip()
             Wvt_Keyboard( K_SBTHUMBTRACKVERT )
@@ -2866,7 +2866,7 @@ METHOD wvtScrollbar:HandleEvent( nKey )
                ::nCurrent := 1
             ENDIF
 
-            ::setPos( ::nTotal, ::nCurrent )
+            ::SetPos( ::nTotal, ::nCurrent )
 
             Wvt_Keyboard( K_SBTHUMBTRACKHORZ )
          ENDIF
@@ -3027,7 +3027,7 @@ METHOD WvtBanner:Create()
 
 METHOD WvtBanner:Destroy()
 
-   WVG_DeleteObject( ::oLabel:hFont )
+   Wvg_DeleteObject( ::oLabel:hFont )
 
    RETURN NIL
 
@@ -3261,10 +3261,10 @@ METHOD WvtProgressBar:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtProgressBar:Create()
 
-   __defaultNIL( @::nTop      , 0 )
-   __defaultNIL( @::nLeft     , 0 )
-   __defaultNIL( @::nBottom   , iif( ::lVertical, ::nTop + 9, ::nTop ) )
-   __defaultNIL( @::nRight    , iif( ::lVertical, ::nLeft + 1, ::nLeft + 19 ) )
+   __defaultNIL( @::nTop, 0 )
+   __defaultNIL( @::nLeft, 0 )
+   __defaultNIL( @::nBottom, iif( ::lVertical, ::nTop + 9, ::nTop ) )
+   __defaultNIL( @::nRight, iif( ::lVertical, ::nLeft + 1, ::nLeft + 19 ) )
    __defaultNIL( @::nTextColor, RGB( 255, 255, 255 ) )
    __defaultNIL( @::nBackColor, RGB( 198, 198, 198 ) )
 
@@ -3284,7 +3284,7 @@ METHOD WvtProgressBar:Display( nCurrent, nTotal )
    ENDIF
 
    __defaultNIL( @nCurrent, ::nCurrent )
-   __defaultNIL( @nTotal  , ::nTotal )
+   __defaultNIL( @nTotal, ::nTotal )
 
    ::nCurrent := nCurrent
    ::nTotal   := nTotal

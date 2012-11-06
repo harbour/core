@@ -99,12 +99,12 @@ CREATE CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
    METHOD   setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
    METHOD   setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex - 1, 0 )
 
-   METHOD   addItem( cItem )                      INLINE  WVG_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
+   METHOD   addItem( cItem )                      INLINE  Wvg_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
    METHOD   CLEAR()
    METHOD   delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex - 1, 0 )
-   METHOD   getItem( nIndex )                     INLINE  WVG_LBGetText( ::hWnd, nIndex - 1 )
+   METHOD   getItem( nIndex )                     INLINE  Wvg_LBGetText( ::hWnd, nIndex - 1 )
    METHOD   getTabstops()                         VIRTUAL
-   METHOD   insItem( nIndex, cItem )              INLINE  WVG_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
+   METHOD   insItem( nIndex, cItem )              INLINE  Wvg_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
    METHOD   setColumnWidth()                      VIRTUAL
    METHOD   setItem( nIndex, cItem )              INLINE  ::delItem( nIndex ), ::insItem( nIndex, cItem )
    METHOD   setTabstops()                         VIRTUAL
@@ -196,7 +196,7 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_COMMAND
       IF aNM[ 1 ] == LBN_SELCHANGE
-         ::nCurSelected := WVG_LBGetCurSel( ::hWnd ) + 1
+         ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
          IF ::isParentCrt()
             ::oParent:setFocus()
          ENDIF
@@ -250,18 +250,18 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
+         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         WVG_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
+         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    CASE nMessage == HB_GTE_ANY               /* This will never be reached */
       IF aNM[ 1 ] == WM_LBUTTONUP
-         ::nCurSelected := WVG_LBGetCurSel( ::hWnd ) + 1
+         ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
          IF HB_ISBLOCK( ::sl_itemMarked )
             IF ::isParentCrt()
                ::oParent:setFocus()
@@ -286,8 +286,8 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
          ENDIF
 
       ELSEIF aNM[ 1 ] == WM_KEYUP
-         IF ::nCurSelected != WVG_LBGetCurSel( ::hWnd ) + 1
-            ::nCurSelected := WVG_LBGetCurSel( ::hWnd ) + 1
+         IF ::nCurSelected != Wvg_LBGetCurSel( ::hWnd ) + 1
+            ::nCurSelected := Wvg_LBGetCurSel( ::hWnd ) + 1
             IF HB_ISBLOCK( ::sl_itemMarked )
                IF ::isParentCrt()
                   ::oParent:setFocus()

@@ -164,9 +164,9 @@ METHOD WvgHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    ::mapEvent( evNavigateComplete, {| cURL | ::xNavigateComplete( cURL ) } )
 
-   ::mapEvent( evProgressChange  , {| nProgress, nProgMax | ::xProgressChange( nProgress, nProgMax ) } )
+   ::mapEvent( evProgressChange, {| nProgress, nProgMax | ::xProgressChange( nProgress, nProgMax ) } )
 
-   ::mapEvent( evTitleChange     , {| cTitle | ::xTitleChange( cTitle ) } )
+   ::mapEvent( evTitleChange, {| cTitle | ::xTitleChange( cTitle ) } )
 
    ::mapEvent( evDocumentComplete, {| cURI | ::xDocumentComplete( cURI ) } )
 

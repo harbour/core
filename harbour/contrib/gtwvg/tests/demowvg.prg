@@ -72,11 +72,11 @@ EXIT PROCEDURE CleanHandles()
    LOCAL obj
 
    FOR EACH obj IN SetFonts()
-      WVG_DeleteObject( obj )
+      Wvg_DeleteObject( obj )
       obj := NIL
    NEXT
    FOR EACH obj IN SetIcons()
-      WVG_DeleteObject( obj )
+      Wvg_DeleteObject( obj )
       obj := NIL
    NEXT
 
@@ -111,7 +111,7 @@ PROCEDURE Main()
 
    Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
 
-   Wvt_SetGui( .T. )
+   Wvt_SetGUI( .T. )
    WvtSetKeys( .T. )
    Popups( 1 )
    Wvt_SetMouseMove( .T. )
@@ -268,7 +268,7 @@ PROCEDURE WvtNextGetsConsole()
 PROCEDURE WvtNextGets()
 
    IF hb_mtvm()
-      hb_threadStart( {|| hb_gtReload( "WVG" ), Wvt_setFont( "Terminal", 20 ), ;
+      hb_threadStart( {|| hb_gtReload( "WVG" ), Wvt_SetFont( "Terminal", 20 ), ;
          hb_clear(), Wvt_ShowWindow( SW_RESTORE ), WvtNextGets_X() } )
    ELSE
       WvtNextGets_X()
@@ -316,7 +316,7 @@ PROCEDURE WvtNextGets_X()
    AAdd( aBlocks, {|| Wvt_DrawBoxGroupRaised( 5, 6, 19, 72 )  } )
    AAdd( aBlocks, {|| AEval( GetList, {| oGet | Wvt_DrawBoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
-   AAdd( aBlocks, {|| Wvt_DrawButton( 21, 6, 22, 9, "New","vouch1.bmp" )                             } )
+   AAdd( aBlocks, {|| Wvt_DrawButton( 21,  6, 22,  9, "New", "vouch1.bmp" )                             } )
    AAdd( aBlocks, {|| Wvt_DrawButton( 21, 11, 22, 14, "Browse", "vouch1.bmp", 1, rgb( 255, 255, 255 ) )      } )
    AAdd( aBlocks, {|| Wvt_DrawButton( 21, 16, 22, 19, , "vouch1.bmp" )                                    } )
    AAdd( aBlocks, {|| Wvt_DrawButton( 21, 21, 22, 24, "Data",, 0, rgb( 100, 22, 241 ), rgb( 198, 198, 198 ) ) } )

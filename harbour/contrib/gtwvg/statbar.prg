@@ -185,13 +185,13 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    CASE nMessage == HB_GTE_CTLCOLOR
       IF HB_ISNUMERIC( ::clr_FG )
-         WVG_SetTextColor( aNM[ 1 ], ::clr_FG )
+         Wvg_SetTextColor( aNM[ 1 ], ::clr_FG )
       ENDIF
       IF HB_ISNUMERIC( ::hBrushBG )
-         WVG_SetBkMode( aNM[ 1 ], 1 )
+         Wvg_SetBkMode( aNM[ 1 ], 1 )
          RETURN ::hBrushBG
       ELSE
-         RETURN WVG_GetCurrentBrush( aNM[ 1 ] )
+         RETURN Wvg_GetCurrentBrush( aNM[ 1 ] )
       ENDIF
 
    ENDCASE
@@ -362,9 +362,9 @@ ENDCLASS
 
 METHOD WvgStatusBarPanel:new( cCaption, nStyle, cKey )
 
-   __defaultNIL( @cCaption      , ::sl_caption )
-   __defaultNIL( @nStyle        , ::style )
-   __defaultNIL( @cKey          , ::key )
+   __defaultNIL( @cCaption, ::sl_caption )
+   __defaultNIL( @nStyle, ::style )
+   __defaultNIL( @cKey, ::key )
 
    ::sl_caption     := cCaption
    ::style          := nStyle

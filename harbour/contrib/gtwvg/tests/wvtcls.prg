@@ -130,7 +130,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oImg:Tooltip := "WvtImage():New()"
    oDlg:AddObject( oImg )
 
-   oTBar := WvtToolbar():New( oDlg, 103, 0, 0, 2 )
+   oTBar := WvtToolBar():New( oDlg, 103, 0, 0, 2 )
    oTBar:lFloating := .F.
    oTBar:Tooltip   := "Toolbar"
    oTBar:AddButton( aImg_[ 1 ], {|| oImg:SetImage( aImg_[ 1 ] ) }, "Lock" )
@@ -350,7 +350,7 @@ FUNCTION DialogWvgClassesTwo()
    LOCAL oPBar1, oPBar2, oPBar3, oPBar4
 
    g_oMenuBar    := WvtMenu():new():create()
-   oMenu         := wvtMenu():new():create()
+   oMenu         := WvtMenu():new():create()
    oMenu:Caption := "Miscellaneous"
    oMenu:AddItem( "Progressbar", {|| ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 ) } )
    oMenu:AddItem( "-" )
