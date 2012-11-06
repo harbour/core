@@ -6635,10 +6635,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF hb_DirBuild( tmp + hb_ps() + "MacOS" )
                      hb_FCopy( hbmk[ _HBMK_cPROGNAME ], tmp + hb_ps() + "MacOS" + hb_ps() + hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) )
                      IF ! hb_FileExists( tmp + hb_ps() + "Info.plist" )
-                        hb_MemoWrit( tmp + hb_ps() + "Info.plist", MacOSXFiles( hbmk, 1, hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) ) )
+                        hb_MemoWrit( tmp + hb_ps() + "Info.plist", Apple_App_Template_Files( hbmk, "Info.plist", hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) ) )
                      ENDIF
                      IF ! hb_FileExists( tmp + hb_ps() + "PkgInfo" )
-                        hb_MemoWrit( tmp + hb_ps() + "PkgInfo", MacOSXFiles( hbmk, 2, hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) ) )
+                        hb_MemoWrit( tmp + hb_ps() + "PkgInfo", Apple_App_Template_Files( hbmk, "PkgInfo", hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ) ) )
                      ENDIF
                      IF ! Empty( hbmk[ _HBMK_aICON ] )
                         IF hb_DirBuild( tmp + hb_ps() + "Resources" )
@@ -10374,7 +10374,7 @@ STATIC FUNCTION ValueIsF( cString )
 /* built-in files */
 
 STATIC FUNCTION hbmk_builtin_File_hb_pkg_install()
-   #pragma __streaminclude "pkg_inst.hbm" | RETURN %s
+#pragma __streaminclude "pkg_inst.hbm" | RETURN %s
 
 /* interface for handling built-in files */
 
@@ -12160,16 +12160,37 @@ STATIC PROCEDURE ParseCOMPPLATCPU( hbmk, cString, nMainTarget )
 
    RETURN
 
-STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
+STATIC FUNCTION Apple_App_Template_Files( hbmk, cFile, cPROGNAME )
 
    LOCAL cString
 
-   HB_SYMBOL_UNUSED( hbmk )
+   SWITCH cFile
+   CASE "Info.plist"
+      cString := Apple_App_Template_Info_plist()
+      EXIT
+   CASE "PkgInfo"
+      cString := "%__APPTYPE__%%__APPSIGN__%"
+      EXIT
+   OTHERWISE
+      cString := ""
+   ENDSWITCH
 
-   SWITCH nType
-   CASE 1
+   cString := StrTran( cString, "%TAB%", Chr( 9 ) )
 
-      #pragma __cstream|cString := %s
+   cString := StrTran( cString, "%__APPNAME__%", cPROGNAME )
+   cString := StrTran( cString, "%__APPTYPE__%", "APPL" )
+   cString := StrTran( cString, "%__APPSIGN__%", PadR( cPROGNAME, 4, "?" ) )
+   cString := StrTran( cString, "%__APPID__%" ) /* TODO */
+   cString := StrTran( cString, "%__APPVERSION__%" ) /* TODO */
+   cString := StrTran( cString, "%__APPCOPYRIGHT__%" ) /* TODO */
+   IF ! Empty( hbmk[ _HBMK_aICON ] )
+      cString := StrTran( cString, "%__APPICON__%", hb_FNameNameExt( hbmk[ _HBMK_aICON ][ 1 ] ) )
+   ENDIF
+
+   RETURN cString
+
+STATIC FUNCTION Apple_App_Template_Info_plist()
+#pragma __cstream | RETURN %s
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
@@ -12202,26 +12223,7 @@ STATIC FUNCTION MacOSXFiles( hbmk, nType, cPROGNAME )
 %TAB%<true/>
 </dict>
 </plist>
-      #pragma __endtext
-      EXIT
-   CASE 2
-      cString := "%__APPTYPE__%%__APPSIGN__%"
-      EXIT
-   ENDSWITCH
-
-   cString := StrTran( cString, "%TAB%", Chr( 9 ) )
-
-   cString := StrTran( cString, "%__APPNAME__%", cPROGNAME )
-   cString := StrTran( cString, "%__APPTYPE__%", "APPL" )
-   cString := StrTran( cString, "%__APPSIGN__%", PadR( cPROGNAME, 4, "?" ) )
-   cString := StrTran( cString, "%__APPID__%" ) /* TODO */
-   cString := StrTran( cString, "%__APPVERSION__%" ) /* TODO */
-   cString := StrTran( cString, "%__APPCOPYRIGHT__%" ) /* TODO */
-   IF ! Empty( hbmk[ _HBMK_aICON ] )
-      cString := StrTran( cString, "%__APPICON__%", hb_FNameNameExt( hbmk[ _HBMK_aICON ][ 1 ] ) )
-   ENDIF
-
-   RETURN cString
+#pragma __endtext
 
 #ifdef _HBMK_LIB_HINTS_
 
@@ -12996,7 +12998,7 @@ FUNCTION hbshell_ext_get_list()
    RETURN aName
 
 STATIC FUNCTION __plugin_ext()
-#pragma __cstream|RETURN %s
+#pragma __cstream | RETURN %s
 /*
  * Harbour Project source code:
  * extension manager plugin
