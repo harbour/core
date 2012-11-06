@@ -52,7 +52,7 @@
 
 #include "hbmagic.ch"
 
-FUNCTION hb_Magic_Simple( cFileName, nFlags )
+FUNCTION hb_magic_simple( cFileName, nFlags )
 
    LOCAL hMagic
 

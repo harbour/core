@@ -25,8 +25,8 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC HBBLAT
-DYNAMIC HB_BLATSEND
+DYNAMIC HBBlat
+DYNAMIC hb_blatSend
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBBLAT__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

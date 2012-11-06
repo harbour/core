@@ -25,7 +25,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC HBFORMATCODE
+DYNAMIC HBFormatCode
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBFORMAT__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

@@ -307,7 +307,7 @@ HB_FUNC( FI_UNLOAD )
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_LoadFromMemory(FREE_IMAGE_FORMAT fif, FIMEMORY *stream, int flags FI_DEFAULT(0)); */
 /* DLL_API FIMEMORY *DLL_CALLCONV FreeImage_OpenMemory(BYTE *data FI_DEFAULT(0), DWORD size_in_bytes FI_DEFAULT(0)); */
 /* DLL_API void DLL_CALLCONV FreeImage_CloseMemory(FIMEMORY *stream); */
-HB_FUNC( FI_LOADFROMMEM )
+HB_FUNC( FI_LOADFROMMEMORY )
 {
    if( hb_pcount() == 3 &&
        HB_ISNUM( 1 ) &&
@@ -742,7 +742,7 @@ HB_FUNC( FI_GETFILETYPE )
 /* DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeU(const wchar_t *filename, int size FI_DEFAULT(0)); */
 /* DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeFromHandle(FreeImageIO *io, fi_handle handle, int size FI_DEFAULT(0)); */
 /* DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeFromMemory(FIMEMORY *stream, int size FI_DEFAULT(0)); */
-HB_FUNC( FI_GETFILETYPEFROMMEM )
+HB_FUNC( FI_GETFILETYPEFROMMEMORY )
 {
    if( hb_pcount() >= 1 &&
        HB_ISCHAR( 1 )

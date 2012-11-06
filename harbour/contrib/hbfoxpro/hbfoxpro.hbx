@@ -25,9 +25,9 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC FOX___DYNCALL
-DYNAMIC SYS
-DYNAMIC __FOX_ARRAY
+DYNAMIC fox___DynCall
+DYNAMIC Sys
+DYNAMIC __fox_Array
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBFOXPRO__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

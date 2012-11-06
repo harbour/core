@@ -10,8 +10,6 @@
 -w3 -es2
 -winuni
 
--hbx=
-
 -stop{!win|hbdyn}
 
 hbwin.hbc
@@ -26,6 +24,8 @@ wvggui.c
 wvgutils.c
 wvgwin.c
 wvgwing.c
+
+gtwvg.hbx
 
 3state.prg
 activex.prg

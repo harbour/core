@@ -25,16 +25,16 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC HB_MAGIC_SIMPLE
-DYNAMIC MAGIC_BUFFER
-DYNAMIC MAGIC_CHECK
-DYNAMIC MAGIC_COMPILE
-DYNAMIC MAGIC_ERRNO
-DYNAMIC MAGIC_ERROR
-DYNAMIC MAGIC_FILE
-DYNAMIC MAGIC_LOAD
-DYNAMIC MAGIC_OPEN
-DYNAMIC MAGIC_SETFLAGS
+DYNAMIC hb_magic_simple
+DYNAMIC magic_buffer
+DYNAMIC magic_check
+DYNAMIC magic_compile
+DYNAMIC magic_errno
+DYNAMIC magic_error
+DYNAMIC magic_file
+DYNAMIC magic_load
+DYNAMIC magic_open
+DYNAMIC magic_setflags
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBMAGIC__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

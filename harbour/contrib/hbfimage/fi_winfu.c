@@ -72,7 +72,7 @@
 /* Convert from FreeImage to HBITMAP */
 
 /* implementation: HBITMAP bitmap = FI_FiToBitmap( FIBITMAP *dib ); */
-HB_FUNC( FI_FITOBITMAP )
+HB_FUNC( FI_WINCONVTODIB )
 {
    if( hb_pcount() == 1 &&
        HB_ISPOINTER( 1 )
@@ -109,7 +109,7 @@ HB_FUNC( FI_FITOBITMAP )
 /* Convert from HBITMAP to FreeImage */
 
 /* implementation:  FIBITMAP *dib = FI_BitmapToFi( HBITMAP bitmap ); */
-HB_FUNC( FI_BITMAPTOFI )
+HB_FUNC( FI_WINCONVFROMDIB )
 {
    if( hb_pcount() == 1 &&
        HB_ISPOINTER( 1 )

@@ -122,7 +122,7 @@ PROCEDURE Main()
    cText := hb_ZUncompress( cText )
    T( "Plain text", cText )
 
-   OutStd( "hb_Magic_Simple(): t: [" + hb_Magic_Simple( hb_argv( 0 ), MAGIC_NONE ) + "] " + ;
-      "m: [" + hb_Magic_Simple( hb_argv( 0 ), MAGIC_MIME_TYPE ) + "]" + hb_eol() )
+   OutStd( "hb_magic_simple(): t: [" + hb_magic_simple( hb_argv( 0 ), MAGIC_NONE ) + "] " + ;
+      "m: [" + hb_magic_simple( hb_argv( 0 ), MAGIC_MIME_TYPE ) + "]" + hb_eol() )
 
    RETURN
