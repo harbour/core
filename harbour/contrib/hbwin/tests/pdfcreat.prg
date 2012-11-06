@@ -24,7 +24,7 @@ PROCEDURE Main()
 
    LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0
 
-   IF Empty( oPC := WIN_OLECreateObject( "PDFCreator.clsPDFCreator" ) )
+   IF Empty( oPC := win_oleCreateObject( "PDFCreator.clsPDFCreator" ) )
       ? "Unable to create PDFCreator COM object"
       RETURN
    ENDIF
@@ -32,7 +32,7 @@ PROCEDURE Main()
    cFilename := hb_ProgName()
 
    /* Setup event notification */
-   oPC:__hSink := __AxRegisterHandler( oPC:__hObj, {| X | nEvent := X } )
+   oPC:__hSink := __axRegisterHandler( oPC:__hObj, {| X | nEvent := X } )
 
    oPC:cStart( "/NoProcessingAtStartup" )
    oPC:_cOption( "UseAutosave", 1 )
@@ -48,7 +48,7 @@ PROCEDURE Main()
    /* You can do any printing here using WinAPI or
       call a 3rd party application to do printing */
 #if 1
-   oPrinter := Win_Prn():New( "PDFCreator" )
+   oPrinter := win_Prn():New( "PDFCreator" )
    oPrinter:Create()
    oPrinter:startDoc( "Harbour print job via PDFCreator" )
    oPrinter:NewLine()

@@ -216,7 +216,7 @@ ENDCLASS
 
 METHOD New( cPrinter ) CLASS WIN_PRN
 
-   ::PrinterName := iif( Empty( cPrinter ), win_PrinterGetDefault(), cPrinter )
+   ::PrinterName := iif( Empty( cPrinter ), win_printerGetDefault(), cPrinter )
    /* Initialized with the current properties of the printer [jarabal] */
    ::GetDocumentProperties()
 
@@ -270,7 +270,7 @@ METHOD Create() CLASS WIN_PRN
          ::BottomMargin     := ( ::PageHeight - ::TopMargin ) + 1
 
          // Set .T. if can print bitmaps
-         ::BitMapsOk := win_BitMapsOk( ::hPrinterDC )
+         ::BitMapsOk := win_BitmapsOK( ::hPrinterDC )
 
          // supports Colour
          ::NumColors := win_GetDeviceCaps( ::hPrinterDC, WIN_NUMCOLORS )
@@ -815,7 +815,7 @@ METHOD DrawBitMap( oBmp ) CLASS WIN_PRN
    LOCAL lResult := .F.
 
    IF ::BitMapsOk .AND. ::CheckPage() .AND. ! Empty( oBmp:BitMap )
-      IF ( lResult := win_DrawBitMap( ::hPrinterDc, oBmp:BitMap, oBmp:Rect[ 1 ], oBmp:Rect[ 2 ], oBmp:Rect[ 3 ], oBmp:Rect[ 4 ], oBmp:DimXY[ 1 ], oBmp:DimXY[ 2 ] ) )
+      IF ( lResult := win_DrawBitmap( ::hPrinterDc, oBmp:BitMap, oBmp:Rect[ 1 ], oBmp:Rect[ 2 ], oBmp:Rect[ 3 ], oBmp:Rect[ 4 ], oBmp:DimXY[ 1 ], oBmp:DimXY[ 2 ] ) )
          ::HavePrinted := .T.
       ENDIF
    ENDIF

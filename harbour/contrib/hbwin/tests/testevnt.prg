@@ -16,7 +16,7 @@
 
 PROCEDURE Main()
 
-   ? WIN_REPORTEVENT( NIL, "Application", WIN_EVENTLOG_SUCCESS, 0, 0, "hello" )
-   ? WIN_REPORTEVENT( NIL, "Application", WIN_EVENTLOG_SUCCESS, 0, 0, { "hello", "world" } )
+   ? win_ReportEvent( NIL, "Application", WIN_EVENTLOG_SUCCESS, 0, 0, "hello" )
+   ? win_ReportEvent( NIL, "Application", WIN_EVENTLOG_SUCCESS, 0, 0, { "hello", "world" } )
 
    RETURN

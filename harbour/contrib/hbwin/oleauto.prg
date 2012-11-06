@@ -76,7 +76,7 @@ METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
 
    LOCAL hObjEnum
 
-   hObjEnum := __OleEnumCreate( ::__hObj, lDescend )
+   hObjEnum := __oleEnumCreate( ::__hObj, lDescend )
    IF ! Empty( hObjEnum )
       IF ! Empty( ::__hObjEnum )
          /* small hack - clone the object array for nested FOR EACH calls */
@@ -97,7 +97,7 @@ METHOD __enumSkip( enum, lDescend ) CLASS WIN_OLEAUTO
 
    HB_SYMBOL_UNUSED( lDescend )
 
-   xValue := __OleEnumNext( ::__hObjEnum, @lContinue, ::classH )
+   xValue := __oleEnumNext( ::__hObjEnum, @lContinue, ::classH )
    /* set enumerator value */
    ( @enum ):__enumValue( xValue )
 
@@ -113,26 +113,26 @@ METHOD PROCEDURE __enumStop() CLASS WIN_OLEAUTO
 
 /* OLE functions */
 
-FUNCTION win_OleGetActiveObject( ... )
+FUNCTION win_oleGetActiveObject( ... )
 
    LOCAL oOle, hOle
 
-   hOle := __OleGetActiveObject( ... )
+   hOle := __oleGetActiveObject( ... )
    IF ! Empty( hOle )
-      oOle := win_OleAuto()
+      oOle := win_oleAuto()
       oOle:__hObj := hOle
    ENDIF
 
    RETURN oOle
 
 
-FUNCTION win_OleCreateObject( ... )
+FUNCTION win_oleCreateObject( ... )
 
    LOCAL oOle, hOle
 
-   hOle := __OleCreateObject( ... )
+   hOle := __oleCreateObject( ... )
    IF ! Empty( hOle )
-      oOle := win_OleAuto()
+      oOle := win_oleAuto()
       oOle:__hObj := hOle
    ENDIF
 

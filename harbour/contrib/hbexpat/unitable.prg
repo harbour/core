@@ -54,7 +54,7 @@
 
 #define _UNI_NAME_NORM( s ) StrTran( StrTran( StrTran( s, "-" ), "." ), " " )
 
-FUNCTION hb_xml_get_unicode_table( cCP )
+FUNCTION hb_XML_get_unicode_table( cCP )
 
    THREAD STATIC t_uni := NIL
 
@@ -70,7 +70,7 @@ FUNCTION hb_xml_get_unicode_table( cCP )
 
    cCP := _UNI_NAME_NORM( cCP )
    IF cCP $ t_uni
-      RETURN __hb_xml_cdpu16map( t_uni[ cCP ] )
+      RETURN __hb_XML_CdpU16Map( t_uni[ cCP ] )
    ENDIF
 
    RETURN NIL

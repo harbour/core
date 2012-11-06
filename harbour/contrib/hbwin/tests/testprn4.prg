@@ -14,10 +14,10 @@
 
 PROCEDURE Main()
 
-   LOCAL a := WIN_PRINTERGETDEFAULT()
+   LOCAL a := win_printerGetDefault()
 
    ? ">" + a + "<"
 
-   ? WIN_PRINTERSETDEFAULT( a )
+   ? win_printerSetDefault( a )
 
    RETURN

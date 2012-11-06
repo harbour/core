@@ -18,13 +18,13 @@ PROCEDURE Main()
 
    LOCAL a, b, c, d
 
-   ? HB_GSAPI_REVISION( @a, @b, @c, @d )
+   ? hb_gsapi_revision( @a, @b, @c, @d )
 
    ? a
    ? b
    ? c
    ? d
 
-   ? HB_GS( { "--version" } )
+   ? hb_gs( { "--version" } )
 
    RETURN

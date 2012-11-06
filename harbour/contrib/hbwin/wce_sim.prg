@@ -115,7 +115,7 @@ METHOD lNumberOfPhoneBookEntries( nType, /* @ */ nTotal, /* @ */ nUsed ) CLASS w
       nType := SIM_PBSTORAGE_SIM
    ENDIF
 
-   nResult       := wce_SimPhoneBookStatus( ::hSim, nType, @nTotal, @nUsed )
+   nResult       := wce_SimPhonebookStatus( ::hSim, nType, @nTotal, @nUsed )
    ::nLastError  := nResult
 
    RETURN nResult == SIM_E_OK
@@ -147,7 +147,7 @@ METHOD aGetAllPhoneBookEntries( nType ) CLASS wce_sim
 
    FOR nPos := 1 TO nUsed
       aEntry := {}
-      nResult := wce_SimReadPhoneBookEntry( ::hSim, nType, nPos, @aEntry )
+      nResult := wce_SimReadPhonebookEntry( ::hSim, nType, nPos, @aEntry )
       IF nResult != SIM_E_OK
          ::nLastError := nResult
          EXIT
@@ -174,7 +174,7 @@ METHOD lGetSimPhoneEntry( nPos, nType, /* @ */ aEntry ) CLASS wce_sim
       nType := SIM_PBSTORAGE_SIM
    ENDIF
 
-   nResult := wce_SimReadPhoneBookEntry( ::hSim, nType, nPos, @a )
+   nResult := wce_SimReadPhonebookEntry( ::hSim, nType, nPos, @a )
 
    aEntry := { a }
    ::nLastError := nResult
@@ -197,7 +197,7 @@ METHOD lSetSimPhoneEntry( nPos, nType, cNumber, cName, nPlan, nAddrType ) CLASS 
       nType := SIM_PBSTORAGE_SIM
    ENDIF
 
-   nResult := wce_SimWritePhoneBookEntry( ::hSim, nType, nPos, cNumber, cName, nPlan, nAddrType )
+   nResult := wce_SimWritePhonebookEntry( ::hSim, nType, nPos, cNumber, cName, nPlan, nAddrType )
    ::nLastError := nResult
 
    RETURN nResult == SIM_E_OK
@@ -215,7 +215,7 @@ METHOD lDelSimPhoneEntry( nPos, nType ) CLASS wce_sim
       nType := SIM_PBSTORAGE_SIM
    ENDIF
 
-   nResult := wce_SimDeletePhoneBookEntry( ::hSim, nType, nPos )
+   nResult := wce_SimDeletePhonebookEntry( ::hSim, nType, nPos )
    ::nLastError := nResult
 
    RETURN nResult == SIM_E_OK

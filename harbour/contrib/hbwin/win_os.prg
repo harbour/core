@@ -66,7 +66,7 @@
 /* NOTE: To change any of these registry settings
          Administrator rights are required by default in Windows. [vszakats] */
 
-FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
+FUNCTION win_osNetRegOk( lSetIt, lDoVista )
 
    LOCAL bRetVal := .T.
    LOCAL cKeySrv
@@ -123,7 +123,7 @@ FUNCTION WIN_OSNETREGOK( lSetIt, lDoVista )
 
    RETURN bRetVal
 
-FUNCTION WIN_OSNETVREDIROK( /* @ */ nResult )
+FUNCTION win_osNetVRedirOk( /* @ */ nResult )
 
    LOCAL aFiles
 

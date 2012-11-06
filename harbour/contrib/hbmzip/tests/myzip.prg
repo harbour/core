@@ -88,7 +88,7 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   hZip := HB_ZIPOPEN( cZipName )
+   hZip := hb_zipOpen( cZipName )
    IF ! Empty( hZip )
       ? "Archive file:", cZipName
       FOR EACH cWild IN aWild
@@ -98,12 +98,12 @@ PROCEDURE Main( ... )
             FOR EACH aFile IN aDir
                IF ! cPath + aFile[ 1 ] == cZipName
                   ? "Adding", cPath + aFile[ 1 ]
-                  HB_ZipStoreFile( hZip, cPath + aFile[ 1 ], cPath + aFile[ 1 ], cPassword )
+                  hb_zipStoreFile( hZip, cPath + aFile[ 1 ], cPath + aFile[ 1 ], cPassword )
                ENDIF
             NEXT
          ENDIF
       NEXT
-      HB_ZIPCLOSE( hZip, cComment )
+      hb_zipClose( hZip, cComment )
    ENDIF
 
    RETURN

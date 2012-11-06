@@ -18,7 +18,7 @@ PROCEDURE Main()
 
 #if defined( __PLATFORM__WINCE )
 
-   LOCAL o := wce_sim():New()
+   LOCAL o := wce_Sim():New()
    LOCAL a
 
    IF o:lInitialize()

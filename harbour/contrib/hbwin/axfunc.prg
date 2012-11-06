@@ -50,13 +50,13 @@
  *
  */
 
-FUNCTION WIN_AxGetControl( hWnd, bHandler, cID )
+FUNCTION win_axGetControl( hWnd, bHandler, cID )
 
-   LOCAL oAx := WIN_OleAuto()
+   LOCAL oAx := win_oleAuto()
 
-   oAx:__hObj := __AxGetControl( hWnd )
+   oAx:__hObj := __axGetControl( hWnd )
    IF bHandler != NIL
-      oAx:__hSink := __AxRegisterHandler( oAx:__hObj, bHandler, cID )
+      oAx:__hSink := __axRegisterHandler( oAx:__hObj, bHandler, cID )
    ENDIF
 
    RETURN oAx

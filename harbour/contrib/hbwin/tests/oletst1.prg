@@ -19,7 +19,7 @@ PROCEDURE Main()
 
    LOCAL oObject
 
-   oObject := win_OleCreateObject( "MyOleRPCServer" )
+   oObject := win_oleCreateObject( "MyOleRPCServer" )
 
    IF ! Empty( oObject )
       IF oObject:connect( NETSERVER, NETPORT,, NETPASSWD )

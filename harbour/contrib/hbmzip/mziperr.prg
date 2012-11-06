@@ -52,7 +52,7 @@
 
 #include "hbmzip.ch"
 
-FUNCTION hb_ZipErrorStr( nStatus )
+FUNCTION hb_zipErrorStr( nStatus )
 
    DO CASE
    CASE nStatus == ZIP_OK                  ; RETURN "ZIP_OK"
@@ -73,7 +73,7 @@ FUNCTION hb_ZipErrorStr( nStatus )
 
    RETURN "ZIP_UNKNOWN: " + hb_ntos( nStatus )
 
-FUNCTION hb_UnzipErrorStr( nStatus )
+FUNCTION hb_unzipErrorStr( nStatus )
 
    DO CASE
    CASE nStatus == UNZ_OK                  ; RETURN "UNZ_OK"

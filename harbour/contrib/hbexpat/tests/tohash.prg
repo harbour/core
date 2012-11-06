@@ -119,7 +119,7 @@ STATIC FUNCTION cb_unknownencoding( xEData, cEncoding, aMap )
 
    HB_SYMBOL_UNUSED( xEData )
 
-   aMyMap := hb_xml_get_unicode_table( cEncoding )
+   aMyMap := hb_XML_get_unicode_table( cEncoding )
    IF ! Empty( aMyMap )
       ACopy( aMyMap, aMap )
       RETURN HB_XML_STATUS_OK

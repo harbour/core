@@ -17,7 +17,7 @@ PROCEDURE Main()
    LOCAL oObject, oTime, oInfo
    LOCAL p1, p2, p3, p4, p5, p6, p7
 
-   oObject := win_OleCreateObject( "MyOleObjServer" )
+   oObject := win_oleCreateObject( "MyOleObjServer" )
 
    IF ! Empty( oObject )
       oTime := oObject:timer()

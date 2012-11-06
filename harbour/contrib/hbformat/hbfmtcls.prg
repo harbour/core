@@ -749,8 +749,9 @@ METHOD SetOption( cLine, i, aIni ) CLASS HBFORMATCODE
             xRes := ""
          ELSEIF IsDigit( cToken2 ) .OR. ( Left( cToken2, 1 ) == "-" .AND. IsDigit( LTrim( SubStr( cToken2, 2 ) ) ) )
             xRes := Val( cToken2 )
-         ELSEIF IsAlpha( cToken2 )
-            IF ( cTemp := Upper( cToken2 ) ) == "ON" .OR. cTemp == "YES"
+         ELSE
+            cTemp := Upper( cToken2 )
+            IF cTemp == "ON" .OR. cTemp == "YES"
                xRes := .T.
             ELSEIF cTemp == "OFF" .OR. cTemp == "NO"
                xRes := .F.
@@ -769,8 +770,6 @@ METHOD SetOption( cLine, i, aIni ) CLASS HBFORMATCODE
                   xRes := cToken2
                ENDIF
             ENDIF
-         ELSE
-            ::nErr := 3
          ENDIF
          IF ::nErr == 0 .AND. !( ValType( xRes ) == Left( cToken1, 1 ) )
             ::nErr := 4
@@ -844,7 +843,7 @@ METHOD Array2Source( aSource ) CLASS HBFORMATCODE
 METHOD File2Array( cFileName ) CLASS HBFORMATCODE
 
    IF hb_FileExists( cFileName )
-      RETURN ::String2Array( MemoRead( cFileName ) )
+      RETURN ::Source2Array( MemoRead( cFileName ) )
    ENDIF
 
    RETURN NIL
@@ -871,7 +870,7 @@ METHOD Array2File( cFileName, aSource ) CLASS HBFORMATCODE
       cFileName := cPath + Lower( iif( i == 0, cFileName, SubStr( cFileName, i + 1 ) ) )
    ENDIF
 
-   RETURN hb_MemoWrit( cFileName, ::Array2String( aSource ) )
+   RETURN hb_MemoWrit( cFileName, ::Array2Source( aSource ) )
 
 STATIC FUNCTION rf_AINS( arr, nItem, cItem )
 

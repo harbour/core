@@ -10,7 +10,7 @@ PROCEDURE Main( cPar1 )
 
    LOCAL nPrn := 1
    LOCAL cBMPFile := Space( 40 )
-   LOCAL aPrn := WIN_PRINTERLIST()
+   LOCAL aPrn := win_printerList()
    LOCAL GetList := {}
 
    CLS
@@ -36,7 +36,7 @@ PROCEDURE Main( cPar1 )
 
 STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
 
-   LOCAL oPrinter := Win_Prn():New( cPrinter )
+   LOCAL oPrinter := win_Prn():New( cPrinter )
    LOCAL aFonts
    LOCAL x
    LOCAL nColFixed

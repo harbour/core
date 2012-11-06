@@ -82,11 +82,11 @@ PROCEDURE Main( ... )
 
    AEval( aWild, {| cPattern, nPos | aWild[ nPos ] := StrTran( cPattern, "\", "/" ) } )
 
-   hUnzip := HB_UNZIPOPEN( cFileName )
+   hUnzip := hb_unzipOpen( cFileName )
 
    IF ! Empty( hUnzip )
       ? "Archive file:", cFileName
-      HB_UnzipGlobalInfo( hUnzip, @nSize, @cComment )
+      hb_unzipGlobalInfo( hUnzip, @nSize, @cComment )
       ? "Number of entires:", nSize
       IF ! Empty( cComment )
          ? "global comment:", cComment
@@ -94,9 +94,9 @@ PROCEDURE Main( ... )
       ? ""
       ? "Filename                         Date     Time         Size Compressed  Action"
       ? "---------------------------------------------------------------------------------"
-      nErr := HB_UNZIPFILEFIRST( hUnzip )
+      nErr := hb_unzipFileFirst( hUnzip )
       DO WHILE nErr == 0
-         HB_UnzipFileInfo( hUnzip, @cFile, @dDate, @cTime, , , , @nSize, @nCompSize, @lCrypted, @cComment )
+         hb_unzipFileInfo( hUnzip, @cFile, @dDate, @cTime, , , , @nSize, @nCompSize, @lCrypted, @cComment )
          ? PadR( cFile + iif( lCrypted, "*", "" ), 30 ), DToC( dDate ), cTime, nSize, nCompSize
          IF ! Empty( cComment )
             ? "comment:", cComment
@@ -104,14 +104,14 @@ PROCEDURE Main( ... )
 
          IF AScan( aWild, {| cPattern | hb_WildMatch( cPattern, cFile, .T. ) } ) > 0
             ?? " Extracting"
-            HB_UnzipExtractCurrentFile( hUnzip, NIL, cPassword )
+            hb_unzipExtractCurrentFile( hUnzip, NIL, cPassword )
          ELSE
             ?? " Skipping"
          ENDIF
 
-         nErr := HB_UNZIPFILENEXT( hUnzip )
+         nErr := hb_unzipFileNext( hUnzip )
       ENDDO
-      HB_UNZIPCLOSE( hUnzip )
+      hb_unzipClose( hUnzip )
    ENDIF
 
    RETURN
