@@ -93,20 +93,20 @@
              xI := {1, .T.}
              xI := {2, xI, xI}
              ? hb_jsonEncode( xI )  // [2,[1,true],[1,true]]
-*/
+ */
 
 typedef struct
 {
-   char *   pBuffer;
-   char *   pHead;
-   HB_SIZE  nAlloc;
-   void **  pId;
-   HB_SIZE  nAllocId;
-   HB_BOOL  fHuman;
+   char *  pBuffer;
+   char *  pHead;
+   HB_SIZE nAlloc;
+   void ** pId;
+   HB_SIZE nAllocId;
+   HB_BOOL fHuman;
 } HB_JSON_ENCODE_CTX, * PHB_JSON_ENCODE_CTX;
 
 
-#if defined( HB_OS_UNIX ) && !defined( HB_EOL_CRLF )
+#if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )
    static const char s_szEol[ 2 ] = { HB_CHAR_LF, 0 };
    static const int  s_iEolLen = 1;
 #else
@@ -114,7 +114,7 @@ typedef struct
    static const int  s_iEolLen = 2;
 #endif
 
-#define INDENT_SIZE   2
+#define INDENT_SIZE  2
 
 static void _hb_jsonCtxAdd( PHB_JSON_ENCODE_CTX pCtx, const char * szString, HB_SIZE nLen )
 {
@@ -186,7 +186,7 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
       while( nPos < nLen )
       {
          nPos2 = nPos;
-         while( * ( ( const unsigned char * ) szString + nPos2 ) >= ' ' &&
+         while( *( ( const unsigned char * ) szString + nPos2 ) >= ' ' &&
                 szString[ nPos2 ] != '\\' && szString[ nPos2 ] != '\"' )
             nPos2++;
          if( nPos2 > nPos )
@@ -297,19 +297,19 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
                _hb_jsonCtxAdd( pCtx, ",", 1 );
 
             if( pCtx->fHuman )
-              _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+               _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
 
             if( pCtx->fHuman &&
-                !( ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) &&
-                   hb_itemSize( pItem ) > 0 ) )
+                ! ( ( HB_IS_ARRAY( pItem ) || HB_IS_HASH( pItem ) ) &&
+                    hb_itemSize( pItem ) > 0 ) )
                _hb_jsonCtxAddIndent( pCtx, ( nLevel + 1 ) * INDENT_SIZE );
 
             _hb_jsonEncode( pItem, pCtx, nLevel + 1 );
          }
          if( pCtx->fHuman )
          {
-           _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
-           _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
+            _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+            _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
          }
          _hb_jsonCtxAdd( pCtx, "]", 1 );
       }
@@ -360,8 +360,8 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
          }
          if( pCtx->fHuman )
          {
-           _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
-           _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
+            _hb_jsonCtxAdd( pCtx, s_szEol, s_iEolLen );
+            _hb_jsonCtxAddIndent( pCtx, nLevel * INDENT_SIZE );
          }
          _hb_jsonCtxAdd( pCtx, "}", 1 );
       }
@@ -378,7 +378,8 @@ static void _hb_jsonEncode( PHB_ITEM pValue, PHB_JSON_ENCODE_CTX pCtx, HB_SIZE n
 
 static const char * _skipws( const char * szSource )
 {
-   while( *szSource == ' ' || *szSource == '\t' || *szSource == '\n' || *szSource == '\r') szSource++;
+   while( *szSource == ' ' || *szSource == '\t' || *szSource == '\n' || *szSource == '\r' )
+      szSource++;
    return szSource;
 }
 
@@ -456,14 +457,12 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
                   break;
                }
                default:
-               {
                   hb_xfree( szDest );
                   return NULL;
-               }
             }
             szSource++;
          }
-         else if( * ( const unsigned char * ) szSource >= ' ' )
+         else if( *( const unsigned char * ) szSource >= ' ' )
             *szHead++ = *szSource++;
          else
          {
@@ -533,7 +532,7 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
       if( fDbl )
          hb_itemPutND( pValue, fNeg ? -dblValue : dblValue );
       else
-         hb_itemPutNInt( pValue, fNeg ? -nValue : nValue);
+         hb_itemPutNInt( pValue, fNeg ? -nValue : nValue );
       return szSource;
    }
    else if( ! strncmp( szSource, "null", 4 ) )

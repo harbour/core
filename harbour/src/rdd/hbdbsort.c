@@ -93,7 +93,7 @@ HB_BOOL hb_dbQSortAdvance( LPDBQUICKSORT pQuickSort, HB_USHORT uiCount )
 
    /* Write chunk */
    uiSize = uiCount * pQuickSort->uiRecordLen;
-   return ( hb_fsWrite( pQuickSort->hFile, pQuickSort->pBuffer, uiSize ) == uiSize );
+   return hb_fsWrite( pQuickSort->hFile, pQuickSort->pBuffer, uiSize ) == uiSize;
 }
 
 static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB_ULONG ulRecNo2 )
@@ -161,9 +161,9 @@ static HB_BOOL hb_dbQSortIsLess( LPDBQUICKSORT pQuickSort, HB_ULONG ulRecNo1, HB
       if( iResult == 0 )
          continue;
       else if( bAscending )
-         return ( iResult < 0 );
+         return iResult < 0;
       else
-         return ( iResult > 0 );
+         return iResult > 0;
    }
    return HB_FALSE;
 }
@@ -210,7 +210,8 @@ static void hb_dbQSortDo( LPDBQUICKSORT pQuickSort, HB_ULONG ulFirst, HB_ULONG u
          ulLeft++;
          ulRight--;
       }
-   } while( ulLeft <= ulRight );
+   }
+   while( ulLeft <= ulRight );
 
    /* Sort segment */
    if( ulFirst < ulRight )

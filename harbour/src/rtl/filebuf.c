@@ -60,7 +60,7 @@
 #include "hbthread.h"
 #include "hbvm.h"
 
-#if !defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #  if defined( HB_OS_UNIX )
@@ -69,12 +69,12 @@
 #endif
 
 
-#define HB_FLOCK_RESIZE       16
+#define HB_FLOCK_RESIZE  16
 
 typedef struct
 {
-   HB_FOFFSET     start;
-   HB_FOFFSET     len;
+   HB_FOFFSET start;
+   HB_FOFFSET len;
 }
 HB_FLOCK, * PHB_FLOCK;
 
@@ -102,7 +102,7 @@ static HB_CRITICAL_NEW( s_fileMtx );
 
 static PHB_FILE s_openFiles = NULL;
 
-/*
+#if 0
 void hb_fileDsp( PHB_FILE pFile, const char * szMsg )
 {
    HB_UINT uiPos = 0;
@@ -116,7 +116,7 @@ void hb_fileDsp( PHB_FILE pFile, const char * szMsg )
    fprintf( stderr, "]" );
    fflush(stderr);
 }
-*/
+#endif
 
 static PHB_FILE hb_fileFind( HB_ULONG device, HB_ULONG inode )
 {
@@ -139,7 +139,7 @@ static PHB_FILE hb_fileNew( HB_FHANDLE hFile, HB_BOOL fShared, HB_BOOL fReadonly
 {
    PHB_FILE pFile = hb_fileFind( device, inode );
 
-   if( !pFile )
+   if( ! pFile )
    {
       pFile = ( PHB_FILE ) hb_xgrab( sizeof( HB_FILE ) );
       memset( pFile, 0, sizeof( HB_FILE ) );
@@ -264,7 +264,7 @@ static HB_BOOL hb_fileSetLock( PHB_FILE pFile, HB_BOOL * pfLockFS,
       hb_fileInsertLock( pFile, uiPos, nStart, nLen );
 
    if( pFile->shared )
-      * pfLockFS = HB_TRUE;
+      *pfLockFS = HB_TRUE;
    return HB_TRUE;
 }
 
@@ -282,7 +282,7 @@ static HB_BOOL hb_fileUnlock( PHB_FILE pFile, HB_BOOL * pfLockFS,
           nStart - pLock->start <= pLock->len - nLen )
       {
          if( pfLockFS && pFile->shared )
-            * pfLockFS = HB_TRUE;
+            *pfLockFS = HB_TRUE;
          else if( nStart == pLock->start )
          {
             if( nLen == pLock->len )
@@ -340,6 +340,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
                                PHB_ITEM pError )
 {
    PHB_FILE pFile = NULL;
+
 #if defined( HB_OS_UNIX )
    struct stat statbuf;
    HB_BOOL fResult;
@@ -364,9 +365,9 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
       pFile = hb_fileFind( statbuf.st_dev, statbuf.st_ino );
       if( pFile )
       {
-         if( !fShared || ! pFile->shared || ( uiExFlags & FXO_TRUNCATE ) != 0 )
+         if( ! fShared || ! pFile->shared || ( uiExFlags & FXO_TRUNCATE ) != 0 )
             fResult = HB_FALSE;
-         else if( !fReadonly && pFile->readonly )
+         else if( ! fReadonly && pFile->readonly )
             pFile = NULL;
          else
             pFile->used++;
@@ -376,7 +377,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
 
    if( pFile )
    {
-      if( !fResult )
+      if( ! fResult )
       {
          hb_fsSetError( ( uiExFlags & FXO_TRUNCATE ) ? 5 : 32 );
          pFile = NULL;
@@ -387,7 +388,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
       if( pError )
       {
          hb_errPutFileName( pError, pszFile );
-         if( !fResult )
+         if( ! fResult )
          {
             hb_errPutOsCode( pError, hb_fsError() );
             hb_errPutGenCode( pError, ( HB_ERRCODE ) ( ( uiExFlags & FXO_TRUNCATE ) ? EG_CREATE : EG_OPEN ) );
@@ -424,7 +425,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
             }
             if( pFile->uiLocks == 0 )
             {
-#if !defined( HB_USE_SHARELOCKS ) || defined( HB_USE_BSDLOCKS )
+#if ! defined( HB_USE_SHARELOCKS ) || defined( HB_USE_BSDLOCKS )
                if( pFile->hFileRO != FS_ERROR )
                {
                   hb_fsClose( pFile->hFileRO );
@@ -435,7 +436,7 @@ static PHB_FILE s_fileExtOpen( const char * pFilename, const char * pDefExt,
                {
                   hb_fsClose( hFile );
                   hFile = FS_ERROR;
-#if defined( HB_USE_SHARELOCKS ) && !defined( HB_USE_BSDLOCKS )
+#if defined( HB_USE_SHARELOCKS ) && ! defined( HB_USE_BSDLOCKS )
                   /* TOFIX: possible race condition */
                   hb_fsLockLarge( hFile, HB_SHARELOCK_POS, HB_SHARELOCK_SIZE,
                                   FL_LOCK | FLX_SHARED );
@@ -533,7 +534,7 @@ static HB_BOOL s_fileLock( PHB_FILE pFile, HB_FOFFSET nStart, HB_FOFFSET nLen,
             iType |= FLX_SHARED;
 #endif
          fResult = hb_fsLockLarge( pFile->hFile, nStart, nLen, ( HB_USHORT ) iType );
-         if( !fResult )
+         if( ! fResult )
          {
             hb_threadEnterCriticalSection( &s_fileMtx );
             hb_fileUnlock( pFile, NULL, nStart, nLen );
@@ -635,7 +636,7 @@ static const HB_FILE_FUNCS * s_fileMethods( void )
 
 
 
-#define HB_FILE_TYPE_MAX      32
+#define HB_FILE_TYPE_MAX  32
 
 static const HB_FILE_FUNCS * s_pFileTypes[ HB_FILE_TYPE_MAX ];
 static int s_iFileTypes = 0;

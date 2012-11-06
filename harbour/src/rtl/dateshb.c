@@ -210,6 +210,7 @@ HB_FUNC( DOW )
 HB_FUNC( TIME )
 {
    char szResult[ 9 ];
+
    hb_dateTimeStr( szResult );
    hb_retclen( szResult, 8 );
 }
@@ -217,6 +218,7 @@ HB_FUNC( TIME )
 HB_FUNC( DATE )
 {
    int iYear, iMonth, iDay;
+
    hb_dateToday( &iYear, &iMonth, &iDay );
    hb_retd( iYear, iMonth, iDay );
 }

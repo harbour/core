@@ -217,7 +217,7 @@ HB_FUNC( DISKSPACE )
 
       /* Query level 1 info from filesystem */
       bError = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) != 0;
-      if( !bError )
+      if( ! bError )
          dSpace = ( double ) fsa.cUnitAvail *
                   ( double ) fsa.cSectorUnit *
                   ( double ) fsa.cbSector;
@@ -227,7 +227,7 @@ HB_FUNC( DISKSPACE )
       const char * szName = hb_parc( 1 );
       char * pszFree = NULL;
 
-      if( !szName )
+      if( ! szName )
          szName = "/";
       else
          szName = hb_fsNameConv( szName, &pszFree );
@@ -246,7 +246,7 @@ HB_FUNC( DISKSPACE )
          struct statvfs st;
          bError = statvfs( szName, &st ) != 0;
 #endif
-         if( !bError )
+         if( ! bError )
          {
 #if ! defined( HB_OS_VXWORKS )
             if( getuid() == 0 )

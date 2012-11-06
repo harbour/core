@@ -878,7 +878,7 @@ char * hb_strncpyUpper( char * pDest, const char * pSource, HB_SIZE nLen )
 {
    char * pBuf = pDest;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strncpyUpper(%p, %.*s, %" HB_PFS "u)", pDest, ( int ) nLen, pSource, nLen ) );
 
    pDest[ nLen ] = '\0';
 

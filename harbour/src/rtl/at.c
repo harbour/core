@@ -60,16 +60,16 @@
 
 HB_FUNC( HB_AT )
 {
-   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pSub  = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
 
    if( pText && pSub )
    {
-      PHB_CODEPAGE cdp = hb_vmCDP();
-      const char * pszText = hb_itemGetCPtr( pText );
-      HB_SIZE nTextLength = hb_itemGetCLen( pText );
-      HB_SIZE nStart = hb_parns( 3 );
-      HB_SIZE nFrom, nTo, nPos = 0;
+      PHB_CODEPAGE cdp         = hb_vmCDP();
+      const char * pszText     = hb_itemGetCPtr( pText );
+      HB_SIZE      nTextLength = hb_itemGetCLen( pText );
+      HB_SIZE      nStart      = hb_parns( 3 );
+      HB_SIZE      nFrom, nTo, nPos = 0;
 
       if( nStart <= 1 )
          nStart = nFrom = 0;
@@ -80,7 +80,7 @@ HB_FUNC( HB_AT )
 
       if( nFrom < nTextLength )
       {
-         pszText += nFrom;
+         pszText     += nFrom;
          nTextLength -= nFrom;
          if( HB_ISNUM( 4 ) )
          {
@@ -120,7 +120,7 @@ HB_FUNC( HB_AT )
 
 HB_FUNC( AT )
 {
-   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pSub  = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
 
    if( pText && pSub )

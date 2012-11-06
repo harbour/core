@@ -2690,7 +2690,7 @@ static HB_ERRCODE adsPutValue( ADSAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pItem
             /* write to autoincrement field will gen error 5066
                #if HB_TR_LEVEL >= HB_TR_DEBUG
                   if( pField->uiTypeExtended == ADS_AUTOINC )
-                     HB_TRACE(HB_TR_INFO, ("adsPutValue() error"));
+                     HB_TRACE( HB_TR_INFO, ( "adsPutValue() error" ) );
                #endif
              */
          }
@@ -3407,7 +3407,7 @@ static HB_ERRCODE adsOpen( ADSAREAP pArea, LPDBOPENINFO pOpenInfo )
    const char * szFile;
    HB_BOOL fDictionary = HB_FALSE, fUnicode = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("adsOpen(%p)", pArea));
+   HB_TRACE( HB_TR_DEBUG, ( "adsOpen(%p)", pArea ) );
 
    hConnection = HB_ADS_DEFCONNECTION( pOpenInfo->ulConnection, pOpenInfo->abName );
    u32RetVal = AdsGetHandleType( hConnection, &usType);

@@ -156,7 +156,9 @@ HB_U32 hb_crc32( HB_U32 crc, const void * buf, HB_SIZE len )
    {
       const unsigned char * ucbuf = ( const unsigned char * ) buf;
       do
+      {
          crc = crc32_tab[ ( crc ^ *ucbuf++ ) & 0xFF ] ^ ( crc >> 8 );
+      }
       while( --len );
    }
    return crc ^ 0xffffffffL;
@@ -169,7 +171,9 @@ HB_U16 hb_crc16( HB_U16 crc, const void * buf, HB_SIZE len )
    {
       const unsigned char * ucbuf = ( const unsigned char * ) buf;
       do
+      {
          crc = crc16_tab[ ( crc ^ *ucbuf++ ) & 0xFF ] ^ ( crc >> 8 );
+      }
       while( --len );
    }
    return crc ^ 0xffff;
@@ -196,7 +200,9 @@ HB_MAXUINT hb_crc( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT pol
          int i = 8;
          crc ^= *ucbuf++;
          do
+         {
             crc = crc & 1 ? revp ^ ( crc >> 1 ) : crc >> 1;
+         }
          while( --i );
       }
       while( --len );
@@ -227,7 +233,9 @@ HB_MAXUINT hb_crcct( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT p
             int i = 8;
             crc ^= ( HB_MAXUINT ) ( *ucbuf++ );
             do
+            {
                crc = crc & mask ? poly ^ ( crc << 1 ) : crc << 1;
+            }
             while( --i );
          }
          while( --len );
@@ -241,7 +249,9 @@ HB_MAXUINT hb_crcct( HB_MAXUINT crc, const void * buf, HB_SIZE len, HB_MAXUINT p
             int i = 8;
             crc ^= ( HB_MAXUINT ) ( *ucbuf++ ) << bits;
             do
+            {
                crc = crc & mask ? poly ^ ( crc << 1 ) : crc << 1;
+            }
             while( --i );
          }
          while( --len );

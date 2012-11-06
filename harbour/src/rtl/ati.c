@@ -59,7 +59,7 @@
 
 static HB_SIZE hb_strAtI( PHB_CODEPAGE cdp, const char * szSub, HB_SIZE nSubLen, const char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strAtI(%p, %s, %" HB_PFS "u, %s, %" HB_PFS "u)", cdp, szSub, nSubLen, szText, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strAtI(%p, %s, %" HB_PFS "u, %s, %" HB_PFS "u)", cdp, szSub, nSubLen, szText, nLen ) );
 
    if( nSubLen > 0 && nLen >= nSubLen )
    {
@@ -88,16 +88,16 @@ static HB_SIZE hb_strAtI( PHB_CODEPAGE cdp, const char * szSub, HB_SIZE nSubLen,
 
 HB_FUNC( HB_ATI )
 {
-   PHB_ITEM pSub = hb_param( 1, HB_IT_STRING );
+   PHB_ITEM pSub  = hb_param( 1, HB_IT_STRING );
    PHB_ITEM pText = hb_param( 2, HB_IT_STRING );
 
    if( pText && pSub )
    {
-      PHB_CODEPAGE cdp = hb_vmCDP();
-      const char * pszText = hb_itemGetCPtr( pText );
-      HB_SIZE nTextLength = hb_itemGetCLen( pText );
-      HB_SIZE nStart = hb_parns( 3 );
-      HB_SIZE nFrom, nTo, nPos = 0;
+      PHB_CODEPAGE cdp         = hb_vmCDP();
+      const char * pszText     = hb_itemGetCPtr( pText );
+      HB_SIZE      nTextLength = hb_itemGetCLen( pText );
+      HB_SIZE      nStart      = hb_parns( 3 );
+      HB_SIZE      nFrom, nTo, nPos = 0;
 
       if( nStart <= 1 )
          nStart = nFrom = 0;
@@ -108,7 +108,7 @@ HB_FUNC( HB_ATI )
 
       if( nFrom < nTextLength )
       {
-         pszText += nFrom;
+         pszText     += nFrom;
          nTextLength -= nFrom;
          if( HB_ISNUM( 4 ) )
          {

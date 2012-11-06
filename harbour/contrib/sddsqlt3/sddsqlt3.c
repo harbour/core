@@ -289,7 +289,9 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   /* HB_TRACE( HB_TR_ALWAYS, ("fieldcount=%d", iNameLen) ); */
+#if 0
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldcount=%d", iNameLen ) );
+#endif
 
    errCode = 0;
    bError  = HB_FALSE;
@@ -314,7 +316,9 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
       pFieldInfo.uiLen = ( HB_USHORT ) iSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;
 
-      /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d nullable=%d", pFieldInfo.atomName, iDataType, iSize, iDec ) ); */
+#if 0
+      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d nullable=%d", pFieldInfo.atomName, iDataType, iSize, iDec ) );
+#endif
 
       switch( iDataType )
       {
@@ -332,7 +336,9 @@ static HB_ERRCODE sqlite3Open( SQLBASEAREAP pArea )
             break;
 
          default:
-            /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", iDataType) ); */
+#if 0
+            HB_TRACE( HB_TR_ALWAYS, ( "new sql type=%d", iDataType ) );
+#endif
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) iDataType;
             pFieldInfo.uiType = 0;

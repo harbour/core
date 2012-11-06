@@ -93,7 +93,7 @@ HB_FUNC( HB_DISKSPACE )
       LPCTSTR lpPath = HB_PARSTR( 1, &hPath, NULL );
       TCHAR szPathBuf[ 4 ];
 
-      if( !lpPath )
+      if( ! lpPath )
       {
 #ifdef HB_OS_HAS_DRIVE_LETTER
          if( HB_ISNUM( 1 ) )
@@ -137,7 +137,7 @@ HB_FUNC( HB_DISKSPACE )
             s_fInit = HB_TRUE;
          }
 
-         if( !s_pGetDiskFreeSpaceEx )
+         if( ! s_pGetDiskFreeSpaceEx )
          {
             DWORD dwSectorsPerCluster;
             DWORD dwBytesPerSector;
@@ -164,9 +164,9 @@ HB_FUNC( HB_DISKSPACE )
 
                   case HB_DISK_USED:
                   case HB_DISK_TOTAL:
-                     dSpace  = ( double ) dwTotalNumberOfClusters *
-                               ( double ) dwSectorsPerCluster *
-                               ( double ) dwBytesPerSector;
+                     dSpace = ( double ) dwTotalNumberOfClusters *
+                              ( double ) dwSectorsPerCluster *
+                              ( double ) dwBytesPerSector;
 
                      if( uiType == HB_DISK_USED )
                         dSpace -= ( double ) dwNumberOfFreeClusters *
@@ -298,7 +298,7 @@ HB_FUNC( HB_DISKSPACE )
          /* Query level 1 info from filesystem */
          while( ( rc = DosQueryFSInfo( uiDrive, 1, &fsa, sizeof( fsa ) ) ) != 0 )
          {
-            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, (EF_CANDEFAULT | EF_CANRETRY), HB_ERR_ARGS_BASEPARAMS ) != E_RETRY )
+            if( hb_errRT_BASE_Ext1( EG_OPEN, 2018, NULL, NULL, 0, ( EF_CANDEFAULT | EF_CANRETRY ), HB_ERR_ARGS_BASEPARAMS ) != E_RETRY )
                break;
          }
 
@@ -346,7 +346,7 @@ HB_FUNC( HB_DISKSPACE )
       char szPathBuf[ 4 ];
       const char * szPath = hb_parc( 1 );
 
-      if( !szPath )
+      if( ! szPath )
       {
 #ifdef HB_OS_HAS_DRIVE_LETTER
          if( HB_ISNUM( 1 ) )
@@ -385,9 +385,9 @@ HB_FUNC( HB_DISKSPACE )
                break;
 
             case HB_DISK_USED:
-                dSpace = ( double ) ( sf.f_blocks - sf.f_bfree ) *
-                         ( double ) sf.f_bsize;
-                break;
+               dSpace = ( double ) ( sf.f_blocks - sf.f_bfree ) *
+                        ( double ) sf.f_bsize;
+               break;
 
             case HB_DISK_TOTAL:
                dSpace = ( double ) sf.f_blocks * ( double ) sf.f_bsize;

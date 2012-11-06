@@ -4124,7 +4124,7 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
    PHB_MODULE pModule;
    HB_BOOL fGenCode = HB_TRUE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compCompile(%s,%p,%d)", szPrg, szBuffer, iStartLine));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compCompile(%s,%p,%d)", szPrg, szBuffer, iStartLine ) );
 
    hb_compSaveSwitches( HB_COMP_PARAM, &switches );
    /* Initialize support variables */

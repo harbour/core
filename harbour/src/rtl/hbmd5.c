@@ -56,9 +56,9 @@
  */
 
 /*
-MD5 digest (based on RFC 1321 only). Harbour implementation
+   MD5 digest (based on RFC 1321 only). Harbour implementation
 
-PRG functions:
+   PRG functions:
 
    HB_MD5( <cString> ) -> <cMD5>
          Calculates RFC 1321 MD5 digest (128-bit checksum)
@@ -77,7 +77,7 @@ PRG functions:
          ASCII hex MD5 digest as 32-byte string
          empty string on error
 
-C functions:
+   C functions:
 
    void hb_md5( const void * data, HB_SIZE datalen, char * digest )
       Parameters:
@@ -92,7 +92,7 @@ C functions:
          digest   - raw (unformatted) MD5 digest buffer
                     (at least 16 bytes long)
 
-*/
+ */
 
 #include "hbapi.h"
 #include "hbapifs.h"
@@ -101,8 +101,8 @@ C functions:
 /* MD5 buffer */
 typedef struct
 {
-   HB_U32   accum[ 4 ];
-   HB_BYTE  buf[ 64 ];
+   HB_U32  accum[ 4 ];
+   HB_BYTE buf[ 64 ];
 } MD5_BUF;
 
 /*
@@ -126,7 +126,7 @@ typedef struct
    A[a] = ROTL(A[a], s) + A[b]
 
 /* Defines for file ops */
-#define MAX_FBUF 0x20000 /* file read buffer size, MUST be 64*n */
+#define MAX_FBUF  0x20000 /* file read buffer size, MUST be 64*n */
 
 /* Static data */
 static const HB_U32 T[ 64 ] = {
@@ -374,7 +374,7 @@ HB_FUNC( HB_MD5 )
          hb_retclen( dststr, HB_SIZEOFARRAY( dststr ) );
    }
    else
-      hb_retc_null(); /* return empty string on wrong call */
+      hb_retc_null();  /* return empty string on wrong call */
 }
 
 HB_FUNC( HB_MD5FILE )

@@ -112,10 +112,10 @@
  * $End$ */
 static void AddToArray( PHB_ITEM pItem, PHB_ITEM pReturn, HB_SIZE nPos )
 {
-   HB_TRACE(HB_TR_DEBUG, ("AddToArray(%p, %p, %" HB_PFS "u)", pItem, pReturn, nPos));
+   HB_TRACE( HB_TR_DEBUG, ( "AddToArray(%p, %p, %" HB_PFS "u)", pItem, pReturn, nPos ) );
 
-   if( HB_IS_SYMBOL( pItem ) )
-   {                                            /* Symbol is pushed as text */
+   if( HB_IS_SYMBOL( pItem ) )                  /* Symbol is pushed as text */
+   {
       PHB_ITEM pArrayItem = hb_arrayGetItemPtr( pReturn, nPos );
 
       if( pArrayItem )
@@ -166,7 +166,7 @@ static HB_ISIZ hb_stackLen( int iLevel )
 {
    HB_ISIZ nBaseOffset, nPrevOffset, nLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stackLen()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stackLen()" ) );
 
    nBaseOffset = hb_stackBaseOffset();
    while( --iLevel > 0 && nBaseOffset > 1 )

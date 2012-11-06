@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
-#define SOUNDEX_LEN_MAX         4
+#define SOUNDEX_LEN_MAX  4
 
 HB_FUNC( SOUNDEX )
 {

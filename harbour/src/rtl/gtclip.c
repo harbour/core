@@ -67,7 +67,7 @@
       #include <wchar.h>
    #elif defined( __POCC__ ) && defined( HB_OS_WIN_CE )
       #ifndef GMEM_MOVEABLE
-         #define GMEM_MOVEABLE       2
+         #define GMEM_MOVEABLE  2
       #endif
    #endif
 #endif
@@ -76,8 +76,8 @@
 
 static HB_CRITICAL_NEW( s_clipMtx );
 
-static char *     s_szClipboardData;
-static HB_SIZE    s_nClipboardLen;
+static char *  s_szClipboardData;
+static HB_SIZE s_nClipboardLen;
 
 HB_BOOL hb_gt_setClipboard( const char * szClipData, HB_SIZE nLen )
 {
@@ -142,7 +142,7 @@ HB_BOOL hb_gt_winapi_setClipboardRaw( HB_UINT uFormat, void * pData, HB_SIZE nSi
                /* Place the handle on the clipboard. */
                fResult = SetClipboardData( ( UINT ) uFormat, hglb ) != 0;
             }
-            if( !fResult )
+            if( ! fResult )
                GlobalFree( hglb );
          }
       }
@@ -173,7 +173,7 @@ HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem )
       {
          /* Allocate a global memory object for the text. */
          HGLOBAL hglb = GlobalAlloc( GMEM_MOVEABLE, ( nSize + 1 ) *
-                                       ( uFormat == CF_UNICODETEXT ?
+                                     ( uFormat == CF_UNICODETEXT ?
                                        sizeof( wchar_t ) : sizeof( char ) ) );
          if( hglb )
          {
@@ -192,7 +192,7 @@ HB_BOOL hb_gt_winapi_setClipboard( HB_UINT uFormat, PHB_ITEM pItem )
                /* Place the handle on the clipboard. */
                fResult = SetClipboardData( ( UINT ) uFormat, hglb ) != 0;
             }
-            if( !fResult )
+            if( ! fResult )
                GlobalFree( hglb );
          }
       }

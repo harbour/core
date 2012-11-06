@@ -69,92 +69,92 @@ HB_FUNC( HB_VERSION )
 {
    switch( hb_parni( 1 ) )
    {
-   case HB_VERSION_HARBOUR:        hb_retc_buffer( hb_verHarbour() ); break;
-   case HB_VERSION_COMPILER:       hb_retc_buffer( hb_verCompiler() ); break;
-   case HB_VERSION_MAJOR:          hb_retni( HB_VER_MAJOR ); break;
-   case HB_VERSION_MINOR:          hb_retni( HB_VER_MINOR ); break;
-   case HB_VERSION_RELEASE:        hb_retni( HB_VER_RELEASE ); break;
-   case HB_VERSION_STATUS:         hb_retc_const( HB_VER_STATUS ); break;
-   case HB_VERSION_REVISION:       hb_retni( hb_verRevision() ); break;
-   case HB_VERSION_CHANGELOG_LAST: hb_retc_const( hb_verChangeLogLastEntry() ); break;
-   case HB_VERSION_CHANGELOG_ID:   hb_retc_const( hb_verChangeLogID() ); break;
-   case HB_VERSION_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
-   case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
-   case HB_VERSION_BUILD_PLAT:     hb_retc_const( hb_verHB_PLAT() ); break;
-   case HB_VERSION_BUILD_COMP:     hb_retc_const( hb_verHB_COMP() ); break;
-   case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verBuildDate() ); break;
-   case HB_VERSION_BUILD_DATE:
-   {
-      char * pszBuildDate = hb_verBuildDate();
-
-      if( strlen( pszBuildDate ) >= 11 )
+      case HB_VERSION_HARBOUR:        hb_retc_buffer( hb_verHarbour() ); break;
+      case HB_VERSION_COMPILER:       hb_retc_buffer( hb_verCompiler() ); break;
+      case HB_VERSION_MAJOR:          hb_retni( HB_VER_MAJOR ); break;
+      case HB_VERSION_MINOR:          hb_retni( HB_VER_MINOR ); break;
+      case HB_VERSION_RELEASE:        hb_retni( HB_VER_RELEASE ); break;
+      case HB_VERSION_STATUS:         hb_retc_const( HB_VER_STATUS ); break;
+      case HB_VERSION_REVISION:       hb_retni( hb_verRevision() ); break;
+      case HB_VERSION_CHANGELOG_LAST: hb_retc_const( hb_verChangeLogLastEntry() ); break;
+      case HB_VERSION_CHANGELOG_ID:   hb_retc_const( hb_verChangeLogID() ); break;
+      case HB_VERSION_PCODE_VER:      hb_retni( HB_PCODE_VER ); break;
+      case HB_VERSION_PCODE_VER_STR:  hb_retc_buffer( hb_verPCode() ); break;
+      case HB_VERSION_BUILD_PLAT:     hb_retc_const( hb_verHB_PLAT() ); break;
+      case HB_VERSION_BUILD_COMP:     hb_retc_const( hb_verHB_COMP() ); break;
+      case HB_VERSION_BUILD_DATE_STR: hb_retc_buffer( hb_verBuildDate() ); break;
+      case HB_VERSION_BUILD_DATE:
       {
-         static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
-         char szDate[ 9 ];
-         int iMonth;
+         char * pszBuildDate = hb_verBuildDate();
 
-         szDate[ 4 ] = szDate[ 5 ] = '0';
-
-         for( iMonth = 11; iMonth >= 0; iMonth-- )
+         if( strlen( pszBuildDate ) >= 11 )
          {
-            if( memcmp( pszBuildDate, s_months[ iMonth ], 3 ) == 0 )
+            static const char * s_months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+            char szDate[ 9 ];
+            int  iMonth;
+
+            szDate[ 4 ] = szDate[ 5 ] = '0';
+
+            for( iMonth = 11; iMonth >= 0; iMonth-- )
             {
-               hb_snprintf( szDate + 4, 3, "%02d", iMonth + 1 );
-               break;
+               if( memcmp( pszBuildDate, s_months[ iMonth ], 3 ) == 0 )
+               {
+                  hb_snprintf( szDate + 4, 3, "%02d", iMonth + 1 );
+                  break;
+               }
             }
+
+            memcpy( szDate, pszBuildDate + 7, 4 );
+            szDate[ 6 ] = pszBuildDate[ 4 ] == ' ' ? '0' : pszBuildDate[ 4 ];
+            szDate[ 7 ] = pszBuildDate[ 5 ];
+            szDate[ 8 ] = '\0';
+
+            hb_retds( szDate );
          }
+         else
+            hb_retds( NULL );
 
-         memcpy( szDate, pszBuildDate + 7, 4 );
-         szDate[ 6 ] = pszBuildDate[ 4 ] == ' ' ? '0' : pszBuildDate[ 4 ];
-         szDate[ 7 ] = pszBuildDate[ 5 ];
-         szDate[ 8 ] = '\0';
-
-         hb_retds( szDate );
+         hb_xfree( pszBuildDate );
+         break;
       }
-      else
-         hb_retds( NULL );
+      case HB_VERSION_BUILD_TIME:
+      {
+         char * pszBuildDate = hb_verBuildDate();
+         hb_retc( strlen( pszBuildDate ) >= 20 ? pszBuildDate + 12 : NULL );
+         hb_xfree( pszBuildDate );
+         break;
+      }
+      case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
+      case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
+      case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
+      case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
+      case HB_VERSION_MT:             hb_retl( hb_vmIsMt() );
 
-      hb_xfree( pszBuildDate );
-      break;
-   }
-   case HB_VERSION_BUILD_TIME:
-   {
-      char * pszBuildDate = hb_verBuildDate();
-      hb_retc( strlen( pszBuildDate ) >= 20 ? pszBuildDate + 12 : NULL );
-      hb_xfree( pszBuildDate );
-      break;
-   }
-   case HB_VERSION_FLAG_PRG:       hb_retc_const( hb_verFlagsPRG() ); break;
-   case HB_VERSION_FLAG_C:         hb_retc_const( hb_verFlagsC() ); break;
-   case HB_VERSION_FLAG_LINKER:    hb_retc_const( hb_verFlagsL() ); break;
-   case HB_VERSION_BITWIDTH:       hb_retni( ( int ) sizeof( void * ) * 8 ); break;
-   case HB_VERSION_MT:             hb_retl( hb_vmIsMt() );
-
-   case HB_VERSION_SHARED:
+      case HB_VERSION_SHARED:
       #if defined( HB_DYNLIB )
          hb_retl( HB_TRUE );
       #else
          hb_retl( HB_FALSE );
       #endif
-      break;
+         break;
 
-   case HB_VERSION_UNIX_COMPAT:
+      case HB_VERSION_UNIX_COMPAT:
       #if defined( HB_OS_UNIX )
          hb_retl( HB_TRUE );
       #else
          hb_retl( HB_FALSE );
       #endif
-      break;
+         break;
 
-   case HB_VERSION_COMPILER_CPP:
+      case HB_VERSION_COMPILER_CPP:
       #if defined( __cplusplus )
          hb_retl( HB_TRUE );
       #else
          hb_retl( HB_FALSE );
       #endif
-      break;
+         break;
 
-   case HB_VERSION_PLATFORM:
+      case HB_VERSION_PLATFORM:
       #if defined( HB_OS_WIN_CE ) /* NOTE: Must precede HB_OS_WIN */
          hb_retc_const( "WCE" );
       #elif defined( HB_OS_WIN )
@@ -162,13 +162,13 @@ HB_FUNC( HB_VERSION )
       #else
          hb_retc_const( hb_verPlatformMacro() );
       #endif
-      break;
+         break;
 
-   case HB_VERSION_CPU:
-      hb_retc_const( hb_verCPU() );
-      break;
+      case HB_VERSION_CPU:
+         hb_retc_const( hb_verCPU() );
+         break;
 
-   case HB_VERSION_ENDIANNESS:
+      case HB_VERSION_ENDIANNESS:
       #if defined( HB_LITTLE_ENDIAN )
          hb_retni( HB_VERSION_ENDIAN_LITTLE );
       #elif defined( HB_BIG_ENDIAN )
@@ -178,7 +178,7 @@ HB_FUNC( HB_VERSION )
       #else
          hb_retni( 0 );
       #endif
-      break;
+         break;
    }
 }
 

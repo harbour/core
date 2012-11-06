@@ -191,6 +191,7 @@ static void hb_znetDecrypt( PHB_ZNETSTREAM pStream, Bytef * data )
 static void hb_znetEncrypt( PHB_ZNETSTREAM pStream, Bytef * data )
 {
    HB_U32 xl, xr;
+
    xl = HB_GET_BE_UINT32( data );
    xr = HB_GET_BE_UINT32( data + 4 );
    hb_blowfishEncrypt( pStream->bf, &xl, &xr );
@@ -221,7 +222,7 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
             memmove( pStream->inbuf, pStream->rd.next_in, pStream->crypt_in );
          pStream->rd.next_in = pStream->inbuf;
 
-         if( !pStream->crypt || pStream->crypt_in < 8 )
+         if( ! pStream->crypt || pStream->crypt_in < 8 )
          {
             if( pStream->rd.avail_out != ( uInt ) len )
                timeout = 0;
@@ -275,9 +276,9 @@ long hb_znetRead( PHB_ZNETSTREAM pStream, HB_SOCKET sd, void * buffer, long len,
 /*
       if( pStream->err == Z_STREAM_END && pStream->rd.avail_in == 0 )
          pStream->err = Z_BUF_ERROR;
-*/
+ */
       if( pStream->err != Z_OK &&
-          !( pStream->err == Z_BUF_ERROR && pStream->rd.avail_in == 0 ) )
+          ! ( pStream->err == Z_BUF_ERROR && pStream->rd.avail_in == 0 ) )
          break;
    }
 

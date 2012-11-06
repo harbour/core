@@ -71,23 +71,23 @@
          These should be named properly if exported outside this file.
          [vszakats] */
 
-#define _DIR_HEADER             1       /* "Database Files    # Records    Last Update     Size" */
-#define _LF_SAMPLES             2       /* "Do you want more samples?" */
-#define _RF_PAGENO              3       /* "Page No." */
-#define _RF_SUBTOTAL            4       /* "** Subtotal **" */
-#define _RF_SUBSUBTOTAL         5       /* "* Subsubtotal *" */
-#define _RF_TOTAL               6       /* "*** Total ***" */
-#define _GET_INSERT_ON          7       /* "Ins" */
-#define _GET_INSERT_OFF         8       /* "   " */
-#define _GET_INVD_DATE          9       /* "Invalid Date" */
-#define _GET_RANGE_FROM         10      /* "Range: " */
-#define _GET_RANGE_TO           11      /* " - " */
-#define _LF_YN                  12      /* "Y/N" */ /* NOTE: This must be in uppercase. [vszakats] */
-#define _INVALID_EXPR           13      /* "INVALID EXPRESSION" */
+#define _DIR_HEADER      1              /* "Database Files    # Records    Last Update     Size" */
+#define _LF_SAMPLES      2              /* "Do you want more samples?" */
+#define _RF_PAGENO       3              /* "Page No." */
+#define _RF_SUBTOTAL     4              /* "** Subtotal **" */
+#define _RF_SUBSUBTOTAL  5              /* "* Subsubtotal *" */
+#define _RF_TOTAL        6              /* "*** Total ***" */
+#define _GET_INSERT_ON   7              /* "Ins" */
+#define _GET_INSERT_OFF  8              /* "   " */
+#define _GET_INVD_DATE   9              /* "Invalid Date" */
+#define _GET_RANGE_FROM  10             /* "Range: " */
+#define _GET_RANGE_TO    11             /* " - " */
+#define _LF_YN           12             /* "Y/N" */ /* NOTE: This must be in uppercase. [vszakats] */
+#define _INVALID_EXPR    13             /* "INVALID EXPRESSION" */
 
 static const char * hb_nationGetMsg( int iMsg )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_nationGetMsg(%u)", iMsg));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_nationGetMsg(%u)", iMsg ) );
 
    return ( iMsg >= 1 && iMsg <= 13 ) ? hb_langDGetItem( HB_LANG_ITEM_BASE_NATMSG + iMsg - 1 ) : "";
 }

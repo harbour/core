@@ -118,50 +118,50 @@
 
 typedef struct _HB_PLURAL_FORMS
 {
-   const char *   szLangID;
-   int            iForm;
+   const char * szLangID;
+   int          iForm;
 }
-HB_PLURAL_FORMS, *PHB_PLURAL_FORMS;
+HB_PLURAL_FORMS, * PHB_PLURAL_FORMS;
 
 static const HB_PLURAL_FORMS s_plural_forms[] =
 {
-   { "EN"   , HB_I18N_PLURAL_EN    },
-   { "PL"   , HB_I18N_PLURAL_PL    },
-   { "LT"   , HB_I18N_PLURAL_LT    },
-   { "CS"   , HB_I18N_PLURAL_CS    },
-   { "FR"   , HB_I18N_PLURAL_FR    },
-   { "GA"   , HB_I18N_PLURAL_GA    },
-   { "HR"   , HB_I18N_PLURAL_HR    },
-   { "HU"   , HB_I18N_PLURAL_HU    },
-   { "JA"   , HB_I18N_PLURAL_JA    },
-   { "KO"   , HB_I18N_PLURAL_KO    },
-   { "LV"   , HB_I18N_PLURAL_LV    },
+   { "EN",    HB_I18N_PLURAL_EN    },
+   { "PL",    HB_I18N_PLURAL_PL    },
+   { "LT",    HB_I18N_PLURAL_LT    },
+   { "CS",    HB_I18N_PLURAL_CS    },
+   { "FR",    HB_I18N_PLURAL_FR    },
+   { "GA",    HB_I18N_PLURAL_GA    },
+   { "HR",    HB_I18N_PLURAL_HR    },
+   { "HU",    HB_I18N_PLURAL_HU    },
+   { "JA",    HB_I18N_PLURAL_JA    },
+   { "KO",    HB_I18N_PLURAL_KO    },
+   { "LV",    HB_I18N_PLURAL_LV    },
    { "PT-BR", HB_I18N_PLURAL_PT_BR },
-   { "RO"   , HB_I18N_PLURAL_RO    },
-   { "RU"   , HB_I18N_PLURAL_RU    },
-   { "SK"   , HB_I18N_PLURAL_SK    },
-   { "SL"   , HB_I18N_PLURAL_SL    },
-   { "SR"   , HB_I18N_PLURAL_SR    },
-   { "TR"   , HB_I18N_PLURAL_TR    },
-   { "UK"   , HB_I18N_PLURAL_UK    },
-   { "VI"   , HB_I18N_PLURAL_VI    }
+   { "RO",    HB_I18N_PLURAL_RO    },
+   { "RU",    HB_I18N_PLURAL_RU    },
+   { "SK",    HB_I18N_PLURAL_SK    },
+   { "SL",    HB_I18N_PLURAL_SL    },
+   { "SR",    HB_I18N_PLURAL_SR    },
+   { "TR",    HB_I18N_PLURAL_TR    },
+   { "UK",    HB_I18N_PLURAL_UK    },
+   { "VI",    HB_I18N_PLURAL_VI    }
 };
 
-#define HB_PLURAL_FOMRS_COUNT ( sizeof( s_plural_forms ) / sizeof( HB_PLURAL_FORMS ) )
+#define HB_PLURAL_FOMRS_COUNT  ( sizeof( s_plural_forms ) / sizeof( HB_PLURAL_FORMS ) )
 
 static const HB_UCHAR s_signature[ 4 ] = { 193, 'H', 'B', 'L' };
 typedef struct _HB_I18N_TRANS
 {
-   HB_COUNTER     iUsers;
-   PHB_CODEPAGE   cdpage;
-   PHB_CODEPAGE   base_cdpage;
-   PHB_ITEM       table;
-   PHB_ITEM       context_table;
-   PHB_ITEM       default_context;
-   PHB_ITEM       plural_block;
-   PHB_ITEM       base_plural_block;
-   int            plural_form;
-   int            base_plural_form;
+   HB_COUNTER   iUsers;
+   PHB_CODEPAGE cdpage;
+   PHB_CODEPAGE base_cdpage;
+   PHB_ITEM     table;
+   PHB_ITEM     context_table;
+   PHB_ITEM     default_context;
+   PHB_ITEM     plural_block;
+   PHB_ITEM     base_plural_block;
+   int          plural_form;
+   int          base_plural_form;
 }
 HB_I18N_TRANS, * PHB_I18N_TRANS;
 
@@ -213,7 +213,7 @@ static long hb_i18n_pluralindex( int iForm, PHB_ITEM pNum )
    switch( iForm )
    {
       case HB_I18N_PLURAL_PL:
-         n10 = fmod( n, 10.0 );
+         n10  = fmod( n, 10.0 );
          n100 = fmod( n, 100.0 );
          return n == 1 ? 1 : ( n10 >= 2 && n10 <= 4 &&
                                ( n100 < 10 || n100 >= 20 ) ? 2 : 3 );
@@ -226,7 +226,7 @@ static long hb_i18n_pluralindex( int iForm, PHB_ITEM pNum )
       case HB_I18N_PLURAL_SR:
       case HB_I18N_PLURAL_RU:
       case HB_I18N_PLURAL_UK:
-         n10 = fmod( n, 10.0 );
+         n10  = fmod( n, 10.0 );
          n100 = fmod( n, 100.0 );
          return n10 == 1 && n100 != 11 ? 1 : n10 >= 2 && n10 <= 4 && ( n100 < 10 || n100 >= 20 ) ? 2 : 3;
 
@@ -239,12 +239,12 @@ static long hb_i18n_pluralindex( int iForm, PHB_ITEM pNum )
          return n100 == 1 ? 1 : ( n100 == 2 ? 1 : ( n100 == 3 || n100 == 4 ? 3 : 4 ) );
 
       case HB_I18N_PLURAL_LT:
-         n10 = fmod( n, 10.0 );
+         n10  = fmod( n, 10.0 );
          n100 = fmod( n, 100.0 );
          return n10 == 1 && n100 != 11 ? 1 : ( n10 != 0 && ( n100 < 10 || n100 >= 20 ) ? 2 : 3 );
 
       case HB_I18N_PLURAL_LV:
-         n10 = fmod( n, 10.0 );
+         n10  = fmod( n, 10.0 );
          n100 = fmod( n, 100.0 );
          return ( n10 == 1 && n100 != 11 ) ? 1 : ( n != 0 ? 2 : 3 );
 
@@ -272,6 +272,7 @@ static void hb_i18n_setitem( PHB_ITEM pHash, const char * szKey, const char * sz
 {
    PHB_ITEM pKey = hb_itemPutC( NULL, szKey );
    PHB_ITEM pValue = hb_itemPutC( NULL, szValue );
+
    hb_hashAdd( pHash, pKey, pValue );
    hb_itemRelease( pKey );
    hb_itemRelease( pValue );
@@ -548,7 +549,7 @@ static PHB_ITEM hb_i18n_newitem( PHB_I18N_TRANS pI18N )
    PHB_I18N_TRANS * pI18NHolder;
    PHB_ITEM pItem = hb_itemNew( NULL );
 
-   if( !pI18N )
+   if( ! pI18N )
       pI18N = hb_i18n_new();
    pI18NHolder = ( PHB_I18N_TRANS * )
                   hb_gcAllocate( sizeof( PHB_I18N_TRANS ), &s_gcI18NFuncs );
@@ -654,6 +655,7 @@ static HB_BOOL hb_i18n_setpluralform( PHB_I18N_TRANS pI18N, PHB_ITEM pForm,
 static void hb_i18n_transitm( PHB_ITEM pText, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
    HB_SIZE nLen = hb_itemGetCLen( pText );
+
    if( nLen > 0 )
    {
       char * szValue = hb_cdpnDup( hb_itemGetCPtr( pText ), &nLen,
@@ -771,7 +773,7 @@ static void hb_i18n_addtext( PHB_I18N_TRANS pI18N, PHB_ITEM pMsgID,
 {
    PHB_ITEM pTable = pContext ? hb_hashGetItemPtr( pI18N->context_table,
                                        pContext, 0 ) : pI18N->default_context;
-   if( !pTable )
+   if( ! pTable )
    {
       pTable = hb_hashNew( hb_itemNew( NULL ) );
       hb_hashAdd( pTable, pMsgID, pTrans );
@@ -879,7 +881,7 @@ PHB_ITEM hb_i18n_ngettext( PHB_ITEM pNum, PHB_ITEM pMsgID, PHB_ITEM pContext )
    {
       long lIndex;
 
-      if( !pNum )
+      if( ! pNum )
          lIndex = 1;
       else if( pBlock )
       {
@@ -946,7 +948,7 @@ HB_FUNC( HB_I18N_NGETTEXT )
    PHB_ITEM pMsgID = hb_param( 2, HB_IT_STRING | HB_IT_ARRAY );
    PHB_ITEM pContext = hb_param( 3, HB_IT_STRING );
 
-   if( !pNum )
+   if( ! pNum )
       pMsgID = NULL;
    else if( pMsgID )
       pMsgID = hb_i18n_ngettext( pNum, pMsgID, pContext );
@@ -1046,7 +1048,7 @@ HB_FUNC( HB_I18N_ADDTEXT )
             {
                for( n = 1; n <= nLen; ++n )
                {
-                  if( !HB_IS_STRING( hb_arrayGetItemPtr( pTrans, n ) ) )
+                  if( ! HB_IS_STRING( hb_arrayGetItemPtr( pTrans, n ) ) )
                   {
                      pTrans = NULL;
                      break;

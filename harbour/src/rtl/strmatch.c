@@ -57,7 +57,7 @@ HB_BOOL hb_strMatchRegExp( const char * szString, const char * szPattern )
 {
    PHB_REGEX pRegEx;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_strMatchRegExp(%s, %s)", szString, szPattern));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strMatchRegExp(%s, %s)", szString, szPattern ) );
 
    pRegEx = hb_regexCompile( szPattern, strlen( szPattern ), HBREG_EXTENDED );
    if( pRegEx )

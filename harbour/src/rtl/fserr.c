@@ -62,7 +62,7 @@
 #endif
 
 /* Try to translate C errno into DOS error code */
-#if !defined( HB_OS_WIN )
+#if ! defined( HB_OS_WIN )
 static HB_ERRCODE hb_errnoToDosError( int ErrCode )
 {
    switch( ErrCode )
@@ -127,7 +127,7 @@ static HB_ERRCODE hb_errnoToDosError( int ErrCode )
 static HB_ERRCODE hb_WinToDosError( DWORD dwError )
 {
    #ifndef ERROR_PRIVILEGE_NOT_HELD
-   #define ERROR_PRIVILEGE_NOT_HELD 1314L
+   #define ERROR_PRIVILEGE_NOT_HELD  1314L
    #endif
 
    switch( dwError )
@@ -148,7 +148,7 @@ static HB_ERRCODE hb_WinToDosError( DWORD dwError )
 /* return FERROR() code */
 HB_ERRCODE hb_fsGetFError( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsGetFError()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsGetFError()" ) );
 
    return hb_stackIOErrors()->uiFError;
 }
@@ -156,7 +156,7 @@ HB_ERRCODE hb_fsGetFError( void )
 /* return DOS error code of last operation */
 HB_ERRCODE hb_fsError( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsError()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsError()" ) );
 
    return hb_stackIOErrors()->uiErrorLast;
 }
@@ -164,7 +164,7 @@ HB_ERRCODE hb_fsError( void )
 /* return real error code of last operation */
 HB_ERRCODE hb_fsOsError( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsOsError()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsOsError()" ) );
 
    return hb_stackIOErrors()->uiOsErrorLast;
 }
@@ -172,7 +172,7 @@ HB_ERRCODE hb_fsOsError( void )
 /* set FERROR() code */
 void hb_fsSetFError( HB_ERRCODE uiError )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetFError(%u)", uiError));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsSetFError(%u)", uiError ) );
 
    hb_stackIOErrors()->uiFError = uiError;
 }
@@ -182,7 +182,7 @@ void  hb_fsSetError( HB_ERRCODE uiError )
 {
    PHB_IOERRORS pIOErrors;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetError(%u)", uiError));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsSetError(%u)", uiError ) );
 
    pIOErrors = hb_stackIOErrors();
    /* TODO: untranslate uiError into errno */
@@ -216,7 +216,7 @@ void  hb_fsSetIOError( HB_BOOL fResult, HB_USHORT uiOperation )
    /* HB_TRACE() message is intentionally here to not overwrite
     * OS error code processed above.
     */
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsSetIOError(%d,%hu)", fResult, uiOperation));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsSetIOError(%d,%hu)", fResult, uiOperation ) );
 
    pIOErrors = hb_stackIOErrors();
    pIOErrors->uiOsErrorLast = uiOsErrorLast;

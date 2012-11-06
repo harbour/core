@@ -279,7 +279,7 @@ HB_FUNC( TRANSFORM )
                            nExpPos = nExpPrev;
                   }
                }
-               else if( !( uiPicFlags & PF_REMAIN ) )
+               else if( ! ( uiPicFlags & PF_REMAIN ) )
                   break;
 
                else
@@ -348,7 +348,7 @@ HB_FUNC( TRANSFORM )
                {
                   if( szResult[ nExpPos ] == ',' )
                      szResult[ nExpPos ] = '.';
-                  else if( !bFound && szResult[ nExpPos ] == '.' )
+                  else if( ! bFound && szResult[ nExpPos ] == '.' )
                   {
                      szResult[ nExpPos ] = ',';
                      bFound = HB_TRUE;
@@ -474,7 +474,7 @@ HB_FUNC( TRANSFORM )
          {
             /* Always convert absolute val */
             if( HB_IS_NUMINT( pValue ) ) /* workaround for 64bit integer conversion */
-               pNumber = hb_itemPutNInt( NULL, - hb_itemGetNInt( pValue ) );
+               pNumber = hb_itemPutNInt( NULL, -hb_itemGetNInt( pValue ) );
             else
                pNumber = hb_itemPutND( NULL, -dValue );
             pValue = pNumber;
@@ -616,6 +616,7 @@ HB_FUNC( TRANSFORM )
                else
 #endif
                   szResult[ iCount ] = '(';
+
                szResult[ i++ ] = ')';
             }
             else if( ( uiPicFlags & PF_PARNEG ) )
@@ -702,7 +703,9 @@ HB_FUNC( TRANSFORM )
                {
                   szNewFormat[ nFor ] = cLast = *szBritish++;
                   do
+                  {
                      szDateFormat++;
+                  }
                   while( szDateFormat[ -1 ] == szDateFormat[ 0 ] );
                }
                else
@@ -806,7 +809,9 @@ HB_FUNC( TRANSFORM )
                {
                   szNewFormat[ nFor ] = cLast = *szBritish++;
                   do
+                  {
                      szDateFormat++;
+                  }
                   while( szDateFormat[ -1 ] == szDateFormat[ 0 ] );
                }
                else
@@ -894,7 +899,7 @@ HB_FUNC( TRANSFORM )
          nResultPos = 0;
          szResult = ( char * ) hb_xgrab( nPicLen + 2 );
 
-         for( ; ( nPicLen || !bDone ) && !bExit ; nResultPos++, szPic++, nPicLen-- )
+         for( ; ( nPicLen || ! bDone ) && !bExit ; nResultPos++, szPic++, nPicLen-- )
          {
             if( nPicLen )
                cPic = *szPic;
@@ -908,8 +913,8 @@ HB_FUNC( TRANSFORM )
             {
                case 'y':                     /* Yes/No                   */
                case 'Y':                     /* Yes/No                   */
-               {
-                  if( !bDone )
+
+                  if( ! bDone )
                   {
                      szResult[ nResultPos ] = hb_itemGetL( pValue ) ? 'Y' : 'N';
                      bDone = HB_TRUE;           /* Logical written          */
@@ -918,13 +923,12 @@ HB_FUNC( TRANSFORM )
                      szResult[ nResultPos ] = ' ';
 
                   break;
-               }
 
                case '#':
                case 'l':                     /* True/False               */
                case 'L':                     /* True/False               */
-               {
-                  if( !bDone )
+
+                  if( ! bDone )
                   {
                      szResult[ nResultPos ] = hb_itemGetL( pValue ) ? 'T' : 'F';
                      bDone = HB_TRUE;
@@ -933,13 +937,12 @@ HB_FUNC( TRANSFORM )
                      szResult[ nResultPos ] = ' ';
 
                   break;
-               }
 
                default:
                   szResult[ nResultPos ] = cPic;
             }
 
-            if( !( uiPicFlags & PF_REMAIN ) )
+            if( ! ( uiPicFlags & PF_REMAIN ) )
                bExit = HB_TRUE;
          }
       }

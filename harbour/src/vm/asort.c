@@ -150,12 +150,12 @@ static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb,
 
    for( ;; )
    {
-      while( j >= i && !hb_itemIsLess( pBaseArray->pItems + j, pBaseArray->pItems + lb, pBlock, pBaseArray, j ) )
+      while( j >= i && ! hb_itemIsLess( pBaseArray->pItems + j, pBaseArray->pItems + lb, pBlock, pBaseArray, j ) )
       {
          j--;
       }
 
-      while( i < j && !hb_itemIsLess( pBaseArray->pItems + lb, pBaseArray->pItems + i, pBlock, pBaseArray, i ) )
+      while( i < j && ! hb_itemIsLess( pBaseArray->pItems + lb, pBaseArray->pItems + i, pBlock, pBaseArray, i ) )
       {
          i++;
       }
@@ -212,7 +212,7 @@ static void hb_arraySortQuick( PHB_BASEARRAY pBaseArray, HB_ISIZ lb, HB_ISIZ ub,
 
 HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pnStart, HB_SIZE * pnCount, PHB_ITEM pBlock )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_arraySort(%p, %p, %p, %p)", pArray, pnStart, pnCount, pBlock));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arraySort(%p, %p, %p, %p)", pArray, pnStart, pnCount, pBlock ) );
 
    if( HB_IS_ARRAY( pArray ) )
    {

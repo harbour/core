@@ -81,7 +81,7 @@
 /* malloc.h has been obsoleted by stdlib.h, which is included via
    hbvmpub.h, which is include via hbapi.h
    #include <malloc.h>
-*/
+ */
 
 #define HB_STACK_PRELOAD
 
@@ -113,7 +113,7 @@
 #  undef HB_FM_WIN_ALLOC
 #elif defined( HB_FM_WIN_ALLOC )
 #  undef HB_FM_DL_ALLOC
-#elif !defined( HB_FM_DL_ALLOC ) && !defined( HB_FM_WIN_ALLOC )
+#elif ! defined( HB_FM_DL_ALLOC ) && ! defined( HB_FM_WIN_ALLOC )
 #  if defined( HB_OS_WIN_CE )
       /* In WinCE builds DLMALLOC creates problems when allocated
        * memory is used in file IO operations.
@@ -149,15 +149,15 @@
 /* #  define INSECURE */
 /* #  define USE_DL_PREFIX */
 #  undef FORCEINLINE
-#  if !defined( FORCEINLINE )
-#     define FORCEINLINE HB_FORCEINLINE
+#  if ! defined( FORCEINLINE )
+#     define FORCEINLINE      HB_FORCEINLINE
 #  endif
 #  define REALLOC_ZERO_BYTES_FREES
 #  if defined( HB_MT_VM )
 #     if defined( HB_SPINLOCK_R )
-#        define USE_LOCKS  2
+#        define USE_LOCKS     2
 #     else
-#        define USE_LOCKS  1
+#        define USE_LOCKS     1
 #     endif
 #     if defined( HB_FM_DLMT_ALLOC )
 #        define ONLY_MSPACES  1
@@ -175,8 +175,8 @@
 #     pragma warn -rch
 #     pragma warn -inl
 #  elif defined( HB_OS_WIN_CE ) && defined( __POCC__ )
-#     define ABORT TerminateProcess( GetCurrentProcess(), 0 )
-#  elif defined( __POCC__ ) && !defined( InterlockedCompareExchangePointer )
+#     define ABORT  TerminateProcess( GetCurrentProcess(), 0 )
+#  elif defined( __POCC__ ) && ! defined( InterlockedCompareExchangePointer )
 #     define InterlockedCompareExchangePointer
 #  elif defined( __WATCOMC__ )
 #     pragma warning 13 9
@@ -184,15 +184,15 @@
 #     pragma warning 368 9
 #     pragma warning 887 9
 #     pragma disable_message ( 201 )
-#     if !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
+#     if ! defined( USE_DL_PREFIX ) && ! defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
 #     endif
 #  elif defined( _MSC_VER )
-#     if !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
+#     if ! defined( USE_DL_PREFIX ) && ! defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
 #     endif
 #     if defined( HB_OS_WIN_CE )
-#        define ABORT TerminateProcess( GetCurrentProcess(), 0 )
+#        define ABORT  TerminateProcess( GetCurrentProcess(), 0 )
 #        define LACKS_FCNTL_H
 #     endif
 #     pragma warning( push )
@@ -201,7 +201,7 @@
 #        pragma warning( disable : 4267 )
 #     endif
 #  elif defined( __MINGW32__ )
-#     if !defined( USE_DL_PREFIX ) && !defined( HB_FM_DLMT_ALLOC )
+#     if ! defined( USE_DL_PREFIX ) && ! defined( HB_FM_DLMT_ALLOC )
 #        define USE_DL_PREFIX
 #     endif
 #  endif
@@ -270,7 +270,7 @@
 #endif
 
 #if defined( HB_FM_STATISTICS )
-#  if !defined( HB_FM_NEED_INIT )
+#  if ! defined( HB_FM_NEED_INIT )
 #     define HB_FM_NEED_INIT
 #  endif
 #else
@@ -290,23 +290,23 @@ static HB_BOOL s_fInitedFM = HB_FALSE;
 
 typedef struct _HB_MEMINFO
 {
-   HB_U32      u32Signature;
-   HB_SIZE     nSize;
-   HB_USHORT   uiProcLine;
-   char        szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
+   HB_U32    u32Signature;
+   HB_SIZE   nSize;
+   HB_USHORT uiProcLine;
+   char      szProcName[ HB_SYMBOL_NAME_LEN + 1 ];
    struct _HB_MEMINFO * pPrevBlock;
    struct _HB_MEMINFO * pNextBlock;
 } HB_MEMINFO, * PHB_MEMINFO;
 
 #ifdef HB_ALLOC_ALIGNMENT
-#  define _HB_MEMINFO_SIZE    ( ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
-                                  ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT ) + \
-                                HB_COUNTER_OFFSET )
+#  define _HB_MEMINFO_SIZE  ( ( ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) - \
+                                ( sizeof( HB_MEMINFO ) + HB_ALLOC_ALIGNMENT - 1 ) % HB_ALLOC_ALIGNMENT ) + \
+                              HB_COUNTER_OFFSET )
 #else
-#  define _HB_MEMINFO_SIZE    ( sizeof( HB_MEMINFO ) + HB_COUNTER_OFFSET )
+#  define _HB_MEMINFO_SIZE  ( sizeof( HB_MEMINFO ) + HB_COUNTER_OFFSET )
 #endif
 
-#define HB_MEMINFO_SIZE       ( s_fStatistic ? sizeof( HB_MEMINFO ) + HB_COUNTER_OFFSET : HB_COUNTER_OFFSET )
+#define HB_MEMINFO_SIZE     ( s_fStatistic ? sizeof( HB_MEMINFO ) + HB_COUNTER_OFFSET : HB_COUNTER_OFFSET )
 
 #define HB_FM_GETSIG( p, n )  HB_GET_UINT32( ( HB_BYTE * ) ( p ) + ( n ) )
 #define HB_FM_SETSIG( p, n )  HB_PUT_UINT32( ( HB_BYTE * ) ( p ) + ( n ), HB_MEMINFO_SIGNATURE )
@@ -324,13 +324,13 @@ typedef struct _HB_MEMINFO
 
 static HB_BOOL s_fStatistic = HB_FALSE;
 
-static HB_ISIZ s_nMemoryBlocks = 0;      /* memory blocks used */
-static HB_ISIZ s_nMemoryMaxBlocks = 0;   /* maximum number of used memory blocks */
+static HB_ISIZ s_nMemoryBlocks      = 0; /* memory blocks used */
+static HB_ISIZ s_nMemoryMaxBlocks   = 0; /* maximum number of used memory blocks */
 static HB_ISIZ s_nMemoryMaxConsumed = 0; /* memory size consumed */
-static HB_ISIZ s_nMemoryConsumed = 0;    /* memory max size consumed */
+static HB_ISIZ s_nMemoryConsumed    = 0; /* memory max size consumed */
 
 static PHB_MEMINFO s_pFirstBlock = NULL;
-static PHB_MEMINFO s_pLastBlock = NULL;
+static PHB_MEMINFO s_pLastBlock  = NULL;
 
 static char s_szFileName[ HB_PATH_MAX ] = { '\0' };
 static char s_szInfo[ 256 ] = { '\0' };
@@ -338,26 +338,26 @@ static char s_szInfo[ 256 ] = { '\0' };
 #else /* ! HB_FM_STATISTICS */
 
 typedef void * PHB_MEMINFO;
-#define HB_MEMINFO_SIZE       HB_COUNTER_OFFSET
-#define HB_ALLOC_SIZE( n )    ( ( n ) + HB_MEMINFO_SIZE )
-#define HB_FM_PTR( p )        HB_COUNTER_PTR( p )
-#define HB_TRACE_FM           HB_TRACE
+#define HB_MEMINFO_SIZE  HB_COUNTER_OFFSET
+#define HB_ALLOC_SIZE( n )  ( ( n ) + HB_MEMINFO_SIZE )
+#define HB_FM_PTR( p )      HB_COUNTER_PTR( p )
+#define HB_TRACE_FM      HB_TRACE
 
 #endif /* HB_FM_STATISTICS */
 
-#define HB_MEM_PTR( p )       ( ( void * ) ( ( HB_BYTE * ) ( p ) + HB_MEMINFO_SIZE ) )
+#define HB_MEM_PTR( p )     ( ( void * ) ( ( HB_BYTE * ) ( p ) + HB_MEMINFO_SIZE ) )
 
 
-#if !defined( HB_MT_VM )
+#if ! defined( HB_MT_VM )
 
 #  undef HB_ATOM_DEC
 #  undef HB_ATOM_INC
 #  undef HB_ATOM_GET
 #  undef HB_ATOM_SET
-#  define HB_ATOM_INC( p )    ( ++(*(p)) )
-#  define HB_ATOM_DEC( p )    ( --(*(p)) )
+#  define HB_ATOM_INC( p )  ( ++( *( p ) ) )
+#  define HB_ATOM_DEC( p )  ( --( *( p ) ) )
 
-#elif !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC )
+#elif ! defined( HB_ATOM_INC ) || ! defined( HB_ATOM_DEC )
 
    /* HB_ATOM_INC and HB_ATOM_DEC have to be synced together */
 #  undef HB_ATOM_DEC
@@ -383,26 +383,26 @@ typedef void * PHB_MEMINFO;
 #endif
 
 #ifndef HB_ATOM_GET
-#  define HB_ATOM_GET( p )    (*(p))
+#  define HB_ATOM_GET( p )     ( *( p ) )
 #endif
 #ifndef HB_ATOM_SET
-#  define HB_ATOM_SET( p, n ) ( (*(p)) = (n) )
+#  define HB_ATOM_SET( p, n )  ( ( *( p ) ) = ( n ) )
 #endif
 
 
 #if defined( HB_FM_DLMT_ALLOC )
 
-#  if !defined( HB_MSPACE_COUNT )
+#  if ! defined( HB_MSPACE_COUNT )
 #     define HB_MSPACE_COUNT  16
 #  endif
 
 typedef struct
 {
-   int      count;
-   mspace   ms;
+   int    count;
+   mspace ms;
 } HB_MSPACE, * PHB_MSPACE;
 
-static mspace s_gm = NULL;
+static mspace    s_gm = NULL;
 static HB_MSPACE s_mspool[ HB_MSPACE_COUNT ];
 
 
@@ -413,7 +413,7 @@ static mspace hb_mspace( void )
    if( pm )
       return pm->ms;
 
-   if( !s_gm )
+   if( ! s_gm )
       s_gm = create_mspace( 0, 1 );
 
    return s_gm;
@@ -479,17 +479,17 @@ static void hb_mspace_cleanup( void )
 
 static void dlmalloc_destroy( void )
 {
-   if( ok_magic(gm) )
+   if( ok_magic( gm ) )
    {
       msegmentptr sp = &gm->seg;
-      while(sp != 0 )
+      while( sp != 0 )
       {
-         char* base = sp->base;
+         char * base = sp->base;
          size_t size = sp->size;
          flag_t flag = sp->sflags;
          sp = sp->next;
-         if( (flag & USE_MMAP_BIT) && !(flag & EXTERN_BIT) )
-            CALL_MUNMAP(base, size);
+         if( ( flag & USE_MMAP_BIT ) && ! ( flag & EXTERN_BIT ) )
+            CALL_MUNMAP( base, size );
       }
    }
 }
@@ -589,13 +589,13 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
 {
    PHB_MEMINFO pMem;
 
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xalloc(%" HB_PFS "u)", nSize));
+   HB_TRACE_FM( HB_TR_DEBUG, ( "hb_xalloc(%" HB_PFS "u)", nSize ) );
 
    if( nSize == 0 )
       hb_errInternal( HB_EI_XALLOCNULLSIZE, NULL, NULL, NULL );
 
 #ifdef HB_FM_NEED_INIT
-   if( !s_fInitedFM )
+   if( ! s_fInitedFM )
       hb_xinit();
 #endif
 
@@ -633,10 +633,10 @@ void * hb_xalloc( HB_SIZE nSize )         /* allocates fixed memory, returns NUL
       if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
       {
          /* NOTE: PRG line number/procname is not very useful during hunting
-         * for memory leaks - this is why we are using the previously stored
-         * function/line info - this is a location of code that called
-         * hb_xalloc/hb_xgrab
-         */
+          * for memory leaks - this is why we are using the previously stored
+          * function/line info - this is a location of code that called
+          * hb_xalloc/hb_xgrab
+          */
          pMem->uiProcLine = pTrace->line; /* C line number */
          if( pTrace->file )
             hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
@@ -675,13 +675,13 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
 {
    PHB_MEMINFO pMem;
 
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xgrab(%" HB_PFS "u)", nSize));
+   HB_TRACE_FM( HB_TR_DEBUG, ( "hb_xgrab(%" HB_PFS "u)", nSize ) );
 
    if( nSize == 0 )
       hb_errInternal( HB_EI_XGRABNULLSIZE, NULL, NULL, NULL );
 
 #ifdef HB_FM_NEED_INIT
-   if( !s_fInitedFM )
+   if( ! s_fInitedFM )
       hb_xinit();
 #endif
 
@@ -719,10 +719,10 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
       if( hb_tr_level() >= HB_TR_DEBUG || pTrace->level == HB_TR_FM )
       {
          /* NOTE: PRG line number/procname is not very useful during hunting
-         * for memory leaks - this is why we are using the previously stored
-         * function/line info - this is a location of code that called
-         * hb_xalloc/hb_xgrab
-         */
+          * for memory leaks - this is why we are using the previously stored
+          * function/line info - this is a location of code that called
+          * hb_xalloc/hb_xgrab
+          */
          pMem->uiProcLine = pTrace->line; /* C line number */
          if( pTrace->file )
             hb_strncpy( pMem->szProcName, pTrace->file, sizeof( pMem->szProcName ) - 1 );
@@ -759,7 +759,7 @@ void * hb_xgrab( HB_SIZE nSize )         /* allocates fixed memory, exits on fai
 
 void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
 {
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xrealloc(%p, %" HB_PFS "u)", pMem, nSize));
+   HB_TRACE_FM( HB_TR_DEBUG, ( "hb_xrealloc(%p, %" HB_PFS "u)", pMem, nSize ) );
 
 #if 0
    /* disabled to make hb_xrealloc() ANSI-C realloc() compatible */
@@ -867,7 +867,7 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
       pMem = realloc( HB_FM_PTR( pMem ), HB_ALLOC_SIZE( nSize ) );
    }
 
-   if( !pMem )
+   if( ! pMem )
       hb_errInternal( HB_EI_XREALLOC, NULL, NULL, NULL );
 
 #endif
@@ -877,7 +877,7 @@ void * hb_xrealloc( void * pMem, HB_SIZE nSize )       /* reallocates memory */
 
 void hb_xfree( void * pMem )            /* frees fixed memory */
 {
-   HB_TRACE_FM(HB_TR_DEBUG, ("hb_xfree(%p)", pMem));
+   HB_TRACE_FM( HB_TR_DEBUG, ( "hb_xfree(%p)", pMem ) );
 
    if( pMem )
    {
@@ -1028,7 +1028,7 @@ void * hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_SIZE * pnAll
 
 HB_SIZE hb_xsize( void * pMem ) /* returns the size of an allocated memory block */
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xsize(%p)", pMem));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xsize(%p)", pMem ) );
 
 #ifdef HB_FM_STATISTICS
    return HB_FM_BLOCKSIZE( pMem );
@@ -1041,10 +1041,10 @@ HB_SIZE hb_xsize( void * pMem ) /* returns the size of an allocated memory block
 
 void hb_xinit( void ) /* Initialize fixed memory subsystem */
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xinit()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xinit()" ) );
 
 #ifdef HB_FM_NEED_INIT
-   if( !s_fInitedFM )
+   if( ! s_fInitedFM )
    {
 
 #ifdef HB_FM_STATISTICS
@@ -1098,7 +1098,7 @@ static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
    }
    else
    {
-     /* format as hex */
+      /* format as hex */
       for( nIndex = 0; nIndex < nSize; nIndex++ )
       {
          int lownibble, hinibble;
@@ -1115,10 +1115,10 @@ static char * hb_mem2str( char * membuffer, void * pMem, HB_SIZE nSize )
    return membuffer;
 }
 
-#define HB_MAX_MEM2STR_BLOCK 256
+#define HB_MAX_MEM2STR_BLOCK  256
 void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xexit()" ) );
 
    if( s_nMemoryBlocks || hb_cmdargCheck( "INFO" ) )
    {
@@ -1134,7 +1134,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       hb_conOutErr( hb_conNewLine(), 0 );
       hb_conOutErr( "----------------------------------------", 0 );
       hb_conOutErr( hb_conNewLine(), 0 );
-      hb_snprintf( buffer, sizeof( buffer ), HB_I_("Total memory allocated: %" HB_PFS "i bytes (%" HB_PFS "i block(s))"), s_nMemoryMaxConsumed, s_nMemoryMaxBlocks );
+      hb_snprintf( buffer, sizeof( buffer ), HB_I_( "Total memory allocated: %" HB_PFS "i bytes (%" HB_PFS "i block(s))" ), s_nMemoryMaxConsumed, s_nMemoryMaxBlocks );
       hb_conOutErr( buffer, 0 );
 
       if( s_nMemoryBlocks )
@@ -1147,15 +1147,15 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
             hb_dateToday( &iYear, &iMonth, &iDay );
             hb_dateTimeStr( szTime );
 
-            fprintf( hLog, HB_I_("Application Memory Allocation Report - %s\n"), hb_cmdargARGVN( 0 ) );
-            fprintf( hLog, HB_I_("Terminated at: %04d.%02d.%02d %s\n"), iYear, iMonth, iDay, szTime );
+            fprintf( hLog, HB_I_( "Application Memory Allocation Report - %s\n" ), hb_cmdargARGVN( 0 ) );
+            fprintf( hLog, HB_I_( "Terminated at: %04d.%02d.%02d %s\n" ), iYear, iMonth, iDay, szTime );
             if( s_szInfo[ 0 ] )
-               fprintf( hLog, HB_I_("Info: %s\n"), s_szInfo );
+               fprintf( hLog, HB_I_( "Info: %s\n" ), s_szInfo );
             fprintf( hLog, "%s\n", buffer );
          }
 
          hb_conOutErr( hb_conNewLine(), 0 );
-         hb_snprintf( buffer, sizeof( buffer ), HB_I_("Warning, memory allocated but not released: %" HB_PFS "i bytes (%" HB_PFS "i block(s))"), s_nMemoryConsumed, s_nMemoryBlocks );
+         hb_snprintf( buffer, sizeof( buffer ), HB_I_( "Warning, memory allocated but not released: %" HB_PFS "i bytes (%" HB_PFS "i block(s))" ), s_nMemoryConsumed, s_nMemoryBlocks );
          hb_conOutErr( buffer, 0 );
 
          if( hLog )
@@ -1164,7 +1164,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
       else
       {
          hb_conOutErr( hb_conNewLine(), 0 );
-         hb_conOutErr( HB_I_("Memory allocated but not released: none"), 0 );
+         hb_conOutErr( HB_I_( "Memory allocated but not released: none" ), 0 );
       }
 
       hb_conOutErr( hb_conNewLine(), 0 );
@@ -1178,17 +1178,17 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
          if( hLog )
          {
-            fprintf( hLog, HB_I_("Block %i %p (size %" HB_PFS "u) %s(%i), \"%s\"\n"), ui,
-               ( char * ) HB_MEM_PTR( pMemBlock ),
-               pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
-               hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
-                           HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) );
+            fprintf( hLog, HB_I_( "Block %i %p (size %" HB_PFS "u) %s(%i), \"%s\"\n" ), ui,
+                     ( char * ) HB_MEM_PTR( pMemBlock ),
+                     pMemBlock->nSize, pMemBlock->szProcName, pMemBlock->uiProcLine,
+                     hb_mem2str( membuffer, ( char * ) HB_MEM_PTR( pMemBlock ),
+                                 HB_MIN( pMemBlock->nSize, HB_MAX_MEM2STR_BLOCK ) ) );
          }
       }
 
       if( hLog )
       {
-         fprintf( hLog, "------------------------------------------------------------------------\n");
+         fprintf( hLog, "------------------------------------------------------------------------\n" );
          fclose( hLog );
       }
    }
@@ -1208,7 +1208,7 @@ void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 
 void hb_xexit( void ) /* Deinitialize fixed memory subsystem */
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_xexit()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xexit()" ) );
 
 #if defined( HB_FM_DL_ALLOC )
 #  if defined( HB_FM_DLMT_ALLOC )
@@ -1227,7 +1227,7 @@ HB_SIZE hb_xquery( int iMode )
 {
    HB_SIZE nResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_xquery(%d)", iMode));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_xquery(%d)", iMode ) );
 
    /* TODO: Return the correct values instead of 9999 [vszakats] */
 
@@ -1424,10 +1424,10 @@ HB_SIZE hb_xquery( int iMode )
          nResult = hb_stackTotalItems() * sizeof( HB_ITEM );
          break;
 
-      case HB_MEM_STACK_TOP : /* Harbour extension (Total items currently on the stack) */
+      case HB_MEM_STACK_TOP:  /* Harbour extension (Total items currently on the stack) */
       {
          HB_STACK_TLS_PRELOAD
-         nResult = hb_stackTopOffset( );
+         nResult = hb_stackTopOffset();
          break;
       }
       default:

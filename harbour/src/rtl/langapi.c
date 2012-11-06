@@ -204,24 +204,24 @@ HB_LANG_ANNOUNCE( EN )
 
 /* NOTE: This is the maximum number of registered languages, later this can be
          made dynamic. */
-#define HB_LANG_MAX_ 128
+#define HB_LANG_MAX_              128
 
-#define HB_LANG_ITEM_ID_ID         0
-#define HB_LANG_ITEM_ID_NAME       1
-#define HB_LANG_ITEM_ID_NAMENAT    2
-#define HB_LANG_ITEM_ID_RFCID      3
-#define HB_LANG_ITEM_ID_CODEPAGE   4
+#define HB_LANG_ITEM_ID_ID        0
+#define HB_LANG_ITEM_ID_NAME      1
+#define HB_LANG_ITEM_ID_NAMENAT   2
+#define HB_LANG_ITEM_ID_RFCID     3
+#define HB_LANG_ITEM_ID_CODEPAGE  4
 
 typedef struct
 {
-   const char *   pItemList[ HB_LANG_ITEM_MAX_ ];
+   const char * pItemList[ HB_LANG_ITEM_MAX_ ];
 }
 HB_LANG_TRANS, * PHB_LANG_TRANS;
 
 typedef struct
 {
-   PHB_LANG       lang;
-   void *         buffer;
+   PHB_LANG lang;
+   void *   buffer;
 }
 HB_LANG_BASE, * PHB_LANG_BASE;
 
@@ -269,7 +269,7 @@ static HB_BOOL hb_langTranslate( const char * szNewId, PHB_LANG lang, PHB_CODEPA
    HB_SIZE nSize = 0;
    int i;
 
-   if( !szNewId || *szNewId == 0 || !lang || !cdpIn || !cdpOut || cdpIn == cdpOut )
+   if( ! szNewId || *szNewId == 0 || ! lang || ! cdpIn || ! cdpOut || cdpIn == cdpOut )
       return HB_FALSE;
 
    for( i = 0; i < HB_LANG_ITEM_MAX_; ++i )
@@ -338,7 +338,7 @@ void hb_langReleaseAll( void )
 
 HB_BOOL hb_langRegister( PHB_LANG lang )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langRegister(%p)", lang));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langRegister(%p)", lang ) );
 
    if( lang )
    {
@@ -358,7 +358,7 @@ PHB_LANG hb_langFind( const char * pszID )
 {
    PHB_LANG_BASE pBase;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_langFind(%s)", pszID));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langFind(%s)", pszID ) );
 
    pBase = hb_langFindBase( pszID );
 
@@ -369,7 +369,7 @@ PHB_LANG hb_langSelect( PHB_LANG lang )
 {
    PHB_LANG langOld;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_langSelect(%p)", lang));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langSelect(%p)", lang ) );
 
    langOld = hb_vmLang();
    if( lang )
@@ -383,7 +383,7 @@ const char * hb_langSelectID( const char * pszID )
    const char * pszIDOld = hb_langID();
    PHB_LANG lang;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_langSelectID(%s)", pszID));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langSelectID(%s)", pszID ) );
 
    lang = hb_langFind( pszID );
    if( lang )
@@ -398,7 +398,7 @@ const char * hb_langDGetItem( int iIndex )
 {
    PHB_LANG lang;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetItem(%i)", iIndex));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langDGetItem(%i)", iIndex ) );
 
    lang = hb_vmLang();
    if( lang && iIndex >= 0 && iIndex < HB_LANG_ITEM_MAX_ )
@@ -409,7 +409,7 @@ const char * hb_langDGetItem( int iIndex )
 
 const char * hb_langID( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langID()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langID()" ) );
 
    return hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID );
 }
@@ -426,9 +426,9 @@ char * hb_langName( void )
    {
       pszName = ( char * ) hb_xgrab( 128 );
       hb_snprintf( pszName, 128, "Harbour Language: %s %s (%s)",
-         hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
-         hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
-         hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
+                   hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_ID ),
+                   hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAME ),
+                   hb_langDGetItem( HB_LANG_ITEM_BASE_ID + HB_LANG_ITEM_ID_NAMENAT ) );
    }
    else
       pszName = hb_strdup( "Harbour Language: (not installed)" );
@@ -440,7 +440,7 @@ char * hb_langName( void )
 
 const char * hb_langDGetErrorDesc( int iIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_langDGetErrorDesc(%i)", iIndex));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_langDGetErrorDesc(%i)", iIndex ) );
 
    return hb_langDGetItem( HB_LANG_ITEM_BASE_ERRDESC + iIndex );
 }

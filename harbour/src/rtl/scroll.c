@@ -106,7 +106,7 @@ HB_FUNC( SCROLL )
                 iLeft,
                 iBottom,
                 iRight,
-                hb_parni( 5 ), /* Defaults to zero on bad type */
+                hb_parni( 5 ),   /* Defaults to zero on bad type */
                 hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }
 
@@ -171,7 +171,7 @@ HB_FUNC( HB_SCROLL )
       if( iChar > 0 && iChar <= 255 )
       {
          PHB_CODEPAGE cdp = hb_vmCDP();
-         if( !HB_CDP_ISCHARUNI( cdp ) )
+         if( ! HB_CDP_ISCHARUNI( cdp ) )
             iChar = hb_cdpGetU16( cdp, ( HB_UCHAR ) iChar );
       }
    }
@@ -186,6 +186,6 @@ HB_FUNC( HB_SCROLL )
                   iRight,
                   iColor,
                   iChar,
-                  hb_parni( 5 ), /* Defaults to zero on bad type */
+                  hb_parni( 5 ),   /* Defaults to zero on bad type */
                   hb_parni( 6 ) ); /* Defaults to zero on bad type */
 }

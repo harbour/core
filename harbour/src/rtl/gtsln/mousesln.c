@@ -64,8 +64,8 @@
 
 /* *********************************************************************** */
 
-static int  s_iMouseRow = 0;
-static int  s_iMouseCol = 0;
+static int s_iMouseRow = 0;
+static int s_iMouseCol = 0;
 
 static HB_BOOL s_bMousePresent = HB_FALSE;
 static int     s_iMouseButtons = -1;
@@ -81,7 +81,7 @@ static struct timeval mRightDblckTime;
 /* *********************************************************************** */
 
 #if defined( HB_HAS_GPM )
-static HB_BOOL GetGpmEvent( Gpm_Event *Evt )
+static HB_BOOL GetGpmEvent( Gpm_Event * Evt )
 {
    if( s_bMousePresent && gpm_fd >= 0 )
    {
@@ -91,7 +91,7 @@ static HB_BOOL GetGpmEvent( Gpm_Event *Evt )
       FD_ZERO( &ReadFD );
       FD_SET( gpm_fd, &ReadFD );
 
-      if( select( gpm_fd+1, &ReadFD, NULL, NULL, &tv ) > 0 )
+      if( select( gpm_fd + 1, &ReadFD, NULL, NULL, &tv ) > 0 )
          if( FD_ISSET( gpm_fd, &ReadFD ) )
             return Gpm_GetEvent( Evt ) > 0;
    }
@@ -102,7 +102,7 @@ static HB_BOOL GetGpmEvent( Gpm_Event *Evt )
 
 /* *********************************************************************** */
 
-static HB_BOOL GetXtermEvent( int *Btn, int *Col, int *Row )
+static HB_BOOL GetXtermEvent( int * Btn, int * Col, int * Row )
 {
    /* Xterm mouse event consists of three chars */
    if( SLang_input_pending( 0 ) > 0 )
@@ -273,7 +273,7 @@ int hb_gt_sln_mouse_Inkey( int iEventMask, HB_BOOL fCheckNew )
 
 #if defined( HB_HAS_GPM )
 
-#define CHECK_BUTTON_DOWN(Mask,GpmBtn,InkBtn,InkDbl)              \
+#define CHECK_BUTTON_DOWN( Mask, GpmBtn, InkBtn, InkDbl )              \
    if( ( iEventMask & Mask ) && ( Evt.buttons & GpmBtn ) )        \
    {                                                              \
       if( Evt.type & GPM_SINGLE )                                 \

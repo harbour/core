@@ -53,7 +53,7 @@
 #include "hbapi.h"
 #include "hbvm.h"
 
-#if !( defined( HB_DYNLIB ) && defined( __WATCOMC__ ) )
+#if ! ( defined( HB_DYNLIB ) && defined( __WATCOMC__ ) )
 
 HB_EXTERN_BEGIN
 #if defined( __MINGW32__ )
@@ -81,15 +81,15 @@ HB_EXTERN_END
 
 int main( int argc, char * argv[] )
 {
-   HB_TRACE(HB_TR_DEBUG, ("main(%d, %p)", argc, argv));
+   HB_TRACE( HB_TR_DEBUG, ( "main(%d, %p)", argc, argv ) );
 
 #if defined( __DJGPP__ )
    __system_flags =
-         __system_redirect |
-         __system_allow_long_cmds |
-         __system_emulate_command |
-         __system_handle_null_commands |
-         __system_emulate_chdir;
+      __system_redirect |
+      __system_allow_long_cmds |
+      __system_emulate_command |
+      __system_handle_null_commands |
+      __system_emulate_chdir;
 #endif
 
    hb_cmdargInit( argc, argv );

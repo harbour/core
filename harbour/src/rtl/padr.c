@@ -59,6 +59,7 @@
 static HB_SIZE hb_cdpItemLen( PHB_CODEPAGE cdp, PHB_ITEM pItem )
 {
    HB_SIZE nLen = hb_itemGetCLen( pItem );
+
    return nLen && HB_CDP_ISCHARIDX( cdp ) ?
           hb_cdpTextLen( cdp, hb_itemGetCPtr( pItem ), nLen ) : nLen;
 }

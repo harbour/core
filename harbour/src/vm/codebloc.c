@@ -72,7 +72,7 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
 {
    HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGarbageDelete(%p)", Cargo));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGarbageDelete(%p)", Cargo ) );
 
    /* free space allocated for pcodes - if it was a macro-compiled codeblock
     */
@@ -109,7 +109,7 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageMark )
 {
    HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGarbageMark(%p)", Cargo));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGarbageMark(%p)", Cargo ) );
 
    if( pCBlock->uiLocals )
    {
@@ -117,7 +117,9 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageMark )
       HB_USHORT uiLocals = pCBlock->uiLocals;
 
       do
-         hb_gcItemRef( &pLocals[ uiLocals] );
+      {
+         hb_gcItemRef( &pLocals[ uiLocals ] );
+      }
       while( --uiLocals );
    }
 }
@@ -149,7 +151,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
    PHB_ITEM pLocals, pBase;
    const HB_BYTE * pCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockNew(%p, %hu, %p, %p, %" HB_PFS "u)", pBuffer, uiLocals, pLocalPosTable, pSymbols, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockNew(%p, %hu, %p, %p, %" HB_PFS "u)", pBuffer, uiLocals, pLocalPosTable, pSymbols, nLen ) );
 
    /*
     * allocate memory for code block body and detach items hb_gcAllocRaw()
@@ -248,7 +250,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
    pCBlock->uiLocals  = uiLocals;
    pCBlock->pLocals   = pLocals;
 
-   HB_TRACE(HB_TR_INFO, ("codeblock created %p", pCBlock));
+   HB_TRACE( HB_TR_INFO, ( "codeblock created %p", pCBlock ) );
 
    return pCBlock;
 }
@@ -260,7 +262,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
    PHB_ITEM pBase;
    HB_BYTE * pCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockMacroNew(%p, %" HB_PFS "u)", pBuffer, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockMacroNew(%p, %" HB_PFS "u)", pBuffer, nLen ) );
 
    /*
     * The codeblock pcode is stored in dynamically allocated memory that
@@ -286,7 +288,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
    pCBlock->uiLocals  = 0;
    pCBlock->pLocals   = NULL;
 
-   HB_TRACE(HB_TR_INFO, ("codeblock created %p", pCBlock));
+   HB_TRACE( HB_TR_INFO, ( "codeblock created %p", pCBlock ) );
 
    return pCBlock;
 }
@@ -297,7 +299,7 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos )
 {
    HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetVar(%p, %d)", pItem, iItemPos));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGetVar(%p, %d)", pItem, iItemPos ) );
 
    /* local variables accessed in a codeblock are always stored as reference */
    return hb_itemUnRef( pCBlock->pLocals - iItemPos );
@@ -307,7 +309,7 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos )
  */
 PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, int iItemPos )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_codeblockGetRef(%p, %d)", pCBlock, iItemPos));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGetRef(%p, %d)", pCBlock, iItemPos ) );
 
    return pCBlock->pLocals - iItemPos;
 }

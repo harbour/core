@@ -70,8 +70,8 @@ BOOL WINAPI HB_DLL_ENTRY_POINT( HANDLE hInstance, DWORD fdwReason, PVOID pvReser
 BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD fdwReason, PVOID pvReserved )
 #endif
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %lu, %p)", hInstance, fdwReason,
-             pvReserved ) );
+   HB_TRACE( HB_TR_DEBUG, ( "DllEntryPoint(%p, %lu, %p)", hInstance, fdwReason,
+                            pvReserved ) );
 
    HB_SYMBOL_UNUSED( hInstance );
    HB_SYMBOL_UNUSED( fdwReason );

@@ -69,7 +69,7 @@ HB_FUNC( FSETDEVMOD )
       hb_fsSetFError( hb_fsError() );
    }
    else
-      hb_fsSetFError( 6 ); /* ERROR_INVALID_HANDLE */
+      hb_fsSetFError( 6 );  /* ERROR_INVALID_HANDLE */
 
    hb_retni( iRet );
 }

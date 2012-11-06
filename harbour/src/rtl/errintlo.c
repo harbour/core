@@ -70,7 +70,7 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
    int iLevel;
    FILE * hLog;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_errInternal(%d, %s, %s, %s)", errCode, szText, szPar1, szPar2 ) );
 
    if( szPar1 == NULL )
       szPar1 = "";
@@ -82,14 +82,14 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
    fLang = fStack && hb_langID() != NULL;
 
    szFile = fStack ? hb_setGetCPtr( HB_SET_HBOUTLOG ) : NULL;
-   if( !szFile )
+   if( ! szFile )
       szFile = "hb_out.log";
 
    hLog = hb_fopen( szFile, "a+" );
    if( hLog )
    {
       char szTime[ 9 ];
-      int iYear, iMonth, iDay;
+      int  iYear, iMonth, iDay;
 
       hb_dateToday( &iYear, &iMonth, &iDay );
       hb_dateTimeStr( szTime );
@@ -111,7 +111,7 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
    if( hLog )
       fprintf( hLog, "%s", buffer );
 
-   if( !szText && fLang )
+   if( ! szText && fLang )
       szText = hb_langDGetItem( HB_LANG_ITEM_BASE_ERRINTR + errCode - 9000 );
 
    if( szText )
@@ -141,7 +141,7 @@ void hb_errInternalRaw( HB_ERRCODE errCode, const char * szText, const char * sz
 
    if( hLog )
    {
-      fprintf( hLog, "------------------------------------------------------------------------\n");
+      fprintf( hLog, "------------------------------------------------------------------------\n" );
       fclose( hLog );
    }
 }

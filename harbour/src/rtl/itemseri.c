@@ -163,21 +163,21 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
 static HB_BOOL hb_itemSerialValueRef( PHB_CYCLIC_REF * pRefPtr, void * value,
                                       HB_SIZE nOffset )
 {
-   while( * pRefPtr )
+   while( *pRefPtr )
    {
-      if( ( * pRefPtr )->value == value )
+      if( ( *pRefPtr )->value == value )
       {
-         ( * pRefPtr )->fRef = HB_TRUE;
+         ( *pRefPtr )->fRef = HB_TRUE;
          return HB_TRUE;
       }
-      pRefPtr = &( * pRefPtr )->pNext;
+      pRefPtr = &( *pRefPtr )->pNext;
    }
 
-   * pRefPtr = ( PHB_CYCLIC_REF ) hb_xgrab( sizeof( HB_CYCLIC_REF ) );
-   ( * pRefPtr )->value = value;
-   ( * pRefPtr )->nOffset = nOffset;
-   ( * pRefPtr )->fRef = HB_FALSE;
-   ( * pRefPtr )->pNext = NULL;
+   *pRefPtr = ( PHB_CYCLIC_REF ) hb_xgrab( sizeof( HB_CYCLIC_REF ) );
+   ( *pRefPtr )->value = value;
+   ( *pRefPtr )->nOffset = nOffset;
+   ( *pRefPtr )->fRef = HB_FALSE;
+   ( *pRefPtr )->pNext = NULL;
 
    return HB_FALSE;
 }
@@ -186,12 +186,12 @@ static void hb_itemSerialUnRefFree( PHB_CYCLIC_REF * pRefPtr )
 {
    PHB_CYCLIC_REF pRef;
 
-   while( * pRefPtr )
+   while( *pRefPtr )
    {
-      pRef = * pRefPtr;
+      pRef = *pRefPtr;
       if( ! pRef->fRef )
       {
-         * pRefPtr =pRef->pNext;
+         *pRefPtr = pRef->pNext;
          hb_xfree( pRef );
       }
       else
@@ -206,31 +206,31 @@ static HB_BOOL hb_itemSerialValueOffset( PHB_CYCLIC_REF pRef, void * value,
    {
       if( pRef->value == value )
       {
-         * pnRef = pRef->nOffset;
+         *pnRef = pRef->nOffset;
          return pRef->nOffset < nOffset;
       }
       pRef = pRef->pNext;
    }
 
-   * pnRef = HB_SERIAL_DUMMYOFFSET;
+   *pnRef = HB_SERIAL_DUMMYOFFSET;
    return HB_FALSE;
 }
 
 static HB_BOOL hb_itemSerialOffsetRef( PHB_CYCLIC_REF * pRefPtr, void * value,
                                        HB_SIZE nOffset )
 {
-   while( * pRefPtr )
+   while( *pRefPtr )
    {
-      if( ( * pRefPtr )->nOffset == nOffset )
+      if( ( *pRefPtr )->nOffset == nOffset )
          return HB_TRUE;
-      pRefPtr = &( * pRefPtr )->pNext;
+      pRefPtr = &( *pRefPtr )->pNext;
    }
 
-   * pRefPtr = ( PHB_CYCLIC_REF ) hb_xgrab( sizeof( HB_CYCLIC_REF ) );
-   ( * pRefPtr )->value = value;
-   ( * pRefPtr )->nOffset = nOffset;
-   ( * pRefPtr )->fRef = HB_FALSE;
-   ( * pRefPtr )->pNext = NULL;
+   *pRefPtr = ( PHB_CYCLIC_REF ) hb_xgrab( sizeof( HB_CYCLIC_REF ) );
+   ( *pRefPtr )->value = value;
+   ( *pRefPtr )->nOffset = nOffset;
+   ( *pRefPtr )->fRef = HB_FALSE;
+   ( *pRefPtr )->pNext = NULL;
 
    return HB_FALSE;
 }

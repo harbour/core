@@ -79,7 +79,7 @@ HB_FUNC( ORDKEYCOUNT )
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if( ! pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
@@ -102,7 +102,7 @@ HB_FUNC( ORDKEYNO )
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if( ! pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
@@ -123,7 +123,7 @@ HB_FUNC( ORDKEYGOTO )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmNewVal = hb_param( 1 , HB_IT_NUMERIC );
+      pOrderInfo.itmNewVal = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.itmResult = hb_itemPutL( NULL, HB_FALSE );
       SELF_ORDINFO( pArea, DBOI_POSITION, &pOrderInfo );
       hb_itemReturnRelease( pOrderInfo.itmResult );
@@ -140,7 +140,7 @@ HB_FUNC( ORDKEYRELPOS )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmNewVal = hb_param( 1 , HB_IT_NUMERIC );
+      pOrderInfo.itmNewVal = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.itmResult = hb_itemPutNI( NULL, 0 );
       SELF_ORDINFO( pArea, DBOI_RELKEYPOS, &pOrderInfo );
       hb_itemReturnRelease( pOrderInfo.itmResult );
@@ -157,7 +157,7 @@ HB_FUNC( ORDFINDREC )
    {
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
-      pOrderInfo.itmNewVal = hb_param( 1 , HB_IT_NUMERIC );
+      pOrderInfo.itmNewVal = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.itmResult = hb_itemPutL( NULL, HB_FALSE );
       SELF_ORDINFO( pArea, hb_parl( 2 ) ? DBOI_FINDRECCONT :
                                           DBOI_FINDREC, &pOrderInfo );
@@ -170,6 +170,7 @@ HB_FUNC( ORDFINDREC )
 HB_FUNC( ORDSKIPRAW )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
    if( pArea )
       SELF_SKIPRAW( pArea, hb_parnldef( 1, 1 ) );
    else
@@ -219,7 +220,7 @@ HB_FUNC( ORDKEYADD )
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if( ! pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
@@ -241,7 +242,7 @@ HB_FUNC( ORDKEYDEL )
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if( ! pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
@@ -263,7 +264,7 @@ HB_FUNC( ORDDESCEND )
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if( ! pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
@@ -285,7 +286,7 @@ HB_FUNC( ORDISUNIQUE )
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if( ! pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* HARBOUR extension: NewVal to set/reset unique flag */
@@ -307,7 +308,7 @@ HB_FUNC( ORDCUSTOM )
       DBORDERINFO pOrderInfo;
       memset( &pOrderInfo, 0, sizeof( pOrderInfo ) );
       pOrderInfo.itmOrder = hb_param( 1, HB_IT_STRING );
-      if( !pOrderInfo.itmOrder )
+      if( ! pOrderInfo.itmOrder )
          pOrderInfo.itmOrder = hb_param( 1, HB_IT_NUMERIC );
       pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
       /* Either or both may be NIL */
@@ -349,24 +350,24 @@ HB_FUNC( DBORDERINFO )
 
    if( pArea )
    {
-      PHB_ITEM pType = hb_param( 1 , HB_IT_NUMERIC );
+      PHB_ITEM pType = hb_param( 1, HB_IT_NUMERIC );
       if( pType )
       {
          DBORDERINFO pOrderInfo;
 
          /* atomBagName may be NIL */
          pOrderInfo.atomBagName = hb_param( 2, HB_IT_STRING );
-         if( !pOrderInfo.atomBagName )
+         if( ! pOrderInfo.atomBagName )
             pOrderInfo.atomBagName = hb_param( 2, HB_IT_NUMERIC );
 
          pOrderInfo.itmOrder = hb_param( 3, HB_IT_STRING );
-         if( !pOrderInfo.itmOrder )
+         if( ! pOrderInfo.itmOrder )
             pOrderInfo.itmOrder = hb_param( 3, HB_IT_NUMERIC );
 
-         pOrderInfo.itmNewVal = hb_param( 4 , HB_IT_ANY );
-         pOrderInfo.itmResult = hb_itemNew( NULL );
+         pOrderInfo.itmNewVal  = hb_param( 4, HB_IT_ANY );
+         pOrderInfo.itmResult  = hb_itemNew( NULL );
          pOrderInfo.itmCobExpr = NULL;
-         pOrderInfo.fAllTags = HB_FALSE;
+         pOrderInfo.fAllTags   = HB_FALSE;
          SELF_ORDINFO( pArea, ( HB_USHORT ) hb_itemGetNI( pType ), &pOrderInfo );
          hb_itemReturnRelease( pOrderInfo.itmResult );
       }
@@ -386,7 +387,7 @@ HB_FUNC( DBFIELDINFO )
       HB_USHORT uiFields, uiIndex;
       PHB_ITEM pType;
 
-      pType = hb_param( 1 , HB_IT_NUMERIC );
+      pType = hb_param( 1, HB_IT_NUMERIC );
       uiIndex = ( HB_FIELDNO ) hb_parni( 2 );
       if( pType && SELF_FIELDCOUNT( pArea, &uiFields ) == HB_SUCCESS &&
           uiIndex > 0 && uiIndex <= uiFields )

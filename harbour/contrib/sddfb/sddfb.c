@@ -180,7 +180,9 @@ static HB_ERRCODE fbConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    }
    pConnection->pSDDConn = hb_xgrab( sizeof( SDDCONN ) );
    ( ( SDDCONN * ) pConnection->pSDDConn )->hDb = hDb;
-/*   HB_TRACE( HB_TR_ALWAYS, ("hDb=%d", hDb) ); */
+#if 0
+   HB_TRACE( HB_TR_ALWAYS, ( "hDb=%d", hDb ) );
+#endif
    return HB_SUCCESS;
 }
 
@@ -223,10 +225,14 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
 
    memset( &status, 0, sizeof( status ) );
 
-/*   HB_TRACE( HB_TR_ALWAYS, ("db=%d", hDb) ); */
+#if 0
+   HB_TRACE( HB_TR_ALWAYS, ( "db=%d", hDb ) );
+#endif
    if( isc_start_transaction( status, &hTrans, 1, phDb, 0, NULL ) )
    {
-/*      HB_TRACE( HB_TR_ALWAYS, ("hTrans=%d status=%ld %ld %ld %ld", ( int ) hTrans, ( long ) status[0], ( long ) status[1], ( long ) status[2], ( long ) status[3] ) ); */
+#if 0
+      HB_TRACE( HB_TR_ALWAYS, ( "hTrans=%d status=%ld %ld %ld %ld", ( int ) hTrans, ( long ) status[ 0 ], ( long ) status[ 1 ], ( long ) status[ 2 ], ( long ) status[ 3 ] ) );
+#endif
       hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_START, "Start transaction failed", NULL, ( HB_ERRCODE ) isc_sqlcode( status ) );
       return HB_FAILURE;
    }

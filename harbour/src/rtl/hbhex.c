@@ -62,7 +62,8 @@ HB_FUNC( HB_HEXTONUM )
    {
       HB_MAXUINT ulNum = 0;
 
-      while( *szHex == ' ' ) szHex++;
+      while( *szHex == ' ' )
+         szHex++;
       while( *szHex )
       {
          int iDigit;
@@ -138,7 +139,7 @@ HB_FUNC( HB_STRTOHEX )
       nSep = hb_parclen( 2 );
    }
 
-   if( !szStr || !szSep )
+   if( ! szStr || ! szSep )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;
@@ -176,7 +177,7 @@ HB_FUNC( HB_HEXTOSTR )
    const char * szStr = hb_parc( 1 );
    HB_SIZE nStr;
 
-   if( !szStr )
+   if( ! szStr )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return;

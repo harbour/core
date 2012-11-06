@@ -68,7 +68,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
    HB_BOOL bRetVal = HB_FALSE;
    HB_FHANDLE fhndSource;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_copyfile(%s, %s)", szSource, szDest));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s)", szSource, szDest ) );
 
    while( ( fhndSource = hb_spOpen( szSource, FO_READ | FO_SHARED | FO_PRIVATE ) ) == FS_ERROR )
    {

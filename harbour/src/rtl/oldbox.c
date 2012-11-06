@@ -66,7 +66,7 @@ HB_FUNC( __BOX )
 
    if( pTop && pLeft && pBottom && pRight && pszBox )
       hb_gtBox( hb_itemGetNI( pTop ),
-                hb_itemGetNI( pLeft),
+                hb_itemGetNI( pLeft ),
                 hb_itemGetNI( pBottom ),
                 hb_itemGetNI( pRight ),
                 pszBox );
@@ -81,7 +81,7 @@ HB_FUNC( __BOXD )
 
    if( pTop && pLeft && pBottom && pRight )
       hb_gtBoxD( hb_itemGetNI( pTop ),
-                 hb_itemGetNI( pLeft),
+                 hb_itemGetNI( pLeft ),
                  hb_itemGetNI( pBottom ),
                  hb_itemGetNI( pRight ) );
 }
@@ -95,7 +95,7 @@ HB_FUNC( __BOXS )
 
    if( pTop && pLeft && pBottom && pRight )
       hb_gtBoxS( hb_itemGetNI( pTop ),
-                 hb_itemGetNI( pLeft),
+                 hb_itemGetNI( pLeft ),
                  hb_itemGetNI( pBottom ),
                  hb_itemGetNI( pRight ) );
 }

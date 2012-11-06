@@ -73,8 +73,8 @@
 #  include <sys/time.h>
 #endif
 
-#if !defined( HB_HAS_UCONTEXT )
-#  if ( defined( HB_OS_LINUX ) && !defined( __WATCOMC__ ) ) || defined( HB_OS_MINIX )
+#if ! defined( HB_HAS_UCONTEXT )
+#  if ( defined( HB_OS_LINUX ) && ! defined( __WATCOMC__ ) ) || defined( HB_OS_MINIX )
 #     define HB_HAS_UCONTEXT
 #  endif
 #endif
@@ -86,15 +86,15 @@
 #endif
 
 
-#define HB_TASK_STACK_MIN           16384
-#define HB_TASK_STACK_ALIGN         16
-#define HB_TASK_NO_DELAY            0
-#define HB_TASK_INFINITE_DELAY      HB_VMLONG_MAX
+#define HB_TASK_STACK_MIN       16384
+#define HB_TASK_STACK_ALIGN     16
+#define HB_TASK_NO_DELAY        0
+#define HB_TASK_INFINITE_DELAY  HB_VMLONG_MAX
 
 
 #undef HB_TASK_STACK_INIT
 
-#if !defined( HB_HAS_UCONTEXT )
+#if ! defined( HB_HAS_UCONTEXT )
 
 #  if defined( __GNUC__ )
 #     if defined( __DJGPP__ )
@@ -264,25 +264,25 @@ static void hb_taskFreeze( HB_MAXINT wakeup )
 
 static void hb_taskLink( PHB_TASKINFO * pList, PHB_TASKINFO pTask )
 {
-   if( * pList )
+   if( *pList )
    {
-      pTask->pNext = * pList;
-      ( pTask->pPrev = ( * pList )->pPrev )->pNext = pTask;
-      ( * pList )->pPrev = pTask;
+      pTask->pNext = *pList;
+      ( pTask->pPrev = ( *pList )->pPrev )->pNext = pTask;
+      ( *pList )->pPrev = pTask;
    }
    else
-      * pList = pTask->pNext = pTask->pPrev = pTask;
+      *pList = pTask->pNext = pTask->pPrev = pTask;
 }
 
 static void hb_taskUnlink( PHB_TASKINFO * pList, PHB_TASKINFO pTask )
 {
    pTask->pPrev->pNext = pTask->pNext;
    pTask->pNext->pPrev = pTask->pPrev;
-   if( * pList == pTask )
+   if( *pList == pTask )
    {
-      * pList = pTask->pNext;
-      if( * pList == pTask )
-         * pList = NULL;
+      *pList = pTask->pNext;
+      if( *pList == pTask )
+         *pList = NULL;
    }
 }
 
@@ -331,6 +331,7 @@ static void hb_taskSetSleep( PHB_TASKINFO pTask, unsigned long ulMilliSec )
 static void hb_taskWakeUp( PHB_TASKINFO pTask )
 {
    PHB_TASKINFO * pSleep = &s_taskSleep;
+
    while( *pSleep )
    {
       if( *pSleep == pTask )
@@ -412,7 +413,7 @@ static void hb_taskFinalize( PHB_TASKINFO pTask )
    {
       PHB_TASKINFO * pLock = &pTask->locking->lockers;
 
-      while( * pLock )
+      while( *pLock )
       {
          if( *pLock == pTask )
          {
@@ -434,7 +435,7 @@ static void hb_taskFinalize( PHB_TASKINFO pTask )
    {
       PHB_TASKINFO * pWait = &pTask->waiting->waiters;
 
-      while( * pWait )
+      while( *pWait )
       {
          if( *pWait == pTask )
          {
@@ -536,7 +537,7 @@ static PHB_TASKINFO hb_taskNew( long stack_size )
    return pTask;
 }
 
-#if !defined( HB_HAS_UCONTEXT )
+#if ! defined( HB_HAS_UCONTEXT )
 static void hb_taskStart( void )
 {
    static jmp_buf context;
@@ -746,7 +747,7 @@ void hb_taskResume( void * pTaskPtr )
       pCurrTask = s_currTask;
       switch( pTask->state )
       {
-#if !defined( HB_HAS_UCONTEXT )
+#if ! defined( HB_HAS_UCONTEXT )
          case TASK_INIT:
             /* save current execution context  */
             if( setjmp( s_currTask->context ) == 0 )
@@ -792,13 +793,13 @@ void hb_taskResume( void * pTaskPtr )
 /*
          default:
             hb_errInternal( HB_EI_ERRUNRECOV, "TaskResume: corrupt", NULL, NULL );
-*/
+ */
       }
    }
 }
 
 /* create new task */
-void * hb_taskCreate( void * ( * start ) ( void * ), void * cargo, long stack_size )
+void * hb_taskCreate( void * ( *start )( void * ), void * cargo, long stack_size )
 {
    PHB_TASKINFO pTask;
 
@@ -1070,7 +1071,7 @@ int hb_taskWait( void ** pCondPtr, void ** pMutexPtr, unsigned long ulMilliSec )
 
    hb_taskSleep( ulMilliSec );
 
-   if( !hb_taskLock( pMutexPtr, HB_TASK_INFINITE_WAIT ) )
+   if( ! hb_taskLock( pMutexPtr, HB_TASK_INFINITE_WAIT ) )
       hb_errInternal( HB_EI_ERRUNRECOV, "TaskWait: lock fail", NULL, NULL );
 
    pMutex->count = iCount;
@@ -1105,7 +1106,7 @@ void hb_taskDestroyMutex( void ** pMutexPtr )
 
    if( pMutex )
    {
-      PHB_TASKMTX *pMutexLst = &s_mutexList;
+      PHB_TASKMTX * pMutexLst = &s_mutexList;
 
       while( *pMutexLst )
       {
@@ -1131,7 +1132,7 @@ void hb_taskDestroyCond( void ** pCondPtr )
 
    if( pCond )
    {
-      PHB_TASKCOND *pCondLst = &s_condList;
+      PHB_TASKCOND * pCondLst = &s_condList;
 
       while( *pCondLst )
       {

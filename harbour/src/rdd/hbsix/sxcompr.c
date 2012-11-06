@@ -119,55 +119,55 @@
    hb_LZSSxCompressMem() and hb_LZSSxCompressFile() intentionally
    do not do that.
 
-*/
+ */
 
 #include "hbsxfunc.h"
 
-#define HB_SX_UNCOMPRESED     0xFFFFFFFFUL
+#define HB_SX_UNCOMPRESED  0xFFFFFFFFUL
 
 
 /* number of bits for encoded item (position,length) */
-#define ITEMBITS        16
+#define ITEMBITS           16
 /* unused DUMMY bits - who does know why SIX has it? */
-#define DUMMYBITS       1
+#define DUMMYBITS          1
 /* number of bits for position offset */
-#define OFFSETBITS      (12 - DUMMYBITS)
+#define OFFSETBITS         ( 12 - DUMMYBITS )
 /* the minimum match length to encode as new position */
-#define MINLENGTH       3
+#define MINLENGTH          3
 
 /* number of bits for match length, 1 bit reserved for ITEM type */
-#define LENGTHBITS      ( ITEMBITS - OFFSETBITS - DUMMYBITS )
+#define LENGTHBITS         ( ITEMBITS - OFFSETBITS - DUMMYBITS )
 /* the maximum match length we can encode in LENGTHBITS */
-#define MAXLENGTH       ( ( 1 << LENGTHBITS ) + MINLENGTH - 1 )
+#define MAXLENGTH          ( ( 1 << LENGTHBITS ) + MINLENGTH - 1 )
 /* size of ring buffer */
-#define RBUFLENGTH      ( 1 << OFFSETBITS )
+#define RBUFLENGTH         ( 1 << OFFSETBITS )
 /* the bit mask for ring buffer */
-#define RBUFMASK        ( ( 1 << OFFSETBITS ) - 1 )
+#define RBUFMASK           ( ( 1 << OFFSETBITS ) - 1 )
 /* the bit mask for match length */
-#define MATCHMASK       ( ( 1 << LENGTHBITS ) - 1 )
+#define MATCHMASK          ( ( 1 << LENGTHBITS ) - 1 )
 /* get ringbuffer index */
-#define RBUFINDEX(i)    ( ( i ) & RBUFMASK )
+#define RBUFINDEX( i )       ( ( i ) & RBUFMASK )
 
 /* get ring buffer offset position from low and high bytes */
-#define LZSS_OFFSET(l, h)  ( (l) | ( (h & ~MATCHMASK) << ( 8 - LENGTHBITS ) ) )
+#define LZSS_OFFSET( l, h )  ( ( l ) | ( ( h & ~MATCHMASK ) << ( 8 - LENGTHBITS ) ) )
 /* get match length from low and high byte */
-#define LZSS_LENGTH(l, h)  ( ( (h) & MATCHMASK ) + MINLENGTH )
+#define LZSS_LENGTH( l, h )  ( ( ( h ) & MATCHMASK ) + MINLENGTH )
 
 /* create compressed item from match position and length */
-#define LZSS_ITEM(o, l)    ( ( (o) << LENGTHBITS ) | ( (l) - MINLENGTH ) )
+#define LZSS_ITEM( o, l )    ( ( ( o ) << LENGTHBITS ) | ( ( l ) - MINLENGTH ) )
 /* create low byte of compressed item */
-#define LZSS_ITMLO(o, l)   ( ( HB_UCHAR ) (o) )
+#define LZSS_ITMLO( o, l )   ( ( HB_UCHAR ) ( o ) )
 /* create high byte of compressed item */
-#define LZSS_ITMHI(o, l)   ( ( HB_UCHAR ) ( ( ( (o) >> ( 8 - LENGTHBITS ) ) & ~MATCHMASK ) | \
-                                         ( (l) - MINLENGTH ) ) )
+#define LZSS_ITMHI( o, l )   ( ( HB_UCHAR ) ( ( ( ( o ) >> ( 8 - LENGTHBITS ) ) & ~MATCHMASK ) | \
+                                              ( ( l ) - MINLENGTH ) ) )
 /* maximum size of item set: byte with item type bits plus 8 items */
-#define ITEMSETSIZE     ( ( ITEMBITS << 3 ) + 1 )
+#define ITEMSETSIZE    ( ( ITEMBITS << 3 ) + 1 )
 
 /* the size of IO buffer for file (de)compression */
-#define LZSS_IOBUFLEN   8192
+#define LZSS_IOBUFLEN  8192
 
 /* uninitialized (dummy) node in compression trees */
-#define DUMMYNODE       RBUFLENGTH
+#define DUMMYNODE      RBUFLENGTH
 
 
 typedef struct _HB_LZSSX_COMPR
@@ -411,7 +411,7 @@ static void hb_LZSSxNodeInsert( PHB_LZSSX_COMPR pCompr, int r )
          pCompr->match_offset = ( HB_SHORT ) p;
          pCompr->match_length = ( HB_SHORT ) i;
          if( i >= MAXLENGTH )
-             break;
+            break;
       }
    }
    pCompr->parent[ r ] = pCompr->parent[ p ];
@@ -470,7 +470,7 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
    HB_SHORT i, c, len, r, s, last_match_length, item;
 
    for( i = RBUFLENGTH + 1; i < RBUFLENGTH + 257; i++ )
-      pCompr->right[i] = DUMMYNODE;
+      pCompr->right[ i ] = DUMMYNODE;
    for( i = 0; i < RBUFLENGTH; i++ )
       pCompr->parent[ i ] = DUMMYNODE;
 
@@ -513,7 +513,7 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
       {
          for( i = 0; i < item; i++ )
          {
-            if( !hb_LZSSxWrite( pCompr, itemSet[ i ] ) )
+            if( ! hb_LZSSxWrite( pCompr, itemSet[ i ] ) )
                return ( HB_SIZE ) -1;
          }
          nSize += item;
@@ -540,19 +540,20 @@ static HB_SIZE hb_LZSSxEncode( PHB_LZSSX_COMPR pCompr )
          if( --len )
             hb_LZSSxNodeInsert( pCompr, r );
       }
-   } while( len > 0 );
+   }
+   while( len > 0 );
 
    if( item > 1 )
    {
       for( i = 0; i < item; i++ )
       {
-         if( !hb_LZSSxWrite( pCompr, itemSet[ i ] ) )
+         if( ! hb_LZSSxWrite( pCompr, itemSet[ i ] ) )
             return ( HB_SIZE ) -1;
       }
       nSize += item;
    }
 
-   if( !hb_LZSSxFlush( pCompr ) )
+   if( ! hb_LZSSxFlush( pCompr ) )
       return ( HB_SIZE ) -1;
 
    return nSize;
@@ -572,7 +573,7 @@ HB_BOOL hb_LZSSxCompressMem( const char * pSrcBuf, HB_SIZE nSrcLen,
    hb_LZSSxExit( pCompr );
    if( pnSize )
       *pnSize = nSize;
-   return ( nSize <= nDstLen );
+   return nSize <= nDstLen;
 }
 
 HB_BOOL hb_LZSSxDecompressMem( const char * pSrcBuf, HB_SIZE nSrcLen,
@@ -744,6 +745,6 @@ HB_FUNC( _SX_STRDECOMPRESS )
       }
    }
 
-   if( !fOK )
+   if( ! fOK )
       hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
 }

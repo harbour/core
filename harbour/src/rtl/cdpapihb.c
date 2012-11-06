@@ -196,7 +196,7 @@ HB_FUNC( HB_UTF8ASC )
 
       while( nLen )
       {
-         if( !hb_cdpUTF8ToU16NextChar( ( unsigned char ) *pszString, &n, &wc ) )
+         if( ! hb_cdpUTF8ToU16NextChar( ( unsigned char ) *pszString, &n, &wc ) )
             break;
          if( n == 0 )
             break;
@@ -451,7 +451,7 @@ HB_FUNC( HB_UTF8POKE )
          uc = ( HB_WCHAR ) hb_parni( 3 );
          n = hb_cdpUTF8CharSize( uc );
          n2 = 0;
-         hb_cdpUTF8ToU16NextChar( szString[nPos], &n2, &uc2 );
+         hb_cdpUTF8ToU16NextChar( szString[ nPos ], &n2, &uc2 );
          ++n2;
          if( n == n2 )
          {
@@ -459,7 +459,7 @@ HB_FUNC( HB_UTF8POKE )
             if( hb_itemGetWriteCL( pText, &szText, &nLen ) &&
                 nPos + n <= nLen )
             {
-               hb_cdpU16CharToUTF8( &szText[nPos], uc );
+               hb_cdpU16CharToUTF8( &szText[ nPos ], uc );
             }
             hb_itemReturn( pText );
          }
@@ -468,7 +468,7 @@ HB_FUNC( HB_UTF8POKE )
             char * szResult = ( char * ) hb_xgrab( nLen - n2 + n + 1 );
 
             memcpy( szResult, szString, nPos );
-            hb_cdpU16CharToUTF8( &szResult[nPos], uc );
+            hb_cdpU16CharToUTF8( &szResult[ nPos ], uc );
             memcpy( szResult + nPos + n, szString + nPos + n2, nLen - nPos - n2 );
             if( HB_ISBYREF( 1 ) )
                hb_storclen( szResult, nLen - n2 + n, 1 );

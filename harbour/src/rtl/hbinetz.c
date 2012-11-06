@@ -70,7 +70,7 @@ HB_FUNC( HB_INETCOMPRESS )
    {
       PHB_ZNETSTREAM pStream = hb_znetOpen( iLevel, iStrategy );
       if( pStream == NULL )
-         pItem = NULL; /* to force RTE */
+         pItem = NULL;  /* to force RTE */
       if( hb_znetInetInitialize( pItem, pStream, hb_znetRead, hb_znetWrite,
                                  hb_znetFlush, hb_znetClose ) )
       {

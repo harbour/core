@@ -130,13 +130,13 @@ int main( int argc, char * argv[] )
 
    hb_compChkFileSwitches( argc, argv );
 
-   iResult = hb_compMain( argc, ( const char * const* ) argv );
+   iResult = hb_compMain( argc, ( const char * const * ) argv );
 
    hb_xexit();
 
    return iResult;
 }
 
-#if defined( HB_OS_WIN_CE ) && !defined( __CEGCC__ )
+#if defined( HB_OS_WIN_CE ) && ! defined( __CEGCC__ )
 #  include "hbwmain.c"
 #endif

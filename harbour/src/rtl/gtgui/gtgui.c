@@ -54,7 +54,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME   GUI
+#define HB_GT_NAME  GUI
 
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -67,37 +67,37 @@
 
 /* *********************************************************************** */
 
-static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+static int s_GtId;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER   ( &SuperTable )
+#define HB_GTID_PTR  ( &s_GtId )
 
 #if defined( HB_OS_WIN )
 
 typedef struct
 {
-   const char *   name;
-   HB_SIZE        len;
-   int            id;
+   const char * name;
+   HB_SIZE      len;
+   int          id;
 } _HB_BUTTON_ID;
 
 static const _HB_BUTTON_ID s_buttons[] =
 {
-   { "OK",             2,     0x0001 },
-   { "QUIT",           4,     0x0002 },
-   { "CANCEL",         6,     0x0002 },
-   { "ABORT",          5,     0x0002 },
-   { "RETRY",          5,     0x0004 },
-   { "AGAIN",          5,     0x0004 },
-   { "TRY AGAIN",      9,     0x0004 },
-   { "DEFAULT",        7,     0x0008 },
-   { "CONTINUE",       8,     0x0008 },
-   { "IGNORE",         6,     0x0008 },
-   { "YES",            3,     0x0010 },
-   { "NO",             2,     0x0020 }
+   { "OK",        2, 0x0001 },
+   { "QUIT",      4, 0x0002 },
+   { "CANCEL",    6, 0x0002 },
+   { "ABORT",     5, 0x0002 },
+   { "RETRY",     5, 0x0004 },
+   { "AGAIN",     5, 0x0004 },
+   { "TRY AGAIN", 9, 0x0004 },
+   { "DEFAULT",   7, 0x0008 },
+   { "CONTINUE",  8, 0x0008 },
+   { "IGNORE",    6, 0x0008 },
+   { "YES",       3, 0x0010 },
+   { "NO",        2, 0x0020 }
 };
 
-#define _HB_BUTTON_COUNT      HB_SIZEOFARRAY( s_buttons )
+#define _HB_BUTTON_COUNT  HB_SIZEOFARRAY( s_buttons )
 
 static int hb_gt_gui_optionId( const char * pszOption )
 {
@@ -261,7 +261,7 @@ static const char * hb_gt_gui_Version( PHB_GT pGT, int iType )
 /* dDuration is in 'Ticks' (18.2 per second) */
 static void hb_gt_gui_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_gui_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_gui_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
 
 #if defined( HB_OS_WIN )
    HB_SYMBOL_UNUSED( pGT );
@@ -316,7 +316,7 @@ static HB_BOOL hb_gt_gui_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
 
    pFuncTable->Version                    = hb_gt_gui_Version;
    pFuncTable->Tone                       = hb_gt_gui_Tone;

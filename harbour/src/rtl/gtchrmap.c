@@ -59,8 +59,8 @@
 
 #if defined( HB_OS_UNIX ) || defined( HB_OS_DOS )
 
-#define MAX_CHAR_VAL       0xff
-#define HB_CHRMAP( a, c )  ( ( (a) << 16 ) | (c) )
+#define MAX_CHAR_VAL  0xff
+#define HB_CHRMAP( a, c )  ( ( ( a ) << 16 ) | ( c ) )
 
 const char * hb_gt_szCharMapFileDefault = "/etc/harbour/hb-charmap.def";
 
@@ -84,7 +84,7 @@ static void chrmap_dotctrl( int * piTransTbl )
 
 static void chrmap_ascictrl( int * piTransTbl )
 {
-   piTransTbl[  4 ] = HB_CHRMAP( 1, '#' );
+   piTransTbl[ 4 ]  = HB_CHRMAP( 1, '#' );
    piTransTbl[ 16 ] = HB_CHRMAP( 1, '>' );
    piTransTbl[ 17 ] = HB_CHRMAP( 1, '<' );
    piTransTbl[ 30 ] = HB_CHRMAP( 1, '^' );
@@ -171,12 +171,12 @@ static int get_val( char ** buf )
    int n = -1;
    char c;
 
-   if( ( *buf )[0] == '\'' && ( *buf )[1] != '\0' && ( *buf )[ 2 ] == '\'' )
+   if( ( *buf )[ 0 ] == '\'' && ( *buf )[ 1 ] != '\0' && ( *buf )[ 2 ] == '\'' )
    {
-      n = ( *buf )[1] & 0xff;
+      n = ( *buf )[ 1 ] & 0xff;
       *buf += 3;
    }
-   else if( ( *buf )[0] == '0' && ( ( *buf )[1] == 'x' || ( *buf )[1] == 'X' ) )
+   else if( ( *buf )[ 0 ] == '0' && ( ( *buf )[ 1 ] == 'x' || ( *buf )[ 1 ] == 'X' ) )
    {
       n = 0;
       *buf += 2;
@@ -254,13 +254,13 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
             *to = *from;
       }
 
-      if( *to >= 0 && *s == ':' && s[1] == ' ' )
+      if( *to >= 0 && *s == ':' && s[ 1 ] == ' ' )
       {
          ++s;
          skip_blank( &s );
-         if( *s == '*' && ( s[1] == '+' || s[1] == '-' || s[1] == '&' ||
-                            s[1] == '|' || s[1] == '^' || s[1] == '=' ||
-                            s[1] == ' ' ) )
+         if( *s == '*' && ( s[ 1 ] == '+' || s[ 1 ] == '-' || s[ 1 ] == '&' ||
+                            s[ 1 ] == '|' || s[ 1 ] == '^' || s[ 1 ] == '=' ||
+                            s[ 1 ] == ' ' ) )
          {
             *op = s[1];
             s+=2;
@@ -271,7 +271,7 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
             skip_blank( &s );
             *mod = get_val( &s );
             skip_blank( &s );
-            if( *mod >=0 && *mod <= 5 && *s == '\0' )
+            if( *mod >= 0 && *mod <= 5 && *s == '\0' )
                ret = 1;
          }
       }
@@ -282,14 +282,14 @@ static int parse_line( char * buf, int * from, int * to, char * op, int * val, i
 static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const char * pszFile )
 {
    int line = 0, from = 0, to = 0, val = 0, mod = 0, i, n;
-   char buf[ 256 ], *s, op = 0;
+   char buf[ 256 ], * s, op = 0;
    int isTerm = 0;
    fpos_t pos;
 
    fgetpos( fp, &pos );
    fseek( fp, 0, SEEK_SET );
 
-   while( !feof( fp ) && isTerm < 2 )
+   while( ! feof( fp ) && isTerm < 2 )
    {
       ++line;
       if( fgets( buf, sizeof( buf ), fp ) != NULL )
@@ -334,30 +334,30 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
                switch( op )
                {
                   case '|':
-                     nTransTbl[i] = ( i | val );
+                     nTransTbl[ i ] = ( i | val );
                      break;
                   case '&':
-                     nTransTbl[i] = ( i & val );
+                     nTransTbl[ i ] = ( i & val );
                      break;
                   case '^':
-                     nTransTbl[i] = ( i ^ val );
+                     nTransTbl[ i ] = ( i ^ val );
                      break;
                   case '+':
-                     nTransTbl[i] = ( i + val ) & 0xff;
+                     nTransTbl[ i ] = ( i + val ) & 0xff;
                      break;
                   case '-':
-                     nTransTbl[i] = ( i - val ) & 0xff;
+                     nTransTbl[ i ] = ( i - val ) & 0xff;
                      break;
                   case '=':
-                     nTransTbl[i] = val;
+                     nTransTbl[ i ] = val;
                      break;
                   case '*':
                   case ' ':
                   default:
-                     nTransTbl[i] = i;
+                     nTransTbl[ i ] = i;
                      break;
                }
-               nTransTbl[i] |= mod << 16;
+               nTransTbl[ i ] |= mod << 16;
             }
          }
          else if( n == -1 )
@@ -372,10 +372,10 @@ static int chrmap_parse( FILE * fp, const char * pszTerm, int * nTransTbl, const
    return isTerm;
 }
 
-static int hb_gt_chrmapread( const char *pszFile, const char *pszTerm, int *nTransTbl )
+static int hb_gt_chrmapread( const char * pszFile, const char * pszTerm, int * nTransTbl )
 {
    FILE * fp;
-   char buf[ 256 ], *ptr, *pTerm;
+   char buf[ 256 ], * ptr, * pTerm;
    int isTerm = -1;
 
    fp = hb_fopen( pszFile, "r" );
@@ -456,7 +456,7 @@ int hb_gt_chrmapinit( int * piTransTbl, const char * pszTerm, HB_BOOL fSetACSC )
    return nRet;
 }
 
-/*
+#if 0
 int main(int argc, char **argv)
 {
    int piTransTbl[ 256 ], i;
@@ -472,6 +472,6 @@ int main(int argc, char **argv)
 
    return 0;
 }
-*/
+#endif
 
 #endif /* HB_OS_UNIX || HB_OS_DOS */

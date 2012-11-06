@@ -65,7 +65,7 @@ HB_FUNC( HB_DBDETACH )
    AREAP pArea = NULL;
    int iArea;
 
-   if( !pAlias || HB_IS_NIL( pAlias ) )
+   if( ! pAlias || HB_IS_NIL( pAlias ) )
    {
       pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    }

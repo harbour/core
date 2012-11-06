@@ -73,41 +73,41 @@
    #include "hbwince.h"
 #endif
 
-#define WVT_CHAR_QUEUE_SIZE   128
-#define WVT_MAX_TITLE_SIZE    128
-#define WVT_MAX_WINDOWS       256
+#define WVT_CHAR_QUEUE_SIZE        128
+#define WVT_MAX_TITLE_SIZE         128
+#define WVT_MAX_WINDOWS            256
 #if defined( HB_OS_WIN_CE )
-#  define WVT_DEFAULT_ROWS          15
-#  define WVT_DEFAULT_COLS          50
-#  define WVT_DEFAULT_FONT_HEIGHT   12
-#  define WVT_DEFAULT_FONT_WIDTH     8
+#  define WVT_DEFAULT_ROWS         15
+#  define WVT_DEFAULT_COLS         50
+#  define WVT_DEFAULT_FONT_HEIGHT  12
+#  define WVT_DEFAULT_FONT_WIDTH   8
 #else
-#  define WVT_DEFAULT_ROWS          25
-#  define WVT_DEFAULT_COLS          80
-#  define WVT_DEFAULT_FONT_HEIGHT   20
-#  define WVT_DEFAULT_FONT_WIDTH    10
+#  define WVT_DEFAULT_ROWS         25
+#  define WVT_DEFAULT_COLS         80
+#  define WVT_DEFAULT_FONT_HEIGHT  20
+#  define WVT_DEFAULT_FONT_WIDTH   10
 #endif
-#define WVT_DEFAULT_FONT_ATTR    0
-#define WVT_DEFAULT_FONT_NAME    TEXT( "Courier New" )
+#define WVT_DEFAULT_FONT_ATTR      0
+#define WVT_DEFAULT_FONT_NAME      TEXT( "Courier New" )
 
-#define BLACK          RGB( 0x00, 0x00, 0x00 )
-#define BLUE           RGB( 0x00, 0x00, 0xAA )
-#define GREEN          RGB( 0x00, 0xAA, 0x00 )
-#define CYAN           RGB( 0x00, 0xAA, 0xAA )
-#define RED            RGB( 0xAA, 0x00, 0x00 )
-#define MAGENTA        RGB( 0xAA, 0x00, 0xAA )
-#define BROWN          RGB( 0xAA, 0x55, 0x00 )
-#define LIGHT_GRAY     RGB( 0xAA, 0xAA, 0xAA )
-#define GRAY           RGB( 0x55, 0x55, 0x55 )
-#define BRIGHT_BLUE    RGB( 0x55, 0x55, 0xFF )
-#define BRIGHT_GREEN   RGB( 0x55, 0xFF, 0x55 )
-#define BRIGHT_CYAN    RGB( 0x55, 0xFF, 0xFF )
-#define BRIGHT_RED     RGB( 0xFF, 0x55, 0x55 )
-#define BRIGHT_MAGENTA RGB( 0xFF, 0x55, 0xFF )
-#define YELLOW         RGB( 0xFF, 0xFF, 0x55 )
-#define WHITE          RGB( 0xFF, 0xFF, 0xFF )
+#define BLACK                      RGB( 0x00, 0x00, 0x00 )
+#define BLUE                       RGB( 0x00, 0x00, 0xAA )
+#define GREEN                      RGB( 0x00, 0xAA, 0x00 )
+#define CYAN                       RGB( 0x00, 0xAA, 0xAA )
+#define RED                        RGB( 0xAA, 0x00, 0x00 )
+#define MAGENTA                    RGB( 0xAA, 0x00, 0xAA )
+#define BROWN                      RGB( 0xAA, 0x55, 0x00 )
+#define LIGHT_GRAY                 RGB( 0xAA, 0xAA, 0xAA )
+#define GRAY                       RGB( 0x55, 0x55, 0x55 )
+#define BRIGHT_BLUE                RGB( 0x55, 0x55, 0xFF )
+#define BRIGHT_GREEN               RGB( 0x55, 0xFF, 0x55 )
+#define BRIGHT_CYAN                RGB( 0x55, 0xFF, 0xFF )
+#define BRIGHT_RED                 RGB( 0xFF, 0x55, 0x55 )
+#define BRIGHT_MAGENTA             RGB( 0xFF, 0x55, 0xFF )
+#define YELLOW                     RGB( 0xFF, 0xFF, 0x55 )
+#define WHITE                      RGB( 0xFF, 0xFF, 0xFF )
 
-#define WM_MY_UPDATE_CARET ( WM_USER + 0x0101 )
+#define WM_MY_UPDATE_CARET         ( WM_USER + 0x0101 )
 
 typedef struct
 {
@@ -204,7 +204,7 @@ typedef struct
 } HB_GTWVT, * PHB_GTWVT;
 
 /* xHarbour compatible definitions */
-#if !defined( K_SH_LEFT )
+#if ! defined( K_SH_LEFT )
 #define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left  */
 #define K_SH_UP             K_UP     /* Shift-Up    == Up    */
 #define K_SH_RIGHT          K_RIGHT  /* Shift-Right == Right */
@@ -220,25 +220,25 @@ typedef struct
 #endif
 
 #ifndef WM_MOUSEWHEEL
-#  define WM_MOUSEWHEEL 0x020A
+#  define WM_MOUSEWHEEL     0x020A
 #endif
 #ifndef WM_ENTERSIZEMOVE
-#  define WM_ENTERSIZEMOVE 561
+#  define WM_ENTERSIZEMOVE  561
 #endif
 #ifndef WM_EXITSIZEMOVE
-#  define WM_EXITSIZEMOVE  562
+#  define WM_EXITSIZEMOVE   562
 #endif
 
 #ifndef SWP_DEFERERASE
-#  define SWP_DEFERERASE 0x2000
+#  define SWP_DEFERERASE    0x2000
 #endif
 #ifndef SW_NORMAL
-#  define SW_NORMAL 1
+#  define SW_NORMAL         1
 #endif
 #ifndef SC_MAXIMIZE
-#  define SC_MAXIMIZE 0xF030
+#  define SC_MAXIMIZE       0xF030
 #endif
 
-#define SYS_EV_MARK  1000
+#define SYS_EV_MARK         1000
 
 #endif /* HB_WVT_H_ */

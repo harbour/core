@@ -375,7 +375,9 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
 
    pItemEof = hb_itemArrayNew( uiFields );
 
-   /* HB_TRACE( HB_TR_ALWAYS, ("fieldcount=%d", iNameLen) ); */
+#if 0
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldcount=%d", iNameLen ) );
+#endif
 
    errCode = 0;
    bError  = HB_FALSE;
@@ -415,7 +417,9 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = iDec;
 
-      /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d null=%d", pFieldInfo.atomName, iDataType, uiSize, iDec, iNull ) ); */
+#if 0
+      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d null=%d", pFieldInfo.atomName, iDataType, uiSize, iDec, iNull ) );
+#endif
 
       switch( iDataType )
       {
@@ -473,7 +477,9 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             break;
 
          default:
-            /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", iDataType) ); */
+#if 0
+            HB_TRACE( HB_TR_ALWAYS, ( "new sql type=%d", iDataType ) );
+#endif
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) iDataType;
             pFieldInfo.uiType = 0;

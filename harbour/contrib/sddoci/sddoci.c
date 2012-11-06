@@ -336,7 +336,9 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
    pItemEof = hb_itemArrayNew( uiFields );
    pItem    = hb_itemNew( NULL );
 
-   /* HB_TRACE( HB_TR_ALWAYS, ("fieldcount=%d", iNameLen) ); */
+#if 0
+   HB_TRACE( HB_TR_ALWAYS, ( "fieldcount=%d", iNameLen ) );
+#endif
 
    errCode = 0;
    bError  = HB_FALSE;
@@ -378,7 +380,9 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
       pFieldInfo.uiLen = ( HB_USHORT ) uiSize;
       pFieldInfo.uiDec = ( HB_USHORT ) iDec;
 
-      /* HB_TRACE( HB_TR_ALWAYS, ("field: name=%s type=%d len=%d dec=%d nullable=%d %d %d %d %d", pFieldInfo.atomName, uiDataType, uiSize, iDec, bNullable, OCI_ColumnGetScale( col ), OCI_ColumnGetPrecision( col ), OCI_ColumnGetFractionalPrecision( col ), OCI_ColumnGetLeadingPrecision( col ) ) ); */
+#if 0
+      HB_TRACE( HB_TR_ALWAYS, ( "field: name=%s type=%d len=%d dec=%d nullable=%d %d %d %d %d", pFieldInfo.atomName, uiDataType, uiSize, iDec, bNullable, OCI_ColumnGetScale( col ), OCI_ColumnGetPrecision( col ), OCI_ColumnGetFractionalPrecision( col ), OCI_ColumnGetLeadingPrecision( col ) ) );
+#endif
 
       switch( uiDataType )
       {
@@ -412,7 +416,9 @@ static HB_ERRCODE ocilibOpen( SQLBASEAREAP pArea )
             break;
 
          default:
-            /* HB_TRACE( HB_TR_ALWAYS, ("new sql type=%d", uiDataType) ); */
+#if 0
+            HB_TRACE( HB_TR_ALWAYS, ( "new sql type=%d", uiDataType ) );
+#endif
             bError  = HB_TRUE;
             errCode = ( HB_ERRCODE ) uiDataType;
             pFieldInfo.uiType = 0;

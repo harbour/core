@@ -52,10 +52,10 @@
  */
 
 /* *nixes */
-#if !defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE 1
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
 #endif
-#if !defined( _GNU_SOURCE )
+#if ! defined( _GNU_SOURCE )
 #  define _GNU_SOURCE
 #endif
 
@@ -90,7 +90,7 @@
 #  endif
 #endif
 
-#if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
@@ -103,7 +103,7 @@
    #endif
 #endif
 
-#if !defined( HB_OS_WIN )
+#if ! defined( HB_OS_WIN )
 static HB_BOOL fsGetTempDirByCase( char * pszName, const char * pszTempDir, HB_BOOL fTrans )
 {
    HB_BOOL fOK = HB_FALSE;
@@ -181,7 +181,7 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
           hb_setGetFileCase() != HB_SET_CASE_UPPER &&
           hb_setGetDirCase() != HB_SET_CASE_LOWER &&
           hb_setGetDirCase() != HB_SET_CASE_UPPER
-#if !defined( HB_HAS_MKSTEMPS )
+#if ! defined( HB_HAS_MKSTEMPS )
           && ( pszExt == NULL || *pszExt == 0 )
 #endif
         )
@@ -236,7 +236,7 @@ HB_FHANDLE hb_fsCreateTempEx( char * pszName, const char * pszDir, const char * 
 }
 
 /* NOTE: The buffer must be at least HB_PATH_MAX chars long */
-#if !defined( HB_OS_UNIX )
+#if ! defined( HB_OS_UNIX )
 
 static HB_BOOL hb_fsTempName( char * pszBuffer, const char * pszDir, const char * pszPrefix )
 {
@@ -391,7 +391,7 @@ HB_ERRCODE hb_fsTempDir( char * pszTempDir )
    }
 #else
    {
-#if !defined( HB_OS_OS2 )
+#if ! defined( HB_OS_OS2 )
       char szBuffer[ L_tmpnam ];
 
       if( tmpnam( szBuffer ) != NULL )

@@ -89,5 +89,5 @@ HB_FUNC( RIGHT )
       }
    }
    else
-      hb_retc_null(); /* Clipper doesn't error */
+      hb_retc_null();  /* Clipper doesn't error */
 }

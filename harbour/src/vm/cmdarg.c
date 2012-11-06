@@ -73,7 +73,7 @@
 static int     s_argc = 0;
 static char ** s_argv = NULL;
 
-#if !defined( HB_OS_WIN )
+#if ! defined( HB_OS_WIN )
 
 static char    s_szAppName[ HB_PATH_MAX ];
 
@@ -114,7 +114,7 @@ HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdS
 
 void hb_cmdargInit( int argc, char * argv[] )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_cmdargInit(%d, %p)", argc, argv));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargInit(%d, %p)", argc, argv ) );
 
    if( argc == 0 || argv == NULL )
    {
@@ -152,7 +152,7 @@ static char * hb_cmdargDup( int argc )
 
 void hb_cmdargUpdate( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_cmdargUpdate()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargUpdate()" ) );
 
    if( s_argc > 0 )
    {
@@ -223,7 +223,7 @@ void hb_cmdargUpdate( void )
                   pNextPath = pNextPath->pNext;
                }
                hb_fsFreeSearchPath( pSearchPath );
-               if( !fInPath )
+               if( ! fInPath )
                   pFName->szPath = NULL;
             }
             if( pszPATH )
@@ -232,7 +232,7 @@ void hb_cmdargUpdate( void )
          if( pFName->szPath )
          {
 #  if defined( HB_OS_HAS_DRIVE_LETTER )
-            if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && !pFName->szDrive )
+            if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && ! pFName->szDrive )
 #  else
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR )
 #  endif
@@ -263,7 +263,7 @@ void hb_cmdargUpdate( void )
 
 HB_BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_cmdargIsInternal(%s, %p)", szArg, piLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, piLen ) );
 
    /* NOTE: Not checking for '--' here, as it would filter out
             valid command line options used by applications. [vszakats] */
@@ -296,14 +296,14 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
    int i;
    int iPrefixLen;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cmdargGet(%s, %d)", pszName, (int) bRetValue));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargGet(%s, %d)", pszName, ( int ) bRetValue ) );
 
    /* Check the command line first */
 
    for( i = 1; i < s_argc; i++ )
    {
       if( hb_cmdargIsInternal( s_argv[ i ], &iPrefixLen ) &&
-         hb_strnicmp( s_argv[ i ] + iPrefixLen, pszName, strlen( pszName ) ) == 0 )
+          hb_strnicmp( s_argv[ i ] + iPrefixLen, pszName, strlen( pszName ) ) == 0 )
       {
          if( bRetValue )
          {
@@ -321,7 +321,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
 
    /* Check the environment variable */
    pszEnvVar = hb_getenv( "HARBOUR" );
-   if( !pszEnvVar || pszEnvVar[ 0 ] == '\0' )
+   if( ! pszEnvVar || pszEnvVar[ 0 ] == '\0' )
    {
       if( pszEnvVar )
          hb_xfree( pszEnvVar );
@@ -406,7 +406,7 @@ int hb_cmdargNum( const char * pszName )
 {
    char * pszValue;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_cmdargNum(%s)", pszName));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargNum(%s)", pszName ) );
 
    pszValue = hb_cmdargGet( pszName, HB_TRUE );
    if( pszValue )
@@ -426,7 +426,7 @@ int hb_cmdargNum( const char * pszName )
 char * hb_cmdargProgName( void )
 {
 #if defined( HB_OS_WIN )
-   if( !s_fSkipAppName )
+   if( ! s_fSkipAppName )
    {
       if( s_lpAppName[ 0 ] == 0 )
       {
@@ -500,7 +500,7 @@ HB_FUNC( HB_ARGSHIFT )
    {
       while( iArg < s_argc )
       {
-         if( !hb_cmdargIsInternal( s_argv[ iArg ], NULL ) )
+         if( ! hb_cmdargIsInternal( s_argv[ iArg ], NULL ) )
          {
             s_argv[ 0 ] = s_argv[ iArg ];
 #if defined( HB_OS_WIN )
@@ -619,7 +619,7 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
                /* default Harbour mode */
                ulFlags |= HB_VMFLAG_HARBOUR;
                break;
-/*
+#if 0
             case 'x':
                ulFlags |= HB_VMFLAG_XBASE;
                break;
@@ -627,7 +627,7 @@ HB_U32 hb_cmdargProcessVM( int * pCancelKey, int * pCancelKeyEx )
             case 'r':
                ulFlags |= HB_VMFLAG_RT_MACRO;
                break;
-*/
+#endif
             case 's':
                ulFlags |= HB_VMFLAG_ARRSTR;
                break;

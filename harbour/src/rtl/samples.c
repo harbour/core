@@ -58,7 +58,7 @@ static char * hb_SecToTimeStr( char * pszTime, long lTime )
 {
    int iValue;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_SecToTimeStr(%p, %ld)", pszTime, lTime));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_SecToTimeStr(%p, %ld)", pszTime, lTime ) );
 
    iValue = ( int ) ( ( lTime / 3600 ) % 24 );
    pszTime[ 0 ] = ( char ) ( iValue / 10 ) + '0';
@@ -81,7 +81,7 @@ static long hb_TimeStrToSec( const char * pszTime )
    HB_SIZE nLen;
    long lTime = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_TimeStrToSec(%s)", pszTime));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_TimeStrToSec(%s)", pszTime ) );
 
    nLen = strlen( pszTime );
 
@@ -105,7 +105,7 @@ HB_FUNC( DAYS )
 HB_FUNC( ELAPTIME )
 {
    long lStart = hb_TimeStrToSec( hb_parcx( 1 ) );
-   long lEnd = hb_TimeStrToSec( hb_parcx( 2 ) );
+   long lEnd   = hb_TimeStrToSec( hb_parcx( 2 ) );
    char szTime[ 9 ];
 
    hb_retc( hb_SecToTimeStr( szTime, ( lEnd < lStart ? 86400 : 0 ) + lEnd - lStart ) );

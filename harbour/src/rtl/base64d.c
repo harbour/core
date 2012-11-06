@@ -62,7 +62,7 @@ static signed char base64_decode_value( int value_in )
    static const signed char s_decoding[] =
    {
       62, -1, -1, -1, 63, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, -1, -1, -1, -2, -1,
-      -1, -1,  0,  1,  2,  3,  4,  5,  6,  7,  8,  9, 10, 11, 12, 13, 14, 15, 16, 17,
+      -1, -1, 0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12, 13, 14, 15, 16, 17,
       18, 19, 20, 21, 22, 23, 24, 25, -1, -1, -1, -1, -1, -1, 26, 27, 28, 29, 30, 31,
       32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51
    };
@@ -76,10 +76,10 @@ static signed char base64_decode_value( int value_in )
 
 static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_in, char * pszPlainttextOut )
 {
-   const char *         codechar = code_in;
-   const char *         code_end = code_in + length_in;
-   char *               pszPlainchar = pszPlainttextOut;
-   signed char          fragment;
+   const char * codechar    = code_in;
+   const char * code_end    = code_in + length_in;
+   char *      pszPlainchar = pszPlainttextOut;
+   signed char fragment;
 
    for( ;; )
    {
@@ -130,7 +130,7 @@ HB_FUNC( HB_BASE64DECODE )
    if( nSrcLen > 0 )
    {
       HB_SIZE nDstLen = ( ( ( nSrcLen * 3 ) / 4 ) + 1 ) * sizeof( char );
-      char * code = ( char * ) hb_xgrab( nDstLen );
+      char *  code    = ( char * ) hb_xgrab( nDstLen );
 
       nDstLen = base64_decode_block( hb_parcx( 1 ), nSrcLen, code );
       hb_retclen_buffer( code, nDstLen );

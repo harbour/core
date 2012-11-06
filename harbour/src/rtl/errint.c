@@ -65,9 +65,9 @@ void hb_errInternal( HB_ERRCODE errCode, const char * szText, const char * szPar
 
    if( hb_cmdargCheck( "ERRGPF" ) )
    {
-       int *pGPF = NULL;
-       *pGPF = 0;
-       *(--pGPF) = 0;
+      int * pGPF = NULL;
+      *pGPF = 0;
+      *( --pGPF ) = 0;
    }
 
    exit( EXIT_FAILURE );

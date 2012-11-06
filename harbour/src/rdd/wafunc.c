@@ -77,7 +77,7 @@ HB_ERRCODE hb_rddVerifyAliasName( const char * szAlias )
       c = *szAlias;
       if( ( c >= 'A' && c <= 'Z' ) || ( c >= 'a' && c <= 'z' ) || c == '_' )
       {
-         c = *(++szAlias);
+         c = *( ++szAlias );
          while( c != 0 )
          {
             if( c != '_' && ! ( c >= '0' && c <= '9' ) &&
@@ -85,13 +85,13 @@ HB_ERRCODE hb_rddVerifyAliasName( const char * szAlias )
             {
                if( c == ' ' )
                {
-                  while( *(++szAlias) == ' ' ) { ; }
+                  while( *( ++szAlias ) == ' ' ) { ; }
                   if( ! *szAlias )
                      break;
                }
                return HB_FAILURE;
             }
-            c = *(++szAlias);
+            c = *( ++szAlias );
          }
          return HB_SUCCESS;
       }
@@ -106,7 +106,7 @@ void * hb_rddNewAreaNode( LPRDDNODE pRddNode, HB_USHORT uiRddID )
 {
    AREAP pArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddNewAreaNode(%p,%hu)", pRddNode, uiRddID));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddNewAreaNode(%p,%hu)", pRddNode, uiRddID ) );
 
    if( pRddNode->uiAreaSize == 0 ) /* Calculate the size of WorkArea */
    {
@@ -158,7 +158,7 @@ HB_ERRCODE hb_rddGetTempAlias( char * szAliasTmp )
       if( hb_rddGetAliasNumber( szAliasTmp, &iArea ) != HB_SUCCESS )
          return HB_SUCCESS;
    }
-   szAliasTmp[0] = '\0';
+   szAliasTmp[ 0 ] = '\0';
    return HB_FAILURE;
 }
 
@@ -170,7 +170,7 @@ void * hb_rddAllocWorkAreaAlias( const char * szAlias, int iArea )
    PHB_DYNS pSymAlias;
    int iDummyArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddAllocWorkAreaAlias(%s, %d)", szAlias, iArea));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddAllocWorkAreaAlias(%s, %d)", szAlias, iArea ) );
 
    /* Verify if the alias name is valid symbol */
    if( hb_rddVerifyAliasName( szAlias ) != HB_SUCCESS )
@@ -211,7 +211,7 @@ HB_USHORT hb_rddFieldIndex( AREAP pArea, const char * szName )
    HB_USHORT uiCount = 0;
    LPFIELD pField;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddFieldIndex(%p, %s)", pArea, szName));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddFieldIndex(%p, %s)", pArea, szName ) );
 
    while( HB_ISSPACE( *szName ) )
    {
@@ -271,12 +271,12 @@ HB_USHORT hb_rddFieldExpIndex( AREAP pArea, const char * szField )
             while( HB_ISNEXTIDCHAR( szField[ n + i ] ) )
                ++i;
 
-            if( !( ( i == l &&
-                       hb_strnicmp( &szField[ n ], szAlias, l ) == 0 ) ) &&
-                !( i >=4 && i <= 5 &&
-                   hb_strnicmp( &szField[ n ], "FIELD", i ) == 0 ) &&
-                !( i >=4 && i <= 6 &&
-                   hb_strnicmp( &szField[ n ], "_FIELD", i ) == 0 ) )
+            if( ! ( ( i == l &&
+                      hb_strnicmp( &szField[ n ], szAlias, l ) == 0 ) ) &&
+                ! ( i >= 4 && i <= 5 &&
+                    hb_strnicmp( &szField[ n ], "FIELD", i ) == 0 ) &&
+                ! ( i >= 4 && i <= 6 &&
+                    hb_strnicmp( &szField[ n ], "_FIELD", i ) == 0 ) )
             {
                i = 0;
             }
@@ -309,7 +309,7 @@ HB_ERRCODE hb_rddGetAliasNumber( const char * szAlias, int * iArea )
    HB_BOOL fOneLetter;
    char c;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddGetAliasNumber(%s, %p)", szAlias, iArea));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddGetAliasNumber(%s, %p)", szAlias, iArea ) );
 
    while( *szAlias == ' ' )
       szAlias++;
@@ -354,7 +354,7 @@ HB_ERRCODE hb_rddSelectWorkAreaSymbol( PHB_SYMB pSymAlias )
    const char * szName;
    int iArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectWorkAreaSymbol(%p)", pSymAlias));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddSelectWorkAreaSymbol(%p)", pSymAlias ) );
 
    iArea = ( int ) hb_dynsymAreaHandle( pSymAlias->pDynSym );
    if( iArea )
@@ -418,7 +418,7 @@ HB_ERRCODE hb_rddSelectWorkAreaAlias( const char * szAlias )
    HB_ERRCODE errCode;
    int iArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectWorkAreaAlias(%s)", szAlias));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddSelectWorkAreaAlias(%s)", szAlias ) );
 
    errCode = hb_rddGetAliasNumber( szAlias, &iArea );
 
@@ -459,7 +459,7 @@ HB_ERRCODE hb_rddFieldGet( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    AREAP pArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddFieldGet(%p, %p)", pItem, pFieldSymbol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddFieldGet(%p, %p)", pItem, pFieldSymbol ) );
 
    pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
@@ -488,7 +488,7 @@ HB_ERRCODE hb_rddFieldPut( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    AREAP pArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddFieldPut(%p, %p)", pItem, pFieldSymbol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddFieldPut(%p, %p)", pItem, pFieldSymbol ) );
 
    pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
    if( pArea )
@@ -517,7 +517,7 @@ HB_ERRCODE hb_rddGetFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddGetFieldValue(%p, %p)", pItem, pFieldSymbol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddGetFieldValue(%p, %p)", pItem, pFieldSymbol ) );
 
    errCode = hb_rddFieldGet( pItem, pFieldSymbol );
 
@@ -550,7 +550,7 @@ HB_ERRCODE hb_rddPutFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 {
    HB_ERRCODE errCode;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddPutFieldValue(%p, %p)", pItem, pFieldSymbol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddPutFieldValue(%p, %p)", pItem, pFieldSymbol ) );
 
    errCode = hb_rddFieldPut( pItem, pFieldSymbol );
 
@@ -577,7 +577,7 @@ HB_ERRCODE hb_rddPutFieldValue( PHB_ITEM pItem, PHB_SYMB pFieldSymbol )
 }
 
 HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
-                            HB_USHORT uiArea, const char *szAlias,
+                            HB_USHORT uiArea, const char * szAlias,
                             HB_BOOL fShared, HB_BOOL fReadonly,
                             const char * szCpId, HB_ULONG ulConnection,
                             PHB_ITEM pStruct, PHB_ITEM pDelim )
@@ -629,7 +629,7 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
    /* Then check if valid file name was given - Clipper allows to use empty
     * ("") file name
     */
-   if( !szFileName )
+   if( ! szFileName )
    {
       hb_rddReleaseCurrentArea();
       hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
@@ -651,7 +651,7 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
    errCode = pStruct ? SELF_CREATEFIELDS( pArea, pStruct ) : HB_SUCCESS;
    if( errCode == HB_SUCCESS )
    {
-      if( pDelim && !HB_IS_NIL( pDelim ) )
+      if( pDelim && ! HB_IS_NIL( pDelim ) )
          errCode = SELF_INFO( pArea, DBI_SETDELIMITER, pDelim );
       if( errCode == HB_SUCCESS )
          /* Open file */
@@ -665,7 +665,7 @@ HB_ERRCODE hb_rddOpenTable( const char * szFileName, const char * szDriver,
 }
 
 HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
-                              HB_USHORT uiArea, const char *szAlias,
+                              HB_USHORT uiArea, const char * szAlias,
                               HB_BOOL fKeepOpen,
                               const char * szCpId, HB_ULONG ulConnection,
                               PHB_ITEM pStruct, PHB_ITEM pDelim )
@@ -676,7 +676,7 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    HB_USHORT uiPrevArea;
    AREAP pArea;
 
-   if( !szFileName )
+   if( ! szFileName )
    {
       hb_errRT_DBCMD( EG_ARG, EDBCMD_DBCMDBADPARAMETER, NULL, HB_ERR_FUNCNAME );
       return HB_FAILURE;
@@ -716,7 +716,7 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
    pInfo.ulConnection = ulConnection;
    pInfo.lpdbHeader = NULL;
 
-   if( pDelim && !HB_IS_NIL( pDelim ) )
+   if( pDelim && ! HB_IS_NIL( pDelim ) )
       errCode = SELF_INFO( pArea, DBI_SETDELIMITER, pDelim );
    else
       errCode = HB_SUCCESS;
@@ -728,7 +728,7 @@ HB_ERRCODE hb_rddCreateTable( const char * szFileName, const char * szDriver,
          errCode = SELF_CREATE( pArea, &pInfo );
    }
 
-   if( !fKeepOpen || errCode != HB_SUCCESS )
+   if( ! fKeepOpen || errCode != HB_SUCCESS )
    {
       hb_rddReleaseCurrentArea();
       hb_rddSelectWorkAreaNumber( uiPrevArea );
@@ -852,7 +852,7 @@ static const char * hb_dbTransFieldPos( PHB_ITEM pFields, HB_USHORT uiField )
       else
          szField = hb_itemGetCPtr( pItem );
 
-      if( * szField == '\0' )
+      if( *szField == '\0' )
          szField = NULL;
    }
 
@@ -861,7 +861,7 @@ static const char * hb_dbTransFieldPos( PHB_ITEM pFields, HB_USHORT uiField )
 
 HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
                              LPDBTRANSINFO lpdbTransInfo,
-                             PHB_ITEM *pStruct, PHB_ITEM pFields )
+                             PHB_ITEM * pStruct, PHB_ITEM pFields )
 {
    HB_USHORT uiFields, uiSize, uiCount, uiPosSrc, uiPosDst, uiSizeSrc, uiSizeDst;
    HB_ERRCODE errCode;
@@ -884,7 +884,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
       uiSize = uiSizeDst = uiSizeSrc;
    }
 
-   if( !uiSize )
+   if( ! uiSize )
       return HB_FAILURE;
    if( hb_itemType( pFields ) & HB_IT_ARRAY )
    {
@@ -902,7 +902,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
    lpdbTransInfo->lpTransItems = ( LPDBTRANSITEM )
                                     hb_xgrab( uiSize * sizeof( DBTRANSITEM ) );
 
-   if( !lpaDest )
+   if( ! lpaDest )
    {
       *pStruct = hb_itemNew( NULL );
       hb_arrayNew( *pStruct, 0 );
@@ -964,7 +964,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
          if( szField )
          {
             uiPosSrc = hb_rddFieldExpIndex( lpaSource, szField );
-            if( !uiPosSrc )
+            if( ! uiPosSrc )
                continue;
             if( lpaDest )
                uiPosDst = hb_rddFieldExpIndex( lpaDest, szField );
@@ -976,7 +976,7 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
                   fAll = HB_FALSE;
                lpdbTransInfo->lpTransItems[ uiSize ].uiSource = uiPosSrc;
                lpdbTransInfo->lpTransItems[ uiSize++ ].uiDest = uiPosDst;
-               if( !lpaDest )
+               if( ! lpaDest )
                {
                   hb_arraySize( *pStruct, uiSize );
                   hb_fldStructure( lpaSource, uiPosSrc, 0,
@@ -1060,14 +1060,14 @@ HB_ERRCODE hb_dbTransStruct( AREAP lpaSource, AREAP lpaDest,
 }
 
 HB_ERRCODE hb_rddTransRecords( AREAP pArea,
-                               const char *szFileName, const char *szDriver,
+                               const char * szFileName, const char * szDriver,
                                HB_ULONG ulConnection,
                                PHB_ITEM pFields, HB_BOOL fExport,
                                PHB_ITEM pCobFor, PHB_ITEM pStrFor,
                                PHB_ITEM pCobWhile, PHB_ITEM pStrWhile,
                                PHB_ITEM pNext, PHB_ITEM pRecID,
                                PHB_ITEM pRest,
-                               const char *szCpId,
+                               const char * szCpId,
                                PHB_ITEM pDelim )
 {
    AREAP lpaClose = NULL;
@@ -1103,7 +1103,7 @@ HB_ERRCODE hb_rddTransRecords( AREAP pArea,
    {
       LPRDDNODE pRddNode = hb_rddFindNode( szDriver, NULL );
 
-      if( !pRddNode )
+      if( ! pRddNode )
       {
          hb_errRT_DBCMD( EG_ARG, EDBCMD_USE_BADPARAMETER, NULL, HB_ERR_FUNCNAME );
          return HB_FAILURE;
@@ -1221,7 +1221,7 @@ HB_ERRCODE hb_rddCloseAllParentRelations( AREAP pArea )
 {
    HB_ERRCODE errCode = HB_SUCCESS;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddCloseAllParentRelations(%p)", pArea));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddCloseAllParentRelations(%p)", pArea ) );
 
    if( pArea->uiParents > 0 )
    {
@@ -1252,7 +1252,7 @@ HB_ERRCODE hb_rddEvalWA( PHB_ITEM pBlock )
    HB_ERRCODE errCode;
    HB_USHORT uiArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddEvalWA(%p)", pBlock));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddEvalWA(%p)", pBlock ) );
 
    uiArea = ( HB_AREANO ) hb_rddGetCurrentWorkAreaNumber();
    errCode = hb_rddIterateWorkAreas( hb_rddEvalWABlock, pBlock );

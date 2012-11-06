@@ -1,19 +1,19 @@
 /* A Bison parser, made by GNU Bison 2.5.  */
 
 /* Bison implementation for Yacc-like parsers in C
-   
+
       Copyright (C) 1984, 1989-1990, 2000-2011 Free Software Foundation, Inc.
-   
+
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
    the Free Software Foundation, either version 3 of the License, or
    (at your option) any later version.
-   
+
    This program is distributed in the hope that it will be useful,
    but WITHOUT ANY WARRANTY; without even the implied warranty of
    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
    GNU General Public License for more details.
-   
+
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
@@ -26,7 +26,7 @@
    special exception, which will cause the skeleton and the resulting
    Bison output files to be licensed under the GNU General Public
    License without this special exception.
-   
+
    This special exception was added by the Free Software Foundation in
    version 2.2 of Bison.  */
 
@@ -2112,7 +2112,7 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 278 "macro.y"
     {
-                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
+                  HB_TRACE( HB_TR_DEBUG, ( "macro -> invalid syntax: %s", HB_MACRO_DATA->string ) );
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
                   HB_MACRO_ABORT;
                }
@@ -2270,7 +2270,7 @@ yyreduce:
                                  {
                                     /* invalid variable name
                                      */
-                                    HB_TRACE(HB_TR_DEBUG, ("macro -> invalid variable name: %s", (yyvsp[(1) - (1)].string)));
+                                    HB_TRACE( HB_TR_DEBUG, ( "macro -> invalid variable name: %s", (yyvsp[(1) - (1)].string) ) );
                                     YYABORT;
                                  }
                               }
@@ -2733,9 +2733,9 @@ yyreduce:
 /* Line 1806 of yacc.c  */
 #line 547 "macro.y"
     {
-                                       if( !(HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST) )
+                                       if( !( HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST ) )
                                        {
-                                          HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
+                                          HB_TRACE( HB_TR_DEBUG, ( "macro -> invalid expression: %s", HB_MACRO_DATA->string ) );
                                           hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
                                           YYABORT;
                                        }
@@ -3422,7 +3422,7 @@ static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType ) );
 
    pExpr = hb_macroExprAlloc( HB_COMP_PARAM );
    pExpr->ExprType = iType;
@@ -3445,7 +3445,7 @@ static void hb_macroExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
  */
 static void hb_macroExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprFree()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprFree()" ) );
 
    HB_EXPR_USE( pExpr, HB_EA_DELETE );
    pExpr->ExprType = HB_ET_NONE;
@@ -3711,4 +3711,3 @@ int hb_macro_yylex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 }
 
 #endif /* HB_MACRO_PPLEX */
-

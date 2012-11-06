@@ -63,7 +63,7 @@ HB_FUNC( DISPBOX )
 
    if( pTop && pLeft && pBottom && pRight )
    {
-      const char * pszBox = hb_parc( 5 );
+      const char * pszBox   = hb_parc( 5 );
       const char * pszColor = hb_parc( 6 );
 
       if( pszBox )
@@ -77,7 +77,7 @@ HB_FUNC( DISPBOX )
          else
             iColor = -1;
          hb_gtBoxEx( hb_itemGetNI( pTop ),
-                     hb_itemGetNI( pLeft),
+                     hb_itemGetNI( pLeft ),
                      hb_itemGetNI( pBottom ),
                      hb_itemGetNI( pRight ),
                      pszBox,
@@ -95,13 +95,13 @@ HB_FUNC( DISPBOX )
 
          if( hb_parni( 5 ) == 2 )
             hb_gtBoxD( hb_itemGetNI( pTop ),
-                       hb_itemGetNI( pLeft),
+                       hb_itemGetNI( pLeft ),
                        hb_itemGetNI( pBottom ),
                        hb_itemGetNI( pRight ) );
 
          else
             hb_gtBoxS( hb_itemGetNI( pTop ),
-                       hb_itemGetNI( pLeft),
+                       hb_itemGetNI( pLeft ),
                        hb_itemGetNI( pBottom ),
                        hb_itemGetNI( pRight ) );
 
@@ -120,12 +120,12 @@ HB_FUNC( HB_DISPBOX )
 
    if( pTop && pLeft && pBottom && pRight )
    {
-      const char * pszBox = hb_parc( 5 );
+      const char * pszBox   = hb_parc( 5 );
       const char * pszColor = hb_parc( 6 );
-      int iColor = pszColor ? hb_gtColorToN( pszColor ) : hb_parnidef( 6, -1 );
+      int          iColor   = pszColor ? hb_gtColorToN( pszColor ) : hb_parnidef( 6, -1 );
 
       hb_gtDrawBox( hb_itemGetNI( pTop ),
-                    hb_itemGetNI( pLeft),
+                    hb_itemGetNI( pLeft ),
                     hb_itemGetNI( pBottom ),
                     hb_itemGetNI( pRight ),
                     pszBox,

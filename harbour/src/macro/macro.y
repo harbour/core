@@ -276,7 +276,7 @@ Main : Expression       {
                            hb_macroGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
                         }
      | error   {
-                  HB_TRACE(HB_TR_DEBUG, ("macro -> invalid syntax: %s", HB_MACRO_DATA->string));
+                  HB_TRACE( HB_TR_DEBUG, ( "macro -> invalid syntax: %s", HB_MACRO_DATA->string ) );
                   hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
                   HB_MACRO_ABORT;
                }
@@ -365,7 +365,7 @@ MacroVar    : MACROVAR        {  $$ = hb_compExprNewMacro( NULL, '&', $1, HB_COM
                                  {
                                     /* invalid variable name
                                      */
-                                    HB_TRACE(HB_TR_DEBUG, ("macro -> invalid variable name: %s", $1));
+                                    HB_TRACE( HB_TR_DEBUG, ( "macro -> invalid variable name: %s", $1 ) );
                                     YYABORT;
                                  }
                               }
@@ -545,9 +545,9 @@ ExtExpression : EPSILON             { $$ = hb_compExprNewArgRef( HB_COMP_PARAM )
               ;
 
 RootParamList : EmptyExpression ',' {
-                                       if( !(HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST) )
+                                       if( !( HB_MACRO_DATA->Flags & HB_MACRO_GEN_LIST ) )
                                        {
-                                          HB_TRACE(HB_TR_DEBUG, ("macro -> invalid expression: %s", HB_MACRO_DATA->string));
+                                          HB_TRACE( HB_TR_DEBUG, ( "macro -> invalid expression: %s", HB_MACRO_DATA->string ) );
                                           hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
                                           YYABORT;
                                        }
@@ -782,7 +782,7 @@ static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType ) );
 
    pExpr = hb_macroExprAlloc( HB_COMP_PARAM );
    pExpr->ExprType = iType;
@@ -805,7 +805,7 @@ static void hb_macroExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
  */
 static void hb_macroExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprFree()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprFree()" ) );
 
    HB_EXPR_USE( pExpr, HB_EA_DELETE );
    pExpr->ExprType = HB_ET_NONE;

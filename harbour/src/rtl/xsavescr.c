@@ -69,9 +69,9 @@
 
 typedef struct
 {
-   int      row;
-   int      col;
-   void *   buffer;
+   int    row;
+   int    col;
+   void * buffer;
 } HB_SCRDATA, * PHB_SCRDATA;
 
 static void hb_xSaveRestRelease( void * cargo )

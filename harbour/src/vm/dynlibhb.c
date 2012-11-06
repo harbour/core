@@ -115,7 +115,7 @@ PHB_ITEM hb_libLoad( PHB_ITEM pLibName, PHB_ITEM pArgs )
 
       if( argc > 0 )
       {
-         argv = ( const char** ) hb_xgrab( sizeof( char* ) * argc );
+         argv = ( const char ** ) hb_xgrab( sizeof( char * ) * argc );
          for( i = 0; i < argc; ++i )
             argv[ i ] = hb_arrayGetCPtr( pArgs, i + 1 );
       }
@@ -160,7 +160,7 @@ PHB_ITEM hb_libLoad( PHB_ITEM pLibName, PHB_ITEM pArgs )
    if( hDynLib )
    {
       void ** pLibPtr = ( void ** ) hb_gcAllocate( sizeof( void * ), &s_gcDynlibFuncs );
-      * pLibPtr = hDynLib;
+      *pLibPtr = hDynLib;
       return hb_itemPutPtrGC( NULL, pLibPtr );
    }
 

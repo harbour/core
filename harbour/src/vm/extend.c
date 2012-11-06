@@ -85,7 +85,7 @@ PHB_ITEM hb_param( int iParam, long lMask )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_param(%d, %ld)", iParam, lMask));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_param(%d, %ld)", iParam, lMask ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -124,7 +124,7 @@ HB_ULONG hb_parinfo( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parinfo(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parinfo(%d)", iParam ) );
 
    if( iParam == 0 )
       return ( HB_ULONG ) hb_pcount();
@@ -149,7 +149,7 @@ HB_SIZE hb_parinfa( int iParamNum, HB_SIZE nArrayIndex )
 {
    PHB_ITEM pArray;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parinfa(%d, %" HB_PFS "u)", iParamNum, nArrayIndex));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parinfa(%d, %" HB_PFS "u)", iParamNum, nArrayIndex ) );
 
    pArray = hb_param( iParamNum, HB_IT_ARRAY );
 
@@ -182,7 +182,7 @@ HB_BOOL hb_extIsArray( int iParam )
    if( HB_IS_BYREF( pItem ) )
       pItem = hb_itemUnRef( pItem );
 
-   return HB_IS_ARRAY( pItem ) && !HB_ARRAY_OBJ( pItem );
+   return HB_IS_ARRAY( pItem ) && ! HB_ARRAY_OBJ( pItem );
 }
 
 /* function to be called from pcode DLLs to detect if the extend system
@@ -213,7 +213,7 @@ const char * hb_parc( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parc(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parc(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -233,7 +233,7 @@ const char * hb_parcx( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parcx(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parcx(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -253,7 +253,7 @@ HB_SIZE hb_parclen( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parclen(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parclen(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -277,7 +277,7 @@ HB_SIZE hb_parcsiz( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parcsiz(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parcsiz(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -305,7 +305,7 @@ const char * hb_pards( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pards(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pards(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -327,7 +327,7 @@ char * hb_pardsbuff( char * szDate, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pardsbuff(%p, %d)", szDate, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pardsbuff(%p, %d)", szDate, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -349,7 +349,7 @@ long hb_pardl( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pardl(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pardl(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -369,7 +369,7 @@ double hb_partd( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_partd(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_partd(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -390,7 +390,7 @@ HB_BOOL hb_partdt( long * plJulian, long * plMilliSec, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_partdt(%p,%p,%d)", plJulian, plMilliSec, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_partdt(%p,%p,%d)", plJulian, plMilliSec, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -415,7 +415,7 @@ int  hb_parl( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parl(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parl(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -435,7 +435,7 @@ int  hb_parldef( int iParam, int iDefValue )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parldef(%d,%d)", iParam, iDefValue));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parldef(%d,%d)", iParam, iDefValue ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -455,7 +455,7 @@ double  hb_parnd( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnd(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parnd(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -479,7 +479,7 @@ int  hb_parni( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parni(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parni(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -507,7 +507,7 @@ int  hb_parnidef( int iParam, int iDefValue )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parni(%d, %d)", iParam, iDefValue));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parni(%d, %d)", iParam, iDefValue ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -535,7 +535,7 @@ long  hb_parnl( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnl(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parnl(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -563,7 +563,7 @@ long  hb_parnldef( int iParam, long lDefValue )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnldef(%d, %ld)", iParam, lDefValue));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parnldef(%d, %ld)", iParam, lDefValue ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -591,7 +591,7 @@ HB_ISIZ hb_parns( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parns(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parns(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -615,7 +615,7 @@ HB_ISIZ hb_parnsdef( int iParam, HB_ISIZ nDefValue )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnsdef(%d, %" HB_PFS "d)", iParam, nDefValue));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parnsdef(%d, %" HB_PFS "d)", iParam, nDefValue ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -640,7 +640,7 @@ HB_LONGLONG  hb_parnll( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnll(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parnll(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -669,7 +669,7 @@ HB_MAXINT hb_parnint( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnint(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parnint(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -697,7 +697,7 @@ HB_MAXINT hb_parnintdef( int iParam, HB_MAXINT nDefValue )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parnintdef(%d, %" PFHL "d)", iParam, nDefValue));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parnintdef(%d, %" PFHL "d)", iParam, nDefValue ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -725,7 +725,7 @@ void * hb_parptr( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parptr(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parptr(%d)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -745,7 +745,7 @@ void * hb_parptrGC( const HB_GC_FUNCS * pFuncs, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parptrGC(%p,%d)", pFuncs, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parptrGC(%p,%d)", pFuncs, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -769,7 +769,7 @@ const char * hb_parvc( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvc(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvc(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -801,7 +801,7 @@ const char * hb_parvcx( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvcx(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvcx(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -832,7 +832,7 @@ HB_SIZE hb_parvclen( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvclen(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvclen(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -867,7 +867,7 @@ HB_SIZE hb_parvcsiz( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvcsiz(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvcsiz(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -906,7 +906,7 @@ const char * hb_parvds( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvds(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvds(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -939,7 +939,7 @@ char  * hb_parvdsbuff( char * szDate, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvdsbuff(%p, %d, ...)", szDate, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvdsbuff(%p, %d, ...)", szDate, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -972,7 +972,7 @@ long hb_parvdl( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvdl(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvdl(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1003,7 +1003,7 @@ double hb_parvtd( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvtd(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvtd(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1035,7 +1035,7 @@ HB_BOOL hb_parvtdt( long * plJulian, long * plMilliSec, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvtdt(%p,%p,%d, ...)", plJulian, plMilliSec, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvtdt(%p,%p,%d, ...)", plJulian, plMilliSec, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1071,7 +1071,7 @@ int  hb_parvl( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvl(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvl(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1108,7 +1108,7 @@ double  hb_parvnd( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvnd(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvnd(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1143,7 +1143,7 @@ int  hb_parvni( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvni(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvni(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1182,7 +1182,7 @@ long  hb_parvnl( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvnl(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvnl(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1224,7 +1224,7 @@ HB_ISIZ hb_parvns( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvns(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvns(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1260,7 +1260,7 @@ HB_LONGLONG hb_parvnll( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvnll(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvnll(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1300,7 +1300,7 @@ HB_MAXINT hb_parvnint( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvnint(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvnint(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1339,7 +1339,7 @@ void * hb_parvptr( int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvptr(%d, ...)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvptr(%d, ...)", iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1370,7 +1370,7 @@ void * hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_parvptrGC(%p,%d, ...)", pFuncs, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_parvptrGC(%p,%d, ...)", pFuncs, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
@@ -1410,7 +1410,7 @@ void hb_ret( void )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ret()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ret()" ) );
 
    hb_itemClear( hb_stackReturnItem() );
 }
@@ -1420,7 +1420,7 @@ void hb_reta( HB_SIZE nLen )  /* undocumented hb_reta() */
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_reta(%" HB_PFS "u)", nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_reta(%" HB_PFS "u)", nLen ) );
 
    hb_arrayNew( hb_stackReturnItem(), nLen );
 }
@@ -1430,7 +1430,7 @@ void hb_retc( const char * szText )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retc(%s)", szText));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retc(%s)", szText ) );
 
    hb_itemPutC( hb_stackReturnItem(), szText );
 }
@@ -1440,7 +1440,7 @@ void hb_retc_null( void )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retc_null()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retc_null()" ) );
 
    hb_itemPutC( hb_stackReturnItem(), NULL );
 }
@@ -1450,7 +1450,7 @@ void hb_retc_buffer( char * szText )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retc_buffer(%s)", szText));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retc_buffer(%s)", szText ) );
 
    hb_itemPutCPtr( hb_stackReturnItem(), szText );
 }
@@ -1460,7 +1460,7 @@ void hb_retc_const( const char * szText )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retc_const(%s)", szText));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retc_const(%s)", szText ) );
 
    hb_itemPutCConst( hb_stackReturnItem(), szText );
 }
@@ -1470,7 +1470,7 @@ void hb_retclen( const char * szText, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retclen(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retclen(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen ) );
 
    hb_itemPutCL( hb_stackReturnItem(), szText, nLen );
 }
@@ -1480,7 +1480,7 @@ void hb_retclen_buffer( char * szText, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_buffer(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retclen_buffer(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen ) );
 
    hb_itemPutCLPtr( hb_stackReturnItem(), szText, nLen );
 }
@@ -1490,7 +1490,7 @@ void hb_retclen_const( const char * szText, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retclen_const(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retclen_const(%.*s, %" HB_PFS "u)", ( int ) nLen, szText, nLen ) );
 
    hb_itemPutCLConst( hb_stackReturnItem(), szText, nLen );
 }
@@ -1502,7 +1502,7 @@ void hb_retds( const char * szDate )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retds(%s)", szDate));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retds(%s)", szDate ) );
 
    hb_itemPutDS( hb_stackReturnItem(), szDate );
 }
@@ -1512,7 +1512,7 @@ void hb_retd( int iYear, int iMonth, int iDay )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retd(%04i, %02i, %02i)", iYear, iMonth, iDay));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retd(%04i, %02i, %02i)", iYear, iMonth, iDay ) );
 
    hb_itemPutD( hb_stackReturnItem(), iYear, iMonth, iDay );
 }
@@ -1522,7 +1522,7 @@ void hb_retdl( long lJulian )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retdl(%ld)", lJulian));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retdl(%ld)", lJulian ) );
 
    hb_itemPutDL( hb_stackReturnItem(), lJulian );
 }
@@ -1532,7 +1532,7 @@ void hb_rettd( double dTimeStamp )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rettd(%lf)", dTimeStamp));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rettd(%lf)", dTimeStamp ) );
 
    hb_itemPutTD( hb_stackReturnItem(), dTimeStamp );
 }
@@ -1542,7 +1542,7 @@ void hb_rettdt( long lJulian, long lMilliSec )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rettdt(%ld, %ld)", lJulian, lMilliSec));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rettdt(%ld, %ld)", lJulian, lMilliSec ) );
 
    hb_itemPutTDT( hb_stackReturnItem(), lJulian, lMilliSec );
 }
@@ -1552,7 +1552,7 @@ void hb_retl( int iLogical )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retl(%d)", iLogical));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retl(%d)", iLogical ) );
 
    hb_itemPutL( hb_stackReturnItem(), iLogical ? HB_TRUE : HB_FALSE );
 }
@@ -1562,7 +1562,7 @@ void hb_retnd( double dNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnd(%lf)", dNumber));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnd(%lf)", dNumber ) );
 
    hb_itemPutND( hb_stackReturnItem(), dNumber );
 }
@@ -1572,7 +1572,7 @@ void hb_retni( int iNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retni(%d)", iNumber));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retni(%d)", iNumber ) );
 
    hb_itemPutNI( hb_stackReturnItem(), iNumber );
 }
@@ -1582,7 +1582,7 @@ void hb_retnl( long lNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%ld)", lNumber));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnl(%ld)", lNumber ) );
 
    hb_itemPutNL( hb_stackReturnItem(), lNumber );
 }
@@ -1592,7 +1592,7 @@ void hb_retns( HB_ISIZ nNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retns(%" HB_PFS "d )", nNumber));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retns(%" HB_PFS "d )", nNumber ) );
 
    hb_itemPutNS( hb_stackReturnItem(), nNumber );
 }
@@ -1603,7 +1603,7 @@ void hb_retnll( HB_LONGLONG llNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnll(%" PFLL "d)", llNumber));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnll(%" PFLL "d)", llNumber ) );
 
    hb_itemPutNLL( hb_stackReturnItem(), llNumber );
 }
@@ -1614,7 +1614,7 @@ void hb_retnint( HB_MAXINT nNumber )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnl(%" PFHL "d )", nNumber));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnl(%" PFHL "d )", nNumber ) );
 
    hb_itemPutNInt( hb_stackReturnItem(), nNumber );
 }
@@ -1624,7 +1624,7 @@ void hb_retnlen( double dNumber, int iWidth, int iDec )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnlen(%lf, %d, %d)", dNumber, iWidth, iDec));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnlen(%lf, %d, %d)", dNumber, iWidth, iDec ) );
 
    hb_itemPutNLen( hb_stackReturnItem(), dNumber, iWidth, iDec );
 }
@@ -1634,7 +1634,7 @@ void hb_retndlen( double dNumber, int iWidth, int iDec )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retndlen(%lf, %d, %d)", dNumber, iWidth, iDec));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retndlen(%lf, %d, %d)", dNumber, iWidth, iDec ) );
 
    hb_itemPutNDLen( hb_stackReturnItem(), dNumber, iWidth, iDec );
 }
@@ -1644,7 +1644,7 @@ void hb_retnilen( int iNumber, int iWidth )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnilen(%d, %d)", iNumber, iWidth));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnilen(%d, %d)", iNumber, iWidth ) );
 
    hb_itemPutNILen( hb_stackReturnItem(), iNumber, iWidth );
 }
@@ -1654,7 +1654,7 @@ void hb_retnllen( long lNumber, int iWidth )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnllen(%ld, %d)", lNumber, iWidth));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnllen(%ld, %d)", lNumber, iWidth ) );
 
    hb_itemPutNLLen( hb_stackReturnItem(), lNumber, iWidth );
 }
@@ -1665,7 +1665,7 @@ void hb_retnlllen( HB_LONGLONG llNumber, int iWidth )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnlllen(%" PFLL "d, %d)", llNumber, iWidth));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnlllen(%" PFLL "d, %d)", llNumber, iWidth ) );
 
    hb_itemPutNLLLen( hb_stackReturnItem(), llNumber, iWidth );
 }
@@ -1676,7 +1676,7 @@ void hb_retnintlen( HB_MAXINT nNumber, int iWidth )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retnintlen(%" PFHL "d, %d)", nNumber, iWidth));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retnintlen(%" PFHL "d, %d)", nNumber, iWidth ) );
 
    hb_itemPutNIntLen( hb_stackReturnItem(), nNumber, iWidth );
 }
@@ -1686,7 +1686,7 @@ void hb_retptr( void * pointer )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retptr(%p)", pointer));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retptr(%p)", pointer ) );
 
    hb_itemPutPtr( hb_stackReturnItem(), pointer );
 }
@@ -1696,7 +1696,7 @@ void hb_retptrGC( void * pointer )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_retptrGC(%p)", pointer));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_retptrGC(%p)", pointer ) );
 
    hb_itemPutPtrGC( hb_stackReturnItem(), pointer );
 }
@@ -1705,7 +1705,7 @@ int hb_stor( int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stor(%d)", iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stor(%d)", iParam ) );
 
    if( iParam == -1 )
    {
@@ -1730,7 +1730,7 @@ int hb_storc( const char * szText, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storc(%s, %d)", szText, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storc(%s, %d)", szText, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1755,7 +1755,7 @@ int hb_storclen( const char * szText, HB_SIZE nLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storclen(%.*s, %" HB_PFS "u, %d)", ( int ) nLen, szText, nLen, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storclen(%.*s, %" HB_PFS "u, %d)", ( int ) nLen, szText, nLen, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1780,7 +1780,7 @@ int hb_storclen_buffer( char * szText, HB_SIZE nLen, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storclen_buffer(%.*s, %" HB_PFS "u, %d)", ( int ) nLen, szText, nLen, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storclen_buffer(%.*s, %" HB_PFS "u, %d)", ( int ) nLen, szText, nLen, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1807,7 +1807,7 @@ int hb_stords( const char * szDate, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stords(%s, %d)", szDate, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stords(%s, %d)", szDate, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1832,7 +1832,7 @@ int hb_stordl( long lJulian, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stordl(%ld, %d)", lJulian, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stordl(%ld, %d)", lJulian, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1857,7 +1857,7 @@ int hb_stortd( double dTimeStamp, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stortd(%lf, %d)", dTimeStamp, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stortd(%lf, %d)", dTimeStamp, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1882,7 +1882,7 @@ int hb_stortdt( long lJulian, long lMilliSec, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stortd(%ld, %ld, %d)", lJulian, lMilliSec, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stortd(%ld, %ld, %d)", lJulian, lMilliSec, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1907,7 +1907,7 @@ int hb_storl( int iLogical, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storl(%d, %d)", iLogical, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storl(%d, %d)", iLogical, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1932,7 +1932,7 @@ int hb_storni( int iValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storni(%d, %d)", iValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storni(%d, %d)", iValue, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1957,7 +1957,7 @@ int hb_stornl( long lValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornl(%ld, %d)", lValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stornl(%ld, %d)", lValue, iParam ) );
 
    if( iParam == -1 )
    {
@@ -1982,7 +1982,7 @@ int hb_storns( HB_ISIZ nValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storns(%" HB_PFS "d, %d)", nValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storns(%" HB_PFS "d, %d)", nValue, iParam ) );
 
    if( iParam == -1 )
    {
@@ -2008,7 +2008,7 @@ int hb_stornll( HB_LONGLONG llValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornll(%" PFLL "d, %d)", llValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stornll(%" PFLL "d, %d)", llValue, iParam ) );
 
    if( iParam == -1 )
    {
@@ -2034,7 +2034,7 @@ int hb_stornint( HB_MAXINT nValue, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornint(%" PFHL "d, %d)", nValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stornint(%" PFHL "d, %d)", nValue, iParam ) );
 
    if( iParam == -1 )
    {
@@ -2059,7 +2059,7 @@ int hb_stornd( double dNumber, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_stornd(%lf, %d)", dNumber, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_stornd(%lf, %d)", dNumber, iParam ) );
 
    if( iParam == -1 )
    {
@@ -2084,7 +2084,7 @@ int hb_storptr( void * pointer, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storptr(%p, %d)", pointer, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storptr(%p, %d)", pointer, iParam ) );
 
    if( iParam == -1 )
    {
@@ -2109,7 +2109,7 @@ int hb_storptrGC( void * pointer, int iParam )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storptrGC(%p, %d)", pointer, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storptrGC(%p, %d)", pointer, iParam ) );
 
    if( iParam == -1 )
    {
@@ -2138,14 +2138,14 @@ int hb_storvc( const char * szText, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvc(%s, %d, ...)", szText, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvc(%s, %d, ...)", szText, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2171,14 +2171,14 @@ int hb_storvclen( const char * szText, HB_SIZE nLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen(%.*s, %" HB_PFS "u, %d, ...)", ( int ) nLen, szText, nLen, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvclen(%.*s, %" HB_PFS "u, %d, ...)", ( int ) nLen, szText, nLen, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2204,14 +2204,14 @@ int hb_storvclen_buffer( char * szText, HB_SIZE nLen, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvclen_buffer(%.*s, %" HB_PFS "u, %d, ...)", ( int ) nLen, szText, nLen, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvclen_buffer(%.*s, %" HB_PFS "u, %d, ...)", ( int ) nLen, szText, nLen, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2239,14 +2239,14 @@ int hb_storvds( const char * szDate, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvds(%s, %d, ...)", szDate, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvds(%s, %d, ...)", szDate, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2272,14 +2272,14 @@ int hb_storvdl( long lJulian, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvdl(%ld, %d, ...)", lJulian, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvdl(%ld, %d, ...)", lJulian, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2305,14 +2305,14 @@ int hb_storvtd( double dTimeStamp, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvtd(%lf, %d, ...)", dTimeStamp, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvtd(%lf, %d, ...)", dTimeStamp, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2338,14 +2338,14 @@ int hb_storvtdt( long lJulian, long lMilliSec, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvtd(%ld, %ld, %d, ...)", lJulian, lMilliSec, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvtd(%ld, %ld, %d, ...)", lJulian, lMilliSec, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2371,14 +2371,14 @@ int hb_storvl( int iLogical, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvl(%d, %d, ...)", iLogical, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvl(%d, %d, ...)", iLogical, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2404,14 +2404,14 @@ int hb_storvni( int iValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvni(%d, %d, ...)", iValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvni(%d, %d, ...)", iValue, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2437,14 +2437,14 @@ int hb_storvnl( long lValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvnl(%ld, %d, ...)", lValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvnl(%ld, %d, ...)", lValue, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2470,14 +2470,14 @@ int hb_storvns( HB_ISIZ nValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvns(%" HB_PFS "d, %d, ...)", nValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvns(%" HB_PFS "d, %d, ...)", nValue, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2504,14 +2504,14 @@ int hb_storvnll( HB_LONGLONG llValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvnll(%" PFLL "d, %d, ...)", llValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvnll(%" PFLL "d, %d, ...)", llValue, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2538,14 +2538,14 @@ int hb_storvnint( HB_MAXINT nValue, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvnint(%" PFHL "d, %d, ...)", nValue, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvnint(%" PFHL "d, %d, ...)", nValue, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2571,14 +2571,14 @@ int hb_storvnd( double dNumber, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvnd(%lf, %d, ...)", dNumber, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvnd(%lf, %d, ...)", dNumber, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2604,14 +2604,14 @@ int hb_storvptr( void * pointer, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvptr(%p, %d, ...)", pointer, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvptr(%p, %d, ...)", pointer, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2637,14 +2637,14 @@ int hb_storvptrGC( void * pointer, int iParam, ... )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_storvptrGC(%p, %d, ...)", pointer, iParam));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_storvptrGC(%p, %d, ...)", pointer, iParam ) );
 
    if( iParam >= -1 && iParam <= hb_pcount() )
    {
       PHB_ITEM pItem = ( iParam == -1 ) ? hb_stackReturnItem() : hb_stackItemFromBase( iParam );
       HB_BOOL bByRef = HB_IS_BYREF( pItem );
 
-      if( bByRef  )
+      if( bByRef )
          pItem = hb_itemUnRef( pItem );
 
       if( HB_IS_ARRAY( pItem ) )
@@ -2671,7 +2671,7 @@ int  hb_pcount( void )
 {
    HB_STACK_TLS_PRELOAD
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_pcount()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_pcount()" ) );
 
    return ( int ) ( hb_stackBaseItem() )->item.asSymbol.paramcnt;
 }

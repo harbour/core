@@ -257,7 +257,7 @@ static HB_BOOL hb_regex( int iRequest )
    HB_SIZE nLen;
 
    pString = hb_param( 2, HB_IT_STRING );
-   if( !pString )
+   if( ! pString )
    {
       hb_errRT_BASE_SubstR( EG_ARG, 3014, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
       return HB_FALSE;
@@ -265,7 +265,7 @@ static HB_BOOL hb_regex( int iRequest )
    pRegEx = hb_regexGet( hb_param( 1, HB_IT_ANY ),
                          ( !hb_parldef( 3, 1 ) ? HBREG_ICASE : 0 ) |
                          ( hb_parl( 4 ) ? HBREG_NEWLINE : 0 ) );
-   if( !pRegEx )
+   if( ! pRegEx )
       return HB_FALSE;
 
    pszString = hb_itemGetCPtr( pString );
@@ -385,7 +385,7 @@ static HB_BOOL hb_regex( int iRequest )
                      iSO = HB_REGMATCH_SO( aMatches, i );
                      iEO = HB_REGMATCH_EO( aMatches, i );
                      pMatch = hb_arrayGetItemPtr( pAtxArray, i + 1 );
-                     if( !fOnlyMatch )
+                     if( ! fOnlyMatch )
                      {
                         hb_arrayNew( pMatch, 3 );
                         if( iEO != -1 )
@@ -422,7 +422,7 @@ static HB_BOOL hb_regex( int iRequest )
                   iSO = HB_REGMATCH_SO( aMatches, i );
                   iEO = HB_REGMATCH_EO( aMatches, i );
                   pMatch = hb_itemNew( NULL );
-                  if( !fOnlyMatch )
+                  if( ! fOnlyMatch )
                   {
                      hb_arrayNew( pMatch, 3 );
                      if( iEO != -1 )
@@ -526,12 +526,12 @@ HB_FUNC( HB_REGEXATX )
 }
 
 /* 2005-12-16 - Francesco Saverio Giudice
-  HB_RegExAll( cRegex, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, lOnlyMatch ) -> aAllRegexMatches
+   HB_RegExAll( cRegex, cString, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch, lOnlyMatch ) -> aAllRegexMatches
 
-  This function return all matches from a Regex search.
-  It is a mix from hb_RegEx() and hb_RegExAtX()
+   This function return all matches from a Regex search.
+   It is a mix from hb_RegEx() and hb_RegExAtX()
 
-  PARAMETERS:
+   PARAMETERS:
     cRegex         - Regex pattern string or precompiled Regex
     cString        - The string you want to search
     lCaseSensitive - default = FALSE

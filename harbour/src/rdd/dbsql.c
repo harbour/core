@@ -63,7 +63,7 @@
 #include "hbvm.h"
 #include "hbdate.h"
 
-#define HB_FILE_BUF_SIZE      0x10000
+#define HB_FILE_BUF_SIZE  0x10000
 typedef struct _HB_FILEBUF
 {
    HB_FHANDLE hFile;
@@ -92,6 +92,7 @@ static void hb_addToFBuffer( PHB_FILEBUF pFileBuf, char ch )
 static void hb_addStrnToFBuffer( PHB_FILEBUF pFileBuf, const char * str, HB_SIZE nSize )
 {
    HB_SIZE nPos = 0;
+
    while( nPos < nSize )
    {
       if( pFileBuf->nPos == pFileBuf->nSize )
@@ -277,7 +278,7 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
          if( SELF_EVALBLOCK( pArea, pFor ) != HB_SUCCESS )
             break;
       }
-      if( !pFor || hb_itemGetL( pArea->valResult ) )
+      if( ! pFor || hb_itemGetL( pArea->valResult ) )
       {
          ++ulRecords;
 
@@ -303,7 +304,7 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
 
          if( fNoFieldPassed )
          {
-            for( ui = 1; ui <= uiFields; ui ++ )
+            for( ui = 1; ui <= uiFields; ui++ )
             {
                if( SELF_GETVALUE( pArea, ui, pTmp ) != HB_SUCCESS )
                   break;
@@ -346,6 +347,7 @@ static HB_ULONG hb_db2Sql( AREAP pArea, PHB_ITEM pFields, HB_MAXINT llNext,
 HB_FUNC( __DBSQL )
 {
    AREAP pArea = ( AREAP ) hb_rddGetCurrentWorkAreaPointer();
+
    if( pArea )
    {
       HB_BOOL fExport         = hb_parl( 1 );
@@ -384,7 +386,7 @@ HB_FUNC( __DBSQL )
                                   NULL, pError );
             if( hFile == FS_ERROR )
             {
-               if( !pError )
+               if( ! pError )
                {
                   pError = hb_errNew();
                   hb_errPutSeverity( pError, ES_ERROR );
@@ -429,7 +431,7 @@ HB_FUNC( __DBSQL )
             {
                llNext = hb_itemGetNInt( pNext );
             }
-            else if( !fRest )
+            else if( ! fRest )
             {
                errCode = SELF_GOTOP( pArea );
             }

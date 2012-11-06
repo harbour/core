@@ -416,7 +416,8 @@ static LONG WINAPI hb_winExceptionHandler( struct _EXCEPTION_POINTERS * pExcepti
                      hb_snprintf( buf, sizeof( buf ), "0x%08lX 0x%08lX %s\n", ( HB_PTRDIFF ) me32.modBaseAddr, ( HB_PTRDIFF ) me32.modBaseSize, szBuffer );
 #endif
                      hb_strncat( errmsg, buf, errmsglen );
-                  } while( pModule32Next( hModuleSnap, &me32 ) );
+                  }
+                  while( pModule32Next( hModuleSnap, &me32 ) );
                }
 
                /* Do not forget to clean up the snapshot object. */
@@ -472,7 +473,7 @@ static ULONG _System hb_os2ExceptionHandler( PEXCEPTIONREPORTRECORD       pExcep
          ( HB_U32 ) pCtx->ctx_EFlags );
 
       while( hb_procinfo( iLevel++, buffer, &uiLine, file ) )
-         fprintf( stderr, HB_I_("Called from %s(%hu)%s%s\n"), buffer, uiLine, *file ? HB_I_(" in ") : "", file );
+         fprintf( stderr, HB_I_( "Called from %s(%hu)%s%s\n" ), buffer, uiLine, *file ? HB_I_( " in " ) : "", file );
    }
 
    return hb_cmdargCheck( "BATCH" ) ? XCPT_CONTINUE_STOP : XCPT_CONTINUE_SEARCH /* Exception not resolved... */;
@@ -490,31 +491,31 @@ static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
 
    switch( sig )
    {
-   case SIGSEGV:
-      signame = "SIGSEGV";
-      hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
-      sigaddr = buffer;
-      break;
-   case SIGILL:
-      signame = "SIGILL";
-      hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
-      sigaddr = buffer;
-      break;
-   case SIGFPE:
-      signame = "SIGFPE";
-      hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
-      sigaddr = buffer;
-      break;
-   case SIGBUS:
-      signame = "SIGBUS";
-      hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
-      sigaddr = buffer;
-      break;
-   default:
-      hb_snprintf( buffer, sizeof( buffer ), "sig:%d", sig );
-      signame = buffer;
-      sigaddr = "UNKNOWN";
-      break;
+      case SIGSEGV:
+         signame = "SIGSEGV";
+         hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+         sigaddr = buffer;
+         break;
+      case SIGILL:
+         signame = "SIGILL";
+         hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+         sigaddr = buffer;
+         break;
+      case SIGFPE:
+         signame = "SIGFPE";
+         hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+         sigaddr = buffer;
+         break;
+      case SIGBUS:
+         signame = "SIGBUS";
+         hb_snprintf( buffer, sizeof( buffer ), "%p", si->si_addr );
+         sigaddr = buffer;
+         break;
+      default:
+         hb_snprintf( buffer, sizeof( buffer ), "sig:%d", sig );
+         signame = buffer;
+         sigaddr = "UNKNOWN";
+         break;
    }
 
    hb_errInternal( 6005, "Exception %s at address %s", signame, sigaddr );
@@ -524,7 +525,7 @@ static void hb_signalExceptionHandler( int sig, siginfo_t * si, void * ucp )
 
 void hb_vmSetExceptionHandler( void )
 {
-#if defined( HB_OS_WIN ) && !defined( HB_OS_WIN_CE )
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    {
       LPTOP_LEVEL_EXCEPTION_FILTER ef = SetUnhandledExceptionFilter( hb_winExceptionHandler );
       HB_SYMBOL_UNUSED( ef );

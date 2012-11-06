@@ -89,7 +89,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME      OS2
+#define HB_GT_NAME  OS2
 
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -108,7 +108,7 @@
 #include <os2.h>
 
 /* convert 16:16 address to 0:32 */
-#define SELTOFLAT(ptr) (void *)(((((ULONG)(ptr))>>19)<<16)|(0xFFFF&((ULONG)(ptr))))
+#define SELTOFLAT( ptr )  ( void * ) ( ( ( ( ( ULONG ) ( ptr ) ) >> 19 ) << 16 ) | ( 0xFFFF & ( ( ULONG ) ( ptr ) ) ) )
 
 #if defined( HB_OS_OS2_GCC )
    /* 25/03/2000 - maurilio.longo@libero.it
@@ -117,23 +117,23 @@
 #else
    #include <bsedos.h>
    #ifndef KBDTRF_EXTENDED_CODE
-      #define KBDTRF_EXTENDED_CODE 0x02
+      #define KBDTRF_EXTENDED_CODE  0x02
    #endif
 #endif
 #include <conio.h>
 
-static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+static int s_GtId;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER                  ( &SuperTable )
+#define HB_GTID_PTR                 ( &s_GtId )
 
-static int  s_iCurRow;
-static int  s_iCurCol;
-static int  s_iCursorStyle;
+static int s_iCurRow;
+static int s_iCurCol;
+static int s_iCursorStyle;
 
 /* buffer for single screen line */
-static int     s_iLineBufSize = 0;
-static char *  s_sLineBuf;
+static int    s_iLineBufSize = 0;
+static char * s_sLineBuf;
 
 /* Code page ID of active codepage at the time harbour program was start */
 static HB_USHORT s_usOldCodePage;
@@ -154,14 +154,14 @@ static void hb_gt_os2_mouse_Init( PHB_GT pGT )
 {
    USHORT fsEvents = MOUSE_MOTION_WITH_BN1_DOWN | MOUSE_BN1_DOWN |
                      MOUSE_MOTION_WITH_BN2_DOWN | MOUSE_BN2_DOWN |
-                     MOUSE_MOTION_WITH_BN3_DOWN | MOUSE_BN3_DOWN ;
+                     MOUSE_MOTION_WITH_BN3_DOWN | MOUSE_BN3_DOWN;
 
    HB_SYMBOL_UNUSED( pGT );
 
-   if( MouOpen ( 0L, &s_uMouHandle ) )          /* try to open mouse */
-      s_uMouHandle = 0;                         /* no mouse found */
+   if( MouOpen( 0L, &s_uMouHandle ) )              /* try to open mouse */
+      s_uMouHandle = 0;                            /* no mouse found */
    else
-      MouSetEventMask ( &fsEvents, s_uMouHandle );    /* mask some events */
+      MouSetEventMask( &fsEvents, s_uMouHandle );  /* mask some events */
 }
 
 static void hb_gt_os2_mouse_Exit( PHB_GT pGT )
@@ -208,7 +208,7 @@ static void hb_gt_os2_mouse_Hide( PHB_GT pGT )
          con: calling function from another module, GT must be linked in
          con: VioGetMode is been called twice
        */
-      vi.cb = sizeof(VIOMODEINFO);
+      vi.cb = sizeof( VIOMODEINFO );
       VioGetMode( &vi, 0 );
       rect.row  = 0;                            /* x-coordinate upper left */
       rect.col  = 0;                            /* y-coordinate upper left */
@@ -246,21 +246,25 @@ static void hb_gt_os2_mouse_SetPos( PHB_GT pGT, int row, int col )
 
 typedef struct
 {
-   HB_BOOL  fDown;
-   int      iPressed;
-   int      iPressRow;
-   int      iPressCol;
-   ULONG    ulPressTime;
-   int      iReleased;
-   int      iReleaseRow;
-   int      iReleaseCol;
-   ULONG    ulReleaseTime;
+   HB_BOOL fDown;
+   int     iPressed;
+   int     iPressRow;
+   int     iPressCol;
+   ULONG   ulPressTime;
+   int     iReleased;
+   int     iReleaseRow;
+   int     iReleaseCol;
+   ULONG   ulReleaseTime;
 } HB_OS2_BUTTONSTATE;
 
 static HB_OS2_BUTTONSTATE s_ButtonState[ 3 ];
-static ULONG   s_ButtonMask[ 3 ] =
-                           { MOUSE_BN1_DOWN, MOUSE_BN2_DOWN, MOUSE_BN3_DOWN };
-static ULONG   s_ulMouseLastState;
+static ULONG s_ButtonMask[ 3 ] =
+{
+   MOUSE_BN1_DOWN,
+   MOUSE_BN2_DOWN,
+   MOUSE_BN3_DOWN
+};
+static ULONG s_ulMouseLastState;
 
 static void hb_gt_os2_mouse_ReadMouseState( void )
 {
@@ -361,7 +365,7 @@ static int hb_gt_os2_mouse_CountButton( PHB_GT pGT )
    HB_SYMBOL_UNUSED( pGT );
 
    if( s_uMouHandle )
-      MouGetNumButtons ( &usButtons, s_uMouHandle );
+      MouGetNumButtons( &usButtons, s_uMouHandle );
 
    return ( int ) usButtons;
 }
@@ -370,7 +374,7 @@ static void hb_gt_os2_GetCursorPosition( int * piRow, int * piCol )
 {
    USHORT y, x;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetCursorPosition(%p, %p)", piRow, piCol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetCursorPosition(%p, %p)", piRow, piCol ) );
 
    VioGetCurPos( &y, &x, 0 );
 
@@ -380,7 +384,7 @@ static void hb_gt_os2_GetCursorPosition( int * piRow, int * piCol )
 
 static void hb_gt_os2_SetCursorPosition( int iRow, int iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetCursorPosition(%d, %d)", iRow, iCol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetCursorPosition(%d, %d)", iRow, iCol ) );
 
    if( s_iCurRow != iRow || s_iCurCol != iCol )
    {
@@ -394,7 +398,7 @@ static void hb_gt_os2_SetCursorSize( char start, char end, int visible )
 {
    VIOCURSORINFO vi;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetCursorSize(%d, %d, %d)", (int) start, (int) end, visible));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetCursorSize(%d, %d, %d)", ( int ) start, ( int ) end, visible ) );
 
    vi.yStart = start;
    vi.cEnd = end;
@@ -405,9 +409,9 @@ static void hb_gt_os2_SetCursorSize( char start, char end, int visible )
 
 static unsigned char hb_gt_os2_GetCharHeight()
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetCharHeight()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetCharHeight()" ) );
 
-   return ( unsigned char )( s_vi.row ? ( s_vi.vres / s_vi.row ) - 1 : 0 );
+   return ( unsigned char ) ( s_vi.row ? ( s_vi.vres / s_vi.row ) - 1 : 0 );
 }
 
 static int hb_gt_os2_GetCursorStyle( void )
@@ -415,7 +419,7 @@ static int hb_gt_os2_GetCursorStyle( void )
    int iStyle;
    VIOCURSORINFO vi;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetCursorStyle()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetCursorStyle()" ) );
 
    VioGetCurType( &vi, 0 );
 
@@ -450,7 +454,7 @@ static int hb_gt_os2_GetCursorStyle( void )
 
 static void hb_gt_os2_SetCursorStyle( int iStyle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetCursorStyle(%d)", iStyle));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetCursorStyle(%d)", iStyle ) );
 
    if( iStyle != s_iCursorStyle )
    {
@@ -492,11 +496,11 @@ static void hb_gt_os2_GetScreenContents( PHB_GT pGT )
    char * pBufPtr;
    HB_BYTE bxAttr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetScreenContents(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetScreenContents(%p)", pGT ) );
 
    bxAttr = 0;
    cdp = HB_GTSELF_CPTERM( pGT );
-   if( !cdp )
+   if( ! cdp )
    {
       cdp = HB_GTSELF_CPBOX( pGT );
       if( cdp )
@@ -556,13 +560,13 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       ANSWER:  But I have a different code page than you and box drawing
                chars are "wrong". So we need to set code page of
                box drawing chars. (Maurilio Longo - maurilio.longo@libero.it)
-   */
+    */
 
    /* 21/08/2001 - <maurilio.longo@libero.it>
       NOTE: Box drawing characters need page 437 to show correctly, so, in your
             config.sys you need to have a CODEPAGE=x,y statement where x or y
             is equal to 437
-   */
+    */
 
    VioGetCp( 0, &s_usOldCodePage, 0 );
 
@@ -586,7 +590,7 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 static void hb_gt_os2_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Exit(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Exit(%p)", pGT ) );
 
    HB_GTSUPER_EXIT( pGT );
 
@@ -605,13 +609,13 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int ch;              /* next char if any */
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_ReadKey(%p,%d)", pGT, iEventMask));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_ReadKey(%p,%d)", pGT, iEventMask ) );
 
    /* zero out keyboard event record */
    memset( s_key, 0, sizeof( KBDKEYINFO ) );
 
    /* Get next character without wait */
-   KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) * s_hk );
+   KbdCharIn( s_key, IO_NOWAIT, ( HKBD ) *s_hk );
 
    /* extended key codes have 00h or E0h as chChar */
    if( ( s_key->fbStatus & KBDTRF_EXTENDED_CODE ) &&
@@ -645,7 +649,7 @@ static int hb_gt_os2_ReadKey( PHB_GT pGT, int iEventMask )
 
 static HB_BOOL hb_gt_os2_IsColor( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_IsColor(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_IsColor(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -656,7 +660,7 @@ static HB_BOOL hb_gt_os2_GetBlink( PHB_GT pGT )
 {
    VIOINTENSITY vi;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_GetBlink(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_GetBlink(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -671,7 +675,7 @@ static void hb_gt_os2_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
    VIOINTENSITY vi;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetBlink(%p,%d)", pGT, (int) fBlink));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetBlink(%p,%d)", pGT, ( int ) fBlink ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -685,7 +689,7 @@ static void hb_gt_os2_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    ULONG ulDuration;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -720,7 +724,7 @@ static const char * hb_gt_os2_Version( PHB_GT pGT, int iType )
 
 static HB_BOOL hb_gt_os2_Resize( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resize(%p,%d,%d)", pGT, iRows, iCols));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Resize(%p,%d,%d)", pGT, iRows, iCols ) );
 
    if( HB_GTSUPER_RESIZE( pGT, iRows, iCols ) )
    {
@@ -743,7 +747,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
    HB_BOOL fResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_SetMode(%p,%d,%d)", pGT, iRows, iCols));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
 
    s_vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
@@ -751,7 +755,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
    s_vi.col = iCols;
    fResult = VioSetMode( &s_vi, 0 ) == 0; /* 0 = Ok, other = Fail */
 
-   if( !fResult )
+   if( ! fResult )
    {
       s_vi.cb = sizeof( VIOMODEINFO );
       VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
@@ -770,7 +774,7 @@ static HB_BOOL hb_gt_os2_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static HB_BOOL hb_gt_os2_PostExt( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_PostExt(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_PostExt(%p)", pGT ) );
 
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    HB_GTSELF_SETPOS( pGT, s_iCurRow, s_iCurCol );
@@ -781,7 +785,7 @@ static HB_BOOL hb_gt_os2_PostExt( PHB_GT pGT )
 
 static HB_BOOL hb_gt_os2_Resume( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_os2_Resume(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_os2_Resume(%p)", pGT ) );
 
    s_vi.cb = sizeof( VIOMODEINFO );
    VioGetMode( &s_vi, 0 );    /* fill structure with current settings */
@@ -808,7 +812,7 @@ static void hb_gt_os2_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
    while( iLen < iSize )
    {
-      if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol + iLen, &iColor, &bAttr, &uc, HB_TRUE ) )
+      if( ! HB_GTSELF_GETSCRUC( pGT, iRow, iCol + iLen, &iColor, &bAttr, &uc, HB_TRUE ) )
          break;
 
       *pBufPtr++ = ( char ) uc;
@@ -861,7 +865,7 @@ static HB_BOOL hb_gt_os2_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_os2_Init;
    pFuncTable->Exit                       = hb_gt_os2_Exit;

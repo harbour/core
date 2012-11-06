@@ -58,12 +58,12 @@
 
 
 /* MT macros */
-#define HB_CDP_LOCK()           hb_threadEnterCriticalSection( &s_cdpMtx )
-#define HB_CDP_UNLOCK()         hb_threadLeaveCriticalSection( &s_cdpMtx )
+#define HB_CDP_LOCK()    hb_threadEnterCriticalSection( &s_cdpMtx )
+#define HB_CDP_UNLOCK()  hb_threadLeaveCriticalSection( &s_cdpMtx )
 static HB_CRITICAL_NEW( s_cdpMtx );
 
 
-#define NUMBER_OF_CHARS    256
+#define NUMBER_OF_CHARS  256
 
 static const HB_WCHAR s_uniCtrls[ 32 ] =
 {
@@ -215,9 +215,9 @@ static HB_BOOL hb_cdpStd_put( PHB_CODEPAGE cdp,
 
       if( wc <= cdp->uniTable->wcMax &&
           cdp->uniTable->uniTrans[ wc ] )
-         pDst[ ( * pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
+         pDst[ ( *pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
       else
-         pDst[ ( * pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
+         pDst[ ( *pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
 
       return HB_TRUE;
    }
@@ -262,8 +262,8 @@ static int hb_cdpBin_cmpi( PHB_CODEPAGE cdp,
 
    while( nLen-- )
    {
-      HB_UCHAR u1 = cdp->upper[ ( HB_UCHAR ) * szFirst++ ],
-               u2 = cdp->upper[ ( HB_UCHAR ) * szSecond++ ];
+      HB_UCHAR u1 = cdp->upper[ ( HB_UCHAR ) *szFirst++ ],
+               u2 = cdp->upper[ ( HB_UCHAR ) *szSecond++ ];
       if( u1 != u2 )
       {
          iRet = ( u1 < u2 ) ? -1 : 1;
@@ -295,8 +295,8 @@ static int hb_cdpStd_cmp( PHB_CODEPAGE cdp,
    {
       if( *szFirst != *szSecond )
       {
-         n1 = ( HB_UCHAR ) cdp->sort[ ( HB_UCHAR ) * szFirst ];
-         n2 = ( HB_UCHAR ) cdp->sort[ ( HB_UCHAR ) * szSecond ];
+         n1 = ( HB_UCHAR ) cdp->sort[ ( HB_UCHAR ) *szFirst ];
+         n2 = ( HB_UCHAR ) cdp->sort[ ( HB_UCHAR ) *szSecond ];
          if( n1 != n2 )
          {
             iRet = ( n1 < n2 ) ? -1 : 1;
@@ -305,15 +305,15 @@ static int hb_cdpStd_cmp( PHB_CODEPAGE cdp,
          if( iAcc == 0 && ( fExact || ( nLenFirst == nLenSecond && cdp->acc ) ) )
          {
             if( cdp->acc )
-               iAcc = ( cdp->acc[ ( HB_UCHAR ) * szFirst ] <
-                        cdp->acc[ ( HB_UCHAR ) * szSecond ] ) ? -1 : 1;
+               iAcc = ( cdp->acc[ ( HB_UCHAR ) *szFirst ] <
+                        cdp->acc[ ( HB_UCHAR ) *szSecond ] ) ? -1 : 1;
             else
-               iAcc = ( ( HB_UCHAR ) * szFirst < ( HB_UCHAR ) * szSecond ) ? -1 : 1;
+               iAcc = ( ( HB_UCHAR ) *szFirst < ( HB_UCHAR ) *szSecond ) ? -1 : 1;
          }
       }
    }
 
-   if( !iRet )
+   if( ! iRet )
    {
       if( iAcc )
          iRet = iAcc;
@@ -337,8 +337,8 @@ static int hb_cdpStd_cmpi( PHB_CODEPAGE cdp,
    nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
    for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
    {
-      u1 = cdp->upper[ ( HB_UCHAR ) * szFirst ];
-      u2 = cdp->upper[ ( HB_UCHAR ) * szSecond ];
+      u1 = cdp->upper[ ( HB_UCHAR ) *szFirst ];
+      u2 = cdp->upper[ ( HB_UCHAR ) *szSecond ];
 
       if( u1 != u2 )
       {
@@ -359,7 +359,7 @@ static int hb_cdpStd_cmpi( PHB_CODEPAGE cdp,
       }
    }
 
-   if( !iRet )
+   if( ! iRet )
    {
       if( iAcc )
          iRet = iAcc;
@@ -431,7 +431,7 @@ static HB_BOOL hb_cdpMulti_get( PHB_CODEPAGE cdp,
 {
    if( *pnIndex < nLen )
    {
-      HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ( * pnIndex )++ ];
+      HB_UCHAR uc = ( HB_UCHAR ) pSrc[ ( *pnIndex )++ ];
 
       *wc = cdp->uniTable->uniCodes[ uc ];
       if( *wc == 0 )
@@ -453,7 +453,7 @@ static HB_BOOL hb_cdpMulti_get( PHB_CODEPAGE cdp,
                      if( cdp->multi[ i ].wcUp )
                      {
                         *wc = cdp->multi[ i ].wcUp;
-                        ++( * pnIndex );
+                        ++( *pnIndex );
                      }
                      break;
                   }
@@ -462,7 +462,7 @@ static HB_BOOL hb_cdpMulti_get( PHB_CODEPAGE cdp,
                      if( cdp->multi[ i ].wcLo )
                      {
                         *wc = cdp->multi[ i ].wcLo;
-                        ++( * pnIndex );
+                        ++( *pnIndex );
                      }
                      break;
                   }
@@ -485,9 +485,9 @@ static HB_BOOL hb_cdpMulti_put( PHB_CODEPAGE cdp,
          hb_cdpBuildTransTable( cdp->uniTable );
 
       if( wc <= cdp->uniTable->wcMax && cdp->uniTable->uniTrans[ wc ] )
-         pDst[ ( * pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
+         pDst[ ( *pnIndex )++ ] = cdp->uniTable->uniTrans[ wc ];
       else if( wc == 0 )
-         pDst[ ( * pnIndex )++ ] = 0;
+         pDst[ ( *pnIndex )++ ] = 0;
       else
       {
          int i;
@@ -495,20 +495,20 @@ static HB_BOOL hb_cdpMulti_put( PHB_CODEPAGE cdp,
          {
             if( wc == cdp->multi[ i ].wcUp )
             {
-               pDst[ ( * pnIndex )++ ] = cdp->multi[ i ].cFirst[ 0 ];
+               pDst[ ( *pnIndex )++ ] = cdp->multi[ i ].cFirst[ 0 ];
                if( *pnIndex < nLen )
-                  pDst[ ( * pnIndex )++ ] = cdp->multi[ i ].cLast[ 0 ];
+                  pDst[ ( *pnIndex )++ ] = cdp->multi[ i ].cLast[ 0 ];
                return HB_TRUE;
             }
             if( wc == cdp->multi[ i ].wcLo )
             {
-               pDst[ ( * pnIndex )++ ] = cdp->multi[ i ].cFirst[ 1 ];
+               pDst[ ( *pnIndex )++ ] = cdp->multi[ i ].cFirst[ 1 ];
                if( *pnIndex < nLen )
-                  pDst[ ( * pnIndex )++ ] = cdp->multi[ i ].cLast[ 1 ];
+                  pDst[ ( *pnIndex )++ ] = cdp->multi[ i ].cLast[ 1 ];
                return HB_TRUE;
             }
          }
-         pDst[ ( * pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
+         pDst[ ( *pnIndex )++ ] = wc >= 0x100 ? '?' : ( HB_UCHAR ) wc;
       }
       return HB_TRUE;
    }
@@ -562,8 +562,8 @@ static int hb_cdpMulti_cmp( PHB_CODEPAGE cdp,
    nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
    for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
    {
-      HB_UCHAR u1 = ( HB_UCHAR ) * szFirst;
-      HB_UCHAR u2 = ( HB_UCHAR ) * szSecond;
+      HB_UCHAR u1 = ( HB_UCHAR ) *szFirst;
+      HB_UCHAR u2 = ( HB_UCHAR ) *szSecond;
 
       n1 = cdp->sort[ u1 ];
       if( ( cdp->flags[ u1 ] & HB_CDP_MULTI1 ) != 0 &&
@@ -619,7 +619,7 @@ static int hb_cdpMulti_cmp( PHB_CODEPAGE cdp,
       }
    }
 
-   if( !iRet )
+   if( ! iRet )
    {
       if( iAcc )
          iRet = iAcc;
@@ -662,8 +662,8 @@ static int hb_cdpMulti_cmpi( PHB_CODEPAGE cdp,
    nLen = nLenFirst < nLenSecond ? nLenFirst : nLenSecond;
    for( ul = 0; ul < nLen; ++szFirst, ++szSecond, ++ul )
    {
-      u1 = cdp->upper[ ( HB_UCHAR ) * szFirst ];
-      u2 = cdp->upper[ ( HB_UCHAR ) * szSecond ];
+      u1 = cdp->upper[ ( HB_UCHAR ) *szFirst ];
+      u2 = cdp->upper[ ( HB_UCHAR ) *szSecond ];
 
       if( ( cdp->flags[ u1 ] & HB_CDP_MULTI1 ) != 0 &&
           ( ul < nLenFirst - 1 ) &&
@@ -727,7 +727,7 @@ static int hb_cdpMulti_cmpi( PHB_CODEPAGE cdp,
       }
    }
 
-   if( !iRet )
+   if( ! iRet )
    {
       if( iAcc )
          iRet = iAcc;
@@ -836,7 +836,7 @@ int hb_charUpper( int iChar )
 
 char * hb_strLower( char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strLower(%s, %" HB_PFS "u)", szText, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strLower(%s, %" HB_PFS "u)", szText, nLen ) );
 
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
@@ -855,7 +855,7 @@ char * hb_strLower( char * szText, HB_SIZE nLen )
 
 char * hb_strUpper( char * szText, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_strUpper(%s, %" HB_PFS "u)", szText, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_strUpper(%s, %" HB_PFS "u)", szText, nLen ) );
 
    {
       PHB_CODEPAGE cdp = hb_vmCDP();
@@ -895,11 +895,11 @@ HB_BOOL hb_strIsDigit( const char * szChar )
             return HB_FALSE;
       }
       else
-         return ( cdp->flags[ ( HB_UCHAR ) * szChar ] & HB_CDP_DIGIT ) != 0;
+         return ( cdp->flags[ ( HB_UCHAR ) *szChar ] & HB_CDP_DIGIT ) != 0;
    }
    else
    {
-      int iChar = ( HB_UCHAR ) * szChar;
+      int iChar = ( HB_UCHAR ) *szChar;
       return HB_ISDIGIT( iChar );
    }
 }
@@ -920,11 +920,11 @@ HB_BOOL hb_strIsAlpha( const char * szChar )
             return HB_FALSE;
       }
       else
-         return ( cdp->flags[ ( HB_UCHAR ) * szChar ] & HB_CDP_ALPHA ) != 0;
+         return ( cdp->flags[ ( HB_UCHAR ) *szChar ] & HB_CDP_ALPHA ) != 0;
    }
    else
    {
-      int iChar = ( HB_UCHAR ) * szChar;
+      int iChar = ( HB_UCHAR ) *szChar;
       return HB_ISALPHA( iChar );
    }
 }
@@ -945,11 +945,11 @@ HB_BOOL hb_strIsLower( const char * szChar )
             return HB_FALSE;
       }
       else
-         return ( cdp->flags[ ( HB_UCHAR ) * szChar ] & HB_CDP_LOWER ) != 0;
+         return ( cdp->flags[ ( HB_UCHAR ) *szChar ] & HB_CDP_LOWER ) != 0;
    }
    else
    {
-      int iChar = ( HB_UCHAR ) * szChar;
+      int iChar = ( HB_UCHAR ) *szChar;
       return HB_ISLOWER( iChar );
    }
 }
@@ -970,11 +970,11 @@ HB_BOOL hb_strIsUpper( const char * szChar )
             return HB_FALSE;
       }
       else
-         return ( cdp->flags[ ( HB_UCHAR ) * szChar ] & HB_CDP_UPPER ) != 0;
+         return ( cdp->flags[ ( HB_UCHAR ) *szChar ] & HB_CDP_UPPER ) != 0;
    }
    else
    {
-      int iChar = ( HB_UCHAR ) * szChar;
+      int iChar = ( HB_UCHAR ) *szChar;
       return HB_ISUPPER( iChar );
    }
 }
@@ -1022,20 +1022,20 @@ int hb_cdpU16CharToUTF8( char * szUTF8, HB_WCHAR wc )
 
    if( wc < 0x0080 )
    {
-      szUTF8[0] = wc & 0xff;
+      szUTF8[ 0 ] = wc & 0xff;
       n = 1;
    }
    else if( wc < 0x0800 )
    {
-      szUTF8[0] = 0xc0 | ( ( wc >> 6 ) & 0x1f );
-      szUTF8[1] = 0x80 | ( wc & 0x3f );
+      szUTF8[ 0 ] = 0xc0 | ( ( wc >> 6 ) & 0x1f );
+      szUTF8[ 1 ] = 0x80 | ( wc & 0x3f );
       n = 2;
    }
    else                         /* if( wc <= 0xffff ) */
    {
-      szUTF8[0] = 0xe0 | ( ( wc >> 12 ) & 0x0f );
-      szUTF8[1] = 0x80 | ( ( wc >> 6 ) & 0x3f );
-      szUTF8[2] = 0x80 | ( wc & 0x3f );
+      szUTF8[ 0 ] = 0xe0 | ( ( wc >> 12 ) & 0x0f );
+      szUTF8[ 1 ] = 0x80 | ( ( wc >> 6 ) & 0x3f );
+      szUTF8[ 2 ] = 0x80 | ( wc & 0x3f );
       n = 3;
    }
 /*
@@ -1043,7 +1043,7 @@ int hb_cdpU16CharToUTF8( char * szUTF8, HB_WCHAR wc )
    {
       n = 0;
    }
-*/
+ */
    return n;
 }
 
@@ -1133,20 +1133,22 @@ HB_SIZE hb_cdpUTF8StringAt( const char * szNeedle, HB_SIZE nLenN,
    {
       do
       {
-         if( !hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szHaystack[ nPosH ], &nH, &wcH ) )
+         if( ! hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szHaystack[ nPosH ], &nH, &wcH ) )
             break;
          ++nPosH;
-      } while( nH && nPosH < nLenH );
+      }
+      while( nH && nPosH < nLenH );
 
       if( ++nPos < nStart )
          continue;
 
       do
       {
-         if( !hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szNeedle[ nPosN ], &nN, &wcN ) )
+         if( ! hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) szNeedle[ nPosN ], &nN, &wcN ) )
             break;
          ++nPosN;
-      } while( nN && nPosN < nLenN );
+      }
+      while( nN && nPosN < nLenN );
 
       if( wcH == wcN )
       {
@@ -1831,7 +1833,7 @@ HB_WCHAR * hb_cdpnStrDupU16( PHB_CODEPAGE cdp, int iEndian,
    HB_WCHAR * pDst = ( HB_WCHAR * ) hb_xgrab( ( nLen + 1 ) * sizeof( HB_WCHAR ) );
    hb_cdpStrToU16( cdp, iEndian, pSrc, nSrc, pDst, nLen + 1 );
    if( pnDst )
-      * pnDst = nLen;
+      *pnDst = nLen;
    return pDst;
 }
 
@@ -2127,7 +2129,7 @@ int hb_cdpTranslateDispChar( int iChar, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut 
          HB_SIZE n = 0;
          char c = ( char ) iChar;
 
-         if( !HB_CDPCHAR_GET( cdpIn, &c, 1, &n, &wc ) )
+         if( ! HB_CDPCHAR_GET( cdpIn, &c, 1, &n, &wc ) )
             wc = ( HB_WCHAR ) iChar;
          if( wc < 32 )
             wc = s_uniCtrls[ iChar ];
@@ -2192,7 +2194,7 @@ const char * hb_cdpnDup2( const char * pSrc, HB_SIZE nSrc,
                           char * pDst, HB_SIZE * pnDst,
                           PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
-   * pnDst = hb_cdpTransTo( pSrc, nSrc, pDst, *pnDst, cdpIn, cdpOut );
+   *pnDst = hb_cdpTransTo( pSrc, nSrc, pDst, *pnDst, cdpIn, cdpOut );
    return pDst;
 }
 
@@ -2202,7 +2204,7 @@ const char * hb_cdpnDup3( const char * pSrc, HB_SIZE nSrc,
                           PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
    if( cdpIn && cdpOut && cdpIn != cdpOut && nSrc &&
-       ( ! HB_CDP_ISUTF8( cdpIn ) || !HB_CDP_ISUTF8( cdpOut ) ) &&
+       ( ! HB_CDP_ISUTF8( cdpIn ) || ! HB_CDP_ISUTF8( cdpOut ) ) &&
        ( cdpIn->uniTable != cdpOut->uniTable ||
          HB_CDP_ISCUSTOM( cdpIn ) || HB_CDP_ISCUSTOM( cdpOut ) ) )
    {
@@ -2240,6 +2242,7 @@ const char * hb_cdpnDup3( const char * pSrc, HB_SIZE nSrc,
 char * hb_cdpDup( const char * pszSrc, PHB_CODEPAGE cdpIn, PHB_CODEPAGE cdpOut )
 {
    HB_SIZE nLen = strlen( pszSrc );
+
    return hb_cdpnDup( pszSrc, &nLen, cdpIn, cdpOut );
 }
 
@@ -2264,11 +2267,11 @@ char * hb_cdpnDupUpper( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE * pnSize
          while( HB_CDPCHAR_GET( cdp, pszText, nSrc, &nS, &wc ) )
          {
             wc = HB_CDPCHAR_UPPER( cdp, wc );
-            if( !HB_CDPCHAR_PUT( cdp, pszDst, nSize, &nD, wc ) )
+            if( ! HB_CDPCHAR_PUT( cdp, pszDst, nSize, &nD, wc ) )
             {
                nSize += ( nSrc - nS + 2 );
                pszDst = ( char * ) hb_xrealloc( pszDst, nSize + 1 );
-               if( !HB_CDPCHAR_PUT( cdp, pszDst, nSize, &nD, wc ) )
+               if( ! HB_CDPCHAR_PUT( cdp, pszDst, nSize, &nD, wc ) )
                   break;
             }
          }
@@ -2303,11 +2306,11 @@ char * hb_cdpnDupLower( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE * pnSize
          while( HB_CDPCHAR_GET( cdp, pszText, nSrc, &nS, &wc ) )
          {
             wc = HB_CDPCHAR_LOWER( cdp, wc );
-            if( !HB_CDPCHAR_PUT( cdp, pszDst, nSize, &nD, wc ) )
+            if( ! HB_CDPCHAR_PUT( cdp, pszDst, nSize, &nD, wc ) )
             {
                nSize += ( nSrc - nS + 2 );
                pszDst = ( char * ) hb_xrealloc( pszDst, nSize + 1 );
-               if( !HB_CDPCHAR_PUT( cdp, pszDst, nSize, &nD, wc ) )
+               if( ! HB_CDPCHAR_PUT( cdp, pszDst, nSize, &nD, wc ) )
                   break;
             }
          }
@@ -2346,7 +2349,7 @@ HB_SIZE hb_cdpnDup2Upper( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize,
       while( HB_CDPCHAR_GET( cdp, pszText, nSize, &nS, &wc ) )
       {
          wc = HB_CDPCHAR_UPPER( cdp, wc );
-         if( !HB_CDPCHAR_PUT( cdp, pBuffer, nBuffLen, &nMax, wc ) )
+         if( ! HB_CDPCHAR_PUT( cdp, pBuffer, nBuffLen, &nMax, wc ) )
             break;
       }
    }
@@ -2361,10 +2364,10 @@ HB_SIZE hb_cdpnDup2Lower( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize,
 {
    HB_SIZE nMax = HB_MIN( nSize, nBuffLen ), n;
 
-   if( !cdp )
+   if( ! cdp )
       for( n = 0; n < nMax; n++ )
          pBuffer[ n ] = HB_TOLOWER( pszText[ n ] );
-   else if( !HB_CDP_ISCUSTOM( cdp ) || !cdp->wcharLower )
+   else if( ! HB_CDP_ISCUSTOM( cdp ) || ! cdp->wcharLower )
       for( n = 0; n < nMax; n++ )
          pBuffer[ n ] = ( char ) cdp->lower[ ( HB_UCHAR ) pszText[ n ] ];
    else
@@ -2376,7 +2379,7 @@ HB_SIZE hb_cdpnDup2Lower( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize,
       while( HB_CDPCHAR_GET( cdp, pszText, nSize, &nS, &wc ) )
       {
          wc = HB_CDPCHAR_LOWER( cdp, wc );
-         if( !HB_CDPCHAR_PUT( cdp, pBuffer, nBuffLen, &nMax, wc ) )
+         if( ! HB_CDPCHAR_PUT( cdp, pBuffer, nBuffLen, &nMax, wc ) )
             break;
       }
    }
@@ -2389,9 +2392,9 @@ HB_SIZE hb_cdpnDup2Lower( PHB_CODEPAGE cdp, const char * pszText, HB_SIZE nSize,
 
 HB_WCHAR hb_cdpUpperWC( PHB_CODEPAGE cdp, HB_WCHAR wc )
 {
-   if( !cdp )
+   if( ! cdp )
       return HB_TOUPPER( wc );
-   else if( !HB_CDP_ISCUSTOM( cdp ) || !cdp->wcharUpper )
+   else if( ! HB_CDP_ISCUSTOM( cdp ) || ! cdp->wcharUpper )
    {
       if( cdp->uniTable->uniTrans == NULL )
          hb_cdpBuildTransTable( cdp->uniTable );
@@ -2434,7 +2437,7 @@ HB_SIZE hb_cdpTextPos( PHB_CODEPAGE cdp, const char * pText, HB_SIZE nSize, HB_S
 
          do
          {
-            if( !HB_CDPCHAR_GET( cdp, pText, nSize, &nPos, &wc ) )
+            if( ! HB_CDPCHAR_GET( cdp, pText, nSize, &nPos, &wc ) )
                break;
          }
          while( --nIndex );
@@ -2450,6 +2453,7 @@ HB_SIZE hb_cdpTextPos( PHB_CODEPAGE cdp, const char * pText, HB_SIZE nSize, HB_S
 HB_SIZE hb_cdpTextPosEx( PHB_CODEPAGE cdp, const char * pText, HB_SIZE nSize, HB_SIZE * pnIndex )
 {
    HB_SIZE nIndex = *pnIndex;
+
    if( nIndex > 0 )
    {
       if( cdp && HB_CDP_ISCUSTOM( cdp ) )
@@ -2459,7 +2463,7 @@ HB_SIZE hb_cdpTextPosEx( PHB_CODEPAGE cdp, const char * pText, HB_SIZE nSize, HB
 
          do
          {
-            if( !HB_CDPCHAR_GET( cdp, pText, nSize, &nPos, &wc ) )
+            if( ! HB_CDPCHAR_GET( cdp, pText, nSize, &nPos, &wc ) )
                break;
          }
          while( --nIndex );
@@ -2492,14 +2496,14 @@ HB_WCHAR hb_cdpTextGetU16( PHB_CODEPAGE cdp, const char * szText, HB_SIZE nLen )
          if( HB_CDP_ISCUSTOM( cdp ) )
          {
             HB_SIZE n = 0;
-            if( !HB_CDPCHAR_GET( cdp, szText, nLen, &n, &wc ) )
+            if( ! HB_CDPCHAR_GET( cdp, szText, nLen, &n, &wc ) )
                wc = 0;
          }
          else
-            wc = cdp->uniTable->uniCodes[ ( HB_UCHAR ) * szText ];
+            wc = cdp->uniTable->uniCodes[ ( HB_UCHAR ) *szText ];
       }
       else
-         wc = ( HB_UCHAR ) * szText;
+         wc = ( HB_UCHAR ) *szText;
    }
 
    return wc;
@@ -2539,7 +2543,7 @@ HB_SIZE hb_cdpTextPutU16( PHB_CODEPAGE cdp, char * szText, HB_SIZE nSize, HB_WCH
 }
 
 HB_BOOL hb_cdpCharEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1, HB_SIZE * pnPos1,
-                                        const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
+                      const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
 {
    if( *pnPos1 < nLen1 && *pnPos2 < nLen2 )
    {
@@ -2551,26 +2555,26 @@ HB_BOOL hb_cdpCharEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1, HB_
                 wc1 == wc2;
       }
       else
-         return szText1[ ( * pnPos1 )++ ] == szText2[ ( * pnPos2 )++ ];
+         return szText1[ ( *pnPos1 )++ ] == szText2[ ( *pnPos2 )++ ];
    }
    return HB_FALSE;
 }
 
 HB_BOOL hb_cdpCharCaseEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1, HB_SIZE * pnPos1,
-                                            const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
+                          const char * szText2, HB_SIZE nLen2, HB_SIZE * pnPos2 )
 {
    if( *pnPos1 < nLen1 && *pnPos2 < nLen2 )
    {
-      if( !cdp )
+      if( ! cdp )
       {
-         HB_UCHAR uc1 = szText1[ ( * pnPos1 )++ ],
-                  uc2 = szText2[ ( * pnPos2 )++ ];
+         HB_UCHAR uc1 = szText1[ ( *pnPos1 )++ ],
+                  uc2 = szText2[ ( *pnPos2 )++ ];
          return HB_TOUPPER( uc1 ) == HB_TOUPPER( uc2 );
       }
-      else if( !HB_CDP_ISCUSTOM( cdp ) || !cdp->wcharUpper )
+      else if( ! HB_CDP_ISCUSTOM( cdp ) || ! cdp->wcharUpper )
       {
-         HB_UCHAR uc1 = szText1[ ( * pnPos1 )++ ],
-                  uc2 = szText2[ ( * pnPos2 )++ ];
+         HB_UCHAR uc1 = szText1[ ( *pnPos1 )++ ],
+                  uc2 = szText2[ ( *pnPos2 )++ ];
          return cdp->upper[ uc1 ] == cdp->upper[ uc2 ];
       }
       else
@@ -2647,13 +2651,17 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
                if( *pup == '=' )
                {
                   do
+                  {
                      ++pup;
+                  }
                   while( HB_ISXDIGIT( *pup ) );
                }
                if( *plo == '=' )
                {
                   do
+                  {
                      ++plo;
+                  }
                   while( HB_ISXDIGIT( *plo ) );
                }
                if( *pup == '.' && *plo == '.' )
@@ -2796,19 +2804,19 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
       if( ucUp == '.' )
       {
          multi->cFirst[ 0 ] = *pup++;
-         multi->cLast [ 0 ] = *pup++;
+         multi->cLast[ 0 ]  = *pup++;
          multi->cFirst[ 1 ] = *plo++;
-         multi->cLast [ 1 ] = *plo++;
+         multi->cLast[ 1 ]  = *plo++;
          if( multi->cFirst[ 0 ] != ' ' )
          {
             flags[ ( HB_UCHAR ) multi->cFirst[ 0 ] ] |= HB_CDP_MULTI1;
-            flags[ ( HB_UCHAR ) multi->cLast [ 0 ] ] |= HB_CDP_MULTI2;
+            flags[ ( HB_UCHAR ) multi->cLast[ 0 ] ]  |= HB_CDP_MULTI2;
             multi->sortUp = ++iSortUp - iAccUp;
          }
          if( multi->cFirst[ 1 ] != ' ' )
          {
             flags[ ( HB_UCHAR ) multi->cFirst[ 1 ] ] |= HB_CDP_MULTI1;
-            flags[ ( HB_UCHAR ) multi->cLast [ 1 ] ] |= HB_CDP_MULTI2;
+            flags[ ( HB_UCHAR ) multi->cLast[ 1 ] ]  |= HB_CDP_MULTI2;
 
             if( nCaseSort == HB_CDP_CSSORT_UPLO )
                ++iSortLo;
@@ -3076,7 +3084,7 @@ HB_BOOL hb_cdpRegisterRaw( PHB_CODEPAGE cdp )
    cdp_ptr = hb_cdpFindPos( cdp->id );
    if( *cdp_ptr == NULL )
    {
-      if( !HB_CDP_ISCUSTOM( cdp ) )
+      if( ! HB_CDP_ISCUSTOM( cdp ) )
       {
          cdp->wcharGet = hb_cdpStd_get;
          cdp->wcharPut = hb_cdpStd_put;
@@ -3087,7 +3095,7 @@ HB_BOOL hb_cdpRegisterRaw( PHB_CODEPAGE cdp )
                          ( cdp->nMulti ? hb_cdpMulti_cmp : hb_cdpStd_cmp );
       if( cdp->wcharCmpI == NULL )
          cdp->wcharCmpI = cdp->sort == NULL ? hb_cdpBin_cmpi :
-                         ( cdp->nMulti ? hb_cdpMulti_cmpi : hb_cdpStd_cmpi );
+                          ( cdp->nMulti ? hb_cdpMulti_cmpi : hb_cdpStd_cmpi );
 
       if( cdp->wcharCmp == hb_cdpBin_cmp && cdp->wcharCmpI == hb_cdpBin_cmpi )
          cdp->type |= HB_CDP_TYPE_BINSORT;
@@ -3140,7 +3148,7 @@ PHB_CODEPAGE hb_cdpFind( const char * id )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_cdpFind(%s)", id ) );
 
-   return id ? * hb_cdpFindPos( id ) : NULL;
+   return id ? *hb_cdpFindPos( id ) : NULL;
 }
 
 PHB_CODEPAGE hb_cdpFindExt( const char * id )
@@ -3149,7 +3157,7 @@ PHB_CODEPAGE hb_cdpFindExt( const char * id )
 
    if( id )
    {
-      PHB_CODEPAGE cdp = * hb_cdpFindPos( id );
+      PHB_CODEPAGE cdp = *hb_cdpFindPos( id );
 
       if( cdp )
          return cdp;

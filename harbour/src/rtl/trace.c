@@ -173,6 +173,6 @@ HB_FUNC( HB_TRACESTRING )
 
       hb_trace_message( message, sizeof( message ) - 1, 1, iPCount );
 
-      HB_TRACE(HB_TR_ALWAYS, ("%s", message) );
+      HB_TRACE( HB_TR_ALWAYS, ( "%s", message ) );
    }
 }

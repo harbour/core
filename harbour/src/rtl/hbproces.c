@@ -200,7 +200,7 @@ static void hb_freeArgs( char ** argv )
 
 #elif defined( HB_OS_WIN_CE )
 
-static void hb_getCommand( const char *pszFilename,
+static void hb_getCommand( const char * pszFilename,
                            LPTSTR * lpAppName, LPTSTR * lpParams )
 {
    const char * src, * params;
@@ -244,7 +244,7 @@ static int hb_fsProcessExec( const char * pszFilename,
 {
    int iResult = FS_ERROR;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessExec(%s, %p, %p, %p)", pszFilename, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessExec(%s, %p, %p, %p)", pszFilename, ( void * ) ( HB_PTRDIFF ) hStdin, ( void * ) ( HB_PTRDIFF ) hStdout, ( void * ) ( HB_PTRDIFF ) hStderr ) );
 
 #if defined( HB_OS_WIN_CE )
 {
@@ -403,13 +403,13 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
    HB_FHANDLE hResult = FS_ERROR;
    HB_BOOL fError = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFilename, phStdin, phStdout, phStderr, fDetach, pulPID));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessOpen(%s, %p, %p, %p, %d, %p)", pszFilename, phStdin, phStdout, phStderr, fDetach, pulPID ) );
 
    if( phStdin != NULL )
-      fError = !hb_fsPipeCreate( hPipeIn );
-   if( !fError && phStdout != NULL )
-      fError = !hb_fsPipeCreate( hPipeOut );
-   if( !fError && phStderr != NULL )
+      fError = ! hb_fsPipeCreate( hPipeIn );
+   if( ! fError && phStdout != NULL )
+      fError = ! hb_fsPipeCreate( hPipeOut );
+   if( ! fError && phStderr != NULL )
    {
       if( phStdout == phStderr )
       {
@@ -417,10 +417,10 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
          hPipeErr[ 1 ] = hPipeOut[ 1 ];
       }
       else
-         fError = !hb_fsPipeCreate( hPipeErr );
+         fError = ! hb_fsPipeCreate( hPipeErr );
    }
 
-   if( !fError )
+   if( ! fError )
    {
 #if defined( HB_OS_WIN )
 
@@ -464,9 +464,9 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
                                 NULL,           /* lpCurrentDirectory */
                                 &si,
                                 &pi );
-      hb_fsSetIOError( !fError, 0 );
+      hb_fsSetIOError( ! fError, 0 );
       hb_xfree( lpCommand );
-      if( !fError )
+      if( ! fError )
       {
          if( phStdin != NULL )
          {
@@ -490,7 +490,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       }
 
 #elif defined( HB_OS_UNIX ) && \
-    !defined( HB_OS_VXWORKS ) && !defined( HB_OS_SYMBIAN )
+      ! defined( HB_OS_VXWORKS ) && ! defined( HB_OS_SYMBIAN )
 
       pid_t pid = fork();
 
@@ -519,15 +519,15 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       }
       else                    /* child process */
       {
-         if( fDetach && ( !phStdin || !phStdout || !phStderr ) )
+         if( fDetach && ( ! phStdin || ! phStdout || ! phStderr ) )
          {
             HB_FHANDLE hNull = open( "/dev/null", O_RDWR );
 
-            if( !phStdin )
+            if( ! phStdin )
                dup2( hNull, 0 );
-            if( !phStdout )
+            if( ! phStdout )
                dup2( hNull, 1 );
-            if( !phStderr )
+            if( ! phStderr )
                dup2( hNull, 2 );
 
             if( hNull != FS_ERROR )
@@ -576,7 +576,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
             execvp( argv[ 0 ], argv );
 #  endif
             hb_freeArgs( argv );
-            exit(1);
+            exit( 1 );
          }
       }
 
@@ -590,15 +590,15 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       hStdOut = dup( 1 );
       hStdErr = dup( 2 );
 
-      if( fDetach && ( !phStdin || !phStdout || !phStderr ) )
+      if( fDetach && ( ! phStdin || ! phStdout || ! phStderr ) )
       {
          HB_FHANDLE hNull = open( "NUL:", O_RDWR );
 
-         if( !phStdin )
+         if( ! phStdin )
             dup2( hNull, 0 );
-         if( !phStdout )
+         if( ! phStdout )
             dup2( hNull, 1 );
-         if( !phStderr )
+         if( ! phStderr )
             dup2( hNull, 2 );
 
          if( hNull != FS_ERROR )
@@ -668,7 +668,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
 #endif
    }
 
-   hb_fsSetIOError( !fError, 0 );
+   hb_fsSetIOError( ! fError, 0 );
 
    if( hPipeIn[ 0 ] != FS_ERROR )
       hb_fsClose( hPipeIn[ 0 ] );
@@ -693,7 +693,7 @@ int hb_fsProcessValue( HB_FHANDLE hProcess, HB_BOOL fWait )
 {
    int iRetStatus = -1;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessValue(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fWait));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessValue(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fWait ) );
 
 #if defined( HB_OS_WIN )
 {
@@ -804,7 +804,7 @@ HB_BOOL hb_fsProcessClose( HB_FHANDLE hProcess, HB_BOOL fGentle )
 {
    HB_BOOL fResult = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessClose(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fGentle));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessClose(%p, %d)", ( void * ) ( HB_PTRDIFF ) hProcess, fGentle ) );
 
 #if defined( HB_OS_WIN )
 {
@@ -874,7 +874,7 @@ int hb_fsProcessRun( const char * pszFilename,
    HB_SIZE nOutSize, nErrSize, nOutBuf, nErrBuf;
    int iResult;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, nStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_fsProcessRun(%s, %p, %" HB_PFS "u, %p, %p, %p, %p, %d)", pStdInBuf, pStdInBuf, nStdInLen, pStdOutPtr, pulStdOut, pStdErrPtr, pulStdErr, fDetach ) );
 
    nOutBuf = nErrBuf = nOutSize = nErrSize = 0;
    pOutBuf = pErrBuf = NULL;
@@ -1237,7 +1237,7 @@ _WCRTLINK long sysconf( int __name )
    return -1;
 }
 
-_WCRTLINK int chroot(const char *__path)
+_WCRTLINK int chroot( const char * __path )
 {
    int iTODO;
 

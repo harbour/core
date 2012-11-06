@@ -56,8 +56,8 @@
 
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    #include <windows.h>
-   #if !defined( INVALID_FILE_ATTRIBUTES )
-      #define INVALID_FILE_ATTRIBUTES     ( ( DWORD ) -1 )
+   #if ! defined( INVALID_FILE_ATTRIBUTES )
+      #define INVALID_FILE_ATTRIBUTES  ( ( DWORD ) -1 )
    #endif
    #include "hbwinuni.h"
 #elif defined( HB_OS_UNIX )
@@ -250,22 +250,22 @@ char * hb_fsLinkRead( const char * pszFile )
          static _HB_GETFINALPATHNAMEBYHANDLE s_pGetFinalPathNameByHandle = NULL;
 
          #ifndef VOLUME_NAME_DOS
-         #define VOLUME_NAME_DOS 0x0
+         #define VOLUME_NAME_DOS       0x0
          #endif
          #ifndef VOLUME_NAME_GUID
-         #define VOLUME_NAME_GUID 0x1
+         #define VOLUME_NAME_GUID      0x1
          #endif
          #ifndef VOLUME_NAME_NT
-         #define VOLUME_NAME_NT 0x2
+         #define VOLUME_NAME_NT        0x2
          #endif
          #ifndef VOLUME_NAME_NONE
-         #define VOLUME_NAME_NONE 0x4
+         #define VOLUME_NAME_NONE      0x4
          #endif
          #ifndef FILE_NAME_NORMALIZED
-         #define FILE_NAME_NORMALIZED 0x0
+         #define FILE_NAME_NORMALIZED  0x0
          #endif
          #ifndef FILE_NAME_OPENED
-         #define FILE_NAME_OPENED 0x8
+         #define FILE_NAME_OPENED      0x8
          #endif
 
          if( ! s_pGetFinalPathNameByHandle )

@@ -76,7 +76,7 @@ HB_FUNC( DO )
       {
          PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
 
-         if( !pDynSym )
+         if( ! pDynSym )
          {
             hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ), HB_ERR_ARGS_BASEPARAMS );
             return;

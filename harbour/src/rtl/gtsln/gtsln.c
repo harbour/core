@@ -56,13 +56,13 @@
 
 #include "gtsln.h"
 
-static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+static int s_GtId;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER   ( &SuperTable )
+#define HB_GTID_PTR  ( &s_GtId )
 
 static HB_FHANDLE s_hStdIn, s_hStdOut, s_hStdErr;
-static HB_BOOL s_fStdInTTY = HB_FALSE, s_fStdOutTTY = HB_FALSE, s_fStdErrTTY = HB_FALSE;
+static HB_BOOL    s_fStdInTTY = HB_FALSE, s_fStdOutTTY = HB_FALSE, s_fStdErrTTY = HB_FALSE;
 
 /* does terminal works in Unicode (UTF-8) mode? */
 HB_BOOL hb_sln_Is_Unicode = HB_FALSE;
@@ -70,23 +70,23 @@ HB_BOOL hb_sln_Is_Unicode = HB_FALSE;
 /* Slang color names */
 static const char * s_colorNames[] =
 {
-    "black"         ,
-    "blue"          ,
-    "green"         ,
-    "cyan"          ,
-    "red"           ,
-    "magenta"       ,
-    "brown"         ,
-    "lightgray"     ,
+   "black",
+   "blue",
+   "green",
+   "cyan",
+   "red",
+   "magenta",
+   "brown",
+   "lightgray",
 
-    "gray"          ,
-    "brightblue"    ,
-    "brightgreen"   ,
-    "brightcyan"    ,
-    "brightred"     ,
-    "brightmagenta" ,
-    "yellow"        ,
-    "white"
+   "gray",
+   "brightblue",
+   "brightgreen",
+   "brightcyan",
+   "brightred",
+   "brightmagenta",
+   "yellow",
+   "white"
 };
 
 /* to convert Clipper colors into Slang ones */
@@ -106,7 +106,7 @@ unsigned char hb_sln_inputTab[ 256 ];
 
 static HB_BOOL s_fActive = HB_FALSE;
 
-static int  s_iCursorStyle = SC_NORMAL;
+static int s_iCursorStyle = SC_NORMAL;
 
 /* indicate if we are currently running a command from system */
 static HB_BOOL s_bSuspended = HB_FALSE;
@@ -219,7 +219,7 @@ static void hb_sln_setSingleBox( void )
 static void hb_sln_setACSCtrans( void )
 {
    unsigned char * p, ch;
-   SLsmg_Char_Type chBoard[3], chArrow[4];
+   SLsmg_Char_Type chBoard[ 3 ], chArrow[ 4 ];
 
    memset( &chArrow, 0, sizeof( chArrow ) );
    memset( &chBoard, 0, sizeof( chBoard ) );
@@ -302,13 +302,13 @@ static void hb_sln_setACSCtrans( void )
       }
 
       HB_SLN_BUILD_RAWCHAR( SLch, 0, 0 );
-      for( i = 0; i < 3 && !HB_SLN_IS_CHAR( SLch ); i++ )
+      for( i = 0; i < 3 && ! HB_SLN_IS_CHAR( SLch ); i++ )
          SLch = chBoard[ i ];
-      if( !HB_SLN_IS_CHAR( SLch ) )
+      if( ! HB_SLN_IS_CHAR( SLch ) )
          HB_SLN_BUILD_RAWCHAR( SLch, '#', 0 );
       for( i = 0; i < 3; i++ )
       {
-         if( !HB_SLN_IS_CHAR( chBoard[ i ] ) )
+         if( ! HB_SLN_IS_CHAR( chBoard[ i ] ) )
             chBoard[ i ] = SLch;
       }
       s_outputTab[ 176 ] = chBoard[ 0 ];
@@ -345,7 +345,7 @@ static void hb_sln_setACSCtrans( void )
 
 static void hb_sln_setCharTrans( PHB_GT pGT, HB_BOOL fBox )
 {
-#if !defined( HB_SLN_UNICODE )
+#if ! defined( HB_SLN_UNICODE )
    PHB_CODEPAGE cdpTerm = HB_GTSELF_TERMCP( pGT );
 #endif
    PHB_CODEPAGE cdpHost = HB_GTSELF_HOSTCP( pGT );
@@ -399,7 +399,7 @@ static void hb_sln_setKeyTrans( PHB_GT pGT )
 {
    PHB_CODEPAGE cdpTerm = HB_GTSELF_INCP( pGT ),
                 cdpHost = HB_GTSELF_HOSTCP( pGT );
-   const char *p;
+   const char * p;
    int i;
 
    for( i = 0; i < 256; i++ )
@@ -413,7 +413,8 @@ static void hb_sln_setKeyTrans( PHB_GT pGT )
       int len = strlen( p ) >> 1, ch;
 
       /* no more than 128 National chars are allowed */
-      if( len > 128 ) len = 128;
+      if( len > 128 )
+         len = 128;
 
       /* the first element contains a number of Dead keys defined in an ENVAR */
       hb_sln_convKDeadKeys[ 0 ] = ( unsigned char ) len;
@@ -433,7 +434,7 @@ static void hb_sln_setKeyTrans( PHB_GT pGT )
 
 static void hb_sln_SetCursorStyle( int iStyle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_sln_SetCursorStyle(%d)", iStyle));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_sln_SetCursorStyle(%d)", iStyle ) );
 
    if( s_iCursorStyle == SC_UNAVAIL )
       return;
@@ -565,7 +566,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    HB_BOOL gt_Inited = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
    /* stdin && stdout && stderr */
    s_hStdIn  = hFilenoStdin;
@@ -591,7 +592,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       if( hb_sln_Init_Terminal( 0 ) )
       {
          /* fix an OutStd()/OutErr() output */
-         if( !s_fStdOutTTY && s_fStdInTTY )
+         if( ! s_fStdOutTTY && s_fStdInTTY )
             SLang_TT_Write_FD = SLang_TT_Read_FD;
 
 #ifdef HB_SLN_UTF8
@@ -658,7 +659,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
             /* initialize conversion tables */
             hb_sln_colorTrans();
-            if( !hb_sln_Is_Unicode )
+            if( ! hb_sln_Is_Unicode )
             {
                hb_sln_setCharTrans( pGT, HB_TRUE );
                hb_sln_setKeyTrans( pGT );
@@ -667,7 +668,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
             /* ensure we are in a normal chars set */
             SLtt_set_alt_char_set( 0 );
 
-             /* set the normal Slang color */
+            /* set the normal Slang color */
             SLsmg_set_color( 0 );
 
             /* NOTE: due to a work of a Slang library which does not
@@ -706,7 +707,7 @@ static void hb_gt_sln_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 
 static void hb_gt_sln_Exit( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Exit(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Exit(%p)", pGT ) );
 
    /* restore a standard bell frequency and duration */
    if( hb_sln_UnderLinuxConsole )
@@ -734,7 +735,7 @@ static void hb_gt_sln_Exit( PHB_GT pGT )
 
 static HB_BOOL hb_gt_sln_SetMode( PHB_GT pGT, int iRows, int iCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetMode(%p,%d,%d)", pGT, iRows, iCols));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_SetMode(%p,%d,%d)", pGT, iRows, iCols ) );
 
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iRows );
@@ -748,7 +749,7 @@ static HB_BOOL hb_gt_sln_SetMode( PHB_GT pGT, int iRows, int iCols )
 
 static HB_BOOL hb_gt_sln_IsColor( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_IsColor(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_IsColor(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -759,7 +760,7 @@ static HB_BOOL hb_gt_sln_IsColor( PHB_GT pGT )
 
 static void hb_gt_sln_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_SetBlink(%p,%d)", pGT, (int) fBlink));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_SetBlink(%p,%d)", pGT, ( int ) fBlink ) );
 
    /*
     * We cannot switch remote terminal between blinking and highlight mode
@@ -782,7 +783,7 @@ static void hb_gt_sln_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
 
 static void hb_gt_sln_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
 
    /* TODO: Implement this for other consoles than linux ? */
 
@@ -866,7 +867,7 @@ static HB_BOOL hb_gt_sln_Resume( PHB_GT pGT )
       s_bSuspended = HB_FALSE;
    }
 
-   return !s_bSuspended;
+   return ! s_bSuspended;
 }
 
 /* *********************************************************************** */
@@ -928,7 +929,7 @@ static HB_BOOL hb_gt_sln_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const c
 {
    if( HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
    {
-      if( !hb_sln_Is_Unicode )
+      if( ! hb_sln_Is_Unicode )
          hb_sln_setCharTrans( pGT, fBox );
       return HB_TRUE;
    }
@@ -941,7 +942,7 @@ static HB_BOOL hb_gt_sln_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const ch
 {
    if( HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP ) )
    {
-      if( !hb_sln_Is_Unicode )
+      if( ! hb_sln_Is_Unicode )
          hb_sln_setKeyTrans( pGT );
       return HB_TRUE;
    }
@@ -965,7 +966,7 @@ static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          HB_USHORT usChar;
          while( iSize-- > 0 )
          {
-            if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
+            if( ! HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
                break;
             SLsmg_gotorc( iRow, iCol );
             usChar = hb_cdpGetU16Ctrl( usChar );
@@ -986,7 +987,7 @@ static void hb_gt_sln_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          HB_UCHAR uc;
          while( iSize-- > 0 )
          {
-            if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol, &iColor, &bAttr, &uc, HB_FALSE ) )
+            if( ! HB_GTSELF_GETSCRUC( pGT, iRow, iCol, &iColor, &bAttr, &uc, HB_FALSE ) )
                break;
             SLsmg_gotorc( iRow, iCol );
             HB_SLN_BUILD_CHAR( SLchar, uc, iColor, bAttr );
@@ -1022,7 +1023,7 @@ static void hb_gt_sln_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_sln_Init;
    pFuncTable->Exit                       = hb_gt_sln_Exit;

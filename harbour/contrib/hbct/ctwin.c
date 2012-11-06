@@ -796,7 +796,7 @@ static int hb_ctw_CreateWindow( PHB_GTCTW pCTW, int iTop, int iLeft, int iBottom
 
 static int hb_ctw_CloseWindow( PHB_GTCTW pCTW, int iWindow )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_CloseWindow(%p,%d)", pCTW, iWindow));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ctw_CloseWindow(%p,%d)", pCTW, iWindow ) );
 
    if( iWindow > 0 && iWindow <= pCTW->iMaxWindow && pCTW->windows[ iWindow ] )
    {
@@ -1226,7 +1226,7 @@ static void hb_ctw_gt_Exit( PHB_GT pGT )
 {
    PHB_GTCTW pCTW;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_ctw_gt_Exit(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_ctw_gt_Exit(%p)", pGT ) );
 
    HB_GTSELF_REFRESH( pGT );
 

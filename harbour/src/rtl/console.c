@@ -92,10 +92,10 @@
  */
 
 /* length of buffer for CR/LF characters */
-#if !defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
-#  define CRLF_BUFFER_LEN   4
+#if ! defined( HB_OS_EOL_LEN ) || HB_OS_EOL_LEN < 4
+#  define CRLF_BUFFER_LEN  4
 #else
-#  define CRLF_BUFFER_LEN   HB_OS_EOL_LEN + 1
+#  define CRLF_BUFFER_LEN  HB_OS_EOL_LEN + 1
 #endif
 
 #if defined( HB_OS_UNIX ) && !defined( HB_EOL_CRLF )
@@ -112,8 +112,8 @@ static HB_FHANDLE s_hFilenoStderr = ( HB_FHANDLE ) HB_STDERR_HANDLE;
 
 typedef struct
 {
-   int      row;
-   int      col;
+   int row;
+   int col;
 } HB_PRNPOS, * PHB_PRNPOS;
 
 static HB_TSD_NEW( s_prnPos, sizeof( HB_PRNPOS ), NULL, NULL );
@@ -125,9 +125,9 @@ static PHB_PRNPOS hb_prnPos( void )
 
 void hb_conInit( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_conInit()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_conInit()" ) );
 
-#if !defined( HB_OS_WIN )
+#if ! defined( HB_OS_WIN )
    /* On Windows file handles with numbers 0, 1, 2 are
       transalted inside filesys to:
       GetStdHandle( STD_INPUT_HANDLE ), GetStdHandle( STD_OUTPUT_HANDLE ),
@@ -177,7 +177,7 @@ void hb_conInit( void )
 
 void hb_conRelease( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_conRelease()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_conRelease()" ) );
 
    /*
     * Clipper does not restore screen size on exit so I removed the code with:
@@ -198,7 +198,7 @@ void hb_conRelease( void )
 
 const char * hb_conNewLine( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_conNewLine()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_conNewLine()" ) );
 
    return s_szCrLf;
 }
@@ -217,7 +217,7 @@ HB_FUNC( HB_OSNEWLINE )
 /* Output an item to STDOUT */
 void hb_conOutStd( const char * szStr, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutStd(%s, %" HB_PFS "u)", szStr, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_conOutStd(%s, %" HB_PFS "u)", szStr, nLen ) );
 
    if( nLen == 0 )
       nLen = strlen( szStr );
@@ -229,7 +229,7 @@ void hb_conOutStd( const char * szStr, HB_SIZE nLen )
 /* Output an item to STDERR */
 void hb_conOutErr( const char * szStr, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutErr(%s, %" HB_PFS "u)", szStr, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_conOutErr(%s, %" HB_PFS "u)", szStr, nLen ) );
 
    if( nLen == 0 )
       nLen = strlen( szStr );
@@ -243,7 +243,7 @@ void hb_conOutAlt( const char * szStr, HB_SIZE nLen )
 {
    HB_FHANDLE hFile;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutAlt(%s, %" HB_PFS "u)", szStr, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_conOutAlt(%s, %" HB_PFS "u)", szStr, nLen ) );
 
    if( hb_setGetConsole() )
       hb_gtWriteCon( szStr, nLen );
@@ -273,7 +273,7 @@ static void hb_conOutDev( const char * szStr, HB_SIZE nLen )
 {
    HB_FHANDLE hFile;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_conOutDev(%s, %" HB_PFS "u)", szStr, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_conOutDev(%s, %" HB_PFS "u)", szStr, nLen ) );
 
    if( ( hFile = hb_setGetPrinterHandle( HB_SET_PRN_DEV ) ) != FS_ERROR )
    {
@@ -422,7 +422,7 @@ static void hb_conDevPos( int iRow, int iCol )
 {
    HB_FHANDLE hFile;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_conDevPos(%d, %d)", iRow, iCol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_conDevPos(%d, %d)", iRow, iCol ) );
 
    /* Position printer if SET DEVICE TO PRINTER and valid printer file
       otherwise position console */

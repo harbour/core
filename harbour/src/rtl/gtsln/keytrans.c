@@ -53,7 +53,7 @@
 /* *********************************************************************** */
 
 /* a shortcut only */
-#define CTRL_PRESSED CONTROL_PRESSED
+#define CTRL_PRESSED  CONTROL_PRESSED
 
 /* *********************************************************************** */
 
@@ -421,7 +421,7 @@ static void hb_sln_SortKeyTranslationTable( void )
 /*
    for( i = 0; i < KeyTranslationTableSize; i++ )
       fprintf( stderr, "%02x %8x %8x\n", i, KeyTranslationTable[ i ][ 0 ], KeyTranslationTable[ i ][ 1 ] );
-*/
+ */
 
 }
 
@@ -430,7 +430,7 @@ static void hb_sln_SortKeyTranslationTable( void )
 /* standard binary search */
 static int hb_sln_FindKeyTranslation( int SlangKey )
 {
-   int Start,Stop,CurPos;
+   int Start, Stop, CurPos;
 
    if( ( SlangKey >= KeyTranslationTable[ 0 ][ 0 ] ) &&
        ( SlangKey <= KeyTranslationTable[ KeyTranslationTableSize - 1 ][ 0 ] ) )

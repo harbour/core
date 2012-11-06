@@ -56,6 +56,7 @@
 HB_FUNC( HB_FNAMEDIR )
 {
    PHB_FNAME pFilepath = hb_fsFNameSplit( hb_parcx( 1 ) );
+
    hb_retc( pFilepath->szPath );
    hb_xfree( pFilepath );
 }
@@ -63,6 +64,7 @@ HB_FUNC( HB_FNAMEDIR )
 HB_FUNC( HB_FNAMENAME )
 {
    PHB_FNAME pFilepath = hb_fsFNameSplit( hb_parcx( 1 ) );
+
    hb_retc( pFilepath->szName );
    hb_xfree( pFilepath );
 }
@@ -70,6 +72,7 @@ HB_FUNC( HB_FNAMENAME )
 HB_FUNC( HB_FNAMEEXT )
 {
    PHB_FNAME pFilepath = hb_fsFNameSplit( hb_parcx( 1 ) );
+
    hb_retc( pFilepath->szExtension );
    hb_xfree( pFilepath );
 }
@@ -78,6 +81,7 @@ HB_FUNC( HB_FNAMENAMEEXT )
 {
    char szPath[ HB_PATH_MAX ];
    PHB_FNAME pFilepath = hb_fsFNameSplit( hb_parcx( 1 ) );
+
    pFilepath->szPath = NULL;
    hb_retc( hb_fsFNameMerge( szPath, pFilepath ) );
    hb_xfree( pFilepath );
@@ -87,6 +91,7 @@ HB_FUNC( HB_FNAMEEXTSET )
 {
    char szPath[ HB_PATH_MAX ];
    PHB_FNAME pFilepath = hb_fsFNameSplit( hb_parcx( 1 ) );
+
    pFilepath->szExtension = hb_parc( 2 );
    hb_retc( hb_fsFNameMerge( szPath, pFilepath ) );
    hb_xfree( pFilepath );
@@ -96,6 +101,7 @@ HB_FUNC( HB_FNAMEEXTSETDEF )
 {
    char szPath[ HB_PATH_MAX ];
    PHB_FNAME pFilepath = hb_fsFNameSplit( hb_parcx( 1 ) );
+
    if( ! pFilepath->szExtension )
       pFilepath->szExtension = hb_parc( 2 );
    hb_retc( hb_fsFNameMerge( szPath, pFilepath ) );

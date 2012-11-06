@@ -194,7 +194,7 @@ static void hb_mathErrDataRelease( void * Cargo )
 static HB_TSD_NEW( s_mathErrData, sizeof( HB_MATHERRDATA ),
                    hb_mathErrDataInit, hb_mathErrDataRelease );
 
-#define hb_mathErrData()      ( ( PHB_MATHERRDATA ) hb_stackGetTSD( &s_mathErrData ) )
+#define hb_mathErrData()  ( ( PHB_MATHERRDATA ) hb_stackGetTSD( &s_mathErrData ) )
 
 
 /*
@@ -232,7 +232,7 @@ void hb_mathResetError( HB_MATH_EXCEPTION * phb_exc )
 /* route C math lib errors to Harbour error handling */
 #if defined( HB_MATH_HANDLER )
 
-int matherr( struct exception *err )
+int matherr( struct exception * err )
 {
    int retval;
    HB_MATH_HANDLERPROC mathHandler;
@@ -302,7 +302,7 @@ int matherr( struct exception *err )
 }
 #endif
 
-HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char *szFunc,
+HB_BOOL hb_mathGetError( HB_MATH_EXCEPTION * phb_exc, const char * szFunc,
                          double arg1, double arg2, double dResult )
 {
 #if defined( HB_MATH_ERRNO )
@@ -574,12 +574,12 @@ static int hb_matherrblock( HB_MATH_EXCEPTION * pexc )
       if( pexc->handled )
       {
          /* the error is handled, so simply inform the previous handler */
-         ( *pMathErr->prevHandler ) ( pexc );
+         ( *pMathErr->prevHandler )( pexc );
       }
       else
       {
          /* else go on error handling within previous handler */
-         retval = ( *pMathErr->prevHandler ) ( pexc );
+         retval = ( *pMathErr->prevHandler )( pexc );
       }
    }
    return retval;
@@ -690,9 +690,9 @@ HB_FUNC( LOG )
                /* math exception is up to the Harbour function, so do this as Clipper compatible as possible */
                switch( hb_exc.type )
                {
-                  case HB_MATH_ERR_SING:       /* argument to log was 0.0 */
-                  case HB_MATH_ERR_DOMAIN:     /* argument to log was < 0.0 */
-                     hb_retndlen( -HUGE_VAL, -1, -1 );  /* return -infinity */
+                  case HB_MATH_ERR_SING:               /* argument to log was 0.0 */
+                  case HB_MATH_ERR_DOMAIN:             /* argument to log was < 0.0 */
+                     hb_retndlen( -HUGE_VAL, -1, -1 ); /* return -infinity */
                      break;
 
                   default:
@@ -728,7 +728,7 @@ HB_FUNC( SQRT )
                hb_retndlen( hb_exc.retval, hb_exc.retvalwidth, hb_exc.retvaldec );
             else
                /* math exception is up to the Harbour function, so do this as Clipper compatible as possible */
-               hb_retnd( 0.0 ); /* return 0.0 on all errors (all (?) of type DOMAIN) */
+               hb_retnd( 0.0 );  /* return 0.0 on all errors (all (?) of type DOMAIN) */
          }
          else
             hb_retnd( dResult );

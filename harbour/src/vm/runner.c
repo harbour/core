@@ -73,31 +73,31 @@
 
 typedef struct
 {
-   char *         szName;                       /* Name of the function     */
-   PHB_PCODEFUNC  pCodeFunc;                    /* Dynamic function info    */
-   HB_BYTE *      pCode;                        /* P-code                   */
+   char *        szName;                        /* Name of the function     */
+   PHB_PCODEFUNC pCodeFunc;                     /* Dynamic function info    */
+   HB_BYTE *     pCode;                         /* P-code                   */
 } HB_DYNF, * PHB_DYNF;
 
 typedef struct
 {
-   HB_ULONG       ulSymbols;                    /* Number of symbols        */
-   HB_ULONG       ulFuncs;                      /* Number of functions      */
-   HB_BOOL        fInit;                        /* should be INIT functions executed */
-   HB_BOOL        fExit;                        /* should be EXIT functions executed */
-   HB_LONG        lSymStart;                    /* Startup Symbol           */
-   PHB_SYMB       pSymRead;                     /* Symbols read             */
-   PHB_DYNF       pDynFunc;                     /* Functions read           */
-   PHB_SYMBOLS    pModuleSymbols;
+   HB_ULONG    ulSymbols;                       /* Number of symbols        */
+   HB_ULONG    ulFuncs;                         /* Number of functions      */
+   HB_BOOL     fInit;                           /* should be INIT functions executed */
+   HB_BOOL     fExit;                           /* should be EXIT functions executed */
+   HB_LONG     lSymStart;                       /* Startup Symbol           */
+   PHB_SYMB    pSymRead;                        /* Symbols read             */
+   PHB_DYNF    pDynFunc;                        /* Functions read           */
+   PHB_SYMBOLS pModuleSymbols;
 } HRB_BODY, * PHRB_BODY;
 
 static const char s_szHead[ 4 ] = { '\xC0', 'H', 'R', 'B' };
 
 
-#define SYM_NOLINK   0              /* symbol does not have to be linked */
-#define SYM_FUNC     1              /* function defined in this module   */
-#define SYM_EXTERN   2              /* function defined in other module  */
-#define SYM_DEFERRED 3              /* lately bound function             */
-#define SYM_NOT_FOUND 0xFFFFFFFFUL  /* Symbol not found.                 */
+#define SYM_NOLINK     0            /* symbol does not have to be linked */
+#define SYM_FUNC       1            /* function defined in this module   */
+#define SYM_EXTERN     2            /* function defined in other module  */
+#define SYM_DEFERRED   3            /* lately bound function             */
+#define SYM_NOT_FOUND  0xFFFFFFFFUL /* Symbol not found.                 */
 
 static HB_SIZE hb_hrbCheckSig( const char * szBody, HB_SIZE nBodySize )
 {
@@ -111,7 +111,7 @@ static int hb_hrbReadHead( const char * szBody, HB_SIZE nBodySize, HB_SIZE * pnB
    const char * pVersion;
    HB_SIZE nSigSize;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadHead(%p,%" HB_PFS "u,%p)", szBody, nBodySize, pnBodyOffset ));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadHead(%p,%" HB_PFS "u,%p)", szBody, nBodySize, pnBodyOffset ) );
 
    nSigSize = hb_hrbCheckSig( szBody, nBodySize );
 
@@ -126,7 +126,7 @@ static int hb_hrbReadHead( const char * szBody, HB_SIZE nBodySize, HB_SIZE * pnB
 
 static HB_BOOL hb_hrbReadValue( const char * szBody, HB_SIZE nBodySize, HB_SIZE * pnBodyOffset, HB_ULONG * pulValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadValue(%p,%" HB_PFS "u,%p,%p)", szBody, nBodySize, pnBodyOffset, pulValue));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadValue(%p,%" HB_PFS "u,%p,%p)", szBody, nBodySize, pnBodyOffset, pulValue ) );
 
    if( *pnBodyOffset + 4 < nBodySize )
    {
@@ -146,7 +146,7 @@ static char * hb_hrbReadId( const char * szBody, HB_SIZE nBodySize, HB_SIZE * pn
 {
    const char * szIdx;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_hrbReadId(%p,%" HB_PFS "u,%p)", szBody, nBodySize, pnBodyOffset));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbReadId(%p,%" HB_PFS "u,%p)", szBody, nBodySize, pnBodyOffset ) );
 
    szIdx = &szBody[ *pnBodyOffset ];
 
@@ -164,7 +164,7 @@ static HB_ULONG hb_hrbFindSymbol( const char * szName, PHB_DYNF pDynFunc, HB_ULO
 {
    HB_ULONG ulRet;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_hrbFindSymbol(%s, %p, %lu)", szName, pDynFunc, ulLoaded));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_hrbFindSymbol(%s, %p, %lu)", szName, pDynFunc, ulLoaded ) );
 
    for( ulRet = 0; ulRet < ulLoaded; ++ulRet )
    {
@@ -198,7 +198,7 @@ static void hb_hrbInitStatic( PHRB_BODY pHrbBody )
              * [MLombardo]
              */
 
-            hb_vmPushSymbol( &(pHrbBody->pSymRead[ ul ]) );
+            hb_vmPushSymbol( &( pHrbBody->pSymRead[ ul ] ) );
             hb_vmPushNil();
             hb_vmProc( 0 );
          }
@@ -229,7 +229,7 @@ static void hb_hrbInit( PHRB_BODY pHrbBody, int iPCount, PHB_ITEM * pParams )
                if( ( pHrbBody->pSymRead[ ul ].scope.value & HB_FS_INITEXIT ) == HB_FS_INIT )
                {
                   if( strcmp( pHrbBody->pSymRead[ ul ].szName, "CLIPINIT$" ) ?
-                      !fClipInit : fClipInit )
+                      ! fClipInit : fClipInit )
                   {
                      hb_vmPushSymbol( pHrbBody->pSymRead + ul );
                      hb_vmPushNil();
@@ -395,7 +395,9 @@ static PHRB_BODY hb_hrbLoad( const char * szHrbBody, HB_SIZE nBodySize, HB_USHOR
       {
          pSymRead[ ul ].szName = buffer;
          do
+         {
             ch = *buffer++ = szHrbBody[ nBodyOffset++ ];
+         }
          while( ch );
          pSymRead[ ul ].scope.value = ( HB_BYTE ) szHrbBody[ nBodyOffset++ ];
          pSymRead[ ul ].value.pCodeFunc = ( PHB_PCODEFUNC ) ( HB_PTRDIFF ) szHrbBody[ nBodyOffset++ ];
@@ -688,6 +690,7 @@ static void hb_hrbReturn( PHRB_BODY pHrbBody )
 {
    PHRB_BODY * pHrbPtr = ( PHRB_BODY * ) hb_gcAllocate( sizeof( PHRB_BODY ),
                                                         &s_gcHrbFuncs );
+
    *pHrbPtr = pHrbBody;
    hb_retptrGC( pHrbPtr );
 }
@@ -700,7 +703,7 @@ static void hb_hrbReturn( PHRB_BODY pHrbBody )
 
    In due time it should also be able to collect the data from the
    binary/executable itself
-*/
+ */
 HB_FUNC( HB_HRBRUN )
 {
    HB_USHORT usMode = HB_HRB_BIND_DEFAULT;

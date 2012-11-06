@@ -60,7 +60,7 @@
    #include <unistd.h>
 #endif
 
-#define BUFFER_SIZE 8192
+#define BUFFER_SIZE  8192
 
 static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
 {
@@ -68,7 +68,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest )
    HB_FHANDLE fhndSource;
    PHB_ITEM pError = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_copyfile(%s, %s)", szSource, szDest));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s)", szSource, szDest ) );
 
    do
    {
@@ -158,5 +158,5 @@ HB_FUNC( __COPYFILE )
          hb_retl( HB_FALSE );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); /* NOTE: Undocumented but existing Clipper Run-time error */
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );  /* NOTE: Undocumented but existing Clipper Run-time error */
 }

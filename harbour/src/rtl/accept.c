@@ -69,7 +69,7 @@
 
 HB_FUNC_EXTERN( QOUT );
 
-#define ACCEPT_BUFFER_LEN 256 /* length of input buffer for ACCEPT command */
+#define ACCEPT_BUFFER_LEN  256 /* length of input buffer for ACCEPT command */
 
 #ifdef HB_CLP_UNDOC
 
@@ -90,10 +90,10 @@ HB_FUNC( __ACCEPTSTR )
 HB_FUNC( __ACCEPT )
 {
    PHB_CODEPAGE cdp = hb_vmCDP();
-   char szAcceptResult[ ACCEPT_BUFFER_LEN ];
-   char szKey[ HB_MAX_CHAR_LEN ];
-   HB_SIZE nLen = 0, nChar;
-   int input = 0;
+   char         szAcceptResult[ ACCEPT_BUFFER_LEN ];
+   char         szKey[ HB_MAX_CHAR_LEN ];
+   HB_SIZE      nLen  = 0, nChar;
+   int          input = 0;
 
    /* cPrompt(s) passed ? */
    if( hb_pcount() >= 1 )
@@ -116,7 +116,9 @@ HB_FUNC( __ACCEPT )
                   nLen = hb_cdpTextPos( cdp, szAcceptResult, nLen, nChar - 1 );
                else
                   nLen = 0;
+
                szKey[ 0 ] = HB_CHAR_BS;
+
                nChar = 1;
             }
             else

@@ -65,12 +65,12 @@
 
 /* #undef X_HAVE_UTF8_STRING */
 
-static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+static int s_GtId;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER            ( &SuperTable )
+#define HB_GTID_PTR           ( &s_GtId )
 
-#define HB_GTXWC_GET(p) ( ( PXWND_DEF ) HB_GTLOCAL( p ) )
+#define HB_GTXWC_GET( p )  ( ( PXWND_DEF ) HB_GTLOCAL( p ) )
 
 #ifdef HB_XWC_XLIB_NEEDLOCKS
    static HB_CRITICAL_NEW( s_xwcMtx );
@@ -88,10 +88,10 @@ static const int s_mouseDblPressKeys[ XWC_MAX_BUTTONS ] = { K_LDBLCLK,     K_MDB
 
 typedef struct
 {
-    int key;
-    int alt_key;
-    int ctrl_key;
-    int shift_key;
+   int key;
+   int alt_key;
+   int ctrl_key;
+   int shift_key;
 } ClipKeyCode;
 
 /* The tables below are indexed by internal key value,
@@ -99,102 +99,102 @@ typedef struct
  * to access proper ClipKeyCode entry
  */
 static const ClipKeyCode s_stdKeyTab[ CLIP_STDKEY_COUNT ] = {
-    {K_SPACE,              0,             0,         0}, /*  32 */
-    {'!',                  0,             0,         0}, /*  33 */
-    {'"',                  0,             0,         0}, /*  34 */
-    {'#',                  0,             0,         0}, /*  35 */
-    {'$',                  0,             0,         0}, /*  36 */
-    {'%',                  0,             0,         0}, /*  37 */
-    {'&',                  0,             0,         0}, /*  38 */
-    {'\'',               296,             7,         0}, /*  39 */
-    {'(',                  0,             0,         0}, /*  40 */
-    {')',                  0,             0,         0}, /*  41 */
-    {'*',                  0,             0,         0}, /*  42 */
-    {'+',                  0,             0,         0}, /*  43 */
-    {',',                307,             0,         0}, /*  44 */
-    {'-',                386,            31,         0}, /*  45 */
-    {'.',                308,             0,         0}, /*  46 */
-    {'/',    K_CTRL_QUESTION,           127,         0}, /*  47 */
-    {'0',            K_ALT_0,             0,         0}, /*  48 */
-    {'1',            K_ALT_1,             0,         0}, /*  49 */
-    {'2',            K_ALT_2,           259,         0}, /*  50 */
-    {'3',            K_ALT_3,            27,         0}, /*  51 */
-    {'4',            K_ALT_4,            28,         0}, /*  52 */
-    {'5',            K_ALT_5,            29,         0}, /*  53 */
-    {'6',            K_ALT_6,            30,         0}, /*  54 */
-    {'7',            K_ALT_7,            31,         0}, /*  55 */
-    {'8',            K_ALT_8,           127,         0}, /*  56 */
-    {'9',            K_ALT_9,             0,         0}, /*  57 */
-    {':',                  0,             0,         0}, /*  58 */
-    {';',                295,             0,         0}, /*  59 */
-    {'<',                  0,             0,         0}, /*  60 */
-    {'=',       K_ALT_EQUALS,             0,         0}, /*  61 */
-    {'>',                  0,             0,         0}, /*  62 */
-    {'?',                  0, K_CTRL_QUESTION,       0}, /*  63 */
-    {'@',                  0,             0,         0}, /*  64 */
-    {'A',            K_ALT_A,      K_CTRL_A,         0}, /*  65 */
-    {'B',            K_ALT_B,      K_CTRL_B,         0}, /*  66 */
-    {'C',            K_ALT_C,      K_CTRL_C,         0}, /*  67 */
-    {'D',            K_ALT_D,      K_CTRL_D,         0}, /*  68 */
-    {'E',            K_ALT_E,      K_CTRL_E,         0}, /*  69 */
-    {'F',            K_ALT_F,      K_CTRL_F,         0}, /*  70 */
-    {'G',            K_ALT_G,      K_CTRL_G,         0}, /*  71 */
-    {'H',            K_ALT_H,      K_CTRL_H,         0}, /*  72 */
-    {'I',            K_ALT_I,      K_CTRL_I,         0}, /*  73 */
-    {'J',            K_ALT_J,      K_CTRL_J,         0}, /*  74 */
-    {'K',            K_ALT_K,      K_CTRL_K,         0}, /*  75 */
-    {'L',            K_ALT_L,      K_CTRL_L,         0}, /*  76 */
-    {'M',            K_ALT_M,      K_CTRL_M,         0}, /*  77 */
-    {'N',            K_ALT_N,      K_CTRL_N,         0}, /*  78 */
-    {'O',            K_ALT_O,      K_CTRL_O,         0}, /*  79 */
-    {'P',            K_ALT_P,      K_CTRL_P,         0}, /*  80 */
-    {'Q',            K_ALT_Q,      K_CTRL_Q,         0}, /*  81 */
-    {'R',            K_ALT_R,      K_CTRL_R,         0}, /*  82 */
-    {'S',            K_ALT_S,      K_CTRL_S,         0}, /*  83 */
-    {'T',            K_ALT_T,      K_CTRL_T,         0}, /*  84 */
-    {'U',            K_ALT_U,      K_CTRL_U,         0}, /*  85 */
-    {'V',            K_ALT_V,      K_CTRL_V,         0}, /*  86 */
-    {'W',            K_ALT_W,      K_CTRL_W,         0}, /*  87 */
-    {'X',            K_ALT_X,      K_CTRL_X,         0}, /*  88 */
-    {'Y',            K_ALT_Y,      K_CTRL_Y,         0}, /*  89 */
-    {'Z',            K_ALT_Z,      K_CTRL_Z,         0}, /*  90 */
-    {'[',                282,            27,         0}, /*  91 */
-    {'\\',               299,            28,         0}, /*  92 */
-    {']',                283,            29,         0}, /*  93 */
-    {'^',            K_ALT_6,            30,         0}, /*  94 */
-    {'_',                386,            31,         0}, /*  95 */
-    {'`',                297,           297,         0}, /*  96 */
-    {'a',            K_ALT_A,      K_CTRL_A,         0}, /*  97 */
-    {'b',            K_ALT_B,      K_CTRL_B,         0}, /*  98 */
-    {'c',            K_ALT_C,      K_CTRL_C,         0}, /*  99 */
-    {'d',            K_ALT_D,      K_CTRL_D,         0}, /* 100 */
-    {'e',            K_ALT_E,      K_CTRL_E,         0}, /* 101 */
-    {'f',            K_ALT_F,      K_CTRL_F,         0}, /* 102 */
-    {'g',            K_ALT_G,      K_CTRL_G,         0}, /* 103 */
-    {'h',            K_ALT_H,      K_CTRL_H,         0}, /* 104 */
-    {'i',            K_ALT_I,      K_CTRL_I,         0}, /* 105 */
-    {'j',            K_ALT_J,      K_CTRL_J,         0}, /* 106 */
-    {'k',            K_ALT_K,      K_CTRL_K,         0}, /* 107 */
-    {'l',            K_ALT_L,      K_CTRL_L,         0}, /* 108 */
-    {'m',            K_ALT_M,      K_CTRL_M,         0}, /* 109 */
-    {'n',            K_ALT_N,      K_CTRL_N,         0}, /* 110 */
-    {'o',            K_ALT_O,      K_CTRL_O,         0}, /* 111 */
-    {'p',            K_ALT_P,      K_CTRL_P,         0}, /* 112 */
-    {'q',            K_ALT_Q,      K_CTRL_Q,         0}, /* 113 */
-    {'r',            K_ALT_R,      K_CTRL_R,         0}, /* 114 */
-    {'s',            K_ALT_S,      K_CTRL_S,         0}, /* 115 */
-    {'t',            K_ALT_T,      K_CTRL_T,         0}, /* 116 */
-    {'u',            K_ALT_U,      K_CTRL_U,         0}, /* 117 */
-    {'v',            K_ALT_V,      K_CTRL_V,         0}, /* 118 */
-    {'w',            K_ALT_W,      K_CTRL_W,         0}, /* 119 */
-    {'x',            K_ALT_X,      K_CTRL_X,         0}, /* 120 */
-    {'y',            K_ALT_Y,      K_CTRL_Y,         0}, /* 121 */
-    {'z',            K_ALT_Z,      K_CTRL_Z,         0}, /* 122 */
-    {'{',                282,            27,         0}, /* 123 */
-    {'|',                299,            28,         0}, /* 124 */
-    {'}',                283,            29,         0}, /* 125 */
-    {'~',                297,           297,         0}, /* 126 */
-    {K_CTRL_BS,     K_ALT_BS,           127,         0}, /* 127 */
+   { K_SPACE,   0,               0,               0 },   /*  32 */
+   { '!',       0,               0,               0 },   /*  33 */
+   { '"',       0,               0,               0 },   /*  34 */
+   { '#',       0,               0,               0 },   /*  35 */
+   { '$',       0,               0,               0 },   /*  36 */
+   { '%',       0,               0,               0 },   /*  37 */
+   { '&',       0,               0,               0 },   /*  38 */
+   { '\'',      296,             7,               0 },   /*  39 */
+   { '(',       0,               0,               0 },   /*  40 */
+   { ')',       0,               0,               0 },   /*  41 */
+   { '*',       0,               0,               0 },   /*  42 */
+   { '+',       0,               0,               0 },   /*  43 */
+   { ',',       307,             0,               0 },   /*  44 */
+   { '-',       386,             31,              0 },   /*  45 */
+   { '.',       308,             0,               0 },   /*  46 */
+   { '/',       K_CTRL_QUESTION, 127,             0 },   /*  47 */
+   { '0',       K_ALT_0,         0,               0 },   /*  48 */
+   { '1',       K_ALT_1,         0,               0 },   /*  49 */
+   { '2',       K_ALT_2,         259,             0 },   /*  50 */
+   { '3',       K_ALT_3,         27,              0 },   /*  51 */
+   { '4',       K_ALT_4,         28,              0 },   /*  52 */
+   { '5',       K_ALT_5,         29,              0 },   /*  53 */
+   { '6',       K_ALT_6,         30,              0 },   /*  54 */
+   { '7',       K_ALT_7,         31,              0 },   /*  55 */
+   { '8',       K_ALT_8,         127,             0 },   /*  56 */
+   { '9',       K_ALT_9,         0,               0 },   /*  57 */
+   { ':',       0,               0,               0 },   /*  58 */
+   { ';',       295,             0,               0 },   /*  59 */
+   { '<',       0,               0,               0 },   /*  60 */
+   { '=',       K_ALT_EQUALS,    0,               0 },   /*  61 */
+   { '>',       0,               0,               0 },   /*  62 */
+   { '?',       0,               K_CTRL_QUESTION, 0 },   /*  63 */
+   { '@',       0,               0,               0 },   /*  64 */
+   { 'A',       K_ALT_A,         K_CTRL_A,        0 },   /*  65 */
+   { 'B',       K_ALT_B,         K_CTRL_B,        0 },   /*  66 */
+   { 'C',       K_ALT_C,         K_CTRL_C,        0 },   /*  67 */
+   { 'D',       K_ALT_D,         K_CTRL_D,        0 },   /*  68 */
+   { 'E',       K_ALT_E,         K_CTRL_E,        0 },   /*  69 */
+   { 'F',       K_ALT_F,         K_CTRL_F,        0 },   /*  70 */
+   { 'G',       K_ALT_G,         K_CTRL_G,        0 },   /*  71 */
+   { 'H',       K_ALT_H,         K_CTRL_H,        0 },   /*  72 */
+   { 'I',       K_ALT_I,         K_CTRL_I,        0 },   /*  73 */
+   { 'J',       K_ALT_J,         K_CTRL_J,        0 },   /*  74 */
+   { 'K',       K_ALT_K,         K_CTRL_K,        0 },   /*  75 */
+   { 'L',       K_ALT_L,         K_CTRL_L,        0 },   /*  76 */
+   { 'M',       K_ALT_M,         K_CTRL_M,        0 },   /*  77 */
+   { 'N',       K_ALT_N,         K_CTRL_N,        0 },   /*  78 */
+   { 'O',       K_ALT_O,         K_CTRL_O,        0 },   /*  79 */
+   { 'P',       K_ALT_P,         K_CTRL_P,        0 },   /*  80 */
+   { 'Q',       K_ALT_Q,         K_CTRL_Q,        0 },   /*  81 */
+   { 'R',       K_ALT_R,         K_CTRL_R,        0 },   /*  82 */
+   { 'S',       K_ALT_S,         K_CTRL_S,        0 },   /*  83 */
+   { 'T',       K_ALT_T,         K_CTRL_T,        0 },   /*  84 */
+   { 'U',       K_ALT_U,         K_CTRL_U,        0 },   /*  85 */
+   { 'V',       K_ALT_V,         K_CTRL_V,        0 },   /*  86 */
+   { 'W',       K_ALT_W,         K_CTRL_W,        0 },   /*  87 */
+   { 'X',       K_ALT_X,         K_CTRL_X,        0 },   /*  88 */
+   { 'Y',       K_ALT_Y,         K_CTRL_Y,        0 },   /*  89 */
+   { 'Z',       K_ALT_Z,         K_CTRL_Z,        0 },   /*  90 */
+   { '[',       282,             27,              0 },   /*  91 */
+   { '\\',      299,             28,              0 },   /*  92 */
+   { ']',       283,             29,              0 },   /*  93 */
+   { '^',       K_ALT_6,         30,              0 },   /*  94 */
+   { '_',       386,             31,              0 },   /*  95 */
+   { '`',       297,             297,             0 },   /*  96 */
+   { 'a',       K_ALT_A,         K_CTRL_A,        0 },   /*  97 */
+   { 'b',       K_ALT_B,         K_CTRL_B,        0 },   /*  98 */
+   { 'c',       K_ALT_C,         K_CTRL_C,        0 },   /*  99 */
+   { 'd',       K_ALT_D,         K_CTRL_D,        0 },   /* 100 */
+   { 'e',       K_ALT_E,         K_CTRL_E,        0 },   /* 101 */
+   { 'f',       K_ALT_F,         K_CTRL_F,        0 },   /* 102 */
+   { 'g',       K_ALT_G,         K_CTRL_G,        0 },   /* 103 */
+   { 'h',       K_ALT_H,         K_CTRL_H,        0 },   /* 104 */
+   { 'i',       K_ALT_I,         K_CTRL_I,        0 },   /* 105 */
+   { 'j',       K_ALT_J,         K_CTRL_J,        0 },   /* 106 */
+   { 'k',       K_ALT_K,         K_CTRL_K,        0 },   /* 107 */
+   { 'l',       K_ALT_L,         K_CTRL_L,        0 },   /* 108 */
+   { 'm',       K_ALT_M,         K_CTRL_M,        0 },   /* 109 */
+   { 'n',       K_ALT_N,         K_CTRL_N,        0 },   /* 110 */
+   { 'o',       K_ALT_O,         K_CTRL_O,        0 },   /* 111 */
+   { 'p',       K_ALT_P,         K_CTRL_P,        0 },   /* 112 */
+   { 'q',       K_ALT_Q,         K_CTRL_Q,        0 },   /* 113 */
+   { 'r',       K_ALT_R,         K_CTRL_R,        0 },   /* 114 */
+   { 's',       K_ALT_S,         K_CTRL_S,        0 },   /* 115 */
+   { 't',       K_ALT_T,         K_CTRL_T,        0 },   /* 116 */
+   { 'u',       K_ALT_U,         K_CTRL_U,        0 },   /* 117 */
+   { 'v',       K_ALT_V,         K_CTRL_V,        0 },   /* 118 */
+   { 'w',       K_ALT_W,         K_CTRL_W,        0 },   /* 119 */
+   { 'x',       K_ALT_X,         K_CTRL_X,        0 },   /* 120 */
+   { 'y',       K_ALT_Y,         K_CTRL_Y,        0 },   /* 121 */
+   { 'z',       K_ALT_Z,         K_CTRL_Z,        0 },   /* 122 */
+   { '{',       282,             27,              0 },   /* 123 */
+   { '|',       299,             28,              0 },   /* 124 */
+   { '}',       283,             29,              0 },   /* 125 */
+   { '~',       297,             297,             0 },   /* 126 */
+   { K_CTRL_BS, K_ALT_BS,        127,             0 },   /* 127 */
 };
 
 static const ClipKeyCode s_extKeyTab[ CLIP_EXTKEY_COUNT ] = {
@@ -302,7 +302,7 @@ typedef struct
    Pixmap pm;
    Drawable drw;
 
-   void (*evt_callback)(void);
+   void ( * evt_callback )( void );
 
    /* is main window initialized */
    HB_BOOL fInit;
@@ -344,15 +344,15 @@ typedef struct
    int markBottom;
 
    /* window title */
-   char *szTitle;
+   char * szTitle;
    HB_BOOL fDspTitle;
 
    /* used font informations */
-   XFontStruct *xfs;
-   char *szFontName;
-   char *szFontWeight;
-   char *szFontEncoding;
-   char *szFontSel;
+   XFontStruct * xfs;
+   char * szFontName;
+   char * szFontWeight;
+   char * szFontEncoding;
+   char * szFontSel;
    int fontHeight;
    int fontWidth;
    /* if font has bad metric then try to fix it and display only single
@@ -433,7 +433,7 @@ typedef struct
    /* Keep last event time */
    Time lastEventTime;
 
-} XWND_DEF, *PXWND_DEF;
+} XWND_DEF, * PXWND_DEF;
 
 /******************************************************************/
 
@@ -458,15 +458,15 @@ static HB_BOOL s_fIgnoreErrors = HB_FALSE;
 
 /* *********************************************************************** */
 
-static int s_errorHandler( Display *dpy, XErrorEvent *e )
+static int s_errorHandler( Display * dpy, XErrorEvent * e )
 {
-   char errorText[1024];
+   char errorText[ 1024 ];
 
    hb_strncpy( errorText, "Xlib error: ", sizeof( errorText ) - 1 );
    XGetErrorText( dpy, e->error_code, errorText + strlen( errorText ),
                   sizeof( errorText ) - strlen( errorText ) );
 
-   if( !s_fIgnoreErrors )
+   if( ! s_fIgnoreErrors )
    {
       s_fNoXServer = HB_TRUE;
       hb_errInternal( 10001, errorText, NULL, NULL );
@@ -530,66 +530,66 @@ static void hb_gt_xwc_Enable( void )
 
 static int hb_gt_xwc_DefineBoxButtonL( XSegment * segs, int cellx, int celly )
 {
-   segs[0].x1 = cellx - 1;
-   segs[0].y1 = 0;
-   segs[0].x2 = 0;
-   segs[0].y2 = segs[0].y1;
+   segs[ 0 ].x1 = cellx - 1;
+   segs[ 0 ].y1 = 0;
+   segs[ 0 ].x2 = 0;
+   segs[ 0 ].y2 = segs[ 0 ].y1;
 
-   segs[1].x1 = 0;
-   segs[1].y1 = 0;
-   segs[1].x2 = segs[1].x1;
-   segs[1].y2 = celly - 1;
+   segs[ 1 ].x1 = 0;
+   segs[ 1 ].y1 = 0;
+   segs[ 1 ].x2 = segs[ 1 ].x1;
+   segs[ 1 ].y2 = celly - 1;
 
-   segs[2].x1 = 0;
-   segs[2].y1 = celly - 1;
-   segs[2].x2 = cellx - 1;
-   segs[2].y2 = segs[2].y1;
+   segs[ 2 ].x1 = 0;
+   segs[ 2 ].y1 = celly - 1;
+   segs[ 2 ].x2 = cellx - 1;
+   segs[ 2 ].y2 = segs[ 2 ].y1;
 
-   segs[3].x1 = segs[2].x1 + 2;
-   segs[3].y1 = segs[2].y1 - 1;
-   segs[3].x2 = cellx - 1;
-   segs[3].y2 = segs[3].y1;
+   segs[ 3 ].x1 = segs[ 2 ].x1 + 2;
+   segs[ 3 ].y1 = segs[ 2 ].y1 - 1;
+   segs[ 3 ].x2 = cellx - 1;
+   segs[ 3 ].y2 = segs[ 3 ].y1;
 
    return 4;
 }
 
 static int hb_gt_xwc_DefineBoxButtonR( XSegment * segs, int cellx, int celly )
 {
-   segs[0].x1 = 0;
-   segs[0].y1 = 0;
-   segs[0].x2 = cellx - 1;
-   segs[0].y2 = segs[0].y1;
+   segs[ 0 ].x1 = 0;
+   segs[ 0 ].y1 = 0;
+   segs[ 0 ].x2 = cellx - 1;
+   segs[ 0 ].y2 = segs[ 0 ].y1;
 
-   segs[1].x1 = segs[0].x2;
-   segs[1].y1 = segs[0].y2;
-   segs[1].x2 = segs[1].x1;
-   segs[1].y2 = celly - 1;
+   segs[ 1 ].x1 = segs[ 0 ].x2;
+   segs[ 1 ].y1 = segs[ 0 ].y2;
+   segs[ 1 ].x2 = segs[ 1 ].x1;
+   segs[ 1 ].y2 = celly - 1;
 
-   segs[2].x1 = segs[1].x2;
-   segs[2].y1 = segs[1].y2;
-   segs[2].x2 = 0;
-   segs[2].y2 = segs[2].y1;
+   segs[ 2 ].x1 = segs[ 1 ].x2;
+   segs[ 2 ].y1 = segs[ 1 ].y2;
+   segs[ 2 ].x2 = 0;
+   segs[ 2 ].y2 = segs[ 2 ].y1;
 
-   segs[3].x1 = segs[1].x1 - 1;
-   segs[3].y1 = segs[1].y1 + 3;
-   segs[3].x2 = segs[3].x1;
-   segs[3].y2 = segs[1].y2 - 1;
+   segs[ 3 ].x1 = segs[ 1 ].x1 - 1;
+   segs[ 3 ].y1 = segs[ 1 ].y1 + 3;
+   segs[ 3 ].x2 = segs[ 3 ].x1;
+   segs[ 3 ].y2 = segs[ 1 ].y2 - 1;
 
-   segs[4].x1 = segs[3].x2;
-   segs[4].y1 = segs[3].y2;
-   segs[4].x2 = 0;
-   segs[4].y2 = segs[3].y2;
+   segs[ 4 ].x1 = segs[ 3 ].x2;
+   segs[ 4 ].y1 = segs[ 3 ].y2;
+   segs[ 4 ].x2 = 0;
+   segs[ 4 ].y2 = segs[ 3 ].y2;
 
    return 5;
 }
 
-static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharTrans *bxCh )
+static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharTrans * bxCh )
 {
    typedef union
    {
-      XSegment    segs[ XWC_MAX_CHAR_SEGS ];
-      XRectangle  rect[ XWC_MAX_CHAR_RECTS ];
-      XPoint      pts[ XWC_MAX_CHAR_POINTS ];
+      XSegment   segs[ XWC_MAX_CHAR_SEGS ];
+      XRectangle rect[ XWC_MAX_CHAR_RECTS ];
+      XPoint     pts[ XWC_MAX_CHAR_POINTS ];
    } HB_XWC_CHDEF;
    HB_XWC_CHDEF   chdef;
    XSegment     * segs = chdef.segs;
@@ -603,1803 +603,1805 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
    int celly = wnd->fontHeight;
    int i, y, x, yy, xx, skip, start, mod;
 
-   if( usCh >= HB_GTXWC_RC_MIN && usCh <= HB_GTXWC_RC_MAX ) switch( usCh )
-   {
-      case HB_GTXWC_RC_ARROW_DL:
-         size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
-         yy = celly / 2 - 1;
-         for( y = celly - 4, x = cellx - 1; x >= 3 && y >= yy && size < XWC_MAX_CHAR_SEGS; --x, --y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y;
-            size++;
-         }
-         xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
-         for( x = cellx - xx / 2 - 1; y >= 3 && size < XWC_MAX_CHAR_SEGS; --y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_DR:
-         size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
-         yy = ( celly + 1 ) / 2;
-         for( y = celly - 5, x = 0; x < cellx - 4 && y >= yy && size < XWC_MAX_CHAR_SEGS; ++x, --y )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = x;
-            segs[size].y2 = y;
-            size++;
-         }
-         xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
-         for( x = xx / 2 - 1; y >= 3 && size < XWC_MAX_CHAR_SEGS; --y )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = x;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_UL:
-         size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
-         yy = ( celly + 1 ) / 2;
-         for( y = 3, x = cellx - 1; x >= 3 && y <= yy && size < XWC_MAX_CHAR_SEGS; --x, ++y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y;
-            size++;
-         }
-         xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
-         for( x = cellx - xx / 2 - 1; y < celly - 3 && size < XWC_MAX_CHAR_SEGS; ++y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_UR:
-         size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
-         yy = ( celly + 1 ) / 2;
-         for( y = 4, x = 0; x < cellx - 4 && y <= yy && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = x;
-            segs[size].y2 = y;
-            size++;
-         }
-         xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
-         for( x = xx / 2 - 1; y < celly - 3 && size < XWC_MAX_CHAR_SEGS; ++y )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = x;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_VL:
-         size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
-         yy = ( celly - 1 ) / 2;
-         for( y = 3, x = cellx - 1; x >= 3 && y < yy && size < XWC_MAX_CHAR_SEGS; --x, ++y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y;
-            size++;
-         }
-         for( y = yy + 2, ++x; x <= cellx - 1 && y < celly - 3 && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_VR:
-         size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
-         yy = ( celly - 1 ) / 2;
-         for( y = 4, x = 0; x < cellx - 4 && y < yy && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = x;
-            segs[size].y2 = y;
-            size++;
-         }
-         for( y += 2, --x; x >= 0 && y < celly - 3 && size < XWC_MAX_CHAR_SEGS; --x, ++y )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = x;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_BUTTON_L:
-         size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_BUTTON_R:
-         size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_LL:
-         size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
-         yy = ( celly - 1 ) / 2;
-         for( x = 3, y = 0; x < cellx && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = yy - y;
-            segs[size].x2 = x;
-            segs[size].y2 = yy + y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_LR:
-         size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
-         yy = HB_MAX( celly / 5, 3 ) | 1;
-         for( y = ( celly - yy ) / 2; yy-- && size < XWC_MAX_CHAR_SEGS; ++y )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 4;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_RL:
-         size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
-         yy = HB_MAX( celly / 5, 3 ) | 1;
-         for( y = ( celly - yy ) / 2; yy-- && size < XWC_MAX_CHAR_SEGS; ++y )
-         {
-            segs[size].x1 = 3;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ARROW_RR:
-         size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
-         yy = ( celly - 1 ) / 2;
-         for( x = cellx - 4, y = 0; x >= 0 && size < XWC_MAX_CHAR_SEGS; --x, ++y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = yy - y;
-            segs[size].x2 = x;
-            segs[size].y2 = yy + y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_RC_ENTER1:
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_ENTER2:
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_ENTER3:
-         /* TODO */
-         break;
-
-      case HB_GTXWC_RC_VSCRL_LD:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = celly / 2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = 2;
-         segs[2].y1 = celly / 2 - 1;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[2].y1;
-
-         size = 3;
-         type = CH_SEG;
-
-         for( y = celly / 2 + 1; y < celly; y++ )
-         {
-            for( x = ( y & 1 ) + 2; x < cellx && size < XWC_MAX_CHAR_SEGS; x += 2 )
+   if( usCh >= HB_GTXWC_RC_MIN && usCh <= HB_GTXWC_RC_MAX )
+      switch( usCh )
+      {
+         case HB_GTXWC_RC_ARROW_DL:
+            size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
+            yy = celly / 2 - 1;
+            for( y = celly - 4, x = cellx - 1; x >= 3 && y >= yy && size < XWC_MAX_CHAR_SEGS; --x, --y )
             {
-               segs[size].x1 = x;
-               segs[size].y1 = y;
-               segs[size].x2 = x;
-               segs[size].y2 = y;
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y;
                size++;
             }
-         }
-         break;
-
-      case HB_GTXWC_RC_VSCRL_RD:
-         segs[0].x1 = cellx - 1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = cellx - 2;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly / 2 - 1;
-
-         segs[2].x1 = 0;
-         segs[2].y1 = celly / 2;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[2].y1;
-
-         segs[3].x1 = 0;
-         segs[3].y1 = celly / 2 - 1;
-         segs[3].x2 = cellx - 1;
-         segs[3].y2 = segs[3].y1;
-
-         size = 4;
-         type = CH_SEG;
-
-         for( y = celly / 2 + 1; y < celly; y++ )
-         {
-            for( x = ( y ^ cellx ) & 1; x < cellx - 2 && size < XWC_MAX_CHAR_SEGS; x += 2 )
+            xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
+            for( x = cellx - xx / 2 - 1; y >= 3 && size < XWC_MAX_CHAR_SEGS; --y )
             {
-               segs[size].x1 = x;
-               segs[size].y1 = y;
-               segs[size].x2 = x;
-               segs[size].y2 = y;
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y;
                size++;
             }
-         }
-         break;
+            type = CH_SEG;
+            break;
 
-      case HB_GTXWC_RC_VSCRL_LU:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = celly / 2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         size = 2;
-         type = CH_SEG;
-
-         for( y = 0; y < celly / 2; y++ )
-         {
-            for( x = ( y & 1 ) + 2; x < cellx && size < XWC_MAX_CHAR_SEGS; x += 2 )
+         case HB_GTXWC_RC_ARROW_DR:
+            size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
+            yy = ( celly + 1 ) / 2;
+            for( y = celly - 5, x = 0; x < cellx - 4 && y >= yy && size < XWC_MAX_CHAR_SEGS; ++x, --y )
             {
-               segs[size].x1 = x;
-               segs[size].y1 = y;
-               segs[size].x2 = x;
-               segs[size].y2 = y;
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = y;
                size++;
             }
-         }
-         break;
-
-      case HB_GTXWC_RC_VSCRL_RU:
-         segs[0].x1 = cellx - 1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = celly / 2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx - 2;
-         segs[2].y1 = celly / 2 + 3;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly - 1;
-
-         size = 3;
-         type = CH_SEG;
-
-         for( y = 0; y < celly / 2; y++ )
-         {
-            for( x = ( y ^ cellx ) & 1; x < cellx - 2 && size < XWC_MAX_CHAR_SEGS; x += 2 )
+            xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
+            for( x = xx / 2 - 1; y >= 3 && size < XWC_MAX_CHAR_SEGS; --y )
             {
-               segs[size].x1 = x;
-               segs[size].y1 = y;
-               segs[size].x2 = x;
-               segs[size].y2 = y;
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = y;
                size++;
             }
-         }
-         break;
+            type = CH_SEG;
+            break;
 
-      case HB_GTXWC_RC_VSCRL_L:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         size = 1;
-         type = CH_SEG;
-
-         for( y = 0; y < celly; y++ )
-         {
-            for( x = ( y & 1 ) + 2; x < cellx && size < XWC_MAX_CHAR_SEGS; x += 2 )
+         case HB_GTXWC_RC_ARROW_UL:
+            size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
+            yy = ( celly + 1 ) / 2;
+            for( y = 3, x = cellx - 1; x >= 3 && y <= yy && size < XWC_MAX_CHAR_SEGS; --x, ++y )
             {
-               segs[size].x1 = x;
-               segs[size].y1 = y;
-               segs[size].x2 = x;
-               segs[size].y2 = y;
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y;
                size++;
             }
-         }
-         break;
-
-      case HB_GTXWC_RC_VSCRL_R:
-         segs[0].x1 = cellx - 1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         size = 1;
-         type = CH_SEG;
-
-         for( y = 0; y < celly; y++ )
-         {
-            for( x = ( y ^ cellx ) & 1; x < cellx - 2 && size < XWC_MAX_CHAR_SEGS; x += 2 )
+            xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
+            for( x = cellx - xx / 2 - 1; y < celly - 3 && size < XWC_MAX_CHAR_SEGS; ++y )
             {
-               segs[size].x1 = x;
-               segs[size].y1 = y;
-               segs[size].x2 = x;
-               segs[size].y2 = y;
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y;
                size++;
             }
-         }
-         break;
+            type = CH_SEG;
+            break;
 
-      case HB_GTXWC_RC_HSCRL:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = celly - 1;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         size = 2;
-         type = CH_SEG;
-
-         for( y = 2; y < celly - 2; y++ )
-         {
-            for( x = y & 1; x < cellx && size < XWC_MAX_CHAR_SEGS; x += 2 )
+         case HB_GTXWC_RC_ARROW_UR:
+            size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
+            yy = ( celly + 1 ) / 2;
+            for( y = 4, x = 0; x < cellx - 4 && y <= yy && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
             {
-               segs[size].x1 = x;
-               segs[size].y1 = y;
-               segs[size].x2 = x;
-               segs[size].y2 = y;
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = y;
                size++;
             }
-         }
-         break;
+            xx = HB_MAX( cellx * 2 / 5, 3 ) | 1;
+            for( x = xx / 2 - 1; y < celly - 3 && size < XWC_MAX_CHAR_SEGS; ++y )
+            {
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
 
-      case HB_GTXWC_RC_0:
-         type = CH_CHAR;
-         usCh = '0';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_1:
-         type = CH_CHAR;
-         usCh = '1';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_2:
-         type = CH_CHAR;
-         usCh = '2';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_3:
-         type = CH_CHAR;
-         usCh = '3';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_4:
-         type = CH_CHAR;
-         usCh = '4';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_5:
-         type = CH_CHAR;
-         usCh = '5';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_6:
-         type = CH_CHAR;
-         usCh = '6';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_7:
-         type = CH_CHAR;
-         usCh = '7';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_8:
-         type = CH_CHAR;
-         usCh = '8';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_9:
-         type = CH_CHAR;
-         usCh = '9';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_DOT:
-         type = CH_CHAR;
-         usCh = '.';
-         /* TODO */
-         break;
-      case HB_GTXWC_RC_ACC:
-         type = CH_CHAR;
-         usCh = '\'';
-         /* TODO */
-         break;
+         case HB_GTXWC_RC_ARROW_VL:
+            size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
+            yy = ( celly - 1 ) / 2;
+            for( y = 3, x = cellx - 1; x >= 3 && y < yy && size < XWC_MAX_CHAR_SEGS; --x, ++y )
+            {
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            for( y = yy + 2, ++x; x <= cellx - 1 && y < celly - 3 && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
+            {
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
 
-      case HB_GTXWC_RC_BOX_ML:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
+         case HB_GTXWC_RC_ARROW_VR:
+            size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
+            yy = ( celly - 1 ) / 2;
+            for( y = 4, x = 0; x < cellx - 4 && y < yy && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
+            {
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            for( y += 2, --x; x >= 0 && y < celly - 3 && size < XWC_MAX_CHAR_SEGS; --x, ++y )
+            {
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
 
-         segs[1].x1 = 0;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
+         case HB_GTXWC_RC_BUTTON_L:
+            size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
+            type = CH_SEG;
+            break;
 
-         size = 2;
-         type = CH_SEG;
-         break;
+         case HB_GTXWC_RC_BUTTON_R:
+            size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
+            type = CH_SEG;
+            break;
 
-      case HB_GTXWC_RC_BOX_MR:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
+         case HB_GTXWC_RC_ARROW_LL:
+            size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
+            yy = ( celly - 1 ) / 2;
+            for( x = 3, y = 0; x < cellx && size < XWC_MAX_CHAR_SEGS; ++x, ++y )
+            {
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = yy - y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = yy + y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
 
-         segs[1].x1 = cellx - 1;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
+         case HB_GTXWC_RC_ARROW_LR:
+            size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
+            yy = HB_MAX( celly / 5, 3 ) | 1;
+            for( y = ( celly - yy ) / 2; yy-- && size < XWC_MAX_CHAR_SEGS; ++y )
+            {
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 4;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
 
-         size = 2;
-         type = CH_SEG;
-         break;
+         case HB_GTXWC_RC_ARROW_RL:
+            size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
+            yy = HB_MAX( celly / 5, 3 ) | 1;
+            for( y = ( celly - yy ) / 2; yy-- && size < XWC_MAX_CHAR_SEGS; ++y )
+            {
+               segs[ size ].x1 = 3;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
 
-      case HB_GTXWC_RC_HWND_L:
-         segs[0].x1 = cellx - 1;
-         segs[0].y1 = 0;
-         segs[0].x2 = 0;
-         segs[0].y2 = segs[0].y1;
+         case HB_GTXWC_RC_ARROW_RR:
+            size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
+            yy = ( celly - 1 ) / 2;
+            for( x = cellx - 4, y = 0; x >= 0 && size < XWC_MAX_CHAR_SEGS; --x, ++y )
+            {
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = yy - y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = yy + y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
 
-         segs[1].x1 = 0;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
+         case HB_GTXWC_RC_ENTER1:
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_ENTER2:
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_ENTER3:
+            /* TODO */
+            break;
 
-         segs[2].x1 = 0;
-         segs[2].y1 = celly - 1;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[2].y1;
+         case HB_GTXWC_RC_VSCRL_LD:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
 
-         segs[3].x1 = cellx - 1;
-         segs[3].y1 = celly / 4 + 2;
-         segs[3].x2 = cellx / 4 + 1;
-         segs[3].y2 = segs[3].y1;
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly / 2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
 
-         segs[4].x1 = segs[3].x2;
-         segs[4].y1 = segs[3].y2;
-         segs[4].x2 = segs[4].x1;
-         segs[4].y2 = celly - 4 - celly / 4;
+            segs[ 2 ].x1 = 2;
+            segs[ 2 ].y1 = celly / 2 - 1;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
 
-         segs[5].x1 = segs[4].x2;
-         segs[5].y1 = segs[4].y2;
-         segs[5].x2 = cellx - 1;
-         segs[5].y2 = segs[5].y1;
+            size = 3;
+            type = CH_SEG;
 
-         segs[6].x1 = segs[5].x1 + 1;
-         segs[6].y1 = segs[5].y1 + 1;
-         segs[6].x2 = segs[5].x2;
-         segs[6].y2 = segs[6].y1;
+            for( y = celly / 2 + 1; y < celly; y++ )
+            {
+               for( x = ( y & 1 ) + 2; x < cellx && size < XWC_MAX_CHAR_SEGS; x += 2 )
+               {
+                  segs[ size ].x1 = x;
+                  segs[ size ].y1 = y;
+                  segs[ size ].x2 = x;
+                  segs[ size ].y2 = y;
+                  size++;
+               }
+            }
+            break;
 
-         size = 7;
-         type = CH_SEG;
-         break;
+         case HB_GTXWC_RC_VSCRL_RD:
+            segs[ 0 ].x1 = cellx - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
 
-      case HB_GTXWC_RC_HWND_R:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
+            segs[ 1 ].x1 = cellx - 2;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly / 2 - 1;
 
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
+            segs[ 2 ].x1 = 0;
+            segs[ 2 ].y1 = celly / 2;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
 
-         segs[2].x1 = segs[1].x2;
-         segs[2].y1 = segs[1].y2;
-         segs[2].x2 = 0;
-         segs[2].y2 = segs[2].y1;
+            segs[ 3 ].x1 = 0;
+            segs[ 3 ].y1 = celly / 2 - 1;
+            segs[ 3 ].x2 = cellx - 1;
+            segs[ 3 ].y2 = segs[ 3 ].y1;
 
-         segs[3].x1 = 0;
-         segs[3].y1 = celly / 4 + 2;
-         segs[3].x2 = cellx - cellx / 4 - 2;
-         segs[3].y2 = segs[3].y1;
+            size = 4;
+            type = CH_SEG;
 
-         segs[4].x1 = segs[3].x2;
-         segs[4].y1 = segs[3].y2;
-         segs[4].x2 = segs[4].x1;
-         segs[4].y2 = celly - 4 - celly / 4;
+            for( y = celly / 2 + 1; y < celly; y++ )
+            {
+               for( x = ( y ^ cellx ) & 1; x < cellx - 2 && size < XWC_MAX_CHAR_SEGS; x += 2 )
+               {
+                  segs[ size ].x1 = x;
+                  segs[ size ].y1 = y;
+                  segs[ size ].x2 = x;
+                  segs[ size ].y2 = y;
+                  size++;
+               }
+            }
+            break;
 
-         segs[5].x1 = segs[4].x2;
-         segs[5].y1 = segs[4].y2;
-         segs[5].x2 = 0;
-         segs[5].y2 = segs[5].y1;
+         case HB_GTXWC_RC_VSCRL_LU:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
 
-         segs[6].x1 = segs[5].x2;
-         segs[6].y1 = segs[5].y2 + 1;
-         segs[6].x2 = segs[5].x1 + 1;
-         segs[6].y2 = segs[6].y1;
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly / 2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
 
-         segs[7].x1 = segs[6].x2;
-         segs[7].y1 = segs[6].y2;
-         segs[7].x2 = segs[7].x1;
-         segs[7].y2 = segs[4].y1 + 1;
+            size = 2;
+            type = CH_SEG;
 
-         size = 8;
-         type = CH_SEG;
-         break;
+            for( y = 0; y < celly / 2; y++ )
+            {
+               for( x = ( y & 1 ) + 2; x < cellx && size < XWC_MAX_CHAR_SEGS; x += 2 )
+               {
+                  segs[ size ].x1 = x;
+                  segs[ size ].y1 = y;
+                  segs[ size ].x2 = x;
+                  segs[ size ].y2 = y;
+                  size++;
+               }
+            }
+            break;
 
-      case HB_GTXWC_RC_BOX_TL:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
+         case HB_GTXWC_RC_VSCRL_RU:
+            segs[ 0 ].x1 = cellx - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
 
-         segs[1].x1 = 0;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly / 2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
 
-         size = 2;
-         type = CH_SEG;
-         break;
+            segs[ 2 ].x1 = cellx - 2;
+            segs[ 2 ].y1 = celly / 2 + 3;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly - 1;
 
-      case HB_GTXWC_RC_BOX_T:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
+            size = 3;
+            type = CH_SEG;
 
-         size = 1;
-         type = CH_SEG;
-         break;
+            for( y = 0; y < celly / 2; y++ )
+            {
+               for( x = ( y ^ cellx ) & 1; x < cellx - 2 && size < XWC_MAX_CHAR_SEGS; x += 2 )
+               {
+                  segs[ size ].x1 = x;
+                  segs[ size ].y1 = y;
+                  segs[ size ].x2 = x;
+                  segs[ size ].y2 = y;
+                  size++;
+               }
+            }
+            break;
 
-      case HB_GTXWC_RC_BOX_TR:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
+         case HB_GTXWC_RC_VSCRL_L:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
 
-         segs[1].x1 = cellx - 1;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
+            size = 1;
+            type = CH_SEG;
 
-         size = 2;
-         type = CH_SEG;
-         break;
+            for( y = 0; y < celly; y++ )
+            {
+               for( x = ( y & 1 ) + 2; x < cellx && size < XWC_MAX_CHAR_SEGS; x += 2 )
+               {
+                  segs[ size ].x1 = x;
+                  segs[ size ].y1 = y;
+                  segs[ size ].x2 = x;
+                  segs[ size ].y2 = y;
+                  size++;
+               }
+            }
+            break;
 
-      case HB_GTXWC_RC_BOX_R:
-         segs[0].x1 = cellx - 1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
+         case HB_GTXWC_RC_VSCRL_R:
+            segs[ 0 ].x1 = cellx - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
 
-         size = 1;
-         type = CH_SEG;
-         break;
+            size = 1;
+            type = CH_SEG;
 
-      case HB_GTXWC_RC_BOX_BR:
-         segs[0].x1 = cellx - 1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
+            for( y = 0; y < celly; y++ )
+            {
+               for( x = ( y ^ cellx ) & 1; x < cellx - 2 && size < XWC_MAX_CHAR_SEGS; x += 2 )
+               {
+                  segs[ size ].x1 = x;
+                  segs[ size ].y1 = y;
+                  segs[ size ].x2 = x;
+                  segs[ size ].y2 = y;
+                  size++;
+               }
+            }
+            break;
 
-         segs[1].x1 = cellx - 1;
-         segs[1].y1 = celly - 1;
-         segs[1].x2 = 0;
-         segs[1].y2 = segs[1].y1;
+         case HB_GTXWC_RC_HSCRL:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
 
-         size = 2;
-         type = CH_SEG;
-         break;
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly - 1;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
 
-      case HB_GTXWC_RC_BOX_B:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly - 1;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
+            size = 2;
+            type = CH_SEG;
 
-         size = 1;
-         type = CH_SEG;
-         break;
+            for( y = 2; y < celly - 2; y++ )
+            {
+               for( x = y & 1; x < cellx && size < XWC_MAX_CHAR_SEGS; x += 2 )
+               {
+                  segs[ size ].x1 = x;
+                  segs[ size ].y1 = y;
+                  segs[ size ].x2 = x;
+                  segs[ size ].y2 = y;
+                  size++;
+               }
+            }
+            break;
 
-      case HB_GTXWC_RC_BOX_BL:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
+         case HB_GTXWC_RC_0:
+            type = CH_CHAR;
+            usCh = '0';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_1:
+            type = CH_CHAR;
+            usCh = '1';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_2:
+            type = CH_CHAR;
+            usCh = '2';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_3:
+            type = CH_CHAR;
+            usCh = '3';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_4:
+            type = CH_CHAR;
+            usCh = '4';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_5:
+            type = CH_CHAR;
+            usCh = '5';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_6:
+            type = CH_CHAR;
+            usCh = '6';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_7:
+            type = CH_CHAR;
+            usCh = '7';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_8:
+            type = CH_CHAR;
+            usCh = '8';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_9:
+            type = CH_CHAR;
+            usCh = '9';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_DOT:
+            type = CH_CHAR;
+            usCh = '.';
+            /* TODO */
+            break;
+         case HB_GTXWC_RC_ACC:
+            type = CH_CHAR;
+            usCh = '\'';
+            /* TODO */
+            break;
 
-         segs[1].x1 = 0;
-         segs[1].y1 = celly - 1;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
+         case HB_GTXWC_RC_BOX_ML:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
 
-         size = 2;
-         type = CH_SEG;
-         break;
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
 
-      case HB_GTXWC_RC_BOX_L:
-         segs[0].x1 = 0;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
+            size = 2;
+            type = CH_SEG;
+            break;
 
-         size = 1;
-         type = CH_SEG;
-         break;
+         case HB_GTXWC_RC_BOX_MR:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
 
-      case HB_GTXWC_RC_BOX_MT:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
+            segs[ 1 ].x1 = cellx - 1;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
 
-         segs[1].x1 = 0;
-         segs[1].y1 = 0;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
+            size = 2;
+            type = CH_SEG;
+            break;
 
-         size = 2;
-         type = CH_SEG;
-         break;
+         case HB_GTXWC_RC_HWND_L:
+            segs[ 0 ].x1 = cellx - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = 0;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
 
-      case HB_GTXWC_RC_BOX_MB:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
 
-         segs[1].x1 = 0;
-         segs[1].y1 = celly - 1;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
+            segs[ 2 ].x1 = 0;
+            segs[ 2 ].y1 = celly - 1;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
 
-         size = 2;
-         type = CH_SEG;
-         break;
+            segs[ 3 ].x1 = cellx - 1;
+            segs[ 3 ].y1 = celly / 4 + 2;
+            segs[ 3 ].x2 = cellx / 4 + 1;
+            segs[ 3 ].y2 = segs[ 3 ].y1;
 
-      case HB_GTXWC_RC_BUTTON_CL:
-         size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
-         yy = celly - 2 / 3;
-         xx = cellx - 4;
-         if( yy > xx )
-            yy = xx;
-         xx = ( xx * 2 + 1 ) / 3;
-         if( xx < 2 )
-            xx = 2;
-         for( y = celly - yy - 3 - xx, i = 0; i < xx && size < XWC_MAX_CHAR_SEGS; ++y, ++i )
-         {
-            segs[size].x1 = 3;
-            segs[size].y1 = y;
-            segs[size].x2 = 3 + yy - 1;
-            segs[size].y2 = y + yy - 1;
+            segs[ 4 ].x1 = segs[ 3 ].x2;
+            segs[ 4 ].y1 = segs[ 3 ].y2;
+            segs[ 4 ].x2 = segs[ 4 ].x1;
+            segs[ 4 ].y2 = celly - 4 - celly / 4;
+
+            segs[ 5 ].x1 = segs[ 4 ].x2;
+            segs[ 5 ].y1 = segs[ 4 ].y2;
+            segs[ 5 ].x2 = cellx - 1;
+            segs[ 5 ].y2 = segs[ 5 ].y1;
+
+            segs[ 6 ].x1 = segs[ 5 ].x1 + 1;
+            segs[ 6 ].y1 = segs[ 5 ].y1 + 1;
+            segs[ 6 ].x2 = segs[ 5 ].x2;
+            segs[ 6 ].y2 = segs[ 6 ].y1;
+
+            size = 7;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_HWND_R:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
+
+            segs[ 2 ].x1 = segs[ 1 ].x2;
+            segs[ 2 ].y1 = segs[ 1 ].y2;
+            segs[ 2 ].x2 = 0;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            segs[ 3 ].x1 = 0;
+            segs[ 3 ].y1 = celly / 4 + 2;
+            segs[ 3 ].x2 = cellx - cellx / 4 - 2;
+            segs[ 3 ].y2 = segs[ 3 ].y1;
+
+            segs[ 4 ].x1 = segs[ 3 ].x2;
+            segs[ 4 ].y1 = segs[ 3 ].y2;
+            segs[ 4 ].x2 = segs[ 4 ].x1;
+            segs[ 4 ].y2 = celly - 4 - celly / 4;
+
+            segs[ 5 ].x1 = segs[ 4 ].x2;
+            segs[ 5 ].y1 = segs[ 4 ].y2;
+            segs[ 5 ].x2 = 0;
+            segs[ 5 ].y2 = segs[ 5 ].y1;
+
+            segs[ 6 ].x1 = segs[ 5 ].x2;
+            segs[ 6 ].y1 = segs[ 5 ].y2 + 1;
+            segs[ 6 ].x2 = segs[ 5 ].x1 + 1;
+            segs[ 6 ].y2 = segs[ 6 ].y1;
+
+            segs[ 7 ].x1 = segs[ 6 ].x2;
+            segs[ 7 ].y1 = segs[ 6 ].y2;
+            segs[ 7 ].x2 = segs[ 7 ].x1;
+            segs[ 7 ].y2 = segs[ 4 ].y1 + 1;
+
+            size = 8;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_TL:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_T:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            size = 1;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_TR:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = cellx - 1;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_R:
+            segs[ 0 ].x1 = cellx - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            size = 1;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_BR:
+            segs[ 0 ].x1 = cellx - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = cellx - 1;
+            segs[ 1 ].y1 = celly - 1;
+            segs[ 1 ].x2 = 0;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_B:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly - 1;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            size = 1;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_BL:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly - 1;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_L:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            size = 1;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_MT:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BOX_MB:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly - 1;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BUTTON_CL:
+            size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
+            yy = celly - 2 / 3;
+            xx = cellx - 4;
+            if( yy > xx )
+               yy = xx;
+            xx = ( xx * 2 + 1 ) / 3;
+            if( xx < 2 )
+               xx = 2;
+            for( y = celly - yy - 3 - xx, i = 0; i < xx && size < XWC_MAX_CHAR_SEGS; ++y, ++i )
+            {
+               segs[ size ].x1 = 3;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = 3 + yy - 1;
+               segs[ size ].y2 = y + yy - 1;
+               size++;
+            }
+            if( size < XWC_MAX_CHAR_SEGS )
+            {
+               y = celly - 5 - xx;
+               segs[ size ].x1 = cellx - 1;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y + xx - 1;
+               size++;
+            }
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_BUTTON_CR:
+            size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
+            yy = celly - 2 / 3;
+            xx = cellx - 4;
+            if( yy > xx )
+               yy = xx;
+            xx = ( xx * 2 + 1 ) / 3;
+            if( xx < 2 )
+               xx = 2;
+            for( y = celly - 6 - xx, i = 0; i < xx && size < XWC_MAX_CHAR_SEGS; ++y, ++i )
+            {
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = yy;
+               segs[ size ].y2 = y - yy;
+               size++;
+            }
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_FARROW_DL:
+            size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
+            yy = ( celly - cellx ) / 2 + 1;
+            yy = HB_MAX( yy, 2 );
+            for( y = celly - yy - 1, x = cellx - 1; x >= 2 && y >= 3 && size < XWC_MAX_CHAR_SEGS; --x, --y )
+            {
+               segs[ size ].x1 = x;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = cellx - 1;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_FARROW_DR:
+            size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
+            yy = ( celly - cellx ) / 2 + 1;
+            yy = HB_MAX( yy, 2 );
+            for( y = celly - yy - 2, x = 0; x < cellx - 3 && y >= 3 && size < XWC_MAX_CHAR_SEGS; ++x, --y )
+            {
+               segs[ size ].x1 = 0;
+               segs[ size ].y1 = y;
+               segs[ size ].x2 = x;
+               segs[ size ].y2 = y;
+               size++;
+            }
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_RC_DOTS:
+            pts[ 0 ].x = 1;
+            pts[ 0 ].y = celly / 2;
             size++;
-         }
-         if( size < XWC_MAX_CHAR_SEGS )
-         {
-            y = celly - 5 - xx;
-            segs[size].x1 = cellx - 1;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y + xx - 1;
-            size++;
-         }
-         type = CH_SEG;
-         break;
+            for( i = 3; i < cellx && size < XWC_MAX_CHAR_POINTS; i += 2 )
+            {
+               pts[ size ].x = 2;
+               pts[ size ].y = 0;
+               size++;
+            }
+            type = CH_PTS;
+            break;
 
-      case HB_GTXWC_RC_BUTTON_CR:
-         size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
-         yy = celly - 2 / 3;
-         xx = cellx - 4;
-         if( yy > xx )
-            yy = xx;
-         xx = ( xx * 2 + 1 ) / 3;
-         if( xx < 2 )
-            xx = 2;
-         for( y = celly - 6 - xx, i = 0; i < xx && size < XWC_MAX_CHAR_SEGS; ++y, ++i )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = yy;
-            segs[size].y2 = y - yy;
-            size++;
-         }
-         type = CH_SEG;
-         break;
+         case HB_GTXWC_RC_DOTS_L:
+            i = cellx / 2;
+            xx = i - i / 2;
+            yy = HB_MAX( 2, xx - 1 );
 
-      case HB_GTXWC_RC_FARROW_DL:
-         size = hb_gt_xwc_DefineBoxButtonL( segs, cellx, celly );
-         yy = ( celly - cellx ) / 2 + 1;
-         yy = HB_MAX( yy, 2 );
-         for( y = celly - yy - 1, x = cellx - 1; x >= 2 && y >= 3 && size < XWC_MAX_CHAR_SEGS; --x, --y )
-         {
-            segs[size].x1 = x;
-            segs[size].y1 = y;
-            segs[size].x2 = cellx - 1;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
+            rect[ 1 ].x = cellx - xx / 2;
+            rect[ 1 ].y = celly / 3 * 2;
+            rect[ 1 ].width = cellx - rect[ 1 ].x;
+            rect[ 1 ].height = yy;
 
-      case HB_GTXWC_RC_FARROW_DR:
-         size = hb_gt_xwc_DefineBoxButtonR( segs, cellx, celly );
-         yy = ( celly - cellx ) / 2 + 1;
-         yy = HB_MAX( yy, 2 );
-         for( y = celly - yy - 2, x = 0; x < cellx - 3 && y >= 3 && size < XWC_MAX_CHAR_SEGS; ++x, --y )
-         {
-            segs[size].x1 = 0;
-            segs[size].y1 = y;
-            segs[size].x2 = x;
-            segs[size].y2 = y;
-            size++;
-         }
-         type = CH_SEG;
-         break;
+            rect[ 0 ].x = rect[ 1 ].x - i;
+            rect[ 0 ].y = rect[ 1 ].y;
+            rect[ 0 ].width = xx;
+            rect[ 0 ].height = yy;
 
-      case HB_GTXWC_RC_DOTS:
-         pts[0].x = 1;
-         pts[0].y = celly / 2;
-         size++;
-         for( i = 3; i < cellx && size < XWC_MAX_CHAR_POINTS; i += 2 )
-         {
-            pts[size].x = 2;
-            pts[size].y = 0;
-            size++;
-         }
-         type = CH_PTS;
-         break;
+            size = 2;
+            type = CH_RECT;
+            break;
 
-      case HB_GTXWC_RC_DOTS_L:
-         i = cellx / 2;
-         xx = i - i / 2;
-         yy = HB_MAX( 2, xx - 1 );
+         case HB_GTXWC_RC_DOTS_R:
+            i = cellx / 2;
+            xx = i - i / 2;
+            yy = HB_MAX( 2, xx - 1 );
 
-         rect[1].x = cellx - xx / 2;
-         rect[1].y = celly / 3 * 2;
-         rect[1].width = cellx - rect[1].x;
-         rect[1].height = yy;
+            rect[ 0 ].x = 0;
+            rect[ 0 ].y = celly / 3 * 2;
+            rect[ 0 ].width = xx - xx / 2;
+            rect[ 0 ].height = yy;
 
-         rect[0].x = rect[1].x - i;
-         rect[0].y = rect[1].y;
-         rect[0].width = xx;
-         rect[0].height = yy;
+            rect[ 1 ].x = rect[ 0 ].width + i - xx;
+            rect[ 1 ].y = rect[ 0 ].y;
+            rect[ 1 ].width = xx;
+            rect[ 1 ].height = yy;
 
-         size = 2;
-         type = CH_RECT;
-         break;
+            size = 2;
+            type = CH_RECT;
+            break;
+      }
+   else
+      switch( usCh )
+      {
+         case HB_GTXWC_FILLER1:
+         case HB_GTXWC_FILLER2:
+         case HB_GTXWC_FILLER3:
+            if( usCh == HB_GTXWC_FILLER1 )
+            {
+               skip = 4;
+               start = mod = 1;
+            }
+            else if( usCh == HB_GTXWC_FILLER2 )
+            {
+               skip = 2;
+               start = 0;
+               mod = 1;
+            }
+            else
+            {
+               skip = 4;
+               start = mod = 0;
+               inverse = HB_TRUE;
+            }
+            xx = yy = 0;
+            for( y = 0; y < celly; y++ )
+            {
+               for( x = start + ( skip >> 1 ) * ( ( y & 1 ) ^ mod ); x < cellx; x += skip )
+               {
+                  /* this is font size dependent, we have to add this checking
+                   * to at least avoid GPF for if user set very large font though
+                   * character definition will not be finished
+                   */
+                  if( size >= XWC_MAX_CHAR_POINTS )
+                     break;
+                  pts[ size ].x = x - xx;
+                  pts[ size ].y = y - yy;
+                  xx = x;
+                  yy = y;
+                  size++;
+               }
+            }
+            type = size == 0 ? CH_NONE : CH_PTS;
+            break;
 
-      case HB_GTXWC_RC_DOTS_R:
-         i = cellx / 2;
-         xx = i - i / 2;
-         yy = HB_MAX( 2, xx - 1 );
+         case HB_GTXWC_ARROW_R:
+            i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
+            pts[ 0 ].x = ( ( cellx - i ) >> 1 );
+            pts[ 0 ].y = ( celly >> 1 ) - i;
+            pts[ 1 ].x = i;
+            pts[ 1 ].y = i;
+            pts[ 2 ].x = -i;
+            pts[ 2 ].y = i;
+            size = 3;
+            type = CH_POLY;
+            break;
 
-         rect[0].x = 0;
-         rect[0].y = celly / 3 * 2;
-         rect[0].width = xx - xx / 2;
-         rect[0].height = yy;
+         case HB_GTXWC_ARROW_L:
+            i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
+            pts[ 0 ].x = ( ( cellx - i ) >> 1 ) + i;
+            pts[ 0 ].y = ( celly >> 1 ) - i;
+            pts[ 1 ].x = - i;
+            pts[ 1 ].y = i;
+            pts[ 2 ].x = i;
+            pts[ 2 ].y = i;
+            size = 3;
+            type = CH_POLY;
+            break;
 
-         rect[1].x = rect[0].width + i - xx;
-         rect[1].y = rect[0].y;
-         rect[1].width = xx;
-         rect[1].height = yy;
+         case HB_GTXWC_ARROW_U:
+            i = HB_MIN( celly, cellx >> 1 );
+            pts[ 0 ].x = ( cellx >> 1 ) - i;
+            pts[ 0 ].y = ( ( celly - i ) >> 1 ) + i;
+            pts[ 1 ].x = i;
+            pts[ 1 ].y = -i;
+            pts[ 2 ].x = i;
+            pts[ 2 ].y = i;
+            size = 3;
+            type = CH_POLY;
+            break;
 
-         size = 2;
-         type = CH_RECT;
-         break;
-   }
-   else switch( usCh )
-   {
-      case HB_GTXWC_FILLER1:
-      case HB_GTXWC_FILLER2:
-      case HB_GTXWC_FILLER3:
-         if( usCh == HB_GTXWC_FILLER1 )
-         {
-            skip = 4;
-            start = mod = 1;
-         }
-         else if( usCh == HB_GTXWC_FILLER2 )
-         {
-            skip = 2;
-            start = 0;
-            mod = 1;
-         }
-         else
-         {
-            skip = 4;
-            start = mod = 0;
+         case HB_GTXWC_ARROW_D:
+            i = HB_MIN( celly, cellx >> 1 );
+            pts[ 0 ].x = ( cellx >> 1 ) - i;
+            pts[ 0 ].y = ( ( celly - i ) >> 1 );
+            pts[ 1 ].x = i;
+            pts[ 1 ].y = i;
+            pts[ 2 ].x = i;
+            pts[ 2 ].y = -i;
+            size = 3;
+            type = CH_POLY;
+            break;
+
+         case HB_GTXWC_FULL:
             inverse = HB_TRUE;
-         }
-         xx = yy = 0;
-         for( y = 0; y < celly; y++ )
-         {
-            for( x = start + ( skip >> 1 ) * ( ( y & 1 ) ^ mod ); x < cellx; x += skip )
-            {
-               /* this is font size dependent, we have to add this checking
-                * to at least avoid GPF for if user set very large font though
-                * character definition will not be finished
-                */
-               if( size >= XWC_MAX_CHAR_POINTS )
-                  break;
-               pts[size].x = x - xx;
-               pts[size].y = y - yy;
-               xx = x;
-               yy = y;
-               size++;
-            }
-         }
-         type = size == 0 ? CH_NONE : CH_PTS;
-         break;
-
-      case HB_GTXWC_ARROW_R:
-         i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
-         pts[0].x = ( ( cellx - i ) >> 1 );
-         pts[0].y = ( celly >> 1 ) - i;
-         pts[1].x = i;
-         pts[1].y = i;
-         pts[2].x = -i;
-         pts[2].y = i;
-         size = 3;
-         type = CH_POLY;
-         break;
-
-      case HB_GTXWC_ARROW_L:
-         i = HB_MIN( ( celly >> 1 ), cellx ) - 3;
-         pts[0].x = ( ( cellx - i ) >> 1 ) + i;
-         pts[0].y = ( celly >> 1 ) - i;
-         pts[1].x = - i;
-         pts[1].y = i;
-         pts[2].x = i;
-         pts[2].y = i;
-         size = 3;
-         type = CH_POLY;
-         break;
-
-      case HB_GTXWC_ARROW_U:
-         i = HB_MIN( celly, cellx >> 1 );
-         pts[0].x = ( cellx >> 1 ) - i;
-         pts[0].y = ( ( celly - i ) >> 1 ) + i;
-         pts[1].x = i;
-         pts[1].y = -i;
-         pts[2].x = i;
-         pts[2].y = i;
-         size = 3;
-         type = CH_POLY;
-         break;
-
-      case HB_GTXWC_ARROW_D:
-         i = HB_MIN( celly, cellx >> 1 );
-         pts[0].x = ( cellx >> 1 ) - i;
-         pts[0].y = ( ( celly - i ) >> 1 );
-         pts[1].x = i;
-         pts[1].y = i;
-         pts[2].x = i;
-         pts[2].y = -i;
-         size = 3;
-         type = CH_POLY;
-         break;
-
-      case HB_GTXWC_FULL:
-         inverse = HB_TRUE;
-         type = CH_NONE;
-         break;
-
-      case HB_GTXWC_FULL_B:
-         inverse = HB_TRUE;
-      case HB_GTXWC_FULL_T:
-         rect[0].x = 0;
-         rect[0].y = 0;
-         rect[0].width = cellx;
-         rect[0].height = celly/2;
-         size = 1;
-         type = CH_RECT;
-         break;
-
-      case HB_GTXWC_FULL_R:
-         inverse = HB_TRUE;
-      case HB_GTXWC_FULL_L:
-         rect[0].x = 0;
-         rect[0].y = 0;
-         rect[0].width = cellx/2;
-         rect[0].height = celly;
-         size = 1;
-         type = CH_RECT;
-         break;
-
-      case HB_GTXWC_SNG_LT:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = celly - 1;
-         segs[0].x2 = cellx/2;
-         segs[0].y2 = celly/2;
-
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = celly/2;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_TD:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = celly/2;
-
-         segs[1].x1 = cellx/2;
-         segs[1].y1 = segs[0].y1;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_RT:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = celly - 1;
-         segs[0].x2 = cellx/2;
-         segs[0].y2 = celly/2;
-
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = 0;
-         segs[1].y2 = celly/2;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_LB:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = cellx/2;
-         segs[0].y2 = celly/2;
-
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = celly/2;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_BU:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = cellx/2;
-         segs[0].y2 = celly/2;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = celly/2;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_RB:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = cellx/2;
-         segs[0].y2 = celly/2;
-
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = 0;
-         segs[1].y2 = celly/2;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_VL:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_VR:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2;
-         segs[1].x2 = 0;
-         segs[1].y2 = segs[1].y1;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_CRS:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = celly/2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_HOR:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         size = 1;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_VRT:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         size = 1;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_LT:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = celly - 1;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly/2-1;
-
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = cellx/2+1;
-         segs[2].y1 = celly - 1;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2+1;
-
-         segs[3].x1 = segs[2].x2;
-         segs[3].y1 = segs[2].y2;
-         segs[3].x2 = cellx - 1;
-         segs[3].y2 = segs[2].y2;
-
-         size = 4;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_TD:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2-1;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2+1;
-         segs[1].x2 = cellx/2-1;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx/2+1;
-         segs[2].y1 = celly/2+1;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[2].y1;
-
-         segs[3].x1 = segs[1].x2;
-         segs[3].y1 = segs[1].y1;
-         segs[3].x2 = segs[1].x2;
-         segs[3].y2 = celly - 1;
-
-         segs[4].x1 = segs[2].x1;
-         segs[4].y1 = segs[2].y1;
-         segs[4].x2 = segs[2].x1;
-         segs[4].y2 = celly - 1;
-
-         size = 5;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_RT:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = celly - 1;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly/2+1;
-
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = 0;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = cellx/2+1;
-         segs[2].y1 = celly - 1;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2-1;
-
-         segs[3].x1 = segs[2].x2;
-         segs[3].y1 = segs[2].y2;
-         segs[3].x2 = 0;
-         segs[3].y2 = segs[2].y2;
-
-         size = 4;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_LB:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly/2+1;
-
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = cellx/2+1;
-         segs[2].y1 = 0;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2-1;
-
-         segs[3].x1 = segs[2].x2;
-         segs[3].y1 = segs[2].y2;
-         segs[3].x2 = cellx - 1;
-         segs[3].y2 = segs[2].y2;
-
-         size = 4;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_BU:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2+1;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2-1;
-         segs[1].x2 = cellx/2-1;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx/2+1;
-         segs[2].y1 = celly/2-1;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[2].y1;
-
-         segs[3].x1 = segs[1].x2;
-         segs[3].y1 = segs[1].y1;
-         segs[3].x2 = segs[1].x2;
-         segs[3].y2 = 0;
-
-         segs[4].x1 = segs[2].x1;
-         segs[4].y1 = segs[2].y1;
-         segs[4].x2 = segs[2].x1;
-         segs[4].y2 = 0;
-
-         size = 5;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_RB:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly/2-1;
-
-         segs[1].x1 = segs[0].x2;
-         segs[1].y1 = segs[0].y2;
-         segs[1].x2 = 0;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = cellx/2+1;
-         segs[2].y1 = 0;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2+1;
-
-         segs[3].x1 = segs[2].x2;
-         segs[3].y1 = segs[2].y2;
-         segs[3].x2 = 0;
-         segs[3].y2 = segs[2].y2;
-
-         size = 4;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_VL:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = cellx/2+1;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly/2-1;
-
-         segs[2].x1 = segs[1].x1;
-         segs[2].y1 = celly/2+1;
-         segs[2].x2 = segs[1].x1;
-         segs[2].y2 = celly - 1;
-
-         segs[3].x1 = segs[1].x1;
-         segs[3].y1 = segs[1].y2;
-         segs[3].x2 = cellx - 1;
-         segs[3].y2 = segs[3].y1;
-
-         segs[4].x1 = segs[2].x1;
-         segs[4].y1 = segs[2].y1;
-         segs[4].x2 = cellx - 1;
-         segs[4].y2 = segs[2].y1;
-
-         size = 5;
-         type = CH_SEG;
-         break;
-
-
-      case HB_GTXWC_DBL_VR:
-         segs[0].x1 = cellx/2+1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = cellx/2-1;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly/2-1;
-
-         segs[2].x1 = segs[1].x1;
-         segs[2].y1 = celly/2+1;
-         segs[2].x2 = segs[1].x1;
-         segs[2].y2 = celly - 1;
-
-         segs[3].x1 = segs[1].x1;
-         segs[3].y1 = segs[1].y2;
-         segs[3].x2 = 0;
-         segs[3].y2 = segs[3].y1;
-
-         segs[4].x1 = segs[2].x1;
-         segs[4].y1 = segs[2].y1;
-         segs[4].x2 = 0;
-         segs[4].y2 = segs[2].y1;
-
-         size = 5;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_CRS:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly/2-1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2+1;
-         segs[1].x2 = segs[0].x1;
-         segs[1].y2 = celly - 1;
-
-         segs[2].x1 = segs[0].x1;
-         segs[2].y1 = segs[0].y2;
-         segs[2].x2 = 0;
-         segs[2].y2 = segs[2].y1;
-
-         segs[3].x1 = segs[1].x1;
-         segs[3].y1 = segs[1].y1;
-         segs[3].x2 = 0;
-         segs[3].y2 = segs[1].y1;
-
-         segs[4].x1 = cellx/2+1;
-         segs[4].y1 = 0;
-         segs[4].x2 = segs[4].x1;
-         segs[4].y2 = celly/2-1;
-
-         segs[5].x1 = segs[4].x1;
-         segs[5].y1 = celly/2+1;
-         segs[5].x2 = segs[4].x1;
-         segs[5].y2 = celly - 1;
-
-         segs[6].x1 = segs[4].x1;
-         segs[6].y1 = segs[4].y2;
-         segs[6].x2 = cellx - 1;
-         segs[6].y2 = segs[6].y1;
-
-         segs[7].x1 = segs[5].x1;
-         segs[7].y1 = segs[5].y1;
-         segs[7].x2 = cellx - 1;
-         segs[7].y2 = segs[5].y1;
-
-         size = 8;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_HOR:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2+1;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = celly/2-1;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_VRT:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = cellx/2+1;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
-
-         size = 2;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_L_DBL_T:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = celly/2-1;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2+1;
-         segs[1].x2 = segs[0].x2;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx/2;
-         segs[2].y1 = celly/2-1;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly - 1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_T_DBL_D:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = cellx/2-1;
-         segs[1].y1 = celly/2;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly - 1;
-
-         segs[2].x1 = cellx/2+1;
-         segs[2].y1 = segs[1].y1;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = segs[1].y2;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_R_DBL_T:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = cellx/2+1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = cellx/2+1;
-         segs[1].y1 = segs[0].y1;
-         segs[1].x2 = segs[0].x2;
-         segs[1].y2 = celly - 1;
-
-         segs[2].x1 = cellx/2-1;
-         segs[2].y1 = celly/2;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly - 1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_L_DBL_B:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = celly/2-1;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2+1;
-         segs[1].x2 = segs[0].x2;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx/2;
-         segs[2].y1 = 0;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2+1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_B_DBL_U:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = cellx/2-1;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly/2;
-
-         segs[2].x1 = cellx/2+1;
-         segs[2].y1 = 0;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_R_DBL_B:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = cellx/2+1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = cellx/2+1;
-         segs[1].y1 = 0;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = celly/2;
-
-         segs[2].x1 = cellx/2-1;
-         segs[2].y1 = 0;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_V_DBL_L:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2-1;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = segs[0].x1;
-         segs[2].y1 = celly/2+1;
-         segs[2].x2 = segs[1].x2;
-         segs[2].y2 = segs[2].y1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_V_DBL_R:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = celly/2-1;
-         segs[1].x2 = segs[0].x1;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = 0;
-         segs[2].y1 = celly/2+1;
-         segs[2].x2 = segs[0].x1;
-         segs[2].y2 = segs[2].y1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SNG_DBL_CRS:
-         segs[0].x1 = cellx/2;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = 0;
-         segs[1].y1 = celly/2-1;
-         segs[1].x2 = cellx - 1;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = 0;
-         segs[2].y1 = celly/2+1;
-         segs[2].x2 = segs[1].x2;
-         segs[2].y2 = segs[2].y1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_L_SNG_T:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = celly/2;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = cellx/2 + 1;
-         segs[1].y1 = segs[0].y1;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = segs[0].x1;
-         segs[2].y1 = segs[0].y1;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[0].y1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_T_SNG_D:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2-1;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2+1;
-         segs[1].x2 = segs[0].x2;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx/2;
-         segs[2].y1 = celly/2+1;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly - 1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_R_SNG_T:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2-1;
-         segs[0].x2 = cellx/2;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2+1;
-         segs[1].x2 = segs[0].x2;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx/2;
-         segs[2].y1 = celly/2-1;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly - 1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_L_SNG_B:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly/2;
-
-         segs[1].x1 = cellx/2+1;
-         segs[1].y1 = segs[0].y1;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = cellx/2-1;
-         segs[2].y1 = segs[0].y2;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[0].y2;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_B_SNG_U:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2-1;
-         segs[0].x2 = cellx - 1;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2+1;
-         segs[1].x2 = segs[0].x2;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx/2;
-         segs[2].y1 = 0;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2-1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_R_SNG_B:
-         segs[0].x1 = 0;
-         segs[0].y1 = celly/2-1;
-         segs[0].x2 = cellx/2;
-         segs[0].y2 = segs[0].y1;
-
-         segs[1].x1 = segs[0].x1;
-         segs[1].y1 = celly/2+1;
-         segs[1].x2 = segs[0].x2;
-         segs[1].y2 = segs[1].y1;
-
-         segs[2].x1 = cellx/2;
-         segs[2].y1 = 0;
-         segs[2].x2 = segs[2].x1;
-         segs[2].y2 = celly/2+1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_V_SNG_L:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = cellx/2+1;
-         segs[1].y1 = segs[0].y1;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = segs[1].x1;
-         segs[2].y1 = celly/2;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[2].y1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_V_SNG_R:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = cellx/2+1;
-         segs[1].y1 = segs[0].y1;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = 0;
-         segs[2].y1 = celly/2;
-         segs[2].x2 = segs[0].x1;
-         segs[2].y2 = segs[2].y1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_DBL_SNG_CRS:
-         segs[0].x1 = cellx/2-1;
-         segs[0].y1 = 0;
-         segs[0].x2 = segs[0].x1;
-         segs[0].y2 = celly - 1;
-
-         segs[1].x1 = cellx/2+1;
-         segs[1].y1 = segs[0].y1;
-         segs[1].x2 = segs[1].x1;
-         segs[1].y2 = segs[0].y2;
-
-         segs[2].x1 = 0;
-         segs[2].y1 = celly/2;
-         segs[2].x2 = cellx - 1;
-         segs[2].y2 = segs[2].y1;
-
-         size = 3;
-         type = CH_SEG;
-         break;
-
-      case HB_GTXWC_SQUARE:
-         rect[0].width = cellx - HB_MAX(cellx >> 2, 2);
-         rect[0].height = rect[0].width;
-         rect[0].x = ( ( cellx - rect[0].width ) >> 1 );
-         rect[0].y = ( ( celly - rect[0].height ) >> 1 );
-         size = 1;
-         type = CH_RECT;
-         break;
-/*
-      default:
-         rect[0].x = 1;
-         rect[0].y = 1;
-         rect[0].width = cellx - 2;
-         rect[0].height = celly - 2;
-         size = 1;
-         type = CH_RECT;
-         break;
-*/
-   }
+            type = CH_NONE;
+            break;
+
+         case HB_GTXWC_FULL_B:
+            inverse = HB_TRUE;
+         case HB_GTXWC_FULL_T:
+            rect[ 0 ].x = 0;
+            rect[ 0 ].y = 0;
+            rect[ 0 ].width = cellx;
+            rect[ 0 ].height = celly / 2;
+            size = 1;
+            type = CH_RECT;
+            break;
+
+         case HB_GTXWC_FULL_R:
+            inverse = HB_TRUE;
+         case HB_GTXWC_FULL_L:
+            rect[ 0 ].x = 0;
+            rect[ 0 ].y = 0;
+            rect[ 0 ].width = cellx / 2;
+            rect[ 0 ].height = celly;
+            size = 1;
+            type = CH_RECT;
+            break;
+
+         case HB_GTXWC_SNG_LT:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = celly - 1;
+            segs[ 0 ].x2 = cellx / 2;
+            segs[ 0 ].y2 = celly / 2;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = celly / 2;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_TD:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = celly / 2;
+
+            segs[ 1 ].x1 = cellx / 2;
+            segs[ 1 ].y1 = segs[ 0 ].y1;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_RT:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = celly - 1;
+            segs[ 0 ].x2 = cellx / 2;
+            segs[ 0 ].y2 = celly / 2;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = 0;
+            segs[ 1 ].y2 = celly / 2;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_LB:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = cellx / 2;
+            segs[ 0 ].y2 = celly / 2;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = celly / 2;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_BU:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = cellx / 2;
+            segs[ 0 ].y2 = celly / 2;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = celly / 2;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_RB:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = cellx / 2;
+            segs[ 0 ].y2 = celly / 2;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = 0;
+            segs[ 1 ].y2 = celly / 2;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_VL:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_VR:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2;
+            segs[ 1 ].x2 = 0;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_CRS:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly / 2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_HOR:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            size = 1;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_VRT:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            size = 1;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_LT:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = celly - 1;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly / 2 - 1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = cellx / 2 + 1;
+            segs[ 2 ].y1 = celly - 1;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2 + 1;
+
+            segs[ 3 ].x1 = segs[ 2 ].x2;
+            segs[ 3 ].y1 = segs[ 2 ].y2;
+            segs[ 3 ].x2 = cellx - 1;
+            segs[ 3 ].y2 = segs[ 2 ].y2;
+
+            size = 4;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_TD:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2 - 1;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 + 1;
+            segs[ 1 ].x2 = cellx / 2 - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = cellx / 2 + 1;
+            segs[ 2 ].y1 = celly / 2 + 1;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            segs[ 3 ].x1 = segs[ 1 ].x2;
+            segs[ 3 ].y1 = segs[ 1 ].y1;
+            segs[ 3 ].x2 = segs[ 1 ].x2;
+            segs[ 3 ].y2 = celly - 1;
+
+            segs[ 4 ].x1 = segs[ 2 ].x1;
+            segs[ 4 ].y1 = segs[ 2 ].y1;
+            segs[ 4 ].x2 = segs[ 2 ].x1;
+            segs[ 4 ].y2 = celly - 1;
+
+            size = 5;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_RT:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = celly - 1;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly / 2 + 1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = 0;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = cellx / 2 + 1;
+            segs[ 2 ].y1 = celly - 1;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2 - 1;
+
+            segs[ 3 ].x1 = segs[ 2 ].x2;
+            segs[ 3 ].y1 = segs[ 2 ].y2;
+            segs[ 3 ].x2 = 0;
+            segs[ 3 ].y2 = segs[ 2 ].y2;
+
+            size = 4;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_LB:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly / 2 + 1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = cellx / 2 + 1;
+            segs[ 2 ].y1 = 0;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2 - 1;
+
+            segs[ 3 ].x1 = segs[ 2 ].x2;
+            segs[ 3 ].y1 = segs[ 2 ].y2;
+            segs[ 3 ].x2 = cellx - 1;
+            segs[ 3 ].y2 = segs[ 2 ].y2;
+
+            size = 4;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_BU:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2 + 1;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 - 1;
+            segs[ 1 ].x2 = cellx / 2 - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = cellx / 2 + 1;
+            segs[ 2 ].y1 = celly / 2 - 1;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            segs[ 3 ].x1 = segs[ 1 ].x2;
+            segs[ 3 ].y1 = segs[ 1 ].y1;
+            segs[ 3 ].x2 = segs[ 1 ].x2;
+            segs[ 3 ].y2 = 0;
+
+            segs[ 4 ].x1 = segs[ 2 ].x1;
+            segs[ 4 ].y1 = segs[ 2 ].y1;
+            segs[ 4 ].x2 = segs[ 2 ].x1;
+            segs[ 4 ].y2 = 0;
+
+            size = 5;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_RB:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly / 2 - 1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x2;
+            segs[ 1 ].y1 = segs[ 0 ].y2;
+            segs[ 1 ].x2 = 0;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = cellx / 2 + 1;
+            segs[ 2 ].y1 = 0;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2 + 1;
+
+            segs[ 3 ].x1 = segs[ 2 ].x2;
+            segs[ 3 ].y1 = segs[ 2 ].y2;
+            segs[ 3 ].x2 = 0;
+            segs[ 3 ].y2 = segs[ 2 ].y2;
+
+            size = 4;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_VL:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly / 2 - 1;
+
+            segs[ 2 ].x1 = segs[ 1 ].x1;
+            segs[ 2 ].y1 = celly / 2 + 1;
+            segs[ 2 ].x2 = segs[ 1 ].x1;
+            segs[ 2 ].y2 = celly - 1;
+
+            segs[ 3 ].x1 = segs[ 1 ].x1;
+            segs[ 3 ].y1 = segs[ 1 ].y2;
+            segs[ 3 ].x2 = cellx - 1;
+            segs[ 3 ].y2 = segs[ 3 ].y1;
+
+            segs[ 4 ].x1 = segs[ 2 ].x1;
+            segs[ 4 ].y1 = segs[ 2 ].y1;
+            segs[ 4 ].x2 = cellx - 1;
+            segs[ 4 ].y2 = segs[ 2 ].y1;
+
+            size = 5;
+            type = CH_SEG;
+            break;
+
+
+         case HB_GTXWC_DBL_VR:
+            segs[ 0 ].x1 = cellx / 2 + 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = cellx / 2 - 1;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly / 2 - 1;
+
+            segs[ 2 ].x1 = segs[ 1 ].x1;
+            segs[ 2 ].y1 = celly / 2 + 1;
+            segs[ 2 ].x2 = segs[ 1 ].x1;
+            segs[ 2 ].y2 = celly - 1;
+
+            segs[ 3 ].x1 = segs[ 1 ].x1;
+            segs[ 3 ].y1 = segs[ 1 ].y2;
+            segs[ 3 ].x2 = 0;
+            segs[ 3 ].y2 = segs[ 3 ].y1;
+
+            segs[ 4 ].x1 = segs[ 2 ].x1;
+            segs[ 4 ].y1 = segs[ 2 ].y1;
+            segs[ 4 ].x2 = 0;
+            segs[ 4 ].y2 = segs[ 2 ].y1;
+
+            size = 5;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_CRS:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly / 2 - 1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 + 1;
+            segs[ 1 ].x2 = segs[ 0 ].x1;
+            segs[ 1 ].y2 = celly - 1;
+
+            segs[ 2 ].x1 = segs[ 0 ].x1;
+            segs[ 2 ].y1 = segs[ 0 ].y2;
+            segs[ 2 ].x2 = 0;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            segs[ 3 ].x1 = segs[ 1 ].x1;
+            segs[ 3 ].y1 = segs[ 1 ].y1;
+            segs[ 3 ].x2 = 0;
+            segs[ 3 ].y2 = segs[ 1 ].y1;
+
+            segs[ 4 ].x1 = cellx / 2 + 1;
+            segs[ 4 ].y1 = 0;
+            segs[ 4 ].x2 = segs[ 4 ].x1;
+            segs[ 4 ].y2 = celly / 2 - 1;
+
+            segs[ 5 ].x1 = segs[ 4 ].x1;
+            segs[ 5 ].y1 = celly / 2 + 1;
+            segs[ 5 ].x2 = segs[ 4 ].x1;
+            segs[ 5 ].y2 = celly - 1;
+
+            segs[ 6 ].x1 = segs[ 4 ].x1;
+            segs[ 6 ].y1 = segs[ 4 ].y2;
+            segs[ 6 ].x2 = cellx - 1;
+            segs[ 6 ].y2 = segs[ 6 ].y1;
+
+            segs[ 7 ].x1 = segs[ 5 ].x1;
+            segs[ 7 ].y1 = segs[ 5 ].y1;
+            segs[ 7 ].x2 = cellx - 1;
+            segs[ 7 ].y2 = segs[ 5 ].y1;
+
+            size = 8;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_HOR:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2 + 1;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly / 2 - 1;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_VRT:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
+
+            size = 2;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_L_DBL_T:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = celly / 2 - 1;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 + 1;
+            segs[ 1 ].x2 = segs[ 0 ].x2;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = cellx / 2;
+            segs[ 2 ].y1 = celly / 2 - 1;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly - 1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_T_DBL_D:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = cellx / 2 - 1;
+            segs[ 1 ].y1 = celly / 2;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly - 1;
+
+            segs[ 2 ].x1 = cellx / 2 + 1;
+            segs[ 2 ].y1 = segs[ 1 ].y1;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = segs[ 1 ].y2;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_R_DBL_T:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = cellx / 2 + 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = segs[ 0 ].y1;
+            segs[ 1 ].x2 = segs[ 0 ].x2;
+            segs[ 1 ].y2 = celly - 1;
+
+            segs[ 2 ].x1 = cellx / 2 - 1;
+            segs[ 2 ].y1 = celly / 2;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly - 1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_L_DBL_B:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = celly / 2 - 1;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 + 1;
+            segs[ 1 ].x2 = segs[ 0 ].x2;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = cellx / 2;
+            segs[ 2 ].y1 = 0;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2 + 1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_B_DBL_U:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = cellx / 2 - 1;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly / 2;
+
+            segs[ 2 ].x1 = cellx / 2 + 1;
+            segs[ 2 ].y1 = 0;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_R_DBL_B:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = cellx / 2 + 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = 0;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = celly / 2;
+
+            segs[ 2 ].x1 = cellx / 2 - 1;
+            segs[ 2 ].y1 = 0;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_V_DBL_L:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 - 1;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = segs[ 0 ].x1;
+            segs[ 2 ].y1 = celly / 2 + 1;
+            segs[ 2 ].x2 = segs[ 1 ].x2;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_V_DBL_R:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly / 2 - 1;
+            segs[ 1 ].x2 = segs[ 0 ].x1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = 0;
+            segs[ 2 ].y1 = celly / 2 + 1;
+            segs[ 2 ].x2 = segs[ 0 ].x1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SNG_DBL_CRS:
+            segs[ 0 ].x1 = cellx / 2;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = 0;
+            segs[ 1 ].y1 = celly / 2 - 1;
+            segs[ 1 ].x2 = cellx - 1;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = 0;
+            segs[ 2 ].y1 = celly / 2 + 1;
+            segs[ 2 ].x2 = segs[ 1 ].x2;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_L_SNG_T:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = celly / 2;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = segs[ 0 ].y1;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = segs[ 0 ].x1;
+            segs[ 2 ].y1 = segs[ 0 ].y1;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 0 ].y1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_T_SNG_D:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2 - 1;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 + 1;
+            segs[ 1 ].x2 = segs[ 0 ].x2;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = cellx / 2;
+            segs[ 2 ].y1 = celly / 2 + 1;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly - 1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_R_SNG_T:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2 - 1;
+            segs[ 0 ].x2 = cellx / 2;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 + 1;
+            segs[ 1 ].x2 = segs[ 0 ].x2;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = cellx / 2;
+            segs[ 2 ].y1 = celly / 2 - 1;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly - 1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_L_SNG_B:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly / 2;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = segs[ 0 ].y1;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = cellx / 2 - 1;
+            segs[ 2 ].y1 = segs[ 0 ].y2;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 0 ].y2;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_B_SNG_U:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2 - 1;
+            segs[ 0 ].x2 = cellx - 1;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 + 1;
+            segs[ 1 ].x2 = segs[ 0 ].x2;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = cellx / 2;
+            segs[ 2 ].y1 = 0;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2 - 1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_R_SNG_B:
+            segs[ 0 ].x1 = 0;
+            segs[ 0 ].y1 = celly / 2 - 1;
+            segs[ 0 ].x2 = cellx / 2;
+            segs[ 0 ].y2 = segs[ 0 ].y1;
+
+            segs[ 1 ].x1 = segs[ 0 ].x1;
+            segs[ 1 ].y1 = celly / 2 + 1;
+            segs[ 1 ].x2 = segs[ 0 ].x2;
+            segs[ 1 ].y2 = segs[ 1 ].y1;
+
+            segs[ 2 ].x1 = cellx / 2;
+            segs[ 2 ].y1 = 0;
+            segs[ 2 ].x2 = segs[ 2 ].x1;
+            segs[ 2 ].y2 = celly / 2 + 1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_V_SNG_L:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = segs[ 0 ].y1;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = segs[ 1 ].x1;
+            segs[ 2 ].y1 = celly / 2;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_V_SNG_R:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = segs[ 0 ].y1;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = 0;
+            segs[ 2 ].y1 = celly / 2;
+            segs[ 2 ].x2 = segs[ 0 ].x1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_DBL_SNG_CRS:
+            segs[ 0 ].x1 = cellx / 2 - 1;
+            segs[ 0 ].y1 = 0;
+            segs[ 0 ].x2 = segs[ 0 ].x1;
+            segs[ 0 ].y2 = celly - 1;
+
+            segs[ 1 ].x1 = cellx / 2 + 1;
+            segs[ 1 ].y1 = segs[ 0 ].y1;
+            segs[ 1 ].x2 = segs[ 1 ].x1;
+            segs[ 1 ].y2 = segs[ 0 ].y2;
+
+            segs[ 2 ].x1 = 0;
+            segs[ 2 ].y1 = celly / 2;
+            segs[ 2 ].x2 = cellx - 1;
+            segs[ 2 ].y2 = segs[ 2 ].y1;
+
+            size = 3;
+            type = CH_SEG;
+            break;
+
+         case HB_GTXWC_SQUARE:
+            rect[ 0 ].width = cellx - HB_MAX( cellx >> 2, 2 );
+            rect[ 0 ].height = rect[ 0 ].width;
+            rect[ 0 ].x = ( ( cellx - rect[ 0 ].width ) >> 1 );
+            rect[ 0 ].y = ( ( celly - rect[ 0 ].height ) >> 1 );
+            size = 1;
+            type = CH_RECT;
+            break;
+#if 0
+         default:
+            rect[ 0 ].x = 1;
+            rect[ 0 ].y = 1;
+            rect[ 0 ].width = cellx - 2;
+            rect[ 0 ].height = celly - 2;
+            size = 1;
+            type = CH_RECT;
+            break;
+#endif
+      }
 
    if( type != CH_UNDEF )
    {
@@ -2410,18 +2412,18 @@ static HB_BOOL hb_gt_xwc_DefineBoxChar( PXWND_DEF wnd, HB_USHORT usCh, XWC_CharT
       switch( type )
       {
          case CH_SEG:
-            bxCh->u.seg = (XSegment*) hb_xgrab( sizeof(XSegment) * size );
-            memcpy( bxCh->u.seg, segs, sizeof(XSegment) * size );
+            bxCh->u.seg = ( XSegment * ) hb_xgrab( sizeof( XSegment ) * size );
+            memcpy( bxCh->u.seg, segs, sizeof( XSegment ) * size );
             break;
          case CH_RECT:
-            bxCh->u.rect = (XRectangle*) hb_xgrab( sizeof(XRectangle) * size );
-            memcpy( bxCh->u.rect, rect, sizeof(XRectangle) * size );
+            bxCh->u.rect = ( XRectangle * ) hb_xgrab( sizeof( XRectangle ) * size );
+            memcpy( bxCh->u.rect, rect, sizeof( XRectangle ) * size );
             break;
          case CH_PTS:
          case CH_LINE:
          case CH_POLY:
-            bxCh->u.pts = (XPoint*) hb_xgrab( sizeof(XPoint) * size );
-            memcpy( bxCh->u.pts, pts, sizeof(XPoint) * size );
+            bxCh->u.pts = ( XPoint * ) hb_xgrab( sizeof( XPoint ) * size );
+            memcpy( bxCh->u.pts, pts, sizeof( XPoint ) * size );
             break;
          default:
             break;
@@ -2477,7 +2479,7 @@ static XWC_CharTrans * hb_gt_xwc_GetBoxChar( PXWND_DEF wnd, HB_USHORT uc16 )
 {
    int iPos, iTrans;
 
-   if( !wnd->fDrawBox )
+   if( ! wnd->fDrawBox )
    {
       wnd->boxTrans[ 0 ].u.ch16 = hb_cdpGetU16Ctrl( uc16 );
       return &wnd->boxTrans[ 0 ];
@@ -2555,7 +2557,7 @@ static void hb_gt_xwc_AddCharToInputQueue( PXWND_DEF wnd, int keyCode )
 {
    if( wnd->keyBuffNO < XWC_CHAR_QUEUE_SIZE )
    {
-      wnd->KeyBuff[ wnd->keyBuffPointer++ ] = keyCode ;
+      wnd->KeyBuff[ wnd->keyBuffPointer++ ] = keyCode;
       if( wnd->keyBuffPointer == XWC_CHAR_QUEUE_SIZE )
       {
          wnd->keyBuffPointer = 0;
@@ -2566,7 +2568,7 @@ static void hb_gt_xwc_AddCharToInputQueue( PXWND_DEF wnd, int keyCode )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_xwc_GetCharFromInputQueue( PXWND_DEF wnd, int *keyCode )
+static HB_BOOL hb_gt_xwc_GetCharFromInputQueue( PXWND_DEF wnd, int * keyCode )
 {
    *keyCode = 0;
    if( wnd->keyBuffNO > 0 )
@@ -2603,7 +2605,7 @@ static int hb_gt_xwc_LastCharInInputQueue( PXWND_DEF wnd )
 
 static void hb_gt_xwc_TranslateKey( PXWND_DEF wnd, int key )
 {
-   const ClipKeyCode *clipKey = NULL;
+   const ClipKeyCode * clipKey = NULL;
 
    if( key >= K_SPACE && key <= K_CTRL_BS )
    {
@@ -2662,7 +2664,7 @@ static void hb_gt_xwc_FullScreen( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
+static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent * evt )
 {
    char buf[ 32 ];
    KeySym outISO = 0, out = XLookupKeysym( evt, 0 );
@@ -2677,15 +2679,15 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
    if( wnd->ic )
    {
       i = Xutf8LookupString( wnd->ic, evt, buf, ( int ) sizeof( buf ), &outISO, &status_return );
-      buf[HB_MAX(i,0)] = '\0';
-      printf( "UTF8: KeySym=%lx, keySymISO=%lx, keystr[%d]='%s'\r\n", out, outISO, i, buf ); fflush(stdout);
+      buf[ HB_MAX( i, 0 ) ] = '\0';
+      printf( "UTF8: KeySym=%lx, keySymISO=%lx, keystr[%d]='%s'\r\n", out, outISO, i, buf ); fflush( stdout );
    }
    else
 #  endif
    {
       i = XLookupString( evt, buf, ( int ) sizeof( buf ), &outISO, NULL );
-      buf[HB_MAX(i,0)] = '\0';
-      printf( "KeySym=%lx, keySymISO=%lx, keystr[%d]='%s'\r\n", out, outISO, i, buf ); fflush(stdout);
+      buf[ HB_MAX( i, 0 ) ] = '\0';
+      printf( "KeySym=%lx, keySymISO=%lx, keystr[%d]='%s'\r\n", out, outISO, i, buf ); fflush( stdout );
    }
 #endif
 
@@ -2718,26 +2720,26 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
          ikey = EXKEY_LEFT;
          break;
       case XK_Right:
-         ikey = EXKEY_RIGHT ;
+         ikey = EXKEY_RIGHT;
          break;
       case XK_Up:
-         ikey = EXKEY_UP ;
+         ikey = EXKEY_UP;
          break;
       case XK_Down:
-         ikey = EXKEY_DOWN ;
+         ikey = EXKEY_DOWN;
          break;
       /* case XK_Begin: case XK_KP_Begin: */
       case XK_Home:
-         ikey = EXKEY_HOME ;
+         ikey = EXKEY_HOME;
          break;
       case XK_End:
-         ikey = EXKEY_END ;
+         ikey = EXKEY_END;
          break;
       case XK_Page_Up:
-         ikey = EXKEY_PGUP ;
+         ikey = EXKEY_PGUP;
          break;
       case XK_Page_Down:
-         ikey = EXKEY_PGDN ;
+         ikey = EXKEY_PGDN;
          break;
 
       /* Special cursor operations */
@@ -2757,7 +2759,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
       case XK_Return:
          if( wnd->keyModifiers.bAlt && wnd->fAltEnter )
          {
-            wnd->fFullScreen = !wnd->fFullScreen;
+            wnd->fFullScreen = ! wnd->fFullScreen;
             hb_gt_xwc_FullScreen( wnd );
             return;
          }
@@ -2839,7 +2841,7 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
           */
          if( outISO >= 0x0100 && outISO <= 0x0fff && ( outISO & 0x80 ) == 0x80 )
          {
-            buf[0] = ( char ) ( outISO & 0xff );
+            buf[ 0 ] = ( char ) ( outISO & 0xff );
             i = 1;
          }
          /* hack for euro sign */
@@ -2878,25 +2880,25 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
          ikey = EXKEY_LEFT;
          break;
       case XK_KP_Right:
-         ikey = EXKEY_RIGHT ;
+         ikey = EXKEY_RIGHT;
          break;
       case XK_KP_Up:
-         ikey = EXKEY_UP ;
+         ikey = EXKEY_UP;
          break;
       case XK_KP_Down:
-         ikey = EXKEY_DOWN ;
+         ikey = EXKEY_DOWN;
          break;
       case XK_KP_Home:
-         ikey = EXKEY_HOME ;
+         ikey = EXKEY_HOME;
          break;
       case XK_KP_End:
-         ikey = EXKEY_END ;
+         ikey = EXKEY_END;
          break;
       case XK_KP_Page_Up:
-         ikey = EXKEY_PGUP ;
+         ikey = EXKEY_PGUP;
          break;
       case XK_KP_Page_Down:
-         ikey = EXKEY_PGDN ;
+         ikey = EXKEY_PGDN;
          break;
       case XK_KP_Begin:
       case XK_KP_5:
@@ -2930,14 +2932,14 @@ static void hb_gt_xwc_ProcessKey( PXWND_DEF wnd, XKeyEvent *evt )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
+static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent * evt )
 {
    KeySym out;
 
 #ifdef XWC_DEBUG
    if( wnd->window != evt->xany.window )
    {
-      printf( "Event: #%d window=%ld (wnd->window=%ld)\r\n", evt->type, evt->xany.window, wnd->window ); fflush(stdout);
+      printf( "Event: #%d window=%ld (wnd->window=%ld)\r\n", evt->type, evt->xany.window, wnd->window ); fflush( stdout );
    }
 #endif
 
@@ -2945,23 +2947,23 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
    {
       case Expose:
 #ifdef XWC_DEBUG
-         printf( "Event: Expose\r\n" ); fflush(stdout);
+         printf( "Event: Expose\r\n" ); fflush( stdout );
 #endif
          hb_gt_xwc_InvalidatePts( wnd,
-                                  evt->xexpose.x , evt->xexpose.y,
+                                  evt->xexpose.x, evt->xexpose.y,
                                   evt->xexpose.x + evt->xexpose.width,
                                   evt->xexpose.y + evt->xexpose.height );
          break;
 
       case NoExpose:
 #ifdef XWC_DEBUG
-         printf( "Event: NoExpose\r\n" ); fflush(stdout);
+         printf( "Event: NoExpose\r\n" ); fflush( stdout );
 #endif
          break;
 
       case KeyPress:
 #ifdef XWC_DEBUG
-         printf( "Event: KeyPress\r\n" ); fflush(stdout);
+         printf( "Event: KeyPress\r\n" ); fflush( stdout );
 #endif
          if( evt->xkey.time != CurrentTime )
             wnd->lastEventTime = evt->xkey.time;
@@ -2970,7 +2972,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
       case KeyRelease:
 #ifdef XWC_DEBUG
-         printf( "Event: KeyRelease\r\n" ); fflush(stdout);
+         printf( "Event: KeyRelease\r\n" ); fflush( stdout );
 #endif
          if( evt->xkey.time != CurrentTime )
             wnd->lastEventTime = evt->xkey.time;
@@ -3001,7 +3003,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
       case MotionNotify:
 #ifdef XWC_DEBUG
-         printf( "Event: MotionNotify\r\n" ); fflush(stdout);
+         printf( "Event: MotionNotify\r\n" ); fflush( stdout );
 #endif
          if( evt->xmotion.time != CurrentTime )
             wnd->lastEventTime = evt->xmotion.time;
@@ -3045,7 +3047,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          int button = evt->xbutton.button - 1;
 
 #ifdef XWC_DEBUG
-         printf( "Event: %s, button=%d\r\n", evt->type == ButtonPress ? "ButtonPress" : "ButtonRelease", button ); fflush(stdout);
+         printf( "Event: %s, button=%d\r\n", evt->type == ButtonPress ? "ButtonPress" : "ButtonRelease", button ); fflush( stdout );
 #endif
          if( evt->xbutton.time != CurrentTime )
             wnd->lastEventTime = evt->xbutton.time;
@@ -3060,7 +3062,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             if( evt->type == ButtonPress )
             {
                if( wnd->keyModifiers.bShift && button == 0 &&
-                   wnd->fSelectCopy && !wnd->fMarkMode )
+                   wnd->fSelectCopy && ! wnd->fMarkMode )
                {
                   wnd->fMarkMode = HB_TRUE;
                   wnd->iMarkCol = wnd->mouseCol;
@@ -3099,7 +3101,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                      HB_BYTE bAttr;
                      HB_USHORT usChar;
 
-                     if( !HB_GTSELF_GETSCRCHAR( wnd->pGT, top, left, &iColor, &bAttr, &usChar ) )
+                     if( ! HB_GTSELF_GETSCRCHAR( wnd->pGT, top, left, &iColor, &bAttr, &usChar ) )
                         break;
 
                      nI += hb_cdpTextPutU16( wnd->utf8CDP, pBuffer + nI, nSize - nI, usChar );
@@ -3119,7 +3121,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
             else
             {
                key = s_mouseReleaseKeys[ button ];
-               wnd->mouseButtonsState &= ~(1 << button);
+               wnd->mouseButtonsState &= ~( 1 << button );
             }
             if( key != 0 )
             {
@@ -3131,20 +3133,20 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
       case CreateNotify:
 #ifdef XWC_DEBUG
-         printf( "Event: CreateNotify\r\n" ); fflush(stdout);
+         printf( "Event: CreateNotify\r\n" ); fflush( stdout );
 #endif
          break;
 
       case MappingNotify:
 #ifdef XWC_DEBUG
-         printf( "Event: MappingNotify\r\n" ); fflush(stdout);
+         printf( "Event: MappingNotify\r\n" ); fflush( stdout );
 #endif
          XRefreshKeyboardMapping( &evt->xmapping );
          break;
 
       case FocusIn:
 #ifdef XWC_DEBUG
-         printf( "Event: FocusIn\r\n" ); fflush(stdout);
+         printf( "Event: FocusIn\r\n" ); fflush( stdout );
 #endif
          XRefreshKeyboardMapping( &evt->xmapping );
          wnd->keyModifiers.bCtrl  =
@@ -3156,14 +3158,14 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
       case FocusOut:
 #ifdef XWC_DEBUG
-         printf( "Event: FocusOut\r\n" ); fflush(stdout);
+         printf( "Event: FocusOut\r\n" ); fflush( stdout );
 #endif
          hb_gt_xwc_AddCharToInputQueue( wnd, HB_K_LOSTFOCUS );
          break;
 
       case ConfigureNotify:
 #ifdef XWC_DEBUG
-         printf( "Event: ConfigureNotify\r\n" ); fflush(stdout);
+         printf( "Event: ConfigureNotify\r\n" ); fflush( stdout );
 #endif
          wnd->newWidth  = evt->xconfigure.width;
          wnd->newHeight = evt->xconfigure.height;
@@ -3172,7 +3174,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
       case ClientMessage:
 #ifdef XWC_DEBUG
-         printf( "Event: ClientMessage:%ld (%s)\r\n", evt->xclient.data.l[ 0 ], XGetAtomName( wnd->dpy, ( Atom ) evt->xclient.data.l[ 0 ] ) ); fflush(stdout);
+         printf( "Event: ClientMessage:%ld (%s)\r\n", evt->xclient.data.l[ 0 ], XGetAtomName( wnd->dpy, ( Atom ) evt->xclient.data.l[ 0 ] ) ); fflush( stdout );
 #endif
          if( ( Atom ) evt->xclient.data.l[ 0 ] == s_atomDelWin )
          {
@@ -3208,13 +3210,13 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 #ifdef XWC_DEBUG
                printf( "xselection.target.target=%ld (%s), TextProperty.format='%d'\r\n",
                        evt->xselection.target,
-                       evt->xselection.target == None ? "None" : XGetAtomName(wnd->dpy, evt->xselection.target),
-                       text.format ); fflush(stdout);
+                       evt->xselection.target == None ? "None" : XGetAtomName( wnd->dpy, evt->xselection.target ),
+                       text.format ); fflush( stdout );
 #endif
                if( evt->xselection.target == s_atomUTF8String && text.format == 8 )
                {
 #ifdef XWC_DEBUG
-                  printf( "UTF8String='%s'\r\n", text.value ); fflush(stdout);
+                  printf( "UTF8String='%s'\r\n", text.value ); fflush( stdout );
 #endif
                   if( wnd->ClipboardData != NULL )
                      hb_xfree( wnd->ClipboardData );
@@ -3228,7 +3230,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                else if( evt->xselection.target == s_atomString && text.format == 8 )
                {
 #ifdef XWC_DEBUG
-                  printf( "String='%s'\r\n", text.value ); fflush(stdout);
+                  printf( "String='%s'\r\n", text.value ); fflush( stdout );
 #endif
                   if( wnd->ClipboardData != NULL )
                      hb_xfree( wnd->ClipboardData );
@@ -3245,7 +3247,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                   Atom aValue;
 
 #ifdef XWC_DEBUG
-                  printf("text.nitems=%ld, text.format=%d\r\n", text.nitems, text.format); fflush(stdout);
+                  printf( "text.nitems=%ld, text.format=%d\r\n", text.nitems, text.format ); fflush( stdout );
 #endif
                   for( nItem = 0; nItem < text.nitems; ++nItem )
                   {
@@ -3258,10 +3260,10 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
                         aNextRequest = s_atomText;
 #ifdef XWC_DEBUG
                      if( aValue )
-                        printf("%ld, %8lx (%s)\r\n", nItem, aValue, XGetAtomName(wnd->dpy, aValue));
+                        printf( "%ld, %8lx (%s)\r\n", nItem, aValue, XGetAtomName( wnd->dpy, aValue ) );
                      else
-                        printf("%ld, %8lx (NULL)\r\n", nItem, aValue);
-                     fflush(stdout);
+                        printf( "%ld, %8lx (NULL)\r\n", nItem, aValue );
+                     fflush( stdout );
 #endif
                   }
                }
@@ -3284,7 +3286,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
 #ifdef XWC_DEBUG
          printf( "Event: SelectionRequest: %ld (%s)\r\n", req->target,
-                        XGetAtomName(wnd->dpy, req->target) ); fflush(stdout);
+                 XGetAtomName( wnd->dpy, req->target ) ); fflush( stdout );
 #endif
          respond.xselection.property = req->property;
 
@@ -3298,7 +3300,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
          else if( req->target == s_atomTargets )
          {
             long aProp[] = { s_atomTimestamp, s_atomTargets,
-                             s_atomString, s_atomUTF8String,
+                             s_atomString,    s_atomUTF8String,
                              s_atomText };
             XChangeProperty( wnd->dpy, req->requestor, req->property,
                              s_atomAtom, 32, PropModeReplace,
@@ -3352,14 +3354,14 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
       case SelectionClear:
 #ifdef XWC_DEBUG
-         printf( "Event: SelectionClear\r\n" ); fflush(stdout);
+         printf( "Event: SelectionClear\r\n" ); fflush( stdout );
 #endif
          wnd->ClipboardOwner = HB_FALSE;
          break;
 
       case PropertyNotify:
 #ifdef XWC_DEBUG
-         printf( "Event: PropertyNotify\r\n" ); fflush(stdout);
+         printf( "Event: PropertyNotify\r\n" ); fflush( stdout );
 #endif
          if( evt->xproperty.time != CurrentTime )
             wnd->lastEventTime = evt->xproperty.time;
@@ -3367,7 +3369,7 @@ static void hb_gt_xwc_WndProc( PXWND_DEF wnd, XEvent *evt )
 
 #ifdef XWC_DEBUG
       default:
-         printf( "Event: #%d\r\n", evt->type ); fflush(stdout);
+         printf( "Event: #%d\r\n", evt->type ); fflush( stdout );
          break;
 #endif
    }
@@ -3401,7 +3403,7 @@ static int hb_gt_xwc_GetColormapSize( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
+static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor * pColor )
 {
    HB_BOOL fOK = HB_FALSE;
    int iCMapSize;
@@ -3426,12 +3428,12 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
 
       colorTable = ( XColor * ) hb_xgrab( iCMapSize * sizeof( XColor ) );
       checkTable = ( HB_BYTE * ) hb_xgrab( iCMapSize * sizeof( HB_BYTE ) );
-      for( i = 0; i  < iCMapSize; i++ )
+      for( i = 0; i < iCMapSize; i++ )
       {
-         colorTable[i].pixel = (HB_GT_PIXELTYPE) i;
-         checkTable[i] = HB_FALSE;
+         colorTable[ i ].pixel = ( HB_GT_PIXELTYPE ) i;
+         checkTable[ i ]       = HB_FALSE;
       }
-      XQueryColors ( wnd->dpy, wnd->colorsmap, colorTable, iCMapSize );
+      XQueryColors( wnd->dpy, wnd->colorsmap, colorTable, iCMapSize );
 
       do
       {
@@ -3450,18 +3452,18 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
          dClosestColorDist = 1e20;
          for( i = 0; i < iCMapSize; i++ )
          {
-            if( ! checkTable[iClosestColor] )
+            if( ! checkTable[ iClosestColor ] )
             {
                /*
                 * Use Euclidean distance in RGB space, weighted by Y (of YIQ)
                 * as the objective function, this accounts for differences
                 * in the color sensitivity of the eye.
                 */
-               dDiff = 0.30 * ( ( (int) pColor->red  ) - (int) colorTable[i].red );
+               dDiff = 0.30 * ( ( ( int ) pColor->red  ) - ( int ) colorTable[i].red );
                dDistance = dDiff * dDiff;
-               dDiff = 0.61 * ( ( (int) pColor->green) - (int) colorTable[i].green );
+               dDiff = 0.61 * ( ( ( int ) pColor->green) - ( int ) colorTable[i].green );
                dDistance += dDiff * dDiff;
-               dDiff = 0.11 * ( ( (int) pColor->blue ) - (int) colorTable[i].blue );
+               dDiff = 0.11 * ( ( ( int ) pColor->blue ) - ( int ) colorTable[i].blue );
                dDistance += dDiff * dDiff;
                if( dDistance < dClosestColorDist )
                {
@@ -3472,13 +3474,13 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
          }
          if( iClosestColor > 0 )
          {
-            if( XAllocColor( wnd->dpy, wnd->colorsmap, &colorTable[iClosestColor] ) != 0 )
+            if( XAllocColor( wnd->dpy, wnd->colorsmap, &colorTable[ iClosestColor ] ) != 0 )
             {
                *pColor = colorTable[iClosestColor];
                fOK = HB_TRUE;
                break;
             }
-            checkTable[iClosestColor] = HB_TRUE;
+            checkTable[ iClosestColor ] = HB_TRUE;
          }
       }
       while( iClosestColor > 0 );
@@ -3494,7 +3496,7 @@ static HB_BOOL hb_gt_xwc_AllocColor( PXWND_DEF wnd, XColor *pColor )
 
 static HB_BOOL hb_gt_xwc_setPalette( PXWND_DEF wnd )
 {
-   char rgb_color[13];
+   char rgb_color[ 13 ];
    XColor color, dummy;
    HB_BOOL fSet = HB_FALSE;
    int i;
@@ -3503,26 +3505,26 @@ static HB_BOOL hb_gt_xwc_setPalette( PXWND_DEF wnd )
    wnd->colorsmap = DefaultColormap( wnd->dpy, DefaultScreen( wnd->dpy ) );
    for( i = 0; i < 16; i++ )
    {
-      if( !wnd->colors[i].set )
+      if( ! wnd->colors[ i ].set )
       {
-         if( wnd->colors[i].pixel )
-            XFreeColors( wnd->dpy, wnd->colorsmap, &wnd->colors[i].pixel, 1, 0 );
+         if( wnd->colors[ i ].pixel )
+            XFreeColors( wnd->dpy, wnd->colorsmap, &wnd->colors[ i ].pixel, 1, 0 );
          hb_snprintf( rgb_color, sizeof( rgb_color ),
                       "rgb:%02X/%02X/%02X",
-                      ( wnd->colors[i].value ) & 0xFF,
-                      ( wnd->colors[i].value >> 8 ) & 0xFF,
-                      ( wnd->colors[i].value >> 16 ) & 0xFF );
+                      ( wnd->colors[ i ].value ) & 0xFF,
+                      ( wnd->colors[ i ].value >> 8 ) & 0xFF,
+                      ( wnd->colors[ i ].value >> 16 ) & 0xFF );
          if( XLookupColor( wnd->dpy, wnd->colorsmap, rgb_color, &dummy, &color ) != 0 )
          {
             if( hb_gt_xwc_AllocColor( wnd, &color ) )
             {
-               wnd->colors[i].pixel = color.pixel;
+               wnd->colors[ i ].pixel = color.pixel;
 #ifdef XWC_DEBUG
-               printf( "hb_gt_xwc_AllocColor[%d]='%x/%x/%x'\r\n", i, color.red, color.green, color.blue ); fflush(stdout);
+               printf( "hb_gt_xwc_AllocColor[%d]='%x/%x/%x'\r\n", i, color.red, color.green, color.blue ); fflush( stdout );
 #endif
             }
          }
-         fSet = wnd->colors[i].set = HB_TRUE;
+         fSet = wnd->colors[ i ].set = HB_TRUE;
       }
    }
    return fSet;
@@ -3530,28 +3532,28 @@ static HB_BOOL hb_gt_xwc_setPalette( PXWND_DEF wnd )
 
 /* *********************************************************************** */
 
-static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, HB_BYTE color, HB_USHORT *usChBuf, int len )
+static void hb_gt_xwc_DrawString( PXWND_DEF wnd, int col, int row, HB_BYTE color, HB_USHORT * usChBuf, int len )
 {
    if( wnd->fClearBkg )
    {
-      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
       XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                       col * wnd->fontWidth, row * wnd->fontHeight,
                       wnd->fontWidth * len, wnd->fontHeight );
-      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
+      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color & 0x0F ].pixel );
       XDrawString16( wnd->dpy, wnd->drw, wnd->gc,
                      col * wnd->fontWidth,
                      row * wnd->fontHeight + wnd->xfs->ascent,
-                     (XChar2b *) usChBuf, len );
+                     ( XChar2b * ) usChBuf, len );
    }
    else
    {
-      XSetBackground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
-      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
+      XSetBackground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
+      XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color & 0x0F ].pixel );
       XDrawImageString16( wnd->dpy, wnd->drw, wnd->gc,
                           col * wnd->fontWidth,
                           row * wnd->fontHeight + wnd->xfs->ascent,
-                          (XChar2b *) usChBuf, len );
+                          ( XChar2b * ) usChBuf, len );
    }
 }
 
@@ -3574,13 +3576,17 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
    XWC_CharTrans * chTrans;
 
 #ifdef XWC_DEBUG
-   printf( "Repaint(%d,%d,%d,%d)[%dx%d]\r\n", rowStart, colStart, rowStop, colStop, wnd->fontHeight, wnd->fontWidth );fflush(stdout);
+   printf( "Repaint(%d,%d,%d,%d)[%dx%d]\r\n", rowStart, colStart, rowStop, colStop, wnd->fontHeight, wnd->fontWidth ); fflush( stdout );
 #endif
 
-   if( rowStop >= wnd->rows ) rowStop = wnd->rows-1;
-   if( colStop >= wnd->cols ) colStop = wnd->cols-1;
-   if( colStart < 0 ) colStart = 0;
-   if( rowStart < 0 ) rowStart = 0;
+   if( rowStop >= wnd->rows )
+      rowStop = wnd->rows - 1;
+   if( colStop >= wnd->cols )
+      colStop = wnd->cols - 1;
+   if( colStart < 0 )
+      colStart = 0;
+   if( rowStart < 0 )
+      rowStart = 0;
 
    for( irow = rowStart; irow <= rowStop; irow++ )
    {
@@ -3621,7 +3627,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
             hb_gt_xwc_DrawString( wnd, startCol, irow, oldColor, usChBuf, len );
             len = 0;
          }
-         if( wnd->pCurrScr[index] != ulCurr )
+         if( wnd->pCurrScr[ index ] != ulCurr )
          {
             switch( chTrans->type )
             {
@@ -3648,15 +3654,15 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   break;
 
                case CH_NONE:
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
                   break;
 
                case CH_IMG:
-                  XSetBackground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
+                  XSetBackground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color & 0x0F ].pixel );
                   XPutImage( wnd->dpy, wnd->drw, wnd->gc,
                              chTrans->u.img, 0, 0,
                              icol * wnd->fontWidth, irow * wnd->fontHeight,
@@ -3665,13 +3671,13 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
 
                case CH_PTS:
                   /* we use CoordModePrevious so only first point position has to be updated */
-                  chTrans->u.pts[0].x = (chTrans->u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
-                  chTrans->u.pts[0].y = (chTrans->u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+                  chTrans->u.pts[ 0 ].x = ( chTrans->u.pts[ 0 ].x % wnd->fontWidth ) + icol * wnd->fontWidth;
+                  chTrans->u.pts[ 0 ].y = ( chTrans->u.pts[ 0 ].y % wnd->fontHeight ) + irow * wnd->fontHeight;
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color & 0x0F ].pixel );
                   XDrawPoints( wnd->dpy, wnd->drw, wnd->gc,
                                chTrans->u.pts,
                                chTrans->size, CoordModePrevious );
@@ -3679,27 +3685,27 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
 
                case CH_LINE:
                   /* we use CoordModePrevious so only first point position has to be updated */
-                  chTrans->u.pts[0].x = (chTrans->u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
-                  chTrans->u.pts[0].y = (chTrans->u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+                  chTrans->u.pts[ 0 ].x = ( chTrans->u.pts[ 0 ].x % wnd->fontWidth ) + icol * wnd->fontWidth;
+                  chTrans->u.pts[ 0 ].y = ( chTrans->u.pts[ 0 ].y % wnd->fontHeight ) + irow * wnd->fontHeight;
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color & 0x0F ].pixel );
                   XDrawLines( wnd->dpy, wnd->drw, wnd->gc,
-                               chTrans->u.pts,
-                               chTrans->size, CoordModePrevious );
+                              chTrans->u.pts,
+                              chTrans->size, CoordModePrevious );
                   break;
 
                case CH_POLY:
                   /* we use CoordModePrevious so only first point position has to be updated */
-                  chTrans->u.pts[0].x = (chTrans->u.pts[0].x % wnd->fontWidth ) + icol * wnd->fontWidth;
-                  chTrans->u.pts[0].y = (chTrans->u.pts[0].y % wnd->fontHeight ) + irow * wnd->fontHeight;
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+                  chTrans->u.pts[ 0 ].x = ( chTrans->u.pts[ 0 ].x % wnd->fontWidth ) + icol * wnd->fontWidth;
+                  chTrans->u.pts[ 0 ].y = ( chTrans->u.pts[ 0 ].y % wnd->fontHeight ) + irow * wnd->fontHeight;
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   icol * wnd->fontWidth, irow * wnd->fontHeight,
                                   wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color & 0x0F ].pixel );
                   XFillPolygon( wnd->dpy, wnd->drw, wnd->gc,
                                 chTrans->u.pts,
                                 chTrans->size,
@@ -3712,15 +3718,15 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   nsize = chTrans->size;
                   for( i = 0; i < nsize; i++ )
                   {
-                     chTrans->u.seg[i].x1 = (chTrans->u.seg[i].x1 % wnd->fontWidth ) + basex;
-                     chTrans->u.seg[i].y1 = (chTrans->u.seg[i].y1 % wnd->fontHeight ) + basey;
-                     chTrans->u.seg[i].x2 = (chTrans->u.seg[i].x2 % wnd->fontWidth ) + basex;
-                     chTrans->u.seg[i].y2 = (chTrans->u.seg[i].y2 % wnd->fontHeight ) + basey;
+                     chTrans->u.seg[ i ].x1 = ( chTrans->u.seg[ i ].x1 % wnd->fontWidth ) + basex;
+                     chTrans->u.seg[ i ].y1 = ( chTrans->u.seg[ i ].y1 % wnd->fontHeight ) + basey;
+                     chTrans->u.seg[ i ].x2 = ( chTrans->u.seg[ i ].x2 % wnd->fontWidth ) + basex;
+                     chTrans->u.seg[ i ].y2 = ( chTrans->u.seg[ i ].y2 % wnd->fontHeight ) + basey;
                   }
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   basex, basey, wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color & 0x0F ].pixel );
                   XDrawSegments( wnd->dpy, wnd->drw, wnd->gc,
                                  chTrans->u.seg, nsize );
                   break;
@@ -3731,13 +3737,13 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   nsize = chTrans->size;
                   for( i = 0; i < nsize; i++ )
                   {
-                     chTrans->u.rect[i].x = (chTrans->u.rect[i].x % wnd->fontWidth ) + basex;
-                     chTrans->u.rect[i].y = (chTrans->u.rect[i].y % wnd->fontHeight ) + basey;
+                     chTrans->u.rect[ i ].x = ( chTrans->u.rect[ i ].x % wnd->fontWidth ) + basex;
+                     chTrans->u.rect[ i ].y = ( chTrans->u.rect[ i ].y % wnd->fontHeight ) + basey;
                   }
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color >> 4].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color >> 4 ].pixel );
                   XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                                   basex, basey, wnd->fontWidth, wnd->fontHeight );
-                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[color & 0x0F].pixel );
+                  XSetForeground( wnd->dpy, wnd->gc, wnd->colors[ color & 0x0F ].pixel );
                   XFillRectangles( wnd->dpy, wnd->drw, wnd->gc,
                                    chTrans->u.rect, nsize );
                   break;
@@ -3746,7 +3752,7 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
                   break;
 
             }
-            wnd->pCurrScr[index] = ulCurr;
+            wnd->pCurrScr[ index ] = ulCurr;
          }
          icol++;
          index++;
@@ -3761,11 +3767,11 @@ static void hb_gt_xwc_RepaintChar( PXWND_DEF wnd, int colStart, int rowStart, in
 /* *********************************************************************** */
 
 static void hb_gt_xwc_RestoreArea( PXWND_DEF wnd,
-                                  int left, int top, int right, int bottom )
+                                   int left, int top, int right, int bottom )
 {
    XCopyArea( wnd->dpy, wnd->pm, wnd->window, wnd->gc,
               wnd->fontWidth * left, wnd->fontHeight * top,
-              wnd->fontWidth * (right - left + 1), wnd->fontHeight * (bottom - top + 1),
+              wnd->fontWidth * ( right - left + 1 ), wnd->fontHeight * ( bottom - top + 1 ),
               wnd->fontWidth * left, wnd->fontHeight * top );
 }
 
@@ -3800,7 +3806,7 @@ static void hb_gt_xwc_InvalidateChar( PXWND_DEF wnd,
 /* *********************************************************************** */
 
 static void hb_gt_xwc_InvalidatePts( PXWND_DEF wnd,
-                                    int left, int top, int right, int bottom )
+                                     int left, int top, int right, int bottom )
 {
    if( ! wnd->fInvalidPts )
    {
@@ -3811,10 +3817,14 @@ static void hb_gt_xwc_InvalidatePts( PXWND_DEF wnd,
    }
    else
    {
-      if( wnd->rInvalidPts.top    > top    ) wnd->rInvalidPts.top    = top;
-      if( wnd->rInvalidPts.left   > left   ) wnd->rInvalidPts.left   = left;
-      if( wnd->rInvalidPts.right  < right  ) wnd->rInvalidPts.right  = right;
-      if( wnd->rInvalidPts.bottom < bottom ) wnd->rInvalidPts.bottom = bottom;
+      if( wnd->rInvalidPts.top > top )
+         wnd->rInvalidPts.top = top;
+      if( wnd->rInvalidPts.left > left )
+         wnd->rInvalidPts.left = left;
+      if( wnd->rInvalidPts.right < right )
+         wnd->rInvalidPts.right = right;
+      if( wnd->rInvalidPts.bottom < bottom )
+         wnd->rInvalidPts.bottom = bottom;
    }
    wnd->fInvalidPts = HB_TRUE;
 }
@@ -3828,9 +3838,9 @@ static void hb_gt_xwc_UpdateCursor( PXWND_DEF wnd )
    /* must the mouse cursor be positioned? */
    if( wnd->mouseGotoRow >= 0 && wnd->mouseGotoCol >= 0 )
    {
-      XWarpPointer( wnd->dpy, None, wnd->window, 0,0,0,0,
-                    wnd->mouseGotoCol * wnd->fontWidth + (wnd->fontWidth>>1),
-                    wnd->mouseGotoRow * wnd->fontHeight + (wnd->fontHeight>>1) );
+      XWarpPointer( wnd->dpy, None, wnd->window, 0, 0, 0, 0,
+                    wnd->mouseGotoCol * wnd->fontWidth + ( wnd->fontWidth >> 1 ),
+                    wnd->mouseGotoRow * wnd->fontHeight + ( wnd->fontHeight >> 1 ) );
       wnd->mouseGotoRow = -1;
    }
 
@@ -3936,7 +3946,7 @@ static void hb_gt_xwc_UpdateChr( PXWND_DEF wnd )
       hb_gt_xwc_RepaintChar( wnd, left, top, right, bottom );
 
       left   = wnd->fontWidth  * left;
-      top    = wnd->fontHeight * top ;
+      top    = wnd->fontHeight * top;
       right  = wnd->fontWidth  * ( right + 1 ) - 1;
       bottom = wnd->fontHeight * ( bottom + 1 ) - 1;
 
@@ -3967,6 +3977,7 @@ static void hb_gt_xwc_UpdateSize( PXWND_DEF wnd )
 static HB_ULONG hb_gt_xwc_CurrentTime( void )
 {
    struct timeval tv;
+
    gettimeofday( &tv, NULL );
    return tv.tv_sec * 1000 + tv.tv_usec / 1000;
 }
@@ -3987,7 +3998,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
 
          if( ulCurrentTime - wnd->cursorStateTime > wnd->cursorBlinkRate )
          {
-            wnd->cursorState = !wnd->cursorState;
+            wnd->cursorState = ! wnd->cursorState;
             wnd->cursorStateTime = ulCurrentTime;
          }
       }
@@ -4123,17 +4134,17 @@ static HB_BOOL hb_gt_xwc_Resize( PXWND_DEF wnd, HB_USHORT cols, HB_USHORT rows )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char *fontFace,
-                               const char *weight, int size,
-                               const char *encoding )
+static HB_BOOL hb_gt_xwc_SetFont( PXWND_DEF wnd, const char * fontFace,
+                                  const char * weight, int size,
+                                  const char * encoding )
 {
    char fontString[ 250 ];
-   XFontStruct *xfs;
+   XFontStruct * xfs;
 
    if( weight )
 /*
       "-*-%s-%s-r-normal-*-%d-*-*-*-*-*-%s"
-*/
+ */
       hb_snprintf( fontString, sizeof( fontString ),
                    "-*-%s-%s-r-*-*-%d-*-*-*-*-*-%s",
                    fontFace, weight, size, encoding == NULL ? "*-*" : encoding );
@@ -4221,7 +4232,7 @@ static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE 
 
 static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
 {
-   if( !wnd->ClipboardOwner )
+   if( ! wnd->ClipboardOwner )
    {
       Atom aRequest;
       HB_ULONG ulCurrentTime = hb_gt_xwc_CurrentTime();
@@ -4245,8 +4256,8 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
             HB_XWC_XLIB_LOCK
 
 #ifdef XWC_DEBUG
-            printf("XConvertSelection: %ld (%s)\r\n", aRequest,
-               XGetAtomName(wnd->dpy, aRequest)); fflush(stdout);
+            printf( "XConvertSelection: %ld (%s)\r\n", aRequest,
+                    XGetAtomName( wnd->dpy, aRequest ) ); fflush( stdout );
 #endif
             XConvertSelection( wnd->dpy, s_atomPrimary, aRequest,
                                s_atomCutBuffer0, wnd->window, wnd->lastEventTime );
@@ -4263,7 +4274,7 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
          else
          {
             hb_gt_xwc_ProcessMessages( wnd, HB_TRUE );
-            if( !wnd->ClipboardRcvd && wnd->ClipboardRequest == aRequest )
+            if( ! wnd->ClipboardRcvd && wnd->ClipboardRequest == aRequest )
             {
                HB_ULONG ulTime = hb_gt_xwc_CurrentTime() - ulCurrentTime;
                struct timeval timeout;
@@ -4282,7 +4293,7 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
             }
          }
       }
-      while( !wnd->ClipboardRcvd && wnd->ClipboardRequest != None );
+      while( ! wnd->ClipboardRcvd && wnd->ClipboardRequest != None );
 
       wnd->ClipboardRequest = None;
    }
@@ -4402,21 +4413,21 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
    hb_gt_xwc_MouseInit( wnd );
 
    /* set atom identifiers for atom names we will use */
-   s_atomDelWin          = XInternAtom( wnd->dpy, "WM_DELETE_WINDOW", True );
-   s_atomTimestamp       = XInternAtom( wnd->dpy, "TIMESTAMP", False );
-   s_atomAtom            = XInternAtom( wnd->dpy, "ATOM", False );
-   s_atomInteger         = XInternAtom( wnd->dpy, "INTEGER", False );
-   s_atomString          = XInternAtom( wnd->dpy, "STRING", False );
-   s_atomUTF8String      = XInternAtom( wnd->dpy, "UTF8_STRING", False );
-   s_atomPrimary         = XInternAtom( wnd->dpy, "PRIMARY", False );
-   s_atomSecondary       = XInternAtom( wnd->dpy, "SECONDARY", False );
-   s_atomClipboard       = XInternAtom( wnd->dpy, "CLIPBOARD", False );
-   s_atomTargets         = XInternAtom( wnd->dpy, "TARGETS", False );
-   s_atomCutBuffer0      = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
-   s_atomText            = XInternAtom( wnd->dpy, "TEXT", False );
-   s_atomCompoundText    = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
-   s_atomFullScreen      = XInternAtom(wnd->dpy, "_NET_WM_STATE_FULLSCREEN", False );
-   s_atomState           = XInternAtom(wnd->dpy, "_NET_WM_STATE", False );
+   s_atomDelWin       = XInternAtom( wnd->dpy, "WM_DELETE_WINDOW", True );
+   s_atomTimestamp    = XInternAtom( wnd->dpy, "TIMESTAMP", False );
+   s_atomAtom         = XInternAtom( wnd->dpy, "ATOM", False );
+   s_atomInteger      = XInternAtom( wnd->dpy, "INTEGER", False );
+   s_atomString       = XInternAtom( wnd->dpy, "STRING", False );
+   s_atomUTF8String   = XInternAtom( wnd->dpy, "UTF8_STRING", False );
+   s_atomPrimary      = XInternAtom( wnd->dpy, "PRIMARY", False );
+   s_atomSecondary    = XInternAtom( wnd->dpy, "SECONDARY", False );
+   s_atomClipboard    = XInternAtom( wnd->dpy, "CLIPBOARD", False );
+   s_atomTargets      = XInternAtom( wnd->dpy, "TARGETS", False );
+   s_atomCutBuffer0   = XInternAtom( wnd->dpy, "CUT_BUFFER0", False );
+   s_atomText         = XInternAtom( wnd->dpy, "TEXT", False );
+   s_atomCompoundText = XInternAtom( wnd->dpy, "COMPOUND_TEXT", False );
+   s_atomFullScreen   = XInternAtom( wnd->dpy, "_NET_WM_STATE_FULLSCREEN", False );
+   s_atomState        = XInternAtom( wnd->dpy, "_NET_WM_STATE", False );
 
    HB_XWC_XLIB_UNLOCK
 
@@ -4566,7 +4577,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
    /* reset character translation table (after font selection) */
    hb_gt_xwc_ResetCharTrans( wnd );
 
-   if( !wnd->window )
+   if( ! wnd->window )
    {
       int blackColor;
 
@@ -4617,7 +4628,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
                            XNClientWindow, wnd->window,
                            XNFocusWindow, wnd->window,
                            NULL );
-      if( !wnd->ic )
+      if( ! wnd->ic )
       {
          XCloseIM( wnd->im );
          wnd->im = NULL;
@@ -4626,12 +4637,12 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
          wnd->fUTF8key = HB_TRUE;
    }
 #ifdef XWC_DEBUG
-   printf( "\r\nXIC=%p, XIC=%p\r\n", wnd->im, wnd->ic ); fflush(stdout);
+   printf( "\r\nXIC=%p, XIC=%p\r\n", wnd->im, wnd->ic ); fflush( stdout );
 #endif
 #endif
 
 #ifdef XWC_DEBUG
-   printf( "Window created\r\n" ); fflush(stdout);
+   printf( "Window created\r\n" ); fflush( stdout );
 #endif
    if( wnd->fResizable != fResizable )
    {
@@ -4649,7 +4660,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
 static void hb_gt_xwc_RealRefresh( PXWND_DEF wnd, HB_BOOL fSync )
 {
-   if( !wnd->fInit )
+   if( ! wnd->fInit )
    {
       if( hb_gt_xwc_ConnectX( wnd, HB_TRUE ) )
       {
@@ -4662,7 +4673,7 @@ static void hb_gt_xwc_RealRefresh( PXWND_DEF wnd, HB_BOOL fSync )
          return;
    }
 
-   if( s_updateMode == XWC_SYNC_UPDATE && !wnd->fRefresh )
+   if( s_updateMode == XWC_SYNC_UPDATE && ! wnd->fRefresh )
    {
       wnd->fRefresh = HB_TRUE;
       hb_gt_xwc_ProcessMessages( wnd, fSync );
@@ -4686,7 +4697,7 @@ static void hb_gt_xwc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 {
    PXWND_DEF wnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
 #ifdef HB_XWC_USE_LOCALE
    setlocale( LC_CTYPE, "" );
@@ -4698,7 +4709,7 @@ static void hb_gt_xwc_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
 #ifndef HB_XWC_XLIB_NEEDLOCKS
    if( hb_vmIsMt() )
    {
-      if( !XInitThreads() )
+      if( ! XInitThreads() )
          hb_errInternal( 10002, "XInitThreads() failed !!!", NULL, NULL );
    }
 #endif
@@ -4729,7 +4740,7 @@ static void hb_gt_xwc_Exit( PHB_GT pGT )
 {
    PXWND_DEF wnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Exit(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Exit(%p)", pGT ) );
 
    wnd = HB_GTXWC_GET( pGT );
 
@@ -4748,7 +4759,7 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
 {
    HB_BOOL fResult = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_SetMode(%p,%d,%d)", pGT, iRow, iCol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_SetMode(%p,%d,%d)", pGT, iRow, iCol ) );
 
    if( iCol >= XWC_MIN_COLS && iRow >= XWC_MIN_ROWS &&
        iCol <= XWC_MAX_COLS && iRow <= XWC_MAX_ROWS )
@@ -4758,11 +4769,11 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
       if( iCol == wnd->cols && iRow == wnd->rows )
       {
          HB_GTSELF_RESIZE( pGT, wnd->rows, wnd->cols );
-         if( !wnd->fInit )
+         if( ! wnd->fInit )
             HB_GTSELF_SEMICOLD( pGT );
          fResult = HB_TRUE;
       }
-      else if( !wnd->fInit )
+      else if( ! wnd->fInit )
       {
          hb_gt_xwc_SetScrBuff( wnd, iCol, iRow );
          HB_GTSELF_SEMICOLD( pGT );
@@ -4793,7 +4804,7 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
 
 static HB_BOOL hb_gt_xwc_GetBlink( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_GetBlink(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_GetBlink(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -4819,7 +4830,7 @@ static int hb_gt_xwc_ReadKey( PHB_GT pGT, int iEventMask )
    PXWND_DEF wnd;
    int c = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_wxc_gt_ReadKey(%p,%d)", pGT, iEventMask));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_wxc_gt_ReadKey(%p,%d)", pGT, iEventMask ) );
 
    HB_SYMBOL_UNUSED( iEventMask );
 
@@ -4840,7 +4851,7 @@ static void hb_gt_xwc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    PXWND_DEF wnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
 
    /* The conversion from Clipper (DOS) timer tick units to
       milliseconds is * 1000.0 / 18.2. */
@@ -4851,8 +4862,8 @@ static void hb_gt_xwc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    {
       XKeyboardControl XkbCtrl;
 
-      XkbCtrl.bell_pitch = (int) dFrequency;
-      XkbCtrl.bell_duration = (int) (dDuration * 1000);
+      XkbCtrl.bell_pitch    = ( int ) dFrequency;
+      XkbCtrl.bell_duration = ( int ) ( dDuration * 1000 );
 
       HB_XWC_XLIB_LOCK
       XChangeKeyboardControl( wnd->dpy, KBBellPitch | KBBellDuration, &XkbCtrl );
@@ -4868,7 +4879,7 @@ static HB_BOOL hb_gt_xwc_mouse_IsPresent( PHB_GT pGT )
 {
    PXWND_DEF wnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_IsPresent(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_mouse_IsPresent(%p)", pGT ) );
 
    wnd = HB_GTXWC_GET( pGT );
    hb_gt_xwc_ConnectX( wnd, HB_TRUE );
@@ -4881,7 +4892,7 @@ static void hb_gt_xwc_mouse_GetPos( PHB_GT pGT, int * piRow, int * piCol )
 {
    PXWND_DEF wnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_GetPos(%p,%p,%p)", pGT, piRow, piCol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_mouse_GetPos(%p,%p,%p)", pGT, piRow, piCol ) );
 
    wnd = HB_GTXWC_GET( pGT );
    if( wnd )
@@ -4898,7 +4909,7 @@ static void hb_gt_xwc_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 {
    PXWND_DEF wnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_SetPos(%p,%d,%d)", pGT, iRow, iCol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_mouse_SetPos(%p,%d,%d)", pGT, iRow, iCol ) );
 
    wnd = HB_GTXWC_GET( pGT );
    wnd->mouseGotoRow = iRow;
@@ -4908,11 +4919,11 @@ static void hb_gt_xwc_mouse_SetPos( PHB_GT pGT, int iRow, int iCol )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_xwc_mouse_ButtonState( PHB_GT pGT,int iButton )
+static HB_BOOL hb_gt_xwc_mouse_ButtonState( PHB_GT pGT, int iButton )
 {
    PXWND_DEF wnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_ButtonState(%p,%i)", pGT, iButton));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_mouse_ButtonState(%p,%i)", pGT, iButton ) );
 
    wnd = HB_GTXWC_GET( pGT );
    hb_gt_xwc_ConnectX( wnd, HB_TRUE );
@@ -4928,7 +4939,7 @@ static int hb_gt_xwc_mouse_CountButton( PHB_GT pGT )
 {
    PXWND_DEF wnd;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_xwc_mouse_CountButton(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_mouse_CountButton(%p)", pGT ) );
 
    wnd = HB_GTXWC_GET( pGT );
    hb_gt_xwc_ConnectX( wnd, HB_TRUE );
@@ -4957,7 +4968,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Info(%p,%d,%p)", pGT, iType, pInfo ) );
 
    wnd = HB_GTXWC_GET( pGT );
-   if( !wnd->dpy )
+   if( ! wnd->dpy )
    {
       switch( iType )
       {
@@ -5299,7 +5310,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                      wnd->colors[ iVal ].set = HB_FALSE;
                      if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
                      {
-                        memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
+                        memset( wnd->pCurrScr, 0xFFFFFFFFL, wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
                         hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
                      }
                   }
@@ -5308,7 +5319,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          else
          {
-            if( !pInfo->pResult )
+            if( ! pInfo->pResult )
                pInfo->pResult = hb_itemNew( NULL );
             hb_arrayNew( pInfo->pResult, 16 );
             for( iVal = 0; iVal < 16; iVal++ )
@@ -5327,7 +5338,7 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                }
                if( wnd->fInit && hb_gt_xwc_setPalette( wnd ) )
                {
-                  memset( wnd->pCurrScr, 0xFFFFFFFFL,  wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
+                  memset( wnd->pCurrScr, 0xFFFFFFFFL, wnd->cols * wnd->rows * sizeof( HB_ULONG ) );
                   hb_gt_xwc_InvalidateChar( wnd, 0, 0, wnd->cols - 1, wnd->rows - 1 );
                }
             }
@@ -5350,7 +5361,7 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_gfx_Primitive(%p,%d,%d,%d,%d,%d,%d)", pGT, iType, iTop, iLeft, iBottom, iRight, iColor ) );
 
    wnd = HB_GTXWC_GET( pGT );
-   if( !wnd->fInit )
+   if( ! wnd->fInit )
       hb_gt_xwc_RealRefresh( wnd, HB_TRUE );
    HB_GTSELF_REFRESH( pGT );
 
@@ -5512,7 +5523,7 @@ static void hb_gt_xwc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Redraw(%p,%d,%d,%d)", pGT, iRow, iCol, iSize ) );
 
    wnd = HB_GTXWC_GET( pGT );
-   if( wnd && !s_fNoXServer )
+   if( wnd && ! s_fNoXServer )
    {
       if( wnd->fInit )
       {
@@ -5528,7 +5539,7 @@ static void hb_gt_xwc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 #endif
       }
 #if 0
-      else if( !wnd->fData )
+      else if( ! wnd->fData )
       {
          int iDefColor = HB_GTSELF_GETCOLOR( pGT );
          int iColor;
@@ -5537,7 +5548,7 @@ static void hb_gt_xwc_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
          while( iSize-- )
          {
-            if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
+            if( ! HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol++, &iColor, &bAttr, &usChar ) )
                break;
             if( iColor != iDefColor || usChar != ' ' )
             {
@@ -5559,12 +5570,12 @@ static void hb_gt_xwc_Refresh( PHB_GT pGT )
 {
    PXWND_DEF wnd;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Refresh(%p)", pGT) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_xwc_Refresh(%p)", pGT ) );
 
    wnd = HB_GTXWC_GET( pGT );
    HB_GTSUPER_REFRESH( pGT );
 
-   if( wnd && !s_fNoXServer )
+   if( wnd && ! s_fNoXServer )
    {
       HB_GTSELF_GETSCRCURSOR( pGT, &wnd->row, &wnd->col, &wnd->cursorType );
 
@@ -5577,7 +5588,7 @@ static void hb_gt_xwc_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_xwc_Init;
    pFuncTable->Exit                       = hb_gt_xwc_Exit;

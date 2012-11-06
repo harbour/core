@@ -54,7 +54,7 @@
 
 /* *********************************************************************** */
 
-#define HB_GT_NAME      SLN
+#define HB_GT_NAME  SLN
 
 #include "hbgtcore.h"
 #include "hbinit.h"
@@ -66,7 +66,7 @@
 #include "hbdate.h"
 
 #if defined( HB_OS_DARWIN ) || ( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
-#define REAL_UNIX_SYSTEM /* this is for slang.h to include some defs */
+#define REAL_UNIX_SYSTEM  /* this is for slang.h to include some defs */
 #endif
 #include <slang.h>
 
@@ -93,28 +93,28 @@
 /* missing defines in previous versions of Slang - this may not work ok ! */
 #ifdef HB_SLN_UTF8
 
-#define HB_SLN_SET_ACSC( slch )                 \
-            do { \
-               (slch).color |= SLSMG_ACS_MASK; \
-            } while( 0 )
-#define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )     \
-            do { \
-               SLsmg_Char_Type * outTab = (attr) & HB_GT_ATTR_BOX ? \
-                                          s_outboxTab : s_outputTab; \
-               (slch).color = outTab[ ( HB_BYTE ) (ch) ].color | \
-                              s_colorTab[ ( HB_BYTE ) (clr) ]; \
-               (slch).nchars = 1; \
-               (slch).wchars[ 0 ] = outTab[ ( HB_BYTE ) (ch) ].wchars[ 0 ]; \
-            } while( 0 )
+#define HB_SLN_SET_ACSC( slch )  \
+   do { \
+      ( slch ).color |= SLSMG_ACS_MASK; \
+   } while( 0 )
+#define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )  \
+   do { \
+      SLsmg_Char_Type * outTab = ( attr ) & HB_GT_ATTR_BOX ? \
+                                 s_outboxTab : s_outputTab; \
+      ( slch ).color = outTab[ ( HB_BYTE ) ( ch ) ].color | \
+                       s_colorTab[ ( HB_BYTE ) ( clr ) ]; \
+      ( slch ).nchars      = 1; \
+      ( slch ).wchars[ 0 ] = outTab[ ( HB_BYTE ) ( ch ) ].wchars[ 0 ]; \
+   } while( 0 )
 
 #define HB_SLN_BUILD_RAWCHAR( slch, ch, attr )  \
-            do { \
-                (slch).color = (attr); \
-                (slch).nchars = 1; \
-                (slch).wchars[ 0 ] = ( SLwchar_Type ) (ch); \
-            } while( 0 )
+   do { \
+      ( slch ).color       = ( attr ); \
+      ( slch ).nchars      = 1; \
+      ( slch ).wchars[ 0 ] = ( SLwchar_Type ) ( ch ); \
+   } while( 0 )
 
-#define HB_SLN_IS_CHAR( slch )     ( (slch).wchars[ 0 ] != 0 )
+#define HB_SLN_IS_CHAR( slch )             ( ( slch ).wchars[ 0 ] != 0 )
 
 #else /* !defined( HB_SLN_UTF8 ) */
 
@@ -142,33 +142,33 @@
 #endif
 #endif
 
-#define HB_SLN_SET_ACSC( slch )                 \
-            do { \
-               (slch) = SLSMG_BUILD_CHAR( (slch), 0x80 ); \
-            } while( 0 )
-#define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )     \
-            do { \
-               (slch) = ( (attr) & HB_GT_ATTR_BOX ? \
-                        s_outboxTab : s_outputTab )[ ( HB_BYTE ) (ch) ] | \
-                        s_colorTab[ ( HB_BYTE ) (clr) ]; \
-            } while( 0 )
+#define HB_SLN_SET_ACSC( slch )  \
+   do { \
+      ( slch ) = SLSMG_BUILD_CHAR( ( slch ), 0x80 ); \
+   } while( 0 )
+#define HB_SLN_BUILD_CHAR( slch, ch, clr, attr )  \
+   do { \
+      ( slch ) = ( ( attr ) & HB_GT_ATTR_BOX ? \
+                   s_outboxTab : s_outputTab )[ ( HB_BYTE ) ( ch ) ] | \
+                 s_colorTab[ ( HB_BYTE ) ( clr ) ]; \
+   } while( 0 )
 
 #define HB_SLN_BUILD_RAWCHAR( slch, ch, attr )  \
-            do { \
-                (slch) = SLSMG_BUILD_CHAR( (ch), (attr) ); \
-            } while( 0 )
+   do { \
+      ( slch ) = SLSMG_BUILD_CHAR( ( ch ), ( attr ) ); \
+   } while( 0 )
 
-#define HB_SLN_IS_CHAR( slch )     ( (slch) != 0 )
+#define HB_SLN_IS_CHAR( slch )  ( ( slch ) != 0 )
 
 #endif /* HB_SLN_UTF8 */
 
 /* *********************************************************************** */
 
 /* if we can not manipulate cursor state */
-#define SC_UNAVAIL -1
+#define SC_UNAVAIL          -1
 
 /* xHarbour compatible definitions */
-#if !defined( K_SH_LEFT )
+#if ! defined( K_SH_LEFT )
 #define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left  */
 #define K_SH_UP             K_UP     /* Shift-Up    == Up    */
 #define K_SH_RIGHT          K_RIGHT  /* Shift-Right == Right */
@@ -185,26 +185,27 @@
 
 /* *********************************************************************** */
 
-#define M_BUTTON_LEFT      0x0001
-#define M_BUTTON_RIGHT     0x0002
-#define M_BUTTON_MIDDLE    0x0004
-#define M_BUTTON_LDBLCK    0x0010
-#define M_BUTTON_RDBLCK    0x0020
-#define M_BUTTON_MDBLCK    0x0040
-#define M_BUTTON_WHEELUP   0x0100
-#define M_BUTTON_WHEELDOWN 0x0200
-#define M_CURSOR_MOVE      0x0400
-#define M_BUTTON_KEYMASK   (M_BUTTON_LEFT | M_BUTTON_RIGHT | M_BUTTON_MIDDLE)
-#define M_BUTTON_DBLMASK   (M_BUTTON_LDBLCK | M_BUTTON_RDBLCK | M_BUTTON_MDBLCK)
+#define M_BUTTON_LEFT       0x0001
+#define M_BUTTON_RIGHT      0x0002
+#define M_BUTTON_MIDDLE     0x0004
+#define M_BUTTON_LDBLCK     0x0010
+#define M_BUTTON_RDBLCK     0x0020
+#define M_BUTTON_MDBLCK     0x0040
+#define M_BUTTON_WHEELUP    0x0100
+#define M_BUTTON_WHEELDOWN  0x0200
+#define M_CURSOR_MOVE       0x0400
+#define M_BUTTON_KEYMASK    ( M_BUTTON_LEFT | M_BUTTON_RIGHT | M_BUTTON_MIDDLE )
+#define M_BUTTON_DBLMASK    ( M_BUTTON_LDBLCK | M_BUTTON_RDBLCK | M_BUTTON_MDBLCK )
 
-#define TIMEVAL_GET(tv)          gettimeofday(&(tv), NULL);
-#define TIMEVAL_LESS(tv1, tv2)   (((tv1).tv_sec == (tv2).tv_sec ) ?     \
-                                  ((tv1).tv_usec < (tv2).tv_usec) :     \
-                                  ((tv1).tv_sec  < (tv2).tv_sec ))
-#define TIMEVAL_ADD(dst, src, n) {                                      \
-      (dst).tv_sec = (src).tv_sec + n / 1000;                           \
-      if (((dst).tv_usec = (src).tv_usec+(n%1000)*1000)>=1000000) {     \
-         (dst).tv_usec -= 1000000; (dst).tv_sec++;                      \
+#define TIMEVAL_GET( tv )         gettimeofday( &( tv ), NULL );
+#define TIMEVAL_LESS( tv1, tv2 )  ( ( ( tv1 ).tv_sec == ( tv2 ).tv_sec ) ?     \
+                                    ( ( tv1 ).tv_usec < ( tv2 ).tv_usec ) :     \
+                                    ( ( tv1 ).tv_sec < ( tv2 ).tv_sec ) )
+#define TIMEVAL_ADD( dst, src, n )  \
+   {                                      \
+      ( dst ).tv_sec = ( src ).tv_sec + n / 1000;                           \
+      if( ( ( dst ).tv_usec = ( src ).tv_usec + ( n % 1000 ) * 1000 ) >= 1000000 ) {     \
+         ( dst ).tv_usec -= 1000000; ( dst ).tv_sec++;                      \
       } \
    }
 

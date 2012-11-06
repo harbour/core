@@ -86,7 +86,7 @@ static int hb_Inp9x( unsigned short int usPort )
 {
    unsigned short int usVal;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_Inp9x(%hu)", usPort));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_Inp9x(%hu)", usPort ) );
 
    #if defined( __BORLANDC__ ) || defined( __DMC__ )
 
@@ -124,7 +124,7 @@ static int hb_Inp9x( unsigned short int usPort )
 
 static int hb_Outp9x( unsigned short int usPort, unsigned short int usVal )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_Outp9x(%hu, %hu)", usPort, usVal));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_Outp9x(%hu, %hu)", usPort, usVal ) );
 
    #if defined( __BORLANDC__ ) || defined( __DMC__ )
 
@@ -164,7 +164,7 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
    int uLSB, uMSB;
    unsigned long lAdjFreq;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_w9xtone(%lf, %lf)", dFreq, dDurat));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_w9xtone(%lf, %lf)", dFreq, dDurat ) );
 
    /* sync with internal clock with very small time period */
    hb_idleSleep( 0.01 );
@@ -220,13 +220,13 @@ static void hb_gt_w9xTone( double dFreq, double dDurat )
 /* dDurat is in seconds */
 static void hb_gt_wNtTone( double dFreq, double dDurat )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_wNtTone(%lf, %lf)", dFreq, dDurat));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wNtTone(%lf, %lf)", dFreq, dDurat ) );
 
    /* Clipper ignores Tone() requests (but delays anyway) if Frequency is
       less than < 20 hz.  Windows NT minimum is 37... */
 
    if( dFreq >= 37.0 )
-      Beep( ( DWORD ) dFreq, ( DWORD ) ( dDurat * 1000 ) ); /* Beep wants Milliseconds */
+      Beep( ( DWORD ) dFreq, ( DWORD ) ( dDurat * 1000 ) );  /* Beep wants Milliseconds */
    else
       hb_idleSleep( dDurat );
 }
@@ -235,7 +235,7 @@ static void hb_gt_wNtTone( double dFreq, double dDurat )
 /* dDuration is in 'Ticks' (18.2 per second) */
 void hb_gt_winapi_tone( double dFrequency, double dDuration )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_winapi_tone(%lf, %lf)", dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_winapi_tone(%lf, %lf)", dFrequency, dDuration ) );
 
    /*
     * According to the Clipper NG, the duration in 'ticks' is truncated to the
@@ -243,10 +243,10 @@ void hb_gt_winapi_tone( double dFrequency, double dDuration )
     * resolution, but the minimum is 1 tick (for compatibility)
     */
    /* Convert from ticks to seconds */
-   dDuration  = ( HB_MIN( HB_MAX( 1.0, dDuration ), ULONG_MAX ) ) / 18.2;
+   dDuration = ( HB_MIN( HB_MAX( 1.0, dDuration ), ULONG_MAX ) ) / 18.2;
 
    /* keep the frequency in an acceptable range */
-   dFrequency =   HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
+   dFrequency = HB_MIN( HB_MAX( 0.0, dFrequency ), 32767.0 );
 
 #if defined( HB_HAS_WIN9X_TONE )
    if( hb_iswin9x() )

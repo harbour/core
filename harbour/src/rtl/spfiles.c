@@ -59,7 +59,7 @@ HB_BOOL hb_spFile( const char * pszFilename, char * pszRetPath )
    HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", pszFilename, pszRetPath));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spFile(%s, %p)", pszFilename, pszRetPath ) );
 
    if( pszRetPath )
       pszPath = pszRetPath;
@@ -123,7 +123,7 @@ HB_BOOL hb_spFileExists( const char * pszFilename, char * pszRetPath )
    HB_BOOL bIsFile = HB_FALSE;
    PHB_FNAME pFilepath;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_spFile(%s, %p)", pszFilename, pszRetPath));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spFile(%s, %p)", pszFilename, pszRetPath ) );
 
    if( pszRetPath )
       pszPath = pszRetPath;
@@ -185,7 +185,7 @@ HB_FHANDLE hb_spOpen( const char * pszFilename, HB_USHORT uiFlags )
 {
    char szPath[ HB_PATH_MAX ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_spOpen(%p, %hu)", pszFilename, uiFlags));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spOpen(%p, %hu)", pszFilename, uiFlags ) );
 
    if( hb_spFile( pszFilename, szPath ) )
       return hb_fsOpen( szPath, uiFlags );
@@ -198,7 +198,7 @@ HB_FHANDLE hb_spCreate( const char * pszFilename, HB_FATTR ulAttr )
    char szPath[ HB_PATH_MAX ];
    PHB_FNAME pFilepath;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_spCreate(%p, %u)", pszFilename, ulAttr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spCreate(%p, %u)", pszFilename, ulAttr ) );
 
    pFilepath = hb_fsFNameSplit( pszFilename );
    if( ! pFilepath->szPath )
@@ -215,7 +215,7 @@ HB_FHANDLE hb_spCreateEx( const char * pszFilename, HB_FATTR ulAttr, HB_USHORT u
    char szPath[ HB_PATH_MAX ];
    PHB_FNAME pFilepath;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_spCreateEx(%p, %u, %hu)", pszFilename, ulAttr, uiFlags));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_spCreateEx(%p, %u, %hu)", pszFilename, ulAttr, uiFlags ) );
 
    pFilepath = hb_fsFNameSplit( pszFilename );
    if( ! pFilepath->szPath )

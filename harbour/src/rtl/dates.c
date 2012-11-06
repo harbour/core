@@ -75,7 +75,7 @@ char * hb_dateFormat( const char * szDate, char * szFormattedDate, const char * 
     */
    int format_count, digit_count, size;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateFormat(%s, %p, %s)", szDate, szFormattedDate, szDateFormat));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dateFormat(%s, %p, %s)", szDate, szFormattedDate, szDateFormat ) );
 
    /*
     * Determine the maximum size of the formatted date string
@@ -250,7 +250,7 @@ static int hb_dateUnformatRaw( const char * szDate, const char * szDateFormat, l
    int d_value = 0, m_value = 0, y_value = 0;
    int iSize = 0;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateUnformatRaw(%s, %s, %p)", szDate, szDateFormat, plDate));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dateUnformatRaw(%s, %s, %p)", szDate, szDateFormat, plDate ) );
 
    if( szDate )
    {
@@ -365,7 +365,7 @@ long hb_dateUnformat( const char * szDate, const char * szDateFormat )
 {
    long lDate;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_dateFormat(%s, %s)", szDate, szDateFormat));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_dateFormat(%s, %s)", szDate, szDateFormat ) );
 
    hb_dateUnformatRaw( szDate, szDateFormat, &lDate );
 
@@ -389,7 +389,7 @@ char * hb_timeFormat( char * szBuffer, const char * szTimeFormat, long lMilliSec
    int iHour, iMinutes, iSeconds, iMSec, iPM, i12;
    int size, i, ch, count, value, digits, skip;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_timeFormat(%p, %s, %ld)", szBuffer, szTimeFormat, lMilliSec));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timeFormat(%p, %s, %ld)", szBuffer, szTimeFormat, lMilliSec ) );
 
    hb_timeDecode( lMilliSec, &iHour, &iMinutes, &iSeconds, &iMSec );
    szTimeBuffer = szBuffer;
@@ -513,7 +513,7 @@ char * hb_timeStampFormat( char * szBuffer,
 {
    char szDate[ 9 ], * szTimeBuffer;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampFormat(%p, %s, %s, %ld, %ld)", szBuffer, szDateFormat, szTimeFormat, lJulian, lMilliSec));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timeStampFormat(%p, %s, %s, %ld, %ld)", szBuffer, szDateFormat, szTimeFormat, lJulian, lMilliSec ) );
 
    hb_dateDecStr( szDate, lJulian );
    hb_dateFormat( szDate, szBuffer, szDateFormat );
@@ -530,7 +530,7 @@ long hb_timeUnformat( const char * szTime, const char * szTimeFormat )
    int iHour, iMinutes, iSeconds, iMSec, iPM;
    int size, i, count, prec, * pValue;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_timeUnformat(%s, %s)", szTime, szTimeFormat));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timeUnformat(%s, %s)", szTime, szTimeFormat ) );
 
    if( ! szTime )
       return 0;
@@ -565,7 +565,7 @@ long hb_timeUnformat( const char * szTime, const char * szTimeFormat )
          case 'p':
             if( iPM < 0 )
             {
-               while( szTime[ count ] && !HB_ISDIGIT( szTime[ count ] ) &&
+               while( szTime[ count ] && ! HB_ISDIGIT( szTime[ count ] ) &&
                       szTime[ count ] != 'P' && szTime[ count ] != 'p' &&
                       szTime[ count ] != 'A' && szTime[ count ] != 'a' )
                   ++count;
@@ -580,7 +580,7 @@ long hb_timeUnformat( const char * szTime, const char * szTimeFormat )
       if( pValue && *pValue < 0 )
       {
          *pValue = 0;
-         while( szTime[ count ] && !HB_ISDIGIT( szTime[ count ] ) )
+         while( szTime[ count ] && ! HB_ISDIGIT( szTime[ count ] ) )
             ++count;
          while( HB_ISDIGIT( szTime[ count ] ) )
          {
@@ -604,7 +604,9 @@ long hb_timeUnformat( const char * szTime, const char * szTimeFormat )
       if( prec > 3 )
       {
          do
+         {
             iMSec /= 10;
+         }
          while( --prec > 3 );
       }
       else while( prec++ < 3 )
@@ -632,7 +634,7 @@ void hb_timeStampUnformat( const char * szDateTime,
                            const char * szDateFormat, const char * szTimeFormat,
                            long * plJulian, long * plMilliSec )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_timeStampUnformat(%s, %s, %s, %p, %p)", szDateTime, szDateFormat, szTimeFormat, plJulian, plMilliSec));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_timeStampUnformat(%s, %s, %s, %p, %p)", szDateTime, szDateFormat, szTimeFormat, plJulian, plMilliSec ) );
 
    if( szDateTime )
    {

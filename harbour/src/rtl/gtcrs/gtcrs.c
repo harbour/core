@@ -55,10 +55,10 @@
 
 #include "gtcrs.h"
 
-static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+static int s_GtId;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER   ( &SuperTable )
+#define HB_GTID_PTR  ( &s_GtId )
 
 static volatile HB_BOOL s_SignalTable[ MAX_SIGNO ];
 #if defined( SA_NOCLDSTOP ) && defined( SA_RESTART ) && defined( SIGCHLD )
@@ -72,15 +72,17 @@ static volatile HB_BOOL s_WinSizeChangeFlag = HB_FALSE;
 
 static int s_iStdIn, s_iStdOut, s_iStdErr;
 
-typedef struct evtFD {
-   int fd;
-   int mode;
-   int status;
-   void *data;
-   int (*eventFunc) (int, int, void*);
+typedef struct evtFD
+{
+   int    fd;
+   int    mode;
+   int    status;
+   void * data;
+   int ( * eventFunc )( int, int, void * );
 } evtFD;
 
-typedef struct mouseEvent {
+typedef struct mouseEvent
+{
    int row, col;
    int buttonstate;
    int lbuttons;
@@ -97,25 +99,27 @@ typedef struct mouseEvent {
    struct timeval BM_time;
 } mouseEvent;
 
-typedef struct keyTab {
-   int  ch;
+typedef struct keyTab
+{
+   int ch;
    int key;
-   struct keyTab *nextCh;
-   struct keyTab *otherCh;
+   struct keyTab * nextCh;
+   struct keyTab * otherCh;
 } keyTab;
 
-typedef struct InOutBase {
+typedef struct InOutBase
+{
    int terminal_type;
 
-   struct keyTab *pKeyTab;
+   struct keyTab * pKeyTab;
    int key_flag;
    int esc_delay;
    int key_counter;
    int nation_mode;
-   unsigned char *in_transtbl;
-   unsigned char *out_transtbl;
-   unsigned char *nation_transtbl;
-   int *charmap;
+   unsigned char * in_transtbl;
+   unsigned char * out_transtbl;
+   unsigned char * nation_transtbl;
+   int * charmap;
 
    int cursor, lcursor;
    int row, col;
@@ -123,13 +127,13 @@ typedef struct InOutBase {
    int is_color;
    unsigned int disp_count;
 
-   char *acsc, *beep, *flash, *civis, *cnorm, *cvvis;
+   char * acsc, * beep, * flash, * civis, * cnorm, * cvvis;
 
    int mouse_type;
    int mButtons;
    int nTermMouseChars;
-   unsigned char cTermMouseBuf[3];
-   mouseEvent mLastEvt;
+   unsigned char cTermMouseBuf[ 3 ];
+   mouseEvent    mLastEvt;
 #if defined( HB_HAS_GPM )
    Gpm_Connect Conn;
 #endif
@@ -147,26 +151,26 @@ typedef struct InOutBase {
    int stdin_ptr_r;
    int stdin_inbuf;
 
-   evtFD **event_fds;
-   int efds_size;
-   int efds_no;
+   evtFD ** event_fds;
+   int      efds_size;
+   int      efds_no;
 
    /* curses data */
-   SCREEN *basescr;
-   WINDOW *hb_stdscr;
-   FILE *basein;
-   FILE *baseout;
-   chtype std_chmap[ 256 ];
-   chtype box_chmap[ 256 ];
-   chtype attr_map[ 256 ];
-   chtype attr_mask;
+   SCREEN * basescr;
+   WINDOW * hb_stdscr;
+   FILE *   basein;
+   FILE *   baseout;
+   chtype   std_chmap[ 256 ];
+   chtype   box_chmap[ 256 ];
+   chtype   attr_map[ 256 ];
+   chtype   attr_mask;
 } InOutBase;
 
 static InOutBase * s_ioBase = NULL;
 
-static InOutBase ** s_ioBaseTab = NULL;
-static int s_iSize_ioBaseTab = 0;
-static int s_iActive_ioBase = -1;
+static InOutBase ** s_ioBaseTab       = NULL;
+static int          s_iSize_ioBaseTab = 0;
+static int          s_iActive_ioBase  = -1;
 
 static void set_tmevt( unsigned char * cMBuf, mouseEvent * );
 static int getMouseKey( mouseEvent * );
@@ -175,7 +179,8 @@ static void set_sig_handler( int iSig );
 
 static void curs_wrkaround( void );
 
-typedef struct ClipKeyCode {
+typedef struct ClipKeyCode
+{
    int key;
    int alt_key;
    int ctrl_key;
@@ -186,140 +191,140 @@ typedef struct ClipKeyCode {
  * It cause that we don't have to make any linear scans
  * to access information proper ClipKeyCode entry
  */
-static const ClipKeyCode stdKeyTab[NO_STDKEYS] = {
-   {K_SPACE,              0,             0,         0}, /*  32 */
-   {'!',                  0,             0,         0}, /*  33 */
-   {'"',                  0,             0,         0}, /*  34 */
-   {'#',                  0,             0,         0}, /*  35 */
-   {'$',                  0,             0,         0}, /*  36 */
-   {'%',                  0,             0,         0}, /*  37 */
-   {'&',                  0,             0,         0}, /*  38 */
-   {'\'',               296,             7,         0}, /*  39 */
-   {'(',                  0,             0,         0}, /*  40 */
-   {')',                  0,             0,         0}, /*  41 */
-   {'*',                  0,             0,         0}, /*  42 */
-   {'+',                  0,             0,         0}, /*  43 */
-   {',',                307,             0,         0}, /*  44 */
-   {'-',                386,            31,         0}, /*  45 */
-   {'.',                308,             0,         0}, /*  46 */
-   {'/',                309,           127,         0}, /*  47 */
-   {'0',            K_ALT_0,             0,         0}, /*  48 */
-   {'1',            K_ALT_1,             0,         0}, /*  49 */
-   {'2',            K_ALT_2,           259,         0}, /*  50 */
-   {'3',            K_ALT_3,            27,         0}, /*  51 */
-   {'4',            K_ALT_4,            28,         0}, /*  52 */
-   {'5',            K_ALT_5,            29,         0}, /*  53 */
-   {'6',            K_ALT_6,            30,         0}, /*  54 */
-   {'7',            K_ALT_7,            31,         0}, /*  55 */
-   {'8',            K_ALT_8,           127,         0}, /*  56 */
-   {'9',            K_ALT_9,             0,         0}, /*  57 */
-   {':',                  0,             0,         0}, /*  58 */
-   {';',                295,             0,         0}, /*  59 */
-   {'<',                  0,             0,         0}, /*  60 */
-   {'=',       K_ALT_EQUALS,             0,         0}, /*  61 */
-   {'>',                  0,             0,         0}, /*  62 */
-   {'?',                  0,             0,         0}, /*  63 */
-   {'@',                  0,             0,         0}, /*  64 */
-   {'A',            K_ALT_A,      K_CTRL_A,         0}, /*  65 */
-   {'B',            K_ALT_B,      K_CTRL_B,         0}, /*  66 */
-   {'C',            K_ALT_C,      K_CTRL_C,         0}, /*  67 */
-   {'D',            K_ALT_D,      K_CTRL_D,         0}, /*  68 */
-   {'E',            K_ALT_E,      K_CTRL_E,         0}, /*  69 */
-   {'F',            K_ALT_F,      K_CTRL_F,         0}, /*  70 */
-   {'G',            K_ALT_G,      K_CTRL_G,         0}, /*  71 */
-   {'H',            K_ALT_H,      K_CTRL_H,         0}, /*  72 */
-   {'I',            K_ALT_I,      K_CTRL_I,         0}, /*  73 */
-   {'J',            K_ALT_J,      K_CTRL_J,         0}, /*  74 */
-   {'K',            K_ALT_K,      K_CTRL_K,         0}, /*  75 */
-   {'L',            K_ALT_L,      K_CTRL_L,         0}, /*  76 */
-   {'M',            K_ALT_M,      K_CTRL_M,         0}, /*  77 */
-   {'N',            K_ALT_N,      K_CTRL_N,         0}, /*  78 */
-   {'O',            K_ALT_O,      K_CTRL_O,         0}, /*  79 */
-   {'P',            K_ALT_P,      K_CTRL_P,         0}, /*  80 */
-   {'Q',            K_ALT_Q,      K_CTRL_Q,         0}, /*  81 */
-   {'R',            K_ALT_R,      K_CTRL_R,         0}, /*  82 */
-   {'S',            K_ALT_S,      K_CTRL_S,         0}, /*  83 */
-   {'T',            K_ALT_T,      K_CTRL_T,         0}, /*  84 */
-   {'U',            K_ALT_U,      K_CTRL_U,         0}, /*  85 */
-   {'V',            K_ALT_V,      K_CTRL_V,         0}, /*  86 */
-   {'W',            K_ALT_W,      K_CTRL_W,         0}, /*  87 */
-   {'X',            K_ALT_X,      K_CTRL_X,         0}, /*  88 */
-   {'Y',            K_ALT_Y,      K_CTRL_Y,         0}, /*  89 */
-   {'Z',            K_ALT_Z,      K_CTRL_Z,         0}, /*  90 */
-   {'[',                282,            27,         0}, /*  91 */
-   {'\\',               299,            28,         0}, /*  92 */
-   {']',                283,            29,         0}, /*  93 */
-   {'^',            K_ALT_6,            30,         0}, /*  94 */
-   {'_',                386,            31,         0}, /*  95 */
-   {'`',                297,           297,         0}, /*  96 */
-   {'a',            K_ALT_A,      K_CTRL_A,         0}, /*  97 */
-   {'b',            K_ALT_B,      K_CTRL_B,         0}, /*  98 */
-   {'c',            K_ALT_C,      K_CTRL_C,         0}, /*  99 */
-   {'d',            K_ALT_D,      K_CTRL_D,         0}, /* 100 */
-   {'e',            K_ALT_E,      K_CTRL_E,         0}, /* 101 */
-   {'f',            K_ALT_F,      K_CTRL_F,         0}, /* 102 */
-   {'g',            K_ALT_G,      K_CTRL_G,         0}, /* 103 */
-   {'h',            K_ALT_H,      K_CTRL_H,         0}, /* 104 */
-   {'i',            K_ALT_I,      K_CTRL_I,         0}, /* 105 */
-   {'j',            K_ALT_J,      K_CTRL_J,         0}, /* 106 */
-   {'k',            K_ALT_K,      K_CTRL_K,         0}, /* 107 */
-   {'l',            K_ALT_L,      K_CTRL_L,         0}, /* 108 */
-   {'m',            K_ALT_M,      K_CTRL_M,         0}, /* 109 */
-   {'n',            K_ALT_N,      K_CTRL_N,         0}, /* 110 */
-   {'o',            K_ALT_O,      K_CTRL_O,         0}, /* 111 */
-   {'p',            K_ALT_P,      K_CTRL_P,         0}, /* 112 */
-   {'q',            K_ALT_Q,      K_CTRL_Q,         0}, /* 113 */
-   {'r',            K_ALT_R,      K_CTRL_R,         0}, /* 114 */
-   {'s',            K_ALT_S,      K_CTRL_S,         0}, /* 115 */
-   {'t',            K_ALT_T,      K_CTRL_T,         0}, /* 116 */
-   {'u',            K_ALT_U,      K_CTRL_U,         0}, /* 117 */
-   {'v',            K_ALT_V,      K_CTRL_V,         0}, /* 118 */
-   {'w',            K_ALT_W,      K_CTRL_W,         0}, /* 119 */
-   {'x',            K_ALT_X,      K_CTRL_X,         0}, /* 120 */
-   {'y',            K_ALT_Y,      K_CTRL_Y,         0}, /* 121 */
-   {'z',            K_ALT_Z,      K_CTRL_Z,         0}, /* 122 */
-   {'{',                282,            27,         0}, /* 123 */
-   {'|',                299,            28,         0}, /* 124 */
-   {'}',                283,            29,         0}, /* 125 */
-   {'~',                297,           297,         0}, /* 126 */
-   {K_CTRL_BS,     K_ALT_BS,           127,         0}  /* 127 */
+static const ClipKeyCode stdKeyTab[ NO_STDKEYS ] = {
+   { K_SPACE,   0,            0,        0 },            /*  32 */
+   { '!',       0,            0,        0 },            /*  33 */
+   { '"',       0,            0,        0 },            /*  34 */
+   { '#',       0,            0,        0 },            /*  35 */
+   { '$',       0,            0,        0 },            /*  36 */
+   { '%',       0,            0,        0 },            /*  37 */
+   { '&',       0,            0,        0 },            /*  38 */
+   { '\'',      296,          7,        0 },            /*  39 */
+   { '(',       0,            0,        0 },            /*  40 */
+   { ')',       0,            0,        0 },            /*  41 */
+   { '*',       0,            0,        0 },            /*  42 */
+   { '+',       0,            0,        0 },            /*  43 */
+   { ',',       307,          0,        0 },            /*  44 */
+   { '-',       386,          31,       0 },            /*  45 */
+   { '.',       308,          0,        0 },            /*  46 */
+   { '/',       309,          127,      0 },            /*  47 */
+   { '0',       K_ALT_0,      0,        0 },            /*  48 */
+   { '1',       K_ALT_1,      0,        0 },            /*  49 */
+   { '2',       K_ALT_2,      259,      0 },            /*  50 */
+   { '3',       K_ALT_3,      27,       0 },            /*  51 */
+   { '4',       K_ALT_4,      28,       0 },            /*  52 */
+   { '5',       K_ALT_5,      29,       0 },            /*  53 */
+   { '6',       K_ALT_6,      30,       0 },            /*  54 */
+   { '7',       K_ALT_7,      31,       0 },            /*  55 */
+   { '8',       K_ALT_8,      127,      0 },            /*  56 */
+   { '9',       K_ALT_9,      0,        0 },            /*  57 */
+   { ':',       0,            0,        0 },            /*  58 */
+   { ';',       295,          0,        0 },            /*  59 */
+   { '<',       0,            0,        0 },            /*  60 */
+   { '=',       K_ALT_EQUALS, 0,        0 },            /*  61 */
+   { '>',       0,            0,        0 },            /*  62 */
+   { '?',       0,            0,        0 },            /*  63 */
+   { '@',       0,            0,        0 },            /*  64 */
+   { 'A',       K_ALT_A,      K_CTRL_A, 0 },            /*  65 */
+   { 'B',       K_ALT_B,      K_CTRL_B, 0 },            /*  66 */
+   { 'C',       K_ALT_C,      K_CTRL_C, 0 },            /*  67 */
+   { 'D',       K_ALT_D,      K_CTRL_D, 0 },            /*  68 */
+   { 'E',       K_ALT_E,      K_CTRL_E, 0 },            /*  69 */
+   { 'F',       K_ALT_F,      K_CTRL_F, 0 },            /*  70 */
+   { 'G',       K_ALT_G,      K_CTRL_G, 0 },            /*  71 */
+   { 'H',       K_ALT_H,      K_CTRL_H, 0 },            /*  72 */
+   { 'I',       K_ALT_I,      K_CTRL_I, 0 },            /*  73 */
+   { 'J',       K_ALT_J,      K_CTRL_J, 0 },            /*  74 */
+   { 'K',       K_ALT_K,      K_CTRL_K, 0 },            /*  75 */
+   { 'L',       K_ALT_L,      K_CTRL_L, 0 },            /*  76 */
+   { 'M',       K_ALT_M,      K_CTRL_M, 0 },            /*  77 */
+   { 'N',       K_ALT_N,      K_CTRL_N, 0 },            /*  78 */
+   { 'O',       K_ALT_O,      K_CTRL_O, 0 },            /*  79 */
+   { 'P',       K_ALT_P,      K_CTRL_P, 0 },            /*  80 */
+   { 'Q',       K_ALT_Q,      K_CTRL_Q, 0 },            /*  81 */
+   { 'R',       K_ALT_R,      K_CTRL_R, 0 },            /*  82 */
+   { 'S',       K_ALT_S,      K_CTRL_S, 0 },            /*  83 */
+   { 'T',       K_ALT_T,      K_CTRL_T, 0 },            /*  84 */
+   { 'U',       K_ALT_U,      K_CTRL_U, 0 },            /*  85 */
+   { 'V',       K_ALT_V,      K_CTRL_V, 0 },            /*  86 */
+   { 'W',       K_ALT_W,      K_CTRL_W, 0 },            /*  87 */
+   { 'X',       K_ALT_X,      K_CTRL_X, 0 },            /*  88 */
+   { 'Y',       K_ALT_Y,      K_CTRL_Y, 0 },            /*  89 */
+   { 'Z',       K_ALT_Z,      K_CTRL_Z, 0 },            /*  90 */
+   { '[',       282,          27,       0 },            /*  91 */
+   { '\\',      299,          28,       0 },            /*  92 */
+   { ']',       283,          29,       0 },            /*  93 */
+   { '^',       K_ALT_6,      30,       0 },            /*  94 */
+   { '_',       386,          31,       0 },            /*  95 */
+   { '`',       297,          297,      0 },            /*  96 */
+   { 'a',       K_ALT_A,      K_CTRL_A, 0 },            /*  97 */
+   { 'b',       K_ALT_B,      K_CTRL_B, 0 },            /*  98 */
+   { 'c',       K_ALT_C,      K_CTRL_C, 0 },            /*  99 */
+   { 'd',       K_ALT_D,      K_CTRL_D, 0 },            /* 100 */
+   { 'e',       K_ALT_E,      K_CTRL_E, 0 },            /* 101 */
+   { 'f',       K_ALT_F,      K_CTRL_F, 0 },            /* 102 */
+   { 'g',       K_ALT_G,      K_CTRL_G, 0 },            /* 103 */
+   { 'h',       K_ALT_H,      K_CTRL_H, 0 },            /* 104 */
+   { 'i',       K_ALT_I,      K_CTRL_I, 0 },            /* 105 */
+   { 'j',       K_ALT_J,      K_CTRL_J, 0 },            /* 106 */
+   { 'k',       K_ALT_K,      K_CTRL_K, 0 },            /* 107 */
+   { 'l',       K_ALT_L,      K_CTRL_L, 0 },            /* 108 */
+   { 'm',       K_ALT_M,      K_CTRL_M, 0 },            /* 109 */
+   { 'n',       K_ALT_N,      K_CTRL_N, 0 },            /* 110 */
+   { 'o',       K_ALT_O,      K_CTRL_O, 0 },            /* 111 */
+   { 'p',       K_ALT_P,      K_CTRL_P, 0 },            /* 112 */
+   { 'q',       K_ALT_Q,      K_CTRL_Q, 0 },            /* 113 */
+   { 'r',       K_ALT_R,      K_CTRL_R, 0 },            /* 114 */
+   { 's',       K_ALT_S,      K_CTRL_S, 0 },            /* 115 */
+   { 't',       K_ALT_T,      K_CTRL_T, 0 },            /* 116 */
+   { 'u',       K_ALT_U,      K_CTRL_U, 0 },            /* 117 */
+   { 'v',       K_ALT_V,      K_CTRL_V, 0 },            /* 118 */
+   { 'w',       K_ALT_W,      K_CTRL_W, 0 },            /* 119 */
+   { 'x',       K_ALT_X,      K_CTRL_X, 0 },            /* 120 */
+   { 'y',       K_ALT_Y,      K_CTRL_Y, 0 },            /* 121 */
+   { 'z',       K_ALT_Z,      K_CTRL_Z, 0 },            /* 122 */
+   { '{',       282,          27,       0 },            /* 123 */
+   { '|',       299,          28,       0 },            /* 124 */
+   { '}',       283,          29,       0 },            /* 125 */
+   { '~',       297,          297,      0 },            /* 126 */
+   { K_CTRL_BS, K_ALT_BS,     127,      0 }             /* 127 */
 };
 
-static const ClipKeyCode extdKeyTab[NO_EXTDKEYS] = {
-   {K_F1,          K_ALT_F1,     K_CTRL_F1,   K_SH_F1}, /*  00 */
-   {K_F2,          K_ALT_F2,     K_CTRL_F2,   K_SH_F2}, /*  01 */
-   {K_F3,          K_ALT_F3,     K_CTRL_F3,   K_SH_F3}, /*  02 */
-   {K_F4,          K_ALT_F4,     K_CTRL_F4,   K_SH_F4}, /*  03 */
-   {K_F5,          K_ALT_F5,     K_CTRL_F5,   K_SH_F5}, /*  04 */
-   {K_F6,          K_ALT_F6,     K_CTRL_F6,   K_SH_F6}, /*  05 */
-   {K_F7,          K_ALT_F7,     K_CTRL_F7,   K_SH_F7}, /*  06 */
-   {K_F8,          K_ALT_F8,     K_CTRL_F8,   K_SH_F8}, /*  07 */
-   {K_F9,          K_ALT_F9,     K_CTRL_F9,   K_SH_F9}, /*  08 */
-   {K_F10,        K_ALT_F10,    K_CTRL_F10,  K_SH_F10}, /*  09 */
-   {K_F11,        K_ALT_F11,    K_CTRL_F11,  K_SH_F11}, /*  10 */
-   {K_F12,        K_ALT_F12,    K_CTRL_F12,  K_SH_F12}, /*  11 */
+static const ClipKeyCode extdKeyTab[ NO_EXTDKEYS ] = {
+   { K_F1,      K_ALT_F1,     K_CTRL_F1,     K_SH_F1    }, /*  00 */
+   { K_F2,      K_ALT_F2,     K_CTRL_F2,     K_SH_F2    }, /*  01 */
+   { K_F3,      K_ALT_F3,     K_CTRL_F3,     K_SH_F3    }, /*  02 */
+   { K_F4,      K_ALT_F4,     K_CTRL_F4,     K_SH_F4    }, /*  03 */
+   { K_F5,      K_ALT_F5,     K_CTRL_F5,     K_SH_F5    }, /*  04 */
+   { K_F6,      K_ALT_F6,     K_CTRL_F6,     K_SH_F6    }, /*  05 */
+   { K_F7,      K_ALT_F7,     K_CTRL_F7,     K_SH_F7    }, /*  06 */
+   { K_F8,      K_ALT_F8,     K_CTRL_F8,     K_SH_F8    }, /*  07 */
+   { K_F9,      K_ALT_F9,     K_CTRL_F9,     K_SH_F9    }, /*  08 */
+   { K_F10,     K_ALT_F10,    K_CTRL_F10,    K_SH_F10   }, /*  09 */
+   { K_F11,     K_ALT_F11,    K_CTRL_F11,    K_SH_F11   }, /*  10 */
+   { K_F12,     K_ALT_F12,    K_CTRL_F12,    K_SH_F12   }, /*  11 */
 
-   {K_UP,          K_ALT_UP,     K_CTRL_UP,   K_SH_UP}, /*  12 */
-   {K_DOWN,      K_ALT_DOWN,   K_CTRL_DOWN, K_SH_DOWN}, /*  13 */
-   {K_LEFT,      K_ALT_LEFT,   K_CTRL_LEFT, K_SH_LEFT}, /*  14 */
-   {K_RIGHT,    K_ALT_RIGHT,  K_CTRL_RIGHT,K_SH_RIGHT}, /*  15 */
-   {K_INS,        K_ALT_INS,    K_CTRL_INS,  K_SH_INS}, /*  16 */
-   {K_DEL,        K_ALT_DEL,    K_CTRL_DEL,  K_SH_DEL}, /*  17 */
-   {K_HOME,      K_ALT_HOME,   K_CTRL_HOME, K_SH_HOME}, /*  18 */
-   {K_END,        K_ALT_END,    K_CTRL_END,  K_SH_END}, /*  19 */
-   {K_PGUP,      K_ALT_PGUP,   K_CTRL_PGUP, K_SH_PGUP}, /*  20 */
-   {K_PGDN,      K_ALT_PGDN,   K_CTRL_PGDN, K_SH_PGDN}, /*  21 */
+   { K_UP,      K_ALT_UP,     K_CTRL_UP,     K_SH_UP    }, /*  12 */
+   { K_DOWN,    K_ALT_DOWN,   K_CTRL_DOWN,   K_SH_DOWN  }, /*  13 */
+   { K_LEFT,    K_ALT_LEFT,   K_CTRL_LEFT,   K_SH_LEFT  }, /*  14 */
+   { K_RIGHT,   K_ALT_RIGHT,  K_CTRL_RIGHT,  K_SH_RIGHT }, /*  15 */
+   { K_INS,     K_ALT_INS,    K_CTRL_INS,    K_SH_INS   }, /*  16 */
+   { K_DEL,     K_ALT_DEL,    K_CTRL_DEL,    K_SH_DEL   }, /*  17 */
+   { K_HOME,    K_ALT_HOME,   K_CTRL_HOME,   K_SH_HOME  }, /*  18 */
+   { K_END,     K_ALT_END,    K_CTRL_END,    K_SH_END   }, /*  19 */
+   { K_PGUP,    K_ALT_PGUP,   K_CTRL_PGUP,   K_SH_PGUP  }, /*  20 */
+   { K_PGDN,    K_ALT_PGDN,   K_CTRL_PGDN,   K_SH_PGDN  }, /*  21 */
 
-   {K_BS,          K_ALT_BS,           127,   K_SH_BS}, /*  22 */
-   {K_TAB,        K_ALT_TAB,    K_CTRL_TAB,  K_SH_TAB}, /*  23 */
-   {K_ESC,        K_ALT_ESC,         K_ESC,         0}, /*  24 */
+   { K_BS,      K_ALT_BS,     127,           K_SH_BS    }, /*  22 */
+   { K_TAB,     K_ALT_TAB,    K_CTRL_TAB,    K_SH_TAB   }, /*  23 */
+   { K_ESC,     K_ALT_ESC,    K_ESC,         0          }, /*  24 */
 
-   {K_ENTER,    K_ALT_ENTER,  K_CTRL_ENTER,K_SH_ENTER}, /*  25 */
+   { K_ENTER,   K_ALT_ENTER,  K_CTRL_ENTER,  K_SH_ENTER }, /*  25 */
 
-   {K_ENTER,   KP_ALT_ENTER,  K_CTRL_ENTER,         0}, /*  26 */
-   {KP_CENTER,            0,     KP_CTRL_5,         0}, /*  27 */
-   {K_PRTSCR,             0, K_CTRL_PRTSCR,         0}, /*  28 */
-   {K_PAUSE,              0,             0,         0}  /*  29 */
+   { K_ENTER,   KP_ALT_ENTER, K_CTRL_ENTER,  0          }, /*  26 */
+   { KP_CENTER, 0,            KP_CTRL_5,     0          }, /*  27 */
+   { K_PRTSCR,  0,            K_CTRL_PRTSCR, 0          }, /*  28 */
+   { K_PAUSE,   0,            0,             0          } /*  29 */
 };
 
 
@@ -332,7 +337,7 @@ static int getClipKey( int nKey )
    else
    {
       nFlag = GET_KEYMASK( nKey );
-      nKey = CLR_KEYMASK( nKey );
+      nKey  = CLR_KEYMASK( nKey );
       if( nFlag & KEY_EXTDMASK )
       {
          if( nKey >= 0 && nKey < NO_EXTDKEYS )
@@ -415,7 +420,6 @@ static void sig_handler( int signo )
    }
 
    errno = e;
-   return;
 }
 
 static void set_signals( void )
@@ -425,15 +429,15 @@ static void set_signals( void )
    s_SignalFlag = HB_FALSE;
    for( i = 1; i < MAX_SIGNO; ++i )
    {
-      s_SignalTable[i] = HB_FALSE;
+      s_SignalTable[ i ] = HB_FALSE;
    }
 
    /* Ignore SIGPIPEs so they don't kill us. */
    signal( SIGPIPE, SIG_IGN );
 
-   for( i = 0; sigs[i]; ++i )
+   for( i = 0; sigs[ i ]; ++i )
    {
-      set_sig_handler( sigs[i] );
+      set_sig_handler( sigs[ i ] );
    }
 }
 
@@ -441,7 +445,7 @@ static void set_signals( void )
 static void sig_handler( int signo )
 {
    int e = errno;
-   char *pszSig;
+   char * pszSig;
 
    switch( signo )
    {
@@ -486,7 +490,6 @@ static void sig_handler( int signo )
    fflush( stdout );
 
    errno = e;
-   return;
 }
 
 static void set_signals( void )
@@ -496,7 +499,7 @@ static void set_signals( void )
    s_SignalFlag = HB_FALSE;
    for( i = 1; i < MAX_SIGNO; ++i )
    {
-      s_SignalTable[i] = HB_FALSE;
+      s_SignalTable[ i ] = HB_FALSE;
       set_sig_handler( i );
    }
 }
@@ -524,9 +527,9 @@ static void set_sig_handler( int iSig )
 
 
 static int add_efds( InOutBase * ioBase, int fd, int mode,
-                     int ( *eventFunc ) ( int, int, void * ), void *data )
+                     int ( * eventFunc )( int, int, void * ), void * data )
 {
-   struct evtFD *pefd = NULL;
+   struct evtFD * pefd = NULL;
    int i, fl;
 
    if( eventFunc == NULL && mode != O_RDONLY )
@@ -540,9 +543,9 @@ static int add_efds( InOutBase * ioBase, int fd, int mode,
        ( fl == O_WRONLY && mode == O_RDONLY ) )
       return -1;
 
-   for( i = 0; i < ioBase->efds_no && !pefd; i++ )
-      if( ioBase->event_fds[i]->fd == fd )
-         pefd = ioBase->event_fds[i];
+   for( i = 0; i < ioBase->efds_no && ! pefd; i++ )
+      if( ioBase->event_fds[ i ]->fd == fd )
+         pefd = ioBase->event_fds[ i ];
 
    if( pefd )
    {
@@ -581,15 +584,15 @@ static void del_efds( InOutBase * ioBase, int fd )
    int i, n = -1;
 
    for( i = 0; i < ioBase->efds_no && n == -1; i++ )
-      if( ioBase->event_fds[i]->fd == fd )
+      if( ioBase->event_fds[ i ]->fd == fd )
          n = i;
 
    if( n != -1 )
    {
-      hb_xfree( ioBase->event_fds[n] );
+      hb_xfree( ioBase->event_fds[ n ] );
       ioBase->efds_no--;
       for( i = n; i < ioBase->efds_no; i++ )
-         ioBase->event_fds[i] = ioBase->event_fds[i + 1];
+         ioBase->event_fds[ i ] = ioBase->event_fds[ i + 1 ];
    }
 }
 
@@ -600,7 +603,7 @@ static void del_all_efds( InOutBase * ioBase )
    if( ioBase->event_fds != NULL )
    {
       for( i = 0; i < ioBase->efds_no; i++ )
-         hb_xfree( ioBase->event_fds[i] );
+         hb_xfree( ioBase->event_fds[ i ] );
 
       hb_xfree( ioBase->event_fds );
 
@@ -613,8 +616,8 @@ static int get_inch( InOutBase * ioBase, int milisec )
 {
    int nRet = 0, npfd = -1, nchk = ioBase->efds_no, lRead = 0;
    int mode, i, n, counter;
-   struct timeval tv, *ptv;
-   struct evtFD *pefd = NULL;
+   struct timeval tv, * ptv;
+   struct evtFD * pefd = NULL;
    fd_set rfds, wfds;
 
    if( milisec == 0 )
@@ -635,21 +638,21 @@ static int get_inch( InOutBase * ioBase, int milisec )
       FD_ZERO( &wfds );
       for( i = 0; i < ioBase->efds_no; i++ )
       {
-         if( ioBase->event_fds[i]->status == EVTFDSTAT_RUN )
+         if( ioBase->event_fds[ i ]->status == EVTFDSTAT_RUN )
          {
-            if( ioBase->event_fds[i]->mode == O_RDWR
-                || ioBase->event_fds[i]->mode == O_RDONLY )
+            if( ioBase->event_fds[ i ]->mode == O_RDWR
+                || ioBase->event_fds[ i ]->mode == O_RDONLY )
             {
-               FD_SET( ioBase->event_fds[i]->fd, &rfds );
-               if( n < ioBase->event_fds[i]->fd )
-                  n = ioBase->event_fds[i]->fd;
+               FD_SET( ioBase->event_fds[ i ]->fd, &rfds );
+               if( n < ioBase->event_fds[ i ]->fd )
+                  n = ioBase->event_fds[ i ]->fd;
             }
-            if( ioBase->event_fds[i]->mode == O_RDWR
-                || ioBase->event_fds[i]->mode == O_WRONLY )
+            if( ioBase->event_fds[ i ]->mode == O_RDWR
+                || ioBase->event_fds[ i ]->mode == O_WRONLY )
             {
-               FD_SET( ioBase->event_fds[i]->fd, &wfds );
-               if( n < ioBase->event_fds[i]->fd )
-                  n = ioBase->event_fds[i]->fd;
+               FD_SET( ioBase->event_fds[ i ]->fd, &wfds );
+               if( n < ioBase->event_fds[ i ]->fd )
+                  n = ioBase->event_fds[ i ]->fd;
             }
          }
       }
@@ -659,25 +662,25 @@ static int get_inch( InOutBase * ioBase, int milisec )
       {
          for( i = 0; i < ioBase->efds_no; i++ )
          {
-            n = ( FD_ISSET( ioBase->event_fds[i]->fd, &rfds ) ? 1 : 0 ) |
-                ( FD_ISSET( ioBase->event_fds[i]->fd, &wfds ) ? 2 : 0 );
+            n = ( FD_ISSET( ioBase->event_fds[ i ]->fd, &rfds ) ? 1 : 0 ) |
+                ( FD_ISSET( ioBase->event_fds[ i ]->fd, &wfds ) ? 2 : 0 );
             if( n != 0 )
             {
-               if( ioBase->event_fds[i]->eventFunc == NULL )
+               if( ioBase->event_fds[ i ]->eventFunc == NULL )
                {
                   lRead = 1;
                   if( STDIN_BUFLEN > ioBase->stdin_inbuf )
                   {
-                     unsigned char buf[STDIN_BUFLEN];
+                     unsigned char buf[ STDIN_BUFLEN ];
 
-                     n = read( ioBase->event_fds[i]->fd, buf,
+                     n = read( ioBase->event_fds[ i ]->fd, buf,
                                STDIN_BUFLEN - ioBase->stdin_inbuf );
                      if( n == 0 )
-                        ioBase->event_fds[i]->status = EVTFDSTAT_STOP;
+                        ioBase->event_fds[ i ]->status = EVTFDSTAT_STOP;
                      else
                         for( i = 0; i < n; i++ )
                         {
-                           ioBase->stdin_buf[ioBase->stdin_ptr_r++] = buf[i];
+                           ioBase->stdin_buf[ ioBase->stdin_ptr_r++ ] = buf[ i ];
                            if( ioBase->stdin_ptr_r == STDIN_BUFLEN )
                               ioBase->stdin_ptr_r = 0;
                            ioBase->stdin_inbuf++;
@@ -692,26 +695,26 @@ static int get_inch( InOutBase * ioBase, int milisec )
                      mode = O_WRONLY;
                   else
                      mode = O_RDONLY;
-                  ioBase->event_fds[i]->status = EVTFDSTAT_STOP;
-                  n = ( ioBase->event_fds[i]->eventFunc ) ( ioBase->
-                                                            event_fds[i]->fd,
-                                                            mode,
-                                                            ioBase->
-                                                            event_fds[i]->
-                                                            data );
+                  ioBase->event_fds[ i ]->status = EVTFDSTAT_STOP;
+                  n = ( ioBase->event_fds[ i ]->eventFunc )( ioBase->
+                                                             event_fds[ i ]->fd,
+                                                             mode,
+                                                             ioBase->
+                                                             event_fds[ i ]->
+                                                             data );
                   if( IS_EVTFDSTAT( n ) )
                   {
-                     ioBase->event_fds[i]->status = n;
+                     ioBase->event_fds[ i ]->status = n;
                      if( nchk > i )
                         nchk = i;
                   }
                   else
                   {
-                     ioBase->event_fds[i]->status = EVTFDSTAT_RUN;
+                     ioBase->event_fds[ i ]->status = EVTFDSTAT_RUN;
                      if( IS_CLIPKEY( n ) )
                      {
                         nRet = n;
-                        npfd = ioBase->event_fds[i]->fd;
+                        npfd = ioBase->event_fds[ i ]->fd;
                         if( nchk > i )
                            nchk = i;
                      }
@@ -726,19 +729,19 @@ static int get_inch( InOutBase * ioBase, int milisec )
 
    for( i = n = nchk; i < ioBase->efds_no; i++ )
    {
-      if( ioBase->event_fds[i]->status == EVTFDSTAT_DEL )
-         hb_xfree( ioBase->event_fds[i] );
-      else if( ioBase->event_fds[i]->fd == npfd )
-         pefd = ioBase->event_fds[i];
+      if( ioBase->event_fds[ i ]->status == EVTFDSTAT_DEL )
+         hb_xfree( ioBase->event_fds[ i ] );
+      else if( ioBase->event_fds[ i ]->fd == npfd )
+         pefd = ioBase->event_fds[ i ];
       else
       {
          if( i > n )
-            ioBase->event_fds[n] = ioBase->event_fds[i];
+            ioBase->event_fds[ n ] = ioBase->event_fds[ i ];
          n++;
       }
    }
    if( pefd )
-      ioBase->event_fds[n++] = pefd;
+      ioBase->event_fds[ n++ ] = pefd;
    ioBase->efds_no = n;
 
    return nRet;
@@ -752,8 +755,8 @@ static int test_bufch( InOutBase * ioBase, int n, int delay )
       nKey = get_inch( ioBase, delay );
 
    return IS_CLIPKEY( nKey ) ? nKey :
-      ( ioBase->stdin_inbuf > n ) ?
-      ioBase->stdin_buf[( ioBase->stdin_ptr_l + n ) % STDIN_BUFLEN] : -1;
+          ( ioBase->stdin_inbuf > n ) ?
+          ioBase->stdin_buf[ ( ioBase->stdin_ptr_l + n ) % STDIN_BUFLEN ] : -1;
 }
 
 static void free_bufch( InOutBase * ioBase, int n )
@@ -767,7 +770,7 @@ static void free_bufch( InOutBase * ioBase, int n )
 static int wait_key( InOutBase * ioBase, int milisec )
 {
    int nKey, esc, n, i, ch, counter;
-   struct keyTab *ptr;
+   struct keyTab * ptr;
 
    if( s_WinSizeChangeFlag )
    {
@@ -792,7 +795,7 @@ static int wait_key( InOutBase * ioBase, int milisec )
       ++i;
       if( ioBase->nTermMouseChars )
       {
-         ioBase->cTermMouseBuf[3 - ioBase->nTermMouseChars] = ch;
+         ioBase->cTermMouseBuf[ 3 - ioBase->nTermMouseChars ] = ch;
          free_bufch( ioBase, i );
          i = 0;
          if( --ioBase->nTermMouseChars == 0 )
@@ -820,7 +823,7 @@ static int wait_key( InOutBase * ioBase, int milisec )
                      ioBase->key_flag |= KEY_CTRLMASK;
                      break;
                   case K_NATIONAL:
-                     ioBase->nation_mode = !ioBase->nation_mode;
+                     ioBase->nation_mode = ! ioBase->nation_mode;
                      break;
                   case K_MOUSETERM:
                      ioBase->nTermMouseChars = 3;
@@ -885,11 +888,11 @@ static int wait_key( InOutBase * ioBase, int milisec )
       }
 
       if( ioBase->nation_transtbl && ioBase->nation_mode &&
-           nKey >= 32 && nKey < 128 && ioBase->nation_transtbl[nKey] )
-         nKey = ioBase->nation_transtbl[nKey];
+          nKey >= 32 && nKey < 128 && ioBase->nation_transtbl[ nKey ] )
+         nKey = ioBase->nation_transtbl[ nKey ];
       if( ioBase->in_transtbl && nKey >= 0 && nKey <= 255
-           && ioBase->in_transtbl[nKey] )
-         nKey = ioBase->in_transtbl[nKey];
+          && ioBase->in_transtbl[ nKey ] )
+         nKey = ioBase->in_transtbl[ nKey ];
 
       if( nKey )
          nKey = getClipKey( nKey );
@@ -898,7 +901,7 @@ static int wait_key( InOutBase * ioBase, int milisec )
    return nKey;
 }
 
-static HB_BOOL write_ttyseq( InOutBase * ioBase, const char *seq )
+static HB_BOOL write_ttyseq( InOutBase * ioBase, const char * seq )
 {
    HB_BOOL success;
 
@@ -917,15 +920,15 @@ static HB_BOOL write_ttyseq( InOutBase * ioBase, const char *seq )
    return success;
 }
 
-static int addKeyMap( InOutBase * ioBase, int nKey, const char *cdesc )
+static int addKeyMap( InOutBase * ioBase, int nKey, const char * cdesc )
 {
    int ret = K_UNDEF, i = 0, c;
-   struct keyTab **ptr;
+   struct keyTab ** ptr;
 
    if( cdesc == NULL )
       return ret;
 
-   c = ( unsigned char ) cdesc[i++];
+   c   = ( unsigned char ) cdesc[ i++ ];
    ptr = &ioBase->pKeyTab;
 
    while( c )
@@ -940,7 +943,7 @@ static int addKeyMap( InOutBase * ioBase, int nKey, const char *cdesc )
       }
       if( ( *ptr )->ch == c )
       {
-         c = ( unsigned char ) cdesc[i++];
+         c = ( unsigned char ) cdesc[ i++ ];
          if( c )
             ptr = &( ( *ptr )->nextCh );
          else
@@ -955,20 +958,20 @@ static int addKeyMap( InOutBase * ioBase, int nKey, const char *cdesc )
    return ret;
 }
 
-static int removeKeyMap( InOutBase * ioBase, const char *cdesc )
+static int removeKeyMap( InOutBase * ioBase, const char * cdesc )
 {
    int ret = K_UNDEF, i = 0, c;
-   struct keyTab **ptr;
+   struct keyTab ** ptr;
 
-   c = ( unsigned char ) cdesc[i++];
+   c = ( unsigned char ) cdesc[ i++ ];
    ptr = &ioBase->pKeyTab;
 
    while( c && *ptr != NULL )
    {
       if( ( *ptr )->ch == c )
       {
-         c = ( unsigned char ) cdesc[i++];
-         if( !c )
+         c = ( unsigned char ) cdesc[ i++ ];
+         if( ! c )
          {
             ret = ( *ptr )->key;
             ( *ptr )->key = K_UNDEF;
@@ -987,7 +990,7 @@ static int removeKeyMap( InOutBase * ioBase, const char *cdesc )
    return ret;
 }
 
-static void removeAllKeyMap( struct keyTab **ptr )
+static void removeAllKeyMap( struct keyTab ** ptr )
 {
    if( ( *ptr )->nextCh != NULL )
       removeAllKeyMap( &( ( *ptr )->nextCh ) );
@@ -1115,12 +1118,12 @@ static void chk_mevtdblck( mouseEvent * mEvt )
    }
 }
 
-static void set_tmevt( unsigned char *cMBuf, mouseEvent * mEvt )
+static void set_tmevt( unsigned char * cMBuf, mouseEvent * mEvt )
 {
    int row, col;
 
-   col = cMBuf[1] - 33;
-   row = cMBuf[2] - 33;
+   col = cMBuf[ 1 ] - 33;
+   row = cMBuf[ 2 ] - 33;
    if( mEvt->row != row || mEvt->col != col )
    {
       mEvt->buttonstate |= M_CURSOR_MOVE;
@@ -1128,7 +1131,7 @@ static void set_tmevt( unsigned char *cMBuf, mouseEvent * mEvt )
       mEvt->col = col;
    }
 
-   switch( cMBuf[0] & 0xC3 )
+   switch( cMBuf[ 0 ] & 0xC3 )
    {
       case 0x0:
          mEvt->buttonstate |= M_BUTTON_LEFT;
@@ -1140,27 +1143,26 @@ static void set_tmevt( unsigned char *cMBuf, mouseEvent * mEvt )
          mEvt->buttonstate |= M_BUTTON_RIGHT;
          break;
       case 0x3:
-         mEvt->buttonstate &= ~(M_BUTTON_KEYMASK|M_BUTTON_DBLMASK);
+         mEvt->buttonstate &= ~( M_BUTTON_KEYMASK | M_BUTTON_DBLMASK );
          break;
       case 0x40:
-         if( cMBuf[0] & 0x20 )
+         if( cMBuf[ 0 ] & 0x20 )
             mEvt->buttonstate |= M_BUTTON_WHEELUP;
          break;
       case 0x41:
-         if( cMBuf[0] & 0x20 )
+         if( cMBuf[ 0 ] & 0x20 )
             mEvt->buttonstate |= M_BUTTON_WHEELDOWN;
          break;
    }
    chk_mevtdblck( mEvt );
    /* printf("\n\rmouse event: %02x, %02x, %02x\n\r", cMBuf[0], cMBuf[1], cMBuf[2]); */
-   return;
 }
 
 #if defined( HB_HAS_GPM )
-static int set_gpmevt( int fd, int mode, void *data )
+static int set_gpmevt( int fd, int mode, void * data )
 {
    int nKey = 0;
-   mouseEvent *mEvt;
+   mouseEvent * mEvt;
    Gpm_Event gEvt;
 
    HB_SYMBOL_UNUSED( fd );
@@ -1196,7 +1198,7 @@ static int set_gpmevt( int fd, int mode, void *data )
    chk_mevtdblck( mEvt );
    nKey = getMouseKey( mEvt );
 
-   return ( nKey ? SET_CLIPKEY( nKey ) : 0 );
+   return nKey ? SET_CLIPKEY( nKey ) : 0;
 }
 
 static void flush_gpmevt( mouseEvent * mEvt )
@@ -1214,7 +1216,6 @@ static void flush_gpmevt( mouseEvent * mEvt )
 
       while( getMouseKey( mEvt ) ) ;
    }
-   return;
 }
 #endif
 
@@ -1305,7 +1306,7 @@ static void disp_cursor( InOutBase * ioBase )
    if( ioBase->cursor != ioBase->lcursor )
    {
       int lcurs = -1;
-      char escseq[64], *cv = NULL;
+      char escseq[ 64 ], * cv = NULL;
 
       switch( ioBase->cursor )
       {
@@ -1378,7 +1379,7 @@ static void gt_refresh( InOutBase * ioBase )
        leaveok( ioBase->hb_stdscr, HB_TRUE );
    else
        leaveok( ioBase->hb_stdscr, HB_FALSE );
-*/
+ */
 /* if(ioBase->cursor != SC_NONE) */
       wmove( ioBase->hb_stdscr, ioBase->row, ioBase->col );
       wrefresh( ioBase->hb_stdscr );
@@ -1399,10 +1400,10 @@ static void gt_ttyrestore( InOutBase * ioBase )
       tcsetattr( ioBase->base_infd, TCSANOW, &ioBase->saved_TIO );
 }
 
-static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char *str,
-                       int len )
+static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char * str,
+                          int len )
 {
-   unsigned char *buf, c;
+   unsigned char * buf, c;
    int i;
    HB_BOOL success;
 
@@ -1411,11 +1412,11 @@ static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char *str,
       buf = ( unsigned char * ) hb_xgrab( len );
       for( i = 0; i < len; ++i )
       {
-         c = str[i];
-         if( c != 9 && c != 10 && c != 13 && ioBase->out_transtbl[c] )
-            buf[i] = ioBase->out_transtbl[c];
+         c = str[ i ];
+         if( c != 9 && c != 10 && c != 13 && ioBase->out_transtbl[ c ] )
+            buf[ i ] = ioBase->out_transtbl[ c ];
          else
-            buf[i] = c;
+            buf[ i ] = c;
       }
       success = ( write( fd, buf, len ) == len );
       hb_xfree( buf );
@@ -1426,26 +1427,26 @@ static HB_BOOL gt_outstr( InOutBase * ioBase, int fd, const char *str,
    return success;
 }
 
-static void gt_outstd( InOutBase * ioBase, const char *str, int len )
+static void gt_outstd( InOutBase * ioBase, const char * str, int len )
 {
    gt_outstr( ioBase, ioBase->stdoutfd, str, len );
 }
 
-static void gt_outerr( InOutBase * ioBase, const char *str, int len )
+static void gt_outerr( InOutBase * ioBase, const char * str, int len )
 {
    gt_outstr( ioBase, ioBase->stderrfd, str, len );
 }
 
-static char *tiGetS( const char *capname )
+static char * tiGetS( const char * capname )
 {
-   char *ptr;
+   char * ptr;
 
    ptr = tigetstr( ( char * ) capname );
    if( ptr )
    {
       if( ptr == ( char * ) -1 )
          ptr = NULL;
-      else if( !ptr[0] )
+      else if( ! ptr[ 0 ] )
          ptr = NULL;
    }
    return ptr;
@@ -1453,7 +1454,7 @@ static char *tiGetS( const char *capname )
 
 static void get_acsc( InOutBase * ioBase, unsigned char c, chtype * pch )
 {
-   unsigned char *ptr;
+   unsigned char * ptr;
 
    if( ioBase->acsc != NULL )
       for( ptr = ( unsigned char * ) ioBase->acsc; *ptr && *( ptr + 1 ); ptr += 2 )
@@ -1489,11 +1490,11 @@ static void get_acsc( InOutBase * ioBase, unsigned char c, chtype * pch )
    }
 }
 
-static void init_keys(InOutBase *ioBase)
+static void init_keys( InOutBase * ioBase )
 {
    /* virual CTRL/ALT sequences */
    addKeyMap( ioBase, K_METACTRL, CTRL_SEQ );
-   addKeyMap( ioBase, K_METAALT,  ALT_SEQ );
+   addKeyMap( ioBase, K_METAALT, ALT_SEQ );
    /* national mode key sequences */
 #ifdef NATION_SEQ
    addKeyMap( ioBase, K_NATIONAL, NATION_SEQ );
@@ -1504,7 +1505,8 @@ static void init_keys(InOutBase *ioBase)
    addKeyMap( ioBase, EXKEY_ENTER, "\r" );
    addKeyMap( ioBase, K_MOUSETERM, "\033[M" );
 
-   if( ioBase->terminal_type == TERM_XTERM ) {
+   if( ioBase->terminal_type == TERM_XTERM )
+   {
 
       addKeyMap( ioBase, EXKEY_UP    , "\033[A" );
       addKeyMap( ioBase, EXKEY_DOWN  , "\033[B" );
@@ -1572,7 +1574,9 @@ static void init_keys(InOutBase *ioBase)
 
       /* end of added */
 
-   } else if( ioBase->terminal_type == TERM_LINUX ) {
+   }
+   else if( ioBase->terminal_type == TERM_LINUX )
+   {
 
       addKeyMap( ioBase, EXKEY_F1 , "\033[[A"  );        /* kf1  */
       addKeyMap( ioBase, EXKEY_F2 , "\033[[B"  );        /* kf2  */
@@ -1699,7 +1703,7 @@ static void init_keys(InOutBase *ioBase)
 
 static void gt_tone( InOutBase * ioBase, double dFrequency, double dDuration )
 {
-   char escseq[64];
+   char escseq[ 64 ];
 
    if( ioBase->terminal_type == TERM_LINUX && ioBase->beep != NULL )
    {
@@ -1724,20 +1728,20 @@ static void set_sig_keys( InOutBase * ioBase, int key_int, int key_brk,
 
       /* set SIGINT character, default ^C */
       if( key_int >= 0 && key_int <= 255 )
-         ioBase->curr_TIO.c_cc[VINTR] = key_int;
+         ioBase->curr_TIO.c_cc[ VINTR ] = key_int;
 
       /* set SIGQUIT character, default ^D */
       if( key_brk >= 0 && key_brk <= 255 )
-         ioBase->curr_TIO.c_cc[VQUIT] = key_brk;
+         ioBase->curr_TIO.c_cc[ VQUIT ] = key_brk;
 
       /* set SIGTSTP character, default ^Z */
       if( key_stp >= 0 && key_stp <= 255 )
-         ioBase->curr_TIO.c_cc[VSUSP] = key_stp;
+         ioBase->curr_TIO.c_cc[ VSUSP ] = key_stp;
 
       /* enable siganls from terminal device */
-      if( ioBase->curr_TIO.c_cc[VINTR] != 0 ||
-          ioBase->curr_TIO.c_cc[VQUIT] != 0 ||
-          ioBase->curr_TIO.c_cc[VSUSP] != 0 )
+      if( ioBase->curr_TIO.c_cc[ VINTR ] != 0 ||
+          ioBase->curr_TIO.c_cc[ VQUIT ] != 0 ||
+          ioBase->curr_TIO.c_cc[ VSUSP ] != 0 )
          ioBase->curr_TIO.c_lflag |= ISIG;
 
       /* ioctl( ioBase->base_infd, TIOCSCTTY, 0 ); */
@@ -1745,7 +1749,7 @@ static void set_sig_keys( InOutBase * ioBase, int key_int, int key_brk,
    }
 }
 
-static int gt_getsize( InOutBase * ioBase, int *rows, int *cols )
+static int gt_getsize( InOutBase * ioBase, int * rows, int * cols )
 {
    int ret = -1;
 
@@ -1766,7 +1770,7 @@ static int gt_getsize( InOutBase * ioBase, int *rows, int *cols )
 
    if( *rows <= 0 || *cols <= 0 )
    {
-      char *env;
+      char * env;
 
       if( ( env = getenv( "COLUMNS" ) ) )
          *cols = atoi( env );
@@ -1810,7 +1814,7 @@ static int gt_resize( InOutBase * ioBase )
 static int gt_setsize( InOutBase * ioBase, int rows, int cols )
 {
    int ret = -1, r, c;
-   char escseq[64];
+   char escseq[ 64 ];
 
    if( ioBase->terminal_type == TERM_XTERM )
    {
@@ -1854,7 +1858,7 @@ static void setKeyTrans( InOutBase * ioBase, PHB_CODEPAGE cdpTerm, PHB_CODEPAGE 
          ioBase->in_transtbl = ( unsigned char * ) hb_xgrab( 256 );
 
       for( i = 0; i < 256; ++i )
-         ioBase->in_transtbl[i] = hb_cdpTranslateChar( i, cdpTerm, cdpHost );
+         ioBase->in_transtbl[ i ] = hb_cdpTranslateChar( i, cdpTerm, cdpHost );
    }
    else if( ioBase->in_transtbl != NULL )
    {
@@ -1872,44 +1876,44 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
 
    for( i = 0; i < 256; i++ )
    {
-      ch = ioBase->charmap[i] & 0xffff;
-      switch( ( ioBase->charmap[i] >> 16 ) & 0xff )
+      ch = ioBase->charmap[ i ] & 0xffff;
+      switch( ( ioBase->charmap[ i ] >> 16 ) & 0xff )
       {
          case 1:
-            ioBase->std_chmap[i] = ioBase->box_chmap[i] = A_NORMAL;
+            ioBase->std_chmap[ i ] = ioBase->box_chmap[ i ] = A_NORMAL;
             break;
          case 2:
-            ioBase->std_chmap[i] = ioBase->box_chmap[i] = A_ALTCHARSET;
+            ioBase->std_chmap[ i ] = ioBase->box_chmap[ i ] = A_ALTCHARSET;
             break;
          case 3:
-            ioBase->std_chmap[i] = ioBase->box_chmap[i] = A_PROTECT;
+            ioBase->std_chmap[ i ] = ioBase->box_chmap[ i ] = A_PROTECT;
             break;
          case 4:
-            ioBase->std_chmap[i] = ioBase->box_chmap[i] = A_ALTCHARSET | A_PROTECT;
+            ioBase->std_chmap[ i ] = ioBase->box_chmap[ i ] = A_ALTCHARSET | A_PROTECT;
             break;
          case 5:
             get_acsc( ioBase, ch & 0xff, &ch );
-            ioBase->std_chmap[i] = ioBase->box_chmap[i] = ch & ~A_CHARTEXT;
+            ioBase->std_chmap[ i ] = ioBase->box_chmap[ i ] = ch & ~A_CHARTEXT;
             ch &= A_CHARTEXT;
             break;
          case 0:
          default:
-            ioBase->std_chmap[i] = aSet ? A_ALTCHARSET : A_NORMAL;
-            ioBase->box_chmap[i] = A_ALTCHARSET;
+            ioBase->std_chmap[ i ] = aSet ? A_ALTCHARSET : A_NORMAL;
+            ioBase->box_chmap[ i ] = A_ALTCHARSET;
             break;
       }
-      ioBase->std_chmap[i] |= ch;
-      ioBase->box_chmap[i] |= ch;
+      ioBase->std_chmap[ i ] |= ch;
+      ioBase->box_chmap[ i ] |= ch;
 
       if( i != ( int ) ( ch & A_CHARTEXT ) &&
-          ( ioBase->std_chmap[i] & A_ALTCHARSET ) == 0 )
+          ( ioBase->std_chmap[ i ] & A_ALTCHARSET ) == 0 )
       {
          if( ioBase->out_transtbl == NULL )
          {
             ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
             memset( ioBase->out_transtbl, 0, 256 );
          }
-         ioBase->out_transtbl[i] = ch & A_CHARTEXT;
+         ioBase->out_transtbl[ i ] = ch & A_CHARTEXT;
       }
    }
    if( aSet )
@@ -1919,11 +1923,11 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
          if( hb_cdpIsAlpha( cdpHost, i ) )
          {
             unsigned char uc = ( unsigned char )
-                              hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
+                               hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
 
-            ioBase->std_chmap[i] = uc | A_NORMAL;
+            ioBase->std_chmap[ i ] = uc | A_NORMAL;
             if( box )
-               ioBase->box_chmap[i] = uc | A_NORMAL;
+               ioBase->box_chmap[ i ] = uc | A_NORMAL;
             if( i != ( int ) uc )
             {
                if( ioBase->out_transtbl == NULL )
@@ -1931,27 +1935,27 @@ static void setDispTrans( InOutBase * ioBase, PHB_CODEPAGE cdpHost, PHB_CODEPAGE
                   ioBase->out_transtbl = ( unsigned char * ) hb_xgrab( 256 );
                   memset( ioBase->out_transtbl, 0, 256 );
                }
-               ioBase->out_transtbl[i] = uc;
+               ioBase->out_transtbl[ i ] = uc;
             }
          }
       }
    }
 }
 
-static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
-                                 pid_t termpid )
+static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
+                                  pid_t termpid )
 {
-   InOutBase *ioBase;
+   InOutBase * ioBase;
    int bg, fg;
    unsigned int i, n;
-   char buf[256], *ptr, *crsterm = NULL;
+   char buf[ 256 ], * ptr, * crsterm = NULL;
 
    ioBase = ( InOutBase * ) hb_xgrab( sizeof( InOutBase ) );
    memset( ioBase, 0, sizeof( InOutBase ) );
 
-   if( !term || !*term )
+   if( ! term || ! *term )
       term = getenv( "HB_TERM" );
-   if( !term || !*term )
+   if( ! term || ! *term )
       term = getenv( "TERM" );
 
    if( term && *term )
@@ -1983,7 +1987,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
    ioBase->termpid = termpid;
    ioBase->cursor = ioBase->lcursor = SC_UNDEF;
 
-   if( !isatty( ioBase->base_outfd ) && isatty( ioBase->base_infd ) )
+   if( ! isatty( ioBase->base_outfd ) && isatty( ioBase->base_infd ) )
       ioBase->base_outfd = ioBase->base_infd;
 
    if( isatty( ioBase->stdoutfd ) )
@@ -2075,14 +2079,13 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
          15 white         -> BOLD/BLINK WHITE
        */
       static const char color_map[] = { COLOR_BLACK,
-         COLOR_BLUE,
-         COLOR_GREEN,
-         COLOR_CYAN,
-         COLOR_RED,
-         COLOR_MAGENTA,
-         COLOR_YELLOW,
-         COLOR_WHITE
-      };
+                                        COLOR_BLUE,
+                                        COLOR_GREEN,
+                                        COLOR_CYAN,
+                                        COLOR_RED,
+                                        COLOR_MAGENTA,
+                                        COLOR_YELLOW,
+                                        COLOR_WHITE };
 
       start_color();
 /*
@@ -2096,11 +2099,11 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
           i = 0;
                 init_pair( i, color_map[ fg ], color_map[ bg ] );
        }
-*/
+ */
       for( i = 0; i < 256; i++ )
       {
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
-         fg = ( i & 0x07 );     /* extract forground color bits 0-2 */
+         fg = ( i & 0x07 );      /* extract forground color bits 0-2 */
          n = bg * 8 + fg;
          /* n = bg * COLORS + fg */
          if( n == 0 )
@@ -2108,12 +2111,12 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
          else if( n == 7 )
             n = 0;
          if( ( i & 0x88 ) == 0 )
-            init_pair( n, color_map[fg], color_map[bg] );
-         ioBase->attr_map[i] = COLOR_PAIR( n );
+            init_pair( n, color_map[ fg ], color_map[ bg ] );
+         ioBase->attr_map[ i ] = COLOR_PAIR( n );
          if( i & 0x08 )        /* highlight forground bit 3 */
-            ioBase->attr_map[i] |= A_BOLD;
+            ioBase->attr_map[ i ] |= A_BOLD;
          if( i & 0x80 )        /* blink/highlight background bit 7 */
-            ioBase->attr_map[i] |= A_BLINK;
+            ioBase->attr_map[ i ] |= A_BLINK;
       }
       ioBase->is_color = 1;
    }
@@ -2122,16 +2125,16 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
       for( i = 0; i < 256; i++ )
       {
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
-         fg = ( i & 0x07 );     /* extract forground color bits 0-2 */
-         ioBase->attr_map[i] = 0;
+         fg = ( i & 0x07 );      /* extract forground color bits 0-2 */
+         ioBase->attr_map[ i ] = 0;
          if( fg < bg )
-            ioBase->attr_map[i] |= A_REVERSE;
+            ioBase->attr_map[ i ] |= A_REVERSE;
          if( fg == 1 )         /* underline? */
-            ioBase->attr_map[i] |= A_UNDERLINE;
+            ioBase->attr_map[ i ] |= A_UNDERLINE;
          if( i & 0x08 )        /* highlight forground bit 3 */
-            ioBase->attr_map[i] |= A_BOLD;
+            ioBase->attr_map[ i ] |= A_BOLD;
          if( i & 0x80 )        /* blink/highlight background bit 7 */
-            ioBase->attr_map[i] |= A_BLINK;
+            ioBase->attr_map[ i ] |= A_BLINK;
          ioBase->is_color = 0;
       }
    }
@@ -2142,7 +2145,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
     idlok( ioBase->hb_stdscr, HB_FALSE );
     idcok( ioBase->hb_stdscr, HB_FALSE );
     leaveok( ioBase->hb_stdscr, HB_FALSE );
-*/
+ */
    /*
     * curses keyboard initialization
     * we have our own keyboard routine so it's unnecessary now
@@ -2161,7 +2164,7 @@ static InOutBase *create_ioBase( char *term, int infd, int outfd, int errfd,
     timeout( 0 );
     noecho();
     curs_set( 0 );
-*/
+ */
    wclear( ioBase->hb_stdscr );
    wrefresh( ioBase->hb_stdscr );
 
@@ -2232,15 +2235,15 @@ static void destroy_ioBase( InOutBase * ioBase )
    hb_xfree( ioBase );
 }
 
-static InOutBase *create_newXterm( void )
+static InOutBase * create_newXterm( void )
 {
 #if defined( HB_OS_LINUX ) || defined( HB_OS_BSD )
 #if 0
    int masterfd, slavefd, fd;
    pid_t termpid;
-   char ptyname[64], buf[64], *ptr;
+   char ptyname[ 64 ], buf[ 64 ], * ptr;
 
-   if( !getenv( "DISPLAY" ) )
+   if( ! getenv( "DISPLAY" ) )
       return NULL;
 
    if( openpty( &masterfd, &slavefd, ptyname, NULL, NULL ) == -1 )
@@ -2266,7 +2269,7 @@ static InOutBase *create_newXterm( void )
       close(0);
       close(1);
       close(2);
-*/
+ */
 /*
       dup2(masterfd, 0);
       dup2(masterfd, 1);
@@ -2275,7 +2278,7 @@ static InOutBase *create_newXterm( void )
 #endif
       fd = open("/dev/null", O_WRONLY);
       dup2(fd, 2);
-*/
+ */
       for( fd = 3; fd < MAXFD; ++fd )
          if( fd != masterfd )
             close( fd );
@@ -2301,7 +2304,7 @@ static int set_active_ioBase( int iNO_ioBase )
    if( iNO_ioBase >= 0 && iNO_ioBase < s_iSize_ioBaseTab )
    {
       s_iActive_ioBase = iNO_ioBase;
-      s_ioBase = s_ioBaseTab[s_iActive_ioBase];
+      s_ioBase = s_ioBaseTab[ s_iActive_ioBase ];
       set_term( s_ioBase->basescr );
    }
 
@@ -2312,14 +2315,14 @@ static int add_new_ioBase( InOutBase * ioBase )
 {
    int i, n, add = 0;
 
-   for( i = 0; i < s_iSize_ioBaseTab && !add; ++i )
-      if( !s_ioBaseTab[i] )
+   for( i = 0; i < s_iSize_ioBaseTab && ! add; ++i )
+      if( ! s_ioBaseTab[ i ] )
       {
-         s_ioBaseTab[i] = ioBase;
+         s_ioBaseTab[ i ] = ioBase;
          add = 1;
       }
 
-   if( !add )
+   if( ! add )
    {
       if( s_ioBaseTab == NULL )
          s_ioBaseTab = ( InOutBase ** ) hb_xgrab(
@@ -2327,12 +2330,12 @@ static int add_new_ioBase( InOutBase * ioBase )
       else
          s_ioBaseTab = ( InOutBase ** ) hb_xrealloc( s_ioBaseTab,
                         ( s_iSize_ioBaseTab += 10 ) * sizeof( InOutBase * ) );
-      s_ioBaseTab[i] = ioBase;
+      s_ioBaseTab[ i ] = ioBase;
       for( n = i + 1; n < s_iSize_ioBaseTab; n++ )
-         s_ioBaseTab[n] = NULL;
+         s_ioBaseTab[ n ] = NULL;
    }
 
-   if( !s_ioBase )
+   if( ! s_ioBase )
       set_active_ioBase( i );
 
    return i;
@@ -2344,14 +2347,14 @@ static int del_ioBase( int iNO_ioBase )
 
    if( iNO_ioBase >= 0 && iNO_ioBase < s_iSize_ioBaseTab )
    {
-      destroy_ioBase( s_ioBaseTab[iNO_ioBase] );
-      s_ioBaseTab[iNO_ioBase] = NULL;
+      destroy_ioBase( s_ioBaseTab[ iNO_ioBase ] );
+      s_ioBaseTab[ iNO_ioBase ] = NULL;
       if( s_iActive_ioBase == iNO_ioBase )
       {
          s_iActive_ioBase = -1;
          s_ioBase = NULL;
-         for( i = 0; i < s_iSize_ioBaseTab && !s_ioBase; ++i )
-            if( s_ioBaseTab[i] )
+         for( i = 0; i < s_iSize_ioBaseTab && ! s_ioBase; ++i )
+            if( s_ioBaseTab[ i ] )
                set_active_ioBase( i );
       }
    }
@@ -2366,8 +2369,8 @@ static void del_all_ioBase( void )
    if( s_ioBaseTab )
    {
       for( i = 0; i < s_iSize_ioBaseTab; ++i )
-         if( s_ioBaseTab[i] )
-            destroy_ioBase( s_ioBaseTab[i] );
+         if( s_ioBaseTab[ i ] )
+            destroy_ioBase( s_ioBaseTab[ i ] );
       hb_xfree( s_ioBaseTab );
       s_ioBaseTab = NULL;
    }
@@ -2380,8 +2383,8 @@ static void del_all_ioBase( void )
 
 
 HB_BOOL HB_GT_FUNC( gt_AddEventHandle( int iFile, int iMode,
-                                    int ( *eventFunc ) ( int, int, void * ),
-                                    void *data ) )
+                                       int ( * eventFunc )( int, int, void * ),
+                                       void * data ) )
 {
    return add_efds( s_ioBase, iFile, iMode, eventFunc, data ) == iFile;
 }
@@ -2393,7 +2396,7 @@ void HB_GT_FUNC( gt_DelEventHandle( int iFileDes ) )
 
 int HB_GT_FUNC( gt_NewXTerm( void ) )
 {
-   InOutBase *ioBase;
+   InOutBase * ioBase;
    int iHandle = -1;
 
    ioBase = create_newXterm();
@@ -2421,12 +2424,12 @@ int HB_GT_FUNC( gt_WaitKey( double dTimeOut ) )
    return wait_key( s_ioBase, ( int ) ( dTimeOut * 1000.0 ) );
 }
 
-int HB_GT_FUNC( gt_AddKeyMap( int iKey, char *szSequence ) )
+int HB_GT_FUNC( gt_AddKeyMap( int iKey, char * szSequence ) )
 {
    return addKeyMap( s_ioBase, SET_CLIPKEY( iKey ), szSequence );
 }
 
-int HB_GT_FUNC( gt_RemoveKeyMap( char *szSequence ) )
+int HB_GT_FUNC( gt_RemoveKeyMap( char * szSequence ) )
 {
    return removeKeyMap( s_ioBase, szSequence );
 }
@@ -2454,10 +2457,10 @@ HB_BOOL HB_GT_FUNC( gt_GetSignalFlag( int iSig ) )
 {
    HB_BOOL bRetVal = HB_FALSE;
 
-   if( iSig > 0 && iSig < MAX_SIGNO && s_SignalTable[iSig] )
+   if( iSig > 0 && iSig < MAX_SIGNO && s_SignalTable[ iSig ] )
    {
       bRetVal = HB_TRUE;
-      s_SignalTable[iSig] = HB_FALSE;
+      s_SignalTable[ iSig ] = HB_FALSE;
    }
 
    return bRetVal;
@@ -2474,11 +2477,11 @@ void HB_GT_FUNC( gt_CatchSignal( int iSig ) )
 
 static void hb_gt_crs_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFilenoStdout, HB_FHANDLE hFilenoStderr )
 {
-   InOutBase *ioBase;
+   InOutBase * ioBase;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
-   if( !s_ioBase )
+   if( ! s_ioBase )
    {
       s_iStdIn  = hFilenoStdin;
       s_iStdOut = hFilenoStdout;
@@ -2503,7 +2506,7 @@ static void hb_gt_crs_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       }
    }
 
-   if( !s_ioBase )
+   if( ! s_ioBase )
       hb_errInternal( 9997, "Internal error: screen driver initialization failure", NULL, NULL );
 }
 
@@ -2788,7 +2791,7 @@ static int hb_gt_crs_mouse_CountButton( PHB_GT pGT )
 
    HB_SYMBOL_UNUSED( pGT );
 
-   return ( s_ioBase->mButtons );
+   return s_ioBase->mButtons;
 }
 
 static void hb_gt_crs_mouse_SetDoubleClickSpeed( PHB_GT pGT, int iSpeed )
@@ -2823,9 +2826,9 @@ static int hb_gt_crs_ReadKey( PHB_GT pGT, int iEventMask )
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
+static HB_BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, ( int ) fBox ) );
 
    if( HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
    {
@@ -2838,7 +2841,7 @@ static HB_BOOL hb_gt_crs_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
 
 /* *********************************************************************** */
 
-static HB_BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
+static HB_BOOL hb_gt_crs_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_crs_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
@@ -2896,7 +2899,7 @@ static void hb_gt_crs_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       wmove( s_ioBase->hb_stdscr, iRow, iCol );
       while( iSize-- > 0 )
       {
-         if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol++, &iColor, &bAttr, &uc, HB_FALSE ) )
+         if( ! HB_GTSELF_GETSCRUC( pGT, iRow, iCol++, &iColor, &bAttr, &uc, HB_FALSE ) )
             break;
          ch = ( s_ioBase->attr_map[ iColor ] & s_ioBase->attr_mask ) |
               ( bAttr & HB_GT_ATTR_BOX ? s_ioBase->box_chmap[ uc ] :
@@ -2929,7 +2932,7 @@ static void hb_gt_crs_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_crs_Init;
    pFuncTable->Exit                       = hb_gt_crs_Exit;

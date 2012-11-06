@@ -52,13 +52,13 @@
 
 #include "hbsocket.h"
 
-#if ( defined( HB_OS_DOS ) && !defined( HB_HAS_WATT ) ) || defined( HB_OS_SYMBIAN )
-#  if !defined( HB_SOCKET_OFF )
+#if ( defined( HB_OS_DOS ) && ! defined( HB_HAS_WATT ) ) || defined( HB_OS_SYMBIAN )
+#  if ! defined( HB_SOCKET_OFF )
 #     define HB_SOCKET_OFF
 #  endif
 #endif
 
-#if !defined( HB_SOCKET_OFF )
+#if ! defined( HB_SOCKET_OFF )
 
 /* we do not use autoconf so we can only guess what is supported
  * by platform and/or CRTL :-(
@@ -122,7 +122,7 @@
 
 #if defined( HB_OS_UNIX )
 #  define HB_HAS_UNIX
-#  if !defined( __WATCOMC__ )
+#  if ! defined( __WATCOMC__ )
 #     define HB_HAS_INET_ATON
 #     define HB_HAS_INET_PTON
 #     define HB_HAS_INET_NTOP
@@ -131,9 +131,9 @@
 #     define HB_HAS_NAMEINFO
 #     define HB_HAS_GETHOSTBYADDR
 #  endif
-#  if !defined( __WATCOMC__ ) && !defined( HB_OS_BEOS ) && !defined( HB_OS_MINIX )
+#  if ! defined( __WATCOMC__ ) && ! defined( HB_OS_BEOS ) && ! defined( HB_OS_MINIX )
 #     define HB_HAS_INET6
-#     if !defined( HB_OS_VXWORKS )
+#     if ! defined( HB_OS_VXWORKS )
 #        define HB_HAS_INET6_ADDR_CONST
 #     endif
 #  endif
@@ -146,7 +146,7 @@
 #     define HB_HAS_SELECT_TIMER
 #  endif
 #  if defined( HB_OS_SUNOS )
-#     if !defined( BSD_COMP )
+#     if ! defined( BSD_COMP )
 #        define BSD_COMP
 #     endif
 #     define HB_SOCKET_TRANSLATE_DOMAIN
@@ -166,7 +166,7 @@
 /* #     define HB_HAS_INET6 */
 #  elif defined( __MINGW32__ )
 #     define HB_HAS_SOCKADDR_STORAGE
-#  elif defined( __POCC__ ) && !defined( __XCC__ )
+#  elif defined( __POCC__ ) && ! defined( __XCC__ )
 #     define HB_HAS_SOCKADDR_STORAGE
 #  endif
 #  define HB_IS_INET_NTOA_MT_SAFE
@@ -218,7 +218,7 @@
 #     include <sys/select.h>
 #     include <arpa/inet.h>
 #  endif
-#  if !( defined( HB_OS_DOS ) && defined( __WATCOMC__ ) )
+#  if ! ( defined( HB_OS_DOS ) && defined( __WATCOMC__ ) )
 #     include <sys/time.h>
 #  endif
 #  include <sys/types.h>
@@ -238,13 +238,13 @@
 #     include <sys/un.h>
 #  endif
 #  include <netinet/tcp.h>
-#  if !( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
+#  if ! ( defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) )
 #     include <net/if.h>
 #  endif
 #  include <unistd.h>
 #  include <fcntl.h>
 #  if defined( HB_OS_DOS )
-#     define select       select_s
+#     define select          select_s
 #  endif
 #endif
 
@@ -820,7 +820,7 @@ static int s_iSessions;
    static const struct in6_addr s_in6addr_any = IN6ADDR_ANY_INIT;
 #endif
 
-#if !defined( HB_HAS_INET_NTOP ) && !defined( HB_IS_INET_NTOA_MT_SAFE ) && defined( AF_INET )
+#if ! defined( HB_HAS_INET_NTOP ) && ! defined( HB_IS_INET_NTOA_MT_SAFE ) && defined( AF_INET )
 static const char * hb_inet_ntoa( const struct in_addr * addr, char * pBuffer )
 {
    /* dirty hack to make inet_ntoa() MT safe,
@@ -828,6 +828,7 @@ static const char * hb_inet_ntoa( const struct in_addr * addr, char * pBuffer )
     * static buffer and is not MT safe.
     */
    HB_ULONG u = ntohl( addr->s_addr );
+
    hb_snprintf( pBuffer, INET_ADDRSTRLEN, "%hd.%hd.%hd.%hd",
                 HB_UHBYTE( u ), HB_ULBYTE( u ), HB_HIBYTE( u ), HB_LOBYTE( u ) );
    return pBuffer;
@@ -2493,6 +2494,7 @@ int hb_socketSetBlockingIO( HB_SOCKET sd, HB_BOOL fBlocking )
 int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
 {
    int ret;
+
 #if defined( TCP_NODELAY )
    /*
     * Turn off the nagle algorithm for the specified socket.
@@ -2520,6 +2522,7 @@ int hb_socketSetNoDelay( HB_SOCKET sd, HB_BOOL fNoDelay )
 int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
 {
    int ret;
+
    #if defined( HB_OS_WIN )
       #if defined( SO_EXCLUSIVEADDRUSE )
          int val = fExclusive ? 1 : 0;
@@ -2543,6 +2546,7 @@ int hb_socketSetExclusiveAddr( HB_SOCKET sd, HB_BOOL fExclusive )
 int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
 {
    int ret;
+
    /* it allows to reuse port immediately without timeout used to
     * clean all pending connections addressed to previous port owner
     */
@@ -2567,6 +2571,7 @@ int hb_socketSetReuseAddr( HB_SOCKET sd, HB_BOOL fReuse )
 int hb_socketSetKeepAlive( HB_SOCKET sd, HB_BOOL fKeepAlive )
 {
    int val = fKeepAlive ? 1 : 0, ret;
+
    ret = setsockopt( sd, SOL_SOCKET, SO_KEEPALIVE, ( const char * ) &val, sizeof( val ) );
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    return ret;
@@ -2590,6 +2595,7 @@ int hb_socketSetBroadcast( HB_SOCKET sd, HB_BOOL fBroadcast )
 int hb_socketSetSndBufSize( HB_SOCKET sd, int iSize )
 {
    int ret = setsockopt( sd, SOL_SOCKET, SO_SNDBUF, ( const char * ) &iSize, sizeof( iSize ) );
+
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    return ret;
 }
@@ -2597,6 +2603,7 @@ int hb_socketSetSndBufSize( HB_SOCKET sd, int iSize )
 int hb_socketSetRcvBufSize( HB_SOCKET sd, int iSize )
 {
    int ret = setsockopt( sd, SOL_SOCKET, SO_RCVBUF, ( const char * ) &iSize, sizeof( iSize ) );
+
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    return ret;
 }
@@ -2605,6 +2612,7 @@ int hb_socketGetSndBufSize( HB_SOCKET sd, int * piSize )
 {
    socklen_t len = sizeof( * piSize );
    int ret = getsockopt( sd, SOL_SOCKET, SO_SNDBUF, ( char * ) piSize, &len );
+
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    return ret;
 }
@@ -2613,6 +2621,7 @@ int hb_socketGetRcvBufSize( HB_SOCKET sd, int * piSize )
 {
    socklen_t len = sizeof( * piSize );
    int ret = getsockopt( sd, SOL_SOCKET, SO_RCVBUF, ( char * ) piSize, &len );
+
    hb_socketSetOsError( ret != -1 ? 0 : HB_SOCK_GETERROR() );
    return ret;
 }
@@ -2644,7 +2653,7 @@ int hb_socketSetMulticast( HB_SOCKET sd, int af, const char * szAddr )
       if( err > 0 )
       {
          mreq.ipv6mr_interface = 0;
-#if !defined( IPV6_JOIN_GROUP ) && defined( IPV6_ADD_MEMBERSHIP )
+#if ! defined( IPV6_JOIN_GROUP ) && defined( IPV6_ADD_MEMBERSHIP )
 #  define IPV6_JOIN_GROUP  IPV6_ADD_MEMBERSHIP
 #endif
          ret = setsockopt( sd, IPPROTO_IPV6, IPV6_JOIN_GROUP, ( const char * ) &mreq, sizeof( mreq ) );
@@ -2709,8 +2718,8 @@ int hb_socketSelect( PHB_ITEM pArrayRD, HB_BOOL fSetRD,
    HB_SIZE nLen, nPos, ul;
    PHB_ITEM pItemSets[ 3 ];
    HB_BOOL pSet[ 3 ];
-   fd_set fds[ 3 ], *pfds[ 3 ];
-   struct timeval tv, *ptv;
+   fd_set fds[ 3 ], * pfds[ 3 ];
+   struct timeval tv, * ptv;
 
    pItemSets[ 0 ] = pArrayRD;
    pItemSets[ 1 ] = pArrayWR;
@@ -2816,7 +2825,7 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
    memset( &sa, 0, sizeof( sa ) );
    sa.sin_family = AF_INET;
    sa.sin_port = htons( ( HB_U16 ) iPort );
-   if( !szAddr || !*szAddr )
+   if( ! szAddr || ! *szAddr )
    {
       sa.sin_addr.s_addr = htonl( INADDR_ANY );
       *pSockAddr = memcpy( hb_xgrab( sizeof( sa ) + 1 ), &sa, sizeof( sa ) );
@@ -2834,10 +2843,10 @@ HB_BOOL hb_socketResolveInetAddr( void ** pSockAddr, unsigned * puiLen, const ch
             strcmp( "255.255.255.255", szAddr ) == 0; /* dirty hack */
 #endif
 
-   if( !fTrans )
+   if( ! fTrans )
    {
 #if defined( HB_HAS_ADDRINFO )
-      struct addrinfo hints, *res = NULL;
+      struct addrinfo hints, * res = NULL;
 
       hb_vmUnlock();
       memset( &hints, 0, sizeof( hints ) );
@@ -2888,7 +2897,7 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
    char * szResult = NULL;
    HB_BOOL fTrans = HB_FALSE;
 
-   if( !szAddr || !*szAddr )
+   if( ! szAddr || ! *szAddr )
       return NULL;
 
    if( af == HB_SOCKET_AF_INET )
@@ -2904,8 +2913,8 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
             strcmp( "255.255.255.255", szAddr ) == 0; /* dirty hack */
 #endif
 
-#if !defined( HB_HAS_ADDRINFO )
-      if( !fTrans )
+#if ! defined( HB_HAS_ADDRINFO )
+      if( ! fTrans )
       {
          struct hostent * he;
 
@@ -2957,10 +2966,10 @@ char * hb_socketResolveAddr( const char * szAddr, int af )
    }
 #endif
 
-   if( !fTrans )
+   if( ! fTrans )
    {
 #if defined( HB_HAS_ADDRINFO )
-      struct addrinfo hints, *res = NULL;
+      struct addrinfo hints, * res = NULL;
 
       hb_vmUnlock();
 #  if defined( HB_SOCKET_TRANSLATE_DOMAIN )
@@ -2985,7 +2994,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
    PHB_ITEM pItem = NULL;
 
 #if defined( HB_HAS_ADDRINFO )
-   struct addrinfo hints, *res = NULL, *ai;
+   struct addrinfo hints, * res = NULL, * ai;
    int iResult;
 
    hb_vmUnlock();
@@ -3028,7 +3037,7 @@ PHB_ITEM hb_socketGetHosts( const char * szAddr, int af )
                if( szResult )
                {
                   ++iCount;
-                  if( !hb_arraySetCLPtr( pItem, iCount, szResult, strlen( szResult ) ) )
+                  if( ! hb_arraySetCLPtr( pItem, iCount, szResult, strlen( szResult ) ) )
                      hb_xfree( szResult );
                }
             }
@@ -3117,8 +3126,8 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
    if( af != -1 )
    {
 #if defined( HB_HAS_NAMEINFO )
-      #if !defined( NI_MAXHOST )
-         #define NI_MAXHOST      1025
+      #if ! defined( NI_MAXHOST )
+         #define NI_MAXHOST  1025
       #endif
       char szHost[ NI_MAXHOST ];
       int iResult;
@@ -3128,11 +3137,11 @@ char * hb_socketGetHostName( const void * pSockAddr, unsigned len )
       hb_vmLock();
       if( iResult == 0 )
          szResult = hb_strdup( szHost );
-#elif defined( HB_HAS_ADDRINFO ) && !defined( HB_HAS_GETHOSTBYADDR )
+#elif defined( HB_HAS_ADDRINFO ) && ! defined( HB_HAS_GETHOSTBYADDR )
       char * szAddr = hb_socketAddrGetName( pSockAddr, len );
       if( szAddr )
       {
-         struct addrinfo hints, *res = NULL;
+         struct addrinfo hints, * res = NULL;
 
          hb_vmUnlock();
          memset( &hints, 0, sizeof( hints ) );
@@ -3270,7 +3279,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
             }
 #  endif
             len += sizeof( pifr->ifr_name );
-#  if !defined( HB_OS_BEOS )
+#  if ! defined( HB_OS_BEOS )
             if( len < ( int ) sizeof( struct ifreq ) )
                len = ( int ) sizeof( struct ifreq );
 #  endif
@@ -3414,7 +3423,7 @@ PHB_ITEM hb_socketGetIFaces( int af, HB_BOOL fNoAliases )
       hb_xfree( buf );
       hb_socketClose( sd );
    }
-#elif defined( HB_OS_WIN ) && !defined( __DMC__ )
+#elif defined( HB_OS_WIN ) && ! defined( __DMC__ )
    HB_SOCKET sd;
 
    /* TODO: add support for IP6 */

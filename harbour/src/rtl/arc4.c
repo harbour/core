@@ -53,7 +53,7 @@
 
 /* XXX: Check and possibly extend this to other Unix-like platforms */
 #if ( defined( HB_OS_BSD ) && ! defined( HB_OS_DARWIN ) ) || \
-    ( defined( HB_OS_LINUX ) && ! defined ( HB_OS_ANDROID ) && ! defined ( __WATCOMC__ ) )
+   ( defined( HB_OS_LINUX ) && ! defined ( HB_OS_ANDROID ) && ! defined ( __WATCOMC__ ) )
 #  define HAVE_SYS_SYSCTL_H
 #  define HAVE_DECL_CTL_KERN
 #  define HAVE_DECL_KERN_RANDOM
@@ -76,7 +76,7 @@
 #  include <sys/types.h>
 #  ifdef HAVE_SYS_SYSCTL_H
 #     include <sys/sysctl.h>
-#     if !defined( HB_OS_LINUX ) && defined( KERN_ARND )
+#     if ! defined( HB_OS_LINUX ) && defined( KERN_ARND )
 #        define HAVE_DECL_KERN_ARND
 #     endif
 #  endif
@@ -89,10 +89,10 @@
 #include <string.h>
 
 /* Add platform entropy 32 bytes (256 bits) at a time. */
-#define ADD_ENTROPY         32
+#define ADD_ENTROPY          32
 
 /* Re-seed from the platform RNG after generating this many bytes. */
-#define BYTES_BEFORE_RESEED 1600000
+#define BYTES_BEFORE_RESEED  1600000
 
 struct arc4_stream
 {
@@ -101,19 +101,19 @@ struct arc4_stream
    HB_U8 s[ 256 ];
 };
 
-#if !defined( HB_OS_UNIX )
+#if ! defined( HB_OS_UNIX )
 #  define NO_PID_CHECK
 #else
-static pid_t              arc4_stir_pid;
+static pid_t arc4_stir_pid;
 #endif
 
-static int                rs_initialized;
+static int rs_initialized;
 static struct arc4_stream rs;
-static HB_I32             arc4_count;
+static HB_I32 arc4_count;
 
 static HB_CRITICAL_NEW( arc4_lock );
-#define _ARC4_LOCK()   hb_threadEnterCriticalSection( &arc4_lock )
-#define _ARC4_UNLOCK() hb_threadLeaveCriticalSection( &arc4_lock )
+#define _ARC4_LOCK()    hb_threadEnterCriticalSection( &arc4_lock )
+#define _ARC4_UNLOCK()  hb_threadLeaveCriticalSection( &arc4_lock )
 
 #if defined( __BORLANDC__ ) && defined( _HB_INLINE_ )
 #undef _HB_INLINE_
@@ -183,7 +183,7 @@ static int arc4_seed_win32( void )
 
    if( ! provider_set &&
        ! CryptAcquireContext( &provider, NULL, NULL, PROV_RSA_FULL, CRYPT_VERIFYCONTEXT ) &&
-         GetLastError() != ( DWORD ) NTE_BAD_KEYSET )
+       GetLastError() != ( DWORD ) NTE_BAD_KEYSET )
       return -1;
 
    provider_set = 1;
@@ -253,10 +253,10 @@ static int arc4_seed_sysctl_bsd( void )
     * This can work even if /dev/urandom is inaccessible for some reason
     * (e.g., we're running in a chroot).
     */
-   int     mib[] = { CTL_KERN, KERN_ARND };
-   HB_U8   buf[ ADD_ENTROPY ];
-   size_t  len, n;
-   int     i, any_set;
+   int    mib[] = { CTL_KERN, KERN_ARND };
+   HB_U8  buf[ ADD_ENTROPY ];
+   size_t len, n;
+   int    i, any_set;
 
    memset( buf, 0, sizeof( buf ) );
 
@@ -384,9 +384,9 @@ static int arc4_seed_urandom( void )
       "/dev/random",
       NULL
    };
-   HB_U8               buf[ ADD_ENTROPY ];
-   int                 fd, i;
-   HB_SIZE             n;
+   HB_U8   buf[ ADD_ENTROPY ];
+   int     fd, i;
+   HB_SIZE n;
 
    for( i = 0; filenames[ i ]; ++i )
    {
@@ -413,12 +413,12 @@ static int arc4_seed_urandom( void )
 static int arc4_seed_rand( void )
 {
    HB_SIZE i;
-   HB_U8 buf[ ADD_ENTROPY ];
+   HB_U8   buf[ ADD_ENTROPY ];
 
    srand( ( unsigned ) hb_dateMilliSeconds() );
 
    for( i = 0; i < sizeof( buf ); i++ )
-      buf[ i ] = ( HB_U8 ) ( rand() % 256 ); /* not biased */
+      buf[ i ] = ( HB_U8 ) ( rand() % 256 );  /* not biased */
 
    arc4_addrandom( buf, sizeof( buf ) );
    memset( buf, 0, sizeof( buf ) );
@@ -549,7 +549,7 @@ static _HB_INLINE_ HB_U32 arc4_getword( void )
 
    val  = arc4_getbyte() << 24;
    val |= arc4_getbyte() << 16;
-   val |= arc4_getbyte() <<  8;
+   val |= arc4_getbyte() << 8;
    val |= arc4_getbyte();
 
    return val;

@@ -63,50 +63,52 @@
    #endif
 #endif
 
-#define HB_DLL_PREF     TEXT( "harbour" )
-#define HB_DLL_VER      TEXT( "-" ) TEXT( HB_MACRO2STRING( HB_VER_MAJOR ) ) TEXT( HB_MACRO2STRING( HB_VER_MINOR ) )
-#define HB_DLL_EXT      TEXT( ".dll" )
+#define HB_DLL_PREF      TEXT( "harbour" )
+#define HB_DLL_VER       TEXT( "-" ) TEXT( HB_MACRO2STRING( HB_VER_MAJOR ) ) TEXT( HB_MACRO2STRING( HB_VER_MINOR ) )
+#define HB_DLL_EXT       TEXT( ".dll" )
 
-#define HB_DLL_NAME     HB_DLL_PREF    HB_DLL_EXT
+#define HB_DLL_NAME      HB_DLL_PREF HB_DLL_EXT
 
 #if   defined( HB_OS_WIN_CE ) && defined( HB_CPU_ARM )
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-arm" ) HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-wce-arm" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_MIPS )
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-mips" ) HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-wce-mips" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_SH )
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-sh" ) HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-wce-sh" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE ) && defined( HB_CPU_X86 )
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce-x86" ) HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-wce-x86" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_CE )
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-wce" ) HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-wce" ) HB_DLL_EXT
 #elif defined( __BORLANDC__ )
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-bcc" ) HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-bcc" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_X86_64 )
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-x64" ) HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-x64" ) HB_DLL_EXT
 #elif defined( HB_OS_WIN_64 ) && defined( HB_CPU_IA_64 )
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER TEXT( "-ia64" ) HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER TEXT( "-ia64" ) HB_DLL_EXT
 #else
-   #define HB_DLL_NAME2   HB_DLL_PREF    HB_DLL_VER HB_DLL_EXT
+   #define HB_DLL_NAME2  HB_DLL_PREF HB_DLL_VER HB_DLL_EXT
 #endif
 
 #if defined( HB_OS_WIN )
 
 HB_EXTERN_BEGIN
 
-#define HB_DLL_MSG_NO_FUNC( func )  do { \
-                                       MessageBox( NULL, \
-                                                   TEXT( "Function '" ) TEXT( func ) TEXT( "' not found!" ), \
-                                                   TEXT( func ), \
-                                                   MB_OK | MB_ICONERROR ); \
-                                    } while( 0 )
+#define HB_DLL_MSG_NO_FUNC( func )  \
+   do \
+   { \
+      MessageBox( NULL, \
+                  TEXT( "Function '" ) TEXT( func ) TEXT( "' not found!" ), \
+                  TEXT( func ), \
+                  MB_OK | MB_ICONERROR ); \
+   } while( 0 )
 
-typedef PHB_FUNC ( * HB_PROC_GET )( const char * szFuncName );
+typedef PHB_FUNC ( *HB_PROC_GET )( const char * szFuncName );
 
 /* hb_vmProcessSymbols() */
-typedef PHB_SYMB ( * HB_VM_PROCESS_SYMBOLS )
-                        ( PHB_SYMB pModuleSymbols, HB_USHORT uiModuleSymbols,
-                          const char * szModuleName, HB_ULONG ulID,
-                          HB_USHORT uiPcodeVer );
+typedef PHB_SYMB ( *HB_VM_PROCESS_SYMBOLS )
+   ( PHB_SYMB pModuleSymbols, HB_USHORT uiModuleSymbols,
+   const char * szModuleName, HB_ULONG ulID,
+   HB_USHORT uiPcodeVer );
 static PHB_SYMB s_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols,
                                     const char * szModuleName, HB_ULONG ulID,
                                     HB_USHORT uiPcodeVer );
@@ -114,7 +116,7 @@ static HB_VM_PROCESS_SYMBOLS s_pProcessSymbols = s_vmProcessSymbols;
 
 
 /* hb_vmExecute() */
-typedef void ( * HB_VM_EXECUTE ) ( const HB_BYTE * pCode, PHB_SYMB pSymbols );
+typedef void ( *HB_VM_EXECUTE )( const HB_BYTE * pCode, PHB_SYMB pSymbols );
 static void s_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols );
 static HB_VM_EXECUTE s_pExecute = s_vmExecute;
 
@@ -122,7 +124,7 @@ static HB_VM_EXECUTE s_pExecute = s_vmExecute;
 PHB_FUNC hb_dllGetProcAddress( const char * szProcName )
 {
    static HB_PROC_GET s_pProcGet = NULL;
-   static HMODULE s_hModule = NULL;
+   static HMODULE     s_hModule  = NULL;
 
    if( s_hModule == NULL )
    {
@@ -158,7 +160,7 @@ BOOL WINAPI HB_DLL_ENTRY_POINT( HANDLE hInstance, DWORD dwReason, PVOID pvReserv
 BOOL WINAPI HB_DLL_ENTRY_POINT( HINSTANCE hInstance, DWORD dwReason, PVOID pvReserved )
 #endif
 {
-   HB_TRACE( HB_TR_DEBUG, ("DllEntryPoint(%p, %lu, %p)", hInstance, dwReason, pvReserved ) );
+   HB_TRACE( HB_TR_DEBUG, ( "DllEntryPoint(%p, %lu, %p)", hInstance, dwReason, pvReserved ) );
 
    HB_SYMBOL_UNUSED( hInstance );
    HB_SYMBOL_UNUSED( dwReason );
@@ -185,7 +187,8 @@ static PHB_SYMB s_vmProcessSymbols( PHB_SYMB pSymbols, HB_USHORT uiSymbols,
                                     HB_USHORT uiPcodeVer )
 {
    HB_VM_PROCESS_SYMBOLS pProcessSymbols = ( HB_VM_PROCESS_SYMBOLS )
-                                   hb_dllGetProcAddress( "hb_vmProcessSymbols" );
+                                           hb_dllGetProcAddress( "hb_vmProcessSymbols" );
+
    if( pProcessSymbols )
    {
       s_pProcessSymbols = pProcessSymbols;
@@ -216,6 +219,7 @@ static void s_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 {
    HB_VM_EXECUTE pExecute = ( HB_VM_EXECUTE )
                             hb_dllGetProcAddress( "hb_vmExecute" );
+
    if( pExecute )
    {
       s_pExecute = pExecute;

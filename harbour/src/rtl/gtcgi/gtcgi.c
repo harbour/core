@@ -52,7 +52,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME      CGI
+#define HB_GT_NAME  CGI
 
 /*
  * HB_GT_CGI_RAWOUTPUT controls the behavior of GTCGI output
@@ -76,12 +76,12 @@
 #include "hbapicdp.h"
 #include "hbdate.h"
 
-static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+static int s_GtId;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER   ( &SuperTable )
+#define HB_GTID_PTR  ( &s_GtId )
 
-#define HB_GTCGI_GET(p) ( ( PHB_GTCGI ) HB_GTLOCAL( p ) )
+#define HB_GTCGI_GET( p )  ( ( PHB_GTCGI ) HB_GTLOCAL( p ) )
 
 typedef struct _HB_GTCGI
 {
@@ -132,7 +132,7 @@ static void hb_gt_cgi_Exit( PHB_GT pGT )
 {
    PHB_GTCGI pGTCGI;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_Exit(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Exit(%p)", pGT ) );
 
    HB_GTSELF_REFRESH( pGT );
 
@@ -158,7 +158,7 @@ static void hb_gt_cgi_Exit( PHB_GT pGT )
 
 static int hb_gt_cgi_ReadKey( PHB_GT pGT, int iEventMask )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_ReadKey(%p,%d)", pGT, iEventMask));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_ReadKey(%p,%d)", pGT, iEventMask ) );
 
    HB_SYMBOL_UNUSED( pGT );
    HB_SYMBOL_UNUSED( iEventMask );
@@ -168,7 +168,7 @@ static int hb_gt_cgi_ReadKey( PHB_GT pGT, int iEventMask )
 
 static HB_BOOL hb_gt_cgi_IsColor( PHB_GT pGT )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_IsColor(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_IsColor(%p)", pGT ) );
 
    HB_SYMBOL_UNUSED( pGT );
 
@@ -180,7 +180,7 @@ static void hb_gt_cgi_Bell( PHB_GT pGT )
    static const char s_szBell[] = { HB_CHAR_BEL, 0 };
    PHB_GTCGI pGTCGI;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_cgi_Bell(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_cgi_Bell(%p)", pGT ) );
 
    pGTCGI = HB_GTCGI_GET( pGT );
 
@@ -388,7 +388,7 @@ static void hb_gt_cgi_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 
       while( iLen < iSize )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
+         if( ! HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol, &iColor, &bAttr, &usChar ) )
             break;
          iIndex += ( int ) hb_cdpTextPutU16( cdpTerm, pGTCGI->sLineBuf + iIndex,
                                                       pGTCGI->iLineBufSize - iIndex, usChar );
@@ -429,7 +429,7 @@ static void hb_gt_cgi_Refresh( PHB_GT pGT )
 
 static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_FuncInit(%p)", pFuncTable));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_FuncInit(%p)", pFuncTable ) );
 
    pFuncTable->Init                       = hb_gt_cgi_Init;
    pFuncTable->Exit                       = hb_gt_cgi_Exit;

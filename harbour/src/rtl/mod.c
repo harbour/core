@@ -68,12 +68,12 @@
 HB_FUNC( MOD )
 {
    PHB_ITEM pNumber = hb_param( 1, HB_IT_NUMERIC );
-   PHB_ITEM pBase = hb_param( 2, HB_IT_NUMERIC );
+   PHB_ITEM pBase   = hb_param( 2, HB_IT_NUMERIC );
 
    if( pNumber && pBase )
    {
       double dNumber = hb_itemGetND( pNumber );
-      double dBase = hb_itemGetND( pBase ); /* dBase! Cool! */
+      double dBase   = hb_itemGetND( pBase ); /* dBase! Cool! */
 
       if( dBase )
       {
@@ -91,10 +91,10 @@ HB_FUNC( MOD )
           * and return original numeric item keeping its internal
           * representation: integer or double, size and number of
           * decimal places, it can be seen in code like:
-          *    proc main()
-          *       set fixed on
-          *       ? transform( mod( 12345, 0 ),"" )
-          *    return
+          *    PROCEDURE Main()
+          *       SET FIXED ON
+          *       ? Transform( Mod( 12345, 0 ),"" )
+          *       RETURN
           *
           * [druzus]
           */
@@ -110,8 +110,8 @@ HB_FUNC( MOD )
 }
 
 /*
-FUNCTION MOD( cl_num, cl_base )
-   LOCAL cl_result := cl_num % cl_base
+   FUNCTION Mod( cl_num, cl_base )
+      LOCAL cl_result := cl_num % cl_base
 
-   RETURN iif( cl_base = 0, cl_num, iif( cl_result * cl_base < 0, cl_result + cl_base, cl_result ) )
-*/
+      RETURN iif( cl_base = 0, cl_num, iif( cl_result * cl_base < 0, cl_result + cl_base, cl_result ) )
+ */

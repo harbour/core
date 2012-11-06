@@ -54,9 +54,9 @@
 
 HB_FUNC( AMPM )
 {
-   HB_SIZE nTimeLen = hb_parclen( 1 );
+   HB_SIZE nTimeLen  = hb_parclen( 1 );
    char *  pszResult = ( char * ) hb_xgrab( HB_MAX( nTimeLen, 2 ) + 3 + 1 );
-   int     iHour = 0;
+   int     iHour     = 0;
    HB_BOOL bAM;
 
    if( nTimeLen )

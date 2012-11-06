@@ -74,14 +74,14 @@ HB_FUNC( SX_SLIMFAST )
       {
          if( c == cQuote )
             cQuote = 0;
-         else if( !cQuote )
+         else if( ! cQuote )
          {
             if( c == '"' || c == '\'' )
                cQuote = c;
-            else if( c == ' ' && nDst && szDst[nDst - 1] == ' ' )
+            else if( c == ' ' && nDst && szDst[ nDst - 1 ] == ' ' )
                continue;
          }
-         szDst[nDst++] = c;
+         szDst[ nDst++ ] = c;
       }
 
       hb_retclen_buffer( szDst, nDst );
@@ -101,10 +101,10 @@ HB_FUNC( SX_WILDMATCH )
    hb_retl( fMatch );
 }
 
-#define HB_SX_VER    "1.00.00"
-#define HB_SX_DAY    "20070530"
-#define HB_SX_TIME   "01:00"
-#define HB_SX_FULL   "Harbour SIx3 compatible library, 1.00.00 2007/05/30 01:00"
+#define HB_SX_VER   "1.00.00"
+#define HB_SX_DAY   "20070530"
+#define HB_SX_TIME  "01:00"
+#define HB_SX_FULL  "Harbour SIx3 compatible library, 1.00.00 2007/05/30 01:00"
 
 HB_FUNC( SX_VERSION )
 {

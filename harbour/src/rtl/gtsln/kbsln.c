@@ -70,23 +70,23 @@
 /* keyboard states - these should be taken
    from system includes, not be hard coded */
 #if defined( __linux__ )
-   #define SHIFT_PRESSED        1
-   #define ALTR_PRESSED         2
-   #define CONTROL_PRESSED      4
-   #define ALTL_PRESSED         8
-   #define ALT_PRESSED ALTL_PRESSED
+   #define SHIFT_PRESSED    1
+   #define ALTR_PRESSED     2
+   #define CONTROL_PRESSED  4
+   #define ALTL_PRESSED     8
+   #define ALT_PRESSED      ALTL_PRESSED
 #elif defined( M_UNIX )         /* SCO */
-   #define SHIFT_PRESSED        1
-   #define ALTR_PRESSED         8
-   #define CONTROL_PRESSED      2
-   #define ALTL_PRESSED         4
-   #define ALT_PRESSED ALTL_PRESSED
+   #define SHIFT_PRESSED    1
+   #define ALTR_PRESSED     8
+   #define CONTROL_PRESSED  2
+   #define ALTL_PRESSED     4
+   #define ALT_PRESSED      ALTL_PRESSED
 #else /* we don't know how to do this */
-   #define SHIFT_PRESSED        0
-   #define ALTR_PRESSED         0
-   #define CONTROL_PRESSED      0
-   #define ALTL_PRESSED         0
-   #define ALT_PRESSED ALTL_PRESSED
+   #define SHIFT_PRESSED    0
+   #define ALTR_PRESSED     0
+   #define CONTROL_PRESSED  0
+   #define ALTL_PRESSED     0
+   #define ALT_PRESSED      ALTL_PRESSED
 #endif
 #define HB_GT_KBD_MODIF_MASK \
    ( ( SHIFT_PRESSED | CONTROL_PRESSED | ALTL_PRESSED ) << 16 )
@@ -95,10 +95,10 @@
    ( INKEY_MOVE | INKEY_LDOWN | INKEY_LUP | INKEY_RDOWN | INKEY_RUP )
 
 /* extra keysyms definitions */
-#define SL_KEY_NUM_5      SL_KEY_B2       /* this is checked explicitly */
-#define SL_KEY_MAX        ( ( unsigned int ) 0x2000 )
-#define SL_KEY_ESC        ( SL_KEY_MAX + 1 )
-#define SL_KEY_MOU        ( SL_KEY_ESC + 1 )
+#define SL_KEY_NUM_5        SL_KEY_B2     /* this is checked explicitly */
+#define SL_KEY_MAX          ( ( unsigned int ) 0x2000 )
+#define SL_KEY_ESC          ( SL_KEY_MAX + 1 )
+#define SL_KEY_MOU          ( SL_KEY_ESC + 1 )
 #define SL_KEY_ALT( ch )  ( SL_KEY_MAX + ( ( unsigned int ) ch ) )
 
 /* we choose Ctrl+\ as an abort key on Unixes where it is a SIGQUIT key by default */
@@ -126,7 +126,7 @@ static int s_iDeadKey = -1;
 #endif
 
 HB_BOOL hb_sln_UnderLinuxConsole = HB_FALSE;
-HB_BOOL hb_sln_UnderXterm = HB_FALSE;
+HB_BOOL hb_sln_UnderXterm        = HB_FALSE;
 
 static int hb_sln_try_get_Kbd_State( void );
 
@@ -160,9 +160,9 @@ static void hb_sln_Init_KeyTranslations( void )
    /* for defining ^[<Key> sequences - this simulates Alt+Keys */
    char AltChars[][ 2 ] =
    {
-      { '0',   '9' },
-      { 'A',   'Z' },
-      { 'a',   'z' }
+      { '0', '9' },
+      { 'A', 'Z' },
+      { 'a', 'z' }
    };
 
    /* on Unix systems ESC is a special key so let
@@ -301,7 +301,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    HB_BOOL fInput;
    int iKey;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_sln_ReadKey(%p,%d)", pGT, (int) iEventMask));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_sln_ReadKey(%p,%d)", pGT, ( int ) iEventMask ) );
 
    /* user AbortKey break */
    if( SLKeyBoard_Quit == 1 )
@@ -323,8 +323,8 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
    }
 
    fInput = SLang_input_pending( 0 ) != 0;
-   iKey = hb_gt_sln_mouse_Inkey( iEventMask, !fInput );
-   if( !fInput || iKey != 0 )
+   iKey = hb_gt_sln_mouse_Inkey( iEventMask, ! fInput );
+   if( ! fInput || iKey != 0 )
       return iKey;
 
 #if HB_GT_KBD_MODIF_MASK
@@ -348,7 +348,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
       else
       {
          /* wait hb_sln_escDelay milisec for next char and in not return ESC keycode */
-         if( 0 == SLang_input_pending( - HB_MAX( hb_sln_escDelay, 0 ) ) )
+         if( 0 == SLang_input_pending( -HB_MAX( hb_sln_escDelay, 0 ) ) )
             return 033;
       }
    }
@@ -410,7 +410,7 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
          return tmp;
    }
 
-   if( !hb_sln_Is_Unicode )
+   if( ! hb_sln_Is_Unicode )
    {
       /* standard ASCII key */
       if( ch && ch < 256 && hb_sln_inputTab[ ch ] )
@@ -429,16 +429,17 @@ int hb_gt_sln_ReadKey( PHB_GT pGT, int iEventMask )
          while( n > 0 )
          {
             if( SLang_input_pending( hb_sln_escDelay == 0 ? -100 :
-                                      - HB_MAX( hb_sln_escDelay, 0 ) ) == 0 )
+                                     -HB_MAX( hb_sln_escDelay, 0 ) ) == 0 )
                break;
             buf[ i++ ] = SLang_getkey();
-            if( !hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) buf[ i - 1 ], &n, &wc ) )
+            if( ! hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) buf[ i - 1 ], &n, &wc ) )
                n = -1;
          }
          if( n == 0 )
             return HB_INKEY_NEW_UNICODE( wc );
-         else while( i > 0 )
-            SLang_ungetkey( buf[ --i ] );
+         else
+            while( i > 0 )
+               SLang_ungetkey( buf[ --i ] );
       }
    }
 #endif

@@ -62,12 +62,13 @@
 static HB_GARBAGE_FUNC( hb_gz_Destructor )
 {
    gzFile * gzHolder = ( gzFile * ) Cargo;
-   if( * gzHolder )
+
+   if( *gzHolder )
    {
       hb_vmUnlock();
-      gzclose( * gzHolder );
+      gzclose( *gzHolder );
       hb_vmLock();
-      * gzHolder = NULL;
+      *gzHolder = NULL;
    }
 }
 
@@ -81,8 +82,8 @@ static gzFile hb_gzParam( int iParam )
 {
    gzFile * gzHolder = ( gzFile * ) hb_parptrGC( &s_gcGZFuncs, iParam );
 
-   if( gzHolder && * gzHolder )
-      return * gzHolder;
+   if( gzHolder && *gzHolder )
+      return *gzHolder;
 
    hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
    return NULL;
@@ -94,6 +95,7 @@ static gzFile hb_gzParam( int iParam )
 HB_FUNC( HB_GZOPEN )
 {
    const char * cFile = hb_parc( 1 ), * cMode = hb_parc( 2 );
+
    if( cFile && cMode )
    {
       gzFile gz;
@@ -114,7 +116,7 @@ HB_FUNC( HB_GZOPEN )
       {
          gzFile * gzHolder = ( gzFile * ) hb_gcAllocate( sizeof( gzFile ),
                                                          &s_gcGZFuncs );
-         * gzHolder = gz;
+         *gzHolder = gz;
          hb_retptrGC( gzHolder );
       }
    }
@@ -128,6 +130,7 @@ HB_FUNC( HB_GZOPEN )
 HB_FUNC( HB_GZDOPEN )
 {
    const char * cMode = hb_parc( 2 );
+
    if( HB_ISNUM( 1 ) && cMode )
    {
       gzFile gz;
@@ -140,7 +143,7 @@ HB_FUNC( HB_GZDOPEN )
       {
          gzFile * gzHolder = ( gzFile * ) hb_gcAllocate( sizeof( gzFile ),
                                                          &s_gcGZFuncs );
-         * gzHolder = gz;
+         *gzHolder = gz;
          hb_retptrGC( gzHolder );
       }
    }
@@ -157,10 +160,10 @@ HB_FUNC( HB_GZCLOSE )
 
    if( gzHolder )
    {
-      gzFile gz = * gzHolder;
+      gzFile gz = *gzHolder;
       int iResult;
 
-      * gzHolder = NULL;
+      *gzHolder = NULL;
 
       hb_vmUnlock();
       iResult = gzclose( gz );
@@ -227,6 +230,7 @@ HB_FUNC( HB_GZREAD )
 HB_FUNC( HB_GZWRITE )
 {
    const char * szData = hb_parc( 2 );
+
    if( szData )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -253,6 +257,7 @@ HB_FUNC( HB_GZWRITE )
 HB_FUNC( HB_GZGETS )
 {
    int iLen = hb_parni( 2 );
+
    if( iLen > 0 )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -285,6 +290,7 @@ HB_FUNC( HB_GZGETS )
 HB_FUNC( HB_GZPUTS )
 {
    const char * szData = hb_parc( 2 );
+
    if( szData )
    {
       gzFile gz = hb_gzParam( 1 );
@@ -332,6 +338,7 @@ HB_FUNC( HB_GZPUTC )
 HB_FUNC( HB_GZGETC )
 {
    gzFile gz = hb_gzParam( 1 );
+
    if( gz )
    {
       int iResult;
@@ -375,6 +382,7 @@ HB_FUNC( HB_GZUNGETC )
 HB_FUNC( HB_GZFLUSH )
 {
    gzFile gz = hb_gzParam( 1 );
+
    if( gz )
    {
       int iResult;
@@ -417,6 +425,7 @@ HB_FUNC( HB_GZSEEK )
 HB_FUNC( HB_GZREWIND )
 {
    gzFile gz = hb_gzParam( 1 );
+
    if( gz )
    {
       int iResult;
@@ -435,6 +444,7 @@ HB_FUNC( HB_GZREWIND )
 HB_FUNC( HB_GZTELL )
 {
    gzFile gz = hb_gzParam( 1 );
+
    if( gz )
    {
       HB_MAXINT nResult;
@@ -453,6 +463,7 @@ HB_FUNC( HB_GZTELL )
 HB_FUNC( HB_GZEOF )
 {
    gzFile gz = hb_gzParam( 1 );
+
    if( gz )
    {
       int iResult;
@@ -491,6 +502,7 @@ HB_FUNC( HB_GZDIRECT )
 HB_FUNC( HB_GZERROR )
 {
    gzFile gz = hb_gzParam( 1 );
+
    if( gz )
    {
       int iErrNum = 0;

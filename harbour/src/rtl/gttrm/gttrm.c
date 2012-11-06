@@ -64,7 +64,7 @@
 
 /* NOTE: User programs should never call this layer directly! */
 
-#define HB_GT_NAME      TRM
+#define HB_GT_NAME  TRM
 
 #define HB_GT_UNICODE_BUF
 
@@ -99,165 +99,169 @@
 #endif
 
 #ifndef O_ACCMODE
-#  define O_ACCMODE           ( O_RDONLY | O_WRONLY | O_RDWR )
+#  define O_ACCMODE         ( O_RDONLY | O_WRONLY | O_RDWR )
 #endif
 
-static int           s_GtId;
-static HB_GT_FUNCS   SuperTable;
-#define HB_GTSUPER   (&SuperTable)
-#define HB_GTID_PTR  (&s_GtId)
+static int s_GtId;
+static HB_GT_FUNCS SuperTable;
+#define HB_GTSUPER          ( &SuperTable )
+#define HB_GTID_PTR         ( &s_GtId )
 
-#define HB_GTTRM_ATTR_CHAR    0x00FF
-#define HB_GTTRM_ATTR_STD     0x0000
+#define HB_GTTRM_ATTR_CHAR  0x00FF
+#define HB_GTTRM_ATTR_STD   0x0000
 #if 0
-#define HB_GTTRM_ATTR_ALT     0x0100
-#define HB_GTTRM_ATTR_PROT    0x0200
-#define HB_GTTRM_ATTR_ACSC    0x0400
+#define HB_GTTRM_ATTR_ALT   0x0100
+#define HB_GTTRM_ATTR_PROT  0x0200
+#define HB_GTTRM_ATTR_ACSC  0x0400
 #else
-#define HB_GTTRM_ATTR_ALT     0x0100
-#define HB_GTTRM_ATTR_PROT    0x0100
-#define HB_GTTRM_ATTR_ACSC    0x0100
+#define HB_GTTRM_ATTR_ALT   0x0100
+#define HB_GTTRM_ATTR_PROT  0x0100
+#define HB_GTTRM_ATTR_ACSC  0x0100
 #endif
-#define HB_GTTRM_ATTR_BOX     0x0800
+#define HB_GTTRM_ATTR_BOX   0x0800
 
-#define TERM_ANSI       1
-#define TERM_LINUX      2
-#define TERM_XTERM      3
-#define TERM_PUTTY      4
-#define TERM_CONS       8
+#define TERM_ANSI           1
+#define TERM_LINUX          2
+#define TERM_XTERM          3
+#define TERM_PUTTY          4
+#define TERM_CONS           8
 
-#define NO_STDKEYS      96
-#define NO_EXTDKEYS     30
+#define NO_STDKEYS          96
+#define NO_EXTDKEYS         30
 
-#define STDIN_BUFLEN    128
+#define STDIN_BUFLEN        128
 
-#define ESC_DELAY       25
+#define ESC_DELAY           25
 
-#define IS_EVTFDSTAT(x) ((x) >= 0x01 && (x) <= 0x03)
-#define EVTFDSTAT_RUN   0x01
-#define EVTFDSTAT_STOP  0x02
-#define EVTFDSTAT_DEL   0x03
+#define IS_EVTFDSTAT( x )  ( ( x ) >= 0x01 && ( x ) <= 0x03 )
+#define EVTFDSTAT_RUN       0x01
+#define EVTFDSTAT_STOP      0x02
+#define EVTFDSTAT_DEL       0x03
 
 /* mouse button states */
-#define M_BUTTON_LEFT      0x0001
-#define M_BUTTON_RIGHT     0x0002
-#define M_BUTTON_MIDDLE    0x0004
-#define M_BUTTON_LDBLCK    0x0010
-#define M_BUTTON_RDBLCK    0x0020
-#define M_BUTTON_MDBLCK    0x0040
-#define M_BUTTON_WHEELUP   0x0100
-#define M_BUTTON_WHEELDOWN 0x0200
-#define M_CURSOR_MOVE      0x0400
-#define M_BUTTON_KEYMASK   (M_BUTTON_LEFT | M_BUTTON_RIGHT | M_BUTTON_MIDDLE)
-#define M_BUTTON_DBLMASK   (M_BUTTON_LDBLCK | M_BUTTON_RDBLCK | M_BUTTON_MDBLCK)
+#define M_BUTTON_LEFT       0x0001
+#define M_BUTTON_RIGHT      0x0002
+#define M_BUTTON_MIDDLE     0x0004
+#define M_BUTTON_LDBLCK     0x0010
+#define M_BUTTON_RDBLCK     0x0020
+#define M_BUTTON_MDBLCK     0x0040
+#define M_BUTTON_WHEELUP    0x0100
+#define M_BUTTON_WHEELDOWN  0x0200
+#define M_CURSOR_MOVE       0x0400
+#define M_BUTTON_KEYMASK    ( M_BUTTON_LEFT | M_BUTTON_RIGHT | M_BUTTON_MIDDLE )
+#define M_BUTTON_DBLMASK    ( M_BUTTON_LDBLCK | M_BUTTON_RDBLCK | M_BUTTON_MDBLCK )
 
-#define MOUSE_NONE      0
-#define MOUSE_GPM       1
-#define MOUSE_XTERM     2
+#define MOUSE_NONE          0
+#define MOUSE_GPM           1
+#define MOUSE_XTERM         2
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
 
-#define TIMEVAL_GET(tv)             gettimeofday(&(tv), NULL)
-#define TIMEVAL_LESS(tv1, tv2)      (((tv1).tv_sec == (tv2).tv_sec ) ?  \
-                                     ((tv1).tv_usec < (tv2).tv_usec) :  \
-                                     ((tv1).tv_sec  < (tv2).tv_sec ))
-#define TIMEVAL_ADD(dst, src, n)    do {                                \
-            (dst).tv_sec = (src).tv_sec + (n) / 1000;                   \
-            if(((dst).tv_usec = (src).tv_usec+(n%1000)*1000)>=1000000) {\
-            (dst).tv_usec -= 1000000; (dst).tv_sec++;                   \
-         } \
-      } while( 0 )
+#define TIMEVAL_GET( tv )           gettimeofday( &( tv ), NULL )
+#define TIMEVAL_LESS( tv1, tv2 )    ( ( ( tv1 ).tv_sec == ( tv2 ).tv_sec ) ?  \
+                                      ( ( tv1 ).tv_usec < ( tv2 ).tv_usec ) :  \
+                                      ( ( tv1 ).tv_sec < ( tv2 ).tv_sec ) )
+#define TIMEVAL_ADD( dst, src, n )  \
+   do { \
+      ( dst ).tv_sec = ( src ).tv_sec + ( n ) / 1000; \
+      if( ( ( dst ).tv_usec = ( src ).tv_usec + ( n % 1000 ) * 1000 ) >= 1000000 ) \
+      { \
+         ( dst ).tv_usec -= 1000000; ( dst ).tv_sec++; \
+      } \
+   } while( 0 )
 
 #else
 
-#define TIMEVAL_GET(tv)             do { (tv) = hb_dateSeconds(); } while( 0 )
-#define TIMEVAL_LESS(tv1, tv2)      ((tv1) < (tv2))
-#define TIMEVAL_ADD(dst, src, n)    do { (dst) = (src) + n / 1000; } while( 0 )
+#define TIMEVAL_GET( tv )           do { ( tv ) = hb_dateSeconds(); } while( 0 )
+#define TIMEVAL_LESS( tv1, tv2 )    ( ( tv1 ) < ( tv2 ) )
+#define TIMEVAL_ADD( dst, src, n )  do { ( dst ) = ( src ) + n / 1000; } while( 0 )
 
 #endif
 
-#define KEY_ALTMASK     0x10000000
-#define KEY_CTRLMASK    0x20000000
-#define KEY_EXTDMASK    0x40000000
-#define KEY_CLIPMASK    0x80000000
-#define KEY_MASK        0xF0000000
+#define KEY_ALTMASK   0x10000000
+#define KEY_CTRLMASK  0x20000000
+#define KEY_EXTDMASK  0x40000000
+#define KEY_CLIPMASK  0x80000000
+#define KEY_MASK      0xF0000000
 
-#define CLR_KEYMASK(x)  ((x) & ~KEY_MASK)
-#define GET_KEYMASK(x)  ((x) & KEY_MASK)
+#define CLR_KEYMASK( x )  ( ( x ) & ~KEY_MASK )
+#define GET_KEYMASK( x )  ( ( x ) & KEY_MASK )
 
-#define IS_CLIPKEY(x)   ((((x) & ~0xffff) ^ KEY_CLIPMASK) == 0)
-#define SET_CLIPKEY(x)  (((x) & 0xffff) | KEY_CLIPMASK)
-#define GET_CLIPKEY(x)  ((((x) & 0x8000) ? ~0xffff : 0) | ((x) & 0xffff))
+#define IS_CLIPKEY( x )   ( ( ( ( x ) & ~0xffff ) ^ KEY_CLIPMASK ) == 0 )
+#define SET_CLIPKEY( x )  ( ( ( x ) & 0xffff ) | KEY_CLIPMASK )
+#define GET_CLIPKEY( x )  ( ( ( ( x ) & 0x8000 ) ? ~0xffff : 0 ) | ( ( x ) & 0xffff ) )
 
-#define CTRL_SEQ        "\036"
-#define ALT_SEQ         "\037"
+#define CTRL_SEQ       "\036"
+#define ALT_SEQ        "\037"
 /*#define NATION_SEQ      "\016"*/
 
-#define EXKEY_F1        ( 0 | KEY_EXTDMASK)
-#define EXKEY_F2        ( 1 | KEY_EXTDMASK)
-#define EXKEY_F3        ( 2 | KEY_EXTDMASK)
-#define EXKEY_F4        ( 3 | KEY_EXTDMASK)
-#define EXKEY_F5        ( 4 | KEY_EXTDMASK)
-#define EXKEY_F6        ( 5 | KEY_EXTDMASK)
-#define EXKEY_F7        ( 6 | KEY_EXTDMASK)
-#define EXKEY_F8        ( 7 | KEY_EXTDMASK)
-#define EXKEY_F9        ( 8 | KEY_EXTDMASK)
-#define EXKEY_F10       ( 9 | KEY_EXTDMASK)
-#define EXKEY_F11       (10 | KEY_EXTDMASK)
-#define EXKEY_F12       (11 | KEY_EXTDMASK)
-#define EXKEY_UP        (12 | KEY_EXTDMASK)
-#define EXKEY_DOWN      (13 | KEY_EXTDMASK)
-#define EXKEY_LEFT      (14 | KEY_EXTDMASK)
-#define EXKEY_RIGHT     (15 | KEY_EXTDMASK)
-#define EXKEY_INS       (16 | KEY_EXTDMASK)
-#define EXKEY_DEL       (17 | KEY_EXTDMASK)
-#define EXKEY_HOME      (18 | KEY_EXTDMASK)
-#define EXKEY_END       (19 | KEY_EXTDMASK)
-#define EXKEY_PGUP      (20 | KEY_EXTDMASK)
-#define EXKEY_PGDN      (21 | KEY_EXTDMASK)
-#define EXKEY_BS        (22 | KEY_EXTDMASK)
-#define EXKEY_TAB       (23 | KEY_EXTDMASK)
-#define EXKEY_ESC       (24 | KEY_EXTDMASK)
-#define EXKEY_ENTER     (25 | KEY_EXTDMASK)
-#define EXKEY_KPENTER   (26 | KEY_EXTDMASK)
-#define EXKEY_CENTER    (27 | KEY_EXTDMASK)
-#define EXKEY_PRTSCR    (28 | KEY_EXTDMASK)
-#define EXKEY_PAUSE     (29 | KEY_EXTDMASK)
+#define EXKEY_F1       ( 0 | KEY_EXTDMASK )
+#define EXKEY_F2       ( 1 | KEY_EXTDMASK )
+#define EXKEY_F3       ( 2 | KEY_EXTDMASK )
+#define EXKEY_F4       ( 3 | KEY_EXTDMASK )
+#define EXKEY_F5       ( 4 | KEY_EXTDMASK )
+#define EXKEY_F6       ( 5 | KEY_EXTDMASK )
+#define EXKEY_F7       ( 6 | KEY_EXTDMASK )
+#define EXKEY_F8       ( 7 | KEY_EXTDMASK )
+#define EXKEY_F9       ( 8 | KEY_EXTDMASK )
+#define EXKEY_F10      ( 9 | KEY_EXTDMASK )
+#define EXKEY_F11      ( 10 | KEY_EXTDMASK )
+#define EXKEY_F12      ( 11 | KEY_EXTDMASK )
+#define EXKEY_UP       ( 12 | KEY_EXTDMASK )
+#define EXKEY_DOWN     ( 13 | KEY_EXTDMASK )
+#define EXKEY_LEFT     ( 14 | KEY_EXTDMASK )
+#define EXKEY_RIGHT    ( 15 | KEY_EXTDMASK )
+#define EXKEY_INS      ( 16 | KEY_EXTDMASK )
+#define EXKEY_DEL      ( 17 | KEY_EXTDMASK )
+#define EXKEY_HOME     ( 18 | KEY_EXTDMASK )
+#define EXKEY_END      ( 19 | KEY_EXTDMASK )
+#define EXKEY_PGUP     ( 20 | KEY_EXTDMASK )
+#define EXKEY_PGDN     ( 21 | KEY_EXTDMASK )
+#define EXKEY_BS       ( 22 | KEY_EXTDMASK )
+#define EXKEY_TAB      ( 23 | KEY_EXTDMASK )
+#define EXKEY_ESC      ( 24 | KEY_EXTDMASK )
+#define EXKEY_ENTER    ( 25 | KEY_EXTDMASK )
+#define EXKEY_KPENTER  ( 26 | KEY_EXTDMASK )
+#define EXKEY_CENTER   ( 27 | KEY_EXTDMASK )
+#define EXKEY_PRTSCR   ( 28 | KEY_EXTDMASK )
+#define EXKEY_PAUSE    ( 29 | KEY_EXTDMASK )
 
-#define K_UNDEF         0x10000
-#define K_METAALT       0x10001
-#define K_METACTRL      0x10002
-#define K_NATIONAL      0x10003
-#define K_MOUSETERM     0x10004
-#define K_RESIZE        0x10005
-#define K_PRTSCR        0x10006
-#define K_PAUSE         0x10007
+#define K_UNDEF        0x10000
+#define K_METAALT      0x10001
+#define K_METACTRL     0x10002
+#define K_NATIONAL     0x10003
+#define K_MOUSETERM    0x10004
+#define K_RESIZE       0x10005
+#define K_PRTSCR       0x10006
+#define K_PAUSE        0x10007
 
 /* xHarbour compatible definitions */
-#if !defined( K_SH_LEFT )
-#define K_SH_LEFT           K_LEFT   /* Shift-Left  == Left  */
-#define K_SH_UP             K_UP     /* Shift-Up    == Up    */
-#define K_SH_RIGHT          K_RIGHT  /* Shift-Right == Right */
-#define K_SH_DOWN           K_DOWN   /* Shift-Down  == Down  */
-#define K_SH_INS            K_INS    /* Shift-Ins   == Ins   */
-#define K_SH_DEL            K_DEL    /* Shift-Del   == Del   */
-#define K_SH_HOME           K_HOME   /* Shift-Home  == Home  */
-#define K_SH_END            K_END    /* Shift-End   == End   */
-#define K_SH_PGUP           K_PGUP   /* Shift-PgUp  == PgUp  */
-#define K_SH_PGDN           K_PGDN   /* Shift-PgDn  == PgDn  */
-#define K_SH_RETURN         K_RETURN /* Shift-Enter == Enter */
-#define K_SH_ENTER          K_ENTER  /* Shift-Enter == Enter */
+#if ! defined( K_SH_LEFT )
+#define K_SH_LEFT      K_LEFT        /* Shift-Left  == Left  */
+#define K_SH_UP        K_UP          /* Shift-Up    == Up    */
+#define K_SH_RIGHT     K_RIGHT       /* Shift-Right == Right */
+#define K_SH_DOWN      K_DOWN        /* Shift-Down  == Down  */
+#define K_SH_INS       K_INS         /* Shift-Ins   == Ins   */
+#define K_SH_DEL       K_DEL         /* Shift-Del   == Del   */
+#define K_SH_HOME      K_HOME        /* Shift-Home  == Home  */
+#define K_SH_END       K_END         /* Shift-End   == End   */
+#define K_SH_PGUP      K_PGUP        /* Shift-PgUp  == PgUp  */
+#define K_SH_PGDN      K_PGDN        /* Shift-PgDn  == PgDn  */
+#define K_SH_RETURN    K_RETURN      /* Shift-Enter == Enter */
+#define K_SH_ENTER     K_ENTER       /* Shift-Enter == Enter */
 #endif
 
-typedef struct {
-   int fd;
-   int mode;
-   int status;
-   void *cargo;
-   int (*eventFunc) (int, int, void*);
+typedef struct
+{
+   int    fd;
+   int    mode;
+   int    status;
+   void * cargo;
+   int ( * eventFunc )( int, int, void * );
 } evtFD;
 
-typedef struct {
+typedef struct
+{
    int row, col;
    int buttonstate;
    int lbuttons;
@@ -279,27 +283,30 @@ typedef struct {
 #endif
 } mouseEvent;
 
-typedef struct _keyTab {
-   int  ch;
+typedef struct _keyTab
+{
+   int ch;
    int key;
    struct _keyTab * nextCh;
    struct _keyTab * otherCh;
 } keyTab;
 
-typedef struct {
+typedef struct
+{
    int key;
    int alt_key;
    int ctrl_key;
    int shift_key;
 } ClipKeyCode;
 
-typedef struct {
-   int          key;
+typedef struct
+{
+   int key;
    const char * seq;
 } keySeq;
 
-#define HB_GTTRM_PTR    struct _HB_GTTRM *
-#define HB_GTTRM_GET(p) ( ( PHB_GTTRM ) HB_GTLOCAL( p ) )
+#define HB_GTTRM_PTR  struct _HB_GTTRM *
+#define HB_GTTRM_GET( p )  ( ( PHB_GTTRM ) HB_GTLOCAL( p ) )
 
 typedef struct _HB_GTTRM
 {
@@ -362,7 +369,7 @@ typedef struct _HB_GTTRM
    double     dToneSeconds;
 
    /* input events */
-   keyTab *pKeyTab;
+   keyTab * pKeyTab;
    int key_flag;
    int esc_delay;
    int key_counter;
@@ -371,7 +378,7 @@ typedef struct _HB_GTTRM
    int mouse_type;
    int mButtons;
    int nTermMouseChars;
-   unsigned char cTermMouseBuf[3];
+   unsigned char cTermMouseBuf[ 3 ];
    mouseEvent mLastEvt;
 #if defined( HB_HAS_GPM )
    Gpm_Connect Conn;
@@ -382,7 +389,7 @@ typedef struct _HB_GTTRM
    int stdin_ptr_r;
    int stdin_inbuf;
 
-   evtFD **event_fds;
+   evtFD ** event_fds;
    int efds_size;
    int efds_no;
 
@@ -423,140 +430,140 @@ static const int  s_AnsiColors[] = { 0, 4, 2, 6, 1, 5, 3, 7 };
  * It cause that we don't have to make any linear scans
  * to access information proper ClipKeyCode entry
  */
-static const ClipKeyCode stdKeyTab[NO_STDKEYS] = {
-   {K_SPACE,              0,             0,         0}, /*  32 */
-   {'!',                  0,             0,         0}, /*  33 */
-   {'"',                  0,             0,         0}, /*  34 */
-   {'#',                  0,             0,         0}, /*  35 */
-   {'$',                  0,             0,         0}, /*  36 */
-   {'%',                  0,             0,         0}, /*  37 */
-   {'&',                  0,             0,         0}, /*  38 */
-   {'\'',               296,             7,         0}, /*  39 */
-   {'(',                  0,             0,         0}, /*  40 */
-   {')',                  0,             0,         0}, /*  41 */
-   {'*',                  0,             0,         0}, /*  42 */
-   {'+',                  0,             0,         0}, /*  43 */
-   {',',                307,             0,         0}, /*  44 */
-   {'-',                386,            31,         0}, /*  45 */
-   {'.',                308,             0,         0}, /*  46 */
-   {'/',                309,           127,         0}, /*  47 */
-   {'0',            K_ALT_0,             0,         0}, /*  48 */
-   {'1',            K_ALT_1,             0,         0}, /*  49 */
-   {'2',            K_ALT_2,           259,         0}, /*  50 */
-   {'3',            K_ALT_3,            27,         0}, /*  51 */
-   {'4',            K_ALT_4,            28,         0}, /*  52 */
-   {'5',            K_ALT_5,            29,         0}, /*  53 */
-   {'6',            K_ALT_6,            30,         0}, /*  54 */
-   {'7',            K_ALT_7,            31,         0}, /*  55 */
-   {'8',            K_ALT_8,           127,         0}, /*  56 */
-   {'9',            K_ALT_9,             0,         0}, /*  57 */
-   {':',                  0,             0,         0}, /*  58 */
-   {';',                295,             0,         0}, /*  59 */
-   {'<',                  0,             0,         0}, /*  60 */
-   {'=',       K_ALT_EQUALS,             0,         0}, /*  61 */
-   {'>',                  0,             0,         0}, /*  62 */
-   {'?',                  0,             0,         0}, /*  63 */
-   {'@',                  0,             0,         0}, /*  64 */
-   {'A',            K_ALT_A,      K_CTRL_A,         0}, /*  65 */
-   {'B',            K_ALT_B,      K_CTRL_B,         0}, /*  66 */
-   {'C',            K_ALT_C,      K_CTRL_C,         0}, /*  67 */
-   {'D',            K_ALT_D,      K_CTRL_D,         0}, /*  68 */
-   {'E',            K_ALT_E,      K_CTRL_E,         0}, /*  69 */
-   {'F',            K_ALT_F,      K_CTRL_F,         0}, /*  70 */
-   {'G',            K_ALT_G,      K_CTRL_G,         0}, /*  71 */
-   {'H',            K_ALT_H,      K_CTRL_H,         0}, /*  72 */
-   {'I',            K_ALT_I,      K_CTRL_I,         0}, /*  73 */
-   {'J',            K_ALT_J,      K_CTRL_J,         0}, /*  74 */
-   {'K',            K_ALT_K,      K_CTRL_K,         0}, /*  75 */
-   {'L',            K_ALT_L,      K_CTRL_L,         0}, /*  76 */
-   {'M',            K_ALT_M,      K_CTRL_M,         0}, /*  77 */
-   {'N',            K_ALT_N,      K_CTRL_N,         0}, /*  78 */
-   {'O',            K_ALT_O,      K_CTRL_O,         0}, /*  79 */
-   {'P',            K_ALT_P,      K_CTRL_P,         0}, /*  80 */
-   {'Q',            K_ALT_Q,      K_CTRL_Q,         0}, /*  81 */
-   {'R',            K_ALT_R,      K_CTRL_R,         0}, /*  82 */
-   {'S',            K_ALT_S,      K_CTRL_S,         0}, /*  83 */
-   {'T',            K_ALT_T,      K_CTRL_T,         0}, /*  84 */
-   {'U',            K_ALT_U,      K_CTRL_U,         0}, /*  85 */
-   {'V',            K_ALT_V,      K_CTRL_V,         0}, /*  86 */
-   {'W',            K_ALT_W,      K_CTRL_W,         0}, /*  87 */
-   {'X',            K_ALT_X,      K_CTRL_X,         0}, /*  88 */
-   {'Y',            K_ALT_Y,      K_CTRL_Y,         0}, /*  89 */
-   {'Z',            K_ALT_Z,      K_CTRL_Z,         0}, /*  90 */
-   {'[',                282,            27,         0}, /*  91 */
-   {'\\',               299,            28,         0}, /*  92 */
-   {']',                283,            29,         0}, /*  93 */
-   {'^',            K_ALT_6,            30,         0}, /*  94 */
-   {'_',                386,            31,         0}, /*  95 */
-   {'`',                297,           297,         0}, /*  96 */
-   {'a',            K_ALT_A,      K_CTRL_A,         0}, /*  97 */
-   {'b',            K_ALT_B,      K_CTRL_B,         0}, /*  98 */
-   {'c',            K_ALT_C,      K_CTRL_C,         0}, /*  99 */
-   {'d',            K_ALT_D,      K_CTRL_D,         0}, /* 100 */
-   {'e',            K_ALT_E,      K_CTRL_E,         0}, /* 101 */
-   {'f',            K_ALT_F,      K_CTRL_F,         0}, /* 102 */
-   {'g',            K_ALT_G,      K_CTRL_G,         0}, /* 103 */
-   {'h',            K_ALT_H,      K_CTRL_H,         0}, /* 104 */
-   {'i',            K_ALT_I,      K_CTRL_I,         0}, /* 105 */
-   {'j',            K_ALT_J,      K_CTRL_J,         0}, /* 106 */
-   {'k',            K_ALT_K,      K_CTRL_K,         0}, /* 107 */
-   {'l',            K_ALT_L,      K_CTRL_L,         0}, /* 108 */
-   {'m',            K_ALT_M,      K_CTRL_M,         0}, /* 109 */
-   {'n',            K_ALT_N,      K_CTRL_N,         0}, /* 110 */
-   {'o',            K_ALT_O,      K_CTRL_O,         0}, /* 111 */
-   {'p',            K_ALT_P,      K_CTRL_P,         0}, /* 112 */
-   {'q',            K_ALT_Q,      K_CTRL_Q,         0}, /* 113 */
-   {'r',            K_ALT_R,      K_CTRL_R,         0}, /* 114 */
-   {'s',            K_ALT_S,      K_CTRL_S,         0}, /* 115 */
-   {'t',            K_ALT_T,      K_CTRL_T,         0}, /* 116 */
-   {'u',            K_ALT_U,      K_CTRL_U,         0}, /* 117 */
-   {'v',            K_ALT_V,      K_CTRL_V,         0}, /* 118 */
-   {'w',            K_ALT_W,      K_CTRL_W,         0}, /* 119 */
-   {'x',            K_ALT_X,      K_CTRL_X,         0}, /* 120 */
-   {'y',            K_ALT_Y,      K_CTRL_Y,         0}, /* 121 */
-   {'z',            K_ALT_Z,      K_CTRL_Z,         0}, /* 122 */
-   {'{',                282,            27,         0}, /* 123 */
-   {'|',                299,            28,         0}, /* 124 */
-   {'}',                283,            29,         0}, /* 125 */
-   {'~',                297,           297,         0}, /* 126 */
-   {K_CTRL_BS,     K_ALT_BS,           127,         0}  /* 127 */
+static const ClipKeyCode stdKeyTab[ NO_STDKEYS ] = {
+   { K_SPACE,   0,            0,        0 },            /*  32 */
+   { '!',       0,            0,        0 },            /*  33 */
+   { '"',       0,            0,        0 },            /*  34 */
+   { '#',       0,            0,        0 },            /*  35 */
+   { '$',       0,            0,        0 },            /*  36 */
+   { '%',       0,            0,        0 },            /*  37 */
+   { '&',       0,            0,        0 },            /*  38 */
+   { '\'',      296,          7,        0 },            /*  39 */
+   { '(',       0,            0,        0 },            /*  40 */
+   { ')',       0,            0,        0 },            /*  41 */
+   { '*',       0,            0,        0 },            /*  42 */
+   { '+',       0,            0,        0 },            /*  43 */
+   { ',',       307,          0,        0 },            /*  44 */
+   { '-',       386,          31,       0 },            /*  45 */
+   { '.',       308,          0,        0 },            /*  46 */
+   { '/',       309,          127,      0 },            /*  47 */
+   { '0',       K_ALT_0,      0,        0 },            /*  48 */
+   { '1',       K_ALT_1,      0,        0 },            /*  49 */
+   { '2',       K_ALT_2,      259,      0 },            /*  50 */
+   { '3',       K_ALT_3,      27,       0 },            /*  51 */
+   { '4',       K_ALT_4,      28,       0 },            /*  52 */
+   { '5',       K_ALT_5,      29,       0 },            /*  53 */
+   { '6',       K_ALT_6,      30,       0 },            /*  54 */
+   { '7',       K_ALT_7,      31,       0 },            /*  55 */
+   { '8',       K_ALT_8,      127,      0 },            /*  56 */
+   { '9',       K_ALT_9,      0,        0 },            /*  57 */
+   { ':',       0,            0,        0 },            /*  58 */
+   { ';',       295,          0,        0 },            /*  59 */
+   { '<',       0,            0,        0 },            /*  60 */
+   { '=',       K_ALT_EQUALS, 0,        0 },            /*  61 */
+   { '>',       0,            0,        0 },            /*  62 */
+   { '?',       0,            0,        0 },            /*  63 */
+   { '@',       0,            0,        0 },            /*  64 */
+   { 'A',       K_ALT_A,      K_CTRL_A, 0 },            /*  65 */
+   { 'B',       K_ALT_B,      K_CTRL_B, 0 },            /*  66 */
+   { 'C',       K_ALT_C,      K_CTRL_C, 0 },            /*  67 */
+   { 'D',       K_ALT_D,      K_CTRL_D, 0 },            /*  68 */
+   { 'E',       K_ALT_E,      K_CTRL_E, 0 },            /*  69 */
+   { 'F',       K_ALT_F,      K_CTRL_F, 0 },            /*  70 */
+   { 'G',       K_ALT_G,      K_CTRL_G, 0 },            /*  71 */
+   { 'H',       K_ALT_H,      K_CTRL_H, 0 },            /*  72 */
+   { 'I',       K_ALT_I,      K_CTRL_I, 0 },            /*  73 */
+   { 'J',       K_ALT_J,      K_CTRL_J, 0 },            /*  74 */
+   { 'K',       K_ALT_K,      K_CTRL_K, 0 },            /*  75 */
+   { 'L',       K_ALT_L,      K_CTRL_L, 0 },            /*  76 */
+   { 'M',       K_ALT_M,      K_CTRL_M, 0 },            /*  77 */
+   { 'N',       K_ALT_N,      K_CTRL_N, 0 },            /*  78 */
+   { 'O',       K_ALT_O,      K_CTRL_O, 0 },            /*  79 */
+   { 'P',       K_ALT_P,      K_CTRL_P, 0 },            /*  80 */
+   { 'Q',       K_ALT_Q,      K_CTRL_Q, 0 },            /*  81 */
+   { 'R',       K_ALT_R,      K_CTRL_R, 0 },            /*  82 */
+   { 'S',       K_ALT_S,      K_CTRL_S, 0 },            /*  83 */
+   { 'T',       K_ALT_T,      K_CTRL_T, 0 },            /*  84 */
+   { 'U',       K_ALT_U,      K_CTRL_U, 0 },            /*  85 */
+   { 'V',       K_ALT_V,      K_CTRL_V, 0 },            /*  86 */
+   { 'W',       K_ALT_W,      K_CTRL_W, 0 },            /*  87 */
+   { 'X',       K_ALT_X,      K_CTRL_X, 0 },            /*  88 */
+   { 'Y',       K_ALT_Y,      K_CTRL_Y, 0 },            /*  89 */
+   { 'Z',       K_ALT_Z,      K_CTRL_Z, 0 },            /*  90 */
+   { '[',       282,          27,       0 },            /*  91 */
+   { '\\',      299,          28,       0 },            /*  92 */
+   { ']',       283,          29,       0 },            /*  93 */
+   { '^',       K_ALT_6,      30,       0 },            /*  94 */
+   { '_',       386,          31,       0 },            /*  95 */
+   { '`',       297,          297,      0 },            /*  96 */
+   { 'a',       K_ALT_A,      K_CTRL_A, 0 },            /*  97 */
+   { 'b',       K_ALT_B,      K_CTRL_B, 0 },            /*  98 */
+   { 'c',       K_ALT_C,      K_CTRL_C, 0 },            /*  99 */
+   { 'd',       K_ALT_D,      K_CTRL_D, 0 },            /* 100 */
+   { 'e',       K_ALT_E,      K_CTRL_E, 0 },            /* 101 */
+   { 'f',       K_ALT_F,      K_CTRL_F, 0 },            /* 102 */
+   { 'g',       K_ALT_G,      K_CTRL_G, 0 },            /* 103 */
+   { 'h',       K_ALT_H,      K_CTRL_H, 0 },            /* 104 */
+   { 'i',       K_ALT_I,      K_CTRL_I, 0 },            /* 105 */
+   { 'j',       K_ALT_J,      K_CTRL_J, 0 },            /* 106 */
+   { 'k',       K_ALT_K,      K_CTRL_K, 0 },            /* 107 */
+   { 'l',       K_ALT_L,      K_CTRL_L, 0 },            /* 108 */
+   { 'm',       K_ALT_M,      K_CTRL_M, 0 },            /* 109 */
+   { 'n',       K_ALT_N,      K_CTRL_N, 0 },            /* 110 */
+   { 'o',       K_ALT_O,      K_CTRL_O, 0 },            /* 111 */
+   { 'p',       K_ALT_P,      K_CTRL_P, 0 },            /* 112 */
+   { 'q',       K_ALT_Q,      K_CTRL_Q, 0 },            /* 113 */
+   { 'r',       K_ALT_R,      K_CTRL_R, 0 },            /* 114 */
+   { 's',       K_ALT_S,      K_CTRL_S, 0 },            /* 115 */
+   { 't',       K_ALT_T,      K_CTRL_T, 0 },            /* 116 */
+   { 'u',       K_ALT_U,      K_CTRL_U, 0 },            /* 117 */
+   { 'v',       K_ALT_V,      K_CTRL_V, 0 },            /* 118 */
+   { 'w',       K_ALT_W,      K_CTRL_W, 0 },            /* 119 */
+   { 'x',       K_ALT_X,      K_CTRL_X, 0 },            /* 120 */
+   { 'y',       K_ALT_Y,      K_CTRL_Y, 0 },            /* 121 */
+   { 'z',       K_ALT_Z,      K_CTRL_Z, 0 },            /* 122 */
+   { '{',       282,          27,       0 },            /* 123 */
+   { '|',       299,          28,       0 },            /* 124 */
+   { '}',       283,          29,       0 },            /* 125 */
+   { '~',       297,          297,      0 },            /* 126 */
+   { K_CTRL_BS, K_ALT_BS,     127,      0 }             /* 127 */
 };
 
-static const ClipKeyCode extdKeyTab[NO_EXTDKEYS] = {
-   {K_F1,          K_ALT_F1,     K_CTRL_F1,   K_SH_F1}, /*  00 */
-   {K_F2,          K_ALT_F2,     K_CTRL_F2,   K_SH_F2}, /*  01 */
-   {K_F3,          K_ALT_F3,     K_CTRL_F3,   K_SH_F3}, /*  02 */
-   {K_F4,          K_ALT_F4,     K_CTRL_F4,   K_SH_F4}, /*  03 */
-   {K_F5,          K_ALT_F5,     K_CTRL_F5,   K_SH_F5}, /*  04 */
-   {K_F6,          K_ALT_F6,     K_CTRL_F6,   K_SH_F6}, /*  05 */
-   {K_F7,          K_ALT_F7,     K_CTRL_F7,   K_SH_F7}, /*  06 */
-   {K_F8,          K_ALT_F8,     K_CTRL_F8,   K_SH_F8}, /*  07 */
-   {K_F9,          K_ALT_F9,     K_CTRL_F9,   K_SH_F9}, /*  08 */
-   {K_F10,        K_ALT_F10,    K_CTRL_F10,  K_SH_F10}, /*  09 */
-   {K_F11,        K_ALT_F11,    K_CTRL_F11,  K_SH_F11}, /*  10 */
-   {K_F12,        K_ALT_F12,    K_CTRL_F12,  K_SH_F12}, /*  11 */
+static const ClipKeyCode extdKeyTab[ NO_EXTDKEYS ] = {
+   { K_F1,      K_ALT_F1,     K_CTRL_F1,     K_SH_F1    }, /*  00 */
+   { K_F2,      K_ALT_F2,     K_CTRL_F2,     K_SH_F2    }, /*  01 */
+   { K_F3,      K_ALT_F3,     K_CTRL_F3,     K_SH_F3    }, /*  02 */
+   { K_F4,      K_ALT_F4,     K_CTRL_F4,     K_SH_F4    }, /*  03 */
+   { K_F5,      K_ALT_F5,     K_CTRL_F5,     K_SH_F5    }, /*  04 */
+   { K_F6,      K_ALT_F6,     K_CTRL_F6,     K_SH_F6    }, /*  05 */
+   { K_F7,      K_ALT_F7,     K_CTRL_F7,     K_SH_F7    }, /*  06 */
+   { K_F8,      K_ALT_F8,     K_CTRL_F8,     K_SH_F8    }, /*  07 */
+   { K_F9,      K_ALT_F9,     K_CTRL_F9,     K_SH_F9    }, /*  08 */
+   { K_F10,     K_ALT_F10,    K_CTRL_F10,    K_SH_F10   }, /*  09 */
+   { K_F11,     K_ALT_F11,    K_CTRL_F11,    K_SH_F11   }, /*  10 */
+   { K_F12,     K_ALT_F12,    K_CTRL_F12,    K_SH_F12   }, /*  11 */
 
-   {K_UP,          K_ALT_UP,     K_CTRL_UP,   K_SH_UP}, /*  12 */
-   {K_DOWN,      K_ALT_DOWN,   K_CTRL_DOWN, K_SH_DOWN}, /*  13 */
-   {K_LEFT,      K_ALT_LEFT,   K_CTRL_LEFT, K_SH_LEFT}, /*  14 */
-   {K_RIGHT,    K_ALT_RIGHT,  K_CTRL_RIGHT,K_SH_RIGHT}, /*  15 */
-   {K_INS,        K_ALT_INS,    K_CTRL_INS,  K_SH_INS}, /*  16 */
-   {K_DEL,        K_ALT_DEL,    K_CTRL_DEL,  K_SH_DEL}, /*  17 */
-   {K_HOME,      K_ALT_HOME,   K_CTRL_HOME, K_SH_HOME}, /*  18 */
-   {K_END,        K_ALT_END,    K_CTRL_END,  K_SH_END}, /*  19 */
-   {K_PGUP,      K_ALT_PGUP,   K_CTRL_PGUP, K_SH_PGUP}, /*  20 */
-   {K_PGDN,      K_ALT_PGDN,   K_CTRL_PGDN, K_SH_PGDN}, /*  21 */
+   { K_UP,      K_ALT_UP,     K_CTRL_UP,     K_SH_UP    }, /*  12 */
+   { K_DOWN,    K_ALT_DOWN,   K_CTRL_DOWN,   K_SH_DOWN  }, /*  13 */
+   { K_LEFT,    K_ALT_LEFT,   K_CTRL_LEFT,   K_SH_LEFT  }, /*  14 */
+   { K_RIGHT,   K_ALT_RIGHT,  K_CTRL_RIGHT,  K_SH_RIGHT }, /*  15 */
+   { K_INS,     K_ALT_INS,    K_CTRL_INS,    K_SH_INS   }, /*  16 */
+   { K_DEL,     K_ALT_DEL,    K_CTRL_DEL,    K_SH_DEL   }, /*  17 */
+   { K_HOME,    K_ALT_HOME,   K_CTRL_HOME,   K_SH_HOME  }, /*  18 */
+   { K_END,     K_ALT_END,    K_CTRL_END,    K_SH_END   }, /*  19 */
+   { K_PGUP,    K_ALT_PGUP,   K_CTRL_PGUP,   K_SH_PGUP  }, /*  20 */
+   { K_PGDN,    K_ALT_PGDN,   K_CTRL_PGDN,   K_SH_PGDN  }, /*  21 */
 
-   {K_BS,          K_ALT_BS,           127,   K_SH_BS}, /*  22 */
-   {K_TAB,        K_ALT_TAB,    K_CTRL_TAB,  K_SH_TAB}, /*  23 */
-   {K_ESC,        K_ALT_ESC,         K_ESC,         0}, /*  24 */
+   { K_BS,      K_ALT_BS,     127,           K_SH_BS    }, /*  22 */
+   { K_TAB,     K_ALT_TAB,    K_CTRL_TAB,    K_SH_TAB   }, /*  23 */
+   { K_ESC,     K_ALT_ESC,    K_ESC,         0          }, /*  24 */
 
-   {K_ENTER,    K_ALT_ENTER,  K_CTRL_ENTER,K_SH_ENTER}, /*  25 */
+   { K_ENTER,   K_ALT_ENTER,  K_CTRL_ENTER,  K_SH_ENTER }, /*  25 */
 
-   {K_ENTER,   KP_ALT_ENTER,  K_CTRL_ENTER,         0}, /*  26 */
-   {KP_CENTER,            0,     KP_CTRL_5,         0}, /*  27 */
-   {K_PRTSCR,             0, K_CTRL_PRTSCR,         0}, /*  28 */
-   {K_PAUSE,              0,             0,         0}  /*  29 */
+   { K_ENTER,   KP_ALT_ENTER, K_CTRL_ENTER,  0          }, /*  26 */
+   { KP_CENTER, 0,            KP_CTRL_5,     0          }, /*  27 */
+   { K_PRTSCR,  0,            K_CTRL_PRTSCR, 0          }, /*  28 */
+   { K_PAUSE,   0,            0,             0          } /*  29 */
 };
 
 static int getClipKey( int nKey )
@@ -574,15 +581,15 @@ static int getClipKey( int nKey )
          if( nKey >= 0 && nKey < NO_EXTDKEYS )
          {
             if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                 extdKeyTab[nKey].shift_key != 0 )
-               nRet = extdKeyTab[nKey].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && extdKeyTab[nKey].alt_key != 0 )
-               nRet = extdKeyTab[nKey].alt_key;
+                extdKeyTab[ nKey ].shift_key != 0 )
+               nRet = extdKeyTab[ nKey ].shift_key;
+            else if( ( nFlag & KEY_ALTMASK ) && extdKeyTab[ nKey ].alt_key != 0 )
+               nRet = extdKeyTab[ nKey ].alt_key;
             else if( ( nFlag & KEY_CTRLMASK )
-                      && extdKeyTab[nKey].ctrl_key != 0 )
-               nRet = extdKeyTab[nKey].ctrl_key;
+                     && extdKeyTab[ nKey ].ctrl_key != 0 )
+               nRet = extdKeyTab[ nKey ].ctrl_key;
             else
-               nRet = extdKeyTab[nKey].key;
+               nRet = extdKeyTab[ nKey ].key;
          }
       }
       else
@@ -596,14 +603,14 @@ static int getClipKey( int nKey )
          if( n >= 0 && n < NO_STDKEYS )
          {
             if( ( nFlag & KEY_ALTMASK ) && ( nFlag & KEY_CTRLMASK ) &&
-                 stdKeyTab[n].shift_key != 0 )
-               nRet = stdKeyTab[n].shift_key;
-            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[n].alt_key != 0 )
-               nRet = stdKeyTab[n].alt_key;
-            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[n].ctrl_key != 0 )
-               nRet = stdKeyTab[n].ctrl_key;
+                stdKeyTab[ n ].shift_key != 0 )
+               nRet = stdKeyTab[ n ].shift_key;
+            else if( ( nFlag & KEY_ALTMASK ) && stdKeyTab[ n ].alt_key != 0 )
+               nRet = stdKeyTab[ n ].alt_key;
+            else if( ( nFlag & KEY_CTRLMASK ) && stdKeyTab[ n ].ctrl_key != 0 )
+               nRet = stdKeyTab[ n ].ctrl_key;
             else
-               nRet = stdKeyTab[n].key;
+               nRet = stdKeyTab[ n ].key;
          }
          else
             nRet = nKey;
@@ -667,9 +674,9 @@ static void set_signals( void )
 
    /* Ignore SIGPIPEs so they don't kill us. */
    signal( SIGPIPE, SIG_IGN );
-   for( i = 0; sigs[i]; ++i )
+   for( i = 0; sigs[ i ]; ++i )
    {
-      set_sig_handler( sigs[i] );
+      set_sig_handler( sigs[ i ] );
    }
 }
 
@@ -697,7 +704,7 @@ static int hb_gt_trm_getSize( PHB_GTTRM pTerm, int * piRows, int * piCols )
 
    if( *piRows <= 0 || *piCols <= 0 )
    {
-      char *env;
+      char * env;
       if( ( env = getenv( "COLUMNS" ) ) != NULL )
          *piCols = atoi( env );
       if( ( env = getenv( "LINES" ) ) != NULL )
@@ -788,7 +795,7 @@ static void hb_gt_trm_termOutTrans( PHB_GTTRM pTerm, const char * pStr, int iLen
  */
 
 static int add_efds( PHB_GTTRM pTerm, int fd, int mode,
-                     int ( *eventFunc ) ( int, int, void * ), void *cargo )
+                     int ( * eventFunc )( int, int, void * ), void * cargo )
 {
    evtFD *pefd = NULL;
    int i;
@@ -809,9 +816,9 @@ static int add_efds( PHB_GTTRM pTerm, int fd, int mode,
    }
 #endif
 
-   for( i = 0; i < pTerm->efds_no && !pefd; i++ )
-      if( pTerm->event_fds[i]->fd == fd )
-         pefd = pTerm->event_fds[i];
+   for( i = 0; i < pTerm->efds_no && ! pefd; i++ )
+      if( pTerm->event_fds[ i ]->fd == fd )
+         pefd = pTerm->event_fds[ i ];
 
    if( pefd )
    {
@@ -851,15 +858,15 @@ static void del_efds( PHB_GTTRM pTerm, int fd )
    int i, n = -1;
 
    for( i = 0; i < pTerm->efds_no && n == -1; i++ )
-      if( pTerm->event_fds[i]->fd == fd )
+      if( pTerm->event_fds[ i ]->fd == fd )
          n = i;
 
    if( n != -1 )
    {
-      hb_xfree( pTerm->event_fds[n] );
+      hb_xfree( pTerm->event_fds[ n ] );
       pTerm->efds_no--;
       for( i = n; i < pTerm->efds_no; i++ )
-         pTerm->event_fds[i] = pTerm->event_fds[i + 1];
+         pTerm->event_fds[ i ] = pTerm->event_fds[ i + 1 ];
    }
 }
 #endif
@@ -871,7 +878,7 @@ static void del_all_efds( PHB_GTTRM pTerm )
    if( pTerm->event_fds != NULL )
    {
       for( i = 0; i < pTerm->efds_no; i++ )
-         hb_xfree( pTerm->event_fds[i] );
+         hb_xfree( pTerm->event_fds[ i ] );
 
       hb_xfree( pTerm->event_fds );
 
@@ -1004,12 +1011,12 @@ static void chk_mevtdblck( PHB_GTTRM pTerm )
    }
 }
 
-static void set_tmevt( PHB_GTTRM pTerm, unsigned char *cMBuf, mouseEvent * mEvt )
+static void set_tmevt( PHB_GTTRM pTerm, unsigned char * cMBuf, mouseEvent * mEvt )
 {
    int row, col;
 
-   col = cMBuf[1] - 33;
-   row = cMBuf[2] - 33;
+   col = cMBuf[ 1 ] - 33;
+   row = cMBuf[ 2 ] - 33;
    if( mEvt->row != row || mEvt->col != col )
    {
       mEvt->buttonstate |= M_CURSOR_MOVE;
@@ -1019,18 +1026,18 @@ static void set_tmevt( PHB_GTTRM pTerm, unsigned char *cMBuf, mouseEvent * mEvt 
 
 #if defined( HB_OS_BEOS )
    /* warning in HAIKU/BEOS MIDDLE and RIGHT buttons are reverted */
-   switch( cMBuf[0] & 0xC3 )
+   switch( cMBuf[ 0 ] & 0xC3 )
    {
       case 0x1:
-         cMBuf[0] = 0x2;
+         cMBuf[ 0 ] = 0x2;
          break;
       case 0x2:
-         cMBuf[0] = 0x1;
+         cMBuf[ 0 ] = 0x1;
          break;
    }
 #endif
 
-   switch( cMBuf[0] & 0xC3 )
+   switch( cMBuf[ 0 ] & 0xC3 )
    {
       case 0x0:
          mEvt->buttonstate |= M_BUTTON_LEFT;
@@ -1042,24 +1049,23 @@ static void set_tmevt( PHB_GTTRM pTerm, unsigned char *cMBuf, mouseEvent * mEvt 
          mEvt->buttonstate |= M_BUTTON_RIGHT;
          break;
       case 0x3:
-         mEvt->buttonstate &= ~(M_BUTTON_KEYMASK|M_BUTTON_DBLMASK);
+         mEvt->buttonstate &= ~( M_BUTTON_KEYMASK | M_BUTTON_DBLMASK );
          break;
       case 0x40:
-         if( cMBuf[0] & 0x20 )
+         if( cMBuf[ 0 ] & 0x20 )
             mEvt->buttonstate |= M_BUTTON_WHEELUP;
          break;
       case 0x41:
-         if( cMBuf[0] & 0x20 )
+         if( cMBuf[ 0 ] & 0x20 )
             mEvt->buttonstate |= M_BUTTON_WHEELDOWN;
          break;
    }
    chk_mevtdblck( pTerm );
    /* printf("\n\rmouse event: %02x, %02x, %02x\n\r", cMBuf[0], cMBuf[1], cMBuf[2]); */
-   return;
 }
 
 #if defined( HB_HAS_GPM )
-static int set_gpmevt( int fd, int mode, void *cargo )
+static int set_gpmevt( int fd, int mode, void * cargo )
 {
    int nKey = 0;
    PHB_GTTRM pTerm;
@@ -1098,7 +1104,7 @@ static int set_gpmevt( int fd, int mode, void *cargo )
    chk_mevtdblck( pTerm );
    nKey = getMouseKey( &pTerm->mLastEvt );
 
-   return ( nKey ? SET_CLIPKEY( nKey ) : 0 );
+   return nKey ? SET_CLIPKEY( nKey ) : 0;
 }
 
 static void flush_gpmevt( PHB_GTTRM pTerm )
@@ -1116,14 +1122,13 @@ static void flush_gpmevt( PHB_GTTRM pTerm )
 
       while( getMouseKey( &pTerm->mLastEvt ) ) ;
    }
-   return;
 }
 #endif
 
 static void disp_mousecursor( PHB_GTTRM pTerm )
 {
 #if defined( HB_HAS_GPM )
-   if( (pTerm->mouse_type & MOUSE_GPM) && gpm_visiblepointer )
+   if( ( pTerm->mouse_type & MOUSE_GPM ) && gpm_visiblepointer )
    {
       Gpm_DrawPointer( pTerm->mLastEvt.col, pTerm->mLastEvt.row,
                        gpm_consolefd );
@@ -1189,7 +1194,7 @@ static void mouse_exit( PHB_GTTRM pTerm )
       hb_gt_trm_termFlush( pTerm );
    }
 #if defined( HB_HAS_GPM )
-   if( (pTerm->mouse_type & MOUSE_GPM) && gpm_fd >= 0 )
+   if( ( pTerm->mouse_type & MOUSE_GPM ) && gpm_fd >= 0 )
    {
       del_efds( pTerm, gpm_fd );
       Gpm_Close();
@@ -1201,8 +1206,8 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
 {
    int nRet = 0, npfd = -1, nchk = pTerm->efds_no, lRead = 0;
    int mode, i, n, counter;
-   struct timeval tv, *ptv;
-   evtFD *pefd = NULL;
+   struct timeval tv, * ptv;
+   evtFD * pefd = NULL;
    fd_set rfds, wfds;
 
    if( milisec == 0 )
@@ -1223,21 +1228,21 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
       FD_ZERO( &wfds );
       for( i = 0; i < pTerm->efds_no; i++ )
       {
-         if( pTerm->event_fds[i]->status == EVTFDSTAT_RUN )
+         if( pTerm->event_fds[ i ]->status == EVTFDSTAT_RUN )
          {
-            if( pTerm->event_fds[i]->mode == O_RDWR
-                 || pTerm->event_fds[i]->mode == O_RDONLY )
+            if( pTerm->event_fds[ i ]->mode == O_RDWR
+                || pTerm->event_fds[ i ]->mode == O_RDONLY )
             {
-               FD_SET( pTerm->event_fds[i]->fd, &rfds );
-               if( n < pTerm->event_fds[i]->fd )
-                  n = pTerm->event_fds[i]->fd;
+               FD_SET( pTerm->event_fds[ i ]->fd, &rfds );
+               if( n < pTerm->event_fds[ i ]->fd )
+                  n = pTerm->event_fds[ i ]->fd;
             }
-            if( pTerm->event_fds[i]->mode == O_RDWR
-                 || pTerm->event_fds[i]->mode == O_WRONLY )
+            if( pTerm->event_fds[ i ]->mode == O_RDWR
+                || pTerm->event_fds[ i ]->mode == O_WRONLY )
             {
-               FD_SET( pTerm->event_fds[i]->fd, &wfds );
-               if( n < pTerm->event_fds[i]->fd )
-                  n = pTerm->event_fds[i]->fd;
+               FD_SET( pTerm->event_fds[ i ]->fd, &wfds );
+               if( n < pTerm->event_fds[ i ]->fd )
+                  n = pTerm->event_fds[ i ]->fd;
             }
          }
       }
@@ -1247,30 +1252,30 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
       {
          for( i = 0; i < pTerm->efds_no; i++ )
          {
-            n = ( FD_ISSET( pTerm->event_fds[i]->fd, &rfds ) ? 1 : 0 ) |
-                ( FD_ISSET( pTerm->event_fds[i]->fd, &wfds ) ? 2 : 0 );
+            n = ( FD_ISSET( pTerm->event_fds[ i ]->fd, &rfds ) ? 1 : 0 ) |
+                ( FD_ISSET( pTerm->event_fds[ i ]->fd, &wfds ) ? 2 : 0 );
             if( n != 0 )
             {
-               if( pTerm->event_fds[i]->eventFunc == NULL )
+               if( pTerm->event_fds[ i ]->eventFunc == NULL )
                {
                   lRead = 1;
                   if( STDIN_BUFLEN > pTerm->stdin_inbuf )
                   {
-                     unsigned char buf[STDIN_BUFLEN];
+                     unsigned char buf[ STDIN_BUFLEN ];
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
-                     n = read( pTerm->event_fds[i]->fd, buf,
+                     n = read( pTerm->event_fds[ i ]->fd, buf,
                                STDIN_BUFLEN - pTerm->stdin_inbuf );
 #else
-                     n = hb_fsRead( pTerm->event_fds[i]->fd, buf,
+                     n = hb_fsRead( pTerm->event_fds[ i ]->fd, buf,
                                     STDIN_BUFLEN - pTerm->stdin_inbuf );
 #endif
                      if( n == 0 )
-                        pTerm->event_fds[i]->status = EVTFDSTAT_STOP;
+                        pTerm->event_fds[ i ]->status = EVTFDSTAT_STOP;
                      else
                         for( i = 0; i < n; i++ )
                         {
-                           pTerm->stdin_buf[pTerm->stdin_ptr_r++] = buf[i];
+                           pTerm->stdin_buf[ pTerm->stdin_ptr_r++ ] = buf[ i ];
                            if( pTerm->stdin_ptr_r == STDIN_BUFLEN )
                               pTerm->stdin_ptr_r = 0;
                            pTerm->stdin_inbuf++;
@@ -1285,26 +1290,26 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
                      mode = O_WRONLY;
                   else
                      mode = O_RDONLY;
-                  pTerm->event_fds[i]->status = EVTFDSTAT_STOP;
-                  n = ( pTerm->event_fds[i]->eventFunc ) ( pTerm->
-                                                            event_fds[i]->fd,
+                  pTerm->event_fds[ i ]->status = EVTFDSTAT_STOP;
+                  n = ( pTerm->event_fds[ i ]->eventFunc )( pTerm->
+                                                            event_fds[ i ]->fd,
                                                             mode,
                                                             pTerm->
-                                                            event_fds[i]->
+                                                            event_fds[ i ]->
                                                             cargo );
                   if( IS_EVTFDSTAT( n ) )
                   {
-                     pTerm->event_fds[i]->status = n;
+                     pTerm->event_fds[ i ]->status = n;
                      if( nchk > i )
                         nchk = i;
                   }
                   else
                   {
-                     pTerm->event_fds[i]->status = EVTFDSTAT_RUN;
+                     pTerm->event_fds[ i ]->status = EVTFDSTAT_RUN;
                      if( IS_CLIPKEY( n ) )
                      {
                         nRet = n;
-                        npfd = pTerm->event_fds[i]->fd;
+                        npfd = pTerm->event_fds[ i ]->fd;
                         if( nchk > i )
                            nchk = i;
                      }
@@ -1319,19 +1324,19 @@ static int get_inch( PHB_GTTRM pTerm, int milisec )
 
    for( i = n = nchk; i < pTerm->efds_no; i++ )
    {
-      if( pTerm->event_fds[i]->status == EVTFDSTAT_DEL )
-         hb_xfree( pTerm->event_fds[i] );
-      else if( pTerm->event_fds[i]->fd == npfd )
-         pefd = pTerm->event_fds[i];
+      if( pTerm->event_fds[ i ]->status == EVTFDSTAT_DEL )
+         hb_xfree( pTerm->event_fds[ i ] );
+      else if( pTerm->event_fds[ i ]->fd == npfd )
+         pefd = pTerm->event_fds[ i ];
       else
       {
          if( i > n )
-            pTerm->event_fds[n] = pTerm->event_fds[i];
+            pTerm->event_fds[ n ] = pTerm->event_fds[ i ];
          n++;
       }
    }
    if( pefd )
-      pTerm->event_fds[n++] = pefd;
+      pTerm->event_fds[ n++ ] = pefd;
    pTerm->efds_no = n;
 
    return nRet;
@@ -1360,7 +1365,7 @@ static void free_bufch( PHB_GTTRM pTerm, int n )
 static int wait_key( PHB_GTTRM pTerm, int milisec )
 {
    int nKey, esc, n, i, ch, counter;
-   keyTab *ptr;
+   keyTab * ptr;
 
 #if defined( HB_OS_UNIX ) || defined( __DJGPP__ )
    if( s_WinSizeChangeFlag )
@@ -1386,7 +1391,7 @@ again:
       ++i;
       if( pTerm->nTermMouseChars )
       {
-         pTerm->cTermMouseBuf[3 - pTerm->nTermMouseChars] = ch;
+         pTerm->cTermMouseBuf[ 3 - pTerm->nTermMouseChars ] = ch;
          free_bufch( pTerm, i );
          i = 0;
          if( --pTerm->nTermMouseChars == 0 )
@@ -1414,7 +1419,7 @@ again:
                      pTerm->key_flag |= KEY_CTRLMASK;
                      break;
                   case K_NATIONAL:
-                     pTerm->nation_mode = !pTerm->nation_mode;
+                     pTerm->nation_mode = ! pTerm->nation_mode;
                      break;
                   case K_MOUSETERM:
                      pTerm->nTermMouseChars = 3;
@@ -1480,7 +1485,7 @@ again:
       }
 
 #ifdef HB_GT_UNICODE_BUF
-      if( !pTerm->fUTF8 )
+      if( ! pTerm->fUTF8 )
       {
          if( nKey != 0 )
          {
@@ -1501,7 +1506,7 @@ again:
                ch = test_bufch( pTerm, i++, pTerm->esc_delay );
                if( ch < 0 || ch > 255 )
                   break;
-               if( !hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) ch, &n, &wc ) )
+               if( ! hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) ch, &n, &wc ) )
                   n = -1;
             }
             if( n == 0 )
@@ -1523,7 +1528,7 @@ again:
                ch = test_bufch( pTerm, i++, pTerm->esc_delay );
                if( ch < 0 || ch > 255 )
                   break;
-               if( !hb_cdpGetFromUTF8( pTerm->cdpIn, ch, &n, &uc ) )
+               if( ! hb_cdpGetFromUTF8( pTerm->cdpIn, ch, &n, &uc ) )
                   n = -1;
             }
             if( n == 0 )
@@ -1534,13 +1539,13 @@ again:
          }
       }
 
-      if( nKey > 0 && nKey <= 255 && pTerm->keyTransTbl[nKey] )
-         nKey = pTerm->keyTransTbl[nKey];
+      if( nKey > 0 && nKey <= 255 && pTerm->keyTransTbl[ nKey ] )
+         nKey = pTerm->keyTransTbl[ nKey ];
 /*
       if( pTerm->nation_transtbl && pTerm->nation_mode &&
            nKey >= 32 && nKey < 128 && pTerm->nation_transtbl[nKey] )
          nKey = pTerm->nation_transtbl[nKey];
-*/
+ */
 #endif
       if( nKey )
          nKey = getClipKey( nKey );
@@ -1556,7 +1561,7 @@ again:
  */
 static void hb_gt_trm_LinuxSetTermMode( PHB_GTTRM pTerm, int iAM )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxSetTermMode(%p,%d)", pTerm, iAM));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_LinuxSetTermMode(%p,%d)", pTerm, iAM ) );
 
    if( iAM != pTerm->iAM )
    {
@@ -1570,9 +1575,9 @@ static void hb_gt_trm_LinuxSetTermMode( PHB_GTTRM pTerm, int iAM )
 
 static void hb_gt_trm_LinuxTone( PHB_GTTRM pTerm, double dFrequency, double dDuration )
 {
-   char escseq[64];
+   char escseq[ 64 ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxTone(%p,%lf,%lf)", pTerm, dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_LinuxTone(%p,%lf,%lf)", pTerm, dFrequency, dDuration ) );
 
    if( pTerm->iACSC )
    {
@@ -1590,7 +1595,7 @@ static void hb_gt_trm_LinuxTone( PHB_GTTRM pTerm, double dFrequency, double dDur
 
 static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxSetCursorStyle(%p,%d)", pTerm, iStyle));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_LinuxSetCursorStyle(%p,%d)", pTerm, iStyle ) );
 
    if( pTerm->iCursorStyle != iStyle )
    {
@@ -1620,7 +1625,7 @@ static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
       }
       if( lcurs != -1 )
       {
-         char escseq[64];
+         char escseq[ 64 ];
          hb_snprintf( escseq, sizeof( escseq ), "\033[?25%c\033[?%dc",
                       iStyle == SC_NONE ? 'l' : 'h', lcurs );
          hb_gt_trm_termOut( pTerm, escseq, strlen( escseq ) );
@@ -1631,7 +1636,7 @@ static void hb_gt_trm_LinuxSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
 
 static void hb_gt_trm_LinuxSetPalette( PHB_GTTRM pTerm, int iIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxSetPalette(%p,%d)", pTerm, iIndex));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_LinuxSetPalette(%p,%d)", pTerm, iIndex ) );
 
    if( iIndex >= 0 && iIndex <= 15 )
    {
@@ -1648,7 +1653,7 @@ static void hb_gt_trm_LinuxSetPalette( PHB_GTTRM pTerm, int iIndex )
 
 static void hb_gt_trm_LinuxResetPalette( PHB_GTTRM pTerm )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_LinuxResetPalette(%p)", pTerm));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_LinuxResetPalette(%p)", pTerm ) );
 
    hb_gt_trm_termOut( pTerm, "\033]R", 3 );
 }
@@ -1659,9 +1664,9 @@ static void hb_gt_trm_LinuxResetPalette( PHB_GTTRM pTerm )
 static HB_BOOL hb_gt_trm_XtermSetMode( PHB_GTTRM pTerm, int * piRows, int * piCols )
 {
    int iHeight, iWidth;
-   char escseq[64];
+   char escseq[ 64 ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_XtermSetMode(%p,%d,%d)", pTerm, *piRows, *piCols));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_XtermSetMode(%p,%d,%d)", pTerm, *piRows, *piCols ) );
 
    HB_GTSELF_GETSIZE( pTerm->pGT, &iHeight, &iWidth );
    hb_snprintf( escseq, sizeof( escseq ), "\033[8;%d;%dt", *piRows, *piCols );
@@ -1683,12 +1688,12 @@ static HB_BOOL hb_gt_trm_XtermSetMode( PHB_GTTRM pTerm, int * piRows, int * piCo
 
 static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_XtermSetAttributes(%p,%d)", pTerm, iAttr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_XtermSetAttributes(%p,%d)", pTerm, iAttr ) );
 
    if( pTerm->iCurrentSGR != iAttr )
    {
       int i, acsc, bg, fg, bold, blink;
-      char buff[32];
+      char buff[ 32 ];
 
       i = 2;
       buff[ 0 ] = 0x1b;
@@ -1748,7 +1753,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
          }
          if( pTerm->iBlink != blink )
          {
-            if( !blink )
+            if( ! blink )
                buff[ i++ ] = '2';
             buff[ i++ ] = '5';
             buff[ i++ ] = ';';
@@ -1789,7 +1794,7 @@ static void hb_gt_trm_XtermSetAttributes( PHB_GTTRM pTerm, int iAttr )
 
 static void hb_gt_trm_XtermSetTitle( PHB_GTTRM pTerm, const char * szTitle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_XtermSetTitle(%p,%s)", pTerm, szTitle));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_XtermSetTitle(%p,%s)", pTerm, szTitle ) );
 
    hb_gt_trm_termOut( pTerm, "\033]0;", 4 );
    if( szTitle )
@@ -1804,7 +1809,7 @@ static void hb_gt_trm_XtermSetTitle( PHB_GTTRM pTerm, const char * szTitle )
 static HB_BOOL hb_gt_trm_BsdGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
                                           const char * szPost )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdGetCursorPos(%p,%p,%p,%s)", pTerm, iRow, iCol, szPost));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_BsdGetCursorPos(%p,%p,%p,%s)", pTerm, iRow, iCol, szPost ) );
 
    HB_SYMBOL_UNUSED( szPost );
 
@@ -1819,7 +1824,7 @@ static HB_BOOL hb_gt_trm_BsdGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCo
 
 static void hb_gt_trm_BsdSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdSetCursorStyle(%p,%d)", pTerm, iStyle));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_BsdSetCursorStyle(%p,%d)", pTerm, iStyle ) );
 
    if( pTerm->iCursorStyle != iStyle )
    {
@@ -1853,9 +1858,9 @@ static void hb_gt_trm_BsdSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
 
 static void hb_gt_trm_BsdTone( PHB_GTTRM pTerm, double dFrequency, double dDuration )
 {
-   char escseq[64];
+   char escseq[ 64 ];
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_BsdTone(%p,%lf,%lf)", pTerm, dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_BsdTone(%p,%lf,%lf)", pTerm, dFrequency, dDuration ) );
 
    hb_snprintf( escseq, sizeof( escseq ), "\033[=%d;%dB\007",
                 ( int ) dFrequency, ( int ) ( dDuration * 10.0 / 18.2 ) );
@@ -1873,7 +1878,7 @@ static void hb_gt_trm_BsdTone( PHB_GTTRM pTerm, double dFrequency, double dDurat
  */
 static void hb_gt_trm_AnsiSetTermMode( PHB_GTTRM pTerm, int iAM )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetTermMode(%p,%d)", pTerm, iAM));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiSetTermMode(%p,%d)", pTerm, iAM ) );
 
    if( iAM != pTerm->iAM )
    {
@@ -1895,7 +1900,7 @@ static void hb_gt_trm_AnsiSetTermMode( PHB_GTTRM pTerm, int iAM )
 static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iCol,
                                            const char * szPost )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiGetCursorPos(%p,%p,%p,%s)", pTerm, iRow, iCol, szPost));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiGetCursorPos(%p,%p,%p,%s)", pTerm, iRow, iCol, szPost ) );
 
    if( pTerm->fPosAnswer )
    {
@@ -2005,11 +2010,11 @@ static HB_BOOL hb_gt_trm_AnsiGetCursorPos( PHB_GTTRM pTerm, int * iRow, int * iC
 
 static void hb_gt_trm_AnsiSetCursorPos( PHB_GTTRM pTerm, int iRow, int iCol )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetCursorPos(%p,%d,%d)", pTerm, iRow, iCol));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiSetCursorPos(%p,%d,%d)", pTerm, iRow, iCol ) );
 
    if( pTerm->iRow != iRow || pTerm->iCol != iCol )
    {
-      char buff[16];
+      char buff[ 16 ];
       hb_snprintf( buff, sizeof( buff ), "\x1B[%d;%dH", iRow + 1, iCol + 1 );
       hb_gt_trm_termOut( pTerm, buff, strlen( buff ) );
       pTerm->iRow = iRow;
@@ -2019,7 +2024,7 @@ static void hb_gt_trm_AnsiSetCursorPos( PHB_GTTRM pTerm, int iRow, int iCol )
 
 static void hb_gt_trm_AnsiSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetCursorStyle(%p,%d)", pTerm, iStyle));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiSetCursorStyle(%p,%d)", pTerm, iStyle ) );
 
    if( pTerm->iCursorStyle != iStyle )
    {
@@ -2031,12 +2036,12 @@ static void hb_gt_trm_AnsiSetCursorStyle( PHB_GTTRM pTerm, int iStyle )
 
 static void hb_gt_trm_AnsiSetAttributes( PHB_GTTRM pTerm, int iAttr )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetAttributes(%p,%d)", pTerm, iAttr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiSetAttributes(%p,%d)", pTerm, iAttr ) );
 
    if( pTerm->iCurrentSGR != iAttr )
    {
       int i, acsc, bg, fg, bold, blink;
-      char buff[32];
+      char buff[ 32 ];
 
       i = 2;
       buff[ 0 ] = 0x1b;
@@ -2100,7 +2105,7 @@ static void hb_gt_trm_AnsiSetAttributes( PHB_GTTRM pTerm, int iAttr )
          }
          if( pTerm->iBlink != blink )
          {
-            if( !blink )
+            if( ! blink )
                buff[ i++ ] = '2';
             buff[ i++ ] = '5';
             buff[ i++ ] = ';';
@@ -2132,9 +2137,9 @@ static void hb_gt_trm_AnsiSetAttributes( PHB_GTTRM pTerm, int iAttr )
 
 static int hb_gt_trm_AnsiGetAcsc( PHB_GTTRM pTerm, unsigned char c )
 {
-   const unsigned char *ptr;
+   const unsigned char * ptr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiGetAcsc(%p,%d)", pTerm, c));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiGetAcsc(%p,%d)", pTerm, c ) );
 
    for( ptr = ( const unsigned char * ) pTerm->szAcsc; *ptr && *( ptr + 1 ); ptr += 2 )
    {
@@ -2164,7 +2169,7 @@ static int hb_gt_trm_AnsiGetAcsc( PHB_GTTRM pTerm, unsigned char c )
 
 static HB_BOOL hb_gt_trm_AnsiSetMode( PHB_GTTRM pTerm, int * piRows, int * piCols )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiSetMode(%p,%d,%d)", pTerm, *piRows, *piCols));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiSetMode(%p,%d,%d)", pTerm, *piRows, *piCols ) );
 
    if( pTerm->terminal_ext & TERM_PUTTY )
       return hb_gt_trm_XtermSetMode( pTerm, piRows, piCols );
@@ -2174,7 +2179,7 @@ static HB_BOOL hb_gt_trm_AnsiSetMode( PHB_GTTRM pTerm, int * piRows, int * piCol
 
 static void hb_gt_trm_AnsiBell( PHB_GTTRM pTerm )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiBell(%p)", pTerm) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiBell(%p)", pTerm ) );
 
    hb_gt_trm_termOut( pTerm, s_szBell, 1 );
    hb_gt_trm_termFlush( pTerm );
@@ -2184,7 +2189,7 @@ static void hb_gt_trm_AnsiTone( PHB_GTTRM pTerm, double dFrequency, double dDura
 {
    double dCurrentSeconds;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiTone(%p,%lf,%lf)", pTerm, dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiTone(%p,%lf,%lf)", pTerm, dFrequency, dDuration ) );
 
    /* Output an ASCII BEL character to cause a sound */
    /* but throttle to max once per second, in case of sound */
@@ -2207,7 +2212,7 @@ static void hb_gt_trm_AnsiTone( PHB_GTTRM pTerm, double dFrequency, double dDura
 
 static void hb_gt_trm_AnsiInit( PHB_GTTRM pTerm )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiInit(%p)", pTerm));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiInit(%p)", pTerm ) );
 
    pTerm->iCurrentSGR = pTerm->iRow = pTerm->iCol =
    pTerm->iCursorStyle = pTerm->iACSC = pTerm->iAM = -1;
@@ -2215,7 +2220,7 @@ static void hb_gt_trm_AnsiInit( PHB_GTTRM pTerm )
 
 static void hb_gt_trm_AnsiExit( PHB_GTTRM pTerm )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_AnsiExit(%p)", pTerm));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_AnsiExit(%p)", pTerm ) );
 
    /* set default color */
    pTerm->SetAttributes( pTerm, 0x07 & pTerm->iAttrMask );
@@ -2234,6 +2239,7 @@ static void hb_gt_trm_AnsiExit( PHB_GTTRM pTerm )
 static HB_BOOL hb_trm_isUTF8( PHB_GTTRM pTerm )
 {
    char * szLang;
+
    if( pTerm->fPosAnswer )
    {
       int iRow = 0, iCol = 0;
@@ -2249,9 +2255,9 @@ static HB_BOOL hb_trm_isUTF8( PHB_GTTRM pTerm )
    return szLang && strstr( szLang, "UTF-8" ) != NULL;
 }
 
-static void hb_gt_trm_PutStr( PHB_GTTRM pTerm, int iRow, int iCol, int iAttr, const char *pStr, int iLen, int iChars )
+static void hb_gt_trm_PutStr( PHB_GTTRM pTerm, int iRow, int iCol, int iAttr, const char * pStr, int iLen, int iChars )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_PutStr(%p,%d,%d,%d,%p,%d,%d)", pTerm, iRow, iCol, iAttr, pStr, iLen, iChars));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_PutStr(%p,%d,%d,%d,%p,%d,%d)", pTerm, iRow, iCol, iAttr, pStr, iLen, iChars ) );
 
    if( pTerm->iOutBufSize )
    {
@@ -2269,7 +2275,7 @@ static void hb_gt_trm_PutStr( PHB_GTTRM pTerm, int iRow, int iCol, int iAttr, co
 
 static void hb_gt_trm_SetPalette( PHB_GTTRM pTerm, int iIndex )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetPalette(%p,%d)", pTerm, iIndex));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetPalette(%p,%d)", pTerm, iIndex ) );
 
    if( pTerm->terminal_type == TERM_LINUX ||
        ( pTerm->terminal_ext & TERM_PUTTY ) )
@@ -2280,7 +2286,7 @@ static void hb_gt_trm_SetPalette( PHB_GTTRM pTerm, int iIndex )
 
 static void hb_gt_trm_ResetPalette( PHB_GTTRM pTerm )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_ResetPalette(%p)", pTerm));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_ResetPalette(%p)", pTerm ) );
 
    if( pTerm->terminal_type == TERM_LINUX ||
        ( pTerm->terminal_ext & TERM_PUTTY ) )
@@ -2291,7 +2297,7 @@ static void hb_gt_trm_ResetPalette( PHB_GTTRM pTerm )
 
 static void hb_gt_trm_SetTitle( PHB_GTTRM pTerm, const char * szTitle )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetTitle(%p,%s)", pTerm, szTitle));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetTitle(%p,%s)", pTerm, szTitle ) );
 
    if( pTerm->terminal_type == TERM_XTERM ||
        ( pTerm->terminal_ext & TERM_PUTTY ) )
@@ -2307,7 +2313,7 @@ static void hb_gt_trm_SetKeyTrans( PHB_GTTRM pTerm )
                 cdpHost = HB_GTSELF_HOSTCP( pTerm->pGT );
    int i;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetKeyTrans(%p,%p,%p)", pTerm, cdpTerm, cdpHost));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetKeyTrans(%p,%p,%p)", pTerm, cdpTerm, cdpHost ) );
 
    for( i = 0; i < 256; ++i )
       pTerm->keyTransTbl[ i ] = ( unsigned char )
@@ -2326,35 +2332,35 @@ static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, int box )
 
    for( i = 0; i < 256; i++ )
    {
-      ch = pTerm->charmap[i] & 0xffff;
-      mode = !pTerm->fUTF8 ? ( pTerm->charmap[i] >> 16 ) & 0xff : 1;
+      ch = pTerm->charmap[ i ] & 0xffff;
+      mode = ! pTerm->fUTF8 ? ( pTerm->charmap[ i ] >> 16 ) & 0xff : 1;
 
       switch( mode )
       {
          case 1:
-            pTerm->chrattr[i] = pTerm->boxattr[i] = HB_GTTRM_ATTR_STD;
+            pTerm->chrattr[ i ] = pTerm->boxattr[ i ] = HB_GTTRM_ATTR_STD;
             break;
          case 2:
-            pTerm->chrattr[i] = pTerm->boxattr[i] = HB_GTTRM_ATTR_ALT;
+            pTerm->chrattr[ i ] = pTerm->boxattr[ i ] = HB_GTTRM_ATTR_ALT;
             break;
          case 3:
-            pTerm->chrattr[i] = pTerm->boxattr[i] = HB_GTTRM_ATTR_PROT;
+            pTerm->chrattr[ i ] = pTerm->boxattr[ i ] = HB_GTTRM_ATTR_PROT;
             break;
          case 4:
-            pTerm->chrattr[i] = pTerm->boxattr[i] = HB_GTTRM_ATTR_ALT | HB_GTTRM_ATTR_PROT;
+            pTerm->chrattr[ i ] = pTerm->boxattr[ i ] = HB_GTTRM_ATTR_ALT | HB_GTTRM_ATTR_PROT;
             break;
          case 5:
             ch = pTerm->GetAcsc( pTerm, ch & 0xff );
-            pTerm->chrattr[i] = pTerm->boxattr[i] = ch & ~HB_GTTRM_ATTR_CHAR;
+            pTerm->chrattr[ i ] = pTerm->boxattr[ i ] = ch & ~HB_GTTRM_ATTR_CHAR;
             break;
          case 0:
          default:
-            pTerm->chrattr[i] = HB_GTTRM_ATTR_STD;
-            pTerm->boxattr[i] = HB_GTTRM_ATTR_ALT;
+            pTerm->chrattr[ i ] = HB_GTTRM_ATTR_STD;
+            pTerm->boxattr[ i ] = HB_GTTRM_ATTR_ALT;
             break;
       }
-      pTerm->chrattr[i] |= ch;
-      pTerm->boxattr[i] |= ch;
+      pTerm->chrattr[ i ] |= ch;
+      pTerm->boxattr[ i ] |= ch;
    }
 
    if( cdpHost && cdpTerm )
@@ -2366,23 +2372,23 @@ static void hb_gt_trm_SetDispTrans( PHB_GTTRM pTerm, int box )
             unsigned char uc = ( unsigned char )
                               hb_cdpTranslateDispChar( i, cdpHost, cdpTerm );
 
-            pTerm->chrattr[i] = uc | HB_GTTRM_ATTR_STD;
+            pTerm->chrattr[ i ] = uc | HB_GTTRM_ATTR_STD;
             if( box )
-               pTerm->boxattr[i] = uc | HB_GTTRM_ATTR_STD;
+               pTerm->boxattr[ i ] = uc | HB_GTTRM_ATTR_STD;
          }
       }
    }
 }
 
-static int addKeyMap( PHB_GTTRM pTerm, int nKey, const char *cdesc )
+static int addKeyMap( PHB_GTTRM pTerm, int nKey, const char * cdesc )
 {
    int ret = K_UNDEF, i = 0, c;
-   keyTab **ptr;
+   keyTab ** ptr;
 
    if( cdesc == NULL )
       return ret;
 
-   c = ( unsigned char ) cdesc[i++];
+   c   = ( unsigned char ) cdesc[ i++ ];
    ptr = &pTerm->pKeyTab;
 
    while( c )
@@ -2397,7 +2403,7 @@ static int addKeyMap( PHB_GTTRM pTerm, int nKey, const char *cdesc )
       }
       if( ( *ptr )->ch == c )
       {
-         c = ( unsigned char ) cdesc[i++];
+         c = ( unsigned char ) cdesc[ i++ ];
          if( c )
             ptr = &( ( *ptr )->nextCh );
          else
@@ -2412,20 +2418,20 @@ static int addKeyMap( PHB_GTTRM pTerm, int nKey, const char *cdesc )
    return ret;
 }
 
-static int removeKeyMap( PHB_GTTRM pTerm, const char *cdesc )
+static int removeKeyMap( PHB_GTTRM pTerm, const char * cdesc )
 {
    int ret = K_UNDEF, i = 0, c;
-   keyTab **ptr;
+   keyTab ** ptr;
 
-   c = ( unsigned char ) cdesc[i++];
+   c   = ( unsigned char ) cdesc[ i++ ];
    ptr = &pTerm->pKeyTab;
 
    while( c && *ptr != NULL )
    {
       if( ( *ptr )->ch == c )
       {
-         c = ( unsigned char ) cdesc[i++];
-         if( !c )
+         c = ( unsigned char ) cdesc[ i++ ];
+         if( ! c )
          {
             ret = ( *ptr )->key;
             ( *ptr )->key = K_UNDEF;
@@ -2444,7 +2450,7 @@ static int removeKeyMap( PHB_GTTRM pTerm, const char *cdesc )
    return ret;
 }
 
-static void removeAllKeyMap( PHB_GTTRM pTerm, keyTab **ptr )
+static void removeAllKeyMap( PHB_GTTRM pTerm, keyTab ** ptr )
 {
    if( ( *ptr )->nextCh != NULL )
       removeAllKeyMap( pTerm, &( ( *ptr )->nextCh ) );
@@ -3013,7 +3019,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    static const char * szExtAcsc = "+\020,\021-\030.\0310\333`\004a\261f\370g\361h\260i\316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v\301w\302x\263y\363z\362{\343|\330}\234~\376";
    const char * szTerm;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_SetTerm(%p)", pTerm));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetTerm(%p)", pTerm ) );
 
    if( pTerm->iOutBufSize == 0 )
    {
@@ -3027,10 +3033,10 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    pTerm->terminal_ext  = 0;
    pTerm->fAM           = HB_FALSE;
 
-   szTerm = getenv("HB_TERM");
+   szTerm = getenv( "HB_TERM" );
    if( szTerm == NULL || *szTerm == '\0' )
    {
-      szTerm = getenv("TERM");
+      szTerm = getenv( "TERM" );
       if( szTerm == NULL || *szTerm == '\0' )
          szTerm = "ansi";
    }
@@ -3113,7 +3119,7 @@ static void hb_gt_trm_SetTerm( PHB_GTTRM pTerm )
    pTerm->fStderrTTY     = hb_fsIsDevice( pTerm->hFilenoStderr );
    pTerm->hFileno        = pTerm->hFilenoStdout;
    pTerm->fOutTTY        = pTerm->fStdoutTTY;
-   if( !pTerm->fOutTTY && pTerm->fStdinTTY )
+   if( ! pTerm->fOutTTY && pTerm->fStdinTTY )
    {
       pTerm->hFileno     = pTerm->hFilenoStdin;
       pTerm->fOutTTY     = HB_TRUE;
@@ -3140,7 +3146,7 @@ static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    int iRows = 24, iCols = 80;
    PHB_GTTRM pTerm;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
    pTerm = ( PHB_GTTRM ) hb_xgrab( sizeof( HB_GTTRM ) );
    memset( pTerm, 0, sizeof( HB_GTTRM ) );
@@ -3214,7 +3220,7 @@ static void hb_gt_trm_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    if( pTerm->GetCursorPos( pTerm, &pTerm->iRow, &pTerm->iCol, NULL ) )
       HB_GTSELF_SETPOS( pGT, pTerm->iRow, pTerm->iCol );
    pTerm->fUTF8 = hb_trm_isUTF8( pTerm );
-   if( !pTerm->fUTF8 )
+   if( ! pTerm->fUTF8 )
    {
 #ifndef HB_GT_UNICODE_BUF
       hb_gt_trm_SetKeyTrans( pTerm );
@@ -3230,7 +3236,7 @@ static void hb_gt_trm_Exit( PHB_GT pGT )
 {
    PHB_GTTRM pTerm;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_Exit(%p)", pGT));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Exit(%p)", pGT ) );
 
    HB_GTSELF_REFRESH( pGT );
 
@@ -3362,7 +3368,7 @@ static int hb_gt_trm_ReadKey( PHB_GT pGT, int iEventMask )
 {
    int iKey;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_ReadKey(%p,%d)", pGT, iEventMask));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_ReadKey(%p,%d)", pGT, iEventMask ) );
 
    HB_SYMBOL_UNUSED( iEventMask );
 
@@ -3388,7 +3394,7 @@ static void hb_gt_trm_Tone( PHB_GT pGT, double dFrequency, double dDuration )
 {
    PHB_GTTRM pTerm;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_gt_trm_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Tone(%p,%lf,%lf)", pGT, dFrequency, dDuration ) );
 
    pTerm = HB_GTTRM_GET( pGT );
    pTerm->Tone( pTerm, dFrequency, dDuration );
@@ -3398,7 +3404,7 @@ static void hb_gt_trm_Bell( PHB_GT pGT )
 {
    PHB_GTTRM pTerm;
 
-   HB_TRACE(HB_TR_DEBUG, ( "hb_gt_trm_Bell(%p)", pGT ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_Bell(%p)", pGT ) );
 
    pTerm = HB_GTTRM_GET( pGT );
    pTerm->Bell( pTerm );
@@ -3479,7 +3485,9 @@ static void hb_gt_trm_Scroll( PHB_GT pGT, int iTop, int iLeft, int iBottom, int 
          pTerm->SetAttributes( pTerm, iColor & pTerm->iAttrMask );
          /* update our internal row position */
          do
+         {
             hb_gt_trm_termOut( pTerm, "\n\r", 2 );
+         }
          while( --iRows > 0 );
          pTerm->iCol = 0;
          return;
@@ -3537,13 +3545,13 @@ static void hb_gt_trm_SetBlink( PHB_GT pGT, HB_BOOL fBlink )
    HB_GTSUPER_SETBLINK( pGT, fBlink );
 }
 
-static HB_BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP, HB_BOOL fBox )
+static HB_BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP, HB_BOOL fBox )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, (int) fBox ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetDispCP(%p,%s,%s,%d)", pGT, pszTermCDP, pszHostCDP, ( int ) fBox ) );
 
    if( HB_GTSUPER_SETDISPCP( pGT, pszTermCDP, pszHostCDP, fBox ) )
    {
-      if( !HB_GTTRM_GET( pGT )->fUTF8 )
+      if( ! HB_GTTRM_GET( pGT )->fUTF8 )
          hb_gt_trm_SetDispTrans( HB_GTTRM_GET( pGT ), fBox ? 1 : 0 );
       return HB_TRUE;
    }
@@ -3551,13 +3559,13 @@ static HB_BOOL hb_gt_trm_SetDispCP( PHB_GT pGT, const char *pszTermCDP, const ch
 }
 
 #ifndef HB_GT_UNICODE_BUF
-static HB_BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char *pszTermCDP, const char *pszHostCDP )
+static HB_BOOL hb_gt_trm_SetKeyCP( PHB_GT pGT, const char * pszTermCDP, const char * pszHostCDP )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_trm_SetKeyCP(%p,%s,%s)", pGT, pszTermCDP, pszHostCDP ) );
 
    if( HB_GTSUPER_SETKEYCP( pGT, pszTermCDP, pszHostCDP ) )
    {
-      if( !HB_GTTRM_GET( pGT )->fUTF8 )
+      if( ! HB_GTTRM_GET( pGT )->fUTF8 )
          hb_gt_trm_SetKeyTrans( HB_GTTRM_GET( pGT ) );
       return HB_TRUE;
    }
@@ -3584,7 +3592,7 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
 #ifdef HB_GT_UNICODE_BUF
       if( pTerm->fUTF8 )
       {
-         if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iChars, &iColor, &bAttr, &usChar ) )
+         if( ! HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iChars, &iColor, &bAttr, &usChar ) )
             break;
          if( bAttr & HB_GT_ATTR_BOX )
             iColor |= HB_GTTRM_ATTR_BOX;
@@ -3593,7 +3601,7 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       else
       {
          HB_UCHAR uc;
-         if( !HB_GTSELF_GETSCRUC( pGT, iRow, iCol + iChars, &iColor, &bAttr, &uc, HB_FALSE ) )
+         if( ! HB_GTSELF_GETSCRUC( pGT, iRow, iCol + iChars, &iColor, &bAttr, &uc, HB_FALSE ) )
             break;
          if( bAttr & HB_GT_ATTR_BOX )
          {
@@ -3622,13 +3630,13 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
          pTerm->pLineBuf[ iLen++ ] = ( char ) usChar;
       ++iChars;
 #else
-      if( !HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iChars, &iColor, &bAttr, &usChar ) )
+      if( ! HB_GTSELF_GETSCRCHAR( pGT, iRow, iCol + iChars, &iColor, &bAttr, &usChar ) )
          break;
       usChar &= 0xff;
       if( bAttr & HB_GT_ATTR_BOX )
       {
          iColor |= ( pTerm->boxattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
-         if( !pTerm->fUTF8 )
+         if( ! pTerm->fUTF8 )
             usChar = pTerm->boxattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
          else
             iColor |= HB_GTTRM_ATTR_BOX;
@@ -3636,7 +3644,7 @@ static void hb_gt_trm_Redraw( PHB_GT pGT, int iRow, int iCol, int iSize )
       else
       {
          iColor |= ( pTerm->chrattr[ usChar ] & ~HB_GTTRM_ATTR_CHAR );
-         if( !pTerm->fUTF8 )
+         if( ! pTerm->fUTF8 )
             usChar = pTerm->chrattr[ usChar ] & HB_GTTRM_ATTR_CHAR;
       }
       if( iLen == 0 )
@@ -3803,7 +3811,7 @@ static HB_BOOL hb_gt_trm_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          }
          else
          {
-            if( !pInfo->pResult )
+            if( ! pInfo->pResult )
                pInfo->pResult = hb_itemNew( NULL );
             hb_arrayNew( pInfo->pResult, 16 );
             for( iVal = 0; iVal < 16; iVal++ )

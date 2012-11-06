@@ -58,7 +58,7 @@
    #include <unistd.h>
 #endif
 
-#define HB_FSCOPY_BUFFERSIZE    65536
+#define HB_FSCOPY_BUFFERSIZE  65536
 
 HB_BOOL hb_fsCopy( const char * pszSource, const char * pszDest )
 {

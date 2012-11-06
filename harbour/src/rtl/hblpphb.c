@@ -51,82 +51,82 @@
  */
 
 
- /*
+/*
 
-  Idea and protocol
-  =================
-  Very often it is required to accept the whole data message from 
-  TCP connection. Because of stream nature of TCP, this requires 
-  additional steps from application like start/end marker, or sending 
-  length of structure before the structure. The latter simple approach 
-  was used in Length Prefix Protocol (LPP). Protocol can easily be 
-  described by simple Clipper expression:
-     BIN2L(LEN(cData)) + cData
+   Idea and protocol
+   =================
+   Very often it is required to accept the whole data message from
+   TCP connection. Because of stream nature of TCP, this requires
+   additional steps from application like start/end marker, or sending
+   length of structure before the structure. The latter simple approach
+   was used in Length Prefix Protocol (LPP). Protocol can easily be
+   described by simple Clipper expression:
+    BIN2L(LEN(cData)) + cData
 
-  Future extensions: Protocol is limitted to 4GB size for a single LPP 
-  message. This can be extended in future to use highest bit of length 
-  (or some highest length values 2^32-1, etc) as a special marker for 
-  64-bit or similar length encoding. 
+   Future extensions: Protocol is limitted to 4GB size for a single LPP
+   message. This can be extended in future to use highest bit of length
+   (or some highest length values 2^32-1, etc) as a special marker for
+   64-bit or similar length encoding.
 
-  Public functions and procedures
-  ===============================
-  hb_lppCreate( hSocket ) --> hLPP
-  hb_lppDestroy( hNSTP )
-     Destroys only LPP related structures. Socket remains open and
-     it is possible to continue data transfers using hb_socket*()
-     functions.
-  hb_lppError( hLPP ) --> nError
-     nError value is compatible with Harbour socket error API,
-     the only new error code (until now) is HB_LPP_ERROR_TOOLARGE
-  hb_lppSetLimit( hLPP, nLimit )
-     Sets size limit for receiving data. Sending 4 bytes containing 
-     large 32-bit value makes receiving application to alllocate a 
-     large memory block for storage of data to be received. It is very 
-     easy to crash  application (or system) using such protocol and 
-     logic. hb_lppSetLimit() helps to protect against such attacks.
-     On hb_lppCreate() limit is set to 1024 bytes. This is enough 
-     for server/client authentification. After successful 
-     authentification server can increase size limit and large LPP 
-     packets can be used.
-  hb_lppSend( hLPP, cBuf [, nTimeout = FOREVER ] ) --> lSuccess
-  hb_lppRecv( hLPP, @cBuf [, nTimeout = FOREVER ] ) --> lSuccess
-  hb_lppSendLen( hLPP ) --> nBytesSent
-     Useful for drawing progress bars, etc.
-  hb_lppRecvLen( hLPP ) --> nBytesReceived
-     Useful for drawing progress bars, etc.
+   Public functions and procedures
+   ===============================
+   hb_lppCreate( hSocket ) --> hLPP
+   hb_lppDestroy( hNSTP )
+    Destroys only LPP related structures. Socket remains open and
+    it is possible to continue data transfers using hb_socket*()
+    functions.
+   hb_lppError( hLPP ) --> nError
+    nError value is compatible with Harbour socket error API,
+    the only new error code (until now) is HB_LPP_ERROR_TOOLARGE
+   hb_lppSetLimit( hLPP, nLimit )
+    Sets size limit for receiving data. Sending 4 bytes containing
+    large 32-bit value makes receiving application to alllocate a
+    large memory block for storage of data to be received. It is very
+    easy to crash  application (or system) using such protocol and
+    logic. hb_lppSetLimit() helps to protect against such attacks.
+    On hb_lppCreate() limit is set to 1024 bytes. This is enough
+    for server/client authentification. After successful
+    authentification server can increase size limit and large LPP
+    packets can be used.
+   hb_lppSend( hLPP, cBuf [, nTimeout = FOREVER ] ) --> lSuccess
+   hb_lppRecv( hLPP, @cBuf [, nTimeout = FOREVER ] ) --> lSuccess
+   hb_lppSendLen( hLPP ) --> nBytesSent
+    Useful for drawing progress bars, etc.
+   hb_lppRecvLen( hLPP ) --> nBytesReceived
+    Useful for drawing progress bars, etc.
 
-  Sample code
-  ===========
-  // send sample
-  hLPP := hb_lppCreate( hSocket )
-  DO WHILE ! ( lI := hb_lppSend( hLPP, cData, nTimeout ) ) .AND. ;
-           hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
-    // draw progressbar using hb_lppSendLen( hLPP )
-  ENDDO
-  IF lI   // or hb_lppError( hLPP ) == 0
-    // Sent OK
-  ELSE
-    // error
-  ENDIF
-  hb_hsctpDestroy( hLPP )
-  
+   Sample code
+   ===========
+   // send sample
+   hLPP := hb_lppCreate( hSocket )
+   DO WHILE ! ( lI := hb_lppSend( hLPP, cData, nTimeout ) ) .AND. ;
+          hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
+   // draw progressbar using hb_lppSendLen( hLPP )
+   ENDDO
+   IF lI   // or hb_lppError( hLPP ) == 0
+   // Sent OK
+   ELSE
+   // error
+   ENDIF
+   hb_hsctpDestroy( hLPP )
 
-  // recv sample
-  DO WHILE ! ( lI := hb_lppRecv( hLPP, @cData, nTimeout ) ) .AND. ;
-           hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
-    // draw progressbar using hb_lppRecvLen( hLPP )
-  ENDDO
-  IF lI
-    // Rcvd OK, data in cData
-  ELSE
-    IF hb_lppError( hLPP ) == 0
-      // remote side shutdown connection
-    ELSE
-      // error
-    ENDIF
-  ENDIF
 
-*/
+   // recv sample
+   DO WHILE ! ( lI := hb_lppRecv( hLPP, @cData, nTimeout ) ) .AND. ;
+          hb_lppError( hLPP ) == HB_SOCKET_ERR_TIMEOUT )
+   // draw progressbar using hb_lppRecvLen( hLPP )
+   ENDDO
+   IF lI
+   // Rcvd OK, data in cData
+   ELSE
+   IF hb_lppError( hLPP ) == 0
+     // remote side shutdown connection
+   ELSE
+     // error
+   ENDIF
+   ENDIF
+
+ */
 
 
 #include "hbapiitm.h"
@@ -135,8 +135,8 @@
 
 typedef struct
 {
-   PHB_LPP   pSocket;
-   PHB_ITEM  pItemSocket;
+   PHB_LPP  pSocket;
+   PHB_ITEM pItemSocket;
 } HB_LPP_GC, * PHB_LPP_GC;
 
 
@@ -252,7 +252,7 @@ HB_FUNC( HB_LPPSEND )
    }
 
    pData = hb_param( 2, HB_IT_STRING );
-   hb_retl( hb_lppSend( pGC->pSocket, pData ? hb_itemGetCPtr( pData ) : "", 
+   hb_retl( hb_lppSend( pGC->pSocket, pData ? hb_itemGetCPtr( pData ) : "",
                         hb_itemGetCLen( pData ), hb_parnintdef( 3, -1 ) ) );
 }
 
@@ -260,9 +260,9 @@ HB_FUNC( HB_LPPSEND )
 HB_FUNC( HB_LPPRECV )
 {
    PHB_LPP_GC pGC;
-   HB_BOOL bRet;
-   void * data;
-   HB_SIZE len;
+   HB_BOOL    bRet;
+   void *     data;
+   HB_SIZE    len;
 
    pGC = ( PHB_LPP_GC ) hb_parptrGC( &s_gcPSocketFuncs, 1 );
    if( ! pGC || ! pGC->pSocket || hb_socketItemGet( pGC->pItemSocket ) == HB_NO_SOCKET )

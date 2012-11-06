@@ -55,7 +55,7 @@
 /* *********************************************************************** */
 
 /* This definition has to be placed before #include "hbapigt.h" */
-#define HB_GT_NAME      NUL
+#define HB_GT_NAME  NUL
 
 #include "hbgtcore.h"
 

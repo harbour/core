@@ -69,7 +69,7 @@ HB_FUNC( VAL )
 
       fDbl = hb_valStrnToNum( szText, iLen, &lValue, &dValue , &iDec, &iWidth );
 
-      if( !fDbl )
+      if( ! fDbl )
          hb_retnintlen( lValue, iWidth );
       else
          hb_retndlen( dValue, iWidth, iDec );

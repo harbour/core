@@ -60,13 +60,14 @@
 #include "hbthread.h"
 
 
-#define HB_SET_WA( n )  do \
-            { \
-               pRddInfo->uiCurrArea = n; \
-               pRddInfo->pCurrArea = ( ( pRddInfo->uiCurrArea < pRddInfo->uiWaNumMax ) ? \
-                                 pRddInfo->waList[ pRddInfo->waNums[ pRddInfo->uiCurrArea ] ] : \
-                                 NULL ); \
-            } while( 0 )
+#define HB_SET_WA( n )  \
+   do \
+   { \
+      pRddInfo->uiCurrArea = n; \
+      pRddInfo->pCurrArea  = ( ( pRddInfo->uiCurrArea < pRddInfo->uiWaNumMax ) ? \
+                               pRddInfo->waList[ pRddInfo->waNums[ pRddInfo->uiCurrArea ] ] : \
+                               NULL ); \
+   } while( 0 )
 
 
 /*
@@ -171,7 +172,7 @@ HB_ERRCODE hb_rddSelectFirstAvailable( void )
    PHB_STACKRDD pRddInfo;
    HB_USHORT uiArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectFirstAvailable()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddSelectFirstAvailable()" ) );
 
    pRddInfo = hb_stackRDD();
 
@@ -191,25 +192,25 @@ HB_ERRCODE hb_rddSelectFirstAvailable( void )
 /*
  * Create and insert the new WorkArea node
  */
-HB_USHORT hb_rddInsertAreaNode( const char *szDriver )
+HB_USHORT hb_rddInsertAreaNode( const char * szDriver )
 {
    PHB_STACKRDD pRddInfo;
    LPRDDNODE pRddNode;
    HB_USHORT uiRddID;
    AREAP pArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddInsertAreaNode(%s)", szDriver));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddInsertAreaNode(%s)", szDriver ) );
 
    pRddInfo = hb_stackRDD();
    if( pRddInfo->uiCurrArea && pRddInfo->pCurrArea )
       return 0;
 
    pRddNode = hb_rddFindNode( szDriver, &uiRddID );
-   if( !pRddNode )
+   if( ! pRddNode )
       return 0;
 
    pArea = ( AREAP ) hb_rddNewAreaNode( pRddNode, uiRddID );
-   if( !pArea )
+   if( ! pArea )
       return 0;
 
    if( pRddInfo->uiCurrArea == 0 )
@@ -232,11 +233,11 @@ void hb_rddReleaseCurrentArea( void )
    PHB_STACKRDD pRddInfo;
    AREAP pArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddReleaseCurrentArea()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddReleaseCurrentArea()" ) );
 
    pRddInfo = hb_stackRDD();
    pArea = ( AREAP ) pRddInfo->pCurrArea;
-   if( !pArea )
+   if( ! pArea )
       return;
 
    if( SELF_CLOSE( pArea ) == HB_FAILURE )
@@ -254,7 +255,7 @@ void hb_rddCloseAll( void )
 {
    PHB_STACKRDD pRddInfo;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddCloseAll()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddCloseAll()" ) );
 
    pRddInfo = hb_stackRDD();
    if( pRddInfo->uiWaMax > 0 )
@@ -285,7 +286,7 @@ void hb_rddCloseAll( void )
                SELF_CLOSE( pArea );
             }
          }
-         if( !isParents && !isFinish )
+         if( ! isParents && ! isFinish )
          {
             isParents = isFinish = HB_TRUE;
          }
@@ -336,7 +337,7 @@ HB_ERRCODE hb_rddIterateWorkAreas( WACALLBACK pCallBack, void * cargo )
    HB_ERRCODE errCode = HB_SUCCESS;
    HB_USHORT uiIndex;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddIterateWorkAreas(%p,%p)", pCallBack, cargo));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddIterateWorkAreas(%p,%p)", pCallBack, cargo ) );
 
    pRddInfo = hb_stackRDD();
    for( uiIndex = 1; uiIndex < pRddInfo->uiWaMax; uiIndex++ )
@@ -376,14 +377,14 @@ const char * hb_rddDefaultDrv( const char * szDriver )
 
       hb_strncpyUpper( szNewDriver, szDriver, sizeof( szNewDriver ) - 1 );
       pRddNode = hb_rddFindNode( szNewDriver, NULL );
-      if( !pRddNode )
+      if( ! pRddNode )
          return NULL;
 
       pRddInfo->szDefaultRDD = pRddNode->szName;
    }
-   else if( !pRddInfo->szDefaultRDD && hb_rddGetNode( 0 ) )
+   else if( ! pRddInfo->szDefaultRDD && hb_rddGetNode( 0 ) )
    {
-      const char *szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF", NULL };
+      const char * szDrvTable[] = { "DBFNTX", "DBFCDX", "DBFFPT", "DBF", NULL };
       int i;
 
       pRddInfo->szDefaultRDD = "";
@@ -407,7 +408,7 @@ void * hb_rddGetWorkAreaPointer( int iArea )
 {
    PHB_STACKRDD pRddInfo;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddGetWorkAreaPointer(%d)", iArea));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddGetWorkAreaPointer(%d)", iArea ) );
 
    pRddInfo = hb_stackRDD();
 
@@ -424,7 +425,7 @@ void * hb_rddGetWorkAreaPointer( int iArea )
  */
 void * hb_rddGetCurrentWorkAreaPointer( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaPointer()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddGetCurrentWorkAreaPointer()" ) );
 
    return hb_stackRDD()->pCurrArea;
 }
@@ -434,7 +435,7 @@ void * hb_rddGetCurrentWorkAreaPointer( void )
  */
 int hb_rddGetCurrentWorkAreaNumber( void )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddGetCurrentWorkAreaNumber()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddGetCurrentWorkAreaNumber()" ) );
 
    return hb_stackRDD()->uiCurrArea;
 }
@@ -446,7 +447,7 @@ HB_ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 {
    PHB_STACKRDD pRddInfo;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddSelectWorkAreaNumber(%d)", iArea));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddSelectWorkAreaNumber(%d)", iArea ) );
 
    pRddInfo = hb_stackRDD();
    if( iArea < 1 || iArea > HB_RDD_MAX_AREA_NUM )
@@ -518,7 +519,7 @@ HB_ERRCODE hb_rddDetachArea( AREAP pArea, PHB_ITEM pCargo )
    HB_SIZE nPos;
    int iArea;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddDetachArea(%p,%p)", pArea, pCargo));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddDetachArea(%p,%p)", pArea, pCargo ) );
 
    /* save current WA number */
    iArea = hb_rddGetCurrentWorkAreaNumber();
@@ -584,7 +585,7 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
       hb_itemClear( pCargo );
 
    /* close current WA or chose 1-st free available */
-   if( !fNewArea )
+   if( ! fNewArea )
    {
       hb_rddReleaseCurrentArea();
    }
@@ -645,7 +646,7 @@ AREAP hb_rddRequestArea( const char * szAlias, PHB_ITEM pCargo,
          }
       }
 
-      if( pArea || !fWait )
+      if( pArea || ! fWait )
          break;
 
       hb_vmUnlock();
@@ -676,7 +677,7 @@ PHB_ITEM hb_rddDetachedList( void )
 {
    PHB_ITEM pArray;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_rddDetachedList()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddDetachedList()" ) );
 
    pArray = hb_itemArrayNew( 0 );
    /* protect by critical section access to s_pDetachedAreas array */

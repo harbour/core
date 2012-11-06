@@ -54,7 +54,7 @@
    Either way you have to clean up the memory on exit. The best way to
    do this is to add a hb_setkeyInit() and hb_setkeyExit() function
    and call them from console.c Init/Exit functions.
-*/
+ */
 
 #include "hbvm.h"
 #include "hbapi.h"
@@ -117,9 +117,9 @@ static void sk_add( PHB_SETKEY * sk_list_ptr, HB_BOOL bReturn,
    {
       PHB_SETKEY sk_list_tmp, sk_list_end;
 
-      if( pIsActive && !HB_IS_BLOCK( pIsActive ) )
+      if( pIsActive && ! HB_IS_BLOCK( pIsActive ) )
          pIsActive = NULL;
-      if( pAction && !HB_IS_BLOCK( pAction ) )
+      if( pAction && ! HB_IS_BLOCK( pAction ) )
          pAction = NULL;
 
       sk_list_tmp = sk_findkey( iKeyCode, *sk_list_ptr, &sk_list_end );

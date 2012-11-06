@@ -51,20 +51,20 @@
  *
  */
 
-#if !defined( _LARGEFILE64_SOURCE )
-#  define _LARGEFILE64_SOURCE 1
+#if ! defined( _LARGEFILE64_SOURCE )
+#  define _LARGEFILE64_SOURCE  1
 #endif
 
 #include "hbapi.h"
 #include "hbapifs.h"
 #include "hbvm.h"
 
-#if !defined( HB_OS_WIN_CE )
+#if ! defined( HB_OS_WIN_CE )
 #  include <sys/types.h>
 #  include <sys/stat.h>
 #endif
 
-#if !defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
+#if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
    #if defined( __USE_LARGEFILE64 )
       /*
        * The macro: __USE_LARGEFILE64 is set when _LARGEFILE64_SOURCE is
@@ -138,5 +138,6 @@ HB_FOFFSET hb_fsFSize( const char * pszFileName, HB_BOOL bUseDirEntry )
 HB_FUNC( HB_FSIZE )
 {
    const char * pszFile = hb_parc( 1 );
+
    hb_retnint( pszFile ? hb_fsFSize( pszFile, hb_parldef( 2, 1 ) ) : 0 );
 }

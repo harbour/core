@@ -326,7 +326,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                }
                else
                {
-                  for( i = (iSize > iDec ? iSize : iDec) + iExtra; i < iWidth; i++ )
+                  for( i = ( iSize > iDec ? iSize : iDec ) + iExtra; i < iWidth; i++ )
                      bufadd( &buffer, " ", 1 );
 
                   /* ForceSign has priority over SpaceSign */

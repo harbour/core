@@ -88,7 +88,7 @@
 
 #elif defined( HB_OS_UNIX )
 
-   #if !defined( __WATCOMC__ )
+   #if ! defined( __WATCOMC__ )
       #if defined( HB_OS_VXWORKS )
          #include <hostLib.h>
       #else

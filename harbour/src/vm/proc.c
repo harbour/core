@@ -261,7 +261,7 @@ HB_BOOL hb_procinfo( int iLevel, char * szName, HB_USHORT * puiLine, char * szFi
       }
 
       if( puiLine )
-         * puiLine = pBase->item.asSymbol.stackstate->uiLineNo;
+         *puiLine = pBase->item.asSymbol.stackstate->uiLineNo;
 
       if( szFile )
       {
@@ -287,7 +287,7 @@ HB_BOOL hb_procinfo( int iLevel, char * szName, HB_USHORT * puiLine, char * szFi
    if( szName )
       szName[ 0 ] = '\0';
    if( puiLine )
-      * puiLine = 0;
+      *puiLine = 0;
    if( szFile )
       szFile[ 0 ] = '\0';
 

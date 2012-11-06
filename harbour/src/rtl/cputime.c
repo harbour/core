@@ -64,7 +64,7 @@
    #define INCL_DOSPROFILE
    #define INCL_ERRORS
    #include <os2.h>
-   #define BUFSIZE   16 * 1024
+   #define BUFSIZE  16 * 1024
    #include <unistd.h>
    #if defined( __WATCOMC__ )
       #include <process.h>
@@ -86,12 +86,13 @@
     n == 11 cutime -> sum of the user CPU time of the current + child process
     n == 12 cstime -> sum of the system CPU time of the current + child process
     n == 13 cu+cs  -> sum of cutime + cstime
-*/
+ */
 
 double hb_secondsCPU( int n )
 {
    double d = 0.0;
-#if defined( HB_OS_WIN ) && !defined( HB_OS_UNIX )
+
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_UNIX )
    FILETIME Create, Exit, Kernel, User;
 #endif
 
@@ -164,7 +165,7 @@ double hb_secondsCPU( int n )
 
       if( rc == NO_ERROR )
       {
-         QSGREC * pGrec = * pBuf;
+         QSGREC * pGrec = *pBuf;
          QSPREC * pPrec = ( QSPREC * ) ( ( ULONG ) pGrec + sizeof( QSGREC ) );
          QSTREC * pTrec = pPrec->pThrdRec;
 

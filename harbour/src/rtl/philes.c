@@ -62,6 +62,7 @@
 HB_FUNC( FOPEN )
 {
    const char * szFile = hb_parc( 1 );
+
    if( szFile )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsOpen( szFile,
@@ -79,6 +80,7 @@ HB_FUNC( FOPEN )
 HB_FUNC( FCREATE )
 {
    const char * szFile = hb_parc( 1 );
+
    if( szFile )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsCreate( szFile,
@@ -95,6 +97,7 @@ HB_FUNC( FCREATE )
 HB_FUNC( HB_FCREATE )
 {
    const char * szFile = hb_parc( 1 );
+
    if( szFile )
    {
       hb_retnint( ( HB_NHANDLE ) hb_fsCreateEx( szFile,
@@ -172,6 +175,7 @@ HB_FUNC( FERROR )
 HB_FUNC( FCLOSE )
 {
    HB_ERRCODE uiError = 0;
+
    if( HB_ISNUM( 1 ) )
    {
       hb_fsClose( hb_numToHandle( hb_parnint( 1 ) ) );
@@ -489,7 +493,7 @@ HB_FUNC( HB_FSETDEVMODE )
       hb_fsSetFError( hb_fsError() );
    }
    else
-      hb_fsSetFError( 6 ); /* ERROR_INVALID_HANDLE */
+      hb_fsSetFError( 6 );  /* ERROR_INVALID_HANDLE */
 
    hb_retni( iRet );
 }
@@ -560,6 +564,7 @@ HB_FUNC( HB_OSPATHSEPARATOR )
 HB_FUNC( HB_OSPATHLISTSEPARATOR )
 {
    static const char s_ret[ 2 ] = { HB_OS_PATH_LIST_SEP_CHR, '\0' };
+
    hb_retc_const( s_ret );
 }
 

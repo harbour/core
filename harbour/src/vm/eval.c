@@ -71,7 +71,7 @@
 
 HB_BOOL hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_evalNew(%p, %p)", pEvalInfo, pItem));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_evalNew(%p, %p)", pEvalInfo, pItem ) );
 
    if( pEvalInfo )
    {
@@ -100,7 +100,7 @@ HB_BOOL hb_evalNew( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
 
 HB_BOOL hb_evalPutParam( PHB_EVALINFO pEvalInfo, PHB_ITEM pItem )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_evalPutParam(%p, %p)", pEvalInfo, pItem));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_evalPutParam(%p, %p)", pEvalInfo, pItem ) );
 
    if( pEvalInfo && pItem && pEvalInfo->paramCount < HB_EVAL_PARAM_MAX_ )
    {
@@ -116,7 +116,7 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
 {
    PHB_ITEM pResult = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_evalLaunch(%p)", pEvalInfo));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_evalLaunch(%p)", pEvalInfo ) );
 
    if( pEvalInfo )
    {
@@ -170,7 +170,7 @@ PHB_ITEM hb_evalLaunch( PHB_EVALINFO pEvalInfo )
 
 HB_BOOL hb_evalRelease( PHB_EVALINFO pEvalInfo )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_evalRelease(%p)", pEvalInfo));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_evalRelease(%p)", pEvalInfo ) );
 
    if( pEvalInfo )
    {
@@ -198,13 +198,13 @@ HB_BOOL hb_evalRelease( PHB_EVALINFO pEvalInfo )
 
    NOTE: When calling hb_itemDo() with no arguments for the Harbour item being
          evaluated, you must use '(PHB_ITEM *) 0' as the third parameter.
-*/
+ */
 
 PHB_ITEM hb_itemDo( PHB_ITEM pItem, HB_ULONG ulPCount, ... )
 {
    PHB_ITEM pResult = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemDo(%p, %lu, ...)", pItem, ulPCount));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemDo(%p, %lu, ...)", pItem, ulPCount ) );
 
    if( pItem )
    {
@@ -268,13 +268,13 @@ PHB_ITEM hb_itemDo( PHB_ITEM pItem, HB_ULONG ulPCount, ... )
 
    NOTE: When calling hb_itemDoC() with no arguments for the Harbour function
          being called, you must use '(PHB_ITEM *) 0' as the third parameter.
-*/
+ */
 
 PHB_ITEM hb_itemDoC( const char * szFunc, HB_ULONG ulPCount, ... )
 {
    PHB_ITEM pResult = NULL;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_itemDoC(%s, %lu, ...)", szFunc, ulPCount));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemDoC(%s, %lu, ...)", szFunc, ulPCount ) );
 
    if( szFunc )
    {
@@ -460,13 +460,13 @@ HB_FUNC( HB_EXECFROMARRAY )
       }
    }
 
-   if( pFunc && ( !pArray || HB_IS_ARRAY( pArray ) ) )
+   if( pFunc && ( ! pArray || HB_IS_ARRAY( pArray ) ) )
    {
       if( HB_IS_SYMBOL( pFunc ) )
          pExecSym = hb_itemGetSymbol( pFunc );
       else if( HB_IS_STRING( pFunc ) )
          pExecSym = hb_dynsymGet( hb_itemGetCPtr( pFunc ) )->pSymbol;
-      else if( HB_IS_BLOCK( pFunc ) && !pSelf )
+      else if( HB_IS_BLOCK( pFunc ) && ! pSelf )
       {
          pSelf = pFunc;
          pExecSym = &hb_symEval;
@@ -517,7 +517,7 @@ HB_BOOL hb_execFromArray( PHB_ITEM pParam )
    HB_ULONG ulParamOffset = 0;
    int iPCount = 0;
 
-   if( pParam && HB_IS_ARRAY( pParam ) && !HB_IS_OBJECT( pParam ) )
+   if( pParam && HB_IS_ARRAY( pParam ) && ! HB_IS_OBJECT( pParam ) )
    {
       pArray = pParam;
       pParam = hb_arrayGetItemPtr( pArray, 1 );
@@ -537,7 +537,7 @@ HB_BOOL hb_execFromArray( PHB_ITEM pParam )
          pExecSym = hb_itemGetSymbol( pParam );
       else if( HB_IS_STRING( pParam ) )
          pExecSym = hb_dynsymGet( hb_itemGetCPtr( pParam ) )->pSymbol;
-      else if( HB_IS_BLOCK( pParam ) && !pSelf )
+      else if( HB_IS_BLOCK( pParam ) && ! pSelf )
       {
          pSelf = pParam;
          pExecSym = &hb_symEval;

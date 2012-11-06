@@ -95,7 +95,7 @@ static char set_char( PHB_ITEM pItem, char oldChar )
 {
    char newChar = oldChar;
 
-   HB_TRACE(HB_TR_DEBUG, ("set_char(%p, %c)", pItem, oldChar));
+   HB_TRACE( HB_TR_DEBUG, ( "set_char(%p, %c)", pItem, oldChar ) );
 
    if( HB_IS_STRING( pItem ) )
    {
@@ -117,7 +117,7 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
 {
    HB_BOOL bLogical = bDefault;
 
-   HB_TRACE(HB_TR_DEBUG, ("set_logical(%p)", pItem));
+   HB_TRACE( HB_TR_DEBUG, ( "set_logical(%p)", pItem ) );
 
    if( pItem )
    {
@@ -129,13 +129,13 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
          HB_SIZE nLen = hb_itemGetCLen( pItem );
 
          if( nLen >= 2
-          && ( ( HB_UCHAR ) szString[ 0 ] == 'O' || ( HB_UCHAR ) szString[ 0 ] == 'o' )
-          && ( ( HB_UCHAR ) szString[ 1 ] == 'N' || ( HB_UCHAR ) szString[ 1 ] == 'n' ) )
+             && ( ( HB_UCHAR ) szString[ 0 ] == 'O' || ( HB_UCHAR ) szString[ 0 ] == 'o' )
+             && ( ( HB_UCHAR ) szString[ 1 ] == 'N' || ( HB_UCHAR ) szString[ 1 ] == 'n' ) )
             bLogical = HB_TRUE;
          else if( nLen >= 3
-          && ( ( HB_UCHAR ) szString[ 0 ] == 'O' || ( HB_UCHAR ) szString[ 0 ] == 'o' )
-          && ( ( HB_UCHAR ) szString[ 1 ] == 'F' || ( HB_UCHAR ) szString[ 1 ] == 'f' )
-          && ( ( HB_UCHAR ) szString[ 2 ] == 'F' || ( HB_UCHAR ) szString[ 2 ] == 'f' ) )
+                  && ( ( HB_UCHAR ) szString[ 0 ] == 'O' || ( HB_UCHAR ) szString[ 0 ] == 'o' )
+                  && ( ( HB_UCHAR ) szString[ 1 ] == 'F' || ( HB_UCHAR ) szString[ 1 ] == 'f' )
+                  && ( ( HB_UCHAR ) szString[ 2 ] == 'F' || ( HB_UCHAR ) szString[ 2 ] == 'f' ) )
             bLogical = HB_FALSE;
       }
    }
@@ -145,7 +145,7 @@ static HB_BOOL set_logical( PHB_ITEM pItem, HB_BOOL bDefault )
 
 static int set_number( PHB_ITEM pItem, int iOldValue )
 {
-   HB_TRACE(HB_TR_DEBUG, ("set_number(%p, %d)", pItem, iOldValue));
+   HB_TRACE( HB_TR_DEBUG, ( "set_number(%p, %d)", pItem, iOldValue ) );
 
    return HB_IS_NUMERIC( pItem ) ? hb_itemGetNI( pItem ) : iOldValue;
 }
@@ -154,7 +154,7 @@ static char * set_string( PHB_ITEM pItem, char * szOldString )
 {
    char * szString;
 
-   HB_TRACE(HB_TR_DEBUG, ("set_string(%p, %s)", pItem, szOldString));
+   HB_TRACE( HB_TR_DEBUG, ( "set_string(%p, %s)", pItem, szOldString ) );
 
    if( HB_IS_STRING( pItem ) || HB_IS_NIL( pItem ) )
    {
@@ -173,7 +173,7 @@ static void close_handle( PHB_SET_STRUCT pSet, HB_set_enum set_specifier )
 {
    HB_FHANDLE * handle_ptr;
 
-   HB_TRACE(HB_TR_DEBUG, ("close_handle(%p,%d)", pSet, ( int ) set_specifier));
+   HB_TRACE( HB_TR_DEBUG, ( "close_handle(%p,%d)", pSet, ( int ) set_specifier ) );
 
    switch( set_specifier )
    {
@@ -210,9 +210,9 @@ static HB_BOOL is_devicename( const char * szFileName )
               hb_stricmp( szFileName, "CON" ) == 0 ) ) ||
           ( iLen == 4 &&
             ( ( hb_strnicmp( szFileName, "LPT", 3 ) == 0 &&
-                szFileName[3] >= '1' && szFileName[3] <= '3' ) ||
+                szFileName[ 3 ] >= '1' && szFileName[ 3 ] <= '3' ) ||
               ( hb_strnicmp( szFileName, "COM", 3 ) == 0 &&
-                szFileName[3] >= '1' && szFileName[3] <= '9' ) ) ) )
+                szFileName[ 3 ] >= '1' && szFileName[ 3 ] <= '9' ) ) ) )
       {
          return HB_TRUE;
       }
@@ -243,7 +243,7 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
    const char * def_ext;
    HB_BOOL bPipe = HB_FALSE;
 
-   HB_TRACE(HB_TR_DEBUG, ("open_handle(%p, %s, %d, %d)", pSet, file_name, (int) bAppend, (int) set_specifier));
+   HB_TRACE( HB_TR_DEBUG, ( "open_handle(%p, %s, %d, %d)", pSet, file_name, ( int ) bAppend, ( int ) set_specifier ) );
 
    switch( set_specifier )
    {
@@ -360,10 +360,10 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
                }
             }
             else
-               bCreate = HB_TRUE; /* Otherwise create a new file. */
+               bCreate = HB_TRUE;  /* Otherwise create a new file. */
          }
          else
-            bCreate = HB_TRUE; /* Always create a new file for overwrite mode. */
+            bCreate = HB_TRUE;  /* Always create a new file for overwrite mode. */
 
          if( bCreate )
             handle = hb_fsCreate( szFileName, FC_NORMAL );
@@ -390,12 +390,10 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
     * close it again if necessary
     */
    close_handle( pSet, set_specifier );
-   * handle_ptr = handle;
+   *handle_ptr = handle;
    if( *set_value )
       hb_xfree( *set_value );
    *set_value = szFileName;
-
-   return;
 }
 
 HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
@@ -437,20 +435,22 @@ HB_BOOL hb_setSetCentury( HB_BOOL new_century_setting )
          y_stop = 0;
       }
       else if( y_stop < 0 )
-         y_stop = size; /* All digits are year digits */
+         y_stop = size;  /* All digits are year digits */
       y_size = y_stop - y_start;
       /* Calculate size of new format */
       size -= y_size;
       if( new_century_setting )
          size += 4;
-      else size += 2;
+      else
+         size += 2;
 
       /* Create the new date format */
       szNewFormat = ( char * ) hb_xgrab( size + 1 );
 
       {
          int format_len;
-         if( y_start > 0 ) memcpy( szNewFormat, szDateFormat, y_start );
+         if( y_start > 0 )
+            memcpy( szNewFormat, szDateFormat, y_start );
          szNewFormat[ y_start ] = '\0';
          hb_strncat( szNewFormat, "YY", size );
          if( new_century_setting )
@@ -697,7 +697,7 @@ HB_FUNC( SET )
       case HB_SET_EXIT:
          hb_retl( pSet->HB_SET_EXIT );
          /* NOTE: Otherwise ReadExit() will always set the value. [vszakats] */
-         if( pArg2 != NULL && !HB_IS_NIL( pArg2 ) )
+         if( pArg2 != NULL && ! HB_IS_NIL( pArg2 ) )
             pSet->HB_SET_EXIT = set_logical( pArg2, pSet->HB_SET_EXIT );
          break;
       case HB_SET_EXTRA:
@@ -832,7 +832,7 @@ HB_FUNC( SET )
             /* Set the value and limit the range */
             pSet->HB_SET_TYPEAHEAD = set_number( pArg2, pSet->HB_SET_TYPEAHEAD );
             if( pSet->HB_SET_TYPEAHEAD == 0 )
-               /* Do nothing */ ;
+               /* Do nothing */;
             else if( pSet->HB_SET_TYPEAHEAD < 16 )
                pSet->HB_SET_TYPEAHEAD = 16;
             else if( pSet->HB_SET_TYPEAHEAD > 4096 )
@@ -1054,7 +1054,7 @@ HB_FUNC( SET )
 
 void hb_setInitialize( PHB_SET_STRUCT pSet )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_setInitialize(%p)", pSet));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_setInitialize(%p)", pSet ) );
 
    pSet->HB_SET_ALTERNATE = HB_FALSE;
    pSet->HB_SET_ALTFILE = NULL;
@@ -1150,7 +1150,7 @@ void hb_setInitialize( PHB_SET_STRUCT pSet )
 
 void hb_setRelease( PHB_SET_STRUCT pSet )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_setRelease()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_setRelease()" ) );
 
    close_handle( pSet, HB_SET_ALTFILE );
    close_handle( pSet, HB_SET_EXTRAFILE );
@@ -1253,12 +1253,13 @@ void hb_setListenerNotify( HB_set_enum set, HB_set_listener_enum when )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SET_LISTENER_LST pList = ( PHB_SET_LISTENER_LST ) hb_stackSetStruct()->hb_set_listener;
+
    if( pList )
    {
       PHB_SET_LISTENER p_sl = pList->first;
       while( p_sl )
       {
-         ( * p_sl->callback )( set, when );
+         ( *p_sl->callback )( set, when );
          p_sl = p_sl->next;
       }
    }
@@ -1268,6 +1269,7 @@ int hb_setListenerRemove( int listener )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SET_LISTENER_LST pList = ( PHB_SET_LISTENER_LST ) hb_stackSetStruct()->hb_set_listener;
+
    if( pList )
    {
       PHB_SET_LISTENER p_sl = pList->first;
@@ -1659,7 +1661,7 @@ HB_BOOL hb_setSetItem( HB_set_enum set_specifier, PHB_ITEM pItem )
                /* Set the value and limit the range */
                pSet->HB_SET_TYPEAHEAD = hb_itemGetNI( pItem );
                if( pSet->HB_SET_TYPEAHEAD == 0 )
-                  /* Do nothing */ ;
+                  /* Do nothing */;
                else if( pSet->HB_SET_TYPEAHEAD < 16 )
                   pSet->HB_SET_TYPEAHEAD = 16;
                else if( pSet->HB_SET_TYPEAHEAD > 4096 )
@@ -2669,6 +2671,7 @@ const char * hb_setGetOSCODEPAGE( void )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
+
    return pSet->hb_set_oscp ? ( ( PHB_CODEPAGE ) pSet->hb_set_oscp )->id : NULL;
 }
 
@@ -2682,6 +2685,7 @@ const char * hb_setGetDBCODEPAGE( void )
 {
    HB_STACK_TLS_PRELOAD
    PHB_SET_STRUCT pSet = hb_stackSetStruct();
+
    return pSet->hb_set_dbcp ? ( ( PHB_CODEPAGE ) pSet->hb_set_dbcp )->id : NULL;
 }
 

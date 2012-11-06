@@ -59,11 +59,11 @@
          http://www.cs.wm.edu/~va/software/park/
  */
 
-#define MODULUS    2147483647 /* DON'T CHANGE THIS VALUE                  */
-#define MULTIPLIER 48271      /* DON'T CHANGE THIS VALUE                  */
+#define MODULUS     2147483647 /* DON'T CHANGE THIS VALUE                  */
+#define MULTIPLIER  48271      /* DON'T CHANGE THIS VALUE                  */
 
 static HB_TSD_NEW( s_seed, sizeof( HB_I32 ), NULL, NULL );
-#define SEED_PTR ( ( HB_I32 * ) hb_stackGetTSD( &s_seed ) )
+#define SEED_PTR    ( ( HB_I32 * ) hb_stackGetTSD( &s_seed ) )
 
 /* Returns a double value between 0 and 1 */
 double hb_random_num( void )
@@ -73,9 +73,9 @@ double hb_random_num( void )
    t = *seed;
    if( t == 0 )
       t = ( HB_I32 )
-         ( ( hb_dateMilliSeconds() ^ ( HB_PTRUINT ) hb_stackId() ) % MODULUS );
+          ( ( hb_dateMilliSeconds() ^ ( HB_PTRUINT ) hb_stackId() ) % MODULUS );
 
-#if !defined( HB_LONG_LONG_OFF )
+#if ! defined( HB_LONG_LONG_OFF )
    t = ( HB_I32 ) ( ( HB_LONGLONG ) t * MULTIPLIER % MODULUS );
 #else
    {

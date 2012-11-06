@@ -64,6 +64,7 @@ HB_FUNC( HB_BASE64ENCODE )
       if( dst > len )
       {
          const char * s = hb_parcx( 1 );
+
          char * t, * p;
 
          t = p = ( char * ) hb_xgrab( dst );
@@ -74,6 +75,7 @@ HB_FUNC( HB_BASE64ENCODE )
             int x, y;
 
             x = *s++;
+
             *p++ = s_b64chars[ ( x >> 2 ) & 0x3F ];
 
             if( len-- == 0 )
@@ -84,6 +86,7 @@ HB_FUNC( HB_BASE64ENCODE )
                break;
             }
             y = *s++;
+
             *p++ = s_b64chars[ ( ( x << 4 ) | ( ( y >> 4 ) & 0x0F ) ) & 0x3F ];
 
             if( len-- == 0 )
@@ -92,7 +95,9 @@ HB_FUNC( HB_BASE64ENCODE )
                *p++ = '=';
                break;
             }
+
             x = *s++;
+
             *p++ = s_b64chars[ ( ( y << 2 ) | ( ( x >> 6 ) & 3 ) ) & 0x3F ];
             *p++ = s_b64chars[ x & 0x3F ];
          }

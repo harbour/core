@@ -79,7 +79,7 @@ HB_FUNC( ORDWILDSEEK )
          memset( &OrderInfo, 0, sizeof( OrderInfo ) );
          OrderInfo.itmResult = hb_itemNew( NULL );
 
-         if( !fCont )
+         if( ! fCont )
          {
             const char * szKey;
 
@@ -98,7 +98,7 @@ HB_FUNC( ORDWILDSEEK )
                }
             }
          }
-         if( !fFound && errCode == HB_SUCCESS )
+         if( ! fFound && errCode == HB_SUCCESS )
          {
             OrderInfo.itmNewVal = hb_param( 1, HB_IT_STRING );
             if( SELF_ORDINFO( pArea, fBack ? DBOI_SKIPWILDBACK : DBOI_SKIPWILD,
