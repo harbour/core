@@ -66,7 +66,7 @@ THREAD STATIC t_nErrorLevel := 0
 THREAD STATIC t_nErrorMaj := 0
 THREAD STATIC t_nErrorMin := 0
 
-PROCEDURE HB_BLIVERNUM( cString )
+PROCEDURE hb_BliVerNum( cString )
 
    IF HB_ISSTRING( cString )
       s_cSerialNum := cString
@@ -74,7 +74,7 @@ PROCEDURE HB_BLIVERNUM( cString )
 
    RETURN
 
-PROCEDURE HB_BLIDEMDTE( dDate )
+PROCEDURE hb_BliDemDte( dDate )
 
    IF HB_ISDATE( dDate )
       s_cDemoDate := DToS( dDate )
@@ -82,7 +82,7 @@ PROCEDURE HB_BLIDEMDTE( dDate )
 
    RETURN
 
-PROCEDURE HB_BLIDEMMIN( nValue )
+PROCEDURE hb_BliDemMin( nValue )
 
    IF HB_ISNUMERIC( nValue )
       s_nDemoMinutes := nValue
@@ -90,7 +90,7 @@ PROCEDURE HB_BLIDEMMIN( nValue )
 
    RETURN
 
-FUNCTION BLIDBGHAN( nValue )
+FUNCTION BliDbgHan( nValue )
 
    STATIC s_nDebugHandle := 1
    LOCAL nOldValue := s_nDebugHandle
@@ -101,13 +101,13 @@ FUNCTION BLIDBGHAN( nValue )
 
    RETURN nOldValue
 
-FUNCTION BLIDEMDTE()
+FUNCTION BliDemDte()
    RETURN s_cDemoDate
 
-FUNCTION BLIDEMDTEBAS()
+FUNCTION BliDemDteBas()
    RETURN s_cDemoDate
 
-FUNCTION BLIDEMMIN( nValue )
+FUNCTION BliDemMin( nValue )
 
    LOCAL nOldValue := s_nDemoMinutes
 
@@ -117,30 +117,30 @@ FUNCTION BLIDEMMIN( nValue )
 
    RETURN nOldValue
 
-PROCEDURE BLIDISFRG( fhnd )
+PROCEDURE BliDisFrg( fhnd )
 
    HB_SYMBOL_UNUSED( fhnd )
 
    RETURN
 
-FUNCTION BLIERRNUM()
+FUNCTION BliErrNum()
    RETURN s_nError
 
-FUNCTION BLIERRPRM()
+FUNCTION BliErrPrm()
    RETURN s_cErrorParam
 
-FUNCTION BLIERRPRMBAS()
+FUNCTION BliErrPrmBas()
    RETURN s_cErrorParam
 
 /* INCOMPATIBLE: Will return pointer instead of numeric. */
-FUNCTION BLILIBLIB( cLib )
+FUNCTION BliLibLib( cLib )
    RETURN iif( s_lLibOverrides, hb_hrbLoad( HB_HRB_BIND_OVERLOAD, cLib ), hb_hrbLoad( cLib ) )
 
 /* INCOMPATIBLE: Will return array instead of numeric. */
-FUNCTION BLIFUNHAN( pLib, cFunction )
+FUNCTION BliFunHan( pLib, cFunction )
    RETURN hb_hrbGetFunSym( pLib, cFunction )
 
-FUNCTION BLIFUNCAL( ... )
+FUNCTION BliFunCal( ... )
 
    LOCAL aParams := hb_AParams()
    LOCAL pFunction
@@ -153,13 +153,13 @@ FUNCTION BLIFUNCAL( ... )
 
    RETURN NIL
 
-PROCEDURE BLILIBFRE( pLib )
+PROCEDURE BliLibFre( pLib )
 
    hb_hrbUnload( pLib )
 
    RETURN
 
-PROCEDURE BLILIBOVR( lValue )
+PROCEDURE BliLibOvr( lValue )
 
    IF HB_ISLOGICAL( lValue )
       s_lLibOverrides := lValue
@@ -167,25 +167,25 @@ PROCEDURE BLILIBOVR( lValue )
 
    RETURN
 
-PROCEDURE BLILSTFRG( fhnd )
+PROCEDURE BliLstFrg( fhnd )
 
    HB_SYMBOL_UNUSED( fhnd )
 
    RETURN
 
-FUNCTION BLIMEMAVL()
+FUNCTION BliMemAvl()
    RETURN Memory( HB_MEM_CHAR )
 
-FUNCTION BLIMEMSIZ()
+FUNCTION BliMemSiz()
    RETURN Memory( HB_MEM_CHAR )
 
-FUNCTION BLIMEMBLK( nBlockSize )
+FUNCTION BliMemBlk( nBlockSize )
 
    HB_SYMBOL_UNUSED( nBlockSize )
 
    RETURN Memory( HB_MEM_CHAR )
 
-FUNCTION BLIMEMPAK( nValue )
+FUNCTION BliMemPak( nValue )
 
    STATIC s_nGCFrequency := 0
    LOCAL nOldValue := s_nDemoMinutes
@@ -196,52 +196,52 @@ FUNCTION BLIMEMPAK( nValue )
 
    RETURN nOldValue
 
-FUNCTION BLIMEMUSE()
+FUNCTION BliMemUse()
    RETURN Memory( HB_MEM_USED )
 
-PROCEDURE BLIOVLCLR()
+PROCEDURE BliOvlClr()
    RETURN
 
-FUNCTION BLIOVLOPS()
+FUNCTION BliOvlOps()
    RETURN Memory( HB_MEM_CHAR )
 
-PROCEDURE BLIOVLRES()
+PROCEDURE BliOvlRes()
    RETURN
 
-FUNCTION BLIOVLSIZ()
+FUNCTION BliOvlSiz()
    RETURN 0
 
-PROCEDURE BLIOVLSUS( nValue )
+PROCEDURE BliOvlSus( nValue )
 
    HB_SYMBOL_UNUSED( nValue )
 
    RETURN
 
-FUNCTION BLIPTRDEC( nPointer, nValue )
+FUNCTION BliPtrDec( nPointer, nValue )
    RETURN nPointer - nValue
 
-FUNCTION BLIPTRINC( nPointer, nValue )
+FUNCTION BliPtrInc( nPointer, nValue )
    RETURN nPointer + nValue
 
-FUNCTION BLISERNUM()
+FUNCTION BliSerNum()
    RETURN s_cSerialNum
 
-FUNCTION BLISERNUMBAS()
+FUNCTION BliSerNumBas()
    RETURN s_cSerialNum
 
-FUNCTION BLISTRFRG( cString )
+FUNCTION BliStrFrg( cString )
 
    HB_SYMBOL_UNUSED( cString )
 
    RETURN ""
 
-FUNCTION BLIVERNUM()
+FUNCTION BliVerNum()
    RETURN 700
 
-FUNCTION BLICPUREL()
+FUNCTION BliCpuRel()
    RETURN hb_ReleaseCPU()
 
-FUNCTION BLIMGRSTS( nParam )
+FUNCTION BliMgrSts( nParam )
 
    SWITCH nParam
    CASE BliCacheLoc     ; RETURN BliCacheNone
@@ -257,129 +257,129 @@ FUNCTION BLIMGRSTS( nParam )
 
    RETURN 0
 
-FUNCTION SWPADDENV( nBytes )
+FUNCTION SwpAddEnv( nBytes )
 
    HB_SYMBOL_UNUSED( nBytes )
 
    RETURN 32768
 
-FUNCTION SWPADDSTR( cPID, cString )
+FUNCTION SwpAddStr( cPID, cString )
 
    HB_SYMBOL_UNUSED( cPID )
    HB_SYMBOL_UNUSED( cString )
 
    RETURN 1
 
-FUNCTION SWPADDSTRBAS( cPID, cString )
+FUNCTION SwpAddStrBas( cPID, cString )
 
    HB_SYMBOL_UNUSED( cPID )
    HB_SYMBOL_UNUSED( cString )
 
    RETURN 1
 
-FUNCTION SWPCURDIR( lValue )
+FUNCTION SwpCurDir( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .T.
 
-FUNCTION SWPDISMSG( lValue )
+FUNCTION SwpDisMsg( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .F.
 
-FUNCTION SWPEMS320( lValue )
+FUNCTION SwpEms320( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .F.
 
-FUNCTION SWPERRLEV()
+FUNCTION SwpErrLev()
    RETURN t_nErrorLevel
 
-FUNCTION SWPERRMAJ()
+FUNCTION SwpErrMaj()
    RETURN t_nErrorMaj
 
-FUNCTION SWPERRMIN()
+FUNCTION SwpErrMin()
    RETURN t_nErrorMin
 
-FUNCTION SWPFREEMS( nLimitKB )
+FUNCTION SwpFreEms( nLimitKB )
 
    HB_SYMBOL_UNUSED( nLimitKB )
 
    RETURN 0
 
-FUNCTION SWPUSEEMS( lValue )
+FUNCTION SwpUseEms( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .F.
 
-FUNCTION SWPFREXMS( nLimitKB )
+FUNCTION SwpFreXms( nLimitKB )
 
    HB_SYMBOL_UNUSED( nLimitKB )
 
    RETURN 0
 
-FUNCTION SWPUSEXMS( lValue )
+FUNCTION SwpUseXms( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .F.
 
-FUNCTION SWPUSEUMB( lValue )
+FUNCTION SwpUseUmb( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .F.
 
-FUNCTION SWPGETKEY( lValue )
+FUNCTION SwpGetKey( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .F.
 
-FUNCTION SWPGETPID( cIDString )
+FUNCTION SwpGetPid( cIDString )
 
    HB_SYMBOL_UNUSED( cIDString )
 
    RETURN .F.
 
-FUNCTION SWPVIDMDE( lValue )
+FUNCTION SwpVidMde( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .F.
 
-FUNCTION SWPGETSTR()
+FUNCTION SwpGetStr()
    RETURN ""
 
-FUNCTION SWPKEYBRD( cKeyString )
+FUNCTION SwpKeyBrd( cKeyString )
 
    HB_SYMBOL_UNUSED( cKeyString )
 
    RETURN 0
 
-FUNCTION SWPKEYBRDBAS( cKeyString )
+FUNCTION SwpKeyBrdBas( cKeyString )
 
    HB_SYMBOL_UNUSED( cKeyString )
 
    RETURN 0
 
-FUNCTION SWPKEYCLR( nValue )
+FUNCTION SwpKeyClr( nValue )
 
    HB_SYMBOL_UNUSED( nValue )
 
    RETURN 0
 
-FUNCTION SWPNOBOOT( lValue )
+FUNCTION SwpNobOot( lValue )
 
    HB_SYMBOL_UNUSED( lValue )
 
    RETURN .F.
 
-FUNCTION SWPRUNCMD( cCommand, nMem, cRunPath, cTempPath )
+FUNCTION SwpRunCmd( cCommand, nMem, cRunPath, cTempPath )
 
    LOCAL cShell
 
@@ -405,7 +405,7 @@ FUNCTION SWPRUNCMD( cCommand, nMem, cRunPath, cTempPath )
 
    RETURN .T.
 
-FUNCTION SWPSETENV( cString )
+FUNCTION SwpSetEnv( cString )
 
    LOCAL cPair
    LOCAL tmp
@@ -421,25 +421,25 @@ FUNCTION SWPSETENV( cString )
 
    RETURN .T.
 
-FUNCTION SWPSETPID( cIDString )
+FUNCTION SwpSetPid( cIDString )
 
    HB_SYMBOL_UNUSED( cIDString )
 
    RETURN .T.
 
-FUNCTION SWPSETPIDBAS( cIDString )
+FUNCTION SwpSetPidBas( cIDString )
 
    HB_SYMBOL_UNUSED( cIDString )
 
    RETURN .T.
 
-FUNCTION SWPSETSTR( cString )
+FUNCTION SwpSetStr( cString )
 
    HB_SYMBOL_UNUSED( cString )
 
    RETURN .T.
 
-FUNCTION SWPSETSTRBAS( cString )
+FUNCTION SwpSetStrBas( cString )
 
    HB_SYMBOL_UNUSED( cString )
 

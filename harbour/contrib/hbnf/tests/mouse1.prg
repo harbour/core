@@ -5,7 +5,7 @@
 #require "hbnf"
 
 #ifndef __HARBOUR__
-#  define hb_ntos( n ) LTrim( Str( n ) )
+#define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
 // Pass valid row and column values for different video modes to change modes
