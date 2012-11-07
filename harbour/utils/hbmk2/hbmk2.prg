@@ -12343,13 +12343,8 @@ STATIC PROCEDURE GetListOfFunctionsKnownWalkDir( cDir, cRoot, hAll )
 
    cDir := hb_DirSepAdd( PathSepToSelf( cDir ) )
 
-   FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
-      IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
-      ELSEIF "D" $ aFile[ F_ATTR ]
-         GetListOfFunctionsKnownWalkDir( cDir + aFile[ F_NAME ] + hb_ps(), cRoot, hAll )
-      ELSEIF hb_FNameExt( aFile[ F_NAME ] ) == ".hbx"
-         GetListOfFunctionsKnownLoadHBX( cDir + aFile[ F_NAME ], cRoot, hAll )
-      ENDIF
+   FOR EACH aFile IN hb_DirScan( cDir, "*.hbx" )
+      GetListOfFunctionsKnownLoadHBX( cDir + aFile[ F_NAME ], cRoot, hAll )
    NEXT
 
    RETURN

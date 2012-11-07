@@ -63,9 +63,9 @@
 
 /* NOTE: This definitions must be ahead of any and all #include statements */
 
-#if !defined( HB_FM_STATISTICS ) && \
-    !defined( HB_FM_STATISTICS_OFF ) && \
-    !defined( HB_FM_STATISTICS_DYN_OFF )
+#if ! defined( HB_FM_STATISTICS ) && \
+    ! defined( HB_FM_STATISTICS_OFF ) && \
+    ! defined( HB_FM_STATISTICS_DYN_OFF )
 #  define HB_FM_STATISTICS_OFF
 #endif
 
@@ -139,9 +139,9 @@
 /* #define HB_PARANOID_MEM_CHECK */
 
 #if defined( HB_FM_DL_ALLOC )
-#  if !defined( HB_FM_DLMT_ALLOC ) && !defined( HB_FM_DLMT_ALLOC_OFF ) && \
+#  if ! defined( HB_FM_DLMT_ALLOC ) && ! defined( HB_FM_DLMT_ALLOC_OFF ) && \
       defined( HB_MT_VM )
-#     if !( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
+#     if ! ( defined( HB_OS_WIN_CE ) && ( defined( _MSC_VER ) && ( _MSC_VER <= 1500 ) ) )
 #        define HB_FM_DLMT_ALLOC
 #     endif
 #  endif
@@ -165,7 +165,7 @@
 #     endif
 #  else
 #     undef HB_FM_DLMT_ALLOC
-#     define USE_LOCKS     0
+#     define USE_LOCKS        0
 #  endif
 #  if defined( __BORLANDC__ )
 #     pragma warn -aus
@@ -210,11 +210,11 @@
 #     define USE_DL_PREFIX
 #  endif
 #  if defined( HB_OS_WIN )
-#     if !defined( ENOMEM )
-#        define ENOMEM 12
+#     if ! defined( ENOMEM )
+#        define ENOMEM  12
 #     endif
-#     if !defined( EINVAL )
-#        define EINVAL 22
+#     if ! defined( EINVAL )
+#        define EINVAL  22
 #     endif
 #  endif
 #  include "dlmalloc.c"
@@ -265,11 +265,11 @@
 
 #if defined( HB_MT_VM ) && \
     ( defined( HB_FM_STATISTICS ) || defined( HB_FM_DLMT_ALLOC ) || \
-      !defined( HB_ATOM_INC ) || !defined( HB_ATOM_DEC ) )
+      ! defined( HB_ATOM_INC ) || ! defined( HB_ATOM_DEC ) )
 
    static HB_CRITICAL_NEW( s_fmMtx );
-#  define HB_FM_LOCK()        hb_threadEnterCriticalSection( &s_fmMtx )
-#  define HB_FM_UNLOCK()      hb_threadLeaveCriticalSection( &s_fmMtx )
+#  define HB_FM_LOCK()           hb_threadEnterCriticalSection( &s_fmMtx )
+#  define HB_FM_UNLOCK()         hb_threadLeaveCriticalSection( &s_fmMtx )
 
 #else
 
@@ -293,9 +293,9 @@ static HB_BOOL s_fInitedFM = HB_FALSE;
 #ifdef HB_FM_STATISTICS
 
 #ifndef HB_MEMFILER
-#  define HB_MEMFILER  0xff
+#  define HB_MEMFILER         0xff
 #endif
-#define HB_MEMINFO_SIGNATURE 0x19730403
+#define HB_MEMINFO_SIGNATURE  0x19730403
 
 typedef struct _HB_MEMINFO
 {
@@ -329,7 +329,7 @@ typedef struct _HB_MEMINFO
 /* NOTE: we cannot use here HB_TRACE because it will overwrite the
  * function name/line number of code which called hb_xalloc/hb_xgrab
  */
-#define HB_TRACE_FM           HB_TRACE_STEALTH
+#define HB_TRACE_FM  HB_TRACE_STEALTH
 
 static HB_BOOL s_fStatistic = HB_FALSE;
 
@@ -376,7 +376,7 @@ typedef void * PHB_MEMINFO;
    static HB_FORCEINLINE void hb_counterIncrement( volatile HB_COUNTER * p )
    {
       HB_FM_LOCK();
-      ++(*p);
+      ++( *p );
       HB_FM_UNLOCK();
    }
 #  define HB_ATOM_INC( p )    hb_counterIncrement( p )
@@ -384,7 +384,7 @@ typedef void * PHB_MEMINFO;
    {
       int iResult;
       HB_FM_LOCK();
-      iResult = --(*p) != 0;
+      iResult = --( *p ) != 0;
       HB_FM_UNLOCK();
       return iResult;
    }

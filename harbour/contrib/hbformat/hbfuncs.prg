@@ -91,13 +91,8 @@ STATIC PROCEDURE WalkDir( cDir, /* @ */ cFunctions )
 
    cDir := hb_DirSepAdd( cDir )
 
-   FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
-      IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
-      ELSEIF "D" $ aFile[ F_ATTR ]
-         WalkDir( cDir + aFile[ F_NAME ] + hb_ps(), @cFunctions )
-      ELSEIF hb_FNameExt( aFile[ F_NAME ] ) == ".hbx"
-         HBXToFuncList( @cFunctions, hb_MemoRead( cDir + aFile[ F_NAME ] ) )
-      ENDIF
+   FOR EACH aFile IN hb_DirScan( cDir, "*.hbx" )
+      HBXToFuncList( @cFunctions, hb_MemoRead( cDir + aFile[ F_NAME ] ) )
    NEXT
 
    RETURN
