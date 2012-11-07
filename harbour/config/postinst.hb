@@ -693,18 +693,14 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
 
    __hb_extern_get_exception_list( cOutputName, @aInclude, @aExclude, @hDynamic )
 
-   cExtern := "/*" + hb_eol()
-   cExtern += " * $" + "Id" + "$" + hb_eol()
-   cExtern += " */" + hb_eol()
+   cExtern := ""
    IF Empty( aInclude ) .AND. ;
       Empty( aExclude )
-      cExtern += hb_eol()
       cExtern += cLine
       cExtern += " * NOTE: You can add manual override which functions to include or" + hb_eol()
       cExtern += " *       exclude from automatically generated EXTERNAL/DYNAMIC list." + hb_eol()
       cExtern += cHelp
    ELSE
-      cExtern += hb_eol()
       cExtern += cLine
       cExtern += " * NOTE: Following comments are control commands for the generator." + hb_eol()
       cExtern += " *       Do not edit them unless you know what you are doing." + hb_eol()
