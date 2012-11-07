@@ -665,8 +665,8 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 
    iLen += 4; /* Mode indicator length */
 
-
    /*  Select version */
+   iDataLen = 0; /* to pacify warning with some C compilers (MSVS 2010) */
    iVersion = 0; /* to pacify warning */
    for( i = 1; i <= 40; i++ )
    {
