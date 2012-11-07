@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION ft_e2d( sNumE )
+FUNCTION ft_E2D( sNumE )
 
    LOCAL nMant := Val( Left( sNumE, At( "E", sNumE ) - 1 ) )
    LOCAL nExp  := Val( SubStr( sNumE, ;

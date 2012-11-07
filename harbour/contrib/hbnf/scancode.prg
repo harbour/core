@@ -30,11 +30,11 @@
 
 /* TODO: rewrite in C */
 
-FUNCTION FT_SCANCODE()
+FUNCTION ft_ScanCode()
 
    LOCAL aRegs[ INT86_MAX_REGS ]
 
    aRegs[ AX ] := MAKEHI( 0 )
-   FT_INT86( 22, aRegs )
+   ft_int86( 22, aRegs )
 
    RETURN hb_BChar( LOWBYTE( aRegs[ AX ] ) ) + hb_BChar( HIGHBYTE( aRegs[ AX ] ) )

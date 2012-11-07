@@ -6,6 +6,6 @@
 
 PROCEDURE Main()
 
-   ? "Conventional memory: " + Str( FT_SYSMEM() ) + "K installed"
+   ? "Conventional memory: " + Str( ft_SysMem() ) + "K installed"
 
    RETURN

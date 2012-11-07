@@ -58,7 +58,7 @@
  *                           const char * format,
  *                           ... )
  */
-FUNCTION mxmlElementSetAttrf( hNode, cName, cFormat, ... )
+FUNCTION mxmlElementSetAttrF( hNode, cName, cFormat, ... )
    RETURN mxmlElementSetAttr( hNode, cName, hb_StrFormat( cFormat, ... ) )
 
 /*
@@ -67,7 +67,7 @@ FUNCTION mxmlElementSetAttrf( hNode, cName, cFormat, ... )
  *                    const char * format,
  *                    ... )
  */
-FUNCTION mxmlNewTextf( hNode, nWhitespace, cFormat, ... )
+FUNCTION mxmlNewTextF( hNode, nWhitespace, cFormat, ... )
    RETURN mxmlNewText( hNode, nWhitespace, hb_StrFormat( cFormat, ... ) )
 
 /*
@@ -76,5 +76,5 @@ FUNCTION mxmlNewTextf( hNode, nWhitespace, cFormat, ... )
  *                   const char * format,
  *                   ... )
  */
-FUNCTION mxmlSetTextf( hNode, nWhitespace, cFormat, ... )
+FUNCTION mxmlSetTextF( hNode, nWhitespace, cFormat, ... )
    RETURN mxmlSetText( hNode, nWhitespace, hb_StrFormat( cFormat, ... ) )

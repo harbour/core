@@ -50,7 +50,7 @@
  *
  */
 
-PROCEDURE HB_HashAddMember( aName, cType, uInit, oObj )
+PROCEDURE hb_HashAddMember( aName, cType, uInit, oObj )
 
    LOCAL cName
 

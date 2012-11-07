@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_NETPV( nInitialInvestment, nInterestRate, aCashFlow, nNoOfCashFlows )
+FUNCTION ft_NetPV( nInitialInvestment, nInterestRate, aCashFlow, nNoOfCashFlows )
 
    LOCAL nNetPresentValue := 0
 

@@ -25,7 +25,7 @@
 
 #define FORCE_BETWEEN( x, y, z )         ( y := Max( Min( y, z ), x ) )
 
-FUNCTION FT_ADESSORT( aArray, nStartIndex, nEndIndex )
+FUNCTION ft_ADesSort( aArray, nStartIndex, nEndIndex )
 
    __defaultNIL( @nStartIndex, 1 )
    __defaultNIL( @nEndIndex, Len( aArray ) )

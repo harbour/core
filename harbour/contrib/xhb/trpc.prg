@@ -703,7 +703,7 @@ METHOD RecvAuth( lEncrypt ) CLASS tRPCServeCon
       RETURN .F.
    ENDIF
 
-   nLen := HB_GetLen8( cLength )
+   nLen := hb_GetLen8( cLength )
 
    IF ( lEncrypt .AND. nLen > 128 ) .OR. ( ! lEncrypt .AND. nLen > 37 )
       RETURN .F.
@@ -757,10 +757,10 @@ METHOD LaunchChallenge( cUserid, cPassword ) CLASS tRPCServeCon
       cChallenge += hb_BChar( hb_Random( 0, 255 ) )
    NEXT
 
-   ::nChallengeCRC := HB_Checksum( cChallenge )
-   cChallenge := HB_Crypt( cChallenge, ::cCryptKey )
+   ::nChallengeCRC := hb_Checksum( cChallenge )
+   cChallenge := hb_Crypt( cChallenge, ::cCryptKey )
 
-   hb_inetSendAll( ::skRemote, "XHBR94" + HB_CreateLen8( hb_BLen( cChallenge ) ) + cChallenge )
+   hb_inetSendAll( ::skRemote, "XHBR94" + hb_CreateLen8( hb_BLen( cChallenge ) ) + cChallenge )
 
    IF hb_inetErrorCode( ::skRemote ) != 0
       RETURN .F.
@@ -777,7 +777,7 @@ METHOD RecvChallenge() CLASS tRPCServeCon
       RETURN .F.
    ENDIF
 
-   IF ::nChallengeCRC != HB_GetLen8( cNumber )
+   IF ::nChallengeCRC != hb_GetLen8( cNumber )
       RETURN .F.
    ENDIF
 
@@ -809,7 +809,7 @@ METHOD RecvFunction( bComp, bMode ) CLASS tRPCServeCon
       RETURN NIL
    ENDIF
 
-   nLen := HB_GetLen8( cLength )
+   nLen := hb_GetLen8( cLength )
    IF nLen > 65000
       RETURN NIL
    ENDIF
@@ -820,7 +820,7 @@ METHOD RecvFunction( bComp, bMode ) CLASS tRPCServeCon
          RETURN NIL
       ENDIF
 
-      nComp := HB_GetLen8( cLength )
+      nComp := hb_GetLen8( cLength )
    ELSE
       nComp := nLen
    ENDIF
@@ -845,7 +845,7 @@ METHOD RecvFunction( bComp, bMode ) CLASS tRPCServeCon
 
    /* Eventually uncompress it */
    IF bComp
-      cData := HB_Uncompress( nLen, cData )
+      cData := hb_Uncompress( nLen, cData )
    ENDIF
 
    RETURN { cMode, cData }
@@ -855,12 +855,12 @@ METHOD FuncCall( cData ) CLASS tRPCServeCon
    LOCAL cSer, cFuncName, aParams
 
    /* Deserialize all elements */
-   cSer := HB_DeserialBegin( cData )
+   cSer := hb_DeserialBegin( cData )
    IF cSer == NIL
       RETURN .F.
    ENDIF
-   cFuncName := HB_DeserialNext( @cSer )
-   aParams := HB_DeserialNext( @cSer )
+   cFuncName := hb_DeserialNext( @cSer )
+   aParams := hb_DeserialNext( @cSer )
 
    IF aParams == NIL
       RETURN .F.
@@ -877,15 +877,15 @@ METHOD FuncLoopCall( cMode, cData ) CLASS tRPCServeCon
    LOCAL cFuncName, aParams
 
    /* Deserialize all elements */
-   cSer := HB_DeserialBegin( cData )
+   cSer := hb_DeserialBegin( cData )
    IF Empty( cSer )
       RETURN .F.
    ENDIF
-   nBegin := HB_DeserialNext( @cSer )
-   nEnd := HB_DeserialNext( @cSer )
-   nStep := HB_DeserialNext( @cSer )
-   cFuncName := HB_DeserialNext( @cSer )
-   aParams := HB_DeserialNext( @cSer )
+   nBegin := hb_DeserialNext( @cSer )
+   nEnd := hb_DeserialNext( @cSer )
+   nStep := hb_DeserialNext( @cSer )
+   cFuncName := hb_DeserialNext( @cSer )
+   aParams := hb_DeserialNext( @cSer )
 
    IF aParams == NIL
       RETURN .F.
@@ -902,14 +902,14 @@ METHOD FuncForeachCall( cMode, cData ) CLASS tRPCServeCon
    LOCAL aItems
 
    /* Deserialize all elements */
-   cSer := HB_DeserialBegin( cData )
+   cSer := hb_DeserialBegin( cData )
    IF Empty( cSer )
       RETURN .F.
    ENDIF
 
-   cFuncName := HB_DeserialNext( @cSer )
-   aParams := HB_DeserialNext( @cSer )
-   aItems := HB_DeserialNext( @cSer )
+   cFuncName := hb_DeserialNext( @cSer )
+   aParams := hb_DeserialNext( @cSer )
+   aItems := hb_DeserialNext( @cSer )
 
    IF aItems  == NIL
       RETURN .F.
@@ -1114,13 +1114,13 @@ METHOD SendResult( oRet, cFuncName )
       hb_inetSendAll( ::skRemote, "XHBR4010" )
    ELSE
       cData := hb_Serialize( oRet )
-      cOrigLen := HB_CreateLen8( Len( cData ) )
+      cOrigLen := hb_CreateLen8( Len( cData ) )
       ::oServer:OnFunctionReturn( Self, cData )
       // should we compress it ?
 
       IF Len( cData ) > 512
-         cData := HB_Compress( cData )
-         cCompLen := HB_CreateLen8( Len( cData ) )
+         cData := hb_Compress( cData )
+         cCompLen := hb_CreateLen8( Len( cData ) )
          hb_inetSendAll( ::skRemote, "XHBR31" + cOrigLen + cCompLen + ::Encrypt( cData ) )
       ELSE
          hb_inetSendAll( ::skRemote, "XHBR30" + cOrigLen + ::Encrypt( cData ) )
@@ -1151,11 +1151,11 @@ METHOD SendProgress( nProgress, oData ) CLASS tRPCServeCon
       hb_inetSendAll( ::skRemote, "XHBR33" + hb_Serialize( nProgress ) )
    ELSE
       cData := hb_Serialize( oData )
-      cOrigLen := HB_CreateLen8( Len( cData ) )
+      cOrigLen := hb_CreateLen8( Len( cData ) )
       // do we should compress it ?
       IF Len( cData ) > 512
-         cData := HB_Compress( cData )
-         cCompLen := HB_CreateLen8( Len( cData ) )
+         cData := hb_Compress( cData )
+         cCompLen := hb_CreateLen8( Len( cData ) )
          hb_inetSendAll( ::skRemote, "XHBR35" + hb_Serialize( nProgress ) + ;
             cOrigLen + cCompLen + ::Encrypt( cData ) )
       ELSE
@@ -1173,7 +1173,7 @@ METHOD SendProgress( nProgress, oData ) CLASS tRPCServeCon
 METHOD Encrypt( cDataIn ) CLASS tRPCServeCon
 
    IF ::bEncrypted
-      RETURN HB_Crypt( cDataIn, ::cCryptKey )
+      RETURN hb_Crypt( cDataIn, ::cCryptKey )
    ENDIF
 
    RETURN cDataIn
@@ -1181,7 +1181,7 @@ METHOD Encrypt( cDataIn ) CLASS tRPCServeCon
 METHOD Decrypt( cDataIn ) CLASS tRPCServeCon
 
    IF ::bEncrypted
-      RETURN HB_Decrypt( cDataIn, ::cCryptKey )
+      RETURN hb_Decrypt( cDataIn, ::cCryptKey )
    ENDIF
 
    RETURN cDataIn
@@ -1281,7 +1281,7 @@ METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
    LOCAL oFunction
 
    IF HB_ISSTRING( xFunction )
-      oFunction := TRpcFunction():New( xFunction, cVersion, nLevel, oExec, oMethod )
+      oFunction := TRPCFunction():New( xFunction, cVersion, nLevel, oExec, oMethod )
    ELSE
       oFunction := xFunction
    ENDIF
@@ -1429,7 +1429,7 @@ METHOD StartService( skIn ) CLASS tRPCService
    LOCAL oService
 
    hb_mutexLock( ::mtxBusy )
-   oService := tRpcServeCon():New( Self, skIn )
+   oService := TRPCServeCon():New( Self, skIn )
    AAdd( ::aServing, oService )
    oService:Start()
    hb_mutexUnlock( ::mtxBusy )
@@ -1552,7 +1552,7 @@ METHOD AuthorizeChallenge( cUserId, cData ) CLASS tRPCService
       RETURN NIL
    ENDIF
 
-   cData := HB_Decrypt( cData, cKey )
+   cData := hb_Decrypt( cData, cKey )
    nPos := At( cMarker, cData )
    IF nPos == 0
       RETURN NIL

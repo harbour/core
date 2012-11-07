@@ -79,7 +79,7 @@
 
 /* NOTE: In Harbour video pages are ignored. */
 
-PROCEDURE FT_SETVCUR( nPage, nRow, nCol )
+PROCEDURE ft_SetVcur( nPage, nRow, nCol )
 
    HB_SYMBOL_UNUSED( nPage )
 
@@ -89,7 +89,7 @@ PROCEDURE FT_SETVCUR( nPage, nRow, nCol )
 
 /* NOTE: In Harbour video pages are ignored. */
 
-FUNCTION FT_GETVCUR( nPage )
+FUNCTION ft_GetVCur( nPage )
 
    LOCAL nTop, nBot
 

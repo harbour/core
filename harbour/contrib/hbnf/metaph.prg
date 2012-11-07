@@ -91,7 +91,7 @@
  *
  */
 
-FUNCTION FT_METAPH( cName, nSize ) //  Calculates the metaphone of a character string
+FUNCTION ft_Metaph( cName, nSize ) //  Calculates the metaphone of a character string
 
    LOCAL cMeta
 

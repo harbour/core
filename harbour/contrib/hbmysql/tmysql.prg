@@ -298,8 +298,8 @@ CREATE CLASS TMySQLQuery
 
    METHOD Skip( nRows )                 // Same as clipper ones
 
-   METHOD Bof() INLINE ::lBof           //DAVID:  ::nCurRow == 1
-   METHOD Eof() INLINE ::lEof           //DAVID:  ::nCurRow == ::nNumRows
+   METHOD Bof() INLINE ::lBof           // DAVID:  ::nCurRow == 1
+   METHOD Eof() INLINE ::lEof           // DAVID:  ::nCurRow == ::nNumRows
    METHOD RecNo() INLINE ::nCurRow
    METHOD LastRec() INLINE ::nNumRows
    METHOD GoTop() INLINE ::GetRow( 1 )
@@ -411,6 +411,7 @@ METHOD Refresh() CLASS TMySQLQuery
 
 
 METHOD Skip( nRows ) CLASS TMySQLQuery
+
    // DAVID:
    LOCAL lbof
 
@@ -448,7 +449,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
    // Clipper: only SKIP movement can set Bof() to .T.
    lbof := ::Bof()
 
-// mysql_data_seek( ::nResultHandle, ::nCurRow - 1 )
+   // mysql_data_seek( ::nResultHandle, ::nCurRow - 1 )
    ::getRow( ::nCurrow )
 
    IF lbof

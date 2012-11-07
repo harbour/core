@@ -30,7 +30,7 @@
 
 // beginning of demo program
 
-FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
+FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
 
    LOCAL xRtnVal := .F.
    LOCAL nWidest := 0
@@ -140,24 +140,24 @@ FUNCTION FT_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    FOR i := 1 TO Len( aPos )
       FOR j := 1 TO Len( aPos[ i ] )
 
-         FT_SetAttr( nBoxTop + i, ;
+         ft_SetAttr( nBoxTop + i, ;
             aPos[ i, j, 1 ] + aLeft[ i ] - 1, ;
             nBoxTop + i, ;
             aPos[ i, j, 2 ] + aLeft[ i ] - 1, ;
-            FT_Color2N( aInfo[ 2, Len( aInfo[ 2 ] ) ] ) )
+            ft_Color2N( aInfo[ 2, Len( aInfo[ 2 ] ) ] ) )
       NEXT
    NEXT
 
    IF cKey != NIL
       IF Len( cKey ) == 1
-         nOption := FT_SInkey( 0 )
+         nOption := ft_SInkey( 0 )
          IF Upper( Chr( nOption ) ) == cKey
             xRtnVal := .T.
          ENDIF
       ELSE
          nOption := 0
          DO WHILE hb_BAt( Upper( Chr( nOption ) ), Upper( cKey ) ) == 0
-            nOption := FT_SInkey( 0 )
+            nOption := ft_SInkey( 0 )
          ENDDO
          xRtnVal := nOption
       ENDIF

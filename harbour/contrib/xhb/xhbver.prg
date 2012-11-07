@@ -54,7 +54,7 @@
 
 #include "xhbver.ch"
 
-FUNCTION hb_buildinfo( n )
+FUNCTION hb_BuildInfo( n )
 
    LOCAL v := Array( _HB_VER_LAST - 1 )
 

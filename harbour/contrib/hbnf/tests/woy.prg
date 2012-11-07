@@ -24,8 +24,8 @@ PROCEDURE Main()
          EXIT
       ENDIF
 
-      @ 4, 10 SAY "Is Day Number " + Str( FT_DOY( dDate ), 10 )
-      @ 6, 10 SAY "Is in Week Number " + Str( FT_WOY( dDate ), 10 )
+      @ 4, 10 SAY "Is Day Number " + Str( ft_DoY( dDate ), 10 )
+      @ 6, 10 SAY "Is in Week Number " + Str( ft_WoY( dDate ), 10 )
       @ 7, 0
 
       WAIT

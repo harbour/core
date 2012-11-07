@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION ft_rand1( nMax )
+FUNCTION ft_Rand1( nMax )
 
    THREAD STATIC t_nSeed
 

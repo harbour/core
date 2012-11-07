@@ -20,7 +20,7 @@
  *
  */
 
-FUNCTION ft_sqzn( nValue, nSize, nDecimals )
+FUNCTION ft_Sqzn( nValue, nSize, nDecimals )
 
    LOCAL tmpstr, cCompressed, k
 
@@ -39,7 +39,7 @@ FUNCTION ft_sqzn( nValue, nSize, nDecimals )
 
    RETURN cCompressed
 
-FUNCTION ft_unsqzn( cCompressed, nSize, nDecimals )
+FUNCTION ft_Unsqzn( cCompressed, nSize, nDecimals )
 
    LOCAL tmp := "", k, cValue, multi
 

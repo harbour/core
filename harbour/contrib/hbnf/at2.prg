@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
+FUNCTION ft_At2( cSearch, cTarget, nOccurs, lCaseSens )
 
    LOCAL nCount, nPos, nPos2 := 0
    LOCAL cSubstr := cTarget
@@ -60,7 +60,7 @@ FUNCTION FT_AT2( cSearch, cTarget, nOccurs, lCaseSens )
 
    RETURN nPos2
 
-FUNCTION FT_RAT2( cSearch, cTarget, nOccurs, lCaseSens )
+FUNCTION ft_RAt2( cSearch, cTarget, nOccurs, lCaseSens )
 
    LOCAL nCount, nPos, nPos2 := 0
    LOCAL cSubstr := cTarget

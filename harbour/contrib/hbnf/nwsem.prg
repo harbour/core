@@ -43,7 +43,7 @@
 
 /* TODO: rewrite in C */
 
-FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
+FUNCTION ft_NWSemOpen( cName, nInitVal, nHandle, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], cRequest, nRet
 
@@ -71,7 +71,7 @@ FUNCTION ft_nwSemOpen( cName, nInitVal, nHandle, nOpenCnt )
 
 /* TODO: rewrite in C */
 
-FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
+FUNCTION ft_NWSemEx( nHandle, nValue, nOpenCnt )
 
    LOCAL aRegs[ INT86_MAX_REGS ], nRet
 
@@ -91,15 +91,15 @@ FUNCTION ft_nwSemEx( nHandle, nValue, nOpenCnt )
 
    RETURN iif( nRet < 0, nRet + 256, nRet )
 
-FUNCTION ft_nwSemWait( nHandle, nTimeout )
+FUNCTION ft_NWSemWait( nHandle, nTimeout )
 
    RETURN _ftnwsem( WAIT_SEMAPHORE, nHandle, nTimeout )
 
-FUNCTION ft_nwSemSig( nHandle )
+FUNCTION ft_NWSemSig( nHandle )
 
    RETURN _ftnwsem( SIGNAL_SEMAPHORE, nHandle )
 
-FUNCTION ft_nwSemClose( nHandle )
+FUNCTION ft_NWSemClose( nHandle )
 
    RETURN _ftnwsem( CLOSE_SEMAPHORE, nHandle )
 
@@ -127,19 +127,19 @@ STATIC FUNCTION _ftnwsem( nOp, nHandle, nTimeout )
 
    RETURN nRet
 
-FUNCTION ft_nwSemLock( cSemaphore, nHandle )
+FUNCTION ft_NWSemLock( cSemaphore, nHandle )
 
    LOCAL nOpenCnt := 0
-   LOCAL nRc := FT_NWSEMOPEN( cSemaphore, 0, @nHandle, @nOpenCnt )
+   LOCAL nRc := ft_NWSemOpen( cSemaphore, 0, @nHandle, @nOpenCnt )
 
    IF nRc == 0
       IF nOpenCnt != 1
-         ft_nwSemClose( nHandle )
+         ft_NWSemClose( nHandle )
       ENDIF
    ENDIF
 
    RETURN nOpenCnt == 1
 
-FUNCTION ft_nwSemUnLock( nHandle )
+FUNCTION ft_NWSemUnlock( nHandle )
 
-   RETURN ft_nwSemClose( nHandle ) == 0
+   RETURN ft_NWSemClose( nHandle ) == 0

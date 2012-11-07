@@ -30,7 +30,7 @@
 
 #define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
-FUNCTION FT_PCHR( c_nums )
+FUNCTION ft_PChr( c_nums )
 
    LOCAL c_ret := "", c_st := 0, c_part, c_st2, c_hex := "0123456789ABCDEF"
    LOCAL c_upper, c_t1, c_t2

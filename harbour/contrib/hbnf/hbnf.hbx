@@ -34,7 +34,7 @@ DYNAMIC ft_AcctWeek
 DYNAMIC ft_AcctYear
 DYNAMIC ft_Adapter
 DYNAMIC ft_Adder
-DYNAMIC ft_AddWkdy
+DYNAMIC ft_AddWkDy
 DYNAMIC ft_ADesSort
 DYNAMIC ft_AEMaxLen
 DYNAMIC ft_AEMinLen

@@ -253,7 +253,7 @@ FUNCTION ParseString( cString, cDelim, nRet )
 
 FUNCTION CgiParseVar( cEnvVar )
 
-   cEnvVar := HtmlDecodeURL( cEnvVar )
+   cEnvVar := HtmlDecodeUrl( cEnvVar )
 
    IF "=" $ cEnvVar .AND. Len( cEnvVar ) > At( "=", cEnvVar )
       cEnvVar := AllTrim( SubStr( cEnvVar, At( "=", cEnvVar ) + 1 ) )

@@ -30,7 +30,7 @@
  *
  */
 
-FUNCTION FT_ACCTADJ( dGivenDate, lIsEnd )
+FUNCTION ft_AcctAdj( dGivenDate, lIsEnd )
 
    LOCAL nTemp
 
@@ -40,7 +40,7 @@ FUNCTION FT_ACCTADJ( dGivenDate, lIsEnd )
 
    hb_default( @lIsEnd, .F. )
 
-   nTemp := FT_DAYTOBOW( dGivenDate )
+   nTemp := ft_DayToBoW( dGivenDate )
 
    IF nTemp > ( 2 + iif( lIsEnd, 0, 1 ) )
       dGivenDate += 7 - nTemp          // Next Week Start (This Week End + 1)

@@ -6,7 +6,7 @@
 
 PROCEDURE Main( cMode )
 
-   FT_SETMODE( Val( cMode ) )
-   ? "Video mode is: " + Str( FT_GETMODE() )
+   ft_SetMode( Val( cMode ) )
+   ? "Video mode is: " + Str( ft_GetMode() )
 
    RETURN

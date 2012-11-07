@@ -6,6 +6,6 @@
 
 PROCEDURE Main()
 
-   FT_PEGS()
+   ft_Pegs()
 
    RETURN

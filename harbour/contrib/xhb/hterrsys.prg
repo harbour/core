@@ -168,7 +168,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
 
    FWrite( nH, "</TD>" + CRLF() + "</TR>" + CRLF() + "</TABLE>" + CRLF() )
 
-   HtmlJsCmd( nH, 'alert("There was an error processing your request:\n' + ;
+   HtmlJSCmd( nH, 'alert("There was an error processing your request:\n' + ;
       'Look at the bottom of this page for\n' + ;
       'error description and parameters...");' )
    FWrite( nH, "</FONT>" + CRLF() + "</BODY></HTML>" + CRLF() )

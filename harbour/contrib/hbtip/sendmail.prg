@@ -140,17 +140,17 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       IF Len( xTo ) > 1
          FOR EACH cTo IN xTo
             IF cTo:__enumIndex() != 1
-               cTmp += tip_GetRawEMail( AllTrim( cTo ) ) + ","
+               cTmp += tip_GetRawEmail( AllTrim( cTo ) ) + ","
             ENDIF
          NEXT
          cTmp := SubStr( cTmp, 1, Len( cTmp ) - 1 )
       ENDIF
-      cTo := tip_GetRawEMail( AllTrim( xTo[ 1 ] ) )
+      cTo := tip_GetRawEmail( AllTrim( xTo[ 1 ] ) )
       IF Len( cTmp ) > 0
          cTo += "," + cTmp
       ENDIF
    ELSEIF HB_ISSTRING( xTo )
-      cTo := tip_GetRawEMail( AllTrim( xTo ) )
+      cTo := tip_GetRawEmail( AllTrim( xTo ) )
    ENDIF
 
 
@@ -164,12 +164,12 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       cCC := ""
       IF Len( xCC ) > 0
          FOR EACH cTmp IN xCC
-            cCC += tip_GetRawEMail( AllTrim( cTmp ) ) + ","
+            cCC += tip_GetRawEmail( AllTrim( cTmp ) ) + ","
          NEXT
          cCC := SubStr( cCC, 1, Len( cCC ) - 1 )
       ENDIF
    ELSEIF HB_ISSTRING( xCC )
-      cCC := tip_GetRawEMail( AllTrim( xCC ) )
+      cCC := tip_GetRawEmail( AllTrim( xCC ) )
    ENDIF
 
 
@@ -183,21 +183,21 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       cBCC := ""
       IF Len( xBCC ) > 0
          FOR EACH cTmp IN xBCC
-            cBCC += tip_GetRawEMail( AllTrim( cTmp ) ) + ","
+            cBCC += tip_GetRawEmail( AllTrim( cTmp ) ) + ","
          NEXT
          cBCC := SubStr( cBCC, 1, Len( cBCC ) - 1 )
       ENDIF
    ELSEIF HB_ISSTRING( xBCC )
-      cBCC := tip_GetRawEMail( AllTrim( xBCC ) )
+      cBCC := tip_GetRawEmail( AllTrim( xBCC ) )
    ENDIF
 
    cUser := StrTran( cUser, "@", "&at;" )
 
    IF cPopServer != NIL .AND. lPopAuth
       BEGIN SEQUENCE
-         oUrl1 := tUrl():New( iif( lTLS, "pop3s://", "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
+         oUrl1 := TUrl():New( iif( lTLS, "pop3s://", "pop://" ) + cUser + ":" + cPass + "@" + cPopServer + "/" )
          oUrl1:cUserid := StrTran( cUser, "&at;", "@" )
-         oPop := tIPClientPOP():New( oUrl1, xTrace )
+         oPop := TIPClientPOP():New( oUrl1, xTrace )
          IF oPop:Open()
             oPop:Close()
          ELSE
@@ -213,7 +213,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    ENDIF
 
    BEGIN SEQUENCE
-      oUrl := tUrl():New( iif( lTLS, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer )
+      oUrl := TUrl():New( iif( lTLS, "smtps://", "smtp://" ) + cUser + iif( Empty( cSMTPPass ), "", ":" + cSMTPPass ) + "@" + cServer )
    RECOVER
       lReturn := .F.
    END SEQUENCE
@@ -228,7 +228,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    oUrl:cFile := cTo + iif( Empty( cCC ), "", "," + cCC ) + iif( Empty( cBCC ), "", "," + cBCC )
 
    BEGIN SEQUENCE
-      oInmail := tIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
+      oInmail := TIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
    RECOVER
       lReturn := .F.
    END SEQUENCE
@@ -291,7 +291,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
       ENDIF
 
       BEGIN SEQUENCE
-         oInmail := tIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
+         oInmail := TIPClientSMTP():New( oUrl, xTrace, NIL, cClientHost )
       RECOVER
          lReturn := .F.
       END SEQUENCE
@@ -317,7 +317,7 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
 
    ENDIF
 
-   oInMail:oUrl:cUserid := tip_GetRawEMail( cFrom )
+   oInMail:oUrl:cUserid := tip_GetRawEmail( cFrom )
 
    oInMail:Write( hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, aFiles, nPriority, lRead, cReplyTo, cCharset, cEncoding ) )
    oInMail:Commit()
@@ -376,17 +376,17 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
       ENDIF
    ENDIF
 
-   oMail := tipMail():new()
+   oMail := TIPMail():new()
    oMail:SetEncoder( cEncoding )
    oMail:SetCharset( cCharset )
    oMail:SetHeader( cSubject, cFrom, xTo, xCC )
-   oMail:hHeaders[ "Date" ] := tip_Timestamp()
+   oMail:hHeaders[ "Date" ] := tip_TimeStamp()
    IF ! Empty( cReplyTo )
       oMail:hHeaders[ "Reply-to" ] := cReplyTo
    ENDIF
 
    IF ! Empty( aFiles )
-      oAttach := tipMail():new()
+      oAttach := TIPMail():new()
       oAttach:SetEncoder( cEncoding )
       oAttach:SetCharset( cCharset )
 
@@ -437,7 +437,7 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
 
       cData += Chr( 13 ) + Chr( 10 )
 
-      oAttach := TipMail():New()
+      oAttach := TIPMail():New()
       oAttach:SetCharset( cCharset )
 
       hb_FNameSplit( cFile,, @cFname, @cFext )
@@ -489,7 +489,7 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
    NEXT
 
    IF lRead
-      oMail:hHeaders[ "Disposition-Notification-To" ] := tip_GetRawEMail( cFrom )
+      oMail:hHeaders[ "Disposition-Notification-To" ] := tip_GetRawEmail( cFrom )
    ENDIF
 
    IF nPriority != 3

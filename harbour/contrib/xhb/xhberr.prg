@@ -347,7 +347,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, "Time...............: " + Time()          )
 
       FWriteLine( nHandle, "" )
-      FWriteLine( nHandle, "Application name...: " + hb_cmdargargv() )
+      FWriteLine( nHandle, "Application name...: " + hb_CmdArgArgV() )
       FWriteLine( nHandle, "Workstation name...: " + NetName() )
       FWriteLine( nHandle, "Available memory...: " + strvalue( Memory( 0 ) )  )
       FWriteLine( nHandle, "Current disk.......: " + DiskName() )
@@ -360,7 +360,7 @@ STATIC FUNCTION LogError( oerr )
       FWriteLine( nHandle, "C/C++ compiler.....: " + hb_Compiler() )
 
       FWriteLine( nHandle, "Multi Threading....: " + iif( hb_mtvm(), "YES", "NO" ) )
-      FWriteLine( nHandle, "VM Optimization....: " + strvalue( Hb_VmMode() ) )
+      FWriteLine( nHandle, "VM Optimization....: " + strvalue( hb_VMMode() ) )
 
       IF hb_IsFunction( "Select" )
          FWriteLine( nHandle, "" )
@@ -481,13 +481,13 @@ STATIC FUNCTION LogError( oerr )
 
       hb_WAeval( {||
          IF hb_IsFunction( "Select" )
-            FWriteLine( nHandle, "Work Area No ......: " + strvalue( &("Select()" ) ) )
+            FWriteLine( nHandle, "Work Area No ......: " + strvalue( &( "Select()" ) ) )
          ENDIF
          IF hb_IsFunction( "Alias" )
             FWriteLine( nHandle, "Alias .............: " + &( "Alias()" ) )
          ENDIF
          IF hb_IsFunction( "RecNo" )
-            FWriteLine( nHandle, "Current Recno .....: " + strvalue( &("RecNo()" ) ) )
+            FWriteLine( nHandle, "Current Recno .....: " + strvalue( &( "RecNo()" ) ) )
          ENDIF
          IF hb_IsFunction( "DbFilter" )
             FWriteLine( nHandle, "Current Filter ....: " + &( "DbFilter()" ) )
@@ -496,10 +496,10 @@ STATIC FUNCTION LogError( oerr )
             FWriteLine( nHandle, "Relation Exp. .....: " + &( "DbRelation()" ) )
          ENDIF
          IF hb_IsFunction( "IndexOrd" )
-            FWriteLine( nHandle, "Index Order .......: " + strvalue( &("IndexOrd(0)" ) ) )
+            FWriteLine( nHandle, "Index Order .......: " + strvalue( &( "IndexOrd(0)" ) ) )
          ENDIF
          IF hb_IsFunction( "IndexKey" )
-            FWriteLine( nHandle, "Active Key ........: " + strvalue( &("IndexKey(0)" ) ) )
+            FWriteLine( nHandle, "Active Key ........: " + strvalue( &( "IndexKey(0)" ) ) )
          ENDIF
          FWriteLine( nHandle, "" )
          RETURN .T.
@@ -655,7 +655,9 @@ STATIC FUNCTION strvalue( c, l )
       cr := DToC( c )
       EXIT
    CASE "L"
-//    cr := iif( l, iif( c, "On", "Off" ), iif( c, "True", "False" ) )
+#if 0
+      cr := iif( l, iif( c, "On", "Off" ), iif( c, "True", "False" ) )
+#endif
       cr := iif( l, iif( c, "On", "Off" ), iif( c, ".t.", ".f." ) )
       EXIT
    ENDSWITCH

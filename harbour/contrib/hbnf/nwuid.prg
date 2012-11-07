@@ -35,14 +35,14 @@
 
 /* TODO: rewrite in C */
 
-FUNCTION FT_NWUID( nConn )
+FUNCTION ft_NWUID( nConn )
 
    LOCAL aRegs[ INT86_MAX_REGS ]
    LOCAL cReqPkt
    LOCAL cRepPkt
 
    IF nConn == NIL
-      nConn := FT_NWLSTAT()
+      nConn := ft_NWLStat()
    ENDIF
 
    // Set up request packet
@@ -60,6 +60,6 @@ FUNCTION FT_NWUID( nConn )
    aRegs[ ES ] := cRepPkt
    aRegs[ DI ] := REG_ES
 
-   FT_INT86( 33, aRegs )
+   ft_int86( 33, aRegs )
 
    RETURN AllTrim( StrTran( hb_BSubStr( aRegs[ ES ], 9, 48 ), hb_BChar( 0 ) ) )

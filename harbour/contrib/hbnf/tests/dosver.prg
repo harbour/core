@@ -6,6 +6,6 @@
 
 PROCEDURE Main()
 
-   ? "Dos version: " + FT_DOSVER()
+   ? "Dos version: " + ft_DosVer()
 
    RETURN

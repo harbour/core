@@ -15,11 +15,11 @@ PROCEDURE Main()
    SET DATE ANSI
    SET CENTURY OFF /* TOFIX: RTEs with ON */
 
-   FT_SAVEARR( aArray, "invoice.dat", @nErrorCode )
+   ft_SaveArr( aArray, "invoice.dat", @nErrorCode )
    IF nErrorCode == 0
       CLS
       DispArray( aArray )
-      aSave := FT_RESTARR( "invoice.dat", @nErrorCode )
+      aSave := ft_RestArr( "invoice.dat", @nErrorCode )
       IF nErrorCode == 0
          DispArray( aSave )
       ELSE

@@ -20,7 +20,7 @@ PROCEDURE Main()
       RETURN
    ENDIF
 
-   oDoc := TXmlDocument():New( cString, HBXML_STYLE_NOESCAPE )
+   oDoc := TXMLDocument():New( cString, HBXML_STYLE_NOESCAPE )
    IF oDoc:nError != HBXML_ERROR_NONE
       WAIT "xml file parsing error " + Str( oDoc:nError )
       RETURN
@@ -42,7 +42,7 @@ PROCEDURE Main()
 
       cNote := ""
       cDiscount := ""
-      oIterator := TXmlIterator():New( oBook )
+      oIterator := TXMLIterator():New( oBook )
 
       DO WHILE .T.
          oCurrent := oIterator:Next()

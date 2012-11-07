@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   LOCAL nLoaded := ft_isshare()
+   LOCAL nLoaded := ft_IsShare()
 
    DO CASE
    CASE nLoaded == 0

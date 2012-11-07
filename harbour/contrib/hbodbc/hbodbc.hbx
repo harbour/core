@@ -26,9 +26,9 @@
 #endif
 
 DYNAMIC BrowseODBC
-DYNAMIC hb_ODBCNumSetLen
-DYNAMIC hb_ODBCSToD
-DYNAMIC hb_ODBCVer
+DYNAMIC hb_odbcNumSetLen
+DYNAMIC hb_odbcSToD
+DYNAMIC hb_odbcVer
 DYNAMIC SQLAllocConnect
 DYNAMIC SQLAllocEnv
 DYNAMIC SQLAllocStmt

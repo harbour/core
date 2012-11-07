@@ -97,7 +97,7 @@ PROCEDURE DrawBarcode( hCairo, nY, nLineWidth, cType, cCode, nFlags )
 
 STATIC FUNCTION hb_zebra_draw_cairo( hZebra, hCairo, ... )
 
-   IF hb_zebra_GetError( hZebra ) != 0
+   IF hb_zebra_geterror( hZebra ) != 0
       RETURN HB_ZEBRA_ERROR_INVALIDZEBRA
    ENDIF
 

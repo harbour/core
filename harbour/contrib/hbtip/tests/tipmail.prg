@@ -27,7 +27,7 @@ PROCEDURE Main( cFileName )
          QUIT
       ENDIF
    ENDIF
-   oMail := TipMail():New()
+   oMail := TIPMail():New()
    IF oMail:FromString( cData ) == 0
       ? "Malformed mail. Dumping up to where parsed"
    ENDIF

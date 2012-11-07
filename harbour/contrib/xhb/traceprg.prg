@@ -62,7 +62,7 @@ STATIC s_lSET_TRACE      := .T.
 STATIC s_cSET_TRACEFILE  := "trace.log"
 STATIC s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
 
-FUNCTION xhb_setTrace( xTrace )
+FUNCTION xhb_SetTrace( xTrace )
 
    LOCAL lTrace := s_lSET_TRACE
 
@@ -78,7 +78,7 @@ FUNCTION xhb_setTrace( xTrace )
 
    RETURN lTrace
 
-FUNCTION xhb_setTraceFile( xFile, lAppend )
+FUNCTION xhb_SetTraceFile( xFile, lAppend )
 
    LOCAL cTraceFile := s_cSET_TRACEFILE
 
@@ -91,7 +91,7 @@ FUNCTION xhb_setTraceFile( xFile, lAppend )
 
    RETURN cTraceFile
 
-FUNCTION xhb_setTraceStack( xLevel )
+FUNCTION xhb_SetTraceStack( xLevel )
 
    LOCAL nTraceLevel := s_nSET_TRACESTACK
 

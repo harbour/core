@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_BYTENEG( cByte )
+FUNCTION ft_ByteNeg( cByte )
 
    IF HB_ISSTRING( cByte )
       RETURN hb_BChar( ( 256 - hb_BCode( cByte ) ) % 256 )

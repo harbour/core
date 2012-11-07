@@ -17,7 +17,7 @@ PROCEDURE Main()
 
    LOCAL bio
 
-   SSL_INIT()
+   SSL_init()
 
    ? bio := BIO_new_fd( 1, HB_BIO_NOCLOSE )
    ? "BIO_WRITE", BIO_write( bio, "Hello world!" + hb_eol() )

@@ -26,7 +26,7 @@
 #define CASE_AT( x, y, z )               z[ At( x, y ) + 1 ]
 #define FORCE_BETWEEN( x, y, z )         ( y := Max( Min( y, z ), x ) )
 
-FUNCTION FT_ASUM( aArray, nStartIndex, nEndIndex )
+FUNCTION ft_ASum( aArray, nStartIndex, nEndIndex )
 
    LOCAL nSumTotal := 0                 // Array Sum
 

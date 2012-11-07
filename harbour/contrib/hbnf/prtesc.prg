@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_ESCCODE( cInput )
+FUNCTION ft_EscCode( cInput )
 
    LOCAL cOutput  := ""
    LOCAL cCurrent

@@ -281,7 +281,9 @@ METHOD Build( xPos, yPos ) CLASS TJsList
    cStr += "</HEAD>" + CRLF()
    cStr += '<BODY ONLOAD="listInit();" BGCOLOR="#FFFFFF">' + CRLF()
    cStr += '<DIV ID="spacer"></DIV>' + CRLF()
-// cStr += '<DIV ID="' + ::cMainNode + 'Item0" NAME="' + ::cMainNode + "Item0"></DIV>' + CRLF()
+#if 0
+   cStr += '<DIV ID="' + ::cMainNode + 'Item0" NAME="' + ::cMainNode + 'Item0"></DIV>' + CRLF()
+#endif
 
    FOR i := 0 TO ::nItems
       cStr += '<DIV ID="' + ::cMainNode + 'Item' + hb_ntos( i ) + '" NAME="' + ::cMainNode + 'Item' + hb_ntos( i ) + '"></DIV>' + CRLF()

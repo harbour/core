@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_BYT2HEX( cByte )
+FUNCTION ft_Byt2Hex( cByte )
 
    IF HB_ISSTRING( cByte )
       RETURN hb_StrToHex( Left( cByte, 1 ) ) + "h"

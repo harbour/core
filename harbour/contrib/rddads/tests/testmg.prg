@@ -70,7 +70,7 @@ PROCEDURE Main()
 #if defined( __HBDYNLOAD__RDDADS__ )
    LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libPostfix() ) )
 
-   hb_rddadsRegister()
+   hb_rddADSRegister()
 
    HB_SYMBOL_UNUSED( l )
 #endif

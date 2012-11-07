@@ -22,7 +22,7 @@
 
 /* display vertical menu */
 
-FUNCTION ft_menu2( aMenuInfo, cColors )
+FUNCTION ft_Menu2( aMenuInfo, cColors )
 
    LOCAL nChoice     := 1
    LOCAL nOptions    := Len( aMenuInfo )

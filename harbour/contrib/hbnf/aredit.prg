@@ -54,7 +54,7 @@
 //  NOTE: When evaluated a code block is passed the array element to
 //          be edited
 
-FUNCTION FT_ArEdit( nTop, nLeft, nBot, nRight, ;
+FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
       ar, nElem, aHeadings, aBlocks, bGetFunc )
 
    LOCAL exit_requested, nKey, meth_no

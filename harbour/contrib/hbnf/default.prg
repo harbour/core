@@ -50,7 +50,7 @@
  *
  */
 
-FUNCTION FT_DEFAULT( cDrive )
+FUNCTION ft_Default( cDrive )
 
    BEGIN SEQUENCE WITH {|| Break() }
       hb_CurDrive( cDrive )

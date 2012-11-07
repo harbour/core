@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_FDAY( dDateToChk )
+FUNCTION ft_FDay( dDateToChk )
 
    IF ! HB_ISDATE( dDatetoChk )
       dDatetoChk := Date()

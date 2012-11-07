@@ -31,6 +31,6 @@
 
 #include "hbmemory.ch"
 
-FUNCTION FT_SYSMEM()
+FUNCTION ft_SysMem()
 
    RETURN Memory( HB_MEM_FM )

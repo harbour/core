@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_BITSET( cInbyte, nBitpos )
+FUNCTION ft_BitSet( cInbyte, nBitpos )
 
    IF HB_ISSTRING( cInbyte ) .AND. HB_ISNUMERIC( nBitpos )
       RETURN hb_BChar( hb_bitSet( hb_BCode( cInbyte ), nBitpos ) )

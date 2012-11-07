@@ -26,6 +26,6 @@
  *
  */
 
-FUNCTION FT_HEX2DEC( cHexNum )
+FUNCTION ft_Hex2Dec( cHexNum )
 
    RETURN hb_HexToNum( cHexNum )

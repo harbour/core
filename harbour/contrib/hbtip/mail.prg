@@ -139,7 +139,7 @@ METHOD New( cBody, oEncoder ) CLASS TipMail
 METHOD SetEncoder( cEncoder ) CLASS TipMail
 
    IF HB_ISSTRING( cEncoder )
-      ::oEncoder := TIp_GetEncoder( cEncoder )
+      ::oEncoder := tip_GetEncoder( cEncoder )
    ELSE
       ::oEncoder := cEncoder
    ENDIF
@@ -438,7 +438,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
    // boundary.
 
    IF "Content-Transfer-Encoding" $ ::hHeaders
-      ::oEncoder := TIp_GetEncoder( ::hHeaders[ "Content-Transfer-Encoding" ] )
+      ::oEncoder := tip_GetEncoder( ::hHeaders[ "Content-Transfer-Encoding" ] )
    ENDIF
 
    // se if we have subparts:
@@ -483,7 +483,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
          ENDIF
 
          // Add our subsection
-         oSubSection := TipMail():New()
+         oSubSection := TIPMail():New()
          nPos := oSubSection:FromString( cMail, cSubBoundary, ;
             nLinePos + 2 )
 
@@ -567,14 +567,14 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
       RETURN .F.
    ENDIF
 
-   IF ! ::setFieldPart( "From", LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( cFrom ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( cFrom ) ) + ">" ) )
+   IF ! ::setFieldPart( "From", LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( cFrom ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( cFrom ) ) + ">" ) )
       RETURN .F.
    ENDIF
 
    cTo := ""
    imax := Len( aTO )
    FOR i := 1 TO imax
-      cTo += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aTo[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aTo[ i ] ) ) + ">" )
+      cTo += LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( aTo[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( aTo[ i ] ) ) + ">" )
       IF i < imax
          cTo += "," + tip_CRLF() + " "
       ENDIF
@@ -592,7 +592,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
       cCC := ""
       imax := Len( aCC )
       FOR i := 2 TO imax
-         cCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aCC[ i ] ) ) + ">" )
+         cCC += LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( aCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( aCC[ i ] ) ) + ">" )
          IF i < imax
             cCC += "," + tip_CRLF() + " "
          ENDIF
@@ -607,7 +607,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
       cBCC := ""
       imax := Len( aBCC )
       FOR i := 2 TO imax
-         cBCC += LTrim( WordEncodeQ( tip_GetNameEMail( AllTrim( aBCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEMail( AllTrim( aBCC[ i ] ) ) + ">" )
+         cBCC += LTrim( WordEncodeQ( tip_GetNameEmail( AllTrim( aBCC[ i ] ) ), ::cCharset ) + " <" + tip_GetRawEmail( AllTrim( aBCC[ i ] ) ) + ">" )
          IF i < imax
             cBCC += "," + tip_CRLF() + " "
          ENDIF
@@ -623,7 +623,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
 METHOD attachFile( cFileName ) CLASS TipMail
 
    LOCAL cContent := hb_MemoRead( cFileName )
-   LOCAL cMimeType := TIP_FileMimetype( cFileName )
+   LOCAL cMimeType := tip_FileMimeType( cFileName )
    LOCAL cDelim := hb_ps()
 
    LOCAL oAttach
@@ -730,7 +730,7 @@ STATIC FUNCTION WordEncodeQ( cData, cCharset )
 
    RETURN iif( lToEncode, cString + "?=", cData )
 
-FUNCTION tip_GetRawEMail( cAddress )
+FUNCTION tip_GetRawEmail( cAddress )
 
    LOCAL tmp, tmp1
 
@@ -742,7 +742,7 @@ FUNCTION tip_GetRawEMail( cAddress )
 
    RETURN cAddress
 
-FUNCTION tip_GetNameEMail( cAddress )
+FUNCTION tip_GetNameEmail( cAddress )
 
    LOCAL tmp
 

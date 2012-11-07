@@ -5,7 +5,7 @@
 THREAD STATIC t_lCrsState := .F.
 THREAD STATIC t_lMInit := .F.
 
-FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
+FUNCTION ft_MDblClk( nClick, nButton, nInterval, nRow, nCol, nStart )
 
    LOCAL nVert, nHorz  // local row and col coordinates
    LOCAL lDouble       // double click actually occurred
@@ -27,7 +27,7 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
    DO WHILE ! lDone
 
-      FT_MBUTPRS( nButton, @nPrs, @nVert, @nHorz )
+      ft_MButPrs( nButton, @nPrs, @nVert, @nHorz )
       nVert := Int( nVert / 8 )
       nHorz := Int( nHorz / 8 )
 
@@ -56,7 +56,7 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
       DO WHILE ! lDone
 
-         FT_MBUTPRS( nButton, @nPrs, @nVert, @nHorz )
+         ft_MButPrs( nButton, @nPrs, @nVert, @nHorz )
          nVert := Int( nVert / 8 )
          nHorz := Int( nHorz / 8 )
 
@@ -72,20 +72,20 @@ FUNCTION FT_MDBLCLK( nClick, nButton, nInterval, nRow, nCol, nStart )
 
    RETURN lDouble
 
-FUNCTION FT_MINREGION( nTR, nLC, nBR, nRC )
+FUNCTION ft_MInRegion( nTR, nLC, nBR, nRC )
 
    RETURN ;
       MRow() >= nTR .AND. MRow() <= nBR .AND. ;
       MCol() >= nLC .AND. MCol() <= nRC
 
-FUNCTION FT_MMICKEYS( /* @ */ nX, /* @ */ nY )
+FUNCTION ft_MMickeys( /* @ */ nX, /* @ */ nY )
 
    nX := MRow() * 8
    nY := MCol() * 8
 
    RETURN NIL
 
-FUNCTION FT_MGETPOS( /* @ */ nX, /* @ */ nY )
+FUNCTION ft_MGetPos( /* @ */ nX, /* @ */ nY )
 
    nX := MRow() * 8
    nY := MCol() * 8
@@ -95,11 +95,11 @@ FUNCTION FT_MGETPOS( /* @ */ nX, /* @ */ nY )
       iif( MRightDown(), 2, 0 ) + ;
       iif( hb_MMiddleDown(), 4, 0 )
 
-FUNCTION FT_MSETPOS( nX, nY )
+FUNCTION ft_MSetPos( nX, nY )
 
    RETURN MSetPos( nX / 8, nY / 8 )
 
-FUNCTION FT_MGETCOORD( /* @ */ nX, /* @ */ nY )
+FUNCTION ft_MGetCoord( /* @ */ nX, /* @ */ nY )
 
    nX := MRow()
    nY := MCol()
@@ -109,17 +109,17 @@ FUNCTION FT_MGETCOORD( /* @ */ nX, /* @ */ nY )
       iif( MRightDown(), 2, 0 ) + ;
       iif( hb_MMiddleDown(), 4, 0 )
 
-FUNCTION FT_MSETCOORD( nX, nY )
+FUNCTION ft_MSetCoord( nX, nY )
 
    RETURN MSetPos( nX, nY )
 
-FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
+FUNCTION ft_MSetSens( nHoriz, nVert, nDouble )
 
    LOCAL nCurHoriz, nCurVert, nCurDouble
 
    // Get current values
 
-   FT_MGETSENS( @nCurHoriz, @nCurVert, @nCurDouble )
+   ft_MGetSens( @nCurHoriz, @nCurVert, @nCurDouble )
 
    hb_default( @nHoriz, nCurHoriz )
    hb_default( @nVert, nCurVert )
@@ -130,7 +130,7 @@ FUNCTION FT_MSETSENS( nHoriz, nVert, nDouble )
 
    RETURN NIL
 
-FUNCTION FT_MVERSION( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
+FUNCTION ft_MVersion( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
 
    nMinor := 20
    nType := 2 /* serial */
@@ -138,19 +138,19 @@ FUNCTION FT_MVERSION( /* @ */ nMinor, /* @ */ nType, /* @ */ nIRQ )
 
    RETURN 8
 
-FUNCTION FT_MINIT()
+FUNCTION ft_MInit()
 
-// If not previously initialized then try
+   // If not previously initialized then try
 
    IF ! t_lMInit
-      t_lMInit := ( FT_MRESET() != 0 )
+      t_lMInit := ( ft_MReset() != 0 )
    ELSE
       MSetBounds()
    ENDIF
 
    RETURN t_lMInit
 
-FUNCTION FT_MRESET()
+FUNCTION ft_MReset()
 
    t_lCrsState := .F. // Cursor is off after reset
    MHide()
@@ -159,7 +159,7 @@ FUNCTION FT_MRESET()
 
    RETURN iif( MPresent(), -1, 0 )
 
-FUNCTION FT_MCURSOR( lState )
+FUNCTION ft_MCursor( lState )
 
    LOCAL lSavState := t_lCrsState
 
@@ -173,7 +173,7 @@ FUNCTION FT_MCURSOR( lState )
 
    RETURN lSavState
 
-FUNCTION FT_MSHOWCRS()
+FUNCTION ft_MShowCrs()
 
    MShow()
 
@@ -181,7 +181,7 @@ FUNCTION FT_MSHOWCRS()
 
    RETURN NIL                // no output from function
 
-FUNCTION FT_MHIDECRS() // decrement internal cursor flag and hide cursor
+FUNCTION ft_MHideCrs() // decrement internal cursor flag and hide cursor
 
    MHide()
 
@@ -189,7 +189,7 @@ FUNCTION FT_MHIDECRS() // decrement internal cursor flag and hide cursor
 
    RETURN NIL                // no output from function
 
-FUNCTION FT_MXLIMIT( nMin, nMax )
+FUNCTION ft_MXLimit( nMin, nMax )
 
    LOCAL nTop, nBottom
 
@@ -198,7 +198,7 @@ FUNCTION FT_MXLIMIT( nMin, nMax )
 
    RETURN NIL
 
-FUNCTION FT_MYLIMIT( nMin, nMax )
+FUNCTION ft_MYLimit( nMin, nMax )
 
    LOCAL nLeft, nRight
 
@@ -211,21 +211,21 @@ FUNCTION FT_MYLIMIT( nMin, nMax )
          vertical position (row) as X and
          horizontal position (col) as Y. [vszakats] */
 
-FUNCTION FT_MGETX()
+FUNCTION ft_MGetX()
 
    RETURN MRow()
 
-FUNCTION FT_MGETY()
+FUNCTION ft_MGetY()
 
    RETURN MCol()
 
-FUNCTION FT_MGETPAGE()
+FUNCTION ft_MGetPage()
 
    RETURN 0
 
-   /* NOTE: Page is ignored in Harbour */
+/* NOTE: Page is ignored in Harbour */
 
-FUNCTION FT_MSETPAGE( nPage )
+FUNCTION ft_MSetPage( nPage )
 
    HB_SYMBOL_UNUSED( nPage )
 

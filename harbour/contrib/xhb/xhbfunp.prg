@@ -54,7 +54,7 @@
 
 FUNCTION gtSetClipboard( x )            ; RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA, x )
 FUNCTION gtGetClipboard()               ; RETURN hb_gtInfo( HB_GTI_CLIPBOARDDATA )
-FUNCTION gtGetClipBoardSize()           ; RETURN Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
-FUNCTION gtPasteClipBoard()             ; RETURN hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
+FUNCTION gtGetClipboardSize()           ; RETURN Len( hb_gtInfo( HB_GTI_CLIPBOARDDATA ) )
+FUNCTION gtPasteClipboard()             ; RETURN hb_gtInfo( HB_GTI_CLIPBOARDPASTE )
 
-FUNCTION INETDESTROY( x )               ; RETURN iif( hb_inetIsSocket( x ), hb_inetClose( x ), )
+FUNCTION inetDestroy( x )               ; RETURN iif( hb_inetIsSocket( x ), hb_inetClose( x ), )

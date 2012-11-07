@@ -40,7 +40,7 @@
       NULL ), ;
       x } )
 
-FUNCTION FT_XTOY( xValueToConvert, cTypeToConvertTo, lWantYesNo )
+FUNCTION ft_XToY( xValueToConvert, cTypeToConvertTo, lWantYesNo )
 
    __defaultNIL( @lWantYesNo, .F. )
 
@@ -49,7 +49,7 @@ FUNCTION FT_XTOY( xValueToConvert, cTypeToConvertTo, lWantYesNo )
    CASE cTypeToConvertTo == "C" .AND. ; // They Want a Character String
       ! HB_ISSTRING( xValueToConvert )
 
-      xValueToConvert := XTOC( xValueToConvert )
+      xValueToConvert := XToC( xValueToConvert )
 
    CASE cTypeToConvertTo == "D" .AND. ; // They Want a Date
       ! HB_ISDATE( xValueToConvert )

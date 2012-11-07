@@ -64,7 +64,7 @@
 // Colour selection routine
 // Return -> the same array that was passed but with modified colours
 
-FUNCTION FT_ClrSel( aClrs, lColour, cChr )
+FUNCTION ft_ClrSel( aClrs, lColour, cChr )
 
    LOCAL aClrOld := AClone( aClrs )
    LOCAL aOptions
@@ -77,7 +77,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
    LOCAL aClrBW  := { "N", "B", "W" }
    LOCAL nRowSav := Row()
    LOCAL nColSav := Col()
-   LOCAL aEnvSav := FT_SaveSets()
+   LOCAL aEnvSav := ft_SaveSets()
    LOCAL cScrSav := SaveScreen( 0, 0, MaxRow(), MaxCol() )
 
    __defaultNIL( @lColour, IsColor() )
@@ -133,7 +133,7 @@ FUNCTION FT_ClrSel( aClrs, lColour, cChr )
       nChoice := 1
    ENDIF
 
-   FT_RestSets( aEnvSav )
+   ft_RestSets( aEnvSav )
    RestScreen( 0, 0, MaxRow(), MaxCol(), cScrSav )
    SetPos( nRowSav, nColSav )
 

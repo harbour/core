@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_DATECNFG( cFYStart, nDow )
+FUNCTION ft_DateCnfg( cFYStart, nDow )
 
    THREAD STATIC t_aDatePar := { hb_SToD( "19800101" ), 1 }
 

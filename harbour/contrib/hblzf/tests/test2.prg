@@ -16,13 +16,13 @@ PROCEDURE Main()
    LOCAL hFuncs := { ;
       "GZIP" => @hb_gzCompress(), ;
       "ZLIB" => @hb_ZCompress(), ;
-      "BZ2 " => @hb_bz2_compress(), ;
+      "BZ2 " => @hb_bz2_Compress(), ;
       "LZF " => @hb_lzf_compress();
       }
    LOCAL hFuncs2 := { ;
       "GZIP" => @hb_ZUncompress(), ;
       "ZLIB" => @hb_ZUncompress(), ;
-      "BZ2 " => @hb_bz2_uncompress(), ;
+      "BZ2 " => @hb_bz2_Uncompress(), ;
       "LZF " => @hb_lzf_decompress();
       }
 

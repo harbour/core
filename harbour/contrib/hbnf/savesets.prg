@@ -32,7 +32,7 @@
 #define FT_SET_CENTURY   _SET_COUNT + 1
 #define FT_SET_BLINK     _SET_COUNT + 2
 
-FUNCTION FT_SAVESETS()
+FUNCTION ft_SaveSets()
 
    LOCAL aOldSets := Array( _SET_COUNT + FT_EXTRA_SETS )
 
@@ -40,7 +40,7 @@ FUNCTION FT_SAVESETS()
       {| xElement, nElementNo | HB_SYMBOL_UNUSED( xElement ), ;
       aOldSets[ nElementNo ] := Set( nElementNo ) } )
 
-   aOldSets[ FT_SET_CENTURY ] := FT_SETCENTURY()
+   aOldSets[ FT_SET_CENTURY ] := ft_SetCentury()
    aOldSets[ FT_SET_BLINK ]   := SetBlink()
 
    RETURN aOldSets                    // FT_SaveSets

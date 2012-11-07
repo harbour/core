@@ -5,7 +5,7 @@
 #require "hbnf"
 
 #ifndef __HARBOUR__
-   #define hb_ntos( n ) LTrim( Str( n ) )
+#  define hb_ntos( n ) LTrim( Str( n ) )
 #endif
 
 // Pass valid row and column values for different video modes to change modes
@@ -37,7 +37,7 @@ PROCEDURE Main( nRow, nCol )
       RETURN
    ENDIF
 
-   IF Empty( FT_MINIT() )
+   IF Empty( ft_MInit() )
       @ MaxRow(), 0 SAY "Mouse driver is not installed!"
       SetMode( nSaveRow, nSaveCol )
       RETURN
@@ -63,15 +63,15 @@ PROCEDURE Main( nRow, nCol )
    // ..... Start the demo
 
    @ MaxRow(), 0 SAY "Driver version: " + ;
-      hb_ntos( FT_MVERSION( @nMinor, @nType, @nIRQ ) ) + "." + ;
+      hb_ntos( ft_MVersion( @nMinor, @nType, @nIRQ ) ) + "." + ;
       hb_ntos( nMinor )
    @ Row(), Col() SAY " " + aType[ nType ] + " mouse using IRQ " + Str( nIRQ, 1, 0 )
 
-   FT_MGETSENS( @nHoriz, @nVert, @nDouble )  // Get the current sensitivities
-   FT_MSETSENS( 70, 70, 60 )    // Bump up the sensitivity of the mouse
+   ft_MGetSens( @nHoriz, @nVert, @nDouble )  // Get the current sensitivities
+   ft_MSetSens( 70, 70, 60 )    // Bump up the sensitivity of the mouse
 
-   FT_MSHOWCRS()
-   FT_MSETCOORD( 10, 20 )  // just an arbitrary place for demo
+   ft_MShowCrs()
+   ft_MSetCoord( 10, 20 )  // just an arbitrary place for demo
 
    // put the unchanging stuff
 
@@ -105,37 +105,37 @@ PROCEDURE Main( nRow, nCol )
       // the ordinary.
 
       DO WHILE nX == 0 .AND. nY == 0
-         FT_MMICKEYS( @nX, @nY )
+         ft_MMickeys( @nX, @nY )
       ENDDO
       // tell the mouse driver where updates will be taking place so it can hide
       // the cursor when necessary.
 
-      FT_MCONOFF( 9, 23, 16, 53 )
+      ft_MCOnOff( 9, 23, 16, 53 )
 
       DevPos( 9, 23 )
       DevOut( nX )
       DevOut( nY )
 
       DevPos( 10, 23 )
-      DevOut( FT_MGETPOS( @nX, @nY ) )
+      DevOut( ft_MGetPos( @nX, @nY ) )
       DevOut( nX )
       DevOut( nY )
 
       DevPos( 11, 23 )
-      DevOut( FT_MGETX() )
+      DevOut( ft_MGetX() )
 
       DevPos( 12, 23 )
-      DevOut( FT_MGETY() )
+      DevOut( ft_MGetY() )
 
       DevPos( 13, 23 )
-      DevOut( FT_MGETCOORD( @nX, @nY ) )
+      DevOut( ft_MGetCoord( @nX, @nY ) )
       DevOut( nX )
       DevOut( nY )
 
       nX := nY := 0
       DevPos( 14, 23 )
-      DevOut( FT_MBUTPRS( 1 ) )
-      DevOut( FT_MBUTPRS( 0,, nX, nY ) )
+      DevOut( ft_MButPrs( 1 ) )
+      DevOut( ft_MButPrs( 0,, nX, nY ) )
       DevPos( 15, 23 )
 
       // show only the last Press since it flashes by so quickly
@@ -147,7 +147,7 @@ PROCEDURE Main( nRow, nCol )
 
       nX := nY := 0
       DevPos( 16, 23 )
-      DevOut( FT_MBUTREL( 0,, @nX, @nY ) )
+      DevOut( ft_MButRel( 0,, @nX, @nY ) )
 
       // show only the last release since it flashes by so quickly
 
@@ -158,36 +158,36 @@ PROCEDURE Main( nRow, nCol )
 
       // Restore the cursor if it has been hidden
 
-      FT_MSHOWCRS()
+      ft_MShowCrs()
 
-      IF FT_MINREGION( 18, 11, 18, 39 )
+      IF ft_MInRegion( 18, 11, 18, 39 )
 
          // Change the type of cursor when in the box. Just slightly different than the
          // normal. The character is shown in high intensity.
 
-         FT_MDEFCRS( 0, 32767, 32512 )
-         IF FT_MDBLCLK( 2, 0, 0.8 )
+         ft_MDefCrs( 0, 32767, 32512 )
+         IF ft_MDblClk( 2, 0, 0.8 )
             EXIT
          ENDIF
       ENDIF
 
-      IF FT_MINREGION( 18, 11, 18, 39 )
+      IF ft_MInRegion( 18, 11, 18, 39 )
 
          // Change the type of cursor when in the box. Just slightly different than the
          // normal. The character is shown in high intensity.
 
-         FT_MDEFCRS( 0, 32767, 32512 )
+         ft_MDefCrs( 0, 32767, 32512 )
       ELSE
 
          // Put the cursor back to normal mode
 
-         FT_MDEFCRS( 0, 30719, 30464 )
+         ft_MDefCrs( 0, 30719, 30464 )
       ENDIF
 
-      FT_MMICKEYS( @nX, @nY )
+      ft_MMickeys( @nX, @nY )
    ENDDO
 
-   FT_MHIDECRS()
+   ft_MHideCrs()
 
    SetMode( nSaveRow, nSaveCol )
    SetColor( cSavClr )
@@ -196,6 +196,6 @@ PROCEDURE Main( nRow, nCol )
 
    // Reset sensitivity
 
-   FT_MSETSENS( nHoriz, nVert, nDouble )
+   ft_MSetSens( nHoriz, nVert, nDouble )
 
    RETURN

@@ -23,11 +23,11 @@
  *
  */
 
-FUNCTION FT_MIL2MIN( cMILTIME )
+FUNCTION ft_Mil2Min( cMILTIME )
 
    RETURN Int( Val( Left( cMILTIME, 2 ) ) * 60 + Val( Right( cMILTIME, 2 ) ) )
 
-FUNCTION FT_MIN2MIL( nMin )
+FUNCTION ft_Min2Mil( nMin )
 
    nMin := nMin % 1440
 
@@ -35,7 +35,7 @@ FUNCTION FT_MIN2MIL( nMin )
       Right( "00" + hb_ntos( Int( nMin / 60 ) ), 2 ) + ;
       Right( "00" + hb_ntos( Int( nMin % 60 ) ), 2 )
 
-FUNCTION FT_MIL2CIV( cMILTIME )
+FUNCTION ft_Mil2Civ( cMILTIME )
 
    LOCAL cHRS, cMINS, nHRS, cCIVTIME
 
@@ -66,7 +66,7 @@ FUNCTION FT_MIL2CIV( cMILTIME )
 
    RETURN cCIVTIME
 
-FUNCTION FT_CIV2MIL( cTIME )
+FUNCTION ft_Civ2Mil( cTIME )
 
    LOCAL cKEY, cMILTIME
 
@@ -107,6 +107,6 @@ FUNCTION FT_CIV2MIL( cTIME )
 
    RETURN cMILTIME
 
-FUNCTION FT_SYS2MIL()
+FUNCTION ft_Sys2Mil()
 
    RETURN Left( Stuff( Time(), 3, 1, "" ), 4 )

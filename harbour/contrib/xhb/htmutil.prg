@@ -150,7 +150,7 @@ FUNCTION PutCounter( oHtm, nNumber, cDir, nDigits, nWidth, bgColor, nBorder )
 
    RETURN NIL
 
-PROCEDURE htmlBrowse( oHtm, cAction, lUseLinks )
+PROCEDURE HtmlBrowse( oHtm, cAction, lUseLinks )
 
    LOCAL i
    LOCAL n      := 0
@@ -208,7 +208,7 @@ PROCEDURE htmlBrowse( oHtm, cAction, lUseLinks )
       FOR i := 1 TO Len( aFlds )
          cAlign := iif( aFlds[ i, 2 ] == "N", "RIGHT", "CENTER" )
          oHtm:newTableCell( cAlign, , , , "black" )
-         oHtm:Write( greek2Html( htmlany2Str( FieldGet( i ) ) ) )
+         oHtm:Write( Greek2Html( HtmlAny2Str( FieldGet( i ) ) ) )
          oHtm:EndTableCell()
       NEXT
       oHtm:endTableRow()
@@ -285,7 +285,7 @@ PROCEDURE htmlBrowseSql( oHtm, cAction, lUseLinks, cTarget, oServer, oQuery )
 
          cAlign := iif( oCurRow:FieldType( i ) == "N", "RIGHT", "CENTER" )
          oHtm:newTableCell( cAlign, , , , "black" )
-         oHtm:Write( greek2Html( htmlany2Str( oCurRow:FieldGet( i ) ) ) )
+         oHtm:Write( Greek2Html( HtmlAny2Str( oCurRow:FieldGet( i ) ) ) )
          oHtm:EndTableCell()
       NEXT
       oHtm:endTableRow()
@@ -346,7 +346,7 @@ CREATE CLASS JWindow
 
    METHOD Paragraph() INLINE ::QOut( "<P></P>" )
 
-   METHOD CENTER( l ) INLINE ::QOut( iif( l, "<CENTER>", "</CENTER>" ) )
+   METHOD Center( l ) INLINE ::QOut( iif( l, "<CENTER>", "</CENTER>" ) )
 
    METHOD bold( l ) INLINE ::QOut( iif( l, "<B>", "</B>" ) )
 
@@ -572,7 +572,7 @@ METHOD Put() CLASS JWindow
       ::varName + "', '" + ;
       ::features + "')"
 
-   htmljscmd( ::nH, cStr )
+   HtmlJSCmd( ::nH, cStr )
 
    RETURN Self
 
@@ -584,7 +584,7 @@ METHOD Put() CLASS JWindow
 
 METHOD Write( c ) CLASS JWindow
 
-   htmljscmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
 
    RETURN Self
 
@@ -676,9 +676,9 @@ METHOD BEGIN() CLASS JWindow
 *
 */
 
-METHOD END () CLASS JWindow
+METHOD END() CLASS JWindow
 
-   htmljscmd( ::nH, ::varName + ".document.write('</BODY></HTML>')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('</BODY></HTML>')" + CRLF() )
 
    RETURN Self
 
@@ -743,7 +743,7 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
 *     own character set.
 */
 
-FUNCTION initGreek()
+FUNCTION InitGreek()
 
    LOCAL aGreek := { ;
       hb_BChar( 193 ), ;
@@ -852,7 +852,7 @@ FUNCTION Greek2Html( cText )
    LOCAL cStr := ""
 
    IF Empty( t_aGreek )
-      t_aGreek := initGreek()
+      t_aGreek := InitGreek()
    ENDIF
    FOR I := 1 TO Len( cText )
       cStr += t_aGreek[ Asc( SubStr( cText, i, 1 ) ) ] /* TOFIX: for unicode */

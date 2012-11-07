@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_SETCENTURY( lNewSetState )
+FUNCTION ft_SetCentury( lNewSetState )
 
    // Note that if CENTURY is ON then
    // DToC() Will Return a String of Length

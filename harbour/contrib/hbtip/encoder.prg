@@ -62,7 +62,7 @@
 
 #include "fileio.ch"
 
-FUNCTION TIp_GetEncoder( cModel )
+FUNCTION tip_GetEncoder( cModel )
 
    LOCAL oEncoder
 

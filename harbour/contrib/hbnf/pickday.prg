@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_PICKDAY()
+FUNCTION ft_PickDay()
 
    LOCAL days := { "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", ;
       "FRIDAY", "SATURDAY" }

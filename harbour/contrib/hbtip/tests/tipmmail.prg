@@ -37,9 +37,9 @@ PROCEDURE Main( ... )
       QUIT
    ENDIF
 
-   oMail := TipMail( "This is the body of the mail" )
+   oMail := TIPMail( "This is the body of the mail" )
    oMail:hHeaders[ "Content-Type" ] := "text/plain; charset=utf-8"
-   oMail:hHeaders[ "Date" ] := Tip_Timestamp()
+   oMail:hHeaders[ "Date" ] := tip_TimeStamp()
 
    i := 1
    DO WHILE i < PCount()
@@ -91,7 +91,7 @@ PROCEDURE Main( ... )
             ? "FATAL: Can't read attachment", hb_PValue( i )
             QUIT
          ENDIF
-         oAttach := TipMail():New()
+         oAttach := TIPMail():New()
 
          oAttach:SetEncoder( "base64" )
          // TODO: mime type magic auto-finder

@@ -53,7 +53,7 @@
 
 #ifndef __PLATFORM__WINDOWS
 
-FUNCTION TOLEAUTO()
+FUNCTION TOleAuto()
    RETURN NIL
 
 FUNCTION CreateObject()
@@ -62,7 +62,7 @@ FUNCTION CreateObject()
 FUNCTION GetActiveObject()
    RETURN NIL
 
-FUNCTION CreateOLEObject()
+FUNCTION CreateOleObject()
    RETURN NIL
 
 #else
@@ -123,7 +123,7 @@ STATIC FUNCTION s_oleError( nGenCode, cDescript )
       oErr:Description   := cDescript
    ELSE
       oErr:GenCode       := EG_OLEEXCEPTION
-      oErr:Description   := win_OleErrorText()
+      oErr:Description   := win_oleErrorText()
    ENDIF
    oErr:Operation     := ProcName( 1 )
    oErr:Severity      := ES_ERROR
@@ -171,9 +171,9 @@ METHOD hObj( xOle ) CLASS TOLEAUTO
 
    IF xOle != NIL
       IF HB_ISNUMERIC( xOle )
-         xOle := __OLEPDISP( xOle )
+         xOle := __olePDisp( xOle )
       ENDIF
-      IF __OleIsDisp( xOle )
+      IF __oleIsDisp( xOle )
          ::__hObj := xOle
       ENDIF
    ENDIF
@@ -185,7 +185,7 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
    LOCAL hOle
 
    IF HB_ISSTRING( xOle )
-      hOle := __OleCreateObject( xOle,, cLicense )
+      hOle := __oleCreateObject( xOle,, cLicense )
       IF ! Empty( hOle )
          ::__hObj := hOle
          ::cClassName := xOle
@@ -208,13 +208,13 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
 METHOD GetActiveObject( cClass ) CLASS TOLEAUTO
 
    IF HB_ISSTRING( cClass )
-      IF ! Empty( ::__hObj := __OleGetActiveObject( cClass ) )
+      IF ! Empty( ::__hObj := __oleGetActiveObject( cClass ) )
          ::cClassName := cClass
       ELSE
          RETURN Throw( s_oleError() )
       ENDIF
    ELSE
-      WAPI_MessageBox( , "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", ;
+      wapi_MessageBox( , "Invalid parameter type to constructor TOleAuto():GetActiveObject()!", ;
          "OLE Interface", )
       ::__hObj := NIL
    ENDIF
@@ -266,7 +266,7 @@ FUNCTION CreateObject( xOle, cLicense )
 FUNCTION GetActiveObject( cString )
    RETURN TOleAuto():GetActiveObject( cString )
 
-FUNCTION CreateOLEObject( ... )
-   RETURN __OleCreateObject( ... )
+FUNCTION CreateOleObject( ... )
+   RETURN __oleCreateObject( ... )
 
 #endif /* __PLATFORM__WINDOWS */

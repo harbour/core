@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_MADD( dGivenDate, nAddMonths, lMakeEOM )
+FUNCTION ft_MAdd( dGivenDate, nAddMonths, lMakeEOM )
 
    LOCAL nAdjDay, dTemp, i
 

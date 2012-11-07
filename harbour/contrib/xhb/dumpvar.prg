@@ -80,7 +80,7 @@ PROCEDURE __OutDebug( ... )
  * - Added front function with limited parameters and removed support for TAssociative Array
 */
 
-FUNCTION HB_DumpVar( xVar, lRecursive, nMaxRecursionLevel )
+FUNCTION hb_DumpVar( xVar, lRecursive, nMaxRecursionLevel )
 
    LOCAL nRecursionLevel := 1
    LOCAL nIndent         := 0
@@ -179,10 +179,14 @@ STATIC FUNCTION DShowProperties( oVar, nScope, lRecursive, nIndent, nRecursionLe
    __defaultNIL( @nIndent, 0 )
 
    IF HB_ISOBJECT( oVar )
-//    lOldScope := __SetClassScope( .F. )
+#if 0
+      lOldScope := __SetClassScope( .F. )
+#endif
       aMethods  := __objGetMsgFullList( oVar, .F., HB_MSGLISTALL, nScope )
       aProps    := __objGetValueFullList( oVar, NIL, nScope )
-//    __SetClassScope( lOldScope )
+#if 0
+      __SetClassScope( lOldScope )
+#endif
 
       IF Len( aProps ) > 0
          cString += Space( nIndent ) + " |  +- >> Begin Data    ------" + hb_eol()

@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
+FUNCTION ft_AcctWeek( dGivenDate, nWeekNum )
 
    LOCAL nTemp, aRetVal
 
@@ -37,7 +37,7 @@ FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
       dGivenDate := Date()
    ENDIF
 
-   aRetVal := FT_ACCTYEAR( dGivenDate )
+   aRetVal := ft_AcctYear( dGivenDate )
 
    IF HB_ISNUMERIC( nWeekNum )
       nTemp := Int( ( aRetVal[ 3 ] - aRetVal[ 2 ] ) / 7 ) + 1
@@ -48,7 +48,7 @@ FUNCTION FT_ACCTWEEK( dGivenDate, nWeekNum )
    ENDIF
 
    aRetVal[ 1 ] += StrZero( Int( ( dGivenDate - aRetVal[ 2 ] ) / 7 ) + 1, 2 )
-   dGivenDate += ( 6 - FT_DAYTOBOW( dGivenDate ) )  // end of week
+   dGivenDate += ( 6 - ft_DayToBoW( dGivenDate ) )  // end of week
    aRetVal[ 2 ] := dGivenDate - 6
    aRetVal[ 3 ] := dGivenDate
 

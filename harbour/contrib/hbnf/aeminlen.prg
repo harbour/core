@@ -21,7 +21,7 @@
  *
  */
 
-FUNCTION FT_AEminlen( aArray, nDimension, nStart, nCount )
+FUNCTION ft_AEMinLen( aArray, nDimension, nStart, nCount )
 
    LOCAL i, nLast, nMinlen := NIL, nLen
 

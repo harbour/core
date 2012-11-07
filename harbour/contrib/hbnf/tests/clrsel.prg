@@ -10,7 +10,7 @@ PROCEDURE Main( cVidMode )
 
    LOCAL nRowOri := Row()
    LOCAL nColOri := Col()
-   LOCAL aEnvOri := FT_SaveSets()
+   LOCAL aEnvOri := ft_SaveSets()
    LOCAL cScrOri := SaveScreen( 0, 0, MaxRow(), MaxCol() )
    LOCAL lColour
    LOCAL aClrs
@@ -44,12 +44,12 @@ PROCEDURE Main( cVidMode )
       { "Database Query", "N/BG, N/GR*,,,N+/BG",           "B" }, ;
       { "Pick List",      "N/GR*,W+/B,,, BG/GR*",          "A" } }
 
-   aClrs := FT_ClrSel( aClrs, lColour )
+   aClrs := ft_ClrSel( aClrs, lColour )
 
    HB_SYMBOL_UNUSED( aClrs )
 
    // .... restore the original environment
-   FT_RestSets( aEnvOri )
+   ft_RestSets( aEnvOri )
    RestScreen( 0, 0, MaxRow(), MaxCol(), cScrOri )
    SetPos( nRowOri, nColOri )
    SetBlink( .F. )  // doesn't appear to be reset from FT_RestSets

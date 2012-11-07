@@ -6,7 +6,7 @@
 
 PROCEDURE Main( cDrv )
 
-   ? "Disk size:   " + Str( FT_DSKSIZE( cDrv ) )
-   ? "Free bytes:  " + Str( FT_DSKFREE( cDrv ) )
+   ? "Disk size:   " + Str( ft_DskSize( cDrv ) )
+   ? "Free bytes:  " + Str( ft_DskFree( cDrv ) )
 
    RETURN

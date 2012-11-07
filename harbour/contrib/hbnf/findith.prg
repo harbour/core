@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_FINDITH( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
+FUNCTION ft_FindITh( cCheckFor, cCheckIn, nWhichOccurrence, lIgnoreCase )
 
    LOCAL nIthOccurrence
 

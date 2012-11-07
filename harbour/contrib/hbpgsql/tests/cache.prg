@@ -475,7 +475,7 @@ FUNCTION SQLSequence( Sequence_name )
 
 PROCEDURE SQLStartTrans()
 
-   IF PQtransactionstatus( s_oServer:pDB ) != PQTRANS_INTRANS
+   IF PQtransactionStatus( s_oServer:pDB ) != PQTRANS_INTRANS
       s_oServer:StartTransaction()
    ENDIF
 
@@ -483,7 +483,7 @@ PROCEDURE SQLStartTrans()
 
 
 FUNCTION SQLInTrans()
-   RETURN PQtransactionstatus( s_oServer:pDB ) == PQTRANS_INTRANS
+   RETURN PQtransactionStatus( s_oServer:pDB ) == PQTRANS_INTRANS
 
 
 PROCEDURE SQLCommitTrans()
@@ -510,17 +510,17 @@ FUNCTION QuickQuery( cQuery )
 
    pQuery := PQexec( s_oServer:pDB, cQuery )
 
-   IF PQresultstatus( pQuery ) == PGRES_TUPLES_OK
-      IF PQLastrec( pQuery ) != 0
-         IF PQFcount( pQuery ) == 1 .AND. PQLastrec( pQuery ) == 1
-            temp := PQGetValue( pQuery, 1, 1 )
+   IF PQresultStatus( pQuery ) == PGRES_TUPLES_OK
+      IF PQlastrec( pQuery ) != 0
+         IF PQfcount( pQuery ) == 1 .AND. PQlastrec( pQuery ) == 1
+            temp := PQgetvalue( pQuery, 1, 1 )
             result := iif( temp == NIL, "", temp )
          ELSE
             result := {}
-            FOR x := 1 TO PQLastrec( pQuery )
+            FOR x := 1 TO PQlastrec( pQuery )
                aTemp := {}
                FOR y := 1 TO PQfcount( pQuery )
-                  temp := PQGetValue( pQuery, x, y )
+                  temp := PQgetvalue( pQuery, x, y )
                   AAdd( aTemp, iif( temp == NIL, "", temp ) )
                NEXT
                AAdd( result, aTemp )

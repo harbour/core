@@ -112,13 +112,13 @@ METHOD Open( cUrl, lTLS ) CLASS tIPClientSMTP
    ENDIF
 
    IF lTLS
-      ::InetSendall( ::SocketCon, "STARTTLS" + ::cCRLF )
+      ::inetSendAll( ::SocketCon, "STARTTLS" + ::cCRLF )
       IF ::GetOk()
          ::EnableTLS( .T. )
       ENDIF
    ENDIF
 
-   ::InetSendall( ::SocketCon, "HELO " + iif( Empty( ::cClientHost ), "tipClientSMTP", ::cClientHost ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "HELO " + iif( Empty( ::cClientHost ), "tipClientSMTP", ::cClientHost ) + ::cCRLF )
 
    RETURN ::GetOk()
 
@@ -137,20 +137,20 @@ METHOD OpenSecure( cUrl, lTLS ) CLASS tIPClientSMTP
    ENDIF
 
    IF lTLS
-      ::InetSendall( ::SocketCon, "STARTTLS" + ::cCRLF )
+      ::inetSendAll( ::SocketCon, "STARTTLS" + ::cCRLF )
       IF ::GetOk()
          ::EnableTLS( .T. )
       ENDIF
    ENDIF
 
-   ::InetSendall( ::SocketCon, "EHLO " + iif( Empty( ::cClientHost ), "tipClientSMTP", ::cClientHost ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "EHLO " + iif( Empty( ::cClientHost ), "tipClientSMTP", ::cClientHost ) + ::cCRLF )
 
    RETURN ::GetOk()
 
 METHOD GetOk() CLASS tIPClientSMTP
 
-   ::cReply := ::InetRecvLine( ::SocketCon,, 512 )
-   IF ::InetErrorCode( ::SocketCon ) != 0 .OR. ! HB_ISSTRING( ::cReply ) .OR. Left( ::cReply, 1 ) == "5"
+   ::cReply := ::inetRecvLine( ::SocketCon,, 512 )
+   IF ::inetErrorCode( ::SocketCon ) != 0 .OR. ! HB_ISSTRING( ::cReply ) .OR. Left( ::cReply, 1 ) == "5"
       RETURN .F.
    ENDIF
 
@@ -165,46 +165,46 @@ METHOD Close() CLASS tIPClientSMTP
 
 METHOD Commit() CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, ::cCRLF + "." + ::cCRLF )
+   ::inetSendAll( ::SocketCon, ::cCRLF + "." + ::cCRLF )
 
    RETURN ::GetOk()
 
 METHOD Quit() CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, "QUIT" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "QUIT" + ::cCRLF )
    ::isAuth := .F.
 
    RETURN ::GetOk()
 
 METHOD Mail( cFrom ) CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, "MAIL FROM: <" + cFrom + ">" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "MAIL FROM: <" + cFrom + ">" + ::cCRLF )
 
    RETURN ::GetOk()
 
 METHOD Rcpt( cTo ) CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, "RCPT TO: <" + cTo + ">" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "RCPT TO: <" + cTo + ">" + ::cCRLF )
 
    RETURN ::GetOk()
 
 METHOD Data( cData ) CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "DATA" + ::cCRLF )
    IF ! ::GetOk()
       RETURN .F.
    ENDIF
-   ::InetSendall( ::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
+   ::inetSendAll( ::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
 
    RETURN ::GetOk()
 
 METHOD Auth( cUser, cPass ) CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, "AUTH LOGIN" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "AUTH LOGIN" + ::cCRLF )
    IF ::GetOk()
-      ::InetSendall( ::SocketCon, hb_base64Encode( StrTran( cUser, "&at;", "@" ) ) + ::cCRLF  )
+      ::inetSendAll( ::SocketCon, hb_base64Encode( StrTran( cUser, "&at;", "@" ) ) + ::cCRLF  )
       IF ::GetOk()
-         ::InetSendall( ::SocketCon, hb_base64Encode( cPass ) + ::cCRLF )
+         ::inetSendAll( ::SocketCon, hb_base64Encode( cPass ) + ::cCRLF )
          IF ::GetOk()
             RETURN ::isAuth := .T.
          ENDIF
@@ -215,7 +215,7 @@ METHOD Auth( cUser, cPass ) CLASS tIPClientSMTP
 
 METHOD AuthPlain( cUser, cPass ) CLASS tIPClientSMTP
 
-   ::InetSendall( ::SocketCon, "AUTH PLAIN" + hb_base64Encode( hb_BChar( 0 ) + cUser + hb_BChar( 0 ) + cPass ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "AUTH PLAIN" + hb_base64Encode( hb_BChar( 0 ) + cUser + hb_BChar( 0 ) + cPass ) + ::cCRLF )
 
    RETURN ::isAuth := ::GetOk()
 
@@ -239,7 +239,7 @@ METHOD Write( cData, nLen, bCommit ) CLASS tIPClientSMTP
          ENDIF
       NEXT
 
-      ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
+      ::inetSendAll( ::SocketCon, "DATA" + ::cCRLF )
       IF ! ::GetOk()
          RETURN -1
       ENDIF

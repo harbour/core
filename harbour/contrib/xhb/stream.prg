@@ -73,11 +73,13 @@ CREATE CLASS TStream
    VAR nLength   INIT 0
    VAR nPosition INIT 0
 
-   //METHOD BeginRead( sBuffer, nOffset, nCount, bCallback, oState )
-   //METHOD EndRead( oAsync ) VIRTUAL
+#if 0
+   METHOD BeginRead( sBuffer, nOffset, nCount, bCallback, oState )
+   METHOD EndRead( oAsync ) VIRTUAL
 
-   //METHOD BeginWrite( sBuffer, nOffset, nCount, bCallback, oState )
-   //METHOD EndWrite( oAsync ) VIRTUAL
+   METHOD BeginWrite( sBuffer, nOffset, nCount, bCallback, oState )
+   METHOD EndWrite( oAsync ) VIRTUAL
+#endif
 
    METHOD Close() VIRTUAL
    METHOD Flush() VIRTUAL

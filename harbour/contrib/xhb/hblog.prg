@@ -66,11 +66,11 @@ STATIC s_StdLogMutex := hb_mutexCreate()
 
 STATIC s_StdLogger
 
-PROCEDURE HB_InitStandardLog( ... )
+PROCEDURE hb_InitStandardLog( ... )
 
    LOCAL PARAM
 
-   s_StdLogger := HB_Logger():New()
+   s_StdLogger := hb_Logger():New()
 
    FOR EACH PARAM in hb_AParams()
 #ifdef HB_THREAD_SUPPORT
@@ -96,13 +96,13 @@ PROCEDURE HB_InitStandardLog( ... )
 
    RETURN
 
-PROCEDURE HB_OpenStandardLog()
+PROCEDURE hb_OpenStandardLog()
 
    s_StdLogger:Open()
 
    RETURN
 
-PROCEDURE HB_StandardLogAdd( oChannel )
+PROCEDURE hb_StandardLogAdd( oChannel )
 
    IF s_StdLogger != NIL
 #ifdef HB_THREAD_SUPPORT
@@ -118,7 +118,7 @@ PROCEDURE HB_StandardLogAdd( oChannel )
 
    RETURN
 
-PROCEDURE HB_CloseStandardLog()
+PROCEDURE hb_CloseStandardLog()
 
    // If the logger is NIL also the mutex is NIL
    IF s_StdLogger != NIL
@@ -135,7 +135,7 @@ PROCEDURE HB_CloseStandardLog()
 
    RETURN
 
-PROCEDURE HB_SetStandardLogStyle( nStyle )
+PROCEDURE hb_SetStandardLogStyle( nStyle )
 
    IF s_StdLogger != NIL
 #ifdef HB_THREAD_SUPPORT
@@ -151,7 +151,7 @@ PROCEDURE HB_SetStandardLogStyle( nStyle )
 
    RETURN
 
-PROCEDURE HB_StandardLogName( cName )
+PROCEDURE hb_StandardLogName( cName )
 
 #ifdef HB_THREAD_SUPPORT
 
@@ -166,7 +166,7 @@ PROCEDURE HB_StandardLogName( cName )
 
    RETURN
 
-PROCEDURE HB_StandardLog( cMsg, nPrio )
+PROCEDURE hb_StandardLog( cMsg, nPrio )
 
    IF s_StdLogger != NIL
 #ifdef HB_THREAD_SUPPORT
@@ -182,7 +182,7 @@ PROCEDURE HB_StandardLog( cMsg, nPrio )
 
    RETURN
 
-FUNCTION HB_BldLogMsg( ... )
+FUNCTION hb_BldLogMsg( ... )
 
    LOCAL xVar
    LOCAL cMsg := ""
@@ -203,7 +203,7 @@ FUNCTION HB_BldLogMsg( ... )
 
    RETURN cMsg
 
-FUNCTION HB_LogDateStamp()
+FUNCTION hb_LogDateStamp()
 
    LOCAL dToday := Date()
 
@@ -372,7 +372,7 @@ METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
    IF hb_bitAnd( nStyle, HB_LOG_ST_DATE ) > 0
       IF hb_bitAnd( nStyle, HB_LOG_ST_ISODATE ) > 0
-         cPrefix += HB_LogDateStamp()
+         cPrefix += hb_LogDateStamp()
       ELSE
          cPrefix += DToC( Date() )
       ENDIF
@@ -447,7 +447,7 @@ METHOD Open( cName ) CLASS HB_LogConsole
       RETURN .F.
    ENDIF
 
-   ::Out( HB_LogDateStamp(), Time(), "--", cName, "start --" )
+   ::Out( hb_LogDateStamp(), Time(), "--", cName, "start --" )
    ::lOpened := .T.
 
    RETURN .T.
@@ -458,7 +458,7 @@ METHOD close( cName ) CLASS HB_LogConsole
       RETURN .F.
    ENDIF
 
-   ::Out( HB_LogDateStamp(), Time(), "--", cName, "end --" )
+   ::Out( hb_LogDateStamp(), Time(), "--", cName, "end --" )
    ::lOpened := .F.
 
    RETURN .T.
@@ -542,7 +542,7 @@ METHOD Open( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   FWrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "--", cProgName, "start --", hb_eol() ) )
+   FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "start --", hb_eol() ) )
 
    hb_FCommit( ::nFileHandle )
    ::lOpened := .T.
@@ -555,7 +555,7 @@ METHOD close( cProgName ) CLASS HB_LogFile
       RETURN .F.
    ENDIF
 
-   FWrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
+   FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "--", cProgName, "end --", hb_eol() ) )
 
    FClose( ::nFileHandle )
    ::nFileHandle := F_ERROR
@@ -574,7 +574,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
    // see file limit and eventually swap file.
    IF ::nFileLimit > 0
       IF FSeek( ::nFileHandle, 0, FS_RELATIVE ) > ::nFileLimit * 1024
-         FWrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
+         FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Closing file due to size limit breaking", hb_eol() ) )
          FClose( ::nFileHandle )
 
          IF ::nBackup > 1
@@ -588,7 +588,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
 
          IF FRename( ::cFileName, ::cFileName + ".000" ) == 0
             ::nFileHandle := hb_FCreate( ::cFileName, FC_NORMAL, FO_READWRITE )
-            FWrite( ::nFileHandle, HB_BldLogMsg( HB_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
+            FWrite( ::nFileHandle, hb_BldLogMsg( hb_LogDateStamp(), Time(), "LogFile: Reopening file due to size limit breaking", hb_eol() ) )
          ENDIF
       ENDIF
    ENDIF
@@ -756,7 +756,7 @@ METHOD Open( cName ) CLASS HB_LogSyslog
       RETURN .F.
    ENDIF
 
-   IF HB_SyslogOpen( cName )
+   IF hb_SysLogOpen( cName )
       ::lOpened := .T.
       RETURN .T.
    ENDIF
@@ -769,7 +769,7 @@ METHOD close( cName ) CLASS HB_LogSyslog
       RETURN .F.
    ENDIF
 
-   IF HB_SyslogClose( cName )
+   IF hb_SysLogClose( cName )
       ::lOpened := .F.
       RETURN .T.
    ENDIF
@@ -781,7 +781,7 @@ METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSyslog
    HB_SYMBOL_UNUSED( nType )
    // Syslog does not need timestamp, nor priority
 
-   RETURN HB_SyslogMessage( ::Format( HB_LOG_ST_LEVEL, cMessage, cName, nPriority ), nPriority, ::nId )
+   RETURN hb_SysLogMessage( ::Format( HB_LOG_ST_LEVEL, cMessage, cName, nPriority ), nPriority, ::nId )
 
 
 /**********************************************
@@ -816,6 +816,6 @@ METHOD PROCEDURE Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogDebug
       ENDIF
    ENDIF
 
-   HB_OutDebug( ::Format( nStyle, cMessage, cName, nPriority ) )
+   hb_OutDebug( ::Format( nStyle, cMessage, cName, nPriority ) )
 
    RETURN

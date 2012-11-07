@@ -11,7 +11,7 @@ PROCEDURE Main( cDate )
 
    cDate := iif( cDate == NIL, DToS( Date() ), cDate )
    ? "Setting date to: " + cDate  + "... "
-   FT_SETDATE( SToD( cDate ) )
+   ft_SetDate( SToD( cDate ) )
    ? "Today is now: " + DToC( Date() )
 
    RETURN

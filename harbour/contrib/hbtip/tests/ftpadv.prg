@@ -13,7 +13,7 @@ PROCEDURE Main( cUrl )
 
    LOCAL oCon, oUrl
 
-   oUrl := tURL():New( cUrl )
+   oUrl := TUrl():New( cUrl )
    IF Empty( oUrl )
       ? "Invalid url " + cUrl
       ?
@@ -27,7 +27,7 @@ PROCEDURE Main( cUrl )
       QUIT
    ENDIF
 
-   oCon := TipClientFtp():New( oUrl )
+   oCon := TIPClientFTP():New( oUrl )
    oCon:nConnTimeout := 20000
    ? "Connecting with", oUrl:cServer
    IF oCon:Open( cUrl )

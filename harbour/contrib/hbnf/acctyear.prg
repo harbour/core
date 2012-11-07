@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_ACCTYEAR( dGivenDate )
+FUNCTION ft_AcctYear( dGivenDate )
 
    LOCAL nYTemp, aRetVal
 
@@ -34,24 +34,24 @@ FUNCTION FT_ACCTYEAR( dGivenDate )
       dGivenDate := Date()
    ENDIF
 
-   aRetVal      := FT_YEAR( dGivenDate )
+   aRetVal      := ft_Year( dGivenDate )
    nYTemp       := Val( aRetVal[ 1 ] )
-   aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
-   aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+   aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
+   aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
    IF dGivenDate < aRetVal[ 2 ]
 
-      aRetVal    := FT_YEAR( FT_MADD( dGivenDate, -1 ) )
+      aRetVal    := ft_Year( ft_MAdd( dGivenDate, -1 ) )
       nYTemp--
-      aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
-      aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+      aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
+      aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
    ELSEIF dGivenDate > aRetVal[ 3 ]
 
-      aRetVal    := FT_YEAR( FT_MADD( dGivenDate, 1 ) )
+      aRetVal    := ft_Year( ft_MAdd( dGivenDate, 1 ) )
       nYTemp++
-      aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
-      aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+      aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
+      aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
    ENDIF
 

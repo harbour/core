@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_SINKEY( waittime )
+FUNCTION ft_SInkey( waittime )
 
    LOCAL nKey, cBlock
 

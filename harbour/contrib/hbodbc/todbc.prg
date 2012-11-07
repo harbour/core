@@ -224,7 +224,7 @@ METHOD SetAutoCommit( lEnable ) CLASS TODBC
 //
 METHOD Destroy() CLASS TODBC
 
-   SQLDisConnect( ::hDbc )                        // Disconnects from Driver
+   SQLDisconnect( ::hDbc )                        // Disconnects from Driver
    SQLFreeConnect( ::hDbc )                        // Frees the connection
    SQLFreeEnv( ::hEnv )                        // Frees the environment
 
@@ -252,7 +252,7 @@ METHOD Commit() CLASS TODBC
 //
 METHOD RollBack() CLASS TODBC
 
-   RETURN ::nRetCode := SQLRollBack( ::hEnv, ::hDbc )
+   RETURN ::nRetCode := SQLRollback( ::hEnv, ::hDbc )
 
 //
 METHOD GetStmtOptions( nType ) CLASS TODBC

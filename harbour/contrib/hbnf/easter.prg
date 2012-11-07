@@ -25,7 +25,7 @@
  *
  */
 
-FUNCTION FT_EASTER( nYear )
+FUNCTION ft_Easter( nYear )
 
    LOCAL nGold, nCent, nCorx, nCorz, nSunday, nEpact, nMoon
    LOCAL nMonth := 0, nDay := 0

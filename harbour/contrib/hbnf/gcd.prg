@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_GCD( nNumber1, nNumber2 )
+FUNCTION ft_GCD( nNumber1, nNumber2 )
 
    LOCAL nHold1                      // Temporarily Hold the Maximum Number
    LOCAL nHold2                      // Temporarily Hold the Minimum Number

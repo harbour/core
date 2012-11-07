@@ -29,7 +29,7 @@
 // Returns: .T. if all functions are available,
 //          .F. if not
 
-FUNCTION FT_Linked( cFuncs )
+FUNCTION ft_Linked( cFuncs )
 
    LOCAL aFuncArray := {}, nSpace, nComma, nFEnd, lRetVal := .F.
 

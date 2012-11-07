@@ -83,6 +83,7 @@ METHOD New( cFileName ) CLASS TIPLOG
    RETURN Self
 
 METHOD Add( cMsg ) CLASS TIPLOG
+
    LOCAL cDir, cName, cExt
    LOCAL n
 

@@ -44,18 +44,18 @@ PROCEDURE Main()
    CLS
    SetColor( cNormN )
 
-   FT_DispMsg( { { "[Esc] To Abort Changes   [PgDn] To Continue" }, { cNormN, , cNormH } }, , nMaxRow - 5 )
+   ft_DispMsg( { { "[Esc] To Abort Changes   [PgDn] To Continue" }, { cNormN, , cNormH } }, , nMaxRow - 5 )
 
-   FT_DispMsg( { { "[E]dit     [P]rint    [D]elete", ;
+   ft_DispMsg( { { "[E]dit     [P]rint    [D]elete", ;
       "[Esc]ape       [Alt-Q]" }, ;
       { cErrN, cErrN, cErrH } }, , 2 )
 
-   nType := FT_DispMsg( { { ;
-      "Create Or Edit [I]nvoice"    ,;
-      "Create Or Edit [O]rder"      ,;
-      "Create Or Edit [B]ack Order" ,;
-      "Create Or Edit [Q]uote"      ,;
-      "[Esc] To Exit" }             ,;
+   nType := ft_DispMsg( { { ;
+      "Create Or Edit [I]nvoice",;
+      "Create Or Edit [O]rder",;
+      "Create Or Edit [B]ack Order",;
+      "Create Or Edit [Q]uote",;
+      "[Esc] To Exit" },;
       { cWindN, , , , , cWindH } }, "BIOQ" + Chr( K_ESC ) )
 
    HB_SYMBOL_UNUSED( nType )

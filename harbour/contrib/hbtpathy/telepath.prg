@@ -204,7 +204,7 @@ FUNCTION tp_open( nPort, nInSize, nOutSize, nBaud, nData, cParity, nStop, cPortn
          t_aPorts[ nPort, TPFP_OC ] := .T.
          RETURN 0
       ELSE
-         tp_Close( t_aPorts[ nPort, TPFP_HANDLE ] )
+         tp_close( t_aPorts[ nPort, TPFP_HANDLE ] )
          RETURN TE_PARAM
       ENDIF
    ENDIF
@@ -618,12 +618,12 @@ FUNCTION tp_flush( nPort, nTimeout )
 
    nDone := Seconds() + iif( nTimeout >= 0, nTimeout, 0 )
 
-   DO WHILE tp_OutFree( nPort ) > 0 .AND. ;
+   DO WHILE tp_outfree( nPort ) > 0 .AND. ;
          ( nTimeout < 0 .OR. Seconds() < nDone )
       hb_idleState()
    ENDDO
 
-   RETURN iif( tp_OutFree( nPort ) > 0, TE_TMOUT, 0 )
+   RETURN iif( tp_outfree( nPort ) > 0, TE_TMOUT, 0 )
 
 #if 0
 
@@ -750,14 +750,14 @@ STATIC FUNCTION __TP_INFREE()
 STATIC FUNCTION __TP_OUTFREE()
    RETURN -1
 
-FUNCTION BIN_AND( ... )
+FUNCTION bin_and( ... )
    RETURN hb_bitAnd( ... )
 
-FUNCTION BIN_OR( ... )
+FUNCTION bin_or( ... )
    RETURN hb_bitOr( ... )
 
-FUNCTION BIN_XOR( ... )
+FUNCTION bin_xor( ... )
    RETURN hb_bitXor( ... )
 
-FUNCTION BIN_NOT( ... )
+FUNCTION bin_not( ... )
    RETURN hb_bitNot( ... )

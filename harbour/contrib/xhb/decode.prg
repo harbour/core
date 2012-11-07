@@ -60,7 +60,7 @@
 *                   Decode a value from a list.
 *******************/
 
-FUNCTION HB_Decode( ... )
+FUNCTION hb_Decode( ... )
 
    LOCAL aParams, nParams, xDefault
    LOCAL xVal, cKey, xRet
@@ -197,10 +197,10 @@ FUNCTION HB_Decode( ... )
 
    RETURN xRet
 
-FUNCTION HB_DecodeOrEmpty( ... )
+FUNCTION hb_DecodeOrEmpty( ... )
 
    LOCAL aParams := hb_AParams()
-   LOCAL xVal    := hb_ExecFromArray( @hb_decode(), aParams )
+   LOCAL xVal    := hb_ExecFromArray( @hb_Decode(), aParams )
 
    RETURN iif( xVal == NIL, EmptyValue( aParams[ 1 ] ), xVal )
 

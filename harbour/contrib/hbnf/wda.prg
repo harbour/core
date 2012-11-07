@@ -20,7 +20,7 @@
  *
  */
 
-FUNCTION ft_addWkDy( dStart, nDys )
+FUNCTION ft_AddWkDy( dStart, nDys )
 
    LOCAL nDc  := DoW( dStart )
 

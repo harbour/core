@@ -38,7 +38,7 @@ STATIC sc_tens  :=  { ;
 
 STATIC sc_qualifiers := { "", " Thousand", " Million", " Billion", " Trillion" }
 
-FUNCTION ft_ntow( nAmount )
+FUNCTION ft_NToW( nAmount )
 
    LOCAL nTemp, sResult := " ", nQualNo
    LOCAL nDiv := 10 ^ ( Int( sol10( nAmount ) / 3 ) * 3 )
@@ -49,7 +49,7 @@ FUNCTION ft_ntow( nAmount )
    sResult += grp_to_words( nAmount, sc_qualifiers[ nQualNo ] )
 
    IF nTemp > ( nDiv /= 1000 ) .AND. ( nDiv > 1 )
-      sResult += ft_ntow( nTemp, nDiv )
+      sResult += ft_NToW( nTemp, nDiv )
    ELSE
       sResult += grp_to_words( nTemp, "" )
    ENDIF

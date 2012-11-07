@@ -25,7 +25,7 @@
 
 #define FORCE_BETWEEN( x, y, z )         ( y := Max( Min( y, z ), x ) )
 
-FUNCTION FT_ANOMATCHES( aArray, bCompareBlock, nStartIndex, nEndIndex )
+FUNCTION ft_ANoMatches( aArray, bCompareBlock, nStartIndex, nEndIndex )
 
    LOCAL nNoOfMatches := 0              // Number of Matches Found
 

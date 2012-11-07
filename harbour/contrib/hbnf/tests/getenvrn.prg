@@ -13,8 +13,8 @@ PROCEDURE Main()
 
    LOCAL tmp
 
-   a := Array( FT_GETE() )
-   FT_GETE( @a )
+   a := Array( ft_GetE() )
+   ft_GetE( @a )
    FOR tmp := 1 TO Len( a )
       ? a[ tmp ]
    NEXT
@@ -22,7 +22,7 @@ PROCEDURE Main()
    ? "-------------------------------------"
 
    c := ""
-   FT_GETE( @c )
+   ft_GetE( @c )
    ? c
 
    RETURN

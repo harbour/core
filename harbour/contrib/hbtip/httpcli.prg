@@ -108,10 +108,10 @@ METHOD Get( cQuery ) CLASS tIPClientHTTP
       cQuery := ::oUrl:BuildQuery()
    ENDIF
 
-   ::InetSendall( ::SocketCon, "GET " + cQuery + " HTTP/1.1" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "GET " + cQuery + " HTTP/1.1" + ::cCRLF )
    ::StandardFields()
-   ::InetSendall( ::SocketCon, ::cCRLF )
-   IF ::InetErrorCode( ::SocketCon ) ==  0
+   ::inetSendAll( ::SocketCon, ::cCRLF )
+   IF ::inetErrorCode( ::SocketCon ) ==  0
       RETURN ::ReadHeaders()
    ENDIF
 
@@ -155,21 +155,21 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
       cQuery := ::oUrl:BuildQuery()
    ENDIF
 
-   ::InetSendall( ::SocketCon, "POST " + cQuery + " HTTP/1.1" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "POST " + cQuery + " HTTP/1.1" + ::cCRLF )
    ::StandardFields()
 
    IF ! "Content-Type" $ ::hFields
-      ::InetSendall( ::SocketCon, e"Content-Type: application/x-www-form-urlencoded\r\n" )
+      ::inetSendAll( ::SocketCon, e"Content-Type: application/x-www-form-urlencoded\r\n" )
    ENDIF
 
-   ::InetSendall( ::SocketCon, "Content-Length: " + ;
+   ::inetSendAll( ::SocketCon, "Content-Length: " + ;
       hb_ntos( Len( cData ) ) + ::cCRLF )
 
    // End of header
-   ::InetSendall( ::SocketCon, ::cCRLF )
+   ::inetSendAll( ::SocketCon, ::cCRLF )
 
-   IF ::InetErrorCode( ::SocketCon  ) ==  0
-      ::InetSendall( ::SocketCon, cData )
+   IF ::inetErrorCode( ::SocketCon  ) ==  0
+      ::inetSendAll( ::SocketCon, cData )
       ::bInitialized := .T.
       RETURN ::ReadHeaders()
    ENDIF
@@ -181,15 +181,15 @@ METHOD StandardFields() CLASS tIPClientHTTP
    LOCAL iCount
    LOCAL oEncoder, cCookies
 
-   ::InetSendall( ::SocketCon, "Host: " + ::oUrl:cServer + ::cCRLF )
-   ::InetSendall( ::SocketCon, "User-agent: " + ::cUserAgent + ::cCRLF )
-   ::InetSendall( ::SocketCon, "Connection: close" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "Host: " + ::oUrl:cServer + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "User-agent: " + ::cUserAgent + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "Connection: close" + ::cCRLF )
 
    // Perform a basic authentication request
    IF ::cAuthMode == "Basic" .AND. ! ( "Authorization" $ ::hFields )
       oEncoder := TIPEncoderBase64():New()
       oEncoder:bHttpExcept := .T.
-      ::InetSendall( ::SocketCon, "Authorization: Basic " + ;
+      ::inetSendAll( ::SocketCon, "Authorization: Basic " + ;
          oEncoder:Encode(  ::oUrl:cUserID + ":" + ::oUrl:cPassword ) + ::cCRLF )
    ENDIF
 
@@ -197,12 +197,12 @@ METHOD StandardFields() CLASS tIPClientHTTP
    // send cookies
    cCookies := ::getCookies()
    IF ! Empty( cCookies )
-      ::InetSendall( ::SocketCon, "Cookie: " + cCookies + ::cCRLF )
+      ::inetSendAll( ::SocketCon, "Cookie: " + cCookies + ::cCRLF )
    ENDIF
 
    // Send optional Fields
    FOR iCount := 1 TO Len( ::hFields )
-      ::InetSendall( ::SocketCon, hb_HKeyAt( ::hFields, iCount ) + ;
+      ::inetSendAll( ::SocketCon, hb_HKeyAt( ::hFields, iCount ) + ;
          ": " + hb_HValueAt( ::hFields, iCount ) + ::cCRLF )
    NEXT
 
@@ -214,7 +214,7 @@ METHOD ReadHeaders( lClear ) CLASS tIPClientHTTP
    LOCAL aHead
 
    // Now reads the fields and set the content lenght
-   cLine := ::InetRecvLine( ::SocketCon, @nPos, 500 )
+   cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
    IF Empty( cLine )
       // In case of timeout or error on receiving
       RETURN .F.
@@ -238,14 +238,14 @@ METHOD ReadHeaders( lClear ) CLASS tIPClientHTTP
 
    ::nLength := -1
    ::bChunked := .F.
-   cLine := ::InetRecvLine( ::SocketCon, @nPos, 500 )
+   cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
    IF lClear != NIL .AND. lClear .AND. ! Empty( ::hHeaders )
       ::hHeaders := { => }
    ENDIF
-   DO WHILE ::InetErrorCode( ::SocketCon ) == 0 .AND. ! Empty( cLine )
+   DO WHILE ::inetErrorCode( ::SocketCon ) == 0 .AND. ! Empty( cLine )
       aHead := hb_regexSplit( ":", cLine,,, 1 )
       IF aHead == NIL .OR. Len( aHead ) != 2
-         cLine := ::InetRecvLine( ::SocketCon, @nPos, 500 )
+         cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
          LOOP
       ENDIF
 
@@ -267,9 +267,9 @@ METHOD ReadHeaders( lClear ) CLASS tIPClientHTTP
          ::setCookie( aHead[ 2 ] )
       ENDCASE
 
-      cLine := ::InetRecvLine( ::SocketCon, @nPos, 500 )
+      cLine := ::inetRecvLine( ::SocketCon, @nPos, 500 )
    ENDDO
-   IF ::InetErrorCode( ::SocketCon ) != 0
+   IF ::inetErrorCode( ::SocketCon ) != 0
       RETURN .F.
    ENDIF
 
@@ -292,7 +292,7 @@ METHOD Read( nLen ) CLASS tIPClientHTTP
       chunk, the footer is discarded, and nLenght is reset to -1.
    */
    IF ::nLength == -1 .AND. ::bChunked
-      cLine := ::InetRecvLine( ::SocketCon, @nPos, 1024 )
+      cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 )
 
       IF Empty( cLine )
          RETURN NIL
@@ -302,7 +302,7 @@ METHOD Read( nLen ) CLASS tIPClientHTTP
       IF cLine == "0"
 
          // read the footers.
-         cLine := ::InetRecvLine( ::SocketCon, @nPos, 1024 )
+         cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 )
          DO WHILE ! Empty( cLine )
             // add Headers to footers
             aHead := hb_regexSplit( ":", cLine,,, 1 )
@@ -310,7 +310,7 @@ METHOD Read( nLen ) CLASS tIPClientHTTP
                ::hHeaders[ aHead[ 1 ] ] := LTrim( aHead[ 2 ] )
             ENDIF
 
-            cLine := ::InetRecvLine( ::SocketCon, @nPos, 1024 )
+            cLine := ::inetRecvLine( ::SocketCon, @nPos, 1024 )
          ENDDO
 
          // we are done
@@ -395,7 +395,9 @@ METHOD setCookie( cLine ) CLASS tIPClientHTTP
          ELSE
             cElement := Upper( AllTrim( aElements[ 1 ] ) )
             DO CASE
-         // CASE cElement == "EXPIRES"
+#if 0
+            CASE cElement == "EXPIRES"
+#endif
             CASE cElement == "PATH"
                cPath := AllTrim( aElements[ 2 ] )
             CASE cElement == "DOMAIN"
@@ -581,19 +583,19 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
       cQuery := ::oUrl:BuildQuery()
    ENDIF
 
-   ::InetSendall( ::SocketCon, "POST " + cQuery + " HTTP/1.1" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "POST " + cQuery + " HTTP/1.1" + ::cCRLF )
    ::StandardFields()
 
    IF ! "Content-Type" $ ::hFields
-      ::InetSendall( ::SocketCon, e"Content-Type: multipart/form-data; boundary=" + ::boundary( 2 ) + ::cCrlf )
+      ::inetSendAll( ::SocketCon, e"Content-Type: multipart/form-data; boundary=" + ::boundary( 2 ) + ::cCrlf )
    ENDIF
 
-   ::InetSendall( ::SocketCon, "Content-Length: " + hb_ntos( Len( cData ) ) + ::cCRLF )
+   ::inetSendAll( ::SocketCon, "Content-Length: " + hb_ntos( Len( cData ) ) + ::cCRLF )
    // End of header
-   ::InetSendall( ::SocketCon, ::cCRLF )
+   ::inetSendAll( ::SocketCon, ::cCRLF )
 
-   IF ::InetErrorCode( ::SocketCon  ) ==  0
-      ::InetSendall( ::SocketCon, cData )
+   IF ::inetErrorCode( ::SocketCon  ) ==  0
+      ::inetSendAll( ::SocketCon, cData )
       ::bInitialized := .T.
       RETURN ::ReadHeaders()
    ENDIF

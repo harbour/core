@@ -110,7 +110,7 @@ PROCEDURE Main
    ENDIF
 
    WAIT
-   ? HtmlToOem( oDoc:body:getText() )
+   ? tip_HtmlToStr( oDoc:body:getText() )
 
    hb_run( "address.html" )
 

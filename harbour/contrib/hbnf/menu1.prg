@@ -49,7 +49,7 @@ THREAD STATIC t_nVPos
 THREAD STATIC t_nMaxRow
 THREAD STATIC t_nMaxCol
 
-FUNCTION FT_MENU1( aBar, aOptions, aColors, nTopRow, lShadow )
+FUNCTION ft_Menu1( aBar, aOptions, aColors, nTopRow, lShadow )
 
    LOCAL nTtlUsed
    LOCAL sMainScrn, lCancMode, lLooping := .T.
@@ -255,7 +255,7 @@ STATIC FUNCTION _ftValKeys( nNum, t_aChoices, t_aValidKeys )
 
    RETURN NIL
 
-FUNCTION FT_FILL( aArray, cMenuOption, bBlock, lAvailable )
+FUNCTION ft_Fill( aArray, cMenuOption, bBlock, lAvailable )
 
    AAdd( aArray[ 1 ], cMenuOption )
    AAdd( aArray[ 2 ], bBlock )

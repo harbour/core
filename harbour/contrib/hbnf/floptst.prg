@@ -62,7 +62,7 @@
          for writability. It also won't detected unformatted
          state and "not ready" state. [vszakats] */
 
-FUNCTION FT_FLOPTST( nDriveNum )
+FUNCTION ft_FlopTst( nDriveNum )
 
    LOCAL cFileName
    LOCAL fhnd

@@ -25,7 +25,7 @@
 
 #define FORCE_BETWEEN( x, y, z )         ( y := Max( Min( y, z ), x ) )
 
-FUNCTION FT_AMEDIAN( aArray, nStart, nEnd )
+FUNCTION ft_AMedian( aArray, nStart, nEnd )
 
    LOCAL nTemplen, aTemparray, nMiddle1, nMiddle2, nMedian
 

@@ -64,7 +64,7 @@ STATIC PROCEDURE __FT_ONTICK()
 
    RETURN
 
-PROCEDURE FT_ONTICK( bOnTick, nTickInterval )
+PROCEDURE ft_OnTick( bOnTick, nTickInterval )
 
    IF HB_ISBLOCK( bOnTick )
       t_bOnTick := bOnTick

@@ -56,7 +56,7 @@ PROCEDURE hbnetiocon_cmdUI( cIP, nPort, cPassword )
    LOCAL netcliID
 
    LOCAL hConIO := { ;
-      "displine"  => {| c | hbnetiocon_ToConsole( c ) },;
+      "displine"  => {| c | hbnetiocon_ToConsole( c ) }, ;
       "gethidden" => {|| hbnetiocon_GetHidden() } }
 
    Set( _SET_CONFIRM, .F. )

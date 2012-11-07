@@ -30,7 +30,7 @@ PROCEDURE Main( cFileName )
       QUIT
    ENDIF
 
-   ? cFileName + ":", Tip_FileMimeType( cFileName )
+   ? cFileName + ":", tip_FileMimeType( cFileName )
    ?
 
    RETURN

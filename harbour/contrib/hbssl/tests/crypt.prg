@@ -42,11 +42,11 @@ PROCEDURE Main()
        @PEM_READ_BIO_X509_CRL()        ,;
        @PEM_READ_BIO_PKCS7()           }
 
-   SSL_INIT()
+   SSL_init()
 
    OpenSSL_add_all_ciphers()
 
-   ctx := hb_EVP_CIPHER_CTX_create()
+   ctx := hb_EVP_CIPHER_ctx_create()
    EVP_CIPHER_CTX_init( ctx )
 
    EVP_EncryptInit( ctx, "AES-192-OFB", cKey )
@@ -62,7 +62,7 @@ PROCEDURE Main()
    ? "ENCRYTPTED", ">" + hb_StrToHex( encrypted ) + "<"
    ? ">" + encrypted + "<"
 
-   ctx := hb_EVP_CIPHER_CTX_create()
+   ctx := hb_EVP_CIPHER_ctx_create()
 
    EVP_DecryptInit( ctx, "AES-192-OFB", cKey )
 
@@ -77,7 +77,7 @@ PROCEDURE Main()
    ? ERR_load_PEM_strings()
    ? OpenSSL_add_all_algorithms()
 
-   ctx := hb_EVP_CIPHER_CTX_create()
+   ctx := hb_EVP_CIPHER_ctx_create()
 
    ? "=============="
    bioe := BIO_new_fd( 1, HB_BIO_NOCLOSE )

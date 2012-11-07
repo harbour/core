@@ -278,7 +278,7 @@ METHOD CheckServer( cRemote )
       hb_inetRecvAll( skRemote, @cData, 6 + 9 )
       IF hb_inetErrorCode( skRemote ) == 0
          cData2 := Space( 256 )
-         nLen := HB_GetLen8( SubStr( cData, 8, 8 ) )
+         nLen := hb_GetLen8( SubStr( cData, 8, 8 ) )
          hb_inetRecvAll( skRemote, @cData2, nLen )
          IF hb_inetErrorCode( skRemote ) == 0
             cData := SubStr( cData + cData2, 7 )
@@ -400,9 +400,9 @@ METHOD UDPParse( cData, nLen ) CLASS tRPCClient
 
    CASE cCode == "XHBR11"
       cData := SubStr( cData, 7 )
-      cSer := HB_DeserialBegin( cData )
-      cName := HB_DeserialNext( @cSer, 64 )
-      cFunc := HB_DeserialNext( @cSer, 64 )
+      cSer := hb_DeserialBegin( cData )
+      cName := hb_DeserialNext( @cSer, 64 )
+      cFunc := hb_DeserialNext( @cSer, 64 )
       IF cName != NIL .AND. cFunc != NIL
          aLoc := { hb_inetAddress( ::skUDP ), cName, cFunc }
          AAdd( ::aFunctions, aLoc )
@@ -440,10 +440,10 @@ METHOD Connect( cServer, cUserId, cPassword ) CLASS tRPCClient
       IF ::bEncrypted
          cAuth := ::BuildChallengePwd( cPassword )
          cAuth := cUserId + ":" + cAuth
-         hb_inetSendAll( ::skTcp, "XHBR93" + HB_CreateLen8( Len( cAuth ) ) + cAuth )
+         hb_inetSendAll( ::skTcp, "XHBR93" + hb_CreateLen8( Len( cAuth ) ) + cAuth )
       ELSE
          cAuth := cUserId + ":" + cPassword
-         hb_inetSendAll( ::skTcp, "XHBR90" + HB_CreateLen8( Len( cAuth ) ) + cAuth )
+         hb_inetSendAll( ::skTcp, "XHBR90" + hb_CreateLen8( Len( cAuth ) ) + cAuth )
       ENDIF
 
       IF hb_inetErrorCode( ::skTcp ) == 0
@@ -505,18 +505,20 @@ METHOD ManageChallenge() CLASS tRPCClient
       RETURN .F.
    ENDIF
 
-   nLen := HB_GetLen8( cLen )
+   nLen := hb_GetLen8( cLen )
    cData := Space( nLen )
    IF hb_inetRecvAll( ::skTCP, @cData, nLen ) != nLen
       RETURN .F.
    ENDIF
 
-   cData := HB_Decrypt( cData, ::cCryptKey )
-   nChallenge := HB_Checksum( cData )
-   hb_inetSendAll( ::skTCP, "XHBR95" + HB_CreateLen8( nChallenge ) )
-// IF hb_inetErrorCode( ::skTCP ) != 0
-//    RETURN .F.
-// ENDIF
+   cData := hb_Decrypt( cData, ::cCryptKey )
+   nChallenge := hb_Checksum( cData )
+   hb_inetSendAll( ::skTCP, "XHBR95" + hb_CreateLen8( nChallenge ) )
+#if 0
+   IF hb_inetErrorCode( ::skTCP ) != 0
+      RETURN .F.
+   ENDIF
+#endif
 
    cCode := Space( 8 )
    hb_inetRecvAll( ::skTCP, @cCode )
@@ -728,7 +730,7 @@ METHOD StopCall() CLASS tRPCClient
    ::ClearTcpBuffer()
 
    // send cancelation request
-   hb_inetSendAll( ::skTCP, "XHBR29" );
+   hb_inetSendAll( ::skTCP, "XHBR29" )
 
    // Stops waiting for a result
    hb_mutexLock( ::mtxBusy )
@@ -785,12 +787,12 @@ METHOD SendCall( cFunction, aParams ) CLASS tRPCClient
 
    nLen := hb_BLen( cData )
    IF nLen > 512
-      cData := HB_Compress( cData )
+      cData := hb_Compress( cData )
       cData := "XHBR2" + hb_ntos( nReq + 1 ) + ;
-         HB_CreateLen8( nLen ) + HB_CreateLen8( hb_BLen( cData ) ) + ;
+         hb_CreateLen8( nLen ) + hb_CreateLen8( hb_BLen( cData ) ) + ;
          cType + ::Encrypt( cData )
    ELSE
-      cData := "XHBR2" + hb_ntos( nReq ) + HB_CreateLen8( nLen ) + ;
+      cData := "XHBR2" + hb_ntos( nReq ) + hb_CreateLen8( nLen ) + ;
          cType + ::Encrypt( cData )
    ENDIF
 
@@ -874,7 +876,7 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
       /* We have a reply */
    CASE cCode == "XHBR30"
       IF hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
-         nDataLen := HB_GetLen8( cDataLen )
+         nDataLen := hb_GetLen8( cDataLen )
          cData := Space( nDataLen )
          IF hb_inetRecvAll( ::skTCP, @cData, nDataLen ) == nDataLen
             ::oResult := hb_Deserialize( ::Decrypt( cData ), nDataLen )
@@ -888,12 +890,12 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
       /* We have a reply */
    CASE cCode == "XHBR31"
       IF hb_inetRecvAll( ::skTCP, @cOrigLen ) == Len( cOrigLen )
-         nOrigLen := HB_GetLen8( cOrigLen )
+         nOrigLen := hb_GetLen8( cOrigLen )
          IF hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
-            nDataLen := HB_GetLen8( cDataLen )
+            nDataLen := hb_GetLen8( cDataLen )
             cData := Space( nDataLen )
             IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
-               cData := HB_Uncompress( nOrigLen, ::Decrypt( cData ) )
+               cData := hb_Uncompress( nOrigLen, ::Decrypt( cData ) )
                IF ! Empty( cData )
                   ::oResult := hb_Deserialize( cData, nDataLen )
                   IF ::oResult != NIL
@@ -919,7 +921,7 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
       IF hb_inetRecvAll( ::skTCP, @cProgress ) == Len( cProgress )
          nProgress := hb_Deserialize( cProgress, Len( cProgress ) )
          IF nProgress != NIL .AND. hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
-            nDataLen := HB_GetLen8( cDataLen )
+            nDataLen := hb_GetLen8( cDataLen )
             cData := Space( nDataLen )
             IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
                ::oResult := hb_Deserialize( ::Decrypt( cData ), nDataLen )
@@ -936,12 +938,12 @@ METHOD TCPParse( cCode ) CLASS tRPCClient
       IF hb_inetRecvAll( ::skTCP, @cProgress ) == Len( cProgress )
          nProgress := hb_Deserialize( cProgress, Len( cProgress ) )
          IF nProgress != NIL .AND. hb_inetRecvAll( ::skTCP, @cOrigLen ) == Len( cOrigLen )
-            nOrigLen := HB_GetLen8( cOrigLen )
+            nOrigLen := hb_GetLen8( cOrigLen )
             IF hb_inetRecvAll( ::skTCP, @cDataLen ) == Len( cDataLen )
-               nDataLen := HB_GetLen8( cDataLen )
+               nDataLen := hb_GetLen8( cDataLen )
                cData := Space( nDataLen )
                IF hb_inetRecvAll( ::skTCP, @cData ) == nDataLen
-                  cData := HB_Uncompress( nOrigLen, cData )
+                  cData := hb_Uncompress( nOrigLen, cData )
                   IF ! Empty( cData )
                      ::oResult := hb_Deserialize( ::Decrypt( cData ), nDataLen )
                      IF ::oResult != NIL
@@ -1019,7 +1021,7 @@ METHOD GetServerAddress( xId ) CLASS tRpcClient
 METHOD Encrypt( cDataIn ) CLASS tRPCClient
 
    IF ::bEncrypted
-      RETURN HB_Crypt( cDataIn, ::cCryptKey )
+      RETURN hb_Crypt( cDataIn, ::cCryptKey )
    ENDIF
 
    RETURN cDataIn
@@ -1027,7 +1029,7 @@ METHOD Encrypt( cDataIn ) CLASS tRPCClient
 METHOD Decrypt( cDataIn ) CLASS tRPCClient
 
    IF ::bEncrypted
-      RETURN HB_Decrypt( cDataIn, ::cCryptKey )
+      RETURN hb_Decrypt( cDataIn, ::cCryptKey )
    ENDIF
 
    RETURN cDataIn

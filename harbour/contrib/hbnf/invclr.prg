@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_INVCLR( cDsrdColor )
+FUNCTION ft_InvClr( cDsrdColor )
 
    LOCAL cBackground                    // The Background Color, New Foreground
    LOCAL cForeground                    // The Foreground Color, New Background

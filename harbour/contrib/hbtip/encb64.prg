@@ -73,12 +73,12 @@ METHOD New() CLASS TIPEncoderBase64
    RETURN Self
 
 METHOD Encode( cData ) CLASS TIPEncoderBase64
-   RETURN TIP_BASE64ENCODE( cData, iif( ::bHttpExcept, NIL, 72 ), Chr( 13 ) + Chr( 10 ) )
+   RETURN tip_Base64Encode( cData, iif( ::bHttpExcept, NIL, 72 ), Chr( 13 ) + Chr( 10 ) )
 
 METHOD Decode( cData ) CLASS TIPEncoderBase64
    RETURN hb_base64Decode( cData )
 
-FUNCTION TIP_BASE64ENCODE( cBinary, nLineLength, cCRLF )
+FUNCTION tip_Base64Encode( cBinary, nLineLength, cCRLF )
 
    LOCAL cTextIn := hb_base64Encode( cBinary )
 

@@ -14,21 +14,21 @@ PROCEDURE Main()
    ? "myarray1 := DIRECTORY()"
    ?
    AEval( myarray1, {| v | QOut( PadR( v[ 1 ], 12 ), v[ 2 ], v[ 3 ], v[ 4 ], v[ 5 ] ) } )
-   var0 := FT_AEMINLEN( myarray1 )
+   var0 := ft_AEMinLen( myarray1 )
    ? PadR( "FT_AEMINLEN( myarray1 ) ->", 30 )
    ?? var0
    ?
-   var0 := FT_AEMINLEN( myarray1, 2 )
+   var0 := ft_AEMinLen( myarray1, 2 )
    ? PadR( "FT_AEMINLEN( myarray1, 2 ) ->", 30 )
    ?? var0
    ?
    ?
-   var0 := FT_AEMINLEN( myarray1[ 2 ] )
+   var0 := ft_AEMinLen( myarray1[ 2 ] )
    ? PadR( "FT_AEMINLEN( myarray1[ 2 ] ) ->", 30 )
    ?? var0
    ?
    ?
-   var0 := FT_AEMINLEN( myarray1, 3 )
+   var0 := ft_AEMinLen( myarray1, 3 )
    ? PadR( "FT_AEMINLEN( myarray1, 3 ) ->", 30 )
    ?? var0
    ?

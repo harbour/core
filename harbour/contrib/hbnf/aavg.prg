@@ -25,7 +25,7 @@
 
 #define FORCE_BETWEEN( x, y, z )         ( y := Max( Min( y, z ), x ) )
 
-FUNCTION FT_AAVG( aArray, nStartIndex, nEndIndex )
+FUNCTION ft_AAvg( aArray, nStartIndex, nEndIndex )
 
    __defaultNIL( @nStartIndex, 1 )
    __defaultNIL( @nEndIndex, Len( aArray ) )
@@ -37,5 +37,5 @@ FUNCTION FT_AAVG( aArray, nStartIndex, nEndIndex )
 
    RETURN iif( ! HB_ISARRAY( aArray ) .OR. Empty( aArray ), ;
       0, ;
-      FT_ASUM( aArray, nStartIndex, nEndIndex ) / ;
+      ft_ASum( aArray, nStartIndex, nEndIndex ) / ;
       ( nEndIndex - nStartIndex + 1 ) )

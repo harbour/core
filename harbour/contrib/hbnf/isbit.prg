@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_ISBIT( cInbyte, nBitPos )
+FUNCTION ft_IsBit( cInbyte, nBitPos )
 
    IF HB_ISSTRING( cInbyte ) .AND. HB_ISNUMERIC( nBitPos )
       RETURN hb_bitTest( hb_BCode( cInbyte ), nBitpos )

@@ -88,7 +88,9 @@ PROCEDURE WinMain( ... )
 
 PROCEDURE hbnetio_WinServiceEntry( ... )
 
-// LOCAL bSignal := {|| win_serviceGetStatus() != WIN_SERVICE_RUNNING }
+#if 0
+   LOCAL bSignal := {|| win_serviceGetStatus() != WIN_SERVICE_RUNNING }
+#endif
 
    netiosrv_Main( .F., ... ) /* Non-interactive */
 

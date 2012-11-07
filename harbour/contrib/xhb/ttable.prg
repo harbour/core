@@ -322,7 +322,7 @@ FUNCTION NetDelete()
 
    RETURN s_lNetOk
 
-FUNCTION NetReCall()
+FUNCTION NetRecall()
 
    s_lNetOk := .F.
 
@@ -703,7 +703,7 @@ CREATE CLASS HBTable
       ( ::Alias )->( ordName( nOrder, ::cOrderBag ) )
 
    METHOD ordNumber( cOrder ) INLINE ;
-   ( ::Alias )->( ordNumber( cOrder, ::cOrderBag ) )
+      ( ::Alias )->( ordNumber( cOrder, ::cOrderBag ) )
 
    METHOD ordScope( n, u ) INLINE ( ::Alias )->( ordScope( n, u ) )
 

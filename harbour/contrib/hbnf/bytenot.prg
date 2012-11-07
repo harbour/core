@@ -24,7 +24,7 @@
  *
  */
 
-FUNCTION FT_BYTENOT( cByte )
+FUNCTION ft_ByteNot( cByte )
 
    IF HB_ISSTRING( cByte )
       RETURN hb_BChar( hb_bitNot( hb_BCode( cByte ) ) )

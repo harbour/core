@@ -49,7 +49,7 @@ PROCEDURE Main()
    ENDIF
 
    ? "--- test 3 ---"
-   nLen := hb_lzf_compressBound( cStr )
+   nLen := hb_lzf_compressbound( cStr )
 
    cStr := TEST_STRING
    str_compressed := hb_lzf_compress( cStr, nLen, @nResult )
@@ -64,7 +64,7 @@ PROCEDURE Main()
    ENDIF
 
    ? "--- test 4 ---"
-   nLen := hb_lzf_compressBound( cStr )
+   nLen := hb_lzf_compressbound( cStr )
    str_compressed := Space( nLen )
 
    cStr := TEST_STRING

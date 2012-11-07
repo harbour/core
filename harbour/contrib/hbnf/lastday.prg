@@ -27,7 +27,7 @@
 
  */
 
-FUNCTION ft_lday( dDate )
+FUNCTION ft_LDay( dDate )
 
    IF dDate == NIL
       dDate := Date()

@@ -12,7 +12,7 @@ PROCEDURE Main()
 
    LOCAL oHttp, cHtml, hQuery, aLink, oNode, oDoc
 
-   oHttp := TIpClientHttp():new( "http://www.google.com/search" )
+   oHttp := TIPClientHTTP():new( "http://www.google.com/search" )
 
    /* build the Google query */
    hQUery := { => }
@@ -51,7 +51,7 @@ PROCEDURE Main()
    aLink := oNode:aS
 
    FOR EACH oNode IN aLink
-      ? HtmlToOem( oNode:getText( "" ) ), oNode:href
+      ? tip_HtmlToStr( oNode:getText( "" ) ), oNode:href
    NEXT
 
    RETURN

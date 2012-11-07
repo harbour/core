@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
+FUNCTION ft_Elapsed( dStart, dEnd, cTimeStart, cTimeEnd )
 
    LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[ 4 ][ 2 ]
 

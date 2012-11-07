@@ -25,39 +25,39 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC Bin_And
-DYNAMIC Bin_Not
-DYNAMIC Bin_Or
-DYNAMIC Bin_Xor
-DYNAMIC tp_Baud
-DYNAMIC tp_ClearIn
-DYNAMIC tp_Close
-DYNAMIC tp_ClrKbd
-DYNAMIC tp_Crc16
-DYNAMIC tp_Crc32
-DYNAMIC tp_CtrlCTS
-DYNAMIC tp_CtrlDTR
-DYNAMIC tp_CtrlRTS
-DYNAMIC tp_Delay
-DYNAMIC tp_Flush
-DYNAMIC tp_Idle
-DYNAMIC tp_InChrs
-DYNAMIC tp_InFree
-DYNAMIC tp_Inkey
-DYNAMIC tp_IsCTS
-DYNAMIC tp_IsDCD
-DYNAMIC tp_IsDSR
-DYNAMIC tp_IsRI
-DYNAMIC tp_LookFor
-DYNAMIC tp_Open
-DYNAMIC tp_OutFree
-DYNAMIC tp_Recv
-DYNAMIC tp_RecvTo
-DYNAMIC tp_Reopen
-DYNAMIC tp_Send
-DYNAMIC tp_SendSub
-DYNAMIC tp_Uninstall
-DYNAMIC tp_WaitFor
+DYNAMIC bin_and
+DYNAMIC bin_not
+DYNAMIC bin_or
+DYNAMIC bin_xor
+DYNAMIC tp_baud
+DYNAMIC tp_clearin
+DYNAMIC tp_close
+DYNAMIC tp_clrkbd
+DYNAMIC tp_crc16
+DYNAMIC tp_crc32
+DYNAMIC tp_ctrlcts
+DYNAMIC tp_ctrldtr
+DYNAMIC tp_ctrlrts
+DYNAMIC tp_delay
+DYNAMIC tp_flush
+DYNAMIC tp_idle
+DYNAMIC tp_inchrs
+DYNAMIC tp_infree
+DYNAMIC tp_inkey
+DYNAMIC tp_iscts
+DYNAMIC tp_isdcd
+DYNAMIC tp_isdsr
+DYNAMIC tp_isri
+DYNAMIC tp_lookfor
+DYNAMIC tp_open
+DYNAMIC tp_outfree
+DYNAMIC tp_recv
+DYNAMIC tp_recvto
+DYNAMIC tp_reopen
+DYNAMIC tp_send
+DYNAMIC tp_sendsub
+DYNAMIC tp_uninstall
+DYNAMIC tp_waitfor
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTPATHY__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

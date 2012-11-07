@@ -70,16 +70,16 @@ CREATE CLASS TXMLNode
    VAR oChild
 
    METHOD New( nType, cName, aAttributes, cData ) CONSTRUCTOR
-   METHOD Clone()                      INLINE HBXml_node_clone( Self )
-   METHOD CloneTree()                  INLINE HBXml_node_clone_tree( Self )
+   METHOD Clone()                      INLINE hbxml_node_clone( Self )
+   METHOD CloneTree()                  INLINE hbxml_node_clone_tree( Self )
 
-   METHOD Unlink()                     INLINE HBXml_node_unlink( Self )
+   METHOD Unlink()                     INLINE hbxml_node_unlink( Self )
    METHOD NextInTree()
 
-   METHOD InsertBefore( oNode )        INLINE HBXml_node_insert_before( Self, oNode )
-   METHOD InsertAfter( oNode )         INLINE HBXml_node_insert_after( Self, oNode )
-   METHOD InsertBelow( oNode )         INLINE HBXml_node_insert_below( Self, oNode )
-   METHOD AddBelow( oNode )            INLINE HBXml_node_add_below( Self, oNode )
+   METHOD InsertBefore( oNode )        INLINE hbxml_node_insert_before( Self, oNode )
+   METHOD InsertAfter( oNode )         INLINE hbxml_node_insert_after( Self, oNode )
+   METHOD InsertBelow( oNode )         INLINE hbxml_node_insert_below( Self, oNode )
+   METHOD AddBelow( oNode )            INLINE hbxml_node_add_below( Self, oNode )
 
    METHOD GetAttribute( cAttrib )         INLINE iif( cAttrib $ ::aAttributes, ::aAttributes[ cAttrib ], NIL )
    METHOD SetAttribute( cAttrib, xValue ) INLINE ::aAttributes[ cAttrib ] := xValue
@@ -87,8 +87,8 @@ CREATE CLASS TXMLNode
    METHOD Depth()
    METHOD Path()
 
-   METHOD ToString( nStyle )        INLINE HBXml_node_to_string( Self, nStyle )
-   METHOD Write( fHandle, nStyle )  INLINE HBXml_node_write( Self, fHandle, nStyle )
+   METHOD ToString( nStyle )        INLINE hbxml_node_to_string( Self, nStyle )
+   METHOD Write( fHandle, nStyle )  INLINE hbxml_node_write( Self, fHandle, nStyle )
 
    // Useful for debugging purposes
    METHOD ToArray()                 INLINE;
@@ -205,7 +205,7 @@ METHOD Clone() CLASS TXmlIterator
 
    LOCAL oRet
 
-   oRet := TXmlIterator():New( ::oNodeTop )
+   oRet := TXMLIterator():New( ::oNodeTop )
    oRet:cName := ::cName
    oRet:cAttribute := ::cAttribute
    oRet:cValue := ::cValue
@@ -361,7 +361,7 @@ CREATE CLASS TXmlDocument
    VAR nNodeCount
 
    METHOD New( xElem, nStyle )        CONSTRUCTOR
-   METHOD Read( xData, nStyle )       INLINE HBXML_DATAREAD( Self, xData, nStyle )
+   METHOD Read( xData, nStyle )       INLINE hbxml_dataread( Self, xData, nStyle )
    METHOD ToString( nStyle )          INLINE ::oRoot:ToString( nStyle )
    METHOD Write( fHandle, nStyle )
 
@@ -386,7 +386,7 @@ METHOD New( xElem, nStyle ) CLASS TXmlDocument
    ::nNodeCount := 0
 
    IF xElem == NIL
-      ::oRoot := TXmlNode():New( HBXML_TYPE_DOCUMENT )
+      ::oRoot := TXMLNode():New( HBXML_TYPE_DOCUMENT )
    ELSE
       SWITCH ValType( xElem )
       CASE "O"
@@ -395,7 +395,7 @@ METHOD New( xElem, nStyle ) CLASS TXmlDocument
 
       CASE "N"
       CASE "C"
-         ::oRoot := TXmlNode():New( HBXML_TYPE_DOCUMENT )
+         ::oRoot := TXMLNode():New( HBXML_TYPE_DOCUMENT )
          IF hb_FileExists( xElem )
             ::Read( hb_MemoRead( xElem ), nStyle )
          ELSE
@@ -435,13 +435,13 @@ METHOD Write( fHandle, nStyle ) CLASS TXmlDocument
 
 METHOD FindFirst( cName, cAttrib, cValue, cData ) CLASS TXmlDocument
 
-   ::oIterator := TXmlIteratorScan():New( ::oRoot )
+   ::oIterator := TXMLIteratorScan():New( ::oRoot )
 
    RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
 
 METHOD FindFirstRegex( cName, cAttrib, cValue, cData ) CLASS TXmlDocument
 
-   ::oIterator := TXmlIteratorRegex():New( ::oRoot )
+   ::oIterator := TXMLIteratorRegex():New( ::oRoot )
 
    RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
 
@@ -449,7 +449,7 @@ METHOD GetContext() CLASS TXmlDocument
 
    LOCAL oDoc
 
-   oDoc := TXmlDocument():New()
+   oDoc := TXMLDocument():New()
    oDoc:oRoot := ::oIterator:GetNode()
 
    RETURN oDoc

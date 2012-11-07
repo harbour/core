@@ -30,7 +30,7 @@
 
 THREAD STATIC t_nHandle := F_ERROR
 
-FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
+FUNCTION ft_DFSetup( cInFile, nTop, nLeft, nBottom, nRight, ;
       nStart, nCNormal, nCHighlight, cExitKeys, ;
       lBrowse, nColSkip, nRMargin, nBuffSize )
 
@@ -65,7 +65,7 @@ FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
       rval := FError()
 
       IF rval == 0
-         rval := _FT_DFINIT( t_nHandle, nTop, nLeft, nBottom, nRight, ;
+         rval := _ft_DFInit( t_nHandle, nTop, nLeft, nBottom, nRight, ;
             nStart, nCNormal, nCHighlight, cExitKeys, ;
             lBrowse, nColSkip, nRMargin, nBuffSize )
       ENDIF
@@ -75,10 +75,10 @@ FUNCTION FT_DFSETUP( cInFile, nTop, nLeft, nBottom, nRight, ;
 
    RETURN rval
 
-FUNCTION FT_DFCLOSE()
+FUNCTION ft_DFClose()
 
    IF t_nHandle != F_ERROR
-      _FT_DFCLOS()
+      _ft_DFClos()
 
       FClose( t_nHandle )
 

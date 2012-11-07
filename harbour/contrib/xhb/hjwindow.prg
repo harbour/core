@@ -309,7 +309,7 @@ METHOD Put() CLASS TJsWindow
       ::varName + "', '" + ;
       ::features + "')"
 
-   HtmlJsCmd( ::nH, cStr )
+   HtmlJSCmd( ::nH, cStr )
 
    RETURN Self
 
@@ -321,7 +321,7 @@ METHOD Put() CLASS TJsWindow
 
 METHOD Write( c ) CLASS TJsWindow
 
-   HtmlJsCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
 
    RETURN Self
 
@@ -413,7 +413,7 @@ METHOD Begin() CLASS TJsWindow
 
 METHOD End() CLASS TJsWindow
 
-   HtmlJsCmd( ::nH, ::varName + ".document.write('</BODY></HTML>')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('</BODY></HTML>')" + CRLF() )
 
    RETURN Self
 

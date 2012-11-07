@@ -57,7 +57,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
+FUNCTION ft_BrwsWhl( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
       cColorList, cColorShad, nTop, nLeft, nBottom, nRight )
 
    LOCAL b, column, i
@@ -82,7 +82,7 @@ FUNCTION FT_BRWSWHL( aFields, bWhileCond, cKey, nFreeze, lSaveScrn, ;
    ENDIF
 
    /* make new browse object */
-   b := TBrowseDb( nTop, nLeft, nBottom, nRight )
+   b := TBrowseDB( nTop, nLeft, nBottom, nRight )
 
    /* default heading and column separators */
    b:headSep := hb_UTF8ToStrBox( "═╤═" )

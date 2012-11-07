@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_QTR( dGivenDate, nQtrNum )
+FUNCTION ft_Qtr( dGivenDate, nQtrNum )
 
    LOCAL nTemp, aRetVal
 
@@ -37,13 +37,13 @@ FUNCTION FT_QTR( dGivenDate, nQtrNum )
       dGivenDate := Date()
    ENDIF
 
-   aRetval := FT_YEAR( dGivenDate )
+   aRetval := ft_Year( dGivenDate )
 
    IF HB_ISNUMERIC( nQtrNum )
       IF nQtrNum < 1 .OR. nQtrNum > 4
          nQtrNum := 4
       ENDIF
-      dGivenDate := FT_MADD( aRetVal[ 2 ], 3 * ( nQtrNum - 1 ) )
+      dGivenDate := ft_MAdd( aRetVal[ 2 ], 3 * ( nQtrNum - 1 ) )
    ENDIF
 
    nTemp := Month( dGivenDate ) - Month( aRetVal[ 2 ] )
@@ -51,7 +51,7 @@ FUNCTION FT_QTR( dGivenDate, nQtrNum )
    nTemp := Int( ( nTemp - 1 ) / 3 )
 
    aRetVal[ 1 ] += StrZero( nTemp + 1, 2 )
-   aRetVal[ 2 ] := FT_MADD( aRetVal[ 2 ], nTemp * 3 )
-   aRetVal[ 3 ] := FT_MADD( aRetVal[ 2 ], 3 ) - 1
+   aRetVal[ 2 ] := ft_MAdd( aRetVal[ 2 ], nTemp * 3 )
+   aRetVal[ 3 ] := ft_MAdd( aRetVal[ 2 ], 3 ) - 1
 
    RETURN aRetVal

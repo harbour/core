@@ -70,7 +70,7 @@ PROCEDURE Main()
    ? Str( nRows, 4 ), " row(s) affected."
 
    SQLFreeStmt( hStmt, SQL_DROP )
-   SQLDisConnect( hDbc )
+   SQLDisconnect( hDbc )
    SQLFreeConnect( hDbc )
    SQLFreeEnv( hEnv )
 

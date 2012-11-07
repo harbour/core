@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_WorkDays( dStart, dStop )
+FUNCTION ft_Workdays( dStart, dStop )
 
    LOCAL nWorkDays := 0, nDays, nAdjust
 

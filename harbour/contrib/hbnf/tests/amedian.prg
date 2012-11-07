@@ -14,19 +14,19 @@ PROCEDURE Main()
    ? "TEST TO DEMONSTRATE EXAMPLES OF FT_AMEDIAN"
    ?
    AEval( myarray0, {| x | AAdd( myarray1, x[ F_SIZE ] ) } )
-   var0 := FT_AMEDIAN( myarray1 )
+   var0 := ft_AMedian( myarray1 )
    ? PadR( "FT_AMEDIAN( myarray1 ) ->", 35 )
    ?? var0
    ?
-   var0 := FT_AMEDIAN( myarray1, 2 )
+   var0 := ft_AMedian( myarray1, 2 )
    ? PadR( "FT_AMEDIAN( myarray1, 2 ) ->", 35 )
    ?? var0
    ?
-   var0 := FT_AMEDIAN( myarray1, , 9 )
+   var0 := ft_AMedian( myarray1, , 9 )
    ? PadR( "FT_AMEDIAN( myarray1, , 9 ) ->", 35 )
    ?? var0
    ?
-   var0 := FT_AMEDIAN( myarray1, 8, 40 )
+   var0 := ft_AMedian( myarray1, 8, 40 )
    ? PadR( "FT_AMEDIAN( myarray1, 8, 40 ) ->", 35 )
    ?? var0
    ?

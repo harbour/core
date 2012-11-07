@@ -99,8 +99,8 @@ CREATE CLASS TIpCgi
 
    METHOD StartSession( cSID )
    METHOD DestroySession( cID )
-   METHOD CreateSID( cCRCKey ) INLINE ::cSID := TIP_GenerateSID( cCrcKey )
-   METHOD CheckCrcSID( cSID, cCRCKey ) INLINE TIP_CheckSID( cSID, cCRCKey )
+   METHOD CreateSID( cCRCKey ) INLINE ::cSID := tip_GenerateSID( cCrcKey )
+   METHOD CheckCrcSID( cSID, cCRCKey ) INLINE tip_CheckSID( cSID, cCRCKey )
    METHOD SessionEncode()
    METHOD SessionDecode( cData )
 
@@ -338,7 +338,7 @@ METHOD DestroySession( cID ) CLASS TIpCgi
       IF !( lRet := ( FErase( cFile ) == 0 ) )
          ::Write( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
       ELSE
-         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + TIP_DateToGMT( Date() - 1 )
+         ::hCookies[ "SESSIONID" ] := cSID + "; expires= " + tip_DateToGMT( Date() - 1 )
          ::CreateSID()
          cSID := ::cSID
          ::hCookies[ "SESSIONID" ] := cSID
@@ -363,7 +363,7 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
       cErrMsg += '<tr><td>OS ERROR:</td><td>' + hb_ntos( xError:OsCode ) + ' IN ' + xError:SubSystem + '/' + hb_ntos( xError:SubCode ) + '</td></tr>'
       cErrMsg += '<tr><td>FILENAME:</td><td>' + Right( xError:FileName, 40 ) + '</td></tr>'
    ELSEIF HB_ISSTRING( xError )
-      cErrMsg += '<tr><td>ERROR MESSAGE:</td><td>' + TIP_HTMLSPECIALCHARS( xError ) + '</td></tr>'
+      cErrMsg += '<tr><td>ERROR MESSAGE:</td><td>' + tip_HtmlSpecialChars( xError ) + '</td></tr>'
    ENDIF
 
    nCalls := 1

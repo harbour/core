@@ -76,11 +76,13 @@ CREATE CLASS THtml
    VAR BaseURL, BaseTarget
    VAR lFont INIT .F.
 
-// METHOD New( cFile, cTitle, cLinkTitle, cCharSet, cScriptSRC, ;
-//         BGIMAGE, BGCOLOR, txtColor, cJavaCode, ;
-//         onLoad, onUnload, cLinkClr, cVLinkClr, cALinkClr, ;
-//         cStyle, aimages, baseURL, baseTarget, ;
-//         nRefresh, cRefreshURL, cStyleScr, lnocache )
+#if 0
+   METHOD New( cFile, cTitle, cLinkTitle, cCharSet, cScriptSRC, ;
+           BGIMAGE, BGCOLOR, txtColor, cJavaCode, ;
+           onLoad, onUnload, cLinkClr, cVLinkClr, cALinkClr, ;
+           cStyle, aimages, baseURL, baseTarget, ;
+           nRefresh, cRefreshURL, cStyleScr, lnocache )
+#endif
 
    METHOD Newalt( cType )
    METHOD cgiNew( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
@@ -104,11 +106,11 @@ CREATE CLASS THtml
 
    METHOD CGIClose()
 
-   METHOD SetPageColor( cColor, lBody ) INLINE DEFAULT( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BGCOLOR="' + cColor + '">', ' BGCOLOR="' + cColor + '" ' )
+   METHOD SetPageColor( cColor, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BGCOLOR="' + cColor + '">', ' BGCOLOR="' + cColor + '" ' )
 
-   METHOD SetTextColor( cColor, lBody ) INLINE DEFAULT( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY TEXT="' + cColor + '">', ' TEXT="' + cColor + '" ' )
+   METHOD SetTextColor( cColor, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY TEXT="' + cColor + '">', ' TEXT="' + cColor + '" ' )
 
-   METHOD SetBgImage( cImage, lBody ) INLINE DEFAULT( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BACKGROUND="' + cImage + '">', ' BACKGROUND="' + cImage + '" ' )
+   METHOD SetBgImage( cImage, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BACKGROUND="' + cImage + '">', ' BACKGROUND="' + cImage + '" ' )
 
    METHOD CLOSE()
 
@@ -124,29 +126,29 @@ CREATE CLASS THtml
 
    METHOD SAY( str, font, size, type, color, style )
 
-   METHOD QQOut( c ) INLINE DEFAULT( c, "" ), ::cStr +=  c
+   METHOD QQOut( c ) INLINE Default( c, "" ), ::cStr +=  c
 
-   METHOD QOut( c ) INLINE DEFAULT( c, "" ), ::cStr +=  CRLF() + c + '<BR>' + CRLF()
+   METHOD QOut( c ) INLINE Default( c, "" ), ::cStr +=  CRLF() + c + '<BR>' + CRLF()
 
-   METHOD Write( c ) INLINE DEFAULT( c, "" ), ::cStr +=  c
+   METHOD Write( c ) INLINE Default( c, "" ), ::cStr +=  c
 
-   METHOD WriteLN( c ) INLINE DEFAULT( c, "" ), ::cStr +=  CRLF() + c + '<BR>' + CRLF()
+   METHOD WriteLN( c ) INLINE Default( c, "" ), ::cStr +=  CRLF() + c + '<BR>' + CRLF()
 
-   METHOD SayColor( t, c ) INLINE DEFAULT( t, "" ), DEFAULT( c, "black" ), ;
+   METHOD SayColor( t, c ) INLINE Default( t, "" ), Default( c, "black" ), ;
       ::cStr +=  '<FONT COLOR="' + c + '">' + t + '</FONT>'
 
-   METHOD Space( n ) INLINE DEFAULT( n, 1 ), ::cStr +=  Replicate( "&nbsp;", n  )
+   METHOD Space( n ) INLINE Default( n, 1 ), ::cStr +=  Replicate( "&nbsp;", n  )
 
    METHOD PutImage( cImage, nBorder, nHeight, cOnclick, cOnMsOver, cOnMsOut, ;
       cName, cAlt, cTarget, nWidth, lBreak, ID, MAP, ALING, HSPACE )
 
-   METHOD TEXT( cText, nCols, lWrap ) INLINE DEFAULT( lWrap, .T. ), DEFAULT( nCols, 80 ), ;
+   METHOD TEXT( cText, nCols, lWrap ) INLINE Default( lWrap, .T. ), Default( nCols, 80 ), ;
       ::cStr +=  "<PRE" + iif( nCols != NIL, ' COLS="' + hb_ntos( nCols ) + "'", "" ) + iif( lWrap, " WRAP>", ">" ) + CRLF() + cText + CRLF() + "</PRE>" + CRLF()
 
-   METHOD MultiCol( txt, cols, gutter, width ) INLINE DEFAULT( txt, "" ), ;
-      DEFAULT( cols, 2 ), ;
-      DEFAULT( gutter, 5 ), ;
-      DEFAULT( width, 100 ), ;
+   METHOD MultiCol( txt, cols, gutter, width ) INLINE Default( txt, "" ), ;
+      Default( cols, 2 ), ;
+      Default( gutter, 5 ), ;
+      Default( width, 100 ), ;
       ::cStr +=  '<MULTICOL COLS="' + hb_ntos( cols ) + '" GUTTER="' + hb_ntos( gutter ) + '" WIDTH="' + hb_ntos( width ) + '">', ;
       ::cStr +=  txt, ;
       ::cStr +=  "</MULTICOL>"
@@ -368,7 +370,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
 
    IF aJsCode != NIL
-      AEval( aJsCode, {| e | HtmlJsCmd( ::nH, e ) } )
+      AEval( aJsCode, {| e | HtmlJSCmd( ::nH, e ) } )
    ENDIF
 
    IF aScriptSrc != NIL
@@ -1195,7 +1197,9 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
 
 METHOD CLOSE() CLASS THtml
 
-// ::cStr += ::cStr
+#if 0
+   ::cStr += ::cStr
+#endif
    ::cStr += "</body>" + CRLF()
    ::cStr += "</html>" + CRLF()
 
@@ -1622,11 +1626,11 @@ METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
    ENDIF
 
    IF xValue != NIL
-      ::cStr +=  ' Value="' + htmlany2sTR( xValue ) + '"'
+      ::cStr +=  ' Value="' + HtmlAny2Str( xValue ) + '"'
    ENDIF
 
    IF nSize != NIL
-      ::cStr +=  ' Size="' + htmlany2sTR( nSize ) + '"'
+      ::cStr +=  ' Size="' + HtmlAny2Str( nSize ) + '"'
    ENDIF
 
    ::cStr +=  ">"
@@ -2122,7 +2126,7 @@ FUNCTION HtmlPageObject()
 *
 */
 
-FUNCTION HtmlDecodeURL( cString )
+FUNCTION HtmlDecodeUrl( cString )
 
    DO WHILE "%26" $ cString
       cString := Stuff( cString, At( "%26", cString ), 3, "&" )
@@ -2198,7 +2202,7 @@ FUNCTION HtmlDecodeURL( cString )
 *
 */
 
-PROCEDURE HtmlJsCmd( nH, cCmd )
+PROCEDURE HtmlJSCmd( nH, cCmd )
 
    LOCAL cStr := ""
 
@@ -2289,11 +2293,11 @@ FUNCTION HtmlPadR( cStr, n )
 
 //
 
-FUNCTION ANY2STR( xVal )
+FUNCTION Any2Str( xVal )
 
-   RETURN  HTMLANY2STR( xVal )
+   RETURN  HtmlAny2Str( xVal )
 
-FUNCTION HTMLANY2STR( xVal )
+FUNCTION HtmlAny2Str( xVal )
 
    LOCAL xRet := NIL
 

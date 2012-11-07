@@ -24,7 +24,7 @@
  *
  */
 
-FUNCTION FT_WOY( dInDate )
+FUNCTION ft_WoY( dInDate )
 
    LOCAL nFirstDays, nDayOffset, nWkNumber, cCentury
 
@@ -52,7 +52,7 @@ FUNCTION FT_WOY( dInDate )
 
    RETURN nWkNumber
 
-FUNCTION FT_DOY( dInDate )
+FUNCTION ft_DoY( dInDate )
 
    LOCAL nDayNum
 

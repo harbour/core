@@ -27,10 +27,10 @@
 
 #include "fileio.ch"
 
-FUNCTION FT_DSKSIZE( cDrive )
+FUNCTION ft_DskSize( cDrive )
 
    RETURN hb_DiskSpace( cDrive + hb_osDriveSeparator(), HB_DISK_TOTAL )
 
-FUNCTION FT_DSKFREE( cDrive )
+FUNCTION ft_DskFree( cDrive )
 
    RETURN hb_DiskSpace( cDrive + hb_osDriveSeparator(), HB_DISK_FREE )

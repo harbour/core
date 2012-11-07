@@ -58,8 +58,10 @@ PROCEDURE Main()
    SET CENTURY ON
    hb_langSelect( "EN" )
 
-   aTemp      := FT_DATECNFG()                   // Get/Set cFY_Start & nDOW_Start.
-// aTemp      := FT_DATECNFG( "1980.01.03", 1 )  // Date string in user's format.
+   aTemp      := ft_DateCnfg()                   // Get/Set cFY_Start & nDOW_Start.
+#if 0
+   aTemp      := ft_DateCnfg( "1980.01.03", 1 )  // Date string in user's format.
+#endif
    cFY_Start  := aTemp[ 1 ]                      // See FT_DATECNFG() in ft_date0.prg
    nDOW_Start := ATEMP[ 2 ]                      // FOR PARAMETERS.
    dDate      := Date() - 500
@@ -71,72 +73,72 @@ PROCEDURE Main()
    ??   " nDOW_Start:" + Str( nDOW_Start, 2 )
    ?    "---- Fiscal Year Data -----------"
 
-   aTestData := FT_YEAR( dDate )
+   aTestData := ft_Year( dDate )
    ? "FYYear     ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ]
 
-   aTestData := FT_QTR( dDate )
+   aTestData := ft_Qtr( dDate )
    ? "FYQtr      ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
-   aTestData := FT_QTR( dDate, nNum )
+   aTestData := ft_Qtr( dDate, nNum )
    ? "FYQtr    " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   aTestData := FT_MONTH( dDate )
+   aTestData := ft_Month( dDate )
    ? "FYMonth    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
-   aTestData := FT_MONTH( dDate, nNum )
+   aTestData := ft_Month( dDate, nNum )
    ? "FYMonth  " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   aTestData := FT_WEEK( dDate )
+   aTestData := ft_Week( dDate )
    ? "FYWeek     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
-   aTestData := FT_WEEK( dDate, nNum )
+   aTestData := ft_Week( dDate, nNum )
    ? "FYWeek   " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   aTestData := FT_DAYOFYR( dDate )
+   aTestData := ft_DayOfYr( dDate )
    ? "FYDay     ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 3 ) )
-   aTestData := FT_DAYOFYR( dDate, nNum )
+   aTestData := ft_DayOfYr( dDate, nNum )
    ? "FYDAY   " + Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    ?
    ? "---- Accounting Year Data -------"
 
-   aTestData := FT_ACCTYEAR( dDate )
+   aTestData := ft_AcctYear( dDate )
    ? "ACCTYear   ", aTestData[ 1 ] + "  ", aTestData[ 2 ], aTestData[ 3 ], ;
       Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
-   aTestData := FT_ACCTQTR( dDate )
+   aTestData := ft_AcctQtr( dDate )
    ? "ACCTQtr    ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
       Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
-   aTestData := FT_ACCTQTR( dDate, nNum )
+   aTestData := ft_AcctQtr( dDate, nNum )
    ? "ACCTQtr  " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   aTestData := FT_ACCTMONTH( dDate )
+   aTestData := ft_AcctMonth( dDate )
    ? "ACCTMonth  ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ], ;
       Str( ( aTestData[ 3 ] - aTestData[ 2 ] + 1 ) / 7, 3 ) + " Weeks"
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
-   aTestData := FT_ACCTMONTH( dDate, nNum )
+   aTestData := ft_AcctMonth( dDate, nNum )
    ? "ACCTMonth" + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   aTestData := FT_ACCTWEEK( dDate )
+   aTestData := ft_AcctWeek( dDate )
    ? "ACCTWeek   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 2 ) )
-   aTestData := FT_ACCTWEEK( dDate, nNum )
+   aTestData := ft_AcctWeek( dDate, nNum )
    ? "ACCTWeek " + Str( nNum, 2 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
-   aTestData := FT_DAYOFYR( dDate, , .T. )
+   aTestData := ft_DayOfYr( dDate, , .T. )
    ? "ACCTDay   ", aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    nNum      := Val( SubStr( aTestData[ 1 ], 5, 3 ) )
-   aTestData := FT_DAYOFYR( dDate, nNum, .T. )
+   aTestData := ft_DayOfYr( dDate, nNum, .T. )
    ? "ACCTDay " + Str( nNum, 3 ), aTestData[ 1 ], aTestData[ 2 ], aTestData[ 3 ]
 
    WAIT
@@ -153,7 +155,7 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
 
    LOCAL nTemp, dTemp, aTemp, cFY_Start, dStart, dEnd
 
-   aTemp     := FT_DATECNFG()
+   aTemp     := ft_DateCnfg()
    cFY_Start := aTemp[ 1 ]
 
    IF dGivenDate == NIL .OR. !( ValType( dGivenDate ) $ "ND" )
@@ -172,14 +174,14 @@ STATIC FUNCTION FT_CAL( dGivenDate, nType )
          ? "            Fiscal Month Calendar containing " + DToC( dGivenDate )
       ENDIF
 
-      aTemp    := FT_MONTH( dGivenDate )
+      aTemp    := ft_Month( dGivenDate )
       dStart   := aTemp[ 2 ]
       dEnd     := aTemp[ 3 ]
-      aTemp[ 2 ] -= FT_DAYTOBOW( aTemp[ 2 ] )
-      aTemp[ 3 ] += 6 - FT_DAYTOBOW( aTemp[ 3 ] )
+      aTemp[ 2 ] -= ft_DayToBoW( aTemp[ 2 ] )
+      aTemp[ 3 ] += 6 - ft_DayToBoW( aTemp[ 3 ] )
    ELSE
       ? "            Accounting Month Calendar containing " + DToC( dGivenDate )
-      aTemp := FT_ACCTMONTH( dGivenDate )
+      aTemp := ft_AcctMonth( dGivenDate )
    ENDIF
 
    ?

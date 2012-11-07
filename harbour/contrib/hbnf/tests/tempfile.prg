@@ -10,7 +10,7 @@ PROCEDURE Main( cPath, cHide )
 
    LOCAL cFile, nHandle
 
-   cFile := FT_TEMPFIL( cPath, cHide == "Y" )
+   cFile := ft_TempFil( cPath, cHide == "Y" )
 
    IF ! Empty( cFile )
       ? cFile

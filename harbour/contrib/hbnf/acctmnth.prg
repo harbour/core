@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
+FUNCTION ft_AcctMonth( dGivenDate, nMonthNum )
 
    LOCAL nYTemp, nMTemp, aRetVal
 
@@ -37,35 +37,35 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
       dGivenDate := Date()
    ENDIF
 
-   aRetVal := FT_MONTH( dGivenDate )
+   aRetVal := ft_Month( dGivenDate )
    nYTemp := Val( SubStr( aRetVal[ 1 ], 1, 4 ) )
    nMTemp := Val( SubStr( aRetVal[ 1 ], 5, 2 ) )
-   aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
-   aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+   aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
+   aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
    IF dGivenDate < aRetVal[ 2 ]
 
-      dGivenDate := FT_MADD( dGivenDate, -1 )
-      aRetVal    := FT_MONTH( dGivenDate )
+      dGivenDate := ft_MAdd( dGivenDate, -1 )
+      aRetVal    := ft_Month( dGivenDate )
       nMTemp     -= 1
       IF nMTemp  == 0
          nYTemp -= 1
          nMTemp := 12
       ENDIF
-      aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
-      aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+      aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
+      aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
    ELSEIF dGivenDate > aRetVal[ 3 ]
 
-      dGivenDate := FT_MADD( dGivenDate, 1 )
-      aRetVal    := FT_MONTH( dGivenDate )
+      dGivenDate := ft_MAdd( dGivenDate, 1 )
+      aRetVal    := ft_Month( dGivenDate )
       nMTemp     += 1
       IF nMTemp == 13
          nYTemp += 1
          nMTemp := 1
       ENDIF
-      aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
-      aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+      aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
+      aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
 
    ENDIF
 
@@ -73,11 +73,11 @@ FUNCTION FT_ACCTMONTH( dGivenDate, nMonthNum )
       IF nMonthNum < 1 .OR. nMonthNum > 12
          nMonthNum := 12
       ENDIF
-      aRetVal      := FT_MONTH( dGivenDate, nMonthNum )
+      aRetVal      := ft_Month( dGivenDate, nMonthNum )
       nYTemp       := Val( SubStr( aRetVal[ 1 ], 1, 4 ) )
       nMTemp       := Val( SubStr( aRetVal[ 1 ], 5, 2 ) )
-      aRetVal[ 2 ] := FT_ACCTADJ( aRetVal[ 2 ] )
-      aRetVal[ 3 ] := FT_ACCTADJ( aRetVal[ 3 ], .T. )
+      aRetVal[ 2 ] := ft_AcctAdj( aRetVal[ 2 ] )
+      aRetVal[ 3 ] := ft_AcctAdj( aRetVal[ 3 ], .T. )
    ENDIF
 
    aRetVal[ 1 ] := Str( nYTemp, 4 ) + StrZero( nMTemp, 2 )

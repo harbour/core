@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_MONTH( dGivenDate, nMonthNum )
+FUNCTION ft_Month( dGivenDate, nMonthNum )
 
    LOCAL nTemp, aRetVal
 
@@ -37,20 +37,20 @@ FUNCTION FT_MONTH( dGivenDate, nMonthNum )
       dGivenDate := Date()
    ENDIF
 
-   aRetVal := FT_YEAR( dGivenDate )
+   aRetVal := ft_Year( dGivenDate )
 
    IF HB_ISNUMERIC( nMonthNum )
       IF nMonthNum < 1 .OR. nMonthNum > 12
          nMonthNum := 12
       ENDIF
-      dGivenDate := FT_MADD( aRetVal[ 2 ], nMonthNum - 1 )
+      dGivenDate := ft_MAdd( aRetVal[ 2 ], nMonthNum - 1 )
    ENDIF
 
    nTemp := Month( dGivenDate ) - Month( aRetVal[ 2 ] )
    nTemp += iif( nTemp >= 0, 1, 13 )
 
    aRetVal[ 1 ] += StrZero( nTemp, 2 )
-   aRetVal[ 2 ] := FT_MADD( aRetVal[ 2 ], nTemp - 1 )
-   aRetVal[ 3 ] := FT_MADD( aRetVal[ 2 ], 1 ) - 1
+   aRetVal[ 2 ] := ft_MAdd( aRetVal[ 2 ], nTemp - 1 )
+   aRetVal[ 3 ] := ft_MAdd( aRetVal[ 2 ], 1 ) - 1
 
    RETURN aRetVal

@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_NOOCCUR( cCheckFor, cCheckIn, lIgnoreCase )
+FUNCTION ft_NoOccur( cCheckFor, cCheckIn, lIgnoreCase )
 
    // Is Case Important?
 

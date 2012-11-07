@@ -29,14 +29,14 @@
 #define FT_SET_CENTURY   _SET_COUNT + 1
 #define FT_SET_BLINK     _SET_COUNT + 2
 
-FUNCTION FT_RESTSETS( aOldSets )
+FUNCTION ft_RestSets( aOldSets )
 
    AEval( aOldSets, ;
       {| xElement, nElementNo | ;
       Set( nElementNo, xElement ) }, ;
       1, _SET_COUNT )
 
-   FT_SETCENTURY( aOldSets[ FT_SET_CENTURY ] )
+   ft_SetCentury( aOldSets[ FT_SET_CENTURY ] )
    SetBlink( aOldSets[ FT_SET_BLINK ] )
 
    RETURN NIL                         // FT_RestSets

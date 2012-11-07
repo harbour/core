@@ -263,12 +263,12 @@ METHOD EditField() CLASS TBrowseSQL
       hb_DispBox( 10, 10, 22, 69 )
 
       /* use fieldspec for title */
-      //@ 10, ( ( 76 - Len( ::oCurRow:FieldName( oCol:nFieldNum ) ) / 2 ) SAY "  " + ( ::oCurRow:FieldName( oCol:nFieldNum ) ) + "  "
+      // @ 10, ( ( 76 - Len( ::oCurRow:FieldName( oCol:nFieldNum ) ) / 2 ) SAY "  " + ( ::oCurRow:FieldName( oCol:nFieldNum ) ) + "  "
 
       /* edit the memo field */
       cMemo := MemoEdit( ::oCurRow:FieldGet( oCol:nFieldNum ), 11, 11, 21, 68, .T. )
 
-      IF Lastkey() == K_CTRL_END
+      IF LastKey() == K_CTRL_END
          ::oCurRow:FieldPut( oCol:nFieldNum, cMemo )
 
          /* NOTE: To do in a better way */

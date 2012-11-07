@@ -162,7 +162,7 @@ CREATE CLASS XHBEditor
    METHOD _lInsert( lInsert )    BLOCK {| Self, lInsert | HB_SYMBOL_UNUSED( Self ), iif( HB_ISLOGICAL( lInsert ), Set( _SET_INSERT, lInsert ), Set( _SET_INSERT ) ) }
 
    METHOD  New( cString, nTop, nLeft, nBottom, ;             // Converts a string to an array of strings splitting input string at EOL boundaries
-                nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol )
+      nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol )
    METHOD  LoadFile( cFileName )                            // Load cFileName into active editor
    METHOD  LoadText( cString )                              // Load cString into active editor
    METHOD  SaveFile()                                       // Save active file ( not for MemoEdit() emulation )
@@ -251,7 +251,7 @@ CREATE CLASS XHBEditor
 
    // 2006/07/25 - E.F. - Internal use only.
 
-   METHOD  GetCol( nRow, nCol ) INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), iif( nCol > 0 .AND. nCol <= Min(::nWordWrapCol + 1,::LineLen(nRow ) ), SubStr( ::aText[ nRow ]:cText, nCol, 1 ), "" ), "" )
+   METHOD  GetCol( nRow, nCol ) INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), iif( nCol > 0 .AND. nCol <= Min( ::nWordWrapCol + 1, ::LineLen( nRow ) ), SubStr( ::aText[ nRow ]:cText, nCol, 1 ), "" ), "" )
    METHOD  IsEmptyLine( nRow )  INLINE iif( nRow > 0 .AND. nRow <= ::LastRow(), Empty( ::aText[ nRow ]:cText ), .T. )
 
 ENDCLASS
@@ -1822,7 +1822,7 @@ METHOD GetLine( nRow ) CLASS XHBEditor
       IF ::lEditAllow .OR. Empty( ::nTabWidth )
          RETURN ::aText[ nRow ]:cText
       ELSE
-         RETURN HB_TabExpand( ::aText[ nRow ]:cText, ::nTabWidth )
+         RETURN hb_TabExpand( ::aText[ nRow ]:cText, ::nTabWidth )
       ENDIF
    ELSE
       RETURN ""
@@ -2772,9 +2772,11 @@ METHOD DelTextSelection() CLASS XHBEditor
       ELSE
 
          IF ::nColSelStart > 0 .AND. ::nColSelEnd > 0
-//          IF Empty( nRowSelStart )
-//             nRowSelStart := ::nColSelRow
-//          ENDIF
+#if 0
+            IF Empty( nRowSelStart )
+               nRowSelStart := ::nColSelRow
+            ENDIF
+#endif
             cText := ::aText[ ::nRow ]:cText
             ::aText[ ::nRow ]:cText := Stuff( cText, ::nColSelStart, ::nColSelEnd - ::nColSelStart + 1, "" )
             ::RefreshLine()
@@ -2832,9 +2834,11 @@ METHOD AddText( cString, lAtPos ) CLASS XHBEditor
          FOR i := 1 TO nLines
             hb_AIns( ::aText, nAtRow + i, aTmpText[ i ], .T. )
          NEXT
+#if 0
          IF nLines > 0
-//          ::RemoveLine( nAtRow + nLines )
+            ::RemoveLine( nAtRow + nLines )
          ENDIF
+#endif
       ENDIF
 
       IF ! lSaveIns

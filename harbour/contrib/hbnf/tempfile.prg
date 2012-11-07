@@ -42,7 +42,7 @@
 
 #include "fileio.ch"
 
-FUNCTION FT_TEMPFIL( cPath, lHide, /* @ */ nHandle )
+FUNCTION ft_TempFil( cPath, lHide, /* @ */ nHandle )
 
    LOCAL cFile
 

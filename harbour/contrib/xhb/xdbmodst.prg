@@ -141,7 +141,7 @@ FUNCTION dbModifyStructure( cFile )
       IF oErr:ClassName == "ERROR"
          IF oErr:genCode == EG_RENAME
             // This kind of error must be reported
-            lRet := THROW( oErr )
+            lRet := Throw( oErr )
          ELSE
             lRet := .F.
          ENDIF

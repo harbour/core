@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct )
+FUNCTION ft_DayOfYr( dGivenDate, nDayNum, lIsAcct )
 
    LOCAL nTemp, aRetVal
 
@@ -41,9 +41,9 @@ FUNCTION FT_DAYOFYR( dGivenDate, nDayNum, lIsAcct )
    ENDIF
 
    IF HB_ISLOGICAL( lIsAcct )
-      aRetVal := FT_ACCTYEAR( dGivenDate )
+      aRetVal := ft_AcctYear( dGivenDate )
    ELSE
-      aRetVal := FT_YEAR( dGivenDate )
+      aRetVal := ft_Year( dGivenDate )
    ENDIF
 
    IF HB_ISNUMERIC( nDayNum )

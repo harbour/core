@@ -26,7 +26,7 @@
  *
  */
 
-FUNCTION FT_BYTEXOR( cByte1, cByte2 )
+FUNCTION ft_ByteXor( cByte1, cByte2 )
 
    IF HB_ISSTRING( cByte1 ) .AND. HB_ISSTRING( cByte2 )
       RETURN hb_BChar( hb_bitXor( hb_BCode( cByte1 ), hb_BCode( cByte2 ) ) )

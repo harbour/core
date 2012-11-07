@@ -30,7 +30,7 @@
 #define ROUND_NORMAL         "N"
 #define ROUND_UP             "U"
 
-FUNCTION FT_ROUND( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
+FUNCTION ft_Round( nNumber, nRoundToAmount, cRoundType, cRoundDirection, ;
       nAcceptableError )
 
    LOCAL nResult := Abs( nNumber )        // The Result of the Rounding

@@ -6,7 +6,7 @@
 
 PROCEDURE Main()
 
-   LOCAL aSets := FT_SAVESETS()
+   LOCAL aSets := ft_SaveSets()
 
    HB_SYMBOL_UNUSED( aSets )
 

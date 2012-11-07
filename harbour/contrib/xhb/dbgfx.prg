@@ -56,7 +56,7 @@ STATIC s_lToOutDebug   := .T.
 STATIC s_lToLogFile    := .T.
 STATIC s_lEmptyLogFile := .T.
 
-FUNCTION HB_ToOutDebugOnOff( lOnOff )
+FUNCTION hb_ToOutDebugOnOff( lOnOff )
 
    LOCAL lOld := s_lToOutDebug
 
@@ -66,7 +66,7 @@ FUNCTION HB_ToOutDebugOnOff( lOnOff )
 
    RETURN lOld
 
-PROCEDURE HB_ToOutDebug( ... )
+PROCEDURE hb_ToOutDebug( ... )
 
    IF s_lToOutDebug
       hb_OutDebug( sprintf( ... ) )
@@ -74,7 +74,7 @@ PROCEDURE HB_ToOutDebug( ... )
 
    RETURN
 
-FUNCTION HB_ToLogFileOnOff( lOnOff )
+FUNCTION hb_ToLogFileOnOff( lOnOff )
 
    LOCAL lOld := s_lToLogFile
 
@@ -84,7 +84,7 @@ FUNCTION HB_ToLogFileOnOff( lOnOff )
 
    RETURN lOld
 
-FUNCTION HB_EmptyLogFileOnOff( lOnOff )
+FUNCTION hb_EmptyLogFileOnOff( lOnOff )
 
    LOCAL lOld := s_lEmptyLogFile
 
@@ -94,7 +94,7 @@ FUNCTION HB_EmptyLogFileOnOff( lOnOff )
 
    RETURN lOld
 
-PROCEDURE HB_ToLogFile( cLogFile, ... )
+PROCEDURE hb_ToLogFile( cLogFile, ... )
 
    LOCAL nHandle
 

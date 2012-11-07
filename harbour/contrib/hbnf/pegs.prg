@@ -41,7 +41,7 @@
    board_[ xx, 4 ] - is the location occupied or not? .T. -> Yes, .F. -> No
 */
 
-FUNCTION FT_PEGS()
+FUNCTION ft_Pegs()
 
    LOCAL XX, MOVE, MPOS, POSSIBLE_, BUFFER, TOPROW, OLDSCORE, MOVE2
    LOCAL SCANBLOCK, OLDCOLOR := SetColor( "w/n" )

@@ -55,10 +55,10 @@
 
 #ifndef __PLATFORM__WINDOWS
 
-FUNCTION WIN32PRN()
+FUNCTION Win32Prn()
    RETURN NIL
 
-FUNCTION WIN32BMP()
+FUNCTION Win32Bmp()
    RETURN NIL
 
 #else
@@ -84,8 +84,10 @@ CREATE CLASS WIN32PRN FROM WIN_PRN
    VAR SetTextVert      INIT TA_BOTTOM    // Default vertical alignment for SetTextAlign() (TEXTOUT)
 
    /* not implemented */
-// METHOD TextOutW( wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
-// METHOD TextOutWAt( nPosX, nPosY, wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
+#if 0
+   METHOD TextOutW( wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
+   METHOD TextOutWAt( nPosX, nPosY, wString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert )
+#endif
 
 ENDCLASS
 

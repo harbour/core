@@ -34,7 +34,7 @@ PROCEDURE Main()
 
    CLS
 
-   FT_MENU2( mainmenu )
+   ft_Menu2( mainmenu )
 
    RETURN
 

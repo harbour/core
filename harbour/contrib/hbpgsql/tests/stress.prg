@@ -19,9 +19,9 @@ PROCEDURE Main( cServer, cDatabase, cUser, cPass )
    CLS
 
    ? "Connecting...."
-   conn := PQconnectDB( "dbname = " + cDatabase + " host = " + cServer + " user = " + cUser + " password = " + cPass + " port = 5432" )
+   conn := PQconnectdb( "dbname = " + cDatabase + " host = " + cServer + " user = " + cUser + " password = " + cPass + " port = 5432" )
 
-   ? PQstatus( conn ), PQerrormessage( conn )
+   ? PQstatus( conn ), PQerrorMessage( conn )
 
    IF PQstatus( conn ) != CONNECTION_OK
       QUIT

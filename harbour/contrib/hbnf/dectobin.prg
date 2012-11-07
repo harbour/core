@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_DEC2BIN( x )
+FUNCTION ft_Dec2Bin( x )
 
    LOCAL buffer := { "0", "0", "0", "0", "0", "0", "0", "0" }
    LOCAL i

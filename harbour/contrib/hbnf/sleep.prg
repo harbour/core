@@ -20,7 +20,7 @@
  *
  */
 
-FUNCTION FT_SLEEP( nSeconds, nInitial )
+FUNCTION ft_Sleep( nSeconds, nInitial )
 
    IF HB_ISNUMERIC( nInitial )
       nInitial -= Seconds()

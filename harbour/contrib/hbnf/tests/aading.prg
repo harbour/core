@@ -22,21 +22,21 @@ PROCEDURE Main()
 
    nstart := Seconds()
    FOR nCtr := 1 TO 100
-      var0 := FT_AADDITION( aList1, aList2 )
+      var0 := ft_AAddition( aList1, aList2 )
    NEXT
    nstop := Seconds()
    nelapsed := nstop - nstart
    ? "time for 100 merges:", nelapsed
 
-   ? PadR( "FT_AADDITION( aList1, aList2 ) ->", 44 )
+   ? PadR( "ft_AAddition( aList1, aList2 ) ->", 44 )
    AEval( var0, {| x | QQOut( x + "," ) } )
    ?
-   var0 := FT_AADDITION( aList1, aList2, , .F. )
-   ? PadR( "FT_AADDITION( aList1, aList2, , .F. ) ->", 44 )
+   var0 := ft_AAddition( aList1, aList2, , .F. )
+   ? PadR( "ft_AAddition( aList1, aList2, , .F. ) ->", 44 )
    AEval( var0, {| x | QQOut( x + "," ) } )
    ?
-   var0 := FT_AADDITION( aList1, aList2, .F., .F. )
-   ? PadR( "FT_AADDITION( aList1, aList2, .F., .F. ) ->", 44 )
+   var0 := ft_AAddition( aList1, aList2, .F., .F. )
+   ? PadR( "ft_AAddition( aList1, aList2, .F., .F. ) ->", 44 )
    AEval( var0, {| x | QQOut( x + "," ) } )
    ?
 

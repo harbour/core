@@ -18,9 +18,9 @@ PROCEDURE Main()
    conn := PQsetdbLogin( "localhost", "5432", NIL, NIL, cDb, cUser, cPass )
    ? PQdb( conn ), PQuser( conn ), PQpass( conn ), PQhost( conn ), PQport( conn ), PQtty( conn ), PQoptions( conn )
 
-   conn := PQconnectDB( "dbname = " + cDb + " host = localhost user = " + cUser + " password = " + cPass + " port = 5432" )
+   conn := PQconnectdb( "dbname = " + cDb + " host = localhost user = " + cUser + " password = " + cPass + " port = 5432" )
 
-   ? PQstatus( conn ), PQerrormessage( conn )
+   ? PQstatus( conn ), PQerrorMessage( conn )
 
    IF PQstatus( conn ) != CONNECTION_OK
       QUIT
@@ -74,19 +74,19 @@ PROCEDURE Main()
       NEXT
    NEXT
 
-   ? PQFcount( res )
+   ? PQfcount( res )
 
    ? PQlastrec( res )
 
-   ? PQGetvalue( res, 1, 2 )
+   ? PQgetvalue( res, 1, 2 )
 
    ? "Large Objects, always should be in a transaction..."
 
    PQexec( conn, "begin" )
 
-   ? ( x := lo_Import( conn, __FILE__ ) )
-   ? lo_Export( conn, x, "test.new" )
-   ? lo_Unlink( conn, x )
+   ? ( x := lo_import( conn, __FILE__ ) )
+   ? lo_export( conn, x, "test.new" )
+   ? lo_unlink( conn, x )
 
    PQexec( conn, "commit" )
 

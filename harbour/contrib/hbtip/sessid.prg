@@ -64,7 +64,7 @@
 #define BASE_KEY_STRING "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
 #define CRC_KEY_STRING  "Ak3yStR1Ng"  // Max Length must be 10 chars
 
-FUNCTION TIP_GENERATESID( cCRCKey )
+FUNCTION tip_GenerateSID( cCRCKey )
 
    LOCAL cSID, nSIDCRC, cSIDCRC, n, cTemp
    LOCAL nLenSID     := SID_LENGTH
@@ -96,7 +96,7 @@ FUNCTION TIP_GENERATESID( cCRCKey )
 
    RETURN cRet
 
-FUNCTION TIP_CHECKSID( cSID, cCRCKey )
+FUNCTION tip_CheckSID( cSID, cCRCKey )
 
    LOCAL nSIDCRC, cSIDCRC, n, cTemp
    LOCAL nLenSID     := SID_LENGTH
@@ -123,7 +123,7 @@ FUNCTION TIP_CHECKSID( cSID, cCRCKey )
 
    RETURN Right( cSID, 5 ) == cSIDCRC
 
-FUNCTION TIP_DATETOGMT( dDate, cTime )
+FUNCTION tip_DateToGMT( dDate, cTime )
 
    LOCAL cStr
    LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd-mm-yy" )

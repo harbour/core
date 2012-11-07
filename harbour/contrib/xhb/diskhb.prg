@@ -52,7 +52,7 @@
 
 #include "directry.ch"
 
-FUNCTION GETVOLINFO( cDir )
+FUNCTION GetVolInfo( cDir )
 
    LOCAL aFiles := Directory( cDir, "V" )
 

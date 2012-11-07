@@ -25,12 +25,12 @@
 
 THREAD STATIC t_aRgnStack := {}
 
-FUNCTION FT_SAVRGN( nTop, nLeft, nBottom, nRight )
+FUNCTION ft_SavRgn( nTop, nLeft, nBottom, nRight )
 
    RETURN hb_BChar( nTop ) + hb_BChar( nLeft ) + hb_BChar( nBottom ) + hb_BChar( nRight ) + ;
       SaveScreen( nTop, nLeft, nBottom, nRight )
 
-FUNCTION FT_RSTRGN( cScreen, nTop, nLeft )
+FUNCTION ft_RstRgn( cScreen, nTop, nLeft )
 
    IF PCount() == 3
       RestScreen( nTop, nLeft, ;
@@ -52,7 +52,7 @@ FUNCTION FT_RSTRGN( cScreen, nTop, nLeft )
          extra character and _SET_EXACT was set to .F.
          Harbour version accepts "pop all" only. [vszakats] */
 
-FUNCTION FT_RGNSTACK( cAction, nTop, nLeft, nBottom, nRight )
+FUNCTION ft_RgnStack( cAction, nTop, nLeft, nBottom, nRight )
 
    THREAD STATIC t_nStackPtr := 0
 
@@ -61,14 +61,14 @@ FUNCTION FT_RGNSTACK( cAction, nTop, nLeft, nBottom, nRight )
    IF cAction == "push"
 
       ASize( t_aRgnStack, ++t_nStackPtr )[ t_nStackPtr ] := ;
-         FT_SAVRGN( nTop, nLeft, nBottom, nRight )
+         ft_SavRgn( nTop, nLeft, nBottom, nRight )
 
    ELSEIF cAction == "pop" .OR. cAction == "pop all"
 
       nPopTop := iif( "all" $ cAction, 0, t_nStackPtr - 1 )
 
       DO WHILE t_nStackPtr > nPopTop
-         FT_RSTRGN( t_aRgnStack[ t_nStackPtr-- ] )
+         ft_RstRgn( t_aRgnStack[ t_nStackPtr-- ] )
       ENDDO
 
       ASize( t_aRgnStack, t_nStackPtr )

@@ -23,7 +23,7 @@
  *
  */
 
-FUNCTION FT_BYT2BIT( cByte )
+FUNCTION ft_Byt2Bit( cByte )
 
    LOCAL nCounter, cBitstring
 

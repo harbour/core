@@ -20,11 +20,11 @@ PROCEDURE Main()
    LOCAL encrypted
    LOCAL decrypted
 
-   SSL_INIT()
+   SSL_init()
 
    OpenSSL_add_all_ciphers()
 
-   ctx := hb_EVP_ENCODE_CTX_create()
+   ctx := hb_EVP_ENCODE_ctx_create()
 
    EVP_EncodeInit( ctx )
 
@@ -36,7 +36,7 @@ PROCEDURE Main()
    encrypted += result
    ? "ENCRYTPTED", ">" + encrypted + "<"
 
-   ctx := hb_EVP_ENCODE_CTX_create()
+   ctx := hb_EVP_ENCODE_ctx_create()
 
    EVP_DecodeInit( ctx )
 

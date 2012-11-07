@@ -26,11 +26,11 @@
  *
  */
 
-FUNCTION FT_DAYTOBOW( dGivenDate )
+FUNCTION ft_DayToBoW( dGivenDate )
 
    LOCAL nRetVal, nDOW_Start
 
-   nDOW_Start := FT_DATECNFG()[ 2 ]
+   nDOW_Start := ft_DateCnfg()[ 2 ]
 
    IF ! HB_ISDATE( dGivenDate )
       dGivenDate := Date()

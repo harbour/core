@@ -52,13 +52,13 @@ PROCEDURE Main()
 
    @ 4, 9 TO 11, 71
 
-   FT_DFSETUP( cInFile, 5, 10, 10, 70, nStart, ;
+   ft_DFSetup( cInFile, 5, 10, 10, 70, nStart, ;
       nNColor, nHColor, aExitKeys, ;
       lBrowse, nColSkip, nRMargin, nBuffSize )
 
-   nKey := FT_DISPFILE()
+   nKey := ft_DispFile()
 
-   FT_DFCLOSE()
+   ft_DFClose()
 
    @ 20, 0 SAY "Key pressed was: " + "[" + hb_keyChar( nKey ) + "] (" + hb_ntos( nKey ) + ")"
 

@@ -23,10 +23,10 @@ PROCEDURE Main()
 
    @ 2, 5 SAY "TEST 1: using on-the-fly Buffer creation"
 
-   nBufLen := HB_CompressBuflen( Len( cText ) )
+   nBufLen := hb_CompressBufLen( Len( cText ) )
    // cComp and cDecomp will be created with the correct length
-   cComp := HB_Compress( cText )
-   cDecomp := HB_Uncompress( nBuflen, cComp )
+   cComp := hb_Compress( cText )
+   cDecomp := hb_Uncompress( nBuflen, cComp )
 
    @ 3, 7 SAY "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
    @ 4, 7 SAY "Compressed (" + hb_ntos( Len( cComp ) ) + ")" + hb_StrToHex( cComp ) + "<<"
@@ -40,8 +40,8 @@ PROCEDURE Main()
    cDecomp := Space( Int( nBufLen * 1.1 ) )
 
    // on exit, nBuflen will contain the length of the compressed buffer
-   HB_Compress( cText, Len( cText ), @cComp, @nBuflen )
-   HB_Uncompress( Len( cText ), cComp, nBuflen, @cDecomp )
+   hb_Compress( cText, Len( cText ), @cComp, @nBuflen )
+   hb_Uncompress( Len( cText ), cComp, nBuflen, @cDecomp )
 
    @ 8, 7 SAY "Uncompressed: (" + hb_ntos( Len( cText ) ) + ")" + cText + "<<"
    @ 9, 7 SAY "Compressed (" + hb_ntos( nBuflen ) + ")" + hb_StrToHex( cComp ) + "<<"
@@ -51,20 +51,20 @@ PROCEDURE Main()
 
    @ 12, 5 SAY "TEST 3: Generating an error"
 
-   nBufLen := HB_CompressBuflen( Len( cText ) )
+   nBufLen := hb_CompressBufLen( Len( cText ) )
    cComp := Space( nBufLen )
    cDecomp := Space( Len( cText ) )
 
    // we generate an error: 3 is not a valid length for this buffer
    nBuflen := 3
-   nError := HB_Compress( cText, Len( cText ), @cComp, @nBuflen )
+   nError := hb_Compress( cText, Len( cText ), @cComp, @nBuflen )
 
    IF nError != HB_Z_OK
       @ 13, 7 SAY "Error generated (" + hb_ntos( Len( cComp ) ) + ")" + ;
-         HB_CompressErrorDesc( nError )
+         hb_CompressErrorDesc( nError )
    ELSE
       @ 13, 7 SAY "NO Error generated (" + hb_ntos( Len( cComp ) ) + ")" + ;
-         HB_CompressErrorDesc( nError )
+         hb_CompressErrorDesc( nError )
    ENDIF
 
    @ 22, 25 SAY "Press a key to terminate"

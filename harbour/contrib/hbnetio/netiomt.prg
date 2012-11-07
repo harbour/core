@@ -61,7 +61,7 @@
 
 #include "error.ch"
 
-FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
+FUNCTION netio_MTServer( nPort, cIfAddr, cRootDir, xRPC, ;
       cPasswd, nCompressLevel, nStrategy, ;
       sSrvFunc )
 
@@ -69,7 +69,7 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
    LOCAL oError
 
    IF sSrvFunc == NIL
-      sSrvFunc := @netio_server()
+      sSrvFunc := @netio_Server()
    ENDIF
 
    IF hb_mtvm()
@@ -86,7 +86,7 @@ FUNCTION NETIO_MTSERVER( nPort, cIfAddr, cRootDir, xRPC, ;
          xRPC := NIL
       ENDSWITCH
 
-      pListenSocket := netio_listen( nPort, cIfAddr, cRootDir, lRPC )
+      pListenSocket := netio_Listen( nPort, cIfAddr, cRootDir, lRPC )
       IF ! Empty( pListenSocket )
          hb_threadDetach( hb_threadStart( @netio_srvloop(), pListenSocket, ;
             xRPC, sSrvFunc, ;
@@ -116,12 +116,12 @@ STATIC FUNCTION NETIO_SRVLOOP( pListenSocket, xRPC, sSrvFunc, ... )
    LOCAL pConnectionSocket
 
    WHILE .T.
-      pConnectionSocket := netio_accept( pListenSocket,, ... )
+      pConnectionSocket := netio_Accept( pListenSocket,, ... )
       IF Empty( pConnectionSocket )
          EXIT
       ENDIF
       IF xRPC != NIL
-         netio_rpcfilter( pConnectionSocket, xRPC )
+         netio_RPCFilter( pConnectionSocket, xRPC )
       ENDIF
       hb_threadDetach( hb_threadStart( sSrvFunc, pConnectionSocket ) )
       pConnectionSocket := NIL

@@ -14,10 +14,10 @@ PROCEDURE Main()
    CLS
 
    nInitVal := INITIAL_SEMAPHORE_VALUE
-   FT_NWSEMOPEN( "TEST", nInitVal, @nHandle, @nOpenCnt )
+   ft_NWSemOpen( "TEST", nInitVal, @nHandle, @nOpenCnt )
 
    ? "Waiting ten seconds..."
-   nRc := ft_nwSemWait( nHandle, 180 )
+   nRc := ft_NWSemWait( nHandle, 180 )
    ? "Final nRc value = " + Str( nRc )
    Inkey( 0 )
    IF nRc == 254
@@ -30,7 +30,7 @@ PROCEDURE Main()
    @ 24, 0 SAY "Any key to exit"
    @ 0,  0 SAY "Handle: " + Str( nHandle )
 
-   ft_nwSemEx( nHandle, @nValue, @nOpenCnt )
+   ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
    WHILE .T.
       @ 23, 0 SAY "Semaphore test -> Open at [" + ;
          hb_ntos( nOpenCnt )           + ;
@@ -42,10 +42,10 @@ PROCEDURE Main()
       ENDIF
 
       Tone( nHandle, .5 )
-      ft_nwSemEx( nHandle, @nValue, @nOpenCnt )
+      ft_NWSemEx( nHandle, @nValue, @nOpenCnt )
    ENDDO
 
-   ? "Signal returns: " + Str( ft_nwsemSig( nHandle ) )
-   ? "Close returns:  " + Str( ft_nwsemClose( nHandle ) )
+   ? "Signal returns: " + Str( ft_NWSemSig( nHandle ) )
+   ? "Close returns:  " + Str( ft_NWSemClose( nHandle ) )
 
    RETURN

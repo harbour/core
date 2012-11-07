@@ -24,7 +24,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
+FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
 
    LOCAL  nJump := 0, nKey := 0, cSavColor, cSaveScreen, cSaveCursor
    LOCAL  aRetVal[ 8 ]
@@ -86,7 +86,7 @@ FUNCTION FT_CALENDAR( nRow, nCol, cColor, lShadow, lShowHelp )
          IF lShowHelp .AND. ! lHelpIsDisplayed
             lHelpIsDisplayed := .T.
             cSaveHelp := SaveScreen( nHelpRow - 1, 1, nHelpRow + 7, 80 )
-            FT_XBOX( "L",,, cColor, cColor, nHelpRow, 1, ;
+            ft_XBox( "L",,, cColor, cColor, nHelpRow, 1, ;
                "Home, Up_Arrow or PgUp keys page by day, month or year to a past date.", ;
                "End, Dn_Arrow or PgDn keys page by day, month or year to a future date.", ;
                "Left_Arrow or Right_Arrow keys page by week to a past or future date.", ;

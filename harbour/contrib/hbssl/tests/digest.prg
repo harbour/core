@@ -21,13 +21,13 @@ PROCEDURE Main()
    LOCAL key
    LOCAL iv
 
-   SSL_INIT()
+   SSL_init()
 
    OpenSSL_add_all_digests()
    OpenSSL_add_all_ciphers()
 
    ? "Version built against:", hb_NumToHex( OPENSSL_VERSION() )
-   ? "Version loaded:", hb_NumToHex( SSLEAY() )
+   ? "Version loaded:", hb_NumToHex( SSLeay() )
 
    ctx := EVP_MD_CTX_create()
    EVP_MD_CTX_init( ctx )

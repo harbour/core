@@ -62,7 +62,7 @@ THREAD STATIC t_nLastError := HB_ZLIB_RES_OK
 *  HB_COMPRESS(               cSource, nSourceLen, @cDest, @nDestLen ) --> nError
 *  HB_COMPRESS( nComprFactor, cSource, nSourceLen, @cDest, @nDestLen ) --> nError
 */
-FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
+FUNCTION hb_Compress( xPar1, xPar2, xPar3, xPar4, xPar5 )
 
    LOCAL nComprFactor
    LOCAL cSource
@@ -131,7 +131,7 @@ FUNCTION HB_COMPRESS( xPar1, xPar2, xPar3, xPar4, xPar5 )
 *  HB_UNCOMPRESS( nDestLen, cSource [, nSourceLen ] ) --> cDest
 *  HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, @cDest ) --> nError
 */
-FUNCTION HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, /* @ */ cDest )
+FUNCTION hb_Uncompress( nDestLen, cSource, nSourceLen, /* @ */ cDest )
 
    LOCAL oError
 
@@ -164,19 +164,19 @@ FUNCTION HB_UNCOMPRESS( nDestLen, cSource, nSourceLen, /* @ */ cDest )
 /*********************************
 *  HB_COMPRESSERROR() --> nError
 */
-FUNCTION HB_COMPRESSERROR()
+FUNCTION hb_CompressError()
    RETURN t_nLastError
 
 /*********************************
 *  HB_COMPRESSERRORDESC( nErrorCode ) --> cDesc
 */
-FUNCTION HB_COMPRESSERRORDESC( nError )
+FUNCTION hb_CompressErrorDesc( nError )
    RETURN hb_ZError( nError )
 
 /*******************************
 *  HB_COMPRESSBUFLEN( nSrcLen ) --> nDestLen
 */
-FUNCTION HB_COMPRESSBUFLEN( nSrcLen )
+FUNCTION hb_CompressBufLen( nSrcLen )
 
    LOCAL nRet
 

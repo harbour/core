@@ -24,9 +24,9 @@
  *
  */
 
-FUNCTION FT_NWLSTAT()
+FUNCTION ft_NWLStat()
 
-   LOCAL nStation := _ft_nwkstat()
+   LOCAL nStation := _ft_NWKStat()
 
    IF nStation < 0
       nStation += 256

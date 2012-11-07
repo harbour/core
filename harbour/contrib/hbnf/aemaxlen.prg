@@ -21,7 +21,7 @@
  *
  */
 
-FUNCTION FT_AEmaxlen( aArray, nDimension, nStart, nCount )
+FUNCTION ft_AEMaxLen( aArray, nDimension, nStart, nCount )
 
    LOCAL i, nLast, nMaxlen := 0
 

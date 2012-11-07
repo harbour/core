@@ -13,7 +13,7 @@ PROCEDURE Main()
    LOCAL x
 
    FOR x := 1 TO 100
-      ? Int( ft_rand1( 100 ) )
+      ? Int( ft_Rand1( 100 ) )
    NEXT
 
    RETURN

@@ -21,7 +21,7 @@
  *
  */
 
-FUNCTION FT_AADDITION( aList1, aList2, lTrimmer, lCaseSens )
+FUNCTION ft_AAddition( aList1, aList2, lTrimmer, lCaseSens )
 
    LOCAL nElement, bScanCode
    LOCAL aNewArray := AClone( aList1 )

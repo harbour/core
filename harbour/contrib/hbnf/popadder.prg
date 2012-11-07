@@ -100,7 +100,7 @@ THREAD STATIC t_aStdColor
 //         SET KEY K_ALT_A  TO FT_Adder
 //       at the top of your application
 
-FUNCTION FT_Adder()
+FUNCTION ft_Adder()
 
    LOCAL nOldDecim, cMoveTotSubTot, cTotal, lDone, nKey
    LOCAL oGet        := GetActive()

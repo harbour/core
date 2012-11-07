@@ -4516,7 +4516,7 @@ STATIC FUNCTION THtmlAttr_XMP()
 
 // Converts an HTML formatted text string to the ANSI character set
 
-FUNCTION HtmlToAnsi( cHtmlText )
+FUNCTION HtmlToANSI( cHtmlText )
 
    LOCAL aEntity
 
@@ -4537,13 +4537,13 @@ FUNCTION HtmlToAnsi( cHtmlText )
 
 // Converts an HTML formatted text string to the OEM character set
 
-FUNCTION HtmlToOem( cHtmlText )
+FUNCTION HtmlToOEM( cHtmlText )
 
-   RETURN hb_ANSIToOEM( HtmlToAnsi( cHtmlText ) )
+   RETURN hb_ANSIToOEM( HtmlToANSI( cHtmlText ) )
 
 // Inserts HTML character entities into an ANSI text string
 
-FUNCTION AnsiToHtml( cAnsiText )
+FUNCTION ANSIToHtml( cAnsiText )
 
    LOCAL cHtmlText := ""
    LOCAL parser    := P_PARSER( cAnsiText )
@@ -4608,9 +4608,9 @@ FUNCTION AnsiToHtml( cAnsiText )
 
 // Inserts HTML character entities into an OEM text string
 
-FUNCTION OemToHtml( cOemText )
+FUNCTION OEMToHtml( cOemText )
 
-   RETURN AnsiToHtml( hb_OEMToANSI( cOemText ) )
+   RETURN ANSIToHtml( hb_OEMToANSI( cOemText ) )
 
 // This function returs the HTML character entities that are exchangeable between ANSI and OEM character sets
 
@@ -4700,7 +4700,7 @@ STATIC PROCEDURE _Init_Html_AnsiCharacterEntities()
 
 #endif
 
-// Converts an HTML formatted text string to the ANSI character set
+// Converts an HTML formatted text string to the current character set
 
 FUNCTION tip_HtmlToStr( cHtmlText )
 
@@ -4719,7 +4719,7 @@ FUNCTION tip_HtmlToStr( cHtmlText )
 
    RETURN cHtmlText
 
-// Inserts HTML character entities into an ANSI text string
+// Inserts HTML character entities into a text string
 
 FUNCTION tip_StrToHtml( cAnsiText )
 

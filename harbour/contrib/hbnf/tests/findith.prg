@@ -18,7 +18,7 @@ PROCEDURE Main( cCk, cStr, nOcc, xCase )
    ? iif( xCase, "Ignoring ", "Observing " ) + "case:"
 
    ? cStr
-   nFind := FT_FINDITH( cCk, cStr, nOcc, xCase )
+   nFind := ft_FindITh( cCk, cStr, nOcc, xCase )
    ? iif( nFind > 0, Space( nFind - 1 ) + "^", "Not found" )
 
    RETURN

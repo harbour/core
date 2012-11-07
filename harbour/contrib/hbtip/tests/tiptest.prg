@@ -67,7 +67,7 @@ PROCEDURE Main( cUrl, cFile )
       Terminate()
    ENDIF
 
-   oUrl := tURL():New( cUrl )
+   oUrl := TUrl():New( cUrl )
    IF Empty( oUrl )
       @ 4, 5 SAY "Invalid url " + cUrl
       Terminate()
@@ -75,16 +75,16 @@ PROCEDURE Main( cUrl, cFile )
 
    DO CASE
    CASE Lower( oUrl:cProto ) == "ftp"
-      oClient := TIpClientFtp():new( oUrl )
+      oClient := TIPClientFTP():new( oUrl )
 
    CASE Lower( oUrl:cProto ) == "http"
-      oClient := TIpClientHttp():new( oUrl )
+      oClient := TIPClientHTTP():new( oUrl )
 
    CASE Lower( oUrl:cProto ) == "pop"
-      oClient := TIpClientPop():new( oUrl )
+      oClient := TIPClientPOP():new( oUrl )
 
    CASE Lower( oUrl:cProto ) == "smtp"
-      oClient := TIpClientSmtp():new( oUrl )
+      oClient := TIPClientSMTP():new( oUrl )
 
    ENDCASE
 

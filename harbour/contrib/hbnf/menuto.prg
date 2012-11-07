@@ -61,7 +61,7 @@ THREAD STATIC t_aRight        := { {} }
 THREAD STATIC t_aExecute      := { {} }
 THREAD STATIC t_nLevel        := 1
 
-FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
+FUNCTION ft_Prompt( nRow, nCol, cPrompt, cColor, ;
       nMsgRow, nMsgCol, cMessage, cMsgColor, ;
       nTrigger, cTriggerColor, nHome, nEnd, ;
       nUp, nDown, nLeft, nRight, bExecute )
@@ -126,7 +126,7 @@ FUNCTION FT_Prompt( nRow, nCol, cPrompt, cColor, ;
 
    RETURN NIL
 
-FUNCTION FT_MenuTo( bGetSet, cReadVar, lCold )
+FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
 
    LOCAL nMenu   := t_nLevel++
    LOCAL nActive

@@ -6,6 +6,6 @@
 
 PROCEDURE Main( cHexNum )
 
-   ? FT_HEX2DEC( cHexNum )
+   ? ft_Hex2Dec( cHexNum )
 
    RETURN

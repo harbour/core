@@ -25,7 +25,7 @@ PROCEDURE Main()
 #if defined( __HBDYNLOAD__RDDADS__ )
    LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libPostfix() ) )
 
-   hb_rddadsRegister()
+   hb_rddADSRegister()
 
    HB_SYMBOL_UNUSED( l )
 #endif
@@ -36,7 +36,7 @@ PROCEDURE Main()
    AdsSetServerType( 7 )
    SET FILETYPE TO ADT
 
-   ? "Default connection is 0:", adsConnection()
+   ? "Default connection is 0:", AdsConnection()
 
    FErase( "harbour.add" )
    FErase( "harbour.ai" )
@@ -49,15 +49,15 @@ PROCEDURE Main()
    // now Create a Data dictionary and the files if not exist
    IF ! hb_FileExists( "harbour.add" )
 
-      ADSDDCREATE( "harbour.add", , "Harbour ADS demo for data dictionary" )
+      AdsDDCreate( "harbour.add", , "Harbour ADS demo for data dictionary" )
       // This also creates an Administrative Handle that is set as the default
-      ? "Default connection is now this admin handle:", adsConnection()
+      ? "Default connection is now this admin handle:", AdsConnection()
       AdsDisconnect()   // disconnect current default.
       // if you wanted to retain this connection for later, you could use
       // hAdminCon := adsConnection(0)
       // This get/set call would return the current connection, then set it to 0
 
-      ? "Default connection is now this handle (zero):", adsConnection()
+      ? "Default connection is now this handle (zero):", AdsConnection()
 
       // now create two free tables with same structure
       dbCreate( "Table1", aStru )
@@ -73,12 +73,12 @@ PROCEDURE Main()
    ENDIF
 
    // now the magic
-   IF adsConnect60( "harbour.add", 7; /* All types of connection*/
+   IF AdsConnect60( "harbour.add", 7; /* All types of connection*/
       , "ADSSYS", "", , @hConnection1 )
       // The connection handle to harbour.add is now stored in hConnection1,
       // and this is now the default connection
 
-      ? "Default connection is now this handle:", adsConnection()
+      ? "Default connection is now this handle:", AdsConnection()
       ? "   Is it a Data Dict connection?  (ADS_DATABASE_CONNECTION=6, "
       ? "      ADS_SYS_ADMIN_CONNECTION=7):", AdsGetHandleType()
 
@@ -86,7 +86,7 @@ PROCEDURE Main()
       AdsDDCreateUser( , "Luiz", "papael", "This is user Luiz" )
 
 
-      IF adsddGetUserProperty( "Luiz", ADS_DD_COMMENT, @cStr, hConnection1 )
+      IF AdsDDGetUserProperty( "Luiz", ADS_DD_COMMENT, @cStr, hConnection1 )
          ? "User comment:", cStr
       ELSE
          ? "Error retrieving User comment"
@@ -94,11 +94,11 @@ PROCEDURE Main()
 
 
       ? "Add the tables"
-      AdsDDaddTable( "Table1", "table1.adt", "table1.adi" )
+      AdsDDAddTable( "Table1", "table1.adt", "table1.adi" )
       ?
-      IF ! AdsDDaddTable( "Customer Data", "table2.adt", "table2.adi" )
+      IF ! AdsDDAddTable( "Customer Data", "table2.adt", "table2.adi" )
          // notice the "long table name" for file Table2.adt.  Later open it with "Customer Data" as the table name
-         ? "Error adding table:", adsGetLastError( @cErr ), cErr
+         ? "Error adding table:", AdsGetLastError( @cErr ), cErr
       ENDIF
       ? "Set new admin pword on default  connection:", AdsDDSetDatabaseProperty( ADS_DD_ADMIN_PASSWORD, "newPWord"  )
       ? "Set new admin pword on explicit connection:", AdsDDSetDatabaseProperty( ADS_DD_ADMIN_PASSWORD, "newPWord", hConnection1  )
@@ -110,19 +110,19 @@ PROCEDURE Main()
    AdsDisconnect( hConnection1 )
    hConnection1 := NIL     // you should always reset a variable holding a handle that is no longer valid
 
-   ? "Default connection is back to 0:", adsConnection()
+   ? "Default connection is back to 0:", AdsConnection()
    ? "Is a Data Dict connection? (AE_INVALID_HANDLE = 5018):", AdsGetHandleType()
 
    // now open the tables and put some data
 
    IF AdsConnect60( "harbour.add", 7; /* All types of connection*/
       , "Luiz", "papael", , @hConnection1 )
-      ? "Default connection is now this handle:", adsConnection()
+      ? "Default connection is now this handle:", AdsConnection()
       ? "Connection type?", AdsGetHandleType()
 
       FOR n := 1 TO  100
-         IF AdsCreateSqlStatement( "Data2", 3 )
-            IF ! AdsExecuteSqlDirect( " insert into Table1( name,address,city,age) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + Str( n ) + ")" )
+         IF AdsCreateSQLStatement( "Data2", 3 )
+            IF ! AdsExecuteSQLDirect( " insert into Table1( name,address,city,age) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + Str( n ) + ")" )
                ShowAdsError()
             ENDIF
             USE
@@ -130,8 +130,8 @@ PROCEDURE Main()
       NEXT
 
       FOR n := 1 TO 100
-         IF AdsCreateSqlStatement( "Data1", 3 )
-            IF ! AdsExecuteSqlDirect( " insert into " + '"Customer Data"' + "( name,address,city,age) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + Str( n ) + ")" )
+         IF AdsCreateSQLStatement( "Data1", 3 )
+            IF ! AdsExecuteSQLDirect( " insert into " + '"Customer Data"' + "( name,address,city,age) VALUES( '" + StrZero( n ) + "','" + StrZero( n ) + "','" + StrZero( n ) + "'," + Str( n ) + ")" )
                ShowAdsError()
             ENDIF
             USE

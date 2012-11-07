@@ -33,8 +33,8 @@
          but only if _SET_EXACT was set to .F., Harbour accepts them
          that way regardless of _SET_EXACT setting. [vszakats] */
 
-FUNCTION FT_XBOX( cJustType, ; // "L" -> left, otherwise centered
-   cRetWait, ; // "W" -> wait for keypress before continuing
+FUNCTION ft_XBox( cJustType, ; // "L" -> left, otherwise centered
+      cRetWait, ; // "W" -> wait for keypress before continuing
    cBorType, ; // "D" -> double, anything else single border
    cBorColor, ; // color string for border
    cBoxColor, ; // color string for text

@@ -30,7 +30,7 @@
  *
  */
 
-FUNCTION FT_SAVEARR( aArray, cFileName, /* @ */ nErrorCode )
+FUNCTION ft_SaveArr( aArray, cFileName, /* @ */ nErrorCode )
 
    LOCAL nHandle, lRet
 
@@ -100,7 +100,7 @@ STATIC FUNCTION _ftsavesub( xMemVar, nHandle, /* @ */ nErrorCode )
 
    RETURN lRet
 
-FUNCTION FT_RESTARR( cFileName, /* @ */ nErrorCode )
+FUNCTION ft_RestArr( cFileName, /* @ */ nErrorCode )
 
    LOCAL nHandle, aArray
 

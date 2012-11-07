@@ -34,7 +34,7 @@
 
 THREAD STATIC t_aVideo := {}
 
-FUNCTION FT_PushVid()
+FUNCTION ft_PushVid()
 
    AAdd( t_aVideo, { Row(), ;
       Col(), ;
@@ -49,7 +49,7 @@ FUNCTION FT_PushVid()
 
    RETURN Len( t_aVideo )
 
-FUNCTION FT_PopVid()
+FUNCTION ft_PopVid()
 
    LOCAL nNewSize := Len( t_aVideo ) - 1
    LOCAL aBottom  := ATail( t_aVideo )

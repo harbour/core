@@ -67,8 +67,10 @@ PROCEDURE Main( cArg )
    ENDIF
 
    oServer:SelectDB( "ims" )
-// oQuery := oServer:Query( "SELECT * from maga limit 10" )
-// oRow := oQuery:GetRow()
+#if 0
+   oQuery := oServer:Query( "SELECT * from maga limit 10" )
+   oRow := oQuery:GetRow()
+#endif
 
    dbUseArea( .T.,, cArg, "wn", .F. )
 
@@ -84,7 +86,9 @@ PROCEDURE Main( cArg )
    ENDIF
 
    oQuery := oServer:Query( "SELECT C111, C116, C134 from maga limit 10" )
-// oRow := oQuery:GetRow()
+#if 0
+   oRow := oQuery:GetRow()
+#endif
 
    oServer:Destroy()
 

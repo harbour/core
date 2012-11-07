@@ -222,7 +222,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
          aObjs := {}
          cRet  := cName + " := "
       ELSE
-         IF ( nObj := AScan( aObjs, {| a | HB_ArrayID( a[ 1 ] ) == HB_ArrayID( xVal ) } ) ) > 0
+         IF ( nObj := AScan( aObjs, {| a | hb_ArrayId( a[ 1 ] ) == hb_ArrayId( xVal ) } ) ) > 0
             RETURN aObjs[ nObj ][ 2 ] + " /* Cyclic */"
          ENDIF
 

@@ -6,6 +6,6 @@
 
 PROCEDURE Main()
 
-   FT_BLINK( "WAIT", 5, 10 )
+   ft_Blink( "WAIT", 5, 10 )
 
    RETURN

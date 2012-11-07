@@ -16,15 +16,15 @@ PROCEDURE Main()
 
    CLS
 
-   FT_ONTICK( {|| OutStd( hb_MilliSeconds(), hb_eol() ) } )
+   ft_OnTick( {|| OutStd( hb_MilliSeconds(), hb_eol() ) } )
 
    Inkey( 0 )
 
-   FT_ONTICK( {|| OutStd( hb_MilliSeconds(), hb_eol() ) }, 18 )
+   ft_OnTick( {|| OutStd( hb_MilliSeconds(), hb_eol() ) }, 18 )
 
    Inkey( 0 )
 
-   FT_ONTICK()
+   ft_OnTick()
 
    Inkey( 0 )
 
