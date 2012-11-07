@@ -165,6 +165,7 @@
 #     endif
 #  else
 #     undef HB_FM_DLMT_ALLOC
+#     define USE_LOCKS     0
 #  endif
 #  if defined( __BORLANDC__ )
 #     pragma warn -aus
@@ -207,6 +208,14 @@
 #  endif
 #  if defined( __cplusplus ) && ! defined( USE_DL_PREFIX )
 #     define USE_DL_PREFIX
+#  endif
+#  if defined( HB_OS_WIN )
+#     if !defined( ENOMEM )
+#        define ENOMEM 12
+#     endif
+#     if !defined( EINVAL )
+#        define EINVAL 22
+#     endif
 #  endif
 #  include "dlmalloc.c"
 #  if defined( __BORLANDC__ )
