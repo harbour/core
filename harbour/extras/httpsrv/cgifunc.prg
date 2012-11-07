@@ -473,7 +473,7 @@ FUNCTION uhttpd_TimeDiffAsSeconds( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
    __defaultNIL( @dDateEnd, Date() )
    __defaultNIL( @cTimeEnd, Time() )
 
-   aRetVal := FT_ELAPSED( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
+   aRetVal := ft_Elapsed( dDateStart, dDateEnd, cTimeStart, cTimeEnd )
 
    RETURN aRetVal[ 4, 2 ]
 
@@ -497,8 +497,8 @@ FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
 FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
 
    LOCAL aTranslations := { ;
-      { '&', '&amp;' },;
-      { '<', '&lt;'  },;
+      { '&', '&amp;' }, ;
+      { '<', '&lt;'  }, ;
       { '>', '&gt;'  }  ;
       }
 
@@ -693,50 +693,6 @@ PROCEDURE uhttpd_Die( cError )
 FUNCTION uhttpd_HTMLSpace( n )
    RETURN Replicate( "&nbsp;", n )  // "&#32;"
 
-/* FROM FT LIB */
-STATIC FUNCTION FT_ELAPSED( dStart, dEnd, cTimeStart, cTimeEnd )
-
-   LOCAL nTotalSec, nCtr, nConstant, nTemp, aRetVal[ 4, 2 ]
-
-   IF HB_ISSTRING( dStart )
-      cTimeStart := dStart
-      dStart     := Date()
-   ELSEIF ! HB_ISDATE( dStart )
-      dStart := Date()
-   ENDIF
-
-   IF HB_ISSTRING( dEnd )
-      cTimeEnd := dEnd
-      dEnd     := Date()
-   ELSEIF ! HB_ISDATE( dEnd )
-      dEnd := Date()
-   ENDIF
-
-   iif( ! HB_ISSTRING( cTimeStart ), cTimeStart := '00:00:00', )
-   iif( ! HB_ISSTRING( cTimeEnd ), cTimeEnd   := '00:00:00', )
-
-   nTotalSec  := ;
-      ( dEnd - dStart ) * 86400                              + ;
-      Val( cTimeEnd )   *  3600                              + ;
-      Val( SubStr( cTimeEnd, At( ':', cTimeEnd ) + 1, 2 ) ) * 60     + ;
-      iif( RAt( ':', cTimeEnd ) == At( ':', cTimeEnd ), 0,        ;
-      Val( SubStr( cTimeEnd, RAt( ':', cTimeEnd ) + 1 ) ) )          - ;
-      Val( cTimeStart ) * 3600                               - ;
-      Val( SubStr( cTimeStart, At( ':', cTimeStart ) + 1, 2 ) ) * 60 - ;
-      iif( RAt( ':', cTimeStart ) == At( ':', cTimeStart ), 0,    ;
-      Val( SubStr( cTimeStart, RAt( ':', cTimeStart ) + 1 ) ) )
-
-   nTemp := nTotalSec
-
-   FOR nCtr := 1 TO 4
-      nConstant := iif( nCtr == 1, 86400, iif( nCtr == 2, 3600, iif( nCtr == 3, 60, 1 ) ) )
-      aRetVal[ nCtr, 1 ] := Int( nTemp / nConstant )
-      aRetval[ nCtr, 2 ] := nTotalSec / nConstant
-      nTemp -= aRetVal[ nCtr, 1 ] * nConstant
-   NEXT
-
-   RETURN aRetVal
-
 PROCEDURE uhttpd_WriteToLogFile( cString, cLog, lCreate )
 
    LOCAL nHandle, cSep
@@ -777,13 +733,13 @@ FUNCTION uhttpd_SplitFileName( cFile )
 
    hb_FNameSplit( cFile, @cPath, @cName, @cExt, @cDrive )
    hFile := { ;
-      "FILE"     => cFile,;
-      "DRIVE"    => cDrive,;
-      "PATH"     => cPath,;
-      "NAME"     => cName,;
-      "EXT"      => cExt,;
-      "FULLPATH" => NIL,;
-      "FULLNAME" => cName + cExt,;
+      "FILE"     => cFile, ;
+      "DRIVE"    => cDrive, ;
+      "PATH"     => cPath, ;
+      "NAME"     => cName, ;
+      "EXT"      => cExt, ;
+      "FULLPATH" => NIL, ;
+      "FULLNAME" => cName + cExt, ;
       "UNC"      => NIL                    ;
       }
 

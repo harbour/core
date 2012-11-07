@@ -3,5 +3,5 @@
 #
 
 @uhttpd.hbp
+
 hbgd.hbc -DGD_SUPPORT
-hbct.hbc

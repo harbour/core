@@ -144,8 +144,8 @@ STATIC FUNCTION ADO_CREATE( nWA, aOpenInfo )
    LOCAL cUserName  := hb_tokenGet( aOpenInfo[ UR_OI_NAME ], 5, ";" )
    LOCAL cPassword  := hb_tokenGet( aOpenInfo[ UR_OI_NAME ], 6, ";" )
 
-   LOCAL oConnection := win_OleCreateObject( "ADODB.Connection" )
-   LOCAL oCatalog := win_OleCreateObject( "ADOX.Catalog" )
+   LOCAL oConnection := win_oleCreateObject( "ADODB.Connection" )
+   LOCAL oCatalog := win_oleCreateObject( "ADOX.Catalog" )
    LOCAL aWAData := USRRDD_AREADATA( nWA )
    LOCAL oError, n
 
@@ -279,7 +279,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
    ENDIF
 
    IF Empty( aOpenInfo[ UR_OI_CONNECT ] )
-      aWAData[ WA_CONNECTION ] := win_OleCreateObject( "ADODB.Connection" )
+      aWAData[ WA_CONNECTION ] := win_oleCreateObject( "ADODB.Connection" )
       aWAData[ WA_TABLENAME ] := t_cTableName
       aWAData[ WA_QUERY ] := t_cQuery
       aWAData[ WA_USERNAME ] := t_cUserName
@@ -335,7 +335,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
             ";DbName=" + aOpenInfo[ UR_OI_NAME ] )
       ENDCASE
    ELSE
-      aWAData[ WA_CONNECTION ] := win_OleAuto()
+      aWAData[ WA_CONNECTION ] := win_oleAuto()
       aWAData[ WA_CONNECTION ]:__hObj := aOpenInfo[ UR_OI_CONNECT ] /* "ADODB.Connection" */
       aWAData[ WA_TABLENAME ] := t_cTableName
       aWAData[ WA_QUERY ] := t_cQuery
@@ -353,7 +353,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
       aWAData[ WA_QUERY ] := "SELECT * FROM "
    ENDIF
 
-   oRecordSet := win_OleCreateObject( "ADODB.Recordset" )
+   oRecordSet := win_oleCreateObject( "ADODB.Recordset" )
 
    IF oRecordSet == NIL
       oError := ErrorNew()
@@ -377,7 +377,7 @@ STATIC FUNCTION ADO_OPEN( nWA, aOpenInfo )
    ENDIF
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
-      aWAData[ WA_CATALOG ] := win_OleCreateObject( "ADOX.Catalog" )
+      aWAData[ WA_CATALOG ] := win_oleCreateObject( "ADOX.Catalog" )
       aWAData[ WA_CATALOG ]:ActiveConnection := aWAData[ WA_CONNECTION ]
    RECOVER
    END SEQUENCE
@@ -1158,7 +1158,7 @@ STATIC FUNCTION ADO_ORDCREATE( nWA, aOrderCreateInfo )
 
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       IF aWAData[ WA_CATALOG ]:Tables( aWAData[ WA_TABLENAME ] ):Indexes == NIL .OR. ! lFound
-         oIndex := win_OleCreateObject( "ADOX.Index" )
+         oIndex := win_oleCreateObject( "ADOX.Index" )
          oIndex:Name := iif( ! Empty( aOrderCreateInfo[ UR_ORCR_TAGNAME ] ), aOrderCreateInfo[ UR_ORCR_TAGNAME ], aOrderCreateInfo[ UR_ORCR_CKEY ] )
          oIndex:PrimaryKey := .F.
          oIndex:Unique := aOrderCreateInfo[ UR_ORCR_UNIQUE ]
@@ -1213,7 +1213,8 @@ STATIC FUNCTION ADO_EVALBLOCK( nArea, bBlock, uResult )
    RETURN HB_SUCCESS
 
 STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
-// LOCAL n
+
+   // LOCAL n
    LOCAL lRet := HB_FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
@@ -1237,7 +1238,8 @@ STATIC FUNCTION ADO_EXISTS( nRdd, cTable, cIndex, ulConnect )
    RETURN lRet
 
 STATIC FUNCTION ADO_DROP( nRdd, cTable, cIndex, ulConnect )
-// LOCAL n
+
+   // LOCAL n
    LOCAL lRet := HB_FAILURE
    LOCAL aRData := USRRDD_RDDDATA( nRDD )
 
@@ -1491,7 +1493,9 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFieldType )
    CASE nADOFieldType == adChapter
 
    CASE nADOFieldType == adVarNumeric
-/* CASE nADOFieldType == adArray */
+#if 0
+   CASE nADOFieldType == adArray
+#endif
 
    CASE nADOFieldType == adBoolean
       nDBFFieldType := HB_FT_LOGICAL

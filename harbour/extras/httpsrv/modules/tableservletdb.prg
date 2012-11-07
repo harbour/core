@@ -368,9 +368,11 @@ METHOD xmlEncode( input ) CLASS TableManager
       CASE '>'
          out += "&gt;"
          EXIT
-//    CASE ' '
-//       out += "&nbsp;"
-//       EXIT
+#if 0
+      CASE ' '
+         out += "&nbsp;"
+         EXIT
+#endif
       CASE Chr( 9 )  // E'\t'
       CASE Chr( 13 ) // E'\r'
       CASE Chr( 10 ) // E'\n'
