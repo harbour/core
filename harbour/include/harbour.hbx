@@ -406,6 +406,7 @@ DYNAMIC hb_DirExists
 DYNAMIC hb_DirScan
 DYNAMIC hb_DirSepAdd
 DYNAMIC hb_DirSepDel
+DYNAMIC hb_DirSepToOS
 DYNAMIC hb_DirTemp
 DYNAMIC hb_DirUnbuild
 DYNAMIC hb_DisableWaitLocks

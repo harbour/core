@@ -267,6 +267,9 @@ FUNCTION hb_DirSepDel( cDir )
 
    RETURN cDir
 
+FUNCTION hb_DirSepToOS( cFileName )
+   RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
+
 FUNCTION hb_DirBuild( cDir )
 
    LOCAL cDirTemp

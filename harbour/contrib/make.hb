@@ -173,7 +173,7 @@ PROCEDURE Standalone( aParams, hProjectList )
    IF ! lCustom
       /* Find out which projects are in current dir, these will be our primary targets */
       FOR EACH tmp IN hProjectList
-         tmp1 := hb_ps() + hb_FNameDir( PathSepToSelf( tmp:__enumKey() ) )
+         tmp1 := hb_ps() + hb_FNameDir( hb_DirSepToOS( tmp:__enumKey() ) )
          IF tmp1 == Right( hb_cwd(), Len( tmp1 ) ) /* Not ultimate solution */
             hProjectReqList[ tmp:__enumKey() ] := tmp:__enumKey()
             s_cReBase := SubStr( tmp1, 2 )
@@ -306,8 +306,8 @@ PROCEDURE GNUMake( aParams, hProjectList )
       ENDIF
       FOR EACH cProject IN aFilter
          FOR EACH tmp IN hProjectList
-            IF hb_FileMatch( PathSepToSelf( cProject ), PathSepToSelf( tmp:__enumKey() ) ) .OR. ;
-               hb_FileMatch( PathSepToSelf( cProject ), hb_DirSepDel( hb_FNameDir( PathSepToSelf( tmp:__enumKey() ) ) ) )
+            IF hb_FileMatch( hb_DirSepToOS( cProject ), hb_DirSepToOS( tmp:__enumKey() ) ) .OR. ;
+               hb_FileMatch( hb_DirSepToOS( cProject ), hb_DirSepDel( hb_FNameDir( hb_DirSepToOS( tmp:__enumKey() ) ) ) )
                IF lFilterNegative
                   IF tmp:__enumKey() $ hProjectReqList
                      hb_HDel( hProjectReqList, tmp:__enumKey() )
@@ -467,7 +467,7 @@ STATIC PROCEDURE build_projects( nAction, hProjectList, hProjectReqList, cOption
 
                /* Compile documentation */
                IF lInstall
-                  mk_hbd( hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
+                  mk_hbd( hb_FNameDir( hb_DirSepToOS( cProjectPath ) ) )
                ENDIF
             ENDIF
          ELSE
@@ -517,7 +517,7 @@ STATIC FUNCTION call_hbmk2_hbinfo( cProjectPath, hProject )
             ENDIF
 #endif
             AAdd( hProject[ "aDept" ], { "nDepth" => Len( tmp ) - Len( LTrim( tmp ) ), ;
-               "cFileName_HBP" => StrTran( hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( PathSepToSelf( LTrim( tmp ) ), ".hbp" ) ) ), "\", "/" ) } )
+               "cFileName_HBP" => StrTran( hb_PathNormalize( hb_PathJoin( s_cRebase, hb_FNameExtSet( hb_DirSepToOS( LTrim( tmp ) ), ".hbp" ) ) ), "\", "/" ) } )
          ENDIF
       NEXT
    ENDIF
@@ -552,7 +552,7 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
       hb_SetEnv( "_HB_BUILD_LIBDYN" )
    ENDIF
 
-   hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( PathSepToSelf( cProjectPath ) ) )
+   hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( hb_DirSepToOS( cProjectPath ) ) )
 
    cCommand := s_cBinDir + "hbmk2" + ;
       " -quiet -width=0 -autohbm-" + ;
@@ -625,7 +625,7 @@ STATIC FUNCTION mk_hbd( cDir )
       NEXT
 
       IF ! Empty( aEntry )
-         cName := PathSepToSelf( cDocDir ) + hb_ps() + cName + ".hbd"
+         cName := hb_DirSepToOS( cDocDir ) + hb_ps() + cName + ".hbd"
          IF __hbdoc_SaveHBD( cName, aEntry )
             OutStd( "! Compiled documentation: " + cName + " <= " + cDir + hb_eol() )
             RETURN .T.
@@ -653,9 +653,6 @@ STATIC FUNCTION DirGetName( cDir )
    ENDIF
 
    RETURN cName
-
-STATIC FUNCTION PathSepToSelf( cFileName )
-   RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
 
 /* Convert indented list of line to tree / list of parent-child pairs */
 STATIC PROCEDURE DeptLinesToDeptPairList( aPairList, cParent, aFlatTree )
@@ -748,7 +745,7 @@ PROCEDURE AddProject( hProjectList, cFileName )
 
    IF ! Empty( cFileName )
 
-      cFileName := PathSepToSelf( AllTrim( cFileName ) )
+      cFileName := hb_DirSepToOS( AllTrim( cFileName ) )
 
       hb_FNameSplit( cFileName, @cDir, @cName, @cExt )
 

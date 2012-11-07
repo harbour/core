@@ -42,21 +42,13 @@ STATIC PROCEDURE WalkDir( cDir, aContains )
 
    LOCAL aFile
 
-   cDir := hb_DirSepAdd( PathSepToSelf( cDir ) )
+   cDir := hb_DirSepAdd( hb_DirSepToOS( cDir ) )
 
-   FOR EACH aFile IN Directory( cDir + hb_osFileMask(), "D" )
-      IF aFile[ F_NAME ] == "." .OR. aFile[ F_NAME ] == ".."
-      ELSEIF "D" $ aFile[ F_ATTR ]
-         WalkDir( cDir + aFile[ F_NAME ] + hb_ps(), aContains )
-      ELSEIF hb_FNameExt( aFile[ F_NAME ] ) == ".hbx"
-         ProcessFile( cDir + aFile[ F_NAME ], aContains )
-      ENDIF
+   FOR EACH aFile IN hb_DirScan( cDir, "*.hbx" )
+      ProcessFile( cDir + aFile[ F_NAME ], aContains )
    NEXT
 
    RETURN
-
-STATIC FUNCTION PathSepToSelf( cFileName )
-   RETURN StrTran( cFileName, iif( hb_ps() == "\", "/", "\" ), hb_ps() )
 
 STATIC PROCEDURE ProcessFile( cFileName, aContains )
 
@@ -67,7 +59,7 @@ STATIC PROCEDURE ProcessFile( cFileName, aContains )
       IF Empty( aContains ) .OR. AScan( aContains, {| tmp | Upper( tmp ) $ Upper( cDynamic ) } ) > 0
          IF lFirst
             lFirst := .F.
-            OutStd( PathSepToSelf( cFileName ) + hb_eol() )
+            OutStd( hb_DirSepToOS( cFileName ) + hb_eol() )
          ENDIF
          OutStd( "   " + cDynamic + "()" + hb_eol() )
       ENDIF

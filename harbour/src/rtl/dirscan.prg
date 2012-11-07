@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    HB_DirScan()
+ *    hb_DirScan()
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
@@ -78,18 +78,9 @@ STATIC FUNCTION hb_doScan( cPath, cMask, cAttr, cPathSep )
 
 FUNCTION hb_DirScan( cPath, cFileMask, cAttr )
 
-   LOCAL cFilePath
+   hb_default( @cPath, "" )
 
-   IF Empty( cPath )
-      cFilePath := ""
-   ELSE
-      cFilePath := cPath
-      IF ! Right( cPath, 1 ) $ hb_osPathDelimiters()
-         cFilePath += hb_ps()
-      ENDIF
-   ENDIF
-
-   RETURN HB_DoScan( cFilePath, ;
-      iif( Empty( cFileMask ), hb_osFileMask(), cFileMask ), ;
+   RETURN HB_DoScan( hb_DirSepAdd( cPath ), ;
+      iif( HB_ISSTRING( cFileMask ), cFileMask, hb_osFileMask() ), ;
       iif( HB_ISSTRING( cAttr ), cAttr, "" ), ;
       hb_ps() )
