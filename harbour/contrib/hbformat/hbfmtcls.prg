@@ -688,26 +688,37 @@ METHOD FormatLine( cLine, lContinued ) CLASS HBFORMATCODE
 
 METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS HBFORMATCODE
 
-   LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
+   LOCAL nPos, cToken
 
    IF ::lCase
-      hb_default( @lFirstOnly, .F. )
-      IF ( ( nPos := At( "," + cToken, ::cCommands ) ) != 0 .AND. ( Len( cToken ) >= 4 ;
-            .OR. SubStr( ::cCommands, nPos + Len( cToken ) + 1, 1 ) == "," ) ) ;
-            .OR. ;
-            ( ! lFirstOnly .AND. ;
-            ( nPos := At( "," + cToken, ::cClauses ) ) != 0 .AND. ( Len( cToken ) >= 4 ;
-            .OR. SubStr( ::cClauses, nPos + Len( cToken ) + 1, 1 ) == "," ) )
-         IF ::nCaseCmd > 0
-            IF ::nCaseCmd > 1
-               cToken := iif( ::nCaseCmd == 2, Lower( cToken ), Left( cToken, 1 ) + ;
-                  Lower( SubStr( cToken, 2 ) ) )
-            ENDIF
-            cLine := iif( nBegin == 1, cToken + SubStr( cLine, nEnd ), ;
-               Left( cLine, nBegin - 1 ) + cToken + SubStr( cLine, nEnd ) )
-         ENDIF
-      ELSE
+
+      IF ! HB_ISNUMERIC( nBegin ) /* TOFIX: Temporary hack to avoid RTE when processing contrib/hbhttpd/core.prg */
+         ::nErr := 1
+         ::cLineErr := cLine
          RETURN .F.
+      ELSE
+
+         hb_default( @lFirstOnly, .F. )
+
+         cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
+
+         IF ( ( nPos := At( "," + cToken, ::cCommands ) ) != 0 .AND. ( Len( cToken ) >= 4 ;
+               .OR. SubStr( ::cCommands, nPos + Len( cToken ) + 1, 1 ) == "," ) ) ;
+               .OR. ;
+               ( ! lFirstOnly .AND. ;
+               ( nPos := At( "," + cToken, ::cClauses ) ) != 0 .AND. ( Len( cToken ) >= 4 ;
+               .OR. SubStr( ::cClauses, nPos + Len( cToken ) + 1, 1 ) == "," ) )
+            IF ::nCaseCmd > 0
+               IF ::nCaseCmd > 1
+                  cToken := iif( ::nCaseCmd == 2, Lower( cToken ), Left( cToken, 1 ) + ;
+                     Lower( SubStr( cToken, 2 ) ) )
+               ENDIF
+               cLine := iif( nBegin == 1, cToken + SubStr( cLine, nEnd ), ;
+                  Left( cLine, nBegin - 1 ) + cToken + SubStr( cLine, nEnd ) )
+            ENDIF
+         ELSE
+            RETURN .F.
+         ENDIF
       ENDIF
    ENDIF
 
@@ -715,9 +726,12 @@ METHOD ConvertCmd( cLine, nBegin, nEnd, lFirstOnly ) CLASS HBFORMATCODE
 
 METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS HBFORMATCODE
 
-   LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
+   LOCAL nPos, cToken
 
    IF ::lCase .AND. ::nCaseFnc > 0
+
+      cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
+
       IF ( nPos := hb_AtI( "," + cToken + ",", ::cFunctions ) ) != 0
 
          IF ::nCaseFnc > 1
@@ -740,10 +754,14 @@ METHOD ConvertFnc( cLine, nBegin, nEnd ) CLASS HBFORMATCODE
 
 METHOD ConvertBool( cLine, nBegin, nEnd ) CLASS HBFORMATCODE
 
-   LOCAL cBool := ",NOT,AND,OR,F,T,"
-   LOCAL nPos, cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
+   LOCAL cBool
+   LOCAL nPos, cToken
 
    IF ::lCase
+
+      cBool := ",NOT,AND,OR,F,T,"
+      cToken := Upper( SubStr( cLine, nBegin, nEnd - nBegin ) )
+
       IF ( nPos := At( "," + cToken + ",", cBool ) ) != 0
          IF ::lCnvNot .AND. nPos == 1
             cLine := Left( cLine, nBegin - 2 ) + "!" + SubStr( cLine, nEnd + 1 )

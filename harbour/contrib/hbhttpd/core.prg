@@ -75,7 +75,7 @@ METHOD Run( hConfig ) CLASS UHttpd
       RETURN .F.
    ENDIF
 
-   Self:hConfig := {;
+   Self:hConfig := { ;
       "SSL"                  => .F., ;
       "Port"                 => 80, ;
       "BindAddress"          => "0.0.0.0", ;
@@ -99,18 +99,18 @@ METHOD Run( hConfig ) CLASS UHttpd
 
    IF Self:hConfig[ "SSL" ]
       IF Self:lHasSSL
-         SSL_INIT()
-         DO WHILE RAND_STATUS() != 1
-            RAND_add( Str( hb_Random(), 18, 15 ) + Str( hb_milliSeconds(), 20 ), 1 )
+         SSL_init()
+         DO WHILE RAND_status() != 1
+            RAND_add( Str( hb_Random(), 18, 15 ) + Str( hb_MilliSeconds(), 20 ), 1 )
          ENDDO
 
-         Self:hSSLCtx := SSL_CTX_NEW( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
-         SSL_CTX_SET_OPTIONS( Self:hSSLCtx, HB_SSL_OP_NO_TLSv1 )
-         IF SSL_CTX_USE_PRIVATEKEY_FILE( Self:hSSLCtx, Self:hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+         Self:hSSLCtx := SSL_CTX_new( HB_SSL_CTX_NEW_METHOD_SSLV23_SERVER )
+         SSL_CTX_set_options( Self:hSSLCtx, HB_SSL_OP_NO_TLSv1 )
+         IF SSL_CTX_use_PrivateKey_file( Self:hSSLCtx, Self:hConfig[ "PrivateKeyFilename" ], HB_SSL_FILETYPE_PEM ) != 1
             Self:cError := "Invalid private key file"
             RETURN .F.
          ENDIF
-         IF SSL_CTX_USE_CERTIFICATE_FILE( Self:hSSLCtx, Self:hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
+         IF SSL_CTX_use_certificate_file( Self:hSSLCtx, Self:hConfig[ "CertificateFilename" ], HB_SSL_FILETYPE_PEM ) != 1
             Self:cError := "Invalid certificate file"
             RETURN .F.
          ENDIF
@@ -261,7 +261,7 @@ STATIC FUNCTION ParseFirewallFilter( cFilter, aFilter )
                ENDIF
             ELSE
                nPrefix := Val( cI )
-               IF nPrefix < 0 .OR. nPrefix > 32 .OR. ! ( hb_ntos( nPrefix ) == cI )
+               IF nPrefix < 0 .OR. nPrefix > 32 .OR. !( hb_ntos( nPrefix ) == cI )
                   RETURN .F.
                ENDIF
             ENDIF
@@ -330,9 +330,9 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
 
    LOCAL nErr, nLen
 
-   nLen := SSL_READ( hSSL, @cBuf )
+   nLen := SSL_read( hSSL, @cBuf )
    IF nLen < 0
-      nErr := SSL_GET_ERROR( hSSL, nLen )
+      nErr := SSL_get_error( hSSL, nLen )
       IF nErr == HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
@@ -362,9 +362,9 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
 
    LOCAL nErr, nLen
 
-   nLen := SSL_WRITE( hSSL, cBuf )
+   nLen := SSL_write( hSSL, cBuf )
    IF nLen <= 0
-      nErr := SSL_GET_ERROR( hSSL, nLen )
+      nErr := SSL_get_error( hSSL, nLen )
       IF nErr == HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
@@ -394,11 +394,11 @@ STATIC FUNCTION MY_SSL_ACCEPT( hConfig, hSSL, hSocket, nTimeout )
 
    LOCAL nErr
 
-   nErr := SSL_ACCEPT( hSSL )
+   nErr := SSL_accept( hSSL )
    IF nErr > 0
       RETURN 0
    ELSEIF nErr < 0
-      nErr := SSL_GET_ERROR( hSSL, nErr )
+      nErr := SSL_get_error( hSSL, nErr )
       IF nErr == HB_SSL_ERROR_WANT_READ
          nErr := hb_socketSelectRead( hSocket, nTimeout )
          IF nErr < 0
@@ -418,7 +418,7 @@ STATIC FUNCTION MY_SSL_ACCEPT( hConfig, hSSL, hSocket, nTimeout )
          nErr := 1000 + nErr
       ENDIF
    ELSE /* nErr == 0 */
-      nErr := SSL_GET_ERROR( hSSL, nErr )
+      nErr := SSL_get_error( hSSL, nErr )
       Eval( hConfig[ "Trace" ], "SSL_ACCEPT() shutdown error", nErr )
       nErr := 1000 + nErr
    ENDIF
@@ -443,8 +443,8 @@ STATIC FUNCTION ProcessConnection( oServer )
          EXIT
       ENDIF
 
-    /* Prepare server variable and clone it for every query,
-       because request handler script can ruin variable value */
+      /* Prepare server variable and clone it for every query,
+         because request handler script can ruin variable value */
       aServer := { => }
       aServer[ "HTTPS" ] := oServer:hConfig[ "SSL" ]
       IF ! Empty( aI := hb_socketGetPeerName( hSocket ) )
@@ -468,18 +468,18 @@ STATIC FUNCTION ProcessConnection( oServer )
       ENDIF
 
       IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
-         hSSL := SSL_NEW( oServer:hSSLCtx )
-         SSL_SET_MODE( hSSL, hb_bitOr( SSL_GET_MODE( hSSL ), HB_SSL_MODE_ENABLE_PARTIAL_WRITE ) )
+         hSSL := SSL_new( oServer:hSSLCtx )
+         SSL_set_mode( hSSL, hb_bitOr( SSL_get_mode( hSSL ), HB_SSL_MODE_ENABLE_PARTIAL_WRITE ) )
          hb_socketSetBlockingIO( hSocket, .F. )
-         SSL_SET_FD( hSSL, hb_socketGetFD( hSocket ) )
+         SSL_set_fd( hSSL, hb_socketGetFD( hSocket ) )
 
-         nTime := hb_milliSeconds()
+         nTime := hb_MilliSeconds()
          DO WHILE .T.
             IF ( nErr := MY_SSL_ACCEPT( oServer:hConfig, hSSL, hSocket, 1000 ) ) == 0
                EXIT
             ELSE
                IF nErr == HB_SOCKET_ERR_TIMEOUT
-                  IF ( hb_Milliseconds() - nTime ) > 1000 * 30 .OR. oServer:lStop
+                  IF ( hb_MilliSeconds() - nTime ) > 1000 * 30 .OR. oServer:lStop
                      Eval( oServer:hConfig[ "Trace" ], "SSL accept timeout", hSocket )
                      EXIT
                   ENDIF
@@ -497,13 +497,13 @@ STATIC FUNCTION ProcessConnection( oServer )
             LOOP
          ENDIF
 
-         aServer[ "SSL_CIPHER" ] := SSL_GET_CIPHER( hSSL )
-         aServer[ "SSL_PROTOCOL" ] := SSL_GET_VERSION( hSSL )
-         aServer[ "SSL_CIPHER_USEKEYSIZE" ] := SSL_GET_CIPHER_BITS( hSSL, @nErr )
+         aServer[ "SSL_CIPHER" ] := SSL_get_cipher( hSSL )
+         aServer[ "SSL_PROTOCOL" ] := SSL_get_version( hSSL )
+         aServer[ "SSL_CIPHER_USEKEYSIZE" ] := SSL_get_cipher_bits( hSSL, @nErr )
          aServer[ "SSL_CIPHER_ALGKEYSIZE" ] := nErr
-         aServer[ "SSL_VERSION_LIBRARY" ] := SSLEAY_VERSION( HB_SSLEAY_VERSION )
-         aServer[ "SSL_SERVER_I_DN" ] := X509_NAME_ONELINE( X509_GET_ISSUER_NAME( SSL_GET_CERTIFICATE( hSSL ) ) )
-         aServer[ "SSL_SERVER_S_DN" ] := X509_NAME_ONELINE( X509_GET_SUBJECT_NAME( SSL_GET_CERTIFICATE( hSSL ) ) )
+         aServer[ "SSL_VERSION_LIBRARY" ] := SSLeay_version( HB_SSLEAY_VERSION )
+         aServer[ "SSL_SERVER_I_DN" ] := X509_name_oneline( X509_get_issuer_name( SSL_get_certificate( hSSL ) ) )
+         aServer[ "SSL_SERVER_S_DN" ] := X509_name_oneline( X509_get_subject_name( SSL_get_certificate( hSSL ) ) )
       ENDIF
 
       /* loop for processing connection */
@@ -514,7 +514,7 @@ STATIC FUNCTION ProcessConnection( oServer )
 
          /* receive query header */
          nLen := 1
-         nTime := hb_Milliseconds()
+         nTime := hb_MilliSeconds()
          cBuf := Space( 4096 )
          DO WHILE At( CR_LF + CR_LF, cRequest ) == 0
             IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
@@ -534,7 +534,7 @@ STATIC FUNCTION ProcessConnection( oServer )
             ELSE
                /* nLen == -1  socket error */
                IF nErr == HB_SOCKET_ERR_TIMEOUT
-                  IF ( hb_Milliseconds() - nTime ) > 1000 * 30 .OR. oServer:lStop
+                  IF ( hb_MilliSeconds() - nTime ) > 1000 * 30 .OR. oServer:lStop
                      Eval( oServer:hConfig[ "Trace" ], "receive timeout", hSocket )
                      EXIT
                   ENDIF
@@ -571,7 +571,7 @@ STATIC FUNCTION ProcessConnection( oServer )
 
             /* receive query body */
             nLen := 1
-            nTime := hb_Milliseconds()
+            nTime := hb_MilliSeconds()
             cBuf := Space( 4096 )
             DO WHILE Len( cRequest ) < nReqLen
                IF oServer:lHasSSL .AND. oServer:hConfig[ "SSL" ]
@@ -591,7 +591,7 @@ STATIC FUNCTION ProcessConnection( oServer )
                ELSE
                   /* nLen == -1  socket error */
                   IF nErr == HB_SOCKET_ERR_TIMEOUT
-                     IF ( hb_Milliseconds() - nTime ) > 1000 * 120 .OR. oServer:lStop
+                     IF ( hb_MilliSeconds() - nTime ) > 1000 * 120 .OR. oServer:lStop
                         Eval( oServer:hConfig[ "Trace" ], "receive timeout", hSocket )
                         EXIT
                      ENDIF
@@ -611,10 +611,10 @@ STATIC FUNCTION ProcessConnection( oServer )
             cRequest := SubStr( cRequest, nReqLen + 1 )
 
             /* Deal with supported protocols and methods */
-            IF ! ( Left( server[ "SERVER_PROTOCOL" ], 5 ) == "HTTP/" )
+            IF !( Left( server[ "SERVER_PROTOCOL" ], 5 ) == "HTTP/" )
                USetStatusCode( 400 ) /* Bad request */
                UAddHeader( "Connection", "close" )
-            ELSEIF ! ( SubStr( server[ "SERVER_PROTOCOL" ], 6 ) $ "1.0 1.1" )
+            ELSEIF !( SubStr( server[ "SERVER_PROTOCOL" ], 6 ) $ "1.0 1.1" )
                USetStatusCode( 505 ) /* HTTP version not supported */
             ELSEIF !( server[ "REQUEST_METHOD" ] $ "GET POST" )
                USetStatusCode( 501 ) /* Not implemented */
@@ -678,7 +678,7 @@ STATIC FUNCTION ProcessConnection( oServer )
 
 STATIC PROCEDURE ProcessRequest( oServer )
 
-   LOCAL nI, aMount, cMount, cPath, bEval, xRet, nT := hb_milliSeconds()
+   LOCAL nI, aMount, cMount, cPath, bEval, xRet, nT := hb_MilliSeconds()
 
    // Search mounting table
    aMount := oServer:hConfig[ "Mount" ]
@@ -723,7 +723,7 @@ STATIC PROCEDURE ProcessRequest( oServer )
    ELSE
       USetStatusCode( 404 )
    ENDIF
-   Eval( oServer:hConfig[ "Trace" ], "ProcessRequest time:", hb_ntos( hb_milliSeconds() - nT ), "ms" )
+   Eval( oServer:hConfig[ "Trace" ], "ProcessRequest time:", hb_ntos( hb_MilliSeconds() - nT ), "ms" )
 
    RETURN
 
@@ -750,7 +750,7 @@ STATIC FUNCTION ParseRequestHeader( cRequest )
    ENDIF
 
    // Fix invalid queries: bind to root
-   IF ! ( Left( server[ "REQUEST_URI" ], 1 ) == "/" )
+   IF !( Left( server[ "REQUEST_URI" ], 1 ) == "/" )
       server[ "REQUEST_URI" ] := "/" + server[ "REQUEST_URI" ]
    ENDIF
 
@@ -913,7 +913,7 @@ STATIC FUNCTION MakeResponse( hConfig )
 
 STATIC FUNCTION HttpDateFormat( tDate )
 
-   tDate -= HB_UTCOFFSET() / ( 3600 * 24 )
+   tDate -= hb_UTCOffset() / ( 3600 * 24 )
 
    RETURN ;
       { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }[ DoW( tDate ) ] + ", " + ;
@@ -1179,7 +1179,7 @@ STATIC PROCEDURE USessionCreateInternal()
    cSID := hb_MD5( DToS( Date() ) + Time() + Str( hb_Random(), 15, 12 ) )
    hMtx := hb_mutexCreate()
    hb_mutexLock( hMtx )
-   t_aSessionData := httpd:hSession[ cSID ] := { hMtx, { "_unique" => hb_MD5( Str( hb_Random(), 15, 12 ) ) }, hb_milliSeconds() + SESSION_TIMEOUT * 1000, cSID }
+   t_aSessionData := httpd:hSession[ cSID ] := { hMtx, { "_unique" => hb_MD5( Str( hb_Random(), 15, 12 ) ) }, hb_MilliSeconds() + SESSION_TIMEOUT * 1000, cSID }
    session := t_aSessionData[ 2 ]
    UAddHeader( "Set-Cookie", "SESSID=" + cSID + "; path=/" )
 
@@ -1212,8 +1212,8 @@ PROCEDURE USessionStart()
       IF hb_mutexLock( t_aSessionData[ 1 ], 0 )
 
          // No concurent sessions
-         IF t_aSessionData[ 3 ] > hb_milliSeconds()
-            t_aSessionData[ 3 ] := hb_milliSeconds() + SESSION_TIMEOUT * 1000
+         IF t_aSessionData[ 3 ] > hb_MilliSeconds()
+            t_aSessionData[ 3 ] := hb_MilliSeconds() + SESSION_TIMEOUT * 1000
             session := t_aSessionData[ 2 ]
          ELSE
             USessionDestroyInternal()
@@ -1231,8 +1231,8 @@ PROCEDURE USessionStart()
          hb_mutexLock( httpd:hmtxSession )
          IF hb_HHasKey( httpd:hSession, cSID )
             // Session exists
-            IF t_aSessionData[ 3 ] > hb_milliSeconds()
-               t_aSessionData[ 3 ] := hb_milliSeconds() + SESSION_TIMEOUT * 1000
+            IF t_aSessionData[ 3 ] > hb_MilliSeconds()
+               t_aSessionData[ 3 ] := hb_MilliSeconds() + SESSION_TIMEOUT * 1000
                session := t_aSessionData[ 2 ]
             ELSE
                USessionDestroyInternal()
@@ -1335,7 +1335,7 @@ FUNCTION ULink( cText, cUrl )
 
    RETURN '<a href="' + cUrl + '">' + UHtmlEncode( cText ) + '</a>'
 
-FUNCTION UUrlCheckSum( cUrl )
+FUNCTION UUrlChecksum( cUrl )
 
    RETURN cUrl + iif( "?" $ cUrl, "&", "?" ) + "_ucs=" + hb_MD5( session[ "_unique" ] + cUrl + session[ "_unique" ] )
 
@@ -1368,7 +1368,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
       RETURN
    ENDIF
 
-   IF hb_FileExists( uOSFileName( cFileName ) )
+   IF hb_FileExists( UOsFileName( cFileName ) )
       IF hb_HHasKey( server, "HTTP_IF_MODIFIED_SINCE" ) .AND. ;
             HttpDateUnformat( server[ "HTTP_IF_MODIFIED_SINCE" ], @tHDate ) .AND. ;
             hb_FGetDateTime( UOsFileName( cFileName ), @tDate ) .AND. ;
@@ -1433,7 +1433,7 @@ PROCEDURE UProcFiles( cFileName, lIndex )
          RETURN
       ENDIF
       IF AScan( { "index.html", "index.htm" }, ;
-            {| x | iif( hb_FileExists( UOSFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
+            {| x | iif( hb_FileExists( UOsFileName( cFileName + X ) ), ( cFileName += X, .T. ), .F. ) } ) > 0
          UAddHeader( "Content-Type", "text/html" )
          UWrite( hb_MemoRead( UOsFileName( cFileName ) ) )
          RETURN
@@ -1676,9 +1676,9 @@ STATIC FUNCTION compile_buffer( cTpl, nStart, aCode )
 
          CASE "if"
             AAdd( aCode, { "if", cParam, {}, {} } )
-            nI := compile_buffer( cTpl, nE + 2, ATail( aCode )[3] )
+            nI := compile_buffer( cTpl, nE + 2, ATail( aCode )[ 3 ] )
             IF SubStr( cTpl, nI, 8 ) == "{{else}}"
-               nI := compile_buffer( cTpl, nI + 8, ATail( aCode )[4] )
+               nI := compile_buffer( cTpl, nI + 8, ATail( aCode )[ 4 ] )
             ENDIF
             IF SubStr( cTpl, nI, 9 ) == "{{endif}}"
                nStart := nI + 9
@@ -1689,7 +1689,7 @@ STATIC FUNCTION compile_buffer( cTpl, nStart, aCode )
 
          CASE "loop"
             AAdd( aCode, { "loop", cParam, {} } )
-            nI := compile_buffer( cTpl, nE + 2, ATail( aCode )[3] )
+            nI := compile_buffer( cTpl, nE + 2, ATail( aCode )[ 3 ] )
             IF SubStr( cTpl, nI, 11 ) == "{{endloop}}"
                nStart := nI + 11
             ELSE

@@ -539,7 +539,7 @@ PROCEDURE mk_hbr( cDestDir )
       ENDIF
    NEXT
 
-   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "harbour.hbr", hb_ZCompress( hb_Serialize( hAll ) ) )
+   hb_MemoWrit( hb_DirSepAdd( cDestDir ) + "contrib.hbr", hb_ZCompress( hb_Serialize( hAll ) ) )
 
    RETURN
 
