@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARREM()
+ *   Test CT3 function CharRem()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARREM()"
+   ? "Begin test of CharRem()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charrem(" ", " 1  2  ") == "12"   ? ---> "' + CharRem( " ", " 1  2  " ) + '"'
-   ? '  charrem("3y", "xyz123") == "xz12" ? ---> "' + CharRem( "3y", "xyz123" ) + '"'
+   ? '  CharRem(" ", " 1  2  ") == "12"   ? ---> "' + CharRem( " ", " 1  2  " ) + '"'
+   ? '  CharRem("3y", "xyz123") == "xz12" ? ---> "' + CharRem( "3y", "xyz123" ) + '"'
    ?
 
-   ? "End test of CHARREM()"
+   ? "End test of CharRem()"
    ?
 
    ctexit()

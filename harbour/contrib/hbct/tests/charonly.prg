@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARONLY()
+ *   Test CT3 function CharOnly()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARONLY()"
+   ? "Begin test of CharOnly()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charonly("0123456789", "0211 - 38 99 77") == "0211389977" ? --> "' + CharOnly( "0123456789", "0211 - 38 99 77" ) + '"'
-   ? '  charonly("0123456789", "0211/ 389 977")   == "0211389977" ? --> "' + CharOnly( "0123456789", "0211/ 389 977" )  + '"'
+   ? '  CharOnly("0123456789", "0211 - 38 99 77") == "0211389977" ? --> "' + CharOnly( "0123456789", "0211 - 38 99 77" ) + '"'
+   ? '  CharOnly("0123456789", "0211/ 389 977")   == "0211389977" ? --> "' + CharOnly( "0123456789", "0211/ 389 977" )  + '"'
    ?
 
-   ? "End test of CHARONLY()"
+   ? "End test of CharOnly()"
    ?
 
    ctexit()

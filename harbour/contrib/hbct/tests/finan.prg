@@ -78,7 +78,7 @@ PROCEDURE Main()
 
    ? "Calculate the monthly payment for a loan of $2000.00 at an annual rate"
    ? "of 10%, within 24 month "
-   ? "PAYMENT( 2000.00, 0.10 / 12, 24 ) =  92.290    // CT3"
+   ? "Payment( 2000.00, 0.10 / 12, 24 ) =  92.290    // CT3"
    ? Space( 28 ), Payment( 2000.00, 0.10 / 12, 24 ), "  <-- CT for Harbour"
    ?
    ? "  PRESS ANY KEY"
@@ -88,14 +88,14 @@ PROCEDURE Main()
    ?
    ? "Calculate how many month do you need to cancel a loan of $4000.00 at"
    ? "an annual rate of 9.5% with payments of $200.00 max"
-   ? "PERIODS( 4000.00, 200.00, 0.095 / 12 ) =  21.859    // CT3"
+   ? "Periods( 4000.00, 200.00, 0.095 / 12 ) =  21.859    // CT3"
    ? Space( 33 ), Periods( 4000.00, 200.00, 0.095 / 12 ), "  <-- CT for Harbour"
    ?
    ?
 
    ? "Calculate which is the effective anual rate of your Bank, for a loan"
    ? "of $2500.00 if you pay $86.67 per month for 3 years"
-   ? "RATE( 2500.00, 86.67, 36 ) * 12 = 0.1501  // CT3"
+   ? "Rate( 2500.00, 86.67, 36 ) * 12 = 0.1501  // CT3"
    ? Space( 24 ), Rate( 2500.00, 86.67, 36 ) * 12.0, "  <-- CT for Harbour"
    ?
    ? "  PRESS ANY KEY"

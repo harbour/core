@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARAND()
+ *   Test CT3 function ChaRand()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARAND()"
+   ? "Begin test of ChaRand()"
    ?
 
    // simple tests
    ? "Simple tests:"
 
-   ? '  charand("012345678", chr(254)) == "002244668" ? --> "' + CharAnd( "012345678", Chr( 254 ) ) + '"'
-   ? '  charand("012345678", chr(254)+chr(252)) == "002044648" ? --> "' + CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) + '"'
+   ? '  ChaRand("012345678", Chr(254)) == "002244668" ? --> "' + ChaRand( "012345678", Chr( 254 ) ) + '"'
+   ? '  ChaRand("012345678", Chr(254)+Chr(252)) == "002044648" ? --> "' + ChaRand( "012345678", Chr( 254 ) + Chr( 252 ) ) + '"'
 
-   ? "End test of CHARAND()"
+   ? "End test of ChaRand()"
    ?
 
    ctexit()

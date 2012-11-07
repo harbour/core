@@ -63,27 +63,27 @@ PROCEDURE Main( cLang )
    LOCAL nChoice := 1
    LOCAL c    := .T.
    LOCAL farr := { ;
-      "addmonth( dDate )   Add a month to dDate      ", ;
-      "bom()               Beginning of month        ", ;
-      "boq()               Returns first date of qtr ", ;
-      "boy()               Beginning of year         ", ;
-      "ctodow()            Day name to day number    ", ;
-      "ctomonth()          Month name to number      ", ;
-      "daysInMonth()       number of days in xMonth  ", ;
-      "daystomonth(dDate)  Returns num days to month ", ;
-      "dmy( dDate, lmode)  date as DD month YY       ", ;
-      "doy( dDate )        Returns day of the year   ", ;
-      "eom( dDate )        Returns last day of month ", ;
-      "eoq( dDate )        Returns last date of qtr  ", ;
-      "eoy( dDate )        Returns last day of year  ", ;
-      "isleap( dDate )     Returns .T. if leap year  ", ;
-      "lastdayom( dDate )  Returns num days in month ", ;
-      "mdy( dDate )        Returns stg Month DD, YY  ", ;
-      "ntocdow( nDay )     Returns name of day       ", ;
-      "ntocmonth( nMth )   Returns name of month     ", ;
-      "quarter(date)       Returns qtr number of date", ;
+      "AddMonth( dDate )   Add a month to dDate      ", ;
+      "BoM()               Beginning of month        ", ;
+      "BoQ()               Returns first date of qtr ", ;
+      "BoY()               Beginning of year         ", ;
+      "CToDoW()            Day name to day number    ", ;
+      "CToMonth()          Month name to number      ", ;
+      "DaysInMonth()       number of days in xMonth  ", ;
+      "DaysToMonth(dDate)  Returns num days to month ", ;
+      "DMY( dDate, lmode)  date as DD month YY       ", ;
+      "DoY( dDate )        Returns day of the year   ", ;
+      "EoM( dDate )        Returns last day of month ", ;
+      "EoQ( dDate )        Returns last date of qtr  ", ;
+      "EoY( dDate )        Returns last day of year  ", ;
+      "IsLeap( dDate )     Returns .T. if leap year  ", ;
+      "LastDayOM( dDate )  Returns num days in month ", ;
+      "MDY( dDate )        Returns stg Month DD, YY  ", ;
+      "NToCDoW( nDay )     Returns name of day       ", ;
+      "NToCMonth( nMth )   Returns name of month     ", ;
+      "Quarter(date)       Returns qtr number of date", ;
       "stod( ansi date)    Returns Clipper date      ", ;
-      "week( dDate, lSWN ) Returns numbef of week    ", }
+      "Week( dDate, lSWN ) Returns numbef of week    ", }
 
    SET DATE ANSI
    SET CENTURY ON
@@ -161,7 +161,7 @@ PROCEDURE Main( cLang )
 FUNCTION addmtest()
 
    //
-   // addmonth(dDate, nMonths)
+   // AddMonth(dDate, nMonths)
    // =========================
    // This version will only accept an nMonths value of from 0 to 70
 
@@ -172,7 +172,7 @@ FUNCTION addmtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "addmonth(dDate) returns the date incremented by"
+      @ 5, 10 SAY "AddMonth(dDate) returns the date incremented by"
       @ 6, 10 SAY "the number of days in months."
       @ 7, 10 SAY "Insert a date"
       @ 8, 10 SAY "How many months"
@@ -210,7 +210,7 @@ FUNCTION addmtest()
 FUNCTION bomtest()
 
    //
-   // bom( dDate )
+   // BoM( dDate )
    // =============
 
    LOCAL getlist := {}
@@ -219,8 +219,8 @@ FUNCTION bomtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "bom(dDate) returns the date of the first day of dDate"
-      @ 6, 10 SAY "If dDate is 2002/10/15 (that's in yyyy/mm/dd), bom()"
+      @ 5, 10 SAY "BoM(dDate) returns the date of the first day of dDate"
+      @ 6, 10 SAY "If dDate is 2002/10/15 (that's in yyyy/mm/dd), BoM()"
       @ 7, 10 SAY "should return 2002/10/01. Test it, Insert a date"
       @ 9, 10 GET dDate
 
@@ -254,7 +254,7 @@ FUNCTION bomtest()
 FUNCTION boqtest()
 
    //
-   // bom( dDate )
+   // BoM( dDate )
    // =============
 
    LOCAL getlist := {}
@@ -263,9 +263,9 @@ FUNCTION boqtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "boq(dDate) returns the date of the first day of the"
+      @ 5, 10 SAY "BoQ(dDate) returns the date of the first day of the"
       @ 6, 10 SAY "quarter in which dDate is situated. If dDate is"
-      @ 7, 10 SAY "2002/10/15 (that's in yyyy/mm/dd), BOQ() should return"
+      @ 7, 10 SAY "2002/10/15 (that's in yyyy/mm/dd), BoQ() should return"
       @ 8, 10 SAY "2002/09/01. Test it, Insert a date"
 
       @ 9, 10 GET dDate
@@ -300,7 +300,7 @@ FUNCTION boqtest()
 FUNCTION boytest()
 
    //
-   // boy( dDate )
+   // BoY( dDate )
    // =============
 
    LOCAL getlist := {}
@@ -309,8 +309,8 @@ FUNCTION boytest()
    LOCAL nkey
 
    DO WHILE c
-      @ 5, 10 SAY "boy(dDate) returns the date of the first day of dDate"
-      @ 6, 10 SAY "If dDate is 2002/10/15 (that's in yyyy/mm/dd), boy()"
+      @ 5, 10 SAY "BoY(dDate) returns the date of the first day of dDate"
+      @ 6, 10 SAY "If dDate is 2002/10/15 (that's in yyyy/mm/dd), BoY()"
       @ 7, 10 SAY "should return 2002/01/01. Test it, Insert a date"
       @ 9, 10 GET dDate
 
@@ -346,7 +346,7 @@ FUNCTION boytest()
 FUNCTION ctodowtest()
 
    //
-   // ctodow( cDow )
+   // CToDoW( cDow )
    // ==============
    // Convert name of day of the week to its ordinal number
    // if cDow is invalid, returns 0
@@ -358,7 +358,7 @@ FUNCTION ctodowtest()
    LOCAL c       := .T.
 
    DO WHILE c
-      @ 5, 10 SAY "ctodow(dDate) receives the name of a day of the week and "
+      @ 5, 10 SAY "CToDoW(dDate) receives the name of a day of the week and "
       @ 6, 10 SAY "returns a number representing its position in the week"
       @ 7, 10 SAY "Sunday returns 1. Test it, Insert a day"
       @ 9, 10 GET cDow
@@ -395,10 +395,10 @@ FUNCTION ctodowtest()
 FUNCTION ctomonthtest()
 
    //
-   // ctomonth(cDom )
+   // CToMonth(cDom )
    // ===============
    // Convert the name of a month to its ordinal number. If cMonth is
-   // invalid, ctomonth() Returns 0. English month names only
+   // invalid, CToMonth() Returns 0. English month names only
 
    LOCAL getlist := {}
    LOCAL cDom    := Space( 9 )
@@ -406,7 +406,7 @@ FUNCTION ctomonthtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "ctomonth(dDate) receives the name of a month and returns"
+      @ 5, 10 SAY "CToMonth(dDate) receives the name of a month and returns"
       @ 6, 10 SAY "a number representing its position in the month. April"
       @ 7, 10 SAY "returns 4. Test it, Insert a month"
       @ 9, 10 GET cDom PICTURE "!!!!!!!!!"
@@ -444,7 +444,7 @@ FUNCTION ctomonthtest()
 FUNCTION dInMonthtest()
 
    //
-   // daysInMonth( xDate, lleap )
+   // DaysInMonth( xDate, lleap )
    // ============================
    // Returns the number of days in nMonth, either whose name as a
    // string or month number is passed. English Month names only.
@@ -457,7 +457,7 @@ FUNCTION dInMonthtest()
    LOCAL cLeap   := Space( 1 )
 
    DO WHILE c
-      @ 5, 10 SAY "daysInmonth() receives either the number of a month or"
+      @ 5, 10 SAY "DaysInMonth() receives either the number of a month or"
       @ 6, 10 SAY "its name and returns the number of days in the month. "
       @ 7, 10 SAY "April returns 30. Test it. Insert a month number"
       @ 8, 10 SAY "Is it a leap year?"
@@ -512,7 +512,7 @@ FUNCTION dInMonthtest()
 FUNCTION d2month()
 
    //
-   // daystomonth()
+   // DaysToMonth()
    // =============
    // Total number days from first of Jan to beginning of nMonth.
    // lLeap is .F. for a non-leap year but .T. if it is. If so and
@@ -526,7 +526,7 @@ FUNCTION d2month()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "daystomonth() receives the number a month and returns"
+      @ 5, 10 SAY "DaysToMonth() receives the number a month and returns"
       @ 6, 10 SAY "the number of days in the year up to that month. March"
       @ 7, 10 SAY "returns 59 or 60 in a leap year. Test it."
       @ 8, 10 SAY "Insert a month number"
@@ -570,7 +570,7 @@ FUNCTION d2month()
 FUNCTION dmytest()
 
    //
-   // dmy( dDate, lmode)
+   // DMY( dDate, lmode)
    // ===================
    // Returns the date as a string in DD Month YY format. If lmode
    // is .T., a "." is inserted after the DD
@@ -584,7 +584,7 @@ FUNCTION dmytest()
    LOCAL nKey
 
    DO WHILE c
-      @  5, 10 SAY "dmy() receives a date and logical lmode. If lmode is"
+      @  5, 10 SAY "DMY() receives a date and logical lmode. If lmode is"
       @  6, 10 SAY "is either missing or FALSE, dmy returns the date as"
       @  7, 10 SAY "a string in DD Month YY format. If lmode is TRUE, a"
       @  8, 10 SAY "full stop or perod '.' is inserted after DD. Test it"
@@ -627,7 +627,7 @@ FUNCTION dmytest()
 FUNCTION doytest()
 
    //
-   // doy( dDate )
+   // DoY( dDate )
    // =============
    // Determines the day of the year for a specific date
    // if dDate is invalid, returns 0
@@ -638,7 +638,7 @@ FUNCTION doytest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "doy(dDate) returns the day of the year for the"
+      @ 5, 10 SAY "DoY(dDate) returns the day of the year for the"
       @ 6, 10 SAY "date passed. Test it, Insert a date"
       @ 9, 10 GET dDate
 
@@ -675,7 +675,7 @@ FUNCTION doytest()
 FUNCTION eomtest()
 
    //
-   // dBom := eom( dDate )
+   // dBom := EoM( dDate )
    // =====================
    // Returns the last date in the month of the month appearing in
    // date.
@@ -686,7 +686,7 @@ FUNCTION eomtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "eom(dDate) returns the last date in the month of the"
+      @ 5, 10 SAY "EoM(dDate) returns the last date in the month of the"
       @ 6, 10 SAY "month appearing in dDate. Test it, Insert a date"
       @ 9, 10 GET dDate
 
@@ -724,7 +724,7 @@ FUNCTION eomtest()
 FUNCTION eoqtest()
 
    //
-   // dret := eoq( dDate )
+   // dret := EoQ( dDate )
    // =====================
    // Returns the last date in the quarter in which dDate falls.
 
@@ -734,7 +734,7 @@ FUNCTION eoqtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "EOQ(dDate) returns the last date in the quarter in"
+      @ 5, 10 SAY "EoQ(dDate) returns the last date in the quarter in"
       @ 6, 10 SAY "which dDate falls. Test it, Insert a date"
       @ 9, 10 GET dDate
 
@@ -772,7 +772,7 @@ FUNCTION eoqtest()
 FUNCTION eoytest()
 
    //
-   // dEoy := eoy( dDate )
+   // dEoy := EoY( dDate )
    // =====================
    // Returns the last date in the year of the year appearing in
    // date.
@@ -783,7 +783,7 @@ FUNCTION eoytest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "eoy(dDate) returns the last date in the year of the"
+      @ 5, 10 SAY "EoY(dDate) returns the last date in the year of the"
       @ 6, 10 SAY "year appearing in dDate. Test it, Insert a date"
       @ 9, 10 GET dDate
 
@@ -821,7 +821,7 @@ FUNCTION eoytest()
 FUNCTION isleaptest()
 
    //
-   // lRet :=  isleap( dDate )
+   // lRet :=  IsLeap( dDate )
    // ========================
    // if dDate is a leap year, lRet is .T., otherwise .F..
    // Leap years are exactly divisible by 4 and 1,000 but not 100.
@@ -833,7 +833,7 @@ FUNCTION isleaptest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "isleap(dDate) returns TRUE if dDate is a leap year"
+      @ 5, 10 SAY "IsLeap(dDate) returns TRUE if dDate is a leap year"
       @ 6, 10 SAY "Test it, Insert a date"
       @ 9, 10 GET dDate
 
@@ -876,7 +876,7 @@ FUNCTION isleaptest()
 FUNCTION lastdayomtest()
 
    //
-   //  ndays := lastdayom( xDate )
+   //  ndays := LastDayOM( xDate )
    //  ===========================
    // Returns the the number of days in the month.
    // xDate can be a date or a month number. If empty uses the
@@ -890,7 +890,7 @@ FUNCTION lastdayomtest()
    LOCAL cMth  := "  "
 
    DO WHILE c
-      @  5, 10 SAY "lastdayom(xDate) returns the number of days in the"
+      @  5, 10 SAY "LastDayOM(xDate) returns the number of days in the"
       @  6, 10 SAY "month appearing in date. Or, if only a month number"
       @  7, 10 SAY "is passed, in that month. Test it. "
       @  9, 10 SAY "Insert a date(or)"
@@ -936,7 +936,7 @@ FUNCTION lastdayomtest()
 FUNCTION mdytest()
 
    //
-   // cDate := mdy( dDate )
+   // cDate := MDY( dDate )
    // ======================
    // Returns the date as a string in "Month DD, YY" or "Month DD, YYYY"
    // If dDate is NULL, the system date is used
@@ -948,7 +948,7 @@ FUNCTION mdytest()
    LOCAL nKey
 
    DO WHILE c
-      @  5, 10 SAY "mdy() receives a date. mdy returns the date as"
+      @  5, 10 SAY "MDY() receives a date. mdy returns the date as"
       @  6, 10 SAY "a string in month DD YY format.  Test it"
       @  8, 10 SAY "Insert a date"
       @  8, 30 GET dDate PICTURE "@D   /  /  "
@@ -987,9 +987,9 @@ FUNCTION mdytest()
 FUNCTION ntocdowtest()
 
    //
-   // cDay :=  ntocdow( nDayNum )
+   // cDay :=  NToCDoW( nDayNum )
    // ==================================
-   // ntocdow() receives the number of a day and returns its
+   // NToCDoW() receives the number of a day and returns its
    // name as a string. This version does not observe the Nations
    // module. English only.
 
@@ -999,7 +999,7 @@ FUNCTION ntocdowtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "ntocdow(n) returns the name of the day number n"
+      @ 5, 10 SAY "NToCDoW(n) returns the name of the day number n"
       @ 6, 10 SAY "Test it, Insert a day number"
       @ 6, 60 GET cDay
 
@@ -1037,9 +1037,9 @@ FUNCTION ntocdowtest()
 FUNCTION ntocmthtest()
 
    //
-   // cMonth :=  ntocmonth( nMonthNum )
+   // cMonth :=  NToCMonth( nMonthNum )
    // ==================================
-   // ntocmonth() receives the number of a month and returns its
+   // NToCMonth() receives the number of a month and returns its
    // name as a string. This version does not observe the Nations
    // module. English only.
 
@@ -1049,7 +1049,7 @@ FUNCTION ntocmthtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "ntocmonth(n) returns the name of the month number n"
+      @ 5, 10 SAY "NToCMonth(n) returns the name of the month number n"
       @ 6, 10 SAY "Test it, Insert a month number"
       @ 6, 60 GET cMonth
 
@@ -1087,7 +1087,7 @@ FUNCTION ntocmthtest()
 FUNCTION qtrtest()
 
    //
-   // nqtr := quarter( dDate )
+   // nqtr := Quarter( dDate )
    // ===========================
    // Returns the quarter as a number. If no date is specified,
    // the system date is used.
@@ -1098,7 +1098,7 @@ FUNCTION qtrtest()
    LOCAL nKey
 
    DO WHILE c
-      @ 5, 10 SAY "quarter(dDate) returns the number of the quarter"
+      @ 5, 10 SAY "Quarter(dDate) returns the number of the quarter"
       @ 6, 10 SAY "Test it, Insert a date"
       @ 6, 52 GET dDate
 
@@ -1213,7 +1213,7 @@ FUNCTION chkansi( cAnsidate )
 FUNCTION weektest()
 
    //
-   // nWeek := week( dDate, lSWN )
+   // nWeek := Week( dDate, lSWN )
    // =============================
    // Returns the calendar week as a number. If no date is specified,
    // the system date is used. An empty date viz stod()
@@ -1226,7 +1226,7 @@ FUNCTION weektest()
    LOCAL cMode := Space( 1 )
 
    DO WHILE c
-      @  5, 10 SAY "week(dDate, lSWN) returns the calendar number of the week"
+      @  5, 10 SAY "Week(dDate, lSWN) returns the calendar number of the week"
       @  6, 10 SAY "if lSWN == .T., the simple week number is returned"
       @  7, 10 SAY "if lSWN == .F.(default), the ISO8601 week number is returned"
 

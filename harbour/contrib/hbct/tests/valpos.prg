@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function VALPOS()
+ *   Test CT3 function ValPos()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of VALPOS()"
+   ? "Begin test of ValPos()"
    ?
 
-   ? '  valpos("1234x56789") == 9    ? --> ' + Str( ValPos( "1234x56789" ) )
-   ? '  valpos("1234x56789",1) == 1  ? --> ' + Str( ValPos( "1234x56789", 1 ) )
-   ? '  valpos("1234x56789",11) == 0 ? --> ' + Str( ValPos( "1234x56789", 11 ) )
-   ? '  valpos("1234x56789",5) == 0  ? --> ' + Str( ValPos( "1234x56789", 5 ) )
+   ? '  ValPos("1234x56789") == 9    ? --> ' + Str( ValPos( "1234x56789" ) )
+   ? '  ValPos("1234x56789",1) == 1  ? --> ' + Str( ValPos( "1234x56789", 1 ) )
+   ? '  ValPos("1234x56789",11) == 0 ? --> ' + Str( ValPos( "1234x56789", 11 ) )
+   ? '  ValPos("1234x56789",5) == 0  ? --> ' + Str( ValPos( "1234x56789", 5 ) )
 
    ?
-   ? "End test of VALPOS()"
+   ? "End test of ValPos()"
    ?
 
    ctexit()

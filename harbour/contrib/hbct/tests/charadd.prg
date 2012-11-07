@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARADD()
+ *   Test CT3 function CharAdd()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,17 +56,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARADD()"
+   ? "Begin test of CharAdd()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charadd("012345678", chr(1)) == "123456789" ? -> "' + CharAdd( "012345678", Chr( 1 ) ) + '"'
-   ? '  charadd("012345678", chr(1)+chr(2)) == "133557799" ? -> "' + CharAdd( "012345678", Chr( 1 ) + Chr( 2 ) ) + '"'
-   ? '  charadd("123456789", chr(255)) == "012345678" ? -> "' + CharAdd( "123456789", Chr( 255 ) ) + '"'
-   ? '  charadd("123456789", chr(255)+chr(254)) == "002244668" ? -> "' + CharAdd( "123456789", Chr( 255 ) + Chr( 254 ) ) + '"'
+   ? '  CharAdd("012345678", Chr(1)) == "123456789" ? -> "' + CharAdd( "012345678", Chr( 1 ) ) + '"'
+   ? '  CharAdd("012345678", Chr(1)+Chr(2)) == "133557799" ? -> "' + CharAdd( "012345678", Chr( 1 ) + Chr( 2 ) ) + '"'
+   ? '  CharAdd("123456789", Chr(255)) == "012345678" ? -> "' + CharAdd( "123456789", Chr( 255 ) ) + '"'
+   ? '  CharAdd("123456789", Chr(255)+Chr(254)) == "002244668" ? -> "' + CharAdd( "123456789", Chr( 255 ) + Chr( 254 ) ) + '"'
 
-   ? "End test of CHARADD()"
+   ? "End test of CharAdd()"
    ?
 
    ctexit()

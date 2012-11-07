@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARHIST()
+ *   Test CT3 function CharHist()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARHIST()"
+   ? "Begin test of CharHist()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charhist("Hello World !")' + "'109' == 3 ? --> ", CharHist( "Hello World !" )' 109 '
-   ? '  aeval(charhist("Hello World !"), {| x | nTotal += x } ) '
+   ? '  CharHist("Hello World !")' + "'109' == 3 ? --> ", CharHist( "Hello World !" )' 109 '
+   ? '  aeval(CharHist("Hello World !"), {| x | nTotal += x } ) '
    AEval( CharHist( "Hello World !" ), {| x | nTotal += x } )
    ? '    ==> nTotal == len("Hello World !") ? --> ', nTotal == Len( "Hello World !" )
 
-   ? "End test of CHARHIST()"
+   ? "End test of CharHist()"
    ?
 
    ctexit()

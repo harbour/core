@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function TOKENSEP()
+ *   Test CT3 function TokenSep()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -63,7 +63,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of TOKENSEP()"
+   ? "Begin test of TokenSep()"
    ?
 
    // Some simple tests
@@ -85,7 +85,7 @@ PROCEDURE Main()
    NEXT
 
    ?
-   ? "End test of TOKENSEP()"
+   ? "End test of TokenSep()"
    ?
 
    ctexit()

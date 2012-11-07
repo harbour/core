@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARSHL()
+ *   Test CT3 function CharShl()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -62,26 +62,26 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARSHL()"
+   ? "Begin test of CharShl()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charshl(chr(1)+chr(2)+chr(4)+chr(8)+chr(16)+chr(32)+'
-   ? '           chr(64)+chr(128), 3) == '
-   ? '  chr(8)+chr(16)+chr(32)+chr(64)+chr(128)+chr(0)+chr(0)+chr(0) ? -->'
+   ? '  CharShl(Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)+Chr(32)+'
+   ? '           Chr(64)+Chr(128), 3) == '
+   ? '  Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(0)+Chr(0)+Chr(0) ? -->'
 
    ? '  '
-   cStr := charshl( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
+   cStr := CharShl( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
    FOR ni := 1 TO Len( cStr )
-      ?? "chr(" + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + ")"
+      ?? "Chr(" + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + ")"
       IF ni < Len( cStr )
          ?? "+"
       ENDIF
    NEXT
    ?
 
-   ? "End test of CHARSHL()"
+   ? "End test of CharShl()"
    ?
 
    ctexit()

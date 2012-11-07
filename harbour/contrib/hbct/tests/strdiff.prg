@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function STRDIFF()
+ *   Test CT3 function StrDiff()
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,20 +56,20 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of STRDIFF()"
+   ? "Begin test of StrDiff()"
    ?
 
    // simple tests
    ? "Simple tests:"
 
-   ? '  strdiff("ABC", "ADC") == 3 ?  -> ', StrDiff( "ABC", "ADC" )
-   ? '  strdiff("ABC", "AEC") == 3 ?  -> ', StrDiff( "ABC", "AEC" )
-   ? '  strdiff("CBA", "ABC") == 6 ?  -> ', StrDiff( "CBA", "ABC" )
-   ? '  strdiff("ABC", "AXBC") == 1 ? -> ', StrDiff( "ABC", "AXBC" )
-   ? '  strdiff("AXBC", "ABC") == 6 ? -> ', StrDiff( "AXBC", "ABC" )
-   ? '  strdiff("AXBC", "ADC") == 9 ? -> ', StrDiff( "AXBC", "ADC" )
+   ? '  StrDiff("ABC", "ADC") == 3 ?  -> ', StrDiff( "ABC", "ADC" )
+   ? '  StrDiff("ABC", "AEC") == 3 ?  -> ', StrDiff( "ABC", "AEC" )
+   ? '  StrDiff("CBA", "ABC") == 6 ?  -> ', StrDiff( "CBA", "ABC" )
+   ? '  StrDiff("ABC", "AXBC") == 1 ? -> ', StrDiff( "ABC", "AXBC" )
+   ? '  StrDiff("AXBC", "ABC") == 6 ? -> ', StrDiff( "AXBC", "ABC" )
+   ? '  StrDiff("AXBC", "ADC") == 9 ? -> ', StrDiff( "AXBC", "ADC" )
 
-   ? "End test of STRDIFF()"
+   ? "End test of StrDiff()"
    ?
 
    ctexit()

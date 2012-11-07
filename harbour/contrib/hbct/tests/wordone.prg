@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDONE()
+ *   Test CT3 function WordOne()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,17 +56,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of WORDONE()"
+   ? "Begin test of WordOne()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  wordone("12ABAB12")       == "12AB12" ? --> "' + WordOne( "12ABAB12" )       + '"'
-   ? '  wordone("1AAAA2")         == "1AAAA2" ? --> "' + WordOne( "1AAAA2" )         + '"'
-   ? '  wordone("12", "1212ABAB") == "12ABAB" ? --> "' + WordOne( "12", "1212ABAB" ) + '"'
+   ? '  WordOne("12ABAB12")       == "12AB12" ? --> "' + WordOne( "12ABAB12" )       + '"'
+   ? '  WordOne("1AAAA2")         == "1AAAA2" ? --> "' + WordOne( "1AAAA2" )         + '"'
+   ? '  WordOne("12", "1212ABAB") == "12ABAB" ? --> "' + WordOne( "12", "1212ABAB" ) + '"'
    ?
 
-   ? "End test of WORDONE()"
+   ? "End test of WordOne()"
    ?
 
    ctexit()

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function TOKEN()
+ *   Test CT3 function Token()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -65,15 +65,15 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of TOKEN()"
+   ? "Begin test of Token()"
    ?
 
    // Some simple tests
    ? "  Simple tests:"
-   ? '    token("Hello, World!") == "World" ? -----------> "' + Token( "Hello, World!" ) + '"'
-   ? '    token("Hello, World!",,2,1) == "" ? -----------> "' + Token( "Hello, World!",, 2, 1 ) + '"'
-   ? '    token("Hello, World!",",",2,1) == " World!" ? -> "' + Token( "Hello, World!", ",", 2, 1 ) + '"'
-   ? '    token("Hello, World!"," ",2,1) == "World!" ? --> "' + Token( "Hello, World!", " ", 2, 1 ) + '"'
+   ? '    Token("Hello, World!") == "World" ? -----------> "' + Token( "Hello, World!" ) + '"'
+   ? '    Token("Hello, World!",,2,1) == "" ? -----------> "' + Token( "Hello, World!",, 2, 1 ) + '"'
+   ? '    Token("Hello, World!",",",2,1) == " World!" ? -> "' + Token( "Hello, World!", ",", 2, 1 ) + '"'
+   ? '    Token("Hello, World!"," ",2,1) == "World!" ? --> "' + Token( "Hello, World!", " ", 2, 1 ) + '"'
    ?
 
    ? '  Tokenizing the string "' + cStr + '"'
@@ -94,7 +94,7 @@ PROCEDURE Main()
    NEXT
 
    ?
-   ? "End test of TOKEN()"
+   ? "End test of Token()"
    ?
 
    ctexit()

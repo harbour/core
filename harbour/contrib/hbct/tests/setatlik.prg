@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function SETATLIKE()
+ *   Test CT3 function SetAtLike()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -58,7 +58,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of SETATLIKE()"
+   ? "Begin test of SetAtLike()"
    ? "  Default mode should be 0, is................................", SetAtLike()
    ? "  Setting mode to 1, return value should be 0, is.............", SetAtLike( 1 )
    ? "  Mode setting should now be 1, is............................", SetAtLike()
@@ -68,9 +68,9 @@ PROCEDURE Main()
    ? "  Default wildcard character should be '?', is................", cWildcard
    SetAtLike( , "#" )
    SetAtLike( , @cWildcard )
-   ? "  Setting wildcard to '#' and calling SETATLIKE(,@cWildcard)"
+   ? "  Setting wildcard to '#' and calling SetAtLike(,@cWildcard)"
    ? "    should yield '#' for cWildcard, does......................", cWildcard
-   ? "End test of SETATLIKE()"
+   ? "End test of SetAtLike()"
    ?
 
    ctexit()

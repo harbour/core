@@ -62,30 +62,30 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARNOT()"
+   ? "Begin test of CharNot()"
    ?
 
    // simple tests
    ? "Simple tests:"
 
-   ? '  charnot(chr(85)+chr(128)+chr(170)+chr(1)) == '
-   ? '  chr(170)+chr(127)+chr(85)+chr(254) ? -->'
+   ? '  CharNot(Chr(85)+Chr(128)+Chr(170)+Chr(1)) == '
+   ? '  Chr(170)+Chr(127)+Chr(85)+Chr(254) ? -->'
 
    ? '  '
    cStr := CharNot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) )
    FOR ni := 1 TO Len( cStr )
-      ?? "chr(" + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + ")"
+      ?? "Chr(" + hb_ntos( Asc( SubStr( cStr, ni, 1 ) ) ) + ")"
       IF ni < Len( cStr )
          ?? "+"
       ENDIF
    NEXT
    ?
 
-   ? '  charnot(charnot("This is a test!")) == "This is a test!" ?'
+   ? '  CharNot(CharNot("This is a test!")) == "This is a test!" ?'
    ? '  --> "' + CharNot( CharNot( "This is a test!" ) ) + '"'
    ?
 
-   ? "End test of CHARNOT()"
+   ? "End test of CharNot()"
    ?
 
    ctexit()

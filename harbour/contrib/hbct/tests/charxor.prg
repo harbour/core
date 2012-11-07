@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARXOR()
+ *   Test CT3 function CharXor()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARXOR()"
+   ? "Begin test of CharXor()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charxor(charxor("This is top secret !", "My Password"),'
+   ? '  CharXor(CharXor("This is top secret !", "My Password"),'
    ? '           "My Password") == "This is top secret !" ? ->'
    ? '  ' + CharXor( CharXor( "This is top secret !", "My Password" ), "My Password" )
 
-   ? "End test of CHARXOR()"
+   ? "End test of CharXor()"
    ?
 
    ctexit()

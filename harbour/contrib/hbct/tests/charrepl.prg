@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARREPL()
+ *   Test CT3 function CharRepl()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,19 +56,19 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARREPL()"
+   ? "Begin test of CharRepl()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charrepl("1234", "1x2y3z", "abcd") ==            "axbycz" ? --> "' + CharRepl( "1234", "1x2y3z", "abcd" )            + '"'
-   ? '  charrepl("abcdefghij", "jhfdb", "1234567890") == "08642"  ? --> "' + CharRepl( "abcdefghij", "jhfdb", "1234567890" ) + '"'
-   ? '  charrepl("abcdefghij", "jhfdb", "12345") ==      "55542"  ? --> "' + CharRepl( "abcdefghij", "jhfdb", "12345" )      + '"'
-   ? '  charrepl("1234", "1234", "234A") ==              "AAAA"   ? --> "' + CharRepl( "1234", "1234", "234A" )              + '"'
-   ? '  charrepl("1234", "1234", "234A", .T.) ==         "234A"   ? --> "' + CharRepl( "1234", "1234", "234A", .T. )         + '"'
+   ? '  CharRepl("1234", "1x2y3z", "abcd") ==            "axbycz" ? --> "' + CharRepl( "1234", "1x2y3z", "abcd" )            + '"'
+   ? '  CharRepl("abcdefghij", "jhfdb", "1234567890") == "08642"  ? --> "' + CharRepl( "abcdefghij", "jhfdb", "1234567890" ) + '"'
+   ? '  CharRepl("abcdefghij", "jhfdb", "12345") ==      "55542"  ? --> "' + CharRepl( "abcdefghij", "jhfdb", "12345" )      + '"'
+   ? '  CharRepl("1234", "1234", "234A") ==              "AAAA"   ? --> "' + CharRepl( "1234", "1234", "234A" )              + '"'
+   ? '  CharRepl("1234", "1234", "234A", .T.) ==         "234A"   ? --> "' + CharRepl( "1234", "1234", "234A", .T. )         + '"'
    ?
 
-   ? "End test of CHARREPL()"
+   ? "End test of CharRepl()"
    ?
 
    ctexit()

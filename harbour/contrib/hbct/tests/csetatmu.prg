@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CSETATMUPA()
+ *   Test CT3 function CSetAtMupa()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,12 +56,12 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CSETATMUPA()"
+   ? "Begin test of CSetAtMupa()"
    ? "  Default switch should be .F., is..................................", CSetAtMupa()
    ? "  Setting switch to .T., return value should be .F., is.............", CSetAtMupa( .T. )
    ? "  Switch setting should now be .T., is..............................", CSetAtMupa()
    ? "  Setting switch to .F. again, return value should still be .T., is ", CSetAtMupa( .F. )
-   ? "End test of CSETATMUPA()"
+   ? "End test of CSetAtMupa()"
    ?
 
    ctexit()

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARMIRR()
+ *   Test CT3 function CharMirr()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARMIRR()"
+   ? "Begin test of CharMirr()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charmirr("racecar") == "racecar" ? ----------> "' + CharMirr( "racecar" ) + '"'
-   ? '  charmirr("racecar  ", .T.) == "racecar  " ? -> "' + CharMirr( "racecar  ", .T. ) + '"'
-   ? '  charmirr("racecar  ", .F.) == "  racecar" ? -> "' + CharMirr( "racecar  ", .F. ) + '"'
+   ? '  CharMirr("racecar") == "racecar" ? ----------> "' + CharMirr( "racecar" ) + '"'
+   ? '  CharMirr("racecar  ", .T.) == "racecar  " ? -> "' + CharMirr( "racecar  ", .T. ) + '"'
+   ? '  CharMirr("racecar  ", .F.) == "  racecar" ? -> "' + CharMirr( "racecar  ", .F. ) + '"'
 
-   ? "End test of CHARMIRR()"
+   ? "End test of CharMirr()"
    ?
 
    ctexit()

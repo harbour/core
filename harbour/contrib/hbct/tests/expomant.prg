@@ -65,11 +65,11 @@ PROCEDURE Main()
       ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( Mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( Exponent( Sqrt( n ) ), 4 )
    NEXT
 
-   // The call to str( infinity(.T.) ), generate a GPF.
-   // ?? Str( infinity( .T. ) ) + Str( mantissa( infinity( .T. ) ) ) + Str( exponent( infinity( .T. ) ) )
-   // ?? Str( infinity( .T. ) )
+   // The call to str( Infinity(.T.) ), generate a GPF.
+   // ?? Str( Infinity( .T. ) ) + Str( Mantissa( Infinity( .T. ) ) ) + Str( Exponent( Infinity( .T. ) ) )
+   // ?? Str( Infinity( .T. ) )
 
-   ?? "       infinity(.T.): " + Str( Mantissa( Infinity( .T. ) ), 20, 15 ) + " "
+   ?? "       Infinity(.T.): " + Str( Mantissa( Infinity( .T. ) ), 20, 15 ) + " "
    ? Str( Exponent( Infinity( .T. ) ), 4 )
 
    ctexit()

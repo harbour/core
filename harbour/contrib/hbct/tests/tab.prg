@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 functions TABEXPAND() and TABPACK()
+ *   Test CT3 functions TabExpand() and TabPack()
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -58,17 +58,17 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of TABEXPAND()"
+   ? "Begin test of TabExpand()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  tabexpand("-"+chr(9)+"!")             == "-       !" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!" )            + '"'
-   ? '  tabexpand("----"+chr(9) +"!")         == "----    !" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!" )         + '"'
-   ? '  tabexpand("-"+chr(9)+"!",, "+")       == "-+++++++!" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!",, "+" )      + '"'
-   ? '  tabexpand("-"+chr(9)+ "!", 4)         == "-   !"     ? -> "' + TabExpand( "-" + Chr( 9 ) + "!", 4 )         + '"'
-   ? '  tabexpand("----"+chr(9)+ "!", 8)      == "----    !" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!", 8 )      + '"'
-   ? '  tabexpand("----"+chr(9)+ "!", 8, "+") == "----++++!" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!", 8, "+" ) + '"'
+   ? '  TabExpand("-"+Chr(9)+"!")             == "-       !" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!" )            + '"'
+   ? '  TabExpand("----"+Chr(9) +"!")         == "----    !" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!" )         + '"'
+   ? '  TabExpand("-"+Chr(9)+"!",, "+")       == "-+++++++!" ? -> "' + TabExpand( "-" + Chr( 9 ) + "!",, "+" )      + '"'
+   ? '  TabExpand("-"+Chr(9)+ "!", 4)         == "-   !"     ? -> "' + TabExpand( "-" + Chr( 9 ) + "!", 4 )         + '"'
+   ? '  TabExpand("----"+Chr(9)+ "!", 8)      == "----    !" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!", 8 )      + '"'
+   ? '  TabExpand("----"+Chr(9)+ "!", 8, "+") == "----++++!" ? -> "' + TabExpand( "----" + Chr( 9 ) + "!", 8, "+" ) + '"'
    ?
 
    ? "Tests with newline characters: ^J == LF, ^M == CR"
@@ -79,36 +79,36 @@ PROCEDURE Main()
    cStr := TabExpand( "-" + Chr( 9 ) + "!" + hb_eol() + "----" + Chr( 9 ) + "!", , "+" )
    cStr := StrTran( cStr, Chr( 10 ), "^J" )
    cStr := StrTran( cStr, Chr( 13 ), "^M" )
-   ? '  tabexpand("-"+chr(9)+"!"+hb_eol()+"----"+chr(9)+ "!",, "+")'
+   ? '  TabExpand("-"+Chr(9)+"!"+hb_eol()+"----"+Chr(9)+ "!",, "+")'
    ? '     == "-+++++++!"+hb_eol()+"----++++!"  ? -> "' + cStr + '"'
    cStr := TabExpand( "-" + Chr( 9 ) + "!$$--" + hb_eol() + "--" + Chr( 9 ) + "!", , "+", "$" )
    cStr := StrTran( cStr, Chr( 10 ), "^J" )
    cStr := StrTran( cStr, Chr( 13 ), "^M" )
-   ? '  tabexpand("-"+chr(9)+"!$$--"+hb_eol()+--"+chr(9)+ "!",, "+", "$")'
+   ? '  TabExpand("-"+Chr(9)+"!$$--"+hb_eol()+--"+Chr(9)+ "!",, "+", "$")'
    nLen := Len( hb_eol() )
    ? '     == "-+++++++!$$--"+hb_eol()+"' + Replicate( "-", 4 - nLen ) + '++!"  ? -> "' + cStr + '"'
    ?
 
    ? "Tests with tab characters:"
-   ? '  tabexpand("-"+chr(9)+"-",,"+")      == "-+++++++-" ? -> "' + TabExpand( "-" + Chr( 9 ) + "-",, "+" ) + '"'
-   ? '  tabexpand("-"+chr(9)+"-",,"+",,"-")'
+   ? '  TabExpand("-"+Chr(9)+"-",,"+")      == "-+++++++-" ? -> "' + TabExpand( "-" + Chr( 9 ) + "-",, "+" ) + '"'
+   ? '  TabExpand("-"+Chr(9)+"-",,"+",,"-")'
    ? '                              == "++++++++^I+++++++" ? -> "' + StrTran( TabExpand( "-" + Chr( 9 ) + "-",, "+",, "-" ), Chr( 9 ), "^I" ) + '"'
    ?
 
-   ? "End test of TABEXPAND()"
-   ? "Press any key to continue with tests of TABPACK()..."
+   ? "End test of TabExpand()"
+   ? "Press any key to continue with tests of TabPack()..."
    ?
    Inkey( 0 )
 
-   ? "Begin test of TABPACK()"
+   ? "Begin test of TabPack()"
    ?
 
    // simple tests
    ? "Simple tests: ^I == tab character"
 
-   ? '  tabpack("AAAAAAA*",, "*")   == "AAAAAAA*"  ? -> "' + StrTran( TabPack( "AAAAAAA*",, "*" ), Chr( 9 ), "^I" )  + '"'
-   ? '  tabpack("AAAAA***",, "*")   == "AAAAA^I"   ? -> "' + StrTran( TabPack( "AAAAA***",, "*" ), Chr( 9 ), "^I" )  + '"'
-   ? '  tabpack("AAAAA*****",, "*") == "AAAAA^I**" ? -> "' + StrTran( TabPack( "AAAAA*****",, "*" ), Chr( 9 ), "^I" ) + '"'
+   ? '  TabPack("AAAAAAA*",, "*")   == "AAAAAAA*"  ? -> "' + StrTran( TabPack( "AAAAAAA*",, "*" ), Chr( 9 ), "^I" )  + '"'
+   ? '  TabPack("AAAAA***",, "*")   == "AAAAA^I"   ? -> "' + StrTran( TabPack( "AAAAA***",, "*" ), Chr( 9 ), "^I" )  + '"'
+   ? '  TabPack("AAAAA*****",, "*") == "AAAAA^I**" ? -> "' + StrTran( TabPack( "AAAAA*****",, "*" ), Chr( 9 ), "^I" ) + '"'
    ?
 
    ? "Tests with newline characters:"
@@ -122,10 +122,10 @@ PROCEDURE Main()
    cStr := StrTran( cStr, Chr( 10 ), "^J" )
    cStr := StrTran( cStr, Chr( 13 ), "^M" )
    cStr := StrTran( cStr, Chr( 9 ), "^I" )
-   ? '  tabpack("ABCD+" + hb_eol() + "++---+++++", 4, "+")'
-   ? '     == "ABCD+"+hb_eol()+"++---"+chr(9)+"++" ? -> "' + cStr + '"'
+   ? '  TabPack("ABCD+" + hb_eol() + "++---+++++", 4, "+")'
+   ? '     == "ABCD+"+hb_eol()+"++---"+Chr(9)+"++" ? -> "' + cStr + '"'
 
-   ? "End test of TABPACK()"
+   ? "End test of TabPack()"
    ?
 
 #if 0

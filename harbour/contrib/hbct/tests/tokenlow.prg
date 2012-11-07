@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function TOKENLOWER()
+ *   Test CT3 function TokenLower()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -58,30 +58,30 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of TOKENLOWER()"
+   ? "Begin test of TokenLower()"
    ?
 
    // Some simple tests
    ? "  Simple tests:"
-   ? '   tokenlower("Hello, World, here I am!")       == "hello, world, here i am!" ?'
+   ? '   TokenLower("Hello, World, here I am!")       == "hello, world, here i am!" ?'
    ? '                                                -> "' + TokenLower( "Hello, World, here I am!" ) + '"'
-   ? '   tokenlower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?'
+   ? '   TokenLower("Hello, World, here I am!",,3)    == "hello, world, here I am!" ?'
    ? '                                                -> "' + TokenLower( "Hello, World, here I am!",, 3 ) + '"'
-   ? '   tokenlower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?'
+   ? '   TokenLower("Hello, World, here I am!",",",3) == "hello, World, here I am!" ?'
    ? '                                                -> "' + TokenLower( "Hello, World, here I am!", ",", 3 ) + '"'
-   ? '   tokenlower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?'
+   ? '   TokenLower("Hello, World, here I am!"," W")  == "hello, World, here i am!" ?'
    ? '                                                -> "' + TokenLower( "Hello, World, here I am!", " W" ) + '"'
    ?
 
    ? '  Lowercase the tokens in the string "' + cStr + '"'
-   ? '            with csetref(.T.) and "@"'
+   ? '            with CSetRef(.T.) and "@"'
    CSetRef( .T. )
    ?
-   ? '    --> return value of tokenlower(@cStr): ', TokenLower( @cStr )
+   ? '    --> return value of TokenLower(@cStr): ', TokenLower( @cStr )
    ? '    --> cStr is now: "' + cStr + '"'
 
    ?
-   ? "End test of TOKENLOWER()"
+   ? "End test of TokenLower()"
    ?
 
    ctexit()

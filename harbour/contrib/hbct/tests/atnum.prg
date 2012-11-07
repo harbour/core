@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 functions ATNUM()
+ *   Test CT3 functions AtNum()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -62,48 +62,48 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of ATNUM()"
+   ? "Begin test of AtNum()"
    ?
    ? "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
    ?
 
    // Some simple tests
    ? "  Simple tests:"
-   ? '  atnum("..",cStr)     should be 18,'
+   ? '  AtNum("..",cStr)     should be 18,'
    ? '                          and is ', AtNum( "..", cStr )
-   ? '  atnum("..",cStr,2)   should be 8,'
+   ? '  AtNum("..",cStr,2)   should be 8,'
    ? '                          and is ', AtNum( "..", cStr, 2 )
-   ? '  atnum("..",cStr,2,2) should be 13,'
+   ? '  AtNum("..",cStr,2,2) should be 13,'
    ? '                          and is ', AtNum( "..", cStr, 2, 2 )
    ?
 
-   // Tests with CSetAtMuPa(.T.)
+   // Tests with CSetAtMupa(.T.)
    ? "  Multi-Pass tests"
-   ? "  Setting csetatmupa() to .T."
+   ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
-   ? '  atnum("..",cStr)     should be 18,'
+   ? '  AtNum("..",cStr)     should be 18,'
    ? '                          and is ', AtNum( "..", cStr )
-   ? '  atnum("..",cStr,2)   should be 2,'
+   ? '  AtNum("..",cStr,2)   should be 2,'
    ? '                          and is ', AtNum( "..", cStr, 2 )
-   ? '  atnum("..",cStr,2,2) should be 9,'
+   ? '  AtNum("..",cStr,2,2) should be 9,'
    ? '                          and is ', AtNum( "..", cStr, 2, 2 )
-   ? "  Setting csetatmupa() to .F."
+   ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
 
-   // Tests mit SetAtlike(1)
+   // Tests mit SetAtLike(1)
    ? "  SetAtLike tests"
-   ? '  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")'
+   ? '  Setting SetAtLike(CT_SETATLIKE_WILDCARD, ".")'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
-   ? '  atnum("..",cStr) should be 23,'
+   ? '  AtNum("..",cStr) should be 23,'
    ? '                      and is ', AtNum( "..", cStr )
-   ? '  atnum("..",cStr,2,2) should be 5,'
+   ? '  AtNum("..",cStr,2,2) should be 5,'
    ? '                          and is ', AtNum( "..", cStr, 2, 2 )
-   ? '  atnum("..",cStr,2,10) should be 13,'
+   ? '  AtNum("..",cStr,2,10) should be 13,'
    ? '                           and is ', AtNum( "..", cStr, 2, 10 )
    ?
 
-   ? "End test of ATNUM()"
+   ? "End test of AtNum()"
    ?
 
    ctexit()

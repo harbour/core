@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARODD()
+ *   Test CT3 function CharOdd()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,15 +56,15 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARODD()"
+   ? "Begin test of CharOdd()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charodd("1A2B3C4D5E") == "12345" ? --> "' + CharOdd( "1A2B3C4D5E" ) + '"'
-   ? '  charodd("1A2B3C4D5")  == "12345" ? --> "' + CharOdd( "1A2B3C4D5" ) + '"'
+   ? '  CharOdd("1A2B3C4D5E") == "12345" ? --> "' + CharOdd( "1A2B3C4D5E" ) + '"'
+   ? '  CharOdd("1A2B3C4D5")  == "12345" ? --> "' + CharOdd( "1A2B3C4D5" ) + '"'
 
-   ? "End test of CHARODD()"
+   ? "End test of CharOdd()"
    ?
 
    ctexit()

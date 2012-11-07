@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function RANGEREPL()
+ *   Test CT3 function RangeRepl()
  *
  * Copyright 2002 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,7 +56,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of RANGEREPL()"
+   ? "Begin test of RangeRepl()"
    ?
 
    ? '  RangeRepl( "0", "9", "year2002.dbf", "?" ) == "year????.dbf" ? --> "' + ;
@@ -67,7 +67,7 @@ PROCEDURE Main()
         RangeRepl( "0", "9", "yearcurr.dbf", "?" ) + '"'
 
    ?
-   ? "End test of RANGEREPL()"
+   ? "End test of RangeRepl()"
    ?
 
    ctexit()

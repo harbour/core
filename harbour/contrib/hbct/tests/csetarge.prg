@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CSETARGERR()
+ *   Test CT3 function CSetArgErr()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -66,7 +66,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CSETARGERR()"
+   ? "Begin test of CSetArgErr()"
    ?
 
    ?
@@ -77,11 +77,11 @@ PROCEDURE Main()
    // standard behaviour on argument error
    ?
    ? "Standard behaviour"
-   ? "  Call to addascii(5789676,1,2,.T.):"
+   ? "  Call to AddAscii(5789676,1,2,.T.):"
    cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -91,11 +91,11 @@ PROCEDURE Main()
    ?
    ? "CT_ARGERR_WHOCARES behaviour"
    CSetArgErr( CT_ARGERR_WHOCARES )
-   ? "  Call to addascii(5789676,1,2,.T.):"
+   ? "  Call to AddAscii(5789676,1,2,.T.):"
    cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -105,11 +105,11 @@ PROCEDURE Main()
    ?
    ? "CT_ARGERR_WARNING behaviour"
    CSetArgErr( CT_ARGERR_WARNING )
-   ? "  Call to addascii(5789676,1,2,.T.):"
+   ? "  Call to AddAscii(5789676,1,2,.T.):"
    cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -119,11 +119,11 @@ PROCEDURE Main()
    ?
    ? "CT_ARGERR_ERROR behaviour"
    CSetArgErr( CT_ARGERR_ERROR )
-   ? "  Call to addascii(5789676,1,2,.T.):"
+   ? "  Call to AddAscii(5789676,1,2,.T.):"
    cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -133,11 +133,11 @@ PROCEDURE Main()
    ?
    ? "CT_ARGERR_CATASTROPHIC behaviour"
    CSetArgErr( CT_ARGERR_CATASTROPHIC )
-   ? "  Call to addascii(5789676,1,2,.T.):"
+   ? "  Call to AddAscii(5789676,1,2,.T.):"
    cRet := AddAscii( 5789676, 1, 2, .T. )
    ? "  return value was", cRet
    ?
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -150,7 +150,7 @@ PROCEDURE Main()
    // standard behaviour on argument error
    ?
    ? "Standard behaviour"
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -160,7 +160,7 @@ PROCEDURE Main()
    ?
    ? "CT_ARGERR_WHOCARES behaviour"
    CSetArgErr( CT_ARGERR_WHOCARES )
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -170,7 +170,7 @@ PROCEDURE Main()
    ?
    ? "CT_ARGERR_WARNING behaviour"
    CSetArgErr( CT_ARGERR_WARNING )
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -180,7 +180,7 @@ PROCEDURE Main()
    ?
    ? "CT_ARGERR_ERROR behaviour"
    CSetArgErr( CT_ARGERR_ERROR )
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
@@ -190,13 +190,13 @@ PROCEDURE Main()
    ?
    ? "CT_ARGERR_CATASTROPHIC behaviour"
    CSetArgErr( CT_ARGERR_CATASTROPHIC )
-   ? "  Call to charadd('AA',.F.):"
+   ? "  Call to CharAdd('AA',.F.):"
    cRet := CharAdd( "AA", .F. )
    ? "  return value was", cRet, "<Press any key>"
    ?
    Inkey( 0 )
 
-   ? "End test of CSETARGERR()"
+   ? "End test of CSetArgErr()"
 
    ctexit()
 

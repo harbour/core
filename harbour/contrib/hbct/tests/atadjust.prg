@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ATADJUST()
+ *   Test CT3 function AtAdjust()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -69,7 +69,7 @@ PROCEDURE Main()
    ctinit()
 
    // Some simple tests
-   ? "Begin test of ATADJUST()"
+   ? "Begin test of AtAdjust()"
    ?
 
    ? "  Original strings:"
@@ -78,27 +78,27 @@ PROCEDURE Main()
    NEXT
    ?
 
-   ? '  ATADJUST(":", aStr[ni], 21,,, ".") yields'
+   ? '  AtAdjust(":", aStr[ni], 21,,, ".") yields'
    FOR ni := 1 TO Len( aStr )
       ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 21, 1,, "." )
    NEXT
    ?
 
-   ? '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields'
+   ? '  AtAdjust(":", aStr[ni], 10, 1,, ".") yields'
    FOR ni := 1 TO Len( aStr )
       ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 10, 1,, "." )
    NEXT
    ?
 
-   ? '  SETATLIKE(CT_SETATLIKE_WILDCARD, ":")'
-   ? '  ATADJUST(":", aStr[ni], 10, 1,, ".") yields now'
+   ? '  SetAtLike(CT_SETATLIKE_WILDCARD, ":")'
+   ? '  AtAdjust(":", aStr[ni], 10, 1,, ".") yields now'
    SetAtLike( CT_SETATLIKE_WILDCARD, ":" )
    FOR ni := 1 TO Len( aStr )
       ? Space( 4 ) + AtAdjust( ":", aStr[ ni ], 10, 1,, "." )
    NEXT
    ?
 
-   ? "End test of ATADJUST()"
+   ? "End test of AtAdjust()"
    ?
 
    ctexit()

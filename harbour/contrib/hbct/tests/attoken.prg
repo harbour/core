@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ATTOKEN()
+ *   Test CT3 function AtToken()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -63,15 +63,15 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of ATTOKEN()"
+   ? "Begin test of AtToken()"
    ?
 
    // Some simple tests
    ? "  Simple tests:"
-   ? '    attoken("Hello, World!") == 8 ? ---------> ' + Str( AtToken( "Hello, World!" ) )
-   ? '    attoken("Hello, World!",,2) == 8 ? ------> ' + Str( AtToken( "Hello, World!",, 2 ) )
-   ? '    attoken("Hello, World!",,2,1) == 7 ? ----> ' + Str( AtToken( "Hello, World!",, 2, 1 ) )
-   ? '    attoken("Hello, World!"," ",2,1) == 8 ? -> ' + Str( AtToken( "Hello, World!", " ", 2, 1 ) )
+   ? '    AtToken("Hello, World!") == 8 ? ---------> ' + Str( AtToken( "Hello, World!" ) )
+   ? '    AtToken("Hello, World!",,2) == 8 ? ------> ' + Str( AtToken( "Hello, World!",, 2 ) )
+   ? '    AtToken("Hello, World!",,2,1) == 7 ? ----> ' + Str( AtToken( "Hello, World!",, 2, 1 ) )
+   ? '    AtToken("Hello, World!"," ",2,1) == 8 ? -> ' + Str( AtToken( "Hello, World!", " ", 2, 1 ) )
    ?
 
    ? '  Tokenizing a string with skip width == 1 and ".!" as tokenizer list:'
@@ -84,7 +84,7 @@ PROCEDURE Main()
    NEXT
 
    ?
-   ? "End test of ATTOKEN()"
+   ? "End test of AtToken()"
    ?
 
    ctexit()

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function NUMTOKEN()
+ *   Test CT3 function NumToken()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -58,14 +58,14 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of NUMTOKEN()"
+   ? "Begin test of NumToken()"
    ?
 
    // Some simple tests
    ? "  Simple tests:"
-   ? '    numtoken("Hello, World!") ==  2 ? ------------------------------> ' + Str( NumToken( "Hello, World!" ), 2 )
-   ? '    numtoken("This is good. See you! How do you do?",".!?") == 3 ? -> ' + Str( NumToken( "This is good. See you! How do you do?", ".!?" ), 2 )
-   ? '    numtoken("one,,three,four,,six",",",1) ==  6 ? -----------------> ' + Str( NumToken( "one,,three,four,,six", ",", 1 ), 2 )
+   ? '    NumToken("Hello, World!") ==  2 ? ------------------------------> ' + Str( NumToken( "Hello, World!" ), 2 )
+   ? '    NumToken("This is good. See you! How do you do?",".!?") == 3 ? -> ' + Str( NumToken( "This is good. See you! How do you do?", ".!?" ), 2 )
+   ? '    NumToken("one,,three,four,,six",",",1) ==  6 ? -----------------> ' + Str( NumToken( "one,,three,four,,six", ",", 1 ), 2 )
    ?
 
    ? '  # of tokens in the string "' + cStr + '"'
@@ -77,7 +77,7 @@ PROCEDURE Main()
    ? '                                 skip width = 3: ' + Str( NumToken( cStr, "!", 3 ) )
 
    ?
-   ? "End test of NUMTOKEN()"
+   ? "End test of NumToken()"
    ?
 
    ctexit()

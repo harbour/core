@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 functions AFTERATNUM()
+ *   Test CT3 functions AfterAtNum()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -62,48 +62,48 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of AFTERATNUM()"
+   ? "Begin test of AfterAtNum()"
    ?
    ? "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
    ?
 
    // Some simple tests
    ? "  Simple tests:"
-   ? '  afteratnum("..",cStr)     should be "test!",'
+   ? '  AfterAtNum("..",cStr)     should be "test!",'
    ? '                               and is "' + AfterAtNum( "..", cStr ) + '"'
-   ? '  afteratnum("..",cStr,2)   should be ".is...a...test!",'
+   ? '  AfterAtNum("..",cStr,2)   should be ".is...a...test!",'
    ? '                               and is "' + AfterAtNum( "..", cStr, 2 ) + '"'
-   ? '  afteratnum("..",cStr,2,2) should be ".a...test!",'
+   ? '  AfterAtNum("..",cStr,2,2) should be ".a...test!",'
    ? '                               and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
    ?
 
-   // Tests with CSetAtMuPa(.T.)
+   // Tests with CSetAtMupa(.T.)
    ? "  Multi-Pass tests"
-   ? "  Setting csetatmupa() to .T."
+   ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
-   ? '  afteratnum("..",cStr)     should be "test!",'
+   ? '  AfterAtNum("..",cStr)     should be "test!",'
    ? '                               and is "' + AfterAtNum( "..", cStr ) + '"'
-   ? '  afteratnum("..",cStr,2)   should be "This...is...a...test!",'
+   ? '  AfterAtNum("..",cStr,2)   should be "This...is...a...test!",'
    ? '                               and is "' + AfterAtNum( "..", cStr, 2 ) + '"'
-   ? '  afteratnum("..",cStr,2,2) should be "is...a...test!",'
+   ? '  AfterAtNum("..",cStr,2,2) should be "is...a...test!",'
    ? '                               and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
-   ? "  Setting csetatmupa() to .F."
+   ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
 
-   // Tests mit SetAtlike(1)
+   // Tests mit SetAtLike(1)
    ? "  SetAtLike tests"
-   ? '  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")'
+   ? '  Setting SetAtLike(CT_SETATLIKE_WILDCARD, ".")'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
-   ? '  afteratnum("..",cStr) should be "",'
+   ? '  AfterAtNum("..",cStr) should be "",'
    ? '                           and is "' + AfterAtNum( "..", cStr ) + '"'
-   ? '  afteratnum("..",cStr,2,2) should be "s...is...a...test!",'
+   ? '  AfterAtNum("..",cStr,2,2) should be "s...is...a...test!",'
    ? '                               and is "' + AfterAtNum( "..", cStr, 2, 2 ) + '"'
-   ? '  afteratnum("..",cStr,2,10) should be ".a...test!",'
+   ? '  AfterAtNum("..",cStr,2,10) should be ".a...test!",'
    ? '                                and is "' + AfterAtNum( "..", cStr, 2, 10 ) + '"'
    ?
 
-   ? "End test of AFTERATNUM()"
+   ? "End test of AfterAtNum()"
    ?
 
    ctexit()

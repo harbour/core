@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARONE()
+ *   Test CT3 function CharOne()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,19 +56,19 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARONE()"
+   ? "Begin test of CharOne()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charone("112333a123")      == "123a123"? --> "' + CharOne( "112333a123" )      + '"'
-   ? '  charone("122333a123")      == "123a123"? --> "' + CharOne( "122333a123" )      + '"'
-   ? '  charone("A  B  CCCD")      == "A B CD"? ---> "' + CharOne( "A  B  CCCD" )      + '"'
-   ? '  charone(" ", "A  B  A  B") == "A B A B"? --> "' + CharOne( " ", "A  B  A  B" ) + '"'
-   ? '  charone("o", "122oooB12o") == "122oB12o"? -> "' + CharOne( "o", "122oooB12o" ) + '"'
+   ? '  CharOne("112333a123")      == "123a123"? --> "' + CharOne( "112333a123" )      + '"'
+   ? '  CharOne("122333a123")      == "123a123"? --> "' + CharOne( "122333a123" )      + '"'
+   ? '  CharOne("A  B  CCCD")      == "A B CD"? ---> "' + CharOne( "A  B  CCCD" )      + '"'
+   ? '  CharOne(" ", "A  B  A  B") == "A B A B"? --> "' + CharOne( " ", "A  B  A  B" ) + '"'
+   ? '  CharOne("o", "122oooB12o") == "122oB12o"? -> "' + CharOne( "o", "122oooB12o" ) + '"'
    ?
 
-   ? "End test of CHARONE()"
+   ? "End test of CharOne()"
    ?
 
    ctexit()

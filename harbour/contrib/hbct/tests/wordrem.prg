@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDREM()
+ *   Test CT3 function WordRem()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of WORDREM()"
+   ? "Begin test of WordRem()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  wordrem("abcd", "0ab1cd") == "0ab1" ? ----> "' + WordRem( "abcd", "0ab1cd" ) + '"'
-   ? '  wordrem("abcd", "ab0cd1") == "0cd1" ? ----> "' + WordRem( "abcd", "ab0cd1" ) + '"'
+   ? '  WordRem("abcd", "0ab1cd") == "0ab1" ? ----> "' + WordRem( "abcd", "0ab1cd" ) + '"'
+   ? '  WordRem("abcd", "ab0cd1") == "0cd1" ? ----> "' + WordRem( "abcd", "ab0cd1" ) + '"'
    ?
 
-   ? "End test of WORDREM()"
+   ? "End test of WordRem()"
    ?
 
    ctexit()

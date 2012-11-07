@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDSWAP()
+ *   Test CT3 function WordSwap()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of WORDSWAP()"
+   ? "Begin test of WordSwap()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  wordswap("1234567890")      == "3412785690" ? --> "' + WordSwap( "1234567890" )     + '"'
-   ? '  wordswap("1234567890", .T.) == "4321876590" ? --> "' + WordSwap( "1234567890", .T. ) + '"'
+   ? '  WordSwap("1234567890")      == "3412785690" ? --> "' + WordSwap( "1234567890" )     + '"'
+   ? '  WordSwap("1234567890", .T.) == "4321876590" ? --> "' + WordSwap( "1234567890", .T. ) + '"'
    ?
 
-   ? "End test of WORDSWAP()"
+   ? "End test of WordSwap()"
    ?
 
    ctexit()

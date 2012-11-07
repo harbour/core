@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARLIST()
+ *   Test CT3 function CharList()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,15 +56,15 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARLIST()"
+   ? "Begin test of CharList()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charlist("Hello World !") == "Helo Wrd!" ? -> "' + CharList( "Hello World !" ) + '"'
-   ? '  charlist(NIL) == "" ? -> "' + CharList( NIL ) + '"'
+   ? '  CharList("Hello World !") == "Helo Wrd!" ? -> "' + CharList( "Hello World !" ) + '"'
+   ? '  CharList(NIL) == "" ? -> "' + CharList( NIL ) + '"'
 
-   ? "End test of CHARLIST()"
+   ? "End test of CharList()"
    ?
 
    ctexit()

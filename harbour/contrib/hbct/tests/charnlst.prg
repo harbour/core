@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARNOLIST()
+ *   Test CT3 function CharNoList()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,16 +56,16 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARNOLIST()"
+   ? "Begin test of CharNoList()"
    ?
 
    // simple tests
    ? "Simple tests:"
 
-   ? '  charnolist(charnolist("Hello World !")) == " !HWdelor" ? -> "' + CharNoList( CharNoList( "Hello World !" ) ) + '"'
-   ? '  charnolist(charnolist(NIL)) == "" ? -> "' + CharNoList( CharNoList( NIL ) ) + '"'
+   ? '  CharNoList(CharNoList("Hello World !")) == " !HWdelor" ? -> "' + CharNoList( CharNoList( "Hello World !" ) ) + '"'
+   ? '  CharNoList(CharNoList(NIL)) == "" ? -> "' + CharNoList( CharNoList( NIL ) ) + '"'
 
-   ? "End test of CHARNOLIST()"
+   ? "End test of CharNoList()"
    ?
 
    ctexit()

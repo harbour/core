@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ASCPOS()
+ *   Test CT3 function AscPos()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,15 +56,15 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of ASCPOS()"
+   ? "Begin test of AscPos()"
    ?
 
-   ? '  ascpos("0123456789") == 57   ? --> ' + Str( AscPos( "0123456789" ) )
-   ? '  ascpos("0123456789",1) == 48 ? --> ' + Str( AscPos( "0123456789", 1 ) )
-   ? '  ascpos("0123456789",11) == 0 ? --> ' + Str( AscPos( "0123456789", 11 ) )
+   ? '  AscPos("0123456789") == 57   ? --> ' + Str( AscPos( "0123456789" ) )
+   ? '  AscPos("0123456789",1) == 48 ? --> ' + Str( AscPos( "0123456789", 1 ) )
+   ? '  AscPos("0123456789",11) == 0 ? --> ' + Str( AscPos( "0123456789", 11 ) )
 
    ?
-   ? "End test of ASCPOS()"
+   ? "End test of AscPos()"
    ?
 
    ctexit()

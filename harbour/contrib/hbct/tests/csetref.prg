@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CSETREF()
+ *   Test CT3 function CSetRef()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,12 +56,12 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CSETREF()"
+   ? "Begin test of CSetRef()"
    ? "  Default switch should be .F., is..................................", CSetRef()
    ? "  Setting switch to .T., return value should be .F., is.............", CSetRef( .T. )
    ? "  Switch setting should now be .T., is..............................", CSetRef()
    ? "  Setting switch to .F. again, return value should still be .T., is ", CSetRef( .F. )
-   ? "End test of CSETREF()"
+   ? "End test of CSetRef()"
    ?
 
    ctexit()

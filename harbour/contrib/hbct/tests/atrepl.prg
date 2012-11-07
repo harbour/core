@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ATREPL()
+ *   Test CT3 function AtRepl()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,20 +56,20 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of ATREPL()"
+   ? "Begin test of AtRepl()"
    ?
 
    // simple tests
    ? "Simple tests:"
 
-   ? '  atrepl("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx" ) + '"'
-   ? '  atrepl("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW" ? --> "' + AtRepl( "ABC", "ABCDABC", "ZYXW" ) + '"'
-   ? '  atrepl("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) + '"'
-   ? '  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + '"'
-   ? '  atrepl("ABC", "ABCDABCDABC", "xx", 2, .T., 1) == "ABCDABCDxx" ? '
+   ? '  AtRepl("ABC", "ABCDABCDABC", "xx") == "xxDxxDxx" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx" ) + '"'
+   ? '  AtRepl("ABC", "ABCDABC", "ZYXW") == "ZYXWDZYXW" ? --> "' + AtRepl( "ABC", "ABCDABC", "ZYXW" ) + '"'
+   ? '  AtRepl("ABC", "ABCDABCDABC", "xx", 2) == "xxDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) + '"'
+   ? '  AtRepl("ABC", "ABCDABCDABC", "xx", 2, .T.) == "ABCDxxDABC" ? --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) + '"'
+   ? '  AtRepl("ABC", "ABCDABCDABC", "xx", 2, .T., 1) == "ABCDABCDxx" ? '
    ? '          --> "' + AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T., 1 ) + '"'
 
-   ? "End test of ATREPL()"
+   ? "End test of AtRepl()"
    ?
 
    ctexit()

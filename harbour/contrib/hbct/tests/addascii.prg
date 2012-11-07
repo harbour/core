@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function ADDASCII()
+ *   Test CT3 function AddAscii()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -58,7 +58,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of ADDASCII()"
+   ? "Begin test of AddAscii()"
    ?
    // simple tests
    ? "Simple tests:"
@@ -67,38 +67,38 @@ PROCEDURE Main()
    ? '  This should be "BAAA": ' + AddAscii( "AAAA", -255, 1 )
    ? '  This should be "AAAB": ' + AddAscii( "AAAA", -255 )
 
-   // csetref() tests
+   // CSetRef() tests
    ?
    ? "CSETREF tests:"
    ? "  current csetref setting(should be .F.)................: ", CSetRef()
-   ? "  return value of addascii([A],1,1) call(should be 'B'): ", AddAscii( "A", 1, 1 )
+   ? "  return value of AddAscii([A],1,1) call(should be 'B'): ", AddAscii( "A", 1, 1 )
    ? "  value of cStr..........................................: ", cStr
-   ? "  return value of addascii(cStr,1,1) call...............: ", AddAscii( cStr, 1, 1 )
+   ? "  return value of AddAscii(cStr,1,1) call...............: ", AddAscii( cStr, 1, 1 )
    ? "  value of cStr is now...................................: ", cStr
-   ? "  return value of addascii(@cStr,1,1) call..............: ", AddAscii( @cStr, 1, 1 )
+   ? "  return value of AddAscii(@cStr,1,1) call..............: ", AddAscii( @cStr, 1, 1 )
    ? "  value of cStr is now...................................: ", cStr
-   ? "  return value of addascii(@cStr,-1,1) call.............: ", AddAscii( @cStr, -1, 1 )
+   ? "  return value of AddAscii(@cStr,-1,1) call.............: ", AddAscii( @cStr, -1, 1 )
    ? "  value of cStr is now...................................: ", cStr
-   ? "  return value of csetref(.T.)..........................: ", CSetRef( .T. )
-   ? "  return value of addascii([A],1,1) call................: ", AddAscii( "A", 1, 1 )
-   ? "  return value of addascii(cStr,1,1) call...............: ", AddAscii( cStr, 1, 1 )
+   ? "  return value of CSetRef(.T.)..........................: ", CSetRef( .T. )
+   ? "  return value of AddAscii([A],1,1) call................: ", AddAscii( "A", 1, 1 )
+   ? "  return value of AddAscii(cStr,1,1) call...............: ", AddAscii( cStr, 1, 1 )
    ? "  value of cStr is now...................................: ", cStr
-   ? "  return value of addascii(@cStr,1,1) call..............: ", AddAscii( @cStr, 1, 1 )
+   ? "  return value of AddAscii(@cStr,1,1) call..............: ", AddAscii( @cStr, 1, 1 )
    ? "  value of cStr is now...................................: ", cStr
-   ? "  return value of addascii(@cStr,-1,1) call.............: ", AddAscii( @cStr, -1, 1 )
+   ? "  return value of AddAscii(@cStr,-1,1) call.............: ", AddAscii( @cStr, -1, 1 )
    ? "  value of cStr is now...................................: ", cStr
-   ? "  return value of csetref(.F.)..........................: ", CSetRef( .F. )
+   ? "  return value of CSetRef(.F.)..........................: ", CSetRef( .F. )
 
    // tests for the new 4th parameter
    ?
    ? "Carryover tests(new 4th parameter):"
-   ? "  return value of addascii([AAAA],1,2,.T.) call('ABAA')....:", AddAscii( "AAAA", 1, 2, .T. )
-   ? "  return value of addascii([AAAA],257,2,.T.) call('BBAA')..:", AddAscii( "AAAA", 257, 2, .T. )
-   ? "  return value of addascii([AAAA],257,2,.F.) call('ABAA')..:", AddAscii( "AAAA", 257, 2, .F. )
-   ? "  return value of addascii([AAAA],258,,.T.) call('AABC')...:", AddAscii( "AAAA", 258,, .T. )
-   ? "  return value of addascii([ABBA],-257,3,.T.) call('AAAA').:", AddAscii( "ABBA", -257, 3, .T. )
+   ? "  return value of AddAscii([AAAA],1,2,.T.) call('ABAA')....:", AddAscii( "AAAA", 1, 2, .T. )
+   ? "  return value of AddAscii([AAAA],257,2,.T.) call('BBAA')..:", AddAscii( "AAAA", 257, 2, .T. )
+   ? "  return value of AddAscii([AAAA],257,2,.F.) call('ABAA')..:", AddAscii( "AAAA", 257, 2, .F. )
+   ? "  return value of AddAscii([AAAA],258,,.T.) call('AABC')...:", AddAscii( "AAAA", 258,, .T. )
+   ? "  return value of AddAscii([ABBA],-257,3,.T.) call('AAAA').:", AddAscii( "ABBA", -257, 3, .T. )
 
-   ? "End test of ADDASCII()"
+   ? "End test of AddAscii()"
    ?
 
    ctexit()

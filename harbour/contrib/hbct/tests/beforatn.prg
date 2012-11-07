@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 functions BEFORATNUM()
+ *   Test CT3 functions BeforAtNum()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -62,48 +62,48 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of BEFORATNUM()"
+   ? "Begin test of BeforAtNum()"
    ?
    ? "  Value of cStr is:" + Chr( 34 ) + cStr + Chr( 34 )
    ?
 
    // Some simple tests
    ? "  Simple tests:"
-   ? '  beforatnum("..",cStr)     should be "...This...is...a.",'
+   ? '  BeforAtNum("..",cStr)     should be "...This...is...a.",'
    ? '                               and is "' + BeforAtNum( "..", cStr ) + '"'
-   ? '  beforatnum("..",cStr,2)   should be "...This",'
+   ? '  BeforAtNum("..",cStr,2)   should be "...This",'
    ? '                               and is "' + BeforAtNum( "..", cStr, 2 ) + '"'
-   ? '  beforatnum("..",cStr,2,2) should be "...This...is",'
+   ? '  BeforAtNum("..",cStr,2,2) should be "...This...is",'
    ? '                               and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
    ?
 
-   // Tests with CSetAtMuPa(.T.)
+   // Tests with CSetAtMupa(.T.)
    ? "  Multi-Pass tests"
-   ? "  Setting csetatmupa() to .T."
+   ? "  Setting CSetAtMupa() to .T."
    CSetAtMupa( .T. )
-   ? '  beforatnum("..",cStr)     should be "...This...is...a.",'
+   ? '  BeforAtNum("..",cStr)     should be "...This...is...a.",'
    ? '                               and is "' + BeforAtNum( "..", cStr ) + '"'
-   ? '  beforatnum("..",cStr,2)   should be ".",'
+   ? '  BeforAtNum("..",cStr,2)   should be ".",'
    ? '                               and is "' + BeforAtNum( "..", cStr, 2 ) + '"'
-   ? '  beforatnum("..",cStr,2,2) should be "...This.",'
+   ? '  BeforAtNum("..",cStr,2,2) should be "...This.",'
    ? '                               and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
-   ? "  Setting csetatmupa() to .F."
+   ? "  Setting CSetAtMupa() to .F."
    CSetAtMupa( .F. )
    ?
 
-   // Tests mit SetAtlike(1)
+   // Tests mit SetAtLike(1)
    ? "  SetAtLike tests"
-   ? '  Setting setatlike(CT_SETATLIKE_WILDCARD, ".")'
+   ? '  Setting SetAtLike(CT_SETATLIKE_WILDCARD, ".")'
    SetAtLike( CT_SETATLIKE_WILDCARD, "." )
-   ? '  beforatnum("..",cStr) should be "...This...is...a...tes",'
+   ? '  BeforAtNum("..",cStr) should be "...This...is...a...tes",'
    ? '                           and is "' + BeforAtNum( "..", cStr ) + '"'
-   ? '  beforatnum("..",cStr,2,2) should be "...T",'
+   ? '  BeforAtNum("..",cStr,2,2) should be "...T",'
    ? '                               and is "' + BeforAtNum( "..", cStr, 2, 2 ) + '"'
-   ? '  beforatnum("..",cStr,2,10) should be "...This...is",'
+   ? '  BeforAtNum("..",cStr,2,10) should be "...This...is",'
    ? '                                and is "' + BeforAtNum( "..", cStr, 2, 10 ) + '"'
    ?
 
-   ? "End test of BEFORATNUM()"
+   ? "End test of BeforAtNum()"
    ?
 
    ctexit()

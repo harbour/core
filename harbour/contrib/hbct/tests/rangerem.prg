@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function RANGEREM()
+ *   Test CT3 function RangeRem()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,7 +56,7 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of RANGEREM()"
+   ? "Begin test of RangeRem()"
    ?
 
    ? '  RangeRem( "0", "9", "year2002.dbf" ) == "year.dbf"     ? --> "' + ;
@@ -67,7 +67,7 @@ PROCEDURE Main()
         RangeRem( "0", "9", "yearcurr.dbf" ) + '"'
 
    ?
-   ? "End test of RANGEREM()"
+   ? "End test of RangeRem()"
    ?
 
    ctexit()

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function CHARMIX()
+ *   Test CT3 function CharMix()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,19 +56,19 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of CHARMIX()"
+   ? "Begin test of CharMix()"
    ?
 
    // simple tests
    ? "Simple tests:"
-   ? '  charmix("ABC", "123")  == "A1B2C3"     ? --> "' + CharMix( "ABC", "123" )  + '"'
-   ? '  charmix("ABCDE", "12") == "A1B2C1D2E1" ? --> "' + CharMix( "ABCDE", "12" ) + '"'
-   ? '  charmix("AB", "12345") == "A1B2"       ? --> "' + CharMix( "AB", "12345" ) + '"'
-   ? '  charmix("HELLO", " ")  == "H E L L O " ? --> "' + CharMix( "HELLO", " " )  + '"'
-   ? '  charmix("HELLO", "")   == "HELLO"      ? --> "' + CharMix( "HELLO", "" )   + '"'
+   ? '  CharMix("ABC", "123")  == "A1B2C3"     ? --> "' + CharMix( "ABC", "123" )  + '"'
+   ? '  CharMix("ABCDE", "12") == "A1B2C1D2E1" ? --> "' + CharMix( "ABCDE", "12" ) + '"'
+   ? '  CharMix("AB", "12345") == "A1B2"       ? --> "' + CharMix( "AB", "12345" ) + '"'
+   ? '  CharMix("HELLO", " ")  == "H E L L O " ? --> "' + CharMix( "HELLO", " " )  + '"'
+   ? '  CharMix("HELLO", "")   == "HELLO"      ? --> "' + CharMix( "HELLO", "" )   + '"'
    ?
 
-   ? "End test of CHARMIX()"
+   ? "End test of CharMix()"
    ?
 
    ctexit()

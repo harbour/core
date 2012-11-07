@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   Test CT3 function WORDREPL()
+ *   Test CT3 function WordRepl()
  *
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *        Author: Martin Vogel <vogel@inttec.de>
@@ -56,23 +56,23 @@ PROCEDURE Main()
 
    ctinit()
 
-   ? "Begin test of WORDREPL()"
+   ? "Begin test of WordRepl()"
    ?
 
    // simple tests
    ? "  Simple tests:"
-   ? '    wordrepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"? --> "' + WordRepl( "CC", "AABBCCDDEE", "XX" ) + '"'
-   ? '    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? ------> "' + WordRepl( "aa", "1aaaa", "ba" )     + '"'
-   ? '    wordrepl("aa", "1aaaa", "ba", .T.) == "1baba" ? ------> "' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
+   ? '    WordRepl("CC", "AABBCCDDEE", "XX") == "AABBXXDDEE"? --> "' + WordRepl( "CC", "AABBCCDDEE", "XX" ) + '"'
+   ? '    WordRepl("aa", "1aaaa", "ba")      == "1abaa" ? ------> "' + WordRepl( "aa", "1aaaa", "ba" )     + '"'
+   ? '    WordRepl("aa", "1aaaa", "ba", .T.) == "1baba" ? ------> "' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
    ?
 
-   ? "  Testing CSETATMUPA(.T.) with lMode==.T.:"
+   ? "  Testing CSetAtMupa(.T.) with lMode==.T.:"
    CSetAtMupa( .T. )
-   ? '    wordrepl("aa", "1aaaa", "ba")      == "1abaa" ? --> "' + WordRepl( "aa", "1aaaa", "ba" )     + '"'
-   ? '    wordrepl("aa", "1aaaa", "ba", .T.) == "1bbba" ? --> "' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
+   ? '    WordRepl("aa", "1aaaa", "ba")      == "1abaa" ? --> "' + WordRepl( "aa", "1aaaa", "ba" )     + '"'
+   ? '    WordRepl("aa", "1aaaa", "ba", .T.) == "1bbba" ? --> "' + WordRepl( "aa", "1aaaa", "ba", .T. ) + '"'
    ?
 
-   ? "End test of WORDREPL()"
+   ? "End test of WordRepl()"
    ?
 
    ctexit()

@@ -63,99 +63,99 @@ PROCEDURE Main()
    ? "Test of mathematical functions"
    ?
 
-   ? "FLOOR( 1.9 ) = 1       // CT3"
+   ? "Floor( 1.9 ) = 1       // CT3"
    ? Space( 5 ), Floor( 1.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "FLOOR( 1.1 ) = 1       // CT3"
+   ? "Floor( 1.1 ) = 1       // CT3"
    ? Space( 5 ), Floor( 1.1 ), "  <-- CT for Harbour"
    ?
 
-   ? "FLOOR( 0.9 ) = 0       // CT3"
+   ? "Floor( 0.9 ) = 0       // CT3"
    ? Space( 5 ), Floor( 0.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "FLOOR( -0.1 ) = -1       // CT3"
+   ? "Floor( -0.1 ) = -1       // CT3"
    ? Space( 7 ), Floor( -0.1 ), "  <-- CT for Harbour"
    ?
 
-   ? "FLOOR( -0.9 ) = -1       // CT3"
+   ? "Floor( -0.9 ) = -1       // CT3"
    ? Space( 7 ), Floor( -0.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "FLOOR( -1.1 ) = -2       // CT3"
+   ? "Floor( -1.1 ) = -2       // CT3"
    ? Space( 7 ), Floor( -1.1 ), "  <-- CT for Harbour"
    ?
 
    WAIT4()
 
-   ? "CEILING( 1.9 ) = 2       // CT3"
+   ? "Ceiling( 1.9 ) = 2       // CT3"
    ? Space( 7 ), Ceiling( 1.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "CEILING( 1.1 ) = 2       // CT3"
+   ? "Ceiling( 1.1 ) = 2       // CT3"
    ? Space( 7 ), Ceiling( 1.1 ), "  <-- CT for Harbour"
    ?
 
-   ? "CEILING( 0.9 ) = 1       // CT3"
+   ? "Ceiling( 0.9 ) = 1       // CT3"
    ? Space( 7 ), Ceiling( 0.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "CEILING( -0.1 ) = 0       // CT3"
+   ? "Ceiling( -0.1 ) = 0       // CT3"
    ? Space( 8 ), Ceiling( -0.1 ), "  <-- CT for Harbour"
    ?
 
-   ? "CEILING( -0.9 ) = 0       // CT3"
+   ? "Ceiling( -0.9 ) = 0       // CT3"
    ? Space( 8 ), Ceiling( -0.9 ), "  <-- CT for Harbour"
    ?
 
-   ? "CEILING( -1.1 ) = -1       // CT3"
+   ? "Ceiling( -1.1 ) = -1       // CT3"
    ? Space( 9 ), Ceiling( -1.1 ), "  <-- CT for Harbour"
    ?
 
    WAIT4()
 
-   ? "LOG10( 0.01 ) = -2.00    // CT3"
+   ? "Log10( 0.01 ) = -2.00    // CT3"
    ?  Space( 7 ), Log10( 0.01 ), "  <-- CT for Harbour"
    ?
 
-   ? "LOG10( 2 ) = 0.30    // CT3"
+   ? "Log10( 2 ) = 0.30    // CT3"
    ?  Space( 3 ), Log10( 2 ), "  <-- CT for Harbour"
    ?
 
-   ? "LOG10( 100 ) = 2.00    // CT3"
+   ? "Log10( 100 ) = 2.00    // CT3"
    ?  Space( 5 ), Log10( 100 ), "  <-- CT for Harbour"
    ?
    ?
 
-   ? "SIGN( 48335 ) = 1    // CT3"
+   ? "Sign( 48335 ) = 1    // CT3"
    ? Space( 6 ), Sign( 48335 ), "  <-- CT for Harbour"
    ?
 
-   ? "SIGN( -258 ) = -1    // CT3"
+   ? "Sign( -258 ) = -1    // CT3"
    ? Space( 6 ), Sign( -258 ), "  <-- CT for Harbour"
    ?
 
    WAIT4()
 
    SET DECIMALS TO 0
-   ? "FACT( 1 ) = 1    // CT3"
+   ? "Fact( 1 ) = 1    // CT3"
    ? Space( 2 ), Fact( 1 ), "  <-- CT for Harbour"
    ?
 
-   ? "FACT( 5 ) = 120    // CT3"
+   ? "Fact( 5 ) = 120    // CT3"
    ? Space( 4 ), Fact( 5 ), "  <-- CT for Harbour"
    ?
 
-   ? "FACT( 21 ) = 51090942171709440000    // CT3"
+   ? "Fact( 21 ) = 51090942171709440000    // CT3"
    ? Space( 12 ), Fact( 21 ), "  <-- CT for Harbour"
    ?
 
-   ? "FACT( 25 ) = -1    // CT3"
+   ? "Fact( 25 ) = -1    // CT3"
    ? Space( 4 ), Fact( 25 ), "  <-- CT for Harbour"
    ?
 
-   ? "FACT( 0 ) = 1    // CT3"
+   ? "Fact( 0 ) = 1    // CT3"
    ? Space( 2 ), Fact( 0 ), "  <-- CT for Harbour"
    ?
 
