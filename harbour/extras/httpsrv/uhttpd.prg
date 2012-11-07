@@ -171,20 +171,18 @@ STATIC s_aServiceThreads := {}
 STATIC s_hHRBModules     := { => }
 STATIC s_aDirectoryIndex
 
-STATIC s_hActions          := { ;
-                                /*"default-handler" => @Handler_Default()      ,*/;    // default handler
-                                /*"send-as-is"      => @Handler_SendAsIs()     ,*/;
-                                "cgi-script"      => @Handler_CgiScript()    ,;
-                                "hrb-script"      => @Handler_HrbScript()    ,;
-                                /*"server-info"     => @Handler_ServerInfo()   ,*/;
-                                "server-status"   => @Handler_ServerStatus()  ;
-                              }
+STATIC s_hActions := { ;
+   /* "default-handler" => @Handler_Default(), */;    // default handler
+   /* "send-as-is"      => @Handler_SendAsIs(), */;
+   "cgi-script"      => @Handler_CgiScript(), ;
+   "hrb-script"      => @Handler_HrbScript(), ;
+   /* "server-info"     => @Handler_ServerInfo(), */;
+   "server-status"   => @Handler_ServerStatus() }
 
-STATIC s_hHandlers         := { ;
-                                "hrb"            => "hrb-script"             ,;
-                                "exe"            => "cgi-script"             ,;
-                                "/serverstatus"  => "server-status"           ;
-                              }
+STATIC s_hHandler := { ;
+   "hrb"            => "hrb-script", ;
+   "exe"            => "cgi-script", ;
+   "/serverstatus"  => "server-status" }
 
 // STATIC s_lAcceptPathInfo   := .T.
 
@@ -2176,12 +2174,17 @@ STATIC FUNCTION HRB_LoadFromFile( cFile )
 
 STATIC PROCEDURE Help()
 
-   // LOCAL cPrg := hb_argv( 0 )
-   // LOCAL nPos := RAt( "\", cPrg )
-   // __OutDebug( hb_argv(0) )
-   // IF nPos > 0
-   //   cPrg := SubStr( cPrg, nPos + 1 )
-   // ENDIF
+#if 0
+   LOCAL cPrg := hb_argv( 0 )
+   LOCAL nPos := RAt( "\", cPrg )
+
+   __OutDebug( hb_argv( 0 ) )
+
+   IF nPos > 0
+      cPrg := SubStr( cPrg, nPos + 1 )
+   ENDIF
+#endif
+
    ?
    ? "(C) 2009 Francesco Saverio Giudice <info@fsgiudice.com>"
    ?
@@ -2881,7 +2884,7 @@ STATIC FUNCTION LoadMimeTypes()
       "wav"  =>  "audio/x-wav", ;
       "qt"   =>  "video/quicktime", ;
       "mov"  =>  "video/quicktime", ;
-      "avi"  =>  "video/x-msvideo"           }
+      "avi"  =>  "video/x-msvideo" }
 
 STATIC FUNCTION GT_notifier( nEvent, xParams )
 

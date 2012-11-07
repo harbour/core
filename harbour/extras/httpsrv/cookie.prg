@@ -132,7 +132,7 @@ METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpO
    nCookies := Len( ::aCookies )
    AEval( ::aCookies, {| e, i | cStr += e[ 1 ] + "=" + e[ 2 ] + iif( i < nCookies, ",", "" ) } )
 
-   // cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_cStr( xValue ) )
+   // cStr := cCookieName + "=" + uhttpd_UrlEncode( hb_CStr( xValue ) )
 
    IF cDomain != NIL
       cStr += "; domain=" + cDomain

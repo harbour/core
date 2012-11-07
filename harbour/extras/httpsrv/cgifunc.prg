@@ -56,8 +56,8 @@
 // #define HB_USE_HBTIP    // Use functions from HBTIP - TOIMPLEMENT
 
 #define CRLF ( Chr( 13 ) + Chr( 10 ) )
-#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
-#define HB_IHASH()   HB_HSETCASEMATCH( {=>}, .F. )
+#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
+#define HB_IHASH()   hb_HSetCaseMatch( { => }, .F. )
 
 MEMVAR _SERVER, _GET, _POST, _COOKIE, _REQUEST, _HTTP_REQUEST
 
@@ -499,20 +499,20 @@ FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
    LOCAL aTranslations := { ;
       { '&', '&amp;' }, ;
       { '<', '&lt;'  }, ;
-      { '>', '&gt;'  }  ;
-      }
+      { '>', '&gt;'  } }
 
    RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 
 FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 
    __defaultNIL( @cQuote_style, "ENT_COMPAT" )
+
    DO CASE
    CASE cQuote_style == "ENT_COMPAT"
-      AAdd( aTranslations, { '"', '&quot;'  } )
+      AAdd( aTranslations, { '"', "&quot;" } )
    CASE cQuote_style == "ENT_QUOTES"
-      AAdd( aTranslations, { '"', '&quot;'  } )
-      AAdd( aTranslations, { "'", '&#039;'  } )
+      AAdd( aTranslations, { '"', "&quot;" } )
+      AAdd( aTranslations, { "'", "&#039;" } )
    CASE cQuote_style == "ENT_NOQUOTES"
    ENDCASE
 
@@ -521,8 +521,7 @@ FUNCTION uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 FUNCTION uhttpd_CRLF2BR( cString )
 
    LOCAL aTranslations := { ;
-      { CRLF, '<br />' } ;
-      }
+      { CRLF, "<br />" } }
 
    RETURN uhttpd_TranslateStrings( cString, aTranslations )
 
@@ -549,108 +548,11 @@ FUNCTION uhttpd_StrIStr( cString, cSearch )
    RETURN uhttpd_StrStr( Upper( cSearch ), Upper( cString ) )
 
 FUNCTION uhttpd_HtmlEntities( cString, cQuote_style )
-//  LOCAL aTranslations := { ;  // ATTENTION, this chars are visible only with OEM font
-//                           { hb_BChar( 160 ), '&#160;' } ,; // &nbsp;   Nonbreaking space
-//                           { hb_BChar( 161 ), '&#161;' } ,; // &iexcl;  Inverted exclamation
-//                           { hb_BChar( 162 ), '&#162;' } ,; // &cent;   Cent sign
-//                           { hb_BChar( 163 ), '&#163;' } ,; // &pound;  Pound sterling
-//                           { hb_BChar( 164 ), '&#164;' } ,; // &curren; General currency sign
-//                           { hb_BChar( 165 ), '&#165;' } ,; // &yen;    Yen sign
-//                           { hb_BChar( 166 ), '&#166;' } ,; // &brvbar; or &brkbar; Broken vertical bar
-//                           { hb_BChar( 167 ), '&#167;' } ,; // &sect;   Section sign
-//                           { hb_BChar( 168 ), '&#168;' } ,; // &uml; or &die; Diaeresis / Umlaut
-//                           { hb_BChar( 169 ), '&#169;' } ,; // &copy;   Copyright
-//                           { hb_BChar( 170 ), '&#170;' } ,; // &ordf;   Feminine ordinal
-//                           { hb_BChar( 171 ), '&#171;' } ,; // &laquo;  Left angle quote, guillemet left
-//                           { hb_BChar( 172 ), '&#172;' } ,; // &not     Not sign
-//                           { hb_BChar( 173 ), '&#173;' } ,; // &shy;    Soft hyphen
-//                           { hb_BChar( 174 ), '&#174;' } ,; // &reg;    Registered trademark
-//                           { hb_BChar( 175 ), '&#175;' } ,; // &macr; or &hibar; Macron accent
-//                           { hb_BChar( 176 ), '&#176;' } ,; // &deg;    Degree sign
-//                           { hb_BChar( 177 ), '&#177;' } ,; // &plusmn; Plus or minus
-//                           { hb_BChar( 178 ), '&#178;' } ,; // &sup2;   Superscript two
-//                           { hb_BChar( 179 ), '&#179;' } ,; // &sup3;   Superscript three
-//                           { hb_BChar( 180 ), '&#180;' } ,; // &acute;  Acute accent
-//                           { hb_BChar( 181 ), '&#181;' } ,; // &micro;  Micro sign
-//                           { hb_BChar( 182 ), '&#182;' } ,; // &para;   Paragraph sign
-//                           { hb_BChar( 183 ), '&#183;' } ,; // &middot; Middle dot
-//                           { hb_BChar( 184 ), '&#184;' } ,; // &cedil;  Cedilla
-//                           { hb_BChar( 185 ), '&#185;' } ,; // &sup1;   Superscript one
-//                           { hb_BChar( 186 ), '&#186;' } ,; // &ordm;   Masculine ordinal
-//                           { hb_BChar( 187 ), '&#187;' } ,; // &raquo;  Right angle quote, guillemet right
-//                           { hb_BChar( 188 ), '&#188;' } ,; // &frac14; Fraction one-fourth
-//                           { hb_BChar( 189 ), '&#189;' } ,; // &frac12; Fraction one-half
-//                           { hb_BChar( 190 ), '&#190;' } ,; // &frac34; Fraction three-fourths
-//                           { hb_BChar( 191 ), '&#191;' } ,; // &iquest; Inverted question mark
-//                           { hb_BChar( 192 ), '&#192;' } ,; // &Agrave; Capital A, grave accent
-//                           { hb_BChar( 193 ), '&#193;' } ,; // &Aacute; Capital A, acute accent
-//                           { hb_BChar( 194 ), '&#194;' } ,; // &Acirc;  Capital A, circumflex
-//                           { hb_BChar( 195 ), '&#195;' } ,; // &Atilde; Capital A, tilde
-//                           { hb_BChar( 196 ), '&#196;' } ,; // &Auml;   Capital A, diaeresis / umlaut
-//                           { hb_BChar( 197 ), '&#197;' } ,; // &Aring;  Capital A, ring
-//                           { hb_BChar( 198 ), '&#198;' } ,; // &AElig;  Capital AE ligature
-//                           { hb_BChar( 199 ), '&#199;' } ,; // &Ccedil; Capital C, cedilla
-//                           { hb_BChar( 200 ), '&#200;' } ,; // &Egrave; Capital E, grave accent
-//                           { hb_BChar( 201 ), '&#201;' } ,; // &Eacute; Capital E, acute accent
-//                           { hb_BChar( 202 ), '&#202;' } ,; // &Ecirc;  Capital E, circumflex
-//                           { hb_BChar( 203 ), '&#203;' } ,; // &Euml;   Capital E, diaeresis / umlaut
-//                           { hb_BChar( 204 ), '&#204;' } ,; // &Igrave; Capital I, grave accent
-//                           { hb_BChar( 205 ), '&#205;' } ,; // &Iacute; Capital I, acute accent
-//                           { hb_BChar( 206 ), '&#206;' } ,; // &Icirc;  Capital I, circumflex
-//                           { hb_BChar( 207 ), '&#207;' } ,; // &Iuml;   Capital I, diaeresis / umlaut
-//                           { hb_BChar( 208 ), '&#208;' } ,; // &ETH;    Capital Eth, Icelandic
-//                           { hb_BChar( 209 ), '&#209;' } ,; // &Ntilde; Capital N, tilde
-//                           { hb_BChar( 210 ), '&#210;' } ,; // &Ograve; Capital O, grave accent
-//                           { hb_BChar( 211 ), '&#211;' } ,; // &Oacute; Capital O, acute accent
-//                           { hb_BChar( 212 ), '&#212;' } ,; // &Ocirc;  Capital O, circumflex
-//                           { hb_BChar( 213 ), '&#213;' } ,; // &Otilde; Capital O, tilde
-//                           { hb_BChar( 214 ), '&#214;' } ,; // &Ouml;   Capital O, diaeresis / umlaut
-//                           { hb_BChar( 215 ), '&#215;' } ,; // &times;  Multiply sign
-//                           { hb_BChar( 216 ), '&#216;' } ,; // &Oslash; Capital O, slash
-//                           { hb_BChar( 217 ), '&#217;' } ,; // &Ugrave; Capital U, grave accent
-//                           { hb_BChar( 218 ), '&#218;' } ,; // &Uacute; Capital U, acute accent
-//                           { hb_BChar( 219 ), '&#219;' } ,; // &Ucirc;  Capital U, circumflex
-//                           { hb_BChar( 220 ), '&#220;' } ,; // &Uuml;   Capital U, diaeresis / umlaut
-//                           { hb_BChar( 221 ), '&#221;' } ,; // &Yacute; Capital Y, acute accent
-//                           { hb_BChar( 222 ), '&#222;' } ,; // &THORN;  Capital Thorn, Icelandic
-//                           { hb_BChar( 223 ), '&#223;' } ,; // &szlig;  Small sharp s, German sz
-//                           { hb_BChar( 224 ), '&#224;' } ,; // &agrave; Small a, grave accent
-//                           { hb_BChar( 225 ), '&#225;' } ,; // &aacute; Small a, acute accent
-//                           { hb_BChar( 226 ), '&#226;' } ,; // &acirc;  Small a, circumflex
-//                           { hb_BChar( 227 ), '&#227;' } ,; // &atilde; Small a, tilde
-//                           { hb_BChar( 228 ), '&#228;' } ,; // &auml;   Small a, diaeresis / umlaut
-//                           { hb_BChar( 229 ), '&#229;' } ,; // &aring;  Small a, ring
-//                           { hb_BChar( 230 ), '&#230;' } ,; // &aelig;  Small ae ligature
-//                           { hb_BChar( 231 ), '&#231;' } ,; // &ccedil; Small c, cedilla
-//                           { hb_BChar( 232 ), '&#232;' } ,; // &egrave; Small e, grave accent
-//                           { hb_BChar( 233 ), '&#233;' } ,; // &eacute; Small e, acute accent
-//                           { hb_BChar( 234 ), '&#234;' } ,; // &ecirc;  Small e, circumflex
-//                           { hb_BChar( 235 ), '&#235;' } ,; // &euml;   Small e, diaeresis / umlaut
-//                           { hb_BChar( 236 ), '&#236;' } ,; // &igrave; Small i, grave accent
-//                           { hb_BChar( 237 ), '&#237;' } ,; // &iacute; Small i, acute accent
-//                           { hb_BChar( 238 ), '&#238;' } ,; // &icirc;  Small i, circumflex
-//                           { hb_BChar( 239 ), '&#239;' } ,; // &iuml;   Small i, diaeresis / umlaut
-//                           { hb_BChar( 240 ), '&#240;' } ,; // &eth;    Small eth, Icelandic
-//                           { hb_BChar( 241 ), '&#241;' } ,; // &ntilde; Small n, tilde
-//                           { hb_BChar( 242 ), '&#242;' } ,; // &ograve; Small o, grave accent
-//                           { hb_BChar( 243 ), '&#243;' } ,; // &oacute; Small o, acute accent
-//                           { hb_BChar( 244 ), '&#244;' } ,; // &ocirc;  Small o, circumflex
-//                           { hb_BChar( 245 ), '&#245;' } ,; // &otilde; Small o, tilde
-//                           { hb_BChar( 246 ), '&#246;' } ,; // &ouml;   Small o, diaeresis / umlaut
-//                           { hb_BChar( 247 ), '&#247;' } ,; // &divide; Division sign
-//                           { hb_BChar( 248 ), '&#248;' } ,; // &oslash; Small o, slash
-//                           { hb_BChar( 249 ), '&#249;' } ,; // &ugrave; Small u, grave accent
-//                           { hb_BChar( 250 ), '&#250;' } ,; // &uacute; Small u, acute accent
-//                           { hb_BChar( 251 ), '&#251;' } ,; // &ucirc;  Small u, circumflex
-//                           { hb_BChar( 252 ), '&#252;' } ,; // &uuml;   Small u, diaeresis / umlaut
-//                           { hb_BChar( 253 ), '&#253;' } ,; // &yacute; Small y, acute accent
-//                           { hb_BChar( 254 ), '&#254;' } ,; // &thorn;  Small thorn, Icelandic
-//                           { hb_BChar( 255 ), '&#255;' }  ; // &yuml;   Small y, diaeresis / umlaut
-//                         }
 
   LOCAL aTranslations := {}
   LOCAL i
 
+  // ATTENTION, these chars are visible only with OEM font
   FOR i := 160 TO 255
       aAdd( aTranslations, { hb_BChar( i ), "&#" + Str( i, 3 ) + ";" } )
   NEXT
@@ -662,11 +564,13 @@ PROCEDURE uhttpd_Die( cError )
    LOCAL oErr, lError
 
    IF cError != NIL // THEN OutStd( cError )
-      // __OutDebug( "cError: ", cError )
-      // IF ! oCGI:HeaderSent()
-      //   oCGI:WriteLN( CRLF2BR( cError ), CRLF2BR( CRLF() ) )
-      //   //oCGI:WriteLN( CRLF2BR( hb_dumpVar(TConfigure():hConfig) ) )
-      // ENDIF
+#if 0
+      __OutDebug( "cError: ", cError )
+      IF ! oCGI:HeaderSent()
+        oCGI:WriteLN( CRLF2BR( cError ), CRLF2BR( CRLF() ) )
+        // oCGI:WriteLN( CRLF2BR( hb_dumpVar( TConfigure():hConfig ) ) )
+      ENDIF
+#endif
       // Generate Error
       oErr := ErrorNew()
       oErr:severity    := ES_ERROR
@@ -740,8 +644,7 @@ FUNCTION uhttpd_SplitFileName( cFile )
       "EXT"      => cExt, ;
       "FULLPATH" => NIL, ;
       "FULLNAME" => cName + cExt, ;
-      "UNC"      => NIL                    ;
-      }
+      "UNC"      => NIL }
 
    cSep := hb_ps()
 
@@ -780,41 +683,41 @@ FUNCTION uhttpd_CStrToVal( cExp, cType )
    ENDIF
 
    SWITCH cType
-   CASE 'C'
+   CASE "C"
       RETURN cExp
 
-   CASE 'P'
+   CASE "P"
       RETURN hb_HexToNum( cExp )
 
-   CASE 'D'
-      IF cExp[ 3 ] >= '0' .AND. cExp[ 3 ] <= '9' .AND. cExp[ 5 ] >= '0' .AND. cExp[ 5 ] <= '9'
+   CASE "D"
+      IF cExp[ 3 ] >= "0" .AND. cExp[ 3 ] <= "9" .AND. cExp[ 5 ] >= "0" .AND. cExp[ 5 ] <= "9"
          RETURN SToD( cExp )
       ELSE
          RETURN CToD( cExp )
       ENDIF
 
-   CASE 'L'
-      RETURN iif( cExp[ 1 ] == 'T' .OR. cExp[ 1 ] == 'Y' .OR. cExp[ 2 ] == 'T' .OR. cExp[ 2 ] == 'Y', .T., .F. )
+   CASE "L"
+      RETURN iif( cExp[ 1 ] == "T" .OR. cExp[ 1 ] == "Y" .OR. cExp[ 2 ] == "T" .OR. cExp[ 2 ] == "Y", .T., .F. )
 
-   CASE 'N'
+   CASE "N"
       RETURN Val( cExp )
 
-   CASE 'M'
+   CASE "M"
       RETURN cExp
 
-   CASE 'U'
+   CASE "U"
       RETURN NIL
 
-      /*
-      CASE 'A'
-         Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+#if 0
+   CASE "A"
+      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
-      CASE 'B'
-         Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+   CASE "B"
+      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
 
-      CASE 'O'
-         Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
-      */
+   CASE "O"
+      Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
+#endif
 
    OTHERWISE
       Throw( ErrorNew( "CSTR", 0, 3101, ProcName(), "Argument error", { cExp, cType } ) )
@@ -855,6 +758,6 @@ FUNCTION uhttpd_HGetValue( hHash, cKey )
    IF hHash != NIL
       xVal := iif( ( nPos := hb_HPos( hHash, cKey ) ) == 0, NIL, hb_HValueAt( hHash, nPos ) )
    ENDIF
-   // RETURN iif( cKey IN hHash:Keys, hHash[ cKey ], NIL )
+   // RETURN iif( cKey $ hHash:Keys, hHash[ cKey ], NIL )
 
    RETURN xVal

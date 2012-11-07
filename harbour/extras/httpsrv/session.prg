@@ -171,7 +171,7 @@ METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
    ::bDestroy  := {| cID | ::SessionDestroy( cID ) }
    ::bGC       := {| nMaxLifeTime | ::SessionGC( nMaxLifeTime ) }
 
-   /*
+#if 0
    // DBF version - we will store in a DBF - this only an example
    ::bOpen     := {| cPath, cName | DBF_Session_Open( cPath, cName ) }
    ::bClose    := {|| DBF_Session_Close() }
@@ -179,7 +179,7 @@ METHOD New( cSessionName, cSessionPath ) CLASS uhttpd_Session
    ::bWrite    := {| cID, cData | DBF_Session_Write( cID, cData ) }
    ::bDestroy  := {| cID | DBF_Session_Destroy( cID ) }
    ::bGC       := {| nMaxLifeTime | DBF_Session_GC( nMaxLifeTime ) }
-   */
+#endif
 
    ::cName     := cSessionName + "ID"
    ::cReferrer_Check := _SERVER[ "HTTP_REFERER" ]
@@ -203,7 +203,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
    // hb_toOutDebug( "cSID = %s, ::cSID = %s\n\r", cSID, ::cSID )
 
-   // TraceLog( "Active Sessions : " + hb_cStr( ::nActiveSessions ) )
+   // TraceLog( "Active Sessions : " + hb_CStr( ::nActiveSessions ) )
 
    IF ::nActiveSessions != 0
       RETURN .F.
@@ -218,12 +218,12 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       ENDIF
       lSendCookie := .F.
       lDefine_SID := .F.
-      // ::oCGI:ToLogFile( "::cSID = " + hb_cStr( ::cSID ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "::cSID = " + hb_CStr( ::cSID ), "/pointtoit/tmp/log.txt" )
    ENDIF
 
    IF ! Empty( ::cSID ) .AND. ! ::CheckSID()
       // Check if the SID is NOT valid, someone altered it
-      // ::oCGI:ToLogFile( "::cSID = " + hb_cStr( ::cSID ) + " SID is NOT valid, someone altered it", "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "::cSID = " + hb_CStr( ::cSID ) + " SID is NOT valid, someone altered it", "/pointtoit/tmp/log.txt" )
       ::cSID      := NIL   // invalidate current SID, i'll generate a new one
       lSendCookie := .T.
       lDefine_SID := .T.
@@ -288,7 +288,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    // Read session data
    IF !( ( xVal := ::Read( ::cSID  ) ) == NIL )
       // TraceLog( "Read session data - xVal", xVal )
-      // ::oCGI:ToLogFile( "xval = " + hb_cStr( xVal ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "xval = " + hb_CStr( xVal ), "/pointtoit/tmp/log.txt" )
       // Decode session data
       ::Decode( xVal )
       // ::oCGI:ToLogFile( "decoded", "/pointtoit/tmp/log.txt" )
@@ -298,10 +298,10 @@ METHOD Start( cSID ) CLASS uhttpd_Session
    ::SendCacheLimiter()
 
    // Check if we should clean up (call the garbage collection routines)
-   // TraceLog( "::nGc_probability = " + hb_cStr( ::nGc_probability ) )
+   // TraceLog( "::nGc_probability = " + hb_CStr( ::nGc_probability ) )
    IF ::nGc_probability > 0
       nRand := hb_RandomInt( 1, 100 )
-      // TraceLog( "::nGc_probability - nRand = " + hb_cStr( nRand ) )
+      // TraceLog( "::nGc_probability - nRand = " + hb_CStr( nRand ) )
       IF nRand <= ::nGc_Probability
          ::GC( ::nGc_MaxLifeTime )
       ENDIF
@@ -418,9 +418,13 @@ METHOD SaveCookie() CLASS uhttpd_Session
 
    RETURN NIL
 
-// METHOD ReadCookie()
-//   oCGI:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, cExpires, ::lCookie_Secure )
-//   RETURN NIL
+#if 0
+METHOD ReadCookie()
+
+   oCGI:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, cExpires, ::lCookie_Secure )
+
+   RETURN NIL
+#endif
 
 METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
 
@@ -530,11 +534,11 @@ METHOD GenerateSID( cCRCKey ) CLASS uhttpd_Session
    FOR n := 1 TO nLenTemp
       // cSIDCRC += cCRCKey[ Val( cTemp[ n ] ) + 1 ]
       cSIDCRC += SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 )
-      // ::oCGI:ToLogFile( "cCRCKey = " + hb_cStr( SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 ) ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "cCRCKey = " + hb_CStr( SubStr( cCRCKey, Val( SubStr( cTemp, n, 1 ) ) + 1, 1 ) ), "/pointtoit/tmp/log.txt" )
    NEXT
 
    cRet := cSID + cSIDCRC
-   // ::oCGI:ToLogFile( "::GenerateSID() = " + hb_cStr( cSID ) + " " + hb_cStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
+   // ::oCGI:ToLogFile( "::GenerateSID() = " + hb_CStr( cSID ) + " " + hb_CStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
 
    // TraceLog( "Generate SID: cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a", cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a )
 
@@ -580,7 +584,7 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
       lOk := ( Right( cSID, 5 ) == cSIDCRC )
 
       // TraceLog( "Check SID: cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a", cRet, cSID, nSIDCRC, cTemp, cSIDCRC, nKey, a )
-      // ::oCGI:ToLogFile( "::CheckSID() = " + hb_cStr( cSID ) + " " + hb_cStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "::CheckSID() = " + hb_CStr( cSID ) + " " + hb_CStr( cSIDCRC ), "/pointtoit/tmp/log.txt" )
    ENDIF
 
    RETURN lOk
@@ -650,7 +654,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
                FSeek( nH, 0, FS_SET )
                cBuffer := Space( nFileSize )
                IF ( FRead( nH, @cBuffer,  nFileSize ) ) != nFileSize
-                  // uhttpd_Die( "ERROR: On reading session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+                  // uhttpd_Die( "ERROR: On reading session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
                   hb_idleSleep( ::nFileWait / 1000 )
                   LOOP
                ENDIF
@@ -659,7 +663,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
             ENDDO
 
          ELSE
-            // uhttpd_Die( "ERROR: On opening session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+            // uhttpd_Die( "ERROR: On opening session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
             hb_idleSleep( ::nFileWait / 1000 )
             LOOP
          ENDIF
@@ -696,7 +700,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
             ENDIF
             FClose( nH )
          ELSE
-            // uhttpd_Die( "ERROR: On WRITING session file. I can not create session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
+            // uhttpd_Die( "ERROR: On WRITING session file. I can not create session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
             hb_idleSleep( ::nFileWait / 1000 )
             LOOP
          ENDIF
@@ -738,9 +742,11 @@ METHOD SessionDestroy( cID ) CLASS uhttpd_Session
       ENDIF
    ENDDO
 
-   // IF !( lOk := ( FErase( cFile ) == 0 ) )
-   //   uhttpd_Die( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_cStr( FError() ) )
-   // ELSE
+#if 0
+   IF !( lOk := ( FErase( cFile ) == 0 ) )
+      uhttpd_Die( "ERROR: On deleting session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
+   ELSE
+#endif
 
    IF lOk
       // TraceLog( "SessionDestroy() - Sessione Eliminata - File " + cFile )
@@ -763,7 +769,7 @@ METHOD SessionGC( nMaxLifeTime ) CLASS uhttpd_Session
    FOR EACH aFile IN aDir
       nSecs := TimeDiffAsSeconds( aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time() )
       // TraceLog( "GC: aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime", ;
-      //               aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime )
+      //                aFile[ F_NAME ], aFile[ F_DATE ], Date(), aFile[ F_TIME ], Time(), nSecs, nMaxLifeTime )
       IF nSecs > nMaxLifeTime
          // No error checking here, because if I cannot delete file now I will find it again on next loop
          FErase( ::cSavePath + hb_ps() + aFile[ F_NAME ] )
@@ -812,29 +818,31 @@ METHOD Decode( cData ) CLASS uhttpd_Session
    // LOCAL cKey
 
    // TraceLog( "Decode - cSerial", cSerial )
-   // ::oCGI:ToLogFile( "Decode - cSerial = " + hb_cStr( cSerial ), "/pointtoit/tmp/log.txt" )
+   // ::oCGI:ToLogFile( "Decode - cSerial = " + hb_CStr( cSerial ), "/pointtoit/tmp/log.txt" )
 
    DO WHILE ( xVal := hb_Deserialize( @cSerial ) ) != NIL
       // TraceLog( "Decode - xVal", DumpValue( xVal ) )
-      // ::oCGI:ToLogFile( "Decode - xVal = " + hb_cStr( xVal ) + ", ValType( xVal ) = " + ValType( xVal ), "/pointtoit/tmp/log.txt" )
+      // ::oCGI:ToLogFile( "Decode - xVal = " + hb_CStr( xVal ) + ", ValType( xVal ) = " + ValType( xVal ), "/pointtoit/tmp/log.txt" )
 
       SWITCH ValType( xVal )
-         // CASE 'O'
-         //   //TraceLog( "Decode - xVal - Object", xVal )
-         //   IF xVal:classname == "TASSOCIATIVEARRAY"
-         //      //TraceLog( "Decode - xVal - Object - TAssociativeArray - Keys", xVal:Keys )
-         //      FOR EACH cKey IN xVal:Keys
-         //          //TraceLog( "Decode TassociativeArray - cKey, xVal:SendKey( cKey )", cKey, xVal:SendKey( cKey ) )
-         //          _SESSION:SendKey( cKey, xVal:SendKey( cKey ) )
-         //      NEXT
-         //   ENDIF
-         //   EXIT
+#if 0
+      CASE 'O'
+         // TraceLog( "Decode - xVal - Object", xVal )
+         IF xVal:classname == "TASSOCIATIVEARRAY"
+            // TraceLog( "Decode - xVal - Object - TAssociativeArray - Keys", xVal:Keys )
+            FOR EACH cKey IN xVal:Keys
+               // TraceLog( "Decode TassociativeArray - cKey, xVal:SendKey( cKey )", cKey, xVal:SendKey( cKey ) )
+               _SESSION:SendKey( cKey, xVal:SendKey( cKey ) )
+            NEXT
+         ENDIF
+         EXIT
+#endif
 
       CASE 'A'  // Le variabili sono conservate come array { VarName, Value }
          // TraceLog( "Decode - xVal - Array", xVal )
-         // ::oCGI:ToLogFile( "Decode - xVal - Array = " + hb_cStr( xVal ) + ", Len = " + hb_cStr( Len( xVal ) ), "/pointtoit/tmp/log.txt" )
+         // ::oCGI:ToLogFile( "Decode - xVal - Array = " + hb_CStr( xVal ) + ", Len = " + hb_CStr( Len( xVal ) ), "/pointtoit/tmp/log.txt" )
          FOR EACH aElem IN xVal
-            // ::oCGI:ToLogFile( "Decode - aElem = " + hb_cStr( hb_valtoexp( aElem ) ), "/pointtoit/tmp/log.txt" )
+            // ::oCGI:ToLogFile( "Decode - aElem = " + hb_CStr( hb_valtoexp( aElem ) ), "/pointtoit/tmp/log.txt" )
             _SESSION[ aElem[ 1 ] ] := aElem[ 2 ]
          NEXT
          EXIT
