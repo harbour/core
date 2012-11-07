@@ -261,12 +261,12 @@ METHOD ExcelWriterXML:writeData( target )
       format:bgColor( "red" )
    ENDIF
 
-   IF ! Empty( ::cDocTitle   ); docTitle   := "<Title>"   + StrToHtmlEspecial( ::cDocTitle   ) + "</Title>"   + hb_eol(); ENDIF
-   IF ! Empty( ::cDocSubject ); docSubject := "<Subject>" + StrToHtmlEspecial( ::cDocSubject ) + "</Subject>" + hb_eol(); ENDIF
-   IF ! Empty( ::cDocAuthor  ); docAuthor  := "<Author>"  + StrToHtmlEspecial( ::cDocAuthor  ) + "</Author>"  + hb_eol(); ENDIF
-   IF ! Empty( ::cDocCreated ); docCreated := "<Created>" + StrToHtmlEspecial( ::cDocCreated ) + "</Created>" + hb_eol(); ENDIF
-   IF ! Empty( ::cDocManager ); docManager := "<Manager>" + StrToHtmlEspecial( ::cDocManager ) + "</Manager>" + hb_eol(); ENDIF
-   IF ! Empty( ::cDocCompany ); docCompany := "<Company>" + StrToHtmlEspecial( ::cDocCompany ) + "</Company>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocTitle   ); docTitle   := "<Title>"   + StrToHtmlSpecial( ::cDocTitle   ) + "</Title>"   + hb_eol(); ENDIF
+   IF ! Empty( ::cDocSubject ); docSubject := "<Subject>" + StrToHtmlSpecial( ::cDocSubject ) + "</Subject>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocAuthor  ); docAuthor  := "<Author>"  + StrToHtmlSpecial( ::cDocAuthor  ) + "</Author>"  + hb_eol(); ENDIF
+   IF ! Empty( ::cDocCreated ); docCreated := "<Created>" + StrToHtmlSpecial( ::cDocCreated ) + "</Created>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocManager ); docManager := "<Manager>" + StrToHtmlSpecial( ::cDocManager ) + "</Manager>" + hb_eol(); ENDIF
+   IF ! Empty( ::cDocCompany ); docCompany := "<Company>" + StrToHtmlSpecial( ::cDocCompany ) + "</Company>" + hb_eol(); ENDIF
 
    xml := '<?xml version="1.0"?>' + hb_eol()
    xml += '<?mso-application progid="Excel.Sheet"?>' + hb_eol()
@@ -362,7 +362,7 @@ METHOD ExcelWriterXML:docCompany( company )
 
    RETURN NIL
 
-FUNCTION STRTOHTML( xtxt )
+FUNCTION StrToHtml( xtxt )
 
    LOCAL afrm, i, xret := "", xpos
 
@@ -393,8 +393,7 @@ FUNCTION STRTOHTML( xtxt )
       { "Õ", "&Otilde;" }, ;
       { "Ú", "&Uacute;" }, ;
       { "Ü", "&Uuml;"   }, ;
-      { "-", "&ndash;"  } ;
-      }
+      { "-", "&ndash;"  } }
 
    FOR i := 1 TO Len( xtxt )
       IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == hb_UTF8ToStr( x[ 1 ] ) } ) ) > 0
@@ -406,18 +405,17 @@ FUNCTION STRTOHTML( xtxt )
 
    RETURN xret
 
-FUNCTION STRTOHTMLESPECIAL( xtxt )
+FUNCTION StrToHtmlSpecial( xtxt )
 
    LOCAL afrm, i, xret := "", xpos
 
-   xtxt := exretiraAcentos( xtxt )
+   xtxt := RemoveAccents( xtxt )
    afrm := { ;
       { "&", "&amp;"  }, ;
       { '"', "&quot;" }, ;
       { "'", "&#039;" }, ;
       { "<", "&lt;"   }, ;
-      { ">", "&gt;"   } ;
-      }
+      { ">", "&gt;"   } }
 
    FOR i := 1 TO Len( xtxt )
       IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == x[ 1 ] } ) ) > 0
@@ -429,7 +427,7 @@ FUNCTION STRTOHTMLESPECIAL( xtxt )
 
    RETURN xret
 
-FUNCTION EXRETIRAACENTOS( xtxt )
+STATIC FUNCTION RemoveAccents( xtxt )
 
    LOCAL afrm, i, xret := "", xpos
 
@@ -462,8 +460,7 @@ FUNCTION EXRETIRAACENTOS( xtxt )
       { "Ü", "U" }, ;
       { "ª", "." }, ;
       { "º", "." }, ;
-      { "°", "." }  ;
-      }
+      { "°", "." } }
 
    FOR i := 1 TO Len( xtxt )
       IF ( xpos := AScan( afrm, {| x | SubStr( xtxt, i, 1 ) == hb_UTF8ToStr( x[ 1 ] ) } ) ) > 0

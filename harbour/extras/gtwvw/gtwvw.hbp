@@ -13,6 +13,10 @@
 
 "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform."
 
+-hbx=gtwvw.hbx
+
+gtwvw.hbx
+
 gtwvw.c
 wvwcheck.c
 wvwdraw.c

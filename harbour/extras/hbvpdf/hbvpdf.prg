@@ -945,7 +945,7 @@ FUNCTION pdfOpen( cFile, nLen, lOptimize )
 
    // TOFIX: This external file dependency should be removed.
 
-   cTemp := vpdf_FontsDat() // times, times-bold, times-italic, times-bolditalic, helvetica..., courier... // 0.04
+   cTemp := __pdf_FontsDat() // times, times-bold, times-italic, times-bolditalic, helvetica..., courier... // 0.04
    n1 := Len( cTemp ) / ( 2 * n2 )
    t_aReport[ FONTWIDTH ] := Array( n1, n2 )
 

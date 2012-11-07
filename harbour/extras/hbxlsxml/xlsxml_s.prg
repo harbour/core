@@ -260,7 +260,7 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
 
             xml += "         <Cell " + style + ' ss:Index="' + hb_ntos( column ) + '" ' + URL + " " + mergeCell + " " + formula + ">" + hb_eol()
             xml += '            <Data ss:Type="' + type + '">'
-            xml += StrToHtmlEspecial( xData )
+            xml += StrToHtmlSpecial( xData )
             xml += "</Data>" + hb_eol()
             xml += comment
             xml += "         </Cell>" + hb_eol()

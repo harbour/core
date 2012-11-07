@@ -9,6 +9,10 @@
 
 -w3 -es2
 
+-hbx=hbvpdf.hbx
+
+hbvpdf.hbx
+
 hbvpdf.prg
 hbvpsup.prg
 

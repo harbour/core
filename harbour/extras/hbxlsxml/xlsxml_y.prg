@@ -661,7 +661,7 @@ METHOD ExcelWriterXML_Style:setNumberFormatDatetime()
 
    RETURN NIL
 
-FUNCTION getColorIE()
+STATIC FUNCTION getColorIE()
 
    LOCAL hcolor := { => }
 
