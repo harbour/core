@@ -56,22 +56,23 @@ PROCEDURE __hbformat_BuildListOfFunctions( /* @ */ cFunctions, cHBXList )
 
    LOCAL aFile
    LOCAL cName
-   LOCAL lAnyHBR
+   LOCAL lContribHBR := .F.
 
    /* from built-in core .hbx file */
    HBXToFuncList( @cFunctions, __harbour_hbx() )
 
    /* from .hbr container files */
-   lAnyHBR := .F.
    FOR EACH aFile IN Directory( hb_DirBase() + "*.hbr" )
-      lAnyHBR := .T.
+      IF hb_FileMatch( hb_FNameName( aFile[ F_NAME ] ), "contrib" )
+         lContribHBR := .T.
+      ENDIF
       FOR EACH cName IN hb_Deserialize( hb_ZUncompress( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) )
          cFunctions += "," + cName:__enumKey()
       NEXT
    NEXT
 
    /* from standalone .hbx files in some known locations */
-   IF ! lAnyHBR
+   IF ! lContribHBR
       WalkDir( hb_DirBase() + ".." + hb_ps() + "contrib", @cFunctions )
    ENDIF
    WalkDir( hb_DirBase() + ".." + hb_ps() + "addons", @cFunctions )
