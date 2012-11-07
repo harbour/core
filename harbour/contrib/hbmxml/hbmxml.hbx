@@ -34,7 +34,7 @@ DYNAMIC mxmlDelete
 DYNAMIC mxmlElementDeleteAttr
 DYNAMIC mxmlElementGetAttr
 DYNAMIC mxmlElementSetAttr
-DYNAMIC mxmlElementSetAttrF
+DYNAMIC mxmlElementSetAttrf
 DYNAMIC mxmlEntityGetName
 DYNAMIC mxmlEntityGetValue
 DYNAMIC mxmlFindElement
@@ -69,7 +69,7 @@ DYNAMIC mxmlNewInteger
 DYNAMIC mxmlNewOpaque
 DYNAMIC mxmlNewReal
 DYNAMIC mxmlNewText
-DYNAMIC mxmlNewTextF
+DYNAMIC mxmlNewTextf
 DYNAMIC mxmlNewXML
 DYNAMIC mxmlRemove
 DYNAMIC mxmlSaveAllocString
@@ -86,7 +86,7 @@ DYNAMIC mxmlSetInteger
 DYNAMIC mxmlSetOpaque
 DYNAMIC mxmlSetReal
 DYNAMIC mxmlSetText
-DYNAMIC mxmlSetTextF
+DYNAMIC mxmlSetTextf
 DYNAMIC mxmlSetUserData
 DYNAMIC mxmlSetWrapMargin
 DYNAMIC mxmlWalkNext
