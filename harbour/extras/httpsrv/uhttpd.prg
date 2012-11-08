@@ -1239,7 +1239,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    // hb_toOutDebug( "GET: cFields = %s, hVars = %s, _GET = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _GET ), hb_ValToExp( _REQUEST ) )
 
    // POST
-   IF "POST" $ Upper( _SERVER[ 'REQUEST_METHOD' ] )
+   IF "POST" $ Upper( _SERVER[ "REQUEST_METHOD" ] )
       cFields := ATail( aRequest )
       IF ! Empty( cFields )
          hVars := uhttpd_GetVars( cFields )
@@ -1252,7 +1252,7 @@ STATIC FUNCTION ParseRequest( cRequest )
    // hb_toOutDebug( "POST: cFields = %s, hVars = %s, _POST = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ) )
 
    // COOKIES
-   cFields := _SERVER[ 'HTTP_COOKIE' ]
+   cFields := _SERVER[ "HTTP_COOKIE" ]
    IF ! Empty( cFields )
       hVars := uhttpd_GetVars( cFields, ";" )
       hb_HMerge( _COOKIE, hVars )
@@ -1450,7 +1450,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
       cAccess := _SERVER[ "REMOTE_ADDR" ] + " - - [" + Right( cDate, 2 ) + "/" + ;
          aMonths[ Val( SubStr( cDate, 5, 2 ) ) ] + ;
-         "/" + Left( cDate, 4 ) + ":" + cTime + ' ' + cBias + '] "' + ;
+         "/" + Left( cDate, 4 ) + ":" + cTime + " " + cBias + '] "' + ;
          Left( cRequest, At( CR_LF, cRequest ) - 1 ) + '" ' + ;
          hb_ntos( t_nStatusCode ) + " " + iif( nSize == 0, "-", hb_ntos( nSize ) ) + ;
          ' "' + iif( Empty( cReferer ), "-", cReferer ) + '" "' + _SERVER[ "HTTP_USER_AGENT" ] + ;

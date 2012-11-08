@@ -139,12 +139,12 @@ METHOD new( cHtmlString ) CLASS THtmlDocument
    LOCAL cEmptyHtmlDoc, oNode, oSubNode, oErrNode, aHead, aBody, nMode := 0
 
    cEmptyHtmlDoc := '<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">' + hb_eol() + ;
-      '<html>' + hb_eol() + ;
-      ' <head>' + hb_eol() + ;
-      ' </head>' + hb_eol() + ;
-      ' <body>' + hb_eol() + ;
-      ' </body>' + hb_eol() + ;
-      '</html>'
+      "<html>" + hb_eol() + ;
+      " <head>" + hb_eol() + ;
+      " </head>" + hb_eol() + ;
+      " <body>" + hb_eol() + ;
+      " </body>" + hb_eol() + ;
+      "</html>"
 
    IF ! HB_ISSTRING( cHtmlString )
       ::root := THtmlNode():new( cEmptyHtmlDoc )

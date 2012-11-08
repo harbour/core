@@ -969,7 +969,7 @@ FUNCTION Sp_Split( cWord )
       cWord2 := SubStr( cWord, x )
       IF Len( cWord1 ) > 1 .AND. Len( cWord2 ) > 1
          IF SP_Check( cWord1 ) .AND.  SP_Check( cWord2 )
-            AAdd( arr_, cWord1 + ' ' + cWord2 )
+            AAdd( arr_, cWord1 + " " + cWord2 )
          ENDIF
       ENDIF
    NEXT

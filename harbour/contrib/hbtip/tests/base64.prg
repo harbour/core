@@ -36,16 +36,16 @@ PROCEDURE Main( ... )
    FOR nLen := 1 TO PCount()
       cData := Lower( hb_PValue( nLen ) )
       DO CASE
-      CASE cData == '-h'
+      CASE cData == "-h"
          lHelp := .T.
 
-      CASE cData == '-d'
+      CASE cData == "-d"
          lDecode := .T.
 
-      CASE cData == '-q'
+      CASE cData == "-q"
          lQp := .T.
 
-      CASE cData == '-u'
+      CASE cData == "-u"
          lUrl := .T.
 
       OTHERWISE

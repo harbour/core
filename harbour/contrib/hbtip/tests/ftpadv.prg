@@ -21,8 +21,8 @@ PROCEDURE Main( cUrl )
    ENDIF
 
    IF oUrl:cProto != "ftp"
-      ? 'This is a "DELE" test for ftp.'
-      ? 'Use an ftp address with a file that you can delete.'
+      ? "This is a 'DELE' test for ftp."
+      ? "Use an ftp address with a file that you can delete."
       ?
       QUIT
    ENDIF

@@ -61,31 +61,31 @@
    #pragma -ks+
    REQUEST XHB_LIB
 
-   #xtranslate __Keyboard([<x,...>])           => xhb__Keyboard(<x>)
-   #xtranslate __CopyFile([<x,...>])           => xhb_CopyFile(<x>)
+   #xtranslate __Keyboard( [<x,...>] )           => xhb__Keyboard( <x> )
+   #xtranslate __CopyFile( [<x,...>] )           => xhb_CopyFile( <x> )
 
-   #xuntranslate AIns(                         =>
-   #xuntranslate ADel(                         =>
+   #xuntranslate AIns(                           =>
+   #xuntranslate ADel(                           =>
 
-   #xtranslate AIns(<a>,<n>,[<x,...>])         => xhb_AIns(<a>,<n>,<x>)
-   #xtranslate ADel(<a>,<n>,<l>)               => xhb_ADel(<a>,<n>,<l>)
+   #xtranslate AIns( <a>, <n>, [<x,...>] )       => xhb_AIns( <a>, <n>, <x> )
+   #xtranslate ADel( <a>, <n>, <l> )             => xhb_ADel( <a>, <n>, <l> )
 
-   #xuntranslate NetName(                      =>
-   #xuntranslate MemoWrit(                     =>
+   #xuntranslate NetName(                        =>
+   #xuntranslate MemoWrit(                       =>
 
-   #xtranslate NetName([<x,...>])              => xhb_NetName(<x>)
-   #xtranslate MemoWrit([<x,...>])             => xhb_MemoWrit(<x>)
+   #xtranslate NetName( [<x,...>] )              => xhb_NetName( <x> )
+   #xtranslate MemoWrit( [<x,...>] )             => xhb_MemoWrit( <x> )
 
-   #xtranslate SaveScreen([<x,...>])           => xhb_SaveScreen(<x>)
-   #xtranslate RestScreen([<x,...>])           => xhb_RestScreen(<x>)
-   #xtranslate RTrim([<x,...>])                => xhb_RTrim(<x>)
-   #xtranslate Trim([<x,...>])                 => xhb_Trim(<x>)
-   #xtranslate AllTrim([<x,...>])              => xhb_AllTrim(<x>)
+   #xtranslate SaveScreen( [<x,...>] )           => xhb_SaveScreen( <x> )
+   #xtranslate RestScreen( [<x,...>] )           => xhb_RestScreen( <x> )
+   #xtranslate RTrim( [<x,...>] )                => xhb_RTrim( <x> )
+   #xtranslate Trim( [<x,...>] )                 => xhb_Trim( <x> )
+   #xtranslate AllTrim( [<x,...>] )              => xhb_AllTrim( <x> )
 
    /* _SET_TRACE* / TraceLog() */
-   #xtranslate Set(_SET_TRACE [,<x,...>])      => xhb_setTrace( <x> )
-   #xtranslate Set(_SET_TRACEFILE [,<x,...>])  => xhb_setTraceFile( <x> )
-   #xtranslate Set(_SET_TRACESTACK [,<x,...>]) => xhb_setTraceStack( <x> )
+   #xtranslate Set( _SET_TRACE [,<x,...>] )      => xhb_SetTrace( <x> )
+   #xtranslate Set( _SET_TRACEFILE [,<x,...>] )  => xhb_SetTraceFile( <x> )
+   #xtranslate Set( _SET_TRACESTACK [,<x,...>] ) => xhb_SetTraceStack( <x> )
 
 #endif
 

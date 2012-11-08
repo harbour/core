@@ -50,40 +50,40 @@
  */
 
 #ifndef __HBCTYPES_CH_
-   #define __HBCTYPES_CH_
+#define __HBCTYPES_CH_
 
-   #define CTYPE_VOID                     0
+#define CTYPE_VOID                     0
 
-   #define CTYPE_CHAR                     1
-   #define CTYPE_UNSIGNED_CHAR           -1
-   #define CTYPE_CHAR_PTR                10
-   #define CTYPE_UNSIGNED_CHAR_PTR      -10
+#define CTYPE_CHAR                     1
+#define CTYPE_UNSIGNED_CHAR           -1
+#define CTYPE_CHAR_PTR                10
+#define CTYPE_UNSIGNED_CHAR_PTR      -10
 
-   #define CTYPE_SHORT                    2
-   #define CTYPE_UNSIGNED_SHORT          -2
-   #define CTYPE_SHORT_PTR               20
-   #define CTYPE_UNSIGNED_SHORT_PTR     -20
+#define CTYPE_SHORT                    2
+#define CTYPE_UNSIGNED_SHORT          -2
+#define CTYPE_SHORT_PTR               20
+#define CTYPE_UNSIGNED_SHORT_PTR     -20
 
-   #define CTYPE_INT                      3
-   #define CTYPE_UNSIGNED_INT            -3
-   #define CTYPE_INT_PTR                 30
-   #define CTYPE_UNSIGNED_INT_PTR       -30
+#define CTYPE_INT                      3
+#define CTYPE_UNSIGNED_INT            -3
+#define CTYPE_INT_PTR                 30
+#define CTYPE_UNSIGNED_INT_PTR       -30
 
-   #define CTYPE_LONG                     4
-   #define CTYPE_UNSIGNED_LONG           -4
-   #define CTYPE_LONG_PTR                40
-   #define CTYPE_UNSIGNED_LONG_PTR      -40
+#define CTYPE_LONG                     4
+#define CTYPE_UNSIGNED_LONG           -4
+#define CTYPE_LONG_PTR                40
+#define CTYPE_UNSIGNED_LONG_PTR      -40
 
-   #define CTYPE_FLOAT                    5
-   #define CTYPE_FLOAT_PTR               50
+#define CTYPE_FLOAT                    5
+#define CTYPE_FLOAT_PTR               50
 
-   #define CTYPE_DOUBLE                   6
-   #define CTYPE_DOUBLE_PTR              60
+#define CTYPE_DOUBLE                   6
+#define CTYPE_DOUBLE_PTR              60
 
-   #define CTYPE_VOID_PTR                 7
+#define CTYPE_VOID_PTR                 7
 
-   /* _Must_ be smaller than CTYPE_STRUCTURE_PTR */
-   #define CTYPE_STRUCTURE             1000
-   #define CTYPE_STRUCTURE_PTR        10000
+/* _Must_ be smaller than CTYPE_STRUCTURE_PTR */
+#define CTYPE_STRUCTURE             1000
+#define CTYPE_STRUCTURE_PTR        10000
 
 #endif /* __HBCTYPES_CH_ */

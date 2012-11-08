@@ -21,8 +21,8 @@ PROCEDURE Main( cUrl )
    ENDIF
 
    IF oUrl:cProto != "http"
-      ? 'This is a header test for http.'
-      ? 'Use an http address.'
+      ? "This is a header test for http."
+      ? "Use an http address."
       ?
       QUIT
    ENDIF

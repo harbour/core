@@ -44,7 +44,7 @@
  *
  */
 
-#xtranslate DEFAULT( <p>, <v> )  => <p> := iif( <p> == NIL, <v>, <p> )
+#xtranslate Default( <p>, <v> )  => <p> := iif( <p> == NIL, <v>, <p> )
 #xtranslate HTMLSpace( <n> )     => Replicate( "&nbsp;", <n> )  //"&#32;"
 #xtranslate CRLF()               => Chr( 13 ) + Chr( 10 )
 

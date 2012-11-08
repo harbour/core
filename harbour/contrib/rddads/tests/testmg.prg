@@ -82,7 +82,7 @@ PROCEDURE Main()
 
    ? "Advantage Database Server Management Functions in Harbour"
    ?
-   ? "Connect:", AdsMgConnect( 'C:' )
+   ? "Connect:", AdsMgConnect( "C:" )
    ?
    ? "AdsVersion( 0 ):", AdsVersion( 0 )
    ? "AdsVersion( 3 ):", AdsVersion( 3 )

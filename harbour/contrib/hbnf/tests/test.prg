@@ -12,10 +12,10 @@ PROCEDURE Main()
 
    nmar := ft_MVersion( @nver, @ntype, @nir )
    ppp := nmar + nver
-   ? Str( nmar, 2, 0 ), '.', Str( nver, 2, 0 )
+   ? Str( nmar, 2, 0 ), ".", Str( nver, 2, 0 )
    ? ppp / 100
    Inkey( 0 )
-   ? 'is mouse on', ft_MReset()
+   ? "is mouse on", ft_MReset()
    Inkey( 0 )
    ? ft_MShowCrs()
    Inkey( 0 )
@@ -25,8 +25,8 @@ PROCEDURE Main()
    Inkey( 0 )
 
    DO WHILE LastKey() != K_ESC
-      ? 'mouse row is', ft_MGetX()
-      ? 'mouse col is', ft_MGetY()
+      ? "mouse row is", ft_MGetX()
+      ? "mouse col is", ft_MGetY()
       IF LastKey() == K_ESC
          EXIT
       ENDIF

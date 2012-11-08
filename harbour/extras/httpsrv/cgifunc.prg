@@ -343,11 +343,11 @@ FUNCTION uhttpd_URLEncode( cString, lComplete )
       CASE ( cChar >= "A" .AND. cChar <= "Z" ) .OR. ;
            ( cChar >= "a" .AND. cChar <= "z" ) .OR. ;
            ( cChar >= "0" .AND. cChar <= "9" ) .OR. ;
-           cChar == '.' .OR. cChar == ',' .OR. cChar == '&' .OR. ;
-           cChar == '/' .OR. cChar == ';' .OR. cChar == '_'
+           cChar == "." .OR. cChar == "," .OR. cChar == "&" .OR. ;
+           cChar == "/" .OR. cChar == ";" .OR. cChar == "_"
          cRet += cChar
 
-      CASE iif( ! lComplete, cChar == ':' .OR. cChar == '?' .OR. cChar == '=', .F. )
+      CASE iif( ! lComplete, cChar == ":" .OR. cChar == "?" .OR. cChar == "=", .F. )
          cRet += cChar
 
       OTHERWISE
@@ -482,7 +482,7 @@ FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
    LOCAL cHtml
 
    __defaultNIL( @lProtected, .F. )
-   __defaultNIL( @aTranslate, { { '"', '&quot;' }, { ' ', '&nbsp;' } } )
+   __defaultNIL( @aTranslate, { { '"', "&quot;" }, { " ", "&nbsp;" } } )
 
    // TraceLog( "OutputString( cString, aTranslate, lProtected )", cString, aTranslate, lProtected )
    IF lProtected
@@ -497,9 +497,9 @@ FUNCTION uhttpd_OutputString( cString, aTranslate, lProtected )
 FUNCTION uhttpd_HtmlSpecialChars( cString, cQuote_style )
 
    LOCAL aTranslations := { ;
-      { '&', '&amp;' }, ;
-      { '<', '&lt;'  }, ;
-      { '>', '&gt;'  } }
+      { "&", "&amp;" }, ;
+      { "<", "&lt;"  }, ;
+      { ">", "&gt;"  } }
 
    RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )
 

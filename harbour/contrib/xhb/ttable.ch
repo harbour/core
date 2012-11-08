@@ -92,7 +92,7 @@
            [<new: NEW>]     ;
            [<ro: READONLY>] ;
            => ;
-           netDbUse( <(cDBF)>, <(cAlias)>, <nSecs>, <cRDD>, ;
+           NetDbUse( <(cDBF)>, <(cAlias)>, <nSecs>, <cRDD>, ;
                    <.new.>, NET_OPEN_MODE, <.ro.> )
 
 
@@ -154,7 +154,7 @@
           <oObj>:ClassAdd( <"cFld">,, {| Self | [<xpression>] },,)
 
 
-// --> ::undo() buffer constants
+// --> ::unDo() buffer constants
 
 #define _WRITE_BUFFER        1
 #define _DELETE_BUFFER       2
@@ -167,17 +167,17 @@
           [STEP <n>]       ;
           IN <oTable>      ;
           =>               ;
-          <oTable>:Undo( <nType>, [<n>] )
+          <oTable>:UnDo( <nType>, [<n>] )
 
 #xCommand END TRANSACTION IN <oTable>   => <oTable>:SetMonitor( .F. )
 
-#command SKIP     in <o>              =>  <o>:dbSkip(1)
+#command SKIP        in <o>           => <o>:dbSkip( 1 )
 #command SKIP <n>    in <o>           => <o>:dbSkip( <n> )
 
 #command SEEK <xpr>                                                        ;
          [<soft: SOFTSEEK>]                                                ;
-         [<last: LAST>]     in <o>                                               ;
-      => <o>:dbSeek( <xpr>, if( <.soft.>, .T., NIL ), if( <.last.>, .T., NIL ) )
+         [<last: LAST>]     in <o>                                         ;
+      => <o>:dbSeek( <xpr>, iif( <.soft.>, .T., NIL ), iif( <.last.>, .T., NIL ) )
 
 #translate  CSY_TYPE Character  =>  "C"
 
@@ -192,7 +192,7 @@
                 [ TYPE <cType> ]                    ;
                 [ LEN <nLen> ]                      ;
                 [ DEC <nDec> ]                      ;
-                OF <oDbf>                          ;
+                OF <oDbf>                           ;
                 => ;
     [ <oFld> := ] _TABLE_:AddField( <(cName)>,CSY_TYPE <cType>, <nLen>, <nDec>)
 #xCommand BUILD TABLE <o> => _TABLE_:Gentable()

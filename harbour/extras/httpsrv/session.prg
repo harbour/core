@@ -272,7 +272,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
    // Should we define the SID?
    IF lDefine_SID
-      cSID := ::cName + '=' + ::cSID
+      cSID := ::cName + "=" + ::cSID
       _REQUEST[ ::cName ] := ::cSID
    ENDIF
 
@@ -282,7 +282,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
    // Start session
    IF ! ::Open( ::cSavePath, ::cName )
-      uhttpd_Die( 'ERROR: Failed to open session file' )
+      uhttpd_Die( "ERROR: Failed to open session file" )
    ENDIF
 
    // Read session data
@@ -337,11 +337,11 @@ METHOD Close() CLASS uhttpd_Session
 
    // Save session
    IF ! ::Write( ::cSID, cVal )
-      uhttpd_Die( 'Session could not be saved.' )
+      uhttpd_Die( "Session could not be saved." )
    ENDIF
    // Close session
    IF ! Eval( ::bClose )
-      uhttpd_Die( 'Session could not be closed.' )
+      uhttpd_Die( "Session could not be closed." )
    ENDIF
    ::nActiveSessions--
 
@@ -826,7 +826,7 @@ METHOD Decode( cData ) CLASS uhttpd_Session
 
       SWITCH ValType( xVal )
 #if 0
-      CASE 'O'
+      CASE "O"
          // TraceLog( "Decode - xVal - Object", xVal )
          IF xVal:classname == "TASSOCIATIVEARRAY"
             // TraceLog( "Decode - xVal - Object - TAssociativeArray - Keys", xVal:Keys )
@@ -838,7 +838,7 @@ METHOD Decode( cData ) CLASS uhttpd_Session
          EXIT
 #endif
 
-      CASE 'A'  // Le variabili sono conservate come array { VarName, Value }
+      CASE "A"  // Le variabili sono conservate come array { VarName, Value }
          // TraceLog( "Decode - xVal - Array", xVal )
          // ::oCGI:ToLogFile( "Decode - xVal - Array = " + hb_CStr( xVal ) + ", Len = " + hb_CStr( Len( xVal ) ), "/pointtoit/tmp/log.txt" )
          FOR EACH aElem IN xVal
@@ -861,24 +861,24 @@ METHOD SendCacheLimiter() CLASS uhttpd_Session
    LOCAL dDate
 
    DO CASE
-   CASE ::cCache_Limiter == 'nocache'
-      // uhttpd_SetHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
-      uhttpd_SetHeader( 'Expires', uhttpd_DateToGMT( ,, -1, ) )
-      uhttpd_SetHeader( 'Cache-Control', 'no-cache' )
-      // uhttpd_SetHeader("Cache-Control", "no-store, no-cache, must-revalidate")  // HTTP/1.1
-      // uhttpd_SetHeader("Cache-Control", "post-check=0, pre-check=0", .F. )
-      uhttpd_SetHeader( 'Pragma', 'no-cache' )
-   CASE ::cCache_Limiter == 'private'
-      uhttpd_SetHeader( 'Expires', 'Thu, 19 Nov 1981 08:52:00 GMT' )
-      uhttpd_SetHeader( 'Cache-Control', 'private, max-age=' + hb_ntos( ::nCache_Expire * 60 ) )
+   CASE ::cCache_Limiter == "nocache"
+      // uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
+      uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,, -1, ) )
+      uhttpd_SetHeader( "Cache-Control", "no-cache" )
+      // uhttpd_SetHeader( "Cache-Control", "no-store, no-cache, must-revalidate" )  // HTTP/1.1
+      // uhttpd_SetHeader( "Cache-Control", "post-check=0, pre-check=0", .F. )
+      uhttpd_SetHeader( "Pragma", "no-cache" )
+   CASE ::cCache_Limiter == "private"
+      uhttpd_SetHeader( "Expires", "Thu, 19 Nov 1981 08:52:00 GMT" )
+      uhttpd_SetHeader( "Cache-Control", "private, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
       IF hb_FGetDateTime( hb_argv( 0 ), @dDate )
-         uhttpd_SetHeader( 'Last-Modified', uhttpd_DateToGMT( dDate ) )
+         uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )
       ENDIF
-   CASE ::cCache_Limiter == 'public'
-      uhttpd_SetHeader( 'Expires', uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
-      uhttpd_SetHeader( 'Cache-Control', 'public, max-age=' + hb_ntos( ::nCache_Expire * 60 ) )
+   CASE ::cCache_Limiter == "public"
+      uhttpd_SetHeader( "Expires", uhttpd_DateToGMT( ,,, ::nCache_Expire * 60 ) )
+      uhttpd_SetHeader( "Cache-Control", "public, max-age=" + hb_ntos( ::nCache_Expire * 60 ) )
       IF hb_FGetDateTime( hb_argv( 0 ), @dDate )
-         uhttpd_SetHeader( 'Last-Modified', uhttpd_DateToGMT( dDate ) )
+         uhttpd_SetHeader( "Last-Modified", uhttpd_DateToGMT( dDate ) )
       ENDIF
    OTHERWISE
       uhttpd_Die( "ERROR: Caching method " + ::cCache_Limiter + " not implemented." )

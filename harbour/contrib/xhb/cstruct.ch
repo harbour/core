@@ -60,34 +60,34 @@
       #xcommand C STRUCTURE <!stru!> [ALIGN <align> ] => ;
                INIT PROCEDURE __INIT_<stru>; ;
                   __ActiveStructure( #<stru>, <align> ) ; ;
-               #xtranslate IS <stru> \[ \<x: :=, INIT> { \<initlist,...> } ] => := HB_CStructure( #<stru> ):Init( {\<initlist>} ); ;
-               #xtranslate IS <stru> FROM \<pointer> => := HB_CStructure( #<stru> ):Buffer( \<pointer> )
+               #xtranslate IS <stru> \[ \<x: :=, INIT> { \<initlist,...> } ] => := hb_CStructure( #<stru> ):Init( {\<initlist>} ); ;
+               #xtranslate IS <stru> FROM \<pointer> => := hb_CStructure( #<stru> ):Buffer( \<pointer> )
 
       // <elem> instead of <!elem!> to allow ElemName[n] syntax.
-      #xcommand MEMBER <elem> IS <type> => HB_Member( #<elem>, <type> )
+      #xcommand MEMBER <elem> IS <type> => hb_Member( #<elem>, <type> )
 
       /*
          Will match:
             MEMBER <elem> IS <!stru!>
          due to expansion of:
-            #xtranslate IS <stru> [...] => := HB_CStructure( #<stru> ):Init( {} )
+            #xtranslate IS <stru> [...] => := hb_CStructure( #<stru> ):Init( {} )
          as established by C STRUCTURE <!stru!> #xcommand for the given structure.
       */
-      #xcommand MEMBER <elem> := HB_CStructure( <literalstru> ):Init( {} ) => ;
-               HB_Member( #<elem>, HB_CStructureId( <literalstru>, .T. ) )
+      #xcommand MEMBER <elem> := hb_CStructure( <literalstru> ):Init( {} ) => ;
+               hb_Member( #<elem>, hb_CStructureId( <literalstru>, .T. ) )
 
-      #xcommand MEMBER <!elem!> IS <type> ( <nlen> ) => HB_Member( #<elem>, HB_CTypeArrayID( <type>, <nlen> ) )
+      #xcommand MEMBER <!elem!> IS <type> ( <nlen> ) => hb_Member( #<elem>, hb_CTypeArrayId( <type>, <nlen> ) )
 
       #xcommand MEMBER <!elem!> AS <!stru!> => ;
-               HB_Member( #<elem>, HB_CStructureId( #<stru>, .F. ) )
+               hb_Member( #<elem>, hb_CStructureId( #<stru>, .F. ) )
 
       #xcommand END C STRUCTURE [<!stru!>] => ; ;
                   __ClsSetModule( __ActiveStructure() ); ;
                RETURN
 
       #xcommand IMPORT C STRUCTURE <!stru!> => ;
-               #xtranslate IS <stru> \[ \<x: :=, INIT> { \<initlist,...> } ] => := HB_CStructure( #<stru> ):Init( {\<initlist>} ); ;
-               #xtranslate IS <stru> FROM \<pointer> => := HB_CStructure( #<stru> ):Buffer( \<pointer> )
+               #xtranslate IS <stru> \[ \<x: :=, INIT> { \<initlist,...> } ] => := hb_CStructure( #<stru> ):Init( {\<initlist>} ); ;
+               #xtranslate IS <stru> FROM \<pointer> => := hb_CStructure( #<stru> ):Buffer( \<pointer> )
 
       //----------------------------- C Syntax support ---------------------------------//
       /* NOTES:
@@ -101,17 +101,17 @@
 
       #xcommand typedef struct [<!tag!>] { [[struct] <elem>] } <!stru!> [, <*synon*>] => ;
                 INIT PROCEDURE __INIT_<stru>; ;
-                   HB_CStructureCSyntax( #<stru>, {[#<elem>,]}, <(tag)>, <"synon">, __PACK ); ;
+                   hb_CStructureCSyntax( #<stru>, {[#<elem>,]}, <(tag)>, <"synon">, __PACK ); ;
                    __ClsSetModule( __ActiveStructure() ); ;
                 RETURN; ;
-                #xtranslate IS <stru> \[ \<x: :=, INIT> { \<initlist,...> } ] => := HB_CStructure( #<stru> ):Init( {\<initlist>} ); ;
-                #xtranslate IS <stru> FROM \<pointer> => := HB_CStructure( #<stru> ):Buffer( \<pointer> )
+                #xtranslate IS <stru> \[ \<x: :=, INIT> { \<initlist,...> } ] => := hb_CStructure( #<stru> ):Init( {\<initlist>} ); ;
+                #xtranslate IS <stru> FROM \<pointer> => := hb_CStructure( #<stru> ):Buffer( \<pointer> )
 
       #xcommand pragma pack( <pack> ) => #undef __PACK; #define __PACK <pack>
       #xcommand pragma pack() => #undef __PACK; #define __PACK 8
 
-      #xtranslate ( struct <stru> ) [<buffer>] => HB_CStructure( #<stru> ):Buffer( <buffer> )
-      #xtranslate ( struct <stru>* ) <pointer> => HB_CStructure( #<stru> ):Pointer( <pointer> )
+      #xtranslate ( struct <stru> ) [<buffer>] => hb_CStructure( #<stru> ):Buffer( <buffer> )
+      #xtranslate ( struct <stru>* ) <pointer> => hb_CStructure( #<stru> ):Pointer( <pointer> )
    #endif
 
 #endif /* __HBCSTRUCT_CH_ */

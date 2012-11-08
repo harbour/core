@@ -355,24 +355,24 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
 
    cErrMsg += '<table border="1">'
 
-   cErrMsg += '<tr><td>SCRIPT NAME:</td><td>' + GetEnv( "SCRIPT_NAME" ) + '</td></tr>'
+   cErrMsg += "<tr><td>SCRIPT NAME:</td><td>" + GetEnv( "SCRIPT_NAME" ) + "</td></tr>"
 
    IF HB_ISOBJECT( xError )
-      cErrMsg += '<tr><td>CRITICAL ERROR:</td><td>' + xError:Description + '</td></tr>'
-      cErrMsg += '<tr><td>OPERATION:</td><td>' + xError:Operation + '</td></tr>'
-      cErrMsg += '<tr><td>OS ERROR:</td><td>' + hb_ntos( xError:OsCode ) + ' IN ' + xError:SubSystem + '/' + hb_ntos( xError:SubCode ) + '</td></tr>'
-      cErrMsg += '<tr><td>FILENAME:</td><td>' + Right( xError:FileName, 40 ) + '</td></tr>'
+      cErrMsg += "<tr><td>CRITICAL ERROR:</td><td>" + xError:Description + "</td></tr>"
+      cErrMsg += "<tr><td>OPERATION:</td><td>" + xError:Operation + "</td></tr>"
+      cErrMsg += "<tr><td>OS ERROR:</td><td>" + hb_ntos( xError:OsCode ) + " IN " + xError:SubSystem + "/" + hb_ntos( xError:SubCode ) + "</td></tr>"
+      cErrMsg += "<tr><td>FILENAME:</td><td>" + Right( xError:FileName, 40 ) + "</td></tr>"
    ELSEIF HB_ISSTRING( xError )
-      cErrMsg += '<tr><td>ERROR MESSAGE:</td><td>' + tip_HtmlSpecialChars( xError ) + '</td></tr>'
+      cErrMsg += "<tr><td>ERROR MESSAGE:</td><td>" + tip_HtmlSpecialChars( xError ) + "</td></tr>"
    ENDIF
 
    nCalls := 1
    DO WHILE ! Empty( ProcName( nCalls ) )
-      cErrMsg += '<tr><td>PROC/LINE:</td><td>' + ProcName( nCalls ) + "/" + hb_ntos( ProcLine( nCalls ) ) + '</td></tr>'
+      cErrMsg += "<tr><td>PROC/LINE:</td><td>" + ProcName( nCalls ) + "/" + hb_ntos( ProcLine( nCalls ) ) + "</td></tr>"
       nCalls++
    ENDDO
 
-   cErrMsg += '</table>'
+   cErrMsg += "</table>"
 
    ::Write( cErrMsg )
 
@@ -393,25 +393,25 @@ METHOD Write( cString ) CLASS TIpCgi
 METHOD StartHtml( hOptions ) CLASS TIpCgi
 
    ::cHtmlPage += ;
-      '<?xml version="1.0"' + HtmlOption( hOptions, 'encoding', ' ' ) + '?>' + _CRLF + ;
+      '<?xml version="1.0"' + HtmlOption( hOptions, "encoding", " " ) + "?>" + _CRLF + ;
       '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"' + _CRLF + ;
       '"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">' + _CRLF + ;
       '<html xmlns="http://www.w3.org/1999/xhtml">' + ;
-      '<head>' + ;
-      HtmlTag( hOptions, 'title', 'title' ) + ;
+      "<head>" + ;
+      HtmlTag( hOptions, "title", "title" ) + ;
       HtmlScript( hOptions ) + ;
       HtmlStyle( hOptions ) + ;
       HtmlLinkRel( hOptions ) + ;
-      '</head>' + ;
-      '<body ' + ;
+      "</head>" + ;
+      "<body " + ;
       HtmlAllOption( hOptions ) + ;
-      '>'
+      ">"
 
    RETURN Self
 
 METHOD EndHtml() CLASS TIpCgi
 
-   ::cHtmlPage += '</body></html>'
+   ::cHtmlPage += "</body></html>"
 
    RETURN Self
 
@@ -552,7 +552,7 @@ STATIC FUNCTION HtmlScript( hVal, cKey )
                IF HB_ISARRAY( cVal )
                   cTmp := ""
                   AScan( cVal, {| cVar | cTmp += cVar } )
-                  cRet += '<script type="text/javascript">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</script>' + _CRLF
+                  cRet += '<script type="text/javascript">' + _CRLF + "<!--" + _CRLF + cTmp + _CRLF + "-->" + _CRLF + "</script>" + _CRLF
                ENDIF
             ENDIF
          ENDIF
@@ -595,7 +595,7 @@ STATIC FUNCTION HtmlStyle( hVal, cKey )
                IF HB_ISARRAY( cVal )
                   cTmp := ""
                   AScan( cVal, {| cVar | cTmp += cVar } )
-                  cRet += '<style type="text/css">' + _CRLF + '<!--' + _CRLF + cTmp + _CRLF + '-->' + _CRLF + '</style>' + _CRLF
+                  cRet += '<style type="text/css">' + _CRLF + "<!--" + _CRLF + cTmp + _CRLF + "-->" + _CRLF + "</style>" + _CRLF
                ENDIF
             ENDIF
          ENDIF

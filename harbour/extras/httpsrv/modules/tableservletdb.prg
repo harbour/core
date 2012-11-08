@@ -65,7 +65,7 @@ FUNCTION HRBMAIN()
 
    hGets := _REQUEST
 
-   DEFAULT hGets TO { => }
+   hb_default( @hGets, { => } )
 
    IF hb_HHasKey( hGets, "page" )
 
@@ -116,7 +116,7 @@ FUNCTION HRBMAIN()
 
       uhttpd_SetHeader( "Content-Type", "text/xml" )
       uhttpd_Write( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
-      uhttpd_Write( '<pages><page>No Data</page></pages>' )
+      uhttpd_Write( "<pages><page>No Data</page></pages>" )
 
    ENDIF
 
@@ -353,7 +353,7 @@ METHOD xmlEncode( input ) CLASS TableManager
    FOR i := 1 TO Len( input )
       c := SubStr( input, i, 1 )
       SWITCH c
-      CASE '&'
+      CASE "&"
          out += "&amp;"
          EXIT
       CASE "'"
@@ -362,14 +362,14 @@ METHOD xmlEncode( input ) CLASS TableManager
       CASE '"'
          out += "&quot;"
          EXIT
-      CASE '<'
+      CASE "<"
          out += "&lt;"
          EXIT
-      CASE '>'
+      CASE ">"
          out += "&gt;"
          EXIT
 #if 0
-      CASE ' '
+      CASE " "
          out += "&nbsp;"
          EXIT
 #endif

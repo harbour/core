@@ -68,12 +68,12 @@
                                 <.frame.>, <cap> )                ;;
           [<oFrm>:setTarget( <(target)> ) ;]                       ;
           [<oFrm>:setEncType( <(enctype)> ) ;]                     ;
-          [<oFrm>:setCapClr( <(capclr)> ) ;]                         ;
-          [<oFrm>:setCapFntClr( <(capfntclr)> ) ;]                   ;
-          [<oFrm>:setCapImage( <(capimage)> ) ;]                     ;
-          [<oFrm>:setBgImage( <(bgimg)> ) ;]                         ;
-          [<oFrm>:setFontColor( <(fntclr)> ) ;]                      ;
-          [<oFrm>:setFrmColor( <(clr)> ) ;]                          ;
+          [<oFrm>:setCapClr( <(capclr)> ) ;]                       ;
+          [<oFrm>:setCapFntClr( <(capfntclr)> ) ;]                 ;
+          [<oFrm>:setCapImage( <(capimage)> ) ;]                   ;
+          [<oFrm>:setBgImage( <(bgimg)> ) ;]                       ;
+          [<oFrm>:setFontColor( <(fntclr)> ) ;]                    ;
+          [<oFrm>:setFrmColor( <(clr)> ) ;]                        ;
           [<oFrm>:setwidth( <w> ) ;]                               ;
           [<oFrm>:setAction( <(action)> ) ;]                       ;
           [<oFrm>:setOnSubmit( <(onsubmit)> ) ;]                   ;
@@ -82,7 +82,7 @@
 
 #xCommand ACTIVATE <oFrm> ;
           =>;
-          <oFrm>:Put(.T.) ; <oFrm>:End()
+          <oFrm>:Put( .T. ) ; <oFrm>:End()
 
 
 // --> Controls
@@ -125,15 +125,15 @@
                   [ <obj>:= ] THtmlControl():SetControl(;
                   <(name)>, <rows>, <cols>, <size>, <maxchars>, ;
                   <(value)>, ;
-                  <(onfocus)>,<(onblur)>,<(onchange)>,<(onselect)>,;
-                  <(onclick)>,<(onmsover)>,<(onmsout)>,<(onmsdn)>,<(onmsup)>,;
-                  <(onkdown)>,<(onkup)>,<(onkprs)>,;
-                  <(pic)>,<(cap)>,;
-                  <.dis.>,<.ro.>,<.mult.>,<.chk.>,;
+                  <(onfocus)>, <(onblur)>, <(onchange)>, <(onselect)>, ;
+                  <(onclick)>, <(onmsover)>, <(onmsout)>, <(onmsdn)>, <(onmsup)>, ;
+                  <(onkdown)>, <(onkup)>, <(onkprs)>, ;
+                  <(pic)>, <(cap)>, ;
+                  <.dis.>, <.ro.>, <.mult.>, <.chk.>, ;
                   __ALIGN__ [<aln>], ;
                   __WRAP__ [<wrap>], ;
-                  __TYPE__ [<typ>],;
-                  <style>, <id> ,<.l.>) )
+                  __TYPE__ [<typ>], ;
+                  <style>, <id>, <.l.> ) )
 
 
 #xCommand DEFINE <typ:EDIT,TEXT,TEXTAREA,PASSWORD,BUTTON,IMAGE,CHECKBOX,CHECK,HIDDEN,RADIO,FILE,RESET,SUBMIT,SELECT,LISTBOX> <oCtr>;
@@ -164,7 +164,7 @@
           [CAPTION <cap>]                          ;
           [STYLE <style>]                          ;
           [ID <id>]                                ;
-          [<l:LABEL>]                         ;
+          [<l:LABEL>]                              ;
           IN <oForm>                               ;
           =>                                       ;
           <oCtr> := THtmlControl()                 ;;
@@ -174,29 +174,29 @@
           [<oCtr>:SetCols( <cols> ) ;]             ;
           [<oCtr>:SetAlign( __ALIGN__ <aln> );]    ;
           [<oCtr>:SetWrap( __WRAP__ <wrap> );]     ;
-          [<oCtr>:SetSource(<(source)>);]          ;
+          [<oCtr>:SetSource( <(source)> );]        ;
           [<oCtr>:SetMaxChars( <maxchars> );]      ;
           [<oCtr>:SetValue( <(value)> );]          ;
-          [<oCtr>:SetOnFocus(<(onfocus)>);]        ;
-          [<oCtr>:SetOnBlur(<(onblur)>);]          ;
-          [<oCtr>:SetOnChange(<(onchange)>);]      ;
-          [<oCtr>:SetOnSelect(<(onselect)>);]      ;
-          [<oCtr>:SetonClick(<(onclick)>);]        ;
-          [<oCtr>:SetonMsOver(<(onmsover)>);]      ;
-          [<oCtr>:SetonMsOut(<(onmsout)>);]        ;
-          [<oCtr>:SetonKDown(<(onkdown)>);]        ;
-          [<oCtr>:SetonKUp(<(onkup)>);]            ;
-          [<oCtr>:SetonKPress(<(onkprs)>);]        ;
-          [<oCtr>:SetPicture(<(pic)>);]            ;
-          [<oCtr>:SetCaption(<cap>);]              ;
-          [<oCtr>:SetStyle(<(style)>);]            ;
-          [<oCtr>:SetId(<(id)>);]                  ;
-          [<oCtr>:SetChecked( <.checked.>);]       ;
-          [<oCtr>:SetMultiple(<.mult.>);]          ;
-          [<oCtr>:SetDisabled(<.dis.>);]           ;
-          [<oCtr>:SetReadonly(<.ro.>);]            ;
-          [<oCtr>:SetLabel(<.l.>);]            ;
-          <oCtr>:Type := __TYPE__ <typ>           ;;
+          [<oCtr>:SetOnFocus( <(onfocus)> );]      ;
+          [<oCtr>:SetOnBlur( <(onblur)> );]        ;
+          [<oCtr>:SetOnChange( <(onchange)> );]    ;
+          [<oCtr>:SetOnSelect( <(onselect)> );]    ;
+          [<oCtr>:SetonClick( <(onclick)> );]      ;
+          [<oCtr>:SetonMsOver( <(onmsover)> );]    ;
+          [<oCtr>:SetonMsOut( <(onmsout)> );]      ;
+          [<oCtr>:SetonKDown( <(onkdown)> );]      ;
+          [<oCtr>:SetonKUp( <(onkup)> );]          ;
+          [<oCtr>:SetonKPress( <(onkprs)> );]      ;
+          [<oCtr>:SetPicture( <(pic)> );]          ;
+          [<oCtr>:SetCaption( <cap> );]            ;
+          [<oCtr>:SetStyle( <(style)> );]          ;
+          [<oCtr>:SetId( <(id)> );]                ;
+          [<oCtr>:SetChecked( <.checked.> );]      ;
+          [<oCtr>:SetMultiple( <.mult.> );]        ;
+          [<oCtr>:SetDisabled( <.dis.> );]         ;
+          [<oCtr>:SetReadonly( <.ro.> );]          ;
+          [<oCtr>:SetLabel( <.l.> );]              ;
+          <oCtr>:Type := __TYPE__ <typ>            ;;
           <oForm>:AddControl( <oCtr> )
 
 #xcommand DEFINE OPTION <text> [OF <oSelect>] ;
@@ -221,16 +221,16 @@
 #xCommand LINE BREAK                       ;
           IN <oForm>                       ;
           =>                               ;
-          <oForm>:AddControl( "<BR>"+CRLF() )
+          <oForm>:AddControl( "<BR>" + CRLF() )
 
 
 #xCommand LINE IN <oForm>                  ;
           =>                               ;
-          <oForm>:AddControl( CRLF()+'<HR WIDTH = 100%>'+CRLF() )
+          <oForm>:AddControl( CRLF() + "<HR WIDTH = 100%>" + CRLF() )
 
 #xCommand SPACE <n> IN <oForm>             ;
           =>                               ;
-          <oForm>:AddControl( replicate( "&nbsp;", <n> ) )
+          <oForm>:AddControl( Replicate( "&nbsp;", <n> ) )
 
 
 #xCommand TEXT <c> IN <oForm>              ;
@@ -243,33 +243,33 @@
 
 
 #xCommand START GROUP <c> IN <oForm> => ;
-          <oForm>:AddControl( CRLF()+"<FIELDSET><LEGEND>"+<c>+"</LEGEND>"+CRLF() )
+          <oForm>:AddControl( CRLF() + "<FIELDSET><LEGEND>" + <c> + "</LEGEND>" + CRLF() )
 
 #xCommand END GROUP IN <oForm> => ;
-          <oForm>:AddControl( CRLF()+"</FIELDSET>"+CRLF() )
+          <oForm>:AddControl( CRLF() + "</FIELDSET>" + CRLF() )
 
 
-#xtranslate __TYPE__                 => "TEXT"
-#xtranslate __TYPE__ <typ:EDIT>      => "TEXT"
-#xtranslate __TYPE__ <typ:TEXT>      => "TEXT"
-#xtranslate __TYPE__ <typ:TEXTAREA>  => "TEXTAREA"
-#xtranslate __TYPE__ <typ:PASSWORD>  => "PASSWORD"
-#xtranslate __TYPE__ <typ:IMAGE>     => "IMAGE"
-#xtranslate __TYPE__ <typ:BUTTON>    => "BUTTON"
-#xtranslate __TYPE__ <typ:CHECKBOX>  => "CHECKBOX"
-#xtranslate __TYPE__ <typ:CHECK>     => "CHECKBOX"
-#xtranslate __TYPE__ <typ:HIDDEN>    => "HIDDEN"
-#xtranslate __TYPE__ <typ:RADIO>     => "RADIO"
-#xtranslate __TYPE__ <typ:FILE>      => "FILE"
-#xtranslate __TYPE__ <typ:RESET>     => "RESET"
-#xtranslate __TYPE__ <typ:SUBMIT>    => "SUBMIT"
-#xtranslate __TYPE__ <typ:SELECT>    => "SELECT"
+#xtranslate __TYPE__                  => "TEXT"
+#xtranslate __TYPE__ <typ:EDIT>       => "TEXT"
+#xtranslate __TYPE__ <typ:TEXT>       => "TEXT"
+#xtranslate __TYPE__ <typ:TEXTAREA>   => "TEXTAREA"
+#xtranslate __TYPE__ <typ:PASSWORD>   => "PASSWORD"
+#xtranslate __TYPE__ <typ:IMAGE>      => "IMAGE"
+#xtranslate __TYPE__ <typ:BUTTON>     => "BUTTON"
+#xtranslate __TYPE__ <typ:CHECKBOX>   => "CHECKBOX"
+#xtranslate __TYPE__ <typ:CHECK>      => "CHECKBOX"
+#xtranslate __TYPE__ <typ:HIDDEN>     => "HIDDEN"
+#xtranslate __TYPE__ <typ:RADIO>      => "RADIO"
+#xtranslate __TYPE__ <typ:FILE>       => "FILE"
+#xtranslate __TYPE__ <typ:RESET>      => "RESET"
+#xtranslate __TYPE__ <typ:SUBMIT>     => "SUBMIT"
+#xtranslate __TYPE__ <typ:SELECT>     => "SELECT"
 
-#xtranslate __WRAP__                 => NIL
-#xtranslate __WRAP__ <wrap:OFF>      => "OFF"
-#xtranslate __WRAP__ <wrap:VIRTUAL>  => "VIRTUAL"
-#xtranslate __WRAP__ <wrap:PHYSICAL> => "PHYSICAL"
-#xtranslate __WRAP__ <wrap:NORMAL>   => "NORMAL"
+#xtranslate __WRAP__                  => NIL
+#xtranslate __WRAP__ <wrap:OFF>       => "OFF"
+#xtranslate __WRAP__ <wrap:VIRTUAL>   => "VIRTUAL"
+#xtranslate __WRAP__ <wrap:PHYSICAL>  => "PHYSICAL"
+#xtranslate __WRAP__ <wrap:NORMAL>    => "NORMAL"
 
 #xtranslate __ALIGN__                 =>  NIL
 #xtranslate __ALIGN__ <aln:LEFT>      => "LEFT"

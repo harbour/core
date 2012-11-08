@@ -73,37 +73,37 @@
    [<ema: EMAIL> ([<nEmaPrio> [,<cHelo>[,<cServer>[,<cDest>[,<cSubject>[,<cFrom>]]]]]])] ;
    [<dbg: DEBUG> ( [<nDebugPrio> [,<nMaxDebugPrio>]] )] ;
    [NAME <cName>]=>;
-   HB_InitStandardLog() ;;
-   if <.con.>;;
-      HB_StandardLogAdd( HB_LogConsole():New( <nConPrio> ));;
-   end ;;
-   if <.fil.> ;;
-      HB_StandardLogAdd( HB_LogFile():New( <nFilPrio>, <cFileName>, <nFileSize>, <nFileCount> ));;
-   end ;;
-   if <.mon.> ;;
-      HB_StandardLogAdd( HB_LogInetPort():New( <nMonPrio>, <nMonPort> ));;
-   end ;;
-   if <.sys.> ;;
-      HB_StandardLogAdd( HB_LogSyslog():New( <nSysPrio>, <nSysId> ));;
-   end ;;
-   if <.ema.> ;;
-      HB_StandardLogAdd( HB_LogEmail():New( <nEmaPrio> ,<cHelo>,<cServer>,<cDest>,<cSubject>,<cFrom>));;
-   end ;;
-   if <.dbg.> ;;
-      HB_StandardLogAdd( HB_LogDebug():New( <nDebugPrio>, <nMaxDebugPrio> ) ) ;;
-   end ;;
-   HB_StandardLogName( <cName> );;
-   HB_OpenStandardLog()
+   hb_InitStandardLog() ;;
+   IF <.con.>;;
+      hb_StandardLogAdd( hb_LogConsole():New( <nConPrio> ));;
+   END ;;
+   IF <.fil.> ;;
+      hb_StandardLogAdd( hb_LogFile():New( <nFilPrio>, <cFileName>, <nFileSize>, <nFileCount> ));;
+   END ;;
+   IF <.mon.> ;;
+      hb_StandardLogAdd( hb_LoginetPort():New( <nMonPrio>, <nMonPort> ));;
+   END ;;
+   IF <.sys.> ;;
+      hb_StandardLogAdd( hb_LogSysLog():New( <nSysPrio>, <nSysId> ));;
+   END ;;
+   IF <.ema.> ;;
+      hb_StandardLogAdd( hb_LogEmail():New( <nEmaPrio> ,<cHelo>,<cServer>,<cDest>,<cSubject>,<cFrom>));;
+   END ;;
+   IF <.dbg.> ;;
+      hb_StandardLogAdd( hb_LogDebug():New( <nDebugPrio>, <nMaxDebugPrio> ) ) ;;
+   END ;;
+   hb_StandardLogName( <cName> );;
+   hb_OpenStandardLog()
 
 
-#xcommand SET LOG STYLE <nStyle> => HB_SetStandardLogStyle( <nStyle> )
+#xcommand SET LOG STYLE <nStyle> => hb_SetStandardLogStyle( <nStyle> )
 
 #xcommand LOG <data,...> [PRIORITY <prio>] => ;
-      HB_StandardLog( HB_BldLogMsg( <data> ), <prio> )
+      hb_StandardLog( hb_BldLogMsg( <data> ), <prio> )
 #xcommand LOG <data,...> [PRIO <prio>] => ;
-      HB_StandardLog( HB_BldLogMsg( <data> ), <prio> )
+      hb_StandardLog( hb_BldLogMsg( <data> ), <prio> )
 
-#xcommand CLOSE LOG =>  HB_CloseStandardLog()
+#xcommand CLOSE LOG =>  hb_CloseStandardLog()
 
 #xtranslate PRIO[RITY] DEFAULT  => PRIO HB_LOG_DEFAULT
 #xtranslate PRIO[RITY] CRITICAL => PRIO HB_LOG_CRITICAL

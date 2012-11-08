@@ -46,7 +46,7 @@ PROCEDURE Main
    oNode         := oNode   + "b"
 
    /* Operator "+" creates a new <font> node with attribute */
-   oNode         := oNode   + "font color='blue'"
+   oNode         := oNode   + 'font color="blue"'
    oNode:text    := "sample "
 
    /* Operator "-" closes 2nd <font>, result is <b> node */

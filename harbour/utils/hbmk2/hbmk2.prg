@@ -2998,7 +2998,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          /* Silently ignore these. These options can be used to store options
             processed by other tools allowing them to keep additional information
-            in .hb? script files. */
+            in .hbp/.hbm script files. */
 
       CASE Left( cParamL, Len( "-workdir=" ) ) == "-workdir="
 

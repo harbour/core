@@ -9,6 +9,8 @@
 
 -o${hb_targetname}
 
+-hbx=
+
 -warn=low
 -pic
 

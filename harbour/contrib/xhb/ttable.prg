@@ -1441,7 +1441,7 @@ METHOD OnError( uParam ) CLASS HBTable
    LOCAL nPos
    LOCAL uRet, oErr
 
-   IF uParam != NIL .AND. Left( cMsg, 1 ) == '_'
+   IF uParam != NIL .AND. Left( cMsg, 1 ) == "_"
       cMsg := SubStr( cMsg, 2 )
    ENDIF
    nPos := ( ::Alias )->( FieldPos( cMsg ) )

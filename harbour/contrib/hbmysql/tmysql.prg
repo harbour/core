@@ -1473,10 +1473,10 @@ METHOD CreateTable( cTable, aStruct, cPrimaryKey, cUniqueKey, cAuto ) CLASS TMyS
 
    NEXT
    IF cPrimarykey != NIL
-      ::cCreateQuery += ' PRIMARY KEY (' + cPrimaryKey + '),'
+      ::cCreateQuery += " PRIMARY KEY (" + cPrimaryKey + "),"
    ENDIF
    IF cUniquekey != NIL
-      ::cCreateQuery += ' UNIQUE ' + cUniquekey + ' (' + cUniqueKey + '),'
+      ::cCreateQuery += " UNIQUE " + cUniquekey + " (" + cUniqueKey + "),"
    ENDIF
 
    // remove last comma from list
