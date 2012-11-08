@@ -113,30 +113,37 @@ HB_FUNC( HB_RAT )
          else
             nFrom = --nStart;
 
-         if( HB_ISNUM( 4 ) )
+         if( nTo >= nFrom )
          {
-            HB_ISIZ nEnd = hb_parns( 4 ) - 1;
-
-            if( nEnd > 0 && HB_CDP_ISCHARIDX( cdp ) )
-               nEnd = hb_cdpTextPos( cdp, pszText, nLen, nEnd );
-
-            if( nEnd < nTo )
-               nTo = nEnd;
-         }
-
-         if( nTo >= nFrom ) do
-         {
-            if( pszText[ nTo ] == *pszSub &&
-                memcmp( pszSub, pszText + nTo, nSubLen ) == 0 )
+            if( HB_ISNUM( 4 ) )
             {
-               if( HB_CDP_ISCHARIDX( cdp ) )
-                  nPos = hb_cdpTextLen( cdp, pszText, nTo ) + 1;
-               else
-                  nPos = nTo + 1;
-               break;
+               HB_ISIZ nEnd = hb_parns( 4 ) - 1;
+
+               if( nEnd > 0 && HB_CDP_ISCHARIDX( cdp ) )
+                  nEnd = hb_cdpTextPos( cdp, pszText, nLen, nEnd );
+               nEnd -= nSubLen - 1;
+
+               if( nEnd < nTo )
+                  nTo = nEnd;
+            }
+
+            if( nTo >= nFrom )
+            {
+               do
+               {
+                  if( pszText[ nTo ] == *pszSub &&
+                      memcmp( pszSub, pszText + nTo, nSubLen ) == 0 )
+                  {
+                     if( HB_CDP_ISCHARIDX( cdp ) )
+                        nPos = hb_cdpTextLen( cdp, pszText, nTo ) + 1;
+                     else
+                        nPos = nTo + 1;
+                     break;
+                  }
+               }
+               while( --nTo >= nFrom );
             }
          }
-         while( --nTo >= nFrom );
       }
    }
 
