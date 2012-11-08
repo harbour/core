@@ -95,7 +95,8 @@ HB_FUNC( HB_RAT )
 
    if( nSubLen )
    {
-      HB_ISIZ nTo = hb_parclen( 2 ) - nSubLen;
+      HB_SIZE nLen = hb_parclen( 2 );
+      HB_ISIZ nTo = nLen - nSubLen;
 
       if( nTo >= 0 )
       {
@@ -108,7 +109,7 @@ HB_FUNC( HB_RAT )
          if( nStart <= 1 )
             nFrom = 0;
          else if( HB_CDP_ISCHARIDX( cdp ) )
-            nFrom = hb_cdpTextPos( cdp, pszText, nTo, --nStart );
+            nFrom = hb_cdpTextPos( cdp, pszText, nLen, --nStart );
          else
             nFrom = --nStart;
 
@@ -117,7 +118,7 @@ HB_FUNC( HB_RAT )
             HB_ISIZ nEnd = hb_parns( 4 ) - 1;
 
             if( nEnd > 0 && HB_CDP_ISCHARIDX( cdp ) )
-               nEnd = hb_cdpTextPos( cdp, pszText, nTo, nEnd );
+               nEnd = hb_cdpTextPos( cdp, pszText, nLen, nEnd );
 
             if( nEnd < nTo )
                nTo = nEnd;

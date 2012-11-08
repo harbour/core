@@ -158,7 +158,7 @@ HB_FUNC( DRIVETYPE )
 HB_FUNC( NUMDISKL )
 {
 #if defined( HB_OS_DOS )
-#if defined( __DJGPP__ )
+#if defined( __DJGPP__ ) || defined( __WATCOMC__ )
    unsigned cur_drive, n_drives;
 
    _dos_getdrive( &cur_drive );
@@ -270,18 +270,20 @@ HB_FUNC( VOLUME )
 HB_FUNC( VOLSERIAL )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   void * hDrive = NULL;
-   DWORD dSerial = 0;
+   DWORD dwSerial = 0;
+   void * hDrive;
+   HB_SIZE nLen;
+   LPCTSTR lpRootPath = HB_PARSTR( 1, &hDrive, &nLen );
 
-   if( GetVolumeInformation( hb_parclen( 1 ) > 0 ? HB_PARSTR( 1, &hDrive, NULL ) : NULL, /* RootPathName */
+   if( GetVolumeInformation( nLen > 0 ? lpRootPath : NULL, /* RootPathName */
                              NULL,      /* VolumeName */
                              0,         /* VolumeNameSize */
-                             &dSerial,  /* VolumeSerialNumber */
+                             &dwSerial, /* VolumeSerialNumber */
                              NULL,      /* MaxComponentLength */
                              NULL,      /* FileSystemFlags */
                              NULL,      /* FileSystemName */
                              0 ) )      /* FileSystemSize */
-      hb_retnint( dSerial );
+      hb_retnint( dwSerial );
    else
       hb_retni( -1 );
 
@@ -299,7 +301,7 @@ HB_FUNC( TRUENAME )
       void * hFile;
       TCHAR buffer[ MAX_PATH + 1 ];
 
-      buffer[ 0 ] = TEXT( '\0' );
+      buffer[ 0 ] = buffer[ MAX_PATH ] = TEXT( '\0' );
 
       GetFullPathName( HB_PARSTR( 1, &hFile, NULL ),
                        HB_SIZEOFARRAY( buffer ) - 1,
