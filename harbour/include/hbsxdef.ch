@@ -82,7 +82,7 @@
 
 
 /*
- * Sx_File2BLOB() actions
+ * sx_File2Blob() actions
  */
 #define BLOB_FILECOMPRESS     1
 #define BLOB_FILEENCRYPT      2

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for DBEDIT() function
+ * Header file for dbEdit() function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -61,8 +61,8 @@
 #define DE_EXCEPT       4       /* Key exception                           */
 
 /* User function return codes */
-#define DE_ABORT        0       /* Abort DBEDIT()                          */
-#define DE_CONT         1       /* Continue DBEDIT()                       */
+#define DE_ABORT        0       /* Abort dbEdit()                          */
+#define DE_CONT         1       /* Continue dbEdit()                       */
 #define DE_REFRESH      2       /* Force reread/redisplay of all data rows */
 #ifdef HB_CLP_UNDOC
    #define DE_APPEND       3       /* Undocumented CA-Cl*pper append mode in DBEdit */

@@ -70,8 +70,8 @@ INIT PROCEDURE RT_InitStatics()
    snLongN   := -100000
    snDoubleN := -10.567 /* Use different number of decimals than the default */
    snDoubleI := 0   // Log( 0 )
-   sdDate    := HB_SToD( "19840325" )
-   sdDateE   := HB_SToD( "" )
+   sdDate    := hb_SToD( "19840325" )
+   sdDateE   := hb_SToD( "" )
    slFalse   := .F.
    slTrue    := .T.
    soObject  := ErrorNew()
@@ -80,26 +80,26 @@ INIT PROCEDURE RT_InitStatics()
    sbBlockC  := {|| "(string)" }
    saArray   := { 9898 }
 
-   saAllTypes := {;
-      scString  ,;
-      scStringE ,;
-      scStringZ ,;
-      snIntZ    ,;
-      snDoubleZ ,;
-      snIntP    ,;
-      snLongP   ,;
-      snDoubleP ,;
-      snIntN    ,;
-      snLongN   ,;
-      snDoubleN ,;
-      snDoubleI ,;
-      sdDateE   ,;
-      slFalse   ,;
-      slTrue    ,;
-      soObject  ,;
-      suNIL     ,;
-      sbBlock   ,;
-      sbBlockC  ,;
-      saArray   }
+   saAllTypes := { ;
+      scString, ;
+      scStringE, ;
+      scStringZ, ;
+      snIntZ, ;
+      snDoubleZ, ;
+      snIntP, ;
+      snLongP, ;
+      snDoubleP, ;
+      snIntN, ;
+      snLongN, ;
+      snDoubleN, ;
+      snDoubleI, ;
+      sdDateE, ;
+      slFalse, ;
+      slTrue, ;
+      soObject, ;
+      suNIL, ;
+      sbBlock, ;
+      sbBlockC, ;
+      saArray }
 
    RETURN

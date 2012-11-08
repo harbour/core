@@ -129,7 +129,7 @@
 /* File system error codes */
 #define F_ERROR            ( -1 )      /* Unspecified error */
 
-/* HB_DISKSPACE() types */
+/* hb_DiskSpace() types */
 #define HB_DISK_AVAIL      0
 #define HB_DISK_FREE       1
 #define HB_DISK_USED       2

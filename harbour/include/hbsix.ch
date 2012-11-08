@@ -58,19 +58,19 @@
 /*
  * obsolete SIx Driver functions
  */
-#xtranslate Sx_IndexFilter( [<nOrder>] )           => OrdFor( [<nOrder>] )
-#xtranslate Sx_TagName([<nOrder>])                 => iif( Used(), OrdName( [<nOrder>] ), "" )
-#xtranslate Sx_SetTagOrder( [<xOrder>] [,<cBag>] ) => Sx_SetTag( [<xOrder>] [,<cBag>] )
-#xtranslate Sx_SetTagOrd( [<xOrder>] [,<cBag>] )   => Sx_SetTag( [<xOrder>] [,<cBag>] )
-#xtranslate Sx_SetTagNo( [<xOrder>] )              => Sx_SetTag( [<xOrder>], iif( ordNumber()>0, ordBagName(), ordBagName(1) ) )
-#xtranslate Sx_SetTagNo( <xOrder>, <cBag> )        => Sx_SetTag( <xOrder>, <cBag> )
-#xtranslate _sxCondSet( [<params,...>] )           => OrdCondSet( [<params>] )
-#xtranslate SetRDD( [<cRDDname>] )                 => RDDSetDefault( [<cRDDname>] )
+#xtranslate Sx_IndexFilter( [<nOrder>] )           => ordFor( [<nOrder>] )
+#xtranslate Sx_TagName([<nOrder>])                 => iif( Used(), ordName( [<nOrder>] ), "" )
+#xtranslate Sx_SetTagOrder( [<xOrder>] [,<cBag>] ) => sx_SetTag( [<xOrder>] [,<cBag>] )
+#xtranslate Sx_SetTagOrd( [<xOrder>] [,<cBag>] )   => sx_SetTag( [<xOrder>] [,<cBag>] )
+#xtranslate Sx_SetTagNo( [<xOrder>] )              => sx_SetTag( [<xOrder>], iif( ordNumber()>0, ordBagName(), ordBagName(1) ) )
+#xtranslate Sx_SetTagNo( <xOrder>, <cBag> )        => sx_SetTag( <xOrder>, <cBag> )
+#xtranslate _sxCondSet( [<params,...>] )           => ordCondSet( [<params>] )
+#xtranslate SetRDD( [<cRDDname>] )                 => rddSetDefault( [<cRDDname>] )
 /* SIx 2.0 Compatibity */
-#command SET DIRTYREAD ON                       => Sx_SetTurbo( .T. )
-#command SET DIRTYREAD OFF                      => Sx_SetTurbo( .F. )
-#xtranslate Sx_SetDirty( [<param>] )            => Sx_SetTurbo( [<param>] )
-#xtranslate Sx_DirtyArea( [<param>] )           => Sx_TurboArea( [<param>] )
+#command SET DIRTYREAD ON                       => sx_SetTurbo( .T. )
+#command SET DIRTYREAD OFF                      => sx_SetTurbo( .F. )
+#xtranslate Sx_SetDirty( [<param>] )            => sx_SetTurbo( [<param>] )
+#xtranslate Sx_DirtyArea( [<param>] )           => sx_TurboArea( [<param>] )
 
 
 /*
@@ -80,8 +80,8 @@
             [<ex: EXCLUSIVE>] [<sh: SHARED>] [<ro: READONLY>] ;
             [CODEPAGE <cp>] [INDEX <(index1)> [, <(indexN)>]] ;
             [TRIGGER <trig>] [PASSWORD <pass>] => ;
-         [Sx_SetTrigger( TRIGGER_PENDING, <trig>, <rdd> ); ] <-trig-> ;
-         [Sx_SetPass( <pass>, 1, <rdd> ); ] <-pass-> ;
+         [sx_SetTrigger( TRIGGER_PENDING, <trig>, <rdd> ); ] <-trig-> ;
+         [sx_SetPass( <pass>, 1, <rdd> ); ] <-pass-> ;
          dbUseArea( <.nw.>, <rdd>, <(db)>, <(a)>, ;
                     iif(<.sh.> .or. <.ex.>, ! <.ex.>, NIL), <.ro.> [, <cp>] ) ;
          [; dbSetIndex( <(index1)> )] ;
@@ -95,7 +95,7 @@
               [FOR <for>] [WHILE <while>] [NEXT <next>] ;
               [RECORD <rec>] [<rest:REST>] [<all:ALL>] ;
               [<cur: USECURRENT>] [NOOPTIMIZE] => ;
-         Sx_SortOption(<.cur.>); ;
+         sx_SortOption(<.cur.>); ;
          __dbSort( <(f)>, { <(fields)> }, ;
                    <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
@@ -103,13 +103,13 @@
 /*
  * Seek using wildcards
  */
-#xcommand WILDSEEK <str>      => Sx_WildSeek( <str> )
-#xcommand WILDSEEKNEXT <str>  => Sx_WildSeek( <str>, .T. )
+#xcommand WILDSEEK <str>      => sx_WildSeek( <str> )
+#xcommand WILDSEEKNEXT <str>  => sx_WildSeek( <str>, .T. )
 
 /*
  * order management commands
  */
-#command CLEAR ORDER <order>                    => Sx_ClearOrder( <order> )
+#command CLEAR ORDER <order>                    => sx_ClearOrder( <order> )
 #command SET TAGORDER TO <order>                => ordSetFocus( <order> )
 #command SET TAGORDER TO                        => ordSetFocus( 0 )
 #command SET ORDER TO TAG <(tag)> [OF <(bag)>]  => ;
@@ -122,34 +122,34 @@
          REINDEX EVAL <eval> [EVERY <step>]
 #command DELETE TAG <(tag1)> [OF <(bag1)>] [, <(tagN)> [OF <(bagN)>]] => ;
          ordDestroy( <(tag1)>, <(bag1)> )[ ; ordDestroy( <(tagN)>, <(bagN)> ) ]
-#command DELETE TAG ALL [OF <(bag)>]            => Sx_KillTag( .t., <(bag)> )
+#command DELETE TAG ALL [OF <(bag)>]            => sx_KillTag( .T., <(bag)> )
 
 
 /*
  * order scope commands
  */
-#command CLEAR SCOPE                            => Sx_ClrScope()
-#xcommand SET SCOPETOP TO <value>               => Sx_SetScope( 0, <value> )
-#xcommand SET SCOPETOP TO                       => Sx_ClrScope( 0 )
-#xcommand SET SCOPEBOTTOM TO <value>            => Sx_SetScope( 1, <value> )
-#xcommand SET SCOPEBOTTOM TO                    => Sx_ClrScope( 1 )
-#command SET SCOPE TO                           => Sx_ClrScope()
-#command SET SCOPE TO <value>                   => Sx_SetScope( 0, <value> ) ;
-                                                 ; Sx_SetScope( 1, <value> )
+#command CLEAR SCOPE                            => sx_ClrScope()
+#xcommand SET SCOPETOP TO <value>               => sx_SetScope( 0, <value> )
+#xcommand SET SCOPETOP TO                       => sx_ClrScope( 0 )
+#xcommand SET SCOPEBOTTOM TO <value>            => sx_SetScope( 1, <value> )
+#xcommand SET SCOPEBOTTOM TO                    => sx_ClrScope( 1 )
+#command SET SCOPE TO                           => sx_ClrScope()
+#command SET SCOPE TO <value>                   => sx_SetScope( 0, <value> ) ;
+                                                 ; sx_SetScope( 1, <value> )
 
 /*
  * TURBO(DIRTY) READ commands
  */
-#command SET TURBOREAD ON                       => Sx_SetTurbo( .t. )
-#command SET TURBOREAD OFF                      => Sx_SetTurbo( .f. )
+#command SET TURBOREAD ON                       => sx_SetTurbo( .T. )
+#command SET TURBOREAD OFF                      => sx_SetTurbo( .F. )
 
 
 /*
  * MEMO commands
  */
 #command MEMOPACK [BLOCK <size>] [OPTION <opt> [STEP <step>]] => ;
-            Sx_MemoPack( <size>, <{opt}>, <step> )
-#command SET MEMOBLOCK TO <value>               => Sx_SetMemoBlock( <value> )
+            sx_MemoPack( <size>, <{opt}>, <step> )
+#command SET MEMOBLOCK TO <value>               => sx_SetMemoBlock( <value> )
 
 /*
  * indexing
@@ -203,7 +203,7 @@
                [<noopt: NOOPTIMIZE>] [<mem: MEMORY, TEMPORARY>] ;
                [<filter: USEFILTER>] [<ex: EXCLUSIVE>] => ;
          ordCondSet( <"for">, <{for}>, [<.all.>], <{while}>, ;
-                     <{eval}>, <every>, RECNO(), <next>, <rec>, ;
+                     <{eval}>, <every>, RecNo(), <next>, <rec>, ;
                      [<.rest.>], [<.descend.>],, ;
                      [<.add.>], [<.cur.>], [<.cust.>], [<.noopt.>], ;
                      <"while">, [<.mem.>], [<.filter.>], [<.ex.>] ) ;;
@@ -222,7 +222,7 @@
                [<noopt: NOOPTIMIZE>] [<mem: MEMORY, TEMPORARY>] ;
                [<filter: USEFILTER>] [<ex: EXCLUSIVE>] => ;
          ordCondSet( <"for">, <{for}>, [<.all.>], <{while}>, ;
-                     <{eval}>, <every>, RECNO(), <next>, <rec>, ;
+                     <{eval}>, <every>, RecNo(), <next>, <rec>, ;
                      [<.rest.>], [<.descend.>],, ;
                      [<.add.>], [<.cur.>], [<.cust.>], [<.noopt.>], ;
                      <"while">, [<.mem.>], [<.filter.>], [<.ex.>] ) ;;

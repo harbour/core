@@ -68,13 +68,13 @@
    REQUEST XPP_OP_OVERLOAD
 #endif
 
-#xtranslate IsPrinter([<x>])   => hb_IsPrinter(<x>)
-#xtranslate DispOutAt(<x,...>) => hb_DispOutAt(<x>)
-#xtranslate AAdd(<a>,<v>,<p>)  => hb_AIns(<a>,<v>,<p>,.T.)
+#xtranslate IsPrinter( [<x>] )     => hb_IsPrinter( <x> )
+#xtranslate DispOutAt( <x,...> )   => hb_DispOutAt( <x> )
+#xtranslate AAdd( <a>, <v>, <p> )  => hb_AIns( <a>, <v>, <p>, .T. )
 
-#xtranslate TBColumn()         => xpp_TBColumn()
-#xtranslate TBrowse()          => xpp_TBrowse()
-#xtranslate Get()              => xpp_Get()
+#xtranslate TBColumn()             => xpp_TBColumn()
+#xtranslate TBrowse()              => xpp_TBrowse()
+#xtranslate Get()                  => xpp_Get()
 
 /* NOTE: Several other Xbase++ functions are currently implemented using
          original Xbase++ names. */
@@ -92,11 +92,11 @@
 
 /* TEXT INTO <varname> [WRAP [<cEOL>]] [TRIMMED]  */
 #xcommand TEXT INTO <v> [<wrp:WRAP>] [<trm:TRIMMED>] => ;
-            #pragma __text|<v>+=iif(<.trm.>,ltrim(%s),%s)+;
-                                iif(<.wrp.>,hb_eol(),"");<v>:=""
+            #pragma __text | <v> += iif( <.trm.>, LTrim( %s ), %s ) +;
+                                    iif( <.wrp.>, hb_eol(), "" ); <v> := ""
 #xcommand TEXT INTO <v> WRAP [<EOL>] [<trm:TRIMMED>] => ;
-            #pragma __text|<v>+=iif(<.trm.>,ltrim(%s),%s)+;
-                                iif(<.EOL.>,<EOL>,hb_eol());<v>:=""
+            #pragma __text | <v> += iif( <.trm.>, LTrim( %s ), %s ) +;
+                                    iif( <.EOL.>, <EOL>, hb_eol() ); <v> := ""
 
 #endif
 #endif

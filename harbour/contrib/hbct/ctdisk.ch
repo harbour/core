@@ -60,17 +60,17 @@
 #define FA_HIDDEN           2       /* H */
 #define FA_SYSTEM           4       /* S */
 #define FA_VOLUME           8       /* V */
-#define FA_DIRECTORY       16       /* D */
-#define FA_ARCHIVE         32       /* A */
+#define FA_DIRECTORY        16      /* D */
+#define FA_ARCHIVE          32      /* A */
 
-#define FA_DEVICE          64       /* I */
-#define FA_TEMPORARY      256       /* T */
-#define FA_SPARSE         512       /* P */
-#define FA_REPARSE       1024       /* L */
-#define FA_COMPRESSED    2048       /* C */
-#define FA_OFFLINE       4096       /* O */
-#define FA_NOTINDEXED    8192       /* X */
-#define FA_ENCRYPTED    16384       /* E */
-#define FA_VOLCOMP      32768       /* M */
+#define FA_DEVICE           64      /* I */
+#define FA_TEMPORARY        256     /* T */
+#define FA_SPARSE           512     /* P */
+#define FA_REPARSE          1024    /* L */
+#define FA_COMPRESSED       2048    /* C */
+#define FA_OFFLINE          4096    /* O */
+#define FA_NOTINDEXED       8192    /* X */
+#define FA_ENCRYPTED        16384   /* E */
+#define FA_VOLCOMP          32768   /* M */
 
 #endif /* _CTDISK_CH */

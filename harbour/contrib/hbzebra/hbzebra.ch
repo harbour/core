@@ -56,36 +56,36 @@
 #define HB_ZEBRA_CH_
 
 /* Barcode types */
-#define HB_ZEBRA_TYPE_EAN13               1
-#define HB_ZEBRA_TYPE_EAN8                2
-#define HB_ZEBRA_TYPE_UPCA                3
-#define HB_ZEBRA_TYPE_UPCE                4
-#define HB_ZEBRA_TYPE_CODE128             5
-#define HB_ZEBRA_TYPE_CODE93              6
-#define HB_ZEBRA_TYPE_CODE39              7
-#define HB_ZEBRA_TYPE_CODE11              8
-#define HB_ZEBRA_TYPE_CODABAR             9
-#define HB_ZEBRA_TYPE_ITF                10
-#define HB_ZEBRA_TYPE_MSI                11
+#define HB_ZEBRA_TYPE_EAN13                 1
+#define HB_ZEBRA_TYPE_EAN8                  2
+#define HB_ZEBRA_TYPE_UPCA                  3
+#define HB_ZEBRA_TYPE_UPCE                  4
+#define HB_ZEBRA_TYPE_CODE128               5
+#define HB_ZEBRA_TYPE_CODE93                6
+#define HB_ZEBRA_TYPE_CODE39                7
+#define HB_ZEBRA_TYPE_CODE11                8
+#define HB_ZEBRA_TYPE_CODABAR               9
+#define HB_ZEBRA_TYPE_ITF                   10
+#define HB_ZEBRA_TYPE_MSI                   11
 
-#define HB_ZEBRA_TYPE_PDF417            257
-#define HB_ZEBRA_TYPE_DATAMATRIX        258
-#define HB_ZEBRA_TYPE_QRCODE            259
+#define HB_ZEBRA_TYPE_PDF417                257
+#define HB_ZEBRA_TYPE_DATAMATRIX            258
+#define HB_ZEBRA_TYPE_QRCODE                259
 
 /* Generate errors */
-#define HB_ZEBRA_ERROR_INVALIDCODE        1
-#define HB_ZEBRA_ERROR_BADCHECKSUM        2
-#define HB_ZEBRA_ERROR_TOOLARGE           3
-#define HB_ZEBRA_ERROR_ARGUMENT           4
+#define HB_ZEBRA_ERROR_INVALIDCODE          1
+#define HB_ZEBRA_ERROR_BADCHECKSUM          2
+#define HB_ZEBRA_ERROR_TOOLARGE             3
+#define HB_ZEBRA_ERROR_ARGUMENT             4
 
 /* Draw errors */
-#define HB_ZEBRA_ERROR_INVALIDZEBRA     101
+#define HB_ZEBRA_ERROR_INVALIDZEBRA         101
 
 /* Generate flags */
-#define HB_ZEBRA_FLAG_CHECKSUM            1
-#define HB_ZEBRA_FLAG_WIDE2            0x00  /* Dummy flag - default */
-#define HB_ZEBRA_FLAG_WIDE2_5          0x40
-#define HB_ZEBRA_FLAG_WIDE3            0x80
+#define HB_ZEBRA_FLAG_CHECKSUM              1
+#define HB_ZEBRA_FLAG_WIDE2                 0x00  /* Dummy flag - default */
+#define HB_ZEBRA_FLAG_WIDE2_5               0x40
+#define HB_ZEBRA_FLAG_WIDE3                 0x80
 
 /* Draw flags */
 

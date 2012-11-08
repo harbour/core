@@ -23,7 +23,7 @@
  *
  */
 
-#define log10( num )          ( Log( num ) / Log( 10 ) )
+#define _LOG10( num )         ( Log( num ) / Log( 10 ) )
 #define DEFAULT_PRECISION     6
 
 FUNCTION ft_D2E( nDec, nPrecision )
@@ -35,9 +35,9 @@ FUNCTION ft_D2E( nDec, nPrecision )
    IF nDec == 0
       nExp := 0
    ELSEIF Abs( nDec ) < 1
-      nExp := Int( Log10( nDec ) ) - 1
+      nExp := Int( _LOG10( nDec ) ) - 1
    ELSE
-      nExp := Int( Log10( Abs( nDec ) + 0.00001 ) )   /* 0.00001 == kludge */
+      nExp := Int( _LOG10( Abs( nDec ) + 0.00001 ) )   /* 0.00001 == kludge */
    ENDIF           /* for imprecise logs */
 
    nDec /= 10 ^ nExp

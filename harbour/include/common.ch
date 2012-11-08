@@ -65,14 +65,14 @@
 
 /* Type checking macros */
 #translate ISNIL( <xValue> )       => ( <xValue> == NIL )
-#translate ISARRAY( <xValue> )     => hb_isArray( <xValue> )
-#translate ISBLOCK( <xValue> )     => hb_isBlock( <xValue> )
-#translate ISCHARACTER( <xValue> ) => hb_isString( <xValue> )
-#translate ISDATE( <xValue> )      => hb_isDate( <xValue> )
-#translate ISLOGICAL( <xValue> )   => hb_isLogical( <xValue> )
-#translate ISMEMO( <xValue> )      => hb_isMemo( <xValue> )
-#translate ISNUMBER( <xValue> )    => hb_isNumeric( <xValue> )
-#translate ISOBJECT( <xValue> )    => hb_isObject( <xValue> )
+#translate ISARRAY( <xValue> )     => HB_ISARRAY( <xValue> )
+#translate ISBLOCK( <xValue> )     => HB_ISBLOCK( <xValue> )
+#translate ISCHARACTER( <xValue> ) => HB_ISSTRING( <xValue> )
+#translate ISDATE( <xValue> )      => HB_ISDATE( <xValue> )
+#translate ISLOGICAL( <xValue> )   => HB_ISLOGICAL( <xValue> )
+#translate ISMEMO( <xValue> )      => HB_ISMEMO( <xValue> )
+#translate ISNUMBER( <xValue> )    => HB_ISNUMERIC( <xValue> )
+#translate ISOBJECT( <xValue> )    => HB_ISOBJECT( <xValue> )
 
 /* DEFAULT and UPDATE commands */
 #xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ] => ;

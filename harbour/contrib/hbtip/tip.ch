@@ -53,9 +53,6 @@
 #ifndef TIP_CH
 #define TIP_CH
 
-/* QUESTION: These values serve no purpose in code.
-             Shouldn't we delete them with this file? [vszakats] */
-
 #define TIP_RO    0   /* Tip read only protocol */
 #define TIP_WO    1   /* Tip write only protocol */
 #define TIP_RW    2   /* Tip read/write protocol */

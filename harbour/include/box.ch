@@ -53,7 +53,7 @@
 #ifndef _BOX_CH
 #define _BOX_CH
 
-/* #defines for DISPBOX() */
+/* #defines for DispBox() */
 
 /* Single-line */
 #define B_SINGLE        ( Chr( 218 ) + Chr( 196 ) + Chr( 191 ) + Chr( 179 ) + ; /* "┌─┐│┘─└│" */

@@ -53,18 +53,18 @@
 #ifndef HBMXML_CH_
 #define HBMXML_CH_
 
-#define MXML_TAB                8 /* Tabs every N columns */
+#define MXML_TAB                8   /* Tabs every N columns */
 
-#define MXML_NO_CALLBACK        0 /* Don't use a type callback */
-#define MXML_INTEGER_CALLBACK   1 /* Treat all data as integers */
-#define MXML_OPAQUE_CALLBACK    2 /* Treat all data as opaque */
-#define MXML_REAL_CALLBACK      3 /* Treat all data as real numbers */
-#define MXML_TEXT_CALLBACK      4 /* Treat all data as text */
-#define MXML_IGNORE_CALLBACK    5 /* Ignore all non-element content */
+#define MXML_NO_CALLBACK        0   /* Don't use a type callback */
+#define MXML_INTEGER_CALLBACK   1   /* Treat all data as integers */
+#define MXML_OPAQUE_CALLBACK    2   /* Treat all data as opaque */
+#define MXML_REAL_CALLBACK      3   /* Treat all data as real numbers */
+#define MXML_TEXT_CALLBACK      4   /* Treat all data as text */
+#define MXML_IGNORE_CALLBACK    5   /* Ignore all non-element content */
 
 #define MXML_NO_PARENT          0
 
-#define MXML_IGNORE            -1 
+#define MXML_IGNORE             -1
 
 #define MXML_ELEMENT            0
 #define MXML_INTEGER            1
@@ -73,14 +73,14 @@
 #define MXML_TEXT               4
 #define MXML_CUSTOM             5
 
-#define MXML_DESCEND            1 /* Descend when finding/walking */
-#define MXML_NO_DESCEND         0 /* Don't descend when finding/walking */
-#define MXML_DESCEND_FIRST     -1 /* Descend for first find */
+#define MXML_DESCEND            1   /* Descend when finding/walking */
+#define MXML_NO_DESCEND         0   /* Don't descend when finding/walking */
+#define MXML_DESCEND_FIRST      -1  /* Descend for first find */
 
-#define MXML_WS_BEFORE_OPEN     0 /* Callback for before open tag */
-#define MXML_WS_AFTER_OPEN      1 /* Callback for after open tag */
-#define MXML_WS_BEFORE_CLOSE    2 /* Callback for before close tag */
-#define MXML_WS_AFTER_CLOSE     3 /* Callback for after close tag */
+#define MXML_WS_BEFORE_OPEN     0   /* Callback for before open tag */
+#define MXML_WS_AFTER_OPEN      1   /* Callback for after open tag */
+#define MXML_WS_BEFORE_CLOSE    2   /* Callback for before close tag */
+#define MXML_WS_AFTER_CLOSE     3   /* Callback for after close tag */
 
 #define MXML_ADD_BEFORE         0   /* Add node before specified node */
 #define MXML_ADD_AFTER          1   /* Add node after specified node */

@@ -28,7 +28,7 @@
 #define EARLIEST_DATE                hb_SToD( "01000101" )
 #define BLANK_DATE                   hb_SToD()
 
-#define XTOC( x )           CASE_AT( ValType( x ), "CNDLM", ;
+#define _XTOC( x )           CASE_AT( ValType( x ), "CNDLM", ;
       { NULL, ;
       x, ;
       iif( HB_ISNUMERIC( x ), ;
@@ -49,7 +49,7 @@ FUNCTION ft_XToY( xValueToConvert, cTypeToConvertTo, lWantYesNo )
    CASE cTypeToConvertTo == "C" .AND. ; // They Want a Character String
       ! HB_ISSTRING( xValueToConvert )
 
-      xValueToConvert := XToC( xValueToConvert )
+      xValueToConvert := _XTOC( xValueToConvert )
 
    CASE cTypeToConvertTo == "D" .AND. ; // They Want a Date
       ! HB_ISDATE( xValueToConvert )

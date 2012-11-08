@@ -273,7 +273,7 @@ DECLARE HBClass ;
             __clsUnlockDef( @s_oClass, oClass ) ;;
          end sequence ;;
          oInstance := oClass:Instance() ;;
-         if __ObjHasMsg( oInstance, "InitClass" ) ;;
+         if __objHasMsg( oInstance, "InitClass" ) ;;
             oInstance:InitClass( HB_CLS_PARAM_LIST ) ;;
          end ;;
          return oInstance ;;

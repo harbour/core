@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for MEMORY() function
+ * Header file for Memory() function
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for DIRECTORY() function
+ * Header file for Directory() function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -55,14 +55,14 @@
 #ifndef _DIRECTRY_CH
 #define _DIRECTRY_CH
 
-/* Positions for DIRECTORY() array */
+/* Positions for Directory() array */
 #define F_NAME          1       /* File name */
 #define F_SIZE          2       /* File size */
 #define F_DATE          3       /* File date (write) */
 #define F_TIME          4       /* File time (write) */
 #define F_ATTR          5       /* File attribute */
 
-/* Length of DIRECTORY() array */
+/* Length of Directory() array */
 #define F_LEN           5
 
 #endif /* _DIRECTRY_CH */

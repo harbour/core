@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for TBROWSE() function
+ * Header file for TBrowse() function
  *
  * Copyright 2002 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for MEMOEDIT() function
+ * Header file for MemoEdit() function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -76,7 +76,7 @@
 #define ME_PASTE        110     /* Paste string into buffer        */ /* Xbase++ extension */
 #endif
 
-/* NOTE: Return codes 1-31 cause MEMOEDIT() to perform the */
+/* NOTE: Return codes 1-31 cause MemoEdit() to perform the */
 /*       edit action corresponding to the key whose value is returned. */
 
 #endif /* _MEMOEDIT_CH */

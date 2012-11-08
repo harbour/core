@@ -111,7 +111,7 @@
 /* Internal errors */
 #define HB_EI_ERRUNRECOV        9000 /* "Unrecoverable error %lu: " */
 #define HB_EI_ERRRECFAILURE     9001 /* "Error recovery failure" */
-#define HB_EI_ERRNOBLOCK        9002 /* "No ERRORBLOCK() for error" */
+#define HB_EI_ERRNOBLOCK        9002 /* "No ErrorBlock() for error" */
 #define HB_EI_ERRTOOMANY        9003 /* "Too many recursive error handler calls" */
 #define HB_EI_RDDINVALID        9004 /* "RDD invalid or failed to load" */
 #define HB_EI_CLSINVMETHOD      9005 /* "Invalid method type from %s" */

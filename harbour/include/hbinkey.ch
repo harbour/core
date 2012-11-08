@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for INKEY() function
+ * Header file for Inkey() function
  *
  * Copyright 2001 David G. Holm
  * www - http://harbour-project.org

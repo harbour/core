@@ -53,14 +53,14 @@
 #ifndef _HBGTWVG_CH
 #define _HBGTWVG_CH
 
-/*                 Extended GT Manipulation Constants                   */
+/* Extended GT Manipulation Constants */
 
 #ifndef HB_GTE_ACTIVATE
-   #define HB_GTE_ACTIVATE                1
-   #define HB_GTE_SETFOCUS                2
-   #define HB_GTE_KILLFOCUS               3
-   #define HB_GTE_CLOSE                   4
-   #define HB_GTE_RESIZED                 5
+#define HB_GTE_ACTIVATE                   1
+#define HB_GTE_SETFOCUS                   2
+#define HB_GTE_KILLFOCUS                  3
+#define HB_GTE_CLOSE                      4
+#define HB_GTE_RESIZED                    5
 #endif
 #define HB_GTE_MOUSE                      6
 #define HB_GTE_KEYBOARD                   7

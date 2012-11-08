@@ -108,7 +108,7 @@
 /** I/O image format identifiers.
 */
 //FREE_IMAGE_FORMAT
-#define FIF_UNKNOWN -1
+#define FIF_UNKNOWN  -1
 #define FIF_BMP      0
 #define FIF_ICO      1
 #define FIF_JPEG     2
@@ -120,41 +120,41 @@
 #define FIF_PBM      7
 #define FIF_PBMRAW   8
 #define FIF_PCD      9
-#define FIF_PCX     10
-#define FIF_PGM     11
-#define FIF_PGMRAW  12
-#define FIF_PNG     13
-#define FIF_PPM     14
-#define FIF_PPMRAW  15
-#define FIF_RAS     16
-#define FIF_TARGA   17
-#define FIF_TIFF    18
-#define FIF_WBMP    19
-#define FIF_PSD     20
-#define FIF_CUT     21
-#define FIF_XBM     22
-#define FIF_XPM     23
-#define FIF_DDS     24
-#define FIF_GIF     25
-#define FIF_HDR     26
+#define FIF_PCX      10
+#define FIF_PGM      11
+#define FIF_PGMRAW   12
+#define FIF_PNG      13
+#define FIF_PPM      14
+#define FIF_PPMRAW   15
+#define FIF_RAS      16
+#define FIF_TARGA    17
+#define FIF_TIFF     18
+#define FIF_WBMP     19
+#define FIF_PSD      20
+#define FIF_CUT      21
+#define FIF_XBM      22
+#define FIF_XPM      23
+#define FIF_DDS      24
+#define FIF_GIF      25
+#define FIF_HDR      26
 
 
 /** Image type used in FreeImage.
 */
 //FREE_IMAGE_TYPE
-#define FIT_UNKNOWN  0  // unknown type
-#define FIT_BITMAP   1  // standard image     : 1-, 4-, 8-, 16-, 24-, 32-bit
-#define FIT_UINT16   2  // array of unsigned short  : unsigned 16-bit
-#define FIT_INT16    3  // array of short     : signed 16-bit
-#define FIT_UINT32   4  // array of unsigned long : unsigned 32-bit
-#define FIT_INT32    5  // array of long      : signed 32-bit
-#define FIT_FLOAT    6  // array of float     : 32-bit IEEE floating point
-#define FIT_DOUBLE   7  // array of double      : 64-bit IEEE floating point
-#define FIT_COMPLEX  8  // array of FICOMPLEX   : 2 x 64-bit IEEE floating point
-#define FIT_RGB16    9  // 48-bit RGB image     : 3 x 16-bit
-#define FIT_RGBA16  10  // 64-bit RGBA image    : 4 x 16-bit
-#define FIT_RGBF    11  // 96-bit RGB float image : 3 x 32-bit IEEE floating point
-#define FIT_RGBAF   12  // 128-bit RGBA float image : 4 x 32-bit IEEE floating point
+#define FIT_UNKNOWN  0   // unknown type
+#define FIT_BITMAP   1   // standard image     : 1-, 4-, 8-, 16-, 24-, 32-bit
+#define FIT_UINT16   2   // array of unsigned short  : unsigned 16-bit
+#define FIT_INT16    3   // array of short     : signed 16-bit
+#define FIT_UINT32   4   // array of unsigned long : unsigned 32-bit
+#define FIT_INT32    5   // array of long      : signed 32-bit
+#define FIT_FLOAT    6   // array of float     : 32-bit IEEE floating point
+#define FIT_DOUBLE   7   // array of double      : 64-bit IEEE floating point
+#define FIT_COMPLEX  8   // array of FICOMPLEX   : 2 x 64-bit IEEE floating point
+#define FIT_RGB16    9   // 48-bit RGB image     : 3 x 16-bit
+#define FIT_RGBA16   10  // 64-bit RGBA image    : 4 x 16-bit
+#define FIT_RGBF     11  // 96-bit RGB float image : 3 x 32-bit IEEE floating point
+#define FIT_RGBAF    12  // 128-bit RGBA float image : 4 x 32-bit IEEE floating point
 
 
 /** Image color type used in FreeImage.
@@ -255,29 +255,29 @@ Constants used in color manipulation routines.
 #define FIDT_UNDEFINED  7   // 8-bit untyped data
 #define FIDT_SSHORT     8   // 16-bit signed integer
 #define FIDT_SLONG      9   // 32-bit signed integer
-#define FIDT_SRATIONAL 10   // 64-bit signed fraction
-#define FIDT_FLOAT     11   // 32-bit IEEE floating point
-#define FIDT_DOUBLE    12   // 64-bit IEEE floating point
-#define FIDT_IFD       13   // 32-bit unsigned integer (offset)
-#define FIDT_PALETTE   14   // 32-bit RGBQUAD
+#define FIDT_SRATIONAL  10  // 64-bit signed fraction
+#define FIDT_FLOAT      11  // 32-bit IEEE floating point
+#define FIDT_DOUBLE     12  // 64-bit IEEE floating point
+#define FIDT_IFD        13  // 32-bit unsigned integer (offset)
+#define FIDT_PALETTE    14  // 32-bit RGBQUAD
 
 
 /**
   Metadata models supported by FreeImage
 */
 //FREE_IMAGE_MDMODEL
-#define FIMD_NODATA         -1
-#define FIMD_COMMENTS        0  // single comment or keywords
-#define FIMD_EXIF_MAIN       1  // Exif-TIFF metadata
-#define FIMD_EXIF_EXIF       2  // Exif-specific metadata
-#define FIMD_EXIF_GPS        3  // Exif GPS metadata
-#define FIMD_EXIF_MAKERNOTE  4  // Exif maker note metadata
-#define FIMD_EXIF_INTEROP    5  // Exif interoperability metadata
-#define FIMD_IPTC            6  // IPTC/NAA metadata
-#define FIMD_XMP             7  // Abobe XMP metadata
-#define FIMD_GEOTIFF         8  // GeoTIFF metadata
-#define FIMD_ANIMATION       9  // Animation metadata
-#define FIMD_CUSTOM         10  // Used to attach other metadata types to a dib
+#define FIMD_NODATA          -1
+#define FIMD_COMMENTS        0   // single comment or keywords
+#define FIMD_EXIF_MAIN       1   // Exif-TIFF metadata
+#define FIMD_EXIF_EXIF       2   // Exif-specific metadata
+#define FIMD_EXIF_GPS        3   // Exif GPS metadata
+#define FIMD_EXIF_MAKERNOTE  4   // Exif maker note metadata
+#define FIMD_EXIF_INTEROP    5   // Exif interoperability metadata
+#define FIMD_IPTC            6   // IPTC/NAA metadata
+#define FIMD_XMP             7   // Abobe XMP metadata
+#define FIMD_GEOTIFF         8   // GeoTIFF metadata
+#define FIMD_ANIMATION       9   // Animation metadata
+#define FIMD_CUSTOM          10  // Used to attach other metadata types to a dib
 
 /* Load / Save flag constants */
 

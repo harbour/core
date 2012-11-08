@@ -16,43 +16,43 @@
 #define BOOKLAST      7
 #define BOOKCOUNT     8
 #define BOOKPAGE      9
-#define BOOKCOORD    10
+#define BOOKCOORD     10
 
-#define FONTNAME      1  // font name
-#define FONTSIZE      2  // font size
-#define LPI           3  // lines per inch
-#define PAGESIZE      4  // page size
-#define PAGEORIENT    5  // page orientation
+#define FONTNAME      1   // font name
+#define FONTSIZE      2   // font size
+#define LPI           3   // lines per inch
+#define PAGESIZE      4   // page size
+#define PAGEORIENT    5   // page orientation
 #define PAGEX         6
 #define PAGEY         7
-#define REPORTWIDTH   8  // report width
-#define REPORTPAGE    9  // report page
-#define REPORTLINE   10  // report line
-#define FONTNAMEPREV 11  // prev font name
-#define FONTSIZEPREV 12  // prev font size
-#define PAGEBUFFER   13  // page buffer
-#define REPORTOBJ    14  // current obj
-#define DOCLEN       15  // document length
-#define TYPE1        16  // array of type 1 fonts
-#define MARGINS      17  // recalc margins ?
-#define HEADEREDIT   18  // edit header ?
-#define NEXTOBJ      19  // next obj
-#define PDFTOP       20  // top row
-#define PDFLEFT      21  // left & right margin in mm
-#define PDFBOTTOM    22  // bottom row
-#define HANDLE       23  // handle
-#define PAGES        24  // array of pages
-#define REFS         25  // array of references
-#define BOOKMARK     26  // array of bookmarks
-#define HEADER       27  // array of headers
-#define FONTS        28  // array of report fonts
-#define IMAGES       29  // array of report images
-#define PAGEIMAGES   30  // array of current page images
-#define PAGEFONTS    31  // array of current page fonts
-#define FONTWIDTH    32  // array of fonts width's
-#define OPTIMIZE     33  // optimized ?
-#define PDFCPI       34  // char per inch
-#define PARAMLEN     34  // number of report elements
+#define REPORTWIDTH   8   // report width
+#define REPORTPAGE    9   // report page
+#define REPORTLINE    10  // report line
+#define FONTNAMEPREV  11  // prev font name
+#define FONTSIZEPREV  12  // prev font size
+#define PAGEBUFFER    13  // page buffer
+#define REPORTOBJ     14  // current obj
+#define DOCLEN        15  // document length
+#define TYPE1         16  // array of type 1 fonts
+#define MARGINS       17  // recalc margins ?
+#define HEADEREDIT    18  // edit header ?
+#define NEXTOBJ       19  // next obj
+#define PDFTOP        20  // top row
+#define PDFLEFT       21  // left & right margin in mm
+#define PDFBOTTOM     22  // bottom row
+#define HANDLE        23  // handle
+#define PAGES         24  // array of pages
+#define REFS          25  // array of references
+#define BOOKMARK      26  // array of bookmarks
+#define HEADER        27  // array of headers
+#define FONTS         28  // array of report fonts
+#define IMAGES        29  // array of report images
+#define PAGEIMAGES    30  // array of current page images
+#define PAGEFONTS     31  // array of current page fonts
+#define FONTWIDTH     32  // array of fonts width's
+#define OPTIMIZE      33  // optimized ?
+#define PDFCPI        34  // char per inch
+#define PARAMLEN      34  // number of report elements
 
 #define ALIGN_LEFT    1
 #define ALIGN_CENTER  2
@@ -77,9 +77,9 @@
 #define UNDEFINED     7
 #define SSHORT        8
 #define SLONG         9
-#define SRATIONAL    10
-#define FLOAT        11
-#define DOUBLE       12
+#define SRATIONAL     10
+#define FLOAT         11
+#define DOUBLE        12
 
 #define pdf_ALICEBLUE            "F0F8FF"
 #define pdf_ANTIQUEWHITE         "FAEBD7"

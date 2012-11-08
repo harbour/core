@@ -58,22 +58,22 @@
 
 /* SCOPE commands: */
 
-#command SET SCOPETOP TO              => OrdScope( TOPSCOPE, nil )
-#command SET SCOPETOP TO <x>          => OrdScope( TOPSCOPE, <x> )
+#command SET SCOPETOP TO              => ordScope( TOPSCOPE, nil )
+#command SET SCOPETOP TO <x>          => ordScope( TOPSCOPE, <x> )
 
-#command SET SCOPEBOTTOM TO           => OrdScope( BOTTOMSCOPE, nil )
-#command SET SCOPEBOTTOM TO <x>       => OrdScope( BOTTOMSCOPE, <x> )
+#command SET SCOPEBOTTOM TO           => ordScope( BOTTOMSCOPE, nil )
+#command SET SCOPEBOTTOM TO <x>       => ordScope( BOTTOMSCOPE, <x> )
 
-#command SET SCOPE TO                 => OrdScope( TOPSCOPE, nil );
-                                       ; OrdScope( BOTTOMSCOPE, nil )
+#command SET SCOPE TO                 => ordScope( TOPSCOPE, nil );
+                                       ; ordScope( BOTTOMSCOPE, nil )
 
-#command SET SCOPE TO <x>, <y>        => OrdScope( TOPSCOPE, <x> );
-                                       ; OrdScope( BOTTOMSCOPE, <y> )
+#command SET SCOPE TO <x>, <y>        => ordScope( TOPSCOPE, <x> );
+                                       ; ordScope( BOTTOMSCOPE, <y> )
 
-#command SET SCOPE TO <x>             => OrdScope( TOPSCOPE, <x> );
-                                       ; OrdScope( BOTTOMSCOPE, <x> )
+#command SET SCOPE TO <x>             => ordScope( TOPSCOPE, <x> );
+                                       ; ordScope( BOTTOMSCOPE, <x> )
 
-#command SET SCOPE TO ,<x>            => OrdScope( BOTTOMSCOPE, <x> )
+#command SET SCOPE TO ,<x>            => ordScope( BOTTOMSCOPE, <x> )
 
 
 /*
@@ -91,7 +91,7 @@
       => ordCondSet( <"for">, <{for}>,                                  ;
                      [<.all.>], <{while}>,                              ;
                      <{eval}>, <every>,                                 ;
-                     RECNO(), <next>, <rec>,                            ;
+                     RecNo(), <next>, <rec>,                            ;
                      [<.rest.>], [<.descend.>] )
 
 #endif

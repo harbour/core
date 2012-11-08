@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for ACHOICE() function
+ * Header file for AChoice() function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -61,10 +61,10 @@
 #define AC_NOITEM       4       /* There's no selectable item                  */
 
 /* User callback return codes */
-#define AC_ABORT        0       /* Abort ACHOICE() and return zero             */
+#define AC_ABORT        0       /* Abort AChoice() and return zero             */
 #define AC_SELECT       1       /* Select current item and return it's index   */
-#define AC_CONT         2       /* Continue ACHOICE()                          */
+#define AC_CONT         2       /* Continue AChoice()                          */
 #define AC_GOTO         3       /* Search first chars for the last pressed key */
-#define AC_REDRAW       4       /* Redraw ACHOICE()                            */
+#define AC_REDRAW       4       /* Redraw AChoice()                            */
 
 #endif /* _ACHOICE_CH */

@@ -77,8 +77,8 @@
 
 #xcommand DEFAULT <v1> TO <x1> [, <vn> TO <xn> ]                        ;
           =>                                                            ;
-          IF <v1> == NIL ; <v1> := <x1> ; END                           ;
-          [; IF <vn> == NIL ; <vn> := <xn> ; END ]
+          IF <v1> == NIL ; <v1> := <x1> ; ENDIF                         ;
+          [; IF <vn> == NIL ; <vn> := <xn> ; ENDIF ]
 
 // --> OOPs
 #xtranslate BYNAME <V> [, <VN> ]     => ::<V> := <V> [; ::<VN> := <VN> ]

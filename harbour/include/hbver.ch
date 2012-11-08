@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for HB_VERSION() function
+ * Header file for hb_Version() function
  *
  * Copyright 2008 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -55,7 +55,7 @@
 #ifndef HB_VER_CH_
 #define HB_VER_CH_
 
-/* hb_version() parameters. */
+/* hb_Version() parameters. */
 #define HB_VERSION_HARBOUR          0  /* default */
 #define HB_VERSION_COMPILER         1
 #define HB_VERSION_MAJOR            2
@@ -85,7 +85,7 @@
 #define HB_VERSION_COMPILER_CPP     25
 #define HB_VERSION_MAX_             26
 
-/* hb_version( HB_VERSION_ENDIANNESS ) return values. */
+/* hb_Version( HB_VERSION_ENDIANNESS ) return values. */
 #define HB_VERSION_ENDIAN_LITTLE    1
 #define HB_VERSION_ENDIAN_BIG       2
 #define HB_VERSION_ENDIAN_PDP       3

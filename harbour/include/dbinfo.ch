@@ -254,10 +254,10 @@
 #define DBI_ISFLOCK              20  /* Is there a file lock active?        */
 #define DBI_CHILDCOUNT           22  /* Number of child relations set       */
 #define DBI_FILEHANDLE           23  /* The data file's OS file handle      */
-#define DBI_BOF                  26  /* Same as bof()    */
-#define DBI_EOF                  27  /* Same as eof()    */
+#define DBI_BOF                  26  /* Same as Bof()    */
+#define DBI_EOF                  27  /* Same as Eof()    */
 #define DBI_DBFILTER             28  /* Current Filter setting              */
-#define DBI_FOUND                29  /* Same as found()  */
+#define DBI_FOUND                29  /* Same as Found()  */
 #define DBI_FCOUNT               30  /* How many fields in a record?        */
 #define DBI_LOCKCOUNT            31  /* Number of record locks              */
 #define DBI_VALIDBUFFER          32  /* Is the record buffer valid?         */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for SETCURSOR() function
+ * Header file for SetCursor() function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
