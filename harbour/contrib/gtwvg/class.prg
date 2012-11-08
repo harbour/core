@@ -105,7 +105,7 @@
  */
 //
 
-CREATE CLASS wvtDialog
+CREATE CLASS WvtDialog
 
    /*  To hold previous settings  */
    VAR    nOldRows
@@ -191,7 +191,7 @@ ENDCLASS
 
 //
 
-METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFontBold, nFontQuality )
+METHOD WvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFontBold, nFontQuality )
 
    LOCAL fnt_ := Wvt_GetFontInfo()
 
@@ -249,7 +249,7 @@ METHOD wvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFon
 
 //
 
-METHOD wvtDialog:Create()
+METHOD WvtDialog:Create()
 
    LOCAL aPalette, i, j
 
@@ -320,7 +320,7 @@ METHOD wvtDialog:Create()
 
 //
 
-METHOD wvtDialog:Destroy()
+METHOD WvtDialog:Destroy()
 
    IF HB_ISOBJECT( ::oMenu )
       ::oMenu:Destroy()
@@ -359,7 +359,7 @@ METHOD wvtDialog:Destroy()
 
 //
 
-METHOD wvtDialog:Event()
+METHOD WvtDialog:Event()
 
    LOCAL  nKey
 
@@ -373,7 +373,7 @@ METHOD wvtDialog:Event()
 
 //
 
-METHOD wvtDialog:Execute()
+METHOD WvtDialog:Execute()
 
    IF ::nObjects == 0
       DO WHILE .T.
@@ -390,7 +390,7 @@ METHOD wvtDialog:Execute()
 
 //
 
-METHOD wvtDialog:Inkey()
+METHOD WvtDialog:Inkey()
 
    LOCAL  n, oObj, nID, i
 
@@ -610,7 +610,7 @@ METHOD wvtDialog:Inkey()
 
 //
 
-METHOD wvtDialog:MouseOver()
+METHOD WvtDialog:MouseOver()
 
    LOCAL mRow := MRow()
    LOCAL mCol := MCol()
@@ -634,7 +634,7 @@ METHOD wvtDialog:MouseOver()
 
 //
 
-METHOD wvtDialog:Update()
+METHOD WvtDialog:Update()
 
    Wvt_InvalidateRect( 0, 0, ::MaxRow(), ::MaxCol() )
 
@@ -642,7 +642,7 @@ METHOD wvtDialog:Update()
 
 //
 
-METHOD wvtDialog:CreateObjects()
+METHOD WvtDialog:CreateObjects()
 
    LOCAL i, nObjs
 
@@ -699,7 +699,7 @@ METHOD wvtDialog:CreateObjects()
 
 //
 
-METHOD wvtDialog:Eval( bBlock, p1, p2, p3, p4, p5 )
+METHOD WvtDialog:Eval( bBlock, p1, p2, p3, p4, p5 )
 
    LOCAL lRet
 
@@ -711,7 +711,7 @@ METHOD wvtDialog:Eval( bBlock, p1, p2, p3, p4, p5 )
 
 //
 
-METHOD wvtDialog:ActivateMenu()
+METHOD WvtDialog:ActivateMenu()
 
    LOCAL nMenu := Wvt_GetLastMenuEvent()
    LOCAL aMenuItem
@@ -3590,7 +3590,7 @@ METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 //
 //
 /*
- *                      TBrowseWVG From TBrowse
+ *                      TBrowseWvg From TBrowse
  */
 //
 //
@@ -3614,7 +3614,7 @@ METHOD WvtConsole:Box( nRow, nCol, n2Row, n2Col, cBoxChars, cColor )
 
 //
 
-CREATE CLASS TBrowseWVG FROM TBrowse
+CREATE CLASS TBrowseWvg FROM TBrowse
 
    VAR    aColumnsSep                             INIT {}
 
@@ -3624,7 +3624,7 @@ ENDCLASS
 
 //
 
-METHOD TBrowseWVG:SetVisible()
+METHOD TBrowseWvg:SetVisible()
 
    LOCAL lFirst, aCol, nColPos
 

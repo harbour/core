@@ -75,22 +75,22 @@
    [NAME <cName>] => ;
    hb_InitStandardLog() ;;
    IF <.con.> ;;
-      hb_StandardLogAdd( hb_LogConsole():New( <nConPrio> ));;
+      hb_StandardLogAdd( HB_LogConsole():New( <nConPrio> ));;
    ENDIF ;;
    IF <.fil.> ;;
-      hb_StandardLogAdd( hb_LogFile():New( <nFilPrio>, <cFileName>, <nFileSize>, <nFileCount> ));;
+      hb_StandardLogAdd( HB_LogFile():New( <nFilPrio>, <cFileName>, <nFileSize>, <nFileCount> ));;
    ENDIF ;;
    IF <.mon.> ;;
-      hb_StandardLogAdd( hb_LoginetPort():New( <nMonPrio>, <nMonPort> ));;
+      hb_StandardLogAdd( HB_LogInetPort():New( <nMonPrio>, <nMonPort> ));;
    ENDIF ;;
    IF <.sys.> ;;
-      hb_StandardLogAdd( hb_LogSysLog():New( <nSysPrio>, <nSysId> ));;
+      hb_StandardLogAdd( HB_LogSysLog():New( <nSysPrio>, <nSysId> ));;
    ENDIF ;;
    IF <.ema.> ;;
-      hb_StandardLogAdd( hb_LogEmail():New( <nEmaPrio> ,<cHelo>,<cServer>,<cDest>,<cSubject>,<cFrom>));;
+      hb_StandardLogAdd( HB_LogEmail():New( <nEmaPrio> ,<cHelo>,<cServer>,<cDest>,<cSubject>,<cFrom>));;
    ENDIF ;;
    IF <.dbg.> ;;
-      hb_StandardLogAdd( hb_LogDebug():New( <nDebugPrio>, <nMaxDebugPrio> ) ) ;;
+      hb_StandardLogAdd( HB_LogDebug():New( <nDebugPrio>, <nMaxDebugPrio> ) ) ;;
    ENDIF ;;
    hb_StandardLogName( <cName> );;
    hb_OpenStandardLog()

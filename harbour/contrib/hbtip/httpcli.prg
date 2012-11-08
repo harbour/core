@@ -54,7 +54,7 @@
 
 #include "fileio.ch"
 
-CREATE CLASS tIPClientHTTP FROM tIPClient
+CREATE CLASS TIPClientHTTP FROM TIPClient
 
    VAR cMethod
    VAR nReplyCode
@@ -90,7 +90,7 @@ CREATE CLASS tIPClientHTTP FROM tIPClient
 
 ENDCLASS
 
-METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientHTTP
+METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientHTTP
 
    ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "http", xTrace ), oCredentials )
 
@@ -102,7 +102,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientHTTP
 
    RETURN Self
 
-METHOD Get( cQuery ) CLASS tIPClientHTTP
+METHOD Get( cQuery ) CLASS TIPClientHTTP
 
    IF ! HB_ISSTRING( cQuery )
       cQuery := ::oUrl:BuildQuery()
@@ -117,7 +117,7 @@ METHOD Get( cQuery ) CLASS tIPClientHTTP
 
    RETURN .F.
 
-METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
+METHOD Post( xPostData, cQuery ) CLASS TIPClientHTTP
 
    LOCAL cData, nI, cTmp, y
 
@@ -176,7 +176,7 @@ METHOD Post( xPostData, cQuery ) CLASS tIPClientHTTP
 
    RETURN .F.
 
-METHOD StandardFields() CLASS tIPClientHTTP
+METHOD StandardFields() CLASS TIPClientHTTP
 
    LOCAL iCount
    LOCAL oEncoder, cCookies
@@ -208,7 +208,7 @@ METHOD StandardFields() CLASS tIPClientHTTP
 
    RETURN .T.
 
-METHOD ReadHeaders( lClear ) CLASS tIPClientHTTP
+METHOD ReadHeaders( lClear ) CLASS TIPClientHTTP
 
    LOCAL cLine, nPos, aVersion
    LOCAL aHead
@@ -275,7 +275,7 @@ METHOD ReadHeaders( lClear ) CLASS tIPClientHTTP
 
    RETURN .T.
 
-METHOD Read( nLen ) CLASS tIPClientHTTP
+METHOD Read( nLen ) CLASS TIPClientHTTP
 
    LOCAL cData, nPos, cLine, aHead
 
@@ -346,7 +346,7 @@ METHOD Read( nLen ) CLASS tIPClientHTTP
 
    RETURN cData
 
-METHOD ReadAll() CLASS tIPClientHTTP
+METHOD ReadAll() CLASS TIPClientHTTP
 
    LOCAL cOut := "", cChunk
 
@@ -369,7 +369,7 @@ METHOD ReadAll() CLASS tIPClientHTTP
 
    RETURN cOut
 
-METHOD setCookie( cLine ) CLASS tIPClientHTTP
+METHOD setCookie( cLine ) CLASS TIPClientHTTP
 
    // docs from http://www.ietf.org/rfc/rfc2109.txt
    LOCAL aParam
@@ -420,7 +420,7 @@ METHOD setCookie( cLine ) CLASS tIPClientHTTP
 
    RETURN NIL
 
-METHOD getcookies( cHost, cPath ) CLASS tIPClientHTTP
+METHOD getcookies( cHost, cPath ) CLASS TIPClientHTTP
 
    LOCAL x, y, aDomKeys := {}, aKeys, z, cKey, aPathKeys, nPath
    LOCAL a, b, cOut := "", c, d
@@ -480,7 +480,7 @@ METHOD getcookies( cHost, cPath ) CLASS tIPClientHTTP
 
    RETURN cOut
 
-METHOD Boundary( nType ) CLASS tIPClientHTTP
+METHOD Boundary( nType ) CLASS TIPClientHTTP
    /*
    nType: 0=as found as the separator in the stdin stream
           1=as found as the last one in the stdin stream
@@ -506,13 +506,13 @@ METHOD Boundary( nType ) CLASS tIPClientHTTP
 
    RETURN cBound
 
-METHOD Attach( cName, cFileName, cType ) CLASS tIPClientHTTP
+METHOD Attach( cName, cFileName, cType ) CLASS TIPClientHTTP
 
    AAdd( ::aAttachments, { cName, cFileName, cType } )
 
    RETURN NIL
 
-METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
+METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
 
    LOCAL cData := "", nI, cTmp, y, cBound := ::boundary()
    LOCAL cCrlf := ::cCRlf, oSub
@@ -602,7 +602,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS tIPClientHTTP
 
    RETURN .F.
 
-METHOD WriteAll( cFile ) CLASS tIPClientHTTP
+METHOD WriteAll( cFile ) CLASS TIPClientHTTP
 
    LOCAL nFile
    LOCAL lSuccess

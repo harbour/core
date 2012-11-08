@@ -133,7 +133,7 @@ STATIC FUNCTION s_oleError( nGenCode, cDescript )
    RETURN oErr
 
 
-CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
+CREATE CLASS TOleAuto FROM win_oleAuto
 
    VAR cClassName
 
@@ -167,7 +167,7 @@ CREATE CLASS TOLEAUTO FROM WIN_OLEAUTO
 
 ENDCLASS
 
-METHOD hObj( xOle ) CLASS TOLEAUTO
+METHOD hObj( xOle ) CLASS TOleAuto
 
    IF xOle != NIL
       IF HB_ISNUMERIC( xOle )
@@ -180,7 +180,7 @@ METHOD hObj( xOle ) CLASS TOLEAUTO
 
    RETURN ::__hObj
 
-METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
+METHOD New( xOle, cClass, cLicense ) CLASS TOleAuto
 
    LOCAL hOle
 
@@ -205,7 +205,7 @@ METHOD New( xOle, cClass, cLicense ) CLASS TOLEAUTO
 
    RETURN Self
 
-METHOD GetActiveObject( cClass ) CLASS TOLEAUTO
+METHOD GetActiveObject( cClass ) CLASS TOleAuto
 
    IF HB_ISSTRING( cClass )
       IF ! Empty( ::__hObj := __oleGetActiveObject( cClass ) )
@@ -221,14 +221,14 @@ METHOD GetActiveObject( cClass ) CLASS TOLEAUTO
 
    RETURN Self
 
-METHOD OleValue() CLASS TOLEAUTO
+METHOD OleValue() CLASS TOleAuto
    RETURN __oleInvokeGet( ::__hObj, DISPID_VALUE )
 
-METHOD _OleValue( xValue ) CLASS TOLEAUTO
+METHOD _OleValue( xValue ) CLASS TOleAuto
    RETURN __oleInvokePut( ::__hObj, DISPID_VALUE, xValue )
 
 #xcommand OLE OPERATOR <op> METHOD <!mth!> [WITH <!arg!>] IS <exp> => ;
-   METHOD <mth>( <arg> ) CLASS TOLEAUTO                     ;;
+   METHOD <mth>( <arg> ) CLASS TOleAuto                     ;;
    LOCAL xRet                                               ;;
    BEGIN SEQUENCE WITH s_bBreak                             ;;
       xRet := ( <exp> )                                     ;;

@@ -70,7 +70,7 @@ PROCEDURE hb_InitStandardLog( ... )
 
    LOCAL PARAM
 
-   s_StdLogger := hb_Logger():New()
+   s_StdLogger := HB_Logger():New()
 
    FOR EACH PARAM in hb_AParams()
 #ifdef HB_THREAD_SUPPORT
@@ -730,7 +730,7 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogDbf
 * C interface to syslog/ event log system
 ***********************************************/
 
-CREATE CLASS HB_LogSyslog FROM HB_LogChannel
+CREATE CLASS HB_LogSysLog FROM HB_LogChannel
 
    VAR nId
 
@@ -743,14 +743,14 @@ CREATE CLASS HB_LogSyslog FROM HB_LogChannel
 
 ENDCLASS
 
-METHOD New( nLevel, nId ) CLASS HB_LogSyslog
+METHOD New( nLevel, nId ) CLASS HB_LogSysLog
 
    ::Super:New( nLevel )
    ::nId := nId
 
    RETURN SELF
 
-METHOD Open( cName ) CLASS HB_LogSyslog
+METHOD Open( cName ) CLASS HB_LogSysLog
 
    IF ::lOpened
       RETURN .F.
@@ -763,7 +763,7 @@ METHOD Open( cName ) CLASS HB_LogSyslog
 
    RETURN .F.
 
-METHOD close( cName ) CLASS HB_LogSyslog
+METHOD close( cName ) CLASS HB_LogSysLog
 
    IF ! ::lOpened
       RETURN .F.
@@ -776,7 +776,7 @@ METHOD close( cName ) CLASS HB_LogSyslog
 
    RETURN .F.
 
-METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSyslog
+METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSysLog
 
    HB_SYMBOL_UNUSED( nType )
    // Syslog does not need timestamp, nor priority

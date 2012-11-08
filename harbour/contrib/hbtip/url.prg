@@ -63,7 +63,7 @@
 *                                                 cFname cExt
 */
 
-CREATE CLASS tURL
+CREATE CLASS TUrl
 
    VAR cAddress
    VAR cProto
@@ -90,13 +90,13 @@ CREATE CLASS tURL
 ENDCLASS
 
 
-METHOD New( cUrl ) CLASS tURL
+METHOD New( cUrl ) CLASS TUrl
 
    ::SetAddress( cUrl )
 
    RETURN Self
 
-METHOD SetAddress( cUrl ) CLASS tURL
+METHOD SetAddress( cUrl ) CLASS TUrl
 
    LOCAL aMatch, cServer, cPath
 
@@ -145,7 +145,7 @@ METHOD SetAddress( cUrl ) CLASS tURL
    RETURN .T.
 
 
-METHOD BuildAddress() CLASS tURL
+METHOD BuildAddress() CLASS TUrl
 
    LOCAL cRet := ""
 
@@ -189,7 +189,7 @@ METHOD BuildAddress() CLASS tURL
 
    RETURN cRet
 
-METHOD BuildQuery() CLASS tURL
+METHOD BuildQuery() CLASS TUrl
 
    LOCAL cLine
 

@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * TipCgi Class oriented cgi protocol
+ * TIPCgi Class oriented cgi protocol
  *
  * Copyright 2006 Lorenzo Fiorini <lorenzo.fiorini@gmail.com>
  *
@@ -69,7 +69,7 @@
 #define _CRLF Chr( 13 ) + Chr( 10 )
 #define _BR "<br />"
 
-CREATE CLASS TIpCgi
+CREATE CLASS TIPCgi
 
    VAR HTTP_RAW_POST_DATA
 
@@ -106,7 +106,7 @@ CREATE CLASS TIpCgi
 
 ENDCLASS
 
-METHOD New() CLASS TIpCgi
+METHOD New() CLASS TIPCgi
 
    LOCAL aTemp
    LOCAL aVar
@@ -172,7 +172,7 @@ METHOD New() CLASS TIpCgi
 
    RETURN Self
 
-METHOD Header( cValue ) CLASS TIpCgi
+METHOD Header( cValue ) CLASS TIPCgi
 
    IF Empty( cValue )
       ::cCgiHeader += "Content-Type: text/html" + _CRLF
@@ -182,13 +182,13 @@ METHOD Header( cValue ) CLASS TIpCgi
 
    RETURN Self
 
-METHOD Redirect( cUrl ) CLASS TIpCgi
+METHOD Redirect( cUrl ) CLASS TIPCgi
 
    ::cCgiHeader += "Location: " + cUrl + _CRLF
 
    RETURN Self
 
-METHOD Flush() CLASS TIpCgi
+METHOD Flush() CLASS TIPCgi
 
    LOCAL cStream
    LOCAL lRet
@@ -235,7 +235,7 @@ METHOD Flush() CLASS TIpCgi
 
    RETURN lRet
 
-METHOD SaveHtmlPage( cFile ) CLASS TIpCgi
+METHOD SaveHtmlPage( cFile ) CLASS TIPCgi
 
    LOCAL nFile
    LOCAL lSuccess
@@ -253,7 +253,7 @@ METHOD SaveHtmlPage( cFile ) CLASS TIpCgi
 
    RETURN lSuccess
 
-METHOD StartSession( cSID ) CLASS TIpCgi
+METHOD StartSession( cSID ) CLASS TIPCgi
 
    LOCAL nH
    LOCAL cFile
@@ -309,17 +309,17 @@ METHOD StartSession( cSID ) CLASS TIpCgi
 
    RETURN Self
 
-METHOD SessionEncode() CLASS TIpCgi
+METHOD SessionEncode() CLASS TIPCgi
 
    RETURN hb_Serialize( ::hSession )
 
-METHOD SessionDecode( cData ) CLASS TIpCgi
+METHOD SessionDecode( cData ) CLASS TIPCgi
 
    ::hSession := hb_Deserialize( cData )
 
    RETURN HB_ISHASH( ::hSession )
 
-METHOD DestroySession( cID ) CLASS TIpCgi
+METHOD DestroySession( cID ) CLASS TIPCgi
 
    LOCAL cFile
    LOCAL cSID := ::cSID
@@ -348,7 +348,7 @@ METHOD DestroySession( cID ) CLASS TIpCgi
 
    RETURN lRet
 
-METHOD ErrHandler( xError ) CLASS TIpCgi
+METHOD ErrHandler( xError ) CLASS TIPCgi
 
    LOCAL nCalls
    LOCAL cErrMsg := ""
@@ -384,13 +384,13 @@ METHOD ErrHandler( xError ) CLASS TIpCgi
 
    RETURN NIL
 
-METHOD Write( cString ) CLASS TIpCgi
+METHOD Write( cString ) CLASS TIPCgi
 
    ::cHtmlPage += cString + _CRLF
 
    RETURN Self
 
-METHOD StartHtml( hOptions ) CLASS TIpCgi
+METHOD StartHtml( hOptions ) CLASS TIPCgi
 
    ::cHtmlPage += ;
       '<?xml version="1.0"' + HtmlOption( hOptions, "encoding", " " ) + "?>" + _CRLF + ;
@@ -409,7 +409,7 @@ METHOD StartHtml( hOptions ) CLASS TIpCgi
 
    RETURN Self
 
-METHOD EndHtml() CLASS TIpCgi
+METHOD EndHtml() CLASS TIPCgi
 
    ::cHtmlPage += "</body></html>"
 

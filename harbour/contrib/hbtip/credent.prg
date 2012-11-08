@@ -57,7 +57,7 @@
 * A way to give basic credentials
 */
 
-CREATE CLASS tIPCredentials
+CREATE CLASS TIPCredentials
 
    VAR cMethod
    VAR cUserid

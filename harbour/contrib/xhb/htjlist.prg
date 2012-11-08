@@ -51,7 +51,7 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
-CREATE CLASS TJsList
+CREATE CLASS TJSList
 
    VAR nH INIT STD_OUT
    VAR aScript INIT {}
@@ -93,7 +93,7 @@ ENDCLASS
 */
 
 METHOD New( name, lOpen, width, height, bgColor, ;
-      FONT, fntColor, fntSize, cMinusImg, cPlusImg ) CLASS TJsList
+      FONT, fntColor, fntSize, cMinusImg, cPlusImg ) CLASS TJSList
 
    LOCAL cStr
 
@@ -152,7 +152,7 @@ METHOD New( name, lOpen, width, height, bgColor, ;
 *
 */
 
-METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJsList
+METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJSList
 
    LOCAL cStr := ""
 
@@ -181,7 +181,7 @@ METHOD NewNode( name, lOpen, width, height, bgColor ) CLASS TJsList
 *
 */
 
-METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJsList
+METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
 
    LOCAL cStr := ""
 
@@ -206,7 +206,7 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJsList
 *
 */
 
-METHOD AddItem( name, url, bgColor ) CLASS TJsList
+METHOD AddItem( name, url, bgColor ) CLASS TJSList
 
    LOCAL cStr := ""
    LOCAL cUrl
@@ -226,7 +226,7 @@ METHOD AddItem( name, url, bgColor ) CLASS TJsList
 *
 */
 
-METHOD AddLink( name, url, img, bgColor ) CLASS TJsList
+METHOD AddLink( name, url, img, bgColor ) CLASS TJSList
 
    LOCAL cStr := ""
    LOCAL cUrl
@@ -241,7 +241,7 @@ METHOD AddLink( name, url, img, bgColor ) CLASS TJsList
 
    RETURN self
 
-METHOD EndNode( name, caption ) CLASS TJsList
+METHOD EndNode( name, caption ) CLASS TJSList
 
    LOCAL cStr := ""
 
@@ -253,7 +253,7 @@ METHOD EndNode( name, caption ) CLASS TJsList
 
    RETURN self
 
-METHOD Build( xPos, yPos ) CLASS TJsList
+METHOD Build( xPos, yPos ) CLASS TJSList
 
    LOCAL i
    LOCAL cStr := ""
@@ -294,7 +294,7 @@ METHOD Build( xPos, yPos ) CLASS TJsList
 
    RETURN Self
 
-METHOD Put( cFile ) CLASS TJsList
+METHOD Put( cFile ) CLASS TJSList
 
    IF cFile == NIL
       ::nH := STD_OUT

@@ -54,7 +54,7 @@
 
 #include "fileio.ch"
 
-CREATE CLASS TIPLOG
+CREATE CLASS TIPLog
 
    METHOD New( cFileName )
    METHOD Add( cMsg )
@@ -68,7 +68,7 @@ CREATE CLASS TIPLOG
 
 ENDCLASS
 
-METHOD New( cFileName ) CLASS TIPLOG
+METHOD New( cFileName ) CLASS TIPLog
 
    IF ! HB_ISSTRING( cFileName )
       cFileName := "hbtip"
@@ -82,7 +82,7 @@ METHOD New( cFileName ) CLASS TIPLOG
 
    RETURN Self
 
-METHOD Add( cMsg ) CLASS TIPLOG
+METHOD Add( cMsg ) CLASS TIPLog
 
    LOCAL cDir, cName, cExt
    LOCAL n
@@ -108,7 +108,7 @@ METHOD Add( cMsg ) CLASS TIPLOG
 
    RETURN .F.
 
-METHOD Close() CLASS TIPLOG
+METHOD Close() CLASS TIPLog
 
    LOCAL lRetVal
 
@@ -120,5 +120,5 @@ METHOD Close() CLASS TIPLOG
 
    RETURN .F.
 
-METHOD Clear() CLASS TIPLOG
+METHOD Clear() CLASS TIPLog
    RETURN ::Close() .AND. FErase( ::cFileName ) == 0

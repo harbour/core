@@ -47,7 +47,7 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
-CREATE CLASS TJsWindow
+CREATE CLASS TJSWindow
 
    VAR nH
    VAR Name INIT ""
@@ -128,7 +128,7 @@ ENDCLASS
 *
 */
 
-METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJsWindow
+METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJSWindow
 
    __defaultNIL( @cVarName, "newWin" )
    __defaultNIL( @cURL, " " )
@@ -160,7 +160,7 @@ METHOD New( cVarName, cUrl, cName, x, y, w, h ) CLASS TJsWindow
 METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
       Resizable, Menubar, personalBar, ;
       dependent, location, directories, ;
-      Scrollbars, Status, TitleBar, Toolbar, copyHistory ) CLASS TJsWindow
+      Scrollbars, Status, TitleBar, Toolbar, copyHistory ) CLASS TJSWindow
 
    LOCAL cStr := ""
 
@@ -254,7 +254,7 @@ METHOD SetFeatures( alwaysRaised, alwaysLowered, ;
 *
 */
 
-METHOD SetSize( x, y, h, w ) CLASS TJsWindow
+METHOD SetSize( x, y, h, w ) CLASS TJSWindow
 
    LOCAL cStr := ""
 
@@ -284,7 +284,7 @@ METHOD SetSize( x, y, h, w ) CLASS TJsWindow
 *
 */
 
-METHOD Put() CLASS TJsWindow
+METHOD Put() CLASS TJSWindow
 
    LOCAL cStr := ""
 
@@ -319,7 +319,7 @@ METHOD Put() CLASS TJsWindow
 *
 */
 
-METHOD Write( c ) CLASS TJsWindow
+METHOD Write( c ) CLASS TJSWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
 
@@ -332,7 +332,7 @@ METHOD Write( c ) CLASS TJsWindow
 *
 */
 
-METHOD QOut( c ) CLASS TJsWindow
+METHOD QOut( c ) CLASS TJSWindow
 
    FWrite( ::nH, ::varName + ".document.write('" + c + "')" + CRLF() )
 
@@ -346,7 +346,7 @@ METHOD QOut( c ) CLASS TJsWindow
 *
 */
 
-METHOD Begin() CLASS TJsWindow
+METHOD Begin() CLASS TJSWindow
 
    LOCAL i
 
@@ -411,7 +411,7 @@ METHOD Begin() CLASS TJsWindow
 *
 */
 
-METHOD End() CLASS TJsWindow
+METHOD End() CLASS TJSWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('</BODY></HTML>')" + CRLF() )
 
@@ -425,7 +425,7 @@ METHOD End() CLASS TJsWindow
 
 METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
       cOnClick, cOnMsover, cOnMsout, ;
-      cName, cAlt ) CLASS TJsWindow
+      cName, cAlt ) CLASS TJSWindow
 
    LOCAL cStr := ""
 

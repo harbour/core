@@ -57,7 +57,7 @@
 //
 // A specialized HBEditor which can simulate MemoEdit() behaviour
 //
-CREATE CLASS XHB_TMemoEditor FROM XHBEditor
+CREATE CLASS xhb_TMemoEditor FROM XHBEditor
 
    VAR    xUserFunction   // User Function called to change default MemoEdit() behaviour
 
@@ -77,7 +77,7 @@ CREATE CLASS XHB_TMemoEditor FROM XHBEditor
 
 ENDCLASS
 
-METHOD MemoInit( xUDF ) CLASS XHB_TMemoEditor
+METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
 
    LOCAL nUdfReturn
 
@@ -152,7 +152,7 @@ METHOD MemoInit( xUDF ) CLASS XHB_TMemoEditor
 
    RETURN Self
 
-METHOD Edit() CLASS XHB_TMemoEditor
+METHOD Edit() CLASS xhb_TMemoEditor
 
    LOCAL nKey, nUdfReturn, nNextKey
 
@@ -275,7 +275,7 @@ METHOD Edit() CLASS XHB_TMemoEditor
 // I come here if I have an unknown key and it is not a configurable key
 // if there is an user function I leave to it its handling
 //
-METHOD KeyboardHook( nKey ) CLASS XHB_TMemoEditor
+METHOD KeyboardHook( nKey ) CLASS xhb_TMemoEditor
 
    LOCAL nUdfReturn
 
@@ -287,7 +287,7 @@ METHOD KeyboardHook( nKey ) CLASS XHB_TMemoEditor
    RETURN Self
 
 
-METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
+METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS xhb_TMemoEditor
 
 
    /* 05/08/2004 - <maurilio.longo@libero.it>
@@ -384,7 +384,7 @@ METHOD HandleUdf( nKey, nUdfReturn, lEdited ) CLASS XHB_TMemoEditor
 
    RETURN Self
 
-METHOD CallUdf( nMode ) CLASS XHB_TMemoEditor
+METHOD CallUdf( nMode ) CLASS xhb_TMemoEditor
 
    LOCAL nCurRow := ::Row()
    LOCAL nCurCol := ::Col()

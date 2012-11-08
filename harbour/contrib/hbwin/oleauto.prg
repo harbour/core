@@ -54,7 +54,7 @@
 #include "hbclass.ch"
 
 
-CREATE CLASS WIN_OLEAUTO
+CREATE CLASS win_oleAuto
 
    VAR __hObj
    VAR __hObjEnum
@@ -72,7 +72,7 @@ CREATE CLASS WIN_OLEAUTO
 ENDCLASS
 
 
-METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
+METHOD __enumStart( enum, lDescend ) CLASS win_oleAuto
 
    LOCAL hObjEnum
 
@@ -91,7 +91,7 @@ METHOD __enumStart( enum, lDescend ) CLASS WIN_OLEAUTO
    RETURN .F.
 
 
-METHOD __enumSkip( enum, lDescend ) CLASS WIN_OLEAUTO
+METHOD __enumSkip( enum, lDescend ) CLASS win_oleAuto
 
    LOCAL lContinue, xValue
 
@@ -104,7 +104,7 @@ METHOD __enumSkip( enum, lDescend ) CLASS WIN_OLEAUTO
    RETURN lContinue
 
 
-METHOD PROCEDURE __enumStop() CLASS WIN_OLEAUTO
+METHOD PROCEDURE __enumStop() CLASS win_oleAuto
 
    ::__hObjEnum := NIL     /* activate autodestructor */
 

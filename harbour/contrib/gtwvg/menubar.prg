@@ -76,7 +76,7 @@
 
 //
 
-CREATE CLASS wvgMenuBar INHERIT wvgWindow
+CREATE CLASS WvgMenuBar INHERIT wvgWindow
 
    VAR      hMenu
    VAR      pMenu
@@ -587,7 +587,7 @@ METHOD WvgMenuBar:onMenuKey( xParam )
 //
 //
 
-CREATE CLASS wvgMenu INHERIT wvgMenuBar
+CREATE CLASS WvgMenu INHERIT WvgMenuBar
 
    VAR      title                                 INIT  ""
 
@@ -661,5 +661,3 @@ METHOD WvgMenu:Popup( oXbp, aPos, nDefaultItem, nControl )
    ENDIF
 
    RETURN 0
-
-//

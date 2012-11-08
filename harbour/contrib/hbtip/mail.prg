@@ -61,7 +61,7 @@
 
 #include "hbclass.ch"
 
-CREATE CLASS TipMail
+CREATE CLASS TIPMail
 
    VAR hHeaders
    // received fields may be more than once.
@@ -118,7 +118,7 @@ CREATE CLASS TipMail
 
 ENDCLASS
 
-METHOD New( cBody, oEncoder ) CLASS TipMail
+METHOD New( cBody, oEncoder ) CLASS TIPMail
 
    // Set header fileds to non-sensitive
    ::hHeaders := hb_HSetCaseMatch( { => }, .F. )
@@ -136,7 +136,7 @@ METHOD New( cBody, oEncoder ) CLASS TipMail
 
    RETURN Self
 
-METHOD SetEncoder( cEncoder ) CLASS TipMail
+METHOD SetEncoder( cEncoder ) CLASS TIPMail
 
    IF HB_ISSTRING( cEncoder )
       ::oEncoder := tip_GetEncoder( cEncoder )
@@ -147,7 +147,7 @@ METHOD SetEncoder( cEncoder ) CLASS TipMail
 
    RETURN .T.
 
-METHOD SetBody( cBody ) CLASS TipMail
+METHOD SetBody( cBody ) CLASS TIPMail
 
    IF ::oEncoder != NIL
       ::cBody := ::oEncoder:Encode( cBody )
@@ -161,7 +161,7 @@ METHOD SetBody( cBody ) CLASS TipMail
 
    RETURN .T.
 
-METHOD GetBody() CLASS TipMail
+METHOD GetBody() CLASS TIPMail
 
    IF ::cBody == NIL
       RETURN NIL
@@ -171,7 +171,7 @@ METHOD GetBody() CLASS TipMail
 
    RETURN ::cBody
 
-METHOD GetFieldPart( cPart ) CLASS TipMail
+METHOD GetFieldPart( cPart ) CLASS TIPMail
 
    LOCAL nPos, cEnc
 
@@ -188,7 +188,7 @@ METHOD GetFieldPart( cPart ) CLASS TipMail
 
    RETURN cEnc
 
-METHOD GetFieldOption( cPart, cOption ) CLASS TipMail
+METHOD GetFieldOption( cPart, cOption ) CLASS TIPMail
 
    LOCAL nPos, aMatch
    LOCAL cEnc
@@ -209,7 +209,7 @@ METHOD GetFieldOption( cPart, cOption ) CLASS TipMail
 
    RETURN cEnc
 
-METHOD SetFieldPart( cPart, cValue ) CLASS TipMail
+METHOD SetFieldPart( cPart, cValue ) CLASS TIPMail
 
    LOCAL nPos, cEnc
 
@@ -228,7 +228,7 @@ METHOD SetFieldPart( cPart, cValue ) CLASS TipMail
 
    RETURN .T.
 
-METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TipMail
+METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TIPMail
 
    LOCAL nPos, aMatch
    LOCAL cEnc
@@ -249,9 +249,9 @@ METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TipMail
 
    RETURN .T.
 
-METHOD Attach( oSubPart ) CLASS TipMail
+METHOD Attach( oSubPart ) CLASS TIPMail
 
-   IF HB_ISOBJECT( oSubPart ) .AND. oSubPart:ClassName == "TIPMAIL"
+   IF HB_ISOBJECT( oSubPart ) .AND. oSubPart:ClassName == "TIPMail"
       // reset wrong content-type
       IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) == 0
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
@@ -263,7 +263,7 @@ METHOD Attach( oSubPart ) CLASS TipMail
 
    RETURN .F.
 
-METHOD NextAttachment() CLASS TipMail
+METHOD NextAttachment() CLASS TIPMail
 
    IF ::nAttachPos > Len( ::aAttachments )
       RETURN NIL
@@ -273,7 +273,7 @@ METHOD NextAttachment() CLASS TipMail
 
    RETURN ::aAttachments[ ::nAttachPos - 1 ]
 
-METHOD GetAttachment() CLASS TipMail
+METHOD GetAttachment() CLASS TIPMail
 
    IF ::nAttachPos > Len( ::aAttachments )
       RETURN NIL
@@ -281,7 +281,7 @@ METHOD GetAttachment() CLASS TipMail
 
    RETURN ::aAttachments[ ::nAttachPos ]
 
-METHOD ToString() CLASS TipMail
+METHOD ToString() CLASS TIPMail
 
    LOCAL cBoundary, cElem, i
    LOCAL cRet := ""
@@ -379,7 +379,7 @@ METHOD ToString() CLASS TipMail
 
    RETURN cRet
 
-METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
+METHOD FromString( cMail, cBoundary, nPos ) CLASS TIPMail
 
    LOCAL oSubSection, cSubBoundary
    LOCAL nLinePos, nSplitPos, nBodyPos
@@ -514,7 +514,7 @@ METHOD FromString( cMail, cBoundary, nPos ) CLASS TipMail
 
    RETURN nPos
 
-METHOD MakeBoundary() CLASS TipMail
+METHOD MakeBoundary() CLASS TIPMail
 
    LOCAL cBound := "=_0" + Space( 17 )
    LOCAL i
@@ -528,7 +528,7 @@ METHOD MakeBoundary() CLASS TipMail
 
    RETURN cBound
 
-METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
+METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TIPMail
 
    LOCAL aTo, aCC, aBCC, i, imax
    LOCAL cTo, cCC, cBCC
@@ -620,7 +620,7 @@ METHOD setHeader( cSubject, cFrom, xTo, xCC, xBCC ) CLASS TipMail
 
    RETURN .T.
 
-METHOD attachFile( cFileName ) CLASS TipMail
+METHOD attachFile( cFileName ) CLASS TIPMail
 
    LOCAL cContent := hb_MemoRead( cFileName )
    LOCAL cMimeType := tip_FileMimeType( cFileName )
@@ -643,7 +643,7 @@ METHOD attachFile( cFileName ) CLASS TipMail
 
    RETURN ::attach( oAttach )
 
-METHOD detachFile( cPath ) CLASS TipMail
+METHOD detachFile( cPath ) CLASS TIPMail
 
    LOCAL cContent := ::getBody()
    LOCAL cFileName := ::getFileName()
@@ -668,13 +668,13 @@ METHOD detachFile( cPath ) CLASS TipMail
 
    RETURN FError() == 0
 
-METHOD getFileName() CLASS TipMail
+METHOD getFileName() CLASS TIPMail
    RETURN StrTran( ::getFieldOption( "Content-Type", "name" ), '"' )
 
-METHOD isMultiPart() CLASS TipMail
+METHOD isMultiPart() CLASS TIPMail
    RETURN "multipart/" $ Lower( ::GetFieldPart( "Content-Type" ) )
 
-METHOD getMultiParts( aParts ) CLASS TipMail
+METHOD getMultiParts( aParts ) CLASS TIPMail
 
    LOCAL oSubPart, lReset := .F.
 

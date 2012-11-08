@@ -54,7 +54,7 @@
 
 #include "hbsim.ch"
 
-CREATE CLASS wce_sim
+CREATE CLASS wce_Sim
 
    VAR lInitialized INIT .F.
    VAR hSim
@@ -74,10 +74,10 @@ CREATE CLASS wce_sim
 
 ENDCLASS
 
-METHOD New() CLASS wce_sim
+METHOD New() CLASS wce_Sim
    RETURN Self
 
-METHOD lInitialize() CLASS wce_sim
+METHOD lInitialize() CLASS wce_Sim
 
    LOCAL nResult := wce_SimInitialize( @::hSim )
 
@@ -86,7 +86,7 @@ METHOD lInitialize() CLASS wce_sim
 
    RETURN ::lInitialized
 
-METHOD lDeInitialize() CLASS wce_sim
+METHOD lDeInitialize() CLASS wce_Sim
 
    LOCAL nResult
 
@@ -102,7 +102,7 @@ METHOD lDeInitialize() CLASS wce_sim
 
    RETURN nResult == SIM_E_OK
 
-METHOD lNumberOfPhoneBookEntries( nType, /* @ */ nTotal, /* @ */ nUsed ) CLASS wce_sim
+METHOD lNumberOfPhoneBookEntries( nType, /* @ */ nTotal, /* @ */ nUsed ) CLASS wce_Sim
 
    LOCAL nResult
 
@@ -120,7 +120,7 @@ METHOD lNumberOfPhoneBookEntries( nType, /* @ */ nTotal, /* @ */ nUsed ) CLASS w
 
    RETURN nResult == SIM_E_OK
 
-METHOD aGetAllPhoneBookEntries( nType ) CLASS wce_sim
+METHOD aGetAllPhoneBookEntries( nType ) CLASS wce_Sim
 
    LOCAL nResult
    LOCAL nTotal
@@ -160,7 +160,7 @@ METHOD aGetAllPhoneBookEntries( nType ) CLASS wce_sim
 
    RETURN aEntries
 
-METHOD lGetSimPhoneEntry( nPos, nType, /* @ */ aEntry ) CLASS wce_sim
+METHOD lGetSimPhoneEntry( nPos, nType, /* @ */ aEntry ) CLASS wce_Sim
 
    LOCAL nResult
    LOCAL a
@@ -181,7 +181,7 @@ METHOD lGetSimPhoneEntry( nPos, nType, /* @ */ aEntry ) CLASS wce_sim
 
    RETURN nResult == SIM_E_OK
 
-METHOD lSetSimPhoneEntry( nPos, nType, cNumber, cName, nPlan, nAddrType ) CLASS wce_sim
+METHOD lSetSimPhoneEntry( nPos, nType, cNumber, cName, nPlan, nAddrType ) CLASS wce_Sim
 
    LOCAL nResult
 
@@ -202,7 +202,7 @@ METHOD lSetSimPhoneEntry( nPos, nType, cNumber, cName, nPlan, nAddrType ) CLASS 
 
    RETURN nResult == SIM_E_OK
 
-METHOD lDelSimPhoneEntry( nPos, nType ) CLASS wce_sim
+METHOD lDelSimPhoneEntry( nPos, nType ) CLASS wce_Sim
 
    LOCAL nResult
 
@@ -220,7 +220,7 @@ METHOD lDelSimPhoneEntry( nPos, nType ) CLASS wce_sim
 
    RETURN nResult == SIM_E_OK
 
-METHOD End() CLASS wce_sim
+METHOD End() CLASS wce_Sim
 
    IF ::lInitialized
       ::lDeInitialize()

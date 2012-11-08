@@ -78,7 +78,7 @@ FUNCTION tip_GetEncoder( cModel )
       oEncoder := TIPEncoderQP():New()
 
    CASE cModel == "url" .OR. cModel == "urlencoded"
-      oEncoder := TIPEncoderURL():New()
+      oEncoder := TIPEncoderUrl():New()
 
    CASE cModel == "7bit" .OR. cModel == "8bit"
       oEncoder := TIPEncoder():New( cModel )

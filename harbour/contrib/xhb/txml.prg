@@ -205,7 +205,7 @@ METHOD Clone() CLASS TXmlIterator
 
    LOCAL oRet
 
-   oRet := TXMLIterator():New( ::oNodeTop )
+   oRet := TXmlIterator():New( ::oNodeTop )
    oRet:cName := ::cName
    oRet:cAttribute := ::cAttribute
    oRet:cValue := ::cValue
@@ -351,7 +351,7 @@ METHOD MatchCriteria( oFound ) CLASS TXmlIteratorRegex
    Document Class
 *********************************************/
 
-CREATE CLASS TXmlDocument
+CREATE CLASS TXMLDocument
 
    VAR oRoot
    VAR nStatus
@@ -378,7 +378,7 @@ CREATE CLASS TXmlDocument
 
 ENDCLASS
 
-METHOD New( xElem, nStyle ) CLASS TXmlDocument
+METHOD New( xElem, nStyle ) CLASS TXMLDocument
 
    ::nStatus := HBXML_STATUS_OK
    ::nError := HBXML_ERROR_NONE
@@ -411,7 +411,7 @@ METHOD New( xElem, nStyle ) CLASS TXmlDocument
 
    RETURN Self
 
-METHOD Write( fHandle, nStyle ) CLASS TXmlDocument
+METHOD Write( fHandle, nStyle ) CLASS TXMLDocument
 
    LOCAL nResult := HBXML_STATUS_ERROR
 
@@ -433,19 +433,19 @@ METHOD Write( fHandle, nStyle ) CLASS TXmlDocument
 
    RETURN ::oRoot:Write( fHandle, nStyle )
 
-METHOD FindFirst( cName, cAttrib, cValue, cData ) CLASS TXmlDocument
+METHOD FindFirst( cName, cAttrib, cValue, cData ) CLASS TXMLDocument
 
-   ::oIterator := TXMLIteratorScan():New( ::oRoot )
-
-   RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
-
-METHOD FindFirstRegex( cName, cAttrib, cValue, cData ) CLASS TXmlDocument
-
-   ::oIterator := TXMLIteratorRegex():New( ::oRoot )
+   ::oIterator := TXmlIteratorScan():New( ::oRoot )
 
    RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
 
-METHOD GetContext() CLASS TXmlDocument
+METHOD FindFirstRegex( cName, cAttrib, cValue, cData ) CLASS TXMLDocument
+
+   ::oIterator := TXmlIteratorRegex():New( ::oRoot )
+
+   RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
+
+METHOD GetContext() CLASS TXMLDocument
 
    LOCAL oDoc
 

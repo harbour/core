@@ -61,7 +61,7 @@
 * Inet service manager: pop3
 */
 
-CREATE CLASS tIPClientPOP FROM tIPClient
+CREATE CLASS TIPClientPOP FROM TIPClient
 
    METHOD New( oUrl, xTrace, oCredentials )
    METHOD Open( cUrl )
@@ -83,7 +83,7 @@ CREATE CLASS tIPClientPOP FROM tIPClient
 
 ENDCLASS
 
-METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientPOP
+METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClientPOP
 
    ::super:new( oUrl, iif( HB_ISLOGICAL( xTrace ) .AND. xTrace, "pop3", xTrace ), oCredentials )
 
@@ -94,7 +94,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS tIPClientPOP
 
 /**
 */
-METHOD Open( cUrl ) CLASS tIPClientPOP
+METHOD Open( cUrl ) CLASS TIPClientPOP
 
    IF ! ::super:Open( cUrl )
       RETURN .F.
@@ -117,7 +117,7 @@ METHOD Open( cUrl ) CLASS tIPClientPOP
 
    RETURN .F.
 
-METHOD OpenDigest( cUrl ) CLASS tIPClientPOP
+METHOD OpenDigest( cUrl ) CLASS TIPClientPOP
 
    LOCAL nPos, nPos2, cDigest
 
@@ -147,7 +147,7 @@ METHOD OpenDigest( cUrl ) CLASS tIPClientPOP
 
    RETURN .F.
 
-METHOD Close( lAutoQuit ) CLASS tIPClientPOP
+METHOD Close( lAutoQuit ) CLASS TIPClientPOP
 
    IF ! HB_ISLOGICAL( lAutoQuit )
       lAutoQuit := .T.
@@ -163,13 +163,13 @@ METHOD Close( lAutoQuit ) CLASS tIPClientPOP
 
 /**
 */
-METHOD Delete( nId ) CLASS tIPClientPOP
+METHOD Delete( nId ) CLASS TIPClientPOP
 
    ::inetSendAll( ::SocketCon, "DELE " + hb_ntos( nId ) + ::cCRLF )
 
    RETURN ::GetOk()
 
-METHOD List() CLASS tIPClientPOP
+METHOD List() CLASS TIPClientPOP
 
    LOCAL nPos
    LOCAL cStr, cRet
@@ -196,13 +196,13 @@ METHOD List() CLASS tIPClientPOP
 
    RETURN cRet
 
-METHOD Noop() CLASS tIPClientPOP
+METHOD Noop() CLASS TIPClientPOP
 
    ::inetSendAll( ::SocketCon, "NOOP" + ::cCRLF )
 
    RETURN ::GetOk()
 
-METHOD Retrieve( nId, nLen ) CLASS tIPClientPOP
+METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
 
    LOCAL nPos
    LOCAL cRet, nRetLen, cBuffer, nRead
@@ -256,13 +256,13 @@ METHOD Retrieve( nId, nLen ) CLASS tIPClientPOP
 
    RETURN StrTran( cRet, ::cCRLF + "..", ::cCRLF + "." )
 
-METHOD Rset() CLASS tIPClientPOP
+METHOD Rset() CLASS TIPClientPOP
 
    ::inetSendAll( ::SocketCon, "RSET" + ::cCRLF )
 
    RETURN ::GetOk()
 
-METHOD Stat() CLASS tIPClientPOP
+METHOD Stat() CLASS TIPClientPOP
 
    LOCAL nRead
 
@@ -270,7 +270,7 @@ METHOD Stat() CLASS tIPClientPOP
 
    RETURN ::inetRecvLine( ::SocketCon, @nRead, 128 )
 
-METHOD Top( nMsgId ) CLASS tIPClientPOP
+METHOD Top( nMsgId ) CLASS TIPClientPOP
 
    LOCAL nPos
    LOCAL cStr, cRet
@@ -296,13 +296,13 @@ METHOD Top( nMsgId ) CLASS tIPClientPOP
 
    RETURN cRet
 
-METHOD Quit() CLASS tIPClientPOP
+METHOD Quit() CLASS TIPClientPOP
 
    ::inetSendAll( ::SocketCon, "QUIT" + ::cCRLF )
 
    RETURN ::GetOk()
 
-METHOD UIDL( nMsgId ) CLASS tIPClientPOP
+METHOD UIDL( nMsgId ) CLASS TIPClientPOP
 
    LOCAL nPos
    LOCAL cStr, cRet
@@ -340,7 +340,7 @@ METHOD UIDL( nMsgId ) CLASS tIPClientPOP
 
 /**
 */
-METHOD countMail() CLASS TIpClientPop
+METHOD countMail() CLASS TIPClientPop
 
    LOCAL cStat
 
@@ -354,7 +354,7 @@ METHOD countMail() CLASS TIpClientPop
 
    RETURN -1
 
-METHOD GetOk() CLASS tIPClientPOP
+METHOD GetOk() CLASS TIPClientPOP
 
    LOCAL nLen
 
@@ -365,7 +365,7 @@ METHOD GetOk() CLASS tIPClientPOP
 
    RETURN .T.
 
-METHOD Read( nLen ) CLASS tIPClientPOP
+METHOD Read( nLen ) CLASS TIPClientPOP
 
    /** Set what to read for */
    IF Empty( ::oUrl:cFile )
