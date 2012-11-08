@@ -66,7 +66,6 @@
       This image has no more than 256 colors.
 
       gdImageCreate() returns an image pointer or NIL if unable to create the image.
-      The image pointer must be destroyed using gdImageDestroy()
 
    $EXAMPLES$
       PROCEDURE Main()
@@ -105,7 +104,6 @@
       This image has true colors.
 
       gdImageCreateTrueColor() returns an image pointer or NIL if unable to create the image.
-      The image pointer must be destroyed using gdImageDestroy()
 
    $EXAMPLES$
       PROCEDURE Main()
@@ -122,43 +120,6 @@
       All
    $SEEALSO$
       gdImageCreate()
-   $END$
- */
-
-/* $DOC$
-   $FUNCNAME$
-      gdImageDestroy()
-   $CATEGORY$
-      HBGD
-   $ONELINER$
-      Free memory used from an image.
-   $SYNTAX$
-      gdImageDestroy( <pImage> ) --> NIL
-   $ARGUMENTS$
-      <pImage>       - Image pointer
-   $RETURNS$
-      NIL
-   $DESCRIPTION$
-      gdImageDestroy() frees memory used from an image.
-      It's important to use this function before exiting from a program.
-
-      HBGD uses it's own memory to manage an image, so it is important to use this function.
-
-   $EXAMPLES$
-      PROCEDURE Main()
-         LOCAL pImage := gdImageCreateTrueColor( 64, 64 )
-
-         // Use image here
-
-         RETURN
-   $STATUS$
-      R
-   $COMPLIANCE$
-      GD Library
-   $PLATFORMS$
-      All
-   $SEEALSO$
-      gdImageCreate(), gdImageCreateTrueColor()
    $END$
  */
 
@@ -196,7 +157,6 @@
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the jpeg image.
 
-      Remember to free memory with gdImageDestroy() before exit from application.
       HBGD uses it's own memory to manage an image, so it is important to use this function.
 
    $EXAMPLES$
@@ -251,7 +211,6 @@
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the gif image.
 
-      Remember to free memory with gdImageDestroy() before exit from application.
       HBGD uses it's own memory to manage an image, so it is important to use this function.
 
    $EXAMPLES$
@@ -306,7 +265,6 @@
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the png image.
 
-      Remember to free memory with gdImageDestroy() before exit from application.
       HBGD uses it's own memory to manage an image, so it is important to use this function.
 
    $EXAMPLES$
@@ -361,7 +319,6 @@
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the GD image.
 
-      Remember to free memory with gdImageDestroy() before exit from application.
       HBGD uses it's own memory to manage an image, so it is important to use this function.
 
    $EXAMPLES$
@@ -416,7 +373,6 @@
       the pImage pointer returned will be not NIL if successfull and will contains a memory pointer
       to the WBmp image.
 
-      Remember to free memory with gdImageDestroy() before exit from application.
       HBGD uses it's own memory to manage an image, so it is important to use this function.
 
    $EXAMPLES$
@@ -1584,8 +1540,7 @@
       different brush images, you can quickly fill your color map, and the results will not be
       optimal.
 
-      You need not take any special action when you are finished with a brush. As for any other image,
-      if you will not be using the brush image for any further purpose, you should call gdImageDestroy.
+      You need not take any special action when you are finished with a brush. As for any other image.
       You must not use the color gdBrushed if the current brush has been destroyed; you can of course
       set a new brush to replace it.
 
@@ -1657,8 +1612,7 @@
       different tile images, you can quickly fill your color map, and the results will not be optimal.
 
       You need not take any special action when you are finished with a tile. As for any other
-      image, if you will not be using the tile image for any further purpose, you should call
-      gdImageDestroy. You must not use the color gdTiled if the current tile has been destroyed;
+      image. You must not use the color gdTiled if the current tile has been destroyed;
       you can of course set a new tile to replace it.
 
    $EXAMPLES$

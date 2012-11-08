@@ -68,7 +68,6 @@ CREATE CLASS GDImage
 
    VAR aPoints      INIT {}
    VAR aStyles      INIT {}
-   VAR lDestroy     INIT .T.
 
    EXPORTED:
    VAR hFile
@@ -133,18 +132,19 @@ CREATE CLASS GDImage
 
    METHOD ToString()                       INLINE gdImageToString( Self )
 
+#if defined( HB_LEGACY_LEVEL4 )
    // Destructor
    METHOD Destroy()
    DESTRUCTOR Destruct()
-
-
+#endif
 
    /* DRAWING FUNCTIONS */
+
    METHOD SetPixel( x, y, color )          INLINE hb_default( @color, ::pColor ), gdImageSetPixel( ::pImage, x, y, color )
    METHOD Line( x1, y1, x2, y2, color )    INLINE hb_default( @color, ::pColor ), gdImageLine( ::pImage, x1, y1, x2, y2, color )
    METHOD DashedLine( x1, y1, x2, y2, color )    INLINE hb_default( @color, ::pColor ), gdImageDashedLine( ::pImage, x1, y1, x2, y2, color )
 
-   // Functions usefull for polygons
+   // Functions useful for polygons
    METHOD Polygon( aPoints, lFilled, color )
    METHOD OpenPolygon( aPoints, color )
    METHOD AddPoint( x, y )                 INLINE AAdd( ::aPoints, { x, y } )
@@ -180,6 +180,7 @@ CREATE CLASS GDImage
    METHOD SetClippingArea( x1, y1, x2, y2 )   INLINE gdImageSetClip( ::pImage, x1, y1, x2, y2 )
 
    /* QUERY FUNCTIONS */
+
    METHOD ColorsTotal()                    INLINE gdImageColorsTotal( ::pImage )
    METHOD Alpha( color )                   INLINE hb_default( @color, ::pColor ), gdImageAlpha( ::pImage, color )
    METHOD Red( color )                     INLINE hb_default( @color, ::pColor ), gdImageRed( ::pImage, color )
@@ -243,6 +244,7 @@ CREATE CLASS GDImage
                                                       gdImageFTSize( cString, cFontName, nPitch )
 
    /* COLOR HANDLING FUNCTIONS */
+
    METHOD SetColor( r, g, b )              INLINE iif( PCount() == 2, ::pColor := r, ::pColor := gdImageColorAllocate( ::pImage, r, g, b ) )
    METHOD DelColor( pColor )               INLINE ::pColor := NIL, gdImageColorDeAllocate( ::pImage, pColor )
    METHOD SetColorAlpha( r, g, b, a )      INLINE ::pColor := gdImageColorAllocateAlpha( ::pImage, r, g, b, a)
@@ -259,6 +261,7 @@ CREATE CLASS GDImage
    METHOD SetInterlaceOff()                INLINE gdImageInterlace( ::pImage, .F. )
 
    /* COPY AND RESIZING FUNCTIONS */
+
    METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage )
    METHOD CopyResized( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage )
    METHOD CopyResampled( nSrcX, nSrcY, nSrcWidth, nSrcHeight, nDstX, nDstY, nDstWidth, nDstHeight, oDestImage )
@@ -297,8 +300,12 @@ METHOD New( sx, sy ) CLASS GDImage
 
    RETURN Self
 
+#if defined( HB_LEGACY_LEVEL4 )
+
 METHOD PROCEDURE Destruct() CLASS GDImage
    RETURN
+
+#endif
 
 METHOD Polygon( aPoints, lFilled, color ) CLASS GDImage
 
@@ -369,10 +376,8 @@ METHOD LoadFromFile( cFile ) CLASS GDImage
 
    aLoad := gdImageFromFile( cFile )
    // Self  := aLoad[ 1 ]:Clone()
-   ::Destroy()
    Self := ::CloneDataFrom( aLoad[ 1 ] )
-   // Self := __objClone( aLoad[1] )
-   aLoad[ 1 ]:lDestroy := .F.
+   // Self := __objClone( aLoad[ 1 ] )
    aLoad[ 1 ] := NIL
 
    ::hFile := aLoad[ 2 ]
@@ -381,9 +386,13 @@ METHOD LoadFromFile( cFile ) CLASS GDImage
 
    RETURN Self
 
+#if defined( HB_LEGACY_LEVEL4 )
+
 /* dummy. no longer needed */
 METHOD Destroy() CLASS GDImage
    RETURN Self
+
+#endif
 
 METHOD Copy( nSrcX, nSrcY, nWidth, nHeight, nDstX, nDstY, oDestImage ) CLASS GDImage
 
@@ -574,13 +583,10 @@ METHOD Rotate( nAngle, lInside ) CLASS GDImage
    ELSE
       ::CopyRotated( ,,,,,, nAngle, oDestImage )
    ENDIF
-   ::Destroy()
    Self := ::CloneDataFrom( oDestImage )
    // Self := __ObjClone( oDestImage ) // non funziona
 
    // Move new image to existing one
-   // Signal that this image must not be destroyed
-   oDestImage:lDestroy := .F.
    oDestImage := NIL
 
    RETURN Self
@@ -590,13 +596,10 @@ METHOD Crop( nX, nY, nWidth, nHeight ) CLASS GDImage
    LOCAL oDestImage
 
    oDestImage := ::CopyResized( nX, nY, nWidth, nHeight, 0, 0, nWidth, nHeight )
-   ::Destroy()
    Self := ::CloneDataFrom( oDestImage )
    // Self := __ObjClone( oDestImage ) // non funziona
 
    // Move new image to existing one
-   // Signal that this image must not be destroyed
-   oDestImage:lDestroy := .F.
    oDestImage := NIL
 
    RETURN Self
@@ -606,13 +609,10 @@ METHOD Resize( nWidth, nHeight ) CLASS GDImage
    LOCAL oDestImage
 
    oDestImage := ::CopyResampled( 0, 0, NIL, NIL, 0, 0, nWidth, nHeight )
-   ::Destroy()
    Self := ::CloneDataFrom( oDestImage )
    // Self := __ObjClone( oDestImage ) // non funziona
 
    // Move new image to existing one
-   // Signal that this image must not be destroyed
-   oDestImage:lDestroy := .F.
    oDestImage := NIL
 
    RETURN Self
@@ -622,13 +622,10 @@ METHOD Zoom( nPerc ) CLASS GDImage
    LOCAL oDestImage
 
    oDestImage := ::CopyZoomed( nPerc )
-   ::Destroy()
    Self := ::CloneDataFrom( oDestImage )
    // Self := __ObjClone( oDestImage ) // non funziona
 
    // Move new image to existing one
-   // Signal that this image must not be destroyed
-   oDestImage:lDestroy := .F.
    oDestImage := NIL
 
    RETURN Self
@@ -650,10 +647,7 @@ METHOD Clone() CLASS GDImage
    oDestImage:pImage := pImage
    ::Copy( 0, 0, ::Width, ::Height, 0, 0, oDestImage )
 
-
    // pImage := oDestImage:pImage
-   // // Signal that this image must not be destroyed
-   // oDestImage:lDestroy := .F.
    // oDestImage := NIL
    // oDestImage:pImage := pImage
 
@@ -729,7 +723,6 @@ METHOD CloneDataFrom( oSrc )
 
    ::aPoints     := AClone( oSrc:aPoints )
    ::aStyles     := AClone( oSrc:aStyles )
-   ::lDestroy    := oSrc:lDestroy
 
    ::hFile       := oSrc:hFile
    ::cType       := oSrc:cType
