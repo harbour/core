@@ -97,7 +97,7 @@
    #xtranslate hb_ValToExp( [<x,...>] )      => ValToPrgExp( <x> )
    #xtranslate hb_rddInfo( [<x,...>] )       => rddInfo( <x> )
    #xtranslate hb_idleSleep( [<x,...>] )     => SecondsSleep( <x> )
-   #xtranslate hb_UserName()                 => NetName(1)
+   #xtranslate hb_UserName()                 => NetName( 1 )
    #xtranslate hb_FSize( <x> )               => FileSize( <x> )
    #xtranslate hb_WildMatch( [<x,...>] )     => WildMatch( <x> )
    #xtranslate hb_bitTest( [<x,...>] )       => hb_bitIsSet( <x> )
