@@ -424,7 +424,7 @@ HB_FUNC( PQEXECPARAMS )
 
       const char ** paramvalues = ( const char ** ) hb_xgrab( sizeof( char * ) * n );
 
-      for( i = 0; i < n; i++ )
+      for( i = 0; i < n; ++i )
          paramvalues[ i ] = hb_arrayGetCPtr( aParam, i + 1 );
 
       hb_PGresult_ret( PQexecParams( conn, hb_parcx( 2 ), n, NULL, paramvalues, NULL, NULL, 1 ) );
@@ -1142,7 +1142,7 @@ HB_FUNC( PQEXECPREPARED )
 
       hb_PGresult_ret( PQexecPrepared( conn, hb_parcx( 2 ), ( int ) n, ( const char * const * ) paramvalues, NULL, NULL, 1 ) );
 
-      hb_xfree( paramvalues );
+      hb_xfree( ( void * ) paramvalues );
    }
    else
       hb_errRT_BASE( EG_ARG, 2020, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

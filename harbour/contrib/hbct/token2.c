@@ -420,7 +420,7 @@ HB_FUNC( TOKENNEXT )
             return;
          }
          sTokenEnvironment = ( TOKEN_ENVIRONMENT ) hb_xgrab( sStrLen3 );
-         hb_xmemcpy( ( char * ) sTokenEnvironment, hb_parc( 3 ), sStrLen3 );
+         hb_xmemcpy( sTokenEnvironment, hb_parc( 3 ), sStrLen3 );
       }
       else
       {
@@ -466,7 +466,7 @@ HB_FUNC( TOKENNEXT )
          if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
          {
             hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 3 );
-            hb_xfree( ( char * ) sTokenEnvironment );
+            hb_xfree( sTokenEnvironment );
          }
          hb_retc_null();
          return;
@@ -482,7 +482,7 @@ HB_FUNC( TOKENNEXT )
       if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
       {
          hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 3 );
-         hb_xfree( ( char * ) sTokenEnvironment );
+         hb_xfree( sTokenEnvironment );
       }
 
    }
@@ -514,7 +514,7 @@ HB_FUNC( TOKENNUM )
    else
       sTokenEnvironment = s_sTokenEnvironment;
 
-   if( ( void * ) sTokenEnvironment != NULL )
+   if( sTokenEnvironment != NULL )
       hb_retns( sTokEnvGetCnt( sTokenEnvironment ) );
    else
    {
@@ -543,7 +543,7 @@ HB_FUNC( TOKENEND )
    else
       sTokenEnvironment = s_sTokenEnvironment;
 
-   if( ( void * ) sTokenEnvironment != NULL )
+   if( sTokenEnvironment != NULL )
       hb_retl( sTokEnvEnd( sTokenEnvironment ) );
    else
    {
@@ -590,7 +590,7 @@ HB_FUNC( TOKENAT )
    else
       sTokenEnvironment = s_sTokenEnvironment;
 
-   if( ( void * ) sTokenEnvironment == NULL )
+   if( sTokenEnvironment == NULL )
    {
       int iArgErrorMode = ct_getargerrormode();
 

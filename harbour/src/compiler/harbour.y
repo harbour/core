@@ -2740,7 +2740,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    {
       HB_COMP_EXPR_FREE( pCase->pExpr );
       pTmp = pCase->pNext;
-      hb_xfree( ( void * ) pCase );
+      hb_xfree( pCase );
       pCase = pTmp;
    }
    pFunc->pSwitch = pSwitch->pPrev;
@@ -2761,13 +2761,13 @@ void hb_compSwitchKill( HB_COMP_DECL, PFUNCTION pFunc )
          pCase = pFunc->pSwitch->pCases;
          HB_COMP_EXPR_FREE( pCase->pExpr );
          pFunc->pSwitch->pCases = pCase->pNext;
-         hb_xfree( ( void * ) pCase );
+         hb_xfree( pCase );
       }
       pSwitch = pFunc->pSwitch;
       pFunc->pSwitch = pSwitch->pPrev;
       if( pSwitch->pExpr )
          HB_COMP_EXPR_FREE( pSwitch->pExpr );
-      hb_xfree( ( void * ) pSwitch );
+      hb_xfree( pSwitch );
    }
 }
 
