@@ -2593,6 +2593,47 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
       else if( HB_INKEY_ISMOUSEKEY( iKey ) )
       {
          switch( HB_INKEY_VALUE( iKey ) )
+         {
+            case K_MOUSEMOVE:
+            case K_MMLEFTDOWN:
+            case K_MMRIGHTDOWN:
+            case K_MMMIDDLEDOWN:
+            case K_NCMOUSEMOVE:
+               iMask = INKEY_MOVE;
+               break;
+            case K_LBUTTONDOWN:
+            case K_LDBLCLK:
+               iMask = INKEY_LDOWN;
+               break;
+            case K_LBUTTONUP:
+               iMask = INKEY_LUP;
+               break;
+            case K_RBUTTONDOWN:
+            case K_RDBLCLK:
+               iMask = INKEY_RDOWN;
+               break;
+            case K_RBUTTONUP:
+               iMask = INKEY_RUP;
+               break;
+            case K_MBUTTONDOWN:
+            case K_MBUTTONUP:
+            case K_MDBLCLK:
+               iMask = INKEY_MMIDDLE;
+               break;
+            case K_MWFORWARD:
+            case K_MWBACKWARD:
+               iMask = INKEY_MWHEEL;
+               break;
+            default:
+               iMask = INKEY_KEYBOARD;
+         }
+      }
+      else
+         iMask = INKEY_KEYBOARD;
+   }
+   else
+   {
+      switch( iKey )
       {
          case K_MOUSEMOVE:
          case K_MMLEFTDOWN:
@@ -2624,59 +2665,18 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
          case K_MWBACKWARD:
             iMask = INKEY_MWHEEL;
             break;
+         case HB_K_RESIZE:
+         case HB_K_CLOSE:
+         case HB_K_GOTFOCUS:
+         case HB_K_LOSTFOCUS:
+         case HB_K_CONNECT:
+         case HB_K_DISCONNECT:
+            iMask = HB_INKEY_GTEVENT;
+            break;
          default:
             iMask = INKEY_KEYBOARD;
+            break;
       }
-      }
-      else
-         iMask = INKEY_KEYBOARD;
-   }
-   else
-   {
-      switch( iKey )
-   {
-      case K_MOUSEMOVE:
-      case K_MMLEFTDOWN:
-      case K_MMRIGHTDOWN:
-      case K_MMMIDDLEDOWN:
-      case K_NCMOUSEMOVE:
-         iMask = INKEY_MOVE;
-         break;
-      case K_LBUTTONDOWN:
-      case K_LDBLCLK:
-         iMask = INKEY_LDOWN;
-         break;
-      case K_LBUTTONUP:
-         iMask = INKEY_LUP;
-         break;
-      case K_RBUTTONDOWN:
-      case K_RDBLCLK:
-         iMask = INKEY_RDOWN;
-         break;
-      case K_RBUTTONUP:
-         iMask = INKEY_RUP;
-         break;
-      case K_MBUTTONDOWN:
-      case K_MBUTTONUP:
-      case K_MDBLCLK:
-         iMask = INKEY_MMIDDLE;
-         break;
-      case K_MWFORWARD:
-      case K_MWBACKWARD:
-         iMask = INKEY_MWHEEL;
-         break;
-      case HB_K_RESIZE:
-      case HB_K_CLOSE:
-      case HB_K_GOTFOCUS:
-      case HB_K_LOSTFOCUS:
-      case HB_K_CONNECT:
-      case HB_K_DISCONNECT:
-         iMask = HB_INKEY_GTEVENT;
-         break;
-      default:
-         iMask = INKEY_KEYBOARD;
-         break;
-   }
    }
 
    if( ( iMask & iEventMask ) == 0 )

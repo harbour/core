@@ -35,7 +35,7 @@
 /* ugly workaround for bugs in XCC preprocessor */
 static sha1_quadbyte rol( sha1_quadbyte value, int bits )
 {
-   return ((value << bits) | (value >> (32 - bits)));
+   return (value << bits) | (value >> (32 - bits));
 }
 #endif
 
