@@ -32,25 +32,25 @@ PROCEDURE Main( ... )
 
    LOCAL cRoot := hb_DirBase() + ".." + hb_ps()
 
-   WalkDir( cRoot + "include", { ... } )
-   WalkDir( cRoot + "contrib", { ... } )
-   WalkDir( cRoot + "addons" , { ... } )
+   WalkDir( cRoot + "include", { ... }, "core" )
+   WalkDir( cRoot + "contrib", { ... }, "contrib" )
+   WalkDir( cRoot + "addons" , { ... }, "addon" )
 
    RETURN
 
-STATIC PROCEDURE WalkDir( cDir, aContains )
+STATIC PROCEDURE WalkDir( cDir, aContains, cComponent )
 
    LOCAL aFile
 
    cDir := hb_DirSepAdd( hb_DirSepToOS( cDir ) )
 
    FOR EACH aFile IN hb_DirScan( cDir, "*.hbx" )
-      ProcessFile( cDir + aFile[ F_NAME ], aContains )
+      ProcessFile( cDir + aFile[ F_NAME ], aContains, cComponent )
    NEXT
 
    RETURN
 
-STATIC PROCEDURE ProcessFile( cFileName, aContains )
+STATIC PROCEDURE ProcessFile( cFileName, aContains, cComponent )
 
    LOCAL cDynamic
    LOCAL lFirst := .T.
@@ -59,7 +59,12 @@ STATIC PROCEDURE ProcessFile( cFileName, aContains )
       IF Empty( aContains ) .OR. AScan( aContains, {| tmp | Upper( tmp ) $ Upper( cDynamic ) } ) > 0
          IF lFirst
             lFirst := .F.
-            OutStd( hb_DirSepToOS( cFileName ) + hb_eol() )
+            IF cComponent == "core"
+               cFileName := "(" + cComponent + ")"
+            ELSE
+               cFileName := cComponent + " - " + hb_FNameExtSet( hb_FNameName( hb_DirSepToOS( cFileName ) ), ".hbc" )
+            ENDIF
+            OutStd( cFileName + ": " + hb_eol() )
          ENDIF
          OutStd( "   " + cDynamic + "()" + hb_eol() )
       ENDIF
