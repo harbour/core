@@ -383,6 +383,7 @@ typedef void * PHB_MEMINFO;
    static HB_FORCEINLINE int hb_counterDecrement( volatile HB_COUNTER * p )
    {
       int iResult;
+
       HB_FM_LOCK();
       iResult = --( *p ) != 0;
       HB_FM_UNLOCK();

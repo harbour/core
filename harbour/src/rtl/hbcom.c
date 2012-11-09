@@ -1122,46 +1122,49 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
          tio.c_cc[ VTIME ] = 0;  /* inter-character timer in 1/10 sec. */
          tio.c_cc[ VMIN ]  = 0;  /* minimum number of characters for read */
 
-         if( iBaud ) switch( iBaud )
+         if( iBaud )
          {
-            case        0: iBaud =      B0; break;
-            case       50: iBaud =     B50; break;
-            case       75: iBaud =     B75; break;
-            case      110: iBaud =    B110; break;
-            case      150: iBaud =    B150; break;
-            case      200: iBaud =    B200; break;
-            case      300: iBaud =    B300; break;
-            case      600: iBaud =    B600; break;
-            case     1200: iBaud =   B1200; break;
-            case     1800: iBaud =   B1800; break;
-            case     2400: iBaud =   B2400; break;
-            case     4800: iBaud =   B4800; break;
-            case     9600: iBaud =   B9600; break;
-            case    19200: iBaud =  B19200; break;
-            case    38400: iBaud =  B38400; break;
+            switch( iBaud )
+            {
+               case        0: iBaud =      B0; break;
+               case       50: iBaud =     B50; break;
+               case       75: iBaud =     B75; break;
+               case      110: iBaud =    B110; break;
+               case      150: iBaud =    B150; break;
+               case      200: iBaud =    B200; break;
+               case      300: iBaud =    B300; break;
+               case      600: iBaud =    B600; break;
+               case     1200: iBaud =   B1200; break;
+               case     1800: iBaud =   B1800; break;
+               case     2400: iBaud =   B2400; break;
+               case     4800: iBaud =   B4800; break;
+               case     9600: iBaud =   B9600; break;
+               case    19200: iBaud =  B19200; break;
+               case    38400: iBaud =  B38400; break;
 #ifdef B57600
-            case    57600: iBaud =  B57600; break;
+               case    57600: iBaud =  B57600; break;
 #endif
 #ifdef B115200
-            case   115200: iBaud = B115200; break;
+               case   115200: iBaud = B115200; break;
 #endif
 #ifdef B230400
-            case   230400: iBaud = B230400; break;
+               case   230400: iBaud = B230400; break;
 #endif
 #ifdef B460800
-            case   460800: iBaud = B460800; break;
+               case   460800: iBaud = B460800; break;
 #endif
 #ifdef B500000
-            case   500000: iBaud = B500000; break;
+               case   500000: iBaud = B500000; break;
 #endif
 #ifdef B576000
-            case   576000: iBaud = B576000; break;
+               case   576000: iBaud = B576000; break;
 #endif
 #ifdef B921600
-            case   921600: iBaud = B921600; break;
+               case   921600: iBaud = B921600; break;
 #endif
-            default:
-               iResult = -1;
+               default:
+                  iResult = -1;
+            }
          }
          switch( iParity )
          {

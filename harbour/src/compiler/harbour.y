@@ -43,7 +43,7 @@
 
 /* to pacify some meaningless warnings */
 #if defined( __BORLANDC__ )
-#  if !defined( __STDC__ )
+#  if ! defined( __STDC__ )
 #     define __STDC__
 #  endif
 #  pragma warn -aus
@@ -413,8 +413,9 @@ Statement  : ExecFlow CrlfStmnt
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
                         hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
-                        if( (HB_COMP_PARAM->functions.pLast->funFlags & FUN_PROCEDURE) == 0 )
-                        { /* return from a function without a return value */
+                        if( ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_PROCEDURE ) == 0 )
+                        {
+                           /* return from a function without a return value */
                            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_NO_RETURN_VALUE, NULL, NULL );
                         }
                         HB_COMP_PARAM->functions.pLast->funFlags |= FUN_WITH_RETURN | FUN_BREAK_CODE;
@@ -434,7 +435,8 @@ Statement  : ExecFlow CrlfStmnt
                         else
                            hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, HB_COMP_PARAM );
                         if( HB_COMP_PARAM->functions.pLast->funFlags & FUN_PROCEDURE )
-                        { /* procedure returns a value */
+                        {
+                           /* procedure returns a value */
                            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PROC_RETURN_VALUE, NULL, NULL );
                         }
                         HB_COMP_PARAM->functions.pLast->funFlags |= FUN_WITH_RETURN | FUN_BREAK_CODE;
@@ -502,12 +504,12 @@ LineStat   : Crlf          { $<lNumber>$ = 0; }
            | ControlError  { $<lNumber>$ = 0; hb_compCheckUnclosedStru( HB_COMP_PARAM, HB_COMP_PARAM->functions.pLast ); }
            | error         { if( HB_COMP_PARAM->ilastLineErr && HB_COMP_PARAM->ilastLineErr == HB_COMP_PARAM->currLine )
                              {
-                                 yyclearin;
+                                yyclearin;
                              }
                              else
                              {
-                                 yyerrok;
-                                 HB_COMP_PARAM->ilastLineErr = HB_COMP_PARAM->currLine;
+                                yyerrok;
+                                HB_COMP_PARAM->ilastLineErr = HB_COMP_PARAM->currLine;
                              }
                              $<lNumber>$ = 0;
                            }
@@ -2425,7 +2427,7 @@ static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEa
    pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    if( pEnumVar == NULL )
    {
-      HB_COMP_PARAM->functions.pLast->pEnum = (HB_ENUMERATOR_PTR) hb_xgrab( sizeof(HB_ENUMERATOR) );
+      HB_COMP_PARAM->functions.pLast->pEnum = ( HB_ENUMERATOR_PTR ) hb_xgrab( sizeof( HB_ENUMERATOR ) );
       pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    }
    else
@@ -2447,7 +2449,7 @@ static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEa
          pLast = pEnumVar;
          pEnumVar = pEnumVar->pNext;
       }
-      pLast->pNext = (HB_ENUMERATOR_PTR) hb_xgrab( sizeof( HB_ENUMERATOR ) );
+      pLast->pNext = ( HB_ENUMERATOR_PTR ) hb_xgrab( sizeof( HB_ENUMERATOR ) );
       pEnumVar = pLast->pNext;
    }
    pEnumVar->szName   = szVarName;
@@ -2460,7 +2462,7 @@ static HB_BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
    HB_ENUMERATOR_PTR pEnumVar;
 
    pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
-   if( pEnumVar && !HB_COMP_PARAM->functions.pLast->bBlock )
+   if( pEnumVar && ! HB_COMP_PARAM->functions.pLast->bBlock )
    {
       while( pEnumVar )
       {
@@ -2502,6 +2504,7 @@ static void hb_compForEnd( HB_COMP_DECL, const char *szVar )
 static HB_COMP_CARGO2_FUNC( hb_compEnumEvalStart )
 {
    const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
+
    if( szName )
       hb_compForStart( HB_COMP_PARAM, szName, HB_TRUE );
 
@@ -2513,7 +2516,7 @@ static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExpr
 {
    HB_SIZE ulLen;
 
-   if( hb_compExprListLen(pVars) != hb_compExprListLen(pExprs) )
+   if( hb_compExprListLen( pVars ) != hb_compExprListLen( pExprs ) )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_FORVAR_DIFF, NULL, NULL );
    }
@@ -2546,6 +2549,7 @@ static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend )
 static HB_COMP_CARGO_FUNC( hb_compEnumEvalEnd )
 {
    const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
+
    if( szName )
       hb_compForEnd( HB_COMP_PARAM, szName );
 }
@@ -2558,7 +2562,7 @@ static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
 static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
-   HB_SWITCHCMD_PTR pSwitch = (HB_SWITCHCMD_PTR) hb_xgrab( sizeof( HB_SWITCHCMD ) );
+   HB_SWITCHCMD_PTR pSwitch = ( HB_SWITCHCMD_PTR ) hb_xgrab( sizeof( HB_SWITCHCMD ) );
    PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
 
    pSwitch->pCases = NULL;
@@ -2580,7 +2584,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    if( pExpr )
    {
       /* normal CASE */
-      pCase = (HB_SWITCHCASE_PTR) hb_xgrab( sizeof( HB_SWITCHCASE ) );
+      pCase = ( HB_SWITCHCASE_PTR ) hb_xgrab( sizeof( HB_SWITCHCASE ) );
       pCase->nOffset = pFunc->nPCodePos;
       pCase->pNext = NULL;
       pCase->pExpr = pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
@@ -2685,7 +2689,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
          }
          pCase = pCase->pNext;
       }
-      if( pSwitch->nDefault && !fGen )
+      if( pSwitch->nDefault && ! fGen )
       {
          hb_compGenJumpThere( hb_compGenJump( 0, HB_COMP_PARAM ),
                               pSwitch->nDefault, HB_COMP_PARAM );
@@ -2736,7 +2740,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
    {
       HB_COMP_EXPR_FREE( pCase->pExpr );
       pTmp = pCase->pNext;
-      hb_xfree( (void *)pCase );
+      hb_xfree( ( void * ) pCase );
       pCase = pTmp;
    }
    pFunc->pSwitch = pSwitch->pPrev;
@@ -2757,13 +2761,13 @@ void hb_compSwitchKill( HB_COMP_DECL, PFUNCTION pFunc )
          pCase = pFunc->pSwitch->pCases;
          HB_COMP_EXPR_FREE( pCase->pExpr );
          pFunc->pSwitch->pCases = pCase->pNext;
-         hb_xfree( (void *) pCase );
+         hb_xfree( ( void * ) pCase );
       }
       pSwitch = pFunc->pSwitch;
       pFunc->pSwitch = pSwitch->pPrev;
       if( pSwitch->pExpr )
          HB_COMP_EXPR_FREE( pSwitch->pExpr );
-      hb_xfree( (void *) pSwitch );
+      hb_xfree( ( void * ) pSwitch );
    }
 }
 
@@ -2878,9 +2882,9 @@ HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION pFunc )
 
 void yyerror( HB_COMP_DECL, const char * s )
 {
-   if( !HB_COMP_PARAM->pLex->lasttok || HB_COMP_PARAM->pLex->lasttok[ 0 ] == '\n' )
+   if( ! HB_COMP_PARAM->pLex->lasttok || HB_COMP_PARAM->pLex->lasttok[ 0 ] == '\n' )
    {
-      if( HB_COMP_PARAM->iErrorCount == 0 || !hb_pp_eof( HB_COMP_PARAM->pLex->pPP ) )
+      if( HB_COMP_PARAM->iErrorCount == 0 || ! hb_pp_eof( HB_COMP_PARAM->pLex->pPP ) )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_INCOMPLETE_STMT, NULL, NULL );
    }
    else

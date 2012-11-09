@@ -77,6 +77,7 @@ HB_FUNC( AFIELDS )
    PHB_ITEM pType = hb_param( 2, HB_IT_ARRAY );
    PHB_ITEM pLen = hb_param( 3, HB_IT_ARRAY );
    PHB_ITEM pDec = hb_param( 4, HB_IT_ARRAY );
+
 #ifdef DBS_FLAG
    PHB_ITEM pFlags = hb_param( 5, HB_IT_ARRAY );
 #else

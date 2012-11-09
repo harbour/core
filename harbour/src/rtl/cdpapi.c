@@ -519,13 +519,16 @@ static int hb_cdpMulti_len( PHB_CODEPAGE cdp, HB_WCHAR wc )
 {
    int i, n = 1;
 
-   if( wc ) for( i = 0; i < cdp->nMulti; ++i )
+   if( wc )
    {
-      if( wc == cdp->multi[ i ].wcUp ||
-          wc == cdp->multi[ i ].wcLo )
+      for( i = 0; i < cdp->nMulti; ++i )
       {
-         ++n;
-         break;
+         if( wc == cdp->multi[ i ].wcUp ||
+             wc == cdp->multi[ i ].wcLo )
+         {
+            ++n;
+            break;
+         }
       }
    }
    return n;
@@ -1831,6 +1834,7 @@ HB_WCHAR * hb_cdpnStrDupU16( PHB_CODEPAGE cdp, int iEndian,
 {
    HB_SIZE nLen = hb_cdpStrAsU16Len( cdp, pSrc, nSrc, 0 );
    HB_WCHAR * pDst = ( HB_WCHAR * ) hb_xgrab( ( nLen + 1 ) * sizeof( HB_WCHAR ) );
+
    hb_cdpStrToU16( cdp, iEndian, pSrc, nSrc, pDst, nLen + 1 );
    if( pnDst )
       *pnDst = nLen;

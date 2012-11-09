@@ -211,6 +211,7 @@ static int hb_lexStringExtCopy( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro,
 {
    HB_SIZE nLen;
    char * string;
+
    pLex->quote = HB_FALSE;
    string = pLex->pDst;
    while( pLex->nSrc < pLex->nLen )

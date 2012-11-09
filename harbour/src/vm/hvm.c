@@ -1242,6 +1242,7 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
    HB_STACK_TLS_PRELOAD
    HB_BOOL bCanRecover = HB_FALSE;
    HB_BOOL bDynCode = pSymbols == NULL || ( pSymbols->scope.value & HB_FS_DYNCODE ) != 0;
+
 #ifndef HB_NO_PROFILER
    HB_ULONG ulLastOpcode = 0; /* opcodes profiler support */
    HB_ULONG ulPastClock = 0;  /* opcodes profiler support */
@@ -5817,6 +5818,7 @@ void hb_vmProc( HB_USHORT uiParams )
 {
    HB_STACK_STATE sStackState;
    PHB_SYMB pSym;
+
 #ifndef HB_NO_PROFILER
    HB_ULONG ulClock = 0;
    HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
@@ -5877,6 +5879,7 @@ void hb_vmDo( HB_USHORT uiParams )
    HB_STACK_STATE sStackState;
    PHB_SYMB pSym;
    PHB_ITEM pSelf;
+
 #ifndef HB_NO_PROFILER
    HB_ULONG ulClock = 0;
    HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */
@@ -5966,6 +5969,7 @@ void hb_vmSend( HB_USHORT uiParams )
    PHB_SYMB pSym;
    PHB_SYMB pExecSym;
    PHB_ITEM pSelf;
+
 #ifndef HB_NO_PROFILER
    HB_ULONG ulClock = 0;
    HB_BOOL bProfiler = hb_bProfiler; /* because profiler state may change */

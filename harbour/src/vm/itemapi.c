@@ -1485,42 +1485,45 @@ const char * hb_itemTypeStr( PHB_ITEM pItem )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_itemTypeStr(%p)", pItem ) );
 
-   if( pItem ) switch( HB_ITEM_TYPE( pItem ) )
+   if( pItem )
    {
-      case HB_IT_ARRAY:
-         return hb_arrayIsObject( pItem ) ? "O" : "A";
+      switch( HB_ITEM_TYPE( pItem ) )
+      {
+         case HB_IT_ARRAY:
+            return hb_arrayIsObject( pItem ) ? "O" : "A";
 
-      case HB_IT_BLOCK:
-         return "B";
+         case HB_IT_BLOCK:
+            return "B";
 
-      case HB_IT_DATE:
-         return "D";
+         case HB_IT_DATE:
+            return "D";
 
-      case HB_IT_TIMESTAMP:
-         return "T";
+         case HB_IT_TIMESTAMP:
+            return "T";
 
-      case HB_IT_LOGICAL:
-         return "L";
+         case HB_IT_LOGICAL:
+            return "L";
 
-      case HB_IT_INTEGER:
-      case HB_IT_LONG:
-      case HB_IT_DOUBLE:
-         return "N";
+         case HB_IT_INTEGER:
+         case HB_IT_LONG:
+         case HB_IT_DOUBLE:
+            return "N";
 
-      case HB_IT_STRING:
-         return "C";
+         case HB_IT_STRING:
+            return "C";
 
-      case HB_IT_MEMO:
-         return "M";
+         case HB_IT_MEMO:
+            return "M";
 
-      case HB_IT_HASH:
-         return "H";
+         case HB_IT_HASH:
+            return "H";
 
-      case HB_IT_POINTER:
-         return "P";
+         case HB_IT_POINTER:
+            return "P";
 
-      case HB_IT_SYMBOL:
-         return "S";
+         case HB_IT_SYMBOL:
+            return "S";
+      }
    }
 
    return "U";

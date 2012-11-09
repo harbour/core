@@ -249,6 +249,7 @@ static void hb_pp_error( PHB_PP_STATE pState, char type, int iError, const char 
 static void hb_pp_operatorsFree( PHB_PP_OPERATOR pOperators, int iOperators )
 {
    PHB_PP_OPERATOR pOperator = pOperators;
+
    while( --iOperators >= 0 )
    {
       hb_xfree( ( void * ) pOperator->name );
@@ -541,6 +542,7 @@ static void hb_pp_tokenAdd( PHB_PP_TOKEN ** pTokenPtr,
                             HB_SIZE nSpaces, HB_USHORT type )
 {
    PHB_PP_TOKEN pToken = hb_pp_tokenNew( value, nLen, nSpaces, type );
+
    ** pTokenPtr = pToken;
    * pTokenPtr = &pToken->pNext;
 }
@@ -862,7 +864,9 @@ static void hb_pp_dumpEnd( PHB_PP_STATE pState )
          else if( pState->pFile->iLastLine < pState->iDumpLine )
          {
             do
+            {
                fputc( '\n', pState->file_out );
+            }
             while( ++pState->pFile->iLastLine < pState->iDumpLine );
          }
          pBuffer = hb_membufPtr( pState->pDumpBuffer );
@@ -1131,7 +1135,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                while( n == nLen )
                {
                   u = 1;
-                  while( n > u && pBuffer[ n - u ] == ' ' ) ++u;
+                  while( n > u && pBuffer[ n - u ] == ' ' )
+                     ++u;
                   if( n >= u && pBuffer[ n - u ] == ';' )
                   {
                      n -= u;
@@ -1214,7 +1219,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                while( n == nLen )
                {
                   HB_SIZE u = 1;
-                  while( n > u && pBuffer[ n - u ] == ' ' ) ++u;
+                  while( n > u && pBuffer[ n - u ] == ' ' )
+                     ++u;
                   if( n >= u && pBuffer[ n - u ] == ';' )
                   {
                      n -= u;
@@ -1552,7 +1558,9 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
    if( nSpace > 0 )
    {
       do
+      {
          hb_membufAddCh( pBuffer, ' ' );
+      }
       while( --nSpace );
    }
 
@@ -2210,6 +2218,7 @@ static void hb_pp_pragmaStreamFile( PHB_PP_STATE pState, const char * szFileName
    PHB_PP_FILE pFile = hb_pp_FileNew( pState, szFileName, HB_FALSE, NULL, NULL,
                                       HB_TRUE, pState->pOpenFunc,
                                       pState->iStreamDump == HB_PP_STREAM_BINARY );
+
    if( pFile )
    {
       HB_SIZE nSize;
@@ -2405,30 +2414,33 @@ static HB_BOOL hb_pp_getCompilerSwitch( PHB_PP_STATE pState, const char * szSwit
    if( pState->pSwitchFunc )
       fError = ( pState->pSwitchFunc )( pState->cargo, szSwitch, piValue, HB_FALSE );
 
-   if( fError ) switch( szSwitch[ 0 ] )
+   if( fError )
    {
-      case 'p':
-      case 'P':
-         if( szSwitch[ 1 ] == '\0' )
-         {
-            *piValue = pState->fWritePreprocesed ? 1 : 0;
-            fError = HB_FALSE;
-         }
-         else if( szSwitch[ 1 ] == '+' && szSwitch[ 2 ] == '\0' )
-         {
-            *piValue = pState->fWriteTrace ? 1 : 0;
-            fError = HB_FALSE;
-         }
-         break;
+      switch( szSwitch[ 0 ] )
+      {
+         case 'p':
+         case 'P':
+            if( szSwitch[ 1 ] == '\0' )
+            {
+               *piValue = pState->fWritePreprocesed ? 1 : 0;
+               fError = HB_FALSE;
+            }
+            else if( szSwitch[ 1 ] == '+' && szSwitch[ 2 ] == '\0' )
+            {
+               *piValue = pState->fWriteTrace ? 1 : 0;
+               fError = HB_FALSE;
+            }
+            break;
 
-      case 'q':
-      case 'Q':
-         if( szSwitch[ 1 ] == '\0' )
-         {
-            *piValue = pState->fQuiet ? 1 : 0;
-            fError = HB_FALSE;
-         }
-         break;
+         case 'q':
+         case 'Q':
+            if( szSwitch[ 1 ] == '\0' )
+            {
+               *piValue = pState->fQuiet ? 1 : 0;
+               fError = HB_FALSE;
+            }
+            break;
+      }
    }
 
    return fError;
@@ -3342,6 +3354,7 @@ static void hb_pp_directiveDel( PHB_PP_STATE pState, PHB_PP_TOKEN pMatch,
 {
    PHB_PP_RULE pRule, * pRulePtr = fCommand ? &pState->pCommands :
                                               &pState->pTranslations;
+
    while( * pRulePtr )
    {
       pRule = * pRulePtr;
@@ -3871,7 +3884,9 @@ static HB_BOOL hb_pp_tokenMatch( PHB_PP_TOKEN pMatch, PHB_PP_TOKEN * pTokenPtr,
       {
          fMatch = HB_TRUE;
          do
+         {
             * pTokenPtr = ( * pTokenPtr )->pNext;
+         }
          while( !HB_PP_TOKEN_ISEOS( * pTokenPtr ) );
       }
    }
@@ -5060,7 +5075,9 @@ static void hb_pp_genLineTokens( PHB_PP_STATE pState )
    else if( pState->pFile->iLastLine < pState->pFile->iCurrentLine )
    {
       do
+      {
          hb_pp_tokenAdd( &pState->pNextTokenPtr, "\n", 1, 0, HB_PP_TOKEN_EOL | HB_PP_TOKEN_STATIC );
+      }
       while( ++pState->pFile->iLastLine < pState->pFile->iCurrentLine );
    }
    hb_pp_tokenMoveCommand( pState, pState->pNextTokenPtr,

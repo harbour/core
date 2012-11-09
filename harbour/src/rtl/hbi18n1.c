@@ -773,6 +773,7 @@ static void hb_i18n_addtext( PHB_I18N_TRANS pI18N, PHB_ITEM pMsgID,
 {
    PHB_ITEM pTable = pContext ? hb_hashGetItemPtr( pI18N->context_table,
                                        pContext, 0 ) : pI18N->default_context;
+
    if( ! pTable )
    {
       pTable = hb_hashNew( hb_itemNew( NULL ) );

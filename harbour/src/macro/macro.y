@@ -74,7 +74,7 @@
 
 /* to pacify some meaningless warnings */
 #if defined( __BORLANDC__ )
-#  if !defined( __STDC__ )
+#  if ! defined( __STDC__ )
 #     define __STDC__
 #  endif
 #  pragma warn -aus
@@ -121,9 +121,9 @@
    }
 
 #define HB_MACRO_IFENABLED( pSet, pExpr, flag ) \
-   if( HB_MACRO_DATA->supported & (flag) ) \
+   if( HB_MACRO_DATA->supported & ( flag ) ) \
    { \
-      pSet = (pExpr); \
+      pSet = ( pExpr ); \
    }\
    else \
    { \
@@ -758,7 +758,7 @@ static HB_EXPR_PTR hb_macroExprAlloc( HB_COMP_DECL )
 {
    HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
 
-   if( !pMExpr || pMExpr->count >= HB_MEXPR_PREALLOC )
+   if( ! pMExpr || pMExpr->count >= HB_MEXPR_PREALLOC )
    {
       pMExpr = ( HB_MEXPR_PTR ) hb_xgrab( sizeof( HB_MEXPR ) );
       pMExpr->pPrev = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
@@ -771,6 +771,7 @@ static HB_EXPR_PTR hb_macroExprAlloc( HB_COMP_DECL )
 char * hb_macroIdentNew( HB_COMP_DECL, char * szIdent )
 {
    HB_MIDENT_PTR pMIdent = ( HB_MIDENT_PTR ) hb_xgrab( sizeof( HB_MIDENT ) );
+
    pMIdent->Identifier = szIdent;
    pMIdent->pPrev = ( HB_MIDENT_PTR ) HB_MACRO_DATA->pIdentLst;
    HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent;
@@ -919,7 +920,7 @@ int hb_macro_yylex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
 {
    PHB_PP_TOKEN pToken = hb_pp_lexGet( ( PHB_PP_STATE ) pMacro->pLex );
 
-   if( !pToken )
+   if( ! pToken )
       return 0;
 
    switch( HB_PP_TOKEN_TYPE( pToken->type ) )
@@ -991,9 +992,9 @@ int hb_macro_yylex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
          return NUM_DATE;
 
       case HB_PP_TOKEN_TIMESTAMP:
-         if( !hb_timeStampStrGetDT( pToken->value,
-                                    &yylval_ptr->valTimeStamp.date,
-                                    &yylval_ptr->valTimeStamp.time ) )
+         if( ! hb_timeStampStrGetDT( pToken->value,
+                                     &yylval_ptr->valTimeStamp.date,
+                                     &yylval_ptr->valTimeStamp.time ) )
          {
             hb_macroError( EG_SYNTAX, pMacro );
          }

@@ -122,14 +122,17 @@ const char * hb_tracemode( const char * szNewMode )
 {
    const char * szPrevMode = s_mode;
 
-   if( szNewMode ) switch( *szNewMode )
+   if( szNewMode )
    {
-      case 'a':
-         s_mode = "a";
-         break;
-      case 'w':
-         s_mode = "w";
-         break;
+      switch( *szNewMode )
+      {
+         case 'a':
+            s_mode = "a";
+            break;
+         case 'w':
+            s_mode = "w";
+            break;
+      }
    }
 
    return szPrevMode;

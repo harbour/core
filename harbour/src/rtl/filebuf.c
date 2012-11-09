@@ -106,6 +106,7 @@ static PHB_FILE s_openFiles = NULL;
 void hb_fileDsp( PHB_FILE pFile, const char * szMsg )
 {
    HB_UINT uiPos = 0;
+
    fprintf( stderr, "\r\n[%s][", szMsg );
    while( uiPos < pFile->uiLocks )
    {

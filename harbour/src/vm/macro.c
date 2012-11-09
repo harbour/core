@@ -1514,18 +1514,21 @@ void hb_macroGenPopAliasedVar( const char * szVarName,
 
          if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
              ( iLen >= 4 && iLen <= 6 && strncmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
-         {  /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
+         {
+            /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
             /* TODO: memvars created inside TYPE() function should have PUBLIC scope */
             hb_macroMemvarGenPCode( HB_P_MPOPMEMVAR, szVarName, HB_COMP_PARAM );
          }
          else if( iLen >= 4 && iLen <= 6 &&
                   ( strncmp( szAlias, "FIELD", iLen ) == 0 ||
                     strncmp( szAlias, "_FIELD", iLen ) == 0 ) )
-         {  /* FIELD-> */
+         {
+            /* FIELD-> */
             hb_macroMemvarGenPCode( HB_P_MPOPFIELD, szVarName, HB_COMP_PARAM );
          }
          else
-         {  /* database alias */
+         {
+            /* database alias */
             hb_macroGenPushSymbol( szAlias, HB_FALSE, HB_COMP_PARAM );
             hb_macroMemvarGenPCode( HB_P_MPOPALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
@@ -1608,17 +1611,20 @@ void hb_macroGenPushAliasedVar( const char * szVarName,
 
          if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
              ( iLen >= 4 && iLen <= 6 && strncmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
-         {  /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
+         {
+            /* M-> or MEMV-> or MEMVA-> or MEMVAR-> variable */
             hb_macroMemvarGenPCode( HB_P_MPUSHMEMVAR, szVarName, HB_COMP_PARAM );
          }
          else if( iLen >= 4 && iLen <= 6 &&
                   ( strncmp( szAlias, "FIELD", iLen ) == 0 ||
                     strncmp( szAlias, "_FIELD", iLen ) == 0 ) )
-         {  /* FIELD-> */
+         {
+            /* FIELD-> */
             hb_macroMemvarGenPCode( HB_P_MPUSHFIELD, szVarName, HB_COMP_PARAM );
          }
          else
-         {  /* database alias */
+         {
+            /* database alias */
             hb_macroGenPushSymbol( szAlias, HB_FALSE, HB_COMP_PARAM );
             hb_macroMemvarGenPCode( HB_P_MPUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }

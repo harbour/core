@@ -706,11 +706,13 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
    while( pFunc )
    {
       if( ( pFunc->cScope & HB_FS_INITEXIT ) == HB_FS_INITEXIT )
-      {  /* static initialization function */
+      {
+         /* static initialization function */
          fStatic = HB_TRUE;
       }
       else if( pFunc->szName )
-      {  /* normal function/procedure */
+      {
+         /* normal function/procedure */
          /* check local parameters */
          pVar = hb_compVariableGet( pFunc->pLocals, szVarName, piPos );
          if( pVar )
@@ -799,7 +801,8 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
          }
       }
       else
-      {  /* codeblock */
+      {
+         /* codeblock */
          fBlock = HB_TRUE;
          /* check local parameters */
          pVar = hb_compVariableGet( pFunc->pLocals, szVarName, piPos );
@@ -816,7 +819,8 @@ PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int
             }
          }
          else if( pFunc->funFlags & FUN_EXTBLOCK )
-         {  /* extended codeblock */
+         {
+            /* extended codeblock */
             /* check static variables */
             pVar = hb_compVariableGet( pFunc->pStatics, szVarName, piPos );
             if( pVar )
@@ -2575,7 +2579,8 @@ static void hb_compGenVariablePCode( HB_COMP_DECL, HB_BYTE bPCode, const char * 
 static void hb_compGenFieldPCode( HB_COMP_DECL, HB_BYTE bPCode, PVAR pField )
 {
    if( pField->szAlias )
-   {  /* the alias was specified in FIELD declaration
+   {
+      /* the alias was specified in FIELD declaration
        * Push alias symbol before the field symbol
        */
       if( bPCode == HB_P_POPFIELD )
@@ -2843,7 +2848,8 @@ void hb_compGenPushVarRef( const char * szVarName, HB_COMP_DECL ) /* generates t
    }
 
    if( !pVar )
-   {  /* undeclared variable */
+   {
+      /* undeclared variable */
       /* field cannot be passed by the reference - assume the memvar */
       hb_compGenVariablePCode( HB_COMP_PARAM, HB_P_PUSHMEMVARREF, szVarName );
    }
@@ -2871,16 +2877,19 @@ void hb_compGenPopAliasedVar( const char * szVarName,
          if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
              ( iLen >= 4 && iLen <= 6 &&
                memcmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
-         {  /* M->variable or MEMV[A[R]]->variable */
+         {
+            /* M->variable or MEMV[A[R]]->variable */
             hb_compGenVarPCode( HB_P_POPMEMVAR, szVarName, HB_COMP_PARAM );
          }
          else if( iLen >= 4 && iLen <= 5 &&
                   memcmp( szAlias, "FIELD", iLen ) == 0 )
-         {  /* FIEL[D]->variable */
+         {
+            /* FIEL[D]->variable */
             hb_compGenVarPCode( HB_P_POPFIELD, szVarName, HB_COMP_PARAM );
          }
          else
-         {  /* database alias */
+         {
+            /* database alias */
             hb_compGenPushSymbol( szAlias, HB_SYM_ALIAS, HB_COMP_PARAM );
             hb_compGenVarPCode( HB_P_POPALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
@@ -2920,16 +2929,19 @@ void hb_compGenPushAliasedVar( const char * szVarName,
          if( szAlias[ 0 ] == 'M' && ( iLen == 1 ||
              ( iLen >= 4 && iLen <= 6 &&
                memcmp( szAlias, "MEMVAR", iLen ) == 0 ) ) )
-         {  /* M->variable or MEMV[A[R]]->variable */
+         {
+            /* M->variable or MEMV[A[R]]->variable */
             hb_compGenVarPCode( HB_P_PUSHMEMVAR, szVarName, HB_COMP_PARAM );
          }
          else if( iLen >= 4 && iLen <= 5 &&
                   memcmp( szAlias, "FIELD", iLen ) == 0 )
-         {  /* FIEL[D]->variable */
+         {
+            /* FIEL[D]->variable */
             hb_compGenVarPCode( HB_P_PUSHFIELD, szVarName, HB_COMP_PARAM );
          }
          else
-         {  /* database alias */
+         {
+            /* database alias */
             hb_compGenPushSymbol( szAlias, HB_SYM_ALIAS, HB_COMP_PARAM );
             hb_compGenVarPCode( HB_P_PUSHALIASEDFIELD, szVarName, HB_COMP_PARAM );
          }
@@ -3981,18 +3993,21 @@ static void hb_compGenIncluded( HB_COMP_DECL )
       if( ( HB_COMP_PARAM->iTraceInclude & 0xff ) == 2 )
       {
          FileName.szExtension = HB_COMP_PARAM->szDepExt;
-         if( !FileName.szExtension ) switch( HB_COMP_PARAM->iLanguage )
+         if( ! FileName.szExtension )
          {
-            case HB_LANG_C:
-               FileName.szExtension = ".c";
-               break;
-            case HB_LANG_PORT_OBJ:
-            case HB_LANG_PORT_OBJ_BUF:
-               FileName.szExtension = ".hrb";
-               break;
+            switch( HB_COMP_PARAM->iLanguage )
+            {
+               case HB_LANG_C:
+                  FileName.szExtension = ".c";
+                  break;
+               case HB_LANG_PORT_OBJ:
+               case HB_LANG_PORT_OBJ_BUF:
+                  FileName.szExtension = ".hrb";
+                  break;
 
-            default:
-               FileName.szExtension = ".c";
+               default:
+                  FileName.szExtension = ".c";
+            }
          }
          hb_fsFNameMerge( szDestFile, &FileName );
       }

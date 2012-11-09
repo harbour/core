@@ -496,25 +496,28 @@ static void hb_gt_def_StringToColors( PHB_GT pGT, const char * szColorString, in
       pColors[ HB_CLR_BACKGROUND ] = 0;
       pColors[ HB_CLR_UNSELECTED ] = 0x70;
    }
-   else do
+   else
    {
-      szColorString = hb_gt_def_ColorDecode( szColorString, &nColor );
+      do
+      {
+         szColorString = hb_gt_def_ColorDecode( szColorString, &nColor );
 
-      if( nPos == *piColorCount )
-      {
-         ++*piColorCount;
-         pColors = *pColorsPtr = ( int * ) hb_xrealloc( pColors, *piColorCount * sizeof( int ) );
-         pColors[ nPos ] = 0;
+         if( nPos == *piColorCount )
+         {
+            ++*piColorCount;
+            pColors = *pColorsPtr = ( int * ) hb_xrealloc( pColors, *piColorCount * sizeof( int ) );
+            pColors[ nPos ] = 0;
+         }
+         if( nColor != -1 )
+         {
+            pColors[ nPos ] = nColor;
+            if( nPos == HB_CLR_ENHANCED && *piColorCount > HB_CLR_UNSELECTED )
+               pColors[ HB_CLR_UNSELECTED ] = nColor;
+         }
+         ++nPos;
       }
-      if( nColor != -1 )
-      {
-         pColors[ nPos ] = nColor;
-         if( nPos == HB_CLR_ENHANCED && *piColorCount > HB_CLR_UNSELECTED )
-            pColors[ HB_CLR_UNSELECTED ] = nColor;
-      }
-      ++nPos;
+      while( szColorString );
    }
-   while( szColorString );
 }
 
 static void hb_gt_def_ColorsToString( PHB_GT pGT, int * pColors, int iColorCount, char * pszColorString, int iBufSize )
@@ -846,13 +849,16 @@ static int hb_gt_def_PutText( PHB_GT pGT, int iRow, int iCol, int iColor, const 
 
 static int hb_gt_def_PutTextW( PHB_GT pGT, int iRow, int iCol, int iColor, const HB_WCHAR * szText, HB_SIZE nLen )
 {
-   if( nLen ) do
+   if( nLen )
    {
-      if( !HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, *szText++ ) )
-         break;
-      ++iCol;
+      do
+      {
+         if( !HB_GTSELF_PUTCHAR( pGT, iRow, iCol, iColor, 0, *szText++ ) )
+            break;
+         ++iCol;
+      }
+      while( --nLen );
    }
-   while( --nLen );
 
    return iCol + ( int ) nLen;
 }
@@ -2584,7 +2590,9 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
          iMask = HB_INKEY_GTEVENT;
       else if( HB_INKEY_ISMOUSEPOS( iKey ) )
          iMask = INKEY_MOVE;
-      else if( HB_INKEY_ISMOUSEKEY( iKey ) ) switch( HB_INKEY_VALUE( iKey ) )
+      else if( HB_INKEY_ISMOUSEKEY( iKey ) )
+      {
+         switch( HB_INKEY_VALUE( iKey ) )
       {
          case K_MOUSEMOVE:
          case K_MMLEFTDOWN:
@@ -2619,10 +2627,13 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
          default:
             iMask = INKEY_KEYBOARD;
       }
+      }
       else
          iMask = INKEY_KEYBOARD;
    }
-   else switch( iKey )
+   else
+   {
+      switch( iKey )
    {
       case K_MOUSEMOVE:
       case K_MMLEFTDOWN:
@@ -2665,6 +2676,7 @@ static int hb_gt_def_InkeyFilter( PHB_GT pGT, int iKey, int iEventMask )
       default:
          iMask = INKEY_KEYBOARD;
          break;
+   }
    }
 
    if( ( iMask & iEventMask ) == 0 )

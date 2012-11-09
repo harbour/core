@@ -163,12 +163,15 @@ static void hb_compGenArgList( int iFirst, int iLast,
          if( HB_IS_ARRAY( pParam ) )
          {
             ul = hb_arrayLen( pParam );
-            if( ul ) do
+            if( ul )
             {
-               if( hb_arrayGetType( pParam, ul ) & HB_IT_STRING )
-                  ++argc;
+               do
+               {
+                  if( hb_arrayGetType( pParam, ul ) & HB_IT_STRING )
+                     ++argc;
+               }
+               while( --ul );
             }
-            while( --ul );
          }
          else if( HB_IS_STRING( pParam ) )
             ++argc;

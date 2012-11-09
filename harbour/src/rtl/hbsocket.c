@@ -393,6 +393,7 @@ const char * hb_socketErrorStr( int iError )
 static void hb_socketSetRawError( int err )
 {
    PHB_IOERRORS pError = hb_stackIOErrors();
+
    pError->uiSocketError = ( HB_ERRCODE ) err;
    pError->iSocketOsError = 0;
 }
@@ -1469,6 +1470,7 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
    struct timeval tv, * ptv;
    fd_set rfds;
    int iResult, iError;
+
 #if !defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
@@ -1518,6 +1520,7 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
    struct timeval tv, * ptv;
    fd_set wfds;
    int iResult, iError;
+
 #if !defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
@@ -1566,6 +1569,7 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 {
    struct timeval tv, * ptv;
    fd_set wfds, * pefds;
+
 #if defined( HB_OS_WIN )
    fd_set efds;
 #endif
@@ -2030,6 +2034,7 @@ int hb_socketGetSockName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 int hb_socketGetPeerName( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen )
 {
    int ret;
+
 #if defined( HB_OS_LINUX ) && defined( __WATCOMC__ ) && ( __WATCOMC__ <= 1290 )
    /* it's still not supported by Linux OpenWatcom port :-( */
    ret = -1;
@@ -2091,15 +2096,19 @@ int hb_socketClose( HB_SOCKET sd )
    ret = close_s( sd );
 #else
 #  if defined( EINTR )
+   {
       /* ignoring EINTR in close() it's quite common bug when sockets or
        * pipes are used. Without such protection it's not safe to use
        * signals in user code.
        */
       do
+      {
          ret = close( sd );
+      }
       while( ret == -1 && errno == EINTR );
+   }
 #  else
-      ret = close( sd );
+   ret = close( sd );
 #  endif
 #endif
    hb_socketSetOsError( ret == 0 ? 0 : HB_SOCK_GETERROR() );
@@ -2442,6 +2451,7 @@ long hb_socketRecvFrom( HB_SOCKET sd, void * data, long len, int flags, void ** 
 int hb_socketSetBlockingIO( HB_SOCKET sd, HB_BOOL fBlocking )
 {
    int ret;
+
 #if defined( HB_OS_WIN )
    u_long mode = fBlocking ? 0 : 1;
    ret = ioctlsocket( sd, FIONBIO, &mode );

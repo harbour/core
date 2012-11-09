@@ -609,8 +609,11 @@ long hb_timeUnformat( const char * szTime, const char * szTimeFormat )
          }
          while( --prec > 3 );
       }
-      else while( prec++ < 3 )
-         iMSec *= 10;
+      else
+      {
+         while( prec++ < 3 )
+            iMSec *= 10;
+      }
    }
    if( iPM > 0 )
    {

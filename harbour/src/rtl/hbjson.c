@@ -598,11 +598,11 @@ static const char * _hb_jsonDecode( const char * szSource, PHB_ITEM pValue )
 
          for( ;; )
          {
+            /* Do we need to check if key does not exist yet? */
             if( ( szSource = _hb_jsonDecode( szSource, pItemKey ) ) == NULL ||
                 ! HB_IS_STRING( pItemKey ) ||
                 * ( szSource = _skipws( szSource ) ) != ':' ||
                 ( szSource = _hb_jsonDecode( _skipws( szSource + 1 ), pItemValue ) ) == NULL)
-            /* Do we need to check if key does not exist yet? */
             {
                hb_itemRelease( pItemKey );
                hb_itemRelease( pItemValue );

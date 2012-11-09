@@ -152,6 +152,7 @@ static int hb_memoDefaultType( LPRDDNODE pRDD, HB_ULONG ulConnect )
 {
    int iType = DB_MEMO_FPT;
    PHB_ITEM pItem = hb_stackAllocItem();
+
    if( SELF_RDDINFO( pRDD, RDDI_MEMOTYPE, ulConnect, pItem ) == HB_SUCCESS )
       iType = hb_itemGetNI( pItem );
    hb_stackPop();
@@ -5228,17 +5229,20 @@ static HB_ERRCODE hb_fptRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ulC
          else if( ( iOldSize = hb_setGetMBlockSize() ) > 0 &&
                   ( ( iOldSize <= 0x10000 ) || ( iOldSize & 0xFFFF ) == 0 ) )
             hb_itemPutNI( pItem, iOldSize );
-         else switch( hb_memoDefaultType( pRDD, ulConnect ) )
+         else
          {
-            case DB_MEMO_DBT:
-               hb_itemPutNI( pItem, DBT_DEFBLOCKSIZE );
-               break;
-            case DB_MEMO_SMT:
-               hb_itemPutNI( pItem, SMT_DEFBLOCKSIZE );
-               break;
-            default:
-               hb_itemPutNI( pItem, FPT_DEFBLOCKSIZE );
-               break;
+            switch( hb_memoDefaultType( pRDD, ulConnect ) )
+            {
+               case DB_MEMO_DBT:
+                  hb_itemPutNI( pItem, DBT_DEFBLOCKSIZE );
+                  break;
+               case DB_MEMO_SMT:
+                  hb_itemPutNI( pItem, SMT_DEFBLOCKSIZE );
+                  break;
+               default:
+                  hb_itemPutNI( pItem, FPT_DEFBLOCKSIZE );
+                  break;
+            }
          }
          if( iSize > 0 && ( iSize <= 0x10000 || ( iSize & 0xFFFF ) == 0 ) )
             pData->ulMemoBlockSize = iSize;

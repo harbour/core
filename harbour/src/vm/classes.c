@@ -1930,8 +1930,8 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
 #if defined( HB_HASH_MSG_ITEMS )
       else
       {
-         if( hb_pcount() == 1 && pMessage->szName[ 0 ] == '_' )
-         {  /* ASSIGN */
+         if( hb_pcount() == 1 && pMessage->szName[ 0 ] == '_' ) /* ASSIGN */
+         {
             PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), pMessage->szName + 1 );
             PHB_ITEM pDest = hb_hashGetItemPtr( pObject, pIndex, HB_HASH_AUTOADD_ASSIGN );
             hb_stackPop();
@@ -1943,8 +1943,8 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
                return &s___msgVirtual;
             }
          }
-         else if( hb_pcount() == 0 )
-         {  /* ACCESS */
+         else if( hb_pcount() == 0 ) /* ACCESS */
+         {
             PHB_ITEM pIndex = hb_itemPutCConst( hb_stackAllocItem(), pMessage->szName );
             PHB_ITEM pValue = hb_hashGetItemPtr( pObject, pIndex, HB_HASH_AUTOADD_ACCESS );
             hb_stackPop();
@@ -2070,7 +2070,6 @@ PHB_SYMB hb_objGetMethod( PHB_ITEM pObject, PHB_SYMB pMessage,
          }
       }
    }
-
    else if( pMsg == s___msgClassName.pDynSym )
       return &s___msgClassName;
 
@@ -4921,8 +4920,8 @@ void hb_mthAddTime( HB_ULONG ulClockTicks )
 }
 #endif
 
+/* ( nClass, cMsg ) --> aMethodInfo { nTimes, nTime } */
 HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times */
-                       /* ( nClass, cMsg ) --> aMethodInfo { nTimes, nTime } */
 {
    HB_STACK_TLS_PRELOAD
 #ifndef HB_NO_PROFILER

@@ -331,22 +331,26 @@ static void open_handle( PHB_SET_STRUCT pSet, const char * file_name,
       {
          HB_BOOL bCreate = HB_FALSE;
 
-         if( bAppend )
-         {  /* Append mode */
+         if( bAppend ) /* Append mode */
+         {
             if( hb_fsFileExists( szFileName ) )
-            {  /* If the file already exists, open it (in read-write mode, in
+            {
+               /* If the file already exists, open it (in read-write mode, in
                   case of non-Unix and text modes). */
                handle = hb_fsOpen( szFileName, FO_READWRITE | FO_DENYWRITE );
                if( handle != FS_ERROR )
-               {  /* Position to EOF */
+               {
+                  /* Position to EOF */
                   /* Special binary vs. text file handling - even for UN*X, now
                      that there's an HB_SET_EOF flag. */
                   if( set_specifier == HB_SET_PRINTFILE )
-                  {  /* PRINTFILE is always binary and needs no special handling. */
+                  {
+                     /* PRINTFILE is always binary and needs no special handling. */
                      hb_fsSeek( handle, 0, FS_END );
                   }
                   else
-                  {  /* All other files are text files and may have an EOF
+                  {
+                     /* All other files are text files and may have an EOF
                         ('\x1A') character at the end (both UN*X and non-UN*X,
                         now that theres an HB_SET_EOF flag). */
                      char cEOF = '\0';

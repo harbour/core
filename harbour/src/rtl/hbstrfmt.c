@@ -173,7 +173,8 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                continue;
          }
          break;
-      } while( * ++pFmt );
+      }
+      while( *++pFmt );
 
       /* Parse width */
       if( HB_ISDIGIT( *pFmt ) )
@@ -284,7 +285,8 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
                iExtra = 1;
 
             /* If decimals is set, zero padding flag is ignored */
-            if( iDec >= 0 )  fPadZero = 0;
+            if( iDec >= 0 )
+               fPadZero = 0;
 
             if( fLeftAlign )
             {

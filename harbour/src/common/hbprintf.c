@@ -224,7 +224,8 @@
 #define v_x_double      15
 #define v_x_long_dbl    16
 
-typedef union {
+typedef union
+{
    _x_int         as_x_int;
    _x_uint        as_x_uint;
    _x_long        as_x_long;
@@ -243,12 +244,14 @@ typedef union {
    _x_long_dbl    as_x_long_dbl;
 } x_type;
 
-typedef struct {
+typedef struct
+{
    int      id;
    x_type   value;
 } v_param;
 
-typedef struct {
+typedef struct
+{
    int         maxarg;
    int         size;
    HB_BOOL     repeat;
@@ -329,6 +332,7 @@ static v_param * va_arg_get( int iArg, v_paramlst * plst, int iType )
 static void va_arg_fill( v_paramlst * plst, va_list va )
 {
    int iArg;
+
    for( iArg = 0; iArg < plst->maxarg; ++iArg )
    {
       switch( plst->arglst[ iArg ].id )
@@ -391,6 +395,7 @@ _x_long_dbl _hb_modfl( _x_long_dbl x, _x_long_dbl * p )
 {
    _x_double pd;
    _x_long_dbl r = modf( x, &pd );
+
    *p = pd;
    return r;
 }
@@ -731,12 +736,15 @@ static size_t put_str( char *buffer, size_t bufsize, size_t size,
       precision = ( int ) _hb_strnlen( str, precision );
 
    width -= precision;
-   if( ( flags & _F_LEFTADJUSTED ) == 0 ) while( width > 0 )
+   if( ( flags & _F_LEFTADJUSTED ) == 0 )
    {
-      if( size < bufsize )
-         buffer[ size ] = ' ';
-      ++size;
-      --width;
+      while( width > 0 )
+      {
+         if( size < bufsize )
+            buffer[ size ] = ' ';
+         ++size;
+         --width;
+      }
    }
    while( precision > 0 )
    {
@@ -781,12 +789,15 @@ static size_t put_wstr( char *buffer, size_t bufsize, size_t size,
    }
 
    width -= precision;
-   if( ( flags & _F_LEFTADJUSTED ) == 0 ) while( width > 0 )
+   if( ( flags & _F_LEFTADJUSTED ) == 0 )
    {
-      if( size < bufsize )
-         buffer[ size ] = ' ';
-      ++size;
-      --width;
+      while( width > 0 )
+      {
+         if( size < bufsize )
+            buffer[ size ] = ' ';
+         ++size;
+         --width;
+      }
    }
    while( precision > 0 )
    {
@@ -833,21 +844,24 @@ int hb_printf_params( const char * format )
 
             /* flags */
             value = 0;
-            while( !value ) switch( c )
+            while( ! value )
             {
-               case '#':
-               case '0':
-               case '-':
-               case ' ':
-               case '+':
+               switch( c )
+               {
+                  case '#':
+                  case '0':
+                  case '-':
+                  case ' ':
+                  case '+':
 #ifdef _SUSV2_COMPAT_
-               case '\'':  /* group with locale thousands' grouping characters */
+                  case '\'':  /* group with locale thousands' grouping characters */
 #endif
-                  c = *format++;
-                  break;
-               default:
-                  value = 1;
-                  break;
+                     c = *format++;
+                     break;
+                  default:
+                     value = 1;
+                     break;
+               }
             }
 
             /* field width */
@@ -992,6 +1006,7 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
    va_list args;
    size_t size;
    char c;
+
 #ifndef __NO_ARGPOS__
    const char * fmt_start = format;
    v_param argbuf[ _ARGBUF_SIZE ];
@@ -1045,36 +1060,39 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                }
 
                /* flags */
-               while( !stop ) switch( c )
+               while( ! stop )
                {
-                  case '#':
-                     flags |= _F_ALTERNATE;
-                     c = *format++;
-                     break;
-                  case '0':
-                     flags |= _F_ZEROPADED;
-                     c = *format++;
-                     break;
-                  case '-':
-                     flags |= _F_LEFTADJUSTED;
-                     c = *format++;
-                     break;
-                  case ' ':
-                     flags |= _F_SPACE;
-                     c = *format++;
-                     break;
-                  case '+':
-                     flags |= _F_SIGN;
-                     c = *format++;
-                     break;
+                  switch( c )
+                  {
+                     case '#':
+                        flags |= _F_ALTERNATE;
+                        c = *format++;
+                        break;
+                     case '0':
+                        flags |= _F_ZEROPADED;
+                        c = *format++;
+                        break;
+                     case '-':
+                        flags |= _F_LEFTADJUSTED;
+                        c = *format++;
+                        break;
+                     case ' ':
+                        flags |= _F_SPACE;
+                        c = *format++;
+                        break;
+                     case '+':
+                        flags |= _F_SIGN;
+                        c = *format++;
+                        break;
 #ifdef _SUSV2_COMPAT_
-                  case '\'':  /* group with locale thousands' grouping characters */
-                     c = *format++;
-                     break;
+                     case '\'':  /* group with locale thousands' grouping characters */
+                        c = *format++;
+                        break;
 #endif
-                  default:
-                     stop = 1;
-                     break;
+                     default:
+                        stop = 1;
+                        break;
+                  }
                }
 
                /* field width */
@@ -1303,11 +1321,14 @@ int hb_vsnprintf( char * buffer, size_t bufsize, const char * format, va_list ap
                                         flags, width, -1 );
                      continue;
                   case 'c':   /* signed int casted to unsigned char */
-                     if( ( flags & _F_LEFTADJUSTED ) == 0 ) while( --width > 0 )
+                     if( ( flags & _F_LEFTADJUSTED ) == 0 )
                      {
-                        if( size < bufsize )
-                           buffer[ size ] = ' ';
-                        ++size;
+                        while( --width > 0 )
+                        {
+                           if( size < bufsize )
+                              buffer[ size ] = ' ';
+                           ++size;
+                        }
                      }
                      c = ( unsigned char ) va_arg_n( args, _x_int, param );
                      if( size < bufsize )
