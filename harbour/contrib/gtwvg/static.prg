@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                  Xbase++ xbpTreeView compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               26Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgStatic  INHERIT  WvgWindow
 
@@ -97,8 +89,6 @@ CREATE CLASS WvgStatic  INHERIT  WvgWindow
 
 ENDCLASS
 
-//
-
 METHOD WvgStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -110,8 +100,6 @@ METHOD WvgStatic:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objTypeStatic
 
    RETURN Self
-
-//
 
 METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -129,7 +117,6 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    SS_ETCHEDVERT
    SS_RIGHTJUST
 #endif
-
 
    SWITCH ::type
    CASE WVGSTATIC_TYPE_TEXT
@@ -237,8 +224,6 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-//
-
 METHOD WvgStatic:handleEvent( nMessage, aNM )
 
    DO CASE
@@ -269,12 +254,9 @@ METHOD WvgStatic:handleEvent( nMessage, aNM )
 
       ENDIF
 
-
    ENDCASE
 
    RETURN EVENT_UNHANDELLED
-
-//
 
 METHOD WvgStatic:destroy()
 
@@ -285,15 +267,11 @@ METHOD WvgStatic:destroy()
 
    RETURN NIL
 
-//
-
 METHOD WvgStatic:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD WvgStatic:setCaption( xCaption, cDll )
 

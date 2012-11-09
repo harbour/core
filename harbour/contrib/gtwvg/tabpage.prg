@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                  Xbase++ xbpTabPage compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               01Mar2009
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,14 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
-
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-//
 
 CREATE CLASS WvgTabPage  INHERIT  WvgWindow
 
@@ -106,8 +92,6 @@ CREATE CLASS WvgTabPage  INHERIT  WvgWindow
 
 ENDCLASS
 
-//
-
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -117,8 +101,6 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPa
    ::objType     := objTypeTabPage
 
    RETURN Self
-
-//
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
@@ -153,8 +135,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTa
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
@@ -192,8 +172,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD tabActivate( xParam ) CLASS WvgTabPage
 
    IF HB_ISBLOCK( xParam )
@@ -202,15 +180,11 @@ METHOD tabActivate( xParam ) CLASS WvgTabPage
 
    RETURN self
 
-//
-
 METHOD minimize() CLASS WvgTabPage
 
    ::hide()
 
    RETURN .F.
-
-//
 
 METHOD maximize() CLASS WvgTabPage
 
@@ -218,15 +192,11 @@ METHOD maximize() CLASS WvgTabPage
 
    RETURN .T.
 
-//
-
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgTabPage
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD destroy() CLASS WvgTabPage
 

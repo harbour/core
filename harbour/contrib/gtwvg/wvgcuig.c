@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * Based on:
  *
  * Video subsystem for Windows using GUI windows instead of Console
@@ -73,7 +73,7 @@
  *                         No Callbacks etc.
  *                            Pure Statics
  *                                 .
- *                Pritpal Bedi <pritpal@vouchcac.com>
+ *                Pritpal Bedi <bedipritpal@hotmail.com>
  *                            28Feb2009
  */
 

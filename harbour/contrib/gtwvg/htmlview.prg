@@ -7,7 +7,7 @@
  * Source file for the Wvg*Classes
  *
  * Copyright 2008 Andy Wos
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,21 +51,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
  *                Xbase++ xbpHtmlViewer compatible Class
  *
- *                 Pritpal Bedi  <pritpal@vouchcac.com>
+ *                 Pritpal Bedi  <bedipritpal@hotmail.com>
  *                              08Dec2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -75,24 +69,20 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-//
+#define evBeforeNavigate                          100
+#define evNavigateComplete                        101
+#define evStatusTextChange                        102
+#define evDownloadComplete                        104
+#define evCommandStateChange                      105
+#define evDownloadBegin                           106
+#define evProgressChange                          108
+#define evTitleChange                             113
 
-#define evBeforeNavigate     100
-#define evNavigateComplete   101
-#define evStatusTextChange   102
-#define evDownloadComplete   104
-#define evCommandStateChange 105
-#define evDownloadBegin      106
-#define evProgressChange     108
-#define evTitleChange        113
-
-#define evPropertyChange     112
-#define evBeforeNavigate2    250
-#define evNavigateComplete2  252
-#define evDocumentComplete   259
-#define evNavigateError      271
-
-//
+#define evPropertyChange                          112
+#define evBeforeNavigate2                         250
+#define evNavigateComplete2                       252
+#define evDocumentComplete                        259
+#define evNavigateError                           271
 
 CREATE CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
@@ -141,8 +131,6 @@ CREATE CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
 ENDCLASS
 
-//
-
 METHOD WvgHTMLViewer:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -150,8 +138,6 @@ METHOD WvgHTMLViewer:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD WvgHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -174,8 +160,6 @@ METHOD WvgHTMLViewer:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
    RETURN Self
 
-//
-
 METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
 
    HB_SYMBOL_UNUSED( Flags   )
@@ -190,8 +174,6 @@ METHOD WvgHTMLViewer:xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
 
    RETURN Self
 
-//
-
 METHOD WvgHTMLViewer:xStatusTextChange( cText )
 
    IF HB_ISBLOCK( ::sl_statusTextChange )
@@ -199,8 +181,6 @@ METHOD WvgHTMLViewer:xStatusTextChange( cText )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgHTMLViewer:xNavigateComplete( cURL )
 
@@ -210,8 +190,6 @@ METHOD WvgHTMLViewer:xNavigateComplete( cURL )
 
    RETURN Self
 
-//
-
 METHOD WvgHTMLViewer:xProgressChange( nProgress, nProgMax )
 
    IF HB_ISBLOCK( ::sl_progressChange )
@@ -219,8 +197,6 @@ METHOD WvgHTMLViewer:xProgressChange( nProgress, nProgMax )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgHTMLViewer:xTitleChange( cTitle )
 
@@ -230,8 +206,6 @@ METHOD WvgHTMLViewer:xTitleChange( cTitle )
 
    RETURN Self
 
-//
-
 METHOD WvgHTMLViewer:xDocumentComplete( cURI )
 
    IF HB_ISBLOCK( ::sl_documentComplete )
@@ -240,13 +214,9 @@ METHOD WvgHTMLViewer:xDocumentComplete( cURI )
 
    RETURN Self
 
-//
-
 METHOD WvgHTMLViewer:setHTML( cHTML )
 
    ::document:innerHTML := cHTML
    ::refresh()
 
    RETURN self
-
-//

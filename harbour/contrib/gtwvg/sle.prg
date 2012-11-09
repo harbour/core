@@ -50,9 +50,6 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
@@ -62,9 +59,6 @@
  *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               07Dec2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
 
@@ -121,8 +113,6 @@ CREATE CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -132,8 +122,6 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
    ::objType     := objTypeSLE
 
    RETURN Self
-
-//
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSLE
 
@@ -178,8 +166,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSL
    ::sendMessage( EM_SETLIMITTEXT, ::bufferLength )
 
    RETURN Self
-
-//
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
@@ -257,8 +243,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgSLE
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD destroy() CLASS WvgSLE
 
    hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
@@ -266,8 +250,6 @@ METHOD destroy() CLASS WvgSLE
    ::wvgWindow:destroy()
 
    RETURN NIL
-
-//
 
 METHOD WvgSLE:changed( lChanged )
 
@@ -279,8 +261,6 @@ METHOD WvgSLE:changed( lChanged )
 
    RETURN lChg
 
-//
-
 METHOD WvgSLE:clear()
 
    LOCAL cText := ::getData()
@@ -288,8 +268,6 @@ METHOD WvgSLE:clear()
    ::setData( "" )
 
    RETURN Len( cText )
-
-//
 
 METHOD WvgSLE:copyMarked()
 
@@ -304,8 +282,6 @@ METHOD WvgSLE:copyMarked()
    ENDIF
 
    RETURN n
-
-//
 
 METHOD WvgSLE:cutMarked()
 
@@ -322,8 +298,6 @@ METHOD WvgSLE:cutMarked()
 
    RETURN n
 
-//
-
 METHOD WvgSLE:returnPressed( ... )
 
    LOCAL a_ := hb_AParams()
@@ -335,5 +309,3 @@ METHOD WvgSLE:returnPressed( ... )
    ENDIF
 
    RETURN Self
-
-//

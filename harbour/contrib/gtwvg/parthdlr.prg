@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
  *                Xbase++ Compatible xbpPartHandler Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               08Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgPartHandler
 
@@ -111,16 +103,12 @@ CREATE CLASS WvgPartHandler
 
 ENDCLASS
 
-//
-
 METHOD WvgPartHandler:new( oParent, oOwner )
 
    ::oParent := oParent
    ::oOwner  := oOwner
 
    RETURN Self
-
-//
 
 METHOD WvgPartHandler:create( oParent, oOwner )
 
@@ -132,8 +120,6 @@ METHOD WvgPartHandler:create( oParent, oOwner )
 
    RETURN Self
 
-//
-
 METHOD WvgPartHandler:configure( oParent, oOwner )
 
    __defaultNIL( @oParent, ::oParent )
@@ -144,8 +130,6 @@ METHOD WvgPartHandler:configure( oParent, oOwner )
 
    RETURN Self
 
-//
-
 METHOD WvgPartHandler:destroy()
 
    ::hChildren  := NIL
@@ -155,8 +139,6 @@ METHOD WvgPartHandler:destroy()
 
    RETURN Self
 
-//
-
 METHOD WvgPartHandler:handleEvent( hEvent, mp1, mp2 )
 
    HB_SYMBOL_UNUSED( hEvent )
@@ -165,13 +147,9 @@ METHOD WvgPartHandler:handleEvent( hEvent, mp1, mp2 )
 
    RETURN Self
 
-//
-
 METHOD WvgPartHandler:status()
 
    RETURN ::nStatus
-
-//
 
 METHOD WvgPartHandler:addChild( oWvg )
 
@@ -179,8 +157,6 @@ METHOD WvgPartHandler:addChild( oWvg )
    AAdd( ::aChildren, oWvg )
 
    RETURN Self
-
-//
 
 METHOD WvgPartHandler:childFromName( nNameId )
 
@@ -194,13 +170,9 @@ METHOD WvgPartHandler:childFromName( nNameId )
 
    RETURN oWvg
 
-//
-
 METHOD WvgPartHandler:childList()
 
    RETURN ::aChildren
-
-//
 
 METHOD WvgPartHandler:removeChild( oChild )
 
@@ -211,8 +183,6 @@ METHOD WvgPartHandler:removeChild( oChild )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgPartHandler:delChild( oWvg )
 
@@ -226,8 +196,6 @@ METHOD WvgPartHandler:delChild( oWvg )
 
    RETURN Self
 
-//
-
 METHOD WvgPartHandler:setName( nNameId )
 
    LOCAL nOldNameId := ::nNameId
@@ -237,8 +205,6 @@ METHOD WvgPartHandler:setName( nNameId )
    ENDIF
 
    RETURN nOldNameId
-
-//
 
 METHOD WvgPartHandler:setOwner( oWvg )
 
@@ -250,8 +216,6 @@ METHOD WvgPartHandler:setOwner( oWvg )
 
    RETURN oOldXbp
 
-//
-
 METHOD WvgPartHandler:setParent( oWvg )
 
    LOCAL oOldXbp := ::oParent
@@ -261,8 +225,6 @@ METHOD WvgPartHandler:setParent( oWvg )
    ENDIF
 
    RETURN oOldXbp
-
-//
 
 METHOD WvgPartHandler:notifierBlock( ... )
 
@@ -278,12 +240,9 @@ METHOD WvgPartHandler:notifierBlock( ... )
 
    RETURN NIL
 
-//
-
 /*
    This will be called by the WvgCRT() console FOR various events TO be propogated TO child controls
 */
-
 METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    LOCAL aPos, aMenuItem, nIndex, nCtrlID, oObj
@@ -494,11 +453,9 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
 
    RETURN nReturn
 
-//
 /*
   This will be called if a control is assigned its own WndProc via ::SetWindowProcCallback()
 */
-
 METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
    LOCAL nCtrlID, nNotifctn, hWndCtrl, nObj, aMenuItem, oObj, nReturn
@@ -622,5 +579,3 @@ METHOD WvgPartHandler:controlWndProc( hWnd, nMessage, nwParam, nlParam )
    ENDSWITCH
 
    RETURN Wvg_CallWindowProc( ::nOldProc, hWnd, nMessage, nwParam, nlParam )
-
-//

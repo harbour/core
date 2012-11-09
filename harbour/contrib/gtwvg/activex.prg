@@ -7,7 +7,7 @@
  * Source file for the Wvg*Classes
  *
  * Copyright 2008 Andy Wos
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -51,21 +51,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
  *              Xbase++ Compatible xbpActiveXControl Class
  *
- *                 Pritpal Bedi  <pritpal@vouchcac.com>
+ *                 Pritpal Bedi  <bedipritpal@hotmail.com>
  *                              08Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -75,13 +69,9 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-//
-
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
-
-//
 
 CREATE CLASS WvgActiveXControl FROM WvgWindow
 
@@ -127,8 +117,6 @@ CREATE CLASS WvgActiveXControl FROM WvgWindow
 
 ENDCLASS
 
-//
-
 METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -139,8 +127,6 @@ METHOD WvgActiveXControl:new( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::className  := "WIN_OLEAUTO"
 
    RETURN Self
-
-//
 
 METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVisible, cCLSID, cLicense )
 
@@ -201,8 +187,6 @@ METHOD WvgActiveXControl:Create( oParent, oOwner, aPos, aSize, aPresParams, lVis
 
    RETURN Self
 
-//
-
 PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
 
 #if 0
@@ -219,8 +203,6 @@ PROCEDURE execEvent( nEvent, ... ) CLASS WvgActiveXControl
    ENDIF
 
    RETURN
-
-//
 
 METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
 
@@ -246,8 +228,6 @@ METHOD WvgActiveXControl:handleEvent( nEvent, aNM )
 
    RETURN nHandled
 
-//
-
 METHOD WvgActiveXControl:OnError()
 
 #if 0
@@ -256,8 +236,6 @@ METHOD WvgActiveXControl:OnError()
 #endif
 
    RETURN hb_ExecFromArray( ::oOLE, __GetMessage(), hb_AParams() )
-
-//
 
 METHOD WvgActiveXControl:Destroy()
 
@@ -271,8 +249,6 @@ METHOD WvgActiveXControl:Destroy()
 
    RETURN NIL
 
-//
-
 METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
    IF HB_ISNUMERIC( nEvent ) .AND. HB_ISBLOCK( bBlock )
@@ -281,78 +257,52 @@ METHOD WvgActiveXControl:mapEvent( nEvent, bBlock )
 
    RETURN Self
 
-//
-
 METHOD WvgActiveXControl:inheritPresParams()
 
    LOCAL lSuccess := .T.
 
    RETURN lSuccess
 
-//
-
 METHOD WvgActiveXControl:presParamsChanged()
 
    RETURN Self
-
-//
 
 METHOD WvgActiveXControl:setInputFocus()
 
    RETURN Self
 
-//
-
 METHOD WvgActiveXControl:subscribeStdEvents()
 
    RETURN NIL
-
-//
 
 METHOD WvgActiveXControl:unsubscribeStdEvents()
 
    RETURN Self
 
-//
-
 METHOD WvgActiveXControl:keyDown()
 
    RETURN Self
-
-//
 
 METHOD WvgActiveXControl:click()
 
    RETURN Self
 
-//
-
 METHOD WvgActiveXControl:dblClick()
 
    RETURN Self
-
-//
 
 METHOD WvgActiveXControl:mouseDown()
 
    RETURN Self
 
-//
-
 METHOD WvgActiveXControl:mouseUp()
 
    RETURN Self
-
-//
 
 METHOD WvgActiveXControl:mouseMove()
 
    RETURN Self
 
-//
-
 METHOD WvgActiveXControl:activate()
 
    RETURN Self
-
-//

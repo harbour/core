@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                 Xbase++ xbpPushButton Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               06Dec2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,14 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
-
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-//
 
 CREATE CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
 
@@ -102,8 +88,6 @@ CREATE CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -113,8 +97,6 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadio
    ::objType     := objTypeRadioButton
 
    RETURN Self
-
-//
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
@@ -138,8 +120,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRa
 
    RETURN Self
 
-//
-
 METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
@@ -161,8 +141,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
    RETURN 1
 
-//
-
 METHOD destroy() CLASS WvgRadioButton
 
    hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
@@ -171,15 +149,11 @@ METHOD destroy() CLASS WvgRadioButton
 
    RETURN NIL
 
-//
-
 METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRadioButton
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD setCaption( xCaption ) CLASS WvgRadioButton
 
@@ -189,5 +163,3 @@ METHOD setCaption( xCaption ) CLASS WvgRadioButton
    ENDIF
 
    RETURN Self
-
-//

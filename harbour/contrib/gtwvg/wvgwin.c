@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Video subsystem for Windows using GUI windows instead of Console
  *
- *    Copyright 2007 Pritpal Bedi <pritpal@vouchcac.com>
+ *    Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * based on:
  *
  *    Copyright 2003 Peter Rees <peter@rees.co.nz>

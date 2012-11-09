@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
  *                  Xbase++ Compatible xbpDialog Class
  *
- *                 Pritpal Bedi <pritpal@vouchcac.com>
+ *                 Pritpal Bedi <bedipritpal@hotmail.com>
  *                             17Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgDialog FROM WvgWindow
 
@@ -94,15 +86,10 @@ CREATE CLASS WvgDialog FROM WvgWindow
    METHOD   showModal()                           INLINE NIL
    METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
    METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
-   METHOD   calcClientRect()                      INLINE ::aRect := Wvg_GetClientRect( ::hWnd ), ;
-      { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
-   METHOD   calcFrameRect()                       INLINE ::aRect := Wvg_GetWindowRect( ::hWnd ), ;
-      { ::aRect[ 1 ], ::aRect[ 2 ], ;
-      ::aRect[ 3 ] - ::aRect[ 1 ], ::aRect[ 4 ] - ::aRect[ 2 ] }
+   METHOD   calcClientRect()                      INLINE ::aRect := Wvg_GetClientRect( ::hWnd ), { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
+   METHOD   calcFrameRect()                       INLINE ::aRect := Wvg_GetWindowRect( ::hWnd ), { ::aRect[ 1 ], ::aRect[ 2 ], ::aRect[ 3 ] - ::aRect[ 1 ], ::aRect[ 4 ] - ::aRect[ 2 ] }
 
 ENDCLASS
-
-//
 
 METHOD WvgDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -116,8 +103,6 @@ METHOD WvgDialog:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::style       := WS_THICKFRAME + WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_MINIMIZEBOX + WS_MAXIMIZEBOX
 
    RETURN Self
-
-//
 
 METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -177,15 +162,11 @@ METHOD WvgDialog:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-//
-
 METHOD WvgDialog:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD WvgDialog:destroy()
 
@@ -206,8 +187,6 @@ METHOD WvgDialog:destroy()
 
    RETURN Self
 
-//
-
 METHOD WvgDialog:setFrameState( nState )
 
    LOCAL lSuccess := .F.
@@ -227,8 +206,6 @@ METHOD WvgDialog:setFrameState( nState )
 
    RETURN lSuccess
 
-//
-
 METHOD WvgDialog:getFrameState()
 
    IF Wvg_IsIconic( ::hWnd )
@@ -240,8 +217,6 @@ METHOD WvgDialog:getFrameState()
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
 
-//
-
 METHOD WvgDialog:menuBar()
 
    IF ! HB_ISOBJECT( ::oMenu )
@@ -249,5 +224,3 @@ METHOD WvgDialog:menuBar()
    ENDIF
 
    RETURN ::oMenu
-
-//

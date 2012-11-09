@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                    Xbase++ dataRef Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               06Dec2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgDataRef
 
@@ -101,13 +93,9 @@ CREATE CLASS WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD WvgDataRef:new()
 
    RETURN self
-
-//
 
 METHOD WvgDataRef:getData()
 
@@ -144,8 +132,6 @@ METHOD WvgDataRef:getData()
    ENDIF
 
    RETURN ::sl_editBuffer
-
-//
 
 METHOD WvgDataRef:setData( xValue, mp2 )
 
@@ -197,13 +183,9 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    RETURN ::sl_editBuffer
 
-//
-
 METHOD WvgDataRef:undo()
 
    RETURN .F.
-
-//
 
 METHOD WvgDataRef:validate( xParam )
 
@@ -214,5 +196,3 @@ METHOD WvgDataRef:validate( xParam )
    ENDIF
 
    RETURN .T.
-
-//

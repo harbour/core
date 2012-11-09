@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                 Xbase++ xbpPushButton Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               26Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgPushButton  INHERIT  WvgWindow
 
@@ -102,8 +94,6 @@ CREATE CLASS WvgPushButton  INHERIT  WvgWindow
 
 ENDCLASS
 
-//
-
 METHOD WvgPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -113,8 +103,6 @@ METHOD WvgPushButton:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objTypePushButton
 
    RETURN Self
-
-//
 
 METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -148,8 +136,6 @@ METHOD WvgPushButton:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible
    ::setCaption( ::caption )
 
    RETURN Self
-
-//
 
 METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
@@ -204,23 +190,17 @@ METHOD WvgPushButton:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD WvgPushButton:destroy()
 
    ::wvgWindow:destroy()
 
    RETURN NIL
 
-//
-
 METHOD WvgPushButton:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD WvgPushButton:setCaption( xCaption, cDll )
 
@@ -245,8 +225,6 @@ METHOD WvgPushButton:setCaption( xCaption, cDll )
 
    RETURN Self
 
-//
-
 METHOD WvgPushButton:activate( xParam )
 
    IF HB_ISBLOCK( xParam ) .OR. xParam == NIL
@@ -254,8 +232,6 @@ METHOD WvgPushButton:activate( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgPushButton:draw( xParam )
 

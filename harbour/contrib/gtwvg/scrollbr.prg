@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
  *                 Xbase++ xbpScrollBar Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                              17Feb2009
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
 
@@ -101,8 +93,6 @@ CREATE CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -112,8 +102,6 @@ METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrol
    ::objType     := objTypeScrollBar
 
    RETURN Self
-
-//
 
 METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgScrollBar
 
@@ -150,8 +138,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgSc
 #endif
 
    RETURN Self
-
-//
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
@@ -317,8 +303,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD destroy() CLASS WvgScrollBar
 
    hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
@@ -327,8 +311,6 @@ METHOD destroy() CLASS WvgScrollBar
 
    RETURN NIL
 
-//
-
 METHOD Scroll( xParam ) CLASS WvgScrollBar
 
    IF HB_ISBLOCK( xParam )
@@ -336,8 +318,6 @@ METHOD Scroll( xParam ) CLASS WvgScrollBar
    ENDIF
 
    RETURN self
-
-//
 
 METHOD setRange( aRange ) CLASS WvgScrollBar
 
@@ -354,8 +334,6 @@ METHOD setRange( aRange ) CLASS WvgScrollBar
    ENDIF
 
    RETURN aOldRange
-
-//
 
 METHOD setScrollBoxSize( nUnits ) CLASS WvgScrollBar
 

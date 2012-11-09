@@ -50,10 +50,6 @@
  *
  */
 
-//
-//
-//
-//
 //                               EkOnkar
 //                         ( The LORD is ONE )
 //
@@ -62,10 +58,6 @@
 //                Pritpal Bedi  <bedipritpal@hotmail.com>
 //                              03Dec2011
 //
-//
-//
-//
-
 #include "hbclass.ch"
 #include "inkey.ch"
 #include "hbgtinfo.ch"
@@ -74,11 +66,7 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-//
-
 THREAD STATIC t_oCrt := NIL
-
-//
 
 EXIT PROCEDURE KillGTChildren()
 
@@ -88,8 +76,6 @@ EXIT PROCEDURE KillGTChildren()
    ENDIF
 
    RETURN
-
-//
 
 FUNCTION WvgSetAppWindow( oCrt )
 
@@ -109,5 +95,3 @@ FUNCTION WvgSetAppWindow( oCrt )
    ENDIF
 
    RETURN ooCrt
-
-//

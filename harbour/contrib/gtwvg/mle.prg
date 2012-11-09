@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                    Xbase++ xbpMLE compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               07Dec2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,14 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
-
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-//
 
 CREATE CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
 
@@ -133,8 +119,6 @@ CREATE CLASS WvgMLE INHERIT WvgWindow, WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD WvgMLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -145,8 +129,6 @@ METHOD WvgMLE:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objTypeMLE
 
    RETURN Self
-
-//
 
 METHOD WvgMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -187,11 +169,7 @@ METHOD WvgMLE:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-//
-
 METHOD WvgMLE:handleEvent( nMessage, aNM )
-
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -271,8 +249,6 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD WvgMLE:destroy()
 
    hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
@@ -280,8 +256,6 @@ METHOD WvgMLE:destroy()
    ::wvgWindow:destroy()
 
    RETURN NIL
-
-//
 
 METHOD WvgMLE:changed( lChanged )
 
@@ -293,8 +267,6 @@ METHOD WvgMLE:changed( lChanged )
 
    RETURN lChg
 
-//
-
 METHOD WvgMLE:clear()
 
    LOCAL cText := ::getData()
@@ -302,8 +274,6 @@ METHOD WvgMLE:clear()
    ::setData( "" )
 
    RETURN Len( cText )
-
-//
 
 METHOD WvgMLE:copyMarked()
 
@@ -319,8 +289,6 @@ METHOD WvgMLE:copyMarked()
 
    RETURN n
 
-//
-
 METHOD WvgMLE:cutMarked()
 
    LOCAL n, nB, nE, cText
@@ -335,5 +303,3 @@ METHOD WvgMLE:cutMarked()
    ENDIF
 
    RETURN n
-
-//

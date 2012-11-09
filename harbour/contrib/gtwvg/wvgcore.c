@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *
- * Copyright 2007 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2007-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * Based on:
  *
  * Video subsystem for Windows using GUI windows instead of Console
@@ -66,7 +66,7 @@
 
 /*
  *         GUI Drawing Functions
- *  Pritpal Bedi <pritpal@vouchcac.com>
+ *  Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
 #include "hbwinole.h"

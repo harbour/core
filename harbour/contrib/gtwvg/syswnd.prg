@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
  *                Xbase++ Compatible xbpPartHandler Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               08Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgSysWindow INHERIT WvgPartHandler
 
@@ -113,8 +105,6 @@ CREATE CLASS WvgSysWindow INHERIT WvgPartHandler
 
 ENDCLASS
 
-//
-
 METHOD WvgSysWindow:new( oParent, oOwner, aPos )
 
    __defaultNIL( @oParent, ::oParent )
@@ -128,8 +118,6 @@ METHOD WvgSysWindow:new( oParent, oOwner, aPos )
    ::WvgPartHandler:new( oParent, oOwner )
 
    RETURN Self
-
-//
 
 METHOD WvgSysWindow:create( oParent, oOwner, aPos )
 
@@ -145,51 +133,35 @@ METHOD WvgSysWindow:create( oParent, oOwner, aPos )
 
    RETURN Self
 
-//
-
 METHOD WvgSysWindow:configure()
 
    RETURN Self
-
-//
 
 METHOD WvgSysWindow:destroy()
 
    RETURN Self
 
-//
-
 METHOD WvgSysWindow:disable()
 
    RETURN Self
-
-//
 
 METHOD WvgSysWindow:enable()
 
    RETURN Self
 
-//
-
 METHOD WvgSysWindow:hide()
 
    RETURN Self
 
-//
-
 METHOD WvgSysWindow:show()
 
    RETURN Self
-
-//
 
 METHOD WvgSysWindow:SetPos( aPos )
 
    Wvg_SetWindowPosition( ::hWnd, aPos[ 1 ], aPos[ 2 ], .F. )
 
    RETURN Self
-
-//
 
 METHOD WvgSysWindow:currentPos()
 
@@ -199,8 +171,6 @@ METHOD WvgSysWindow:currentPos()
 
    RETURN { aRect[ 1 ], aRect[ 2 ] }
 
-//
-
 METHOD WvgSysWindow:currentSize()
 
    LOCAL aRect
@@ -209,16 +179,9 @@ METHOD WvgSysWindow:currentSize()
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
-//
-//
-//
 /*
  *                       Class WvgFontDialog()
  */
-//
-//
-//
-
 CREATE CLASS WvgFontDialog INHERIT WvgSysWindow
 
    /* Appearance */
@@ -292,8 +255,6 @@ CREATE CLASS WvgFontDialog INHERIT WvgSysWindow
 
 ENDCLASS
 
-//
-
 METHOD new( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
 
    __defaultNIL( @oParent, ::oParent )
@@ -311,8 +272,6 @@ METHOD new( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
    ::WvgSysWindow:new( oParent, oOwner )
 
    RETURN Self
-
-//
 
 METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialog
 
@@ -340,8 +299,6 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
    /* ::nWndProc := hb_AsCallBack( "WNDPROC", Self ) */
 
    RETURN Self
-
-//
 
 METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
 
@@ -421,8 +378,6 @@ METHOD wndProc( hWnd, nMessage, nwParam, nlParam ) CLASS WvgFontDialog
 
    RETURN 0
 
-//
-
 METHOD display( nMode ) CLASS WvgFontDialog
 
    LOCAL hWnd, aInfo
@@ -442,19 +397,15 @@ METHOD display( nMode ) CLASS WvgFontDialog
 
    RETURN ::GetWvgFont( aInfo )
 
-//
-
 METHOD destroy() CLASS WvgFontDialog
 
    /* hb_FreeCallBack( ::nWndProc ) */
 
    RETURN Self
 
-//
 /*
  * Only callable from ::activateOK and ::activateApply
  */
-
 METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 
    LOCAL oWvgFont
@@ -480,16 +431,9 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 
    RETURN oWvgFont
 
-//
-//
-//
 /*
                             Class WvgFont()
 */
-//
-//
-//
-
 CREATE CLASS WvgFont
 
    VAR      hFont
@@ -538,8 +482,6 @@ CREATE CLASS WvgFont
 
 ENDCLASS
 
-//
-
 METHOD new( oPS ) CLASS WvgFont
 
    __defaultNIL( @oPS, ::oPS )
@@ -547,8 +489,6 @@ METHOD new( oPS ) CLASS WvgFont
    ::oPS := oPS
 
    RETURN Self
-
-//
 
 METHOD create( cFontName ) CLASS WvgFont
 
@@ -560,8 +500,6 @@ METHOD create( cFontName ) CLASS WvgFont
 
    RETURN Self
 
-//
-
 METHOD configure( cFontName ) CLASS WvgFont
 
    __defaultNIL( @cFontName, ::familyName )
@@ -572,8 +510,6 @@ METHOD configure( cFontName ) CLASS WvgFont
 
    RETURN Self
 
-//
-
 METHOD destroy() CLASS WvgFont
 
    IF ::hFont != NIL
@@ -582,15 +518,11 @@ METHOD destroy() CLASS WvgFont
 
    RETURN Self
 
-//
-
 METHOD list() CLASS WvgFont
 
    LOCAL aList := {}
 
    RETURN aList
-
-//
 
 METHOD createFont() CLASS WvgFont
 
@@ -632,5 +564,3 @@ METHOD createFont() CLASS WvgFont
    ::aFontInfo := aFont
 
    RETURN ::hFont
-
-//

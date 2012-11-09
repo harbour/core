@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
  *                 Xbase++ xbpStatusBar Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                              25Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,14 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
-
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
-//
 
 CREATE CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
@@ -106,8 +92,6 @@ CREATE CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
 ENDCLASS
 
-//
-
 METHOD WvgStatusBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -117,8 +101,6 @@ METHOD WvgStatusBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objTypeStatusBar
 
    RETURN Self
-
-//
 
 METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -142,14 +124,10 @@ METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
 
    RETURN Self
 
-//
-
 METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    LOCAL nHandled := 1
    LOCAL nObj, aNMH
-
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
 
    DO CASE
 
@@ -198,13 +176,9 @@ METHOD WvgStatusBar:handleEvent( nMessage, aNM )
 
    RETURN nHandled
 
-//
-
 METHOD WvgStatusBar:destroy()
 
    LOCAL i, nItems
-
-   hb_traceLog( "          %s:destroy()", __objGetClsName() )
 
    IF ( nItems := Len( ::aItems ) ) > 0
       FOR i := 1 TO nItems
@@ -216,15 +190,11 @@ METHOD WvgStatusBar:destroy()
 
    RETURN NIL
 
-//
-
 METHOD WvgStatusBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 
@@ -250,8 +220,6 @@ METHOD WvgStatusBar:addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
 
    RETURN oPanel
 
-//
-
 METHOD WvgStatusBar:delItem( nItemORcKey )
 
    LOCAL nIndex := 0
@@ -268,8 +236,6 @@ METHOD WvgStatusBar:delItem( nItemORcKey )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgStatusBar:getItem( nItemORcKey )
 
@@ -289,8 +255,6 @@ METHOD WvgStatusBar:getItem( nItemORcKey )
 
    RETURN oPanel
 
-//
-
 METHOD WvgStatusBar:clear()
 
    LOCAL i
@@ -304,8 +268,6 @@ METHOD WvgStatusBar:clear()
 
    RETURN Self
 
-//
-
 METHOD WvgStatusBar:panelClick( xParam )
 
    IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
@@ -313,8 +275,6 @@ METHOD WvgStatusBar:panelClick( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgStatusBar:panelDblClick( xParam )
 
@@ -324,16 +284,9 @@ METHOD WvgStatusBar:panelDblClick( xParam )
 
    RETURN Self
 
-//
-//
-//
 /*
  *       WvgToolbarButton() Class compatible with XbpToolbarButton()
  */
-//
-//
-//
-
 CREATE CLASS WvgStatusBarPanel
 
    VAR      alignment                             INIT WVGALIGN_LEFT
@@ -358,8 +311,6 @@ CREATE CLASS WvgStatusBarPanel
 
 ENDCLASS
 
-//
-
 METHOD WvgStatusBarPanel:new( cCaption, nStyle, cKey )
 
    __defaultNIL( @cCaption, ::sl_caption )
@@ -371,8 +322,6 @@ METHOD WvgStatusBarPanel:new( cCaption, nStyle, cKey )
    ::key            := cKey
 
    RETURN Self
-
-//
 
 METHOD WvgStatusBarPanel:caption( cCaption )
 

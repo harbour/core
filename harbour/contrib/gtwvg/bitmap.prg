@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                   Xbase++ xbpBitmap compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               06Dec2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -74,13 +68,9 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-//
-
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
-
-//
 
 CREATE CLASS WvgBitmap
 
@@ -114,13 +104,9 @@ CREATE CLASS WvgBitmap
 
 ENDCLASS
 
-//
-
 METHOD new() CLASS WvgBitmap
 
    RETURN Self
-
-//
 
 METHOD create( oPScompat ) CLASS WvgBitmap
 
@@ -133,8 +119,6 @@ METHOD create( oPScompat ) CLASS WvgBitmap
 
    RETURN Self
 
-//
-
 METHOD destroy() CLASS WvgBitmap
 
    IF ::hBitmap != nil
@@ -145,5 +129,3 @@ METHOD destroy() CLASS WvgBitmap
    ENDIF
 
    RETURN Self
-
-//

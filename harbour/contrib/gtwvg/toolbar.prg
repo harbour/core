@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                               EkOnkar
  *                         ( The LORD is ONE )
  *
  *                  Xbase++ xbpToolBar Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                              23Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
 
@@ -127,8 +119,6 @@ CREATE CLASS WvgToolBar  INHERIT  WvgWindow /*WvgActiveXControl*/
 
 ENDCLASS
 
-//
-
 METHOD WvgToolBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -143,8 +133,6 @@ METHOD WvgToolBar:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objTypeToolBar
 
    RETURN Self
-
-//
 
 METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -200,8 +188,6 @@ METHOD WvgToolBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-//
-
 METHOD WvgToolBar:handleEvent( nMessage, aNM )
 
    LOCAL nObj, aNMMouse
@@ -245,8 +231,6 @@ METHOD WvgToolBar:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD WvgToolBar:destroy()
 
    LOCAL i, nItems
@@ -273,21 +257,15 @@ METHOD WvgToolBar:destroy()
 
    RETURN NIL
 
-//
-
 METHOD WvgToolBar:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-//
-
 METHOD WvgToolBar:sendToolbarMessage( nMsg, p1, p2 )
 
    RETURN Wvg_SendToolBarMessage( ::pWnd, nMsg, p1, p2 )
-
-//
 
 METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nStyle, cKey, nMapRGB )
 
@@ -364,63 +342,43 @@ METHOD WvgToolBar:addItem( cCaption, xImage, xDisabledImage, xHotImage, cDLL, nS
 
    RETURN oBtn
 
-//
-
 METHOD WvgToolBar:delItem()
 
    RETURN Self
-
-//
 
 METHOD WvgToolBar:getItem()
 
    RETURN Self
 
-//
-
 METHOD WvgToolBar:clear()
 
    RETURN Self
-
-//
 
 METHOD WvgToolBar:customize()
 
    RETURN Self
 
-//
-
 METHOD WvgToolBar:loadImageSet()
 
    RETURN Self
-
-//
 
 METHOD WvgToolBar:saveToolbar()
 
    RETURN Self
 
-//
-
 METHOD WvgToolBar:restToolbar()
 
    RETURN Self
 
-//
-
 METHOD WvgToolBar:setPosAndSize()
 
    RETURN Self
-
-//
 
 METHOD WvgToolBar:setSize()
 
    ::sendMessage( TB_AUTOSIZE, 0, 0 )
 
    RETURN Self
-
-//
 
 METHOD WvgToolBar:buttonClick( xParam )
 
@@ -430,8 +388,6 @@ METHOD WvgToolBar:buttonClick( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgToolBar:change( xParam )
 
    IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
@@ -439,8 +395,6 @@ METHOD WvgToolBar:change( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgToolBar:buttonMenuClick( xParam )
 
@@ -450,8 +404,6 @@ METHOD WvgToolBar:buttonMenuClick( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgToolBar:buttonDropDown( xParam )
 
    IF HB_ISBLOCK( xParam ) .OR. HB_ISNIL( xParam )
@@ -460,16 +412,9 @@ METHOD WvgToolBar:buttonDropDown( xParam )
 
    RETURN Self
 
-//
-//
-//
 /*
  *       WvgToolbarButton() Class compatible with XbpToolbarButton()
  */
-//
-//
-//
-
 CREATE CLASS WvgToolBarButton
 
    VAR      enabled                               INIT .T.
@@ -495,8 +440,6 @@ CREATE CLASS WvgToolBarButton
    METHOD   new( cCaption, nStyle, cKey )
 
 ENDCLASS
-
-//
 
 METHOD WvgToolBarButton:new( cCaption, nStyle, cKey )
 

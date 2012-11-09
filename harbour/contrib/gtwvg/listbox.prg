@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                  Xbase++ xbpTreeView compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               26Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
 
@@ -139,8 +131,6 @@ CREATE CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -151,8 +141,6 @@ METHOD WvgListBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objTypeListBox
 
    RETURN Self
-
-//
 
 METHOD WvgListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -181,8 +169,6 @@ METHOD WvgListBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::setPosAndSize()
 
    RETURN Self
-
-//
 
 METHOD WvgListBox:handleEvent( nMessage, aNM )
 
@@ -304,23 +290,17 @@ METHOD WvgListBox:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD WvgListBox:clear()
 
    ::sendMessage( LB_RESETCONTENT, 0, 0 )
 
    RETURN Self
 
-//
-
 METHOD WvgListBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD WvgListBox:destroy()
 

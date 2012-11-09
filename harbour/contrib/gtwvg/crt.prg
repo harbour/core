@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,13 @@
  *
  */
 
-//
-//
-//
-//
 //                               EkOnkar
 //                         ( The LORD is ONE )
 //
 //                    Xbase++ Compatible xbpCrt Class
 //
-//                 Pritpal Bedi  <pritpal@vouchcac.com>
+//                 Pritpal Bedi  <bedipritpal@hotmail.com>
 //                              08Nov2008
-//
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +65,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
 
@@ -256,10 +246,6 @@ CREATE CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
 
 ENDCLASS
 
-//
-//                         Instance Initiation
-//
-
 METHOD WvgCrt:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::WvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -281,10 +267,6 @@ METHOD WvgCrt:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::drawingArea := Self
 
    RETURN Self
-
-//
-//                              Life Cycle
-//
 
 METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -362,8 +344,6 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    __defaultNIL( @oParent    , ::oParent )
@@ -381,8 +361,6 @@ METHOD WvgCrt:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::visible     := lVisible
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:destroy()
 
@@ -409,27 +387,17 @@ METHOD WvgCrt:destroy()
 
    RETURN Self
 
-//
-//                              Methods
-//
-
 METHOD WvgCrt:currentPos()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:currentSize()
 
    RETURN { hb_gtInfo( HB_GTI_SCREENWIDTH ), hb_gtInfo( HB_GTI_SCREENHEIGHT ) }
 
-//
-
 METHOD WvgCrt:captureMouse()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:disable()
 
@@ -437,15 +405,11 @@ METHOD WvgCrt:disable()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:enable()
 
    hb_gtInfo( HB_GTI_ENABLE, ::pGT )
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:getFrameState()
 
@@ -458,33 +422,23 @@ METHOD WvgCrt:getFrameState()
 
    RETURN WVGDLG_FRAMESTAT_NORMALIZED
 
-//
-
 METHOD WvgCrt:getHWND()
 
    RETURN ::hWnd
-
-//
 
 METHOD WvgCrt:getModalState()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:hasInputFocus()
 
    RETURN ::lHasInputFocus
-
-//
 
 METHOD WvgCrt:hide()
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, HB_GTS_SW_HIDE )
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
 
@@ -497,31 +451,21 @@ METHOD WvgCrt:invalidateRect( nTop, nLeft, nBottom, nRight )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:isEnabled()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:isVisible()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:lockPS()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:lockUpdate()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:menuBar()
 
@@ -531,31 +475,21 @@ METHOD WvgCrt:menuBar()
 
    RETURN ::oMenu
 
-//
-
 METHOD WvgCrt:setColorBG()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:setColorFG()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:setFont()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:setFontCompoundName()
 
    RETURN ""
-
-//
 
 METHOD WvgCrt:setFrameState( nState )
 
@@ -576,43 +510,29 @@ METHOD WvgCrt:setFrameState( nState )
 
    RETURN lSuccess
 
-//
-
 METHOD WvgCrt:setModalState()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:setPointer()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:setTrackPointer()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:setPos()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:setPosAndSize()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:setPresParam()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:setSize( aSize, lPaint )
 
@@ -625,8 +545,6 @@ METHOD WvgCrt:setSize( aSize, lPaint )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:show()
 
    hb_gtInfo( HB_GTI_SPEC, HB_GTS_SHOWWINDOW, SW_NORMAL )
@@ -634,39 +552,25 @@ METHOD WvgCrt:show()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:showModal()
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:toBack()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:toFront()
 
    RETURN WVG_SetWindowPosToTop( ::hWnd )
-
-//
 
 METHOD WvgCrt:unlockPS()
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:winDevice()
 
    RETURN Self
-
-//
-//                           Callback Methods
-//
 
 METHOD WvgCrt:enter( xParam )
 
@@ -682,8 +586,6 @@ METHOD WvgCrt:enter( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:leave( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_leave )
@@ -697,8 +599,6 @@ METHOD WvgCrt:leave( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:lbClick( xParam )
 
@@ -714,8 +614,6 @@ METHOD WvgCrt:lbClick( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:lbDblClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_lbDblClick )
@@ -729,8 +627,6 @@ METHOD WvgCrt:lbDblClick( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:lbDown( xParam )
 
@@ -746,8 +642,6 @@ METHOD WvgCrt:lbDown( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:lbUp( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_lbUp )
@@ -761,8 +655,6 @@ METHOD WvgCrt:lbUp( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:mbClick( xParam )
 
@@ -778,8 +670,6 @@ METHOD WvgCrt:mbClick( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:mbDblClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_mbDblClick )
@@ -793,8 +683,6 @@ METHOD WvgCrt:mbDblClick( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:mbDown( xParam )
 
@@ -810,8 +698,6 @@ METHOD WvgCrt:mbDown( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:mbUp( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_mbUp )
@@ -825,8 +711,6 @@ METHOD WvgCrt:mbUp( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:motion( xParam )
 
@@ -842,8 +726,6 @@ METHOD WvgCrt:motion( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:rbClick( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_rbClick )
@@ -857,8 +739,6 @@ METHOD WvgCrt:rbClick( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:rbDblClick( xParam )
 
@@ -874,8 +754,6 @@ METHOD WvgCrt:rbDblClick( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:rbDown( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_rbDown )
@@ -889,8 +767,6 @@ METHOD WvgCrt:rbDown( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:rbUp( xParam )
 
@@ -906,8 +782,6 @@ METHOD WvgCrt:rbUp( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:wheel( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_wheel )
@@ -921,10 +795,6 @@ METHOD WvgCrt:wheel( xParam )
    ENDIF
 
    RETURN Self
-
-//
-//                           Other Messages
-//
 
 METHOD WvgCrt:close( xParam )
 
@@ -940,8 +810,6 @@ METHOD WvgCrt:close( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:helpRequest( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_helpRequest )
@@ -955,8 +823,6 @@ METHOD WvgCrt:helpRequest( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:keyboard( xParam )
 
@@ -972,8 +838,6 @@ METHOD WvgCrt:keyboard( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:killDisplayFocus( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_killDisplayFocus )
@@ -987,8 +851,6 @@ METHOD WvgCrt:killDisplayFocus( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:killInputFocus( xParam )
 
@@ -1004,8 +866,6 @@ METHOD WvgCrt:killInputFocus( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:move( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_move )
@@ -1019,8 +879,6 @@ METHOD WvgCrt:move( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:paint( xParam )
 
@@ -1036,8 +894,6 @@ METHOD WvgCrt:paint( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:quit( xParam, xParam1 )
 
    IF HB_ISNUMERIC( xParam ) .AND. HB_ISBLOCK( ::sl_quit )
@@ -1052,8 +908,6 @@ METHOD WvgCrt:quit( xParam, xParam1 )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:resize( xParam )
 
    IF HB_ISBLOCK( xParam )/* .or. HB_ISNIL( xParam ) */
@@ -1065,8 +919,6 @@ METHOD WvgCrt:resize( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:setDisplayFocus( xParam )
 
@@ -1082,8 +934,6 @@ METHOD WvgCrt:setDisplayFocus( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:setInputFocus( xParam )
 
    IF HB_ISNIL( xParam ) .AND. HB_ISBLOCK( ::sl_setInputFocus )
@@ -1097,8 +947,6 @@ METHOD WvgCrt:setInputFocus( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:dragEnter( xParam, xParam1 )
 
@@ -1114,8 +962,6 @@ METHOD WvgCrt:dragEnter( xParam, xParam1 )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:dragMotion( xParam )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_dragMotion )
@@ -1129,8 +975,6 @@ METHOD WvgCrt:dragMotion( xParam )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgCrt:dragLeave( xParam )
 
@@ -1146,8 +990,6 @@ METHOD WvgCrt:dragLeave( xParam )
 
    RETURN Self
 
-//
-
 METHOD WvgCrt:dragDrop( xParam, xParam1 )
 
    IF HB_ISARRAY( xParam ) .AND. HB_ISBLOCK( ::sl_dragDrop )
@@ -1161,5 +1003,3 @@ METHOD WvgCrt:dragDrop( xParam, xParam1 )
    ENDIF
 
    RETURN Self
-
-//

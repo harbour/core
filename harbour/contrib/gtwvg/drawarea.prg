@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2009 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2009-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                   Xbase++ WvgDialog's Helper Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               15Feb2009
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgDrawingArea  INHERIT  WvgWindow
 
@@ -89,8 +81,6 @@ CREATE CLASS WvgDrawingArea  INHERIT  WvgWindow
 
 ENDCLASS
 
-//
-
 METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -102,8 +92,6 @@ METHOD WvgDrawingArea:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::visible     := .T.
 
    RETURN Self
-
-//
 
 METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -121,8 +109,6 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
    ::show()
 
    RETURN Self
-
-//
 
 METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
@@ -148,8 +134,6 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD destroy() CLASS WvgDrawingArea
 
    hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
@@ -157,5 +141,3 @@ METHOD destroy() CLASS WvgDrawingArea
    ::wvgWindow:destroy()
 
    RETURN NIL
-
-//

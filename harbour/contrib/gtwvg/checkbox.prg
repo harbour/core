@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                 Xbase++ xbpPushButton Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               05Dec2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
 
@@ -101,8 +93,6 @@ CREATE CLASS WvgCheckBox  INHERIT  WvgWindow, WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD WvgCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -112,8 +102,6 @@ METHOD WvgCheckBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objTypeCheckBox
 
    RETURN Self
-
-//
 
 METHOD WvgCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -139,8 +127,6 @@ METHOD WvgCheckBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::editBuffer := ( Wvg_Button_GetCheck( ::hWnd ) == BST_CHECKED )
 
    RETURN Self
-
-//
 
 METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
@@ -195,23 +181,17 @@ METHOD WvgCheckBox:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD WvgCheckBox:destroy()
 
    ::wvgWindow:destroy()
 
    RETURN NIL
 
-//
-
 METHOD WvgCheckBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD WvgCheckBox:setCaption( xCaption )
 
@@ -221,5 +201,3 @@ METHOD WvgCheckBox:setCaption( xCaption )
    ENDIF
 
    RETURN Self
-
-//

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                  Xbase++ xbpTreeView compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               26Nov2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -73,8 +67,6 @@
 #include "hbgtwvg.ch"
 #include "wvtwin.ch"
 #include "wvgparts.ch"
-
-//
 
 CREATE CLASS WvgComboBox  INHERIT  WvgWindow, WvgDataRef
 
@@ -118,8 +110,6 @@ CREATE CLASS WvgComboBox  INHERIT  WvgWindow, WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD WvgComboBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -133,8 +123,6 @@ METHOD WvgComboBox:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objTypeComboBox
 
    RETURN Self
-
-//
 
 METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -176,20 +164,15 @@ METHOD WvgComboBox:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-//
-
 METHOD WvgComboBox:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
 
-//
-
 METHOD WvgComboBox:destroy()
 
 #if 0
-
    IF HB_ISOBJECT( ::oSLE )
       ::oSLE:destroy()
    ENDIF
@@ -200,8 +183,6 @@ METHOD WvgComboBox:destroy()
    ::wvgWindow:destroy()
 
    RETURN NIL
-
-//
 
 METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
@@ -274,8 +255,6 @@ METHOD WvgComboBox:handleEvent( nMessage, aNM )
 
    RETURN EVENT_UNHANDELLED
 
-//
-
 METHOD WvgComboBox:addItem( cItem )
 
    IF HB_ISSTRING( cItem )
@@ -283,8 +262,6 @@ METHOD WvgComboBox:addItem( cItem )
    ENDIF
 
    RETURN - 1
-
-//
 
 METHOD WvgComboBox:listBoxFocus( lFocus )
 
@@ -296,8 +273,6 @@ METHOD WvgComboBox:listBoxFocus( lFocus )
 
    RETURN lOldFocus
 
-//
-
 METHOD WvgComboBox:sleSize()
 
    IF HB_ISOBJECT( ::oSLE )
@@ -305,8 +280,6 @@ METHOD WvgComboBox:sleSize()
    ENDIF
 
    RETURN { 0, 0 }
-
-//
 
 METHOD WvgComboBox:listBoxSize()
 
@@ -316,16 +289,12 @@ METHOD WvgComboBox:listBoxSize()
 
    RETURN { 0, 0 }
 
-//
-
 METHOD WvgComboBox:setIcon( nItem, cIcon )
 
    HB_SYMBOL_UNUSED( nItem )
    HB_SYMBOL_UNUSED( cIcon )
 
    RETURN Self
-
-//
 
 METHOD WvgComboBox:itemMarked( ... )
 
@@ -339,8 +308,6 @@ METHOD WvgComboBox:itemMarked( ... )
 
    RETURN Self
 
-//
-
 METHOD WvgComboBox:itemSelected( ... )
 
    LOCAL a_ := hb_AParams()
@@ -352,8 +319,6 @@ METHOD WvgComboBox:itemSelected( ... )
    ENDIF
 
    RETURN Self
-
-//
 
 METHOD WvgComboBox:drawItem( ... )
 

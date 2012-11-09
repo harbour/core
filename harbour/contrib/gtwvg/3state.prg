@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Source file for the Wvg*Classes
  *
- * Copyright 2008 Pritpal Bedi <pritpal@vouchcac.com>
+ * Copyright 2008-2012 Pritpal Bedi <bedipritpal@hotmail.com>
  * http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,21 +50,15 @@
  *
  */
 
-//
-//
-//
 /*
  *                                EkOnkar
  *                          ( The LORD is ONE )
  *
  *                  Xbase++ xbp3State Compatible Class
  *
- *                  Pritpal Bedi <pritpal@vouchcac.com>
+ *                  Pritpal Bedi <bedipritpal@hotmail.com>
  *                               07Dec2008
  */
-//
-//
-//
 
 #include "hbclass.ch"
 #include "inkey.ch"
@@ -74,13 +68,9 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-//
-
 #ifndef __DBG_PARTS__
 #xtranslate hb_traceLog( [<x,...>] ) =>
 #endif
-
-//
 
 CREATE CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
 
@@ -103,8 +93,6 @@ CREATE CLASS Wvg3State  INHERIT  WvgWindow, WvgDataRef
 
 ENDCLASS
 
-//
-
 METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::wvgWindow:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
@@ -114,8 +102,6 @@ METHOD Wvg3State:new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::objType     := objType3State
 
    RETURN Self
-
-//
 
 METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
@@ -144,8 +130,6 @@ METHOD Wvg3State:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    ::editBuffer := Wvg_Button_GetCheck( ::hWnd )
 
    RETURN Self
-
-//
 
 METHOD Wvg3State:handleEvent( nMessage, aNM )
 
@@ -179,8 +163,6 @@ METHOD Wvg3State:handleEvent( nMessage, aNM )
 
    RETURN 1
 
-//
-
 METHOD Wvg3State:destroy()
 
    hb_traceLog( "          %s:destroy()", __objGetClsName() )
@@ -189,15 +171,11 @@ METHOD Wvg3State:destroy()
 
    RETURN NIL
 
-//
-
 METHOD Wvg3State:configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    ::Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    RETURN Self
-
-//
 
 METHOD Wvg3State:setCaption( xCaption )
 
@@ -207,5 +185,3 @@ METHOD Wvg3State:setCaption( xCaption )
    ENDIF
 
    RETURN Self
-
-//
