@@ -54,7 +54,7 @@
 
 #include "fileio.ch"
 
-#xtranslate THROW(<oErr>) => (Eval(ErrorBlock(), <oErr>), Break(<oErr>))
+#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 #define BUFFER_SIZE 16384
 

@@ -78,13 +78,9 @@ FUNCTION HRBMAIN()
          uhttpd_SetHeader( "Content-Type", "text/html" )
          uhttpd_Write( "<h1>Error: No image created</h1>" )
       ENDIF
-
-
    ELSE
-
       uhttpd_SetHeader( "Content-Type", "text/html" )
       uhttpd_Write( "<h1>Error: no parameters passed</h1>" )
-
    ENDIF
 
    RETURN .T.
@@ -93,22 +89,19 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    LOCAL oI, oIDigits, nWidth, nHeight, nDigits, nNumWidth, oTemp
 
-// LOCAL black, white, blue, red, green, cyan, gray
-// LOCAL white
+#if 0
+   LOCAL black, white, blue, red, green, cyan, gray
+   LOCAL white
+#endif
    LOCAL aNumberImages := {}
    LOCAL n, nValue
-// LOCAL cFile
 
    // A value if not passed
-   hb_default( @cValue    , Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
+   hb_default( @cValue, Str( hb_RandomInt( 1, 10 ^ DISPLAY_NUM ), DISPLAY_NUM ) )
    hb_default( @cBaseImage, "57chevy.gif" )
 
    IF ! hb_FileExists( IMAGES_IN + cBaseImage )
-      // hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
-      // THROW( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' not found" )
       RETURN NIL
-      // ELSE
-      //   hb_ToOutDebug( "ERROR: Base Image File '" + IMAGES_IN + cBaseImage + "' FOUND" )
    ENDIF
 
    nValue := Val( cValue )
@@ -120,14 +113,14 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    cValue := StrZero( nValue, DISPLAY_NUM )
 
-// ? "Value = ", cValue
+#if 0
+   ? "Value = ", cValue
 
    // Check output directory
-   /*
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-   */
+#endif
 
    /* Load a digits image in memory from file */
    oIDigits := GDImage():LoadFromGif( IMAGES_IN + cBaseImage )
@@ -151,12 +144,13 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
    ENDCASE
    nNumWidth := nWidth / nDigits
 
-// ? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
+#if 0
+   ? "nNumWidth, nWidth, nHeight, nDigits = ", nNumWidth, nWidth, nHeight, nDigits
+#endif
 
    /* extracts single digits */
    FOR n := 1 TO nDigits
       oTemp := oIDigits:Copy( ( n - 1 ) * nNumWidth, 0, nNumWidth, nHeight )
-      // oTemp:SaveGif( IMAGES_OUT + StrZero( n - 1, 2 ) + ".gif" )
       // Here I have to clone the image, otherwise on var destruction I loose
       // the image in memory
       AAdd( aNumberImages, oTemp:Clone() )
@@ -164,20 +158,22 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
 
    /* Create counter image in memory */
    oI := GDImage():New( nNumWidth * DISPLAY_NUM, nHeight )  // the counter
-// ? "Image dimensions: ", oI:Width(), oI:Height()
+#if 0
+   ? "Image dimensions: ", oI:Width(), oI:Height()
 
    /* Allocate background */
-// white := oI:SetColor( 255, 255, 255 )
+   white := oI:SetColor( 255, 255, 255 )
 
    /* Allocate drawing color */
-// black := oI:SetColor( 0, 0, 0 )
-// blue  := oI:SetColor( 0, 0, 255 )
-// red   := oI:SetColor( 255, 0, 0 )
-// green := oI:SetColor( 0, 255, 0 )
-// cyan  := oI:SetColor( 0, 255, 255 )
+   black := oI:SetColor( 0, 0, 0 )
+   blue  := oI:SetColor( 0, 0, 255 )
+   red   := oI:SetColor( 255, 0, 0 )
+   green := oI:SetColor( 0, 255, 0 )
+   cyan  := oI:SetColor( 0, 255, 255 )
 
    /* Draw rectangle */
-// oI:Rectangle( 0, 0, 200, 30, , blue )
+   oI:Rectangle( 0, 0, 200, 30,, blue )
+#endif
 
    /* Draw Digits */
    FOR n := 1 TO Len( cValue )
@@ -191,18 +187,14 @@ STATIC FUNCTION CreateCounter( cValue, cBaseImage )
       oI:Rectangle( ( n - 1 ) * nNumWidth, 0, ( n - 1 ) * nNumWidth + nNumWidth, nHeight, .T., gdTiled )
    NEXT
 
+#if 0
    /* Write Final Counter Image */
-// cFile := "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif"
-// oI:SaveGif( IMAGES_OUT + cFile )
+   oI:SaveGif( IMAGES_OUT + "counter" + StrZero( hb_RandomInt( 1, 99 ), 2 ) + ".gif" )
 
-   /* Destroy images in memory */
-   // Class does it automatically
-
-// ?
-// ? "Look at " + IMAGES_OUT + " folder for output images"
-// ?
-
-// RETURN cFile
+   ?
+   ? "Look at " + IMAGES_OUT + " folder for output images"
+   ?
+#endif
 
    RETURN oI:ToStringGif()
 

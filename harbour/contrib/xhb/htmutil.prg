@@ -356,9 +356,9 @@ CREATE CLASS JWindow
 
    METHOD Put()
 
-   METHOD BEGIN()
+   METHOD Begin()
 
-   METHOD END ()
+   METHOD End()
 
    METHOD QOut( c )
 
@@ -609,7 +609,7 @@ METHOD QOut( c ) CLASS JWindow
 *
 */
 
-METHOD BEGIN() CLASS JWindow
+METHOD Begin() CLASS JWindow
 
    LOCAL i
 
@@ -676,7 +676,7 @@ METHOD BEGIN() CLASS JWindow
 *
 */
 
-METHOD END() CLASS JWindow
+METHOD End() CLASS JWindow
 
    HtmlJSCmd( ::nH, ::varName + ".document.write('</BODY></HTML>')" + CRLF() )
 

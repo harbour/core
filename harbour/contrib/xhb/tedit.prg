@@ -497,7 +497,7 @@ CREATE CLASS THtmlForm
 
    METHOD Put( lPutControls )
 
-   METHOD END ()
+   METHOD End()
 
    METHOD GetControl( cName )
 

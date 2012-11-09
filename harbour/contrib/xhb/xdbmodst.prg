@@ -59,7 +59,7 @@
 #define EG_RENAME       26
 #endif
 
-#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
+#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 FUNCTION dbModifyStructure( cFile )
 

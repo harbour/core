@@ -62,7 +62,7 @@ CREATE CLASS THtmlFrameSet
 
    METHOD EndSet()
 
-   METHOD END ()
+   METHOD End()
 
    METHOD Frame( cName, cURL, lBorder, lResize, lScrolling, ;
       marginwidth, marginheight, cTarget, cScrolling )
@@ -153,7 +153,7 @@ METHOD Endset() CLASS THtmlFrameSet
    RETURN Self
 
 
-METHOD END () CLASS THtmlFrameSet
+METHOD End() CLASS THtmlFrameSet
 
    ::cStr += "</html>" + CRLF()
 

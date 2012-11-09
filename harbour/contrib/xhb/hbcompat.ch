@@ -557,7 +557,7 @@
    #xtranslate inetIsSocket( [<x,...>] )            => hb_inetIsSocket( <x> )
    #xtranslate inetDestroy( [<x,...>] )             => iif( hb_inetIsSocket( <x> ), hb_inetClose( <x> ), )
 
-   /* THROW => generate error */
+   /* Throw() => generate error */
    #xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 #endif

@@ -60,7 +60,7 @@
 
 #define CRLF Chr( 13 ) + Chr( 10 )
 
-#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
+#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 //
 

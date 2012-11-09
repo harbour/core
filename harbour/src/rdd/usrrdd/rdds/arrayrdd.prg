@@ -70,7 +70,7 @@
 
 #include "hbtrace.ch"
 
-#xtranslate THROW( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
+#xtranslate Throw( <oErr> ) => ( Eval( ErrorBlock(), <oErr> ), Break( <oErr> ) )
 
 ANNOUNCE ARRAYRDD
 

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    THROW() compatibility function
+ *    Throw() compatibility function
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

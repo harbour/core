@@ -223,7 +223,7 @@ CREATE CLASS TRPCFunction
    METHOD CheckTypes( aParams )
    METHOD CheckParam( cParam )
    METHOD Describe()
-   METHOD RUN( aParams, oClient )
+   METHOD Run( aParams, oClient )
 
 ENDCLASS
 
@@ -298,7 +298,7 @@ METHOD SetCallable( oExec, oMeth ) CLASS TRPCFunction
 
    RETURN .T.
 
-METHOD RUN( aParams, oClient ) CLASS TRPCFunction
+METHOD Run( aParams, oClient ) CLASS TRPCFunction
 
    LOCAL nStart, nCount, xRet
 
@@ -395,7 +395,7 @@ CREATE CLASS TRPCServeCon
    /* Managing async */
    METHOD Start()
    METHOD Stop()
-   METHOD RUN()
+   METHOD Run()
 
    /* Utilty */
    METHOD SendProgress( nProgress, oData )
@@ -490,7 +490,7 @@ METHOD Stop() CLASS TRPCServeCon
 
    RETURN lRet
 
-METHOD RUN() CLASS TRPCServeCon
+METHOD Run() CLASS TRPCServeCon
 
    LOCAL cCode := Space( 6 )
    LOCAL lBreak := .F.
@@ -1229,7 +1229,7 @@ CREATE CLASS TRPCService
 
    /* Function management */
    METHOD Add( xFunction, cVersion, nLevel, oExec, oMethod )
-   METHOD RUN( cName, aParams )
+   METHOD Run( cName, aParams )
    METHOD Describe( cName )
    METHOD Find( cName )
    METHOD Remove( cName )
@@ -1241,7 +1241,7 @@ CREATE CLASS TRPCService
    METHOD Terminating( oConnection )
 
    /* Tcp services */
-   METHOD ACCEPT()
+   METHOD Accept()
 
    /* UDP services */
    METHOD UdpListen()
@@ -1325,7 +1325,7 @@ METHOD Remove( cName ) CLASS TRPCService
 
    RETURN lRet
 
-METHOD RUN( cName, aParams ) CLASS TRPCService
+METHOD Run( cName, aParams ) CLASS TRPCService
 
    LOCAL oFunc := ::Find( cName )
    LOCAL oRet := NIL
@@ -1407,7 +1407,7 @@ METHOD Stop() CLASS TRPCService
 
    RETURN .T.
 
-METHOD ACCEPT() CLASS TRPCService
+METHOD Accept() CLASS TRPCService
 
    LOCAL skIn
 

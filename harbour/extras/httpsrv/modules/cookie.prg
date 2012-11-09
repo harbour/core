@@ -50,12 +50,7 @@
  *
  */
 
-#include "hbclass.ch"
-
 MEMVAR _REQUEST
-
-#xcommand TEXT INTO <v> => #pragma __cstream|<v>+=%s
-// #pragma escapedstrings = on
 
 FUNCTION HRBMAIN()
 
@@ -70,7 +65,7 @@ FUNCTION HRBMAIN()
    hb_default( @cAction, "" )
 
    // Sample page embedded
-   TEXT INTO cHtml
+#pragma __cstream | cHtml += %s
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -95,7 +90,7 @@ Pressing button you will redirect to /info page. Look at COOKIE values.
 
 </body>
 </html>
-   ENDTEXT
+#pragma __endtext
 
    IF Empty( cAction )
       // Set a simple cookie

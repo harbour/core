@@ -61,9 +61,7 @@ FUNCTION HRBMAIN()
 
    LOCAL cXml, cPage, cCount, nCount
    LOCAL oTM
-   LOCAL hGets
-
-   hGets := _REQUEST
+   LOCAL hGets := _REQUEST
 
    hb_default( @hGets, { => } )
 
@@ -71,15 +69,11 @@ FUNCTION HRBMAIN()
 
       cPage := hGets[ "page" ]
 
-      oTM  := TableManager():New()
-
+      oTM := TableManager():New()
       IF oTM:Open()
-
          oTM:Read()
          cXml := oTM:getXmlData( Val( cPage ) )
-
          oTM:Close()
-
       ENDIF
 
    ELSEIF hb_HHasKey( hGets, "count" )
@@ -87,37 +81,25 @@ FUNCTION HRBMAIN()
       cCount := hGets[ "count" ]
 
       IF cCount == "true"
-
          oTM  := TableManager():New()
-
-         IF ( oTM:Open() )
-
+         IF oTM:Open()
             nCount := oTM:getLastRec()
             cXml := oTM:getXmlCount( nCount )
-
             oTM:Close()
-
          ENDIF
-
       ENDIF
    ENDIF
 
-
    IF ! Empty( cXml )
-
       uhttpd_SetHeader( "Content-Type", "text/xml" )
       // cache control
       uhttpd_SetHeader( "Cache-Control", "no-cache, must-revalidate" )
       uhttpd_SetHeader( "Expires", "Mon, 26 Jul 1997 05:00:00 GMT" )
-
       uhttpd_Write( cXml )
-
    ELSE
-
       uhttpd_SetHeader( "Content-Type", "text/xml" )
       uhttpd_Write( '<?xml version="1.0" encoding="ISO-8859-1"?>' )
       uhttpd_Write( "<pages><page>No Data</page></pages>" )
-
    ENDIF
 
    RETURN .T. // I Handle HTML Output
@@ -126,7 +108,7 @@ FUNCTION HRBMAIN()
   TableManager
 */
 
-CLASS TableManager
+CREATE CLASS TableManager
 
    CLASS VAR ROWS_PER_PAGE INIT 23
 
@@ -137,8 +119,8 @@ CLASS TableManager
 
    METHOD New()
    METHOD Open()
-   METHOD CLOSE()          INLINE iif( ::lOpened, ( table->( dbCloseArea() ), ::lOpened := .F. ), )
-   METHOD READ()
+   METHOD Close()          INLINE iif( ::lOpened, ( table->( dbCloseArea() ), ::lOpened := .F. ), )
+   METHOD Read()
    METHOD getLastRec()     INLINE table->( LastRec() )
    METHOD getXmlData( page )
    METHOD getXmlCount( ncount )
@@ -169,12 +151,11 @@ METHOD Open() CLASS TableManager
 
    RETURN ::lOpened
 
-METHOD READ() CLASS TableManager
+METHOD Read() CLASS TableManager
 
    LOCAL hMap, lOk := .F.
 
 #ifdef SIMULATE_SLOW_REPLY
-
    // force slow connection to simulate long reply
    hb_idleSleep( 0.5 )
 #endif
@@ -391,12 +372,12 @@ METHOD xmlEncode( input ) CLASS TableManager
 
    RETURN out
 
-CLASS BasicXML
+CREATE CLASS BasicXML
 
    VAR aData         INIT {}
 
    METHOD New()              CONSTRUCTOR
-   METHOD APPEND( cString )  INLINE AAdd( ::aData, cString )
+   METHOD append( cString )  INLINE AAdd( ::aData, cString )
    METHOD ToString()
 
 ENDCLASS

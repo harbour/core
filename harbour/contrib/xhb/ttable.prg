@@ -642,21 +642,21 @@ CREATE CLASS HBTable
    METHOD Bof() INLINE ( ::Alias )->( Bof() )
    METHOD RecNo() INLINE ( ::Alias )->( RecNo() )
    METHOD LastRec() INLINE ( ::Alias )->( LastRec() )
-   METHOD SKIP( n ) INLINE ( ::Alias )->( dbSkip( n ) ), ;
+   METHOD Skip( n ) INLINE ( ::Alias )->( dbSkip( n ) ), ;
       ::nRecno := ( ::Alias )->( RecNo() )
 
-   METHOD GOTO( n ) INLINE ( ::Alias )->( dbGoto( n ) )
+   METHOD Goto( n ) INLINE ( ::Alias )->( dbGoto( n ) )
    METHOD goTop() INLINE ( ::Alias )->( dbGoTop() )
    METHOD goBottom() INLINE ( ::Alias )->( dbGoBottom() )
    METHOD SetFocus() INLINE ( ::Alias )->( Select( ::ALias ) )
-   METHOD APPEND( l ) INLINE iif( ::isNet, ( ::Alias )->( NetAppend( l ) ), ;
+   METHOD Append( l ) INLINE iif( ::isNet, ( ::Alias )->( NetAppend( l ) ), ;
       ( ::alias )->( dbAppend() ) )
-   METHOD RECALL() INLINE ( ::Alias )->( NetRecall() )
+   METHOD Recall() INLINE ( ::Alias )->( NetRecall() )
 
-   METHOD LOCATE( bFor, bWhile, nNext, nRec, lRest ) INLINE ;
+   METHOD Locate( bFor, bWhile, nNext, nRec, lRest ) INLINE ;
       ( ::Alias )->( __dbLocate( bFor, bWhile, ;
       nNext, nRec, lRest ) )
-   METHOD CONTINUE() INLINE ( ::Alias )->( __dbContinue() )
+   METHOD Continue() INLINE ( ::Alias )->( __dbContinue() )
    METHOD Found() INLINE ( ::Alias )->( Found() )
    METHOD Kill() INLINE ( ::Alias )->( dbCommit() ), ;
       ( ::Alias )->( dbUnlock() ), ;
@@ -723,15 +723,15 @@ CREATE CLASS HBTable
    METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
       lNET, cPATH, lNEW, lREADONLY )
 
-   METHOD OPEN()
+   METHOD Open()
 
    METHOD dbMove( nDirection )
    METHOD FldInit()
-   METHOD READ( lKeepBuffer )
+   METHOD Read( lKeepBuffer )
    METHOD ReadBLANK( lKeepBuffer )
    METHOD Write( lKeepBuffer )
    METHOD BufWrite( aBuffer )
-   MESSAGE DELETE() METHOD __oTDelete( lKeepBuffer ) // reserved word - *HAS* to be renamed...
+   MESSAGE Delete() METHOD __oTDelete( lKeepBuffer ) // reserved word - *HAS* to be renamed...
    METHOD SetMonitor( l )
    METHOD Undo( nBuffer, nLevel )
 
@@ -806,7 +806,7 @@ METHOD New( cDBF, cALIAS, cOrderBag, cDRIVER, ;
 
    RETURN Self
 
-METHOD OPEN() CLASS HBTable
+METHOD Open() CLASS HBTable
 
    LOCAL lSuccess := .T.
 
@@ -928,7 +928,7 @@ METHOD FldInit() CLASS HBTable
 
    RETURN oNew
 
-METHOD PROCEDURE READ( lKeepBuffer ) CLASS HBTable
+METHOD PROCEDURE Read( lKeepBuffer ) CLASS HBTable
 
    LOCAL i
    LOCAL nSel   := Select( ::Alias )
@@ -1254,7 +1254,7 @@ METHOD AddOrder( cTag, cKey, cLabel, ;
 
    RETURN oOrd
 
-METHOD REINDEX() CLASS HBTable
+METHOD Reindex() CLASS HBTable
 
    LOCAL nSel := Select( ::Alias )
    LOCAL nOrd := ( ::Alias )->( ordSetFocus( 0 ) )
@@ -1481,7 +1481,7 @@ CREATE CLASS HBOrder
    METHOD Alias() INLINE ::oTable:Alias
 
    METHOD New( cTag, cKey, cLabel, cFor, cWhile, lUnique, bEval, nInterval, cOrderBag )
-   METHOD CREATE()
+   METHOD Create()
 
    METHOD SetFocus() INLINE ( ::alias )->( ordSetFocus( ::Tag, ::cOrderBag ) )
    METHOD Destroy() INLINE ( ::alias )->( ordDestroy( ::Tag, ::cOrderBag ) )

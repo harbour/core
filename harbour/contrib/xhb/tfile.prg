@@ -66,12 +66,12 @@ CREATE CLASS TCgiFile
 
    METHOD Open( nMode )
 
-   METHOD CLOSE() INLINE FClose( ::Handle ), ;
+   METHOD Close() INLINE FClose( ::Handle ), ;
       ::Handle := -999
 
-   METHOD RENAME( c ) INLINE FRename( ::File, c ) == 0
+   METHOD Rename( c ) INLINE FRename( ::File, c ) == 0
 
-   METHOD ERASE() INLINE FErase( ::File ) == 0
+   METHOD Erase() INLINE FErase( ::File ) == 0
 
    METHOD Exists() INLINE hb_FileExists( ::File )
 
@@ -101,9 +101,9 @@ CREATE CLASS TCgiFile
 
    METHOD Eof() INLINE FPOS( ::Handle ) == ::FileSize
 
-   METHOD SEEK( n, o ) INLINE FSeek( ::Handle, n, o )
+   METHOD Seek( n, o ) INLINE FSeek( ::Handle, n, o )
 
-   METHOD CREATE( nAttr )
+   METHOD Create( nAttr )
 
    METHOD Size()
 
@@ -121,9 +121,9 @@ CREATE CLASS TCgiFile
 
    METHOD ReadLong()
 
-   METHOD GOTO( nLine )
+   METHOD Goto( nLine )
 
-   METHOD SKIP( nLines )
+   METHOD Skip( nLines )
 
    METHOD MaxPages( nPageSize )
 
@@ -165,7 +165,7 @@ METHOD Open( nMode ) CLASS TCgiFile
 **   ::Create( [<nAttrib>] ) --> lSuccess
 */
 
-METHOD CREATE ( nAttr ) CLASS TCgiFile
+METHOD Create( nAttr ) CLASS TCgiFile
 
    LOCAL nSuccess
 
@@ -336,7 +336,7 @@ METHOD WriteLong( nLong ) CLASS TCgiFile
 **
 */
 
-METHOD GOTO( nLine ) CLASS TCgiFile
+METHOD Goto( nLine ) CLASS TCgiFile
 
    LOCAL nCount := 1
    LOCAL nPos   := FPOS( ::Handle )
@@ -372,7 +372,7 @@ METHOD GOTO( nLine ) CLASS TCgiFile
 **
 */
 
-METHOD SKIP( nLines ) CLASS TCgiFile
+METHOD Skip( nLines ) CLASS TCgiFile
 
    LOCAL nCount := 0
    LOCAL nPos   := FPOS( ::Handle )

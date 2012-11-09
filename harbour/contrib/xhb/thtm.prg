@@ -112,7 +112,7 @@ CREATE CLASS THtml
 
    METHOD SetBgImage( cImage, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BACKGROUND="' + cImage + '">', ' BACKGROUND="' + cImage + '" ' )
 
-   METHOD CLOSE()
+   METHOD Close()
 
    METHOD SetCenter( lOn ) INLINE ::cStr +=  iif( lOn, "<CENTER>", "</CENTER>" )
 
@@ -122,9 +122,9 @@ CREATE CLASS THtml
 
    METHOD DefineFont( cFont, cType, nSize, cColor, lSet )
 
-   METHOD ENDFONT()
+   METHOD EndFont()
 
-   METHOD SAY( str, font, size, type, color, style )
+   METHOD Say( str, font, size, type, color, style )
 
    METHOD QQOut( c ) INLINE Default( c, "" ), ::cStr +=  c
 
@@ -142,7 +142,7 @@ CREATE CLASS THtml
    METHOD PutImage( cImage, nBorder, nHeight, cOnclick, cOnMsOver, cOnMsOut, ;
       cName, cAlt, cTarget, nWidth, lBreak, ID, MAP, ALING, HSPACE )
 
-   METHOD TEXT( cText, nCols, lWrap ) INLINE Default( lWrap, .T. ), Default( nCols, 80 ), ;
+   METHOD Text( cText, nCols, lWrap ) INLINE Default( lWrap, .T. ), Default( nCols, 80 ), ;
       ::cStr +=  "<PRE" + iif( nCols != NIL, ' COLS="' + hb_ntos( nCols ) + "'", "" ) + iif( lWrap, " WRAP>", ">" ) + CRLF() + cText + CRLF() + "</PRE>" + CRLF()
 
    METHOD MultiCol( txt, cols, gutter, width ) INLINE Default( txt, "" ), ;
@@ -709,7 +709,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
 *     End a font definition
 */
 
-METHOD ENDFONT() CLASS THtml
+METHOD EndFont() CLASS THtml
 
    ::cStr +=  '</font>' + CRLF()
 
@@ -723,7 +723,7 @@ METHOD ENDFONT() CLASS THtml
 *
 */
 
-METHOD SAY( str, font, size, type, color, style ) CLASS THtml
+METHOD Say( str, font, size, type, color, style ) CLASS THtml
 
    LOCAL cOut    := ""
    LOCAL lBold   := .F.
@@ -1195,7 +1195,7 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
 *
 */
 
-METHOD CLOSE() CLASS THtml
+METHOD Close() CLASS THtml
 
 #if 0
    ::cStr += ::cStr
