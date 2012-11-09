@@ -112,9 +112,9 @@ HB_FUNC_TRANSLATE( HB_CMDARGARGV, HB_PROGNAME )
 
 HB_FUNC( HB_VMMODE )
 {
-#if   defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) && !defined( HB_GUI )
+#if   defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) && ! defined( HB_GUI )
    hb_retni( 2 ); /* optimized for console applications */
-#elif defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) &&  defined( HB_GUI )
+#elif defined( HB_NO_PROFILER ) && defined( HB_NO_TRACE ) && defined( HB_GUI )
    hb_retni( 1 ); /* optimized for gui applications */
 #else
    hb_retni( 0 ); /* no optimization */
@@ -138,8 +138,8 @@ HB_FUNC( XHB__KEYBOARD )
    else if( HB_ISARRAY( 1 ) )
    {
       PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
-      HB_SIZE nIndex;
-      HB_SIZE nElements = hb_arrayLen( pArray );
+      HB_SIZE  nIndex;
+      HB_SIZE  nElements = hb_arrayLen( pArray );
 
       for( nIndex = 1; nIndex <= nElements; nIndex++ )
       {
@@ -159,7 +159,7 @@ HB_FUNC( XHB__KEYBOARD )
 
 HB_FUNC( HB_CREATELEN8 )
 {
-   char buffer[ 8 ];
+   char      buffer[ 8 ];
    HB_MAXINT nValue;
 
    if( HB_ISNUM( 1 ) )
@@ -179,6 +179,7 @@ HB_FUNC( HB_CREATELEN8 )
 HB_FUNC( HB_GETLEN8 )
 {
    const char * buffer = hb_parc( 1 );
+
    if( buffer && hb_parclen( 1 ) >= 8 )
       hb_retnint( HB_GET_LE_UINT64( buffer ) );
    else
@@ -188,6 +189,7 @@ HB_FUNC( HB_GETLEN8 )
 HB_FUNC( HB_DESERIALBEGIN )
 {
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
+
    if( pItem )
       hb_itemReturn( pItem );
 }
@@ -214,10 +216,10 @@ HB_FUNC( HB_F_EOF )
 HB_FUNC( CURDIRX )
 {
    HB_ERRCODE uiErrorOld = hb_fsError();
-   char * pbyBuffer = ( char * ) hb_xgrab( HB_PATH_MAX + 1 );
-   PHB_ITEM pDrv = hb_param( 1, HB_IT_STRING );
-   int iCurDrv = hb_fsCurDrv();
-   int iDrv;
+   char *     pbyBuffer  = ( char * ) hb_xgrab( HB_PATH_MAX + 1 );
+   PHB_ITEM   pDrv       = hb_param( 1, HB_IT_STRING );
+   int        iCurDrv    = hb_fsCurDrv();
+   int        iDrv;
 
    if( pDrv && hb_parclen( 1 ) > 0 )
    {
@@ -264,8 +266,8 @@ HB_FUNC( HB_EXEC )
 {
    if( HB_ISSYMBOL( 1 ) )
    {
-      HB_BOOL fSend = HB_FALSE;
-      int iParams = hb_pcount() - 1;
+      HB_BOOL fSend   = HB_FALSE;
+      int     iParams = hb_pcount() - 1;
 
       if( iParams >= 1 )
       {

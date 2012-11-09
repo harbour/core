@@ -61,11 +61,11 @@
    #include <unistd.h>
 #endif
 
-#define BUFFER_SIZE 8192
+#define BUFFER_SIZE  8192
 
 static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM pBlock )
 {
-   HB_BOOL bRetVal = HB_FALSE;
+   HB_BOOL    bRetVal = HB_FALSE;
    HB_FHANDLE fhndSource;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_copyfile(%s, %s)", szSource, szDest ) );
@@ -94,7 +94,7 @@ static HB_BOOL hb_copyfile( const char * szSource, const char * szDest, PHB_ITEM
       {
 #if defined( HB_OS_UNIX )
          struct stat struFileInfo;
-         int iSuccess = fstat( fhndSource, &struFileInfo );
+         int         iSuccess = fstat( fhndSource, &struFileInfo );
 #endif
          HB_BYTE * buffer = ( HB_BYTE * ) hb_xgrab( BUFFER_SIZE );
          HB_USHORT usRead;
@@ -153,5 +153,5 @@ HB_FUNC( XHB_COPYFILE )
          hb_retl( HB_FALSE );
    }
    else
-      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS ); /* NOTE: Undocumented but existing Clipper Run-time error */
+      hb_errRT_BASE( EG_ARG, 2010, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );  /* NOTE: Undocumented but existing Clipper Run-time error */
 }

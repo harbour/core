@@ -76,31 +76,31 @@ static BIO_METHOD * hb_BIO_METHOD_par( int iParam )
 
    switch( hb_parni( iParam ) )
    {
-   case HB_BIO_METHOD_S_NULL       : p = BIO_s_null();       break;
+      case HB_BIO_METHOD_S_NULL:        p = BIO_s_null();       break;
 #ifndef OPENSSL_NO_FP_API
-   case HB_BIO_METHOD_S_FILE       : p = BIO_s_file();       break;
+      case HB_BIO_METHOD_S_FILE:        p = BIO_s_file();       break;
 #endif
-   case HB_BIO_METHOD_S_MEM        : p = BIO_s_mem();        break;
-   case HB_BIO_METHOD_S_SOCKET     : p = BIO_s_socket();     break;
-   case HB_BIO_METHOD_S_CONNECT    : p = BIO_s_connect();    break;
-   case HB_BIO_METHOD_S_ACCEPT     : p = BIO_s_accept();     break;
-   case HB_BIO_METHOD_S_FD         : p = BIO_s_fd();         break;
+      case HB_BIO_METHOD_S_MEM:         p = BIO_s_mem();        break;
+      case HB_BIO_METHOD_S_SOCKET:      p = BIO_s_socket();     break;
+      case HB_BIO_METHOD_S_CONNECT:     p = BIO_s_connect();    break;
+      case HB_BIO_METHOD_S_ACCEPT:      p = BIO_s_accept();     break;
+      case HB_BIO_METHOD_S_FD:          p = BIO_s_fd();         break;
 #if 0 /* BIO_s_log() isn't exported via implibs on Windows at version 0.9.8k. [vszakats] */
 #ifndef OPENSSL_SYS_OS2
-   case HB_BIO_METHOD_S_LOG        : p = BIO_s_log();        break;
+      case HB_BIO_METHOD_S_LOG:         p = BIO_s_log();        break;
 #endif
 #endif
-   case HB_BIO_METHOD_S_BIO        : p = BIO_s_bio();        break;
+      case HB_BIO_METHOD_S_BIO:         p = BIO_s_bio();        break;
 #ifndef OPENSSL_NO_DGRAM
-   case HB_BIO_METHOD_S_DATAGRAM   : p = BIO_s_datagram();   break;
+      case HB_BIO_METHOD_S_DATAGRAM:    p = BIO_s_datagram();   break;
 #endif
-   case HB_BIO_METHOD_F_NULL       : p = BIO_f_null();       break;
-   case HB_BIO_METHOD_F_BUFFER     : p = BIO_f_buffer();     break;
+      case HB_BIO_METHOD_F_NULL:        p = BIO_f_null();       break;
+      case HB_BIO_METHOD_F_BUFFER:      p = BIO_f_buffer();     break;
 #ifdef OPENSSL_SYS_VMS
-   case HB_BIO_METHOD_F_LINEBUFFER : p = BIO_f_linebuffer(); break;
+      case HB_BIO_METHOD_F_LINEBUFFER:  p = BIO_f_linebuffer(); break;
 #endif
-   case HB_BIO_METHOD_F_NBIO_TEST  : p = BIO_f_nbio_test();  break;
-   default                         : p = NULL;
+      case HB_BIO_METHOD_F_NBIO_TEST:   p = BIO_f_nbio_test();  break;
+      default:                          p = NULL;
    }
 
    return p;
@@ -697,47 +697,47 @@ HB_FUNC( ERR_LOAD_BIO_STRINGS )
 
 #if 0
 
-#define BIO_set_url(b,url)    BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,0,(char *)(url))
-#define BIO_set_proxies(b,p)  BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,1,(char *)(p))
+#define BIO_set_url( b, url )                 BIO_ctrl( b, BIO_C_SET_PROXY_PARAM, 0, ( char * ) ( url ) )
+#define BIO_set_proxies( b, p )               BIO_ctrl( b, BIO_C_SET_PROXY_PARAM, 1, ( char * ) ( p ) )
 /* BIO_set_nbio(b,n) */
-#define BIO_set_filter_bio(b,s) BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,2,(char *)(s))
+#define BIO_set_filter_bio( b, s )            BIO_ctrl( b, BIO_C_SET_PROXY_PARAM, 2, ( char * ) ( s ) )
 /* BIO *BIO_get_filter_bio(BIO *bio); */
-#define BIO_set_proxy_cb(b,cb) BIO_callback_ctrl(b,BIO_C_SET_PROXY_PARAM,3,(void *(*cb)()))
-#define BIO_set_proxy_header(b,sk) BIO_ctrl(b,BIO_C_SET_PROXY_PARAM,4,(char *)sk)
-#define BIO_set_no_connect_return(b,bool) BIO_int_ctrl(b,BIO_C_SET_PROXY_PARAM,5,bool)
+#define BIO_set_proxy_cb( b, cb )             BIO_callback_ctrl( b, BIO_C_SET_PROXY_PARAM, 3, ( void *( *cb )( ) ) )
+#define BIO_set_proxy_header( b, sk )         BIO_ctrl( b, BIO_C_SET_PROXY_PARAM, 4, ( char * ) sk )
+#define BIO_set_no_connect_return( b, bool )  BIO_int_ctrl( b, BIO_C_SET_PROXY_PARAM, 5, bool )
 
-#define BIO_get_proxy_header(b,skp) BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,0,(char *)skp)
-#define BIO_get_proxies(b,pxy_p) BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,1,(char *)(pxy_p))
-#define BIO_get_url(b,url)    BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,2,(char *)(url))
-#define BIO_get_no_connect_return(b)      BIO_ctrl(b,BIO_C_GET_PROXY_PARAM,5,NULL)
+#define BIO_get_proxy_header( b, skp )        BIO_ctrl( b, BIO_C_GET_PROXY_PARAM, 0, ( char * ) skp )
+#define BIO_get_proxies( b, pxy_p )           BIO_ctrl( b, BIO_C_GET_PROXY_PARAM, 1, ( char * ) ( pxy_p ) )
+#define BIO_get_url( b, url )                 BIO_ctrl( b, BIO_C_GET_PROXY_PARAM, 2, ( char * ) ( url ) )
+#define BIO_get_no_connect_return( b )        BIO_ctrl( b, BIO_C_GET_PROXY_PARAM, 5, NULL )
 
-#define BIO_set_fp(b,fp,c)    BIO_ctrl(b,BIO_C_SET_FILE_PTR,c,(char *)fp)
-#define BIO_get_fp(b,fpp)     BIO_ctrl(b,BIO_C_GET_FILE_PTR,0,(char *)fpp)
+#define BIO_set_fp( b, fp, c )                BIO_ctrl( b, BIO_C_SET_FILE_PTR, c, ( char * ) fp )
+#define BIO_get_fp( b, fpp )                  BIO_ctrl( b, BIO_C_GET_FILE_PTR, 0, ( char * ) fpp )
 
-int   BIO_indent(BIO *b,int indent,int max);
-long  BIO_ctrl(BIO *bp,int cmd,long larg,void *parg);
-long  BIO_callback_ctrl(BIO *b, int cmd, void (*fp)(struct bio_st *, int, const char *, int, long, long));
-char * BIO_ptr_ctrl(BIO *bp,int cmd,long larg);
-long  BIO_int_ctrl(BIO *bp,int cmd,long larg,int iarg);
-BIO * BIO_push(BIO *b,BIO *append);
-BIO * BIO_pop(BIO *b);
-BIO * BIO_find_type(BIO *b,int bio_type);
-BIO * BIO_next(BIO *b);
-BIO * BIO_get_retry_BIO(BIO *bio, int *reason);
-BIO * BIO_dup_chain(BIO *in);
+int   BIO_indent( BIO * b, int indent, int max );
+long  BIO_ctrl( BIO * bp, int cmd, long larg, void * parg );
+long  BIO_callback_ctrl( BIO * b, int cmd, void ( * fp )( struct bio_st *, int, const char *, int, long, long ) );
+char * BIO_ptr_ctrl( BIO * bp, int cmd, long larg );
+long  BIO_int_ctrl( BIO * bp, int cmd, long larg, int iarg );
+BIO * BIO_push( BIO * b, BIO * append );
+BIO * BIO_pop( BIO * b );
+BIO * BIO_find_type( BIO * b, int bio_type );
+BIO * BIO_next( BIO * b );
+BIO * BIO_get_retry_BIO( BIO * bio, int * reason );
+BIO * BIO_dup_chain( BIO * in );
 
-int BIO_nread0(BIO *bio, char **buf);
-int BIO_nread(BIO *bio, char **buf, int num);
-int BIO_nwrite0(BIO *bio, char **buf);
-int BIO_nwrite(BIO *bio, char **buf, int num);
+int BIO_nread0( BIO * bio, char ** buf );
+int BIO_nread( BIO * bio, char ** buf, int num );
+int BIO_nwrite0( BIO * bio, char ** buf );
+int BIO_nwrite( BIO * bio, char ** buf, int num );
 
-BIO_METHOD *   BIO_s_mem(void);
+BIO_METHOD *   BIO_s_mem( void );
 
-BIO_set_mem_eof_return(BIO *b,int v)
-long BIO_get_mem_data(BIO *b, char **pp)
-BIO_set_mem_buf(BIO *b,BUF_MEM *bm,int c)
-BIO_get_mem_ptr(BIO *b,BUF_MEM **pp)
+BIO_set_mem_eof_return( BIO * b, int v )
+long BIO_get_mem_data( BIO * b, char ** pp )
+BIO_set_mem_buf( BIO * b, BUF_MEM * bm, int c )
+BIO_get_mem_ptr( BIO * b, BUF_MEM * *pp )
 
-BIO *BIO_new_mem_buf(void *buf, int len);
+BIO * BIO_new_mem_buf( void * buf, int len );
 
 #endif

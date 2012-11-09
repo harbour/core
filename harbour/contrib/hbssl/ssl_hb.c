@@ -66,19 +66,19 @@ HB_FUNC( HB_SSL_READ_ALL )
 
       if( ssl )
       {
-         int iMax = hb_parnidef( 3, INT_MAX );
-         int iTimeout = hb_parnidef( 4, -1 );
+         int iMax        = hb_parnidef( 3, INT_MAX );
+         int iTimeout    = hb_parnidef( 4, -1 );
          int iBufferSize = hb_parnidef( 5, 80 );
 
-         int iPos = 0;
-         int iAllocated = 0;
-         char * retval = NULL;
+         int    iPos       = 0;
+         int    iAllocated = 0;
+         char * retval     = NULL;
 
-         for( ;; )
+         for(;; )
          {
             char buffer[ 1 ];
-            int iLen;
-            int sd = SSL_get_rfd( ssl );
+            int  iLen;
+            int  sd = SSL_get_rfd( ssl );
 
             if( SSL_pending( ssl ) ||
                 ( sd >= 0 && hb_socketSelectRead( ( HB_SOCKET ) sd, iTimeout ) ) )
@@ -104,7 +104,7 @@ HB_FUNC( HB_SSL_READ_ALL )
             if( iPos == iAllocated )
             {
                iAllocated += iBufferSize;
-               retval = ( char * ) hb_xrealloc( retval, iAllocated );
+               retval      = ( char * ) hb_xrealloc( retval, iAllocated );
             }
 
             retval[ iPos++ ] = buffer[ 0 ];
@@ -136,19 +136,19 @@ HB_FUNC( HB_SSL_READ_LINE )
 
       if( ssl )
       {
-         int iMax = hb_parnidef( 3, INT_MAX );
-         int iTimeout = hb_parnidef( 4, -1 );
+         int iMax        = hb_parnidef( 3, INT_MAX );
+         int iTimeout    = hb_parnidef( 4, -1 );
          int iBufferSize = hb_parnidef( 5, 80 );
 
-         int iPos = 0;
-         int iAllocated = 0;
-         char * retval = NULL;
+         int    iPos       = 0;
+         int    iAllocated = 0;
+         char * retval     = NULL;
 
-         for( ;; )
+         for(;; )
          {
             char buffer[ 1 ];
-            int iLen;
-            int sd = SSL_get_rfd( ssl );
+            int  iLen;
+            int  sd = SSL_get_rfd( ssl );
 
             if( SSL_pending( ssl ) ||
                 ( sd >= 0 && hb_socketSelectRead( ( HB_SOCKET ) sd, iTimeout ) ) )
@@ -178,7 +178,7 @@ HB_FUNC( HB_SSL_READ_LINE )
             if( iPos == iAllocated )
             {
                iAllocated += iBufferSize;
-               retval = ( char * ) hb_xrealloc( retval, iAllocated );
+               retval      = ( char * ) hb_xrealloc( retval, iAllocated );
             }
 
             retval[ iPos++ ] = buffer[ 0 ];

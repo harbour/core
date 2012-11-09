@@ -175,17 +175,11 @@ static HB_ISIZ hb_tabexpand( const char * szString, char * szRet, HB_ISIZ nEnd, 
    for( nPos = 0; nPos <= nEnd; nPos++ )
    {
       if( szString[ nPos ] == HB_CHAR_HT )
-      {
          nSpAdded += ( ( nTabLen > 0 ) ? nTabLen - ( ( nPos + nSpAdded ) % nTabLen ) - 1 : 0 );
-      }
       else if( ( nPos < nEnd && szString[ nPos ] == HB_CHAR_SOFT1 && szString[ nPos + 1 ] == HB_CHAR_SOFT2 ) || szString[ nPos ] == HB_CHAR_LF )
-      {
          nSpAdded--;
-      }
       else
-      {
          *( szRet + nPos + nSpAdded ) = *( szString + nPos );
-      }
    }
 
    return nSpAdded + nEnd;
@@ -207,9 +201,7 @@ HB_FUNC( HB_TABEXPAND )
    }
 
    if( ( nStrLen == 0 ) || ( nTabCount == 0 ) || ( nTabLen == 0 ) )
-   {
       hb_retc( szText );
-   }
    else
    {
       nSize = nStrLen + nTabCount * ( nTabLen - 1 );

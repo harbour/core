@@ -68,13 +68,13 @@ static HB_GARBAGE_FUNC( EVP_MD_CTX_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Destroy the object */
-      EVP_MD_CTX_destroy( ( EVP_MD_CTX * ) * ph );
+      EVP_MD_CTX_destroy( ( EVP_MD_CTX * ) *ph );
 
       /* set pointer to NULL just in case */
-      * ph = NULL;
+      *ph = NULL;
    }
 }
 
@@ -93,7 +93,7 @@ static EVP_MD_CTX * hb_EVP_MD_CTX_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcEVP_MD_CTX_funcs, iParam );
 
-   return ph ? ( EVP_MD_CTX * ) * ph : NULL;
+   return ph ? ( EVP_MD_CTX * ) *ph : NULL;
 }
 
 int hb_EVP_MD_is( int iParam )
@@ -110,40 +110,40 @@ const EVP_MD * hb_EVP_MD_par( int iParam )
 
    switch( hb_parni( iParam ) )
    {
-   case HB_EVP_MD_MD_NULL   : p = EVP_md_null();   break;
+      case HB_EVP_MD_MD_NULL:    p = EVP_md_null();   break;
 #if ! defined( OPENSSL_NO_MD2 ) && OPENSSL_VERSION_NUMBER < 0x10000000L
-   case HB_EVP_MD_MD2       : p = EVP_md2();       break;
+      case HB_EVP_MD_MD2:        p = EVP_md2();       break;
 #endif
 #ifndef OPENSSL_NO_MD4
-   case HB_EVP_MD_MD4       : p = EVP_md4();       break;
+      case HB_EVP_MD_MD4:        p = EVP_md4();       break;
 #endif
 #ifndef OPENSSL_NO_MD5
-   case HB_EVP_MD_MD5       : p = EVP_md5();       break;
+      case HB_EVP_MD_MD5:        p = EVP_md5();       break;
 #endif
 #ifndef OPENSSL_NO_SHA
-   case HB_EVP_MD_SHA       : p = EVP_sha();       break;
-   case HB_EVP_MD_SHA1      : p = EVP_sha1();      break;
-   case HB_EVP_MD_DSS       : p = EVP_dss();       break;
-   case HB_EVP_MD_DSS1      : p = EVP_dss1();      break;
+      case HB_EVP_MD_SHA:        p = EVP_sha();       break;
+      case HB_EVP_MD_SHA1:       p = EVP_sha1();      break;
+      case HB_EVP_MD_DSS:        p = EVP_dss();       break;
+      case HB_EVP_MD_DSS1:       p = EVP_dss1();      break;
 #if ! defined( HB_OPENSSL_OLD_OSX_ )
-   case HB_EVP_MD_ECDSA     : p = EVP_ecdsa();     break;
+      case HB_EVP_MD_ECDSA:      p = EVP_ecdsa();     break;
 #endif
 #endif
 #ifndef OPENSSL_NO_SHA256
-   case HB_EVP_MD_SHA224    : p = EVP_sha224();    break;
-   case HB_EVP_MD_SHA256    : p = EVP_sha256();    break;
+      case HB_EVP_MD_SHA224:     p = EVP_sha224();    break;
+      case HB_EVP_MD_SHA256:     p = EVP_sha256();    break;
 #endif
 #ifndef OPENSSL_NO_SHA512
-   case HB_EVP_MD_SHA384    : p = EVP_sha384();    break;
-   case HB_EVP_MD_SHA512    : p = EVP_sha512();    break;
+      case HB_EVP_MD_SHA384:     p = EVP_sha384();    break;
+      case HB_EVP_MD_SHA512:     p = EVP_sha512();    break;
 #endif
 #ifndef OPENSSL_NO_MDC2
-   case HB_EVP_MD_MDC2      : p = EVP_mdc2();      break;
+      case HB_EVP_MD_MDC2:       p = EVP_mdc2();      break;
 #endif
 #ifndef OPENSSL_NO_RIPEMD
-   case HB_EVP_MD_RIPEMD160 : p = EVP_ripemd160(); break;
+      case HB_EVP_MD_RIPEMD160:  p = EVP_ripemd160(); break;
 #endif
-   default                  : p = NULL;
+      default:                   p = NULL;
    }
 
    return p;
@@ -248,7 +248,7 @@ HB_FUNC( EVP_MD_CTX_CREATE )
 
    EVP_MD_CTX * ctx = EVP_MD_CTX_create();
 
-   * ph = ctx;
+   *ph = ctx;
 
    hb_retptrGC( ph );
 }
@@ -297,7 +297,7 @@ HB_FUNC( EVP_MD_CTX_COPY )
    if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_CTX_is( 2 ) )
    {
       EVP_MD_CTX * ctx_out = hb_EVP_MD_CTX_par( 1 );
-      EVP_MD_CTX * ctx_in = hb_EVP_MD_CTX_par( 2 );
+      EVP_MD_CTX * ctx_in  = hb_EVP_MD_CTX_par( 2 );
 
       if( ctx_out && ctx_in )
          hb_retni( EVP_MD_CTX_copy( ctx_out, ctx_in ) );
@@ -311,7 +311,7 @@ HB_FUNC( EVP_MD_CTX_COPY_EX )
    if( hb_EVP_MD_CTX_is( 1 ) && hb_EVP_MD_CTX_is( 2 ) )
    {
       EVP_MD_CTX * ctx_out = hb_EVP_MD_CTX_par( 1 );
-      EVP_MD_CTX * ctx_in = hb_EVP_MD_CTX_par( 2 );
+      EVP_MD_CTX * ctx_in  = hb_EVP_MD_CTX_par( 2 );
 
       if( ctx_out && ctx_in )
          hb_retni( EVP_MD_CTX_copy_ex( ctx_out, ctx_in ) );
@@ -372,7 +372,7 @@ HB_FUNC( EVP_DIGESTFINAL )
       if( ctx )
       {
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE + 1 );
-         unsigned int size = 0;
+         unsigned int    size   = 0;
 
          hb_retni( EVP_DigestFinal( ctx, buffer, &size ) );
 
@@ -401,7 +401,7 @@ HB_FUNC( EVP_DIGESTFINAL_EX )
       if( ctx )
       {
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_MAX_MD_SIZE + 1 );
-         unsigned int size = 0;
+         unsigned int    size   = 0;
 
          hb_retni( EVP_DigestFinal_ex( ctx, buffer, &size ) );
 
@@ -473,7 +473,7 @@ HB_FUNC( EVP_SIGNFINAL )
       if( ctx )
       {
          unsigned char * buffer = ( unsigned char * ) hb_xgrab( EVP_PKEY_size( hb_EVP_PKEY_par( 3 ) ) + 1 );
-         unsigned int size = 0;
+         unsigned int    size   = 0;
 
          hb_retni( EVP_SignFinal( ctx, buffer, &size, hb_EVP_PKEY_par( 3 ) ) );
 

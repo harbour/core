@@ -75,7 +75,7 @@ static HB_GARBAGE_FUNC( X509_release )
    {
       /* Destroy the object */
       if( ph->fRelease )
-          X509_free( ( X509 * ) ph->pX509 );
+         X509_free( ( X509 * ) ph->pX509 );
 
       /* set pointer to NULL just in case */
       ph->pX509 = NULL;
@@ -104,7 +104,7 @@ void hb_X509_ret( X509 * x509, HB_BOOL fRelease )
 {
    PHB_X509 ph = ( PHB_X509 ) hb_gcAllocate( sizeof( HB_X509 ), &s_gcX509_funcs );
 
-   ph->pX509 = x509;
+   ph->pX509    = x509;
    ph->fRelease = fRelease;
 
    hb_retptrGC( ( void * ) ph );

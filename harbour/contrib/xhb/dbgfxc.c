@@ -59,7 +59,7 @@
 static HB_BOOL s_bToOutputDebug = HB_TRUE;
 static HB_BOOL s_bToLogFile     = HB_TRUE;
 
-static HB_BOOL s_bEmptyLogFile  = HB_TRUE;
+static HB_BOOL s_bEmptyLogFile = HB_TRUE;
 
 HB_BOOL hb_ToOutDebugOnOff( HB_BOOL bOnOff )
 {
@@ -73,7 +73,7 @@ void hb_ToOutDebug( const char * sTraceMsg, ... )
 {
    if( sTraceMsg && s_bToOutputDebug )
    {
-      char buffer[ 1024 ];
+      char    buffer[ 1024 ];
       va_list ap;
 
       va_start( ap, sTraceMsg );

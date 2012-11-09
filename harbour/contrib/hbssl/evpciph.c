@@ -68,15 +68,15 @@ static HB_GARBAGE_FUNC( EVP_CIPHER_CTX_release )
    void ** ph = ( void ** ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( ph && * ph )
+   if( ph && *ph )
    {
       /* Cleanup the object */
-      EVP_CIPHER_CTX_cleanup( ( EVP_CIPHER_CTX * ) * ph );
+      EVP_CIPHER_CTX_cleanup( ( EVP_CIPHER_CTX * ) *ph );
       /* Destroy the object */
-      hb_xfree( * ph );
+      hb_xfree( *ph );
 
       /* set pointer to NULL just in case */
-      * ph = NULL;
+      *ph = NULL;
    }
 }
 
@@ -95,7 +95,7 @@ static EVP_CIPHER_CTX * hb_EVP_CIPHER_CTX_par( int iParam )
 {
    void ** ph = ( void ** ) hb_parptrGC( &s_gcEVP_CIPHER_CTX_funcs, iParam );
 
-   return ph ? ( EVP_CIPHER_CTX * ) * ph : NULL;
+   return ph ? ( EVP_CIPHER_CTX * ) *ph : NULL;
 }
 
 int hb_EVP_CIPHER_is( int iParam )
@@ -112,126 +112,126 @@ const EVP_CIPHER * hb_EVP_CIPHER_par( int iParam )
 
    switch( hb_parni( iParam ) )
    {
-   case HB_EVP_CIPHER_ENC_NULL            : p = EVP_enc_null();            break;
+      case HB_EVP_CIPHER_ENC_NULL:             p = EVP_enc_null();            break;
 #ifndef OPENSSL_NO_DES
-   case HB_EVP_CIPHER_DES_ECB             : p = EVP_des_ecb();             break;
-   case HB_EVP_CIPHER_DES_EDE             : p = EVP_des_ede();             break;
-   case HB_EVP_CIPHER_DES_EDE3            : p = EVP_des_ede3();            break;
-   case HB_EVP_CIPHER_DES_EDE_ECB         : p = EVP_des_ede_ecb();         break;
-   case HB_EVP_CIPHER_DES_EDE3_ECB        : p = EVP_des_ede3_ecb();        break;
-   case HB_EVP_CIPHER_DES_CFB64           : p = EVP_des_cfb64();           break;
-   case HB_EVP_CIPHER_DES_CFB             : p = EVP_des_cfb();             break;
-   case HB_EVP_CIPHER_DES_CFB1            : p = EVP_des_cfb1();            break;
-   case HB_EVP_CIPHER_DES_CFB8            : p = EVP_des_cfb8();            break;
-   case HB_EVP_CIPHER_DES_EDE_CFB64       : p = EVP_des_ede_cfb64();       break;
-   case HB_EVP_CIPHER_DES_EDE_CFB         : p = EVP_des_ede_cfb();         break;
-   case HB_EVP_CIPHER_DES_EDE3_CFB64      : p = EVP_des_ede3_cfb64();      break;
-   case HB_EVP_CIPHER_DES_EDE3_CFB        : p = EVP_des_ede3_cfb();        break;
-   case HB_EVP_CIPHER_DES_EDE3_CFB1       : p = EVP_des_ede3_cfb1();       break;
-   case HB_EVP_CIPHER_DES_EDE3_CFB8       : p = EVP_des_ede3_cfb8();       break;
-   case HB_EVP_CIPHER_DES_OFB             : p = EVP_des_ofb();             break;
-   case HB_EVP_CIPHER_DES_EDE_OFB         : p = EVP_des_ede_ofb();         break;
-   case HB_EVP_CIPHER_DES_EDE3_OFB        : p = EVP_des_ede3_ofb();        break;
-   case HB_EVP_CIPHER_DES_CBC             : p = EVP_des_cbc();             break;
-   case HB_EVP_CIPHER_DES_EDE_CBC         : p = EVP_des_ede_cbc();         break;
-   case HB_EVP_CIPHER_DES_EDE3_CBC        : p = EVP_des_ede3_cbc();        break;
-   case HB_EVP_CIPHER_DESX_CBC            : p = EVP_desx_cbc();            break;
+      case HB_EVP_CIPHER_DES_ECB:              p = EVP_des_ecb();             break;
+      case HB_EVP_CIPHER_DES_EDE:              p = EVP_des_ede();             break;
+      case HB_EVP_CIPHER_DES_EDE3:             p = EVP_des_ede3();            break;
+      case HB_EVP_CIPHER_DES_EDE_ECB:          p = EVP_des_ede_ecb();         break;
+      case HB_EVP_CIPHER_DES_EDE3_ECB:         p = EVP_des_ede3_ecb();        break;
+      case HB_EVP_CIPHER_DES_CFB64:            p = EVP_des_cfb64();           break;
+      case HB_EVP_CIPHER_DES_CFB:              p = EVP_des_cfb();             break;
+      case HB_EVP_CIPHER_DES_CFB1:             p = EVP_des_cfb1();            break;
+      case HB_EVP_CIPHER_DES_CFB8:             p = EVP_des_cfb8();            break;
+      case HB_EVP_CIPHER_DES_EDE_CFB64:        p = EVP_des_ede_cfb64();       break;
+      case HB_EVP_CIPHER_DES_EDE_CFB:          p = EVP_des_ede_cfb();         break;
+      case HB_EVP_CIPHER_DES_EDE3_CFB64:       p = EVP_des_ede3_cfb64();      break;
+      case HB_EVP_CIPHER_DES_EDE3_CFB:         p = EVP_des_ede3_cfb();        break;
+      case HB_EVP_CIPHER_DES_EDE3_CFB1:        p = EVP_des_ede3_cfb1();       break;
+      case HB_EVP_CIPHER_DES_EDE3_CFB8:        p = EVP_des_ede3_cfb8();       break;
+      case HB_EVP_CIPHER_DES_OFB:              p = EVP_des_ofb();             break;
+      case HB_EVP_CIPHER_DES_EDE_OFB:          p = EVP_des_ede_ofb();         break;
+      case HB_EVP_CIPHER_DES_EDE3_OFB:         p = EVP_des_ede3_ofb();        break;
+      case HB_EVP_CIPHER_DES_CBC:              p = EVP_des_cbc();             break;
+      case HB_EVP_CIPHER_DES_EDE_CBC:          p = EVP_des_ede_cbc();         break;
+      case HB_EVP_CIPHER_DES_EDE3_CBC:         p = EVP_des_ede3_cbc();        break;
+      case HB_EVP_CIPHER_DESX_CBC:             p = EVP_desx_cbc();            break;
 #endif
 #ifndef OPENSSL_NO_RC4
-   case HB_EVP_CIPHER_RC4                 : p = EVP_rc4();                 break;
-   case HB_EVP_CIPHER_RC4_40              : p = EVP_rc4_40();              break;
+      case HB_EVP_CIPHER_RC4:                  p = EVP_rc4();                 break;
+      case HB_EVP_CIPHER_RC4_40:               p = EVP_rc4_40();              break;
 #endif
 #ifndef OPENSSL_NO_IDEA
-   case HB_EVP_CIPHER_IDEA_ECB            : p = EVP_idea_ecb();            break;
-   case HB_EVP_CIPHER_IDEA_CFB64          : p = EVP_idea_cfb64();          break;
-   case HB_EVP_CIPHER_IDEA_CFB            : p = EVP_idea_cfb();            break;
-   case HB_EVP_CIPHER_IDEA_OFB            : p = EVP_idea_ofb();            break;
-   case HB_EVP_CIPHER_IDEA_CBC            : p = EVP_idea_cbc();            break;
+      case HB_EVP_CIPHER_IDEA_ECB:             p = EVP_idea_ecb();            break;
+      case HB_EVP_CIPHER_IDEA_CFB64:           p = EVP_idea_cfb64();          break;
+      case HB_EVP_CIPHER_IDEA_CFB:             p = EVP_idea_cfb();            break;
+      case HB_EVP_CIPHER_IDEA_OFB:             p = EVP_idea_ofb();            break;
+      case HB_EVP_CIPHER_IDEA_CBC:             p = EVP_idea_cbc();            break;
 #endif
 #ifndef OPENSSL_NO_RC2
-   case HB_EVP_CIPHER_RC2_ECB             : p = EVP_rc2_ecb();             break;
-   case HB_EVP_CIPHER_RC2_CBC             : p = EVP_rc2_cbc();             break;
-   case HB_EVP_CIPHER_RC2_40_CBC          : p = EVP_rc2_40_cbc();          break;
-   case HB_EVP_CIPHER_RC2_64_CBC          : p = EVP_rc2_64_cbc();          break;
-   case HB_EVP_CIPHER_RC2_CFB64           : p = EVP_rc2_cfb64();           break;
-   case HB_EVP_CIPHER_RC2_CFB             : p = EVP_rc2_cfb();             break;
-   case HB_EVP_CIPHER_RC2_OFB             : p = EVP_rc2_ofb();             break;
+      case HB_EVP_CIPHER_RC2_ECB:              p = EVP_rc2_ecb();             break;
+      case HB_EVP_CIPHER_RC2_CBC:              p = EVP_rc2_cbc();             break;
+      case HB_EVP_CIPHER_RC2_40_CBC:           p = EVP_rc2_40_cbc();          break;
+      case HB_EVP_CIPHER_RC2_64_CBC:           p = EVP_rc2_64_cbc();          break;
+      case HB_EVP_CIPHER_RC2_CFB64:            p = EVP_rc2_cfb64();           break;
+      case HB_EVP_CIPHER_RC2_CFB:              p = EVP_rc2_cfb();             break;
+      case HB_EVP_CIPHER_RC2_OFB:              p = EVP_rc2_ofb();             break;
 #endif
 #ifndef OPENSSL_NO_BF
-   case HB_EVP_CIPHER_BF_ECB              : p = EVP_bf_ecb();              break;
-   case HB_EVP_CIPHER_BF_CBC              : p = EVP_bf_cbc();              break;
-   case HB_EVP_CIPHER_BF_CFB64            : p = EVP_bf_cfb64();            break;
-   case HB_EVP_CIPHER_BF_CFB              : p = EVP_bf_cfb();              break;
-   case HB_EVP_CIPHER_BF_OFB              : p = EVP_bf_ofb();              break;
+      case HB_EVP_CIPHER_BF_ECB:               p = EVP_bf_ecb();              break;
+      case HB_EVP_CIPHER_BF_CBC:               p = EVP_bf_cbc();              break;
+      case HB_EVP_CIPHER_BF_CFB64:             p = EVP_bf_cfb64();            break;
+      case HB_EVP_CIPHER_BF_CFB:               p = EVP_bf_cfb();              break;
+      case HB_EVP_CIPHER_BF_OFB:               p = EVP_bf_ofb();              break;
 #endif
 #ifndef OPENSSL_NO_CAST
-   case HB_EVP_CIPHER_CAST5_ECB           : p = EVP_cast5_ecb();           break;
-   case HB_EVP_CIPHER_CAST5_CBC           : p = EVP_cast5_cbc();           break;
-   case HB_EVP_CIPHER_CAST5_CFB64         : p = EVP_cast5_cfb64();         break;
-   case HB_EVP_CIPHER_CAST5_CFB           : p = EVP_cast5_cfb();           break;
-   case HB_EVP_CIPHER_CAST5_OFB           : p = EVP_cast5_ofb();           break;
+      case HB_EVP_CIPHER_CAST5_ECB:            p = EVP_cast5_ecb();           break;
+      case HB_EVP_CIPHER_CAST5_CBC:            p = EVP_cast5_cbc();           break;
+      case HB_EVP_CIPHER_CAST5_CFB64:          p = EVP_cast5_cfb64();         break;
+      case HB_EVP_CIPHER_CAST5_CFB:            p = EVP_cast5_cfb();           break;
+      case HB_EVP_CIPHER_CAST5_OFB:            p = EVP_cast5_ofb();           break;
 #endif
 #ifndef OPENSSL_NO_RC5
-   case HB_EVP_CIPHER_RC5_32_12_16_CBC    : p = EVP_rc5_32_12_16_cbc();    break;
-   case HB_EVP_CIPHER_RC5_32_12_16_ECB    : p = EVP_rc5_32_12_16_ecb();    break;
-   case HB_EVP_CIPHER_RC5_32_12_16_CFB64  : p = EVP_rc5_32_12_16_cfb64();  break;
-   case HB_EVP_CIPHER_RC5_32_12_16_CFB    : p = EVP_rc5_32_12_16_cfb();    break;
-   case HB_EVP_CIPHER_RC5_32_12_16_OFB    : p = EVP_rc5_32_12_16_ofb();    break;
+      case HB_EVP_CIPHER_RC5_32_12_16_CBC:     p = EVP_rc5_32_12_16_cbc();    break;
+      case HB_EVP_CIPHER_RC5_32_12_16_ECB:     p = EVP_rc5_32_12_16_ecb();    break;
+      case HB_EVP_CIPHER_RC5_32_12_16_CFB64:   p = EVP_rc5_32_12_16_cfb64();  break;
+      case HB_EVP_CIPHER_RC5_32_12_16_CFB:     p = EVP_rc5_32_12_16_cfb();    break;
+      case HB_EVP_CIPHER_RC5_32_12_16_OFB:     p = EVP_rc5_32_12_16_ofb();    break;
 #endif
 #ifndef OPENSSL_NO_AES
-   case HB_EVP_CIPHER_AES_128_ECB         : p = EVP_aes_128_ecb();         break;
-   case HB_EVP_CIPHER_AES_128_CBC         : p = EVP_aes_128_cbc();         break;
-   case HB_EVP_CIPHER_AES_128_CFB1        : p = EVP_aes_128_cfb1();        break;
-   case HB_EVP_CIPHER_AES_128_CFB8        : p = EVP_aes_128_cfb8();        break;
-   case HB_EVP_CIPHER_AES_128_CFB128      : p = EVP_aes_128_cfb128();      break;
-   case HB_EVP_CIPHER_AES_128_CFB         : p = EVP_aes_128_cfb();         break;
-   case HB_EVP_CIPHER_AES_128_OFB         : p = EVP_aes_128_ofb();         break;
-   case HB_EVP_CIPHER_AES_192_ECB         : p = EVP_aes_192_ecb();         break;
-   case HB_EVP_CIPHER_AES_192_CBC         : p = EVP_aes_192_cbc();         break;
-   case HB_EVP_CIPHER_AES_192_CFB1        : p = EVP_aes_192_cfb1();        break;
-   case HB_EVP_CIPHER_AES_192_CFB8        : p = EVP_aes_192_cfb8();        break;
-   case HB_EVP_CIPHER_AES_192_CFB128      : p = EVP_aes_192_cfb128();      break;
-   case HB_EVP_CIPHER_AES_192_CFB         : p = EVP_aes_192_cfb();         break;
-   case HB_EVP_CIPHER_AES_192_OFB         : p = EVP_aes_192_ofb();         break;
-   case HB_EVP_CIPHER_AES_256_ECB         : p = EVP_aes_256_ecb();         break;
-   case HB_EVP_CIPHER_AES_256_CBC         : p = EVP_aes_256_cbc();         break;
-   case HB_EVP_CIPHER_AES_256_CFB1        : p = EVP_aes_256_cfb1();        break;
-   case HB_EVP_CIPHER_AES_256_CFB8        : p = EVP_aes_256_cfb8();        break;
-   case HB_EVP_CIPHER_AES_256_CFB128      : p = EVP_aes_256_cfb128();      break;
-   case HB_EVP_CIPHER_AES_256_CFB         : p = EVP_aes_256_cfb();         break;
-   case HB_EVP_CIPHER_AES_256_OFB         : p = EVP_aes_256_ofb();         break;
+      case HB_EVP_CIPHER_AES_128_ECB:          p = EVP_aes_128_ecb();         break;
+      case HB_EVP_CIPHER_AES_128_CBC:          p = EVP_aes_128_cbc();         break;
+      case HB_EVP_CIPHER_AES_128_CFB1:         p = EVP_aes_128_cfb1();        break;
+      case HB_EVP_CIPHER_AES_128_CFB8:         p = EVP_aes_128_cfb8();        break;
+      case HB_EVP_CIPHER_AES_128_CFB128:       p = EVP_aes_128_cfb128();      break;
+      case HB_EVP_CIPHER_AES_128_CFB:          p = EVP_aes_128_cfb();         break;
+      case HB_EVP_CIPHER_AES_128_OFB:          p = EVP_aes_128_ofb();         break;
+      case HB_EVP_CIPHER_AES_192_ECB:          p = EVP_aes_192_ecb();         break;
+      case HB_EVP_CIPHER_AES_192_CBC:          p = EVP_aes_192_cbc();         break;
+      case HB_EVP_CIPHER_AES_192_CFB1:         p = EVP_aes_192_cfb1();        break;
+      case HB_EVP_CIPHER_AES_192_CFB8:         p = EVP_aes_192_cfb8();        break;
+      case HB_EVP_CIPHER_AES_192_CFB128:       p = EVP_aes_192_cfb128();      break;
+      case HB_EVP_CIPHER_AES_192_CFB:          p = EVP_aes_192_cfb();         break;
+      case HB_EVP_CIPHER_AES_192_OFB:          p = EVP_aes_192_ofb();         break;
+      case HB_EVP_CIPHER_AES_256_ECB:          p = EVP_aes_256_ecb();         break;
+      case HB_EVP_CIPHER_AES_256_CBC:          p = EVP_aes_256_cbc();         break;
+      case HB_EVP_CIPHER_AES_256_CFB1:         p = EVP_aes_256_cfb1();        break;
+      case HB_EVP_CIPHER_AES_256_CFB8:         p = EVP_aes_256_cfb8();        break;
+      case HB_EVP_CIPHER_AES_256_CFB128:       p = EVP_aes_256_cfb128();      break;
+      case HB_EVP_CIPHER_AES_256_CFB:          p = EVP_aes_256_cfb();         break;
+      case HB_EVP_CIPHER_AES_256_OFB:          p = EVP_aes_256_ofb();         break;
 #endif
 #ifndef OPENSSL_NO_CAMELLIA
-   case HB_EVP_CIPHER_CAMELLIA_128_ECB    : p = EVP_camellia_128_ecb();    break;
-   case HB_EVP_CIPHER_CAMELLIA_128_CBC    : p = EVP_camellia_128_cbc();    break;
-   case HB_EVP_CIPHER_CAMELLIA_128_CFB1   : p = EVP_camellia_128_cfb1();   break;
-   case HB_EVP_CIPHER_CAMELLIA_128_CFB8   : p = EVP_camellia_128_cfb8();   break;
-   case HB_EVP_CIPHER_CAMELLIA_128_CFB128 : p = EVP_camellia_128_cfb128(); break;
-   case HB_EVP_CIPHER_CAMELLIA_128_CFB    : p = EVP_camellia_128_cfb();    break;
-   case HB_EVP_CIPHER_CAMELLIA_128_OFB    : p = EVP_camellia_128_ofb();    break;
-   case HB_EVP_CIPHER_CAMELLIA_192_ECB    : p = EVP_camellia_192_ecb();    break;
-   case HB_EVP_CIPHER_CAMELLIA_192_CBC    : p = EVP_camellia_192_cbc();    break;
-   case HB_EVP_CIPHER_CAMELLIA_192_CFB1   : p = EVP_camellia_192_cfb1();   break;
-   case HB_EVP_CIPHER_CAMELLIA_192_CFB8   : p = EVP_camellia_192_cfb8();   break;
-   case HB_EVP_CIPHER_CAMELLIA_192_CFB128 : p = EVP_camellia_192_cfb128(); break;
-   case HB_EVP_CIPHER_CAMELLIA_192_CFB    : p = EVP_camellia_192_cfb();    break;
-   case HB_EVP_CIPHER_CAMELLIA_192_OFB    : p = EVP_camellia_192_ofb();    break;
-   case HB_EVP_CIPHER_CAMELLIA_256_ECB    : p = EVP_camellia_256_ecb();    break;
-   case HB_EVP_CIPHER_CAMELLIA_256_CBC    : p = EVP_camellia_256_cbc();    break;
-   case HB_EVP_CIPHER_CAMELLIA_256_CFB1   : p = EVP_camellia_256_cfb1();   break;
-   case HB_EVP_CIPHER_CAMELLIA_256_CFB8   : p = EVP_camellia_256_cfb8();   break;
-   case HB_EVP_CIPHER_CAMELLIA_256_CFB128 : p = EVP_camellia_256_cfb128(); break;
-   case HB_EVP_CIPHER_CAMELLIA_256_CFB    : p = EVP_camellia_256_cfb();    break;
-   case HB_EVP_CIPHER_CAMELLIA_256_OFB    : p = EVP_camellia_256_ofb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_128_ECB:     p = EVP_camellia_128_ecb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_128_CBC:     p = EVP_camellia_128_cbc();    break;
+      case HB_EVP_CIPHER_CAMELLIA_128_CFB1:    p = EVP_camellia_128_cfb1();   break;
+      case HB_EVP_CIPHER_CAMELLIA_128_CFB8:    p = EVP_camellia_128_cfb8();   break;
+      case HB_EVP_CIPHER_CAMELLIA_128_CFB128:  p = EVP_camellia_128_cfb128(); break;
+      case HB_EVP_CIPHER_CAMELLIA_128_CFB:     p = EVP_camellia_128_cfb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_128_OFB:     p = EVP_camellia_128_ofb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_192_ECB:     p = EVP_camellia_192_ecb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_192_CBC:     p = EVP_camellia_192_cbc();    break;
+      case HB_EVP_CIPHER_CAMELLIA_192_CFB1:    p = EVP_camellia_192_cfb1();   break;
+      case HB_EVP_CIPHER_CAMELLIA_192_CFB8:    p = EVP_camellia_192_cfb8();   break;
+      case HB_EVP_CIPHER_CAMELLIA_192_CFB128:  p = EVP_camellia_192_cfb128(); break;
+      case HB_EVP_CIPHER_CAMELLIA_192_CFB:     p = EVP_camellia_192_cfb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_192_OFB:     p = EVP_camellia_192_ofb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_256_ECB:     p = EVP_camellia_256_ecb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_256_CBC:     p = EVP_camellia_256_cbc();    break;
+      case HB_EVP_CIPHER_CAMELLIA_256_CFB1:    p = EVP_camellia_256_cfb1();   break;
+      case HB_EVP_CIPHER_CAMELLIA_256_CFB8:    p = EVP_camellia_256_cfb8();   break;
+      case HB_EVP_CIPHER_CAMELLIA_256_CFB128:  p = EVP_camellia_256_cfb128(); break;
+      case HB_EVP_CIPHER_CAMELLIA_256_CFB:     p = EVP_camellia_256_cfb();    break;
+      case HB_EVP_CIPHER_CAMELLIA_256_OFB:     p = EVP_camellia_256_ofb();    break;
 #endif
 #ifndef OPENSSL_NO_SEED
-   case HB_EVP_CIPHER_SEED_ECB            : p = EVP_seed_ecb();            break;
-   case HB_EVP_CIPHER_SEED_CBC            : p = EVP_seed_cbc();            break;
-   case HB_EVP_CIPHER_SEED_CFB128         : p = EVP_seed_cfb128();         break;
-   case HB_EVP_CIPHER_SEED_CFB            : p = EVP_seed_cfb();            break;
-   case HB_EVP_CIPHER_SEED_OFB            : p = EVP_seed_ofb();            break;
+      case HB_EVP_CIPHER_SEED_ECB:             p = EVP_seed_ecb();            break;
+      case HB_EVP_CIPHER_SEED_CBC:             p = EVP_seed_cbc();            break;
+      case HB_EVP_CIPHER_SEED_CFB128:          p = EVP_seed_cfb128();         break;
+      case HB_EVP_CIPHER_SEED_CFB:             p = EVP_seed_cfb();            break;
+      case HB_EVP_CIPHER_SEED_OFB:             p = EVP_seed_ofb();            break;
 #endif
-   default                                : p = NULL;
+      default:                                 p = NULL;
    }
 
    return p;
@@ -438,7 +438,7 @@ HB_FUNC( HB_EVP_CIPHER_CTX_CREATE )
 
    EVP_CIPHER_CTX_init( ctx );
 
-   * ph = ctx;
+   *ph = ctx;
 
    hb_retptrGC( ph );
 }
@@ -933,9 +933,9 @@ HB_FUNC( EVP_SEALINIT )
 
       if( ctx )
       {
-         int npubk = 0;
-         PHB_ITEM pArray = NULL;
-         EVP_PKEY * pkey1 = NULL;
+         int        npubk  = 0;
+         PHB_ITEM   pArray = NULL;
+         EVP_PKEY * pkey1  = NULL;
 
          if( HB_ISARRAY( 5 ) )
             npubk = ( int ) hb_arrayLen( pArray = hb_param( 5, HB_IT_ARRAY ) );
@@ -949,17 +949,18 @@ HB_FUNC( EVP_SEALINIT )
          {
             unsigned char ** ek = ( unsigned char ** ) hb_xgrab( sizeof( unsigned char * ) * npubk );
             int * ekl = ( int * ) hb_xgrab( sizeof( int ) * npubk );
-            int ivl = EVP_CIPHER_iv_length( cipher );
+            int   ivl = EVP_CIPHER_iv_length( cipher );
             unsigned char * iv = ivl > 0 ? ( unsigned char * ) hb_xgrab( ivl + 1 ) : NULL;
+
             EVP_PKEY ** pubk = ( EVP_PKEY ** ) hb_xgrab( sizeof( EVP_PKEY * ) * npubk + 1 );
-            PHB_ITEM pPKEY;
-            int tmp;
+            PHB_ITEM    pPKEY;
+            int         tmp;
 
             for( tmp = 0; tmp < npubk; tmp++ )
             {
                pubk[ tmp ] = pkey1 ? pkey1 : ( EVP_PKEY * ) hb_arrayGetPtr( pArray, tmp + 1 );
-               ek[ tmp ] = ( unsigned char * ) hb_xgrab( EVP_PKEY_size( pubk[ tmp ] ) + 1 );
-               ekl[ tmp ] = 0;
+               ek[ tmp ]   = ( unsigned char * ) hb_xgrab( EVP_PKEY_size( pubk[ tmp ] ) + 1 );
+               ekl[ tmp ]  = 0;
             }
 
             hb_retni( EVP_SealInit( ctx,
@@ -1064,8 +1065,8 @@ HB_FUNC( EVP_OPENINIT )
 
    if( hb_EVP_CIPHER_CTX_is( 1 ) && cipher )
    {
-      EVP_CIPHER_CTX * ctx = hb_EVP_CIPHER_CTX_par( 1 );
-      EVP_PKEY * priv = ( EVP_PKEY * ) hb_parptr( 5 );
+      EVP_CIPHER_CTX * ctx  = hb_EVP_CIPHER_CTX_par( 1 );
+      EVP_PKEY *       priv = ( EVP_PKEY * ) hb_parptr( 5 );
 
       if( ctx && priv )
          hb_retni( EVP_OpenInit( ctx,
@@ -1143,10 +1144,10 @@ HB_FUNC( EVP_OPENFINAL )
 
 #if 0
 
-#define EVP_CIPHER_CTX_get_app_data(e) ((e)->app_data)
-#define EVP_CIPHER_CTX_set_app_data(e,d) ((e)->app_data=(char *)(d))
+#define EVP_CIPHER_CTX_get_app_data( e )     ( ( e )->app_data )
+#define EVP_CIPHER_CTX_set_app_data( e, d )  ( ( e )->app_data = ( char * ) ( d ) )
 
-int EVP_CIPHER_param_to_asn1(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
-int EVP_CIPHER_asn1_to_param(EVP_CIPHER_CTX *c, ASN1_TYPE *type);
+int EVP_CIPHER_param_to_asn1( EVP_CIPHER_CTX * c, ASN1_TYPE * type );
+int EVP_CIPHER_asn1_to_param( EVP_CIPHER_CTX * c, ASN1_TYPE * type );
 
 #endif
