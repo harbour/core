@@ -69,7 +69,7 @@ FUNCTION Win32Bmp()
 #define TA_BOTTOM             8
 #define FORM_CUSTOM           256
 
-CREATE CLASS WIN32PRN FROM WIN_PRN
+CREATE CLASS Win32Prn FROM win_Prn
 
    METHOD Create()
    METHOD StartPage()
@@ -97,7 +97,7 @@ METHOD Create() CLASS WIN32PRN
       ::FormType := FORM_CUSTOM
    ENDIF
 
-   RETURN ::WIN_PRN:Create()
+   RETURN ::win_Prn:Create()
 
 METHOD StartPage() CLASS WIN32PRN
 
@@ -105,14 +105,14 @@ METHOD StartPage() CLASS WIN32PRN
       ::FormType := FORM_CUSTOM
    ENDIF
 
-   RETURN ::WIN_PRN:StartPage()
+   RETURN ::win_Prn:StartPage()
 
 METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert ) CLASS WIN32PRN
 
    __defaultNIL( @nAlignHori, ::SetTextHori )
    __defaultNIL( @nAlignVert, ::SetTextVert )
 
-   RETURN ::WIN_PRN:TextOut( cString, lNewLine, lUpdatePosX, ;
+   RETURN ::win_Prn:TextOut( cString, lNewLine, lUpdatePosX, ;
       hb_bitOr( nAlignHori, nAlignVert ) )
 
 METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlignHori, nAlignVert ) CLASS WIN32PRN
@@ -120,7 +120,7 @@ METHOD TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, nAlignHori, nAli
    __defaultNIL( @nAlignHori, ::SetTextHori )
    __defaultNIL( @nAlignVert, ::SetTextVert )
 
-   RETURN ::WIN_PRN:TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, ;
+   RETURN ::win_Prn:TextOutAt( nPosX, nPosY, cString, lNewLine, lUpdatePosX, ;
       hb_bitOr( nAlignHori, nAlignVert ) )
 
 METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
@@ -130,12 +130,12 @@ METHOD TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
    __defaultNIL( @nAlignHori, ::SetTextHori )
    __defaultNIL( @nAlignVert, ::SetTextVert )
 
-   RETURN ::WIN_PRN:TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
+   RETURN ::win_Prn:TextAtFont( nPosX, nPosY, cString, cFont, nPointSize, ;
       nWidth, nBold, lUnderLine, lItalic, lNewLine, ;
       lUpdatePosX, nColor, ;
       hb_bitOr( nAlignHori, nAlignVert ) )
 
-CREATE CLASS Win32Bmp FROM WIN_BMP
+CREATE CLASS Win32Bmp FROM win_BMP
 ENDCLASS
 
 #endif /* __PLATFORM__WINDOWS */

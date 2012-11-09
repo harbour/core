@@ -76,12 +76,12 @@ static signed char base64_decode_value( int value_in )
 
 static HB_SIZE base64_decode_block( const char * code_in, const HB_SIZE length_in, char * pszPlainttextOut )
 {
-   const char * codechar    = code_in;
-   const char * code_end    = code_in + length_in;
-   char *      pszPlainchar = pszPlainttextOut;
-   signed char fragment;
+   const char * codechar     = code_in;
+   const char * code_end     = code_in + length_in;
+   char *       pszPlainchar = pszPlainttextOut;
+   signed char  fragment;
 
-   for( ;; )
+   for(;; )
    {
       do
       {
