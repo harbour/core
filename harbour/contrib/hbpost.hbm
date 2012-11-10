@@ -42,21 +42,21 @@
 {hblib&(HB_BUILD_STRIP='lib'|HB_BUILD_STRIP='all')}-strip
 
 # dynamic lib creation settings
-{_HB_BUILD_LIBDYN}-shared
-{_HB_BUILD_LIBDYN}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/
-{_HB_BUILD_LIBDYN&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
-{_HB_BUILD_LIBDYN&!hb_dynsuffix}-implib=${hb_outputname}_dll
-{_HB_BUILD_LIBDYN&unix&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}
-{_HB_BUILD_LIBDYN&unix&!darwin&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}
-{_HB_BUILD_LIBDYN&unix&darwin}-ln=${hb_dynprefix}${hb_outputname}.${hb_major}.${hb_minor}${hb_dynext}
-{_HB_BUILD_LIBDYN&(allwin|cygwin)}-lhbmaindllp
-{_HB_BUILD_LIBDYN}-depimplib-
+{hbdyn}-shared
+{hbdyn}-implib=../lib/${hb_plat}/${hb_comp}${hb_build}/
+{hbdyn&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
+{hbdyn&!hb_dynsuffix}-implib=${hb_outputname}_dll
+{hbdyn&unix&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}
+{hbdyn&unix&!darwin&!cygwin}-ln=${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}
+{hbdyn&unix&darwin}-ln=${hb_dynprefix}${hb_outputname}.${hb_major}.${hb_minor}${hb_dynext}
+{hbdyn&(allwin|cygwin)}-lhbmaindllp
+{hbdyn}-depimplib-
 
-"{_HB_BUILD_LIBDYN&darwin}-dflag=-install_name '${hb_dynprefix}${hb_outputname}${hb_dynext}'"
-"{_HB_BUILD_LIBDYN&darwin}-dflag=-compatibility_version ${hb_major}.${hb_minor}"
-"{_HB_BUILD_LIBDYN&darwin}-dflag=-current_version ${hb_major}.${hb_minor}.${hb_release}"
-"{_HB_BUILD_LIBDYN&linux}-dflag=-Wl,-soname,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
-"{_HB_BUILD_LIBDYN&sunos}-dflag=-Wl,-h,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
+"{hbdyn&darwin}-dflag=-install_name '${hb_dynprefix}${hb_outputname}${hb_dynext}'"
+"{hbdyn&darwin}-dflag=-compatibility_version ${hb_major}.${hb_minor}"
+"{hbdyn&darwin}-dflag=-current_version ${hb_major}.${hb_minor}.${hb_release}"
+"{hbdyn&linux}-dflag=-Wl,-soname,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
+"{hbdyn&sunos}-dflag=-Wl,-h,${hb_dynprefix}${hb_outputname}${hb_dynext}.${hb_major}.${hb_minor}"
 
 # output name tweaks for dynamic libs
 # NOTE: We're altering previously set output name value here
