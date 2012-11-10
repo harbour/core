@@ -1168,7 +1168,7 @@ METHOD GoTop() CLASS XHBEditor
 
 METHOD Right() CLASS XHBEditor
 
-   IF ( ::lWordWrap )
+   IF ::lWordWrap
       // 2006/07/19 - E.F. Changed max right point to pos cursor to next.
       //
       IF ::nCol > ::nWordWrapCol .AND. ::nRow < ::LastRow()
@@ -1290,7 +1290,7 @@ METHOD Left() CLASS XHBEditor
 
    // Gotocol checks for nCol > 1 also, but this saves a func call
    IF ::nCol == 1
-      IF ( ::lWordWrap )
+      IF ::lWordWrap
          IF ::nRow > 1
             // 2006/07/19 E.F. left should be at max in the leftmost column.
             //
@@ -1388,7 +1388,7 @@ METHOD K_Mouse( nKey ) CLASS XHBEditor
       nRow := MRow()
       nCol := MCol()
 
-      IF ( nRow >= ::nTop .AND. nRow <= ::nBottom )
+      IF nRow >= ::nTop .AND. nRow <= ::nBottom
          IF nCol >= ::nLeft .AND. nCol <= ::nRight
             IF ( ::nRow + ( nJump := nRow - ::nPhysRow ) ) <= ::LastRow()
                ::GotoPos( Max( 1, ::nRow + nJump ), Max( 1, ::nCol + ( nCol - ::nPhysCol ) ), .T. )
@@ -1472,7 +1472,7 @@ METHOD K_Bs() CLASS XHBEditor
    //
    IF ::nCol == 1
 
-      IF ( ::lWordWrap )
+      IF ::lWordWrap
 
          IF ::nRow > 1  .AND. ::nRow <= ::LastRow()
 
@@ -1550,7 +1550,7 @@ METHOD K_Del() CLASS XHBEditor
       RETURN Self
    ENDIF
 
-   IF ::nCol > ::LineLen( ::nRow ) // .and. ::nRow < ::LastRow()
+   IF ::nCol > ::LineLen( ::nRow ) // .AND. ::nRow < ::LastRow()
       // eventually pad.
       //
       // IF ::nCol > ::LineLen( ::nRow ) + 1
@@ -2082,10 +2082,11 @@ STATIC FUNCTION GetParagraph( oSelf, nRow )
          EXIT
       ENDIF
       // GAD  This is not needed and will corrupt long lines that do not have any spaces with wordwrap on.
-/*    IF Len( cLine ) > 0 .and. !( Right( cLine, 1 ) == " " )
+#if 0
+      IF Len( cLine ) > 0 .AND. !( Right( cLine, 1 ) == " " )
          cLine += " "
       ENDIF
-*/
+#endif
    ENDDO
 
    // Last line, or only one line
@@ -2583,8 +2584,8 @@ METHOD SetTextSelection( cAction, nCount ) CLASS XHBEditor
             // if columns was already selected before...
             //
             IF ( ::nRowSelStart == 0 .AND. ::nRowSelEnd == 0 ) .OR. ;
-                  ( ::nRowSelEnd - ::nRowSelStart == 1 .AND. ;
-                  ::nColSelStart > 0 .AND. ::nColSelEnd > 0 )
+               ( ::nRowSelEnd - ::nRowSelStart == 1 .AND. ;
+               ::nColSelStart > 0 .AND. ::nColSelEnd > 0 )
 
                ::nColSelStart := ::nColSelEnd := 0
                ::nRowSelStart := ::nRow

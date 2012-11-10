@@ -429,7 +429,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
    ELSEIF nRows < 0
       // Negative movement
       // DAVID: ::nCurRow := Max( ::nCurRow + nRows, 1 )
-      IF ( ( ::RecNo() + nRows ) + 0 ) < 1
+      IF ( ::RecNo() + nRows ) < 1
          nRows := - ::RecNo() + 1
          // Clipper: only SKIP movement can set Bof() to .T.
          ::lBof := .T.  // Try to skip before first record
@@ -437,7 +437,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
    ELSE
       // positive movement
       // DAVID: ::nCurRow := Min( ::nCurRow + nRows, ::nNumRows )
-      IF ( ( ::RecNo() + nRows ) + 0 ) > ::LastRec()
+      IF ( ::RecNo() + nRows ) > ::LastRec()
          nRows := ::LastRec() - ::RecNo() + 1
       ENDIF
    ENDIF

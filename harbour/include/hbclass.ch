@@ -252,13 +252,13 @@ DECLARE HBClass ;
              [ <modulfriend: MODULE FRIENDLY> ] ;
              [ <static: STATIC> ] [ FUNCTION <FuncName> ] => ;
    _HB_CLASS <ClassName> <FuncName> ;;
-   <static> function __HB_CLS_OPT([<FuncName>,] <ClassName>) ( HB_CLS_PARAM_LIST ) ;;
-      static s_oClass ;;
-      local nScope, oClass, oInstance ;;
-      if s_oClass == NIL .and. __clsLockDef( @s_oClass ) ;;
-         begin sequence ;;
+   <static> function __HB_CLS_OPT( [<FuncName>,] <ClassName> ) ( HB_CLS_PARAM_LIST ) ;;
+      STATIC s_oClass ;;
+      LOCAL nScope, oClass, oInstance ;;
+      IF s_oClass == NIL .AND. __clsLockDef( @s_oClass ) ;;
+         BEGIN SEQUENCE ;;
             nScope := HB_OO_CLSTP_EXPORTED ; HB_SYMBOL_UNUSED( nScope ) ;;
-            oClass  := iif(<.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)> , __HB_CLS_PAR( [ @<SuperClass1>() ] [ , @<SuperClassN>() ] ), @__HB_CLS_OPT([__HB_CLS_ASID(<FuncName>),] <ClassName>)() [, <.modulfriend.> ] ) ) ;;
+            oClass  := iif( <.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)>, __HB_CLS_PAR( [ @<SuperClass1>() ] [ , @<SuperClassN>() ] ), @__HB_CLS_OPT([__HB_CLS_ASID(<FuncName>),] <ClassName>)() [, <.modulfriend.> ] ) ) ;;
    #undef  _CLASS_NAME_ ; #define _CLASS_NAME_ <ClassName> ;;
    #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_ ;
    [ ; #translate Super( <SuperClassN> ): => ::<SuperClassN>: ] ;
@@ -269,16 +269,16 @@ DECLARE HBClass ;
 
 #xcommand ENDCLASS [<lck: LOCK, LOCKED>] => ;
             oClass:Create() ; [<-lck-> __clsLock( oClass:hClass ) ] ;;
-         always ;;
+         ALWAYS ;;
             __clsUnlockDef( @s_oClass, oClass ) ;;
-         end sequence ;;
+         END SEQUENCE ;;
          oInstance := oClass:Instance() ;;
-         if __objHasMsg( oInstance, "InitClass" ) ;;
+         IF __objHasMsg( oInstance, "InitClass" ) ;;
             oInstance:InitClass( HB_CLS_PARAM_LIST ) ;;
-         end ;;
-         return oInstance ;;
-      end ;;
-      return s_oClass:Instance() AS CLASS _CLASS_NAME_ ;;
+         END ;;
+         RETURN oInstance ;;
+      END ;;
+      RETURN s_oClass:Instance() AS CLASS _CLASS_NAME_ ;;
    #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_IMPLEMENTATION_
 
 

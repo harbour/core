@@ -76,22 +76,22 @@
    hb_InitStandardLog() ;;
    IF <.con.> ;;
       hb_StandardLogAdd( HB_LogConsole():New( <nConPrio> ));;
-   ENDIF ;;
+   END ;;
    IF <.fil.> ;;
       hb_StandardLogAdd( HB_LogFile():New( <nFilPrio>, <cFileName>, <nFileSize>, <nFileCount> ));;
-   ENDIF ;;
+   END ;;
    IF <.mon.> ;;
       hb_StandardLogAdd( HB_LogInetPort():New( <nMonPrio>, <nMonPort> ));;
-   ENDIF ;;
+   END ;;
    IF <.sys.> ;;
       hb_StandardLogAdd( HB_LogSysLog():New( <nSysPrio>, <nSysId> ));;
-   ENDIF ;;
+   END ;;
    IF <.ema.> ;;
       hb_StandardLogAdd( HB_LogEmail():New( <nEmaPrio> ,<cHelo>,<cServer>,<cDest>,<cSubject>,<cFrom>));;
-   ENDIF ;;
+   END ;;
    IF <.dbg.> ;;
       hb_StandardLogAdd( HB_LogDebug():New( <nDebugPrio>, <nMaxDebugPrio> ) ) ;;
-   ENDIF ;;
+   END ;;
    hb_StandardLogName( <cName> );;
    hb_OpenStandardLog()
 

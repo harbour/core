@@ -210,7 +210,7 @@
          [ HB_AdoSetQuery( <cQuery> ) ; ] ;
          [ HB_AdoSetUser( <cUser> ); HB_AdoSetPassword( <cPassword> ) ; ] ;
          dbUseArea( <.nw.>, <rdd>, <(db)>, <(a)>, ;
-                    iif( <.sh.> .or. <.ex.>, ! <.ex.>, NIL), <.ro.> [, <cp>] ) ;
+                    iif( <.sh.> .OR. <.ex.>, ! <.ex.>, NIL ), <.ro.> [, <cp>] ) ;
          [; dbSetIndex( <(index1)> )] ;
          [; dbSetIndex( <(indexN)> )]
 

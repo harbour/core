@@ -404,7 +404,7 @@ STATIC PROCEDURE ProcessFolder( cFolder, aContent ) // this is a recursive proce
             IF !( aFiles[ idx ][ F_NAME ] == "." ) .AND. ;
                !( aFiles[ idx ][ F_NAME ] == ".." )
 
-               IF ( p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ] )
+               IF p_hsSwitches[ "source" ] .OR. p_hsSwitches[ "contribs" ]
                   /* .AND. AScan( s_aSkipDirs, {| d | Lower( d ) == Lower( aFiles[ idx ][ F_NAME ] ) } ) == 0 */
                   ProcessFolder( cFolder + aFiles[ idx ][ F_NAME ], @aContent )
                ENDIF

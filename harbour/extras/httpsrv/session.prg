@@ -653,7 +653,7 @@ METHOD SessionRead( cID ) CLASS uhttpd_Session
                nFileSize := FSeek( nH, 0, FS_END )
                FSeek( nH, 0, FS_SET )
                cBuffer := Space( nFileSize )
-               IF ( FRead( nH, @cBuffer,  nFileSize ) ) != nFileSize
+               IF FRead( nH, @cBuffer,  nFileSize ) != nFileSize
                   // uhttpd_Die( "ERROR: On reading session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
                   hb_idleSleep( ::nFileWait / 1000 )
                   LOOP
@@ -693,7 +693,7 @@ METHOD SessionWrite( cID, cData ) CLASS uhttpd_Session
    IF nFileSize > 0
       DO WHILE nRetry++ <= ::nFileRetry
          IF ( nH := hb_FCreate( cFile, FC_NORMAL, FO_READWRITE + FO_DENYWRITE ) ) != F_ERROR
-            IF ( FWrite( nH, @cData,  nFileSize ) ) != nFileSize
+            IF FWrite( nH, @cData,  nFileSize ) != nFileSize
                uhttpd_Die( "ERROR: On writing session file : " + cFile + ", File error : " + hb_CStr( FError() ) )
             ELSE
                lOk := .T.

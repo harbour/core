@@ -1159,15 +1159,15 @@ STATIC FUNCTION ParseRequest( cRequest )
    _SERVER[ "SCRIPT_NAME"  ] := hUrl[ "URI" ]
    _SERVER[ "QUERY_STRING" ] := hUrl[ "QUERY" ]
 
-   /*
-   IF ( nI := AT( "?", _SERVER[ "REQUEST_URI" ] ) ) > 0
-      _SERVER[ "SCRIPT_NAME"  ] := LEFT( _SERVER[ "REQUEST_URI" ], nI - 1)
-      _SERVER[ "QUERY_STRING" ] := SUBSTR( _SERVER[ "REQUEST_URI" ], nI + 1)
+#if 0
+   IF ( nI := At( "?", _SERVER[ "REQUEST_URI" ] ) ) > 0
+      _SERVER[ "SCRIPT_NAME"  ] := Left( _SERVER[ "REQUEST_URI" ], nI - 1 )
+      _SERVER[ "QUERY_STRING" ] := SubStr( _SERVER[ "REQUEST_URI" ], nI + 1 )
    ELSE
       _SERVER[ "SCRIPT_NAME"  ] := _SERVER[ "REQUEST_URI" ]
       _SERVER[ "QUERY_STRING" ] := ""
    ENDIF
-   */
+#endif
 
    FOR nI := 2 TO Len( aRequest )
       IF aRequest[ nI ] == "";  EXIT
@@ -1682,15 +1682,6 @@ PROCEDURE uhttpd_SetHeader( cType, cValue )
 
 FUNCTION uhttpd_GetHeader( cType )
    RETURN uhttpd_HGetValue( _HTTP_RESPONSE, cType )
-/*
-   __defaultNIL( @nPos, 1 )
-
-   nPos := hb_HPos( hHash, cKey ))
-   IF ( nPos := ASCAN( t_aHeader, {| x | UPPER( x[ 1 ] ) == UPPER( cType ) }, nPos ) ) > 0
-      RETURN t_aHeader[ nPos, 2 ]
-   ENDIF
-   RETURN NIL
-*/
 
 PROCEDURE uhttpd_DelHeader( cType )
 
@@ -1701,14 +1692,6 @@ PROCEDURE uhttpd_DelHeader( cType )
    ENDIF
 
    RETURN
-/*
-   LOCAL nI
-
-   IF ( nI := ASCAN( t_aHeader, {| x | UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
-      hb_aDel( t_aHeader, nI, .T. )
-   ENDIF
-   RETURN
-*/
 
 PROCEDURE uhttpd_Write( cString )
 
@@ -2817,7 +2800,7 @@ STATIC FUNCTION Handler_CgiScript( cFileName )
 
    WriteToConsole( "Executing: " + cFileName )
 
-   IF ( CGIExec( uhttpd_OSFileName( cFileName ), @xResult ) ) == 0
+   IF CGIExec( uhttpd_OSFileName( cFileName ), @xResult ) == 0
 
       // uhttpd_SetHeader( "Content-Type", cI )
       // uhttpd_Write( xResult )

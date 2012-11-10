@@ -70,7 +70,7 @@
                     iif( <.msg.>, <msg>, <"exp"> )                      ;
                   )                                                     ;
        ;    QUIT                                                        ;
-       ; ENDIF
+       ; END
 
 #endif /* NDEBUG */
 

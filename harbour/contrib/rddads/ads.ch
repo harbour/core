@@ -320,4 +320,4 @@
                      )                                                     ;
             [; dbSetIndex( <(index1)> )]                                   ;
             [; dbSetIndex( <(indexn)> )]                                   ;
-       ; ENDIF
+       ; END

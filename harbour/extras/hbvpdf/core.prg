@@ -1958,8 +1958,8 @@ FUNCTION pdfTIFFInfo( cFile )
                // Alert( "Wrong Type for BitsPerSample" )
             ENDIF
             nBits := nTemp
-            // IF nTemp != 4 .and. nTemp != 8
-            //   Alert( "Wrong Value for BitsPerSample" )
+            // IF nTemp != 4 .AND. nTemp != 8
+            //    Alert( "Wrong Value for BitsPerSample" )
             // ENDIF
          CASE nTag == 259
                /*
@@ -1986,7 +1986,7 @@ FUNCTION pdfTIFFInfo( cFile )
             ELSE
                // Alert( "Wrong Type for Compression" )
             ENDIF*/
-            // IF nTemp != 1 .and. nTemp != 2 .and. nTemp != 32773
+            // IF nTemp != 1 .AND. nTemp != 2 .AND. nTemp != 32773
             //    Alert( "Wrong Value for Compression" )
             // ENDIF
          CASE nTag == 262

@@ -120,16 +120,16 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
    SWITCH ::type
    CASE WVGSTATIC_TYPE_TEXT
-      IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_LEFT ) == WVGSTATIC_TEXT_LEFT )
+      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_LEFT ) == WVGSTATIC_TEXT_LEFT
          ::style += SS_LEFT /*+ SS_LEFTNOWORDWRAP */
       ENDIF
-      IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) == WVGSTATIC_TEXT_RIGHT )
+      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_RIGHT ) == WVGSTATIC_TEXT_RIGHT
          ::style += SS_RIGHT
       ENDIF
-      IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_CENTER ) == WVGSTATIC_TEXT_CENTER )
+      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_CENTER ) == WVGSTATIC_TEXT_CENTER
          ::style += SS_CENTER
       ENDIF
-      IF ( hb_bitAnd( ::options, WVGSTATIC_TEXT_WORDBREAK ) == WVGSTATIC_TEXT_WORDBREAK )
+      IF hb_bitAnd( ::options, WVGSTATIC_TEXT_WORDBREAK ) == WVGSTATIC_TEXT_WORDBREAK
          ::style -= SS_LEFTNOWORDWRAP
       ENDIF
       EXIT
@@ -189,11 +189,11 @@ METHOD WvgStatic:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
 #if 1
    /* Options */
-   IF ( AScan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0 )
-      IF     ( hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) == WVGSTATIC_FRAMETHIN )
+   IF AScan( { WVGSTATIC_TYPE_FGNDFRAME, WVGSTATIC_TYPE_BGNDFRAME, WVGSTATIC_TYPE_HALFTONEFRAME }, ::type ) > 0
+      IF     hb_bitAnd( ::options, WVGSTATIC_FRAMETHIN ) == WVGSTATIC_FRAMETHIN
          ::style += WS_BORDER
 
-      ELSEIF ( hb_bitAnd( ::options, WVGSTATIC_FRAMETHICK ) == WVGSTATIC_FRAMETHICK )
+      ELSEIF hb_bitAnd( ::options, WVGSTATIC_FRAMETHICK ) == WVGSTATIC_FRAMETHICK
          ::style += WS_DLGFRAME
 
       ENDIF

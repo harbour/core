@@ -79,7 +79,7 @@ FUNCTION hb_Decode( ... )
       nParams := Len( aParams )
 
       // if I have a odd number of members, last is default
-      IF ( nParams % 2 != 0 )
+      IF nParams % 2 != 0
          xDefault := ATail( aParams )
          // Resize again deleting last
          hb_ADel( aParams, nParams, .T. )
@@ -89,8 +89,8 @@ FUNCTION hb_Decode( ... )
       // Ok because I have no other value than default, I will check if it is a complex value
       // like an array or an hash, so I can get it to decode values
       IF xDefault != NIL .AND. ;
-            ( HB_ISARRAY( xDefault ) .OR. ;
-            HB_ISHASH( xDefault ) )
+         ( HB_ISARRAY( xDefault ) .OR. ;
+         HB_ISHASH( xDefault ) )
 
          // If it is an array I will restart this function creating a linear call
          IF HB_ISARRAY( xDefault ) .AND. Len( xDefault ) > 0

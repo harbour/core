@@ -261,7 +261,7 @@ METHOD WvgComboBox:addItem( cItem )
       RETURN ::sendCBMessage( CB_ADDSTRING, cItem )
    ENDIF
 
-   RETURN - 1
+   RETURN -1
 
 METHOD WvgComboBox:listBoxFocus( lFocus )
 

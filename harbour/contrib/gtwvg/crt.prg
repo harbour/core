@@ -317,7 +317,7 @@ METHOD WvgCrt:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
    IF HB_ISNUMERIC( ::icon )
       hb_gtInfo( HB_GTI_ICONRES, ::icon )
    ELSE
-      IF ( ".ico" $ Lower( ::icon ) )
+      IF ".ico" $ Lower( ::icon )
          hb_gtInfo( HB_GTI_ICONFILE, ::icon )
       ELSE
          hb_gtInfo( HB_GTI_ICONRES, ::icon )
@@ -910,7 +910,7 @@ METHOD WvgCrt:quit( xParam, xParam1 )
 
 METHOD WvgCrt:resize( xParam )
 
-   IF HB_ISBLOCK( xParam )/* .or. HB_ISNIL( xParam ) */
+   IF HB_ISBLOCK( xParam ) /* .OR. HB_ISNIL( xParam ) */
       ::sl_resize := xParam
       RETURN NIL
    ENDIF

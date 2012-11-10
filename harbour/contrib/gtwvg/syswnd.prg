@@ -290,7 +290,7 @@ METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos ) CLASS WvgFontDialo
    IF ::viewPrinterFonts .AND. ::oPrinterPS == NIL
       ::viewPrinterFonts := .F.
    ENDIF
-   IF ( ! ::viewScreenFonts .AND. ! ::viewPrinterFonts )
+   IF ! ::viewScreenFonts .AND. ! ::viewPrinterFonts
       ::viewScreenFonts := .T.
    ENDIF
 

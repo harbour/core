@@ -559,7 +559,7 @@ METHOD WvtDialog:Inkey()
 
             ::lEventHandled := ::oCurObj:HandleEvent( ::nKey )
 
-            IF ( ::lEventHandled )
+            IF ::lEventHandled
                IF ::oCurObj:nChildren > 0
                   FOR i := 1 to ::oCurObj:nChildren
                      IF AScan( ::oCurObj:aChildren[ i, OBJ_CHILD_EVENTS ], ::nKey ) > 0
@@ -1309,7 +1309,7 @@ METHOD WvtStatusBar:SetPanels( aPanels )
 
    ATail( ::aPanels ):nRight := nLastCol
 
-   FOR i := Len( ::aPanels ) - 1 TO 1 STEP - 1
+   FOR i := Len( ::aPanels ) - 1 TO 1 STEP -1
       oPanel        := ::aPanels[ i ]
       oPanel:nRight := ::aPanels[ i + 1 ]:nLeft
       oPanel:cColor := ::cColor
@@ -1603,7 +1603,7 @@ METHOD WvtToolBar:Refresh()
 
 METHOD WvtToolBar:PaintToolBar()
 
-   IF ( ::lActive )
+   IF ::lActive
       Wvt_DrawLine( ::nTop, ::nLeft, ::nBottom, ::nRight, 0, 1, 2, , , ::nRGBSep )
    ENDIF
 
@@ -1681,7 +1681,7 @@ CREATE CLASS WvtToolButton FROM WvtObject
    VAR    cFileImage
    VAR    nCurState             INIT 0
    VAR    nBtnType              INIT TLB_BUTTON_TYPE_IMAGE
-   VAR    aPxlOffSet            INIT { 0, - 1, - 3, 1 }
+   VAR    aPxlOffSet            INIT { 0, -1, -3, 1 }
 
    METHOD New( oParent )
    METHOD create()
@@ -3084,7 +3084,7 @@ METHOD wvtMenu:DelItem( nItemNum )
 
 METHOD wvtMenu:EnableItem( nItemNum )
 
-   LOCAL nPrevious := - 1
+   LOCAL nPrevious := -1
 
    IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
       nPrevious := Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_ENABLED )
@@ -3094,7 +3094,7 @@ METHOD wvtMenu:EnableItem( nItemNum )
 
 METHOD wvtMenu:DisableItem( nItemNum )
 
-   LOCAL nPrevious := - 1
+   LOCAL nPrevious := -1
 
    IF ! Empty( ::hMenu ) .AND. ! Empty( nItemNum )
       nPrevious := Wvt_EnableMenuItem( ::hMenu, nItemNum - 1, MF_BYPOSITION + MF_GRAYED )
@@ -3153,7 +3153,7 @@ ENDCLASS
 
 METHOD WvtConsole:New( oParent )
 
-   ::Super:New( oParent, DLG_OBJ_CONSOLE, , - 1, - 1, - 1, - 1 )
+   ::Super:New( oParent, DLG_OBJ_CONSOLE, , -1, -1, -1, -1 )
 
    RETURN Self
 

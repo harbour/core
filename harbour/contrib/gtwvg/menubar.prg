@@ -168,13 +168,13 @@ METHOD WvgMenuBar:create( oParent, aPresParams, lVisible )
       Wvg_SetMenu( ::oParent:getHWND(), ::hMenu )
 #endif
 
-      /* how to make menu invisible ? */
-      IF ( ::visible )
 #if 0
+      /* how to make menu invisible ? */
+      IF ::visible
          Wvg_ShowWindow( ::oParent:getHWND(), SW_MINIMIZE )
          Wvg_ShowWindow( ::oParent:getHWND(), SW_NORMAL )
-#endif
       ENDIF
+#endif
 
       ::oParent:oMenu := Self
 
@@ -263,7 +263,7 @@ METHOD WvgMenuBar:addItem( aItem, p2, p3, p4 )
       nAttrib  := p4
    ENDIF
 
-   RETURN ::putItem( { xCaption, bAction, nStyle, nAttrib }, - 1, .T. )
+   RETURN ::putItem( { xCaption, bAction, nStyle, nAttrib }, -1, .T. )
 
 METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
 
@@ -389,7 +389,7 @@ METHOD WvgMenuBar:findMenuPosById( nId )
 
 METHOD WvgMenuBar:checkItem( nItemNum, lCheck )
 
-   LOCAL nRet := - 1
+   LOCAL nRet := -1
 
    __defaultNIL( @lCheck, .T. )
 

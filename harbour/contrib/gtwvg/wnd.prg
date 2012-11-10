@@ -1029,7 +1029,7 @@ METHOD WvgWindow:resize( xParam, xParam1 )
       RETURN Self
    ENDIF
 
-   IF HB_ISBLOCK( xParam ) /*.or. HB_ISNIL( xParam )*/
+   IF HB_ISBLOCK( xParam ) /* .OR. HB_ISNIL( xParam )*/
       ::sl_resize := xParam
       RETURN NIL
    ENDIF

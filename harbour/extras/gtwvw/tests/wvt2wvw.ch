@@ -72,10 +72,10 @@ PART-2: WINDOW DEPENDENT (additional nWinNum parameter)
   Notes:
 
   nWinNum parameter passed as NIL will be translated by gtwvw into :
-    IF ! MainCoordMode
-       Current Window
-    ELSE
+    IF MainCoordMode
        Topmost Window
+    ELSE
+       Current Window
     ENDIF
 
   Since gtwvt application can't be in MainCoordMode,

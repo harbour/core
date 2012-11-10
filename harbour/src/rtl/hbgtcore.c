@@ -91,7 +91,7 @@ void hb_gt_BaseFree( PHB_GT pGT )
 /* helper internal function */
 static void hb_gt_def_BaseInit( PHB_GT_BASE pGT )
 {
-   pGT->fVgaCell     = HB_FALSE;
+   pGT->fVgaCell     = HB_TRUE;
    pGT->fIsColor     = HB_TRUE;
    pGT->fBlinking    = HB_TRUE;
    pGT->fStdOutCon   = HB_FALSE;

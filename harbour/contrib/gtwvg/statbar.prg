@@ -120,7 +120,7 @@ METHOD WvgStatusBar:create( oParent, oOwner, aPos, aSize, aPresParams, lVisible 
       ::show()
    ENDIF
 
-   ::addItem( , , , , , - 1 )
+   ::addItem( , , , , , -1 )
 
    RETURN Self
 

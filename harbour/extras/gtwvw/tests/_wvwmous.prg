@@ -318,7 +318,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
    LOCAL nROw := Row(), nCol := Col()
    LOCAL nOldCursor := SetCursor( SC_NONE )
-   LOCAL lMouseOver := ::lHover // 20040303,was: ( mrow() >= ::nrow1 .and. mrow() <= ::nrow2 .and. mcol() >= ::ncol1 .and. mcol() <= ::ncol2 )
+   LOCAL lMouseOver := ::lHover // 20040303,was: ( MRow() >= ::nrow1 .AND. MRow() <= ::nrow2 .AND. MCol() >= ::ncol1 .AND. MCol() <= ::ncol2 )
    LOCAL lPressed := ::lPressed .AND. lMouseOver
    LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_getFontInfo( nWinNum ), NIL )
    LOCAL nLabelColor := iif( ! lPressed, rgb( 0, 0, 0 ), rgb( 96, 96, 96 ) )

@@ -330,14 +330,18 @@ FUNCTION URLDecode( cStr )
 
       ENDCASE
 
-      // IF ( cRet[ i ] > "9" .or. cRet[ i ] < "0" ) .AND. !( cRet[ i ] == "." )
-      //    lNumeric := .F.
-      // ENDIF
+#if 0
+      IF ( cRet[ i ] > "9" .OR. cRet[ i ] < "0" ) .AND. !( cRet[ i ] == "." )
+         lNumeric := .F.
+      ENDIF
+#endif
    NEXT
 
-   // IF lNumeric
-   //    cRet := Val( cRet )
-   // ENDIF
+#if 0
+   IF lNumeric
+      cRet := Val( cRet )
+   ENDIF
+#endif
 
    RETURN cRet
 

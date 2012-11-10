@@ -90,7 +90,7 @@ FUNCTION uhttpd_GetVars( cFields, cSeparator )
       ELSE
          // now check if variable already exists. If yes and I have already another element
          // with same name, then I will change it to an array
-         IF ( hb_HPos( hHashVars, cName ) ) > 0
+         IF hb_HPos( hHashVars, cName ) > 0
             IF ! HB_ISARRAY( hHashVars[ cName ] )
                // Transform it to array
                hHashVars[ cName ] := { hHashVars[ cName ] }

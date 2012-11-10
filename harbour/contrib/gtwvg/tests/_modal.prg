@@ -293,7 +293,7 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
    IF HB_ISNUMERIC( xIcon )
       hb_gtInfo( HB_GTI_ICONRES, xIcon )
    ELSE
-      IF ( ".ico" $ Lower( xIcon ) )
+      IF ".ico" $ Lower( xIcon )
          hb_gtInfo( HB_GTI_ICONFILE, xIcon )
       ELSE
          IF ".bmp" $ Lower( xIcon )
