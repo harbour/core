@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
+
 PROCEDURE Main()
 
    LOCAL A := { "one  ", "two  ", "three" }
@@ -11,23 +13,23 @@ PROCEDURE Main()
    LOCAL bb, cc
    LOCAL i
 
-/*
+#if 0
    test( @a, b )
    test( a, @b )
    test( @a, @b )
-*/
+#endif
 
    ? "========================================================"
    ? "before loop: ENUM=", ENUM
    ? "before loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    FOR EACH enum IN A
-      ? "start: ENUM=", ENUM
-      IF ENUM = "two"
-         ENUM := Upper( ENUM )
+      ? "start: ENUM=", enum
+      IF LEFTEQUAL( enum, "two" )
+         enum := Upper( enum )
       ENDIF
-      ? "end:   ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", ValType( ENUM:__enumBase )
+      ? "end:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
    NEXT
-   ? "after loop ENUM=", ENUM
+   ? "after loop ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    ? "-----------------"
    ?
@@ -36,51 +38,51 @@ PROCEDURE Main()
 
    ? "========================================================"
    ? "Testing passing by reference"
-   ? "before loop: ENUM=", ENUM
+   ? "before loop: ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
-   FOR EACH ENUM IN A
-      IF Upper( ENUM ) = "TWO"
-         ENUM := Upper( ENUM )
-         ? "before passing by @ | ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", ValType( ENUM:__enumBase )
-         testBYREF( @ENUM )
-         ? " after passing by @ | ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", ValType( ENUM:__enumBase )
+   FOR EACH enum IN A
+      IF LEFTEQUAL( Upper( enum ), "TWO" )
+         enum := Upper( enum )
+         ? "before passing by @ | ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+         testBYREF( @enum )
+         ? " after passing by @ | ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
       ENDIF
    NEXT
-   ? "after loop ENUM=", ENUM
+   ? "after loop ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    Inkey( 0 )
 
    ? "========================================================"
    ? "Testing BREAK"
-   ? "before loop: ENUM=", ENUM
+   ? "before loop: ENUM=", enum
    ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
    BEGIN SEQUENCE
       FOR EACH enum IN A DESCEND
-         ? "loop:   ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", ValType( ENUM:__enumBase )
-         TESTbreak( ENUM )
+         ? "loop:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+         TESTbreak( enum )
       NEXT
 
    RECOVER USING i
-      ? "after loop ENUM=", ENUM
+      ? "after loop ENUM=", enum
       ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
       ? "recover variable i=", i
    END SEQUENCE
    Inkey( 0 )
 
    ? "========================================================"
-   ? "before loop: ENUM=", ENUM
+   ? "before loop: ENUM=", enum
    ? "before loop: c=", c
    BEGIN SEQUENCE
       FOR EACH enum IN c
-         ? "start: ENUM=", ENUM
-         IF enum = "d"
+         ? "start: ENUM=", enum
+         IF LEFTEQUAL( enum, "d" )
             enum := Upper( enum )
          ENDIF
          Testbreak( enum )
-         ? "end:   ENUM=", ENUM, "| index:", ENUM:__enumIndex, "| value:", ENUM:__enumValue, "| base: ", ValType( ENUM:__enumBase )
+         ? "end:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
       NEXT
    RECOVER USING i
-      ? "after loop ENUM=", ENUM
+      ? "after loop ENUM=", enum
       ? "after loop: c=", c
       ? "recover variable i=", i
    END SEQUENCE
@@ -88,22 +90,22 @@ PROCEDURE Main()
 
    ? "========================================================"
    FOR EACH enum, bb, cc IN A, AA, c
-      ? enum, enum:__enumIndex, enum:__enumValue
-      ? bb, bb:__enumIndex, bb:__enumValue
-      ? cc, cc:__enumIndex, cc:__enumValue
+      ? enum, enum:__enumIndex(), enum:__enumValue()
+      ? bb, bb:__enumIndex(), bb:__enumValue()
+      ? cc, cc:__enumIndex(), cc:__enumValue()
    NEXT
    Inkey( 0 )
 
    ? "========================================================"
    FOR EACH enum, bb, cc IN A, AA, c DESCEND
-      ? enum, enum:__enumIndex, enum:__enumValue
-      ? bb, bb:__enumIndex, bb:__enumValue
-      ? cc, cc:__enumIndex, cc:__enumValue
+      ? enum, enum:__enumIndex(), enum:__enumValue()
+      ? bb, bb:__enumIndex(), bb:__enumValue()
+      ? cc, cc:__enumIndex(), cc:__enumValue()
    NEXT
 
    FOR EACH enum IN a
       BEGIN SEQUENCE
-         IF enum = "2"
+         IF LEFTEQUAL( enum, "2" )
             BREAK
          ENDIF
       END SEQUENCE
@@ -111,7 +113,7 @@ PROCEDURE Main()
 
    FOR EACH enum IN a
       BEGIN SEQUENCE
-         IF enum = "2"
+         IF LEFTEQUAL( enum, "2" )
             ? "Breaking... enum=", enum
             BREAK enum
          ENDIF
@@ -124,7 +126,7 @@ PROCEDURE Main()
 
 PROCEDURE TESTbreak( v )
 
-   IF v = "2" .OR. v = "d"
+   IF LEFTEQUAL( v, "2" ) .OR. LEFTEQUAL( v, "d" )
       ? "issuing break"
       Break( v )
    ENDIF
@@ -133,12 +135,12 @@ PROCEDURE TESTbreak( v )
 
 PROCEDURE TESTBYREF( enum )
 
-   ? "start of testBYREF ENUM=", ENUM
-   FOR EACH ENUM IN { 1, 2, 3 }
-      ? "  -testBYREF=", ENUM
+   ? "start of testBYREF ENUM=", enum
+   FOR EACH enum IN { 1, 2, 3 }
+      ? "  -testBYREF=", enum
    NEXT
-   ? "end of loop: ENUM=", ENUM
-   ENUM := "22222"
-   ? "end of testBYREF ENUM=", ENUM
+   ? "end of loop: ENUM=", enum
+   enum := "22222"
+   ? "end of testBYREF ENUM=", enum
 
    RETURN

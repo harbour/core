@@ -75,7 +75,9 @@ PROCEDURE Main()
    sheet1:writeString( 2, 1, "celula 2_1", format4 )
 
    sheet1:writeString( 1, 1, "celula 1_1", format4 )
-// sheet1:writeString( 1, 2, "celula 1_2", format4 )
+#if 0
+   sheet1:writeString( 1, 2, "celula 1_2", format4 )
+#endif
    sheet1:writeString( 1, 3, "celula 1_3", format4 )
    sheet1:cellMerge( 1, 1, 1, 0 )
 

@@ -133,13 +133,9 @@ METHOD ExcelWriterXML:showErrorSheet( show )
 
 METHOD ExcelWriterXML:addError( cFunction, cMessage )
 
-   LOCAL tmp
-
-   tmp := { ;
+   ::formatErrors += { ;
       "FUNCTION" => cFunction, ;
       "MESSAGE"  => cMessage  }
-
-   ::formatErrors += tmp
 
    RETURN NIL
 

@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifndef __HARBOUR__
+#define hb_ntos( n ) LTrim( Str( n ) )
+#endif
+
 #include "inkey.ch"
 
 PROCEDURE Main()
@@ -24,7 +28,7 @@ PROCEDURE Main()
 
    MENU TO testvar
 
-   @  9, 10 SAY "Your Choice = " + Str( testvar, 1 )
+   @  9, 10 SAY "Your Choice = " + hb_ntos( testvar )
 
    Inkey( 0 )
 
@@ -42,7 +46,7 @@ PROCEDURE Main()
 
    MENU TO ptestvar
 
-   @  9, 10 SAY "Your Choice = " + Str( ptestvar, 1 )
+   @  9, 10 SAY "Your Choice = " + hb_ntos( ptestvar )
 
    RETURN
 
@@ -63,7 +67,7 @@ PROCEDURE RECURSE()
 
    @  7, 10 SAY "Press F8 to recurse into MENU TO"
 
-   @  9, 50 SAY "Your Choice = " + Str( testvar, 1 )
+   @  9, 50 SAY "Your Choice = " + hb_ntos( testvar )
 
    SET KEY K_F8 TO RECURSE()
 

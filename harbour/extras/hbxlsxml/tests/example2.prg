@@ -72,7 +72,9 @@ PROCEDURE Main()
    /**
     * Choose to show any formatting/input errors on a seperate sheet
     */
-// xml:showErrorSheet( .T. )
+#if 0
+   xml:showErrorSheet( .T. )
+#endif
 
    /**
     * Show the style options
@@ -102,8 +104,9 @@ PROCEDURE Main()
    sheet1:writeString( 1, 1, "left_rotate45", format1 )
    sheet1:writeString( 1, 2, "vertical left", "verticaltext_left" )
    sheet1:writeString( 1, 3, "this text has been wrapped and is aligned at the top", "wraptext_top" )
-// sheet1:writeString( 1, 4, "No style applied" )
-
+#if 0
+   sheet1:writeString( 1, 4, "No style applied" )
+#endif
 
    sheet2 := xml:addSheet( "Formulas" )
    /**
@@ -121,10 +124,14 @@ PROCEDURE Main()
    sheet2:writeNumber( 3, 2, 20 )
    sheet2:writeString( 4, 1, "=SUM(R[-3]C:R[-1]C)" )
    sheet2:writeFormula( "Number", 4, 2, "=SUM(R[-3]C:R[-1]C)" )
-// sheet2:addComment( 4, 2, "Here is my formula: =SUM(R[-3]C:R[-1]C)","My NAME" )
+#if 0
+   sheet2:addComment( 4, 2, "Here is my formula: =SUM(R[-3]C:R[-1]C)","My NAME" )
+#endif
    sheet2:writeString( 5, 1, "=SUM(R1C2:R3C2)" )
    sheet2:writeFormula( "Number", 5, 2, "=SUM(R1C1:R3C2)" )
-// sheet2:addComment( 5, 2, "Here is my formula: =SUM(R1C1:R3C2)" )
+#if 0
+   sheet2:addComment( 5, 2, "Here is my formula: =SUM(R1C1:R3C2)" )
+#endif
 
    sheet4 := xml:addSheet( "more formatting" )
    format4 := xml:addStyle( "my style" )
@@ -134,18 +141,22 @@ PROCEDURE Main()
    format4:bgColor( "Black" )
    format4:setFontColor( "White" )
    format4:setNumberFormatDateTime()
-// mydate := sheet4:convertMysqlDateTime( "2008-02-14 19:30:00" )
+#if 0
+   mydate := sheet4:convertMysqlDateTime( "2008-02-14 19:30:00" )
+#endif
    sheet4:writeDateTime( 1, 1, DToC( Date() ), format4 )
-// Change the row1 height to 30 pixels
+   // Change the row1 height to 30 pixels
    sheet4:rowHeight( 1, "30" )
    sheet4:writeString( 2, 1, "formatted text + cell color + merged + underlined", format4 )
-// Merge (2,1) with 4 columns to the right and 2 rows down
+   // Merge (2,1) with 4 columns to the right and 2 rows down
    sheet4:cellMerge( 2, 1, 4, 2 )
 
    /**
     * Send the headers, then output the data
     */
-// xml:sendHeaders()
+#if 0
+   xml:sendHeaders()
+#endif
    xml:writeData( "example2.xml" )
 
    RETURN

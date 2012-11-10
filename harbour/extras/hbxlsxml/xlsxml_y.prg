@@ -52,7 +52,6 @@
  *
  */
 
-
 #include "hbclass.ch"
 
 CREATE CLASS ExcelWriterXML_Style
@@ -252,9 +251,9 @@ METHOD ExcelWriterXML_Style:getStyleXML()
             'ss:Color="' + pData[ "Color" ] + '"', ;
             "" )
          bWeight := iif( hb_HPos( pData, "Weight" ) > 0, ;
-            'ss:Weight="' + Str( pData[ "Weight" ], 1 ) + '"', ;
+            'ss:Weight="' + hb_ntos( pData[ "Weight" ] ) + '"', ;
             "" )
-         borders += '<Border ss:Position="' + position + '" ' + bLinestyle + " " + bColor + " " + bWeight + "/>" + hb_eol()
+         borders += '<Border ss:Position="' + AllTrim( position + '" ' + bLinestyle + " " + bColor + " " + bWeight ) + "/>" + hb_eol()
       NEXT
       borders += "</Borders>" + hb_eol()
    ENDIF
@@ -269,24 +268,24 @@ METHOD ExcelWriterXML_Style:getStyleXML()
       IF ! Empty( ::interiorPatternColor )
          interiorPatternColor := 'ss:PatternColor="' + ::interiorPatternColor + '"'
       ENDIF
-      interior := "      <Interior " + interiorColor + " " + interiorPattern + " " + interiorPatternColor + "/>" + hb_eol()
+      interior := "      <Interior " + AllTrim( interiorColor + " " + interiorPattern + " " + interiorPatternColor ) + "/>" + hb_eol()
    ENDIF
 
-   IF ! Empty( ::numberFormat )
-      numberFormat := '      <NumberFormat ss:Format="' + ::numberFormat + '"/>' + hb_eol()
-   ELSE
+   IF Empty( ::numberFormat )
       numberFormat := "      <NumberFormat/>" + hb_eol()
+   ELSE
+      numberFormat := '      <NumberFormat ss:Format="' + ::numberFormat + '"/>' + hb_eol()
    ENDIF
 
    xml := '   <Style ss:ID="' + ::id + '" ' + name + ">" + hb_eol()
    IF ::useAlignment
-      xml += "      <Alignment " + valign + " " + halign + " " + rotate + " " + shrinktofit + " " + wraptext + " " + verticaltext + "/>" + hb_eol()
+      xml += "      <Alignment " + AllTrim( valign + " " + halign + " " + rotate + " " + shrinktofit + " " + wraptext + " " + verticaltext ) + "/>" + hb_eol()
    ENDIF
    IF ::useBorder
       xml += borders
    ENDIF
    IF ::useFont
-      xml += "      <Font " + fontSize + " " + fontColor + " " + bold + " " + italic + " " + strikethrough + " " + underline + " " + shadow + " " + outline + " " + fontName + " " + fontFamily + "/>" + hb_eol()
+      xml += "      <Font " + AllTrim( fontSize + " " + fontColor + " " + bold + " " + italic + " " + strikethrough + " " + underline + " " + shadow + " " + outline + " " + fontName + " " + fontFamily ) + "/>" + hb_eol()
    ENDIF
    IF ::useInterior
       xml += interior
@@ -318,10 +317,10 @@ METHOD ExcelWriterXML_Style:setName( name )
 
 METHOD ExcelWriterXML_Style:alignVertical( valign )
 
-   IF ( !( valign == "Automatic" ) .AND. ;
-        !( valign == "Top"       ) .AND. ;
-        !( valign == "Bottom"    ) .AND. ;
-        !( valign == "Center"    ) )
+   IF !( valign == "Automatic" ) .AND. ;
+      !( valign == "Top"       ) .AND. ;
+      !( valign == "Bottom"    ) .AND. ;
+      !( valign == "Center"    )
       RETURN NIL
    ENDIF
    ::valign := valign
@@ -331,10 +330,10 @@ METHOD ExcelWriterXML_Style:alignVertical( valign )
 
 METHOD ExcelWriterXML_Style:alignHorizontal( halign )
 
-   IF ( !( halign == "Automatic" ) .AND. ;
-        !( halign == "Left"      ) .AND. ;
-        !( halign == "Center"    ) .AND. ;
-        !( halign == "Right"     ) )
+   IF !( halign == "Automatic" ) .AND. ;
+      !( halign == "Left"      ) .AND. ;
+      !( halign == "Center"    ) .AND. ;
+      !( halign == "Right"     )
       halign := "Automatic"
    ENDIF
    ::halign := halign
@@ -378,9 +377,8 @@ METHOD ExcelWriterXML_Style:alignWraptext()
 
 METHOD ExcelWriterXML_Style:setFontSize( fontSize )
 
-   IF ! HB_ISNUMERIC( fontSize )
-      fontSize := 10
-   ENDIF
+   hb_default( @fontSize, 10 )
+
    IF fontSize <= 0
       fontSize := 10
    ENDIF
@@ -402,9 +400,8 @@ METHOD ExcelWriterXML_Style:setFontColor( fontColor )
 
 METHOD ExcelWriterXML_Style:setFontName( fontName )
 
-   IF fontname == NIL
-      fontname := "Arial"
-   ENDIF
+   hb_default( @fontname, "Arial" )
+
    ::fontName := fontName
    ::useFont := .T.
 
@@ -412,16 +409,14 @@ METHOD ExcelWriterXML_Style:setFontName( fontName )
 
 METHOD ExcelWriterXML_Style:setFontFamily( fontFamily )
 
-   IF fontFamily == NIL
-      fontFamily := "Swiss"
-   ENDIF
+   hb_default( @fontFamily, "Swiss" )
 
-   IF ( !( fontFamily == "Automatic"  ) .AND. ;
-        !( fontFamily == "Decorative" ) .AND. ;
-        !( fontFamily == "Modern"     ) .AND. ;
-        !( fontFamily == "Roman"      ) .AND. ;
-        !( fontFamily == "Script"     ) .AND. ;
-        !( fontFamily == "Swiss"      ) )
+   IF !( fontFamily == "Automatic"  ) .AND. ;
+      !( fontFamily == "Decorative" ) .AND. ;
+      !( fontFamily == "Modern"     ) .AND. ;
+      !( fontFamily == "Roman"      ) .AND. ;
+      !( fontFamily == "Script"     ) .AND. ;
+      !( fontFamily == "Swiss"      )
       RETURN NIL
    ENDIF
    ::fontFamily := fontFamily
@@ -452,17 +447,16 @@ METHOD ExcelWriterXML_Style:setFontStrikethrough()
 
 METHOD ExcelWriterXML_Style:setFontUnderline( uStyle )
 
-   IF uStyle == NIL
-      uStyle := "Single"
-   ENDIF
-   IF ( !( uStyle == "None"             ) .AND. ;
-        !( uStyle == "Single"           ) .AND. ;
-        !( uStyle == "Double"           ) .AND. ;
-        !( uStyle == "SingleAccounting" ) .AND. ;
-        !( uStyle == "DoubleAccounting" ) )
+   hb_default( @uStyle, "Single" )
 
+   IF !( uStyle == "None"             ) .AND. ;
+      !( uStyle == "Single"           ) .AND. ;
+      !( uStyle == "Double"           ) .AND. ;
+      !( uStyle == "SingleAccounting" ) .AND. ;
+      !( uStyle == "DoubleAccounting" )
       RETURN NIL
    ENDIF
+
    ::underline := uStyle
    ::useFont := .T.
 
@@ -486,36 +480,24 @@ METHOD ExcelWriterXML_Style:border( position, weight, color, linestyle )
 
    LOCAL tmp
 
-   IF position == NIL
-      position := "All"          // All, Left, Top, Right, Bottom, DiagonalLeft, DiagonalRight
-   ENDIF
-   IF weight == NIL
-      weight := "1"              // 0-Hairline, 1-Thin, 2-Medium, 3-Thick
-   ENDIF
-   IF color == NIL
-      color := "Automatic"       // Automatic, 6-hexadecimal digit number IN "#rrggbb" format OR it can be any of the MS Internet Explorer named colors
-   ENDIF
-   IF linestyle == NIL
-      linestyle := "Continuous"  // None, Continuous, Dash, Dot, DashDot, DashDotDot, SlantDashDot, Double
-   ENDIF
+   hb_default( @position, "All" )          // All, Left, Top, Right, Bottom, DiagonalLeft, DiagonalRight
+   hb_default( @weight, 1 )                // 0-Hairline, 1-Thin, 2-Medium, 3-Thick
+   hb_default( @color, "Automatic" )       // Automatic, 6-hexadecimal digit number IN "#rrggbb" format OR it can be any of the MS Internet Explorer named colors
+   hb_default( @linestyle, "Continuous" )  // None, Continuous, Dash, Dot, DashDot, DashDotDot, SlantDashDot, Double
 
-   IF ( !( position == "All"           ) .AND. ;
-        !( position == "Left"          ) .AND. ;
-        !( position == "Top"           ) .AND. ;
-        !( position == "Right"         ) .AND. ;
-        !( position == "Bottom"        ) .AND. ;
-        !( position == "DiagonalLeft"  ) .AND. ;
-        !( position == "DiagonalRight" ) )
+   IF !( position == "All"           ) .AND. ;
+      !( position == "Left"          ) .AND. ;
+      !( position == "Top"           ) .AND. ;
+      !( position == "Right"         ) .AND. ;
+      !( position == "Bottom"        ) .AND. ;
+      !( position == "DiagonalLeft"  ) .AND. ;
+      !( position == "DiagonalRight" )
 
       position := "All"
    ENDIF
 
-   IF HB_ISNUMERIC( weight )
-      IF Abs( weight ) > 3
-         weight := 3
-      ENDIF
-   ELSE
-      weight := 1
+   IF weight > 3 .OR. weight < 0
+      weight := 3
    ENDIF
 
    color := ::checkColor( color )
@@ -523,21 +505,21 @@ METHOD ExcelWriterXML_Style:border( position, weight, color, linestyle )
       color := "Automatic"
    ENDIF
 
-   IF ( !( linestyle == "None"         ) .AND. ;
-        !( linestyle == "Continuous"   ) .AND. ;
-        !( linestyle == "Dash"         ) .AND. ;
-        !( linestyle == "Dot"          ) .AND. ;
-        !( linestyle == "DashDot"      ) .AND. ;
-        !( linestyle == "DashDotDot"   ) .AND. ;
-        !( linestyle == "SlantDashDot" ) .AND. ;
-        !( linestyle == "Double"       ) )
+   IF !( linestyle == "None"         ) .AND. ;
+      !( linestyle == "Continuous"   ) .AND. ;
+      !( linestyle == "Dash"         ) .AND. ;
+      !( linestyle == "Dot"          ) .AND. ;
+      !( linestyle == "DashDot"      ) .AND. ;
+      !( linestyle == "DashDotDot"   ) .AND. ;
+      !( linestyle == "SlantDashDot" ) .AND. ;
+      !( linestyle == "Double"       )
 
       linestyle := "Continuous"
    ENDIF
 
    tmp := { ;
       "LineStyle" => linestyle, ;
-      "Color"     => color,    ;
+      "Color"     => color, ;
       "Weight"    => weight }
 
    IF position == "Top"    .OR. position == "All"
@@ -546,10 +528,10 @@ METHOD ExcelWriterXML_Style:border( position, weight, color, linestyle )
    IF position == "Bottom" .OR. position == "All"
       ::borderBottom := tmp
    ENDIF
-   IF position == "Left"    .OR. position == "All"
+   IF position == "Left"   .OR. position == "All"
       ::borderLeft := tmp
    ENDIF
-   IF position == "Right"    .OR. position == "All"
+   IF position == "Right"  .OR. position == "All"
       ::borderRight := tmp
    ENDIF
    IF position == "DiagonalLeft"
@@ -565,12 +547,8 @@ METHOD ExcelWriterXML_Style:border( position, weight, color, linestyle )
 
 METHOD ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
 
-   IF color == NIL
-      color := "Yellow"
-   ENDIF
-   IF pattern == NIL
-      pattern := "Solid"
-   ENDIF
+   hb_default( @color, "Yellow" )
+   hb_default( @pattern, "Solid" )
 
    color := ::checkColor( color )
    IF !( Left( color, 1 ) == "#" )
@@ -586,29 +564,27 @@ METHOD ExcelWriterXML_Style:bgColor( color, pattern, patternColor )
 
 METHOD ExcelWriterXML_Style:bgPattern( pattern, color )
 
-   IF pattern == NIL
-      pattern := "None"
-   ENDIF
+   hb_default( @pattern, "None" )
 
-   IF ( !( pattern == "None"                  ) .AND. ;
-        !( pattern == "Solid"                 ) .AND. ;
-        !( pattern == "Gray75"                ) .AND. ;
-        !( pattern == "Gray50"                ) .AND. ;
-        !( pattern == "Gray25"                ) .AND. ;
-        !( pattern == "Gray125"               ) .AND. ;
-        !( pattern == "Gray0625"              ) .AND. ;
-        !( pattern == "HorzStripe"            ) .AND. ;
-        !( pattern == "VertStripe"            ) .AND. ;
-        !( pattern == "ReverseDiagStripe"     ) .AND. ;
-        !( pattern == "DiagStripe"            ) .AND. ;
-        !( pattern == "DiagCross"             ) .AND. ;
-        !( pattern == "ThickDiagCross"        ) .AND. ;
-        !( pattern == "ThinHorzStripe"        ) .AND. ;
-        !( pattern == "ThinVertStripe"        ) .AND. ;
-        !( pattern == "ThinReverseDiagStripe" ) .AND. ;
-        !( pattern == "ThinDiagStripe"        ) .AND. ;
-        !( pattern == "ThinHorzCross"         ) .AND. ;
-        !( pattern == "ThinDiagCross"         ) )
+   IF !( pattern == "None"                  ) .AND. ;
+      !( pattern == "Solid"                 ) .AND. ;
+      !( pattern == "Gray75"                ) .AND. ;
+      !( pattern == "Gray50"                ) .AND. ;
+      !( pattern == "Gray25"                ) .AND. ;
+      !( pattern == "Gray125"               ) .AND. ;
+      !( pattern == "Gray0625"              ) .AND. ;
+      !( pattern == "HorzStripe"            ) .AND. ;
+      !( pattern == "VertStripe"            ) .AND. ;
+      !( pattern == "ReverseDiagStripe"     ) .AND. ;
+      !( pattern == "DiagStripe"            ) .AND. ;
+      !( pattern == "DiagCross"             ) .AND. ;
+      !( pattern == "ThickDiagCross"        ) .AND. ;
+      !( pattern == "ThinHorzStripe"        ) .AND. ;
+      !( pattern == "ThinVertStripe"        ) .AND. ;
+      !( pattern == "ThinReverseDiagStripe" ) .AND. ;
+      !( pattern == "ThinDiagStripe"        ) .AND. ;
+      !( pattern == "ThinHorzCross"         ) .AND. ;
+      !( pattern == "ThinDiagCross"         )
 
       pattern := "None"
    ENDIF
@@ -623,9 +599,8 @@ METHOD ExcelWriterXML_Style:bgPattern( pattern, color )
 
 METHOD ExcelWriterXML_Style:bgPatternColor( color )
 
-   IF color == NIL
-      color := "Yellow"
-   ENDIF
+   hb_default( @color, "Yellow" )
+
    IF !( color == "Automatic" )
       color := ::checkColor( color )
       IF !( Left( color, 1 ) == "#" )

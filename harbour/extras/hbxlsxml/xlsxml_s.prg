@@ -52,7 +52,6 @@
  *
  */
 
-
 #include "hbclass.ch"
 
 CREATE CLASS ExcelWriterXML_Sheet
@@ -99,13 +98,10 @@ METHOD ExcelWriterXML_Sheet:getID()
 
 METHOD ExcelWriterXML_Sheet:addError( cFunction, cMessage )
 
-   LOCAL tmp
-
-   tmp := { "sheet"      => ::id, ;
+   ::formatErrors += { ;
+      "sheet"      => ::id, ;
       "FUNCTION"   => cFunction, ;
       "MESSAGE"    => cMessage }
-
-   ::formatErrors += tmp
 
    RETURN NIL
 
@@ -129,10 +125,10 @@ METHOD ExcelWriterXML_Sheet:writeString( row, column, xData, style )
 
 METHOD ExcelWriterXML_Sheet:writeNumber( row, column, xData, style )
 
-   IF ! HB_ISNUMERIC( xData )
-      ::writeData( "String", row, column, xData, style )
-   ELSE
+   IF HB_ISNUMERIC( xData )
       ::writeData( "Number", row, column, AllTrim( Str( xData, 18, 6 ) ), style )
+   ELSE
+      ::writeData( "String", row, column, xData, style )
    ENDIF
 
    RETURN NIL
@@ -166,6 +162,7 @@ METHOD ExcelWriterXML_Sheet:writeData( type, row, column, xData, style, formula 
       "style"     => styleID, ;
       "data"      => xData, ;
       "formula"   => formula }
+
    IF hb_HPos( ::cells, row ) > 0
       hcol := ::cells[ row ]
       hcol[ column ] := cell
@@ -198,80 +195,77 @@ METHOD ExcelWriterXML_Sheet:getSheetXML( handle )
    FWrite( handle, xml )
    xml := ""
 
-   IF Len( ::colWidth ) > 0
-      FOR ic := 1 TO Len( ::colWidth )
-         colIndex := hb_HKeyAt( ::colWidth, ic )
-         colWidth := hb_HValueAt( ::colWidth, ic )
-         colIndex := hb_ntos( colIndex )
-         colWidth := hb_ntos( colWidth )
-         xml += '      <Column ss:Index="' + colIndex + '" ss:AutoFitWidth="0" ss:Width="' + colWidth + '"/>' + hb_eol()
-      NEXT
-   ENDIF
+   FOR EACH ic IN ::colWidth
+      colIndex := ic:__enumKey()
+      colWidth := ic:__enumValue()
+      colIndex := hb_ntos( colIndex )
+      colWidth := hb_ntos( colWidth )
+      xml += '      <Column ss:Index="' + colIndex + '" ss:AutoFitWidth="0" ss:Width="' + colWidth + '"/>' + hb_eol()
+   NEXT
 
    FWrite( handle, xml )
    xml := ""
 
-   IF Len( ::cells ) > 0
-      FOR ir := 1 TO Len( ::cells )
-         row     := hb_HKeyAt( ::cells, ir )
-         rowData := hb_HValueAt( ::cells, ir )
+   FOR EACH ir IN ::cells
+      row     := ir:__enumKey()
+      rowData := ir:__enumValue()
 
-         IF hb_HPos( ::rowHeight, row ) > 0
-            rowHeight := 'ss:AutoFitHeight="0" ss:Height="' + AllTrim( Str( ::rowHeight[ row ], 14, 2 ) ) + '"'
+      IF hb_HPos( ::rowHeight, row ) > 0
+         rowHeight := 'ss:AutoFitHeight="0" ss:Height="' + AllTrim( Str( ::rowHeight[ row ], 14, 2 ) ) + '"'
+      ELSE
+         rowHeight := ""
+      ENDIF
+
+      xml += '      <Row ss:Index="' + hb_ntos( row ) + '" ' + rowHeight + " >" + hb_eol()
+      FOR EACH ic IN rowData
+         column := ic:__enumKey()
+         cell   := ic:__enumValue()
+         IF Empty( cell[ "formula" ] )
+            formula := ""
          ELSE
-            rowHeight := ""
+            formula := 'ss:Formula="' + cell[ "formula" ] + '"'
          ENDIF
-
-         xml += '      <Row ss:Index="' + hb_ntos( row ) + '" ' + rowHeight + " >" + hb_eol()
-         FOR ic := 1 TO Len( rowData )
-            column := hb_HKeyAt( rowData, ic )
-            cell   := hb_HValueAt( rowData, ic )
-            IF ! Empty( cell[ "formula" ] )
-               formula := 'ss:Formula="' + cell[ "formula" ] + '"'
-            ELSE
-               formula := ""
+         IF Empty( cell[ "style" ] )
+            style := ""
+         ELSE
+            style := 'ss:StyleID="' + cell[ "style" ] + '"'
+         ENDIF
+         URL := ""
+         mergeCell := ""
+         IF hb_HPos( ::mergeCells, row ) > 0
+            IF hb_HPos( ::mergeCells[ row ], column ) > 0
+               mergeCell := 'ss:MergeAcross="' + hb_ntos( ::mergeCells[ row ][ column ][ "width" ] ) + '" ss:MergeDown="' + hb_ntos( ::mergeCells[ row ][ column ][ "height" ] ) + '"'
             ENDIF
-            IF ! Empty( cell[ "style" ] )
-               style := 'ss:StyleID="' + cell[ "style" ] + '"'
-            ELSE
-               style := ""
+         ENDIF
+         comment := ""
+         IF hb_HPos( ::comments, row ) > 0
+            IF hb_HPos( ::comments[ row ], column ) > 0
+               comment := '               <Comment ss:Author="' + ::comments[ row ][ column ][ "author" ] + '">' + hb_eol()
+               comment += '               <ss:Data xmlns="http://www.w3.org/TR/REC-html40">' + hb_eol()
+               comment += '               <B><Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "author" ] + ":</Font></B>" + hb_eol()
+               comment += '               <Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "comment" ] + "</Font>" + hb_eol()
+               comment += "               </ss:Data>" + hb_eol()
+               comment += "               </Comment>" + hb_eol()
             ENDIF
-            URL := ""
-            mergeCell := ""
-            IF hb_HPos( ::mergeCells, row ) > 0
-               IF hb_HPos( ::mergeCells[ row ], column ) > 0
-                  mergeCell := 'ss:MergeAcross="' + hb_ntos( ::mergeCells[ row ][ column ][ "width" ] ) + '" ss:MergeDown="' + hb_ntos( ::mergeCells[ row ][ column ][ "height" ] ) + '"'
-               ENDIF
-            ENDIF
-            comment := ""
-            IF hb_HPos( ::comments, row ) > 0
-               IF hb_HPos( ::comments[ row ], column ) > 0
-                  comment := '               <Comment ss:Author="' + ::comments[ row ][ column ][ "author" ] + '">' + hb_eol()
-                  comment += '               <ss:Data xmlns="http://www.w3.org/TR/REC-html40">' + hb_eol()
-                  comment += '               <B><Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "author" ] + ":</Font></B>" + hb_eol()
-                  comment += '               <Font html:Face="Tahoma" x:CharSet="1" html:Size="8" html:Color="#000000">' + ::comments[ row ][ column ][ "comment" ] + "</Font>" + hb_eol()
-                  comment += "               </ss:Data>" + hb_eol()
-                  comment += "               </Comment>" + hb_eol()
-               ENDIF
-            ENDIF
-            comment := ""
-            type  := cell[ "type" ]
-            xData := cell[ "data" ]
+         ENDIF
+         comment := ""
+         type  := cell[ "type" ]
+         xData := cell[ "data" ]
 
-            xml += "         <Cell " + style + ' ss:Index="' + hb_ntos( column ) + '" ' + URL + " " + mergeCell + " " + formula + ">" + hb_eol()
-            xml += '            <Data ss:Type="' + type + '">'
-            xml += StrToHtmlSpecial( xData )
-            xml += "</Data>" + hb_eol()
-            xml += comment
-            xml += "         </Cell>" + hb_eol()
+         xml += "         <Cell " + AllTrim( style + ' ss:Index="' + hb_ntos( column ) + '" ' + URL + " " + mergeCell + " " + formula ) + ">" + hb_eol()
+         xml += '            <Data ss:Type="' + type + '">'
+         xml += StrToHtmlSpecial( xData )
+         xml += "</Data>" + hb_eol()
+         xml += comment
+         xml += "         </Cell>" + hb_eol()
 
-         NEXT
-         xml += "      </Row>" + hb_eol()
-
-         FWrite( handle, xml )
-         xml := ""
       NEXT
-   ENDIF
+      xml += "      </Row>" + hb_eol()
+
+      FWrite( handle, xml )
+      xml := ""
+   NEXT
+
    xml += "   </Table>" + hb_eol()
    xml += "</Worksheet>" + hb_eol()
 
@@ -285,18 +279,16 @@ METHOD ExcelWriterXML_Sheet:cellWidth( row, col, width )
    HB_SYMBOL_UNUSED( row )
    HB_SYMBOL_UNUSED( col )
 
-   IF width == NIL
-      width := 48
-   ENDIF
+   hb_default( @width, 48 )
+
    ::columnWidth( col, width )
 
    RETURN NIL
 
 METHOD ExcelWriterXML_Sheet:columnWidth( col, width )
 
-   IF width == NIL
-      width := 48
-   ENDIF
+   hb_default( @width, 48 )
+
    ::colWidth[ col ] := width
 
    RETURN NIL
@@ -305,18 +297,16 @@ METHOD ExcelWriterXML_Sheet:cellHeight( row, col, height )
 
    HB_SYMBOL_UNUSED( col )
 
-   IF height == NIL
-      height := 12.5
-   ENDIF
+   hb_default( @height, 12.5 )
+
    ::setRowHeight( row, height )
 
    RETURN NIL
 
 METHOD ExcelWriterXML_Sheet:setRowHeight( row, height )
 
-   IF height == NIL
-      height := 12.5
-   ENDIF
+   hb_default( @height, 12.5 )
+
    ::rowHeight[ row ] := height
 
    RETURN NIL
@@ -328,7 +318,9 @@ METHOD ExcelWriterXML_Sheet:cellMerge( row, col, width, height )
    IF hb_HPos( ::mergeCells, row ) > 0
       haux := ::mergeCells[ row ]
    ENDIF
-   haux[ col ] := { "width"   => width, ;
+
+   haux[ col ] := { ;
+      "width"   => width, ;
       "height"  => height }
 
    ::mergeCells[ row ] := haux
@@ -339,8 +331,9 @@ METHOD ExcelWriterXML_Sheet:addComment( row, col, comment, author )
 
    LOCAL haux := { => }
 
-   haux[ col ] := { "comment"  => comment, ;
-      "author"   => author  }
+   haux[ col ] := { ;
+      "comment"  => comment, ;
+      "author"   => author }
 
    ::comments[ row ] := haux
 
