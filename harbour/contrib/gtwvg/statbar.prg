@@ -70,25 +70,25 @@
 
 CREATE CLASS WvgStatusBar  INHERIT  WvgWindow /* WvgActiveXControl */
 
-   VAR      caption                               INIT ""
-   VAR      sizeGrip                              INIT .T.
+   VAR    caption                               INIT ""
+   VAR    sizeGrip                              INIT .T.
 
-   VAR      aItems                                INIT {}
+   VAR    aItems                                INIT {}
 
-   METHOD   numItems()                            INLINE Len( ::aItems )
+   METHOD numItems()                            INLINE Len( ::aItems )
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
+   METHOD handleEvent( nMessage, aNM )
 
-   METHOD   addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
-   METHOD   delItem( nItemORcKey )
-   METHOD   getItem( nItemORcKey )
-   METHOD   clear()
-   METHOD   panelClick( xParam )                  SETGET
-   METHOD   panelDblClick( xParam )               SETGET
+   METHOD addItem( cCaption, xImage, cDLL, nStyle, cKey, nMode )
+   METHOD delItem( nItemORcKey )
+   METHOD getItem( nItemORcKey )
+   METHOD clear()
+   METHOD panelClick( xParam )                  SETGET
+   METHOD panelDblClick( xParam )               SETGET
 
 ENDCLASS
 
@@ -289,25 +289,25 @@ METHOD WvgStatusBar:panelDblClick( xParam )
  */
 CREATE CLASS WvgStatusBarPanel
 
-   VAR      alignment                             INIT WVGALIGN_LEFT
-   VAR      autosize                              INIT WVGSTATUSBAR_AUTOSIZE_NONE
-   VAR      bevel                                 INIT WVGSTATUSBAR_BEVEL_INSET
-   VAR      enabled                               INIT .T.
-   VAR      INDEX                                 INIT 0
-   VAR      KEY                                   INIT ""
-   VAR      style                                 INIT WVGSTATUSBAR_PANEL_TEXT
-   VAR      sl_caption                            INIT ""
-   VAR      image                                 INIT NIL
-   VAR      tooltipText                           INIT ""
-   VAR      visible                               INIT .T.
-   VAR      left                                  INIT 0
-   VAR      width                                 INIT 0
-   VAR      minWidth                              INIT 0
+   VAR    alignment                             INIT WVGALIGN_LEFT
+   VAR    autosize                              INIT WVGSTATUSBAR_AUTOSIZE_NONE
+   VAR    bevel                                 INIT WVGSTATUSBAR_BEVEL_INSET
+   VAR    enabled                               INIT .T.
+   VAR    index                                 INIT 0
+   VAR    key                                   INIT ""
+   VAR    style                                 INIT WVGSTATUSBAR_PANEL_TEXT
+   VAR    sl_caption                            INIT ""
+   VAR    image                                 INIT NIL
+   VAR    tooltipText                           INIT ""
+   VAR    visible                               INIT .T.
+   VAR    left                                  INIT 0
+   VAR    width                                 INIT 0
+   VAR    minWidth                              INIT 0
 
-   METHOD   new( cCaption, nStyle, cKey )
-   METHOD   caption( cCaption )                   SETGET
+   METHOD new( cCaption, nStyle, cKey )
+   METHOD caption( cCaption )                   SETGET
 
-   VAR      oParent
+   VAR    oParent
 
 ENDCLASS
 

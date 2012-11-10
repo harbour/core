@@ -68,181 +68,181 @@
 
 CREATE CLASS WvgCrt  INHERIT  WvgWindow, WvgPartHandler
 
-   VAR      oMenu
+   VAR    oMenu
 
    /*  CONFIGURATION */
-   VAR      alwaysOnTop                           INIT  .F.        /* Determines whether the dialog can be covered by other windows */
-   VAR      border                                INIT  0          /* Border type for the XbpCrt window */
-   VAR      clipChildren                          INIT  .F.
-   VAR      closable                              INIT  .T.
-   VAR      fontHeight                            INIT  16
-   VAR      fontWidth                             INIT  10
-   VAR      fontName                              INIT  "Courier New"
-   VAR      gridMove                              INIT  .F.
-   VAR      icon                                  INIT  0
-   VAR      minMax                                INIT  .T.
-   VAR      sysMenu                               INIT  .T.
-   VAR      taskList                              INIT  .T.
-   VAR      title                                 INIT  " "
-   VAR      titleBar                              INIT  .T.
-   VAR      visible                               INIT  .T.
+   VAR    alwaysOnTop                           INIT  .F.        /* Determines whether the dialog can be covered by other windows */
+   VAR    border                                INIT  0          /* Border type for the XbpCrt window */
+   VAR    clipChildren                          INIT  .F.
+   VAR    closable                              INIT  .T.
+   VAR    fontHeight                            INIT  16
+   VAR    fontWidth                             INIT  10
+   VAR    fontName                              INIT  "Courier New"
+   VAR    gridMove                              INIT  .F.
+   VAR    icon                                  INIT  0
+   VAR    minMax                                INIT  .T.
+   VAR    sysMenu                               INIT  .T.
+   VAR    taskList                              INIT  .T.
+   VAR    title                                 INIT  " "
+   VAR    titleBar                              INIT  .T.
+   VAR    visible                               INIT  .T.
 
-   VAR      autoFocus                             INIT  .T.
-   VAR      autoMark                              INIT  .T.
-   VAR      dropFont                              INIT  .T.
-   VAR      dropZone                              INIT  .F.
-   VAR      helpLink                              INIT  NIL
-   VAR      maxCol                                INIT  79
-   VAR      maxRow                                INIT  24
-   VAR      mouseMode                             INIT  1          /* Determines whether mouse coordinates are given as graphics or text coordinates.*/
-   VAR      modalResult                           INIT  NIL        /* Specifies the result of a modal dialog.                                        */
-   VAR      aSyncFlush                            INIT  .F.        /* Determines the display behavior of text-mode output.                           */
-   VAR      tooltipText                           INIT  ""
-   VAR      useShortCuts                          INIT  .F.        /* Enables shortcut keys for the system menu                                      */
-   VAR      xSize                                 INIT  640 READONLY
-   VAR      ySize                                 INIT  400 READONLY
+   VAR    autoFocus                             INIT  .T.
+   VAR    autoMark                              INIT  .T.
+   VAR    dropFont                              INIT  .T.
+   VAR    dropZone                              INIT  .F.
+   VAR    helpLink                              INIT  NIL
+   VAR    maxCol                                INIT  79
+   VAR    maxRow                                INIT  24
+   VAR    mouseMode                             INIT  1          /* Determines whether mouse coordinates are given as graphics or text coordinates.*/
+   VAR    modalResult                           INIT  NIL        /* Specifies the result of a modal dialog.                                        */
+   VAR    aSyncFlush                            INIT  .F.        /* Determines the display behavior of text-mode output.                           */
+   VAR    tooltipText                           INIT  ""
+   VAR    useShortCuts                          INIT  .F.        /* Enables shortcut keys for the system menu                                      */
+   VAR    xSize                                 INIT  640 READONLY
+   VAR    ySize                                 INIT  400 READONLY
 
    /*  GUI Specifics */
-   VAR      animate                               INIT  .F.
-   VAR      clipParent                            INIT  .F.
-   VAR      clipSiblings                          INIT  .T.
-   VAR      group                                 INIT  0          /* XBP_NO_GROUP */
-   VAR      sizeRedraw                            INIT  .F.
-   VAR      tabStop                               INIT  .F.
+   VAR    animate                               INIT  .F.
+   VAR    clipParent                            INIT  .F.
+   VAR    clipSiblings                          INIT  .T.
+   VAR    group                                 INIT  0          /* XBP_NO_GROUP */
+   VAR    sizeRedraw                            INIT  .F.
+   VAR    tabStop                               INIT  .F.
 
    /*  CALLBACK SLOTS */
-   VAR      sl_enter
-   VAR      sl_leave
-   VAR      sl_lbClick
-   VAR      sl_lbDblClick
-   VAR      sl_lbDown
-   VAR      sl_lbUp
-   VAR      sl_mbClick
-   VAR      sl_mbDblClick
-   VAR      sl_mbDown
-   VAR      sl_mbUp
-   VAR      sl_motion
-   VAR      sl_rbClick
-   VAR      sl_rbDblClick
-   VAR      sl_rbDown
-   VAR      sl_rbUp
-   VAR      sl_wheel
+   VAR    sl_enter
+   VAR    sl_leave
+   VAR    sl_lbClick
+   VAR    sl_lbDblClick
+   VAR    sl_lbDown
+   VAR    sl_lbUp
+   VAR    sl_mbClick
+   VAR    sl_mbDblClick
+   VAR    sl_mbDown
+   VAR    sl_mbUp
+   VAR    sl_motion
+   VAR    sl_rbClick
+   VAR    sl_rbDblClick
+   VAR    sl_rbDown
+   VAR    sl_rbUp
+   VAR    sl_wheel
 
-   VAR      sl_close
-   VAR      sl_helpRequest
-   VAR      sl_keyboard
-   VAR      sl_killDisplayFocus                    /* only for CRT */
-   VAR      sl_killInputFocus
-   VAR      sl_move
-   VAR      sl_paint                               /* only for gui dialogs */
-   VAR      sl_quit
-   VAR      sl_resize
-   VAR      sl_setDisplayFocus                     /* only for CRT */
-   VAR      sl_setInputFocus
-   VAR      sl_dragEnter
-   VAR      sl_dragMotion
-   VAR      sl_dragLeave
-   VAR      sl_dragDrop
+   VAR    sl_close
+   VAR    sl_helpRequest
+   VAR    sl_keyboard
+   VAR    sl_killDisplayFocus                    /* only for CRT */
+   VAR    sl_killInputFocus
+   VAR    sl_move
+   VAR    sl_paint                               /* only for gui dialogs */
+   VAR    sl_quit
+   VAR    sl_resize
+   VAR    sl_setDisplayFocus                     /* only for CRT */
+   VAR    sl_setInputFocus
+   VAR    sl_dragEnter
+   VAR    sl_dragMotion
+   VAR    sl_dragLeave
+   VAR    sl_dragDrop
 
-   /*  HARBOUR implementation */
-   VAR      resizable                             INIT  .T.
-   VAR      resizeMode                            INIT  HB_GTI_RESIZEMODE_FONT
-   VAR      style                                 INIT  ( WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX )
-   VAR      exStyle                               INIT  0
-   VAR      lModal                                INIT  .F.
-   VAR      pGTp
-   VAR      pGT
-   VAR      objType                               INIT  objTypeCrt
-   VAR      ClassName                             INIT  "WVGCRT"
-   VAR      drawingArea
-   VAR      hWnd
-   VAR      aPos                                  INIT  { 0, 0 }
-   VAR      aSize                                 INIT  { 24, 79 }
-   VAR      aPresParams                           INIT  {}
-   VAR      lHasInputFocus                        INIT  .F.
-   VAR      nFrameState                           INIT  0  /* normal */
+   /*  HARUR implementation */
+   VAR    resizable                             INIT  .T.
+   VAR    resizeMode                            INIT  HB_GTI_RESIZEMODE_FONT
+   VAR    style                                 INIT  ( WS_OVERLAPPED + WS_CAPTION + WS_SYSMENU + WS_SIZEBOX + WS_MINIMIZEBOX + WS_MAXIMIZEBOX )
+   VAR    exStyle                               INIT  0
+   VAR    lModal                                INIT  .F.
+   VAR    pGTp
+   VAR    pGT
+   VAR    objType                               INIT  objTypeCrt
+   VAR    ClassName                             INIT  "WVGCRT"
+   VAR    drawingArea
+   VAR    hWnd
+   VAR    aPos                                  INIT  { 0, 0 }
+   VAR    aSize                                 INIT  { 24, 79 }
+   VAR    aPresParams                           INIT  {}
+   VAR    lHasInputFocus                        INIT  .F.
+   VAR    nFrameState                           INIT  0  /* normal */
 
-   VAR      isGT                                  INIT  .F.
+   VAR    isGT                                  INIT  .F.
 
-   METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
-   METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
-   METHOD   showWindow()                          INLINE ::show()
-   METHOD   refresh()                             INLINE ::invalidateRect()
+   METHOD setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
+   METHOD getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
+   METHOD showWindow()                          INLINE ::show()
+   METHOD refresh()                             INLINE ::invalidateRect()
 
-   /*  LIFE CYCLE */
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
+   /* LIFE CYCLE */
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
 
    /*  METHODS */
-   METHOD   currentPos()
-   METHOD   currentSize()
-   METHOD   captureMouse()
-   METHOD   disable()
-   METHOD   enable()
-   METHOD   getFrameState()
-   METHOD   getHWND()
-   METHOD   getModalState()
-   METHOD   hasInputFocus()
-   METHOD   hide()
-   METHOD   invalidateRect( nTop, nLeft, nBottom, nRight )
-   METHOD   isEnabled()
-   METHOD   isVisible()
-   METHOD   lockPS()
-   METHOD   lockUpdate()
-   METHOD   menuBar()
-   METHOD   setColorBG()
-   METHOD   setColorFG()
-   METHOD   setFont()
-   METHOD   setFontCompoundName()
-   METHOD   setFrameState( nState )
-   METHOD   setPresParam()
-   METHOD   setModalState()
-   METHOD   setPointer()
-   METHOD   setTrackPointer()
-   METHOD   setPos()
-   METHOD   setPosAndSize()
-   METHOD   setSize( aSize, lPaint )
-   METHOD   showModal()
-   METHOD   show()
-   METHOD   toBack()
-   METHOD   toFront()
-   METHOD   unlockPS()
-   METHOD   winDevice()
+   METHOD currentPos()
+   METHOD currentSize()
+   METHOD captureMouse()
+   METHOD disable()
+   METHOD enable()
+   METHOD getFrameState()
+   METHOD getHWND()
+   METHOD getModalState()
+   METHOD hasInputFocus()
+   METHOD hide()
+   METHOD invalidateRect( nTop, nLeft, nBottom, nRight )
+   METHOD isEnabled()
+   METHOD isVisible()
+   METHOD lockPS()
+   METHOD lockUpdate()
+   METHOD menuBar()
+   METHOD setColorBG()
+   METHOD setColorFG()
+   METHOD setFont()
+   METHOD setFontCompoundName()
+   METHOD setFrameState( nState )
+   METHOD setPresParam()
+   METHOD setModalState()
+   METHOD setPointer()
+   METHOD setTrackPointer()
+   METHOD setPos()
+   METHOD setPosAndSize()
+   METHOD setSize( aSize, lPaint )
+   METHOD showModal()
+   METHOD show()
+   METHOD toBack()
+   METHOD toFront()
+   METHOD unlockPS()
+   METHOD winDevice()
 
    /* MESSAGES  */
-   METHOD   enter( xParam )                       SETGET
-   METHOD   leave( xParam )                       SETGET
-   METHOD   lbClick( xParam )                     SETGET
-   METHOD   lbDblClick( xParam )                  SETGET
-   METHOD   lbDown( xParam )                      SETGET
-   METHOD   lbUp( xParam )                        SETGET
-   METHOD   mbClick( xParam )                     SETGET
-   METHOD   mbDblClick( xParam )                  SETGET
-   METHOD   mbDown( xParam )                      SETGET
-   METHOD   mbUp( xParam )                        SETGET
-   METHOD   motion( xParam )                      SETGET
-   METHOD   rbClick( xParam )                     SETGET
-   METHOD   rbDblClick( xParam )                  SETGET
-   METHOD   rbDown( xParam )                      SETGET
-   METHOD   rbUp( xParam )                        SETGET
-   METHOD   wheel( xParam )                       SETGET
-   METHOD   CLOSE( xParam )                       SETGET
-   METHOD   helpRequest( xParam )                 SETGET
-   METHOD   KEYBOARD( xParam )                    SETGET
-   METHOD   killDisplayFocus( xParam )            SETGET
-   METHOD   killInputFocus( xParam )              SETGET
-   METHOD   move( xParam )                        SETGET
-   METHOD   paint( xParam )                       SETGET
-   METHOD   quit( xParam, xParam1 )               SETGET
-   METHOD   resize( xParam )                      SETGET
-   METHOD   setDisplayFocus( xParam )             SETGET
-   METHOD   setInputFocus( xParam )               SETGET
-   METHOD   dragEnter( xParam, xParam1 )          SETGET
-   METHOD   dragMotion( xParam )                  SETGET
-   METHOD   dragLeave( xParam )                   SETGET
-   METHOD   dragDrop( xParam, xParam1 )           SETGET
+   METHOD enter( xParam )                       SETGET
+   METHOD leave( xParam )                       SETGET
+   METHOD lbClick( xParam )                     SETGET
+   METHOD lbDblClick( xParam )                  SETGET
+   METHOD lbDown( xParam )                      SETGET
+   METHOD lbUp( xParam )                        SETGET
+   METHOD mbClick( xParam )                     SETGET
+   METHOD mbDblClick( xParam )                  SETGET
+   METHOD mbDown( xParam )                      SETGET
+   METHOD mbUp( xParam )                        SETGET
+   METHOD motion( xParam )                      SETGET
+   METHOD rbClick( xParam )                     SETGET
+   METHOD rbDblClick( xParam )                  SETGET
+   METHOD rbDown( xParam )                      SETGET
+   METHOD rbUp( xParam )                        SETGET
+   METHOD wheel( xParam )                       SETGET
+   METHOD close( xParam )                       SETGET
+   METHOD helpRequest( xParam )                 SETGET
+   METHOD keyboard( xParam )                    SETGET
+   METHOD killDisplayFocus( xParam )            SETGET
+   METHOD killInputFocus( xParam )              SETGET
+   METHOD move( xParam )                        SETGET
+   METHOD paint( xParam )                       SETGET
+   METHOD quit( xParam, xParam1 )               SETGET
+   METHOD resize( xParam )                      SETGET
+   METHOD setDisplayFocus( xParam )             SETGET
+   METHOD setInputFocus( xParam )               SETGET
+   METHOD dragEnter( xParam, xParam1 )          SETGET
+   METHOD dragMotion( xParam )                  SETGET
+   METHOD dragLeave( xParam )                   SETGET
+   METHOD dragDrop( xParam, xParam1 )           SETGET
 
 ENDCLASS
 

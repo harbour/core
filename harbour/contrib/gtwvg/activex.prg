@@ -80,7 +80,7 @@ CREATE CLASS WvgActiveXControl FROM WvgWindow
    VAR    server                             INIT NIL
    VAR    license                            INIT NIL
    VAR    controlFlags                       INIT 0
-   VAR    DEFAULT                            INIT .F.
+   VAR    default                            INIT .F.
    VAR    cancel                             INIT .F.
 
    VAR    interface

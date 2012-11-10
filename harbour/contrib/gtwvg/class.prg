@@ -130,7 +130,7 @@ CREATE CLASS WvtDialog
    VAR    nCurObj                                 INIT 1
    VAR    nLastObj                                INIT 0
    VAR    nObjOver                                INIT 0
-   VAR    nLastOver                               INIT - 1
+   VAR    nLastOver                               INIT -1
    VAR    nUseObj
    VAR    oMenu
    VAR    aDialogKeys                             INIT {}

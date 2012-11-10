@@ -70,46 +70,46 @@
 
 CREATE CLASS WvgTreeView  INHERIT  WvgWindow, WvgDataRef
 
-   VAR      alwaysShowSelection                   INIT .F.
-   VAR      hasButtons                            INIT .F.
-   VAR      hasLines                              INIT .F.
+   VAR    alwaysShowSelection                   INIT .F.
+   VAR    hasButtons                            INIT .F.
+   VAR    hasLines                              INIT .F.
 
-   VAR      aItems                                INIT {}
+   VAR    aItems                                INIT {}
 
-   VAR      oRootItem
-   ACCESS   rootItem()                            INLINE ::oRootItem
+   VAR    oRootItem
+   ACCESS rootItem()                            INLINE ::oRootItem
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
+   METHOD handleEvent( nMessage, aNM )
 
-   METHOD   itemFromPos( aPos )
+   METHOD itemFromPos( aPos )
 
-   VAR      sl_itemCollapsed
-   VAR      sl_itemExpanded
-   VAR      sl_itemMarked
-   VAR      sl_itemSelected
+   VAR    sl_itemCollapsed
+   VAR    sl_itemExpanded
+   VAR    sl_itemMarked
+   VAR    sl_itemSelected
 
-   METHOD   itemCollapsed( xParam )               SETGET
-   METHOD   itemExpanded( xParam )                SETGET
-   METHOD   itemMarked( xParam )                  SETGET
+   METHOD itemCollapsed( xParam )               SETGET
+   METHOD itemExpanded( xParam )                SETGET
+   METHOD itemMarked( xParam )                  SETGET
 
-   VAR      oItemSelected
-   ACCESS   itemSelected                          INLINE ::sl_itemSelected
-   ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
+   VAR    oItemSelected
+   ACCESS itemSelected                          INLINE ::sl_itemSelected
+   ASSIGN itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
 
-   VAR      hParentSelected
-   VAR      hItemSelected
-   VAR      textParentSelected                    INIT ""
-   VAR      textItemSelected                      INIT ""
+   VAR    hParentSelected
+   VAR    hItemSelected
+   VAR    textParentSelected                    INIT ""
+   VAR    textItemSelected                      INIT ""
 
-   METHOD   getSelectionInfo( nlParam )
-   METHOD   setColorFG( nRGB )                    INLINE Wvg_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
-   METHOD   setColorBG( nRGB )                    INLINE Wvg_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
-   METHOD   setColorLines( nRGB )                 INLINE Wvg_TreeView_SetLineColor( ::hWnd, nRGB )
-   METHOD   showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
+   METHOD getSelectionInfo( nlParam )
+   METHOD setColorFG( nRGB )                    INLINE Wvg_TreeView_SetTextColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 0 ), nRGB ) )
+   METHOD setColorBG( nRGB )                    INLINE Wvg_TreeView_SetBkColor( ::hWnd, iif( HB_ISSTRING( nRGB ), Wvt_GetRGBColorByString( nRGB, 1 ), nRGB ) )
+   METHOD setColorLines( nRGB )                 INLINE Wvg_TreeView_SetLineColor( ::hWnd, nRGB )
+   METHOD showExpanded( lExpanded, nLevels )    INLINE Wvg_TreeView_ShowExpanded( ::hWnd, ;
       iif( HB_ISNIL( lExpanded ), .F., lExpanded ), nLevels )
 
 ENDCLASS
@@ -332,41 +332,40 @@ METHOD WvgTreeView:itemSelected( xParam )
 
 #endif
 
-/*                      Class WvgTreeViewItem                           */
 CREATE CLASS WvgTreeViewItem
 
-   VAR      caption                               INIT ""
-   VAR      dllName                               INIT NIL
-   VAR      expandedImage                         INIT - 1
-   VAR      image                                 INIT - 1
-   VAR      markedImage                           INIT - 1
+   VAR    caption                               INIT ""
+   VAR    dllName                               INIT NIL
+   VAR    expandedImage                         INIT -1
+   VAR    image                                 INIT -1
+   VAR    markedImage                           INIT -1
 
-   VAR      hTree
-   VAR      hItem
-   VAR      oParent
-   VAR      oWnd
+   VAR    hTree
+   VAR    hItem
+   VAR    oParent
+   VAR    oWnd
 
-   VAR      className                              INIT "TREEVIEWITEM"
-   VAR      objType                                INIT objTypeTreeViewItem
+   VAR    className                              INIT "TREEVIEWITEM"
+   VAR    objType                                INIT objTypeTreeViewItem
 
-   METHOD   new()
-   METHOD   create()
-   METHOD   configure()
-   METHOD   destroy()
+   METHOD new()
+   METHOD create()
+   METHOD configure()
+   METHOD destroy()
 
-   METHOD   Expand( lExpand )                      INLINE Wvg_TreeView_Expand( ::hTree, ::hItem, ;
+   METHOD Expand( lExpand )                      INLINE Wvg_TreeView_Expand( ::hTree, ::hItem, ;
       iif( HB_ISLOGICAL( lExpand ), lExpand, .T. ) )
-   METHOD   isExpanded()
-   METHOD   setCaption( cCaption )
-   METHOD   setExpandedImage( nResIdoBitmap )
-   METHOD   setImage( nResIdoBitmap )
-   METHOD   setMarkedImage( nResIdoBitmap )
+   METHOD isExpanded()
+   METHOD setCaption( cCaption )
+   METHOD setExpandedImage( nResIdoBitmap )
+   METHOD setImage( nResIdoBitmap )
+   METHOD setMarkedImage( nResIdoBitmap )
 
-   METHOD   addItem( cCaption )
-   METHOD   delItem()
-   METHOD   getChildItems()
-   METHOD   getParentItem()
-   METHOD   insItem()
+   METHOD addItem( cCaption )
+   METHOD delItem()
+   METHOD getChildItems()
+   METHOD getParentItem()
+   METHOD insItem()
 
 ENDCLASS
 

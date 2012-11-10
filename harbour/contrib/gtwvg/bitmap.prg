@@ -74,33 +74,33 @@
 
 CREATE CLASS WvgBitmap
 
-   VAR      bits                                  INIT 0        READONLY
-   VAR      bufferOffset                          INIT 0        READONLY
-   VAR      planes                                INIT 0        READONLY
-   VAR      transparentClr                        INIT 0
-   VAR      xSize                                 INIT 0        READONLY
-   VAR      ySize                                 INIT 0        READONLY
+   VAR    bits                                  INIT 0        READONLY
+   VAR    bufferOffset                          INIT 0        READONLY
+   VAR    planes                                INIT 0        READONLY
+   VAR    transparentClr                        INIT 0
+   VAR    xSize                                 INIT 0        READONLY
+   VAR    ySize                                 INIT 0        READONLY
 
-   VAR      hBitmap
-   VAR      hDCcompat
-   VAR      lDCToDestroy                          INIT .F.
+   VAR    hBitmap
+   VAR    hDCcompat
+   VAR    lDCToDestroy                          INIT .F.
 
-   METHOD   new()
-   METHOD   create( oPScompat )
-   METHOD   configure()                           VIRTUAL
-   METHOD   destroy()
+   METHOD new()
+   METHOD create( oPScompat )
+   METHOD configure()                           VIRTUAL
+   METHOD destroy()
 
-   METHOD   draw()                                VIRTUAL
-   METHOD   getColorTable()                       VIRTUAL
-   METHOD   getDefaultBGColor()                   VIRTUAL
-   METHOD   load()                                VIRTUAL
-   METHOD   loadFile()                            VIRTUAL
-   METHOD   make()                                VIRTUAL
-   METHOD   presSpace()                           VIRTUAL
-   METHOD   saveFile()                            VIRTUAL
-   METHOD   setBuffer()                           VIRTUAL
-   METHOD   getPicture()                          VIRTUAL
-   METHOD   setPicture()                          VIRTUAL
+   METHOD draw()                                VIRTUAL
+   METHOD getColorTable()                       VIRTUAL
+   METHOD getDefaultBGColor()                   VIRTUAL
+   METHOD load()                                VIRTUAL
+   METHOD loadFile()                            VIRTUAL
+   METHOD make()                                VIRTUAL
+   METHOD presSpace()                           VIRTUAL
+   METHOD saveFile()                            VIRTUAL
+   METHOD setBuffer()                           VIRTUAL
+   METHOD getPicture()                          VIRTUAL
+   METHOD setPicture()                          VIRTUAL
 
 ENDCLASS
 

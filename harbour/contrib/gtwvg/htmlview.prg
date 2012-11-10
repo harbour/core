@@ -86,48 +86,48 @@
 
 CREATE CLASS WvgHTMLViewer INHERIT WvgActiveXControl
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
 
-   METHOD   xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
-   METHOD   xStatusTextChange( cText )
-   METHOD   xNavigateComplete( cURL )
-   METHOD   xProgressChange( nProgress, nProgMax )
-   METHOD   xTitleChange( cTitle )
-   METHOD   xDocumentComplete( cURI )
-   METHOD   setHTML( cHTML )
+   METHOD xBeforeNavigate( cURL, Flags, TFName, PData, Headers )
+   METHOD xStatusTextChange( cText )
+   METHOD xNavigateComplete( cURL )
+   METHOD xProgressChange( nProgress, nProgMax )
+   METHOD xTitleChange( cTitle )
+   METHOD xDocumentComplete( cURI )
+   METHOD setHTML( cHTML )
 
-   METHOD   back()                                INLINE  ::goBack()
-   METHOD   forward()                             INLINE  ::goForward()
-   METHOD   home()                                INLINE  ::goHome()
-   METHOD   search()                              INLINE  ::goSearch()
-   METHOD   isBusy()                              INLINE  ::busy()
+   METHOD back()                                INLINE  ::goBack()
+   METHOD forward()                             INLINE  ::goForward()
+   METHOD home()                                INLINE  ::goHome()
+   METHOD search()                              INLINE  ::goSearch()
+   METHOD isBusy()                              INLINE  ::busy()
 
-   VAR      sl_beforeNavigate                                                  PROTECTED
-   ACCESS   beforeNavigate                        INLINE ::sl_beforeNavigate
-   ASSIGN   beforeNavigate( bBlock )              INLINE ::sl_beforeNavigate := bBlock
+   VAR    sl_beforeNavigate                                                  PROTECTED
+   ACCESS beforeNavigate                        INLINE ::sl_beforeNavigate
+   ASSIGN beforeNavigate( bBlock )              INLINE ::sl_beforeNavigate := bBlock
 
-   VAR      sl_navigateComplete                                                PROTECTED
-   ACCESS   navigateComplete                      INLINE ::sl_navigateComplete
-   ASSIGN   navigateComplete( bBlock )            INLINE ::sl_navigateComplete := bBlock
+   VAR    sl_navigateComplete                                                PROTECTED
+   ACCESS navigateComplete                      INLINE ::sl_navigateComplete
+   ASSIGN navigateComplete( bBlock )            INLINE ::sl_navigateComplete := bBlock
 
-   VAR      sl_statusTextChange                                                PROTECTED
-   ACCESS   statusTextChange                      INLINE ::sl_statusTextChange
-   ASSIGN   statusTextChange( bBlock )            INLINE ::sl_statusTextChange := bBlock
+   VAR    sl_statusTextChange                                                PROTECTED
+   ACCESS statusTextChange                      INLINE ::sl_statusTextChange
+   ASSIGN statusTextChange( bBlock )            INLINE ::sl_statusTextChange := bBlock
 
-   VAR      sl_progressChange                                                  PROTECTED
-   ACCESS   progressChange                        INLINE ::sl_progressChange
-   ASSIGN   progressChange( bBlock )              INLINE ::sl_progressChange := bBlock
+   VAR    sl_progressChange                                                  PROTECTED
+   ACCESS progressChange                        INLINE ::sl_progressChange
+   ASSIGN progressChange( bBlock )              INLINE ::sl_progressChange := bBlock
 
-   VAR      sl_titleChange                                                     PROTECTED
-   ACCESS   titleChange                           INLINE ::sl_titleChange
-   ASSIGN   titleChange( bBlock )                 INLINE ::sl_titleChange := bBlock
+   VAR    sl_titleChange                                                     PROTECTED
+   ACCESS titleChange                           INLINE ::sl_titleChange
+   ASSIGN titleChange( bBlock )                 INLINE ::sl_titleChange := bBlock
 
-   VAR      sl_documentComplete                                                PROTECTED
-   ACCESS   documentComplete                      INLINE ::sl_documentComplete
-   ASSIGN   documentComplete( bBlock )            INLINE ::sl_documentComplete := bBlock
+   VAR    sl_documentComplete                                                PROTECTED
+   ACCESS documentComplete                      INLINE ::sl_documentComplete
+   ASSIGN documentComplete( bBlock )            INLINE ::sl_documentComplete := bBlock
 
-   VAR      CLSID                                 INIT   "Shell.Explorer"      PROTECTED
+   VAR    CLSID                                 INIT   "Shell.Explorer"      PROTECTED
 
 ENDCLASS
 

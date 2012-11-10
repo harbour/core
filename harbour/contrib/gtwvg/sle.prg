@@ -70,46 +70,46 @@
 
 CREATE CLASS WvgSLE INHERIT WvgWindow, WvgDataRef
 
-   VAR      align                                 INIT WVGSLE_LEFT
-   VAR      autoKeyboard                          INIT .T.
-   VAR      autoSize                              INIT .F.
-   VAR      autoTab                               INIT .F.
-   VAR      border                                INIT .T.
-   VAR      bufferLength                          INIT 32
-   VAR      editable                              INIT .T.
-   VAR      unReadable                            INIT .F.
+   VAR    align                                 INIT WVGSLE_LEFT
+   VAR    autoKeyboard                          INIT .T.
+   VAR    autoSize                              INIT .F.
+   VAR    autoTab                               INIT .F.
+   VAR    border                                INIT .T.
+   VAR    bufferLength                          INIT 32
+   VAR    editable                              INIT .T.
+   VAR    unReadable                            INIT .F.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
-   METHOD   destroy()
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
+   METHOD destroy()
+   METHOD handleEvent( nMessage, aNM )
 
-   METHOD   clear()
-   METHOD   copyMarked()
-   METHOD   cutMarked()
-   METHOD   delMarked()                           VIRTUAL
-   METHOD   editBuffer()                          VIRTUAL
-   METHOD   pasteMarked()                         VIRTUAL
-   METHOD   queryFirstChar()                      VIRTUAL
-   METHOD   queryMarked()                         VIRTUAL
-   METHOD   setFirstChar()                        VIRTUAL
-   METHOD   setMarked()                           VIRTUAL
+   METHOD clear()
+   METHOD copyMarked()
+   METHOD cutMarked()
+   METHOD delMarked()                           VIRTUAL
+   METHOD editBuffer()                          VIRTUAL
+   METHOD pasteMarked()                         VIRTUAL
+   METHOD queryFirstChar()                      VIRTUAL
+   METHOD queryMarked()                         VIRTUAL
+   METHOD setFirstChar()                        VIRTUAL
+   METHOD setMarked()                           VIRTUAL
 
-   METHOD   setInsertMode( lInsertMode )          VIRTUAL
+   METHOD setInsertMode( lInsertMode )          VIRTUAL
 
-   VAR      sl_hScroll
-   ACCESS   hScroll                               INLINE  ::sl_hScroll
-   ASSIGN   hScroll( bBlock )                     INLINE  ::sl_hScroll := bBlock
+   VAR    sl_hScroll
+   ACCESS hScroll                               INLINE ::sl_hScroll
+   ASSIGN hScroll( bBlock )                     INLINE ::sl_hScroll := bBlock
 
-   VAR      sl_typeOut
-   ACCESS   typeOut                               INLINE  ::sl_typeOut
-   ASSIGN   typeOut( bBlock )                     INLINE  ::sl_typeOut := bBlock
+   VAR    sl_typeOut
+   ACCESS typeOut                               INLINE ::sl_typeOut
+   ASSIGN typeOut( bBlock )                     INLINE ::sl_typeOut := bBlock
 
-   METHOD   changed( lChanged )                   SETGET
+   METHOD changed( lChanged )                   SETGET
 
-   VAR      sl_returnPressed
-   METHOD   returnPressed( ... )                  SETGET
+   VAR    sl_returnPressed
+   METHOD returnPressed( ... )                  SETGET
 
 ENDCLASS
 

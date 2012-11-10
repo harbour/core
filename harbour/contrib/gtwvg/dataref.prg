@@ -70,26 +70,26 @@
 
 CREATE CLASS WvgDataRef
 
-   VAR      changed                               INIT .F.
-   VAR      dataLink                              INIT NIL
-   VAR      lastValid                             INIT .T.
-   VAR      sl_undo                               INIT NIL
-   VAR      undoBuffer                            INIT NIL
-   VAR      sl_validate                           INIT NIL
+   VAR    changed                               INIT .F.
+   VAR    dataLink                              INIT NIL
+   VAR    lastValid                             INIT .T.
+   VAR    sl_undo                               INIT NIL
+   VAR    undoBuffer                            INIT NIL
+   VAR    sl_validate                           INIT NIL
 
-   METHOD   new()
+   METHOD new()
 
-   VAR      sl_editBuffer
-   VAR      sl_buffer
+   VAR    sl_editBuffer
+   VAR    sl_buffer
 
-   ACCESS   editBuffer                             INLINE ::sl_editBuffer
-   ASSIGN   editBuffer( xData )                    INLINE ::sl_editBuffer := xData
+   ACCESS editBuffer                             INLINE ::sl_editBuffer
+   ASSIGN editBuffer( xData )                    INLINE ::sl_editBuffer := xData
 
-   METHOD   getData()
-   METHOD   setData( xValue, mp2 )
-   METHOD   undo()
+   METHOD getData()
+   METHOD setData( xValue, mp2 )
+   METHOD undo()
 
-   METHOD   validate( xParam )                     SETGET
+   METHOD validate( xParam )                     SETGET
 
 ENDCLASS
 

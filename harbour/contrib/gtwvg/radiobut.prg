@@ -70,21 +70,21 @@
 
 CREATE CLASS WvgRadioButton  INHERIT  WvgWindow, WvgDataRef
 
-   VAR      autosize                              INIT .F.
-   VAR      caption                               INIT ""
-   VAR      pointerFocus                          INIT .T.
-   VAR      selection                             INIT .F.
+   VAR    autosize                              INIT .F.
+   VAR    caption                               INIT ""
+   VAR    pointerFocus                          INIT .T.
+   VAR    selection                             INIT .F.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
+   METHOD handleEvent( nMessage, aNM )
 
-   METHOD   setCaption( xCaption )
+   METHOD setCaption( xCaption )
 
-   ACCESS   selected                              INLINE ::sl_lbClick
-   ASSIGN   selected( bBlock )                    INLINE ::sl_lbClick := bBlock
+   ACCESS selected                              INLINE ::sl_lbClick
+   ASSIGN selected( bBlock )                    INLINE ::sl_lbClick := bBlock
 
 ENDCLASS
 

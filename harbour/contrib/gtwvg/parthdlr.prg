@@ -70,36 +70,36 @@
 
 CREATE CLASS WvgPartHandler
 
-   VAR      cargo
+   VAR    cargo
 
-   METHOD   new( oParent, oOwner )
-   METHOD   create( oParent, oOwner )
-   METHOD   configure( oParent, oOwner )
-   METHOD   destroy()
-   METHOD   handleEvent( hEvent, mp1, mp2 )
-   METHOD   status()
+   METHOD new( oParent, oOwner )
+   METHOD create( oParent, oOwner )
+   METHOD configure( oParent, oOwner )
+   METHOD destroy()
+   METHOD handleEvent( hEvent, mp1, mp2 )
+   METHOD status()
 
-   METHOD   removeChild( oChild )
-   METHOD   addChild( oWvg )
-   METHOD   childFromName( nNameId )
-   METHOD   childList()
-   METHOD   delChild( oWvg )
-   METHOD   setName( nNameId )
-   METHOD   setOwner( oWvg )
-   METHOD   setParent( oWvg )
+   METHOD removeChild( oChild )
+   METHOD addChild( oWvg )
+   METHOD childFromName( nNameId )
+   METHOD childList()
+   METHOD delChild( oWvg )
+   METHOD setName( nNameId )
+   METHOD setOwner( oWvg )
+   METHOD setParent( oWvg )
 
-   METHOD   notifier( nEvent, xParams )
-   METHOD   controlWndProc( hWnd, nMessage, nwParam, nlParam )
+   METHOD notifier( nEvent, xParams )
+   METHOD controlWndProc( hWnd, nMessage, nwParam, nlParam )
 
-   VAR      aChildren                             INIT    {}
-   VAR      nNameId
-   VAR      oParent
-   VAR      oOwner
-   VAR      nStatus                               INIT    0
+   VAR    aChildren                             INIT    {}
+   VAR    nNameId
+   VAR    oParent
+   VAR    oOwner
+   VAR    nStatus                               INIT    0
 
    /* Application Level Notifier */
-   VAR      sb_notifier
-   METHOD   notifierBlock( ... )                  SETGET
+   VAR    sb_notifier
+   METHOD notifierBlock( ... )                  SETGET
 
 ENDCLASS
 

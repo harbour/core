@@ -70,24 +70,24 @@
 
 CREATE CLASS WvgDialog FROM WvgWindow
 
-   VAR      oMenu
-   VAR      aRect
-   VAR      drawingArea
-   VAR      tasklist                              INIT  .T.
+   VAR    oMenu
+   VAR    aRect
+   VAR    drawingArea
+   VAR    tasklist                              INIT  .T.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
-   METHOD   setFrameState( nState )
-   METHOD   getFrameState()
-   METHOD   menuBar()
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
+   METHOD setFrameState( nState )
+   METHOD getFrameState()
+   METHOD menuBar()
 
-   METHOD   showModal()                           INLINE NIL
-   METHOD   setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
-   METHOD   getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
-   METHOD   calcClientRect()                      INLINE ::aRect := Wvg_GetClientRect( ::hWnd ), { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
-   METHOD   calcFrameRect()                       INLINE ::aRect := Wvg_GetWindowRect( ::hWnd ), { ::aRect[ 1 ], ::aRect[ 2 ], ::aRect[ 3 ] - ::aRect[ 1 ], ::aRect[ 4 ] - ::aRect[ 2 ] }
+   METHOD showModal()                           INLINE NIL
+   METHOD setTitle( cTitle )                    INLINE ::title := cTitle, hb_gtInfo( HB_GTI_WINTITLE, cTitle )
+   METHOD getTitle()                            INLINE hb_gtInfo( HB_GTI_WINTITLE )
+   METHOD calcClientRect()                      INLINE ::aRect := Wvg_GetClientRect( ::hWnd ), { 0, 0, ::aRect[ 3 ], ::aRect[ 4 ] }
+   METHOD calcFrameRect()                       INLINE ::aRect := Wvg_GetWindowRect( ::hWnd ), { ::aRect[ 1 ], ::aRect[ 2 ], ::aRect[ 3 ] - ::aRect[ 1 ], ::aRect[ 4 ] - ::aRect[ 2 ] }
 
 ENDCLASS
 

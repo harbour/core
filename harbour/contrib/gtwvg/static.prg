@@ -70,22 +70,22 @@
 
 CREATE CLASS WvgStatic  INHERIT  WvgWindow
 
-   VAR      autoSize                              INIT .F.
-   VAR      caption                               INIT ""
-   VAR      clipParent                            INIT .T.
-   VAR      clipSiblings                          INIT .F.
-   VAR      options                               INIT - 1 /* WVGSTATIC_TEXT_LEFT */
-   VAR      TYPE                                  INIT - 1 /* WVGSTATIC_TYPE_TEXT */
+   VAR    autoSize                              INIT .F.
+   VAR    caption                               INIT ""
+   VAR    clipParent                            INIT .T.
+   VAR    clipSiblings                          INIT .F.
+   VAR    options                               INIT -1 /* WVGSTATIC_TEXT_LEFT */
+   VAR    TYPE                                  INIT -1 /* WVGSTATIC_TYPE_TEXT */
 
-   VAR      hBitmap
+   VAR    hBitmap
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
+   METHOD handleEvent( nMessage, aNM )
 
-   METHOD   setCaption( xCaption, cDll )
+   METHOD setCaption( xCaption, cDll )
 
 ENDCLASS
 

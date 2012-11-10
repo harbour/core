@@ -70,26 +70,26 @@
 
 CREATE CLASS WvgScrollBar  INHERIT  WvgWindow, WvgDataRef
 
-   VAR      autoTrack                             INIT .T.
-   VAR      RANGE                                 INIT { 0, 1 }
-   VAR      scrollBoxSize                         INIT - 1
-   VAR      TYPE                                  INIT WVGSCROLL_HORIZONTAL
-   VAR      excludeScrollBox                      INIT .F.
+   VAR    autoTrack                             INIT .T.
+   VAR    range                                 INIT { 0, 1 }
+   VAR    scrollBoxSize                         INIT -1
+   VAR    type                                  INIT WVGSCROLL_HORIZONTAL
+   VAR    excludeScrollBox                      INIT .F.
 
-   VAR      sl_xbeSB_Scroll
+   VAR    sl_xbeSB_Scroll
 
-   VAR      lTracking                             INIT .F.
+   VAR    lTracking                             INIT .F.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
-   METHOD   destroy()
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )  VIRTUAL
+   METHOD destroy()
+   METHOD handleEvent( nMessage, aNM )
 
-   METHOD   Scroll( xParam )                      SETGET
+   METHOD Scroll( xParam )                      SETGET
 
-   METHOD   setRange( aRange )
-   METHOD   setScrollBoxSize( nUnits )
+   METHOD setRange( aRange )
+   METHOD setScrollBoxSize( nUnits )
 
 ENDCLASS
 

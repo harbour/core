@@ -70,64 +70,64 @@
 
 CREATE CLASS WvgListBox  INHERIT  WvgWindow, WvgDataRef
 
-   VAR      adjustHeight                          INIT .F.
-   VAR      horizScroll                           INIT .F.
-   VAR      markMode                              INIT WVGLISTBOX_MM_SINGLE
-   VAR      multiColumn                           INIT .F.
-   VAR      vertScroll                            INIT .T.
-   VAR      drawMode                              INIT WVG_DRAW_NORMAL
+   VAR    adjustHeight                          INIT .F.
+   VAR    horizScroll                           INIT .F.
+   VAR    markMode                              INIT WVGLISTBOX_MM_SINGLE
+   VAR    multiColumn                           INIT .F.
+   VAR    vertScroll                            INIT .T.
+   VAR    drawMode                              INIT WVG_DRAW_NORMAL
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
 
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD handleEvent( nMessage, aNM )
 
-   METHOD   getItemHeight()                       INLINE  ::sendMessage( LB_GETITEMHEIGHT, 0, 0 )
-   METHOD   getTopItem()                          INLINE  ::sendMessage( LB_GETTOPINDEX, 0, 0 )
-   METHOD   getVisibleItems()                     VIRTUAL
-   METHOD   numItems()                            INLINE  ::sendMessage( LB_GETCOUNT, 0, 0 )
-   METHOD   setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
-   METHOD   setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex - 1, 0 )
+   METHOD getItemHeight()                       INLINE  ::sendMessage( LB_GETITEMHEIGHT, 0, 0 )
+   METHOD getTopItem()                          INLINE  ::sendMessage( LB_GETTOPINDEX, 0, 0 )
+   METHOD getVisibleItems()                     VIRTUAL
+   METHOD numItems()                            INLINE  ::sendMessage( LB_GETCOUNT, 0, 0 )
+   METHOD setItemsHeight( nPixel )              INLINE  ::sendMessage( LB_SETITEMHEIGHT, 0, nPixel )
+   METHOD setTopItem( nIndex )                  INLINE  ::sendMessage( LB_SETTOPINDEX, nIndex - 1, 0 )
 
-   METHOD   addItem( cItem )                      INLINE  Wvg_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
-   METHOD   clear()
-   METHOD   delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex - 1, 0 )
-   METHOD   getItem( nIndex )                     INLINE  Wvg_LBGetText( ::hWnd, nIndex - 1 )
-   METHOD   getTabstops()                         VIRTUAL
-   METHOD   insItem( nIndex, cItem )              INLINE  Wvg_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
-   METHOD   setColumnWidth()                      VIRTUAL
-   METHOD   setItem( nIndex, cItem )              INLINE  ::delItem( nIndex ), ::insItem( nIndex, cItem )
-   METHOD   setTabstops()                         VIRTUAL
+   METHOD addItem( cItem )                      INLINE  Wvg_SendMessageText( ::hWnd, LB_ADDSTRING, 0, cItem )
+   METHOD clear()
+   METHOD delItem( nIndex )                     INLINE  ::sendMessage( LB_DELETESTRING, nIndex - 1, 0 )
+   METHOD getItem( nIndex )                     INLINE  Wvg_LBGetText( ::hWnd, nIndex - 1 )
+   METHOD getTabstops()                         VIRTUAL
+   METHOD insItem( nIndex, cItem )              INLINE  Wvg_SendMessageText( ::hWnd, LB_INSERTSTRING, nIndex - 1, cItem )
+   METHOD setColumnWidth()                      VIRTUAL
+   METHOD setItem( nIndex, cItem )              INLINE  ::delItem( nIndex ), ::insItem( nIndex, cItem )
+   METHOD setTabstops()                         VIRTUAL
 
 
-   VAR      sl_hScroll
-   ACCESS   hScroll                               INLINE ::sl_hScroll
-   ASSIGN   hScroll( bBlock )                     INLINE ::sl_hScroll := bBlock
+   VAR    sl_hScroll
+   ACCESS hScroll                               INLINE ::sl_hScroll
+   ASSIGN hScroll( bBlock )                     INLINE ::sl_hScroll := bBlock
 
-   VAR      sl_vScroll
-   ACCESS   vScroll                               INLINE ::sl_vScroll
-   ASSIGN   vScroll( bBlock )                     INLINE ::sl_vScroll := bBlock
+   VAR    sl_vScroll
+   ACCESS vScroll                               INLINE ::sl_vScroll
+   ASSIGN vScroll( bBlock )                     INLINE ::sl_vScroll := bBlock
 
-   VAR      sl_itemMarked
-   ACCESS   itemMarked                            INLINE ::sl_itemMarked
-   ASSIGN   itemMarked( bBlock )                  INLINE ::sl_itemMarked := bBlock
+   VAR    sl_itemMarked
+   ACCESS itemMarked                            INLINE ::sl_itemMarked
+   ASSIGN itemMarked( bBlock )                  INLINE ::sl_itemMarked := bBlock
 
-   VAR      sl_itemSelected
-   ACCESS   itemSelected                          INLINE ::sl_itemSelected
-   ASSIGN   itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
+   VAR    sl_itemSelected
+   ACCESS itemSelected                          INLINE ::sl_itemSelected
+   ASSIGN itemSelected( bBlock )                INLINE ::sl_itemSelected := bBlock
 
-   VAR      sl_drawItem
-   ACCESS   drawItem                              INLINE ::sl_drawItem
-   ASSIGN   drawItem( bBlock )                    INLINE ::sl_drawItem := bBlock
+   VAR    sl_drawItem
+   ACCESS drawItem                              INLINE ::sl_drawItem
+   ASSIGN drawItem( bBlock )                    INLINE ::sl_drawItem := bBlock
 
-   VAR      sl_measureItem
-   ACCESS   measureItem                           INLINE ::sl_measureItem
-   ASSIGN   measureItem( bBlock )                 INLINE ::sl_measureItem := bBlock
+   VAR    sl_measureItem
+   ACCESS measureItem                           INLINE ::sl_measureItem
+   ASSIGN measureItem( bBlock )                 INLINE ::sl_measureItem := bBlock
 
-   VAR      nCurSelected                          INIT 0
-   METHOD   getCurItem()                          INLINE ::getItem( ::nCurSelected )
+   VAR    nCurSelected                          INIT 0
+   METHOD getCurItem()                          INLINE ::getItem( ::nCurSelected )
 
 ENDCLASS
 

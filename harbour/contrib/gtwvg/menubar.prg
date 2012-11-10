@@ -70,62 +70,63 @@
 
 CREATE CLASS WvgMenuBar INHERIT wvgWindow
 
-   VAR      hMenu
-   VAR      pMenu
+   CLASS VAR nMenuItemID                         INIT 0
+
+   VAR    hMenu
+   VAR    pMenu
 
    /* Event CallBack Slots */
-   VAR      sl_beginMenu
-   VAR      sl_endMenu
-   VAR      sl_itemMarked
-   VAR      sl_itemSelected
-   VAR      sl_drawItem
-   VAR      sl_measureItem
-   VAR      sl_onMenuKey
+   VAR    sl_beginMenu
+   VAR    sl_endMenu
+   VAR    sl_itemMarked
+   VAR    sl_itemSelected
+   VAR    sl_drawItem
+   VAR    sl_measureItem
+   VAR    sl_onMenuKey
 
-   VAR      aMenuItems                             INIT {}
+   VAR    aMenuItems                             INIT {}
 
-   CLASS VAR nMenuItemID                           INIT 0
-   VAR      nPass                                  INIT 0
+   VAR    nPass                                  INIT 0
 
-   VAR      caption                                INIT ""
-   VAR      nItemID                                INIT 0
-   VAR      aIds                                   INIT {}
+   VAR    caption                                INIT ""
+   VAR    nItemID                                INIT 0
+   VAR    aIds                                   INIT {}
 
-   VAR      className                              INIT "MENUBAR"
+   VAR    className                              INIT "MENUBAR"
 
-   METHOD   numItems()                             INLINE Len( ::aMenuItems )
+   METHOD numItems()                             INLINE Len( ::aMenuItems )
 
-   METHOD   new( oParent, aPresParams, lVisible )
-   METHOD   create( oParent, aPresParams, lVisible )
-   METHOD   configure( oParent, aPresParams, lVisible )
-   METHOD   destroy()
-   METHOD   delAllItems()
-   METHOD   delItem( nItemNum )
-   METHOD   addItem( aItem, p2, p3, p4 )
-   METHOD   findMenuItemById( nId )
-   METHOD   findMenuPosById( nId )
-   METHOD   checkItem( nItemNum, lCheck )
-   METHOD   enableItem( nItemNum )
-   METHOD   disableItem( nItemNum )
+   METHOD new( oParent, aPresParams, lVisible )
+   METHOD create( oParent, aPresParams, lVisible )
+   METHOD configure( oParent, aPresParams, lVisible )
+   METHOD destroy()
+   METHOD delAllItems()
+   METHOD delItem( nItemNum )
+   METHOD addItem( aItem, p2, p3, p4 )
+   METHOD findMenuItemById( nId )
+   METHOD findMenuPosById( nId )
+   METHOD checkItem( nItemNum, lCheck )
+   METHOD enableItem( nItemNum )
+   METHOD disableItem( nItemNum )
 
-   METHOD   getItem( nItemNum )
-   METHOD   insItem( nItemNum, aItem )
-   METHOD   isItemChecked( nItemNum )
-   METHOD   isItemEnabled( nItemNum )
-   METHOD   selectItem( nItemNum )
-   METHOD   setItem( nItemNum, aItem )
+   METHOD getItem( nItemNum )
+   METHOD insItem( nItemNum, aItem )
+   METHOD isItemChecked( nItemNum )
+   METHOD isItemEnabled( nItemNum )
+   METHOD selectItem( nItemNum )
+   METHOD setItem( nItemNum, aItem )
 
    /* Event Callback Methods */
-   METHOD   beginMenu( xParam )                   SETGET
-   METHOD   endMenu( xParam )                     SETGET
-   METHOD   itemMarked( xParam )                  SETGET
-   METHOD   itemSelected( xParam )                SETGET
-   METHOD   drawItem( xParam )                    SETGET
-   METHOD   measureItem( xParam )                 SETGET
-   METHOD   onMenuKey( xParam )                   SETGET
+   METHOD beginMenu( xParam )                   SETGET
+   METHOD endMenu( xParam )                     SETGET
+   METHOD itemMarked( xParam )                  SETGET
+   METHOD itemSelected( xParam )                SETGET
+   METHOD drawItem( xParam )                    SETGET
+   METHOD measureItem( xParam )                 SETGET
+   METHOD onMenuKey( xParam )                   SETGET
 
    PROTECTED:
-   METHOD   putItem( aItem, nPos, lInsert )
+   METHOD putItem( aItem, nPos, lInsert )
 
 ENDCLASS
 
@@ -520,14 +521,14 @@ METHOD WvgMenuBar:onMenuKey( xParam )
  */
 CREATE CLASS WvgMenu INHERIT WvgMenuBar
 
-   VAR      title                                 INIT  ""
+   VAR    title                                 INIT  ""
 
-   METHOD   new( oParent, aPresParams, lVisible )
-   METHOD   create( oParent, aPresParams, lVisible )
+   METHOD new( oParent, aPresParams, lVisible )
+   METHOD create( oParent, aPresParams, lVisible )
 
-   METHOD   getTitle()
-   METHOD   setTitle( cTitle )
-   METHOD   Popup( oXbp, aPos, nDefaultItem, nControl )
+   METHOD getTitle()
+   METHOD setTitle( cTitle )
+   METHOD Popup( oXbp, aPos, nDefaultItem, nControl )
 
 ENDCLASS
 

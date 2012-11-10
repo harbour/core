@@ -70,14 +70,14 @@
 
 CREATE CLASS WvgDrawingArea  INHERIT  WvgWindow
 
-   VAR      caption                               INIT ""
-   VAR      clipParent                            INIT .T.
-   VAR      clipSiblings                          INIT .T.
+   VAR    caption                               INIT ""
+   VAR    clipParent                            INIT .T.
+   VAR    clipSiblings                          INIT .T.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
+   METHOD handleEvent( nMessage, aNM )
 
 ENDCLASS
 

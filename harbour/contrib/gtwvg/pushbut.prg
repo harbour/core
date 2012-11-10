@@ -70,27 +70,27 @@
 
 CREATE CLASS WvgPushButton  INHERIT  WvgWindow
 
-   VAR      autosize                              INIT .F.
-   VAR      border                                INIT .T.
-   VAR      caption                               INIT NIL
-   VAR      pointerFocus                          INIT .T.
-   VAR      preSelect                             INIT .F.
-   VAR      drawMode                              INIT WVG_DRAW_NORMAL
-   VAR      DEFAULT                               INIT .F.
-   VAR      cancel                                INIT .F.
+   VAR    autosize                              INIT .F.
+   VAR    border                                INIT .T.
+   VAR    caption                               INIT NIL
+   VAR    pointerFocus                          INIT .T.
+   VAR    preSelect                             INIT .F.
+   VAR    drawMode                              INIT WVG_DRAW_NORMAL
+   VAR    default                               INIT .F.
+   VAR    cancel                                INIT .F.
 
-   METHOD   new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
-   METHOD   destroy()
-   METHOD   handleEvent( nMessage, aNM )
+   METHOD new( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD configure( oParent, oOwner, aPos, aSize, aPresParams, lVisible )
+   METHOD destroy()
+   METHOD handleEvent( nMessage, aNM )
 
-   METHOD   setCaption( xCaption, cDll )
-   METHOD   activate( xParam )                    SETGET
-   METHOD   draw( xParam )                        SETGET
+   METHOD setCaption( xCaption, cDll )
+   METHOD activate( xParam )                    SETGET
+   METHOD draw( xParam )                        SETGET
 
-   METHOD   setColorFG()                          INLINE NIL
-   METHOD   setColorBG()                          INLINE NIL
+   METHOD setColorFG()                          INLINE NIL
+   METHOD setColorBG()                          INLINE NIL
 
 ENDCLASS
 

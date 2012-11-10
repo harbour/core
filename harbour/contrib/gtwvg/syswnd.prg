@@ -70,38 +70,38 @@
 
 CREATE CLASS WvgSysWindow INHERIT WvgPartHandler
 
-   METHOD   new( oParent, oOwner, aPos )
-   METHOD   create( oParent, oOwner, aPos )
-   METHOD   configure()
-   METHOD   destroy()
+   METHOD new( oParent, oOwner, aPos )
+   METHOD create( oParent, oOwner, aPos )
+   METHOD configure()
+   METHOD destroy()
 
-   METHOD   disable()
-   METHOD   enable()
-   METHOD   hide()
-   METHOD   show()
-   METHOD   SetPos( aPos )
+   METHOD disable()
+   METHOD enable()
+   METHOD hide()
+   METHOD show()
+   METHOD SetPos( aPos )
 
-   METHOD   currentPos()
-   METHOD   currentSize()
+   METHOD currentPos()
+   METHOD currentSize()
 
-   VAR      aPos                                  INIT    { 0, 0 }
+   VAR    aPos                                  INIT    { 0, 0 }
 
-   VAR      hWnd                                  PROTECTED
-   VAR      nOldProc                              PROTECTED
-   VAR      nWndProc                              PROTECTED
+   VAR    hWnd                                  PROTECTED
+   VAR    nOldProc                              PROTECTED
+   VAR    nWndProc                              PROTECTED
 
 
-   VAR      sl_helpRequest
-   ACCESS   helpRequest                           INLINE  ::sl_helpRequest
-   ASSIGN   helpRequest( bBlock )                 INLINE  ::sl_helpRequest := bBlock
+   VAR    sl_helpRequest
+   ACCESS helpRequest                           INLINE  ::sl_helpRequest
+   ASSIGN helpRequest( bBlock )                 INLINE  ::sl_helpRequest := bBlock
 
-   VAR      sl_move
-   ACCESS   move                                  INLINE  ::sl_move
-   ASSIGN   move( bBlock )                        INLINE  ::sl_move := bBlock
+   VAR    sl_move
+   ACCESS move                                  INLINE  ::sl_move
+   ASSIGN move( bBlock )                        INLINE  ::sl_move := bBlock
 
-   VAR      sl_quit
-   ACCESS   QUIT                                  INLINE  ::sl_quit
-   ASSIGN   quit( bBlock )                        INLINE  ::sl_quit := bBlock
+   VAR    sl_quit
+   ACCESS quit                                  INLINE  ::sl_quit
+   ASSIGN quit( bBlock )                        INLINE  ::sl_quit := bBlock
 
 ENDCLASS
 
@@ -185,73 +185,73 @@ METHOD WvgSysWindow:currentSize()
 CREATE CLASS WvgFontDialog INHERIT WvgSysWindow
 
    /* Appearance */
-   VAR      title                                 INIT   ""
-   VAR      buttonApply                           INIT   .F.
-   VAR      buttonCancel                          INIT   .T.
-   VAR      buttonHelp                            INIT   .F.
-   VAR      buttonOk                              INIT   .T.
-   VAR      buttonReset                           INIT   .F.
-   VAR      strikeOut                             INIT   .T.
-   VAR      underscore                            INIT   .T.
+   VAR    title                                 INIT   ""
+   VAR    buttonApply                           INIT   .F.
+   VAR    buttonCancel                          INIT   .T.
+   VAR    buttonHelp                            INIT   .F.
+   VAR    buttonOk                              INIT   .T.
+   VAR    buttonReset                           INIT   .F.
+   VAR    strikeOut                             INIT   .T.
+   VAR    underscore                            INIT   .T.
 
-   VAR      name                                  INIT   .T.
-   VAR      style                                 INIT   .T.
-   VAR      size                                  INIT   .T.
+   VAR    name                                  INIT   .T.
+   VAR    style                                 INIT   .T.
+   VAR    size                                  INIT   .T.
 
-   VAR      displayFilter                         INIT   .T.
-   VAR      printerFilter                         INIT   .T.
+   VAR    displayFilter                         INIT   .T.
+   VAR    printerFilter                         INIT   .T.
 
-   VAR      familyName                            INIT   " "
-   VAR      nominalPointSize                      INIT   0
+   VAR    familyName                            INIT   " "
+   VAR    nominalPointSize                      INIT   0
 
-   VAR      bitmapOnly                            INIT   .F.
-   VAR      fixedOnly                             INIT   .F.
-   VAR      proportionalOnly                      INIT   .T.
+   VAR    bitmapOnly                            INIT   .F.
+   VAR    fixedOnly                             INIT   .F.
+   VAR    proportionalOnly                      INIT   .T.
 
 
-   VAR      outLine                               INIT   .T.
-   VAR      previewBGClr                          INIT   RGB( 255, 255, 255 )
-   VAR      previewFGClr                          INIT   RGB( 0, 0, 0 )
-   VAR      previewString                         INIT   " "
-   VAR      printerPS                             INIT   NIL
-   VAR      screenPS                              INIT   NIL
+   VAR    outLine                               INIT   .T.
+   VAR    previewBGClr                          INIT   RGB( 255, 255, 255 )
+   VAR    previewFGClr                          INIT   RGB( 0, 0, 0 )
+   VAR    previewString                         INIT   " "
+   VAR    printerPS                             INIT   NIL
+   VAR    screenPS                              INIT   NIL
 
-   VAR      synthesizeFonts                       INIT   .T.
+   VAR    synthesizeFonts                       INIT   .T.
 
-   VAR      vectorOnly                            INIT   .F.
-   VAR      vectorSizes                           INIT   {}
+   VAR    vectorOnly                            INIT   .F.
+   VAR    vectorSizes                           INIT   {}
 
-   VAR      viewPrinterFonts                      INIT   .F.
-   VAR      viewScreenFonts                       INIT   .T.
+   VAR    viewPrinterFonts                      INIT   .F.
+   VAR    viewScreenFonts                       INIT   .T.
 
-   METHOD   new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
-   METHOD   create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
-   METHOD   destroy()
-   METHOD   display( nMode )
+   METHOD new( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
+   METHOD create( oParent, oOwner, oScreenPS, oPrinterPS, aPos )
+   METHOD destroy()
+   METHOD display( nMode )
 
-   VAR      sl_activateApply
-   ACCESS   activateApply                         INLINE ::sl_activateApply
-   ASSIGN   activateApply( bBlock )               INLINE ::sl_activateApply := bBlock
+   VAR    sl_activateApply
+   ACCESS activateApply                         INLINE ::sl_activateApply
+   ASSIGN activateApply( bBlock )               INLINE ::sl_activateApply := bBlock
 
-   VAR      sl_activateCancel
-   ACCESS   activateCancel                        INLINE ::sl_activateCancel
-   ASSIGN   activateCancel( bBlock )              INLINE ::sl_activateCancel := bBlock
+   VAR    sl_activateCancel
+   ACCESS activateCancel                        INLINE ::sl_activateCancel
+   ASSIGN activateCancel( bBlock )              INLINE ::sl_activateCancel := bBlock
 
-   VAR      sl_activateOk
-   ACCESS   activateOk                            INLINE ::sl_activateOk
-   ASSIGN   activateOk( bBlock )                  INLINE ::sl_activateOk := bBlock
+   VAR    sl_activateOk
+   ACCESS activateOk                            INLINE ::sl_activateOk
+   ASSIGN activateOk( bBlock )                  INLINE ::sl_activateOk := bBlock
 
-   VAR      sl_activateReset
-   ACCESS   activateReset                         INLINE ::sl_activateReset
-   ASSIGN   activateReset( bBlock )               INLINE ::sl_activateReset := bBlock
+   VAR    sl_activateReset
+   ACCESS activateReset                         INLINE ::sl_activateReset
+   ASSIGN activateReset( bBlock )               INLINE ::sl_activateReset := bBlock
 
-   VAR      oScreenPS
-   VAR      oPrinterPS
-   VAR      aPos                                  INIT   { 0, 0 }
-   VAR      ok                                    INIT   .F.
+   VAR    oScreenPS
+   VAR    oPrinterPS
+   VAR    aPos                                  INIT   { 0, 0 }
+   VAR    ok                                    INIT   .F.
 
-   METHOD   wndProc( hWnd, nMessage, nwParam, nlParam )
-   METHOD   GetWvgFont( aFont )                   PROTECTED
+   METHOD wndProc( hWnd, nMessage, nwParam, nlParam )
+   METHOD GetWvgFont( aFont )                   PROTECTED
 
 ENDCLASS
 
