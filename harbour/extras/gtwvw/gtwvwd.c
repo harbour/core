@@ -456,7 +456,10 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    s_iStdErr = hFilenoStderr;
 
    if( ! hb_winmainArgGet( &hInstance, &hPrevInstance, &iCmdShow ) )
-      hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
+   {
+      hInstance = GetModuleHandle( NULL );
+      iCmdShow = 1;
+   }
 
    s_iOldCurStyle = s_iCursorStyle = SC_NORMAL;
 

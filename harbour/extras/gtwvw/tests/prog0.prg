@@ -11,12 +11,9 @@
 
    Note that this Clipper program uses ZNEWWINDOW() and ZREVWINDOW() to
    open and close every pseudo-windows respectively.
-
-   Compiling and linking in Clipper:
-     clipper prog0 -m -n -w
-     blinker file prog0
 */
 
+#require "gtwvw"
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -27,6 +24,10 @@ STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
 PROCEDURE Main()
 
    LOCAL i, j
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
 
    SET SCOREBOARD OFF
    SetColor( s_cStdColor )

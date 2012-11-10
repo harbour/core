@@ -13,7 +13,8 @@
 
 hbvpdf.hbx
 
-hbvpdf.prg
-hbvpsup.prg
+core.prg
+fonts.prg
 
+$hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

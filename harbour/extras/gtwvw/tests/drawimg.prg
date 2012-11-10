@@ -27,10 +27,12 @@
       of the image.
 
    Remarks:
-   Image drawing and wvw_paint management are performed by WUTIL.PRG.
-   WUTIL.PRG is a simple "middle module" interfacing an application with
+   Image drawing and wvw_paint management are performed by wutil.prg.
+   wutil.prg is a simple "middle module" interfacing an application with
    gtwvw.
  */
+
+#require "gtwvw"
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -87,6 +89,10 @@ PROCEDURE Main()
       nMaxCache := wvw_SetMaxBMcache()
    LOCAL i, j, oWPaint
    LOCAL getlist := {}
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
 
    SetColor( "N/W,N/GR*,,,N/W*" )
    wvw_setcodepage( , 255 )

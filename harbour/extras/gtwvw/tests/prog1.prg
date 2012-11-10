@@ -24,15 +24,9 @@
 
    All changes are guarded by #ifdef, so this program is still compilable
    in Clipper resulting its original behaviour.
-
-   Compiling and linking in Clipper:
-     clipper prog1 -m -n -w
-     blinker file prog1
-
-   Compiling and linking in xHarbour:
-     requires GTWVW
 */
 
+#require "gtwvw"
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -52,6 +46,11 @@ PROCEDURE Main()
 
    WVW_SetCodePage( , 255 )
 #endif
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
+
    SET SCOREBOARD OFF
    SetColor( s_cStdColor )
    SetCursor( SC_NONE )

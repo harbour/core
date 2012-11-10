@@ -10381,6 +10381,9 @@ STATIC FUNCTION ValueIsF( cString )
 
 /* built-in files */
 
+STATIC FUNCTION hbmk_builtin_File_hb_pkg_dynlib()
+#pragma __streaminclude "pkg_dynl.hbm" | RETURN %s
+
 STATIC FUNCTION hbmk_builtin_File_hb_pkg_install()
 #pragma __streaminclude "pkg_inst.hbm" | RETURN %s
 
@@ -10391,6 +10394,7 @@ STATIC FUNCTION hbmk_builtin_File_hb_pkg_install()
 STATIC FUNCTION hbmk_builtin_List()
 
    STATIC s_hHBM_BuildIn := { ;
+      _HBMK_BUILDIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" => {|| hbmk_builtin_File_hb_pkg_dynlib() } , ;
       _HBMK_BUILDIN_FILENAME_MARKER_ + "hb_pkg_install.hbm" => {|| hbmk_builtin_File_hb_pkg_install() } }
 
    RETURN s_hHBM_BuildIn

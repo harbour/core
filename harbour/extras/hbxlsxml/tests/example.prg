@@ -52,6 +52,8 @@
  *
  */
 
+#require "hbxlsxml"
+
 PROCEDURE Main()
 
    LOCAL oXml, oSheet, xarquivo := "example.xml"
@@ -225,7 +227,7 @@ PROCEDURE Main()
          Date() - 50 - i, ;
          "5.102", ;
          StrZero( i, 5 ), ;
-         "NOME DO CLIENTE TESTE " + hb_ntos( i ) ), ;
+         "NOME DO CLIENTE TESTE " + hb_ntos( i ), ;
          "PR", ;
          i * 100, ;
          i * 100 * 0.90, ;

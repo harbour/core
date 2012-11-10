@@ -10,6 +10,8 @@
  *
  */
 
+#require "gtwvw"
+
 #include "inkey.ch"
 #include "setcurs.ch"
 
@@ -48,6 +50,10 @@ STATIC s_akeyhandlers[ _MAX_WINNUM ]
 PROCEDURE Main()
 
    LOCAL ch
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
 
    IF ! SetMode( 25, 80 )
       wvw_messagebox( 0, "Cannot set to (25,80) screen", "Warning", MB_OK + MB_ICONEXCLAMATION )

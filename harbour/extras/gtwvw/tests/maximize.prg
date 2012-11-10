@@ -7,6 +7,8 @@
    budyanto@centrin.net.id
  */
 
+#require "gtwvw"
+
 #include "inkey.ch"
 
 // this dimension will be used when user presses RESTORE button
@@ -18,6 +20,10 @@ STATIC s_lSizeReady := .F.
 PROCEDURE Main()
 
    LOCAL ch
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
 
    // activate WVW_SIZE()
    s_lSizeReady := .T.

@@ -12,6 +12,7 @@
    Compile: bldwvw cbtest1
 */
 
+#require "gtwvw"
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -34,6 +35,10 @@ PROCEDURE Main()
 
    LOCAL nMaxWidth, nCBid, nPBid, nPos
    LOCAL ch, ncursor
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
 
    SetColor( "N/W" )
    WVW_SetTitle( NIL, "Quick Survey" )

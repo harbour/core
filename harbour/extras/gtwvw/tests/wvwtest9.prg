@@ -24,10 +24,10 @@
 
 /*
    Compile/Link info:
-   This program requires WVWMOUSE.PRG.
    You may use 'hbmk2 wvwtest9.hbp' to build this program.
-
  */
+
+#require "gtwvw"
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -174,9 +174,14 @@ PROCEDURE Main()
    LOCAL oMouse
    LOCAL ch
 
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
+
    SET( _SET_EVENTMASK, INKEY_ALL )
 
    SET DATE ANSI
+   SET CENTURY ON
    SET SCOREBOARD OFF
    // wvw_SetPaintRefresh( 0 )
    wvw_SetVertCaret( .T. )
@@ -1297,3 +1302,5 @@ PROCEDURE pause()
    Inkey( 0 )
 
    RETURN
+
+SET PROCEDURE TO "_wvwmous.prg"

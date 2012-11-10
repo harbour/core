@@ -23,6 +23,8 @@
 
  */
 
+#require "gtwvw"
+
 #include "inkey.ch"
 #include "set.ch"
 #include "setcurs.ch"
@@ -60,8 +62,13 @@ PROCEDURE Main()
    LOCAL lClosepermitted := .F.
    LOCAL bSetKey := SetKey( K_F8, {|| MyHelp() } )
 
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
+
    SET CENTURY ON
    SET DATE ANSI
+   SET CENTURY ON
    SetMode( 4, 54 )   // a small window
    SetColor( "N/W" )
    Wvw_SetFont( 0, "Courier New", 16, - 7 )

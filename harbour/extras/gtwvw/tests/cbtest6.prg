@@ -14,6 +14,8 @@
    Compile: bldwvw cbtest6
 */
 
+#require "gtwvw"
+
 #include "getexit.ch"
 #include "inkey.ch"
 
@@ -57,6 +59,10 @@ PROCEDURE Main()
    LOCAL getlist := {}
    LOCAL mname := PadR( "Budyanto Dj.", 30 ), msex := "MALE", mage := 17, mstat := "married"
    LOCAL __nCBid__, __temp__  // these two are temporary var required by CB get creation
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
+#endif
 
    WVW_SetCodePage( NIL, 255 )
    WVW_SetLineSpacing( NIL, 4 )

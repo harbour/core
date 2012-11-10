@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbusb"
+
 #include "simpleio.ch"
 
 #include "hbusb.ch"

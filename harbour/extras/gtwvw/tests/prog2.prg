@@ -11,16 +11,9 @@
    pseudo-GUI objects onto each window, one by one.
 
    Notes: GTWVW now also has native Windows Controls. See other samples.
-
-   Compiling and linking in Clipper:
-     clipper prog2 -m -n -w
-     blinker file prog2
-
-   See also
-   Compiling and linking in xHarbour:
-     requires GTWVW
 */
 
+#require "gtwvw"
 
 #include "inkey.ch"
 #include "setcurs.ch"
@@ -46,6 +39,10 @@ PROCEDURE Main()
    WVW_SetFont( , "Lucida Console", 16, - 8 )
    WVW_SetCodePage( , 255 )
    WVW_SBcreate()
+#endif
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVW" )
 #endif
 
    SET SCOREBOARD OFF

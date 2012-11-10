@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbvpdf"
+
 #include "hbvpdf.ch"
 
 PROCEDURE Main()

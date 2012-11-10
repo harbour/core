@@ -23,4 +23,7 @@ hbusb.hbx
 
 core.c
 
+{hbdyn}hbusb.hbc
+
+$hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

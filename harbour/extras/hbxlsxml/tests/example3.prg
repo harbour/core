@@ -52,6 +52,8 @@
  *
  */
 
+#require "hbxlsxml"
+
 PROCEDURE Main()
 
    LOCAL xml, sheet1, format4
