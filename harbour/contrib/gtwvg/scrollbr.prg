@@ -305,8 +305,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgScrollBar
 
 METHOD destroy() CLASS WvgScrollBar
 
-   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
-
    ::wvgWindow:destroy()
 
    RETURN NIL

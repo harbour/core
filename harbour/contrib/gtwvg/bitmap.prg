@@ -68,10 +68,6 @@
 #include "wvtwin.ch"
 #include "wvgparts.ch"
 
-#ifndef __DBG_PARTS__
-#xtranslate hb_traceLog( [<x,...>] ) =>
-#endif
-
 CREATE CLASS WvgBitmap
 
    VAR    bits                                  INIT 0        READONLY

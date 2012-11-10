@@ -251,8 +251,6 @@ METHOD WvgMLE:handleEvent( nMessage, aNM )
 
 METHOD WvgMLE:destroy()
 
-   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
-
    ::wvgWindow:destroy()
 
    RETURN NIL

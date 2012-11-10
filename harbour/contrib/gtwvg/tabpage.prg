@@ -140,10 +140,7 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgTabPage
 
    LOCAL aHdr
 
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
-
    DO CASE
-
    CASE nMessage == HB_GTE_SETFOCUS
       IF HB_ISBLOCK( ::sl_tabActivate )
 

@@ -122,8 +122,6 @@ METHOD create( oParent, oOwner, aPos, aSize, aPresParams, lVisible ) CLASS WvgRa
 
 METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
 
-   hb_traceLog( "       %s:handleEvent( %i )", __objGetClsName( self ), nMessage )
-
    SWITCH nMessage
 
    CASE HB_GTE_COMMAND
@@ -142,8 +140,6 @@ METHOD handleEvent( nMessage, aNM ) CLASS WvgRadioButton
    RETURN 1
 
 METHOD destroy() CLASS WvgRadioButton
-
-   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
 
    ::wvgWindow:destroy()
 

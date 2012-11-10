@@ -136,8 +136,6 @@ METHOD WvgDrawingArea:handleEvent( nMessage, aNM )
 
 METHOD destroy() CLASS WvgDrawingArea
 
-   hb_traceLog( "          %s:destroy()", __objGetClsName( self ) )
-
    ::wvgWindow:destroy()
 
    RETURN NIL
