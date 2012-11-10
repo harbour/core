@@ -542,14 +542,14 @@ STATIC FUNCTION call_hbmk2( cProjectPath, cOptionsPre, cDynSuffix, cStdErr, cStd
 
    IF cDynSuffix != NIL
       hb_SetEnv( "_HB_DYNSUFF", cDynSuffix ) /* Request dll version of Harbour contrib dependencies (the implibs) to be linked (experimental) */
-      hb_SetEnv( "_HB_BUILD_LIBDYN", "yes" )
+
+      cOptionsPre += " -hbdyn"
 
       IF hb_FileExists( hb_FNameExtSet( cProjectPath, ".hbc" ) )
          cOptionsLibDyn += " " + hb_FNameExtSet( cProjectPath, ".hbc" )
       ENDIF
    ELSE
       hb_SetEnv( "_HB_DYNSUFF" )
-      hb_SetEnv( "_HB_BUILD_LIBDYN" )
    ENDIF
 
    hb_SetEnv( "_HB_CONTRIB_SUBDIR", hb_FNameDir( hb_DirSepToOS( cProjectPath ) ) )
