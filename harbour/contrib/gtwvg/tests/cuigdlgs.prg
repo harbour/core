@@ -6,19 +6,13 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-//
-
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-//
-//
 //                    Simplified Console with GUI Look
-//
-//
 
 PROCEDURE ExecGCUI()
 
@@ -31,8 +25,6 @@ PROCEDURE ExecGCUI()
    ENDIF
 
    RETURN
-
-//
 
 #xtranslate Alert( => MyAlert(
 
@@ -81,25 +73,24 @@ PROCEDURE GCUIConsole( oCrt )
       WHEN  {|| Wvg_SetGObjData( hTxt, 6, RGB( 0, 0, 0 ) ), .T. }
 
    // The only additional calls to render your console GUI
-   //
    // The GETLIST  : This can be embedded via  @ GET preprocessor command
    AEval( GetList, {| oGet | Wvg_BoxGet( oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } )
-   //
+
    hBoxR := Wvg_BoxRaised( 1, 2, 18, 49, { -5, -5, 5, 5 } )
-   //
+
    Wvg_BoxRecessed( 1, 2, 18, 49 )
-   //
+
    // Wvg_BoxGroup( 2, 4, 17, 47 )
-   //
+
    Wvg_BoxGroupRaised( 2, 4, 17, 47, { -7, -7, 7, 7 } )
-   //
+
    hTxt := Wvg_TextBox( 3, 57, 16, 75, { 10, 10, -10, -10 }, "This is first TextBox Line!", 2, 2 )
-   //
+
    Wvg_Image( 15, 36, 16, 42, { -3, -3, 3, 3 }, GOBJ_IMAGESOURCE_FILE, GetResource( "Vouch1.bmp" ) )
    Wvg_BoxRaised( 15, 36, 16, 42, { -2, -2, 2, 2 } )
-   //
+
    Wvg_ShadedRect( 1, 54, 18, 79, { -5, -5, 5, 5 }, 0, { 65000, 21000, 7000, 56000 }, { 255, 32255, 16000, 32500 } )
-   //
+
    Wvg_BoxRaised( 1, 54, 18, 79, { -5, -5, 5, 5 } )
 
    // Instruct GT to Repaint the Screen with GUI elements.
@@ -111,8 +102,6 @@ PROCEDURE GCUIConsole( oCrt )
    My_Alert( "How did you like the "Alert" replacement?", { "WOW", "OK", "OOps" } )
 
    RETURN
-
-//
 
 STATIC FUNCTION FetchText( nMode )
 
@@ -133,5 +122,3 @@ STATIC FUNCTION FetchText( nMode )
    ENDCASE
 
    RETURN cText
-
-//

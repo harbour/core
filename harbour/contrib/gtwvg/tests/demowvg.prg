@@ -2,10 +2,6 @@
  * $Id$
  */
 
-//
-//
-//
-//
 //                   GTWVT Console GUI Interface
 //
 //               Pritpal Bedi <pritpal@vouchcac.com>
@@ -21,9 +17,6 @@
 //            you all will cooperate to enhance it further.
 //
 //           Thanks Peter Rees! You have laid the foundation!
-//
-//
-//
 
 #include "inkey.ch"
 #include "wvtwin.ch"
@@ -31,12 +24,8 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-//
-
 REQUEST DbfCdx
 REQUEST DbfNtx
-
-//
 
 #define IMAGE_VOUCH                hb_dirBase() + "vouch1.bmp"
 #define IMAGE_BROWSE               hb_dirBase() + "v_browse.ico"
@@ -47,25 +36,17 @@ REQUEST DbfNtx
 
 #define OBJ_TYPE_BUTTON            1
 
-//
-
 #ifndef __SQL__
    ANNOUNCE Hb_NoStartUpWindow
 #endif
 
-//
-
 MEMVAR cCdxExp, First, Last, City
-
-//
 
 THREAD STATIC t_wvtScreen := {}
 
 #ifdef __XCC__
 STATIC s_paint_ := { { "", {} } }
 #endif
-
-//
 
 EXIT PROCEDURE CleanHandles()
 
@@ -81,8 +62,6 @@ EXIT PROCEDURE CleanHandles()
    NEXT
 
    RETURN
-
-//
 
 PROCEDURE Main()
 
@@ -187,7 +166,6 @@ PROCEDURE Main()
    READ
 
    //  Restore Environment
-   //
    WvtSetBlocks( aLastPaint )
    WvtSetObjects( aObjects )
    SetColor( clr )
@@ -202,8 +180,6 @@ PROCEDURE Main()
 
    RETURN
 
-//
-
 FUNCTION hb_GTSYS()
 
    REQUEST HB_GT_WVG_DEFAULT
@@ -211,8 +187,6 @@ FUNCTION hb_GTSYS()
    REQUEST HB_GT_WGU
 
    RETURN NIL
-
-//
 
 PROCEDURE WvtConsoleGets( nMode )
 
@@ -226,8 +200,6 @@ PROCEDURE WvtConsoleGets( nMode )
    ENDIF
 
    RETURN
-
-//
 
 PROCEDURE WvtNextGetsConsole()
 
@@ -263,8 +235,6 @@ PROCEDURE WvtNextGetsConsole()
 
    RETURN
 
-//
-
 PROCEDURE WvtNextGets()
 
    IF hb_mtvm()
@@ -275,8 +245,6 @@ PROCEDURE WvtNextGets()
    ENDIF
 
    RETURN
-
-//
 
 PROCEDURE WvtNextGets_X()
 
@@ -302,7 +270,6 @@ PROCEDURE WvtNextGets_X()
 
    // Change the values of pallatte arbitrarily though yu can fine tune
    // these values with realistic values.
-   //
    aNewPalette[ 8 ] := aNewPalette[ 8 ] + ( 100000 * ++s_nPalletMultiplier )
 
    Wvt_SetPalette( aNewPalette )
@@ -346,7 +313,6 @@ PROCEDURE WvtNextGets_X()
    READ
 
    // Restore Environment
-   //
    Wvt_SetPalette( aPalette )
    WvtSetObjects( aObjects )
    WvtSetBlocks( aLastPaint )
@@ -357,8 +323,6 @@ PROCEDURE WvtNextGets_X()
    SetPos( nRow, nCol )
 
    RETURN
-
-//
 
 FUNCTION WvtPartialScreen()
 
@@ -401,8 +365,6 @@ FUNCTION WvtPartialScreen()
    Wvt_SetPopupMenu( hPopup )
 
    RETURN NIL
-
-//
 
 FUNCTION WvtLines()
 
@@ -453,7 +415,6 @@ FUNCTION WvtLines()
    ENDDO
 
    //  Restore Environments
-   //
    SetColor( clr )
 
    WvtSetBlocks( aLastPaint )
@@ -463,8 +424,6 @@ FUNCTION WvtLines()
    RestScreen( 0, 0, MaxRow(), MaxCol(), scr )
 
    RETURN NIL
-
-//
 
 FUNCTION BuildMainMenu()
 
@@ -543,8 +502,6 @@ FUNCTION BuildMainMenu()
 
    RETURN oMenu  /* The last submenu item */
 
-//
-
 STATIC FUNCTION GoogleMap()
 
    LOCAL mfrom1, mto1, mfrom2, mto2, mfrom3, mto3, mweb
@@ -584,8 +541,6 @@ STATIC FUNCTION GoogleMap()
    ENDDO
 
    RETURN NIL
-
-//
 
 FUNCTION BuildButtons()
 
@@ -639,5 +594,3 @@ FUNCTION BuildButtons()
    oXbp:toolTipText := "Flat Button . Lines: press ESC when finished."
 
    RETURN NIL
-
-//

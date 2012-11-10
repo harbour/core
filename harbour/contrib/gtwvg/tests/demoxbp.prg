@@ -2,10 +2,6 @@
  * $Id$
  */
 
-//
-//
-//
-//
 //                                EnOnkar
 //                          ( The Lord is ONE )
 //                                   .
@@ -13,18 +9,12 @@
 //
 //                  Pritpal Bedi <pritpal@vouchcac.com>
 //                              08Dec2008
-//
-//
-//
-//
 
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
-
-//
 
 PROCEDURE Main()
 
@@ -267,8 +257,6 @@ PROCEDURE Main()
 
    RETURN
 
-//
-
 STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
 
    LOCAL aCrt, aTBar, aSBar
@@ -295,8 +283,6 @@ STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr
    ENDIF
 
    RETURN 1
-
-//
 
 STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
@@ -338,8 +324,6 @@ STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    LOCAL oTBar
@@ -372,8 +356,6 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    RETURN oTBar
 
-//
-
 STATIC FUNCTION MyFunctionXbp( nMode )
 
 #define MUSIC_WAITON          {800, 1600}
@@ -403,8 +385,6 @@ STATIC FUNCTION MyFunctionXbp( nMode )
    ENDCASE
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION ExeFontDialog( oCrt )
 
@@ -438,8 +418,6 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    RETURN NIL
 
-//
-
 FUNCTION hb_GTSYS()
 
    REQUEST HB_GT_GUI_DEFAULT
@@ -448,5 +426,3 @@ FUNCTION hb_GTSYS()
    REQUEST HB_GT_WGU
 
    RETURN NIL
-
-//

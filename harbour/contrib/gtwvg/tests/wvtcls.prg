@@ -12,15 +12,11 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-//
-
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
-
-//
 
 FUNCTION DialogWvgClassesOne( nMode )
 
@@ -46,8 +42,6 @@ FUNCTION DialogWvgClassesOne( nMode )
    ENDIF
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION MyDialogOne( oCrt )
 
@@ -340,8 +334,6 @@ STATIC FUNCTION MyDialogOne( oCrt )
 
    RETURN NIL
 
-//
-
 FUNCTION DialogWvgClassesTwo()
 
    LOCAL aObjects := WvtSetBlocks( {} )
@@ -402,8 +394,6 @@ FUNCTION DialogWvgClassesTwo()
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
 
    LOCAL i
@@ -430,8 +420,6 @@ STATIC FUNCTION ExeProgBar( oPBar, oPBar1, oPBar2, oPBar3, oPBar4 )
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
 
    LOCAL i
@@ -447,5 +435,3 @@ STATIC FUNCTION ExeProgressBar( oPBar, oPBar3 )
    oPBar3:DeActivate()
 
    RETURN NIL
-
-//

@@ -6,17 +6,13 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-//
-
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-//
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
-//
 
 FUNCTION ExecuteActiveX( nActiveX, xParam )
 
@@ -241,8 +237,6 @@ FUNCTION ExecuteActiveX( nActiveX, xParam )
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
 
    LOCAL aCrt, aTBar, aSBar
@@ -270,8 +264,6 @@ STATIC FUNCTION ResizeDialog( oCrt, oTBar, oSBar, oStatic, oCom, oTree )
    ENDIF
 
    RETURN 1
-
-//
 
 STATIC FUNCTION ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
 
@@ -309,8 +301,6 @@ STATIC FUNCTION ActiveXBuildMenu( oCrt, oStatic, oStatic2 )
    oMenuBar:addItem( { oSubMenu, NIL } )
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
@@ -377,8 +367,6 @@ STATIC FUNCTION BuildActiveXControl( nActiveX, oDA )
 
    RETURN oCom
 
-//
-
 STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
    LOCAL nKey, sData
@@ -386,7 +374,6 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
    STATIC s_nTurn := 0
 
    // After :CREATE() Messages
-   //
    IF nActiveX == 1
       hb_gtInfo( HB_GTI_WINTITLE, iif( Empty( xParam ), "http://hbide.vouch.info", xParam ) )
       oCom:AddressBar := .T.
@@ -595,8 +582,6 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION ConfigureRMChart( RMChart )
 
    LOCAL oRegion
@@ -640,8 +625,6 @@ STATIC FUNCTION ConfigureRMChart( RMChart )
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION MyFunction( nMode )
 
 #define MUSIC_WAITON          { 800, 1600 }
@@ -671,5 +654,3 @@ STATIC FUNCTION MyFunction( nMode )
    ENDCASE
 
    RETURN NIL
-
-//

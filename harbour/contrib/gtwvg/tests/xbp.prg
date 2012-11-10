@@ -14,14 +14,10 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-//
-
 #define MUSIC_WAITON          {800, 1600}
 
 //
-//
 //                     A Pure Xbase++ Implementation
-//
 //
 
 FUNCTION demoxbp()
@@ -266,8 +262,6 @@ FUNCTION demoxbp()
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr )
 
    LOCAL aCrt, aTBar, aSBar
@@ -294,8 +288,6 @@ STATIC FUNCTION ResizeDialogXbp( oCrt, oTBar, oSBar, oStatic, oCom, oTree, oAddr
    ENDIF
 
    RETURN 1
-
-//
 
 STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
@@ -337,8 +329,6 @@ STATIC FUNCTION ActiveXBuildMenuXbp( oCrt, oStatic, oStatic2 )
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    LOCAL oTBar
@@ -371,8 +361,6 @@ STATIC FUNCTION ActiveXBuildToolBarXbp( oCrt )
 
    RETURN oTBar
 
-//
-
 STATIC FUNCTION MyFunctionXbp( nMode )
 
    DO CASE
@@ -400,8 +388,6 @@ STATIC FUNCTION MyFunctionXbp( nMode )
    ENDCASE
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION ExeFontDialogXbp( oCrt )
 
@@ -432,5 +418,3 @@ STATIC FUNCTION ExeFontDialogXbp( oCrt )
    oFontDlg:destroy()
 
    RETURN NIL
-
-//

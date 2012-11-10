@@ -2,21 +2,15 @@
  * $Id$
  */
 
-//
-//
 //                   GTWVT Console GUI Interface
 //
 //               Pritpal Bedi <bedipritpal@hotmail.com>
-//
-//
 
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
-
-//
 
 #define IMAGE_VOUCH                hb_dirBase() + "vouch1.bmp"
 #define IMAGE_BROWSE               hb_dirBase() + "v_browse.ico"
@@ -25,11 +19,7 @@
 #define IMAGE_TOOLS                hb_dirBase() + "v_tools.ico"
 #define IMAGE_HELP                 hb_dirBase() + "v_notes.ico"
 
-//
-
 MEMVAR GetList
-
-//
 
 PROCEDURE Main()
 
@@ -66,7 +56,6 @@ PROCEDURE Main()
 
    RETURN
 
-//
 /* This function must be linked with the application */
 
 FUNCTION Wvt_Paint()
@@ -74,8 +63,6 @@ FUNCTION Wvt_Paint()
    WvtPaintObjects()
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION ExecForm( aPaint )
 
@@ -116,8 +103,6 @@ STATIC FUNCTION ExecForm( aPaint )
 
    RETURN NIL
 
-//
-
 FUNCTION hb_GTSYS()
 
 REQUEST HB_GT_WVG_DEFAULT
@@ -127,8 +112,6 @@ REQUEST HB_GT_WVT
 REQUEST HB_GT_WGU
 
    RETURN NIL
-
-//
 
 FUNCTION SetGT( nIndex, pGT )
 
@@ -141,8 +124,6 @@ FUNCTION SetGT( nIndex, pGT )
    ENDIF
 
    RETURN oldGT
-
-//
 
 STATIC FUNCTION MyChoice( aChoices )
 
@@ -160,25 +141,18 @@ STATIC FUNCTION MyChoice( aChoices )
 
    RETURN nChoice
 
-//
-
 FUNCTION rgb( r, g, b )
 
    RETURN r + ( g * 256 ) + ( b * 256 * 256 )
-
-//
 
 FUNCTION DispStatusMsg( cMsg )
 
    ClearStatusMsg()
 
    /* NOTE: The GUI function used as such is not subject to autopainting */
-   //
    Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb( 198, 198, 198 ), "Arial", 18, , 900 )
 
    RETURN .T.
-
-//
 
 FUNCTION ClearStatusMsg()
 
@@ -189,8 +163,6 @@ FUNCTION ClearStatusMsg()
    SetPos( nRow, nCol )
 
    RETURN .T.
-
-//
 
 FUNCTION DoModalDialog()
 
@@ -226,5 +198,3 @@ FUNCTION DoModalDialog()
    WvtSetPaint( aPnt )
 
    RETURN NIL
-
-//

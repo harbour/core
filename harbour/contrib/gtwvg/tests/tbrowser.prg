@@ -12,15 +12,11 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-//
-
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
-
-//
 
 #define K_MOVING                1001
 
@@ -36,8 +32,6 @@
 
 #define K_SBTHUMBTRACKVERT      1059
 #define K_SBTHUMBTRACKHORZ      1060
-
-//
 
 FUNCTION WvtMyBrowse()
 
@@ -56,8 +50,6 @@ FUNCTION WvtMyBrowse()
    ENDIF
 
    RETURN NIL
-
-//
 
 FUNCTION ExecBrowser( oCrt )
 
@@ -230,8 +222,6 @@ FUNCTION ExecBrowser( oCrt )
 
    RETURN NIL
 
-//
-
 STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTre, oChk, aNvg, oIdx, lActiveX, cFileDbf )
 
    HB_SYMBOL_UNUSED( oSle )
@@ -276,8 +266,6 @@ STATIC FUNCTION BrwHandleResize( oCrt, oBrw, oVBar, oHBar, oCom, oSLE, oLBx, oTr
 
    RETURN .T.
 
-//
-
 STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
 
    LOCAL i, j, nCur
@@ -301,8 +289,6 @@ STATIC FUNCTION BrwShowColumn( oBrw, cHeading )
    oBrw:forceStable()
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
 
@@ -335,8 +321,6 @@ STATIC FUNCTION BrwBuildTree( oCrt /*, oBrw*/ )
 
    RETURN oTree
 
-//
-
 STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
 
    LOCAL oCom
@@ -350,8 +334,6 @@ STATIC FUNCTION BrwBuildActiveX( oCrt, oBrw )
    oCom:navigate( "http://hbide.vouch.info" )
 
    RETURN oCom
-
-//
 
 STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
 
@@ -370,8 +352,6 @@ STATIC FUNCTION BrwBuildListBox( oCrt, oBrw )
 
    RETURN oXbp
 
-//
-
 STATIC FUNCTION BrwSetThisOrder( oBrw, nOrd )
 
    dbSetOrder( nOrd )
@@ -379,8 +359,6 @@ STATIC FUNCTION BrwSetThisOrder( oBrw, nOrd )
    oBrw:forceStable()
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
 
@@ -407,8 +385,6 @@ STATIC FUNCTION BrwBuildListBoxIdx( oCrt, oBrw )
 
    RETURN oXbp
 
-//
-
 STATIC FUNCTION BrwBuildSLE( oCrt, oBrw )
 
    LOCAL oXbp
@@ -429,8 +405,6 @@ STATIC FUNCTION BrwBuildSLE( oCrt, oBrw )
    oXbp:tooltipText := "Type in a field name and press ENTER"
 
    RETURN oXbp
-
-//
 
 STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
 
@@ -457,8 +431,6 @@ STATIC FUNCTION BrwBuildNvg( oCrt, oBrw, oCom )
 
    RETURN { oLbl, oXbp }
 
-//
-
 STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
 
    LOCAL oXbp
@@ -476,8 +448,6 @@ STATIC FUNCTION BrwBuildCheckBox( oCrt, oBrw, lActiveX )
    oXbp:tooltipText  := "Naviagate: http://hbide.vouch.info"
 
    RETURN oXbp
-
-//
 
 STATIC FUNCTION BrwReposButtons( oCrt )
 
@@ -500,8 +470,6 @@ STATIC FUNCTION BrwReposButtons( oCrt )
    NEXT
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
 
@@ -542,8 +510,6 @@ STATIC FUNCTION BrwBuildButtons( oCrt, oBrw )
 
    RETURN NIL
 
-//
-
 FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
 
    oHBar := WvgScrollBar():new( oCrt, , { {|| -( oBrw:nBottom + 1 ) }, {|| -( oBrw:nLeft ) } }, ;
@@ -561,8 +527,6 @@ FUNCTION Vou_BrwAddScrollBars( oCrt, oBrw, oVBar, oHBar )
    oVBar:scroll := {| mp1 | Vou_BrwSetVScroll( mp1, oBrw ) }
 
    RETURN NIL
-
-//
 
 STATIC FUNCTION BrwBuildMenu( oCrt )
 
@@ -594,8 +558,6 @@ STATIC FUNCTION BrwBuildMenu( oCrt )
 
    RETURN oMenu
 
-//
-
 STATIC FUNCTION BrwBuildToolBar( oCrt )
 
    LOCAL oTBar, nRGB := RGB( 172, 172, 172 )
@@ -626,9 +588,7 @@ STATIC FUNCTION BrwBuildToolBar( oCrt )
 
    RETURN oTBar
 
-//
-//                         Key Handelling
-//
+// Key Handling
 
 STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
@@ -720,8 +680,6 @@ STATIC FUNCTION BrwHandleKey( oBrowse, nKey, lEnd )
 
    RETURN lRet
 
-//
-
 FUNCTION Vou_NavigateToCell( oBrowse )
 
    LOCAL nCount
@@ -765,8 +723,6 @@ FUNCTION Vou_NavigateToCell( oBrowse )
 
    RETURN .F.
 
-//
-
 STATIC FUNCTION DbSkipBlock( n )
 
    LOCAL nSkipped := 0
@@ -786,8 +742,6 @@ STATIC FUNCTION DbSkipBlock( n )
 
    RETURN  nSkipped
 
-//
-
 STATIC FUNCTION TBNext()
 
    LOCAL nSaveRecNum := RecNo()
@@ -805,8 +759,6 @@ STATIC FUNCTION TBNext()
 
    RETURN lMoved
 
-//
-
 STATIC FUNCTION TBPrev()
 
    LOCAL nSaveRecNum := RecNo()
@@ -821,13 +773,9 @@ STATIC FUNCTION TBPrev()
 
    RETURN lMoved
 
-//
-
 STATIC FUNCTION VouBlockField( i )
 
    RETURN  {|| FieldGet( i ) }
-
-//
 
 STATIC FUNCTION Vou_ExecTBarAction( oBtn )
 
@@ -849,8 +797,6 @@ STATIC FUNCTION Vou_ExecTBarAction( oBtn )
    ENDSWITCH
 
    RETURN NIL
-
-//
 
 FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 
@@ -893,9 +839,7 @@ FUNCTION Vou_BrwSetVScroll( mp1, oBrowse )
 
    RETURN NIL
 
-//
-/*                   For brosers inside WvtDialog()                     */
-//
+/* For brosers inside WvtDialog() */
 
 STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
 
@@ -1004,8 +948,6 @@ STATIC FUNCTION BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey )
 
    RETURN lRet
 
-//
-
 FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, nID )
 
    LOCAL info_, oWvtBrw, oBrowse, i, bBlock
@@ -1054,5 +996,3 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    oWvtBrw:bHandleEvent := {| oWvtBrw, cPaintID, oBrowse, nKey | BrwOnEvent( oWvtBrw, cPaintID, oBrowse, nKey ) }
 
    RETURN oWvtBrw
-
-//

@@ -1,19 +1,16 @@
 /*
  * $Id$
  */
+
 /*
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
-
-//
 
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
-
-//
 
 #xuntranslate alert( =>
 
@@ -39,13 +36,9 @@ FUNCTION MyAlert( cMsg, aOpt )
 
 #xtranslate Alert( => MyAlert(
 
-//
-
 FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
 
    RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , , nTime )
-
-//
 
 #xuntranslate alert( =>
 
@@ -54,8 +47,6 @@ FUNCTION Just_Alert( cMsg, aOpt )
    RETURN Alert( cMsg, aOpt )
 
 #xtranslate Alert( => MyAlert(
-
-//
 
 #define DLG_CLR_MOUSE              1
 #define DLG_CLR_CAPT               2
@@ -88,8 +79,6 @@ FUNCTION Just_Alert( cMsg, aOpt )
       <oCrt > := CreateOCrt( <nTop>, <nLeft>, <nBottom>, <nRight>, <ttl>, <icon>, ;
       <.lModal.>, <.lRowCols.>, <.lHidden.>, <.lCenter.>, ;
       <nRow>, <nCol>, <.lNoTitleBar.> )
-
-//
 
 FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
@@ -150,7 +139,6 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    NEXT
 
    //                        Create a new Window
-   //
    B_CRT nTop, nLeft, nBottom - 1, nRight MODAL ICON "dia_excl.ico" TITLE "  " + cCaption INTO oCrt
 
    nTop    := -1
@@ -185,7 +173,6 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
    ENDIF
 
    // display buttons
-   //
    FOR i := 1 TO Len( aButtons_ )
       SetColor( pal_[ DLG_CLR_BTN ] )
       @ nBtnRow, nBtnCol_[ i ] SAY "  " + aButtons_[ i ] + "  "
@@ -281,8 +268,6 @@ FUNCTION DialogAlert( cCaption, aText_, aButtons_, sel, aMessage_, nTop, nTime )
 
    RETURN sel
 
-//
-
 FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
       lCenter, nRow, nCol, lNoTitleBar )
 
@@ -325,8 +310,6 @@ FUNCTION CreateOCrt( nT, nL, nB, nR, cTitle, xIcon, lModal, lRowCols, lHidden, ;
 
    RETURN oCrt
 
-//
-
 FUNCTION DoModalWindow()
 
    LOCAL oCrt, nSel, pGT
@@ -354,7 +337,6 @@ FUNCTION DoModalWindow()
    pGT := SetGT( 3, hb_gtSelect() )
 
    // Here goes the Clipper Code
-   //
    SetColor( "N/W" )
    CLS
    DO WHILE .T.
@@ -372,5 +354,3 @@ FUNCTION DoModalWindow()
    WvtSetBlocks( aLastPaint )
 
    RETURN NIL
-
-//

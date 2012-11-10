@@ -6,15 +6,11 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-//
-
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
-
-//
 
 #define ID_BTN_OK                  1
 #define ID_MLE                     10
@@ -36,11 +32,7 @@
 #define ID_MNU_FILE                201
 #define ID_MNU_CONTROL             202
 
-//
-
 THREAD STATIC t_aSlides := {}
-
-//
 
 FUNCTION DynWinDialog( nInfo )
 
@@ -56,13 +48,11 @@ FUNCTION DynWinDialog( nInfo )
       iif( nInfo % 2 == 0, "Modeless", "Modal" ), " Dialog !", nStyle )
 
    // Multi line edit control
-   //
    nStyle := WS_CHILD + WS_VISIBLE + WS_TABSTOP + ES_AUTOVSCROLL + ES_MULTILINE + ;
       ES_WANTRETURN + WS_BORDER  + WS_VSCROLL
    aDlg   := Wvt_AddDlgItem( aDlg,  1, 2, 15, 35, {}, ID_MLE       , "EDIT"   , nStyle, /* cText, nHelpId, nExStyle */ )
 
    // Two Horz and Vert Lines
-   //
    nStyle := WS_CHILD + WS_VISIBLE + SS_ETCHEDVERT
    aDlg   := Wvt_AddDlgItem( aDlg, 1, 39,  16, 1, {}, 111          , "STATIC" , nStyle )
    nStyle := WS_CHILD + WS_VISIBLE + SS_ETCHEDHORZ
@@ -122,12 +112,10 @@ FUNCTION DynWinDialog( nInfo )
 
    IF nInfo == 2
       // Modal Dialog
-      //
       //hDlg := Wvt_DialogBox( aDlg, bDlgProc, Wvt_GetWindowHandle() )
       hDlg := Wvt_DialogBox( aDlg, cDlgProc, Wvt_GetWindowHandle() )
    ELSE
       // Modeless Dialog
-      //
       hDlg := Wvt_CreateDialog( aDlg, lOnTop, cDlgProc, cDlgIcon, /*nTimerTicks*/, hMenu )
 
       // Using Function name.
@@ -135,8 +123,6 @@ FUNCTION DynWinDialog( nInfo )
    ENDIF
 
    RETURN hDlg
-
-//
 
 FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
@@ -265,15 +251,12 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
    CASE WM_DESTROY
       // Do whatevert you want to do with cText
       // Each box will retrieve its own text.
-      //
       /* cText := */
       Wvg_GetDlgItemText( hDlg, ID_MLE )
       EXIT
    ENDSWITCH
 
    RETURN 0
-
-//
 
 STATIC FUNCTION GetEditText()
 
@@ -306,8 +289,6 @@ STATIC FUNCTION GetEditText()
 
    RETURN cText
 
-//
-
 FUNCTION DlgSlideShow()
 
    LOCAL hDlg, aDlg, nStyle
@@ -321,8 +302,6 @@ FUNCTION DlgSlideShow()
    hDlg    := Wvt_CreateDialog( aDlg, .F., "DlgSlideShowProc", "vr_1.ico", 5000 )
 
    RETURN hDlg
-
-//
 
 FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
@@ -353,8 +332,6 @@ FUNCTION DlgSlideShowProc( hDlg, nMsg, wParam, lParam )
 
    RETURN 0
 
-//
-
 FUNCTION DrawSlide( hDlg, nSlide )
 
    LOCAL hDC, aRect
@@ -369,5 +346,3 @@ FUNCTION DrawSlide( hDlg, nSlide )
    Wvg_ReleaseDC( hDlg, hDC )
 
    RETURN NIL
-
-//

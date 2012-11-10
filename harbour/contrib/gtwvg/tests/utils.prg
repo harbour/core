@@ -6,18 +6,13 @@
  *    Pritpal Bedi <bedipritpal@hotmail.com>
  */
 
-//
-
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-//
-//
-//   WvtSetObjects() array structure
-//
+// WvtSetObjects() array structure
 #define WVT_OBJ_TYPE               1
 #define WVT_OBJ_ID                 2
 #define WVT_OBJ_ROW                3
@@ -34,24 +29,18 @@
 
 #define WVT_OBJ_VRBLS             13
 
-//   WVT_OBJ_TYPE  Constants
-//
+// WVT_OBJ_TYPE  Constants
 #define OBJ_TYPE_BUTTON            1
 
-//   WVT_OBJ_STATE
-//
+// WVT_OBJ_STATE
 #define OBJ_STATE_HIDE             0
 #define OBJ_STATE_DISP             1
 #define OBJ_STATE_MOUSEOVER        2
 #define OBJ_STATE_BUTTONDOWN       3
 #define OBJ_STATE_BUTTONUP         4
 
-//
-
 THREAD STATIC t_keys_ := {, , , , , , , , , , , , , , , , , , , }
 THREAD STATIC t_pic_ := {, , , , , , , , , , , , , , , , , , , }
-
-//
 
 FUNCTION WvtSetKeys( lSet )
 
@@ -79,10 +68,8 @@ FUNCTION WvtSetKeys( lSet )
 
    RETURN NIL
 
-//
-//      Wvt_Paint() must be a FUNCTION in your application
-//      as it is called when Window gets WM_PAINT message.
-//
+// Wvt_Paint() must be a FUNCTION in your application
+// as it is called when Window gets WM_PAINT message.
 
 FUNCTION Wvt_Paint()
 
@@ -94,11 +81,10 @@ FUNCTION Wvt_Paint()
 
    RETURN 0
 
-//
-//      Wvt_SetFocus() must be a FUNCTION in your application
-//      needs to process messages sent through WM_SETFOCUS message
-//      received by the window.
-//
+// Wvt_SetFocus() must be a FUNCTION in your application
+// needs to process messages sent through WM_SETFOCUS message
+// received by the window.
+
 #if 0
 
 FUNCTION Wvt_SetFocus()
@@ -114,11 +100,10 @@ FUNCTION Wvt_SetFocus()
 
 #endif
 
-//
-//      Wvt_KillFocus() must be a FUNCTION in your application
-//      needs to process messages sent through WM_KILLFOCUS message
-//      received by the window.
-//
+// Wvt_KillFocus() must be a FUNCTION in your application
+// needs to process messages sent through WM_KILLFOCUS message
+// received by the window.
+
 #if 0
 
 FUNCTION Wvt_KillFocus()
@@ -134,12 +119,8 @@ FUNCTION Wvt_KillFocus()
 
 #endif
 
-//
-//
-//      Wvt_Mouse() must be present if you want to catch and fire
-//      mouse call back outside of the inkey() loop.
-//
-//
+// Wvt_Mouse() must be present if you want to catch and fire
+// mouse call back outside of the inkey() loop.
 
 FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 
@@ -220,9 +201,7 @@ FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 
    RETURN NIL
 
-//
 //  WvtSetBlocks() is a get/set FUNCTION to be used by Wvt_Paint()
-//
 
 FUNCTION WvtSetBlocks( a_ )
 
@@ -238,9 +217,7 @@ FUNCTION WvtSetBlocks( a_ )
 
    RETURN o
 
-//
-//  WvtSetObjects() is a get/set FUNCTION to be used by Wvt_Mouse()
-//
+// WvtSetObjects() is a get/set FUNCTION to be used by Wvt_Mouse()
 
 FUNCTION WvtSetObjects( aObject )
 
@@ -268,8 +245,6 @@ FUNCTION WvtSetObjects( aObject )
 
    RETURN oObjects
 
-//
-
 FUNCTION SetMouseCheck( lYes )
 
    LOCAL lOYes
@@ -282,8 +257,6 @@ FUNCTION SetMouseCheck( lYes )
 
    RETURN lOYes
 
-//
-
 FUNCTION WvtWindowExpand( nUnits )
 
    STATIC s_nUnits := 18
@@ -294,13 +267,9 @@ FUNCTION WvtWindowExpand( nUnits )
 
    RETURN .T.
 
-//
-
 FUNCTION rgb( r, g, b )
 
    RETURN r + ( g * 256 ) + ( b * 256 * 256 )
-
-//
 
 FUNCTION VouChoice( aChoices )
 
@@ -318,15 +287,11 @@ FUNCTION VouChoice( aChoices )
 
    RETURN nChoice
 
-//
-
 FUNCTION Hb_Clear()
 
    CLS
 
    RETURN .F.
-
-//
 
 FUNCTION MyMenuProcedure( nID )
 
@@ -338,8 +303,6 @@ FUNCTION MyMenuProcedure( nID )
    ENDCASE
 
    RETURN .T.
-
-//
 
 FUNCTION BuildWvgToolBar( oDA, nActiveX )
 
@@ -373,8 +336,6 @@ FUNCTION BuildWvgToolBar( oDA, nActiveX )
 
    RETURN oTBar
 
-//
-
 FUNCTION SetGT( nIndex, pGT )
 
    LOCAL oldGT
@@ -386,8 +347,6 @@ FUNCTION SetGT( nIndex, pGT )
    ENDIF
 
    RETURN oldGT
-
-//
 
 FUNCTION SetFonts( hFont )
 
@@ -401,8 +360,6 @@ FUNCTION SetFonts( hFont )
 
    RETURN oldFont
 
-//
-
 FUNCTION SetIcons( hIcon )
 
    LOCAL oldIcon
@@ -414,8 +371,6 @@ FUNCTION SetIcons( hIcon )
    ENDIF
 
    RETURN oldIcon
-
-//
 
 FUNCTION Popups( nID, lDestroy )
 
@@ -486,15 +441,11 @@ FUNCTION Popups( nID, lDestroy )
 
    RETURN Wvt_SetPopupMenu( t_hPop_[ nID ] )
 
-//
-
 FUNCTION DispStatusMsg( cMsg )
 
    Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb( 198, 198, 198 ), "Arial", 18, , 900 )
 
    RETURN .T.
-
-//
 
 FUNCTION ClearStatusMsg()
 
@@ -506,8 +457,6 @@ FUNCTION ClearStatusMsg()
    SetPos( nRow, nCol )
 
    RETURN .T.
-
-//
 
 FUNCTION WvtPictures( nSlot, cFilePic )
 
@@ -521,8 +470,6 @@ FUNCTION WvtPictures( nSlot, cFilePic )
 
    RETURN NIL
 
-//
-
 FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
    IF t_pic_[ nSlot ] != NIL
@@ -531,13 +478,9 @@ FUNCTION WvtExePicture( nTop, nLeft, nBottom, nRight, nSlot, aOffset )
 
    RETURN NIL
 
-//
-
 FUNCTION GetResource( cName )
 
    RETURN hb_DirBase() + cName
-
-//
 
 FUNCTION uiDebug( ... )
 
@@ -549,8 +492,6 @@ FUNCTION uiDebug( ... )
    wapi_OutputDebugString( s )
 
    RETURN NIL
-
-//
 
 FUNCTION MyError( oError )
 
@@ -565,5 +506,3 @@ FUNCTION MyError( oError )
    ENDDO
 
    RETURN NIL
-
-//
