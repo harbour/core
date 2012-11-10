@@ -115,7 +115,6 @@ HB_FUNC( WIN_SENDMESSAGE )
 }
 
 
-
 HB_FUNC( WIN_SENDDLGITEMMESSAGE )
 {
    char *   cText;
@@ -127,9 +126,7 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
       hb_xmemcpy( cText, hb_itemGetCPtr( pText ), hb_itemGetCLen( pText ) + 1 );
    }
    else
-   {
       cText = NULL;
-   }
 
    hb_retnl( ( LONG ) SendDlgItemMessage( ( HWND ) HB_PARHANDLE( 1 ),
                                           ( int ) hb_parni( 2 ),
@@ -140,14 +137,10 @@ HB_FUNC( WIN_SENDDLGITEMMESSAGE )
              );
 
    if( pText )
-   {
       hb_storclen( cText, hb_itemGetCLen( pText ), 5 );
-   }
 
    if( cText )
-   {
       hb_xfree( cText );
-   }
 }
 
 /*
@@ -161,12 +154,10 @@ HB_FUNC( WIN_SETTIMER )
 }
 
 
-
 HB_FUNC( WIN_SETFOCUS )
 {
    SetFocus( ( HWND ) HB_PARHANDLE( 1 ) );
 }
-
 
 
 HB_FUNC( WIN_SETTEXTCOLOR )
@@ -175,12 +166,10 @@ HB_FUNC( WIN_SETTEXTCOLOR )
 }
 
 
-
 HB_FUNC( WIN_SETBKCOLOR )
 {
    hb_retnl( ( ULONG ) SetBkColor( ( HDC ) HB_PARHANDLE( 1 ), ( COLORREF ) hb_parnl( 2 ) ) );
 }
-
 
 
 HB_FUNC( WVW_SETBKMODE )
@@ -189,12 +178,10 @@ HB_FUNC( WVW_SETBKMODE )
 }
 
 
-
 HB_FUNC( WIN_GETSTOCKOBJECT )
 {
    hb_retnl( ( ULONG ) GetStockObject( hb_parnl( 1 ) ) );
 }
-
 
 
 HB_FUNC( WIN_DELETEOBJECT )
@@ -203,12 +190,10 @@ HB_FUNC( WIN_DELETEOBJECT )
 }
 
 
-
 HB_FUNC( WIN_SELECTOBJECT )
 {
    hb_retnl( ( ULONG ) SelectObject( ( HDC ) HB_PARHANDLE( 1 ), ( HGDIOBJ ) HB_PARHANDLE( 2 ) ) );
 }
-
 
 
 HB_FUNC( WIN_MULDIV )
@@ -217,22 +202,16 @@ HB_FUNC( WIN_MULDIV )
 }
 
 
-
 HB_FUNC( WIN_GETDIALOGBASEUNITS )
 {
    hb_retnl( ( LONG ) GetDialogBaseUnits() );
 }
 
 
-
-
-
-
 HB_FUNC( WIN_SETDLGITEMTEXT )
 {
    SetDlgItemText( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parc( 3 ) );
 }
-
 
 
 HB_FUNC( WIN_GETDLGITEMTEXT )
@@ -251,7 +230,6 @@ HB_FUNC( WIN_GETDLGITEMTEXT )
 }
 
 
-
 HB_FUNC( WIN_CHECKDLGBUTTON )
 {
    hb_retl( CheckDlgButton( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ),
@@ -259,12 +237,10 @@ HB_FUNC( WIN_CHECKDLGBUTTON )
 }
 
 
-
 HB_FUNC( WIN_ISDLGBUTTONCHECKED )
 {
    hb_retni( IsDlgButtonChecked( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
-
 
 
 HB_FUNC( WIN_CHECKRADIOBUTTON )
@@ -277,19 +253,16 @@ HB_FUNC( WIN_CHECKRADIOBUTTON )
 }
 
 
-
 HB_FUNC( WIN_GETDLGITEM )
 {
    hb_retnl( ( ULONG ) GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ) );
 }
 
 
-
 HB_FUNC( WIN_MESSAGEBOX )
 {
    hb_retni( MessageBox( ( HWND ) HB_PARHANDLE( 1 ), hb_parcx( 2 ), hb_parcx( 3 ), HB_ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) );
 }
-
 
 
 HB_FUNC( WIN_INVALIDATERECT )
@@ -307,13 +280,9 @@ HB_FUNC( WIN_LOADICON )
    HICON hIcon;
 
    if( HB_ISNUM( 1 ) )
-   {
       hIcon = LoadIcon( hb_getWvwData()->hInstance, MAKEINTRESOURCE( hb_parni( 1 ) ) );
-   }
    else
-   {
       hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, hb_parc( 1 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-   }
 
    hb_retnl( ( ULONG ) hIcon );
 }
@@ -350,7 +319,6 @@ HB_FUNC( WIN_LOADIMAGE )
 }
 
 
-
 HB_FUNC( WIN_GETCLIENTRECT )
 {
    RECT     rc   = { 0 };
@@ -380,12 +348,10 @@ HB_FUNC( WIN_GETCLIENTRECT )
  */
 
 
-
 HB_FUNC( WIN_GETDC )
 {
    HB_RETHANDLE( GetDC( ( HWND ) HB_PARHANDLE( 1 ) ) );
 }
-
 
 
 HB_FUNC( WIN_RELEASEDC )
@@ -394,12 +360,10 @@ HB_FUNC( WIN_RELEASEDC )
 }
 
 
-
 HB_FUNC( WVW_RECTANGLE )
 {
    Rectangle( ( HDC ) HB_PARHANDLE( 1 ), hb_parni( 2 ), hb_parni( 3 ), hb_parni( 4 ), hb_parni( 5 ) );
 }
-
 
 
 HB_FUNC( WIN_CREATEBRUSH )
@@ -512,9 +476,7 @@ HB_FUNC( WVW_SETCONTROLTEXT )
    HWND hWndPB = FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
 
    if( uiCtrlId == 0 || hWndPB == NULL )
-   {
       return;
-   }
    SetWindowText( hWndPB, hb_parcx( 3 ) );
    hb_retl( TRUE );
 }
@@ -535,13 +497,9 @@ HB_FUNC( WVW_PBVISIBLE )
    }
 
    if( bEnable )
-   {
       iCmdShow = SW_SHOW;
-   }
    else
-   {
       iCmdShow = SW_HIDE;
-   }
    hb_retl( ShowWindow( hWndPB, iCmdShow ) == 0 );
 }
 
@@ -557,19 +515,13 @@ HB_FUNC( WVW_CBVISIBLE )
    if( hWndCB )
    {
       if( bEnable )
-      {
          iCmdShow = SW_SHOW;
-      }
       else
-      {
          iCmdShow = SW_HIDE;
-      }
       hb_retl( ShowWindow( hWndCB, iCmdShow ) == 0 );
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 HB_FUNC( WVW_CXVISIBLE )
@@ -588,13 +540,9 @@ HB_FUNC( WVW_CXVISIBLE )
    }
 
    if( bEnable )
-   {
       iCmdShow = SW_SHOW;
-   }
    else
-   {
       iCmdShow = SW_HIDE;
-   }
    hb_retl( ShowWindow( hWndPB, iCmdShow ) == 0 );
 }
 
@@ -624,22 +572,15 @@ HB_FUNC( WVW_XBVISIBLE )
 }
 
 
-
-
 HB_FUNC( WVW_MOUSE_COL )
 {
    WVW_DATA * pData = hb_getWvwData();
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_retni( hb_gt_wvwGetMouseX( pData->s_pWindows[ pData->s_usNumWindows - 1 ] ) + hb_gt_wvwColOfs( pData->s_usNumWindows - 1 ) );
-   }
    else
-   {
       hb_retni( hb_gt_wvwGetMouseX( pData->s_pWindows[ pData->s_usCurWindow ] ) );
-   }
 }
-
 
 
 HB_FUNC( WVW_MOUSE_ROW )
@@ -647,13 +588,9 @@ HB_FUNC( WVW_MOUSE_ROW )
    WVW_DATA * pData = hb_getWvwData();
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_retni( hb_gt_wvwGetMouseY( pData->s_pWindows[ pData->s_usNumWindows - 1 ] ) + hb_gt_wvwRowOfs( pData->s_usNumWindows - 1 ) );
-   }
    else
-   {
       hb_retni( hb_gt_wvwGetMouseY( pData->s_pWindows[ pData->s_usCurWindow ] ) );
-   }
 }
 
 HB_FUNC( SENDMESSAGE )
@@ -749,9 +686,6 @@ HB_FUNC( ADDTOOLTIPEX ) // changed by MAG
 
    hb_retl( SendMessage( pData->hWndTT, TTM_ADDTOOL, 0, ( LPARAM ) ( LPTOOLINFO ) &ti ) );
 }
-
-
-
 
 
 /*
@@ -1267,9 +1201,7 @@ HB_FUNC( TOOLBARADDBUTTONS )
    hb_gt_wvwTBinitSize( pWindowData, hWndCtrl );
 
    if( pWindowData->usTBHeight != usOldHeight )
-   {
       hb_gt_wvwResetWindow( usWinNum );
-   }
 
    hb_xfree( tb );
 }
@@ -1316,9 +1248,7 @@ HB_FUNC( SETBITMAPRESOURCEID )
 
    }
    else /* system bitmap */
-   {
       iNewBitmap = ( int ) uiBitmap + iOffset;
-   }
    hb_retni( iNewBitmap );
 
 }
@@ -1349,14 +1279,10 @@ HB_FUNC( DRAWBITMAP )
    SelectObject( hDCmem, hBitmap );
    GetObject( hBitmap, sizeof( BITMAP ), ( LPVOID ) &bitmap );
    if( nWidthDest && ( nWidthDest != bitmap.bmWidth || nHeightDest != bitmap.bmHeight ) )
-   {
       StretchBlt( hDC, hb_parni( 4 ), hb_parni( 5 ), nWidthDest, nHeightDest, hDCmem,
                   0, 0, bitmap.bmWidth, bitmap.bmHeight, dwraster );
-   }
    else
-   {
       BitBlt( hDC, hb_parni( 4 ), hb_parni( 5 ), bitmap.bmWidth, bitmap.bmHeight, hDCmem, 0, 0, dwraster );
-   }
 
    DeleteDC( hDCmem );
 }
@@ -1385,7 +1311,6 @@ HB_FUNC( WINDOW2BITMAP )
 }
 
 
-
 /* wvw_SetMaxBMCache([nMax])
    Get/Set maximum user-bitmap cache (default is 20, minimum is 1).
    Returns old setting of maximum user-bitmap cache.
@@ -1412,9 +1337,7 @@ HB_FUNC( WVW_SETMAXBMCACHE )
    UINT       uiOldMaxBMcache = p->s_sApp->uiMaxBMcache;
 
    if( ! HB_ISNIL( 1 ) )
-   {
       p->s_sApp->uiMaxBMcache = ( UINT ) hb_parni( 1 );
-   }
 
    hb_retni( uiOldMaxBMcache );
 }
@@ -1430,21 +1353,10 @@ HB_FUNC( WVW_NUMBMCACHE )
 }
 
 
-
-
-
-
-
-
-
-
 /*                                                                   */
 /*               Miscellaneous xHarbour callable functions           */
 /*               Budyanto Dj. <budyanto@centrin.net.id>              */
 /*                                                                   */
-
-
-
 
 
 /* TIMER                                                             */
@@ -1470,9 +1382,7 @@ HB_FUNC( WVW_SETTIMER )
       hb_retl( TRUE );
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 /*WVW_KillTimer([nWinNum])
@@ -1492,12 +1402,8 @@ HB_FUNC( WVW_KILLTIMER )
       hb_retl( TRUE );
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
-
-
 
 
 /*WVW_GetPaintRect( nWinNum )   nWinNum is 0 based               */
@@ -1522,7 +1428,6 @@ HB_FUNC( WVW_GETPAINTRECT )
 
    hb_itemReturnRelease( info );
 }
-
 
 
 HB_FUNC( WVW_SETPOINTER )
@@ -1607,8 +1512,6 @@ HB_FUNC( WVW_SETPOINTER )
 }
 
 
-
-
 /*                                                                   */
 /*   Wvw_LoadPicture( nSlot, cFilePic )                              */
 /*                                                                   */
@@ -1622,9 +1525,7 @@ HB_FUNC( WVW_LOADPICTURE )
    if( iPicture )
    {
       if( p->s_sApp->iPicture[ iSlot ] )
-      {
          hb_gt_wvwDestroyPicture( p->s_sApp->iPicture[ iSlot ] );
-      }
 
       p->s_sApp->iPicture[ iSlot ] = iPicture;
       bResult = TRUE;
@@ -1666,9 +1567,7 @@ HB_FUNC( WVW_LOADFONT )
    if( hFont )
    {
       if( p->s_sApp->hUserFonts[ iSlot ] )
-      {
          DeleteObject( ( HFONT ) p->s_sApp->hUserFonts[ iSlot ] );
-      }
       p->s_sApp->hUserFonts[ iSlot ] = hFont;
    }
 }
@@ -1694,20 +1593,14 @@ HB_FUNC( WVW_LOADPEN )
    if( hPen )
    {
       if( p->s_sApp->hUserPens[ iSlot ] )
-      {
          DeleteObject( ( HPEN ) p->s_sApp->hUserPens[ iSlot ] );
-      }
       p->s_sApp->hUserPens[ iSlot ] = hPen;
 
       hb_retl( TRUE );
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
-
-
 
 
 HB_FUNC( WVW_MESSAGEBOX )
@@ -1717,7 +1610,6 @@ HB_FUNC( WVW_MESSAGEBOX )
 
    hb_retni( MessageBox( pWindowData->hWnd, hb_parcx( 2 ), hb_parcx( 3 ), HB_ISNIL( 4 ) ? MB_OK : hb_parni( 4 ) ) );
 }
-
 
 
 /*                    End of Drawing Primitives                      */
@@ -1741,9 +1633,7 @@ HB_FUNC( WVW_CHOOSEFONT )
    WVW_DATA * p         = hb_getWvwData();
 
    if( ! HB_ISNIL( 2 ) )
-   {
       PointSize = -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( p->s_pWindows[ p->s_usNumWindows - 1 ]->hdc, LOGPIXELSY ), 72 );
-   }
 
    lf.lfHeight         = PointSize;
    lf.lfWidth          = HB_ISNIL( 3 ) ? 0 : hb_parni( 3 );
@@ -1755,9 +1645,7 @@ HB_FUNC( WVW_CHOOSEFONT )
    lf.lfQuality        = HB_ISNIL( 5 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 5 );
    lf.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 1 ) )
-   {
       strcpy( lf.lfFaceName, hb_parcx( 1 ) );
-   }
 
    cf.lStructSize    = sizeof( CHOOSEFONT );
    cf.hwndOwner      = p->s_pWindows[ p->s_usNumWindows - 1 ]->hWnd;
@@ -1821,10 +1709,7 @@ HB_FUNC( WVW_CHOOSECOLOR )
    WVW_DATA *  p = hb_getWvwData();
 
    for( i = 0; i < 16; i++ )
-   {
-
       crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE ) );
-   }
 
    cc.lStructSize  = sizeof( CHOOSECOLOR );
    cc.hwndOwner    = p->s_pWindows[ p->s_usNumWindows - 1 ]->hWnd;
@@ -1834,15 +1719,10 @@ HB_FUNC( WVW_CHOOSECOLOR )
    cc.Flags = ( WORD ) ( HB_ISNIL( 3 ) ? CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN : hb_parnl( 3 ) );
 
    if( ChooseColor( &cc ) )
-   {
       hb_retnl( cc.rgbResult );
-   }
    else
-   {
       hb_retnl( -1 );
-   }
 }
-
 
 
 /*WVW_SETMOUSEPOS( nWinNum, nRow, nCol ) nWinNum is 0 based        */
@@ -1862,22 +1742,15 @@ HB_FUNC( WVW_SETMOUSEPOS )
               usCol = ( USHORT ) hb_parni( 3 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usRow, &usCol, NULL, NULL );
-   }
 
    xy = hb_gt_wvwGetXYFromColRow( pWindowData, usCol, usRow );
 
    if( ClientToScreen( pWindowData->hWnd, &xy ) )
-   {
       hb_retl( SetCursorPos( xy.x, xy.y + ( pWindowData->PTEXTSIZE.y / 2 ) ) );
-   }
    else
-   {
       hb_retl( FALSE );
-   }
 }
-
 
 
 /*by bdj                                                                                */
@@ -1914,9 +1787,7 @@ HB_FUNC( WVW_FILLRECTANGLE )
    RECT     xyRect = { 0 };
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-   }
 
    iOffTop    = ! HB_ISNIL( 9 ) ? hb_parvni( 9, 1 ) : 0;
    iOffLeft   = ! HB_ISNIL( 9 ) ? hb_parvni( 9, 2 ) : 0;
@@ -1963,8 +1834,6 @@ HB_FUNC( WVW_FILLRECTANGLE )
 }
 
 
-
-
 HB_FUNC( WVW_LBADDSTRING )
 {
    SendMessage( GetDlgItem( ( HWND ) HB_PARHANDLE( 1 ), hb_parni( 2 ) ), LB_ADDSTRING, 0, ( LPARAM ) ( LPSTR ) hb_parcx( 3 ) );
@@ -1992,13 +1861,9 @@ HB_FUNC( WVW_DLGSETICON )
    HICON hIcon;
 
    if( HB_ISNUM( 2 ) )
-   {
       hIcon = LoadIcon( hb_getWvwData()->hInstance, MAKEINTRESOURCE( hb_parni( 2 ) ) );
-   }
    else
-   {
       hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, hb_parc( 2 ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
-   }
 
    if( hIcon )
    {
@@ -2007,20 +1872,14 @@ HB_FUNC( WVW_DLGSETICON )
    }
 
    if( hIcon )
-   {
       hb_retnl( ( ULONG ) hIcon );
-   }
 }
-
-
 
 
 /*                                                                   */
 /*                      GUI Drawing Functions                        */
 /*               Pritpal Bedi <pritpal@vouchcac.com>                 */
 /*                                                                   */
-
-
 
 
 /*                                                                   */
@@ -2040,9 +1899,7 @@ HB_FUNC( WVW_SETPEN )
    WVW_DATA * p = hb_getWvwData();
 
    if( HB_ISNIL( 1 ) )
-   {
       hb_retl( FALSE );
-   }
 
    iPenStyle = hb_parni( 1 );
    iPenWidth = HB_ISNIL( 2 ) ? 0 : hb_parni( 2 );
@@ -2061,18 +1918,14 @@ HB_FUNC( WVW_SETPEN )
        */
 
       if( p->s_sApp->currentPen )
-      {
          DeleteObject( ( HPEN ) p->s_sApp->currentPen );
-      }
 
       p->s_sApp->currentPen = hPen;
 
       hb_retl( TRUE );
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 
@@ -2092,9 +1945,7 @@ HB_FUNC( WVW_SETBRUSH )
    WVW_DATA * p  = hb_getWvwData();
 
    if( HB_ISNIL( 1 ) )
-   {
       hb_retl( FALSE );
-   }
 
    lb.lbStyle = hb_parnl( 1 );
    lb.lbColor = HB_ISNIL( 2 ) ? RGB( 0, 0, 0 ) : ( COLORREF ) hb_parnl( 2 );
@@ -2122,9 +1973,7 @@ HB_FUNC( WVW_SETBRUSH )
       hb_retl( TRUE );
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 
@@ -2164,9 +2013,7 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
       p    += nchar;
    }
    else
-   {
       *p++ = 0;
-   }
 
    if( ( lStyle & DS_SETFONT ) )
    {
@@ -2177,7 +2024,6 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
       nchar = nCopyAnsiToWideChar( p, TEXT( ( char * ) hb_parvcx( 1, 15 ) ) );
       p    += nchar;
    }
-   ;
 
    for( i = 1; i <= nItems; i++ )
    {
@@ -2225,7 +2071,6 @@ HB_FUNC( WVW__MAKEDLGTEMPLATE )
 
       *p++ = 0x00;
    }
-   ;
 
    p = lpwAlign( p );
 
@@ -2249,13 +2094,6 @@ HB_FUNC( WVW_GETCURSORPOS )
 }
 
 
-
-
-
-
-
-
-
 /* WVW_ShowWindow( [nWinNum], nCmdShow ) */
 HB_FUNC( WVW_SHOWWINDOW )
 {
@@ -2265,7 +2103,6 @@ HB_FUNC( WVW_SHOWWINDOW )
 
    ShowWindow( pWindowData->hWnd, iCmdShow );
 }
-
 
 
 /* WVW_UpdateWindow( [nWinNum] ) */
@@ -2298,12 +2135,8 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
    /* check if we still have room for a new dialog */
 
    for( iIndex = 0; iIndex < WVW_DLGML_MAX; iIndex++ )
-   {
       if( p->s_sApp->hDlgModeless[ iIndex ] == NULL )
-      {
          break;
-      }
-   }
 
    if( iIndex >= WVW_DLGML_MAX )
    {
@@ -2323,21 +2156,17 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
    {
       pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
       if( pExecSym )
-      {
          pFunc = ( PHB_ITEM ) pExecSym;
-      }
       iType = 1;
    }
 
    {
 
       if( HB_ISNUM( 3 ) )
-      {
          hDlg = CreateDialogIndirect( hb_getWvwData()->hInstance,
                                       ( LPDLGTEMPLATE ) hb_parc( 1 ),
                                       hb_parl( 2 ) ? p->s_pWindows[ 0 ]->hWnd : NULL,
                                       ( DLGPROC ) hb_parnl( 3 ) );
-      }
       else
       {
 
@@ -2374,10 +2203,8 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 
             /* if codeblock, store the codeblock and lock it there */
             if( HB_IS_BLOCK( pFirst ) )
-            {
                p->s_sApp->pcbFunc[ iIndex ] = pFunc;
 
-            }
 
             p->s_sApp->pFunc[ iIndex ] = pFunc;
             p->s_sApp->iType[ iIndex ] = iType;
@@ -2393,9 +2220,7 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
       {
 
          if( iType == 2 && pFunc )
-         {
             hb_itemRelease( pFunc );
-         }
 
          p->s_sApp->hDlgModeless[ iIndex ] = NULL;
       }
@@ -2403,7 +2228,6 @@ HB_FUNC( WVW_CREATEDIALOGDYNAMIC )
 
    hb_retnl( ( ULONG ) hDlg );
 }
-
 
 
 HB_FUNC( WVW_CREATEDIALOGMODAL )
@@ -2419,12 +2243,8 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
 
    /* check if we still have room for a new dialog */
    for( iIndex = 0; iIndex < WVW_DLGMD_MAX; iIndex++ )
-   {
       if( p->s_sApp->hDlgModal[ iIndex ] == NULL )
-      {
          break;
-      }
-   }
 
    if( iIndex >= WVW_DLGMD_MAX )
    {
@@ -2447,9 +2267,7 @@ HB_FUNC( WVW_CREATEDIALOGMODAL )
    {
       pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
       if( pExecSym )
-      {
          pFunc = ( PHB_ITEM ) pExecSym;
-      }
       p->s_sApp->pFuncModal[ iIndex ] = pFunc;
       p->s_sApp->iTypeModal[ iIndex ] = 1;
    }
@@ -2490,8 +2308,6 @@ HB_FUNC( WVW_DELETEOBJECT )
 }
 
 
-
-
 HB_FUNC( WVW_SETONTOP )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -2507,7 +2323,6 @@ HB_FUNC( WVW_SETONTOP )
                           0,
                           SWP_NOSIZE + SWP_NOMOVE + SWP_NOACTIVATE ) );
 }
-
 
 
 HB_FUNC( WVW_SETASNORMAL )
@@ -2551,9 +2366,7 @@ HB_FUNC( WVW_SAVESCREEN )
           usRight  = ( USHORT ) hb_parni( 5 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-   }
 
    xy    = hb_gt_wvwGetXYFromColRow( pWindowData, usLeft, usTop );
    iTop  = xy.y;
@@ -2606,9 +2419,7 @@ HB_FUNC( WVW_RESTSCREEN )
           usRight  = ( USHORT ) hb_parni( 5 );
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-   }
 
    xy    = hb_gt_wvwGetXYFromColRow( pWindowData, usLeft, usTop );
    iTop  = xy.y;
@@ -2635,35 +2446,27 @@ HB_FUNC( WVW_RESTSCREEN )
                      0,
                      0,
                      SRCCOPY ) )
-         {
             bResult = TRUE;
-         }
       }
-      else
-      {
-         if( StretchBlt( pWindowData->hdc,
-                         iLeft,
-                         iTop,
-                         iWidth,
-                         iHeight,
-                         pWindowData->hCompDC,
-                         0,
-                         0,
-                         hb_parvni( 6, 1 ),
-                         hb_parvni( 6, 2 ),
-                         SRCCOPY ) )
-         {
-            bResult = TRUE;
-         }
-      }
+      else if( StretchBlt( pWindowData->hdc,
+                           iLeft,
+                           iTop,
+                           iWidth,
+                           iHeight,
+                           pWindowData->hCompDC,
+                           0,
+                           0,
+                           hb_parvni( 6, 1 ),
+                           hb_parvni( 6, 2 ),
+                           SRCCOPY ) )
+         bResult = TRUE;
+
    }
 
    SelectObject( pWindowData->hCompDC, hBmp );
 
    if( ! bDoNotDestroyBMP )
-   {
       DeleteObject( ( HBITMAP ) hb_parvnl( 6, 3 ) );
-   }
 
    hb_retl( bResult );
 }
@@ -2702,13 +2505,9 @@ HB_FUNC( WVW_CREATEFONT )
 
    hFont = CreateFontIndirect( &logfont );
    if( hFont )
-   {
       hb_retnl( ( ULONG ) hFont );
-   }
    else
-   {
       hb_retnl( 0 );
-   }
 }
 
 HB_FUNC( WVW_GETKEYSTATE )

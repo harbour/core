@@ -99,12 +99,9 @@ STATIC FUNCTION CreateToolbar( nWinNum )
    ENDIF
 
    /* using system std & view bitmaps */
-   wvw_tbAddButton( nWinNum, IDM_OPENWIN,  STD_FILENEW, "Open a new typewriter window", 1 /*system std bitmap*/
-   )
-   wvw_tbAddButton( nWinNum, IDM_CLOSEWIN, STD_DELETE, "Close last window", 1 /*system std bitmap*/
-   )
-   wvw_tbAddButton( nWinNum, IDM_ARRANGEWIN, VIEW_PARENTFOLDER, "Reposition all windows", 2 /*system view bitmap*/
-   )
+   wvw_tbAddButton( nWinNum, IDM_OPENWIN,  STD_FILENEW, "Open a new typewriter window", 1 /*system std bitmap*/ )
+   wvw_tbAddButton( nWinNum, IDM_CLOSEWIN, STD_DELETE, "Close last window", 1 /*system std bitmap*/ )
+   wvw_tbAddButton( nWinNum, IDM_ARRANGEWIN, VIEW_PARENTFOLDER, "Reposition all windows", 2 /*system view bitmap*/ )
 
    RETURN .T.  // CreateToolbar()
 
@@ -253,7 +250,9 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
    LOCAL wParamHi := WVW_HIWORD( wParam )
    LOCAL nCommand, ch
 
-// LOCAL cdebug
+#if 0
+   LOCAL cdebug
+#endif
 
    // did user perform a menu/toolbar action on Main Window?
    IF message == WM_COMMAND .AND. nWinNum == 0  // menu,toolbar,pushbutton

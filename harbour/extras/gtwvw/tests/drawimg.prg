@@ -84,15 +84,17 @@ PROCEDURE Main()
       nrig := MaxCol() - 2, ;
       nmidver := Int( ( ntop + nbot ) / 2 ), ;
       nmidhor := Int( ( nleft + nrig ) / 2 )
-   LOCAL cpict := "vouch1.gif", ;
-      ltransp := .F., ;
-      nMaxCache := wvw_SetMaxBMcache()
+   LOCAL cpict := "vouch1.gif"
+   LOCAL ltransp := .F.
+   LOCAL nMaxCache
    LOCAL i, j, oWPaint
    LOCAL getlist := {}
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
 #endif
+
+   nMaxCache := wvw_SetMaxBMcache()
 
    SetColor( "N/W,N/GR*,,,N/W*" )
    wvw_setcodepage( , 255 )

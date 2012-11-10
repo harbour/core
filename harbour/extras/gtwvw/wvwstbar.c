@@ -111,13 +111,9 @@ HB_FUNC( WVW_SBCREATE )
 
       RECT rSB = { 0 };
       if( pWindowData->hSBfont == NULL )
-      {
          pWindowData->hSBfont = CreateFontIndirect( &pData->s_lfSB );
-      }
       if( GetClientRect( hWndSB, &rSB ) )
-      {
          pWindowData->usSBHeight = ( USHORT ) rSB.bottom;
-      }
       pWindowData->hStatusBar = hWndSB;
 
       hb_gt_wvwResetWindow( usWinNum );
@@ -202,9 +198,7 @@ HB_FUNC( WVW_SBADDPART )
       HFONT hOldFont = ( HFONT ) SelectObject( hDCSB, hFont );
 
       if( GetTextExtentPoint32( hDCSB, hb_parcx( 2 ), hb_parclen( 2 ) + 1, &size ) )
-      {
          usWidth = ( USHORT ) size.cx;
-      }
 
       SelectObject( hDCSB, hOldFont );
 
@@ -212,26 +206,17 @@ HB_FUNC( WVW_SBADDPART )
    }
 
    if( ! lResetParts )
-   {
-
       numOfParts = SendMessage( hWndSB, SB_GETPARTS, WVW_MAX_STATUS_PARTS, ( LPARAM ) ( LPINT ) ptArray );
-   }
    else
-   {
       numOfParts = 0;
-   }
    numOfParts++;
 
    GetClientRect( hWndSB, &rSB );
 
    ptArray[ numOfParts - 1 ] = rSB.right;
    if( ! lResetParts )
-   {
       for( n = 0; n < numOfParts - 1; n++ )
-      {
          ptArray[ n ] -= ( usWidth + WVW_SPACE_BETWEEN_PARTS );
-      }
-   }
 
    SendMessage( hWndSB, SB_SETPARTS, numOfParts, ( LPARAM ) ( LPINT ) ptArray );
 
@@ -243,22 +228,15 @@ HB_FUNC( WVW_SBADDPART )
       hIcon = ( HICON ) LoadImage( 0, hb_parcx( 6 ), IMAGE_ICON, cx, cy, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS | LR_LOADTRANSPARENT | LR_DEFAULTSIZE );
 
       if( hIcon == NULL )
-      {
          hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), hb_parcx( 6 ), IMAGE_ICON, cx, cy, LR_DEFAULTCOLOR | LR_DEFAULTSIZE );
-      }
 
       if( ! ( hIcon == NULL ) )
-      {
          SendMessage( hWndSB, SB_SETICON, ( WPARAM ) numOfParts - 1, ( LPARAM ) hIcon );
-      }
    }
 
    SendMessage( hWndSB, SB_SETTEXT, ( numOfParts - 1 ) | displayFlags, ( LPARAM ) NULL );
    if( ! HB_ISNIL( 7 ) )
-   {
-
       SendMessage( hWndSB, SB_SETTIPTEXT, ( WPARAM ) ( numOfParts - 1 ), ( LPARAM ) hb_parcx( 7 ) );
-   }
 
    hb_retni( numOfParts );
 }
@@ -298,9 +276,7 @@ HB_FUNC( WVW_SBREFRESH )
    iDiff = rSB.right - ptArray[ numOfParts - 1 ];
 
    for( n = 0; n <= numOfParts - 1; n++ )
-   {
       ptArray[ n ] += iDiff;
-   }
 
    SendMessage( hWndSB, SB_SETPARTS, numOfParts, ( LPARAM ) ( LPINT ) ptArray );
 
@@ -394,9 +370,7 @@ HB_FUNC( WVW_SBSETFONT )
    pData->s_lfSB.lfQuality        = HB_ISNIL( 6 ) ? pData->s_lfSB.lfQuality : ( BYTE ) hb_parni( 6 );
    pData->s_lfSB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-   {
       strcpy( pData->s_lfSB.lfFaceName, hb_parcx( 2 ) );
-   }
 
    if( pWindowData->hSBfont )
    {
@@ -408,9 +382,7 @@ HB_FUNC( WVW_SBSETFONT )
          DeleteObject( ( HFONT ) hOldFont );
       }
       else
-      {
          retval = FALSE;
-      }
    }
 
    hb_retl( retval );
@@ -513,9 +485,7 @@ HB_FUNC( WVW_XBCREATE )
    }
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-   }
 
    xy    = hb_gt_wvwGetXYFromColRow( pWindowData, usLeft, usTop );
    iTop  = xy.y + iOffTop;
@@ -538,13 +508,9 @@ HB_FUNC( WVW_XBCREATE )
 
    uiXBid = LastControlId( usWinNum, WVW_CONTROL_SCROLLBAR );
    if( uiXBid == 0 )
-   {
       uiXBid = WVW_ID_BASE_SCROLLBAR;
-   }
    else
-   {
       uiXBid++;
-   }
 
    hWndXB = CreateWindowEx(
       0L,                                       /* no extended styles */
@@ -586,10 +552,7 @@ HB_FUNC( WVW_XBCREATE )
       hb_retnl( ( LONG ) uiXBid );
    }
    else
-   {
-
       hb_retnl( ( LONG ) 0 );
-   }
 }
 
 /*WVW_XBdestroy( [nWinNum], nXBid )
@@ -606,34 +569,24 @@ HB_FUNC( WVW_XBDESTROY )
    while( pcd )
    {
       if( pcd->byCtrlClass == WVW_CONTROL_SCROLLBAR && pcd->uiCtrlid == uiXBid )
-      {
          break;
-      }
 
       pcdPrev = pcd;
       pcd     = pcd->pNext;
    }
    if( pcd == NULL )
-   {
       return;
-   }
 
    DestroyWindow( pcd->hWndCtrl );
 
    if( pcdPrev == NULL )
-   {
       pWindowData->pcdCtrlList = pcd->pNext;
-   }
    else
-   {
       pcdPrev->pNext = pcd->pNext;
-   }
 
    if( pcd->phiCodeBlock )
-   {
       hb_itemRelease( pcd->phiCodeBlock );
 
-   }
 
    hb_xfree( pcd );
 }
@@ -667,17 +620,11 @@ HB_FUNC( WVW_XBUPDATE )
    }
 
    if( ! HB_ISNIL( 3 ) )
-   {
       fMask = fMask | SIF_POS;
-   }
    if( ! HB_ISNIL( 4 ) )
-   {
       fMask = fMask | SIF_PAGE;
-   }
    if( ! HB_ISNIL( 5 ) && ! HB_ISNIL( 6 ) )
-   {
       fMask = fMask | SIF_RANGE;
-   }
 
    si.cbSize = sizeof( si );
    si.fMask  = fMask;

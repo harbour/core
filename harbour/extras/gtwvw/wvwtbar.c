@@ -290,9 +290,7 @@ HB_FUNC( WVW_TBADDBUTTON )
    hb_gt_wvwTBinitSize( pWindowData, hWndTB );
 
    if( pWindowData->usTBHeight != usOldHeight )
-   {
       hb_gt_wvwResetWindow( usWinNum );
-   }
 
    hb_retl( TRUE );
 }
@@ -347,9 +345,7 @@ HB_FUNC( WVW_TBDELBUTTON )
    hb_gt_wvwTBinitSize( pWindowData, hWndTB );
 
    if( pWindowData->usTBHeight != usOldHeight )
-   {
       hb_gt_wvwResetWindow( usWinNum );
-   }
 
    hb_retl( TRUE );
 }
@@ -434,9 +430,7 @@ HB_FUNC( WVW_TBENABLEBUTTON )
    hb_gt_wvwTBinitSize( pWindowData, hWndTB );
 
    if( pWindowData->usTBHeight != usOldHeight )
-   {
       hb_gt_wvwResetWindow( usWinNum );
-   }
 
    hb_retl( TRUE );
 }
@@ -492,8 +486,6 @@ HB_FUNC( WVW_TBCMD2INDEX )
 /* TOOLBAR ends                                                      */
 
 
-
-
 #if _WIN32_IE > 0x400
 
 
@@ -514,9 +506,7 @@ HB_FUNC( WVW_SETTOOLTIPACTIVE )
    {
 
       if( hb_parl( 2 ) && ( pWindowData->hWndTT == NULL ) )
-      {
          hb_gt_wvwCreateToolTipWindow( pWindowData );
-      }
 
       pWindowData->bToolTipActive = hb_parl( 2 );
    }
@@ -543,14 +533,10 @@ HB_FUNC( WVW_SETTOOLTIP )
           usRight  = hb_parni( 5 );
 
    if( ! pWindowData->bToolTipActive )
-   {
       return;
-   }
 
    if( hb_getWvwData()->s_bMainCoordMode )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-   }
 
    ti.cbSize = sizeof( TOOLINFO );
    ti.hwnd   = pWindowData->hWnd;
@@ -577,7 +563,6 @@ HB_FUNC( WVW_SETTOOLTIP )
 }
 
 
-
 HB_FUNC( WVW_SETTOOLTIPTEXT )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -594,7 +579,6 @@ HB_FUNC( WVW_SETTOOLTIPTEXT )
       SendMessage( pWindowData->hWndTT, TTM_UPDATETIPTEXT, 0, ( LPARAM ) &ti );
    }
 }
-
 
 
 HB_FUNC( WVW_SETTOOLTIPMARGIN )
@@ -619,13 +603,10 @@ HB_FUNC( WVW_SETTOOLTIPWIDTH )
    int iTipWidth = SendMessage( pWindowData->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
    if( HB_ISNUM( 2 ) )
-   {
       SendMessage( pWindowData->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( int ) hb_parni( 2 ) );
-   }
 
    hb_retni( iTipWidth );
 }
-
 
 
 HB_FUNC( WVW_SETTOOLTIPBKCOLOR )
@@ -636,12 +617,9 @@ HB_FUNC( WVW_SETTOOLTIPBKCOLOR )
    COLORREF cr = SendMessage( pWindowData->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
 
    if( HB_ISNUM( 2 ) )
-   {
       SendMessage( pWindowData->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 2 ), 0 );
-   }
    hb_retnl( ( COLORREF ) cr );
 }
-
 
 
 HB_FUNC( WVW_SETTOOLTIPTEXTCOLOR )
@@ -652,12 +630,9 @@ HB_FUNC( WVW_SETTOOLTIPTEXTCOLOR )
    COLORREF cr = SendMessage( pWindowData->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
 
    if( HB_ISNUM( 2 ) )
-   {
       SendMessage( pWindowData->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 2 ), 0 );
-   }
    hb_retnl( ( COLORREF ) cr );
 }
-
 
 
 HB_FUNC( WVW_SETTOOLTIPTITLE )
@@ -670,13 +645,10 @@ HB_FUNC( WVW_SETTOOLTIPTITLE )
    {
       iIcon = HB_ISNIL( 2 ) ? 0 : hb_parni( 2 );
       if( iIcon > 3 )
-      {
          iIcon = 0;
-      }
       SendMessage( pWindowData->hWndTT, TTM_SETTITLE, ( WPARAM ) iIcon, ( LPARAM ) hb_parcx( 3 ) );
    }
 }
-
 
 
 HB_FUNC( WVW_GETTOOLTIPWIDTH )
@@ -688,7 +660,6 @@ HB_FUNC( WVW_GETTOOLTIPWIDTH )
 }
 
 
-
 HB_FUNC( WVW_GETTOOLTIPBKCOLOR )
 {
    UINT       usWinNum    = WVW_WHICH_WINDOW;
@@ -696,7 +667,6 @@ HB_FUNC( WVW_GETTOOLTIPBKCOLOR )
 
    hb_retnl( ( COLORREF ) SendMessage( pWindowData->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
 }
-
 
 
 HB_FUNC( WVW_GETTOOLTIPTEXTCOLOR )

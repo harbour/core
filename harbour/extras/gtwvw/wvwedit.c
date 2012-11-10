@@ -162,9 +162,7 @@ HB_FUNC( WVW_EBCREATE )
    iOffRight  = ! HB_ISNIL( 12 ) ? hb_parvni( 12, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-   }
 
    xy    = hb_gt_wvwGetXYFromColRow( pWindowData, usLeft, usTop );
    iTop  = xy.y + iOffTop;
@@ -179,31 +177,21 @@ HB_FUNC( WVW_EBCREATE )
 
    uiEBid = LastControlId( usWinNum, WVW_CONTROL_EDITBOX );
    if( uiEBid == 0 )
-   {
       uiEBid = WVW_ID_BASE_EDITBOX;
-   }
    else
-   {
       uiEBid++;
-   }
 
    dwStyle = WS_BORDER | WS_GROUP | WS_TABSTOP | dwMoreStyle;
 
    if( ( bEBType & WVW_EB_MULTILINE ) == WVW_EB_MULTILINE )
-   {
       dwStyle |= ES_AUTOVSCROLL | ES_MULTILINE |
                  ES_WANTRETURN | WS_BORDER | WS_VSCROLL;
-   }
    else
-   {
       dwStyle |= ES_AUTOHSCROLL;
-   }
 
    if( pWindowData->CodePage == OEM_CHARSET )
-   {
       dwStyle |= ES_OEMCONVERT;
 
-   }
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
@@ -245,19 +233,15 @@ HB_FUNC( WVW_EBCREATE )
          );
 
       if( bFromOEM )
-      {
          hb_xfree( lpszText );
-      }
 
       if( usMaxChar > 0 )
-      {
          SendMessage(
             ( HWND ) hWndEB,
             EM_LIMITTEXT,
             ( WPARAM ) usMaxChar,
             ( LPARAM ) 0
             );
-      }
 
       rXB.top       = usTop;     rXB.left = usLeft;
       rXB.bottom    = usBottom; rXB.right = usRight;
@@ -276,10 +260,7 @@ HB_FUNC( WVW_EBCREATE )
       hb_retnl( ( LONG ) uiEBid );
    }
    else
-   {
-
       hb_retnl( ( LONG ) 0 );
-   }
 }
 
 /*WVW_EBdestroy( [nWinNum], nEBid )
@@ -296,34 +277,24 @@ HB_FUNC( WVW_EBDESTROY )
    while( pcd )
    {
       if( pcd->byCtrlClass == WVW_CONTROL_EDITBOX && pcd->uiCtrlid == uiEBid )
-      {
          break;
-      }
 
       pcdPrev = pcd;
       pcd     = pcd->pNext;
    }
    if( pcd == NULL )
-   {
       return;
-   }
 
    DestroyWindow( pcd->hWndCtrl );
 
    if( pcdPrev == NULL )
-   {
       pWindowData->pcdCtrlList = pcd->pNext;
-   }
    else
-   {
       pcdPrev->pNext = pcd->pNext;
-   }
 
    if( pcd->phiCodeBlock )
-   {
       hb_itemRelease( pcd->phiCodeBlock );
 
-   }
 
    hb_xfree( pcd );
 }
@@ -339,13 +310,9 @@ HB_FUNC( WVW_EBSETFOCUS )
    HWND hWndEB = FindControlHandle( usWinNum, WVW_CONTROL_EDITBOX, uiCtrlId, &bStyle );
 
    if( hWndEB )
-   {
       hb_retl( SetFocus( hWndEB ) != NULL );
-   }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 /*WVW_EBisFocused( [nWinNum], nEditId )
@@ -381,14 +348,10 @@ HB_FUNC( WVW_EBENABLE )
       hb_retl( EnableWindow( hWndEB, bEnable ) == 0 );
 
       if( ! bEnable )
-      {
          SetFocus( pWindowData->hWnd );
-      }
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 /*WVW_EBeditable( [nWinNum], nEditId, [lEditable] )
@@ -412,19 +375,15 @@ HB_FUNC( WVW_EBEDITABLE )
       hb_retl( ! ( ( dwStyle & ES_READONLY ) == ES_READONLY ) );
 
       if( ! HB_ISNIL( 3 ) )
-      {
          SendMessage(
             ( HWND ) hWndEB,
             EM_SETREADONLY,
             ( WPARAM ) ! bEditable,
             ( LPARAM ) 0
             );
-      }
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 /*WVW_EBsetcodeblock( [nWinNum], nEBid, bBlock )
@@ -452,10 +411,8 @@ HB_FUNC( WVW_EBSETCODEBLOCK )
    pcd->bBusy = TRUE;
 
    if( pcd->phiCodeBlock )
-   {
       hb_itemRelease( pcd->phiCodeBlock );
 
-   }
 
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
@@ -493,9 +450,7 @@ HB_FUNC( WVW_EBSETFONT )
    pData->s_lfEB.lfQuality        = HB_ISNIL( 6 ) ? pData->s_lfEB.lfQuality : ( BYTE ) hb_parni( 6 );
    pData->s_lfEB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-   {
       strcpy( pData->s_lfEB.lfFaceName, hb_parcx( 2 ) );
-   }
 
    if( pWindowData->hEBfont )
    {
@@ -510,10 +465,8 @@ HB_FUNC( WVW_EBSETFONT )
             if( ( pcd->byCtrlClass == WVW_CONTROL_EDITBOX ) &&
                 ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont )
                 )
-            {
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
-            }
 
             pcd = pcd->pNext;
          }
@@ -523,9 +476,7 @@ HB_FUNC( WVW_EBSETFONT )
 
       }
       else
-      {
          retval = FALSE;
-      }
    }
 
    hb_retl( retval );
@@ -584,7 +535,6 @@ HB_FUNC( WVW_EBGETTEXT )
    }
 
    if( bSoftBreak )
-   {
       SendMessage(
          ( HWND ) pcd->hWndCtrl,
          EM_FMTLINES,
@@ -592,7 +542,6 @@ HB_FUNC( WVW_EBGETTEXT )
          ( LPARAM ) 0
          );
 
-   }
 
    usLen = ( USHORT ) SendMessage( ( HWND ) pcd->hWndCtrl, WM_GETTEXTLENGTH, 0, 0 ) + 1;
 
@@ -614,9 +563,7 @@ HB_FUNC( WVW_EBGETTEXT )
       hb_xfree( lpszText );
    }
    else
-   {
       hb_retc( lpszTextANSI );
-   }
 
    hb_xfree( lpszTextANSI );
 }
@@ -657,9 +604,7 @@ HB_FUNC( WVW_EBSETTEXT )
       );
 
    if( bFromOEM )
-   {
       hb_xfree( lpszText );
-   }
 
    hb_retl( bRetval );
 }
@@ -777,7 +722,6 @@ HB_FUNC( WVW_STCREATE )
    }
 
 
-
    iOffTop  = ! HB_ISNIL( 6 ) ? hb_parvni( 6, 1 ) : 0;
    iOffLeft = ! HB_ISNIL( 6 ) ? hb_parvni( 6, 2 ) : 0;
 
@@ -785,9 +729,7 @@ HB_FUNC( WVW_STCREATE )
    iOffRight  = ! HB_ISNIL( 6 ) ? hb_parvni( 6, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-   }
 
    xy    = hb_gt_wvwGetXYFromColRow( pWindowData, usLeft, usTop );
    iTop  = xy.y + iOffTop;
@@ -802,13 +744,9 @@ HB_FUNC( WVW_STCREATE )
 
    uiCBid = LastControlId( usWinNum, WVW_CONTROL_STATIC );
    if( uiCBid == 0 )
-   {
       uiCBid = WVW_ID_BASE_STATIC;
-   }
    else
-   {
       uiCBid++;
-   }
 
    hb_winmainArgGet( &hInstance, NULL, NULL );
 
@@ -840,9 +778,7 @@ HB_FUNC( WVW_STCREATE )
 
 
       if( HB_ISCHAR( 5 ) )
-      {
          SendMessage( hWndCB, WM_SETTEXT, 0, ( LPARAM ) hb_parc( 5 ) );
-      }
       if( hFont )
          SendMessage( hWndCB, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
       else
@@ -851,10 +787,7 @@ HB_FUNC( WVW_STCREATE )
       HB_STOREHANDLE( hWndCB, 9 );
    }
    else
-   {
-
       hb_retnl( ( LONG ) 0 );
-   }
 }
 
 
@@ -870,9 +803,7 @@ HB_FUNC( WVW_STSETTEXT )
       hb_retl( 1 );
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 
@@ -896,9 +827,7 @@ HB_FUNC( WVW_STSETFONT )
    pData->s_lfST.lfQuality        = HB_ISNIL( 6 ) ? pData->s_lfST.lfQuality : ( BYTE ) hb_parni( 6 );
    pData->s_lfST.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-   {
       strcpy( pData->s_lfST.lfFaceName, hb_parcx( 2 ) );
-   }
 
    if( pWindowData->hSTfont )
    {
@@ -913,10 +842,8 @@ HB_FUNC( WVW_STSETFONT )
             if( ( pcd->byCtrlClass == WVW_CONTROL_STATIC ) &&
                 ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont )
                 )
-            {
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
-            }
 
             pcd = pcd->pNext;
          }
@@ -926,9 +853,7 @@ HB_FUNC( WVW_STSETFONT )
 
       }
       else
-      {
          retval = FALSE;
-      }
    }
 
    hb_retl( retval );

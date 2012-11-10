@@ -88,7 +88,7 @@
 
 #ifndef _SYS_GUID_OPERATOR_EQ_
 #define _SYS_GUID_OPERATOR_EQ_  1
-#endif   // _SYS_GUID_OPERATOR_EQ_
+#endif
 
-#endif   // _MSC_VER
-#endif   // HB_OLE_H_
+#endif
+#endif

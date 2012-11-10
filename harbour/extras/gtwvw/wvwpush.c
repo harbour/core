@@ -168,34 +168,24 @@ HB_FUNC( WVW_PBDESTROY )
    while( pcd )
    {
       if( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON && pcd->uiCtrlid == uiPBid )
-      {
          break;
-      }
       pcdPrev = pcd;
       pcd     = pcd->pNext;
    }
 
    if( pcd == NULL )
-   {
       return;
-   }
 
    DestroyWindow( pcd->hWndCtrl );
 
    if( pcdPrev == NULL )
-   {
       pWindowData->pcdCtrlList = pcd->pNext;
-   }
    else
-   {
       pcdPrev->pNext = pcd->pNext;
-   }
 
    if( pcd->phiCodeBlock )
-   {
       hb_itemRelease( pcd->phiCodeBlock );
 
-   }
 
    hb_xfree( pcd );
 }
@@ -211,14 +201,9 @@ HB_FUNC( WVW_PBSETFOCUS )
    HWND hWndPB = FindControlHandle( usWinNum, WVW_CONTROL_PUSHBUTTON, uiCtrlId, &bStyle );
 
    if( hWndPB )
-   {
-
       hb_retl( SetFocus( hWndPB ) != NULL );
-   }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 /*WVW_PBisFocused( [nWinNum], nPBid )
@@ -254,14 +239,10 @@ HB_FUNC( WVW_PBENABLE )
       hb_retl( EnableWindow( hWndPB, bEnable ) == 0 );
 
       if( ! bEnable )
-      {
          SetFocus( pWindowData->hWnd );
-      }
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 /*WVW_PBsetcodeblock( [nWinNum], nPBid, bBlock )
@@ -309,10 +290,8 @@ HB_FUNC( WVW_PBSETCODEBLOCK )
    pcd->bBusy = TRUE;
 
    if( pcd->phiCodeBlock )
-   {
       hb_itemRelease( pcd->phiCodeBlock );
 
-   }
 
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
@@ -344,9 +323,7 @@ HB_FUNC( WVW_PBSETSTYLE )
    CONTROL_DATA * pcd = GetControlData( usWinNum, WVW_CONTROL_PUSHBUTTON, NULL, uiPBid );
 
    if( pcd->hWndCtrl )
-   {
       SendMessage( pcd->hWndCtrl, BM_SETSTYLE, ( WPARAM ) ulStyle, ( LPARAM ) TRUE );
-   }
 
    hb_retl( TRUE );
 }
@@ -377,9 +354,7 @@ HB_FUNC( WVW_PBSETFONT )
    pData->s_lfPB.lfQuality        = HB_ISNIL( 6 ) ? pData->s_lfPB.lfQuality : ( BYTE ) hb_parni( 6 );
    pData->s_lfPB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-   {
       strcpy( pData->s_lfPB.lfFaceName, hb_parcx( 2 ) );
-   }
 
    if( pWindowData->hPBfont )
    {
@@ -394,9 +369,7 @@ HB_FUNC( WVW_PBSETFONT )
             if( ( pcd->byCtrlClass == WVW_CONTROL_PUSHBUTTON ) &&
                 ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont )
                 )
-            {
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
-            }
 
             pcd = pcd->pNext;
          }
@@ -406,9 +379,7 @@ HB_FUNC( WVW_PBSETFONT )
 
       }
       else
-      {
          retval = FALSE;
-      }
    }
 
    hb_retl( retval );
@@ -417,7 +388,6 @@ HB_FUNC( WVW_PBSETFONT )
 
 
 /* PUSHBUTTON ends                                                   */
-
 
 
 /* COMBOBOX begins (experimental)                                    */
@@ -517,9 +487,7 @@ HB_FUNC( WVW_CBCREATE )
    iOffRight  = ! HB_ISNIL( 10 ) ? hb_parvni( 10, 4 ) : 0;
 
    if( hb_gt_wvw_GetMainCoordMode() )
-   {
       hb_wvw_HBFUNCPrologue( usWinNum, &usTop, &usLeft, &usBottom, &usRight );
-   }
 
    xy    = hb_gt_wvwGetXYFromColRow( pWindowData, usLeft, usTop );
    iTop  = xy.y + iOffTop;
@@ -534,13 +502,9 @@ HB_FUNC( WVW_CBCREATE )
 
    uiCBid = LastControlId( usWinNum, WVW_CONTROL_COMBOBOX );
    if( uiCBid == 0 )
-   {
       uiCBid = WVW_ID_BASE_COMBOBOX;
-   }
    else
-   {
       uiCBid++;
-   }
 
    InitCommonControls();
 
@@ -586,7 +550,6 @@ HB_FUNC( WVW_CBCREATE )
          }
       }
       else
-      {
          for( i = 1; i <= usNumElement; i++ )
          {
             if( SendMessage( ( HWND ) hWndCB,
@@ -606,7 +569,6 @@ HB_FUNC( WVW_CBCREATE )
 
             }
          }
-      }
 
       SendMessage(
          ( HWND ) hWndCB,
@@ -649,10 +611,7 @@ HB_FUNC( WVW_CBCREATE )
       hb_retnl( ( LONG ) uiCBid );
    }
    else
-   {
-
       hb_retnl( ( LONG ) 0 );
-   }
 }
 
 /*WVW_CBdestroy( [nWinNum], nCBid )
@@ -669,34 +628,24 @@ HB_FUNC( WVW_CBDESTROY )
    while( pcd )
    {
       if( pcd->byCtrlClass == WVW_CONTROL_COMBOBOX && pcd->uiCtrlid == uiCBid )
-      {
          break;
-      }
 
       pcdPrev = pcd;
       pcd     = pcd->pNext;
    }
    if( pcd == NULL )
-   {
       return;
-   }
 
    DestroyWindow( pcd->hWndCtrl );
 
    if( pcdPrev == NULL )
-   {
       pWindowData->pcdCtrlList = pcd->pNext;
-   }
    else
-   {
       pcdPrev->pNext = pcd->pNext;
-   }
 
    if( pcd->phiCodeBlock )
-   {
       hb_itemRelease( pcd->phiCodeBlock );
 
-   }
 
    hb_xfree( pcd );
 }
@@ -712,14 +661,9 @@ HB_FUNC( WVW_CBSETFOCUS )
    HWND hWndCB = FindControlHandle( usWinNum, WVW_CONTROL_COMBOBOX, uiCtrlId, &bStyle );
 
    if( hWndCB )
-   {
-
       hb_retl( SetFocus( hWndCB ) != NULL );
-   }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 /*WVW_CBisFocused( [nWinNum], nComboId )
@@ -755,14 +699,10 @@ HB_FUNC( WVW_CBENABLE )
       hb_retl( EnableWindow( hWndCB, bEnable ) == 0 );
 
       if( ! bEnable )
-      {
          SetFocus( pWindowData->hWnd );
-      }
    }
    else
-   {
       hb_retl( FALSE );
-   }
 }
 
 /*WVW_CBsetcodeblock( [nWinNum], nCBid, bBlock )
@@ -790,10 +730,8 @@ HB_FUNC( WVW_CBSETCODEBLOCK )
    pcd->bBusy = TRUE;
 
    if( pcd->phiCodeBlock )
-   {
       hb_itemRelease( pcd->phiCodeBlock );
 
-   }
 
    pcd->phiCodeBlock = hb_itemNew( phiCodeBlock );
 
@@ -832,9 +770,7 @@ HB_FUNC( WVW_CBSETFONT )
    pData->s_lfCB.lfQuality        = HB_ISNIL( 6 ) ? pData->s_lfCB.lfQuality : ( BYTE ) hb_parni( 6 );
    pData->s_lfCB.lfPitchAndFamily = FF_DONTCARE;
    if( HB_ISCHAR( 2 ) )
-   {
       strcpy( pData->s_lfCB.lfFaceName, hb_parcx( 2 ) );
-   }
 
    if( pWindowData->hCBfont )
    {
@@ -849,10 +785,8 @@ HB_FUNC( WVW_CBSETFONT )
             if( ( pcd->byCtrlClass == WVW_CONTROL_COMBOBOX ) &&
                 ( ( HFONT ) SendMessage( pcd->hWndCtrl, WM_GETFONT, ( WPARAM ) 0, ( LPARAM ) 0 ) == hOldFont )
                 )
-            {
                SendMessage( pcd->hWndCtrl, WM_SETFONT, ( WPARAM ) hFont, ( LPARAM ) TRUE );
 
-            }
 
             pcd = pcd->pNext;
          }
@@ -862,9 +796,7 @@ HB_FUNC( WVW_CBSETFONT )
 
       }
       else
-      {
          retval = FALSE;
-      }
    }
 
    hb_retl( retval );
@@ -1008,13 +940,9 @@ HB_FUNC( WVW_CBGETCURTEXT )
                     ( WPARAM ) iCurSel,
                     ( LPARAM ) lptstr
                     ) == CB_ERR )
-   {
       hb_retclen( lptstr, 0 );
-   }
    else
-   {
       hb_retc( lptstr );
-   }
    hb_xfree( lptstr );
 }
 

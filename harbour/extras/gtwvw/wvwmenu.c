@@ -78,14 +78,9 @@
 #include "hbgtwvw.h"
 
 
-
-
-
 /*                                                                   */
 /*                 Peter Rees <peter@rees.co.nz>                     */
 /*                                                                   */
-
-
 
 
 HB_FUNC( WVW_SETMENU )
@@ -97,7 +92,6 @@ HB_FUNC( WVW_SETMENU )
 
    hb_gt_wvwResetWindow( usWinNum );
 }
-
 
 
 HB_FUNC( WVW_SETPOPUPMENU )
@@ -114,19 +108,16 @@ HB_FUNC( WVW_SETPOPUPMENU )
 }
 
 
-
 HB_FUNC( WVW_CREATEMENU )
 {
    HB_RETHANDLE( CreateMenu() );
 }
 
 
-
 HB_FUNC( WVW_CREATEPOPUPMENU )
 {
    HB_RETHANDLE( CreatePopupMenu() );
 }
-
 
 
 /* WVW_APPENDMENU( hMenu, nFlags, nMenuItemId, cCaption ) */
@@ -161,18 +152,13 @@ HB_FUNC( WVW_APPENDMENU )
          lpszCaption   = ucBuf;
       }
       else
-      {
          lpszCaption = hb_parcx( 4 );
-      }
    }
    else
-   {
       lpszCaption = ( LPCTSTR ) hb_parni( 4 );
-   }
 
    hb_retl( AppendMenu( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT_PTR ) hb_parni( 3 ), ( LPCTSTR ) lpszCaption ) );
 }
-
 
 
 HB_FUNC( WVW_DELETEMENU )
@@ -181,19 +167,16 @@ HB_FUNC( WVW_DELETEMENU )
 }
 
 
-
 HB_FUNC( WVW_DESTROYMENU )
 {
    hb_retl( DestroyMenu( ( HMENU ) HB_PARHANDLE( 1 ) ) );
 }
 
 
-
 HB_FUNC( WVW_ENABLEMENUITEM )
 {
    hb_retni( EnableMenuItem( ( HMENU ) HB_PARHANDLE( 1 ), ( UINT ) hb_parni( 2 ), ( UINT ) hb_parni( 3 ) ) );
 }
-
 
 
 HB_FUNC( WVW_GETLASTMENUEVENT )
@@ -204,7 +187,6 @@ HB_FUNC( WVW_GETLASTMENUEVENT )
 }
 
 
-
 HB_FUNC( WVW_SETLASTMENUEVENT )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
@@ -213,16 +195,13 @@ HB_FUNC( WVW_SETLASTMENUEVENT )
 }
 
 
-
 HB_FUNC( WVW_SETMENUKEYEVENT )
 {
    UINT usWinNum = WVW_WHICH_WINDOW;
    int  iEvent   = 0;
 
    if( HB_ISNUM( 2 ) )
-   {
       iEvent = hb_parnl( 2 );
-   }
 
    hb_retni( hb_gt_wvwSetMenuKeyEvent( usWinNum, iEvent ) );
 }
@@ -294,16 +273,10 @@ HB_FUNC( WVW_MENUITEM_SETBITMAPS )
    }
 
    if( ! HB_ISNIL( 2 ) )
-   {
       SetMenuItemBitmaps( ( HMENU ) HB_PARHANDLE( 1 ), hb_parni( 2 ), MF_BYCOMMAND, ( HBITMAP ) hBitmapUnchecked, ( HBITMAP ) hBitmapChecked );
-   }
    else
-   {
       SetMenuItemBitmaps( ( HMENU ) HB_PARHANDLE( 1 ), hb_parni( 3 ), MF_BYPOSITION, ( HBITMAP ) hBitmapUnchecked, ( HBITMAP ) hBitmapChecked );
-   }
 }
-
-
 
 
 HB_FUNC( WVW_DRAWMENUBAR )
@@ -313,7 +286,6 @@ HB_FUNC( WVW_DRAWMENUBAR )
 
    DrawMenuBar( pWindowData->hWnd );
 }
-
 
 
 HB_FUNC( WVW_ENDMENU )
