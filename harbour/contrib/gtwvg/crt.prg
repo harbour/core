@@ -413,10 +413,10 @@ METHOD WvgCrt:enable()
 
 METHOD WvgCrt:getFrameState()
 
-   IF WVG_IsIconic( ::hWnd )
+   IF Wvg_IsIconic( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MINIMIZED
    ENDIF
-   IF WVG_IsZoomed( ::hWnd )
+   IF Wvg_IsZoomed( ::hWnd )
       RETURN WVGDLG_FRAMESTAT_MAXIMIZED
    ENDIF
 
@@ -562,7 +562,7 @@ METHOD WvgCrt:toBack()
 
 METHOD WvgCrt:toFront()
 
-   RETURN WVG_SetWindowPosToTop( ::hWnd )
+   RETURN Wvg_SetWindowPosToTop( ::hWnd )
 
 METHOD WvgCrt:unlockPS()
 

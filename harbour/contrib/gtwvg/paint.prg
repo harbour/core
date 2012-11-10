@@ -615,7 +615,7 @@ FUNCTION Wvt_GetRGBColor( nIndex )
 #define YELLOW                                    RGB( 0xFF,0xFF,0x00 )
 #define WHITE                                     RGB( 0xFF,0xFF,0xFF )
 
-FUNCTION Wvt_GetRGBColorBYString( cColor, nForeBack )
+FUNCTION Wvt_GetRGBColorByString( cColor, nForeBack )
 
    LOCAL s, n, lEnh
    LOCAL nIndex := 0

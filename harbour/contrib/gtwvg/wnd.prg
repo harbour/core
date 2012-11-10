@@ -332,17 +332,17 @@ METHOD WvgWindow:destroy()
       ::aChildren := {}
    ENDIF
 
-   WVG_ReleaseWindowProcBlock( ::pWnd )
+   Wvg_ReleaseWindowProcBlock( ::pWnd )
 
-   IF WVG_IsWindow( ::hWndTT )
-      WVG_DestroyWindow( ::hWndTT )
+   IF Wvg_IsWindow( ::hWndTT )
+      Wvg_DestroyWindow( ::hWndTT )
    ENDIF
-   IF WVG_IsWindow( ::hWnd )
-      WVG_DestroyWindow( ::hWnd )
+   IF Wvg_IsWindow( ::hWnd )
+      Wvg_DestroyWindow( ::hWnd )
    ENDIF
 
    IF ::hBrushBG != NIL
-      WVG_DeleteObject( ::hBrushBG )
+      Wvg_DeleteObject( ::hBrushBG )
    ENDIF
 
    ::hWnd                   := NIL
@@ -411,7 +411,7 @@ METHOD WvgWindow:destroy()
 
 METHOD WvgWindow:SetWindowProcCallback()
 
-   ::nOldProc := WVG_SetWindowProcBlock( ::pWnd, {| h, m, w, l | ::ControlWndProc( h, m, w, l ) } )
+   ::nOldProc := Wvg_SetWindowProcBlock( ::pWnd, {| h, m, w, l | ::ControlWndProc( h, m, w, l ) } )
 
    RETURN Self
 
@@ -421,7 +421,7 @@ METHOD WvgWindow:captureMouse()
 
 METHOD WvgWindow:disable()
 
-   IF WVG_EnableWindow( ::hWnd, .F. )
+   IF Wvg_EnableWindow( ::hWnd, .F. )
       ::is_enabled := .F.
       RETURN .T.
    ENDIF
@@ -430,7 +430,7 @@ METHOD WvgWindow:disable()
 
 METHOD WvgWindow:enable()
 
-   IF WVG_EnableWindow( ::hWnd, .T. )
+   IF Wvg_EnableWindow( ::hWnd, .T. )
       ::is_enabled := .T.
       RETURN .T.
    ENDIF
@@ -439,8 +439,8 @@ METHOD WvgWindow:enable()
 
 METHOD WvgWindow:hide()
 
-   IF WVG_IsWindow( ::hWnd )
-      WVG_ShowWindow( ::hWnd, SW_HIDE )
+   IF Wvg_IsWindow( ::hWnd )
+      Wvg_ShowWindow( ::hWnd, SW_HIDE )
       ::is_hidden := .T.
    ENDIF
 
@@ -448,7 +448,7 @@ METHOD WvgWindow:hide()
 
 METHOD WvgWindow:invalidateRect( aRect )
 
-   RETURN WVG_InvalidateRect( ::hWnd, aRect )
+   RETURN Wvg_InvalidateRect( ::hWnd, aRect )
 
 METHOD WvgWindow:lockPS()
 
@@ -466,7 +466,7 @@ METHOD WvgWindow:setColorBG( nRGB )
       nRGB := Wvt_GetRGBColorByString( nRGB, 1 )
    ENDIF
    IF HB_ISNUMERIC( nRGB )
-      hBrush := WVG_CreateBrush( BS_SOLID, nRGB, 0 )
+      hBrush := Wvg_CreateBrush( BS_SOLID, nRGB, 0 )
       IF hBrush != 0
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
@@ -505,7 +505,7 @@ METHOD WvgWindow:setPos( aPos, lPaint )
 
       OTHERWISE
          aPosSz := ::getPosAndSize( aPos )
-         WVG_SetWindowPosition( ::hWnd, aPosSz[ 1 ], aPosSz[ 2 ], lPaint )
+         Wvg_SetWindowPosition( ::hWnd, aPosSz[ 1 ], aPosSz[ 2 ], lPaint )
 
       ENDSWITCH
    ENDIF
@@ -533,7 +533,7 @@ METHOD WvgWindow:setPosAndSize( aPos, aSize, lPaint )
 
       OTHERWISE
          aPosSz := ::getPosAndSize( aPos, aSize )
-         WVG_SetWindowPosAndSize( ::hWnd, aPosSz[ 1 ], aPosSz[ 2 ], aPosSz[ 3 ], aPosSz[ 4 ], lPaint )
+         Wvg_SetWindowPosAndSize( ::hWnd, aPosSz[ 1 ], aPosSz[ 2 ], aPosSz[ 3 ], aPosSz[ 4 ], lPaint )
 
       ENDSWITCH
    ENDIF
@@ -554,7 +554,7 @@ METHOD WvgWindow:setSize( aSize, lPaint )
 
       OTHERWISE
          aPosSz := ::getPosAndSize( , aSize )
-         WVG_SetWindowSize( ::hWnd, aPosSz[ 3 ], aPosSz[ 4 ], lPaint )
+         Wvg_SetWindowSize( ::hWnd, aPosSz[ 3 ], aPosSz[ 4 ], lPaint )
 
       ENDSWITCH
    ENDIF
@@ -583,7 +583,7 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
 
 METHOD WvgWindow:show()
 
-   WVG_ShowWindow( ::hWnd, SW_NORMAL )
+   Wvg_ShowWindow( ::hWnd, SW_NORMAL )
    ::is_hidden      := .F.
    ::lHasInputFocus := .T.
 
@@ -591,13 +591,13 @@ METHOD WvgWindow:show()
 
 METHOD WvgWindow:toBack()
 
-   RETURN WVG_SetWindowPosToBack( ::hWnd )
+   RETURN Wvg_SetWindowPosToBack( ::hWnd )
 
 METHOD WvgWindow:toFront()
 
    /*RETURN WVG_SetForeGroundWindow( ::hWnd ) */
 
-   RETURN WVG_SetWindowPosToTop( ::hWnd )
+   RETURN Wvg_SetWindowPosToTop( ::hWnd )
 
 METHOD WvgWindow:unlockPS()
 
@@ -607,7 +607,7 @@ METHOD WvgWindow:winDevice()
 
    RETURN Self
 
-METHOD WvgWindow:setFont()
+METHOD WvgWindow:SetFont()
 
    RETURN Self
 
@@ -656,7 +656,7 @@ METHOD WvgWindow:setPresParam()
 
 METHOD WvgWindow:currentPos()
 
-   LOCAL aRect := WVG_GetWindowRect( ::hWnd )
+   LOCAL aRect := Wvg_GetWindowRect( ::hWnd )
 
    RETURN { aRect[ 1 ], aRect[ 2 ] }
 
@@ -664,7 +664,7 @@ METHOD WvgWindow:currentSize()
 
    LOCAL aRect
 
-   aRect := WVG_GetClientRect( ::hWnd )
+   aRect := Wvg_GetClientRect( ::hWnd )
 
    RETURN { aRect[ 3 ] - aRect[ 1 ], aRect[ 4 ] - aRect[ 2 ] }
 
@@ -1140,13 +1140,13 @@ METHOD WvgWindow:Initialize( oParent, oOwner, aPos, aSize, aPresParams, lVisible
 
 METHOD WvgWindow:setFocus()
 
-   WVG_SetFocus( ::hWnd )
+   Wvg_SetFocus( ::hWnd )
 
    RETURN Self
 
 METHOD WvgWindow:sendMessage( nMessage, nlParam, nwParam )
 
-   RETURN WVG_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
+   RETURN Wvg_SendMessage( ::hWnd, nMessage, nlParam, nwParam )
 
 METHOD WvgWindow:findObjectByHandle( hWnd )
 
@@ -1216,8 +1216,8 @@ METHOD WvgWindow:toolTipText( cText )
 
    IF HB_ISSTRING( cText )
       ::s_toolTipText := cText
-      IF WVG_IsWindow( ::hWndTT )
-         WVG_SetTooltipText( ::hWnd, ::hWndTT, ::s_toolTipText )
+      IF Wvg_IsWindow( ::hWndTT )
+         Wvg_SetToolTipText( ::hWnd, ::hWndTT, ::s_toolTipText )
       ENDIF
    ENDIF
 
@@ -1231,21 +1231,23 @@ METHOD WvgWindow:createControl()
 
    aPosSz := ::getPosAndSize( ::aPos, ::aSize )
 
-   hWnd := WVG_CreateWindowEx( ::exStyle, ;
-                               ::className, ;
-                               "", ;                              /* window name */
-                               ::style, ;
-                               aPosSz[ 1 ], aPosSz[ 2 ], ;
-                               aPosSz[ 3 ], aPosSz[ 4 ], ;
-                               ::oParent:hWnd, ;
-                               ::nID, ;                           /* hMenu       */
-                               NIL, ;                             /* hInstance   */
-                               NIL )                              /* lParam      */
-   IF WVG_IsWindow( hWnd )
+   hWnd := Wvg_CreateWindowEx( ;
+      ::exStyle, ;
+      ::className, ;
+      "", ;                              /* window name */
+      ::style, ;
+      aPosSz[ 1 ], aPosSz[ 2 ], ;
+      aPosSz[ 3 ], aPosSz[ 4 ], ;
+      ::oParent:hWnd, ;
+      ::nID, ;                           /* hMenu       */
+      NIL, ;                             /* hInstance   */
+      NIL )                              /* lParam      */
+
+   IF Wvg_IsWindow( hWnd )
       ::hWnd := hWnd
-      ::pWnd := WIN_N2P( hWnd )
-      ::sendMessage( WM_SETFONT, WVG_GetStockObject( DEFAULT_GUI_FONT ), 1 )
-      ::hWndTT := WVG_CreateTooltipWindow( ::hWnd )
+      ::pWnd := win_N2P( hWnd )
+      ::sendMessage( WM_SETFONT, Wvg_GetStockObject( DEFAULT_GUI_FONT ), 1 )
+      ::hWndTT := Wvg_CreateToolTipWindow( ::hWnd )
    ENDIF
 
    RETURN Self
