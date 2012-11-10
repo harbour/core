@@ -86,7 +86,7 @@
 #define WIN_REG_QWORD                      11  /* 64-bit number */
 #define WIN_REG_QWORD_LITTLE_ENDIAN        11  /* 64-bit number (same as REG_QWORD) */
 
-/* WIN_PORT() related values */
+/* win_com*() related values */
 
 /* win_comOpen() bit rates */
 #define WIN_CBR_110                 110
@@ -214,7 +214,7 @@
 #define WIN_DMDUP_VERTICAL          2
 #define WIN_DMDUP_HORIZONTAL        3
 
-/* WAPI DEVMODE "dmOrientation" modes */
+/* __wapi_DEVMODE_*() "dmOrientation" modes */
 #define WIN_DMORIENT_PORTRAIT       1
 #define WIN_DMORIENT_LANDSCAPE      2
 
@@ -338,23 +338,23 @@
 #define WIN_OEM_CHARSET             255
 
 /* win_GetDeviceCaps() parameters */
-#define WIN_HORZSIZE                4     // Horizontal size in millimeters
-#define WIN_VERTSIZE                6     // Vertical size in millimeters
-#define WIN_HORZRES                 8     // Horizontal width in pixels
-#define WIN_VERTRES                 10    // Vertical height in pixels
-#define WIN_NUMBRUSHES              16    // Number of brushes the device has
-#define WIN_NUMPENS                 18    // Number of pens the device has
-#define WIN_NUMFONTS                22    // Number of fonts the device has
-#define WIN_NUMCOLORS               24    // Number of colors the device supports
-#define WIN_RASTERCAPS              38    // Bitblt capabilities
-#define WIN_LOGPIXELSX              88    // Logical pixels/inch in X
-#define WIN_LOGPIXELSY              90    // Logical pixels/inch in Y
-#define WIN_PHYSICALWIDTH           110   // Physical Width in device units
-#define WIN_PHYSICALHEIGHT          111   // Physical Height in device units
-#define WIN_PHYSICALOFFSETX         112   // Physical Printable Area x margin
-#define WIN_PHYSICALOFFSETY         113   // Physical Printable Area y margin
-#define WIN_SCALINGFACTORX          114   // Scaling factor x
-#define WIN_SCALINGFACTORY          115   // Scaling factor y
+#define WIN_HORZSIZE                4     /* Horizontal size in millimeters */
+#define WIN_VERTSIZE                6     /* Vertical size in millimeters */
+#define WIN_HORZRES                 8     /* Horizontal width in pixels */
+#define WIN_VERTRES                 10    /* Vertical height in pixels */
+#define WIN_NUMBRUSHES              16    /* Number of brushes the device has */
+#define WIN_NUMPENS                 18    /* Number of pens the device has */
+#define WIN_NUMFONTS                22    /* Number of fonts the device has */
+#define WIN_NUMCOLORS               24    /* Number of colors the device supports */
+#define WIN_RASTERCAPS              38    /* Bitblt capabilities */
+#define WIN_LOGPIXELSX              88    /* Logical pixels/inch in X */
+#define WIN_LOGPIXELSY              90    /* Logical pixels/inch in Y */
+#define WIN_PHYSICALWIDTH           110   /* Physical Width in device units */
+#define WIN_PHYSICALHEIGHT          111   /* Physical Height in device units */
+#define WIN_PHYSICALOFFSETX         112   /* Physical Printable Area x margin */
+#define WIN_PHYSICALOFFSETY         113   /* Physical Printable Area y margin */
+#define WIN_SCALINGFACTORX          114   /* Scaling factor x */
+#define WIN_SCALINGFACTORY          115   /* Scaling factor y */
 
 /* wapi_GetSystemMetrics() parameters */
 #define WIN_SM_CXSCREEN             0
