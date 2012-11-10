@@ -6,6 +6,8 @@
 //
 //               Pritpal Bedi <bedipritpal@hotmail.com>
 
+#require "gtwvg"
+
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
@@ -24,6 +26,10 @@ MEMVAR GetList
 PROCEDURE Main()
 
    LOCAL aPaint
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVG" )
+#endif
 
    SET DATE ANSI
    Set( _SET_EVENTMASK, INKEY_ALL + HB_INKEY_GTEVENT )
@@ -100,16 +106,6 @@ STATIC FUNCTION ExecForm( aPaint )
 
    SetColor( cColor )
    WvtSetPaint( aPnt )
-
-   RETURN NIL
-
-FUNCTION hb_GTSYS()
-
-REQUEST HB_GT_WVG_DEFAULT
-
-REQUEST HB_GT_WVT
-
-REQUEST HB_GT_WGU
 
    RETURN NIL
 
@@ -198,3 +194,15 @@ FUNCTION DoModalDialog()
    WvtSetPaint( aPnt )
 
    RETURN NIL
+
+#if ! defined( __HBSCRIPT__HBSHELL )
+
+FUNCTION hb_GTSYS()
+
+   REQUEST HB_GT_WVG_DEFAULT
+   REQUEST HB_GT_WVT
+   REQUEST HB_GT_WGU
+
+   RETURN NIL
+
+#endif

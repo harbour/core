@@ -12,7 +12,7 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-//                    Simplified Console with GUI Look
+// Simplified Console with GUI Look
 
 PROCEDURE ExecGCUI()
 
@@ -99,7 +99,7 @@ PROCEDURE GCUIConsole( oCrt )
    // Issue the read
    READ
 
-   My_Alert( "How did you like the "Alert" replacement?", { "WOW", "OK", "OOps" } )
+   My_Alert( "How did you like the 'Alert' replacement?", { "WOW", "OK", "OOps" } )
 
    RETURN
 

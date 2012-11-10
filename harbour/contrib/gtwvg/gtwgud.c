@@ -82,7 +82,7 @@
  *
  */
 
-#include "wvggui.h"
+#include "gtwgu.h"
 
 static int s_GtId;
 static HB_GT_FUNCS SuperTable;
@@ -1241,11 +1241,14 @@ static void hb_gt_wvt_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvt_Init(%p,%p,%p,%p)", pGT, ( void * ) ( HB_PTRDIFF ) hFilenoStdin, ( void * ) ( HB_PTRDIFF ) hFilenoStdout, ( void * ) ( HB_PTRDIFF ) hFilenoStderr ) );
 
    if( ! hb_winmainArgGet( &hInstance, NULL, &iCmdShow ) )
-      hb_errInternal( 10001, "It's not a GUI program", NULL, NULL );
+   {
+      hInstance = GetModuleHandle( NULL );
+      iCmdShow = 1;
+   }
 
    pWVT = hb_gt_wvt_New( pGT, ( HINSTANCE ) hInstance, iCmdShow );
    if( ! pWVT )
-      hb_errInternal( 10001, "Maximum number of WVT windows reached, cannot create another one", NULL, NULL );
+      hb_errInternal( 10001, "Maximum number of WGU windows reached, cannot create another one", NULL, NULL );
 
    HB_GTLOCAL( pGT ) = ( void * ) pWVT;
 

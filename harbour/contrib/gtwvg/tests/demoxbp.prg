@@ -10,6 +10,8 @@
 //                  Pritpal Bedi <pritpal@vouchcac.com>
 //                              08Dec2008
 
+#require "gtwvg"
+
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
@@ -24,6 +26,10 @@ PROCEDURE Main()
    LOCAL cVarA  := "Test A", cVarB := "Test B"
    LOCAL aState := { "not selected", "selected", "undefined" }
    LOCAL aParts := {}
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVG" )
+#endif
 
    // --------------------------- Dialog -------------------------------\\
    oCrt := WvgDialog():new( , , { 30, 30 }, { 900, 600 }, , .T. )
@@ -418,6 +424,8 @@ STATIC FUNCTION ExeFontDialog( oCrt )
 
    RETURN NIL
 
+#if ! defined( __HBSCRIPT__HBSHELL )
+
 FUNCTION hb_GTSYS()
 
    REQUEST HB_GT_GUI_DEFAULT
@@ -426,3 +434,5 @@ FUNCTION hb_GTSYS()
    REQUEST HB_GT_WGU
 
    RETURN NIL
+
+#endif

@@ -17,7 +17,8 @@
 
 gtwvw.hbx
 
-gtwvw.c
+gtwvwd.c
+
 wvwcheck.c
 wvwdraw.c
 wvwedit.c

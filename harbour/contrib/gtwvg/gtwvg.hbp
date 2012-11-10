@@ -10,17 +10,18 @@
 -w3 -es2
 -winuni
 
--stop{!win|hbdyn}
+-stop{!win}
 
 hbwin.hbc
 
 # Optimize build time and make sure we build even with this option
 -cflag=-DWIN32_LEAN_AND_MEAN
 
-gtwvg.c
+gtwvgd.c
+gtwgud.c
+
 wvgcore.c
 wvgcuig.c
-wvggui.c
 wvgutils.c
 wvgwin.c
 wvgwing.c

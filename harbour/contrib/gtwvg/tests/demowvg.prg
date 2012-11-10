@@ -18,14 +18,16 @@
 //
 //           Thanks Peter Rees! You have laid the foundation!
 
+#require "gtwvg"
+
 #include "inkey.ch"
 #include "wvtwin.ch"
 #include "hbgtinfo.ch"
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-REQUEST DbfCdx
-REQUEST DbfNtx
+REQUEST DBFCDX
+REQUEST DBFNTX
 
 #define IMAGE_VOUCH                hb_dirBase() + "vouch1.bmp"
 #define IMAGE_BROWSE               hb_dirBase() + "v_browse.ico"
@@ -84,6 +86,10 @@ PROCEDURE Main()
    LOCAL aObjects  := WvtSetObjects( {} )
    LOCAL oLastMenu
    LOCAL oError := ErrorBlock( {| o | MyError( o ) } )
+
+#if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
+   hbshell_gtSelect( "GTWVG" )
+#endif
 
    SET DATE ANSI
    SET CENTURY ON
@@ -179,14 +185,6 @@ PROCEDURE Main()
    ErrorBlock( oError )
 
    RETURN
-
-FUNCTION hb_GTSYS()
-
-   REQUEST HB_GT_WVG_DEFAULT
-   REQUEST HB_GT_WVT
-   REQUEST HB_GT_WGU
-
-   RETURN NIL
 
 PROCEDURE WvtConsoleGets( nMode )
 
@@ -594,3 +592,24 @@ FUNCTION BuildButtons()
    oXbp:toolTipText := "Flat Button . Lines: press ESC when finished."
 
    RETURN NIL
+
+#if ! defined( __HBSCRIPT__HBSHELL )
+
+FUNCTION hb_GTSYS()
+
+   REQUEST HB_GT_WVG_DEFAULT
+   REQUEST HB_GT_WVT
+   REQUEST HB_GT_WGU
+
+   RETURN NIL
+
+#endif
+
+SET PROCEDURE TO "activex.prg"
+SET PROCEDURE TO "cuigdlgs.prg"
+SET PROCEDURE TO "dyndlgs.prg"
+SET PROCEDURE TO "modal.prg"
+SET PROCEDURE TO "tbrowser.prg"
+SET PROCEDURE TO "utils.prg"
+SET PROCEDURE TO "wvtcls.prg"
+SET PROCEDURE TO "xbp.prg"
