@@ -27,6 +27,9 @@
 {hbdyn&!unix}-instpath=${HB_BIN}/
 {hbdyn&unix}-instpath=${HB_LIB}/
 
+# executable
+{hbexe}-instpath=${HB_BIN}/
+
 # import library on non-*nix
 -instpath=implib:${HB_ADDONS}/${hb_name}/lib/${hb_plat}/${hb_comp}/
 
