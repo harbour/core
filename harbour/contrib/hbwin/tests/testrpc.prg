@@ -14,6 +14,9 @@
 
 PROCEDURE Main()
 
-   ? win_UuidCreateString()
+   LOCAL nRPCStatus
+
+   ? win_UuidCreateString( @nRPCStatus )
+   ? nRPCStatus
 
    RETURN

@@ -146,6 +146,7 @@ ifeq ($(HB_INIT_DONE),)
 
       # Enforce some basic settings for release packages
       export HB_BUILD_DYN := yes
+      export HB_BUILD_CONTRIB_DYN := yes
       export HB_BUILD_OPTIM := yes
       export HB_BUILD_DEBUG := no
       export HB_BUILD_SHARED := no

@@ -53,12 +53,16 @@
 #include "hbapi.h"
 #include "hbwinuni.h"
 
+#include "hbwin.ch"
+
 #if ! defined( HB_OS_WIN_CE )
 #  include <rpc.h>
 #endif
 
 HB_FUNC( WIN_UUIDCREATESTRING )
 {
+   RPC_STATUS lRPCStatus = HB_RPC_S_ERROR;
+
 #if ! defined( HB_OS_WIN_CE )
    typedef RPC_STATUS ( RPC_ENTRY * _HB_UUIDCREATE )( UUID * );
    typedef RPC_STATUS ( RPC_ENTRY * _HB_UUIDTOSTRING )( UUID *, unsigned char ** );
@@ -76,16 +80,16 @@ HB_FUNC( WIN_UUIDCREATESTRING )
 
       s_pUuidToString = ( _HB_UUIDTOSTRING ) GetProcAddress( hRpcrt4,
 #if defined( UNICODE )
-         "UuidToStringW" );
+                                                             "UuidToStringW" );
 #else
-         "UuidToStringA" );
+                                                             "UuidToStringA" );
 #endif
 
       s_pRpcStringFree = ( _HB_RPCSTRINGFREE ) GetProcAddress( hRpcrt4,
 #if defined( UNICODE )
-         "RpcStringFreeW" );
+                                                               "RpcStringFreeW" );
 #else
-         "RpcStringFreeA" );
+                                                               "RpcStringFreeA" );
 #endif
    }
 
@@ -94,11 +98,11 @@ HB_FUNC( WIN_UUIDCREATESTRING )
        s_pRpcStringFree )
    {
       TCHAR * tszUuid = NULL;
-      UUID uuid;
+      UUID    uuid;
 
       memset( &uuid, 0, sizeof( UUID ) );
 
-      s_pUuidCreate( &uuid );
+      lRPCStatus = s_pUuidCreate( &uuid );
 
       s_pUuidToString( &uuid, ( unsigned char ** ) ( void * ) &tszUuid );
 
@@ -112,6 +116,10 @@ HB_FUNC( WIN_UUIDCREATESTRING )
          hb_retc_null();
    }
    else
-#endif
       hb_retc_null();
+#else
+   hb_retc_null();
+#endif
+
+   hb_stornl( lRPCStatus, 1 );
 }

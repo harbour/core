@@ -56,7 +56,7 @@
 #ifndef HBWIN_CH_
 #define HBWIN_CH_
 
-/* WIN_MAPISENDMAIL() address types */
+/* win_MAPISendMail() address types */
 #define WIN_MAPI_TO                 1
 #define WIN_MAPI_CC                 2
 #define WIN_MAPI_BCC                3
@@ -88,7 +88,7 @@
 
 /* WIN_PORT() related values */
 
-/* WIN_COMOPEN() bit rates */
+/* win_comOpen() bit rates */
 #define WIN_CBR_110                 110
 #define WIN_CBR_300                 300
 #define WIN_CBR_600                 600
@@ -105,30 +105,30 @@
 #define WIN_CBR_128000              128000
 #define WIN_CBR_256000              256000
 
-/* WIN_COMOPEN() parity modes */
+/* win_comOpen() parity modes */
 #define WIN_NOPARITY                0
 #define WIN_ODDPARITY               1
 #define WIN_EVENPARITY              2
 #define WIN_MARKPARITY              3
 #define WIN_SPACEPARITY             4
 
-/* WIN_COMOPEN() stopbit modes */
+/* win_comOpen() stopbit modes */
 #define WIN_ONESTOPBIT              0
 #define WIN_ONE5STOPBITS            1
 #define WIN_TWOSTOPBITS             2
 
-/* WIN_COMDTRFLOW() parameters */
+/* win_comDTRFlow() parameters */
 #define WIN_DTR_CONTROL_DISABLE     0x00
 #define WIN_DTR_CONTROL_ENABLE      0x01
 #define WIN_DTR_CONTROL_HANDSHAKE   0x02
 
-/* WIN_COMRTSFLOW() parameters */
+/* win_comRTSFlow() parameters */
 #define WIN_RTS_CONTROL_DISABLE     0x00
 #define WIN_RTS_CONTROL_ENABLE      0x01
 #define WIN_RTS_CONTROL_HANDSHAKE   0x02
 #define WIN_RTS_CONTROL_TOGGLE      0x03
 
-/* WIN_COMDEBUGDCB() debug levels */
+/* win_comDebugDCB() debug levels */
 #define HB_WIN_COM_DBGBASIC         0x01
 #define HB_WIN_COM_DBGFLOW          0x02
 #define HB_WIN_COM_DBGXTRAFLOW      0x04
@@ -137,9 +137,9 @@
 #define HB_WIN_COM_DBGQUEUE         0x20
 #define HB_WIN_COM_DBGALL           0x3F
 
-/* WIN_PRN() related values */
+/* win_Prn() related values */
 
-/* WIN_PRINTERLIST() positions for array returned */
+/* win_printerList() positions for array returned */
 #define HB_WINPRN_NAME              1
 #define HB_WINPRN_PORT              2
 #define HB_WINPRN_TYPE              3
@@ -148,14 +148,14 @@
 #define HB_WINPRN_SERVER            6
 #define HB_WINPRN_LEN_              6
 
-/* WIN_ENUMFONTS()/WIN_ENUMFONTFAMILIES() positions for array returned */
+/* win_EnumFonts()/win_EnumFontFamilies() positions for array returned */
 #define HB_WINFONT_NAME             1
 #define HB_WINFONT_FIXED            2
 #define HB_WINFONT_TRUETYPE         3
 #define HB_WINFONT_CHARSET          4
 #define HB_WINFONT_LEN_             4
 
-/* WIN_BITMAPTYPE() return values */
+/* win_bitmapType() return values */
 #define HB_WIN_BITMAP_UNKNOWN       0
 #define HB_WIN_BITMAP_BMP           1
 #define HB_WIN_BITMAP_JPEG          2
@@ -173,7 +173,7 @@
 #define HB_WIN_RGB_YELLOW           WIN_RGB( 0xFF, 0xFF, 0x00 )
 #define HB_WIN_RGB_WHITE            WIN_RGB( 0xFF, 0xFF, 0xFF )
 
-/* WIN_SETDOCUMENTPROPERTIES() paper types */
+/* win_SetDocumentProperties() paper types */
 #define WIN_DMPAPER_LETTER          1
 #define WIN_DMPAPER_LEGAL           5
 #define WIN_DMPAPER_EXECUTIVE       7
@@ -184,7 +184,7 @@
 #define WIN_DMPAPER_B5              13
 #define WIN_DMPAPER_USER            256
 
-/* WIN_SETDOCUMENTPROPERTIES() bin selections */
+/* win_SetDocumentProperties() bin selections */
 #define WIN_DMBIN_UPPER             1
 #define WIN_DMBIN_ONLYONE           1
 #define WIN_DMBIN_LOWER             2
@@ -203,13 +203,13 @@
 #define WIN_DMBIN_FIRST             WIN_DMBIN_UPPER
 #define WIN_DMBIN_LAST              WIN_DMBIN_FORMSOURCE
 
-/* WIN_SETDOCUMENTPROPERTIES() print qualities */
+/* win_SetDocumentProperties() print qualities */
 #define WIN_DMRES_DRAFT             ( -1 )
 #define WIN_DMRES_LOW               ( -2 )
 #define WIN_DMRES_MEDIUM            ( -3 )
 #define WIN_DMRES_HIGH              ( -4 )
 
-/* WIN_SETDOCUMENTPROPERTIES() duplex modes */
+/* win_SetDocumentProperties() duplex modes */
 #define WIN_DMDUP_SIMPLEX           1
 #define WIN_DMDUP_VERTICAL          2
 #define WIN_DMDUP_HORIZONTAL        3
@@ -218,7 +218,7 @@
 #define WIN_DMORIENT_PORTRAIT       1
 #define WIN_DMORIENT_LANDSCAPE      2
 
-/* WIN_SETMAPMODE() parameters */
+/* win_SetMapMode() parameters */
 #define WIN_MM_TEXT                 1
 #define WIN_MM_LOMETRIC             2
 #define WIN_MM_HIMETRIC             3
@@ -229,7 +229,7 @@
 #define WIN_MM_ANISOTROPIC          8
 #define WIN_MM_MAX_FIXEDSCALE       WIN_MM_TWIPS
 
-/* WIN_CREATEFONT() font weights */
+/* win_CreateFont() font weights */
 #define WIN_FW_DONTCARE             0
 #define WIN_FW_THIN                 100
 #define WIN_FW_EXTRALIGHT           200
@@ -246,14 +246,14 @@
 #define WIN_FW_HEAVY                900
 #define WIN_FW_BLACK                WIN_FW_HEAVY
 
-/* WAPI_CREATEFONT() font qualities */
+/* wapi_CreateFont() font qualities */
 #define WIN_DEFAULT_QUALITY         0
 #define WIN_DRAFT_QUALITY           1
 #define WIN_PROOF_QUALITY           2
 #define WIN_NONANTIALIASED_QUALITY  3
 #define WIN_ANTIALIASED_QUALITY     4
 
-/* WAPI_CREATEFONT() output precision values */
+/* wapi_CreateFont() output precision values */
 #define WIN_OUT_DEFAULT_PRECIS      0
 #define WIN_OUT_STRING_PRECIS       1
 #define WIN_OUT_CHARACTER_PRECIS    2
@@ -265,11 +265,11 @@
 #define WIN_OUT_OUTLINE_PRECIS      8
 #define WIN_OUT_PS_ONLY_PRECIS      10
 
-/* WIN_SETBKMODE() modes */
+/* win_SetBkMode() modes */
 #define WIN_TRANSPARENT             1
 #define WIN_OPAQUE                  2
 
-/* WAPI_EXTTEXTOUT() options */
+/* wapi_ExtTextOut() options */
 #define WIN_ETO_OPAQUE              0x00002
 #define WIN_ETO_CLIPPED             0x00004
 #define WIN_ETO_GLYPH_INDEX         0x00010
@@ -280,7 +280,7 @@
 #define WIN_ETO_PDY                 0x02000
 #define WIN_ETO_REVERSE_INDEX_MAP   0x10000
 
-/* WAPI_DRAWTEXT() format methods */
+/* wapi_DrawText() format methods */
 #define WIN_DT_BOTTOM               0x00008
 #define WIN_DT_CALCRECT             0x00400
 #define WIN_DT_CENTER               0x00001
@@ -303,7 +303,7 @@
 #define WIN_DT_WORDBREAK            0x00010
 #define WIN_DT_INTERNAL             0x01000
 
-/* WAPI_CREATEHATCHBRUSH() styles */
+/* wapi_CreateHatchBrush() styles */
 #define WIN_HS_BDIAGONAL            3
 #define WIN_HS_CROSS                4
 #define WIN_HS_DIAGCROSS            5
@@ -311,11 +311,11 @@
 #define WIN_HS_HORIZONTAL           0
 #define WIN_HS_VERTICAL             1
 
-/* WAPI_ADDFONTRESOURCEEX()/WAPI_REMOVEFONTRESOURCEEX() flags */
+/* wapi_AddFontResourceEx()/wapi_RemoveFontResourceEx() flags */
 #define WIN_FR_PRIVATE              0x10
 #define WIN_FR_NOT_ENUM             0x20
 
-/* Windows charset values (WIN_CREATEFONT()) */
+/* Windows charset values (win_CreateFont()) */
 #define WIN_ANSI_CHARSET            0
 #define WIN_DEFAULT_CHARSET         1
 #define WIN_SYMBOL_CHARSET          2
@@ -337,7 +337,7 @@
 #define WIN_EASTEUROPE_CHARSET      238
 #define WIN_OEM_CHARSET             255
 
-/* WIN_GETDEVICECAPS() parameters */
+/* win_GetDeviceCaps() parameters */
 #define WIN_HORZSIZE                4     // Horizontal size in millimeters
 #define WIN_VERTSIZE                6     // Vertical size in millimeters
 #define WIN_HORZRES                 8     // Horizontal width in pixels
@@ -356,7 +356,7 @@
 #define WIN_SCALINGFACTORX          114   // Scaling factor x
 #define WIN_SCALINGFACTORY          115   // Scaling factor y
 
-/* WAPI_GETSYSTEMMETRICS() parameters */
+/* wapi_GetSystemMetrics() parameters */
 #define WIN_SM_CXSCREEN             0
 #define WIN_SM_CYSCREEN             1
 #define WIN_SM_CXVSCROLL            2
@@ -452,7 +452,7 @@
 #define WIN_SM_REMOTECONTROL        8193
 #define WIN_SM_CARETBLINKINGENABLED 8194
 
-/* WIN_TEXTOUT() text alignment modes */
+/* win_TextOut() text alignment modes */
 #define WIN_TA_NOUPDATECP           0
 #define WIN_TA_UPDATECP             1
 #define WIN_TA_LEFT                 0
@@ -462,7 +462,7 @@
 #define WIN_TA_BOTTOM               8
 #define WIN_TA_BASELINE             24
 
-/* WIN_SETPEN() pen styles */
+/* win_SetPen() pen styles */
 #define WIN_PS_SOLID                0
 #define WIN_PS_DASH                 1
 #define WIN_PS_DOT                  2
@@ -471,7 +471,7 @@
 #define WIN_PS_NULL                 5
 #define WIN_PS_INSIDEFRAME          6
 
-/* WIN_GETOPENFILENAME()/WIN_GETSAVEFILENAME() */
+/* win_GetOpenFileName()/win_GetSaveFileName() */
 #define WIN_OFN_READONLY                  0x00000001
 #define WIN_OFN_OVERWRITEPROMPT           0x00000002
 #define WIN_OFN_HIDEREADONLY              0x00000004
@@ -503,13 +503,13 @@
 #define WIN_OFN_SHARENOWARN               0x00000001
 #define WIN_OFN_SHAREWARN                 0x00000000
 
-/* WAPI_LOADIMAGE() <nType> values */
+/* wapi_LoadImage() <nType> values */
 #define WIN_IMAGE_BITMAP            0
 #define WIN_IMAGE_ICON              1
 #define WIN_IMAGE_CURSOR            2
 #define WIN_IMAGE_ENHMETAFILE       3
 
-/* WAPI_LOADIMAGE() <nFlags> values */
+/* wapi_LoadImage() <nFlags> values */
 #define WIN_LR_DEFAULTCOLOR         0x0000
 #define WIN_LR_MONOCHROME           0x0001
 #define WIN_LR_COLOR                0x0002
@@ -524,7 +524,7 @@
 #define WIN_LR_COPYFROMRESOURCE     0x4000
 #define WIN_LR_SHARED               0x8000
 
-/* WIN_SHELLNOTIFYICON() <nInfoFlags> values */
+/* win_ShellNotifyIcon() <nInfoFlags> values */
 #define WIN_NIIF_NONE               0x00000000
 #define WIN_NIIF_INFO               0x00000001
 #define WIN_NIIF_WARNING            0x00000002
@@ -565,7 +565,7 @@
 #define WIN_MF_BYCOMMAND            0x0000
 #define WIN_MF_BYPOSITION           0x0400
 
-/* WAPI_TRACKPOPUPMENU() */
+/* wapi_TrackPopupMenu() */
 #define WIN_TPM_CENTERALIGN         4
 #define WIN_TPM_LEFTALIGN           0
 #define WIN_TPM_RIGHTALIGN          8
@@ -580,7 +580,7 @@
 #define WIN_TPM_RETURNCMD           256
 #define WIN_TPM_RECURSE             1
 
-/* WAPI_PLAYSOUND() flags */
+/* wapi_PlaySound() flags */
 #define WIN_SND_SYNC                0x00000000
 #define WIN_SND_ASYNC               0x00000001
 #define WIN_SND_NODEFAULT           0x00000002
@@ -598,7 +598,7 @@
 #define WIN_SND_RING                0x00100000
 #define WIN_SND_SYSTEM              0x00200000
 
-/* WAPI_SETWINDOWPOS() flags */
+/* wapi_SetWindowPos() flags */
 #define WIN_SWP_NOSIZE              0x0001
 #define WIN_SWP_NOMOVE              0x0002
 #define WIN_SWP_NOZORDER            0x0004
@@ -616,10 +616,10 @@
 #define WIN_SWP_NOREPOSITION        WIN_SWP_NOOWNERZORDER
 
 /* Predefined window IDs */
-#define WIN_HWND_TOP                win_n2p( 0 )
-#define WIN_HWND_BOTTOM             win_n2p( 1 )
-#define WIN_HWND_TOPMOST            win_n2p( -1 )
-#define WIN_HWND_NOTOPMOST          win_n2p( -2 )
+#define WIN_HWND_TOP                win_N2P( 0 )
+#define WIN_HWND_BOTTOM             win_N2P( 1 )
+#define WIN_HWND_TOPMOST            win_N2P( -1 )
+#define WIN_HWND_NOTOPMOST          win_N2P( -2 )
 
 /* window messages */
 #define WIN_WM_USER                 1024
@@ -653,7 +653,7 @@
 #define WIN_WS_POPUPWINDOW          hb_bitOr( WIN_WS_POPUP, WIN_WS_BORDER, WIN_WS_SYSMENU )
 #define WIN_WS_CHILDWINDOW          WIN_WS_CHILD
 
-/* WIN_REPORTEVENT() event types */
+/* win_ReportEvent() event types */
 #define WIN_EVENTLOG_SUCCESS              0x0000
 #define WIN_EVENTLOG_ERROR_TYPE           0x0001
 #define WIN_EVENTLOG_WARNING_TYPE         0x0002
@@ -661,7 +661,7 @@
 #define WIN_EVENTLOG_AUDIT_SUCCESS        0x0008
 #define WIN_EVENTLOG_AUDIT_FAILURE        0x0010
 
-/* WIN_SERVICEGETSTATUS() return values */
+/* win_serviceGetStatus() return values */
 #define WIN_SERVICE_NO_CHANGE             0xFFFFFFFF
 #define WIN_SERVICE_STOPPED               1
 #define WIN_SERVICE_START_PENDING         2
@@ -671,14 +671,14 @@
 #define WIN_SERVICE_PAUSE_PENDING         6
 #define WIN_SERVICE_PAUSED                7
 
-/* WIN_SERVICEINSTALL() start type */
+/* win_serviceInstall() start type */
 #define WIN_SERVICE_AUTO_START            0x00000002
 #define WIN_SERVICE_BOOT_START            0x00000000
 #define WIN_SERVICE_DEMAND_START          0x00000003
 #define WIN_SERVICE_DISABLED              0x00000004
 #define WIN_SERVICE_SYSTEM_START          0x00000001
 
-/* WAPI_MESSAGEBOX()/WAPI_MESSAGEBEEP() flags */
+/* wapi_MessageBox()/wapi_MessageBeep() flags */
 #define WIN_MB_OK                         0x00000000
 #define WIN_MB_OKCANCEL                   0x00000001
 #define WIN_MB_ABORTRETRYIGNORE           0x00000002
@@ -715,13 +715,13 @@
 #define WIN_MB_MODEMASK                   0x00003000
 #define WIN_MB_MISCMASK                   0x0000C000
 
-/* WIN_SHFILEOPERATION() functions */
+/* win_SHFileOperation() functions */
 #define WIN_FO_MOVE                       0x0001
 #define WIN_FO_COPY                       0x0002
 #define WIN_FO_DELETE                     0x0003
 #define WIN_FO_RENAME                     0x0004
 
-/* WIN_SHFILEOPERATION() flags */
+/* win_SHFileOperation() flags */
 #define WIN_FOF_MULTIDESTFILES            0x0001
 #define WIN_FOF_CONFIRMMOUSE              0x0002
 #define WIN_FOF_SILENT                    0x0004
@@ -738,7 +738,7 @@
 #define WIN_FOF_NO_CONNECTED_ELEMENTS     0x2000
 #define WIN_FOF_WANTNUKEWARNING           0x4000
 
-/* WIN_SHFILEOPERATION() results */
+/* win_SHFileOperation() results */
 #define HB_WIN_DE_SAMEFILE                0x71      /* The source and destination files are the same file. */
 #define HB_WIN_DE_MANYSRC1DEST            0x72      /* Multiple file paths were specified in the source buffer, but only one destination file path. */
 #define HB_WIN_DE_DIFFDIR                 0x73      /* Rename operation was specified but the destination path is a different directory. Use the move operation instead. */
@@ -764,5 +764,20 @@
 #define HB_WIN_DE_UNKNOWN_                0x402     /* An unknown error occurred. This is typically due to an invalid path in the source or destination. This error does not occur on Windows Vista and later. */
 #define HB_WIN_DE_ERRORONDEST_            0x10000   /* An unspecified error occurred on the destination. */
 #define HB_WIN_DE_ROOTDIR_ERRORONDEST_    0x10074   /* Destination is a root directory and cannot be renamed. */
+
+/* RPC status code (win_UuidCreateString() first reference parameter) */
+#define HB_RPC_S_ERROR                    ( -1 )
+#define RPC_S_OK                          0
+#define RPC_S_INVALID_ARG                 87
+#define RPC_S_OUT_OF_MEMORY               14
+#define RPC_S_OUT_OF_THREADS              164
+#define RPC_S_INVALID_LEVEL               87
+#define RPC_S_BUFFER_TOO_SMALL            122
+#define RPC_S_INVALID_SECURITY_DESC       1338
+#define RPC_S_ACCESS_DENIED               5
+#define RPC_S_SERVER_OUT_OF_MEMORY        1130
+#define RPC_S_ASYNC_CALL_PENDING          997
+#define RPC_S_UNKNOWN_PRINCIPAL           1332
+#define RPC_S_TIMEOUT                     1460
 
 #endif /* HBWIN_CH_ */
