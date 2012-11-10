@@ -605,11 +605,11 @@ FUNCTION hb_GTSYS()
 
 #endif
 
-SET PROCEDURE TO "activex.prg"
-SET PROCEDURE TO "cuigdlgs.prg"
-SET PROCEDURE TO "dyndlgs.prg"
-SET PROCEDURE TO "modal.prg"
-SET PROCEDURE TO "tbrowser.prg"
-SET PROCEDURE TO "utils.prg"
-SET PROCEDURE TO "wvtcls.prg"
-SET PROCEDURE TO "xbp.prg"
+SET PROCEDURE TO "_activex.prg"
+SET PROCEDURE TO "_cuigdlg.prg"
+SET PROCEDURE TO "_dyndlgs.prg"
+SET PROCEDURE TO "_modal.prg"
+SET PROCEDURE TO "_tbrowse.prg"
+SET PROCEDURE TO "_utils.prg"
+SET PROCEDURE TO "_wvtcls.prg"
+SET PROCEDURE TO "_xbp.prg"
