@@ -656,12 +656,12 @@ STATIC PROCEDURE __hb_extern_get_exception_list( cInputName, /* @ */ aInclude, /
    IF ! Empty( cFile := MemoRead( cInputName ) )
       IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_INCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
-            AAdd( aInclude, Upper( tmp[ 2 ] ) )
+            AAdd( aInclude, tmp[ 2 ] )
          NEXT
       ENDIF
       IF ! Empty( pRegex := hb_regexComp( "[[:space:]]" + _HB_FUNC_EXCLUDE_ + "[[:space:]]([a-zA-Z0-9_].[^ \t\n\r]*)", .T., .T. ) )
          FOR EACH tmp IN hb_regexAll( pRegex, StrTran( cFile, Chr( 13 ) ),,,,, .T. )
-            AAdd( aExclude, Upper( tmp[ 2 ] ) )
+            AAdd( aExclude, tmp[ 2 ] )
          NEXT
       ENDIF
       IF ! Empty( pRegex := hb_regexComp( "^DYNAMIC ([a-zA-Z0-9_]*)$", .T., .T. ) )
@@ -740,7 +740,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    ELSE
       aExtern := {}
       FOR EACH tmp IN aFuncList
-         IF AScan( aInclude, {| flt | hb_WildMatch( flt, tmp, .T. ) } ) > 0
+         IF AScan( aInclude, {| flt | hb_WildMatchI( flt, tmp, .T. ) } ) > 0
             AAdd( aExtern, tmp )
          ENDIF
       NEXT
@@ -748,7 +748,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    FOR EACH tmp IN aExtern
       IF ! hb_WildMatch( "HB_GT_*_DEFAULT", tmp, .T. ) .AND. ;
          ! hb_WildMatch( _HB_SELF_PREFIX + "*" + _HB_SELF_SUFFIX, tmp, .T. ) .AND. ;
-         AScan( aExclude, {| flt | hb_WildMatch( flt, tmp, .T. ) } ) == 0
+         AScan( aExclude, {| flt | hb_WildMatchI( flt, tmp, .T. ) } ) == 0
          cExtern += "DYNAMIC " + hb_HGetDef( hDynamic, tmp, tmp ) + hb_eol()
       ENDIF
    NEXT

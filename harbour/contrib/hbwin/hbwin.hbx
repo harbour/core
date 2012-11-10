@@ -5,7 +5,7 @@
  *                  // HB_FUNC_EXCLUDE <func>
  */
 
-// HB_FUNC_EXCLUDE WIN_OLESERVERINIT
+// HB_FUNC_EXCLUDE win_oleServerInit
 
 /* --------------------------------------------------------------------
  * WARNING: Automatically generated code below. DO NOT EDIT!

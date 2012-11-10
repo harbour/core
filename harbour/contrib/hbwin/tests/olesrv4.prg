@@ -21,7 +21,7 @@
 
 PROCEDURE DllMain()
 
-   WIN_OleServerInit( CLS_ID, CLS_Name, OleObjServer():new() )
+   win_oleServerInit( CLS_ID, CLS_Name, OleObjServer():new() )
 
    RETURN
 

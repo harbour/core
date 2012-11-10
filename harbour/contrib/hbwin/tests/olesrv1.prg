@@ -26,9 +26,9 @@
 PROCEDURE DllMain()
 
    /* Initialize OLE server ID and name.
-    * WIN_OleServerInit() should be executed from DllMain()
+    * win_oleServerInit() should be executed from DllMain()
     *
-    * WIN_OleServerInit( <cClassID>, <cServerName>, ;
+    * win_oleServerInit( <cClassID>, <cServerName>, ;
     *                    [ <hAction> | <oAction> | <bAction> | <sAction> ], ;
     *                    [ <lHashClone> | <lAcceptAll> ] ) -> <lServerActive>
     *
@@ -97,7 +97,7 @@ PROCEDURE DllMain()
     * It allows to create OLE server which will accept unknown messages
     * redirecting them to some other code, i.e.:
     *    if netio_connect( cServer,,, cPasswd )
-    *       WIN_OleServerInit( cClassID, cServerName, @netio_funcExec(), .T. )
+    *       win_oleServerInit( cClassID, cServerName, @netio_funcExec(), .T. )
     *    endif
     * initialize OLE server which redirects all messages to default netio
     * connection established by netio_connect().
@@ -110,7 +110,7 @@ PROCEDURE DllMain()
     * http://xharbour.com/index.asp?page=add_on_oleserver&show_sub=7&show_i=1
     */
 
-   WIN_OleServerInit( CLS_ID, CLS_Name, {|| OleNetioSrv():new() }, .T. )
+   win_oleServerInit( CLS_ID, CLS_Name, {|| OleNetioSrv():new() }, .T. )
 
    RETURN
 
