@@ -9,13 +9,11 @@
 
 -w3 -es2
 
--hbx=hbxlsxml.hbx
-
-hbxlsxml.hbx
-
 xlsxml.prg
 xlsxml_s.prg
 xlsxml_y.prg
 
+-hbx=${hb_name}.hbx
+${hb_name}.hbx
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

@@ -9,8 +9,6 @@
 
 -w3 -es2
 
--hbx=
-
 bmdbfx.c
 bmdbfcdx.prg
 bmdbfnsx.prg

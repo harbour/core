@@ -9,12 +9,10 @@
 
 -w3 -es2
 
--hbx=hbvpdf.hbx
-
-hbvpdf.hbx
-
 core.prg
 fonts.prg
 
+-hbx=${hb_name}.hbx
+${hb_name}.hbx
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

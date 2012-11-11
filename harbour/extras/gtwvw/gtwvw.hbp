@@ -13,10 +13,6 @@
 
 "-stop={!allwin}Skipped: '${hb_name}' only supported on win platform."
 
--hbx=gtwvw.hbx
-
-gtwvw.hbx
-
 gtwvwd.c
 
 wvwcheck.c
@@ -33,5 +29,7 @@ wvwtbar.c
 # NOTE: Due to large quantity of unprecise code, it doesn't build in C++ mode.
 -warn=no
 
+-hbx=${hb_name}.hbx
+${hb_name}.hbx
 $hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

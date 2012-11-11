@@ -13,4 +13,8 @@ hbxpp.hbc
 
 tpscript.prg
 
+-hbx=${hb_name}.hbx
+${hb_name}.hbx
+{hbdyn}${hb_name}.hbc
+$hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm
