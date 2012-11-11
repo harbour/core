@@ -1009,7 +1009,7 @@ diff -u superori/s_modify.prg superpat/s_modify.prg
              EXIT
 diff -u superori/s_moose.prg superpat/s_moose.prg
 --- superori/s_moose.prg	1995-11-02 16:17:08.000000000 +0100
-+++ superpat/s_moose.prg	2009-06-22 23:36:57.000000000 +0200
++++ superpat/s_moose.prg	2012-11-12 00:07:50.000000000 +0100
 @@ -98,7 +98,13 @@
  
  */
@@ -1025,7 +1025,15 @@ diff -u superori/s_moose.prg superpat/s_moose.prg
  #define MTOP      1
  #define MLEFT     2
  #define MBOTTOM   3
-@@ -747,7 +753,7 @@
+@@ -272,6 +278,7 @@
+                 endif
+         endif
+     endif
++    hb_idleState()
+   enddo
+   #ifndef CLIPPER53
+   if lIsMouse
+@@ -747,7 +754,7 @@
  ³
  ³  Examples:
  ³  ---------
