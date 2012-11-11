@@ -767,8 +767,6 @@ HB_FUNC( C_METAFONE )
 
    /* Release the memory that we allocated for the return string. */
    hb_xfree( sReturn );
-
-   /* We're all finished now, so let's return control to Clipper. */
 }
 
 /** Start of bit() **/
@@ -887,7 +885,7 @@ HB_FUNC( SP_LINE )
             while( cIn[ nOffset ] == 32 )             /* Remove leading spaces */
                nOffset++;
          }
-         nOffset++;                                   /* +1 for Clipper string */
+         nOffset++;                                   /* +1 for Harbour string */
       }
       else
       {

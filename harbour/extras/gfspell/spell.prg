@@ -2,26 +2,26 @@
  * $Id$
  */
 
-// Author....:  Joseph D. Booth
-// Copyright.:  (C)1993, Joseph D. Booth, All Rights Reserved
+// Author....: Joseph D. Booth
+// Copyright.: (C)1993, Joseph D. Booth, All Rights Reserved
 //
-// Purpose...:  Library of functions to allow a Clipper program to
-//              spell check a string and to also work with individual
-//              words.
+// Purpose...: Library of functions to allow a Harbour program to
+//             spell check a string and to also work with individual
+//             words.
 //
-//              Sp_Add()        - Add word to the dictionary
-//              Sp_Cache()      - Add word to spelling cache
-//              Sp_Check()      - Is word spelled correctly?
-//              Sp_Clear()      - Clear the spelling cache
-//              Sp_Init()       - Initialize the spelling dictionary
-//              Sp_GetSet()     - Get/Set global parameters
-//              Sp_LoadAux()    - Loads an auxiliary dictionary
-//              Sp_Suggest()    - Offer list of sound alike suggestions
-//              Sp_Quick()      - Offer list of suggested spellings
-//              Sp_WildCard()   - List of wildcard matches
+//             Sp_Add()        - Add word to the dictionary
+//             Sp_Cache()      - Add word to spelling cache
+//             Sp_Check()      - Is word spelled correctly?
+//             Sp_Clear()      - Clear the spelling cache
+//             Sp_Init()       - Initialize the spelling dictionary
+//             Sp_GetSet()     - Get/Set global parameters
+//             Sp_LoadAux()    - Loads an auxiliary dictionary
+//             Sp_Suggest()    - Offer list of sound alike suggestions
+//             Sp_Quick()      - Offer list of suggested spellings
+//             Sp_WildCard()   - List of wildcard matches
 //
-//              DBF2Dic()       - Convert a DBF file to a DIC file
-//              Dic2DBF()       - Convert a DIC file to a DBF file
+//             DBF2Dic()       - Convert a DBF file to a DIC file
+//             Dic2DBF()       - Convert a DIC file to a DBF file
 //
 
 #include "fileio.ch"
@@ -89,16 +89,15 @@ THREAD STATIC t_nHandle := F_ERROR
 THREAD STATIC t_cOffsets
 
 
-//   Function:  Sp_Add()
-//    Purpose:  Adds a word to the dictionary
-//     Syntax:  <logical> := Sp_Add( cWord )
-//  Arguments:  cWord     - Word to add to the auxiliary dictionary
-//    Returns:  <logical> - TRUE if added,
-//                          FALSE otherwise
+//  Function:  Sp_Add()
+//   Purpose:  Adds a word to the dictionary
+//    Syntax:  <logical> := Sp_Add( cWord )
+// Arguments:  cWord     - Word to add to the auxiliary dictionary
+//   Returns:  <logical> - TRUE if added,
+//                         FALSE otherwise
 //
-//      Notes:  Does not check to see if the word already exists in the
-//              dictionary.
-//
+//     Notes:  Does not check to see if the word already exists in the
+//             dictionary.
 
 FUNCTION Sp_Add( cWord )
 
@@ -141,18 +140,16 @@ FUNCTION Sp_Add( cWord )
    RETURN was_added
 
 
+//  Function:  Sp_cache()
+//   Purpose:  To add a word to the cache list
+//    Syntax:  <logical> := Sp_cache(cWord)
+// Arguments:  cWord - upper case, all trimmed word to add
+//   Returns:  <logical> - TRUE if added,
+//                         FALSE otherwise
 //
-//   Function:  Sp_cache()
-//    Purpose:  To add a word to the cache list
-//     Syntax:  <logical> := Sp_cache(cWord)
-//  Arguments:  cWord - upper case, all trimmed word to add
-//    Returns:  <logical> - TRUE if added,
-//                          FALSE otherwise
+//    Static:  CACHE_WORDS - String of cache words
 //
-//     Static:  CACHE_WORDS - String of cache words
-//
-//      Notes:  Check to see if the word already exists in the cache
-//
+//     Notes:  Check to see if the word already exists in the cache
 
 FUNCTION Sp_Cache( cWord )
 
@@ -170,22 +167,17 @@ FUNCTION Sp_Cache( cWord )
    RETURN lAdded
 
 
+//  Function:  Sp_Check()
+//   Purpose:  To check the spelling of a word
+//    Syntax:  <logical> := Sp_Check( cWord )
+// Arguments:  cWord - upper case, all trimmed word to check
+//   Returns:  <logical> - TRUE if valid spelling
+//                         FALSE otherwise
 //
-//   Function:  Sp_Check()
-//    Purpose:  To check the spelling of a word
-//     Syntax:  <logical> := Sp_Check( cWord )
-//  Arguments:  cWord - upper case, all trimmed word to check
-//    Returns:  <logical> - TRUE if valid spelling
-//                          FALSE otherwise
-//
-//     Static:  CACHE_WORDS  - String of cache words
-//              COMMON_WORDS - String of common words
-//              t_cOffsets   -
-//              t_nHandle    - Handle DIC file is opened on
-//
-//      Notes:
-//
-//
+//    Static:  CACHE_WORDS  - String of cache words
+//             COMMON_WORDS - String of common words
+//             t_cOffsets   -
+//             t_nHandle    - Handle DIC file is opened on
 
 FUNCTION Sp_Check( cWord )
 
@@ -288,13 +280,11 @@ FUNCTION Sp_Check( cWord )
    RETURN ok
 
 
-//
-//   Function:  Sp_GetBuf()
-//    Purpose:  To get all words within the buffer
-//     Syntax:  Sp_GetBuf( <cLetters> )
-//  Arguments:  <cLetters>   - First two letters
-//    Returns:  cString      - Buffer string from DIC file
-//
+//  Function:  Sp_GetBuf()
+//   Purpose:  To get all words within the buffer
+//    Syntax:  Sp_GetBuf( <cLetters> )
+// Arguments:  <cLetters>   - First two letters
+//   Returns:  cString      - Buffer string from DIC file
 
 STATIC FUNCTION sp_GetBuf( cLetters )
 
@@ -320,17 +310,14 @@ STATIC FUNCTION sp_GetBuf( cLetters )
    RETURN cBuf
 
 
+//  Function:  Sp_clear()
+//   Purpose:  To clear out the cache list
+//    Syntax:  Sp_clear()
+//   Returns:  NIL
 //
-//   Function:  Sp_clear()
-//    Purpose:  To clear out the cache list
-//     Syntax:  Sp_clear()
-//  Arguments:  NONE
-//    Returns:  NIL
-//
-//     Static:  CACHE_WORDS  - String of cache words
-//
+//    Static:  CACHE_WORDS  - String of cache words
 
-FUNCTION sp_clear
+FUNCTION Sp_Clear()
 
    // *DEBUG**
    // @ 24, 30 SAY "At SP_clear"
@@ -340,16 +327,15 @@ FUNCTION sp_clear
    RETURN NIL
 
 
-//     Function: Sp_GetSet()
-//      Purpose: To get/set a parameter for the spell check function
-//       Syntax: <xOldValue> := Sp_GetSet( nWhich [,xNewSetting] )
-//   Parameters: nWhich      - Which parameter to get/set
-//               xNewSetting - Value to set parameter to
+//   Function: Sp_GetSet()
+//    Purpose: To get/set a parameter for the spell check function
+//     Syntax: <xOldValue> := Sp_GetSet( nWhich [,xNewSetting] )
+// Parameters: nWhich      - Which parameter to get/set
+//             xNewSetting - Value to set parameter to
 //
-//      Returns: <logical>  TRUE if word succesfully added
-//                          FALSE if an error occurs, usually network lock
-//                          problem
-//
+//    Returns: <logical>  TRUE if word succesfully added
+//                        FALSE if an error occurs, usually network lock
+//                        problem
 
 FUNCTION Sp_GetSet( nWhich, xNewSetting )
 
@@ -368,16 +354,8 @@ FUNCTION Sp_GetSet( nWhich, xNewSetting )
    RETURN xOld
 
 
-//     Function: Sp_LoadAux()
-//      Purpose: To load an auxiliary dictionary of words
-//       Syntax:
-//   Parameters:
-//
-//
-//      Returns:
-//
-//
-//
+// Function: Sp_LoadAux()
+//  Purpose: To load an auxiliary dictionary of words
 
 FUNCTION Sp_LoadAux( cFile )
 
@@ -414,14 +392,12 @@ FUNCTION Sp_LoadAux( cFile )
    RETURN is_ok
 
 
-//
-//     Function:  Sp_Suggest()
-//      Purpose:  To return an array of possible spellings
-//       Syntax:  aSuggest_ := Sp_Suggest(cWord [,lInclude] )
-//    Arguments:  cWord     - Word to look for suggestions for
-//                lInclude  - Should word be included in list?
-//      Returns:  aSuggest_ - List of suggested words
-//
+//  Function:  Sp_Suggest()
+//   Purpose:  To return an array of possible spellings
+//    Syntax:  aSuggest_ := Sp_Suggest(cWord [,lInclude] )
+// Arguments:  cWord     - Word to look for suggestions for
+//             lInclude  - Should word be included in list?
+//   Returns:  aSuggest_ - List of suggested words
 
 FUNCTION Sp_Suggest( cWord, lInclude )
 
@@ -818,12 +794,11 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
    RETURN aRet_
 
-
-//      Function:  Sp_Quick()
-//       Purpose:  To return an array of quick spellings
-//        Syntax:  aSuggest  := Sp_Quick( cWord )
-//     Arguments:  cWord     - Word to look for suggestions for
-//       Returns:  aSuggest  - List of suggested words
+//  Function:  Sp_Quick()
+//   Purpose:  To return an array of quick spellings
+//    Syntax:  aSuggest  := Sp_Quick( cWord )
+// Arguments:  cWord     - Word to look for suggestions for
+//   Returns:  aSuggest  - List of suggested words
 
 FUNCTION Sp_Quick( cWord )
 
@@ -833,35 +808,37 @@ FUNCTION Sp_Quick( cWord )
       "A$E$EE$IA$IE$O$U$UI$Y$YE$UY$EI$IGH$", ;
       "AU$EAU$EO$EW$OA$OE$OH$OU$OUGH$OW$A$AH$AW$UO$E$", ;
       "O$OE$OO$OU$EUA$EU$EUE$EW$IEU$IEW$UE$UI$YOU$YU$", ;
-      "ED$GHT$PT$TH$"  }
+      "ED$GHT$PT$TH$" }
 
-   LOCAL ii       := 0
+   LOCAL ii := 0
    LOCAL nOld, jj, kk
-   LOCAL zz       := Len( cWord )
-   LOCAL arr_     := {}
+   LOCAL zz
+   LOCAL arr_ := {}
    LOCAL cHold, ll, cTemp
 
    // *DEBUG**
    // @ 24, 30 SAY "At SP_quick"
 
-   cWord    := Upper( RTrim( cWord ) )
+   cWord := Upper( RTrim( cWord ) )
+
+   zz := Len( cWord )
 
    IF zz < 3                          // Don't offer suggestions for
       RETURN {}                       // one or two letter words
    ENDIF
 
-   // *
-   // * Step One - Do letter doubling
-   // *
+   //
+   // Step One - Do letter doubling
+   //
 
    FOR jj := 2 TO zz
       IF SubStr( cWord, jj, 1 ) $ "BCDEFGKLMNOPRSTZ"
          cHold := Left( cWord, jj ) + SubStr( cWord, jj, 1 ) + ;
             SubStr( cWord, jj + 1 )
-         // *
-         // * If the word is not already in the list, then check
-         // * to see if it is a valid word.
-         // *
+         //
+         // If the word is not already in the list, then check
+         // to see if it is a valid word.
+         //
 
          IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
             AAdd( arr_, cHold )
@@ -869,25 +846,25 @@ FUNCTION Sp_Quick( cWord )
       ENDIF
    NEXT
 
-   // *
-   // * Step Two - Remove extra letters
-   // *
+   //
+   // Step Two - Remove extra letters
+   //
 
    FOR jj := 1 TO zz
       cHold := Left( cWord, jj - 1 ) + SubStr( cWord, jj + 1 )
-      // *
-      // * If the word is not already in the list, then check
-      // * to see if it is a valid word.
-      // *
+      //
+      // If the word is not already in the list, then check
+      // to see if it is a valid word.
+      //
 
       IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
          AAdd( arr_, cHold )
       ENDIF
    NEXT
 
-   // *
-   // * Step Three - Transpose the letters
-   // *
+   //
+   // Step Three - Transpose the letters
+   //
 
    FOR jj := 2 TO zz
       cHold := Left( cWord, jj - 2 ) + SubStr( cWord, jj, 1 ) + ;
@@ -897,25 +874,25 @@ FUNCTION Sp_Quick( cWord )
       ENDIF
    NEXT
 
-   // *
-   // * Step Four - Try adding a silent E to the end
-   // *
+   //
+   // Step Four - Try adding a silent E to the end
+   //
 
    cHold := cWord + "E"
    IF AScan( arr_, cHold ) == 0 .AND. Sp_Check( cHold )
       AAdd( arr_, cHold )
    ENDIF
 
-   // *
-   // * Step Five - Do sound alike substitutions
-   // *
+   //
+   // Step Five - Do sound alike substitutions
+   //
 
    FOR jj := 1 TO 6
       IF SubStr( "AEIOUT", jj, 1 ) $ cWord
          ii   := fat( SubStr( "AEIOUT", jj, 1 ), cWord, ii )
          nold := 1
          DO WHILE ii > 0
-            FOR kk := 1 TO chrcount( "$", sc_aTryThese[ jj ] )
+            FOR kk := 1 TO ChrCount( "$", sc_aTryThese[ jj ] )
                ll    := fat( "$", sc_aTryThese[ jj ], nOld )
                cTemp := SubStr( sc_aTryThese[ jj ], nOld, ll - nOld )
                nOld  := ll + 1
@@ -937,7 +914,7 @@ STATIC FUNCTION ChrCount( cChar, cString )
    // *DEBUG**
    // @ 24, 30 SAY "At ChrCount"
 
-   RETURN Len( cString ) -Len( StrTran( cString, cChar ) )
+   RETURN Len( cString ) - Len( StrTran( cString, cChar ) )
 
 FUNCTION Sp_Split( cWord )
 
@@ -978,11 +955,11 @@ FUNCTION Sp_Expand( cWord )
    RETURN cExpand
 
 
-//      Function:  Sp_WildCard()
-//       Purpose:  To return an array of wildcard matches
-//        Syntax:  aSuggest  := Sp_WildCard( cPattern )
-//     Arguments:  cPattern  - Pattern to match using * or ?'s
-//       Returns:  aSuggest  - List of matching words
+//  Function:  Sp_WildCard()
+//   Purpose:  To return an array of wildcard matches
+//    Syntax:  aSuggest  := Sp_WildCard( cPattern )
+// Arguments:  cPattern  - Pattern to match using * or ?'s
+//   Returns:  aSuggest  - List of matching words
 
 FUNCTION Sp_WildCard( cPattern )
 
@@ -1040,9 +1017,9 @@ FUNCTION Sp_WildCard( cPattern )
 
 // The following functions are internal and should not be modified.           *
 
-//   Function:  Sp_Init()
-//    Purpose:  Internal function to initialize the dictionary
-//    Returns:  <logical> - Was dictionary initialized?
+// Function:  Sp_Init()
+//  Purpose:  Internal function to initialize the dictionary
+//  Returns:  <logical> - Was dictionary initialized?
 
 FUNCTION Sp_Init()
 
@@ -1100,7 +1077,7 @@ FUNCTION Sp_Init()
          Sp_Common()
       ENDIF
 
-      // * Thesaurus comented out as not needed
+      // Thesaurus comented out as not needed
 #if 0
       IF ! Empty( THESAURUS_NAME )
          IF hb_FileExists( DICTIONARY_PATH + THESAURUS_NAME )
@@ -1117,22 +1094,18 @@ FUNCTION Sp_Init()
 
 
 
-//
-//      Function:  DBF2Dic()
-//       Purpose:  To create a DIC file from a DBF list of words
-//        Syntax:  nStatus := DBF2Dic( <cDBF_file>, <cDIC_file> )
-//     Arguments:  <cDBF_File>  - DBF containing sorted list of upper
-//                                case words. The field name must be
-//                                WORD and of type character
-//                 <cDIC_File>  - Name of DIC file to create, assumes
-//                                'dict.dic'
-//       Returns:  nStatus      -  0 if successful
-//                                -1 DBF file does not exist
-//                                -2 Field WORD does not exist in DBF
-//                                >0 File error occurred, see FERROR()
-//
-//         Calls:
-//
+//  Function:  DBF2Dic()
+//   Purpose:  To create a DIC file from a DBF list of words
+//    Syntax:  nStatus := DBF2Dic( <cDBF_file>, <cDIC_file> )
+// Arguments:  <cDBF_File>  - DBF containing sorted list of upper
+//                            case words. The field name must be
+//                            WORD and of type character
+//             <cDIC_File>  - Name of DIC file to create, assumes
+//                            'dict.dic'
+//   Returns:  nStatus      -  0 if successful
+//                            -1 DBF file does not exist
+//                            -2 Field WORD does not exist in DBF
+//                            >0 File error occurred, see FERROR()
 
 FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
@@ -1150,7 +1123,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    LOCAL nCurRec := 0
 
    //
-   //  DEFAULT name for dictionary file
+   // DEFAULT name for dictionary file
    //
 
    // *DEBUG**
@@ -1166,7 +1139,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
 
    //
-   //  See if the DBF file exists
+   // See if the DBF file exists
    //
 
    IF ! "." $ cDBF
@@ -1187,12 +1160,11 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
       cSave := SaveScreen( 8, 30, 11, 48 )
       hb_DispBox( 8, 30, 11, 48,, "W+/R" )
-      @  8, 33 SAY " Creating DIC "     COLOR "W+/R"
-      @  9, 31 SAY " Indexing words  "  COLOR "W/R"
-      @ 10, 31 SAY "                 "  COLOR "W/R"
+      hb_DispOutAt(  8, 33, " Creating DIC ", "W+/R" )
+      hb_DispOutAt(  9, 31, " Indexing words  ", "W/R" )
+      hb_DispOutAt( 10, 31, "                 ", "W/R" )
 
       nSize := DICT->( LastRec() )
-
    ENDIF
 
    INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( C_MetaFone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
@@ -1200,12 +1172,12 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
 
    IF lTalk
-      @  9, 31 SAY "Percent          "  COLOR "W/R"
-      @ 10, 31 SAY "Complete:        "  COLOR "W/R"
+      hb_DispOutAt(  9, 31, "Percent          ", "W/R" )
+      hb_DispOutAt( 10, 31, "Complete:        ", "W/R" )
    ENDIF
 
    //
-   //  Create the dictionary file
+   // Create the dictionary file
    //
 
    // ADDED - 02/08/96 - JAMES
@@ -1245,7 +1217,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                   dbSkip()
                   IF lTalk
                      nCurRec++
-                     @ 10, 41 SAY ( nCurRec / nSize ) * 100   PICTURE "999.9%"   COLOR "W+/R"
+                     hb_DispOutAt( 10, 41, Transform( ( nCurRec / nSize ) * 100, "999.9%" ), "W+/R" )
                   ENDIF
                ENDDO
                IF ! Empty( temp ) .OR. !( cBits == FOUR_BYTES )
@@ -1284,21 +1256,17 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    RETURN nStatus
 
 
-//
-//      Function:  Dic2DBF()
-//       Purpose:  To create a DBF file from a DIC file
-//        Syntax:  nStatus := DIC2DBF( <cDIC_file>, <cDBF_file> )
-//     Arguments:  <cDIC_File>  - Name of DIC file to read, assumes
-//                                dict.dic
-//                 <cDBF_File>  - Name of DBF to create, assumes dict.dbf
-//                                It will contain a single field called
-//                                WORD of type character
-//       Returns:  nStatus      -  0 if successful
-//                                -1 DIC file does not exist
-//                                -2 DIC file is not a valid dictionary
-//
-//         Calls:
-//
+//  Function:  Dic2DBF()
+//   Purpose:  To create a DBF file from a DIC file
+//    Syntax:  nStatus := DIC2DBF( <cDIC_file>, <cDBF_file> )
+// Arguments:  <cDIC_File>  - Name of DIC file to read, assumes
+//                            dict.dic
+//             <cDBF_File>  - Name of DBF to create, assumes dict.dbf
+//                            It will contain a single field called
+//                            WORD of type character
+//   Returns:  nStatus      -  0 if successful
+//                            -1 DIC file does not exist
+//                            -2 DIC file is not a valid dictionary
 
 FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
 
@@ -1316,7 +1284,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
    // @ 24, 30 SAY "At DIC2DBF"
 
    //
-   //  DEFAULT name for dictionary file
+   // DEFAULT name for dictionary file
    //
 
    IF cDictionary == NIL
@@ -1334,14 +1302,15 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
    DICTIONARY_NAME := cDictionary
 
    //
-   //  Read the dictionary file
+   // Read the dictionary file
    //
 
    IF ! Sp_Init()
       RETURN -2
    ENDIF
+
    //
-   //  See if the DBF file exists
+   // See if the DBF file exists
    //
 
    IF ! "." $ cDBF
@@ -1355,38 +1324,35 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
    IF lTalk
       cSave := SaveScreen( 8, 30, 12, 48 )
       hb_DispBox( 8, 30, 12, 48,, "W+/R" )
-      @  8, 34 SAY " Creating DBF "     COLOR "W+/R"
-      @  9, 31 SAY "Percent          "  COLOR "W/R"
-      @ 10, 31 SAY "Complete:        "  COLOR "W/R"
-      @ 11, 31 SAY "  Record:        "  COLOR "W/R"
+      hb_DispOutAt(  8, 34, " Creating DBF ", "W+/R" )
+      hb_DispOutAt(  9, 31, "Percent          ", "W/R" )
+      hb_DispOutAt( 10, 31, "Complete:        ", "W/R" )
+      hb_DispOutAt( 11, 31, "  Record:        ", "W/R" )
 
       temp  := Directory( cDictionary )
       nSize := temp[ 1, 2 ]
 
    ENDIF
 
-
    j := 2
-
    FOR i := 2 TO Len( CACHE_WORDS )
       IF SubStr( CACHE_WORDS, i, 1 ) == "|"
          dbAppend()
-         REPLACE DICT->word WITH SubStr( CACHE_WORDS, j, i - j )
+         DICT->word := SubStr( CACHE_WORDS, j, i - j )
          j := i + 1
       ENDIF
    NEXT
-
 
    FOR i := 1 TO 26
       FOR j := 1 TO 26
          temp := Chr( i + 64 ) + Chr( j + 64 )
          x  := Bin2L( hb_BSubStr( t_cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 1 ), 4 ) )
          IF ! Empty( x )
-            y    := Bin2W( hb_BSubStr( t_cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 5 ), 2 ) )
+            y := Bin2W( hb_BSubStr( t_cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 5 ), 2 ) )
 
             IF lTalk
-               @ 10, 43 SAY ( x / nSize ) * 100   PICTURE "999%"   COLOR "W+/R"
-               @ 11, 41 SAY LastRec()             PICTURE "99,999" COLOR "W+/R"
+               hb_DispOutAt( 10, 43, Transform( ( x / nSize ) * 100, "999%"   ), "W+/R" )
+               hb_DispOutAt( 11, 41, Transform( LastRec()          , "99,999" ), "W+/R" )
             ENDIF
 
             cBuf := Space( y )
@@ -1395,12 +1361,12 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
             FOR z := 1 TO 26
                IF bit( @cBuf, z )
                   dbAppend()
-                  REPLACE DICT->word WITH temp + Chr( z + 64 )
+                  DICT->word := temp + Chr( z + 64 )
                ENDIF
             NEXT
             IF bit( @cBuf, 27 )
                dbAppend()
-               REPLACE DICT->word WITH temp
+               DICT->word := temp
             ENDIF
             cBuf := SubStr( cBuf, 5 )
             z    := 1
@@ -1408,13 +1374,13 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
                IF SubStr( cBuf, z, 1 ) >= Chr( 128 )
                   cWord := SubStr( cBuf, 1, z )
                   dbAppend()
-                  REPLACE DICT->word WITH temp + ExtractWord( cWord )
+                  DICT->word := temp + ExtractWord( cWord )
                   cWord := ""
                   cBuf  := SubStr( cBuf, z + 1 )
                   z     := 1
 
                   IF lTalk
-                     @ 11, 41 SAY LastRec()  PICTURE "99,999" COLOR "W+/R"
+                     hb_DispOutAt( 11, 41, Transform( LastRec(), "99,999" ), "W+/R" )
                   ENDIF
 
                ELSE
@@ -1437,17 +1403,15 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
 
    RETURN nStatus
 
-//     Function:  Sp_Common()
-//      Purpose:  Loads the COMMON word static array element
-//       Syntax:  Sp_Common()
-//    Arguments:  <NONE>
-//      Returns:  NIL
+//  Function:  Sp_Common()
+//   Purpose:  Loads the COMMON word static array element
+//    Syntax:  Sp_Common()
+//   Returns:  NIL
 //
-//        Notes:  The common word list represents some of the most commonly
-//                used English words.  They are stored in RAM to prevent a
-//                dictionary lookup for 70-80% of the words.
-//
-//
+//     Notes:  The common word list represents some of the most commonly
+//             used English words.  They are stored in RAM to prevent a
+//             dictionary lookup for 70-80% of the words.
+
 STATIC FUNCTION Sp_Common()
 
 #ifdef REDUCE_MEMORY_NEEDS
@@ -1523,7 +1487,6 @@ STATIC FUNCTION Sp_Common()
       "|WORKING|EFFORT|SAT|ENTIRE|HAPPENED|LABOR|PURPOSE|RESULTS|CASES|DIFFERENCE" + ;
       "|HAIR|PRODUCTION|STAND|I'VE|I'D|WON'T|"
 
-
 #endif
 
    // *DEBUG**
@@ -1565,7 +1528,7 @@ FUNCTION WildCard( cPattern, cString )
             Right( cString, Len( cAfter ) ) == cAfter
       ENDCASE
    ELSE
-      x      := At( "?", cPattern )
+      x := At( "?", cPattern )
       IF x > 0
          nPatSize  := Len( cPattern )
          nStrSize  := Len( cString )
@@ -1586,13 +1549,12 @@ FUNCTION WildCard( cPattern, cString )
 
    RETURN lMatch
 
-#ifndef CLIP52
 FUNCTION aWords( cLine )
 
-   LOCAL aWords_   := {}
-   LOCAL nSize     := Len( RTrim( cLine ) )
+   LOCAL aWords_ := {}
+   LOCAL nSize   := Len( RTrim( cLine ) )
    LOCAL x, y, z
-   LOCAL cWord     := ""
+   LOCAL cWord   := ""
    LOCAL nOffset
 
    // *DEBUG**
@@ -1602,25 +1564,24 @@ FUNCTION aWords( cLine )
    DO WHILE z <= nSize
       z++
       y := Asc( SubStr( cLine, z, 1 ) )
-      IF  y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~"
+      IF y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~"
          nOffset := z
          cWord   := Chr( y )
          z++
-         y     := Asc( SubStr( cLine, z, 1 ) )
+         y := Asc( SubStr( cLine, z, 1 ) )
          WHILE ( y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" ) .OR. y == 39
             cWord += Chr( y )
             z++
             IF z > nSize
                EXIT
             ENDIF
-            y     := Asc( SubStr( cLine, z, 1 ) )
+            y := Asc( SubStr( cLine, z, 1 ) )
          ENDDO
          AAdd( aWords_, { cWord, nOffset } )
       ENDIF
    ENDDO
 
-   RETURN  aWords_
-#endif
+   RETURN aWords_
 
 // Find an occurrence of 'f_str' in 'l_str' starting from position 'f_rom'
 FUNCTION fat( f_str, l_str, f_rom )
