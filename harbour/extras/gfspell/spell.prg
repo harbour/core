@@ -26,8 +26,6 @@
 
 #include "fileio.ch"
 
-// #define REDUCE_MEMORY_NEEDS
-
 #xtranslate StoreWord( <cWord> )   => xForm( <cWord> )
 #xtranslate ExtractWord( <cWord> ) => xUnForm( <cWord> )
 
@@ -108,9 +106,6 @@ FUNCTION Sp_Add( cWord )
    // Initialize the spell checker and make sure
    // an auxiliary dictionary name was specified
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_ADD"
-
    IF Sp_Init() .AND. ! Empty( AUXILIARY_DICTIONARY )
       cWord      := Upper( AllTrim( cWord ) )
 
@@ -139,7 +134,6 @@ FUNCTION Sp_Add( cWord )
 
    RETURN was_added
 
-
 //  Function:  Sp_cache()
 //   Purpose:  To add a word to the cache list
 //    Syntax:  <logical> := Sp_cache(cWord)
@@ -156,16 +150,12 @@ FUNCTION Sp_Cache( cWord )
    LOCAL cTemp  := "|" + Upper( AllTrim( cWord ) ) + "|"
    LOCAL lAdded := .F.
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_cache"
-
    IF ! cTemp $ CACHE_WORDS .AND. Len( CACHE_WORDS ) < MAX_STRING
       CACHE_WORDS += cTemp
       lAdded      := .T.
    ENDIF
 
    RETURN lAdded
-
 
 //  Function:  Sp_Check()
 //   Purpose:  To check the spelling of a word
@@ -197,9 +187,6 @@ FUNCTION Sp_Check( cWord )
    LOCAL z := 4
    LOCAL cTemp
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_init"
-
    IF Sp_Init()
       IF Len( cLookup ) == 1 .AND. cLookup $ "IA"
          RETURN .T.
@@ -218,20 +205,8 @@ FUNCTION Sp_Check( cWord )
             nCol  := Asc( SubStr( cLookup, 2, 1 ) ) - 64
             IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
 
-#ifdef REDUCE_MEMORY_NEEDS
-
-               t_cOffsets := Space( 6 )
-               FSeek( t_nHandle, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * 6 + 1 ) + 5, FS_SET )
-               FRead( t_nHandle, @t_cOffsets, 6 )
-               x  := Bin2L( hb_BSubStr( t_cOffsets, 1, 4 ) )
-               y  := Bin2W( hb_BSubStr( t_cOffsets, 5, 2 ) )
-
-#else
-
                x  := Bin2L( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
                y  := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
-
-#endif
 
                IF ! Empty( x )
                   IF !( t_cLast == SubStr( cLookup, 1, 2 ) )
@@ -279,7 +254,6 @@ FUNCTION Sp_Check( cWord )
 
    RETURN ok
 
-
 //  Function:  Sp_GetBuf()
 //   Purpose:  To get all words within the buffer
 //    Syntax:  Sp_GetBuf( <cLetters> )
@@ -294,9 +268,6 @@ STATIC FUNCTION sp_GetBuf( cLetters )
    LOCAL nRow  := Asc( SubStr( cLetters, 1, 1 ) ) - 64
    LOCAL nCol  := Asc( SubStr( cLetters, 2, 1 ) ) - 64
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_getbuf"
-
    IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
       x  := Bin2L( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
       IF ! Empty( x )
@@ -309,7 +280,6 @@ STATIC FUNCTION sp_GetBuf( cLetters )
 
    RETURN cBuf
 
-
 //  Function:  Sp_clear()
 //   Purpose:  To clear out the cache list
 //    Syntax:  Sp_clear()
@@ -319,13 +289,9 @@ STATIC FUNCTION sp_GetBuf( cLetters )
 
 FUNCTION Sp_Clear()
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_clear"
-
    CACHE_WORDS := ""
 
    RETURN NIL
-
 
 //   Function: Sp_GetSet()
 //    Purpose: To get/set a parameter for the spell check function
@@ -341,9 +307,6 @@ FUNCTION Sp_GetSet( nWhich, xNewSetting )
 
    LOCAL xOld := NIL
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_getset"
-
    IF nWhich != NIL .AND. ( nWhich > 0 .AND. nWhich <= Len( t_aGlobal ) )
       xOld := t_aGlobal[ nWhich ]
       IF ValType( xNewSetting ) == ValType( xOld )
@@ -352,7 +315,6 @@ FUNCTION Sp_GetSet( nWhich, xNewSetting )
    ENDIF
 
    RETURN xOld
-
 
 // Function: Sp_LoadAux()
 //  Purpose: To load an auxiliary dictionary of words
@@ -363,9 +325,6 @@ FUNCTION Sp_LoadAux( cFile )
    LOCAL x     := 0
    LOCAL cStr  := ""
    LOCAL nSize
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_loadaux"
 
    IF ! Empty( cFile )
       IF hb_FileExists( cFile )
@@ -390,7 +349,6 @@ FUNCTION Sp_LoadAux( cFile )
    ENDIF
 
    RETURN is_ok
-
 
 //  Function:  Sp_Suggest()
 //   Purpose:  To return an array of possible spellings
@@ -466,9 +424,6 @@ FUNCTION Sp_Suggest( cWord, lInclude )
    LOCAL cFirst
    LOCAL cKey
    LOCAL arr_
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_suggest"
 
    cWord := Upper( RTrim( cWord ) )
    zz    := Len( cWord )
@@ -774,14 +729,13 @@ FUNCTION Sp_Suggest( cWord, lInclude )
                   ELSEIF cKey > cMeta
                      EXIT
                   ENDIF
-                  jj    := kk + 1
+                  jj := kk + 1
                ENDIF
                kk++
             ENDDO
          ENDIF
       ENDIF
    ENDIF
-
 
    nSugg := Len( aRet_ )
    IF nSugg > 1 .AND. SORT_SUGGESTIONS
@@ -815,9 +769,6 @@ FUNCTION Sp_Quick( cWord )
    LOCAL zz
    LOCAL arr_ := {}
    LOCAL cHold, ll, cTemp
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_quick"
 
    cWord := Upper( RTrim( cWord ) )
 
@@ -910,10 +861,6 @@ FUNCTION Sp_Quick( cWord )
    RETURN arr_
 
 STATIC FUNCTION ChrCount( cChar, cString )
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At ChrCount"
-
    RETURN Len( cString ) - Len( StrTran( cString, cChar ) )
 
 FUNCTION Sp_Split( cWord )
@@ -922,9 +869,6 @@ FUNCTION Sp_Split( cWord )
    LOCAL x
    LOCAL cWord1
    LOCAL cWord2
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_split"
 
    FOR x := 2 TO Len( cWord )
       cWord1 := Left( cWord, x - 1 )
@@ -943,9 +887,6 @@ FUNCTION Sp_Expand( cWord )
    LOCAL x
    LOCAL cExpand
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_expand"
-
    cWord := Upper( AllTrim( cWord ) )
    x := AScan( sc_aContracts, {| jj | Left( jj[ 1 ], Len( cWord ) ) == cWord } ) // LEFTEQUAL()
    IF x > 0
@@ -953,7 +894,6 @@ FUNCTION Sp_Expand( cWord )
    ENDIF
 
    RETURN cExpand
-
 
 //  Function:  Sp_WildCard()
 //   Purpose:  To return an array of wildcard matches
@@ -967,9 +907,6 @@ FUNCTION Sp_WildCard( cPattern )
    LOCAL   ii, kk, jj, cFirst, cHold, x, z
    LOCAL   arr_   := {}
    LOCAL   nStart, nEnd
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_wildcard"
 
    cPattern := Upper( cPattern )
 
@@ -1014,8 +951,7 @@ FUNCTION Sp_WildCard( cPattern )
 
    RETURN arr_
 
-
-// The following functions are internal and should not be modified.           *
+// The following functions are internal and should not be modified.
 
 // Function:  Sp_Init()
 //  Purpose:  Internal function to initialize the dictionary
@@ -1031,43 +967,25 @@ FUNCTION Sp_Init()
    LOCAL cOther := ""
    LOCAL nFileSize
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_init"
-
    IF t_cOffsets == NIL
-      isok    := .F.
+      isok := .F.
       t_nHandle := FOpen( DICTIONARY_PATH + DICTIONARY_NAME, FO_READ + FO_DENYWRITE )
       IF t_nHandle != F_ERROR
-
-#ifdef REDUCE_MEMORY_NEEDS
-
-         cBuf := Space( 6 )
-         FRead( t_nHandle, @cBuf, 6 )
-
-#else
 
          cBuf := Space( NSIZE + 6 )
          FRead( t_nHandle, @cBuf, NSIZE + 6 )
 
-#endif
-
          IF SubStr( cBuf, 1, 2 ) == "JJ"
-            nOther    := Bin2L( SubStr( cBuf, 3, 4 ) )
-
-#ifndef REDUCE_MEMORY_NEEDS
-
-            t_cOffsets  := hb_BSubStr( cBuf, 7 )
-
-#endif
-
+            nOther := Bin2L( SubStr( cBuf, 3, 4 ) )
+            t_cOffsets := hb_BSubStr( cBuf, 7 )
             nFileSize := FSeek( t_nHandle, 0, FS_END )
             IF nFileSize - nOther > 0
-               cOther   := Space( nFileSize - nOther )
+               cOther := Space( nFileSize - nOther )
                FSeek( t_nHandle, nOther, FS_SET )
                FRead( t_nHandle, @cOther, ( nFileSize - nOther ) )
             ENDIF
             t_aGlobal[ 2 ] += cOther
-            isok     := .T.
+            isok := .T.
          ENDIF
          IF ! Empty( AUXILIARY_DICTIONARY )
             Sp_LoadAux( AUXILIARY_DICTIONARY )
@@ -1091,7 +1009,6 @@ FUNCTION Sp_Init()
    ENDIF
 
    RETURN isok
-
 
 
 //  Function:  DBF2Dic()
@@ -1126,9 +1043,6 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    // DEFAULT name for dictionary file
    //
 
-   // *DEBUG**
-   // @ 24, 30 SAY "At DBF2DIC"
-
    IF cDictionary == NIL
       cDictionary := "dict.dic"
    ENDIF
@@ -1136,7 +1050,6 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    IF lTalk == NIL
       lTalk := .F.
    ENDIF
-
 
    //
    // See if the DBF file exists
@@ -1169,7 +1082,6 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
    INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( C_MetaFone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
    dbGoTop()
-
 
    IF lTalk
       hb_DispOutAt(  9, 31, "Percent          ", "W/R" )
@@ -1255,7 +1167,6 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
    RETURN nStatus
 
-
 //  Function:  Dic2DBF()
 //   Purpose:  To create a DBF file from a DIC file
 //    Syntax:  nStatus := DIC2DBF( <cDIC_file>, <cDBF_file> )
@@ -1279,9 +1190,6 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
    LOCAL cWord
    LOCAL cSave
    LOCAL nSize
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At DIC2DBF"
 
    //
    // DEFAULT name for dictionary file
@@ -1414,17 +1322,6 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
 
 STATIC FUNCTION Sp_Common()
 
-#ifdef REDUCE_MEMORY_NEEDS
-
-   t_aGlobal_[ 1 ]  := ;
-      "|THE|OF|AND|TO|A|IN|THAT|FOR|IS|WAS|IT|HE|I|AS" + ;
-      "|WITH|ON|HIS|BE|AT|BY|NOT|THIS|HAD|HAVE|YOU|BUT" + ;
-      "|FROM|ARE|OR|WHICH|AN|THEY|WILL|ONE|WERE|ALL|WE" + ;
-      "|HER|SHE|WOULD|THERE|HAS|BEEN|HIM|THEIR|IF|WHEN" + ;
-      "|SO|MORE|NO|WHO|YOUR|OUT|MY|I'VE|I'D|I'LL|CAN'T|"
-
-#else
-
    t_aGlobal[ 1 ] := ;
       "|THE|OF|AND|TO|A|IN|THAT|FOR|IS|WAS|IT|HE|I|AS|WITH|ON|HIS|BE|AT|BY" + ;
       "|NOT|THIS|HAD|HAVE|YOU|BUT|FROM|ARE|OR|WHICH|AN|THEY|WILL|ONE|WERE|ALL" + ;
@@ -1467,9 +1364,7 @@ STATIC FUNCTION Sp_Common()
       "|HARD|SCHOOLS|STRONG|BELIEVE|PLAY|VARIOUS|SURFACE|MAKING|MEAN|SOON|VALUE" + ;
       "|LINES|MODERN|NEAR|TABLE|PRIVATE|RED|ROAD|TAX|ALONE|MINUTES|PERSONAL|PROCESS" + ;
       "|SITUATION|THAT'S|GONE|IDEA|INCREASE|NOR|PEACE|SECTION|LIVING|STARTED|BOOK" + ;
-      "|LONGER|CUT|FINALLY|NATURE|SECRETARY|MONTHS|THIRD|CALL|COMPLETE|GREATER"
-
-   t_aGlobal[ 1 ] += ;
+      "|LONGER|CUT|FINALLY|NATURE|SECRETARY|MONTHS|THIRD|CALL|COMPLETE|GREATER" + ;
       "|EXPECTED|FIRE|NEEDED|KEPT|VALUES|VIEW|BASIS|DARK|EVERYTHING|PRESSURE" + ;
       "|GROUND|EAST|RECENT|REQUIRED|SPIRIT|UNION|HOPE|I'LL|MOVED|NATIONS|WROTE" + ;
       "|CONDITIONS|RETURN|SUPPORT|ATTENTION|LATE|PARTICULAR|BROWN|COSTS|ELSE|NATION" + ;
@@ -1487,25 +1382,16 @@ STATIC FUNCTION Sp_Common()
       "|WORKING|EFFORT|SAT|ENTIRE|HAPPENED|LABOR|PURPOSE|RESULTS|CASES|DIFFERENCE" + ;
       "|HAIR|PRODUCTION|STAND|I'VE|I'D|WON'T|"
 
-#endif
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At SP_common"
-
    RETURN NIL
-
 
 FUNCTION WildCard( cPattern, cString )
 
-   LOCAL lMatch  := .F.
-   LOCAL x       := At( "*", cPattern )
+   LOCAL lMatch := .F.
+   LOCAL x      := At( "*", cPattern )
    LOCAL cBefore
    LOCAL cAfter
    LOCAL y
    LOCAL nStrSize, nPatSize
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At wildcard"
 
    cString := Upper( AllTrim( cString ) )
 
@@ -1530,8 +1416,8 @@ FUNCTION WildCard( cPattern, cString )
    ELSE
       x := At( "?", cPattern )
       IF x > 0
-         nPatSize  := Len( cPattern )
-         nStrSize  := Len( cString )
+         nPatSize := Len( cPattern )
+         nStrSize := Len( cString )
          IF nPatSize == nStrSize
             lMatch := .T.
             FOR y := 1 TO nPatSize
@@ -1556,9 +1442,6 @@ FUNCTION aWords( cLine )
    LOCAL x, y, z
    LOCAL cWord   := ""
    LOCAL nOffset
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At clip52"
 
    z := 0
    DO WHILE z <= nSize
@@ -1587,9 +1470,6 @@ FUNCTION aWords( cLine )
 FUNCTION fat( f_str, l_str, f_rom )
 
    LOCAL ret_val
-
-   // *DEBUG**
-   // @ 24, 30 SAY "At FAT"
 
    IF PCount() < 3                        // Is f_rom passed?
       f_rom := 1
