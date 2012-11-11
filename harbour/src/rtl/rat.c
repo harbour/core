@@ -65,6 +65,7 @@ HB_FUNC( RAT )
 
       if( nTo >= 0 )
       {
+         PHB_CODEPAGE cdp = hb_vmCDP();
          const char * pszSub = hb_parc( 1 );
          const char * pszText = hb_parc( 2 );
 
@@ -73,7 +74,6 @@ HB_FUNC( RAT )
             if( pszText[ nTo ] == *pszSub &&
                 memcmp( pszSub, pszText + nTo, nSubLen ) == 0 )
             {
-               PHB_CODEPAGE cdp = hb_vmCDP();
                if( HB_CDP_ISCHARIDX( cdp ) )
                   nPos = hb_cdpTextLen( cdp, pszText, nTo ) + 1;
                else
