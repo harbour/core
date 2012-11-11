@@ -26,13 +26,10 @@
 
 #include "fileio.ch"
 
-#xtranslate StoreWord( <cWord> )   => xForm( <cWord> )
-#xtranslate ExtractWord( <cWord> ) => xUnForm( <cWord> )
-
 #define EACH_WORD              6
 #define NSIZE                  ( 26 * 26 * EACH_WORD )
 #define CRLF                   Chr( 13 ) + Chr( 10 )
-#define FOUR_BYTES             Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+#define FOUR_BYTES             hb_BChar( 0 ) + hb_BChar( 0 ) + hb_BChar( 0 ) + hb_BChar( 0 )
 #define MAX_STRING             40000
 
 #define COMMON_WORDS           t_aGlobal[  1 ]
@@ -107,7 +104,8 @@ FUNCTION Sp_Add( cWord )
    // an auxiliary dictionary name was specified
 
    IF Sp_Init() .AND. ! Empty( AUXILIARY_DICTIONARY )
-      cWord      := Upper( AllTrim( cWord ) )
+
+      cWord := Upper( AllTrim( cWord ) )
 
       //
       // If the auxiliary dictionary does not exist,
@@ -121,14 +119,12 @@ FUNCTION Sp_Add( cWord )
       ENDIF
       IF nAuxHandle >= 0
 
-         FSeek( nAuxHandle, 0, FS_END )             // Bottom of the file
-         nWritten := FWrite( nAuxHandle, ;        // Write word into file
-         cWord + CRLF )
+         FSeek( nAuxHandle, 0, FS_END )                 // Bottom of the file
+         nWritten := FWrite( nAuxHandle, cWord + CRLF ) // Write word into file
+         FClose( nAuxHandle )                           // Close the file
+         Sp_Cache( cWord )                              // Add word to cache
 
-         FClose( nAuxHandle )                     // Close the file
-         Sp_Cache( cWord )                        // Add word to cache
-
-         was_added := ( nWritten == Len( cWord ) + 2 )
+         was_added := ( nWritten == hb_BLen( cWord ) + hb_BLen( CRLF ) )
       ENDIF
    ENDIF
 
@@ -136,7 +132,7 @@ FUNCTION Sp_Add( cWord )
 
 //  Function:  Sp_cache()
 //   Purpose:  To add a word to the cache list
-//    Syntax:  <logical> := Sp_cache(cWord)
+//    Syntax:  <logical> := Sp_Cache( cWord )
 // Arguments:  cWord - upper case, all trimmed word to add
 //   Returns:  <logical> - TRUE if added,
 //                         FALSE otherwise
@@ -198,8 +194,8 @@ FUNCTION Sp_Check( cWord )
          cLookUp := SubStr( cLookup, 1, Len( cLookup ) -2 )
       ENDIF
       cTemp := "|" + cLookup + "|"
-      IF fat( cTemp, COMMON_WORDS ) == 0    // Check the common words first
-         IF fat( cTemp, CACHE_WORDS ) == 0   // then check the cache words
+      IF At( cTemp, COMMON_WORDS ) == 0    // Check the common words first
+         IF At( cTemp, CACHE_WORDS ) == 0   // then check the cache words
             ok    := .F.
             nRow  := Asc( SubStr( cLookup, 1, 1 ) ) - 64
             nCol  := Asc( SubStr( cLookup, 2, 1 ) ) - 64
@@ -223,12 +219,12 @@ FUNCTION Sp_Check( cWord )
                   ELSEIF Len( cLookup ) < 3
                      ok := bit( @t_cBuf, 27 )
                   ELSEIF y > 4
-                     cTemp := StoreWord( cLookup )
+                     cTemp := xForm( cLookup )
                      DO WHILE z < y
-                        z := fat( cTemp, t_cBuf, z )
+                        z := bfat( cTemp, t_cBuf, z )
                         IF z < 6
                            EXIT
-                        ELSEIF hb_BSubStr( t_cBuf, z - 1, 1 ) < Chr( 128 )
+                        ELSEIF hb_BSubStr( t_cBuf, z - 1, 1 ) < hb_BChar( 128 )
                            z++
                         ELSE
                            EXIT
@@ -280,9 +276,9 @@ STATIC FUNCTION sp_GetBuf( cLetters )
 
    RETURN cBuf
 
-//  Function:  Sp_clear()
+//  Function:  Sp_Clear()
 //   Purpose:  To clear out the cache list
-//    Syntax:  Sp_clear()
+//    Syntax:  Sp_Clear()
 //   Returns:  NIL
 //
 //    Static:  CACHE_WORDS  - String of cache words
@@ -295,7 +291,7 @@ FUNCTION Sp_Clear()
 
 //   Function: Sp_GetSet()
 //    Purpose: To get/set a parameter for the spell check function
-//     Syntax: <xOldValue> := Sp_GetSet( nWhich [,xNewSetting] )
+//     Syntax: <xOldValue> := Sp_GetSet( nWhich [, xNewSetting] )
 // Parameters: nWhich      - Which parameter to get/set
 //             xNewSetting - Value to set parameter to
 //
@@ -352,7 +348,7 @@ FUNCTION Sp_LoadAux( cFile )
 
 //  Function:  Sp_Suggest()
 //   Purpose:  To return an array of possible spellings
-//    Syntax:  aSuggest_ := Sp_Suggest(cWord [,lInclude] )
+//    Syntax:  aSuggest_ := Sp_Suggest( cWord [, lInclude] )
 // Arguments:  cWord     - Word to look for suggestions for
 //             lInclude  - Should word be included in list?
 //   Returns:  aSuggest_ - List of suggested words
@@ -432,7 +428,9 @@ FUNCTION Sp_Suggest( cWord, lInclude )
       RETURN aRet_                    // single letter words
    ENDIF
 
-   IF lInclude == NIL ; lInclude := .F.  ; ENDIF
+   IF lInclude == NIL
+      lInclude := .F.
+   ENDIF
 
    //
    // Should the current word be included?
@@ -707,7 +705,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
                   ELSEIF cKey < cMeta
                      EXIT
                   ENDIF
-                  jj    := kk
+                  jj := kk
                ENDIF
                kk--
             ENDDO
@@ -903,17 +901,17 @@ FUNCTION Sp_Expand( cWord )
 
 FUNCTION Sp_WildCard( cPattern )
 
-   LOCAL   cTemp
-   LOCAL   ii, kk, jj, cFirst, cHold, x, z
-   LOCAL   arr_   := {}
-   LOCAL   nStart, nEnd
+   LOCAL cTemp
+   LOCAL ii, kk, jj, cFirst, cHold, x, z
+   LOCAL arr_   := {}
+   LOCAL nStart, nEnd
 
    cPattern := Upper( cPattern )
 
    IF Sp_Init()
-      x      := fat( "*", cPattern )
+      x := At( "*", cPattern )
       IF x == 0
-         x := fat( "?", cPattern )
+         x := At( "?", cPattern )
       ENDIF
       IF x == 1                 // Can't handle wildcards in first position
          RETURN arr_
@@ -1105,7 +1103,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       // Write out enough bytes to hold the index information
       //
 
-      FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( Chr( 0 ), NSIZE ) + Space( 10 ) )
+      FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( hb_BChar( 0 ), NSIZE ) + Space( 10 ) )
 
       FOR i := 1 TO 26
          DO WHILE Left( DICT->word, 1 ) == Chr( i + 64 ) .AND. ! Eof()
@@ -1124,7 +1122,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                   ELSEIF Len( RTrim( DICT->word ) ) == 2
                      bit( @cBits, 27, .T. )
                   ELSE
-                     temp += StoreWord( RTrim( DICT->word ) )
+                     temp += xForm( RTrim( DICT->word ) )
                   ENDIF
                   dbSkip()
                   IF lTalk
@@ -1169,7 +1167,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
 //  Function:  Dic2DBF()
 //   Purpose:  To create a DBF file from a DIC file
-//    Syntax:  nStatus := DIC2DBF( <cDIC_file>, <cDBF_file> )
+//    Syntax:  nStatus := Dic2DBF( <cDIC_file>, <cDBF_file> )
 // Arguments:  <cDIC_File>  - Name of DIC file to read, assumes
 //                            dict.dic
 //             <cDBF_File>  - Name of DBF to create, assumes dict.dbf
@@ -1279,10 +1277,10 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
             cBuf := SubStr( cBuf, 5 )
             z    := 1
             DO WHILE ! Empty( cBuf )
-               IF SubStr( cBuf, z, 1 ) >= Chr( 128 )
+               IF SubStr( cBuf, z, 1 ) >= hb_BChar( 128 )
                   cWord := SubStr( cBuf, 1, z )
                   dbAppend()
-                  DICT->word := temp + ExtractWord( cWord )
+                  DICT->word := temp + xUnForm( cWord )
                   cWord := ""
                   cBuf  := SubStr( cBuf, z + 1 )
                   z     := 1
@@ -1290,7 +1288,6 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
                   IF lTalk
                      hb_DispOutAt( 11, 41, Transform( LastRec(), "99,999" ), "W+/R" )
                   ENDIF
-
                ELSE
                   z++
                ENDIF
@@ -1452,7 +1449,7 @@ FUNCTION aWords( cLine )
          cWord   := Chr( y )
          z++
          y := Asc( SubStr( cLine, z, 1 ) )
-         WHILE ( y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" ) .OR. y == 39
+         WHILE ( y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" ) .OR. y == "'"
             cWord += Chr( y )
             z++
             IF z > nSize
@@ -1469,12 +1466,16 @@ FUNCTION aWords( cLine )
 // Find an occurrence of 'f_str' in 'l_str' starting from position 'f_rom'
 FUNCTION fat( f_str, l_str, f_rom )
 
-   LOCAL ret_val
+   IF PCount() < 3                        // Is f_rom passed?
+      f_rom := 1
+   ENDIF
+
+   RETURN At( f_str, SubStr( l_str, f_rom ) )
+
+STATIC FUNCTION bfat( f_str, l_str, f_rom )
 
    IF PCount() < 3                        // Is f_rom passed?
       f_rom := 1
    ENDIF
 
-   ret_val := At( f_str, SubStr( l_str, f_rom ) )
-
-   RETURN ret_val
+   RETURN hb_BAt( f_str, hb_BSubStr( l_str, f_rom ) )

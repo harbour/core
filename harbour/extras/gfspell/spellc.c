@@ -14,7 +14,7 @@ static const char * s_cRepl   = "[\\]^_`a";
 /*
  *   Function: xForm()
  *    Purpose: Internal function to translate words to dictionary
- *  Arguments: cWord  - upper case word to format
+ *  Arguments: cWord    - upper case word to format
  *    Returns: cXformed - translated word
  *
  *      Notes: I'm assuming that the passed word won't exceed 128 bytes.
@@ -33,6 +33,7 @@ HB_FUNC( XFORM )
    {
       iKey = *( ( HB_UINT * ) cWord );
       for( x = 0; x < 14; x += 2 )
+      {
          if( *( ( HB_UINT * ) ( s_cSearch + x ) ) == iKey )
          {
             if( x == 0 )
@@ -53,9 +54,11 @@ HB_FUNC( XFORM )
             *cPtr++ = *( s_cRepl + ( x >> 1 ) );
             break;
          }
+      }
 
       if( x >= 14 )
          *cPtr++ = *cWord++;
+
       iRetLen++;
    }
 
@@ -72,11 +75,10 @@ HB_FUNC( XFORM )
    hb_retclen( cRet, iRetLen );
 }
 
-
 /*
  *   Function: xUnForm()
  *    Purpose: Internal function to translate words from dictionary
- *  Arguments: cWord  - formatted word
+ *  Arguments: cWord    - formatted word
  *    Returns: cXformed - unformatted word
  *
  *      Notes: I'm assuming that the returned word won't exceed 128 bytes.
@@ -101,7 +103,7 @@ HB_FUNC( XUNFORM )
       else
          c -= 128;
 
-      if( ( x = ( int ) memchr( s_cRepl, c, 7 ) ) <= 6 )
+      if( ( x = ( HB_ISIZ ) memchr( s_cRepl, c, 7 ) ) <= 6 )
       {
          if( x == 0 )
          {
@@ -127,7 +129,6 @@ HB_FUNC( XUNFORM )
 
    hb_retclen( cRet, iRetLen );
 }
-
 
 /***************************
  *   Function: Sp_Rate()
@@ -183,8 +184,6 @@ HB_FUNC( SP_RATE )
 
    hb_retclen_buffer( cRating, 3 );
 }
-
-/** Start of C_MetaFone() **/
 
 /*
  * Author: Clayton Neff
@@ -769,8 +768,6 @@ HB_FUNC( C_METAFONE )
    hb_xfree( sReturn );
 }
 
-/** Start of bit() **/
-
 /*
  *  Purpose: Sets the given bit in a passed bit string.  Returns the previous
  *           value.  Be sure to pass the string by reference.  NOTE.  In order
@@ -805,10 +802,9 @@ HB_FUNC( BIT )
             *ptr = ( HB_UCHAR ) *ptr & ~mask;
       }
    }
-   hb_retl( res );
-}
 
-/** Start of Sp_Line() **/
+   hb_retl( res != 0 );
+}
 
 static HB_BOOL WordSep( HB_UCHAR c )
 {
@@ -882,7 +878,7 @@ HB_FUNC( SP_LINE )
          nOffset += nCount + 1;
          if( ! bLineBreak )
          {
-            while( cIn[ nOffset ] == 32 )             /* Remove leading spaces */
+            while( cIn[ nOffset ] == ' ' )            /* Remove leading spaces */
                nOffset++;
          }
          nOffset++;                                   /* +1 for Harbour string */
@@ -896,6 +892,5 @@ HB_FUNC( SP_LINE )
    else
       hb_retc_null();
 
-   if( HB_ISBYREF( 2 ) )                                 /* Change reference val */
-      hb_stornl( nOffset, 2 );
+   hb_storns( nOffset, 2 );
 }
