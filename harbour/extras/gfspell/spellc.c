@@ -12,7 +12,7 @@ static const char * s_cSearch = "INEDTIERESTEON";
 static const char * s_cRepl   = "[\\]^_`a";
 
 /*
- *   Function: xForm()
+ *   Function: XForm()
  *    Purpose: Internal function to translate words to dictionary
  *  Arguments: cWord    - upper case word to format
  *    Returns: cXformed - translated word
@@ -76,7 +76,7 @@ HB_FUNC( XFORM )
 }
 
 /*
- *   Function: xUnForm()
+ *   Function: XUnForm()
  *    Purpose: Internal function to translate words from dictionary
  *  Arguments: cWord    - formatted word
  *    Returns: cXformed - unformatted word

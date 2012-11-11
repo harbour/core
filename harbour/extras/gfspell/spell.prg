@@ -167,7 +167,7 @@ FUNCTION Sp_Cache( cWord )
 
 FUNCTION Sp_Check( cWord )
 
-   THREAD STATIC t_cBuf   := ""
+   THREAD STATIC t_cBuf := ""
    THREAD STATIC t_cLast
 
    THREAD STATIC t_nDicCount   := 0
@@ -196,13 +196,13 @@ FUNCTION Sp_Check( cWord )
       cTemp := "|" + cLookup + "|"
       IF At( cTemp, COMMON_WORDS ) == 0    // Check the common words first
          IF At( cTemp, CACHE_WORDS ) == 0   // then check the cache words
-            ok    := .F.
-            nRow  := Asc( SubStr( cLookup, 1, 1 ) ) - 64
-            nCol  := Asc( SubStr( cLookup, 2, 1 ) ) - 64
+            ok   := .F.
+            nRow := Asc( SubStr( cLookup, 1, 1 ) ) - 64
+            nCol := Asc( SubStr( cLookup, 2, 1 ) ) - 64
             IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
 
-               x  := Bin2L( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
-               y  := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
+               x := Bin2L( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
+               y := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
 
                IF ! Empty( x )
                   IF !( t_cLast == SubStr( cLookup, 1, 2 ) )
@@ -219,7 +219,7 @@ FUNCTION Sp_Check( cWord )
                   ELSEIF Len( cLookup ) < 3
                      ok := bit( @t_cBuf, 27 )
                   ELSEIF y > 4
-                     cTemp := xForm( cLookup )
+                     cTemp := XForm( cLookup )
                      DO WHILE z < y
                         z := bfat( cTemp, t_cBuf, z )
                         IF z < 6
@@ -260,14 +260,14 @@ STATIC FUNCTION sp_GetBuf( cLetters )
 
    LOCAL x
    LOCAL y
-   LOCAL cBuf  := ""
-   LOCAL nRow  := Asc( SubStr( cLetters, 1, 1 ) ) - 64
-   LOCAL nCol  := Asc( SubStr( cLetters, 2, 1 ) ) - 64
+   LOCAL cBuf := ""
+   LOCAL nRow := Asc( SubStr( cLetters, 1, 1 ) ) - 64
+   LOCAL nCol := Asc( SubStr( cLetters, 2, 1 ) ) - 64
 
    IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
-      x  := Bin2L( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
+      x := Bin2L( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
       IF ! Empty( x )
-         y    := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
+         y := Bin2W( hb_BSubStr( t_cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
          cBuf := Space( y )
          FSeek( t_nHandle, x + 4, FS_SET )
          FRead( t_nHandle, @cBuf, y - 4 )
@@ -333,10 +333,10 @@ FUNCTION Sp_LoadAux( cFile )
       IF x > 0
          nSize := FSeek( x, 0, FS_END )
          IF nSize < MAX_STRING
-            cStr  := Space( nSize )
+            cStr := Space( nSize )
             FSeek( x, 0, FS_SET )
             FRead( x, @cStr, nSize )
-            cStr  := "|" + StrTran( cStr, CRLF, "|" )
+            cStr := "|" + StrTran( cStr, CRLF, "|" )
             CACHE_WORDS += Upper( cStr )
             is_ok := .T.
          ENDIF
@@ -411,11 +411,11 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
    LOCAL jj, kk, zz, ii
    LOCAL cHold
-   LOCAL aRet_   := {}                // List of suggested words
+   LOCAL aRet_ := {}                  // List of suggested words
    LOCAL cTemp
    LOCAL nSugg
-   LOCAL nSize    := Len( sc_aParts_ )
-   LOCAL nSuffix  := Len( sc_aEnds )
+   LOCAL nSize   := Len( sc_aParts_ )
+   LOCAL nSuffix := Len( sc_aEnds )
    LOCAL cMeta
    LOCAL cFirst
    LOCAL cKey
@@ -672,12 +672,12 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
    IF SUGGEST_PREFERENCE $ "MB"
       IF METAPHONE_SIZE == 0
-         zz    := Min( 5, Len( cWord ) )
+         zz := Min( 5, Len( cWord ) )
          IF zz < 3
             zz := 3
          ENDIF
       ELSE
-         zz  := METAPHONE_SIZE
+         zz := METAPHONE_SIZE
       ENDIF
       cTemp  := Sp_GetBuf( cWord )
       ii     := Len( cTemp )
@@ -694,7 +694,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
             DO WHILE kk > 0
                IF Asc( SubStr( cTemp, kk, 1 ) ) >= 128      // End of word
-                  cHold := cFirst + xUnForm( SubStr( cTemp, kk + 1, jj - kk ) )
+                  cHold := cFirst + XUnForm( SubStr( cTemp, kk + 1, jj - kk ) )
                   cKey  := C_Metafone( cHold, zz )
                   IF cMeta ==  C_Metafone( cHold, zz )
                      IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) -Len( cHold ) ) <= MAX_DIFFERENCE
@@ -716,7 +716,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
             DO WHILE kk < ii
                IF Asc( SubStr( cTemp, kk, 1 ) ) >= 128      // End of word
-                  cHold := cFirst + xUnForm( SubStr( cTemp, jj, kk - jj + 1 ) )
+                  cHold := cFirst + XUnForm( SubStr( cTemp, jj, kk - jj + 1 ) )
                   cKey  := C_Metafone( cHold, zz )
                   IF cMeta ==  C_Metafone( cHold, zz )
                      IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) -Len( cHold ) ) <= MAX_DIFFERENCE
@@ -748,7 +748,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
 //  Function:  Sp_Quick()
 //   Purpose:  To return an array of quick spellings
-//    Syntax:  aSuggest  := Sp_Quick( cWord )
+//    Syntax:  aSuggest := Sp_Quick( cWord )
 // Arguments:  cWord     - Word to look for suggestions for
 //   Returns:  aSuggest  - List of suggested words
 
@@ -895,7 +895,7 @@ FUNCTION Sp_Expand( cWord )
 
 //  Function:  Sp_WildCard()
 //   Purpose:  To return an array of wildcard matches
-//    Syntax:  aSuggest  := Sp_WildCard( cPattern )
+//    Syntax:  aSuggest := Sp_WildCard( cPattern )
 // Arguments:  cPattern  - Pattern to match using * or ?'s
 //   Returns:  aSuggest  - List of matching words
 
@@ -903,7 +903,7 @@ FUNCTION Sp_WildCard( cPattern )
 
    LOCAL cTemp
    LOCAL ii, kk, jj, cFirst, cHold, x, z
-   LOCAL arr_   := {}
+   LOCAL arr_ := {}
    LOCAL nStart, nEnd
 
    cPattern := Upper( cPattern )
@@ -935,11 +935,11 @@ FUNCTION Sp_WildCard( cPattern )
             jj := 1
             DO WHILE kk < ii
                IF Asc( SubStr( cTemp, kk, 1 ) ) >= 128      // End of word
-                  cHold := cFirst + xUnForm( SubStr( cTemp, jj, kk - jj + 1 ) )
+                  cHold := cFirst + XUnForm( SubStr( cTemp, jj, kk - jj + 1 ) )
                   IF WildCard( cPattern, cHold )
                      AAdd( arr_, cHold )
                   ENDIF
-                  jj    := kk + 1
+                  jj := kk + 1
                ENDIF
                kk++
             ENDDO
@@ -1122,7 +1122,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                   ELSEIF Len( RTrim( DICT->word ) ) == 2
                      bit( @cBits, 27, .T. )
                   ELSE
-                     temp += xForm( RTrim( DICT->word ) )
+                     temp += XForm( RTrim( DICT->word ) )
                   ENDIF
                   dbSkip()
                   IF lTalk
@@ -1252,7 +1252,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
    FOR i := 1 TO 26
       FOR j := 1 TO 26
          temp := Chr( i + 64 ) + Chr( j + 64 )
-         x  := Bin2L( hb_BSubStr( t_cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 1 ), 4 ) )
+         x := Bin2L( hb_BSubStr( t_cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 1 ), 4 ) )
          IF ! Empty( x )
             y := Bin2W( hb_BSubStr( t_cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 5 ), 2 ) )
 
@@ -1280,7 +1280,7 @@ FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
                IF SubStr( cBuf, z, 1 ) >= hb_BChar( 128 )
                   cWord := SubStr( cBuf, 1, z )
                   dbAppend()
-                  DICT->word := temp + xUnForm( cWord )
+                  DICT->word := temp + XUnForm( cWord )
                   cWord := ""
                   cBuf  := SubStr( cBuf, z + 1 )
                   z     := 1
@@ -1432,7 +1432,7 @@ FUNCTION WildCard( cPattern, cString )
 
    RETURN lMatch
 
-FUNCTION aWords( cLine )
+FUNCTION AWords( cLine )
 
    LOCAL aWords_ := {}
    LOCAL nSize   := Len( RTrim( cLine ) )

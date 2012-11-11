@@ -21,7 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
-DYNAMIC aWords
+DYNAMIC AWords
 DYNAMIC bit
 DYNAMIC C_Metafone
 DYNAMIC DBF2Dic
@@ -42,8 +42,8 @@ DYNAMIC Sp_Split
 DYNAMIC Sp_Suggest
 DYNAMIC Sp_WildCard
 DYNAMIC WildCard
-DYNAMIC xForm
-DYNAMIC xUnForm
+DYNAMIC XForm
+DYNAMIC XUnForm
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__GFSPELL__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
