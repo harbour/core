@@ -1069,7 +1069,7 @@ FUNCTION Sp_Init()
 
 #else
 
-         cBuf       := Space( NSIZE + 6 )
+         cBuf := Space( NSIZE + 6 )
          FRead( t_nHandle, @cBuf, NSIZE + 6 )
 
 #endif
@@ -1195,7 +1195,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
    ENDIF
 
-   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( c_metafone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
+   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( C_MetaFone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
    dbGoTop()
 
 

@@ -158,7 +158,7 @@ HB_FUNC( SP_RATE )
    HB_ISIZ      nMinLen = HB_MIN( nFound, nWord );
    HB_ISIZ      x       = abs( nFound - nWord );
    HB_ISIZ      lim     = HB_MIN( nMinLen, 5 );
-   char *       cRating = "nZZ";
+   char *       cRating = hb_strdup( "nZZ" );
 
    *cRating = ( char ) ( HB_MIN( x, 9 ) + '0' );
 
@@ -181,7 +181,7 @@ HB_FUNC( SP_RATE )
       cWord--;
    }
 
-   hb_retclen( cRating, 3 );
+   hb_retclen_buffer( cRating, 3 );
 }
 
 /** Start of C_MetaFone() **/
