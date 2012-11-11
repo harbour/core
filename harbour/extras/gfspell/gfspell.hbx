@@ -1,0 +1,52 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT!
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__GFSPELL__
+#define __HBEXTERN_CH__GFSPELL__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__GFSPELL__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__GFSPELL__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__GFSPELL__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC aWords
+DYNAMIC bit
+DYNAMIC C_Metafone
+DYNAMIC DBF2Dic
+DYNAMIC Dic2DBF
+DYNAMIC fat
+DYNAMIC Sp_Add
+DYNAMIC Sp_Cache
+DYNAMIC Sp_Check
+DYNAMIC Sp_Clear
+DYNAMIC Sp_Expand
+DYNAMIC Sp_GetSet
+DYNAMIC Sp_Init
+DYNAMIC Sp_Line
+DYNAMIC Sp_LoadAux
+DYNAMIC Sp_Quick
+DYNAMIC Sp_Rate
+DYNAMIC Sp_Split
+DYNAMIC Sp_Suggest
+DYNAMIC Sp_WildCard
+DYNAMIC WildCard
+DYNAMIC xForm
+DYNAMIC xUnForm
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__GFSPELL__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

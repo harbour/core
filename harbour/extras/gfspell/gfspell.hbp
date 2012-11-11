@@ -12,4 +12,7 @@
 spell.prg
 spellc.c
 
+-hbx=${hb_name}.hbx
+${hb_name}.hbx
+$hb_pkg_dynlib.hbm
 $hb_pkg_install.hbm

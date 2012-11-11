@@ -36,8 +36,8 @@
 #include "setcurs.ch"
 #include "inkey.ch"
 
-#xtranslate isOkay( <exp> )                      => ( <exp> \ > 0 .AND. <exp> \ <= nCount )
-#xtranslate isBetween( <val>, <lower>, <upper> ) => ( <val> \ >= <lower> .AND. <val> \ <= <upper> )
+#xtranslate isOkay( <exp> )                      => ( <exp> \> 0 .AND. <exp> \<= nCount )
+#xtranslate isBetween( <val>, <lower>, <upper> ) => ( <val> \>= <lower> .AND. <val> \<= <upper> )
 
 // These arrays hold information about each menu item
 

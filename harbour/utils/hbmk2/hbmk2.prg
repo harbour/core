@@ -6536,6 +6536,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             IF ! hb_DirBuild( hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) )
                _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create directory for target '%1$s'." ), hbmk[ _HBMK_cPROGNAME ] ) )
             ENDIF
+            IF ! Empty( l_cIMPLIBNAME )
+               IF ! hb_DirBuild( hb_FNameDir( l_cIMPLIBNAME ) )
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot create directory for import library '%1$s'." ), l_cIMPLIBNAME ) )
+               ENDIF
+            ENDIF
 
             IF hbmk[ _HBMK_lREBUILD ] .OR. ;
                ( ! hbmk[ _HBMK_lINC ] .AND. lStopAfterCComp .AND. hbmk[ _HBMK_lCreateLib ] .AND. ! Empty( cBin_Lib ) ) /* non-incremental + static lib */

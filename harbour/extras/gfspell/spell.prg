@@ -9,16 +9,16 @@
 //              spell check a string and to also work with individual
 //              words.
 //
-//              SP_Add()        - Add word to the dictionary
-//              SP_Cache()      - Add word to spelling cache
-//              SP_Check()      - Is word spelled correctly?
-//              SP_Clear()      - Clear the spelling cache
-//              SP_Init()       - Initialize the spelling dictionary
-//              SP_GetSet()     - Get/Set global parameters
-//              SP_LoadAux()    - Loads an auxiliary dictionary
-//              SP_Suggest()    - Offer list of sound alike suggestions
-//              SP_Quick()      - Offer list of suggested spellings
-//              SP_WildCard()   - List of wildcard matches
+//              Sp_Add()        - Add word to the dictionary
+//              Sp_Cache()      - Add word to spelling cache
+//              Sp_Check()      - Is word spelled correctly?
+//              Sp_Clear()      - Clear the spelling cache
+//              Sp_Init()       - Initialize the spelling dictionary
+//              Sp_GetSet()     - Get/Set global parameters
+//              Sp_LoadAux()    - Loads an auxiliary dictionary
+//              Sp_Suggest()    - Offer list of sound alike suggestions
+//              Sp_Quick()      - Offer list of suggested spellings
+//              Sp_WildCard()   - List of wildcard matches
 //
 //              DBF2Dic()       - Convert a DBF file to a DIC file
 //              Dic2DBF()       - Convert a DIC file to a DBF file
@@ -26,78 +26,78 @@
 
 #include "fileio.ch"
 
-#xtranslate    StoreWord( <cWord> )   => Xform( <cWord> )
-#xtranslate    ExtractWord( <cWord> ) => Xunform( <cWord> )
+#xtranslate StoreWord( <cWord> )   => Xform( <cWord> )
+#xtranslate ExtractWord( <cWord> ) => Xunform( <cWord> )
 
-#define    NSIZE                  ( 26 * 26 * 6 )
-#define    EACH_WORD                          6
-#define    CRLF                   Chr( 13 ) + Chr( 10 )
-#define    FOUR_BYTES             Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
-#define    MAX_STRING             40000
+#define NSIZE                  ( 26 * 26 * 6 )
+#define EACH_WORD                          6
+#define CRLF                   Chr( 13 ) + Chr( 10 )
+#define FOUR_BYTES             Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
+#define MAX_STRING             40000
 
-#define    COMMON_WORDS           aGlobal[ 1]
-#define    CACHE_WORDS            aGlobal[ 2]
-#define    DICTIONARY_PATH        aGlobal[ 3]
-#define    DICTIONARY_NAME        aGlobal[ 4]
-#define    AUXILIARY_DICTIONARY   aGlobal[ 5]
-#define    EXTRA_CODE_BLOCK       aGlobal[ 6]
-#define    ADD_SUFFIXES           aGlobal[ 7]
-#define    ADD_PREFIXES           aGlobal[ 8]
-#define    ADD_PLURALS            aGlobal[ 9]
-#define    SORT_SUGGESTIONS       aGlobal[10]
-#define    SUGGEST_PREFERENCE     aGlobal[11]
-#define    MINIMUM_WORD_LENGTH    aGlobal[12]
-#define    METAPHONE_SIZE         aGlobal[13]
-#define    MAX_DIFFERENCE         aGlobal[14]
-#define    THESAURUS_NAME         aGlobal[15]
-#define    CHECK_RUNONS           aGlobal[16]
+#define COMMON_WORDS           aGlobal[  1 ]
+#define CACHE_WORDS            aGlobal[  2 ]
+#define DICTIONARY_PATH        aGlobal[  3 ]
+#define DICTIONARY_NAME        aGlobal[  4 ]
+#define AUXILIARY_DICTIONARY   aGlobal[  5 ]
+#define EXTRA_CODE_BLOCK       aGlobal[  6 ]
+#define ADD_SUFFIXES           aGlobal[  7 ]
+#define ADD_PREFIXES           aGlobal[  8 ]
+#define ADD_PLURALS            aGlobal[  9 ]
+#define SORT_SUGGESTIONS       aGlobal[ 10 ]
+#define SUGGEST_PREFERENCE     aGlobal[ 11 ]
+#define MINIMUM_WORD_LENGTH    aGlobal[ 12 ]
+#define METAPHONE_SIZE         aGlobal[ 13 ]
+#define MAX_DIFFERENCE         aGlobal[ 14 ]
+#define THESAURUS_NAME         aGlobal[ 15 ]
+#define CHECK_RUNONS           aGlobal[ 16 ]
 
 
-// #define    REDUCE_MEMORY_NEEDS
+// #define REDUCE_MEMORY_NEEDS
 
 
 
 
 THREAD STATIC aGlobal := { ;
-   NIL,;
-   "",;
-   "",;
-   "DICT.DIC",;
-   "",;
-   NIL,;
-   .T.,;
-   .T.,;
-   .T.,;
-   .T.,;
-   "B",;     // (M)etaphone, (A)lgorithmic, (B)oth
-    2,;
-    5,;
-    1,;
-    "THES.DIC",;
+   NIL, ;
+   "", ;
+   "", ;
+   "dict.dic", ;
+   "", ;
+   NIL, ;
+   .T., ;
+   .T., ;
+   .T., ;
+   .T., ;
+   "B", ;     // (M)etaphone, (A)lgorithmic, (B)oth
+    2, ;
+    5, ;
+    1, ;
+    "thes.dic", ;
    .T. }
 
 STATIC aContracts := { ;
-   { "CAN'T"       ,"CANNOT"    },;
-   { "WON'T"       ,"WILL NOT"  },;
-   { "AREN'T"      ,"ARE NOT"   },;
-   { "AIN'T"       ,"ARE NOT"   },;
-   { "THEY'RE"     ,"THEY ARE"  },;
-   { "THEY'VE"     ,"THEY HAVE" },;
-   { "IT'S"        ,"IT IS"     },;
-   { "I'LL"        ,"I WILL"    },;
-   { "I'D"         ,"I WOULD"   },;
+   { "CAN'T"       ,"CANNOT"    }, ;
+   { "WON'T"       ,"WILL NOT"  }, ;
+   { "AREN'T"      ,"ARE NOT"   }, ;
+   { "AIN'T"       ,"ARE NOT"   }, ;
+   { "THEY'RE"     ,"THEY ARE"  }, ;
+   { "THEY'VE"     ,"THEY HAVE" }, ;
+   { "IT'S"        ,"IT IS"     }, ;
+   { "I'LL"        ,"I WILL"    }, ;
+   { "I'D"         ,"I WOULD"   }, ;
    { "DON'T"       ,"DO NOT"    } }
 
 
 
-THREAD STATIC nHandle := 0
+THREAD STATIC nHandle := F_ERROR
 THREAD STATIC cOffsets
 
 
 
-//   Function:  SP_Add()
+//   Function:  Sp_Add()
 //    Purpose:  Adds a word to the dictionary
-//     Syntax:  <logical> := SP_Add(cWord)
+//     Syntax:  <logical> := Sp_Add( cWord )
 //  Arguments:  cWord     - Word to add to the auxiliary dictionary
 //    Returns:  <logical> - TRUE if added,
 //                          FALSE otherwise
@@ -106,7 +106,7 @@ THREAD STATIC cOffsets
 //              dictionary.
 //
 
-FUNCTION SP_Add( cWord )
+FUNCTION Sp_Add( cWord )
 
    LOCAL was_added := .F.             // Was word written to dictionary?
    LOCAL nAuxHandle                   // Dictionary file handle
@@ -116,9 +116,9 @@ FUNCTION SP_Add( cWord )
    // an auxiliary dictionary name was specified
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_ADD"
+   // @ 24, 30 SAY "At SP_ADD"
 
-   IF SP_Init() .AND. ! Empty( AUXILIARY_DICTIONARY )
+   IF Sp_Init() .AND. ! Empty( AUXILIARY_DICTIONARY )
       cWord      := Upper( AllTrim( cWord ) )
 
       //
@@ -126,7 +126,7 @@ FUNCTION SP_Add( cWord )
       // we will create it for the user
       //
 
-      IF File( AUXILIARY_DICTIONARY )
+      IF hb_FileExists( AUXILIARY_DICTIONARY )
          nAuxHandle := FOpen( AUXILIARY_DICTIONARY, FO_READWRITE + FO_DENYWRITE )
       ELSE
          nAuxHandle := FCreate( AUXILIARY_DICTIONARY )
@@ -135,10 +135,10 @@ FUNCTION SP_Add( cWord )
 
          FSeek( nAuxHandle, 0, FS_END )             // Bottom of the file
          nWritten := FWrite( nAuxHandle, ;        // Write word into file
-         cWord + CRLF, Len( cWord ) + 2 )
+         cWord + CRLF )
 
          FClose( nAuxHandle )                     // Close the file
-         SP_Cache( cWord )                        // Add word to cache
+         Sp_Cache( cWord )                        // Add word to cache
 
          was_added := ( nWritten == Len( cWord ) + 2 )
       ENDIF
@@ -160,13 +160,13 @@ FUNCTION SP_Add( cWord )
 //      Notes:  Check to see if the word already exists in the cache
 //
 
-FUNCTION Sp_cache( cWord )
+FUNCTION Sp_Cache( cWord )
 
    LOCAL cTemp  := "|" + Upper( AllTrim( cWord ) ) + "|"
    LOCAL lAdded := .F.
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_cache"
+   // @ 24, 30 SAY "At SP_cache"
 
    IF ! cTemp $ CACHE_WORDS .AND. Len( CACHE_WORDS ) < MAX_STRING
       CACHE_WORDS += cTemp
@@ -177,9 +177,9 @@ FUNCTION Sp_cache( cWord )
 
 
 //
-//   Function:  Sp_check()
+//   Function:  Sp_Check()
 //    Purpose:  To check the spelling of a word
-//     Syntax:  <logical> := Sp_check(cWord)
+//     Syntax:  <logical> := Sp_Check( cWord )
 //  Arguments:  cWord - upper case, all trimmed word to check
 //    Returns:  <logical> - TRUE if valid spelling
 //                          FALSE otherwise
@@ -193,7 +193,7 @@ FUNCTION Sp_cache( cWord )
 //
 //
 
-FUNCTION SP_Check( cWord )
+FUNCTION Sp_Check( cWord )
 
    STATIC cBuf   := ""
    STATIC cLast
@@ -214,16 +214,16 @@ FUNCTION SP_Check( cWord )
    LOCAL cTemp
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_init"
+   // @ 24, 30 SAY "At SP_init"
 
-   IF sp_init()
+   IF Sp_Init()
       IF Len( cLookup ) == 1 .AND. cLookup $ "IA"
          RETURN .T.
       ENDIF
       IF Len( cLookup ) < MINIMUM_WORD_LENGTH
          RETURN .T.
       ENDIF
-      IF Right( cLookup, 2 ) = "'S"
+      IF Right( cLookup, 2 ) == "'S"
          cLookUp := SubStr( cLookup, 1, Len( cLookup ) -2 )
       ENDIF
       cTemp := "|" + cLookup + "|"
@@ -239,13 +239,13 @@ FUNCTION SP_Check( cWord )
                cOffsets := Space( 6 )
                FSeek( nHandle, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * 6 + 1 ) + 5, FS_SET )
                FRead( nHandle, @cOffsets, 6 )
-               x  := Bin2L( SubStr( cOffsets, 1, 4 ) )
-               y  := Bin2W( SubStr( cOffsets, 5, 2 ) )
+               x  := Bin2L( hb_BSubStr( cOffsets, 1, 4 ) )
+               y  := Bin2W( hb_BSubStr( cOffsets, 5, 2 ) )
 
 #else
 
-               x  := Bin2L( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
-               y  := Bin2W( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
+               x  := Bin2L( hb_BSubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
+               y  := Bin2W( hb_BSubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
 
 #endif
 
@@ -258,18 +258,18 @@ FUNCTION SP_Check( cWord )
                   ELSE
                      nBuffCount++
                   ENDIF
-                  IF Len( cLookup ) = 3
-                     z  := Asc( SubStr( cLookup, 3, 1 ) ) -64
-                     ok := bit( cBuf, z )
+                  IF Len( cLookup ) == 3
+                     z  := Asc( SubStr( cLookup, 3, 1 ) ) - 64
+                     ok := bit( @cBuf, z )
                   ELSEIF Len( cLookup ) < 3
-                     ok := bit( cBuf, 27 )
+                     ok := bit( @cBuf, 27 )
                   ELSEIF y > 4
                      cTemp := StoreWord( cLookup )
                      DO WHILE z < y
                         z   := fat( cTemp, cBuf, z )
                         IF z < 6
                            EXIT
-                        ELSEIF SubStr( cBuf, z - 1, 1 ) < Chr( 128 )
+                        ELSEIF hb_BSubStr( cBuf, z - 1, 1 ) < Chr( 128 )
                            z++
                         ELSE
                            EXIT
@@ -309,16 +309,16 @@ STATIC FUNCTION sp_GetBuf( cLetters )
    LOCAL x
    LOCAL y
    LOCAL cBuf  := ""
-   LOCAL nRow  := Asc( SubStr( cLetters, 1, 1 ) ) -64
-   LOCAL nCol  := Asc( SubStr( cLetters, 2, 1 ) ) -64
+   LOCAL nRow  := Asc( SubStr( cLetters, 1, 1 ) ) - 64
+   LOCAL nCol  := Asc( SubStr( cLetters, 2, 1 ) ) - 64
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_getbuf"
+   // @ 24, 30 SAY "At SP_getbuf"
 
    IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
-      x  := Bin2L( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
+      x  := Bin2L( hb_BSubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 1 ), 4 ) )
       IF ! Empty( x )
-         y    := Bin2W( SubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
+         y    := Bin2W( hb_BSubStr( cOffsets, ( ( nRow - 1 ) * 156 ) + ( ( nCol - 1 ) * EACH_WORD + 5 ), 2 ) )
          cBuf := Space( y )
          FSeek( nHandle, x + 4, FS_SET )
          FRead( nHandle, @cBuf, y - 4 )
@@ -341,7 +341,7 @@ STATIC FUNCTION sp_GetBuf( cLetters )
 FUNCTION sp_clear
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_clear"
+   // @ 24, 30 SAY "At SP_clear"
 
    CACHE_WORDS := ""
 
@@ -364,7 +364,7 @@ FUNCTION Sp_GetSet( nWhich, xNewSetting )
    LOCAL xOld := NIL
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_getset"
+   // @ 24, 30 SAY "At SP_getset"
 
    IF nWhich != NIL .AND. ( nWhich > 0 .AND. nWhich <= Len( aGlobal ) )
       xOld := aGlobal[ nWhich ]
@@ -395,15 +395,15 @@ FUNCTION Sp_LoadAux( cFile )
    LOCAL nSize
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_loadaux"
+   // @ 24, 30 SAY "At SP_loadaux"
 
    IF ! Empty( cFile )
-      IF File( cFile )
+      IF hb_FileExists( cFile )
          x := FOpen( cFile, FO_READ + FO_DENYNONE )
       ELSE
          x := FCreate( cFile )
       ENDIF
-      SP_GetSet( 5, cFile )
+      Sp_GetSet( 5, cFile )
 
       IF x > 0
          nSize := FSeek( x, 0, FS_END )
@@ -500,12 +500,12 @@ FUNCTION Sp_Suggest( cWord, lInclude )
    LOCAL arr_
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_suggest"
+   // @ 24, 30 SAY "At SP_suggest"
 
    cWord := Upper( RTrim( cWord ) )
    zz    := Len( cWord )
 
-   IF zz = 1                           // Don't offer suggestions for
+   IF zz == 1                         // Don't offer suggestions for
       RETURN aRet_                    // single letter words
    ENDIF
 
@@ -520,14 +520,14 @@ FUNCTION Sp_Suggest( cWord, lInclude )
    ENDIF
 
    IF "'" $ cWord
-      cHold := SP_Expand( cWord )
+      cHold := Sp_Expand( cWord )
       IF ! Empty( cHold )
          AAdd( aRet_, "A1AA" + cHold )
       ENDIF
    ENDIF
 
    IF CHECK_RUNONS
-      arr_ := SP_Split( cWord )
+      arr_ := Sp_Split( cWord )
       FOR jj := 1 TO Len( arr_ )
          AAdd( aRet_, "A1AA" + arr_[ jj ] )
       NEXT
@@ -548,8 +548,8 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             // to see if it is a valid word.
             //
 
-            IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
-               AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+            IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+               AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
             ENDIF
          ENDIF
       NEXT
@@ -565,8 +565,8 @@ FUNCTION Sp_Suggest( cWord, lInclude )
          // to see if it is a valid word.
          //
 
-         IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
-            AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+         IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+            AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
          ENDIF
       NEXT
 
@@ -577,8 +577,8 @@ FUNCTION Sp_Suggest( cWord, lInclude )
       FOR jj := 2 TO zz
          cHold := Left( cWord, jj - 2 ) + SubStr( cWord, jj, 1 ) + ;
             SubStr( cWord, jj - 1, 1 ) + SubStr( cWord, jj + 1 )
-         IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
-            AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+         IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+            AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
          ENDIF
       NEXT
 
@@ -588,8 +588,8 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
 
       cHold := cWord + "E"
-      IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
-         AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+      IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+         AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
       ENDIF
 
       //
@@ -603,8 +603,8 @@ FUNCTION Sp_Suggest( cWord, lInclude )
                DO WHILE ( ii := fat( aParts_[ jj, 1 ], cWord, ii ) ) > 0
                   FOR kk := 1 TO Len( aParts_[ jj, 2 ] )
                      cHold := SubStr( cWord, 1, ii - 1 ) + aParts_[ jj, 2, kk ] + SubStr( cWord, ii + 1 )
-                     IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
-                        AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+                     IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+                        AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
                      ENDIF
                   NEXT
                   ii++
@@ -612,8 +612,8 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             ELSE
                FOR kk := 1 TO Len( aParts_[ jj, 2 ] )
                   cHold := StrTran( cWord, aParts_[ jj, 1 ], aParts_[ jj, 2, kk ] )
-                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
-                     AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+                  IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0 .AND. Sp_Check( cHold )
+                     AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
                   ENDIF
                NEXT
             ENDIF
@@ -636,9 +636,9 @@ FUNCTION Sp_Suggest( cWord, lInclude )
          IF ADD_SUFFIXES
             FOR kk := 1 TO nSuffix
                cTemp := cHold + aEnds[ kk ]
-               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                     Sp_Check( cTemp )
-                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                  Sp_Check( cTemp )
+                  AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             NEXT
             //
@@ -647,9 +647,9 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
             FOR kk := 1 TO nSuffix
                cTemp := cHold + SubStr( cHold, zz, 1 ) + aEnds[ kk ]
-               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                     SP_Check( cTemp )
-                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                  Sp_Check( cTemp )
+                  AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             NEXT
             //
@@ -659,9 +659,9 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             IF SubStr( cHold, -1, 1 ) == "C"
                FOR kk := 1 TO nSuffix
                   cTemp := cHold + "K" + aEnds[ kk ]
-                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                        SP_Check( cTemp )
-                     AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+                  IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     Sp_Check( cTemp )
+                     AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                   ENDIF
                NEXT
             ENDIF
@@ -671,20 +671,20 @@ FUNCTION Sp_Suggest( cWord, lInclude )
 
             IF SubStr( cHold, -2, 2 ) == "ND"
                cTemp := SubStr( cHold, 1, zz - 1 ) + "SE"
-               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                     SP_Check( cTemp )
-                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                  Sp_Check( cTemp )
+                  AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
                FOR kk := 1 TO nSuffix
                   cTemp := SubStr( cHold, 1, zz - 1 ) + "SE" + aEnds[ kk ]
-                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                        SP_Check( cTemp )
-                     AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+                  IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     Sp_Check( cTemp )
+                     AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                   ENDIF
                   cTemp := SubStr( cHold, 1, zz - 1 ) + "S" + aEnds[ kk ]
-                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                        SP_Check( cTemp )
-                     AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+                  IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     Sp_Check( cTemp )
+                     AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                   ENDIF
                NEXT
             ENDIF
@@ -695,9 +695,9 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             IF SubStr( cHold, zz, 1 ) == "E"
                FOR kk := 1 TO nSuffix
                   cTemp := SubStr( cHold, 1, zz - 1 ) + aEnds[ kk ]
-                  IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                        SP_Check( cTemp )
-                     AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+                  IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                     Sp_Check( cTemp )
+                     AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                   ENDIF
                NEXT
             ENDIF
@@ -706,37 +706,37 @@ FUNCTION Sp_Suggest( cWord, lInclude )
          IF ADD_PREFIXES
             FOR kk := 1 TO 7
                cTemp := aBegs[ kk ] + cHold
-               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                     SP_Check( cTemp )
-                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                  Sp_Check( cTemp )
+                  AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             NEXT
          ENDIF
 
          IF ADD_PLURALS
             cTemp := cHold + "S"
-            IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                  SP_Check( cTemp )
-               AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+            IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+               Sp_Check( cTemp )
+               AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
             ENDIF
 
             IF SubStr( cHold, zz, 1 ) == "Y"
                cTemp := SubStr( cHold, 1, zz - 1 ) + "IES"
-               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                     SP_Check( cTemp )
-                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                  Sp_Check( cTemp )
+                  AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             ELSEIF SubStr( cHold, zz, 1 ) == "F"
                cTemp := SubStr( cHold, 1, zz - 1 ) + "VES"
-               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                     SP_Check( cTemp )
-                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                  Sp_Check( cTemp )
+                  AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             ELSEIF SubStr( cHold, zz, 1 ) == "O"
                cTemp := cHold + "ES"
-               IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
-                     SP_Check( cTemp )
-                  AAdd( aRet_, "C" + SP_Rate( cTemp, cWord ) + cTemp )
+               IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cTemp } ) == 0 .AND. ;
+                  Sp_Check( cTemp )
+                  AAdd( aRet_, "C" + Sp_Rate( cTemp, cWord ) + cTemp )
                ENDIF
             ENDIF
          ENDIF
@@ -757,9 +757,9 @@ FUNCTION Sp_Suggest( cWord, lInclude )
       ELSE
          zz  := METAPHONE_SIZE
       ENDIF
-      cTemp  := SP_GetBuf( cWord )
+      cTemp  := Sp_GetBuf( cWord )
       ii     := Len( cTemp )
-      cMeta  := C_Metafone( cWord, zz )
+      cMeta  := C_MetaFone( cWord, zz )
       zz     := Len( cMeta )
       cFirst := SubStr( cWord, 1, 2 )
 
@@ -773,11 +773,11 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             DO WHILE kk > 0
                IF Asc( SubStr( cTemp, kk, 1 ) ) >= 128      // End of word
                   cHold := cFirst + xUnForm( SubStr( cTemp, kk + 1, jj - kk ) )
-                  cKey  := c_metafone( cHold, zz )
-                  IF cMeta ==  c_Metafone( cHold, zz )
+                  cKey  := C_Metafone( cHold, zz )
+                  IF cMeta ==  C_Metafone( cHold, zz )
                      IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) -Len( cHold ) ) <= MAX_DIFFERENCE
-                        IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0
-                           AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+                        IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0
+                           AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
                         ENDIF
                      ENDIF
                   ELSEIF cKey < cMeta
@@ -796,11 +796,11 @@ FUNCTION Sp_Suggest( cWord, lInclude )
             DO WHILE kk < ii
                IF Asc( SubStr( cTemp, kk, 1 ) ) >= 128      // End of word
                   cHold := cFirst + xUnForm( SubStr( cTemp, jj, kk - jj + 1 ) )
-                  cKey  := c_metafone( cHold, zz )
-                  IF cMeta ==  c_Metafone( cHold, zz )
+                  cKey  := C_Metafone( cHold, zz )
+                  IF cMeta ==  C_Metafone( cHold, zz )
                      IF MAX_DIFFERENCE < 0 .OR. Abs( Len( cWord ) -Len( cHold ) ) <= MAX_DIFFERENCE
-                        IF AScan( aRet_, {|xx| SubStr( xx, 5 ) == cHold } ) == 0
-                           AAdd( aRet_, "B" + SP_Rate( cHold, cWord ) + cHold )
+                        IF AScan( aRet_, {| xx | SubStr( xx, 5 ) == cHold } ) == 0
+                           AAdd( aRet_, "B" + Sp_Rate( cHold, cWord ) + cHold )
                         ENDIF
                      ENDIF
                   ELSEIF cKey > cMeta
@@ -853,7 +853,7 @@ FUNCTION Sp_Quick( cWord )
    LOCAL cHold, ll, cTemp
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_quick"
+   // @ 24, 30 SAY "At SP_quick"
 
    cWord    := Upper( RTrim( cWord ) )
 
@@ -950,7 +950,7 @@ FUNCTION Sp_Quick( cWord )
 STATIC FUNCTION ChrCount( cChar, cString )
 
    // *DEBUG**
-   @ 24, 30 SAY "At ChrCount"
+   // @ 24, 30 SAY "At ChrCount"
 
    RETURN Len( cString ) -Len( StrTran( cString, cChar ) )
 
@@ -962,13 +962,13 @@ FUNCTION Sp_Split( cWord )
    LOCAL cWord2
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_split"
+   // @ 24, 30 SAY "At SP_split"
 
    FOR x := 2 TO Len( cWord )
       cWord1 := Left( cWord, x - 1 )
       cWord2 := SubStr( cWord, x )
       IF Len( cWord1 ) > 1 .AND. Len( cWord2 ) > 1
-         IF SP_Check( cWord1 ) .AND.  SP_Check( cWord2 )
+         IF Sp_Check( cWord1 ) .AND.  Sp_Check( cWord2 )
             AAdd( arr_, cWord1 + " " + cWord2 )
          ENDIF
       ENDIF
@@ -976,18 +976,18 @@ FUNCTION Sp_Split( cWord )
 
    RETURN arr_
 
-FUNCTION SP_Expand( cWord )
+FUNCTION Sp_Expand( cWord )
 
    LOCAL x
    LOCAL cExpand
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_expand"
+   // @ 24, 30 SAY "At SP_expand"
 
    cWord := Upper( AllTrim( cWord ) )
-   x := AScan( aContracts, {|jj| jj[ 1 ] = cWord } )
+   x := AScan( aContracts, {| jj | Left( jj[ 1 ], Len( cWord ) ) == cWord } ) // LEFTEQUAL()
    IF x > 0
-      cExpand :=  aContracts[ x, 2 ]
+      cExpand := aContracts[ x, 2 ]
    ENDIF
 
    RETURN cExpand
@@ -1003,7 +1003,7 @@ FUNCTION SP_Expand( cWord )
 //       Returns:  aSuggest  - List of matching words
 //
 
-FUNCTION Sp_Wildcard( cPattern )
+FUNCTION Sp_WildCard( cPattern )
 
    LOCAL   cTemp
    LOCAL   ii, kk, jj, cFirst, cHold, x, z
@@ -1011,11 +1011,11 @@ FUNCTION Sp_Wildcard( cPattern )
    LOCAL   nStart, nEnd
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_wildcard"
+   // @ 24, 30 SAY "At SP_wildcard"
 
    cPattern := Upper( cPattern )
 
-   IF SP_Init()
+   IF Sp_Init()
       x      := fat( "*", cPattern )
       IF x == 0
          x := fat( "?", cPattern )
@@ -1033,7 +1033,7 @@ FUNCTION Sp_Wildcard( cPattern )
 
 
       FOR z := nStart TO nEnd
-         cTemp  := SP_GetBuf( SubStr( cPattern, 1, 1 ) + Chr( z + 64 ) )
+         cTemp  := Sp_GetBuf( SubStr( cPattern, 1, 1 ) + Chr( z + 64 ) )
          ii     := Len( cTemp )
          cFirst := SubStr( cPattern, 1, 1 ) + Chr( z + 64 )
 
@@ -1062,7 +1062,7 @@ FUNCTION Sp_Wildcard( cPattern )
 // The following functions are internal and should not be modified.           *
 
 
-//   Function:  SP_Init()
+//   Function:  Sp_Init()
 //    Purpose:  Internal function to initialize the dictionary
 //  Arguments:  NONE
 //    Returns:  <logical> - Was dictionary initialized?
@@ -1070,7 +1070,7 @@ FUNCTION Sp_Wildcard( cPattern )
 //      Notes:
 //
 
-FUNCTION Sp_init
+FUNCTION Sp_Init()
 
    LOCAL isok := .T.
    LOCAL cBuf
@@ -1081,12 +1081,12 @@ FUNCTION Sp_init
    LOCAL nFileSize
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_init"
+   // @ 24, 30 SAY "At SP_init"
 
    IF cOffsets == NIL
       isok    := .F.
       nHandle := FOpen( DICTIONARY_PATH + DICTIONARY_NAME, FO_READ + FO_DENYWRITE )
-      IF nHandle > 0
+      IF nHandle != F_ERROR
 
 #ifdef REDUCE_MEMORY_NEEDS
 
@@ -1119,20 +1119,20 @@ FUNCTION Sp_init
             isok     := .T.
          ENDIF
          IF ! Empty( AUXILIARY_DICTIONARY )
-            SP_LoadAux( AUXILIARY_DICTIONARY )
+            Sp_LoadAux( AUXILIARY_DICTIONARY )
          ENDIF
       ENDIF
       IF aGlobal[ 1 ] == NIL
-         SP_Common()
+         Sp_Common()
       ENDIF
 
       // * Thesaurus comented out as not needed
 #if 0
       IF ! Empty( THESAURUS_NAME )
-         IF File( DICTIONARY_PATH + THESAURUS_NAME )
-            SP_OpenThes( DICTIONARY_PATH + THESAURUS_NAME )
-         ELSEIF File( THESAURUS_NAME )
-            SP_OpenThes( THESAURUS_NAME )
+         IF hb_FileExists( DICTIONARY_PATH + THESAURUS_NAME )
+            Sp_OpenThes( DICTIONARY_PATH + THESAURUS_NAME )
+         ELSEIF hb_FileExists( THESAURUS_NAME )
+            Sp_OpenThes( THESAURUS_NAME )
          ENDIF
       ENDIF
 #endif
@@ -1146,12 +1146,12 @@ FUNCTION Sp_init
 //
 //      Function:  DBF2Dic()
 //       Purpose:  To create a DIC file from a DBF list of words
-//        Syntax:  nStatus := DBF2Dic( <cDBF_file>,<cDIC_file> )
+//        Syntax:  nStatus := DBF2Dic( <cDBF_file>, <cDIC_file> )
 //     Arguments:  <cDBF_File>  - DBF containing sorted list of upper
 //                                case words. The field name must be
 //                                WORD and of type character
 //                 <cDIC_File>  - Name of DIC file to create, assumes
-//                                DICT.DIC
+//                                'dict.dic'
 //       Returns:  nStatus      -  0 if successful
 //                                -1 DBF file does not exist
 //                                -2 Field WORD does not exist in DBF
@@ -1180,10 +1180,10 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    //
 
    // *DEBUG**
-   @ 24, 30 SAY "At DBF2DIC"
+   // @ 24, 30 SAY "At DBF2DIC"
 
    IF cDictionary == NIL
-      cDictionary := "DICT.DIC"
+      cDictionary := "dict.dic"
    ENDIF
 
    IF lTalk == NIL
@@ -1196,14 +1196,14 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    //
 
    IF ! "." $ cDBF
-      cDBF += ".DBF"
+      cDBF += ".dbf"
    ENDIF
 
-   IF ! File( cDBF )
+   IF ! hb_FileExists( cDBF )
       RETURN -1
    ENDIF
 
-   USE ( cDbf ) ALIAS DICT new
+   USE ( cDbf ) ALIAS DICT NEW
    IF FieldPos( "WORD" ) == 0
       USE
       RETURN -2
@@ -1221,8 +1221,8 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
    ENDIF
 
-   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( c_metafone( AllTrim( DICT->word ), 5 ), 6 ) to $$ temp
-   GO TOP
+   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( c_metafone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
+   dbGoTop()
 
 
    IF lTalk
@@ -1235,22 +1235,22 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
    //
 
    // ADDED - 02/08/96 - JAMES
-   IF nHandle > 0                         // Is dictionary already open?
-      FClose( nHandle )                     // Yes, close it
-      nHandle := 0
+   IF nHandle != F_ERROR                  // Is dictionary already open?
+      FClose( nHandle )                   // Yes, close it
+      nHandle := F_ERROR
    ENDIF                                  // END OF ADDITION
 
    nH := FCreate( cDictionary )
 
-   IF nH >= 0
+   IF nH != F_ERROR
       //
       // Write out enough bytes to hold the index information
       //
 
-      FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( Chr( 0 ), NSIZE ) + Space( 10 ), NSIZE + 16 )
+      FWrite( nH, "JJ" + L2Bin( NSIZE + 4 ) + Replicate( Chr( 0 ), NSIZE ) + Space( 10 ) )
 
       FOR i := 1 TO 26
-         DO WHILE SubStr( DICT->word, 1, 1 ) == Chr( i + 64 ) .AND. ! Eof()
+         DO WHILE Left( DICT->word, 1 ) == Chr( i + 64 ) .AND. ! Eof()
             FOR j := 1 TO 26
                temp  := ""
                cBits := FOUR_BYTES
@@ -1258,41 +1258,41 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
                   IF Len( AllTrim( DICT->word ) ) > 0
                      cOther += "|" + AllTrim( DICT->word )
                   ENDIF
-                  skip + 1
+                  dbSkip()
                ENDDO
                DO WHILE SubStr( DICT->word, 2, 1 ) == Chr( j + 64 ) .AND. ! Eof()
-                  IF Len( RTrim( DICT->word ) ) = 3
-                     Bit( cBits, Asc( SubStr( DICT->word, 3, 1 ) ) -64, .T. )
+                  IF Len( RTrim( DICT->word ) ) == 3
+                     bit( @cBits, Asc( SubStr( DICT->word, 3, 1 ) ) - 64, .T. )
                   ELSEIF Len( RTrim( DICT->word ) ) == 2
-                     Bit( cBits, 27, .T. )
+                     bit( @cBits, 27, .T. )
                   ELSE
                      temp += StoreWord( RTrim( DICT->word ) )
                   ENDIF
-                  skip + 1
+                  dbSkip()
                   IF lTalk
                      nCurRec++
-                     @ 10, 41 say ( nCurRec / nSize ) * 100   PICTURE "999.9%"   COLOR "W+/R"
+                     @ 10, 41 SAY ( nCurRec / nSize ) * 100   PICTURE "999.9%"   COLOR "W+/R"
                   ENDIF
                ENDDO
-               IF ! Empty( temp ) .OR. cBits != FOUR_BYTES
+               IF ! Empty( temp ) .OR. !( cBits == FOUR_BYTES )
 
                   nWhere := FSeek( nH, 0, FS_END )
 
                   FSeek( nH, ( ( i - 1 ) * 26 * EACH_WORD ) + ( ( j - 1 ) * EACH_WORD ) + 6 )
-                  FWrite( nH, L2Bin( nWhere ) + I2Bin( Len( temp ) + 4 ), EACH_WORD )
+                  FWrite( nH, L2Bin( nWhere ) + I2Bin( hb_BLen( temp ) + 4 ), EACH_WORD )
                   FSeek( nH, 0, FS_END )
-                  FWrite( nH, cBits + temp, Len( temp ) + 4 )
+                  FWrite( nH, cBits + temp )
                ENDIF
             NEXT
          ENDDO
       NEXT
       j := FSeek( nH, 0, FS_END )
       FSeek( nH, 2, FS_SET )
-      FWrite( nH, L2Bin( j ), 4 )
+      FWrite( nH, L2Bin( j ) )
       IF ! Empty( cOther )
          FSeek( nH, j, FS_SET )
          cOther += "|"
-         FWrite( nH, cOther, Len( cOther ) )
+         FWrite( nH, cOther )
       ENDIF
       FClose( nH )
    ELSE
@@ -1305,7 +1305,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 
    SELECT DICT
    USE
-   //  ferase("$$TEMP"+indexext())
+   FErase( "$$temp" + IndexExt() )
 
    RETURN nStatus
 
@@ -1313,10 +1313,10 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 //
 //      Function:  Dic2DBF()
 //       Purpose:  To create a DBF file from a DIC file
-//        Syntax:  nStatus := DIC2DBF( <cDIC_file>,<cDBF_file> )
+//        Syntax:  nStatus := DIC2DBF( <cDIC_file>, <cDBF_file> )
 //     Arguments:  <cDIC_File>  - Name of DIC file to read, assumes
-//                                DICT.DIC
-//                 <cDBF_File>  - Name of DBF to create, assumes DICT.DBF
+//                                dict.dic
+//                 <cDBF_File>  - Name of DBF to create, assumes dict.dbf
 //                                It will contain a single field called
 //                                WORD of type character
 //       Returns:  nStatus      -  0 if successful
@@ -1326,7 +1326,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 //         Calls:
 //
 
-FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
+FUNCTION Dic2DBF( cDictionary, cDBF, lTalk )
 
    LOCAL nStatus := 0                 // Status code
    LOCAL i                            // Loop counters
@@ -1339,21 +1339,21 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
    LOCAL nSize
 
    // *DEBUG**
-   @ 24, 30 SAY "At DIC2DBF"
+   // @ 24, 30 SAY "At DIC2DBF"
 
    //
    //  DEFAULT name for dictionary file
    //
 
    IF cDictionary == NIL
-      cDictionary := "DICT.DIC"
+      cDictionary := "dict.dic"
    ENDIF
 
    IF lTalk == NIL
       lTalk := .F.
    ENDIF
 
-   IF ! File( cDictionary )
+   IF ! hb_FileExists( cDictionary )
       RETURN -1
    ENDIF
 
@@ -1363,7 +1363,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
    //  Read the dictionary file
    //
 
-   IF ! SP_Init()
+   IF ! Sp_Init()
       RETURN -2
    ENDIF
    //
@@ -1371,12 +1371,12 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
    //
 
    IF ! "." $ cDBF
-      cDBF += ".DBF"
+      cDBF += ".dbf"
    ENDIF
 
    dbCreate( cDbf, { { "WORD", "C", 25, 0 } } )
 
-   USE ( cDbf ) ALIAS DICT new
+   USE ( cDbf ) ALIAS DICT NEW
 
    IF lTalk
       cSave := SaveScreen( 8, 30, 12, 48 )
@@ -1396,7 +1396,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
 
    FOR i := 2 TO Len( CACHE_WORDS )
       IF SubStr( CACHE_WORDS, i, 1 ) == "|"
-         APPEND BLANK
+         dbAppend()
          REPLACE DICT->word WITH SubStr( CACHE_WORDS, j, i - j )
          j := i + 1
       ENDIF
@@ -1411,21 +1411,21 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
             y    := Bin2W( SubStr( cOffsets, ( ( i - 1 ) * 156 ) + ( ( j - 1 ) * EACH_WORD + 5 ), 2 ) )
 
             IF lTalk
-               @ 10, 43 say ( x / nSize ) * 100   PICTURE "999%"   COLOR "W+/R"
-               @ 11, 41 SAY LastRec()         PICTURE "99,999" COLOR "W+/R"
+               @ 10, 43 SAY ( x / nSize ) * 100   PICTURE "999%"   COLOR "W+/R"
+               @ 11, 41 SAY LastRec()             PICTURE "99,999" COLOR "W+/R"
             ENDIF
 
             cBuf := Space( y )
             FSeek( nHandle, x, FS_SET )
             FRead( nHandle, @cBuf, y )
             FOR z := 1 TO 26
-               IF bit( cBuf, z )
-                  APPEND BLANK
+               IF bit( @cBuf, z )
+                  dbAppend()
                   REPLACE DICT->word WITH temp + Chr( z + 64 )
                ENDIF
             NEXT
-            IF bit( cBuf, 27 )
-               APPEND BLANK
+            IF bit( @cBuf, 27 )
+               dbAppend()
                REPLACE DICT->word WITH temp
             ENDIF
             cBuf := SubStr( cBuf, 5 )
@@ -1433,7 +1433,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
             DO WHILE ! Empty( cBuf )
                IF SubStr( cBuf, z, 1 ) >= Chr( 128 )
                   cWord := SubStr( cBuf, 1, z )
-                  APPEND BLANK
+                  dbAppend()
                   REPLACE DICT->word WITH temp + ExtractWord( cWord )
                   cWord := ""
                   cBuf  := SubStr( cBuf, z + 1 )
@@ -1462,11 +1462,10 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
    USE
 
    RETURN nStatus
-//
 
-//     Function:  SP_Common()
+//     Function:  Sp_Common()
 //      Purpose:  Loads the COMMON word static array element
-//       Syntax:  SP_Common()
+//       Syntax:  Sp_Common()
 //    Arguments:  <NONE>
 //      Returns:  NIL
 //
@@ -1475,7 +1474,7 @@ FUNCTION DIC2DBF( cDictionary, cDBF, lTalk )
 //                dictionary lookup for 70-80% of the words.
 //
 //
-STATIC FUNCTION SP_common
+STATIC FUNCTION Sp_Common()
 
 #ifdef REDUCE_MEMORY_NEEDS
 
@@ -1554,7 +1553,7 @@ STATIC FUNCTION SP_common
 #endif
 
    // *DEBUG**
-   @ 24, 30 SAY "At SP_common"
+   // @ 24, 30 SAY "At SP_common"
 
    RETURN NIL
 
@@ -1569,7 +1568,7 @@ FUNCTION WildCard( cPattern, cString )
    LOCAL nStrSize, nPatSize
 
    // *DEBUG**
-   @ 24, 30 SAY "At wildcard"
+   // @ 24, 30 SAY "At wildcard"
 
    cString := Upper( AllTrim( cString ) )
 
@@ -1600,14 +1599,14 @@ FUNCTION WildCard( cPattern, cString )
             lMatch := .T.
             FOR y := 1 TO nPatSize
                IF !( SubStr( cPattern, y, 1 ) == "?" ) .AND. ;
-                     !( SubStr( cPattern, y, 1 ) == SubStr( cString, y, 1 ) )
+                  !( SubStr( cPattern, y, 1 ) == SubStr( cString, y, 1 ) )
                   lMatch := .F.
                   EXIT
                ENDIF
             NEXT
          ENDIF
       ELSE
-         lMatch := Upper( cPattern ) = Upper( cString )
+         lMatch := Left( Upper( cPattern ), Len( Upper( cString ) ) ) == Upper( cString )
       ENDIF
    ENDIF
 
@@ -1623,7 +1622,7 @@ FUNCTION aWords( cLine )
    LOCAL nOffset
 
    // *DEBUG**
-   @ 24, 30 SAY "At clip52"
+   // @ 24, 30 SAY "At clip52"
 
    z := 0
    DO WHILE z <= nSize
@@ -1650,12 +1649,12 @@ FUNCTION aWords( cLine )
 #endif
 
 // Find an occurrence of 'f_str' in 'l_str' starting from position 'f_rom'
-FUNCTION FAT( f_str, l_str, f_rom )
+FUNCTION fat( f_str, l_str, f_rom )
 
    LOCAL ret_val
 
    // *DEBUG**
-   @ 24, 30 SAY "At FAT"
+   // @ 24, 30 SAY "At FAT"
 
    IF PCount() < 3                        // Is f_rom passed?
       f_rom := 1
