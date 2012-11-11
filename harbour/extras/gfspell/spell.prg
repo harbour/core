@@ -230,8 +230,8 @@ FUNCTION Sp_Check( cWord )
       IF fat( cTemp, COMMON_WORDS ) == 0    // Check the common words first
          IF fat( cTemp, CACHE_WORDS ) == 0   // then check the cache words
             ok    := .F.
-            nRow  := Asc( SubStr( cLookup, 1, 1 ) ) -64
-            nCol  := Asc( SubStr( cLookup, 2, 1 ) ) -64
+            nRow  := Asc( SubStr( cLookup, 1, 1 ) ) - 64
+            nCol  := Asc( SubStr( cLookup, 2, 1 ) ) - 64
             IF ( nRow > 0 .AND. nRow <= 26 ) .AND. ( nCol > 0 .AND. nCol <= 26 )
 
 #ifdef REDUCE_MEMORY_NEEDS
@@ -1027,7 +1027,7 @@ FUNCTION Sp_WildCard( cPattern )
          nStart := 1
          nEnd   := 26
       ELSE
-         nStart := Asc( SubStr( cPattern, 2, 1 ) ) -64
+         nStart := Asc( SubStr( cPattern, 2, 1 ) ) - 64
          nEnd   := nStart
       ENDIF
 

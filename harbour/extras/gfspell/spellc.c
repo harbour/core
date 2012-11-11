@@ -2,23 +2,14 @@
  * $Id$
  */
 
-/* #define _CLIPDEFS_H */    /* Don't redefine basic types */
-#include "extend.h"
-/* #include "hbapi.h" */
+#include "hbapi.h"
 #include "hbapifs.h"
 #include "hbapiitm.h"
-#include "extend.api"
-#include "hbundoc.api"
 
-typedef char uchar;
-typedef unsigned int uint;
+#define abs( a )  ( ( ( a ) > 0 ) ? ( a ) : -( a ) )
 
-#define abs( a )     ( ( ( a ) > 0 ) ? ( a ) : -( a ) )
-
-
-uchar * cSearch = "INEDTIERESTEON";
-uchar * cRepl   = "[\\]^_`a";
-
+static const char * s_cSearch = "INEDTIERESTEON";
+static const char * s_cRepl   = "[\\]^_`a";
 
 /***************************
  *   Function: xForm()
@@ -30,23 +21,19 @@ uchar * cRepl   = "[\\]^_`a";
  **************************/
 HB_FUNC( XFORM )
 {
-   uchar cRet[ 128 ];
-   uchar *       cPtr;
-   int           iRetLen = 0;
-   const uchar * cWord;
-   int           iWordLen;
-   int           x;
-   uint          iKey;
-
-   cWord    = _parc( 1 ) + 2;
-   iWordLen = _parclen( 1 ) - 2;
-   cPtr     = cRet;
+   char cRet[ 128 ];
+   char *       cPtr     = cRet;
+   HB_ISIZ      iRetLen  = 0;
+   const char * cWord    = hb_parc( 1 ) + 2;
+   HB_ISIZ      iWordLen = hb_parclen( 1 ) - 2;
+   HB_ISIZ      x;
+   HB_UINT      iKey;
 
    while( --iWordLen >= 1 && iRetLen < 128 )
    {
-      iKey = *( ( uint * ) cWord );
+      iKey = *( ( HB_UINT * ) cWord );
       for( x = 0; x < 14; x += 2 )
-         if( *( ( uint * ) ( cSearch + x ) ) == iKey )
+         if( *( ( HB_UINT * ) ( s_cSearch + x ) ) == iKey )
          {
             if( x == 0 )
             {
@@ -63,7 +50,7 @@ HB_FUNC( XFORM )
             }
             iWordLen--;
             cWord  += 2;
-            *cPtr++ = *( cRepl + ( x >> 1 ) );
+            *cPtr++ = *( s_cRepl + ( x >> 1 ) );
             break;
          }
 
@@ -82,7 +69,7 @@ HB_FUNC( XFORM )
       *( cRet + x ) -= 30;
 
    *( cRet + iRetLen - 1 ) += 128;
-   _retclen( cRet, iRetLen );
+   hb_retclen( cRet, iRetLen );
 }
 
 
@@ -96,17 +83,13 @@ HB_FUNC( XFORM )
  **************************/
 HB_FUNC( XUNFORM )
 {
-   uchar cRet[ 128 ];
-   uchar *       cPtr;
-   int           iRetLen = 0;
-   uchar         c;
-   const uchar * cWord;
-   int           iWordLen;
-   int           x;
-
-   cWord    = _parc( 1 );
-   iWordLen = _parclen( 1 );
-   cPtr     = cRet;
+   char cRet[ 128 ];
+   char *       cPtr    = cRet;
+   HB_ISIZ      iRetLen = 0;
+   char         c;
+   const char * cWord    = hb_parc( 1 );
+   HB_ISIZ      iWordLen = hb_parclen( 1 );
+   HB_ISIZ      x;
 
    while( iWordLen > 0 && iRetLen < 128 )
    {
@@ -118,7 +101,7 @@ HB_FUNC( XUNFORM )
       else
          c -= 128;
 
-      if( ( x = ( int ) memchr( cRepl, c, 7 ) ) <= 6 )
+      if( ( x = ( int ) memchr( s_cRepl, c, 7 ) ) <= 6 )
       {
          if( x == 0 )
          {
@@ -133,8 +116,8 @@ HB_FUNC( XUNFORM )
          else if( iRetLen < 128 )
          {
             x       = x << 1;
-            *cPtr++ = *( cSearch + x++ );
-            *cPtr++ = *( cSearch + x );
+            *cPtr++ = *( s_cSearch + x++ );
+            *cPtr++ = *( s_cSearch + x );
             iRetLen++;
          }
       }
@@ -142,7 +125,7 @@ HB_FUNC( XUNFORM )
          *cPtr++ = c;
    }
 
-   _retclen( cRet, iRetLen );
+   hb_retclen( cRet, iRetLen );
 }
 
 
@@ -168,29 +151,22 @@ HB_FUNC( XUNFORM )
  **************************/
 HB_FUNC( SP_RATE )
 {
-   const uchar * cFound;
-   int nFound;
-   const uchar * cWord;
-   int     nWord;
-   int     nMinLen;
-   int     x;
-   int     lim;
-   uchar * cRating = "nZZ";
+   const char * cFound  = hb_parc( 1 );
+   HB_ISIZ      nFound  = hb_parclen( 1 );
+   const char * cWord   = hb_parc( 2 );
+   HB_ISIZ      nWord   = hb_parclen( 2 );
+   HB_ISIZ      nMinLen = HB_MIN( nFound, nWord );
+   HB_ISIZ      x       = abs( nFound - nWord );
+   HB_ISIZ      lim     = HB_MIN( nMinLen, 5 );
+   char *       cRating = "nZZ";
 
-   cFound   = _parc( 1 );
-   nFound   = _parclen( 1 );
-   cWord    = _parc( 2 );
-   nWord    = _parclen( 2 );
-   nMinLen  = HB_MIN( nFound, nWord );
-   x        = abs( nFound - nWord );
-   *cRating = ( uchar ) ( HB_MIN( x, 9 ) + '0' );
-   lim      = HB_MIN( nMinLen, 5 );
+   *cRating = ( char ) ( HB_MIN( x, 9 ) + '0' );
 
    for( x = 0; x < lim; x++ )
    {
       if( *( cFound + x ) != *( cWord + x ) )
          break;
-      *( cRating + 1 ) = ( uchar ) ( 'A' - 1 + lim - x );
+      *( cRating + 1 ) = ( char ) ( 'A' - 1 + lim - x );
    }
 
    cFound = cFound + nFound - 1;
@@ -200,12 +176,12 @@ HB_FUNC( SP_RATE )
    {
       if( *cFound != *cWord )
          break;
-      *( cRating + 2 ) = ( uchar ) ( 'A' - 1 + lim - x );
+      *( cRating + 2 ) = ( char ) ( 'A' - 1 + lim - x );
       cFound--;
       cWord--;
    }
 
-   _retclen( cRating, 3 );
+   hb_retclen( cRating, 3 );
 }
 
 
@@ -241,7 +217,7 @@ HB_FUNC( C_METAFONE )
    HB_SIZE iStrPtr;            /* Pointer into the passed string. */
 
    /* If no string was passed then return an empty string. */
-   if( PCOUNT == 0 )
+   if( hb_pcount() == 0 )
    {
       sMeta      = hb_xgrab( 1 );
       sMeta[ 1 ] = '\0';
@@ -249,7 +225,7 @@ HB_FUNC( C_METAFONE )
       iRetLen    = 4;
    }
    /* If no return lenght was passed, default to 4. */
-   else if( PCOUNT == 1 )
+   else if( hb_pcount() == 1 )
    {
       hb_itemGetWriteCL( hb_param( 1, HB_IT_STRING ), &sMeta, &iStrLen );
       iRetLen = 4;
@@ -257,7 +233,7 @@ HB_FUNC( C_METAFONE )
    else
    {
       hb_itemGetWriteCL( hb_param( 1, HB_IT_STRING ), &sMeta, &iStrLen );
-      iRetLen = _parni( 2 );
+      iRetLen = hb_parns( 2 );
    }
 
    /* Set up the buffer to hold the return string.
@@ -319,8 +295,8 @@ HB_FUNC( C_METAFONE )
             iStrPtr += 2;
          }
          /* WHO->H */
-         else if( ( sMeta[ iStrPtr + 1 ] == 'H' ) &&
-                  ( sMeta[ iStrPtr + 2 ] == 'O' ) )
+         else if( sMeta[ iStrPtr + 1 ] == 'H' &&
+                  sMeta[ iStrPtr + 2 ] == 'O' )
          {
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'H';
@@ -347,9 +323,9 @@ HB_FUNC( C_METAFONE )
             iStrPtr += ( sMeta[ iStrPtr + 2 ] == 'G' ) ? 3 : 2;
          }
          /* MACH->MX */
-         else if( ( sMeta[ iStrPtr + 1 ] == 'A' ) &&
-                  ( sMeta[ iStrPtr + 2 ] == 'C' ) &&
-                  ( sMeta[ iStrPtr + 3 ] == 'H' ) )
+         else if( sMeta[ iStrPtr + 1 ] == 'A' &&
+                  sMeta[ iStrPtr + 2 ] == 'C' &&
+                  sMeta[ iStrPtr + 3 ] == 'H' )
          {
             /* Put in the first return characters and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'M';
@@ -357,8 +333,8 @@ HB_FUNC( C_METAFONE )
             iStrPtr += 4;
          }
          /* MACG->MK or MAC->MK */
-         else if( ( sMeta[ iStrPtr + 1 ] == 'A' ) &&
-                  ( sMeta[ iStrPtr + 2 ] == 'C' ) )
+         else if( sMeta[ iStrPtr + 1 ] == 'A' &&
+                  sMeta[ iStrPtr + 2 ] == 'C' )
          {
             /* Put in the first return characters and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'M';
@@ -423,8 +399,8 @@ HB_FUNC( C_METAFONE )
          /* Skip B if it is the last character and after an 'M'. */
          case 'B':
             if( ( ( iStrPtr == iStrLen - 1 ) ||
-                    sMeta[ iStrPtr + 1 ] == ' ' ) &&
-                    sMeta[ iStrPtr - 1 ] == 'M' )
+                  sMeta[ iStrPtr + 1 ] == ' ' ) &&
+                sMeta[ iStrPtr - 1 ] == 'M' )
             {
                iStrPtr++;
                continue;
@@ -486,7 +462,7 @@ HB_FUNC( C_METAFONE )
             if( ( sMeta[ iStrPtr + 1 ] == 'E' ||
                   sMeta[ iStrPtr + 1 ] == 'I' ||
                   sMeta[ iStrPtr + 1 ] == 'Y' ) &&
-                  sMeta[ iStrPtr - 1 ] != 'G' )
+                sMeta[ iStrPtr - 1 ] != 'G' )
             {
                sReturn[ iRetPtr++ ] = 'J';
                iStrPtr += 2;
@@ -541,7 +517,7 @@ HB_FUNC( C_METAFONE )
             /* The suffix NG is skipped. */
             else if( ( ( iStrPtr == iStrLen - 1 ) ||
                        sMeta[ iStrPtr + 1 ] == ' ' ) &&
-                       sMeta[ iStrPtr - 1 ] == 'N' )
+                     sMeta[ iStrPtr - 1 ] == 'N' )
                iStrPtr++;
 
             /* G -> K */
@@ -795,14 +771,12 @@ HB_FUNC( C_METAFONE )
          /* Default action, skip it. */
          default:
             iStrPtr++;
-
-      }     /* End of switch...case statement. */
-
-   }        /* end while ( iStrPtr < iStrLen && iRetPtr < iRetLen ) */
+      }
+   }
 
    /* Return the prepared string.  Return only the lenght that we know
       is good so we don't return any uninitialized part of memory. */
-   _retclen( sReturn, iRetPtr );
+   hb_retclen( sReturn, iRetPtr );
 
    /* Release the memory that we allocated for the return string. */
    hb_xfree( sReturn );
@@ -832,14 +806,14 @@ HB_FUNC( C_METAFONE )
 
 HB_FUNC( BIT )
 {
-   unsigned char mask;
-   char *        ptr;
-   unsigned int  loc,
-                 offset = _parni( 2 ) - 1,
-                 res    = 0;
+   HB_UCHAR mask;
+   char *   ptr;
+   HB_SIZE  loc;
+   HB_SIZE  offset = hb_parns( 2 ) - 1;
+   HB_SIZE  res    = 0;
 
    loc = offset / 8;
-   if( loc < _parclen( 1 ) )
+   if( loc < hb_parclen( 1 ) )
    {
       HB_SIZE nLen;
       hb_itemGetWriteCL( hb_param( 1, HB_IT_STRING ), &ptr, &nLen );
@@ -847,16 +821,16 @@ HB_FUNC( BIT )
       loc  = offset % 8;
       res  = ( HB_UCHAR ) *ptr << loc & 0x80;
 
-      if( PCOUNT > 2 )
+      if( hb_pcount() > 2 )
       {
-         mask = ( unsigned char ) 0x80 >> loc;
-         if( _parl( 3 ) )
+         mask = ( HB_UCHAR ) 0x80 >> loc;
+         if( hb_parl( 3 ) )
             *ptr = ( HB_UCHAR ) *ptr | mask;
          else
             *ptr = ( HB_UCHAR ) *ptr & ~mask;
       }
    }
-   _retl( res );
+   hb_retl( res );
 }
 
 
@@ -865,7 +839,7 @@ HB_FUNC( BIT )
 /** Start of SP_LINE **/
 
 
-static int WordSep( unsigned char c )
+static HB_BOOL WordSep( HB_UCHAR c )
 {
    return c <= ' '
           || ( c != 39 && ( c > ' ' && c < '0' ) )
@@ -892,24 +866,24 @@ static int WordSep( unsigned char c )
    --------------------------------------------------*/
 HB_FUNC( SP_LINE )
 {
-   int  nArgs           = PCOUNT;
-   BOOL bLineBreak      = FALSE;
-   int  nCount          = 0;
-   int  nWrap           = 0;
-   unsigned int nOffset = 0;
+   int          nArgs      = hb_pcount();
+   HB_BOOL      bLineBreak = HB_FALSE;
+   HB_ISIZ      nCount     = 0;
+   HB_ISIZ      nWrap      = 0;
+   HB_SIZE      nOffset    = 0;
    const char * cIn;
    const char * p;
-   BYTE         cTest;
-   int          nLineLen;
-   unsigned int nStop;
+   HB_BYTE      cTest;
+   HB_ISIZ      nLineLen;
+   HB_SIZE      nStop;
 
-   if( nArgs > 0 && ISCHAR( 1 ) )
+   if( nArgs > 0 && HB_ISCHAR( 1 ) )
    {
-      cIn   = _parc( 1 );
-      nStop = _parclen( 1 );
-      if( nArgs > 1 && ISNUM( 2 ) )
+      cIn   = hb_parc( 1 );
+      nStop = hb_parclen( 1 );
+      if( nArgs > 1 && HB_ISNUM( 2 ) )
       {
-         nOffset = _parni( 2 );
+         nOffset = hb_parns( 2 );
          if( nOffset > 0 )
             nOffset--;
       }
@@ -917,25 +891,25 @@ HB_FUNC( SP_LINE )
       if( nOffset < nStop )                           /* In string somewhere */
       {
          /* Default line len to 75 */
-         nLineLen = nArgs > 2 && ISNUM( 3 ) ? _parni( 3 ) - 1 : 75;
+         nLineLen = nArgs > 2 && HB_ISNUM( 3 ) ? hb_parns( 3 ) - 1 : 75;
          p        = &cIn[ nOffset ];                  /* Starting pointer */
 
          if( nOffset + nLineLen > nStop )             /* Past end of string? */
             nLineLen = nStop - nOffset;               /* Limit to end of string */
 
-         while( ( ! bLineBreak ) && ( nCount++ < nLineLen ) )
+         while( ! bLineBreak && nCount++ < nLineLen )
          {
             cTest = *p++;
             if( cTest == 13 || cTest == 141 )         /* Hard or soft return? */
-               bLineBreak = TRUE;
+               bLineBreak = HB_TRUE;
             else if( WordSep( cTest ) )               /* Wrappable character? */
                nWrap = nCount - 1;
          }
 
-         if( ( ! bLineBreak ) && ( nWrap > 0 ) )      /* Back up to wrap pos */
+         if( ! bLineBreak && nWrap > 0 )              /* Back up to wrap pos */
             nCount = nWrap;
 
-         _retclen( &( cIn[ nOffset ] ), nCount + 1 - ( bLineBreak ? 2 : 0 ) );
+         hb_retclen( &( cIn[ nOffset ] ), nCount + 1 - ( bLineBreak ? 2 : 0 ) );
          nOffset += nCount + 1;
          if( ! bLineBreak )
          {
@@ -947,13 +921,12 @@ HB_FUNC( SP_LINE )
       else
       {
          nOffset = 0;
-         _retc( "" );
+         hb_retc_null();
       }
-
    }
    else
-      _retc( "" );
+      hb_retc_null();
 
-   if( ISBYREF( 2 ) )                                 /* Change reference val */
-      _stornl( nOffset, 2 );
+   if( HB_ISBYREF( 2 ) )                                 /* Change reference val */
+      hb_stornl( nOffset, 2 );
 }
