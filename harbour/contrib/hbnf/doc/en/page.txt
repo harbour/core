@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_SETVPG()
    $CATEGORY$
       Video
@@ -31,7 +31,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_GETVPG()
    $CATEGORY$
       Video

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_D2E()
    $CATEGORY$
       Conversion

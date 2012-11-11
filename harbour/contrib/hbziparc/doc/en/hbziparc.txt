@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_SetZipComment()
    $CATEGORY$
       Zip Functions
@@ -33,7 +33,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_GetZipComment()
    $CATEGORY$
       Zip Functions
@@ -62,7 +62,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_ZipTestPK()
    $CATEGORY$
       Zip Functions
@@ -104,7 +104,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_SetDiskZip()
    $CATEGORY$
       Zip Functions
@@ -136,7 +136,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_SetBuffer()
    $CATEGORY$
       Zip Functions
@@ -176,7 +176,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_ZipFileByTDSpan()
    $CATEGORY$
       Zip Functions
@@ -271,7 +271,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_ZipFileByPKSpan()
    $CATEGORY$
       Zip Functions
@@ -373,7 +373,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_ZipFile()
    $CATEGORY$
       Zip Functions
@@ -470,7 +470,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_UnzipFile()
    $CATEGORY$
       Zip Functions
@@ -538,7 +538,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       hb_ZipDeleteFiles()
    $CATEGORY$
       Zip Functions

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_Adder()
    $CATEGORY$
       Menus/Prompts

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADS Overview
    $CATEGORY$
       Document

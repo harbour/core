@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_WOY()
    $CATEGORY$
       Date/Time
@@ -45,7 +45,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_DOY()
    $CATEGORY$
       Date/Time

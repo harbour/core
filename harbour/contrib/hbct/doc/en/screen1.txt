@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SCREENATTR()
    $CATEGORY$
       CT3 video functions
@@ -45,7 +45,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SCREENMIX()
    $CATEGORY$
       CT3 video functions
@@ -77,7 +77,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SAYSCREEN()
    $CATEGORY$
       CT3 video functions
@@ -112,7 +112,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       INVERTWIN()
    $CATEGORY$
       CT3 video functions
@@ -144,7 +144,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       UNTEXTWIN()
    $CATEGORY$
       CT3 video functions
@@ -197,7 +197,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARWIN()
    $CATEGORY$
       CT3 video functions
@@ -240,7 +240,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       COLORWIN()
    $CATEGORY$
       CT3 video functions
@@ -285,7 +285,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SCREENTEXT()
    $CATEGORY$
       CT video functions (Harbour extension)
@@ -321,7 +321,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       COLORREPL()
    $CATEGORY$
       CT3 video functions

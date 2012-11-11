@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FIELDTYPE()
    $CATEGORY$
       Database Tools
@@ -47,7 +47,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FIELDSIZE()
    $CATEGORY$
       Database tools
@@ -83,7 +83,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FIELDDECI()
    $CATEGORY$
       Database tools

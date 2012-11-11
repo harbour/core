@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_Prompt()
    $CATEGORY$
       Menus/Prompts
@@ -151,7 +151,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MenuTo()
    $CATEGORY$
       Menus/Prompts

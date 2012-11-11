@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_ASCPOS()
    $CATEGORY$
       String Tools
@@ -44,7 +44,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_ASCIISUM()
    $CATEGORY$
       String Tools
@@ -75,7 +75,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_ATDIFF()
    $CATEGORY$
       String Tools
@@ -113,7 +113,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_CHAREVEN()
    $CATEGORY$
       String Tools
@@ -147,7 +147,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_CHARMIX()
    $CATEGORY$
       String Tools
@@ -185,7 +185,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_CHARODD()
    $CATEGORY$
       String Tools
@@ -219,7 +219,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_CHRCOUNT()
    $CATEGORY$
       String Tools
@@ -254,7 +254,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_CHRFIRST()
    $CATEGORY$
       String Tools
@@ -288,7 +288,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_CHRTOTAL()
    $CATEGORY$
       String Tools
@@ -328,7 +328,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_STRCOUNT()
    $CATEGORY$
       String Tools
@@ -367,7 +367,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_STRCSPN()
    $CATEGORY$
       String Tools
@@ -400,7 +400,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_STRDIFF()
    $CATEGORY$
       String Tools
@@ -439,7 +439,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_STREXPAND()
    $CATEGORY$
       String Tools
@@ -477,7 +477,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_STRLEFT()
    $CATEGORY$
       String Tools
@@ -515,7 +515,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_STRPBRK()
    $CATEGORY$
       String Tools
@@ -549,7 +549,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_STRRIGHT()
    $CATEGORY$
       String Tools
@@ -587,7 +587,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_NEWFLAG()
    $CATEGORY$
       General
@@ -616,7 +616,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_SETFLAG()
    $CATEGORY$
       General
@@ -657,7 +657,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_CLRFLAG()
    $CATEGORY$
       General
@@ -702,7 +702,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       GT_ISFLAG()
    $CATEGORY$
       General

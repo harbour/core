@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_AT2()
    $CATEGORY$
       String
@@ -42,7 +42,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_RAT2()
    $CATEGORY$
       String

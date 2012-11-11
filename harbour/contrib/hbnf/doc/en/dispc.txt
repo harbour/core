@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_DISPFILE()
    $CATEGORY$
       File I/O

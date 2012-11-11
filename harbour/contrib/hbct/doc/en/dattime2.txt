@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTODOW()
    $CATEGORY$
       CT3 date and time functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTOMONTH()
    $CATEGORY$
       CT3 date and time functions
@@ -67,7 +67,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       DMY()
    $CATEGORY$
       CT3 date and time functions
@@ -101,7 +101,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       MDY()
    $CATEGORY$
       CT3 date and time functions
@@ -135,7 +135,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADDMONTH()
    $CATEGORY$
       CT3 date and time functions
@@ -167,7 +167,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       DOY()
    $CATEGORY$
       CT3 date and time functions
@@ -201,7 +201,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ISLEAP()
    $CATEGORY$
       CT3 date and time functions
@@ -233,7 +233,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       DAYSTOMONTH()
    $CATEGORY$
       CT3 date and time functions
@@ -267,7 +267,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       DAYSINMONTH()
    $CATEGORY$
       CT3 date and time functions
@@ -299,7 +299,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       QUARTER()
    $CATEGORY$
       CT3 date and time functions
@@ -333,7 +333,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       LASTDAYOM()
    $CATEGORY$
       CT3 date and time functions
@@ -368,7 +368,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       NTOCDOW()
    $CATEGORY$
       CT3 date and time functions
@@ -400,7 +400,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       NTOCMONTH()
    $CATEGORY$
       CT3 date and time functions
@@ -432,7 +432,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       WEEK()
    $CATEGORY$
       CT3 date and time functions

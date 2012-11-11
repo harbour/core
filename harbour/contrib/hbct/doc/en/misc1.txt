@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       XTOC()
    $CATEGORY$
       CT3 miscellaneous functions

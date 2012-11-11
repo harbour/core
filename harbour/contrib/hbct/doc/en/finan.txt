@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FV()
    $CATEGORY$
       CT3 math functions
@@ -55,7 +55,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       PV()
    $CATEGORY$
       CT3 math functions
@@ -106,7 +106,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       PAYMENT()
    $CATEGORY$
       CT3 math functions
@@ -155,7 +155,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       PERIODS()
    $CATEGORY$
       CT3 math functions
@@ -209,7 +209,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       RATE()
    $CATEGORY$
       CT3 math functions

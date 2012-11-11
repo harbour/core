@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENINIT()
    $CATEGORY$
       CT3 string functions
@@ -87,7 +87,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENNEXT()
    $CATEGORY$
       CT3 string functions
@@ -146,7 +146,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENNUM()
    $CATEGORY$
       CT3 string functions
@@ -183,7 +183,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENEND()
    $CATEGORY$
       CT3 string functions
@@ -227,7 +227,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENEXIT()
    $CATEGORY$
       CT3 string functions
@@ -267,7 +267,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENAT()
    $CATEGORY$
       CT3 string functions
@@ -324,7 +324,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SAVETOKEN()
    $CATEGORY$
       CT3 string functions
@@ -359,7 +359,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       RESTTOKEN()
    $CATEGORY$
       CT3 string functions

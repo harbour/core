@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       WAITPERIOD()
    $CATEGORY$
       HBCT date and time functions
@@ -55,7 +55,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TIMEVALID()
    $CATEGORY$
       HBCT Date and Time Functions
@@ -117,7 +117,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SETTIME()
    $CATEGORY$
       HBCT Date and Time Functions
@@ -169,7 +169,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SETDATE()
    $CATEGORY$
       HBCT Date and Time Functions

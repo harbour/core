@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARPIX()
    $CATEGORY$
       HBCT video functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       VGAPALETTE()
    $CATEGORY$
       HBCT video functions
@@ -75,7 +75,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       VIDEOTYPE()
    $CATEGORY$
       HBCT video functions
@@ -107,7 +107,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SETFONT()
    $CATEGORY$
       HBCT video functions

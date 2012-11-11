@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FLOOR()
    $CATEGORY$
       CT3 math functions
@@ -38,7 +38,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CEILING()
    $CATEGORY$
       CT3 math functions
@@ -73,7 +73,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SIGN()
    $CATEGORY$
       CT3 math functions
@@ -112,7 +112,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       LOG10()
    $CATEGORY$
       CT3 math functions
@@ -147,7 +147,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FACT()
    $CATEGORY$
       CT3 math functions

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_NWSEMOPEN()
    $CATEGORY$
       NetWare
@@ -95,7 +95,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_NWSEMEX()
    $CATEGORY$
       NetWare
@@ -148,7 +148,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_NWSEMWAIT()
    $CATEGORY$
       NetWare
@@ -186,7 +186,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_NWSEMSIG()
    $CATEGORY$
       NetWare
@@ -217,7 +217,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_NWSEMCLOSE()
    $CATEGORY$
       NetWare
@@ -245,7 +245,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_NWSEMLOCK()
    $CATEGORY$
       NetWare
@@ -308,7 +308,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_NWSEMUNLOCK()
    $CATEGORY$
       NetWare

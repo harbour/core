@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_DFSETUP()
    $CATEGORY$
       File I/O
@@ -56,7 +56,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_DFCLOSE()
    $CATEGORY$
       File I/O

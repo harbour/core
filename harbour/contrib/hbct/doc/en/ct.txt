@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTINIT()
    $CATEGORY$
       CT3 general functions
@@ -39,7 +39,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTEXIT()
    $CATEGORY$
       CT3 general functions

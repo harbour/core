@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_CALENDAR()
    $CATEGORY$
       Date/Time

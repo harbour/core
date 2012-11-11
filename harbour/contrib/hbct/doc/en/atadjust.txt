@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ATADJUST()
    $CATEGORY$
       CT3 string functions

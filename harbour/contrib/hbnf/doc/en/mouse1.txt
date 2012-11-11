@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MINIT()
    $CATEGORY$
       Keyboard/Mouse
@@ -31,7 +31,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MMICKEYS()
    $CATEGORY$
       Keyboard/Mouse
@@ -56,7 +56,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MDBLCLK()
    $CATEGORY$
       Keyboard/Mouse
@@ -115,7 +115,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MCONOFF()
    $CATEGORY$
       Keyboard/Mouse
@@ -143,7 +143,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MINREGION()
    $CATEGORY$
       Keyboard/Mouse
@@ -168,7 +168,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MSETSENS()
    $CATEGORY$
       Keyboard/Mouse
@@ -230,7 +230,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MGETSENS()
    $CATEGORY$
       Keyboard/Mouse
@@ -261,7 +261,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MVERSION()
    $CATEGORY$
       Keyboard/Mouse
@@ -304,7 +304,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MSETPAGE()
    $CATEGORY$
       Keyboard/Mouse
@@ -328,7 +328,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MGETPAGE()
    $CATEGORY$
       Keyboard/Mouse
@@ -353,7 +353,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MRESET()
    $CATEGORY$
       Keyboard/Mouse
@@ -385,7 +385,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MCURSOR()
    $CATEGORY$
       Keyboard/Mouse
@@ -411,7 +411,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MSHOWCRS()
    $CATEGORY$
       Keyboard/Mouse
@@ -445,7 +445,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MHIDECRS()
    $CATEGORY$
       Keyboard/Mouse
@@ -479,7 +479,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MGETPOS()
    $CATEGORY$
       Keyboard/Mouse
@@ -523,7 +523,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MGETX()
    $CATEGORY$
       Keyboard/Mouse
@@ -548,7 +548,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MGETY()
    $CATEGORY$
       Keyboard/Mouse
@@ -572,7 +572,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MSETPOS()
    $CATEGORY$
       Keyboard/Mouse
@@ -599,7 +599,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MSETCOORD()
    $CATEGORY$
       Keyboard/Mouse
@@ -625,7 +625,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MXLIMIT()
    $CATEGORY$
       Keyboard/Mouse
@@ -649,7 +649,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MYLIMIT()
    $CATEGORY$
       Keyboard/Mouse
@@ -673,7 +673,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MBUTPRS()
    $CATEGORY$
       Keyboard/Mouse
@@ -719,7 +719,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MBUTREL()
    $CATEGORY$
       Keyboard/Mouse
@@ -760,7 +760,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MDEFCRS()
    $CATEGORY$
       Keyboard/Mouse
@@ -818,7 +818,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MGETCOORD()
    $CATEGORY$
       Keyboard/Mouse

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TFileRead()
    $CATEGORY$
       Harbour Tools

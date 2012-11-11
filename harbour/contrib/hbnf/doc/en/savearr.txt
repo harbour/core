@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_SAVEARR()
    $CATEGORY$
       Array
@@ -58,7 +58,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_RESTARR()
    $CATEGORY$
       Array

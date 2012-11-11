@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_VIDSTR()
    $CATEGORY$
       Video
@@ -39,7 +39,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_WRTChr()
    $CATEGORY$
       Video
@@ -78,7 +78,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_CLS()
    $CATEGORY$
       Video
@@ -112,7 +112,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_SETATTR()
    $CATEGORY$
       Video
@@ -143,7 +143,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_REVATTR()
    $CATEGORY$
       Video
@@ -170,7 +170,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_REVCHR()
    $CATEGORY$
       Video

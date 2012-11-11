@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       BOM()
    $CATEGORY$
       CT3 date and time functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       EOM()
    $CATEGORY$
       CT3 date and time functions
@@ -67,7 +67,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       BOQ()
    $CATEGORY$
       CT3 date and time functions
@@ -99,7 +99,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       EOQ()
    $CATEGORY$
       CT3 date and time functions
@@ -131,7 +131,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       BOY()
    $CATEGORY$
       CT3 date and time functions
@@ -163,7 +163,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       EOY()
    $CATEGORY$
       CT3 date and time functions

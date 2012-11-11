@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSDIFF()
    $CATEGORY$
       CT3 string functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSEQUAL()
    $CATEGORY$
       CT3 string functions

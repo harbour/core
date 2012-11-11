@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARSLIST()
    $CATEGORY$
       CT3 string functions
@@ -42,7 +42,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARHIST()
    $CATEGORY$
       CT3 string functions

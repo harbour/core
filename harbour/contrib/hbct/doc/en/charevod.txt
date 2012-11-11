@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHAREVEN()
    $CATEGORY$
       CT3 string functions
@@ -39,7 +39,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARODD()
    $CATEGORY$
       CT3 string functions

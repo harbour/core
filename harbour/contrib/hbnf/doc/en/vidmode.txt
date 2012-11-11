@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_SETMODE()
    $CATEGORY$
       Video
@@ -32,7 +32,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_GETMODE()
    $CATEGORY$
       Video

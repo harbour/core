@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AFTERATNUM()
    $CATEGORY$
       CT3 string functions
@@ -59,7 +59,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       BEFORATNUM()
    $CATEGORY$
       CT3 string functions
@@ -115,7 +115,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ATNUM()
    $CATEGORY$
       CT3 string functions

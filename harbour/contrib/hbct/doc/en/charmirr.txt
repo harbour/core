@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARMIRR()
    $CATEGORY$
       CT3 string functions

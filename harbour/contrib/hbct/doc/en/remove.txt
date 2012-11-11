@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       REMALL()
    $CATEGORY$
       CT3 string functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       REMLEFT()
    $CATEGORY$
       CT3 string functions
@@ -67,7 +67,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       REMRIGHT()
    $CATEGORY$
       CT3 string functions

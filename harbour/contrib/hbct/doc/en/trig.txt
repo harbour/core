@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       PI()
    $CATEGORY$
       CT3 math functions
@@ -40,7 +40,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SIN()
    $CATEGORY$
       CT3 math functions
@@ -80,7 +80,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       COS()
    $CATEGORY$
       CT3 math functions
@@ -120,7 +120,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TAN()
    $CATEGORY$
       CT3 math functions
@@ -160,7 +160,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       COT()
    $CATEGORY$
       CT3 math functions
@@ -198,7 +198,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ASIN()
    $CATEGORY$
       CT3 math functions
@@ -239,7 +239,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ACOS()
    $CATEGORY$
       CT3 math functions
@@ -281,7 +281,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ATAN()
    $CATEGORY$
       CT3 math functions
@@ -319,7 +319,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ATN2()
    $CATEGORY$
       CT3 math functions
@@ -364,7 +364,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SINH()
    $CATEGORY$
       CT3 math functions
@@ -403,7 +403,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       COSH()
    $CATEGORY$
       CT3 math functions
@@ -442,7 +442,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TANH()
    $CATEGORY$
       CT3 math functions
@@ -477,7 +477,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       RTOD()
    $CATEGORY$
       CT3 math functions
@@ -513,7 +513,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       DTOR()
    $CATEGORY$
       CT3 math functions

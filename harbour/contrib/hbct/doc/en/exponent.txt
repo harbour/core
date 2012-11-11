@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       MANTISSA()
    $CATEGORY$
       CT3 number and bit manipulation functions
@@ -45,7 +45,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       EXPONENT()
    $CATEGORY$
       CT3 number and bit manipulation functions

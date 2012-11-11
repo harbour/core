@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_RMDIR()
    $CATEGORY$
       DOS/BIOS

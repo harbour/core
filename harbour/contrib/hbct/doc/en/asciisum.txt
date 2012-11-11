@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ASCIISUM()
    $CATEGORY$
       CT3 string functions

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_DEFAULT()
    $CATEGORY$
       DOS/BIOS

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AMONTHS()
    $CATEGORY$
       Date
@@ -36,7 +36,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADAYS()
    $CATEGORY$
       Date
@@ -69,7 +69,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ISLEAPYEAR()
    $CATEGORY$
       Date
@@ -101,7 +101,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       DAYSINMONTH()
    $CATEGORY$
       Date
@@ -132,7 +132,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       EOM()
    $CATEGORY$
       Date
@@ -164,7 +164,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       BOM()
    $CATEGORY$
       Date
@@ -196,7 +196,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       DOY()
    $CATEGORY$
       Date
@@ -227,7 +227,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       WOY()
    $CATEGORY$
       Date
@@ -261,7 +261,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       EOY()
    $CATEGORY$
       Date
@@ -293,7 +293,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       BOY()
    $CATEGORY$
       Date

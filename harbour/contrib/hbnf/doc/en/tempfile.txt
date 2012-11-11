@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_TEMPFIL()
    $CATEGORY$
       DOS/BIOS

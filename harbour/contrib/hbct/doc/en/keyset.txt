@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       KSETINS()
    $CATEGORY$
       CT3 switch and state functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       KSETCAPS()
    $CATEGORY$
       CT3 switch and state functions
@@ -67,7 +67,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       KSETNUM()
    $CATEGORY$
       CT3 switch and state functions
@@ -99,7 +99,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       KSETSCROLL()
    $CATEGORY$
       CT3 switch and state functions

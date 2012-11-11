@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSBlob2File()
    $CATEGORY$
       Advantage Database RDD
@@ -41,7 +41,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSFile2Blob()
    $CATEGORY$
       Advantage Database RDD
@@ -83,7 +83,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSClearAOF()
    $CATEGORY$
       Advantage Database RDD
@@ -116,7 +116,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSCustomizeAOF()
    $CATEGORY$
       Advantage Database RDD
@@ -187,7 +187,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSEvalAOF()
    $CATEGORY$
       Advantage Database RDD
@@ -224,7 +224,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSGetAOFoptLevel()
    $CATEGORY$
       Advantage Database RDD
@@ -259,7 +259,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSGetAOF()
    $CATEGORY$
       Advantage Database RDD
@@ -292,7 +292,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSGetAOFnoOpt()
    $CATEGORY$
       Advantage Database RDD
@@ -326,7 +326,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSRefreshAOF()
    $CATEGORY$
       Advantage Database RDD
@@ -362,7 +362,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSSetAOF()
    $CATEGORY$
       Advantage Database RDD
@@ -400,7 +400,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSIsRecordInAOF()
    $CATEGORY$
       Advantage Database RDD
@@ -433,7 +433,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSGetRelKeyPos()
    $CATEGORY$
       Advantage Database RDD
@@ -474,7 +474,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSSetRelKeyPos()
    $CATEGORY$
       Advantage Database RDD
@@ -514,7 +514,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSKeyCount()
    $CATEGORY$
       Advantage Database RDD
@@ -565,7 +565,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSKeyNo()
    $CATEGORY$
       Advantage Database RDD
@@ -615,7 +615,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSLocking()
    $CATEGORY$
       Advantage Database RDD
@@ -661,7 +661,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSRightsCheck()
    $CATEGORY$
       Advantage Database RDD
@@ -706,7 +706,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsRegCallBack()
    $CATEGORY$
       Advantage Database RDD
@@ -760,7 +760,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsClrCallBack()
    $CATEGORY$
       Advantage Database RDD
@@ -793,7 +793,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSSetDefault() *
    $CATEGORY$
       Advantage Database RDD
@@ -831,7 +831,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSSetDeleted() *
    $CATEGORY$
       Advantage Database RDD
@@ -872,7 +872,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsSetSearchPath() *
    $CATEGORY$
       Advantage Database RDD
@@ -910,7 +910,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsSetExact() *
    $CATEGORY$
       Advantage Database RDD
@@ -948,7 +948,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSSetCharType()
    $CATEGORY$
       Advantage Database RDD
@@ -992,7 +992,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsIsIndexed()
    $CATEGORY$
       Advantage Database RDD
@@ -1024,7 +1024,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsTestRecLocks()
    $CATEGORY$
       Advantage Database RDD
@@ -1076,7 +1076,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsGetLastError()
    $CATEGORY$
       Advantage Database RDD
@@ -1109,7 +1109,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsIsExprValid()
    $CATEGORY$
       Advantage Database RDD
@@ -1158,7 +1158,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsGetConnectionType()
    $CATEGORY$
       Advantage Database RDD
@@ -1202,7 +1202,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       AdsGetTableConType()
    $CATEGORY$
       Advantage Database RDD
@@ -1241,7 +1241,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSDDADDTABLE()
    $CATEGORY$
       Advantage Database RDD
@@ -1282,7 +1282,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSUSEDICTIONARY()*
    $CATEGORY$
       Advantage Database RDD
@@ -1312,7 +1312,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSCONNECT60()
    $CATEGORY$
       Advantage Database RDD
@@ -1352,7 +1352,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSCACHEOPENTABLES()
    $CATEGORY$
       Advantage Database RDD
@@ -1390,7 +1390,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSCACHEOPENCURSORS()
    $CATEGORY$
       Advantage Database RDD
@@ -1429,7 +1429,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADSCLOSECACHEDTABLES()
    $CATEGORY$
       Advantage Database RDD
@@ -1466,7 +1466,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       xxx()
    $CATEGORY$
       Advantage Database RDD

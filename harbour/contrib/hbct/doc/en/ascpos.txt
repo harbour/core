@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ASCPOS()
    $CATEGORY$
       CT3 string functions
@@ -43,7 +43,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       VALPOS()
    $CATEGORY$
       CT3 string functions

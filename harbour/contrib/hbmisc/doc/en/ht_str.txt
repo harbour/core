@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       StrFormat()
    $CATEGORY$
       String Tools

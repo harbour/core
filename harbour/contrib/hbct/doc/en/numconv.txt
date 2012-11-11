@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       NTOC()
    $CATEGORY$
       CT3 number and bit manipulation functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTON()
    $CATEGORY$
       CT3 number and bit manipulation functions
@@ -67,7 +67,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       BITTOC()
    $CATEGORY$
       CT3 number and bit manipulation functions
@@ -99,7 +99,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTOBIT()
    $CATEGORY$
       CT3 number and bit manipulation functions

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARSWAP()
    $CATEGORY$
       CT3 string functions
@@ -41,7 +41,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       WORDSWAP()
    $CATEGORY$
       CT3 string functions

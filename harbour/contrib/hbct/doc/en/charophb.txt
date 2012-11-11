@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARSUB()
    $CATEGORY$
       CT3 string functions
@@ -53,7 +53,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARSHL()
    $CATEGORY$
       CT3 string functions
@@ -101,7 +101,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARSHR()
    $CATEGORY$
       CT3 string functions
@@ -147,7 +147,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARRLL()
    $CATEGORY$
       CT3 string functions
@@ -193,7 +193,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARRLR()
    $CATEGORY$
       CT3 string functions

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CD()
    $CATEGORY$
       Dos Tools
@@ -31,7 +31,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       MD()
    $CATEGORY$
       Dos Tools
@@ -59,7 +59,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       RD()
    $CATEGORY$
       Dos Tools

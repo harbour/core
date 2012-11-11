@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       RANGEREM()
    $CATEGORY$
       CT3 string functions
@@ -40,7 +40,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       RANGEREPL
    $CATEGORY$
       CT3 string functions

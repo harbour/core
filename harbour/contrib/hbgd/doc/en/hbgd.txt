@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       The GD Library
    $CATEGORY$
       Document
@@ -48,7 +48,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageCreate()
    $CATEGORY$
       HBGD
@@ -86,7 +86,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageCreateTrueColor()
    $CATEGORY$
       HBGD
@@ -124,7 +124,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFromJpeg()
    $CATEGORY$
       HBGD
@@ -178,7 +178,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFromGif()
    $CATEGORY$
       HBGD
@@ -232,7 +232,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFromPng()
    $CATEGORY$
       HBGD
@@ -286,7 +286,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFromGD()
    $CATEGORY$
       HBGD
@@ -340,7 +340,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFromWBmp()
    $CATEGORY$
       HBGD
@@ -394,7 +394,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageJpeg()
    $CATEGORY$
       HBGD
@@ -441,7 +441,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageGif()
    $CATEGORY$
       HBGD
@@ -486,7 +486,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImagePng()
    $CATEGORY$
       HBGD
@@ -533,7 +533,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageGD()
    $CATEGORY$
       HBGD
@@ -578,7 +578,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageWBmp()
    $CATEGORY$
       HBGD
@@ -637,7 +637,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageSetPixel()
    $CATEGORY$
       HBGD
@@ -687,7 +687,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageLine()
    $CATEGORY$
       HBGD
@@ -740,7 +740,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageDashedLine()
    $CATEGORY$
       HBGD
@@ -793,7 +793,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImagePolygon()
    $CATEGORY$
       HBGD
@@ -849,7 +849,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageOpenPolygon()
    $CATEGORY$
       HBGD
@@ -906,7 +906,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageRectangle()
    $CATEGORY$
       HBGD
@@ -959,7 +959,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFilledPolygon()
    $CATEGORY$
       HBGD
@@ -1015,7 +1015,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFilledRectangle()
    $CATEGORY$
       HBGD
@@ -1068,7 +1068,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageArc()
    $CATEGORY$
       HBGD
@@ -1127,7 +1127,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFilledArc()
    $CATEGORY$
       HBGD
@@ -1206,7 +1206,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFilledEllipse()
    $CATEGORY$
       HBGD
@@ -1259,7 +1259,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFillToBorder()
    $CATEGORY$
       HBGD
@@ -1316,7 +1316,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageFill()
    $CATEGORY$
       HBGD
@@ -1377,7 +1377,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageSetAntiAliased()
    $CATEGORY$
       HBGD
@@ -1448,7 +1448,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdSetAntiAliasedDontBlend()
    $CATEGORY$
       HBGD
@@ -1510,7 +1510,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageSetBrush()
    $CATEGORY$
       HBGD
@@ -1582,7 +1582,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageSetTile()
    $CATEGORY$
       HBGD
@@ -1654,7 +1654,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageSetStyle()
    $CATEGORY$
       HBGD
@@ -1742,7 +1742,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       gdImageSetThickness()
    $CATEGORY$
       HBGD

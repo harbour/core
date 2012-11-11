@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FUSE()
    $CATEGORY$
       File I/O
@@ -61,7 +61,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FSELECT()
    $CATEGORY$
       File I/O
@@ -114,7 +114,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FGOTOP()
    $CATEGORY$
       File I/O
@@ -155,7 +155,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FERROR()
    $CATEGORY$
       File I/O
@@ -190,7 +190,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FRECNO()
    $CATEGORY$
       File I/O
@@ -231,7 +231,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FGOBOT()
    $CATEGORY$
       File I/O
@@ -267,7 +267,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FSKIP()
    $CATEGORY$
       File I/O
@@ -315,7 +315,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FREADLN()
    $CATEGORY$
       File I/O
@@ -363,7 +363,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FDELETE()
    $CATEGORY$
       File I/O
@@ -400,7 +400,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FINSERT()
    $CATEGORY$
       File I/O
@@ -442,7 +442,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FAPPEND()
    $CATEGORY$
       File I/O
@@ -494,7 +494,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FWRITELN()
    $CATEGORY$
       File I/O
@@ -550,7 +550,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FLASTRE()
    $CATEGORY$
       File I/O
@@ -582,7 +582,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FEOF()
    $CATEGORY$
       File I/O
@@ -617,7 +617,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FBOF()
    $CATEGORY$
       File I/O
@@ -654,7 +654,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_FGOTO()
    $CATEGORY$
       File I/O

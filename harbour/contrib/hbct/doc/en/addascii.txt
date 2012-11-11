@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ADDASCII()
    $CATEGORY$
       CT3 string functions

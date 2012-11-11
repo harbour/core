@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSCHAR()
    $CATEGORY$
       CT3 string functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSDEL()
    $CATEGORY$
       CT3 string functions
@@ -67,7 +67,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSINS()
    $CATEGORY$
       CT3 string functions
@@ -99,7 +99,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSREPL()
    $CATEGORY$
       CT3 string functions

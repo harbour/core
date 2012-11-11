@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       THtml()
    $CATEGORY$
       Harbour Tools
@@ -52,7 +52,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOs2()
    $CATEGORY$
       Harbour Tools
@@ -102,7 +102,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TNortonGuide()
    $CATEGORY$
       Harbour Tools
@@ -150,7 +150,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TRtf()
    $CATEGORY$
       Harbour Tools
@@ -201,7 +201,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TTroff()
    $CATEGORY$
       Harbour Tools

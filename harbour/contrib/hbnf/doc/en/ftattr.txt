@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_SAVEATT()
    $CATEGORY$
       Video
@@ -39,7 +39,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_RESTATT()
    $CATEGORY$
       Video

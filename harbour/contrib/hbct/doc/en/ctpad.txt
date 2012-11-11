@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       PADLEFT()
    $CATEGORY$
       CT3 string functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       PADRIGHT()
    $CATEGORY$
       CT3 string functions

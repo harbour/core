@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_DSKSIZE()
    $CATEGORY$
       DOS/BIOS
@@ -27,7 +27,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_DSKFREE()
    $CATEGORY$
       DOS/BIOS

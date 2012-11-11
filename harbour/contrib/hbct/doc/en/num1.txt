@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CELSIUS()
    $CATEGORY$
       CT3 numeric functions
@@ -40,7 +40,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FAHRENHEIT()
    $CATEGORY$
       CT3 numeric functions
@@ -77,7 +77,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       INFINITY()
    $CATEGORY$
       CT3 numeric functions

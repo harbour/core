@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_BYT2HEX()
    $CATEGORY$
       Conversion

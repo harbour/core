@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CSETARGERR()
    $CATEGORY$
       CT3 general functions
@@ -46,7 +46,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTCINIT()
    $CATEGORY$
       CT3 general functions
@@ -79,7 +79,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTCEXIT()
    $CATEGORY$
       CT3 general functions

@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TABEXPAND()
    $CATEGORY$
       CT3 string functions
@@ -55,7 +55,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TABPACK()
    $CATEGORY$
       CT3 string functions

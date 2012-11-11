@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       WORDREPL()
    $CATEGORY$
       CT3 string functions

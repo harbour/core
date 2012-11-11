@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CSETREF()
    $CATEGORY$
       CT3 string functions
@@ -65,7 +65,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CSETATMUPA()
    $CATEGORY$
       CT3 string functions
@@ -109,7 +109,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       SETATLIKE()
    $CATEGORY$
       CT3 string functions

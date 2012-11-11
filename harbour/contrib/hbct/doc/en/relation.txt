@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARRELA()
    $CATEGORY$
       CT3 string functions
@@ -36,7 +36,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARRELREP()
    $CATEGORY$
       CT3 string functions

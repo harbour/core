@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_SETVCUR()
    $CATEGORY$
       Video
@@ -36,7 +36,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_GETVCUR()
    $CATEGORY$
       Video

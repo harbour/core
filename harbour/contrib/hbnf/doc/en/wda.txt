@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_ADDWKDY()
    $CATEGORY$
       Date/Time

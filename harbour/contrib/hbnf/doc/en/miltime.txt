@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MIL2MIN()
    $CATEGORY$
       Date/Time
@@ -25,7 +25,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MIN2MIL()
    $CATEGORY$
       Date/Time
@@ -47,7 +47,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_MIL2CIV()
    $CATEGORY$
       Date/Time
@@ -80,7 +80,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_CIV2MIL()
    $CATEGORY$
       Date/Time
@@ -112,7 +112,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_SYS2MIL()
    $CATEGORY$
       Date/Time

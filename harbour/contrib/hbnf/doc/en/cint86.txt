@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_INT86()
    $CATEGORY$
       DOS/BIOS

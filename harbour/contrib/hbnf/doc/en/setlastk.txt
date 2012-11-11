@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_LASTKEY()
    $CATEGORY$
       Keyboard/Mouse

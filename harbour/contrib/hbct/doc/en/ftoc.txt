@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FTOC()
    $CATEGORY$
       CT3 number and bit manipulation functions
@@ -44,7 +44,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CTOF()
    $CATEGORY$
       CT3 number and bit manipulation functions

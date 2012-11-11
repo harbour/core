@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       ATTOKEN()
    $CATEGORY$
       CT3 string functions
@@ -65,7 +65,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKEN()
    $CATEGORY$
       CT3 string functions
@@ -134,7 +134,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       NUMTOKEN()
    $CATEGORY$
       CT3 string functions
@@ -168,7 +168,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENLOWER()
    $CATEGORY$
       CT3 string functions
@@ -230,7 +230,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENUPPER()
    $CATEGORY$
       CT3 string functions
@@ -292,7 +292,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       TOKENSEP()
    $CATEGORY$
       CT3 string functions

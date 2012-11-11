@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSALPHA()
    $CATEGORY$
       CT3 string functions
@@ -35,7 +35,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSLOWER()
    $CATEGORY$
       CT3 string functions
@@ -67,7 +67,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSRANGE()
    $CATEGORY$
       CT3 string functions
@@ -100,7 +100,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       POSUPPER()
    $CATEGORY$
       CT3 string functions

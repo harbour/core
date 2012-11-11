@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_PUSHVID()
    $CATEGORY$
       Video
@@ -33,7 +33,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       FT_POPVID()
    $CATEGORY$
       Video

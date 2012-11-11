@@ -3,7 +3,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARONLY()
    $CATEGORY$
       CT3 string functions
@@ -42,7 +42,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       WORDONLY()
    $CATEGORY$
       CT3 string functions
@@ -81,7 +81,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       CHARREM()
    $CATEGORY$
       CT3 string functions
@@ -119,7 +119,7 @@
  */
 
 /* $DOC$
-   $FUNCNAME$
+   $NAME$
       WORDREM()
    $CATEGORY$
       CT3 string functions
