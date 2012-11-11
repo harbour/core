@@ -69,9 +69,9 @@ HB_FUNC( HB_GS )
    if( pParam )
    {
       void *  minst;
-      int     gsargc = ( int ) hb_arrayLen( pParam ) + 1;
       int     pos;
       int     code, code1;
+      int     gsargc = ( int ) hb_arrayLen( pParam ) + 1;
       char ** gsargv = ( char ** ) hb_xgrab( gsargc * sizeof( const char * ) );
 
       gsargv[ 0 ] = ( char * ) "hbgs"; /* actual value doesn't matter */

@@ -18,7 +18,7 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#ifdef __XHARBOUR__
+#ifdef __HARBOUR__
 #define __GTWVW__
 #endif
 
@@ -33,16 +33,23 @@ PROCEDURE Main()
 
    LOCAL i, j
 #ifdef __GTWVW__
-   LOCAL lMainCoord := WVW_SetMainCoord( .T. )
-   LOCAL nMaxRow := MaxRow(), nMaxCol := MaxCol()
-
-   WVW_SetFont( , "Lucida Console", 16, - 8 )
-   WVW_SetCodePage( , 255 )
-   WVW_SBcreate()
+   LOCAL lMainCoord
+   LOCAL nMaxRow
+   LOCAL nMaxCol
 #endif
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
+#endif
+
+#ifdef __GTWVW__
+   lMainCoord := wvw_SetMainCoord( .T. )
+   nMaxRow := MaxRow()
+   nMaxCol := MaxCol()
+
+   wvw_SetFont( , "Lucida Console", 16, - 8 )
+   wvw_SetCodepage( , 255 )
+   wvw_sbCreate()
 #endif
 
    SET SCOREBOARD OFF
@@ -62,7 +69,7 @@ PROCEDURE Main()
    DispEnd()
 #else
    ResetMiscObjects( 0 )   // make sure we start with no GUI objects
-   AddMiscObjects( 0, {| nWindow | WVW_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, "vouch1.bmp" ) } )
+   AddMiscObjects( 0, {| nWindow | wvw_DrawImage( nWindow, 1, 0, nmaxrow, nmaxcol, "vouch1.bmp" ) } )
 #endif
 
    lboxmessage( "Welcome to our test program." + hb_eol() + ;
@@ -79,7 +86,6 @@ PROCEDURE Main()
 
 PROCEDURE xGet1()
 
-   LOCAL nWin
    LOCAL cName := PadR( "Name", 20 )
    LOCAL cAddr := PadR( "Address", 25 )
    LOCAL cPhone := PadR( "Phone", 15 )
@@ -88,17 +94,22 @@ PROCEDURE xGet1()
    LOCAL getlist := {}
    LOCAL oldCurs := SetCursor( SC_NORMAL )
 #ifdef __GTWVW__
+   LOCAL nWin
    MEMVAR __temp__
 #endif
 
+#ifdef __GTWVW__
    nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
 
-#ifdef __GTWVW__
-   AddMiscObjects( nWin, {| nWindow | __temp__ := nWindow, AEval( GetList, {| oGet | WVW_DrawBoxGet( __temp__, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   AddMiscObjects( nWin, {| nWindow | __temp__ := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( __temp__, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+#else
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
 #endif
 
-//@ 21,21 say "Inside the window" color "R/W"
-//@ 23,0  say "Outside the window" color "R/W"
+#if 0
+   @ 21, 21 say "Inside the window" color "R/W"
+   @ 23, 0  say "Outside the window" color "R/W"
+#endif
 
    DO WHILE ! lDone
       @ 12, 22 SAY "Name    : " GET cName  PICT "@!K" WHEN lMessage( "Please enter your name" )
@@ -124,7 +135,7 @@ FUNCTION xBrowse1()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
-   LOCAL info_   := {}
+   LOCAL info_
    LOCAL nTop    :=  6
    LOCAL nLeft   :=  3
    LOCAL nBottom := MaxRow() - 2
@@ -166,16 +177,16 @@ FUNCTION xBrowse1()
    nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
 
 #ifdef __GTWVW__
-   Wvw_SetPen( 0, 0, rgb( 210, 1210, 210 ) )
+   wvw_SetPen( 0, 0, RGB( 210, 1210, 210 ) )
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep
       tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep
    NEXT
 
-   AddMiscObjects( nWin, {| nWindow | WVW_DrawBoxRecessed( nWindow, nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 ) } )
-   AddMiscObjects( nWin, {| nWindow | WVW_DrawGridHorz( nWindow, oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   AddMiscObjects( nWin, {| nWindow | WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
+   AddMiscObjects( nWin, {| nWindow | wvw_DrawBoxRecessed( nWindow, nTop + 1, nLeft + 1, nBottom - 1, nRight - 1 ) } )
+   AddMiscObjects( nWin, {| nWindow | wvw_DrawGridHorz( nWindow, oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
+   AddMiscObjects( nWin, {| nWindow | wvw_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
 #endif
 
    WHILE ! lEnd
@@ -276,7 +287,7 @@ STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
-   dbSkip( - 1 )
+   dbSkip( -1 )
    IF Bof()
       dbGoto( nSaveRecNum )
       lMoved := .F.
@@ -305,7 +316,7 @@ FUNCTION lMessage( cMsg )
 #else
 
    // displays a message on status bar of Main Window and returns .T.
-   wvw_SBsettext( 0, 0, cMsg )
+   wvw_sbSetText( 0, 0, cMsg )
 
 #endif
 
@@ -412,7 +423,7 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
    SetColor( ccolor )
 
 #ifdef __GTWVW__
-   WVW_nOpenWindow( ctitle, r1, c1, r2, c2 )
+   wvw_nOpenWindow( ctitle, r1, c1, r2, c2 )
    ResetMiscObjects( NIL )   // make sure we start with no GUI objects
 #endif
 
@@ -447,7 +458,7 @@ FUNCTION ZREVWINDOW()
 
 #ifdef __GTWVW__
    ResetMiscObjects( NIL )   // clear all GUI objects, if any
-   WVW_lCloseWindow()
+   wvw_lCloseWindow()
 #endif
 
    // restore states
@@ -491,7 +502,7 @@ FUNCTION WVW_Paint( nWinNum )
 
 FUNCTION ResetMiscObjects( nWinNum )
 
-   hb_default( @nWinNum, WVW_nNumWindows() - 1 )
+   hb_default( @nWinNum, wvw_nNumWindows() - 1 )
 
    DO WHILE Len( s_amiscobjlist ) < nWinNum + 1
       AAdd( s_amiscobjlist, {} )

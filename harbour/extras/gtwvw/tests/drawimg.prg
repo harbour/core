@@ -94,10 +94,10 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   nMaxCache := wvw_SetMaxBMcache()
+   nMaxCache := wvw_SetMaxBMCache()
 
    SetColor( "N/W,N/GR*,,,N/W*" )
-   wvw_setcodepage( , 255 )
+   wvw_SetCodepage( , 255 )
    wg_ResetWPaintObj( 0 )
    DO WHILE .T.
       CLS
@@ -106,15 +106,15 @@ PROCEDURE Main()
       @ 0, 0 SAY "FileName  :" GET cpict PICT "@K" VALID hb_FileExists( AllTrim( cpict ) )
       @ 1, 0 SAY "Transpar? :" GET ltransp PICT "Y"
       @ 2, 0 SAY "Max Cache :" GET nMaxCache PICT "999"
-      @ 3, 0 SAY "NumOfCache=" + Transform( wvw_numBMcache(), "999" ) + ;
-         ", Max NumOfCache=" + Transform( wvw_SetMaxBMcache(), "999" )
+      @ 3, 0 SAY "NumOfCache=" + Transform( wvw_NumBMCache(), "999" ) + ;
+         ", Max NumOfCache=" + Transform( wvw_SetMaxBMCache(), "999" )
       READ
       IF LastKey() == K_ESC
          EXIT
       ENDIF
-      wvw_SetMaxBMcache( nMaxCache )
-      @ 3, 0 SAY "NumOfCache=" + Transform( wvw_numBMcache(), "999" ) + ;
-         ", Max NumOfCache=" + Transform( wvw_SetMaxBMcache(), "999" )
+      wvw_SetMaxBMCache( nMaxCache )
+      @ 3, 0 SAY "NumOfCache=" + Transform( wvw_NumBMCache(), "999" ) + ;
+         ", Max NumOfCache=" + Transform( wvw_SetMaxBMCache(), "999" )
 
       @ 5, 0 SAY "TOPLEFT: stretched image                 TOPRIGHT: fit vertically (proportional)"
       @ 6, 0 SAY "BOTLEFT: fit horizontally (proportional) BOTRIGHT: actual image size"
@@ -187,7 +187,7 @@ CREATE CLASS wPaintObj FROM wGUIObj
    VAR cImage
    VAR lTransp
 
-   METHOD New()
+   METHOD New( nWinNum, nType, cId, nRow1, nCol1, nRow2, nCol2, aOffTLBR, lTransp )
    METHOD Draw()
    METHOD Undraw()
    METHOD Hide()
@@ -229,7 +229,7 @@ METHOD Draw() CLASS wPaintObj
    DO CASE
    case ::nType == WPAINTOBJ_IMAGE
       IF ! Empty( ::cImage )
-         WVW_DRAWIMAGE( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
+         wvw_DrawImage( ::nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ;
             ::cImage, ::aOffTLBR, ::lTransp )
       ENDIF
 
@@ -293,8 +293,6 @@ METHOD Show() CLASS wPaintObj
 // if nObjNum specified, clears object >= nObjNum
 FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 
-   LOCAL i
-
    hb_default( @nObjNum, 0 )
    hb_default( @lStrict, .F. )
 
@@ -311,7 +309,6 @@ FUNCTION wg_ResetWPaintObj( nWinNum, nObjNum, lStrict )
 FUNCTION wg_AddWPaintObj( nWinNum, oWPaint, lStrict, nOperation )
 
    LOCAL i
-   LOCAL nLen, aRect // 20050720
 
    hb_default( @lStrict, .F. )
    hb_default( @nOperation, WOBJ_ADD_OVERWRITE )
@@ -357,7 +354,6 @@ FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
    LOCAL lDelAll := ( cId == NIL )
    LOCAL nDeleted := 0
    LOCAL nLen
-   LOCAL cCurId
 
    hb_default( @lStrict, .F. )
 
@@ -371,13 +367,12 @@ FUNCTION wg_DelWPaintObj( nWinNum, nType, cId, lStrict )
    nLen := Len( s_aPObjList[ nWinNum + 1 ] )
    DO WHILE i <= nLen
       IF s_aPObjList[ nWinNum + 1 ][ i ]:nType == nType .AND. ;
-            ( lDelAll .OR. s_aPObjList[ nWinNum + 1 ][ i ]:cId == cId )
+         ( lDelAll .OR. s_aPObjList[ nWinNum + 1 ][ i ]:cId == cId )
          IF lStrict
             s_aPObjList[ nWinNum + 1 ][ i ]:Hide()
          ELSE
             s_aPObjList[ nWinNum + 1 ][ i ]:lVisible := .F.
          ENDIF
-         cCurId := s_aPObjList[ nWinNum + 1 ][ i ]:cId
          ADel( s_aPObjList[ nWinNum + 1 ], i )
          ASize( s_aPObjList[ nWinNum + 1 ], --nLen )
          nDeleted++

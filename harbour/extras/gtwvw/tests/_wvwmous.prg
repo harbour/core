@@ -61,14 +61,16 @@ STATIC s_nrepeatdelay := 0.5
 #define _BUTTON_NONE   2        // no sign even when mouseover or clicked
 #define _BUTTON_HARD   3        // no recessed when pressed
 
-//**************************************************************
+// **************************************************************
 // WVWMouseButton
-//**************************************************************
+// **************************************************************
 
 CREATE CLASS WVWMouseButton
 
-// VAR nId         /* TODO */       // mouse object id
-// VAR nHotKey     /* TODO */       // hotkey associated with this object
+#if 0
+   VAR nId         /* TODO */       // mouse object id
+   VAR nHotKey     /* TODO */       // hotkey associated with this object
+#endif
    VAR nWinId                       // 20040303, parent window's number
    VAR lVisible                     // is the object visible
    VAR lEnable                      // 20040303, is the object enable
@@ -96,9 +98,11 @@ CREATE CLASS WVWMouseButton
    // METHODS
    METHOD New( cCaption, nRow1, nCol1, nRow2, nCol2, bClickBlock, nType, lDraw, nWinId )
 
-// METHOD nGetId() INLINE ::nId            /* TODO */
-// METHOD SetHotKey( nKey )                /* TODO */
-// METHOD nGetHotKey() INLINE ::nHotKey    /* TODO */
+#if 0
+   METHOD nGetId() INLINE ::nId            /* TODO */
+   METHOD SetHotKey( nKey )                /* TODO */
+   METHOD nGetHotKey() INLINE ::nHotKey    /* TODO */
+#endif
 
    METHOD Enable( lEnable )
 
@@ -274,7 +278,7 @@ METHOD OnReleaseOut() CLASS WVWMouseButton
    ::Draw()
 
    // NOTE: no need to do SetKeyRepeater( .F. ),
-   //      because it was already handled by onMouseOut
+   //       because it was already handled by onMouseOut
 
    RETURN Self
 
@@ -316,12 +320,11 @@ METHOD OnMouseOver() CLASS WVWMouseButton
 
 METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
-   LOCAL nROw := Row(), nCol := Col()
    LOCAL nOldCursor := SetCursor( SC_NONE )
    LOCAL lMouseOver := ::lHover // 20040303,was: ( MRow() >= ::nrow1 .AND. MRow() <= ::nrow2 .AND. MCol() >= ::ncol1 .AND. MCol() <= ::ncol2 )
    LOCAL lPressed := ::lPressed .AND. lMouseOver
-   LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_getFontInfo( nWinNum ), NIL )
-   LOCAL nLabelColor := iif( ! lPressed, rgb( 0, 0, 0 ), rgb( 96, 96, 96 ) )
+   LOCAL aFontInfo := iif( ::nCaptionHeight == NIL, wvw_GetFontInfo( nWinNum ), NIL )
+   LOCAL nLabelColor := iif( ! lPressed, RGB( 0, 0, 0 ), RGB( 96, 96, 96 ) )
    LOCAL lUseImage := HB_ISSTRING( ::cImage ) // 20040325
 
    IF ! ::lVisible .OR. ::nType == _BUTTON_NONE
@@ -338,45 +341,45 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
    IF lPressed // ::lPressed
       IF ::nType != _BUTTON_HARD
-         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN( ::cPressedColor ) ), ::lTight )
-         Wvw_DrawBoxRecessed( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )  // wvw
+         wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cPressedColor ) ), ::lTight )
+         wvw_DrawBoxRecessed( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )  // wvw
       ELSE
-         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN( ::cNormalColor ) ), ::lTight )
-         Wvw_DrawBoxRaised(   nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )
+         wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cNormalColor ) ), ::lTight )
+         wvw_DrawBoxRaised(   nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )
       ENDIF
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
-         IF ! Wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_messagebox( NIL, "Button Failed Wvw_DrawImage(" + ::cImage + ")" )
+         IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
+            win_MessageBox( NIL, "Button Failed Wvw_DrawImage(" + ::cImage + ")" )
          ENDIF
       ENDIF
 
       IF ! Empty( ::cCaption )
-         Wvw_DrawLabel( nWinNum, ::nRow1, nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, rgb( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
+         wvw_DrawLabel( nWinNum, ::nRow1, _nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, RGB( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
       ENDIF
    ELSE
       IF lMouseOver .OR. ::nType == _BUTTON_NORMAL .OR. ::nType == _BUTTON_HARD
-         WVW_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, WVW_GetRGBcolor( hb_ColorToN( ::cNormalColor ) ), ::lTight )
-         Wvw_DrawBoxRaised( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )
+         wvw_FillRectangle(   nWinNum, ::nrow1, ::nCol1, ::nrow2, ::nCol2, wvw_GetRGBColor( hb_ColorToN( ::cNormalColor ) ), ::lTight )
+         wvw_DrawBoxRaised( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::lTight )
       ELSE
          // must undraw the box. ideally GTWVW has this function
-         Wvw_DrawBoxGroup( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2 )
+         wvw_DrawBoxGroup( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2 )
       ENDIF
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
-         IF ! Wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_messagebox( NIL, "Button Failed Wvw_DrawImage(" + ::cImage + ")" )
+         IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
+            win_MessageBox( NIL, "Button Failed Wvw_DrawImage(" + ::cImage + ")" )
          ENDIF
       ENDIF
 
       IF ! ::lEnable
-         nLabelColor := rgb( 96, 96, 96 )
+         nLabelColor := RGB( 96, 96, 96 )
       ELSEIF lMouseOver
-         nLabelColor := rgb( 255, 0, 0 )
+         nLabelColor := RGB( 255, 0, 0 )
       ENDIF
 
       IF ! Empty( ::cCaption )
-         Wvw_DrawLabel( nWinNum, ::nRow1, nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, rgb( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
+         wvw_DrawLabel( nWinNum, ::nRow1, _nCeiling( ( ::nCol2 + ::nCol1 ) / 2 ), ::cCaption, 6, , nLabelColor, RGB( 198, 198, 198 ), ::cCaptionFont, iif( HB_ISARRAY( afontinfo ), afontinfo[ 2 ], ::nCaptionHeight ), 0, , , , .F., .F. )
       ENDIF
    ENDIF
    SetCursor( nOldCursor )
@@ -448,7 +451,6 @@ STATIC FUNCTION nButtonChecker( nkey, oMouseObj )
 
    LOCAL nrow := MRow(), ncol := MCol()
    LOCAL lMouseOver
-   LOCAL i
 
    lMouseOver := ( nrow >= oMouseObj:nrow1 .AND. nrow <= oMouseObj:nrow2 .AND. ncol >= oMouseObj:ncol1 .AND. ncol <= oMouseObj:ncol2 )
    IF ! lMouseOver
@@ -489,9 +491,11 @@ STATIC FUNCTION nButtonChecker( nkey, oMouseObj )
 
    RETURN nkey // nButtonChecker(nkey)
 
-STATIC FUNCTION nScrollChecker( nkey, cType, oMouseObj )
+STATIC FUNCTION nScrollChecker( nKey, cType, oMouseObj )
 
    // cType == "H" or "V"
+
+   HB_SYMBOL_UNUSED( cType )
 
    nButtonChecker( nkey, oMouseObj:oFirstButton )
    nButtonChecker( nkey, oMouseObj:oRail1Button )
@@ -499,7 +503,7 @@ STATIC FUNCTION nScrollChecker( nkey, cType, oMouseObj )
    nButtonChecker( nkey, oMouseObj:oRail2Button )
    nButtonChecker( nkey, oMouseObj:oSecondButton )
 
-   RETURN nkey // nHScrollChecker(nkey)
+   RETURN nKey // nHScrollChecker( nkey )
 
 /* HANDLING MULTIPLE MOUSE OBJECTS */
 /* called by SETKEYAFTERBLOCK() function */
@@ -513,7 +517,7 @@ FUNCTION wvwm_nMouseChecker( nkey )
    LOCAL i, oMouseObj
    LOCAL nCurWindow
 
-   nCurWindow := WVW_nNumWindows() - 1
+   nCurWindow := wvw_nNumWindows() - 1
 
    IF Len( s_amouseobjlist ) < nCurWindow + 1
       RETURN nkey
@@ -585,7 +589,7 @@ STATIC PROCEDURE xKeyRepeater( lInit )
 
 // *************************** supporters
 
-STATIC FUNCTION nCeiling( nNumber )
+STATIC FUNCTION _nCeiling( nNumber )
 
    LOCAL nTemp
 

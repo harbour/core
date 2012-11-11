@@ -165,9 +165,8 @@ STATIC s_afontinfo := {}         // x current font info
 PROCEDURE Main()
 
    LOCAL nCurWindow
-   LOCAL hWnd, hMenu, hPopupmenu, hPopupmenu2
+   LOCAL hMenu, hPopupmenu
    LOCAL cLabel := "This is the Main Window"
-   LOCAL nMaxRow, nMaxCol
    LOCAL nCursor
    LOCAL kF1, kF2, kF3
    LOCAL kF9, kF10, kF11
@@ -193,69 +192,67 @@ PROCEDURE Main()
    ELSE
       ldebug( "Successfully setDefaultWindowSize()" )
    ENDIF
-   nMaxRow := MaxRow(); nMaxCol := MaxCol()
 
-   IF wvw_SBcreate() > 0 .AND. ;
-         wvw_SBaddPart( , "99:99:99" ) > 0
+   IF wvw_sbCreate() > 0 .AND. ;
+      wvw_sbAddPart( , "99:99:99" ) > 0
       wvw_SetTimer( , 1000 )
    ENDIF
 
-   s_afontinfo := WVW_getfontinfo()
+   s_afontinfo := wvw_GetFontInfo()
 
    hb_gtInfo( HB_GTI_INKEYFILTER, {| nkey | nAfterInkey( nkey ) } )
-   WVW_SETMOUSEMOVE( , .T. )                           // required by wvwmouse
+   wvw_SetMouseMove( , .T. )                           // required by wvwmouse
    kF1 := SetKey( K_F1, {|| xHelp() } )
    kF2 := SetKey( K_F2, {|| xDebugInfo() } )
    kF3 := SetKey( K_F3, {|| Demo_Console() } )
 
-   kF9 := SetKey( K_F9, {|| WVW_SetLineSpacing( NIL, WVW_SetLineSpacing() - 2 ) } )
-   kF10 := SetKey( K_F10, {|| WVW_SetLineSpacing( NIL, WVW_SetLineSpacing() + 2 ) } )
-   kF11 := SetKey( K_F11, {|| WVW_SetDefLineSpacing( WVW_SetLineSpacing() ) } )
+   kF9 := SetKey( K_F9, {|| wvw_SetLineSpacing( NIL, wvw_SetLineSpacing() - 2 ) } )
+   kF10 := SetKey( K_F10, {|| wvw_SetLineSpacing( NIL, wvw_SetLineSpacing() + 2 ) } )
+   kF11 := SetKey( K_F11, {|| wvw_SetDefLineSpacing( wvw_SetLineSpacing() ) } )
 
    // start menu definitions *************************************
 
-   hWnd := WVW_GETWINDOWHANDLE()
-   hMenu := WVW_CreateMenu()
-   hPopupMenu := WVW_CreateMenu()
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
+   hMenu := wvw_CreateMenu()
+   hPopupMenu := wvw_CreateMenu()
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
    // WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
-   WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
-   WVW_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Demos",  )
+   wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
+   wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Demos",  )
 
-   hPopupMenu := WVW_CreateMenu()
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
-   WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
-   WVW_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Toolbar",  )
+   hPopupMenu := wvw_CreateMenu()
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_ENABLE,  "~Enable Toolbar" )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DISABLE, "~Disable Toolbar" )
+   wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_RESET,  "~Reset Toolbar" )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_TOOLBAR_DELETE, "~Delete Toolbar" )
+   wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Toolbar",  )
 
-   hPopupMenu := WVW_CreateMenu()
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
-   WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
-   WVW_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Window",  )
+   hPopupMenu := wvw_CreateMenu()
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DECREASE, "~Decrease Line Spacing (F9)" )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_INCREASE, "~Increase Line Spacing (F10)" )
+   wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_WINDOW_SPACING_DEFAULT,  "~Set As Default Line Spacing (F11)" )
+   wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Window",  )
 
-   hPopupMenu := WVW_CreateMenu()
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
-   WVW_AppendMenu( hPopupMenu, MF_SEPARATOR )
-   WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
-   WVW_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Help",  )
+   hPopupMenu := wvw_CreateMenu()
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_HELP, "~Help (F1)"  )
+   wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
+   wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_HELP_INFO, "~Info (F2)"  )
+   wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Help",  )
 
-   WVW_SetMenu( , hMenu )
+   wvw_SetMenu( , hMenu )
 
    // end menu definitions *************************************
 
-   nCurWindow := WVW_nNumWindows() - 1 // == 0, Main Window
+   nCurWindow := wvw_nNumWindows() - 1 // == 0, Main Window
 
    CreateToolbar( nCurWindow )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1, 40, cLabel, 6,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawLabel( nWindow, 1, 40, cLabel, 6,, RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New( "Info!", MaxRow() - 2, 67, , , {|| xDebugInfo() } ) )
@@ -279,7 +276,7 @@ PROCEDURE Main()
    wvwm_AddMouseObjects( nCurWindow, oMouse )
 
    // 20070525 the real pushbutton, easier and better looking. Nothing to do with wvwmouse.prg.
-   WVW_PBcreate( nCurWindow, MaxRow() - 4, 67 - 11 - 11 - 11 - 11 - 11, MaxRow() - 4, 67 + 9 - 11 - 11 - 11 - 11 - 11, "native", NIL, {|| lboxmessage( "native pushbutton" ) }, NIL )
+   wvw_pbCreate( nCurWindow, MaxRow() - 4, 67 - 11 - 11 - 11 - 11 - 11, MaxRow() - 4, 67 + 9 - 11 - 11 - 11 - 11 - 11, "native", NIL, {|| lboxmessage( "native pushbutton" ) }, NIL )
 
    SetColor( "N/W,N/GR*,,,N/W*" )
    CLS
@@ -290,21 +287,19 @@ PROCEDURE Main()
 
    DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
       // experiment with different paintrefresh interval:
-#if 0
       DO CASE
       CASE ch == hb_keyCode( "<" )
-         wvw_setPaintRefresh( Int( wvw_setPaintRefresh() / 2 ) )
-         Alert( wvw_setPaintRefresh() )
+         wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() / 2 ) )
+         Alert( wvw_SetPaintRefresh() )
       CASE ch == hb_keyCode( ">" )
-         wvw_setPaintRefresh( Int( wvw_setPaintRefresh() * 2 ) )
-         Alert( wvw_setPaintRefresh() )
+         wvw_SetPaintRefresh( Int( wvw_SetPaintRefresh() * 2 ) )
+         Alert( wvw_SetPaintRefresh() )
       CASE ch == hb_keyCode( "0" )
-         wvw_setPaintRefresh( 0 )
-         Alert( wvw_setPaintRefresh() )
+         wvw_SetPaintRefresh( 0 )
+         Alert( wvw_SetPaintRefresh() )
       OTHERWISE
          // do nothing. inkey() has been handled by nAfterInket()
       ENDCASE
-#endif
    ENDDO
 
    lboxmessage( "Thanks for trying this program." + hb_eol() + ;
@@ -317,7 +312,7 @@ PROCEDURE Main()
    SetKey( K_F10, kF10 )
    SetKey( K_F9, kF9 )
 
-// SetKey( K_F4, kF4 )
+   // SetKey( K_F4, kF4 )
    SetKey( K_F3, kF3 )
    SetKey( K_F2, kF2 )
    SetKey( K_F1, kF1 )
@@ -331,22 +326,23 @@ STATIC PROCEDURE xDisableMenus( nWinNum, nNumItem )
 
    // disables all Menu Items of window nWinNum
    LOCAL i
-   LOCAL hMenu := WVW_GetMenu( nWinNum )
+   LOCAL hMenu := wvw_GetMenu( nWinNum )
    FOR i := 0 TO nNumItem - 1
-      WVW_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_GRAYED )
+      wvw_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_GRAYED )
    NEXT
 
    RETURN
 
+// enables all Menu Items of window nWinNum
 STATIC PROCEDURE xEnableMenus( nWinNum, nNumItem )
 
-   // enables all Menu Items of window nWinNum
    LOCAL i
-   LOCAL hMenu := WVW_GetMenu( nWinNum )
+   LOCAL hMenu := wvw_GetMenu( nWinNum )
+
    FOR i := 0 TO nNumItem - 1
-      WVW_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_ENABLED )
+      wvw_EnableMenuItem( hMenu, i, MF_BYPOSITION + MF_ENABLED )
    NEXT
-   WVW_DrawMenuBar( nWinNum )   // to force redraw of menu
+   wvw_DrawMenuBar( nWinNum )   // to force redraw of menu
 
    RETURN
 
@@ -355,7 +351,6 @@ STATIC PROCEDURE xEnableMenus( nWinNum, nNumItem )
 PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
 
    LOCAL cWinName, nCurWindow
-   LOCAL nMaxrow, nMaxCol
    LOCAL nCursor
    LOCAL cColor
    LOCAL ch
@@ -367,10 +362,10 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    hb_default( @nBottom, nTop + 10 )
    hb_default( @nRight, nLeft + 45 )
 
-   cWinName := "Typewriter (Win#" + hb_ntos( WVW_nNumWindows() ) + "); CtrlW: New Window; ESC: Exit"
+   cWinName := "Typewriter (Win#" + hb_ntos( wvw_nNumWindows() ) + "); CtrlW: New Window; ESC: Exit"
 
    // x init window
-   nCurWindow := WVW_nOpenWindow( cWinName, nTop, nLeft, nBottom, nRight )
+   nCurWindow := wvw_nOpenWindow( cWinName, nTop, nLeft, nBottom, nRight )
    IF nCurWindow == 0
       lboxmessage( "Failed Opening new window!" )
       RETURN
@@ -378,8 +373,7 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
 
    nCursor := SetCursor( SC_NORMAL )
    cColor := SetColor( "W+/N" )
-   lMouseMove := WVW_SETMOUSEMOVE( , .F. )
-   nMaxrow := MaxRow(); nMaxcol := MaxCol()
+   lMouseMove := wvw_SetMouseMove( , .F. )
 
    ResetMiscObjects( nCurWindow )
    wvwm_ResetMouseObjects( nCurWindow )
@@ -395,9 +389,9 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
          ?? hb_keyChar( ch ) + Chr( 10 )
          IF lEchoing
             // write the same thing to previous window
-            WVW_nSetCurWindow( nCurWindow - 1 )
+            wvw_nSetCurWindow( nCurWindow - 1 )
             ?? hb_keyChar( ch ) + Chr( 10 )
-            WVW_nSetCurWindow( nCurWindow )
+            wvw_nSetCurWindow( nCurWindow )
          ENDIF
       ELSEIF ch == K_CTRL_W
          // Recursively call (another) typewriter, bigger one
@@ -410,9 +404,9 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
          ?? hb_keyChar( ch )
          IF lEchoing
             // write the same thing to previous window
-            WVW_nSetCurWindow( nCurWindow - 1 )
+            wvw_nSetCurWindow( nCurWindow - 1 )
             ?? hb_keyChar( ch )
-            WVW_nSetCurWindow( nCurWindow )
+            wvw_nSetCurWindow( nCurWindow )
          ENDIF
       ENDIF
       ch := Inkey( 0 )
@@ -421,14 +415,14 @@ PROCEDURE Demo_Console( nTop, nLeft, nBottom, nRight )
    // *********** end typewriter mode ***************
 
    // epilogue
-   WVW_lCloseWindow()
+   wvw_lCloseWindow()
 
    // restore state
    wvwm_ResetMouseObjects( nCurWindow )
    ResetMiscObjects( nCurWindow )
    SetCursor( nCursor )
    SetColor( cColor )
-   WVW_SETMOUSEMOVE( , lMouseMove )
+   wvw_SetMouseMove( , lMouseMove )
 
    RETURN // Demo_Console()
 
@@ -453,29 +447,29 @@ PROCEDURE Demo_Get()
    MEMVAR x
 
    // x init window
-   nCurWindow := WVW_nOpenWindow( "GET Demo", nTop, nLeft, nBottom, nRight )
+   nCurWindow := wvw_nOpenWindow( "GET Demo", nTop, nLeft, nBottom, nRight )
    IF nCurWindow == 0
       lboxmessage( "Failed Opening new window!" )
       RETURN
    ENDIF
 
-   WVW_SetIcon( , "vr_1.ico" )
+   wvw_SetIcon( , "vr_1.ico" )
 
    ResetMiscObjects( nCurWindow )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawLabel( nWindow, 1, nRight - nLeft, cLabel, 2,, rgb( 255, 255, 255 ), rgb( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 61 - nLeft, 13 - nTop, 70 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 15 - nTop, 59 - nLeft, 18 - nTop, 72 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawImage( nWindow, 8 - nTop, 62 - nLeft, 12 - nTop, 69 - nLeft, "vouch1.bmp" ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, 7 - nTop, 48 - nLeft, 13 - nTop, 55 - nLeft ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | x := nWindow, AEval( GetList, {| oGet | WVW_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawLabel( nWindow, 1, nRight - nLeft, cLabel, 2,, RGB( 255, 255, 255 ), RGB( 198, 198, 198 ), "Arial", s_afontinfo[ 2 ], , , , , .T., .T. ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxRecessed( nWindow, 7 - nTop, 61 - nLeft, 13 - nTop, 70 - nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxGroup( nWindow, 15 - nTop, 59 - nLeft, 18 - nTop, 72 - nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxGroup( nWindow, 5 - nTop, 6 - nLeft, 19 - nTop, 44 - nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawImage( nWindow, 8 - nTop, 62 - nLeft, 12 - nTop, 69 - nLeft, "vouch1.bmp" ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxRecessed( nWindow, 7 - nTop, 48 - nLeft, 13 - nTop, 55 - nLeft ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | x := nWindow, AEval( GetList, {| oGet | wvw_DrawBoxGet( x, oGet:Row, oGet:Col, Len( Transform( oGet:VarGet(), oGet:Picture ) ) ) } ) } )
 
    wvwm_ResetMouseObjects( nCurWindow )
 
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", maxrow() - 1, maxcol() - 15, , , {|| xDebugInfo() } ))
    */
-   WVW_PBcreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
+   wvw_pbCreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
 
    CLS
 
@@ -495,7 +489,7 @@ PROCEDURE Demo_Get()
 
    // epilogue
    // lboxmessage( "Thanks for trying the GET Demo!" )
-   WVW_lCloseWindow()
+   wvw_lCloseWindow()
 
    // restore state
    wvwm_ResetMouseObjects( nCurWindow )
@@ -510,28 +504,26 @@ FUNCTION DEMO_Browse()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
-   LOCAL info_   := {}             // WVW_nOpenWindow() has not been performed, so...
+   LOCAL info_                     // WVW_nOpenWindow() has not been performed, so...
    LOCAL nTop    :=  3             // pls notice that this is relative to PARENT window!
    LOCAL nLeft   :=  3             // pls notice that this is relative to PARENT window!
    LOCAL nBottom := MaxRow() - 2   // pls notice that this is relative to PARENT window!
    LOCAL nRight  := MaxCol() - 3   // pls notice that this is relative to PARENT window!
    LOCAL cColor
-   LOCAL nMaxRow, nMaxCol
 
    LOCAL nStyle := 0
    LOCAL nCurWindow
 
-   LOCAL oMouse, nHScrollBar, nVScrollBar
+   LOCAL nHScrollBar, nVScrollBar
 
    LOCAL aColumnsSep, tmp
 
    // x init window
-   nCurWindow := WVW_nOpenWindow( "BROWSE Demo", nTop, nLeft, nBottom, nRight )
+   nCurWindow := wvw_nOpenWindow( "BROWSE Demo", nTop, nLeft, nBottom, nRight )
    IF nCurWindow == 0
       lboxmessage( "Failed Opening new window!" )
       RETURN NIL
    ENDIF
-   nMaxRow := MaxRow(); nMaxCol := MaxCol()
 
    ResetMiscObjects( nCurWindow )
    wvwm_ResetMouseObjects( nCurWindow )
@@ -542,11 +534,11 @@ FUNCTION DEMO_Browse()
 
    USE "..\..\..\tests\test" NEW
    IF NetErr()
-      WVW_lCloseWindow()
+      wvw_lCloseWindow()
       RETURN NIL
    ENDIF
 
-   INDEX ON FIELD->LAST TO TEST1  // 20040707
+   INDEX ON FIELD->LAST TO test1  // 20040707
 
    info_ := dbStruct()
 
@@ -565,25 +557,25 @@ FUNCTION DEMO_Browse()
 
    oBrowse:configure()
 
-   WVW_SetPen( nStyle, 0, rgb( 210, 1210, 210 ) )
-   WVW_SetIcon( , "dia_excl.ico" )
+   wvw_SetPen( nStyle, 0, RGB( 210, 1210, 210 ) )
+   wvw_SetIcon( , "dia_excl.ico" )
 
    aColumnsSep := Array( oBrowse:colCount )
    FOR EACH tmp IN aColumnsSep
       tmp := oBrowse:getColumn( tmp:__enumIndex() ):colSep
    NEXT
 
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawBoxRecessed( nWindow, oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridHorz( nWindow, oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
-   AddMiscObjects( nCurWindow, {| nWindow | WVW_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawBoxRecessed( nWindow, oBrowse:nTop, oBrowse:nLeft, oBrowse:nBottom, oBrowse:nRight ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawGridHorz( nWindow, oBrowse:nTop + 3, oBrowse:nLeft, oBrowse:nRight, oBrowse:nBottom - oBrowse:nTop - 2 ) } )
+   AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
 
    /* we now use native push button
    wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", maxrow(), maxcol() - 15, , , {|| xDebugInfo() } ))
    */
-   WVW_PBcreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
+   wvw_pbCreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
 
-   nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
-   nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
+   nHScrollBar := wvw_xbCreate( nCurWindow, 0, oBrowse:nBottom + 1, oBrowse:nLeft, oBrowse:nRight - oBrowse:nLeft + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), HXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
+   nVScrollBar := wvw_xbCreate( nCurWindow, 1, oBrowse:nTop, oBrowse:nRight + 1, oBrowse:nBottom - oBrowse:nTop + 1, /*aBlock*/ {| nWinNum, nXBid, nXBmsg, nXBpos | HB_SYMBOL_UNUSED( nXBpos ), VXBscroller( oBrowse, nWinNum, nXBid, nXBmsg ) }, /*aOffset*/ NIL )
 
    hb_DispOutAt( nTop + 1 - nTop, nleft - nleft, PadC( hb_CurDrive() + ":" + hb_ps() + CurDir() + hb_ps() + "test.dbf", nRight - nLeft + 1 ), "W+/W" )
 
@@ -667,13 +659,13 @@ FUNCTION DEMO_Browse()
 
    // epilogue
    // lboxmessage("Thanks for trying the BROWSE Demo!")
-   WVW_lCloseWindow()
+   wvw_lCloseWindow()
 
    // restore state
    wvwm_ResetMouseObjects( nCurWindow )
    ResetMiscObjects( nCurWindow )
 
-   WVW_SetPen( 0 )
+   wvw_SetPen( 0 )
 
    SetColor( cColor )
    // SetCursor( nCursor )
@@ -785,7 +777,6 @@ STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
 
    // recalc the pos
    IF ordKeyCount() < 30000
-      nRatio := 1
       nMin := 1
       nMax := ordKeyCount()
       nPage := oBrowse:RowCount       // ordKeyCount()
@@ -802,14 +793,13 @@ STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
       nPos := Round( ( ordKeyNo() - oBrowse:RowPos + 1 ) / nRatio, 0 )// ordKeyCount()
    ENDIF
 
-   WVW_XBupdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
+   wvw_xbUpdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
    RETURN NIL
 
 STATIC FUNCTION RefreshHXB( oBrowse, nWinNum, XBid )
 
    LOCAL nMin, nMax, nPage, nPos
-   LOCAL nRatio
 
    // recalc the pos
    nMin := 1
@@ -817,7 +807,7 @@ STATIC FUNCTION RefreshHXB( oBrowse, nWinNum, XBid )
    nPage := oBrowse:RightVisible - oBrowse:LeftVisible + 1
    nPos := iif( oBrowse:RightVisible == oBrowse:ColCount, nMax, oBrowse:LeftVisible )
 
-   WVW_XBupdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
+   wvw_xbUpdate( nWinNum, XBid, nPos, nPage, nMin, nMax )
 
    RETURN NIL
 
@@ -826,6 +816,8 @@ STATIC FUNCTION RefreshHXB( oBrowse, nWinNum, XBid )
 STATIC FUNCTION DbSkipBlock( n, oTbr )
 
    LOCAL nSkipped := 0
+
+   HB_SYMBOL_UNUSED( oTbr )
 
    IF n == 0
       dbSkip( 0 )
@@ -849,6 +841,8 @@ STATIC FUNCTION TBNext( oTbr )
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
+   HB_SYMBOL_UNUSED( oTbr )
+
    IF Eof()
       lMoved := .F.
    ELSE
@@ -868,7 +862,9 @@ STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
-   dbSkip( - 1 )
+   HB_SYMBOL_UNUSED( oTbr )
+
+   dbSkip( -1 )
 
    IF Bof()
       dbGoto( nSaveRecNum )
@@ -923,20 +919,26 @@ FUNCTION WVW_SetFocus( hWnd, nWinNum )
    ENDIF
 
    RETURN NIL
-#endif
 
 //
 //      WVW_KillFocus() must be a FUNCTION in your application
 //      needs to process messages sent through WM_KILLFOCUS message
 //      received by the window.
-//
-// FUNCTION WVW_KillFocus( hWnd )
-// RETURN NIL
+
+FUNCTION WVW_KillFocus( hWnd )
+   RETURN NIL
+#endif
 
 FUNCTION WVW_TIMER( nWinNum, hWnd, message, wParam, lParam )
 
+   HB_SYMBOL_UNUSED( nWinNum )
+   HB_SYMBOL_UNUSED( hWnd )
+   HB_SYMBOL_UNUSED( message )
+   HB_SYMBOL_UNUSED( wParam )
+   HB_SYMBOL_UNUSED( lParam )
+
    // this function is called every certain interval, by GTWVW gtwndproc
-   WVW_SBsetText( 0, 1, Time() )
+   wvw_sbSetText( 0, 1, Time() )
 
    RETURN NIL
 
@@ -948,7 +950,7 @@ FUNCTION CreateToolbar( nWinNum )
    LOCAL hWndTB
    LOCAL ldefault
 
-   wvw_tbdestroy( nWinNum )
+   wvw_tbDestroy( nWinNum )
 
    ldefault := lYesNo( "would you like to use default toolbar setting?" )
 
@@ -958,7 +960,7 @@ FUNCTION CreateToolbar( nWinNum )
       lDisplayText := Alert( "Display text in toolbar?", { "Yes", "No" } ) == 1
    ENDIF
 
-   hWndTB := wvw_tbcreate( nWinNum, lDisplayText, NIL, nSysBitmap )
+   hWndTB := wvw_tbCreate( nWinNum, lDisplayText, NIL, nSysBitmap )
 
    IF hWndTB == 0
       lboxmessage( "FAILED create toolbar" )
@@ -997,7 +999,7 @@ FUNCTION xDisableToolbar( nWinNum )
    LOCAL i
 
    FOR i := 0 TO wvw_tbButtonCount( nWinNum ) - 1
-      WVW_TBEnableButton( nWinNum, i, .F. )
+      wvw_tbEnableButton( nWinNum, i, .F. )
    NEXT
 
    RETURN NIL
@@ -1007,7 +1009,7 @@ FUNCTION xEnableToolbar( nWinNum )
    LOCAL i
 
    FOR i := 0 TO wvw_tbButtonCount( nWinNum ) - 1
-      WVW_TBEnableButton( nWinNum, i, .T. )
+      wvw_tbEnableButton( nWinNum, i, .T. )
    NEXT
 
    RETURN NIL
@@ -1041,7 +1043,7 @@ FUNCTION nAfterInkey( nkey )
    LOCAL bAction
    IF nkey == WVW_DEFAULT_MENUKEYEVENT
       // MenuKeyEvent
-      RETURN nMenuChecker( WVW_GETLASTMENUEVENT() )
+      RETURN nMenuChecker( wvw_GetLastMenuEvent() )
       // was: elseif ASCAN({K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE}, nKey) > 0
    ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN, ;
          K_LDBLCLK }, nKey ) > 0
@@ -1073,19 +1075,21 @@ FUNCTION nMenuChecker( nMenuEvent )
    CASE nMenuEvent == IDM_DEMO_CONSOLE
       // lboxmessage( "Demo CONSOLE" )
       Demo_Console()
-// CASE nMenuEvent == IDM_DEMO_COLOR
-//    // lboxmessage( "Demo COLOR" )
-//    Demo_Color()
+#if 0
+   CASE nMenuEvent == IDM_DEMO_COLOR
+      // lboxmessage( "Demo COLOR" )
+      Demo_Color()
+#endif
    CASE nMenuEvent == IDM_DEMO_EXIT
       // lboxmessage( "should EXIT!" )
       nkey := K_ESC
 
    CASE nMenuEvent == IDM_WINDOW_SPACING_INCREASE
-      WVW_SetLineSpacing( NIL, WVW_SetLineSpacing() + 2 )
+      wvw_SetLineSpacing( NIL, wvw_SetLineSpacing() + 2 )
    CASE nMenuEvent == IDM_WINDOW_SPACING_DECREASE
-      WVW_SetLineSpacing( NIL, WVW_SetLineSpacing() - 2 )
+      wvw_SetLineSpacing( NIL, wvw_SetLineSpacing() - 2 )
    CASE nMenuEvent == IDM_WINDOW_SPACING_DEFAULT
-      WVW_SetDefLineSpacing( WVW_SetLineSpacing() )
+      wvw_SetDefLineSpacing( wvw_SetLineSpacing() )
 
    CASE nMenuEvent == IDM_TOOLBAR_ENABLE
       xEnableToolbar( 0 )
@@ -1094,7 +1098,7 @@ FUNCTION nMenuChecker( nMenuEvent )
    CASE nMenuEvent == IDM_TOOLBAR_RESET
       CreateToolbar( 0 )
    CASE nMenuEvent == IDM_TOOLBAR_DELETE
-      WVW_TBdestroy( 0 )
+      wvw_tbDestroy( 0 )
 
    CASE nMenuEvent == IDM_HELP_HELP
       xHelp()
@@ -1114,7 +1118,7 @@ FUNCTION nMenuChecker( nMenuEvent )
 FUNCTION lBoxMessage( cMsg, cTitle )
 
    hb_default( @cTitle, "Info" )
-   win_messagebox( WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
+   win_MessageBox( wvw_GetWindowHandle(), cMsg, cTitle, MB_OK + MB_ICONINFORMATION + MB_SYSTEMMODAL )
 
    RETURN .T.
 
@@ -1122,7 +1126,7 @@ FUNCTION lYesNo( cMsg, cTitle )
 
    hb_default( @cTitle, "Konfirmasi" )
 
-   RETURN win_messagebox( WVW_GETWINDOWHANDLE(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
+   RETURN win_MessageBox( wvw_GetWindowHandle(), cMsg, cTitle, MB_YESNO + MB_ICONQUESTION + MB_SYSTEMMODAL ) == IDYES
 
 FUNCTION lDebug( cMsg )
 
@@ -1145,9 +1149,9 @@ FUNCTION xDebugInfo()
       "Current Window is Window #" + hb_ntos( wvw_nSetCurWindow() ) + hb_eol() + ;
       "MaxRow() = " + hb_ntos( MaxRow() ) + ", MaxCol() = " + hb_ntos( MaxCol() ) + hb_eol() + ;
       "Row() = " + hb_ntos( Row() ) + ", Col() = " + hb_ntos( Col() ) + hb_eol() + ;
-      "WVW_RowOfs() = " + hb_ntos( wvw_nrowofs() ) + ", WVW_ColOfs() = " + hb_ntos( wvw_ncolofs() ) + hb_eol() + ;
-      "Line Spacing = " + hb_ntos( WVW_SetLineSpacing() ) + hb_eol() + ;
-      "Default Line Spacing = " + hb_ntos( WVW_SetDefLineSpacing() ) + hb_eol() + ;
+      "WVW_RowOfs() = " + hb_ntos( wvw_nRowOfs() ) + ", WVW_ColOfs() = " + hb_ntos( wvw_nColOfs() ) + hb_eol() + ;
+      "Line Spacing = " + hb_ntos( wvw_SetLineSpacing() ) + hb_eol() + ;
+      "Default Line Spacing = " + hb_ntos( wvw_SetDefLineSpacing() ) + hb_eol() + ;
       hb_eol() + ;
       "Font Face = '" + s_aFontInfo[ 1 ] + "'" + hb_eol() + ;
       "Font Height = " + hb_ntos( s_aFontInfo[ 2 ] ) + hb_eol() + ;
@@ -1200,7 +1204,7 @@ FUNCTION nCeiling( nNumber, nRoundDec )
    ENDIF
 
    // geser kanan
-   FOR i := nRoundDec to ( 0 - 1 )   // artinya kalau SATUAN gak usah
+   FOR i := nRoundDec TO -1   // artinya kalau SATUAN gak usah
       nNumber := nNumber / 10
    NEXT
 
@@ -1212,7 +1216,7 @@ FUNCTION nCeiling( nNumber, nRoundDec )
    ENDIF
 
    // geser kiri
-   FOR i := nRoundDec to ( 0 - 1 )   // artinya kalau SATUAN gak usah
+   FOR i := nRoundDec TO -1   // artinya kalau SATUAN gak usah
       nNumber := nNumber * 10
    NEXT
 
@@ -1225,37 +1229,30 @@ FUNCTION SetDefaultWindowSize()
 
    // x was: LOCAL Result:= SetMode(32,98), ScreenWidth
    LOCAL Result := .T., ScreenWidth
+
    SetMode( 25, 80 )
+
    IF Result
-      screenWidth := Wvw_GetScreenWidth()
+      screenWidth := wvw_GetScreenWidth()
       DO CASE
       CASE screenWidth >= 1024
-         Result := Wvw_SetFont( , "Terminal", 20, 10 )
+         Result := wvw_SetFont( , "Terminal", 20, 10 )
       CASE screenWidth >= 800
          IF hb_osIsWinNT()
-            Result := Wvw_SetFont( , "Lucida Console", 16, - 8 )
+            Result := wvw_SetFont( , "Lucida Console", 16, - 8 )
          ELSE
-            Result := Wvw_SetFont( , "System", 16, - 8 )
+            Result := wvw_SetFont( , "System", 16, - 8 )
          ENDIF
       OTHERWISE
-         Result := Wvw_SetFont( , "Terminal", 12, 6 )
+         Result := wvw_SetFont( , "Terminal", 12, 6 )
       ENDCASE
       IF Result
-         Wvw_SetCodePage( , 255 )  // #define OEM_CHARSET 255 - from wingdi.h
+         wvw_SetCodepage( , 255 )  // #define OEM_CHARSET 255 - from wingdi.h
          CLS
       ENDIF
    ENDIF
 
    RETURN Result
-
-#if 0
-
-STATIC FUNCTION isWinNT()
-
-   RETURN lYesNo( "I am preparing the 'best' font for you..." + hb_eol() + ;
-      "Sorry, is it Windows NT?" )
-
-#endif
 
 // ERROR handler *******************************************************
 
@@ -1267,7 +1264,7 @@ PROCEDURE ErrorSys()
 
 STATIC PROCEDURE MyError( e )
 
-   LOCAL cTrace := "", i := 1, cErr
+   LOCAL i := 1, cErr
 
    cErr := "Runtime error" + hb_eol() + ;
       hb_eol() + ;
@@ -1291,6 +1288,8 @@ STATIC PROCEDURE MyError( e )
    RETURN
 
 PROCEDURE debugging( cMsg, nRow, nCol, nWinNum )
+
+   HB_SYMBOL_UNUSED( nWinNum )
 
    ? cmsg + hb_ntos( nrow ) + ", " + hb_ntos( ncol )
 

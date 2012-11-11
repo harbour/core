@@ -35,7 +35,7 @@ STATIC s_aComboList := {}
 // create these two as local, otherwise it will be assumed PRIVATE
 MEMVAR __nCBid__, __temp__
 
-#xcommand   @ <row>, <col> COMBOBOX <var>                        ;
+#xcommand @ <row>, <col> COMBOBOX <var>                        ;
       OPTIONS <aOptions>                    ;
       WIDTH <nWidth>   =>                   ;
       ;
@@ -43,7 +43,7 @@ MEMVAR __nCBid__, __temp__
       __nCBid__ := wvw_cbCreate( NIL, <row>, <col>, <nWidth>, ;
       <aOptions>, ;
       {| nWinNum, nId, nEvent, nIndex, temp |     ;
-      CBhandler( nWinNum, nId, nEvent, nIndex, <"var">, GetList );
+      CBhandler( nWinNum, nId, nEvent, nIndex, <"var">, GetList ), HB_SYMBOL_UNUSED( temp );
       },                                          ;
       NIL, NIL, s_nCB_Kbd, NIL );                     ;
       AAdd( s_aComboList, { __nCBid__, <"var"> } );                        ;
@@ -64,13 +64,15 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   WVW_SetCodePage( NIL, 255 )
-   WVW_SetLineSpacing( NIL, 4 )
-   WVW_SetLSpaceColor( NIL, 0 )
-   WVW_cbSetFont( NIL, "Arial", 14 )  // std: 20-2
-// Set( _SET_TRACESTACK, 0 )
+   wvw_SetCodepage( NIL, 255 )
+   wvw_SetLineSpacing( NIL, 4 )
+   wvw_SetLSpaceColor( NIL, 0 )
+   wvw_cbSetFont( NIL, "Arial", 14 )  // std: 20-2
+#if 0
+   Set( _SET_TRACESTACK, 0 )
 
-// wvw_setmousemove( , .T. )
+   wvw_SetMouseMove( , .T. )
+#endif
 
    CLS
 
@@ -86,7 +88,7 @@ PROCEDURE Main()
    READ
 
    // disable all comboboxes:
-   AEval( s_aComboList, {| x | wvw_cbenable( NIL, x[ 1 ], .F. ) } )
+   AEval( s_aComboList, {| x | wvw_cbEnable( NIL, x[ 1 ], .F. ) } )
 
    DevPos( 5, 0 )
    ? "name: '" + mname + "'"
@@ -97,7 +99,7 @@ PROCEDURE Main()
    Inkey( 0 )
 
    // destroy all comboboxes:
-   AEval( s_aComboList, {| x | wvw_cbdestroy( NIL, x[ 1 ] ) } )
+   AEval( s_aComboList, {| x | wvw_cbDestroy( NIL, x[ 1 ] ) } )
    s_aComboList := {}
 
    ?
@@ -130,8 +132,9 @@ PROCEDURE Main()
 FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 
    LOCAL i, ccursel
-   LOCAL oGetList := __GetListActive()
    LOCAL oGet := GetActive()
+
+   HB_SYMBOL_UNUSED( nIndex )
 
    /* if GetList is empty, then READ session is already ended
     * this should not be happenning!
@@ -206,7 +209,6 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
 FUNCTION CBreader( oGet )
 
    LOCAL nKey, bKeyBlock
-   LOCAL nSelected, cSelected
    LOCAL oGetList := __GetListActive()
 
    IF ! wvw_cbIsFocused( NIL, oGet:cargo )
@@ -301,17 +303,17 @@ STATIC FUNCTION MoveToGet( GetList, nPos )
 // Set FOCUS to window nWinNum
 STATIC FUNCTION SetWinFocus( nWinNum )
 
-   LOCAL hWnd := wvw_getWindowHandle( nWinNum )
+   LOCAL hWnd := wvw_GetWindowHandle( nWinNum )
 
-   WIN_SETFOCUS( hWnd )
+   win_SetFocus( hWnd )
 
    RETURN NIL
 
 STATIC FUNCTION MyAlert( cMsg, par2, par3, par4, par5, par6 )
 
-   LOCAL nLineSpacing := WVW_SetLineSpacing( NIL, 0 )
+   LOCAL nLineSpacing := wvw_SetLineSpacing( NIL, 0 )
    LOCAL retval := Alert( cMsg, par2, par3, par4, par5, par6 )
 
-   WVW_SetLineSpacing( NIL, nLineSpacing )
+   wvw_SetLineSpacing( NIL, nLineSpacing )
 
    RETURN retval

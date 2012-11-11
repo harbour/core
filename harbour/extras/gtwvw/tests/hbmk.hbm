@@ -4,6 +4,4 @@
 
 gtwvw.hbc
 
-# NOTE: Disabled until test code is cleaned/fixed.
-#-w3 -es2
--w1
+-w3 -es2

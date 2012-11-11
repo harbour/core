@@ -542,14 +542,14 @@ HB_FUNC( WAPI_TEXTOUT )
       LPCTSTR lpData = HB_PARSTR( 4, &hData, &nDataLen );
 
 #if ! defined( HB_OS_WIN_CE )
-      hb_retl( TextOut( hDC, 
+      hb_retl( TextOut( hDC,
                         hb_parni( 2 ) /* iRow */,
                         hb_parni( 3 ) /* iCol */,
                         lpData,
                         ( int ) nDataLen ) );
 #else
       /* Emulating TextOut() using ExtTextOut(). [vszakats] */
-      hb_retl( ExtTextOut( hDC, 
+      hb_retl( ExtTextOut( hDC,
                            hb_parni( 2 ) /* iRow */,
                            hb_parni( 3 ) /* iCol */,
                            0,
@@ -601,7 +601,7 @@ HB_FUNC( WAPI_EXTTEXTOUT )
          lpFontWidths = NULL;
 
 
-      hb_retl( ExtTextOut( hDC, 
+      hb_retl( ExtTextOut( hDC,
                            hb_parni( 2 ) /* iRow */,
                            hb_parni( 3 ) /* iCol */,
                            ( UINT ) hb_parni( 4 ) /* fuOptions */,

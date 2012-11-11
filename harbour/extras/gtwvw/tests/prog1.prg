@@ -31,25 +31,21 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-#ifdef __XHARBOUR__
-#define __GTWVW__
-#endif
-
 STATIC s_zwin := {}
 STATIC s_cStdColor := "N/W,N/GR*,,,N/W*"
 
 PROCEDURE Main()
 
    LOCAL i, j
-#ifdef __GTWVW__
-   LOCAL lMainCoord := WVW_SetMainCoord( .T. )
-
-   WVW_SetCodePage( , 255 )
-#endif
+   LOCAL lMainCoord
 
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
 #endif
+
+   lMainCoord := wvw_SetMainCoord( .T. )
+
+   wvw_SetCodepage( , 255 )
 
    SET SCOREBOARD OFF
    SetColor( s_cStdColor )
@@ -80,7 +76,6 @@ PROCEDURE Main()
 
 PROCEDURE xGet1()
 
-   LOCAL nWin
    LOCAL cName := PadR( "Name", 20 )
    LOCAL cAddr := PadR( "Address", 25 )
    LOCAL cPhone := PadR( "Phone", 15 )
@@ -89,10 +84,12 @@ PROCEDURE xGet1()
    LOCAL getlist := {}
    LOCAL oldCurs := SetCursor( SC_NORMAL )
 
-   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), 10, 20, 22, 59, "Some Window" )
 
-// @ 21,21 SAY "Inside the window" COLOR "R/W"
-// @ 23,0  SAY "Outside the window" COLOR "R/W"
+#if 0
+   @ 21, 21 SAY "Inside the window" COLOR "R/W"
+   @ 23, 0  SAY "Outside the window" COLOR "R/W"
+#endif
 
    DO WHILE ! lDone
       @ 12, 22 SAY "Name    : " GET cName  PICT "@!K" WHEN lMessage( "Please enter your name" )
@@ -118,13 +115,12 @@ FUNCTION xBrowse1()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
-   LOCAL info_   := {}
+   LOCAL info_
    LOCAL nTop    :=  6
    LOCAL nLeft   :=  3
    LOCAL nBottom := MaxRow() - 2
    LOCAL nRight  := MaxCol() - 3
    LOCAL nCursor := SetCursor( SC_NONE )
-   LOCAL nWin
 
    USE "..\..\..\tests\test" NEW
    IF NetErr()
@@ -148,7 +144,7 @@ FUNCTION xBrowse1()
 
    oBrowse:configure()
 
-   nWin := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTop, nLeft, nBottom, nRight, "test.dbf" )
 
    WHILE ! lEnd
       oBrowse:ForceStable()
@@ -208,6 +204,8 @@ STATIC FUNCTION DbSkipBlock( n, oTbr )
 
    LOCAL nSkipped := 0
 
+   HB_SYMBOL_UNUSED( oTbr )
+
    IF n == 0
       dbSkip( 0 )
    ELSEIF n > 0
@@ -229,6 +227,8 @@ STATIC FUNCTION TBNext( oTbr )
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
+   HB_SYMBOL_UNUSED( oTbr )
+
    IF Eof()
       lMoved := .F.
    ELSE
@@ -248,7 +248,9 @@ STATIC FUNCTION TBPrev( oTbr )
    LOCAL nSaveRecNum := RecNo()
    LOCAL lMoved := .T.
 
-   dbSkip( - 1 )
+   HB_SYMBOL_UNUSED( oTbr )
+
+   dbSkip( -1 )
    IF Bof()
       dbGoto( nSaveRecNum )
       lMoved := .F.
@@ -280,7 +282,7 @@ FUNCTION lYesNo( cMsg )
       nLeft := 5, ;
       nBotLine := MaxRow() - 2, ;
       nRight := MaxCol() - 5
-   LOCAL nChoice, nWidth, nWinNum
+   LOCAL nChoice, nWidth
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
@@ -294,7 +296,7 @@ FUNCTION lYesNo( cMsg )
    nRight := nLeft + nWidth + 1
 
    // open window
-   nWinNum := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cMsg )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cMsg )
 
    @ nTopLine + 1, nLeft + 1 PROMPT PadR( "Yes", nWidth )
    @ nTopLine + 2, nLeft + 1 PROMPT PadR( "No", nWidth )
@@ -314,7 +316,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
       nLeft := 5, ;
       nBotLine := MaxRow() - 2, ;
       nRight := MaxCol() - 5
-   LOCAL nwidth, nmaxwidth, i, nNumLines, cAline, nWinNum
+   LOCAL nwidth, nmaxwidth, i, nNumLines, cAline
    LOCAL oldCurs := SetCursor( SC_NONE )
    LOCAL oldColor := SetColor( s_cStdColor )
 
@@ -338,7 +340,7 @@ FUNCTION lBoxMessage( cMsg, cTitle )
    nRight := nLeft + nMaxWidth + 1
 
    // open window
-   nWinNum := znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle )
+   znewwindow( hb_UTF8ToStrBox( "┌─┐│┘─└│" ), nTopLine, nLeft, nBotLine, nRight, cTitle )
    DispBegin()
    FOR i := 1 TO nNumLines
       cAline := MemoLine( cMsg, nWidth, i )
@@ -372,9 +374,7 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    SetColor( ccolor )
 
-#ifdef __GTWVW__
-   WVW_nOpenWindow( ctitle, r1, c1, r2, c2 )
-#endif
+   wvw_nOpenWindow( ctitle, r1, c1, r2, c2 )
 
    AAdd( s_zwin, { i + 1, r1, c1, r2, c2, cScreen, ctitle, nrow, ncol, coldcolor } )
 
@@ -382,14 +382,12 @@ FUNCTION ZNEWWINDOW( wtype, r1, c1, r2, c2, ctitle, ccolor )
 
    hb_Scroll( r1, c1, r2, c2 )
 
-#ifndef __GTWVW__
    // GTWVW doesn't need box or textual title
    hb_DispBox( r1, c1, r2, c2, wtype )
    IF ! Empty( ctitle )
       cTitle := " " + AllTrim( ctitle ) + " "
       hb_DispOutAt( r1, nCeiling( ( c2 + c1 - Len( cTitle ) ) / 2 ), cTitle )
    ENDIF
-#endif
 
    SetColor( cOldColor )
 
@@ -405,9 +403,7 @@ FUNCTION ZREVWINDOW()
       RETURN NIL
    ENDIF
 
-#ifdef __GTWVW__
-   WVW_lCloseWindow()
-#endif
+   wvw_lCloseWindow()
 
    // restore states
    RestScreen( s_zwin[ i ][ 2 ], s_zwin[ i ][ 3 ], s_zwin[ i ][ 4 ], s_zwin[ i ][ 5 ], s_zwin[ i ][ 6 ] )

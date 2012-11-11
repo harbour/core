@@ -58,7 +58,6 @@
 
 PROCEDURE Main()
 
-   LOCAL nOpen, nClose
    LOCAL lClosepermitted := .F.
    LOCAL bSetKey := SetKey( K_F8, {|| MyHelp() } )
 
@@ -71,14 +70,14 @@ PROCEDURE Main()
    SET CENTURY ON
    SetMode( 4, 54 )   // a small window
    SetColor( "N/W" )
-   Wvw_SetFont( 0, "Courier New", 16, - 7 )
-   WVW_EBSetFont( 0, "Arial" )  // font for editbox
-   WVW_PBSetFont( 0, "Arial" )  // font for pushbuttons
+   wvw_SetFont( 0, "Courier New", 16, - 7 )
+   wvw_ebSetFont( 0, "Arial" )  // font for editbox
+   wvw_pbSetFont( 0, "Arial" )  // font for pushbuttons
 
-   Wvw_SetCodePage( 0, 255 )
-   wvw_allownontopEvent( .T. )   // this will make pushbuttons to work
+   wvw_SetCodepage( 0, 255 )
+   wvw_AllowNonTopEvent( .T. )   // this will make pushbuttons to work
    // even on non-topmost window
-   wvw_recurseCblock( .T. ) // this will allow recursed execution
+   wvw_RecurseCBlock( .T. ) // this will allow recursed execution
    // of control's codeblocks
    // eg. multiple executions of pushbutton's codeblock
    //    invoking "GetSession()"
@@ -87,11 +86,11 @@ PROCEDURE Main()
 
    CLS
    @ 0, 1 SAY "Click NEW to open a new GET session, CLOSE when done"
-   nOpen := wvw_pbcreate( 0, 2, 1, 2, 10, "New", NIL, {|| GetSession() } )
-   nClose := wvw_pbcreate( 0, 2, 12, 2, 22, "Close", NIL, {|| ToCloseWindow( 0, @lClosepermitted ) } )
+   wvw_pbCreate( 0, 2, 1, 2, 10, "New", NIL, {|| GetSession() } )
+   wvw_pbCreate( 0, 2, 12, 2, 22, "Close", NIL, {|| ToCloseWindow( 0, @lClosepermitted ) } )
 
    // activate/show the main window
-   wvw_showwindow( 0 )
+   wvw_ShowWindow( 0 )
 
    // wait until user click the close button
    DO WHILE ! lClosepermitted
@@ -151,7 +150,7 @@ PROCEDURE GetSession()
    cdebugreport += "cRemark:" + cRemark
    MyMessageBox( nwinnum, cdebugreport )
 
-   wvw_lclosewindow()
+   wvw_lCloseWindow()
 
    s_nsession--
 
@@ -176,8 +175,10 @@ FUNCTION MyHelp()
 
 FUNCTION WVW_SETFOCUS( nWinNum, hWnd )
 
+   HB_SYMBOL_UNUSED( hWnd )
+
    IF nwinnum != 0
-      wvw_nsetcurwindow( nwinnum )
+      wvw_nSetCurWindow( nwinnum )
    ENDIF
 
    RETURN NIL
@@ -246,7 +247,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
    LOCAL nmaxrow, nmincol
    LOCAL i, nlen, lmultiline, clabel, ;
       nrow1, ncol1, nrow2, ncol2
-   LOCAL creport, nOKbutton, nCancelbutton, nClosebutton, ldone := .F.
+   LOCAL nOKbutton, nCancelbutton, nClosebutton, ldone := .F.
    LOCAL lclosePermitted := .F.
    LOCAL nNumGets := Len( aEBGets )
    LOCAL ch
@@ -256,7 +257,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
       RETURN
    ENDIF
 
-   wvw_nsetcurwindow( nwinnum )
+   wvw_nSetCurWindow( nwinnum )
    nmaxrow := 0
    nmincol := 99999
    FOR i := 1 TO nNumGets
@@ -274,7 +275,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
 
       @ nrow1, ncol1 - Len( clabel ) - 1 SAY clabel
 
-      aEBGets[ i ][ __GET_NEBID ] := wvw_ebcreate( nwinnum, nrow1, ncol1, nrow2, ncol2, ;
+      aEBGets[ i ][ __GET_NEBID ] := wvw_ebCreate( nwinnum, nrow1, ncol1, nrow2, ncol2, ;
          Transform( aEBGets[ i ][ __GET_XINIT ], aEBGets[ i ][ __GET_CPICT ] ), ;
          {| nWinNum, nId, nEvent | MaskEditBox( nWinNum, nId, nEvent, @aEBGets ) }, ;
          aEBGets[ i ][ __GET_LMULTILINE ], ;  // EBtype
@@ -287,27 +288,26 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
    NEXT
    nrow1 := nmaxrow + 2 // min(nmaxrow+2, maxrow())
    ncol1 := nmincol // min(nmincol, maxcol()-33)
-   nOKbutton := wvw_pbcreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "OK", NIL, ;
+   nOKbutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "OK", NIL, ;
       {|| SaveVar( nwinnum, @aEBGets, @lDone ), ;
       EndGets( nwinnum, @aEBGets, nOKbutton, nCancelbutton, nCloseButton );
       } )
 
    ncol1 := ncol1 + 10 + 1
-   nCancelbutton := wvw_pbcreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Cancel", NIL, ;
+   nCancelbutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Cancel", NIL, ;
       {|| CancelVar( nwinnum, @aEBGets, @lDone ), ;
       EndGets( nwinnum, @aEBGets, nOKbutton, nCancelbutton, nCloseButton );
       } )
 
    ncol1 := ncol1 + 10 + 1
-   nClosebutton := wvw_pbcreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Close", NIL, ;
+   nClosebutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "Close", NIL, ;
       {|| ToCloseWindow( nwinnum, @lClosepermitted ) } )
-   wvw_pbenable( nwinnum, nclosebutton, .F. )
+   wvw_pbEnable( nwinnum, nclosebutton, .F. )
 
    // register a keyhandler for WVW_INPFOCUS
    inp_handler( nwinnum, {| n, ch | InpKeyHandler( n, ch, aEBGets, nOKbutton, nCancelbutton ) } )
 
-   i := 1
-   wvw_ebsetfocus( nwinnum, aEBGets[ 1 ][ __GET_NEBID ] )
+   wvw_ebSetFocus( nwinnum, aEBGets[ 1 ][ __GET_NEBID ] )
    nFocus := 1
    ch := Inkey( 0.5 )
    DO WHILE ! lDone
@@ -333,17 +333,17 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
          ENDCASE
          IF lchangefocus
             IF nFocus <= nNumGets
-               wvw_ebsetfocus( nwinnum, aEBGets[ nFocus ][ __GET_NEBID ] )
+               wvw_ebSetFocus( nwinnum, aEBGets[ nFocus ][ __GET_NEBID ] )
             ELSEIF nFocus == nNumGets + 1
-               wvw_pbsetfocus( nwinnum, nOKbutton )
+               wvw_pbSetFocus( nwinnum, nOKbutton )
             ELSEIF nFocus == nNumGets + 2
-               wvw_pbsetfocus( nwinnum, nCancelbutton )
+               wvw_pbSetFocus( nwinnum, nCancelbutton )
             ENDIF
          ENDIF
       ENDIF
-      IF wvw_pbisfocused( nwinnum, nOKbutton )
+      IF wvw_pbIsFocused( nwinnum, nOKbutton )
          nFocus := nNumGets + 1
-      ELSEIF wvw_pbisfocused( nwinnum, nCancelbutton )
+      ELSEIF wvw_pbIsFocused( nwinnum, nCancelbutton )
          nFocus := nNumGets + 2
       ELSE
          nFocus := nFocused( aEBGets )
@@ -353,7 +353,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
 
    // session ended (already ended by OK or Cancel)
 
-   lClosepermitted := ( nwinnum == wvw_nnumwindows() - 1 )
+   lClosepermitted := ( nwinnum == wvw_nNumWindows() - 1 )
    // wait until user click the close button
    DO WHILE ! lClosepermitted
       Inkey( 0.5 )
@@ -374,9 +374,9 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
    ELSEIF ch == 0
       RETURN
    ENDIF
-   IF wvw_pbisfocused( nwinnum, nOKbutton )
+   IF wvw_pbIsFocused( nwinnum, nOKbutton )
       nFocus := nNumGets + 1
-   ELSEIF wvw_pbisfocused( nwinnum, nCancelbutton )
+   ELSEIF wvw_pbIsFocused( nwinnum, nCancelbutton )
       nFocus := nNumGets + 2
    ELSE
       nFocus := nFocused( aEBGets )
@@ -400,11 +400,11 @@ STATIC PROCEDURE InpKeyHandler( nwinnum, ch, aEBGets, nOKbutton, nCancelbutton )
    ENDCASE
    IF lchangefocus
       IF nFocus <= nNumGets
-         wvw_ebsetfocus( nwinnum, aEBGets[ nFocus ][ __GET_NEBID ] )
+         wvw_ebSetFocus( nwinnum, aEBGets[ nFocus ][ __GET_NEBID ] )
       ELSEIF nFocus == nNumGets + 1
-         wvw_pbsetfocus( nwinnum, nOKbutton )
+         wvw_pbSetFocus( nwinnum, nOKbutton )
       ELSEIF nFocus == nNumGets + 2
-         wvw_pbsetfocus( nwinnum, nCancelbutton )
+         wvw_pbSetFocus( nwinnum, nCancelbutton )
       ENDIF
    ENDIF
 
@@ -416,16 +416,16 @@ STATIC PROCEDURE EndGets( nwinnum, aEBGets, nOKbutton, nCancelbutton, nCloseButt
 
    // session ended
    FOR i := 1 TO Len( aEBGets )
-      wvw_ebenable( nwinnum, aEBGets[ i ][ __GET_NEBID ], .F. )
+      wvw_ebEnable( nwinnum, aEBGets[ i ][ __GET_NEBID ], .F. )
    NEXT
-   wvw_pbenable( nwinnum, nOKbutton, .F. )
-   wvw_pbenable( nwinnum, nCancelbutton, .F. )
+   wvw_pbEnable( nwinnum, nOKbutton, .F. )
+   wvw_pbEnable( nwinnum, nCancelbutton, .F. )
 
    // clear the getlist
    ASize( aEBGets, 0 )
 
    // wait until user click the close button
-   wvw_pbenable( nwinnum, nclosebutton, .T. )
+   wvw_pbEnable( nwinnum, nclosebutton, .T. )
 
    RETURN
 
@@ -437,7 +437,7 @@ STATIC PROCEDURE SaveVar( nwinnum, aEBGets, lDone )
    FOR i := 1 TO Len( aEBGets )
       // do some validation if necessary
       Eval( aEBGets[ i ][ __GET_BASSIGN ], ;
-         GetValFromText( wvw_ebgettext( nwinnum, aEBGets[ i ][ __GET_NEBID ] ), aEBGets[ i ][ __GET_CVALTYPE ] ) )
+         GetValFromText( wvw_ebGetText( nwinnum, aEBGets[ i ][ __GET_NEBID ] ), aEBGets[ i ][ __GET_CVALTYPE ] ) )
    NEXT
    lDone := .T.
 
@@ -469,10 +469,10 @@ STATIC PROCEDURE CancelVar( nwinnum, aEBGets, lDone )
 STATIC PROCEDURE ToCloseWindow( nwinnum, lPermitted )
 
    // allow to close topmost window only
-   lPermitted := ( nwinnum == wvw_nnumwindows() - 1 )
+   lPermitted := ( nwinnum == wvw_nNumWindows() - 1 )
    IF ! lpermitted
       MyMessageBox( nwinnum, "Window " + hb_ntos( nwinnum ) + " is not allowed to be closed, yet" + hb_eol() + ;
-         "Please close window " + hb_ntos( wvw_nnumwindows() - 1 ) + " first" )
+         "Please close window " + hb_ntos( wvw_nNumWindows() - 1 ) + " first" )
    ENDIF
 
    RETURN
@@ -570,20 +570,20 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
    DO CASE
    CASE nEvent == EN_KILLFOCUS
       IF ! mlmultiline .AND. mcvaltype $ "ND"
-         ctext := wvw_ebgettext( nwinnum, nid )
+         ctext := wvw_ebGetText( nwinnum, nid )
          IF mcvaltype == "D" .AND. IsBadDate( ctext )
             // don't leave it in an invalid state
-            wvw_ebsetfocus( nwinnum, nid )
+            wvw_ebSetFocus( nwinnum, nid )
          ELSE
-            wvw_ebsettext( nwinnum, nId, Transform( GetValFromText( ctext, mcvaltype ), mcpict ) )
+            wvw_ebSetText( nwinnum, nId, Transform( GetValFromText( ctext, mcvaltype ), mcpict ) )
          ENDIF
       ENDIF
    CASE nEvent == EN_SETFOCUS
       IF ! mlmultiline .AND. mcvaltype == "N"
-         ctext := wvw_ebgettext( nwinnum, nid )
-         wvw_ebsettext( nwinnum, nId, Transform( GetValFromText( ctext, mcvaltype ), GetNumMask( mcpict, mcvaltype ) ) )
+         ctext := wvw_ebGetText( nwinnum, nid )
+         wvw_ebSetText( nwinnum, nId, Transform( GetValFromText( ctext, mcvaltype ), GetNumMask( mcpict, mcvaltype ) ) )
       ENDIF
-      wvw_ebsetsel( nwinnum, nid, 0, -1 )
+      wvw_ebSetSel( nwinnum, nid, 0, -1 )
       nwasFocus := nFocused( aEBGets )
       IF nwasFocus != 0
          aEBGets[ nwasFocus ][ __GET_LFOCUSED ] := .F.
@@ -604,15 +604,15 @@ STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )
 
 STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
-   LOCAL InBuffer, OutBuffer := "", icp, x, CB, CM, BadEntry := .F., InBufferLeft, InBufferRight, Mask, OldChar, BackInbuffer
-   LOCAL pc := 0
+   LOCAL InBuffer, OutBuffer := "", icp, x, CB, CM, BadEntry, InBufferLeft, InBufferRight, Mask, OldChar, BackInbuffer
+   LOCAL pc
    LOCAL fnb := 0
    LOCAL dc := 0
-   LOCAL pFlag := .F.
-   LOCAL ncp := 0
+   LOCAL pFlag
+   LOCAL ncp
    LOCAL NegativeZero := .F.
-   LOCAL Output := ""
-   LOCAL ol := 0
+   LOCAL Output
+   LOCAL ol
 
    IF mcvaltype == "N"
       Mask := GetNumMask( mcpict, mcvaltype )
@@ -623,10 +623,10 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
    ENDIF
 
    // Store Initial CaretPos
-   wvw_ebgetsel( mnwinnum, mnebid, NIL, @icp )
+   wvw_ebGetSel( mnwinnum, mnebid, NIL, @icp )
 
    // Get Current Content
-   InBuffer := wvw_ebgettext( mnwinnum, mnebid )
+   InBuffer := wvw_ebGetText( mnwinnum, mnebid )
 
    pc := 0 // x for clarity
    pFlag := .F. // x for clarity
@@ -751,7 +751,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
    // Replace Content
    IF ! ( BackInBuffer == OutBuffer )
-      wvw_ebsettext( mnwinnum, mnebid, OutBuffer )
+      wvw_ebSetText( mnwinnum, mnebid, OutBuffer )
    ENDIF
 
    IF pc > 1
@@ -759,31 +759,31 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
       // RL 104
       IF NegativeZero
-         Output := Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ), Mask )
+         Output := Transform( GetValFromText( wvw_ebGetText( mnwinnum, mnebid ), mcvaltype ), Mask )
 
          // x better:
          ol := Len( Output )
          Output := PadL( "-" + SubStr( Output, At( ".", OutBuffer ) - 1 ), ol )
 
          // Replace Text
-         wvw_ebsettext( mnwinnum, mnebid, Output )
-         wvw_ebsetsel( mnwinnum, mnebid, At( ".", OutBuffer ) + dc, At( ".", OutBuffer ) + dc )
+         wvw_ebSetText( mnwinnum, mnebid, Output )
+         wvw_ebSetSel( mnwinnum, mnebid, At( ".", OutBuffer ) + dc, At( ".", OutBuffer ) + dc )
       ELSE
-         wvw_ebsettext( mnwinnum, mnebid, Transform( GetValFromText( wvw_ebgettext( mnwinnum, mnebid ), mcvaltype ), Mask ) )
-         wvw_ebsetsel( mnwinnum, mnebid, At( ".", OutBuffer ) + dc, At( ".", OutBuffer ) + dc )
+         wvw_ebSetText( mnwinnum, mnebid, Transform( GetValFromText( wvw_ebGetText( mnwinnum, mnebid ), mcvaltype ), Mask ) )
+         wvw_ebSetSel( mnwinnum, mnebid, At( ".", OutBuffer ) + dc, At( ".", OutBuffer ) + dc )
       ENDIF
 
    ELSE
       IF pFlag
-         ncp := At( ".", wvw_ebgettext( mnwinnum, mnebid ) )
-         wvw_ebsetsel( mnwinnum, mnebid, ncp, ncp )
+         ncp := At( ".", wvw_ebGetText( mnwinnum, mnebid ) )
+         wvw_ebSetSel( mnwinnum, mnebid, ncp, ncp )
       ELSE
          // Restore Initial CaretPos
          IF BadEntry
             icp--
          ENDIF
 
-         wvw_ebsetsel( mnwinnum, mnebid, icp, icp )
+         wvw_ebSetSel( mnwinnum, mnebid, icp, icp )
 
          // Skip Protected Characters
          FOR x := 1 TO Len( OutBuffer )
@@ -792,7 +792,7 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
             IF ! IsDigit( CB ) .AND. ! IsAlpha( CB ) .AND. ;
                ( !( CB == " " ) .OR. ( CB == " " .AND. CM == " " ) )
-               wvw_ebsetsel( mnwinnum, mnebid, icp + x, icp + x )
+               wvw_ebSetSel( mnwinnum, mnebid, icp + x, icp + x )
             ELSE
                EXIT
             ENDIF
@@ -806,7 +806,8 @@ STATIC PROCEDURE ProcessCharMask( mnwinnum, mnebid, mcvaltype, mcpict )
 
 STATIC FUNCTION CharMaskTekstOK( cString, cvaltype, cMask )
 
-   LOCAL lPassed := .T., CB, CM, x
+   // LOCAL lPassed := .T.
+   LOCAL CB, CM, x
 
    IF cvaltype == "D"
       FOR x := 1 TO Min( Len( cString ), Len( cMask ) )
@@ -925,9 +926,11 @@ STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
       RETURN .F.
    ENDIF
 
-// IF "E" $ cPicFunc
-//    cBuffer := InvertDwM( cBuffer )
-// ENDIF
+#if 0
+   IF "E" $ cPicFunc
+      cBuffer := InvertDwM( cBuffer )
+   ENDIF
+#endif
 
    cBuffer2 := StrTran( cBuffer, "/" )
    cBuffer2 := StrTran( cBuffer2, "-" )
@@ -950,15 +953,19 @@ STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
 // only handles WM_CHAR, thus not all input characters are accepted
 FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
 
-   LOCAL wParamLow := WVW_LOWORD( wParam )
-   LOCAL wParamHi := WVW_HIWORD( wParam )
-   LOCAL nCommand, ch
+   LOCAL ch
    LOCAL bhandler
 
+   HB_SYMBOL_UNUSED( hWnd )
+   HB_SYMBOL_UNUSED( wParam )
+   HB_SYMBOL_UNUSED( lParam )
+
    // did user perform a menu/toolbar action on Main Window?
-// IF message == WM_COMMAND .AND. nWinNum == 0  //menu,toolbar,pushbutton
-//   RETURN .F.
-// ENDIF
+#if 0
+   IF message == WM_COMMAND .AND. nWinNum == 0  // menu,toolbar,pushbutton
+      RETURN .F.
+   ENDIF
+#endif
 
    // now we handle input on other non-topmost windows
 
@@ -982,7 +989,6 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
 FUNCTION inp_handler( nwinnum, bhandler )
 
    STATIC s_bhandlers := {}
-   LOCAL i
    LOCAL retval := iif( Len( s_bhandlers ) >= nwinnum + 1, s_bhandlers[ nwinnum + 1 ], NIL )
 
    IF HB_ISBLOCK( bhandler )
@@ -1001,12 +1007,11 @@ STATIC FUNCTION MyMessageBox( nwinnum, cMessage, cCaption, nFlags )
    LOCAL nParent
 
    hb_default( @cCaption, "Debug Message" )
-   nParent := wvw_getwindowhandle( nwinnum )
+   nParent := wvw_GetWindowHandle( nwinnum )
 
-   RETURN win_messagebox( nParent, cMessage, cCaption, nFlags )
+   RETURN win_MessageBox( nParent, cMessage, cCaption, nFlags )
+
+#define VK_SHIFT            16
 
 STATIC FUNCTION lShiftPressed()
-
-// #define VK_SHIFT            16
-
-   RETURN wvw_GETKEYSTATE( 16 ) < 0
+   RETURN wvw_GetKeyState( VK_SHIFT ) < 0

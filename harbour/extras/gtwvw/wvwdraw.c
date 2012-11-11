@@ -141,8 +141,8 @@ HB_FUNC( WVW_DRAWLABELOBJ )
    iBottom = xy.y - 1 + 1 + iOffBottom;
    iRight  = xy.x - 1 + 1 + iOffRight;
 
-   iAlignHorz = ( HB_ISNIL( 7 ) ? 0 : hb_parni( 7 ) );
-   iAlignVert = ( HB_ISNIL( 8 ) ? 0 : hb_parni( 8 ) );
+   iAlignHorz = HB_ISNIL( 7 ) ? 0 : hb_parni( 7 );
+   iAlignVert = HB_ISNIL( 8 ) ? 0 : hb_parni( 8 );
 
    oldTextColor = SetTextColor( pWindowData->hdc, HB_ISNIL( 9 ) ? pWindowData->foreground : ( COLORREF ) hb_parnl( 9 ) );
    oldBkColor   = SetBkColor( pWindowData->hdc, HB_ISNIL( 10 ) ? pWindowData->background : ( COLORREF ) hb_parnl( 10 ) );
@@ -573,7 +573,7 @@ HB_FUNC( WVW_DRAWTEXTBOX )
    POINT      xy = { 0 };
    int        iTop, iLeft, iBottom, iRight;
 
-   int iAlignHorz = ( HB_ISNIL( 8 ) ? 0 : hb_parni( 8 ) );
+   int iAlignHorz = HB_ISNIL( 8 ) ? 0 : hb_parni( 8 ) ;
 
    int iAlignH = 0;
 
@@ -1224,9 +1224,9 @@ HB_FUNC( WVW_DRAWIMAGE )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   BOOL bTight       = ( HB_ISARRAY( 7 ) || HB_ISNIL( 7 ) ? FALSE : hb_parl( 7 ) );
+   BOOL bTight       = HB_ISARRAY( 7 ) || HB_ISNIL( 7 ) ? FALSE : hb_parl( 7 );
    BOOL bUseArray    = HB_ISARRAY( 7 );
-   BOOL bTransparent = ( HB_ISNIL( 8 ) ? FALSE : hb_parl( 8 ) );
+   BOOL bTransparent = HB_ISNIL( 8 ) ? FALSE : hb_parl( 8 );
    int  iOLeft, iOTop, iORight, iOBottom;
    BOOL bResult;
 
@@ -1354,9 +1354,9 @@ HB_FUNC( WVW_DRAWIMAGE_RESOURCE )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   BOOL       bTight       = ( HB_ISARRAY( 7 ) || HB_ISNIL( 7 ) ? FALSE : hb_parl( 7 ) );
+   BOOL       bTight       = HB_ISARRAY( 7 ) || HB_ISNIL( 7 ) ? FALSE : hb_parl( 7 );
    BOOL       bUseArray    = HB_ISARRAY( 7 );
-   BOOL       bTransparent = ( HB_ISNIL( 8 ) ? FALSE : hb_parl( 8 ) );
+   BOOL       bTransparent = HB_ISNIL( 8 ) ? FALSE : hb_parl( 8 );
    int        iOLeft, iOTop, iORight, iOBottom;
    BOOL       bResult = FALSE;
    IPicture * pPic;
@@ -1483,19 +1483,19 @@ HB_FUNC( WVW_DRAWLABEL )
    if( hb_gt_wvw_GetMainCoordMode() )
       hb_wvw_HBFUNCPrologue( usWinNum, &usRow, &usCol, NULL, NULL );
 
-   logfont.lfEscapement     = ( HB_ISNIL(  6 ) ? 0 : ( hb_parni( 6 ) * 10 ) );
+   logfont.lfEscapement     = HB_ISNIL(  6 ) ? 0 : ( hb_parni( 6 ) * 10 );
    logfont.lfOrientation    = 0;
-   logfont.lfWeight         = ( HB_ISNIL( 12 ) ? 0 : hb_parni( 12 ) );
-   logfont.lfItalic         = ( HB_ISNIL( 15 ) ? 0 : ( BYTE ) hb_parl( 15 ) );
-   logfont.lfUnderline      = ( HB_ISNIL( 16 ) ? 0 : ( BYTE ) hb_parl( 16 ) );
-   logfont.lfStrikeOut      = ( HB_ISNIL( 17 ) ? 0 : ( BYTE ) hb_parl( 17 ) );
-   logfont.lfCharSet        = ( HB_ISNIL( 14 ) ? ( BYTE ) pWindowData->CodePage : ( BYTE ) hb_parni( 14 ) );
+   logfont.lfWeight         = HB_ISNIL( 12 ) ? 0 : hb_parni( 12 );
+   logfont.lfItalic         = HB_ISNIL( 15 ) ? 0 : ( BYTE ) hb_parl( 15 );
+   logfont.lfUnderline      = HB_ISNIL( 16 ) ? 0 : ( BYTE ) hb_parl( 16 );
+   logfont.lfStrikeOut      = HB_ISNIL( 17 ) ? 0 : ( BYTE ) hb_parl( 17 );
+   logfont.lfCharSet        = HB_ISNIL( 14 ) ? ( BYTE ) pWindowData->CodePage : ( BYTE ) hb_parni( 14 );
    logfont.lfOutPrecision   = 0;
    logfont.lfClipPrecision  = 0;
-   logfont.lfQuality        = ( HB_ISNIL( 13 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 13 ) );
+   logfont.lfQuality        = HB_ISNIL( 13 ) ? DEFAULT_QUALITY : ( BYTE ) hb_parni( 13 );
    logfont.lfPitchAndFamily = FF_DONTCARE;
-   logfont.lfHeight         = ( HB_ISNIL( 10 ) ? pWindowData->fontHeight : hb_parni( 10 ) );
-   logfont.lfWidth = ( HB_ISNIL( 11 ) ? ( pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth )  : hb_parni( 11 ) );
+   logfont.lfHeight         = HB_ISNIL( 10 ) ? pWindowData->fontHeight : hb_parni( 10 );
+   logfont.lfWidth = HB_ISNIL( 11 ) ? ( pWindowData->fontWidth < 0 ? -pWindowData->fontWidth : pWindowData->fontWidth ) : hb_parni( 11 );
 
    strcpy( logfont.lfFaceName, ( HB_ISNIL( 9 ) ? pWindowData->fontFace : hb_parcx( 9 ) ) );
 
@@ -1808,7 +1808,7 @@ HB_FUNC( WVW_DRAWRECTANGLE )
               usBottom = ( USHORT ) hb_parni( 4 ),
               usRight  = ( USHORT ) hb_parni( 5 );
    // Ref.: 28454 - Marson de Paula - 11/27/2007
-   BOOL bUsaCurrentPen = ( HB_ISNIL( 7 ) ? TRUE : hb_parl( 7 ) );
+   BOOL bUsaCurrentPen = HB_ISNIL( 7 ) ? TRUE : hb_parl( 7 );
 
    iOffTop    = ! HB_ISNIL( 6 ) ? hb_parvni( 6, 1 ) : 0;
    iOffLeft   = ! HB_ISNIL( 6 ) ? hb_parvni( 6, 2 ) : 0;
@@ -2362,7 +2362,7 @@ HB_FUNC( WVW_DRAWPICTURE )
           usBottom = ( USHORT ) hb_parni( 4 ),
           usRight  = ( USHORT ) hb_parni( 5 );
 
-   BOOL bTight    = ( HB_ISARRAY( 7 ) || HB_ISNIL( 7 ) ? FALSE : hb_parl( 7 ) );          /* <-- none in gtwvt */
+   BOOL bTight    = HB_ISARRAY( 7 ) || HB_ISNIL( 7 ) ? FALSE : hb_parl( 7 );
    BOOL bUseArray = HB_ISARRAY( 7 );
    int  iOLeft, iOTop, iORight, iOBottom;
 

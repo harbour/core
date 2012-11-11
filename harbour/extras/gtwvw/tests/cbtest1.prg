@@ -41,13 +41,15 @@ PROCEDURE Main()
 #endif
 
    SetColor( "N/W" )
-   WVW_SetTitle( NIL, "Quick Survey" )
-   WVW_NoClose( NIL )
-   WVW_SetAltF4Close( .F. )
-   WVW_SetLineSpacing( NIL, 4 )
-// WVW_SetLSpaceColor( NIL, 7 )
-   WVW_cbSetFont( NIL, "Arial", 16 )
-   WVW_pbSetFont( NIL, "Arial", 16 )
+   wvw_SetTitle( NIL, "Quick Survey" )
+   wvw_NoClose( NIL )
+   wvw_SetAltF4Close( .F. )
+   wvw_SetLineSpacing( NIL, 4 )
+#if 0
+   wvw_SetLSpaceColor( NIL, 7 )
+#endif
+   wvw_cbSetFont( NIL, "Arial", 16 )
+   wvw_pbSetFont( NIL, "Arial", 16 )
 
    nMaxWidth := 0
    AEval( s_aAnswers, {| x | nMaxWIdth := Max( nMaxWidth, Len( x ) ) } )

@@ -19,8 +19,6 @@ STATIC s_lSizeReady := .F.
 
 PROCEDURE Main()
 
-   LOCAL ch
-
 #if defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
    hbshell_gtSelect( "GTWVW" )
 #endif
@@ -30,16 +28,16 @@ PROCEDURE Main()
 
    // the biggest possible window
    SetColor( "N/W" )
-   SetMode( wvw_maxmaxrow() + 1, wvw_maxmaxcol() + 1 )
+   SetMode( wvw_MaxMaxRow() + 1, wvw_MaxMaxCol() + 1 )
 
    // enable MAXIMIZE button
-   wvw_enablemaximize( 0, .T. )
+   wvw_EnableMaximize( 0, .T. )
 
    // set the window to MAXIMIZED state
-   wvw_maximize( 0 )
+   wvw_Maximize( 0 )
 
    updatescr()
-   DO WHILE ( ch := Inkey( 0 ) ) != K_ESC
+   DO WHILE Inkey( 0 ) != K_ESC
       // refresh screen, probably in a new dimension
       // (You may alternatively call updatescr() from WVW_SIZE instead)
       updatescr()
@@ -66,7 +64,9 @@ PROCEDURE updatescr()
    NEXT
    FOR i := 0 TO MaxCol()
       @ MaxRow(), i SAY "B"
-//    @ Maxrow() - 1, i SAY Right( Transform( i, "999" ), 1 )
+#if 0
+      @ MaxRow() - 1, i SAY Right( Transform( i, "999" ), 1 )
+#endif
    NEXT
    FOR i := 0 TO MaxRow()
       @ i, MaxCol() SAY "R"
@@ -84,8 +84,12 @@ PROCEDURE updatescr()
 FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
 
    LOCAL cScreen
-   LOCAL lNeedReset := .F., ;
-      maxsavedscrrow, maxsavedscrcol
+   LOCAL lNeedReset
+   LOCAL maxsavedscrrow, maxsavedscrcol
+
+   HB_SYMBOL_UNUSED( message )
+   HB_SYMBOL_UNUSED( hWnd )
+   HB_SYMBOL_UNUSED( lParam )
 
    IF ! s_lSizeReady
       // program is not ready to handle window resizing
@@ -104,14 +108,14 @@ FUNCTION WVW_SIZE( nWinNum, hWnd, message, wParam, lParam )
    CASE wParam == 2 // SIZE_MAXIMIZED
       // Alert( "MAXIMIZE" )
       // reset is required only if we are changing size
-      lNeedReset := MaxCol() != wvw_maxmaxcol();
-         .OR. MaxRow() != wvw_maxmaxrow()
+      lNeedReset := MaxCol() != wvw_MaxMaxCol();
+         .OR. MaxRow() != wvw_MaxMaxRow()
 
       IF lNeedReset
-         maxsavedscrrow := Min( Min( s_nNormalMaxrow, wvw_maxmaxrow() ), MaxRow() )
-         maxsavedscrcol := Min( Min( s_nNormalMaxcol, wvw_maxmaxcol() ), MaxCol() )
+         maxsavedscrrow := Min( Min( s_nNormalMaxrow, wvw_MaxMaxRow() ), MaxRow() )
+         maxsavedscrcol := Min( Min( s_nNormalMaxcol, wvw_MaxMaxCol() ), MaxCol() )
          cScreen := SaveScreen( 0, 0, maxsavedscrrow, maxsavedscrcol )
-         IF SetMode( wvw_maxmaxrow() + 1, wvw_maxmaxcol() + 1 ) // adjust maxrow() & maxcol()
+         IF SetMode( wvw_MaxMaxRow() + 1, wvw_MaxMaxCol() + 1 ) // adjust maxrow() & maxcol()
             RestScreen( 0, 0, maxsavedscrrow, maxsavedscrcol, cScreen )
          ENDIF
          diminfo()  // updatescr()

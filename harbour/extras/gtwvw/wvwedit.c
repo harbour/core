@@ -136,7 +136,7 @@ HB_FUNC( WVW_EBCREATE )
               usRight  = ( USHORT ) hb_parni( 5 );
    LPTSTR lpszText     = ( LPTSTR ) hb_parcx( 6 );
 
-   BOOL bMultiline = ( HB_ISLOG( 8 ) ? hb_parl( 8 ) : FALSE );
+   BOOL bMultiline = HB_ISLOG( 8 ) ? hb_parl( 8 ) : FALSE;
    BYTE bEBType    = ( BYTE ) ( bMultiline ? WVW_EB_MULTILINE : WVW_EB_SINGLELINE );
 
    DWORD dwMoreStyle = ( DWORD ) ( HB_ISNUM( 9 ) ? hb_parnl( 9 ) : 0 );
@@ -522,7 +522,7 @@ HB_FUNC( WVW_EBGETTEXT )
    UINT usWinNum         = WVW_WHICH_WINDOW;
    UINT uiEBid           = hb_parni( 2 );
    CONTROL_DATA * pcd    = GetControlData( usWinNum, WVW_CONTROL_EDITBOX, NULL, uiEBid );
-   BOOL       bSoftBreak = ( HB_ISLOG( 3 ) ? hb_parl( 3 ) : FALSE );
+   BOOL       bSoftBreak = HB_ISLOG( 3 ) ? hb_parl( 3 ) : FALSE;
    USHORT     usLen;
    WIN_DATA * pWindowData = hb_gt_wvw_GetWindowsData( usWinNum );
    LPTSTR     lpszTextANSI;
