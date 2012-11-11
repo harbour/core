@@ -3346,7 +3346,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       OTHERWISE
 
-         cParam := PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] )
+         cParam := PathMakeAbsolute( PathSepToSelf( MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] ) ), aParam[ _PAR_cFileName ] )
          IF Empty( hb_FNameExt( cParam ) )
             cParam := hb_FNameExtSet( cParam, ".prg" )
          ELSEIF hb_FNameExt( cParamL ) == ".hbx"

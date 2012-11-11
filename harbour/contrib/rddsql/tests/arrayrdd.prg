@@ -8,6 +8,13 @@ REQUEST SQLMIX
 
 PROCEDURE Main()
 
+   CLS
+
+#if defined( __HBSCRIPT__HBSHELL )
+   rddRegister( "SQLBASE" )
+   rddRegister( "SQLMIX" )
+#endif
+
    rddSetDefault( "SQLMIX" )
    dbCreate( "persons", { { "NAME", "C", 20, 0 }, { "FAMILYNAME", "C", 20, 0 }, { "BIRTH", "D", 8, 0 }, { "AMOUNT", "N", 9, 2 } }, , .T., "persons" )
 

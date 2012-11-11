@@ -5,7 +5,7 @@
 -hblib
 -inc
 
--o${hb_targetname}
+-o${hb_name}
 
 -w3 -es2
 
