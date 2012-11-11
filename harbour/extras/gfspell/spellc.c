@@ -11,13 +11,13 @@
 static const char * s_cSearch = "INEDTIERESTEON";
 static const char * s_cRepl   = "[\\]^_`a";
 
-/***************************
+/*
  *   Function: xForm()
  *    Purpose: Internal function to translate words to dictionary
  *  Arguments: cWord  - upper case word to format
  *    Returns: cXformed - translated word
  *
- * Notes:   I'm assuming that the passed word won't exceed 128 bytes.
+ *      Notes: I'm assuming that the passed word won't exceed 128 bytes.
  **************************/
 HB_FUNC( XFORM )
 {
@@ -73,13 +73,13 @@ HB_FUNC( XFORM )
 }
 
 
-/***************************
+/*
  *   Function: xUnForm()
  *    Purpose: Internal function to translate words from dictionary
  *  Arguments: cWord  - formatted word
  *    Returns: cXformed - unformatted word
  *
- * Notes:   I'm assuming that the returned word won't exceed 128 bytes.
+ *      Notes: I'm assuming that the returned word won't exceed 128 bytes.
  **************************/
 HB_FUNC( XUNFORM )
 {
@@ -130,24 +130,24 @@ HB_FUNC( XUNFORM )
 
 
 /***************************
- *    Function:  SP_Rate()
- * Syntax:  cRating := SP_Rate(cFound,cWord)
- *     Purpose:  Returns a letter code indicating how similar the two
- *     words are.  This is primarily used to sort the list
- *     of suggested words.
- *   Arguments:  cFound   - Word from dictionary
- *     cWord     - Word to compare with dictionary word
- *     Returns:  cRating  - Letter A-I or Z
- *    Category:  INTERNAL
- *   Called by:  SP_SUGGEST()
- *  Notes:  SP_Rate() assigns a rating based upon how likely the
- *     word matches the dictionary word.  It compares the
- *     first 5 letters of the boths word, then the last 5,
- *     down to 2 letters.  This results in a rating from A-H.
- *     If none of these matched, then the function will return
- *     either an I if the words are the same length, or a Z.
+ *   Function: Sp_Rate()
+ *     Syntax: cRating := Sp_Rate( cFound, cWord )
+ *    Purpose: Returns a letter code indicating how similar the two
+ *             words are.  This is primarily used to sort the list
+ *             of suggested words.
+ *  Arguments: cFound   - Word from dictionary
+ *             cWord    - Word to compare with dictionary word
+ *    Returns: cRating  - Letter A-I or Z
+ *   Category: INTERNAL
+ *  Called by: Sp_Suggest()
+ *      Notes: SP_Rate() assigns a rating based upon how likely the
+ *             word matches the dictionary word.  It compares the
+ *             first 5 letters of the boths word, then the last 5,
+ *             down to 2 letters.  This results in a rating from A-H.
+ *             If none of these matched, then the function will return
+ *             either an I if the words are the same length, or a Z.
  *
- *     C Notes:  I'm assuming the words passed are already trimmed.
+ *    C Notes: I'm assuming the words passed are already trimmed.
  **************************/
 HB_FUNC( SP_RATE )
 {
@@ -184,23 +184,14 @@ HB_FUNC( SP_RATE )
    hb_retclen( cRating, 3 );
 }
 
-
-/** End of Spell **/
-
-/** Start of Metaphone **/
-
+/** Start of C_MetaFone() **/
 
 /*
- * Program Name: test.c
  * Author: Clayton Neff
  * Copyright (c) 1992 by CoN Computer Consultants
- * -----------------------------------------------------------------------------
- * Created: 8/23/1992 at 16:47
  *
- * .............................................................................
  * Revision: 1.0 Last Revised: 8/23/1992 at 16:47
  * Description: Original Creation.
- * .............................................................................
  *---------------------------- ALL RIGHTS RESERVED ----------------------------*/
 
 /*
@@ -246,7 +237,6 @@ HB_FUNC( C_METAFONE )
    /* Handle the special prefixes. */
    switch( sMeta[ iStrPtr ] )
    {
-
       /* Since "KN" and "PN" both translate into 'N', we just stack their
          case statements with no break, and they will all execute the same
          block of code.  We cannot place "GN" here because we must test
@@ -562,7 +552,6 @@ HB_FUNC( C_METAFONE )
             if( sMeta[ iStrPtr + 1 ] == sMeta[ iStrPtr ] )
                iStrPtr++;
 
-
             /* SCH -> SK */
             if( sMeta[ iStrPtr + 1 ] == 'C' &&
                 sMeta[ iStrPtr + 2 ] == 'H' )
@@ -592,9 +581,7 @@ HB_FUNC( C_METAFONE )
                }
                /* If not one of those three, just copy it over. */
                else
-               {
                   sReturn[ iRetPtr++ ] = sMeta[ iStrPtr++ ];
-               }
             }
             /* Just copy the letter over. */
             else
@@ -784,26 +771,16 @@ HB_FUNC( C_METAFONE )
    /* We're all finished now, so let's return control to Clipper. */
 }
 
+/** Start of bit() **/
 
-/** End of Metaphone **/
-
-
-/** Start of Bit **/
-
-
-/*******************************************************************************
- *    Version: 1.00
- ********************************************************************************
+/*
+ *  Purpose: Sets the given bit in a passed bit string.  Returns the previous
+ *           value.  Be sure to pass the string by reference.  NOTE.  In order
+ *           to stay as fast as possible, minimal parameter checking is
+ *           performed.  It is up to the user to not be too stupid.
  *
- * Purpose: Sets the given bit in a passed bit string.  Returns the previous
- *     value.  Be sure to pass the string by reference.  NOTE.  In order
- *     to stay as fast as possible, minimal parameter checking is
- *     performed.  It is up to the user to not be too stupid.
- *
- * Syntax:  bit( @<OptC String>, <OptN (1...n) Offset> [, <OptL Set/Clear>] )
- *
- ********************************************************************************/
-
+ *   Syntax: bit( @<OptC String>, <OptN (1...n) Offset> [, <OptL Set/Clear>] )
+ **************************/
 HB_FUNC( BIT )
 {
    HB_UCHAR mask;
@@ -833,37 +810,31 @@ HB_FUNC( BIT )
    hb_retl( res );
 }
 
-
-/** End of Bit **/
-
-/** Start of SP_LINE **/
-
+/** Start of Sp_Line() **/
 
 static HB_BOOL WordSep( HB_UCHAR c )
 {
-   return c <= ' '
-          || ( c != 39 && ( c > ' ' && c < '0' ) )
-          || ( c > '9' && c < 'A' )
-          || ( c > 'Z' && c < 'a' )
-          || ( c > 'z' && c < 128 ); /* Support international characters, too. */
+   return c <= ' ' ||
+          ( c != 39 && ( c > ' ' && c < '0' ) ) ||
+          ( c > '9' && c < 'A' ) ||
+          ( c > 'Z' && c < 'a' ) ||
+          ( c > 'z' && c < 128 ); /* Support international characters, too. */
 }
 
-/*-----------------01-20-94 07:51pm-----------------
-
-   Author: John F. Kaster
-   Notes: Copyright (c) 1994 by John F. Kaster and Joseph D. Booth
-        Written for Grumpfish Speller to make it way faster than Prolixity.
-
-   Syntax: sp_line( <cText>, @<nOffset>, <nLineLen> ) -> cLine
-
-   Arguments:
-   <cText>  Text from which to retrieve a wrapped line
-   <nOffset>   Offset (usually passed by reference) for start of wrapped line.
-               Will be set to 0 when the end of the string is encountered.
-               Defaults to start of string.
-   <nLineLen>  Maximum wrap length for line.  Defaults to 75.
-
-   --------------------------------------------------*/
+/*
+ *  Author: John F. Kaster
+ *   Notes: Copyright (c) 1994 by John F. Kaster and Joseph D. Booth
+ *          Written for Grumpfish Speller to make it way faster than Prolixity.
+ *
+ *  Syntax: Sp_Line( <cText>, @<nOffset>, <nLineLen> ) -> cLine
+ *
+ *  Arguments:
+ *  <cText>     Text from which to retrieve a wrapped line
+ *  <nOffset>   Offset (usually passed by reference) for start of wrapped line.
+ *              Will be set to 0 when the end of the string is encountered.
+ *              Defaults to start of string.
+ *  <nLineLen>  Maximum wrap length for line.  Defaults to 75.
+ **************************/
 HB_FUNC( SP_LINE )
 {
    int          nArgs      = hb_pcount();
