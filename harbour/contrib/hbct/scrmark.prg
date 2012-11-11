@@ -86,10 +86,12 @@ FUNCTION ScreenMark( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
    ENDIF
 
    DO WHILE ( nAt := AtNum( cSearch, cScreen, nCount ) ) != 0
+
       IF ( nAt == 1 .OR. cForward == NIL .OR. ;
-            SubStr( cScreen, nAt, 1 ) $ cForward ) .AND. ;
-            ( nAt == nLast .OR. cTrailing == NIL .OR. ;
-            SubStr( cScreen, nAt + nLen ) $ cTrailing )
+           SubStr( cScreen, nAt, 1 ) $ cForward ) .AND. ;
+         ( nAt == nLast .OR. cTrailing == NIL .OR. ;
+           SubStr( cScreen, nAt + nLen ) $ cTrailing )
+
          lFound := .T.
          --nAt
          nRow := Int( nAt / nCols )

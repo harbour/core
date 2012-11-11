@@ -407,7 +407,7 @@ DYNAMIC XToC
 DYNAMIC ZeroInsert
 DYNAMIC ZeroRemove
 DYNAMIC _WStack
-DYNAMIC __hbct_DSPTime
+DYNAMIC __hbct_DspTime
 DYNAMIC __hbct_key_c_to_n
 DYNAMIC __hbct_key_n_to_c
 

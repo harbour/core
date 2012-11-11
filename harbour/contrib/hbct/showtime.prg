@@ -7,7 +7,6 @@
  *   CT3 time function: SHOWTIME()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
- *
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -59,7 +58,7 @@ FUNCTION ShowTime( nRow, nCol, lNoSec, cColor, l12, lAmPm )
       IF t_hTimer != NIL
          hb_idleDel( t_hTimer )
       ENDIF
-      t_hTimer := hb_idleAdd( {|| __HBCT_DSPTIME( nRow, nCol, lNoSec, cColor, ;
+      t_hTimer := hb_idleAdd( {|| __hbct_DspTime( nRow, nCol, lNoSec, cColor, ;
          l12, lAmPm ) } )
    ELSEIF t_hTimer != NIL
       hb_idleDel( t_hTimer )
