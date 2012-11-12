@@ -56,39 +56,39 @@
 #define TP_MAXPORTS  8
 
 /* Error code definitions */
-#define TE_PARAM           ( -1 )       /* Bad parameter */
-#define TE_NOPORT          ( -2 )       /* No such port */
-#define TE_CLOSED          ( -3 )       /* Port not open */
-#define TE_CONFL           ( -4 )       /* IRQ conflict */
-#define TE_TMOUT           ( -5 )       /* Timeout */
-#define TE_NDCD            ( -6 )       /* Lost DCD */
-#define TE_ESCAPE          ( -7 )       /* User escape */
-#define TE_LENGTH          ( -8 )       /* Length limit */
-#define TE_CANCEL          ( -9 )       /* Input canceled */
-#define TE_NOHDL           ( -10 )      /* Out of handles */
+#define TE_PARAM           -1           /* Bad parameter */
+#define TE_NOPORT          -2           /* No such port */
+#define TE_CLOSED          -3           /* Port not open */
+#define TE_CONFL           -4           /* IRQ conflict */
+#define TE_TMOUT           -5           /* Timeout */
+#define TE_NDCD            -6           /* Lost DCD */
+#define TE_ESCAPE          -7           /* User escape */
+#define TE_LENGTH          -8           /* Length limit */
+#define TE_CANCEL          -9           /* Input canceled */
+#define TE_NOHDL           -10          /* Out of handles */
 
-#define TE_UCANCEL         ( -50 )      /* Canceled by user */
-#define TE_RCANCEL         ( -51 )      /* Canceled by remote */
-#define TE_STARTTM         ( -52 )      /* Timeout waiting to start */
-#define TE_BLOCKTM         ( -53 )      /* Timeout waiting for block */
-#define TE_ACKTM           ( -54 )      /* Timeout waiting for acknowledge */
-#define TE_SENDTM          ( -55 )      /* Timeout waiting to send */
-#define TE_CLEARTM         ( -56 )      /* Timeout waiting for sender to stop */
-#define TE_NAK             ( -57 )      /* Negative acknowledge */
-#define TE_BADACK          ( -58 )      /* Bad acknowledge character */
-#define TE_BADBLK          ( -59 )      /* Bad block format */
-#define TE_LONGBLK         ( -60 )      /* Long block received */
-#define TE_ERRMAX          ( -61 )      /* Too many errors */
-#define TE_DUPBLK          ( -62 )      /* Duplicate block */
-#define TE_PROTO           ( -63 )      /* Protocol failure */
-#define TE_CKSUM           ( -64 )      /* Checksum error */
-#define TE_HDRTM           ( -65 )      /* Timeout waiting for Zmodem header */
+#define TE_UCANCEL         -50          /* Canceled by user */
+#define TE_RCANCEL         -51          /* Canceled by remote */
+#define TE_STARTTM         -52          /* Timeout waiting to start */
+#define TE_BLOCKTM         -53          /* Timeout waiting for block */
+#define TE_ACKTM           -54          /* Timeout waiting for acknowledge */
+#define TE_SENDTM          -55          /* Timeout waiting to send */
+#define TE_CLEARTM         -56          /* Timeout waiting for sender to stop */
+#define TE_NAK             -57          /* Negative acknowledge */
+#define TE_BADACK          -58          /* Bad acknowledge character */
+#define TE_BADBLK          -59          /* Bad block format */
+#define TE_LONGBLK         -60          /* Long block received */
+#define TE_ERRMAX          -61          /* Too many errors */
+#define TE_DUPBLK          -62          /* Duplicate block */
+#define TE_PROTO           -63          /* Protocol failure */
+#define TE_CKSUM           -64          /* Checksum error */
+#define TE_HDRTM           -65          /* Timeout waiting for Zmodem header */
 
-#define TE_DISKFULL        ( -100 )     /* Disk full */
-#define TE_NOFILE          ( -102 )     /* File not found */
-#define TE_NOPATH          ( -103 )     /* Path not found */
-#define TE_MFILE           ( -104 )     /* Too many open files */
-#define TE_ACCESS          ( -105 )     /* Access denied */
+#define TE_DISKFULL        -100         /* Disk full */
+#define TE_NOFILE          -102         /* File not found */
+#define TE_NOPATH          -103         /* Path not found */
+#define TE_MFILE           -104         /* Too many open files */
+#define TE_ACCESS          -105         /* Access denied */
 
 /* File transfer status */
 #define TXS_START          1            /* Start of transfer */

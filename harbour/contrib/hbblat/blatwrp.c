@@ -56,15 +56,9 @@
 /* NOTE: We're not using the original blat headers, because they
          contain C++ parts, which we don't need anyway. */
 
-/*-*/
-
 HB_EXTERN_BEGIN
-
 extern int cSend( const char * szCmd );
-
 HB_EXTERN_END
-
-/*-*/
 
 HB_FUNC( HB_BLATSEND )
 {
@@ -73,5 +67,3 @@ HB_FUNC( HB_BLATSEND )
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
-
-/*-*/

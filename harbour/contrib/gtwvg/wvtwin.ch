@@ -758,7 +758,7 @@
 /*
  * Combo Box Notification Codes
  */
-#define CBN_ERRSPACE                              ( -1 )
+#define CBN_ERRSPACE                              -1
 #define CBN_SELCHANGE                             1
 #define CBN_DBLCLK                                2
 #define CBN_SETFOCUS                              3
@@ -816,8 +816,8 @@
  * Combo Box return Values
  */
 #define CB_OKAY                                   0
-#define CB_ERR                                    ( -1 )
-#define CB_ERRSPACE                               ( -2 )
+#define CB_ERR                                    -1
+#define CB_ERRSPACE                               -2
 
 /*
  * Static Control Constants
@@ -934,7 +934,7 @@
 /*
  * Listbox Notification Codes
  */
-#define LBN_ERRSPACE                              ( -2 )
+#define LBN_ERRSPACE                              -2
 #define LBN_SELCHANGE                             1
 #define LBN_DBLCLK                                2
 #define LBN_SELCANCEL                             3
@@ -1168,13 +1168,13 @@
 /*
  * Window field offsets for GetWindowLong()
  */
-#define GWL_WNDPROC                               ( -4 )
-#define GWL_HINSTANCE                             ( -6 )
-#define GWL_HWNDPARENT                            ( -8 )
-#define GWL_STYLE                                 ( -16 )
-#define GWL_EXSTYLE                               ( -20 )
-#define GWL_USERDATA                              ( -21 )
-#define GWL_ID                                    ( -12 )
+#define GWL_WNDPROC                               -4
+#define GWL_HINSTANCE                             -6
+#define GWL_HWNDPARENT                            -8
+#define GWL_STYLE                                 -16
+#define GWL_EXSTYLE                               -20
+#define GWL_USERDATA                              -21
+#define GWL_ID                                    -12
 
 #define DWL_MSGRESULT                             0
 #define DWL_DLGPROC                               4
@@ -1410,7 +1410,7 @@
 #define TB_SETDRAWTEXTFLAGS                       ( WM_USER + 70 )
 #define TB_GETSTRING                              ( WM_USER + 92 )
 
-#define TBN_FIRST                                 ( -700 )
+#define TBN_FIRST                                 -700
 #define TBN_GETBUTTONINFOA                        ( TBN_FIRST - 0 )
 #define TBN_BEGINDRAG                             ( TBN_FIRST - 1 )
 #define TBN_ENDDRAG                               ( TBN_FIRST - 2 )
@@ -1674,7 +1674,7 @@
 #define TVIS_STATEIMAGEMASK                       61440
 #define TVIS_USERMASK                             61440
 
-#define I_CHILDRENCALLBACK                        ( -1 )
+#define I_CHILDRENCALLBACK                        -1
 
 #define LPTV_ITEMW                                LPTVITEMW
 #define LPTV_ITEMA                                LPTVITEMA
@@ -1687,10 +1687,10 @@
 #define TVITEM                                    TVITEMW
 #define LPTVITEM                                  LPTVITEMW
 
-#define TVI_ROOT                                  ( -0x10000 )
-#define TVI_FIRST                                 ( -0x0FFFF )
-#define TVI_LAST                                  ( -0x0FFFE )
-#define TVI_SORT                                  ( -0x0FFFD )
+#define TVI_ROOT                                  -0x10000
+#define TVI_FIRST                                 -0x0FFFF
+#define TVI_LAST                                  -0x0FFFE
+#define TVI_SORT                                  -0x0FFFD
 
 #define LPTV_INSERTSTRUCTA                        LPTVINSERTSTRUCTA
 #define LPTV_INSERTSTRUCTW                        LPTVINSERTSTRUCTW
@@ -1988,12 +1988,12 @@
 
 /*-*/
 
-#define CW_USEDEFAULT                             ( 0x80000000 )
+#define CW_USEDEFAULT                             0x80000000
 
-#define HWND_TOP                                  ( 0 )
-#define HWND_BOTTOM                               ( 1 )
-#define HWND_TOPMOST                              ( -1 )
-#define HWND_NOTOPMOST                            ( -2 )
+#define HWND_TOP                                  0
+#define HWND_BOTTOM                               1
+#define HWND_TOPMOST                              -1
+#define HWND_NOTOPMOST                            -2
 
 #define SWP_NOSIZE                                0x0001
 #define SWP_NOMOVE                                0x0002

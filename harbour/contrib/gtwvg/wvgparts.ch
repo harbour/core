@@ -56,18 +56,18 @@
 
 /*-*/
 
-#define DA_MODE                                    1  /* Experimental */
+#define DA_MODE                                   1  /* Experimental */
 
-#define objTypeNone                                0
-#define objTypeCrt                                 1
-#define objTypeWindow                              2
-#define objTypeActiveX                             3
-#define objTypeDialog                              4
-#define objTypeToolBar                             5
-#define objTypeToolBarButton                       6
-#define objTypeMenu                                7
-#define objTypeStatusBar                           8
-#define objTypePushButton                          9
+#define objTypeNone                               0
+#define objTypeCrt                                1
+#define objTypeWindow                             2
+#define objTypeActiveX                            3
+#define objTypeDialog                             4
+#define objTypeToolBar                            5
+#define objTypeToolBarButton                      6
+#define objTypeMenu                               7
+#define objTypeStatusBar                          8
+#define objTypePushButton                         9
 #define objTypeComboBox                           10
 #define objTypeListBox                            11
 #define objTypeStatic                             12

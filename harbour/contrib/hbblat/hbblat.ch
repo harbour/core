@@ -51,43 +51,38 @@
  */
 
 /*
-Code Description
+  Code Description
 
-2    The server actively denied our connection.
-     The mail server doesn't like the sender name.
+  2    The server actively denied our connection.
+       The mail server doesn't like the sender name.
 
-1    Unable to open SMTP socket
-     SMTP get line did not return 220
-     command unable to write to socket
-     Server does not like To: address
-     Mail server error accepting message data.
+  1    Unable to open SMTP socket
+       SMTP get line did not return 220
+       command unable to write to socket
+       Server does not like To: address
+       Mail server error accepting message data.
 
-0    OK
-1    File name (message text) not given
-1    Bad argument given
-2    File (message text) does not exist
-3    Error reading the file (message text) or attached file
-4    File (message text) not of type FILE_TYPE_DISK
-5    Error Reading File (message text)
+  0    OK
+  1    File name (message text) not given
+  1    Bad argument given
+  2    File (message text) does not exist
+  3    Error reading the file (message text) or attached file
+  4    File (message text) not of type FILE_TYPE_DISK
+  5    Error Reading File (message text)
 
-12   -server or -f options not specified and not found in registry
-13   Error opening temporary file in temp directory
-
+  12   -server or -f options not specified and not found in registry
+  13   Error opening temporary file in temp directory
 */
-
 
 #ifndef _HBBLAT_CH
 #define _HBBLAT_CH
 
+/* Numeric Errors */
 
-/*
-  Numeric Errors
-*/
+#define BLAT_ERR_UNKNONW                               -1
 
-#define BLAT_ERR_UNKNONW                               ( -1 )
-
-#define BLAT_SUCCESS                                      0
-#define BLAT_ERR_MESSAGE_NOT_ACCEPTED                     1
+#define BLAT_SUCCESS                                   0
+#define BLAT_ERR_MESSAGE_NOT_ACCEPTED                  1
 
 #define BLAT_ERR_MISSING_FROM                          1000
 #define BLAT_ERR_MISSING_TO                            1001
@@ -110,9 +105,7 @@ Code Description
 #define BLAT_ERR_LOGICAL_EXPECTED                      2000
 #define BLAT_ERR_STRING_EXPECTED                       2001
 
-/*
-  Text Errors
-*/
+/* Text Errors */
 
 #define BLAT_TEXT_ERROR                                "Blat Error"
 
@@ -142,36 +135,30 @@ Code Description
 #define BLAT_TEXT_ERR_LOGICAL_EXPECTED                 "Logical var expected"
 #define BLAT_TEXT_ERR_STRING_EXPECTED                  "String var expected"
 
+/* Blat Errors */
 
-/*
-  BLAT ERRORS
-*/
+#define BLAT_ERR_CANT_MALLOC                           4001  // "Malloc failed (possibly out of memory)."
+#define BLAT_ERR_SENDING_DATA                          4002  // "Error sending data."
+#define BLAT_ERR_INITIALIZING                          4003  // "Error initializing gensock.dll."
+#define BLAT_ERR_VER_NOT_SUPPORTED                     4004  // "Version not supported."
+#define BLAT_ERR_EINVAL                                4005  // "The winsock version specified by gensock is not supported by this winsock.dll."
+#define BLAT_ERR_SYS_NOT_READY                         4006  // "Network not ready."
+#define BLAT_ERR_CANT_RESOLVE_HOSTNAME                 4007  // "Can't resolve (mailserver) hostname."
+#define BLAT_ERR_CANT_GET_SOCKET                       4008  // "Can't create a socket (too many simultaneous links?)"
+#define BLAT_ERR_READING_SOCKET                        4009  // "Error reading socket."
+#define BLAT_ERR_NOT_A_SOCKET                          4010  // "Not a socket."
+#define BLAT_ERR_BUSY                                  4011  // "Busy."
+#define BLAT_ERR_CLOSING                               4012  // "Error closing socket."
+#define BLAT_WAIT_A_BIT                                4013  // "Wait a bit (possible timeout)."
+#define BLAT_ERR_CANT_RESOLVE_SERVICE                  4014  // "Can't resolve service."
+#define BLAT_ERR_CANT_CONNECT                          4015  // "Can't connect to mailserver (timed out if winsock.dll error 10060)"
+#define BLAT_ERR_NOT_CONNECTED                         4016  // "Connection to mailserver was dropped."
+#define BLAT_ERR_CONNECTION_REFUSED                    4017  // "Mail server refused connection."
 
-#define BLAT_ERR_CANT_MALLOC                 4001  // "Malloc failed (possibly out of memory)."
-#define BLAT_ERR_SENDING_DATA                4002  // "Error sending data."
-#define BLAT_ERR_INITIALIZING                4003  // "Error initializing gensock.dll."
-#define BLAT_ERR_VER_NOT_SUPPORTED           4004  // "Version not supported."
-#define BLAT_ERR_EINVAL                      4005  // "The winsock version specified by gensock is not supported by this winsock.dll."
-#define BLAT_ERR_SYS_NOT_READY               4006  // "Network not ready."
-#define BLAT_ERR_CANT_RESOLVE_HOSTNAME       4007  // "Can't resolve (mailserver) hostname."
-#define BLAT_ERR_CANT_GET_SOCKET             4008  // "Can't create a socket (too many simultaneous links?)"
-#define BLAT_ERR_READING_SOCKET              4009  // "Error reading socket."
-#define BLAT_ERR_NOT_A_SOCKET                4010  // "Not a socket."
-#define BLAT_ERR_BUSY                        4011  // "Busy."
-#define BLAT_ERR_CLOSING                     4012  // "Error closing socket."
-#define BLAT_WAIT_A_BIT                      4013  // "Wait a bit (possible timeout)."
-#define BLAT_ERR_CANT_RESOLVE_SERVICE        4014  // "Can't resolve service."
-#define BLAT_ERR_CANT_CONNECT                4015  // "Can't connect to mailserver (timed out if winsock.dll error 10060)"
-#define BLAT_ERR_NOT_CONNECTED               4016  // "Connection to mailserver was dropped."
-#define BLAT_ERR_CONNECTION_REFUSED          4017  // "Mail server refused connection."
+#define BLAT_ERR_NO_ERROR_CODE                         -5000      /* this is returned by misbehaving stacks that
+                                                                   * fail, but don't set an error code
+                                                                   */
+#define BLAT_TRY_INFINITE_KEY                          -1
+#define BLAT_TRY_INFINITE_VALUE                        "INFINITE"
 
-#define BLAT_ERR_NO_ERROR_CODE               ( -5000 )  /* this is returned by misbehaving stacks that
-                                                         * fail, but don't set an error code
-                                                         */
-
-
-#define BLAT_TRY_INFINITE_KEY                ( -1 )
-#define BLAT_TRY_INFINITE_VALUE              "INFINITE"
-
-
-#endif // _HBBLAT_CH
+#endif /* _HBBLAT_CH */

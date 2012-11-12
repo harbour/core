@@ -125,7 +125,7 @@
 #define adStateFetching                 8
 
 /* Constant Group: SchemaEnum */
-#define adSchemaProviderSpecific        ( -1 )
+#define adSchemaProviderSpecific        -1
 #define adSchemaAsserts                 0
 #define adSchemaCatalogs                1
 #define adSchemaCharacterSets           2
@@ -188,7 +188,7 @@
 #define adUpdateBatch                   0x0010000
 
 /* Command type */
-#define adCmdUnspecified                ( -1 )
+#define adCmdUnspecified                -1
 #define adCmdUnknown                    8
 #define adCmdText                       1
 #define adCmdTable                      2

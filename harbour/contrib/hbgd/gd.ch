@@ -72,16 +72,16 @@
 
 /* Special colors. */
 
-#define gdStyled                      ( -2 )
-#define gdBrushed                     ( -3 )
-#define gdStyledBrushed               ( -4 )
-#define gdTiled                       ( -5 )
+#define gdStyled                      -2
+#define gdBrushed                     -3
+#define gdStyledBrushed               -4
+#define gdTiled                       -5
 
 /* NOT the same as the transparent color index.
    This is used in line styles only. */
-#define gdTransparent                 ( -6 )
+#define gdTransparent                 -6
 
-#define gdAntiAliased                 ( -7 )
+#define gdAntiAliased                 -7
 
 #define gdFTEX_LINESPACE              1
 #define gdFTEX_CHARMAP                2

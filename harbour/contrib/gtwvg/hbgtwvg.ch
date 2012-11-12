@@ -66,29 +66,29 @@
 #define HB_GTE_KEYBOARD                   7
 #define HB_GTE_TIMER                      8
 #define HB_GTE_MENU                       9
-#define HB_GTE_NOTIFY                    10
-#define HB_GTE_COMMAND                   11
-#define HB_GTE_CTLCOLOR                  12
-#define HB_GTE_PAINT                     13
-#define HB_GTE_GUIPARTS                  14
-#define HB_GTE_HSCROLL                   15
-#define HB_GTE_VSCROLL                   16
-#define HB_GTE_ANY                       17
-#define HB_GTE_KEYTOITEM                 18
-#define HB_GTE_CREATED                   19
-#define HB_GTE_CLOSED                    20
+#define HB_GTE_NOTIFY                     10
+#define HB_GTE_COMMAND                    11
+#define HB_GTE_CTLCOLOR                   12
+#define HB_GTE_PAINT                      13
+#define HB_GTE_GUIPARTS                   14
+#define HB_GTE_HSCROLL                    15
+#define HB_GTE_VSCROLL                    16
+#define HB_GTE_ANY                        17
+#define HB_GTE_KEYTOITEM                  18
+#define HB_GTE_CREATED                    19
+#define HB_GTE_CLOSED                     20
 
-#define HB_GTI_SETFONT                   71
-#define HB_GTI_PRESPARAMS                72
-#define HB_GTI_ENABLE                    73
-#define HB_GTI_DISABLE                   74
-#define HB_GTI_SETFOCUS                  75
-#define HB_GTI_DEFERPAINT                76
-#define HB_GTI_ACTIVATESELECTCOPY        77
-#define HB_GTI_SETPOSANDSIZE             78
-#define HB_GTI_REFRESH                   79
-#define HB_GTI_NOTIFIERBLOCKGUI          80
-#define HB_GTI_MAXIMIZABLE               81
+#define HB_GTI_SETFONT                    71
+#define HB_GTI_PRESPARAMS                 72
+#define HB_GTI_ENABLE                     73
+#define HB_GTI_DISABLE                    74
+#define HB_GTI_SETFOCUS                   75
+#define HB_GTI_DEFERPAINT                 76
+#define HB_GTI_ACTIVATESELECTCOPY         77
+#define HB_GTI_SETPOSANDSIZE              78
+#define HB_GTI_REFRESH                    79
+#define HB_GTI_NOTIFIERBLOCKGUI           80
+#define HB_GTI_MAXIMIZABLE                81
 
 /* Presentation Parameters | HB_GTI_PRESPARAMS */
 #define HB_GTI_PP_EXSTYLE                 1
@@ -100,14 +100,14 @@
 #define HB_GTI_PP_PARENT                  7
 #define HB_GTI_PP_VISIBLE                 8
 #define HB_GTI_PP_ROWCOLS                 9
-#define HB_GTI_PP_WNDTYPE                10
+#define HB_GTI_PP_WNDTYPE                 10
 
-#define HB_GTI_PP_SIZE                   10
+#define HB_GTI_PP_SIZE                    10
 
 #define HB_WNDTYPE_CRT                    0
 #define HB_WNDTYPE_DIALOG                 1
 
-#define HB_GTI_SPEC                    1000
+#define HB_GTI_SPEC                       1000
 
 /* Window Specifications | HB_GTI_SPEC */
 #define HB_GTS_WINDOWHANDLE               1
@@ -119,10 +119,10 @@
 #define HB_GTS_SETTIMER                   7
 #define HB_GTS_KILLTIMER                  8
 #define HB_GTS_SETPOSITION                9
-#define HB_GTS_SHOWWINDOW                10
-#define HB_GTS_UPDATEWINDOW              11
-#define HB_GTS_SYSTRAYICON               12
-#define HB_GTS_FACTOR                    13
+#define HB_GTS_SHOWWINDOW                 10
+#define HB_GTS_UPDATEWINDOW               11
+#define HB_GTS_SYSTRAYICON                12
+#define HB_GTS_FACTOR                     13
 
 
 /* Window States | HB_GTS_WNDSTATE */
@@ -145,7 +145,7 @@
 #define HB_GTS_SW_MAXIMIZED               3
 #define HB_GTS_SW_RESTORE                 9
 
-#define HB_GTI_GUI                     1001
+#define HB_GTI_GUI                        1001
 
 /* Constants to manage CUI-GUI objects  */
 #define GOBJ_OBJSTATE_ENABLED             1
