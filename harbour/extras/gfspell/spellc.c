@@ -130,7 +130,7 @@ HB_FUNC( XUNFORM )
    hb_retclen( cRet, iRetLen );
 }
 
-/***************************
+/*
  *   Function: Sp_Rate()
  *     Syntax: cRating := Sp_Rate( cFound, cWord )
  *    Purpose: Returns a letter code indicating how similar the two

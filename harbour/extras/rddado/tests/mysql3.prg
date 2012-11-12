@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "rddado"
+
 // Testing LOCATE and CONTINUE
 
 #include "adordd.ch"

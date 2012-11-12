@@ -4,6 +4,8 @@
 
 /* Testing dbCreate() with Access database engine */
 
+#require "rddado"
+
 #include "adordd.ch"
 
 REQUEST ADORDD

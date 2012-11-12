@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "rddado"
+
 #include "adordd.ch"
 
 REQUEST ADORDD

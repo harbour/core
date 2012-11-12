@@ -29,6 +29,36 @@
 #include "set.ch"
 #include "setcurs.ch"
 
+#define EN_SETFOCUS         0x0100
+#define EN_KILLFOCUS        0x0200
+#define EN_CHANGE           0x0300
+#define EN_UPDATE           0x0400
+#define EN_ERRSPACE         0x0500
+#define EN_MAXTEXT          0x0501
+#define EN_HSCROLL          0x0601
+#define EN_VSCROLL          0x0602
+
+#define WM_KEYFIRST                     0x0100
+#define WM_KEYDOWN                      0x0100
+#define WM_KEYUP                        0x0101
+#define WM_CHAR                         0x0102
+#define WM_DEADCHAR                     0x0103
+#define WM_SYSKEYDOWN                   0x0104
+#define WM_SYSKEYUP                     0x0105
+#define WM_SYSCHAR                      0x0106
+#define WM_SYSDEADCHAR                  0x0107
+#define WM_KEYLAST                      0x0108
+#define WM_INITDIALOG                   0x0110
+#define WM_COMMAND                      0x0111
+#define WM_SYSCOMMAND                   0x0112
+#define WM_TIMER                        0x0113
+#define WM_HSCROLL                      0x0114
+#define WM_VSCROLL                      0x0115
+#define WM_INITMENU                     0x0116
+#define WM_INITMENUPOPUP                0x0117
+#define WM_MENUSELECT                   0x011F
+#define WM_MENUCHAR                     0x0120
+#define WM_ENTERIDLE                    0x0121
 
 #command @ <row>, <col> EBGET <var>                                       ;
       [LABEL <label>]                                   ;
@@ -488,64 +518,6 @@ STATIC FUNCTION nGetIndex( aEBGets, nEBId )
 STATIC FUNCTION nFocused( aEBGets )
 
    RETURN AScan( aEBGets, {| x | x[ __GET_LFOCUSED ] } )
-
-#define EN_SETFOCUS         0x0100
-
-#define EN_KILLFOCUS        0x0200
-
-#define EN_CHANGE           0x0300
-
-#define EN_UPDATE           0x0400
-
-#define EN_ERRSPACE         0x0500
-
-#define EN_MAXTEXT          0x0501
-
-#define EN_HSCROLL          0x0601
-
-#define EN_VSCROLL          0x0602
-
-#define WM_KEYFIRST                     0x0100
-
-#define WM_KEYDOWN                      0x0100
-
-#define WM_KEYUP                        0x0101
-
-#define WM_CHAR                         0x0102
-
-#define WM_DEADCHAR                     0x0103
-
-#define WM_SYSKEYDOWN                   0x0104
-
-#define WM_SYSKEYUP                     0x0105
-
-#define WM_SYSCHAR                      0x0106
-
-#define WM_SYSDEADCHAR                  0x0107
-
-#define WM_KEYLAST                      0x0108
-
-#define WM_INITDIALOG                   0x0110
-
-#define WM_COMMAND                      0x0111
-
-#define WM_SYSCOMMAND                   0x0112
-
-#define WM_TIMER                        0x0113
-
-#define WM_HSCROLL                      0x0114
-
-#define WM_VSCROLL                      0x0115
-
-#define WM_INITMENU                     0x0116
-
-#define WM_INITMENUPOPUP                0x0117
-
-#define WM_MENUSELECT                   0x011F
-
-#define WM_MENUCHAR                     0x0120
-
-#define WM_ENTERIDLE                    0x0121
 
 // callback function called by GTWVW during some events on editbox
 STATIC FUNCTION MaskEditBox( nWinNum, nId, nEvent, aEBGets )

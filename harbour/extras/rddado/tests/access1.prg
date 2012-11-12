@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "rddado"
+
 #include "adordd.ch"
 
 REQUEST ADORDD
@@ -13,6 +15,7 @@ PROCEDURE Main()
 
    USE ( hb_DirBase() + "test.mdb" ) VIA "ADORDD" TABLE "Table1"
 
+   CLS
    Browse()
 
    USE

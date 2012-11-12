@@ -1465,17 +1465,7 @@ FUNCTION AWords( cLine )
 
 // Find an occurrence of 'f_str' in 'l_str' starting from position 'f_rom'
 FUNCTION fat( f_str, l_str, f_rom )
-
-   IF PCount() < 3                        // Is f_rom passed?
-      f_rom := 1
-   ENDIF
-
-   RETURN At( f_str, SubStr( l_str, f_rom ) )
+   RETURN At( f_str, SubStr( l_str, iif( PCount() < 3, 1, f_rom ) ) )
 
 STATIC FUNCTION bfat( f_str, l_str, f_rom )
-
-   IF PCount() < 3                        // Is f_rom passed?
-      f_rom := 1
-   ENDIF
-
    RETURN hb_BAt( f_str, hb_BSubStr( l_str, f_rom ) )
