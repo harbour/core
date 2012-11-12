@@ -664,13 +664,13 @@ HB_FUNC( NETIO_COMPRESS )
 
    if( conn && conn->sd != HB_NO_SOCKET && ! conn->stop )
    {
-      int iLevel, iStrategy, keylen = ( int ) hb_parclen( 3 );
+      int iLevel, iStrategy, keylen = ( int ) hb_parclen( 2 );
 
       if( keylen > NETIO_PASSWD_MAX )
          keylen = NETIO_PASSWD_MAX;
-      iLevel = hb_parnidef( 4, keylen ? HB_ZLIB_COMPRESSION_DEFAULT :
+      iLevel = hb_parnidef( 3, keylen ? HB_ZLIB_COMPRESSION_DEFAULT :
                                         HB_ZLIB_COMPRESSION_DISABLE );
-      iStrategy = hb_parnidef( 5, HB_ZLIB_STRATEGY_DEFAULT );
+      iStrategy = hb_parnidef( 4, HB_ZLIB_STRATEGY_DEFAULT );
 
       if( iLevel == HB_ZLIB_COMPRESSION_DISABLE )
       {
@@ -688,8 +688,6 @@ HB_FUNC( NETIO_COMPRESS )
             if( conn->zstream )
                hb_znetClose( conn->zstream );
             conn->zstream = zstream;
-            if( keylen > NETIO_PASSWD_MAX )
-               keylen = NETIO_PASSWD_MAX;
             if( keylen )
                hb_znetEncryptKey( zstream, hb_parc( 2 ), keylen );
          }

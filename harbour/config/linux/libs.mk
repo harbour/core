@@ -38,6 +38,10 @@ ifneq ($(HB_LINKING_RTL),)
    ifneq ($(HB_LINKING_VMMT),)
       SYSLIBS += pthread
    endif
+else
+   ifeq ($(BUILD_SHARED),yes)
+      SYSLIBS += pthread
+   endif
 endif
 
 SYSLIBS += m

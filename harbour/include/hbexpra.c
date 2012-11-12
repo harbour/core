@@ -399,7 +399,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                    */
                   if( pArg->pNext == NULL )
                   {
-                      /* no second argument */
+                     /* no second argument */
                      const char *szText = pFirst->value.asMacro.szMacro;
                      pArg->pNext = hb_compExprNewString( szText, strlen( szText ), HB_FALSE, HB_COMP_PARAM );
                      pArg->pNext->pNext = pNext;

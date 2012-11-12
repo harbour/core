@@ -121,13 +121,6 @@ ifneq ($(__HB_BUILD_NOSYSLIB),)
    SYSLIBS := $(filter-out $(__HB_BUILD_NOSYSLIB),$(SYSLIBS))
 endif
 
-ifneq ($(HB_PLATFORM_UNIX),)
-   ifeq ($(BUILD_SHARED),yes)
-      SYSLIBS :=
-      SYSLIBPATHS :=
-   endif
-endif
-
 LIBS := $(HB_USER_LIBS) $(LIBS)
 
 include $(TOP)$(ROOT)config/$(HB_PLATFORM)/$(HB_COMPILER).mk

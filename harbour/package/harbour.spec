@@ -521,8 +521,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/%{name}/librddsql.a
 %{_libdir}/%{name}/libsddsqlt3.a
 %{_libdir}/%{name}/libhbsms.a
-%([ -f %{_libdir}/%{name}/libhbssl.a ] && echo %{_libdir}/%{name}/libhbssl.a)
-%([ -f %{_libdir}/%{name}/libhbhttpds.a ] && echo %{_libdir}/%{name}/libhbhttpds.a)
+%([ -f %{buildroot}%{_libdir}/%{name}/libhbssl.a ] && echo %{_libdir}/%{name}/libhbssl.a)
+%([ -f %{buildroot}%{_libdir}/%{name}/libhbhttpds.a ] && echo %{_libdir}/%{name}/libhbhttpds.a)
 
 %{?_with_ads:%files ads}
 %{?_with_ads:%defattr(644,root,root,755)}
