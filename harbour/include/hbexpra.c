@@ -409,9 +409,8 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             }
             else
             {   /* @ 0,0 GET &(var)
-                 * TODO: generate a compilation time error -
-                 * invalid GET expression
                  */
+               hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_GET_COMPLEX_MACRO, NULL, NULL );
             }
          }
          else
