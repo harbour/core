@@ -474,7 +474,7 @@ msgstr "további keresési útvonal a .c fejlécek automatikus detektálásához
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to output executable when -run option is used"
+msgid "pass single flag to output executable when -run option is used"
 msgstr "továbbítsa a kapcsolót a létrehozott alkalmazásnak, -run kapcsoló használatakor"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -579,7 +579,7 @@ msgstr ""
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to resource compiler (Windows only)"
+msgid "pass single flag to resource compiler (Windows only)"
 msgstr "továbbítsa a kapcsolót az erőforrás fordítónak (csak Windows-on)"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -759,7 +759,7 @@ msgstr ""
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to linker (executable)"
+msgid "pass single flag to linker (executable)"
 msgstr "kapcsoló továbbítása (alkalmazás) szerkesztőnek"
 
 #: hbmk2.prg:7691 hbmk2.prg:11307 hbmk2.prg:12334
@@ -774,12 +774,12 @@ msgstr "további keresési útvonal a fejlécekhez"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to linker (dynamic library)"
+msgid "pass single flag to linker (dynamic library)"
 msgstr "kapcsoló továbbítása (dinamikus függvénykönyvtár) szerkesztőnek"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to linker (static library)"
+msgid "pass single flag to linker (static library)"
 msgstr "kapcsoló továbbítása (statikus függvénykönyvtár) szerkesztőnek"
 
 #: hbmk2.prg:7850 hbmk2.prg:11512 hbmk2.prg:12970
@@ -939,12 +939,12 @@ msgstr ""
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to Harbour"
+msgid "pass single flag to Harbour compiler"
 msgstr "kapcsoló továbbítása Harbour fordítónak"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to C compiler"
+msgid "pass single flag to C compiler"
 msgstr "kapcsoló továbbítása C fordítónak"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -1349,7 +1349,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to import library creation command"
+msgid "pass single flag to import library creation command"
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
@@ -1419,7 +1419,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to plugins"
+msgid "pass single flag to plugins"
 msgstr ""
 
 #: hbmk2.prg:1956
@@ -1429,7 +1429,7 @@ msgstr ""
 
 #: hbmk2.prg:13102
 #, c-format
-msgid "pass flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
+msgid "pass single flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
 msgstr ""
 
 #: hbmk2.prg:13120

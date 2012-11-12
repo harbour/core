@@ -403,12 +403,12 @@ msgstr "Executando aplicativo:"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to output executable when -run option is used"
+msgid "pass single flag to output executable when -run option is used"
 msgstr "argumentos à serem passados ao executável gerado quando -run for utilizado"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to linker (executable)"
+msgid "pass single flag to linker (executable)"
 msgstr "especifica flags para o linkeditor (executável)"
 
 #: hbmk2.prg:5835 hbmk2.prg:8807 hbmk2.prg:9381
@@ -603,17 +603,17 @@ msgstr "ecoa texto na tela"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to Harbour"
+msgid "pass single flag to Harbour compiler"
 msgstr "especifica flags para o Harbour"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to C compiler"
+msgid "pass single flag to C compiler"
 msgstr "especifica flags para o compilador C"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to resource compiler (Windows only)"
+msgid "pass single flag to resource compiler (Windows only)"
 msgstr "especifica flags para o compilador de recursos (apenas windows)"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
@@ -753,12 +753,12 @@ msgstr "Erro: %1$s"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to linker (dynamic library)"
+msgid "pass single flag to linker (dynamic library)"
 msgstr "informar flags para o linkeditor (biblioteca dinânica)"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to linker (static library)"
+msgid "pass single flag to linker (static library)"
 msgstr "passa flag para o linkeditor (lib estática)"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
@@ -1353,7 +1353,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to import library creation command"
+msgid "pass single flag to import library creation command"
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
@@ -1423,7 +1423,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "pass flag to plugins"
+msgid "pass single flag to plugins"
 msgstr ""
 
 #: hbmk2.prg:1956
@@ -1433,7 +1433,7 @@ msgstr ""
 
 #: hbmk2.prg:13102
 #, c-format
-msgid "pass flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
+msgid "pass single flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
 msgstr ""
 
 #: hbmk2.prg:13120
