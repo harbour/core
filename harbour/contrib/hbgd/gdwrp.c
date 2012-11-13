@@ -862,9 +862,9 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
 
       int cx    = hb_parni( 2 );
       int cy    = hb_parni( 3 );
-      int w     = hb_parni( 4 ); /* width and height values */
+      int w     = hb_parni( 4 ); /* width and height */
       int h     = hb_parni( 5 );
-      int s     = hb_parni( 6 ); /* starting and ending degree values */
+      int s     = hb_parni( 6 ); /* starting and ending degree */
       int e     = hb_parni( 7 );
       int color = hb_parni( 8 );
 
@@ -889,9 +889,9 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
 
       int cx    = hb_parni( 2 );
       int cy    = hb_parni( 3 );
-      int w     = hb_parni( 4 ); /* width and height values */
+      int w     = hb_parni( 4 ); /* width and height */
       int h     = hb_parni( 5 );
-      int s     = hb_parni( 6 ); /* starting and ending degree values */
+      int s     = hb_parni( 6 ); /* starting and ending degree */
       int e     = hb_parni( 7 );
       int color = hb_parni( 8 );
       int style = hb_parnidef( 9, gdNoFill );
@@ -1440,13 +1440,12 @@ HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int 
       gdImagePtr im   = hb_parGdImage( 1 );
       gdFontPtr  font = hb_parGdFont( 2 );
 
-      int x = hb_parni( 3 );
-      int y = hb_parni( 4 );
-      const char * s     = hb_parc( 5 );
-      int          color = hb_parni( 6 );
+      int x     = hb_parni( 3 );
+      int y     = hb_parni( 4 );
+      int color = hb_parni( 6 );
 
       /* Write string */
-      gdImageString( im, font, x, y, ( unsigned char * ) s, color );
+      gdImageString( im, font, x, y, ( unsigned char * ) hb_parc( 5 ), color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1466,13 +1465,12 @@ HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, 
       gdImagePtr im   = hb_parGdImage( 1 );
       gdFontPtr  font = hb_parGdFont( 2 );
 
-      int x = hb_parni( 3 );
-      int y = hb_parni( 4 );
-      const char * s     = hb_parc( 5 );
-      int          color = hb_parni( 6 );
+      int x     = hb_parni( 3 );
+      int y     = hb_parni( 4 );
+      int color = hb_parni( 6 );
 
       /* Write string */
-      gdImageStringUp( im, font, x, y, ( unsigned char * ) s, color );
+      gdImageStringUp( im, font, x, y, ( unsigned char * ) hb_parc( 5 ), color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1497,7 +1495,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       gdImagePtr im = hb_parGdImage( 1 );
 
       PHB_ITEM     pRect    = hb_param( 2, HB_IT_ARRAY );
-      int          fg       = hb_parni( 3 ); /* foreground color value */
+      int          fg       = hb_parni( 3 ); /* foreground color */
       const char * fontname = hb_parc( 4 );
       double       ptsize   = hb_parnd( 5 ); /* point size */
       double       angle    = hb_parnd( 6 ); /* angle value in radians */
@@ -1506,7 +1504,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       const char * string   = hb_parc( 9 );
 
       gdFTStringExtra extra;
-      int flags = 0; /* EXTENDED FLAGS */
+      int flags = 0; /* Extended flags */
 
       /* defaults */
       double linespacing = 1.05;
@@ -1590,11 +1588,11 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       double       radius      = hb_parnd( 4 );
       double       textRadius  = hb_parnd( 5 );
       double       fillPortion = hb_parnd( 6 );
-      const char * font        = hb_parc( 7 ); /* fontname value */
+      const char * font        = hb_parc( 7 ); /* fontname */
       double       points      = hb_parnd( 8 );
       const char * top         = hb_parcx( 9 );
       const char * bottom      = hb_parcx( 10 );
-      int          fgcolor     = hb_parni( 11 ); /* foreground color value */
+      int          fgcolor     = hb_parni( 11 ); /* foreground color */
 
       /* Write string */
       hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion, ( char * ) font, points, ( char * ) top, ( char * ) bottom, fgcolor ) );
@@ -1642,7 +1640,7 @@ HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int r = hb_parni( 2 ); /* RGB values */
+      int r = hb_parni( 2 ); /* RGB */
       int g = hb_parni( 3 );
       int b = hb_parni( 4 );
 
@@ -1678,7 +1676,7 @@ HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int r = hb_parni( 2 ); /* RGB values */
+      int r = hb_parni( 2 ); /* RGB */
       int g = hb_parni( 3 );
       int b = hb_parni( 4 );
       int a = hb_parni( 5 ); /* alpha */
@@ -1699,7 +1697,7 @@ HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, 
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int r = hb_parni( 2 ); /* RGB values */
+      int r = hb_parni( 2 ); /* RGB */
       int g = hb_parni( 3 );
       int b = hb_parni( 4 );
 
@@ -1720,7 +1718,7 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int r = hb_parni( 2 ); /* RGB values */
+      int r = hb_parni( 2 ); /* RGB */
       int g = hb_parni( 3 );
       int b = hb_parni( 4 );
       int a = hb_parni( 5 ); /* alpha */
@@ -1741,7 +1739,7 @@ HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int 
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int r = hb_parni( 2 ); /* RGB values */
+      int r = hb_parni( 2 ); /* RGB */
       int g = hb_parni( 3 );
       int b = hb_parni( 4 );
 
@@ -1761,7 +1759,7 @@ HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int 
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int r = hb_parni( 2 ); /* RGB values */
+      int r = hb_parni( 2 ); /* RGB */
       int g = hb_parni( 3 );
       int b = hb_parni( 4 );
 
@@ -1781,7 +1779,7 @@ HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, 
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int r = hb_parni( 2 ); /* RGB values */
+      int r = hb_parni( 2 ); /* RGB */
       int g = hb_parni( 3 );
       int b = hb_parni( 4 );
 
@@ -1802,7 +1800,7 @@ HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr i
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int r = hb_parni( 2 ); /* RGB values */
+      int r = hb_parni( 2 ); /* RGB */
       int g = hb_parni( 3 );
       int b = hb_parni( 4 );
       int a = hb_parni( 5 ); /* alpha */
@@ -1836,7 +1834,7 @@ HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      int r = hb_parni( 1 ); /* RGB values */
+      int r = hb_parni( 1 ); /* RGB */
       int g = hb_parni( 2 );
       int b = hb_parni( 3 );
 
@@ -1854,7 +1852,7 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      int r = hb_parni( 1 ); /* RGB values */
+      int r = hb_parni( 1 ); /* RGB */
       int g = hb_parni( 2 );
       int b = hb_parni( 3 );
       int a = hb_parni( 4 ); /* alpha */
@@ -2155,13 +2153,13 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
    {
       gdImagePtr im = hb_parGdImage( 1 );
 
-      int GlobalCM = hb_parni( 3 ); /* global color map value */
+      int GlobalCM = hb_parni( 3 ); /* global color map */
       int Loops    = hb_parni( 4 );
 
       int    size;
       void * iptr = gdImageGifAnimBeginPtr( im, &size, GlobalCM, Loops );
 
-      /* Check if 2nd parameter is a file name or an handle */
+      /* Check if parameter is a file name or a handle */
       if( HB_ISCHAR( 2 ) )
          SaveImageToFile( hb_parc( 2 ), iptr, size );
       else
@@ -2198,7 +2196,7 @@ HB_FUNC( GDIMAGEGIFANIMADD )
       int    size;
       void * iptr = gdImageGifAnimAddPtr( im, &size, LocalCM, LeftOfs, TopOfs, Delay, Disposal, previm );
 
-      /* Check if 2nd parameter is a file name or an handle */
+      /* Check if parameter is a file name or a handle */
       if( HB_ISCHAR( 2 ) )
          AddImageToFile( hb_parc( 2 ), iptr, size );
       else
@@ -2219,7 +2217,7 @@ HB_FUNC( GDIMAGEGIFANIMEND )
       int    size;
       void * iptr = gdImageGifAnimEndPtr( &size );
 
-      /* Check if 1st parameter is a file name or an handle */
+      /* Check if 1st parameter is a file name or a handle */
       if( HB_ISCHAR( 1 ) )
          AddImageToFile( hb_parc( 1 ), iptr, size );
       else
