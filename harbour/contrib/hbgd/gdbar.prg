@@ -62,7 +62,7 @@
 #define THICKNESS_I250   0
 #define THICKNESS_I251   0
 
-CREATE CLASS TBarCode FROM GDImage
+CREATE CLASS GDBar FROM GDImage
 
    // class attributes
    VAR positionX      AS NUMERIC INIT  4
@@ -116,7 +116,7 @@ CREATE CLASS TBarCode FROM GDImage
 
 ENDCLASS
 
-METHOD CreateBar( sx, sy, filename, cColor ) CLASS TBarCode
+METHOD CreateBar( sx, sy, filename, cColor ) CLASS GDBar
 
    ::Create( sx, sy )
 
@@ -152,7 +152,7 @@ METHOD CreateBar( sx, sy, filename, cColor ) CLASS TBarCode
 
    RETURN Self
 
-METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue ) CLASS TBarCode
+METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lDrawValue ) CLASS GDBar
 
    hb_default( @lBook      , .F. )
    hb_default( @lDrawValue , .T. )
@@ -173,20 +173,20 @@ METHOD Configure( nMaxHeight, aFillColor, aBackColor, nRes, nTextFont, lBook, lD
 
    RETURN NIL
 
-METHOD SetText( ptext )  CLASS TBarCode
+METHOD SetText( ptext ) CLASS GDBar
 
    ::text := ptext
 
    RETURN NIL
 
-METHOD ResetColor() CLASS TBarCode
+METHOD ResetColor() CLASS GDBar
 
    ::FillColor := ::SetColor( ::color_f[ 1 ], ::color_f[ 2 ], ::color_f[ 3 ] )
    ::BackColor := ::SetColor( ::color_b[ 1 ], ::color_b[ 2 ], ::color_b[ 3 ] )
 
    RETURN NIL
 
-METHOD Allocate() CLASS TBarCode
+METHOD Allocate() CLASS GDBar
 
    LOCAL R := ::color_b[ 1 ]
    LOCAL G := ::color_b[ 2 ]
@@ -194,7 +194,7 @@ METHOD Allocate() CLASS TBarCode
 
    RETURN ::SetColor( R, G, B )
 
-METHOD DrawSingleBar( pcode ) CLASS TBarCode
+METHOD DrawSingleBar( pcode ) CLASS GDBar
 
    LOCAL i
    LOCAL j
@@ -211,7 +211,7 @@ METHOD DrawSingleBar( pcode ) CLASS TBarCode
 
    RETURN NIL
 
-METHOD DrawSingleI25( pcode ) CLASS TBarCode
+METHOD DrawSingleI25( pcode ) CLASS GDBar
 
    LOCAL j
 
@@ -240,7 +240,7 @@ METHOD DrawSingleI25( pcode ) CLASS TBarCode
 
    RETURN NIL
 
-METHOD DrawError( ptext ) CLASS TBarCode
+METHOD DrawError( ptext ) CLASS GDBar
 
    ::Say( 5, ::error * 15, ptext, ::FillColor )
 
@@ -251,7 +251,7 @@ METHOD DrawError( ptext ) CLASS TBarCode
 
    RETURN NIL
 
-METHOD nextX( lI25 ) CLASS TBarCode
+METHOD nextX( lI25 ) CLASS GDBar
 
    hb_default( @li25, .F. )
 
@@ -263,7 +263,7 @@ METHOD nextX( lI25 ) CLASS TBarCode
 
    RETURN NIL
 
-METHOD DrawText( lIsI25 ) CLASS TBarCode
+METHOD DrawText( lIsI25 ) CLASS GDBar
 
    LOCAL xPosition
 
@@ -285,7 +285,7 @@ METHOD DrawText( lIsI25 ) CLASS TBarCode
 
    RETURN .T.
 
-METHOD CheckCode() CLASS TBarCode
+METHOD CheckCode() CLASS GDBar
 
    LOCAL lRet := .T.
    LOCAL i
@@ -299,13 +299,13 @@ METHOD CheckCode() CLASS TBarCode
 
    RETURN lRet
 
-METHOD CheckValInArray( cChar ) CLASS TBarCode
+METHOD CheckValInArray( cChar ) CLASS GDBar
 
    LOCAL nPos := AScan( ::keys, {| x | SubStr( x, 1, 1 ) == cChar } )
 
    RETURN iif( nPos > 0, nPos, NIL )
 
-METHOD Finish( image_style, quality, nFG ) CLASS TBarCode
+METHOD Finish( image_style, quality, nFG ) CLASS GDBar
 
    hb_default( @image_style, IMG_FORMAT_PNG )
    hb_default( @quality    , 95 )

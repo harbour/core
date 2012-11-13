@@ -21,6 +21,8 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC GDBar
+DYNAMIC GDBarCode
 DYNAMIC GDChart
 DYNAMIC gdFontCacheSetup
 DYNAMIC gdFontCacheShutdown
@@ -132,8 +134,6 @@ DYNAMIC gdTrueColorAlpha
 DYNAMIC gdVersion
 DYNAMIC gdVersionNumber
 DYNAMIC hb_gd_Version
-DYNAMIC TBarCode
-DYNAMIC TCode
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBGD__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>

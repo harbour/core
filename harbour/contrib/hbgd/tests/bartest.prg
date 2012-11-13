@@ -32,7 +32,7 @@ PROCEDURE Main()
    1- Barcode Type 13,8  and 128
    */
 
-   bar := TCode():New( 13 )
+   bar := GDBarCode():New( 13 )
 
    /* Here is the list of the arguments
    1 - Thickness
@@ -57,7 +57,7 @@ PROCEDURE Main()
    bar:Finish( 2 )
 
    // EAN8
-   bar := TCode():New( 8 )
+   bar := GDBarCode():New( 8 )
 
    bar:Configure( 70, black, white, 2, 1 )
 
@@ -70,7 +70,7 @@ PROCEDURE Main()
    bar:ResizeImage()
 
    // EAN128
-   bar := TCode():New( 128 )
+   bar := GDBarCode():New( 128 )
 
    bar:Configure( 50, black, white, 2, 1 )
 
@@ -86,7 +86,7 @@ PROCEDURE Main()
    bar:Finish( 2 )
 
    // BRAZIL-FEBRABAN
-   bar := TCode():New( 25 )
+   bar := GDBarCode():New( 25 )
 
    bar:Configure( 25, black, white, 1, 1,, .T. )
 
