@@ -57,7 +57,7 @@ DECLARE [cFunctionType] FunctionName IN LibraryName [AS AliasName]
    [cParamType1 [@] ParamName1, cParamType2 [@] ParamName2, ...]
 */
 
-FUNCTION FOX___DYNCALL( cCommand, ... )
+FUNCTION fox___DynCall( cCommand, ... )
 
    LOCAL aParam
 

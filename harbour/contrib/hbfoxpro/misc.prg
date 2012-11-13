@@ -52,7 +52,7 @@
 
 #include "setcurs.ch"
 
-FUNCTION SYS( nValue, xPar1 )
+FUNCTION Sys( nValue, xPar1 )
 
    SWITCH nValue
    CASE 0
@@ -84,5 +84,5 @@ STATIC FUNCTION AFillNested( aValue, xVal )
 
    RETURN aValue
 
-FUNCTION __FOX_ARRAY( ... )
+FUNCTION __fox_Array( ... )
    RETURN AFillNested( Array( ... ), .F. )
