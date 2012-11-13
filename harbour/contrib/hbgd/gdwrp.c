@@ -133,6 +133,7 @@ static void hb_retGdImage( gdImagePtr im )
 {
    gdImagePtr * ptr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
                                                       &s_gcGDimageFuncs );
+
    *ptr = im;
 
    hb_retptrGC( ( void * ) ptr );
@@ -144,6 +145,7 @@ static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 {
    gdImagePtr * ptr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
                                                       &s_gcGDimageFuncs );
+
    *ptr = im;
 
    return hb_itemPutPtrGC( NULL, ( void * ) ptr );
@@ -197,6 +199,7 @@ static void hb_retGdFont( gdFontPtr font )
 {
    gdFontPtr * ptr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
                                                     &s_gcGDfontFuncs );
+
    *ptr = font;
 
    hb_retptrGC( ( void * ) ptr );
@@ -208,6 +211,7 @@ static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 {
    gdFontPtr * ptr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
                                                     &s_gcGDfontFuncs );
+
    *ptr = font;
 
    return hb_itemPutPtrGC( NULL, ( void * ) ptr );

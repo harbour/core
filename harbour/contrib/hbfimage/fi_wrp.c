@@ -103,14 +103,14 @@ static HB_TSD_NEW( s_fi_error,
 typedef struct
 {
    FIBITMAP * dib;
-   HB_BOOL fFree;
+   HB_BOOL    fFree;
 } HB_FIBITMAP, * PHB_FIBITMAP;
 
 static PHB_FIBITMAP PHB_FIBITMAP_create( FIBITMAP * dib, HB_BOOL fFree )
 {
    PHB_FIBITMAP hb_dib = ( PHB_FIBITMAP ) hb_xgrab( sizeof( HB_FIBITMAP ) );
 
-   hb_dib->dib = dib;
+   hb_dib->dib   = dib;
    hb_dib->fFree = fFree;
 
    return hb_dib;
@@ -182,10 +182,8 @@ static HB_GARBAGE_FUNC( hb_FIMULTIBITMAP_Destructor )
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( *ptr )
-   {
       /* set pointer to NULL to avoid multiple freeing */
       *ptr = NULL;
-   }
 }
 
 static const HB_GC_FUNCS s_gcFIMULTIBITMAPFuncs =
