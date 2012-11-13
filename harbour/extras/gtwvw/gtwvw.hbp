@@ -24,10 +24,8 @@ wvwpush.c
 wvwstbar.c
 wvwtbar.c
 
-# NOTE: Has a huge number of warnings, which we don't want to see until fixed.
--cpp=no
 # NOTE: Due to large quantity of unprecise code, it doesn't build in C++ mode.
--warn=no
+-cpp=no
 
 -hbx=${hb_name}.hbx
 ${hb_name}.hbx

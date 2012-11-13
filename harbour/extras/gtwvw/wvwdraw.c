@@ -573,7 +573,7 @@ HB_FUNC( WVW_DRAWTEXTBOX )
    POINT      xy = { 0 };
    int        iTop, iLeft, iBottom, iRight;
 
-   int iAlignHorz = HB_ISNIL( 8 ) ? 0 : hb_parni( 8 ) ;
+   int iAlignHorz = HB_ISNIL( 8 ) ? 0 : hb_parni( 8 );
 
    int iAlignH = 0;
 

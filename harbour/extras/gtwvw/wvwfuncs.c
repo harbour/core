@@ -1344,7 +1344,7 @@ HB_FUNC( WINDOW2BITMAP )
 HB_FUNC( WVW_SETMAXBMCACHE )
 {
    WVW_DATA * p = hb_getWvwData();
-   UINT uiOldMaxBMcache = 0;
+   UINT       uiOldMaxBMcache = 0;
 
    if( p )
    {
@@ -1534,7 +1534,7 @@ HB_FUNC( WVW_SETPOINTER )
 /*                                                                   */
 HB_FUNC( WVW_LOADPICTURE )
 {
-   BOOL bResult  = FALSE;
+   BOOL bResult = FALSE;
 
    WVW_DATA * p        = hb_getWvwData();
    IPicture * iPicture = hb_gt_wvwLoadPicture( hb_parcx( 2 ) );
