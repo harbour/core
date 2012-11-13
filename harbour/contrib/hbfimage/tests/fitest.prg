@@ -24,10 +24,10 @@ PROCEDURE Main()
 
 #if 0
    LOCAL bmpinfoheader
-   LOCAL bkcolor
    LOCAL iccprofile
    LOCAL appo
 #endif
+   LOCAL bkcolor
    LOCAL bmpinfo
    LOCAL nH, nLen, cStr
 
@@ -93,52 +93,42 @@ PROCEDURE Main()
 
    ? "Rotate Classic   :", ValToPrg( rotated := fi_RotateClassic( clone, 90 ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, rotated, IMAGES_OUT + "rotate.jpg", JPEG_DEFAULT )
-   fi_Unload( rotated )
 
    centerx := fi_GetWidth( clone ) / 2
    centery := fi_GetHeight( clone ) / 2
    ? "Rotate Ex        :", ValToPrg( rotatedEx := fi_RotateEx( clone, 15, 0, 0, centerx, centery, .T. ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, rotatedEx, IMAGES_OUT + "rotateex.jpg", JPEG_DEFAULT )
-   fi_Unload( rotatedEx )
 
    width   := fi_GetWidth( im )
    height  := fi_GetHeight( im )
 
    ? "Rescale          :", ValToPrg( rescale := fi_Rescale( im, width / 2, height / 2, FILTER_BICUBIC ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, rescale, IMAGES_OUT + "rescale.jpg", JPEG_DEFAULT )
-   fi_Unload( rescale )
 
    im2 := fi_Clone( im )
    ? "Adjust Gamma ?   :", fi_AdjustGamma( im2, 3.0 )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjgamma.jpg", JPEG_DEFAULT )
-   fi_Unload( im2 )
 
    im2 := fi_Clone( im )
    ? "Adjust Brightness:", fi_AdjustBrightness( im2, - 30 )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjbrigh.jpg", JPEG_DEFAULT )
-   fi_Unload( im2 )
 
    im2 := fi_Clone( im )
    ? "Adjust Contrast ?:", fi_AdjustContrast( im2, - 30 )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "adjcontr.jpg", JPEG_DEFAULT )
-   fi_Unload( im2 )
 
    im2 := fi_Clone( im )
    ? "Invert ?         :", fi_Invert( im2 )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "invert.jpg", JPEG_DEFAULT )
-   fi_Unload( im2 )
 
    ? "Red Channel      :", ValToPrg( im2 := fi_GetChannel( im, FICC_RED ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "red.jpg", JPEG_DEFAULT )
-   fi_Unload( im2 )
 
    ? "Green Channel    :", ValToPrg( im2 := fi_GetChannel( im, FICC_GREEN ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "green.jpg", JPEG_DEFAULT )
-   fi_Unload( im2 )
 
    ? "Blue Channel     :", ValToPrg( im2 := fi_GetChannel( im, FICC_BLUE ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "blue.jpg", JPEG_DEFAULT )
-   fi_Unload( im2 )
 
    ? "Copy             :", ValToPrg( im2 := fi_Copy( im, 300, 100, 800, 200 ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im2, IMAGES_OUT + "copy.jpg", JPEG_DEFAULT )
@@ -146,15 +136,17 @@ PROCEDURE Main()
    im3 := fi_Clone( im )
    ? "Paste ?          :", fi_Paste( im3, im2, 10, 10, 70 )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im3, IMAGES_OUT + "paste.jpg", JPEG_DEFAULT )
-   fi_Unload( im2 )
-   fi_Unload( im3 )
 
    ? "Allocate Bitmap  :", ValToPrg( im3 := fi_AllocateT( FIT_BITMAP, 320, 200, 32 ) )
    ? "Save JPG ?       :", fi_Save( FIF_JPEG, im3, IMAGES_OUT + "allocate.jpg", JPEG_DEFAULT )
-   fi_Unload( im3 )
 
    ? "Create ERROR     :"
    ? "Save GIF ?       :", fi_Save( FIF_GIF, im, IMAGES_OUT + "wrong.gif", 0 )
+
+   bkcolor := hb_BChar( 0 ) + hb_BChar( 0 ) + hb_BChar( 205 ) + hb_BChar( 0 ) /* RGBA */
+   ? fi_SetBackgroundColor( im, bkcolor )
+   ? fi_GetBackgroundColor( im, @bkcolor )
+   ? hb_StrToHex( bkcolor )
 
 #if 0
    ? ValToPrg( fi_GetInfoHeader( im ) )
@@ -162,9 +154,7 @@ PROCEDURE Main()
    bmpinfoheader:Pointer( fi_GetInfoHeader( im ) )
    ? "Header           :", ValToPrg( bmpinfoheader )
    ? bmpinfoheader:SayMembers( " ", .T., .T. )
-#endif
 
-#if 0
    bmpinfo:Pointer( fi_GetInfo( im ) )
    bmpinfo := NIL // To fix warning
    ? "Info           :", ValToPrg( bmpinfo )
@@ -174,25 +164,6 @@ PROCEDURE Main()
    ? ValType( bmpinfo:Devalue() )
    TraceLog( "bmpinfoheader", ValToPrg( bmpinfoheader ), ;
       infoheader:SayMembers(, .T. ), bmpinfoheader:Value(), bmpinfoheader:DeValue(), hb_DumpVar( bmpinfoheader:Array() ), hb_DumpVar( bmpinfoheader:acMembers ) )
-
-   appo := bkcolor:Value()
-   ? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
-   ? fi_GetBackgroundColor( im, @bkcolor:Value() )
-   bkcolor:Buffer( appo )
-   ? bkcolor:SayMembers( " ", .T., .T. )
-
-   bkcolor:rgbBlue := 205
-   ? fi_SetBackgroundColor( im, hb_String2Pointer( bkcolor:Value() ) )
-   TraceLog( "line 168" )
-   ? fi_SetBackgroundColor( im, bkcolor:Value() )
-   TraceLog( "line 170" )
-   ? bkcolor:SayMembers( " ", .T., .T. )
-   TraceLog( "line 162" )
-   ? bkcolor:Pointer( fi_GetBackgroundColor( im ) )
-   ? fi_GetBackgroundColor( im, @bkcolor:Value() )
-   bkcolor:Buffer( appo )
-   TraceLog( "line 176" )
-   ? bkcolor:SayMembers( " ", .T., .T. )
 
    TraceLog( "line 179" )
    iccprofile:Pointer( fi_GetICCProfile( im ) )
@@ -206,10 +177,6 @@ PROCEDURE Main()
    bmpinfoheader := NIL
    hb_gcAll( .T. )
 #endif
-
-   ? "Unload images from memory"
-   fi_Unload( im )
-   fi_Unload( clone )
 
    //
 
@@ -269,7 +236,7 @@ FUNCTION ValToPrg( xValue )
       RETURN '"' + xValue + '"'
 
    CASE cType == "N" ; RETURN hb_ntos( xValue )
-   CASE cType == "D" ; RETURN 'HB_SToD("' + DToS( xValue ) + '")'
+   CASE cType == "D" ; RETURN 'hb_SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"

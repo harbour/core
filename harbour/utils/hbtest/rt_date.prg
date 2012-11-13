@@ -67,7 +67,7 @@ PROCEDURE Main_DATE()
 #endif
    TEST_LINE( Year(sdDate)                    , 1984                                   )
    TEST_LINE( Year(sdDateE)                   , 0                                      )
-   TEST_LINE( Str(Year(HB_SToD("19990905")))  , " 1999"                                )
+   TEST_LINE( Str(Year(hb_SToD("19990905")))  , " 1999"                                )
 
    /* MONTH() */
 
@@ -78,7 +78,7 @@ PROCEDURE Main_DATE()
 #endif
    TEST_LINE( Month(sdDate)                   , 3                                      )
    TEST_LINE( Month(sdDateE)                  , 0                                      )
-   TEST_LINE( Str(Month(HB_SToD("19990905"))) , "  9"                                  )
+   TEST_LINE( Str(Month(hb_SToD("19990905"))) , "  9"                                  )
 
    /* DAY() */
 
@@ -89,7 +89,7 @@ PROCEDURE Main_DATE()
 #endif
    TEST_LINE( Day(sdDate)                     , 25                                     )
    TEST_LINE( Day(sdDateE)                    , 0                                      )
-   TEST_LINE( Str(Day(HB_SToD("19990905")))   , "  5"                                  )
+   TEST_LINE( Str(Day(hb_SToD("19990905")))   , "  5"                                  )
 
    /* TIME() */
 
@@ -104,17 +104,17 @@ PROCEDURE Main_DATE()
 #endif
    TEST_LINE( Dow(sdDate)                     , 1                                      )
    TEST_LINE( Dow(sdDateE)                    , 0                                      )
-   TEST_LINE( Dow(HB_SToD("20000222"))        , 3                                      )
-   TEST_LINE( Dow(HB_SToD("20000223"))        , 4                                      )
-   TEST_LINE( Dow(HB_SToD("20000224"))        , 5                                      )
-   TEST_LINE( Dow(HB_SToD("20000225"))        , 6                                      )
-   TEST_LINE( Dow(HB_SToD("20000226"))        , 7                                      )
-   TEST_LINE( Dow(HB_SToD("20000227"))        , 1                                      )
-   TEST_LINE( Dow(HB_SToD("20000228"))        , 2                                      )
-   TEST_LINE( Dow(HB_SToD("20000229"))        , 3                                      )
-   TEST_LINE( Dow(HB_SToD("20000230"))        , 0                                      )
-   TEST_LINE( Dow(HB_SToD("20000231"))        , 0                                      )
-   TEST_LINE( Dow(HB_SToD("20000301"))        , 4                                      )
+   TEST_LINE( Dow(hb_SToD("20000222"))        , 3                                      )
+   TEST_LINE( Dow(hb_SToD("20000223"))        , 4                                      )
+   TEST_LINE( Dow(hb_SToD("20000224"))        , 5                                      )
+   TEST_LINE( Dow(hb_SToD("20000225"))        , 6                                      )
+   TEST_LINE( Dow(hb_SToD("20000226"))        , 7                                      )
+   TEST_LINE( Dow(hb_SToD("20000227"))        , 1                                      )
+   TEST_LINE( Dow(hb_SToD("20000228"))        , 2                                      )
+   TEST_LINE( Dow(hb_SToD("20000229"))        , 3                                      )
+   TEST_LINE( Dow(hb_SToD("20000230"))        , 0                                      )
+   TEST_LINE( Dow(hb_SToD("20000231"))        , 0                                      )
+   TEST_LINE( Dow(hb_SToD("20000301"))        , 4                                      )
 
    /* CMONTH() */
 
@@ -125,18 +125,18 @@ PROCEDURE Main_DATE()
 #endif
    TEST_LINE( CMonth(sdDate)                  , "March"                                 )
    TEST_LINE( CMonth(sdDateE)                 , ""                                      )
-   TEST_LINE( CMonth(HB_SToD("19990101"))     , "January"                               )
-   TEST_LINE( CMonth(HB_SToD("19990201"))     , "February"                              )
-   TEST_LINE( CMonth(HB_SToD("19990301"))     , "March"                                 )
-   TEST_LINE( CMonth(HB_SToD("19990401"))     , "April"                                 )
-   TEST_LINE( CMonth(HB_SToD("19990501"))     , "May"                                   )
-   TEST_LINE( CMonth(HB_SToD("19990601"))     , "June"                                  )
-   TEST_LINE( CMonth(HB_SToD("19990701"))     , "July"                                  )
-   TEST_LINE( CMonth(HB_SToD("19990801"))     , "August"                                )
-   TEST_LINE( CMonth(HB_SToD("19990901"))     , "September"                             )
-   TEST_LINE( CMonth(HB_SToD("19991001"))     , "October"                               )
-   TEST_LINE( CMonth(HB_SToD("19991101"))     , "November"                              )
-   TEST_LINE( CMonth(HB_SToD("19991201"))     , "December"                              )
+   TEST_LINE( CMonth(hb_SToD("19990101"))     , "January"                               )
+   TEST_LINE( CMonth(hb_SToD("19990201"))     , "February"                              )
+   TEST_LINE( CMonth(hb_SToD("19990301"))     , "March"                                 )
+   TEST_LINE( CMonth(hb_SToD("19990401"))     , "April"                                 )
+   TEST_LINE( CMonth(hb_SToD("19990501"))     , "May"                                   )
+   TEST_LINE( CMonth(hb_SToD("19990601"))     , "June"                                  )
+   TEST_LINE( CMonth(hb_SToD("19990701"))     , "July"                                  )
+   TEST_LINE( CMonth(hb_SToD("19990801"))     , "August"                                )
+   TEST_LINE( CMonth(hb_SToD("19990901"))     , "September"                             )
+   TEST_LINE( CMonth(hb_SToD("19991001"))     , "October"                               )
+   TEST_LINE( CMonth(hb_SToD("19991101"))     , "November"                              )
+   TEST_LINE( CMonth(hb_SToD("19991201"))     , "December"                              )
 
    /* CDOW() */
 
@@ -147,17 +147,17 @@ PROCEDURE Main_DATE()
 #endif
    TEST_LINE( CDow(sdDate)                    , "Sunday"                               )
    TEST_LINE( CDow(sdDateE)                   , ""                                     )
-   TEST_LINE( CDow(HB_SToD("20000222"))       , "Tuesday"                              )
-   TEST_LINE( CDow(HB_SToD("20000223"))       , "Wednesday"                            )
-   TEST_LINE( CDow(HB_SToD("20000224"))       , "Thursday"                             )
-   TEST_LINE( CDow(HB_SToD("20000225"))       , "Friday"                               )
-   TEST_LINE( CDow(HB_SToD("20000226"))       , "Saturday"                             )
-   TEST_LINE( CDow(HB_SToD("20000227"))       , "Sunday"                               )
-   TEST_LINE( CDow(HB_SToD("20000228"))       , "Monday"                               )
-   TEST_LINE( CDow(HB_SToD("20000229"))       , "Tuesday"                              )
-   TEST_LINE( CDow(HB_SToD("20000230"))       , ""                                     )
-   TEST_LINE( CDow(HB_SToD("20000231"))       , ""                                     )
-   TEST_LINE( CDow(HB_SToD("20000301"))       , "Wednesday"                            )
+   TEST_LINE( CDow(hb_SToD("20000222"))       , "Tuesday"                              )
+   TEST_LINE( CDow(hb_SToD("20000223"))       , "Wednesday"                            )
+   TEST_LINE( CDow(hb_SToD("20000224"))       , "Thursday"                             )
+   TEST_LINE( CDow(hb_SToD("20000225"))       , "Friday"                               )
+   TEST_LINE( CDow(hb_SToD("20000226"))       , "Saturday"                             )
+   TEST_LINE( CDow(hb_SToD("20000227"))       , "Sunday"                               )
+   TEST_LINE( CDow(hb_SToD("20000228"))       , "Monday"                               )
+   TEST_LINE( CDow(hb_SToD("20000229"))       , "Tuesday"                              )
+   TEST_LINE( CDow(hb_SToD("20000230"))       , ""                                     )
+   TEST_LINE( CDow(hb_SToD("20000231"))       , ""                                     )
+   TEST_LINE( CDow(hb_SToD("20000301"))       , "Wednesday"                            )
 
    /* DTOC() */
 
@@ -174,12 +174,12 @@ PROCEDURE Main_DATE()
 
    TEST_LINE( CToD(NIL)                       , "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( CToD(100)                       , "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:N:100 F:S" )
-   TEST_LINE( CToD("")                        , HB_SToD("        ")                    )
+   TEST_LINE( CToD("")                        , hb_SToD("        ")                    )
 #ifdef __HARBOUR__
-   TEST_LINE( CToD(@cDate)                    , HB_SToD("19991125")                    ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:1999/11/25 F:S" */
+   TEST_LINE( CToD(@cDate)                    , hb_SToD("19991125")                    ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:1999/11/25 F:S" */
 #endif
-   TEST_LINE( CToD(cDate)                     , HB_SToD("19991125")                    )
-   TEST_LINE( CToD("1999/11/25/10")           , HB_SToD("19991125")                    )
+   TEST_LINE( CToD(cDate)                     , hb_SToD("19991125")                    )
+   TEST_LINE( CToD("1999/11/25/10")           , hb_SToD("19991125")                    )
 
    /* DTOS() */
 

@@ -83,12 +83,10 @@
 /* Internal functions */
 
 /*
- ******************
  * internal function for handling pointers
  *
  * Code of Przemyslaw Czerpak for gdImagePtr
  * adapted also to gdFontPtr
- ******************
  */
 
 /* gdImage ----------------------- */
@@ -97,16 +95,16 @@
 static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
 {
    /* Retrieve image pointer holder */
-   gdImagePtr * imPtr = ( gdImagePtr * ) Cargo;
+   gdImagePtr * ptr = ( gdImagePtr * ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( *imPtr )
+   if( *ptr )
    {
       /* Destroy the image */
-      gdImageDestroy( *imPtr );
+      gdImageDestroy( *ptr );
 
       /* set pointer to NULL to avoid multiple freeing */
-      *imPtr = NULL;
+      *ptr = NULL;
    }
 }
 
@@ -120,13 +118,9 @@ static const HB_GC_FUNCS s_gcGDimageFuncs =
    passed or gdImage was freed before */
 static gdImagePtr hb_parGdImage( int iParam )
 {
-   gdImagePtr * imPtr =
-      ( gdImagePtr * ) hb_parptrGC( &s_gcGDimageFuncs, iParam );
+   gdImagePtr * ptr = ( gdImagePtr * ) hb_parptrGC( &s_gcGDimageFuncs, iParam );
 
-   if( imPtr )
-      return *imPtr;
-   else
-      return NULL;
+   return ptr ? *ptr : NULL;
 }
 
 static void * hb_isGdImage( int iParam )
@@ -137,24 +131,22 @@ static void * hb_isGdImage( int iParam )
 /* function create in HVM stack return value item with gdImage pointer */
 static void hb_retGdImage( gdImagePtr im )
 {
-   gdImagePtr * imPtr;
+   gdImagePtr * ptr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
+                                                      &s_gcGDimageFuncs );
+   *ptr = im;
 
-   imPtr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
-                                           &s_gcGDimageFuncs );
-   *imPtr = im;
-   hb_retptrGC( ( void * ) imPtr );
+   hb_retptrGC( ( void * ) ptr );
 }
 
 #if 0
 /* function returns PHB_ITEM with gdImage pointer */
 static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 {
-   gdImagePtr * imPtr;
+   gdImagePtr * ptr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
+                                                      &s_gcGDimageFuncs );
+   *ptr = im;
 
-   imPtr = ( gdImagePtr * ) hb_gcAllocate( sizeof( gdImagePtr ),
-                                           &s_gcGDimageFuncs );
-   *imPtr = im;
-   return hb_itemPutPtrGC( NULL, ( void * ) imPtr );
+   return hb_itemPutPtrGC( NULL, ( void * ) ptr );
 }
 #endif
 
@@ -164,19 +156,19 @@ static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
 {
    /* Retrieve Font pointer holder */
-   gdFontPtr * fontPtr = ( gdFontPtr * ) Cargo;
+   gdFontPtr * ptr = ( gdFontPtr * ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( *fontPtr )
+   if( *ptr )
    {
       /* Destroy the Font */
 #if 0
       /* do nothing, GD handles it directly and gdFontDestroy() not exists */
-      gdFontDestroy( *fontPtr );
+      gdFontDestroy( *ptr );
 #endif
 
       /* set pointer to NULL to avoid multiple freeing */
-      *fontPtr = NULL;
+      *ptr = NULL;
    }
 }
 
@@ -190,13 +182,9 @@ static const HB_GC_FUNCS s_gcGDfontFuncs =
    passed or gdFont was freed before */
 static gdFontPtr hb_parGdFont( int iParam )
 {
-   gdFontPtr * fontPtr =
-      ( gdFontPtr * ) hb_parptrGC( &s_gcGDfontFuncs, iParam );
+   gdFontPtr * ptr = ( gdFontPtr * ) hb_parptrGC( &s_gcGDfontFuncs, iParam );
 
-   if( fontPtr )
-      return *fontPtr;
-   else
-      return NULL;
+   return ptr ? *ptr : NULL;
 }
 
 static void * hb_isGdFont( int iParam )
@@ -207,24 +195,22 @@ static void * hb_isGdFont( int iParam )
 /* function create in HVM stack return value item with gdFont pointer */
 static void hb_retGdFont( gdFontPtr font )
 {
-   gdFontPtr * fontPtr;
+   gdFontPtr * ptr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
+                                                    &s_gcGDfontFuncs );
+   *ptr = font;
 
-   fontPtr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
-                                            &s_gcGDfontFuncs );
-   *fontPtr = font;
-   hb_retptrGC( ( void * ) fontPtr );
+   hb_retptrGC( ( void * ) ptr );
 }
 
 #if 0
 /* function returns PHB_ITEM with gdFont pointer */
 static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 {
-   gdFontPtr * fontPtr;
+   gdFontPtr * ptr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
+                                                    &s_gcGDfontFuncs );
+   *ptr = font;
 
-   fontPtr = ( gdFontPtr * ) hb_gcAllocate( sizeof( gdFontPtr ),
-                                            &s_gcGDfontFuncs );
-   *fontPtr = font;
-   return hb_itemPutPtrGC( NULL, ( void * ) fontPtr );
+   return hb_itemPutPtrGC( NULL, ( void * ) ptr );
 }
 #endif
 

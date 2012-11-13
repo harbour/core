@@ -1608,7 +1608,7 @@ FUNCTION XToStr( xValue )
       RETURN '"' + xValue + '"'
 
    CASE cType == "N" ; RETURN hb_ntos( xValue )
-   CASE cType == "D" ; RETURN 'HB_SToD("' + DToS( xValue ) + '")'
+   CASE cType == "D" ; RETURN 'hb_SToD("' + DToS( xValue ) + '")'
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
