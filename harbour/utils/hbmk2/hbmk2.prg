@@ -10355,6 +10355,18 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
          /* Silently ignore */
 
+      CASE Lower( Left( cLine, Len( "keywords="     ) ) ) == "keywords="     ; cLine := SubStr( cLine, Len( "keywords="     ) + 1 )
+
+         /* Silently ignore */
+
+      CASE Lower( Left( cLine, Len( "licences="     ) ) ) == "licenses="     ; cLine := SubStr( cLine, Len( "licences="     ) + 1 )
+
+         /* Silently ignore */
+
+      CASE Lower( Left( cLine, Len( "repository="   ) ) ) == "repository="   ; cLine := SubStr( cLine, Len( "repository="   ) + 1 )
+
+         /* Silently ignore */
+
       ENDCASE
    NEXT
 

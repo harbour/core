@@ -81,34 +81,26 @@ static void * s_pErrorHandler = NULL;
 /* Init / Error routines */
 /* --------------------- */
 
-/* DLL_API void DLL_CALLCONV FreeImage_Initialise(BOOL load_local_plugins_only FI_DEFAULT(FALSE)); */
 HB_FUNC( FI_INITIALISE )
 {
-   /* Run function */
-   FreeImage_Initialise( hb_fi_parl( 1 ) );
+   FreeImage_Initialise( hb_fi_parl( 1 ) /* load_local_plugins_only */ );
 }
 
-/* DLL_API void DLL_CALLCONV FreeImage_DeInitialise(void); */
 HB_FUNC( FI_DEINITIALISE )
 {
-   /* Run function */
    FreeImage_DeInitialise();
 }
 
 /* Version routines */
 /* ---------------- */
 
-/* DLL_API const char *DLL_CALLCONV FreeImage_GetVersion(void); */
 HB_FUNC( FI_GETVERSION )
 {
-   /* Run function & return value */
    hb_retc( FreeImage_GetVersion() );
 }
 
-/* DLL_API const char *DLL_CALLCONV FreeImage_GetCopyrightMessage(void); */
 HB_FUNC( FI_GETCOPYRIGHTMESSAGE )
 {
-   /* Run function & return value */
    hb_retc( FreeImage_GetCopyrightMessage() );
 }
 
@@ -123,7 +115,6 @@ HB_FUNC( FI_GETCOPYRIGHTMESSAGE )
 /* implementation: void FreeImage_SetOutputMessage( pFunctionPointer ) */
 
 /**
-   FreeImage error handler
    @param fif Format / Plugin responsible for the error
    @param message Error message
  */
@@ -131,8 +122,6 @@ static void FreeImageErrorHandler( FREE_IMAGE_FORMAT fif, const char * message )
 {
    if( s_pErrorHandler )
    {
-      /*TraceLog( NULL, "ErrorHandle %p\n\r", s_pErrorHandler );*/
-
       if( hb_vmRequestReenter() )
       {
          const char * format = FreeImage_GetFormatFromFIF( fif );
@@ -147,7 +136,7 @@ static void FreeImageErrorHandler( FREE_IMAGE_FORMAT fif, const char * message )
          hb_vmRequestRestore();
       }
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "FreeImageErrorHandler", 1, hb_paramError( 1 ) );
+         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "FreeImageErrorHandler", HB_ERR_ARGS_BASEPARAMS );
    }
 }
 
@@ -156,27 +145,11 @@ HB_FUNC( FI_SETOUTPUTMESSAGE )
    s_pErrorHandler = NULL;
    FreeImage_SetOutputMessage( FreeImageErrorHandler );
 
-/* TraceLog( NULL, "PCount = %i\n\r", hb_pcount() ); */
-
-   if( hb_pcount() == 1 )
-   {
-      if( HB_ISPOINTER( 1 ) )
-      {
-         /* Set the pointer */
-         s_pErrorHandler = hb_parptr( 1 );
-      }
-      else if( HB_ISNIL( 1 ) )
-      {
-         /* do nothing */
-      }
-      else
-      {
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                               HB_ERR_FUNCNAME, 1,
-                               hb_paramError( 1 )
-                               );
-      }
-   }
+   if( HB_ISPOINTER( 1 ) )
+      /* Set the pointer */
+      s_pErrorHandler = hb_parptr( 1 );
+   else if( ! HB_ISNIL( 1 ) )
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Allocate / Clone / Unload routines */
@@ -185,120 +158,64 @@ HB_FUNC( FI_SETOUTPUTMESSAGE )
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Allocate(int width, int height, int bpp, unsigned red_mask FI_DEFAULT(0), unsigned green_mask FI_DEFAULT(0), unsigned blue_mask FI_DEFAULT(0)); */
 HB_FUNC( FI_ALLOCATE )
 {
-   if( hb_pcount() >= 3 &&
-       HB_ISNUM( 1 ) &&
+   if( HB_ISNUM( 1 ) &&
        HB_ISNUM( 2 ) &&
-       HB_ISNUM( 3 )
-       )
+       HB_ISNUM( 3 ) )
    {
-      int      width, height, bpp;
-      unsigned red_mask, green_mask, blue_mask;
+      int      width      = hb_parni( 1 );
+      int      height     = hb_parni( 2 );
+      int      bpp        = hb_parni( 3 );
+      unsigned red_mask   = ( unsigned ) hb_parni( 4 );
+      unsigned green_mask = ( unsigned ) hb_parni( 5 );
+      unsigned blue_mask  = ( unsigned ) hb_parni( 6 );
 
-      /* Retrieve parameters */
-      width      = hb_parni( 1 );
-      height     = hb_parni( 2 );
-      bpp        = hb_parni( 3 );
-      red_mask   = ( unsigned ) hb_parni( 4 );
-      green_mask = ( unsigned ) hb_parni( 5 );
-      blue_mask  = ( unsigned ) hb_parni( 6 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_Allocate( width, height, bpp, red_mask, green_mask, blue_mask ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_AllocateT(FREE_IMAGE_TYPE type, int width, int height, int bpp FI_DEFAULT(8), unsigned red_mask FI_DEFAULT(0), unsigned green_mask FI_DEFAULT(0), unsigned blue_mask FI_DEFAULT(0)); */
 HB_FUNC( FI_ALLOCATET )
 {
-   if( hb_pcount() >= 3 &&
-       HB_ISNUM( 1 ) &&
+   if( HB_ISNUM( 1 ) &&
        HB_ISNUM( 2 ) &&
-       HB_ISNUM( 3 )
-       )
+       HB_ISNUM( 3 ) )
    {
-      FREE_IMAGE_TYPE type;
-      int      width, height, bpp;
-      unsigned red_mask, green_mask, blue_mask;
+      FREE_IMAGE_TYPE type = ( FREE_IMAGE_TYPE ) hb_parni( 1 );
+      int      width       = hb_parni( 2 );
+      int      height      = hb_parni( 3 );
+      int      bpp         = hb_parni( 3 );
+      unsigned red_mask    = ( unsigned ) hb_parni( 4 );
+      unsigned green_mask  = ( unsigned ) hb_parni( 5 );
+      unsigned blue_mask   = ( unsigned ) hb_parni( 6 );
 
-      /* Retrieve parameters */
-      type       = ( FREE_IMAGE_TYPE ) hb_parni( 1 );
-      width      = hb_parni( 2 );
-      height     = hb_parni( 3 );
-      bpp        = hb_parni( 3 );
-      red_mask   = ( unsigned ) hb_parni( 4 );
-      green_mask = ( unsigned ) hb_parni( 5 );
-      blue_mask  = ( unsigned ) hb_parni( 6 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_AllocateT( type, width, height, bpp, red_mask, green_mask, blue_mask ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP * DLL_CALLCONV FreeImage_Clone(FIBITMAP *dib); */
 HB_FUNC( FI_CLONE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
+   if( HB_ISPOINTER( 1 ) )
    {
-      FIBITMAP * dib;
-      FIBITMAP * fiClonePtr;
+      FIBITMAP * fiClonePtr = FreeImage_Clone( ( FIBITMAP * ) hb_parptr( 1 ) );
 
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function */
-      fiClonePtr = FreeImage_Clone( dib );
-
-      /* return value */
       if( fiClonePtr )
          hb_retptr( fiClonePtr );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API void DLL_CALLCONV FreeImage_Unload(FIBITMAP *dib); */
 HB_FUNC( FI_UNLOAD )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function */
-      FreeImage_Unload( dib );
-
-      /* return value */
-   }
+   if( HB_ISPOINTER( 1 ) )
+      FreeImage_Unload( ( FIBITMAP * ) hb_parptr( 1 ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Load / Save routines */
@@ -309,72 +226,43 @@ HB_FUNC( FI_UNLOAD )
 /* DLL_API void DLL_CALLCONV FreeImage_CloseMemory(FIMEMORY *stream); */
 HB_FUNC( FI_LOADFROMMEMORY )
 {
-   if( hb_pcount() == 3 &&
-       HB_ISNUM( 1 ) &&
+   if( HB_ISNUM( 1 ) &&
        HB_ISCHAR( 2 ) &&
-       HB_ISNUM( 3 )
-       )
+       HB_ISNUM( 3 ) )
    {
-      FIBITMAP *        dib;
-      FREE_IMAGE_FORMAT fif;
-      FIMEMORY *        stream;
-      const char *      szImage;
-      int flags;
+      FREE_IMAGE_FORMAT fif     = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
+      const char *      szImage = hb_parc( 2 );
+      int flags = hb_parni( 3 );
 
-      /* Retrieve parameters */
-      fif     = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
-      szImage = hb_parcx( 2 );
-      flags   = hb_parni( 3 );
-
-      /* run function */
-      stream = FreeImage_OpenMemory( ( BYTE * ) szImage, ( DWORD ) hb_parclen( 2 ) );
-      dib    = FreeImage_LoadFromMemory( fif, stream, flags );
+      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) szImage, ( DWORD ) hb_parclen( 2 ) );
+      FIBITMAP * dib    = FreeImage_LoadFromMemory( fif, stream, flags );
       FreeImage_CloseMemory( stream );
 
-      /* return value */
       if( dib )
          hb_retptr( dib );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Load(FREE_IMAGE_FORMAT fif, const char *filename, int flags FI_DEFAULT(0)); */
 HB_FUNC( FI_LOAD )
 {
-   if( hb_pcount() == 3 &&
-       HB_ISNUM( 1 ) &&
+   if( HB_ISNUM( 1 ) &&
        HB_ISCHAR( 2 ) &&
-       HB_ISNUM( 3 )
-       )
+       HB_ISNUM( 3 ) )
    {
-      FIBITMAP *        dib;
-      FREE_IMAGE_FORMAT fif;
-      const char *      filename;
-      int flags;
+      FREE_IMAGE_FORMAT fif      = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
+      const char *      filename = hb_parc( 2 );
+      int flags = hb_parni( 3 );
 
-      /* Retrieve parameters */
-      fif      = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
-      filename = hb_parcx( 2 );
-      flags    = hb_parni( 3 );
+      FIBITMAP * dib = FreeImage_Load( fif, filename, flags );
 
-      /* run function */
-      dib = FreeImage_Load( fif, filename, flags );
-
-      /* return value */
       if( dib )
          hb_retptr( dib );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_LoadU(FREE_IMAGE_FORMAT fif, const wchar_t *filename, int flags FI_DEFAULT(0)); */
@@ -383,33 +271,20 @@ HB_FUNC( FI_LOAD )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_Save(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, const char *filename, int flags FI_DEFAULT(0)); */
 HB_FUNC( FI_SAVE )
 {
-   if( hb_pcount() == 4 &&
-       HB_ISNUM( 1 ) &&
+   if( HB_ISNUM( 1 ) &&
        HB_ISPOINTER( 2 ) &&
        HB_ISCHAR( 3 ) &&
-       HB_ISNUM( 4 )
-       )
+       HB_ISNUM( 4 ) )
    {
-      FREE_IMAGE_FORMAT fif;
-      FIBITMAP *        dib;
-      const char *      filename;
-      int flags;
+      FREE_IMAGE_FORMAT fif      = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
+      FIBITMAP *        dib      = ( FIBITMAP * ) hb_parptr( 2 );
+      const char *      filename = hb_parc( 3 );
+      int flags = hb_parni( 4 );
 
-      /* Retrieve parameters */
-      fif      = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
-      dib      = ( FIBITMAP * ) hb_parptr( 2 );
-      filename = hb_parcx( 3 );
-      flags    = hb_parni( 4 );
-
-      /* run function & return value */
       hb_fi_retl( FreeImage_Save( fif, dib, filename, flags ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 4,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SaveU(FREE_IMAGE_FORMAT fif, FIBITMAP *dib, const wchar_t *filename, int flags FI_DEFAULT(0)); */
@@ -459,254 +334,148 @@ HB_FUNC( FI_SAVE )
 /* DLL_API FIMULTIBITMAP * DLL_CALLCONV FreeImage_OpenMultiBitmap(FREE_IMAGE_FORMAT fif, const char *filename, BOOL create_new, BOOL read_only, BOOL keep_cache_in_memory FI_DEFAULT(FALSE), int flags FI_DEFAULT(0)); */
 HB_FUNC( FI_OPENMULTIBITMAP )
 {
-   if( hb_pcount() >= 4 &&
-       HB_ISNUM( 1 ) &&
+   if( HB_ISNUM( 1 ) &&
        HB_ISCHAR( 2 ) &&
        HB_ISLOG( 3 ) &&
-       HB_ISLOG( 4 )
-       )
+       HB_ISLOG( 4 ) )
    {
-      FIMULTIBITMAP *   dib;
-      FREE_IMAGE_FORMAT fif;
-      const char *      filename;
-      BOOL create_new;
-      BOOL read_only;
-      BOOL keep_cache_in_memory;
-      int  flags;
+      FREE_IMAGE_FORMAT fif      = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
+      const char *      filename = hb_parc( 2 );
+      BOOL create_new = hb_fi_parl( 3 );
+      BOOL read_only  = hb_fi_parl( 4 );
+      BOOL keep_cache_in_memory = hb_fi_parl( 5 );
+      int  flags = hb_parni( 6 );
 
-      /* Retrieve parameters */
-      fif        = ( FREE_IMAGE_FORMAT ) hb_parni( 1 );
-      filename   = hb_parcx( 2 );
-      create_new = hb_fi_parl( 3 );
-      read_only  = hb_fi_parl( 4 );
-      keep_cache_in_memory = hb_fi_parl( 5 );
-      flags = hb_parni( 6 );
+      FIMULTIBITMAP * dib = FreeImage_OpenMultiBitmap( fif, filename, create_new, read_only, keep_cache_in_memory, flags );
 
-      /* run function */
-      dib = FreeImage_OpenMultiBitmap( fif, filename, create_new, read_only, keep_cache_in_memory, flags );
-
-      /* return value */
       if( dib )
          hb_retptr( dib );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 4,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_CloseMultiBitmap(FIMULTIBITMAP *bitmap, int flags FI_DEFAULT(0)); */
 HB_FUNC( FI_CLOSEMULTIBITMAP )
 {
-   if( hb_pcount() >= 1 &&
-       HB_ISPOINTER( 1 )
-       )
+   if( HB_ISPOINTER( 1 ) )
    {
-      FIMULTIBITMAP * bitmap;
-      int flags;
+      FIMULTIBITMAP * bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
+      int flags = hb_parni( 2 );
 
-      /* Retrieve parameters */
-      bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-      flags  = hb_parni( 2 );
-
-      /* run function & return value */
       hb_fi_retl( FreeImage_CloseMultiBitmap( bitmap, flags ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API int DLL_CALLCONV FreeImage_GetPageCount(FIMULTIBITMAP *bitmap); */
 HB_FUNC( FI_GETPAGECOUNT )
 {
-   if( hb_pcount() >= 1 &&
-       HB_ISPOINTER( 1 )
-       )
+   if( HB_ISPOINTER( 1 ) )
    {
-      FIMULTIBITMAP * bitmap;
+      FIMULTIBITMAP * bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
 
-      /* Retrieve parameters */
-      bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
       hb_retni( FreeImage_GetPageCount( bitmap ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API void DLL_CALLCONV FreeImage_AppendPage(FIMULTIBITMAP *bitmap, FIBITMAP *data); */
 HB_FUNC( FI_APPENDPAGE )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISPOINTER( 2 ) )
    {
-      FIMULTIBITMAP * bitmap;
-      FIBITMAP *      data;
+      FIMULTIBITMAP * bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
+      FIBITMAP *      data   = ( FIBITMAP * ) hb_parptr( 2 );
 
-      /* Retrieve parameters */
-      bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-      data   = ( FIBITMAP * ) hb_parptr( 2 );
-
-      /* run function & return value */
       FreeImage_AppendPage( bitmap, data );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API void DLL_CALLCONV FreeImage_InsertPage(FIMULTIBITMAP *bitmap, int page, FIBITMAP *data); */
 HB_FUNC( FI_INSERTPAGE )
 {
-   if( hb_pcount() == 3 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&
-       HB_ISPOINTER( 3 )
-       )
+       HB_ISPOINTER( 3 ) )
    {
-      FIMULTIBITMAP * bitmap;
-      int        page;
-      FIBITMAP * data;
+      FIMULTIBITMAP * bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
+      int        page        = hb_parni( 2 ) - 1; /* 0-based index */
+      FIBITMAP * data        = ( FIBITMAP * ) hb_parptr( 3 );
 
-      /* Retrieve parameters */
-      bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-      page   = hb_parni( 2 ) - 1; /* 0-based index */
-      data   = ( FIBITMAP * ) hb_parptr( 3 );
-
-      /* run function & return value */
       FreeImage_InsertPage( bitmap, page, data );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API void DLL_CALLCONV FreeImage_DeletePage(FIMULTIBITMAP *bitmap, int page); */
 HB_FUNC( FI_DELETEPAGE )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIMULTIBITMAP * bitmap;
-      int page;
+      FIMULTIBITMAP * bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
+      int page = hb_parni( 2 ) - 1;               /* 0-based index */
 
-      /* Retrieve parameters */
-      bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-      page   = hb_parni( 2 ) - 1; /* 0-based index */
-
-      /* run function & return value */
       FreeImage_DeletePage( bitmap, page );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP * DLL_CALLCONV FreeImage_LockPage(FIMULTIBITMAP *bitmap, int page); */
 HB_FUNC( FI_LOCKPAGE )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIMULTIBITMAP * bitmap;
-      int page;
+      FIMULTIBITMAP * bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
+      int page = hb_parni( 2 ) - 1;               /* 0-based index */
 
-      /* Retrieve parameters */
-      bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-      page   = hb_parni( 2 ) - 1; /* 0-based index */
-
-      /* run function & return value */
       hb_retptr( FreeImage_LockPage( bitmap, page ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API void DLL_CALLCONV FreeImage_UnlockPage(FIMULTIBITMAP *bitmap, FIBITMAP *page, BOOL changed); */
 HB_FUNC( FI_UNLOCKPAGE )
 {
-   if( hb_pcount() == 3 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&
-       HB_ISLOG( 3 )
-       )
+       HB_ISLOG( 3 ) )
    {
-      FIMULTIBITMAP * bitmap;
-      FIBITMAP *      page;
-      BOOL changed;
+      FIMULTIBITMAP * bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
+      FIBITMAP *      page   = ( FIBITMAP * ) hb_parptr( 2 );
+      BOOL changed = hb_fi_parl( 3 );
 
-      /* Retrieve parameters */
-      bitmap  = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-      page    = ( FIBITMAP * ) hb_parptr( 2 );
-      changed = hb_fi_parl( 3 );
-
-      /* run function & return value */
       FreeImage_UnlockPage( bitmap, page, changed );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_MovePage(FIMULTIBITMAP *bitmap, int target, int source); */
 HB_FUNC( FI_MOVEPAGE )
 {
-   if( hb_pcount() == 3 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&
-       HB_ISNUM( 3 )
-       )
+       HB_ISNUM( 3 ) )
    {
-      FIMULTIBITMAP * bitmap;
-      int target, source;
+      FIMULTIBITMAP * bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
+      int target = hb_parni( 2 );
+      int source = hb_parni( 3 );
 
-      /* Retrieve parameters */
-      bitmap = ( FIMULTIBITMAP * ) hb_parptr( 1 );
-      target = hb_parni( 2 );
-      source = hb_parni( 3 );
-
-      /* run function & return value */
       hb_fi_retl( FreeImage_MovePage( bitmap, target, source ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_GetLockedPageNumbers(FIMULTIBITMAP *bitmap, int *pages, int *count); */
@@ -717,26 +486,15 @@ HB_FUNC( FI_MOVEPAGE )
 /* DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileType(const char *filename, int size FI_DEFAULT(0)); */
 HB_FUNC( FI_GETFILETYPE )
 {
-   if( hb_pcount() >= 1 &&
-       HB_ISCHAR( 1 )
-       )
+   if( HB_ISCHAR( 1 ) )
    {
-      const char * filename;
-      int          size;
+      const char * filename = hb_parc( 1 );
+      int          size     = ( int ) hb_parclen( 1 );
 
-      /* Retrieve parameters */
-      filename = hb_parcx( 1 );
-      size     = ( int ) hb_parclen( 1 );
-
-      /* run function & return value */
       hb_retni( FreeImage_GetFileType( filename, size ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeU(const wchar_t *filename, int size FI_DEFAULT(0)); */
@@ -744,55 +502,28 @@ HB_FUNC( FI_GETFILETYPE )
 /* DLL_API FREE_IMAGE_FORMAT DLL_CALLCONV FreeImage_GetFileTypeFromMemory(FIMEMORY *stream, int size FI_DEFAULT(0)); */
 HB_FUNC( FI_GETFILETYPEFROMMEMORY )
 {
-   if( hb_pcount() >= 1 &&
-       HB_ISCHAR( 1 )
-       )
+   if( HB_ISCHAR( 1 ) )
    {
-      const char * szImage;
-      FIMEMORY *   stream;
-      int          size;
+      FIMEMORY * stream = FreeImage_OpenMemory( ( BYTE * ) hb_parc( 1 ), ( int ) hb_parclen( 1 ) );
+      int        size   = hb_parni( 1 );
 
-      /* Retrieve parameters */
-      szImage = hb_parcx( 1 );
-      stream  = FreeImage_OpenMemory( ( BYTE * ) szImage, ( int ) hb_parclen( 1 ) );
-      size    = hb_parni( 1 );
-
-      /* run function & return value */
       hb_retni( FreeImage_GetFileTypeFromMemory( stream, size ) );
+
       FreeImage_CloseMemory( stream );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Image type request routine */
 /* -------------------------- */
 
-/* DLL_API FREE_IMAGE_TYPE DLL_CALLCONV FreeImage_GetImageType(FIBITMAP *dib); */
 HB_FUNC( FI_GETIMAGETYPE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retni( FreeImage_GetImageType( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retni( FreeImage_GetImageType( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* FreeImage helper routines */
@@ -801,7 +532,6 @@ HB_FUNC( FI_GETIMAGETYPE )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_IsLittleEndian(void); */
 HB_FUNC( FI_ISLITTLEENDIAN )
 {
-   /* run function & return value */
    hb_fi_retl( FreeImage_IsLittleEndian() );
 }
 
@@ -812,53 +542,27 @@ HB_FUNC( FI_ISLITTLEENDIAN )
 /* Pixel access routines */
 /* --------------------- */
 
-/* DLL_API BYTE *DLL_CALLCONV FreeImage_GetBits(FIBITMAP *dib); */
 HB_FUNC( FI_GETBITS )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_GetBits( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_GetBits( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BYTE *DLL_CALLCONV FreeImage_GetScanLine(FIBITMAP *dib, int scanline); */
 HB_FUNC( FI_GETSCANLINE )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      int        scanline;
+      FIBITMAP * dib      = ( FIBITMAP * ) hb_parptr( 1 );
+      int        scanline = hb_parni( 2 );
 
-      /* Retrieve parameters */
-      dib      = ( FIBITMAP * ) hb_parptr( 1 );
-      scanline = hb_parni( 2 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_GetScanLine( dib, scanline ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /*
@@ -871,619 +575,261 @@ HB_FUNC( FI_GETSCANLINE )
 /* DIB info routines */
 /* ----------------- */
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetColorsUsed(FIBITMAP *dib); */
 HB_FUNC( FI_GETCOLORSUSED )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetColorsUsed( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetColorsUsed( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetBPP(FIBITMAP *dib); */
 HB_FUNC( FI_GETBPP )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetBPP( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetBPP( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetWidth(FIBITMAP *dib); */
 HB_FUNC( FI_GETWIDTH )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetWidth( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetWidth( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetHeight(FIBITMAP *dib); */
 HB_FUNC( FI_GETHEIGHT )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetHeight( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetHeight( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetLine(FIBITMAP *dib); */
 HB_FUNC( FI_GETLINE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetLine( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetLine( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetPitch(FIBITMAP *dib); */
 HB_FUNC( FI_GETPITCH )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetPitch( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetPitch( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetDIBSize(FIBITMAP *dib); */
 HB_FUNC( FI_GETDIBSIZE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetDIBSize( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetDIBSize( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API RGBQUAD *DLL_CALLCONV FreeImage_GetPalette(FIBITMAP *dib); */
 HB_FUNC( FI_GETPALETTE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_GetPalette( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_GetPalette( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetDotsPerMeterX(FIBITMAP *dib); */
 HB_FUNC( FI_GETDOTSPERMETERX )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetDotsPerMeterX( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetDotsPerMeterX( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetDotsPerMeterY(FIBITMAP *dib); */
 HB_FUNC( FI_GETDOTSPERMETERY )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retnl( FreeImage_GetDotsPerMeterY( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retnl( FreeImage_GetDotsPerMeterY( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API void DLL_CALLCONV FreeImage_SetDotsPerMeterX(FIBITMAP *dib, unsigned res); */
 HB_FUNC( FI_SETDOTSPERMETERX )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      unsigned   res;
+      FIBITMAP * dib = ( FIBITMAP * ) hb_parptr( 1 );
+      unsigned   res = ( unsigned ) hb_parni( 2 );
 
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-      res = ( unsigned ) hb_parni( 2 );
-
-      /* run function & return value */
       FreeImage_SetDotsPerMeterX( dib, res );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API void DLL_CALLCONV FreeImage_SetDotsPerMeterY(FIBITMAP *dib, unsigned res); */
 HB_FUNC( FI_SETDOTSPERMETERY )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      unsigned   res;
+      FIBITMAP * dib = ( FIBITMAP * ) hb_parptr( 1 );
+      unsigned   res = ( unsigned ) hb_parni( 2 );
 
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-      res = ( unsigned ) hb_parni( 2 );
-
-      /* run function & return value */
       FreeImage_SetDotsPerMeterY( dib, res );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BITMAPINFOHEADER *DLL_CALLCONV FreeImage_GetInfoHeader(FIBITMAP *dib); */
 HB_FUNC( FI_GETINFOHEADER )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
+   if( HB_ISPOINTER( 1 ) )
       /* We need not worry about Memory Management - will be automatically released! */
-      /*BITMAPINFOHEADER * bmpinfoheader = (BITMAPINFOHEADER *) hb_xgrab( sizeof( BITMAPINFOHEADER ) );*/
-      BITMAPINFOHEADER * bmpinfoheader;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      bmpinfoheader = FreeImage_GetInfoHeader( dib );
-
-      /*hb_retclenAdoptRaw( (char *) bmpinfoheader, sizeof( BITMAPINFOHEADER ) );*/
-      hb_retptr( bmpinfoheader );
-   }
+      hb_retptr( FreeImage_GetInfoHeader( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BITMAPINFO *DLL_CALLCONV FreeImage_GetInfo(FIBITMAP *dib); */
 HB_FUNC( FI_GETINFO )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP *   dib;
-      BITMAPINFO * bmpinfo;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      bmpinfo = FreeImage_GetInfo( dib );
-
-      hb_retptr( bmpinfo );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_GetInfo( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API FREE_IMAGE_COLOR_TYPE DLL_CALLCONV FreeImage_GetColorType(FIBITMAP *dib); */
 HB_FUNC( FI_GETCOLORTYPE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retni( FreeImage_GetColorType( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retni( FreeImage_GetColorType( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetRedMask(FIBITMAP *dib); */
 HB_FUNC( FI_GETREDMASK )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retni( FreeImage_GetRedMask( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retni( FreeImage_GetRedMask( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetGreenMask(FIBITMAP *dib); */
 HB_FUNC( FI_GETGREENMASK )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retni( FreeImage_GetGreenMask( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retni( FreeImage_GetGreenMask( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetBlueMask(FIBITMAP *dib); */
 HB_FUNC( FI_GETBLUEMASK )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retni( FreeImage_GetBlueMask( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retni( FreeImage_GetBlueMask( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API unsigned DLL_CALLCONV FreeImage_GetTransparencyCount(FIBITMAP *dib); */
 HB_FUNC( FI_GETTRANSPARENCYCOUNT )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retni( FreeImage_GetTransparencyCount( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retni( FreeImage_GetTransparencyCount( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BYTE * DLL_CALLCONV FreeImage_GetTransparencyTable(FIBITMAP *dib); */
 HB_FUNC( FI_GETTRANSPARENCYTABLE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_GetTransparencyTable( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_GetTransparencyTable( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API void DLL_CALLCONV FreeImage_SetTransparent(FIBITMAP *dib, BOOL enabled); */
 HB_FUNC( FI_SETTRANSPARENT )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISLOG( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISLOG( 2 ) )
    {
-      FIBITMAP * dib;
-      BOOL       enabled;
+      FIBITMAP * dib     = ( FIBITMAP * ) hb_parptr( 1 );
+      BOOL       enabled = hb_fi_parl( 2 );
 
-      /* Retrieve parameters */
-      dib     = ( FIBITMAP * ) hb_parptr( 1 );
-      enabled = hb_fi_parl( 2 );
-
-      /* run function & return value */
       FreeImage_SetTransparent( dib, enabled );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API void DLL_CALLCONV FreeImage_SetTransparencyTable(FIBITMAP *dib, BYTE *table, int count); */
 HB_FUNC( FI_SETTRANSPARENCYTABLE )
 {
-   if( hb_pcount() == 3 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISPOINTER( 2 ) &&
-       HB_ISNUM( 3 )
-       )
+       HB_ISNUM( 3 ) )
    {
-      FIBITMAP * dib;
-      BYTE *     table;
-      int        count;
+      FIBITMAP * dib   = ( FIBITMAP * ) hb_parptr( 1 );
+      BYTE *     table = ( BYTE * ) hb_parptr( 2 );
+      int        count = hb_parni( 3 );
 
-      /* Retrieve parameters */
-      dib   = ( FIBITMAP * ) hb_parptr( 1 );
-      table = ( BYTE * ) hb_parptr( 2 );
-      count = hb_parni( 3 );
-
-      /* run function & return value */
       FreeImage_SetTransparencyTable( dib, table, count );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API BOOL DLL_CALLCONV FreeImage_IsTransparent(FIBITMAP *dib); */
 HB_FUNC( FI_ISTRANSPARENT )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_fi_retl( FreeImage_IsTransparent( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_fi_retl( FreeImage_IsTransparent( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API BOOL DLL_CALLCONV FreeImage_HasBackgroundColor(FIBITMAP *dib); */
 HB_FUNC( FI_HASBACKGROUNDCOLOR )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_fi_retl( FreeImage_HasBackgroundColor( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_fi_retl( FreeImage_HasBackgroundColor( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_GetBackgroundColor(FIBITMAP *dib, RGBQUAD *bkcolor); */
 HB_FUNC( FI_GETBACKGROUNDCOLOR )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 ) /*&& HB_ISCHAR( 2 )*/
-       )
+   if( HB_ISPOINTER( 1 )
+       /* && HB_ISCHAR( 2 ) */ )
    {
       FIBITMAP * dib;
       RGBQUAD *  bkcolor = NULL;
 
       /* Retrieve parameters */
       dib = ( FIBITMAP * ) hb_parptr( 1 );
-      /*bkcolor = ( RGBQUAD * ) hb_param( 2, HB_IT_STRING )->item.asString.value;*/
-      /*bkcolor = ( RGBQUAD * ) hb_parptr( 2 );*/
+      /* bkcolor = ( RGBQUAD * ) hb_parc( 2 ); */
+      /* bkcolor = ( RGBQUAD * ) hb_parptr( 2 ); */
 
-      /* run function & return value */
-      /*hb_fi_retl( FreeImage_GetBackgroundColor(dib, bkcolor) );*/
+      /* hb_fi_retl( FreeImage_GetBackgroundColor(dib, bkcolor) ); */
       FreeImage_GetBackgroundColor( dib, bkcolor );
-      /*hb_storptr( bkcolor, 2 );*/
+      /* hb_storptr( bkcolor, 2 ); */
       hb_retptr( bkcolor );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetBackgroundColor(FIBITMAP *dib, RGBQUAD *bkcolor); */
 HB_FUNC( FI_SETBACKGROUNDCOLOR )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       /*HB_ISPOINTER( 2 )*/
-       HB_ISCHAR( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       /* HB_ISPOINTER( 2 ) */
+       HB_ISCHAR( 2 ) )
    {
       FIBITMAP * dib;
       RGBQUAD *  bkcolor;
@@ -1491,98 +837,50 @@ HB_FUNC( FI_SETBACKGROUNDCOLOR )
       /* Retrieve parameters */
       dib     = ( FIBITMAP * ) hb_parptr( 1 );
       bkcolor = ( RGBQUAD * ) hb_itemGetCPtr( hb_param( 2, HB_IT_STRING ) );
-      /*bkcolor = ( RGBQUAD * ) hb_parptr( 2 );*/
+      /* bkcolor = ( RGBQUAD * ) hb_parptr( 2 ); */
 
-      /* run function & return value */
       hb_fi_retl( FreeImage_SetBackgroundColor( dib, bkcolor ) );
       /* FreeImage_GetBackgroundColor(dib, bkcolor); */
       /* hb_retptr( bkcolor ); */
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* ICC profile routines */
 /* -------------------- */
 
-/* DLL_API FIICCPROFILE *DLL_CALLCONV FreeImage_GetICCProfile(FIBITMAP *dib); */
 HB_FUNC( FI_GETICCPROFILE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_GetICCProfile( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_GetICCProfile( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIICCPROFILE *DLL_CALLCONV FreeImage_CreateICCProfile(FIBITMAP *dib, void *data, long size); */
 HB_FUNC( FI_CREATEICCPROFILE )
 {
-   if( hb_pcount() == 3 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISPOINTER( 2 ) &&
-       HB_ISNUM( 3 )
-       )
+       HB_ISNUM( 3 ) )
    {
-      FIBITMAP * dib;
-      void *     data;
-      long       size;
+      FIBITMAP * dib  = ( FIBITMAP * ) hb_parptr( 1 );
+      void *     data = hb_parptr( 2 );
+      long       size = hb_parnl( 3 );
 
-      /* Retrieve parameters */
-      dib  = ( FIBITMAP * ) hb_parptr( 1 );
-      data = hb_parptr( 2 );
-      size = hb_parnl( 3 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_CreateICCProfile( dib, data, size ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 3,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API void DLL_CALLCONV FreeImage_DestroyICCProfile(FIBITMAP *dib); */
 HB_FUNC( FI_DESTROYICCPROFILE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      FreeImage_DestroyICCProfile( dib );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      FreeImage_DestroyICCProfile( ( FIBITMAP * ) hb_parptr( 1 ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Line conversion routines */
@@ -1630,199 +928,75 @@ HB_FUNC( FI_DESTROYICCPROFILE )
 /* Smart conversion routines */
 /* ------------------------- */
 
-/* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertTo4Bits(FIBITMAP *dib); */
 HB_FUNC( FI_CONVERTTO4BITS )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo4Bits( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_ConvertTo4Bits( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertTo8Bits(FIBITMAP *dib); */
 HB_FUNC( FI_CONVERTTO8BITS )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo8Bits( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_ConvertTo8Bits( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertToGreyscale(FIBITMAP *dib); */
 HB_FUNC( FI_CONVERTTOGREYSCALE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_ConvertToGreyscale( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_ConvertToGreyscale( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertTo16Bits555(FIBITMAP *dib); */
 HB_FUNC( FI_CONVERTTO16BITS555 )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo16Bits555( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_ConvertTo16Bits555( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertTo16Bits565(FIBITMAP *dib); */
 HB_FUNC( FI_CONVERTTO16BITS565 )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo16Bits565( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_ConvertTo16Bits565( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertTo24Bits(FIBITMAP *dib); */
 HB_FUNC( FI_CONVERTTO24BITS )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo24Bits( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_ConvertTo24Bits( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertTo32Bits(FIBITMAP *dib); */
 HB_FUNC( FI_CONVERTTO32BITS )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_ConvertTo32Bits( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_ConvertTo32Bits( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ColorQuantize(FIBITMAP *dib, FREE_IMAGE_QUANTIZE quantize); */
 HB_FUNC( FI_COLORQUANTIZE )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      FREE_IMAGE_QUANTIZE quantize;
+      FIBITMAP * dib = ( FIBITMAP * ) hb_parptr( 1 );
+      FREE_IMAGE_QUANTIZE quantize = ( FREE_IMAGE_QUANTIZE ) hb_parni( 2 );
 
-      /* Retrieve parameters */
-      dib      = ( FIBITMAP * ) hb_parptr( 1 );
-      quantize = ( FREE_IMAGE_QUANTIZE ) hb_parni( 2 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_ColorQuantize( dib, quantize ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ColorQuantizeEx(FIBITMAP *dib, FREE_IMAGE_QUANTIZE quantize FI_DEFAULT(FIQ_WUQUANT), int PaletteSize FI_DEFAULT(256), int ReserveSize FI_DEFAULT(0), RGBQUAD *ReservePalette FI_DEFAULT(NULL)); */
@@ -1831,110 +1005,57 @@ HB_FUNC( FI_COLORQUANTIZE )
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Dither(FIBITMAP *dib, FREE_IMAGE_DITHER algorithm); */
 HB_FUNC( FI_DITHER )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP *        dib;
-      FREE_IMAGE_DITHER algorithm;
+      FIBITMAP *        dib       = ( FIBITMAP * ) hb_parptr( 1 );
+      FREE_IMAGE_DITHER algorithm = ( FREE_IMAGE_DITHER ) hb_parni( 2 );
 
-      /* Retrieve parameters */
-      dib       = ( FIBITMAP * ) hb_parptr( 1 );
-      algorithm = ( FREE_IMAGE_DITHER ) hb_parni( 2 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_Dither( dib, algorithm ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertFromRawBits(BYTE *bits, int width, int height, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown FI_DEFAULT(FALSE)); */
 /* DLL_API void DLL_CALLCONV FreeImage_ConvertToRawBits(BYTE *bits, FIBITMAP *dib, int pitch, unsigned bpp, unsigned red_mask, unsigned green_mask, unsigned blue_mask, BOOL topdown FI_DEFAULT(FALSE)); */
 
-/* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertToRGBF(FIBITMAP *dib); */
 HB_FUNC( FI_CONVERTTORGBF )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_retptr( FreeImage_ConvertToRGBF( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_retptr( FreeImage_ConvertToRGBF( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertToStandardType(FIBITMAP *src, BOOL scale_linear FI_DEFAULT(TRUE)); */
 HB_FUNC( FI_CONVERTTOSTANDARDTYPE )
 {
-   if( hb_pcount() >= 1 &&
-       HB_ISPOINTER( 1 )
-       )
+   if( HB_ISPOINTER( 1 ) )
    {
-      FIBITMAP * dib;
-      BOOL       scale_linear;
+      FIBITMAP * dib = ( FIBITMAP * ) hb_parptr( 1 );
+      BOOL       scale_linear = HB_ISLOG( 2 ) ? hb_fi_parl( 2 ) : TRUE;
 
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-      scale_linear = ( HB_ISLOG( 2 ) ) ? hb_fi_parl( 2 ) : TRUE;
-
-      /* run function & return value */
       hb_retptr( FreeImage_ConvertToStandardType( dib, scale_linear ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_ConvertToType(FIBITMAP *src, FREE_IMAGE_TYPE dst_type, BOOL scale_linear FI_DEFAULT(TRUE)); */
 HB_FUNC( FI_CONVERTTOTYPE )
 {
-   if( hb_pcount() >= 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP *      dib;
-      FREE_IMAGE_TYPE dst_type;
-      BOOL scale_linear;
+      FIBITMAP *      dib      = ( FIBITMAP * ) hb_parptr( 1 );
+      FREE_IMAGE_TYPE dst_type = ( FREE_IMAGE_TYPE ) hb_parni( 2 );
+      BOOL scale_linear        = HB_ISLOG( 3 ) ? hb_fi_parl( 3 ) : TRUE;
 
-      /* Retrieve parameters */
-      dib          = ( FIBITMAP * ) hb_parptr( 1 );
-      dst_type     = ( FREE_IMAGE_TYPE ) hb_parni( 2 );
-      scale_linear = ( HB_ISLOG( 3 ) ) ? hb_fi_parl( 3 ) : TRUE;
-
-      /* run function & return value */
       hb_retptr( FreeImage_ConvertToType( dib, dst_type, scale_linear ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* tone mapping operators */
@@ -1999,112 +1120,57 @@ HB_FUNC( FI_CONVERTTOTYPE )
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_RotateClassic(FIBITMAP *dib, double angle); */
 HB_FUNC( FI_ROTATECLASSIC )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      double     angle;
+      FIBITMAP * dib   = ( FIBITMAP * ) hb_parptr( 1 );
+      double     angle = hb_parnd( 2 );
 
-      /* Retrieve parameters */
-      dib   = ( FIBITMAP * ) hb_parptr( 1 );
-      angle = hb_parnd( 2 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_RotateClassic( dib, angle ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_RotateEx(FIBITMAP *dib, double angle, double x_shift, double y_shift, double x_origin, double y_origin, BOOL use_mask); */
 HB_FUNC( FI_ROTATEEX )
 {
-   if( hb_pcount() == 7 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
        HB_ISNUM( 6 ) &&
-       HB_ISLOG( 7 )
-       )
+       HB_ISLOG( 7 ) )
    {
-      FIBITMAP * dib;
-      double     angle, x_shift, y_shift, x_origin, y_origin;
-      BOOL       use_mask;
+      FIBITMAP * dib      = ( FIBITMAP * ) hb_parptr( 1 );
+      double     angle    = hb_parnd( 2 );
+      double     x_shift  = hb_parnd( 3 );
+      double     y_shift  = hb_parnd( 4 );
+      double     x_origin = hb_parnd( 5 );
+      double     y_origin = hb_parnd( 6 );
+      BOOL       use_mask = hb_fi_parl( 7 );
 
-      /* Retrieve parameters */
-      dib      = ( FIBITMAP * ) hb_parptr( 1 );
-      angle    = hb_parnd( 2 );
-      x_shift  = hb_parnd( 3 );
-      y_shift  = hb_parnd( 4 );
-      x_origin = hb_parnd( 5 );
-      y_origin = hb_parnd( 6 );
-      use_mask = hb_fi_parl( 7 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_RotateEx( dib, angle, x_shift, y_shift, x_origin, y_origin, use_mask ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 7,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-                            hb_paramError( 5 ), hb_paramError( 6 ), hb_paramError( 7 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API BOOL DLL_CALLCONV FreeImage_FlipHorizontal(FIBITMAP *dib); */
 HB_FUNC( FI_FLIPHORIZONTAL )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_fi_retl( FreeImage_FlipHorizontal( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_fi_retl( FreeImage_FlipHorizontal( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API BOOL DLL_CALLCONV FreeImage_FlipVertical(FIBITMAP *dib); */
 HB_FUNC( FI_FLIPVERTICAL )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_fi_retl( FreeImage_FlipVertical( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_fi_retl( FreeImage_FlipVertical( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_JPEGTransform(const char *src_file, const char *dst_file, FREE_IMAGE_JPEG_OPERATION operation, BOOL perfect FI_DEFAULT(FALSE)); */
@@ -2115,33 +1181,20 @@ HB_FUNC( FI_FLIPVERTICAL )
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Rescale(FIBITMAP *dib, int dst_width, int dst_height, FREE_IMAGE_FILTER filter); */
 HB_FUNC( FI_RESCALE )
 {
-   if( hb_pcount() == 4 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
-       HB_ISNUM( 4 )
-       )
+       HB_ISNUM( 4 ) )
    {
-      FIBITMAP *        dib;
-      int               dst_width, dst_height;
-      FREE_IMAGE_FILTER filter;
+      FIBITMAP *        dib        = ( FIBITMAP * ) hb_parptr( 1 );
+      int               dst_width  = hb_parni( 2 );
+      int               dst_height = hb_parni( 3 );
+      FREE_IMAGE_FILTER filter     = ( FREE_IMAGE_FILTER ) hb_parni( 4 );
 
-      /* Retrieve parameters */
-      dib        = ( FIBITMAP * ) hb_parptr( 1 );
-      dst_width  = hb_parni( 2 );
-      dst_height = hb_parni( 3 );
-      filter     = ( FREE_IMAGE_FILTER ) hb_parni( 4 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_Rescale( dib, dst_width, dst_height, filter ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 4,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* color manipulation routines (point operations) */
@@ -2152,106 +1205,54 @@ HB_FUNC( FI_RESCALE )
 /* DLL_API BOOL DLL_CALLCONV FreeImage_AdjustGamma(FIBITMAP *dib, double gamma); */
 HB_FUNC( FI_ADJUSTGAMMA )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      double     gamma;
+      FIBITMAP * dib   = ( FIBITMAP * ) hb_parptr( 1 );
+      double     gamma = hb_parnd( 2 );
 
-      /* Retrieve parameters */
-      dib   = ( FIBITMAP * ) hb_parptr( 1 );
-      gamma = hb_parnd( 2 );
-
-      /* run function & return value */
       hb_fi_retl( FreeImage_AdjustGamma( dib, gamma ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_AdjustBrightness(FIBITMAP *dib, double percentage); */
 HB_FUNC( FI_ADJUSTBRIGHTNESS )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      double     percentage;
+      FIBITMAP * dib        = ( FIBITMAP * ) hb_parptr( 1 );
+      double     percentage = hb_parnd( 2 );
 
-      /* Retrieve parameters */
-      dib        = ( FIBITMAP * ) hb_parptr( 1 );
-      percentage = hb_parnd( 2 );
-
-      /* run function & return value */
       hb_fi_retl( FreeImage_AdjustBrightness( dib, percentage ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_AdjustContrast(FIBITMAP *dib, double percentage); */
 HB_FUNC( FI_ADJUSTCONTRAST )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      double     percentage;
+      FIBITMAP * dib        = ( FIBITMAP * ) hb_parptr( 1 );
+      double     percentage = hb_parnd( 2 );
 
-      /* Retrieve parameters */
-      dib        = ( FIBITMAP * ) hb_parptr( 1 );
-      percentage = hb_parnd( 2 );
-
-      /* run function & return value */
       hb_fi_retl( FreeImage_AdjustContrast( dib, percentage ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-/* DLL_API BOOL DLL_CALLCONV FreeImage_Invert(FIBITMAP *dib); */
 HB_FUNC( FI_INVERT )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
-   {
-      FIBITMAP * dib;
-
-      /* Retrieve parameters */
-      dib = ( FIBITMAP * ) hb_parptr( 1 );
-
-      /* run function & return value */
-      hb_fi_retl( FreeImage_Invert( dib ) );
-   }
+   if( HB_ISPOINTER( 1 ) )
+      hb_fi_retl( FreeImage_Invert( ( FIBITMAP * ) hb_parptr( 1 ) ) );
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_GetHistogram(FIBITMAP *dib, DWORD *histo, FREE_IMAGE_COLOR_CHANNEL channel FI_DEFAULT(FICC_BLACK)); */
@@ -2262,28 +1263,16 @@ HB_FUNC( FI_INVERT )
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_GetChannel(FIBITMAP *dib, FREE_IMAGE_COLOR_CHANNEL channel); */
 HB_FUNC( FI_GETCHANNEL )
 {
-   if( hb_pcount() == 2 &&
-       HB_ISPOINTER( 1 ) &&
-       HB_ISNUM( 2 )
-       )
+   if( HB_ISPOINTER( 1 ) &&
+       HB_ISNUM( 2 ) )
    {
-      FIBITMAP * dib;
-      FREE_IMAGE_COLOR_CHANNEL channel;
+      FIBITMAP * dib = ( FIBITMAP * ) hb_parptr( 1 );
+      FREE_IMAGE_COLOR_CHANNEL channel = ( FREE_IMAGE_COLOR_CHANNEL ) hb_parni( 2 );
 
-      /* Retrieve parameters */
-      dib     = ( FIBITMAP * ) hb_parptr( 1 );
-      channel = ( FREE_IMAGE_COLOR_CHANNEL ) hb_parni( 2 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_GetChannel( dib, channel ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 2,
-                            hb_paramError( 1 ), hb_paramError( 2 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_SetChannel(FIBITMAP *dib, FIBITMAP *dib8, FREE_IMAGE_COLOR_CHANNEL channel); */
@@ -2296,70 +1285,43 @@ HB_FUNC( FI_GETCHANNEL )
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Copy(FIBITMAP *dib, int left, int top, int right, int bottom); */
 HB_FUNC( FI_COPY )
 {
-   if( hb_pcount() == 5 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
-       HB_ISNUM( 5 )
-       )
+       HB_ISNUM( 5 ) )
    {
-      FIBITMAP * dib;
-      int        left, top, right, bottom;
+      FIBITMAP * dib    = ( FIBITMAP * ) hb_parptr( 1 );
+      int        left   = hb_parni( 2 );
+      int        top    = hb_parni( 3 );
+      int        right  = hb_parni( 4 );
+      int        bottom = hb_parni( 5 );
 
-      /* Retrieve parameters */
-      dib    = ( FIBITMAP * ) hb_parptr( 1 );
-      left   = hb_parni( 2 );
-      top    = hb_parni( 3 );
-      right  = hb_parni( 4 );
-      bottom = hb_parni( 5 );
-
-      /* run function & return value */
       hb_retptr( FreeImage_Copy( dib, left, top, right, bottom ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 5,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-                            hb_paramError( 5 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API BOOL DLL_CALLCONV FreeImage_Paste(FIBITMAP *dst, FIBITMAP *src, int left, int top, int alpha); */
 HB_FUNC( FI_PASTE )
 {
-   if( hb_pcount() == 5 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISPOINTER( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
-       HB_ISNUM( 5 )
-       )
+       HB_ISNUM( 5 ) )
    {
-      FIBITMAP * dst;
-      FIBITMAP * src;
-      int        left, top, alpha;
+      FIBITMAP * dst   = ( FIBITMAP * ) hb_parptr( 1 );
+      FIBITMAP * src   = ( FIBITMAP * ) hb_parptr( 2 );
+      int        left  = hb_parni( 3 );
+      int        top   = hb_parni( 4 );
+      int        alpha = hb_parni( 5 );
 
-      /* Retrieve parameters */
-      dst   = ( FIBITMAP * ) hb_parptr( 1 );
-      src   = ( FIBITMAP * ) hb_parptr( 2 );
-      left  = hb_parni( 3 );
-      top   = hb_parni( 4 );
-      alpha = hb_parni( 5 );
-
-      /* run function & return value */
       hb_fi_retl( FreeImage_Paste( dst, src, left, top, alpha ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 5,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ), hb_paramError( 4 ),
-                            hb_paramError( 5 )
-                            );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* DLL_API FIBITMAP *DLL_CALLCONV FreeImage_Composite(FIBITMAP *fg, BOOL useFileBkg FI_DEFAULT(FALSE), RGBQUAD *appBkColor FI_DEFAULT(NULL), FIBITMAP *bg FI_DEFAULT(NULL)); */

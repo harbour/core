@@ -73,9 +73,7 @@
 
 HB_FUNC( FI_WINCONVTODIB )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
+   if( HB_ISPOINTER( 1 ) )
    {
 #if ! defined( HB_OS_WIN_CE )
       FIBITMAP * dib;
@@ -98,33 +96,22 @@ HB_FUNC( FI_WINCONVTODIB )
 #endif
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Convert from HBITMAP to FreeImage */
 
 HB_FUNC( FI_WINCONVFROMDIB )
 {
-   if( hb_pcount() == 1 &&
-       HB_ISPOINTER( 1 )
-       )
+   if( HB_ISPOINTER( 1 ) )
    {
 #if ! defined( HB_OS_WIN_CE )
-      FIBITMAP * dib;
-      HBITMAP    bitmap;
-
-      /* Retrieve parameters */
-      bitmap = ( HBITMAP ) hb_parptr( 1 );
-
-      /* run function */
-      dib = NULL;
+      HBITMAP bitmap = ( HBITMAP ) hb_parptr( 1 );
 
       if( bitmap )
       {
+         FIBITMAP * dib;
+
          BITMAP bm;
          HDC    hDC;
 
@@ -134,38 +121,31 @@ HB_FUNC( FI_WINCONVFROMDIB )
          GetDIBits( hDC, bitmap, 0, FreeImage_GetHeight( dib ),
                     FreeImage_GetBits( dib ), FreeImage_GetInfo( dib ), DIB_RGB_COLORS );
          ReleaseDC( NULL, hDC );
-      }
 
-      /* return value */
-      if( dib )
-         hb_retptr( dib );
+         /* return value */
+         if( dib )
+            hb_retptr( dib );
+      }
 #endif
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 1,
-                            hb_paramError( 1 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 /* Draw an image in a window Box */
 
 HB_FUNC( FI_WINDRAW )
 {
-   if( hb_pcount() == 6 &&
-       HB_ISPOINTER( 1 ) &&
+   if( HB_ISPOINTER( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
-       HB_ISNUM( 6 )
-       )
+       HB_ISNUM( 6 ) )
    {
       FIBITMAP * dib;
       HDC        hDC;
       RECT       rcDest;
-      int        scanlines;
 
       /* Retrieve parameters */
       dib           = ( FIBITMAP * ) hb_parptr( 1 );
@@ -180,24 +160,17 @@ HB_FUNC( FI_WINDRAW )
       SetStretchBltMode( hDC, COLORONCOLOR );
 #endif
 
-      scanlines = StretchDIBits( hDC, rcDest.left,
-                                 rcDest.top,
-                                 rcDest.right - rcDest.left,
-                                 rcDest.bottom - rcDest.top,
-                                 0, 0, FreeImage_GetWidth( dib ), FreeImage_GetHeight( dib ),
-                                 FreeImage_GetBits( dib ), FreeImage_GetInfo( dib ),
-                                 DIB_RGB_COLORS, SRCCOPY );
-
-      /* return value */
-      hb_retni( scanlines );
+      /* return scanlines */
+      hb_retni( StretchDIBits( hDC, rcDest.left,
+                               rcDest.top,
+                               rcDest.right - rcDest.left,
+                               rcDest.bottom - rcDest.top,
+                               0, 0, FreeImage_GetWidth( dib ), FreeImage_GetHeight( dib ),
+                               FreeImage_GetBits( dib ), FreeImage_GetInfo( dib ),
+                               DIB_RGB_COLORS, SRCCOPY ) );
    }
    else
-   {
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL,
-                            HB_ERR_FUNCNAME, 6,
-                            hb_paramError( 1 ), hb_paramError( 2 ), hb_paramError( 3 ),
-                            hb_paramError( 4 ), hb_paramError( 5 ), hb_paramError( 6 ) );
-   }
+      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 #else

@@ -221,7 +221,7 @@ PROCEDURE Main()
       FClose( nH )
 
       ? "Load JPEG from memory"
-      im := fi_LoadFromMem( FIF_JPEG, cStr, JPEG_DEFAULT )
+      im := fi_LoadFromMemory( FIF_JPEG, cStr, JPEG_DEFAULT )
 
       ? "Pointer          :", ValToPrg( im )
       ? "Image Type       :", fi_GetImageType( im )

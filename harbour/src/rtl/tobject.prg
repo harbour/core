@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Base Object from which all object finally inherit
  *
- * Copyright 2000 JfL&RaC <jfl@mafact.com>, <rac@mafact.com>
+ * Copyright 2000 J. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -50,24 +50,6 @@
  *
  */
 
-/*
- * The following parts are Copyright of the individual authors.
- * www - http://harbour-project.org
- *
- * Copyright 2000 J. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
- *    1.40 07/13/2000 JFL&RAC
- *    Now supporting of New and Init method as Class(y) use it
- *    So oMyObj:new(Var1, Var2) will call oMyObj:Init(Var1, Var2)
- *    Currently limited to 20 params
- *
- *    1.41 07/18/2000 JFL&RAC
- *    Improving class(y) compatibility
- *    adding messages :error() and ::MsgNotFound()
- *
- * See COPYING for licensing terms.
- *
- */
-
 /* WARNING: Can not use the preprocessor, otherwise
             it will auto inherit from itself. */
 
@@ -85,12 +67,6 @@ FUNCTION HBObject()
 
          oClass := HBClass():New( "HBObject",, @HBObject() )
 
-         /* Those Five worked fine but their C version from classes.c are probably better in term of speed */
-         /*oClass:AddInline( "CLASSNAME"       , {| Self | __OBJGETCLSNAME( Self )     }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "CLASSH"          , {| Self | __CLASSH( Self )            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "CLASSSEL"        , {| Self | __CLASSSEL( Self:CLASSH() ) }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "EVAL"            , {| Self | __EVAL( Self )              }, HB_OO_CLSTP_EXPORTED ) */
-
 #ifndef HB_CLP_STRICT
          oClass:AddInline( "ISDERIVEDFROM"   , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, HB_OO_CLSTP_EXPORTED ) /* Xbase++ compatibility */
 #endif
@@ -106,42 +82,39 @@ FUNCTION HBObject()
 
          oClass:AddInline( "MSGNOTFOUND"     , {| Self, cMsg | ::Error( "Message not found", Self:className, cMsg, iif( Left( cMsg, 1 ) == "_", 1005, 1004 ) ) }, HB_OO_CLSTP_EXPORTED )
 
-         /*oClass:AddMultiData( , , HB_OO_CLSTP_EXPORTED, { "CLASS" }, .F. ) */
+#if 0
+         oClass:AddMultiData( , , HB_OO_CLSTP_EXPORTED, { "CLASS" }, .F. )
 
-         /*oClass:AddInline( "ADDMETHOD" , {| Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __CLASSH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "ADDVAR"    , {| Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass:=__CLASSH( Self ) ,     cVar , uidata := __CLS_INCDATA( hClass ), HB_OO_MSG_ACCESS, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ; */
-         /*                                                                            __clsAddMsg( hClass                   , "_"+cVar , uiData                           , HB_OO_MSG_ASSIGN, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED ) */
+         oClass:AddInline( "ADDMETHOD" , {| Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __CLASSH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "ADDVAR"    , {| Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass:=__CLASSH( Self ) ,     cVar , uidata := __CLS_INCDATA( hClass ), HB_OO_MSG_ACCESS, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ;
+                                                                                     __clsAddMsg( hClass                   , "_"+cVar , uiData                           , HB_OO_MSG_ASSIGN, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
 
-         /* Those one exist within Class(y), so we will probably try to implement it               */
+         /* These ones exist within Class(y), so we will probably try to implement it */
 
-         /*oClass:AddInline( "asString"       , {| Self | ::class:name + " object"   }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "asExpStr"       , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "basicSize"      , {| Self | Len( Self )                }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "become"         , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "isEqual"        , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "isScalar"       , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "copy"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "deepCopy"       , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
+         oClass:AddInline( "asString"       , {| Self | ::class:name + " object"   }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "asExpStr"       , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "basicSize"      , {| Self | Len( Self )                }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "become"         , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "isEqual"        , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "isScalar"       , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "copy"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "deepCopy"       , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
 
-         /*oClass:AddInline( "deferred"       , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
+         oClass:AddInline( "deferred"       , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
 
-         /*oClass:AddInline( "exec"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "error           , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "hash"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "null"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "size"           , {| Self | Len( Self )                }, HB_OO_CLSTP_EXPORTED ) */
-
-         /* Those three are already treated within Classes.c */
-         /*oClass:AddInline( "protectErr"     , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "hiddenErr"      , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "readOnlyErr"    , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
+         oClass:AddInline( "exec"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "error"          , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "hash"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "null"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "size"           , {| Self | Len( Self )                }, HB_OO_CLSTP_EXPORTED )
 
          /* No idea when those two could occur !!? */
-         /*oClass:AddInline( "wrongClass"     , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
-         /*oClass:AddInline( "badMethod"      , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
+         oClass:AddInline( "wrongClass"     , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "badMethod"      , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
 
          /* this one exist within VO and seem to be Auto Called when object ran out of scope */
-         /*oClass:AddInline( "Axit"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED ) */
+         oClass:AddInline( "Axit"           , {| Self |                            }, HB_OO_CLSTP_EXPORTED )
+#endif
 
          oClass:Create()
 
@@ -153,11 +126,12 @@ FUNCTION HBObject()
 
    ENDIF
 
-/*
+#if 0
    oInstance := s_oClass:Instance()
    oInstance:class := s_oClass
+
    RETURN oInstance
-*/
+#endif
 
    RETURN s_oClass:Instance()
 

@@ -92,8 +92,11 @@ FUNCTION HBClass()
 
       BEGIN SEQUENCE
 
+#if 0
+         hClass := __clsNew( "HBCLASS", 17,, @HBClass() )
+#else
          hClass := __clsNew( "HBCLASS", 16,, @HBClass() )
-/*       hClass := __clsNew( "HBCLASS", 17,, @HBClass())  */
+#endif
 
          __clsAddMsg( hClass, "New"            , @New()            , HB_OO_MSG_METHOD )
          __clsAddMsg( hClass, "Create"         , @Create()         , HB_OO_MSG_METHOD )
@@ -146,8 +149,10 @@ FUNCTION HBClass()
          __clsAddMsg( hClass, "_asFriendFunc"  , 15, HB_OO_MSG_ASSIGN )
          __clsAddMsg( hClass, "sClassFunc"     , 16, HB_OO_MSG_ACCESS )
          __clsAddMsg( hClass, "_sClassFunc"    , 16, HB_OO_MSG_ASSIGN )
-     /*  __clsAddMsg( hClass, "class"          , 17, HB_OO_MSG_ACCESS )
-         __clsAddMsg( hClass, "_class"         , 17, HB_OO_MSG_ASSIGN ) */
+#if 0
+         __clsAddMsg( hClass, "class"          , 17, HB_OO_MSG_ACCESS )
+         __clsAddMsg( hClass, "_class"         , 17, HB_OO_MSG_ASSIGN )
+#endif
 
       ALWAYS
 
@@ -212,7 +217,9 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    LOCAL hClass
    LOCAL ahSuper := {}
 
-/* Self:Class := MetaClass */
+#if 0
+   Self:Class := MetaClass
+#endif
 
    FOR EACH n IN ::asSuper
       hClass := __clsInstSuper( n ) /* Super handle available */
@@ -232,12 +239,13 @@ STATIC PROCEDURE Create( /* MetaClass */ )
    ENDIF
    __clsAddMsg( hClass, "REALCLASS", 0, HB_OO_MSG_REALCLASS, 0, HB_OO_CLSTP_EXPORTED )
 
+#if 0
    // We will work here on the MetaClass object to add the Class Method
    // as needed
-   // FOR EACH n IN ::aClsMethods
-   // // do it
-   // NEXT
-   // //
+   FOR EACH n IN ::aClsMethods
+      // do it
+   NEXT
+#endif
 
    /* local messages... */
 
