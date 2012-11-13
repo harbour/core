@@ -212,7 +212,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
 static BOOL    hb_gt_wvwAllocSpBuffer( WIN_DATA * pWindowData, USHORT col, USHORT row );
 
 static void    hb_gt_wvwSetWindowTitle( UINT usWinNum, LPCTSTR title );
-static BOOL    hb_gt_wvw_GetWindowTitle( UINT usWinNum, char ** title );
+static PHB_ITEM hb_gt_wvw_GetWindowTitle( UINT usWinNum, PHB_ITEM pItem );
 static HICON   hb_gt_wvwSetWindowIcon( UINT usWinNum, int icon, const char * lpIconName );
 static HICON   hb_gt_wvwSetWindowIconFromFile( UINT usWinNum, LPCTSTR icon );
 
@@ -1597,11 +1597,7 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
       case HB_GTI_WINTITLE:
       {
-         char * szTitle = NULL;
-         if( hb_gt_wvw_GetWindowTitle( s_pWvwData->s_usCurWindow, &szTitle ) )
-            pInfo->pResult = hb_itemPutCPtr( pInfo->pResult, szTitle );
-         else
-            pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
+         pInfo->pResult = hb_gt_wvw_GetWindowTitle( s_pWvwData->s_usCurWindow, pInfo->pResult );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
             void * hWindowTitle;
@@ -6221,24 +6217,17 @@ static void hb_gt_wvwSetWindowTitle( UINT usWinNum, LPCSTR title )
    SetWindowText( s_pWvwData->s_pWindows[ usWinNum ]->hWnd, title );
 }
 
-static BOOL hb_gt_wvw_GetWindowTitle( UINT usWinNum, char ** title )
+static PHB_ITEM hb_gt_wvw_GetWindowTitle( UINT usWinNum, PHB_ITEM pItem )
 {
    TCHAR buffer[ WVW_MAX_TITLE_SIZE ];
    int   iResult;
 
    iResult = GetWindowText( s_pWvwData->s_pWindows[ usWinNum ]->hWnd, buffer, WVW_MAX_TITLE_SIZE );
+   buffer[ HB_SIZEOFARRAY( buffer ) - 1 ] = TEXT( '\0' );
    if( iResult > 0 )
-   {
-#ifdef UNICODE
-      *title = hb_wcntomb( buffer, iResult );
-#else
-      *title = hb_strndup( buffer, iResult );
-#endif
-      return TRUE;
-   }
-
-   *title = NULL;
-   return FALSE;
+      return HB_ITEMPUTSTR( pItem, buffer );
+   else
+      return hb_itemPutC( pItem, NULL );
 }
 
 
