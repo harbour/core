@@ -67,6 +67,7 @@
 #include "hbapi.h"
 #include "hbapierr.h"
 #include "hbapifs.h"
+#include "hbvm.h"
 #include "ctstrfil.h"
 #include "hbwinuni.h"
 
@@ -113,8 +114,9 @@ HB_FUNC( DRIVETYPE )
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    HB_SIZE nSize = hb_parclen( 1 ) + 2;  /* allow space for '\0' & ":\" */
    char * pszDrive = ( char * ) hb_xgrab( nSize + 1 );
-   LPTSTR lpDrive;
-   int iType;
+   LPCTSTR lpDrive;
+   LPTSTR lpFree;
+   UINT uiType;
 
    hb_strncpy( pszDrive, hb_parcx( 1 ), nSize );
 
@@ -124,31 +126,36 @@ HB_FUNC( DRIVETYPE )
    if( strstr( pszDrive, "\\" ) == NULL )
       hb_strncat( pszDrive, "\\", nSize );
 
-   lpDrive = HB_TCHAR_CONVTO( pszDrive );
-   switch( GetDriveType( lpDrive ) )
+   lpDrive = HB_FSNAMECONV( pszDrive, &lpFree );
+   hb_vmUnlock();
+   uiType = GetDriveType( lpDrive );
+   hb_vmLock();
+   if( lpFree )
+      hb_xfree( lpFree );
+   hb_xfree( pszDrive );
+
+   switch( uiType )
    {
       case DRIVE_RAMDISK:
-         iType = 0;           /* RAM Drive - Clipper compatible */
+         uiType = 0;           /* RAM Drive - Clipper compatible */
          break;
       case DRIVE_REMOVABLE:
-         iType = 2;           /* Floppy Drive - Clipper compatible */
+         uiType = 2;           /* Floppy Drive - Clipper compatible */
          break;
       case DRIVE_FIXED:
-         iType = 3;           /* Hard Drive  - Clipper compatible */
+         uiType = 3;           /* Hard Drive  - Clipper compatible */
          break;
       case DRIVE_CDROM:
-         iType = 4;           /* CD-Rom Drive - xHarbour extension */
+         uiType = 4;           /* CD-Rom Drive - xHarbour extension */
          break;
       case DRIVE_REMOTE:
-         iType = 5;           /* Network Drive - xHarbour extension */
+         uiType = 5;           /* Network Drive - xHarbour extension */
          break;
       default:
-         iType = 9;           /* Unknown Drive - xHarbour extension */
+         uiType = 9;           /* Unknown Drive - xHarbour extension */
          break;
    }
-   hb_retni( iType );
-   hb_xfree( pszDrive );
-   HB_TCHAR_FREE( lpDrive );
+   hb_retni( uiType );
 #else
    hb_retni( 9 );
 #endif
@@ -200,55 +207,32 @@ HB_FUNC( VOLUME )
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
    if( ! ct_getsafety() )
    {
-      PHB_FNAME fname;
-      const char * sDiskName;
-      char * sRoot = NULL;
-      char * sVolName = NULL;
-      char sRootBuf[ 4 ], sVolNameBuf[ 12 ];
-      char * pszFree;
-      LPTSTR lpRoot;
-      LPTSTR lpVolName;
+      const char * pszRoot = NULL;
+      const char * pszVolName = NULL;
+      char szRootBuf[ 4 ], szVolNameBuf[ 12 ];
+      LPCTSTR lpRoot, lpVolName;
+      LPTSTR lpRootFree = NULL, lpVolNameFree = NULL;
 
       if( hb_parclen( 1 ) > 0 )
       {
-         sDiskName = hb_fsNameConv( hb_parc( 1 ), &pszFree );
+         PHB_FNAME fname = hb_fsFNameSplit( hb_parc( 1 ) );
 
-         if( ( fname = hb_fsFNameSplit( sDiskName ) ) != NULL )
-         {
-            if( fname->szPath )
-            {
-               hb_strncpy( sRootBuf, fname->szPath, sizeof( sRootBuf ) - 1 );
-               sRoot = sRootBuf;
-            }
-
-            if( fname->szName )
-            {
-               hb_strncpy( sVolNameBuf, fname->szName, sizeof( sVolNameBuf ) - 1 );
-               sVolName = sVolNameBuf;
-            }
-
-            hb_xfree( fname );
-         }
-         else
-         {
-            hb_strncpy( sVolNameBuf, sDiskName, sizeof( sVolNameBuf ) - 1 );
-            sVolName = sVolNameBuf;
-         }
-
-         if( pszFree )
-            hb_xfree( pszFree );
+         if( fname->szPath )
+            pszRoot = hb_strncpy( szRootBuf, fname->szPath, sizeof( szRootBuf ) - 1 );
+         if( fname->szName )
+            pszVolName = hb_strncpy( szVolNameBuf, fname->szName, sizeof( szVolNameBuf ) - 1 );
+         hb_xfree( fname );
       }
 
-      lpRoot = sRoot ? HB_TCHAR_CONVTO( sRoot ) : NULL;
-      lpVolName = sVolName ? HB_TCHAR_CONVTO( sVolName ) : NULL;
-
-      bReturn = SetVolumeLabel( lpRoot, lpVolName );
-
-      if( lpRoot )
-         HB_TCHAR_FREE( lpRoot );
-
-      if( lpVolName )
-         HB_TCHAR_FREE( lpVolName );
+      lpRoot = pszRoot ? HB_FSNAMECONV( pszRoot, &lpRootFree ) : NULL;
+      lpVolName = pszVolName ? HB_FSNAMECONV( pszVolName, &lpVolNameFree ) : NULL;
+      hb_vmUnlock();
+      bReturn = SetVolumeLabel( lpRoot, lpVolName ) != 0;
+      hb_vmLock();
+      if( lpRootFree )
+         hb_xfree( lpRootFree );
+      if( lpVolNameFree )
+         hb_xfree( lpVolNameFree );
    }
 #endif
    hb_retl( bReturn );

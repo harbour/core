@@ -85,6 +85,7 @@
 
 #include "hbapi.h"
 #include "hbapiitm.h"
+#include "hbvm.h"
 #include "hbset.h"
 #include "hbapierr.h"
 #include "hbwinuni.h"
@@ -97,15 +98,18 @@
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
 static HB_BOOL hb_IsNetShared( const char * szLocalDevice )
 {
-   TCHAR lpRemoteDevice[ 128 ];
-   LPTSTR lpLocalDevice;
+   TCHAR lpRemoteDevice[ HB_PATH_MAX ];
+   LPCTSTR lpLocalDevice;
+   LPTSTR lpFree;
    DWORD dwLen = HB_SIZEOFARRAY( lpRemoteDevice );
    DWORD dwResult;
 
-   lpLocalDevice = HB_TCHAR_CONVTO( szLocalDevice );
-   dwResult = WNetGetConnection( ( LPCTSTR ) lpLocalDevice,
-                                 ( LPTSTR ) lpRemoteDevice, &dwLen );
-   HB_TCHAR_FREE( lpLocalDevice );
+   lpLocalDevice = HB_FSNAMECONV( szLocalDevice, &lpFree );
+   hb_vmUnlock();
+   dwResult = WNetGetConnection( lpLocalDevice, lpRemoteDevice, &dwLen );
+   hb_vmLock();
+   if( lpFree )
+      hb_xfree( lpFree );
 
    return dwResult == NO_ERROR;
 }
@@ -144,16 +148,21 @@ HB_FUNC( NETPRINTER )
 HB_FUNC( NETDISK )
 {
 #if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
-   char cDrive[ 3 ];
+   const char * pszDrive = hb_parc( 1 );
 
-   cDrive[ 0 ] = hb_parcx( 1 )[ 0 ];
-   cDrive[ 1 ] = ':';
-   cDrive[ 2 ] = '\0';
+   if( pszDrive )
+   {
+      char szDrive[ 3 ];
 
-   hb_retl( hb_IsNetShared( cDrive ) );
-#else
-   hb_retl( HB_FALSE );
+      szDrive[ 0 ] = pszDrive[ 0 ];
+      szDrive[ 1 ] = ':';
+      szDrive[ 2 ] = '\0';
+
+      hb_retl( hb_IsNetShared( szDrive ) );
+   }
+   else
 #endif
+      hb_retl( HB_FALSE );
 }
 
 HB_FUNC( NETREDIR )
