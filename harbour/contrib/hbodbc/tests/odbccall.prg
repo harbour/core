@@ -8,12 +8,7 @@
 
 PROCEDURE Main()
 
-   LOCAL cConStr
-   LOCAL dsFunctions
-
-   cConStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
-
-   dsFunctions := TODBC():New( cConStr )
+   LOCAL dsFunctions := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
 
    dsFunctions:SetSQL( "SELECT * FROM test" )
    dsFunctions:Open()

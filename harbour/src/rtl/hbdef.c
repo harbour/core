@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HB_DEFAULT() function
+ * HB_DEFAULT() and __DEFAULTNIL() functions
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -53,13 +53,70 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 
+typedef enum
+{
+   HB_IT_U,
+   HB_IT_N,
+   HB_IT_C,
+   HB_IT_L,
+   HB_IT_D,
+   HB_IT_T,
+   HB_IT_B,
+   HB_IT_H,
+   HB_IT_A,
+   HB_IT_O,
+   HB_IT_P,
+   HB_IT_S
+} HB_IT_BASIC;
+
+static HB_IT_BASIC s_hb_itemTypeBasic( PHB_ITEM pItem )
+{
+   switch( HB_ITEM_TYPE( pItem ) )
+   {
+      case HB_IT_ARRAY:
+         return hb_arrayIsObject( pItem ) ? HB_IT_O : HB_IT_A;
+
+      case HB_IT_BLOCK:
+         return HB_IT_B;
+
+      case HB_IT_DATE:
+         return HB_IT_D;
+
+      case HB_IT_TIMESTAMP:
+         return HB_IT_T;
+
+      case HB_IT_LOGICAL:
+         return HB_IT_L;
+
+      case HB_IT_INTEGER:
+      case HB_IT_LONG:
+      case HB_IT_DOUBLE:
+         return HB_IT_N;
+
+      case HB_IT_STRING:
+      case HB_IT_MEMO:
+         return HB_IT_C;
+
+      case HB_IT_HASH:
+         return HB_IT_H;
+
+      case HB_IT_POINTER:
+         return HB_IT_P;
+
+      case HB_IT_SYMBOL:
+         return HB_IT_S;
+   }
+
+   return HB_IT_U;
+}
+
 HB_FUNC( HB_DEFAULT )
 {
    if( hb_pcount() >= 2 )
    {
       PHB_ITEM pDefault = hb_param( 2, HB_IT_ANY );
 
-      if( hb_itemType( hb_param( 1, HB_IT_ANY ) ) != hb_itemType( pDefault ) )
+      if( s_hb_itemTypeBasic( hb_param( 1, HB_IT_ANY ) ) != s_hb_itemTypeBasic( pDefault ) )
          hb_itemParamStore( 1, pDefault );
    }
 }

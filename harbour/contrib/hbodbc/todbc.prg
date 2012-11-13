@@ -69,10 +69,10 @@
 #include "hbclass.ch"
 #include "sql.ch"
 
-// +
-// + Class TODBCField
-// + Fields information collection
-// +-----------------------------------------------------------------
+//
+// Class TODBCField
+// Fields information collection
+// -----------------------------------------------------------------
 
 CREATE CLASS TODBCField
 
@@ -91,10 +91,10 @@ ENDCLASS
 METHOD New() CLASS TODBCField
    RETURN Self
 
-// +
-// + Class TODBC
-// + Manages ODBC access
-// +-----------------------------------------------------------------
+//
+// Class TODBC
+// Manages ODBC access
+// -----------------------------------------------------------------
 
 CREATE CLASS TODBC
 
@@ -155,7 +155,6 @@ CREATE CLASS TODBC
 
 ENDCLASS
 
-//
 METHOD SQLErrorMessage() CLASS TODBC
 
    LOCAL cErrorClass, nType, cErrorMsg
@@ -164,10 +163,8 @@ METHOD SQLErrorMessage() CLASS TODBC
 
    RETURN "Error " + cErrorClass + " - " + cErrorMsg
 
-//
 METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
 
-   LOCAL xBuf
    LOCAL nRet
 
    IF HB_ISSTRING( cUserName )
@@ -184,28 +181,23 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
    ::lCacheRS  := lCache
 
    // Allocates SQL Environment
-   IF ( nRet := SQLAllocEnv( @xBuf ) ) == SQL_SUCCESS
-      ::hEnv := xBuf
-   ELSE
+   IF ( nRet := SQLAllocEnv( @::hEnv ) ) != SQL_SUCCESS
       ::nRetCode := nRet
       RETURN NIL
    ENDIF
 
-   SQLAllocConnect( ::hEnv, @xBuf )                 // Allocates SQL Connection
-   ::hDbc := xBuf
+   SQLAllocConnect( ::hEnv, @::hDbc )                   // Allocates SQL Connection
 
    IF HB_ISSTRING( cUserName )
       IF ! ( ( nRet := SQLConnect( ::hDbc, cODBCStr, cUserName, cPassword ) ) == SQL_SUCCESS .OR. nRet == SQL_SUCCESS_WITH_INFO )
          // TODO: Some error here
       ENDIF
    ELSE
-      SQLDriverConnect( ::hDbc, ::cODBCStr, @xBuf )     // Connects to Driver
-      ::cODBCRes := xBuf
+      SQLDriverConnect( ::hDbc, ::cODBCStr, @::cODBCRes )  // Connects to Driver
    ENDIF
 
    RETURN Self
 
-//
 METHOD SetAutoCommit( lEnable ) CLASS TODBC
 
    LOCAL lOld := ::lAutoCommit
@@ -221,16 +213,23 @@ METHOD SetAutoCommit( lEnable ) CLASS TODBC
 
    RETURN lOld
 
-//
 METHOD Destroy() CLASS TODBC
 
-   SQLDisconnect( ::hDbc )                        // Disconnects from Driver
-   SQLFreeConnect( ::hDbc )                        // Frees the connection
+#if defined( _HBODBC_AUTO_MM_ )
+   ::hStmt := NIL  // TOFIX: There should be no GPF even without this line
+
+   SQLDisconnect( ::hDbc )                     // Disconnects from Driver
+
+   ::hDbc := NIL                               // Frees the connection
+   ::hEnv := NIL                               // Frees the environment
+#else
+   SQLDisconnect( ::hDbc )                     // Disconnects from Driver
+   SQLFreeConnect( ::hDbc )                    // Frees the connection
    SQLFreeEnv( ::hEnv )                        // Frees the environment
+#endif
 
    RETURN NIL
 
-//
 METHOD GetCnnOptions( nType ) CLASS TODBC
 
    LOCAL cBuffer := Space( 256 )
@@ -239,22 +238,18 @@ METHOD GetCnnOptions( nType ) CLASS TODBC
 
    RETURN cBuffer
 
-//
 METHOD SetCnnOptions( nType, uBuffer ) CLASS TODBC
 
    RETURN ::nRetCode := SQLSetConnectAttr( ::hDbc, nType, uBuffer )
 
-//
 METHOD Commit() CLASS TODBC
 
    RETURN ::nRetCode := SQLCommit( ::hEnv, ::hDbc )
 
-//
 METHOD RollBack() CLASS TODBC
 
    RETURN ::nRetCode := SQLRollback( ::hEnv, ::hDbc )
 
-//
 METHOD GetStmtOptions( nType ) CLASS TODBC
 
    LOCAL cBuffer := Space( 256 )
@@ -263,12 +258,10 @@ METHOD GetStmtOptions( nType ) CLASS TODBC
 
    RETURN cBuffer
 
-//
 METHOD SetStmtOptions( nType, uBuffer ) CLASS TODBC
 
    RETURN ::nRetCode := SQLSetStmtAttr( ::hStmt, nType, uBuffer )
 
-//
 METHOD SetSQL( cSQL ) CLASS TODBC
 
    // If the DataSet is active, close it
@@ -282,7 +275,6 @@ METHOD SetSQL( cSQL ) CLASS TODBC
 
    RETURN NIL
 
-//
 METHOD Open() CLASS TODBC
 
    LOCAL nRet
@@ -295,7 +287,6 @@ METHOD Open() CLASS TODBC
    LOCAL nColSize
    LOCAL nDecimals
    LOCAL nNul
-   LOCAL xBuf
    LOCAL nResult
    LOCAL aCurRow
 
@@ -307,7 +298,7 @@ METHOD Open() CLASS TODBC
          // TODO: Some error here
          // Cannot do this operation on an opened dataset
 
-         nRet := - 1
+         nRet := -1
          EXIT
       ENDIF
 
@@ -317,14 +308,12 @@ METHOD Open() CLASS TODBC
          // TODO: Some error here
          // SQL Statement not defined
 
-         nRet := - 1
+         nRet := -1
          EXIT
       ENDIF
 
       // Allocates and executes the statement
-      xBuf := ::hStmt
-      SQLAllocStmt( ::hDbc, @xBuf )
-      ::hStmt := xBuf
+      SQLAllocStmt( ::hDbc, @::hStmt )
       nRet := SQLExecDirect( ::hStmt, ::cSQL )
 
       // Get result information about fields and stores it
@@ -387,7 +376,6 @@ METHOD Open() CLASS TODBC
 // Only executes the SQL Statement
 METHOD ExecSQL() CLASS TODBC
 
-   LOCAL xBuf
    LOCAL nRet
 
    // SQL statement is mandatory
@@ -395,9 +383,7 @@ METHOD ExecSQL() CLASS TODBC
       nRet := SQL_ERROR
    ELSE
       // Allocates and executes the statement
-      xBuf := ::hStmt
-      SQLAllocStmt( ::hDbc, @xBuf )
-      ::hStmt := xBuf
+      SQLAllocStmt( ::hDbc, @::hStmt )
       nRet := SQLExecDirect( ::hStmt, ::cSQL )
 
       ::Close()
@@ -409,7 +395,11 @@ METHOD ExecSQL() CLASS TODBC
 METHOD Close() CLASS TODBC
 
    // Frees the statement
+#if defined( _HBODBC_AUTO_MM_ )
+   ::hStmt := NIL
+#else
    SQLFreeStmt( ::hStmt, SQL_DROP )
+#endif
    ::Active := .F.
 
    // Reset all recordset related variables

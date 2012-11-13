@@ -8,24 +8,20 @@
 
 #include "sql.ch"
 
-#xcommand GET ROW <nRow> INTO <cVar> => ;
-      <cVar> := Space( 128 ) ;;
-      SQLGetData( hStmt, <nRow>, SQL_CHAR, Len( <cVar> ), @ <cVar> )
-
 PROCEDURE Main()
 
-   LOCAL hEnv       := 0
-   LOCAL hDbc       := 0
-   LOCAL hStmt      := 0
-   LOCAL cConstrin
+   LOCAL hEnv
+   LOCAL hDbc
+   LOCAL hStmt
+   LOCAL cConnStr
    LOCAL cConstrout := Space( 1024 )
-   LOCAL nRows      := 0
+   LOCAL nRows := 0
    LOCAL cCode, cFunc, cState, cComm
    LOCAL cError1, nError, cError2
 
    ? "Version: " + hb_NumToHex( hb_odbcVer() )
 
-   cConstrin := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
+   cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
 
    ? PadC( "*** ODBC ACCESS TEST ***", 80 )
    ?
@@ -33,23 +29,23 @@ PROCEDURE Main()
    SQLAllocEnv( @hEnv )
    ? "Allocating connection... "
    SQLAllocConnect( hEnv, @hDbc )
-   ? "Connecting to driver " + cConstrin + "... "
-   SQLDriverConnect( hDbc, cConstrin, @cConstrout )
+   ? "Connecting to driver " + cConnStr + "... "
+   SQLDriverConnect( hDbc, cConnStr, @cConstrout )
    ? "Allocating statement... "
    SQLAllocStmt( hDbc, @hStmt )
 
    ? SQLError( hEnv,,, @cError1, @nError, @cError2 )
-   ? "SQLERROR", cError1, nError, cError2
+   ? "SQLError", cError1, nError, cError2
    ? SQLGetDiagRec( SQL_HANDLE_ENV, hEnv, 1, @cError1, @nError, @cError2 )
-   ? "SQLGETDIAGREC", cError1, nError, cError2
+   ? "SQLGetDiagRec", cError1, nError, cError2
 
    ? "SQL: SELECT FROM test"
-   SQLExecDirect( hStmt, "SELECT FROM test" )
+   ? SQLExecDirect( hStmt, "SELECT FROM test" )
 
    ? SQLError( ,, hStmt, @cError1, @nError, @cError2 )
-   ? "SQLERROR", cError1, nError, cError2
+   ? "SQLError", cError1, nError, cError2
    ? SQLGetDiagRec( SQL_HANDLE_STMT, hStmt, 1, @cError1, @nError, @cError2 )
-   ? "SQLGETDIAGREC", cError1, nError, cError2
+   ? "SQLGetDiagRec", cError1, nError, cError2
 
    ?
    ? "SQL: SELECT * FROM test"
@@ -58,20 +54,26 @@ PROCEDURE Main()
    ?
 
    DO WHILE SQLFetch( hStmt ) == 0
-      nRows++
-      GET ROW 1 INTO cCode
-      GET ROW 2 INTO cFunc
-      GET ROW 3 INTO cState
-      GET ROW 4 INTO cComm
+      SQLGetData( hStmt, 1, SQL_CHAR, 128, @cCode )
+      SQLGetData( hStmt, 2, SQL_CHAR, 128, @cFunc )
+      SQLGetData( hStmt, 3, SQL_CHAR, 128, @cState )
+      SQLGetData( hStmt, 4, SQL_CHAR, 128, @cComm )
       ? cCode, PadR( cFunc, 20 ), cState, cComm
+      nRows++
    ENDDO
 
    ? "------------------------------------------------------------------------------"
    ? Str( nRows, 4 ), " row(s) affected."
 
+#if defined( _HBODBC_AUTO_MM_ )
+   hStmt := NIL  // TOFIX: There should be no GPF even without this line
+
+   SQLDisconnect( hDbc )
+#else
    SQLFreeStmt( hStmt, SQL_DROP )
    SQLDisconnect( hDbc )
    SQLFreeConnect( hDbc )
    SQLFreeEnv( hEnv )
+#endif
 
    RETURN

@@ -11,13 +11,10 @@ PROCEDURE Main()
    LOCAL aOrders
    LOCAL nOp
    LOCAL dsFunctions
-   LOCAL cConStr
 
    LOCAL i
 
-   cConStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}"
-
-   dsFunctions := TODBC():New( cConStr )
+   dsFunctions := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )
 
    SET COLOR TO "W+/B"
    CLS
