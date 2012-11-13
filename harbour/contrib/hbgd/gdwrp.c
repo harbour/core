@@ -87,21 +87,17 @@
 /* Internal functions */
 
 /*
- *******************
- ** internal function for handling pointers
- **
- ** Code of Przemyslaw Czerpak for gdImagePtr
- ** adapted also to gdFontPtr
- *******************
+ ******************
+ * internal function for handling pointers
+ *
+ * Code of Przemyslaw Czerpak for gdImagePtr
+ * adapted also to gdFontPtr
+ ******************
  */
 
-/*
-   gdImage -----------------------
+/* gdImage ----------------------- */
 
- */
-
-/* gdImage destructor, it's executed automatically
- */
+/* gdImage destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdImage_Destructor )
 {
    /* Retrieve image pointer holder */
@@ -124,10 +120,8 @@ static const HB_GC_FUNCS s_gcGDimageFuncs =
    hb_gcDummyMark
 };
 
-
 /* function returns gdImage pointer or NULL when wrong variable is
- * passed or gdImage was freed before
- */
+   passed or gdImage was freed before */
 static gdImagePtr hb_parGdImage( int iParam )
 {
    gdImagePtr * imPtr =
@@ -139,8 +133,12 @@ static gdImagePtr hb_parGdImage( int iParam )
       return NULL;
 }
 
-/* function create in HVM stack return value item with gdImage pointer
- */
+static void * hb_isGdImage( int iParam )
+{
+   return hb_parptrGC( &s_gcGDimageFuncs, iParam );
+}
+
+/* function create in HVM stack return value item with gdImage pointer */
 static void hb_retGdImage( gdImagePtr im )
 {
    gdImagePtr * imPtr;
@@ -152,8 +150,7 @@ static void hb_retGdImage( gdImagePtr im )
 }
 
 #if 0
-/* function returns PHB_ITEM with gdImage pointer
- */
+/* function returns PHB_ITEM with gdImage pointer */
 static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 {
    gdImagePtr * imPtr;
@@ -165,13 +162,9 @@ static PHB_ITEM hb_gdImageItemNew( gdImagePtr im )
 }
 #endif
 
-/*
-   gdFont -----------------------
+/* gdFont ----------------------- */
 
- */
-
-/* gdFont destructor, it's executed automatically
- */
+/* gdFont destructor, it's executed automatically */
 static HB_GARBAGE_FUNC( hb_gdFont_Destructor )
 {
    /* Retrieve Font pointer holder */
@@ -198,8 +191,7 @@ static const HB_GC_FUNCS s_gcGDfontFuncs =
 };
 
 /* function returns gdFont pointer or NULL when wrong variable is
- * passed or gdFont was freed before
- */
+   passed or gdFont was freed before */
 static gdFontPtr hb_parGdFont( int iParam )
 {
    gdFontPtr * fontPtr =
@@ -211,8 +203,12 @@ static gdFontPtr hb_parGdFont( int iParam )
       return NULL;
 }
 
-/* function create in HVM stack return value item with gdFont pointer
- */
+static void * hb_isGdFont( int iParam )
+{
+   return hb_parptrGC( &s_gcGDfontFuncs, iParam );
+}
+
+/* function create in HVM stack return value item with gdFont pointer */
 static void hb_retGdFont( gdFontPtr font )
 {
    gdFontPtr * fontPtr;
@@ -224,8 +220,7 @@ static void hb_retGdFont( gdFontPtr font )
 }
 
 #if 0
-/* function returns PHB_ITEM with gdFont pointer
- */
+/* function returns PHB_ITEM with gdFont pointer */
 static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 {
    gdFontPtr * fontPtr;
@@ -249,7 +244,6 @@ static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
    hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) sz );
 
    return iptr;
-
 }
 
 static void * LoadImageFromFile( const char * szFile, int * sz )
@@ -279,7 +273,6 @@ static void * LoadImageFromFile( const char * szFile, int * sz )
    }
 
    return iptr;
-
 }
 
 static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
@@ -312,11 +305,9 @@ static void GDImageCreateFrom( int nType )
    void *     iptr;
 
    if( HB_ISCHAR( 1 ) )
-   {
       /* Retrieve image from file name */
       iptr = LoadImageFromFile( hb_parc( 1 ), &sz );
-   }
-   else if( HB_ISPOINTER( 1 ) &&
+   else if( hb_isGdImage( 1 ) &&
             HB_ISNUM( 2 ) )
    {
       /* Retrieve image size */
@@ -372,15 +363,13 @@ static void GDImageCreateFrom( int nType )
 
 static void GDImageSaveTo( int nType )
 {
-   if( HB_ISPOINTER( 1 ) )
+   if( hb_isGdImage( 1 ) )
    {
-      gdImagePtr im;
-      int        sz    = 0;
-      void *     iptr  = NULL;
-      int        level = 0, fg = 0;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int    sz    = 0;
+      void * iptr  = NULL;
+      int    level = 0, fg = 0;
 
       /* Get file name or an output handler or NIL it I want a return string */
       if( ! ( HB_ISNIL( 2 ) ||
@@ -499,6 +488,13 @@ static void GDImageSaveTo( int nType )
 
 /* ************************* WRAPPED FUNCTIONS ****************************** */
 
+HB_FUNC( HB_GD_VERSION )
+{
+   hb_storni( GD_MAJOR_VERSION, 1 );
+   hb_storni( GD_MINOR_VERSION, 2 );
+   hb_storni( GD_RELEASE_VERSION, 3 );
+}
+
 HB_FUNC( GDVERSION )
 {
 #if HB_GD_VERS( 2, 0, 34 )
@@ -530,18 +526,10 @@ HB_FUNC( GDIMAGECREATE ) /* gdImagePtr gdImageCreate(sx, sy) */
    if( HB_ISNUM( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        sx, sy;
+      int sx = hb_parni( 1 );
+      int sy = hb_parni( 2 );
 
-      /* Retrieve dimensions */
-      sx = hb_parni( 1 );
-      sy = hb_parni( 2 );
-
-      /* Create the image */
-      im = gdImageCreate( sx, sy );
-
-      /* Return image pointer */
-      hb_retGdImage( im );
+      hb_retGdImage( gdImageCreate( sx, sy ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -555,18 +543,10 @@ HB_FUNC( GDIMAGECREATETRUECOLOR )                        /* gdImageCreateTrueCol
    if( HB_ISNUM( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        sx, sy;
+      int sx = hb_parni( 1 );
+      int sy = hb_parni( 2 );
 
-      /* Retrieve dimensions */
-      sx = hb_parni( 1 );
-      sy = hb_parni( 2 );
-
-      /* Create the image */
-      im = gdImageCreateTrueColor( sx, sy );
-
-      /* Return image pointer */
-      hb_retGdImage( im );
+      hb_retGdImage( gdImageCreateTrueColor( sx, sy ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -624,10 +604,8 @@ HB_FUNC( GDIMAGEGD ) /* original: void gdImageGD(gdImagePtr im, FILE *out) */
 
 #if defined( HB_LEGACY_LEVEL4 )
 
-/*
-   After Przemek changes on hb_*ptr() functions, this is a void function holded only
-   for compatibility with GD library.
- */
+/* After Przemek changes on hb_*ptr() functions, this is a void function held only
+   for compatibility with GD library. */
 HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 {
 }
@@ -638,26 +616,17 @@ HB_FUNC( GDIMAGEDESTROY ) /* gdImageDestroy(gdImagePtr im) */
 
 HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      gdImagePtr im;
-      int        x, y;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int x     = hb_parni( 2 );
+      int y     = hb_parni( 3 );
+      int color = hb_parni( 4 );
 
-      /* Retrieve coord values */
-      x = hb_parni( 2 );
-      y = hb_parni( 3 );
-
-      /* Retrieve color value */
-      color = hb_parni( 4 );
-
-      /* Draw a rectangle */
       gdImageSetPixel( im, x, y, color );
    }
    else
@@ -666,30 +635,21 @@ HB_FUNC( GDIMAGESETPIXEL ) /* void gdImageSetPixel(gdImagePtr im, int x, int y, 
 
 HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
        HB_ISNUM( 6 ) )
    {
-      gdImagePtr im;
-      int        x1, y1, x2, y2;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int x1    = hb_parni( 2 );
+      int y1    = hb_parni( 3 );
+      int x2    = hb_parni( 4 );
+      int y2    = hb_parni( 5 );
+      int color = hb_parni( 6 );
 
-      /* Retrieve coord values */
-      x1 = hb_parni( 2 );
-      y1 = hb_parni( 3 );
-      x2 = hb_parni( 4 );
-      y2 = hb_parni( 5 );
-
-      /* Retrieve color value */
-      color = hb_parni( 6 );
-
-      /* Draw a rectangle */
       gdImageLine( im, x1, y1, x2, y2, color );
    }
    else
@@ -698,30 +658,21 @@ HB_FUNC( GDIMAGELINE ) /* void gdImageLine(gdImagePtr im, int x1, int y1, int x2
 
 HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
        HB_ISNUM( 6 ) )
    {
-      gdImagePtr im;
-      int        x1, y1, x2, y2;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int x1    = hb_parni( 2 );
+      int y1    = hb_parni( 3 );
+      int x2    = hb_parni( 4 );
+      int y2    = hb_parni( 5 );
+      int color = hb_parni( 6 );
 
-      /* Retrieve coord values */
-      x1 = hb_parni( 2 );
-      y1 = hb_parni( 3 );
-      x2 = hb_parni( 4 );
-      y2 = hb_parni( 5 );
-
-      /* Retrieve color value */
-      color = hb_parni( 6 );
-
-      /* Draw a rectangle */
       gdImageDashedLine( im, x1, y1, x2, y2, color );
    }
    else
@@ -730,27 +681,19 @@ HB_FUNC( GDIMAGEDASHEDLINE ) /* void gdImageDashedLine(gdImagePtr im, int x1, in
 
 HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
 {                         /* implementation: void gdImagePolygon(gdImagePtr im, gdPointPtr points, int color) */
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISARRAY( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      /*gdPointPtr points; */
-      int      pointsTotal;
-      int      color;
-      PHB_ITEM pPoints;
-      int      i;
+      gdImagePtr im = hb_parGdImage( 1 );
+
+      PHB_ITEM pPoints     = hb_param( 2, HB_IT_ARRAY );
+      int      pointsTotal = ( int ) hb_arrayLen( pPoints );
+      int      color       = hb_parni( 3 );
 
       /* Max Points of polygon */
-      gdPoint * points;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve point array */
-      pPoints     = hb_param( 2, HB_IT_ARRAY );
-      pointsTotal = ( int ) hb_arrayLen( pPoints );
-      points      = ( gdPoint * ) hb_xgrab( sizeof( gdPoint ) * pointsTotal );
+      gdPoint * points = ( gdPoint * ) hb_xgrab( sizeof( gdPoint ) * pointsTotal );
+      int       i;
 
       for( i = 0; i < pointsTotal; i++ )
       {
@@ -760,10 +703,12 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
             points[ i ].x = hb_arrayGetNI( pPoint, 1 );
             points[ i ].y = hb_arrayGetNI( pPoint, 2 );
          }
+         else
+         {
+            points[ i ].x = 0;
+            points[ i ].y = 0;
+         }
       }
-
-      /* Retrieve color value */
-      color = hb_parni( 3 );
 
       /* Draw a polygon */
       gdImagePolygon( im, ( gdPointPtr ) points, pointsTotal, color );
@@ -777,27 +722,19 @@ HB_FUNC( GDIMAGEPOLYGON ) /* original: void gdImagePolygon(gdImagePtr im, gdPoin
 HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
 {                             /* implementation: void gdImageOpenPolygon(gdImagePtr im, gdPointPtr points, int color) */
 #if HB_GD_VERS( 2, 0, 33 )
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISARRAY( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      /*gdPointPtr points; */
-      int      pointsTotal;
-      int      color;
-      PHB_ITEM pPoints;
-      int      i;
+      gdImagePtr im = hb_parGdImage( 1 );
+
+      PHB_ITEM pPoints     = hb_param( 2, HB_IT_ARRAY );
+      int      pointsTotal = ( int ) hb_arrayLen( pPoints );
+      int      color       = hb_parni( 3 );
 
       /* Max Points of polygon */
-      gdPoint * points;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve point array */
-      pPoints     = hb_param( 2, HB_IT_ARRAY );
-      pointsTotal = ( int ) hb_arrayLen( pPoints );
-      points      = ( gdPoint * ) hb_xgrab( sizeof( gdPoint ) * pointsTotal );
+      gdPoint * points = ( gdPoint * ) hb_xgrab( sizeof( gdPoint ) * pointsTotal );
+      int       i;
 
       for( i = 0; i < pointsTotal; i++ )
       {
@@ -807,10 +744,12 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
             points[ i ].x = hb_arrayGetNI( pPoint, 1 );
             points[ i ].y = hb_arrayGetNI( pPoint, 2 );
          }
+         else
+         {
+            points[ i ].x = 0;
+            points[ i ].y = 0;
+         }
       }
-
-      /* Retrieve color value */
-      color = hb_parni( 3 );
 
       /* Draw a polygon */
       gdImageOpenPolygon( im, ( gdPointPtr ) points, pointsTotal, color );
@@ -819,36 +758,26 @@ HB_FUNC( GDIMAGEOPENPOLYGON ) /* original: void gdImageOpenPolygon(gdImagePtr im
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-#endif /* ( GD_VERS >= 2033 ) */
+#endif
 }
 
 HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
        HB_ISNUM( 6 ) )
    {
-      gdImagePtr im;
-      int        x1, y1, x2, y2;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int x1    = hb_parni( 2 );
+      int y1    = hb_parni( 3 );
+      int x2    = hb_parni( 4 );
+      int y2    = hb_parni( 5 );
+      int color = hb_parni( 6 );
 
-      /* Retrieve coord values */
-      x1 = hb_parni( 2 );
-      y1 = hb_parni( 3 );
-      x2 = hb_parni( 4 );
-      y2 = hb_parni( 5 );
-
-      /* Retrieve color value */
-      color = hb_parni( 6 );
-
-      /* Draw a rectangle */
       gdImageRectangle( im, x1, y1, x2, y2, color );
    }
    else
@@ -857,26 +786,19 @@ HB_FUNC( GDIMAGERECTANGLE ) /* void gdImageRectangle(gdImagePtr im, int x1, int 
 
 HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int pointsTotal, int color) */
 {                               /* implementation: void gdImageFilledPolygon(gdImagePtr im, gdPointPtr points, int color) */
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISARRAY( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      /*gdPointPtr points; */
-      int      pointsTotal;
-      int      color;
-      PHB_ITEM pPoints;
-      int      i;
+      gdImagePtr im = hb_parGdImage( 1 );
+
+      PHB_ITEM pPoints     = hb_param( 2, HB_IT_ARRAY );
+      int      pointsTotal = ( int ) hb_arrayLen( pPoints );
+      int      color       = hb_parni( 3 );
 
       /* Max Points of polygon */
-      gdPoint points[ 50 ];
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve point array */
-      pPoints     = hb_param( 2, HB_IT_ARRAY );
-      pointsTotal = ( int ) hb_arrayLen( pPoints );
+      gdPoint * points = ( gdPoint * ) hb_xgrab( sizeof( gdPoint ) * pointsTotal );
+      int       i;
 
       for( i = 0; i < pointsTotal; i++ )
       {
@@ -886,13 +808,17 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
             points[ i ].x = hb_arrayGetNI( pPoint, 1 );
             points[ i ].y = hb_arrayGetNI( pPoint, 2 );
          }
+         else
+         {
+            points[ i ].x = 0;
+            points[ i ].y = 0;
+         }
       }
-
-      /* Retrieve color value */
-      color = hb_parni( 3 );
 
       /* Draw a filled polygon */
       gdImageFilledPolygon( im, ( gdPointPtr ) points, pointsTotal, color );
+
+      hb_xfree( points );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -900,30 +826,21 @@ HB_FUNC( GDIMAGEFILLEDPOLYGON ) /* original: void gdImageFilledPolygon(gdImagePt
 
 HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, int x1, int y1, int x2, int y2, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
        HB_ISNUM( 6 ) )
    {
-      gdImagePtr im;
-      int        x1, y1, x2, y2;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int x1    = hb_parni( 2 );
+      int y1    = hb_parni( 3 );
+      int x2    = hb_parni( 4 );
+      int y2    = hb_parni( 5 );
+      int color = hb_parni( 6 );
 
-      /* Retrieve coord values */
-      x1 = hb_parni( 2 );
-      y1 = hb_parni( 3 );
-      x2 = hb_parni( 4 );
-      y2 = hb_parni( 5 );
-
-      /* Retrieve color value */
-      color = hb_parni( 6 );
-
-      /* Draw a filled rectangle */
       gdImageFilledRectangle( im, x1, y1, x2, y2, color );
    }
    else
@@ -932,7 +849,7 @@ HB_FUNC( GDIMAGEFILLEDRECTANGLE ) /* void gdImageFilledRectangle(gdImagePtr im, 
 
 HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, int h, int s, int e, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
@@ -941,25 +858,16 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
        HB_ISNUM( 7 ) &&
        HB_ISNUM( 8 ) )
    {
-      gdImagePtr im;
-      int        cx, cy, w, h, s, e, color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int cx    = hb_parni( 2 );
+      int cy    = hb_parni( 3 );
+      int w     = hb_parni( 4 ); /* width and height values */
+      int h     = hb_parni( 5 );
+      int s     = hb_parni( 6 ); /* starting and ending degree values */
+      int e     = hb_parni( 7 );
+      int color = hb_parni( 8 );
 
-      /* Retrieve point values */
-      cx = hb_parni( 2 );
-      cy = hb_parni( 3 );
-      /* Retrieve width and height values */
-      w = hb_parni( 4 );
-      h = hb_parni( 5 );
-      /* Retrieve starting and ending degree values */
-      s = hb_parni( 6 );
-      e = hb_parni( 7 );
-      /* Retrieve color value */
-      color = hb_parni( 8 );
-
-      /* Draw an arc */
       gdImageArc( im, cx, cy, w, h, s, e, color );
    }
    else
@@ -968,7 +876,7 @@ HB_FUNC( GDIMAGEARC ) /* void gdImageArc(gdImagePtr im, int cx, int cy, int w, i
 
 HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int cy, int w, int h, int s, int e, int color[, int style]) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
@@ -977,28 +885,17 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
        HB_ISNUM( 7 ) &&
        HB_ISNUM( 8 ) )
    {
-      gdImagePtr im;
-      int        cx, cy, w, h, s, e, color, style;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int cx    = hb_parni( 2 );
+      int cy    = hb_parni( 3 );
+      int w     = hb_parni( 4 ); /* width and height values */
+      int h     = hb_parni( 5 );
+      int s     = hb_parni( 6 ); /* starting and ending degree values */
+      int e     = hb_parni( 7 );
+      int color = hb_parni( 8 );
+      int style = hb_parnidef( 9, gdNoFill );
 
-      /* Retrieve point values */
-      cx = hb_parni( 2 );
-      cy = hb_parni( 3 );
-      /* Retrieve width and height values */
-      w = hb_parni( 4 );
-      h = hb_parni( 5 );
-      /* Retrieve starting and ending degree values */
-      s = hb_parni( 6 );
-      e = hb_parni( 7 );
-      /* Retrieve color value */
-      color = hb_parni( 8 );
-
-      /* Retrieve style value */
-      style = hb_parnidef( 9, gdNoFill );
-
-      /* Draw a filled arc */
       gdImageFilledArc( im, cx, cy, w, h, s, e, color, style );
    }
    else
@@ -1007,29 +904,21 @@ HB_FUNC( GDIMAGEFILLEDARC ) /* void gdImageFilledArc(gdImagePtr im, int cx, int 
 
 HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
        HB_ISNUM( 6 ) )
    {
-      gdImagePtr im;
-      int        cx, cy, w, h, color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int cx    = hb_parni( 2 );
+      int cy    = hb_parni( 3 );
+      int w     = hb_parni( 4 );
+      int h     = hb_parni( 5 );
+      int color = hb_parni( 6 );
 
-      /* Retrieve point values */
-      cx = hb_parni( 2 );
-      cy = hb_parni( 3 );
-      /* Retrieve width and height values */
-      w = hb_parni( 4 );
-      h = hb_parni( 5 );
-      /* Retrieve color value */
-      color = hb_parni( 6 );
-
-      /* Draw a filled ellipse */
       gdImageFilledEllipse( im, cx, cy, w, h, color );
    }
    else
@@ -1038,27 +927,19 @@ HB_FUNC( GDIMAGEFILLEDELLIPSE ) /* void gdImageFilledEllipse(gdImagePtr im, int 
 
 HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x, int y, int border, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) )
    {
-      gdImagePtr im;
-      int        x, y, border, color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int x      = hb_parni( 2 );
+      int y      = hb_parni( 3 );
+      int border = hb_parni( 4 );
+      int color  = hb_parni( 5 );
 
-      /* Retrieve point values */
-      x = hb_parni( 2 );
-      y = hb_parni( 3 );
-      /* Retrieve color to use as border */
-      border = hb_parni( 4 );
-      /* Retrieve color value */
-      color = hb_parni( 5 );
-
-      /* Fill image to border */
       gdImageFillToBorder( im, x, y, border, color );
    }
    else
@@ -1071,58 +952,42 @@ HB_FUNC( GDIMAGEFILLTOBORDER ) /* void gdImageFillToBorder(gdImagePtr im, int x,
 HB_FUNC( GDIMAGEELLIPSE ) /* void gdImageEllipse(gdImagePtr im, int cx, int cy, int w, int h, int color) */
 {
 #if HB_GD_VERS( 2, 0, 35 )
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
        HB_ISNUM( 6 ) )
    {
-      gdImagePtr im;
-      int        cx, cy, w, h, color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int cx    = hb_parni( 2 );
+      int cy    = hb_parni( 3 );
+      int w     = hb_parni( 4 );
+      int h     = hb_parni( 5 );
+      int color = hb_parni( 6 );
 
-      /* Retrieve point values */
-      cx = hb_parni( 2 );
-      cy = hb_parni( 3 );
-      /* Retrieve width and height values */
-      w = hb_parni( 4 );
-      h = hb_parni( 5 );
-      /* Retrieve color value */
-      color = hb_parni( 6 );
-
-      /* Draw a filled ellipse */
       gdImageEllipse( im, cx, cy, w, h, color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-#endif /* ( GD_VERS >= 2035 ) */
+#endif
 }
 #endif
 
 HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      gdImagePtr im;
-      int        x, y, color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int x     = hb_parni( 2 );
+      int y     = hb_parni( 3 );
+      int color = hb_parni( 4 );
 
-      /* Retrieve point values */
-      x = hb_parni( 2 );
-      y = hb_parni( 3 );
-      /* Retrieve color value */
-      color = hb_parni( 4 );
-
-      /* Fill image */
       gdImageFill( im, x, y, color );
    }
    else
@@ -1131,19 +996,13 @@ HB_FUNC( GDIMAGEFILL ) /* void gdImageFill(gdImagePtr im, int x, int y, int colo
 
 HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int color = hb_parni( 2 );
 
-      /* Retrieve color value */
-      color = hb_parni( 2 );
-
-      /* Set Antialias */
       gdImageSetAntiAliased( im, color );
    }
    else
@@ -1152,24 +1011,15 @@ HB_FUNC( GDIMAGESETANTIALIASED ) /* void gdImageSetAntiAliased(gdImagePtr im, in
 
 HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend(gdImagePtr im, int c, int dont_blend) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      int        color;
-      int        dont_blend;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int color      = hb_parni( 2 );
+      int dont_blend = hb_parni( 3 );
 
-      /* Retrieve color value */
-      color = hb_parni( 2 );
-
-      /* Retrieve dont_blend value */
-      dont_blend = hb_parni( 3 );
-
-      /* Set Antialias but don't blend */
       gdImageSetAntiAliasedDontBlend( im, color, dont_blend );
    }
    else
@@ -1178,19 +1028,12 @@ HB_FUNC( GDIMAGESETANTIALIASEDDONTBLEND ) /* void gdImageSetAntiAliasedDontBlend
 
 HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr brush) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) )
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) )
    {
-      gdImagePtr im;
-      gdImagePtr brush;
+      gdImagePtr im    = hb_parGdImage( 1 );
+      gdImagePtr brush = hb_parGdImage( 2 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve brush pointer */
-      brush = hb_parGdImage( 2 );
-
-      /* Set Brush */
       gdImageSetBrush( im, brush );
    }
    else
@@ -1199,19 +1042,12 @@ HB_FUNC( GDIMAGESETBRUSH ) /* void gdImageSetBrush(gdImagePtr im, gdImagePtr bru
 
 HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) )
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) )
    {
-      gdImagePtr im;
-      gdImagePtr tile;
+      gdImagePtr im   = hb_parGdImage( 1 );
+      gdImagePtr tile = hb_parGdImage( 2 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve tile pointer */
-      tile = hb_parGdImage( 2 );
-
-      /* Set Tile */
       gdImageSetTile( im, tile );
    }
    else
@@ -1220,24 +1056,17 @@ HB_FUNC( GDIMAGESETTILE ) /* void gdImageSetTile(gdImagePtr im, gdImagePtr tile)
 
 HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int *style, int styleLength) */
 {                          /* implementation: void gdImageSetStyle(gdImagePtr im, int *style) */
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISARRAY( 2 ) )
    {
-      gdImagePtr im;
-      PHB_ITEM   pStyles;
-      int        styleLength;
-      int        i;
+      gdImagePtr im = hb_parGdImage( 1 );
+
+      PHB_ITEM pStyles     = hb_param( 2, HB_IT_ARRAY );
+      int      styleLength = ( int ) hb_arrayLen( pStyles );
 
       /* Max numbery of Styles */
-      int * styles;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve style array */
-      pStyles     = hb_param( 2, HB_IT_ARRAY );
-      styleLength = ( int ) hb_arrayLen( pStyles );
-      styles      = ( int * ) hb_xgrab( sizeof( int ) * styleLength );
+      int * styles = ( int * ) hb_xgrab( sizeof( int ) * styleLength );
+      int   i;
 
       for( i = 0; i < styleLength; i++ )
          styles[ i ] = hb_arrayGetNI( pStyles, i + 1 );
@@ -1253,27 +1082,17 @@ HB_FUNC( GDIMAGESETSTYLE ) /* original: void gdImageSetStyle(gdImagePtr im, int 
 
 HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int thickness) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        thickness;
-      int        oldthick;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve thickness value */
-      thickness = hb_parni( 2 );
-
-      /* Previous value */
-      oldthick = im->thick;
-
-      /* Set thickness */
-      gdImageSetThickness( im, thickness );
+      int thickness = hb_parni( 2 );
 
       /* Return previous */
-      hb_retni( oldthick );
+      hb_retni( im->thick );
+
+      gdImageSetThickness( im, thickness );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1281,19 +1100,13 @@ HB_FUNC( GDIMAGESETTHICKNESS ) /* void gdImageSetThickness(gdImagePtr im, int th
 
 HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int blending) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISLOG( 2 ) )
    {
-      gdImagePtr im;
-      int        blending;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int blending = hb_parl( 2 ) ? 1 : 0;
 
-      /* Retrieve blending value - logical */
-      blending = hb_parl( 2 );
-
-      /* Set blending */
       gdImageAlphaBlending( im, blending );
    }
    else
@@ -1302,19 +1115,13 @@ HB_FUNC( GDIMAGEALPHABLENDING ) /* void gdImageAlphaBlending(gdImagePtr im, int 
 
 HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISLOG( 2 ) )
    {
-      gdImagePtr im;
-      int        saveFlag;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int saveFlag = hb_parl( 2 ) ? 1 : 0;
 
-      /* Retrieve saveFlag value - logical */
-      saveFlag = hb_parl( 2 );
-
-      /* Set saveFlag */
       gdImageSaveAlpha( im, saveFlag );
    }
    else
@@ -1323,25 +1130,19 @@ HB_FUNC( GDIMAGESAVEALPHA ) /* void gdImageSaveAlpha(gdImagePtr im, int saveFlag
 
 HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, int x2, int y2) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) )
    {
-      gdImagePtr im;
-      int        x1, y1, x2, y2;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int x1 = hb_parni( 2 );
+      int y1 = hb_parni( 3 );
+      int x2 = hb_parni( 4 );
+      int y2 = hb_parni( 5 );
 
-      /* Retrieve coords value */
-      x1 = hb_parni( 2 );
-      y1 = hb_parni( 3 );
-      x2 = hb_parni( 4 );
-      y2 = hb_parni( 5 );
-
-      /* Set clipping rectangle */
       gdImageSetClip( im, x1, y1, x2, y2 );
    }
    else
@@ -1350,17 +1151,13 @@ HB_FUNC( GDIMAGESETCLIP ) /* void gdImageSetClip(gdImagePtr im, int x1, int y1, 
 
 HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x1P, int *y1P, int *x2P, int *y2P) */
 {                         /* implementation: array gdImageGetClip(gdImagePtr im) */
-   if( HB_ISPOINTER( 1 ) )
+   if( hb_isGdImage( 1 ) )
    {
-      gdImagePtr im;
-      int        x1, y1, x2, y2;
-      PHB_ITEM   pClipArray;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int      x1, y1, x2, y2;
+      PHB_ITEM pClipArray;
 
       /* Get clipping rectangle */
-      gdImageGetClip( im, &x1, &y1, &x2, &y2 );
+      gdImageGetClip( hb_parGdImage( 1 ), &x1, &y1, &x2, &y2 );
 
       /* Return clipping rectangle value in an array */
       pClipArray = hb_itemArrayNew( 4 );
@@ -1380,35 +1177,21 @@ HB_FUNC( GDIMAGEGETCLIP ) /* original: void gdImageGetClip(gdImagePtr im, int *x
 
 HB_FUNC( GDIMAGECOLORSTOTAL ) /* int gdImageColorsTotal(gdImagePtr im) */
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdImagePtr im;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Get Colors total */
-      hb_retni( gdImageColorsTotal( im ) );
-   }
+   if( hb_isGdImage( 1 ) )
+      hb_retni( gdImageColorsTotal( hb_parGdImage( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int color = hb_parni( 2 );
 
-      /* Retrieve saveFlag value */
-      color = hb_parni( 2 );
-
-      /* Get Alpha Level */
       hb_retni( gdImageAlpha( im, color ) );
    }
    else
@@ -1417,19 +1200,13 @@ HB_FUNC( GDIMAGEALPHA ) /* int gdImageAlpha(gdImagePtr im, int color) */
 
 HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int color = hb_parni( 2 );
 
-      /* Retrieve saveFlag value */
-      color = hb_parni( 2 );
-
-      /* Get Red Level */
       hb_retni( gdImageRed( im, color ) );
    }
    else
@@ -1438,19 +1215,13 @@ HB_FUNC( GDIMAGERED ) /* int gdImageRed(gdImagePtr im, int color) */
 
 HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int color = hb_parni( 2 );
 
-      /* Retrieve saveFlag value */
-      color = hb_parni( 2 );
-
-      /* Get Green Level */
       hb_retni( gdImageGreen( im, color ) );
    }
    else
@@ -1459,19 +1230,13 @@ HB_FUNC( GDIMAGEGREEN ) /* int gdImageGreen(gdImagePtr im, int color) */
 
 HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int color = hb_parni( 2 );
 
-      /* Retrieve saveFlag value */
-      color = hb_parni( 2 );
-
-      /* Get Blue Level */
       hb_retni( gdImageBlue( im, color ) );
    }
    else
@@ -1480,51 +1245,32 @@ HB_FUNC( GDIMAGEBLUE ) /* int gdImageBlue(gdImagePtr im, int color) */
 
 HB_FUNC( GDIMAGESX ) /* int gdImageSX(gdImagePtr im) */
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdImagePtr im;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
+   if( hb_isGdImage( 1 ) )
       /* Get Image Width in pixels */
-      hb_retni( gdImageSX( im ) );
-   }
+      hb_retni( gdImageSX( hb_parGdImage( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( GDIMAGESY ) /* int gdImageSX(gdImagePtr im) */
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdImagePtr im;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
+   if( hb_isGdImage( 1 ) )
       /* Get Image Height in pixels */
-      hb_retni( gdImageSY( im ) );
-   }
+      hb_retni( gdImageSY( hb_parGdImage( 1 ) ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      int        x, y;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve coord value */
-      x = hb_parni( 2 );
-      y = hb_parni( 3 );
+      int x = hb_parni( 2 );
+      int y = hb_parni( 3 );
 
       /* Get Color of a pixel */
       hb_retni( gdImageGetPixel( im, x, y ) );
@@ -1535,22 +1281,17 @@ HB_FUNC( GDIMAGEGETPIXEL ) /* int gdImageGetPixel(gdImagePtr im, int x, int y) *
 
 HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int y) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      int        x, y;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve coord value */
-      x = hb_parni( 2 );
-      y = hb_parni( 3 );
+      int x = hb_parni( 2 );
+      int y = hb_parni( 3 );
 
       /* Get if pixel in Clipping region */
-      hb_retl( gdImageBoundsSafe( im, x, y ) );
+      hb_retl( gdImageBoundsSafe( im, x, y ) != 0 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1558,70 +1299,38 @@ HB_FUNC( GDIMAGEBOUNDSSAFE ) /* int gdImageBoundsSafe(gdImagePtr im, int x, int 
 
 HB_FUNC( GDIMAGEGETINTERLACED ) /* int gdImageGetInterlaced(gdImagePtr im) */
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdImagePtr im;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Image is interlaced ? */
-      hb_retl( gdImageGetInterlaced( im ) );
-   }
+   if( hb_isGdImage( 1 ) )
+      hb_retl( gdImageGetInterlaced( hb_parGdImage( 1 ) ) != 0 );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( GDIMAGEGETTRANSPARENT ) /* int gdImageGetTransparent(gdImagePtr im) */
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdImagePtr im;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Image is trasparent ? */
-      hb_retl( gdImageGetTransparent( im ) );
-   }
+   if( hb_isGdImage( 1 ) )
+      hb_retl( gdImageGetTransparent( hb_parGdImage( 1 ) ) != 0 );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( GDIMAGETRUECOLOR ) /* int gdImageTrueColor(gdImagePtr im) */
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdImagePtr im;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Is TrueColor ? */
-      hb_retl( gdImageTrueColor( im ) );
-
-   }
+   if( hb_isGdImage( 1 ) )
+      hb_retl( gdImageTrueColor( hb_parGdImage( 1 ) ) != 0 );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImagePtr im, int ditherFlag, int colorsWanted) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISLOG( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      int        ditherFlag, colorsWanted;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve ditherFlag - logical */
-      ditherFlag = hb_parl( 2 );
-
-      /* Retrieve number of color wanted */
-      colorsWanted = hb_parni( 3 );
+      int ditherFlag   = hb_parl( 2 ) ? 1 : 0;
+      int colorsWanted = hb_parni( 3 );
 
       /* Converts a truecolor image to a palette-based image */
       gdImageTrueColorToPalette( im, ditherFlag, colorsWanted );
@@ -1632,28 +1341,17 @@ HB_FUNC( GDIMAGETRUECOLORTOPALETTE ) /* void gdImageTrueColorToPalette (gdImageP
 
 HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteFromTrueColor(gdImagePtr im, int ditherFlag, int colorsWanted) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISLOG( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      gdImagePtr imNew;
-      int        ditherFlag, colorsWanted;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve ditherFlag - logical */
-      ditherFlag = hb_parl( 2 );
-
-      /* Retrieve number of color wanted */
-      colorsWanted = hb_parni( 3 );
+      int ditherFlag   = hb_parl( 2 ) ? 1 : 0;
+      int colorsWanted = hb_parni( 3 );
 
       /* Converts a truecolor image to a palette-based image and return the image */
-      imNew = gdImageCreatePaletteFromTrueColor( im, ditherFlag, colorsWanted );
-
-      /* Return image pointer */
-      hb_retGdImage( imNew );
+      hb_retGdImage( gdImageCreatePaletteFromTrueColor( im, ditherFlag, colorsWanted ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1661,19 +1359,14 @@ HB_FUNC( GDIMAGECREATEPALETTEFROMTRUECOLOR ) /* gdImagePtr gdImageCreatePaletteF
 
 HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, int y) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      int        x, y;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve coord value */
-      x = hb_parni( 2 );
-      y = hb_parni( 3 );
+      int x = hb_parni( 2 );
+      int y = hb_parni( 3 );
 
       /* Get Color of a pixel */
       hb_retni( gdImagePalettePixel( im, x, y ) );
@@ -1684,19 +1377,14 @@ HB_FUNC( GDIMAGEPALETTEPIXEL ) /* int gdImagePalettePixel(gdImagePtr im, int x, 
 
 HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int x, int y) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      gdImagePtr im;
-      int        x, y;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve coord value */
-      x = hb_parni( 2 );
-      y = hb_parni( 3 );
+      int x = hb_parni( 2 );
+      int y = hb_parni( 3 );
 
       /* Get Color of a pixel */
       hb_retni( gdImageTrueColorPixel( im, x, y ) );
@@ -1707,16 +1395,8 @@ HB_FUNC( GDIMAGETRUECOLORPIXEL ) /* int gdImageTrueColorPixel(gdImagePtr im, int
 
 HB_FUNC( GDIMAGEGETTHICKNESS ) /* void gdImageGetThickness(gdImagePtr im) */
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdImagePtr im;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Return previous */
-      hb_retni( im->thick );
-   }
+   if( hb_isGdImage( 1 ) )
+      hb_retni( hb_parGdImage( 1 )->thick );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -1725,82 +1405,48 @@ HB_FUNC( GDIMAGEGETTHICKNESS ) /* void gdImageGetThickness(gdImagePtr im) */
 
 HB_FUNC( GDFONTGETSMALL ) /* gdFontPtr gdFontGetSmall(void) */
 {
-   /* Get font pointer */
-   gdFontPtr font = gdFontGetSmall();
-
-   /* Return font pointer */
-   hb_retGdFont( font );
-   /* hb_retptr( font ); */
+   hb_retGdFont( gdFontGetSmall() );
 }
 
 HB_FUNC( GDFONTGETLARGE ) /* gdFontPtr gdFontGetLarge(void) */
 {
-   /* Get font pointer */
-   gdFontPtr font = gdFontGetLarge();
-
-   /* Return font pointer */
-   hb_retGdFont( font );
-   /* hb_retptr( font ); */
+   hb_retGdFont( gdFontGetLarge() );
 }
 
 HB_FUNC( GDFONTGETMEDIUMBOLD ) /* gdFontPtr gdFontGetMediumBold(void) */
 {
-   /* Get font pointer */
-   gdFontPtr font = gdFontGetMediumBold();
-
-   /* Return font pointer */
-   hb_retGdFont( font );
-   /* hb_retptr( font ); */
+   hb_retGdFont( gdFontGetMediumBold() );
 }
 
 HB_FUNC( GDFONTGETGIANT ) /* gdFontPtr gdFontGetGiant(void) */
 {
-   /* Get font pointer */
-   gdFontPtr font = gdFontGetGiant();
-
-   /* Return font pointer */
-   hb_retGdFont( font );
-   /* hb_retptr( font ); */
+   hb_retGdFont( gdFontGetGiant() );
 }
 
 HB_FUNC( GDFONTGETTINY ) /* gdFontPtr gdFontGetTiny(void) */
 {
-   /* Get font pointer */
-   gdFontPtr font = gdFontGetTiny();
-
-   /* Return font pointer */
-   hb_retGdFont( font );
-   /* hb_retptr( font ); */
+   hb_retGdFont( gdFontGetTiny() );
 }
 
 HB_FUNC( GDIMAGESTRING ) /* void gdImageChar(gdImagePtr im, gdFontPtr font, int x, int y, int c, int color) */
 {                        /* void gdImageString(gdImagePtr im, gdFontPtr font, int x, int y, unsigned char *s, int color) */
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) &&
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdFont( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISCHAR( 5 ) &&
        HB_ISNUM( 6 ) )
    {
-      gdImagePtr im;
-      gdFontPtr  font;
-      int        x, y, color;
+      gdImagePtr im   = hb_parGdImage( 1 );
+      gdFontPtr  font = hb_parGdFont( 2 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve font pointer */
-      font = hb_parGdFont( 2 );
-
-      /* Retrieve coord value */
-      x = hb_parni( 3 );
-      y = hb_parni( 4 );
-
-      /* Retrieve color value */
-      color = hb_parni( 6 );
+      int x = hb_parni( 3 );
+      int y = hb_parni( 4 );
+      const char * s     = hb_parc( 5 );
+      int          color = hb_parni( 6 );
 
       /* Write string */
-      gdImageString( im, font, x, y, ( unsigned char * ) hb_parc( 5 ), color );
+      gdImageString( im, font, x, y, ( unsigned char * ) s, color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1810,32 +1456,23 @@ HB_FUNC_TRANSLATE( GDIMAGECHAR, GDIMAGESTRING )
 
 HB_FUNC( GDIMAGESTRINGUP ) /* void gdImageCharUp(gdImagePtr im, gdFontPtr font, int x, int y, int c, int color) */
 {                          /* void gdImageStringUp(gdImagePtr im, gdFontPtr font, int x, int y, unsigned char *s, int color) */
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) &&
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdFont( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISCHAR( 5 ) &&
        HB_ISNUM( 6 ) )
    {
-      gdImagePtr im;
-      gdFontPtr  font;
-      int        x, y, color;
+      gdImagePtr im   = hb_parGdImage( 1 );
+      gdFontPtr  font = hb_parGdFont( 2 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve font pointer */
-      font = hb_parGdFont( 2 );
-
-      /* Retrieve coord value */
-      x = hb_parni( 3 );
-      y = hb_parni( 4 );
-
-      /* Retrieve color value */
-      color = hb_parni( 6 );
+      int x = hb_parni( 3 );
+      int y = hb_parni( 4 );
+      const char * s     = hb_parc( 5 );
+      int          color = hb_parni( 6 );
 
       /* Write string */
-      gdImageStringUp( im, font, x, y, ( unsigned char * ) hb_parc( 5 ), color );
+      gdImageStringUp( im, font, x, y, ( unsigned char * ) s, color );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -1847,7 +1484,7 @@ HB_FUNC_TRANSLATE( GDIMAGECHARUP, GDIMAGESTRINGUP )
 /* implementation: cError := gdImageStringFTEx( im, aRect, int fg, cFontname, nPtSize, nAngle, x, y, cString, nLinespacing, nCharmap, nResolution ) */
 HB_FUNC( GDIMAGESTRINGFTEX )
 {
-   if( ( HB_ISNIL( 1 ) || HB_ISPOINTER( 1 ) ) &&
+   if( ( HB_ISNIL( 1 ) || hb_isGdImage( 1 ) ) &&
        HB_ISARRAY( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISCHAR( 4 ) &&
@@ -1857,55 +1494,32 @@ HB_FUNC( GDIMAGESTRINGFTEX )
        HB_ISNUM( 8 ) &&
        HB_ISCHAR( 9 ) )
    {
-      gdImagePtr      im;
+      gdImagePtr im = hb_parGdImage( 1 );
+
+      PHB_ITEM     pRect    = hb_param( 2, HB_IT_ARRAY );
+      int          fg       = hb_parni( 3 ); /* foreground color value */
+      const char * fontname = hb_parc( 4 );
+      double       ptsize   = hb_parnd( 5 ); /* point size */
+      double       angle    = hb_parnd( 6 ); /* angle value in radians */
+      int          x        = hb_parni( 7 );
+      int          y        = hb_parni( 8 );
+      const char * string   = hb_parc( 9 );
+
       gdFTStringExtra extra;
-      int fg;
-      const char * fontname;
-      double       ptsize, angle;
-      int          x, y, i;
-      const char * string;
-      PHB_ITEM     pRect;
-      int          aRect[ 8 ];
-      char *       err;
-      int          flags;
-      double       linespacing;
-      int          charmap;
-      int          resolution;
-
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve rectangle array */
-      pRect = hb_param( 2, HB_IT_ARRAY );
-      for( i = 0; i < 8; i++ )
-         aRect[ i ] = hb_arrayGetNI( pRect, i + 1 );
-
-      /* Retrieve foreground color value */
-      fg = hb_parni( 3 );
-
-      /* Retrieve fontname value */
-      fontname = hb_parc( 4 );
-
-      /* Retrieve point size value */
-      ptsize = hb_parni( 5 );
-
-      /* Retrieve angle value in radians */
-      angle = hb_parnd( 6 );
-
-      /* Retrieve pos value */
-      x = hb_parni( 7 );
-      y = hb_parni( 8 );
-
-      /* Retrieve string value */
-      string = hb_parc( 9 );
-
-      /* EXTENDED FLAGS */
-      flags = 0;
+      int flags = 0; /* EXTENDED FLAGS */
 
       /* defaults */
-      linespacing = 1.05;
-      charmap     = gdFTEX_Unicode;
-      resolution  = 96;
+      double linespacing = 1.05;
+      int    charmap     = gdFTEX_Unicode;
+      int    resolution  = 96;
+
+      int    aRect[ 8 ];
+      int    i;
+      char * err;
+
+      /* Retrieve rectangle array */
+      for( i = 0; i < 8; i++ )
+         aRect[ i ] = hb_arrayGetNI( pRect, i + 1 );
 
       /* Retrieve line spacing */
       if( HB_ISNUM( 10 ) )
@@ -1938,7 +1552,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       }
 
       /* Write string */
-      err = gdImageStringFTEx( im, &aRect[ 0 ], fg, ( char * ) fontname, ptsize, angle, x, y, ( char * ) string, ( ! ( flags == 0 ) ? &extra : 0 ) );
+      err = gdImageStringFTEx( im, &aRect[ 0 ], fg, ( char * ) fontname, ptsize, angle, x, y, ( char * ) string, ( flags != 0 ? &extra : NULL ) );
       if( ! err )
       {
          /* Save in array the correct text rectangle dimensions */
@@ -1957,7 +1571,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
 
 HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, int cx, int cy, double radius, double textRadius, double fillPortion, char *font, double points, char *top, char *bottom, int fgcolor) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
@@ -1969,44 +1583,18 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
        ( HB_ISNIL( 10 ) || HB_ISCHAR( 10 ) ) &&
        HB_ISNUM( 11 ) )
    {
-      gdImagePtr   im;
-      int          cx, cy;
-      double       radius, textRadius, fillPortion, points;
-      const char * top;
-      const char * bottom;
-      int          fgcolor;
-      const char * font;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve pos value */
-      cx = hb_parni( 2 );
-      cy = hb_parni( 3 );
-
-      /* Retrieve radius value */
-      radius = hb_parnd( 4 );
-
-      /* Retrieve textRadius value */
-      textRadius = hb_parnd( 5 );
-
-      /* Retrieve textRadius value */
-      fillPortion = hb_parnd( 6 );
-
-      /* Retrieve fontname value */
-      font = hb_parc( 7 );
-
-      /* Retrieve points value */
-      points = hb_parnd( 8 );
-
-      /* Retrieve top string value */
-      top = hb_parcx( 9 );
-
-      /* Retrieve top string value */
-      bottom = hb_parcx( 10 );
-
-      /* Retrieve foreground color value */
-      fgcolor = hb_parni( 11 );
+      int          cx          = hb_parni( 2 );
+      int          cy          = hb_parni( 3 );
+      double       radius      = hb_parnd( 4 );
+      double       textRadius  = hb_parnd( 5 );
+      double       fillPortion = hb_parnd( 6 );
+      const char * font        = hb_parc( 7 ); /* fontname value */
+      double       points      = hb_parnd( 8 );
+      const char * top         = hb_parcx( 9 );
+      const char * bottom      = hb_parcx( 10 );
+      int          fgcolor     = hb_parni( 11 ); /* foreground color value */
 
       /* Write string */
       hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion, ( char * ) font, points, ( char * ) top, ( char * ) bottom, fgcolor ) );
@@ -2018,7 +1606,7 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
 HB_FUNC( GDFONTCACHESETUP ) /* int gdFontCacheSetup (void) */
 {
    /* This function initializes the font cache for freetype text output functions */
-   hb_retl( gdFontCacheSetup() );
+   hb_retl( gdFontCacheSetup() != 0 );
 }
 
 HB_FUNC( GDFONTCACHESHUTDOWN ) /* void gdFontCacheShutdown (void) */
@@ -2029,24 +1617,16 @@ HB_FUNC( GDFONTCACHESHUTDOWN ) /* void gdFontCacheShutdown (void) */
 
 HB_FUNC( GDFONTGETWIDTH )
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdFontPtr font = hb_parGdFont( 1 );
-
-      hb_retni( font->w );
-   }
+   if( hb_isGdFont( 1 ) )
+      hb_retni( hb_parGdFont( 1 )->w );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( GDFONTGETHEIGHT )
 {
-   if( HB_ISPOINTER( 1 ) )
-   {
-      gdFontPtr font = hb_parGdFont( 1 );
-
-      hb_retni( font->h );
-   }
+   if( hb_isGdFont( 1 ) )
+      hb_retni( hb_parGdFont( 1 )->h );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -2055,28 +1635,19 @@ HB_FUNC( GDFONTGETHEIGHT )
 
 HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r, int g, int b) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      gdImagePtr im;
-      int        r, g, b;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve RGB values */
-      r = hb_parni( 2 );
-      g = hb_parni( 3 );
-      b = hb_parni( 4 );
-
-      /* Allocate color */
-      color = gdImageColorAllocate( im, r, g, b );
+      int r = hb_parni( 2 ); /* RGB values */
+      int g = hb_parni( 3 );
+      int b = hb_parni( 4 );
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdImageColorAllocate( im, r, g, b ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2084,19 +1655,13 @@ HB_FUNC( GDIMAGECOLORALLOCATE ) /* int gdImageColorAllocate(gdImagePtr im, int r
 
 HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int color = hb_parni( 2 );
 
-      /* Retrieve saveFlag value */
-      color = hb_parni( 2 );
-
-      /* Deallocate color */
       gdImageColorDeallocate( im, color );
    }
    else
@@ -2105,33 +1670,21 @@ HB_FUNC( GDIMAGECOLORDEALLOCATE ) /* void gdImageColorDeallocate(gdImagePtr im, 
 
 HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) )
    {
-      gdImagePtr im;
-      int        r, g, b;
-      int        color;
-      int        a;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve RGB values */
-      r = hb_parni( 2 );
-      g = hb_parni( 3 );
-      b = hb_parni( 4 );
-
-      /* Retrieve Alpha value */
-      a = hb_parni( 5 );
-
-      /* Allocate color */
-      color = gdImageColorAllocateAlpha( im, r, g, b, a );
+      int r = hb_parni( 2 ); /* RGB values */
+      int g = hb_parni( 3 );
+      int b = hb_parni( 4 );
+      int a = hb_parni( 5 ); /* alpha */
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdImageColorAllocateAlpha( im, r, g, b, a ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2139,28 +1692,19 @@ HB_FUNC( GDIMAGECOLORALLOCATEALPHA ) /* int gdImageColorAllocateAlpha(gdImagePtr
 
 HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, int g, int b) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      gdImagePtr im;
-      int        r, g, b;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve RGB values */
-      r = hb_parni( 2 );
-      g = hb_parni( 3 );
-      b = hb_parni( 4 );
-
-      /* Search color closest */
-      color = gdImageColorClosest( im, r, g, b );
+      int r = hb_parni( 2 ); /* RGB values */
+      int g = hb_parni( 3 );
+      int b = hb_parni( 4 );
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdImageColorClosest( im, r, g, b ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2168,33 +1712,21 @@ HB_FUNC( GDIMAGECOLORCLOSEST ) /* int gdImageColorClosest(gdImagePtr im, int r, 
 
 HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) )
    {
-      gdImagePtr im;
-      int        r, g, b;
-      int        color;
-      int        a;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve RGB values */
-      r = hb_parni( 2 );
-      g = hb_parni( 3 );
-      b = hb_parni( 4 );
-
-      /* Retrieve Alpha value */
-      a = hb_parni( 5 );
-
-      /* Allocate color */
-      color = gdImageColorClosestAlpha( im, r, g, b, a );
+      int r = hb_parni( 2 ); /* RGB values */
+      int g = hb_parni( 3 );
+      int b = hb_parni( 4 );
+      int a = hb_parni( 5 ); /* alpha */
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdImageColorClosestAlpha( im, r, g, b, a ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2202,28 +1734,19 @@ HB_FUNC( GDIMAGECOLORCLOSESTALPHA ) /* int gdImageColorClosestAlpha(gdImagePtr i
 
 HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int r, int g, int b) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      gdImagePtr im;
-      int        r, g, b;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve RGB values */
-      r = hb_parni( 2 );
-      g = hb_parni( 3 );
-      b = hb_parni( 4 );
-
-      /* Search color closest */
-      color = gdImageColorClosestHWB( im, r, g, b );
+      int r = hb_parni( 2 ); /* RGB values */
+      int g = hb_parni( 3 );
+      int b = hb_parni( 4 );
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdImageColorClosestHWB( im, r, g, b ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2231,28 +1754,19 @@ HB_FUNC( GDIMAGECOLORCLOSESTHWB ) /*  gdImageColorClosestHWB(gdImagePtr im, int 
 
 HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int g, int b) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      gdImagePtr im;
-      int        r, g, b;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve RGB values */
-      r = hb_parni( 2 );
-      g = hb_parni( 3 );
-      b = hb_parni( 4 );
-
-      /* Search if there is the color */
-      color = gdImageColorExact( im, r, g, b );
+      int r = hb_parni( 2 ); /* RGB values */
+      int g = hb_parni( 3 );
+      int b = hb_parni( 4 );
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdImageColorExact( im, r, g, b ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2260,28 +1774,19 @@ HB_FUNC( GDIMAGECOLOREXACT ) /* int gdImageColorExact(gdImagePtr im, int r, int 
 
 HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, int g, int b) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      gdImagePtr im;
-      int        r, g, b;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve RGB values */
-      r = hb_parni( 2 );
-      g = hb_parni( 3 );
-      b = hb_parni( 4 );
-
-      /* Search if there is the color or similar, if not it creates */
-      color = gdImageColorResolve( im, r, g, b );
+      int r = hb_parni( 2 ); /* RGB values */
+      int g = hb_parni( 3 );
+      int b = hb_parni( 4 );
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdImageColorResolve( im, r, g, b ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2289,33 +1794,21 @@ HB_FUNC( GDIMAGECOLORRESOLVE ) /* int gdImageColorResolve(gdImagePtr im, int r, 
 
 HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr im, int r, int g, int b, int a) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) )
    {
-      gdImagePtr im;
-      int        r, g, b;
-      int        color;
-      int        a;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve RGB values */
-      r = hb_parni( 2 );
-      g = hb_parni( 3 );
-      b = hb_parni( 4 );
-
-      /* Retrieve Alpha value */
-      a = hb_parni( 5 );
-
-      /* Allocate color */
-      color = gdImageColorResolveAlpha( im, r, g, b, a );
+      int r = hb_parni( 2 ); /* RGB values */
+      int g = hb_parni( 3 );
+      int b = hb_parni( 4 );
+      int a = hb_parni( 5 ); /* alpha */
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdImageColorResolveAlpha( im, r, g, b, a ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2323,17 +1816,12 @@ HB_FUNC( GDIMAGECOLORRESOLVEALPHA ) /* int gdImageColorResolveAlpha(gdImagePtr i
 
 HB_FUNC( GDIMAGECOLORTRANSPARENT ) /* void gdImageColorTransparent(gdImagePtr im, int color) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        color;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve saveFlag value */
-      color = hb_parni( 2 );
+      int color = hb_parni( 2 );
 
       /* Set transparent color (to define no transparent color set -1) */
       gdImageColorTransparent( im, color );
@@ -2348,19 +1836,12 @@ HB_FUNC( GDTRUECOLOR ) /* int gdTrueColor(int red, int green, int blue) */
        HB_ISNUM( 2 ) &&
        HB_ISNUM( 3 ) )
    {
-      int r, g, b;
-      int color;
-
-      /* Retrieve RGB values */
-      r = hb_parni( 1 );
-      g = hb_parni( 2 );
-      b = hb_parni( 3 );
-
-      /* Allocate color */
-      color = gdTrueColor( r, g, b );
+      int r = hb_parni( 1 ); /* RGB values */
+      int g = hb_parni( 2 );
+      int b = hb_parni( 3 );
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdTrueColor( r, g, b ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2373,20 +1854,13 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      int r, g, b, a;
-      int color;
-
-      /* Retrieve RGB values */
-      r = hb_parni( 1 );
-      g = hb_parni( 2 );
-      b = hb_parni( 3 );
-      a = hb_parni( 4 );
-
-      /* Allocate color */
-      color = gdTrueColorAlpha( r, g, b, a );
+      int r = hb_parni( 1 ); /* RGB values */
+      int g = hb_parni( 2 );
+      int b = hb_parni( 3 );
+      int a = hb_parni( 4 ); /* alpha */
 
       /* return color */
-      hb_retni( color );
+      hb_retni( gdTrueColorAlpha( r, g, b, a ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -2396,8 +1870,8 @@ HB_FUNC( GDTRUECOLORALPHA ) /* int gdTrueColorAlpha(int red, int green, int blue
 
 HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) &&
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
@@ -2405,28 +1879,15 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
        HB_ISNUM( 7 ) &&
        HB_ISNUM( 8 ) )
    {
-      gdImagePtr dst, src;
-      int        dstX, dstY, srcX, srcY, w, h;
+      gdImagePtr dst = hb_parGdImage( 1 );
+      gdImagePtr src = hb_parGdImage( 2 );
 
-      /* Retrieve destination image pointer */
-      dst = hb_parGdImage( 1 );
-
-      /* Retrieve source image pointer */
-      src = hb_parGdImage( 2 );
-
-      /* Retrieve destination pos value */
-      dstX = hb_parni( 3 );
-      dstY = hb_parni( 4 );
-
-      /* Retrieve source pos value */
-      srcX = hb_parni( 5 );
-      srcY = hb_parni( 6 );
-
-      /* Retrieve width value */
-      w = hb_parni( 7 );
-
-      /* Retrieve height value */
-      h = hb_parni( 8 );
+      int dstX = hb_parni( 3 );
+      int dstY = hb_parni( 4 );
+      int srcX = hb_parni( 5 );
+      int srcY = hb_parni( 6 );
+      int w    = hb_parni( 7 );
+      int h    = hb_parni( 8 );
 
       /* Perform copy */
       gdImageCopy( dst, src, dstX, dstY, srcX, srcY, w, h );
@@ -2437,8 +1898,8 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
 
 HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) &&
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
@@ -2448,35 +1909,17 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
        HB_ISNUM( 9 ) &&
        HB_ISNUM( 10 ) )
    {
-      gdImagePtr dst, src;
-      int        dstX, dstY, srcX, srcY;
-      int        dstW, dstH, srcW, srcH;
+      gdImagePtr dst = hb_parGdImage( 1 );
+      gdImagePtr src = hb_parGdImage( 2 );
 
-      /* Retrieve destination image pointer */
-      dst = hb_parGdImage( 1 );
-
-      /* Retrieve source image pointer */
-      src = hb_parGdImage( 2 );
-
-      /* Retrieve destination pos value */
-      dstX = hb_parni( 3 );
-      dstY = hb_parni( 4 );
-
-      /* Retrieve source pos value */
-      srcX = hb_parni( 5 );
-      srcY = hb_parni( 6 );
-
-      /* Retrieve dest width value */
-      dstW = hb_parni( 7 );
-
-      /* Retrieve dest height value */
-      dstH = hb_parni( 8 );
-
-      /* Retrieve source width value */
-      srcW = hb_parni( 9 );
-
-      /* Retrieve source height value */
-      srcH = hb_parni( 10 );
+      int dstX = hb_parni( 3 );
+      int dstY = hb_parni( 4 );
+      int srcX = hb_parni( 5 );
+      int srcY = hb_parni( 6 );
+      int dstW = hb_parni( 7 );
+      int dstH = hb_parni( 8 );
+      int srcW = hb_parni( 9 );
+      int srcH = hb_parni( 10 );
 
       /* Perform copy */
       gdImageCopyResized( dst, src, dstX, dstY, srcX, srcY, dstW, dstH, srcW, srcH );
@@ -2487,8 +1930,8 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
 
 HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int dstW, int dstH, int srcW, int srcH) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) &&
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
@@ -2498,35 +1941,17 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
        HB_ISNUM( 9 ) &&
        HB_ISNUM( 10 ) )
    {
-      gdImagePtr dst, src;
-      int        dstX, dstY, srcX, srcY;
-      int        dstW, dstH, srcW, srcH;
+      gdImagePtr dst = hb_parGdImage( 1 );
+      gdImagePtr src = hb_parGdImage( 2 );
 
-      /* Retrieve destination image pointer */
-      dst = hb_parGdImage( 1 );
-
-      /* Retrieve source image pointer */
-      src = hb_parGdImage( 2 );
-
-      /* Retrieve destination pos value */
-      dstX = hb_parni( 3 );
-      dstY = hb_parni( 4 );
-
-      /* Retrieve source pos value */
-      srcX = hb_parni( 5 );
-      srcY = hb_parni( 6 );
-
-      /* Retrieve dest width value */
-      dstW = hb_parni( 7 );
-
-      /* Retrieve dest height value */
-      dstH = hb_parni( 8 );
-
-      /* Retrieve source width value */
-      srcW = hb_parni( 9 );
-
-      /* Retrieve source height value */
-      srcH = hb_parni( 10 );
+      int dstX = hb_parni( 3 );
+      int dstY = hb_parni( 4 );
+      int srcX = hb_parni( 5 );
+      int srcY = hb_parni( 6 );
+      int dstW = hb_parni( 7 );
+      int dstH = hb_parni( 8 );
+      int srcW = hb_parni( 9 );
+      int srcH = hb_parni( 10 );
 
       /* Perform copy */
       gdImageCopyResampled( dst, src, dstX, dstY, srcX, srcY, dstW, dstH, srcW, srcH );
@@ -2537,8 +1962,8 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
 
 HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImagePtr src, double dstX, double dstY, int srcX, int srcY, int srcW, int srcH, int angle) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) &&
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
@@ -2547,32 +1972,16 @@ HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImage
        HB_ISNUM( 8 ) &&
        HB_ISNUM( 9 ) )
    {
-      gdImagePtr dst, src;
-      double     dstX, dstY;
-      int        srcX, srcY, srcW, srcH, angle;
+      gdImagePtr dst = hb_parGdImage( 1 );
+      gdImagePtr src = hb_parGdImage( 2 );
 
-      /* Retrieve destination image pointer */
-      dst = hb_parGdImage( 1 );
-
-      /* Retrieve source image pointer */
-      src = hb_parGdImage( 2 );
-
-      /* Retrieve destination pos value */
-      dstX = hb_parnd( 3 );
-      dstY = hb_parnd( 4 );
-
-      /* Retrieve source pos value */
-      srcX = hb_parni( 5 );
-      srcY = hb_parni( 6 );
-
-      /* Retrieve source width value */
-      srcW = hb_parni( 7 );
-
-      /* Retrieve source height value */
-      srcH = hb_parni( 8 );
-
-      /* Retrieve angle value */
-      angle = hb_parni( 9 );
+      double dstX  = hb_parnd( 3 );
+      double dstY  = hb_parnd( 4 );
+      int    srcX  = hb_parni( 5 );
+      int    srcY  = hb_parni( 6 );
+      int    srcW  = hb_parni( 7 );
+      int    srcH  = hb_parni( 8 );
+      int    angle = hb_parni( 9 );
 
       /* Perform rotation */
       gdImageCopyRotated( dst, src, dstX, dstY, srcX, srcY, srcW, srcH, angle );
@@ -2583,8 +1992,8 @@ HB_FUNC( GDIMAGECOPYROTATED ) /* void gdImageCopyRotated(gdImagePtr dst, gdImage
 
 HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h, int pct) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) &&
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
@@ -2593,31 +2002,16 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
        HB_ISNUM( 8 ) &&
        HB_ISNUM( 9 ) )
    {
-      gdImagePtr dst, src;
-      int        dstX, dstY, srcX, srcY, w, h, pct;
+      gdImagePtr dst = hb_parGdImage( 1 );
+      gdImagePtr src = hb_parGdImage( 2 );
 
-      /* Retrieve destination image pointer */
-      dst = hb_parGdImage( 1 );
-
-      /* Retrieve source image pointer */
-      src = hb_parGdImage( 2 );
-
-      /* Retrieve destination pos value */
-      dstX = hb_parni( 3 );
-      dstY = hb_parni( 4 );
-
-      /* Retrieve source pos value */
-      srcX = hb_parni( 5 );
-      srcY = hb_parni( 6 );
-
-      /* Retrieve width value */
-      w = hb_parni( 7 );
-
-      /* Retrieve height value */
-      h = hb_parni( 8 );
-
-      /* Retrieve percentual value */
-      pct = hb_parni( 9 );
+      int dstX = hb_parni( 3 );
+      int dstY = hb_parni( 4 );
+      int srcX = hb_parni( 5 );
+      int srcY = hb_parni( 6 );
+      int w    = hb_parni( 7 );
+      int h    = hb_parni( 8 );
+      int pct  = hb_parni( 9 );
 
       /* Perform copy */
       gdImageCopyMerge( dst, src, dstX, dstY, srcX, srcY, w, h, pct );
@@ -2628,8 +2022,8 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
 
 HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdImagePtr src, int dstX, int dstY, int srcX, int srcY, int w, int h, int pct) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) &&
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
@@ -2638,31 +2032,16 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
        HB_ISNUM( 8 ) &&
        HB_ISNUM( 9 ) )
    {
-      gdImagePtr dst, src;
-      int        dstX, dstY, srcX, srcY, w, h, pct;
+      gdImagePtr dst = hb_parGdImage( 1 );
+      gdImagePtr src = hb_parGdImage( 2 );
 
-      /* Retrieve destination image pointer */
-      dst = hb_parGdImage( 1 );
-
-      /* Retrieve source image pointer */
-      src = hb_parGdImage( 2 );
-
-      /* Retrieve destination pos value */
-      dstX = hb_parni( 3 );
-      dstY = hb_parni( 4 );
-
-      /* Retrieve source pos value */
-      srcX = hb_parni( 5 );
-      srcY = hb_parni( 6 );
-
-      /* Retrieve width value */
-      w = hb_parni( 7 );
-
-      /* Retrieve height value */
-      h = hb_parni( 8 );
-
-      /* Retrieve percentual value */
-      pct = hb_parni( 9 );
+      int dstX = hb_parni( 3 );
+      int dstY = hb_parni( 4 );
+      int srcX = hb_parni( 5 );
+      int srcY = hb_parni( 6 );
+      int w    = hb_parni( 7 );
+      int h    = hb_parni( 8 );
+      int pct  = hb_parni( 9 );
 
       /* Perform copy */
       gdImageCopyMergeGray( dst, src, dstX, dstY, srcX, srcY, w, h, pct );
@@ -2673,18 +2052,12 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
 
 HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImagePtr src) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) )
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) )
    {
-      gdImagePtr dst, src;
+      gdImagePtr dst = hb_parGdImage( 1 );
+      gdImagePtr src = hb_parGdImage( 2 );
 
-      /* Retrieve destination image pointer */
-      dst = hb_parGdImage( 1 );
-
-      /* Retrieve source image pointer */
-      src = hb_parGdImage( 2 );
-
-      /* Perform copy */
       gdImagePaletteCopy( dst, src );
    }
    else
@@ -2693,17 +2066,12 @@ HB_FUNC( GDIMAGEPALETTECOPY ) /* void gdImagePaletteCopy(gdImagePtr dst, gdImage
 
 HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, int radius) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        radius;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
-
-      /* Retrieve radius value */
-      radius = hb_parni( 2 );
+      int radius = hb_parni( 2 );
 
       hb_retGdImage( gdImageSquareToCircle( im, radius ) );
    }
@@ -2713,19 +2081,13 @@ HB_FUNC( GDIMAGESQUARETOCIRCLE ) /* void gdImageSquareToCircle(gdImagePtr im, in
 
 HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISNUM( 2 ) )
    {
-      gdImagePtr im;
-      int        pct;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int pct = hb_parni( 2 );
 
-      /* Retrieve percentual value */
-      pct = hb_parni( 2 );
-
-      /* Sharpens the specified image */
       gdImageSharpen( im, pct );
    }
    else
@@ -2736,8 +2098,8 @@ HB_FUNC( GDIMAGESHARPEN ) /* void gdImageSharpen(gdImagePtr im, int pct) */
 
 HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) */
 {
-   if( HB_ISPOINTER( 1 ) &&
-       HB_ISPOINTER( 2 ) )
+   if( hb_isGdImage( 1 ) &&
+       hb_isGdImage( 2 ) )
       /* Compare images - if return <> 0 check value for infos */
       hb_retni( gdImageCompare( hb_parGdImage( 1 ),
                                 hb_parGdImage( 2 ) ) );
@@ -2747,19 +2109,13 @@ HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) 
 
 HB_FUNC( GDIMAGEINTERLACE ) /* void gdImageInterlace(gdImagePtr im, int interlace) */
 {
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        HB_ISLOG( 2 ) )
    {
-      gdImagePtr im;
-      int        interlace;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int interlace = hb_parl( 2 ) ? 1 : 0;
 
-      /* Retrieve interlace value */
-      interlace = hb_parl( 2 );
-
-      /* Set interlace */
       gdImageInterlace( im, interlace );
    }
    else
@@ -2792,32 +2148,23 @@ static void AddImageToFile( const char * szFile, const void * iptr, int sz )
 HB_FUNC( GDIMAGEGIFANIMBEGIN )
 {
 #if HB_GD_VERS( 2, 0, 33 )
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) )
    {
-      gdImagePtr im;
-      void *     iptr;
-      int        size;
-      int        GlobalCM, Loops;
+      gdImagePtr im = hb_parGdImage( 1 );
 
-      /* Retrieve image pointer */
-      im = hb_parGdImage( 1 );
+      int GlobalCM = hb_parni( 3 ); /* global color map value */
+      int Loops    = hb_parni( 4 );
 
-      /* Retrieve global color map value */
-      GlobalCM = hb_parni( 3 );
-
-      /* Retrieve Loops value */
-      Loops = hb_parni( 4 );
-
-      /* run function */
-      iptr = gdImageGifAnimBeginPtr( im, &size, GlobalCM, Loops );
+      int    size;
+      void * iptr = gdImageGifAnimBeginPtr( im, &size, GlobalCM, Loops );
 
       /* Check if 2nd parameter is a file name or an handle */
       if( HB_ISCHAR( 2 ) )
          SaveImageToFile( hb_parc( 2 ), iptr, size );
-      else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
+      else
          SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, 1 /* std output */ ) ), iptr, size );
    }
    else
@@ -2830,37 +2177,31 @@ HB_FUNC( GDIMAGEGIFANIMBEGIN )
 HB_FUNC( GDIMAGEGIFANIMADD )
 {
 #if HB_GD_VERS( 2, 0, 33 )
-   if( HB_ISPOINTER( 1 ) &&
+   if( hb_isGdImage( 1 ) &&
        ( HB_ISCHAR( 2 ) || HB_ISNUM( 2 ) || HB_ISNIL( 2 ) ) &&
        HB_ISNUM( 3 ) &&
        HB_ISNUM( 4 ) &&
        HB_ISNUM( 5 ) &&
        HB_ISNUM( 6 ) &&
        HB_ISNUM( 7 ) &&
-       ( HB_ISPOINTER( 8 ) || HB_ISNIL( 8 ) ) )
+       ( hb_isGdImage( 8 ) || HB_ISNIL( 8 ) ) )
    {
-      gdImagePtr im, previm;
-      void *     iptr;
-      int        size;
-      int        LocalCM, LeftOfs, TopOfs, Delay, Disposal;
+      gdImagePtr im     = hb_parGdImage( 1 );
+      gdImagePtr previm = hb_parGdImage( 8 );
 
-      /* Retrieve parameters */
-      im = hb_parGdImage( 1 );
+      int LocalCM  = hb_parni( 3 );
+      int LeftOfs  = hb_parni( 4 );
+      int TopOfs   = hb_parni( 5 );
+      int Delay    = hb_parni( 6 );
+      int Disposal = hb_parni( 7 );
 
-      LocalCM  = hb_parni( 3 );
-      LeftOfs  = hb_parni( 4 );
-      TopOfs   = hb_parni( 5 );
-      Delay    = hb_parni( 6 );
-      Disposal = hb_parni( 7 );
-      previm   = hb_parGdImage( 8 );
-
-      /* Run function and return value */
-      iptr = gdImageGifAnimAddPtr( im, &size, LocalCM, LeftOfs, TopOfs, Delay, Disposal, previm );
+      int    size;
+      void * iptr = gdImageGifAnimAddPtr( im, &size, LocalCM, LeftOfs, TopOfs, Delay, Disposal, previm );
 
       /* Check if 2nd parameter is a file name or an handle */
       if( HB_ISCHAR( 2 ) )
          AddImageToFile( hb_parc( 2 ), iptr, size );
-      else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
+      else
          SaveImageToHandle( hb_numToHandle( hb_parnintdef( 2, 1 /* std output */ ) ), iptr, size );
    }
    else
@@ -2875,26 +2216,16 @@ HB_FUNC( GDIMAGEGIFANIMEND )
 #if HB_GD_VERS( 2, 0, 33 )
    if( HB_ISCHAR( 1 ) || HB_ISNUM( 1 ) || HB_ISNIL( 1 ) )
    {
-      void * iptr;
       int    size;
-
-      /* Run function and return value */
-      iptr = gdImageGifAnimEndPtr( &size );
+      void * iptr = gdImageGifAnimEndPtr( &size );
 
       /* Check if 1st parameter is a file name or an handle */
       if( HB_ISCHAR( 1 ) )
          AddImageToFile( hb_parc( 1 ), iptr, size );
-      else if( HB_ISNUM( 2 ) || HB_ISNIL( 2 ) )
+      else
          SaveImageToHandle( hb_numToHandle( hb_parnintdef( 1, 1 /* std output */ ) ), iptr, size );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 #endif
-}
-
-HB_FUNC( HB_GD_VERSION )
-{
-   hb_storni( GD_MAJOR_VERSION, 1 );
-   hb_storni( GD_MINOR_VERSION, 2 );
-   hb_storni( GD_RELEASE_VERSION, 3 );
 }
