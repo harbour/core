@@ -199,11 +199,11 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
               nValueType == WIN_REG_DWORD_LITTLE_ENDIAN
             xRetVal := Bin2U( xRetVal )
          CASE nValueType == WIN_REG_DWORD_BIG_ENDIAN
-            xRetVal := Bin2U( Right( xRetVal, 2 ) + Left( xRetVal, 2 ) )
+            xRetVal := Bin2U( hb_BRight( xRetVal, 2 ) + hb_BLeft( xRetVal, 2 ) )
          CASE nValueType == WIN_REG_QWORD .OR. ;
               nValueType == WIN_REG_QWORD_LITTLE_ENDIAN
-            xRetVal := hb_bitShift( Bin2U( SubStr( xRetVal, 5, 2 ) + SubStr( xRetVal, 7, 2 ) ), 32 ) +;
-                                    Bin2U( SubStr( xRetVal, 1, 2 ) + SubStr( xRetVal, 3, 2 ) )
+            xRetVal := hb_bitShift( Bin2U( hb_BSubStr( xRetVal, 5, 4 ) ), 32 ) +;
+                                    Bin2U( hb_BSubStr( xRetVal, 1, 4 ) )
          OTHERWISE
             /* Strip ending zero byte */
             IF hb_BRight( xRetVal, 1 ) == hb_BChar( 0 )
