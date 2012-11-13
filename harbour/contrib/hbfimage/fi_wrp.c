@@ -64,10 +64,6 @@
 #  endif
 #endif
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "FreeImage.h"
 
 #define hb_fi_retl( x )  hb_retl( x ? HB_TRUE : HB_FALSE )

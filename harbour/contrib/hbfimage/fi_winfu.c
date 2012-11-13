@@ -63,10 +63,6 @@
 #  define _WINDOWS_
 #endif
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "FreeImage.h"
 
 /* Convert from FreeImage to HBITMAP */

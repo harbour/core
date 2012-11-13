@@ -65,10 +65,6 @@
 #  endif
 #endif
 
-#ifdef HAVE_CONFIG_H
-#  include "config.h"
-#endif
-
 #include "gd.h"
 #include "gdfontt.h"
 #include "gdfonts.h"
@@ -234,13 +230,8 @@ static PHB_ITEM hb_gdFontItemNew( gdFontPtr font )
 
 static void * LoadImageFromHandle( HB_FHANDLE fhandle, int sz )
 {
-   void * iptr;
+   void * iptr = hb_xgrab( sz );
 
-   if( ! fhandle )
-      fhandle = 0;  /* std input */
-
-   /* Read file */
-   iptr = hb_xgrab( sz );
    hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) sz );
 
    return iptr;
@@ -262,7 +253,6 @@ static void * LoadImageFromFile( const char * szFile, int * sz )
       iptr = hb_xgrab( *sz );
       hb_fsReadLarge( fhandle, iptr, ( HB_SIZE ) *sz );
 
-      /* Close file */
       hb_fsClose( fhandle );
    }
    else
@@ -277,10 +267,6 @@ static void * LoadImageFromFile( const char * szFile, int * sz )
 
 static void SaveImageToHandle( HB_FHANDLE fhandle, const void * iptr, int sz )
 {
-   if( ! fhandle )
-      fhandle = 1;  /* std output */
-
-   /* Write Image */
    hb_fsWriteLarge( fhandle, iptr, ( HB_SIZE ) sz );
 }
 
@@ -293,7 +279,6 @@ static void SaveImageToFile( const char * szFile, const void * iptr, int sz )
       /* Write Image */
       SaveImageToHandle( fhandle, iptr, sz );
 
-      /* Close file */
       hb_fsClose( fhandle );
    }
 }
@@ -468,7 +453,7 @@ static void GDImageSaveTo( int nType )
          /* Write to std output or to a passed file */
          HB_FHANDLE fhandle = hb_numToHandle( hb_parnint( 2 ) );
 
-         if( fhandle == FS_ERROR )
+         if( fhandle == FS_ERROR || fhandle == 0 )
             fhandle = 1;  /* std output */
 
          /* Write Image */
@@ -1554,8 +1539,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       if( ! err )
       {
          /* Save in array the correct text rectangle dimensions */
-         PHB_ITEM pArray;
-         pArray = hb_itemArrayNew( 8 );
+         PHB_ITEM pArray = hb_itemArrayNew( 8 );
          for( i = 0; i < 8; i++ )
             hb_itemPutNI( hb_arrayGetItemPtr( pArray, i + 1 ), aRect[ i ] );
          hb_itemCopy( pRect, pArray );
@@ -1887,7 +1871,6 @@ HB_FUNC( GDIMAGECOPY ) /* void gdImageCopy(gdImagePtr dst, gdImagePtr src, int d
       int w    = hb_parni( 7 );
       int h    = hb_parni( 8 );
 
-      /* Perform copy */
       gdImageCopy( dst, src, dstX, dstY, srcX, srcY, w, h );
    }
    else
@@ -1919,7 +1902,6 @@ HB_FUNC( GDIMAGECOPYRESIZED ) /* void gdImageCopyResized(gdImagePtr dst, gdImage
       int srcW = hb_parni( 9 );
       int srcH = hb_parni( 10 );
 
-      /* Perform copy */
       gdImageCopyResized( dst, src, dstX, dstY, srcX, srcY, dstW, dstH, srcW, srcH );
    }
    else
@@ -1951,7 +1933,6 @@ HB_FUNC( GDIMAGECOPYRESAMPLED ) /* void gdImageCopyResampled(gdImagePtr dst, gdI
       int srcW = hb_parni( 9 );
       int srcH = hb_parni( 10 );
 
-      /* Perform copy */
       gdImageCopyResampled( dst, src, dstX, dstY, srcX, srcY, dstW, dstH, srcW, srcH );
    }
    else
@@ -2011,7 +1992,6 @@ HB_FUNC( GDIMAGECOPYMERGE ) /* void gdImageCopyMerge(gdImagePtr dst, gdImagePtr 
       int h    = hb_parni( 8 );
       int pct  = hb_parni( 9 );
 
-      /* Perform copy */
       gdImageCopyMerge( dst, src, dstX, dstY, srcX, srcY, w, h, pct );
    }
    else
@@ -2041,7 +2021,6 @@ HB_FUNC( GDIMAGECOPYMERGEGRAY ) /* void gdImageCopyMergeGray(gdImagePtr dst, gdI
       int h    = hb_parni( 8 );
       int pct  = hb_parni( 9 );
 
-      /* Perform copy */
       gdImageCopyMergeGray( dst, src, dstX, dstY, srcX, srcY, w, h, pct );
    }
    else
@@ -2098,7 +2077,7 @@ HB_FUNC( GDIMAGECOMPARE ) /* int gdImageCompare(gdImagePtr im1, gdImagePtr im2) 
 {
    if( hb_isGdImage( 1 ) &&
        hb_isGdImage( 2 ) )
-      /* Compare images - if return <> 0 check value for infos */
+      /* Compare images - if return != 0 check value for infos */
       hb_retni( gdImageCompare( hb_parGdImage( 1 ),
                                 hb_parGdImage( 2 ) ) );
    else
@@ -2134,7 +2113,6 @@ static void AddImageToFile( const char * szFile, const void * iptr, int sz )
       /* Write Image */
       SaveImageToHandle( fhandle, iptr, sz );
 
-      /* Close file */
       hb_fsClose( fhandle );
    }
 }

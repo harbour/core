@@ -50,6 +50,8 @@
  *
  */
 
+/* NOTE: This file is also used by C code. */
+
 #ifndef HB_ZLIB_CH_
 #define HB_ZLIB_CH_
 
@@ -59,8 +61,8 @@
 #define HB_ZLIB_COMPRESSION_NONE          0
 #define HB_ZLIB_COMPRESSION_SPEED         1
 #define HB_ZLIB_COMPRESSION_SIZE          9
-#define HB_ZLIB_COMPRESSION_DEFAULT       (-1)
-#define HB_ZLIB_COMPRESSION_DISABLE       (-2)
+#define HB_ZLIB_COMPRESSION_DEFAULT       ( -1 )
+#define HB_ZLIB_COMPRESSION_DISABLE       ( -2 )
 
 #define HB_ZLIB_STRATEGY_DEFAULT          0
 #define HB_ZLIB_STRATEGY_FILTERED         1
@@ -71,11 +73,11 @@
 #define HB_ZLIB_RES_OK                    0
 #define HB_ZLIB_RES_STREAM_END            1
 #define HB_ZLIB_RES_NEED_DICT             2
-#define HB_ZLIB_RES_ERRNO                 (-1)
-#define HB_ZLIB_RES_STREAM_ERROR          (-2)
-#define HB_ZLIB_RES_DATA_ERROR            (-3)
-#define HB_ZLIB_RES_MEM_ERROR             (-4)
-#define HB_ZLIB_RES_BUF_ERROR             (-5)
-#define HB_ZLIB_RES_VERSION_ERROR         (-6)
+#define HB_ZLIB_RES_ERRNO                 ( -1 )
+#define HB_ZLIB_RES_STREAM_ERROR          ( -2 )
+#define HB_ZLIB_RES_DATA_ERROR            ( -3 )
+#define HB_ZLIB_RES_MEM_ERROR             ( -4 )
+#define HB_ZLIB_RES_BUF_ERROR             ( -5 )
+#define HB_ZLIB_RES_VERSION_ERROR         ( -6 )
 
 #endif /* HB_ZLIB_CH_ */
