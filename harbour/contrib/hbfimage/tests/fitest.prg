@@ -13,6 +13,7 @@
 #include "freeimag.ch"
 
 #include "fileio.ch"
+#include "simpleio.ch"
 
 #define IMAGES_IN  ""
 #define IMAGES_OUT "imgs_out" + hb_ps()
@@ -47,14 +48,14 @@ PROCEDURE Main()
 
    //
 
-   ? "Set Error Message:", fi_SetOutputMessage( fi_Error() )
-#if 0
-   ? "Set Error Message:", fi_SetOutputMessage( NIL )
-#endif
-
    ? "Version          :", fi_GetVersion()
    ? "Copyright        :", fi_GetCopyrightMessage()
    ? "File type        :", fi_GetFileType( IMAGES_IN + "sample1.jpg" )
+
+   ? "Set Error Message (symbol):", fi_SetOutputMessage( @fi_Error() )
+   im := fi_Load( FIF_JPEG, IMAGES_IN + "nothere.jpg", JPEG_DEFAULT )
+   ? "Set Error Message (block):", fi_SetOutputMessage( {| cFormat, cMessage | fi_Error( cFormat, cMessage ) } )
+   im := fi_Load( FIF_JPEG, IMAGES_IN + "nothere.jpg", JPEG_DEFAULT )
 
    ? "Load JPEG directly from file"
    im := fi_Load( FIF_JPEG, IMAGES_IN + "sample1.jpg", JPEG_DEFAULT )
@@ -208,9 +209,9 @@ PROCEDURE Main()
 
 PROCEDURE fi_Error( cFormat, cMessage )
 
-   ? "ERROR!..."
-   ? "Format  : ", cFormat
-   ? "Message : ", cMessage
+   ? "ERROR!.."
+   ? "Format : ", cFormat
+   ? "Message: ", cMessage
 
    RETURN
 

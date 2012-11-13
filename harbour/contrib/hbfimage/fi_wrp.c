@@ -7,6 +7,7 @@
  * FreeImage graphic library low level (client api) interface code.
  *
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
+ * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://www.xharbour.org http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -55,6 +56,7 @@
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
+#include "hbstack.h"
 #include "hbvm.h"
 
 #if defined( HB_OS_WIN )
@@ -68,6 +70,33 @@
 
 #define hb_fi_retl( x )  hb_retl( x ? HB_TRUE : HB_FALSE )
 #define hb_fi_parl( x )  ( hb_parl( x ) ? TRUE : FALSE )
+
+/* Error callback */
+
+typedef struct
+{
+   PHB_ITEM pErrorCallback;
+} HB_FI_ERROR;
+
+static void hb_fi_error_init( void * cargo )
+{
+   HB_FI_ERROR * pError = ( HB_FI_ERROR * ) cargo;
+
+   pError->pErrorCallback = NULL;
+}
+
+static void hb_fi_error_release( void * cargo )
+{
+   HB_FI_ERROR * pError = ( HB_FI_ERROR * ) cargo;
+
+   if( pError->pErrorCallback )
+      hb_itemRelease( pError->pErrorCallback );
+}
+
+static HB_TSD_NEW( s_fi_error,
+                   sizeof( HB_FI_ERROR ),
+                   hb_fi_error_init,
+                   hb_fi_error_release );
 
 /* HB_FIBITMAP API */
 
@@ -189,9 +218,6 @@ static void hb_FIMULTIBITMAP_ret( FIMULTIBITMAP * bitmap )
 
 /* ************************* WRAPPED FUNCTIONS ****************************** */
 
-/* static for error handler (see below FI_SETOUTPUTMESSAGE ) */
-static void * s_pErrorHandler = NULL;
-
 /* Init / Error routines */
 /* --------------------- */
 
@@ -224,45 +250,45 @@ HB_FUNC( FI_GETCOPYRIGHTMESSAGE )
 /* DLL_API void DLL_CALLCONV FreeImage_OutputMessageProc(int fif, const char *fmt, ...); */
 
 /* typedef void (*FreeImage_OutputMessageFunction)(FREE_IMAGE_FORMAT fif, const char *msg); */
-/* DLL_API void DLL_CALLCONV FreeImage_SetOutputMessage(FreeImage_OutputMessageFunction omf); */
 
-/* implementation: void FreeImage_SetOutputMessage( pFunctionPointer ) */
-
-/**
-   @param fif Format / Plugin responsible for the error
-   @param message Error message
- */
 static void FreeImageErrorHandler( FREE_IMAGE_FORMAT fif, const char * message )
 {
-   if( s_pErrorHandler )
+   HB_FI_ERROR * pError = ( HB_FI_ERROR * ) hb_stackGetTSD( &s_fi_error );
+
+   if( pError )
    {
-      if( hb_vmRequestReenter() )
+      PHB_ITEM pErrorCallback = pError->pErrorCallback;
+
+      if( pErrorCallback && hb_vmRequestReenter() )
       {
          const char * format = FreeImage_GetFormatFromFIF( fif );
 
-         /* launch error function at prg level */
-         hb_vmPushSymbol( ( PHB_SYMB ) s_pErrorHandler );
-         hb_vmPushNil();
+         hb_vmPushEvalSym();
+         hb_vmPush( pErrorCallback );
          hb_vmPushString( format, strlen( format ) );
          hb_vmPushString( message, strlen( message ) );
-         hb_vmDo( 2 );
+         hb_vmSend( 2 );
 
          hb_vmRequestRestore();
       }
-      else
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, "FreeImageErrorHandler", HB_ERR_ARGS_BASEPARAMS );
    }
 }
 
+/* DLL_API void DLL_CALLCONV FreeImage_SetOutputMessage(FreeImage_OutputMessageFunction omf); */
+/* implementation: void FreeImage_SetOutputMessage( pFunctionPointer ) */
 HB_FUNC( FI_SETOUTPUTMESSAGE )
 {
-   s_pErrorHandler = NULL;
-   FreeImage_SetOutputMessage( FreeImageErrorHandler );
+   if( HB_ISBLOCK( 1 ) || HB_ISSYMBOL( 1 ) )
+   {
+      HB_FI_ERROR * pError = ( HB_FI_ERROR * ) hb_stackGetTSD( &s_fi_error );
 
-   if( HB_ISPOINTER( 1 ) )
-      /* Set the pointer */
-      s_pErrorHandler = hb_parptr( 1 );
-   else if( ! HB_ISNIL( 1 ) )
+      if( pError->pErrorCallback )
+         hb_itemRelease( pError->pErrorCallback );
+      pError->pErrorCallback = hb_itemNew( hb_param( 1, HB_IT_BLOCK | HB_IT_SYMBOL ) );
+
+      FreeImage_SetOutputMessage( FreeImageErrorHandler );
+   }
+   else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
