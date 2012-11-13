@@ -211,7 +211,7 @@ static BOOL    hb_gt_wvwSetCodePage( UINT usWinNum, int iCodePage );
 static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam );
 static BOOL    hb_gt_wvwAllocSpBuffer( WIN_DATA * pWindowData, USHORT col, USHORT row );
 
-static void    hb_gt_wvwSetWindowTitle( UINT usWinNum, const char * title );
+static void    hb_gt_wvwSetWindowTitle( UINT usWinNum, LPCTSTR title );
 static BOOL    hb_gt_wvw_GetWindowTitle( UINT usWinNum, char ** title );
 static HICON   hb_gt_wvwSetWindowIcon( UINT usWinNum, int icon, const char * lpIconName );
 static HICON   hb_gt_wvwSetWindowIconFromFile( UINT usWinNum, LPCTSTR icon );
@@ -401,9 +401,7 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    HANDLE hPrevInstance;
    int    iCmdShow;
 
-   /* FSG: filename var for application name */
-   PHB_FNAME pFileName;
-   USHORT    i;
+   USHORT i;
 
    if( bStartMode )
    {
@@ -469,11 +467,17 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
        */
       hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
-   pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+   {
+      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGVN( 0 ) );
+      PHB_ITEM  pItem     = hb_itemPutC( NULL, pFileName->szName );
+      void *    hWindowTitle;
 
-   hb_gt_wvwSetWindowTitle( 0, ( char * ) pFileName->szName );
+      hb_gt_wvwSetWindowTitle( 0, HB_ITEMGETSTR( pItem, &hWindowTitle, NULL ) );
 
-   hb_xfree( pFileName );
+      hb_strfree( hWindowTitle );
+      hb_itemRelease( pItem );
+      hb_xfree( pFileName );
+   }
 
    hb_gt_wvwCreateObjects( 0 );
    s_pWvwData->s_pWindows[ 0 ]->hdc     = GetDC( s_pWvwData->s_pWindows[ 0 ]->hWnd );
@@ -1599,7 +1603,11 @@ static BOOL hb_gt_wvw_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          else
             pInfo->pResult = hb_itemPutC( pInfo->pResult, NULL );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
-            hb_gt_wvwSetWindowTitle( s_pWvwData->s_usCurWindow, hb_itemGetCPtr( pInfo->pNewVal ) );
+         {
+            void * hWindowTitle;
+            hb_gt_wvwSetWindowTitle( s_pWvwData->s_usCurWindow, HB_ITEMGETSTR( pInfo->pNewVal, &hWindowTitle, NULL ) );
+            hb_strfree( hWindowTitle );
+         }
          break;
       }
       case HB_GTI_CODEPAGE:
@@ -5053,12 +5061,14 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
    HB_TRACE( HB_TR_DEBUG, ( "hb_gt_wvwOpenWindow()" ) );
 
    /* in MainCoord Mode make sure that usRowx and usColx are within Main Window's bound! */
-//    if ( s_pWvwData->s_bMainCoordMode && (!hb_gt_wvwInWindow(0, iRow1, iCol1) || !hb_gt_wvwInWindow(0, iRow2, iCol2)) )
-//    {
-//      MessageBox( NULL, TEXT( "Invalid (Row,Col)" ),
-//                  lpszWinName, MB_ICONERROR );
-//      return( 0 );
-//    }
+#if 0
+   if( s_pWvwData->s_bMainCoordMode && ( ! hb_gt_wvwInWindow( 0, iRow1, iCol1 ) || ! hb_gt_wvwInWindow( 0, iRow2, iCol2 ) ) )
+   {
+      MessageBox( NULL, TEXT( "Invalid (Row,Col)" ),
+                  lpszWinName, MB_ICONERROR );
+      return 0;
+   }
+#endif
 
    if( iParentWin < 0 )
       pParentWindow = NULL;
@@ -5160,7 +5170,7 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
    ShowWindow( hWnd, iCmdShow );
    UpdateWindow( hWnd );
 
-   hb_gt_wvwSetWindowTitle( s_pWvwData->s_usNumWindows - 1, ( const char * ) lpszWinName );
+   hb_gt_wvwSetWindowTitle( s_pWvwData->s_usNumWindows - 1, lpszWinName );
 
    hb_gt_wvwCreateObjects( s_pWvwData->s_usNumWindows - 1 );
 
@@ -5168,12 +5178,9 @@ static UINT hb_gt_wvwOpenWindow( LPCTSTR lpszWinName, int iRow1, int iCol1, int 
    s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ]->hCompDC = CreateCompatibleDC( s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ]->hdc );
    s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ]->hIcon   = NULL;
 
-   /*
-      Apos o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
-      o handle original da PEN e BRUSH do Device Context
-    */
-   /*
-      E, logo apos, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restauracao
+   /* Apos o Device Context e as PENs e BRUSHes criados, atribuo uma PEN e um BRUSH qualquer apenas para pegar
+      o handle original da PEN e BRUSH do Device Context */
+   /* E, logo apos, restaura aos valores originais mantendo em s_pWvwData->s_sApp os valores salvos para restauracao
       quando for utilizar DeleteObject()
     */
    SelectObject( s_pWvwData->s_pWindows[ s_pWvwData->s_usNumWindows - 1 ]->hdc, ( HPEN ) s_pWvwData->s_sApp->OriginalPen );
@@ -5391,9 +5398,9 @@ static void hb_gt_wvwInputNotAllowed( UINT usWinNum, UINT message, WPARAM wParam
    oldCoordMode := WVW_SetMainCoord( .t. )
 
    Illustration:
- *******+------
- *******|Main Window (Window 0)
- *******|maxrow()=24 maxcol()=79
+ +------
+ |Main Window (Window 0)
+ |maxrow()=24 maxcol()=79
  |   +---------------
  |   |Window1 RowOfs=3 ColOfs=4
  |   |maxrow()=9 maxcol()=29
@@ -6209,12 +6216,9 @@ int hb_gt_wvwSetLastMenuEvent( UINT usWinNum, int iLastMenuEvent )
 }
 
 
-static void hb_gt_wvwSetWindowTitle( UINT usWinNum, const char * title )
+static void hb_gt_wvwSetWindowTitle( UINT usWinNum, LPCSTR title )
 {
-   LPTSTR text = HB_TCHAR_CONVTO( title );
-
-   SetWindowText( s_pWvwData->s_pWindows[ usWinNum ]->hWnd, text );
-   HB_TCHAR_FREE( text );
+   SetWindowText( s_pWvwData->s_pWindows[ usWinNum ]->hWnd, title );
 }
 
 static BOOL hb_gt_wvw_GetWindowTitle( UINT usWinNum, char ** title )
@@ -7043,6 +7047,7 @@ WVW_DATA * hb_getWvwData( void )
 HB_FUNC( WVW_NOPENWINDOW )
 {
    LPCTSTR lpszWinName;
+   void *  hWinName;
 
    int        iLen;
    WIN_DATA * pParentWindow;
@@ -7054,11 +7059,10 @@ HB_FUNC( WVW_NOPENWINDOW )
 
    DWORD     dwStyle    = ( HB_ISNIL( 6 ) ? ( ( DWORD ) ( WS_POPUP | WS_CAPTION | WS_SYSMENU | WS_CLIPCHILDREN ) ) : ( ( DWORD ) hb_parnl( 6 ) ) );
    INT       iParentWin = ( HB_ISNIL( 7 ) ? ( s_pWvwData->s_bMainCoordMode ? s_pWvwData->s_usNumWindows - 1 : s_pWvwData->s_usCurWindow ) : ( ( INT ) hb_parni( 7 ) ) );
-   PHB_FNAME pFileName  = NULL;
+   PHB_FNAME pFileName;
 
    if( s_pWvwData->s_usNumWindows == 0 )
    {
-
       hb_retni( 0 );
       return;
    }
@@ -7066,7 +7070,7 @@ HB_FUNC( WVW_NOPENWINDOW )
    if( s_pWvwData->s_usNumWindows == WVW_MAXWINDOWS )
    {
       MessageBox( NULL, TEXT( "Too many Windows to open" ),
-                  "Error", MB_ICONERROR );
+                  TEXT( "Error" ), MB_ICONERROR );
       hb_retni( 0 );
       return;
    }
@@ -7074,7 +7078,7 @@ HB_FUNC( WVW_NOPENWINDOW )
    if( iParentWin > ( INT ) s_pWvwData->s_usNumWindows - 1 )
    {
       MessageBox( NULL, TEXT( "Invalid Parent Window" ),
-                  "Error", MB_ICONERROR );
+                  TEXT( "Error" ), MB_ICONERROR );
       hb_retni( 0 );
       return;
    }
@@ -7099,21 +7103,17 @@ HB_FUNC( WVW_NOPENWINDOW )
          hb_retni( 0 );
          return;
       }
-      lpszWinName = hb_parcx( 1 );
-   }
-   else if( HB_ISNIL( 1 ) )
-   {
-
-      pFileName   = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-      lpszWinName = pFileName->szName;
-
+      pFileName   = NULL;
+      lpszWinName = HB_PARSTR( 1, &hWinName, NULL );
    }
    else
    {
+      pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
+      PHB_ITEM pItem = hb_itemPutC( NULL, pFileName->szName );
 
-      hb_errRT_TERM( EG_DATATYPE, 10001, "Window Title must be character", "WVW_nOpenWindow()", 0, 0 );
-      hb_retni( 0 );
-      return;
+      lpszWinName = HB_ITEMGETSTR( pItem, &hWinName, NULL );
+
+      hb_itemRelease( pItem );
    }
 
    irow1 = HB_ISNIL( 2 ) ? 0 : hb_parni( 2 );
@@ -7123,6 +7123,8 @@ HB_FUNC( WVW_NOPENWINDOW )
 
    usWinNum = hb_gt_wvwOpenWindow( lpszWinName, irow1, icol1, irow2, icol2,
                                    dwStyle, iParentWin );
+
+   hb_strfree( hWinName );
 
    if( usWinNum == 0 )
    {
@@ -7141,11 +7143,8 @@ HB_FUNC( WVW_NOPENWINDOW )
    if( wi.right < rcWorkArea.left || wi.left > rcWorkArea.right ||
        wi.top > rcWorkArea.bottom || wi.bottom < rcWorkArea.top )
    {
-
       hb_gt_wvwSetCentreWindow( 0, TRUE, TRUE );
-
       hb_gt_wvwSetCentreWindow( usWinNum, s_pWvwData->s_bDefCentreWindow, TRUE );
-
    }
 
    if( s_pWvwData->s_bMainCoordMode )
@@ -8184,7 +8183,11 @@ HB_FUNC( WVW_SETICON )
    if( HB_ISNUM( 2 ) || HB_ISCHAR( 3 ) )
       hb_retptr( ( void * ) hb_gt_wvwSetWindowIcon( usWinNum, hb_parni( 2 ), hb_parc( 3 ) ) );
    else
-      hb_retptr( ( void * ) hb_gt_wvwSetWindowIconFromFile( usWinNum, hb_parcx( 2 ) ) );
+   {
+      void * hImageName;
+      hb_retptr( ( void * ) hb_gt_wvwSetWindowIconFromFile( usWinNum, HB_PARSTRDEF( 1, &hImageName, NULL ) ) );
+      hb_strfree( hImageName );
+   }
 }
 
 
@@ -8193,7 +8196,6 @@ HB_FUNC( WVW_SETTITLE )
    UINT usWinNum = WVW_WHICH_WINDOW;
 
    hb_gt_wvwSetWindowTitle( usWinNum, hb_parcx( 2 ) );
-   return;
 }
 
 

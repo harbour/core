@@ -767,16 +767,6 @@ HB_FUNC( WVW_STCREATE )
 
    if( hWndCB )
    {
-      RECT rXB = { 0 }, rOffXB = { 0 };
-
-//     WNDPROC OldProc;
-
-      rXB.top       = usTop;     rXB.left = usLeft;
-      rXB.bottom    = usBottom; rXB.right = usRight;
-      rOffXB.top    = iOffTop;     rOffXB.left = iOffLeft;
-      rOffXB.bottom = iOffBottom; rOffXB.right = iOffRight;
-
-
       if( HB_ISCHAR( 5 ) )
          SendMessage( hWndCB, WM_SETTEXT, 0, ( LPARAM ) hb_parc( 5 ) );
       if( hFont )

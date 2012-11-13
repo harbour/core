@@ -2191,7 +2191,7 @@ HB_FUNC( WVW_DRAWBUTTON )
 
    if( bText )
    {
-      ( HFONT ) SelectObject( pWindowData->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
+      SelectObject( pWindowData->hdc, GetStockObject( DEFAULT_GUI_FONT ) );
 
       GetTextExtentPoint32( pWindowData->hdc, hb_parcx( 6 ), strlen( hb_parcx( 6 ) ), &sz );
 
