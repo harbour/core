@@ -103,8 +103,6 @@ echo.> _hbfiles
 echo "%HB_DR%RELNOTES"                              >> _hbfiles
 echo "%HB_DR%README"                                >> _hbfiles
 echo "%HB_DR%COPYING"                               >> _hbfiles
-echo "%HB_DR%NEWS"                                  >> _hbfiles
-echo "%HB_DR%TODO"                                  >> _hbfiles
 echo "%HB_DR%ChangeLog*"                            >> _hbfiles
 echo "%HB_DR%bin\*-%HB_VS%.dll"                     >> _hbfiles
 echo "%HB_DR%bin\harbour.exe"                       >> _hbfiles

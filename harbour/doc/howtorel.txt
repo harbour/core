@@ -17,9 +17,9 @@ By Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 2. Update files which contain harbour release number. Now these are:
     harbour.spec
     include/hbver.h
-3. Set proper release date in NEWS and if necessary update
-   release informations. Also add the exact tag name to this file,
-   for example "tag: build46".
+3. Set proper release date in NEWS (found as doc/oldnews.txt) and
+   if necessary update release informations. Also add the exact
+   tag name to this file, for example "tag: build46".
 4. Update ChangeLog file and commit your modifications.
 5. Update hbver.h with ChangeLog file ID and your last entry ID.
 6. Tag the CVS tree with the new release tag:

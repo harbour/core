@@ -21,11 +21,13 @@ DOC_FILES := \
    howtorep.txt \
    inet.txt \
    locks.txt \
+   oldnews.txt \
    pcode.txt \
    pp.txt \
    pragma.txt \
    readme.txt \
    statics.txt \
+   todo.txt \
    tracing.txt \
    transfrm.txt \
    vm.txt \

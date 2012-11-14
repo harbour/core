@@ -39,7 +39,7 @@ Status...: Open.
 Assign to: Przemek
 Detail...: Define multi platform platform API for GTs which can mix
            graphics objects with standard text output. Now it's
-           possible in GTXWC, GTWVG and GTALLEG. This I will discuss
+           possible in GTXWC, GTWVT and GTALLEG. This I will discuss
            yet also with Harbour developers.
 Status...: Open.
 

@@ -81,11 +81,8 @@ files, you need to investigate the license that applies to each file.
 THE HARBOUR PROJECT NON-SOURCE LICENSE
 ======================================
 
-Note: This license only applies to the following files:
-
-   ChangeLog
-   README
-   NEWS
+Note: This license applies to the files where the content
+      explicitly indicates so.
 
    These works are licensed under the Creative Commons Attribution-ShareAlike
    License. To view a copy of this license, visit
