@@ -59,7 +59,6 @@ typedef enum
    HB_IT_N,
    HB_IT_C,
    HB_IT_L,
-   HB_IT_D,
    HB_IT_T,
    HB_IT_B,
    HB_IT_H,
@@ -80,8 +79,6 @@ static HB_IT_BASIC s_hb_itemTypeBasic( PHB_ITEM pItem )
          return HB_IT_B;
 
       case HB_IT_DATE:
-         return HB_IT_D;
-
       case HB_IT_TIMESTAMP:
          return HB_IT_T;
 
@@ -112,13 +109,12 @@ static HB_IT_BASIC s_hb_itemTypeBasic( PHB_ITEM pItem )
 
 HB_FUNC( HB_DEFAULT )
 {
-   if( hb_pcount() >= 2 )
-   {
-      PHB_ITEM pDefault = hb_param( 2, HB_IT_ANY );
+   PHB_ITEM pDefault = hb_param( 2, HB_IT_ANY );
 
-      if( s_hb_itemTypeBasic( hb_param( 1, HB_IT_ANY ) ) != s_hb_itemTypeBasic( pDefault ) )
-         hb_itemParamStore( 1, pDefault );
-   }
+   if( pDefault &&
+       s_hb_itemTypeBasic( hb_param( 1, HB_IT_ANY ) ) !=
+       s_hb_itemTypeBasic( pDefault ) )
+      hb_itemParamStore( 1, pDefault );
 }
 
 /* For compatibility with legacy DEFAULT ... TO ... command.
