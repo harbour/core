@@ -9,7 +9,7 @@ msgstr "Project-Id-Version: hbmk2\nLast-Translator: Guillermo Varona <gvaronas@g
 #: hbmk2.prg:861 hbmk2.prg:1153 hbmk2.prg:1210
 #, c-format
 msgid "Processing environment options: %1$s"
-msgstr "Processando opciones de ambiente: %1$s"
+msgstr "Procesando opciones de ambiente: %1$s"
 
 #: hbmk2.prg:455 hbmk2.prg:652 hbmk2.prg:687
 #, c-format
@@ -1004,574 +1004,574 @@ msgstr "crear librería dinámica"
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "<.ch> is a header file name. <.hbc> is a .hbc filename to be automatically included in case the header is found in any of the compiled sources. (EXPERIMENTAL)"
-msgstr ""
+msgstr "<.ch> es un nombre de archivo de cabecera. <.hbc> es un nombre de archivo .hbc para ser incluido automáticamente en caso la cabecera se encuentra en cualquiera de las fuentes compiladas. (EXPERIMENTAL)"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "specify a new build target. <script> can be .prg (or no extension) or .hbp file. Note that .hbp files are automatically considered as separate targets."
-msgstr ""
+msgstr "especifica un nuevo destino de construcción. <script> puede ser .prg (o sin extensión) o .hbp archivo. Tenga en cuenta que los archivos .hbp son automáticamente considerados como destinos separados."
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you don't specify <file>, the list of files in that group will be emptied."
-msgstr ""
+msgstr "añadir <archivo> a la lista de archivos que desea copiar a la ruta especificada por la opción -instpath. <g> es un grupo opcional de copia (distingue mayúsculas y minúsculas), debe haber al menos dos caracteres. En caso de que no se especifica <archivo>, la lista de archivos en ese grupo se vaciará."
 
 #: hbmk2.prg:6385 hbmk2.prg:7111
 #, c-format
 msgid "Created symbolic link %1$s to %2$s"
-msgstr ""
+msgstr "Creado enlace simbólico %1$s a %2$s"
 
 #: hbmk2.prg:1638 hbmk2.prg:1721
 #, c-format
 msgid "Autodetected platform: %1$s (adjusted)"
-msgstr ""
+msgstr "Plataforma autodetectada: %1$s (ajustado)"
 
 #: hbmk2.prg:1147 hbmk2.prg:1204
 #, c-format
 msgid "Building sub-project (level %1$d): %2$s"
-msgstr ""
+msgstr "Construyendo sub-proyecto (nivel %1$d): %2$s"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added."
-msgstr ""
+msgstr "crear (o no) una biblioteca de importación (en modo -hbdyn/-hbexe). El nombre tendrá un sufijo añadido."
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)"
-msgstr ""
+msgstr "crear biblioteca de importación (en modo -hbdyn/-hbexe) Nombre de <output> (por defecto: igual que la salida)"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "working directory\\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)"
-msgstr ""
+msgstr "Trabajando en directorio\\n(por defecto: %1$s/plat/comp en modo incremental, de otra manera en directorio temporal del OS)"
 
 #: hbmk2.prg:6519 hbmk2.prg:7245
 #, c-format
 msgid "Warning: Cannot create install directory for install target %1$s."
-msgstr ""
+msgstr "Advertencia: No se puede crear directorio de instalación para instalación de destino %1$s."
 
 #: hbmk2.prg:5703 hbmk2.prg:6282
 #, c-format
 msgid "Error: C/C++ command is not implemented for this platform/compiler."
-msgstr ""
+msgstr "Error: Comando C/C++ no está implementado para esta plataforma/compilador."
 
 #: hbmk2.prg:9421 hbmk2.prg:10090
 #, c-format
 msgid "Warning: Project reference (%1$s) ignored in automatic make file: %2$s"
-msgstr ""
+msgstr "Advertencia: Referencia del proyecto (%1$s) ignorado en hacer archivo automático: %2$s"
 
 #: hbmk2.prg:2570 hbmk2.prg:2763 hbmk2.prg:9207 hbmk2.prg:2840 hbmk2.prg:3083 hbmk2.prg:9854
 #, c-format
 msgid "Warning: Plugin not found: %1$s"
-msgstr ""
+msgstr "Advertencia: Plugin no encontrado: %1$s"
 
 #: hbmk2.prg:2956 hbmk2.prg:3300
 #, c-format
 msgid "Error: Temporary Working directory cannot be created: %1$s"
-msgstr ""
+msgstr "Error: Directorio temporal de trabajo no puede ser creado: %1$s"
 
 #: hbmk2.prg:6507 hbmk2.prg:7233
 #, c-format
 msgid "Warning: Copying symbolic link %1$s to %2$s failed with %3$d."
-msgstr ""
+msgstr "Advertencia: Copiando enlace simbólico %1$s en %2$ falló con %3$d."
 
 #: hbmk2.prg:9415 hbmk2.prg:10084
 #, c-format
 msgid "Warning: Project reference (%1$s) ignored. File not found."
-msgstr ""
+msgstr "Advertencia: Referencia del proyecto (%1$s) ignorada. Archivo no encontrado."
 
 #: hbmk2.prg:1141 hbmk2.prg:1198
 #, c-format
 msgid "Error: Cannot nest projects deeper than %1$d levels"
-msgstr ""
+msgstr "Error: No se puede anidar proyectos más profundos de %1$d niveles"
 
 #: hbmk2.prg:5210 hbmk2.prg:5731
 #, c-format
 msgid "Warning: Stub helper .cpp program could not be created."
-msgstr ""
+msgstr "Advertencia:. Programa de Ayudante Stub .cpp podría no crearse."
 
 #: hbmk2.prg:6383 hbmk2.prg:7109
 #, c-format
 msgid "Error: Failed creating symbolic link %1$s to %2$s"
-msgstr ""
+msgstr "Error: No se pudo crear enlace simbólico %1$s en %2$s"
 
 #: hbmk2.prg:6419 hbmk2.prg:7145
 #, c-format
 msgid "Error: Failed creating import library %1$s from %2$s."
-msgstr ""
+msgstr "Error: Falla creando biblioteca de importación %1$s desde %2$s."
 
 #: hbmk2.prg:7934 hbmk2.prg:8776
 #, c-format
 msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\\n'%2$s'"
-msgstr ""
+msgstr "Error: Ejecutando plugin: %1$s en %3$s(%4$d)\\n'%2$s'"
 
 #: hbmk2.prg:11512 hbmk2.prg:12970
 #, c-format
 msgid "create dynamic library (without linked Harbour VM)"
-msgstr ""
+msgstr "crea biblioteca dinámica (sin enlace a Harbour VM)"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "copy target to install path even if it is up to date"
-msgstr ""
+msgstr "copia destino a ruta de instalación incluso si está actualizado"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "rebuild with sub-projects (in incremental build mode)"
-msgstr ""
+msgstr "reconstruir con sub-proyectos (contrucción en modo incremental)"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "set output width to <n> characters (0=unlimited)."
-msgstr ""
+msgstr "establecer el ancho de salida a <n> caracteres (0=sin límite)."
 
 #: hbmk2.prg:2914 hbmk2.prg:3250
 #, c-format
 msgid "Warning: No source files were specified."
-msgstr ""
+msgstr "Advertencia: No se especificaron los archivos fuentes."
 
 #: hbmk2.prg:4758 hbmk2.prg:5251
 #, c-format
 msgid "Processing (triggered by '%1$s' header): %2$s"
-msgstr ""
+msgstr "Procesando (disparada por encabezado '%1$s'): %2$s"
 
 #: hbmk2.prg:6429 hbmk2.prg:7155
 #, c-format
 msgid "Warning: No import library sources were found."
-msgstr ""
+msgstr "Advertencia: Fuentes de Biblioteca de importación no se encontraron."
 
 #: hbmk2.prg:6513 hbmk2.prg:7239
 #, c-format
 msgid "Warning: Copying %1$s to %2$s failed with %3$d."
-msgstr ""
+msgstr "Advertencia: Copiando %1$s a %2$s falló con %3$d."
 
 #: hbmk2.prg:6439 hbmk2.prg:7165
 #, c-format
 msgid "Warning: No import library source was specified"
-msgstr ""
+msgstr "Advertencia: Fuente de biblioteca de importación no se ha especificado"
 
 #: hbmk2.prg:7298 hbmk2.prg:8119
 #, c-format
 msgid "Warning: Missing optional dependencies: %1$s"
-msgstr ""
+msgstr "Advertencia: Faltan dependencias opcionales: %1$s"
 
 #: hbmk2.prg:7263 hbmk2.prg:8084
 #, c-format
 msgid "Dependency '%1$s' found: %2$s%3$s%4$s%5$s"
-msgstr ""
+msgstr "Dependencia '%1$s' encontrada: %2$s%3$s%4$s%5$s"
 
 #: hbmk2.prg:7300 hbmk2.prg:8121
 #, c-format
 msgid "Warning: Missing optional dependency: %1$s"
-msgstr ""
+msgstr "Advertencia: Falta dependencia opcional: %1$s"
 
 #: hbmk2.prg:6443 hbmk2.prg:7169
 #, c-format
 msgid "Error: Creating import libraries is not supported for this platform or compiler."
-msgstr ""
+msgstr "Error: Creación de bibliotecas de importación no es compatible con esta plataforma o compilador."
 
 #: hbmk2.prg:10477 hbmk2.prg:11203
 #, c-format
 msgid "Found OMF .lib with the same name, falling back to using it instead of the .dll."
-msgstr ""
+msgstr "Encontrado .lib OMF con el mismo nombre, cayendo de nuevo a usar éste en lugar de la .dll."
 
 #: hbmk2.prg:10462 hbmk2.prg:11188
 #, c-format
 msgid "Found COFF .lib with the same name, falling back to using it instead of the .dll."
-msgstr ""
+msgstr "Encontrado .lib COFF con el mismo nombre, cayendo de nuevo a usar éste en lugar de la .dll."
 
 #: hbmk2.prg:10491 hbmk2.prg:11217
 #, c-format
 msgid "Found .def file with the same name, falling back to using it instead of the .dll."
-msgstr ""
+msgstr "Encontrado archivo .def con el mismo nombre, cayendo de nuevo a usar éste en lugar de la .dll."
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "create symbolic link pointing to <output> (<link> is considered relative to <output>)"
-msgstr ""
+msgstr "crea enlace simbólico apuntando a <output> (<link> se asocia a <output>)"
 
 #: hbmk2.prg:5552 hbmk2.prg:6126
 #, c-format
 msgid "Compiling C++..."
-msgstr ""
+msgstr "Compilando C++..."
 
 #: hbmk2.prg:6515 hbmk2.prg:7241
 #, c-format
 msgid "Copied %1$s to %2$s"
-msgstr ""
+msgstr "Copiado %1$s en %2$s"
 
 #: hbmk2.prg:6489 hbmk2.prg:7215
 #, c-format
 msgid "Warning: Install path not a directory (%1$s). Extra install files not copied."
-msgstr ""
+msgstr "Advertencia: La ruta de instalación no es un directorio (%1$s). Archivos de instalación no se copian."
 
 #: hbmk2.prg:11633
 #, c-format
 msgid "forces to override standard C++ memory management functions with Harbour ones"
-msgstr ""
+msgstr "fuerza a reemplazar funciones estándar de administración de memoria de C++ con las de Harbour"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "options/flags reserved for 3rd party tools, always ignored by %1$s itself"
-msgstr ""
+msgstr "opciones/flags reservados para herramientas de terceros, siempre ignorado por %1$s en sí"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "<d> is the name of the dependency. Set generated import library name to <lib>"
-msgstr ""
+msgstr "<d> es el nombre de la dependencia. Establecer nombre generado de biblioteca de importación a <lib>"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "enable (or disable) processing of %1$s in current directory (default: yes)"
-msgstr ""
+msgstr "activar (o desactivar) procesamiento de %1$s en el directorio actual (por defecto: yes)"
 
 #: hbmk2.prg:9418 hbmk2.prg:10087
 #, c-format
 msgid "Warning: Project reference (%1$s) ignored. Project references require %2$s to be invoked with a main project."
-msgstr ""
+msgstr "Advertencia: Referencia del proyecto (%1$s) ignorada. Las referencias del proyecto requiere %2$s para ser invocada con un proyecto principal."
 
 #: hbmk2.prg:6786 hbmk2.prg:7576
 #, c-format
 msgid "Internal Error: Regular expression engine missing or unsupported. Check your Harbour build settings."
-msgstr ""
+msgstr "Error interno: motor de expresiones regulares falta o no es compatible. Verifique su configuración de generación de Harbour."
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "enable (or disable) import library generation for import library sources specified in -depimplibs= options (default: yes)"
-msgstr ""
+msgstr "activar (o desactivar) la generación de Bibliotecas de Importación para fuentes de biblioteca de importación especificados en la opción -depimplibs= (por defecto: yes)"
 
 #: hbmk2.prg:7306 hbmk2.prg:8127
 #, c-format
 msgid "Error: Missing dependencies: %1$s"
-msgstr ""
+msgstr "Error: Faltan dependencias: %1$s"
 
 #: hbmk2.prg:6415 hbmk2.prg:7141
 #, c-format
 msgid "Created import library: %1$s <= %2$s"
-msgstr ""
+msgstr "Biblioteca de importación creada: %1$s <= %2$s"
 
 #: hbmk2.prg:7316 hbmk2.prg:8137
 #, c-format
 msgid "Warning: Missing dependency: %1$s"
-msgstr ""
+msgstr "Advertencia: Falta dependencia: %1$s"
 
 #: hbmk2.prg:7710 hbmk2.prg:8540
 #, c-format
 msgid "Error: Initializing plugin: %1$s"
-msgstr ""
+msgstr "Error: Iniciando plugin: %1$s"
 
 #: hbmk2.prg:6509 hbmk2.prg:7235
 #, c-format
 msgid "Copied symbolic link %1$s to %2$s"
-msgstr ""
+msgstr "Copiado enlace simbólico %1$s en %2$s"
 
 #: hbmk2.prg:7268 hbmk2.prg:8089
 #, c-format
 msgid "Dependency '%1$s' forcibly disabled"
-msgstr ""
+msgstr "Dependencia '%1$s' deshabilitada a la fuerza"
 
 #: hbmk2.prg:7314 hbmk2.prg:8135
 #, c-format
 msgid "Warning: Missing dependencies: %1$s"
-msgstr ""
+msgstr "Advertencia: Faltan dependencias: %1$s"
 
 #: hbmk2.prg:7926 hbmk2.prg:8768
 #, c-format
 msgid "Plugin %1$s returned at '%2$s': '%3$s'"
-msgstr ""
+msgstr "Plugin %1$s retornado en '%2$s': '%3$s'"
 
 #: hbmk2.prg:5604 hbmk2.prg:6183
 #, c-format
 msgid "'cd' to: %1$s"
-msgstr ""
+msgstr "'cd' a: %1$s"
 
 #: hbmk2.prg:5698 hbmk2.prg:6277
 #, c-format
 msgid "'cd' back."
-msgstr ""
+msgstr "'cd' atras."
 
 #: hbmk2.prg:7715 hbmk2.prg:8545
 #, c-format
 msgid "Loaded plugin: %1$s %2$s"
-msgstr ""
+msgstr "Plugin cargado: %1$s %2$s"
 
 #: hbmk2.prg:7720 hbmk2.prg:8550
 #, c-format
 msgid "Error: Loading plugin: %1$s"
-msgstr ""
+msgstr "Error: Cargando plugin: %1$s"
 
 #: hbmk2.prg:7308 hbmk2.prg:8129
 #, c-format
 msgid "Error: Missing dependency: %1$s"
-msgstr ""
+msgstr "Error: Falta dependencia: %1$s"
 
 #: hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
 msgid "<script> can be:\\n  <@script> or <script.hbm>: command line options in file\\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\\n  <script.hbc>: package configuration file"
-msgstr ""
+msgstr "<script> puede ser:\\n <@script> o <script.hbm>: comandos de opciones de línea en el archivo\\n <script.hbp>: comandos de opciones de línea en el archivo, también marca un nuevo destino si se especifica en la línea de comandos\\n <script.hbc>: archivo de configuración de paquetes"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert."
-msgstr ""
+msgstr "alterar el ambiente local. <e> es el nombre de la variable de entorno a alterar. <o> puede ser '=' para establecer/reemplazar, '-' para borrar, '+' para añadir al final de valor existente, '#' para insertar al principio del valor existente. <v> es el valor a poner/agregar/insertar."
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group."
-msgstr ""
+msgid "copy target to <path>. if <path> is a directory, it should end with path separator, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group."
+msgstr "copia destino a <ruta>. si <ruta> es un directorio, debe terminar con separador de ruta, en este caso los archivos especificados por la opción -instfile también se copiarán. se puede especificar varias veces. <g> es un grupo opcional de copia, que debe ser al menos de dos caracteres de longitud. Destino de construcción se copia automáticamente en el grupo de copia por defecto (vacío)."
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency."
-msgstr ""
+msgstr "<d> es el nombre de la dependencia. Añadir <i> a la lista rutas de encabezados detectados, donde <i> apunta a un directorio local para el proyecto y contiene una dependencia incorporada (o alojada localmente)."
 
 #: hbmk2.prg:7693 hbmk2.prg:8523
 #, c-format
 msgid "(compiled)"
-msgstr ""
+msgstr "(compilado)"
 
 #: hbmk2.prg:7698 hbmk2.prg:8528
 #, c-format
 msgid "(source)"
-msgstr ""
+msgstr "(fuente)"
 
 #: hbmk2.prg:7797 hbmk2.prg:7804 hbmk2.prg:8638 hbmk2.prg:8645
 #, c-format
 msgid "plugin: %1$s"
-msgstr ""
+msgstr "plugin: %1$s"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "<d> is the name of the dependency. <f> can be 'yes' or 'no', specifies whether the dependency is optional. Default: no"
-msgstr ""
+msgstr "<d> es el nombre de la dependencia. <f> puede ser 'yes' o 'no', especifica si la dependencia es opcional. Por defecto: no"
 
 #: hbmk2.prg:10401 hbmk2.prg:10591 hbmk2.prg:11127 hbmk2.prg:11317
 #, c-format
 msgid "Warning: Source dynamic library not found: %1$s"
-msgstr ""
+msgstr "Advertencia: Fuente de biblioteca dinámica no encontrada: %1$s"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "pass single flag to import library creation command"
-msgstr ""
+msgstr "pasar solo bandera a comando de creación de biblioteca de importación"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "show sub-project level in output lines"
-msgstr ""
+msgstr "mostrar nivel de subproyecto en las líneas de salida"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "rebuild (in incremental build mode)"
-msgstr ""
+msgstr "reconstrucción (en modo incremental)"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "select target CPU. (EXPERIMENTAL)"
-msgstr ""
+msgstr "selecciona la CPU de destino. (EXPERIMENTAL)"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "enable Harbour 2.0.x compatibility mode"
-msgstr ""
+msgstr "activa el modo de compatibilidad Harbour 2.0.x"
 
 #: hbmk2.prg:10414 hbmk2.prg:10601 hbmk2.prg:11140 hbmk2.prg:11327
 #, c-format
 msgid "Import library creation command:"
-msgstr ""
+msgstr "Comando de creación de biblioteca de importación:"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "<d> is the name of the dependency. <h> is the key header (.h) of the package dependency. Multiple alternative headers can be specified."
-msgstr ""
+msgstr "<d> es el nombre de la dependencia. <h> es la cabecera clave (.h) de la dependencia de un paquete. Varios encabezados alternativos pueden ser especificados."
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "output Harbour build information. Output is in JSON format. The included paths always contain forward slashes."
-msgstr ""
+msgstr "salida de información de la compilación de Harbour. La salida es en formato JSON. Las rutas incluidas siempre contienen barras diagonales."
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "<d> is the name of the dependency. <v> is a value that controls how detection is done. Accepted values: no, yes, force, nolocal, local. Default: content of envvar HBMK_WITH_<d>"
-msgstr ""
+msgstr "<d> es el nombre de la dependencia. <v> es un valor que controla como se hace la detección. Valores aceptados: no, yes, force, nolocal, local. Por defecto: contenido de envvar HBMK_WITH_<d>"
 
 #: hbmk2.prg:11512 hbmk2.prg:12970
 #, c-format
 msgid "create executable (default)"
-msgstr ""
+msgstr "crea ejecutable (por defecto)"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "pass input file to plugins"
-msgstr ""
+msgstr "pasar archivo de entrada a plugins"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "<d> is the name of the dependency. <n> name of the package depedency. Can be specified multiple times."
-msgstr ""
+msgid "<d> is the name of the dependency. <n> name of the package dependency. Can be specified multiple times."
+msgstr "<d> es el nombre de la dependencia. <n> nombre de la dependencia de un paquete. Se puede especificar varias veces."
 
 #: hbmk2.prg:11633
 #, c-format
 msgid "add plugin"
-msgstr ""
+msgstr "agregar plugin"
 
 #: hbmk2.prg:11512 hbmk2.prg:12970
 #, c-format
 msgid "create import library"
-msgstr ""
+msgstr "crear biblioteca de importación"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "pass single flag to plugins"
-msgstr ""
+msgstr "pasar solo bandera para plugins"
 
 #: hbmk2.prg:1956
 #, c-format
 msgid "Using C compiler: %1$s [%2$s...%3$s]"
-msgstr ""
+msgstr "Usando compilador C: %1$s [%2$s...%3$s]"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "pass single flag to C compiler overriding C compiler flags added by %1$s itself. Use with caution."
-msgstr ""
+msgstr "pasar solo bandera del compilador de C para reemplazar las opciones del compilador C añadida por %1$s mismo. Usar con precaución."
 
 #: hbmk2.prg:13120
 #, c-format
 msgid ".hb or .hrb file passed as first parameter will be run as Harbour script."
-msgstr ""
+msgstr "Archivo .hb o .hrb se pasa como primer parámetro se ejecutará como Harbour script."
 
 #: hbmk2.prg:2590
 #, c-format
 msgid "Warning: Ignored unsupported codepage value: %1$s"
-msgstr ""
+msgstr "Advertencia: Ignorado valor no soportado de Página de códigos: %1$s"
 
 #: hbmk2.prg:3071 hbmk2.prg:9499 hbmk2.prg:9573 hbmk2.prg:9611
 #, c-format
 msgid "Warning: Cannot find %1$s (referenced from %2$s)"
-msgstr ""
+msgstr "Advertencia: No se puede encontrar %1$s (referenciado desde %2$s)"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "do not link default GTs (effective in -static mode)"
-msgstr ""
+msgstr "no enlaza GTs por defecto (efectivo en modo -static)"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "add plugin. <filename> can be: .hb, .prg, .hrb"
-msgstr ""
+msgstr "agregar plugin (módulo). <filename> puede ser: .hb, .prg, .hrb"
 
 #: hbmk2.prg:5315
 #, c-format
 msgid "Target(s) up to date."
-msgstr ""
+msgstr "Destino(s) actualizados"
 
 #: hbmk2.prg:2471
 #, c-format
 msgid "Warning: Invalid -request value ignored: %1$s"
-msgstr ""
+msgstr "Advertencia: -request no válido, valor ignorado: %1$s"
 
 #: hbmk2.prg:6843
 #, c-format
 msgid "Warning: Running code sign command. %1$d:"
-msgstr ""
+msgstr "Advertencia: Ejecutando comando de código de signos. %1$d:"
 
 #: hbmk2.prg:2597
 #, c-format
 msgid "Warning: Option available only when using embedded Harbour compiler: %1$s"
-msgstr ""
+msgstr "Advertencia: Opción disponible sólo cuando se utiliza el compilador Harbour embebido: %1$s"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "<d> is the name of the dependency. Add <i> to the header detection path list."
-msgstr ""
+msgstr "<d> es el nombre de la dependencia. Añadir <i> a la lista de rutas de detección de encabezados."
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "<d> is the name of the dependency. Add <dll> to the import library source list."
-msgstr ""
+msgstr "<d> es el nombre de la dependencia. Añadir <dll> a la lista fuente de la biblioteca de importación."
 
 #: hbmk2.prg:6917
 #, c-format
 msgid "Warning: Ignoring explicitly specified core library: %1$s"
-msgstr ""
+msgstr "Advertencia: Ignora biblioteca explícitamente especifica del núcleo:"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "embed manifest <file> in executable/dynamic lib (Windows only)"
-msgstr ""
+msgstr "incrustar manifiesto <file> en ejecutable/lib dinámica (sólo Windows)"
 
 #: hbmk2.prg:6837
 #, c-format
 msgid "Code sign command:"
-msgstr ""
+msgstr "Código de comando signo:"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "create position independent object code (always enabled in -hbdyn/-hbdynvm modes)"
-msgstr ""
+msgstr "crear código objeto independiente de la posición (siempre activado en los modos -hbdyn/-hbdynvm)"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)"
-msgstr ""
+msgstr "seleccionar modo de compilación entre Unicode (WIDE) y ANSI (por defecto: ANSI) (sólo Windows. Para WinCE siempre se establece en UNICODE.)"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "Create Harbour header (in .hbx format) with all external symbols."
-msgstr ""
+msgstr "Crear encabezado Harbour (en formato .hbx) con todos los símbolos externos."
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "accept raw C flags\\ncreate link/copy %1$s to hbcc for the same effect"
-msgstr ""
+msgstr "acepta raw C flags\\ncreate enlace/copia %1$s para hbcc para el mismo efecto"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "override standard C++ memory management functions with Harbour ones"
-msgstr ""
+msgstr "reemplaza las funciones de administración de memoria estandar de C++ con las de Harbour"
 
 #: hbmk2.prg:3069
 #, c-format
 msgid "Warning: Cannot find %1$s"
-msgstr ""
+msgstr "Advertencia: No se puede encontrar %1$s"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "control source header parsing (in incremental build mode)\\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off"
-msgstr ""
+msgstr "analizando fuente de control de encabezado (en construcción en modo incremental)\\n<m> puede ser: nativo (compilador utilizado para extraer las dependencias), completa (por defecto, utiliza analizador de texto simple en el fichero entero), dep, off"
 
 #: hbmk2.prg:10233
 #, c-format
 msgid "Warning: Error in filter expression: '%1$s'"
-msgstr ""
+msgstr "Advertencia: Error en la expresión de filtro: '%1$s'"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "link with <framework> framework (Darwin only)"
-msgstr ""
+msgstr "Enlace con marco <framework> (Sólo Darwin )"
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "<d> is the name of the dependency. Set <r> as root directory for paths specified in -depincpath options."
-msgstr ""
+msgstr "<d> es el nombre de la dependencia. Establecer <r> como directorio raíz para las rutas especificadas en la opción -depincpath."
 
 #: hbmk2.prg:13102
 #, c-format
 msgid "force function/procedure to be linked"
-msgstr ""
+msgstr "fuerza función/procedimiento a enlazarse"
 
 #: hbmk2.prg:11455
 #, c-format
 msgid "VCS version command:"
-msgstr ""
+msgstr "VCS versión comando"
 
 #: hbmk2.prg:11966
 #, c-format
 msgid "Updating extern header: %1$s"
-msgstr ""
+msgstr "Actualizando cabecera externa"
 
 #: hbmk2.prg:11973
 #, c-format
 msgid "Error: Updating extern header."
-msgstr ""
+msgstr "Error: Actualizando cabecera externa"
