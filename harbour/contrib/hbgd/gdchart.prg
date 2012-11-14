@@ -89,8 +89,8 @@ ENDCLASS
 
 METHOD New( sx, sy ) CLASS GDChart
 
-   __defaultNIL( @sx, 320 )
-   __defaultNIL( @sy, 200 )
+   hb_default( @sx, 320 )
+   hb_default( @sy, 200 )
 
    ::cTitle := "Chart"
    ::aSeries        := {}
@@ -154,10 +154,10 @@ METHOD PieChart() CLASS GDChart
    nWidth     := __HGetValue( hDefs, "WIDTH" )
    cFontPitch := __HGetValue( hDefs, "FONTPITCH" )
 
-   __defaultNIL( @x         , ::CenterWidth() )
-   __defaultNIL( @y         , ::CenterHeight() )
-   __defaultNIL( @nWidth    , Min( ::Width(), ::Height() ) )
-   __defaultNIL( @cFontPitch, "TINY" )
+   hb_default( @x         , ::CenterWidth() )
+   hb_default( @y         , ::CenterHeight() )
+   hb_default( @nWidth    , Min( ::Width(), ::Height() ) )
+   hb_default( @cFontPitch, "TINY" )
 
    DO CASE
    CASE cFontPitch == "TINY"
@@ -201,9 +201,9 @@ METHOD PieChart() CLASS GDChart
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := 360 * ( ( nVal / nTot ) * 100 ) / 100
-      __defaultNIL( @lFilled , .F. )
-      __defaultNIL( @nExtrude, 0 )
-      __defaultNIL( @colorp  , ::SetColor( 0, 0, 0 ) )
+      hb_default( @lFilled, .F. )
+      hb_default( @nExtrude, 0 )
+      hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
       IF lExtruded
          nPosX   := x + nExtrude * Cos( ::Radians( nDegree + nDim / 2 ) )
          nPosY   := y + nExtrude * Sin( ::Radians( nDegree + nDim / 2 ) )
@@ -237,9 +237,9 @@ METHOD PieChart() CLASS GDChart
             nPitch    := __HGetValue( hFont, "PITCH" )
             nAngle    := __HGetValue( hFont, "ANGLE" )
             textcolor := __HGetValue( hFont, "COLOR" )
-            __defaultNIL( @cFontName, "Arial" )
-            __defaultNIL( @nPitch   , 8 )
-            __defaultNIL( @nAngle   , 0 )
+            hb_default( @cFontName, "Arial" )
+            hb_default( @nPitch   , 8 )
+            hb_default( @nAngle   , 0 )
          ENDIF
          nPosX   := nPosX + ( ( nExtrude + nWidth ) / 4 ) * Cos( ::Radians( nDegree + nDim / 2 ) )
          nPosY   := nPosY + ( ( nExtrude + nWidth ) / 4 ) * Sin( ::Radians( nDegree + nDim / 2 ) )
@@ -300,17 +300,17 @@ METHOD VerticalBarChart() CLASS GDChart
    cAxisPict  := __HGetValue( hDefs, "AXISPICT" )
    cFontPitch := __HGetValue( hDefs, "FONTPITCH" )
 
-   __defaultNIL( @x         , 0 )
-   __defaultNIL( @y         , 0 )
-   __defaultNIL( @nWidth    , ::Width() )
-   __defaultNIL( @nHeight   , ::Height() )
-   __defaultNIL( @color     , ::GetColor() )
-   __defaultNIL( @lShowAxis , .T. )
-   __defaultNIL( @lShowGrid , .T. )
-   __defaultNIL( @cAxisPict , "@E 9,999.99" )
-   __defaultNIL( @cFontPitch, "TINY" )
+   hb_default( @x         , 0 )
+   hb_default( @y         , 0 )
+   hb_default( @nWidth    , ::Width() )
+   hb_default( @nHeight   , ::Height() )
+   hb_default( @color     , ::GetColor() )
+   hb_default( @lShowAxis , .T. )
+   hb_default( @lShowGrid , .T. )
+   hb_default( @cAxisPict , "@E 9,999.99" )
+   hb_default( @cFontPitch, "TINY" )
 
-   __defaultNIL( @nBorder, 4 )
+   hb_default( @nBorder, 4 )
 
    /*
      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
@@ -328,7 +328,6 @@ METHOD VerticalBarChart() CLASS GDChart
    CASE cFontPitch == "GIANT"
       ::SetFontGiant()
    ENDCASE
-
 
 
    // Before sum of values to determine perentual
@@ -355,7 +354,7 @@ METHOD VerticalBarChart() CLASS GDChart
       nBottomLabelSpace := nBorder + nMaxLabel * ::GetFontWidth() + nBorder
    ENDIF
 
-   __defaultNIL( @nMaxValue, nMax )
+   hb_default( @nMaxValue, nMax )
 
    IF lShowAxis
       IF lShowLabelLeft
@@ -428,12 +427,13 @@ METHOD VerticalBarChart() CLASS GDChart
       nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nHeight
 
-      __defaultNIL( @lFilled , .F. )
-      // __defaultNIL( @nExtrude, 0 )
-      __defaultNIL( @colorp  , ::SetColor( 0, 0, 0 ) )
+      hb_default( @lFilled, .F. )
+      // hb_default( @nExtrude, 0 )
+      hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
       nPosY   := y
+
       IF pTile != NIL
          ::SetTile( pTile )
          colorp := gdTiled
@@ -493,17 +493,17 @@ METHOD HorizontalBarChart() CLASS GDChart
    cAxisPict  := __HGetValue( hDefs, "AXISPICT" )
    cFontPitch := __HGetValue( hDefs, "FONTPITCH" )
 
-   __defaultNIL( @x         , 0 )
-   __defaultNIL( @y         , 0 )
-   __defaultNIL( @nWidth    , ::Width() )
-   __defaultNIL( @nHeight   , ::Height() )
-   __defaultNIL( @color     , ::GetColor() )
-   __defaultNIL( @lShowAxis , .T. )
-   __defaultNIL( @lShowGrid , .T. )
-   __defaultNIL( @cAxisPict , "@E 9,999.99" )
-   __defaultNIL( @cFontPitch, "TINY" )
+   hb_default( @x         , 0 )
+   hb_default( @y         , 0 )
+   hb_default( @nWidth    , ::Width() )
+   hb_default( @nHeight   , ::Height() )
+   hb_default( @color     , ::GetColor() )
+   hb_default( @lShowAxis , .T. )
+   hb_default( @lShowGrid , .T. )
+   hb_default( @cAxisPict , "@E 9,999.99" )
+   hb_default( @cFontPitch, "TINY" )
 
-   __defaultNIL( @nBorder, 4 )
+   hb_default( @nBorder, 4 )
 
    /*
      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
@@ -549,7 +549,7 @@ METHOD HorizontalBarChart() CLASS GDChart
       nBottomLabelSpace := nTopLabelSpace // nBorder + ::GetFontHeight() + nBorder
    ENDIF
 
-   __defaultNIL( @nMaxValue, nMax )
+   hb_default( @nMaxValue, nMax )
 
    IF lShowAxis
       IF lShowLabelLeft
@@ -621,9 +621,9 @@ METHOD HorizontalBarChart() CLASS GDChart
       colorp    := __HGetValue( hElement, "COLOR" )
       nVal      := hElement[ "VALUE" ]
       nDim      := ( nVal / nMaxValue ) * nWidth
-      __defaultNIL( @lFilled , .F. )
-      // __defaultNIL( @nExtrude, 0 )
-      __defaultNIL( @colorp  , ::SetColor( 0, 0, 0 ) )
+      hb_default( @lFilled, .F. )
+      // hb_default( @nExtrude, 0 )
+      hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x
       nPosY   := y + ( nSize * ( hElement:__enumIndex() - 1 ) )
@@ -689,17 +689,17 @@ METHOD LineChart() CLASS GDChart
    cAxisPict  := __HGetValue( hDefs, "AXISPICT" )
    cFontPitch := __HGetValue( hDefs, "FONTPITCH" )
 
-   __defaultNIL( @x         , 0 )
-   __defaultNIL( @y         , 0 )
-   __defaultNIL( @nWidth    , ::Width() )
-   __defaultNIL( @nHeight   , ::Height() )
-   __defaultNIL( @colorp    , ::GetColor() )
-   __defaultNIL( @lShowAxis , .T. )
-   __defaultNIL( @lShowGrid , .T. )
-   __defaultNIL( @cAxisPict , "@E 9,999.99" )
-   __defaultNIL( @cFontPitch, "TINY" )
+   hb_default( @x         , 0 )
+   hb_default( @y         , 0 )
+   hb_default( @nWidth    , ::Width() )
+   hb_default( @nHeight   , ::Height() )
+   hb_default( @colorp    , ::GetColor() )
+   hb_default( @lShowAxis , .T. )
+   hb_default( @lShowGrid , .T. )
+   hb_default( @cAxisPict , "@E 9,999.99" )
+   hb_default( @cFontPitch, "TINY" )
 
-   __defaultNIL( @nBorder, 4 )
+   hb_default( @nBorder, 4 )
 
    /*
      hData := ["TITLE"], ["VALUE"], ["FILLED"], ["COLOR"], ["TILE"], ["EXTRUDE"]
@@ -754,8 +754,8 @@ METHOD LineChart() CLASS GDChart
       nBottomLabelSpace := nBorder + nMaxLabel * ::GetFontWidth() + nBorder
    ENDIF
 
-   __defaultNIL( @nMaxValue, nMax )
-   __defaultNIL( @nMinValue, nMin )
+   hb_default( @nMaxValue, nMax )
+   hb_default( @nMinValue, nMin )
 
    IF lShowAxis
       IF lShowLabelLeft
@@ -855,12 +855,13 @@ METHOD LineChart() CLASS GDChart
       nVal      := hElement[ "VALUE" ]
       nDim      := ( ( nVal + Abs( nMinValue ) ) / nTotRange ) * nHeight
 
-      // __defaultNIL( @lFilled, .F. )
-      // __defaultNIL( @nExtrude, 0 )
-      __defaultNIL( @colorp, ::SetColor( 0, 0, 0 ) )
+      // hb_default( @lFilled, .F. )
+      // hb_default( @nExtrude, 0 )
+      hb_default( @colorp, ::SetColor( 0, 0, 0 ) )
 
       nPosX   := x + ( nSize * ( hElement:__enumIndex() - 1 ) )
       nPosY   := y
+
       IF pTile != NIL
          ::SetTile( pTile )
          colorp := gdTiled

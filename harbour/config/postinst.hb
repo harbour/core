@@ -404,9 +404,7 @@ STATIC PROCEDURE mk_hb_FCopy( cSrc, cDst, l644 )
 
    LOCAL cDir, cName, cExt
 
-   IF ! HB_ISLOGICAL( l644 )
-      l644 := .F.
-   ENDIF
+   hb_default( @l644, .F. )
 
    cSrc := hb_DirSepToOS( cSrc )
    cDst := hb_DirSepToOS( cDst )

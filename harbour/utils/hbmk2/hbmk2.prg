@@ -8880,9 +8880,7 @@ FUNCTION hbmk_ArrayToList( array, cSeparator )
    LOCAL cString := ""
    LOCAL tmp
 
-   IF ! HB_ISSTRING( cSeparator )
-      cSeparator := " "
-   ENDIF
+   hb_default( @cSeparator, " " )
 
    FOR tmp := 1 TO Len( array )
       cString += array[ tmp ]
@@ -9034,9 +9032,7 @@ FUNCTION hbmk_AddInput_INSTFILE( ctx, cFileName, cGroup )
    LOCAL hbmk := ctx_to_hbmk( ctx )
 
    IF hbmk != NIL .AND. HB_ISSTRING( cFileName )
-      IF ! HB_ISSTRING( cGroup )
-         cGroup := ""
-      ENDIF
+      hb_default( @cGroup, "" )
       AAddNewINST( hbmk[ _HBMK_aINSTFILE ], { cGroup, PathSepToSelf( cFileName ) } )
    ENDIF
 
@@ -9553,9 +9549,7 @@ STATIC FUNCTION PathSepToSelf( cFileName, nStart )
 
 STATIC FUNCTION PathSepToTarget( hbmk, cFileName, nStart )
 
-   IF ! HB_ISNUMERIC( nStart )
-      nStart := 1
-   ENDIF
+   hb_default( @nStart, 1 )
 
    IF HBMK_ISPLAT( "win|wce|dos|os2" ) .AND. ! HBMK_ISCOMP( "mingw|mingw64|mingwarm" )
       RETURN Left( cFileName, nStart - 1 ) + StrTran( SubStr( cFileName, nStart ), "/", "\" )
@@ -9567,18 +9561,15 @@ STATIC FUNCTION FNameEscape( cFileName, nEscapeMode, nFNNotation )
 
    LOCAL cDir, cName, cExt, cDrive
 
-   IF ! HB_ISNUMERIC( nEscapeMode )
-      nEscapeMode := _ESC_NONE
-   ENDIF
-   IF ! HB_ISNUMERIC( nFNNotation )
+   hb_default( @nEscapeMode, _ESC_NONE )
+
 #if defined( __PLATFORM__WINDOWS ) .OR. ;
     defined( __PLATFORM__DOS ) .OR. ;
     defined( __PLATFORM__OS2 )
-      nFNNotation := _FNF_BCKSLASH
+   hb_default( @nFNNotation, _FNF_BCKSLASH )
 #else
-      nFNNotation := _FNF_FWDSLASH
+   hb_default( @nFNNotation, _FNF_FWDSLASH )
 #endif
-   ENDIF
 
    SWITCH nFNNotation
    CASE _FNF_BCKSLASH
@@ -10824,9 +10815,7 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       ENDIF
    ENDSWITCH
 
-   IF ! HB_ISSTRING( cMacro )
-      cMacro := ""
-   ENDIF
+   hb_default( @cMacro, "" )
 
    RETURN cMacro
 
@@ -11252,9 +11241,9 @@ STATIC FUNCTION rtlnk_process( hbmk, cCommands, cFileOut, aFileList, aLibList, ;
    cCommands := StrTran( StrTran( cCommands, Chr( 13 ) ), "//", "# " )
 
    nMode := RTLNK_MODE_NONE
-   IF ! HB_ISARRAY( aPrevFiles )
-      aPrevFiles := {}
-   ENDIF
+
+   hb_default( @aPrevFiles, {} )
+
    FOR EACH cLine IN hb_ATokens( cCommands, Chr( 10 ) )
       cLine := AllTrim( cLine )
       IF ! Empty( cLine )
@@ -13745,9 +13734,8 @@ FUNCTION hbshell_ProgName()
 
 FUNCTION hbshell_gtSelect( cGT )
 
-   IF ! HB_ISSTRING( cGT )
-      cGT := __hbshell_gtDefault()
-   ENDIF
+   hb_default( @cGT, __hbshell_gtDefault() )
+
    IF !( "GT" + hb_gtVersion( 0 ) == cGT )
       hb_gtSelect( hb_gtCreate( cGT ) )
       hb_SetTermCP( hb_cdpTerm() )
