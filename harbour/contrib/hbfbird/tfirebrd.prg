@@ -106,9 +106,7 @@ ENDCLASS
 
 METHOD New( cServer, cUser, cPassword, nDialect ) CLASS TFbServer
 
-   IF ! HB_ISNUMERIC( nDialect )
-      nDialect := 1
-   ENDIF
+   hb_default( @nDialect, 1 )
 
    ::lError := .F.
    ::nError := 0

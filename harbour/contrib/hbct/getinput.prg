@@ -59,15 +59,9 @@ FUNCTION GetInput( xVar, nRow, nCol, lSay, xPrompt )
    LOCAL nCursorCol := Col()
    LOCAL GetList := {}
 
-   IF ! HB_ISNUMERIC( nRow )
-      nRow := nCursorRow
-   ENDIF
-   IF ! HB_ISNUMERIC( nCol )
-      nCol := nCursorCol
-   ENDIF
-   IF ! HB_ISLOGICAL( lSay )
-      lSay := .F.
-   ENDIF
+   hb_default( @nRow, nCursorRow )
+   hb_default( @nCol, nCursorCol )
+   hb_default( @lSay, .F. )
 
    SetPos( nRow, nCol )
    IF xPrompt != Nil

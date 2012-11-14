@@ -59,9 +59,7 @@ FUNCTION EditorNew( nTop, nLeft, nBottom, nRight, nLength, ;
 
    LOCAL pEdit, oEdit
 
-   IF ! HB_ISNUMERIC( nLength )
-      nLength := 80
-   ENDIF
+   hb_default( @nLength, 80 )
 
    pEdit := ed_New( nLength, 4, IIFNIL( s_nESize, nSize ), nEscape )
    IF ! Empty( pEdit )
@@ -200,9 +198,7 @@ PROCEDURE EditorInsText( oEdit, cText, nLine )
 
 FUNCTION EditorGetText( oEdit, nCarret )
 
-   IF ! HB_ISNUMERIC( nCarret )
-      nCarret := EDIT_HARD
-   ENDIF
+   hb_default( @nCarret, EDIT_HARD )
 
    RETURN ed_GetText( oEdit[ E_EDIT ], nCarret )
 
@@ -264,9 +260,7 @@ FUNCTION EditorFile( xInput, cOutput, nLineLen, ;
    LOCAL nHandle, nLen, oEdit, lSaved, lClose := .F.
    LOCAL nSize
 
-   IF ! HB_ISLOGICAL( lSave )
-      lSave := .T.
-   ENDIF
+   hb_default( @lSave, .T. )
 
    IF HB_ISSTRING( xInput )
       nHandle := FOpen( xInput )

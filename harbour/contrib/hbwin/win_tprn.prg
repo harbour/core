@@ -329,9 +329,7 @@ METHOD StartDoc( cDocName ) CLASS win_Prn
 METHOD EndDoc( lAbortDoc ) CLASS win_Prn
 
    IF ::HavePrinted
-      IF ! HB_ISLOGICAL( lAbortDoc )
-         lAbortDoc := .F.
-      ENDIF
+      hb_default( @lAbortDoc, .F. )
    ELSE
       lAbortDoc := .T.
    ENDIF
@@ -416,9 +414,7 @@ METHOD CheckPage() CLASS win_Prn
 
 METHOD EndPage( lStartNewPage ) CLASS win_Prn
 
-   IF ! HB_ISLOGICAL( lStartNewPage )
-      lStartNewPage := .T.
-   ENDIF
+   hb_default( @lStartNewPage, .T. )
 
    win_EndPage( ::hPrinterDC )
    IF lStartNewPage
@@ -444,9 +440,7 @@ METHOD NewLine() CLASS win_Prn
 
 METHOD NewPage( lDelay ) CLASS win_Prn
 
-   IF ! HB_ISLOGICAL( lDelay )
-      lDelay := .F.
-   ENDIF
+   hb_default( @lDelay, .F. )
 
    IF ::Printing
       IF lDelay
@@ -650,15 +644,9 @@ METHOD TextOut( cString, lNewLine, lUpdatePosX, nAlign ) CLASS win_Prn
 
    IF cString != NIL .AND. ::CheckPage()
 
-      IF ! HB_ISLOGICAL( lNewLine )
-         lNewLine := .F.
-      ENDIF
-      IF ! HB_ISLOGICAL( lUpdatePosX )
-         lUpdatePosX := .T.
-      ENDIF
-      IF ! HB_ISNUMERIC( nAlign )
-         nAlign := hb_bitOr( WIN_TA_BOTTOM, WIN_TA_LEFT )
-      ENDIF
+      hb_default( @lNewLine, .F. )
+      hb_default( @lUpdatePosX, .T. )
+      hb_default( @nAlign, hb_bitOr( WIN_TA_BOTTOM, WIN_TA_LEFT ) )
 
       nPosX := win_TextOut( ::hPrinterDC, ::PosX, ::PosY, cString, Len( cString ), ::fCharWidth, nAlign )
 

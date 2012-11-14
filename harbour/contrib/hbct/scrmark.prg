@@ -62,12 +62,9 @@ FUNCTION ScreenMark( cSearch, xAttr, lUpperLower, lAll, cForward, cTrailing )
    LOCAL nAt, nLen, nLast, nRow, nCol, nEnd, nCols
    LOCAL cScreen
 
-   IF ! HB_ISLOGICAL( lUpperLower )
-      lUpperLower := .F.
-   ENDIF
-   IF ! HB_ISLOGICAL( lAll )
-      lAll := .F.
-   ENDIF
+   hb_default( @lUpperLower, .F. )
+   hb_default( @lAll, .F. )
+
    IF ! HB_ISSTRING( cForward ) .OR. cForward == ""
       cForward := NIL
    ENDIF

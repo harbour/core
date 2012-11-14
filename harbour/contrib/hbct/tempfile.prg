@@ -60,9 +60,8 @@ FUNCTION TempFile( cDir, cExt, nAttr )
    IF HB_ISSTRING( cExt ) .AND. !( Left( cExt, 1 ) == "." )
       cExt := "." + cExt
    ENDIF
-   IF ! HB_ISNUMERIC( nAttr )
-      nAttr := SetFCreate()
-   ENDIF
+
+   hb_default( @nAttr, SetFCreate() )
 
    fhnd := hb_FTempCreateEx( @cName, cDir,, cExt, nAttr )
 

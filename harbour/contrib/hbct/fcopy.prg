@@ -87,9 +87,8 @@ FUNCTION FileCopy( cSource, cDest, lMode )
    LOCAL lDone := .F.
    LOCAL nSrcBytes, nDstBytes, nTotBytes := 0
 
-   IF ! HB_ISLOGICAL( lMode )
-      lMode := .F.
-   ENDIF
+   hb_default( @lMode, .F. )
+
    IF t_hSrcFile != F_ERROR
       FClose( t_hSrcFile )
    ENDIF

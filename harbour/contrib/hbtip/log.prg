@@ -70,9 +70,7 @@ ENDCLASS
 
 METHOD New( cFileName ) CLASS TIPLog
 
-   IF ! HB_ISSTRING( cFileName )
-      cFileName := "hbtip"
-   ENDIF
+   hb_default( @cFileName, "hbtip" )
 
    IF Set( _SET_DEFEXTENSIONS )
       cFileName := hb_FNameExtSetDef( cFileName, ".log" )

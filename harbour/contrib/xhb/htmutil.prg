@@ -563,9 +563,7 @@ METHOD Put() CLASS JWindow
       ::setFeatures()
    ENDIF
 
-   IF ! HB_ISSTRING( ::name )
-      ::name := "newWin"
-   ENDIF
+   hb_default( @::name, "newWin" )
 
    cStr += ::varName + " = window.open('" + ;
       ::URL + "', '" + ;

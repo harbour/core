@@ -1542,9 +1542,7 @@ PROCEDURE HB_AdoSetPassword( cPassword )
 
 PROCEDURE HB_AdoSetQuery( cQuery )
 
-   IF ! HB_ISSTRING( cQuery )
-      cQuery := "SELECT * FROM "
-   ENDIF
+   hb_default( @cQuery, "SELECT * FROM " )
 
    t_cQuery := cQuery
 

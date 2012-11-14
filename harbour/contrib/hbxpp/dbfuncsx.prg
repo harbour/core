@@ -71,9 +71,8 @@ FUNCTION xpp_dbUseArea( lNewArea, cDriver, cName, xcAlias, lShared, lReadonly )
    LOCAL nArea
 
    IF HB_ISLOGICAL( lNewArea ) .AND. lNewArea
-      IF ! HB_ISSTRING( xcAlias )
-         xcAlias := ""
-      ENDIF
+
+      hb_default( @xcAlias, "" )
 
       IF Empty( xcAlias )
          xcAlias := cName

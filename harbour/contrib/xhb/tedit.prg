@@ -543,23 +543,12 @@ METHOD New( cName, cAction, cMethod, lFrame, cCaption, nWidth ) CLASS THtmlForm
 
 METHOD Put( lPutControls ) CLASS THtmlForm
 
-   __defaultNIL( @lPutControls, .F. )
+   hb_default( @lPutControls, .F. )
 
-   IF ! HB_ISNUMERIC( ::width )
-      ::width := 90
-   ENDIF
-
-   IF ! HB_ISSTRING( ::color )
-      ::Color := "#9196A0"
-   ENDIF
-
-   IF ! HB_ISSTRING( ::fontColor )
-      ::fontColor := "black"
-   ENDIF
-
-   IF ! HB_ISSTRING( ::CaptionColor )
-      ::CaptionColor := "black"
-   ENDIF
+   hb_default( @::width, 90 )
+   hb_default( @::Color, "#9196A0" )
+   hb_default( @::fontColor, "black" )
+   hb_default( @::CaptionColor, "black" )
 
    IF ::Frame
       ::cOutPut := CRLF() + CRLF() + CRLF() + "<!-------  Start of Form ------->" + CRLF() + CRLF()

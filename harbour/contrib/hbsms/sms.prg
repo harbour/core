@@ -68,13 +68,8 @@ STATIC FUNCTION port_rece( h, n, t )
 
    LOCAL cString
 
-   IF ! HB_ISNUMERIC( n )
-      n := 64
-   ENDIF
-
-   IF ! HB_ISNUMERIC( t )
-      t := 5
-   ENDIF
+   hb_default( @n, 64 )
+   hb_default( @t, 5 )
 
    cString := Space( n )
 

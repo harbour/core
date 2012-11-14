@@ -57,9 +57,7 @@
 
 FUNCTION AlloFree( lMode )
 
-   IF ! HB_ISLOGICAL( lMode )
-      lMode := .F.
-   ENDIF
+   hb_default( @lMode, .F. )
 
    RETURN Memory( iif( lMode, HB_MEM_CHAR, HB_MEM_BLOCK ) )
 

@@ -63,15 +63,9 @@ FUNCTION GetSecret( cVar, nRow, nCol, lSay, xPrompt )
    LOCAL _cGetSecret := cVar
    LOCAL lHide := .T.
 
-   IF ! HB_ISNUMERIC( nRow )
-      nRow := Row()
-   ENDIF
-   IF ! HB_ISNUMERIC( nCol )
-      nCol := Col()
-   ENDIF
-   IF ! HB_ISLOGICAL( lSay )
-      lSay := .F.
-   ENDIF
+   hb_default( @nRow, nCursorRow )
+   hb_default( @nCol, nCursorCol )
+   hb_default( @lSay, .F. )
 
    SetPos( nRow, nCol )
    IF xPrompt != Nil

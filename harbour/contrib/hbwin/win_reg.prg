@@ -131,9 +131,7 @@ FUNCTION win_regDelete( cRegPath, nRegSam )
    IF Empty( cEntry )
       lRetVal := win_regDeleteKey( nHKEY, cKey )
    ELSE
-      IF ! HB_ISNUMERIC( nRegSam )
-         nRegSam := 0
-      ENDIF
+      hb_default( @nRegSam, 0 )
 
       IF win_regOpenKeyEx( nHKEY, cKey, 0, hb_bitOr( KEY_SET_VALUE, nRegSam ), @pKeyHandle )
          lRetVal := win_regDeleteValue( pKeyHandle, cEntry )
@@ -152,9 +150,7 @@ FUNCTION win_regQuery( nHKEY, cKeyName, cEntryName, xValue, lSetIt, nRegSam )
    LOCAL cValType := ValType( xValue )
    LOCAL lRetVal
 
-   IF ! HB_ISLOGICAL( lSetIt )
-      lSetIt := .F.
-   ENDIF
+   hb_default( @lSetIt, .F. )
 
    IF cValType == "L"
       xValue := iif( xValue, 1, 0 )
@@ -183,9 +179,7 @@ FUNCTION win_regGet( nHKEY, cKeyName, cEntryName, xDefault, nRegSam )
    LOCAL pKeyHandle
    LOCAL nValueType
 
-   IF ! HB_ISNUMERIC( nRegSam )
-      nRegSam := 0
-   ENDIF
+   hb_default( @nRegSam, 0 )
 
    IF win_regOpenKeyEx( nHKEY, cKeyName, 0, hb_bitOr( KEY_QUERY_VALUE, nRegSam ), @pKeyHandle )
 
@@ -227,9 +221,7 @@ FUNCTION win_regSet( nHKEY, cKeyName, cEntryName, xValue, nValueType, nRegSam )
    LOCAL lRetVal := .F.
    LOCAL pKeyHandle
 
-   IF ! HB_ISNUMERIC( nRegSam )
-      nRegSam := 0
-   ENDIF
+   hb_default( @nRegSam, 0 )
 
    IF win_regCreateKeyEx( nHKEY, cKeyName, 0, 0, 0, hb_bitOr( KEY_SET_VALUE, nRegSam ), 0, @pKeyHandle )
 

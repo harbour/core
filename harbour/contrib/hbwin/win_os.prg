@@ -72,12 +72,8 @@ FUNCTION win_osNetRegOk( lSetIt, lDoVista )
    LOCAL cKeySrv
    LOCAL cKeyWks
 
-   IF ! HB_ISLOGICAL( lSetIt )
-      lSetIt := .F.
-   ENDIF
-   IF ! HB_ISLOGICAL( lDoVista )
-      lDoVista := .T.
-   ENDIF
+   hb_default( @lSetIt, .F. )
+   hb_default( @lDoVista, .T. )
 
    IF ! lDoVista .AND. hb_osIsWinVista()
       /* do nothing */

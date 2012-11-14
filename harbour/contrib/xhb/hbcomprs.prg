@@ -111,15 +111,11 @@ FUNCTION hb_Compress( xPar1, xPar2, xPar3, xPar4, xPar5 )
    IF lReturnByRef
       IF HB_ISNUMERIC( xPar1 )
          xPar4 := hb_ZCompress( cSource, nDestLen, @t_nLastError, nComprFactor )
-         IF ! HB_ISSTRING( xPar4 )
-            xPar4 := ""
-         ENDIF
+         hb_default( @xPar4, "" )
          xPar5 := Len( xPar4 )
       ELSE
          xPar3 := hb_ZCompress( cSource, nDestLen, @t_nLastError, nComprFactor )
-         IF ! HB_ISSTRING( xPar3 )
-            xPar3 := ""
-         ENDIF
+         hb_default( @xPar3, "" )
          xPar4 := Len( xPar3 )
       ENDIF
       RETURN t_nLastError
@@ -180,9 +176,7 @@ FUNCTION hb_CompressBufLen( nSrcLen )
 
    LOCAL nRet
 
-   IF ! HB_ISNUMERIC( nSrcLen )
-      nSrcLen := 0
-   ENDIF
+   hb_default( @nSrcLen, 0 )
 
    nRet := nSrcLen
 

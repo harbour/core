@@ -167,15 +167,7 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
 
    LOCAL nRet
 
-   IF HB_ISSTRING( cUserName )
-      IF ! HB_ISSTRING( cPassword )
-         cPassword := ""
-      ENDIF
-   ENDIF
-
-   IF ! HB_ISLOGICAL( lCache )
-      lCache := .T.
-   ENDIF
+   hb_default( @lCache, .T. )
 
    ::cODBCStr  := cODBCStr
    ::lCacheRS  := lCache
@@ -189,6 +181,9 @@ METHOD New( cODBCStr, cUserName, cPassword, lCache ) CLASS TODBC
    SQLAllocConnect( ::hEnv, @::hDbc )                   // Allocates SQL Connection
 
    IF HB_ISSTRING( cUserName )
+
+      hb_default( @cPassword, "" )
+
       IF ! ( ( nRet := SQLConnect( ::hDbc, cODBCStr, cUserName, cPassword ) ) == SQL_SUCCESS .OR. nRet == SQL_SUCCESS_WITH_INFO )
          // TODO: Some error here
       ENDIF
@@ -202,9 +197,7 @@ METHOD SetAutoCommit( lEnable ) CLASS TODBC
 
    LOCAL lOld := ::lAutoCommit
 
-   IF ! HB_ISLOGICAL( lEnable )
-      lEnable := .T.
-   ENDIF
+   hb_default( @lEnable, .T. )
 
    IF lEnable != lOld
       ::SetCnnOptions( SQL_AUTOCOMMIT, iif( lEnable, SQL_AUTOCOMMIT_ON, SQL_AUTOCOMMIT_OFF ) )

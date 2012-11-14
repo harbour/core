@@ -244,17 +244,13 @@ FUNCTION AddEBGet( aEBGets, mnrow, mncol, mxValue, mcVarName, mbAssign, mcLabel,
       RETURN .F.
    ENDCASE
 
-   IF ! HB_ISARRAY( aEBGets )
-      aEBGEts := {}
-   ENDIF
+   hb_default( @aEBGEts, {} )
 
    IF ! HB_ISLOGICAL( mlMultiline ) .OR. ;
       ! HB_ISSTRING( mxValue )
       mlMultiline := .F.
    ENDIF
-   IF ! HB_ISSTRING( mcLabel )
-      mcLabel := mcVarName + ":"
-   ENDIF
+   hb_default( @mcLabel, mcVarName + ":" )
 
    AAdd( aEBGets, { ;
       mlMultiline, ;    // __GET_LMULTILINE

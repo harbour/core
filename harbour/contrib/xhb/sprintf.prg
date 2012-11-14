@@ -149,9 +149,7 @@ FUNCTION sprintf( ... )
          CASE "f"
          CASE "i"
             xVal := aPar[ nPar++ ]
-            IF ! HB_ISNUMERIC( xVal )
-               xVal := 0
-            ENDIF
+            hb_default( @xVal, 0 )
             IF nLen != 0
                IF nLen - Int( nLen ) > 0.0
                   nDec := Str( nLen )

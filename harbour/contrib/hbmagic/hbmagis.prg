@@ -56,9 +56,7 @@ FUNCTION hb_magic_simple( cFileName, nFlags )
 
    LOCAL hMagic
 
-   IF ! HB_ISNUMERIC( nFlags )
-      nFlags := MAGIC_MIME_TYPE
-   ENDIF
+   hb_default( @nFlags, MAGIC_MIME_TYPE )
 
    hMagic := magic_open( nFlags )
    IF Empty( hMagic ) .OR.;

@@ -1017,9 +1017,7 @@ METHOD Delete()  CLASS THtmlNode
 
 METHOD firstNode( lRoot ) CLASS THtmlNode
 
-   IF ! HB_ISLOGICAL( lRoot )
-      lRoot := .F.
-   ENDIF
+   hb_default( @lRoot, .F. )
 
    IF lRoot
       RETURN ::root:htmlContent[ 1 ]
@@ -1035,9 +1033,7 @@ METHOD lastNode( lRoot ) CLASS THtmlNode
 
    LOCAL aNodes
 
-   IF ! HB_ISLOGICAL( lRoot )
-      lRoot := .F.
-   ENDIF
+   hb_default( @lRoot, .F. )
 
    IF ::htmlTagName == "_text_"
       RETURN ::parent:lastNode( lRoot )
@@ -1228,9 +1224,7 @@ METHOD getText( cEOL ) CLASS THtmlNode
    LOCAL cText := ""
    LOCAL oNode
 
-   IF ! HB_ISSTRING( cEOL )
-      cEOL := hb_eol()
-   ENDIF
+   hb_default( @cEOL, hb_eol() )
 
    IF ::htmlTagName == "_text_"
       RETURN RTrim( ::htmlContent ) + cEOL

@@ -105,9 +105,7 @@ METHOD New( cHost, cDatabase, cUser, cPass, nPort, Schema ) CLASS TPQserver
 
    LOCAL res
 
-   IF ! HB_ISNUMERIC( nPort )
-      nPort := 5432
-   ENDIF
+   hb_default( @nPort, 5432 )
 
    ::pDB := PQconnectdb( "dbname = " + cDatabase + " host = " + cHost + " user = " + cUser + " password = " + cPass + " port = " +  hb_ntos( nPort ) )
 
@@ -572,12 +570,8 @@ METHOD Refresh( lQuery, lMeta ) CLASS TPQquery
    LOCAL i
    LOCAL cType, nDec, nSize
 
-   IF ! HB_ISLOGICAL( lQuery )
-      lQuery := .T.
-   ENDIF
-   IF ! HB_ISLOGICAL( lMeta )
-      lMeta := .T.
-   ENDIF
+   hb_default( @lQuery, .T. )
+   hb_default( @lMeta, .T. )
 
    ::Destroy()
 
@@ -748,9 +742,7 @@ METHOD Read() CLASS TPQquery
 
 METHOD Skip( nrecno ) CLASS TPQquery
 
-   IF ! HB_ISNUMERIC( nRecno )
-      nRecno := 1
-   ENDIF
+   hb_default( @nRecno, 1 )
 
    IF ::nRecno + nRecno > 0 .AND. ::nRecno + nRecno <= ::nLastrec
       ::nRecno := ::nRecno + nRecno

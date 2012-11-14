@@ -77,9 +77,7 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
 
    IF hb_comOpen( nPort )
 
-      IF ! HB_ISNUMERIC( nBaud )
-         nBaud := 9600
-      ENDIF
+      hb_default( @nBaud, 9600 )
 
       cParity := "N"
       IF HB_ISNUMERIC( nParity )
@@ -91,9 +89,7 @@ FUNCTION INIT_PORT( cPort, nBaud, nData, nParity, nStop, nBufferSize )
          ENDSWITCH
       ENDIF
 
-      IF ! HB_ISNUMERIC( nStop )
-         nStop := 1
-      ENDIF
+      hb_default( @nStop, 1 )
 
       HB_SYMBOL_UNUSED( nBufferSize )
 

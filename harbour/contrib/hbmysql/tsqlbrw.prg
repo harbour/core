@@ -328,12 +328,8 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
    IF ! HB_ISNUMERIC( nKey )
       nKey := NIL
    ENDIF
-   IF ! HB_ISLOGICAL( lCanEdit )
-      lCanEdit := .F.
-   ENDIF
-   IF ! HB_ISARRAY( aExitKeys )
-      aExitKeys := { K_ESC }
-   ENDIF
+   hb_default( @lCanEdit, .F. )
+   hb_default( @aExitKeys, { K_ESC } )
 
    DO WHILE lKeepGoing
 

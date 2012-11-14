@@ -381,13 +381,8 @@ STATIC FUNCTION __objGetMsgFullList( oObject, lData, nRange, nScope, nNoScope )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName() )
    ENDIF
 
-   IF ! HB_ISLOGICAL( lData )
-      lData := .T.
-   ENDIF
-
-   IF ! HB_ISNUMERIC( nNoScope )
-      nNoScope := 0
-   ENDIF
+   hb_default( @lData, .T. )
+   hb_default( @nNoScope, 0 )
 
    // nRange is already defaulted in ClassFullSel in classes.c
 
@@ -427,9 +422,7 @@ STATIC FUNCTION __objGetValueFullList( oObject, aExcept, nScope, nNoScope )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   IF ! HB_ISARRAY( aExcept )
-      aExcept := {}
-   ENDIF
+   hb_default( @aExcept, {} )
 
    aVars   := __objGetMsgFullList( oObject, .T., HB_MSGLISTALL, nScope, nNoScope )
    aReturn := {}

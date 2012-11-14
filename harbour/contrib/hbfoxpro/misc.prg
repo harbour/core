@@ -60,9 +60,7 @@ FUNCTION Sys( nValue, xPar1 )
    CASE 2
       RETURN hb_ntos( Seconds() )
    CASE 2002
-      IF ! HB_ISNUMERIC( xPar1 )
-         xPar1 := SC_NONE
-      ENDIF
+      hb_default( @xPar1, SC_NONE )
       RETURN SetCursor( xPar1 )
    OTHERWISE
       /* Throw RTE? */

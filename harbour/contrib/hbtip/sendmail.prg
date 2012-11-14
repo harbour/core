@@ -100,33 +100,23 @@ FUNCTION hb_SendMail( cServer, nPort, cFrom, xTo, xCC, xBCC, cBody, cSubject, ;
    LOCAL lConnect      := .T.
    LOCAL oPop
 
-   IF ! HB_ISSTRING( cServer ) .OR. Empty( cServer )
-      cServer := "localhost"
+   /* consider any empty values invalid */
+   IF Empty( cServer )
+      cServer := NIL
    ENDIF
-   IF ! HB_ISSTRING( cUser )
-      cUser := ""
+   IF Empty( nPort )
+      nPort := NIL
    ENDIF
-   IF ! HB_ISSTRING( cPass )
-      cPass := ""
-   ENDIF
-   IF ! HB_ISNUMERIC( nPort ) .OR. Empty( nPort )
-      nPort := 25
-   ENDIF
-   IF ! HB_ISLOGICAL( lPopAuth )
-      lPopAuth := .T.
-   ENDIF
-   IF ! HB_ISLOGICAL( lNoAuth )
-      lNoAuth := .F.
-   ENDIF
-   IF ! HB_ISNUMERIC( nTimeOut )
-      nTimeOut := 10000
-   ENDIF
-   IF ! HB_ISLOGICAL( lTLS )
-      lTLS := .F.
-   ENDIF
-   IF ! HB_ISSTRING( cSMTPPass )
-      cSMTPPass := cPass
-   ENDIF
+
+   hb_default( @cServer, "localhost" )
+   hb_default( @cUser, "" )
+   hb_default( @cPass, "" )
+   hb_default( @nPort, 25 )
+   hb_default( @lPopAuth, .T. )
+   hb_default( @lNoAuth, .F. )
+   hb_default( @nTimeOut, 10000 )
+   hb_default( @lTLS, .F. )
+   hb_default( @cSMTPPass, cPass )
 
    // cTo
    IF HB_ISARRAY( xTo )
@@ -351,24 +341,12 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
    LOCAL cFext
    LOCAL cData
 
-   IF ! HB_ISARRAY( aFiles )
-      aFiles := {}
-   ENDIF
-   IF ! HB_ISNUMERIC( nPriority )
-      nPriority := 3
-   ENDIF
-   IF ! HB_ISLOGICAL( lRead )
-      lRead := .F.
-   ENDIF
-   IF ! HB_ISSTRING( cReplyTo )
-      cReplyTo := ""
-   ENDIF
-   IF ! HB_ISSTRING( cCharset )
-      cCharset := "ISO-8859-1"
-   ENDIF
-   IF ! HB_ISSTRING( cEncoding )
-      cEncoding := "quoted-printable"
-   ENDIF
+   hb_default( @aFiles, {} )
+   hb_default( @nPriority, 3 )
+   hb_default( @lRead, .F. )
+   hb_default( @cReplyTo, "" )
+   hb_default( @cCharset, "ISO-8859-1" )
+   hb_default( @cEncoding, "quoted-printable" )
 
    IF !( ( ".htm" $ Lower( cBody ) .OR. ".html" $ Lower( cBody ) ) .AND. hb_FileExists( cBody ) )
       IF !( Right( cBody, 2 ) == Chr( 13 ) + Chr( 10 ) )
@@ -421,9 +399,7 @@ FUNCTION hb_MailAssemble( cFrom, xTo, xCC, cBody, cSubject, ;
          cFile := aThisFile[ 1 ]
          IF HB_ISSTRING( aThisFile[ 2 ] )
             cData := aThisFile[ 2 ]
-            IF ! HB_ISSTRING( cFile )
-               cFile := "unnamed"
-            ENDIF
+            hb_default( @cFile, "unnamed" )
          ELSE
             IF ! HB_ISSTRING( cFile )
                LOOP /* No filename and no content. */

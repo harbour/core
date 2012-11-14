@@ -88,9 +88,8 @@ FUNCTION tip_Base64Encode( cBinary, nLineLength, cCRLF )
    IF ! HB_ISNUMERIC( nLineLength )
       RETURN cTextIn
    ENDIF
-   IF ! HB_ISSTRING( cCRLF )
-      cCRLF := hb_eol()
-   ENDIF
+
+   hb_default( @cCRLF, hb_eol() )
 
    cText := ""
    FOR tmp := 1 TO Len( cTextIn ) STEP nLineLength

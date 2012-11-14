@@ -300,9 +300,7 @@ METHOD Put() CLASS TJSWindow
       ::setFeatures()
    ENDIF
 
-   IF ! HB_ISSTRING( ::name )
-      ::name := "newWin"
-   ENDIF
+   hb_default( @::name, "newWin" )
 
    cStr += ::varName + " = window.open('" + ;
       ::URL + "', '" + ;

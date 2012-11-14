@@ -62,18 +62,16 @@ FUNCTION KeySec( nKey, nTime, nCounter, lMode )
    ENDIF
 
    IF HB_ISNUMERIC( nKey )
+
       IF ! HB_ISNUMERIC( nTime )
          nTime := 0
       ELSEIF nTime < 0
          nTime := -nTime / 18.2
       ENDIF
       nTime *= 1000
-      IF ! HB_ISNUMERIC( nCounter )
-         nCounter := 1
-      ENDIF
-      IF ! HB_ISLOGICAL( lMode )
-         lMode := .F.
-      ENDIF
+
+      hb_default( @nCounter, 1 )
+      hb_default( @lMode, .F. )
 
       nSeconds := hb_MilliSeconds()
       t_hIdle := hb_idleAdd( {|| doKeySec( nKey, nTime, lMode, ;

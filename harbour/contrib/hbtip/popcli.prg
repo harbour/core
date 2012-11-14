@@ -149,9 +149,7 @@ METHOD OpenDigest( cUrl ) CLASS TIPClientPOP
 
 METHOD Close( lAutoQuit ) CLASS TIPClientPOP
 
-   IF ! HB_ISLOGICAL( lAutoQuit )
-      lAutoQuit := .T.
-   ENDIF
+   hb_default( @lAutoQuit, .T. )
 
    ::InetTimeOut( ::SocketCon )
 
@@ -386,9 +384,7 @@ METHOD retrieveAll( lDelete )
 
    LOCAL aMails, i, imax, cMail
 
-   IF ! HB_ISLOGICAL( lDelete )
-      lDelete := .F.
-   ENDIF
+   hb_default( @lDelete, .F. )
 
    IF ! ::isOpen
       RETURN NIL

@@ -460,9 +460,7 @@ METHOD ReadToFile( cFile, nMode, nSize ) CLASS TIPClient
    LOCAL cData
    LOCAL nSent
 
-   IF ! HB_ISNUMERIC( nMode )
-      nMode := FC_NORMAL
-   ENDIF
+   hb_default( @nMode, FC_NORMAL )
 
    nSent := 0
 

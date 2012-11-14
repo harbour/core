@@ -89,12 +89,8 @@ ENDCLASS
 
 METHOD New( aRow, aFStruct, cTableName ) CLASS TMySQLRow
 
-   IF ! HB_ISSTRING( cTableName )
-      cTableName := ""
-   ENDIF
-   IF ! HB_ISARRAY( aFStruct )
-      aFStruct := {}
-   ENDIF
+   hb_default( @cTableName, "" )
+   hb_default( @aFStruct, {} )
 
    ::aRow := aRow
    // DAVID:
@@ -180,9 +176,7 @@ METHOD FieldLen( nNum ) CLASS TMySQLRow
 */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLRow
 
-   IF ! HB_ISLOGICAL( lFormat )
-      lFormat := .F.
-   ENDIF
+   hb_default( @lFormat, .F. )
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
 
@@ -416,9 +410,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
    LOCAL lbof
 
    // NOTE: MySQL row count starts from 0
-   IF ! HB_ISNUMERIC( nRows )
-      nRows := 1
-   ENDIF
+   hb_default( @nRows, 1 )
 
    // DAVID:
    ::lBof := Empty( ::LastRec() )
@@ -674,9 +666,7 @@ METHOD FieldLen( nNum ) CLASS TMySQLQuery
 */
 METHOD FieldDec( nNum, lFormat ) CLASS TMySQLQuery
 
-   IF ! HB_ISLOGICAL( lFormat )
-      lFormat := .F.
-   ENDIF
+   hb_default( @lFormat, .F. )
 
    IF nNum >= 1 .AND. nNum <= Len( ::aFieldStruct )
       IF ! lFormat .AND. ( ::aFieldStruct[ nNum ][ MYSQL_FS_TYPE ] == MYSQL_TYPE_FLOAT .OR. ;
@@ -814,13 +804,9 @@ METHOD Update( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    // DAVID:
    LOCAL ni, cWhere := " WHERE "
 
-   IF ! HB_ISLOGICAL( lOldRecord )
-      lOldRecord := .F.
-   ENDIF
-   // DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   IF ! HB_ISLOGICAL( lRefresh )
-      lRefresh := .T.
-   ENDIF
+   hb_default( @lOldRecord, .F. )
+   // DAVID: too many ::refresh() can slow some processes, so we can deactivate it by parameter
+   hb_default( @lRefresh, .T. )
 
    ::lError := .F.
 
@@ -937,13 +923,9 @@ METHOD Delete( oRow, lOldRecord, lRefresh ) CLASS TMySQLTable
    // DAVID:
    LOCAL ni, cWhere := " WHERE "
 
-   IF ! HB_ISLOGICAL( lOldRecord )
-      lOldRecord := .F.
-   ENDIF
-   // DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   IF ! HB_ISLOGICAL( lRefresh )
-      lRefresh := .T.
-   ENDIF
+   hb_default( @lOldRecord, .F. )
+   // DAVID: too many ::refresh() can slow some processes, so we can deactivate it by parameter
+   hb_default( @lRefresh, .T. )
 
    // is this a row of this table ?
    IF oRow == NIL
@@ -1034,10 +1016,8 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
    LOCAL cInsertQuery := "INSERT INTO " + ::cTable + " ("
    LOCAL i
 
-   // DAVID: too many ::refresh() can slow some processes, so we can desactivate it by parameter
-   IF ! HB_ISLOGICAL( lRefresh )
-      lRefresh := .T.
-   ENDIF
+   // DAVID: too many ::refresh() can slow some processes, so we can deactivate it by parameter
+   hb_default( @lRefresh, .T. )
 
    IF oRow == NIL // default Current row
 
@@ -1143,9 +1123,7 @@ METHOD GetBlankRow( lSetValues ) CLASS TMySQLTable
    LOCAL aRow := Array( ::nNumFields )
 
    // DAVID: It is not current row, so do not change it
-   IF ! HB_ISLOGICAL( lSetValues )
-      lSetValues := .F.
-   ENDIF
+   hb_default( @lSetValues, .F. )
 
    // crate an array of empty fields
    FOR i := 1 TO ::nNumFields
@@ -1495,9 +1473,7 @@ METHOD CreateIndex( cName, cTable, aFNames, lUnique ) CLASS TMySQLServer
    LOCAL cCreateQuery := "CREATE "
    LOCAL i
 
-   IF ! HB_ISLOGICAL( lUnique )
-      lUnique := .F.
-   ENDIF
+   hb_default( @lUnique, .F. )
 
    IF lUnique
       cCreateQuery += "UNIQUE INDEX "
@@ -1558,9 +1534,7 @@ METHOD Query( cQuery ) CLASS TMySQLServer
 
    LOCAL oQuery, cTableName, i, cUpperQuery, nNumTables, cToken
 
-   IF ! HB_ISSTRING( cQuery )
-      cQuery := ""
-   ENDIF
+   hb_default( @cQuery, "" )
 
    cUpperQuery := Upper( AllTrim( cQuery ) )
    i := 1
