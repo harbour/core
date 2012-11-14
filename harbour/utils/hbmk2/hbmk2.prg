@@ -134,6 +134,8 @@
               On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ...
  */
 
+#define _HBMK_LIB_HINTS_
+
 #ifndef _HBMK_EMBEDDED_
 
 #include "hbextcdp.ch"
@@ -1330,7 +1332,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL lHBMAINDLLP
 
 #ifdef _HBMK_LIB_HINTS_
-   LOCAL cStdErr
+   LOCAL cStdOut, cStdErr
 #endif
 
    IF s_cSecToken == NIL
@@ -6609,11 +6611,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-#ifdef _HBMK_LIB_HINTS_
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand,,, @cStdErr ) ) != 0
-#else
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand  ) ) != 0
-#endif
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running linker. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6621,8 +6619,14 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
                      hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
+
 #ifdef _HBMK_LIB_HINTS_
-                  AdviseMissingLibs( hbmk, cStdErr )
+                  /* Run failed linker command again to
+                     analyze its output and present hints */
+                  IF ! hbmk[ _HBMK_lQuiet ] .AND. ! hbmk[ _HBMK_lIGNOREERROR ]
+                     hb_processRun( cCommand,, @cStdOut, @cStdErr )
+                     AdviseMissingLibs( hbmk, cStdOut + hb_eol() + cStdErr )
+                  ENDIF
 #endif
                ENDIF
 
@@ -6729,11 +6733,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-#ifdef _HBMK_LIB_HINTS_
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand,,, @cStdErr ) ) != 0
-#else
                IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand  ) ) != 0
-#endif
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6741,8 +6741,14 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   IF ! hbmk[ _HBMK_lIGNOREERROR ]
                      hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
+
 #ifdef _HBMK_LIB_HINTS_
-                  AdviseMissingLibs( hbmk, cStdErr )
+                  /* Run failed linker command again to
+                     analyze its output and present hints */
+                  IF ! hbmk[ _HBMK_lQuiet ] .AND. ! hbmk[ _HBMK_lIGNOREERROR ]
+                     hb_processRun( cCommand,, @cStdOut, @cStdErr )
+                     AdviseMissingLibs( hbmk, cStdOut + hb_eol() + cStdErr )
+                  ENDIF
 #endif
                ENDIF
 
@@ -12260,15 +12266,27 @@ STATIC PROCEDURE AdviseMissingLibs( hbmk, cOutput )
 
    FOR EACH cFunction IN aFunction DESCEND
       IF cFunction $ hAll
+
+         /* Get the function name in original .hbx casing */
+         cFunction := hb_HKeyAt( hAll, hb_HPos( hAll, cFunction ) )
+
          FOR EACH cLib IN hb_ATokens( hAll[ cFunction ], "," )
             IF !( cLib $ hNeeded )
                hNeeded[ cLib ] := {}
             ENDIF
             AAddNew( hNeeded[ cLib ], cFunction )
          NEXT
+
          hb_ADel( aFunction, cFunction:__enumIndex(), .T. )
       ENDIF
    NEXT
+
+   IF ! Empty( hNeeded ) .OR. ;
+      ! Empty( aFunction )
+      /* Just an empty separator for better visibility
+         of what follows */
+      OutStd( _OUT_EOL )
+   ENDIF
 
    FOR EACH tmp IN hNeeded
       aLib := LibReferenceToOption( tmp:__enumKey() )
@@ -12338,9 +12356,9 @@ STATIC FUNCTION GetListOfFunctionsKnown( hbmk )
       hb_HMerge( hAll, hb_Deserialize( hb_ZUncompress( hb_MemoRead( hb_DirBase() + aFile[ F_NAME ] ) ) ) )
    NEXT
 
-   hAll[ "HB_COMPILE" ] := ;
-   hAll[ "HB_COMPILEBUF" ] := ;
-   hAll[ "HB_COMPILEFROMBUFF" ] := "(hbcplr)"
+   hAll[ "hb_compile" ] := ;
+   hAll[ "hb_compileBuf" ] := ;
+   hAll[ "hb_compileFromBuff" ] := "(hbcplr)"
 
    GetListOfFunctionsKnownWalkDir( hbmk[ _HBMK_cHB_INSTALL_CON ], hb_FNameDir( hbmk[ _HBMK_cHB_INSTALL_CON ] ), hAll )
    GetListOfFunctionsKnownWalkDir( hbmk[ _HBMK_cHB_INSTALL_ADD ], hb_FNameDir( hbmk[ _HBMK_cHB_INSTALL_ADD ] ), hAll )
