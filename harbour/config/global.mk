@@ -1890,7 +1890,7 @@ else
    # copied to install destination.
    ifneq ($(filter install,$(HB_MAKECMDGOALS)),)
       ifeq ($(HB_PLATFORM_UNIX),)
-         $(error ! Please set HB_INSTALL_PREFIX and try again. For more information: read INSTALL)
+         $(error ! Please set HB_INSTALL_PREFIX and try again. For more information: see README)
       endif
    endif
 endif

@@ -20,7 +20,7 @@ test.prg    :  a little test program which wont work for you :-) since it uses a
                provided. Use it as a small tutorial of tmysql.prg provided functions.
 
 
-1) See INSTALL on how to obtain/install and configure Harbour build
+1) See README on how to obtain/install and configure Harbour build
    system for mysql.
 
 2) Add hbmysql.hbc to your hbmk2 command line (you can also try to

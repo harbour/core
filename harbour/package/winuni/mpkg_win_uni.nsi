@@ -84,7 +84,7 @@ Section "Main components" hb_main
 
   File /nonfatal "$%HB_ABSROOT%RELNOTES"
 
-  File /nonfatal "$%HB_ABSROOT%INSTALL"
+  File /nonfatal "$%HB_ABSROOT%README"
   File /nonfatal "$%HB_ABSROOT%COPYING"
   File /nonfatal "$%HB_ABSROOT%NEWS"
   File /nonfatal "$%HB_ABSROOT%TODO"

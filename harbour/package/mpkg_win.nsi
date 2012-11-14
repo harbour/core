@@ -9,7 +9,7 @@
 ; Harbour Nullsoft installer script (for Windows/MS-DOS)
 ; [ Do not try to use this script directly. It won't work. ]
 ;
-; Please read INSTALL for further information.
+; Please see README for further information.
 ; ---------------------------------------------------------------
 
   SetCompressor /solid lzma
@@ -78,7 +78,7 @@ Section "Main components" hb_main
   SetOutPath $INSTDIR
 
   File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING"
-  File /nonfatal "$%HB_INSTALL_PREFIX%\INSTALL"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\README"
   File /nonfatal "$%HB_INSTALL_PREFIX%\NEWS"
   File /nonfatal "$%HB_INSTALL_PREFIX%\TODO"
   ; Let it work also for MS-DOS packages where short filename is used here

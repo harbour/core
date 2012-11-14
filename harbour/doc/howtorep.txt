@@ -19,7 +19,7 @@ Content
 =========================================================
 by Viktor Szakats
 
- 1) Read the Harbour INSTALL, monitor the development mailing list,
+ 1) Read the Harbour README, monitor the development mailing list,
     consult with the developers, make contributions. This way your chances
     are high to get a R/W access to the repository.
  2) Before uploading anything you'll need Developer (R/W) status for the
@@ -78,7 +78,7 @@ Important notes:
     placement.
     Add the new filename to the related makefiles.
     (*) There are some exceptions: ChangeLog.*, Makefile, COPYING,
-        TODO and INSTALL for example.
+        TODO and README for example.
 
 1.3 Here's how to format your ChangeLog entries
 ===============================================

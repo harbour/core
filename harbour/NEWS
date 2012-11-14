@@ -117,7 +117,7 @@ General
 - x64 msvc compiler got a distinct HB_COMPILER value: msvc64.
 - msvcce compiler made compatible with older MSVC/WinCE versions.
 - Added support for Intel(R) C++ compiler (icc) on Linux and Windows.
-- Added new INSTALL document giving a quick describing of the build
+- Added new README document giving a quick describing of the build
   process on all supported platforms and compilers.
 - Several steps to make the build process simpler and requiring the
   less amount of preparation.
@@ -126,7 +126,7 @@ General
 - Added support for HB_CONTRIBLIBS=no to disable building of all contribs.
 - Added ability to generate Windows installer and .zip distribution file.
 - Fully transitioned to GNU Make system for all compilers.
-  Now msvc, msvcce and bcc builds need GNU Make, see INSTALL for more
+  Now msvc, msvcce and bcc builds need GNU Make, see README for more
   information. "non-GNU" make systems got deleted from the source tree.
 - Cygwin renamed from gcc to cygwin. (NOTE: Cygwin doesn't work since
   some versions, and support may be removed in the future.)

@@ -69,7 +69,7 @@ PROCEDURE Main( ... )
                NEXT
 
                mk_hb_FCopy( "COPYING", tmp + hb_ps() )
-               mk_hb_FCopy( "INSTALL", tmp + hb_ps() )
+               mk_hb_FCopy( "README" , tmp + hb_ps() )
                mk_hb_FCopy( "NEWS"   , tmp + hb_ps() )
                mk_hb_FCopy( "TODO"   , tmp + hb_ps() )
             ELSE
