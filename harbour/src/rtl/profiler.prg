@@ -535,9 +535,7 @@ METHOD generate( bFilter ) CLASS HBProfileReport
 
    LOCAL lProfile := __SetProfiler( .F. )
 
-   IF ! HB_ISBLOCK( bFilter )
-      bFilter := {|| .T. }
-   ENDIF
+   hb_default( @bFilter, {|| .T. } )
 
    ::emitHeader():oProfile:forEach( {| o | iif( Eval( bFilter, o ), ::emitLine( o ), NIL ) } )
 
@@ -576,9 +574,7 @@ METHOD generate( bFilter, cFile ) CLASS HBProfileReportToFile
 
    LOCAL lProfile := __SetProfiler( .F. )
 
-   IF ! HB_ISSTRING( cFile )
-      cFile := "hbprof.txt"
-   ENDIF
+   hb_default( @cFile, "hbprof.txt" )
 
    IF ( ::hFile := FCreate( cFile ) ) != F_ERROR
       ::super:generate( bFilter )

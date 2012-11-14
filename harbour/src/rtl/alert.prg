@@ -64,9 +64,7 @@ FUNCTION Alert( cMessage, aOptions, cColorNorm )
 
    cMessage := StrTran( cMessage, ";", Chr( 10 ) )
 
-   IF ! HB_ISARRAY( aOptions )
-      aOptions := {}
-   ENDIF
+   hb_default( @aOptions, {} )
 
    IF ! HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)
@@ -131,9 +129,7 @@ FUNCTION hb_Alert( xMessage, aOptions, cColorNorm, nDelay )
       cMessage := hb_CStr( xMessage )
    ENDIF
 
-   IF ! HB_ISARRAY( aOptions )
-      aOptions := {}
-   ENDIF
+   hb_default( @aOptions, {} )
 
    IF ! HB_ISSTRING( cColorNorm ) .OR. Empty( cColorNorm )
       cColorNorm := "W+/R" // first pair color (Box line and Text)

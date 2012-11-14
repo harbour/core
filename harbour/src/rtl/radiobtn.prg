@@ -329,9 +329,7 @@ METHOD New( nRow, nCol, cCaption, cData ) CLASS RADIOBUTTN
       RETURN NIL
    ENDIF
 
-   IF ! HB_ISSTRING( cCaption )
-      cCaption := ""
-   ENDIF
+   hb_default( @cCaption, "" )
 
    ::nCapRow  := nRow
    ::nCapCol  := nCol + 3 + 1

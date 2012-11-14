@@ -323,12 +323,8 @@ FUNCTION __i18n_potArraySave( cFile, aTrans, cErrorMsg, lVersionNo, lSourceRef )
    LOCAL cEol, cPOT, cFlg
    LOCAL msg
 
-   IF ! HB_ISLOGICAL( lVersionNo )
-      lVersionNo := .T.
-   ENDIF
-   IF ! HB_ISLOGICAL( lSourceRef )
-      lSourceRef := .T.
-   ENDIF
+   hb_default( @lVersionNo, .T. )
+   hb_default( @lSourceRef, .T. )
 
    lRet := .F.
    cEol := hb_eol()
@@ -392,9 +388,7 @@ FUNCTION __i18n_potArrayToHash( aTrans, lEmpty, hI18N )
    LOCAL cContext
    LOCAL hTrans, hContext
 
-   IF ! HB_ISLOGICAL( lEmpty )
-      lEmpty := .F.
-   ENDIF
+   hb_default( @lEmpty, .F. )
    IF ! HB_ISHASH( hI18N )
       hI18N := { "CONTEXT" => { "" => { => } } }
    ENDIF

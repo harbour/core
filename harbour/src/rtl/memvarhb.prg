@@ -104,9 +104,7 @@ FUNCTION hb_mvSave( cFileName, cMask, lIncludeMask )
          cMask := "*"
       ENDIF
 
-      IF ! HB_ISLOGICAL( lIncludeMask )
-         lIncludeMask := .T.
-      ENDIF
+      hb_default( @lIncludeMask, .T. )
 
       aVars := {}
 
@@ -187,9 +185,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
 
    IF HB_ISSTRING( cFileName )
 
-      IF ! HB_ISLOGICAL( lAdditive )
-         lAdditive := .T.
-      ENDIF
+      hb_default( @lAdditive, .T. )
 
       IF ! lAdditive
          __mvClear()
@@ -204,9 +200,7 @@ FUNCTION hb_mvRestore( cFileName, lAdditive, cMask, lIncludeMask )
          cMask := "*"
       ENDIF
 
-      IF ! HB_ISLOGICAL( lIncludeMask )
-         lIncludeMask := .T.
-      ENDIF
+      hb_default( @lIncludeMask, .T. )
 
       nRetries := 0
       DO WHILE .T.

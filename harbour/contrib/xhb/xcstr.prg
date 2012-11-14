@@ -236,7 +236,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
       nPad += 3
       cPad := Space( nPad )
 
-      FOR EACH aVar IN __objGetValueLIST( xVal )
+      FOR EACH aVar IN __objGetValueList( xVal )
          cRet += cPad + cName + ":" + aVar[ 1 ] + " := " + ValToPrg( aVar[ 2 ], cName + ":" + aVar[ 1 ], nPad, aObjs ) + CRLF
       NEXT
 

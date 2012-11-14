@@ -1311,16 +1311,12 @@ METHOD doConfigure() CLASS TBROWSE
       cHeadSep := oCol:headSep
       IF ! HB_ISSTRING( cHeadSep ) .OR. cHeadSep == ""
          cHeadSep := ::cHeadSep
-         IF ! HB_ISSTRING( cHeadSep )
-            cHeadSep := ""
-         ENDIF
+         hb_default( @cHeadSep, "" )
       ENDIF
       cFootSep := oCol:footSep
       IF ! HB_ISSTRING( cFootSep ) .OR. cFootSep == ""
          cFootSep := ::cFootSep
-         IF ! HB_ISSTRING( cFootSep )
-            cFootSep := ""
-         ENDIF
+         hb_default( @cFootSep, "" )
       ENDIF
       aCol := Array( _TBCI_SIZE )
       aCol[ _TBCI_COLOBJECT   ] := oCol

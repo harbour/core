@@ -656,9 +656,7 @@ METHOD GetDoSetKey( bKeyBlock, oGet ) CLASS HBGetList
 
    lSetKey := Eval( bKeyBlock, ::cReadProcName, ::nReadProcLine, ::ReadVar() )
 
-   IF ! HB_ISLOGICAL( lSetKey )
-      lSetKey := .T.
-   ENDIF
+   hb_default( @lSetKey, .T. )
 
    ::ShowScoreboard()
    oGet:updateBuffer()

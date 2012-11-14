@@ -146,9 +146,7 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
       RETURN ""
    ENDIF
 
-   IF ! HB_ISLOGICAL( lForceRelative )
-      lForceRelative := .T.
-   ENDIF
+   hb_default( @lForceRelative, .T. )
 
    cPathBase   := hb_PathJoin( hb_DirBase(), hb_DirSepAdd( cPathBase ) )
    cPathTarget := hb_PathJoin( hb_DirBase(), cPathTarget )

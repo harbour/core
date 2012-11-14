@@ -72,9 +72,7 @@ PROCEDURE __TypeFile( cFile, lPrint )
    LOCAL cPath
    LOCAL i
 
-   IF ! HB_ISLOGICAL( lPrint )
-      lPrint := .F.
-   ENDIF
+   hb_default( @lPrint, .F. )
 
    IF ! HB_ISSTRING( cFile )
       oErr := ErrorNew()

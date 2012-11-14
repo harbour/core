@@ -143,7 +143,7 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
    CASE cValTxt == "O"                         // Object
       IF lDebug
          cOut  := xTxt:ClassName() + "(#" + ToChar( xTxt:ClassH() ) + "):{"
-         aData := __objGetValueLIST( xTxt )
+         aData := __objGetValueList( xTxt )
          nLen  := Len( aData )
          FOR n := 1 TO nLen                     // For each item : Recurse !
             cOut += aData[ n ][ HB_OO_DATA_SYMBOL ] + ":" + ;

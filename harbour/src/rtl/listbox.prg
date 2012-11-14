@@ -323,12 +323,9 @@ METHOD findText( cText, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    IF ! HB_ISSTRING( cText ) .OR. Len( cText ) == 0
       RETURN 0
    ENDIF
-   IF ! HB_ISNUMERIC( nPos )
-      nPos := 1
-   ENDIF
-   IF ! HB_ISLOGICAL( lCaseSensitive )
-      lCaseSensitive := .T.
-   ENDIF
+
+   hb_default( @nPos, 1 )
+   hb_default( @lCaseSensitive, .T. )
    IF ! HB_ISLOGICAL( lExact )
       lExact := Set( _SET_EXACT )
    ENDIF
@@ -367,12 +364,9 @@ METHOD findData( cData, nPos, lCaseSensitive, lExact ) CLASS LISTBOX
    IF ! HB_ISSTRING( cData )
       RETURN 0
    ENDIF
-   IF ! HB_ISNUMERIC( nPos )
-      nPos := 1
-   ENDIF
-   IF ! HB_ISLOGICAL( lCaseSensitive )
-      lCaseSensitive := .T.
-   ENDIF
+
+   hb_default( @nPos, 1 )
+   hb_default( @lCaseSensitive, .T. )
    IF ! HB_ISLOGICAL( lExact )
       lExact := Set( _SET_EXACT )
    ENDIF
@@ -1065,9 +1059,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, lDropDown )
       RETURN NIL
    ENDIF
 
-   IF ! HB_ISLOGICAL( lDropDown )
-      lDropDown := .F.
-   ENDIF
+   hb_default( @lDropDown, .F. )
 
    ::nBottom   := nBottom
    ::nRight    := nRight

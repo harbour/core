@@ -149,8 +149,6 @@ STATIC FUNCTION HBObject_Dftonerror( ... )
 
 STATIC FUNCTION HBObject_Error( cDesc, cClass, cMsg, nCode )
 
-   IF ! HB_ISNUMERIC( nCode )
-      nCode := 1004
-   ENDIF
+   hb_default( @nCode, 1004 )
 
    RETURN __errRT_SBASE( iif( nCode == 1005, EG_NOVARMETHOD, EG_NOMETHOD ), nCode, cDesc, cClass + ":" + cMsg, 1, QSelf() )

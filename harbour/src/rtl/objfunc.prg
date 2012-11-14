@@ -100,13 +100,8 @@ FUNCTION __objGetMsgList( oObject, lDataMethod, nClassType )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   IF ! HB_ISLOGICAL( lDataMethod )
-      lDataMethod := .T.
-   ENDIF
-
-   IF ! HB_ISNUMERIC( nClassType  )
-      nClasstype  := HB_MSGLISTALL
-   ENDIF
+   hb_default( @lDataMethod, .T. )
+   hb_default( @nClasstype, HB_MSGLISTALL )
 
    aInfo := ASort( oObject:ClassSel( nClassType ) )
    aData := {}
@@ -141,7 +136,7 @@ FUNCTION __objGetMethodList( oObject )
 
    RETURN __objGetMsgList( oObject, .F. )
 
-FUNCTION __objGetValueLIST( oObject, aExcept )
+FUNCTION __objGetValueList( oObject, aExcept )
 
    LOCAL aDataSymbol
    LOCAL nLen
@@ -153,9 +148,7 @@ FUNCTION __objGetValueLIST( oObject, aExcept )
       __errRT_BASE( EG_ARG, 3101, NIL, ProcName( 0 ) )
    ENDIF
 
-   IF ! HB_ISARRAY( aExcept )
-      aExcept := {}
-   ENDIF
+   hb_default( @aExcept, {} )
 
    aDataSymbol := __objGetMsgList( oObject )
    nLen        := Len( aDataSymbol )

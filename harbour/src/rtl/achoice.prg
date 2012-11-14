@@ -53,18 +53,10 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    LOCAL cKey
    LOCAL nAux
 
-   IF ! HB_ISNUMERIC( nTop )
-      nTop := 0
-   ENDIF
-   IF ! HB_ISNUMERIC( nLeft )
-      nLeft := 0
-   ENDIF
-   IF ! HB_ISNUMERIC( nBottom )
-      nBottom := 0
-   ENDIF
-   IF ! HB_ISNUMERIC( nRight )
-      nRight := 0
-   ENDIF
+   hb_default( @nTop, 0 )
+   hb_default( @nLeft, 0 )
+   hb_default( @nBottom, 0 )
+   hb_default( @nRight, 0 )
 
    IF nRight > MaxCol()
       nRight := MaxCol()
@@ -98,12 +90,9 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    IF ! HB_ISARRAY( xSelect ) .AND. ! HB_ISLOGICAL( xSelect )
       xSelect := .T.               // Array or logical, what is selectable
    ENDIF
-   IF ! HB_ISNUMERIC( nPos )
-      nPos := 1                    // The number of the selected item
-   ENDIF
-   IF ! HB_ISNUMERIC( nHiLiteRow )
-      nHiLiteRow := 0              // The row to be highlighted
-   ENDIF
+
+   hb_default( @nPos, 1 )          // The number of the selected item
+   hb_default( @nHiLiteRow, 0 )    // The row to be highlighted
 
    nNumCols := nRight - nLeft + 1
    nNumRows := nBottom - nTop + 1

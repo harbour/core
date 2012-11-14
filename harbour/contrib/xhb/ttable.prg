@@ -996,7 +996,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
    LOCAL aOldBuffer := Array( ( ::Alias )->( FCount() ) )
    LOCAL nSel       := Select( ::Alias )
    LOCAL nOrd       := ( ::Alias )->( ordSetFocus() )
-   LOCAL aData      := __objGetValueLIST( Self )
+   LOCAL aData      := __objGetValueList( Self )
    LOCAL xBuffer
    LOCAL n
 

@@ -249,9 +249,7 @@ METHOD xDo( nStatus ) CLASS HBMemoEditor
 
    LOCAL xResult := Do( ::xUserFunction, nStatus, ::nRow, ::nCol - 1 )
 
-   IF ! HB_ISNUMERIC( xResult )
-      xResult := ME_DEFAULT
-   ENDIF
+   hb_default( @xResult, ME_DEFAULT )
 
    ::SetPos( nOldRow, nOldCol )
    SetCursor( nOldCur )
@@ -292,18 +290,18 @@ FUNCTION MemoEdit( ;
 
    LOCAL nOldCursor
 
-   IF ! HB_ISNUMERIC( nTop )            ; nTop            := 0                  ; ENDIF
-   IF ! HB_ISNUMERIC( nLeft )           ; nLeft           := 0                  ; ENDIF
-   IF ! HB_ISNUMERIC( nBottom )         ; nBottom         := MaxRow()           ; ENDIF
-   IF ! HB_ISNUMERIC( nRight )          ; nRight          := MaxCol()           ; ENDIF
-   IF ! HB_ISLOGICAL( lEditMode )       ; lEditMode       := .T.                ; ENDIF
-   IF ! HB_ISNUMERIC( nLineLength )     ; nLineLength     := nRight - nLeft + 1 ; ENDIF
-   IF ! HB_ISNUMERIC( nTabSize )        ; nTabSize        := 4                  ; ENDIF
-   IF ! HB_ISNUMERIC( nTextBuffRow )    ; nTextBuffRow    := 1                  ; ENDIF
-   IF ! HB_ISNUMERIC( nTextBuffColumn ) ; nTextBuffColumn := 0                  ; ENDIF
-   IF ! HB_ISNUMERIC( nWindowRow )      ; nWindowRow      := 0                  ; ENDIF
-   IF ! HB_ISNUMERIC( nWindowColumn )   ; nWindowColumn   := nTextBuffColumn    ; ENDIF
-   IF ! HB_ISSTRING( cString )          ; cString         := ""                 ; ENDIF
+   hb_default( @nTop            , 0                  )
+   hb_default( @nLeft           , 0                  )
+   hb_default( @nBottom         , MaxRow()           )
+   hb_default( @nRight          , MaxCol()           )
+   hb_default( @lEditMode       , .T.                )
+   hb_default( @nLineLength     , nRight - nLeft + 1 )
+   hb_default( @nTabSize        , 4                  )
+   hb_default( @nTextBuffRow    , 1                  )
+   hb_default( @nTextBuffColumn , 0                  )
+   hb_default( @nWindowRow      , 0                  )
+   hb_default( @nWindowColumn   , nTextBuffColumn    )
+   hb_default( @cString         , ""                 )
 
    // Original MemoEdit() converts Tabs into spaces;
    oEd := HBMemoEditor():New( StrTran( cString, Chr( 9 ), Space( 1 ) ), nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextBuffRow, nTextBuffColumn, nWindowRow, nWindowColumn )

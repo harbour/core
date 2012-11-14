@@ -130,9 +130,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
                xMsg := Eval( xMsg )
             ENDIF
 
-            IF ! HB_ISSTRING( xMsg )
-               xMsg := ""
-            ENDIF
+            hb_default( @xMsg, "" )
 
             IF lMsgCenter
                nMsgCol := Int( ( MaxCol() - Len( xMsg ) ) / 2 )

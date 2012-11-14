@@ -97,9 +97,7 @@ FUNCTION hb_iniNew( lAutoMain )
 
    hb_HKeepOrder( hIni, .T. )
 
-   IF ! HB_ISLOGICAL( lAutoMain )
-      lAutoMain := .T.
-   ENDIF
+   hb_default( @lAutoMain, .T. )
 
    IF lAutoMain
       hIni[ "MAIN" ] := { => }
@@ -119,18 +117,10 @@ FUNCTION hb_iniReadStr( cData, lKeyCaseSens, cSplitters, lAutoMain )
    hb_HKeepOrder( hIni, .T. )
 
    /* Default case sensitiveness for keys */
-   IF ! HB_ISLOGICAL( lKeyCaseSens )
-      lKeyCaseSens := .T.
-   ENDIF
-   IF ! HB_ISSTRING( cSplitters )
-      cSplitters := "="
-   ENDIF
-   IF ! HB_ISLOGICAL( lAutoMain )
-      lAutoMain := .T.
-   ENDIF
-   IF ! HB_ISSTRING( cData )
-      cData := ""
-   ENDIF
+   hb_default( @lKeyCaseSens, .T. )
+   hb_default( @cSplitters, "=" )
+   hb_default( @lAutoMain, .T. )
+   hb_default( @cData, "" )
 
    hb_HCaseMatch( hIni, lKeyCaseSens )
 
@@ -346,9 +336,7 @@ FUNCTION hb_iniWriteStr( hIni, cCommentBegin, cCommentEnd, lAutoMain )
       cBuffer += cCommentBegin + cNewLine
    ENDIF
 
-   IF ! HB_ISLOGICAL( lAutoMain )
-      lAutoMain := .T.
-   ENDIF
+   hb_default( @lAutoMain, .T. )
 
    // Fix if lAutoMain is .T. but I haven't a MAIN section
    IF lAutoMain .AND. ! hb_HHasKey( hIni, "MAIN" )

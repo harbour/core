@@ -1006,18 +1006,18 @@ METHOD BrowseText( nPassedKey )
 
 METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabSize, nTextRow, nTextCol, nWndRow, nWndCol ) CLASS HBEditor
 
-   IF ! HB_ISSTRING( cString )      ; cString         := ""       ; ENDIF
-   IF ! HB_ISNUMERIC( nTop )        ; nTop            := 0        ; ENDIF
-   IF ! HB_ISNUMERIC( nLeft )       ; nLeft           := 0        ; ENDIF
-   IF ! HB_ISNUMERIC( nBottom )     ; nBottom         := MaxRow() ; ENDIF
-   IF ! HB_ISNUMERIC( nRight )      ; nRight          := MaxCol() ; ENDIF
-   IF ! HB_ISLOGICAL( lEditMode )   ; lEditMode       := .T.      ; ENDIF
-   IF ! HB_ISNUMERIC( nLineLength ) ; nLineLength     := NIL      ; ENDIF
-   IF ! HB_ISNUMERIC( nTabSize )    ; nTabSize        := NIL      ; ENDIF
-   IF ! HB_ISNUMERIC( nTextRow )    ; nTextRow        := 1        ; ENDIF
-   IF ! HB_ISNUMERIC( nTextCol )    ; nTextCol        := 0        ; ENDIF
-   IF ! HB_ISNUMERIC( nWndRow )     ; nWndRow         := 0        ; ENDIF
-   IF ! HB_ISNUMERIC( nWndCol )     ; nWndCol         := 0        ; ENDIF
+   hb_default( @cString     , ""       )
+   hb_default( @nTop        , 0        )
+   hb_default( @nLeft       , 0        )
+   hb_default( @nBottom     , MaxRow() )
+   hb_default( @nRight      , MaxCol() )
+   hb_default( @lEditMode   , .T.      )
+   hb_default( @nLineLength , NIL      )
+   hb_default( @nTabSize    , NIL      )
+   hb_default( @nTextRow    , 1        )
+   hb_default( @nTextCol    , 0        )
+   hb_default( @nWndRow     , 0        )
+   hb_default( @nWndCol     , 0        )
 
    ::aText := Text2Array( cString, nLineLength )
    ::naTextLen := Len( ::aText )

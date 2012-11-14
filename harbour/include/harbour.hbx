@@ -1447,7 +1447,7 @@ DYNAMIC __objGetClsName
 DYNAMIC __objGetMethodList
 DYNAMIC __objGetMsgList
 DYNAMIC __objGetProperties
-DYNAMIC __objGetValueLIST
+DYNAMIC __objGetValueList
 DYNAMIC __objHasData
 DYNAMIC __objHasMethod
 DYNAMIC __objHasMsg
