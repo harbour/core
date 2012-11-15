@@ -136,9 +136,7 @@ static void hb_ocidd_init( void * cargo )
    OCI_Initialize( NULL, NULL, OCI_ENV_DEFAULT | OCI_ENV_CONTEXT | OCI_ENV_THREADED );
 
    if( ! hb_sddRegister( &ocidd ) )
-   {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-   }
 }
 
 static void hb_ocidd_exit( void * cargo )

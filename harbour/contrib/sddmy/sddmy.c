@@ -387,9 +387,7 @@ static HB_ERRCODE mysqlOpen( SQLBASEAREAP pArea )
          hb_itemRelease( pItem );
 
 /*       if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
-         {
             pFieldInfo.uiType = HB_IT_LONG;
-         }
  */
 
          if( ! bError )

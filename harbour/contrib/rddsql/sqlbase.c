@@ -409,9 +409,7 @@ static HB_ERRCODE sqlbaseSkipRaw( SQLBASEAREAP pArea, HB_LONG lToSkip )
       pArea->area.fBof = HB_TRUE;
    }
    else
-   {
       errCode = SELF_GOTO( ( AREAP ) pArea, pArea->ulRecNo + lToSkip );
-   }
 
    return errCode;
 }
@@ -479,12 +477,11 @@ static HB_ERRCODE sqlbaseGetValue( SQLBASEAREAP pArea, HB_USHORT uiIndex, PHB_IT
 
 static HB_ERRCODE sqlbaseGetVarLen( SQLBASEAREAP pArea, HB_USHORT uiIndex, HB_ULONG * pLength )
 {
-   /*  TODO: should we use this code?
-      if( pArea->area.lpFields[ uiIndex ].uiType == HB_IT_MEMO )
-      {
-         return pArea->pSDD->GetVarLen( pArea, uiIndex, pLength );
-      }
-    */
+   /*  TODO: should we use this code? */
+#if 0
+   if( pArea->area.lpFields[ uiIndex ].uiType == HB_IT_MEMO )
+      return pArea->pSDD->GetVarLen( pArea, uiIndex, pLength );
+#endif
 
    *pLength = pArea->area.lpFields[ uiIndex - 1 ].uiLen;
    return HB_SUCCESS;
@@ -496,9 +493,7 @@ static HB_ERRCODE sqlbaseGoCold( SQLBASEAREAP pArea )
    if( pArea->fRecordChanged )
    {
       if( ! pArea->fAppend && pArea->pRowFlags[ pArea->ulRecNo ] & SQLDD_FLAG_CACHED )
-      {
          hb_itemRelease( ( PHB_ITEM ) ( pArea->pRow[ pArea->ulRecNo ] ) );
-      }
       pArea->pRow[ pArea->ulRecNo ]      = pArea->pRecord;
       pArea->pRowFlags[ pArea->ulRecNo ] = pArea->bRecordFlags;
       pArea->fRecordChanged = HB_FALSE;
@@ -629,9 +624,7 @@ static HB_ERRCODE sqlbaseClose( SQLBASEAREAP pArea )
       for( ulIndex = 0; ulIndex <= pArea->ulRecCount; ulIndex++ )
       {
          if( pArea->pRowFlags[ ulIndex ] & SQLDD_FLAG_CACHED )
-         {
             hb_itemRelease( ( PHB_ITEM ) pArea->pRow[ ulIndex ] );
-         }
       }
       hb_xfree( pArea->pRow );
       hb_xfree( pArea->pRowFlags );
@@ -676,9 +669,7 @@ static HB_ERRCODE sqlbaseCreate( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
       pArea->pSDD = pArea->pConnection->pSDD;
    }
    else
-   {
       pArea->pSDD = &sddNull;
-   }
 
    pItemEof = hb_itemArrayNew( pArea->area.uiFieldCount );
 
@@ -821,9 +812,7 @@ static HB_ERRCODE sqlbaseOpen( SQLBASEAREAP pArea, LPDBOPENINFO pOpenInfo )
    errCode = pArea->pSDD->Open( pArea );
 
    if( errCode == HB_SUCCESS )
-   {
       errCode = SUPER_OPEN( ( AREAP ) pArea, pOpenInfo );
-   }
 
    if( errCode != HB_SUCCESS )
    {
@@ -968,7 +957,6 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
 
    switch( uiIndex )
    {
-
       case RDDI_REMOTE:
          hb_itemPutL( pItem, HB_TRUE );
          break;
@@ -978,14 +966,12 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
          HB_ULONG ulNewConnection = 0;
 
          if( hb_itemType( pItem ) & HB_IT_NUMERIC )
-         {
             ulNewConnection = hb_itemGetNL( pItem );
-         }
+
          hb_itemPutNL( pItem, ulConnect ? ulConnect : s_ulConnectionCurrent );
+
          if( ulNewConnection )
-         {
             s_ulConnectionCurrent = ulNewConnection;
-         }
          break;
       }
 
@@ -996,7 +982,6 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
       case RDDI_CANPUTREC:
          hb_itemPutL( pItem, HB_TRUE );
          break;
-
 
       case RDDI_CONNECT:
       {
@@ -1062,9 +1047,8 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
             hb_xfree( pConn );
             s_pConnection[ ulConn - 1 ] = NULL;
             if( s_ulConnectionCurrent == ulConn )
-            {
                s_ulConnectionCurrent = 0;
-            }
+
             hb_itemPutL( pItem, HB_TRUE );
             return HB_SUCCESS;
          }
@@ -1100,10 +1084,10 @@ static HB_ERRCODE sqlbaseRddInfo( LPRDDNODE pRDD, HB_USHORT uiIndex, HB_ULONG ul
          hb_itemPutNInt( pItem, s_ulAffectedRows );
          return HB_SUCCESS;
 
-/*
+#if 0
       default:
          return SUPER_RDDINFO( pRDD, uiIndex, ulConnect, pItem );
- */
+#endif
 
    }
 
@@ -1243,15 +1227,12 @@ HB_FUNC_STATIC( SQLBASE_GETFUNCTABLE )
 
       errCode = hb_rddInheritEx( pTable, &sqlbaseTable, &sqlbaseSuper, NULL, NULL );
       if( errCode == HB_SUCCESS )
-      {
          s_rddidSQLBASE = uiRddId;
-      }
+
       hb_retni( errCode );
    }
    else
-   {
       hb_retni( HB_FAILURE );
-   }
 }
 
 static void hb_sqlbaseInit( void * cargo )

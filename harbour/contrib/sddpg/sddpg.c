@@ -122,9 +122,7 @@ static void hb_pgsqldd_init( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 
    if( ! hb_sddRegister( &pgsqldd ) )
-   {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-   }
 }
 
 /* force SQLBASE linking */
@@ -438,9 +436,7 @@ static HB_ERRCODE pgsqlOpen( SQLBASEAREAP pArea )
          hb_arraySetForward( pItemEof, uiCount + 1, pItem );
 
 /*       if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
-         {
             pFieldInfo.uiType = HB_IT_LONG;
-         }
  */
 
          if( ! bError )

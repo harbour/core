@@ -302,7 +302,7 @@ static HB_BOOL amf3_decode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
    PHB_ITEM pValue;
    HB_BOOL  result;
 
-   while( 1 )
+   for( ;; )
    {
       pKey = hb_itemNew( NULL );
       if( ! amf3_deserialize_string( context, pKey ) )

@@ -103,9 +103,7 @@ static void hb_firebirddd_init( void * cargo )
    HB_SYMBOL_UNUSED( cargo );
 
    if( ! hb_sddRegister( &firebirddd ) || ( sizeof( isc_db_handle ) != sizeof( void * ) ) )
-   {
       hb_errInternal( HB_EI_RDDINVALID, NULL, NULL, NULL );
-   }
 }
 
 /* force SQLBASE linking */
@@ -399,9 +397,7 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
          hb_itemRelease( pItem );
 
 /*       if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
-         {
             pFieldInfo.uiType = HB_IT_LONG;
-         }
  */
 
          if( ! bError )
@@ -444,17 +440,11 @@ static HB_ERRCODE fbClose( SQLBASEAREAP pArea )
    if( pSDDData )
    {
       if( pSDDData->pSqlda )
-      {
          hb_xfree( pSDDData->pSqlda );
-      }
       if( pSDDData->hStmt )
-      {
          isc_dsql_free_statement( status, &pSDDData->hStmt, DSQL_drop );
-      }
       if( pSDDData->hTrans )
-      {
          isc_rollback_transaction( status, &pSDDData->hTrans );
-      }
       hb_xfree( pSDDData );
       pArea->pSDDData = NULL;
    }
