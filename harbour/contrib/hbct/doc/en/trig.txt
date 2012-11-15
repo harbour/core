@@ -35,7 +35,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR()
+      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR()
    $END$
  */
 
@@ -75,7 +75,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -115,7 +115,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -155,7 +155,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -193,48 +193,48 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ASin()
+      Asin()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Arcus sine of the argument
    $SYNTAX$
-      ASin( nSine ) -> nRadiant
+      Asin( nSine ) -> nRadiant
    $ARGUMENTS$
       <nSine>         the sine of an angle
    $RETURNS$
       <nRadiant>      the angle whose sine is <nSine>
    $DESCRIPTION$
-      The function ASin() is the inverse function of Sin(). It takes a
+      The function Asin() is the inverse function of Sin(). It takes a
       sine value and returns the smallest(!) angle whose sine equals to the argument.
       The return value is given in radiants (full angle equals 2*Pi -
       see DToR() if you need to convert it into degress).
       Note, that <nSine> must be between -1 and 1 and that <nRadiant>
       is always between -Pi()/2 and Pi()/2.
    $EXAMPLES$
-      ? aSin( 0.0 ) // --> 0.0
-      ? aSin( 0.5 ) // --> 0.5235...
+      ? Asin( 0.0 ) // --> 0.0
+      ? Asin( 0.5 ) // --> 0.5235...
    $TESTS$
-      aSin( 0.0 ) == 0.0
-      aSin( Sqrt( 1 / 2 ) ) == Pi() / 4
-      aSin( 1.0 ) == Pi() / 2
-      aSin( 0.0 ) == 0.0  // and not Pi(), since the smallest angle is returned !
+      Asin( 0.0 ) == 0.0
+      Asin( Sqrt( 1 / 2 ) ) == Pi() / 4
+      Asin( 1.0 ) == Pi() / 2
+      Asin( 0.0 ) == 0.0  // and not Pi(), since the smallest angle is returned !
    $STATUS$
       Ready
    $COMPLIANCE$
-      ASin() is compatible with CT3's ASin().
+      Asin() is compatible with CT3's Asin().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -276,13 +276,13 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ATan()
+      Atan()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
@@ -294,27 +294,27 @@
    $RETURNS$
       <nRadiant>      the angle whose tangent is <nTangent>
    $DESCRIPTION$
-      The function ATan() is the inverse function of Tan(). It takes a
+      The function Atan() is the inverse function of Tan(). It takes a
       tangent value and returns the smallest(!) angle whose tangent equals to the argument.
       The return value is given in radiants between -Pi()/2 and Pi()/2
       (full angle equals 2*Pi - see DToR() if you need to convert it into degress).
    $EXAMPLES$
-      ? aTan( 0.0 ) // --> 0.0
-      ? aTan( 0.5 ) // --> 0.4636...
+      ? Atan( 0.0 ) // --> 0.0
+      ? Atan( 0.5 ) // --> 0.4636...
    $TESTS$
-      aTan( 0.0 ) == 0.0
-      aTan( 1.0 ) == Pi() / 4
-      aTan( 0.0 ) == 0.0 // and not Pi(), although Tan( Pi() ) == 0.0 !
+      Atan( 0.0 ) == 0.0
+      Atan( 1.0 ) == Pi() / 4
+      Atan( 0.0 ) == 0.0 // and not Pi(), although Tan( Pi() ) == 0.0 !
    $STATUS$
       Ready
    $COMPLIANCE$
-      ATan() is compatible with CT3's ATan().
+      Atan() is compatible with CT3's Atan().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -334,9 +334,9 @@
       <nRadiant>      the angle whose tangent is <nSine>/<nCosine>
    $DESCRIPTION$
       The function Atn2() is an alternate function for calculating
-      the arcus tangent, Atn2(x,y) = aTan(x/y).
+      the arcus tangent, Atn2(x,y) = Atan(x/y).
       It takes two arguments, the sine and the cosine
-      of the angle that should be calculated. Thus, in contrast to the ATan()
+      of the angle that should be calculated. Thus, in contrast to the Atan()
       function, Atn2() can distinguish whether the sine or the cosine has
       a negative sign (or both being positive or negative), so that
       the return value can be between -Pi() and Pi() and covers the full
@@ -349,7 +349,7 @@
    $TESTS$
       Atn2( 0.0, 1.0 ) == 0.0
       Atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) == Pi() / 4
-      Atn2( -Sqrt( 1 / 2 ), -Sqrt( 1 / 2 ) ) == -3 / 4 * Pi()  // aTan() would return Pi() / 4 !
+      Atn2( -Sqrt( 1 / 2 ), -Sqrt( 1 / 2 ) ) == -3 / 4 * Pi()  // Atan() would return Pi() / 4 !
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -359,7 +359,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -398,7 +398,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -437,7 +437,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -472,7 +472,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -508,7 +508,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),DToR(),Pi()
    $END$
  */
 
@@ -543,6 +543,6 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),Pi()
    $END$
  */

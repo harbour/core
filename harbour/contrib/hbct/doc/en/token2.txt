@@ -82,7 +82,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      Token(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SAVEToken(),RESTToken(),TokenEnd()
+      Token(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
    $END$
  */
 
@@ -141,7 +141,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNum(),TokenAt(),SAVEToken(),RESTToken(),TokenEnd()
+      TokenInit(),TokenExit(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
    $END$
  */
 
@@ -178,7 +178,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenAt(),SAVEToken(),RESTToken(),TokenEnd()
+      TokenInit(),TokenExit(),TokenNext(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
    $END$
  */
 
@@ -222,7 +222,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SAVEToken(),RESTToken()
+      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken()
    $END$
  */
 
@@ -262,7 +262,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TokenInit(),TokenNext(),TokenNum(),TokenAt(),SAVEToken(),RESTToken(),TokenEnd()
+      TokenInit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
    $END$
  */
 
@@ -319,25 +319,25 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenNum(),SAVEToken(),RESTToken(),TokenEnd()
+      TokenInit(),TokenExit(),TokenNext(),TokenNum(),SaveToken(),RestToken(),TokenEnd()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      SAVEToken()
+      SaveToken()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Save the global token environment
    $SYNTAX$
-      SAVEToken() -> cStaticTokenEnvironment
+      SaveToken() -> cStaticTokenEnvironment
    $ARGUMENTS$
 
    $RETURNS$
       <cStaticTokenEnvironment>   a binary string encoding the global TE
    $DESCRIPTION$
-      The SAVEToken() function can be used to store the global TE for future
+      The SaveToken() function can be used to store the global TE for future
       use or when two or more incremental tokenizers must the nested.
       Note however that the latter can now be solved with locally stored
       token environments.
@@ -348,33 +348,33 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      SAVEToken() is compatible with CTIII's SAVEToken(),
+      SaveToken() is compatible with CTIII's SaveToken(),
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),RESTToken(),TokenEnd()
+      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),RestToken(),TokenEnd()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      RESTToken()
+      RestToken()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Restore global token environment
    $SYNTAX$
-      RESTToken( <cStaticTokenEnvironment> ) -> cOldStaticEnvironment
+      RestToken( <cStaticTokenEnvironment> ) -> cOldStaticEnvironment
    $ARGUMENTS$
       <cStaticTokenEnvironment>     a binary string encoding a TE
    $RETURNS$
       <cOldStaticEnvironment>       a string encoding the old global TE
    $DESCRIPTION$
-      The RESTToken() function restores the global TE to the one encoded
+      The RestToken() function restores the global TE to the one encoded
       in <cStaticTokenEnvironment>. This can either be the return value
-      of SAVEToken() or the value stored in the 4th parameter in a
+      of SaveToken() or the value stored in the 4th parameter in a
       TokenInit() call.
    $EXAMPLES$
 
@@ -383,12 +383,12 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      RESTToken() is compatible with CTIII's RESTToken(),
+      RestToken() is compatible with CTIII's RestToken(),
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SAVEToken(),TokenEnd()
+      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),TokenEnd()
    $END$
  */

@@ -82,7 +82,7 @@
    $DESCRIPTION$
       CSETATMUPA determines how the following CT3 string functions
 
-      AtNum()       AFTERAtNum()  BEFORAtNum()
+      AtNum()       AfterAtNum()  BeforAtNum()
       AtRepl()      NumAt()       AtAdjust()
       WordToChar()  WordRepl()
 
@@ -102,7 +102,7 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      AtNum()       AFTERAtNum()  BEFORAtNum()
+      AtNum()       AfterAtNum()  BeforAtNum()
       AtRepl()      NumAt()       AtAdjust()
       WordToChar()  WordRepl()
    $END$
@@ -135,7 +135,7 @@
       In the following CT3 functions, strings are compared on a character
       base:
 
-      AtAdjust()    AtNum()    AFTERAtNum()
+      AtAdjust()    AtNum()    AfterAtNum()
       BEFOREAtNum() AtRepl()   NumAt()
       StrDiff()
 

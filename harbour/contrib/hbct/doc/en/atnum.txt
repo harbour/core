@@ -54,19 +54,19 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      AtNum(),BEFORAtNum(),CSetAtMupa(),SetAtLike()
+      AtNum(),BeforAtNum(),CSetAtMupa(),SetAtLike()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      BEFORAtNum()
+      BeforAtNum()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Returns string portion before nth occurence of substring
    $SYNTAX$
-      BEFORAtNum( <cStringToMatch>, <cString>, [<nCounter>],
+      BeforAtNum( <cStringToMatch>, <cString>, [<nCounter>],
                   [<nIgnore>] ) --> cRestString
    $ARGUMENTS$
       <cStringToMatch>    is the substring scanned for
@@ -94,17 +94,17 @@
       second character of the matched substring otherwise.
       The function will also consider the settings of SetAtLike().
    $EXAMPLES$
-      ? BEFORAtNum( "!", "What is the answer ? 4 ! 5 !" ) // -> "What is the answer ? 4 ! 5 "
-      ? BEFORAtNum( "!", "What is the answer ? 4 ! 5 ?" ) // -> "What is the answer ? 4 "
+      ? BeforAtNum( "!", "What is the answer ? 4 ! 5 !" ) // -> "What is the answer ? 4 ! 5 "
+      ? BeforAtNum( "!", "What is the answer ? 4 ! 5 ?" ) // -> "What is the answer ? 4 "
       <TODO: add some examples here with CSetAtMupa() and SetAtLike()>
    $TESTS$
-      BEFORAtNum( "..", "..This..is..a..test!" ) == "..This..is..a"
-      BEFORAtNum( "..", "..This..is..a..test!", 2 ) == "..This"
-      BEFORAtNum( "..", "..This..is..a..test!", 2, 2 ) == "..This..is"
+      BeforAtNum( "..", "..This..is..a..test!" ) == "..This..is..a"
+      BeforAtNum( "..", "..This..is..a..test!", 2 ) == "..This"
+      BeforAtNum( "..", "..This..is..a..test!", 2, 2 ) == "..This..is"
    $STATUS$
       Ready
    $COMPLIANCE$
-      BEFORAtNum() is compatible with CT3's BEFORAtNum().
+      BeforAtNum() is compatible with CT3's BeforAtNum().
    $PLATFORMS$
       All
    $FILES$
