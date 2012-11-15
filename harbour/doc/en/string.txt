@@ -10,11 +10,11 @@
  *    Documentation for: Descend()
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: HB_OEMTOANSI(), HB_ANSITOOEM(), ISALPHA(), ISDIGIT(),
- *                       ISUPPER(), ISLOWER(), LTRIM(), AT(), RAT(), LEFT(),
- *                       RIGHT(), SUBSTR(), UPPER(), LOWER(), ASC(), CHR(),
- *                       PADC(), PADL(), PADR(), ALLTRIM(), TRIM(), RTRIM(),
- *                       SPACE(), REPLICATE(), VAL(), TRANSFORM(), STRTRAN()
+ *    Documentation for: ISALPHA(), ISDIGIT(), ISUPPER(), ISLOWER(), LTRIM(),
+ *                       AT(), HB_AT(),RAT(), HB_RAT(), LEFT(), RIGHT(),
+ *                       SUBSTR(), UPPER(), LOWER(), ASC(), CHR(), PADC(),
+ *                       PADL(), PADR(), ALLTRIM(), TRIM(), RTRIM(), SPACE(),
+ *                       REPLICATE(), VAL(), TRANSFORM(), STRTRAN()
  *
  * See COPYING for licensing terms.
  *
@@ -218,7 +218,47 @@
    $ONELINER$
       Locates the position of a substring in a main string.
    $SYNTAX$
-      AT( <cSearch>, <cString>, [<nStart>], [<nEnd>] ) --> nPos
+      AT( <cSearch>, <cString> ) --> nPos
+   $ARGUMENTS$
+      <cSearch> Substring to search for
+
+      <cString> Main string
+   $RETURNS$
+      AT() return the starting position of the first occurrence of the
+      substring in the main string
+   $DESCRIPTION$
+      This function searches the string <cString> for the characters in
+      the first string <cSearch>. If the substring is not contained within
+      the second expression, the function will return 0.
+   $EXAMPLES$
+      ? 'At( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( At( "cde", "abcdefgfedcba" ) )    // 3
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      RAT()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_AT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Locates the position of a substring in a main string.
+   $SYNTAX$
+      HB_AT( <cSearch>, <cString>, [<nStart>], [<nEnd>] ) --> nPos
    $ARGUMENTS$
       <cSearch> Substring to search for
 
@@ -228,7 +268,7 @@
 
       <nEnd> End position to search, by default cString length
    $RETURNS$
-      AT() return the starting position of the first occurrence of the
+      HB_AT() return the starting position of the first occurrence of the
       substring in the main string
    $DESCRIPTION$
       This function searches the string <cString> for the characters in
@@ -236,8 +276,10 @@
       the second expression, the function will return 0. The third and fourth
       parameters lets you indicate a starting and end offset to search in.
    $EXAMPLES$
-      ? 'At( "cde", "abcdefgfedcba" ) = ' + ;
-         At( "cde", "abcsefgfedcba" )
+      ? 'HB_AT( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( HB_AT( "cde", "abcdefgfedcba" ) )       // 3
+      ? 'HB_AT( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( HB_AT( "cde", "abcdefgfedcba", 4 ) )    // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -250,7 +292,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      RAT()
+      HB_RAT()
    $END$
  */
 
@@ -280,7 +322,7 @@
       occurrence of <cSearch> in <cString>, the return value is 0.
    $EXAMPLES$
       ? 'RAt( "cde", "abcdefgfedcba" ) = ' + ;
-         RAt( "cde", "abcsefgfedcba" )
+         Str( RAt( "cde", "abcdefgfedcba" ) )
    $STATUS$
       R
    $COMPLIANCE$
@@ -291,6 +333,52 @@
       Library is rtl
    $SEEALSO$
       AT(), SUBSTR(), RIGHT()
+   $END$
+ */
+
+/* $DOC$
+   $TEMPLATE$
+      Function
+   $NAME$
+      HB_RAT()
+   $CATEGORY$
+      API
+   $SUBCATEGORY$
+      Strings
+   $ONELINER$
+      Searches for a substring from the right side of a string.
+   $SYNTAX$
+      HB_RAT( <cSearch>, <cString>, [<nStart>], [<nEnd>]  ) --> nPos
+   $ARGUMENTS$
+      <cSearch> Substring to search for
+
+      <cString> Main string
+
+      <nStart> First position to search in cString, by default cString length
+
+      <nEnd> End position to search, by default 1
+   $RETURNS$
+      HB_RAT() return the location of beginning position.
+   $DESCRIPTION$
+      This function searches through <cString> for the first existence
+      of <cSearch>. The search operation is performed from the right side
+      of <cString> to the left. If the function is unable to find any
+      occurrence of <cSearch> in <cString>, the return value is 0.
+      The third and fourth parameters lets you indicate a starting and
+      end offset to search in.
+   $EXAMPLES$
+      ? 'HB_RAt( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( HB_RAt( "cde", "abcdefgfedcba" ) )   // 3
+   $STATUS$
+      R
+   $COMPLIANCE$
+      C
+   $PLATFORMS$
+      All(64K)
+   $FILES$
+      Library is rtl
+   $SEEALSO$
+      HB_AT(), SUBSTR(), RIGHT()
    $END$
  */
 
