@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_LDAY()
+      ft_LDay()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return last day of the month
    $SYNTAX$
-      FT_LDAY( [ <dDateToChk> ] ) -> dLastDay
+      ft_LDay( [ <dDateToChk> ] ) -> dLastDay
    $ARGUMENTS$
       <dDateToChk> is a date within a month for which you want to find
       the last date of that month.  If not passed or is an incorrect
@@ -23,9 +23,9 @@
       supplied.
    $EXAMPLES$
       dDate := SToD( "19900915" )
-      ? FT_LDAY( dDate )             // 09/30/90
-      ? FT_LDAY()                    // 03/31/91  (current month)
+      ? ft_LDay( dDate )             // 09/30/90
+      ? ft_LDay()                    // 03/31/91  (current month)
    $SEEALSO$
-      FT_FDAY()
+      ft_FDay()
    $END$
  */

@@ -35,7 +35,7 @@ PROCEDURE Main()
    SetColor( "W/N" )
    CLS
    ? cRet
-   ? "Lastkey() = ESC:", LastKey() == K_ESC
+   ? "LastKey() = ESC:", LastKey() == K_ESC
 
    RETURN
 

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_REBOOT()
+      ft_Reboot()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Force a warm or cold boot
    $SYNTAX$
-      FT_REBOOT( <nBootType> ) -> NIL
+      ft_Reboot( <nBootType> ) -> NIL
    $ARGUMENTS$
       <nBootType> is used to indicate the type of reboot.  A value of zero
       will cause a cold boot, while any other value will cause a warm boot.
@@ -31,7 +31,7 @@
 
       // Issue a warm boot
 
-      FT_Reboot( WARM )
+      ft_Reboot( WARM )
 
    $END$
  */

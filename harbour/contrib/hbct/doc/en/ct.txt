@@ -4,19 +4,19 @@
 
 /* $DOC$
    $NAME$
-      CTINIT()
+      ctinit()
    $CATEGORY$
       CT3 general functions
    $ONELINER$
       Initializes the CT3 library
    $SYNTAX$
-      CTINIT() -> lInitialized
+      ctinit() -> lInitialized
    $ARGUMENTS$
       None
    $RETURNS$
       lInitialized     .T. if the function has been correctly initialized
    $DESCRIPTION$
-      The CTINIT() function initializes the CT3 library.
+      The ctinit() function initializes the CT3 library.
       Identical code is declared as INIT FUNCTION, thus should be executed
       automatically at the beginning of the application, but it is a good
       idea to call it once again explicitly somewhere at the beginning of
@@ -28,7 +28,7 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      CTINIT() is a new function in Harbour's CT3 library.
+      ctinit() is a new function in Harbour's CT3 library.
    $PLATFORMS$
       All
    $FILES$
@@ -40,19 +40,19 @@
 
 /* $DOC$
    $NAME$
-      CTEXIT()
+      ctexit()
    $CATEGORY$
       CT3 general functions
    $ONELINER$
       Uninitializes the CT3 library
    $SYNTAX$
-      CTEXIT() -> nil
+      ctexit() -> nil
    $ARGUMENTS$
       none
    $RETURNS$
       nil
    $DESCRIPTION$
-      The CTEXIT() function uninitializes the CT3 library.
+      The ctexit() function uninitializes the CT3 library.
       Identical code is declared as EXIT FUNCTION, thus should be executed
       automatically at the end of the application, but it is a good idea
       to call it explicitly somewhere at the end of your program to make
@@ -64,7 +64,7 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      CTEXIT() is a new function in Harbour's CT3 library.
+      ctexit() is a new function in Harbour's CT3 library.
    $PLATFORMS$
       All
    $FILES$

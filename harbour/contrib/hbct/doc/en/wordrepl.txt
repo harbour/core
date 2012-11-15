@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      WORDREPL()
+      WordRepl()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Replacement of double characters
    $SYNTAX$
-      WORDREPL( <cDoubleCharacterSearchString>, <[@]cString>,
+      WordRepl( <cDoubleCharacterSearchString>, <[@]cString>,
                 <cDoubleCharacterReplaceString>, [<lMode>] ) -> cString
    $ARGUMENTS$
       <cDoubleCharacterSearchString>   is a string of double characters
@@ -23,7 +23,7 @@
    $RETURNS$
       cString                          the processed string
    $DESCRIPTION$
-      The WORDREPL() takes the double characters of <cDoubleCharacterSearchString>
+      The WordRepl() takes the double characters of <cDoubleCharacterSearchString>
       one after the other and searches for them in <cString>.
       For <lMode> set to .F., this search is successful, if the double
       character sequence in <cString> starts at an odd position or at any
@@ -35,33 +35,33 @@
       the "rest" of <cDoubleCharacterSearchString>. Note that the last double
       character sequence in "AABBC" is "BB" in this context !!
       After the replacement the function restarts the search in <cString>
-      BEHIND the replacement if the CSETATMUPA() switch is turned off, or
+      BEHIND the replacement if the CSetAtMupa() switch is turned off, or
       BEHIND the first character of the replacement if the switch is turned on.
       (see examples for this !)
-      One can omit the return value of this function by setting the CSETREF()
+      One can omit the return value of this function by setting the CSetRef()
       to .T., but one must then pass <cString> by reference to get a result.
    $EXAMPLES$
-      ? wordrepl( "CC", "AABBCCDDEE", "XX" ) // "AABBXXDDEE"
-      ? wordrepl( "aa", "1aaaa", "ba" )      // "1abaa"
-      ? wordrepl( "aa", "1aaaa", "ba", .T. ) // "1baba"
-      csetatmupa( .T. )
-      ? wordrepl( "aa", "1aaaa", "ba" )      // "1abaa"
-      ? wordrepl( "aa", "1aaaa", "ba", .T. ) // "1bbba"
+      ? WordRepl( "CC", "AABBCCDDEE", "XX" ) // "AABBXXDDEE"
+      ? WordRepl( "aa", "1aaaa", "ba" )      // "1abaa"
+      ? WordRepl( "aa", "1aaaa", "ba", .T. ) // "1baba"
+      CSetAtMupa( .T. )
+      ? WordRepl( "aa", "1aaaa", "ba" )      // "1abaa"
+      ? WordRepl( "aa", "1aaaa", "ba", .T. ) // "1bbba"
    $TESTS$
-      wordrepl( "CC", "AABBCCDDEE", "XX" ) == "AABBXXDDEE"
-      wordrepl( "aa", "1aaaa", "ba" )      == "1abaa"
-      wordrepl( "aa", "1aaaa", "ba", .T. ) == "1baba"
-      Eval( {|| csetatmupa( .T. ), wordrepl( "aa", "1aaaa", "ba" ) } ) == "1abaa"
-      Eval( {|| csetatmupa( .T. ), wordrepl( "aa", "1aaaa", "ba", .T. ) } ) == "1bbba"
+      WordRepl( "CC", "AABBCCDDEE", "XX" ) == "AABBXXDDEE"
+      WordRepl( "aa", "1aaaa", "ba" )      == "1abaa"
+      WordRepl( "aa", "1aaaa", "ba", .T. ) == "1baba"
+      Eval( {|| CSetAtMupa( .T. ), WordRepl( "aa", "1aaaa", "ba" ) } ) == "1abaa"
+      Eval( {|| CSetAtMupa( .T. ), WordRepl( "aa", "1aaaa", "ba", .T. ) } ) == "1bbba"
    $STATUS$
       Ready
    $COMPLIANCE$
-      WORDREPL() is compatible with CT3's WORDREPL().
+      WordRepl() is compatible with CT3's WordRepl().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARREPL(),RANGEREPL(),POSREPL(),CSETREF(),CSETATMUPA()
+      CharRepl(),RangeRepl(),PosRepl(),CSetRef(),CSetAtMupa()
    $END$
  */

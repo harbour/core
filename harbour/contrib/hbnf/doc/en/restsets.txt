@@ -4,15 +4,15 @@
 
 /* $DOC$
    $NAME$
-      FT_RESTSETS()
+      ft_RestSets()
    $CATEGORY$
       Environment
    $ONELINER$
       Restore status of all SET command settings
    $SYNTAX$
-      FT_RESTSETS( [ <aOldSets> ] ) -> NIL
+      ft_RestSets( [ <aOldSets> ] ) -> NIL
    $ARGUMENTS$
-      aOldSets is an array of SET settings created by FT_SAVESETS()
+      aOldSets is an array of SET settings created by ft_SaveSets()
    $RETURNS$
       NIL
    $DESCRIPTION$
@@ -21,10 +21,10 @@
       supported: FILTER, FORMAT, FUNCTION, INDEX, KEYS, MODE, ORDER,
       PROCEDURE, RELATION, TYPEAHEAD
    $EXAMPLES$
-      FT_RESTSETS( aOldSets )
+      ft_RestSets( aOldSets )
    $INCLUDE$
       set.ch
    $SEEALSO$
-      FT_SAVESETS() FT_SETCENTURY()
+      ft_SaveSets() ft_SetCentury()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ISBIT()
+      ft_IsBit()
    $CATEGORY$
       String
    $ONELINER$
       Test the status of an individual bit
    $SYNTAX$
-      FT_ISBIT( <cByte>, <nBitPos> ) -> lResult
+      ft_IsBit( <cByte>, <nBitPos> ) -> lResult
    $ARGUMENTS$
       <cByte> is a character from Chr(0) to Chr(255)
 
@@ -32,14 +32,14 @@
       // This code tests whether bit 3 is set in the byte represented by
       // Chr( 107 ):
 
-      lBitflag := FT_ISBIT( Chr( 107 ), 3 )
+      lBitflag := ft_IsBit( Chr( 107 ), 3 )
       ? lBitflag                  // result: .T.
 
       // This code tests whether bit 5 is set in the byte represented by ASCII
       // 65 (letter "A")
 
-      ? FT_ISBIT( "A", 5 )        // result: .F.
+      ? ft_IsBit( "A", 5 )        // result: .F.
    $SEEALSO$
-      FT_BITSET() FT_BITCLR()
+      ft_BitSet() ft_BitClr()
    $END$
  */

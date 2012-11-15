@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_PICKDAY()
+      ft_PickDay()
    $CATEGORY$
       Menus/Prompts
    $ONELINER$
       Picklist of days of week
    $SYNTAX$
-      FT_PICKDAY() -> cDayOfWeek
+      ft_PickDay() -> cDayOfWeek
    $ARGUMENTS$
       None
    $RETURNS$
@@ -18,6 +18,6 @@
    $DESCRIPTION$
       This function is ideal if you need the user to select a day.
    $EXAMPLES$
-      mday := FT_PICKDAY()
+      mday := ft_PickDay()
    $END$
  */

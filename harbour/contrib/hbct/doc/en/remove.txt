@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      REMALL()
+      RemAll()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Remove certain characters at the left and right of a string
    $SYNTAX$
-      REMALL( <cString>, [<cSearch|nSearch>] ) -> cString
+      RemAll( <cString>, [<cSearch|nSearch>] ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,25 +24,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      REMALL() is compatible with CT3's REMALL().
+      RemAll() is compatible with CT3's RemAll().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      REMLEFT(),REMRIGHT()
+      RemLeft(),RemRight()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      REMLEFT()
+      RemLeft()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Remove certain characters at the left of a string
    $SYNTAX$
-      REMLEFT( <cString>, [<cSearch|nSearch>] ) -> cString
+      RemLeft( <cString>, [<cSearch|nSearch>] ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -56,25 +56,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      REMLEFT() is compatible with CT3's REMLEFT().
+      RemLeft() is compatible with CT3's RemLeft().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      REMALL(),REMRIGHT()
+      RemAll(),RemRight()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      REMRIGHT()
+      RemRight()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Remove certain characters at the right of a string
    $SYNTAX$
-      REMRIGHT( <cString>, [<cSearch|nSearch>] ) -> cString
+      RemRight( <cString>, [<cSearch|nSearch>] ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -88,12 +88,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      REMRIGHT() is compatible with CT3's REMRIGHT().
+      RemRight() is compatible with CT3's RemRight().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      REMALL(),REMLEFT()
+      RemAll(),RemLeft()
    $END$
  */

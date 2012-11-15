@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_MIN2DHM()
+      ft_Min2Dhm()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Convert numeric minutes to days, hours and minutes.
    $SYNTAX$
-      FT_MIN2DHM( <nMinutes> ) -> aDHM_
+      ft_Min2Dhm( <nMinutes> ) -> aDHM_
    $ARGUMENTS$
       <nMinutes>  the number of minutes.
    $RETURNS$

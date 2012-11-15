@@ -36,19 +36,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSFile2Blob()
+      AdsFile2Blob()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSFile2Blob()
+      AdsFile2Blob()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Save a Binary file to a field
    $SYNTAX$
-      ADSFile2Blob(cFileName, cFieldName, <nBinaryType>) --> lSuccess
+      AdsFile2Blob(cFileName, cFieldName, <nBinaryType>) --> lSuccess
    $ARGUMENTS$
       <cFileName>    File to read. Can be in UNC format. A common example is an image file.
 
@@ -62,7 +62,7 @@
       <lSuccess>   True if the file is successfully written.
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
-      ADSFile2Blob() is a wrapper for AdsFileToBinary.
+      AdsFile2Blob() is a wrapper for AdsFileToBinary.
       Use of this function is illegal in an ADS transaction.
    $EXAMPLES$
 
@@ -111,7 +111,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSCustomizeAOF(),ADSEvalAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
+      ADSCustomizeAOF(),AdsEvalAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
@@ -143,7 +143,7 @@
       the database. If bit 5 is on, record 5 is considered a visible record.
       If bit 5 is off, record 5 is not visible. It does not "pass the test".
       Initially, the bits are set by the Server according to a filter expression
-      from SET FILTER TO or adsSetAOF(). But by using ADSCustomizeAOF() you can
+      from SET FILTER TO or AdsSetAOF(). But by using ADSCustomizeAOF() you can
       add or remove records at will from the visible set.  This is useful for
       tagging records or for refining a result set after the data has been retrieved
       from the server.
@@ -182,19 +182,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),ADSEvalAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
+      ADSClearAOF(),AdsEvalAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSEvalAOF()
+      AdsEvalAOF()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Evaluate a filter expression to determine its optimization level
    $SYNTAX$
-      ADSEvalAOF(<cFilter>) --> nOptimizationLevel
+      AdsEvalAOF(<cFilter>) --> nOptimizationLevel
    $ARGUMENTS$
       <cFilter>       Expression to test.
    $RETURNS$
@@ -219,19 +219,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),ADSGetAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
+      ADSClearAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSGetAOFoptLevel()
+      AdsGetAOFOptLevel()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Returns optimization level of the current AOF filter
    $SYNTAX$
-      ADSGetAOFoptLevel() --> nOptimizationLevel
+      AdsGetAOFOptLevel() --> nOptimizationLevel
    $ARGUMENTS$
       None
    $RETURNS$
@@ -254,19 +254,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),ADSGetAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
+      ADSClearAOF(),AdsGetAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSGetAOF()
+      AdsGetAOF()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Retrieve the filter expression used in the call to AdsSetAOF
    $SYNTAX$
-      ADSGetAOF() --> cFilter
+      AdsGetAOF() --> cFilter
    $ARGUMENTS$
       None
    $RETURNS$
@@ -287,19 +287,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),ADSGetAOFoptLevel(),ADSIsRecordInAOF(),ADSRefreshAOF()
+      ADSClearAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSGetAOFnoOpt()
+      AdsGetAOFNoOpt()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Return the non-optimized portion of the current filter expression
    $SYNTAX$
-      ADSGetAOFnoOpt() --> cFilterFragment
+      AdsGetAOFNoOpt() --> cFilterFragment
    $ARGUMENTS$
       None
    $RETURNS$
@@ -321,19 +321,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
+      ADSClearAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSRefreshAOF()
+      AdsRefreshAOF()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Update the filter snapshot
    $SYNTAX$
-      ADSRefreshAOF()
+      AdsRefreshAOF()
    $ARGUMENTS$
       None
    $RETURNS$
@@ -341,7 +341,7 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
       If record updates occur after an AOF is set, the updated records may
-      or may not be valid records for the filter. ADSRefreshAOF()
+      or may not be valid records for the filter. AdsRefreshAOF()
       re-evaluates the data to include or exclude changed records.
    $EXAMPLES$
 
@@ -357,19 +357,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),ADSIsRecordInAOF(),ADSSetAOF()
+      ADSClearAOF(),AdsIsRecordInAOF(),AdsSetAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSSetAOF()
+      AdsSetAOF()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Create an Advantage Optimized Filter
    $SYNTAX$
-      ADSSetAOF( <cFilter> [, <nResolveOption>] ) --> lSuccess
+      AdsSetAOF( <cFilter> [, <nResolveOption>] ) --> lSuccess
    $ARGUMENTS$
       <cFilter>         Filter expression to set.
 
@@ -395,19 +395,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),ADSIsRecordInAOF(),ADSRefreshAOF()
+      ADSClearAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSIsRecordInAOF()
+      AdsIsRecordInAOF()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Determine if a record is in the current AOF
    $SYNTAX$
-      ADSIsRecordInAOF( [<nRecNo>] ) --> lSatisfiesFilter
+      AdsIsRecordInAOF( [<nRecNo>] ) --> lSatisfiesFilter
    $ARGUMENTS$
       <nRecNo>         Record number to test. Default is current record.
    $RETURNS$
@@ -428,19 +428,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),ADSRefreshAOF()
+      ADSClearAOF(),AdsRefreshAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSGetRelKeyPos()
+      AdsGetRelKeyPos()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Estimated key position of current record within the current index
    $SYNTAX$
-      ADSGetRelKeyPos() --> nKeyPos
+      AdsGetRelKeyPos() --> nKeyPos
    $ARGUMENTS$
       None.  Only accesses the current index, if any.
    $RETURNS$
@@ -469,13 +469,13 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSKeyNo(),ADSKeyCount(),ADSSetRelKeyPos()
+      AdsKeyNo(),AdsKeyCount(),AdsSetRelKeyPos()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSSetRelKeyPos()
+      AdsSetRelKeyPos()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
@@ -509,19 +509,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSKeyNo(),ADSKeyCount(),ADSGetRelKeyPos()
+      AdsKeyNo(),AdsKeyCount(),AdsGetRelKeyPos()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSKeyCount()
+      AdsKeyCount()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Retrieve the number of keys in a specified index
    $SYNTAX$
-      ADSKeyCount([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyCount
+      AdsKeyCount([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyCount
    $ARGUMENTS$
       <xTag>     Numeric order number OR index tag name. Default is current index.
 
@@ -560,19 +560,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSKeyNo(),ADSGetRelKeyPos()
+      AdsKeyNo(),AdsGetRelKeyPos()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSKeyNo()
+      AdsKeyNo()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Get the logical key number of the current record in the given index
    $SYNTAX$
-      ADSKeyNo([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyNo
+      AdsKeyNo([<xTag>], <cIgnoredIndexFile>, [<nFilterOption>]) --> nKeyNo
    $ARGUMENTS$
       <xTag>          Numeric order number OR index tag name. Default is current index.
 
@@ -599,7 +599,7 @@
       Wrapper for AdsGetKeyNum. </par>
       This function may be slow on a large database with
       ADS_RESPECTFILTERS set because it walks through the keys to get the
-      current position.  Compare to ADSGetRelKeyPos().
+      current position.  Compare to AdsGetRelKeyPos().
    $STATUS$
       R
    $COMPLIANCE$
@@ -610,19 +610,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSKeyCount(),ADSGetRelKeyPos()
+      AdsKeyCount(),AdsGetRelKeyPos()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSLocking()
+      AdsLocking()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Turns on/off the Advantage proprietary locking mode
    $SYNTAX$
-      ADSLocking( <lMode> ) --> lPriorSetting
+      AdsLocking( <lMode> ) --> lPriorSetting
    $ARGUMENTS$
       <lMode>    .T. to use the Advantage proprietary locking mode
       (this is the default setting if a remote server is used)
@@ -639,9 +639,9 @@
       If a file is opened in the proprietary mode, other applications cannot
       open it in a "write" mode. So if non-Advantage applications need
       concurrent access to the data files, use the Compatibility locking mode
-      by calling  ADSLocking( .F. ).
+      by calling  AdsLocking( .F. ).
 
-      ADSLocking() is a Get/Set function for the locking mode. It affects
+      AdsLocking() is a Get/Set function for the locking mode. It affects
       files at the time they are opened. So when a data
       file is opened, the current setting is used for that file until it is
       closed. Different files can have different locking modes by changing
@@ -656,19 +656,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSRightsCheck()
+      AdsRightsCheck()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSRightsCheck()
+      AdsRightsCheck()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Sets the "rights checking" setting for opening files
    $SYNTAX$
-      ADSRightsCheck( <lMode> ) --> lPriorSetting
+      AdsRightsCheck( <lMode> ) --> lPriorSetting
    $ARGUMENTS$
       <lMode>    .T. to check rights upon opening data files (the default),
       or .F. to ignore rights
@@ -677,7 +677,7 @@
       <lPriorSetting>
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
-      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
+      AdsRightsCheck() is a Get/Set function for the "rights checking" mode.
       If the setting is .T. when a file is opened, then the Advantage
       Database Server will use the rights of the connected user when
       opening the file. If the user does not have rights to the
@@ -701,19 +701,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      ADSLocking()
+      AdsLocking()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      AdsRegCallBack()
+      AdsRegCallback()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       For Progress displays: Sets a codeblock to be called during indexing
    $SYNTAX$
-      AdsRegCallBack( bEval )  --> nil
+      AdsRegCallback( bEval )  --> nil
    $ARGUMENTS$
       <bEval>    The codeblock that is eval'ed every 2 seconds during
       indexing. A numeric value of the "percent completed" is passed
@@ -733,7 +733,7 @@
       #include "inkey.ch"
       PROCEDURE Main()
          ...
-         AdsRegCallBack( {| nPercent | outputstuff( nPercent ) }  )
+         AdsRegCallback( {| nPercent | outputstuff( nPercent ) }  )
          /* The above codeblock will be called approximately
               every 2 seconds while indexing.
               The codeblock can return .T. to abort.   */
@@ -765,7 +765,7 @@
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
-      Clears the callback set by AdsRegCallBack().
+      Clears the callback set by AdsRegCallback().
    $SYNTAX$
       AdsClrCallBack() --> nil
    $ARGUMENTS$
@@ -773,7 +773,7 @@
    $RETURNS$
       <nil>
    $DESCRIPTION$
-      See AdsRegCallBack().
+      See AdsRegCallback().
    $EXAMPLES$
 
    $TESTS$
@@ -788,19 +788,19 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      AdsRegCallBack()
+      AdsRegCallback()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSSetDefault() *
+      AdsSetDefault() *
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Get/Set function for ADS's DEFAULT setting.
    $SYNTAX$
-      ADSSetDefault( [<cPath>] ) --> cPriorSetting
+      AdsSetDefault( [<cPath>] ) --> cPriorSetting
    $ARGUMENTS$
       <cPath>    Sets new value if passed.
 
@@ -832,13 +832,13 @@
 
 /* $DOC$
    $NAME$
-      ADSSetDeleted() *
+      AdsSetDeleted() *
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Get/Set function for ADS's ShowDeleted() setting.
    $SYNTAX$
-      ADSSetDeleted( [<lOnOff>] ) --> lPriorSetting
+      AdsSetDeleted( [<lOnOff>] ) --> lPriorSetting
    $ARGUMENTS$
       <lOnOff>    Sets new value if passed. The value is parallel
       to Harbour usage, so pass .F. to see deleted records or .T.
@@ -949,13 +949,13 @@
 
 /* $DOC$
    $NAME$
-      ADSSetCharType()
+      AdsSetCharType()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Sets the type of character data expected when opening tables.
    $SYNTAX$
-      ADSSetCharType( <nCharType>, [lOEM] ) --> nPriorSetting
+      AdsSetCharType( <nCharType>, [lOEM] ) --> nPriorSetting
    $ARGUMENTS$
       <nCharType>    Type of character data in the table.
       From ADS docs:
@@ -987,7 +987,7 @@
       Library is RddAds
       Header is ads.ch
    $SEEALSO$
-      AdsRightsCheck(),AdsLocking(), ADSSetFileType()
+      AdsRightsCheck(),AdsLocking(), AdsSetFileType()
    $END$
  */
 
@@ -1005,7 +1005,7 @@
    $RETURNS$
       <lActiveIndex>
    $DESCRIPTION$
-      Equivalent to <b>empty(ordSetFocus())<\b>, but faster.
+      Equivalent to <b>Empty(ordSetFocus())<\b>, but faster.
    $EXAMPLES$
 
    $TESTS$
@@ -1482,7 +1482,7 @@
       <lPriorSetting>
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
-      ADSRightsCheck() is a Get/Set function for the "rights checking" mode.
+      AdsRightsCheck() is a Get/Set function for the "rights checking" mode.
    $EXAMPLES$
 
    $TESTS$

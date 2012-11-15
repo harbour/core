@@ -10,12 +10,12 @@
  *    Documentation for: __TYPEFILE(), TYPE
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: FOPEN(), FCLOSE(), FWRITE(), FSEEK(), FREAD(), FILE(),
- *                       FREADSTR(), FRENAME(), FERROR(), RENAME, ERASE, CURDIR(),
- *                       DIRMAKE(), DIRCHANGE(), ISDISK(), DIRREMOVE(), DISKCHANGE()
+ *    Documentation for: FOpen(), FClose(), FWrite(), FSeek(), FRead(), FILE(),
+ *                       FReadStr(), FRename(), FError(), RENAME, ERASE, CurDir(),
+ *                       DirMake(), DirChange(), IsDisk(), DirRemove(), DiskChange()
  *
  * Copyright 2000 David G. Holm <Harbour@SpaceMoose.com>
- *    Documentation for: HB_FEOF()
+ *    Documentation for: hb_FEof()
  *
  * See COPYING for licensing terms.
  *
@@ -25,7 +25,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FOPEN()
+      FOpen()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -33,7 +33,7 @@
    $ONELINER$
       Open a file.
    $SYNTAX$
-      FOPEN( <cFile>, [<nMode>] ) --> nHandle
+      FOpen( <cFile>, [<nMode>] ) --> nHandle
    $ARGUMENTS$
       <cFile> Name of file to open.
 
@@ -65,7 +65,7 @@
       on this function. Directory names and paths must be specified along
       with the file that is to be opened.
 
-      If an error has occurred, see the returns values from FERROR() for
+      If an error has occurred, see the returns values from FError() for
       possible reasons for the error.
    $EXAMPLES$
       #include "fileio.ch"
@@ -80,7 +80,7 @@
       Library is rtl
       Header  is fileio.ch
    $SEEALSO$
-      FCREATE(),FERROR(),FCLOSE()
+      FCreate(),FError(),FClose()
    $END$
  */
 
@@ -88,7 +88,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FCREATE()
+      FCreate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -96,7 +96,7 @@
    $ONELINER$
       Creates a file.
    $SYNTAX$
-      FCREATE( <cFile>, [<nAttribute>] ) --> nHandle
+      FCreate( <cFile>, [<nAttribute>] ) --> nHandle
    $ARGUMENTS$
       <cFile> is the name of the file to create.
 
@@ -140,7 +140,7 @@
       Library is rtl
       Header is fileio.ch
    $SEEALSO$
-      FCLOSE(),FOPEN(),FWRITE(),FREAD(),FERROR()
+      FClose(),FOpen(),FWrite(),FRead(),FError()
    $END$
  */
 
@@ -148,7 +148,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FREAD()
+      FRead()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -156,7 +156,7 @@
    $ONELINER$
       Reads a specified number of bytes from a file.
    $SYNTAX$
-      FREAD( <nHandle>, @<cBuffer>, <nBytes> ) --> nBytes
+      FRead( <nHandle>, @<cBuffer>, <nBytes> ) --> nBytes
    $ARGUMENTS$
       <nHandle>     File handle
 
@@ -172,8 +172,8 @@
       The function returns the number of bytes successfully read into
       <cBuffer>.
 
-      The value of <nHandle> is obtained from either a call to the FOPEN()
-      or the FCREATE() function.
+      The value of <nHandle> is obtained from either a call to the FOpen()
+      or the FCreate() function.
 
       The <cBuffer> expression is passed by reference and must be defined
       before this function is called. It also must be at least the same
@@ -205,7 +205,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2L(),BIN2W(),FERROR(),FWRITE()
+      Bin2I(),Bin2L(),Bin2W(),FError(),FWrite()
    $END$
  */
 
@@ -213,7 +213,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FWRITE()
+      FWrite()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -221,7 +221,7 @@
    $ONELINER$
       Writes characters to a file.
    $SYNTAX$
-      FWRITE( <nHandle>, <cBuffer>, [<nBytes>] ) --> nBytesWritten
+      FWrite( <nHandle>, <cBuffer>, [<nBytes>] ) --> nBytesWritten
    $ARGUMENTS$
       <nHandle>  File handle number.
 
@@ -247,7 +247,7 @@
       The disk write begins with the current file position in <nHandle>. If
       this variable is not used, the entire contents of <cBuffer> is written
       to the file.
-      To truncate a file, a call of FWRITE( nHandle, "", 0 ) is needed.
+      To truncate a file, a call of FWrite( nHandle, "", 0 ) is needed.
    $EXAMPLES$
       nHandle := FCreate( "x.txt" )
       FOR X := 1 TO 10
@@ -263,7 +263,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      FCLOSE(), FCREATE(), FERROR(), FOPEN(), I2BIN(), L2BIN()
+      FClose(), FCreate(), FError(), FOpen(), I2Bin(), L2Bin()
    $END$
  */
 
@@ -271,7 +271,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FERROR()
+      FError()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -279,12 +279,12 @@
    $ONELINER$
       Reports the error status of low-level file functions
    $SYNTAX$
-      FERROR() --> <nErrorCode>
+      FError() --> <nErrorCode>
    $RETURNS$
       <nErrorCode> Value of the OS error last encountered by a
       low-level file function.
 
-      FERROR() Return Values
+      FError() Return Values
 
       <table>
        Error          Meaning
@@ -308,9 +308,9 @@
    $DESCRIPTION$
       After every low-level file function,this function will return
       a value that provides additional information on the status of
-      the last low-level file functions's performance. If the FERROR()
+      the last low-level file functions's performance. If the FError()
       function returns a 0, no error was detected. Below is a table
-      of possibles values returned by the FERROR() function.
+      of possibles values returned by the FError() function.
    $EXAMPLES$
       #include "fileio.ch"
       nHandle := FCreate( "temp.txt", FC_NORMAL )
@@ -324,7 +324,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      FCLOSE(),FERASE(),FOPEN(),FWRITE()
+      FClose(),FErase(),FOpen(),FWrite()
    $END$
  */
 
@@ -332,7 +332,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FCLOSE()
+      FClose()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -340,7 +340,7 @@
    $ONELINER$
       Closes an open file
    $SYNTAX$
-      FCLOSE( <nHandle> ) --> <lSuccess>
+      FClose( <nHandle> ) --> <lSuccess>
    $ARGUMENTS$
       <nHandle> File handle
    $RETURNS$
@@ -348,8 +348,8 @@
    $DESCRIPTION$
       This function closes an open file with a file handle
       of <nHandle> and writes the associated buffers to the
-      disk. The <nHandle> value is derived from the FCREATE()
-      or FOPEN() function.
+      disk. The <nHandle> value is derived from the FCreate()
+      or FOpen() function.
    $EXAMPLES$
       #include "fileio.ch"
       nHandle := FOpen( "x.txt" )
@@ -362,7 +362,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      FOPEN(),FCREATE(),FREAD(),FWRITE(),FERROR()
+      FOpen(),FCreate(),FRead(),FWrite(),FError()
    $END$
  */
 
@@ -370,7 +370,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FERASE()
+      FErase()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -378,7 +378,7 @@
    $ONELINER$
       Erase a file from disk
    $SYNTAX$
-      FERASE( <cFile> ) --> nSuccess
+      FErase( <cFile> ) --> nSuccess
    $ARGUMENTS$
       <cFile> Name of file to erase.
    $RETURNS$
@@ -394,9 +394,9 @@
       If the function is able to successfully delete the file from the
       disk, the value of the function will be 0; otherwise a -1 will
       be returned. If not successfull, additional information may be
-      obtained by calling the FERROR() function.
+      obtained by calling the FError() function.
 
-      Note: Any file to be removed by FERASE() must still be closed.
+      Note: Any file to be removed by FErase() must still be closed.
 
    $EXAMPLES$
       #include "fileio.ch"
@@ -412,7 +412,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      FERROR(),FRENAME()
+      FError(),FRename()
    $END$
  */
 
@@ -420,7 +420,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FRENAME()
+      FRename()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -428,7 +428,7 @@
    $ONELINER$
       Renames a file
    $SYNTAX$
-      FRENAME( <cOldFile>, <cNewFile> ) --> nSuccess
+      FRename( <cOldFile>, <cNewFile> ) --> nSuccess
    $ARGUMENTS$
       <cOldFile> Old filename to be changed
 
@@ -455,7 +455,7 @@
       the function will be unable to rename the file. If the function
       is unable to complete its operation,it will return a value of -1.
       If it is able to rename the file, the return value for the function
-      will be 0. A call to FERROR() function will give additional infor-
+      will be 0. A call to FError() function will give additional infor-
       mation about any error found.
    $EXAMPLES$
       #include "fileio.ch"
@@ -470,7 +470,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ERASE,FERASE(),FERROR(),FILE(),RENAME
+      ERASE,FErase(),FError(),FILE(),RENAME
    $END$
  */
 
@@ -478,7 +478,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FSEEK()
+      FSeek()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -486,7 +486,7 @@
    $ONELINER$
       Positions the file pointer in a file.
    $SYNTAX$
-      FSEEK( <nHandle>, <nOffset>, [<nOrigin>] ) --> nPosition
+      FSeek( <nHandle>, <nOffset>, [<nOrigin>] ) --> nPosition
    $ARGUMENTS$
       <nHandle> File handle.
 
@@ -502,8 +502,8 @@
       is the relative position of the file pointer to the beginning-of-file
       marker once the operation has been completed.
 
-      <nHandle> is the file handle number. It is obtained from the FOPEN()
-      or FCREATE() function.
+      <nHandle> is the file handle number. It is obtained from the FOpen()
+      or FCreate() function.
 
       The value of <nOffSet> is the number of bytes to move the file pointer
       from the position determined by <nOrigin>. The value of <nOffset> may
@@ -550,7 +550,7 @@
       Library is rtl
       Header is fileio.ch
    $SEEALSO$
-      FCREATE(),FERROR(),FOPEN(),FREAD(),FREADSTR(),FWRITE()
+      FCreate(),FError(),FOpen(),FRead(),FReadStr(),FWrite()
    $END$
  */
 
@@ -593,7 +593,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SET DEFAULT,SET PATH,SET()
+      SET DEFAULT,SET PATH,Set()
    $END$
  */
 
@@ -601,7 +601,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FREADSTR()
+      FReadStr()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -609,7 +609,7 @@
    $ONELINER$
       Reads a string from a file.
    $SYNTAX$
-      FREADSTR(<nHandle>, <nBytes>) --> cString
+      FReadStr(<nHandle>, <nBytes>) --> cString
    $ARGUMENTS$
       <nHandle> File handle number.
 
@@ -621,18 +621,18 @@
       file whose file handle is <nHandle>.
 
       The value of the file handle <nHandle> is obtained from either the
-      FOPEN() or FCREATE() functions.
+      FOpen() or FCreate() functions.
 
       The value of <nBytes> is the number of bytes to read from the file.
       The returned string will be the number of characters specified in
       <nBytes> or the number of bytes read before an end-of-file charac-
       ter (ASCII 26) is found.
 
-      NOTE  This function is similar to the FREAD() function, except that
+      NOTE  This function is similar to the FRead() function, except that
       it will not read binary characters that may he required as part of
-      a header of a file construct. Characters Such as CHR( 0 ) and CHR( 26 )
+      a header of a file construct. Characters Such as Chr( 0 ) and Chr( 26 )
       may keep this function from performing its intended operation. In this
-      event, the FREAD() function should he used in place of the FREADSTR()
+      event, the FRead() function should he used in place of the FReadStr()
       function.
    $EXAMPLES$
       #include "fileio.ch"
@@ -650,7 +650,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2L(),BIN2W(),FERROR(),FREAD(),FSEEK()
+      Bin2I(),Bin2L(),Bin2W(),FError(),FRead(),FSeek()
    $END$
  */
 
@@ -689,7 +689,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      CURDIR(),ERASE,FILE(),FERASE(),FRENAME()
+      CurDir(),ERASE,FILE(),FErase(),FRename()
    $END$
  */
 
@@ -723,7 +723,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      CURDIR(), FILE(), FERASE(), DELETE FILE
+      CurDir(), FILE(), FErase(), DELETE FILE
    $END$
  */
 
@@ -757,7 +757,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      CURDIR(), FILE(), FERASE(), ERASE
+      CurDir(), FILE(), FErase(), ERASE
    $END$
  */
 
@@ -893,7 +893,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      CURDIR()
+      CurDir()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -901,7 +901,7 @@
    $ONELINER$
       Returns the current OS directory name.
    $SYNTAX$
-      CURDIR( [<cDrive>] )  --> cPath
+      CurDir( [<cDrive>] )  --> cPath
    $ARGUMENTS$
       <cDrive> OS drive letter
    $RETURNS$
@@ -963,7 +963,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      ERASE,RENAME,FRENAME(),FERASE()
+      ERASE,RENAME,FRename(),FErase()
    $END$
  */
 
@@ -971,7 +971,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_FEOF()
+      hb_FEof()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -979,7 +979,7 @@
    $ONELINER$
       Check for end-of-file.
    $SYNTAX$
-      HB_FEOF( <nHandle> ) --> lIsEof
+      hb_FEof( <nHandle> ) --> lIsEof
    $ARGUMENTS$
       <nHandle> The handle of an open file.
    $RETURNS$
@@ -988,7 +988,7 @@
       This function checks an open file handle to see if it is at EOF.
 
       If the file handle is missing, not numeric, or not open, then this
-      function returns .T. and sets the value returned by FERROR() to -1
+      function returns .T. and sets the value returned by FError() to -1
       (FS_ERROR) or a C-compiler dependent errno value (EBADF or EINVAL).
    $EXAMPLES$
       nH := FOpen( "file.txt" )
@@ -1005,7 +1005,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      FERROR()
+      FError()
    $END$
  */
 
@@ -1013,7 +1013,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DIRREMOVE()
+      DirRemove()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1021,7 +1021,7 @@
    $ONELINER$
       Attempt to remove an directory
    $SYNTAX$
-      DIRREMOVE( <cDirectory> ) --> nError
+      DirRemove( <cDirectory> ) --> nError
    $ARGUMENTS$
       <cDirectory>  The name of the directory you want to remove.
    $RETURNS$
@@ -1030,7 +1030,7 @@
    $DESCRIPTION$
       This function attempt to remove the specified directory in <cDirectory>
       If this function fails, it will return the last OS error code number.
-      See FERROR() function for the description of the error.
+      See FError() function for the description of the error.
    $EXAMPLES$
       cDir := ".\backup"
       IF DirRemove( cDir ) == 0
@@ -1047,7 +1047,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      MAKEDIR(), DIRCHANGE(), ISDISK(), DISKCHANGE(), DISKNAME(), FERROR()
+      MakeDir(), DirChange(), IsDisk(), DiskChange(), DiskName(), FError()
    $END$
  */
 
@@ -1055,7 +1055,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DIRCHANGE()
+      DirChange()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1063,7 +1063,7 @@
    $ONELINER$
       Changes the directory
    $SYNTAX$
-      DIRCHANGE( <cDirectory> ) --> nError
+      DirChange( <cDirectory> ) --> nError
    $ARGUMENTS$
       <cDirectory>  The name of the directory you want do change into.
    $RETURNS$
@@ -1072,7 +1072,7 @@
    $DESCRIPTION$
       This function attempt to change the current directory to the one
       specified in <cDirectory>. If this function fails, it will return
-      the last OS error code number. See FERROR() function for the
+      the last OS error code number. See FError() function for the
       description of the error.
    $EXAMPLES$
       IF DirChange( "\temp" ) == 0
@@ -1089,7 +1089,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      MAKEDIR(), DIRREMOVE(), ISDISK(), DISKCHANGE(), DISKNAME(), FERROR()
+      MakeDir(), DirRemove(), IsDisk(), DiskChange(), DiskName(), FError()
    $END$
  */
 
@@ -1097,7 +1097,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MAKEDIR()
+      MakeDir()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1105,7 +1105,7 @@
    $ONELINER$
       Create a new directory
    $SYNTAX$
-      MAKEDIR( <cDirectory> ) --> nError
+      MakeDir( <cDirectory> ) --> nError
    $ARGUMENTS$
       <cDirectory>  The name of the directory you want to create.
    $RETURNS$
@@ -1114,7 +1114,7 @@
    $DESCRIPTION$
       This function attempt to create a new directory with the name contained
       in <cDirectory>. If this function fails, it will return the last OS
-      error code number. See FERROR() function for the description of the
+      error code number. See FError() function for the description of the
       error
    $EXAMPLES$
       cDir := "temp"
@@ -1132,7 +1132,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      DIRCHANGE(), DIRREMOVE(), ISDISK(), DISKCHANGE(), DISKNAME(), FERROR()
+      DirChange(), DirRemove(), IsDisk(), DiskChange(), DiskName(), FError()
    $END$
  */
 
@@ -1140,7 +1140,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ISDISK()
+      IsDisk()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1148,7 +1148,7 @@
    $ONELINER$
       Verify if a drive is ready
    $SYNTAX$
-      ISDISK( <cDrive> ) --> lSuccess
+      IsDisk( <cDrive> ) --> lSuccess
    $ARGUMENTS$
       <cDrive>  An valid Drive letter
    $RETURNS$
@@ -1173,6 +1173,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      DIRCHANGE(), MAKEDIR(), DIRREMOVE(), DISKCHANGE(), DISKNAME()
+      DirChange(), MakeDir(), DirRemove(), DiskChange(), DiskName()
    $END$
  */

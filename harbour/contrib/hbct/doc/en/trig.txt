@@ -4,44 +4,44 @@
 
 /* $DOC$
    $NAME$
-      PI()
+      Pi()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Returns Pi, the perimeter-to-diameter-ratio of a circle
    $SYNTAX$
-      PI() -> nPi
+      Pi() -> nPi
    $ARGUMENTS$
 
    $RETURNS$
       <nPi>      the math constant Pi with maximum precision available
    $DESCRIPTION$
-      The function PI() can be used if the constant Pi is needed
+      The function Pi() can be used if the constant Pi is needed
       with maximum precision. One of the most known interpretations of this
       number is the constant perimeter-to-diameter-ratio of circles.
    $EXAMPLES$
       // the diameter of a circle-like swimming pool is 3.4 meters, how
       // long is the perimeter ?
 
-      ? Str( PI() * 3.4, 5, 3 ) + " meters" // --> 10.681 meters
+      ? Str( Pi() * 3.4, 5, 3 ) + " meters" // --> 10.681 meters
    $TESTS$
 
    $STATUS$
       Ready
    $COMPLIANCE$
-      PI() is compatible with CT3's PI().
+      Pi() is compatible with CT3's Pi().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      SIN()
+      Sin()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
@@ -53,496 +53,496 @@
    $RETURNS$
       <nSine>          the sine of <nRadiant>
    $DESCRIPTION$
-      The function SIN() calculates the sine of an angle whose size is
-      given in radiants (full angle equals 2*Pi - see DTOR() for angle size
+      The function Sin() calculates the sine of an angle whose size is
+      given in radiants (full angle equals 2*Pi - see DToR() for angle size
       given in degress).
-      A common geometric interpretation of the SIN() function is the
+      A common geometric interpretation of the Sin() function is the
       counterkathede-hypotenuse-ratio of a right-angled triangle.
    $EXAMPLES$
-      ? sin( 0.0 ) // --> 0.0
-      ? sin( 1.0 ) // --> 0.8414...
+      ? Sin( 0.0 ) // --> 0.0
+      ? Sin( 1.0 ) // --> 0.8414...
    $TESTS$
-      sin( 0.0 ) == 0.0
-      sin( PI() / 4 ) == Sqrt( 1 / 2 )
-      sin( PI() / 2 ) == 1.0
-      sin( PI() ) == 0.0
+      Sin( 0.0 ) == 0.0
+      Sin( Pi() / 4 ) == Sqrt( 1 / 2 )
+      Sin( Pi() / 2 ) == 1.0
+      Sin( Pi() ) == 0.0
    $STATUS$
       Ready
    $COMPLIANCE$
-      SIN() is compatible with CT3's SIN().
+      Sin() is compatible with CT3's Sin().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      COS()
+      Cos()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Cosine of the argument
    $SYNTAX$
-      COS( nRadiant ) -> nCosine
+      Cos( nRadiant ) -> nCosine
    $ARGUMENTS$
       <nRadiant>       an angle size given in radiants
    $RETURNS$
       <nCosine>        the cosine of <nRadiant>
    $DESCRIPTION$
-      The function COS() calculates the cosine of an angle whose size is
-      given in radiants (full angle equals 2*Pi - see DTOR() for angle size
+      The function Cos() calculates the cosine of an angle whose size is
+      given in radiants (full angle equals 2*Pi - see DToR() for angle size
       given in degress).
-      A common geometric interpretation of the COS() function is the
+      A common geometric interpretation of the Cos() function is the
       ankathede-hypotenuse-ratio of a right-angled triangle.
    $EXAMPLES$
-      ? cos( 0.0 ) // --> 1.0
-      ? cos( 1.0 ) // --> 0.5403...
+      ? Cos( 0.0 ) // --> 1.0
+      ? Cos( 1.0 ) // --> 0.5403...
    $TESTS$
-      cos( 0.0 ) == 1.0
-      cos( PI() / 4 ) == Sqrt( 1 / 2 )
-      cos( PI() / 2 ) == 0.0
-      cos( PI() ) == -1.0
+      Cos( 0.0 ) == 1.0
+      Cos( Pi() / 4 ) == Sqrt( 1 / 2 )
+      Cos( Pi() / 2 ) == 0.0
+      Cos( Pi() ) == -1.0
    $STATUS$
       Ready
    $COMPLIANCE$
-      COS() is compatible with CT3's COS().
+      Cos() is compatible with CT3's Cos().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      TAN()
+      Tan()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Tangent of the argument
    $SYNTAX$
-      TAN( nRadiant ) -> nTangent
+      Tan( nRadiant ) -> nTangent
    $ARGUMENTS$
       <nRadiant>       an angle size given in radiants
    $RETURNS$
       <nTangent>       the tangent of <nRadiant>
    $DESCRIPTION$
-      The function TAN() calculates the tangent of an angle whose size is
-      given in radiants (full angle equals 2*Pi - see DTOR() for angle size
+      The function Tan() calculates the tangent of an angle whose size is
+      given in radiants (full angle equals 2*Pi - see DToR() for angle size
       given in degress).
-      A common geometric interpretation of the TAN() function is the
+      A common geometric interpretation of the Tan() function is the
       counterkathede-ankathede-ratio of a right-angled triangle, or,
-      tan(x) = sin(x)/cos(x).
+      Tan(x) = Sin(x)/Cos(x).
    $EXAMPLES$
-      ? tan( 0.0 ) // --> 0.0
-      ? tan( 1.0 ) // --> 1.5574...
+      ? Tan( 0.0 ) // --> 0.0
+      ? Tan( 1.0 ) // --> 1.5574...
    $TESTS$
-      tan( 0.0 ) == 0.0
-      tan( PI() / 4 ) == 1
-      tan( PI() ) == 0.0
+      Tan( 0.0 ) == 0.0
+      Tan( Pi() / 4 ) == 1
+      Tan( Pi() ) == 0.0
    $STATUS$
       Ready
    $COMPLIANCE$
-      TAN() is compatible with CT3's TAN().
+      Tan() is compatible with CT3's Tan().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      COT()
+      Cot()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Cotangent of the argument
    $SYNTAX$
-      COT( nRadiant ) -> nCotangent
+      Cot( nRadiant ) -> nCotangent
    $ARGUMENTS$
       <nRadiant>       an angle size given in radiants
    $RETURNS$
       <nCotangent>     the cotangent of <nRadiant>
    $DESCRIPTION$
-      The function COT() calculates the cotangent of an angle whose size is
-      given in radiants (full angle equals 2*Pi - see DTOR() for angle size
+      The function Cot() calculates the cotangent of an angle whose size is
+      given in radiants (full angle equals 2*Pi - see DToR() for angle size
       given in degress).
-      A common geometric interpretation of the COT() function is the
+      A common geometric interpretation of the Cot() function is the
       ankathede-counterkathede-ratio of a right-angled triangle, or,
-      cot(x) = cos(x)/sin(x)=1/tan(x).
+      Cot(x) = Cos(x)/Sin(x)=1/Tan(x).
    $EXAMPLES$
-      ? cot( 1.0 ) // --> 0.6420...
+      ? Cot( 1.0 ) // --> 0.6420...
    $TESTS$
-      cot( PI() / 4 ) == 1
-      cot( PI() / 2 ) == 0
+      Cot( Pi() / 4 ) == 1
+      Cot( Pi() / 2 ) == 0
    $STATUS$
       Ready
    $COMPLIANCE$
-      COT() is compatible with CT3's COT().
+      Cot() is compatible with CT3's Cot().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Tan(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ASIN()
+      ASin()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Arcus sine of the argument
    $SYNTAX$
-      ASIN( nSine ) -> nRadiant
+      ASin( nSine ) -> nRadiant
    $ARGUMENTS$
       <nSine>         the sine of an angle
    $RETURNS$
       <nRadiant>      the angle whose sine is <nSine>
    $DESCRIPTION$
-      The function ASIN() is the inverse function of SIN(). It takes a
+      The function ASin() is the inverse function of Sin(). It takes a
       sine value and returns the smallest(!) angle whose sine equals to the argument.
       The return value is given in radiants (full angle equals 2*Pi -
-      see DTOR() if you need to convert it into degress).
+      see DToR() if you need to convert it into degress).
       Note, that <nSine> must be between -1 and 1 and that <nRadiant>
-      is always between -PI()/2 and PI()/2.
+      is always between -Pi()/2 and Pi()/2.
    $EXAMPLES$
-      ? asin( 0.0 ) // --> 0.0
-      ? asin( 0.5 ) // --> 0.5235...
+      ? aSin( 0.0 ) // --> 0.0
+      ? aSin( 0.5 ) // --> 0.5235...
    $TESTS$
-      asin( 0.0 ) == 0.0
-      asin( Sqrt( 1 / 2 ) ) == PI() / 4
-      asin( 1.0 ) == PI() / 2
-      asin( 0.0 ) == 0.0  // and not PI(), since the smallest angle is returned !
+      aSin( 0.0 ) == 0.0
+      aSin( Sqrt( 1 / 2 ) ) == Pi() / 4
+      aSin( 1.0 ) == Pi() / 2
+      aSin( 0.0 ) == 0.0  // and not Pi(), since the smallest angle is returned !
    $STATUS$
       Ready
    $COMPLIANCE$
-      ASIN() is compatible with CT3's ASIN().
+      ASin() is compatible with CT3's ASin().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Tan(),Cot(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ACOS()
+      ACos()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Arcus cosine of the argument
    $SYNTAX$
-      ACOS( nCosine ) -> nRadiant
+      ACos( nCosine ) -> nRadiant
    $ARGUMENTS$
       <nCosine>       the cosine of an angle
    $RETURNS$
       <nRadiant>      the angle whose cosine is <nCosine>
    $DESCRIPTION$
-      The function ACOS() is the inverse function of COS(). It takes a
+      The function ACos() is the inverse function of Cos(). It takes a
       cosine value and returns the smallest(!) angle whose cosine equals to the argument.
       The return value is given in radiants (full angle equals 2*Pi -
-      see DTOR() if you need to convert it into degress).
+      see DToR() if you need to convert it into degress).
       Note, that <nCosine> must be between -1 and 1 and that <nRadiant>
-      is always between 0 and PI().
+      is always between 0 and Pi().
    $EXAMPLES$
-      ? acos( 0.0 ) // --> PI() / 2
-      ? acos( 0.5 ) // --> 1.04719...
+      ? aCos( 0.0 ) // --> Pi() / 2
+      ? aCos( 0.5 ) // --> 1.04719...
    $TESTS$
-      acos( 0.0 ) == PI() / 2
-      acos( Sqrt( 1 / 2 ) ) == PI() / 4
-      acos( 1.0 ) == 0.0
-      acos( -1.0 ) == PI()
-      acos( 0.0 ) == PI() / 2  // and not -PI()/2, although cos (-PI()/2) == 0.0 !
+      aCos( 0.0 ) == Pi() / 2
+      aCos( Sqrt( 1 / 2 ) ) == Pi() / 4
+      aCos( 1.0 ) == 0.0
+      aCos( -1.0 ) == Pi()
+      aCos( 0.0 ) == Pi() / 2  // and not -Pi()/2, although cos (-Pi()/2) == 0.0 !
    $STATUS$
       Ready
    $COMPLIANCE$
-      ACOS() is compatible with CT3's ACOS().
+      ACos() is compatible with CT3's ACos().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ATAN()
+      ATan()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Arcus tangent of the argument
    $SYNTAX$
-      ACOS( nTangent ) -> nRadiant
+      ACos( nTangent ) -> nRadiant
    $ARGUMENTS$
       <nTangent>      the tangent of an angle
    $RETURNS$
       <nRadiant>      the angle whose tangent is <nTangent>
    $DESCRIPTION$
-      The function ATAN() is the inverse function of TAN(). It takes a
+      The function ATan() is the inverse function of Tan(). It takes a
       tangent value and returns the smallest(!) angle whose tangent equals to the argument.
-      The return value is given in radiants between -PI()/2 and PI()/2
-      (full angle equals 2*Pi - see DTOR() if you need to convert it into degress).
+      The return value is given in radiants between -Pi()/2 and Pi()/2
+      (full angle equals 2*Pi - see DToR() if you need to convert it into degress).
    $EXAMPLES$
-      ? atan( 0.0 ) // --> 0.0
-      ? atan( 0.5 ) // --> 0.4636...
+      ? aTan( 0.0 ) // --> 0.0
+      ? aTan( 0.5 ) // --> 0.4636...
    $TESTS$
-      atan( 0.0 ) == 0.0
-      atan( 1.0 ) == PI() / 4
-      atan( 0.0 ) == 0.0 // and not PI(), although tan( PI() ) == 0.0 !
+      aTan( 0.0 ) == 0.0
+      aTan( 1.0 ) == Pi() / 4
+      aTan( 0.0 ) == 0.0 // and not Pi(), although Tan( Pi() ) == 0.0 !
    $STATUS$
       Ready
    $COMPLIANCE$
-      ATAN() is compatible with CT3's ATAN().
+      ATan() is compatible with CT3's ATan().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ATN2()
+      Atn2()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Arcus tangent a sine and a cosine argument
    $SYNTAX$
-      ATN2( nSine, nCosine ) -> nRadiant
+      Atn2( nSine, nCosine ) -> nRadiant
    $ARGUMENTS$
       <nSine>         the sine of an angle
       <nCosine>       the cosine of an angle
    $RETURNS$
       <nRadiant>      the angle whose tangent is <nSine>/<nCosine>
    $DESCRIPTION$
-      The function ATN2() is an alternate function for calculating
-      the arcus tangent, atn2(x,y) = atan(x/y).
+      The function Atn2() is an alternate function for calculating
+      the arcus tangent, Atn2(x,y) = aTan(x/y).
       It takes two arguments, the sine and the cosine
-      of the angle that should be calculated. Thus, in contrast to the ATAN()
-      function, ATN2() can distinguish whether the sine or the cosine has
+      of the angle that should be calculated. Thus, in contrast to the ATan()
+      function, Atn2() can distinguish whether the sine or the cosine has
       a negative sign (or both being positive or negative), so that
-      the return value can be between -PI() and PI() and covers the full
+      the return value can be between -Pi() and Pi() and covers the full
       angle.
       The return value is given in radiants (full angle equals 2*Pi -
-      see DTOR() if you need to convert it into degress).
+      see DToR() if you need to convert it into degress).
    $EXAMPLES$
-      ? atn2( 0.0, 1.0 ) // --> 0.0
-      ? atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) // --> PI() / 4
+      ? Atn2( 0.0, 1.0 ) // --> 0.0
+      ? Atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) // --> Pi() / 4
    $TESTS$
-      atn2( 0.0, 1.0 ) == 0.0
-      atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) == PI() / 4
-      atn2( -Sqrt( 1 / 2 ), -Sqrt( 1 / 2 ) ) == -3 / 4 * PI()  // atan() would return PI() / 4 !
+      Atn2( 0.0, 1.0 ) == 0.0
+      Atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) == Pi() / 4
+      Atn2( -Sqrt( 1 / 2 ), -Sqrt( 1 / 2 ) ) == -3 / 4 * Pi()  // aTan() would return Pi() / 4 !
    $STATUS$
       Ready
    $COMPLIANCE$
-      ATN2() is compatible with CT3's ATN2().
+      Atn2() is compatible with CT3's Atn2().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),SINH(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      SINH()
+      Sinh()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Hyperbolic Sine of the argument
    $SYNTAX$
-      SINH( nArea ) -> nHyperbolicSine
+      Sinh( nArea ) -> nHyperbolicSine
    $ARGUMENTS$
       <nArea>            the size of the area (see below)
    $RETURNS$
       <nHyperbolicSine>  the hyperbolic sine of <nArea>
    $DESCRIPTION$
-      The function SINH() calculates the hyperbolic sine of the argument.
-      In analytical mathematics it is defined as 1/2*(exp(nArea)-exp(-nArea)).
-      A common geometric interpretation of the SINH() function is the
+      The function Sinh() calculates the hyperbolic sine of the argument.
+      In analytical mathematics it is defined as 1/2*(Exp(nArea)-Exp(-nArea)).
+      A common geometric interpretation of the Sinh() function is the
       maximum y value of the points in the area with the given size <nArea>,
       that is bound by the x axis, a straight line through the point of
       origin (this one is fixed by the area) and the hyperbola x^2-y^2=1.
    $EXAMPLES$
-      ? sinh( 0.0 ) // --> 0.0
-      ? sinh( 1.0 ) // --> 1.1752...
+      ? Sinh( 0.0 ) // --> 0.0
+      ? Sinh( 1.0 ) // --> 1.1752...
    $TESTS$
-      sinh( 0.0 ) == 0.0
-      sinh( -0.5 ) == -sinh( 0.5 )
+      Sinh( 0.0 ) == 0.0
+      Sinh( -0.5 ) == -Sinh( 0.5 )
    $STATUS$
       Ready
    $COMPLIANCE$
-      SINH() is new in Harbours CT3's library.
+      Sinh() is new in Harbours CT3's library.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),COSH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      COSH()
+      Cosh()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Hyperbolic Cosine of the argument
    $SYNTAX$
-      COSH( nArea ) -> nHyperbolicCosine
+      Cosh( nArea ) -> nHyperbolicCosine
    $ARGUMENTS$
       <nArea>              the size of the area (see below)
    $RETURNS$
       <nHyperbolicCosine>  the hyperbolic cosine of <nArea>
    $DESCRIPTION$
-      The function COSH() calculates the hyperbolic cosine of the argument.
-      In analytical mathematics it is defined as 1/2*(exp(nArea)+exp(-nArea)).
-      A common geometric interpretation of the COSH() function is the
+      The function Cosh() calculates the hyperbolic cosine of the argument.
+      In analytical mathematics it is defined as 1/2*(Exp(nArea)+Exp(-nArea)).
+      A common geometric interpretation of the Cosh() function is the
       maximum x value of the points in the area with the given size <nArea>,
       that is bound by the x axis, a straight line through the point of
       origin (this one is fixed by the area) and the hyperbola x^2-y^2=1.
    $EXAMPLES$
-      ? cosh( 0.0 ) // --> 1.0
-      ? cosh( 1.0 ) // --> 1.5430...
+      ? Cosh( 0.0 ) // --> 1.0
+      ? Cosh( 1.0 ) // --> 1.5430...
    $TESTS$
-      cosh( 0.0 ) == 1.0
-      cosh( -0.5 ) == cosh( 0.5 )
+      Cosh( 0.0 ) == 1.0
+      Cosh( -0.5 ) == Cosh( 0.5 )
    $STATUS$
       Ready
    $COMPLIANCE$
-      COSH() is new in Harbours CT3's library.
+      Cosh() is new in Harbours CT3's library.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),TANH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      TANH()
+      Tanh()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Hyperbolic Tangent of the argument
    $SYNTAX$
-      TANH( nArea ) -> nHyperbolicTangent
+      Tanh( nArea ) -> nHyperbolicTangent
    $ARGUMENTS$
       <nArea>               the size of the area (see below)
    $RETURNS$
       <nHyperbolicTangent>  the hyperbolic tangent of <nArea>
    $DESCRIPTION$
-      The function TANH() calculates the hyperbolic tangent of the argument.
-      In analytical mathematics it is defined as SINH(x)/COSH(x).
+      The function Tanh() calculates the hyperbolic tangent of the argument.
+      In analytical mathematics it is defined as Sinh(x)/Cosh(x).
    $EXAMPLES$
-      ? tanh( 0.0 ) // --> 0.0
-      ? tanh( 1.0 ) // --> 0.7615...
+      ? Tanh( 0.0 ) // --> 0.0
+      ? Tanh( 1.0 ) // --> 0.7615...
    $TESTS$
-      tanh( 0.0 ) == 0.0
-      tanh( -0.5 ) == -tanh( 0.5 )
+      Tanh( 0.0 ) == 0.0
+      Tanh( -0.5 ) == -Tanh( 0.5 )
    $STATUS$
       Ready
    $COMPLIANCE$
-      TANH() is new in Harbours CT3's library.
+      Tanh() is new in Harbours CT3's library.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),RTOD(),DTOR(),PI()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      RTOD()
+      RToD()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Convert radiant to degree
    $SYNTAX$
-      RTOD( nRadiant ) -> nDegree
+      RToD( nRadiant ) -> nDegree
    $ARGUMENTS$
       <nRadiant>         the size of an angle in radiant
    $RETURNS$
       <nDegree>          the size of that angle in degree
    $DESCRIPTION$
-      The function RTOD() can be used to convert sizes of angles given
+      The function RToD() can be used to convert sizes of angles given
       in radiant (like those returned by the asin, acos or atan function)
       to degrees that are commonly used geometry and technics.
    $EXAMPLES$
-      ? rtod( PI() ) // --> 180
-      ? tanh( PI() / 3 ) // --> 60
+      ? RToD( Pi() ) // --> 180
+      ? Tanh( Pi() / 3 ) // --> 60
    $TESTS$
-      rtod( 0.0 ) == 0.0
-      rtod( PI() ) == 180.0
+      RToD( 0.0 ) == 0.0
+      RToD( Pi() ) == 180.0
    $STATUS$
       Ready
    $COMPLIANCE$
-      RTOD() is compatible with CT3's RTOD().
+      RToD() is compatible with CT3's RToD().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),DTOR(),PI()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      DTOR()
+      DToR()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Convert degree to radiant
    $SYNTAX$
-      DTOR( nDegree ) -> nRadiant
+      DToR( nDegree ) -> nRadiant
    $ARGUMENTS$
       <nDegree>          the size of that angle in degree
    $RETURNS$
       <nRadiant>         the size of an angle in radiant
    $DESCRIPTION$
-      The function DTOR() can be used to convert sizes of angles given
+      The function DToR() can be used to convert sizes of angles given
       in degrees to radiant (as expected by sin, cos or tan functions).
    $EXAMPLES$
-      ? dtor( 180 ) // --> PI()
-      ? dtor( 60 ) // --> PI() / 3
+      ? DToR( 180 ) // --> Pi()
+      ? DToR( 60 ) // --> Pi() / 3
    $TESTS$
-      dtor( 0.0 ) == 0.0
-      dtor( 180.0 ) == PI()
+      DToR( 0.0 ) == 0.0
+      DToR( 180.0 ) == Pi()
    $STATUS$
       Ready
    $COMPLIANCE$
-      DTOR() is compatible with CT3's DTOR().
+      DToR() is compatible with CT3's DToR().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SIN(),COS(),TAN(),COT(),ASIN(),ACOS(),ATAN(),ATN2(),SINH(),COSH(),TANH(),RTOD(),PI()
+      Sin(),Cos(),Tan(),Cot(),ASin(),ACos(),ATan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),Pi()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_AADDITION()
+      ft_AAddition()
    $CATEGORY$
       Array
    $ONELINER$
       Add elements unique of source array to target array
    $SYNTAX$
-      FT_AADDITION( <aList1>, <aList2> [, <lTrimmer> [, <lCaseSens> ] ] ) ;
+      ft_AAddition( <aList1>, <aList2> [, <lTrimmer> [, <lCaseSens> ] ] ) ;
               -> aNewArray
    $ARGUMENTS$
       <aList1> is the primary array.
@@ -35,15 +35,15 @@
       aList1 := { "apple", "orange", "pear" }
       aList2 := { "apple ", "banana", "PEAR" }
 
-      FT_AADDITION( aList1, aList2 )
+      ft_AAddition( aList1, aList2 )
       // ignores spaces, sensitive to case
       // returns { "apple", "orange", "pear", "banana", "PEAR" }
 
-      FT_AADDITION( aList1, aList2, , .F. )
+      ft_AAddition( aList1, aList2, , .F. )
       // ignores spaces, not sensitive to case
       // returns { "apple", "orange", "pear", "banana" }
 
-      FT_AADDITION( aList1, aList2, .F. , .F. )
+      ft_AAddition( aList1, aList2, .F. , .F. )
       // sensitive to spaces, not sensitive to case
       // returns { "apple", "orange", "pear", "apple ", "banana" }
    $END$

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      PADLEFT()
+      PadLeft()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Fills string to a certain length on the left
    $SYNTAX$
-      PADLEFT( <cString>, <nLength>, [<cChar|nChar>] ) -> cString
+      PadLeft( <cString>, <nLength>, [<cChar|nChar>] ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,25 +24,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      PADLEFT() is compatible with CT3's PADLEFT().
+      PadLeft() is compatible with CT3's PadLeft().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      PADRIGHT()
+      PadRight()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      PADRIGHT()
+      PadRight()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Fills string to a certain length on the right
    $SYNTAX$
-      PADRIGHT( <cString>, <nLength>, [<cChar|nChar>] ) -> cString
+      PadRight( <cString>, <nLength>, [<cChar|nChar>] ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -56,12 +56,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      PADRIGHT() is compatible with CT3's PADRIGHT().
+      PadRight() is compatible with CT3's PadRight().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      PADLEFT()
+      PadLeft()
    $END$
  */

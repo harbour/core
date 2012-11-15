@@ -4,20 +4,20 @@
 
 /* $DOC$
    $NAME$
-      FT_PROPER()
+      ft_Proper()
    $CATEGORY$
       String
    $ONELINER$
       Convert a string to proper-name case
    $SYNTAX$
-      FT_PROPER( <cString> ) -> cProperName
+      ft_Proper( <cString> ) -> cProperName
    $ARGUMENTS$
       <cString> is the string to be converted.
    $RETURNS$
       A string of the same length as <cString>, only converted to
       proper name case (upper/lower case).
    $DESCRIPTION$
-      FT_PROPER() uses a brute-force algorithm to convert a string
+      ft_Proper() uses a brute-force algorithm to convert a string
       to propername case.  First, it capitalizes the first letter of
       all words starting after a blank, dash, or apostrophe.  This
       catches most names, including special cases such as names
@@ -28,12 +28,12 @@
       It finds the first 'Mc' and capitalizes the next character after
       it.  It does this for all occurrences of Mc.
 
-      The original FT_PROPER() was written in Clipper by Glenn Scott
+      The original ft_Proper() was written in Clipper by Glenn Scott
       and Mark Zechiel; it was re-written in C (and thus, optimized
       and enhanced) by Robert DiFalco.
    $EXAMPLES$
       PROCEDURE Main( cStr )
-         OutStd( FT_PROPER( cStr ) + hb_eol() )
+         OutStd( ft_Proper( cStr ) + hb_eol() )
          RETURN
    $END$
  */

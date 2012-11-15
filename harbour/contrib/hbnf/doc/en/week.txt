@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_WEEK()
+      ft_Week()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return calendar or fiscal week data
    $SYNTAX$
-      FT_WEEK( [ <dGivenDate> ], [ <nWeekNum> ] ) -> aDateinfo
+      ft_Week( [ <dGivenDate> ], [ <nWeekNum> ] ) -> aDateinfo
    $ARGUMENTS$
       <dGivenDate> is any valid date in any date format.  Defaults
       to current system date if not supplied.
@@ -24,38 +24,38 @@
          aDateInfo[ 2 ] - The beginning date of the week
          aDateInfo[ 3 ] - The ending date of the week
    $DESCRIPTION$
-      FT_WEEK() returns an array containing data about the week
+      ft_Week() returns an array containing data about the week
       containing the given date.
 
       Normally the return data will be based on a year beginning
       on January 1st with weeks beginning on Sunday.
 
       The beginning of year date and/or beginning of week day can be
-      changed by using FT_DATECNFG(), which will affect all subsequent
-      calls to FT_WEEK() until another call to FT_DATECNFG().
+      changed by using ft_DateCnfg(), which will affect all subsequent
+      calls to ft_Week() until another call to ft_DateCnfg().
 
       The beginning of year date and beginning of week day may be reset
-      to January 1 and Sunday by calling FT_DATECNFG() with no
+      to January 1 and Sunday by calling ft_DateCnfg() with no
       parameters.
    $EXAMPLES$
       // get info about week containing 9/15/90
-      aDateInfo := FT_WEEK( SToD( "19900915" ) )
+      aDateInfo := ft_Week( SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  199037       (37th week)
       ? aDateInfo[ 2 ]   //  09/09/90     beginning of week 37
       ? aDateInfo[ 3 ]   //  09/15/90     end of week 37
 
       // get info about week 25 in year containing 9/15/90
-      aDateInfo := FT_WEEK( SToD( "19900915" ), 25 )
+      aDateInfo := ft_Week( SToD( "19900915" ), 25 )
       ? aDateInfo[ 1 ]   //  199025
       ? aDateInfo[ 2 ]   //  06/17/90   beginning of week 25
       ? aDateInfo[ 3 ]   //  06/23/90   end of week 25
 
-      // get info about week 25 in current year( 1991 )
-      aDateInfo := FT_WEEK( , 25 )
+      // get info about week 25 in current Year( 1991 )
+      aDateInfo := ft_Week( , 25 )
       ? aDateInfo[ 1 ]   //  199025
       ? aDateInfo[ 2 ]   //  06/16/91   beginning of week 25
       ? aDateInfo[ 3 ]   //  06/22/91   end of week 25
    $SEEALSO$
-      FT_DATECNFG() FT_MONTH() FT_QTR() FT_YEAR() FT_DAYTOBOW()
+      ft_DateCnfg() ft_Month() ft_Qtr() ft_Year() ft_DayToBoW()
    $END$
  */

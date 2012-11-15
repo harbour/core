@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_NOOCCUR()
+      ft_NoOccur()
    $CATEGORY$
       String
    $ONELINER$
       Find the number of times one string occurs in another
    $SYNTAX$
-      FT_NOOCCUR( <cCheckFor>, <cCheckIn> ;
+      ft_NoOccur( <cCheckFor>, <cCheckIn> ;
                   [, <lIgnoreCase> ] )      -> <nOccurrences>
    $ARGUMENTS$
       <cCheckFor> is the string to search for
@@ -28,11 +28,11 @@
       // Find the number of times "the" appears in cMemoString, case
       // insensitive
 
-      nNoOfOccurrences := FT_NOOCCUR( "the", cMemoString )
+      nNoOfOccurrences := ft_NoOccur( "the", cMemoString )
 
       // Find the number of times "the" appears in cMemoString, case
       // sensitive
 
-      nNoOfOccurrences := FT_NOOCCUR( "the", cMemoString, .T. )
+      nNoOfOccurrences := ft_NoOccur( "the", cMemoString, .T. )
    $END$
  */

@@ -30,7 +30,7 @@
       PROCEDURE Main()
          LOCAL oHtm
 
-         oHtm := THTML():New( "www\harbour.html" )
+         oHtm := THtml():New( "www\harbour.html" )
          oHtm:WriteTitle( "Harbour Reference Guide" )
          oHtm:WritePar( "HARBOUR" )
          oHtm:WriteLink( "OverView" )

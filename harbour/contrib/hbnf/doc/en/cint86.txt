@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_INT86()
+      ft_int86()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Execute a software interrupt
    $SYNTAX$
-      FT_INT86( <nInterruptNumber>, <aRegisterValues> ) -> lResult
+      ft_int86( <nInterruptNumber>, <aRegisterValues> ) -> lResult
    $ARGUMENTS$
       <nInterruptNumber> is the interrupt to execute.
 
@@ -53,7 +53,7 @@
       you to specify values for AX, DX, and DS, you would only need to
       initialize elements 1, 4, and 8.
 
-      Once you have done the required register setup, call FT_INT86(),
+      Once you have done the required register setup, call ft_int86(),
       passing the interrupt number and the register array as parameters.
       The function will load the CPU with your specified values, execute the
       interrupt, and then store the contents of the CPU registers back into
@@ -65,16 +65,16 @@
       of situations, but it will take a little work on your part.  If you need
       to pass a string that uses the DS register, store the string in element
       8;  if you need to pass a string that uses the ES register, store the
-      string in element 9.  FT_INT86() will detect that you've supplied a
+      string in element 9.  ft_int86() will detect that you've supplied a
       string instead of a numeric value and will behave accordingly.
 
       That takes care of obtaining the segment portion of the pointer.  To
       specify which register is to contain the offset, use the values REG_DS
       and REG_ES which are defined in the ftint86.ch file.  When one of these
-      values is found in an array element, it alerts FT_Int86() to use the
+      values is found in an array element, it alerts ft_int86() to use the
       offset portion of a pointer instead of a numeric value.  REG_DS tells
-      FT_Int86() to use the offset of the string in element 8, while REG_ES
-      tells FT_Int86() to use the offset of the string in element 9.
+      ft_int86() to use the offset of the string in element 8, while REG_ES
+      tells ft_int86() to use the offset of the string in element 9.
 
       All the CPU registers are sixteen bits in size.  Some, however, are
       also split into two 8-bit registers.  This function is only capable of
@@ -83,7 +83,7 @@
       pseudo-functions HighByte() and LowByte(), contained in the .ch file.
 
       To alter an 8-bit number so it will appear in the high-order byte of a
-      register when passed to the FT_INT86() function, use the MakeHI()
+      register when passed to the ft_int86() function, use the MakeHI()
       pseudo-function contained in the .ch file.
 
       When run in real mode, this function is a shell for __ftint86(),
@@ -113,7 +113,7 @@
 
       aRegs[ DS ] := "C:\misc\myfile.xxx"
       aRegs[ DX ] := REG_DS
-      FT_INT86( 33, aRegs )        // Make the call to the DOS interrupt
+      ft_int86( 33, aRegs )        // Make the call to the DOS interrupt
 
 
       // This example shows how to call the DOS "get current directory"
@@ -131,7 +131,7 @@
 
       aRegs[ DS ] := Space( 64 )
       aRegs[ SI ] := REG_DS
-      FT_INT86( 33, aRegs )
+      ft_int86( 33, aRegs )
 
       ? aRegs[ DS ]       // Display the directory name
 
@@ -145,7 +145,7 @@
       LOCAL aRegs[ 10 ]
 
       aRegs[ AX ] := 16          // Choose hi-res graphics
-      FT_INT86( 16, aRegs )
+      ft_int86( 16, aRegs )
    $INCLUDE$
       ftint86.ch
    $END$

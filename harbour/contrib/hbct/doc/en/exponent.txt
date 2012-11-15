@@ -4,26 +4,26 @@
 
 /* $DOC$
    $NAME$
-      MANTISSA()
+      Mantissa()
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
       Evaluate the mantissa of a floating point number
    $SYNTAX$
-      MANTISSA( <nFloatingPointNumber> ) --> nMantissa
+      Mantissa( <nFloatingPointNumber> ) --> nMantissa
    $ARGUMENTS$
       <nFloatingPointNumber> Designate any Harbour number.
    $RETURNS$
-      MANTISSA() returns the mantissa of the <nFloatingPointNumber> number.
+      Mantissa() returns the mantissa of the <nFloatingPointNumber> number.
    $DESCRIPTION$
-      This function supplements EXPONENT() to return the mantissa of the
+      This function supplements Exponent() to return the mantissa of the
       <nFloatingPointNumber> number.
 
       Note:  The mantissa value can be 0 or in the range of 1 to 2.
 
              The following calculation reproduces the original value:
 
-      MANTISSA( <nFloatingPointNumber> ) * 2 ^ EXPONENT( <nFloatingPointNumber> ) =
+      Mantissa( <nFloatingPointNumber> ) * 2 ^ Exponent( <nFloatingPointNumber> ) =
       <nFloatingPointNumber>
 
       TODO: add documentation
@@ -34,43 +34,43 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      MANTISSA() is compatible with CT3's MANTISSA().
+      Mantissa() is compatible with CT3's Mantissa().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      EXPONENT()
+      Exponent()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      EXPONENT()
+      Exponent()
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
       Evaluate the exponent of a floating point number
    $SYNTAX$
-      EXPONENT( <nFloatingPointNumber> ) --> nExponent
+      Exponent( <nFloatingPointNumber> ) --> nExponent
    $ARGUMENTS$
       <nFloatingPointNumber> Designate any Harbour number.
    $RETURNS$
-      EXPONENT() returns the exponent of the <nFloatingPointNumber> number
+      Exponent() returns the exponent of the <nFloatingPointNumber> number
       in base 2.
    $DESCRIPTION$
-      This function supplements MANTISSA() to return the exponent of the
+      This function supplements Mantissa() to return the exponent of the
       <nFloatingPointNumber> number.
 
       Values > 1 or values < -1 return a positive number 0 to 1023.
 
       Values < 1 or values > -1 return a negative number -1 to -1023.
 
-      The EXPONENT( 0 ), return 0.
+      The Exponent( 0 ), return 0.
 
       The following calculation reproduces the original value:
 
-      2^EXPONENT(<nFloatingPointNumber>) * MANTISSA(<nFloatingPointNumber>) =
+      2^Exponent(<nFloatingPointNumber>) * Mantissa(<nFloatingPointNumber>) =
       <nFloatingPointNumber>
 
       TODO: add documentation
@@ -81,12 +81,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      EXPONENT() is compatible with CT3's EXPONENT()
+      Exponent() is compatible with CT3's Exponent()
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      MANTISSA()
+      Mantissa()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_NWLSTAT()
+      ft_NWLStat()
    $CATEGORY$
       NetWare
    $ONELINER$
       Return the current Novell NetWare logical station number
    $SYNTAX$
-      FT_NWLSTAT() -> nStatNum
+      ft_NWLStat() -> nStatNum
    $ARGUMENTS$
       None
    $RETURNS$
@@ -24,11 +24,11 @@
       under NetWare 286, or from 1 to 250 under NetWare 386.  This is *not*
       the same as a physical station number.
 
-      This function requires FT_INT86().
+      This function requires ft_int86().
 
       This function does NOT test for the existence of the NetWare shell.
       The behavior is undefined if no shell is loaded.
    $EXAMPLES$
-      ? "Logical station: " + Str( FT_NWLSTAT() )
+      ? "Logical station: " + Str( ft_NWLStat() )
    $END$
  */

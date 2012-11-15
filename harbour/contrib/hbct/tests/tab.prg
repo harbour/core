@@ -130,7 +130,7 @@ PROCEDURE Main()
 
 #if 0
    ? "Test with a MEMOEDITed string:"
-   ? "  Now, a memoedit() will start. Please type a text, use tab characters"
+   ? "  Now, a MemoEdit() will start. Please type a text, use tab characters"
    ? "  and make sure, you make use of soft and hard returns !"
    ? "  ...press any key to start the memoedit now..."
    ?

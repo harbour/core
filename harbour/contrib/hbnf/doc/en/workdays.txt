@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_WORKDAYS()
+      ft_Workdays()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return number of work days between two dates
    $SYNTAX$
-      FT_WORKDAYS( [ <dStart> ], [ <dStop> ] ) -> nDays
+      ft_Workdays( [ <dStart> ], [ <dStop> ] ) -> nDays
    $ARGUMENTS$
       <dStart> is the beginning value for the date range.
 
@@ -20,14 +20,14 @@
       The number of work days (Monday through Friday) between two dates.
 
    $DESCRIPTION$
-      FT_WORKDAYS() returns a number indicating the number of work days
+      ft_Workdays() returns a number indicating the number of work days
       between two dates.  Work days are considered Monday through Friday.
       (The five day work week none of us Clipper programmers have.)
 
    $EXAMPLES$
-      ? FT_WorkDays( SToD( "19910516" ), SToD( "19910520" ) ) // 3  (Th - Mo)
-      ? FT_WorkDays( SToD( "19910518" ), SToD( "19910519" ) ) // 0  (Sa - Su)
-      ? FT_WorkDays( SToD( "19910517" ), SToD( "19910517" ) ) // 1  (Fr - Fr)
+      ? ft_Workdays( SToD( "19910516" ), SToD( "19910520" ) ) // 3  (Th - Mo)
+      ? ft_Workdays( SToD( "19910518" ), SToD( "19910519" ) ) // 0  (Sa - Su)
+      ? ft_Workdays( SToD( "19910517" ), SToD( "19910517" ) ) // 1  (Fr - Fr)
    $SEEALSO$
 
    $END$

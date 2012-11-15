@@ -19,7 +19,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBEVAL()
+      dbEval()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -27,7 +27,7 @@
    $ONELINER$
       Performs a code block operation on the current Database
    $SYNTAX$
-      DBEVAL( <bBlock>,
+      dbEval( <bBlock>,
       [<bFor>], [<bWhile>],
       [<nNext>], [<nRecord>],
       [<lRest>] ) --> NIL
@@ -44,7 +44,7 @@
 
       <lRest> Toggle to rewind record pointer
    $RETURNS$
-      DBEVAL() always returns NIL
+      dbEval() always returns NIL
    $DESCRIPTION$
       Performs a code block operation on the current Database
    $EXAMPLES$
@@ -68,7 +68,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      EVAL()
+      Eval()
    $END$
  */
 
@@ -84,7 +84,7 @@
    $ONELINER$
       Alias name of a work area
    $SYNTAX$
-      Dbf() --> <cWorkArea>
+      DBF() --> <cWorkArea>
    $RETURNS$
       <cWorkArea> Name of alias
    $DESCRIPTION$
@@ -107,7 +107,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      ALIAS()
+      Alias()
    $END$
  */
 
@@ -115,7 +115,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBAPPEND()
+      dbAppend()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -123,26 +123,26 @@
    $ONELINER$
       Appends a new record to a database file.
    $SYNTAX$
-      DbAppend( [<lLock>] ) --> NIL
+      dbAppend( [<lLock>] ) --> NIL
    $ARGUMENTS$
       <lLock> Toggle to release record locks
    $RETURNS$
-      DbAppend() always returns NIL
+      dbAppend() always returns NIL
    $DESCRIPTION$
       This function add a new record to the end of the database
       in the selected or aliased work area. All fields in that
       database will be given empty data values - character fields
-      will be filled with blank spaces,date fields with CTOD('//'),
+      will be filled with blank spaces,date fields with CToD('//'),
       numeric fields with 0, logical fields with .F., and memo fields
       with NULL bytes. The header of the database is not updated until
       the record is flushed from the buffer and the contents are
       written to the disk.
 
-      Under a networking enviroment, DBAPPEND() performs an additional
+      Under a networking enviroment, dbAppend() performs an additional
       operation: It attrmps to lock the newly added record. If
       the database file is currently locked or if a locking assignment
-      if made to LASTREC()+1, NETERR() will return a logical true (.T.)
-      immediately after the DBAPPEND() function. This function does
+      if made to LastRec()+1, NetErr() will return a logical true (.T.)
+      immediately after the dbAppend() function. This function does
       not unlock the locked records.
 
       If <lLock> is passed a logical true (.T.) value, it will
@@ -164,7 +164,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBUNLOCK(),DBUNLOCKALL()
+      dbUnlock(),dbUnlockAll()
    $END$
  */
 
@@ -172,7 +172,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBCLEARFILTER()
+      dbClearFilter()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -180,9 +180,9 @@
    $ONELINER$
       Clears the current filter condiction in a work area
    $SYNTAX$
-      DbClearFilTer() --> NIL
+      dbClearFilter() --> NIL
    $RETURNS$
-      DbClearFilTer() always returns NIL
+      dbClearFilter() always returns NIL
    $DESCRIPTION$
       This function clears any active filter condiction
       for the current or selected work area.
@@ -201,7 +201,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBSETFILTER(),DBFILTER()
+      dbSetFilter(),dbFilter()
    $END$
  */
 
@@ -209,7 +209,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBCLOSEALL()
+      dbCloseAll()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -217,9 +217,9 @@
    $ONELINER$
       Close all open files in all work areas.
    $SYNTAX$
-      DbCloseAll() --> NIL
+      dbCloseAll() --> NIL
    $RETURNS$
-      DBCLOSEALL() always return NIL
+      dbCloseAll() always return NIL
    $DESCRIPTION$
       This function close all open databases and all associated
       indexes. In addition, it closes all format files and moves
@@ -240,7 +240,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBUSEAREA(),DBCLOSEAREA()
+      dbUseArea(),dbCloseArea()
    $END$
  */
 
@@ -248,7 +248,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBCLOSEAREA()
+      dbCloseArea()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -256,7 +256,7 @@
    $ONELINER$
       Close a database file in a work area.
    $SYNTAX$
-      DbCloseArea()
+      dbCloseArea()
    $DESCRIPTION$
       This function  will close any database open in the selected
       or aliased work area.
@@ -274,7 +274,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBUSEAREA(),DBCLOSEALL()
+      dbUseArea(),dbCloseAll()
    $END$
  */
 
@@ -282,7 +282,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBCOMMIT()
+      dbCommit()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -290,7 +290,7 @@
    $ONELINER$
       Updates all index and database buffers for a given workarea
    $SYNTAX$
-      DBCOMMIT()
+      dbCommit()
    $DESCRIPTION$
       This function updates all of the information for a give,selected,
       or active workarea. This operation includes all database and index
@@ -320,7 +320,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBCLOSEALL(),DBCOMMITALL(),DBUNLOCK()
+      dbCloseAll(),dbCommitAll(),dbUnlock()
    $END$
  */
 
@@ -328,7 +328,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBCOMMITALL()
+      dbCommitAll()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -336,7 +336,7 @@
    $ONELINER$
       Flushes the memory buffer and performs a hard-disk write
    $SYNTAX$
-      DBCOMMIT()
+      dbCommit()
    $DESCRIPTION$
       This function performs a hard-disk write for all work areas.
       Before the disk write is performed,all buffers are flushed.
@@ -370,7 +370,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBCLOSEALL(),DBCOMMIT(),DBUNLOCK()
+      dbCloseAll(),dbCommit(),dbUnlock()
    $END$
  */
 
@@ -378,7 +378,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBCREATE()
+      dbCreate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -386,7 +386,7 @@
    $ONELINER$
       Creates an empty database from a array.
    $SYNTAX$
-      DBCREATE( <cDatabase>, <aStruct>, [<cDriver>], [<lOpen>],
+      dbCreate( <cDatabase>, <aStruct>, [<cDriver>], [<lOpen>],
                 [<cAlias>] )
    $ARGUMENTS$
       <cDatabase> Name of database to be create
@@ -410,7 +410,7 @@
       multidimensional array <aStruct>. If no file extension is use with <cDatabase>
       the .dbf extension is assumed.
       The array specified in <aStruct> must follow a few guidelines when being
-      built prior to a call to DBCREATE():
+      built prior to a call to dbCreate():
 
       - All subscripts values in the second dimension must be set to proper values
 
@@ -423,7 +423,7 @@
         for 'N'): however, the first letter of this array element must
         be a proper value.
 
-      The DBCREATE( ) function does not use the decimal field to
+      The dbCreate( ) function does not use the decimal field to
       calculate the length of a character held longer than 256. Values
       up to the maximum length of a character field (which is 65,519 bytes)
       are stored directly in the database in the length attribute if that
@@ -465,7 +465,7 @@
       Library is rdd
       Header  is dbstruct.ch
    $SEEALSO$
-      AFIELDS()*,DBSTRUCT()
+      AFields()*,dbStruct()
    $END$
  */
 
@@ -473,7 +473,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBDELETE()
+      dbDelete()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -481,7 +481,7 @@
    $ONELINER$
       Mark a record for deletion in a database.
    $SYNTAX$
-      DBDELETE()
+      dbDelete()
    $DESCRIPTION$
       This function marks a record for deletion in the selected
       or aliased work area. If the DELETED setting is on, the record
@@ -489,7 +489,7 @@
       is moved to another record.
 
       In a networking situation, this function requires that the record
-      be locked prior to issuing the DBDELETE() function.
+      be locked prior to issuing the dbDelete() function.
    $EXAMPLES$
       nId := 10
       USE testid INDEX testid NEW
@@ -506,7 +506,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBRECALL()
+      dbRecall()
    $END$
  */
 
@@ -514,7 +514,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBFILTER()
+      dbFilter()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -522,9 +522,9 @@
    $ONELINER$
       Return the filter expression in a work area
    $SYNTAX$
-      DBFILTER() --> cFilter
+      dbFilter() --> cFilter
    $RETURNS$
-      DBFILTER() returns the filter expression.
+      dbFilter() returns the filter expression.
    $DESCRIPTION$
       This function return the expression of the SET FILTER TO command
       for the current or designated work area. If no filter condition
@@ -545,7 +545,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBRELATION(),DBRSELECT()
+      dbRelation(),dbRSelect()
    $END$
  */
 
@@ -553,7 +553,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBGOBOTTOM()
+      dbGoBottom()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -561,13 +561,13 @@
    $ONELINER$
       Moves the record pointer to the bottom of the database.
    $SYNTAX$
-      DBGOBOTTOM()
+      dbGoBottom()
    $DESCRIPTION$
       This function moves the record pointer in the selected or aliased
       work area to the end of the file. The position of the record pointer
       is affected by the values in the index key or by an active FILTER
       condition. Otherwise, if no index is active or if no filter condition
-      is present, the value of the record pointer will be LASTREC().
+      is present, the value of the record pointer will be LastRec().
    $EXAMPLES$
       USE tests
       dbGoTop()
@@ -582,7 +582,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOTOP()
+      Bof(),Eof(),dbSkip(),dbSeek(),dbGoTop()
    $END$
  */
 
@@ -590,7 +590,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBGOTO()
+      dbGoto()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -598,7 +598,7 @@
    $ONELINER$
       Position the record pointer to a specific location.
    $SYNTAX$
-      DBGOTO(<xRecordNumber>)
+      dbGoto(<xRecordNumber>)
    $ARGUMENTS$
       <xRecordNumber> Record number or unique identity
    $DESCRIPTION$
@@ -612,8 +612,8 @@
       is a unique primary key while in other formats,<xRecordNumber> could
       be an array offset if the data set was an array.
 
-      Issuing a DBGOTO(RECNO()) call in a network enviroment will refresh
-      the database and index buffers. This is the same as a DBSKIP(0) call.
+      Issuing a dbGoto(RecNo()) call in a network enviroment will refresh
+      the database and index buffers. This is the same as a dbSkip(0) call.
    $EXAMPLES$
       The following example uses dbGoto() TO iteratively process
       every fourth record:
@@ -632,7 +632,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      BOF(),EOF(),DBGOTOP(),DBGOBOTTOM(),DBSEEK(),DBSKIP()
+      Bof(),Eof(),dbGoTop(),dbGoBottom(),dbSeek(),dbSkip()
    $END$
  */
 
@@ -640,7 +640,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBGOTOP()
+      dbGoTop()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -648,13 +648,13 @@
    $ONELINER$
       Moves the record pointer to the top of the database.
    $SYNTAX$
-      DBGOTOP()
+      dbGoTop()
    $DESCRIPTION$
       This function moves the record pointer in the selected or aliased
       work area to the top of the file. The position of the record pointer
       is affected by the values in the index key or by an active FILTER
       condition. Otherwise, if no index is active or if no filter condition
-      is present, the value of RECNO() will be 1.
+      is present, the value of RecNo() will be 1.
    $EXAMPLES$
       USE tests
       dbGoTop()
@@ -669,7 +669,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      BOF(),EOF(),DBSKIP(),DBSEEK(),DBGOBOTTOM()
+      Bof(),Eof(),dbSkip(),dbSeek(),dbGoBottom()
    $END$
  */
 
@@ -677,7 +677,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBRECALL()
+      dbRecall()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -685,15 +685,15 @@
    $ONELINER$
       Recalls a record previousy marked for deletion.
    $SYNTAX$
-      DBRECALL()
+      dbRecall()
    $DESCRIPTION$
       This function unmarks those records marked for deletion and
       reactivates them in the aliased or selected work area. If a record
       is DELETED and the DELETED setting is on, the record will still be
-      visible for a DBRECALL() provided that the database record pointer
+      visible for a dbRecall() provided that the database record pointer
       has not been skipped. Once a record marked for deletion with the
       DELETE setting ON has been skipped, it no longer can be brought back
-      with DBRECALL().
+      with dbRecall().
    $EXAMPLES$
       USE test NEW
       dbGoto( 10 )
@@ -709,7 +709,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBDELETE()
+      dbDelete()
    $END$
  */
 
@@ -717,7 +717,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBRLOCK()
+      dbRLock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -725,11 +725,11 @@
    $ONELINER$
       This function locks the record based on identity
    $SYNTAX$
-      DBRLOCK([<xIdentity>]) --> lSuccess
+      dbRLock([<xIdentity>]) --> lSuccess
    $ARGUMENTS$
       <xIdentity> Record identifier
    $RETURNS$
-      DBRLOCK() returns a logical true (.T.) if lock was successful
+      dbRLock() returns a logical true (.T.) if lock was successful
    $DESCRIPTION$
       This function attempts to lock a record which is identified
       by <xIdentity> in the active data set. If the lock is successful
@@ -754,7 +754,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBUNLOCK(),DBUNLOCKALL(),FLOCK(),RLOCK()
+      dbUnlock(),dbUnlockAll(),FLock(),RLock()
    $END$
  */
 
@@ -762,7 +762,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBRLOCKLIST()
+      dbRLockList()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -770,7 +770,7 @@
    $ONELINER$
       This function return a list of locked records in the database work area
    $SYNTAX$
-      DBRLOCKLIST() --> aRecordLocks
+      dbRLockList() --> aRecordLocks
    $RETURNS$
       <aRecordList> is an array of lock records
    $DESCRIPTION$
@@ -800,7 +800,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      RLOCK(),DBRLOCK(),DBRUNLOCK()
+      RLock(),dbRLock(),dbRUnlock()
    $END$
  */
 
@@ -808,7 +808,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBRUNLOCK()
+      dbRUnlock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -816,7 +816,7 @@
    $ONELINER$
       Unlocks a record based on its identifier
    $SYNTAX$
-      DBRUNLOCK([<xIdentity>])
+      dbRUnlock([<xIdentity>])
    $ARGUMENTS$
       <xIdentity> Record identifier, typically a record number
    $DESCRIPTION$
@@ -841,7 +841,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      RLOCK(),DBRLOCK(),DBRLOCKLIST()
+      RLock(),dbRLock(),dbRLockList()
    $END$
  */
 
@@ -849,7 +849,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBSEEK()
+      dbSeek()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -857,7 +857,7 @@
    $ONELINER$
       Searches for a value based on an active index.
    $SYNTAX$
-      DBSEEK(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
+      dbSeek(<expKey>, [<lSoftSeek>],[<lFindLast>]) --> lFound
    $ARGUMENTS$
       <expKey> Any expression
 
@@ -866,25 +866,25 @@
       <lFindLast> is an optional logical value that set the current
       record position to the last record if successful
    $RETURNS$
-      DBSEEK() returns logical true (.T.) if found, otherwise false
+      dbSeek() returns logical true (.T.) if found, otherwise false
    $DESCRIPTION$
       This function searches for the first record in a database file whose
       index key matches <expKey>. If the item is found, the function will
-      return a logical true (.T.), the value of FOUND() wilI be a logical
-      true (.T.), and the value of EOF() wilI be a logical false (.F.). If
+      return a logical true (.T.), the value of Found() wilI be a logical
+      true (.T.), and the value of Eof() wilI be a logical false (.F.). If
       no item is found. then the function will return a logical false, the
-      value of FOUND( ) will be a logical false (.F.), and the value of
-      EOF() will be a logical true (.T.).
+      value of Found( ) will be a logical false (.F.), and the value of
+      Eof() will be a logical true (.T.).
 
       This function always "rewinds" the database pointer and starts the
       search from the top of the file.
 
       If the SOFTSEEK flag is on or if <lSoftSeek> is set to a logical true
-      (.T.) the value of FOUND() will be a logical false and EOF() will be
+      (.T.) the value of Found() will be a logical false and Eof() will be
       false if there is an item in the index key with a greater value than
       the key expression <expKey>; at this point the record pointer will
       position itself on that record. However, if there is no greater key
-      in the index,EOF() will return a logical true (.T.) value. If
+      in the index,Eof() will return a logical true (.T.) value. If
       <lSoftSeek> is not passed, the function will look to the internal
       status of SOFTSEEK before performing the operation. The default of
       <lSoftSeek> is a logical false (.F.)
@@ -911,11 +911,11 @@
    $STATUS$
       S
    $COMPLIANCE$
-      DBSEEK() is  Compatible with CA-Cl*pper 5.3
+      dbSeek() is  Compatible with CA-Cl*pper 5.3
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBGOBOTTOM(),DBGOTOP(),DBSKIP(),EOF(),BOF(),FOUND()
+      dbGoBottom(),dbGoTop(),dbSkip(),Eof(),Bof(),Found()
    $END$
  */
 
@@ -923,7 +923,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBSELECTAREA()
+      dbSelectArea()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -931,7 +931,7 @@
    $ONELINER$
       Change to another work area
    $SYNTAX$
-      DBSELECTAREA(<xArea>) -
+      dbSelectArea(<xArea>) -
    $ARGUMENTS$
       <xArea> Alias or work area
    $DESCRIPTION$
@@ -940,10 +940,10 @@
       select the numeric work area; if <xArea> is character,then it will
       select the work area with the alias name.
 
-      DBSELECTAREA(0) will select the next avaliable and unused work area.
+      dbSelectArea(0) will select the next avaliable and unused work area.
       Up to 255 work areas are supported. Each work area has its own alias
-      and record pointer, as well as its own FOUND(), DBFILTER(),
-      DBRSELECT() and DBRELATION() function values.
+      and record pointer, as well as its own Found(), dbFilter(),
+      dbRSelect() and dbRelation() function values.
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL nId
@@ -964,7 +964,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBUSEAREA(),SELECT()
+      dbUseArea(),Select()
    $END$
  */
 
@@ -972,7 +972,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBSETDRIVER()
+      dbSetDriver()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -980,11 +980,11 @@
    $ONELINER$
       Establishes the RDD name for the selected work area
    $SYNTAX$
-      DBSETDRIVER( [<cDriver>] ) --> cCurrentDriver
+      dbSetDriver( [<cDriver>] ) --> cCurrentDriver
    $ARGUMENTS$
       <cDriver> Optional database driver name
    $RETURNS$
-      DBSETDRIVER() returns the name of active driver
+      dbSetDriver() returns the name of active driver
    $DESCRIPTION$
       This function returns the name of the current database driver for the
       selected work area. The default will be "DBFNTX". If specified,
@@ -1000,7 +1000,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBUSEAREA()
+      dbUseArea()
    $END$
  */
 
@@ -1008,7 +1008,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBSKIP()
+      dbSkip()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1016,13 +1016,13 @@
    $ONELINER$
       Moves the record pointer in the selected work area.
    $SYNTAX$
-      DBSKIP([<nRecords>])
+      dbSkip([<nRecords>])
    $ARGUMENTS$
       <nRecords> Numbers of records to move record pointer.
    $DESCRIPTION$
       This function moves the record pointer <nRecords> in the selected or
       aliased work area. The default value for <nRecords> will be 1.
-      A DBSKIP(0) will flush and refresh the internal database bufer and
+      A dbSkip(0) will flush and refresh the internal database bufer and
       make any changes made to the record visible without moving the record
       pointer in either direction.
    $EXAMPLES$
@@ -1042,7 +1042,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      BOF(),DBGOBOTTOM(),DBGOTOP(),DBSEEK(),EOF()
+      Bof(),dbGoBottom(),dbGoTop(),dbSeek(),Eof()
    $END$
  */
 
@@ -1050,7 +1050,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBSETFILTER()
+      dbSetFilter()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1058,7 +1058,7 @@
    $ONELINER$
       Establishes a filter condition for a work area.
    $SYNTAX$
-      DBSETFILTER(<bCondition>, [<cCondition>])
+      dbSetFilter(<bCondition>, [<cCondition>])
    $ARGUMENTS$
       <bCondition> Code block expression for filtered evaluation.
 
@@ -1067,7 +1067,7 @@
       This function masks a database so that only those records that meet
       the condition prescribed by the expression in the code block
       <bCondition> and literally expressed as <cCondition> are visible.
-      If <cCondition> is not passed to this function,then the DBFILTER()
+      If <cCondition> is not passed to this function,then the dbFilter()
       function will return an empty string showing no filter in that work
       area which in fact,would be not correct.
    $EXAMPLES$
@@ -1082,7 +1082,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBFILTER(),DBCLEARFILTER()
+      dbFilter(),dbClearFilter()
    $END$
  */
 
@@ -1090,7 +1090,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBSTRUCT()
+      dbStruct()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1098,15 +1098,15 @@
    $ONELINER$
       Creates a multidimensional array of a database structure.
    $SYNTAX$
-      DBSTRUCT() --> aStruct
+      dbStruct() --> aStruct
    $RETURNS$
-      DBSTRUCT() returns an array pointer to database structure
+      dbStruct() returns an array pointer to database structure
    $DESCRIPTION$
       This function returns a multidimensional array. This array has array
       pointers to other arrays,each of which contains the characteristic
       of a field in the active work area. The lenght of this array is based
       in the number of fields in that particular work area. In other words,
-      LEN(DBSTRUCT()) is equal to the value obtained from FCOUNT().
+      Len(dbStruct()) is equal to the value obtained from FCount().
       Each subscript position
    $EXAMPLES$
       #include "dbstruct.ch"
@@ -1127,7 +1127,7 @@
       Library is rdd
       Header  is dbstruct.ch
    $SEEALSO$
-      AFIELDS()*
+      AFields()*
    $END$
  */
 
@@ -1135,7 +1135,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBUNLOCK()
+      dbUnlock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1143,7 +1143,7 @@
    $ONELINER$
       Unlock a record or release a file lock
    $SYNTAX$
-      DBUNLOCK()
+      dbUnlock()
    $DESCRIPTION$
       This function releases the file or record lock in the currently
       selected or aliased work area. It will not unlock an associated lock
@@ -1166,7 +1166,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBUNLOCKALL(),FLOCK(),RLOCK()
+      dbUnlockAll(),FLock(),RLock()
    $END$
  */
 
@@ -1174,7 +1174,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBUNLOCKALL()
+      dbUnlockAll()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1182,7 +1182,7 @@
    $ONELINER$
       Unlocks all records and releases all file locks in all work areas.
    $SYNTAX$
-      DBUNLOCKALL()
+      dbUnlockAll()
    $DESCRIPTION$
       This function will remove all file and record locks in all work area.
    $EXAMPLES$
@@ -1206,7 +1206,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBUNLOCK(),FLOCK(),RLOCK()
+      dbUnlock(),FLock(),RLock()
    $END$
  */
 
@@ -1214,7 +1214,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DBUSEAREA()
+      dbUseArea()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1222,7 +1222,7 @@
    $ONELINER$
       Opens a work area and uses a database file.
    $SYNTAX$
-      DBUSEAREA( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
+      dbUseArea( [<lNewArea>], [<cDriver>], <cName>, [<xcAlias>],
       [<lShared>], [<lReadonly>])
    $ARGUMENTS$
       <lNewArea>  A optional logical expression for the new work area
@@ -1268,6 +1268,6 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBCLOSEAREA(),DBSETDRIVER(),SELECT(),SET()
+      dbCloseArea(),dbSetDriver(),Select(),Set()
    $END$
  */

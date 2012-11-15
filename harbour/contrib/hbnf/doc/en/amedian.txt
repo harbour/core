@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_AMEDIAN()
+      ft_AMedian()
    $CATEGORY$
       Array
    $ONELINER$
       Find middle value in array, or average of two middle values
    $SYNTAX$
-      FT_AMEDIAN( <aArray> [, <nStart> [, <nEnd> ] ] )
+      ft_AMedian( <aArray> [, <nStart> [, <nEnd> ] ] )
                  -> nMedian
    $ARGUMENTS$
       <aArray> is the array containing the elements to be averaged.
@@ -31,12 +31,12 @@
       more reflect a more useful average when there are extreme
       values in the set.
    $EXAMPLES$
-      FT_AMEDIAN( aArray )        // Return Median for entire array
+      ft_AMedian( aArray )        // Return Median for entire array
 
-      FT_AMEDIAN( aArray, 2 )     // Return Median for elements from 2 to end
+      ft_AMedian( aArray, 2 )     // Return Median for elements from 2 to end
 
-      FT_AMEDIAN( aArray, , 9 )   // Return Median for 1st 9 elements
+      ft_AMedian( aArray, , 9 )   // Return Median for 1st 9 elements
 
-      FT_AMEDIAN( aArray, 8, 40 ) // Return Median for elements 8 to 40
+      ft_AMedian( aArray, 8, 40 ) // Return Median for elements 8 to 40
    $END$
  */

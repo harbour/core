@@ -17,7 +17,7 @@
  *    Documentation for: __SetFunction(), SET FUNCTION
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    Documentation for: SetTypeAhead()
+ *    Documentation for: SetTypeahead()
  *    Documentation for: __XHELP()
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
@@ -60,7 +60,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SET()
+      Set()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -80,16 +80,16 @@
 
               _SET_ALTERNATE   <lFlag> | <cOnOff>
 
-                   If enabled, QOUT() and QQOUT() write to the screen and to
+                   If enabled, QOut() and QQOut() write to the screen and to
                    a file, provided that a file has been opened or created
                    with _SET_ALTFILE. If disabled, which is the default,
-                   QOUT() and QQOUT() only write to the screen (and/or to
+                   QOut() and QQOut() only write to the screen (and/or to
                    the PRINTFILE). Defaults to disabled.
 
               _SET_ALTFILE     <cFileName>             <lAdditive>
 
-                   When set, creates or opens file to write QOUT() and
-                   QQOUT() output to. If <lAdditive> is TRUE and the file
+                   When set, creates or opens file to write QOut() and
+                   QQOut() output to. If <lAdditive> is TRUE and the file
                    already exists, the file is opened and positioned at end
                    of file. Otherwise, the file is created. If a file is
                    already opened, it is closed before the new file is
@@ -119,7 +119,7 @@
 
                    When enabled, which is the default, pressing Alt+C or
                    Ctrl+Break terminates the program. When disabled, both
-                   keystrokes can be read by INKEY(). Note: SET KEY has
+                   keystrokes can be read by Inkey(). Note: SET KEY has
                    precedence over SET CANCEL.
 
               _SET_COLOR       <cColorSet>
@@ -148,7 +148,7 @@
 
                    If enabled, which is the default, all screen output goes
                    to the screen. When disabled, screen output is suppressed
-                   (Note: This setting does not affect OUTSTD() or OUTERR()).
+                   (Note: This setting does not affect OutStd() or OutErr()).
 
               _SET_CURSOR      <nCursorType>
 
@@ -170,7 +170,7 @@
 
                    When set to .T., pressing Alt+D activates the debugger.
                    When set to .F., which is the default, Alt+D can be read
-                   by INKEY(). (Also affected by AltD(1) and AltD(0))
+                   by Inkey(). (Also affected by AltD(1) and AltD(0))
 
               _SET_DECIMALS    <nNumberOfDecimals>
 
@@ -178,7 +178,7 @@
                    printing numeric values when SET FIXED is ON. Defaults to
                    2. If SET FIXED is OFF, then SET DECIMALS is only used to
                    determine the number of decimal digits to use after using
-                   EXP(), LOG(), SQRT(), or division. Other math operations
+                   Exp(), LOG(), Sqrt(), or division. Other math operations
                    may adjust the number of decimal digits that the result
                    will display. Note: This never affects the precision of
                    a number. Only the display format is affected.
@@ -205,7 +205,7 @@
 
               _SET_DEVICE      <cDeviceName>
 
-                   Selects the output device for DEVOUT(). When set to
+                   Selects the output device for DevOut(). When set to
                    "PRINTER", all output is sent to the printer device or
                    file set by _SET_PRINTFILE. When set to anything else,
                    all output is sent to the screen. Defaults to "SCREEN".
@@ -213,7 +213,7 @@
               _SET_EOF         <lFlag> | <cOnOff>
 
                    Defaults to FALSE on UN*X, but defaults to TRUE on
-                   everything else. If set to FALSE, then CHR( 26 ) does not
+                   everything else. If set to FALSE, then Chr( 26 ) does not
                    get written when using COPY TO DELIMITED, COPY TO SDF,
                    or when closing any of the various text files that are
                    created using various SET values.
@@ -242,7 +242,7 @@
 
               _SET_EVENTMASK   <nEventCodes>
 
-                   Determines which events INKEY() will respond to.
+                   Determines which events Inkey() will respond to.
                    INKEY_MOVE allows mouse movement events. INKEY_LDOWN
                    allows the left mouse button down click. INKEY_LUP
                    allows the left mouse button up click. INKEY_RDOWN
@@ -288,8 +288,8 @@
 
               _SET_EXTRAFILE   <cFileName>             <lAdditive>
 
-                   When set, creates or opens file to write QOUT() and
-                   QQOUT() output to. If <lAdditive> is TRUE and the file
+                   When set, creates or opens file to write QOut() and
+                   QQOut() output to. If <lAdditive> is TRUE and the file
                    already exists, the file is opened and positioned at end
                    of file. Otherwise, the file is created. If a file is
                    already opened, it is closed before the new file is
@@ -329,9 +329,9 @@
               _SET_MARGIN      <nColumns>
 
                    Sets the left margin for all printed output. The default
-                   value is 0. Note: PCOL() reflects the printer's column
+                   value is 0. Note: PCol() reflects the printer's column
                    position including the margin (e.g., SET MARGIN TO 5
-                   followed by DEVPOS(5, 10) makes PCOL() return 15).
+                   followed by DevPos(5, 10) makes PCol() return 15).
 
               _SET_MBLOCKSIZE <nMemoBlockSize>
 
@@ -368,16 +368,16 @@
 
               _SET_PRINTER     <lFlag> | <cOnOff>
 
-                   If enabled, QOUT() and QQOUT() write to the screen and to
+                   If enabled, QOut() and QQOut() write to the screen and to
                    a file, provided that a file has been opened or created
                    with _SET_ALTFILE. If disabled, which is the default,
-                   QOUT() and QQOUT() only write to the screen (and/or to
+                   QOut() and QQOut() only write to the screen (and/or to
                    the ALTFILE).
 
               _SET_PRINTFILE   <cFileName>             <lAdditive>
 
-                   When set, creates or opens file to write QOUT(), QQOUT()
-                   and DEVOUT() output to. If <lAdditive> is TRUE and the
+                   When set, creates or opens file to write QOut(), QQOut()
+                   and DevOut() output to. If <lAdditive> is TRUE and the
                    file already exists, the file is opened and positioned
                    at end of file. Otherwise, the file is created. If a
                    file is already opened, it is closed before the new file
@@ -400,9 +400,9 @@
 
                    When enabled, a SEEK that fails will position the record
                    pointer to the first key that is higher than the sought
-                   after key or to LASTREC() + 1 if there is no higher key.
+                   after key or to LastRec() + 1 if there is no higher key.
                    When disabled, which is the default, a SEEK that fails
-                   will position the record pointer to LASTREC()+1.
+                   will position the record pointer to LastRec()+1.
 
               _SET_STRICTREAD  <lFlag> | <cOnOff>
 
@@ -429,7 +429,7 @@
                    to the last. When disabled, which is the default, there
                    is a hard stop at the first and last positions.
    $RETURNS$
-      SET() The current or previous setting
+      Set() The current or previous setting
    $FILES$
       Library is rtl
    $COMPLIANCE$
@@ -456,14 +456,14 @@
 
       <cString> is a character string to set. If <cString> is not
       specified, the function key is going to be set to NIL releasing by
-      that any previous __SetFunction() or SETKEY() for that function.
+      that any previous __SetFunction() or SetKey() for that function.
    $RETURNS$
       __SetFunction() always return NIL.
    $DESCRIPTION$
       __SetFunction() assign a character string with a function key, when
       this function key is pressed, the keyboard is stuffed with this
       character string. __SetFunction() has the effect of clearing any
-      SETKEY() previously set to the same function number and vice versa.
+      SetKey() previously set to the same function number and vice versa.
 
       <table>
       nFunctionKey    Key to be set
@@ -494,7 +494,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      INKEY(),SETKEY(),__Keyboard(),SET KEY
+      Inkey(),SetKey(),__Keyboard(),SET KEY
    $END$
  */
 
@@ -517,12 +517,12 @@
 
       <cString> is a character string to set. If <cString> is not
       specified, the function key is going to be set to NIL releasing by
-      that any previous Set Function or SETKEY() for that function.
+      that any previous Set Function or SetKey() for that function.
    $DESCRIPTION$
       Set Function assign a character string with a function key, when
       this function key is pressed, the keyboard is stuffed with this
       character string. Set Function has the effect of clearing any
-      SETKEY() previously set to the same function number and vice versa.
+      SetKey() previously set to the same function number and vice versa.
 
       <table>
       nFunctionKey    Key to be set
@@ -551,7 +551,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      INKEY(),SETKEY(),__Keyboard()
+      Inkey(),SetKey(),__Keyboard()
    $END$
  */
 
@@ -559,7 +559,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SETKEY()
+      SetKey()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -567,7 +567,7 @@
    $ONELINER$
       Assign an action block to a key
    $SYNTAX$
-      SETKEY( <anKey> [, <bAction> [, <bCondition> ] ] )
+      SetKey( <anKey> [, <bAction> [, <bCondition> ] ] )
    $ARGUMENTS$
       <anKey> is either a numeric key value, or an array of such values
 
@@ -600,14 +600,14 @@
    $STATUS$
       R
    $COMPLIANCE$
-      SETKEY() is mostly CA-Cl*pper compliant. The only difference is the
+      SetKey() is mostly CA-Cl*pper compliant. The only difference is the
       addition of the condition code-block parameter, allowing set-keys to
       be conditionally turned off or on.  This condition-block cannot be
       returned once set - see SetKeyGet()
    $FILES$
       Library is rtl
    $SEEALSO$
-      HB_SETKEYSAVE()
+      hb_SetKeySave()
    $END$
  */
 
@@ -615,7 +615,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_SetKeyGet()
+      hb_SetKeyGet()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -623,7 +623,7 @@
    $ONELINER$
       Determine a set-key code block and condition-block
    $SYNTAX$
-      HB_SETKEYGET( <nKey> [, <bConditionByRef> ] )
+      hb_SetKeyGet( <nKey> [, <bConditionByRef> ] )
    $ARGUMENTS$
       <anKey> is an numeric key value
 
@@ -631,7 +631,7 @@
    $RETURNS$
       Current assigned action-block
    $DESCRIPTION$
-      The HB_SetKeyGet() function returns the current code-block assigned to
+      The hb_SetKeyGet() function returns the current code-block assigned to
       a key, and optionally assigns the condition-block to the
       return-parameter
    $EXAMPLES$
@@ -648,7 +648,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SETKEY(),HB_SETKEYSAVE(),HB_SETKEYCHECK()
+      SetKey(),hb_SetKeySave(),hb_SetKeyCheck()
    $END$
  */
 
@@ -656,7 +656,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_SETKEYSAVE()
+      hb_SetKeySave()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -664,14 +664,14 @@
    $ONELINER$
       Returns a copy of internal set-key list, optionally overwriting
    $SYNTAX$
-      HB_SETKEYSAVE( [ <OldKeys> ] )
+      hb_SetKeySave( [ <OldKeys> ] )
    $ARGUMENTS$
       <OldKeys> is an optional set-key list from a previous call to
-      HB_SetKeySave(), or NIL to clear current set-key list
+      hb_SetKeySave(), or NIL to clear current set-key list
    $RETURNS$
       Current set-key list
    $DESCRIPTION$
-      HB_SetKeySave() is designed to act like the set() function which
+      hb_SetKeySave() is designed to act like the Set() function which
       returns the current state of an environment setting, and optionally
       assigning a new value.  In this case, the "environment setting" is the
       internal set-key list, and the optional new value is either a value
@@ -690,7 +690,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SETKEY()
+      SetKey()
    $END$
  */
 
@@ -698,7 +698,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_SetKeyCheck()
+      hb_SetKeyCheck()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -706,7 +706,7 @@
    $ONELINER$
       Implements common hot-key activation code
    $SYNTAX$
-      HB_SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
+      hb_SetKeyCheck( <nKey> [, <p1> ][, <p2> ][, <p3> ] )
    $ARGUMENTS$
       <nKey> is a numeric key value to be tested code-block, if executed
 
@@ -717,12 +717,12 @@
       If there is a hot-key association (before checking any condition):
       - if there is a condition-block, it is passed one parameter - <nKey>
       - when the hot-key code-block is called, it is passed 1 to 4 parameters,
-      depending on the parameters passed to HB_SetKeyCheck().  Any
+      depending on the parameters passed to hb_SetKeyCheck().  Any
       parameters so passed are directly passed to the code-block, with an
       additional parameter being <nKey>
    $DESCRIPTION$
-      HB_SetKeyCheck() is intended as a common interface to the SetKey()
-      functionality for such functions as ACHOICE(), DBEDIT(), MEMOEDIT(),
+      hb_SetKeyCheck() is intended as a common interface to the SetKey()
+      functionality for such functions as ACHOICE(), dbEdit(), MemoEdit(),
       ACCEPT, INPUT, READ, and WAIT
    $EXAMPLES$
       // within ReadModal()
@@ -743,7 +743,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SETKEY(),HB_SETKEYSAVE()
+      SetKey(),hb_SetKeySave()
    $END$
  */
 
@@ -796,7 +796,7 @@
       be conditionally turned off or on.  This condition-block cannot be
       returned once set - see SetKeyGet()
    $SEEALSO$
-      HB_SETKEYSAVE()
+      hb_SetKeySave()
    $END$
  */
 
@@ -804,7 +804,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SETTYPEAHEAD()
+      SetTypeahead()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -812,7 +812,7 @@
    $ONELINER$
       Sets the typeahead buffer to given size.
    $SYNTAX$
-      SETTYPEAHEAD( <nSize> ) --> <nPreviousSize>
+      SetTypeahead( <nSize> ) --> <nPreviousSize>
    $ARGUMENTS$
       <nSize> is a valid typeahead size.
    $RETURNS$
@@ -844,7 +844,7 @@
    $SUBCATEGORY$
       Internal
    $ONELINER$
-      Determines whether a Help() user defined function exists.
+      Determines whether a HELP() user defined function exists.
    $SYNTAX$
       __XHELP() --> <xValue>
    $ARGUMENTS$
@@ -892,7 +892,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET PATH,CURDIR(),SET()
+      SET PATH,CurDir(),Set()
    $END$
  */
 
@@ -945,7 +945,7 @@
    $DESCRIPTION$
       This command is designed to work in conjunction with the MENU TO and
       @...PROMPT commands. With this command, a row number between 0 and
-      MAXROW() may be specified in <nRow>. This establishes the row on
+      MaxRow() may be specified in <nRow>. This establishes the row on
       witch any message associated with an @...PROMPT command will appear.
 
       If the value of <nRow> is 0, all messages will be suppressed.
@@ -966,7 +966,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET(),SET WRAP,@...PROMPT,MENU TO
+      Set(),SET WRAP,@...PROMPT,MENU TO
    $END$
  */
 
@@ -999,7 +999,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DEFAULT,CURDIR(),SET()
+      SET DEFAULT,CurDir(),Set()
    $END$
  */
 
@@ -1029,7 +1029,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      @...GET,@...PROMPT,@...SAY,SET()
+      @...GET,@...PROMPT,@...SAY,Set()
    $END$
  */
 
@@ -1079,7 +1079,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      CLOSE,SET PRINTER,SET CONSOLE,SET()
+      CLOSE,SET PRINTER,SET CONSOLE,Set()
    $END$
  */
 
@@ -1101,7 +1101,7 @@
    $DESCRIPTION$
       This command allows the input and display of dates with the century
       prefix. It will be in the standart MM/DD/YYYY format unless specified
-      by the SET DATE command or SET() function. If <lCent> is a logical
+      by the SET DATE command or Set() function. If <lCent> is a logical
       true (.T.), the command will be set on; otherwise, the command will
       be set off
    $EXAMPLES$
@@ -1113,7 +1113,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
+      SET DATE,SET EPOCH,CToD(),Date(),DToC(),Set()
    $END$
  */
 
@@ -1165,7 +1165,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DATE,SET EPOCH,CTOD(),DATE(),DTOC(),SET()
+      SET DATE,SET EPOCH,CToD(),Date(),DToC(),Set()
    $END$
  */
 
@@ -1195,7 +1195,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DATE,SET CENTURY,CTOD(),DATE(),DTOC(),SET()
+      SET DATE,SET CENTURY,CToD(),Date(),DToC(),Set()
    $END$
  */
 
@@ -1230,9 +1230,9 @@
        Division         Determined by SET DECIMAL TO
        Exponential      Determined by SET DECIMAL TO
        LOG()            Determined by SET DECIMAL TO
-       EXP()            Determined by SET DECIMAL TO
-       SQRT()           Determined by SET DECIMAL TO
-       VAL()            Determined by SET DECIMAL TO
+       Exp()            Determined by SET DECIMAL TO
+       Sqrt()           Determined by SET DECIMAL TO
+       Val()            Determined by SET DECIMAL TO
       </table>
    $EXAMPLES$
       SET FIXED ON
@@ -1243,7 +1243,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DECIMALS,EXP(),LOG(),SQRT(),VAL(),SET()
+      SET DECIMALS,Exp(),LOG(),Sqrt(),Val(),Set()
    $END$
  */
 
@@ -1268,7 +1268,7 @@
       <cPrinter> A device name or an alternate name
    $DESCRIPTION$
       This command can direct all output that is not controlled by the
-      @...SAY command and the DEVPOS() and DEVOUT() functions to the
+      @...SAY command and the DevPos() and DevOut() functions to the
       printer. If specified,the condition <lPrinter> toggles the printer
       ON if a logical true (.T.) and OFF if a logical false (.F.). If no
       argument is specified in the command, the alternate file (if one
@@ -1300,7 +1300,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DEVICE, SET CONSOLE, DEVOUT(), SET()
+      SET DEVICE, SET CONSOLE, DevOut(), Set()
    $END$
  */
 
@@ -1322,7 +1322,7 @@
    $DESCRIPTION$
       This command turns the screen display either off or on for all
       screens display other then direct output via the @...SAY commands
-      or the <-> DEVOUT() function.
+      or the <-> DevOut() function.
 
       If <lConsole> is a logical true (.T.),the console will be turned
       ON; otherwise, the console will be turned off.
@@ -1336,7 +1336,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DEVICE,SET()
+      SET DEVICE,Set()
    $END$
  */
 
@@ -1371,7 +1371,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET FIXED,SET()
+      SET FIXED,Set()
    $END$
  */
 
@@ -1392,7 +1392,7 @@
       None.
    $DESCRIPTION$
       This command determines whether the output from the @...SAY command
-      and the DEVPOS() and DEVOUT() function will be displayed on the
+      and the DevPos() and DevOut() function will be displayed on the
       printer.
 
       When the device is set to the PRINTER,the SET MARGIN value adjusts
@@ -1413,7 +1413,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      @...SAY,SET PRINTER,SETPRC(),SET()
+      @...SAY,SET PRINTER,SetPRC(),Set()
    $END$
  */
 
@@ -1450,6 +1450,6 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET()
+      Set()
    $END$
  */

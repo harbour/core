@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ANOMATCHES()
+      ft_ANoMatches()
    $CATEGORY$
       Array
    $ONELINER$
       Find the number of array elements meeting a condition
    $SYNTAX$
-      FT_ANOMATCHES( <aArray>, <bCompareBlock> ;
+      ft_ANoMatches( <aArray>, <bCompareBlock> ;
                      [, <nStartIndex> [, <nEndIndex> ] ] ) -> nNoOfMatches
    $ARGUMENTS$
       <aArray> is the array to be searched
@@ -32,15 +32,15 @@
       to the supplied code block, cause that code block to return a .T. value.
    $EXAMPLES$
       // Search the Entire Array
-      FT_ANOMATCHES( aTries, {| x | x <= 100 } )
+      ft_ANoMatches( aTries, {| x | x <= 100 } )
 
       // Search from the 5th Element On
-      FT_ANOMATCHES( aCodes, {| x | Upper( x ) == cCurrentCode }, 5 )
+      ft_ANoMatches( aCodes, {| x | Upper( x ) == cCurrentCode }, 5 )
 
       // Search the 1st 10 Elements
-      FT_ANOMATCHES( aDates, {| x | IS_BETWEEN( Date() - 7, x, Date() + 7 ) }, 10 )
+      ft_ANoMatches( aDates, {| x | IS_BETWEEN( Date() - 7, x, Date() + 7 ) }, 10 )
 
       // Search Elements 5-10
-      FT_ANOMATCHES( aNames, {| x | x <= cLastGoodName }, 5, 10 )
+      ft_ANoMatches( aNames, {| x | x <= cLastGoodName }, 5, 10 )
    $END$
  */

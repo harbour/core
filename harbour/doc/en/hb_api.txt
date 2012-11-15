@@ -3963,7 +3963,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      hb_cmdargARGV()
+      hb_CmdArgArgV()
    $CATEGORY$
       C level API
    $SUBCATEGORY$
@@ -3974,7 +3974,7 @@
       C Prototype
 
       #include "hbapi.h"
-      hb_cmdargARGV( void ) --> ( char ** )ppszResult
+      hb_CmdArgArgV( void ) --> ( char ** )ppszResult
    $ARGUMENTS$
 
    $RETURNS$
@@ -7701,7 +7701,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ISPOINTER()
+      IsPointer()
    $CATEGORY$
       C level API
    $SUBCATEGORY$
@@ -7712,7 +7712,7 @@
       C Prototype (macro definition)
 
       #include "hbapi.h"
-      ISPOINTER( n ) --> <see ( hb_param( n, HB_IT_POINTER ) != NULL )>
+      IsPointer( n ) --> <see ( hb_param( n, HB_IT_POINTER ) != NULL )>
    $ARGUMENTS$
       <n>
    $RETURNS$

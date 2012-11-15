@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      SCREENATTR()
+      ScreenAttr()
    $CATEGORY$
       CT3 video functions
    $ONELINER$
 
    $SYNTAX$
-      SCREENATTR( [<nRow>],[<nColumn>] ) -> <nAttr>
+      ScreenAttr( [<nRow>],[<nColumn>] ) -> <nAttr>
    $ARGUMENTS$
       <nRow>     Designates the line from which to determine the attribute.
                  The default is the cursor line.
@@ -19,12 +19,12 @@
                  attribute.  The default is the cursor column.
 
    $RETURNS$
-      SCREENATTR() returns the attribute at the designated position.
+      ScreenAttr() returns the attribute at the designated position.
 
    $DESCRIPTION$
-      SCREENATTR() returns the current screen attribute at <nRow> and
+      ScreenAttr() returns the current screen attribute at <nRow> and
       <nColumn>.  You can query targeted attributes this way and save them
-      to use later, or process them later with INVERTATTR().
+      to use later, or process them later with InvertAttr().
 
       TODO: add documentation
    $EXAMPLES$
@@ -46,13 +46,13 @@
 
 /* $DOC$
    $NAME$
-      SCREENMIX()
+      ScreenMix()
    $CATEGORY$
       CT3 video functions
    $ONELINER$
 
    $SYNTAX$
-      SCREENMIX( <cCharString>, <cAttributeString>, [<nRow>], [<nCol>] ) -> <cEmptyString>
+      ScreenMix( <cCharString>, <cAttributeString>, [<nRow>], [<nCol>] ) -> <cEmptyString>
    $ARGUMENTS$
 
    $RETURNS$
@@ -78,13 +78,13 @@
 
 /* $DOC$
    $NAME$
-      SAYSCREEN()
+      SayScreen()
    $CATEGORY$
       CT3 video functions
    $ONELINER$
 
    $SYNTAX$
-      SAYSCREEN( <cString>, [<nRow>], [<nCol>] ) -> <cEmptyString>
+      SayScreen( <cString>, [<nRow>], [<nCol>] ) -> <cEmptyString>
    $ARGUMENTS$
       <cString> - the string to output. Although undocumented, can be NIL.
       <nRow> - row number, defaults to cursor row.
@@ -107,13 +107,13 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      SCREENMIX()
+      ScreenMix()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      INVERTWIN()
+      InvertWin()
    $CATEGORY$
       CT3 video functions
    $ONELINER$
@@ -133,7 +133,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      INVERTWIN() is compatible with CT3's INVERTWIN().
+      InvertWin() is compatible with CT3's InvertWin().
    $PLATFORMS$
       All
    $FILES$
@@ -145,13 +145,13 @@
 
 /* $DOC$
    $NAME$
-      UNTEXTWIN()
+      UnTextWin()
    $CATEGORY$
       CT3 video functions
    $ONELINER$
 
    $SYNTAX$
-      UNTEXTWIN( <nTopLine>, <nLeftColumn>, <nBottomLine>, <nRightColumn>,
+      UnTextWin( <nTopLine>, <nLeftColumn>, <nBottomLine>, <nRightColumn>,
                  <cReplacementCharacter|nReplacementCharacter>,
                  [<cInitialCharacter|nInitialCharacter>],
                  [<cEndCharacter|nEndCharacter>] ) --> cNull
@@ -198,13 +198,13 @@
 
 /* $DOC$
    $NAME$
-      CHARWIN()
+      CharWin()
    $CATEGORY$
       CT3 video functions
    $ONELINER$
 
    $SYNTAX$
-      CHARWIN( <nTop>, <nLeft>, <nBottom>, <nRight>, [<cNewChar|nNewChar>],
+      CharWin( <nTop>, <nLeft>, <nBottom>, <nRight>, [<cNewChar|nNewChar>],
                [<cOldChar|nOldChar>] ) --> <cEmptyString>
    $ARGUMENTS$
       <nTop> - top row number, default 0
@@ -241,13 +241,13 @@
 
 /* $DOC$
    $NAME$
-      COLORWIN()
+      ColorWin()
    $CATEGORY$
       CT3 video functions
    $ONELINER$
 
    $SYNTAX$
-      COLORWIN( [<nTopLine>], [<nLeftCol>], [<nBottomLine>], [<nRightCol>],
+      ColorWin( [<nTopLine>], [<nLeftCol>], [<nBottomLine>], [<nRightCol>],
                 [<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>] ) --> cNull
    $ARGUMENTS$
       <nTopLine>  Designates the topmost line to begin processing.  The
@@ -286,13 +286,13 @@
 
 /* $DOC$
    $NAME$
-      SCREENTEXT()
+      ScreenText()
    $CATEGORY$
       CT video functions (Harbour extension)
    $ONELINER$
 
    $SYNTAX$
-      SCREENTEXT( <nTop>, <nLeft>, <nBottom>, <nRight> )
+      ScreenText( <nTop>, <nLeft>, <nBottom>, <nRight> )
    $ARGUMENTS$
       <nTop> - top row number, default 0
       <nLeft> - left column number, default 0
@@ -322,13 +322,13 @@
 
 /* $DOC$
    $NAME$
-      COLORREPL()
+      ColorRepl()
    $CATEGORY$
       CT3 video functions
    $ONELINER$
 
    $SYNTAX$
-      COLORREPL( [<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>] ) --> cNull
+      ColorRepl( [<cNewAttr|nNewAttr>], [<cOldAttr|nOldAttr>] ) --> cNull
    $ARGUMENTS$
       <cNewAttr|nNewAttr>  Designates the new attribute.  The default is
         CLEARA.

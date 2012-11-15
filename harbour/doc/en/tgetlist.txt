@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: READVAR()
+ *    Documentation for: ReadVar()
  *
  * See COPYING for licensing terms.
  *
@@ -17,7 +17,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      READVAR()
+      ReadVar()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -25,14 +25,14 @@
    $ONELINER$
       Return variable name of current GET or MENU
    $SYNTAX$
-      READVAR( [<cVarName>] ) --> cOldVarName
+      ReadVar( [<cVarName>] ) --> cOldVarName
    $ARGUMENTS$
       <cVarName> is a new variable name to set.
    $RETURNS$
-      READVAR() return the old variable name. If no variable previously
-      was set, READVAR() return "".
+      ReadVar() return the old variable name. If no variable previously
+      was set, ReadVar() return "".
    $DESCRIPTION$
-      READVAR() is set inside a READ or MENU TO command to hold the
+      ReadVar() is set inside a READ or MENU TO command to hold the
       uppercase name of the GET / MENU TO variable, and re-set back to old
       value when those commands finished. You should not normally set a
       variable name but rather use it to retrieve the name of a GET
@@ -50,11 +50,11 @@
       MENU TO What_Is_Bug
 
       PROCEDURE ShowVar
-         Alert( ReadVar() )     // WHAT_IS_BUG in red ALERT() box
+         Alert( ReadVar() )     // WHAT_IS_BUG in red Alert() box
    $STATUS$
       R
    $COMPLIANCE$
-      READVAR() works exactly like CA-Cl*pper's READKEY().
+      ReadVar() works exactly like CA-Cl*pper's ReadKey().
 
       Note however,
       that the <cVarName> parameter is not documented and used internally

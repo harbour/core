@@ -7,11 +7,11 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: ASORT()
+ *    Documentation for: ASort()
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: ARRAY(), AADD(), ACLONE(), ACOPY(), ASIZE(),
- *                       ATAIL(), AINS(), ADEL(), AFILL(), ASCAN(), AEVAL()
+ *    Documentation for: Array(), AADD(), ACLONE(), ACOPY(), ASize(),
+ *                       ATail(), AIns(), ADEL(), AFill(), AScan(), AEval()
  *
  * See COPYING for licensing terms.
  *
@@ -21,7 +21,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ARRAY()
+      Array()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -29,7 +29,7 @@
    $ONELINER$
       Create an uninitialized array of specified length
    $SYNTAX$
-      ARRAY( <nElements> [, <nElements>...] ) --> aArray
+      Array( <nElements> [, <nElements>...] ) --> aArray
    $ARGUMENTS$
       <nElements> is the number of elements in the specified dimension.
    $RETURNS$
@@ -61,7 +61,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      AADD(),ADEL(),AFILL(),AINS()
+      AADD(),ADEL(),AFill(),AIns()
    $END$
  */
 
@@ -107,7 +107,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      AINS(),ASIZE()
+      AIns(),ASize()
    $END$
  */
 
@@ -115,7 +115,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ASIZE()
+      ASize()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -123,7 +123,7 @@
    $ONELINER$
       Adjust the size of an array
    $SYNTAX$
-      ASIZE(<aArray>, <nLen>) --> aTarget
+      ASize(<aArray>, <nLen>) --> aTarget
    $ARGUMENTS$
       <aArray> Name of array to be dynamically altered
 
@@ -150,7 +150,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      AADD(),ADEL(),AFILL(),AINS()
+      AADD(),ADEL(),AFill(),AIns()
    $END$
  */
 
@@ -158,7 +158,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ATAIL()
+      ATail()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -166,7 +166,7 @@
    $ONELINER$
       Returns the rightmost element of an array
    $SYNTAX$
-      ATAIL( <aArray> ) --> Element
+      ATail( <aArray> ) --> Element
    $ARGUMENTS$
       <aArray> is the array.
    $RETURNS$
@@ -185,7 +185,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      LEN(),ARRAY(),ASIZE(),AADD()
+      Len(),Array(),ASize(),AADD()
    $END$
  */
 
@@ -193,7 +193,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      AINS()
+      AIns()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -201,7 +201,7 @@
    $ONELINER$
       Insert a NIL value at an array subscript position.
    $SYNTAX$
-      AINS( <aArray>, <nPos> ) --> aTarget
+      AIns( <aArray>, <nPos> ) --> aTarget
    $ARGUMENTS$
       <aArray> Array name.
 
@@ -229,7 +229,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      AADD(),ACOPY(),ADEL(),AEVAL(),AFILL(),ASIZE()
+      AADD(),ACOPY(),ADEL(),AEval(),AFill(),ASize()
    $END$
  */
 
@@ -270,7 +270,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      ACOPY(),AINS(),AFILL()
+      ACOPY(),AIns(),AFill()
    $END$
  */
 
@@ -278,7 +278,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      AFILL()
+      AFill()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -286,7 +286,7 @@
    $ONELINER$
       Fill an array with a specified value
    $SYNTAX$
-      AFILL( <aArray>, <xValue>, [<nStart>], [<nCount>] ) --> aTarget
+      AFill( <aArray>, <xValue>, [<nStart>], [<nCount>] ) --> aTarget
    $ARGUMENTS$
       <aArray> Name of array to be filled.
 
@@ -303,7 +303,7 @@
       element to be filled and the array elements will continue to be
       filled for <nCount> positions. If Not specified, the value of
       <nStart> will be 1, and the value of <nCount> will be the value
-      of LEN(<aArray>); thus, all subscript positions in the array
+      of Len(<aArray>); thus, all subscript positions in the array
       <aArray> will be filled with the value of <xValue>.
 
       This function will work on only a single dimension of <aArray>.
@@ -320,7 +320,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      AADD(),AEVAL(),DBSTRUCT(),DIRECTORY()
+      AADD(),AEval(),dbStruct(),Directory()
    $END$
  */
 
@@ -328,7 +328,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ASCAN()
+      AScan()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -336,7 +336,7 @@
    $ONELINER$
       Scan array elements for a specified condition
    $SYNTAX$
-      ASCAN( <aTarget>, <xSearch>, [<nStart>], [<nCount>] ) --> nStoppedAt
+      AScan( <aTarget>, <xSearch>, [<nStart>], [<nCount>] ) --> nStoppedAt
    $ARGUMENTS$
       <aTarget>   Array to be scanned.
 
@@ -373,11 +373,11 @@
    $STATUS$
       R
    $COMPLIANCE$
-      This function is not CA-Cl*pper compatible.  CA-Cl*pper ASCAN() is affected by the SET EXACT ON/OFF Condition
+      This function is not CA-Cl*pper compatible.  CA-Cl*pper AScan() is affected by the SET EXACT ON/OFF Condition
    $FILES$
       Library is vm
    $SEEALSO$
-      AEVAL()
+      AEval()
    $END$
  */
 
@@ -385,7 +385,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      AEVAL()
+      AEval()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -393,7 +393,7 @@
    $ONELINER$
       Evaluates the subscript element of an array
    $SYNTAX$
-      AEVAL(<aArray>, <bBlock>, [<nStart>], [<nCount>]) --> aArray
+      AEval(<aArray>, <bBlock>, [<nStart>], [<nCount>]) --> aArray
    $ARGUMENTS$
       <aArray> Is the array to be evaluated.
 
@@ -415,8 +415,8 @@
       elements in an array are the first parameter and the subscript position
       is the second.
 
-      AEVAL() does not replace a FOR...NEXT loop for processing arrays. If
-      an array is an autonomous unit, AEVAL() is appropriate. If the array
+      AEval() does not replace a FOR...NEXT loop for processing arrays. If
+      an array is an autonomous unit, AEval() is appropriate. If the array
       is to be altered or if elements are to be reevaluated, a FOR...NEXT
       loop is more appropriate.
    $STATUS$
@@ -426,7 +426,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      EVAL(),DBEVAL()
+      Eval(),dbEval()
    $END$
  */
 
@@ -493,7 +493,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      ACLONE(),ADEL(),AEVAL(),AFILL(),AINS(),ASORT()
+      ACLONE(),ADEL(),AEval(),AFill(),AIns(),ASort()
    $END$
  */
 
@@ -535,7 +535,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      ACOPY(),ADEL(),AINS(),ASIZE()
+      ACOPY(),ADEL(),AIns(),ASize()
    $END$
  */
 
@@ -543,7 +543,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ASORT()
+      ASort()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -551,7 +551,7 @@
    $ONELINER$
       Sort an array
    $SYNTAX$
-      ASORT( <aArray>, [<nStart>], [<nCount>], [<bSort>] ) --> aArray
+      ASort( <aArray>, [<nStart>], [<nCount>], [<bSort>] ) --> aArray
    $ARGUMENTS$
       <aArray> Array to be sorted.
 
@@ -567,7 +567,7 @@
       <aArray> reference to the now sorted <aArray> or NIL if the
       passed <aArray> is not an array.
    $DESCRIPTION$
-      ASORT() sort all or part of a given array. If <bSort> is omitted,
+      ASort() sort all or part of a given array. If <bSort> is omitted,
       the function expect <aArray> to be one dimensional array containing
       single data type (one of: Character, Date, Logical, Numeric) and sort
       this array in ascending order: Character are sorted by their ASCII
@@ -601,6 +601,6 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      ASCAN(),EVAL(),SORT
+      AScan(),Eval(),SORT
    $END$
  */

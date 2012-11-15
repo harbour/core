@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_CHDIR()
+      ft_ChDir()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Change the current directory
    $SYNTAX$
-      FT_CHDIR( <cDirName> ) -> nResult
+      ft_ChDir( <cDirName> ) -> nResult
    $ARGUMENTS$
       <cDirName> is the name of the desired directory.
    $RETURNS$
@@ -26,8 +26,8 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      FT_CHDIR( "C:\harbour" )
-      FT_CHDIR( hb_ps() )
-      FT_CHDIR( ".." + hb_ps() + "hbnf" )
+      ft_ChDir( "C:\harbour" )
+      ft_ChDir( hb_ps() )
+      ft_ChDir( ".." + hb_ps() + "hbnf" )
    $END$
  */

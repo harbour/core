@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_FINDITH()
+      ft_FindITh()
    $CATEGORY$
       String
    $ONELINER$
       Find the "ith" occurrence of a substring within a string
    $SYNTAX$
-      FT_FINDITH( <cCheckFor>, <cCheckIn>, <nWhichOccurrence> ;
+      ft_FindITh( <cCheckFor>, <cCheckIn>, <nWhichOccurrence> ;
                   [, <lIgnoreCase> ] ) -> <nStringPosition>
    $ARGUMENTS$
       <cCheckFor> is the string to search for.
@@ -31,8 +31,8 @@
       // the 10th Occurrence of "the", case
       // insensitive
 
-      nNextPosition := FT_FINDITH( "the", cMemoString, 10 )
+      nNextPosition := ft_FindITh( "the", cMemoString, 10 )
    $SEEALSO$
-      FT_AT2()
+      ft_At2()
    $END$
  */

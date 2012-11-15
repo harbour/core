@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_DFSETUP()
+      ft_DFSetup()
    $CATEGORY$
       File I/O
    $ONELINER$
-      Set up parameters for FT_DISPFILE()
+      Set up parameters for ft_DispFile()
    $SYNTAX$
-      FT_DFSETUP( <cInFile>, <nTop>, <nLeft>, <nBottom>, <nRight>, ;
+      ft_DFSetup( <cInFile>, <nTop>, <nLeft>, <nBottom>, <nRight>, ;
                <nStart>, <nCNormal>, <nCHighlight>, <cExitKeys>,   ;
                <lBrowse>, <nColSkip>, <nRMargin>, <nBuffSize> ) -> nResult
    $ARGUMENTS$
@@ -42,46 +42,46 @@
    $EXAMPLES$
       @ 4, 9 TO 11, 71
 
-      FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15, ;
+      ft_DFSetup( "test.txt", 5, 10, 10, 70, 1, 7, 15, ;
          "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
 
-      cKey := FT_DISPFILE()
+      cKey := ft_DispFile()
 
-      FT_DFCLOSE()
+      ft_DFClose()
 
-      @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
+      @ 20, 0 SAY "Key that terminated ft_DispFile() was: " + "[" + cKey + "]"
    $SEEALSO$
-      FT_DISPFILE() FT_DFCLOSE()
+      ft_DispFile() ft_DFClose()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_DFCLOSE()
+      ft_DFClose()
    $CATEGORY$
       File I/O
    $ONELINER$
-      Close file displayed by FT_DISPFILE()
+      Close file displayed by ft_DispFile()
    $SYNTAX$
-      FT_DFCLOSE() -> NIL
+      ft_DFClose() -> NIL
    $ARGUMENTS$
       None
    $RETURNS$
       NIL
    $DESCRIPTION$
-      Closes the file opened by FT_DFSETUP()
+      Closes the file opened by ft_DFSetup()
    $EXAMPLES$
       @ 4, 9 TO 11, 71
 
-      FT_DFSETUP( "test.txt", 5, 10, 10, 70, 1, 7, 15, ;
+      ft_DFSetup( "test.txt", 5, 10, 10, 70, 1, 7, 15, ;
          "AaBb" + Chr( 143 ), .T., 5, 132, 4096 )
 
-      cKey := FT_DISPFILE()
+      cKey := ft_DispFile()
 
-      FT_DFCLOSE()
+      ft_DFClose()
 
-      @ 20, 0 SAY "Key that terminated FT_DISPFILE() was: " + "[" + cKey + "]"
+      @ 20, 0 SAY "Key that terminated ft_DispFile() was: " + "[" + cKey + "]"
    $SEEALSO$
-      FT_DFSETUP() FT_DISPFILE()
+      ft_DFSetup() ft_DispFile()
    $END$
  */

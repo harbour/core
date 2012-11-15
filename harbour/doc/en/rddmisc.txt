@@ -19,7 +19,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      AFIELDS()*
+      AFields()*
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -51,11 +51,11 @@
       the number of fields or the lenght of the shortest array argument,
       witchever is smaller, will be returned.
 
-      AFIELDS() is a compatibility function, it is superseded by
-      DBSTRUCT() which returns one multidimensional array.
+      AFields() is a compatibility function, it is superseded by
+      dbStruct() which returns one multidimensional array.
 
       NOTE: The destination arrays must be initialized to a given size,
-            usually FCOUNT(), before calling this function.
+            usually FCount(), before calling this function.
 
    $EXAMPLES$
       PROCEDURE Main()
@@ -75,7 +75,7 @@
          aTypes  := Array( nCount )
          aLens   := Array( nCount )
          aDecs   := Array( nCount )
-         nFields := aFields( aNames, aTypes, aLens, aDecs )
+         nFields := AFields( aNames, aTypes, aLens, aDecs )
 
          ? "Number of items :", nFields
          FOR i := 1 TO nFields
@@ -91,7 +91,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBSTRUCT()
+      dbStruct()
    $END$
  */
 
@@ -99,7 +99,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ALIAS()
+      Alias()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -141,7 +141,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      BOF()
+      Bof()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -149,14 +149,14 @@
    $ONELINER$
       Test for the beggining-of-file condition
    $SYNTAX$
-      BOF() --> <lBegin>
+      Bof() --> <lBegin>
    $RETURNS$
-      BOF() Logical true (.T.) or false (.F.)
+      Bof() Logical true (.T.) or false (.F.)
    $DESCRIPTION$
       This function determines if the beggining of the file marker has been
       reached. If so, the function will return a logical true (.T.); otherwise,
       a logical false (.F.) will be returned.
-      By default, BOF() will apply to the currently selected database unless
+      By default, Bof() will apply to the currently selected database unless
       the function is preceded by an alias
    $EXAMPLES$
       PROCEDURE Main()
@@ -174,7 +174,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      EOF(),FOUND(),LASTREC()
+      Eof(),Found(),LastRec()
    $END$
  */
 
@@ -217,7 +217,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DELETED()
+      Deleted()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -225,11 +225,11 @@
    $ONELINER$
       Tests the record's deletion flag.
    $SYNTAX$
-      DELETED() --> lDeleted
+      Deleted() --> lDeleted
    $ARGUMENTS$
       (This command has no arguments)
    $RETURNS$
-      DELETED() return a logical true (.T.) or false (.F.).
+      Deleted() return a logical true (.T.) or false (.F.).
    $DESCRIPTION$
       This function returns a logical true (.T.) is the current record in the
       selected or designated work area ha ben marked for deletion. If not, the
@@ -250,7 +250,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBDELETE()
+      dbDelete()
    $END$
  */
 
@@ -258,7 +258,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      EOF()
+      Eof()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -266,7 +266,7 @@
    $ONELINER$
       Test for end-of-file condition.
    $SYNTAX$
-      EOF() --> <lEnd>
+      Eof() --> <lEnd>
    $ARGUMENTS$
       (This command has no arguments)
    $RETURNS$
@@ -291,7 +291,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      BOF(),FOUND(),LASTREC()
+      Bof(),Found(),LastRec()
    $END$
  */
 
@@ -299,7 +299,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FCOUNT()
+      FCount()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -307,7 +307,7 @@
    $ONELINER$
       Counts the number of fields in an active database.
    $SYNTAX$
-      FCOUNT() --> nFields
+      FCount() --> nFields
    $RETURNS$
       <nFields> Return the number of fields
    $DESCRIPTION$
@@ -327,7 +327,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FIELDNAME(),TYPE()
+      FIELDNAME(),Type()
    $END$
  */
 
@@ -408,7 +408,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBSTRUCT(),FCOUNT(),LEN(),VALTYPE()
+      dbStruct(),FCount(),Len(),ValType()
    $END$
  */
 
@@ -495,7 +495,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FLOCK()
+      FLock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -503,7 +503,7 @@
    $ONELINER$
       Locks a file
    $SYNTAX$
-      FLOCK() --> lSuccess
+      FLock() --> lSuccess
    $RETURNS$
       <lSuccess> A true (.T.) value, if the lock was successful;otherwise
       false (.F.)
@@ -525,7 +525,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      RLOCK()
+      RLock()
    $END$
  */
 
@@ -533,7 +533,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FOUND()
+      Found()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -541,15 +541,15 @@
    $ONELINER$
       Determine the success of a previous search operation.
    $SYNTAX$
-      FOUND() --> lSuccess
+      Found() --> lSuccess
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
       <lSuccess> A logical true (.T.) is successful; otherwise, false (.F.)
    $DESCRIPTION$
       This function is used to test if the previous SEEK, LOCATE, CONTINUE,
-      or FIND operation was successful. Each wrk area has its own FOUND()
-      flag, so that a FOUND() condition may be tested in unselected work
+      or FIND operation was successful. Each wrk area has its own Found()
+      flag, so that a Found() condition may be tested in unselected work
       areas by using an alias.
    $EXAMPLES$
       nId := 100
@@ -566,7 +566,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      EOF()
+      Eof()
    $END$
  */
 
@@ -574,7 +574,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HEADER()
+      Header()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -582,14 +582,14 @@
    $ONELINER$
       Return the length of a database file header
    $SYNTAX$
-      HEADER() --> nBytes
+      Header() --> nBytes
    $RETURNS$
       <nBytes> The numeric size of a database file header in bytes
    $DESCRIPTION$
       This function returns the number of bytes in the header of the
       selected database ot the database in the designated work area.
 
-      If used in conjunction with the LASTREC(), RECSIZE() and DISKSPACE()
+      If used in conjunction with the LastRec(), RecSize() and DiskSpace()
       functions, this functions is capable of implementing a backup and
       restore routine.
    $EXAMPLES$
@@ -602,7 +602,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DISKSPACE(),LASTREC(),RECSIZE()
+      DiskSpace(),LastRec(),RecSize()
    $END$
  */
 
@@ -610,7 +610,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      LASTREC()
+      LastRec()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -618,7 +618,7 @@
    $ONELINER$
       Returns the number of records in an active work area or database.
    $SYNTAX$
-      LASTREC() | RECCOUNT()* --> nRecords
+      LastRec() | RecCount()* --> nRecords
    $RETURNS$
       <nRecords > The number of records
    $DESCRIPTION$
@@ -641,7 +641,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      EOF()
+      Eof()
    $END$
  */
 
@@ -649,7 +649,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      LUPDATE()
+      LUpdate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -657,7 +657,7 @@
    $ONELINER$
       Yields the date the database was last updated.
    $SYNTAX$
-      LUPDATE() --> dModification
+      LUpdate() --> dModification
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
@@ -683,7 +683,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FIELDNAME(),LASTREC(),RECSIZE()
+      FIELDNAME(),LastRec(),RecSize()
    $END$
  */
 
@@ -691,7 +691,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      NETERR()
+      NetErr()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -699,7 +699,7 @@
    $ONELINER$
       Tests the success of a network function
    $SYNTAX$
-      NETERR([<lNewError>]) --> lError
+      NetErr([<lNewError>]) --> lError
    $ARGUMENTS$
       <lNewError> Is a logical Expression.
    $RETURNS$
@@ -708,12 +708,12 @@
    $DESCRIPTION$
       This function return a logical true (.T.) is a USE, APPEND BLANK, or
       a USE...EXCLUSIVE command is issue and fails in a network enviroment.
-      In the case of USE and USE...EXCLUSIVE commands, a NETERR() value
+      In the case of USE and USE...EXCLUSIVE commands, a NetErr() value
       of .T. would be returned if another node of the network has the
       exclusive use of a file. And the case of the APPEND BLANK command,
-      NETERR() will return a logical true (.T.) if the file or record
-      is locked by another node or the value of LASTREC() has been advanced
-      The value of NETERR() may be changed via the value of <lNewError>.
+      NetErr() will return a logical true (.T.) if the file or record
+      is locked by another node or the value of LastRec() has been advanced
+      The value of NetErr() may be changed via the value of <lNewError>.
       This allow the run-time error-handling system to control the way
       certains errors are handled.
    $EXAMPLES$
@@ -732,7 +732,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FLOCK(),RLOCK()
+      FLock(),RLock()
    $END$
  */
 
@@ -740,7 +740,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      RECCOUNT()
+      RecCount()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -748,7 +748,7 @@
    $ONELINER$
       Counts the number of records in a database.
    $SYNTAX$
-      RECCOUNT()* | LASTREC() --> nRecords
+      RecCount()* | LastRec() --> nRecords
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
@@ -774,7 +774,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      EOF(),LASTREC(),RECNO(),DBGOBOTTOM()
+      Eof(),LastRec(),RecNo(),dbGoBottom()
    $END$
  */
 
@@ -782,7 +782,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      RECNO()
+      RecNo()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -790,11 +790,11 @@
    $ONELINER$
       Returns the current record number or identity.
    $SYNTAX$
-      RECNO() --> Identity
+      RecNo() --> Identity
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
-      RECNO() The record number or identity
+      RecNo() The record number or identity
    $DESCRIPTION$
       This function returns the position of the record pointer in the
       currently selected ot designated work area.
@@ -816,7 +816,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBGOTO(),DBGOTOP(),DBGOBOTTOM(),LASTREC(),EOF(),BOF()
+      dbGoto(),dbGoTop(),dbGoBottom(),LastRec(),Eof(),Bof()
    $END$
  */
 
@@ -824,7 +824,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      RECSIZE()
+      RecSize()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -832,7 +832,7 @@
    $ONELINER$
       Returns the size of a single record in an active database.
    $SYNTAX$
-      RECSIZE() --> nBytes
+      RecSize() --> nBytes
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
@@ -857,7 +857,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DISKSPACE(),FIELDNAME(),HEADER(),LASTREC()
+      DiskSpace(),FIELDNAME(),Header(),LastRec()
    $END$
  */
 
@@ -865,7 +865,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      RLOCK()
+      RLock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -873,18 +873,18 @@
    $ONELINER$
       Lock a record in a work area
    $SYNTAX$
-      RLOCK() --> lSuccess
+      RLock() --> lSuccess
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
-      RLOCK() True (.T.) if record lock is successful; otherwise, it
+      RLock() True (.T.) if record lock is successful; otherwise, it
       returns false (.F.).
    $DESCRIPTION$
       This function returns a logical true (.T.) if an attempt to lock a
       specific record in a selected or designated work area is successful.
       It will yield a false (.F.) if either the file or the desired record
       is currently locked.
-      A record that is locked remains locked until another RLOCK() is issued
+      A record that is locked remains locked until another RLock() is issued
       or until an UNLOCK command is executed.
       On a Network enviroment the follow command need that the record is
       locked:
@@ -914,7 +914,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FLOCK()
+      FLock()
    $END$
  */
 
@@ -922,7 +922,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SELECT()
+      Select()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -930,11 +930,11 @@
    $ONELINER$
       Returns the work area number for a specified alias.
    $SYNTAX$
-      SELECT([<cAlias>]) --> nWorkArea
+      Select([<cAlias>]) --> nWorkArea
    $ARGUMENTS$
       <cAlias> is the target work area alias name.
    $RETURNS$
-      SELECT() returns the work area number.
+      Select() returns the work area number.
    $DESCRIPTION$
       This function returns the work area number for the specified alias
       name <cAlias>. If no parameter is specified, the current work area will
@@ -955,7 +955,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      ALIAS(), USED()
+      Alias(), Used()
    $END$
  */
 
@@ -963,7 +963,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      USED()
+      Used()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -971,7 +971,7 @@
    $ONELINER$
       Checks whether a database is in use in a work area
    $SYNTAX$
-      USED() --> lDbfOpen
+      Used() --> lDbfOpen
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
@@ -999,7 +999,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      ALIAS(), SELECT()
+      Alias(), Select()
    $END$
  */
 
@@ -1037,6 +1037,6 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      DBEVAL(), DELETE, DELETED(), ZAP, RECALL
+      dbEval(), DELETE, Deleted(), ZAP, RECALL
    $END$
  */

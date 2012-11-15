@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      ISBIN()
+      IsBin()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Check if the value is a Binary  Number
    $SYNTAX$
-      ISBIN(<cN>) -><cNr>
+      IsBin(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
@@ -20,19 +20,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      ISOCTAL(),ISDEC(),ISHEXA()
+      IsOctal(),IsDec(),IsHexa()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ISOCTAL()
+      IsOctal()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Check if the value is a Octal  Number
    $SYNTAX$
-      ISOCTAL(<cN>) -><cNr>
+      IsOctal(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
@@ -42,19 +42,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      ISBIN(),ISDEC(),ISHEXA()
+      IsBin(),IsDec(),IsHexa()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ISDEC()
+      IsDec()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Check if the value is a Decimal  Number
    $SYNTAX$
-      ISDEC(<cN>) -><cNr>
+      IsDec(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
@@ -64,19 +64,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      ISOCTAL(),ISBIN(),ISHEXA()
+      IsOctal(),IsBin(),IsHexa()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ISHEXA()
+      IsHexa()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Check if the value is a Hexal  Number
    $SYNTAX$
-      ISHEXA(<cN>) -><cNr>
+      IsHexa(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> STRING TO BE CHECKED
    $RETURNS$
@@ -86,19 +86,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      ISOCTAL(),ISDEC(),ISBIN()
+      IsOctal(),IsDec(),IsBin()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      DECTOBIN()
+      DecToBin()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Converts a Decimal Value to Binary
    $SYNTAX$
-      DECTOBIN(<cN>) -><cNr>
+      DecToBin(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -109,19 +109,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      Dectohexa(),dectooctal()
+      DecToHexa(),DecToOctal()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      DECTOOCTAL()
+      DecToOctal()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Converts a Decimal Value to Octal
    $SYNTAX$
-      DECTOOCTAL(<cN>) -><cNr>
+      DecToOctal(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -132,19 +132,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      Dectohexa(),dectobin()
+      DecToHexa(),DecToBin()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      DECTOHEXA()
+      DecToHexa()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Converts a Decimal Value to Hexa
    $SYNTAX$
-      DECTOHEXA(<cN>) -><cNr>
+      DecToHexa(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -155,19 +155,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      Dectobin(),dectooctal()
+      DecToBin(),DecToOctal()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      BINTODEC()
+      BinToDec()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Converts a Binary Value to Decimal
    $SYNTAX$
-      BIntODEC(<cN>) -><cNr>
+      BinToDec(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -178,19 +178,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      OctaltoDec(),HexatoDec()
+      OctalToDec(),HexaToDec()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      OCTALTODEC()
+      OctalToDec()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Converts a Octal Value to Decimal
    $SYNTAX$
-      OCTALTODEC(<cN>) -><cNr>
+      OctalToDec(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -201,19 +201,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      BintoDec(),HexatoDec()
+      BinToDec(),HexaToDec()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      HEXATODEC()
+      HexaToDec()
    $CATEGORY$
       Conversion Tools
    $ONELINER$
       Converts a Hexa Value to Decimal
    $SYNTAX$
-      HEXATODEC(<cN>) -><cNr>
+      HexaToDec(<cN>) -><cNr>
    $ARGUMENTS$
       <cN> NUMBER TO BE CONVERTED
    $RETURNS$
@@ -224,6 +224,6 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      OctaltoDec(),BintoDec()
+      OctalToDec(),BinToDec()
    $END$
  */

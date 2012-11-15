@@ -112,7 +112,7 @@ PROCEDURE Main( cCmdLine )
    @ nMaxRow - 4, 25 SAY "Enter       ESCape       Alt-Q"
    SetColor( cNormN )
 
-   FT_MENU1( aBar, aOptions, aColors )
+   ft_Menu1( aBar, aOptions, aColors )
 
    SetColor( "W/N" )
    SetCursor( SC_NORMAL )

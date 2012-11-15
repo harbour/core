@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      CSETREF()
+      CSetRef()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Determine return value of reference sensitive CT3 string functions
    $SYNTAX$
-      CSETREF( [<lNewSwitch>] ) -> lOldSwitch
+      CSetRef( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
       [<lNewSwitch>]  .T. -> suppress return value
                       .F. -> do not suppress return value
@@ -22,15 +22,15 @@
       change the length of a string passed as parameter while
       transforming this string:
 
-      ADDASCII()   BLANK()       CHARADD()
-      CHARAND()    CHARMIRR()    CHARNOT()
-      CHAROR()     CHARRELREP()  CHARREPL()
-      CHARSORT()   CHARSWAP()    CHARXOR()
-      CRYPT()      JUSTLEFT()    JUSTRIGHT()
-      POSCHAR()    POSREPL()     RANGEREPL()
-      REPLALL()    REPLLEFT()    REPLRIGHT()
-      TOKENLOWER() TOKENUPPER()  WORDREPL()
-      WORDSWAP()
+      ADDASCII()   Blank()       CharAdd()
+      CharAnd()    CharMirr()    CharNot()
+      CharOr()     CharRelRep()  CharRepl()
+      CharSort()   CharSwap()    CharXor()
+      Crypt()      JustLeft()    JustRight()
+      PosChar()    PosRepl()     RangeRepl()
+      ReplAll()    ReplLeft()    ReplRight()
+      TokenLower() TokenUpper()  WordRepl()
+      WordSwap()
 
       Thus, these functions allow to pass the string by reference [@] to
       the function so that it may not be necessary to return the transformed
@@ -52,27 +52,27 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      ADDASCII()   BLANK()       CHARADD()
-      CHARAND()    CHARMIRR()    CHARNOT()
-      CHAROR()     CHARRELREP()  CHARREPL()
-      CHARSORT()   CHARSWAP()    CHARXOR()
-      CRYPT()      JUSTLEFT()    JUSTRIGHT()
-      POSCHAR()    POSREPL()     RANGEREPL()
-      REPLALL()    REPLLEFT()    REPLRIGHT()
-      TOKENLOWER() TOKENUPPER()  WORDREPL()
-      WORDSWAP()
+      ADDASCII()   Blank()       CharAdd()
+      CharAnd()    CharMirr()    CharNot()
+      CharOr()     CharRelRep()  CharRepl()
+      CharSort()   CharSwap()    CharXor()
+      Crypt()      JustLeft()    JustRight()
+      PosChar()    PosRepl()     RangeRepl()
+      ReplAll()    ReplLeft()    ReplRight()
+      TokenLower() TokenUpper()  WordRepl()
+      WordSwap()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CSETATMUPA()
+      CSetAtMupa()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Determine "multi-pass" behaviour in some string functions
    $SYNTAX$
-      CSETATMUPA( [<lNewSwitch>] ) -> lOldSwitch
+      CSetAtMupa( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
       [<lNewSwitch>]  .T. -> turn "multi-pass" on
                       .F. -> turn "multi-pass" off
@@ -82,9 +82,9 @@
    $DESCRIPTION$
       CSETATMUPA determines how the following CT3 string functions
 
-      ATNUM()       AFTERATNUM()  BEFORATNUM()
-      ATREPL()      NUMAT()       ATADJUST()
-      WORDTOCHAR()  WORDREPL()
+      AtNum()       AFTERAtNum()  BEFORAtNum()
+      AtRepl()      NumAt()       AtAdjust()
+      WordToChar()  WordRepl()
 
       perform their work. See the respective function documentation for a
       further description how the switch influences these functions.
@@ -102,15 +102,15 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      ATNUM()       AFTERATNUM()  BEFORATNUM()
-      ATREPL()      NUMAT()       ATADJUST()
-      WORDTOCHAR()  WORDREPL()
+      AtNum()       AFTERAtNum()  BEFORAtNum()
+      AtRepl()      NumAt()       AtAdjust()
+      WordToChar()  WordRepl()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      SETATLIKE()
+      SetAtLike()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
@@ -135,9 +135,9 @@
       In the following CT3 functions, strings are compared on a character
       base:
 
-      ATADJUST()    ATNUM()    AFTERATNUM()
-      BEFOREATNUM() ATREPL()   NUMAT()
-      STRDIFF()
+      AtAdjust()    AtNum()    AFTERAtNum()
+      BEFOREAtNum() AtRepl()   NumAt()
+      StrDiff()
 
       With the SETATLIKE function, one can determine when characters are
       considered to match within these functions. If CT_SETATLIKE_WILDCARD

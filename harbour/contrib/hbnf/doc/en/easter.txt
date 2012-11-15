@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_EASTER()
+      ft_Easter()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return the date of Easter
    $SYNTAX$
-      FT_EASTER( <xYear> ) -> dEdate
+      ft_Easter( <xYear> ) -> dEdate
    $ARGUMENTS$
       xYear can be a character, date or numeric describing the year
       for which you wish to receive the date of Easter.
@@ -24,6 +24,6 @@
       This function can be useful in calender type programs that indicate
       when holidays occur.
    $EXAMPLES$
-      dEdate := FT_EASTER( 1990 )     // returns 04/15/1990
+      dEdate := ft_Easter( 1990 )     // returns 04/15/1990
    $END$
  */

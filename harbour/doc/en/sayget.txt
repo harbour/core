@@ -48,8 +48,8 @@
       at row, column coordinate <nRow>, <nCol>.
 
       If the SAY clause is used <cSay> will be displayed starting at
-      <nRow>,<nCol>, with the field variable <xVar> displayed at ROW(),
-      COL()+ 1. If <cSayPicr>, the picture template for the SAY expression
+      <nRow>,<nCol>, with the field variable <xVar> displayed at Row(),
+      Col()+ 1. If <cSayPicr>, the picture template for the SAY expression
       <cSay>, is used, all formatting rules contained will apply See the
       TRANSFORM I function for further information.
 
@@ -62,7 +62,7 @@
       GET object will be skipped and no information will be obtained via
       the screen. The name of a user-defined function returning a logical
       true (.T.) or false ( F.) or a code block may be ,specified in <lWhen>
-      This clause not activated until a READ command or READMODAL()
+      This clause not activated until a READ command or ReadModal()
       function call is issued.
 
       If the VALID clause is specified and <lValid> evaluates to it logical
@@ -72,7 +72,7 @@
       until the condition in <lValid> evaluates to true (.T.). The name
       of a user-defined function returning a logical true (.T.) or false
       (.F.) or it code block may be specified in <lValid>. This clause is
-      not activated until a READ command or READMODAL( ) function call is
+      not activated until a READ command or ReadModal( ) function call is
       issued.
 
       If the RANGE clause is specified instead of the VALID clause, the
@@ -82,7 +82,7 @@
       and <xEnd> must also be numeric data types. If a value fails the
       RANGE test ,a message of OUT OF RANGE will appear in the SCOREBOARD
       area (row = 0, col = 60). The RANGE message may be turned off it the
-      SET SCOREBOARD command or SET() function appropriately toggled.
+      SET SCOREBOARD command or Set() function appropriately toggled.
 
       NOTE       GET functions/formatting rules:
 
@@ -148,7 +148,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      @...SAY,READ,TRANSFORM()
+      @...SAY,READ,Transform()
    $END$
  */
 
@@ -202,6 +202,6 @@
    $FILES$
 
    $SEEALSO$
-      @...GET,SET DEVICE,TRANSFORM()
+      @...GET,SET DEVICE,Transform()
    $END$
  */

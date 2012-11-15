@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Jose Lanin <dezac@corevia.com>
- *    Documentation for: PROCLINE(),PROCFILE(),PROCNAME()
+ *    Documentation for: ProcLine(),ProcFile(),ProcName()
  *
  * Copyright 1999 Eddie Ruina
  *   Documentation for: __DBGVMVARLGET()
@@ -16,7 +16,7 @@
  *    Documentation for: CLIPINIT(), __SETHELPK()
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- *    Documentation for: DO()
+ *    Documentation for: Do()
  *
  * See COPYING for licensing terms.
  *
@@ -26,7 +26,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      PROCNAME()
+      ProcName()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -34,7 +34,7 @@
    $ONELINER$
       Gets the name of the current function on the stack
    $SYNTAX$
-      PROCNAME( <nLevel> ) --> <cProcName>
+      ProcName( <nLevel> ) --> <cProcName>
    $ARGUMENTS$
       <nLevel> is the function level required.
    $RETURNS$
@@ -61,7 +61,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      PROCLINE(),PROCFILE()
+      ProcLine(),ProcFile()
    $END$
  */
 
@@ -69,7 +69,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      PROCLINE()
+      ProcLine()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -77,7 +77,7 @@
    $ONELINER$
       Gets the line number of the current function on the stack.
    $SYNTAX$
-      PROCLINE( <nLevel> ) --> <nLine>
+      ProcLine( <nLevel> ) --> <nLine>
    $ARGUMENTS$
       <nLevel> is the function level required.
    $RETURNS$
@@ -101,7 +101,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      PROCNAME(),PROCFILE()
+      ProcName(),ProcFile()
    $END$
  */
 
@@ -109,7 +109,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      PROCFILE()
+      ProcFile()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -117,7 +117,7 @@
    $ONELINER$
       This function allways returns an empty string.
    $SYNTAX$
-      PROCFILE( <xExp> ) --> <cEmptyString>
+      ProcFile( <xExp> ) --> <cEmptyString>
    $ARGUMENTS$
       <xExp> is any valid type.
    $RETURNS$
@@ -140,7 +140,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      PROCNAME(),PROCLINE()
+      ProcName(),ProcLine()
    $END$
  */
 
@@ -148,7 +148,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_PVALUE()
+      hb_PValue()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -156,7 +156,7 @@
    $ONELINER$
       Retrieves the value of an argument.
    $SYNTAX$
-      HB_PVALUE( <nArg> ) --> <xExp>
+      hb_PValue( <nArg> ) --> <xExp>
    $ARGUMENTS$
       A number that indicates the argument to check.
    $RETURNS$
@@ -179,7 +179,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      PCOUNT()
+      PCount()
    $END$
  */
 
@@ -187,7 +187,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      PCOUNT()
+      PCount()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -195,7 +195,7 @@
    $ONELINER$
       Retrieves the number of arguments passed to a function.
    $SYNTAX$
-      PCOUNT() --> <nArgs>
+      PCount() --> <nArgs>
    $ARGUMENTS$
       None
    $RETURNS$
@@ -221,7 +221,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      HB_PVALUE()
+      hb_PValue()
    $END$
  */
 
@@ -322,7 +322,7 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      __XHelp(),SET KEY,SETKEY()
+      __XHelp(),SET KEY,SetKey()
    $END$
  */
 
@@ -330,7 +330,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      BREAK()
+      Break()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -338,7 +338,7 @@
    $ONELINER$
       Exits from a BEGIN SEQUENCE block
    $SYNTAX$
-      BREAK( <xExp> )
+      Break( <xExp> )
    $ARGUMENTS$
       <xExp> is any valid expression. It is always required.
       If do not want to pass any argument, just use NIL.
@@ -362,7 +362,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DO()
+      Do()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -370,7 +370,7 @@
    $ONELINER$
       Calls a procedure or a function
    $SYNTAX$
-      DO( <xFuncProc> [, <xArguments...>] ) --> <xRetVal>
+      Do( <xFuncProc> [, <xArguments...>] ) --> <xRetVal>
    $ARGUMENTS$
       <xFuncProc> = Either a string with a function/procedure name to be called
       or a codeblock to evaluate.

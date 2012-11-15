@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_BYTEXOR()
+      ft_ByteXor()
    $CATEGORY$
       String
    $ONELINER$
       Perform bit-wise XOR on two ASCII characters (bytes)
    $SYNTAX$
-      FT_BYTEXOR( <cByte1>, <cByte2> ) -> cNewByte
+      ft_ByteXor( <cByte1>, <cByte2> ) -> cNewByte
    $ARGUMENTS$
       <cByte1> and <cByte2> are characters from Chr(0) to Chr(255).
       May be passed in Chr() form, as character literals, or
@@ -29,10 +29,10 @@
       // This code performs a bit-wise XOR on two bytes represented
       // by Chr( 32 ) and Chr( 55 ):
 
-      cNewByte := FT_BYTEXOR( Chr( 32 ), Chr( 55 ) )
+      cNewByte := ft_ByteXor( Chr( 32 ), Chr( 55 ) )
       ? Asc( cNewByte )     // result: 23
       ? cNewByte            // result: non-printable character
    $SEEALSO$
-      FT_BYTEOR() FT_BYTENOT() FT_BYTENEG() FT_BYTEAND()
+      ft_ByteOr() ft_ByteNot() ft_ByteNeg() ft_ByteAnd()
    $END$
  */

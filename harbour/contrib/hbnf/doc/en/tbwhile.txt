@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_BRWSWHL()
+      ft_BrwsWhl()
    $CATEGORY$
       Menus/Prompts
    $ONELINER$
       Browse an indexed database limited to a while condition
    $SYNTAX$
-      FT_BRWSWHL( <aFields>, <bWhileCond>, <cKey>,                  ;
+      ft_BrwsWhl( <aFields>, <bWhileCond>, <cKey>,                  ;
                   [ <nFreeze> ], [ <lSaveScrn> ], [ <cColorList> ], ;
                   [ <cColorShadow> ], [ <nTop> ], [ <nLeft> ],      ;
                   [ <nBottom> ], [ <nRight> ] -> nRecno
@@ -50,7 +50,7 @@
 
       <nTop>, <nLeft>, <nBottom>, <nRight> are the coordinates of
       the area to display the TBrowse in.  Defaults to 2, 2,
-      MAXROW() - 2, MAXCOL() - 2 with shadowed box, i.e. full screen.
+      MaxRow() - 2, MaxCol() - 2 with shadowed box, i.e. full screen.
    $RETURNS$
       nRecno is the number of the record selected by the <Enter> key.
       0 is returned if there are either no records matching the WHILE
@@ -74,12 +74,12 @@
       USE TBNames INDEX TBNames NEW // indexed on Last + First
 
       // Pass Heading as character and Field as Block including Alias
-      // To eliminate the need to use FIELDWBLOCK() function in FT_BRWSWHL()
+      // To eliminate the need to use FIELDWBLOCK() function in ft_BrwsWhl()
       AAdd( aFields, { "Last Name" , {|| TBNames->Last }  } )
       AAdd( aFields, { "First Name", {|| TBNames->First } } )
       AAdd( aFields, { "City"      , {|| TBNames->City }  } )
 
-      IF FT_BRWSWHL( aFields, bWhile, cKey, nFreeze, lSaveScrn, ;
+      IF ft_BrwsWhl( aFields, bWhile, cKey, nFreeze, lSaveScrn, ;
          cColorList, cColorShad, 3, 6, MaxRow() - 2, MaxCol() - 6 ) == 0
          ? "Sorry, NO Records Were Selected"
       ELSE

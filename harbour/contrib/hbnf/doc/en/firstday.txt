@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_FDAY()
+      ft_FDay()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return first day of the month
    $SYNTAX$
-      FT_FDAY( [ <dDateToChk> ] ) -> dFirstDay
+      ft_FDay( [ <dDateToChk> ] ) -> dFirstDay
    $ARGUMENTS$
       <dDateToChk> is a date within a month for which you want to find
       the first date of that month.  If not passed or is an incorrect type,
@@ -23,9 +23,9 @@
       supplied.
    $EXAMPLES$
       dDate := SToD( "19900915" )
-      ? FT_FDAY( dDate )             // 09/01/90
-      ? FT_FDAY()                    // 03/01/91  (current month)
+      ? ft_FDay( dDate )             // 09/01/90
+      ? ft_FDay()                    // 03/01/91  (current month)
    $SEEALSO$
-      FT_LDAY()
+      ft_LDay()
    $END$
  */

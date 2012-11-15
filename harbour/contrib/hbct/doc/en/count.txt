@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      COUNTLEFT()
+      CountLeft()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Count a certain character at the beginning of a string
    $SYNTAX$
-      COUNTLEFT( <cString>, [<cSearch|nSearch>] ) -> nCount
+      CountLeft( <cString>, [<cSearch|nSearch>] ) -> nCount
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,25 +24,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      COUNTLEFT() is compatible with CT3's COUNTLEFT().
+      CountLeft() is compatible with CT3's CountLeft().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      COUNTRIGHT()
+      CountRight()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      COUNTRIGHT()
+      CountRight()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Count a certain character at the end of a string
    $SYNTAX$
-      COUNTRIGHT( <cString>, [<cSearch|nSearch>] ) -> nCount
+      CountRight( <cString>, [<cSearch|nSearch>] ) -> nCount
    $ARGUMENTS$
 
    $RETURNS$
@@ -56,12 +56,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      COUNTRIGHT() is compatible with CT3's COUNTRIGHT().
+      CountRight() is compatible with CT3's CountRight().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      COUNTLEFT()
+      CountLeft()
    $END$
  */

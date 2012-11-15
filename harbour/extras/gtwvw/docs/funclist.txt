@@ -67,12 +67,12 @@ read the source code :-).
 //-------------------------------------------------
 
 //
-//WVW_nOpenWindow(cWinName, row1, col1, row2, col2, ;
+//wvw_nOpenWindow(cWinName, row1, col1, row2, col2, ;
 //                nStyle, nParentWin)
 //rowx and colx are relative to MAIN WINDOW (not current window!)
 //rowx and colx are used for:
 //(1) positioning window to its initial position,
-//(2) determining the size of the window (new maxrow() and maxcol())
+//(2) determining the size of the window (new MaxRow() and MaxCol())
 //(3) saved into RowOfs and ColOfs for MainCoord mode
 //
 //nStyle is window style (eg. WS_OVERLAPPEDWINDOW, etc.)
@@ -92,39 +92,39 @@ read the source code :-).
 //returns 0 if failed
 //
 
-//WVW_lCloseWindow()
+//wvw_lCloseWindow()
 //closes the last/topmost window
 //returns .t. if successful
 //
 
-//WVW_nNumWindows()
+//wvw_nNumWindows()
 //returns number of windows opened (including main window)
 //
 
-//WVW_xReposWindow()
+//wvw_XReposWindow()
 //reposition all windows to their initial position
 //
 
-//WVW_nSetCurWindow( nWinNum )   (0==MAIN)
+//wvw_nSetCurWindow( nWinNum )   (0==MAIN)
 //assigns nWinNum as the new current window (s_usCurWindow)
 //returns old current window
-//example: saved := WVW_nSetCurWindow(0)
+//example: saved := wvw_nSetCurWindow(0)
 //         ? "This will be displayed in Main Window"
-//         WVW_nSetCurWindow(saved)
+//         wvw_nSetCurWindow(saved)
 //notes: makes sense only if !s_bMainCoordMode
 //
 
-//WVW_nRowOfs( [nWinNum] )
+//wvw_nRowOfs( [nWinNum] )
 //returns row offset of window #nWinNum (0==MAIN), relative to Main Window
 //nWinNum defaults to current window
 //
 
-//WVW_nColOfs( [nWinNum] )
+//wvw_nColOfs( [nWinNum] )
 //returns col offset of window #nWinNum (0==MAIN), relative to Main Window
 //nWinNum defaults to topmost window
 //
 
-//WVW_SetMainCoord( [lMainCoord] )
+//wvw_SetMainCoord( [lMainCoord] )
 //returns old setting of s_bMainCoordMode,
 //then assigns s_bMainCoordMode := lMainCoord (if supplied)
 //
@@ -137,18 +137,18 @@ read the source code :-).
 //        column 0 of original last row
 // WARNING: no checking if window size will become larger than desktop area
 //          (except if in MainCoord Mode, because it is implied from
-//           restriction of resulted maxrow())
+//           restriction of resulted MaxRow())
 //
 
 //
-//WVW_NOCLOSE( [nWinNum] )
+//wvw_NoClose( [nWinNum] )
 //disable CLOSE 'X' button of a window
 //
 //no return value
 //
 
 //
-//WVW_SETWINSTYLE( [nWinNum], [nStyle] )
+//wvw_SetWinStyle( [nWinNum], [nStyle] )
 //Get/Set window style
 //NOTES: if window has controls (eg. pushbutton, scrollbar)
 //       you should include WS_CLIPCHILDREN in nStyle
@@ -163,64 +163,64 @@ read the source code :-).
 //               GTWVW parameter setting from .prg
 //-------------------------------------------------
 
-//WVW_SetPaintRefresh( [nPaintRefresh] )
+//wvw_SetPaintRefresh( [nPaintRefresh] )
 //returns old setting of s_uiPaintRefresh (millisec between calls to WVW_PAINT)
 //then assigns s_uiPaintRefresh:= nPaintRefresh (if supplied)
 //NOTES: nPaintRefresh must be >= 50
 //       or nPaintRefresh == 0, causing Repaint to execute immediately, as GTWVT
 //
 
-//WVW_SetVertCaret( [lOn] )
+//wvw_SetVertCaret( [lOn] )
 //if lOn is supplied:
 //lOn == .t.: turn caret into vertical caret
 //lOn == .f.: turn caret into horizontal caret
 //return old setting of s_bVertCaret
 //
 
-//WVW_SetDefLineSpacing( [nLineSpacing] )
+//wvw_SetDefLineSpacing( [nLineSpacing] )
 //returns old setting of s_byDefLineSpacing (default linespacing between lines)
 //then assigns s_byDefLineSpacing:= nLineSpacing (if supplied)
 //NOTES:
 // - nLineSpacing will be the default line spacing for all window opens
 // - nLineSpacing must be even, positive number <= 40
 //   otherwise it will be ignored
-// - to check line spacing being used by a window, use WVW_SetLineSpacing()
+// - to check line spacing being used by a window, use wvw_SetLineSpacing()
 //
 
-//WVW_SetLineSpacing( [nWinNum], [nLineSpacing] )
+//wvw_SetLineSpacing( [nWinNum], [nLineSpacing] )
 //returns old setting of linespacing between lines in window nWinNum
 //then set the line spacing to nLineSpacing (if supplied)
 //NOTES:
 // - nLineSpacing must be even, positive number <= 40
 //   otherwise it will be ignored
 // - if window size will become too high, line spacing is restored
-// - to change default line spacing for next window open, use WVW_SetDefLineSpacing()
+// - to change default line spacing for next window open, use wvw_SetDefLineSpacing()
 //
 
-//WVW_NoStartupSubWindow( [lOn] )
+//wvw_NoStartupSubWindow( [lOn] )
 //if lOn is supplied:
 //lOn == .t.: when opening window, window will not be displayed
 //lOn == .f.: when opening window, window will be displayed (default)
 //return old setting of s_bNOSTARTUPWINDOW
 //
-//See Also: WVW_ShowWindow()
+//See Also: wvw_ShowWindow()
 //
 
 //-------------------------------------------------
 // STATUS BAR
 //-------------------------------------------------
 
-//WVW_SBcreate( [nWinNum] )
+//wvw_sbCreate( [nWinNum] )
 //create status bar for window nWinNum, with one part.
 //returns handle to status bar of windows nWinNum
 //returns 0 if failed, eg. if there is already a status bar for this window
 //
 
-//WVW_SBdestroy( [nWinNum] )
+//wvw_sbDestroy( [nWinNum] )
 //destroy status bar for window nWinNum
 //
 
-//WVW_SBaddPart(nWinNum, cMaxText, nWidth, nStyle, lResetParts, [cIcon , cToolTip])
+//wvw_sbAddPart(nWinNum, cMaxText, nWidth, nStyle, lResetParts, [cIcon , cToolTip])
 //ps.
 //lResetParts==.t. :: remove all previously created parts
 //nStyle: 0 (default), 0x0200 (SBT_POPOUT), 0x0100 (SBT_NOBORDERS)
@@ -233,21 +233,21 @@ read the source code :-).
 //returns 0 if failed
 //
 
-//WVW_SBrefresh(nWinNum)
+//wvw_sbRefresh(nWinNum)
 //reinitialize StatusBar's parts, eg. after window resize
 //returns number of parts
 //returns 0 if failed
 //
 
-//WVW_SBsetText([nWinNum], [nPart], cText)
+//wvw_sbSetText([nWinNum], [nPart], cText)
 //Set Text of status bar's part #npart
 //
 
-//WVW_SBgetText([nWinNum], [nPart])
+//wvw_sbGetText([nWinNum], [nPart])
 //Get Text of status bar's part #npart
 //
 
-//WVW_SBgetparts([nWinNum])
+//wvw_sbGetParts([nWinNum])
 //Get number of parts in statusbar of window nWinNum
 //
 
@@ -255,7 +255,7 @@ read the source code :-).
 // TIMER
 //-------------------------------------------------
 
-//WVW_SetTimer([nWinNum], nInterval)
+//wvw_SetTimer([nWinNum], nInterval)
 //set timer event for every nInterval millisec
 //(effective only if WVW_TIMER() function exists)
 //eg. it can be usefull to update clock on status bar
@@ -263,7 +263,7 @@ read the source code :-).
 //
 
 
-//WVW_KillTimer([nWinNum])
+//wvw_KillTimer([nWinNum])
 //kill the timer event handler for window nWinNum
 //returns .t. if successfull
 //
@@ -272,7 +272,7 @@ read the source code :-).
 // TOOLBAR
 //-------------------------------------------------
 
-//WVW_TBCreate([nWinNum], lDisplayText, nStyle, nSystemBitmap, nImageWidth, nImageHeight)
+//wvw_tbCreate([nWinNum], lDisplayText, nStyle, nSystemBitmap, nImageWidth, nImageHeight)
 //creates a toolbar at the top (no button initially)
 //lDisplayText==.f. button's string is used as tooltips (default)
 //nStyle: toolbar style, defaults to TBSTYLE_FLAT | TBSTYLE_TOOLTIPS
@@ -281,7 +281,7 @@ read the source code :-).
 //nImageWidth/Height are in effect only if nSystemBitmap==0
 //
 
-//WVW_TBAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType,;
+//wvw_tbAddButton([nWinNum], nCommand, xBitmap, cLabel, nBitmapType,;
 //                           lMap3Dcolors)
 //adds one button on the right of existing buttons
 //xBitmap:
@@ -302,33 +302,33 @@ read the source code :-).
 //
 
 
-//WVW_TBButtonCount([nWinNum])
+//wvw_tbButtonCount([nWinNum])
 //returns number of buttons in toolbar on window nWinNum
 //
 
-//WVW_TBDelButton([nWinNum], nButton)
+//wvw_tbDelButton([nWinNum], nButton)
 //nButton is zero based index of button to delete
 //index=0 is the leftmost button
 //NOTE: button separator is indexed and deleteable too
 //
 
-//WVW_TBEnableButton([nWinNum], nButton, [lToggle])
+//wvw_tbEnableButton([nWinNum], nButton, [lToggle])
 //nButton is zero based index of button to delete
 //index=0 is the leftmost button
 //NOTE: button separator is indexed too
 //returns .t. if successful
 //
 
-//WVW_TBdestroy( [nWinNum] )
+//wvw_tbDestroy( [nWinNum] )
 //destroy toolbar for window nWinNum
 //
 
-//WVW_TBINDEX2CMD([nWinNum], nIndex)
+//wvw_tbIndex2Cmd([nWinNum], nIndex)
 //returns Command Id of button nIndex (0 based)
 //returns -1 if the button does not exist
 //
 
-//WVW_TBCmd2Index([nWinNum], nCmd)
+//wvw_tbCmd2Index([nWinNum], nCmd)
 //returns Index (0 based) of button whose command id is nCmd
 //returns -1 if the button does not exist
 //
@@ -338,7 +338,7 @@ read the source code :-).
 // SCROLLBAR
 //-------------------------------------------------
 
-//WVW_XBcreate( [nWinNum], nStyle, nTop, nLeft, nLength, bBlock, aOffset)
+//wvw_xbCreate( [nWinNum], nStyle, nTop, nLeft, nLength, bBlock, aOffset)
 //create scroll bar for window nWinNum
 //nStyle: SBS_HORZ (0)=horizontal, SBS_VERT (1)=vertical
 //nTop: row of top/left corner (in character unit)
@@ -375,12 +375,12 @@ read the source code :-).
 //returns 0 if failed
 //
 //example:
-//WVW_XBcreate( , 1, 10, 70, 12)
+//wvw_xbCreate( , 1, 10, 70, 12)
 //  :: creates Vertical scrollbar on current window at (10,70) with length 12
 //     dimensions using default ones.
 //     buttons/parts behaviour using default ones.
 //
-//WVW_XBcreate( , 1, 10, 70, 12, {0, +5, 0, +5} )
+//wvw_xbCreate( , 1, 10, 70, 12, {0, +5, 0, +5} )
 //  :: creates Vertical scrollbar on current window at (10,70) with length 12
 //     left and right coordinate is shifted 5 pixels to the right.
 //     buttons/parts behaviour using default ones.
@@ -390,11 +390,11 @@ read the source code :-).
 //Initial ScrollPos is 0
 //
 
-//WVW_XBdestroy( [nWinNum], nXBid )
+//wvw_xbDestroy( [nWinNum], nXBid )
 //destroy scrollbar nXBid for window nWinNum
 //
 
-//WVW_XBupdate(nWinNum, XBid, [nPos], [nPageSize], [nMin], [nMax])
+//wvw_xbUpdate(nWinNum, XBid, [nPos], [nPageSize], [nMin], [nMax])
 //update scrollbar data and its display
 //nPos, nPageSize, nMin, nMax are optional.
 //however, both nMin & nMax must be supplied, or not at all.
@@ -402,7 +402,7 @@ read the source code :-).
 //returns -1 if update failed.
 //
 
-//WVW_XBenable( [nWinNum], nXBid, nFlags )
+//wvw_xbEnable( [nWinNum], nXBid, nFlags )
 //enable/disable scrollbar nXBid in window nWinNum (default to topmost window)
 //nFlags: ESB_ENABLE_BOTH                    0: enable both arrows
 //        ESB_DISABLE_LEFT/ESB_DISABLE_UP    1: disable left/up arrow
@@ -416,7 +416,7 @@ read the source code :-).
 // PUSHBUTTON
 //-------------------------------------------------
 
-//WVW_PBcreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset)
+//wvw_pbCreate( [nWinNum], nTop, nLeft, nBottom, nRight, cText, cImage/nImage, bBlock, aOffset)
 //create pushbutton for window nWinNum
 //nTop: row of top/left corner (in character unit)
 //nLeft: col of top/left corner (in character unit)
@@ -446,28 +446,28 @@ read the source code :-).
 //example:
 //
 
-//WVW_PBdestroy( [nWinNum], nPBid )
+//wvw_pbDestroy( [nWinNum], nPBid )
 //destroy button nPBid for window nWinNum
 //
 
-//WVW_PBsetFocus( [nWinNum], nButtonId )
+//wvw_pbSetFocus( [nWinNum], nButtonId )
 //set the focus to button nButtonId in window nWinNum
 //
 
-//WVW_PBenable( [nWinNum], nButtonId, [lToggle] )
+//wvw_pbEnable( [nWinNum], nButtonId, [lToggle] )
 //enable/disable button nButtonId on window nWinNum
 //(lToggle defaults to .t., ie. enabling the button)
 //return previous state of the button (TRUE:enabled FALSE:disabled)
 //(if nButtonId is invalid, this function returns FALSE too)
 //
 
-//WVW_PBsetcodeblock( [nWinNum], nPBid, bBlock )
+//wvw_pbSetCodeblock( [nWinNum], nPBid, bBlock )
 //assign (new) codeblock bBlock to button nPBid for window nWinNum
 //
 // return .t. if successful
 //
 
-//WVW_PBsetstyle( [nWinNum], nPBid, nStyle )
+//wvw_pbSetStyle( [nWinNum], nPBid, nStyle )
 //assign new style nStyle to button nPBid for window nWinNum
 //typical usage: nStyle==BS_DEFPUSHBUTTON (==01) to turn the button
 //                                               into default push button
@@ -481,7 +481,7 @@ read the source code :-).
 // this function always return .t.
 //
 
-//WVW_PBSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
+//wvw_pbSetFont([nWinNum], cFontFace, nHeight, nWidth, nWeight, nQUality,;
 //                             lItalic, lUnderline, lStrikeout
 //
 //this will initialize font for ALL pushbuttons in window nWinNum
@@ -493,7 +493,7 @@ read the source code :-).
 // PROGRESSBAR
 //-------------------------------------------------
 
-//WVW_PGcreate( [nWinNum], nTop, nLeft, nBottom, nRight, [aOffset],
+//wvw_pgCreate( [nWinNum], nTop, nLeft, nBottom, nRight, [aOffset],
 //                         [nBackColor], [nBarColor], [lSmooth], [lVertical])
 //create progress bar for window nWinNum
 //nTop: row of top/left corner (in character unit)
@@ -511,11 +511,11 @@ read the source code :-).
 //returns 0 if failed
 //
 //example:
-//WVW_PGcreate( , 5, 10, 5, 30)
+//wvw_pgCreate( , 5, 10, 5, 30)
 //  :: creates horiz progressbar on current window at (5,10) to (5,30)
 //     colors using default ones.
 //
-//WVW_PGcreate( , 5, 10, 5, 30, {-1, 0, +1, 0} )
+//wvw_pgCreate( , 5, 10, 5, 30, {-1, 0, +1, 0} )
 //  :: same as above, but the bar is enlarged 1 pixel to the top
 //     and 1 pixel to the bottom
 //
@@ -524,12 +524,12 @@ read the source code :-).
 //Initial ProgressPos is 0
 //
 
-//WVW_PGdestroy( [nWinNum], nPGid )
+//wvw_pgDestroy( [nWinNum], nPGid )
 //destroy progressbar nPGid for window nWinNum
 //This function has no return value.
 //
 
-//WVW_PGsetrange(nWinNum, PGid, [nMin], [nMax])
+//wvw_pgSetRange(nWinNum, PGid, [nMin], [nMax])
 //update progressbar data range (default is 0-100)
 //nMin: a number in range of -32767 to +32767
 //nMax: a number in range of -32767 to +32767
@@ -539,13 +539,13 @@ read the source code :-).
 //returns .t. if operation considered successfull
 //
 
-//WVW_PGsetpos(nWinNum, PGid, [nPos])
+//wvw_pgSetPos(nWinNum, PGid, [nPos])
 //update progressbar position within current range
 //nPos: a number in range of current range
 //returns .t. if operation considered successfull
 //
 
-//WVW_PGgetpos(nWinNum, PGid)
+//wvw_pgGetPos(nWinNum, PGid)
 //get progressbar current position
 //returns 0 if operation failed
 //
@@ -591,7 +591,7 @@ WVW_LOADPEN            ([<vlist>])
 WVW_SETPEN             ([<vlist>])
 WVW_SETBRUSH           ([<vlist>])
 
-WVW_CREATEDIALOGDYNAMIC([<vlist>])
+wvw_CreateDialogDynamic([<vlist>])
 WVW_CREATEDIALOGMODAL  ([<vlist>])
 WVW__MAKEDLGTEMPLATE   ([<vlist>])
 WVW_LBADDSTRING        ([<vlist>])
@@ -759,7 +759,7 @@ PART-3: General Windows API functions
 //
 
 WIN_SENDMESSAGE       ([<vlist>])
-WIN_SENDDLGITEMMESSAGE([<vlist>])
+win_SendDlgItemMessage([<vlist>])
 WIN_SETTIMER          ([<vlist>])
 WIN_SETFOCUS          ([<vlist>])
 WIN_SETTEXTCOLOR      ([<vlist>])
@@ -771,12 +771,12 @@ WIN_SELECTOBJECT      ([<vlist>])
 WIN_LOWORD            ([<vlist>])
 WIN_HIWORD            ([<vlist>])
 WIN_MULDIV            ([<vlist>])
-WIN_GETDIALOGBASEUNITS([<vlist>])
+win_GetDialogBaseUnits([<vlist>])
 WIN_SETMENU           ([<vlist>])
 WIN_SETDLGITEMTEXT    ([<vlist>])
 WIN_GETDLGITEMTEXT    ([<vlist>])
 WIN_CHECKDLGBUTTON    ([<vlist>])
-WIN_ISDLGBUTTONCHECKED([<vlist>])
+win_IsDlgButtonChecked([<vlist>])
 WIN_CHECKRADIOBUTTON  ([<vlist>])
 WIN_GETDLGITEM        ([<vlist>])
 WIN_MESSAGEBOX        ([<vlist>])
@@ -838,28 +838,28 @@ FUNCTION WVW_INPUTFOCUS(nWinNum, hWnd, message, wParam, lParam)
 //-------------------------------------------------
 
 //-------------------------------------------------
-//   aScr := Wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight )
+//   aScr := wvw_SaveScreen( nWinNum, nTop, nLeft, nBottom, nRight )
 //
 
 //-------------------------------------------------
-//   Wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )
+//   wvw_RestScreen( nWinNum, nTop, nLeft, nBottom, nRight, aScr, lDoNotDestroyBMP )
 //
 
 //-------------------------------------------------
-// Wvw_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
+// wvw_CreateFont( cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline,
 //                 lStrikeout, nCharSet, nQuality, nEscapement )
 //
 
 //-------------------------------------------------
-//    WVW_DRAWLABELOBJ( [nWinNum], nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont )
+//    wvw_DrawLabelObj( [nWinNum], nTop, nLeft, nBottom, nRight, cLabel, nAlignHorz, nAlignVert, nTextColor, nBkColor, hFont )
 //
 
 //-------------------------------------------------
-//    Wvw_DrawToolButtonState( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOff, nState )
+//    wvw_DrawToolButtonState( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOff, nState )
 //
 
 //-------------------------------------------------
-//   Wvw_DrawScrollButton( [nWinNum], nTop, nLeft, nBottom, nRight, aOffPixels, nTLBR, lDepressed )
+//   wvw_DrawScrollButton( [nWinNum], nTop, nLeft, nBottom, nRight, aOffPixels, nTLBR, lDepressed )
 //
 // SEE ALSO: WVW_XB* functions
 
@@ -876,27 +876,27 @@ FUNCTION WVW_INPUTFOCUS(nWinNum, hWnd, message, wParam, lParam)
 // SEE ALSO: WVW_XB* functions
 
 //-------------------------------------------------
-//    Wvw_DrawShadedRect( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, nHorVert, aRGBb, aRGBe  )
+//    wvw_DrawShadedRect( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, nHorVert, aRGBb, aRGBe  )
 //
 
 //-------------------------------------------------
-//   Wvw_DrawTextBox( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, cText, ;
+//   wvw_DrawTextBox( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlOffSet, cText, ;
 //                    nAlignHorz, nAlignVert, nTextColor, nBackColor, ;
 //                    nBackMode, hFont )
 //
 
 //-------------------------------------------------
-// Wvw_DrawProgressBar( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlTLBR, nPercent,;
+// wvw_DrawProgressBar( [nWinNum], nTop, nLeft, nBottom, nRight, aPxlTLBR, nPercent,;
 //                      nBackColor, nBarColor, cImage, lVertical, nDirection )
 //
 
-// WVW_TrackPopupMenu([nWinNum], n)
+// wvw_TrackPopupMenu([nWinNum], n)
 
-// WVW_GetMenu([nWinNum])
+// wvw_GetMenu([nWinNum])
 
 //-------------------------------------------------
 //
-//   Wvw_SetPen( nPenStyle, nWidth, nColor )
+//   wvw_SetPen( nPenStyle, nWidth, nColor )
 //
 // IMPORTANT: in prev release this functions has nWinNum parameter
               PENs are now application-wide.
@@ -904,18 +904,18 @@ FUNCTION WVW_INPUTFOCUS(nWinNum, hWnd, message, wParam, lParam)
 
 //-------------------------------------------------
 //
-//   Wvw_SetBrush( nStyle, nColor, [ nHatch ] )
+//   wvw_SetBrush( nStyle, nColor, [ nHatch ] )
 //
 // IMPORTANT: in prev release this functions has nWinNum parameter
               BRUSHes are now application-wide.
 //
 
 //-------------------------------------------------
-//   Wvw_DrawBoxGet( [nWinNum], nRow, nCol, nWidth )
+//   wvw_DrawBoxGet( [nWinNum], nRow, nCol, nWidth )
 //
 
 //-------------------------------------------------
-//   Wvw_DrawBoxRaised( nWinNum,
+//   wvw_DrawBoxRaised( nWinNum,
 //                   nTop, nLeft, nBottom, nRight,
 //                   lTight) <--none in gtwvt
 //
@@ -927,7 +927,7 @@ FUNCTION WVW_INPUTFOCUS(nWinNum, hWnd, message, wParam, lParam)
 //
 
 //-------------------------------------------------
-//    Wvw_DrawBoxRecessed( nWinNum, ;
+//    wvw_DrawBoxRecessed( nWinNum, ;
 //                   nTop, nLeft, nBottom, nRight,
 //                   lTight) <--none in gtwvt
 //
@@ -939,52 +939,52 @@ FUNCTION WVW_INPUTFOCUS(nWinNum, hWnd, message, wParam, lParam)
 //
 
 //-------------------------------------------------
-//    Wvw_DrawBoxGroup( nWinNum, ;
+//    wvw_DrawBoxGroup( nWinNum, ;
 //                   nTop, nLeft, nBottom, nRight )
 //
 
 //-------------------------------------------------
-//    Wvw_DrawBoxRaised( nWinNum, ;
+//    wvw_DrawBoxRaised( nWinNum, ;
 //                   nTop, nLeft, nBottom, nRight )
 //
 
 //-------------------------------------------------
-//    Wvw_DrawImage( nWinNum, ;
+//    wvw_DrawImage( nWinNum, ;
 //                   nTop, nLeft, nBottom, nRight, cImage/nPictureSlot, ;
 //                   lTight/aOffset) <--none in gtwvt
 //
 
 //-------------------------------------------------
-//    WVW_DRAWLABEL( nWinNum, ;
+//    wvw_DrawLabel( nWinNum, ;
 //                   nRow, nCol, cLabel, nAlign, nEscapement, nTextColor, ;
 //                   nBkColor, cFontFace,nHeight, nWidth, nWeight, ;
 //                   nQuality, nCharSet, lItalic, lUnderline, lStrikeOut )
 //
 
 //-------------------------------------------------
-//    Wvw_DrawOutline( nWinNum, ;
+//    wvw_DrawOutline( nWinNum, ;
 //                   nTop, nLeft, nBottom, nRight,
 //                   nThick, nShape, nRGBColor )
 //
 
 //-------------------------------------------------
-//   Wvw_DrawLine( nWinNum, ;
+//   wvw_DrawLine( nWinNum, ;
 //                 nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nStyle, nThick, nColor )
 //
 
 //-------------------------------------------------
 //    Inside the area requested!
-//    Wvw_DrawEllipse( nWinNum, nTop, nLeft, nBottom, nRight )
+//    wvw_DrawEllipse( nWinNum, nTop, nLeft, nBottom, nRight )
 //
 
 //-------------------------------------------------
-//    Wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight )
+//    wvw_DrawRectangle( nWinNum, nTop, nLeft, nBottom, nRight )
 //
 
 //-------------------------------------------------
 //GTWVW specific
 //none in gtwvt
-//    Wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBcolor/hBrush,
+//    wvw_FillRectangle( nWinNum, nTop, nLeft, nBottom, nRight, nRGBcolor/hBrush,
 //                       lTight, lUseBrush )
 //
 //   if lTight, rect is drawn inside the character region
@@ -997,50 +997,50 @@ FUNCTION WVW_INPUTFOCUS(nWinNum, hWnd, message, wParam, lParam)
 //
 
 //-------------------------------------------------
-//    Wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, nRoundHeight, nRoundWidth )
+//    wvw_DrawRoundRect( nWinNum, nTop, nLeft, nBottom, nRight, nRoundHeight, nRoundWidth )
 //
 
 //-------------------------------------------------
-//    Wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight )
+//    wvw_DrawFocusRect( nWinNum, nTop, nLeft, nBottom, nRight )
 //
 
 //-------------------------------------------------
-//   Wvw_DrawGridHorz( nWinNum, ;
+//   wvw_DrawGridHorz( nWinNum, ;
 //                   nTop, nLeft, nRight, nRows )
 //
 
 //-------------------------------------------------
-//     Wvw_DrawGridVert( nWinNum, ;
+//     wvw_DrawGridVert( nWinNum, ;
 //                   nTop, nBottom, aCols, nCols )
 //
 
 //-------------------------------------------------
-//    Wvw_DrawButton( nWinNum, ;
+//    wvw_DrawButton( nWinNum, ;
 //                   nTop, nLeft, nBottom, nRight, cText, cImage/nImage, nFormat, ;
 //                    nTextColor, nBkColor, nImageAt )
 //
 
-// WVW_DrawStatusbar() is meant for WVT compatibility only.
+// wvw_DrawStatusBar() is meant for WVT compatibility only.
 // WVW_SBxxxx() functions are recommended instead.
 //
 
 //-------------------------------------------------
-//     Wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
+//     wvw_ChooseFont( cFontName, nHeight, nWidth, nWeight, nQuality, ;
 //                                    lItalic, lUnderline, lStrikeout )
 //
 
 //-------------------------------------------------
-//    Wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected
+//    wvw_ChooseColor( nRGBInit, aRGB16, nFlags ) => nRGBSelected
 //
 
-//WVW_SETMOUSEPOS( nWinNum, nRow, nCol ) nWinNum is 0 based
+//wvw_SetMousePos( nWinNum, nRow, nCol ) nWinNum is 0 based
 //WHAT'S the difference with GT_FUNC( mouse_SetPos ) ???
 //this func is able to position cursor on any window
-//NOTE: consider using 'standard' SETMOUSE() instead:
-//      SETMOUSE(.t., nRow, nCol)
+//NOTE: consider using 'standard' SetMouse() instead:
+//      SetMouse(.t., nRow, nCol)
 //      This will treat (nRow,nCol) according to current s_bMainCoordMode setting
 
-//WVW_GetPaintRect( nWinNum )   nWinNum is 0 based
+//wvw_GetPaintRect( nWinNum )   nWinNum is 0 based
 //returns array of paint pending rect {top, left, bottom, right}
 //WARNING:
 //unlike WVT, top maybe > bottom
@@ -1049,33 +1049,33 @@ FUNCTION WVW_INPUTFOCUS(nWinNum, hWnd, message, wParam, lParam)
 //(in WVT these is reflected in {0,0,0,0})
 
 //-------------------------------------------------
-//   Wvw_LoadPicture( nSlot, cFilePic )
+//   wvw_LoadPicture( nSlot, cFilePic )
 //
 
 //-------------------------------------------------
-// Wvw_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
+// wvw_LoadFont( nSlotFont, cFontFace, nHeight, nWidth, nWeight, lItalic, lUnderline, lStrikeout,
 //               nCharSet, nQuality, nEscapement )
 //
 
 //-------------------------------------------------
-//  Wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor )
+//  wvw_LoadPen( nSlot, nStyle, nWidth, nRGBColor )
 //
 
 //-------------------------------------------------
-//  Wvw_DrawPicture( [nWinNum], nTop, nLeft, nBottom, nRight, nSlot, lTight/aAdj ) -> lOk
+//  wvw_DrawPicture( [nWinNum], nTop, nLeft, nBottom, nRight, nSlot, lTight/aAdj ) -> lOk
 //  nSlot <= 20  aAdj == { 0,0,-2,-2 } To Adjust the pixels for { Top,Left,Bottom,Right }
 //
 
 //-------------------------------------------------
-//    WVW_DRAWLABELEX( [nWinNum], nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont )
+//    wvw_DrawLabelEx( [nWinNum], nRow, nCol, cLabel, nAlign, nTextColor, nBkColor, nSlotFont )
 //
 
 //-------------------------------------------------
-//   Wvw_DrawLineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen )
+//   wvw_DrawLineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nOrient, nFormat, nAlign, nSlotPen )
 //
 
 //-------------------------------------------------
-//    Wvw_DrawOutlineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nSlotPen )
+//    wvw_DrawOutlineEx( [nWinNum], nTop, nLeft, nBottom, nRight, nSlotPen )
 //
 
 //-------------------------------------------------

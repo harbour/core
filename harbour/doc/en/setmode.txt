@@ -13,7 +13,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SETMODE()
+      SetMode()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -21,16 +21,16 @@
    $ONELINER$
       Change the video mode to a specified number of rows and columns
    $SYNTAX$
-      SETMODE( <nRows>, <nCols> ) --> lSuccess
+      SetMode( <nRows>, <nCols> ) --> lSuccess
    $ARGUMENTS$
       <nRows> is the number of rows for the video mode to set.
 
       <nCols> is the number of columns for the video mode to set.
    $RETURNS$
-      SETMODE() returns true if the video mode change was successful;
+      SetMode() returns true if the video mode change was successful;
       otherwise, it returns false.
    $DESCRIPTION$
-      SETMODE() is a function that change the video mode depend on the
+      SetMode() is a function that change the video mode depend on the
       video card and monitor combination, to match the number of rows and
       columns specified.
       Note that there are only a real few combination or rows/cols pairs
@@ -55,7 +55,7 @@
 
       Some modes only are availables for color and/or VGA monitors.
       Any change produced on the screen size is updated in the values
-      returned by MAXROW() and MAXCOL().
+      returned by MaxRow() and MaxCol().
    $EXAMPLES$
       // The first example change to a 12 lines of display mode:
       IF SetMode( 12, 40 )
@@ -77,6 +77,6 @@
    $PLATFORMS$
       DOS,Win
    $SEEALSO$
-      MAXCOL(),MAXROW()
+      MaxCol(),MaxRow()
    $END$
  */

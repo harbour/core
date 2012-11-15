@@ -7,21 +7,21 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    Documentation for: HB_COLORINDEX()
+ *    Documentation for: hb_ColorIndex()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    Documentation for: __WAIT(), __INPUT()
  *
  * Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: ALERT(), __NONOALERT(), OUTSTD(), OUTERR(),
+ *    Documentation for: Alert(), __NONOAlert(), OutStd(), OutErr(),
  *                       __XSaveScreen(), SAVE SCREEN, __XRestScreen(),
  *                       RESTORE SCREEN, __TextSave(), __TextRestore()
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    Documentation for: DEVOUTPICT()
+ *    Documentation for: DevOutPict()
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: EJECT,MAXROW(),MAXCOL(),ROW(),COL(),PROW(),PCOL()
+ *    Documentation for: EJECT,MaxRow(),MaxCol(),Row(),Col(),PRow(),PCol()
  *
  * See COPYING for licensing terms.
  *
@@ -50,10 +50,10 @@
 
       SAVE SCREEN command is preprocessed into __XSaveScreen() function
       during compile time. Note that SAVE SCREEN TO is preprocessed into
-      SAVESCREEN() function.
+      SaveScreen() function.
 
       __XSaveScreen() is a compatibility function, it is superseded by
-      SAVESCREEN() which allow you to save part or all the screen into a
+      SaveScreen() which allow you to save part or all the screen into a
       variable.
    $EXAMPLES$
       // save the screen, display list of files than restore the screen
@@ -70,7 +70,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      RESTORE SCREEN,RESTSCREEN(),SAVESCREEN()
+      RESTORE SCREEN,RestScreen(),SaveScreen()
    $END$
  */
 
@@ -97,7 +97,7 @@
 
       SAVE SCREEN command is preprocessed into __XSaveScreen() function
       during compile time. Note that SAVE SCREEN TO is preprocessed into
-      SAVESCREEN() function.
+      SaveScreen() function.
    $EXAMPLES$
       // save the screen, display list of files than restore the screen
       SAVE SCREEN
@@ -111,7 +111,7 @@
    $PLATFORMS$
       All(GT)
    $SEEALSO$
-      RESTORE SCREEN,__XRESTSCREEN(),__XSAVESCREEN()
+      RESTORE SCREEN,__XRestScreen(),__XSaveScreen()
    $END$
  */
 
@@ -138,10 +138,10 @@
 
       RESTORE SCREEN command is preprocessed into __XRestScreen() function
       during compile time. Note that RESTORE SCREEN FROM is preprocessed
-      into RESTSCREEN() function.
+      into RestScreen() function.
 
       __XRestScreen() is a compatibility function, it is superseded by
-      RESTSCREEN() which allow you to restore the screen from a variable.
+      RestScreen() which allow you to restore the screen from a variable.
    $EXAMPLES$
       // save the screen, display list of files than restore the screen
       SAVE SCREEN
@@ -157,7 +157,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
+      __XRestScreen(),SAVE SCREEN,__XSaveScreen()
    $END$
  */
 
@@ -184,7 +184,7 @@
 
       RESTORE SCREEN command is preprocessed into __XRestScreen() function
       during compile time. Note that RESTORE SCREEN FROM is preprocessed
-      into RESTSCREEN() function.
+      into RestScreen() function.
    $EXAMPLES$
       // save the screen, display list of files than restore the screen
       SAVE SCREEN
@@ -198,7 +198,7 @@
    $PLATFORMS$
       All(GT)
    $SEEALSO$
-      __XRESTSCREEN(),SAVE SCREEN,__XSAVESCREEN()
+      __XRestScreen(),SAVE SCREEN,__XSaveScreen()
    $END$
  */
 
@@ -206,7 +206,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ALERT()
+      Alert()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -214,7 +214,7 @@
    $ONELINER$
       Display a dialog box with a message
    $SYNTAX$
-      ALERT( <xMessage>, [<aOptions>], [<cColorNorm>], [<nDelay>] ) --> nChoice or NIL
+      Alert( <xMessage>, [<aOptions>], [<cColorNorm>], [<nDelay>] ) --> nChoice or NIL
    $ARGUMENTS$
       <xMessage> Message to display in the dialog box. <xMessage> can be
       of any Harbour type.
@@ -232,27 +232,27 @@
       <nDelay> Number of seconds to wait to user response before abort.
       Default value is 0, that wait forever.
    $RETURNS$
-      ALERT() return Numeric value representing option number chosen.
+      Alert() return Numeric value representing option number chosen.
 
       If ESC was pressed, return value is zero.
 
       The return value is NIL
-      if ALERT() is called with no parameters, or if <xMessage> type is
+      if Alert() is called with no parameters, or if <xMessage> type is
       not Character and HB_CLP_STRICT option was used. If <nDelay> seconds
       had passed without user response, the return value is 1.
    $DESCRIPTION$
-      ALERT() display simple dialog box on screen and let the user select
+      Alert() display simple dialog box on screen and let the user select
       one option. The user can move the highlight bar using arrow keys or
       TAB key. To select an option the user can press ENTER, SPACE or the
       first letter of the option.
 
       If the program is executed with the //NOALERT command line switch,
       nothing is displayed and it simply returns NIL. This switch could
-      be overridden with __NONOALERT().
+      be overridden with __NONOAlert().
 
-      If the GT system is linked in, ALERT() display the message using
+      If the GT system is linked in, Alert() display the message using
       the full screen I/O system, if not, the information is printed to
-      the standard output using OUTSTD().
+      the standard output using OutStd().
    $EXAMPLES$
       LOCAL cMessage, aOptions, nChoice
 
@@ -307,7 +307,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      @...PROMPT,MENU TO,OUTSTD(),__NONOALERT()
+      @...PROMPT,MENU TO,OutStd(),__NONOAlert()
    $END$
  */
 
@@ -315,7 +315,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      __NONOALERT()
+      __NONOAlert()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -323,16 +323,16 @@
    $ONELINER$
       Override //NOALERT command line switch
    $SYNTAX$
-      __NONOALERT()
+      __NONOAlert()
    $ARGUMENTS$
       This function takes no arguments.
    $DESCRIPTION$
       The //NOALERT command line switch cause Clipper to ignore calls to
-      the ALERT() function, this function override this behavior
-      and always display ALERT() dialog box.
+      the Alert() function, this function override this behavior
+      and always display Alert() dialog box.
    $EXAMPLES$
       // make sure alert are been displayed
-      __NONOALERT()
+      __NONOAlert()
    $STATUS$
       R
    $FILES$
@@ -389,7 +389,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      OS(),OUTSTD(),OUTERR()
+      OS(),OutStd(),OutErr()
    $END$
  */
 
@@ -440,7 +440,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      DEVOUTPICT()
+      DevOutPict()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -448,11 +448,11 @@
    $ONELINER$
       Displays a value to a device using a picture template
    $SYNTAX$
-      DEVOUTPICT( <xExp>, <cPicture>, [<cColorString>] )
+      DevOutPict( <xExp>, <cPicture>, [<cColorString>] )
    $ARGUMENTS$
       <xExp> is any valid expression.
 
-      <cPicture> is any picture transformation that TRANSFORM() can use.
+      <cPicture> is any picture transformation that Transform() can use.
 
       <cColorString> is an optional string that specifies a screen color to
       use in place of the default color when the output goes to the screen.
@@ -469,12 +469,12 @@
    $STATUS$
       R
    $COMPLIANCE$
-      DEVOUTPICT() is mostly CA-Cl*pper compliant. Any differences are due
-      to enhancements in the Harbour TRANSFORM() over CA-Cl*pper.
+      DevOutPict() is mostly CA-Cl*pper compliant. Any differences are due
+      to enhancements in the Harbour Transform() over CA-Cl*pper.
    $FILES$
       Library is rtl
    $SEEALSO$
-      DEVOUT(),TRANSFORM()
+      DevOut(),Transform()
    $END$
  */
 
@@ -539,7 +539,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SET(),SET ALTERNATE,SET PRINTER,TEXT,__TextRestore()
+      Set(),SET ALTERNATE,SET PRINTER,TEXT,__TextRestore()
    $END$
  */
 
@@ -571,7 +571,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SET(),SET ALTERNATE,SET PRINTER,TEXT,__TextSave()
+      Set(),SET ALTERNATE,SET PRINTER,TEXT,__TextSave()
    $END$
  */
 
@@ -617,7 +617,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      OUTSTD()
+      OutStd()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -625,23 +625,23 @@
    $ONELINER$
       Write a list of values to the standard output device
    $SYNTAX$
-      OUTSTD( <xExp,...> )
+      OutStd( <xExp,...> )
    $ARGUMENTS$
       <xExp,...> is a list of expressions to display. Expressions are any
       mixture of Harbour data types.
    $DESCRIPTION$
-      OUTSTD() write one or more values into the standard output device.
+      OutStd() write one or more values into the standard output device.
       Character and Memo values are printed as is, Dates are printed
       according to the SET DATE FORMAT, Numeric values are converted to
       strings, Logical values are printed as .T. or .F., NIL are printed
       as NIL, values of any other kind are printed as empty string. There
       is one space separating each two values. Note that Numeric value can
       take varying length when converted into string depending on its
-      source (see STR() for detail).
+      source (see Str() for detail).
 
-      OUTSTD() is similar to QQOUT() with the different that QQOUT() send
+      OutStd() is similar to QQOut() with the different that QQOut() send
       its output to the Harbour console stream, which can or can not be
-      redirected according with the screen driver, and OUTSTD() send its
+      redirected according with the screen driver, and OutStd() send its
       output to the standard output device (STDOUT) and can be redirected.
    $EXAMPLES$
       OutStd( "Hello" )            // Result: Hello
@@ -659,7 +659,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ?,??,DEVOUT(),DEVOUTPICT(),DISPOUT(),DISPOUTAT(),OUTERR(),QOUT(),QQOUT(),STR()
+      ?,??,DevOut(),DevOutPict(),DispOut(),DispOutAt(),OutErr(),QOut(),QQOut(),Str()
    $END$
  */
 
@@ -667,7 +667,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      OUTERR()
+      OutErr()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -675,24 +675,24 @@
    $ONELINER$
       Write a list of values to the standard error device
    $SYNTAX$
-      OUTERR( <xExp,...> )
+      OutErr( <xExp,...> )
    $ARGUMENTS$
       <xExp,...> is a list of expressions to display. Expressions are any
       mixture of Harbour data types.
    $DESCRIPTION$
-      OUTERR() write one or more values into the standard error device.
+      OutErr() write one or more values into the standard error device.
       Character and Memo values are printed as is, Dates are printed
       according to the SET DATE FORMAT, Numeric values are converted to
       strings, Logical values are printed as .T. or .F., NIL are printed
       as NIL, values of any other kind are printed as empty string. There
       is one space separating each two values. Note that Numeric value can
       take varying length when converted into string depending on its
-      source (see STR() for detail).
+      source (see Str() for detail).
 
       There is an undocumented CA-Cl*pper command line switch //STDERR
-      which can set the file handle to write output from OUTERR(). If not
+      which can set the file handle to write output from OutErr(). If not
       specified the default STDERR is used, //STDERR or //STDERR:0 set
-      OUTERR() to output to the same file handle as OUTSTD(), //STDERR:n
+      OutErr() to output to the same file handle as OutStd(), //STDERR:n
       set output to file handle n. Like other undocumented features this
       switch is available only if src/rtl/console.c was compiled with
       the HB_CLP_UNDOC flag.
@@ -710,7 +710,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ?,??,DEVOUT(),DEVOUTPICT(),DISPOUT(),DISPOUTAT(),OUTSTD(),QOUT(),QQOUT(),STR()
+      ?,??,DevOut(),DevOutPict(),DispOut(),DispOutAt(),OutStd(),QOut(),QQOut(),Str()
    $END$
  */
 
@@ -734,9 +734,9 @@
       is not properly hooked up to the computer,an error will not be
       generated and the command will be ignored.
 
-      Once completed,the values of PROW() and PCOL(),the row and column
+      Once completed,the values of PRow() and PCol(),the row and column
       indicators to the printer,will be set to 0. Their values,however,may
-      be manipulated before or after ussuing an EJECT by using the DEVPOS()
+      be manipulated before or after ussuing an EJECT by using the DevPos()
       function.
 
       On compile time this command is translated into __EJECT() function.
@@ -763,7 +763,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      DEVPOS(),SET PRINTER,PROW(),PCOL()
+      DevPos(),SET PRINTER,PRow(),PCol()
    $END$
  */
 
@@ -771,7 +771,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      COL()
+      Col()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -779,14 +779,14 @@
    $ONELINER$
       Returns the current screen column position
    $SYNTAX$
-      COL()  --> nPosition
+      Col()  --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
       <nPosition>  Current column position
    $DESCRIPTION$
       This function returns the current cursor column position. The value
-      for this function can range between 0 and MAXCOL().
+      for this function can range between 0 and MaxCol().
    $EXAMPLES$
       ? Col()
    $STATUS$
@@ -798,7 +798,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ROW(),MAXROW(),MAXCOL()
+      Row(),MaxRow(),MaxCol()
    $END$
  */
 
@@ -806,7 +806,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ROW()
+      Row()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -814,14 +814,14 @@
    $ONELINER$
       Returns the current screen row position
    $SYNTAX$
-      ROW()  --> nPosition
+      Row()  --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
       <nPosition>  Current screen row position
    $DESCRIPTION$
       This function returns the current cursor row location. The value
-      for this function can range between 0 and MAXCOL().
+      for this function can range between 0 and MaxCol().
    $EXAMPLES$
       ? Row()
    $STATUS$
@@ -833,7 +833,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      COL(),MAXROW(),MAXCOL()
+      Col(),MaxRow(),MaxCol()
    $END$
  */
 
@@ -841,7 +841,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MAXCOL()
+      MaxCol()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -849,7 +849,7 @@
    $ONELINER$
       Returns the maximun number of columns in the current video mode
    $SYNTAX$
-      MAXCOL()  --> nPosition
+      MaxCol()  --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -857,7 +857,7 @@
       mode
    $DESCRIPTION$
       This function returns the current cursor column position. The value
-      for this function can range between 0 and MAXCOL().
+      for this function can range between 0 and MaxCol().
    $EXAMPLES$
       ? MaxCol()
    $STATUS$
@@ -869,7 +869,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ROW(),MAXROW(),COL()
+      Row(),MaxRow(),Col()
    $END$
  */
 
@@ -877,7 +877,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MAXROW()
+      MaxRow()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -885,7 +885,7 @@
    $ONELINER$
       Returns the current screen row position
    $SYNTAX$
-      MAXROW()  --> nPosition
+      MaxRow()  --> nPosition
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -893,7 +893,7 @@
       mode
    $DESCRIPTION$
       This function returns the current cursor row location. The value
-      for this function can range between 0 and MAXCOL().
+      for this function can range between 0 and MaxCol().
    $EXAMPLES$
       ? MaxRow()
    $STATUS$
@@ -905,6 +905,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      COL(),ROW(),MAXCOL()
+      Col(),Row(),MaxCol()
    $END$
  */

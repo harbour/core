@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ADAPTER()
+      ft_Adapter()
    $CATEGORY$
       Video
    $ONELINER$
       Report the type of video adapter installed
    $SYNTAX$
-      FT_ADAPTER() -> nResult
+      ft_Adapter() -> nResult
    $ARGUMENTS$
       None
    $RETURNS$
@@ -29,7 +29,7 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      iVideo := FT_ADAPTER()
+      iVideo := ft_Adapter()
 
       DO CASE
       CASE iVideo == 0
@@ -42,6 +42,6 @@
          QOut( "You have a VGA adapter." )
       ENDCASE
    $SEEALSO$
-      FT_SETMODE()
+      ft_SetMode()
    $END$
  */

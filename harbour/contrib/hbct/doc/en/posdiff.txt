@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      POSDIFF()
+      PosDiff()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       The left-most position there two string differ
    $SYNTAX$
-      POSDIFF( <cString1>, <cString2>, [<nIgnore>] ) -> nPosition
+      PosDiff( <cString1>, <cString2>, [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,25 +24,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      POSDIFF() is compatible with CT3's POSDIFF().
+      PosDiff() is compatible with CT3's PosDiff().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      POSEQUAL()
+      PosEqual()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      POSEQUAL()
+      PosEqual()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       The left-most position there two string begin to be equal
    $SYNTAX$
-      POSEQUAL( <cString1>, <cString2>, [<nCompare>], [<nIgnore>] ) -> nPosition
+      PosEqual( <cString1>, <cString2>, [<nCompare>], [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
 
    $RETURNS$
@@ -56,12 +56,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      POSEQUAL() is compatible with CT3's POSEQUAL().
+      PosEqual() is compatible with CT3's PosEqual().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      POSDIFF()
+      PosDiff()
    $END$
  */

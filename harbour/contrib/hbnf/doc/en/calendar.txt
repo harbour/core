@@ -4,7 +4,7 @@
 
 /* $DOC$
    $NAME$
-      FT_CALENDAR()
+      ft_Calendar()
    $CATEGORY$
       Date/Time
    $ONELINER$
@@ -23,7 +23,7 @@
                default is bright white text over green background.
 
       <lShadow> is an optional logical variable. If true (.T.),
-                it uses FT_SHADOW() to add a transparent shadow
+                it uses ft_Shadow() to add a transparent shadow
                 to the display, default (.F.).
 
       <lShowHelp> is an optional logical variable. If true, uses
@@ -36,7 +36,7 @@
                and current time.
 
    $DESCRIPTION$
-      FT_CALENDAR() simply displays today's date, time and julian
+      ft_Calendar() simply displays today's date, time and julian
       day in a two line display with an optional box shadow. Cursor keys may
       be used to page through the calendar by day, week, month or year
       increments. Returns an 8 element array of calendar data:
@@ -57,7 +57,7 @@
    $EXAMPLES$
       LOCAL aRetVal[ 8 ]
       CLS
-      aRetVal := FT_CALENDAR( 10, 40, "W+/RB", .T., .T. )
+      aRetVal := ft_Calendar( 10, 40, "W+/RB", .T., .T. )
       ? aRetVal[ 1 ]      // Result: 04/20/91
       ? aRetVal[ 2 ]      // Result:   4
       ? aRetVal[ 3 ]      // Result:  20
@@ -67,7 +67,7 @@
       ? aRetVal[ 7 ]      // Result:        110
       ? aRetVal[ 8 ]      // Result: 12:45:20
    $SEEALSO$
-      FT_DAYOFYR()
+      ft_DayOfYr()
 
    $END$
  */

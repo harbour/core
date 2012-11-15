@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ROUND()
+      ft_Round()
    $CATEGORY$
       Math
    $ONELINER$
       Rounds a number to a specific place
    $SYNTAX$
-      FT_ROUND( <nNumber> [, <nRoundToAmount>           ;
+      ft_Round( <nNumber> [, <nRoundToAmount>           ;
                 [, <cRoundType>  [, <cRoundDirection>   ;
                 [, <nAcceptableError> ] ] ] ] )            -> nNumber
    $ARGUMENTS$
@@ -49,18 +49,18 @@
         c. Amount (100's, 5 decimals, 16th, etc.)
    $EXAMPLES$
       // round normal to 2 decimal places
-      nDollars := FT_ROUND( nDollars )
+      nDollars := ft_Round( nDollars )
 
       // round normal to 6 decimal places
-      nIntRate := FT_ROUND( nIntRate, 6 )
+      nIntRate := ft_Round( nIntRate, 6 )
 
       // round to nearest thousands
-      nPrice   := FT_ROUND( nPrice, 3, NEAREST_WHOLE_NUMBER )
+      nPrice   := ft_Round( nPrice, 3, NEAREST_WHOLE_NUMBER )
 
       // round Up to nearest third
-      nAmount  := FT_ROUND( nAmount, 3, NEAREST_FRACTION, ROUND_UP )
+      nAmount  := ft_Round( nAmount, 3, NEAREST_FRACTION, ROUND_UP )
 
       // round down to 3 decimals Within .005
-      nAvg     := FT_ROUND( nAvg, 3, , ROUND_DOWN, .005 )
+      nAvg     := ft_Round( nAvg, 3, , ROUND_DOWN, .005 )
    $END$
  */

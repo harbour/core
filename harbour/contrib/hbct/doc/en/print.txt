@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      PRINTSTAT()
+      PrintStat()
    $CATEGORY$
       CT3 printer functions
    $ONELINER$
 
    $SYNTAX$
-      PRINTSTAT( [<nPrinter>] ) -> nState
+      PrintStat( [<nPrinter>] ) -> nState
    $ARGUMENTS$
 
    $RETURNS$
@@ -36,13 +36,13 @@
 
 /* $DOC$
    $NAME$
-      PRINTREADY()
+      PrintReady()
    $CATEGORY$
       CT3 printer functions
    $ONELINER$
 
    $SYNTAX$
-      PRINTREADY( [<nPrinter>] ) -> lPrinterReady
+      PrintReady( [<nPrinter>] ) -> lPrinterReady
    $ARGUMENTS$
 
    $RETURNS$

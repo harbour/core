@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_Idle()
+      ft_Idle()
    $CATEGORY$
       Event
    $ONELINER$
       Generate an idle event to allow incremental garbage collection.
    $SYNTAX$
-      FT_Idle()
+      ft_Idle()
    $ARGUMENTS$
       None
    $RETURNS$
@@ -34,7 +34,7 @@
 
          Something()          // Create 'n' discard a bunch of stuff
 
-         FT_Idle()            // Take out the garbage
+         ft_Idle()            // Take out the garbage
 
       ENDDO
    $SEEALSO$

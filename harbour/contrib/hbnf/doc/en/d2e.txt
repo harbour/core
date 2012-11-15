@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_D2E()
+      ft_D2E()
    $CATEGORY$
       Conversion
    $ONELINER$
       Convert decimal to scientific notation
    $SYNTAX$
-      FT_D2E( <nDec>, <nPrecision> )  -> <cNumE>
+      ft_D2E( <nDec>, <nPrecision> )  -> <cNumE>
    $ARGUMENTS$
       <nDec>         Decimal number to convert
 
@@ -24,12 +24,12 @@
       a string representing the equivalent in scientific
       notation is returned.
    $EXAMPLES$
-      ? FT_D2E( 12.345, 2 )     // -> 1.23E1
+      ? ft_D2E( 12.345, 2 )     // -> 1.23E1
 
-      ? FT_D2E( -12.345, 3 )    // -> -1.235E1
+      ? ft_D2E( -12.345, 3 )    // -> -1.235E1
 
-      ? FT_D2E( 0.00000543, 2 ) // -> 5.43E-6
+      ? ft_D2E( 0.00000543, 2 ) // -> 5.43E-6
    $SEEALSO$
-      FT_E2D()
+      ft_E2D()
    $END$
  */

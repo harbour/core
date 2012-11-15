@@ -9,8 +9,8 @@
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  *    Documentation for: __MVPUBLIC(), __MVPRIVATE(), __MVXRELEASE(),
  *                       __MVRELEASE(), __MVSCOPE(), __MVCLEAR(),
- *                       __MVDBGINFO(), __MVGET(), __MVPUT(), MEMVARBLOCK(),
- *                       TYPE()
+ *                       __MVDBGINFO(), __MVGET(), __MVPUT(), MemVarBlock(),
+ *                       Type()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: FIELDBLOCK(), FIELDWBLOCK()
@@ -543,7 +543,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MEMVARBLOCK()
+      MemVarBlock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -551,7 +551,7 @@
    $ONELINER$
       Returns a codeblock that sets/gets a value of memvar variable
    $SYNTAX$
-      MEMVARBLOCK( <cMemvarName> ) --> <bBlock>
+      MemVarBlock( <cMemvarName> ) --> <bBlock>
    $ARGUMENTS$
       <cMemvarName> - a string that contains the name of variable
    $RETURNS$
@@ -634,7 +634,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      EVAL(),FIELDWBLOCK(),MEMVARBLOCK()
+      Eval(),FIELDWBLOCK(),MemVarBlock()
    $END$
  */
 
@@ -697,7 +697,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      EVAL(),FIELDBLOCK(),MEMVARBLOCK()
+      Eval(),FIELDBLOCK(),MemVarBlock()
    $END$
  */
 
@@ -705,7 +705,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      TYPE()
+      Type()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -713,7 +713,7 @@
    $ONELINER$
       Retrieves the type of an expression
    $SYNTAX$
-      TYPE( <cExp> ) --> <cRetType>
+      Type( <cExp> ) --> <cRetType>
    $ARGUMENTS$
       <cExp> must be a character expression.
    $RETURNS$
@@ -748,12 +748,12 @@
 
       The data type of expression is checked by invoking a macro compiler
       and by evaluation of generated code (if there is no syntax errors).
-      This causes that TYPE() cannot determine a type of local or static
+      This causes that Type() cannot determine a type of local or static
       variables - only symbols visible at runtime can be checked.
 
       Notice the subtle difference between TYPE and VALTYPE functions.
-      VALTYPE() function doesn't call a macro compiler - it simply checks
-      the type of passed argument of any type. TYPE() requires a string
+      ValType() function doesn't call a macro compiler - it simply checks
+      the type of passed argument of any type. Type() requires a string
       argument with a valid Harbour expression - the data type of this
       expression is returned.
    $EXAMPLES$
@@ -783,7 +783,7 @@
         In the following code:
 
           PRIVATE lCond := 0
-          ? TYPE( "iof( lCond, 'true', MyUDF() )" )
+          ? Type( "iof( lCond, 'true', MyUDF() )" )
 
         CA-Cl*pper will print "UE" - in Harbour the output will be "UI"
 
@@ -797,7 +797,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      VALTYPE()
+      ValType()
    $END$
  */
 
@@ -805,7 +805,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      VALTYPE()
+      ValType()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -813,7 +813,7 @@
    $ONELINER$
       Retrieves the data type of an expression
    $SYNTAX$
-      VALTYPE( <xExp> ) --> <cRetType>
+      ValType( <xExp> ) --> <cRetType>
    $ARGUMENTS$
       <xExp> is any valid expression.
    $RETURNS$
@@ -855,12 +855,12 @@
    $STATUS$
       R
    $COMPLIANCE$
-      VALTYPE() is CA-Cl*pper compliant, with the addition of the new
+      ValType() is CA-Cl*pper compliant, with the addition of the new
       Harbour types: Pointer and Symbol.
    $FILES$
       Library is rtl
    $SEEALSO$
-      TYPE()
+      Type()
    $END$
  */
 
@@ -918,6 +918,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      VALTYPE()
+      ValType()
    $END$
  */

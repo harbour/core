@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_MKDIR()
+      ft_MkDir()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Create a subdirectory
    $SYNTAX$
-      FT_MKDIR(  <cDirName> ) -> nResult
+      ft_MkDir(  <cDirName> ) -> nResult
    $ARGUMENTS$
       <cDirName> is the name of the directory to create.
    $RETURNS$
@@ -28,8 +28,8 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      FT_MKDIR( "C:\clipper" )
-      FT_MKDIR( "\example" )
-      FT_MKDIR( "..\source" )
+      ft_MkDir( "C:\clipper" )
+      ft_MkDir( "\example" )
+      ft_MkDir( "..\source" )
    $END$
  */

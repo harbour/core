@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ISPRINT()
+      ft_IsPrint()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Check printer status
    $SYNTAX$
-      FT_ISPRINT( [ <cDevice> ] ) -> lResult
+      ft_IsPrint( [ <cDevice> ] ) -> lResult
    $ARGUMENTS$
       <cDevice> is optional and is the device to test (LPT2, COM1, etc.).
       If omitted, the function will default to the PRN device.
@@ -50,15 +50,15 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      IF ! FT_ISPRINT()
+      IF ! ft_IsPrint()
          ? "PRN is not ready!"
       ENDIF
 
-      IF ! FT_ISPRINT( "COM2" )
+      IF ! ft_IsPrint( "COM2" )
          ? "Check the device on COM2.  Something is wrong."
       ENDIF
 
-      IF ! FT_ISPRINT( "A:\nul" )
+      IF ! ft_IsPrint( "A:\nul" )
          ? "Oops, better check drive A!"
       ENDIF
    $END$

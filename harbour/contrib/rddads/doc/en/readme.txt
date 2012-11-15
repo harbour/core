@@ -30,7 +30,7 @@
 
       REQUEST ADS
       rddRegister( "ADS", 1 )
-      rddsetdefault( "ADS" )
+      rddSetDefault( "ADS" )
 
       By default RDDADS is tuned for remote server and cdx indexes. To
       change this you may use these commands defined in ads.ch:
@@ -65,7 +65,7 @@
       If you have sluggish browsers, one issue could be the scrollbar.
       If it's fast with the scrollbar disabled, the browse/scrolling logic
       may not be as optimized as it could be. Scrollbars should always use
-      ADSGetRelKeyPos() and ADSSetRelKeyPos() instead of key counting functions.
+      AdsGetRelKeyPos() and AdsSetRelKeyPos() instead of key counting functions.
 
       If filtered data seems slower than expected, check these things:
       First, optimization is not on by default, so at the top of the app
@@ -116,7 +116,7 @@
       is an external process doing the indexing that knows nothing of
       Harbour expressions or codeblocks. Even with Local Server it's the
       DLLs doing all the indexing. So to do progress meters
-      you need to implement <b>adsRegCallback( bEval )</b>.
+      you need to implement <b>AdsRegCallback( bEval )</b>.
       It lets you set a codeblock that is eval'ed every 2 seconds.
       A numeric value of the "percent completed" is passed to the
       codeblock by the ADS server.
@@ -125,7 +125,7 @@
        #include "inkey.ch"
        PROCEDURE Main()
           ...
-          AdsRegCallBack( {| nPercent | outputstuff( nPercent ) }  )
+          AdsRegCallback( {| nPercent | outputstuff( nPercent ) }  )
           /* The above codeblock will be called approximately
                every 2 seconds while indexing.
                The codeblock can return .T. to abort.   */

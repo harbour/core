@@ -4,16 +4,16 @@
 
 /* $DOC$
    $NAME$
-      FT_ACCTADJ()
+      ft_AcctAdj()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Adjust beginning or ending fiscal pd. dates to acctg. dates
    $SYNTAX$
-      FT_ACCTADJ( [ <dGivenDate> ], [ <lIsEnd> ] ) -> dDate
+      ft_AcctAdj( [ <dGivenDate> ], [ <lIsEnd> ] ) -> dDate
    $ARGUMENTS$
       <dGivenDate> is any valid date in any valid format.
-      Defaults to DATE() if not supplied.
+      Defaults to Date() if not supplied.
 
       <lIsEnd> is a logical variable. .F. = adjust for beginning of
       period mode, .T. = adjust for end of period mode.  Defaults to
@@ -42,19 +42,19 @@
       Beginning of period mode (lIsEnd == .F.)
 
         dDate := SToD( "19910131" )  // In last 3 days of work week
-        ? FT_ACCTADJ( dDate )        // 1991.02.03 (next week's start)
+        ? ft_AcctAdj( dDate )        // 1991.02.03 (next week's start)
 
         dDate := SToD( "19910331" )  // Not in last 3 days of work week
-        ? FT_ACCTADJ( dDate )        // 1991.03.31 (this week's start)
+        ? ft_AcctAdj( dDate )        // 1991.03.31 (this week's start)
 
       End of period mode (lIsEnd == .T.)
 
         dDate := SToD( "19910131" )  // In last 4 days of work week
-        ? FT_ACCTADJ( dDate, .T. )   // 1991.02.02 (this week's end)
+        ? ft_AcctAdj( dDate, .T. )   // 1991.02.02 (this week's end)
 
         dDate := SToD( "19910331" )  // Not in last 4 days of work week
-        ? FT_ACCTADJ( dDate, .T. )   // 1991.03.30 (prior week's end)
+        ? ft_AcctAdj( dDate, .T. )   // 1991.03.30 (prior week's end)
    $SEEALSO$
-      FT_DATECNFG() FT_DAYTOBOW()
+      ft_DateCnfg() ft_DayToBoW()
    $END$
  */

@@ -4,236 +4,236 @@
 
 /* $DOC$
    $NAME$
-      CHARSUB()
+      CharSub()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Subtracts corresponding ASCII value of two strings
    $SYNTAX$
-      CHARSUB( <[@]cString1>, <cString2>) --> cSubString
+      CharSub( <[@]cString1>, <cString2>) --> cSubString
    $ARGUMENTS$
       <[@]cString1>   first string
       <cString2>      second string
    $RETURNS$
       <cSubString>    string with subtracted ASCII values
    $DESCRIPTION$
-      The CHARSUB() function constructs a new string from the two strings
+      The CharSub() function constructs a new string from the two strings
       passed as parameters. To do this, it subtracts the ASCII values of the
       corresponding characters of both strings and places a character in
       the resulting string whose ASCII value equals to that difference (modulo 256).
       If the first string is passed by reference, the resulting string is
-      stored in <cString1>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
       If <cString2> is shorter than <cString1> and the last character of
       <cString2> has been processed, the function restarts with the first
       character of <cString2>.
    $EXAMPLES$
-      ? charsub( "012345678", Chr( 1 ) ) // --> "/01234567"
-      ? charsub( "123456789", Chr( 255 ) ) // --> "23456789:"
-      ? charsub( "9999", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "9876"
+      ? CharSub( "012345678", Chr( 1 ) ) // --> "/01234567"
+      ? CharSub( "123456789", Chr( 255 ) ) // --> "23456789:"
+      ? CharSub( "9999", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "9876"
    $TESTS$
-      charsub( "123456789", Chr( 1 ) ) == "012345678"
-      charsub( "123456789", Chr( 1 ) + Chr( 2 ) ) == "002244668"
-      charsub( "012345678", Chr( 255 ) ) == "123456789"
-      charsub( "012345678", Chr( 255 ) + Chr( 254 ) ) == "133557799"
+      CharSub( "123456789", Chr( 1 ) ) == "012345678"
+      CharSub( "123456789", Chr( 1 ) + Chr( 2 ) ) == "002244668"
+      CharSub( "012345678", Chr( 255 ) ) == "123456789"
+      CharSub( "012345678", Chr( 255 ) + Chr( 254 ) ) == "133557799"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARSUB() is a new function that is only available in Harbour's CT3 lib.
+      CharSub() is a new function that is only available in Harbour's CT3 lib.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARAND()   CHARNOT()
-      CHAROR()    CHARXOR()   CHARSHL()
-      CHARSHR()   CHARRLL()   CHARRLR()
-      CSETREF()
+      CharAdd()   CharAnd()   CharNot()
+      CharOr()    CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARSHL()
+      CharShl()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Process each character in a string with bitwise SHIFT LEFT operation
    $SYNTAX$
-      CHARSHL( <[@]cString>, <nBitsToSHL> ) --> cSHLString
+      CharShl( <[@]cString>, <nBitsToSHL> ) --> cSHLString
    $ARGUMENTS$
       <[@]cString>    string to be processed
       <nBitsToSHL>    number of bit positions to be shifted to the left
    $RETURNS$
       <cSHLString>    string with bitwise shifted left characters
    $DESCRIPTION$
-      The CHARSHL() function constructs a new string from the string
+      The CharShl() function constructs a new string from the string
       passed as parameter. To do this, it performs a bitwise SHIFT LEFT
       (SHL) operation to the characters of the string and places a character in
       the resulting string whose ASCII value equals to the result of that
       operation.
       Be aware that bits shifted out of the byte are lost. If you need
-      a bit rotation, use the CHARRLL() function instead.
+      a bit rotation, use the CharRll() function instead.
       If the string is passed by reference, the resulting string is
-      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charshl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
+      ? CharShl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
                  Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(0)+Chr(0)+Chr(0)
    $TESTS$
-      charshl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
+      CharShl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
                Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARSHL() is a new function that is only available in Harbour's CT3 lib.
+      CharShl() is a new function that is only available in Harbour's CT3 lib.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARSUB()   CHARAND()
-      CHAROR()    CHARXOR()   CHARNOT()
-      CHARSHR()   CHARRLL()   CHARRLR()
-      CSETREF()
+      CharAdd()   CharSub()   CharAnd()
+      CharOr()    CharXor()   CharNot()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARSHR()
+      CharShr()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Process each character in a string with bitwise SHIFT RIGHT operation
    $SYNTAX$
-      CHARSHR( <[@]cString>, <nBitsToSHR> ) --> cSHRString
+      CharShr( <[@]cString>, <nBitsToSHR> ) --> cSHRString
    $ARGUMENTS$
       <[@]cString>    string to be processed
       <nBitsToSHR>    number of bit positions to be shifted to the right
    $RETURNS$
       <cSHRString>    string with bitwise shifted right characters
    $DESCRIPTION$
-      The CHARSHR() function constructs a new string from the string
+      The CharShr() function constructs a new string from the string
       passed as parameter. To do this, it performs a bitwise SHIFT RIGHT
       (SHR) operation to the characters of the string and places a character in
       the resulting string whose ASCII value equals to the result of that
       operation.
       Be aware that bits shifted out of the byte are lost. If you need
-      a bit rotation, use the CHARRLR() function instead.
+      a bit rotation, use the CharRlr() function instead.
       If the string is passed by reference, the resulting string is
-      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charshr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
+      ? CharShr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(0)+Chr(0)+Chr(0)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
    $TESTS$
-      charshr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 )
+      CharShr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 )
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARSHR() is a new function that is only available in Harbour's CT3 lib.
+      CharShr() is a new function that is only available in Harbour's CT3 lib.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARSUB()   CHARAND()
-      CHAROR()    CHARXOR()   CHARNOT()
-      CHARSHL()   CHARRLL()   CHARRLR()
-      CSETREF()
+      CharAdd()   CharSub()   CharAnd()
+      CharOr()    CharXor()   CharNot()
+      CharShl()   CharRll()   CharRlr()
+      CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARRLL()
+      CharRll()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Process each character in a string with bitwise ROLL LEFT operation
    $SYNTAX$
-      CHARRLL( <[@]cString>, <nBitsToRLL> ) --> cRLLString
+      CharRll( <[@]cString>, <nBitsToRLL> ) --> cRLLString
    $ARGUMENTS$
       <[@]cString>    string to be processed
       <nBitsToRLL>    number of bit positions to be rolled to the left
    $RETURNS$
       <cRLLString>    string with bitwise rolled left characters
    $DESCRIPTION$
-      The CHARRLL() function constructs a new string from the string
+      The CharRll() function constructs a new string from the string
       passed as parameter. To do this, it performs a bitwise ROLL LEFT
       (RLL) operation to the characters of the string and places a character in
       the resulting string whose ASCII value equals to the result of that
       operation.
-      Be aware that, in contrast to CHARSHL(), bits rolled out on
+      Be aware that, in contrast to CharShl(), bits rolled out on
       the left are put in again on the right.
       If the string is passed by reference, the resulting string is
-      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charrll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
+      ? CharRll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)
    $TESTS$
-      charrll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 )
+      CharRll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 )
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARRLL() is a new function that is only available in Harbour's CT3 lib.
+      CharRll() is a new function that is only available in Harbour's CT3 lib.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARSUB()   CHARAND()
-      CHAROR()    CHARXOR()   CHARNOT()
-      CHARSHL()   CHARSHR()   CHARRLR()
-      CSETREF()
+      CharAdd()   CharSub()   CharAnd()
+      CharOr()    CharXor()   CharNot()
+      CharShl()   CharShr()   CharRlr()
+      CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARRLR()
+      CharRlr()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Process each character in a string with bitwise ROLL RIGHT operation
    $SYNTAX$
-      CHARRLR( <[@]cString>, <nBitsToRLR> ) --> cRLRString
+      CharRlr( <[@]cString>, <nBitsToRLR> ) --> cRLRString
    $ARGUMENTS$
       <[@]cString>    string to be processed
       <nBitsToRLR>    number of bit positions to be rolled to the right
    $RETURNS$
       <cRLRString>    string with bitwise rolled right characters
    $DESCRIPTION$
-      The CHARRLR() function constructs a new string from the string
+      The CharRlr() function constructs a new string from the string
       passed as parameter. To do this, it performs a bitwise ROLL RIGHT
       (RLR) operation to the characters of the string and places a character in
       the resulting string whose ASCII value equals to the result of that
       operation.
-      Be aware that, in contrast to CHARSHR(), bits rolled out on
+      Be aware that, in contrast to CharShr(), bits rolled out on
       the right are put in again on the left.
       If the string is passed by reference, the resulting string is
-      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charrlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
+      ? CharRlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
    $TESTS$
-      charrlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 )
+      CharRlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 )
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARRLR() is a new function that is only available in Harbour's CT3 lib.
+      CharRlr() is a new function that is only available in Harbour's CT3 lib.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARSUB()   CHARAND()
-      CHAROR()    CHARXOR()   CHARNOT()
-      CHARSHL()   CHARSHR()   CHARRLL()
-      CSETREF()
+      CharAdd()   CharSub()   CharAnd()
+      CharOr()    CharXor()   CharNot()
+      CharShl()   CharShr()   CharRll()
+      CSetRef()
    $END$
  */

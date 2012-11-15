@@ -50,7 +50,7 @@
 
       The idle state is a state when there is no real application code
       executed. For example, the user code is stopped for 0.1 of a second
-      during INKEY(0.1) - Harbour is checking the keyboard only
+      during Inkey(0.1) - Harbour is checking the keyboard only
       during this time. It leaves however quite enough time for
       many other background tasks. One such background task can be looking
       for unreferenced memory blocks.
@@ -92,10 +92,10 @@
       This is usefull in situations where there is no idle states available
       or the application is working in the loop with no user interaction
       and there is many memory allocations.
-      See HB_GCALL() for explanation of how to call this function from your
+      See hb_gcAll() for explanation of how to call this function from your
       harbour code.
    $SEEALSO$
-      hb_gcAlloc(),hb_gcFree(),hb_gcCollectAll(),hb_gcItemRef(),HB_GCALL(),HB_IDLESTATE()
+      hb_gcAlloc(),hb_gcFree(),hb_gcCollectAll(),hb_gcItemRef(),hb_gcAll(),hb_idleState()
    $END$
  */
 
@@ -257,7 +257,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      HB_GCALL()
+      hb_gcAll()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -265,7 +265,7 @@
    $ONELINER$
       Scans the memory and releases all garbage memory blocks.
    $SYNTAX$
-      HB_GCALL()
+      hb_gcAll()
    $ARGUMENTS$
       None
    $DESCRIPTION$

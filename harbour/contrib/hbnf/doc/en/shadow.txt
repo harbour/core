@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SHADOW()
+      ft_Shadow()
    $CATEGORY$
       Video
    $ONELINER$
       Draw a non-destructive shadow on the screen
    $SYNTAX$
-      FT_SHADOW( <nTop>, <nLeft>, <nBottom>, <nRight> [ ,<nAttr>] ) -> NIL
+      ft_Shadow( <nTop>, <nLeft>, <nBottom>, <nRight> [ ,<nAttr>] ) -> NIL
    $ARGUMENTS$
       <nTop>    is the top row of the shadow area.
       <nLeft>   is the upper left column of the shadow area.
@@ -27,8 +27,8 @@
 
       The source code is written to TASM IDEAL mode.
    $EXAMPLES$
-      FT_Shadow( 10, 10, 15, 50, 8 )   // draw a dim shadow
+      ft_Shadow( 10, 10, 15, 50, 8 )   // draw a dim shadow
 
-      FT_Shadow( 10, 10, 15, 40, 47 )  // draw a green shadow
+      ft_Shadow( 10, 10, 15, 40, 47 )  // draw a green shadow
    $END$
  */

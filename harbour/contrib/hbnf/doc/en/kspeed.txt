@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SETRATE()
+      ft_SetRate()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Set the keyboard delay and repeat rate on PC/AT & PS/2
    $SYNTAX$
-      FT_SETRATE( [ <nDelayTime> ] [, <nRepeatRate> ] ) -> NIL
+      ft_SetRate( [ <nDelayTime> ] [, <nRepeatRate> ] ) -> NIL
    $ARGUMENTS$
       <nDelayTime> is the keyboard delay time.
 
@@ -61,8 +61,8 @@
 
       This source code is written for Microsoft Assembler v5.1.
    $EXAMPLES$
-      FT_SETRATE( 0, 0 )    // Set keyboard to fastest possible settings
-      FT_SETRATE()          // Set keyboard to AT defaults (10.9cps,500ms delay)
-      FT_SETRATE( 11, 1 )   // Set keyboard to PS/2 defaults (10cps,500ms delay)
+      ft_SetRate( 0, 0 )    // Set keyboard to fastest possible settings
+      ft_SetRate()          // Set keyboard to AT defaults (10.9cps,500ms delay)
+      ft_SetRate( 11, 1 )   // Set keyboard to PS/2 defaults (10cps,500ms delay)
    $END$
  */

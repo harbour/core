@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_RAND1()
+      ft_Rand1()
    $CATEGORY$
       Math
    $ONELINER$
       Generate a random number
    $SYNTAX$
-      FT_RAND1( <nMax> ) -> nRand
+      ft_Rand1( <nMax> ) -> nRand
    $ARGUMENTS$
       <nMax>  Maximum limit of value to be produced.
    $RETURNS$
@@ -19,14 +19,14 @@
       Generates a non-integer random number based on the Linear
       Congruential Method.
 
-      If you need a random number between 1 and <nMax> inclusive, INT()
+      If you need a random number between 1 and <nMax> inclusive, Int()
       the result and add 1.
 
       If you need a random number between 0 and <nMax> inclusive,
-      then you should ROUND() the result.
+      then you should Round() the result.
    $EXAMPLES$
-      nResult := Int( FT_RAND1( 100 ) ) + 1    // 1 <= nResult <= 100
-      nResult := Round( FT_RAND1( 100 ), 0 )   // 0 <= nResult <= 100
-      nResult := FT_RAND1( 1 )                 // 0 <= nResult < 1
+      nResult := Int( ft_Rand1( 100 ) ) + 1    // 1 <= nResult <= 100
+      nResult := Round( ft_Rand1( 100 ), 0 )   // 0 <= nResult <= 100
+      nResult := ft_Rand1( 1 )                 // 0 <= nResult < 1
    $END$
  */

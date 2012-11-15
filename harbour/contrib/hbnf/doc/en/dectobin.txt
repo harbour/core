@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_DEC2BIN()
+      ft_Dec2Bin()
    $CATEGORY$
       Conversion
    $ONELINER$
       Convert decimal to binary
    $SYNTAX$
-      FT_DEC2BIN( <nNum> ) -> cBinaryNumber
+      ft_Dec2Bin( <nNum> ) -> cBinaryNumber
    $ARGUMENTS$
       <nNum> is the numeric expression to be converted.
    $RETURNS$
@@ -19,7 +19,7 @@
       This function can be used in conjunction with any bit-wise
       operations.
    $EXAMPLES$
-      ? FT_DEC2BIN( 255 )         // "11111111"
-      ? FT_DEC2BIN( 2 )           // "00000010"
+      ? ft_Dec2Bin( 255 )         // "11111111"
+      ? ft_Dec2Bin( 2 )           // "00000010"
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_LINKED()
+      ft_Linked()
    $CATEGORY$
       Environment
    $ONELINER$
       Determine if a function was linked in
    $SYNTAX$
-      FT_LINKED( <cString> ) -> lResult
+      ft_Linked( <cString> ) -> lResult
    $ARGUMENTS$
       <cString> is a character string containing one or more function
                 calls
@@ -36,10 +36,10 @@
 
    $EXAMPLES$
       cString := "FT_GoodFunc( BadFunc( 3, 2 ) )"
-      IF FT_LINKED( cString )
+      IF ft_Linked( cString )
          Eval( &( "{||" + cString + "}" ) )
       ELSE
-         Alert( "Error: " + cString + " was not linked in. Called by FT_LINKED()" )
+         Alert( "Error: " + cString + " was not linked in. Called by ft_Linked()" )
       ENDIF
    $END$
  */

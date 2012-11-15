@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_XTOY()
+      ft_XToY()
    $CATEGORY$
       Conversion
    $ONELINER$
       Convert from any data type to any other data type
    $SYNTAX$
-      FT_XTOY( <xValueToConvert>, <cTypeToConvertTo> ;
+      ft_XToY( <xValueToConvert>, <cTypeToConvertTo> ;
                [, <lWantYesNo> ] ) -> xResult
    $ARGUMENTS$
       <xValueToConvert> is the value to convert.
@@ -27,10 +27,10 @@
       This function converts a value of character, date, numeric, logical,
       array or code block type to any of the other type.  While it is
       guaranteed to return a value of the correct type, that value may not
-      be meaningful (i.e., converting from a code block returns an EMPTY()
+      be meaningful (i.e., converting from a code block returns an Empty()
       value of the desired type).
    $EXAMPLES$
-      nNumericValue := FT_XTOY( cInputValue, "N" )
-      IF FT_XTOY( nInputValue, "L" )
+      nNumericValue := ft_XToY( cInputValue, "N" )
+      IF ft_XToY( nInputValue, "L" )
    $END$
  */

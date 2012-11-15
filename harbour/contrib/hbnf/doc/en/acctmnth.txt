@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ACCTMONTH()
+      ft_AcctMonth()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return accounting month data
    $SYNTAX$
-      FT_ACCTMONTH( [ <dGivenDate> ], [ <nMonthNum> ] ) -> aDateInfo
+      ft_AcctMonth( [ <dGivenDate> ], [ <nMonthNum> ] ) -> aDateInfo
    $ARGUMENTS$
       <dGivenDate> is any valid date in any date format.  Defaults
       to current system date if not supplied.
@@ -24,7 +24,7 @@
          aDateInfo[ 2 ] - The beginning date of the accounting month
          aDateInfo[ 3 ] - The ending date of the accounting month
    $DESCRIPTION$
-      FT_ACCTMONTH() creates an array containing data about the
+      ft_AcctMonth() creates an array containing data about the
       accounting month containing the given date.
 
       An accounting period has the following characteristics:
@@ -41,17 +41,17 @@
       weeks.
    $EXAMPLES$
       // get info about accounting month containing 9/15/90
-      aDateInfo := FT_ACCTMONTH( SToD( "19900915" ) )
+      aDateInfo := ft_AcctMonth( SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  199009       (9th month)
       ? aDateInfo[ 2 ]   //  09/02/90     beginning of month 9
       ? aDateInfo[ 3 ]   //  09/29/90     end of month 9
 
       // get info about accounting month 5 in year containing 9/15/90
-      aDateInfo := FT_ACCTMONTH( SToD( "19900915" ), 5 )
+      aDateInfo := ft_AcctMonth( SToD( "19900915" ), 5 )
       ? aDateInfo[ 1 ]   //  199005
       ? aDateInfo[ 2 ]   //  04/29/89   beginning of month 5
       ? aDateInfo[ 3 ]   //  06/02/90   end of month 5
    $SEEALSO$
-      FT_DATECNFG() FT_ACCTWEEK() FT_ACCTQTR() FT_ACCTYEAR()
+      ft_DateCnfg() ft_AcctWeek() ft_AcctQtr() ft_AcctYear()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      CHARRELA()
+      CharRelA()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Character relation of two strings
    $SYNTAX$
-      CHARRELA( <cStringToMatch1>, <cString1>,
+      CharRelA( <cStringToMatch1>, <cString1>,
                 <cStringToMatch2>, <cString2> ) -> nPosition
    $ARGUMENTS$
 
@@ -25,25 +25,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      CHARRELA() is compatible with CT3's CHARRELA().
+      CharRelA() is compatible with CT3's CharRelA().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARRELREP()
+      CharRelRep()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARRELREP()
+      CharRelRep()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Relation dependant character replacement
    $SYNTAX$
-      CHARRELREP( <cStringToMatch1>, <cString1>,
+      CharRelRep( <cStringToMatch1>, <cString1>,
                   <cStringToMatch2>, <[@]cString2>,
                   <cReplacement> ) -> cString
    $ARGUMENTS$
@@ -59,12 +59,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      CHARRELREP() is compatible with CT3's CHARRELREP().
+      CharRelRep() is compatible with CT3's CharRelRep().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARRELA(),CSETREF()
+      CharRelA(),CSetRef()
    $END$
  */

@@ -7,14 +7,14 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    MEMOTRAN() documentation
- *    HARDCR() documentation
+ *    MemoTran() documentation
+ *    HardCR() documentation
  *
  * Copyright 2003 Alejandro de Garate <alex_degarate@hotmail.com>
- *    MEMOREAD() documentation
- *    MEMOWRIT() documentation
+ *    MemoRead() documentation
+ *    MemoWrit() documentation
  *
- * Documentation for HB_MEMOREAD(), HB_MEMOWRIT()
+ * Documentation for hb_MemoRead(), hb_MemoWrit()
  *
  * See COPYING for licensing terms.
  *
@@ -24,7 +24,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MEMOTRAN()
+      MemoTran()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -32,7 +32,7 @@
    $ONELINER$
       Converts hard and soft carriage returns within strings.
    $SYNTAX$
-      MEMOTRAN( <cString>, <cHard>, <cSoft> ) --> <cConvertedString>
+      MemoTran( <cString>, <cHard>, <cSoft> ) --> <cConvertedString>
    $ARGUMENTS$
       <cString> is a string of chars to convert.
 
@@ -59,7 +59,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      HARDCR(),STRTRAN()
+      HardCR(),StrTran()
    $END$
  */
 
@@ -67,7 +67,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HARDCR()
+      HardCR()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -75,7 +75,7 @@
    $ONELINER$
       Replace all soft carriage returns with hard carriages returns.
    $SYNTAX$
-      HARDCR( <cString> ) --> <cConvertedString>
+      HardCR( <cString> ) --> <cConvertedString>
    $ARGUMENTS$
       <cString> is a string of chars to convert.
    $RETURNS$
@@ -96,7 +96,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      MEMOTRAN(),STRTRAN()
+      MemoTran(),StrTran()
    $END$
  */
 
@@ -104,7 +104,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MEMOREAD()
+      MemoRead()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -112,7 +112,7 @@
    $ONELINER$
       Return the text file's contents as a character string
    $SYNTAX$
-      MEMOREAD( <cFileName> ) --> cString
+      MemoRead( <cFileName> ) --> cString
    $ARGUMENTS$
       <cFileName> is the filename to read from disk.
                   It must include the file extension. If file to be read
@@ -123,27 +123,27 @@
       If <cFileName> cannot be found or read MEMOREAD returns an empty
       string ("").
    $DESCRIPTION$
-      MEMOREAD() is a function that reads the content of a text file (till
+      MemoRead() is a function that reads the content of a text file (till
       now) from disk (floppy, HD, CD-ROM, etc.) into a memory string.
       In that way you can manipulate as any character string or assigned
       to a memo field to be saved in a database.
 
-      MEMOREAD() function is used together with MEMOEDIT() and MEMOWRIT()
+      MemoRead() function is used together with MemoEdit() and MemoWrit()
       to get from disk text from several sources that would be edited,
       searched, replaced, displayed, etc.
 
       It is used to import data from other sources to our database.
 
       Note:
-      MEMOREAD() does not use the settings SET DEFAULT or SET PATH to
+      MemoRead() does not use the settings SET DEFAULT or SET PATH to
       search for <cFileName>.
       It searches for <cFileName> in the current directory.
 
-      Over a network, MEMOREAD() attempts to open <cFileName> in read-only
+      Over a network, MemoRead() attempts to open <cFileName> in read-only
       mode and shared.  If the file is used in mode exclusive by another
       process, the function will returns a null string ("").
    $EXAMPLES$
-      //  This example uses MEMOREAD() to assign the contents of a text
+      //  This example uses MemoRead() to assign the contents of a text
       //  file to a character variable for later search
 
       cFile   := "account.prg"
@@ -162,7 +162,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      MEMOEDIT(),MEMOWRIT(),REPLACE,HB_MEMOREAD()
+      MemoEdit(),MemoWrit(),REPLACE,hb_MemoRead()
    $END$
  */
 
@@ -170,7 +170,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_MEMOREAD()
+      hb_MemoRead()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -178,7 +178,7 @@
    $ONELINER$
       Return the text file's contents as a character string
    $SYNTAX$
-      HB_MEMOREAD( <cFileName> ) --> cString
+      hb_MemoRead( <cFileName> ) --> cString
    $ARGUMENTS$
       <cFileName> is the filename to read from disk.
                   It must include the file extension. If file to be read
@@ -189,31 +189,31 @@
       If <cFileName> cannot be found or read HB_MEMOREAD returns an empty
       string ("").
    $DESCRIPTION$
-      HB_MEMOREAD() is a function that reads the content of a text file
+      hb_MemoRead() is a function that reads the content of a text file
       (till now) from disk (floppy, HD, CD-ROM, etc.) into a memory string.
       In that way you can manipulate as any character string or assigned
       to a memo field to be saved in a database.
 
-      HB_MEMOREAD() function is used together with MEMOEDIT() and HB_MEMOWRIT()
+      hb_MemoRead() function is used together with MemoEdit() and hb_MemoWrit()
       to get from disk text from several sources that would be edited,
       searched, replaced, displayed, etc.
 
       It is used to import data from other sources to our database.
 
       Note:
-      HB_MEMOREAD() does not use the settings SET DEFAULT or SET PATH to
+      hb_MemoRead() does not use the settings SET DEFAULT or SET PATH to
       search for <cFileName>.
       It searches for <cFileName> in the current directory.
 
-      Over a network, HB_MEMOREAD() attempts to open <cFileName> in read-only
+      Over a network, hb_MemoRead() attempts to open <cFileName> in read-only
       mode and shared.  If the file is used in mode exclusive by another
       process, the function will returns a null string ("").
 
-      HB_MEMOREAD() vs MEMOREAD():
-      HB_MEMOREAD() is identical to MEMOREAD() except it won't truncate the
+      hb_MemoRead() vs MemoRead():
+      hb_MemoRead() is identical to MemoRead() except it won't truncate the
       last byte (on non-UNIX compatible systems) if it's a EOF char.
    $EXAMPLES$
-      //  This example uses HB_MEMOREAD() to assign the contents of a text
+      //  This example uses hb_MemoRead() to assign the contents of a text
       //  file to a character variable for later search
 
       cFile   := "account.prg"
@@ -232,7 +232,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      MEMOEDIT(),HB_MEMOWRIT(),REPLACE,MEMOREAD()
+      MemoEdit(),hb_MemoWrit(),REPLACE,MemoRead()
    $END$
  */
 
@@ -240,7 +240,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MEMOWRIT()
+      MemoWrit()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -248,7 +248,7 @@
    $ONELINER$
       Write a memo field or character string to a text file on disk
    $SYNTAX$
-      MEMOWRIT( <cFileName>, <cString> ) --> lSuccess
+      MemoWrit( <cFileName>, <cString> ) --> lSuccess
    $ARGUMENTS$
       <cFileName> is the filename to read from disk.
                   It must include the file extension. If file to be read
@@ -262,20 +262,20 @@
    $DESCRIPTION$
       This a function that writes a memo field or character string to a
       text file on disk (floppy, HD, CD-ROM, etc.)
-      If you not specified a path, MEMOWRIT() writes <cFileName> to the
+      If you not specified a path, MemoWrit() writes <cFileName> to the
       current directory. If <cFileName> exists, it is overwritten.
 
       There is a third parameter (optional), <lWriteEof>, (not found in
       CA-Cl*pper) which let to programmer change the default behavior of
-      - always - to write the EOF character, CHR(26) as in CA-Cl*pper.
+      - always - to write the EOF character, Chr(26) as in CA-Cl*pper.
 
-      MEMOWRIT() function is used together with MEMOREAD() and MEMOEDIT()
+      MemoWrit() function is used together with MemoRead() and MemoEdit()
       to save to disk text from several sources that was edited, searched,
       replaced, displayed, etc.
 
-      Note that MEMOWRIT() do not use the directory settings SET DEFAULT.
+      Note that MemoWrit() do not use the directory settings SET DEFAULT.
    $EXAMPLES$
-      //  This example uses MEMOWRIT() to write the contents of a character
+      //  This example uses MemoWrit() to write the contents of a character
       // variable to a text file.
 
       cFile   := "account.prg"
@@ -293,7 +293,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      MEMOEDIT(),MEMOREAD(),HB_MEMOWRIT()
+      MemoEdit(),MemoRead(),hb_MemoWrit()
    $END$
  */
 
@@ -301,7 +301,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_MEMOWRIT()
+      hb_MemoWrit()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -309,7 +309,7 @@
    $ONELINER$
       Write a memo field or character string to a text file on disk
    $SYNTAX$
-      HB_MEMOWRIT( <cFileName>, <cString>, [<lWriteEof>] ) --> lSuccess
+      hb_MemoWrit( <cFileName>, <cString>, [<lWriteEof>] ) --> lSuccess
    $ARGUMENTS$
       <cFileName> is the filename to read from disk.
                   It must include the file extension. If file to be read
@@ -319,7 +319,7 @@
                   <cFile>.
 
       <lWriteEof> Is a logic variable that settle if the "end of file"
-                  character - CHR( 26 ) - is written to disk.
+                  character - Chr( 26 ) - is written to disk.
                   This parameter is optional. By default is true (.T.)
    $RETURNS$
       Function returns true (.T.) if the writing operation was successful;
@@ -327,28 +327,28 @@
    $DESCRIPTION$
       This a function that writes a memo field or character string to a
       text file on disk (floppy, HD, CD-ROM, etc.)
-      If you not specified a path, HB_MEMOWRIT() writes <cFileName> to the
+      If you not specified a path, hb_MemoWrit() writes <cFileName> to the
       current directory. If <cFileName> exists, it is overwritten.
 
       There is a third parameter (optional), <lWriteEof>, (not found in
       CA-Cl*pper) which let to programmer change the default behavior of
-      - always - to write the EOF character, CHR( 26 ) as in CA-Cl*pper.
+      - always - to write the EOF character, Chr( 26 ) as in CA-Cl*pper.
 
       If there is no third parameter, nothing change, EOF is written as
       in CA-Cl*pper, the same occurs when <lWriteEof> is set to .T.
       But, if <lWriteEof> is set to .F., EOF char is Not written to the
       end of the file.
 
-      HB_MEMOWRIT() function is used together with HB_MEMOREAD() and
-      MEMOEDIT() to save to disk text from several sources that was edited,
+      hb_MemoWrit() function is used together with hb_MemoRead() and
+      MemoEdit() to save to disk text from several sources that was edited,
       searched, replaced, displayed, etc.
 
-      Note that HB_MEMOWRIT() do not use the directory settings SET DEFAULT.
+      Note that hb_MemoWrit() do not use the directory settings SET DEFAULT.
 
-      HB_MEMOWRIT() vs MEMOWRIT():
-      HB_MEMOWRIT() never writes the obsolete EOF char at the end of the file.
+      hb_MemoWrit() vs MemoWrit():
+      hb_MemoWrit() never writes the obsolete EOF char at the end of the file.
    $EXAMPLES$
-      //  This example uses HB_MEMOWRIT() to write the contents of a character
+      //  This example uses hb_MemoWrit() to write the contents of a character
       //  variable to a text file.
 
       cFile   := "account.prg"
@@ -367,6 +367,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      MEMOEDIT(),MEMOREAD(),HB_MEMOWRIT()
+      MemoEdit(),MemoRead(),hb_MemoWrit()
    $END$
  */

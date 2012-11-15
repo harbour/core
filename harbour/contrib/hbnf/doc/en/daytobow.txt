@@ -4,37 +4,37 @@
 
 /* $DOC$
    $NAME$
-      FT_DAYTOBOW()
+      ft_DayToBoW()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Calculate no. of days between date and beginning of week
    $SYNTAX$
-      FT_DAYTOBOW( [ <dGivenDate> ] ) -> nDays
+      ft_DayToBoW( [ <dGivenDate> ] ) -> nDays
    $ARGUMENTS$
       <dGivenDate> is any valid date in any valid date format.
       Defaults to current date if not supplied.
    $RETURNS$
       A positive number of days to beginning of week, range 0 to 6.
    $DESCRIPTION$
-      FT_DAYTOBOW() returns the number of days to the beginning of the
+      ft_DayToBoW() returns the number of days to the beginning of the
       week.  Normally this will be one less than the value that
-      would be returned by the Clipper function DOW(), unless the
+      would be returned by the Clipper function DoW(), unless the
       day for the beginning of the week has been changed with
-      FT_DATECNFG().
+      ft_DateCnfg().
    $EXAMPLES$
       dDate := SToD( "19900915" )
 
       ? DoW( dDate )               // 7
       ? CDoW( dDate )              // Saturday
-      ? FT_DAYTOBOW( dDate )       // 6
+      ? ft_DayToBoW( dDate )       // 6
 
       // change beginning of week to Friday  (yeah!)
-      FT_DATECNFG( , 6 )
+      ft_DateCnfg( , 6 )
       ? DoW( dDate )               // 7
       ? CDoW( dDate )              // Saturday
-      ? FT_DAYTOBOW( dDate )       // 1
+      ? ft_DayToBoW( dDate )       // 1
    $SEEALSO$
-      FT_DATECNFG() FT_ACCTWEEK() FT_WEEK()
+      ft_DateCnfg() ft_AcctWeek() ft_Week()
    $END$
  */

@@ -4,20 +4,20 @@
 
 /* $DOC$
    $NAME$
-      XTOC()
+      XToC()
    $CATEGORY$
       CT3 miscellaneous functions
    $ONELINER$
 
    $SYNTAX$
-      XTOC( <expValue> ) --> cValue
+      XToC( <expValue> ) --> cValue
 
    $ARGUMENTS$
       <expValue> Designate an expression of some of the following data
       type: NUMBER, CHARACTER, DATE, LOGICAL.
 
    $RETURNS$
-      XTOC() return a string with the representation of data type of
+      XToC() return a string with the representation of data type of
       expValue.
 
    $DESCRIPTION$
@@ -28,7 +28,7 @@
       -----------------------------------------------------------
       Numeric      sizeof( DOUBLE )   FTOC()
       Logical      1
-      Date         8                  DTOS()
+      Date         8                  DToS()
       String       Unchanged
       -----------------------------------------------------------
 
@@ -46,6 +46,6 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      CTOF(), FTOC()
+      CToF(), FTOC()
    $END$
  */

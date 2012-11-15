@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ESCCODE()
+      ft_EscCode()
    $CATEGORY$
       Conversion
    $ONELINER$
       Convert Lotus style escape codes
    $SYNTAX$
-      FT_ESCCODE( <cASCII> )  -> <cPrinterFormat>
+      ft_EscCode( <cASCII> )  -> <cPrinterFormat>
    $ARGUMENTS$
       <cASCII> is the ASCII representation of the printer control
       codes in Lotus 123 format (e.g. "\027E" for Chr(27)+"E")
@@ -28,6 +28,6 @@
       cSetup := "\015"         // default = Epson compressed print
       UserInput( @cSetup )     // Let user modify setup code
       SET DEVICE TO PRINT      // get ready to print
-      ?? FT_ESCCODE( cSetup )  // Output the converted code
+      ?? ft_EscCode( cSetup )  // Output the converted code
    $END$
  */

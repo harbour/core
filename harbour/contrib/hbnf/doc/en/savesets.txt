@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SAVESETS()
+      ft_SaveSets()
    $CATEGORY$
       Environment
    $ONELINER$
       Save the status of all the SET command settings
    $SYNTAX$
-      FT_SAVESETS() -> aOldSets
+      ft_SaveSets() -> aOldSets
    $ARGUMENTS$
       None
    $RETURNS$
@@ -21,10 +21,10 @@
       FILTER, FORMAT, FUNCTION, INDEX, KEYS, MODE, ORDER, PROCEDURE,
       RELATION, TYPEAHEAD
    $EXAMPLES$
-      aOldSets := FT_SAVESETS()
+      aOldSets := ft_SaveSets()
    $INCLUDE$
       set.ch
    $SEEALSO$
-      FT_RESTSETS() FT_SETCENTURY()
+      ft_RestSets() ft_SetCentury()
    $END$
  */

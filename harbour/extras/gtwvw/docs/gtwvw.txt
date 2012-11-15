@@ -240,17 +240,17 @@ In Standard Mode:
 (coordinates are relative to current window)
 ---------------------------------------------------------------------------
 - CurrentWindow is automatically reset to topmost window during program
-  start and after WVW_nOpenWindow() and after WVW_lCloseWindow().
+  start and after wvw_nOpenWindow() and after wvw_lCloseWindow().
 
 - All input/output oriented GT_FUNC() work on CurrentWindow.
-  Notice that this way maxrow() and maxcol() will return CurrentWindow's.
+  Notice that this way MaxRow() and MaxCol() will return CurrentWindow's.
 
 - Programmer can change CurrentWindow by using HB_FUNC( WVW_NSETCURWINDOW ).
   Example:
-     nCurWin := WVW_nSetCurWindow(1)
+     nCurWin := wvw_nSetCurWindow(1)
      ? "In Window 1"
-     WVW_nSetCurWindow(nCurWin)
-     ? "Back in Window " + alltrim(str(nCurWin))
+     wvw_nSetCurWindow(nCurWin)
+     ? "Back in Window " + AllTrim(str(nCurWin))
 
 - All exported, output oriented C functions work on window designated by
   usWinNum parameter.
@@ -264,25 +264,25 @@ In MainCoord Mode:
 coordinates in Clipper)
 ---------------------------------------------------------------------------
 - CurrentWindow is automatically reset to MAIN window during program start
-  and after WVW_nOpenWindow() and after WVW_lCloseWindow().
+  and after wvw_nOpenWindow() and after wvw_lCloseWindow().
 
 - All output oriented GT_FUNC() work on CurrentWindow, which is internally
   switched depending of requested row,col position. After each operation,
-  CurrentWindow is reset back to MAIN window. Notice that this way maxrow()
-  and maxcol() will always return MAIN window's, as they do in Clipper.
+  CurrentWindow is reset back to MAIN window. Notice that this way MaxRow()
+  and MaxCol() will always return MAIN window's, as they do in Clipper.
   To support this feature, each window keeps records of Row and Col Offset
   to the Main Window, specified during Window opening.
   Example:
       Assume this window states:
       +------...
       |Main Window (Window 0)
-      |maxrow()=24 maxcol()=79
+      |MaxRow()=24 MaxCol()=79
       |   +---------------...
       |   |Window1 RowOfs=3 ColOfs=4
-      |   |maxrow()=9 maxcol()=29
+      |   |MaxRow()=9 MaxCol()=29
       |   |          +---------------------------...
       |   |          |Window2 RowOfs=6 ColOfs=15
-      |   |          |maxrow()=3 maxcol()=49
+      |   |          |MaxRow()=3 MaxCol()=49
       |   |          |
 
       @ 6,15 say "text1" will be written to Window2 starting at 0,0
@@ -369,7 +369,7 @@ Paint Refresh Method
 
 When GTWVW receives WM_PAINT message, GTWVW doesn't always call WVW_PAINT() function
 immediately. The behaviour is controlled by nPaintRefresh interval (settable by
-WVW_SetPaintRefresh()).
+wvw_SetPaintRefresh()).
 
 If nPaintRefresh==0 then (like GTWVT) GTWVW will call WVW_PAINT() on every receipt
 of WM_PAINT message from Windows. (Except if previous call has not returned.)
@@ -379,7 +379,7 @@ at nPaintRefresh millisecond interval, only if there was a pending WM_PAINT requ
 This approach may be desireable if programmer has a simple WVW_PAINT() function that
 repaint many GUI elements everytime it is called.
 
-In any case, WVW_PAINT() can consult WVW_GETPAINTRECT() to check the pixel regions
+In any case, WVW_PAINT() can consult wvw_GetPaintRect() to check the pixel regions
 needing actual repainting.
 
 Default nPaintRefresh is 100.
@@ -392,7 +392,7 @@ Vertical/Horizontal Caret
 There are two styles of caret: horizontal (classic, console style) and vertical
 (commonly used in GUI applications).
 
-Programmer can select which style to choose, using WVW_SetVertCaret() function.
+Programmer can select which style to choose, using wvw_SetVertCaret() function.
 Currently the chosen style will be applied to all windows. (In current implementation
 of GTWVW caret can only be displayed on topmost window, the only one allowed to
 accept input).
@@ -407,10 +407,10 @@ Line Spacing
 Programmer may choose to have spacing between lines. This may be desirable,
 among other reasons, because GUI elements may overwrite the line above or
 the line below the GUI objects. Each window may have its own line spacing,
-settable via WVW_SetLineSpacing() function.
+settable via wvw_SetLineSpacing() function.
 
 Next open window will use default line spacing of nDefLineSpacing settable
-via WVW_SetDefLineSpacing() function.
+via wvw_SetDefLineSpacing() function.
 
 nDefLineSpacing is initially 0.
 
@@ -420,8 +420,8 @@ Status Bar
 ----------
 
 GTWVW uses native Windows Status Bar Control. This Status Bar will be placed
-below the maxrow() line. In GTWVT, on the other hand, Status Bar is drawn
-at maxrow() line.
+below the MaxRow() line. In GTWVT, on the other hand, Status Bar is drawn
+at MaxRow() line.
 
 Status Bar is automatically resized whenever its parent window is resized, and
 automatically destroyed when its parent window is closed.
@@ -433,8 +433,8 @@ Status Bar functions are named WVW_SB*().
 Timer
 -----
 
-Programmer may set a timer process using WVW_SETTIMER(), and end it using
-WVW_KILLTIMER(). This is meant for a quick, simple timer process like displaying
+Programmer may set a timer process using wvw_SetTimer(), and end it using
+wvw_KillTimer(). This is meant for a quick, simple timer process like displaying
 clock on the status bar.
 
 GTWVT has similar feature, but currently it is not activated.
@@ -446,7 +446,7 @@ Tool Bar
 
 GTWVW uses native Windows Tool Bar Control. This Tool Bar will be placed
 above the 0 line. In GTWVT, on the other hand, Tool Bar is drawn anywhere
-between 0 - maxrow() line, drawn using GUI primitive functions.
+between 0 - MaxRow() line, drawn using GUI primitive functions.
 
 Programmer may use system bitmaps in Tool Bar, or use his own bitmap.
 
@@ -515,7 +515,7 @@ Miscellaneous
 -------------
 
 There are also some lower level differences between GTWVW and GTWVT. For example,
-when executing SETMODE() GTWVW will validate that the window size must not exceed
+when executing SetMode() GTWVW will validate that the window size must not exceed
 system's client (desktop) area. That's why some overly sized window, as in
 "Dialog 1" of WVT*Class demo, will work in GTWVT but not in GTWVW.
 

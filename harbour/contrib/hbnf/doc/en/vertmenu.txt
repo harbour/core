@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_MENU2()
+      ft_Menu2()
    $CATEGORY$
       Menus/Prompts
    $ONELINER$
       Vertical lightbar menu
    $SYNTAX$
-      FT_MENU2( <aMenuarray> [, <cColors> ] ) -> NIL
+      ft_Menu2( <aMenuarray> [, <cColors> ] ) -> NIL
    $ARGUMENTS$
       <aMenuarray> is an array of menu options, messages, and action
        blocks.
@@ -38,10 +38,10 @@
       main program.  See the test code for a succinct demonstration.
    $EXAMPLES$
       LOCAL mainmenu := { ;
-            { "Data Entry",  "Enter data",    {|| FT_MENU2( datamenu )  } }, ;
-            { "Reports",     "Hard copy",     {|| FT_MENU2( repmenu )   } }, ;
-            { "Maintenance", "Reindex files", {|| FT_MENU2( maintmenu ) } }, ;
+            { "Data Entry",  "Enter data",    {|| ft_Menu2( datamenu )  } }, ;
+            { "Reports",     "Hard copy",     {|| ft_Menu2( repmenu )   } }, ;
+            { "Maintenance", "Reindex files", {|| ft_Menu2( maintmenu ) } }, ;
             { "Quit", "See ya later" } }
-      FT_MENU2( mainmenu )
+      ft_Menu2( mainmenu )
    $END$
  */

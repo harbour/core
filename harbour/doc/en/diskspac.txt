@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Paul Tucker <ptucker@sympatico.ca>
- *    Documentation for: DISKSPACE() and related functions
+ *    Documentation for: DiskSpace() and related functions
  *
  * See COPYING for licensing terms.
  *
@@ -17,7 +17,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DISKSPACE()
+      DiskSpace()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -25,7 +25,7 @@
    $ONELINER$
       Get the amount of space available on a disk
    $SYNTAX$
-      DISKSPACE( [<nDrive>] ) --> nDiskbytes
+      DiskSpace( [<nDrive>] ) --> nDiskbytes
    $ARGUMENTS$
       <nDrive> The number of the drive you are requesting info on where 1 = A,
       2 = B, etc. For 0 or no parameter, DiskSpace will operate on the current
@@ -60,7 +60,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_DISKSPACE()
+      hb_DiskSpace()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -68,7 +68,7 @@
    $ONELINER$
       Get the amount of space available on a disk
    $SYNTAX$
-      HB_DISKSPACE( [<cDrive>] [, <nType>] ) --> nDiskbytes
+      hb_DiskSpace( [<cDrive>] [, <nType>] ) --> nDiskbytes
    $ARGUMENTS$
       <cDrive> The drive letter you are requesting info on. The default
       is A:

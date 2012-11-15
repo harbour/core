@@ -4,7 +4,7 @@
 
 /* $DOC$
    $NAME$
-      FT_PENDING()
+      ft_Pending()
    $CATEGORY$
       Menus/Prompts
    $ONELINER$
@@ -32,21 +32,21 @@
       give users a chance to read the current message before the next one
       is displayed we may need to insert a delay after each message.
 
-      FT_PENDING() function displays messages by keeping track of
+      ft_Pending() function displays messages by keeping track of
       the time of the last message and providing a delay ONLY if the next
       pending message is issued much too soon after the current one.
 
    $EXAMPLES$
-      FT_PENDING( "Message one", 20, 0, 3, "W+/G" ) // Displays "Message one."
+      ft_Pending( "Message one", 20, 0, 3, "W+/G" ) // Displays "Message one."
                                                     // sets row to 20, col to 0.
                                                     // wait to 3 and color to
                                                     // bright white over green.
-      FT_PENDING( "Message two" )   // Displays "Message two", after 5 sec.
-      FT_PENDING( "Message three" ) // Displays "Message three", after 5 sec.
+      ft_Pending( "Message two" )   // Displays "Message two", after 5 sec.
+      ft_Pending( "Message three" ) // Displays "Message three", after 5 sec.
 
 
       // Note that default row, col, wait time and color need to be set only
-      // once in the very first call to FT_PENDING() and only if the internal
+      // once in the very first call to ft_Pending() and only if the internal
       // default values are not appropriate.
    $END$
  */

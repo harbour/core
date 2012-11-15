@@ -4,26 +4,26 @@
 
 /* $DOC$
    $NAME$
-      FT_SYSMEM()
+      ft_SysMem()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Determine the amount of conventional memory installed
    $SYNTAX$
-      FT_SYSMEM() -> nMemSize
+      ft_SysMem() -> nMemSize
    $ARGUMENTS$
       None
    $RETURNS$
       A numeric corresponding to the number of K memory.
    $DESCRIPTION$
-      FT_SYSMEM() simply reports the amount of conventional memory
+      ft_SysMem() simply reports the amount of conventional memory
       (up to 640K) installed.
 
-      FT_SYSMEM() uses DOS interrupt 12h to get this information.
+      ft_SysMem() uses DOS interrupt 12h to get this information.
       For information, refer to Peter Norton's _Programmer's Guide
       to the IBM PC_ (Brady).
 
    $EXAMPLES$
-      ? "Conventional memory installed: " + Str( FT_SYSMEM() ) + "K"
+      ? "Conventional memory installed: " + Str( ft_SysMem() ) + "K"
    $END$
  */

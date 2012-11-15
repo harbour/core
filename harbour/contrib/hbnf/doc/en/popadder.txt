@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_Adder()
+      ft_Adder()
    $CATEGORY$
       Menus/Prompts
    $ONELINER$
       Pop up a simple calculator
    $SYNTAX$
-      FT_Adder()
+      ft_Adder()
    $ARGUMENTS$
       None
    $RETURNS$
@@ -67,8 +67,8 @@
           This will make <ALT-A> a key "Hot" and permit you to
           Pop - Up the adder from anywhere in the application.
 
-      6.) If you use FT_INKEY(), you can even have active hotkeys
-          in an INKEY().
+      6.) If you use FT_Inkey(), you can even have active hotkeys
+          in an Inkey().
 
 
 

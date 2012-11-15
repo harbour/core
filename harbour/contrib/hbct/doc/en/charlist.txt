@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      CHARLIST()
+      CharList()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Generates a list of all characters in a string
    $SYNTAX$
-      CHARLIST( [<cString>] ) -> cCharacterList
+      CharList( [<cString>] ) -> cCharacterList
    $ARGUMENTS$
       [<cString>]       is the string for whom the function generates a list
                         of all characters
@@ -18,37 +18,37 @@
    $RETURNS$
       <cCharacterList>  a list of the characters in <cString>
    $DESCRIPTION$
-      The CHARLIST() function generates a list of those characters that
+      The CharList() function generates a list of those characters that
       are contained in <cString>. This list can contain each character
       only once, so that its maximum length is 256. The list lists those
       characters first that are occuring in <cString> first.
    $EXAMPLES$
-      ? charlist( "Hello World !" ) // --> "Helo Wrd!"
+      ? CharList( "Hello World !" ) // --> "Helo Wrd!"
    $TESTS$
-      charlist( "Hello World !" ) == "Helo Wrd!"
-      charlist( NIL ) == ""
+      CharList( "Hello World !" ) == "Helo Wrd!"
+      CharList( NIL ) == ""
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARLIST() is compatible with CT3's CHARLIST().
+      CharList() is compatible with CT3's CharList().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARNOLIST(),CHARSLIST(),CHARHIST()
+      CharNoList(),CharSList(),CharHist()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARNOLIST()
+      CharNoList()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Generates a list of all characters not contained in a string
    $SYNTAX$
-      CHARNOLIST( [<cString>] ) -> cCharacterList
+      CharNoList( [<cString>] ) -> cCharacterList
    $ARGUMENTS$
       [<cString>]       is the string for whom the function generates a list
                         of all characters not contained in that string
@@ -56,24 +56,24 @@
    $RETURNS$
       <cCharacterList>  a list of the characters that are not contained in <cString>
    $DESCRIPTION$
-      The CHARNOLIST() function generates a list of those characters that
+      The CharNoList() function generates a list of those characters that
       are not contained in <cString>. This list can contain each character
       only once, so that its maximum length is 256. The list is alphabetically
       sorted.
    $EXAMPLES$
-      ? charnolist( charnolist( "Hello World !" ) ) // --> " !HWdelor"
+      ? CharNoList( CharNoList( "Hello World !" ) ) // --> " !HWdelor"
    $TESTS$
-      charnolist( charnolist( "Hello World !" ) ) == charslist( "Hello World !" )
-      charnolist( charnolist( NIL ) ) == ""
+      CharNoList( CharNoList( "Hello World !" ) ) == CharSList( "Hello World !" )
+      CharNoList( CharNoList( NIL ) ) == ""
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARNOLIST() is compatible with CT3's CHARNOLIST().
+      CharNoList() is compatible with CT3's CharNoList().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARLIST(),CHARSLIST(),CHARHIST()
+      CharList(),CharSList(),CharHist()
    $END$
  */

@@ -131,7 +131,7 @@
       define any row and column combination and they will be displayed at
       the order of definition. After each call to __AtPrompt(), the cursor
       is placed one column to the right of the last text displayed, and
-      ROW() and COL() are updated.
+      Row() and Col() are updated.
 
       @...PROMPT command is preprocessed into __AtPrompt() function during
       compile time.
@@ -194,7 +194,7 @@
       define any row and column combination and they will be displayed at
       the order of definition. After each call to @...Prompt, the cursor
       is placed one column to the right of the last text displayed, and
-      ROW() and COL() are updated.
+      Row() and Col() are updated.
 
       @...PROMPT command is preprocessed into __AtPrompt() function during
       compile time.

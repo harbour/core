@@ -7,9 +7,9 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    ISAFFIRM() documentation
- *    ISNEGATIVE() documentation
- *    NATIONMSG() documentation
+ *    IsAffirm() documentation
+ *    IsNegative() documentation
+ *    NationMsg() documentation
  *
  * See COPYING for licensing terms.
  *
@@ -19,7 +19,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ISAFFIRM()
+      IsAffirm()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -27,7 +27,7 @@
    $ONELINER$
       Checks if passed char is an affirmation char
    $SYNTAX$
-      ISAFFIRM( <cChar> ) --> <lTrueOrFalse>
+      IsAffirm( <cChar> ) --> <lTrueOrFalse>
    $ARGUMENTS$
       <cChar> is a char or string of chars   </par>
    $RETURNS$
@@ -48,7 +48,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ISNEGATIVE(),NATIONMSG()
+      IsNegative(),NationMsg()
    $END$
  */
 
@@ -56,7 +56,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ISNEGATIVE()
+      IsNegative()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -64,7 +64,7 @@
    $ONELINER$
       Checks if passed char is a negation char.
    $SYNTAX$
-      ISNEGATIVE( <cChar> ) --> <lTrueOrFalse>
+      IsNegative( <cChar> ) --> <lTrueOrFalse>
    $ARGUMENTS$
       <cChar> is a char or string of chars   </par>
    $RETURNS$
@@ -85,7 +85,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ISAFFIRM(),NATIONMSG()
+      IsAffirm(),NationMsg()
    $END$
  */
 
@@ -112,7 +112,7 @@
       Language and Nation MSG() returns international message descriptions.   </par>
    $EXAMPLES$
       // Displays "Sure Y/N: "  and waits until user enters Y
-      // Y/N is the string for NATIONMSG( 12 ) with default natmsg module.
+      // Y/N is the string for NationMsg( 12 ) with default natmsg module.
       DO WHILE ! IsAffirm( cYesNo )
          ACCEPT "Sure " + NationMsg( 12 ) + ": " TO cYesNo
       ENDDO
@@ -123,6 +123,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ISAFFIRM(),ISNEGATIVE()
+      IsAffirm(),IsNegative()
    $END$
  */

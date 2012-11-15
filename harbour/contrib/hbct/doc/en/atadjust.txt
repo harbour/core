@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      ATADJUST()
+      AtAdjust()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Adjusts a sequence within a string to a specified position
    $SYNTAX$
-      ATADJUST( <cStringToMatch>, <cString>, <nAdjustPosition>,
+      AtAdjust( <cStringToMatch>, <cString>, <nAdjustPosition>,
                 [<nCounter>], [<nIgnore>],
                 [<nFillChar|cFillChar>] ) -> cString
    $ARGUMENTS$
@@ -36,12 +36,12 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      ATADJUST() works like CT3's ATADJUST()
+      AtAdjust() works like CT3's AtAdjust()
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      SETATLIKE(),CSETATMUPA()
+      SetAtLike(),CSetAtMupa()
    $END$
  */

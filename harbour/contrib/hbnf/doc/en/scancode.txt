@@ -4,33 +4,33 @@
 
 /* $DOC$
    $NAME$
-      FT_SCANCODE()
+      ft_ScanCode()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Wait for keypress and return keyboard scan code
    $SYNTAX$
-      FT_SCANCODE() -> cCode
+      ft_ScanCode() -> cCode
    $ARGUMENTS$
       None
    $RETURNS$
       A two-character string, corresponding to the keyboard scan code.
    $DESCRIPTION$
-      FT_SCANCODE() enables you to distinguish the different scancodes
+      ft_ScanCode() enables you to distinguish the different scancodes
       of similar keys (such as Grey minus versus regular minus), thus
       increasing the number of keys your input routine can recognize.
 
-      It works like INKEY(), in that it waits for a key to be pressed.
+      It works like Inkey(), in that it waits for a key to be pressed.
       The scan code consists of two bytes, which are returned as a
       two-character string.
 
-      For example, calling FT_SCANCODE() and pressing the Grey-minus
+      For example, calling ft_ScanCode() and pressing the Grey-minus
       key will return a two character string:
 
              Chr( 45 ) + Chr( 74 )
 
-      LASTKEY() is not updated by FT_SCANCODE(), so don't try to
-      test LASTKEY() to see what was pressed during an FT_SCANCODE()
+      LastKey() is not updated by ft_ScanCode(), so don't try to
+      test LastKey() to see what was pressed during an ft_ScanCode()
       call.  Simply assign the return value to a variable and test
       that (see the test driver below).
 
@@ -38,9 +38,9 @@
          NANFORUM.  It was written in Clipper to help demonstrate the
          FT_INT86 function of the Nanforum Toolkit.
 
-      This program requires FT_INT86().
+      This program requires ft_int86().
    $EXAMPLES$
-      cKey := FT_SCANCODE()
+      cKey := ft_ScanCode()
 
       [grey-] returns:  Chr( 45 ) + Chr( 74 )
       [-]     returns:  Chr( 45 ) + Chr( 12 )

@@ -65,7 +65,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,dbCreate(),dbStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
    $END$
  */
 
@@ -115,7 +115,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      COPY STRUCTURE EXTENDED,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
+      COPY STRUCTURE EXTENDED,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate(),__dbStructFilter()
    $END$
  */
 
@@ -162,7 +162,7 @@
       formula (this is done internally):
 
       <fixed>
-      FIELD->FIELD_DEC := int( nLength / 256 )
+      FIELD->FIELD_DEC := Int( nLength / 256 )
       FIELD->FIELD_LEN := ( nLength % 256 )
       </fixed>
 
@@ -195,7 +195,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCreate()
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCreate()
    $END$
  */
 
@@ -240,7 +240,7 @@
       formula (this is done internally):
 
       <fixed>
-      FIELD->FIELD_DEC := int( nLength / 256 )
+      FIELD->FIELD_DEC := Int( nLength / 256 )
       FIELD->FIELD_LEN := ( nLength % 256 )
       </fixed>
 
@@ -269,7 +269,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      COPY STRUCTURE,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+      COPY STRUCTURE,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
    $END$
  */
 
@@ -346,7 +346,7 @@
       FIELD_DEC according to the following formula:
 
       <fixed>
-      FIELD->FIELD_DEC := int( nLength / 256 )
+      FIELD->FIELD_DEC := Int( nLength / 256 )
       FIELD->FIELD_LEN := ( nLength % 256 )
       </fixed>
 
@@ -383,7 +383,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct()
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct()
    $END$
  */
 
@@ -458,7 +458,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE FROM,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE FROM,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
    $END$
  */
 
@@ -511,7 +511,7 @@
       FIELD_DEC according to the following formula:
 
       <fixed>
-      FIELD->FIELD_DEC := int( nLength / 256 )
+      FIELD->FIELD_DEC := Int( nLength / 256 )
       FIELD->FIELD_LEN := ( nLength % 256 )
       </fixed>
 
@@ -526,7 +526,7 @@
    $PLATFORMS$
       All
    $SEEALSO$
-      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
+      COPY STRUCTURE,COPY STRUCTURE EXTENDED,CREATE,dbCreate(),dbStruct(),__dbCopyStruct(),__dbCopyXStruct(),__dbCreate()
    $END$
  */
 
@@ -545,7 +545,7 @@
       __FLEDIT( <aStruct>, [<aFieldList>] ) --> aStructFiltered
    $ARGUMENTS$
       <aStruct> is a multidimensional array with database fields
-      structure, which is usually the output from DBSTRUCT(), where each
+      structure, which is usually the output from dbStruct(), where each
       array element has the following structure:
 
        <table>
@@ -620,7 +620,7 @@
       Header file is dbstruct.ch
       Library is rdd
    $SEEALSO$
-      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__dbStructFilter()
+      dbCreate(),dbStruct(),__dbCopyStruct(),__dbStructFilter()
    $END$
  */
 
@@ -639,7 +639,7 @@
       __dbStructFilter( <aStruct>, [<aFieldList>] ) --> aStructFiltered
    $ARGUMENTS$
       <aStruct> is a multidimensional array with database fields
-      structure, which is usually the output from DBSTRUCT(), where each
+      structure, which is usually the output from dbStruct(), where each
       array element has the following structure:
 
        <table>
@@ -707,6 +707,6 @@
       Header file is dbstruct.ch
       Library is rdd
    $SEEALSO$
-      DBCREATE(),DBSTRUCT(),__dbCopyStruct(),__FLEDIT()*
+      dbCreate(),dbStruct(),__dbCopyStruct(),__FLEDIT()*
    $END$
  */

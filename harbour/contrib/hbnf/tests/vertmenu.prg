@@ -27,9 +27,9 @@ PROCEDURE Main()
       { "Exit",     "Return to Main Menu" } }
 
    LOCAL MAINMENU := { ;
-      { "DATA ENTRY",  "ENTER DATA",          {|| FT_MENU2( datamenu )  } }, ;
-      { "Reports",     "Hard copy",           {|| FT_MENU2( repmenu )   } }, ;
-      { "Maintenance", "Reindex files, etc.", {|| FT_MENU2( maintmenu ) } }, ;
+      { "DATA ENTRY",  "ENTER DATA",          {|| ft_Menu2( datamenu )  } }, ;
+      { "Reports",     "Hard copy",           {|| ft_Menu2( repmenu )   } }, ;
+      { "Maintenance", "Reindex files, etc.", {|| ft_Menu2( maintmenu ) } }, ;
       { "Quit",        "See ya later" } }
 
    CLS

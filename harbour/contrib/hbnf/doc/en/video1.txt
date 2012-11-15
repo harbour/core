@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_VIDSTR()
+      ft_VidStr()
    $CATEGORY$
       Video
    $ONELINER$
       Display string on screen in specified attribute
    $SYNTAX$
-      FT_VIDSTR( <nRow>, <nCol>, <cString> [, <nColor> ] ) -> NIL
+      ft_VidStr( <nRow>, <nCol>, <cString> [, <nColor> ] ) -> NIL
    $ARGUMENTS$
       <nRow> and <nCol> are the screen coordinates.
 
@@ -21,7 +21,7 @@
 
         nFore + ( nBack * 16 )
 
-      FT_VIDSTR() will display the string in the current color if
+      ft_VidStr() will display the string in the current color if
       <nColor> is not passed.
    $RETURNS$
       NIL
@@ -31,7 +31,7 @@
       is useful for constructing screens with a lot of text or repetitive
       screen prints where speed is important.
    $EXAMPLES$
-      FT_VIDSTR( 10, 20, "Enter Name :", 165 )
+      ft_VidStr( 10, 20, "Enter Name :", 165 )
 
       // This example will print the specified text at coordinates 10, 20
       // in bright white on top of Magenta.
@@ -40,13 +40,13 @@
 
 /* $DOC$
    $NAME$
-      FT_WRTChr()
+      ft_WrtChr()
    $CATEGORY$
       Video
    $ONELINER$
       Display character on screen
    $SYNTAX$
-      FT_WRTChr( <nRow>, <nCol>, <cChar>, <nColor> ) -> NIL
+      ft_WrtChr( <nRow>, <nCol>, <cChar>, <nColor> ) -> NIL
    $ARGUMENTS$
       <nRow> and <nCol> are the screen coordinates.
 
@@ -63,11 +63,11 @@
       on screen in a specified color attribute.  This function is useful
       for constructing screens with a lot of text or repetitive screen prints
       where speed is important.  It is faster and requires less memory than
-      FT_VIDSTR().  A working example is contained in clrtable.prg.
+      ft_VidStr().  A working example is contained in clrtable.prg.
    $EXAMPLES$
       FOR nX := 1 TO MaxRow()
          FOR nY := 1 TO MaxCol()
-            FT_WRTChr( nX, nY, "∙", ( nX - 1 ) + ( nY * 16 ) )
+            ft_WrtChr( nX, nY, "∙", ( nX - 1 ) + ( nY * 16 ) )
          NEXT
       NEXT
 
@@ -79,13 +79,13 @@
 
 /* $DOC$
    $NAME$
-      FT_CLS()
+      ft_CLS()
    $CATEGORY$
       Video
    $ONELINER$
       Clear screen
    $SYNTAX$
-      FT_CLS( <nTRow>, <nLCol>, <nBRow>, <nRCol>, <nColor> ) -> NIL
+      ft_CLS( <nTRow>, <nLCol>, <nBRow>, <nRCol>, <nColor> ) -> NIL
    $ARGUMENTS$
       <nTRow>, <nLCol>, <nBRow> and  <nRCol> are the screen coordinates
       to clear.
@@ -104,7 +104,7 @@
       Clipper's color settings.  It uses direct video writes for speed.
 
    $EXAMPLES$
-      FT_CLS( 0, 0, MaxRow(), MaxCol(), 165 )
+      ft_CLS( 0, 0, MaxRow(), MaxCol(), 165 )
 
       // This example will clear the entire screen with the colors
       // bright white on magenta.
@@ -113,13 +113,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SETATTR()
+      ft_SetAttr()
    $CATEGORY$
       Video
    $ONELINER$
       Change color attributes of screen region
    $SYNTAX$
-      FT_SETATTR( <nTRow>, <nLCol>, <nBRow>, <nRCol>, <nColor> ) -> NIL
+      ft_SetAttr( <nTRow>, <nLCol>, <nBRow>, <nRCol>, <nColor> ) -> NIL
    $ARGUMENTS$
       <nTRow>, <nLCol>, <nBRow>, and <nRCol> are the coordinates of the
       screen region.
@@ -135,7 +135,7 @@
       region of the screen without disturbing any text.  Uses direct
       video writes.
    $EXAMPLES$
-      FT_SETATTR( 0, 0, MaxRow(), MaxCol(), 95 )
+      ft_SetAttr( 0, 0, MaxRow(), MaxCol(), 95 )
 
       // This example will change the entire screen's colors to bright white on
       // magenta without changing or overwriting any text on the screen.
@@ -144,13 +144,13 @@
 
 /* $DOC$
    $NAME$
-      FT_REVATTR()
+      ft_RevAttr()
    $CATEGORY$
       Video
    $ONELINER$
       Reverse colors of specified screen coordinates
    $SYNTAX$
-      FT_REVATTR( <nTRow>, <nLCol>, <nBRow>, <nRCol> ) -> NIL
+      ft_RevAttr( <nTRow>, <nLCol>, <nBRow>, <nRCol> ) -> NIL
    $ARGUMENTS$
       <nTRow>, <nLCol>, <nBRow>, and <nRCol> are the coordinates of the
       screen region.
@@ -162,7 +162,7 @@
       function will correctly reverse the color attributes in a region
       containing multiple color combinations.
    $EXAMPLES$
-      FT_REVATTR( 0, 0, MaxRow(), MaxCol() )
+      ft_RevAttr( 0, 0, MaxRow(), MaxCol() )
 
       // This example will change the entire screen's colors to their reverse
       // attributes without changing  or overwriting any text.
@@ -171,13 +171,13 @@
 
 /* $DOC$
    $NAME$
-      FT_REVCHR()
+      ft_RevChr()
    $CATEGORY$
       Video
    $ONELINER$
       Reverse the color of a single character on the screen
    $SYNTAX$
-      FT_REVCHR( <nTRow>, <nLCol> ) -> NIL
+      ft_RevChr( <nTRow>, <nLCol> ) -> NIL
    $ARGUMENTS$
       <nTRow>, <nLCol> are the screen coordinates of the character.
    $RETURNS$
@@ -185,10 +185,10 @@
    $DESCRIPTION$
       This is a high speed function to reverse the color of a single
       character on the screen without changing the character itself.
-      This function is the same as FT_REVATTR() except that it changes
+      This function is the same as ft_RevAttr() except that it changes
       only one character on screen and hence is faster and uses less memory.
    $EXAMPLES$
-      FT_REVCHR( 10, 20 )
+      ft_RevChr( 10, 20 )
 
       // This example will change the text and background at 10, 20 to it's
       // reverse color attributes without changing or overwriting the

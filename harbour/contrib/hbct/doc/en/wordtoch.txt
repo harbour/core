@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      WORDTOCHAR()
+      WordToChar()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Replace double with single characters
    $SYNTAX$
-      WORDTOCHAR( <cDoubleCharacterSearchString>, <cString>,
+      WordToChar( <cDoubleCharacterSearchString>, <cString>,
                   <cSingleCharacterReplaceString> ) -> cString
    $ARGUMENTS$
 
@@ -25,12 +25,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      WORDTOCHAR() is compatible with CT3's WORDTOCHAR().
+      WordToChar() is compatible with CT3's WordToChar().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CSETATMUPA(),CHARREPL(),WORDREPL()
+      CSetAtMupa(),CharRepl(),WordRepl()
    $END$
  */

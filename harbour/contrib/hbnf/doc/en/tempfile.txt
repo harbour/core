@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_TEMPFIL()
+      ft_TempFil()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Create a file with a unique name
    $SYNTAX$
-      FT_TEMPFIL( [ <cPath> ] [, <lHide> ] ) -> cFileSpec
+      ft_TempFil( [ <cPath> ] [, <lHide> ] ) -> cFileSpec
    $ARGUMENTS$
       <cPath> is the directory where you want to create the temporary
       file.  If you omit this argument, the root of the current drive
@@ -20,7 +20,7 @@
       attribute set.  The default is .F.
    $RETURNS$
       <cFileSpec> should be your path, including the name of the newly
-      created unique file.  Use this with FOPEN(), etc.
+      created unique file.  Use this with FOpen(), etc.
 
       If a DOS error occurred when trying to create the file, a
       null string will be returned.
@@ -29,21 +29,21 @@
       This function uses DOS Interrupt 21, service 5Ah (Create temporary
       file) to create a unique filename in a directory you specify.
       There will be no extension.  After the file is created, you may
-      then fopen() it and do any i/o you need (see the test driver
+      then FOpen() it and do any i/o you need (see the test driver
       in the source code).
 
-      This function requires FT_INT86().
+      This function requires ft_int86().
    $EXAMPLES$
       // Create a unique file in the root of the current drive:
 
-      myFile := FT_TEMPFIL()
+      myFile := ft_TempFil()
 
       // Create a unique file in the current directory and hide it:
 
-      myFile := FT_TEMPFIL( "." + hb_ps(), .T. )
+      myFile := ft_TempFil( "." + hb_ps(), .T. )
 
       // Create a unique file on another drive, but do not hide it:
 
-      myFile := FT_TEMPFIL( "E:\nanfor\src\" )
+      myFile := ft_TempFil( "E:\nanfor\src\" )
    $END$
  */

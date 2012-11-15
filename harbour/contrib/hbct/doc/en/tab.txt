@@ -4,7 +4,7 @@
 
 /* $DOC$
    $NAME$
-      TABEXPAND()
+      TabExpand()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
@@ -22,7 +22,7 @@
                                 hb_eol()
       <cTabChar|nTabChar>       character indicating a tab stop,
                                 default is Chr(9)
-      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
+      <lIgnore141>              .T., if the soft-CR used by MemoEdit()
                                 should be ignored as a newline indicator,
                                 default is .F. (functions uses Chr(141))
    $RETURNS$
@@ -32,17 +32,17 @@
    $EXAMPLES$
 
    $TESTS$
-      tabexpand( "-" + Chr( 9 ) + "!" )             == "-       !"
-      tabexpand( "----" + Chr( 9 ) + "!" )         == "----    !"
-      tabexpand( "-" + Chr( 9 ) + "!", , "+" )       == "-+++++++!"
-      tabexpand( "-" + Chr( 9 ) + "!", 4 )         == "-   !"
-      tabexpand( "----" + Chr( 9 ) + "!", 8 )      == "----    !"
-      tabexpand( "----" + Chr( 9 ) + "!", 8, "+" ) == "----++++!"
-      tabexpand( "-" + Chr( 9 ) + "!" + hb_eol() + "----" + Chr( 9 ) + "!", , "+" ) == "-+++++++!" + hb_eol() + "----++++!"
+      TabExpand( "-" + Chr( 9 ) + "!" )             == "-       !"
+      TabExpand( "----" + Chr( 9 ) + "!" )         == "----    !"
+      TabExpand( "-" + Chr( 9 ) + "!", , "+" )       == "-+++++++!"
+      TabExpand( "-" + Chr( 9 ) + "!", 4 )         == "-   !"
+      TabExpand( "----" + Chr( 9 ) + "!", 8 )      == "----    !"
+      TabExpand( "----" + Chr( 9 ) + "!", 8, "+" ) == "----++++!"
+      TabExpand( "-" + Chr( 9 ) + "!" + hb_eol() + "----" + Chr( 9 ) + "!", , "+" ) == "-+++++++!" + hb_eol() + "----++++!"
    $STATUS$
       Started
    $COMPLIANCE$
-      TABEXPAND() is compatible with CT3's TABEXPAND(), but there are
+      TabExpand() is compatible with CT3's TabExpand(), but there are
       three new parameters for a better fine control of the function's
       behaviour.
    $PLATFORMS$
@@ -50,19 +50,19 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TABPACK()
+      TabPack()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      TABPACK()
+      TabPack()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Pack fill characters to appropriate tab characters
    $SYNTAX$
-      TABPACK( <cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
+      TabPack( <cString>, [<nTabWidth>], [<cFillChar|nFillChar>],
                [<cNewLineCharacters>], [<cTabChar|nTabChar>],
                [<lIgnore141>] ) -> cPackedString
    $ARGUMENTS$
@@ -74,7 +74,7 @@
                                 hb_eol()
       <cTabChar|nTabChar>       character indicating a tab stop,
                                 default is Chr(9)
-      <lIgnore141>              .T., if the soft-CR used by MEMOEDIT()
+      <lIgnore141>              .T., if the soft-CR used by MemoEdit()
                                 should be ignored as a newline indicator,
                                 default is .F. (functions uses Chr(141))
    $RETURNS$
@@ -88,7 +88,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      TABPACK() is compatible with CT3's TABPACK(), but there are
+      TabPack() is compatible with CT3's TabPack(), but there are
       three new parameters for a better fine control of the function's
       behaviour.
    $PLATFORMS$
@@ -96,6 +96,6 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TABEXPAND()
+      TabExpand()
    $END$
  */

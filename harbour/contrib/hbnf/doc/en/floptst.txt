@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_FLOPTST()
+      ft_FlopTst()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Test diskette drive status
    $SYNTAX$
-      FT_FLOPTST( <nDrive> ) -> nStatus
+      ft_FlopTst( <nDrive> ) -> nStatus
    $ARGUMENTS$
       <nDrive> is the diskette drive number, 0 = A:, 1 = B:
    $RETURNS$
@@ -21,12 +21,12 @@
        3 - Write protected
        4 - Undetermined
    $DESCRIPTION$
-      FT_FLOPTST() is designed as a full replacement for ISDRIVE().  Where
+      ft_FlopTst() is designed as a full replacement for ISDRIVE().  Where
       ISDRIVE() returns just .T. or .F. depending if the diskette drive is
-      ready or not, FT_FLOPTST() returns a numeric code designating the
+      ready or not, ft_FlopTst() returns a numeric code designating the
       diskette drive's status.
 
-      FT_FLOPTST() is particularly useful in backup and restore programs
+      ft_FlopTst() is particularly useful in backup and restore programs
       that need to test the floppy drive before writing/reading from a
       floppy disk.
 
@@ -35,11 +35,11 @@
       should be no problems.
 
       This function does not currently check subst'd drives.  So if you
-      have SUBST E: A:\ then FT_FLOPTST( Asc( "E" ) - Asc( "A" ) ) == 4
+      have SUBST E: A:\ then ft_FlopTst( Asc( "E" ) - Asc( "A" ) ) == 4
       Any suggestions to fix this limitation are appreciated.
 
    $EXAMPLES$
-      iStatus := FT_FLOPTST( 0 )
+      iStatus := ft_FlopTst( 0 )
       DO CASE
       CASE iStatus == 1
          ? "The door to drive A is open."

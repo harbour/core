@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SETDATE()
+      ft_SetDate()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Set the DOS system date
    $SYNTAX$
-      FT_SETDATE( <dDate> ) -> <lResult>
+      ft_SetDate( <dDate> ) -> <lResult>
    $ARGUMENTS$
       <dDate> is a Clipper date variable that you want to set the current
       DOS system date to.
@@ -20,11 +20,11 @@
       thinks the date is not valid, it won't change the date.
 
    $RETURNS$
-      <lResult> is simply the result of FT_INT86(), passed back
+      <lResult> is simply the result of ft_int86(), passed back
       to your program.
 
    $DESCRIPTION$
-      FT_SETDATE() uses NANFOR.LIB's FT_INT86() function to invoke
+      ft_SetDate() uses NANFOR.LIB's ft_int86() function to invoke
       the DOS Set Date service (Interrupt 33, service 43).
 
    $EXAMPLES$
@@ -35,7 +35,7 @@
 
          cDate := iif( cDate == NIL, DToS( Date() ), cDate )
          ? "Setting date to: " + cDate  + "... "
-         FT_SETDATE( SToD( cDate ) )
+         ft_SetDate( SToD( cDate ) )
          ? "Today is now: " + DToC( Date() )
 
          RETURN

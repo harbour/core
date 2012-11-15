@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_OnTick()
+      ft_OnTick()
    $CATEGORY$
       Event
    $ONELINER$
       Evaluate a designated code block at a designated interval.
    $SYNTAX$
-      FT_OnTick( bCode, nInterval )
+      ft_OnTick( bCode, nInterval )
    $ARGUMENTS$
       <bCode> is the code block to evaluate.
       <nInterval> is the number of clock ticks to wait between
@@ -21,7 +21,7 @@
       This function effectively allows you to run tasks in the background
       by transparently and periodically calling a designated routine.
 
-      To halt the execution of the background function, call FT_OnTick()
+      To halt the execution of the background function, call ft_OnTick()
       with no arguments.
 
       This function makes heavy use of several undocumented internal
@@ -30,7 +30,7 @@
    $EXAMPLES$
       // Set up a self-updating on-screen clock
 
-      FT_OnTick( "CLOCK", 9 )
+      ft_OnTick( "CLOCK", 9 )
 
       PROCEDURE Clock()
 

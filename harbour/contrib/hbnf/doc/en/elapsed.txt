@@ -4,18 +4,18 @@
 
 /* $DOC$
    $NAME$
-      FT_ELAPSED()
+      ft_Elapsed()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return elapsed time between two days and/or times
    $SYNTAX$
-      FT_ELAPSED([ <dStart> ], [ <dEnd> ], ;
+      ft_Elapsed([ <dStart> ], [ <dEnd> ], ;
                  <cTimeStart>, <cTimeEnd>) -> aTimedata
    $ARGUMENTS$
-      <dStart> is any valid date in any date format. Defaults to DATE().
+      <dStart> is any valid date in any date format. Defaults to Date().
 
-      <dEnd> is any valid date in any date format. Defaults to DATE().
+      <dEnd> is any valid date in any date format. Defaults to Date().
 
       <cTimeStart> is a valid Time string of the format 'hh:mm:ss' where
       hh is hours in 24-hour format.
@@ -25,7 +25,7 @@
    $RETURNS$
       A two-dimensional array containing elapsed time data.
    $DESCRIPTION$
-      FT_ELAPSED() calculates the elapsed time between two Date/Time events.
+      ft_Elapsed() calculates the elapsed time between two Date/Time events.
 
       It returns an array which contains the following data:
 
@@ -34,7 +34,7 @@
       aRetVal[ 3, 1 ]  Integer Minutes   aRetVal[ 3, 2 ] Total Minutes (nn.nnnn)
       aRetVal[ 4, 1 ]  Integer Seconds   aRetVal[ 4, 2 ] Total Seconds (nn)
    $EXAMPLES$
-      FT_ELAPSED( SToD( "19901128" ), SToD( "19901130" ), "08:00:00", "12:10:30" )
+      ft_Elapsed( SToD( "19901128" ), SToD( "19901130" ), "08:00:00", "12:10:30" )
 
       // will return:
       ? aRetVal[ 1, 1 ] // ->  2 ( Days )        aRetVal[ 1, 2 ] ->    2.1740  Days

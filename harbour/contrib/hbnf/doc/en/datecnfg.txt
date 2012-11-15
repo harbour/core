@@ -4,16 +4,16 @@
 
 /* $DOC$
    $NAME$
-      FT_DATECNFG()
+      ft_DateCnfg()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Set beginning of year/week for FT_ date functions
    $SYNTAX$
-      FT_DATECNFG( [ <cFYStart> ], [ <nDow> ] ) -> aDateInfo
+      ft_DateCnfg( [ <cFYStart> ], [ <nDow> ] ) -> aDateInfo
    $ARGUMENTS$
       <cFYStart> is a character date string in the user's system date
-      format, i.e., the same as the user would enter for CTOD().  If
+      format, i.e., the same as the user would enter for CToD().  If
       this argument is NIL, the current value is unchanged.
 
       Note: The year portion of the date string must be present and
@@ -34,45 +34,45 @@
                         (1 = Sunday)
 
    $DESCRIPTION$
-      FT_DATECNFG() is called internally by many of the date functions
+      ft_DateCnfg() is called internally by many of the date functions
       in the library to determine the beginning of year date and
       beginning of week day.
 
       The default beginning of the year is January 1st and the default
       beginning of the week is Sunday (day 1).  Either or both of these
-      settings may be changed by calling FT_DATECNFG() with the proper
+      settings may be changed by calling ft_DateCnfg() with the proper
       arguments.  They will retain their values for the duration of the
       program or until they are changed again by a subsequent call to
-      FT_DATECNFG().
+      ft_DateCnfg().
 
-      It is not necessary to call FT_DATECNFG() unless you need to
+      It is not necessary to call ft_DateCnfg() unless you need to
       change the defaults.
 
-      FT_DATECNFG() affects the following library functions:
+      ft_DateCnfg() affects the following library functions:
 
-        FT_WEEK()       FT_ACCTWEEK()       FT_DAYTOBOW()
-        FT_MONTH()      FT_ACCTMONTH()      FT_DAYOFYR()
-        FT_QTR()        FT_ACCTQTR()        FT_ACCTADJ()
-        FT_YEAR()       FT_ACCTYEAR()
+        ft_Week()       ft_AcctWeek()       ft_DayToBoW()
+        ft_Month()      ft_AcctMonth()      ft_DayOfYr()
+        ft_Qtr()        ft_AcctQtr()        ft_AcctAdj()
+        ft_Year()       ft_AcctYear()
    $EXAMPLES$
       // Configure library date functions to begin year on
       //  July 1st.
 
-      FT_DATECNFG( "07/01/80" )    // year is insignificant
+      ft_DateCnfg( "07/01/80" )    // year is insignificant
 
       // Examples of return values:
 
       //  System date format: American            aArray[1]    aArray[2]
 
-      aArray := FT_DATECNFG()                //  "1980.01.01"     1 (Sun.)
-      aArray := FT_DATECNFG( "07/01/80" )    //  "1980.07.01"     1 (Sun.)
-      aArray := FT_DATECNFG( "07/01/80", 2 ) //  "1980.07.01"     2 (Mon.)
-      aArray := FT_DATECNFG( , 2 )           //  "1980.01.01"     2 (Mon.)
+      aArray := ft_DateCnfg()                //  "1980.01.01"     1 (Sun.)
+      aArray := ft_DateCnfg( "07/01/80" )    //  "1980.07.01"     1 (Sun.)
+      aArray := ft_DateCnfg( "07/01/80", 2 ) //  "1980.07.01"     2 (Mon.)
+      aArray := ft_DateCnfg( , 2 )           //  "1980.01.01"     2 (Mon.)
 
       //  System date format: British
 
-      aArray := FT_DATECNFG( "01/07/80", 2 ) //  "1980.07.01"     2 (Mon.)
+      aArray := ft_DateCnfg( "01/07/80", 2 ) //  "1980.07.01"     2 (Mon.)
    $SEEALSO$
-      FT_ACCTADJ()
+      ft_AcctAdj()
    $END$
  */

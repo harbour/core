@@ -11,7 +11,7 @@
 //        2) The date functions fall into two categories:
 //
 //           a) Calendar or fiscal periods.
-//              A calendar or fiscal year is identified by the year()
+//              A calendar or fiscal year is identified by the Year()
 //              of the last date in the year.
 //
 //           b) Accounting Periods. An accounting period has the
@@ -37,12 +37,12 @@
 //
 //              The year may be any valid year. It's value has no
 //              effect on the date functions. The day is assumed to be
-//              less than 29. See function: FT_DATECNFG().
+//              less than 29. See function: ft_DateCnfg().
 //
 //           B) nDow_Start is a number from 1 to 7 which defines the
-//              starting day, DOW(), of a work week; e.g., 1 == Sunday.
+//              starting day, DoW(), of a work week; e.g., 1 == Sunday.
 //
-//              See function: FT_DATECNFG()
+//              See function: ft_DateCnfg()
 //
 // *******************************************************************
 
@@ -62,7 +62,7 @@ PROCEDURE Main()
 #if 0
    aTemp      := ft_DateCnfg( "1980.01.03", 1 )  // Date string in user's format.
 #endif
-   cFY_Start  := aTemp[ 1 ]                      // See FT_DATECNFG() in ft_date0.prg
+   cFY_Start  := aTemp[ 1 ]                      // See ft_DateCnfg() in ft_date0.prg
    nDOW_Start := ATEMP[ 2 ]                      // FOR PARAMETERS.
    dDate      := Date() - 500
 

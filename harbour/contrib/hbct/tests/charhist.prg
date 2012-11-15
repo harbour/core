@@ -64,9 +64,9 @@ PROCEDURE Main()
    // simple tests
    ? "Simple tests:"
    ? '  CharHist("Hello World !")' + "'109' == 3 ? --> ", CharHist( "Hello World !" )' 109 '
-   ? '  aeval(CharHist("Hello World !"), {| x | nTotal += x } ) '
+   ? '  AEval(CharHist("Hello World !"), {| x | nTotal += x } ) '
    AEval( CharHist( "Hello World !" ), {| x | nTotal += x } )
-   ? '    ==> nTotal == len("Hello World !") ? --> ', nTotal == Len( "Hello World !" )
+   ? '    ==> nTotal == Len("Hello World !") ? --> ', nTotal == Len( "Hello World !" )
 
    ? "End test of CharHist()"
    ?

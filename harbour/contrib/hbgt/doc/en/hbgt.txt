@@ -4,32 +4,32 @@
 
 /* $DOC$
    $NAME$
-      GT_ASCPOS()
+      gt_AscPos()
    $CATEGORY$
       String Tools
    $ONELINER$
       Return the ascii value of a specified character in a string
    $SYNTAX$
-      GT_Ascpos(<cStr>, <nPos>) --> nAscVal
+      gt_AscPos(<cStr>, <nPos>) --> nAscVal
    $ARGUMENTS$
       <cStr>  - The string
       <nPos>  - The position in <cStr>
    $RETURNS$
-      <nAscVal> - The ascii value of substr(<cStr>, <nPos>, 1)
+      <nAscVal> - The ascii value of SubStr(<cStr>, <nPos>, 1)
    $DESCRIPTION$
       Return the ascii value of a specified character in a string
       Equivalent (but much faster) to
-          asc(substr(cStr, nPos, 1)
+          Asc(SubStr(cStr, nPos, 1)
 
       NOTE:
          invalid parameters will return -1
-         nPos > len(cStr)   will return -2
+         nPos > Len(cStr)   will return -2
 
       This last behaviour is different to the Funcky function of the
       same name.  I changed the behaviour because some of the strings
       I process contain embedded NULs.
    $EXAMPLES$
-      ? gt_ascpos( "the cat sat on the mat", 3 ) // prints e
+      ? gt_AscPos( "the cat sat on the mat", 3 ) // prints e
    $TESTS$
 
    $STATUS$
@@ -45,13 +45,13 @@
 
 /* $DOC$
    $NAME$
-      GT_ASCIISUM()
+      gt_AsciiSum()
    $CATEGORY$
       String Tools
    $ONELINER$
       Sum the ascii values in a string.
    $SYNTAX$
-      GT_AsciiSum(<cStr>) --> nSum
+      gt_AsciiSum(<cStr>) --> nSum
    $ARGUMENTS$
       <cStr>  - The string to sum
    $RETURNS$
@@ -76,13 +76,13 @@
 
 /* $DOC$
    $NAME$
-      GT_ATDIFF()
+      gt_AtDiff()
    $CATEGORY$
       String Tools
    $ONELINER$
       Return the position where two strings begin to differ
    $SYNTAX$
-      GT_AtDiff(<cStr1>, <cStr2>) --> nPos
+      gt_AtDiff(<cStr1>, <cStr2>) --> nPos
    $ARGUMENTS$
       <cStr1>  - A character string to compare
       <cStr2>  - The string to compare with
@@ -90,15 +90,15 @@
       <nPos>     - The position in <cStr2> where <cStr1> begins to differ
    $DESCRIPTION$
       Return the position in <cStr2> where <cStr1> begins to differ.
-      If the strings differ in the first character GT_AtDiff() will
+      If the strings differ in the first character gt_AtDiff() will
       return 1.  If the two strings are identical (or identical upto
       the last character in <cStr2>) the function will return 0.
 
       NOTE:
          invalid parameters will return -1
    $EXAMPLES$
-      ? gt_atDiff( "the cat", "the rat" )          // prints 5
-      ? gt_atDiff( "the cat", "the " )             // prints 0
+      ? gt_AtDiff( "the cat", "the rat" )          // prints 5
+      ? gt_AtDiff( "the cat", "the " )             // prints 0
    $TESTS$
 
    $STATUS$
@@ -114,13 +114,13 @@
 
 /* $DOC$
    $NAME$
-      GT_CHAREVEN()
+      gt_CharEven()
    $CATEGORY$
       String Tools
    $ONELINER$
       Return a string of all the characters in even positions
    $SYNTAX$
-      GT_CharEven(<cStr>) --> cRet
+      gt_CharEven(<cStr>) --> cRet
    $ARGUMENTS$
       <cStr>   - A character string to extract chars from
    $RETURNS$
@@ -148,13 +148,13 @@
 
 /* $DOC$
    $NAME$
-      GT_CHARMIX()
+      gt_CharMix()
    $CATEGORY$
       String Tools
    $ONELINER$
       Amalgamate two strings to form the return value
    $SYNTAX$
-      GT_CharMix(<cStr1>, <cStr2>) --> cRet
+      gt_CharMix(<cStr1>, <cStr2>) --> cRet
    $ARGUMENTS$
       <cStr1>  - A character string to mix
       <cStr2>  - A character string to mix with

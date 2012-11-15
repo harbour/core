@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_CTRL()
+      ft_Ctrl()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Determine status of the Ctrl key
    $SYNTAX$
-      FT_CTRL() -> lValue
+      ft_Ctrl() -> lValue
    $ARGUMENTS$
       None
    $RETURNS$
@@ -19,12 +19,12 @@
       This function is useful for times you need to know whether or not
       the Ctrl key is pressed, such as during a MemoEdit().
    $EXAMPLES$
-      IF FT_CTRL()
+      IF ft_Ctrl()
          @ 24, 0 SAY "Ctrl"
       ELSE
          @ 24, 0 SAY "    "
       ENDIF
    $SEEALSO$
-      FT_CAPLOCK() FT_NUMLOCK() FT_PRTSCR() FT_SHIFT() FT_ALT()
+      ft_CapLock() ft_NumLock() ft_PrtScr() ft_Shift() ft_Alt()
    $END$
  */

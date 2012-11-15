@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      RANGEREM()
+      RangeRem()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Remove characters within a certain ASCII range from a string
    $SYNTAX$
-      RANGEREM( <cChar1|nChar1>, <cChar2|nChar2>, <cString> ) -> cString
+      RangeRem( <cChar1|nChar1>, <cChar2|nChar2>, <cString> ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -18,24 +18,24 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-      ? rangerem( "0", "9", "year2002.dbf" ) // "year.dbf", remove all digits
-      ? rangerem( "9", "0", "year2002.dbf" ) // "22", testing removal from "9" to Chr(255)
+      ? RangeRem( "0", "9", "year2002.dbf" ) // "year.dbf", remove all digits
+      ? RangeRem( "9", "0", "year2002.dbf" ) // "22", testing removal from "9" to Chr(255)
                                              // and from Chr(0) to "0"
-      ? rangerem( "0", "9", "yearcurr.dbf" ) // "yearcurr.dbf", test leaving string untouched
+      ? RangeRem( "0", "9", "yearcurr.dbf" ) // "yearcurr.dbf", test leaving string untouched
    $TESTS$
-      rangerem( "0", "9", "year2002.dbf" ) == "year.dbf"
-      rangerem( "9", "0", "year2002.dbf" ) == "22"
-      rangerem( "0", "9", "yearcurr.dbf" ) == "yearcurr.dbf"
+      RangeRem( "0", "9", "year2002.dbf" ) == "year.dbf"
+      RangeRem( "9", "0", "year2002.dbf" ) == "22"
+      RangeRem( "0", "9", "yearcurr.dbf" ) == "yearcurr.dbf"
    $STATUS$
       Started
    $COMPLIANCE$
-      RANGEREM() is compatible with CT3's RANGEREM().
+      RangeRem() is compatible with CT3's RangeRem().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      RANGEREPL()
+      RangeRepl()
    $END$
  */
 
@@ -47,7 +47,7 @@
    $ONELINER$
       Replace characters within a certain ASCII range from a string
    $SYNTAX$
-      RANGEREPL( <cChar1|nChar1>, <cChar2|nChar2>,
+      RangeRepl( <cChar1|nChar1>, <cChar2|nChar2>,
                  <[@]cString>, <cReplacementChar|nReplacementChar> ) -> cString
    $ARGUMENTS$
 
@@ -56,23 +56,23 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-      ? rangerepl( "0", "9", "year2002.dbf", "?" ) // "year????.dbf", replace all digits
-      ? rangerepl( "9", "0", "year2002.dbf", "?" ) // "????2??2????", testing replacement from "9" to Chr(255)
+      ? RangeRepl( "0", "9", "year2002.dbf", "?" ) // "year????.dbf", replace all digits
+      ? RangeRepl( "9", "0", "year2002.dbf", "?" ) // "????2??2????", testing replacement from "9" to Chr(255)
                                                    // and from Chr(0) to "0"
-      ? rangerepl( "0", "9", "yearcurr.dbf", "?" ) // "yearcurr.dbf", test leaving string untouched
+      ? RangeRepl( "0", "9", "yearcurr.dbf", "?" ) // "yearcurr.dbf", test leaving string untouched
    $TESTS$
-      rangerepl( "0", "9", "year2002.dbf", "?" ) == "year????.dbf"
-      rangerepl( "9", "0", "year2002.dbf", "?" ) == "????2??2????"
-      rangerepl( "0", "9", "yearcurr.dbf", "?" ) == "yearcurr.dbf"
+      RangeRepl( "0", "9", "year2002.dbf", "?" ) == "year????.dbf"
+      RangeRepl( "9", "0", "year2002.dbf", "?" ) == "????2??2????"
+      RangeRepl( "0", "9", "yearcurr.dbf", "?" ) == "yearcurr.dbf"
    $STATUS$
       Started
    $COMPLIANCE$
-      RANGEREPL() is compatible with CT3's RANGEREPL().
+      RangeRepl() is compatible with CT3's RangeRepl().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      RANGEREM()
+      RangeRem()
    $END$
  */

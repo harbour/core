@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_PEGS()
+      ft_Pegs()
    $CATEGORY$
       Game
    $ONELINER$
       FT_PEGS GAME (all work and no play...)
    $SYNTAX$
-      FT_PEGS() -> NIL
+      ft_Pegs() -> NIL
    $ARGUMENTS$
       None
    $RETURNS$
@@ -20,6 +20,6 @@
       remove all pegs except one.  This is done by jumping over adjacent
       pegs.
    $EXAMPLES$
-      FT_PEGS()
+      ft_Pegs()
    $END$
  */

@@ -7,8 +7,8 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: CDOW(),CMONTH(),DATE(),CTOD(),DAY(),DAYS()
- *    DOW(),DTOS(),DTOC(),ELAPTIME(),MONTH(),SECONDS(),SECS(),TIME(),YEAR()
+ *    Documentation for: CDoW(),CMonth(),Date(),CToD(),Day(),Days()
+ *    DoW(),DToS(),DToC(),ElapTime(),Month(),Seconds(),Secs(),Time(),Year()
  * See COPYING for licensing terms.
  *
  */
@@ -17,7 +17,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      CDOW()
+      CDoW()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -25,7 +25,7 @@
    $ONELINER$
       Converts a date to the day of week
    $SYNTAX$
-      CDOW(<dDate>)  --> cDay
+      CDoW(<dDate>)  --> cDay
    $ARGUMENTS$
       <dDate>  Any date expression.
    $RETURNS$
@@ -49,7 +49,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      DAY(),DOW(),DATE(),CMONTH()
+      Day(),DoW(),Date(),CMonth()
    $END$
  */
 
@@ -57,7 +57,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      CMONTH()
+      CMonth()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -65,7 +65,7 @@
    $ONELINER$
       Return the name of the month.
    $SYNTAX$
-      CMONTH(<dDate>)  --> cMonth
+      CMonth(<dDate>)  --> cMonth
    $ARGUMENTS$
       <dDate>  Any date expression.
    $RETURNS$
@@ -89,7 +89,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      CDOW(),DATE(),MONTH(),YEAR(),DOW(),DTOC()
+      CDoW(),Date(),Month(),Year(),DoW(),DToC()
    $END$
  */
 
@@ -97,7 +97,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DATE()
+      Date()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -105,7 +105,7 @@
    $ONELINER$
       Return the Current OS Date
    $SYNTAX$
-      DATE() --> dCurDate
+      Date() --> dCurDate
    $ARGUMENTS$
       None
    $RETURNS$
@@ -125,7 +125,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      CTOD(),DTOS(),DTOC(),DAY(),MONTH(),CMONTH()
+      CToD(),DToS(),DToC(),Day(),Month(),CMonth()
    $END$
  */
 
@@ -133,7 +133,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      CTOD()
+      CToD()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -141,7 +141,7 @@
    $ONELINER$
       Converts a character string to a date expression
    $SYNTAX$
-      CTOD(<cDateString>)  --> dDate
+      CToD(<cDateString>)  --> dDate
    $ARGUMENTS$
       <cDateString> A character date in format 'mm/dd/yy'
    $RETURNS$
@@ -164,7 +164,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SET DATE,DATE(),DTOS()
+      SET DATE,Date(),DToS()
    $END$
  */
 
@@ -172,7 +172,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DAY()
+      Day()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -180,7 +180,7 @@
    $ONELINER$
       Return the numeric day of the month.
    $SYNTAX$
-      DAY(<cDate>) --> nMonth
+      Day(<cDate>) --> nMonth
    $ARGUMENTS$
       <cDate> Any valid date expression.
    $RETURNS$
@@ -200,7 +200,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      CTOD(),DTOS(),DTOC(),DATE(),MONTH(),CMONTH()
+      CToD(),DToS(),DToC(),Date(),Month(),CMonth()
    $END$
  */
 
@@ -208,7 +208,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DAYS()
+      Days()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -216,7 +216,7 @@
    $ONELINER$
       Convert elapsed seconds into days
    $SYNTAX$
-      DAYS(<nSecs> ) --> nDay
+      Days(<nSecs> ) --> nDay
    $ARGUMENTS$
       <nSecs> The number of seconds
    $RETURNS$
@@ -236,7 +236,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SECONDS(),SECS(),ELAPTIME()
+      Seconds(),Secs(),ElapTime()
    $END$
  */
 
@@ -244,7 +244,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DOW()
+      DoW()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -252,7 +252,7 @@
    $ONELINER$
       Value for the day of week.
    $SYNTAX$
-      DOW(<dDate>) --> nDay
+      DoW(<dDate>) --> nDay
    $ARGUMENTS$
       <dDate>  Any valid date expression
    $RETURNS$
@@ -272,7 +272,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      DTOC(),CDOW(),DATE(),DTOS(),DAY()
+      DToC(),CDoW(),Date(),DToS(),Day()
    $END$
  */
 
@@ -280,7 +280,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DTOC()
+      DToC()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -288,7 +288,7 @@
    $ONELINER$
       Date to character conversion
    $SYNTAX$
-      DTOC(<dDateString>)  --> cDate
+      DToC(<dDateString>)  --> cDate
    $ARGUMENTS$
       <dDateString> Any date
    $RETURNS$
@@ -310,7 +310,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SET DATE,DATE(),DTOS()
+      SET DATE,Date(),DToS()
    $END$
  */
 
@@ -318,7 +318,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DTOS()
+      DToS()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -326,7 +326,7 @@
    $ONELINER$
       Date to string conversion
    $SYNTAX$
-      DTOS(<dDateString>)  --> cDate
+      DToS(<dDateString>)  --> cDate
    $ARGUMENTS$
       <dDateString> Any date
    $RETURNS$
@@ -346,7 +346,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      DTOC(),DATE(),DTOS()
+      DToC(),Date(),DToS()
    $END$
  */
 
@@ -354,7 +354,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ELAPTIME()
+      ElapTime()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -362,7 +362,7 @@
    $ONELINER$
       Calculates elapted time.
    $SYNTAX$
-      ELAPTIME(<cStartTime>,<cEndTime>) --> cDiference
+      ElapTime(<cStartTime>,<cEndTime>) --> cDiference
    $ARGUMENTS$
       <cStartTime> Start in time as a string format
       <cEndTime>   End time as a string format
@@ -390,7 +390,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SECS(),SECONDS(),TIME(),DAY()
+      Secs(),Seconds(),Time(),Day()
    $END$
  */
 
@@ -398,7 +398,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MONTH()
+      Month()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -406,7 +406,7 @@
    $ONELINER$
       Converts a date expression to a month value
    $SYNTAX$
-      MONTH(<dDate>) --> nMonth
+      Month(<dDate>) --> nMonth
    $ARGUMENTS$
       <dDate> Any valid date expression
    $RETURNS$
@@ -414,7 +414,7 @@
        0 to 12
    $DESCRIPTION$
       This function returns a number that represents the month of a given
-      date expression <dDate>. If a NULL date (CTOD('')) is passed to the
+      date expression <dDate>. If a NULL date (CToD('')) is passed to the
       function, the value of the function will be 0.
    $EXAMPLES$
       ? Month( Date() )
@@ -427,7 +427,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      CDOW(),DOW(),YEAR(),CMONTH()
+      CDoW(),DoW(),Year(),CMonth()
    $END$
  */
 
@@ -435,7 +435,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SECONDS()
+      Seconds()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -443,7 +443,7 @@
    $ONELINER$
       Returns the number of elapsed seconds past midnight.
    $SYNTAX$
-      SECONDS() --> nSeconds
+      Seconds() --> nSeconds
    $ARGUMENTS$
       None
    $RETURNS$
@@ -465,7 +465,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      TIME()
+      Time()
    $END$
  */
 
@@ -473,7 +473,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SECS()
+      Secs()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -481,7 +481,7 @@
    $ONELINER$
       Return the number of seconds from the system date.
    $SYNTAX$
-      SECS( <cTime> ) --> nSeconds
+      Secs( <cTime> ) --> nSeconds
    $ARGUMENTS$
       <cTime> Character expression in a time string format
    $RETURNS$
@@ -501,7 +501,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SECONDS(),ELAPTIME(),TIME()
+      Seconds(),ElapTime(),Time()
    $END$
  */
 
@@ -509,7 +509,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      TIME()
+      Time()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -517,7 +517,7 @@
    $ONELINER$
       Returns the system time as a string
    $SYNTAX$
-      TIME() --> cTime
+      Time() --> cTime
    $ARGUMENTS$
       None
    $RETURNS$
@@ -536,7 +536,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      DATE(),SECONDS()
+      Date(),Seconds()
    $END$
  */
 
@@ -544,7 +544,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      YEAR()
+      Year()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -552,7 +552,7 @@
    $ONELINER$
       Converts the year portion of a date into a numeric value
    $SYNTAX$
-      YEAR(<cDate>) --> nYear
+      Year(<cDate>) --> nYear
    $ARGUMENTS$
       <dDate> Any valid date expression
    $RETURNS$
@@ -575,6 +575,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      DAY(),MONTH()
+      Day(),Month()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_PChr()
+      ft_PChr()
    $CATEGORY$
       String
    $ONELINER$
       Convert printer control codes
    $SYNTAX$
-      FT_PChr( <cString> )  ->  <cPrinterFormat>
+      ft_PChr( <cString> )  ->  <cPrinterFormat>
    $ARGUMENTS$
       <cString> is the representation of the printer control codes in
       text, numeric, hexadecimal, Epson command format, or any combination
@@ -76,15 +76,15 @@
    $EXAMPLES$
       cSetUp := "27,116,1"
       SET PRINT ON
-      ? FT_PChr( cSetUp )        // -> (Chr(27)+Chr(116)+Chr(1))
+      ? ft_PChr( cSetUp )        // -> (Chr(27)+Chr(116)+Chr(1))
                                            <select Epson char. graphics>
 
-      ? FT_PChr( '27,"x",0' )    // -> (Chr(27)+Chr(120)+Chr(0))
+      ? ft_PChr( '27,"x",0' )    // -> (Chr(27)+Chr(120)+Chr(0))
                                         <Epson draft mode>
 
-      ? FT_PChr( '&1B,"E"'  )    // -> (Chr(27)+Chr(69))   <HP reset>
+      ? ft_PChr( '&1B,"E"'  )    // -> (Chr(27)+Chr(69))   <HP reset>
 
-      ? FT_PChr( "/ELITE,/NLQ" ) // -> (Chr(27)+Chr(77)+Chr(27)+Chr(120)+Chr(1))
+      ? ft_PChr( "/ELITE,/NLQ" ) // -> (Chr(27)+Chr(77)+Chr(27)+Chr(120)+Chr(1))
                                  //     <Epson elite & near letter quality>
    $SEEALSO$
 

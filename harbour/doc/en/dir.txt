@@ -44,7 +44,7 @@
       DIR command is preprocessed into __Dir() function during compile
       time.
 
-      __Dir() is a compatibility function, it is superseded by DIRECTORY()
+      __Dir() is a compatibility function, it is superseded by Directory()
       which return all the information in a multidimensional array.
    $EXAMPLES$
       __Dir()      // information for all DBF files in current directory
@@ -66,7 +66,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ADIR(),DIRECTORY(),SET DEFAULT,DIR
+      ADIR(),Directory(),SET DEFAULT,DIR
    $END$
  */
 
@@ -99,7 +99,7 @@
       DIR command is preprocessed into __Dir() function during compile
       time.
 
-      __Dir() is a compatibility function, it is superseded by DIRECTORY()
+      __Dir() is a compatibility function, it is superseded by Directory()
       which returns all the information in a multidimensional array.
    $EXAMPLES$
       DIR          // information for all DBF files in current directory
@@ -119,7 +119,7 @@
    $PLATFORMS$
       All(LFN)
    $SEEALSO$
-      ADIR(),DIRECTORY(),SET DEFAULT,__DIR()*
+      ADIR(),Directory(),SET DEFAULT,__DIR()*
    $END$
  */
 
@@ -160,7 +160,7 @@
       HH:mm:ss.
 
       <aAttr> Array to fill with attribute of files that meet <cFileMask>.
-      Each element is a Character string, see DIRECTORY() for information
+      Each element is a Character string, see Directory() for information
       about attribute values. If you pass array to <aAttr>, the function
       is going to return files with normal, hidden, system and directory
       attributes. If <aAttr> is not specified or with type other than
@@ -175,7 +175,7 @@
       In order to include hidden, system or directories <aAttr> must be
       specified.
 
-      ADIR() is a compatibility function, it is superseded by DIRECTORY()
+      ADIR() is a compatibility function, it is superseded by Directory()
       which returns all the information in a multidimensional array.
    $EXAMPLES$
       LOCAL aName, aSize, aDate, aTime, aAttr, nLen, i
@@ -201,6 +201,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ARRAY(),DIRECTORY(),SET DEFAULT
+      Array(),Directory(),SET DEFAULT
    $END$
  */

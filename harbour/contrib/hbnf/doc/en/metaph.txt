@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_METAPH()
+      ft_Metaph()
    $CATEGORY$
       String
    $ONELINER$
       Convert a character string to MetaPhone format
    $SYNTAX$
-      FT_METAPH( <cName> [, <nSize> ] ) -> cMetaPhone
+      ft_Metaph( <cName> [, <nSize> ] ) -> cMetaPhone
    $ARGUMENTS$
       <cName> is the character string to convert
 
@@ -21,16 +21,16 @@
    $DESCRIPTION$
       This function is a character function use to index and search for
       sound-alike or phonetic matches.  It is an alternative to
-      the SOUNDEX() function, and addresses some basic pronunciation
+      the SoundEx() function, and addresses some basic pronunciation
       rules, by looking at surrounding letters to determine how parts of
-      the string are pronounced.  FT_METAPH() will group sound-alikes
+      the string are pronounced.  ft_Metaph() will group sound-alikes
       together, and forgive shortcomings in spelling ability.
    $EXAMPLES$
       USE persons
-      INDEX ON FT_METAPH( LastName ) TO lastname
-      SEEK FT_METAPH( "Philmore" )
+      INDEX ON ft_Metaph( LastName ) TO lastname
+      SEEK ft_Metaph( "Philmore" )
       ? Found(), LastName             // Result: .T. Philmore
-      SEEK FT_METAPH( "Fillmore" )
+      SEEK ft_Metaph( "Fillmore" )
       ? Found(), LastName             // Result: .T. Philmore
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SAVEARR()
+      ft_SaveArr()
    $CATEGORY$
       Array
    $ONELINER$
       Save Clipper array to a disc file.
    $SYNTAX$
-      FT_SAVEARR( <aArray>, <cFileName>, <nErrorCode> ) -> lRet
+      ft_SaveArr( <aArray>, <cFileName>, <nErrorCode> ) -> lRet
    $ARGUMENTS$
       <aArray> is any Clipper array except those containing
       compiled code blocks.
@@ -25,10 +25,10 @@
       .F. if there was a DOS file error or the array contained
       code blocks, otherwise returns .T.
    $DESCRIPTION$
-      FT_SAVEARR() saves any Clipper array, except those
+      ft_SaveArr() saves any Clipper array, except those
       containing compiled code blocks, to a disc file.  The
       array can be restored from the disc file using
-      FT_RESTARR().
+      ft_RestArr().
 
       [10/1/92 Librarian note:
 
@@ -43,9 +43,9 @@
          { "Invoice 2", Date(), 234.98, .F. }, ;
          { "Invoice 3", Date() + 1, 0, .T. } }
       nErrorCode := 0
-      FT_SAVEARR( aArray, "invoice.dat", @nErrorCode )
+      ft_SaveArr( aArray, "invoice.dat", @nErrorCode )
       IF nErrorCode == 0
-         aSave := FT_RESTARR( "invoice.dat", @nErrorCode )
+         aSave := ft_RestArr( "invoice.dat", @nErrorCode )
          IF nErrorCode != 0
             ? "Error restoring array"
          ENDIF
@@ -53,19 +53,19 @@
          ? "Error writing array"
       ENDIF
    $SEEALSO$
-      FT_RESTARR()
+      ft_RestArr()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_RESTARR()
+      ft_RestArr()
    $CATEGORY$
       Array
    $ONELINER$
       Restore a Clipper array from a disc file
    $SYNTAX$
-      FT_RESTARR( <cFileName>, <nErrorCode> ) -> aArray
+      ft_RestArr( <cFileName>, <nErrorCode> ) -> aArray
    $ARGUMENTS$
       <cFileName> is a DOS file name.
 
@@ -75,8 +75,8 @@
    $RETURNS$
       Return an array variable.
    $DESCRIPTION$
-      FT_RESTARR() restores an array which was saved to
-      a disc file using FT_SAVEARR().
+      ft_RestArr() restores an array which was saved to
+      a disc file using ft_SaveArr().
 
       [10/1/92 Librarian note:
 
@@ -90,9 +90,9 @@
          { "Invoice 2", Date(), 234.98, .F. }, ;
          { "Invoice 3", Date() + 1, 0, .T. } }
       nErrorCode := 0
-      FT_SAVEARR( aArray, "invoice.dat", @nErrorCode )
+      ft_SaveArr( aArray, "invoice.dat", @nErrorCode )
       IF nErrorCode == 0
-         aSave := FT_RESTARR( "invoice.dat", @nErrorCode )
+         aSave := ft_RestArr( "invoice.dat", @nErrorCode )
          IF nErrorCode != 0
             ? "Error restoring array"
          ENDIF
@@ -100,6 +100,6 @@
          ? "Error writing array"
       ENDIF
    $SEEALSO$
-      FT_SAVEARR()
+      ft_SaveArr()
    $END$
  */

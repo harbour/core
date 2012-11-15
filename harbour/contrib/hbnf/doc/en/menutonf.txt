@@ -4,11 +4,11 @@
 
 /* $DOC$
    $NAME$
-      FT_Prompt()
+      ft_Prompt()
    $CATEGORY$
       Menus/Prompts
    $ONELINER$
-      Define a menu item for use with FT_MenuTo()
+      Define a menu item for use with ft_MenuTo()
    $SYNTAX$
       #include "ftmenuto.ch"
 
@@ -110,7 +110,7 @@
       the prompts are stored in stack-based static arrays.
 
       Note that this command can also be called using function-style
-      syntax.  See the entry for FT_PROMPT() for further details.
+      syntax.  See the entry for ft_Prompt() for further details.
 
       This enhanced version of @...PROMPT requires the inclusion of
       the header file ftmenuto.ch in any source file that uses it.
@@ -152,7 +152,7 @@
 
 /* $DOC$
    $NAME$
-      FT_MenuTo()
+      ft_MenuTo()
    $CATEGORY$
       Menus/Prompts
    $ONELINER$
@@ -180,7 +180,7 @@
       command.
 
       Note that this command can also be called using function-style
-      syntax.  See the entry for FT_MENUTO() for further details.
+      syntax.  See the entry for ft_MenuTo() for further details.
    $EXAMPLES$
       #include "ftmenuto.ch"
 
@@ -190,6 +190,6 @@
    $INCLUDE$
       ftmenuto.ch
    $SEEALSO$
-      FT_Prompt()
+      ft_Prompt()
    $END$
  */

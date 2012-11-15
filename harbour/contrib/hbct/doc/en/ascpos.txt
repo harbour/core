@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      ASCPOS()
+      AscPos()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       ASCII value of a character at a certain position
    $SYNTAX$
-      ASCPOS( <cString>, [<nPosition>] ) --> nAsciiValue
+      AscPos( <cString>, [<nPosition>] ) --> nAsciiValue
    $ARGUMENTS$
       <cString>      is the processed string
       [<nPosition>]  is an optional position within <cString>
@@ -19,38 +19,38 @@
       <nAsciiValue>  the ASCII value of the character at the specified
                      position
    $DESCRIPTION$
-      The ASCPOS() function returns the ASCII value of the character that
+      The AscPos() function returns the ASCII value of the character that
       can be found at the position <nPosition> in <cString>. If <nPosition>
       is larger than the length of <cString>, 0 is returned.
    $EXAMPLES$
-      ? ascpos( "0123456789" ) // --> 57
-      ? ascpos( "0123456789", 1 ) // --> 48
+      ? AscPos( "0123456789" ) // --> 57
+      ? AscPos( "0123456789", 1 ) // --> 48
    $TESTS$
-      ascpos( "0123456789" ) == 57
-      ascpos( "0123456789", 1 ) == 48
-      ascpos( "0123456789", 11 ) == 0  // <nPosition> to large !
+      AscPos( "0123456789" ) == 57
+      AscPos( "0123456789", 1 ) == 48
+      AscPos( "0123456789", 11 ) == 0  // <nPosition> to large !
    $STATUS$
       Ready
    $COMPLIANCE$
-      ASCPOS() is compatible with CT3's ASCPOS().
+      AscPos() is compatible with CT3's AscPos().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      VALPOS()
+      ValPos()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      VALPOS()
+      ValPos()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Numerical value of a character at a certain position
    $SYNTAX$
-      VALPOS( <cString>, [<nPosition>] ) --> nDigitValue
+      ValPos( <cString>, [<nPosition>] ) --> nDigitValue
    $ARGUMENTS$
       <cString>      is the processed string
       [<nPosition>]  is an optional position within <cString>
@@ -59,27 +59,27 @@
       <nDigitValue>  the numerical value of the character at the specified
                      position
    $DESCRIPTION$
-      The VALPOS() function returns the numerical value of the character that
+      The ValPos() function returns the numerical value of the character that
       can be found at the position <nPosition> in <cString>. If no digit
       can be found at this position or if <nPosition>
       is larger than the length of <cString>, 0 is returned.
    $EXAMPLES$
-      ? valpos( "1234x56789" ) // --> 9
-      ? valpos( "1234x56789", 1 ) // --> 1
+      ? ValPos( "1234x56789" ) // --> 9
+      ? ValPos( "1234x56789", 1 ) // --> 1
    $TESTS$
-      valpos( "1234x56789" ) == 9
-      valpos( "1234x56789", 1 ) == 1
-      valpos( "1234x56789", 11 ) == 0  // <nPosition> to large !
-      valpos( "1234x56789", 5 ) == 0   // "x" is not a digit !
+      ValPos( "1234x56789" ) == 9
+      ValPos( "1234x56789", 1 ) == 1
+      ValPos( "1234x56789", 11 ) == 0  // <nPosition> to large !
+      ValPos( "1234x56789", 5 ) == 0   // "x" is not a digit !
    $STATUS$
       Ready
    $COMPLIANCE$
-      VALPOS() is compatible with CT3's VALPOS().
+      ValPos() is compatible with CT3's ValPos().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      ASCPOS()
+      AscPos()
    $END$
  */

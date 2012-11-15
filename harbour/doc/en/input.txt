@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: READKEY()
+ *    Documentation for: ReadKey()
  *
  * See COPYING for licensing terms.
  *
@@ -17,7 +17,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      INKEY()
+      Inkey()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -25,12 +25,12 @@
    $ONELINER$
       Extracts the next key code from the Harbour keyboard buffer.
    $SYNTAX$
-      INKEY( [<nTimeout>] [,<nEvents>] ) --> nKey
+      Inkey( [<nTimeout>] [,<nEvents>] ) --> nKey
    $ARGUMENTS$
       <nTimeout> is an optional timeout value in seconds, with a granularity
-      of 1/10th of a second. If omitted, INKEY() returns immediately. If set
-      to 0, INKEY() waits until an input event occurs. If set to any other
-      value, INKEY() will return either when an input event occurs or when
+      of 1/10th of a second. If omitted, Inkey() returns immediately. If set
+      to 0, Inkey() waits until an input event occurs. If set to any other
+      value, Inkey() will return either when an input event occurs or when
       the timeout period has elapsed. If only this parameter is specified
       and it is not numeric, it will be treated as if it were 0. But if both
       parameters are specified and this parameter is not numeric, it will be
@@ -89,7 +89,7 @@
       input buffer in normal mode and you won't be able to go back and
       fetch them later in extended mode.
    $DESCRIPTION$
-      INKEY() can be used to detect input events, such as keypress, mouse
+      Inkey() can be used to detect input events, such as keypress, mouse
       movement, or mouse key clicks (up and/or down).
    $EXAMPLES$
       // Wait for the user to press the Esc key
@@ -101,8 +101,8 @@
    $STATUS$
       S
    $COMPLIANCE$
-      INKEY() is compliant with the CA-Cl*pper 5.3 INKEY() function with one
-      exception: The Harbour INKEY() function will raise an argument error
+      Inkey() is compliant with the CA-Cl*pper 5.3 Inkey() function with one
+      exception: The Harbour Inkey() function will raise an argument error
       if the first parameter is less than or equal to 0 and the second
       parameter (or the default mask) is not valid, because otherwise INKEY
       would never return, because it was, in effect, asked to wait forever
@@ -161,7 +161,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_KEYPUT()
+      hb_keyPut()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -169,7 +169,7 @@
    $ONELINER$
       Put an inkey code to the keyboard buffer.
    $SYNTAX$
-      HB_KEYPUT( <nInkeyCode> )
+      hb_keyPut( <nInkeyCode> )
    $ARGUMENTS$
       <nInkeyCode> is the inkey code, which should be inserted into the
       keyboard buffer.
@@ -185,8 +185,8 @@
       // Stuff an Alt+PgDn key into the keyboard buffer
       hb_keyPut( K_ALT_PGDN )
    $TESTS$
-      hb_keyPut( K_ALT_PGDN ) ; ? INKEY() // ==> 417
-      hb_keyPut( K_F11 ) ; ? INKEY() // ==> -40
+      hb_keyPut( K_ALT_PGDN ) ; ? Inkey() // ==> 417
+      hb_keyPut( K_F11 ) ; ? Inkey() // ==> -40
    $STATUS$
       R
    $COMPLIANCE$
@@ -194,7 +194,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      KEYBOARD,CLEAR TYPEAHEAD,INKEY()
+      KEYBOARD,CLEAR TYPEAHEAD,Inkey()
    $END$
  */
 
@@ -202,7 +202,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      NEXTKEY()
+      NextKey()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -210,7 +210,7 @@
    $ONELINER$
       Get the next key code in the buffer without extracting it.
    $SYNTAX$
-      NEXTKEY( [<nInputMask>] ) --> nKey
+      NextKey( [<nInputMask>] ) --> nKey
    $ARGUMENTS$
       nInputMask is an optional integer value composed of one or more
       INKEY_ or HB_INKEY_ constants. The sole purpose of this argument
@@ -222,7 +222,7 @@
       Returns the value of the next key in the Harbour keyboard buffer
       without extracting it.
    $EXAMPLES$
-      // Use NEXTKEY() with INKEY() to change display characters, or by
+      // Use NextKey() with Inkey() to change display characters, or by
       // itself to exit the loop, so that the caller can detect the Esc.
       LOCAL nKey, cChar := "+"
       DO WHILE .T.
@@ -241,12 +241,12 @@
    $STATUS$
       R
    $COMPLIANCE$
-      NEXTKEY() is compliant with CA-Cl*pper 5.3, but has been extended
+      NextKey() is compliant with CA-Cl*pper 5.3, but has been extended
       for Harbour.
    $FILES$
       Library is rtl
    $SEEALSO$
-      INKEY(),LASTKEY()
+      Inkey(),LastKey()
    $END$
  */
 
@@ -254,7 +254,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      LASTKEY()
+      LastKey()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -262,7 +262,7 @@
    $ONELINER$
       Get the last key extracted from the keyboard buffer.
    $SYNTAX$
-      LASTKEY( [<nInputMask>] ) --> nKey
+      LastKey( [<nInputMask>] ) --> nKey
    $ARGUMENTS$
       nInputMask is an optional integer value composed of one or more
       INKEY_ or HB_INKEY_ constants. The sole purpose of this argument
@@ -282,16 +282,16 @@
          ENDIF
       ENDDO
    $TESTS$
-      KEYBOARD "AB"; ? INKEY(), LASTKEY() // ==>   65   65
+      KEYBOARD "AB"; ? Inkey(), LastKey() // ==>   65   65
    $STATUS$
       R
    $COMPLIANCE$
-      LASTKEY() is compliant with CA-Cl*pper 5.3, but has been extended
+      LastKey() is compliant with CA-Cl*pper 5.3, but has been extended
       for Harbour.
    $FILES$
       Library is rtl
    $SEEALSO$
-      INKEY(),LASTKEY()
+      Inkey(),LastKey()
    $END$
  */
 
@@ -343,7 +343,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      READKEY()*
+      ReadKey()*
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -351,14 +351,14 @@
    $ONELINER$
       Determine which key terminated a READ.
    $SYNTAX$
-      READKEY() --> nKeyCode
+      ReadKey() --> nKeyCode
    $ARGUMENTS$
       None.
    $RETURNS$
-      READKEY() returns a numeric code representing the key that caused READ
+      ReadKey() returns a numeric code representing the key that caused READ
       to terminate.
    $DESCRIPTION$
-      READKEY() is used after a READ was terminated to determine the exit
+      ReadKey() is used after a READ was terminated to determine the exit
       key pressed. If the GET buffer was updated during READ, 256 is added
       to the return code.
 
@@ -379,18 +379,18 @@
       otherwise             0            0
       </table>
 
-      READKEY() is a compatibility function so try not to use it.
-      READKEY() is superseded by LASTKEY() which returns the INKEY()
-      code for that key.  UPDATED() could be used to find if the
+      ReadKey() is a compatibility function so try not to use it.
+      ReadKey() is superseded by LastKey() which returns the Inkey()
+      code for that key.  Updated() could be used to find if the
       GET buffer was changed during the READ.
    $STATUS$
       R
    $COMPLIANCE$
-      READKEY() is compliant with CA-Cl*pper 5.3
+      ReadKey() is compliant with CA-Cl*pper 5.3
    $FILES$
       Library is rtl
    $SEEALSO$
-      @...GET,INKEY(),LASTKEY(),READ,READEXIT(),UPDATED()
+      @...GET,Inkey(),LastKey(),READ,ReadExit(),Updated()
    $END$
  */
 
@@ -398,7 +398,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MROW()
+      MRow()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -423,14 +423,14 @@
    $STATUS$
       R
    $COMPLIANCE$
-      MROW() is compliant with CA-Cl*pper 5.3, but has been extended
+      MRow() is compliant with CA-Cl*pper 5.3, but has been extended
       to work on graphical systems as well as character-based systems.
    $PLATFORMS$
 
    $FILES$
       Library is rtl
    $SEEALSO$
-      MCOL()
+      MCol()
    $END$
  */
 
@@ -438,7 +438,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MCOL()
+      MCol()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -463,13 +463,13 @@
    $STATUS$
       R
    $COMPLIANCE$
-      MCOL() is compliant with CA-Cl*pper 5.3, but has been extended
+      MCol() is compliant with CA-Cl*pper 5.3, but has been extended
       to work on graphical systems as well as character-based systems.
    $PLATFORMS$
       All
    $FILES$
       Library is rtl
    $SEEALSO$
-      MROW()
+      MRow()
    $END$
  */

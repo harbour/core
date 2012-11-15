@@ -540,7 +540,7 @@
    $ONELINER$
       Save a GD image.
    $SYNTAX$
-      gdImageGd( <pImage>, <cFile> | <nHandle> ) --> NIL
+      gdImageGD( <pImage>, <cFile> | <nHandle> ) --> NIL
    $ARGUMENTS$
       <pImage>       - Image pointer
       <cFile>        - Image file name
@@ -548,22 +548,22 @@
    $RETURNS$
       NIL
    $DESCRIPTION$
-      gdImageGd() saves a GD image to a file or a handle.
+      gdImageGD() saves a GD image to a file or a handle.
 
       You can use one of 2 syntax:
 
-      gdImageGd( pImage, "myimage.gd" )
+      gdImageGD( pImage, "myimage.gd" )
 
       or
 
-      gdImageGd( pImage, nFileHandle )
+      gdImageGD( pImage, nFileHandle )
 
    $EXAMPLES$
       PROCEDURE Main()
          LOCAL pImage := gdImageFromGif( "myimage.gif" )
 
          // Image conversion
-         gdImageGd( pImage, "myimage.gd" )
+         gdImageGD( pImage, "myimage.gd" )
 
          RETURN
    $STATUS$

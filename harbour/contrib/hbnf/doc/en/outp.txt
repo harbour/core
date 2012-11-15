@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_OUTP()
+      ft_outp()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Write a byte to a specified I/O port
    $SYNTAX$
-      FT_OUTP( <nPort>, <nValue> ) -> lResult
+      ft_outp( <nPort>, <nValue> ) -> lResult
    $ARGUMENTS$
       <nPort> is the port from which to retrieve the byte.
 
@@ -28,8 +28,8 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      lOk := FT_OUTP( 100, 0 )   // send a Chr( 0 ) to port 100 (064h)
+      lOk := ft_outp( 100, 0 )   // send a Chr( 0 ) to port 100 (064h)
    $SEEALSO$
-      FT_INP()
+      ft_inp()
    $END$
  */

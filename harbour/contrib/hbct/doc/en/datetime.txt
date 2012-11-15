@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      BOM()
+      BoM()
    $CATEGORY$
       CT3 date and time functions
    $ONELINER$
       _B_egin _O_f _M_onth
    $SYNTAX$
-      BOM( [<dDate>] ) -> dDateBeginOfMonth
+      BoM( [<dDate>] ) -> dDateBeginOfMonth
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,25 +24,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      BOM() is compatible with CT3's BOM().
+      BoM() is compatible with CT3's BoM().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      EOM(),BOQ(),EOQ(),BOY(),EOY()
+      EoM(),BoQ(),EoQ(),BoY(),EoY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      EOM()
+      EoM()
    $CATEGORY$
       CT3 date and time functions
    $ONELINER$
       _E_nd _O_f _M_onth
    $SYNTAX$
-      EOM( [<dDate>] ) -> dDateEndOfMonth
+      EoM( [<dDate>] ) -> dDateEndOfMonth
    $ARGUMENTS$
 
    $RETURNS$
@@ -56,25 +56,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      EOM() is compatible with CT3's EOM().
+      EoM() is compatible with CT3's EoM().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      BOM(),BOQ(),EOQ(),BOY(),EOY()
+      BoM(),BoQ(),EoQ(),BoY(),EoY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      BOQ()
+      BoQ()
    $CATEGORY$
       CT3 date and time functions
    $ONELINER$
       _B_egin _O_f _Q_uarter
    $SYNTAX$
-      BOQ( [<dDate>] ) -> dDateBeginOfQuarter
+      BoQ( [<dDate>] ) -> dDateBeginOfQuarter
    $ARGUMENTS$
 
    $RETURNS$
@@ -88,25 +88,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      BOQ() is compatible with CT3's BOQ().
+      BoQ() is compatible with CT3's BoQ().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      BOM(),EOM(),EOQ(),BOY(),EOY()
+      BoM(),EoM(),EoQ(),BoY(),EoY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      EOQ()
+      EoQ()
    $CATEGORY$
       CT3 date and time functions
    $ONELINER$
       _E_nd _O_f _Q_uarter
    $SYNTAX$
-      EOQ( [<dDate>] ) -> dDateEndOfQuarter
+      EoQ( [<dDate>] ) -> dDateEndOfQuarter
    $ARGUMENTS$
 
    $RETURNS$
@@ -120,25 +120,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      EOQ() is compatible with CT3's EOQ().
+      EoQ() is compatible with CT3's EoQ().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      BOM(),EOM(),BOQ(),BOY(),EOY()
+      BoM(),EoM(),BoQ(),BoY(),EoY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      BOY()
+      BoY()
    $CATEGORY$
       CT3 date and time functions
    $ONELINER$
       _B_egin _O_f _Y_ear
    $SYNTAX$
-      BOY( [<dDate>] ) -> dDateBeginOfYear
+      BoY( [<dDate>] ) -> dDateBeginOfYear
    $ARGUMENTS$
 
    $RETURNS$
@@ -152,25 +152,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      BOY() is compatible with CT3's BOY().
+      BoY() is compatible with CT3's BoY().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      BOM(),EOM(),BOQ(),EOQ(),EOY()
+      BoM(),EoM(),BoQ(),EoQ(),EoY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      EOY()
+      EoY()
    $CATEGORY$
       CT3 date and time functions
    $ONELINER$
       _E_nd _O_f _Y_ear
    $SYNTAX$
-      EOY( [<dDate>] ) -> dDateEndOfYear
+      EoY( [<dDate>] ) -> dDateEndOfYear
    $ARGUMENTS$
 
    $RETURNS$
@@ -184,12 +184,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      EOY() is compatible with CT3's EOY().
+      EoY() is compatible with CT3's EoY().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      BOM(),EOM(),BOQ(),EOQ(),BOY()
+      BoM(),EoM(),BoQ(),EoQ(),BoY()
    $END$
  */

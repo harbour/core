@@ -4,20 +4,20 @@
 
 /* $DOC$
    $NAME$
-      FT_FUSE()
+      ft_FUse()
    $CATEGORY$
       File I/O
    $ONELINER$
       Open or close a text file for use by the FT_F* functions
    $SYNTAX$
-      FT_FUSE( [ <cFile> ] [, <nMode> ] ) -> nHandle | 0
+      ft_FUse( [ <cFile> ] [, <nMode> ] ) -> nHandle | 0
 
    $ARGUMENTS$
       ^b<cFile>^n is the text file you want to open.  If not specified,
       the file currently open, if any, will be closed.
 
       ^b<nMode>^n is the open mode for the file.  Please refer to the
-      discussion of open modes under FOPEN() in the Clipper manual
+      discussion of open modes under FOpen() in the Clipper manual
       and fileio.ch for a list of allowable open modes.  If not
       specified, the file will be opened with a mode of
       FO_READ + FO_SHARED (64).
@@ -26,12 +26,12 @@
       If ^b<cFile>^n is passed and the file is opened successfully, an
       integer containing the text file's workarea.  If the file cannot be
       opened, -1 will be returned.  In this case, check the return value
-      of ^bft_fError()^n for the cause of the error.
+      of ^bft_FError()^n for the cause of the error.
 
-      If FT_FUSE() is called without any arguments, it will close the
+      If ft_FUse() is called without any arguments, it will close the
       text file in the current "text area" and return 0.
 
-      If a read error occurs ^ft_fError()^n will contain the error code.
+      If a read error occurs ^ft_FError()^n will contain the error code.
 
    $DESCRIPTION$
       The FT_F*() file functions are for reading text files, that is,
@@ -47,28 +47,28 @@
       #include "fileio.ch"
 
       // open a text file for reading
-      ft_fUse( "text.txt" )
+      ft_FUse( "text.txt" )
 
       // open a text file for reading and writing
-      ft_fUse( "text.txt", FO_READWRITE + FO_SHARED )
+      ft_FUse( "text.txt", FO_READWRITE + FO_SHARED )
 
       // close file
-      ft_fUse()
+      ft_FUse()
 
    $SEEALSO$
-      FT_FUSE() FT_FSELECT()
+      ft_FUse() ft_FSelect()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FSELECT()
+      ft_FSelect()
    $CATEGORY$
       File I/O
    $ONELINER$
       Select a text file workarea
    $SYNTAX$
-      FT_FSELECT( [ <nNewArea> ] ) -> nPreviousArea
+      ft_FSelect( [ <nNewArea> ] ) -> nPreviousArea
 
    $ARGUMENTS$
       ^b<nNewArea>^n is the text file workarea to select.
@@ -97,31 +97,31 @@
       database workareas.
 
    $EXAMPLES$
-      FT_FSELECT( 1 )
+      ft_FSelect( 1 )
 
-      nFile1 := FT_FUSE( "temp.c" )
+      nFile1 := ft_FUse( "temp.c" )
 
-      ? FT_FLASTRE()                 // no. of lines in temp.c
+      ? ft_FLastRe()                 // no. of lines in temp.c
 
-      FT_FSELECT( 2 )
+      ft_FSelect( 2 )
 
-      nFile2 := FT_FUSE( "temp.h" )
+      nFile2 := ft_FUse( "temp.h" )
 
-      ? FT_FLASTRE()                 // no. of lines in temp.h
+      ? ft_FLastRe()                 // no. of lines in temp.h
    $SEEALSO$
-      FT_FUSE()
+      ft_FUse()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FGOTOP()
+      ft_FGoTop()
    $CATEGORY$
       File I/O
    $ONELINER$
       Go to the first record in a text file
    $SYNTAX$
-      FT_FGOTOP() -> NIL
+      ft_FGoTop() -> NIL
 
    $ARGUMENTS$
       None
@@ -136,33 +136,33 @@
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
-      FT_FUSE( "text.c" )      // open text file
+      ft_FUse( "text.c" )      // open text file
 
-      DO WHILE ! FT_FEOF()
+      DO WHILE ! ft_FEof()
 
-         ? FT_FREADLN()        // read thru file
+         ? ft_FReadLn()        // read thru file
 
-         FT_FSKIP()
+         ft_FSkip()
 
       ENDDO
 
-      FT_FGOTOP()              // go back to top
+      ft_FGoTop()              // go back to top
 
-      ? FT_FRECNO()            // 1
+      ? ft_FRecNo()            // 1
    $SEEALSO$
-      FT_FSELECT() FT_FUSE() FT_FRECNO() FT_FGOBOT()
+      ft_FSelect() ft_FUse() ft_FRecNo() ft_FGoBot()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FERROR()
+      ft_FError()
    $CATEGORY$
       File I/O
    $ONELINER$
       Return the error code for a text file operation
    $SYNTAX$
-      FT_FERROR() -> nErrorNo
+      ft_FError() -> nErrorNo
 
    $ARGUMENTS$
       None
@@ -179,8 +179,8 @@
       among others.
 
    $EXAMPLES$
-      IF ft_fUse( "text.c" ) < 0     // open text file
-         err := ft_fError()
+      IF ft_FUse( "text.c" ) < 0     // open text file
+         err := ft_FError()
          ? "Error opening file 'text.c', error code (" + ;
             hb_ntos( err ) + ")"
       ENDIF
@@ -191,13 +191,13 @@
 
 /* $DOC$
    $NAME$
-      FT_FRECNO()
+      ft_FRecNo()
    $CATEGORY$
       File I/O
    $ONELINER$
       Return the current record number of a text file
    $SYNTAX$
-      FT_FRECNO() -> nRecNo
+      ft_FRecNo() -> nRecNo
 
    $ARGUMENTS$
       None
@@ -212,33 +212,33 @@
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
-      FT_FUSE( "text.c" )      // open text file
+      ft_FUse( "text.c" )      // open text file
 
-      DO WHILE ! FT_FEOF()
+      DO WHILE ! ft_FEof()
 
-         ? FT_FREADLN()        // read thru file
+         ? ft_FReadLn()        // read thru file
 
-         FT_FSKIP()
+         ft_FSkip()
 
       ENDDO
 
-      FT_FGOTOP()              // go back to top
+      ft_FGoTop()              // go back to top
 
-      ? FT_FRECNO()            // 1
+      ? ft_FRecNo()            // 1
    $SEEALSO$
-      FT_FSELECT() FT_FUSE() FT_FGOTOP() FT_FGOBOT()
+      ft_FSelect() ft_FUse() ft_FGoTop() ft_FGoBot()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FGOBOT()
+      ft_FGoBot()
    $CATEGORY$
       File I/O
    $ONELINER$
       Go to the last record in a text file
    $SYNTAX$
-      FT_FGOBOT() -> NIL
+      ft_FGoBot() -> NIL
 
    $ARGUMENTS$
       None
@@ -250,31 +250,31 @@
       This function moves the record pointer to the last record of the
       file in the currently selected text file workarea.
 
-      If a read error occurs ^ft_fError()^n will contain the error code.
+      If a read error occurs ^ft_FError()^n will contain the error code.
 
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
       // read last line
-      FT_FUSE( "text.c" )
+      ft_FUse( "text.c" )
 
-      FT_FGOBOT()
+      ft_FGoBot()
 
-      ? FT_FREADLN()
+      ? ft_FReadLn()
    $SEEALSO$
-      FT_FSELECT() FT_FUSE() FT_FGOTOP() FT_FRECNO() FT_FREADLN()
+      ft_FSelect() ft_FUse() ft_FGoTop() ft_FRecNo() ft_FReadLn()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FSKIP()
+      ft_FSkip()
    $CATEGORY$
       File I/O
    $ONELINER$
       Move the record pointer to a new position in a text file
    $SYNTAX$
-      FT_FSKIP( [ <nLines> ] ) -> nLinesSkipped
+      ft_FSkip( [ <nLines> ] ) -> nLinesSkipped
 
    $ARGUMENTS$
       <nLines> is the number of lines to skip.  Defaults to 1 if
@@ -293,36 +293,36 @@
       skipped, for example to write a custom skipper function for
       TBrowse'g text files.
 
-      If a read error occurs ^ft_fError()^n will contain the error code.
+      If a read error occurs ^ft_FError()^n will contain the error code.
 
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
       // display each record of a text file
 
-      FT_FUSE( "text.c" )
+      ft_FUse( "text.c" )
 
-      DO WHILE ! FT_FEOF()
+      DO WHILE ! ft_FEof()
 
-         ? FT_FREADLN()
+         ? ft_FReadLn()
 
-         FT_FSKIP()
+         ft_FSkip()
 
       ENDDO
    $SEEALSO$
-      FT_FRECNO() FT_FGOTOP()
+      ft_FRecNo() ft_FGoTop()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FREADLN()
+      ft_FReadLn()
    $CATEGORY$
       File I/O
    $ONELINER$
       Read a line from the currently selected text file
    $SYNTAX$
-      FT_FREADLN() -> cLine
+      ft_FReadLn() -> cLine
 
    $ARGUMENTS$
       None
@@ -339,38 +339,38 @@
       increase the maximum record size by changing the value of ^b#define
       ^bBUFFSIZE^n in the C source and recompiling, however you should
       consider the performance implications if you do (all read and writes
-      use this buffer size, including ft_fSkip()'s and ft_fGoto()'s).
+      use this buffer size, including ft_FSkip()'s and ft_FGoto()'s).
 
-      If a read error occurs ^ft_fError()^n will contain the error code.
+      If a read error occurs ^ft_FError()^n will contain the error code.
 
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
       // display each record of a text file
 
-      FT_FUSE( "text.c" )
+      ft_FUse( "text.c" )
 
-      DO WHILE ! FT_FEOF()
+      DO WHILE ! ft_FEof()
 
-         ? FT_FREADLN()
+         ? ft_FReadLn()
 
-         FT_FSKIP()
+         ft_FSkip()
 
       ENDDO
    $SEEALSO$
-      FT_FUSE() FT_FWRITELN() FT_FRECNO() FT_FGOTOP()
+      ft_FUse() ft_FWriteLn() ft_FRecNo() ft_FGoTop()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FDELETE()
+      ft_FDelete()
    $CATEGORY$
       File I/O
    $ONELINER$
       Deletes a line from the currently selected text file
    $SYNTAX$
-      FT_FDELETE( [ <nLines> ] ) -> lSuccess
+      ft_FDelete( [ <nLines> ] ) -> lSuccess
 
    $ARGUMENTS$
       ^b<nLines>^n is the number of lines to be eliminated, beginning with
@@ -379,7 +379,7 @@
       If ^b<nLines>^n is omitted, the current record is deleted only.
 
    $RETURNS$
-      TRUE if successful, otherwise check ^ft_fError()^n for error code.
+      TRUE if successful, otherwise check ^ft_FError()^n for error code.
 
    $DESCRIPTION$
       This function deletes one or several lines of text from the file
@@ -391,23 +391,23 @@
 
    $EXAMPLES$
       // delete the next 4 lines from a file
-      FT_FUSE( "test.txt" )
+      ft_FUse( "test.txt" )
 
-      FT_FDELETE( 4 )
+      ft_FDelete( 4 )
    $SEEALSO$
-      FT_FAPPEND() FT_FRECNO() FT_FINSERT()
+      ft_FAppend() ft_FRecNo() ft_FInsert()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FINSERT()
+      ft_FInsert()
    $CATEGORY$
       File I/O
    $ONELINER$
       Inserts a line in the currently selected text file
    $SYNTAX$
-      FT_FINSERT( [ <nLines> ] ) -> lSuccess
+      ft_FInsert( [ <nLines> ] ) -> lSuccess
 
    $ARGUMENTS$
       ^b<nLines>^n is the number of lines that should be inserted at the
@@ -417,7 +417,7 @@
 
    $RETURNS$
       ^blSuccess^n is TRUE if the insert succeeded, FALSE if not.  If
-      false check the return value of ^bft_fError()^n for the reason.
+      false check the return value of ^bft_FError()^n for the reason.
 
    $DESCRIPTION$
       This function inserts a line of text in the file in the currently
@@ -431,25 +431,25 @@
 
    $EXAMPLES$
       // add a couple of blank lines of text to a file
-      ft_fUse( "test.txt" )
+      ft_FUse( "test.txt" )
 
-      ft_fGoTo( 10 )
+      ft_FGoto( 10 )
 
-      ft_fInsert( 5 )
+      ft_FInsert( 5 )
    $SEEALSO$
-      FT_FAPPEND() FT_FRECNO() FT_FDELETE() FT_FLASTRE()
+      ft_FAppend() ft_FRecNo() ft_FDelete() ft_FLastRe()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FAPPEND()
+      ft_FAppend()
    $CATEGORY$
       File I/O
    $ONELINER$
       Appends a line to the currently selected text file
    $SYNTAX$
-      FT_FAPPEND( [ < nLines > ] ) -> NIL
+      ft_FAppend( [ < nLines > ] ) -> NIL
 
    $ARGUMENTS$
       <nLines> is the number of lines that should be appended to the
@@ -458,7 +458,7 @@
       If <nLines> is omitted, one record is appended.
 
    $RETURNS$
-      lSuccess.  If FALSE, check ^bft_fError()^n for the error code.
+      lSuccess.  If FALSE, check ^bft_FError()^n for the error code.
 
    $DESCRIPTION$
       This function appends a line of text to the file in the currently
@@ -466,7 +466,7 @@
       CRLF pair.  The record pointer is moved to the last appended
       record.
 
-      Multiple lines may be appended with one call to FT_FAPPEND().
+      Multiple lines may be appended with one call to ft_FAppend().
 
       A text file "record" is a line of text terminated by a CRLF pair.
       Each line appended with this function will be empty.
@@ -476,32 +476,32 @@
       these stragglers to be the last line of the file, and begins
       appending the new lines after this line.  In other words, if the
       last line in the text file is not terminated with a CRLF pair prior
-      to calling FT_FAPPEND(), the function will terminate that last line
+      to calling ft_FAppend(), the function will terminate that last line
       before appending any new lines.
 
    $EXAMPLES$
       // add a blank line of text to a file
-      FT_FUSE( "test.txt" )
+      ft_FUse( "test.txt" )
 
-      ? FT_FRECNO()           // displays 5
+      ? ft_FRecNo()           // displays 5
 
-      FT_FAPPEND()
+      ft_FAppend()
 
-      ? FT_FRECNO()           // displays 6
+      ? ft_FRecNo()           // displays 6
    $SEEALSO$
-      FT_FRECNO() FT_FDELETE() FT_FINSERT() FT_FLASTRE()
+      ft_FRecNo() ft_FDelete() ft_FInsert() ft_FLastRe()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FWRITELN()
+      ft_FWriteLn()
    $CATEGORY$
       File I/O
    $ONELINER$
       Write a line to the currently selected text file
    $SYNTAX$
-      FT_FWRITELN( < cData >, [ < lInsert > ] ) -> lSuccess
+      ft_FWriteLn( < cData >, [ < lInsert > ] ) -> lSuccess
 
    $ARGUMENTS$
       <cData> is a string of data to write to the file at the current
@@ -510,13 +510,13 @@
       <lInsert> is a logical indicating whether the contents
       of the current record are to be preserved, that is, if lInsert
       evaluates to .T., the a new record is inserted at the current
-      position.  The current record then is pushed down to FT_FRECNO()+1.
+      position.  The current record then is pushed down to ft_FRecNo()+1.
 
       If lInsert is .F. or omitted, the current record is replaced by
       cData.
 
    $RETURNS$
-      TRUE if successful, otherwise check ^ft_fError()^n for error code.
+      TRUE if successful, otherwise check ^ft_FError()^n for error code.
 
    $DESCRIPTION$
       This function writes a line of text to the file in the currently
@@ -528,36 +528,36 @@
 
       Writing a null string has the effect of clearing the current line
       if in overstrike mode, else inserting a new line (same as
-      FT_FINSERT()).
+      ft_FInsert()).
 
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
       // write a line of text to a file
 
-      FT_FUSE( "config.sys" )
+      ft_FUse( "config.sys" )
 
-      DO WHILE Upper( FT_FREADLN() ) != "FILES=" .AND. ! F_FEOF()
+      DO WHILE Upper( ft_FReadLn() ) != "FILES=" .AND. ! F_FEOF()
 
-         FT_FSKIP()
+         ft_FSkip()
 
       ENDDO
 
-      FT_FWRITELN( "FILES=30", FT_FEOF() )
+      ft_FWriteLn( "FILES=30", ft_FEof() )
    $SEEALSO$
-      FT_FREADLN() FT_FRECNO() FT_FINSERT() FT_FDELETE()
+      ft_FReadLn() ft_FRecNo() ft_FInsert() ft_FDelete()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FLASTRE()
+      ft_FLastRe()
    $CATEGORY$
       File I/O
    $ONELINER$
       Get the no. of records in the currently selected text file
    $SYNTAX$
-      FT_FLASTRE() -> nLastRecordNum
+      ft_FLastRe() -> nLastRecordNum
 
    $ARGUMENTS$
       None
@@ -573,23 +573,23 @@
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
-      FT_FUSE( "text.c" )
+      ft_FUse( "text.c" )
 
-      ? FT_FLASTRE()
+      ? ft_FLastRe()
    $SEEALSO$
-      FT_FUSE() FT_FRECNO()
+      ft_FUse() ft_FRecNo()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FEOF()
+      ft_FEof()
    $CATEGORY$
       File I/O
    $ONELINER$
       Determine if end of text file has been encountered
    $SYNTAX$
-      FT_FEOF() -> lResult
+      ft_FEof() -> lResult
 
    $ARGUMENTS$
       None
@@ -604,27 +604,27 @@
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
-      FT_FUSE( "fttext.c" )
+      ft_FUse( "fttext.c" )
 
-      ? FT_FEOF()        // .F.
+      ? ft_FEof()        // .F.
 
-      FT_FSKIP()
+      ft_FSkip()
 
-      ? FT_FEOF()        // .T.
+      ? ft_FEof()        // .T.
    $SEEALSO$
-      FT_FUSE() FT_FSKIP()
+      ft_FUse() ft_FSkip()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FBOF()
+      ft_FBof()
    $CATEGORY$
       File I/O
    $ONELINER$
       Determine if attempt to skip past beginning of text file
    $SYNTAX$
-      FT_FBOF() -> lResult
+      ft_FBof() -> lResult
 
    $ARGUMENTS$
       None
@@ -639,29 +639,29 @@
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
-      FT_FUSE( "fttext.c" )
+      ft_FUse( "fttext.c" )
 
-      FT_FGOTOP()
+      ft_FGoTop()
 
-      ? FT_FBOF()        // .F.
+      ? ft_FBof()        // .F.
 
-      FT_FSKIP( -1 )
+      ft_FSkip( -1 )
 
-      ? FT_FBOF()        // .T.
+      ? ft_FBof()        // .T.
    $SEEALSO$
-      FT_FSKIP() FT_EOF() FT_GOTOP()
+      ft_FSkip() FT_EOF() FT_GOTOP()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_FGOTO()
+      ft_FGoto()
    $CATEGORY$
       File I/O
    $ONELINER$
       Move record pointer to specific record in a text file
    $SYNTAX$
-      FT_FGOTO( nLine ) -> NIL
+      ft_FGoto( nLine ) -> NIL
 
    $ARGUMENTS$
       <nLine> is the record number to go to.
@@ -679,23 +679,23 @@
       Internally, the function operates differently depending on how
       you invoke it.  Passing a value for ^b<nLine>^n results in what
       is effectively a skip operation, which is fairly quick.  However
-      if you pass 0 for ^b<nLine>^n, e.g. ft_fGoTo( 0 ), the function
+      if you pass 0 for ^b<nLine>^n, e.g. ft_FGoto( 0 ), the function
       internally goes to the top of the file, then skips down the
       required number of records.  Hence if your file is relatively
       large and the current record is a high number, you may see some
-      delay as ft_fGoTo(0) skips through the file.
+      delay as ft_FGoto(0) skips through the file.
 
       A text file "record" is a line of text terminated by a CRLF pair.
 
    $EXAMPLES$
       // read 5th line of text from file
 
-      ft_fUse( "fttext.c" )
+      ft_FUse( "fttext.c" )
 
-      ft_fGoTo( 5 )
+      ft_FGoto( 5 )
 
-      cText := ft_fReadLN()
+      cText := ft_FReadLn()
    $SEEALSO$
-      FT_FRECNO() FT_FGOTOP() FT_FREADLN()
+      ft_FRecNo() ft_FGoTop() ft_FReadLn()
    $END$
  */

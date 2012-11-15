@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_AREDIT()
+      ft_ArEdit()
    $CATEGORY$
       Array
    $ONELINER$
       2 dimensional array editing function using TBrowse
    $SYNTAX$
-      FT_AREDIT( <nTop>, <nLeft>, <nBottom>, <nRight>, <Array Name>, ;
+      ft_ArEdit( <nTop>, <nLeft>, <nBottom>, <nRight>, <Array Name>, ;
          <nElem>, <aHeadings>, <aBlocks> [, <bGetFunc> ] ) -> xElement
    $ARGUMENTS$
       <nTop>, <nLeft>, <nBottom>, <nRight> are coordinates for TBrowse
@@ -25,14 +25,14 @@
 
       [ <bGetFunc> ] is get editing function for handling individual elements
    $RETURNS$
-      Value of element positioned on when exit FT_AREDIT()
+      Value of element positioned on when exit ft_ArEdit()
       The type of this value depends on what is displayed.
    $DESCRIPTION$
       This function allows you to position yourself in an array,
       add and delete rows with the <F7> and <F8> keys,
       and pass a UDF with information to edit the individual gets.
    $EXAMPLES$
-      FT_AREDIT( 3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks )
+      ft_ArEdit( 3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks )
 
       // This example will allow you to browse a 2 dimensional array
       // But you can't edit it since there is no GetBlock UDF
@@ -69,6 +69,6 @@
       bGetFunc   := {| b, ar, nDim, nElem | TestGet( b, ar, nDim, nElem ) }
       SetColor( "N/W, W/N, , , W/N" )
       CLS
-      FT_AREDIT( 3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks, bGetFunc )
+      ft_ArEdit( 3, 5, 18, 75, ar, @nElem, aHeadings, aBlocks, bGetFunc )
    $END$
  */

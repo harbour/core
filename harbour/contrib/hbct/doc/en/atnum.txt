@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      AFTERATNUM()
+      AfterAtNum()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Returns string portion after nth occurence of substring
    $SYNTAX$
-      AFTERATNUM( <cStringToMatch>, <cString>, [<nCounter>],
+      AfterAtNum( <cStringToMatch>, <cString>, [<nCounter>],
                   [<nIgnore>] ) --> cRestString
    $ARGUMENTS$
       <cStringToMatch>    is the substring scanned for
@@ -34,39 +34,39 @@
       matches or the last match is identical to the end of <cString>, an
       empty string will be returned.
       After a match has been found, the function continues to scan after
-      that match if the CSETATMUPA() switch is turned off, with the
+      that match if the CSetAtMupa() switch is turned off, with the
       second character of the matched substring otherwise.
-      The function will also consider the settings of SETATLIKE().
+      The function will also consider the settings of SetAtLike().
    $EXAMPLES$
-      ? AFTERATNUM( "!", "What is the answer ? 4 ! 5 !" ) // -> ""
-      ? AFTERATNUM( "!", "What is the answer ? 4 ! 5 ?" ) // -> " 5 ?"
-      <TODO: add some examples here with csetatmupa() and setatlike()>
+      ? AfterAtNum( "!", "What is the answer ? 4 ! 5 !" ) // -> ""
+      ? AfterAtNum( "!", "What is the answer ? 4 ! 5 ?" ) // -> " 5 ?"
+      <TODO: add some examples here with CSetAtMupa() and SetAtLike()>
    $TESTS$
-      AFTERATNUM( "..", "..This..is..a..test!" ) == "test!"
-      AFTERATNUM( "..", "..This..is..a..test!", 2 ) == "is..a..test!"
-      AFTERATNUM( "..", "..This..is..a..test!", 2, 2 ) == "a..test!"
+      AfterAtNum( "..", "..This..is..a..test!" ) == "test!"
+      AfterAtNum( "..", "..This..is..a..test!", 2 ) == "is..a..test!"
+      AfterAtNum( "..", "..This..is..a..test!", 2, 2 ) == "a..test!"
    $STATUS$
       Ready
    $COMPLIANCE$
-      AFTERATNUM() is compatible with CT3's AFTERATNUM().
+      AfterAtNum() is compatible with CT3's AfterAtNum().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      ATNUM(),BEFORATNUM(),CSETATMUPA(),SETATLIKE()
+      AtNum(),BEFORAtNum(),CSetAtMupa(),SetAtLike()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      BEFORATNUM()
+      BEFORAtNum()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Returns string portion before nth occurence of substring
    $SYNTAX$
-      BEFORATNUM( <cStringToMatch>, <cString>, [<nCounter>],
+      BEFORAtNum( <cStringToMatch>, <cString>, [<nCounter>],
                   [<nIgnore>] ) --> cRestString
    $ARGUMENTS$
       <cStringToMatch>    is the substring scanned for
@@ -90,33 +90,33 @@
       matches or the last match is identical to the start of <cString>
       (i.e. the last match is the first match), an empty string will be returned.
       After a match has been found, the function continues to scan after
-      that match if the CSETATMUPA() switch is turned off, with the
+      that match if the CSetAtMupa() switch is turned off, with the
       second character of the matched substring otherwise.
-      The function will also consider the settings of SETATLIKE().
+      The function will also consider the settings of SetAtLike().
    $EXAMPLES$
-      ? BEFORATNUM( "!", "What is the answer ? 4 ! 5 !" ) // -> "What is the answer ? 4 ! 5 "
-      ? BEFORATNUM( "!", "What is the answer ? 4 ! 5 ?" ) // -> "What is the answer ? 4 "
-      <TODO: add some examples here with csetatmupa() and setatlike()>
+      ? BEFORAtNum( "!", "What is the answer ? 4 ! 5 !" ) // -> "What is the answer ? 4 ! 5 "
+      ? BEFORAtNum( "!", "What is the answer ? 4 ! 5 ?" ) // -> "What is the answer ? 4 "
+      <TODO: add some examples here with CSetAtMupa() and SetAtLike()>
    $TESTS$
-      BEFORATNUM( "..", "..This..is..a..test!" ) == "..This..is..a"
-      BEFORATNUM( "..", "..This..is..a..test!", 2 ) == "..This"
-      BEFORATNUM( "..", "..This..is..a..test!", 2, 2 ) == "..This..is"
+      BEFORAtNum( "..", "..This..is..a..test!" ) == "..This..is..a"
+      BEFORAtNum( "..", "..This..is..a..test!", 2 ) == "..This"
+      BEFORAtNum( "..", "..This..is..a..test!", 2, 2 ) == "..This..is"
    $STATUS$
       Ready
    $COMPLIANCE$
-      BEFORATNUM() is compatible with CT3's BEFORATNUM().
+      BEFORAtNum() is compatible with CT3's BEFORAtNum().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      ATNUM()  AFTERATNUM()  CSETATMUPA()  SETATLIKE()
+      AtNum()  AfterAtNum()  CSetAtMupa()  SetAtLike()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ATNUM()
+      AtNum()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
@@ -145,26 +145,26 @@
       that match will be returned. If there aren't enough
       matches or there is no last match, 0 will be returned.
       After a match has been found, the function continues to scan after
-      that match if the CSETATMUPA() switch is turned off, with the
+      that match if the CSetAtMupa() switch is turned off, with the
       second character of the matched substring otherwise.
-      The function will also consider the settings of SETATLIKE().
+      The function will also consider the settings of SetAtLike().
    $EXAMPLES$
-      ? ATNUM( "!", "What is the answer ? 4 ! 5 !" ) // -> 28
-      ? ATNUM( "!", "What is the answer ? 4 ! 5 ?" ) // -> 24
-      <TODO: add some examples here with csetatmupa() and setatlike()>
+      ? AtNum( "!", "What is the answer ? 4 ! 5 !" ) // -> 28
+      ? AtNum( "!", "What is the answer ? 4 ! 5 ?" ) // -> 24
+      <TODO: add some examples here with CSetAtMupa() and SetAtLike()>
    $TESTS$
-      ATNUM( "..", "..This..is..a..test!" ) == 14
-      ATNUM( "..", "..This..is..a..test!", 2 ) == 7
-      ATNUM( "..", "..This..is..a..test!", 2, 2 ) == 11
+      AtNum( "..", "..This..is..a..test!" ) == 14
+      AtNum( "..", "..This..is..a..test!", 2 ) == 7
+      AtNum( "..", "..This..is..a..test!", 2, 2 ) == 11
    $STATUS$
       Ready
    $COMPLIANCE$
-      ATNUM() is compatible with CT3's ATNUM().
+      AtNum() is compatible with CT3's AtNum().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      ATNUM()  AFTERATNUM()  CSETATMUPA()  SETATLIKE()
+      AtNum()  AfterAtNum()  CSetAtMupa()  SetAtLike()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      REPLALL()
+      ReplAll()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Replace certain characters at the left and right of a string
    $SYNTAX$
-      REPLALL( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
+      ReplAll( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,25 +24,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      REPLALL() is compatible with CT3's REPLALL().
+      ReplAll() is compatible with CT3's ReplAll().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      REPLLEFT(),REPLRIGHT()
+      ReplLeft(),ReplRight()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      REPLLEFT()
+      ReplLeft()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Replace certain characters at the left of a string
    $SYNTAX$
-      REPLLEFT( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
+      ReplLeft( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -56,25 +56,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      REPLLEFT() is compatible with CT3's REPLLEFT().
+      ReplLeft() is compatible with CT3's ReplLeft().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      REPLALL(),REPLRIGHT()
+      ReplAll(),ReplRight()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      REPLRIGHT()
+      ReplRight()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Replace certain characters at the right of a string
    $SYNTAX$
-      REPLRIGHT( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
+      ReplRight( <cString>, <cReplace|nReplace>, [<cSearch|nSearch>] ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -88,12 +88,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      REPLRIGHT() is compatible with CT3's REPLRIGHT().
+      ReplRight() is compatible with CT3's ReplRight().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      REPLALL(),REPLLEFT()
+      ReplAll(),ReplLeft()
    $END$
  */

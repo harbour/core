@@ -4,20 +4,20 @@
 
 /* $DOC$
    $NAME$
-      CSETARGERR()
+      CSetArgErr()
    $CATEGORY$
       CT3 general functions
    $ONELINER$
       Sets argument error behaviour
    $SYNTAX$
-      CSETARGERR( [<nNewMode>] ) -> <nOldMode>
+      CSetArgErr( [<nNewMode>] ) -> <nOldMode>
    $ARGUMENTS$
       [<nNewMode>]   New argument error throwing mode
    $RETURNS$
       <nOldMode>     The current or old argument error throwing mode.
    $DESCRIPTION$
       All CT3 functions are very compliant in their reaction to wrong
-      parameters. By using the CSETARGERR() function, you can make the
+      parameters. By using the CSetArgErr() function, you can make the
       library throw an error with the severity <nNewMode>. It is then
       up to the error handler to substitute the return value.
       <nNewMode> can be one of the severity modes defined in ct.ch:
@@ -35,7 +35,7 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      CSETARGERR() is a new function in Harbour's CT3 library.
+      CSetArgErr() is a new function in Harbour's CT3 library.
    $PLATFORMS$
       All
    $FILES$
@@ -47,19 +47,19 @@
 
 /* $DOC$
    $NAME$
-      CTCINIT()
+      ctcinit()
    $CATEGORY$
       CT3 general functions
    $ONELINER$
       Initializes the CT3 library, C part
    $SYNTAX$
-      CTCINIT() -> lInitialized
+      ctcinit() -> lInitialized
    $ARGUMENTS$
       None
    $RETURNS$
       lInitialized     .T. if the function has been correctly initialized
    $DESCRIPTION$
-      The CTCINIT() function initializes the C source part of the CT3
+      The ctcinit() function initializes the C source part of the CT3
       library. Do not call this function directly.
    $EXAMPLES$
 
@@ -68,31 +68,31 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      CTCINIT() is a new function in Harbour's CT3 library.
+      ctcinit() is a new function in Harbour's CT3 library.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CTINIT(),CTEXIT()
+      ctinit(),ctexit()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CTCEXIT()
+      ctcexit()
    $CATEGORY$
       CT3 general functions
    $ONELINER$
       Uninitializes the CT3 library, C part
    $SYNTAX$
-      CTCEXIT() -> NIL
+      ctcexit() -> NIL
    $ARGUMENTS$
       none
    $RETURNS$
       nil
    $DESCRIPTION$
-      The CTCEXIT() function uninitializes the C part of the CT3 library.
+      The ctcexit() function uninitializes the C part of the CT3 library.
       Do not call this function directly.
    $EXAMPLES$
 
@@ -101,12 +101,12 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      CTCEXIT() is a new function in Harbour's CT3 library.
+      ctcexit() is a new function in Harbour's CT3 library.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CTINIT(),CTEXIT()
+      ctinit(),ctexit()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_QTR()
+      ft_Qtr()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return Calendar or Fiscal Quarter Data.
    $SYNTAX$
-      FT_QTR( [ <dGivenDate> ], [ <nQtrNum> ] ) -> aDateInfo
+      ft_Qtr( [ <dGivenDate> ], [ <nQtrNum> ] ) -> aDateInfo
    $ARGUMENTS$
       <dGivenDate> is any valid date in any date format.  Defaults
       to current system date if not supplied.
@@ -24,38 +24,38 @@
          aDateInfo[ 2 ] - The beginning date of the quarter
          aDateInfo[ 3 ] - The ending date of the quarter
    $DESCRIPTION$
-      FT_QTR() returns an array containing data about the quarter
+      ft_Qtr() returns an array containing data about the quarter
       containing the given date.
 
       Normally the return data will be based on a year beginning
       on January 1st with weeks beginning on Sunday.
 
       The beginning of year date and/or beginning of week day can be
-      changed by using FT_DATECNFG(), which will affect all subsequent
-      calls to FT_QTR() until another call to FT_DATECNFG().
+      changed by using ft_DateCnfg(), which will affect all subsequent
+      calls to ft_Qtr() until another call to ft_DateCnfg().
 
       The beginning of year date and beginning of week day may be reset
-      to January 1 and Sunday by calling FT_DATECNFG() with no
+      to January 1 and Sunday by calling ft_DateCnfg() with no
       parameters.
    $EXAMPLES$
       // get info about quarter containing 9/15/90
-      aDateInfo := FT_QTR( SToD( "19900915" ) )
+      aDateInfo := ft_Qtr( SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  199003       (3rd quarter)
       ? aDateInfo[ 2 ]   //  07/01/90     beginning of quarter 3
       ? aDateInfo[ 3 ]   //  09/30/90     end of week quarter 3
 
       // get info about quarter 2 in year containing 9/15/90
-      aDateInfo := FT_QTR( SToD( "19900915" ), 2 )
+      aDateInfo := ft_Qtr( SToD( "19900915" ), 2 )
       ? aDateInfo[ 1 ]   //  199002
       ? aDateInfo[ 2 ]   //  04/01/90   beginning of quarter 2
       ? aDateInfo[ 3 ]   //  06/30/90   end of quarter 2
 
       // get info about quarter 2 in current year (1991)
-      aDateInfo := FT_QTR( , 2 )
+      aDateInfo := ft_Qtr( , 2 )
       ? aDateInfo[ 1 ]   //  199102
       ? aDateInfo[ 2 ]   //  04/01/91   beginning of quarter 2
       ? aDateInfo[ 3 ]   //  06/30/91   end of quarter 2
    $SEEALSO$
-      FT_DATECNFG() FT_WEEK() FT_MONTH() FT_YEAR()
+      ft_DateCnfg() ft_Week() ft_Month() ft_Year()
    $END$
  */

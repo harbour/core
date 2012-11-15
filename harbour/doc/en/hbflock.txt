@@ -6,7 +6,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_FLOCK()
+      hb_FLock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -14,7 +14,7 @@
    $ONELINER$
       Locks part or all of any file
    $SYNTAX$
-      HB_FLOCK( <nHandle>, <nOffset>, <nBytes> [, <nType ] )
+      hb_FLock( <nHandle>, <nOffset>, <nBytes> [, <nType ] )
                 --> <lSuccess>
    $ARGUMENTS$
       <nHandle>  Dos file handle
@@ -29,10 +29,10 @@
    $DESCRIPTION$
       This function attempts to lock a region of the file whose file handle
       is <nHandle>. This is a low level file function.  To lock Harbour
-      data files use either the FLOCK() or RLOCK() function.
+      data files use either the FLock() or RLock() function.
 
-      The value of <nHandle> is obtained from either a call to the FOPEN()
-      or the FCREATE() function.
+      The value of <nHandle> is obtained from either a call to the FOpen()
+      or the FCreate() function.
 
       <nOffset> is the offset (from the beginning of the file) to the first
       of the region to be locked.  (Offsets from the current position
@@ -57,7 +57,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      HB_FUNLOCK(),FOPEN(),FCREATE(),FERROR(),FCLOSE()
+      hb_FUnlock(),FOpen(),FCreate(),FError(),FClose()
    $END$
  */
 
@@ -65,7 +65,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_FUNLOCK()
+      hb_FUnlock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -73,7 +73,7 @@
    $ONELINER$
       Unlocks part or all of any file
    $SYNTAX$
-      HB_FUNLOCK( <nHandle>, <nOffset>, <nBytes> )  --> <lSuccess>
+      hb_FUnlock( <nHandle>, <nOffset>, <nBytes> )  --> <lSuccess>
 
    $ARGUMENTS$
       <nHandle>  Dos file handle
@@ -86,10 +86,10 @@
    $DESCRIPTION$
       This function attempts to unlock a region of the file whose file
       handle is <nHandle>. This is a low level file function.  To
-      unlock Harbour data files use the DBUNLOCK() function.
+      unlock Harbour data files use the dbUnlock() function.
 
-      The value of <nHandle> is obtained from either a call to the FOPEN()
-      or the FCREATE() function.
+      The value of <nHandle> is obtained from either a call to the FOpen()
+      or the FCreate() function.
 
       <nOffset> is the offset (from the beginning of the file) to the first
       of the region to be unlocked.  (Offsets from the current position
@@ -107,6 +107,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      HB_FLOCK(),FOPEN(),FCREATE(),FERROR(),FCLOSE()
+      hb_FLock(),FOpen(),FCreate(),FError(),FClose()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_DAYOFYR()
+      ft_DayOfYr()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return calendar, fiscal or accounting day data
    $SYNTAX$
-      FT_DAYOFYR( [ <dGivenDate> ], [ <nDayNum> ], [ <lIsAcct> ] )
+      ft_DayOfYr( [ <dGivenDate> ], [ <nDayNum> ], [ <lIsAcct> ] )
              -> aDateInfo
    $ARGUMENTS$
       <dGivenDate> is any valid date in any valid format.  Defaults
@@ -37,27 +37,27 @@
          aDateInfo[ 2 ] - The beginning date of the year
          aDateInfo[ 3 ] - The ending date of the year
    $DESCRIPTION$
-      FT_DAYOFYR() returns an array containing data about a day in the
+      ft_DayOfYr() returns an array containing data about a day in the
       calendar or fiscal year containing the given date.
 
       The beginning of year date defaults to January 1st but may be
-      changed with FT_DATECNFG().
+      changed with ft_DateCnfg().
    $EXAMPLES$
-      aDateInfo := FT_DAYOFYR( SToD( "19910331" ) )
+      aDateInfo := ft_DayOfYr( SToD( "19910331" ) )
       ? aDateInfo[ 1 ]        // 1991090    (90th day of year 1991)
       ? aDateInfo[ 2 ]        // 01/01/91
       ? aDateInfo[ 3 ]        // 12/31/91
 
-      aDateInfo := FT_DAYOFYR( , 90 )    // assume current date is 3/31/91
+      aDateInfo := ft_DayOfYr( , 90 )    // assume current date is 3/31/91
       ? aDateInfo[ 1 ]        // 03/31/91    (90th day of year)
       ? aDateInfo[ 2 ]        // 01/01/91
       ? aDateInfo[ 3 ]        // 12/31/91
 
-      aDateInfo := FT_DAYOFYR( , 90, .T. )
+      aDateInfo := ft_DayOfYr( , 90, .T. )
       ? aDateInfo[ 1 ]        // 03/29/91    (90th day of accounting year)
       ? aDateInfo[ 2 ]        // 12/30/90    (1st day of accounting year)
       ? aDateInfo[ 3 ]        // 12/28/91    (last day of accounting year)
    $SEEALSO$
-      FT_DATECNFG()
+      ft_DateCnfg()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      KSETINS()
+      KSetIns()
    $CATEGORY$
       CT3 switch and state functions
    $ONELINER$
 
    $SYNTAX$
-      KSETINS( [<lNewSwitch>] ) -> lOldSwitch
+      KSetIns( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
 
    $RETURNS$
@@ -36,13 +36,13 @@
 
 /* $DOC$
    $NAME$
-      KSETCAPS()
+      KSetCaps()
    $CATEGORY$
       CT3 switch and state functions
    $ONELINER$
 
    $SYNTAX$
-      KSETCAPS( [<lNewSwitch>] ) -> lOldSwitch
+      KSetCaps( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
 
    $RETURNS$
@@ -68,13 +68,13 @@
 
 /* $DOC$
    $NAME$
-      KSETNUM()
+      KSetNum()
    $CATEGORY$
       CT3 switch and state functions
    $ONELINER$
 
    $SYNTAX$
-      KSETNUM( [<lNewSwitch>] ) -> lOldSwitch
+      KSetNum( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
 
    $RETURNS$
@@ -100,13 +100,13 @@
 
 /* $DOC$
    $NAME$
-      KSETSCROLL()
+      KSetScroll()
    $CATEGORY$
       CT3 switch and state functions
    $ONELINER$
 
    $SYNTAX$
-      KSETSCROLL( [<lNewSwitch>] ) -> lOldSwitch
+      KSetScroll( [<lNewSwitch>] ) -> lOldSwitch
    $ARGUMENTS$
 
    $RETURNS$

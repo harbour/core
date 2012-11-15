@@ -39,19 +39,19 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      CTOF(), XTOC()
+      CToF(), XToC()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CTOF()
+      CToF()
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
 
    $SYNTAX$
-      CTOF( <cFloatingPointNumber> ) --> nFloatingPointNumber
+      CToF( <cFloatingPointNumber> ) --> nFloatingPointNumber
 
    $ARGUMENTS$
       <cFloatingPointNumber> Designate a string that contains a Harbour
@@ -60,11 +60,11 @@
       could produce different format in the string returned by FTOC().
 
    $RETURNS$
-      CTOF() return the floating point number that corresponds to the
+      CToF() return the floating point number that corresponds to the
       string passed.
 
    $DESCRIPTION$
-      Character strings created with FTOC() or XTOC() are convert into
+      Character strings created with FTOC() or XToC() are convert into
       Harbour floating point number
 
       TODO: add documentation
@@ -81,6 +81,6 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      FTOC(), XTOC()
+      FTOC(), XToC()
    $END$
  */

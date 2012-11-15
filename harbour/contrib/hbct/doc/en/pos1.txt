@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      POSALPHA()
+      PosAlpha()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Left-most position of a letter in a string
    $SYNTAX$
-      POSALPHA( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
+      PosAlpha( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,25 +24,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      POSALPHA() is compatible with CT3's POSALPHA().
+      PosAlpha() is compatible with CT3's PosAlpha().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      POSLOWER(),POSUPPER(),POSRANGE()
+      PosLower(),PosUpper(),PosRange()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      POSLOWER()
+      PosLower()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Left-most position of a lowercase letter in a string
    $SYNTAX$
-      POSLOWER( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
+      PosLower( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
 
    $RETURNS$
@@ -56,25 +56,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      POSLOWER() is compatible with CT3's POSLOWER().
+      PosLower() is compatible with CT3's PosLower().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      POSALPHA(),POSUPPER(),POSRANGE()
+      PosAlpha(),PosUpper(),PosRange()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      POSRANGE()
+      PosRange()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Left-most position of a character from a set in a string
    $SYNTAX$
-      POSRANGE( <cChar1>, <cChar2>, <cString>, [<lMode>],
+      PosRange( <cChar1>, <cChar2>, <cString>, [<lMode>],
                 [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
 
@@ -89,25 +89,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      POSRANGE() is compatible with CT3's POSRANGE().
+      PosRange() is compatible with CT3's PosRange().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      POSALPHA(),POSLOWER(),POSUPPER()
+      PosAlpha(),PosLower(),PosUpper()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      POSUPPER()
+      PosUpper()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Left-most position of an uppercase letter in a string
    $SYNTAX$
-      POSUPPER( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
+      PosUpper( <cString>, [<lMode>], [<nIgnore>] ) -> nPosition
    $ARGUMENTS$
 
    $RETURNS$
@@ -121,12 +121,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      POSUPPER() is compatible with CT3's POSUPPER().
+      PosUpper() is compatible with CT3's PosUpper().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      POSALPHA(),POSLOWER(),POSRANGE()
+      PosAlpha(),PosLower(),PosRange()
    $END$
  */

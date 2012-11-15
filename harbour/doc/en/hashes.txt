@@ -57,7 +57,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HASH()
+      hb_Hash()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -65,7 +65,7 @@
    $ONELINER$
       Returns a hash table
    $SYNTAX$
-      HB_HASH( [ <Key1>, <Value1> ], [ <KeyN>, <ValueN> ], ... ) -> hsTable
+      hb_Hash( [ <Key1>, <Value1> ], [ <KeyN>, <ValueN> ], ... ) -> hsTable
    $ARGUMENTS$
       <Key1> entry key;
       can be of type: number, date, datetime, string, pointer
@@ -96,7 +96,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HHASKEY()
+      hb_HHasKey()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -104,9 +104,9 @@
    $ONELINER$
       Determines whether a hash table has an entry with a give key
    $SYNTAX$
-      HB_HHASKEY( <hsTable>, <Key> ) -> lExists
+      hb_HHasKey( <hsTable>, <Key> ) -> lExists
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <Key> a key value to be queried for;
       can be of type: number, date, datetime, string, pointer
@@ -135,7 +135,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HPOS()
+      hb_HPos()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -143,9 +143,9 @@
    $ONELINER$
       Locates the index of a key within a hash table
    $SYNTAX$
-      HB_HPOS( <hsTable>, <Key> ) -> nPosition
+      hb_HPos( <hsTable>, <Key> ) -> nPosition
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <Key> key for which its position is to be determined;
       can be of type: number, date, datetime, string, pointer
@@ -176,7 +176,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HGET()
+      hb_HGet()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -184,9 +184,9 @@
    $ONELINER$
       Returns a hash value
    $SYNTAX$
-      HB_HGET( <hsTable>, <Key> ) -> <Value>
+      hb_HGet( <hsTable>, <Key> ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <Key> key to be retrieve from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -217,7 +217,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HGETDEF()
+      hb_HGetDef()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -225,9 +225,9 @@
    $ONELINER$
       Returns a hash value, or a default value if the key is not present
    $SYNTAX$
-      HB_HGETDEF( <hsTable>, <Key>, [<DefaultValue>] ) -> <Value>
+      hb_HGetDef( <hsTable>, <Key>, [<DefaultValue>] ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <Key> key to be retrieve from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -260,7 +260,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HSET()
+      hb_HSet()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -268,9 +268,9 @@
    $ONELINER$
       Sets a hash value
    $SYNTAX$
-      HB_HSET( <hsTable>, <Key>, <Value> ) -> <hsTable>
+      hb_HSet( <hsTable>, <Key>, <Value> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <Key> the key of the entry to be set;
       can be of type: number, date, datetime, string, pointer
@@ -301,7 +301,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HDEL()
+      hb_HDel()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -309,9 +309,9 @@
    $ONELINER$
       Removes a key/value pair from a hash table
    $SYNTAX$
-      HB_HDEL( <hsTable>, <Key> ) -> <hsTable>
+      hb_HDel( <hsTable>, <Key> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <Key> key to be removed from the hash table;
       can be of type: number, date, datetime, string, pointer
@@ -340,7 +340,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HKEYAT()
+      hb_HKeyAt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -348,9 +348,9 @@
    $ONELINER$
       Gets a hash table key at a given position
    $SYNTAX$
-      HB_HKEYAT( <hsTable>, <nPosition> ) -> <Key>
+      hb_HKeyAt( <hsTable>, <nPosition> ) -> <Key>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -380,7 +380,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HVALUEAT()
+      hb_HValueAt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -388,9 +388,9 @@
    $ONELINER$
       Gets/sets a hash value at a given position
    $SYNTAX$
-      HB_HVALUEAT( <hsTable>, <nPosition>, [<NewValue>] ) -> <Value>
+      hb_HValueAt( <hsTable>, <nPosition>, [<NewValue>] ) -> <Value>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -422,7 +422,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HPAIRAT()
+      hb_HPairAt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -430,9 +430,9 @@
    $ONELINER$
       Returns a two-dimensional array of a hash table entry key/value pair
    $SYNTAX$
-      HB_HPAIRAT( <hsTable>, <nPosition> ) -> <aKeyValue>
+      hb_HPairAt( <hsTable>, <nPosition> ) -> <aKeyValue>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <nPosition> the position of an entry within the hash table that will
       be returned
@@ -461,7 +461,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HDELAT()
+      hb_HDelAt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -469,9 +469,9 @@
    $ONELINER$
       Removes an entry from a hash table based on its index position
    $SYNTAX$
-      HB_HDELAT( <hsTable>, <nPosition> ) -> <hsTable>
+      hb_HDelAt( <hsTable>, <nPosition> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <nPosition> the position of an entry within the hash table that will
       be deleted
@@ -500,7 +500,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HKEYS()
+      hb_HKeys()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -508,9 +508,9 @@
    $ONELINER$
       Returns an array of the keys of a hash table
    $SYNTAX$
-      HB_HKEYS( <hsTable> ) -> <aKeys>
+      hb_HKeys( <hsTable> ) -> <aKeys>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
    $RETURNS$
       An array of all the hash table keys
    $DESCRIPTION$
@@ -536,7 +536,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HVALUES()
+      hb_HValues()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -544,9 +544,9 @@
    $ONELINER$
       Returns an array of the values of a hash table
    $SYNTAX$
-      HB_HVALUES( <hsTable> ) -> <aValues>
+      hb_HValues( <hsTable> ) -> <aValues>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
    $RETURNS$
       An array of all the hash values
    $DESCRIPTION$
@@ -572,7 +572,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HFILL()
+      hb_HFill()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -580,9 +580,9 @@
    $ONELINER$
       Fills a hash table with a value
    $SYNTAX$
-      HB_HFILL( <hsTable>, <Value> ) -> <hsTable>
+      hb_HFill( <hsTable>, <Value> ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <Value> fill value; can be of type: block, string, numeric, date/datetime, logical, nil, pointer, array, hash table
    $RETURNS$
@@ -610,7 +610,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HCLONE()
+      hb_HClone()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -618,9 +618,9 @@
    $ONELINER$
       Creates a copy of a hash table
    $SYNTAX$
-      HB_HCLONE( <hsTable> ) -> <hsDestination>
+      hb_HClone( <hsTable> ) -> <hsDestination>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
    $RETURNS$
       A cloned copy of the hash table
    $DESCRIPTION$
@@ -646,7 +646,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HCOPY()
+      hb_HCopy()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -654,11 +654,11 @@
    $ONELINER$
       Adds entries from the source hash table to the destination hash table
    $SYNTAX$
-      HB_HCOPY( <hsDestination>, <hsSource>, [<nStart>], [<nCount>] ) -> <hsDestination>
+      hb_HCopy( <hsDestination>, <hsSource>, [<nStart>], [<nCount>] ) -> <hsDestination>
    $ARGUMENTS$
-      <hsDestination> a destination hash table, created by HB_HASH()
+      <hsDestination> a destination hash table, created by hb_Hash()
 
-      <hsSource> a source hash table, created by HB_HASH()
+      <hsSource> a source hash table, created by hb_Hash()
 
       <nStart> starting index, defaults to 1 if omitted
 
@@ -688,7 +688,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HMERGE()
+      hb_HMerge()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -696,11 +696,11 @@
    $ONELINER$
       Merges a source hash table into a destination hash table
    $SYNTAX$
-      HB_HMERGE( <hsDestination>, <hsSource>, <bBlock>|<nPosition> ) -> <hsDestination>
+      hb_HMerge( <hsDestination>, <hsSource>, <bBlock>|<nPosition> ) -> <hsDestination>
    $ARGUMENTS$
-      <hsDestination> a destination hash table, created by HB_HASH()
+      <hsDestination> a destination hash table, created by hb_Hash()
 
-      <hsSource> a source hash table, created by HB_HASH()
+      <hsSource> a source hash table, created by hb_Hash()
 
       <bBlock> a code block that will be evaluated for each entry within the
       source hash table; the code block will be passed the entry key, value and
@@ -736,7 +736,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HEVAL()
+      hb_HEval()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -744,9 +744,9 @@
    $ONELINER$
       Evaluate a code block across the contents of a hash table
    $SYNTAX$
-      HB_HEVAL( <hsTable>, <bBlock>, [<nStart>], [<nCount>] ) -> <hsTable>
+      hb_HEval( <hsTable>, <bBlock>, [<nStart>], [<nCount>] ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <bBlock> code block to be evaluated
 
@@ -781,7 +781,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HSCAN()
+      hb_HScan()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -789,9 +789,9 @@
    $ONELINER$
       Scans a hash table
    $SYNTAX$
-      HB_HSCAN( <hsTable>, <Value>, [<nStart>], [<nCount>, [<lExact>] ) -> nPosition
+      hb_HScan( <hsTable>, <Value>, [<nStart>], [<nCount>, [<lExact>] ) -> nPosition
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <Value> to be located within the hash table
 
@@ -826,7 +826,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HSORT()
+      hb_HSort()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -834,9 +834,9 @@
    $ONELINER$
       Reorganizes the internal list of the hash table to be sorted
    $SYNTAX$
-      HB_HSORT( <hsTable> ) -> <hsSortedTable>
+      hb_HSort( <hsTable> ) -> <hsSortedTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
    $RETURNS$
       The hash table sorted
 
@@ -864,7 +864,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HCASEMATCH()
+      hb_HCaseMatch()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -872,16 +872,16 @@
    $ONELINER$
       Sets the 'case match' flag for the hash table
    $SYNTAX$
-      HB_HCASEMATCH( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
+      hb_HCaseMatch( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <lFlag> a logical value indicating to turn on or off
       the 'case match' flag of the hash table
    $RETURNS$
       The previous value of the 'case match' flag
    $DESCRIPTION$
-      This function is equivalent to HB_HSETCASEMATCH() but it returns
+      This function is equivalent to hb_HSetCaseMatch() but it returns
       the old flag value rather than the hash table
    $EXAMPLES$
       LOCAL hsTable, lFlag
@@ -899,7 +899,7 @@
    $FILES$
 
    $SEEALSO$
-      HB_HSETCASEMATCH()
+      hb_HSetCaseMatch()
    $END$
  */
 
@@ -907,7 +907,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HBINARY()
+      hb_HBinary()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -915,16 +915,16 @@
    $ONELINER$
       Sets the 'binary' flag for the hash table
    $SYNTAX$
-      HB_HBINARY( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
+      hb_HBinary( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <lFlag> a logical value indicating to turn on or off
       the 'binary' flag of the hash table
    $RETURNS$
       The previous value of the 'binary' flag
    $DESCRIPTION$
-      This function is equivalent to HB_HBINARY() but it returns
+      This function is equivalent to hb_HBinary() but it returns
       the old flag value rather than the hash table
    $EXAMPLES$
       LOCAL hsTable, lFlag
@@ -942,7 +942,7 @@
    $FILES$
 
    $SEEALSO$
-      HB_HSETBINARY()
+      hb_HSetBinary()
    $END$
  */
 
@@ -950,7 +950,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HAUTOADD()
+      hb_HAutoAdd()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -958,16 +958,16 @@
    $ONELINER$
       Sets the 'auto add' flag for the hash table
    $SYNTAX$
-      HB_HAUTOADD( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
+      hb_HAutoAdd( <hsTable>, [<lFlag>] ) -> <lPreviousFlag>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <lFlag> a logical value indicating to turn on or off
       the 'auto add' flag of the hash table
    $RETURNS$
       The previous value of the 'auto add' flag
    $DESCRIPTION$
-      This function is equivalent to HB_HAUTOADD() but it returns
+      This function is equivalent to hb_HAutoAdd() but it returns
       the old flag value rather than the hash table
    $EXAMPLES$
       LOCAL hsTable, lFlag
@@ -985,7 +985,7 @@
    $FILES$
 
    $SEEALSO$
-      HB_HSETAUTOADD()
+      hb_HSetAutoAdd()
    $END$
  */
 
@@ -993,7 +993,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      HB_HALLOCATE()
+      hb_HAllocate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1001,9 +1001,9 @@
    $ONELINER$
       Preallocates a hash table
    $SYNTAX$
-      HB_HALLOCATE( <hsTable>, <nItems> )
+      hb_HAllocate( <hsTable>, <nItems> )
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <nItems> number of items to preallocate in the hash table
    $DESCRIPTION$
@@ -1029,7 +1029,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HDEFAULT()
+      hb_HDefault()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1037,9 +1037,9 @@
    $ONELINER$
       Returns/sets a default value for a hash table.
    $SYNTAX$
-      HB_HDEFAULT( <hsTable>, <DefaultValue> ) -> <OldDefaultValye>
+      hb_HDefault( <hsTable>, <DefaultValue> ) -> <OldDefaultValye>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <DefaultValue>
    $RETURNS$
@@ -1067,7 +1067,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HSETAUTOADD()
+      hb_HSetAutoAdd()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1075,16 +1075,16 @@
    $ONELINER$
       Sets the 'auto add' flag for the hash table
    $SYNTAX$
-      HB_HSETAUTOADD( <hsTable>, [<lFlag>] ) -> <hsTable>
+      hb_HSetAutoAdd( <hsTable>, [<lFlag>] ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <lFlag> a logical value indicating to turn on or off
       the 'auto add' flag of the hash table
    $RETURNS$
       The hash table
    $DESCRIPTION$
-      This function is equivalent to HB_HAUTOADD() but it returns
+      This function is equivalent to hb_HAutoAdd() but it returns
       the passed hash table rather than the old flag value
    $EXAMPLES$
       LOCAL hsTable
@@ -1101,7 +1101,7 @@
    $FILES$
 
    $SEEALSO$
-      HB_HAUTOADD(),HB_HSETBINARY(),HB_HSETCASEMATCH()
+      hb_HAutoAdd(),hb_HSetBinary(),hb_HSetCaseMatch()
    $END$
  */
 
@@ -1109,7 +1109,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HSETCASEMATCH()
+      hb_HSetCaseMatch()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1117,16 +1117,16 @@
    $ONELINER$
       Sets the 'case match' flag for the hash table
    $SYNTAX$
-      HB_HSETCASEMATCH( <hsTable>, [<lFlag>] ) -> <hsTable>
+      hb_HSetCaseMatch( <hsTable>, [<lFlag>] ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <lFlag> a logical value indicating to turn on or off
       the 'case match' flag of the hash table
    $RETURNS$
       The hash table
    $DESCRIPTION$
-      This function is equivalent to HB_HCASEMATCH() but it returns
+      This function is equivalent to hb_HCaseMatch() but it returns
       the passed hash table rather than the old flag value
    $EXAMPLES$
       LOCAL hsTable
@@ -1143,7 +1143,7 @@
    $FILES$
 
    $SEEALSO$
-      HB_HCASEMATCH(),HB_HSETAUTOADD(),HB_HSETBINARY
+      hb_HCaseMatch(),hb_HSetAutoAdd(),HB_HSETBINARY
    $END$
  */
 
@@ -1151,7 +1151,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_HSETBINARY()
+      hb_HSetBinary()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1159,16 +1159,16 @@
    $ONELINER$
       Sets the 'binary' flag for the hash table
    $SYNTAX$
-      HB_HSETBINARY( <hsTable>, [<lFlag>] ) -> <hsTable>
+      hb_HSetBinary( <hsTable>, [<lFlag>] ) -> <hsTable>
    $ARGUMENTS$
-      <hsTable> a hash table, created by HB_HASH()
+      <hsTable> a hash table, created by hb_Hash()
 
       <lFlag> a logical value indicating to turn on or off
       the 'binary' flag of the hash table
    $RETURNS$
       The hash table
    $DESCRIPTION$
-      This function is equivalent to HB_HBINARY() but it returns
+      This function is equivalent to hb_HBinary() but it returns
       the passed hash table rather than the old flag value
    $EXAMPLES$
       LOCAL hsTable
@@ -1185,6 +1185,6 @@
    $FILES$
 
    $SEEALSO$
-      HB_HBINARY(),HB_HSETAUTOADD(),HB_HSETCASEMATCH
+      hb_HBinary(),hb_HSetAutoAdd(),HB_HSETCASEMATCH
    $END$
  */

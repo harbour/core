@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_N2COLOR()
+      ft_N2Color()
    $CATEGORY$
       String
    $ONELINER$
       Returns the string complement of a Clipper color number
    $SYNTAX$
-      FT_COLOR2N( <nColor> ) -> cColor
+      ft_Color2N( <nColor> ) -> cColor
    $ARGUMENTS$
       <nColor> a number representing a Clipper color
    $RETURNS$
@@ -20,8 +20,8 @@
       This function is useful for converting a number to a Clipper color
       string.
    $EXAMPLES$
-      cColor := FT_COLOR2N( 239 )         // returns "*+w/gr"
+      cColor := ft_Color2N( 239 )         // returns "*+w/gr"
    $SEEALSO$
-      FT_N2COLOR()
+      ft_N2Color()
    $END$
  */

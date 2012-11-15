@@ -62,7 +62,7 @@
    $ONELINER$
       Activate Harbour INET support
    $SYNTAX$
-      HB_INETINIT() -> lResult
+      hb_inetInit() -> lResult
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
@@ -100,7 +100,7 @@
    $ONELINER$
       Terminate Harbour INET support
    $SYNTAX$
-      HB_INETCLEANUP()
+      hb_inetCleanup()
    $ARGUMENTS$
       (This function has no arguments)
    $DESCRIPTION$
@@ -135,7 +135,7 @@
    $ONELINER$
       Create an INET socket
    $SYNTAX$
-      HB_INETCREATE( [ <nTimeout> ] ) -> SOCKET
+      hb_inetCreate( [ <nTimeout> ] ) -> SOCKET
    $ARGUMENTS$
       <nTimeout> Socket timeout (optional) TODO: what is the scale (seconds, milliseconds?)
    $RETURNS$
@@ -174,7 +174,7 @@
    $ONELINER$
       Close an INET socket
    $SYNTAX$
-      HB_INETCLOSE( <socket> ) -> nResult
+      hb_inetClose( <socket> ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -221,7 +221,7 @@
    $ONELINER$
       ?
    $SYNTAX$
-      HB_INETFD( <socket> [, <lNoSocket> ] ) -> nResult
+      hb_inetFD( <socket> [, <lNoSocket> ] ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -259,7 +259,7 @@
    $ONELINER$
       Get the status of a socket
    $SYNTAX$
-      HB_INETSTATUS( <socket> ) -> nResult
+      hb_inetstatus( <socket> ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -295,7 +295,7 @@
    $ONELINER$
       Get the last INET error code
    $SYNTAX$
-      HB_INETERRORCODE( <socket> ) -> nResult
+      hb_inetErrorCode( <socket> ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -335,7 +335,7 @@
    $ONELINER$
       Get the last INET error code description
    $SYNTAX$
-      HB_INETERRORDESC( <socket> ) -> cResult
+      hb_inetErrorDesc( <socket> ) -> cResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -373,7 +373,7 @@
    $ONELINER$
       Clear the socket error value
    $SYNTAX$
-      HB_INETCLEARERROR( <socket> )
+      hb_inetClearError( <socket> )
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $DESCRIPTION$
@@ -407,7 +407,7 @@
    $ONELINER$
       Get the number of bytes last read or sent
    $SYNTAX$
-      HB_INETCOUNT( <socket> ) -> nResult
+      hb_inetCount( <socket> ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -444,7 +444,7 @@
    $ONELINER$
       Get a remote server address
    $SYNTAX$
-      HB_INETADDRESS( <socket> ) -> cResult
+      hb_inetAddress( <socket> ) -> cResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -484,7 +484,7 @@
    $ONELINER$
       Get the port a socket is bound to.
    $SYNTAX$
-      HB_INETPORT( <socket> ) -> cResult
+      hb_inetPort( <socket> ) -> cResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -521,7 +521,7 @@
    $ONELINER$
       Get or change the timeout value of a socket
    $SYNTAX$
-      HB_INETTIMEOUT( <socket> [, <nTimeout> ] ) -> nPreviousTimeout
+      hb_inetTimeout( <socket> [, <nTimeout> ] ) -> nPreviousTimeout
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -559,7 +559,7 @@
    $ONELINER$
       Clear the timeout value of a socket
    $SYNTAX$
-      HB_INETCLEARTIMEOUT( <socket> )
+      hb_inetClearTimeout( <socket> )
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $DESCRIPTION$
@@ -594,7 +594,7 @@
    $ONELINER$
       Get or change the time limit value of a socket
    $SYNTAX$
-      HB_INETTIMELIMIT( <socket> [, <nTimeLimit> ) -> NIL
+      hb_inetTimeLimit( <socket> [, <nTimeLimit> ) -> NIL
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -632,7 +632,7 @@
    $ONELINER$
       Clear the time limit value of a socket
    $SYNTAX$
-      HB_INETCLEARTIMELIMIT( <socket> )
+      hb_inetClearTimeLimit( <socket> )
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $DESCRIPTION$
@@ -666,7 +666,7 @@
    $ONELINER$
       Get or change the periodic callback value of a socket
    $SYNTAX$
-      HB_INETPERIODCALLBACK( <socket> [, <xCallback> ] ) -> xPreviousCallback
+      hb_inetPeriodCallback( <socket> [, <xCallback> ] ) -> xPreviousCallback
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -707,7 +707,7 @@
    $ONELINER$
       Clear the periodic callback value of a socket
    $SYNTAX$
-      HB_INETCLEARPERIODCALLBACK( <socket> )
+      hb_inetClearPeriodCallback( <socket> )
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $DESCRIPTION$
@@ -741,7 +741,7 @@
    $ONELINER$
       Get the socket send buffer size
    $SYNTAX$
-      HB_INETGETSNDBUFSIZE( <socket> ) -> nResult
+      hb_inetGetSndBufSize( <socket> ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -777,7 +777,7 @@
    $ONELINER$
       Get the socket receive buffer size
    $SYNTAX$
-      HB_INETGETRCVBUFSIZE( <socket> ) -> nResult
+      hb_inetGetRcvBufSize( <socket> ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$
@@ -813,7 +813,7 @@
    $ONELINER$
       Set the send buffer size of a socket
    $SYNTAX$
-      HB_INETSETSNDBUFSIZE( <socket>, <nSize> ) -> nSize
+      hb_inetSetSndBufSize( <socket>, <nSize> ) -> nSize
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -851,7 +851,7 @@
    $ONELINER$
       Set the receive buffer size of a socket
    $SYNTAX$
-      HB_INETSETRCVBUFSIZE( <socket>, nSize ) -> nSize
+      hb_inetSetRcvBufSize( <socket>, nSize ) -> nSize
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -889,7 +889,7 @@
    $ONELINER$
       Read from a socket
    $SYNTAX$
-      HB_INETRECV( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
+      hb_inetRecv( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -913,7 +913,7 @@
       read before the function returns, in fact, hb_InetRecv returns as soon it
       is able to fill cString with one or more bytes. To block the current
       process until the whole cString is filled (or nAmount bytes are read),
-      use the hb_InetRecvALL().
+      use the hb_inetRecvAll().
    $EXAMPLES$
 
    $TESTS$
@@ -943,7 +943,7 @@
    $ONELINER$
       Read from a socket without blocking
    $SYNTAX$
-      HB_INETRECVALL( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
+      hb_inetRecvAll( <socket>, @<cResult>, [ <nAmount> ] ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -987,7 +987,7 @@
    $ONELINER$
       Read a line from a socket
    $SYNTAX$
-      HB_INETRECVLINE( <socket> [, @<nBytesRead>, [, <nMaxLength> [, <nBufSize> ]]] ) -> cResult
+      hb_inetRecvLine( <socket> [, @<nBytesRead>, [, <nMaxLength> [, <nBufSize> ]]] ) -> cResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -1053,7 +1053,7 @@
    $ONELINER$
       Read a block from a socket
    $SYNTAX$
-      HB_INETRECVENDBLOCK( <socket> [, <cBlock >[, @<nBytesRead> [, <nMaxLength> [, <nBufSize> ]]]] ) -> cResult
+      hb_inetRecvEndblock( <socket> [, <cBlock >[, @<nBytesRead> [, <nMaxLength> [, <nBufSize> ]]]] ) -> cResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -1100,7 +1100,7 @@
    $ONELINER$
       Get whether there is data ready in a socket
    $SYNTAX$
-      HB_INETDATAREADY( <socket>, [ <nMillisec> ] ) -> nResult
+      hb_inetDataReady( <socket>, [ <nMillisec> ] ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -1120,7 +1120,7 @@
       amount of milliseconds for data to be available; if some data arrives in the
       meanwhile, the wait is immediately interrupted.
 
-      The next hb_InetRecv() function will read all the available data (up to the
+      The next hb_inetRecv() function will read all the available data (up to the
       required length) without blocking.
 
       On error, hb_InetErrorCode and hb_InetErrorDesc can be use to determine what kind
@@ -1154,7 +1154,7 @@
    $ONELINER$
       Sent data through a socket
    $SYNTAX$
-      HB_INETSEND( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
+      hb_inetSend( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -1175,7 +1175,7 @@
       the returned number and send the part that has not been sent.
 
       To ensure that all the data is sent before the function returns, use the
-      hb_InetSendAll() function.
+      hb_inetSendAll() function.
 
       On error, the error in the socket is set.
    $EXAMPLES$
@@ -1207,7 +1207,7 @@
    $ONELINER$
       Send data through a socket with blocking
    $SYNTAX$
-      HB_INETSENDALL( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
+      hb_inetSendAll( <socket>, <cBuffer> [, <nLength> ] ) -> nResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -1217,7 +1217,7 @@
    $RETURNS$
       The amount of data written, 0 (zero) if the socket is closed, or -1 on an error
    $DESCRIPTION$
-      This function works exactly as hb_InetSend() but it ensures that all the
+      This function works exactly as hb_inetSend() but it ensures that all the
       data to be sent is written before returning.
    $EXAMPLES$
 
@@ -1248,7 +1248,7 @@
    $ONELINER$
       Get an array of IP addresses of a host
    $SYNTAX$
-      HB_INETGETHOSTS( <cName> ) -> aHosts
+      hb_inetGetHosts( <cName> ) -> aHosts
    $ARGUMENTS$
       <cName>
    $RETURNS$
@@ -1257,7 +1257,7 @@
       Returns an array containing all the IP addresses associated with a given
       host name. The IP addressess returned by this funtion are strings in
       quad dot notations, eg "192.168.1.1", and can be directly used into
-      hb_InetConnectIP().
+      hb_inetConnectIP().
 
       cName can be any string: valid DNS names (eg.
       "www.myserver.com"), locally available names (e.g. "localhost" or
@@ -1266,7 +1266,7 @@
 
       NOTE: This function is not thread safe (by design), and programmers
       must be sure not to use it at the same time in two different threads,
-      or not to use it together with a hb_InetConnect(). If this kind of situation
+      or not to use it together with a hb_inetConnect(). If this kind of situation
       should ever arise, you are advised to use a thread MUTEX.
 
       On error, and if the server can't be found, the function returns NIL.
@@ -1299,7 +1299,7 @@
    $ONELINER$
       Get an array of aliases of a server
    $SYNTAX$
-      HB_INETGETALIAS( <cName> ) -> aHosts
+      hb_inetGetAlias( <cName> ) -> aHosts
    $ARGUMENTS$
       <cName>
    $RETURNS$
@@ -1340,7 +1340,7 @@
    $ONELINER$
       Create a socket bound to a port
    $SYNTAX$
-      HB_INETSERVER( <port> [, <cBindAddr> [, <nListenLimit> ]]  ) -> SOCKET
+      hb_inetServer( <port> [, <cBindAddr> [, <nListenLimit> ]]  ) -> SOCKET
    $ARGUMENTS$
       <port>
 
@@ -1400,7 +1400,7 @@
    $ONELINER$
       Wait until a socket is ready
    $SYNTAX$
-      HB_INETACCEPT( <socket> ) -> SOCKET
+      hb_inetAccept( <socket> ) -> SOCKET
    $ARGUMENTS$
       An INET socket
    $RETURNS$
@@ -1411,7 +1411,7 @@
 
       On error, NIL is returned and error code sets in the passed SOCKET.
 
-      This error can be accessed using hb_InetErrorCode() function.
+      This error can be accessed using hb_inetErrorCode() function.
    $EXAMPLES$
 
    $TESTS$
@@ -1441,9 +1441,9 @@
    $ONELINER$
       Connect a socket to a remote server by IP address or name
    $SYNTAX$
-      HB_INETCONNECT( <cAddress>, <nPort> ) -> SOCKET
+      hb_inetConnect( <cAddress>, <nPort> ) -> SOCKET
 
-      HB_INETCONNECT( <cAddress>, <nPort>, <socket> ) -> NIL
+      hb_inetConnect( <cAddress>, <nPort>, <socket> ) -> NIL
    $ARGUMENTS$
       <cAddress>
 
@@ -1506,9 +1506,9 @@
    $ONELINER$
       Connect to a remote server by IP address
    $SYNTAX$
-      HB_INETCONNECTIP( <cAddress>, <nPort> ) -> SOCKET
+      hb_inetConnectIP( <cAddress>, <nPort> ) -> SOCKET
 
-      HB_INETCONNECTIP( <cAddress>, <nPort>, <socket> ) -> NIL
+      hb_inetConnectIP( <cAddress>, <nPort>, <socket> ) -> NIL
    $ARGUMENTS$
       <cAddress>
 
@@ -1561,7 +1561,7 @@
    $ONELINER$
       Create a datagram socket
    $SYNTAX$
-      HB_INETDGRAM( [<lBroadcast>] ) -> SOCKET
+      hb_inetDGram( [<lBroadcast>] ) -> SOCKET
    $ARGUMENTS$
       lBroadcast
    $RETURNS$
@@ -1608,7 +1608,7 @@
    $ONELINER$
       Create a bound datagram socket
    $SYNTAX$
-      HB_INETDGRAMBIND( <nPort>, [<cAddress> [, <lBroadcast>] ] ) -> SOCKET
+      hb_inetDGramBind( <nPort>, [<cAddress> [, <lBroadcast>] ] ) -> SOCKET
    $ARGUMENTS$
       <nPort>
 
@@ -1658,7 +1658,7 @@
    $ONELINER$
       Send data to a datagram socket
    $SYNTAX$
-      HB_INETDGRAMSEND( <socket>, <cAddress>, <nPort>, <cBuffer> [, <nSize> ] ) -> nBytesSent
+      hb_inetDGramSend( <socket>, <cAddress>, <nPort>, <cBuffer> [, <nSize> ] ) -> nBytesSent
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -1721,7 +1721,7 @@
    $ONELINER$
       Get data from a datagram socket
    $SYNTAX$
-      HB_INETDGRAMRECV( <socket>, @<cBuffer> [, <nSize> ] ) -> nBytesRead
+      hb_inetDGramRecv( <socket>, @<cBuffer> [, <nSize> ] ) -> nBytesRead
    $ARGUMENTS$
       <socket> a socket previously created  / opened
 
@@ -1767,7 +1767,7 @@
    $ONELINER$
       Get a CRLF sequence for internet protocols
    $SYNTAX$
-      HB_INETCRLF() -> cResult
+      hb_inetCRLF() -> cResult
    $ARGUMENTS$
       (This function has no arguments)
    $RETURNS$
@@ -1803,7 +1803,7 @@
    $ONELINER$
       Get whether a variable is a socket
    $SYNTAX$
-      HB_INETISSOCKET( <socket> ) -> lResult
+      hb_inetIsSocket( <socket> ) -> lResult
    $ARGUMENTS$
       <socket> a socket previously created  / opened
    $RETURNS$

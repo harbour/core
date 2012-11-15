@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_BYTEAND()
+      ft_ByteAnd()
    $CATEGORY$
       String
    $ONELINER$
       Perform bit-wise AND on two ASCII characters (bytes)
    $SYNTAX$
-      FT_BYTEAND( <cByte1>, <cByte2> ) -> cByte
+      ft_ByteAnd( <cByte1>, <cByte2> ) -> cByte
    $ARGUMENTS$
       <cByte1> and <cByte2> are characters from Chr(0) TO Chr(255).
       May be passed in Chr() form, as character literals, or as expressions
@@ -30,10 +30,10 @@
       // of the byte represented by Chr(123) and leave the low nibble bits as in
       // the parameter byte.
 
-      cNewbyte := FT_BYTEAND( Chr( 123 ), Chr( 15 ) )
+      cNewbyte := ft_ByteAnd( Chr( 123 ), Chr( 15 ) )
       ? Asc( cNewByte )  // result: 11
       ? cNewByte         // result: non-printable character
    $SEEALSO$
-      FT_BYTEOR() FT_BYTEXOR() FT_BYTENOT() FT_BYTENEG()
+      ft_ByteOr() ft_ByteXor() ft_ByteNot() ft_ByteNeg()
    $END$
  */

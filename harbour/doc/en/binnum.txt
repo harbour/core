@@ -7,8 +7,8 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: BIN2W(), BIN2I(), BIN2L(), BIN2U(), I2BIN(), W2BIN(),
- *                       L2BIN(), U2BIN()
+ *    Documentation for: Bin2W(), Bin2I(), Bin2L(), Bin2U(), I2Bin(), W2Bin(),
+ *                       L2Bin(), U2Bin()
  *
  * See COPYING for licensing terms.
  *
@@ -18,7 +18,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      BIN2W()
+      Bin2W()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -26,17 +26,17 @@
    $ONELINER$
       Convert unsigned short encoded bytes into Harbour numeric
    $SYNTAX$
-      BIN2W( <cBuffer> ) --> nNumber
+      Bin2W( <cBuffer> ) --> nNumber
    $ARGUMENTS$
       <cBuffer> is a character string that contain 16 bit encoded unsigned
       short integer (least significant byte first). The first two bytes
       are taken into account, the rest if any are ignored.
    $RETURNS$
-      BIN2W() return numeric integer (or 0 if <cBuffer> is not a string).
+      Bin2W() return numeric integer (or 0 if <cBuffer> is not a string).
    $DESCRIPTION$
-      BIN2W() is one of the low level binary conversion functions, those
+      Bin2W() is one of the low level binary conversion functions, those
       functions convert between Harbour numeric and a character
-      representation of numeric value. BIN2W() take two bytes of encoded
+      representation of numeric value. Bin2W() take two bytes of encoded
       16 bit unsigned short integer and convert it into standard Harbour
       numeric value.
 
@@ -46,7 +46,7 @@
       way to share information from source other than Harbour (C for
       instance).
 
-      BIN2W() is the opposite of W2BIN()
+      Bin2W() is the opposite of W2Bin()
    $EXAMPLES$
       // Show header length of a DBF
       #include "fileio.ch"
@@ -69,7 +69,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2L(),BIN2U(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+      Bin2I(),Bin2L(),Bin2U(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
    $END$
  */
 
@@ -77,7 +77,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      BIN2I()
+      Bin2I()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -85,17 +85,17 @@
    $ONELINER$
       Convert signed short encoded bytes into Harbour numeric
    $SYNTAX$
-      BIN2I( <cBuffer> ) --> nNumber
+      Bin2I( <cBuffer> ) --> nNumber
    $ARGUMENTS$
       <cBuffer> is a character string that contain 16 bit encoded signed
       short integer (least significant byte first). The first two bytes
       are taken into account, the rest if any are ignored.
    $RETURNS$
-      BIN2I() return numeric integer (or 0 if <cBuffer> is not a string).
+      Bin2I() return numeric integer (or 0 if <cBuffer> is not a string).
    $DESCRIPTION$
-      BIN2I() is one of the low level binary conversion functions, those
+      Bin2I() is one of the low level binary conversion functions, those
       functions convert between Harbour numeric and a character
-      representation of numeric value. BIN2I() take two bytes of encoded
+      representation of numeric value. Bin2I() take two bytes of encoded
       16 bit signed short integer and convert it into standard Harbour
       numeric value.
 
@@ -105,7 +105,7 @@
       way to share information from source other than Harbour (C for
       instance).
 
-      BIN2I() is the opposite of I2BIN()
+      Bin2I() is the opposite of I2Bin()
    $EXAMPLES$
       // Show DBF last update date
       #include "fileio.ch"
@@ -131,7 +131,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+      Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
    $END$
  */
 
@@ -139,7 +139,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      BIN2L()
+      Bin2L()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -147,17 +147,17 @@
    $ONELINER$
       Convert signed long encoded bytes into Harbour numeric
    $SYNTAX$
-      BIN2L( <cBuffer> ) --> nNumber
+      Bin2L( <cBuffer> ) --> nNumber
    $ARGUMENTS$
       <cBuffer> is a character string that contain 32 bit encoded signed
       long integer (least significant byte first). The first four bytes
       are taken into account, the rest if any are ignored.
    $RETURNS$
-      BIN2L() return numeric integer (or 0 if <cBuffer> is not a string).
+      Bin2L() return numeric integer (or 0 if <cBuffer> is not a string).
    $DESCRIPTION$
-      BIN2L() is one of the low level binary conversion functions, those
+      Bin2L() is one of the low level binary conversion functions, those
       functions convert between Harbour numeric and a character
-      representation of numeric value. BIN2L() take four bytes of encoded
+      representation of numeric value. Bin2L() take four bytes of encoded
       32 bit signed long integer and convert it into standard Harbour
       numeric value.
 
@@ -167,7 +167,7 @@
       way to share information from source other than Harbour (C for
       instance).
 
-      BIN2L() is the opposite of L2BIN()
+      Bin2L() is the opposite of L2Bin()
    $EXAMPLES$
       // Show number of records in DBF
       #include "fileio.ch"
@@ -190,7 +190,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+      Bin2I(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
    $END$
  */
 
@@ -198,7 +198,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      BIN2U()
+      Bin2U()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -206,17 +206,17 @@
    $ONELINER$
       Convert unsigned long encoded bytes into Harbour numeric
    $SYNTAX$
-      BIN2U( <cBuffer> ) --> nNumber
+      Bin2U( <cBuffer> ) --> nNumber
    $ARGUMENTS$
       <cBuffer> is a character string that contain 32 bit encoded unsigned
       long integer (least significant byte first). The first four bytes
       are taken into account, the rest if any are ignored.
    $RETURNS$
-      BIN2U() return numeric integer (or 0 if <cBuffer> is not a string).
+      Bin2U() return numeric integer (or 0 if <cBuffer> is not a string).
    $DESCRIPTION$
-      BIN2U() is one of the low level binary conversion functions, those
+      Bin2U() is one of the low level binary conversion functions, those
       functions convert between Harbour numeric and a character
-      representation of numeric value. BIN2U() take four bytes of encoded
+      representation of numeric value. Bin2U() take four bytes of encoded
       32 bit unsigned long integer and convert it into standard Harbour
       numeric value.
 
@@ -226,7 +226,7 @@
       way to share information from source other than Harbour (C for
       instance).
 
-      BIN2U() is the opposite of U2BIN()
+      Bin2U() is the opposite of U2Bin()
    $EXAMPLES$
       // Show number of records in DBF
       #include "fileio.ch"
@@ -249,7 +249,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2L(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),U2BIN(),FREAD()
+      Bin2I(),Bin2L(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
    $END$
  */
 
@@ -257,7 +257,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      I2BIN()
+      I2Bin()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -265,16 +265,16 @@
    $ONELINER$
       Convert Harbour numeric into signed short encoded bytes
    $SYNTAX$
-      I2BIN( <nNumber> ) --> cBuffer
+      I2Bin( <nNumber> ) --> cBuffer
    $ARGUMENTS$
       <nNumber> is a numeric value to convert (decimal digits are ignored).
    $RETURNS$
-      I2BIN() return two bytes character string that contain 16 bit
+      I2Bin() return two bytes character string that contain 16 bit
       encoded signed short integer (least significant byte first).
    $DESCRIPTION$
-      I2BIN() is one of the low level binary conversion functions, those
+      I2Bin() is one of the low level binary conversion functions, those
       functions convert between Harbour numeric and a character
-      representation of numeric value. I2BIN() take a numeric integer
+      representation of numeric value. I2Bin() take a numeric integer
       value and convert it into two bytes of encoded 16 bit signed short
       integer.
 
@@ -284,7 +284,7 @@
       way to share information from source other than Harbour (C for
       instance).
 
-      I2BIN() is the opposite of BIN2I()
+      I2Bin() is the opposite of Bin2I()
    $EXAMPLES$
       // Update DBF "last update" date
       #include "fileio.ch"
@@ -317,7 +317,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2L(),BIN2U(),BIN2W(),L2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
+      Bin2I(),Bin2L(),Bin2U(),Bin2W(),L2Bin(),W2Bin(),Word(),U2Bin(),FWrite()
    $END$
  */
 
@@ -325,7 +325,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      W2BIN()
+      W2Bin()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -333,16 +333,16 @@
    $ONELINER$
       Convert Harbour numeric into unsigned short encoded bytes
    $SYNTAX$
-      W2BIN( <nNumber> ) --> cBuffer
+      W2Bin( <nNumber> ) --> cBuffer
    $ARGUMENTS$
       <nNumber> is a numeric value to convert (decimal digits are ignored).
    $RETURNS$
-      W2BIN() return two bytes character string that contain 16 bit
+      W2Bin() return two bytes character string that contain 16 bit
       encoded unsigned short integer (least significant byte first).
    $DESCRIPTION$
-      W2BIN() is one of the low level binary conversion functions, those
+      W2Bin() is one of the low level binary conversion functions, those
       functions convert between Harbour numeric and a character
-      representation of numeric value. W2BIN() take a numeric integer
+      representation of numeric value. W2Bin() take a numeric integer
       value and convert it into two bytes of encoded 16 bit unsigned short
       integer.
 
@@ -352,7 +352,7 @@
       way to share information from source other than Harbour (C for
       instance).
 
-      W2BIN() is the opposite of BIN2W()
+      W2Bin() is the opposite of Bin2W()
    $STATUS$
       R
    $COMPLIANCE$
@@ -360,7 +360,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),WORD(),U2BIN(),FWRITE()
+      Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),Word(),U2Bin(),FWrite()
    $END$
  */
 
@@ -368,7 +368,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      L2BIN()
+      L2Bin()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -376,16 +376,16 @@
    $ONELINER$
       Convert Harbour numeric into signed long encoded bytes
    $SYNTAX$
-      L2BIN( <nNumber> ) --> cBuffer
+      L2Bin( <nNumber> ) --> cBuffer
    $ARGUMENTS$
       <nNumber> is a numeric value to convert (decimal digits are ignored).
    $RETURNS$
-      L2BIN() return four bytes character string that contain 32 bit
+      L2Bin() return four bytes character string that contain 32 bit
       encoded signed long integer (least significant byte first).
    $DESCRIPTION$
-      L2BIN() is one of the low level binary conversion functions, those
+      L2Bin() is one of the low level binary conversion functions, those
       functions convert between Harbour numeric and a character
-      representation of numeric value. L2BIN() take a numeric integer
+      representation of numeric value. L2Bin() take a numeric integer
       value and convert it into four bytes of encoded 32 bit signed long
       integer.
 
@@ -395,7 +395,7 @@
       way to share information from source other than Harbour (C for
       instance).
 
-      L2BIN() is the opposite of BIN2L()
+      L2Bin() is the opposite of Bin2L()
    $STATUS$
       R
    $COMPLIANCE$
@@ -403,7 +403,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),W2BIN(),WORD(),U2BIN(),FWRITE()
+      Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),W2Bin(),Word(),U2Bin(),FWrite()
    $END$
  */
 
@@ -411,7 +411,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      U2BIN()
+      U2Bin()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -419,16 +419,16 @@
    $ONELINER$
       Convert Harbour numeric into unsigned long encoded bytes
    $SYNTAX$
-      U2BIN( <nNumber> ) --> cBuffer
+      U2Bin( <nNumber> ) --> cBuffer
    $ARGUMENTS$
       <nNumber> is a numeric value to convert (decimal digits are ignored).
    $RETURNS$
-      U2BIN() return four bytes character string that contain 32 bit
+      U2Bin() return four bytes character string that contain 32 bit
       encoded unsigned long integer (least significant byte first).
    $DESCRIPTION$
-      U2BIN() is one of the low level binary conversion functions, those
+      U2Bin() is one of the low level binary conversion functions, those
       functions convert between Harbour numeric and a character
-      representation of numeric value. U2BIN() take a numeric integer
+      representation of numeric value. U2Bin() take a numeric integer
       value and convert it into four bytes of encoded 32 bit unsigned long
       integer.
 
@@ -438,7 +438,7 @@
       way to share information from source other than Harbour (C for
       instance).
 
-      U2BIN() is the opposite of BIN2U()
+      U2Bin() is the opposite of Bin2U()
    $STATUS$
       R
    $COMPLIANCE$
@@ -446,7 +446,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      BIN2I(),BIN2L(),BIN2U(),BIN2W(),I2BIN(),L2BIN(),W2BIN(),WORD(),FWRITE()
+      Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),FWrite()
    $END$
  */
 
@@ -454,7 +454,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      WORD()
+      Word()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -462,18 +462,18 @@
    $ONELINER$
       Converts double to integer values.
    $SYNTAX$
-      WORD( <nDouble> ) --> <nInteger>
+      Word( <nDouble> ) --> <nInteger>
    $ARGUMENTS$
       <nDouble> is a numeric double value.
    $RETURNS$
-      WORD() return an integer in the range +-32767
+      Word() return an integer in the range +-32767
    $DESCRIPTION$
       This function converts double values to integers to use
       within the CALL command
    $STATUS$
       R
    $COMPLIANCE$
-      The CA-Cl*pper NG states that WORD() will only work when used in CALL
+      The CA-Cl*pper NG states that Word() will only work when used in CALL
       commands parameter list, otherwise it will return NIL, in Harbour
       it will work anywhere.
    $FILES$

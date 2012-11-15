@@ -10,8 +10,8 @@
  *    Documentation for: HB_LANGNAME(), HB_LANGSELECT()
  *
  * Copyright 2004 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: HB_LANGERRMSG(),HB_LANGMESSAGE(),HB_CDPSELECT(),
- *                       HB_TRANSLATE()
+ *    Documentation for: HB_LANGERRMSG(),HB_LANGMESSAGE(),hb_cdpSelect(),
+ *                       hb_Translate()
  *
  * See COPYING for licensing terms.
  *
@@ -59,7 +59,7 @@
       Library are rtl, lang
       Header is error.ch
    $SEEALSO$
-      HB_LANGSELECT(),NATIONMSG()
+      HB_LANGSELECT(),NationMsg()
    $END$
  */
 
@@ -81,7 +81,7 @@
    $RETURNS$
       HB_LANGMESSAGE() return the text associated with the code <nMsg>.
    $DESCRIPTION$
-      HB_LANGMESSAGE() is similar to NATIONMSG() but give access to the
+      HB_LANGMESSAGE() is similar to NationMsg() but give access to the
       whole list of language messages: Day and month names, generic error
       messages, internal errors, and others...
 
@@ -106,7 +106,7 @@
       Library are rtl, lang
       Header is hblang.ch
    $SEEALSO$
-      HB_LANGSELECT(),NATIONMSG(),REQUEST
+      HB_LANGSELECT(),NationMsg(),REQUEST
    $END$
  */
 
@@ -157,7 +157,7 @@
    $FILES$
       Library are rtl, lang
    $SEEALSO$
-      HB_LANGSELECT(),NATIONMSG()
+      HB_LANGSELECT(),NationMsg()
    $END$
  */
 
@@ -256,7 +256,7 @@
    $FILES$
       Libraty are rtl, lang
    $SEEALSO$
-      HB_LANGNAME(),HB_CDPSELECT(),NATIONMSG(),REQUEST
+      HB_LANGNAME(),hb_cdpSelect(),NationMsg(),REQUEST
    $END$
  */
 
@@ -264,7 +264,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_CDPSELECT()
+      hb_cdpSelect()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -272,7 +272,7 @@
    $ONELINER$
       Select the active code page by language ID
    $SYNTAX$
-      HB_CDPSELECT( [<cNewLang>] ) --> cOldLang
+      hb_cdpSelect( [<cNewLang>] ) --> cOldLang
    $ARGUMENTS$
       <cNewLang>  The optional ID of the country language module.
       Possible values for <cNewLang> are below as defined in the
@@ -342,7 +342,7 @@
    $RETURNS$
       <cOldLang>   The old language indentifier
    $DESCRIPTION$
-      HB_CDPSELECT() set the active code page use by Harbour for
+      hb_cdpSelect() set the active code page use by Harbour for
       sorting and comparing strings. The default code page use ASCII
       order (cLang == "EN").
 
@@ -369,7 +369,7 @@
    $FILES$
       Libraty are rtl, codepage
    $SEEALSO$
-      HB_LANGNAME(),HB_LANGSELECT(),HB_TRANSLATE(),NATIONMSG(),REQUEST
+      HB_LANGNAME(),HB_LANGSELECT(),hb_Translate(),NationMsg(),REQUEST
    $END$
  */
 
@@ -377,7 +377,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_TRANSLATE()
+      hb_Translate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -385,7 +385,7 @@
    $ONELINER$
       Translate a string from one code page to the other
    $SYNTAX$
-      HB_TRANSLATE( <cSrcText>, [<cPageFrom>], [<cPageTo>] ) --> cDstText
+      hb_Translate( <cSrcText>, [<cPageFrom>], [<cPageTo>] ) --> cDstText
    $ARGUMENTS$
       <cSrcText> Is the source string to translate.
 
@@ -395,12 +395,12 @@
       <cPageTo> Is the optional character code page ID of the destination
       string. If not specified, the default code page is used.
    $RETURNS$
-      HB_TRANSLATE() return destination string converted from the source
+      hb_Translate() return destination string converted from the source
       string.
    $DESCRIPTION$
-      HB_TRANSLATE() try to convert a source string from one code page
+      hb_Translate() try to convert a source string from one code page
       into the other. If a code page ID is not recognized, or not linked
-      in, the default code page is used. HB_TRANSLATE() is used usually
+      in, the default code page is used. hb_Translate() is used usually
       to convert between the Dos and the Windows code pages of the same
       language.
 
@@ -428,6 +428,6 @@
    $FILES$
       Libraty are rtl, codepage
    $SEEALSO$
-      HB_LANGSELECT(),HB_CDPSELECT(),NATIONMSG(),REQUEST
+      HB_LANGSELECT(),hb_cdpSelect(),NationMsg(),REQUEST
    $END$
  */

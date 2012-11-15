@@ -29,7 +29,7 @@
          New()              Creates a new instance of the TFileRead class.   </par>
 
          Open([<nFlags>])   Opens the file for reading. The optional nFlags
-                            parameter can use any of the FOPEN() flags from
+                            parameter can use any of the FOpen() flags from
                             fileio.ch. The default is FO_READ + FO_SHARED.
                             Calling this method when the file is already
                             open causes the next ReadLine() to start over

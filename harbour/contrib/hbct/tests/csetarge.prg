@@ -212,7 +212,7 @@ FUNCTION myerrhandler( oerr )
    ? "      err:severity.....:", oerr:severity
    ? "      err:subSystem....:", oerr:subSystem
    ? "      err:operation....:", oerr:operation
-   ? "      len(err:args)....:", Len( oerr:args )
+   ? "      Len(err:args)....:", Len( oerr:args )
    FOR ni := 1 TO Len( oerr:args )
       ? "          err:args[" + hb_ntos( ni ) + "]..:", oerr:args[ ni ]
    NEXT

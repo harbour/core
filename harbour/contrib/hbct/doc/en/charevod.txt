@@ -4,71 +4,71 @@
 
 /* $DOC$
    $NAME$
-      CHAREVEN()
+      CharEven()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Returns the characters on the even positions in a string
    $SYNTAX$
-      CHAREVEN( <cString> ) --> cEvenString
+      CharEven( <cString> ) --> cEvenString
    $ARGUMENTS$
       <cString>      processed string
    $RETURNS$
       <cEvenString>  a string containing all character from even positions
                      in <cString>
    $DESCRIPTION$
-      The CHAREVEN() function looks for the characters on the even positions
+      The CharEven() function looks for the characters on the even positions
       in a given string, collects them and returns them as a string.
    $EXAMPLES$
-      ? CHAREVEN( " H E L L O !" ) // -> "HELLO!"
+      ? CharEven( " H E L L O !" ) // -> "HELLO!"
    $TESTS$
-      CHAREVEN( " 1 2 3 4 5" ) == "12345"
-      CHAREVEN( " 1 2 3 4 " ) == "1234"
-      CHAREVEN( " " ) == ""
+      CharEven( " 1 2 3 4 5" ) == "12345"
+      CharEven( " 1 2 3 4 " ) == "1234"
+      CharEven( " " ) == ""
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHAREVEN() is compatible with CT3's CHAREVEN().
+      CharEven() is compatible with CT3's CharEven().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARODD()  CHARMIX()
+      CharOdd()  CharMix()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARODD()
+      CharOdd()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Returns the characters on the odd positions in a string
    $SYNTAX$
-      CHARODD( <cString> ) --> cOddString
+      CharOdd( <cString> ) --> cOddString
    $ARGUMENTS$
       <cString>      processed string
    $RETURNS$
       <cOddString>  a string containing all character from odd positions
                     in <cString>
    $DESCRIPTION$
-      The CHARODD() function looks for the characters on the odd positions
+      The CharOdd() function looks for the characters on the odd positions
       in a given string, collects them and returns them as a string.
    $EXAMPLES$
-      ? CHARODD( "H E L L O ! " ) // -> "HELLO!"
+      ? CharOdd( "H E L L O ! " ) // -> "HELLO!"
    $TESTS$
-      CHARODD( "1A2B3C4D5E" ) == "12345"
-      CHARODD( "1A2B3C4D5" )  == "12345"
+      CharOdd( "1A2B3C4D5E" ) == "12345"
+      CharOdd( "1A2B3C4D5" )  == "12345"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARODD() is compatible with CT3's CHARODD().
+      CharOdd() is compatible with CT3's CharOdd().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHAREVEN()  CHARMIX()
+      CharEven()  CharMix()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_Descend()
+      ft_Descend()
    $CATEGORY$
       Conversion
    $ONELINER$
       Create a descending index key value
    $SYNTAX$
-      FT_Descend( <exp> ) -> <value>
+      ft_Descend( <exp> ) -> <value>
    $ARGUMENTS$
       <exp> is any expression of character, numeric, date, or logical type.
    $RETURNS$
@@ -19,8 +19,8 @@
       This function is a replacement for CA-Cl*pper's Descend() function,
       which is known to produce memory corruption occassionally.
    $EXAMPLES$
-      ? FT_Descend( 1 )      // Returns -1
+      ? ft_Descend( 1 )      // Returns -1
    $SEEALSO$
-      FT_XTOY()
+      ft_XToY()
    $END$
  */

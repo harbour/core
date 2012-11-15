@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SAVEATT()
+      ft_SaveAtt()
    $CATEGORY$
       Video
    $ONELINER$
       Save the attribute bytes of a specified screen region.
    $SYNTAX$
-      FT_SAVEATT( <nTop>, <nLeft>, <nBottom>, <nRight> ) -> cAttributes
+      ft_SaveAtt( <nTop>, <nLeft>, <nBottom>, <nRight> ) -> cAttributes
    $ARGUMENTS$
       <nTop>, <nLeft>, <nBottom>, and <nRight> define the screen region.
    $RETURNS$
@@ -29,29 +29,29 @@
       to use internals, then this function isn't for you.
    $EXAMPLES$
       // Save attributes of row 4
-      cBuffer := FT_SAVEATT( 4, 0, 4, MaxCol() )
+      cBuffer := ft_SaveAtt( 4, 0, 4, MaxCol() )
 
       // Save attributes from middle of screen
-      cBuffer := FT_SAVEATT( 10, 20, 14, 59 )
+      cBuffer := ft_SaveAtt( 10, 20, 14, 59 )
    $SEEALSO$
-      FT_RESTATT()
+      ft_RestAtt()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_RESTATT()
+      ft_RestAtt()
    $CATEGORY$
       Video
    $ONELINER$
       Restore the attribute bytes of a specified screen region.
    $SYNTAX$
-      FT_RESTATT( <nTop>, <nLeft>, <nBottom>, <nRight>, <cAttributes> ) -> NIL
+      ft_RestAtt( <nTop>, <nLeft>, <nBottom>, <nRight>, <cAttributes> ) -> NIL
    $ARGUMENTS$
       <nTop>, <nLeft>, <nBottom>, and <nRight> define the screen region.
       <cAttributes> is a character string containing the attribute bytes
                     for the screen region.  This will most often be a string
-                    previously returned by FT_SAVEATT(), but any character
+                    previously returned by ft_SaveAtt(), but any character
                     string may be used (provided it is of the proper size).
    $RETURNS$
       NIL
@@ -67,11 +67,11 @@
       internals, then this function isn't for you.
    $EXAMPLES$
       // Restore attributes of row 4
-      FT_RESTATT( 4, 0, 4, MaxCol(), cBuffer )
+      ft_RestAtt( 4, 0, 4, MaxCol(), cBuffer )
 
       // Restore attributes to middle of screen
-      FT_RESTATT( 10, 20, 14, 59, cBuffer )
+      ft_RestAtt( 10, 20, 14, 59, cBuffer )
    $SEEALSO$
-      FT_SAVEATT()
+      ft_SaveAtt()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_BYTENEG()
+      ft_ByteNeg()
    $CATEGORY$
       String
    $ONELINER$
       Perform bit-wise negation on an ASCII character
    $SYNTAX$
-      FT_BYTENEG( <cByte> ) -> cNewByte
+      ft_ByteNeg( <cByte> ) -> cNewByte
    $ARGUMENTS$
       <cByte> is a character from Chr(0) to Chr(255).
       May be passed in Chr() form, as character literal, or
@@ -29,9 +29,9 @@
    $EXAMPLES$
       // This code performs a bit-wise NEG on byte represented by Chr( 32 ):
 
-      cNewByte := FT_BYTENOT( Chr( 32 ) )
+      cNewByte := ft_ByteNot( Chr( 32 ) )
       ? Asc( cNewByte )                  // result: 224
    $SEEALSO$
-      FT_BYTEOR() FT_BYTEXOR() FT_BYTENOT() FT_BYTEAND()
+      ft_ByteOr() ft_ByteXor() ft_ByteNot() ft_ByteAnd()
    $END$
  */

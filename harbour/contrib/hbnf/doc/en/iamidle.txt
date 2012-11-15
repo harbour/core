@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_IAmIdle()
+      ft_IAmIdle()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Inform the operating system that the application is idle.
    $SYNTAX$
-      FT_IAmIdle() -> lSuccess
+      ft_IAmIdle() -> lSuccess
    $ARGUMENTS$
       None
    $RETURNS$
@@ -26,12 +26,12 @@
       Clipper itself detects an idle state.
    $EXAMPLES$
       DO WHILE Inkey() != K_ESC
-         FT_IAmIdle()         // Wait for ESC and announce idleness
+         ft_IAmIdle()         // Wait for ESC and announce idleness
       ENDDO
 
       // Here's another way to do it:
 
-      FT_OnIdle( {|| FT_IAmIdle() } )
+      FT_OnIdle( {|| ft_IAmIdle() } )
 
       Inkey( 0 )              // Automatically reports idleness until key is pressed!
    $SEEALSO$

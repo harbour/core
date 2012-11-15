@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_RMDIR()
+      ft_RmDir()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Delete a subdirectory
    $SYNTAX$
-      FT_RMDIR( <cDirName> ) -> nResult
+      ft_RmDir( <cDirName> ) -> nResult
    $ARGUMENTS$
       <cDirName> is the name of the directory to delete.
    $RETURNS$
@@ -28,8 +28,8 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      FT_RMDIR( "C:\clipper" )
-      FT_RMDIR( "\example" )
-      FT_RMDIR( "..\source" )
+      ft_RmDir( "C:\clipper" )
+      ft_RmDir( "\example" )
+      ft_RmDir( "..\source" )
    $END$
  */

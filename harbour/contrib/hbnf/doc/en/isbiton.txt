@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ISBITON()
+      ft_IsBitOn()
    $CATEGORY$
       String
    $ONELINER$
       Determine the state of individual bits in a number
    $SYNTAX$
-      FT_ISBITON( <nNumber>, <nBit> ) -> lResult
+      ft_IsBitOn( <nNumber>, <nBit> ) -> lResult
    $ARGUMENTS$
       <nNumber> is an integer for which a bit state needs to be checked.
 
@@ -19,15 +19,15 @@
       .T. if the specified bit was on., .F. if off.
    $DESCRIPTION$
       This function is useful when dealing with binary integers.  It will
-      come in very handy if you use the FT_INT86() function, because the
+      come in very handy if you use the ft_int86() function, because the
       CPU flags are returned as a series of bits.  Using this function, you
       can determine the state of each CPU flag.
    $EXAMPLES$
-      IF FT_ISBITON( nCPUFlags, 0 )
+      IF ft_IsBitOn( nCPUFlags, 0 )
          ? "The carry flag was set."
       ENDIF
 
-      IF FT_ISBITON( nCPUFlags, 7 )
+      IF ft_IsBitOn( nCPUFlags, 7 )
          ? "The sign flag was set."
       ENDIF
    $END$

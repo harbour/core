@@ -7,8 +7,8 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: ABS(),EXP(),LOG(),INT(),MAX()
- *    MIN(),SQRT(),ROUND()
+ *    Documentation for: ABS(),Exp(),LOG(),Int(),Max()
+ *    Min(),Sqrt(),Round()
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *           Author: Martin Vogel <vogel@inttec.de>
  *    Documentation for API
@@ -66,7 +66,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      EXP()
+      Exp()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -74,7 +74,7 @@
    $ONELINER$
       Calculates the value of e raised to the passed power.
    $SYNTAX$
-      EXP( <nNumber> ) --> <nValue>
+      Exp( <nNumber> ) --> <nValue>
    $ARGUMENTS$
       <nNumber> Any  real number.
    $RETURNS$
@@ -101,7 +101,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      INT()
+      Int()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -109,7 +109,7 @@
    $ONELINER$
       Return the integer port of a numeric value.
    $SYNTAX$
-      INT( <nNumber> ) --> <nIntNumber>
+      Int( <nNumber> ) --> <nIntNumber>
    $ARGUMENTS$
       <nNumber> Any  numeric value.
    $RETURNS$
@@ -132,7 +132,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ROUND(),STRZERO()
+      Round(),StrZero()
    $END$
  */
 
@@ -157,7 +157,7 @@
       This function returns the natural logarithm of the number <nNumber>.
       If <nNumber> is 0 or less than 0, a numeric overflow occurs,
       which is depicted on the display device as a series of asterisks.
-      This function is the inverse of EXP().
+      This function is the inverse of Exp().
    $EXAMPLES$
       ? Log( 632512 )
    $STATUS$
@@ -169,7 +169,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      EXP()
+      Exp()
    $END$
  */
 
@@ -177,7 +177,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MAX()
+      Max()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -185,7 +185,7 @@
    $ONELINER$
       Returns the maximum of two numbers or dates.
    $SYNTAX$
-      MAX( <xValue>, <xValue1> )  --> <xMax>
+      Max( <xValue>, <xValue1> )  --> <xMax>
    $ARGUMENTS$
       <xValue>  Any date or numeric value.
 
@@ -219,7 +219,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MIN()
+      Min()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -227,7 +227,7 @@
    $ONELINER$
       Determines the minumum of two numbers or dates.
    $SYNTAX$
-      MIN( <xValue>, <xValue1> )  --> <xMin>
+      Min( <xValue>, <xValue1> )  --> <xMin>
    $ARGUMENTS$
       <xValue>  Any date or numeric value.
 
@@ -250,7 +250,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      MAX()
+      Max()
    $END$
  */
 
@@ -258,7 +258,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      MOD()
+      Mod()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -266,7 +266,7 @@
    $ONELINER$
       Return the modulus of two numbers.
    $SYNTAX$
-      MOD( <nNumber>, <nNumber1> ) -->  <nRemainder>
+      Mod( <nNumber>, <nNumber1> ) -->  <nRemainder>
    $ARGUMENTS$
       <nNumber>  Numerator in a divisional expression.
 
@@ -297,7 +297,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SQRT()
+      Sqrt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -305,7 +305,7 @@
    $ONELINER$
       Calculates the square root of a number.
    $SYNTAX$
-      SQRT( <nNumber> ) --> <nSqrt>
+      Sqrt( <nNumber> ) --> <nSqrt>
    $ARGUMENTS$
       <nNumber> Any  numeric value.
    $RETURNS$
@@ -328,7 +328,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ROUND()
+      Round()
    $END$
  */
 
@@ -336,7 +336,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ROUND()
+      Round()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -344,7 +344,7 @@
    $ONELINER$
       Rounds off a numeric expression.
    $SYNTAX$
-      ROUND( <nNumber>,<nPlace> ) --> <nResult>
+      Round( <nNumber>,<nPlace> ) --> <nResult>
    $ARGUMENTS$
       <nNumber> Any numeric value.
 
@@ -369,7 +369,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      INT(),STR(),VAL(),SET FIXED
+      Int(),Str(),Val(),SET FIXED
    $END$
  */
 
@@ -670,7 +670,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_MATHERMODE()
+      hb_matherMode()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -678,7 +678,7 @@
    $ONELINER$
       Set/Get math error handling mode
    $SYNTAX$
-      HB_MATHERMODE( [<nNewMode>] ) --> <nOldMode>
+      hb_matherMode( [<nNewMode>] ) --> <nOldMode>
    $ARGUMENTS$
       [<nNumber>]   new math error handling mode, one of the following
                     constants, defined in hbmath.ch:
@@ -711,7 +711,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_MATHERBLOCK()
+      hb_matherBlock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -719,7 +719,7 @@
    $ONELINER$
       Set/Get math error handling codeblock
    $SYNTAX$
-      HB_MATHERBLOCK( [<bNewBlock>] ) --> <bOldBlock>
+      hb_matherBlock( [<bNewBlock>] ) --> <bOldBlock>
    $ARGUMENTS$
       <bNewBlock>
    $RETURNS$

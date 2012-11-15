@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_BYT2BIT()
+      ft_Byt2Bit()
    $CATEGORY$
       Conversion
    $ONELINER$
       Convert byte to string of 1's and 0's
    $SYNTAX$
-      FT_BYT2BIT( <cByte> ) -> cBitPattern
+      ft_Byt2Bit( <cByte> ) -> cBitPattern
    $ARGUMENTS$
       <cByte> is the byte to convert.
    $RETURNS$
@@ -31,12 +31,12 @@
       // Chr( 20 ) and Chr( 36 ), and deliver the result as a string in binary (bit)
       // format.
 
-      ? FT_BYT2BIT( Chr( 20 ) )         // byte1: '0001 0100'
-      ? FT_BYT2BIT( Chr( 36 ) )         // byte2: '0010 0100'
+      ? ft_Byt2Bit( Chr( 20 ) )         // byte1: '0001 0100'
+      ? ft_Byt2Bit( Chr( 36 ) )         // byte2: '0010 0100'
 
-      ? FT_BYT2BIT( FT_BYTEAND( Chr( 20 ), Chr( 36 ) ) )
+      ? ft_Byt2Bit( ft_ByteAnd( Chr( 20 ), Chr( 36 ) ) )
       // result: '0000 0100'
    $SEEALSO$
-      FT_BYT2HEX()
+      ft_Byt2Hex()
    $END$
  */

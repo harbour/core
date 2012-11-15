@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_DEFAULT()
+      ft_Default()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Retrieve and optionally change the current default drive
    $SYNTAX$
-      FT_DEFAULT( [ <cDrive> ] ) -> cDrive
+      ft_Default( [ <cDrive> ] ) -> cDrive
    $ARGUMENTS$
       <cDrive> is optional, and if specified is the new default drive.
    $RETURNS$
@@ -22,10 +22,10 @@
    $DESCRIPTION$
       Useful any time you need to know or change the default drive.
    $EXAMPLES$
-      cDrive := FT_DEFAULT()  // Get the current drive
-      FT_DEFAULT( "C" )       // Switch to drive C
+      cDrive := ft_Default()  // Get the current drive
+      ft_Default( "C" )       // Switch to drive C
 
-      IF !( FT_DEFAULT( "E" ) == "E" )
+      IF !( ft_Default( "E" ) == "E" )
          QOut( "Drive E does not exist!" )
       ENDIF
    $END$

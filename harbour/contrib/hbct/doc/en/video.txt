@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      CHARPIX()
+      CharPix()
    $CATEGORY$
       HBCT video functions
    $ONELINER$
       Gets the number of scan lines per character.
    $SYNTAX$
-      CHARPIX() --> nHeight
+      CharPix() --> nHeight
    $ARGUMENTS$
 
    $RETURNS$
@@ -36,13 +36,13 @@
 
 /* $DOC$
    $NAME$
-      VGAPALETTE()
+      VGAPalette()
    $CATEGORY$
       HBCT video functions
    $ONELINER$
       Changes VGA palette colors
    $SYNTAX$
-      VGAPALETTE( [<cColor|nColor>, [<nRedValue>, <nGreenValue>,
+      VGAPalette( [<cColor|nColor>, [<nRedValue>, <nGreenValue>,
                                      <nBlueValue]] ) --> lValid
    $ARGUMENTS$
       <cColor|nColor> - the color to change in CA-Cl*pper color notation or
@@ -76,13 +76,13 @@
 
 /* $DOC$
    $NAME$
-      VIDEOTYPE()
+      VideoType()
    $CATEGORY$
       HBCT video functions
    $ONELINER$
       Detects supported video adapter modes
    $SYNTAX$
-      VIDEOTYPE() --> nMask
+      VideoType() --> nMask
    $ARGUMENTS$
 
    $RETURNS$
@@ -108,15 +108,15 @@
 
 /* $DOC$
    $NAME$
-      SETFONT()
+      SetFont()
    $CATEGORY$
       HBCT video functions
    $ONELINER$
       Loads font from a string.
    $SYNTAX$
-      SETFONT( <cFontString>, [<nFontArea>], [<nOffset>], [<nCounter>] ) --> nError
+      SetFont( <cFontString>, [<nFontArea>], [<nOffset>], [<nCounter>] ) --> nError
           or:
-      SETFONT( <cFontString>, [<nFontArea>], [<lCompute>] ) --> nError
+      SetFont( <cFontString>, [<nFontArea>], [<lCompute>] ) --> nError
    $ARGUMENTS$
       <cFontString> Binary string containing a valid font definition.
       <nFontArea> Number of a font area where the font must be loaded.

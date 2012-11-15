@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      NTOC()
+      NToC()
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
 
    $SYNTAX$
-      NTOC( <xNumber>[, <nBase>][,<nLength>][,<cPadChar>] ) -> <cNumber>
+      NToC( <xNumber>[, <nBase>][,<nLength>][,<cPadChar>] ) -> <cNumber>
    $ARGUMENTS$
 
    $RETURNS$
@@ -30,19 +30,19 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      CTON()
+      CToN()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CTON()
+      CToN()
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
 
    $SYNTAX$
-      CTON( <xNumber>[, <nBase>][,<lMode>] ) -> <nNumber>
+      CToN( <xNumber>[, <nBase>][,<lMode>] ) -> <nNumber>
    $ARGUMENTS$
 
    $RETURNS$
@@ -62,19 +62,19 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      NTOC()
+      NToC()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      BITTOC()
+      BitToC()
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
 
    $SYNTAX$
-      BITTOC( <nInteger>, <cBitPattern>[,<lMode>] ) -> <cBitString>
+      BitToC( <nInteger>, <cBitPattern>[,<lMode>] ) -> <cBitString>
    $ARGUMENTS$
 
    $RETURNS$
@@ -94,19 +94,19 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      CTOBIT()
+      CToBit()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CTOBIT()
+      CToBit()
    $CATEGORY$
       CT3 number and bit manipulation functions
    $ONELINER$
 
    $SYNTAX$
-      CTOBIT( <cBitString>, <cBitPattern> ) -> <nWord>
+      CToBit( <cBitString>, <cBitPattern> ) -> <nWord>
    $ARGUMENTS$
 
    $RETURNS$
@@ -126,6 +126,6 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      BITTOC()
+      BitToC()
    $END$
  */

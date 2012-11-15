@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      AMONTHS()
+      AMonths()
    $CATEGORY$
       Date
    $ONELINER$
       Returns an array with the months names.
    $SYNTAX$
-      AMONTHS()  --> aMonths
+      AMonths()  --> aMonths
    $ARGUMENTS$
       None
    $RETURNS$
@@ -70,13 +70,13 @@
 
 /* $DOC$
    $NAME$
-      ISLEAPYEAR()
+      IsLeapYear()
    $CATEGORY$
       Date
    $ONELINER$
       Checks if the given date is a leap year.
    $SYNTAX$
-      ISLEAPYEAR( <dDate> )  --> lTrueOrFalse
+      IsLeapYear( <dDate> )  --> lTrueOrFalse
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -96,19 +96,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      DAYSINMONTH()
+      DaysInMonth()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      DAYSINMONTH()
+      DaysInMonth()
    $CATEGORY$
       Date
    $ONELINER$
       Gets the days in a month.
    $SYNTAX$
-      DAYSINMONTH( <dDate> )  --> nDays
+      DaysInMonth( <dDate> )  --> nDays
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -133,13 +133,13 @@
 
 /* $DOC$
    $NAME$
-      EOM()
+      EoM()
    $CATEGORY$
       Date
    $ONELINER$
       Gets the last day in a month.
    $SYNTAX$
-      EOM( <dDate> )  --> dEOM
+      EoM( <dDate> )  --> dEOM
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -148,8 +148,8 @@
       This function returns the last day of a given month date.
    $EXAMPLES$
       SET DATE ANSI
-      ? EOM( hb_SToD( "20000101" ) ) // -> "2000.01.31"
-      ? EOM( hb_SToD( "20000201" ) ) // -> "2000.02.29"
+      ? EoM( hb_SToD( "20000101" ) ) // -> "2000.01.31"
+      ? EoM( hb_SToD( "20000201" ) ) // -> "2000.02.29"
    $STATUS$
       R
    $COMPLIANCE$
@@ -159,19 +159,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      BOM(),WOM()
+      BoM(),WoM()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      BOM()
+      BoM()
    $CATEGORY$
       Date
    $ONELINER$
       Gets the first day in a month.
    $SYNTAX$
-      BOM( <dDate> )  --> dBOM
+      BoM( <dDate> )  --> dBOM
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -180,8 +180,8 @@
       This function returns the first day of a given month date.
    $EXAMPLES$
       SET DATE ANSI
-      ? BOM( hb_SToD( "20000125" ) ) // -> "2000.01.01"
-      ? BOM( hb_SToD( "20000224" ) ) // -> "2000.02.01"
+      ? BoM( hb_SToD( "20000125" ) ) // -> "2000.01.01"
+      ? BoM( hb_SToD( "20000224" ) ) // -> "2000.02.01"
    $STATUS$
       R
    $COMPLIANCE$
@@ -191,19 +191,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      EOM(),WOM()
+      EoM(),WoM()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      DOY()
+      DoY()
    $CATEGORY$
       Date
    $ONELINER$
       Gets the day number of the year.
    $SYNTAX$
-      DOY( <dDate> )  --> nDay
+      DoY( <dDate> )  --> nDay
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -211,8 +211,8 @@
    $DESCRIPTION$
       This function returns the day number of the year for a given date.
    $EXAMPLES$
-      ? DOY( hb_SToD( "20000131" ) ) // -> 31
-      ? DOY( hb_SToD( "20000220" ) ) // -> 51
+      ? DoY( hb_SToD( "20000131" ) ) // -> 31
+      ? DoY( hb_SToD( "20000220" ) ) // -> 51
    $STATUS$
       R
    $COMPLIANCE$
@@ -222,19 +222,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      WOY()
+      WoY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      WOY()
+      WoY()
    $CATEGORY$
       Date
    $ONELINER$
       Gets the week number of the year.
    $SYNTAX$
-      WOY( <dDate>, <lIso> )  --> nWeek
+      WoY( <dDate>, <lIso> )  --> nWeek
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -245,8 +245,8 @@
       It returns the week number in ISO format ( range 0 - 52, by default
       or passing TRUE as second parameter) or 1 - 52 if lIso is FALSE.
    $EXAMPLES$
-      ? WOY( hb_SToD( "20000131" ) ) // -> 3
-      ? WOY( hb_SToD( "20000131" ), .F. ) // -> 4
+      ? WoY( hb_SToD( "20000131" ) ) // -> 3
+      ? WoY( hb_SToD( "20000131" ), .F. ) // -> 4
    $STATUS$
       R
    $COMPLIANCE$
@@ -256,19 +256,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      DOY()
+      DoY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      EOY()
+      EoY()
    $CATEGORY$
       Date
    $ONELINER$
       Gets the last date of the year.
    $SYNTAX$
-      EOY( <dDate> )  --> dEOY
+      EoY( <dDate> )  --> dEOY
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -277,8 +277,8 @@
       This function returns the last date of a given year date.
    $EXAMPLES$
       SET DATE ANSI
-      ? EOY( hb_SToD( "20000101" ) ) // -> "2000.12.31"
-      ? EOY( hb_SToD( "20010101" ) ) // -> "2001.12.31"
+      ? EoY( hb_SToD( "20000101" ) ) // -> "2000.12.31"
+      ? EoY( hb_SToD( "20010101" ) ) // -> "2001.12.31"
    $STATUS$
       R
    $COMPLIANCE$
@@ -288,19 +288,19 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      BOY()
+      BoY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      BOY()
+      BoY()
    $CATEGORY$
       Date
    $ONELINER$
       Gets the first date of the year.
    $SYNTAX$
-      BOY( <dDate> )  --> dBOY
+      BoY( <dDate> )  --> dBOY
    $ARGUMENTS$
       <dDate>   A valid date.
    $RETURNS$
@@ -309,8 +309,8 @@
       This function returns the first date of a given year date.
    $EXAMPLES$
       SET DATE ANSI
-      ? BOY( hb_SToD( "20000125" ) ) // -> "2000.01.01"
-      ? BOY( hb_SToD( "20010224" ) ) // -> "2001.01.01"
+      ? BoY( hb_SToD( "20000125" ) ) // -> "2000.01.01"
+      ? BoY( hb_SToD( "20010224" ) ) // -> "2001.01.01"
    $STATUS$
       R
    $COMPLIANCE$
@@ -320,6 +320,6 @@
    $FILES$
       Library is libmisc
    $SEEALSO$
-      EOY()
+      EoY()
    $END$
  */

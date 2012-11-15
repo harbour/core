@@ -477,7 +477,7 @@
    $ONELINER$
       Unzip a compressed file
    $SYNTAX$
-      hb_UnzipFILE( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
+      hb_UnzipFile( <cFile>, <bBlock>, <lWithPath>, <cPassWord>, <cPath>,
                     <cFile> | <aFile>, <pFileProgress> ) --> lCompress
    $ARGUMENTS$
       <cFile>   Name of the zip file to extract

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      CHARMIRR()
+      CharMirr()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Mirror a string
    $SYNTAX$
-      CHARMIRR( <[@]cString>, [<lDontMirrorSpaces>] ) -> cMirroredString
+      CharMirr( <[@]cString>, [<lDontMirrorSpaces>] ) -> cMirroredString
    $ARGUMENTS$
       <[@]cString>            is the string that should be mirrored
       [<lDontMirrorSpaces>]   if set to .T., spaces at the end of
@@ -19,30 +19,30 @@
    $RETURNS$
       <cMirroredString>       the mirrored string
    $DESCRIPTION$
-      The CHARMIRR() function mirrors a string, i.e. the first character
+      The CharMirr() function mirrors a string, i.e. the first character
       will be put at the end, the second at the last but one position etc..
       One can use this function for index searches, but then, the spaces
       at the end of the string should not be mirrored.
-      One can omit the return value of the function by setting the CSETREF()
+      One can omit the return value of the function by setting the CSetRef()
       switch to .T., but <cString> must then be passed by reference to get
       a result.
    $EXAMPLES$
-      ? charmirr( "racecar" )        // "racecar"
-      ? charmirr( "racecar  ", .T. ) // "racecar  "
-      ? charmirr( "racecar  ", .F. ) // "  racecar"
+      ? CharMirr( "racecar" )        // "racecar"
+      ? CharMirr( "racecar  ", .T. ) // "racecar  "
+      ? CharMirr( "racecar  ", .F. ) // "  racecar"
    $TESTS$
-      charmirr( "racecar" ) == "racecar"
-      charmirr( "racecar  ", .T. ) == "racecar  "
-      charmirr( "racecar  ", .F. ) == "  racecar"
+      CharMirr( "racecar" ) == "racecar"
+      CharMirr( "racecar  ", .T. ) == "racecar  "
+      CharMirr( "racecar  ", .F. ) == "  racecar"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARMIRR() is compatible with CT3's CHARMIRR().
+      CharMirr() is compatible with CT3's CharMirr().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CSETREF()
+      CSetRef()
    $END$
  */

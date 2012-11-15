@@ -78,7 +78,7 @@
         Could affect Adir() and Dir if they were modified to take advantage
         of it - currently, they will return long names if the os supports it.
 
-      - HB_DiskSpace( <nDrive>, <nType> )
+      - hb_DiskSpace( <nDrive>, <nType> )
 
         The second parameter is a Harbour (optional) parameter and indicates the
         type of diskinfo being requested.  See en/diskspac.txt for info.

@@ -4,24 +4,24 @@
 
 /* $DOC$
    $NAME$
-      FT_HEX2DEC()
+      ft_Hex2Dec()
    $CATEGORY$
       Conversion
    $ONELINER$
       Convert a hex number to decimal
    $SYNTAX$
-      FT_HEX2DEC( <cHexNum> ) -> nDecNum
+      ft_Hex2Dec( <cHexNum> ) -> nDecNum
    $ARGUMENTS$
       <cHexNum> is a character string representing a hex number.
    $RETURNS$
       A decimal number.
    $DESCRIPTION$
       Converts a hexadecimal number to a BASE 10 decimal number.
-      Useful for using FT_INT86().
+      Useful for using ft_int86().
    $EXAMPLES$
-      FT_INT86( HEX2DEC( "21" ), aRegs )
+      ft_int86( HEX2DEC( "21" ), aRegs )
 
       // Converts 21h, the Dos Interrupt, to its decimal equivalent,
-      // 33, for use by FT_INT86().
+      // 33, for use by ft_int86().
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ORIGIN()
+      ft_Origin()
    $CATEGORY$
       Environment
    $ONELINER$
       Report the drive, path and filename of the current program
    $SYNTAX$
-      FT_ORIGIN() -> cString
+      ft_Origin() -> cString
    $ARGUMENTS$
       None
    $RETURNS$
@@ -27,7 +27,7 @@
 
       Requires DOS v3.xx and above.
    $EXAMPLES$
-      cMyFile := FT_ORIGIN()
+      cMyFile := ft_Origin()
 
       IF !( cMyFile == "C:\appdir\myfile.exe" )
          ? "Incorrect startup file.  Please remove/rename and start again"

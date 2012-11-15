@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      TOKENINIT()
+      TokenInit()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Initializes a token environment
    $SYNTAX$
-      TOKENINIT( <[@]cString>], [<cTokenizer>], [<nSkipWidth>],
+      TokenInit( <[@]cString>], [<cTokenizer>], [<nSkipWidth>],
                  [<@cTokenEnvironment>] ) -> lState
    $ARGUMENTS$
       <[@]cString>          is the processed string
@@ -30,15 +30,15 @@
    $RETURNS$
       <lState>              success of the initialization
    $DESCRIPTION$
-      The TOKENINIT() function initializes a token environment. A token
+      The TokenInit() function initializes a token environment. A token
       environment is the information about how a string is to be tokenized.
       This information is created in the process of tokenization of the
-      string <cString> - equal to the one used in the TOKEN() function
+      string <cString> - equal to the one used in the Token() function
       with the help of the <cTokenizer> and <nSkipWidth> parameters.
 
       This token environment can be very useful when large strings have
       to be tokenized since the tokenization has to take place only once
-      whereas the TOKEN() function must always start the tokenizing process
+      whereas the Token() function must always start the tokenizing process
       from scratch.
 
       Unlike CTIII, this function provides two mechanisms of storing the
@@ -49,52 +49,52 @@
 
       Additionally, a counter is stored in the token environment, so that
       the tokens can successivly be obtained. This counter is first set to 1.
-      When the TOKENINIT() function is called without a string a tokenize,
+      When the TokenInit() function is called without a string a tokenize,
       the counter of either the global environment or the environment given
       by reference in the 4th parameter is rewind to 1.
 
-      Additionally, unlike CTIII, tokeninit() does not need the string
+      Additionally, unlike CTIII, TokenInit() does not need the string
       <cString> to be passed by reference, since one must provide the
-      string in calls to TOKENNEXT() again.
+      string in calls to TokenNext() again.
    $EXAMPLES$
-      tokeninit( cString )             // tokenize the string <cString> with default
+      TokenInit( cString )             // tokenize the string <cString> with default
                                        // rules and store the token environment globally
                                        // and eventually delete an old global TE
-      tokeninit( @cString )            // no difference in result, but eventually faster,
+      TokenInit( @cString )            // no difference in result, but eventually faster,
                                        // since the string must not be copied
-      tokeninit()                      // rewind counter of global TE to 1
-      tokeninit( "1,2,3", "," , 1 )    // tokenize constant string, store in global TE
-      tokeninit( cString, , 1, @cTE1 ) // tokenize cString and store TE in
+      TokenInit()                      // rewind counter of global TE to 1
+      TokenInit( "1,2,3", "," , 1 )    // tokenize constant string, store in global TE
+      TokenInit( cString, , 1, @cTE1 ) // tokenize cString and store TE in
                                        // cTE1 only without overriding global TE
-      tokeninit( cString, , 1, cTE1 )  // tokenize cString and store TE in
+      TokenInit( cString, , 1, cTE1 )  // tokenize cString and store TE in
                                        // GLOBAL TE since 4th parameter is
                                        // not given by reference !!!
-      tokeninit( ,,, @cTE1 )           // set counter in TE stored in cTE1 to 1
+      TokenInit( ,,, @cTE1 )           // set counter in TE stored in cTE1 to 1
    $TESTS$
 
    $STATUS$
       Ready
    $COMPLIANCE$
-      TOKENINIT() is compatible with CTIII's TOKENINIT(),
+      TokenInit() is compatible with CTIII's TokenInit(),
       but there is an additional parameter featuring local token environments.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      TOKEN(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
+      Token(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SAVEToken(),RESTToken(),TokenEnd()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      TOKENNEXT()
+      TokenNext()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Successivly obtains tokens from a string
    $SYNTAX$
-      TOKENNEXT( <[@]cString>, [<nToken>],
+      TokenNext( <[@]cString>, [<nToken>],
                  [<@cTokenEnvironment>] ) -> cToken
    $ARGUMENTS$
       <[@]cString>             the processed string
@@ -103,37 +103,37 @@
    $RETURNS$
       <cToken>                 a token from <cString>
    $DESCRIPTION$
-      With TOKENNEXT(), the tokens determined with the TOKENINIT() functions
-      can be retrieved. To do this, TOKENNEXT() uses the information stored
+      With TokenNext(), the tokens determined with the TokenInit() functions
+      can be retrieved. To do this, TokenNext() uses the information stored
       in either the global token environment or the local one supplied by
       <cTokenEnvironment>. Note that, is supplied, this 3rd parameter has
       always to be passed by reference.
 
-      If the 2nd parameter, <nToken> is given, TOKENNEXT() simply returns
+      If the 2nd parameter, <nToken> is given, TokenNext() simply returns
       the <nToken>th token without manipulating the TE counter. Otherwise
       the token pointed to by the TE counter is returned and the counter
-      is incremented by one. Like this, a simple loop with TOKENEND() can
+      is incremented by one. Like this, a simple loop with TokenEnd() can
       be used to retrieve all tokens of a string successivly.
 
-      Note that <cString> does not have to be the same used in TOKENINIT(),
+      Note that <cString> does not have to be the same used in TokenInit(),
       so that one can do a "correlational tokenization", i.e. tokenize a string
-      as if it was another! E.G. using TOKENINIT() with the string
-      "AA,BBB" but calling TOKENNEXT() with "CCCEE" would
+      as if it was another! E.G. using TokenInit() with the string
+      "AA,BBB" but calling TokenNext() with "CCCEE" would
       give first "CC" and then "EE" (because "CCCEE" is not long enough).
    $EXAMPLES$
       // default behavhiour
-      tokeninit( cString ) // initialize a TE
-      DO WHILE ! tokenend()
-         ? tokennext( cString )  // get all tokens successivly
+      TokenInit( cString ) // initialize a TE
+      DO WHILE ! TokenEnd()
+         ? TokenNext( cString )  // get all tokens successivly
       ENDDO
-      ? tokennext( cString, 3 )  // get the 3rd token, counter will remain the same
-      tokenexit()                // free the memory used for the global TE
+      ? TokenNext( cString, 3 )  // get the 3rd token, counter will remain the same
+      TokenExit()                // free the memory used for the global TE
    $TESTS$
 
    $STATUS$
       Ready
    $COMPLIANCE$
-      TOKENNEXT() is compatible with CTIII's TOKENNEXT(),
+      TokenNext() is compatible with CTIII's TokenNext(),
       but there are two additional parameters featuring local token
       environments and optional access to tokens.
    $PLATFORMS$
@@ -141,143 +141,143 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TOKENINIT(),TOKENEXIT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
+      TokenInit(),TokenExit(),TokenNum(),TokenAt(),SAVEToken(),RESTToken(),TokenEnd()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      TOKENNUM()
+      TokenNum()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Get the total number of tokens in a token environment
    $SYNTAX$
-      TOKENNUM( [<@cTokenEnvironment>] ) -> nNumberofTokens
+      TokenNum( [<@cTokenEnvironment>] ) -> nNumberofTokens
    $ARGUMENTS$
       <@cTokenEnvironment>     a token environment
    $RETURNS$
       <nNumberofTokens>        number of tokens in the token environment
    $DESCRIPTION$
-      The TOKENNUM() function can be used to retrieve the total number
+      The TokenNum() function can be used to retrieve the total number
       of tokens in a token environment.
       If the parameter <@cTokenEnvironment> is supplied (must be by
       reference), the information from this token environment is used,
       otherwise the global TE is used.
    $EXAMPLES$
-      tokeninit( "a.b.c.d", ".", 1 )  // initialize global TE
-      ? tokennum()  // --> 4
+      TokenInit( "a.b.c.d", ".", 1 )  // initialize global TE
+      ? TokenNum()  // --> 4
    $TESTS$
 
    $STATUS$
       Ready
    $COMPLIANCE$
-      TOKENNUM() is a new function in Harbour's CTIII library.
+      TokenNum() is a new function in Harbour's CTIII library.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
+      TokenInit(),TokenExit(),TokenNext(),TokenAt(),SAVEToken(),RESTToken(),TokenEnd()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      TOKENEND()
+      TokenEnd()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
-      Check whether additional tokens are available with TOKENNEXT()
+      Check whether additional tokens are available with TokenNext()
    $SYNTAX$
-      TOKENEND( [<@cTokenEnvironment>] ) -> lTokenEnd
+      TokenEnd( [<@cTokenEnvironment>] ) -> lTokenEnd
    $ARGUMENTS$
       <@cTokenEnvironment>     a token environment
    $RETURNS$
       <lTokenEnd>              .T., if additional tokens are available
    $DESCRIPTION$
-      The TOKENEND() function can be used to check whether the next
-      call to TOKENNEXT() would return a new token. This can not be
-      decided with TOKENNEXT() alone, since an empty token cannot be
+      The TokenEnd() function can be used to check whether the next
+      call to TokenNext() would return a new token. This can not be
+      decided with TokenNext() alone, since an empty token cannot be
       distinguished from a "no more" tokens.
       If the parameter <@cTokenEnvironment> is supplied (must be by
       reference), the information from this token environment is used,
       otherwise the global TE is used.
-      With a combination of TOKENEND() and TOKENNEXT(), all tokens from a
+      With a combination of TokenEnd() and TokenNext(), all tokens from a
       string can be retrieved successivly (see example).
    $EXAMPLES$
-      tokeninit( "a.b.c.d", ".", 1 )  // initialize global TE
-      DO WHILE ! tokenend()
-         ? tokennext( "a.b.c.d" )     // get all tokens successivly
+      TokenInit( "a.b.c.d", ".", 1 )  // initialize global TE
+      DO WHILE ! TokenEnd()
+         ? TokenNext( "a.b.c.d" )     // get all tokens successivly
       ENDDO
    $TESTS$
 
    $STATUS$
       Ready
    $COMPLIANCE$
-      TOKENEND() is compatible with CTIII's TOKENEND(),
+      TokenEnd() is compatible with CTIII's TokenEnd(),
       but there are is an additional parameter featuring local token environments.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),RESTTOKEN()
+      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SAVEToken(),RESTToken()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      TOKENEXIT()
+      TokenExit()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Release global token environment
    $SYNTAX$
-      TOKENEXIT() -> lStaticEnvironmentReleased
+      TokenExit() -> lStaticEnvironmentReleased
    $ARGUMENTS$
 
    $RETURNS$
       <lStaticEnvironmentReleased>   .T., if global token environment is successfully released
    $DESCRIPTION$
-      The TOKENEXIT() function releases the memory associated with the
-      global token environment. One should use it for every tokeninit()
-      using the global TE. Additionally, TOKENEXIT() is implicitly called
-      from CTEXIT() to free the memory at library shutdown.
+      The TokenExit() function releases the memory associated with the
+      global token environment. One should use it for every TokenInit()
+      using the global TE. Additionally, TokenExit() is implicitly called
+      from ctexit() to free the memory at library shutdown.
    $EXAMPLES$
-      tokeninit( cString ) // initialize a TE
-      DO WHILE ! tokenend()
-         ? tokennext( cString )  // get all tokens successivly
+      TokenInit( cString ) // initialize a TE
+      DO WHILE ! TokenEnd()
+         ? TokenNext( cString )  // get all tokens successivly
       ENDDO
-      ? tokennext( cString, 3 )  // get the 3rd token, counter will remain the same
-      tokenexit()                // free the memory used for the global TE
+      ? TokenNext( cString, 3 )  // get the 3rd token, counter will remain the same
+      TokenExit()                // free the memory used for the global TE
    $TESTS$
 
    $STATUS$
       Ready
    $COMPLIANCE$
-      TOKENEXIT() is a new function in Harbour's CTIII library.
+      TokenExit() is a new function in Harbour's CTIII library.
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      TOKENINIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
+      TokenInit(),TokenNext(),TokenNum(),TokenAt(),SAVEToken(),RESTToken(),TokenEnd()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      TOKENAT()
+      TokenAt()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Get start and end positions of tokens in a token environment
    $SYNTAX$
-      TOKENAT( [<lSeparatorPositionBehindToken>], [<nToken>],
+      TokenAt( [<lSeparatorPositionBehindToken>], [<nToken>],
                [<@cTokenEnvironment>] ) -> nPosition
    $ARGUMENTS$
-      <lSeparatorPositionBehindToken>   .T., if TOKENAT() should return
+      <lSeparatorPositionBehindToken>   .T., if TokenAt() should return
                                         the position of the separator character
                                         BEHIND the token.
                                         Default: .F., return start position of a token.
@@ -286,14 +286,14 @@
    $RETURNS$
       <nPosition>
    $DESCRIPTION$
-      The TOKENAT() function is used to retrieve the start and end position
+      The TokenAt() function is used to retrieve the start and end position
       of the tokens in a token environment. Note however that the position of
       last character of a token is given by tokenat (.T.)-1 !!
 
-      If the 2nd parameter, <nToken> is given, TOKENAT() returns the
+      If the 2nd parameter, <nToken> is given, TokenAt() returns the
       positions of the <nToken>th token. Otherwise
       the token pointed to by the TE counter, i.e. the token that will
-      be retrieved by TOKENNEXT() _NEXT_ is used.
+      be retrieved by TokenNext() _NEXT_ is used.
 
       If the parameter <@cTokenEnvironment> is supplied (must be by
       reference), the information from this token environment is used,
@@ -301,17 +301,17 @@
    $EXAMPLES$
 
    $TESTS$
-      tokeninit( cString ) // initialize a TE
-      DO WHILE ! tokenend()
-         ? "From", tokenat(), "to", tokenat( .T. ) - 1
-         ? tokennext( cString )  // get all tokens successivly
+      TokenInit( cString ) // initialize a TE
+      DO WHILE ! TokenEnd()
+         ? "From", TokenAt(), "to", TokenAt( .T. ) - 1
+         ? TokenNext( cString )  // get all tokens successivly
       ENDDO
-      ? tokennext( cString, 3 )  // get the 3rd token, counter will remain the same
-      tokenexit()                // free the memory used for the global TE
+      ? TokenNext( cString, 3 )  // get the 3rd token, counter will remain the same
+      TokenExit()                // free the memory used for the global TE
    $STATUS$
       Ready
    $COMPLIANCE$
-      TOKENAT() is compatible with CTIII's TOKENAT(),
+      TokenAt() is compatible with CTIII's TokenAt(),
       but there are two additional parameters featuring local token
       environments and optional access to tokens.
    $PLATFORMS$
@@ -319,25 +319,25 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
+      TokenInit(),TokenExit(),TokenNext(),TokenNum(),SAVEToken(),RESTToken(),TokenEnd()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      SAVETOKEN()
+      SAVEToken()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Save the global token environment
    $SYNTAX$
-      SAVETOKEN() -> cStaticTokenEnvironment
+      SAVEToken() -> cStaticTokenEnvironment
    $ARGUMENTS$
 
    $RETURNS$
       <cStaticTokenEnvironment>   a binary string encoding the global TE
    $DESCRIPTION$
-      The SAVETOKEN() function can be used to store the global TE for future
+      The SAVEToken() function can be used to store the global TE for future
       use or when two or more incremental tokenizers must the nested.
       Note however that the latter can now be solved with locally stored
       token environments.
@@ -348,34 +348,34 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      SAVETOKEN() is compatible with CTIII's SAVETOKEN(),
+      SAVEToken() is compatible with CTIII's SAVEToken(),
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),RESTTOKEN(),TOKENEND()
+      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),RESTToken(),TokenEnd()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      RESTTOKEN()
+      RESTToken()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Restore global token environment
    $SYNTAX$
-      RESTTOKEN( <cStaticTokenEnvironment> ) -> cOldStaticEnvironment
+      RESTToken( <cStaticTokenEnvironment> ) -> cOldStaticEnvironment
    $ARGUMENTS$
       <cStaticTokenEnvironment>     a binary string encoding a TE
    $RETURNS$
       <cOldStaticEnvironment>       a string encoding the old global TE
    $DESCRIPTION$
-      The RESTTOKEN() function restores the global TE to the one encoded
+      The RESTToken() function restores the global TE to the one encoded
       in <cStaticTokenEnvironment>. This can either be the return value
-      of SAVETOKEN() or the value stored in the 4th parameter in a
-      TOKENINIT() call.
+      of SAVEToken() or the value stored in the 4th parameter in a
+      TokenInit() call.
    $EXAMPLES$
 
    $TESTS$
@@ -383,12 +383,12 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      RESTTOKEN() is compatible with CTIII's RESTTOKEN(),
+      RESTToken() is compatible with CTIII's RESTToken(),
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),TOKENAT(),SAVETOKEN(),TOKENEND()
+      TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SAVEToken(),TokenEnd()
    $END$
  */

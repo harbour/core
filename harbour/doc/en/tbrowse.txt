@@ -6,13 +6,13 @@
    $TEMPLATE$
       Class
    $NAME$
-      TBROWSENew()
+      TBrowseNew()
    $CATEGORY$
       TBrowse class
    $ONELINER$
       Create a Browse Object
    $CONSTRUCTOR$
-      TBROWSENew(<nTop>,<nLeft>,<nBottom>,<nRight>)   --> <oBrowse>
+      TBrowseNew(<nTop>,<nLeft>,<nBottom>,<nRight>)   --> <oBrowse>
    $ARGUMENTS$
       <nTop>    Top Row
 
@@ -26,7 +26,7 @@
    $DESCRIPTION$
       This function set up a browsing window at top-left coordinates of
       <nTop>,<nLeft> to bottom-right coordinates of <nBottom>,<nRight>.
-      To browse Database files use TBROWSEDB() function insted.
+      To browse Database files use TBrowseDB() function insted.
    $DATANOLINK$
       :aColumns       Array to hold all browse columns
 
@@ -177,13 +177,13 @@
       S
    $COMPLIANCE$
       This functions is Compatible with CA-Cl*pper 5.2. The applykey() and
-      Setkey() methods are only visible if HB_COMPAT_C53 is defined.
+      SetKey() methods are only visible if HB_COMPAT_C53 is defined.
    $PLATFORMS$
       All
    $FILES$
       Library is rtl
    $SEEALSO$
-      TBROWSENEW(),TBCOLUMNNEW()
+      TBrowseNew(),TBColumnNew()
    $END$
  */
 
@@ -233,7 +233,7 @@
       The keys handlers can be queried,added and replace an removed from
       the internal keyboard dictionary. See the example.
 
-      oTb:SETKEY( K_TAB, {| oTb, nKey | -1 } )
+      oTb:SetKey( K_TAB, {| oTb, nKey | -1 } )
 
       An default key handler can be declared by specifyin a value of 0
       for <nKey>. It associate code block will be evaluated each time
@@ -276,7 +276,7 @@
       </table>
    $DESCRIPTION$
       This method evaluate an code block associated with <nkey> that is
-      contained in the TBrowse:setkey() dictionary.
+      contained in the TBrowse:SetKey() dictionary.
    $EXAMPLES$
       DO WHILE .T.
          oTb:forceStable()

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ISSHARE()
+      ft_IsShare()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Determine if DOS "Share" is installed
    $SYNTAX$
-      FT_ISSHARE() -> nRetCode
+      ft_IsShare() -> nRetCode
    $ARGUMENTS$
       None
    $RETURNS$
@@ -23,10 +23,10 @@
       Uses DOS interrupt 2Fh (MultiPlex interrupt), service 10h
       to determine if DOS SHARE.COM is loaded.
    $EXAMPLES$
-      IF FT_ISSHARE() != 255
+      IF ft_IsShare() != 255
          ? "SHARE must be loaded!"
       ENDIF
    $SEEALSO$
-      FT_INT86()
+      ft_int86()
    $END$
  */

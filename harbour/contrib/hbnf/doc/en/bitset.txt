@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_BITSET()
+      ft_BitSet()
    $CATEGORY$
       String
    $ONELINER$
       Set selected bit in a byte
    $SYNTAX$
-      FT_BITSET( <cByte>, <nBitPos> ) -> cByte
+      ft_BitSet( <cByte>, <nBitPos> ) -> cByte
    $ARGUMENTS$
       <cByte> is a character from Chr(0) to Chr(255).
 
@@ -23,7 +23,7 @@
    $DESCRIPTION$
       In effect, ORs argument byte with a byte that has only the target bit
       set.  If bit is already set, it remains set.
-      Note: Calls FT_ISBIT() which is also in this Library.
+      Note: Calls ft_IsBit() which is also in this Library.
 
       This function is presented to illustrate that bit-wise operations
       are possible with Clipper code.  For greater speed, write .c or
@@ -31,16 +31,16 @@
    $EXAMPLES$
       // This code would set bit 4 in a byte represented by Chr( 107 ):
 
-      cNewbyte := FT_BITSET( Chr( 107 ), 4 )
+      cNewbyte := ft_BitSet( Chr( 107 ), 4 )
       ? Asc( cNewbyte )             // result: 123
       ? cNewbyte                    // result: "{"
 
 
       // This code would set bit 5 in the byte represented by the letter "A".
 
-      ? FT_BITSET( "A", 5 )         // result: "a"
+      ? ft_BitSet( "A", 5 )         // result: "a"
                                     // bit 5 set
    $SEEALSO$
-      FT_BITCLR() FT_ISBIT()
+      ft_BitClr() ft_IsBit()
    $END$
  */

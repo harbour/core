@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SETVPG()
+      ft_SetVpg()
    $CATEGORY$
       Video
    $ONELINER$
       Set the current video page
    $SYNTAX$
-      FT_SETVPG( <nPage> ) -> NIL
+      ft_SetVpg( <nPage> ) -> NIL
    $ARGUMENTS$
       <nMode> is a valid video page.
    $RETURNS$
@@ -24,21 +24,21 @@
    $EXAMPLES$
       // The following sets the current video page to 1
 
-      FT_SETVPG( 1 )
+      ft_SetVpg( 1 )
    $SEEALSO$
-      FT_GETVPG()
+      ft_GetVPg()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_GETVPG()
+      ft_GetVPg()
    $CATEGORY$
       Video
    $ONELINER$
       Get the currently selected video page
    $SYNTAX$
-      FT_GETVPG() -> <nPage>
+      ft_GetVPg() -> <nPage>
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -51,8 +51,8 @@
       Video Systems_ (Microsoft Press).
 
    $EXAMPLES$
-      nPage := FT_GETVPG()
+      nPage := ft_GetVPg()
    $SEEALSO$
-      FT_SETVPG()
+      ft_SetVpg()
    $END$
  */

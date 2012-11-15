@@ -25,7 +25,7 @@
                      Default is .F., the original behaviour of this function.
    $RETURNS$
       The edited string is returned. The return value can be suppressed by
-      using the CSETREF() function. The string must then be passed by
+      using the CSetRef() function. The string must then be passed by
       reference [@].
    $DESCRIPTION$
       ADDASCII() can be used to add or subtract integer values from
@@ -62,6 +62,6 @@
    $FILES$
       Library is libct.
    $SEEALSO$
-      CSETREF()
+      CSetRef()
    $END$
  */

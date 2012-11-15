@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ELTIME()
+      ft_ElTime()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Compute difference between times in hours, minutes, seconds.
    $SYNTAX$
-      FT_ELTIME( <cTime1>, <cTime2> ) -> cDiff
+      ft_ElTime( <cTime1>, <cTime2> ) -> cDiff
    $ARGUMENTS$
       <cTime1, cTime2>  character strings representing times in
          hh:mm:ss format.
@@ -21,9 +21,9 @@
       Return the absolute difference between two times in hh:mm:ss format
       in character hours, minutes and seconds (hh:mm:ss).
    $EXAMPLES$
-      FT_ELTIME( "22:40:12", "23:55:17" ) // 01:15:05
-      FT_ELTIME( "23:55:17", "22:40:12" ) // 01:15:05
+      ft_ElTime( "22:40:12", "23:55:17" ) // 01:15:05
+      ft_ElTime( "23:55:17", "22:40:12" ) // 01:15:05
    $SEEALSO$
-      FT_ELAPMIN() FT_MIL2MIN() FT_MIN2MIL()
+      ft_ElapMin() ft_Mil2Min() ft_Min2Mil()
    $END$
  */

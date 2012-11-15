@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_PEEK()
+      ft_Peek()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Retrieve a byte from a specified memory location.
    $SYNTAX$
-      FT_PEEK( <nSegment>, <nOffset> ) -> nValue
+      ft_Peek( <nSegment>, <nOffset> ) -> nValue
    $ARGUMENTS$
       <nSegment> is the segment of the desired memory address.
 
@@ -28,6 +28,6 @@
       This function was written for version 5.1 of MicroSoft C.  You may
       have to modify the source code to use another compiler.
    $EXAMPLES$
-      LOCAL nVMode := FT_PEEK( 0, 1097 )  // Get the current video mode
+      LOCAL nVMode := ft_Peek( 0, 1097 )  // Get the current video mode
    $END$
  */

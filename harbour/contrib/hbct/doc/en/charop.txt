@@ -4,240 +4,240 @@
 
 /* $DOC$
    $NAME$
-      CHARADD()
+      CharAdd()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Adds corresponding ASCII value of two strings
    $SYNTAX$
-      CHARADD( <[@]cString1>, <cString2> ) --> cAddString
+      CharAdd( <[@]cString1>, <cString2> ) --> cAddString
    $ARGUMENTS$
       <[@]cString1>   first string
       <cString2>      second string
    $RETURNS$
       <cAddString>    string with added ASCII values
    $DESCRIPTION$
-      The CHARADD() function constructs a new string from the two strings
+      The CharAdd() function constructs a new string from the two strings
       passed as parameters. To do this, it adds the ASCII values of the
       corresponding characters of both strings and places a character in
       the resulting string whose ASCII value equals to that sum (modulo 256).
       If the first string is passed by reference, the resulting string is
-      stored in <cString1>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
       If <cString2> is shorter than <cString1> and the last character of
       <cString2> has been processed, the function restarts with the first
       character of <cString2>.
    $EXAMPLES$
-      ? charadd( "012345678", Chr( 1 ) ) // --> "123456789"
-      ? charadd( "123456789", Chr( 255 ) ) // --> "012345678"
-      ? charadd( "0000", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "0123"
+      ? CharAdd( "012345678", Chr( 1 ) ) // --> "123456789"
+      ? CharAdd( "123456789", Chr( 255 ) ) // --> "012345678"
+      ? CharAdd( "0000", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "0123"
    $TESTS$
-      charadd( "012345678", Chr( 1 ) ) == "123456789"
-      charadd( "012345678", Chr( 1 ) + Chr( 2 ) ) == "133557799"
-      charadd( "123456789", Chr( 255 ) ) == "012345678"
-      charadd( "123456789", Chr( 255 ) + Chr( 254 ) ) == "002244668"
+      CharAdd( "012345678", Chr( 1 ) ) == "123456789"
+      CharAdd( "012345678", Chr( 1 ) + Chr( 2 ) ) == "133557799"
+      CharAdd( "123456789", Chr( 255 ) ) == "012345678"
+      CharAdd( "123456789", Chr( 255 ) + Chr( 254 ) ) == "002244668"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARADD() is compatible with CT3's CHARADD().
+      CharAdd() is compatible with CT3's CharAdd().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARSUB()   CHARAND()   CHARNOT()
-      CHAROR()    CHARXOR()   CHARSHL()
-      CHARSHR()   CHARRLL()   CHARRLR()
-      CSETREF()
+      CharSub()   CharAnd()   CharNot()
+      CharOr()    CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARAND()
+      CharAnd()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Combine corresponding ASCII value of two strings with bitwise AND
    $SYNTAX$
-      CHARAND( <[@]cString1>, <cString2> ) --> cAndString
+      CharAnd( <[@]cString1>, <cString2> ) --> cAndString
    $ARGUMENTS$
       <[@]cString1>   first string
       <cString2>      second string
    $RETURNS$
       <cAndString>    string with bitwise AND combined ASCII values
    $DESCRIPTION$
-      The CHARAND() function constructs a new string from the two strings
+      The CharAnd() function constructs a new string from the two strings
       passed as parameters. To do this, it combines the ASCII values of the
       corresponding characters of both strings with a bitwise AND-operation
       and places a character in the resulting string whose ASCII value
       equals to the result of that operation.
       If the first string is passed by reference, the resulting string is
-      stored in <cString1>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
       If <cString2> is shorter than <cString1> and the last character of
       <cString2> has been processed, the function restarts with the first
       character of <cString2>.
    $EXAMPLES$
       // clear the LSB
-      ? charand( "012345678", Chr( 254 ) ) // --> "002244668"
-      ? charand( "012345678", Chr( 254 ) + Chr( 252 ) ) // --> "002044648"
+      ? CharAnd( "012345678", Chr( 254 ) ) // --> "002244668"
+      ? CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) // --> "002044648"
    $TESTS$
-      charand( "012345678", Chr( 254 ) ) == "002244668"
-      charand( "012345678", Chr( 254 ) + Chr( 252 ) ) == "002044648"
+      CharAnd( "012345678", Chr( 254 ) ) == "002244668"
+      CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) == "002044648"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARAND() is compatible with CT3's CHARAND().
+      CharAnd() is compatible with CT3's CharAnd().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARSUB()   CHARNOT()
-      CHAROR()    CHARXOR()   CHARSHL()
-      CHARSHR()   CHARRLL()   CHARRLR()
-      CSETREF()
+      CharAdd()   CharSub()   CharNot()
+      CharOr()    CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARNOT()
+      CharNot()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Process each character in a string with bitwise NOT operation
    $SYNTAX$
-      CHARNOT( <[@]cString> ) --> cNotString
+      CharNot( <[@]cString> ) --> cNotString
    $ARGUMENTS$
       <[@]cString>    string to be processed
    $RETURNS$
       <cNotString>    string with bitwise negated characters
    $DESCRIPTION$
-      The CHARNOT() function constructs a new string from the string
+      The CharNot() function constructs a new string from the string
       passed as parameter. To do this, it performs a bitwise NOT operation
       to the characters of the string and places a character in
       the resulting string whose ASCII value equals to the result of that
       operation. It can be easily seen that the resulting ASCII-value equals
       255 minus input ASCII value.
       If the string is passed by reference, the resulting string is
-      stored in <cString>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
    $EXAMPLES$
-      ? charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) // --> Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
-      ? charnot( charnot( "This is a test!" ) ) // --> "This is a test!"
+      ? CharNot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) // --> Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
+      ? CharNot( CharNot( "This is a test!" ) ) // --> "This is a test!"
    $TESTS$
-      charnot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) == Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
-      charnot( charnot( "This is a test!" ) ) == "This is a test!"
+      CharNot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) == Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
+      CharNot( CharNot( "This is a test!" ) ) == "This is a test!"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARNOT() is compatible with CT3's CHARNOT().
+      CharNot() is compatible with CT3's CharNot().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARSUB()   CHARAND()
-      CHAROR()    CHARXOR()   CHARSHL()
-      CHARSHR()   CHARRLL()   CHARRLR()
-      CSETREF()
+      CharAdd()   CharSub()   CharAnd()
+      CharOr()    CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHAROR()
+      CharOr()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Combine corresponding ASCII value of two strings with bitwise OR
    $SYNTAX$
-      CHAROR( <[@]cString1>, <cString2> ) --> cOrString
+      CharOr( <[@]cString1>, <cString2> ) --> cOrString
    $ARGUMENTS$
       <[@]cString1>   first string
       <cString2>      second string
    $RETURNS$
       <cOrString>     string with bitwise OR combined ASCII values
    $DESCRIPTION$
-      The CHAROR() function constructs a new string from the two strings
+      The CharOr() function constructs a new string from the two strings
       passed as parameters. To do this, it combines the ASCII values of the
       corresponding characters of both strings with a bitwise OR-operation
       and places a character in the resulting string whose ASCII value
       equals to the result of that operation.
       If the first string is passed by reference, the resulting string is
-      stored in <cString1>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
       If <cString2> is shorter than <cString1> and the last character of
       <cString2> has been processed, the function restarts with the first
       character of <cString2>.
    $EXAMPLES$
       // set the LSB
-      ? charor( "012345678", Chr( 1 ) ) // --> "113355779"
-      ? charor( "012345678", Chr( 1 ) + Chr( 3 ) ) // --> "133357779"
+      ? CharOr( "012345678", Chr( 1 ) ) // --> "113355779"
+      ? CharOr( "012345678", Chr( 1 ) + Chr( 3 ) ) // --> "133357779"
    $TESTS$
-      charor( "012345678", Chr( 1 ) ) == "113355779"
-      charor( "012345678", Chr( 1 ) + Chr( 3 ) ) == "133357779"
+      CharOr( "012345678", Chr( 1 ) ) == "113355779"
+      CharOr( "012345678", Chr( 1 ) + Chr( 3 ) ) == "133357779"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHAROR() is compatible with CT3's CHAROR().
+      CharOr() is compatible with CT3's CharOr().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARSUB()   CHARNOT()
-      CHARAND()   CHARXOR()   CHARSHL()
-      CHARSHR()   CHARRLL()   CHARRLR()
-      CSETREF()
+      CharAdd()   CharSub()   CharNot()
+      CharAnd()   CharXor()   CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      CHARXOR()
+      CharXor()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Combine corresponding ASCII value of two strings with bitwise XOR
    $SYNTAX$
-      CHARXOR( <[@]cString1>, <cString2> ) --> cXOrString
+      CharXor( <[@]cString1>, <cString2> ) --> cXOrString
    $ARGUMENTS$
       <[@]cString1>   first string
       <cString2>      second string
    $RETURNS$
       <cXOrString>    string with bitwise XOR combined ASCII values
    $DESCRIPTION$
-      The CHARXOR() function constructs a new string from the two strings
+      The CharXor() function constructs a new string from the two strings
       passed as parameters. To do this, it combines the ASCII values of the
       corresponding characters of both strings with a bitwise XOR-operation
       and places a character in the resulting string whose ASCII value
       equals to the result of that operation.
       If the first string is passed by reference, the resulting string is
-      stored in <cString1>, too. By setting the CSETREF()-switch to .T.,
+      stored in <cString1>, too. By setting the CSetRef()-switch to .T.,
       the return value can be omitted.
       If <cString2> is shorter than <cString1> and the last character of
       <cString2> has been processed, the function restarts with the first
       character of <cString2>.
    $EXAMPLES$
       // easy encryption
-      ? charxor( "This is top secret !", "My Password" ) // --> <encrypted sentence>
+      ? CharXor( "This is top secret !", "My Password" ) // --> <encrypted sentence>
    $TESTS$
-      charxor( charxor( "This is top secret !", "My Password" ), "My Password" ) == "This is top secret !"
+      CharXor( CharXor( "This is top secret !", "My Password" ), "My Password" ) == "This is top secret !"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARXOR() is compatible with CT3's CHARXOR().
+      CharXor() is compatible with CT3's CharXor().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARADD()   CHARSUB()   CHARNOT()
-      CHARAND()   CHAROR()    CHARSHL()
-      CHARSHR()   CHARRLL()   CHARRLR()
-      CSETREF()
+      CharAdd()   CharSub()   CharNot()
+      CharAnd()   CharOr()    CharShl()
+      CharShr()   CharRll()   CharRlr()
+      CSetRef()
    $END$
  */

@@ -19,7 +19,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ORDBAGEXT()
+      ordBagExt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -27,7 +27,7 @@
    $ONELINER$
       Returns the Order Bag extension
    $SYNTAX$
-      ORDBAGEXT() --> cBagExt
+      ordBagExt() --> cBagExt
    $ARGUMENTS$
       None
    $RETURNS$
@@ -37,7 +37,7 @@
       the order bag. This is determined by the active RDD for the selected
       work area.
 
-      This function replaces the Indexord() function.
+      This function replaces the IndexOrd() function.
    $EXAMPLES$
       USE tests NEW VIA "DBFNTX"
       ? ordBagExt()      //  Returns .ntx
@@ -54,7 +54,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      INDEXEXT(),ORDBAGNAME()
+      IndexExt(),ordBagName()
    $END$
  */
 
@@ -62,7 +62,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ORDBAGNAME()
+      ordBagName()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -70,13 +70,13 @@
    $ONELINER$
       Returns the Order Bag Name.
    $SYNTAX$
-      ORDBAGNAME(<nOrder> | <cOrderName>) --> cOrderBagName
+      ordBagName(<nOrder> | <cOrderName>) --> cOrderBagName
    $ARGUMENTS$
       <nOrder> A numeric value representing the Order bag number.
 
       <cOrderName> The character name of the Order Bag.
    $RETURNS$
-      ORDBAGNAME() returns the Order bag name
+      ordBagName() returns the Order bag name
    $DESCRIPTION$
       This function returns the name of the order bag for the specified
       work area. If <nOrder> is specidied, it will represent the position
@@ -104,7 +104,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      INDEXORD(),ORDBAGEXT(),ALIAS()
+      IndexOrd(),ordBagExt(),Alias()
    $END$
  */
 
@@ -112,7 +112,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      ORDCONDSET()
+      ordCondSet()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -165,7 +165,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      ORDCREATE()
+      ordCreate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -173,7 +173,7 @@
    $ONELINER$
       Create an Order in an Order Bag
    $SYNTAX$
-      ORDCREATE(<cOrderBagName>,[<cOrderName>], <cExpKey>,
+      ordCreate(<cOrderBagName>,[<cOrderName>], <cExpKey>,
       [<bExpKey>], [<lUnique>])
    $ARGUMENTS$
       <cOrderBagName>  Name of the file that contains one or more Orders.
@@ -188,7 +188,7 @@
       <lUnique> Toggle the unique status of the index.
    $DESCRIPTION$
       This function creates an order for the current work area. It is
-      similar to the DBCREATEINDEX() except that this function allows
+      similar to the dbCreateIndex() except that this function allows
       different orders based on the RDD in effect. The name of the file
       <cOrderBagName> or the name of the order <cOrderName> are technically
       both considered to be "optional" except that at least one of two
@@ -230,7 +230,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBCREATEINDEX(),ORDNAME(),ORDSETFOCUS()
+      dbCreateIndex(),ordName(),ordSetFocus()
    $END$
  */
 
@@ -238,7 +238,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      ORDDESTROY()
+      ordDestroy()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -246,7 +246,7 @@
    $ONELINER$
       Remove an Order from an Order Bag
    $SYNTAX$
-      ORDDESTROY(<cOrderName> [, <cOrderBagName> ])
+      ordDestroy(<cOrderName> [, <cOrderBagName> ])
    $ARGUMENTS$
       <cOrderName> Name of the order to remove
 
@@ -256,7 +256,7 @@
       This function attempts to remove the order named <cOrderName> from the
       file containing the order bag name <cOrderBagName>. If <cOrderBagName>
       is not specified, then the name of the file will be based on the value
-      of the ORDNAME() function. If the extension is not included with the
+      of the ordName() function. If the extension is not included with the
       name of the order file, then the extension will be obtained from the
       default extension of the current and active RDD.
 
@@ -278,7 +278,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      ORDCREATE()
+      ordCreate()
    $END$
  */
 
@@ -286,7 +286,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ORDFOR()
+      ordFor()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -294,7 +294,7 @@
    $ONELINER$
       Return the FOR expression of an Order
    $SYNTAX$
-      ORDFOR(<xOrder>[, <cOrderBagName>]) --> cForExp
+      ordFor(<xOrder>[, <cOrderBagName>]) --> cForExp
 
    $ARGUMENTS$
       <xOrder>  It the name of the target order,or the numeric position
@@ -302,7 +302,7 @@
 
       <cOrderBagName> Name of the order bag.
    $RETURNS$
-      ORDFOR() returns a expression containing the FOR condition for
+      ordFor() returns a expression containing the FOR condition for
       an order.
    $DESCRIPTION$
       This function returns a character string that is the expression for
@@ -330,7 +330,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      ORDKEY(),ORDCREATE(),ORDNAME(),ORDNUMBER()
+      ordKey(),ordCreate(),ordName(),ordNumber()
    $END$
  */
 
@@ -338,7 +338,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ORDKEY()
+      ordKey()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -346,7 +346,7 @@
    $ONELINER$
       Return the key expression of an Order
    $SYNTAX$
-      ORDKEY(<cOrderName> | <nOrder> [, <cOrderBagName>]) --> cExpKey
+      ordKey(<cOrderName> | <nOrder> [, <cOrderBagName>]) --> cExpKey
    $ARGUMENTS$
       <xOrder>  It the name of the target order,or the numeric position
       of the order.
@@ -377,7 +377,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      ORDFOR(),ORDNAME(),ORDNUMBER(),ORDKEY()
+      ordFor(),ordName(),ordNumber(),ordKey()
    $END$
  */
 
@@ -385,7 +385,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      INDEXEXT()
+      IndexExt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -393,7 +393,7 @@
    $ONELINER$
       Returns the file extension of the index module used in an application
    $SYNTAX$
-      INDEXEXT() --> <cExtension>
+      IndexExt() --> <cExtension>
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -416,7 +416,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      INDEXKEY(),INDEXORD()
+      IndexKey(),IndexOrd()
    $END$
  */
 
@@ -424,7 +424,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      INDEXKEY()
+      IndexKey()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -432,7 +432,7 @@
    $ONELINER$
       Yields the key expression of a specified index file.
    $SYNTAX$
-      INDEXKEY(<nOrder>) --> <cIndexKey>
+      IndexKey(<nOrder>) --> <cIndexKey>
    $ARGUMENTS$
       <nOrder>  Index order number
    $RETURNS$
@@ -458,7 +458,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      INDEXORD()
+      IndexOrd()
    $END$
  */
 
@@ -466,7 +466,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      INDEXORD()
+      IndexOrd()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -474,13 +474,13 @@
    $ONELINER$
       Returns the numeric position of the controlling index.
    $SYNTAX$
-      INDEXORD() --> <nPosition>
+      IndexOrd() --> <nPosition>
    $ARGUMENTS$
       None.
    $RETURNS$
       <nPosition>   Ordinal position of a controling index
    $DESCRIPTION$
-      The INDEXORD() function returns the numeric position of the current
+      The IndexOrd() function returns the numeric position of the current
       controlling index in the selected or designated work area.
       A returned value of 0 indicated that no active index is controlling
       the database,which therefore is in the natural order.
@@ -498,6 +498,6 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      INDEXKEY()
+      IndexKey()
    $END$
  */

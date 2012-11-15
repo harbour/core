@@ -65,7 +65,7 @@ PROCEDURE Main()
       ? Str( Sqrt( n ), 20, 15 ) + ": " + Str( Mantissa( Sqrt( n ) ), 20, 15 ) + " " + Str( Exponent( Sqrt( n ) ), 4 )
    NEXT
 
-   // The call to str( Infinity(.T.) ), generate a GPF.
+   // The call to Str( Infinity(.T.) ), generate a GPF.
    // ?? Str( Infinity( .T. ) ) + Str( Mantissa( Infinity( .T. ) ) ) + Str( Exponent( Infinity( .T. ) ) )
    // ?? Str( Infinity( .T. ) )
 

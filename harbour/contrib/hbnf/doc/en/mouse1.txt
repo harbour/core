@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_MINIT()
+      ft_MInit()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Initialize the mouse driver, vars and return status of mouse
    $SYNTAX$
-      FT_MINIT() -> lMouseStatus
+      ft_MInit() -> lMouseStatus
    $ARGUMENTS$
       NONE
    $RETURNS$
@@ -20,25 +20,25 @@
       status. It checks to see if the mouse has been previously initialized
       and if so it does not reinitialize. The row and column limits of mouse
       movement is set to the maximum for the current video mode.
-      Use FT_MSHOWCRS() to display the mouse cursor.
+      Use ft_MShowCrs() to display the mouse cursor.
    $EXAMPLES$
-      IF ! FT_MINIT()
+      IF ! ft_MInit()
          ? "No mouse driver is installed"
       ENDIF
    $SEEALSO$
-      FT_MRESET()
+      ft_MReset()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MMICKEYS()
+      ft_MMickeys()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get mickeys
    $SYNTAX$
-      FT_MMICKEYS( @<nX>, @<nY> ) -> NIL
+      ft_MMickeys( @<nX>, @<nY> ) -> NIL
    $ARGUMENTS$
       <nX> is a variable that will receive the vertical mickey count.
 
@@ -49,7 +49,7 @@
       <nX> and <nY> must be passed by reference to receive
       the mouse position in Mickeys.
    $EXAMPLES$
-      FT_MMICKEYS( @nX, @nY )
+      ft_MMickeys( @nX, @nY )
       ? nX
       ? nY
    $END$
@@ -57,20 +57,20 @@
 
 /* $DOC$
    $NAME$
-      FT_MDBLCLK()
+      ft_MDblClk()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Return true if a double click was detected
    $SYNTAX$
-      FT_MDBLCLK( [ <nClick> [, <nButton> [, <nInterval> [, <nRow> [, <nCol>;
+      ft_MDblClk( [ <nClick> [, <nButton> [, <nInterval> [, <nRow> [, <nCol>;
                   [, <nTime> ] ] ] ] ] ] ) -> lIsDoubleClk
    $ARGUMENTS$
-      <nClick> is a numeric value.  If it is zero FT_MDBLCLK() will not
+      <nClick> is a numeric value.  If it is zero ft_MDblClk() will not
                check for the first press but rather will simply wait the
                specified period for a single press. This is useful if this
                routine is called from one which in turn responded to a button
-               press. If it is not present or not equal to 0, then FT_MDBLCLK()
+               press. If it is not present or not equal to 0, then ft_MDblClk()
                will wait for two presses of the specified button.
 
       <nButton> is the mouse button number
@@ -103,26 +103,26 @@
       of a double click.
    $EXAMPLES$
       IF FT_MISREGION( 10, 10, 11, 20 ) .AND. ;
-         FT_MDBLCLK( 0, 1,, FT_MGETX(), FT_MGETY() ) // double click, right button
+         ft_MDblClk( 0, 1,, ft_MGetX(), ft_MGetY() ) // double click, right button
                                                      // at current location with
                                                      // default interval
 
          MnuItem1()
       ENDIF
    $SEEALSO$
-      FT_MBUTPRS() FT_MBUTREL()
+      ft_MButPrs() ft_MButRel()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MCONOFF()
+      ft_MCOnOff()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Turn mouse cursur off if in specified region
    $SYNTAX$
-      FT_MCONOFF( <nTop>, <nLeft>, <nBottom>, <nRight> )
+      ft_MCOnOff( <nTop>, <nLeft>, <nBottom>, <nRight> )
    $ARGUMENTS$
       <nTop>, <nLeft> <nBottom> <nRight> are the four corners of the
             screen region in row and column coordinates.
@@ -136,21 +136,21 @@
 
       See FT_MSHOWCRS for a discussion of the cursor display flag.
    $EXAMPLES$
-      FT_MCONOFF( 10, 10, 11, 20 )
+      ft_MCOnOff( 10, 10, 11, 20 )
    $SEEALSO$
-      FT_MSHOWCRS() FT_MHIDECRS() FT_MXLIMIT() FT_MYLIMIT() FT_MINREGION()
+      ft_MShowCrs() ft_MHideCrs() ft_MXLimit() ft_MYLimit() ft_MInRegion()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MINREGION()
+      ft_MInRegion()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Test if the mouse cursor is in the passed region
    $SYNTAX$
-      FT_MINREGION( <nT>, <nL>, <nB>, <nR> ) -> lInRegion
+      ft_MInRegion( <nT>, <nL>, <nB>, <nR> ) -> lInRegion
    $ARGUMENTS$
       <nT>, <nL> <nB> <nR> are the four corners of the screen region.
    $RETURNS$
@@ -159,23 +159,23 @@
       This function will check to see if the mouse cursor is
       within the confines of the specified region.
    $EXAMPLES$
-      IF FT_MINREGION( 10, 10, 11, 20 )
+      IF ft_MInRegion( 10, 10, 11, 20 )
          nChoice := 1
       ENDIF
    $SEEALSO$
-      FT_MXLIMIT() FT_MYLIMIT() FT_MINREGION()
+      ft_MXLimit() ft_MYLimit() ft_MInRegion()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MSETSENS()
+      ft_MSetSens()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Set the mouse sensitivity parameters
    $SYNTAX$
-      FT_MSETSENS( <nHoriz>, <nVert>, <nDouble> ) -> NIL
+      ft_MSetSens( <nHoriz>, <nVert>, <nDouble> ) -> NIL
    $ARGUMENTS$
       <nHoriz>  is the sensitivity of the mouse on the horizontal axis. This
                 value is the integer percentage of highest sensitivity and
@@ -223,21 +223,21 @@
 
 
    $EXAMPLES$
-      FT_MSETSENS( 75, 75, 50 )     // a little less mouse movement necessary.
+      ft_MSetSens( 75, 75, 50 )     // a little less mouse movement necessary.
    $SEEALSO$
-      FT_MGETSENS()
+      ft_MGetSens()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MGETSENS()
+      ft_MGetSens()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get the mouse sensitivity parameters
    $SYNTAX$
-      FT_MGETSENS( <@nHoriz>, <@nVert>, <@nDouble> ) -> NIL
+      ft_MGetSens( <@nHoriz>, <@nVert>, <@nDouble> ) -> NIL
    $ARGUMENTS$
       <nHoriz>  is the percentage of maximum horizontal sensitivity. PASSED
                 BY REFERENCE.
@@ -252,23 +252,23 @@
       sensitivity parameters. The first two arguments control the amount of
       movement necessary to move the cursor a given amount. The third argument
       determines the threshold above which the mouse moves at twice the normal
-      speed. For further discussion of these values see FT_MSETSENS()
+      speed. For further discussion of these values see ft_MSetSens()
    $EXAMPLES$
-      FT_MGETSENS( @nHoriz, @nVert, @nDouble )
+      ft_MGetSens( @nHoriz, @nVert, @nDouble )
    $SEEALSO$
-      FT_MSETSENS()
+      ft_MSetSens()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MVERSION()
+      ft_MVersion()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get the mouse driver version
    $SYNTAX$
-      FT_MVERSION( <@nMinor>, <@nType>, <@nIRQ>  ) -> <nMajor>
+      ft_MVersion( <@nMinor>, <@nType>, <@nIRQ>  ) -> <nMajor>
    $ARGUMENTS$
       <nMinor>  is the Minor version number. PASSED BY REFERENCE.
       <nType>   is the Mouse type. PASSED BY REFERENCE.
@@ -293,49 +293,49 @@
       my screen showed 6.24 but this routine returned 30 for the minor version
       number!
    $EXAMPLES$
-      nMajor := FT_MVERSION( @nMinor )
+      nMajor := ft_MVersion( @nMinor )
       IF ( nMajor + nMinor / 100 ) < 7.2
          ? "Sorry mouse driver version too old"
          RETURN
       ENDIF
    $SEEALSO$
-      FT_MSETSENS()
+      ft_MSetSens()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MSETPAGE()
+      ft_MSetPage()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Set the display page for the mouse pointer
    $SYNTAX$
-      FT_MSETPAGE( <@nPage> ) -> NIL
+      ft_MSetPage( <@nPage> ) -> NIL
    $ARGUMENTS$
       <nPage> is the desired display page.
    $RETURNS$
       NIL
    $DESCRIPTION$
       This function sets the display page for the mouse cursor. The valid
-      values of nPage is dependent upon the display mode. See FT_SETVPG()
+      values of nPage is dependent upon the display mode. See ft_SetVpg()
       for changing the current video page
    $EXAMPLES$
-      FT_MSETPAGE( 1 )  // Sets the mouse cursor to page 1
+      ft_MSetPage( 1 )  // Sets the mouse cursor to page 1
    $SEEALSO$
-      FT_MGETPAGE()
+      ft_MGetPage()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MGETPAGE()
+      ft_MGetPage()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get the display page for the mouse pointer
    $SYNTAX$
-      FT_MGETPAGE() -> <nPage>
+      ft_MGetPage() -> <nPage>
    $ARGUMENTS$
       None
    $RETURNS$
@@ -343,56 +343,56 @@
            displayed
    $DESCRIPTION$
       This function gets the display page for the mouse cursor. The valid
-      values of nPage is dependent upon the display mode. See FT_SETVPG()
+      values of nPage is dependent upon the display mode. See ft_SetVpg()
       for changing the current video page
    $EXAMPLES$
-      nPage := FT_MGETPAGE( )  // Gets the mouse cursor display page
+      nPage := ft_MGetPage( )  // Gets the mouse cursor display page
    $SEEALSO$
-      FT_MSETPAGE()
+      ft_MSetPage()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MRESET()
+      ft_MReset()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Reset mouse driver and return status of mouse
    $SYNTAX$
-      FT_MRESET() -> nMouseStatus
+      ft_MReset() -> nMouseStatus
    $ARGUMENTS$
       NONE
    $RETURNS$
       An integer representing the mouse status (0 == mouse not installed)
    $DESCRIPTION$
-      Resets the mouse driver and returns mouse status. Use FT_MSHOWCRS()
+      Resets the mouse driver and returns mouse status. Use ft_MShowCrs()
       to display the mouse cursor. The mouse is set to allow it to cover the
-      complete screen (as defined by MAXCOL() and MAXROW()). This is necessary
+      complete screen (as defined by MaxCol() and MaxRow()). This is necessary
       because at least some versions of the mouse drivers do not operate
       according to the documentation when confronted with a 43 or 50 line
       screen.
 
-      Normally, FT_MINIT() should be used to initialize the mouse since it
+      Normally, ft_MInit() should be used to initialize the mouse since it
       will not reinitialize if already done.
    $EXAMPLES$
-      IF Empty( FT_MRESET() )
+      IF Empty( ft_MReset() )
          ? "No mouse driver is installed"
       ENDIF
    $SEEALSO$
-      FT_MINIT() FT_MSHOWCRS()
+      ft_MInit() ft_MShowCrs()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MCURSOR()
+      ft_MCursor()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Set the mouse cursor
    $SYNTAX$
-      FT_MCURSOR( [ <lState> ] ) -> lCursorState
+      ft_MCursor( [ <lState> ] ) -> lCursorState
    $ARGUMENTS$
       <lState> is a logical indicating whether to set the mouse cursor on.
                .T. - set mouse cursor on
@@ -402,23 +402,23 @@
       A logical indicating the previous mouse cursor state.
    $DESCRIPTION$
       This function works like most Clipper state functions.  If no value
-      is sent to FT_MCURSOR() it will return the state of the mouse cursor.
+      is sent to ft_MCursor() it will return the state of the mouse cursor.
    $EXAMPLES$
-      IF ! FT_MCURSOR()
-         FT_MCURSOR( .T. )
+      IF ! ft_MCursor()
+         ft_MCursor( .T. )
       ENDIF
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MSHOWCRS()
+      ft_MShowCrs()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Increment internal cursor flag and display mouse cursor
    $SYNTAX$
-      FT_MSHOWCRS() -> NIL
+      ft_MShowCrs() -> NIL
    $ARGUMENTS$
       NONE
    $RETURNS$
@@ -429,30 +429,30 @@
       under it, so if you draw over the mouse cursor it will create a "hole"
       in your screen when you move the mouse cursor.
 
-      Note: A call to FT_MHIDECRS() decrements a mouse driver variable
+      Note: A call to ft_MHideCrs() decrements a mouse driver variable
       which indicates whether the cursor is shown. The cursor is visible
-      only when the variable = 0. Thus multiple calls to FT_MHIDECRS()
-      require an equal number of calls to FT_MSHOWCRS() before the cursor
-      will again be visible. Once the variable is 0 calls to FT_MSHOWCRS()
+      only when the variable = 0. Thus multiple calls to ft_MHideCrs()
+      require an equal number of calls to ft_MShowCrs() before the cursor
+      will again be visible. Once the variable is 0 calls to ft_MShowCrs()
       does not increment the variable above 0.
    $EXAMPLES$
-      IF Empty( FT_MRESET() )
-         FT_MSHOWCRS()
+      IF Empty( ft_MReset() )
+         ft_MShowCrs()
       ENDIF
    $SEEALSO$
-      FT_MHIDECRS() FT_MCONOFF()
+      ft_MHideCrs() ft_MCOnOff()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MHIDECRS()
+      ft_MHideCrs()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Decrement internal mouse cursor flag and hide mouse cursor
    $SYNTAX$
-      FT_MHIDECRS() -> NIL
+      ft_MHideCrs() -> NIL
    $ARGUMENTS$
       NONE
    $RETURNS$
@@ -463,30 +463,30 @@
       under it, so if you draw over the mouse cursor it will create a
       "hole" in your screen when you move the mouse cursor.
 
-      Note: A call to FT_MHIDECRS() decrements a mouse driver variable
+      Note: A call to ft_MHideCrs() decrements a mouse driver variable
       which indicates whether the cursor is shown. The cursor is visible
-      only when the variable = 0. Thus multiple calls to FT_MHIDECRS()
-      require an equal number of calls to FT_MSHOWCRS() before the cursor
-      will again be visible. Once the variable is 0 calls to FT_MSHOWCRS()
+      only when the variable = 0. Thus multiple calls to ft_MHideCrs()
+      require an equal number of calls to ft_MShowCrs() before the cursor
+      will again be visible. Once the variable is 0 calls to ft_MShowCrs()
       does not increment the varaible above 0.
    $EXAMPLES$
-      FT_MHIDECRS()
+      ft_MHideCrs()
       @ 10, 10 TO 20, 20
-      FT_MSHOWCRS()
+      ft_MShowCrs()
    $SEEALSO$
-      FT_MSHOWCRS() FT_MCONOFF()
+      ft_MShowCrs() ft_MCOnOff()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MGETPOS()
+      ft_MGetPos()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get mouse cursor position and button status
    $SYNTAX$
-      FT_MGETPOS( @<nX>, @<nY> ) -> nButtonStatus
+      ft_MGetPos( @<nX>, @<nY> ) -> nButtonStatus
    $ARGUMENTS$
       <nX> is a variable that will receive the mouse X position in virtual
       screen coordinates.  It must be passed by reference.
@@ -513,24 +513,24 @@
       experience with drivers prior to that version
    $EXAMPLES$
       LOCAL nX, nY
-      LOCAL nButton := FT_MGETPOS( @nX, @nY )
+      LOCAL nButton := ft_MGetPos( @nX, @nY )
       ? "Mouse Row    :", nX
       ? "Mouse Column :", nY
       ? "Button Status:", nButton
    $SEEALSO$
-      FT_MGETCOORD() FT_MSETPOS() FT_MDEFCRS() FT_MGETX() FT_MGETY()
+      ft_MGetCoord() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MGETX()
+      ft_MGetX()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get mouse cursor row position
    $SYNTAX$
-      FT_MGETX() -> nRowPos
+      ft_MGetX() -> nRowPos
    $ARGUMENTS$
       NONE
    $RETURNS$
@@ -541,21 +541,21 @@
       values returned are multiples of 8 when in text mode and with at least
       Microsoft drivers 6 and above.
    $EXAMPLES$
-      ? FT_MGETX()
+      ? ft_MGetX()
    $SEEALSO$
-      FT_MGETCOORD() FT_MDEFCRS() FT_MGETPOS() FT_MGETY()
+      ft_MGetCoord() ft_MDefCrs() ft_MGetPos() ft_MGetY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MGETY()
+      ft_MGetY()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get mouse cursor column position
    $SYNTAX$
-      FT_MGETY() -> nColPos
+      ft_MGetY() -> nColPos
    $ARGUMENTS$
       NONE
    $RETURNS$
@@ -565,21 +565,21 @@
       values returned are multiples of 8 when in text mode and with at least
       Microsoft drivers 6 and above.
    $EXAMPLES$
-      ? FT_MGETY()
+      ? ft_MGetY()
    $SEEALSO$
-      FT_MGETCOORD() FT_MDEFCRS() FT_MGETPOS() FT_MGETX()
+      ft_MGetCoord() ft_MDefCrs() ft_MGetPos() ft_MGetX()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MSETPOS()
+      ft_MSetPos()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Position the mouse cursor using virtual screen coordinates
    $SYNTAX$
-      FT_MSETPOS( <nX>, <nY> ) -> NIL
+      ft_MSetPos( <nX>, <nY> ) -> NIL
    $ARGUMENTS$
       <nX> is the desired mouse row.
 
@@ -591,22 +591,22 @@
       mode has eight virtual coordinates per character cell. Thus x=16 means
       that you are in the Row 2.
    $EXAMPLES$
-      FT_MSETPOS( 10, 20 )     // position mouse cursor at row 10, col 20
+      ft_MSetPos( 10, 20 )     // position mouse cursor at row 10, col 20
                                // in virtual screen coordinates
    $SEEALSO$
-      FT_MGETPOS() FT_MGETCOORD() FT_MSETCOORD() FT_MGETX() FT_MGETY()
+      ft_MGetPos() ft_MGetCoord() ft_MSetCoord() ft_MGetX() ft_MGetY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MSETCOORD()
+      ft_MSetCoord()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Position the mouse cursor using text screen coordinates
    $SYNTAX$
-      FT_MSETPOS( <nX>, <nY> ) -> NIL
+      ft_MSetPos( <nX>, <nY> ) -> NIL
    $ARGUMENTS$
       <nX> is the desired mouse row.
 
@@ -617,22 +617,22 @@
       Positions mouse cursor on screen using text (normal row and column)
       coordinates.
    $EXAMPLES$
-      FT_MSETCOORD( 10, 20 )     // position mouse cursor at row 10, col 20
+      ft_MSetCoord( 10, 20 )     // position mouse cursor at row 10, col 20
                                  // in text screen coordinates
    $SEEALSO$
-      FT_MGETPOS() FT_MGETCOORD() FT_MSETPOS() FT_MDEFCRS() FT_MGETX() FT_MGETY()
+      ft_MGetPos() ft_MGetCoord() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MXLIMIT()
+      ft_MXLimit()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Set vertical bounds of mouse using virtual screen coord.
    $SYNTAX$
-      FT_MXLIMIT( <nX1>, <nX2> ) -> NIL
+      ft_MXLimit( <nX1>, <nX2> ) -> NIL
    $ARGUMENTS$
       <nX1> is the top row limit.
 
@@ -642,21 +642,21 @@
    $DESCRIPTION$
       Set maximum vertical bounds of mouse using virtual screen coordinates.
    $EXAMPLES$
-      FT_MXLIMIT( 10, 20 )
+      ft_MXLimit( 10, 20 )
    $SEEALSO$
-      FT_MYLIMIT() FT_MINREGION()
+      ft_MYLimit() ft_MInRegion()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MYLIMIT()
+      ft_MYLimit()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Set horiz. bounds of mouse using virtual screen coordinates
    $SYNTAX$
-      FT_MYLIMIT( <nY1>, <nY2> ) -> NIL
+      ft_MYLimit( <nY1>, <nY2> ) -> NIL
    $ARGUMENTS$
       <nY1> is the left column limit.
 
@@ -666,21 +666,21 @@
    $DESCRIPTION$
       Set maximum horizontal bounds of mouse using virtual screen coordinates.
    $EXAMPLES$
-      FT_MYLIMIT( 10, 20 )
+      ft_MYLimit( 10, 20 )
    $SEEALSO$
-      FT_MXLIMIT() FT_MINREGION()
+      ft_MXLimit() ft_MInRegion()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MBUTPRS()
+      ft_MButPrs()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Retrieve button press status
    $SYNTAX$
-      FT_MBUTPRS( <nButton> [, @nButPrs [, @nX [, @nY] ] ] ) -> nButStatus
+      ft_MButPrs( <nButton> [, @nButPrs [, @nX [, @nY] ] ] ) -> nButStatus
    $ARGUMENTS$
       <nButton> is the mouse button number:
 
@@ -710,23 +710,23 @@
       Retrieves the mouse button status and the position of the cursor when
       a button was last pressed.
    $EXAMPLES$
-      IF Empty( FT_MBUTPRS( 1 ) )
+      IF Empty( ft_MButPrs( 1 ) )
          ? "No Item selected"
       ENDIF
    $SEEALSO$
-      FT_MBUTREL() FT_MDBLCLK()
+      ft_MButRel() ft_MDblClk()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MBUTREL()
+      ft_MButRel()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get mouse button release information
    $SYNTAX$
-      FT_MBUTREL( nButton [, @nButRel [, @nX [, @nY] ] ]) -> nBStat
+      ft_MButRel( nButton [, @nButRel [, @nX [, @nY] ] ]) -> nBStat
    $ARGUMENTS$
       <nButton> is the mouse button number
                 0 - Left   Button
@@ -751,23 +751,23 @@
       This function returns the release status of the mouse buttons and the
       coordinates of the last release.
    $EXAMPLES$
-      IF FT_MBUTREL( 0 ) == 1
+      IF ft_MButRel( 0 ) == 1
          ? "Left button released"
       ENDIF
    $SEEALSO$
-      FT_MBUTPRS() FT_MDBLCLK()
+      ft_MButPrs() ft_MDblClk()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MDEFCRS()
+      ft_MDefCrs()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Define the mouse cursor
    $SYNTAX$
-      FT_MDEFCRS( <nCrsType>, <nScrMask>, <nCrsMask> ) -> NIL
+      ft_MDefCrs( <nCrsType>, <nScrMask>, <nCrsMask> ) -> NIL
    $ARGUMENTS$
       <nCrsType> is the cursor type. A value of 0 indicates the software cursor
                  (the default) and a value of 1 indicates the hardware cursor.
@@ -819,13 +819,13 @@
 
 /* $DOC$
    $NAME$
-      FT_MGETCOORD()
+      ft_MGetCoord()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Get mouse cursor position (text coord.) and button status
    $SYNTAX$
-      FT_MGETPOS( @<nX>, @<nY> ) -> nButtonStatus
+      ft_MGetPos( @<nX>, @<nY> ) -> nButtonStatus
    $ARGUMENTS$
       <nX> is a variable that will receive the mouse X position in text
       screen coordinates.  It must be passed by reference.
@@ -848,11 +848,11 @@
       returns the button status.
    $EXAMPLES$
       LOCAL nX, nY
-      LOCAL nButton := FT_MGETCOORD( @nX, @nY )
+      LOCAL nButton := ft_MGetCoord( @nX, @nY )
       ? "Mouse Row    :", nX
       ? "Mouse Column :", nY
       ? "Button Status:", nButton
    $SEEALSO$
-      FT_MGETPOS() FT_MSETPOS() FT_MDEFCRS() FT_MGETX() FT_MGETY()
+      ft_MGetPos() ft_MSetPos() ft_MDefCrs() ft_MGetX() ft_MGetY()
    $END$
  */

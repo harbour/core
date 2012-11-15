@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_INP()
+      ft_inp()
    $CATEGORY$
       DOS/BIOS
    $ONELINER$
       Retrieve a byte from a specified I/O port
    $SYNTAX$
-      FT_INP( <nPort> ) -> nValue
+      ft_inp( <nPort> ) -> nValue
    $ARGUMENTS$
       <nPort> is the port from which to retrieve the byte.  If it is
       invalid in any way, the function will return zero.
@@ -25,8 +25,8 @@
       SEGMENT directives, and also the ENDP and ENDS directives (a very
       minor task).
    $EXAMPLES$
-      byte := FT_INP( 100 )   // read a byte from port 100 (064h)
+      byte := ft_inp( 100 )   // read a byte from port 100 (064h)
    $SEEALSO$
-      FT_OUTP()
+      ft_outp()
    $END$
  */

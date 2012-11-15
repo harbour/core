@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_ACCTYEAR()
+      ft_AcctYear()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Return accounting year data
    $SYNTAX$
-      FT_ACCTYEAR( [ <dGivenDate> ] ) -> aDateInfo
+      ft_AcctYear( [ <dGivenDate> ] ) -> aDateInfo
    $ARGUMENTS$
       <dGivenDate> is any valid date in any date format.  Defaults
       to current system date if not supplied.
@@ -21,7 +21,7 @@
          aDateInfo[ 2 ] - The beginning date of the accounting year
          aDateInfo[ 3 ] - The ending date of the accounting year
    $DESCRIPTION$
-      FT_ACCTYEAR() creates an array containing data about the
+      ft_AcctYear() creates an array containing data about the
       accounting year containing the given date.
 
       An accounting period has the following characteristics:
@@ -38,11 +38,11 @@
       weeks.
    $EXAMPLES$
       // get info about accounting year containing 9/15/90
-      aDateInfo := FT_ACCTYEAR( SToD( "19900915" ) )
+      aDateInfo := ft_AcctYear( SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  1990
       ? aDateInfo[ 2 ]   //  12/31/89    beginning of year
       ? aDateInfo[ 3 ]   //  12/29/90    end of year
    $SEEALSO$
-      FT_DATECNFG() FT_ACCTWEEK() FT_ACCTMONTH() FT_ACCTQTR()
+      ft_DateCnfg() ft_AcctWeek() ft_AcctMonth() ft_AcctQtr()
    $END$
  */

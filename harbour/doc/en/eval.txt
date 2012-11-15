@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: EVAL()
+ *    Documentation for: Eval()
  *
  * See COPYING for licensing terms.
  *
@@ -17,7 +17,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      EVAL()
+      Eval()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -25,7 +25,7 @@
    $ONELINER$
       Evaluate a code block
    $SYNTAX$
-      EVAL( <bBlock> [, <xVal> [,...]])  --> xExpression
+      Eval( <bBlock> [, <xVal> [,...]])  --> xExpression
    $ARGUMENTS$
       <bBlock>   Code block expression to be evaluated
 
@@ -63,6 +63,6 @@
    $FILES$
       Library is vm
    $SEEALSO$
-      AEVAL(),DBEVAL()
+      AEval(),dbEval()
    $END$
  */

@@ -10,11 +10,11 @@
  *    Documentation for: Descend()
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: ISALPHA(), ISDIGIT(), ISUPPER(), ISLOWER(), LTRIM(),
- *                       AT(), HB_AT(),RAT(), HB_RAT(), LEFT(), RIGHT(),
- *                       SUBSTR(), UPPER(), LOWER(), ASC(), CHR(), PADC(),
- *                       PADL(), PADR(), ALLTRIM(), TRIM(), RTRIM(), SPACE(),
- *                       REPLICATE(), VAL(), TRANSFORM(), STRTRAN()
+ *    Documentation for: IsAlpha(), IsDigit(), IsUpper(), IsLower(), LTrim(),
+ *                       At(), hb_At(),RAt(), hb_RAt(), Left(), Right(),
+ *                       SubStr(), Upper(), LOWER(), Asc(), Chr(), PadC(),
+ *                       PadL(), PadR(), AllTrim(), Trim(), RTrim(), SPACE(),
+ *                       Replicate(), Val(), Transform(), StrTran()
  *
  * See COPYING for licensing terms.
  *
@@ -24,7 +24,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ISALPHA()
+      IsAlpha()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -32,7 +32,7 @@
    $ONELINER$
       Checks if leftmost character in a string is an alphabetic character
    $SYNTAX$
-      ISALPHA( <cString> ) --> lAlpha
+      IsAlpha( <cString> ) --> lAlpha
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
@@ -53,7 +53,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ISDIGIT(),ISLOWER(),ISUPPER(),LOWER(),UPPER()
+      IsDigit(),IsLower(),IsUpper(),LOWER(),Upper()
    $END$
  */
 
@@ -61,7 +61,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ISDIGIT()
+      IsDigit()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -69,7 +69,7 @@
    $ONELINER$
       Checks if leftmost character is a digit character
    $SYNTAX$
-      ISDIGIT( <cString> ) --> lDigit
+      IsDigit( <cString> ) --> lDigit
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
@@ -91,7 +91,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ISALPHA(),ISLOWER(),ISUPPER(),LOWER(),UPPER()
+      IsAlpha(),IsLower(),IsUpper(),LOWER(),Upper()
    $END$
  */
 
@@ -99,7 +99,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ISUPPER()
+      IsUpper()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -107,7 +107,7 @@
    $ONELINER$
       Checks if leftmost character is an uppercased letter.
    $SYNTAX$
-      ISUPPER( <cString> ) --> lUpper
+      IsUpper( <cString> ) --> lUpper
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
@@ -129,7 +129,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ISALPHA(),ISLOWER(),ISDIGIT(),LOWER(),UPPER()
+      IsAlpha(),IsLower(),IsDigit(),LOWER(),Upper()
    $END$
  */
 
@@ -137,7 +137,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ISLOWER()
+      IsLower()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -145,7 +145,7 @@
    $ONELINER$
       Checks if leftmost character is an lowercased letter.
    $SYNTAX$
-      ISLOWER( <cString> ) --> lLower
+      IsLower( <cString> ) --> lLower
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
@@ -167,7 +167,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ISALPHA(),ISDIGIT(),ISUPPER(),LOWER(),UPPER()
+      IsAlpha(),IsDigit(),IsUpper(),LOWER(),Upper()
    $END$
  */
 
@@ -175,7 +175,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      LTRIM()
+      LTrim()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -183,11 +183,11 @@
    $ONELINER$
       Removes leading spaces from a string
    $SYNTAX$
-      LTRIM( <cString> ) --> cReturn
+      LTrim( <cString> ) --> cReturn
    $ARGUMENTS$
       <cString>  Character expression with leading spaces
    $RETURNS$
-      LTRIM() returns a copy of the original string with leading spaces
+      LTrim() returns a copy of the original string with leading spaces
       removed.
    $DESCRIPTION$
       This function trims the leading space blank
@@ -202,7 +202,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      TRIM(),RTRIM(),ALLTRIM()
+      Trim(),RTrim(),AllTrim()
    $END$
  */
 
@@ -210,7 +210,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      AT()
+      At()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -218,13 +218,13 @@
    $ONELINER$
       Locates the position of a substring in a main string.
    $SYNTAX$
-      AT( <cSearch>, <cString> ) --> nPos
+      At( <cSearch>, <cString> ) --> nPos
    $ARGUMENTS$
       <cSearch> Substring to search for
 
       <cString> Main string
    $RETURNS$
-      AT() return the starting position of the first occurrence of the
+      At() return the starting position of the first occurrence of the
       substring in the main string
    $DESCRIPTION$
       This function searches the string <cString> for the characters in
@@ -242,7 +242,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      RAT()
+      RAt()
    $END$
  */
 
@@ -250,7 +250,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_AT()
+      hb_At()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -258,7 +258,7 @@
    $ONELINER$
       Locates the position of a substring in a main string.
    $SYNTAX$
-      HB_AT( <cSearch>, <cString>, [<nStart>], [<nEnd>] ) --> nPos
+      hb_At( <cSearch>, <cString>, [<nStart>], [<nEnd>] ) --> nPos
    $ARGUMENTS$
       <cSearch> Substring to search for
 
@@ -268,7 +268,7 @@
 
       <nEnd> End position to search, by default cString length
    $RETURNS$
-      HB_AT() return the starting position of the first occurrence of the
+      hb_At() return the starting position of the first occurrence of the
       substring in the main string
    $DESCRIPTION$
       This function searches the string <cString> for the characters in
@@ -292,7 +292,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      HB_RAT()
+      hb_RAt()
    $END$
  */
 
@@ -300,7 +300,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      RAT()
+      RAt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -308,13 +308,13 @@
    $ONELINER$
       Searches for a substring from the right side of a string.
    $SYNTAX$
-      RAT( <cSearch>, <cString> ) --> nPos
+      RAt( <cSearch>, <cString> ) --> nPos
    $ARGUMENTS$
       <cSearch> Substring to search for
 
       <cString> Main string
    $RETURNS$
-      RAT() return the location of beginning position.
+      RAt() return the location of beginning position.
    $DESCRIPTION$
       This function searches through <cString> for the first existence
       of <cSearch>. The search operation is performed from the right side
@@ -332,7 +332,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      AT(), SUBSTR(), RIGHT()
+      At(), SubStr(), Right()
    $END$
  */
 
@@ -340,7 +340,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_RAT()
+      hb_RAt()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -348,7 +348,7 @@
    $ONELINER$
       Searches for a substring from the right side of a string.
    $SYNTAX$
-      HB_RAT( <cSearch>, <cString>, [<nStart>], [<nEnd>]  ) --> nPos
+      hb_RAt( <cSearch>, <cString>, [<nStart>], [<nEnd>]  ) --> nPos
    $ARGUMENTS$
       <cSearch> Substring to search for
 
@@ -358,7 +358,7 @@
 
       <nEnd> End position to search, by default 1
    $RETURNS$
-      HB_RAT() return the location of beginning position.
+      hb_RAt() return the location of beginning position.
    $DESCRIPTION$
       This function searches through <cString> for the first existence
       of <cSearch>. The search operation is performed from the right side
@@ -378,7 +378,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      HB_AT(), SUBSTR(), RIGHT()
+      hb_At(), SubStr(), Right()
    $END$
  */
 
@@ -386,7 +386,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      LEFT()
+      Left()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -394,7 +394,7 @@
    $ONELINER$
       Extract the leftmost substring of a character expression
    $SYNTAX$
-      LEFT( <cString>, <nLen> ) --> cReturn
+      Left( <cString>, <nLen> ) --> cReturn
    $ARGUMENTS$
       <cString> Main character to be parsed
 
@@ -405,7 +405,7 @@
       This functions returns the leftmost <nLen> characters of <cString>.
       It is equivalent to the following expression:
 
-      SUBSTR( <cString>, 1, <nLen> )
+      SubStr( <cString>, 1, <nLen> )
    $EXAMPLES$
       ? Left( "HELLO HARBOUR", 5 )    // HELLO
    $STATUS$
@@ -417,7 +417,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SUBSTR(),RIGHT(),AT(),RAT()
+      SubStr(),Right(),At(),RAt()
    $END$
  */
 
@@ -425,7 +425,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      RIGHT()
+      Right()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -433,7 +433,7 @@
    $ONELINER$
       Extract the rightmost substring of a character expression
    $SYNTAX$
-      RIGHT( <cString>, <nLen> ) --> cReturn
+      Right( <cString>, <nLen> ) --> cReturn
    $ARGUMENTS$
       <cString> Character expression to be parsed
 
@@ -444,9 +444,9 @@
       This functions returns the rightmost <nLen> characters of <cString>.
       It is equivalent to the following expressions:
 
-      SUBSTR( <cString>,  - <nLen> )
+      SubStr( <cString>,  - <nLen> )
 
-      SUBSTR( <cString>, LEN( <cString> ) - <nLen> + 1, <nLen> )
+      SubStr( <cString>, Len( <cString> ) - <nLen> + 1, <nLen> )
    $EXAMPLES$
       ? Right( "HELLO HARBOUR", 5 )     // RBOUR
    $STATUS$
@@ -458,7 +458,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SUBSTR(),LEFT(),AT(),RAT()
+      SubStr(),Left(),At(),RAt()
    $END$
  */
 
@@ -466,7 +466,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SUBSTR()
+      SubStr()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -474,7 +474,7 @@
    $ONELINER$
       Returns a substring from a main string
    $SYNTAX$
-      SUBSTR( <cString>, <nStart>, [<nLen>] ) --> cReturn
+      SubStr( <cString>, <nStart>, [<nLen>] ) --> cReturn
    $ARGUMENTS$
       <cString> Character expression to be parsed
 
@@ -507,7 +507,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      LEFT(),AT(),RIGHT()
+      Left(),At(),Right()
    $END$
  */
 
@@ -515,7 +515,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      STR()
+      Str()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -523,7 +523,7 @@
    $ONELINER$
       Convert a numeric expression to a character string.
    $SYNTAX$
-      STR( <nNumber>, [<nLength>], [<nDecimals>] ) --> cNumber
+      Str( <nNumber>, [<nLength>], [<nDecimals>] ) --> cNumber
    $ARGUMENTS$
       <nNumber> is the numeric expression to be converted to a character
       string.
@@ -533,37 +533,37 @@
 
       <nDecimals> is the number of decimal places to return.
    $RETURNS$
-      STR() returns <nNumber> formatted as a character string.  If the
-      optional length and decimal arguments are not specified, STR()
+      Str() returns <nNumber> formatted as a character string.  If the
+      optional length and decimal arguments are not specified, Str()
       returns the character string according to the following rules:
 
-      Results of STR() with No Optional Arguments
+      Results of Str() with No Optional Arguments
 
       <table>
       Expression               Return Value Length
 
       Field Variable           Field length plus decimals
       Expressions/constants    Minimum of 10 digits plus decimals
-      VAL()                    Minimum of 3 digits
-      MONTH()/DAY()            3 digits
-      YEAR()                   5 digits
-      RECNO()                  7 digits
+      Val()                    Minimum of 3 digits
+      Month()/Day()            3 digits
+      Year()                   5 digits
+      RecNo()                  7 digits
       </table>
    $DESCRIPTION$
-      STR() is a numeric conversion function that converts numeric values
+      Str() is a numeric conversion function that converts numeric values
       to character strings. It is commonly used to concatenate numeric
-      values to character strings. STR() has applications displaying
+      values to character strings. Str() has applications displaying
       numbers, creating codes such as part numbers from numeric values,
       and creating index keys that combine numeric and character data.
 
-      STR() is like TRANSFORM(), which formats numeric values as character
+      Str() is like Transform(), which formats numeric values as character
       strings using a mask instead of length and decimal specifications.
 
-      The inverse of STR() is VAL(), which converts character numbers to
+      The inverse of Str() is Val(), which converts character numbers to
       numerics.
 
       *  If <nLength> is less than the number of whole number digits in
-         <nNumber>, STR() returns asterisks instead of the number.
+         <nNumber>, Str() returns asterisks instead of the number.
 
       *  If <nLength> is less than the number of decimal digits
          required for the decimal portion of the returned string, Harbour
@@ -583,7 +583,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      STRZERO(),TRANSFORM(),VAL()
+      StrZero(),Transform(),Val()
    $END$
  */
 
@@ -591,7 +591,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      STRZERO()
+      StrZero()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -599,7 +599,7 @@
    $ONELINER$
       Convert a numeric expression to a character string, zero padded.
    $SYNTAX$
-      STRZERO( <nNumber>, [<nLength>], [<nDecimals>] ) --> cNumber
+      StrZero( <nNumber>, [<nLength>], [<nDecimals>] ) --> cNumber
    $ARGUMENTS$
       <nNumber> is the numeric expression to be converted to a character
       string.
@@ -609,39 +609,39 @@
 
       <nDecimals> is the number of decimal places to return.
    $RETURNS$
-      STRZERO() returns <nNumber> formatted as a character string.  If the
-      optional length and decimal arguments are not specified, STRZERO()
+      StrZero() returns <nNumber> formatted as a character string.  If the
+      optional length and decimal arguments are not specified, StrZero()
       returns the character string according to the following rules:
 
-      Results of STRZERO() with No Optional Arguments
+      Results of StrZero() with No Optional Arguments
 
       <table>
       Expression               Return Value Length
 
       Field Variable           Field length plus decimals
       Expressions/constants    Minimum of 10 digits plus decimals
-      VAL()                    Minimum of 3 digits
-      MONTH()/DAY()            3 digits
-      YEAR()                   5 digits
-      RECNO()                  7 digits
+      Val()                    Minimum of 3 digits
+      Month()/Day()            3 digits
+      Year()                   5 digits
+      RecNo()                  7 digits
       </table>
    $DESCRIPTION$
-      STRZERO() is a numeric conversion function that converts numeric
+      StrZero() is a numeric conversion function that converts numeric
       values to character strings. It is commonly used to concatenate
-      numeric values to character strings. STRZERO() has applications
+      numeric values to character strings. StrZero() has applications
       displaying numbers, creating codes such as part numbers from numeric
       values, and creating index keys that combine numeric and character
       data.
 
-      STRZERO() is like TRANSFORM(), which formats numeric values as
+      StrZero() is like Transform(), which formats numeric values as
       character strings using a mask instead of length and decimal
       specifications.
 
-      The inverse of STRZERO() is VAL(), which converts character numbers
+      The inverse of StrZero() is Val(), which converts character numbers
       to numerics.
 
       *  If <nLength> is less than the number of whole number digits in
-         <nNumber>, STR() returns asterisks instead of the number.
+         <nNumber>, Str() returns asterisks instead of the number.
 
       *  If <nLength> is less than the number of decimal digits
          required for the decimal portion of the returned string, Harbour
@@ -650,7 +650,7 @@
       *  If <nLength> is specified but <nDecimals> is omitted (no
          decimal places), the return value is rounded to an integer.
 
-      The STRZERO() function was part of the CA-Cl*pper samples.
+      The StrZero() function was part of the CA-Cl*pper samples.
    $EXAMPLES$
       ? StrZero( 10, 6, 2 ) // "010.00"
       ? StrZero( -10, 8, 2 ) // "-0010.00"
@@ -663,7 +663,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      STR()
+      Str()
    $END$
  */
 
@@ -671,7 +671,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_VALTOSTR()
+      hb_ValToStr()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -679,7 +679,7 @@
    $ONELINER$
       Converts any scalar type to a string.
    $SYNTAX$
-      HB_VALTOSTR( <xValue> ) --> cString
+      hb_ValToStr( <xValue> ) --> cString
    $ARGUMENTS$
       <xValue> is any scalar argument.
    $RETURNS$
@@ -705,7 +705,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      STR()
+      Str()
    $END$
  */
 
@@ -713,7 +713,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      LEN()
+      Len()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -721,7 +721,7 @@
    $ONELINER$
       Returns size of a string or size of an array.
    $SYNTAX$
-      LEN( <cString> | <aArray> ) --> <nLength>
+      Len( <cString> | <aArray> ) --> <nLength>
    $ARGUMENTS$
       <acString> is a character string or the array to check.
    $RETURNS$
@@ -747,7 +747,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      EMPTY(),RTRIM(),LTRIM(),AADD(),ASIZE()
+      Empty(),RTrim(),LTrim(),AADD(),ASize()
    $END$
  */
 
@@ -755,7 +755,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      EMPTY()
+      Empty()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -763,7 +763,7 @@
    $ONELINER$
       Checks if the passed argument is empty.
    $SYNTAX$
-      EMPTY( <xExp> ) --> lIsEmpty
+      Empty( <xExp> ) --> lIsEmpty
    $ARGUMENTS$
       <xExp> is any valid expression.
    $RETURNS$
@@ -792,7 +792,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      LEN()
+      Len()
    $END$
  */
 
@@ -800,7 +800,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DESCEND()
+      Descend()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -808,7 +808,7 @@
    $ONELINER$
       Inverts an expression of string, logical, date or numeric type.
    $SYNTAX$
-      DESCEND( <xExp> ) --> xExpInverted
+      Descend( <xExp> ) --> xExpInverted
    $ARGUMENTS$
       <xExp> is any valid expression.
    $RETURNS$
@@ -866,7 +866,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      UPPER(),ISLOWER(),ISUPPER()
+      Upper(),IsLower(),IsUpper()
    $END$
  */
 
@@ -874,7 +874,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      UPPER()
+      Upper()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -882,7 +882,7 @@
    $ONELINER$
       Converts a character expression to uppercase format
    $SYNTAX$
-      UPPER( <cString> ) --> cUpperString
+      Upper( <cString> ) --> cUpperString
    $ARGUMENTS$
       <cString> Any character expression.
    $RETURNS$
@@ -902,7 +902,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      LOWER(),ISUPPER(),ISLOWER()
+      LOWER(),IsUpper(),IsLower()
    $END$
  */
 
@@ -910,7 +910,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      CHR()
+      Chr()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -918,7 +918,7 @@
    $ONELINER$
       Converts an ASCII value to it character value
    $SYNTAX$
-      CHR( <nAsciiNum> )  --> cReturn
+      Chr( <nAsciiNum> )  --> cReturn
    $ARGUMENTS$
       <nAsciiNum> Any ASCII character code.
    $RETURNS$
@@ -926,10 +926,10 @@
    $DESCRIPTION$
       This function returns the ASCII character code for <nAsciiNum>. The
       number expressed must be an integer value within the range of 0 to
-      255 inclusive. The CHR() function will send the character returned
+      255 inclusive. The Chr() function will send the character returned
       to whatever device is presently set.
 
-      The CHR() function may be used for printing special codes as well
+      The Chr() function may be used for printing special codes as well
       as normal and graphics character codes.
    $EXAMPLES$
       ? Chr( 32 )
@@ -943,7 +943,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ASC(), INKEY()
+      Asc(), Inkey()
    $END$
  */
 
@@ -951,7 +951,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ASC()
+      Asc()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -959,7 +959,7 @@
    $ONELINER$
       Returns the ASCII value of a character
    $SYNTAX$
-      ASC( <cCharacter> ) --> nAscNumber
+      Asc( <cCharacter> ) --> nAscNumber
    $ARGUMENTS$
       <cCharacter> Any character expression
    $RETURNS$
@@ -979,7 +979,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      CHR()
+      Chr()
    $END$
  */
 
@@ -987,7 +987,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      PADC()
+      PadC()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -995,7 +995,7 @@
    $ONELINER$
       Centers an expression for a given width
    $SYNTAX$
-      PADC( <xVal>, <nWidth>, <cFill> )  --> cString
+      PadC( <xVal>, <nWidth>, <cFill> )  --> cString
    $ARGUMENTS$
       <xVal> A Number, Character or Date value to pad
 
@@ -1029,7 +1029,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ALLTRIM(),PADL(),PADR()
+      AllTrim(),PadL(),PadR()
    $END$
  */
 
@@ -1037,7 +1037,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      PADL()
+      PadL()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1045,7 +1045,7 @@
    $ONELINER$
       Left-justifies an expression for a given width
    $SYNTAX$
-      PADL( <xVal>, <nWidth>, <cFill> )  --> cString
+      PadL( <xVal>, <nWidth>, <cFill> )  --> cString
    $ARGUMENTS$
       <xVal> An number,Character or date to pad
 
@@ -1079,7 +1079,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ALLTRIM(),PADC(),PADR()
+      AllTrim(),PadC(),PadR()
    $END$
  */
 
@@ -1087,7 +1087,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      PADR()
+      PadR()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1095,7 +1095,7 @@
    $ONELINER$
       Right-justifies an expression for a given width
    $SYNTAX$
-      PADR( <xVal>, <nWidth>, <cFill> ) --> cString
+      PadR( <xVal>, <nWidth>, <cFill> ) --> cString
    $ARGUMENTS$
       <xVal> A Number, Character or Date value to pad
 
@@ -1129,7 +1129,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ALLTRIM(),PADC(),PADL()
+      AllTrim(),PadC(),PadL()
    $END$
  */
 
@@ -1137,7 +1137,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ALLTRIM()
+      AllTrim()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1145,7 +1145,7 @@
    $ONELINER$
       Removes leading and trailing blank spaces from a string
    $SYNTAX$
-      ALLTRIM( <cString> ) --> cExpression
+      AllTrim( <cString> ) --> cExpression
    $ARGUMENTS$
       <cString> Any character string
    $RETURNS$
@@ -1169,7 +1169,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      LTRIM(),RTRIM(),TRIM()
+      LTrim(),RTrim(),Trim()
    $END$
  */
 
@@ -1177,7 +1177,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      RTRIM()
+      RTrim()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1185,7 +1185,7 @@
    $ONELINER$
       Remove trailing spaces from a string.
    $SYNTAX$
-      RTRIM( <cExpression> ) --> cString
+      RTrim( <cExpression> ) --> cString
    $ARGUMENTS$
       <cExpression> Any character expression
    $RETURNS$
@@ -1194,8 +1194,8 @@
       This function returns the value of <cString> with any trailing blank
       removed.
 
-      This function is identical to RTRIM() and the opposite of LTRIM().
-      Together with LTRIM(), this function equated to the ALLTRIM()
+      This function is identical to RTrim() and the opposite of LTrim().
+      Together with LTrim(), this function equated to the AllTrim()
       function.
    $EXAMPLES$
       ? RTrim( "HELLO" )              //  "HELLO"
@@ -1213,7 +1213,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      ALLTRIM(),LTRIM(),TRIM()
+      AllTrim(),LTrim(),Trim()
    $END$
  */
 
@@ -1221,7 +1221,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      TRIM()
+      Trim()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1229,7 +1229,7 @@
    $ONELINER$
       Remove trailing spaces from a string.
    $SYNTAX$
-      TRIM( <cExpression> )   --> cString
+      Trim( <cExpression> )   --> cString
    $ARGUMENTS$
       <cExpression> Any character expression
    $RETURNS$
@@ -1238,8 +1238,8 @@
       This function returns the value of <cString> with any trailing blank
       removed.
 
-      This function is identical to RTRIM() and the opposite of LTRIM().
-      Together with LTRIM(), this function equated to the ALLTRIM()
+      This function is identical to RTrim() and the opposite of LTrim().
+      Together with LTrim(), this function equated to the AllTrim()
       function.
    $EXAMPLES$
       ? Trim( "HELLO" )     //  "HELLO"
@@ -1257,7 +1257,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      RTRIM(),LTRIM(),ALLTRIM()
+      RTrim(),LTrim(),AllTrim()
    $END$
  */
 
@@ -1265,7 +1265,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      REPLICATE()
+      Replicate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1273,7 +1273,7 @@
    $ONELINER$
       Repeats a single character expression
    $SYNTAX$
-      REPLICATE( <cString>, <nSize> )  --> cReplicateString
+      Replicate( <cString>, <nSize> )  --> cReplicateString
    $ARGUMENTS$
       <cString> Character string to be replicated
 
@@ -1301,7 +1301,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      SPACE(),PADC(),PADL(),PADR()
+      SPACE(),PadC(),PadL(),PadR()
    $END$
  */
 
@@ -1375,7 +1375,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      PADC(),PADL(),PADR(),REPLICATE()
+      PadC(),PadL(),PadR(),Replicate()
    $END$
  */
 
@@ -1383,7 +1383,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      VAL()
+      Val()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1391,7 +1391,7 @@
    $ONELINER$
       Convert a number from a character type to numeric
    $SYNTAX$
-      VAL( <cNumber> ) --> nNumber
+      Val( <cNumber> ) --> nNumber
    $ARGUMENTS$
       <cNumber> Any valid character string of numbers.
    $RETURNS$
@@ -1400,7 +1400,7 @@
       This function converts any number previously defined as an character
       expression <cNumber> into a numeric expression.
 
-      This functions is the oppose of the STR() function.
+      This functions is the oppose of the Str() function.
    $EXAMPLES$
       ? Val( "31421" ) // 31421
    $TESTS$
@@ -1414,7 +1414,7 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      STR(),TRANSFORM()
+      Str(),Transform()
    $END$
  */
 
@@ -1422,7 +1422,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      STRTRAN()
+      StrTran()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1430,7 +1430,7 @@
    $ONELINER$
       Translate substring value with a main string
    $SYNTAX$
-      STRTRAN( <cString>, <cLocString>, [<cRepString>], [<nPos>],
+      StrTran( <cString>, <cLocString>, [<cRepString>], [<nPos>],
                [<nOccurrences>] ) --> cReturn
    $ARGUMENTS$
       <cString>     The main string to search
@@ -1469,7 +1469,7 @@
    $FILES$
       Libraty is rtl
    $SEEALSO$
-      SUBSTR(),AT()
+      SubStr(),At()
    $END$
  */
 
@@ -1477,7 +1477,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      TRANSFORM()
+      Transform()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1515,7 +1515,7 @@
          vice versa.
 
       The table below shows the possible function strings available with
-      the TRANSFORM() function.
+      the Transform() function.
 
       <table>
       @B   Left justify the string within the format.
@@ -1568,6 +1568,6 @@
    $FILES$
       Library is rtl
    $SEEALSO$
-      @...SAY,DEVOUTPICT()
+      @...SAY,DevOutPict()
    $END$
  */

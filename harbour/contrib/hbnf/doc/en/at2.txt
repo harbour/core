@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_AT2()
+      ft_At2()
    $CATEGORY$
       String
    $ONELINER$
       Find position of the nth occurrence of a substring
    $SYNTAX$
-      FT_AT2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
+      ft_At2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
    $ARGUMENTS$
       <cSearch> is the character substring to search for.
 
@@ -31,25 +31,25 @@
       cSearch := "t"
       cTarget := "This is the day that the Lord has made."
 
-      FT_AT2( cSearch, cTarget )            // Returns ( 9 )
+      ft_At2( cSearch, cTarget )            // Returns ( 9 )
 
-      FT_AT2( cSearch, cTarget, 2 )         // Returns ( 17 )
+      ft_At2( cSearch, cTarget, 2 )         // Returns ( 17 )
 
-      FT_AT2( cSearch, cTarget, 2, .F. )    // Returns ( 9 )
+      ft_At2( cSearch, cTarget, 2, .F. )    // Returns ( 9 )
    $SEEALSO$
-      FT_FINDITH(), FT_RAT2()
+      ft_FindITh(), ft_RAt2()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_RAT2()
+      ft_RAt2()
    $CATEGORY$
       String
    $ONELINER$
       Find position of the reversed nth occurrence of a substring
    $SYNTAX$
-      FT_RAT2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
+      ft_RAt2( <cSearch>, <cTarget> [, <nOccurs> [, <lCaseSens> ] ] ) -> nPos
    $ARGUMENTS$
       <cSearch> is the character substring to search for.
 
@@ -70,12 +70,12 @@
       cSearch := "t"
       cTarget := "This is the day that the Lord has made."
 
-      FT_RAT2( cSearch, cTarget )           // Returns ( 22 )
+      ft_RAt2( cSearch, cTarget )           // Returns ( 22 )
 
-      FT_RAT2( cSearch, cTarget, 2 )        // Returns ( 20 )
+      ft_RAt2( cSearch, cTarget, 2 )        // Returns ( 20 )
 
-      FT_RAT2( cSearch, cTarget, 2, .F. )   // Returns ( 22 )
+      ft_RAt2( cSearch, cTarget, 2, .F. )   // Returns ( 22 )
    $SEEALSO$
-      FT_FINDITH(), FT_AT2()
+      ft_FindITh(), ft_At2()
    $END$
  */

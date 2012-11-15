@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_LASTKEY()
+      ft_LastKey()
    $CATEGORY$
       Keyboard/Mouse
    $ONELINER$
       Force LastKey() to return a programmer-defined value.
    $SYNTAX$
-      FT_LastKey( <nKey> ) -> NIL
+      ft_LastKey( <nKey> ) -> NIL
    $ARGUMENTS$
       <nKey> is the Inkey() value of the desired key.
    $RETURNS$
@@ -33,7 +33,7 @@
 
       ? LastKey()  // returns 27
 
-      FT_LastKey( K_F1 )
+      ft_LastKey( K_F1 )
 
       ? LastKey()  // now returns 28
    $END$

@@ -4,16 +4,16 @@
 
 /* $DOC$
    $NAME$
-      FT_SETVCUR()
+      ft_SetVcur()
    $CATEGORY$
       Video
    $ONELINER$
       Set the cursor position on a specified video page
    $SYNTAX$
-      FT_SETVCUR( [ <nPage> ], [ <nRow> ], [ <nCol> ] ) -> NIL
+      ft_SetVcur( [ <nPage> ], [ <nRow> ], [ <nCol> ] ) -> NIL
    $ARGUMENTS$
       <nPage> is the video page (defaults to current page, determined
-              by FT_GETVPG()
+              by ft_GetVPg()
 
       <nRow>  is the row coordinate (defaults to 0 )
 
@@ -21,8 +21,8 @@
    $RETURNS$
       NIL
    $DESCRIPTION$
-      FT_SETVCUR() sets the cursor position on a specific video page.
-      It uses FT_INT86() to invoke interrupt 10h, function 2.
+      ft_SetVcur() sets the cursor position on a specific video page.
+      It uses ft_int86() to invoke interrupt 10h, function 2.
 
       For more information on graphics programming, cursors, and video
       pages, refer to Richard Wilton's _Programmer's Guide to PC and
@@ -31,22 +31,22 @@
    $EXAMPLES$
       // Set the position to row 5, column 10 on video page 1:
 
-      FT_SETVCUR( 1, 5, 10 )
+      ft_SetVcur( 1, 5, 10 )
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_GETVCUR()
+      ft_GetVCur()
    $CATEGORY$
       Video
    $ONELINER$
       Return info about the cursor on a specified video page
    $SYNTAX$
-      FT_GETVCUR( [<nPage>] ) -> <aCurInfo>
+      ft_GetVCur( [<nPage>] ) -> <aCurInfo>
    $ARGUMENTS$
       <nPage> is the video page to get the cursor information for.
-      Defaults to the current page, as returned by FT_GETVPG().
+      Defaults to the current page, as returned by ft_GetVPg().
    $RETURNS$
       A four-element array (<aCurInfo>), set up as follows:
 
@@ -56,7 +56,7 @@
       aCurInfo[ 4 ] = Character column
 
    $DESCRIPTION$
-      FT_GETVCUR() uses FT_INT86() to invoke interrupt 10h, function
+      ft_GetVCur() uses ft_int86() to invoke interrupt 10h, function
       3, to return the character cursor location for the specified
       video page.
 

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      STRSWAP()
+      StrSwap()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Swap the contents of two strings
    $SYNTAX$
-      STRSWAP( <[@]cString1>, <[@]cString2> ) -> cString
+      StrSwap( <[@]cString1>, <[@]cString2> ) -> cString
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,7 +24,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      STRSWAP() is compatible with CT3's STRSWAP().
+      StrSwap() is compatible with CT3's StrSwap().
    $PLATFORMS$
       All
    $FILES$

@@ -4,51 +4,51 @@
 
 /* $DOC$
    $NAME$
-      CHARSWAP()
+      CharSwap()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Swap neighbouring characters in a string
    $SYNTAX$
-      CHARSWAP( <[@]cString> ) -> cSwappedString
+      CharSwap( <[@]cString> ) -> cSwappedString
    $ARGUMENTS$
       <[@]cString>      is the string that should be processed
    $RETURNS$
       <cSwappedString>  a string where neighbour characters are swapped
    $DESCRIPTION$
-      The CHARSWAP() function loops through <cString> in steps of two
+      The CharSwap() function loops through <cString> in steps of two
       characters and exchanges the characters from the odd and the even
       positions.
-      By setting the CSETREF() switch to .T., one can omit the return value
+      By setting the CSetRef() switch to .T., one can omit the return value
       of this functin, but one must then pass <cString> by reference.
    $EXAMPLES$
-      ? CHARSWAP( "0123456789" )   // "1032547698"
-      ? CHARSWAP( "ABCDEFGHIJK" )  // "BADCFEHGJIK"
+      ? CharSwap( "0123456789" )   // "1032547698"
+      ? CharSwap( "ABCDEFGHIJK" )  // "BADCFEHGJIK"
    $TESTS$
-      CHARSWAP( "0123456789" )  == "1032547698"
-      CHARSWAP( "ABCDEFGHIJK" ) == "BADCFEHGJIK"
+      CharSwap( "0123456789" )  == "1032547698"
+      CharSwap( "ABCDEFGHIJK" ) == "BADCFEHGJIK"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARSWAP() is compatible with CT3's CHARSWAP().
+      CharSwap() is compatible with CT3's CharSwap().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      WORDSWAP(),CSETREF()
+      WordSwap(),CSetRef()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      WORDSWAP()
+      WordSwap()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Swap neighbouring double characters in a string
    $SYNTAX$
-      WORDSWAP( <[@]cString> [, <lSwapCharacters>] ) -> cSwappedString
+      WordSwap( <[@]cString> [, <lSwapCharacters>] ) -> cSwappedString
    $ARGUMENTS$
       <[@]cString>         is the string that should be processed
       [<lSwapCharacters>]  specifies whether an additional swap should be
@@ -58,28 +58,28 @@
       <cSwappedString>  a string where neighbouring double characters are
                         swapped
    $DESCRIPTION$
-      The WORDSWAP() function loops through <cString> in steps of four
+      The WordSwap() function loops through <cString> in steps of four
       characters and exchanges the double characters from the first and
       second position with the one from the third and forth position.
       Additionally the function can perform a swap of the both char of
       each double character.
-      By setting the CSETREF() switch to .T., one can omit the return value
+      By setting the CSetRef() switch to .T., one can omit the return value
       of this functin, but one must then pass <cString> by reference.
    $EXAMPLES$
-      ? WORDSWAP( "1234567890" )       // "3412785690"
-      ? WORDSWAP( "1234567890", .T. )  // "4321876590"
+      ? WordSwap( "1234567890" )       // "3412785690"
+      ? WordSwap( "1234567890", .T. )  // "4321876590"
    $TESTS$
-      WORDSWAP( "1234567890" )      == "3412785690"
-      WORDSWAP( "1234567890", .T. ) == "4321876590"
+      WordSwap( "1234567890" )      == "3412785690"
+      WordSwap( "1234567890", .T. ) == "4321876590"
    $STATUS$
       Ready
    $COMPLIANCE$
-      WORDSWAP() is compatible with CT3's WORDSWAP().
+      WordSwap() is compatible with CT3's WordSwap().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CHARSWAP(),CSETREF()
+      CharSwap(),CSetRef()
    $END$
  */

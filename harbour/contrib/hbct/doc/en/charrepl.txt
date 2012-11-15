@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      CHARREPL()
+      CharRepl()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Replacement of characters
    $SYNTAX$
-      CHARREPL( <cSearchString>, <[@]cString>,
+      CharRepl( <cSearchString>, <[@]cString>,
                 <cReplaceString>, [<lMode>] ) -> cString
    $ARGUMENTS$
       <cSearchString>    is a string of characters that should be replaced
@@ -22,7 +22,7 @@
    $RETURNS$
       <cString>          the processed string
    $DESCRIPTION$
-      The CHARREPL() function replaces certain characters in <cString>
+      The CharRepl() function replaces certain characters in <cString>
       with others depending on the setting of <lMode>.
       If <lMode> is set to .F., the function takes the characters of
       <cSearchString> one after the other, searches for them in <cString>
@@ -38,30 +38,30 @@
       If <cReplaceString> is shorter than <cSearchString>, the last
       character of <cReplaceString> is used as corresponding character
       for the the "rest" of <cSearchString>.
-      One can omit the return value by setting the CSETREF() switch to .T.,
+      One can omit the return value by setting the CSetRef() switch to .T.,
       but then one must pass <cString> by reference to get the result.
    $EXAMPLES$
-      ? charrepl( "1234", "1x2y3z", "abcd" )            // "axbycz"
-      ? charrepl( "abcdefghij", "jhfdb", "1234567890" ) // "08642"
-      ? charrepl( "abcdefghij", "jhfdb", "12345" )      // "55542"
-      ? charrepl( "1234", "1234", "234A" )              // "AAAA"
-      ? charrepl( "1234", "1234", "234A", .T. )         // "234A"
+      ? CharRepl( "1234", "1x2y3z", "abcd" )            // "axbycz"
+      ? CharRepl( "abcdefghij", "jhfdb", "1234567890" ) // "08642"
+      ? CharRepl( "abcdefghij", "jhfdb", "12345" )      // "55542"
+      ? CharRepl( "1234", "1234", "234A" )              // "AAAA"
+      ? CharRepl( "1234", "1234", "234A", .T. )         // "234A"
    $TESTS$
-      charrepl( "1234", "1x2y3z", "abcd" ) == "axbycz"
-      charrepl( "abcdefghij", "jhfdb", "1234567890" ) == "08642"
-      charrepl( "abcdefghij", "jhfdb", "12345" ) == "55542"
-      charrepl( "1234", "1234", "234A" ) == "AAAA"
-      charrepl( "1234", "1234", "234A", .T. ) == "234A"
+      CharRepl( "1234", "1x2y3z", "abcd" ) == "axbycz"
+      CharRepl( "abcdefghij", "jhfdb", "1234567890" ) == "08642"
+      CharRepl( "abcdefghij", "jhfdb", "12345" ) == "55542"
+      CharRepl( "1234", "1234", "234A" ) == "AAAA"
+      CharRepl( "1234", "1234", "234A", .T. ) == "234A"
    $STATUS$
       Ready
    $COMPLIANCE$
-      CHARREPL() is compatible with CT3's CHARREPL().
+      CharRepl() is compatible with CT3's CharRepl().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      WORDREPL()   POSREPL()   RANGEREPL()
-      CSETREF()
+      WordRepl()   PosRepl()   RangeRepl()
+      CSetRef()
    $END$
  */

@@ -129,7 +129,7 @@
       =================   </par>
 
           The compiler does not generate the source code line numbers in
-          the output file. The PROCLINE() function will return 0 for
+          the output file. The ProcLine() function will return 0 for
           modules compiled using this option.
 
       /m               compile module only   </par>
@@ -285,7 +285,7 @@
       PROCEDURE Main()
          PRIVATE myname
 
-         DBCREATE( "TEST", { { "MYNAME", "C", 10, 0} } )
+         dbCreate( "TEST", { { "MYNAME", "C", 10, 0} } )
          USE test NEW
          SELECT test
          APPEND BLANK
@@ -364,7 +364,7 @@
          STATIC s_MyStaticVar := {|| MyLocalVar }
 
          MyLocalVar := 0
-         ? EVAL( s_MyStaticVar )
+         ? Eval( s_MyStaticVar )
 
          RETURN
       </fixed>

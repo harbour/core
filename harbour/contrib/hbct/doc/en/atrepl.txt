@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      ATREPL()
+      AtRepl()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Search and replace sequences in a string
    $SYNTAX$
-      ATREPL( <cStringToMatch>, <cString>, <cReplacement>, [<nCounter>],
+      AtRepl( <cStringToMatch>, <cString>, <cReplacement>, [<nCounter>],
               [<lMode>], [<nIgnore>] ) --> cString
    $ARGUMENTS$
       <cStringToMatch>   is the substring searched for in <cString>
@@ -28,7 +28,7 @@
    $RETURNS$
       <cString>
    $DESCRIPTION$
-      The ATREPL() function searches and replaces sequences in a string.
+      The AtRepl() function searches and replaces sequences in a string.
       First, the function ignores the first <nIgnore> characters of <cString>.
       Then, if <lMode> is set to .T., it searches for the <nCounter>th
       occurence of <cStringToMatch> in <cString>. If successful, the
@@ -38,31 +38,31 @@
       be replaced with <cReplacement>. Note that, in this case,
       the replacements are performed even if the <nCounter>th occurence
       does not exist.
-      By using the CSETATMUPA() switch you can decide whether the
+      By using the CSetAtMupa() switch you can decide whether the
       function restarts searching after a found sequence of after
       the first character of that sequence.
       The function allows the use of wildcards in <cStringToMatch>
-      and looks for the settings of SETATLIKE().
+      and looks for the settings of SetAtLike().
    $EXAMPLES$
-      ? ATREPL( "ABC", "ABCDABCDABC", "xx" )    // --> "xxDxxDxx"
-      ? ATREPL( "ABC", "ABCDABC", "ZYXW" )      // --> "ZYXWDZYXW"
-      ? ATREPL( "ABC", "ABCDABCDABC", "xx", 2 ) // --> "xxDxxDABC"
-      ? ATREPL( "ABC", "ABCDABCDABC", "xx", 2, .T. )  // --> "ABCDxxDABC"
+      ? AtRepl( "ABC", "ABCDABCDABC", "xx" )    // --> "xxDxxDxx"
+      ? AtRepl( "ABC", "ABCDABC", "ZYXW" )      // --> "ZYXWDZYXW"
+      ? AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) // --> "xxDxxDABC"
+      ? AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. )  // --> "ABCDxxDABC"
    $TESTS$
-      ATREPL( "ABC", "ABCDABCDABC", "xx" ) == "xxDxxDxx"
-      ATREPL( "ABC", "ABCDABC", "ZYXW" ) == "ZYXWDZYXW"
-      ATREPL( "ABC", "ABCDABCDABC", "xx", 2 ) == "xxDxxDABC"
-      ATREPL( "ABC", "ABCDABCDABC", "xx", 2, .T. ) == "ABCDxxDABC"
+      AtRepl( "ABC", "ABCDABCDABC", "xx" ) == "xxDxxDxx"
+      AtRepl( "ABC", "ABCDABC", "ZYXW" ) == "ZYXWDZYXW"
+      AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) == "xxDxxDABC"
+      AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) == "ABCDxxDABC"
    $STATUS$
       Ready
    $COMPLIANCE$
-      ATREPL() is compatible with CT3's ATREPL().
+      AtRepl() is compatible with CT3's AtRepl().
       Note the new, 6th parameter !
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      CSETATMUPA()   SETATLIKE()
+      CSetAtMupa()   SetAtLike()
    $END$
  */

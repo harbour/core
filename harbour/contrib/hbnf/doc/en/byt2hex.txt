@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_BYT2HEX()
+      ft_Byt2Hex()
    $CATEGORY$
       Conversion
    $ONELINER$
       Convert byte to hexadecimal version of its binary value
    $SYNTAX$
-      FT_BYT2HEX( cByte ) -> cHexValue
+      ft_Byt2Hex( cByte ) -> cHexValue
    $ARGUMENTS$
       <cByte> is the byte to convert.
    $RETURNS$
@@ -28,12 +28,12 @@
       // Chr( 20 ) and Chr( 36 ), and deliver the result as a string in hexadecimal
       // format, using 'h' to signify hexadecimal.
 
-      ? FT_BYT2HEX( Chr( 20 ) )         // byte1: '14h'
-      ? FT_BYT2HEX( Chr( 36 ) )         // byte2: '24h'
+      ? ft_Byt2Hex( Chr( 20 ) )         // byte1: '14h'
+      ? ft_Byt2Hex( Chr( 36 ) )         // byte2: '24h'
 
-      ? FT_BYT2HEX( FT_BYTEAND( Chr( 20 ), Chr( 36 ) ) )
+      ? ft_Byt2Hex( ft_ByteAnd( Chr( 20 ), Chr( 36 ) ) )
       // result: '04h'
    $SEEALSO$
-      FT_BYT2BIT()
+      ft_Byt2Bit()
    $END$
  */

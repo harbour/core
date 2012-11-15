@@ -29,7 +29,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_SETMACRO()
+      hb_SetMacro()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -37,13 +37,13 @@
    $ONELINER$
       Enable/disable the macro compiler runtime features.
    $SYNTAX$
-      HB_SETMACRO( <nOption>, [<lOnOff>] ) --> <lOldSetting>
+      hb_SetMacro( <nOption>, [<lOnOff>] ) --> <lOldSetting>
    $ARGUMENTS$
       <nOption> One of the HB_SM_* constants defined in set.ch.
 
       <lOnOff> .T. to enable or .F. to disable a feature
    $RETURNS$
-      HB_SETMACRO() return the old state of requested feature.
+      hb_SetMacro() return the old state of requested feature.
    $DESCRIPTION$
       This function enables or disables some features of the macro
       compiler. The Harbour is extending the macro features compared

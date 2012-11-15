@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_MIL2MIN()
+      ft_Mil2Min()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Convert time in military format to number of minute of day.
    $SYNTAX$
-      FT_MIL2MIN( <cMILTIME> ) -> nMINUTE
+      ft_Mil2Min( <cMILTIME> ) -> nMINUTE
    $ARGUMENTS$
       <cMILTIME>  character string of form hhmm, where 0<=hh<24.
    $RETURNS$
@@ -18,21 +18,21 @@
    $DESCRIPTION$
       Converts time in military format to number of minute of the day.
    $EXAMPLES$
-      FT_MIL2MIN( "1729" ) // 1049
+      ft_Mil2Min( "1729" ) // 1049
    $SEEALSO$
-      FT_MIN2MIL() FT_CIV2MIL() FT_MIL2CIV() FT_SYS2MIL()
+      ft_Min2Mil() ft_Civ2Mil() ft_Mil2Civ() ft_Sys2Mil()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MIN2MIL()
+      ft_Min2Mil()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Convert minute of day to military format time.
    $SYNTAX$
-      FT_MIN2MIL( <nMINUTE> ) -> cMILTIME
+      ft_Min2Mil( <nMINUTE> ) -> cMILTIME
    $ARGUMENTS$
       <nMINUTE>  numeric integer representing minute of day.
    $RETURNS$
@@ -40,21 +40,21 @@
    $DESCRIPTION$
       Converts minute of the day to military format time.
    $EXAMPLES$
-      FT_MIN2MIL( 279 ) // 0439
+      ft_Min2Mil( 279 ) // 0439
    $SEEALSO$
-      FT_MIL2MIN() FT_MIL2CIV() FT_CIV2MIL() FT_SYS2MIL()
+      ft_Mil2Min() ft_Mil2Civ() ft_Civ2Mil() ft_Sys2Mil()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_MIL2CIV()
+      ft_Mil2Civ()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Convert time in military format to civilian format.
    $SYNTAX$
-      FT_MIL2CIV( <cCIVTIME> ) -> dMILTIME
+      ft_Mil2Civ( <cCIVTIME> ) -> dMILTIME
    $ARGUMENTS$
       <cMILTIME>  character string of form hhmm, where 0<=hh<24.
    $RETURNS$
@@ -63,31 +63,31 @@
    $DESCRIPTION$
       Converts time from military to civilian format
    $EXAMPLES$
-      FT_MIL2CIV( "1640" ) //  4:40 pm
+      ft_Mil2Civ( "1640" ) //  4:40 pm
 
-      FT_MIL2CIV( "0440" ) //  4:40 am
+      ft_Mil2Civ( "0440" ) //  4:40 am
 
-      FT_MIL2CIV( "1200" ) // 12:00 n
+      ft_Mil2Civ( "1200" ) // 12:00 n
 
-      FT_MIL2CIV( "0000" ) // 12:00 m
+      ft_Mil2Civ( "0000" ) // 12:00 m
 
-      FT_MIL2CIV( "2400" ) // 12:00 m
+      ft_Mil2Civ( "2400" ) // 12:00 m
 
       Caution:  leading blanks are irrelevant.
    $SEEALSO$
-      FT_CIV2MIL() FT_SYS2MIL() FT_MIL2MIN() FT_MIN2MIL()
+      ft_Civ2Mil() ft_Sys2Mil() ft_Mil2Min() ft_Min2Mil()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_CIV2MIL()
+      ft_Civ2Mil()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Convert usual civilian format time to military time.
    $SYNTAX$
-      FT_CIV2MIL( <cCIVTIME> ) -> cMILTIME
+      ft_Civ2Mil( <cCIVTIME> ) -> cMILTIME
    $ARGUMENTS$
       <cCIVTIME>  character string of form hh:mm (am,pm,n or m),
          where 0<hh<12.
@@ -96,30 +96,30 @@
    $DESCRIPTION$
       Converts time from 12-hour civilian format to military.
    $EXAMPLES$
-      FT_CIV2MIL( " 5:40 pm" ) // 1740
+      ft_Civ2Mil( " 5:40 pm" ) // 1740
 
-      FT_CIV2MIL( " 5:40 am" ) // 0540
+      ft_Civ2Mil( " 5:40 am" ) // 0540
 
-      FT_CIV2MIL( "12:00 n" ) // 1200
+      ft_Civ2Mil( "12:00 n" ) // 1200
 
-      FT_CIV2MIL( "12:00 m" ) // 0000
+      ft_Civ2Mil( "12:00 m" ) // 0000
 
       // Caution: leading blanks are irrelevant; p,a,n,m must be preceded by
       //          one and only one space.
    $SEEALSO$
-      FT_MIL2CIV() FT_SYS2MIL() FT_MIL2MIN() FT_MIN2MIL()
+      ft_Mil2Civ() ft_Sys2Mil() ft_Mil2Min() ft_Min2Mil()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_SYS2MIL()
+      ft_Sys2Mil()
    $CATEGORY$
       Date/Time
    $ONELINER$
       Convert system time to military time format.
    $SYNTAX$
-      FT_SYS2MIL() -> cMILTIME
+      ft_Sys2Mil() -> cMILTIME
    $ARGUMENTS$
       none
    $RETURNS$
@@ -127,8 +127,8 @@
    $DESCRIPTION$
       Return current system time as character string in military format.
    $EXAMPLES$
-      FT_SYS2MIL() // 1623
+      ft_Sys2Mil() // 1623
    $SEEALSO$
-      FT_MIL2CIV() FT_CIV2MIL()
+      ft_Mil2Civ() ft_Civ2Mil()
    $END$
  */

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      JUSTLEFT()
+      JustLeft()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Move characters from the beginning to the end of a string
    $SYNTAX$
-      JUSTLEFT( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
+      JustLeft( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
    $ARGUMENTS$
 
    $RETURNS$
@@ -24,25 +24,25 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      JUSTLEFT() is compatible with CT3's JUSTLEFT().
+      JustLeft() is compatible with CT3's JustLeft().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      JUSTRIGHT()
+      JustRight()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      JUSTRIGHT()
+      JustRight()
    $CATEGORY$
       Harbour Tools string functions
    $ONELINER$
       Move characters from the end to the beginning of a string
    $SYNTAX$
-      JUSTRIGHT( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
+      JustRight( <[@]cString>, [<cChar>|<nChar>] ) -> cJustifiedString
    $ARGUMENTS$
 
    $RETURNS$
@@ -56,12 +56,12 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      JUSTRIGHT() is compatible with CT3's JUSTRIGHT().
+      JustRight() is compatible with CT3's JustRight().
    $PLATFORMS$
       All
    $FILES$
       Library is libct.
    $SEEALSO$
-      JUSTLEFT()
+      JustLeft()
    $END$
  */

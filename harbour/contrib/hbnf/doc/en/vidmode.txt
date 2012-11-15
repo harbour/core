@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      FT_SETMODE()
+      ft_SetMode()
    $CATEGORY$
       Video
    $ONELINER$
       Set the video mode
    $SYNTAX$
-      FT_SETMODE( <nMode> ) -> NIL
+      ft_SetMode( <nMode> ) -> NIL
    $ARGUMENTS$
       <nMode> is one of the DOS video modes.
    $RETURNS$
@@ -23,23 +23,23 @@
       (Microsoft Press)
    $EXAMPLES$
       PROCEDURE Main( cMode )
-         FT_SETMODE( Val( cMode ) )
-         ? "Video mode is: " + Str( FT_GETMODE() )
+         ft_SetMode( Val( cMode ) )
+         ? "Video mode is: " + Str( ft_GetMode() )
          RETURN
    $SEEALSO$
-      FT_ADAPTER()
+      ft_Adapter()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      FT_GETMODE()
+      ft_GetMode()
    $CATEGORY$
       Video
    $ONELINER$
       Get the video mode
    $SYNTAX$
-      FT_GETMODE() -> nVMode
+      ft_GetMode() -> nVMode
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -52,8 +52,8 @@
       (Microsoft Press)
    $EXAMPLES$
       PROCEDURE Main( cMode )
-         FT_SETMODE( Val( cMode ) )
-         ? "Video mode is: " + Str( FT_GETMODE() )
+         ft_SetMode( Val( cMode ) )
+         ? "Video mode is: " + Str( ft_GetMode() )
          RETURN
    $END$
  */

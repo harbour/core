@@ -10,17 +10,17 @@
    $ONELINER$
       Return the current DOS major and minor version as a string
    $SYNTAX$
-      FT_DOSVER() -> <cVersion>
+      ft_DosVer() -> <cVersion>
    $ARGUMENTS$
       None
    $RETURNS$
       A character string with the major version number first, a
       period ("."), then the minor version number (e.g., "3.30")
    $DESCRIPTION$
-      FT_DOSVER() invokes DOS interrupt 21h, service 30 in order to
+      ft_DosVer() invokes DOS interrupt 21h, service 30 in order to
       return the current DOS version.  It does this by setting up
       an array corresponding to machine registers and then calling
-      the toolkit function FT_INT86().
+      the toolkit function ft_int86().
 
       It returns a character string corresponding to the DOS
       version, as follows:  The major version, a period ("."), then
@@ -29,7 +29,7 @@
 
    $EXAMPLES$
       PROCEDURE Main()
-         ? "Dos version: " + FT_DOSVER()
+         ? "Dos version: " + ft_DosVer()
          RETURN
    $END$
  */
