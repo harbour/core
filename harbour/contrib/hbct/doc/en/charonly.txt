@@ -35,7 +35,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharRem()   WordOnly()   WordRem()
    $END$
@@ -74,7 +74,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharOnly()   CharRem()   WordRem()
    $END$
@@ -112,7 +112,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharOnly()   WordOnly()   WordRem()
    $END$
@@ -151,7 +151,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CHARONLY   CharRem()   WordRem()
    $END$

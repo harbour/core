@@ -28,7 +28,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$

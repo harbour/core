@@ -39,7 +39,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -70,7 +70,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -108,7 +108,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -142,7 +142,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -180,7 +180,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -214,7 +214,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -249,7 +249,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -283,7 +283,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -323,7 +323,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -362,7 +362,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -395,7 +395,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -434,7 +434,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -472,7 +472,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -510,7 +510,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -544,7 +544,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 
@@ -582,7 +582,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is libgt
+      Library is hbgt
    $END$
  */
 

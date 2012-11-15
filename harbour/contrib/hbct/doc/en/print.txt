@@ -28,7 +28,7 @@
    $PLATFORMS$
       DOS
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$
@@ -60,7 +60,7 @@
    $PLATFORMS$
       DOS
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$

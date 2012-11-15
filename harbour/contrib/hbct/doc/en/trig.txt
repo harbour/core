@@ -33,7 +33,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR()
    $END$
@@ -73,7 +73,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -113,7 +113,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -153,7 +153,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -191,7 +191,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -232,7 +232,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -274,7 +274,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -312,7 +312,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -357,7 +357,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -396,7 +396,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -435,7 +435,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Tanh(),RToD(),DToR(),Pi()
    $END$
@@ -470,7 +470,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),RToD(),DToR(),Pi()
    $END$
@@ -506,7 +506,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),DToR(),Pi()
    $END$
@@ -541,7 +541,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),Pi()
    $END$

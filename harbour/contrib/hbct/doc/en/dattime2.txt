@@ -28,7 +28,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       NToCDoW()
    $END$
@@ -60,7 +60,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       NToCMonth()
    $END$
@@ -94,7 +94,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       MDY()
    $END$
@@ -128,7 +128,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       DMY()
    $END$
@@ -160,7 +160,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$
@@ -194,7 +194,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$
@@ -226,7 +226,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$
@@ -260,7 +260,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       DaysInMonth()
    $END$
@@ -292,7 +292,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       DaysToMonth()
    $END$
@@ -326,7 +326,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$
@@ -361,7 +361,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       EoM()
    $END$
@@ -393,7 +393,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CToDoW()
    $END$
@@ -425,7 +425,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CToMonth()
    $END$
@@ -467,7 +467,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$

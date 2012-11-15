@@ -44,7 +44,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CToF(), FTOC()
    $END$

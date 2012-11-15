@@ -41,7 +41,7 @@
       whereas the Token() function must always start the tokenizing process
       from scratch.
 
-      Unlike CTIII, this function provides two mechanisms of storing the
+      Unlike CT3, this function provides two mechanisms of storing the
       resulting token environment. If a variable is passed by reference
       as 4th parameter, the token environment is stored in this variable,
       otherwise the global token environment is used. Do not modify the
@@ -53,7 +53,7 @@
       the counter of either the global environment or the environment given
       by reference in the 4th parameter is rewind to 1.
 
-      Additionally, unlike CTIII, TokenInit() does not need the string
+      Additionally, unlike CT3, TokenInit() does not need the string
       <cString> to be passed by reference, since one must provide the
       string in calls to TokenNext() again.
    $EXAMPLES$
@@ -75,12 +75,12 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      TokenInit() is compatible with CTIII's TokenInit(),
+      TokenInit() is compatible with CT3's TokenInit(),
       but there is an additional parameter featuring local token environments.
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Token(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
    $END$
@@ -133,13 +133,13 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      TokenNext() is compatible with CTIII's TokenNext(),
+      TokenNext() is compatible with CT3's TokenNext(),
       but there are two additional parameters featuring local token
       environments and optional access to tokens.
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       TokenInit(),TokenExit(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
    $END$
@@ -172,11 +172,11 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      TokenNum() is a new function in Harbour's CTIII library.
+      TokenNum() is a new function in Harbour's CT3 library.
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       TokenInit(),TokenExit(),TokenNext(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
    $END$
@@ -215,12 +215,12 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      TokenEnd() is compatible with CTIII's TokenEnd(),
+      TokenEnd() is compatible with CT3's TokenEnd(),
       but there are is an additional parameter featuring local token environments.
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken()
    $END$
@@ -256,11 +256,11 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      TokenExit() is a new function in Harbour's CTIII library.
+      TokenExit() is a new function in Harbour's CT3 library.
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       TokenInit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),RestToken(),TokenEnd()
    $END$
@@ -311,13 +311,13 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      TokenAt() is compatible with CTIII's TokenAt(),
+      TokenAt() is compatible with CT3's TokenAt(),
       but there are two additional parameters featuring local token
       environments and optional access to tokens.
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       TokenInit(),TokenExit(),TokenNext(),TokenNum(),SaveToken(),RestToken(),TokenEnd()
    $END$
@@ -348,11 +348,11 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      SaveToken() is compatible with CTIII's SaveToken(),
+      SaveToken() is compatible with CT3's SaveToken(),
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),RestToken(),TokenEnd()
    $END$
@@ -383,11 +383,11 @@
    $STATUS$
       Ready
    $COMPLIANCE$
-      RestToken() is compatible with CTIII's RestToken(),
+      RestToken() is compatible with CT3's RestToken(),
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       TokenInit(),TokenExit(),TokenNext(),TokenNum(),TokenAt(),SaveToken(),TokenEnd()
    $END$

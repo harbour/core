@@ -29,7 +29,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CSetAtMupa(),CharRepl(),WordRepl()
    $END$

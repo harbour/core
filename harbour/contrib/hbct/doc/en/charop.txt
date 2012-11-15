@@ -43,7 +43,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharSub()   CharAnd()   CharNot()
       CharOr()    CharXor()   CharShl()
@@ -92,7 +92,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharAdd()   CharSub()   CharNot()
       CharOr()    CharXor()   CharShl()
@@ -137,7 +137,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharAdd()   CharSub()   CharAnd()
       CharOr()    CharXor()   CharShl()
@@ -186,7 +186,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharAdd()   CharSub()   CharNot()
       CharAnd()   CharXor()   CharShl()
@@ -233,7 +233,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharAdd()   CharSub()   CharNot()
       CharAnd()   CharOr()    CharShl()

@@ -40,7 +40,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       SetAtLike(),CSetAtMupa()
    $END$

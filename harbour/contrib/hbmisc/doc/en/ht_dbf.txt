@@ -40,7 +40,7 @@
    $COMPLIANCE$
       This function is CA-Cl*pper tools compatible
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       FIELDSIZE(),FIELDDECI()
    $END$
@@ -76,7 +76,7 @@
    $COMPLIANCE$
       This function is CA-Cl*pper tools compatible
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       FIELDTYPE(),FIELDDECI()
    $END$
@@ -113,7 +113,7 @@
    $COMPLIANCE$
       This function is CA-Cl*pper tools compatible
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       FIELDTYPE(),FIELDSIZE()
    $END$

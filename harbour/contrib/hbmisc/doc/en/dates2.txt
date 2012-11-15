@@ -29,7 +29,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       ADAYS()
    $END$
@@ -62,7 +62,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       ADAYS()
    $END$
@@ -94,7 +94,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       DaysInMonth()
    $END$
@@ -125,7 +125,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       IsLeapYear()
    $END$
@@ -157,7 +157,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       BoM(),WoM()
    $END$
@@ -189,7 +189,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       EoM(),WoM()
    $END$
@@ -220,7 +220,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       WoY()
    $END$
@@ -254,7 +254,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       DoY()
    $END$
@@ -286,7 +286,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       BoY()
    $END$
@@ -318,7 +318,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       EoY()
    $END$

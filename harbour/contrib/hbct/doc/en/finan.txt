@@ -48,7 +48,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PV(),Payment(),Periods(),RATE()
    $END$
@@ -99,7 +99,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       FV(),Payment(),Periods(),RATE()
    $END$
@@ -148,7 +148,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PV(),FV(),Periods(),RATE()
    $END$
@@ -202,7 +202,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PV(),FV(),Payment(),RATE()
    $END$
@@ -248,7 +248,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PV(),FV(),Payment(),Periods()
    $END$

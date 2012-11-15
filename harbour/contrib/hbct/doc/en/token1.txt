@@ -58,7 +58,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Token(),NumToken(),TokenLower(),TokenUpper(),TokenSep()
    $END$
@@ -127,7 +127,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       NumToken(),AtToken(),TokenLower(),TokenUpper(),TokenSep()
    $END$
@@ -161,7 +161,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Token(),AtToken(),TokenLower(),TokenUpper(),TokenSep()
    $END$
@@ -223,7 +223,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Token(),NumToken(),AtToken(),TokenUpper(),TokenSep(),CSetRef()
    $END$
@@ -285,7 +285,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Token(),NumToken(),AtToken(),TokenLower(),TokenSep(),CSetRef()
    $END$
@@ -326,7 +326,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       Token(),NumToken(),AtToken(),TokenLower(),TokenUpper()
    $END$

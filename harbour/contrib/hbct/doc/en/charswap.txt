@@ -34,7 +34,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       WordSwap(),CSetRef()
    $END$
@@ -78,7 +78,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharSwap(),CSetRef()
    $END$

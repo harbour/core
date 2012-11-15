@@ -48,7 +48,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
 
    $END$
@@ -110,7 +110,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       SetTime()
    $END$
@@ -162,7 +162,7 @@
    $PLATFORMS$
       Windows, Linux
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       SetDate(),TimeValid()
    $END$
@@ -212,7 +212,7 @@
    $PLATFORMS$
       Windows, Linux
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       SetTime()
    $END$

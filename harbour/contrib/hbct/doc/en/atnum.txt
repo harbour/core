@@ -52,7 +52,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       AtNum(),BeforAtNum(),CSetAtMupa(),SetAtLike()
    $END$
@@ -108,7 +108,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       AtNum()  AfterAtNum()  CSetAtMupa()  SetAtLike()
    $END$
@@ -163,7 +163,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       AtNum()  AfterAtNum()  CSetAtMupa()  SetAtLike()
    $END$

@@ -50,7 +50,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       ADDASCII()   Blank()       CharAdd()
       CharAnd()    CharMirr()    CharNot()
@@ -100,7 +100,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       AtNum()       AfterAtNum()  BeforAtNum()
       AtRepl()      NumAt()       AtAdjust()
@@ -164,7 +164,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Header is ct.ch, library is libct.
+      Header is ct.ch, library is hbct.
    $SEEALSO$
 
    $END$

@@ -28,7 +28,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PosDel(),PosIns(),PosRepl(),CSetRef()
    $END$
@@ -60,7 +60,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PosChar(),PosIns(),PosRepl()
    $END$
@@ -92,7 +92,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       POSCHAR,PosDel(),PosRepl()
    $END$
@@ -124,7 +124,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PosChar(),PosDel(),PosIns(),CSetRef()
    $END$

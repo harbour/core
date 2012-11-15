@@ -32,7 +32,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharOdd()  CharMix()
    $END$
@@ -67,7 +67,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharEven()  CharMix()
    $END$

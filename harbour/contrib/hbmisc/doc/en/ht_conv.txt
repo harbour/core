@@ -18,7 +18,7 @@
    $DESCRIPTION$
       check if the passed string is a bynary number or not
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       IsOctal(),IsDec(),IsHexa()
    $END$
@@ -40,7 +40,7 @@
    $DESCRIPTION$
       check if the passed string is a octal number or not
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       IsBin(),IsDec(),IsHexa()
    $END$
@@ -62,7 +62,7 @@
    $DESCRIPTION$
       check if the passed string is a decimal number or not
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       IsOctal(),IsBin(),IsHexa()
    $END$
@@ -84,7 +84,7 @@
    $DESCRIPTION$
       check if the passed string is a hexa number or not
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       IsOctal(),IsDec(),IsBin()
    $END$
@@ -107,7 +107,7 @@
       This function converts a string <cN> from an decimal value
       to an binary value.
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       DecToHexa(),DecToOctal()
    $END$
@@ -130,7 +130,7 @@
       This function converts a string <cN> from an decimal value
       to an octal value.
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       DecToHexa(),DecToBin()
    $END$
@@ -153,7 +153,7 @@
       This function converts a string <cN> from an decimal value
       to an hexadecimal value.
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       DecToBin(),DecToOctal()
    $END$
@@ -176,7 +176,7 @@
       This function converts a string <cN> from an binary value
       to a numeric decimal value.
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       OctalToDec(),HexaToDec()
    $END$
@@ -199,7 +199,7 @@
       This function converts a string <cN> from an octal value
       to a numeric decimal value.
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       BinToDec(),HexaToDec()
    $END$
@@ -222,7 +222,7 @@
       This function converts a string <cN> from an hexadecimal value
       to a numeric decimal value.
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       OctalToDec(),BinToDec()
    $END$

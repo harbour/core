@@ -10,7 +10,7 @@
    $ONELINER$
       Advantage Database Server RDD
    $DESCRIPTION$
-      RDDADS is an RDD for the Advantage Database Server, an xBase data
+      rddads is an RDD for the Advantage Database Server, an xBase data
       server by Extended Systems <www.advantagedatabase.com>.
       The RDD was written by Alexander Kresin <alex@belacy.belgorod.su>
       Additional code and documentation was added by
@@ -32,7 +32,7 @@
       rddRegister( "ADS", 1 )
       rddSetDefault( "ADS" )
 
-      By default RDDADS is tuned for remote server and cdx indexes. To
+      By default rddads is tuned for remote server and cdx indexes. To
       change this you may use these commands defined in ads.ch:
 
       SET SERVER LOCAL
@@ -73,7 +73,7 @@
 
          Set( _SET_OPTIMIZE, .T. )
 
-      or its command equivalent.  RDDADS will use an AOF whenever
+      or its command equivalent.  rddads will use an AOF whenever
       dbSetFilter is called *if it can*.
 
       Second, make sure the filter is one ADS can understand. UDFs are out,
@@ -141,13 +141,13 @@
 
       For programmers who are already familiar with the ACE engine,
       Harbour's compatibility with dbfcdx means there are some differences
-      between the RDDADS in Harbour and the parallel ACE documentation:
+      between the rddads in Harbour and the parallel ACE documentation:
 
       1) In ACE, skipping backwards to BOF goes to the phantom record and
-      sets the record number to 0.  In RDDADS, the  record pointer stays at
+      sets the record number to 0.  In rddads, the  record pointer stays at
       the Top record and only the BOF flag is set to True.
 
-      2) In RDDADS, a filter expression can be used that may not be
+      2) In rddads, a filter expression can be used that may not be
       valid on the server (because of references to public variables or
       User-Defined Functions).
       In these cases, all data will come back from the server

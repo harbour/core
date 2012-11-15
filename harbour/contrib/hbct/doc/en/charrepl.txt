@@ -59,7 +59,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       WordRepl()   PosRepl()   RangeRepl()
       CSetRef()

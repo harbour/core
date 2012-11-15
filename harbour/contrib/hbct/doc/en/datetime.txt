@@ -28,7 +28,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       EoM(),BoQ(),EoQ(),BoY(),EoY()
    $END$
@@ -60,7 +60,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       BoM(),BoQ(),EoQ(),BoY(),EoY()
    $END$
@@ -92,7 +92,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       BoM(),EoM(),EoQ(),BoY(),EoY()
    $END$
@@ -124,7 +124,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       BoM(),EoM(),BoQ(),BoY(),EoY()
    $END$
@@ -156,7 +156,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       BoM(),EoM(),BoQ(),EoQ(),EoY()
    $END$
@@ -188,7 +188,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       BoM(),EoM(),BoQ(),EoQ(),BoY()
    $END$

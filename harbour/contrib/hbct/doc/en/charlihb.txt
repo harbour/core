@@ -35,7 +35,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharNoList(),CharList(),CharHist()
    $END$
@@ -74,7 +74,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       CharList(),CharNoList(),CharSList()
    $END$

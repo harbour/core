@@ -28,7 +28,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PosLower(),PosUpper(),PosRange()
    $END$
@@ -60,7 +60,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PosAlpha(),PosUpper(),PosRange()
    $END$
@@ -93,7 +93,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PosAlpha(),PosLower(),PosUpper()
    $END$
@@ -125,7 +125,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is libct.
+      Library is hbct.
    $SEEALSO$
       PosAlpha(),PosLower(),PosRange()
    $END$

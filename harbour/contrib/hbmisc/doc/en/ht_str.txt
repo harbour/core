@@ -44,6 +44,6 @@
    $COMPLIANCE$
       All platforms
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $END$
  */

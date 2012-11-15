@@ -76,7 +76,7 @@
    $COMPLIANCE$
       This is a new Harbour Tools class
    $FILES$
-      Library is libmisc
+      Library is hbmisc
    $SEEALSO$
       TClass()
    $END$
