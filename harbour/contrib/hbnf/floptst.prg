@@ -52,7 +52,7 @@
 
 #include "fileio.ch"
 
-#define ERR_WRONG_PARAMETERS  ( -1 )
+#define ERR_WRONG_PARAMETERS  -1
 #define ERR_NO_ERROR          0
 #define ERR_DRIVE_NOT_READY   1 /* unused */
 #define ERR_UNFORMATTED       2 /* unused */

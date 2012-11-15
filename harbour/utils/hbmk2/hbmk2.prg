@@ -309,7 +309,7 @@ EXTERNAL hbmk_KEYW
 #define _CHR_EOL                Chr( 10 )
 #define _OUT_EOL                Chr( 10 )
 
-#define _HBMK_IMPLIB_NOTFOUND   ( -1 )
+#define _HBMK_IMPLIB_NOTFOUND   -1
 #define _HBMK_IMPLIB_OK         0
 #define _HBMK_IMPLIB_FAILED     1
 
