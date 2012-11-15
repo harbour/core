@@ -42,8 +42,8 @@
       in <cString> is an alphabetic character. If not, the function will
       return a logical false (.F.).
    $EXAMPLES$
-      ? 'isalpha( "hello" ) = ', IsAlpha( "hello" )
-      ? 'isalpha( "12345" ) = ', IsAlpha( "12345" )
+      ? 'IsAlpha( "hello" ) = ', IsAlpha( "hello" )
+      ? 'IsAlpha( "12345" ) = ', IsAlpha( "12345" )
    $STATUS$
       R
    $COMPLIANCE$
@@ -276,10 +276,10 @@
       the second expression, the function will return 0. The third and fourth
       parameters lets you indicate a starting and end offset to search in.
    $EXAMPLES$
-      ? 'HB_AT( "cde", "abcdefgfedcba" ) = ' + ;
-         Str( HB_AT( "cde", "abcdefgfedcba" ) )       // 3
-      ? 'HB_AT( "cde", "abcdefgfedcba" ) = ' + ;
-         Str( HB_AT( "cde", "abcdefgfedcba", 4 ) )    // 0
+      ? 'hb_At( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( hb_At( "cde", "abcdefgfedcba" ) )       // 3
+      ? 'hb_At( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( hb_At( "cde", "abcdefgfedcba", 4 ) )    // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -367,8 +367,8 @@
       The third and fourth parameters lets you indicate a starting and
       end offset to search in.
    $EXAMPLES$
-      ? 'HB_RAt( "cde", "abcdefgfedcba" ) = ' + ;
-         Str( HB_RAt( "cde", "abcdefgfedcba" ) )   // 3
+      ? 'hb_RAt( "cde", "abcdefgfedcba" ) = ' + ;
+         Str( hb_RAt( "cde", "abcdefgfedcba" ) )   // 3
    $STATUS$
       R
    $COMPLIANCE$
