@@ -283,7 +283,7 @@ Answer:
 Harbour will not implement all of them as we want to provide the highest
 freedom to programers to extend and modify Harbour as needed. In example:
 Clipper language uses opcodes for: Row(), Col(), Upper(), Space(),
-Replicate(), InKey(), Year(), Month(), etc... where we may just call a
+Replicate(), Inkey(), Year(), Month(), etc... where we may just call a
 standard C function, that uses the standard extend system and that may be
 easily modified. So Harbour will use much less opcodes than the Clipper
 language. This will also help to have a simpler and easier to maintain

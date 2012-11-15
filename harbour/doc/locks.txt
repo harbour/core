@@ -35,19 +35,19 @@ here.
 
 In documentation CLIP can use Clipper like or FoxPro like locking
 schemes and it can be controlled by SET LOCKSTYLE [TO] ... command
-or SET( _SET_LOCKSTYLE, 0 | 1 ) function.
+or Set( _SET_LOCKSTYLE, 0 | 1 ) function.
 This switch only changes the RLOCK/FLOCK offset.
 For:
    SET LOCKSTYLE [TO] CLIPPER | CLIPPER50 | CLIPPER53
 or:
-   SET( _SET_LOCKSTYLE, 0 )
+   Set( _SET_LOCKSTYLE, 0 )
 this offset is set to 1'000'000'000. This is header lock address
 and records are locked at above address + record number.
 This is compatible with standard Clipper locking.
 Commands:
    SET LOCKSTYLE [TO] CLIPPER52 | FOXPRO | SIX
 or:
-   SET( _SET_LOCKSTYLE, 1 )
+   Set( _SET_LOCKSTYLE, 1 )
 set this offset to 0x10000000 keeping the same algorithm
 for record locking what is incompatible with any other locking
 schemes known by me. For sure it's not compatible with [V]FP

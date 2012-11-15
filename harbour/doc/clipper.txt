@@ -10,16 +10,16 @@ CA-Cl*pper.
 Harbour Macro Compiler
 ----------------------
 The Harbour Macro Compiler offers 2 additional layers of functionality
-controlled by means of HB_SETMACRO()* function, not available in CA-Cl*pper.
+controlled by means of hb_SetMacro()* function, not available in CA-Cl*pper.
 
-HB_SETMACRO( HB_SM_HARBOUR, TRUE ) will enable macro compilation and
+hb_SetMacro( HB_SM_HARBOUR, .T. ) will enable macro compilation and
 evaluation of complex expressions not supported by CA-Cl*pper like:
 
  - exp++, exp--, var += exp, (exp), etc..
  - Nested codeblocks.
  - Expressions longer then 254 characters.
 
-HB_SETMACRO( HB_SM_XBASE, TRUE ) will enable macro compilation and
+hb_SetMacro( HB_SM_XBASE, .T. ) will enable macro compilation and
 evaluation of comma separated lists in all contexts where lists are
 acceptable by CA-Cl*pper*, including:
 
@@ -47,7 +47,7 @@ descriptions, but is the de-facto behavior in all CA-Cl*pper 5.x versions.
 
 Harbour instead will not only evaluate all of the expressions in
 such list macro, but will also display all such values. This default
-behavior may be disabled with HB_SETMACRO( HB_SM_XBASE, .F. )*
+behavior may be disabled with hb_SetMacro( HB_SM_XBASE, .F. )*
 
 * See also -k Compiler switch.
 
@@ -71,22 +71,22 @@ Harbour has support enumeration loop with the following syntax:
    NEXT
 
 Note:
-   -expr can be a string or an array
-   -enumerator variable 'var<n>' stores a reference to the element of
-    an array or a string specified by 'expr<n>' thus assigments to the
-    enumerator changes the value of given array element
-   -after the loop the controlling variable(s) store the value which
-    they had before entering the loop
-   -the enumeraqtor variable supports the following properties
-    :__enumindex - the loop counter for variable
-    :__enumbase  - the value that is being traversed
-    :__enumvalue - the value of variable
+   - expr can be a string or an array
+   - enumerator variable 'var<n>' stores a reference to the element of
+     an array or a string specified by 'expr<n>' thus assigments to the
+     enumerator changes the value of given array element
+   - after the loop the controlling variable(s) store the value which
+     they had before entering the loop
+   - the enumeraqtor variable supports the following properties
+     :__enumindex - the loop counter for variable
+     :__enumbase  - the value that is being traversed
+     :__enumvalue - the value of variable
 
 
 for example:
-   a = 'A'
-   b = 'B'
-   FOR EACH a,b IN { 1, 2, 3, 4 }, "abcd"
+   a := 'A'
+   b := 'B'
+   FOR EACH a, b IN { 1, 2, 3, 4 }, "abcd"
       ? a, b   //prints: 1 a
                //        2 b
                //        3 c
@@ -96,7 +96,7 @@ for example:
 
    // you can use EXIT statement inside the loop
    FOR EACH a IN { 1, 2, 3, 4 }
-      IF( a:__enumindex == 3 )
+      IF a:__enumindex == 3
          ? a
          EXIT
       ENDIF
@@ -106,10 +106,10 @@ for example:
    str := "abc"
    FOR EACH a, b IN arr, str
       a *= 2
-      str := UPPER( str )
+      str := Upper( str )
    NEXT
-   //now 'arr' stores { 2, 4, 6 }
-   //howerer 'str' still stores "abc"
+   // now 'arr' stores { 2, 4, 6 }
+   // howerer 'str' still stores "abc"
 
 Notice the difference:
    FOR EACH a IN someValue
@@ -133,14 +133,14 @@ Harbour supports the following statement:
    to send messages to the object specified by 'expression'
 
 for example:
-   WITH OBJECT myobj:a[1]:myitem
+   WITH OBJECT myobj:a[ 1 ]:myitem
       :message( 1 )
       :value := 9
    ENDWITH
 
    The above code is equivalent to:
-   myobj:a[1]:myitem:message( 1 )
-   myobj:a[1]:myitem:value := 9
+   myobj:a[ 1 ]:myitem:message( 1 )
+   myobj:a[ 1 ]:myitem:value := 9
 
    Inside WITH OBJECT/END you can access (or even assign a new object)
    using a special reserved property :__withobject

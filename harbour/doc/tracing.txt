@@ -167,32 +167,32 @@ query and set the trace level. From C code:
   current state to a given value (which should be in the range [0,1],
   otherwise the current state remains unchanged):
 
-    hb_tracestate(state);
+    hb_tracestate( state );
 
   Therefore, to just query the current state, you can safely call
 
-    current_state = hb_tracestate(-1);
+    current_state = hb_tracestate( -1 );
 
   To turn tracing completely off:
 
-    hb_tracestate(0);
+    hb_tracestate( 0 );
 
   To turn tracing back on:
 
-    hb_tracestate(1);
+    hb_tracestate( 1 );
 
 * To query the current tracing level, and optionally change the
   current level to a given value (which should be in the range [0,5],
   otherwise the current level remains unchanged):
 
-    hb_tracelevel(level);
+    hb_tracelevel( level );
 
   Therefore, to just query the current level, you can safely call
 
-    current_level = hb_tracelevel(-1);
+    current_level = hb_tracelevel( -1 );
 
 
 There are wrapper functions callable from Clipper code:
 
-  current_state := HB_TRACESTATE( [new_state] )
-  current_level := HB_TRACELEVEL( [new_level] )
+  current_state := hb_traceState( [new_state] )
+  current_level := hb_traceLevel( [new_level] )

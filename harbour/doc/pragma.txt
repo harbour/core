@@ -170,7 +170,7 @@ Syntax:
 
   The above example is preprocessed into:
   v:=[This is 'example' text with ''""[] embeded and C \nsequence]
-  qout(v)
+  QOut(v)
 
   and at runtime the following is printed:
 

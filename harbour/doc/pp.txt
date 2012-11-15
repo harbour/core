@@ -67,7 +67,7 @@ making in last days.
    Such quoting has very high priority like normal string quoting. f.e:
       ? [ ; // /* ]
    should generate:
-      QOUT( " ; // /* " )
+      QOut( " ; // /* " )
    This implicates one important thing: PP has to read whole physical
    line from file, then convert it to tokens and if necessary (';' is the
    last token after preprocessing) read next line(s).
@@ -91,14 +91,14 @@ making in last days.
       #define O2 ]
       ? O1 b O2
    should generate:
-      QOUT( [ b ] )
+      QOut( [ b ] )
    not:
-      QOUT( " b " )
+      QOut( " b " )
    but:
       #command A <x> => ? <x>
       A [ b ]
    generate also:
-      QOUT( [ b ] )
+      QOut( [ b ] )
    and in this case Clipper compiler makes conversion to string.
    It means that only at initial line preprocessing preprocessor decides
    what can or cannot be string token. I think that we do not have to
@@ -124,7 +124,7 @@ making in last days.
    disable this special meaning and in such case Clipper PP
    generates array tokens but they are not marked as open_array_index
    when in the code they are. It causes that in code like
-      #command A B\[C] => QOUT("A B[C]")
+      #command A B\[C] => QOut("A B[C]")
       A B[C]
    A B[C] is not preprocessed because in #command match pattern '[' is
    not open_array_index and PP cannot find matching tokens.
@@ -133,7 +133,7 @@ making in last days.
    translated to string and not bound
    with keyword. As I wrote above it will be possible when '[' is after
    one of the closing brackets: ')', '}' or ']', f.e.:
-      #command A }\[C] => QOUT("A }[C]")
+      #command A }\[C] => QOut("A }[C]")
       A }[C]
    Will be perfectly translated. For me it seems to be limitation of
    Clipper PP implementation (probably it's a side effect of some internal
@@ -292,7 +292,7 @@ making in last days.
    illustrates it. Clipper does not preprocess the TR2.
         #xtranslate TR1 [<x,...> D]     => ! [#<x>] !
         #xtranslate TR2 [<x,...> D]  C  => ! [#<x>] !
-        #xcommand CMD <*x*> => QOUT( #<x> )
+        #xcommand CMD <*x*> => QOut( #<x> )
         proc main()
         CMD $ TR1 a + b + c + d c
         CMD $ TR2 a + b + c + d c
@@ -558,7 +558,7 @@ making in last days.
 
       #define NEWCMD    MYCMD
       #xcommand CREATEDIRECTIVE => HASH_DIRECTIVE xcommand NEWCMD \<x> => ;;
-                                   QOUT( "INDIRECT # DIRECTIVE", #\<x> )
+                                   QOut( "INDIRECT # DIRECTIVE", #\<x> )
       CREATEDIRECTIVE
       MYCMD Hello
 
@@ -585,7 +585,7 @@ making in last days.
    some other preprocessor rule, .f.e:
       #define EOC ;;
 
-      #xcommand CREATECMD     => #xcommand NEWCMD => QOUT("1") EOC QOUT("2")
+      #xcommand CREATECMD     => #xcommand NEWCMD => QOut("1") EOC QOut("2")
       CREATECMD
       NEWCMD
 

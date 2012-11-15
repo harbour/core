@@ -37,22 +37,22 @@ please see en-EN/hbinet.txt which now replaces this file
        Startup / cleanup functions
        ---------------------------
 
-       hb_InetInit() -->NIL
+       hb_inetInit() -->NIL
          Activates inet support; mainly used for winsock start up at the moment, but
          could be used in the future for many other purpose. Put it at the beginning
          of every program using INET functions.
 
-       hb_InetCleanup() -->NIL
+       hb_inetCleanup() -->NIL
          Closes Inet support; mainly used for Windows. Put it at the end of any program
          using Inet functions, just before the program exits.
 
-       hb_InetCreate() --> SOCKET
+       hb_inetCreate() --> SOCKET
          Creates the raw data of the socket, that can be passed to an asynchronous
          connection function (hb_InetConnect or hb_InetConnectIP). This will prevent the
          connection function from allocating some data that could be never used in
          certain cases, i.e. an asynchronously detected timeout.
 
-       hb_InetClose( SOCKET ) --> NUMERIC
+       hb_inetClose( SOCKET ) --> NUMERIC
          Closes the socket, notifiying both ends of the communication pipe that the
          connection is over. If you have threads waiting for data to be read from
          this socket, this method will make them stop waiting and return an error
@@ -71,7 +71,7 @@ please see en-EN/hbinet.txt which now replaces this file
        hb_InetSetTimeout( SOCKET, nMillisecs ) --> NIL
          Sets the default timeout of the given socket. Default timeout is used in all
          blocking operations: if the operation can't be done in nMillisec milliseconds,
-         the function returns immediately and the hb_InetErrorCode( SOCKET ) returns -1.
+         the function returns immediately and the hb_inetErrorCode( SOCKET ) returns -1.
          The default timeout is not the maximum time that a function using the socket
          is allowed to execute: it is the maximum time that each single blocking
          operation inside that function is allowed to hold the control of the socket.
@@ -84,43 +84,43 @@ please see en-EN/hbinet.txt which now replaces this file
        hb_InetGetTimeout( SOCKET ) --> NUMERIC
          Returns the timeout set for the given socket.
 
-       hb_InetClearTimeout( SOCKET, nMillisecs ) --> NIL
+       hb_inetClearTimeout( SOCKET, nMillisecs ) --> NIL
          Clears the default timeout of the given socket. Default timeout is used in all
          blocking operations.
 
        Informative functions
        ---------------------
 
-       hb_InetErrorCode( SOCKET ) --> Numeric
+       hb_inetErrorCode( SOCKET ) --> Numeric
          Returns the last error code that has been provoked by a network operation,
          or 0 if none. Error codes are the ones used for winsock or UnixSockets (they
          are the same); 1 is reserved for "connection closed" message.
 
 
-       hb_InetErrorDesc( SOCKET ) --> String
+       hb_inetErrorDesc( SOCKET ) --> String
          Returns a string describing the last error that occurred in the socket;
          the string is system dependent, and should be used only for debugging
          purposes.
 
 
-       hb_InetCount( SOCKET ) --> Numeric
+       hb_inetCount( SOCKET ) --> Numeric
          Returns the amount of characters read or written in the latest socket
          operation.
 
-       hb_InetAddress( SOCKET ) --> STRING
+       hb_inetAddress( SOCKET ) --> STRING
          Returns a string representing the remote server address in quad dot notation,
          e.g. "192.168.1.1", or the local server address if the socket is server
          side.
          TODO: have a version that returns a vector of 4 numbers.
 
-       hb_InetPort( SOCKET ) --> STRING
+       hb_inetPort( SOCKET ) --> STRING
          Returns the port to which this socket is bound, or the remote port if this
          socket is connected with a remote host or client
 
        Server Side socket functions
        ----------------------------
 
-       hb_InetServer( port [, cBindAddr [, nListenLimit]]  ) --> SOCKET
+       hb_inetServer( port [, cBindAddr [, nListenLimit]]  ) --> SOCKET
          Creates a server that can accept connections from client on a certain port.
          If the computer on which hb_InetServe is called has more than one logical
          interface (e.g. one network card, one loopback and one PPP address),
@@ -141,17 +141,17 @@ please see en-EN/hbinet.txt which now replaces this file
          a heavy duty server.
          On error, sets error description in the newly returned socket.
 
-       hb_InetAccept( SOCKET ) --> SOCKET
+       hb_inetAccept( SOCKET ) --> SOCKET
          Waits until a connection is available on a socket created with hb_InetServer;
          Returns a socket that can be used to communicate with the incoming client.
          On error, NIL is returned and error code sets in the passed SOCKET.
-         This error can be accessed using hb_InetErrorCode() function.
+         This error can be accessed using hb_inetErrorCode() function.
 
        Client side socket functions
        ----------------------------
 
-       hb_InetConnect( cAddress, nPort ) --> SOCKET
-       hb_InetConnect( cAddress, nPort, SOCKET ) --> NIL
+       hb_inetConnect( cAddress, nPort ) --> SOCKET
+       hb_inetConnect( cAddress, nPort, SOCKET ) --> NIL
          Connects to a remote server described by cAddress, that can be in
          quad dot notation (e.g. "192.168.1.1") or in DNS name (e.g.
          "www.xharbour.org"), using the desired port.
@@ -173,8 +173,8 @@ please see en-EN/hbinet.txt which now replaces this file
          be due to unavailable name resolving service, host name not valid,
          host address not reachable and host reachable but port not open.
 
-       hb_InetConnectIP( cAddress, PORT ) --> SOCKET
-       hb_InetConnectIP( cAddress, PORT, SOCKET ) --> NIL
+       hb_inetConnectIP( cAddress, PORT ) --> SOCKET
+       hb_inetConnectIP( cAddress, PORT, SOCKET ) --> NIL
          Connects to a remote server described by cAddress, that can be specified
          only in quad dot IPV4 notation (e.g. "127.0.0.1"), using the desired port.
          This version of hb_InetConnect does not use gethostbyname, and thus is thread
@@ -190,7 +190,7 @@ please see en-EN/hbinet.txt which now replaces this file
        Sending and receiving data
        ----------------------------
 
-       hb_InetRecv( SOCKET, @cString [, nAmount] ) --> NUMERIC
+       hb_inetRecv( SOCKET, @cString [, nAmount] ) --> NUMERIC
          Reads at maximum nAmount bytes (or a number of bytes equal to cString
          length if nAmount is not given) from the socket into cString.
          The parameter cString must be preallocated so that it has enough
@@ -203,17 +203,17 @@ please see en-EN/hbinet.txt which now replaces this file
          read before the function returns, in fact, hb_InetRecv returns as soon it
          is able to fill cString with one or more bytes. To block the current
          process until the whole cString is filled (or nAmount bytes are read),
-         use the hb_InetRecvALL().
+         use the hb_inetRecvAll().
          RETURNS the number of the characters read from the SOCKET.
 
-       hb_InetRecvAll( SOCKET, @cString [, @nAmount] ) --> NUMERIC
+       hb_inetRecvAll( SOCKET, @cString [, @nAmount] ) --> NUMERIC
          This function works exactly as hb_InetRecv, except for the fact that it
          blocks until nAmount bytes are read, if nAmount is given, or
          cString is filled for its whole length.
          RETURNS the number of the characters read from the SOCKET. Might be
          less than nAmount on premature socket closing or on network error.
 
-       hb_InetRecvLine( SOCKET [, @nResult, [, nMaxLength [, nBufSize]]] ) --> STRING
+       hb_inetRecvLine( SOCKET [, @nResult, [, nMaxLength [, nBufSize]]] ) --> STRING
          Blocks the calling thread until a sequence CRLF is read from the socket.
          Incremental allocation and end-of-line checking are done in an efficient
          way. If an error occurs, or if the stream is closed before a CRLF is read,
@@ -234,26 +234,26 @@ please see en-EN/hbinet.txt which now replaces this file
          equal to nMaxLength, memory for reading the line will be allocated only
          once, at the beginning of the function).
 
-       hb_InetRecvEndBlock( SOCKET [, cBlock [, @nResult, [, nMaxLength [,
+       hb_inetRecvEndblock( SOCKET [, cBlock [, @nResult, [, nMaxLength [,
               nBufSize]]]] ) --> STRING
          This function operates exactly the same way as hb_InetRecvLine, but
          the "record termination" is customizable thorugh the cBlock parameter.
          If not given, this parameter defaults to the CRLF sequence.
          Provided by: Marcelo Lombardo
 
-       hb_InetDataReady( SOCKET [, nMillisecs] ) --> NUMERIC
+       hb_inetDataReady( SOCKET [, nMillisecs] ) --> NUMERIC
          Verifies if some data is available to be read in the socket without blocking
          execution of the caller. If nMillisecs is not given, the function returns
          immediately 1 if there is some data to be read, 0 if there isn't any data and
          -1 in case of error. If nMillisecs is given, the functon will wait up to that
          amount of milliseconds for data to be available; if some data arrives in the
          meanwhile, the wait is immediately interrupted.
-         The next hb_InetRecv() function will read all the available data (up to the
+         The next hb_inetRecv() function will read all the available data (up to the
          required length) without blocking.
          On error, hb_InetErrorCode and hb_InetErrorDesc can be use to determine what kind
          of error happened.
 
-       hb_InetSend( SOCKET, STRING [, nLength ] ) --> NUMERIC
+       hb_inetSend( SOCKET, STRING [, nLength ] ) --> NUMERIC
          Send data being stored in a string over the socket. Returns the amount of
          data written, 0 if the socket has been closed in the meanwhile or -1 on
          error. The nLength parameter can be given to allow writing only a part of
@@ -263,43 +263,43 @@ please see en-EN/hbinet.txt which now replaces this file
          take care to ensure that the data is really sent; so you should check for
          the returned number, and send the part that has not been sent.
          To ensure that all the data is sent before the function returns, use the
-         hb_InetSendAll() function.
+         hb_inetSendAll() function.
          On error, the error in the socket is set.
 
-       hb_InetSendAll( SOCKET, STRING [, nLength ] ) --> NUMERIC
-         This function works exactly as hb_InetSend() but it ensures that all the
+       hb_inetSendAll( SOCKET, STRING [, nLength ] ) --> NUMERIC
+         This function works exactly as hb_inetSend() but it ensures that all the
          data to be sent is written before returning.
 
        Utility Functions
        ------------------
 
-       hb_InetGetHosts( cName ) --> aHosts
+       hb_inetGetHosts( cName ) --> aHosts
          Returns an array containing all the IP addresses associated with a given
          host name. The IP addressess returned by this funtion are strings in
          quad dot notations, eg "192.168.1.1", and can be directly used into
-         hb_InetConnectIP(). cName can be any string: valid DNS names (eg.
+         hb_inetConnectIP(). cName can be any string: valid DNS names (eg.
          "www.myserver.com"), locally available names (e.g. "localhost" or
          windows Network Neighborhood names), or even IP addresses in quad
          dot notation.
          NOTE: This function is not thread safe (by design), and programmers
          must be sure not to use it at the same time in two different threads,
-         or not to use it together with a hb_InetConnect(). If this kind of situation
+         or not to use it together with a hb_inetConnect(). If this kind of situation
          should ever arise, you are advised to use a thread MUTEX.
          On error, and if the server can't be found, the function returns NIL.
 
-       hb_InetGetAlias( cName ) --> aHosts
+       hb_inetGetAlias( cName ) --> aHosts
          Returns an array containing the aliases ( CNAME DNS records ) by
          which the server is currently known. Whether this function is able
          to have the complete list of aliases or not depends on the verbosity
          of the DNS server.
 
-       hb_InetCRLF() --> String
+       hb_inetCRLF() --> String
          Returns a CRLF sequence used in many internet protocols.
 
        UDP (User Datagram Protocol) Compliant Routines
        -----------------------------------------------
 
-       hb_InetDGram( [bBroadcast] ) --> SOCKET
+       hb_inetDGram( [bBroadcast] ) --> SOCKET
          Creates a datagram oriented socket that will be able to send data and
          eventually receive data. Since the socket is not bound, the program can't
          retrieve the address at which this socket appaers to be, but a second
@@ -311,7 +311,7 @@ please see en-EN/hbinet.txt which now replaces this file
          Returns the socket, and if an error occurs, the socket error message
          and code are set.
 
-       hb_InetDGramBind( nPort, [cAddress [, bBroadcast] ] ) --> SOCKET
+       hb_inetDGramBind( nPort, [cAddress [, bBroadcast] ] ) --> SOCKET
          Creates a datagram oriented socket and binds it to a particular port, and
          eventually to a certain interface if cAddress is given and not NIL.
          If bBroadcast is set to .T., the routine creates a broadcast capable socket:
@@ -320,7 +320,7 @@ please see en-EN/hbinet.txt which now replaces this file
          Returns the socket, and if an error occurs, the socket error message
          and code are set.
 
-       hb_InetDGramSend( SOCKET, cAddress, nPort, cBuffer [, nSize ] ) --> NUMERIC
+       hb_inetDGramSend( SOCKET, cAddress, nPort, cBuffer [, nSize ] ) --> NUMERIC
          Sends a datagram (a fixed length data) to a determined ip address (cAddress,
          to be specified in quad-dot notation) and port. If nSize is not specified,
          all the data in cBuffer will be sent; if nSize is specified, only
@@ -336,7 +336,7 @@ please see en-EN/hbinet.txt which now replaces this file
          can be a broadcast address.
          Returns -1 on error, or the number of bytes actually sent on success.
 
-       hb_InetDGramRecv( SOCKET, cBuffer [, nSize ] ) --> NUMERIC
+       hb_inetDGramRecv( SOCKET, cBuffer [, nSize ] ) --> NUMERIC
          Reads at maximum nSize bytes incoming from a UDP socket, if nSize is
          given, or reads at maximum cBuffer length if nSize is not given.
          There isn't any guarantee that all the data required to be read is

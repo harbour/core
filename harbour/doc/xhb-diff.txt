@@ -2502,7 +2502,7 @@ and functions without 'v' which do not allow to access array items, i.e.:
       int          iValue   = hb_parni( 2 );
 These functions (without 'v') are also much more restrictive on accepted
 parameters and do not make hidden parameter translations, i.e. hb_parl()
-returns TRUE only for logical parameters and does not accept numeric
+returns HB_TRUE only for logical parameters and does not accept numeric
 values like hb_parvl() or _parl().
 New functions without array index support were introduced to safely access
 parameters without strict type checking. Such code:

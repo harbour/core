@@ -56,8 +56,8 @@ PROCEDUE Main()
    PRIVATE foo, bar
 
    Test()
-   EVAL( foo )
-   EVAL( bar )
+   Eval( foo )
+   Eval( bar )
 
 PROCEDURE Test()
    LOCAL a := "FOO", b := "BAR"

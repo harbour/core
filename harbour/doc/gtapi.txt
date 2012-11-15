@@ -83,7 +83,7 @@ _gtSave
 _gtRestore
 
 Two Harbour functions are included in the gtapi.c file,
-ROW() and COL() to get started.
+Row() and Col() to get started.
 
 You also may notice that I didn't include any NanFor document headers or
 even any cvs macros. The jury is still out on that so I'll leave that to the
@@ -115,7 +115,7 @@ which operate on GT resources.
 Harbour application can work without any GT driver. In such case all
 functions which operates on GT resources are redirected to meta GT
 driver (GTNUL) which is part of RTL library. This driver makes all
-operations on memory buffer and only OUTSTD()/OUTERR() output is sent
+operations on memory buffer and only OutStd()/OutErr() output is sent
 outside. All GT drivers inherits from GTNUL or from other GTs but in
 the inheritance chain the first GT driver is always GTNUL.
 
@@ -141,7 +141,7 @@ or:
     PROCEDURE RDDSYS(); RETURN
 
 Both gives the same effect, and default RDD (DBFNTX) will not be linked.
-Exactly the same I've done in GT subsystem. HB_GTSYS() makes exactly
+Exactly the same I've done in GT subsystem. hb_GTSYS() makes exactly
 the same job as RDDSYS() but for GT. This symbol is requested by core
 code and in the module where it is defined it request default build GT
 driver or if it's not set then default GT driver for given platform.
@@ -157,7 +157,7 @@ the same as for RDD and add to your code:
 
     ANNOUNCE HB_GTSYS
 or:
-    PROCEDURE HB_GTSYS(); RETURN
+    PROCEDURE hb_GTSYS(); RETURN
 
 In such case your final application will not have any GT driver. If you
 want to use GTNUL as base, you should add:
@@ -216,7 +216,7 @@ other situations when it could be useful to have full functional GT
 driver in GUI application. You can even create mixed GUI/CUI code in one
 program.
 
-And finally, the TONE() function problem.
+And finally, the Tone() function problem.
 Low level TONE code is part of GT driver. In the past, GUI libraries in
 Windows were linked the whole GTWIN driver and only TONE were used. It
 was possible because someone blocked GTWIN to work with application
@@ -239,7 +239,7 @@ NOTE: src/rtl/gtgui/gtdef.c is a hack which overloads the default
 gtnul  - base GT driver from which each other inherits.
          it gives screen buffer functionality but does not
          produce any screen output from disp*() commands
-         Only outStd()/outErr() are supported.
+         Only OutStd()/OutErr() are supported.
          It's present on all platforms and i always linked.
 
 gtcgi  - very simple GT driver which does not make any output
@@ -331,16 +331,16 @@ gtalleg- GT driver which uses alegro library for input/output.
 
 gtgui  - pseudo GT driver which adds to GTNUL Clipboard and Tone
          functionality. If you are using some MS-Windows GUI library
-         and you still want to use TONE() function or GTI_CLIPBOARD
+         and you still want to use Tone() function or HB_GTI_CLIPBOARD
          actions then link this GT driver with your application.
-         If you do not want to use TONE() or GTI_CLIPBOARD then
+         If you do not want to use Tone() or HB_GTI_CLIPBOARD then
          do not link it - it will be only waste of memory.
 
 gtctw  - GT driver which adds CT3 Window functionality to any other
          GT driver from which it inherits. It's activated automatically
          when you execute first W*() function.
          In similar way in Harbour it's possible to add support for
-         GTWVW inheriting from GTWVT.
+         GTWVW/GTWVG inheriting from GTWVT.
 
 Some of the GT drivers support additional functionality with hb_gtInfo()
 interface.

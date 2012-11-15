@@ -13,34 +13,34 @@ optimized at compile time:
 
    - Clipper compatible:
 
-      AT( <cConst1>, <cConst2> ) // Clipper wrongly calculates
-                                 // AT( "", <cConst> ) as 1
-      ASC( <cConst> [ , ... ] )
-      CHR( <nConst> )
-      LEN( <cConst> | <aConst> | <hConst> )  // <hConst> is Harbour extension
-      UPPER( <cConst> ) // <cConst> cannot contain characters different then
+      At( <cConst1>, <cConst2> ) // Clipper wrongly calculates
+                                 // At( "", <cConst> ) as 1
+      Asc( <cConst> [ , ... ] )
+      Chr( <nConst> )
+      Len( <cConst> | <aConst> | <hConst> )  // <hConst> is Harbour extension
+      Upper( <cConst> ) // <cConst> cannot contain characters different then
                            [0-9A-Za-z ]
 
    - Harbour extension:
 
-      INT( <nConst> )
-      MIN( <xConst1>, <xConst2> )   // <xConstN> is N, D or L value
-      MAX( <xConst1>, <xConst2> )   // <xConstN> is N, D or L value
-      EMPTY( <aConst> | <hConst> | <cConst> | <bConst> |
+      Int( <nConst> )
+      Min( <xConst1>, <xConst2> )   // <xConstN> is N, D or L value
+      Max( <xConst1>, <xConst2> )   // <xConstN> is N, D or L value
+      Empty( <aConst> | <hConst> | <cConst> | <bConst> |
              <nConst> | <dConst>| <lConst> | NIL )
-      CTOD( "" [ , ... ] )
-      DTOS( <dConst> ] )
-      STOD( [ <cConst> ] )
-      HB_STOD( [ <cConst> ] )
-      HB_STOT( [ <cConst> ] )
-      HB_BITNOT( <nConst> [, ... ] )
-      HB_BITAND( <nConst1>, <nConst2> [, <nConstN> ] )
-      HB_BITOR( <nConst1>, <nConst2> [, <nConstN> ] )
-      HB_BITXOR( <nConst1>, <nConst2> [, <nConstN> ] )
-      HB_BITTEST( <nConst1>, <nConst2> [, ... ] )
-      HB_BITSET( <nConst1>, <nConst2> [, ... ] )
-      HB_BITRESET( <nConst1>, <nConst2> [, ... ] )
-      HB_BITSHIFT( <nConst1>, <nConst2> [, ... ] )
+      CToD( "" [ , ... ] )
+      DToS( <dConst> ] )
+      SToD( [ <cConst> ] )
+      HB_SToD( [ <cConst> ] )
+      hb_SToT( [ <cConst> ] )
+      hb_bitNot( <nConst> [, ... ] )
+      hb_bitAnd( <nConst1>, <nConst2> [, <nConstN> ] )
+      hb_bitOr( <nConst1>, <nConst2> [, <nConstN> ] )
+      hb_bitXor( <nConst1>, <nConst2> [, <nConstN> ] )
+      hb_bitTest( <nConst1>, <nConst2> [, ... ] )
+      hb_bitSet( <nConst1>, <nConst2> [, ... ] )
+      hb_bitReset( <nConst1>, <nConst2> [, ... ] )
+      hb_bitShift( <nConst1>, <nConst2> [, ... ] )
 
    - Harbour special functions:
 
@@ -48,7 +48,7 @@ optimized at compile time:
       HB_I18N_NGETTEXT_NOOP( <nCount>, <cConst1> | <acConst1> [ , <cConst2> ] )
       HB_I18N_GETTEXT_NOOP_*( <cConst1> [ , <cConst2> ] )
       HB_I18N_NGETTEXT_NOOP_*( <nCount>, <cConst1> | <acConst1> [ , <cConst2> ] )
-      HB_MUTEXCREATE()
+      hb_mutexCreate()
 
 
 2. Expresion optimization:

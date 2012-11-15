@@ -124,7 +124,7 @@ HEADER EXAMPLES
        IsLeapYr( [<dDate>] ) --> <lIsLeap>
    $ARGUMENTS$
        <dDate> is an optional date. If not supplied is defaults to the
-       value returned from date().
+       value returned from Date().
    $RETURNS$
        .T. if <dDate> falls in a leap year, .F. if not.
    $DESCRIPTION$

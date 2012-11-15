@@ -19,17 +19,17 @@ Status...: Working on it.
 Assign to: <nobody>
 Detail...: Add support for virtual file handles and registering some
            meta handles so it will be possible to make:
-              h := fopen( "gzip:/tmp/myarchive.gz", FO_WRITE )
-              fwrite( h, cData )
-              fclose( h )
+              h := FOpen( "gzip:/tmp/myarchive.gz", FO_WRITE )
+              FWrite( h, cData )
+              FClose( h )
            or:
-              h := fopen( "tcp:some.host:port", FO_WRITE )
+              h := FOpen( "tcp:some.host:port", FO_WRITE )
               ...
            or:
-              h := fopen( "|lpr -PLaserJet", FO_WRITE )
+              h := FOpen( "|lpr -PLaserJet", FO_WRITE )
               ...
            or:
-              h := fopen( "gunzip /tmp/myarchive.gz|", FO_READ )
+              h := FOpen( "gunzip /tmp/myarchive.gz|", FO_READ )
               ...
            etc.
 Status...: Open.
