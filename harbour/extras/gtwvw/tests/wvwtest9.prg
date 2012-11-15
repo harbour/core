@@ -11,7 +11,7 @@
 //               Budyanto Dj. <budyanto@centrin.net.id>
 //                            based on:
 //
-//                           WVTGUI.PRG,
+//                           wvtgui.prg,
 //                   GTWVT Console GUI Interface
 //              by Pritpal Bedi <pritpal@vouchcac.com>
 //
@@ -114,14 +114,8 @@
 
 #define IDTRYAGAIN          10
 
-#define WVW_MAXWINDOWS    20             // ! must match with HBGTWVW.H
-#define WVW_DEFAULT_MENUKEYEVENT  1024   // ! must match with HBGTWVW.H
-
-// 20040303: !!! copied from WVWMOUSE.PRG pls create an include file
-// mouse object types //20040303
-#define _MOBJECT_BUTTON  0      // mouse button
-#define _MOBJECT_HSCROLL 1      // horiz scrollbar  //obsolete, not used
-#define _MOBJECT_VSCROLL 2      // horiz scrollbar  //obsolete, not used
+#define WVW_MAXWINDOWS    20             // ! must match with hbgtwvw.h
+#define WVW_DEFAULT_MENUKEYEVENT  1024   // ! must match with hbgtwvw.h
 
 // for Button Types: //20040303
 #define _BUTTON_NORMAL 0        // normal button

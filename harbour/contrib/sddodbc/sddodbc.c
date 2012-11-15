@@ -209,11 +209,21 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    char *     szError;
    HB_ERRCODE errCode;
 
+#if ODBCVER >= 0x0300
    if( SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv ) ) )
+#else
+   if( SQL_SUCCEEDED( SQLAllocEnv( &hEnv ) ) )
+#endif
    {
+#if ODBCVER >= 0x0300
       SQLSetEnvAttr( hEnv, SQL_ATTR_ODBC_VERSION, ( SQLPOINTER ) SQL_OV_ODBC3, SQL_IS_UINTEGER );
+#endif
 
+#if ODBCVER >= 0x0300
       if( SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_DBC, hEnv, &hConnect ) ) )
+#else
+      if( SQL_SUCCEEDED( SQLAllocConnect( hEnv, &hConnect ) ) )
+#endif
       {
          void *      hConnStr;
          SQLTCHAR    cBuffer[ 1024 ];
@@ -243,7 +253,11 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
             hb_rddsqlSetError( errCode, szError, NULL, NULL, 0 );
             hb_xfree( szError );
          }
+#if ODBCVER >= 0x0300
          SQLFreeHandle( SQL_HANDLE_DBC, hConnect );
+#else
+         SQLFreeConnect( hConnect );
+#endif
       }
       else
       {
@@ -251,7 +265,11 @@ static HB_ERRCODE odbcConnect( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
          hb_errRT_ODBCDD( EG_OPEN, ESQLDD_CONNALLOC, szError, hb_arrayGetCPtr( pItem, 2 ), errCode );
          hb_xfree( szError );
       }
+#if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_ENV, hEnv );
+#else
+      SQLFreeEnv( hEnv );
+#endif
    }
    else
    {
@@ -268,8 +286,13 @@ static HB_ERRCODE odbcDisconnect( SQLDDCONNECTION * pConnection )
    SDDCONN * pSDDConn = ( SDDCONN * ) pConnection->pSDDConn;
 
    SQLDisconnect( pSDDConn->hConn );
+#if ODBCVER >= 0x0300
    SQLFreeHandle( SQL_HANDLE_DBC, pSDDConn->hConn );
    SQLFreeHandle( SQL_HANDLE_ENV, pSDDConn->hEnv );
+#else
+   SQLFreeConnect( pSDDConn->hConn );
+   SQLFreeEnv( pSDDConn->hEnv );
+#endif
    hb_xfree( pSDDConn );
    return HB_SUCCESS;
 }
@@ -284,7 +307,11 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    char *     szError;
    HB_ERRCODE errCode;
 
+#if ODBCVER >= 0x0300
    if( ! SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_STMT, pSDDConn->hConn, &hStmt ) ) )
+#else
+   if( ! SQL_SUCCEEDED( SQLAllocStmt( pSDDConn->hConn, &hStmt ) ) )
+#endif
    {
       szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, SQL_NULL_HSTMT, &errCode );
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_STMTALLOC, szError, hb_itemGetCPtr( pItem ), errCode );
@@ -302,7 +329,11 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
       {
          /* TODO: new id */
          hb_rddsqlSetError( 0, NULL, hb_itemGetCPtr( pItem ), NULL, ( unsigned long ) iCount );
+#if ODBCVER >= 0x0300
          SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
+#else
+         SQLFreeStmt( hStmt, SQL_DROP );
+#endif
          return HB_SUCCESS;
       }
    }
@@ -312,7 +343,11 @@ static HB_ERRCODE odbcExecute( SQLDDCONNECTION * pConnection, PHB_ITEM pItem )
    szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, hStmt, &errCode );
    hb_rddsqlSetError( errCode, szError, hb_itemGetCPtr( pItem ), NULL, errCode );
    hb_xfree( szError );
+#if ODBCVER >= 0x0300
    SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
+#else
+   SQLFreeStmt( hStmt, SQL_DROP );
+#endif
    return HB_FAILURE;
 }
 
@@ -333,7 +368,11 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    pArea->pSDDData = memset( hb_xgrab( sizeof( SDDDATA ) ), 0, sizeof( SDDDATA ) );
    pSDDData        = ( SDDDATA * ) pArea->pSDDData;
 
+#if ODBCVER >= 0x0300
    if( ! SQL_SUCCEEDED( SQLAllocHandle( SQL_HANDLE_STMT, pSDDConn->hConn, &hStmt ) ) )
+#else
+   if( ! SQL_SUCCEEDED( SQLAllocStmt( pSDDConn->hConn, &hStmt ) ) )
+#endif
    {
       szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, SQL_NULL_HSTMT, &errCode );
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_STMTALLOC, szError, pArea->szQuery, errCode );
@@ -350,7 +389,11 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       hb_strfree( hQuery );
       hb_itemRelease( pItem );
       szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, hStmt, &errCode );
+#if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
+#else
+      SQLFreeStmt( hStmt, SQL_DROP );
+#endif
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_INVALIDQUERY, szError, pArea->szQuery, errCode );
       hb_xfree( szError );
       return HB_FAILURE;
@@ -364,7 +407,11 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    if( ! SQL_SUCCEEDED( SQLNumResultCols( hStmt, &iNameLen ) ) )
    {
       szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, hStmt, &errCode );
+#if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
+#else
+      SQLFreeStmt( hStmt, SQL_DROP );
+#endif
       hb_errRT_ODBCDD( EG_OPEN, ESQLDD_STMTDESCR + 1000, szError, pArea->szQuery, errCode );
       hb_xfree( szError );
       return HB_FAILURE;
@@ -395,7 +442,11 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
       {
          hb_itemRelease( pItemEof );
          szError = odbcGetError( pSDDConn->hEnv, pSDDConn->hConn, hStmt, NULL );
+#if ODBCVER >= 0x0300
          SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
+#else
+         SQLFreeStmt( hStmt, SQL_DROP );
+#endif
          hb_errRT_ODBCDD( EG_OPEN, ESQLDD_STMTDESCR + 1001, szError, pArea->szQuery, 0 );
          hb_xfree( szError );
          return HB_FAILURE;
@@ -461,18 +512,24 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
             break;
 
          case SQL_DATE:
+#if ODBCVER >= 0x0300
          case SQL_TYPE_DATE:
+#endif
             pFieldInfo.uiType = HB_FT_DATE;
             break;
 
          case SQL_TIME:
+#if ODBCVER >= 0x0300
          case SQL_TYPE_TIME:
+#endif
             pFieldInfo.uiType = HB_FT_DATE;
             break;
 
          /*  SQL_DATETIME = SQL_DATE = 9 */
          case SQL_TIMESTAMP:
+#if ODBCVER >= 0x0300
          case SQL_TYPE_TIMESTAMP:
+#endif
             pFieldInfo.uiType = HB_FT_TIMESTAMP;
             break;
 
@@ -561,7 +618,11 @@ static HB_ERRCODE odbcOpen( SQLBASEAREAP pArea )
    if( bError )
    {
       hb_itemRelease( pItemEof );
+#if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_STMT, hStmt );
+#else
+      SQLFreeStmt( hStmt, SQL_DROP );
+#endif
       hb_errRT_ODBCDD( EG_CORRUPTION, ESQLDD_INVALIDFIELD, "Invalid field type", pArea->szQuery, errCode );
       return HB_FAILURE;
    }
@@ -589,7 +650,11 @@ static HB_ERRCODE odbcClose( SQLBASEAREAP pArea )
    if( pSDDData )
    {
       if( pSDDData->hStmt )
+#if ODBCVER >= 0x0300
          SQLFreeHandle( SQL_HANDLE_STMT, pSDDData->hStmt );
+#else
+         SQLFreeStmt( pSDDData->hStmt, SQL_DROP );
+#endif
 
       hb_xfree( pSDDData );
       pArea->pSDDData = NULL;
@@ -656,21 +721,20 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             }
 
             case HB_FT_INTEGER:
+#if ODBCVER >= 0x0300
                if( pField->uiTypeExtended == ( HB_USHORT ) SQL_BIGINT )
                {
                   HB_I64 val = 0;
+                  /* NOTE: SQL_C_SBIGINT not available before ODBC 3.0 */
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_SBIGINT, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutNIntLen( NULL, val, pField->uiLen );
-                  }
                }
                else
+#endif
                {
                   long int val = 0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
-                  }
                }
                break;
 
@@ -679,17 +743,13 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
                {
                   long int val = 0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_LONG, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutNLLen( NULL, val, pField->uiLen );
-                  }
                }
                else
                {
                   double val = 0.0;
                   if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DOUBLE, &val, sizeof( val ), &iLen ) ) )
-                  {
                      pItem = hb_itemPutNDLen( NULL, val, pField->uiLen, pField->uiDec );
-                  }
                }
                break;
 
@@ -697,9 +757,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             {
                double val = 0.0;
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DOUBLE, &val, sizeof( val ), &iLen ) ) )
-               {
                   pItem = hb_itemPutNDLen( NULL, val, pField->uiLen, pField->uiDec );
-               }
                break;
             }
 
@@ -707,9 +765,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             {
                unsigned char val = 0;
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_BIT, &val, sizeof( val ), &iLen ) ) )
-               {
                   pItem = hb_itemPutL( NULL, val != 0 );
-               }
                break;
             }
 
@@ -717,9 +773,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             {
                DATE_STRUCT val = { 0, 0, 0 };
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_DATE, &val, sizeof( val ), &iLen ) ) )
-               {
                   pItem = hb_itemPutD( NULL, val.year, val.month, val.day );
-               }
                break;
             }
 
@@ -727,9 +781,7 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             {
                TIME_STRUCT val = { 0, 0, 0 };
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIME, &val, sizeof( val ), &iLen ) ) )
-               {
                   pItem = hb_itemPutTDT( NULL, 0, hb_timeEncode( val.hour, val.minute, val.second, 0 ) );
-               }
                break;
             }
 
@@ -737,10 +789,8 @@ static HB_ERRCODE odbcGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
             {
                TIMESTAMP_STRUCT val = { 0, 0, 0, 0, 0, 0, 0 };
                if( SQL_SUCCEEDED( res = SQLGetData( hStmt, ui, SQL_C_TIMESTAMP, &val, sizeof( val ), &iLen ) ) )
-               {
                   pItem = hb_itemPutTDT( NULL, hb_dateEncode( val.year, val.month, val.day ),
                                          hb_timeEncode( val.hour, val.minute, val.second, val.fraction / 1000000 ) );
-               }
                break;
             }
          }

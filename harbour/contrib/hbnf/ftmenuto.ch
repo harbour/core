@@ -28,8 +28,8 @@
  */
 
 /*
-   These commands will simplify use of the FT_PROMPT() and
-   FT_MENUTO() functions.  Refer to MENUTO.PRG for more info.
+   These commands will simplify use of the ft_Prompt() and
+   ft_MenuTo() functions.  Refer to menuto.prg for more info.
    These commands can replace the existing Clipper @ PROMPT and
    MENU TO commands.
 */

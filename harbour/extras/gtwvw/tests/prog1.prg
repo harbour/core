@@ -5,8 +5,8 @@
 /*
    Copyright 2004 Budyanto Dj. <budyanto@centrin.net.id>
 
-   This is PROG0.PRG modified in a quick and dirty fashion to convert
-   pseudo-windows in PROG0.PRG into real windows of GTWVW.
+   This is prog0.prg modified in a quick and dirty fashion to convert
+   pseudo-windows in prog0.prg into real windows of GTWVW.
 
    This quick and dirty approach is making use of GTWVW's MainCoord Mode.
    Instead of specifying to which window we are writing output, we simply
@@ -108,7 +108,7 @@ PROCEDURE xGet1()
 
    RETURN // xGet1()
 
-/* the following is adapted from WVTGUI.PRG by Pritpal Bedi
+/* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
 
 FUNCTION xBrowse1()

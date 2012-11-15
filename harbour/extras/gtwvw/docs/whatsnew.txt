@@ -104,9 +104,9 @@
     * HB_FUNC( WVW_DRAWIMAGE )
       Added lTransp optional parameter.
       Supports displaying images with proportional height/width ratio.
-    + .PRG callable wvw_SetMaxBMcache()
+    + .prg callable wvw_SetMaxBMcache()
       This is to get/set maximum number of bitmap cache for WVW_DRAWIMAGE.
-    + .PRG callable wvw_NumBMcache()
+    + .prg callable wvw_NumBMcache()
       This is to get current number of bitmap cached by WVW_DRAWIMAGE.
   * contrib/gtwvw/doc/whatsnew.txt
     * notes about this change.
@@ -400,7 +400,7 @@ MISCELLANEOUS
  * WVW_ID_BASE_PUSHBUTTON is now 64000 (was 65000).
    It means we may not have Menu Id >= 64000 now.
 
- New .PRG callable Functions: (combobox functions):
+ New .prg callable Functions: (combobox functions):
  + WVW_CBcreate( [nWinNum], nTop, nLeft, nWidth, aText, bBlock, nListLines, ;
                             nReserved, nKbdType, aOffset)
  + WVW_CBdestroy( [nWinNum], nCBid )
@@ -628,7 +628,7 @@ You can now create pushbutton very easily. Simply define where do you
 want it to sit, and what action do you want it to do when it's clicked
 by means of a codeblock.
 
-In previous version, we had to use WVWMOUSE.PRG to simulate pushbuttons
+In previous version, we had to use wvwmouse.prg to simulate pushbuttons
 using wvw_DrawBoxRaised(). We also had to handle 'OnMouseHover', 'OnMouseOut',
 'OnPressed', etc, to simulate the pressed/released state of the button.
 By using native push buttons, we don't have to worry about all that anymore.
@@ -689,7 +689,7 @@ by WVW_INPUTFOCUS().
 If no WVW_INPUTFOCUS() exists, or if it returns .f., GTWVW will do
 the usual response: asterisk sound and flashing window.
 
-See INPFOCUS.PRG sample program demonstrating this feature.
+See inpfocus.prg sample program demonstrating this feature.
 
 
 /*-------------------------------------------------------------------*/
@@ -830,7 +830,7 @@ WVW_Draw* functions.
    window.
  * Some castings and optimizations.
  * Some changes in some EXPORTed C functions.
-   (All .PRG / HB_FUNC functions are not affected)
+   (All .prg / HB_FUNC functions are not affected)
  * aOffset parameter to more primitive GUI drawing functions
    (following the changes on GTWVT by Pritpal Bedi)
 
@@ -843,13 +843,13 @@ WVW_Draw* functions.
  * Some changes to Tooltip functions
    (adopted from Pritpal Bedi's work on GTWVT)
 
- + New .PRG / HB_FUNC functions: (adopted from Pritpal Bedi's on GTWVT)
+ + New .prg / HB_FUNC functions: (adopted from Pritpal Bedi's on GTWVT)
    + HB_FUNC( WVW_UPDATEWINDOW )
    + HB_FUNC( WVW_DRAWCOLORRECT ) (similar to WVW_FillRectangle)
    + DlgModeless functions
    + many WIN_* functions, general window API wrapper functions
 
- - Removed .PRG / HB_FUNC functions:
+ - Removed .prg / HB_FUNC functions:
    - WVW_DeleteObject()
      (following GTWVT. Use WIN_DeleteObject() instead)
 

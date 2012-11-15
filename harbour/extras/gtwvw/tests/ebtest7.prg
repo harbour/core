@@ -884,7 +884,7 @@ STATIC FUNCTION GetNumMask( Text, mcvaltype )
 
    RETURN s
 
-// from TGET.PRG
+// from tget.prg
 
 STATIC FUNCTION IsBadDate( cBuffer ) // , cPicFunc )
 

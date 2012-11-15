@@ -90,7 +90,7 @@ PROCEDURE xGet1()
 
    RETURN // xGet1()
 
-/* the following is adapted from WVTGUI.PRG by Pritpal Bedi
+/* the following is adapted from wvtgui.prg by Pritpal Bedi
    for illustration purposes only */
 
 FUNCTION xBrowse1()

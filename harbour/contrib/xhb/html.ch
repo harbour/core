@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * HTML.CH Main HTML include File Definition of all html lib commands
+ * Main HTML include File Definition of all html lib commands
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
  * www - http://harbour-project.org

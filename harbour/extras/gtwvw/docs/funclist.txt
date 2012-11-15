@@ -554,7 +554,7 @@ read the source code :-).
 //-------------------------------------------------
 //
 //               GTWVT compatibility functions.
-//               See WVT2WVW.CH about how to map coresponding
+//               See wvt2wvw.ch about how to map coresponding
 //               GTWVT functions to GTWVW's ones.
 //
 //-------------------------------------------------
@@ -798,7 +798,7 @@ WIN_DRAWTEXT          ([<vlist>])
 //
 //               CALLBACK FUNCTIONS
 //               (functions in .prg, called by gtwvw)
-//               See WVT2WVW.CH about how to map coresponding
+//               See wvt2wvw.ch about how to map coresponding
 //               GTWVT functions to GTWVW's ones.
 //
 //-------------------------------------------------

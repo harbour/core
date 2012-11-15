@@ -146,7 +146,7 @@ typedef unsigned char SQLTCHAR;
 static HB_GARBAGE_FUNC( hb_SQLHENV_Destructor )
 {
    /* Retrieve image pointer holder */
-   SQLHENV ** ptr = ( SQLHENV ** ) Cargo;
+   SQLHENV * ptr = ( SQLHENV * ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( *ptr )
@@ -155,7 +155,7 @@ static HB_GARBAGE_FUNC( hb_SQLHENV_Destructor )
 #if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_ENV, ( SQLHANDLE ) *ptr );
 #else
-      SQLFreeEnv( ( SQLHENV ) *ptr );
+      SQLFreeEnv( *ptr );
 #endif
 #endif
 
@@ -177,16 +177,16 @@ static SQLHENV hb_SQLHENV_par( int iParam )
    return ptr ? *ptr : NULL;
 }
 
-static SQLHANDLE hb_SQLHENV_is( int iParam )
+static SQLHENV hb_SQLHENV_is( int iParam )
 {
    return hb_parptrGC( &s_gcSQLHENVFuncs, iParam );
 }
 
-static void hb_SQLHENV_stor( SQLHENV hnd, int iParam )
+static void hb_SQLHENV_stor( SQLHENV hEnv, int iParam )
 {
    SQLHENV * ptr = ( SQLHENV * ) hb_gcAllocate( sizeof( SQLHENV ), &s_gcSQLHENVFuncs );
 
-   *ptr = hnd;
+   *ptr = hEnv;
 
    hb_storptrGC( ( void * ) ptr, iParam );
 }
@@ -196,7 +196,7 @@ static void hb_SQLHENV_stor( SQLHENV hnd, int iParam )
 static HB_GARBAGE_FUNC( hb_SQLHDBC_Destructor )
 {
    /* Retrieve image pointer holder */
-   SQLHDBC ** ptr = ( SQLHDBC ** ) Cargo;
+   SQLHDBC * ptr = ( SQLHDBC * ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( *ptr )
@@ -205,7 +205,7 @@ static HB_GARBAGE_FUNC( hb_SQLHDBC_Destructor )
 #if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_DBC, ( SQLHANDLE ) *ptr );
 #else
-      SQLFreeConnect( ( SQLHDBC ) *ptr );
+      SQLFreeConnect( *ptr );
 #endif
 #endif
 
@@ -227,16 +227,16 @@ static SQLHDBC hb_SQLHDBC_par( int iParam )
    return ptr ? *ptr : NULL;
 }
 
-static SQLHANDLE hb_SQLHDBC_is( int iParam )
+static SQLHDBC hb_SQLHDBC_is( int iParam )
 {
    return hb_parptrGC( &s_gcSQLHDBCFuncs, iParam );
 }
 
-static void hb_SQLHDBC_stor( SQLHDBC hnd, int iParam )
+static void hb_SQLHDBC_stor( SQLHDBC hDbc, int iParam )
 {
    SQLHDBC * ptr = ( SQLHDBC * ) hb_gcAllocate( sizeof( SQLHDBC ), &s_gcSQLHDBCFuncs );
 
-   *ptr = hnd;
+   *ptr = hDbc;
 
    hb_storptrGC( ( void * ) ptr, iParam );
 }
@@ -246,7 +246,7 @@ static void hb_SQLHDBC_stor( SQLHDBC hnd, int iParam )
 static HB_GARBAGE_FUNC( hb_SQLHSTMT_Destructor )
 {
    /* Retrieve image pointer holder */
-   SQLHSTMT ** ptr = ( SQLHSTMT ** ) Cargo;
+   SQLHSTMT * ptr = ( SQLHSTMT * ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( *ptr )
@@ -255,7 +255,7 @@ static HB_GARBAGE_FUNC( hb_SQLHSTMT_Destructor )
 #if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_STMT, ( SQLHANDLE ) *ptr );
 #else
-      SQLFreeStmt( ( SQLHSTMT ) *ptr, SQL_DROP );
+      SQLFreeStmt( *ptr, SQL_DROP );
 #endif
 #endif
 
@@ -277,16 +277,16 @@ static SQLHSTMT hb_SQLHSTMT_par( int iParam )
    return ptr ? *ptr : NULL;
 }
 
-static SQLHANDLE hb_SQLHSTMT_is( int iParam )
+static SQLHSTMT hb_SQLHSTMT_is( int iParam )
 {
    return hb_parptrGC( &s_gcSQLHSTMTFuncs, iParam );
 }
 
-static void hb_SQLHSTMT_stor( SQLHSTMT hnd, int iParam )
+static void hb_SQLHSTMT_stor( SQLHSTMT hStmt, int iParam )
 {
    SQLHSTMT * ptr = ( SQLHSTMT * ) hb_gcAllocate( sizeof( SQLHSTMT ), &s_gcSQLHSTMTFuncs );
 
-   *ptr = hnd;
+   *ptr = hStmt;
 
    hb_storptrGC( ( void * ) ptr, iParam );
 }
@@ -295,7 +295,11 @@ HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
 {
    SQLHENV hEnv;
 
+#if ODBCVER >= 0x0300
+   hb_retni( SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv ) );
+#else
    hb_retni( SQLAllocEnv( &hEnv ) );
+#endif
 
    hb_SQLHENV_stor( hEnv, 1 );
 }
@@ -304,9 +308,14 @@ HB_FUNC( SQLALLOCCONNECT ) /* hEnv, @hDbc --> nRetCode */
 {
    if( hb_SQLHENV_is( 1 ) )
    {
+      SQLHENV hEnv = hb_SQLHENV_par( 1 );
       SQLHDBC hDbc;
 
-      hb_retni( SQLAllocConnect( hb_SQLHENV_par( 1 ), &hDbc ) );
+#if ODBCVER >= 0x0300
+      hb_retni( SQLAllocHandle( SQL_HANDLE_DBC, hEnv, &hDbc ) );
+#else
+      hb_retni( SQLAllocConnect( hEnv, &hDbc ) );
+#endif
 
       hb_SQLHDBC_stor( hDbc, 2 );
    }
@@ -410,9 +419,14 @@ HB_FUNC( SQLALLOCSTMT ) /* hDbc, @hStmt --> nRetCode */
 {
    if( hb_SQLHDBC_is( 1 ) )
    {
+      SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
       SQLHSTMT hStmt;
 
-      hb_retni( SQLAllocStmt( hb_SQLHDBC_par( 1 ), &hStmt ) );
+#if ODBCVER >= 0x0300
+      hb_retni( SQLAllocHandle( SQL_HANDLE_STMT, hDbc, &hStmt ) );
+#else
+      hb_retni( SQLAllocStmt( hDbc, &hStmt ) );
+#endif
 
       hb_SQLHSTMT_stor( hStmt, 2 );
    }
@@ -666,6 +680,7 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
 
 HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nError, @cErrorMsg */
 {
+#if ODBCVER >= 0x0300
    SQLSMALLINT iHandleType = ( SQLSMALLINT ) hb_parni( 1 );
    SQLHANDLE   hHandle;
 
@@ -710,6 +725,12 @@ HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nErro
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+#else
+   hb_retni( SQL_ERROR );
+   hb_storc( "", 4 );
+   hb_stornl( 0, 5 );
+   hb_storc( "", 6 );
+#endif
 }
 
 HB_FUNC( SQLROWCOUNT )
@@ -760,7 +781,7 @@ HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
 #else
       hb_retni( SQLSetConnectOption( hb_SQLHDBC_par( 1 ),
                                      ( SQLUSMALLINT ) hb_parni( 2 ),
-                                     ( SQLULEN ) HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
+                                     HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : ( SQLULEN ) hb_parnl( 3 ) ) );
 #endif
    }
    else
@@ -779,7 +800,7 @@ HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
 #else
       hb_retni( SQLSetStmtOption( hb_SQLHSTMT_par( 1 ),
                                   ( SQLUSMALLINT ) hb_parni( 2 ),
-                                  ( SQLULEN ) HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : hb_parnl( 3 ) ) );
+                                  HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : ( SQLULEN ) hb_parnl( 3 ) ) );
 #endif
    }
    else

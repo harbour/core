@@ -766,7 +766,7 @@ TABLE OF CONTENT
    - HB_USER_LIBS=[<list>]       Add space separated <list> of libs to link process.
                                  Lib names should be without extension and path.
                                  You only need this in special cases, like CodeGuard
-                                 build with bcc.
+                                 build with win/bcc.
    - HB_INSTALL_IMPLIB=no        Copy import libraries created for external .dll
                                  dependencies to the library install directory in
                                  'install' build phase. Default: yes
@@ -1334,7 +1334,7 @@ TABLE OF CONTENT
        Follows some environment variable settings which are commonly believed
        by users to be useful, but which in reality are either not needed or
        not even used by Harbour build process and hbmk2.
-       You can delete them:
+       You should delete them:
           set HB_DIR=<Harbour root dir>
           set HB_PATH=<Harbour root dir>
           set HRB_DIR=<Some Harbour dir>
@@ -1427,6 +1427,8 @@ TABLE OF CONTENT
        'hbmk2 -gh script.hb'
    - To run result of above:
        'hbmk2 script.hrb [<parameters>]'
+
+     NOTE: .hb and .hrb scripts are started in UTF-8 mode.
 
    Examples to build a Harbour application:
 
@@ -1801,7 +1803,10 @@ TABLE OF CONTENT
      created from root directory of the repository sandbox.
      Zip your patch file before attaching it. Use the extension '.zip'.
      Always use the same coding/formatting style as you find in
-     the files you're patching.
+     the files you're patching. The easiest way to achieve this
+     is to use these commands to format your sources:
+        $ uncrustify -c <harbour_dir>/bin/harbour.ucf <.c/.h filename>
+        $ <harbour_dir>/bin/hbformat <.prg/.ch/.hb filename>
    - In the rare case you need to send something large (> 100KB),
      use this free service: http://dropcanvas.com
    - Given a good history of valuable contributions, you can get

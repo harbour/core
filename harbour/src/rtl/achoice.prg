@@ -76,7 +76,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
    ColorSelect( CLR_STANDARD )
 
    /* NOTE: Undocumented parameter passing handled. ACHOICE()
-            is called in such way in RLDIALG.PRG from RL tool
+            is called in such way in rldialg.prg from RL tool
             supplied with Clipper 5.x. 6th parameter is the
             user function and 7th parameter is zero (empty I
             suppose). [vszakats] */

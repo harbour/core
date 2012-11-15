@@ -70,7 +70,7 @@
 
       That takes care of obtaining the segment portion of the pointer.  To
       specify which register is to contain the offset, use the values REG_DS
-      and REG_ES which are defined in the FTINT86.CH file.  When one of these
+      and REG_ES which are defined in the ftint86.ch file.  When one of these
       values is found in an array element, it alerts FT_Int86() to use the
       offset portion of a pointer instead of a numeric value.  REG_DS tells
       FT_Int86() to use the offset of the string in element 8, while REG_ES
@@ -80,11 +80,11 @@
       also split into two 8-bit registers.  This function is only capable of
       receiving and returning registers that are 16 bits in size.  To split
       a 16-bit register into two 8-bit values, you can use the
-      pseudo-functions HighByte() and LowByte(), contained in the .CH file.
+      pseudo-functions HighByte() and LowByte(), contained in the .ch file.
 
       To alter an 8-bit number so it will appear in the high-order byte of a
       register when passed to the FT_INT86() function, use the MakeHI()
-      pseudo-function contained in the .CH file.
+      pseudo-function contained in the .ch file.
 
       When run in real mode, this function is a shell for __ftint86(),
       which is written in assembler and does the actual work of executing

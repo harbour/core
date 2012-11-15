@@ -333,13 +333,13 @@ as similar as possible in structure. Although it is not a correct perpective
 a GTWVT application can be thought of as a GTWVW application with one window
 (ie. the Main window). With this perspective, one may expect to compile
 and link his GTWVT program using GTWVW. And yes, to some extent that is possible.
-One of the simplest way is to include a function translator (WVT2WVW.CH) that
+One of the simplest way is to include a function translator (wvt2wvw.ch) that
 will translate GTWVT functions into GTWVW ones, assuming Current Window is
-used in all WVW_* functions. (Details of translation is described in WVT2WVW.CH).
+used in all WVW_* functions. (Details of translation is described in wvt2wvw.ch).
 
 Notes:
 If one uses wvtclass functions, he must recompile/link wvtclass.prg and wvtpaint.prg,
-after adding '#include "WVT2WVW.CH"', using GTWVW.
+after adding '#include "wvt2wvw.ch"', using GTWVW.
 
 Notes:
 There is no guarantee that GTWVW will always be compatible with GTWVT.

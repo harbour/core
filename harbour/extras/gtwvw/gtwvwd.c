@@ -5337,7 +5337,7 @@ static VOID CALLBACK hb_gt_wvwFlashWindow( HWND hwnd, UINT uMsg, UINT_PTR idEven
 static void hb_gt_wvwInputNotAllowed( UINT usWinNum, UINT message, WPARAM wParam, LPARAM lParam )
 {
 
-   /* user may handle this event and returns .t. from .PRG level
+   /* user may handle this event and returns .T. from .prg level
       using function WVW_INPUTFOCUS()
     */
    if( s_pWvwData->s_sApp->pSymWVW_INPUTFOCUS )

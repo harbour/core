@@ -1466,15 +1466,15 @@ HB_FUNC( FI_WINCONVTODIB )
 #if ! defined( HB_OS_WIN_CE )
       FIBITMAP * dib = hb_FIBITMAP_par( 1 );
       HDC        hDC = GetDC( NULL );
-      HBITMAP    bitmap;
 
       /* run function */
-      bitmap = CreateDIBitmap( hDC,
-                               FreeImage_GetInfoHeader( dib ),
-                               CBM_INIT,
-                               FreeImage_GetBits( dib ),
-                               FreeImage_GetInfo( dib ),
-                               DIB_RGB_COLORS );
+      HBITMAP bitmap = CreateDIBitmap( hDC,
+                                       FreeImage_GetInfoHeader( dib ),
+                                       CBM_INIT,
+                                       FreeImage_GetBits( dib ),
+                                       FreeImage_GetInfo( dib ),
+                                       DIB_RGB_COLORS );
+
       ReleaseDC( NULL, hDC );
 
       if( bitmap )

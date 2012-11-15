@@ -78,6 +78,10 @@
 //      STATIC a4
 //      THREAD STATIC a5
 //      ---
+//
+//   a. To add a space between "!" operator and its argument
+//      unless it's beginning with a parenthesis:
+//        'IF ! Empty()' and 'IF !( "a" == b )'
 
 CREATE CLASS HBFormatCode
 

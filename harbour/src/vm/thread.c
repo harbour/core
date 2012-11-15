@@ -893,7 +893,7 @@ HB_THREAD_NO hb_threadNO( void )
 }
 
 /*
- * .PRG level functions
+ * .prg level functions
  */
 
 /* I. THREADS */

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FORMS.CH Include file to create forms
+ * Include file to create forms
  *
  * Copyright 2000 Manos Aspradakis <maspr@otenet.gr>
  * www - http://harbour-project.org
