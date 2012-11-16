@@ -386,6 +386,8 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bResizing         = HB_FALSE;
    pWVT->bAlreadySizing    = HB_FALSE;
 
+   pWVT->bComposited       = HB_FALSE;
+
    return pWVT;
 }
 
@@ -750,7 +752,7 @@ static void hb_gt_wvt_FitSize( PHB_GTWVT pWVT )
                 * This code never seems to get executed with "Lucida Console"
                 * Width scaling with some Heights is an issue with Courier New and Terminal
                 * Height scaling with some Widths is an issue with Consolas and Terminal
-                * but this code lets us adjust it here and try creating the font again. [HVB] 
+                * but this code lets us adjust it here and try creating the font again. [HVB]
                 */
 
                if( iCalcWidth == 0 && iCalcHeight == 0 )
@@ -1041,6 +1043,7 @@ static void hb_gt_wvt_Composited( PHB_GTWVT pWVT, HB_BOOL fEnable )
 #else
    if( hb_iswinvista() && ! GetSystemMetrics( SM_REMOTESESSION ) )
    {
+      pWVT->bComposited = fEnable;
       if( fEnable )
          SetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE, GetWindowLongPtr( pWVT->hWnd, GWL_EXSTYLE ) | WS_EX_COMPOSITED );
       else
@@ -3084,6 +3087,9 @@ static int hb_gt_wvt_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
 
    if( pWVT->hWnd )
    {
+      if( pWVT->bComposited )
+         hb_gt_wvt_Composited( pWVT, HB_FALSE );
+
       switch( iType )
       {
          case HB_GFX_ACQUIRESCREEN:

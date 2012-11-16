@@ -101,7 +101,7 @@
          It does not cause any speed or memory overhead so I left it
          as example for more complicated cases and as base for some
          potential extensions. [druzus]
-*/
+ */
 
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )
@@ -252,10 +252,8 @@ static HB_GARBAGE_FUNC( hb_SQLHDBC_Mark )
    PHB_SQLHDBC pHDbc = ( PHB_SQLHDBC ) Cargo;
 
    if( pHDbc->pHEnvItm )
-   {
       /* mark parent item handler as used */
       hb_gcMark( pHDbc->pHEnvItm );
-   }
 }
 
 static const HB_GC_FUNCS s_gcSQLHDBCFuncs =
@@ -338,10 +336,8 @@ static HB_GARBAGE_FUNC( hb_SQLHSTMT_Mark )
    PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) Cargo;
 
    if( pHStmt->pHDbcItm )
-   {
       /* mark parent item handler as used */
       hb_gcMark( pHStmt->pHDbcItm );
-   }
 }
 static const HB_GC_FUNCS s_gcSQLHSTMTFuncs =
 {
@@ -382,13 +378,19 @@ static void hb_SQLHSTMT_stor( PHB_ITEM pHDbcItm, SQLHSTMT hStmt, int iParam )
 
 HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
 {
-   SQLHENV hEnv;
+   SQLHENV   hEnv;
+   SQLRETURN result;
 
 #if ODBCVER >= 0x0300
-   hb_retni( SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv ) );
+   result = SQLAllocHandle( SQL_HANDLE_ENV, SQL_NULL_HANDLE, &hEnv );
+
+   if( SQL_SUCCEEDED( result ) )
+      SQLSetEnvAttr( hEnv, SQL_ATTR_ODBC_VERSION, ( SQLPOINTER ) SQL_OV_ODBC3, SQL_IS_UINTEGER );
 #else
-   hb_retni( SQLAllocEnv( &hEnv ) );
+   result = SQLAllocEnv( &hEnv );
 #endif
+
+   hb_retni( result );
 
    hb_SQLHENV_stor( hEnv, 1 );
 }
@@ -508,7 +510,7 @@ HB_FUNC( SQLALLOCSTMT ) /* hDbc, @hStmt --> nRetCode */
 {
    if( hb_SQLHDBC_is( 1 ) )
    {
-      SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+      SQLHDBC  hDbc = hb_SQLHDBC_par( 1 );
       SQLHSTMT hStmt;
 
 #if ODBCVER >= 0x0300

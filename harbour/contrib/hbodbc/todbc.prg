@@ -209,7 +209,7 @@ METHOD SetAutoCommit( lEnable ) CLASS TODBC
 METHOD Destroy() CLASS TODBC
 
 #if defined( _HBODBC_AUTO_MM_ )
-   ::hStmt := NIL  // TOFIX: There should be no GPF even without this line
+   // ::hStmt := NIL  // TOFIX: There should be no GPF even without this line
 
    SQLDisconnect( ::hDbc )                     // Disconnects from Driver
 

@@ -20,7 +20,7 @@ MEMVAR _wvwtemp_
 /* ==================================================== */
 
 #xtranslate Wvt_CreateMenu         ( [<vlist,...>] )  => wvw_CreateMenu         ( [<vlist>] )
-#xtranslate Wvt_CreatePOPUPMenu    ( [<vlist,...>] )  => wvw_CreatePOPUPMenu    ( [<vlist>] )
+#xtranslate Wvt_CreatePopupMenu    ( [<vlist,...>] )  => wvw_CreatePopupMenu    ( [<vlist>] )
 #xtranslate Wvt_AppendMenu         ( [<vlist,...>] )  => wvw_AppendMenu         ( [<vlist>] )
 #xtranslate Wvt_DeleteMenu         ( [<vlist,...>] )  => wvw_DeleteMenu         ( [<vlist>] )
 #xtranslate Wvt_DestroyMenu        ( [<vlist,...>] )  => wvw_DestroyMenu        ( [<vlist>] )
@@ -163,7 +163,7 @@ MEMVAR _wvwtemp_
 #xtranslate Wvt_SetToolTipTextColor ( [<vlist,...>] )    =>  wvw_SetToolTipTextColor ( NIL [, <vlist>] )
 #xtranslate Wvt_SetToolTipTitle     ( [<vlist,...>] )    =>  wvw_SetToolTipTitle     ( NIL [, <vlist>] )
 #xtranslate Wvt_GetToolTipWidth     ( [<vlist,...>] )    =>  wvw_GetToolTipWidth     ( NIL [, <vlist>] )
-#xtranslate Wvt_GetToolTipBKColor   ( [<vlist,...>] )    =>  wvw_GetToolTipBkColor   ( NIL [, <vlist>] )
+#xtranslate Wvt_GetToolTipBkColor   ( [<vlist,...>] )    =>  wvw_GetToolTipBkColor   ( NIL [, <vlist>] )
 #xtranslate Wvt_GetToolTipTextColor ( [<vlist,...>] )    =>  wvw_GetToolTipTextColor ( NIL [, <vlist>] )
 
 /* Timer functions. WARNING: WVT implementation is slightly different. */

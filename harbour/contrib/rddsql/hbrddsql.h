@@ -95,7 +95,7 @@ typedef struct _SQLBASEAREA
    HB_ULONG ulRecCount;                      /* Total records */
    HB_ULONG ulRecMax;                        /* Size of pRow, pRowFlags buffer */
 
-   void ** pRow;                             /* array of native pointers or cached PHB_ITEM */
+   void **   pRow;                           /* array of native pointers or cached PHB_ITEM */
    HB_BYTE * pRowFlags;
 
    void *  pRecord;                          /* current record */
@@ -142,8 +142,8 @@ typedef struct _MIXKEY
 
 typedef struct _MIXNODE
 {
-   unsigned int Leaf;
-   unsigned int KeyCount;
+   unsigned int      Leaf;
+   unsigned int      KeyCount;
    struct _MIXNODE * Parent;
    struct _MIXNODE * Child[ MIX_NODE_ORDER + 1 ];
 } MIXNODE, * PMIXNODE;
@@ -151,8 +151,8 @@ typedef struct _MIXNODE
 
 typedef struct _MIXNODELEAF
 {
-   unsigned int Leaf;
-   unsigned int KeyCount;
+   unsigned int      Leaf;
+   unsigned int      KeyCount;
    struct _MIXNODE * Parent;
 } MIXNODELEAF, * PMIXNODELEAF;
 
@@ -200,7 +200,6 @@ typedef struct _SQLMIXAREA
    PMIXTAG      pTag;
    PHB_CODEPAGE pCodepage;
 } SQLMIXAREA, * SQLMIXAREAP;
-
 
 
 /*

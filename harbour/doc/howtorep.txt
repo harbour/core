@@ -112,6 +112,10 @@ by Viktor Szakats
      - Removed
      ; Comment
 
+- Best is to use commit.hb script to add new entry:
+    <harbour dir>$ hbrun bin/commit.hb
+  Then add the change descriptions.
+
 - In case of incompatible changes, add the word 'INCOMPATIBLE' to
   the text.
 

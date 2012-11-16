@@ -471,7 +471,7 @@ cDefName: DEFAULT file name
 
 Returns:  If OFN_ALLOWMULTISELECT ?  Array of files selected : FileName.
 */
-FUNCTION Wvt_GetOpenFilename( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
+FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex, cDefName )
 
    LOCAL cRet, aTmp, xRet, i
 
@@ -514,7 +514,7 @@ nIndex:   Index position of types
 
 Returns:  FileName.
 */
-FUNCTION Wvt_GetSaveFilename( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
+FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir, cDefExt, nFilterIndex )
 
    LOCAL cRet, aTmp, xRet, i, cPath
 

@@ -106,7 +106,7 @@ DYNAMIC wvw_CreateDialogDynamic
 DYNAMIC wvw_CreateDialogModal
 DYNAMIC wvw_CreateFont
 DYNAMIC wvw_CreateMenu
-DYNAMIC wvw_CreatePOPUPMenu
+DYNAMIC wvw_CreatePopupMenu
 DYNAMIC wvw_cxCreate
 DYNAMIC wvw_cxDestroy
 DYNAMIC wvw_cxEnable

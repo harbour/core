@@ -208,7 +208,7 @@ METHOD WvtDialog:New( nRows, nCols, cTitle, cFont, nFontHeight, nFontWidth, nFon
    ::oldMenuBlock        := SetKey( Wvt_SetMenuKeyEvent() )
 
    ::oldTooltipWidth     := Wvt_GetToolTipWidth()
-   ::oldTooltipBkColor   := Wvt_GetToolTipBKColor()
+   ::oldTooltipBkColor   := Wvt_GetToolTipBkColor()
    ::oldTooltipTextColor := Wvt_GetToolTipTextColor()
 
    ::nRows               := nRows
@@ -494,7 +494,6 @@ METHOD WvtDialog:Inkey()
 
          IF ::oCurObj:nType == DLG_OBJ_BROWSE
             SELECT( ::oCurObj:cAlias )
-
          ENDIF
 
          ::Eval( ::oCurObj:bOnFocus, ::oCurObj )
@@ -914,7 +913,7 @@ METHOD WvtObject:CreatePopup()
    LOCAL i, nID
 
    IF ! Empty( ::aPopup ) .AND. ::hPopup == nil
-      ::hPopup := Wvt_CreatePOPUPMenu()
+      ::hPopup := Wvt_CreatePopupMenu()
 
       FOR i := 1 TO Len( ::aPopup )
 

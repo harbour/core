@@ -411,7 +411,7 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
    LOCAL oWvgFont
 
    IF ! HB_ISARRAY( aFont )
-      aFont := Wvg_ChooseFont_GetLOGFont( ::hWnd )
+      aFont := Wvg_ChooseFont_GetLogFont( ::hWnd )
    ENDIF
 
    oWvgFont := WvgFont():new()
@@ -436,47 +436,47 @@ METHOD GetWvgFont( aFont ) CLASS WvgFontDialog
 */
 CREATE CLASS WvgFont
 
-   VAR      hFont
-   VAR      oPS
-   VAR      hdc
+   VAR    hFont
+   VAR    oPS
+   VAR    hdc
 
-   VAR      familyName                            INIT   ""
-   VAR      height                                INIT   0
-   VAR      nominalPointSize                      INIT   0
+   VAR    familyName                            INIT   ""
+   VAR    height                                INIT   0
+   VAR    nominalPointSize                      INIT   0
 
-   VAR      width                                 INIT   0
-   VAR      widthClass                            INIT   .F.
+   VAR    width                                 INIT   0
+   VAR    widthClass                            INIT   .F.
 
-   VAR      bold                                  INIT   .F.
-   VAR      weightClass                           INIT   FW_DONTCARE
+   VAR    bold                                  INIT   .F.
+   VAR    weightClass                           INIT   FW_DONTCARE
 
-   VAR      italic                                INIT   .F.
-   VAR      strikeout                             INIT   .F.
-   VAR      underscore                            INIT   .F.
-   VAR      codePage                              INIT   DEFAULT_CHARSET
+   VAR    italic                                INIT   .F.
+   VAR    strikeout                             INIT   .F.
+   VAR    underscore                            INIT   .F.
+   VAR    codePage                              INIT   DEFAULT_CHARSET
 
-   VAR      FIXED                                 INIT   .F.
-   VAR      antiAliased                           INIT   .F.
+   VAR    fixed                                 INIT   .F.
+   VAR    antiAliased                           INIT   .F.
 
-   VAR      compoundName                          INIT   ""
-   METHOD   setCompoundName( cName )              INLINE ::compoundName := cName
+   VAR    compoundName                          INIT   ""
+   METHOD setCompoundName( cName )              INLINE ::compoundName := cName
 
-   VAR      generic                               INIT   .T.
+   VAR    generic                               INIT   .T.
 
-   VAR      baseLine                              INIT   0                READONLY
-   VAR      dbcs                                  INIT   .F.
-   VAR      kerning                               INIT   .F.
-   VAR      mbcs                                  INIT   .F.
-   VAR      vector                                INIT   .F.
-   VAR      outlined                              INIT   .F.
+   VAR    baseLine                              INIT   0                READONLY
+   VAR    dbcs                                  INIT   .F.
+   VAR    kerning                               INIT   .F.
+   VAR    mbcs                                  INIT   .F.
+   VAR    vector                                INIT   .F.
+   VAR    outlined                              INIT   .F.
 
-   VAR      aFontInfo                             INIT   {}
+   VAR    aFontInfo                             INIT   {}
 
-   METHOD   new( oPS )
-   METHOD   create( cFontName )
-   METHOD   configure( cFontName )
-   METHOD   list()
-   METHOD   createFont()
+   METHOD new( oPS )
+   METHOD create( cFontName )
+   METHOD configure( cFontName )
+   METHOD list()
+   METHOD createFont()
 
    DESTRUCTOR destroy()
 

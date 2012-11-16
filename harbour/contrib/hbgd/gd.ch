@@ -126,7 +126,7 @@
 #define gdDisposalRestoreBackground   2
 #define gdDisposalRestorePrevious     3
 
-/* FSG - text alignment */
+/* Text alignment */
 #define gdAlignLeft                   0
 #define gdAlignCenter                 1
 #define gdAlignRight                  2

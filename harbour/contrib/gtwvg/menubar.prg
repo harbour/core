@@ -556,7 +556,7 @@ METHOD WvgMenu:create( oParent, aPresParams, lVisible )
 
    ::className := "POPUPMENU"
 
-   ::hMenu := Wvg_CreatePOPUPMenu()
+   ::hMenu := Wvg_CreatePopupMenu()
 
    RETURN Self
 
