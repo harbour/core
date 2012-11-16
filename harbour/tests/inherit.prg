@@ -53,7 +53,7 @@ PROCEDURE Main()
    oFrom:Dispose()
    oTo:Dispose()
 
-   // ? hb_ValToExp( __dbgvmStkGList() )  // Stack is OK!
+   // ? hb_ValToExp( __dbgVMStkGList() )  // Stack is OK!
 
    RETURN
 

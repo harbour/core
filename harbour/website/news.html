@@ -243,20 +243,20 @@ Core</span>
                         <li> Added hb_fsCreateTempEx(), hb_fileCreateTempEx() C level APIs.<br />
                            </li>
                         <li> Fixed to not use C RTL CP dependent character functions
-                           in Harbour code. (islower(), toupper(), etc) added new macros instead.<br />
+                           in Harbour code. (IsLower(), toupper(), etc) added new macros instead.<br />
                            </li>
-                        <li> __NATISNEGATIVE() and __NATISAFFIRM() are now using
+                        <li> __natIsNegative() and __NATISAFFIRM() are now using
                            CP sensitive case conversion.<br />
                            </li>
                         <li> Added hb_charIsUpper()/hb_charIsLower() APIs.<br />
                            </li>
-                        <li> CURDRIVE() and DISKNAME() fixed for systems that don't support
+                        <li> CurDrive() and DISKNAME() fixed for systems that don't support
                            drive letters.<br />
                            </li>
-                        <li> Xbase++ compatible TBROWSE()/TBCOLUMN()/GET() related methods
+                        <li> Xbase++ compatible TBrowse()/TBColumn()/Get() related methods
                            moved to derived classes xpp_TBrowse()/xpp_TBColumn()/xpp_Get().<br />
                            </li>
-                        <li> Fixed potential GPF in HB_RASCAN().<br />
+                        <li> Fixed potential GPF in hb_RAScan().<br />
                            </li>
                         <li> Debugger improvements and fixes.<br />
                            </li>
@@ -283,30 +283,30 @@ Core</span>
                         <li> Added __FILE__ support for .prg code.<br />
                            </li>
                         <li> Added:<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_MILLISECONDS()<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_FTEMPCREATEEX( @&lt;cName&gt;, &lt;cDir&gt;, &lt;cPrefix&gt;, &lt;cExt&gt; ) -&gt; &lt;nHandle&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_STRDECODESCAPE( &lt;cEscSeqStr&gt; ) -&gt; &lt;cStr&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_STRCDECODE( &lt;cStr&gt; [, @&lt;lCont&gt; ] ) -&gt; &lt;cResult&gt; | NIL<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_STRXOR( &lt;cStr1&gt;, &lt;cStr2&gt; | &lt;nNum&gt; ) -&gt; &lt;cResult&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_PROGNAME() -&gt; &lt;cProgramNameWithPath&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_DISPOUTATBOX() similar to HB_DISPOUTAT() but for drawing chars.<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_FGETATTR( &lt;cFileName&gt;, @&lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_FSETATTR( &lt;cFileName&gt;, &lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_FSETDATETIME( &lt;cFileName&gt;, [&lt;dDate&gt;], [&lt;cTime HH:MM:SS&gt;], [&lt;nMilliSec&gt;] ) -&gt; &lt;lSuccess&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_FGETDATETIME()<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_WILDMATCHI() like HB_WILDMATCH() but case-insentitive.<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_CDPSELECT() same as HB_SETCODEPAGE() (please upgrade to new function name).<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_CDPUNIID( &lt;cHarbourCP&gt; ) -&gt; &lt;cCPName&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_GTINFO( HB_GTI_CARGO[, &lt;xValue ] ) -&gt; &lt;xPrevValue&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_DIRBASE() -&gt; &lt;cBaseDirectory&gt;<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_DBCREATETEMP()/DBCREATETEMP() to create temporary tables.<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_MMIDDLEDOWN/MMIDDLEDOWN() new Harbour function.<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DBINFO( DBI_ISTEMPORARY )<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_VERSION( HB_VERSION_BUILD_PLAT )<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_VERSION( HB_VERSION_BUILD_COMP )<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_STRFORMAT() C-like string formatting function
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_MilliSeconds()<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FTempCreateEx( @&lt;cName&gt;, &lt;cDir&gt;, &lt;cPrefix&gt;, &lt;cExt&gt; ) -&gt; &lt;nHandle&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_StrDecodEscape( &lt;cEscSeqStr&gt; ) -&gt; &lt;cStr&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_StrCDecode( &lt;cStr&gt; [, @&lt;lCont&gt; ] ) -&gt; &lt;cResult&gt; | NIL<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_StrXor( &lt;cStr1&gt;, &lt;cStr2&gt; | &lt;nNum&gt; ) -&gt; &lt;cResult&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_ProgName() -&gt; &lt;cProgramNameWithPath&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_DispOutAtBox() similar to hb_DispOutAt() but for drawing chars.<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FGetAttr( &lt;cFileName&gt;, @&lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FSetAttr( &lt;cFileName&gt;, &lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FSetDateTime( &lt;cFileName&gt;, [&lt;dDate&gt;], [&lt;cTime HH:MM:SS&gt;], [&lt;nMilliSec&gt;] ) -&gt; &lt;lSuccess&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_FGetDateTime()<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_WildMatchI() like hb_WildMatch() but case-insentitive.<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_cdpSelect() same as hb_SetCodepage() (please upgrade to new function name).<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_cdpUniID( &lt;cHarbourCP&gt; ) -&gt; &lt;cCPName&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_gtInfo( HB_GTI_CARGO[, &lt;xValue ] ) -&gt; &lt;xPrevValue&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_DirBase() -&gt; &lt;cBaseDirectory&gt;<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_dbCreateTemp()/DBCREATETEMP() to create temporary tables.<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_MMIDDLEDOWN/MMiddleDown() new Harbour function.<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dbInfo( DBI_ISTEMPORARY )<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_Version( HB_VERSION_BUILD_PLAT )<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_Version( HB_VERSION_BUILD_COMP )<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_StrFormat() C-like string formatting function
                            (also as C level API named hb_StrFormat())<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_SETENV( &lt;cEnvName&gt;, [&lt;cNewVal&gt;] [, &lt;lOsCP&gt;] ) -&gt; &lt;lOK&gt; (also as C level API named hb_setenv())<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_SetEnv( &lt;cEnvName&gt;, [&lt;cNewVal&gt;] [, &lt;lOsCP&gt;] ) -&gt; &lt;lOK&gt; (also as C level API named hb_setenv())<br />
                            <br />
                            </li>
                         <li> Fixed UNSELECTED color updating in SetColor().<br />
@@ -341,7 +341,7 @@ Core</span>
                            </li>
                         <li> Added hb_osDecode(), hb_osEncode() C APIs.<br />
                         </li>
-                        <li> HB_GETENV() extended with 3rd parameter to control OS codepage
+                        <li> hb_GetEnv() extended with 3rd parameter to control OS codepage
                            conversion (on by default).<br />
                            </li>
                         <li> Added CPU dump support for AMD64/x64.<br />
@@ -351,10 +351,10 @@ Core</span>
                         <li> GTXWC potential GPF fixed.<br />
                            </li>
                         <li> Added process handling:<br />
-                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_PROCESSOPEN()<br />
+                           &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_processOpen()<br />
                            &nbsp;&nbsp;&nbsp;&nbsp;
-HB_PROCESSVALUE()<br />
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;HB_PROCESSCLOSE()<br />
+hb_processValue()<br />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hb_processClose()<br />
                            </li>
                         <li> Added HB_GTI_BOXCP to control box drawing CP for GTs.<br />
                            </li>
@@ -388,7 +388,7 @@ HB_PROCESSVALUE()<br />
                            </li>
                         <li> Some compiler optimizations are now enabled using new -ko switch.<br />
                            </li>
-                        <li> Added array preallocation on AADD().<br />
+                        <li> Added array preallocation on AAdd().<br />
                            </li>
                         <li> Optimization to string reallocation.<br />
                            </li>
@@ -400,7 +400,7 @@ HB_PROCESSVALUE()<br />
                         <li> __HRB*() functions marked as compatibility, please update your
                            code to use HB_HRB*().<br />
                            </li>
-                        <li> __RDDGETTEMPALIAS() marked as compatibility, please update your code to use HB_RDDGETTEMPALIAS().<br />
+                        <li> __RDDGETTEMPALIAS() marked as compatibility, please update your code to use hb_rddGetTempAlias().<br />
                            </li>
                         <li> Added hb_spFileExists() a more efficient version of hb_spFile().<br />
                            </li>
@@ -420,7 +420,7 @@ HB_PROCESSVALUE()<br />
                            present in common.ch so if you're overriding std.ch, make sure to add
                            this macro to your header file.<br />
                            </li>
-                        <li> BIN2W(), BIN2I(), BIN2L(), I2BIN(), L2BIN(), BIN2U(), W2BIN(), U2BIN() functions rewritten in a more efficient way. Previous pure GPL
+                        <li> Bin2W(), Bin2I(), Bin2L(), I2Bin(), L2Bin(), Bin2U(), W2Bin(), U2Bin() functions rewritten in a more efficient way. Previous pure GPL
                            license changed to standard Harbour license (including exception).<br />
                            </li>
                         <li> Fixed Ukrainian localization files.<br />
@@ -448,7 +448,7 @@ HB_PROCESSVALUE()<br />
                            </li>
                         <li> Added all missing non-multibyte codepages.<br />
                            </li>
-                        <li> LISTBOX() doesn't modify _SET_EXACT settings anymore in :Find*() methods.<br />
+                        <li> ListBox() doesn't modify _SET_EXACT settings anymore in :Find*() methods.<br />
                            </li>
                         <li> HVM pcode evaluation speed improvement.<br />
                            </li>
@@ -510,17 +510,17 @@ HB_PROCESSVALUE()<br />
                         <li> Forbid some usage of __clsModMsg() and unblock some othersIt should make some xHarbour users using OVERRIDE METHOD happy<br />
                            but please remember it's still undocumented and unsupportedfunctionality - use for your own risk.<br />
                            </li>
-                        <li> Fixed typo in HB_INETDATAREADY() - the second parameter (timeout) was ignored.<br />
+                        <li> Fixed typo in hb_inetDataReady() - the second parameter (timeout) was ignored.<br />
                            </li>
                         <li> Changed the NOT operator precedence - it should be bigger then logical .and./.or. operators in #if expressions.<br />
                            </li>
-                        <li> Fixed HB_REGEXMATCH(). Now the HAS/LIKE mode can be controlled by 5th logical parameter (was 3rd), so 3rd parameter is solely<br />
-                           controlling case-sensitivity as indicated in the documentation. Users are recommended to use HB_REGEXHAS() and HB_REGEXLIKE()<br />
+                        <li> Fixed hb_regexMatch(). Now the HAS/LIKE mode can be controlled by 5th logical parameter (was 3rd), so 3rd parameter is solely<br />
+                           controlling case-sensitivity as indicated in the documentation. Users are recommended to use hb_regexHas() and HB_REGEXLIKE()<br />
                            functions as unambiguous alternatives, which work equally
-                           well on all Harbour versions. HB_REGEXMATCH() is now deprecated,
+                           well on all Harbour versions. hb_regexMatch() is now deprecated,
                            but kept for compatibility.<br />
                            </li>
-                        <li> ACHOICE() fixed to redisplay itself when exiting with &lt;Esc&gt; or
+                        <li> AChoice() fixed to redisplay itself when exiting with &lt;Esc&gt; or
                            equivalent.</li>
                         </ul>
 <span class="title"><br />
@@ -529,16 +529,16 @@ Contrib</span>
    <li> hbblat new Blat interface class for Windows
       (Contributed by Francesco Saverio Giudice).<br />
       </li>
-   <li> hbmzip fixed GPF in HB_ZIPDELETEFILE() when file has comment.<br />
+   <li> hbmzip fixed GPF in hb_zipDeleteFile() when file has comment.<br />
       </li>
-   <li> hbmzip fixed handling attributes in HB_ZIPFILECREATE().<br />
+   <li> hbmzip fixed handling attributes in hb_zipFileCreate().<br />
       </li>
    <li> hbmzip fixed timestamps stored in .zip files.<br />
       </li>
    <li> hbmzip added HB_ZIPSTOREFILEHANDLE(),
-      HB_UNZIPEXTRACTCURRENTFILETOHANDLE() functions.<br />
+      hb_unzipExtractCurrentFileToHandle() functions.<br />
       </li>
-   <li> hbwin WIN_REGREAD()/GETREGISTRY() got new parameter to supply
+   <li> hbwin win_regRead()/GetRegistry() got new parameter to supply
       a default value when the entry isn't found.<br />
       </li>
    <li> hbtip FTP handling fixed some accidental typos.<br />
@@ -549,15 +549,15 @@ Contrib</span>
       </li>
    <li> rddads now autodetects version 9.10.<br />
       </li>
-   <li> hbct XTOC(), FTOC() and CTOF() fixed to be properly multiplatform.<br />
+   <li> hbct XToC(), FToC() and CTOF() fixed to be properly multiplatform.<br />
       </li>
    <li> hbct unbuffered drawing speed improvement in windowing code.<br />
       </li>
-   <li> hbct DIRNAME() fixed.<br />
+   <li> hbct DirName() fixed.<br />
       </li>
    <li> hbct other fixes.<br />
       </li>
-   <li> hbct FILESEEK(), FILEATTR(), FILESIZE(), FILEDATE() now MT compatible.<br />
+   <li> hbct FileSeek(), FileAttr(), FileSize(), FileDate() now MT compatible.<br />
       </li>
    <li> hbct added support for thread local current window pointer in CT Windows.<br />
       </li>
@@ -575,57 +575,57 @@ Contrib</span>
       </li>
    <li> hbw32 library renamed to hbwin.<br />
       </li>
-   <li> hbwin added WIN_ABORTDOC(), WIN_RUNDETACHED(), WIN_SHELLEXECUTE(),
-      WIN_LOADRESOURCE().<br />
+   <li> hbwin added WIN_ABORTDOC(), win_RunDetached(), WIN_SHELLEXECUTE(),
+      win_LoadResource().<br />
       </li>
    <li> dbu patch now adds SET DATE ANSI and SET CENTURY ON.<br />
       </li>
-   <li> hbwin WIN_MULDIV(), WIN_RECTANGLE(), WIN_SETBKMODE() extended to
+   <li> hbwin win_MulDiv(), win_Rectangle(), win_SetBkMode() extended to
       accept handles passed using alternate methods.<br />
       </li>
    <li> hbwin function names changed as below: <br />
       &nbsp;&nbsp;&nbsp;&nbsp;
-      W32_REGPATHSPLIT()            -&gt; WIN_REGPATHSPLIT()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; W32_REGREAD()                 -&gt; WIN_REGREAD()<br />
-&nbsp;&nbsp;&nbsp;&nbsp; W32_REGWRITE()                -&gt; WIN_REGWRITE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGCREATEKEYEX()        -&gt; WIN_REGCREATEKEYEX()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGOPENKEYEX()          -&gt; WIN_REGOPENKEYEX()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGQUERYVALUEEX()       -&gt; WIN_REGQUERYVALUEEX()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGSETVALUEEX()         -&gt; WIN_REGSETVALUEEX()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGCLOSEKEY()           -&gt; WIN_REGCLOSEKEY()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ARC()                   -&gt; WIN_ARC()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_BITMAPSOK()             -&gt; WIN_BITMAPSOK()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_CREATEDC()              -&gt; WIN_CREATEDC()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_CREATEFONT()            -&gt; WIN_CREATEFONT()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_DELETEDC()              -&gt; WIN_DELETEDC()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_DRAWBITMAP()            -&gt; WIN_DRAWBITMAP()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ELLIPSE()               -&gt; WIN_ELLIPSE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENDDOC()                -&gt; WIN_ENDDOC()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENDPAGE()               -&gt; WIN_ENDPAGE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENUMFONTS()             -&gt; WIN_ENUMFONTS()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_FILLRECT()              -&gt; WIN_FILLRECT()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETCHARSIZE()           -&gt; WIN_GETCHARSIZE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETDEVICECAPS()         -&gt; WIN_GETDEVICECAPS()<br />
+      W32_REGPATHSPLIT()            -&gt; win_regPathSplit()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; W32_REGREAD()                 -&gt; win_regRead()<br />
+&nbsp;&nbsp;&nbsp;&nbsp; W32_REGWRITE()                -&gt; win_regWrite()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGCREATEKEYEX()        -&gt; win_regCreateKeyEx()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGOPENKEYEX()          -&gt; win_regOpenKeyEx()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGQUERYVALUEEX()       -&gt; win_regQueryValueEx()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGSETVALUEEX()         -&gt; win_regSetValueEx()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_REGCLOSEKEY()           -&gt; win_regCloseKey()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ARC()                   -&gt; win_Arc()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_BITMAPSOK()             -&gt; win_BitmapsOK()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_CREATEDC()              -&gt; win_CreateDC()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_CREATEFONT()            -&gt; win_CreateFont()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_DELETEDC()              -&gt; win_DeleteDC()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_DRAWBITMAP()            -&gt; win_DrawBitmap()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ELLIPSE()               -&gt; win_Ellipse()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENDDOC()                -&gt; win_EndDoc()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENDPAGE()               -&gt; win_EndPage()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_ENUMFONTS()             -&gt; win_EnumFonts()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_FILLRECT()              -&gt; win_FillRect()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETCHARSIZE()           -&gt; win_GetCharSize()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETDEVICECAPS()         -&gt; win_GetDeviceCaps()<br />
       &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETEXEFILENAME()        -&gt; WIN_GETEXEFILENAME()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETPRINTERFONTNAME()    -&gt; WIN_GETPRINTERFONTNAME()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETTEXTSIZE()           -&gt; WIN_GETTEXTSIZE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_LINETO()                -&gt; WIN_LINETO()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;  WIN32_LOADBITMAPFILE()        -&gt; WIN_LOADBITMAPFILE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp;  WIN32_MULDIV()                -&gt; WIN_MULDIV()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETPRINTERFONTNAME()    -&gt; win_GetPrinterFontName()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_GETTEXTSIZE()           -&gt; win_GetTextSize()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_LINETO()                -&gt; win_LineTo()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;  WIN32_LOADBITMAPFILE()        -&gt; win_LoadBitmapFile()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp;  WIN32_MULDIV()                -&gt; win_MulDiv()<br />
       &nbsp;&nbsp;&nbsp;&nbsp; WIN32_OS_ISWIN9X()            -&gt; WIN_OS_ISWIN9X()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_RECTANGLE()             -&gt; WIN_RECTANGLE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETBKMODE()             -&gt; WIN_SETBKMODE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETCOLOR()              -&gt; WIN_SETCOLOR()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETDOCUMENTPROPERTIES() -&gt; WIN_SETDOCUMENTPROPERTIES()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETMAPMODE()            -&gt; WIN_SETMAPMODE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETPEN()                -&gt; WIN_SETPEN()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_STARTDOC()              -&gt; WIN_STARTDOC()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_STARTPAGE()             -&gt; WIN_STARTPAGE()<br />
-      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_TEXTOUT()               -&gt; WIN_TEXTOUT()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_RECTANGLE()             -&gt; win_Rectangle()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETBKMODE()             -&gt; win_SetBkMode()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETCOLOR()              -&gt; win_SetColor()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETDOCUMENTPROPERTIES() -&gt; win_SetDocumentProperties()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETMAPMODE()            -&gt; win_SetMapMode()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_SETPEN()                -&gt; win_SetPen()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_STARTDOC()              -&gt; win_StartDoc()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_STARTPAGE()             -&gt; win_StartPage()<br />
+      &nbsp;&nbsp;&nbsp;&nbsp; WIN32_TEXTOUT()               -&gt; win_TextOut()<br />
       &nbsp;&nbsp;&nbsp;&nbsp; WIN32PRN class                -&gt; WIN_PRN class<br />
       &nbsp;&nbsp;&nbsp;&nbsp; WIN32BMP class                -&gt; WIN_BMP class&nbsp;&nbsp;</li>
    <li>hbct GPF and wrong RTE messages fixed in:
-      CHARADD(), CHARSUB(), CHARAND(), CHAROR(), CHARXOR()<br />
+      CharAdd(), CharSub(), CharAnd(), CharOr(), CharXor()<br />
       </li>
    <li> hbct string optimizations in thrown RTEs.<br />
       </li>
@@ -642,8 +642,8 @@ Contrib</span>
    <li> hbgt now properly checks for package version and includes
       feature accordingly.<br />
       </li>
-   <li> hbwin added WAPI_GETCOMMANDLINE(), WIN_GETCOMMANDLINEPARAM(),
-      WAPI_GETLASTERROR(), WAPI_SETLASTERROR(), WAPI_SETERRORMODE().<br />
+   <li> hbwin added WAPI_GETCOMMANDLINE(), win_GetCommandLineParam(),
+      wapi_GetLastError(), wapi_SetLastError(), wapi_SetErrorMode().<br />
       </li>
    <li> hbwhat removed from contrib list and moved to examples instead.<br />
       </li>
@@ -825,20 +825,20 @@ Known build issues</span>
                         </li>
                       <li> Added hb_fsCreateTempEx(), hb_fileCreateTempEx() C level APIs.<br />
                         </li>
-                      <li> Fixed to not use C RTL CP dependent character functions in Harbour code. (islower(), toupper(), etc). Added new macros instead.<br />
+                      <li> Fixed to not use C RTL CP dependent character functions in Harbour code. (IsLower(), toupper(), etc). Added new macros instead.<br />
                         </li>
-                      <li> __NATISNEGATIVE() and __NATISAFFIRM() are now using
+                      <li> __natIsNegative() and __NATISAFFIRM() are now using
                         CP sensitive case conversion.<br />
                         </li>
                       <li> Added hb_charIsUpper()/hb_charIsLower() APIs.<br />
                         </li>
-                      <li> CURDRIVE() and DISKNAME() fixed for systems that don't support
+                      <li> CurDrive() and DISKNAME() fixed for systems that don't support
                         drive letters.<br />
                         </li>
-                      <li> Xbase++ compatible TBROWSE()/TBCOLUMN()/GET() related methods<br />
+                      <li> Xbase++ compatible TBrowse()/TBColumn()/Get() related methods<br />
                         moved to derived classes xpp_TBrowse()/xpp_TBColumn()/xpp_Get().<br />
                         </li>
-                      <li> Fixed potential GPF in HB_RASCAN().<br />
+                      <li> Fixed potential GPF in hb_RAScan().<br />
                         </li>
                       <li> Debugger improvements and fixes.<br />
                         </li>
@@ -865,20 +865,20 @@ Known build issues</span>
                       <li> Added __FILE__ support for .prg code.<br />
                         </li>
                       <li> Added:<br />
-                        - HB_MILLISECONDS()<br />
-                        - HB_FTEMPCREATEEX( @&lt;cName&gt;, &lt;cDir&gt;, &lt;cPrefix&gt;, &lt;cExt&gt; ) -&gt; &lt;nHandle&gt;<br />
-                        - HB_STRDECODESCAPE( &lt;cEscSeqStr&gt; ) -&gt; &lt;cStr&gt;<br />
-                        - HB_STRCDECODE( &lt;cStr&gt; [, @&lt;lCont&gt; ] ) -&gt; &lt;cResult&gt; | NIL<br />
-                        - HB_STRXOR( &lt;cStr1&gt;, &lt;cStr2&gt; | &lt;nNum&gt; ) -&gt; &lt;cResult&gt;<br />
-                        - HB_PROGNAME() -&gt; &lt;cProgramNameWithPath&gt;<br />
-                        - HB_DISPOUTATBOX() similar to HB_DISPOUTAT() but for drawing chars.<br />
-                        - HB_FGETATTR( &lt;cFileName&gt;, @&lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
-                        - HB_FSETATTR( &lt;cFileName&gt;, &lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
-                        - HB_FSETDATETIME( &lt;cFileName&gt;, [&lt;dDate&gt;], [&lt;cTime HH:MM:SS&gt;] ) -&gt; &lt;lSuccess&gt;<br />
-                        - HB_WILDMATCHI() like HB_WILDMATCH() but case-insentitive.<br />
-                        - HB_CDPSELECT() same as HB_SETCODEPAGE() (please upgrade to new function name).<br />
-                        - HB_CDPUNIID( &lt;cHarbourCP&gt; ) -&gt; &lt;cCPName&gt;<br />
-                        - HB_GTINFO( HB_GTI_CARGO[, &lt;xValue ] ) -&gt; &lt;xPrevValue&gt;<br />
+                        - hb_MilliSeconds()<br />
+                        - hb_FTempCreateEx( @&lt;cName&gt;, &lt;cDir&gt;, &lt;cPrefix&gt;, &lt;cExt&gt; ) -&gt; &lt;nHandle&gt;<br />
+                        - hb_StrDecodEscape( &lt;cEscSeqStr&gt; ) -&gt; &lt;cStr&gt;<br />
+                        - hb_StrCDecode( &lt;cStr&gt; [, @&lt;lCont&gt; ] ) -&gt; &lt;cResult&gt; | NIL<br />
+                        - hb_StrXor( &lt;cStr1&gt;, &lt;cStr2&gt; | &lt;nNum&gt; ) -&gt; &lt;cResult&gt;<br />
+                        - hb_ProgName() -&gt; &lt;cProgramNameWithPath&gt;<br />
+                        - hb_DispOutAtBox() similar to hb_DispOutAt() but for drawing chars.<br />
+                        - hb_FGetAttr( &lt;cFileName&gt;, @&lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
+                        - hb_FSetAttr( &lt;cFileName&gt;, &lt;nAttr&gt; ) -&gt; &lt;lSuccess&gt;<br />
+                        - hb_FSetDateTime( &lt;cFileName&gt;, [&lt;dDate&gt;], [&lt;cTime HH:MM:SS&gt;] ) -&gt; &lt;lSuccess&gt;<br />
+                        - hb_WildMatchI() like hb_WildMatch() but case-insentitive.<br />
+                        - hb_cdpSelect() same as hb_SetCodepage() (please upgrade to new function name).<br />
+                        - hb_cdpUniID( &lt;cHarbourCP&gt; ) -&gt; &lt;cCPName&gt;<br />
+                        - hb_gtInfo( HB_GTI_CARGO[, &lt;xValue ] ) -&gt; &lt;xPrevValue&gt;<br />
                         </li>
                       <li>Fixed UNSELECTED color updating in SetColor().<br />
                         </li>
@@ -907,7 +907,7 @@ Known build issues</span>
                         </li>
                       <li> Added hb_osDecode(), hb_osEncode() C APIs.<br />
                         </li>
-                      <li> HB_GETENV() extended with 3rd parameter to control OS codepage conversion (on by default).<br />
+                      <li> hb_GetEnv() extended with 3rd parameter to control OS codepage conversion (on by default).<br />
                         </li>
                       <li> Added CPU dump support for AMD64/x64.<br />
                         </li>
@@ -916,7 +916,7 @@ Known build issues</span>
                       <li> GTXWC potential GPF fixed.<br />
                         </li>
                       <li> Added process handling:
-                        HB_PROCESSOPEN(), HB_PROCESSVALUE(), HB_PROCESSCLOSE()<br />
+                        hb_processOpen(), hb_processValue(), hb_processClose()<br />
                         </li>
                       <li> Added HB_GTI_BOXCP to control box drawing CP for GTs.<br />
                         </li>
@@ -946,7 +946,7 @@ Known build issues</span>
                         </li>
                       <li> Some compiler optimizations are now enabled using new -ko switch.<br />
                         </li>
-                      <li> Added array preallocation on AADD().<br />
+                      <li> Added array preallocation on AAdd().<br />
                         </li>
                       <li> Optimization to string reallocation.<br />
                         </li>
@@ -959,20 +959,20 @@ Known build issues</span>
                         code to use HB_HRB*().<br />
                         </li>
                       <li> __RDDGETTEMPALIAS() marked as compatibility, please update your
-                        code to use HB_RDDGETTEMPALIAS().</li>
+                        code to use hb_rddGetTempAlias().</li>
                       </ul>
                       <br />
                       <font><span class="title">Contrib</span></font>
                       <ul>
-                      <li>hbmzip fixed GPF in HB_ZIPDELETEFILE() when file has comment.<br />
+                      <li>hbmzip fixed GPF in hb_zipDeleteFile() when file has comment.<br />
                         </li>
-                      <li> hbmzip fixed handling attributes in HB_ZIPFILECREATE().<br />
+                      <li> hbmzip fixed handling attributes in hb_zipFileCreate().<br />
                          </li>
                       <li>hbmzip fixed timestamps stored in .zip files.<br />
                         </li>
-                      <li> hbmzip added HB_ZIPSTOREFILEHANDLE(),HB_UNZIPEXTRACTCURRENTFILETOHANDLE() functions.<br />
+                      <li> hbmzip added HB_ZIPSTOREFILEHANDLE(),hb_unzipExtractCurrentFileToHandle() functions.<br />
                         </li>
-                      <li> hbwin WIN_REGREAD()/GETREGISTRY() got new parameter to supply
+                      <li> hbwin win_regRead()/GetRegistry() got new parameter to supply
                         a default value when the entry isn't found.<br />
                         </li>
                       <li> hbtip FTP handling fixed some accidental typos.<br />
@@ -983,11 +983,11 @@ Known build issues</span>
                         </li>
                       <li> rddads now autodetects version 9.10.<br />
                         </li>
-                      <li> hbct XTOC(), FTOC() and CTOF() fixed to be properly multiplatform.<br />
+                      <li> hbct XToC(), FToC() and CTOF() fixed to be properly multiplatform.<br />
                         </li>
                       <li> hbct unbuffered drawing speed improvement in windowing code.<br />
                          </li>
-                      <li>hbct DIRNAME() fixed.<br />
+                      <li>hbct DirName() fixed.<br />
                         </li>
                       <li> hbct other fixes.<br />
                         </li>
@@ -1001,57 +1001,57 @@ Known build issues</span>
                         </li>
                       <li> hbw32 library renamed to hbwin.<br />
                         </li>
-                      <li> hbwin added WIN_ABORTDOC(), WIN_RUNDETACHED(), WIN_SHELLEXECUTE(),
-                        WIN_LOADRESOURCE().<br />
+                      <li> hbwin added WIN_ABORTDOC(), win_RunDetached(), WIN_SHELLEXECUTE(),
+                        win_LoadResource().<br />
                         </li>
                       <li> dbu patch now adds SET DATE ANSI and SET CENTURY ON.<br />
                         </li>
-                      <li> hbwin WIN_MULDIV(), WIN_RECTANGLE(), WIN_SETBKMODE() extended to
+                      <li> hbwin win_MulDiv(), win_Rectangle(), win_SetBkMode() extended to
                         accept handles passed using alternate methods.<br />
                         </li>
                       <li> hbwin function names changed as below:<br />
-                        - W32_REGPATHSPLIT()            -&gt; WIN_REGPATHSPLIT()<br />
-                        - W32_REGREAD()                 -&gt; WIN_REGREAD()<br />
-                        - W32_REGWRITE()                -&gt; WIN_REGWRITE()<br />
-                        - WIN32_REGCREATEKEYEX()        -&gt; WIN_REGCREATEKEYEX()<br />
-                        - WIN32_REGOPENKEYEX()          -&gt; WIN_REGOPENKEYEX()<br />
-                        - WIN32_REGQUERYVALUEEX()       -&gt; WIN_REGQUERYVALUEEX()<br />
-                        - WIN32_REGSETVALUEEX()         -&gt; WIN_REGSETVALUEEX()<br />
-                        - WIN32_REGCLOSEKEY()           -&gt; WIN_REGCLOSEKEY()<br />
-                        - WIN32_ARC()                   -&gt; WIN_ARC()<br />
-                        - WIN32_BITMAPSOK()             -&gt; WIN_BITMAPSOK()<br />
-                        - WIN32_CREATEDC()              -&gt; WIN_CREATEDC()<br />
-                        - WIN32_CREATEFONT()            -&gt; WIN_CREATEFONT()<br />
-                        - WIN32_DELETEDC()              -&gt; WIN_DELETEDC()<br />
-                        - WIN32_DRAWBITMAP()            -&gt; WIN_DRAWBITMAP()<br />
-                        - WIN32_ELLIPSE()               -&gt; WIN_ELLIPSE()<br />
-                        - WIN32_ENDDOC()                -&gt; WIN_ENDDOC()<br />
-                        - WIN32_ENDPAGE()               -&gt; WIN_ENDPAGE()<br />
-                        - WIN32_ENUMFONTS()             -&gt; WIN_ENUMFONTS()<br />
-                        - WIN32_FILLRECT()              -&gt; WIN_FILLRECT()<br />
-                        - WIN32_GETCHARSIZE()           -&gt; WIN_GETCHARSIZE()<br />
-                        - WIN32_GETDEVICECAPS()         -&gt; WIN_GETDEVICECAPS()<br />
+                        - W32_REGPATHSPLIT()            -&gt; win_regPathSplit()<br />
+                        - W32_REGREAD()                 -&gt; win_regRead()<br />
+                        - W32_REGWRITE()                -&gt; win_regWrite()<br />
+                        - WIN32_REGCREATEKEYEX()        -&gt; win_regCreateKeyEx()<br />
+                        - WIN32_REGOPENKEYEX()          -&gt; win_regOpenKeyEx()<br />
+                        - WIN32_REGQUERYVALUEEX()       -&gt; win_regQueryValueEx()<br />
+                        - WIN32_REGSETVALUEEX()         -&gt; win_regSetValueEx()<br />
+                        - WIN32_REGCLOSEKEY()           -&gt; win_regCloseKey()<br />
+                        - WIN32_ARC()                   -&gt; win_Arc()<br />
+                        - WIN32_BITMAPSOK()             -&gt; win_BitmapsOK()<br />
+                        - WIN32_CREATEDC()              -&gt; win_CreateDC()<br />
+                        - WIN32_CREATEFONT()            -&gt; win_CreateFont()<br />
+                        - WIN32_DELETEDC()              -&gt; win_DeleteDC()<br />
+                        - WIN32_DRAWBITMAP()            -&gt; win_DrawBitmap()<br />
+                        - WIN32_ELLIPSE()               -&gt; win_Ellipse()<br />
+                        - WIN32_ENDDOC()                -&gt; win_EndDoc()<br />
+                        - WIN32_ENDPAGE()               -&gt; win_EndPage()<br />
+                        - WIN32_ENUMFONTS()             -&gt; win_EnumFonts()<br />
+                        - WIN32_FILLRECT()              -&gt; win_FillRect()<br />
+                        - WIN32_GETCHARSIZE()           -&gt; win_GetCharSize()<br />
+                        - WIN32_GETDEVICECAPS()         -&gt; win_GetDeviceCaps()<br />
                         - WIN32_GETEXEFILENAME()        -&gt; WIN_GETEXEFILENAME()<br />
-                        - WIN32_GETPRINTERFONTNAME()    -&gt; WIN_GETPRINTERFONTNAME()<br />
-                        - WIN32_GETTEXTSIZE()           -&gt; WIN_GETTEXTSIZE()<br />
-                        - WIN32_LINETO()                -&gt; WIN_LINETO()<br />
-                        - WIN32_LOADBITMAPFILE()        -&gt; WIN_LOADBITMAPFILE()<br />
-                        - WIN32_MULDIV()                -&gt; WIN_MULDIV()<br />
+                        - WIN32_GETPRINTERFONTNAME()    -&gt; win_GetPrinterFontName()<br />
+                        - WIN32_GETTEXTSIZE()           -&gt; win_GetTextSize()<br />
+                        - WIN32_LINETO()                -&gt; win_LineTo()<br />
+                        - WIN32_LOADBITMAPFILE()        -&gt; win_LoadBitmapFile()<br />
+                        - WIN32_MULDIV()                -&gt; win_MulDiv()<br />
                         - WIN32_OS_ISWIN9X()            -&gt; WIN_OS_ISWIN9X()<br />
-                        - WIN32_RECTANGLE()             -&gt; WIN_RECTANGLE()<br />
-                        - WIN32_SETBKMODE()             -&gt; WIN_SETBKMODE()<br />
-                        - WIN32_SETCOLOR()              -&gt; WIN_SETCOLOR()<br />
-                        - WIN32_SETDOCUMENTPROPERTIES() -&gt; WIN_SETDOCUMENTPROPERTIES()<br />
-                        - WIN32_SETMAPMODE()            -&gt; WIN_SETMAPMODE()<br />
-                        - WIN32_SETPEN()                -&gt; WIN_SETPEN()<br />
-                        - WIN32_STARTDOC()              -&gt; WIN_STARTDOC()<br />
-                        - WIN32_STARTPAGE()             -&gt; WIN_STARTPAGE()<br />
-                        - WIN32_TEXTOUT()               -&gt; WIN_TEXTOUT()<br />
+                        - WIN32_RECTANGLE()             -&gt; win_Rectangle()<br />
+                        - WIN32_SETBKMODE()             -&gt; win_SetBkMode()<br />
+                        - WIN32_SETCOLOR()              -&gt; win_SetColor()<br />
+                        - WIN32_SETDOCUMENTPROPERTIES() -&gt; win_SetDocumentProperties()<br />
+                        - WIN32_SETMAPMODE()            -&gt; win_SetMapMode()<br />
+                        - WIN32_SETPEN()                -&gt; win_SetPen()<br />
+                        - WIN32_STARTDOC()              -&gt; win_StartDoc()<br />
+                        - WIN32_STARTPAGE()             -&gt; win_StartPage()<br />
+                        - WIN32_TEXTOUT()               -&gt; win_TextOut()<br />
                         - WIN32PRN class                -&gt; WIN_PRN class<br />
                         - WIN32BMP class                -&gt; WIN_BMP class<br />
                         </li>
                       <li> hbct GPF and wrong RTE message fixed in:
-                        CHARADD(), CHARSUB(), CHARAND(), CHAROR(), CHARXOR()<br />
+                        CharAdd(), CharSub(), CharAnd(), CharOr(), CharXor()<br />
                         </li>
                       <li> hbct string optimizations in thrown RTEs.<br />
                         </li>

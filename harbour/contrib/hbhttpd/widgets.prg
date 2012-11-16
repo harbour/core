@@ -389,7 +389,7 @@ METHOD Output() CLASS UWBrowse
          CASE "C"  ; xI := RTrim( xI ); EXIT
          CASE "N"  ; xI := Str( xI ); EXIT
          CASE "D"  ; xI := DToC( xI ); EXIT
-         OTHERWISE ; xI := "VALTYPE()==" + ValType( xI )
+         OTHERWISE ; xI := "ValType()==" + ValType( xI )
          ENDSWITCH
          IF ! Self:aColumns[ nI, 4 ]
             xI := UHtmlEncode( xI )

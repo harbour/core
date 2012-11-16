@@ -336,7 +336,7 @@ body { color: #000000; background-color: #FFFFFF; }
 </SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-comment>/* TODO: Clear remaining (not matched) tags */
 </SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-comment>/*
          cRes := ""
-         FOR i := 1 TO len( ::cContent )
+         FOR i := 1 TO Len( ::cContent )
             IF SubStr( ::cContent, i, 1 ) == "&lt;" .AND. ;
                SubStr( ::cContent, i + 1, 1 ) == "#"
                lFlag := .t.

@@ -97,7 +97,7 @@ PROCEDURE DllMain()
     * It allows to create OLE server which will accept unknown messages
     * redirecting them to some other code, i.e.:
     *    if netio_Connect( cServer,,, cPasswd )
-    *       win_oleServerInit( cClassID, cServerName, @netio_funcExec(), .T. )
+    *       win_oleServerInit( cClassID, cServerName, @netio_FuncExec(), .T. )
     *    endif
     * initialize OLE server which redirects all messages to default netio
     * connection established by netio_Connect().

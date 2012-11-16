@@ -830,7 +830,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __Accept(),__INPUT()
+      __Accept(),__Input()
    $END$
  */
 

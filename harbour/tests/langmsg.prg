@@ -34,7 +34,7 @@ PROCEDURE Main( cLng )
    ? "HB_LANG_ITEM_BASE_ERRDESC", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ERRDESC ) + "]"
    ? "HB_LANG_ITEM_BASE_ERRINTR", "[" + hb_langMessage( HB_LANG_ITEM_BASE_ERRINTR ) + "]"
    ? "HB_LANG_ITEM_BASE_TEXT   ", "[" + hb_langMessage( HB_LANG_ITEM_BASE_TEXT   ) + "]"
-   ? "HB_LANGERRMSG(0)", hb_langErrMsg( 0 )
+   ? "hb_langErrMsg(0)", hb_langErrMsg( 0 )
    ?
    ? "date format: " + hb_langMessage( HB_LANG_ITEM_BASE_TEXT ) + " (" + cDtFrm + ")"
    ? "   TRUE val: " + hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + " (" + cTrue + ")"

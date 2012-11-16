@@ -350,7 +350,7 @@ STATIC FUNCTION MY_SSL_READ( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
          ENDIF
          RETURN -1
       ELSE
-         Eval( hConfig[ "Trace" ], "SSL_READ() error", nErr )
+         Eval( hConfig[ "Trace" ], "SSL_read() error", nErr )
          nError := 1000 + nErr
          RETURN -1
       ENDIF
@@ -382,7 +382,7 @@ STATIC FUNCTION MY_SSL_WRITE( hConfig, hSSL, hSocket, cBuf, nTimeout, nError )
             RETURN 0
          ENDIF
       ELSE
-         Eval( hConfig[ "Trace" ], "SSL_WRITE() error", nErr )
+         Eval( hConfig[ "Trace" ], "SSL_write() error", nErr )
          nError := 1000 + nErr
          RETURN -1
       ENDIF
@@ -414,12 +414,12 @@ STATIC FUNCTION MY_SSL_ACCEPT( hConfig, hSSL, hSocket, nTimeout )
             nErr := HB_SOCKET_ERR_TIMEOUT
          ENDIF
       ELSE
-         Eval( hConfig[ "Trace" ], "SSL_ACCEPT() error", nErr )
+         Eval( hConfig[ "Trace" ], "SSL_accept() error", nErr )
          nErr := 1000 + nErr
       ENDIF
    ELSE /* nErr == 0 */
       nErr := SSL_get_error( hSSL, nErr )
-      Eval( hConfig[ "Trace" ], "SSL_ACCEPT() shutdown error", nErr )
+      Eval( hConfig[ "Trace" ], "SSL_accept() shutdown error", nErr )
       nErr := 1000 + nErr
    ENDIF
 

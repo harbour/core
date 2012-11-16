@@ -334,7 +334,7 @@ CREATE CLASS JWindow
 
    METHOD setOnUnLoad( c ) INLINE ::onUnLoad := c
 
-   METHOD Alert( c ) INLINE ::QOut( "alert('" + c + "')" )
+   METHOD Alert( c ) INLINE ::QOut( "Alert('" + c + "')" )
 
    METHOD confirm( c ) INLINE ::QOut( "confirm('" + c + "')" )
 

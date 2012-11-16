@@ -490,10 +490,10 @@ STATIC FUNCTION LogError( oerr )
             FWriteLine( nHandle, "Current Recno .....: " + strvalue( &( "RecNo()" ) ) )
          ENDIF
          IF hb_IsFunction( "DbFilter" )
-            FWriteLine( nHandle, "Current Filter ....: " + &( "DbFilter()" ) )
+            FWriteLine( nHandle, "Current Filter ....: " + &( "dbFilter()" ) )
          ENDIF
          IF hb_IsFunction( "DbRelation" )
-            FWriteLine( nHandle, "Relation Exp. .....: " + &( "DbRelation()" ) )
+            FWriteLine( nHandle, "Relation Exp. .....: " + &( "dbRelation()" ) )
          ENDIF
          IF hb_IsFunction( "IndexOrd" )
             FWriteLine( nHandle, "Index Order .......: " + strvalue( &( "IndexOrd(0)" ) ) )

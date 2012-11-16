@@ -408,7 +408,7 @@ PROCEDURE Main_MATH()
    TEST_LINE( Str( Mod( -3, -3 ) )            , "         0.00"                    )
 
    /* <OP>assign and (pre/post)(inc/dec)rementation */
-   o:=errornew()
+   o:=ErrorNew()
    o:oscode := 1
    TEST_LINE( o:oscode                        , 1   )
    o:oscode++

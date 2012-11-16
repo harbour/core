@@ -73,8 +73,8 @@ Martin Vogel <vogel@inttec.de>
                the tokenizer before and after the extracted token.
 
 * TokenInit()  all incremental tokenizer functions
-                 TokenInit(),TokenExit(),TOKENNEXT(),TokenNum(),
-                 TokenAt(),SAVEToken(),RESTToken(),TOKENEND()
+                 TokenInit(),TokenExit(),TokenNext(),TokenNum(),
+                 TokenAt(),SaveToken(),RestToken(),TokenEnd()
                now support locally stored token environments
 
 + TokenExit()  new function related to TOKENINIT

@@ -219,7 +219,7 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
          t_hImage := Wvg_LoadImage( "vouch1.bmp", 2 )
       ENDIF
       IF t_hImage != NIL .AND. t_hImage != 0
-         Wvg_SendMessage( WVG_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
+         Wvg_SendMessage( Wvg_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
       ENDIF
       */
       Wvg_SetDlgItemText( hDlg, ID_MLE, GetEditText() )

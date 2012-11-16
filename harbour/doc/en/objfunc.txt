@@ -796,6 +796,6 @@
    $FILES$
       Library is core
    $SEEALSO$
-      __objHasData(),__ObjHasMethod()
+      __objHasData(),__objHasMethod()
    $END$
  */

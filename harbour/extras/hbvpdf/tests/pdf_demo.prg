@@ -20,7 +20,7 @@ PROCEDURE Main()
       "FDF5E6", "FFF8DC", "FAF0E6", "FAFAD2", "FFFACD", "FFEBCD", "FFFFE0", "FAEBD7", "FFF5EE", "FFF0F5", "D8BFD8", "FFC0CB", "FFB6C1", "BC8F8F", "F08080", "FF7F50", "FF6347", "8B4513", "A0522D", "CD853F", ;
       "FFFAFA", "FFFFF0", "E6E6FA", "FFFAF0", "F8F8FF", "F0FFF0", "F5F5DC", "F0FFFF", "F5FFFA", "708090", "778899", "F5F5F5", "DCDCDC", "D3D3D3", "C0C0C0", "A9A9A9", "808080", "696969", "000000", "FFFFFF" }
 
-   aReport := PdfInit()
+   aReport := pdfInit()
 
    SET DATE FORMAT "YYYY/MM/DD" // important for save/load array function!!!
 
@@ -78,7 +78,7 @@ PROCEDURE Main()
       nRow := 150 + nI * 10
       FOR nJ := 1 TO 20
          nCol := nJ * 10 - 3
-         pdfBox( nRow, nCol, nRow + 10, nCol + 10, 0.01, nI * 10, "M", Chr( 253 ) + Chr( cton( SubStr( aColor[ ( nI - 1 ) * 20 + nJ ], 1, 2 ), 16 ) ) + Chr( cton( SubStr( aColor[ ( nI - 1 ) * 20 + nJ ], 3, 2 ), 16 ) ) + Chr( cton( SubStr( aColor[ ( nI - 1 ) * 20 + nJ ], 5, 2 ), 16 ) ) )
+         pdfBox( nRow, nCol, nRow + 10, nCol + 10, 0.01, nI * 10, "M", Chr( 253 ) + Chr( CToN( SubStr( aColor[ ( nI - 1 ) * 20 + nJ ], 1, 2 ), 16 ) ) + Chr( CToN( SubStr( aColor[ ( nI - 1 ) * 20 + nJ ], 3, 2 ), 16 ) ) + Chr( CToN( SubStr( aColor[ ( nI - 1 ) * 20 + nJ ], 5, 2 ), 16 ) ) )
       NEXT
    NEXT
 
@@ -89,7 +89,7 @@ PROCEDURE Main()
       nLeft := ( nI - 1 ) * 2.1
       nBottom := aReport[ PAGEY ] - ( nI - 1 ) * 2.47
       nRight := aReport[ PAGEX ] - ( nI - 1 ) * 2.18
-      pdfBox1( nTop, nLeft, nBottom, nRight, 10, Chr( cton( SubStr( aColor[ nI ], 1, 2 ), 16 ) ) + Chr( cton( SubStr( aColor[ nI ], 3, 2 ), 16 ) ) + Chr( cton( SubStr( aColor[ nI ], 5, 2 ), 16 ) ) )
+      pdfBox1( nTop, nLeft, nBottom, nRight, 10, Chr( CToN( SubStr( aColor[ nI ], 1, 2 ), 16 ) ) + Chr( CToN( SubStr( aColor[ nI ], 3, 2 ), 16 ) ) + Chr( CToN( SubStr( aColor[ nI ], 5, 2 ), 16 ) ) )
    NEXT
 
    pdfNewPage( "LETTER", "P", 6 )
@@ -101,15 +101,15 @@ PROCEDURE Main()
 
    cTestFile := MemoRead( "files" + hb_ps() + "test.txt" )
 
-   pdfText( cTestFile,  28, 107.95, nWidth, nTab, 3, "M", Chr( 253 ) + Chr( 0 ) + Chr( 0 ) + Chr( 255 ) )   // ,              pdfTextCount( memoread("test.txt"),  28, 107.95, nWidth, nTab, 3, "M" )
-   pdfText( cTestFile,  58, 107.95, nWidth, nTab, 2, "M", Chr( 253 ) + Chr( 0 ) + Chr( 255 ) + Chr( 0 ) )   // ,              pdfTextCount( memoread("test.txt"),  58, 107.95, nWidth, nTab, 2, "M" )
-   pdfText( cTestFile,  88, 107.95, nWidth, nTab, 1, "M", Chr( 253 ) + Chr( 255 ) + Chr( 0 ) + Chr( 0 ) )   // ,              pdfTextCount( memoread("test.txt"),  88, 107.95, nWidth, nTab, 1, "M" )
-   pdfText( cTestFile, 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M", Chr( 253 ) + Chr( 255 ) + Chr( 255 ) + Chr( 0 ) ) // , pdfTextCount( memoread("test.txt"), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M" )
+   pdfText( cTestFile,  28, 107.95, nWidth, nTab, 3, "M", Chr( 253 ) + Chr( 0 ) + Chr( 0 ) + Chr( 255 ) )   // ,              pdfTextCount( MemoRead("test.txt"),  28, 107.95, nWidth, nTab, 3, "M" )
+   pdfText( cTestFile,  58, 107.95, nWidth, nTab, 2, "M", Chr( 253 ) + Chr( 0 ) + Chr( 255 ) + Chr( 0 ) )   // ,              pdfTextCount( MemoRead("test.txt"),  58, 107.95, nWidth, nTab, 2, "M" )
+   pdfText( cTestFile,  88, 107.95, nWidth, nTab, 1, "M", Chr( 253 ) + Chr( 255 ) + Chr( 0 ) + Chr( 0 ) )   // ,              pdfTextCount( MemoRead("test.txt"),  88, 107.95, nWidth, nTab, 1, "M" )
+   pdfText( cTestFile, 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M", Chr( 253 ) + Chr( 255 ) + Chr( 255 ) + Chr( 0 ) ) // , pdfTextCount( MemoRead("test.txt"), 118, 107.95 - nWidth / 2, nWidth, nTab, 4, "M" )
 
-   pdfText( cTestFile,  34, 100,    nWidth, nTab, 3, "R", Chr( 253 ) + Chr( 0 ) + Chr( 128 ) + Chr( 128 ) )  // , pdfTextCount( memoread("test.txt"),  33, 100,    nWidth, nTab, 3, "R" )
-   pdfText( cTestFile,  41, 100,    nWidth, nTab, 2, "R", Chr( 253 ) + Chr( 0 ) + Chr( 191 ) + Chr( 255 ) )  // , pdfTextCount( memoread("test.txt"),  40, 100,    nWidth, nTab, 2, "R" )
-   pdfText( cTestFile,  48, 100,    nWidth, nTab, 1, "R", Chr( 253 ) + Chr( 244 ) + Chr( 164 ) + Chr( 96 ) ) // , pdfTextCount( memoread("test.txt"),  47, 100,    nWidth, nTab, 1, "R" )
-   pdfText( cTestFile,  55,  35,    nWidth, nTab, 4, "R", Chr( 253 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )      // , pdfTextCount( memoread("test.txt"),  54,  35,    nWidth, nTab, 4, "R" )
+   pdfText( cTestFile,  34, 100,    nWidth, nTab, 3, "R", Chr( 253 ) + Chr( 0 ) + Chr( 128 ) + Chr( 128 ) )  // , pdfTextCount( MemoRead("test.txt"),  33, 100,    nWidth, nTab, 3, "R" )
+   pdfText( cTestFile,  41, 100,    nWidth, nTab, 2, "R", Chr( 253 ) + Chr( 0 ) + Chr( 191 ) + Chr( 255 ) )  // , pdfTextCount( MemoRead("test.txt"),  40, 100,    nWidth, nTab, 2, "R" )
+   pdfText( cTestFile,  48, 100,    nWidth, nTab, 1, "R", Chr( 253 ) + Chr( 244 ) + Chr( 164 ) + Chr( 96 ) ) // , pdfTextCount( MemoRead("test.txt"),  47, 100,    nWidth, nTab, 1, "R" )
+   pdfText( cTestFile,  55,  35,    nWidth, nTab, 4, "R", Chr( 253 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 ) )      // , pdfTextCount( MemoRead("test.txt"),  54,  35,    nWidth, nTab, 4, "R" )
 
    pdfNewPage( "LETTER", "P", 6 )
    pdfBookAdd( "Fonts", 1, aReport[ REPORTPAGE ], 0 )
@@ -162,7 +162,7 @@ PROCEDURE Main()
 
    pdfClose()
 
-STATIC FUNCTION cton( cString, nBase ) // this function called only used in pdf_demo.prg
+STATIC FUNCTION CToN( cString, nBase ) // this function called only used in pdf_demo.prg
 
    LOCAL cTemp, nI, cChar, n := 0, nLen
 

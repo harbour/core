@@ -138,7 +138,7 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
       __clsAddMsg( hClass,  "Init"      , @Init()          , HB_OO_MSG_METHOD )
       __clsAddMsg( hClass,  "Pointer"   , @Pointer()       , HB_OO_MSG_METHOD )
       __clsAddMsg( hClass,  "GetPointer", @GetPointer()    , HB_OO_MSG_METHOD )
-      __clsAddMsg( hClass,  "CopyTo"    , @__CSTR_CopyTo() , HB_OO_MSG_METHOD )
+      __clsAddMsg( hClass,  "CopyTo"    , @__CStr_CopyTo() , HB_OO_MSG_METHOD )
 
       FOR EACH cMember IN acMembers
          __clsAddMsg( hClass,       cMember, cMember:__enumIndex(), HB_OO_MSG_PROPERTY )
@@ -200,7 +200,7 @@ FUNCTION hb_CStructureId( cStructure, lInplace )
          oErr:CanRetry      := .F.
          oErr:CanSubstitute := .T.
          oErr:Description   := "Structure not found: '" + cStructure + "'"
-         oErr:Operation     := "HB_CStructureID()"
+         oErr:Operation     := "hb_CStructureId()"
          oErr:Severity      := ES_ERROR
          oErr:SubCode       := 3
          oErr:SubSystem     := "C Structure"
@@ -297,7 +297,7 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
                oErr:CanRetry      := .F.
                oErr:CanSubstitute := .T.
                oErr:Description   := "Undefined CType: '" + aDefinitions[ Counter ] + "'"
-               oErr:Operation     := "HB_CStructureCSyntax()"
+               oErr:Operation     := "hb_CStructureCSyntax()"
                oErr:Severity      := ES_ERROR
                oErr:SubCode       := 2
                oErr:SubSystem     := "C Structure"
@@ -331,7 +331,7 @@ FUNCTION hb_CStructure( cStructure, nAlign )
       oErr:CanRetry      := .F.
       oErr:CanSubstitute := .T.
       oErr:Description   := "Structure not initialized with __ActiveStructure()"
-      oErr:Operation     := "HB_CStructure()"
+      oErr:Operation     := "hb_CStructure()"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 3
       oErr:SubSystem     := "C Structure"
@@ -387,7 +387,7 @@ FUNCTION hb_CStructureFromId( nID, nAlign )
       oErr:CanRetry      := .F.
       oErr:CanSubstitute := .T.
       oErr:Description   := "ID out of range."
-      oErr:Operation     := "HB_CStructureFromID()"
+      oErr:Operation     := "hb_CStructureFromId()"
       oErr:Severity      := ES_ERROR
       oErr:SubCode       := 4
       oErr:SubSystem     := "C Structure"
@@ -443,7 +443,7 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
       __clsAddMsg( hClass,  "Init"      , @Init()          , HB_OO_MSG_METHOD )
       __clsAddMsg( hClass,  "Pointer"   , @Pointer()       , HB_OO_MSG_METHOD )
       __clsAddMsg( hClass,  "GetPointer", @GetPointer()    , HB_OO_MSG_METHOD )
-      __clsAddMsg( hClass,  "CopyTo"    , @__CSTR_CopyTo() , HB_OO_MSG_METHOD )
+      __clsAddMsg( hClass,  "CopyTo"    , @__CStr_CopyTo() , HB_OO_MSG_METHOD )
 
       // IF Abs( CType ) == 1
       __clsAddMsg( hClass, "AsString", @AsString()   , HB_OO_MSG_METHOD )

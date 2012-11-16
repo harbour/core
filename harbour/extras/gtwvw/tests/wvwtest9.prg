@@ -1134,7 +1134,7 @@ FUNCTION xDebugInfo()
 
    // SetMouse( .T., MaxRow(), MaxCol() )
 
-   // wvw_SetMousePos( WVW_nNumWindows() - 1, MaxRow(), MaxCol() )
+   // wvw_SetMousePos( wvw_nNumWindows() - 1, MaxRow(), MaxCol() )
 
    lboxmessage( "GTWVW test/demo" + hb_eol() + ;
       "Budyanto Dj. <budyanto@centrin.net.id>" + hb_eol() + ;

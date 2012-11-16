@@ -92,17 +92,17 @@ PROCEDURE Main()
 /*
    cStr := Replicate( TEST_STRING, 1000000 )
    ?
-   ? "BZ2 ", hb_ntos( Len( hb_bz2_compress( cStr, NIL, @nResult ) ) )
+   ? "BZ2 ", hb_ntos( Len( hb_bz2_Compress( cStr, NIL, @nResult ) ) )
    ? "GZIP", hb_ntos( Len( hb_gzCompress( cStr, NIL, @nResult ) ) )
-   ? "ZLIB", hb_ntos( Len( hb_zCompress( cStr, NIL,  @nResult ) ) )
+   ? "ZLIB", hb_ntos( Len( hb_ZCompress( cStr, NIL,  @nResult ) ) )
    ? "LZF ", hb_ntos( Len( hb_lzf_compress( cStr, NIL, @nResult ) ) )
    ? "LZO ", hb_ntos( Len( hb_lzo1x_1_compress( cStr, NIL, @nResult ) ) )
 
-   cStr := Replicate( hb_memoRead( hb_argv( 0 ) ), 50 )
+   cStr := Replicate( hb_MemoRead( hb_argv( 0 ) ), 50 )
    ?
-   ? "BZ2 ", hb_ntos( Len( hb_bz2_compress( cStr, NIL, @nResult ) ) )
+   ? "BZ2 ", hb_ntos( Len( hb_bz2_Compress( cStr, NIL, @nResult ) ) )
    ? "GZIP", hb_ntos( Len( hb_gzCompress( cStr, NIL, @nResult ) ) )
-   ? "ZLIB", hb_ntos( Len( hb_zCompress( cStr, NIL,  @nResult ) ) )
+   ? "ZLIB", hb_ntos( Len( hb_ZCompress( cStr, NIL,  @nResult ) ) )
    ? "LZF ", hb_ntos( Len( hb_lzf_compress( cStr, NIL, @nResult ) ) )
    ? "LZO ", hb_ntos( Len( hb_lzo1x_1_compress( cStr, NIL, @nResult ) ) )
 */

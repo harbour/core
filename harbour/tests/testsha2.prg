@@ -44,21 +44,21 @@ STATIC PROCEDURE Test_SHA2()
         "8e959b75dae313da8cf4f72814fc143f8f7779c6eb9f7fa17299aeadb6889018501d289e4900f7e4331b99dec4b5433ac7d329eeb6dd26545e96e55b874be909" ,;
         "e718483d0ce769644e2e42c7bc15b4638e1f98b13b2044285632a803afa973ebde0ff244877ea60a4cb0432ce577c31beb009c5c2c49aa2e4eadb217ad8cc09b" } }
 
-   ? StrToHex( HB_SHA224( cMsg1  ) ) == results[ 1 ][ 1 ]
-   ? StrToHex( HB_SHA224( cMsg2a ) ) == results[ 1 ][ 2 ]
-   ? StrToHex( HB_SHA224( cMsg3  ) ) == results[ 1 ][ 3 ]
+   ? StrToHex( hb_SHA224( cMsg1  ) ) == results[ 1 ][ 1 ]
+   ? StrToHex( hb_SHA224( cMsg2a ) ) == results[ 1 ][ 2 ]
+   ? StrToHex( hb_SHA224( cMsg3  ) ) == results[ 1 ][ 3 ]
 
-   ? StrToHex( HB_SHA256( cMsg1  ) ) == results[ 2 ][ 1 ]
-   ? StrToHex( HB_SHA256( cMsg2a ) ) == results[ 2 ][ 2 ]
-   ? StrToHex( HB_SHA256( cMsg3  ) ) == results[ 2 ][ 3 ]
+   ? StrToHex( hb_SHA256( cMsg1  ) ) == results[ 2 ][ 1 ]
+   ? StrToHex( hb_SHA256( cMsg2a ) ) == results[ 2 ][ 2 ]
+   ? StrToHex( hb_SHA256( cMsg3  ) ) == results[ 2 ][ 3 ]
 
-   ? StrToHex( HB_SHA384( cMsg1  ) ) == results[ 3 ][ 1 ]
-   ? StrToHex( HB_SHA384( cMsg2b ) ) == results[ 3 ][ 2 ]
-   ? StrToHex( HB_SHA384( cMsg3  ) ) == results[ 3 ][ 3 ]
+   ? StrToHex( hb_SHA384( cMsg1  ) ) == results[ 3 ][ 1 ]
+   ? StrToHex( hb_SHA384( cMsg2b ) ) == results[ 3 ][ 2 ]
+   ? StrToHex( hb_SHA384( cMsg3  ) ) == results[ 3 ][ 3 ]
 
-   ? StrToHex( HB_SHA512( cMsg1  ) ) == results[ 4 ][ 1 ]
-   ? StrToHex( HB_SHA512( cMsg2b ) ) == results[ 4 ][ 2 ]
-   ? StrToHex( HB_SHA512( cMsg3  ) ) == results[ 4 ][ 3 ]
+   ? StrToHex( hb_SHA512( cMsg1  ) ) == results[ 4 ][ 1 ]
+   ? StrToHex( hb_SHA512( cMsg2b ) ) == results[ 4 ][ 2 ]
+   ? StrToHex( hb_SHA512( cMsg3  ) ) == results[ 4 ][ 3 ]
 
    RETURN
 
@@ -119,10 +119,10 @@ STATIC PROCEDURE Test_SHA2_HMAC()
 
    FOR tmp := 1 TO 7
       IF tmp != 5
-         ? StrToHex( HB_HMAC_SHA224( aMsg[ tmp ], keys[ tmp ] ) ) == results[ tmp ]
-         ? StrToHex( HB_HMAC_SHA256( aMsg[ tmp ], keys[ tmp ] ) ) == results[ tmp + 7 ]
-         ? StrToHex( HB_HMAC_SHA384( aMsg[ tmp ], keys[ tmp ] ) ) == results[ tmp + 14 ]
-         ? StrToHex( HB_HMAC_SHA512( aMsg[ tmp ], keys[ tmp ] ) ) == results[ tmp + 21 ]
+         ? StrToHex( hb_HMAC_SHA224( aMsg[ tmp ], keys[ tmp ] ) ) == results[ tmp ]
+         ? StrToHex( hb_HMAC_SHA256( aMsg[ tmp ], keys[ tmp ] ) ) == results[ tmp + 7 ]
+         ? StrToHex( hb_HMAC_SHA384( aMsg[ tmp ], keys[ tmp ] ) ) == results[ tmp + 14 ]
+         ? StrToHex( hb_HMAC_SHA512( aMsg[ tmp ], keys[ tmp ] ) ) == results[ tmp + 21 ]
 /* We don't support these MAC sizes */
 /*    ELSE
          mac_224_size = 128 / 8;

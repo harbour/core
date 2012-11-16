@@ -247,7 +247,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       // // Check whether the current request was referred to by
       // // an external site which invalidates the previously found ID
       // $url = parse_url($GLOBALS['HTTP_REFERER']);
-      // IF !(trim($url['host']) == $GLOBALS['SERVER_NAME'])
+      // IF !(Trim($url['host']) == $GLOBALS['SERVER_NAME'])
       //    unset(session->id)
       //    send_cookie := .T.
       //    define_sid := .T.

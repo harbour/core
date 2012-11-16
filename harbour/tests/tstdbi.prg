@@ -14,16 +14,16 @@ PROCEDURE Main()
    USE "test" NEW
 
    FOR i := 1 TO 100
-      cStr += Str( i ) + " " + xToStr( DbInfo( i ) ) + hb_eol()
+      cStr += Str( i ) + " " + xToStr( dbInfo( i ) ) + hb_eol()
    NEXT
-   cStr += Str(  101 ) + " " + xToStr( DbInfo(  101 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + xToStr( DbInfo(  101, 1 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + xToStr( DbInfo(  101, 2 ) ) + hb_eol()
-   cStr += Str(  102 ) + " " + xToStr( DbInfo(  102 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + xToStr( DbInfo(  102, 1 ) ) + hb_eol()
-   cStr += Str(  101 ) + " " + xToStr( DbInfo(  102, 2 ) ) + hb_eol()
-   cStr += Str(  999 ) + " " + xToStr( DbInfo(  999 ) ) + hb_eol()
-   cStr += Str( 1000 ) + " " + xToStr( DbInfo( 1000 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + xToStr( dbInfo(  101 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + xToStr( dbInfo(  101, 1 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + xToStr( dbInfo(  101, 2 ) ) + hb_eol()
+   cStr += Str(  102 ) + " " + xToStr( dbInfo(  102 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + xToStr( dbInfo(  102, 1 ) ) + hb_eol()
+   cStr += Str(  101 ) + " " + xToStr( dbInfo(  102, 2 ) ) + hb_eol()
+   cStr += Str(  999 ) + " " + xToStr( dbInfo(  999 ) ) + hb_eol()
+   cStr += Str( 1000 ) + " " + xToStr( dbInfo( 1000 ) ) + hb_eol()
 
 #ifdef __HARBOUR__
    MemoWrit( "dbihb.txt", cStr )

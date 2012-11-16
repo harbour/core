@@ -568,7 +568,7 @@ PROCEDURE uhttpd_Die( cError )
       __OutDebug( "cError: ", cError )
       IF ! oCGI:HeaderSent()
         oCGI:WriteLN( CRLF2BR( cError ), CRLF2BR( CRLF() ) )
-        // oCGI:WriteLN( CRLF2BR( hb_dumpVar( TConfigure():hConfig ) ) )
+        // oCGI:WriteLN( CRLF2BR( hb_DumpVar( TConfigure():hConfig ) ) )
       ENDIF
 #endif
       // Generate Error

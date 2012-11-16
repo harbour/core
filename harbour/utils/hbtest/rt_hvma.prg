@@ -360,7 +360,7 @@ PROCEDURE Main_HVMA()
 
    TEST_LINE( mxNotHere                       , "E 14 BASE 1003 Variable does not exist (MXNOTHERE) OS:0 #:1 F:R" ) /* Bug in CA-Cl*pper, it does not initialize 'TRIES' in error object giving strange results */
 #ifdef __HARBOUR__
-   TEST_LINE( __MVGET("MXUNDECL")             , "E 14 BASE 1003 Variable does not exist (MXUNDECL) OS:0 #:1 F:R" )
+   TEST_LINE( __mvGet("MXUNDECL")             , "E 14 BASE 1003 Variable does not exist (MXUNDECL) OS:0 #:1 F:R" )
 #endif
    mxNotHere ="MXUNDECL"
    TEST_LINE( &mxNotHere.                     , "E 14 BASE 1003 Variable does not exist (MXUNDECL) OS:0 #:1 F:R" )

@@ -155,7 +155,7 @@ FUNCTION Test2()
    n := 2
    n := "a"
    n := Seconds() + 2
-   n := Int( seconds() + 2 )
+   n := Int( Seconds() + 2 )
 
    RETURN NIL
 

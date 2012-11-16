@@ -54,7 +54,7 @@
  * A simple RDD which uses HB_F*() functions from MISC library
  * to access CSV files. It allow to open an CSV file and navigate
  * using SKIP()/GOTO()/GOTOP()/GOBOTTOM() functions using
- * Bof()/EOF()/RECNO()/LASTREC() to check current state.
+ * Bof()/Eof()/RecNo()/LastRec() to check current state.
  * HB_F*() functions does not support single field access and allow
  * to read only the whole line. This RDD also. I only added one
  * virtual field which exist in all tables open by this RDD called

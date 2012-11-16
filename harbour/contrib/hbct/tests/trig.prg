@@ -133,8 +133,8 @@ PROCEDURE Main()
    ? Space( 29 ) + Str( Asin( 0.5 ), 18, 15 ) + "  <-- CT for Harbour"
    ?
 
-   ? "Str( ACos( 0.7 ), 18, 15 ) =  0.795398830184144   // CT3"
-   ? Space( 29 ) + Str( ACos( 0.7 ), 18, 15 ) + "  <-- CT for Harbour"
+   ? "Str( Acos( 0.7 ), 18, 15 ) =  0.795398830184144   // CT3"
+   ? Space( 29 ) + Str( Acos( 0.7 ), 18, 15 ) + "  <-- CT for Harbour"
    ?
 
    ? "Str( Atan( Pi() / 4 ), 18, 15 ) =  0.665773750028354   // CT3"

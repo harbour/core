@@ -22,7 +22,7 @@ PROCEDURE Main( cPar1 )
 
    DO WHILE nPrn != 0
       CLS
-      @ 0, 0 SAY "Win_Prn() Class test program. Choose a printer to test"
+      @ 0, 0 SAY "win_Prn() Class test program. Choose a printer to test"
       @ 1, 0 SAY "Bitmap file name" GET cBMPFile PICT "@K"
       READ
       @ 2, 0 TO MaxRow(), MaxCol()
@@ -53,7 +53,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
    IF ! oPrinter:Create()
       Alert( "Cannot Create Printer" )
    ELSE
-      IF ! oPrinter:startDoc( "Win_Prn(Doc name in Printer Properties)" )
+      IF ! oPrinter:startDoc( "win_Prn(Doc name in Printer Properties)" )
          Alert( "StartDoc() failed" )
       ELSE
          oPrinter:SetPen( WIN_PS_SOLID, 1, HB_WIN_RGB_RED )

@@ -94,7 +94,7 @@ ul {
                             <span class="title">Core</span><br />
                          </font></li>
                          <li><font>Fixed __HARBOUR__ macro on .prg level, when compiled with -u switch.</font></li>
-                         <li><font>HB_ARRAYID() moved to xhb.lib, synced with xhb and made 64 bit
+                         <li><font>hb_ArrayId() moved to xhb.lib, synced with xhb and made 64 bit
                             compatible.</font></li>
                          <li><font>File handle usage cleanup and 64 bit compatibility.</font></li>
                          <li><font>Automatic destructors for .hrb modules.</font></li>
@@ -109,11 +109,11 @@ ul {
                             compatibility fixes.</font></li>
                          <li><font>MD5 calculation fixes.</font></li>
                          <li><font>Added C level hb_hashAddNew().</font></li>
-                         <li><font>Compile time optimization of EMPTY() function.</font></li>
+                         <li><font>Compile time optimization of Empty() function.</font></li>
                          <li><font>Compress trailing spaces during string item serialization.</font></li>
                          <li><font>Replicated CA-Cl*pper compile time optimization bugs.</font></li>
                          <li><font>TCP/IP function (HB_INET*()) fixes.</font></li>
-                         <li><font>Added HB_OSFILEMASK(), HB_DIRSCAN(), HB_FILEMATCH() Harbour level
+                         <li><font>Added HB_OSFILEMASK(), hb_DirScan(), hb_FileMatch() Harbour level
                             functions.</font></li>
                          <li><font>Fixed RTE in HBReportForm() class.</font></li>
                          <li><font>Added __OBJGETPROPERTIES(), extended __CLSGETPROPERTIES().</font></li>
@@ -127,12 +127,12 @@ ul {
                          </font></li>
                          <li><font>Better cross-build support for contribs with external dependencies.</font></li>
                          <li><font>hbmzip OS/2 support, Unix .zip header fix, using Harbour memory
-                            management functions, global and file comment support, HB_ZIPDELETEFILE()
+                            management functions, global and file comment support, hb_zipDeleteFile()
                             function.</font></li>
                          <li><font>hbziparch fixes and better portability.</font></li>
                          <li><font>hbcurl fixes, now using Harbour memory allocation functions, now older
                             libcurl versions are supported as well,</font></li>
-                         <li><font>CURL_EASY_GETINFO() fixed for unsupported info types.</font></li>
+                         <li><font>curl_easy_getinfo() fixed for unsupported info types.</font></li>
                          <li><font>64bit compatibility fixes. hbmysql/SQLLISTF() function now uses pointer
                             instead of numeric type.</font></li>
                          <li><font>Fixed adordd to be _SET_EXACT independent.</font></li>
@@ -199,7 +199,7 @@ ul {
                          <li><font>hbziparch updated, bugs fixed and ZipArchive library <br />
                             updated to latest version.</font></li>
                          <li><font>Added DLL call functionality to hbw32 contrib.</font></li>
-                         <li><font>Added HB_FREADLINE(), HB_CRYPT(), HB_DECRYPT() to xhb contrib.</font></li>
+                         <li><font>Added HB_FREADLINE(), hb_Crypt(), hb_Decrypt() to xhb contrib.</font></li>
                          <li><font>Added hbtip contrib tests.</font></li>
                          <li><font>GTWVG contrib enhancements.</font></li>
                          <li><font>Added SQL_SPRINTF() to hbmisc contrib.</font></li>
@@ -209,9 +209,9 @@ ul {
                             incompatible, because numeric addresses have been converted to <br />
                             pointer types:</font></li>
                          <li><font>hbwhat32: wndproc/dlgproc parameters in related functions.</font></li>
-                         <li><font>hbmysql: SQLCONNECT(), SQLSTORER(), SQLUSERES()</font></li>
+                         <li><font>hbmysql: SQLConnect(), SQLSTORER(), SQLUSERES()</font></li>
                          <li><font>hbmsql: MSQLSTORER(), MSQLLISTFI()</font></li>
-                         <li><font>Removed function CEIL() from hbmisc. Please use CEILING() from
+                         <li><font>Removed function CEIL() from hbmisc. Please use Ceiling() from
                             hbct <br />
                             instead.</font></li>
                          <li><font>Optimizations and minor fixes.</font></li>
@@ -384,10 +384,10 @@ ul {
                             c := Upper( c )<br />
                             NEXT</font></li>
                          <li><font>added full support for FOR EACH overloading</font></li>
-                         <li><font>extended PROCFILE() function - now it can accept &lt;nLevel&gt; | &lt;sFuncSym&gt;
+                         <li><font>extended ProcFile() function - now it can accept &lt;nLevel&gt; | &lt;sFuncSym&gt;
                             |<br />
-                            &lt;cFuncName&gt; as first parameter, f.e.: PROCFILE( @someFunc() ) or<br />
-                            PROCFILE( &quot;PUBLICFUNC&quot; ) or PROCFILE( nStackLevel ). For non character<br />
+                            &lt;cFuncName&gt; as first parameter, f.e.: ProcFile( @someFunc() ) or<br />
+                            ProcFile( &quot;PUBLICFUNC&quot; ) or ProcFile( nStackLevel ). For non character<br />
                             parameters it fully works also for static functions even if source code<br />
                             have many static functions with the same name</font></li>
                          <li><font>added support for detecting not cleanly overloaded by linker .prg<br />
@@ -414,9 +414,9 @@ ul {
                             to/from hexadecimal format</font></li>
                          <li><font>added set of functions with hb_ prefix supported extended
                             parameters,<br />
-                            f.e.: HB_AINS(), HB_ADEL(), HB_ASCAN(), HB_RASCAN(), HB_GETENV(),<br />
-                            HB_AT(), ...</font></li>
-                         <li><font>&nbsp;added HB_FILEEXISTS(), HB_DIREXISTS()</font></li>
+                            f.e.: hb_AIns(), hb_ADel(), hb_AScan(), hb_RAScan(), hb_GetEnv(),<br />
+                            hb_At(), ...</font></li>
+                         <li><font>&nbsp;added HB_FILEEXISTS(), hb_DirExists()</font></li>
                          <li><font>&nbsp;new TBROWSE class which is now very highly compatible with Clipper<br />
                             It should resolve 99.9&amp;percnt; problems with BROWSE reported in the past.</font></li>
                          <li><font>&nbsp;TBCOLUMN class is now fully Clipper compatible</font></li>
@@ -437,9 +437,9 @@ ul {
                             functions strip<br />
                             trailing and leading spaces from file names to emulate DOS like behavior</font></li>
                          <li><font>&nbsp;added support for _SET_DEFEXTENSIONS to native all RDDs</font></li>
-                         <li><font>&nbsp;many fixes in transform() function and fixed 64bit integer
+                         <li><font>&nbsp;many fixes in Transform() function and fixed 64bit integer
                             transformation.<br />
-                            Now transform() passes our all compatibility tests</font></li>
+                            Now Transform() passes our all compatibility tests</font></li>
                          <li><font>&nbsp;added undocumented Clipper error functions</font></li>
                          <li><font>- added functions to manage .ini files: HB_INI*()</font></li>
                          <li><font>&nbsp;extended HB_KEYPUT to support strings and arrays.</font></li>
@@ -493,7 +493,7 @@ ul {
                             escape key sequences in terminal based GTs. It&#39;s supported by<br />
                             GTCRS and GTTRM</font></li>
                          <li><font>&nbsp;fixed color string decoding to be fully Clipper compatible</font></li>
-                         <li><font>&nbsp;OUTSTD()/OUTERR() respects automatic CP translation when they<br />
+                         <li><font>&nbsp;OutStd()/OutErr() respects automatic CP translation when they<br />
                             are not redirected to GT screen</font></li>
                          <li><font>&nbsp;added common for all GTs CLIPBOARD support. If possible low level
                             GT<br />
@@ -538,8 +538,8 @@ ul {
                          <li><font>&nbsp;added xHarbour compatibility library: xhb. It emulates many of
                             xHarbour<br />
                             behavior which cannot be covered by PP rules like extended operators,<br />
-                            strings like arrays, one byte string in math operations, HB_ENUMINDEX(),<br />
-                            HB_QWith(), HB_QSelf(), accessing hash item using OOP interface,<br />
+                            strings like arrays, one byte string in math operations, hb_enumIndex(),<br />
+                            hb_QWith(), hb_QSelf(), accessing hash item using OOP interface,<br />
                             accessing/assigning string characters using [] operators (many of the<br />
                             above fully works only in Harbour but not in native xHarbour code :-))<br />
                             and many extensions like HBLOG, HBXML, HBCSTRUCT, HASH, INET*(), etc.</font></li>

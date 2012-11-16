@@ -375,14 +375,14 @@ PROCEDURE Main_MISC()
    TEST_LINE( ElapTime("23:12:34","12:34:57") , "13:22:23" )
    TEST_LINE( ElapTime("12:34:57","23:12:34") , "10:37:37" )
 
-   TEST_LINE( LENNUM( 10 )                    , 2 )
-   TEST_LINE( LENNUM( 10.9 )                  , 4 )
-   TEST_LINE( LENNUM( 10.90 )                 , 5 )
+   TEST_LINE( LenNum( 10 )                    , 2 )
+   TEST_LINE( LenNum( 10.9 )                  , 4 )
+   TEST_LINE( LenNum( 10.90 )                 , 5 )
 
-   TEST_LINE( SECS("23:12:34")                , 83554 )
-   TEST_LINE( SECS("12:34:57")                , 45297 )
+   TEST_LINE( Secs("23:12:34")                , 83554 )
+   TEST_LINE( Secs("12:34:57")                , 45297 )
 
-   TEST_LINE( TSTRING(1000)                   , "00:16:40" )
+   TEST_LINE( TString(1000)                   , "00:16:40" )
 
 #ifndef __XPP__
    TEST_LINE( SoundEx()                       , "0000" )
@@ -561,7 +561,7 @@ PROCEDURE Main_MISC()
    /* For these tests in CA-Cl*pper 5.2e the following native hb_SToD() has
       been used ( not the emulated one written in Clipper ):
 
-      CLIPPER HB_STOD( void )
+      CLIPPER hb_SToD( void )
       {
          // The length check is a fix to avoid buggy behaviour of _retds()
          _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
@@ -874,7 +874,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"111","222"), "M"+Chr(13)+"s1w"+Chr(141)+"w2h"+Chr(13)+""        )
    TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"","")      , "M"+Chr(13)+"s"+Chr(0)+"w"+Chr(141)+"w"+Chr(0)+"h"+Chr(13)+"" )
 
-   /* MEMOWRITE()/MEMOREAD() */
+   /* MEMOWRITE()/MemoRead() */
 
 #ifndef __XPP__
    TEST_LINE( MemoWrit()                         , .F.              )

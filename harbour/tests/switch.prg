@@ -89,7 +89,7 @@ PROCEDURE Main()
       ? a
       EXIT
    CASE Chr( 12 ) + Chr( 15 )
-      ? "CHR()"
+      ? "Chr()"
       EXIT
    OTHERWISE
       ? "NOT FOUND: running OTHER"

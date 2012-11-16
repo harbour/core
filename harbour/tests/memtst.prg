@@ -86,7 +86,7 @@ FUNCTION build_mode()
    RETURN " (MT)"
 #else
 #ifdef __XHARBOUR__
-   RETURN iif( HB_MULTITHREAD(), " (MT)", "" ) + ;
+   RETURN iif( hb_MultiThread(), " (MT)", "" ) + ;
       iif( Memory( HB_MEM_USEDMAX ) != 0, " (FMSTAT)", "" )
 #else
 #ifdef __HARBOUR__

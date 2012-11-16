@@ -179,7 +179,7 @@
            etc...
       debt in period <nPeriod> = ((debt in period <nPeriod>-1)-<nPayment>)*(1+<nInterest>/100)
                                  -> has to be 0, so
-      <nPeriods> = -log(1-<nLoan>*(<nInterest>/100)/<nPayment>)/log(1+<nInterest>/100))
+      <nPeriods> = -Log(1-<nLoan>*(<nInterest>/100)/<nPayment>)/Log(1+<nInterest>/100))
 
       Note, however that in the case of nPayment <= <nLoan>*(<nInterest>/100),
       one would need infinite time to pay the loan back. The functions does

@@ -173,16 +173,16 @@ PROCEDURE Main( cPar1, cPar2 )
 
 STATIC PROCEDURE Main_LAST()
 
-   TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
+   TEST_LINE( MemVarBlock( "mcString" )           , "{||...}"                                         )
 #ifndef __XPP__
    TEST_LINE( __MRestore()                        , "E 1 BASE 2007 Argument error (__MRESTORE) OS:0 #:0 " )
 #endif
-   TEST_LINE( MEMVARBLOCK( "mcString" )           , "{||...}"                                         )
+   TEST_LINE( MemVarBlock( "mcString" )           , "{||...}"                                         )
 #ifndef __XPP__
    TEST_LINE( __MSave()                           , "E 1 BASE 2008 Argument error (__MSAVE) OS:0 #:0 " )
    TEST_LINE( __MRestore( "$NOTHERE.MEM", .F. )   , "E 21 BASE 2005 Open error <$NOTHERE.MEM> OS:2 #:1 F:DR" )
 #endif
-   TEST_LINE( MEMVARBLOCK( "mcString" )           , NIL                                               )
+   TEST_LINE( MemVarBlock( "mcString" )           , NIL                                               )
 #ifndef __XPP__
    TEST_LINE( __MSave( BADFNAME(), "*", .T. )     , "E 20 BASE 2006 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR" )
 #endif

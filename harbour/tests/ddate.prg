@@ -31,7 +31,7 @@ PROCEDURE Main()
    a := "0d20040229+1"
    ? "Should be '2004.03.01' :", &a
 
-   a := "DATE() - 0d20051112"
+   a := "Date() - 0d20051112"
    ? "Number of days from 2005.11.12:", &a
 
    RETURN

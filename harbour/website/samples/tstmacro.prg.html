@@ -122,11 +122,11 @@ RETURN</SPAN><SPAN class=any1-symbol>( oClass:</SPAN><SPAN class=any1-variable>I
 </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> bErr:=</SPAN><SPAN class=any1-function>ERRORBLOCK</SPAN><SPAN class=any1-symbol>({|e|</SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-symbol>(e)}), oE
 
    ?
-   ? </SPAN><SPAN class=any1-string>"=========== TYPE() function ================="
+   ? </SPAN><SPAN class=any1-string>"=========== Type() function ================="
 </SPAN><SPAN class=any1-space>   v1 := </SPAN><SPAN class=any1-string>"UDF()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
    v2 := </SPAN><SPAN class=any1-string>"UDF_STATIC()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
    ? </SPAN><SPAN class=any1-string>"Test for &amp;"</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-string>"'UDF()'  - should print 'udf': "</SPAN><SPAN class=any1-symbol>, &amp;v1
    ? </SPAN><SPAN class=any1-string>"Test for &amp;"</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-string>"'UDF_STATIC()'  - should print 'ERROR: undefined function': "
 </SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
@@ -137,38 +137,38 @@ RETURN</SPAN><SPAN class=any1-symbol>( oClass:</SPAN><SPAN class=any1-variable>I
 </SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>ERRORBLOCK</SPAN><SPAN class=any1-symbol>(bErr)
 
    v1 := </SPAN><SPAN class=any1-string>"UDF"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF')        - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF')        - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
    v2 := </SPAN><SPAN class=any1-string>"UDF_STATIC"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF_STATIC') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
 
    v1a := </SPAN><SPAN class=any1-string>"UDF:=1"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF:=1')        - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1a)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF:=1')        - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1a)
    v2a := </SPAN><SPAN class=any1-string>"UDF_STATIC:=1"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF_STATIC:=1') - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2a)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC:=1') - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2a)
 
    ? </SPAN><SPAN class=any1-string>"=== after the assignment ==="
 </SPAN><SPAN class=any1-space>   v1 := </SPAN><SPAN class=any1-string>"UDF"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF')        - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF')        - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
    v2 := </SPAN><SPAN class=any1-string>"UDF_STATIC"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF_STATIC') - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC') - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
 
    v1 := </SPAN><SPAN class=any1-string>"UDF()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
    v2 := </SPAN><SPAN class=any1-string>"UDF_STATIC()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
 
 
    ? </SPAN><SPAN class=any1-string>"=== declared public variable ==="
 </SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>PUBLIC</SPAN><SPAN class=any1-space> UDF2, UDF2_STATIC
    v1 := </SPAN><SPAN class=any1-string>"UDF2()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF2()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF2()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
    v2 := </SPAN><SPAN class=any1-string>"UDF2_STATIC()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF2_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF2_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
 
    v1 := </SPAN><SPAN class=any1-string>"UDF2"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF')        - should be 'L': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF')        - should be 'L': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
    v2 := </SPAN><SPAN class=any1-string>"UDF2_STATIC"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for TYPE('UDF_STATIC') - should be 'L': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC') - should be 'L': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
 
    ?   
 </SPAN><SPAN class=any1-reservedword>RETURN

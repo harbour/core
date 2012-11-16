@@ -56,7 +56,7 @@ PROCEDURE Main()
 
    LOCAL aArray
 
-   ? "HB_DECODE() FUNCTION TESTS"
+   ? "hb_Decode() FUNCTION TESTS"
 
    // Single, return empty value
    ? hb_Decode( 10 )

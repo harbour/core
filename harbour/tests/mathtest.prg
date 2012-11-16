@@ -40,7 +40,7 @@ PROCEDURE Main()
 
    nOldMathErrMode := hb_matherMode( HB_MATH_ERRMODE_USERDEFAULT )
 
-   ? "  IIb) error handling by error(hb_MathErMode() == HB_MATH_ERRMODE_USERDEFAULT)"
+   ? "  IIb) error handling by error(hb_matherMode() == HB_MATH_ERRMODE_USERDEFAULT)"
    ? "       Exp(-1000) == 0.00   ?", Exp( -1000 )
    ? "       Exp(1000) == ****... ?", Exp( 1000 )
    ?
@@ -55,7 +55,7 @@ PROCEDURE Main()
    bOldMathErr := hb_matherBlock( {| nType, cFuncname, cError, nArg1, nArg2, aInfo | ;
       localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo ) } )
 
-   ? "  IIc) error handling by callback block(hb_MathErBlock())"
+   ? "  IIc) error handling by callback block(hb_matherBlock())"
    ? "       Exp(-1000) == ?", Exp( -1000 )
    ? "       Exp(1000) ==  ?", Exp( 1000 )
    ?

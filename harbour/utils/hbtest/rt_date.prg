@@ -97,24 +97,24 @@ PROCEDURE Main_DATE()
 
    /* DoW() */
 
-   TEST_LINE( Dow(NIL)                        , "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( Dow(100)                        , "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:N:100 F:S" )
+   TEST_LINE( DoW(NIL)                        , "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( DoW(100)                        , "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:N:100 F:S" )
 #ifdef __HARBOUR__
-   TEST_LINE( Dow(@sdDate)                    , 1                                      ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:U:19840325 F:S" */
+   TEST_LINE( DoW(@sdDate)                    , 1                                      ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( Dow(sdDate)                     , 1                                      )
-   TEST_LINE( Dow(sdDateE)                    , 0                                      )
-   TEST_LINE( Dow(hb_SToD("20000222"))        , 3                                      )
-   TEST_LINE( Dow(hb_SToD("20000223"))        , 4                                      )
-   TEST_LINE( Dow(hb_SToD("20000224"))        , 5                                      )
-   TEST_LINE( Dow(hb_SToD("20000225"))        , 6                                      )
-   TEST_LINE( Dow(hb_SToD("20000226"))        , 7                                      )
-   TEST_LINE( Dow(hb_SToD("20000227"))        , 1                                      )
-   TEST_LINE( Dow(hb_SToD("20000228"))        , 2                                      )
-   TEST_LINE( Dow(hb_SToD("20000229"))        , 3                                      )
-   TEST_LINE( Dow(hb_SToD("20000230"))        , 0                                      )
-   TEST_LINE( Dow(hb_SToD("20000231"))        , 0                                      )
-   TEST_LINE( Dow(hb_SToD("20000301"))        , 4                                      )
+   TEST_LINE( DoW(sdDate)                     , 1                                      )
+   TEST_LINE( DoW(sdDateE)                    , 0                                      )
+   TEST_LINE( DoW(hb_SToD("20000222"))        , 3                                      )
+   TEST_LINE( DoW(hb_SToD("20000223"))        , 4                                      )
+   TEST_LINE( DoW(hb_SToD("20000224"))        , 5                                      )
+   TEST_LINE( DoW(hb_SToD("20000225"))        , 6                                      )
+   TEST_LINE( DoW(hb_SToD("20000226"))        , 7                                      )
+   TEST_LINE( DoW(hb_SToD("20000227"))        , 1                                      )
+   TEST_LINE( DoW(hb_SToD("20000228"))        , 2                                      )
+   TEST_LINE( DoW(hb_SToD("20000229"))        , 3                                      )
+   TEST_LINE( DoW(hb_SToD("20000230"))        , 0                                      )
+   TEST_LINE( DoW(hb_SToD("20000231"))        , 0                                      )
+   TEST_LINE( DoW(hb_SToD("20000301"))        , 4                                      )
 
    /* CMonth() */
 
@@ -140,24 +140,24 @@ PROCEDURE Main_DATE()
 
    /* CDoW() */
 
-   TEST_LINE( CDow(NIL)                       , "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( CDow(100)                       , "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:N:100 F:S" )
+   TEST_LINE( CDoW(NIL)                       , "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:U:NIL F:S" )
+   TEST_LINE( CDoW(100)                       , "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:N:100 F:S" )
 #ifdef __HARBOUR__
-   TEST_LINE( CDow(@sdDate)                   , "Sunday"                               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:U:19840325 F:S" */
+   TEST_LINE( CDoW(@sdDate)                   , "Sunday"                               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( CDow(sdDate)                    , "Sunday"                               )
-   TEST_LINE( CDow(sdDateE)                   , ""                                     )
-   TEST_LINE( CDow(hb_SToD("20000222"))       , "Tuesday"                              )
-   TEST_LINE( CDow(hb_SToD("20000223"))       , "Wednesday"                            )
-   TEST_LINE( CDow(hb_SToD("20000224"))       , "Thursday"                             )
-   TEST_LINE( CDow(hb_SToD("20000225"))       , "Friday"                               )
-   TEST_LINE( CDow(hb_SToD("20000226"))       , "Saturday"                             )
-   TEST_LINE( CDow(hb_SToD("20000227"))       , "Sunday"                               )
-   TEST_LINE( CDow(hb_SToD("20000228"))       , "Monday"                               )
-   TEST_LINE( CDow(hb_SToD("20000229"))       , "Tuesday"                              )
-   TEST_LINE( CDow(hb_SToD("20000230"))       , ""                                     )
-   TEST_LINE( CDow(hb_SToD("20000231"))       , ""                                     )
-   TEST_LINE( CDow(hb_SToD("20000301"))       , "Wednesday"                            )
+   TEST_LINE( CDoW(sdDate)                    , "Sunday"                               )
+   TEST_LINE( CDoW(sdDateE)                   , ""                                     )
+   TEST_LINE( CDoW(hb_SToD("20000222"))       , "Tuesday"                              )
+   TEST_LINE( CDoW(hb_SToD("20000223"))       , "Wednesday"                            )
+   TEST_LINE( CDoW(hb_SToD("20000224"))       , "Thursday"                             )
+   TEST_LINE( CDoW(hb_SToD("20000225"))       , "Friday"                               )
+   TEST_LINE( CDoW(hb_SToD("20000226"))       , "Saturday"                             )
+   TEST_LINE( CDoW(hb_SToD("20000227"))       , "Sunday"                               )
+   TEST_LINE( CDoW(hb_SToD("20000228"))       , "Monday"                               )
+   TEST_LINE( CDoW(hb_SToD("20000229"))       , "Tuesday"                              )
+   TEST_LINE( CDoW(hb_SToD("20000230"))       , ""                                     )
+   TEST_LINE( CDoW(hb_SToD("20000231"))       , ""                                     )
+   TEST_LINE( CDoW(hb_SToD("20000301"))       , "Wednesday"                            )
 
    /* DToC() */
 

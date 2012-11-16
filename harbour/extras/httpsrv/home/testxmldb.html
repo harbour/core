@@ -18,14 +18,14 @@
             function getTableData(pageNum)
             {
                 xslGet( "/xsl/based.xsl" );
-                xmlGet( '/cgi-bin/tableservletdb.hrb?page=' + pageNum + "&sid=" + Math.random(), tableResponseHandler);
+                xmlGet( '/cgi-bin/tableservletdb.hrb?page=' + pageNum + "&sid=" + Math.Random(), tableResponseHandler);
                 divpart = 'tableSection';
             }
 
             function getTablePages()
             {
                 xslGet( "/xsl/basep.xsl" );
-                xmlGet( '/cgi-bin/tableservletdb.hrb?count=true' + "&sid=" + Math.random(), tableResponseHandler);
+                xmlGet( '/cgi-bin/tableservletdb.hrb?count=true' + "&sid=" + Math.Random(), tableResponseHandler);
                 divpart = 'pageSection';
             }
 
@@ -50,7 +50,7 @@
                         // Make sure the XSL document is loaded
                         if (!xsldocloaded)
                         {
-                            alert('Unable to transform data.  XSL is not yet loaded.');
+                            Alert('Unable to transform data.  XSL is not yet loaded.');
                             // break out of the function
                             return;
                         }
@@ -65,7 +65,7 @@
                     }
                     else
                     {
-                        alert("There was a problem retrieving the XML data:\n" +
+                        Alert("There was a problem retrieving the XML data:\n" +
                             req.statusText);
                     }
                 }

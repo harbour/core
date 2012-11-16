@@ -222,12 +222,12 @@ FUNCTION DBFLIST( mslist, x1, y1, x2, y2, title, maskey )
       SetColor( LI_CLR )
       //
       DO CASE
-      CASE !( Type( "Sx_KeyNo()" ) == "U" )
-         fbar1 := "Sx_KeyNo()"
-         fbar2 := "Sx_KeyCount()"
-      CASE !( Type( "ADSKeyNo()" ) == "U" )
-         fbar1 := "ADSKeyNo()"
-         fbar2 := "ADSKeyCount()"
+      CASE !( Type( "sx_KeyNo()" ) == "U" )
+         fbar1 := "sx_KeyNo()"
+         fbar2 := "sx_KeyCount()"
+      CASE !( Type( "AdsKeyNo()" ) == "U" )
+         fbar1 := "AdsKeyNo()"
+         fbar2 := "AdsKeyCount()"
       CASE !( Type( "Ax_KeyNo()" ) == "U" )
          fbar1 := "Ax_KeyNo()"
          fbar2 := "Ax_KeyCount()"

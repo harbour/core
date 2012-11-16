@@ -945,7 +945,7 @@ FUNCTION pdfOpen( cFile, nLen, lOptimize )
 
    // TOFIX: This external file dependency should be removed.
 
-   cTemp := __pdf_FontsDat() // times, times-bold, times-italic, times-bolditalic, helvetica..., courier... // 0.04
+   cTemp := __pdf_fontsdat() // times, times-bold, times-italic, times-bolditalic, helvetica..., courier... // 0.04
    n1 := Len( cTemp ) / ( 2 * n2 )
    t_aReport[ FONTWIDTH ] := Array( n1, n2 )
 
@@ -1322,8 +1322,8 @@ STATIC FUNCTION pdfTextNextPara( cString, cDelim, nI )
    LOCAL nAt, cAt, nCRLF, nNew, nRat, nRet := 0
 
    // check if next spaces paragraph(s)
-   nAt := atToken( cString, cDelim, nI ) + Len( Token( cString, cDelim, nI ) )
-   cAt := SubStr( cString, nAt, atToken( cString, cDelim, nI + 1 ) - nAt )
+   nAt := AtToken( cString, cDelim, nI ) + Len( Token( cString, cDelim, nI ) )
+   cAt := SubStr( cString, nAt, AtToken( cString, cDelim, nI + 1 ) - nAt )
    nCRLF := NumAt( Chr( 13 ) + Chr( 10 ), cAt )
    nRat := RAt( Chr( 13 ) + Chr( 10 ), cAt )
    nNew := Len( cAt ) - nRat - iif( nRat > 0, 1, 0 )
@@ -1334,7 +1334,7 @@ STATIC FUNCTION pdfTextNextPara( cString, cDelim, nI )
    RETURN nRet
 
 // -----------------------------
-FUNCTION pdfUnderLine( cString )
+FUNCTION pdfUnderline( cString )
    RETURN cString + Chr( 254 )
 
 // ------------------------
@@ -2346,7 +2346,7 @@ FUNCTION pdfTIFFInfo( cFile )
          CASE nFieldType == FLOAT
          CASE nFieldType == DOUBLE
             FOR nI := 1 TO nCount
-               ?? " " + hb_ntos( ctof( SubStr( cValues, ( nI - 1 ) * 8 + 1, 8 ) ) )
+               ?? " " + hb_ntos( CToF( SubStr( cValues, ( nI - 1 ) * 8 + 1, 8 ) ) )
             NEXT
 
          ENDCASE

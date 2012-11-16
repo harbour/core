@@ -112,11 +112,11 @@ Syntax:
 
   For example, this pragma is used to implement TEXT/ENDTEXT command
 
-  #command TEXT => #pragma __text|Qout(%s)|QQout()
+  #command TEXT => #pragma __text|QOut(%s)|QQOut()
   #command TEXT TO PRINTER => ;
-           #pragma __text|Qout(%s)|__TextRestore()|__TextSave("PRINTER")
+           #pragma __text|QOut(%s)|__TextRestore()|__TextSave("PRINTER")
   #command TEXT TO FILE <file> => ;
-           #pragma __text|Qout(%s)|__TextRestore()|__TextSave(<"file">)
+           #pragma __text|QOut(%s)|__TextRestore()|__TextSave(<"file">)
 
 
 ?

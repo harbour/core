@@ -44,7 +44,7 @@ DYNAMIC pdfImage
 DYNAMIC pdfImageInfo
 DYNAMIC pdfInit
 DYNAMIC pdfItalic
-DYNAMIC pdfJpegInfo
+DYNAMIC pdfJPEGInfo
 DYNAMIC pdfLen
 DYNAMIC pdfMargins
 DYNAMIC pdfNewLine
@@ -64,7 +64,7 @@ DYNAMIC pdfStringB
 DYNAMIC pdfText
 DYNAMIC pdfTextCount
 DYNAMIC pdfTextWidth
-DYNAMIC pdfTiffInfo
+DYNAMIC pdfTIFFInfo
 DYNAMIC pdfUnderline
 DYNAMIC pdfWidth
 DYNAMIC __pdf_fontsdat

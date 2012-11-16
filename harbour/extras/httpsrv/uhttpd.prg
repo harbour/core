@@ -428,7 +428,7 @@ PROCEDURE Main( ... )
 #endif
 
    IF HB_ISSTRING( cDocumentRoot )
-      // cI := StrTran( SUBSTR( cDocumentRoot, 2 ), "\", "/" )
+      // cI := StrTran( SubStr( cDocumentRoot, 2 ), "\", "/" )
       cI := cDocumentRoot
       IF hb_DirExists( cI )
          IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
@@ -1439,7 +1439,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
    IF hb_mutexLock( s_hmtxLog )
 
-      // hb_ToOutDebug( "TIP_TimeStamp() = %s \n\r", tip_TimeStamp() )
+      // hb_ToOutDebug( "tip_TimeStamp() = %s \n\r", tip_TimeStamp() )
 
       cTime    := Time()
       dDate    := Date()

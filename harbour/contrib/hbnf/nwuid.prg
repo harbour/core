@@ -19,7 +19,7 @@
  * Minor edit to file header
  *
  *    Rev 1.2   14 Jun 1991 04:31:30   GLENN
- * Return value still needs to have nulls (hb_bchar(0)) removed.  Put that back
+ * Return value still needs to have nulls (hb_BChar(0)) removed.  Put that back
  * in.
  *
  *    Rev 1.1   12 Jun 1991 02:25:22   GLENN

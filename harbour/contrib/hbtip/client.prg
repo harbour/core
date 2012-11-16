@@ -599,7 +599,7 @@ METHOD inetSendAll( SocketCon, cData, nLen ) CLASS TIPClient
    IF ::lTLS
       IF ::lHasSSL
 #if defined( _SSL_DEBUG_TEMP )
-         ? "SSL_WRITE()", cData
+         ? "SSL_write()", cData
 #endif
          nRet := SSL_write( ::ssl, cData, nLen )
          ::nSSLError := iif( nRet < 0, nRet, 0 )
@@ -633,7 +633,7 @@ METHOD inetRecv( SocketCon, cStr1, len ) CLASS TIPClient
    IF ::lTLS
       IF ::lHasSSL
 #if defined( _SSL_DEBUG_TEMP )
-         ? "SSL_READ()"
+         ? "SSL_read()"
 #endif
          nRet := SSL_read( ::ssl, @cStr1, len )
          ::nSSLError := iif( nRet < 0, nRet, 0 )
@@ -658,7 +658,7 @@ METHOD inetRecvLine( SocketCon, nRet, size ) CLASS TIPClient
       IF ::lHasSSL
          nRet := hb_SSL_read_line( ::ssl, @cRet, size, ::nConnTimeout )
 #if defined( _SSL_DEBUG_TEMP )
-         ? "HB_SSL_READ_LINE()", cRet
+         ? "hb_SSL_read_line()", cRet
 #endif
          IF nRet == 0 .OR. Empty( cRet )
             cRet := NIL
@@ -686,7 +686,7 @@ METHOD inetRecvAll( SocketCon, cRet, size ) CLASS TIPClient
       IF ::lHasSSL
          nRet := hb_SSL_read_all( ::ssl, @cRet, size, ::nConnTimeout )
 #if defined( _SSL_DEBUG_TEMP )
-         ? "HB_SSL_READ_ALL()", cRet
+         ? "hb_SSL_read_all()", cRet
 #endif
          IF nRet == 0 .OR. Empty( cRet )
             cRet := NIL

@@ -747,7 +747,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      Empty(),RTrim(),LTrim(),AADD(),ASize()
+      Empty(),RTrim(),LTrim(),AAdd(),ASize()
    $END$
  */
 

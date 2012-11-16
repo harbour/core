@@ -103,7 +103,7 @@ PROCEDURE Main( cFrom )
             PrintItem( cSymbol, nIdx, hb_BCode( cScope ) )
          NEXT
          ? "+--------------------------+------------+---------------------------------+"
-         ? " ", hb_ntos( nSymbols ), "symbol(s) found."
+         ? " ", hb_ntos( nSymbols ), "SYMBOL(s) found."
          ?
 
          ACCEPT "Do you want do list all pcode values? (y/N) " TO m

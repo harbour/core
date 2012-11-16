@@ -139,7 +139,7 @@ METHOD New( name, lOpen, width, height, bgColor, ;
    cStr += hb_ntos( height ) + ","
    cStr += '"' + BGCOLOR + '"' + ");" + CRLF()
    cStr += ""       // Space( 10 )
-   cStr += name + [.setFont("<FONT FACE='] + FONT + [' SIZE=] + hb_ntos( fntSize ) + [' COLOR='] + fntColor + ['>","</FONT>");] + CRLF()
+   cStr += name + [.SetFont("<FONT FACE='] + FONT + [' SIZE=] + hb_ntos( fntSize ) + [' COLOR='] + fntColor + ['>","</FONT>");] + CRLF()
 
    ::nItems++
    AAdd( ::aScript, cStr )
@@ -190,7 +190,7 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
    __defaultNIL( @fntColor, ::fontColor )
    __defaultNIL( @fntSize, ::Size )
 
-   cStr += name + [.setFont("<FONT ] + ;
+   cStr += name + [.SetFont("<FONT ] + ;
       [ FACE = '] + font + [' ] + ;
       [ SIZE = ] + hb_ntos( fntSize ) + ['] + ;
       [ COLOR = '] + fntColor + [' ] + ;

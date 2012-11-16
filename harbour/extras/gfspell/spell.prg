@@ -130,7 +130,7 @@ FUNCTION Sp_Add( cWord )
 
    RETURN was_added
 
-//  Function:  Sp_cache()
+//  Function:  Sp_Cache()
 //   Purpose:  To add a word to the cache list
 //    Syntax:  <logical> := Sp_Cache( cWord )
 // Arguments:  cWord - upper case, all trimmed word to add
@@ -681,7 +681,7 @@ FUNCTION Sp_Suggest( cWord, lInclude )
       ENDIF
       cTemp  := Sp_GetBuf( cWord )
       ii     := Len( cTemp )
-      cMeta  := C_MetaFone( cWord, zz )
+      cMeta  := C_Metafone( cWord, zz )
       zz     := Len( cMeta )
       cFirst := SubStr( cWord, 1, 2 )
 
@@ -1078,7 +1078,7 @@ FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
       nSize := DICT->( LastRec() )
    ENDIF
 
-   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( C_MetaFone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
+   INDEX ON SubStr( DICT->word, 1, 2 ) + PadR( C_Metafone( AllTrim( DICT->word ), 5 ), 6 ) TO ( "$$temp" )
    dbGoTop()
 
    IF lTalk

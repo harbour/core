@@ -22,7 +22,7 @@
                 if ( force || qstr.length > 4 )
                 {
                   //qstr = 'w1=' + escape(qstr);  // NOTE: no '?' before querystring
-                  //xmlPost('/cgi-bin/showcounter.hrb', qstr + "&sid=" + Math.random(), tableResponseHandler);
+                  //xmlPost('/cgi-bin/showcounter.hrb', qstr + "&sid=" + Math.Random(), tableResponseHandler);
                   divpart = 'result';
                   updatepage( escape( qstr ) );
                 }
@@ -33,7 +33,7 @@
             {
                 var form = document.forms[ 'f1' ];
                 var word = form.word.value;
-                //alert( 'qstr: ' + qstr );
+                //Alert( 'qstr: ' + qstr );
                 return word;
             }
 
@@ -68,7 +68,7 @@
                     else
                     {
                         EndProgress();
-                        alert("There was a problem retrieving the XML data:\n" +
+                        Alert("There was a problem retrieving the XML data:\n" +
                             req.statusText);
                     }
                 }
