@@ -86,6 +86,23 @@
 #  define HB_LEGACY_LEVEL4
 #endif
 
+/* NOTE: This code using pointer items is a little bit more complicated
+         then it has to be.
+         In current code pointer items can keep references only to other
+         pointer items in the form which cannot create cyclic reference.
+         They also do not have any references to codeblocks, arrays,
+         objects, hashes or any other complex items set by user which
+         may create indirectly cyclic reference. In such case it's
+         possible to eliminate all GC mark functions and use directly
+         items allocated by hb_itemNew() without unlocking them with
+         hb_gcUnlock(). By default all items allocated by hb_itemNew()
+         are locked so GC automatically mark them and their GC memory
+         blocks as used.
+         It does not cause any speed or memory overhead so I left it
+         as example for more complicated cases and as base for some
+         potential extensions. [druzus]
+*/
+
 /* Required by headers on Windows */
 #if defined( HB_OS_WIN )
 
@@ -264,7 +281,16 @@ static void hb_SQLHDBC_stor( PHB_ITEM pHEnvItm, SQLHDBC hDbc, int iParam )
    PHB_SQLHDBC pHDbc = ( PHB_SQLHDBC ) hb_gcAllocate( sizeof( HB_SQLHDBC ), &s_gcSQLHDBCFuncs );
 
    pHDbc->hDbc = hDbc;
-   pHDbc->pHEnvItm = pHEnvItm ? hb_itemNew( pHEnvItm ) : NULL;
+   /* initialize pointer scanned by mark function before allocating new
+    * new GC block - such allocation may activate GC and uninitalized
+    * pointer will be accessed from our mark function
+    */
+   pHDbc->pHEnvItm = NULL;
+   if( pHEnvItm )
+   {
+      pHDbc->pHEnvItm = hb_itemNew( pHEnvItm );
+      hb_gcUnlock( pHDbc->pHEnvItm );
+   }
 
    hb_storptrGC( ( void * ) pHDbc, iParam );
 }
@@ -340,7 +366,16 @@ static void hb_SQLHSTMT_stor( PHB_ITEM pHDbcItm, SQLHSTMT hStmt, int iParam )
    PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) hb_gcAllocate( sizeof( HB_SQLHSTMT ), &s_gcSQLHSTMTFuncs );
 
    pHStmt->hStmt = hStmt;
-   pHStmt->pHDbcItm = pHDbcItm ? hb_itemNew( pHDbcItm ) : NULL;
+   /* initialize pointer scanned by mark function before allocating new
+    * new GC block - such allocation may activate GC and uninitalized
+    * pointer will be accessed from our mark function
+    */
+   pHStmt->pHDbcItm = NULL;
+   if( pHDbcItm )
+   {
+      pHStmt->pHDbcItm = hb_itemNew( pHDbcItm );
+      hb_gcUnlock( pHStmt->pHDbcItm );
+   }
 
    hb_storptrGC( ( void * ) pHStmt, iParam );
 }
