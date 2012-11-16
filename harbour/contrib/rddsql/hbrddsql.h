@@ -249,6 +249,7 @@ typedef struct _SDDNODE
 #define ESQLDD_NULLSDD       1911
 #define ESQLDD_CONNALLOC     1912
 #define ESQLDD_ENVALLOC      1913
+#define ESQLDD_EXECUTE       1914
 
 HB_EXTERN_BEGIN
 
