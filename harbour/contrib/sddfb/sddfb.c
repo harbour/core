@@ -110,21 +110,19 @@ static void hb_firebirddd_init( void * cargo )
 HB_FUNC_TRANSLATE( SDDFB, SQLBASE )
 
 HB_INIT_SYMBOLS_BEGIN( firebirddd__InitSymbols )
-{
-   "SDDFB", { HB_FS_PUBLIC | HB_FS_LOCAL }, { HB_FUNCNAME( SDDFB ) }, NULL
-},
+{ "SDDFB", {HB_FS_PUBLIC|HB_FS_LOCAL}, {HB_FUNCNAME( SDDFB )}, NULL },
 HB_INIT_SYMBOLS_END( firebirddd__InitSymbols )
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_firebirddd_init_ )
-hb_vmAtInit( hb_firebirddd_init, NULL );
+   hb_vmAtInit( hb_firebirddd_init, NULL );
 HB_CALL_ON_STARTUP_END( _hb_firebirddd_init_ )
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup firebirddd__InitSymbols
    #pragma startup _hb_firebirddd_init_
 #elif defined( HB_DATASEG_STARTUP )
-   #define HB_DATASEG_BODY  HB_DATASEG_FUNC( firebirddd__InitSymbols ) \
-   HB_DATASEG_FUNC( _hb_firebirddd_init_ )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( firebirddd__InitSymbols ) \
+                              HB_DATASEG_FUNC( _hb_firebirddd_init_ )
    #include "hbiniseg.h"
 #endif
 
@@ -254,13 +252,23 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
       hb_xfree( pSqlda );
       return HB_FAILURE;
    }
+
+   if( isc_dsql_execute( status, &hTrans, &hStmt, 1, NULL) )
+   {
+      hb_errRT_FireBirdDD( EG_OPEN, ESQLDD_EXECUTE, "Execute statement failed", pArea->szQuery, ( HB_ERRCODE ) isc_sqlcode( status ) );
+      isc_dsql_free_statement( status, &hStmt, DSQL_drop );
+      isc_rollback_transaction( status, &hTrans );
+      hb_xfree( pSqlda );
+      return HB_FAILURE;
+   }
+
    if( pSqlda->sqld > pSqlda->sqln )
    {
-      uiFields = pSqlda->sqld;
-      hb_xfree( pSqlda );
-      pSqlda          = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( uiFields ) );
-      pSqlda->sqln    = uiFields;
-      pSqlda->version = 1;
+       uiFields = pSqlda->sqld;
+       hb_xfree( pSqlda );
+       pSqlda = ( XSQLDA * ) hb_xgrab( XSQLDA_LENGTH( uiFields ) );
+       pSqlda->sqln = uiFields;
+       pSqlda->version = 1;
 
       if( isc_dsql_describe( status, &hStmt, SQL_DIALECT_V5, pSqlda ) )
       {
@@ -298,111 +306,117 @@ static HB_ERRCODE fbOpen( SQLBASEAREAP pArea )
       switch( iType )
       {
          case SQL_TEXT:
+         {
+            char * pStr;
+
             pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = pVar->sqllen;
-            pVar->sqldata     = ( char * ) hb_xgrab( sizeof( char ) * pVar->sqllen + 2 );
+            pFieldInfo.uiLen = pVar->sqllen;
+            pVar->sqldata = ( char* ) hb_xgrab( sizeof( char ) * pVar->sqllen + 2 );
+
+            pStr = ( char * ) memset( hb_xgrab( pFieldInfo.uiLen ), ' ', pFieldInfo.uiLen );
+            pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+            hb_xfree( pStr );
             break;
+         }
+
 
          case SQL_VARYING:
-            pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = pVar->sqllen;
+         {
+            char * pStr;
+
+            pFieldInfo.uiType = HB_FT_VARLENGTH;
+            pFieldInfo.uiLen = pVar->sqllen;
             /* pVar->sqltype = SQL_TEXT;  Coercing */
-            pVar->sqldata = ( char * ) hb_xgrab( sizeof( char ) * pVar->sqllen + 2 );
+            pVar->sqldata = ( char* ) hb_xgrab( sizeof( char ) * pVar->sqllen + 2 );
+
+            pStr = ( char * ) memset( hb_xgrab( pFieldInfo.uiLen ), ' ', pFieldInfo.uiLen );
+            pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
+            hb_xfree( pStr );
             break;
+         }
 
          case SQL_SHORT:
-            pFieldInfo.uiType = HB_FT_INTEGER;
-            pFieldInfo.uiLen  = 6;
-            pVar->sqldata     = ( char * ) hb_xgrab( sizeof( short ) );
+            if( pVar->sqlscale < 0 )
+            {
+               pFieldInfo.uiType = HB_FT_LONG;
+               pFieldInfo.uiLen = 7;
+               pFieldInfo.uiDec = - pVar->sqlscale;
+
+               pItem = hb_itemPutNDLen( NULL, 0.0, 6 - pFieldInfo.uiDec, ( int ) pFieldInfo.uiDec );
+            }
+            else
+            {
+               pFieldInfo.uiType = HB_FT_INTEGER;
+               pFieldInfo.uiLen = 2;
+
+               pItem = hb_itemPutNILen( NULL, 0, 6 );
+            }
+            pVar->sqldata = ( char* ) hb_xgrab( sizeof( short ) );
             break;
 
          case SQL_LONG:
-            pFieldInfo.uiType = HB_FT_LONG;
-            pFieldInfo.uiLen  = 10;
-            pVar->sqldata     = ( char * ) hb_xgrab( sizeof( long ) );
+            if( pVar->sqlscale < 0 )
+            {
+               pFieldInfo.uiType = HB_FT_LONG;
+               pFieldInfo.uiLen = 12;
+               pFieldInfo.uiDec = - pVar->sqlscale;
+
+               pItem = hb_itemPutNDLen( NULL, 0.0, 11 - pFieldInfo.uiDec, ( int ) pFieldInfo.uiDec );
+            }
+            else
+            {
+               pFieldInfo.uiType = HB_FT_INTEGER;
+               pFieldInfo.uiLen = 4;
+
+               pItem = hb_itemPutNLLen( NULL, 0, 11 );
+            }
+            pVar->sqldata = ( char* ) hb_xgrab( sizeof( long ) );
             break;
 
          case SQL_FLOAT:
-            pFieldInfo.uiType = HB_FT_FLOAT;
-            pFieldInfo.uiLen  = 16;
-            pFieldInfo.uiDec  = -pVar->sqlscale;
-            pVar->sqldata     = ( char * ) hb_xgrab( sizeof( float ) );
+            pFieldInfo.uiType = HB_FT_DOUBLE;
+            pFieldInfo.uiLen = 8;
+            pFieldInfo.uiDec = - pVar->sqlscale;
+            pVar->sqldata = ( char* ) hb_xgrab( sizeof( float ) );
+
+            pItem = hb_itemPutNDLen( NULL, * ( float * ) pVar->sqldata,  20 - pFieldInfo.uiDec, pFieldInfo.uiDec );
             break;
 
          case SQL_DOUBLE:
             pFieldInfo.uiType = HB_FT_DOUBLE;
-            pFieldInfo.uiLen  = 16;
-            pFieldInfo.uiDec  = -pVar->sqlscale;
-            pVar->sqldata     = ( char * ) hb_xgrab( sizeof( double ) );
+            pFieldInfo.uiLen = 8;
+            pFieldInfo.uiDec = - pVar->sqlscale;
+            pVar->sqldata = ( char* ) hb_xgrab( sizeof( double ) );
+
+            pItem = hb_itemPutNDLen( NULL, * ( float * ) pVar->sqldata,  20 - pFieldInfo.uiDec, pFieldInfo.uiDec );
+            break;
+
+         case SQL_TIMESTAMP:
+            pFieldInfo.uiType = HB_FT_TIMESTAMP;
+            pFieldInfo.uiLen = 8;
+            pVar->sqldata = ( char* ) hb_xgrab( sizeof( ISC_TIMESTAMP ) );
+
+            pItem = hb_itemPutTDT( NULL, 0, 0 );
             break;
 
          default:  /* other fields as binary string */
             pFieldInfo.uiType = HB_FT_STRING;
-            pFieldInfo.uiLen  = pVar->sqllen;
-            pVar->sqldata     = ( char * ) hb_xgrab( sizeof( char ) * pVar->sqllen );
+            pFieldInfo.uiLen = pVar->sqllen;
+            pVar->sqldata = ( char* ) hb_xgrab( sizeof( char ) * pVar->sqllen );
+
+            pItem = hb_itemNew( NULL );
+            bError = HB_TRUE;
             break;
       }
 
       if( pVar->sqltype & 1 )
          pVar->sqlind = ( short * ) hb_xgrab( sizeof( short ) );
 
+      hb_arraySetForward( pItemEof, uiCount + 1, pItem );
+      hb_itemRelease( pItem );
+
       if( ! bError )
-      {
-         switch( pFieldInfo.uiType )
-         {
-            case HB_FT_STRING:
-            {
-               char * pStr;
-
-               pStr = ( char * ) hb_xgrab( pFieldInfo.uiLen + 1 );
-               memset( pStr, ' ', pFieldInfo.uiLen );
-               pStr[ pFieldInfo.uiLen ] = '\0';
-
-               pItem = hb_itemPutCL( NULL, pStr, pFieldInfo.uiLen );
-               hb_xfree( pStr );
-               break;
-            }
-
-            case HB_FT_MEMO:
-               pItem = hb_itemPutC( NULL, NULL );
-               break;
-
-            case HB_FT_INTEGER:
-               pItem = hb_itemPutNI( NULL, 0 );
-               break;
-
-            case HB_FT_LONG:
-               pItem = hb_itemPutNL( NULL, 0 );
-               break;
-
-            case HB_FT_FLOAT:
-               pItem = hb_itemPutNL( NULL, 0 );
-               break;
-
-            case HB_FT_DOUBLE:
-               pItem = hb_itemPutND( NULL, 0.0 );
-               break;
-
-            case HB_FT_DATE:
-               pItem = hb_itemPutDS( NULL, NULL );
-               break;
-
-            default:
-               pItem  = hb_itemNew( NULL );
-               bError = HB_TRUE;
-               break;
-         }
-
-         hb_arraySetForward( pItemEof, uiCount + 1, pItem );
-         hb_itemRelease( pItem );
-
-/*       if( pFieldInfo.uiType == HB_IT_DOUBLE || pFieldInfo.uiType == HB_IT_INTEGER )
-            pFieldInfo.uiType = HB_IT_LONG;
- */
-
-         if( ! bError )
-            bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
-      }
+         bError = ( SELF_ADDFIELD( ( AREAP ) pArea, &pFieldInfo ) == HB_FAILURE );
 
       hb_xfree( szOurName );
 
@@ -472,39 +486,54 @@ static HB_ERRCODE fbGoTo( SQLBASEAREAP pArea, HB_ULONG ulRecNo )
       if( lErr == 0 )
       {
          pArray = hb_itemArrayNew( pArea->area.uiFieldCount );
-         for( ui = 1; ui <= pArea->area.uiFieldCount; ui++ )
+         for( ui = 0; ui < pArea->area.uiFieldCount; ui++ )
          {
-            pVar  = ( XSQLVAR * ) pSDDData->pSqlda;
-            pVar += ( ui - 1 );
+            LPFIELD pField;
+            pVar = pSDDData->pSqlda->sqlvar + ui;
 
-            if( ( pVar->sqltype & 1 ) && ( *pVar->sqlind < 0 ) )
+            if( ( pVar->sqltype & 1 ) && ( * pVar->sqlind < 0 ) )
                continue;  /* NIL value */
 
-            iType = pVar->sqltype;
-            switch( iType )
+            pField = pArea->area.lpFields + ui;
+            iType = pVar->sqltype & ~1;
+            switch ( iType )
             {
                case SQL_TEXT:
                   pItem = hb_itemPutCL( NULL, pVar->sqldata, pVar->sqllen );
                   break;
 
                case SQL_VARYING:
-                  pItem = hb_itemPutCL( NULL, pVar->sqldata + 2, *( short * ) pVar->sqldata );
+                  pItem = hb_itemPutCL( NULL, pVar->sqldata + 2, * ( short * ) pVar->sqldata );
                   break;
 
                case SQL_SHORT:
-                  pItem = hb_itemPutNI( NULL, *( short * ) pVar->sqldata );
+                  if( pField->uiDec == 0 )
+                     pItem = hb_itemPutNILen( NULL, * ( short * ) pVar->sqldata, 6 );
+                  else
+                     pItem = hb_itemPutNDLen( NULL, hb_numDecConv( * ( short * ) pVar->sqldata, ( int ) pField->uiDec ),
+                                              6 - pField->uiDec, ( int ) pField->uiDec );
                   break;
 
                case SQL_LONG:
-                  pItem = hb_itemPutNL( NULL, *( long * ) pVar->sqldata );
+                  pItem = hb_itemPutNL( NULL, * ( long * ) pVar->sqldata );
+                  if( pField->uiDec == 0 )
+                     pItem = hb_itemPutNLLen( NULL, * ( short * ) pVar->sqldata, 11 );
+                  else
+                     pItem = hb_itemPutNDLen( NULL, hb_numDecConv( * ( long * ) pVar->sqldata, ( int ) pField->uiDec ),
+                                              11 - pField->uiDec, ( int ) pField->uiDec );
                   break;
 
                case SQL_FLOAT:
-                  pItem = hb_itemPutND( NULL, *( float * ) pVar->sqldata );
+                  pItem = hb_itemPutNDLen( NULL, * ( float * ) pVar->sqldata,  20 - pField->uiDec, pField->uiDec );
                   break;
 
                case SQL_DOUBLE:
-                  pItem = hb_itemPutND( NULL, *( double * ) pVar->sqldata );
+                  pItem = hb_itemPutNDLen( NULL, * ( double * ) pVar->sqldata, 20 - pField->uiDec, pField->uiDec );
+                  break;
+
+               case SQL_TIMESTAMP:
+                  pItem = hb_itemPutTDT( NULL, (( ISC_TIMESTAMP * ) pVar->sqldata )->timestamp_date + 2400001, 
+                                               (( ISC_TIMESTAMP * ) pVar->sqldata )->timestamp_time / 10 );
                   break;
 
                default:
