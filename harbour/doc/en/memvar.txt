@@ -104,6 +104,7 @@
          n := "a"
          n := Seconds() + 2
          n := Int( Seconds() + 2 )
+
          RETURN
    $TESTS$
       See tests/testwarn.prg for more examples
@@ -148,6 +149,7 @@
       PROCEDURE commands statements.
    $EXAMPLES$
       MEMVAR y AS NUMERIC
+
       PROCEDURE Main()
          LOCAL n, lVar
 
@@ -157,7 +159,9 @@
          n := Seconds() + 2
          n := Int( Seconds() + 2 )
          y := n
+
          ? y
+
          RETURN
    $TESTS$
       See tests/testwarn.prg for more examples

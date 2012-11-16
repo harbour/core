@@ -78,7 +78,7 @@
       All
    $FILES$
       Header file is set.ch
-      Library is macro
+      Library is core
    $SEEALSO$
       Macro compiler
    $END$

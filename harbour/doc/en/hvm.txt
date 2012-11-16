@@ -10,10 +10,10 @@
  *    Documentation for: ProcLine(),ProcFile(),ProcName()
  *
  * Copyright 1999 Eddie Ruina
- *   Documentation for: __DBGVMVARLGET()
+ *   Documentation for: __dbgVMVarLGet()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: CLIPINIT(), __SETHELPK()
+ *    Documentation for: CLIPINIT(), __SetHelpK()
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
  *    Documentation for: Do()
@@ -59,7 +59,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       ProcLine(),ProcFile()
    $END$
@@ -99,7 +99,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       ProcName(),ProcFile()
    $END$
@@ -138,7 +138,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       ProcName(),ProcLine()
    $END$
@@ -177,7 +177,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       PCount()
    $END$
@@ -219,7 +219,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       hb_PValue()
    $END$
@@ -229,7 +229,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      __QUIT()
+      __Quit()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -237,7 +237,7 @@
    $ONELINER$
       Terminates an application.
    $SYNTAX$
-      __QUIT()
+      __Quit()
    $ARGUMENTS$
       None
    $DESCRIPTION$
@@ -256,7 +256,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       QUIT
    $END$
@@ -320,7 +320,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       __XHelp(),SET KEY,SetKey()
    $END$
@@ -352,7 +352,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       BEGIN SEQUENCE
    $END$
@@ -402,6 +402,6 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $END$
  */

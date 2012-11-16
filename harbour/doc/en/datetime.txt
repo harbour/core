@@ -47,7 +47,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Day(),DoW(),Date(),CMonth()
    $END$
@@ -87,7 +87,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       CDoW(),Date(),Month(),Year(),DoW(),DToC()
    $END$
@@ -123,7 +123,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       CToD(),DToS(),DToC(),Day(),Month(),CMonth()
    $END$
@@ -162,7 +162,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       SET DATE,Date(),DToS()
    $END$
@@ -198,7 +198,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       CToD(),DToS(),DToC(),Date(),Month(),CMonth()
    $END$
@@ -234,7 +234,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Seconds(),Secs(),ElapTime()
    $END$
@@ -270,7 +270,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       DToC(),CDoW(),Date(),DToS(),Day()
    $END$
@@ -308,7 +308,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       SET DATE,Date(),DToS()
    $END$
@@ -344,7 +344,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       DToC(),Date(),DToS()
    $END$
@@ -388,7 +388,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Secs(),Seconds(),Time(),Day()
    $END$
@@ -425,7 +425,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       CDoW(),DoW(),Year(),CMonth()
    $END$
@@ -463,7 +463,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Time()
    $END$
@@ -499,7 +499,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Seconds(),ElapTime(),Time()
    $END$
@@ -534,7 +534,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Date(),Seconds()
    $END$
@@ -573,7 +573,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Day(),Month()
    $END$

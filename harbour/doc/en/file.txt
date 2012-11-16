@@ -7,10 +7,10 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: __TYPEFILE(), TYPE
+ *    Documentation for: __TypeFile(), TYPE
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: FOpen(), FClose(), FWrite(), FSeek(), FRead(), FILE(),
+ *    Documentation for: FOpen(), FClose(), FWrite(), FSeek(), FRead(), File(),
  *                       FReadStr(), FRename(), FError(), RENAME, ERASE, CurDir(),
  *                       DirMake(), DirChange(), IsDisk(), DirRemove(), DiskChange()
  *
@@ -77,7 +77,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
       Header  is fileio.ch
    $SEEALSO$
       FCreate(),FError(),FClose()
@@ -137,7 +137,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
       Header is fileio.ch
    $SEEALSO$
       FClose(),FOpen(),FWrite(),FRead(),FError()
@@ -203,7 +203,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2L(),Bin2W(),FError(),FWrite()
    $END$
@@ -261,7 +261,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       FClose(), FCreate(), FError(), FOpen(), I2Bin(), L2Bin()
    $END$
@@ -322,7 +322,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       FClose(),FErase(),FOpen(),FWrite()
    $END$
@@ -360,7 +360,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       FOpen(),FCreate(),FRead(),FWrite(),FError()
    $END$
@@ -410,7 +410,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       FError(),FRename()
    $END$
@@ -468,9 +468,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      ERASE,FErase(),FError(),FILE(),RENAME
+      ERASE,FErase(),FError(),File(),RENAME
    $END$
  */
 
@@ -547,7 +547,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
       Header is fileio.ch
    $SEEALSO$
       FCreate(),FError(),FOpen(),FRead(),FReadStr(),FWrite()
@@ -558,15 +558,15 @@
    $TEMPLATE$
       Function
    $NAME$
-      FILE()
+      File()
    $CATEGORY$
       API
    $SUBCATEGORY$
       FileSys
    $ONELINER$
-      Tests for the existence of file(s)
+      Tests for the existence of File(s)
    $SYNTAX$
-      FILE( <cFileSpec> ) --> lExists
+      File( <cFileSpec> ) --> lExists
    $ARGUMENTS$
       <cFileSpec> Filename skeleton or file name to find.
    $RETURNS$
@@ -591,7 +591,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       SET DEFAULT,SET PATH,Set()
    $END$
@@ -648,7 +648,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2L(),Bin2W(),FError(),FRead(),FSeek()
    $END$
@@ -687,9 +687,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      CurDir(),ERASE,FILE(),FErase(),FRename()
+      CurDir(),ERASE,File(),FErase(),FRename()
    $END$
  */
 
@@ -723,7 +723,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      CurDir(), FILE(), FErase(), DELETE FILE
+      CurDir(), File(), FErase(), DELETE FILE
    $END$
  */
 
@@ -757,7 +757,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      CurDir(), FILE(), FErase(), ERASE
+      CurDir(), File(), FErase(), ERASE
    $END$
  */
 
@@ -765,7 +765,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __TYPEFILE()
+      __TypeFile()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -773,7 +773,7 @@
    $ONELINER$
       Show the content of a file on the console and/or printer
    $SYNTAX$
-      __TYPEFILE( <cFile>, [<lPrint>] ) --> NIL
+      __TypeFile( <cFile>, [<lPrint>] ) --> NIL
    $ARGUMENTS$
       <cFile> is a name of the file to display. If the file have an
       extension, it must be specified (there is no default value).
@@ -782,41 +782,41 @@
       output should go only to the screen (.F.) or to both the screen and
       printer (.T.), the default is (.F.).
    $RETURNS$
-      __TYPEFILE() always return NIL.
+      __TypeFile() always return NIL.
    $DESCRIPTION$
-      __TYPEFILE() function type the content of a text file on the screen
+      __TypeFile() function type the content of a text file on the screen
       with an option to send this information also to the printer. The
       file is displayed as is without any headings or formatting.
 
-      If <cFile> contain no path, __TYPEFILE() try to find the file first
+      If <cFile> contain no path, __TypeFile() try to find the file first
       in the SET DEFAULT directory and then in search all of the SET PATH
       directories. If <cFile> can not be found a run-time error occur.
 
       Use SET CONSOLE OFF to suppress screen output.
       You can pause the output using Ctrl-S, press any key to resume.
 
-      __TYPEFILE() function is used in the preprocessing of the TYPE
+      __TypeFile() function is used in the preprocessing of the TYPE
       command.
    $EXAMPLES$
       The following examples assume a file name mytext.dat exist in all
       specified paths, a run-time error would displayed if it does not
 
       // display mytext.dat file on screen
-      __TYPEFILE( "mytext.dat" )
+      __TypeFile( "mytext.dat" )
 
       // display mytext.dat file on screen and printer
-      __TYPEFILE( "mytext.dat", .T. )
+      __TypeFile( "mytext.dat", .T. )
 
       // display mytext.dat file on printer only
       SET CONSOLE OFF
-      __TYPEFILE( "mytext.dat", .T. )
+      __TypeFile( "mytext.dat", .T. )
       SET CONSOLE ON
    $STATUS$
       R
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,TYPE
    $END$
@@ -885,7 +885,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TYPEFILE()
+      COPY FILE,SET DEFAULT,SET PATH,SET PRINTER,__TypeFile()
    $END$
  */
 
@@ -926,9 +926,9 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      FILE()
+      File()
    $END$
  */
 
@@ -1003,7 +1003,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       FError()
    $END$
@@ -1045,7 +1045,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MakeDir(), DirChange(), IsDisk(), DiskChange(), DiskName(), FError()
    $END$
@@ -1087,7 +1087,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MakeDir(), DirRemove(), IsDisk(), DiskChange(), DiskName(), FError()
    $END$
@@ -1130,7 +1130,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       DirChange(), DirRemove(), IsDisk(), DiskChange(), DiskName(), FError()
    $END$
@@ -1171,7 +1171,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       DirChange(), MakeDir(), DirRemove(), DiskChange(), DiskName()
    $END$

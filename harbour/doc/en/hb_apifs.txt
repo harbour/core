@@ -44,7 +44,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -81,7 +81,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -116,7 +116,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -151,7 +151,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -190,7 +190,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -231,7 +231,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -268,7 +268,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -309,7 +309,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -346,7 +346,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -383,7 +383,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -420,7 +420,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -457,7 +457,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -494,7 +494,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -533,7 +533,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -578,7 +578,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -615,7 +615,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -652,7 +652,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -695,7 +695,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -732,7 +732,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -771,7 +771,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -812,7 +812,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -853,7 +853,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -890,7 +890,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -929,7 +929,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -970,7 +970,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1007,7 +1007,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1046,7 +1046,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1085,7 +1085,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1120,7 +1120,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1155,7 +1155,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1190,7 +1190,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1231,7 +1231,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1272,7 +1272,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1309,7 +1309,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1348,7 +1348,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$

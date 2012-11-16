@@ -16,6 +16,7 @@ DOC_FILES := \
    dirstruc.txt \
    gmake.txt \
    gtapi.txt \
+   gtslang.txt \
    hdr_tpl.txt \
    howtorel.txt \
    howtorep.txt \

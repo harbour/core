@@ -9,7 +9,7 @@
  * Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: __objHasData(), __objHasMethod(), __objGetMsgList(),
  *                       __objGetMethodList(), __objGetValueList(),
- *                       __ObjSetValueList(), __objAddMethod(),
+ *                       __objSetValueList(), __objAddMethod(),
  *                       __objAddInline(), __objAddData(), __objModMethod(),
  *                       __objModInline(), __objDelMethod(), __objDelInline(),
  *                       __objDelData(), __objDerivedFrom()
@@ -51,9 +51,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objGetMethodList(),__objGetMsgList(),__objHasMethod()
    $END$
  */
 
@@ -90,9 +90,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __ObjGetMethodList(),__objGetMsgList(),__objHasData()
+      __objGetMethodList(),__objGetMsgList(),__objHasData()
    $END$
  */
 
@@ -167,9 +167,9 @@
       H
    $FILES$
       Header file is hboo.ch
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __ObjGetMethodList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
+      __objGetMethodList(),__objGetValueList(),__objHasData(),__objHasMethod()
    $END$
  */
 
@@ -208,9 +208,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objGetMsgList(),__ObjGetValueList(),__objHasData(),__objHasMethod()
+      __objGetMsgList(),__objGetValueList(),__objHasData(),__objHasMethod()
    $END$
  */
 
@@ -256,9 +256,9 @@
       H
    $FILES$
       Header file is hboo.ch
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__ObjSetValueList()
+      __objGetMethodList(),__objGetMsgList(),__objHasData(),__objHasMethod(),__objSetValueList()
    $END$
  */
 
@@ -266,7 +266,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __ObjSetValueList()
+      __objSetValueList()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -274,16 +274,16 @@
    $ONELINER$
       Set object with an array of VAR names and values
    $SYNTAX$
-      __ObjSetValueList( <oObject>, <aData> ) --> oObject
+      __objSetValueList( <oObject>, <aData> ) --> oObject
    $ARGUMENTS$
       <oObject> is an object to set.
 
       <aData> is a 2D array with a pair of instance variables and values
       for setting those variable.
    $RETURNS$
-      __ObjSetValueList() return a reference to <oObject>.
+      __objSetValueList() return a reference to <oObject>.
    $DESCRIPTION$
-      __ObjSetValueList() is a low level class support function that let
+      __objSetValueList() is a low level class support function that let
       you set a group of instance variables with values. each array
       element in <aData> is a pair of:
       aData[ i, HB_OO_DATA_SYMBOL ] which contain the variable name to set
@@ -300,7 +300,7 @@
       aData[ 3, HB_OO_DATA_VALUE  ] = 20
       aData[ 4, HB_OO_DATA_SYMBOL ] = "nRight"
       aData[ 4, HB_OO_DATA_VALUE  ] = 70
-      __ObjSetValueList( oB, aData )
+      __objSetValueList( oB, aData )
       ? oB:nTop      // 1
       ? oB:nLeft     // 10
       ? oB:nBottom   // 20
@@ -311,9 +311,9 @@
       H
    $FILES$
       Header file is hboo.ch
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __ObjGetValueList()
+      __objGetValueList()
    $END$
  */
 
@@ -369,9 +369,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objAddInline(),__objAddData(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
+      __objAddInline(),__objAddData(),__objDelMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModMethod()
    $END$
  */
 
@@ -413,9 +413,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objAddData(),__objAddMethod(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
+      __objAddData(),__objAddMethod(),__objDelInline(),__objGetMethodList(),__objGetMsgList(),__objHasMethod() ,__objModInline()
    $END$
  */
 
@@ -457,9 +457,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
+      __objAddInline(),__objAddMethod(),__objDelData(),__objGetMsgList(),__objGetValueList(),__objHasData(),__objSetValueList()
    $END$
  */
 
@@ -528,9 +528,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objAddMethod(),__objDelMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objAddMethod(),__objDelMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod()
    $END$
  */
 
@@ -578,9 +578,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objAddInline(),__objDelInline(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod()
+      __objAddInline(),__objDelInline(),__objGetMethodList(),__objGetMsgList(),__objHasMethod()
    $END$
  */
 
@@ -634,9 +634,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
+      __objAddInline(),__objAddMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
    $END$
  */
 
@@ -688,9 +688,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objAddInline(),__objAddMethod(),__ObjGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
+      __objAddInline(),__objAddMethod(),__objGetMethodList(),__objGetMsgList(),__objHasMethod(),__objModInline(),__objModMethod()
    $END$
  */
 
@@ -731,9 +731,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __objAddData(),__objGetMsgList(),__ObjGetValueList(),__objHasData(),__ObjSetValueList()
+      __objAddData(),__objGetMsgList(),__objGetValueList(),__objHasData(),__objSetValueList()
    $END$
  */
 
@@ -794,7 +794,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       __objHasData(),__ObjHasMethod()
    $END$

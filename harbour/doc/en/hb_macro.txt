@@ -42,7 +42,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -79,7 +79,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -116,7 +116,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -155,7 +155,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -196,7 +196,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -239,7 +239,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -278,7 +278,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -317,7 +317,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -356,7 +356,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -395,7 +395,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -434,7 +434,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -471,7 +471,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -510,7 +510,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -549,7 +549,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -588,7 +588,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -625,7 +625,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -662,7 +662,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -699,7 +699,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -736,7 +736,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -779,7 +779,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -816,7 +816,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -853,7 +853,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -896,7 +896,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -933,7 +933,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -974,7 +974,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1011,7 +1011,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1050,7 +1050,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1085,7 +1085,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1120,7 +1120,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is macro
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$

@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: ABS(),Exp(),LOG(),Int(),Max()
+ *    Documentation for: Abs(),Exp(),Log(),Int(),Max()
  *    Min(),Sqrt(),Round()
  * Copyright 2001 IntTec GmbH, Neunlindenstr 32, 79106 Freiburg, Germany
  *           Author: Martin Vogel <vogel@inttec.de>
@@ -22,7 +22,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ABS()
+      Abs()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -30,7 +30,7 @@
    $ONELINER$
       Return the absolute value of a number.
    $SYNTAX$
-      ABS(<nNumber>) --> <nAbsNumber>
+      Abs(<nNumber>) --> <nAbsNumber>
    $ARGUMENTS$
       <nNumber> Any number.
    $RETURNS$
@@ -56,7 +56,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
 
    $END$
@@ -81,7 +81,7 @@
       <nValue>  The anti-logarithm of <nNumber>
    $DESCRIPTION$
       This function returns the value of e raised to the power of
-      <nNumber>.  It is the inverse of LOG().
+      <nNumber>.  It is the inverse of Log().
    $EXAMPLES$
       ? Exp( 45 )
    $STATUS$
@@ -91,9 +91,9 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      LOG()
+      Log()
    $END$
  */
 
@@ -130,7 +130,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Round(),StrZero()
    $END$
@@ -140,7 +140,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      LOG()
+      Log()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -148,7 +148,7 @@
    $ONELINER$
       Returns the natural logarithm of a number.
    $SYNTAX$
-      LOG( <nNumber> ) --> <nLog>
+      Log( <nNumber> ) --> <nLog>
    $ARGUMENTS$
       <nNumber> Any numeric expression.
    $RETURNS$
@@ -167,7 +167,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Exp()
    $END$
@@ -209,7 +209,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Min()
    $END$
@@ -248,7 +248,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Max()
    $END$
@@ -287,7 +287,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       %
    $END$
@@ -326,7 +326,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Round()
    $END$
@@ -367,7 +367,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Int(),Str(),Val(),SET FIXED
    $END$
@@ -422,7 +422,7 @@
       NA
    $FILES$
       Header file is hbmath.h
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -458,7 +458,7 @@
       NA
    $FILES$
       Header file is hbmath.h
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -496,7 +496,7 @@
       NA
    $FILES$
       Header file is hbmath.h
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -537,7 +537,7 @@
       NA
    $FILES$
       Header file is hbmath.h
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -576,7 +576,7 @@
       NA
    $FILES$
       Header file is hbmath.h
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -620,7 +620,7 @@
       NA
    $FILES$
       Header file is hbmath.h
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -658,7 +658,7 @@
       NA
    $FILES$
       Header file is hbmath.h
-      Library is rtl
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -701,7 +701,7 @@
       All
    $FILES$
       Header file is hbmath.ch
-      Library is rtl
+      Library is core
    $SEEALSO$
 
    $END$
@@ -735,7 +735,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
 
    $END$

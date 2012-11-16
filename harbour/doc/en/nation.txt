@@ -46,7 +46,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       IsNegative(),NationMsg()
    $END$
@@ -83,7 +83,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       IsAffirm(),NationMsg()
    $END$
@@ -121,7 +121,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       IsAffirm(),IsNegative()
    $END$

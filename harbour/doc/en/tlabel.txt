@@ -76,7 +76,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       REPORT FORM
    $END$

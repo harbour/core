@@ -108,7 +108,7 @@
       would never return, because it was, in effect, asked to wait forever
       for no events (Note: In CA-Cl*pper, this also blocks SET KEY events).
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       inkey.ch
    $END$
@@ -118,7 +118,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      __KEYBOARD()
+      __Keyboard()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -149,9 +149,9 @@
    $STATUS$
       R
    $COMPLIANCE$
-      __KEYBOARD() is compliant with CA-Cl*pper 5.3
+      __Keyboard() is compliant with CA-Cl*pper 5.3
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       CLEAR TYPEAHEAD,KEYBOARD
    $END$
@@ -192,7 +192,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       KEYBOARD,CLEAR TYPEAHEAD,Inkey()
    $END$
@@ -244,7 +244,7 @@
       NextKey() is compliant with CA-Cl*pper 5.3, but has been extended
       for Harbour.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Inkey(),LastKey()
    $END$
@@ -289,7 +289,7 @@
       LastKey() is compliant with CA-Cl*pper 5.3, but has been extended
       for Harbour.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Inkey(),LastKey()
    $END$
@@ -335,7 +335,7 @@
    $COMPLIANCE$
       KEYBOARD is compliant with CA-Cl*pper 5.3
    $SEEALSO$
-      CLEAR TYPEAHEAD,__KEYBOARD()
+      CLEAR TYPEAHEAD,__Keyboard()
    $END$
  */
 
@@ -388,7 +388,7 @@
    $COMPLIANCE$
       ReadKey() is compliant with CA-Cl*pper 5.3
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       @...GET,Inkey(),LastKey(),READ,ReadExit(),Updated()
    $END$
@@ -428,7 +428,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MCol()
    $END$
@@ -468,7 +468,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MRow()
    $END$

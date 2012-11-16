@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
- *    Documentation for: Set(), __SETCENTURY()
+ *    Documentation for: Set(), __SetCentury()
  *
  * Copyright 1999 April White <april@users.sourceforge.net>
  *    Documentation for: SetKey(), hb_SetKeyGet(), hb_SetKeySave(),
@@ -18,7 +18,7 @@
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
  *    Documentation for: SetTypeahead()
- *    Documentation for: __XHELP()
+ *    Documentation for: __XHelp()
  *
  * Copyright 2000 Luiz Rafael Culik <Culik@sl.conex.net>
  *    Documentation for: SET WRAP,SET DEFAULT,SET MESSAGE
@@ -34,7 +34,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __SETCENTURY()
+      __SetCentury()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -42,7 +42,7 @@
    $ONELINER$
       Set the Current Century
    $SYNTAX$
-      __SETCENTURY([<lFlag> | <cOnOff> ] ) --> lPreviousValue
+      __SetCentury([<lFlag> | <cOnOff> ] ) --> lPreviousValue
    $ARGUMENTS$
       optional <lFlag> or <cOnOff> (not case sensitive)
               .T. or "ON" to enable the century setting (4-digit years)
@@ -50,7 +50,7 @@
    $RETURNS$
       Either the current or previous century setting as a logical value
    $FILES$
-      Library is rtl
+      Library is core
    $COMPLIANCE$
       C
    $END$
@@ -178,7 +178,7 @@
                    printing numeric values when SET FIXED is ON. Defaults to
                    2. If SET FIXED is OFF, then SET DECIMALS is only used to
                    determine the number of decimal digits to use after using
-                   Exp(), LOG(), Sqrt(), or division. Other math operations
+                   Exp(), Log(), Sqrt(), or division. Other math operations
                    may adjust the number of decimal digits that the result
                    will display. Note: This never affects the precision of
                    a number. Only the display format is affected.
@@ -431,7 +431,7 @@
    $RETURNS$
       Set() The current or previous setting
    $FILES$
-      Library is rtl
+      Library is core
    $COMPLIANCE$
       C
    $END$
@@ -492,7 +492,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Inkey(),SetKey(),__Keyboard(),SET KEY
    $END$
@@ -605,7 +605,7 @@
       be conditionally turned off or on.  This condition-block cannot be
       returned once set - see SetKeyGet()
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       hb_SetKeySave()
    $END$
@@ -646,7 +646,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       SetKey(),hb_SetKeySave(),hb_SetKeyCheck()
    $END$
@@ -688,7 +688,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       SetKey()
    $END$
@@ -722,7 +722,7 @@
       additional parameter being <nKey>
    $DESCRIPTION$
       hb_SetKeyCheck() is intended as a common interface to the SetKey()
-      functionality for such functions as ACHOICE(), dbEdit(), MemoEdit(),
+      functionality for such functions as AChoice(), dbEdit(), MemoEdit(),
       ACCEPT, INPUT, READ, and WAIT
    $EXAMPLES$
       // within ReadModal()
@@ -741,7 +741,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       SetKey(),hb_SetKeySave()
    $END$
@@ -828,9 +828,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __ACCEPT(),__INPUT()
+      __Accept(),__INPUT()
    $END$
  */
 
@@ -838,7 +838,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __XHELP()
+      __XHelp()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -846,7 +846,7 @@
    $ONELINER$
       Determines whether a HELP() user defined function exists.
    $SYNTAX$
-      __XHELP() --> <xValue>
+      __XHelp() --> <xValue>
    $ARGUMENTS$
       None
    $RETURNS$
@@ -861,7 +861,7 @@
    $COMPLIANCE$
       C52U
    $FILES$
-      Library is rtl
+      Library is core
    $END$
  */
 
@@ -1229,7 +1229,7 @@
        Multiplication   Sum of operand decimal digits
        Division         Determined by SET DECIMAL TO
        Exponential      Determined by SET DECIMAL TO
-       LOG()            Determined by SET DECIMAL TO
+       Log()            Determined by SET DECIMAL TO
        Exp()            Determined by SET DECIMAL TO
        Sqrt()           Determined by SET DECIMAL TO
        Val()            Determined by SET DECIMAL TO
@@ -1243,7 +1243,7 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      SET DECIMALS,Exp(),LOG(),Sqrt(),Val(),Set()
+      SET DECIMALS,Exp(),Log(),Sqrt(),Val(),Set()
    $END$
  */
 

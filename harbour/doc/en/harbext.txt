@@ -70,14 +70,6 @@
       <b>RTL enhanced functionality:</b>   </par>
       ---------------------------
 
-      - Directory( <cMask>, <cFlags>, <lEightDotThree> )
-
-        The 3rd parameter is a Harbour (optional) parameter and indicates that on
-        those platforms that support long filenames, that you wish to receive what
-        would be considered the dos equivalant 8.3 name.
-        Could affect Adir() and Dir if they were modified to take advantage
-        of it - currently, they will return long names if the os supports it.
-
       - hb_DiskSpace( <nDrive>, <nType> )
 
         The second parameter is a Harbour (optional) parameter and indicates the

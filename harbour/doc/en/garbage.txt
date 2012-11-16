@@ -37,10 +37,10 @@
       premature deallocation of such memory blocks the static data have to store
       a pointer to the value created with hb_itemNew() function.
       Example:
-        static HB_ITEM s_item; // this item can be released by the GC
+        static HB_ITEM s_item; /* this item can be released by the GC */
 
-        static PHB_ITEM pItem; // this item will be maintained correctly
-        pItem = hb_itemNew( hb_param(1, IT_BLOCK) );
+        static PHB_ITEM pItem; /* this item will be maintained correctly */
+        pItem = hb_itemNew( hb_param( 1, IT_BLOCK ) );
 
       However, scanning of all variables can be a time consuming operation. It
       requires that all allocated arrays have to be traversed through all their
@@ -83,7 +83,7 @@
       All new or unlocked memory blocks are automatically marked as 'unused'
       using the current flag, which assures that all memory blocks are marked
       with the same flag before the sweep step will start.
-      See hb_gcCollectAll()  and hb_gcItemRef()
+      See hb_gcCollectAll() and hb_gcItemRef()
 
       Calling the garbage collector from harbour code   </par>
       -----------------------------------------------
@@ -113,7 +113,7 @@
    $SYNTAX$
       #include "hbapi.h"
       void * hb_gcAlloc( HB_SIZE nSize,
-      HB_GARBAGE_FUNC_PTR pCleanupFunc );
+                         HB_GARBAGE_FUNC_PTR pCleanupFunc );
    $ARGUMENTS$
       <ulSize> Requested size of memory block
 

@@ -327,7 +327,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FIELDNAME(),Type()
+      FieldName(),Type()
    $END$
  */
 
@@ -335,7 +335,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FIELDGET()
+      FieldGet()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -343,7 +343,7 @@
    $ONELINER$
       Obtains the value  of a specified field
    $SYNTAX$
-      FIELDGET(<nField>) --> ValueField
+      FieldGet(<nField>) --> ValueField
    $ARGUMENTS$
       <nField> Is the numeric field position
    $RETURNS$
@@ -366,7 +366,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FIELDPUT()
+      FieldPut()
    $END$
  */
 
@@ -374,7 +374,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FIELDNAME()
+      FieldName()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -416,7 +416,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FIELDPOS()
+      FieldPos()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -424,7 +424,7 @@
    $ONELINER$
       Return the ordinal position of a field.
    $SYNTAX$
-      FIELDPOS(<cFieldName>) --> nFieldPos
+      FieldPos(<cFieldName>) --> nFieldPos
    $ARGUMENTS$
       <cFieldName> Name of a field.
    $RETURNS$
@@ -447,7 +447,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FIELDGET(),FIELDPUT()
+      FieldGet(),FieldPut()
    $END$
  */
 
@@ -455,7 +455,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FIELDPUT()
+      FieldPut()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -463,7 +463,7 @@
    $ONELINER$
       Set the value of a field variable
    $SYNTAX$
-      FIELDPUT(<nField>, <expAssign>) --> ValueAssigned
+      FieldPut(<nField>, <expAssign>) --> ValueAssigned
    $ARGUMENTS$
       <nField> The field numeric position
 
@@ -487,7 +487,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FIELDGET()
+      FieldGet()
    $END$
  */
 
@@ -683,7 +683,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      FIELDNAME(),LastRec(),RecSize()
+      FieldName(),LastRec(),RecSize()
    $END$
  */
 
@@ -857,7 +857,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DiskSpace(),FIELDNAME(),Header(),LastRec()
+      DiskSpace(),FieldName(),Header(),LastRec()
    $END$
  */
 

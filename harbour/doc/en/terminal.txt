@@ -10,10 +10,10 @@
  *    Documentation for: hb_ColorIndex()
  *
  * Copyright 1999 Jose Lalin <dezac@corevia.com>
- *    Documentation for: __WAIT(), __INPUT()
+ *    Documentation for: __Wait(), __Input()
  *
  * Copyright 1999-2000 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: Alert(), __NONOAlert(), OutStd(), OutErr(),
+ *    Documentation for: Alert(), __NoNoAlert(), OutStd(), OutErr(),
  *                       __XSaveScreen(), SAVE SCREEN, __XRestScreen(),
  *                       RESTORE SCREEN, __TextSave(), __TextRestore()
  *
@@ -68,7 +68,7 @@
    $PLATFORMS$
       All(GT)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       RESTORE SCREEN,RestScreen(),SaveScreen()
    $END$
@@ -155,7 +155,7 @@
    $PLATFORMS$
       All(GT)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       __XRestScreen(),SAVE SCREEN,__XSaveScreen()
    $END$
@@ -248,7 +248,7 @@
 
       If the program is executed with the //NOALERT command line switch,
       nothing is displayed and it simply returns NIL. This switch could
-      be overridden with __NONOAlert().
+      be overridden with __NoNoAlert().
 
       If the GT system is linked in, Alert() display the message using
       the full screen I/O system, if not, the information is printed to
@@ -305,9 +305,9 @@
 
       <nDelay> is a Harbour extension.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      @...PROMPT,MENU TO,OutStd(),__NONOAlert()
+      @...PROMPT,MENU TO,OutStd(),__NoNoAlert()
    $END$
  */
 
@@ -315,7 +315,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      __NONOAlert()
+      __NoNoAlert()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -323,7 +323,7 @@
    $ONELINER$
       Override //NOALERT command line switch
    $SYNTAX$
-      __NONOAlert()
+      __NoNoAlert()
    $ARGUMENTS$
       This function takes no arguments.
    $DESCRIPTION$
@@ -332,11 +332,11 @@
       and always display Alert() dialog box.
    $EXAMPLES$
       // make sure alert are been displayed
-      __NONOAlert()
+      __NoNoAlert()
    $STATUS$
       R
    $FILES$
-      Library is rtl
+      Library is core
    $COMPLIANCE$
       C52U
    $END$
@@ -387,7 +387,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       OS(),OutStd(),OutErr()
    $END$
@@ -430,7 +430,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       ColorSelect()
    $END$
@@ -472,7 +472,7 @@
       DevOutPict() is mostly CA-Cl*pper compliant. Any differences are due
       to enhancements in the Harbour Transform() over CA-Cl*pper.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       DevOut(),Transform()
    $END$
@@ -482,7 +482,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __INPUT()
+      __Input()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -490,7 +490,7 @@
    $ONELINER$
       Stops application
    $SYNTAX$
-      __INPUT( <cMessage> ) --> <cString>
+      __Input( <cMessage> ) --> <cString>
    $ARGUMENTS$
       <cMessage> is any valid expression.
    $RETURNS$
@@ -503,9 +503,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __WAIT(),__ACCEPT()
+      __Wait(),__Accept()
    $END$
  */
 
@@ -537,7 +537,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Set(),SET ALTERNATE,SET PRINTER,TEXT,__TextRestore()
    $END$
@@ -569,7 +569,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Set(),SET ALTERNATE,SET PRINTER,TEXT,__TextSave()
    $END$
@@ -579,7 +579,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __WAIT()
+      __Wait()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -587,7 +587,7 @@
    $ONELINER$
       Stops the application until a key is pressed.
    $SYNTAX$
-      __WAIT( <cMessage> ) --> <cKey>
+      __Wait( <cMessage> ) --> <cKey>
    $ARGUMENTS$
       <cMessage> is a string.
    $RETURNS$
@@ -607,9 +607,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      __ACCEPT(),__INPUT()
+      __Accept(),__Input()
    $END$
  */
 
@@ -657,7 +657,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       ?,??,DevOut(),DevOutPict(),DispOut(),DispOutAt(),OutErr(),QOut(),QQOut(),Str()
    $END$
@@ -708,7 +708,7 @@
    $PLATFORMS$
 
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       ?,??,DevOut(),DevOutPict(),DispOut(),DispOutAt(),OutStd(),QOut(),QQOut(),Str()
    $END$
@@ -739,7 +739,7 @@
       be manipulated before or after ussuing an EJECT by using the DevPos()
       function.
 
-      On compile time this command is translated into __EJECT() function.
+      On compile time this command is translated into __Eject() function.
    $EXAMPLES$
       USE Clientes NEW
       SET DEVICE TO PRINTER
@@ -796,7 +796,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Row(),MaxRow(),MaxCol()
    $END$
@@ -831,7 +831,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Col(),MaxRow(),MaxCol()
    $END$
@@ -867,7 +867,7 @@
    $PLATFORMS$
       Linux(GT),OS2(GT),Win(GT)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Row(),MaxRow(),Col()
    $END$
@@ -903,7 +903,7 @@
    $PLATFORMS$
       Linux(GT),OS2(GT),Win(GT)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Col(),Row(),MaxCol()
    $END$

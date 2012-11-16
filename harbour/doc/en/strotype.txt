@@ -27,7 +27,7 @@
 
       ? Var1 * 3 // Error here.
 
-      @ Var1, 7 SAY 'Hello' // Error here.
+      @ Var1, 7 SAY "Hello" // Error here.
 
       ? SubStr( "Hello", Var1 ) // Error here.
 

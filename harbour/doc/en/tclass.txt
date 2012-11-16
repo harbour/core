@@ -68,7 +68,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       __objHasData(),Object Oriented Programming,CLASS
    $END$

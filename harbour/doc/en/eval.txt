@@ -61,7 +61,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       AEval(),dbEval()
    $END$

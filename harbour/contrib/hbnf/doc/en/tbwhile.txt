@@ -74,7 +74,7 @@
       USE TBNames INDEX TBNames NEW // indexed on Last + First
 
       // Pass Heading as character and Field as Block including Alias
-      // To eliminate the need to use FIELDWBLOCK() function in ft_BrwsWhl()
+      // To eliminate the need to use FieldWBlock() function in ft_BrwsWhl()
       AAdd( aFields, { "Last Name" , {|| TBNames->Last }  } )
       AAdd( aFields, { "First Name", {|| TBNames->First } } )
       AAdd( aFields, { "City"      , {|| TBNames->City }  } )

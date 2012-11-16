@@ -73,7 +73,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       OS()
    $END$
@@ -116,7 +116,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       GETE
    $END$
@@ -161,7 +161,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       GETENV
    $END$
@@ -214,7 +214,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       GETENV, GETE
    $END$
@@ -224,7 +224,7 @@
    $TEMPLATE$
       Procedure
    $NAME$
-      __RUN()
+      __Run()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -232,7 +232,7 @@
    $ONELINER$
       Run an external program.
    $SYNTAX$
-      __RUN( <cCommand> )
+      __Run( <cCommand> )
    $ARGUMENTS$
       <cCommand> Command to execute.
    $DESCRIPTION$
@@ -245,8 +245,8 @@
             It is considered bad form to use this function directly.
             Use the RUN command instead.
    $EXAMPLES$
-      __run( "edit " + cMyTextFile )    // Runs an external editor
-      __run( "command" )                // Gives a OS shell
+      __Run( "edit " + cMyTextFile )    // Runs an external editor
+      __Run( "command" )                // Gives a OS shell
    $TESTS$
 
    $STATUS$
@@ -256,7 +256,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       RUN
    $END$
@@ -313,7 +313,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Chr(),SET BELL
    $END$
@@ -351,7 +351,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       RUN
    $END$

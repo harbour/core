@@ -7,16 +7,16 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Ryszard Glab <rglab@imid.med.pl>
- *    Documentation for: __MVPUBLIC(), __MVPRIVATE(), __MVXRELEASE(),
- *                       __MVRELEASE(), __MVSCOPE(), __MVCLEAR(),
- *                       __MVDBGINFO(), __MVGET(), __MVPUT(), MemVarBlock(),
+ *    Documentation for: __mvPublic(), __mvPrivate(), __mvXRelease(),
+ *                       __mvRelease(), __mvScope(), __mvClear(),
+ *                       __mvDbgInfo(), __mvGet(), __mvPut(), MemVarBlock(),
  *                       Type()
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: FIELDBLOCK(), FIELDWBLOCK()
+ *    Documentation for: FieldBlock(), FieldWBlock()
  *
  * Copyright 2001 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: __MVEXIST()
+ *    Documentation for: __mvExist()
  *
  * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
  *    Documentation for: HB_ISBYREF()
@@ -29,7 +29,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVPUBLIC()
+      __mvPublic()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -37,7 +37,7 @@
    $ONELINER$
       This function creates a PUBLIC variable
    $SYNTAX$
-      __MVPUBLIC( <variable_name> )
+      __mvPublic( <variable_name> )
    $ARGUMENTS$
       <variable_name> = either a string that contains the variable's name or
       an one-dimensional array of strings with variable names
@@ -59,7 +59,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
 
    $END$
@@ -69,7 +69,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVPRIVATE()
+      __mvPrivate()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -77,7 +77,7 @@
    $ONELINER$
       This function creates a PRIVATE variable
    $SYNTAX$
-      __MVPRIVATE( <variable_name> )
+      __mvPrivate( <variable_name> )
    $ARGUMENTS$
       <variable_name> = either a string that contains the variable's name or
       an one-dimensional array of strings with variable names
@@ -98,7 +98,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is vm
+      Library is core
    $END$
  */
 
@@ -106,7 +106,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVXRELEASE()
+      __mvXRelease()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -114,7 +114,7 @@
    $ONELINER$
       This function releases value stored in PRIVATE or PUBLIC variable
    $SYNTAX$
-      __MVXRELEASE( <variable_name> )
+      __mvXRelease( <variable_name> )
    $ARGUMENTS$
       <variable_name> = either a string that contains the variable's name or
       an one-dimensional array of strings with variable names
@@ -159,7 +159,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is vm
+      Library is core
    $END$
  */
 
@@ -167,7 +167,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVRELEASE()
+      __mvRelease()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -175,7 +175,7 @@
    $ONELINER$
       This function releases PRIVATE variables
    $SYNTAX$
-      __MVRELEASE( <skeleton>, <include_exclude_flag> )
+      __mvRelease( <skeleton>, <include_exclude_flag> )
    $ARGUMENTS$
       <skeleton> = string that contains the wildcard mask for variables' names
       that will be released. Supported wildcards: '*' and '?'
@@ -201,7 +201,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is vm
+      Library is core
    $END$
  */
 
@@ -209,7 +209,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVSCOPE()
+      __mvScope()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -217,7 +217,7 @@
    $ONELINER$
       If variable exists then returns its scope.
    $SYNTAX$
-      __MVSCOPE( <cVarName> )
+      __mvScope( <cVarName> )
    $ARGUMENTS$
       <cVarName> = a string with a variable name to check
    $RETURNS$
@@ -261,7 +261,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       include/hbmemvar.ch
    $END$
@@ -271,7 +271,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVCLEAR()
+      __mvClear()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -279,7 +279,7 @@
    $ONELINER$
       This function releases all PRIVATE and PUBLIC variables
    $SYNTAX$
-      __MVCLEAR()
+      __mvClear()
    $ARGUMENTS$
       None
    $RETURNS$
@@ -296,9 +296,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      __MVPUBLIC()
+      __mvPublic()
    $END$
  */
 
@@ -306,7 +306,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVDBGINFO()
+      __mvDbgInfo()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -314,7 +314,7 @@
    $ONELINER$
       This function returns the information about the variables for debugger
    $SYNTAX$
-      __MVDBGINFO( <nScope> [, <nPosition> [, @<cVarName>] ] )
+      __mvDbgInfo( <nScope> [, <nPosition> [, @<cVarName>] ] )
    $ARGUMENTS$
       <nScope> = the scope of variables for which an information is asked
            Supported values (defined in hbmemvar.ch)
@@ -354,31 +354,31 @@
 
       nCount := _mvDBGINFO( HB_MV_PUBLIC )
       FOR i := 1 TO nCount
-         xValue := __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
+         xValue := __mvDbgInfo( HB_MV_PUBLIC, i, @cName )
          ? i, cName, xValue
       NEXT
    $TESTS$
       #include "hbmemvar.ch"
       PROCEDURE Main()
 
-         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
-         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+         ? "PUBLIC=", __mvDbgInfo( HB_MV_PUBLIC )
+         ? "PRIVATE=", __mvDbgInfo( HB_MV_PRIVATE )
 
          PUBLIC cPublic := "cPublic in MAIN"
 
-         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
-         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+         ? "PUBLIC=", __mvDbgInfo( HB_MV_PUBLIC )
+         ? "PRIVATE=", __mvDbgInfo( HB_MV_PRIVATE )
 
          PRIVATE cPrivate := "cPrivate in MAIN"
 
-         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
-         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+         ? "PUBLIC=", __mvDbgInfo( HB_MV_PUBLIC )
+         ? "PRIVATE=", __mvDbgInfo( HB_MV_PRIVATE )
 
          CountMemvars()
 
          ? "Back in Main"
-         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
-         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+         ? "PUBLIC=", __mvDbgInfo( HB_MV_PUBLIC )
+         ? "PRIVATE=", __mvDbgInfo( HB_MV_PRIVATE )
 
          RETURN
 
@@ -388,23 +388,23 @@
          PRIVATE ccPrivate := "ccPrivate"
 
          ? "In CountMemvars"
-         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
-         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+         ? "PUBLIC=", __mvDbgInfo( HB_MV_PUBLIC )
+         ? "PRIVATE=", __mvDbgInfo( HB_MV_PRIVATE )
 
          PRIVATE cPublic := "cPublic"
 
-         ? "PUBLIC=", __mvDBGINFO( HB_MV_PUBLIC )
-         ? "PRIVATE=", __mvDBGINFO( HB_MV_PRIVATE )
+         ? "PUBLIC=", __mvDbgInfo( HB_MV_PUBLIC )
+         ? "PRIVATE=", __mvDbgInfo( HB_MV_PRIVATE )
 
-         nCnt := __mvDBGINFO( HB_MV_PRIVATE ) + 1
+         nCnt := __mvDbgInfo( HB_MV_PRIVATE ) + 1
          FOR i := 1 TO nCnt
-            xVal := __mvDBGINFO( HB_MV_PRIVATE, i, @cName )
+            xVal := __mvDbgInfo( HB_MV_PRIVATE, i, @cName )
             ? i, "=", cName, xVal
          NEXT
 
-         nCnt := __mvDBGINFO( HB_MV_PUBLIC ) + 1
+         nCnt := __mvDbgInfo( HB_MV_PUBLIC ) + 1
          FOR i := 1 TO nCnt
-            xVal := __mvDBGINFO( HB_MV_PUBLIC, i, @cName )
+            xVal := __mvDbgInfo( HB_MV_PUBLIC, i, @cName )
             ? i, "=", cName, xVal
          NEXT
 
@@ -414,7 +414,7 @@
    $COMPLIANCE$
       This function should be called from the debugger only.
    $FILES$
-      Library is vm
+      Library is core
    $END$
  */
 
@@ -422,7 +422,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVEXIST()
+      __mvExist()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -430,11 +430,11 @@
    $ONELINER$
       Determine if a given name is a PUBLIC or PRIVATE memory variable
    $SYNTAX$
-      __MVEXIST( <cVarName> )  --> <lVariableExist>
+      __mvExist( <cVarName> )  --> <lVariableExist>
    $ARGUMENTS$
       <cVarName> - string that specifies the name of variable to check
    $RETURNS$
-      __MVEXIST() return TRUE (.T.) if a MEMVAR named <cVarName> exist.
+      __mvExist() return TRUE (.T.) if a MEMVAR named <cVarName> exist.
    $DESCRIPTION$
       This function determine if a PUBLIC or PRIVATE variable with the
       name <cVarName> exist or not.
@@ -455,7 +455,7 @@
    $SEEALSO$
       MEMVAR, PRIVATE, PUBLIC
    $FILES$
-      Library is vm
+      Library is core
    $END$
  */
 
@@ -463,7 +463,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVGET()
+      __mvGet()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -471,7 +471,7 @@
    $ONELINER$
       This function returns value of memory variable
    $SYNTAX$
-      __MVGET( <cVarName> )  --> <xVar>
+      __mvGet( <cVarName> )  --> <xVar>
    $ARGUMENTS$
       <cVarName> - string that specifies the name of variable
    $RETURNS$
@@ -491,9 +491,9 @@
    $COMPLIANCE$
       H
    $SEEALSO$
-      __MVPUT()
+      __mvPut()
    $FILES$
-      Library is vm
+      Library is core
    $END$
  */
 
@@ -501,7 +501,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      __MVPUT()
+      __mvPut()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -509,7 +509,7 @@
    $ONELINER$
       This function set the value of memory variable
    $SYNTAX$
-      __MVGET( <cVarName> [, <xValue>] )  --> <xValue>
+      __mvGet( <cVarName> [, <xValue>] )  --> <xValue>
    $ARGUMENTS$
       <cVarName> - string that specifies the name of variable
       <xValue>   - a value of any type that will be set - if it is not
@@ -533,9 +533,9 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      __MVPUT()
+      __mvPut()
    $END$
  */
 
@@ -579,9 +579,9 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      __MVGET(),__MVPUT()
+      __mvGet(),__mvPut()
    $FILES$
-      Library is rtl
+      Library is core
    $END$
  */
 
@@ -589,7 +589,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FIELDBLOCK()
+      FieldBlock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -597,16 +597,16 @@
    $ONELINER$
       Return a code block that sets/gets a value for a given field
    $SYNTAX$
-      FIELDBLOCK( <cFieldName> ) --> bFieldBlock
+      FieldBlock( <cFieldName> ) --> bFieldBlock
    $ARGUMENTS$
       <cFieldName> is a string that contain the field name.
    $RETURNS$
-      FIELDBLOCK() return a code block that when evaluate could retrieve
+      FieldBlock() return a code block that when evaluate could retrieve
       a field value or assigning a new value to the field. If <cFieldName>
-      is not specified or from type other than character, FIELDBLOCK()
+      is not specified or from type other than character, FieldBlock()
       return NIL.
    $DESCRIPTION$
-      FIELDBLOCK() return a code block that sets/gets the value of field.
+      FieldBlock() return a code block that sets/gets the value of field.
       When this code block is evaluated without any parameters passed then
       it returns the current value of the given field. If the code block
       is evaluated with a parameter, than its value is used to set a new
@@ -614,8 +614,8 @@
       block is evaluate and there is no field with the name <cFieldName>
       in the current work area, the code block return NIL.
 
-      Note that FIELDBLOCK() works on the current work area, if you need
-      a specific work area code block use FIELDWBLOCK() instead.
+      Note that FieldBlock() works on the current work area, if you need
+      a specific work area code block use FieldWBlock() instead.
    $EXAMPLES$
       // open a file named Test that have a field named "name"
       LOCAL bField
@@ -632,9 +632,9 @@
 
       CA-Cl*pper would raise BASE/1003 error if the field does not exist.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      Eval(),FIELDWBLOCK(),MemVarBlock()
+      Eval(),FieldWBlock(),MemVarBlock()
    $END$
  */
 
@@ -642,7 +642,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      FIELDWBLOCK()
+      FieldWBlock()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -650,19 +650,19 @@
    $ONELINER$
       Return a sets/gets code block for field in a given work area
    $SYNTAX$
-      FIELDWBLOCK( <cFieldName>, <nWorkArea> ) --> bFieldBlock
+      FieldWBlock( <cFieldName>, <nWorkArea> ) --> bFieldBlock
    $ARGUMENTS$
       <cFieldName> is a string that contain the field name.
 
       <nWorkArea> is the work area number in which <cFieldName> exist.
    $RETURNS$
-      FIELDWBLOCK() return a code block that when evaluate could retrieve
+      FieldWBlock() return a code block that when evaluate could retrieve
       field value or assigning a new value for a field in a given work
       area. If <cFieldName> is not specified or from type other than
       character, or if <nWorkArea> is not specified or is not numeric
-      FIELDWBLOCK() return NIL.
+      FieldWBlock() return NIL.
    $DESCRIPTION$
-      FIELDWBLOCK() return a code block that sets/gets the value of field
+      FieldWBlock() return a code block that sets/gets the value of field
       from a given work area. When this code block is evaluated without
       any parameters passed then it returns the current value of the given
       field. If the code block is evaluated with a parameter, than its
@@ -695,9 +695,9 @@
 
       CA-Cl*pper would raise BASE/1003 error if the field does not exist.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      Eval(),FIELDBLOCK(),MemVarBlock()
+      Eval(),FieldBlock(),MemVarBlock()
    $END$
  */
 
@@ -795,7 +795,7 @@
       - Harbour supports two new types (Pointer and Symbol) which does
         not exists in CA-Cl*pper.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       ValType()
    $END$
@@ -858,7 +858,7 @@
       ValType() is CA-Cl*pper compliant, with the addition of the new
       Harbour types: Pointer and Symbol.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Type()
    $END$
@@ -916,7 +916,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       ValType()
    $END$

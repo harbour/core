@@ -7,10 +7,10 @@
  * www - http://harbour-project.org
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: HB_LANGNAME(), HB_LANGSELECT()
+ *    Documentation for: hb_langName(), hb_langSelect()
  *
  * Copyright 2004 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: HB_LANGERRMSG(),HB_LANGMESSAGE(),hb_cdpSelect(),
+ *    Documentation for: hb_langErrMsg(),hb_langMessage(),hb_cdpSelect(),
  *                       hb_Translate()
  *
  * See COPYING for licensing terms.
@@ -21,7 +21,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_LANGERRMSG()
+      hb_langErrMsg()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -29,12 +29,12 @@
    $ONELINER$
       Description of an error code using current language
    $SYNTAX$
-      HB_LANGERRMSG( <nErrorCode> ) --> cErrorMessage
+      hb_langErrMsg( <nErrorCode> ) --> cErrorMessage
    $ARGUMENTS$
       <nErrorCode> is one of the generic error codes (EG_...) defined
       in include/error.ch
    $RETURNS$
-      HB_LANGERRMSG() return the error message string represented by
+      hb_langErrMsg() return the error message string represented by
       the code <nErrorCode>.
    $DESCRIPTION$
       This function return the error message associated with an error
@@ -59,7 +59,7 @@
       Library are rtl, lang
       Header is error.ch
    $SEEALSO$
-      HB_LANGSELECT(),NationMsg()
+      hb_langSelect(),NationMsg()
    $END$
  */
 
@@ -67,7 +67,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_LANGMESSAGE()
+      hb_langMessage()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -75,13 +75,13 @@
    $ONELINER$
       Returns international strings messages and errors
    $SYNTAX$
-      HB_LANGMESSAGE( <nMsg> ) --> cMessage
+      hb_langMessage( <nMsg> ) --> cMessage
    $ARGUMENTS$
       <nMsg> is the message number to get.
    $RETURNS$
-      HB_LANGMESSAGE() return the text associated with the code <nMsg>.
+      hb_langMessage() return the text associated with the code <nMsg>.
    $DESCRIPTION$
-      HB_LANGMESSAGE() is similar to NationMsg() but give access to the
+      hb_langMessage() is similar to NationMsg() but give access to the
       whole list of language messages: Day and month names, generic error
       messages, internal errors, and others...
 
@@ -106,7 +106,7 @@
       Library are rtl, lang
       Header is hblang.ch
    $SEEALSO$
-      HB_LANGSELECT(),NationMsg(),REQUEST
+      hb_langSelect(),NationMsg(),REQUEST
    $END$
  */
 
@@ -114,7 +114,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_LANGNAME()
+      hb_langName()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -122,7 +122,7 @@
    $ONELINER$
       Return the name of the current language module in use
    $SYNTAX$
-      HB_LANGNAME() --> cLangName
+      hb_langName() --> cLangName
    $ARGUMENTS$
       None.
    $RETURNS$
@@ -157,7 +157,7 @@
    $FILES$
       Library are rtl, lang
    $SEEALSO$
-      HB_LANGSELECT(),NationMsg()
+      hb_langSelect(),NationMsg()
    $END$
  */
 
@@ -165,7 +165,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_LANGSELECT()
+      hb_langSelect()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -173,7 +173,7 @@
    $ONELINER$
       Select a specific nation message module
    $SYNTAX$
-      HB_LANGSELECT( [ <cNewLang> ][, <cCodepage> ] ) --> cOldLang
+      hb_langSelect( [ <cNewLang> ][, <cCodepage> ] ) --> cOldLang
    $ARGUMENTS$
       <cNewLang>  The optional ID of the country language module.
       Possible values for <cNewLang> are below as defined in the
@@ -256,7 +256,7 @@
    $FILES$
       Libraty are rtl, lang
    $SEEALSO$
-      HB_LANGNAME(),hb_cdpSelect(),NationMsg(),REQUEST
+      hb_langName(),hb_cdpSelect(),NationMsg(),REQUEST
    $END$
  */
 
@@ -369,7 +369,7 @@
    $FILES$
       Libraty are rtl, codepage
    $SEEALSO$
-      HB_LANGNAME(),HB_LANGSELECT(),hb_Translate(),NationMsg(),REQUEST
+      hb_langName(),hb_langSelect(),hb_Translate(),NationMsg(),REQUEST
    $END$
  */
 
@@ -428,6 +428,6 @@
    $FILES$
       Libraty are rtl, codepage
    $SEEALSO$
-      HB_LANGSELECT(),hb_cdpSelect(),NationMsg(),REQUEST
+      hb_langSelect(),hb_cdpSelect(),NationMsg(),REQUEST
    $END$
  */

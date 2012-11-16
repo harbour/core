@@ -10,8 +10,8 @@
  *    Documentation for: ASort()
  *
  * Copyright 1999 Luiz Rafael Culik <culik@sl.conex.net>
- *    Documentation for: Array(), AADD(), ACLONE(), ACOPY(), ASize(),
- *                       ATail(), AIns(), ADEL(), AFill(), AScan(), AEval()
+ *    Documentation for: Array(), AAdd(), AClone(), ACopy(), ASize(),
+ *                       ATail(), AIns(), ADel(), AFill(), AScan(), AEval()
  *
  * See COPYING for licensing terms.
  *
@@ -59,9 +59,9 @@
    $COMPLIANCE$
       C(array)
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      AADD(),ADEL(),AFill(),AIns()
+      AAdd(),ADel(),AFill(),AIns()
    $END$
  */
 
@@ -69,7 +69,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      AADD()
+      AAdd()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -77,7 +77,7 @@
    $ONELINER$
       Dynamically add an element to an array
    $SYNTAX$
-      AADD(<aArray>[, <xValue>]) --> Value
+      AAdd(<aArray>[, <xValue>]) --> Value
    $ARGUMENTS$
       <aArray> The name of an array
 
@@ -105,7 +105,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       AIns(),ASize()
    $END$
@@ -148,9 +148,9 @@
       If HB_COMPAT_C53 is defined, the function generates an Error,
       else it will return the array itself.
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      AADD(),ADEL(),AFill(),AIns()
+      AAdd(),ADel(),AFill(),AIns()
    $END$
  */
 
@@ -183,9 +183,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      Len(),Array(),ASize(),AADD()
+      Len(),Array(),ASize(),AAdd()
    $END$
  */
 
@@ -227,9 +227,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      AADD(),ACOPY(),ADEL(),AEval(),AFill(),ASize()
+      AAdd(),ACopy(),ADel(),AEval(),AFill(),ASize()
    $END$
  */
 
@@ -237,7 +237,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ADEL()
+      ADel()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -245,7 +245,7 @@
    $ONELINER$
       Delete an element form an array.
    $SYNTAX$
-      ADEL(<aArray>, <nPos>) --> aTarget
+      ADel(<aArray>, <nPos>) --> aTarget
    $ARGUMENTS$
       <aArray> Name of array from which an element is to be removed.
 
@@ -268,9 +268,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      ACOPY(),AIns(),AFill()
+      ACopy(),AIns(),AFill()
    $END$
  */
 
@@ -318,9 +318,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      AADD(),AEval(),dbStruct(),Directory()
+      AAdd(),AEval(),dbStruct(),Directory()
    $END$
  */
 
@@ -375,7 +375,7 @@
    $COMPLIANCE$
       This function is not CA-Cl*pper compatible.  CA-Cl*pper AScan() is affected by the SET EXACT ON/OFF Condition
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       AEval()
    $END$
@@ -424,7 +424,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       Eval(),dbEval()
    $END$
@@ -434,7 +434,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ACOPY()
+      ACopy()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -442,7 +442,7 @@
    $ONELINER$
       Copy elements from one array to another
    $SYNTAX$
-      ACOPY( <aSource>, <aTarget>, [<nStart>], [<nCount>], [<nTargetPos>] ) --> aTarget
+      ACopy( <aSource>, <aTarget>, [<nStart>], [<nCount>], [<nTargetPos>] ) --> aTarget
    $ARGUMENTS$
       <aSource> is the array to copy elements from.
 
@@ -473,12 +473,12 @@
       If an array element in <aSource> is a pointer reference to another
       array, that array pointer will be copied to <aTarget>; not all
       subdimensions will be copied from one array to the next. This must
-      be accomplished via the ACLONE() function.
+      be accomplished via the AClone() function.
 
       Note:
       If array <aSource> is larger then <aTarget>, array elements will
       start copying at <nTargetPos> and continue copying until the end
-      of array <aTarget> is reached. The ACOPY() function doesn't append
+      of array <aTarget> is reached. The ACopy() function doesn't append
       subscript positions to the target array, the size of the target
       array <aTarget> remains constant.
    $EXAMPLES$
@@ -491,9 +491,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      ACLONE(),ADEL(),AEval(),AFill(),AIns(),ASort()
+      AClone(),ADel(),AEval(),AFill(),AIns(),ASort()
    $END$
  */
 
@@ -501,7 +501,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ACLONE()
+      AClone()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -509,7 +509,7 @@
    $ONELINER$
       Duplicate a  multidimensional array
    $SYNTAX$
-      ACLONE(<aSource>) --> aDuplicate
+      AClone(<aSource>) --> aDuplicate
    $ARGUMENTS$
       <aSource> Name of the array to be cloned.
    $RETURNS$
@@ -533,9 +533,9 @@
    $COMPLIANCE$
       CA-Cl*pper will return NIL if the parameter is not an array.
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
-      ACOPY(),ADEL(),AIns(),ASize()
+      ACopy(),ADel(),AIns(),ASize()
    $END$
  */
 
@@ -599,7 +599,7 @@
    $COMPLIANCE$
       C(arrayblock)
    $FILES$
-      Library is vm
+      Library is core
    $SEEALSO$
       AScan(),Eval(),SORT
    $END$

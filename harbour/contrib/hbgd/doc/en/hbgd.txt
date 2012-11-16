@@ -1705,16 +1705,16 @@
          red   := gdImageColorAllocate( pImage, 255, 0, 0 )
 
          // Set up dotted style. Leave every other pixel alone.
-         aAdd( aStyleDotted, red )
-         aAdd( aStyleDotted, gdTransparent )
+         AAdd( aStyleDotted, red )
+         AAdd( aStyleDotted, gdTransparent )
 
          // Set up dashed style. Three on, three off.
-         aAdd( aStyleDashed, red )
-         aAdd( aStyleDashed, red )
-         aAdd( aStyleDashed, red )
-         aAdd( aStyleDashed, gdTransparent )
-         aAdd( aStyleDashed, gdTransparent )
-         aAdd( aStyleDashed, gdTransparent )
+         AAdd( aStyleDashed, red )
+         AAdd( aStyleDashed, red )
+         AAdd( aStyleDashed, red )
+         AAdd( aStyleDashed, gdTransparent )
+         AAdd( aStyleDashed, gdTransparent )
+         AAdd( aStyleDashed, gdTransparent )
 
          // Set dotted style.
          gdImageSetStyle( pImage, aStyleDotted )

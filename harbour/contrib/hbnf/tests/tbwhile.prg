@@ -36,7 +36,7 @@ PROCEDURE Main()
    SET INDEX TO tbnames
 
    // Pass Heading as character and Field as Block including Alias
-   // To eliminate the need to use FIELDWBLOCK() function in ft_BrwsWhl()
+   // To eliminate the need to use FieldWBlock() function in ft_BrwsWhl()
 
    AAdd( aFields, { "Last Name" , {|| tbnames->Last }  } )
    AAdd( aFields, { "First Name", {|| tbnames->First } } )

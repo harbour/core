@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: ERRORSYS()
+ *    Documentation for: ErrorSys()
  *
  * See COPYING for licensing terms.
  *
@@ -17,7 +17,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ERRORSYS()
+      ErrorSys()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -25,22 +25,22 @@
    $ONELINER$
       Install default error handler
    $SYNTAX$
-      ERRORSYS() --> NIL
+      ErrorSys() --> NIL
    $ARGUMENTS$
       None.
    $RETURNS$
-      ERRORSYS() always return NIL.
+      ErrorSys() always return NIL.
    $DESCRIPTION$
-      ERRORSYS() is called upon startup by Harbour and installs the default
+      ErrorSys() is called upon startup by Harbour and installs the default
       error handler. Normally you should not call this function directly,
-      instead use ERRORBLOCK() to install your own error handler.
+      instead use ErrorBlock() to install your own error handler.
    $STATUS$
       R
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      ERRORBLOCK(),Error class
+      ErrorBlock(),Error class
    $END$
  */

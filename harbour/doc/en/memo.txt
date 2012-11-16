@@ -57,7 +57,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       HardCR(),StrTran()
    $END$
@@ -94,7 +94,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MemoTran(),StrTran()
    $END$
@@ -160,7 +160,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MemoEdit(),MemoWrit(),REPLACE,hb_MemoRead()
    $END$
@@ -230,7 +230,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MemoEdit(),hb_MemoWrit(),REPLACE,MemoRead()
    $END$
@@ -291,7 +291,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MemoEdit(),MemoRead(),hb_MemoWrit()
    $END$
@@ -365,7 +365,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       MemoEdit(),MemoRead(),hb_MemoWrit()
    $END$

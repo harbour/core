@@ -42,7 +42,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -79,7 +79,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -116,7 +116,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -153,7 +153,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -188,7 +188,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -223,7 +223,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -258,7 +258,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -293,7 +293,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -328,7 +328,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -365,7 +365,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -400,7 +400,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -435,7 +435,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -470,7 +470,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -505,7 +505,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -542,7 +542,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -583,7 +583,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -618,7 +618,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -653,7 +653,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -690,7 +690,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -725,7 +725,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -760,7 +760,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -797,7 +797,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -832,7 +832,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -869,7 +869,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -904,7 +904,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -939,7 +939,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -974,7 +974,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1009,7 +1009,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -1044,7 +1044,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is vm
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$

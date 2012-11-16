@@ -195,7 +195,7 @@
       This mode is not supported by Harbour.
    $FILES$
       Header files are dbedit.ch, inkey.ch
-      Library is rtl
+      Library is core
    $SEEALSO$
       @...SAY,Browse(),TBrowse class,Transform()
    $END$
@@ -272,7 +272,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       dbEdit()*,TBrowse class
    $END$
@@ -316,7 +316,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Browse(),TBColumn class,TBrowse class,TBrowseNew()
    $END$
@@ -360,7 +360,7 @@
    $COMPLIANCE$
       XPP
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       dbSkip(),SKIP
    $END$

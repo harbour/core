@@ -55,7 +55,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       hb_FUnlock(),FOpen(),FCreate(),FError(),FClose()
    $END$
@@ -105,7 +105,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       hb_FLock(),FOpen(),FCreate(),FError(),FClose()
    $END$

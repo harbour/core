@@ -40,12 +40,16 @@ TABLE OF CONTENT
 
    This document and all other parts of Harbour are distributed in the
    hope they will be useful, but there is NO GUARANTEE that they are
-   complete, accurate or usable for any purpose whatsoever. Authors
-   and contributors are NOT LIABLE for any damages that result from
-   using Harbour in any ways. For more legal details, see COPYING.
+   complete, accurate, non-infringing or usable for any purpose whatsoever.
+   Contributors are NOT LIABLE for any damages that result from using
+   Harbour in any ways. For more legal details, see COPYING.
 
    If you think you can make Harbour better, start to contribute.
    See this section: 'HOW TO PARTICIPATE'
+
+   The information this document is subject to change without notice
+   and does not represent any future commitment by the participants
+   of the project.
 
 
 1. HOW TO BUILD AND INSTALL HARBOUR FROM SOURCE
@@ -1807,6 +1811,13 @@ TABLE OF CONTENT
      is to use these commands to format your sources:
         $ uncrustify -c <harbour_dir>/bin/harbour.ucf <.c/.h filename>
         $ <harbour_dir>/bin/hbformat <.prg/.ch/.hb filename>
+   - Text editor setting for Harbour files
+     - Encoding is either 7-bit ASCII or UTF-8.
+     - Always add spaces, never tabs
+     - Never convert spaces to tabs
+     - Remove trailing spaces from lines
+     - Always keep one (not zero or multiple) newline at the end of file
+     - Use platform native newline (CRLF or LF)
    - In the rare case you need to send something large (> 100KB),
      use this free service: http://dropcanvas.com
    - Given a good history of valuable contributions, you can get

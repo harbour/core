@@ -7,7 +7,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
- *    Documentation for: __ATPROMPT(), @...PROMPT, __MENUTO(), MENU TO
+ *    Documentation for: __AtPrompt(), @...PROMPT, __MenuTo(), MENU TO
  *
  * See COPYING for licensing terms.
  *
@@ -17,7 +17,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      ACHOICE()
+      AChoice()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -25,7 +25,7 @@
    $ONELINER$
       Allows selection of an element from an array
    $SYNTAX$
-      ACHOICE(<nTop>, <nLeft>, <nBottom>, <nRight>, <acMenuItems>, [<alSelableItems> | <lSelableItems>], [<cUserFunction> | <bUserBlock>], [<nInitialItem>], [<nWindowRow>]) --> nPosition
+      AChoice(<nTop>, <nLeft>, <nBottom>, <nRight>, <acMenuItems>, [<alSelableItems> | <lSelableItems>], [<cUserFunction> | <bUserBlock>], [<nInitialItem>], [<nWindowRow>]) --> nPosition
    $ARGUMENTS$
       <nTop>           - topmost row used to display array (default 0)
 
@@ -88,7 +88,7 @@
          ?? " which has a value of " + aItems[ nChoice ]
       ENDIF
    $FILES$
-      Library is rtl
+      Library is core
    $COMPLIANCE$
       C
    $SEEALSO$
@@ -155,9 +155,9 @@
    $COMPLIANCE$
       C(menu)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
+      AChoice(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MenuTo()
    $END$
  */
 
@@ -218,7 +218,7 @@
    $COMPLIANCE$
       C(menu)
    $SEEALSO$
-      ACHOICE(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MENUTO()
+      AChoice(),MENU TO,SET MESSAGE,SET INTENSITY,SET WRAP,__MenuTo()
    $END$
  */
 
@@ -308,9 +308,9 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
+      @...PROMPT,AChoice(),SET MESSAGE,SET INTENSITY,SET WRAP,__AtPrompt()
    $END$
  */
 
@@ -394,6 +394,6 @@
    $COMPLIANCE$
       C
    $SEEALSO$
-      @...PROMPT,ACHOICE(),SET MESSAGE,SET INTENSITY,SET WRAP,__ATPROMPT()
+      @...PROMPT,AChoice(),SET MESSAGE,SET INTENSITY,SET WRAP,__AtPrompt()
    $END$
  */

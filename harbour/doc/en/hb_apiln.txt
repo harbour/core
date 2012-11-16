@@ -44,7 +44,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -81,7 +81,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -118,7 +118,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -155,7 +155,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -192,7 +192,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -229,7 +229,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -266,7 +266,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -303,7 +303,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$
@@ -340,7 +340,7 @@
    $COMPLIANCE$
       NA
    $FILES$
-      Library is lang
+      Library is core
    $PLATFORMS$
       All
    $SEEALSO$

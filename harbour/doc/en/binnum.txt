@@ -67,7 +67,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2L(),Bin2U(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
    $END$
@@ -129,7 +129,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
    $END$
@@ -188,7 +188,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
    $END$
@@ -247,7 +247,7 @@
    $COMPLIANCE$
       XPP
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2L(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),U2Bin(),FRead()
    $END$
@@ -315,7 +315,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2L(),Bin2U(),Bin2W(),L2Bin(),W2Bin(),Word(),U2Bin(),FWrite()
    $END$
@@ -358,7 +358,7 @@
    $COMPLIANCE$
       XPP
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),Word(),U2Bin(),FWrite()
    $END$
@@ -401,7 +401,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),W2Bin(),Word(),U2Bin(),FWrite()
    $END$
@@ -444,7 +444,7 @@
    $COMPLIANCE$
       XPP
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Bin2I(),Bin2L(),Bin2U(),Bin2W(),I2Bin(),L2Bin(),W2Bin(),Word(),FWrite()
    $END$
@@ -477,7 +477,7 @@
       commands parameter list, otherwise it will return NIL, in Harbour
       it will work anywhere.
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       CALL
    $END$

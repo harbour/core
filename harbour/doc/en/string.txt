@@ -12,8 +12,8 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: IsAlpha(), IsDigit(), IsUpper(), IsLower(), LTrim(),
  *                       At(), hb_At(),RAt(), hb_RAt(), Left(), Right(),
- *                       SubStr(), Upper(), LOWER(), Asc(), Chr(), PadC(),
- *                       PadL(), PadR(), AllTrim(), Trim(), RTrim(), SPACE(),
+ *                       SubStr(), Upper(), Lower(), Asc(), Chr(), PadC(),
+ *                       PadL(), PadR(), AllTrim(), Trim(), RTrim(), Space(),
  *                       Replicate(), Val(), Transform(), StrTran()
  *
  * See COPYING for licensing terms.
@@ -51,9 +51,9 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      IsDigit(),IsLower(),IsUpper(),LOWER(),Upper()
+      IsDigit(),IsLower(),IsUpper(),Lower(),Upper()
    $END$
  */
 
@@ -89,9 +89,9 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      IsAlpha(),IsLower(),IsUpper(),LOWER(),Upper()
+      IsAlpha(),IsLower(),IsUpper(),Lower(),Upper()
    $END$
  */
 
@@ -127,9 +127,9 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      IsAlpha(),IsLower(),IsDigit(),LOWER(),Upper()
+      IsAlpha(),IsLower(),IsDigit(),Lower(),Upper()
    $END$
  */
 
@@ -165,9 +165,9 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      IsAlpha(),IsDigit(),IsUpper(),LOWER(),Upper()
+      IsAlpha(),IsDigit(),IsUpper(),Lower(),Upper()
    $END$
  */
 
@@ -200,7 +200,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Trim(),RTrim(),AllTrim()
    $END$
@@ -240,7 +240,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       RAt()
    $END$
@@ -290,7 +290,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       hb_RAt()
    $END$
@@ -330,7 +330,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       At(), SubStr(), Right()
    $END$
@@ -376,7 +376,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       hb_At(), SubStr(), Right()
    $END$
@@ -415,7 +415,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       SubStr(),Right(),At(),RAt()
    $END$
@@ -456,7 +456,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       SubStr(),Left(),At(),RAt()
    $END$
@@ -505,7 +505,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Left(),At(),Right()
    $END$
@@ -581,7 +581,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       StrZero(),Transform(),Val()
    $END$
@@ -661,7 +661,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Str()
    $END$
@@ -703,7 +703,7 @@
    $COMPLIANCE$
       H
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Str()
    $END$
@@ -745,7 +745,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Empty(),RTrim(),LTrim(),AADD(),ASize()
    $END$
@@ -790,7 +790,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Len()
    $END$
@@ -827,7 +827,7 @@
    $COMPLIANCE$
       C
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       INDEX, SEEK
    $END$
@@ -837,7 +837,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      LOWER()
+      Lower()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -845,7 +845,7 @@
    $ONELINER$
       Universally lowercases a character string expression.
    $SYNTAX$
-      LOWER( <cString> ) --> cLowerString
+      Lower( <cString> ) --> cLowerString
    $ARGUMENTS$
       <cString> Any character expression.
    $RETURNS$
@@ -864,7 +864,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Upper(),IsLower(),IsUpper()
    $END$
@@ -900,9 +900,9 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      LOWER(),IsUpper(),IsLower()
+      Lower(),IsUpper(),IsLower()
    $END$
  */
 
@@ -941,7 +941,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Asc(), Inkey()
    $END$
@@ -977,7 +977,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Chr()
    $END$
@@ -1027,7 +1027,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       AllTrim(),PadL(),PadR()
    $END$
@@ -1077,7 +1077,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       AllTrim(),PadC(),PadR()
    $END$
@@ -1127,7 +1127,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       AllTrim(),PadC(),PadL()
    $END$
@@ -1167,7 +1167,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       LTrim(),RTrim(),Trim()
    $END$
@@ -1211,7 +1211,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       AllTrim(),LTrim(),Trim()
    $END$
@@ -1255,7 +1255,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       RTrim(),LTrim(),AllTrim()
    $END$
@@ -1299,9 +1299,9 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
-      SPACE(),PadC(),PadL(),PadR()
+      Space(),PadC(),PadL(),PadR()
    $END$
  */
 
@@ -1309,7 +1309,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      SPACE()
+      Space()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -1317,7 +1317,7 @@
    $ONELINER$
       Returns a string of blank spaces
    $SYNTAX$
-      SPACE( <nSize> ) --> cString
+      Space( <nSize> ) --> cString
    $ARGUMENTS$
       <nSize> The length of the string
    $RETURNS$
@@ -1373,7 +1373,7 @@
    $PLATFORMS$
       All(64K)
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       PadC(),PadL(),PadR(),Replicate()
    $END$
@@ -1412,7 +1412,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       Str(),Transform()
    $END$
@@ -1566,7 +1566,7 @@
    $PLATFORMS$
       All
    $FILES$
-      Library is rtl
+      Library is core
    $SEEALSO$
       @...SAY,DevOutPict()
    $END$
