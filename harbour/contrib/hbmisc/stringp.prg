@@ -53,15 +53,6 @@
 #include "hboo.ch"
 
 /* $Doc$
- * $FuncName$     <xRet> Default( <xArg>, <xDefault> )
- * $Description$  If argument is not set, return default
- * $End$ */
-
-STATIC FUNCTION DEFAULT( xArg, xDef )
-   RETURN iif( !( ValType( xArg ) == ValType( xDef ) ), xDef, xArg )
-
-
-/* $Doc$
  * $FuncName$     <cOut> ToChar( <xTxt>, [cSeparator], [lDebug] )
  * $Description$  Convert to character
  * $Arguments$    <xTxt>       : Item to write
@@ -92,8 +83,9 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
    LOCAL nLen
    LOCAL aData
 
-   cSeparator := Default( cSeparator, " " )
-   lDebug     := Default( lDebug,     .F. )
+   hb_default( @cSeparator, " " )
+   hb_default( @lDebug,     .F. )
+
    cValTxt    := ValType( xTxt )
 
    DO CASE
