@@ -413,7 +413,7 @@ METHOD WvgToolBar:buttonDropDown( xParam )
    RETURN Self
 
 /*
- *       WvgToolbarButton() Class compatible with XbpToolbarButton()
+ *       WvgToolBarButton() Class compatible with XbpToolbarButton()
  */
 CREATE CLASS WvgToolBarButton
 

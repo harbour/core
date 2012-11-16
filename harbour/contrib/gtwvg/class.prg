@@ -493,7 +493,7 @@ METHOD WvtDialog:Inkey()
          ::oLastObj := ::aObjects[ ::nCurObj ]
 
          IF ::oCurObj:nType == DLG_OBJ_BROWSE
-            SELECT( ::oCurObj:cAlias )
+            Select( ::oCurObj:cAlias )
          ENDIF
 
          ::Eval( ::oCurObj:bOnFocus, ::oCurObj )
@@ -992,7 +992,7 @@ METHOD WvtBrowse:New( oParent, nID, nTop, nLeft, nBottom, nRight )
 
 METHOD WvtBrowse:Create()
 
-   SELECT( ::cAlias )
+   Select( ::cAlias )
 #if 0
    ::nTop    := ::oBrw:nTop - 2
    ::nLeft   := ::oBrw:nLeft - 2
@@ -1089,12 +1089,12 @@ METHOD WvtBrowse:Refresh()
    IF HB_ISBLOCK( ::bOnRefresh )
       Eval( ::bOnRefresh, self )
    ELSE
-      SELECT( ::cAlias )
+      Select( ::cAlias )
 
       ::oBrw:RefreshAll()
       ::oBrw:ForceStable()
 
-      SELECT( nWorkArea )
+      Select( nWorkArea )
    ENDIF
 
    RETURN Self
@@ -1164,11 +1164,11 @@ METHOD WvtBrowse:SetTooltip()
       ::SaveSettings()
       nArea := Select( ::cAlias )
 
-      SELECT( ::cAlias )
+      Select( ::cAlias )
 
       cTip := Eval( ::bTooltip )
 
-      SELECT( nArea )
+      Select( nArea )
 
       ::RestSettings()
    ENDIF

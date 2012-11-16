@@ -216,10 +216,10 @@ FUNCTION DynDlgProc( hDlg, nMsg, wParam, lParam )
 
       /*
       IF t_hImage == NIL
-         t_hImage := WVG_LoadImage( "vouch1.bmp", 2 )
+         t_hImage := Wvg_LoadImage( "vouch1.bmp", 2 )
       ENDIF
       IF t_hImage != NIL .AND. t_hImage != 0
-         WVG_SendMessage( WVG_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
+         Wvg_SendMessage( WVG_GetDlgItem( hDlg, ID_STA_IMAGE ), STM_SETIMAGE, IMAGE_BITMAP, t_hImage )
       ENDIF
       */
       Wvg_SetDlgItemText( hDlg, ID_MLE, GetEditText() )

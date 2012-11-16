@@ -227,7 +227,7 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
 
 
 #ifdef __HARBOUR__
-   SET( _SET_EVENTMASK, HB_INKEY_ALL )
+   Set( _SET_EVENTMASK, HB_INKEY_ALL )
    // hb_gtInfo( HB_GTI_RESIZABLE, .F. )
    // hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_ROWS )
    // hb_gtInfo( HB_GTI_RESIZEMODE, HB_GTI_RESIZEMODE_FONT )
@@ -250,13 +250,13 @@ PROCEDURE Main( cTermCP, cHostCP, lBoxChar )
    hb_SetTermCP( cTermCP, cHostCP, lBoxChar )
 #else
 #ifdef INKEY_ALL
-   SET( _SET_EVENTMASK, INKEY_ALL )
+   Set( _SET_EVENTMASK, INKEY_ALL )
 #endif
 #endif
 
    MDblClk( 250 )
    SetCancel( .F. )
-   // altd(0)
+   // AltD(0)
 
    ? OS(), Version(), Date(), Time()
 #ifdef __HARBOUR__

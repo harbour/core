@@ -49,7 +49,7 @@
                         [LEFT <Left>]                       ;
                         [RIGHT <Right>]                     ;
                         [EXECUTE <Block>]                   ;
-      => FT_Prompt( <Row>,                                  ;
+      => ft_Prompt( <Row>,                                  ;
                     <Col>,                                  ;
                     <Prompt>,                               ;
                     <Attr>,                                 ;
@@ -68,4 +68,4 @@
                     <Block>                                 )
 
 #xcommand MENU TO <v> [<l : COLD>] => ;
-   <v> := FT_MenuTo( {| _1 | iif( _1 == NIL, <v>, <v> := _1 ) }, #<v>, <.l.> )
+   <v> := ft_MenuTo( {| _1 | iif( _1 == NIL, <v>, <v> := _1 ) }, #<v>, <.l.> )

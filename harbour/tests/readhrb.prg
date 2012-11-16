@@ -151,7 +151,7 @@ PROCEDURE Main( cFrom )
       ENDIF
       FClose( hFile )
    ENDIF
-   SET( _SET_ALTERNATE, .F. )
+   Set( _SET_ALTERNATE, .F. )
 
    RETURN
 

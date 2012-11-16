@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   CT3 video functions (screen-like functions):
  *
- * SCREENMARK()
+ * ScreenMark()
  * Copyright 2004 Pavel Tsarenko <tpe2.mail.ru>
  * www - http://harbour-project.org
  *

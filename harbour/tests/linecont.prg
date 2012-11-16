@@ -7,7 +7,7 @@ PROCEDURE Main()
 LOCAL a, b
 
   TEST1() ; TEST2()
-  ABS( 4 )
+  Abs( 4 )
 
   TEST3()
 

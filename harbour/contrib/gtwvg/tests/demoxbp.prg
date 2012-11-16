@@ -407,7 +407,7 @@ STATIC FUNCTION ExeFontDialog( oCrt )
    oFontDlg:familyName       := "Courier New"
    oFontDlg:strikeout        := .T.
    oFontDlg:underscore       := .F.
-// oFontDlg:activateOk       := {|| WVG_MessageBox( , "activateOK Event Handelled in Windows!" ) }
+// oFontDlg:activateOk       := {|| Wvg_MessageBox( , "activateOK Event Handelled in Windows!" ) }
    oFontDlg:nominalPointSize := 12
 
 // oFontDlg:size             := .F.

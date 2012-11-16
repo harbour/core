@@ -121,7 +121,7 @@ PROCEDURE Main()
 
       cpict := AllTrim( cpict )
 
-      // wvw_loadpicture( 1, cpict ) //20060707
+      // wvw_LoadPicture( 1, cpict ) //20060707
 
       SetCursor( SC_NONE )
       DispBegin()

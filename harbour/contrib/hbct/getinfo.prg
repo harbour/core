@@ -5,11 +5,11 @@
  * xHarbour Project source code:
  *   CT3 GET/READ Functions
  *
- * SAVEGETS(), RESTGETS()
+ * SaveGets(), RestGets()
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
- * COUNTGETS(), CURRENTGET(), GETFLDROW(), GETFLDCOL(), GETFLDVAR()
+ * CountGets(), CurrentGet(), GetFldRow(), GetFldCol(), GetFldVar()
  * Copyright 2004 Philip Chee <philip@aleytys.pc.my>
  *
  * This program is free software; you can redistribute it and/or modify

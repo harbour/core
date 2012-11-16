@@ -76,7 +76,7 @@
 
     + wvw_pbIsFocused()
 
-    + wvw_allowNonTopEvent()
+    + wvw_AllowNonTopEvent()
       To set whether control's codeblock is allowed to be executed from
       non topmost window.
       (default is FALSE, the old behaviour)

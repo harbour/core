@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __DBLIST() function
+ * __dbList() function
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://harbour-project.org

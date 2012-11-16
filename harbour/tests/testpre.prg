@@ -11,7 +11,7 @@ PROCEDURE Main()
 
    CLS
 
-   l_pp := __pp_init()
+   l_pp := __pp_Init()
 
    ? "Testing Harbour run-time preprocessing"
    ? "======================================"
@@ -19,27 +19,27 @@ PROCEDURE Main()
 
    cString := "@ 10, 10 SAY 'Hello!'"
    ? cString
-   ? __pp_process( l_pp, cString )
+   ? __pp_Process( l_pp, cString )
    ?
 
    cString := "? 'Hello mom'"
    ? cString
-   ? __pp_process( l_pp, cString )
+   ? __pp_Process( l_pp, cString )
    ?
 
    cString := 'SET RELATION TO Something INTO MySelf'
    ? cString
-   ? __pp_process( l_pp, cString )
+   ? __pp_Process( l_pp, cString )
    ?
 
    cString := 'SET RELATION ADDITIVE TO Something INTO YourSelf'
    ? cString
-   ? __pp_process( l_pp, cString )
+   ? __pp_Process( l_pp, cString )
    ?
 
    cString := "#xcommand DEFAULT <v1> := <x1> => IF <v1> == NIL ; <v1> := <x1> ; END"
    ? cString
-   IF __pp_addRule( l_pp, cString )
+   IF __pp_AddRule( l_pp, cString )
       ? "Rule added successfully !"
    ELSE
       ? "Rule addition failed ..."
@@ -47,7 +47,7 @@ PROCEDURE Main()
 
    cString := 'DEFAULT x := 100'
    ? cString
-   ? __pp_process( l_pp, cString )
+   ? __pp_Process( l_pp, cString )
    ?
 
    ? "Press <Enter>..."
@@ -66,12 +66,12 @@ PROCEDURE Main()
                 'CLOSE ALL' }
 
    FOR j := 1 TO 2
-      ? iif( j == 1, "Before", "After" ) + " __pp_process()"
+      ? iif( j == 1, "Before", "After" ) + " __pp_Process()"
       ? "==================="
       ?
       FOR i := 1 TO Len( aScript )
 
-         ? iif( j == 1, aScript[ i ], __pp_process( l_pp, aScript[ i ] ) )
+         ? iif( j == 1, aScript[ i ], __pp_Process( l_pp, aScript[ i ] ) )
 
       NEXT
       ?

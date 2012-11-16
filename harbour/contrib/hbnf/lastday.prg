@@ -21,7 +21,7 @@
  *
  */
 
-/* Librarian's note:  The toolkit's original ft_lday() function was
+/* Librarian's note:  The toolkit's original ft_LDay() function was
    submitted by Jeff Bryant.  Mike saw it and optimized it.  Thanks
    to you both for your great code!
 

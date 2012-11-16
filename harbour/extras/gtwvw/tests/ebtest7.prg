@@ -197,7 +197,7 @@ FUNCTION MyHelp()
 
    MyMessageBox( NIL, ;
       "Sorry, this is not really a help :-)" + hb_eol() + ;
-      "It is only to show that SETKEY() codeblock is handled by our editboxes" + hb_eol() + ;
+      "It is only to show that SetKey() codeblock is handled by our editboxes" + hb_eol() + ;
       "Call stack:" + hb_eol() + ;
       ccallstack )
 
@@ -312,8 +312,8 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
       nmaxrow := Max( nmaxrow, nrow2 )
       nmincol := Min( nmincol, ncol1 )
    NEXT
-   nrow1 := nmaxrow + 2 // min(nmaxrow+2, maxrow())
-   ncol1 := nmincol // min(nmincol, maxcol()-33)
+   nrow1 := nmaxrow + 2 // Min(nmaxrow+2, MaxRow())
+   ncol1 := nmincol // Min(nmincol, MaxCol()-33)
    nOKbutton := wvw_pbCreate( nwinnum, nrow1, ncol1, nrow1, ncol1 + 10 - 1, "OK", NIL, ;
       {|| SaveVar( nwinnum, @aEBGets, @lDone ), ;
       EndGets( nwinnum, @aEBGets, nOKbutton, nCancelbutton, nCloseButton );
@@ -355,7 +355,7 @@ PROCEDURE EBReadGets( nwinnum, aEBGets )
                nFocus := nNumGets + 2
             ENDIF
          OTHERWISE
-            lchangefocus := .F. // ! wvw_ebisfocused(nwinnum, aEBGets[nFocus][__GET_NEBID])
+            lchangefocus := .F. // ! wvw_ebIsFocused(nwinnum, aEBGets[nFocus][__GET_NEBID])
          ENDCASE
          IF lchangefocus
             IF nFocus <= nNumGets

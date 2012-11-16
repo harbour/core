@@ -22,7 +22,7 @@
       change the length of a string passed as parameter while
       transforming this string:
 
-      ADDASCII()   Blank()       CharAdd()
+      AddAscii()   Blank()       CharAdd()
       CharAnd()    CharMirr()    CharNot()
       CharOr()     CharRelRep()  CharRepl()
       CharSort()   CharSwap()    CharXor()
@@ -52,7 +52,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      ADDASCII()   Blank()       CharAdd()
+      AddAscii()   Blank()       CharAdd()
       CharAnd()    CharMirr()    CharNot()
       CharOr()     CharRelRep()  CharRepl()
       CharSort()   CharSwap()    CharXor()

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 functions: RANDOM(), RAND()
+ *   CT3 functions: Random(), Rand()
  *
  * Copyright 2007 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://harbour-project.org

@@ -10,17 +10,17 @@
  */
 
 // Some constants
-#define IDD_DIALOG1                         101
+#define IDD_DIALOG1                        101
 #define IDC_BUTTON1                        4001
 #define IDC_STATIC1                        1002
 #define IDC_EDIT1                          1003
 #define IDC_COMBO1                         1006
 
-#define WM_INITDIALOG                    0x0110
-#define WM_COMMAND                       0x0111
-#define WM_SYSCOMMAND                    0x0112
-#define WM_CLOSE                         0x0010
-#define MB_ICONASTERISK              0x00000040
+#define WM_INITDIALOG                      0x0110
+#define WM_COMMAND                         0x0111
+#define WM_SYSCOMMAND                      0x0112
+#define WM_CLOSE                           0x0010
+#define MB_ICONASTERISK                    0x00000040
 
 // Main entry point
 PROCEDURE Main()
@@ -44,13 +44,13 @@ FUNCTION DialogFunc( hWnd, nMessage, wParam, lParam, wPHigh, wPLow )
       wapi_SetDlgItemText( hWnd, IDC_STATIC1, "Hi! " + Time() )
       wapi_SetDlgItemText( hWnd, IDC_EDIT1, "Harbour" )
 
-      wapi_ComboBox_AddString( WAPI_GETDLGITEM( hWnd, IDC_COMBO1 ), "Architect" )
-      wapi_ComboBox_AddString( WAPI_GETDLGITEM( hWnd, IDC_COMBO1 ), "Engineer" )
-      wapi_ComboBox_AddString( WAPI_GETDLGITEM( hWnd, IDC_COMBO1 ), "Project or Program Administrator" )
-      wapi_ComboBox_AddString( WAPI_GETDLGITEM( hWnd, IDC_COMBO1 ), "Software Designer" )
-      wapi_ComboBox_AddString( WAPI_GETDLGITEM( hWnd, IDC_COMBO1 ), "Other" )
+      wapi_ComboBox_AddString( wapi_GetDlgItem( hWnd, IDC_COMBO1 ), "Architect" )
+      wapi_ComboBox_AddString( wapi_GetDlgItem( hWnd, IDC_COMBO1 ), "Engineer" )
+      wapi_ComboBox_AddString( wapi_GetDlgItem( hWnd, IDC_COMBO1 ), "Project or Program Administrator" )
+      wapi_ComboBox_AddString( wapi_GetDlgItem( hWnd, IDC_COMBO1 ), "Software Designer" )
+      wapi_ComboBox_AddString( wapi_GetDlgItem( hWnd, IDC_COMBO1 ), "Other" )
 
-      wapi_SetFocus( hWnd, WAPI_GETDLGITEM( hWnd, IDC_EDIT1 ) )
+      wapi_SetFocus( hWnd, wapi_GetDlgItem( hWnd, IDC_EDIT1 ) )
       RETURN .T.
 
    CASE WM_CLOSE

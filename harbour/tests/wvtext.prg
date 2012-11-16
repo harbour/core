@@ -59,7 +59,7 @@ PROCEDURE Main()
          @ nI, MaxCol() - 5 SAY Str( aKeys[ nI ], 4, 0 )
       NEXT
 
-      IF nMSec != NIL .AND. hb_milliSeconds() > nMSec + 2000
+      IF nMSec != NIL .AND. hb_MilliSeconds() > nMSec + 2000
          hb_DispOutAt( MaxRow(), 0, Space( MaxCol() + 1 ), "N/G*" )
          nMSec := NIL
       ENDIF
@@ -221,7 +221,7 @@ PROCEDURE Main()
          SetPaletteIndex()
 
       CASE nKey == K_F8
-         Alert( "Menu text changed. Was: " + hb_gtInfo( HB_GTI_SELECTCOPY, Dtos(Date() ) + " " + Time() ) )
+         Alert( "Menu text changed. Was: " + hb_gtInfo( HB_GTI_SELECTCOPY, DToS(Date() ) + " " + Time() ) )
 
       CASE nKey == K_F9
          hb_gtInfo( HB_GTI_RESIZEMODE, iif( hb_gtInfo( HB_GTI_RESIZEMODE ) == HB_GTI_RESIZEMODE_ROWS, HB_GTI_RESIZEMODE_FONT, HB_GTI_RESIZEMODE_ROWS ) )
@@ -229,7 +229,7 @@ PROCEDURE Main()
          DispScreen()
 
       CASE nKey == K_F10
-         IF hb_MTVM()
+         IF hb_mtvm()
             hb_threadStart( @thFunc() )
          ELSE
             Alert( "MT mode not available. Rebuild this program with -mt switch and try again." )
@@ -262,22 +262,22 @@ PROCEDURE Main()
          ENDIF
          DispScreen()
          hb_DispOutAt( MaxRow(), 2, "< Font changed to " + hb_gtInfo( HB_GTI_FONTNAME ) + " >", "B/G*" )
-         nMSec := hb_milliSeconds()
+         nMSec := hb_MilliSeconds()
 
       CASE nKey == HB_K_RESIZE
          DispScreen()
          hb_DispOutAt( MaxRow(), 33, "Resized      ", "B/G*" )
-         nMSec := hb_milliSeconds()
+         nMSec := hb_MilliSeconds()
 
       CASE nKey == HB_K_GOTFOCUS
          ChgPalette( .T. )
          hb_DispOutAt( MaxRow(), 33, "We got focus ", "B/G*" )
-         nMSec := hb_milliSeconds()
+         nMSec := hb_MilliSeconds()
 
       CASE nKey == HB_K_LOSTFOCUS
          ChgPalette( .F. )
          hb_DispOutAt( MaxRow(), 33, "We lost focus", "B/G*" )
-         nMSec := hb_milliSeconds()
+         nMSec := hb_MilliSeconds()
 
       CASE nKey == HB_K_CLOSE
          IF Alert( "Close Application", { "Yes", "No" } ) == 1
@@ -340,7 +340,7 @@ STATIC PROCEDURE DispScreen()
 
 #if ! defined( __HBSCRIPT__HBSHELL ) .AND. defined( __PLATFORM__WINDOWS )
 
-PROCEDURE HB_GTSYS()
+PROCEDURE hb_GTSYS()
 
    REQUEST HB_GT_WVT_DEFAULT
    REQUEST HB_GT_WIN

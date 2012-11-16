@@ -64,10 +64,10 @@
 #include "tbrowse.ch"
 
 /* HB_BRW_STATICMOUSE controls if mouse position is static
- * and set by call to hitTest() method or dynamic calculated
- * by calls to MPOS() / MCOL(). CL53 uses dynamic mouse but
+ * and set by call to HitTest() method or dynamic calculated
+ * by calls to MPOS() / MCol(). CL53 uses dynamic mouse but
  * I guess that some Harbour GUI libraries inherit from TBROWSE
- * and because they do not support MCOL()/MROW() (when someone
+ * and because they do not support MCol()/MRow() (when someone
  * will create GUI library integrated with GT system?) then they
  * need static mouse with positions passed by GUI code. [druzus]
  */
@@ -157,8 +157,8 @@ CREATE CLASS TBROWSE
 #endif
 
    METHOD setStyle( nStyle, lNewValue )         // maintains a dictionary within an object
-   METHOD setKey( nKey, bBlock )                // get/set a code block associated with an INKEY() value
-   METHOD applyKey( nKey )                      // evaluate the code block associated with given INKEY() value
+   METHOD setKey( nKey, bBlock )                // get/set a code block associated with an Inkey() value
+   METHOD applyKey( nKey )                      // evaluate the code block associated with given Inkey() value
    METHOD hitTest( mRow, mCol )                 // indicate position of mouse cursor relative to TBrowse
    METHOD nRow SETGET                           // screen row number for the actual cell
    METHOD nCol SETGET                           // screen column number for the actual cell
@@ -295,7 +295,7 @@ CREATE CLASS TBROWSE
    METHOD dispFrames()                          // display TBrowse border, columns' headings, footings and separators
    METHOD dispRow( nRow )                       // display TBrowse data
 
-   FRIEND FUNCTION _mBrwPos                     // helper function for mRow() and mCol() methods
+   FRIEND FUNCTION _mBrwPos                     // helper function for MRow() and mCol() methods
 
 ENDCLASS
 
@@ -2394,7 +2394,7 @@ METHOD hitTest( mRow, mCol ) CLASS TBROWSE
 
 #ifdef HB_BRW_STATICMOUSE
    /* This is not CA-Cl*pper compatible, in Clipper ::mRowPos and ::mColPos
-    * is calculated dynamically by call to MCOL() and MROW()
+    * is calculated dynamically by call to MCol() and MROW()
     */
    ::mRowPos := ::mColPos := 0
 #endif

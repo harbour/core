@@ -148,7 +148,7 @@ FUNCTION __ActiveStructure( cStructure, nAlign )
       __clsAddMsg( hClass,  "aCTypes"       , ++Counter, HB_OO_MSG_PROPERTY, acTypes )
       __clsAddMsg( hClass,  "aCMembers"     , ++Counter, HB_OO_MSG_PROPERTY, acMembers, HB_OO_CLSTP_READONLY )
       __clsAddMsg( hClass,  "nAlign"        , ++Counter, HB_OO_MSG_PROPERTY, nAlign, HB_OO_CLSTP_READONLY )
-      __clsAddMsg( hClass,  "SizeOf"        , ++Counter, HB_OO_MSG_PROPERTY, HB_SizeOfCStructure( aCTypes, nAlign ), HB_OO_CLSTP_READONLY )
+      __clsAddMsg( hClass,  "SizeOf"        , ++Counter, HB_OO_MSG_PROPERTY, hb_SizeOfCstructure( aCTypes, nAlign ), HB_OO_CLSTP_READONLY )
       __clsAddMsg( hClass,  "_nID"          , ++Counter, HB_OO_MSG_PROPERTY, Len( s_aClasses ) )
       // WARNING InternalBuffer *MUST* remain the *LAST* Property!!!
       __clsAddMsg( hClass,  "InternalBuffer", ++Counter, HB_OO_MSG_PROPERTY, , HB_OO_CLSTP_READONLY )
@@ -261,7 +261,7 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
 
    IF ! Empty( cTag )
       AAdd( s_aSynonyms, { Upper( cTag ), nID + CTYPE_STRUCTURE } )
-      // Tracelog( ATail( s_aSynonyms )[ 1 ], ATail( s_aSynonyms )[ 2 ] )
+      // TraceLog( ATail( s_aSynonyms )[ 1 ], ATail( s_aSynonyms )[ 2 ] )
    ENDIF
 
    IF ! Empty( cSynonList )
@@ -272,7 +272,7 @@ PROCEDURE hb_CStructureCSyntax( cStructure, aDefinitions, cTag, cSynonList, nAli
             AAdd( s_aSynonyms, { Upper( cSynon ), nID + CTYPE_STRUCTURE } )
          ENDIF
 
-         // Tracelog( ATail( s_aSynonyms )[ 1 ], ATail( s_aSynonyms )[ 2 ] )
+         // TraceLog( ATail( s_aSynonyms )[ 1 ], ATail( s_aSynonyms )[ 2 ] )
       NEXT
    ENDIF
 
@@ -458,11 +458,11 @@ FUNCTION hb_CTypeArrayId( CType, nLen )
       __clsAddMsg( hClass,  "aCTypes"       , Counter++, HB_OO_MSG_PROPERTY, aCTypes )
       __clsAddMsg( hClass,  "aCMembers"     , Counter++, HB_OO_MSG_PROPERTY, acMembers, HB_OO_CLSTP_READONLY )
       __clsAddMsg( hClass,  "nAlign"        , Counter++, HB_OO_MSG_PROPERTY, 1, HB_OO_CLSTP_READONLY )
-      __clsAddMsg( hClass,  "SizeOf"        , Counter++, HB_OO_MSG_PROPERTY, HB_SizeOfCStructure( aCTypes, 1 ), HB_OO_CLSTP_READONLY )
+      __clsAddMsg( hClass,  "SizeOf"        , Counter++, HB_OO_MSG_PROPERTY, hb_SizeOfCstructure( aCTypes, 1 ), HB_OO_CLSTP_READONLY )
       __clsAddMsg( hClass,  "_nID", Counter++, HB_OO_MSG_PROPERTY, nID )
       // WARNING InternalBuffer *MUST* remain the *LAST* Property!!!
       __clsAddMsg( hClass,  "InternalBuffer", Counter, HB_OO_MSG_PROPERTY, , HB_OO_CLSTP_READONLY )
-      // TraceLog( "Registered: " + cArrayClassName, nID, Len( s_aArrayClasses ), HB_SizeOfCStructure( aCTypes, 1 ), nLen )
+      // TraceLog( "Registered: " + cArrayClassName, nID, Len( s_aArrayClasses ), hb_SizeOfCstructure( aCTypes, 1 ), nLen )
    ELSE
       nID := s_aArrayClasses[ nID ][ 3 ]
       // TraceLog( "Reused: " + s_aClasses[ nID ][ 1 ], nID )
@@ -574,7 +574,7 @@ STATIC FUNCTION Value()
 #if 0
    LOCAL aValues := {}
 
-   AEval( QSelf(), {| xVal | aAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
+   AEval( QSelf(), {| xVal | AAdd( aValues, xVal ) }, 1, Len( QSelf() ) - CLASS_PROPERTIES )
 #endif
 
    QSelf():InternalBuffer := hb_ArrayToStructure( QSelf(), QSelf():aCTypes, QSelf():nAlign )

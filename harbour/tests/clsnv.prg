@@ -11,8 +11,8 @@
  *
  */
 
-#xtranslate QQOUT([<x,...>]) => [OUTSTD(<x>)]
-#xtranslate QOUT([<x,...>]) => OUTSTD(hb_eol())[;OUTSTD(<x>)]
+#xtranslate QQOut([<x,...>]) => [OutStd(<x>)]
+#xtranslate QOut([<x,...>]) => OutStd(hb_eol())[;OutStd(<x>)]
 
 #include "hbclass.ch"
 

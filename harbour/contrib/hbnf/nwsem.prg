@@ -16,8 +16,8 @@
  * Leo cleaned up documentation blocks.
  *
  *    Rev 1.3   08 Oct 1992 01:37:34   GLENN
- * Added ft_nwsemUnlock() to complement ft_nwsemlock().  Modified
- * the calling procedure for ft_nwsemlock() but it shouldn't break any
+ * Added ft_nwsemUnlock() to complement ft_NWSemLock().  Modified
+ * the calling procedure for ft_NWSemLock() but it shouldn't break any
  * existing code, although I doubt anyone's using it.
  *
  *

@@ -293,7 +293,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
    __defaultNIL( @lRemDelim, .T. )
    __defaultNIL( @nCount, -1 )
 
-   // WriteToLogFile( "Splitstring: " + cStr( cString ) )
+   // WriteToLogFile( "Splitstring: " + CStr( cString ) )
 
    DO WHILE ( nEOLPos := At( cDelim, cBuffer ) ) > 0
       nHowMany++
@@ -302,7 +302,7 @@ FUNCTION uhttpd_SplitString( cString, cDelim, lRemDelim, nCount )
       ELSE
          cLine := Left( cBuffer, ( nEOLPos + Len( cDelim ) ) - 1 )
       ENDIF
-      // WriteToLogFile( "cBuffer, cDelim, nEOLPos, cLine: " + cStr( cBuffer ) + "," + cStr( cDelim ) + "," + cStr( nEOLPos ) + "," + cStr( cLine ) )
+      // WriteToLogFile( "cBuffer, cDelim, nEOLPos, cLine: " + CStr( cBuffer ) + "," + CStr( cDelim ) + "," + CStr( nEOLPos ) + "," + CStr( cLine ) )
       AAdd( aLines, cLine )
       cBuffer := SubStr( cBuffer, nEOLPos + Len( cDelim ) )
       IF nCount > -1
@@ -392,7 +392,7 @@ FUNCTION uhttpd_URLDecode( cString )
 /*
  * DateToGMT( dDate, cTime, nDayToAdd ) --> cGMTDate
  *
- * dDate     : default DATE()
+ * dDate     : default Date()
  * cTime     : default "00:00:00"
  * nDayToAdd : default 0 - may be a negative number
  *
@@ -412,7 +412,7 @@ FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
    __defaultNIL( @nDayToAdd, 0 )
    __defaultNIL( @nSecsToAdd, 0 )
 
-   // Tracelog( "DateToGMT - StartingValue", dDate, cTime, nDayToAdd, nSecsToAdd )
+   // TraceLog( "DateToGMT - StartingValue", dDate, cTime, nDayToAdd, nSecsToAdd )
 
    cTime := uhttpd_AddSecondsToTime( cTime, nSecsToAdd, @nDayToAdd )
    dDate += nDayToAdd
@@ -425,7 +425,7 @@ FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
    cStr := aDays[ nDow ] + ", " + StrZero( nDay, 2 ) + "-" + aMonths[ nMonth ] + "-" + ;
       Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
 
-   // Tracelog( "DateToGMT", cStr )
+   // TraceLog( "DateToGMT", cStr )
 
    Set( _SET_DATEFORMAT, cOldDateFormat )
 
@@ -554,7 +554,7 @@ FUNCTION uhttpd_HtmlEntities( cString, cQuote_style )
 
   // ATTENTION, these chars are visible only with OEM font
   FOR i := 160 TO 255
-      aAdd( aTranslations, { hb_BChar( i ), "&#" + Str( i, 3 ) + ";" } )
+      AAdd( aTranslations, { hb_BChar( i ), "&#" + Str( i, 3 ) + ";" } )
   NEXT
 
 RETURN uhttpd_HtmlConvertChars( cString, cQuote_style, aTranslations )

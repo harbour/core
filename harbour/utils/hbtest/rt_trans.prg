@@ -61,7 +61,7 @@ PROCEDURE Main_TRANS()
    local cOldDecim := Set( _SET_DECIMALS )
    local dt
 
-   /* TRANSFORM() */
+   /* Transform() */
 
    TEST_LINE( Transform( NIL       , NIL        )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( Transform( NIL       , ""         )          , "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:U:NIL;C: F:S" )
@@ -419,9 +419,9 @@ PROCEDURE Main_TRANS()
     * but CA-Cl*pper uses static buffer for result and when current one
     * is smaller then 5 bytes then first two bytes are replaced with
     * 4-5 bytes from previous result which was length enough, f.e.:
-    *          ? transform( "0123456789", "" )
-    *          ? transform( "AB", "@E" )
-    *          ? transform( "ab", "@E" )
+    *          ? Transform( "0123456789", "" )
+    *          ? Transform( "AB", "@E" )
+    *          ? Transform( "ab", "@E" )
     * [druzus]
     */
    TEST_LINE( Transform(".", "@E" )                        , " "                           )
@@ -513,7 +513,7 @@ PROCEDURE Main_TRANS()
 
    TEST_LINE( Transform( "abcd", "@9!*" )                   , "ABCD"          )
    TEST_LINE( Transform( "abcd", "@_9!*" )                  , "ABCD"          )
-   TEST_LINE( Transform( "abcd", "@_9" + chr( 9 ) + "9!9")  , "aBc"           )
+   TEST_LINE( Transform( "abcd", "@_9" + Chr( 9 ) + "9!9")  , "aBc"           )
    TEST_LINE( Transform( "abcd", "@!!!" )                   , "ABCD"          )
    TEST_LINE( Transform( "abcd", "@9" )                     , "abcd"          )
 
@@ -528,7 +528,7 @@ PROCEDURE Main_TRANS()
 
    TEST_LINE( Transform( hb_SToD( "19920509" ), "@E" )      , "09/05/92"      )
 
-   TEST_LINE( Transform( val("3.10"), "@X" )                , "3.10"          )
+   TEST_LINE( Transform( Val("3.10"), "@X" )                , "3.10"          )
    TEST_LINE( Transform(        0.80, ".9999" )             , ".8000"         )
    TEST_LINE( Transform(       -0.80, ".9999" )             , ".****"         )
    TEST_LINE( Transform(   12345.123, "@X99" )              , "     12345.123" )
@@ -715,28 +715,28 @@ PROCEDURE Main_TRANS()
    TEST_LINE( Transform(       1234.567, "@!"   ), "      1234.57"      )
    TEST_LINE( Transform(      -1234.567,        ), "     -1234.57"      )
    TEST_LINE( Transform(      -1234.567, "@"    ), "     -1234.57"      )
-   TEST_LINE( Transform(    val("-1.0"),        ), "-1.00"              )
-   TEST_LINE( Transform(    val("-1.0"), "@"    ), "-1.00"              )
-   TEST_LINE( Transform(    val("-123"),        ), "      -123"         )
-   TEST_LINE( Transform(    val("-123"), "@"    ), "      -123"         )
+   TEST_LINE( Transform(    Val("-1.0"),        ), "-1.00"              )
+   TEST_LINE( Transform(    Val("-1.0"), "@"    ), "-1.00"              )
+   TEST_LINE( Transform(    Val("-123"),        ), "      -123"         )
+   TEST_LINE( Transform(    Val("-123"), "@"    ), "      -123"         )
    TEST_LINE( Transform(              0,        ), "               0"   )
    TEST_LINE( Transform(            0.0,        ), "         0.00"      )
-   TEST_LINE( Transform(       val("1"),        ), "      1"            )
-   TEST_LINE( Transform(      val("12"),        ), "      12"           )
-   TEST_LINE( Transform(     val("123"),        ), "      123"          )
-   TEST_LINE( Transform(    val("1234"),        ), "      1234"         )
+   TEST_LINE( Transform(       Val("1"),        ), "      1"            )
+   TEST_LINE( Transform(      Val("12"),        ), "      12"           )
+   TEST_LINE( Transform(     Val("123"),        ), "      123"          )
+   TEST_LINE( Transform(    Val("1234"),        ), "      1234"         )
    SET DECIMAL TO 3
    TEST_LINE( Transform(            0.0,        ), "         0.000"     )
-   TEST_LINE( Transform(       val("1"),        ), "        1"          )
-   TEST_LINE( Transform(      val("12"),        ), "        12"         )
-   TEST_LINE( Transform(     val("123"),        ), "        123"        )
-   TEST_LINE( Transform(    val("1234"),        ), "        1234"       )
+   TEST_LINE( Transform(       Val("1"),        ), "        1"          )
+   TEST_LINE( Transform(      Val("12"),        ), "        12"         )
+   TEST_LINE( Transform(     Val("123"),        ), "        123"        )
+   TEST_LINE( Transform(    Val("1234"),        ), "        1234"       )
    SET DECIMAL TO 4
    TEST_LINE( Transform(            0.0,        ), "         0.0000"    )
-   TEST_LINE( Transform(       val("1"),        ), "          1"        )
-   TEST_LINE( Transform(      val("12"),        ), "          12"       )
-   TEST_LINE( Transform(     val("123"),        ), "          123"      )
-   TEST_LINE( Transform(    val("1234"),        ), "          1234"     )
+   TEST_LINE( Transform(       Val("1"),        ), "          1"        )
+   TEST_LINE( Transform(      Val("12"),        ), "          12"       )
+   TEST_LINE( Transform(     Val("123"),        ), "          123"      )
+   TEST_LINE( Transform(    Val("1234"),        ), "          1234"     )
 
    SET FIXED OFF
 

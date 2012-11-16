@@ -16,7 +16,7 @@
  * Forest Belt proofread/edited/cleaned up doc
  *
  *    Rev 1.1   11 May 1991 00:01:00   GLENN
- * Documentation correction on ft_doy() oneliner.  Was identical to ft_woy(),
+ * Documentation correction on ft_DoY() oneliner.  Was identical to ft_WoY(),
  * now it's right.
  *
  *    Rev 1.0   01 Apr 1991 01:02:32   GLENN

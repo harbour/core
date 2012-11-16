@@ -556,7 +556,7 @@ METHOD open() CLASS LISTBOX
          ::nLeft,;
          ::nBottom,;
          ::nRight,;
-         Savescreen( ::nTop + 1, ::nLeft, ::nBottom, ::nRight ) }
+         SaveScreen( ::nTop + 1, ::nLeft, ::nBottom, ::nRight ) }
 
       ::lIsOpen := .T.
       ::display()

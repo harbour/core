@@ -27,7 +27,7 @@
  *        - Added refreshCurrent and another stabilize around line 349
  *        - TbSkipWhile was redone
  *             Note: Leo's line was changed to:
- *                 ELSEIF n > 0 .AND. RECNO() != LASTREC() + 1
+ *                 ELSEIF n > 0 .AND. RecNo() != LastRec() + 1
  *
  *  3.  Added DispBegin() and DispEnd() around both Stabilize sections
  *

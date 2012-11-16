@@ -15,8 +15,8 @@ DBFCDX application to SQL world.
    I want to discuss this in more detail. Many current RDDs for SQL servers
 (ex. SQLRDD from xHarbour.com) tries to make a feeling you are working with
 DBF file, but not with SQL database. SQL server does not support many
-features, ex. RECNO(), deleted flag, file locks, record locks. These RDDs
-are emulating these features to make feeling of DBF. DELETED() function is
+features, ex. RecNo(), deleted flag, file locks, record locks. These RDDs
+are emulating these features to make feeling of DBF. Deleted() function is
 emulated by creating additional table columns to store delete flag. Some
 "hidden system" tables are used to register locking operations and emulate
 record and file locks in DBF style. The idea of SQL query is also lost. If
@@ -30,8 +30,8 @@ you do a simple loop
 
 RDD usualy will read SQL rows in portions, let's say 100 records per query.
 So, hidden queries are generated. If you are using indexes these queries
-are really complicated. Let's have index on FIELD1 + STR(FIELD2). A seek to
-value cValue1 + STR(nValue2) will generate a query like:
+are really complicated. Let's have index on FIELD1 + Str(FIELD2). A seek to
+value cValue1 + Str(nValue2) will generate a query like:
 
  SELECT * FROM my_table
      WHERE (FIELD1 == cValue1 and FIELD2 >= nValue2) or FIELD1 > cValue1
@@ -77,7 +77,7 @@ all query (it could contain millions of records!) will be cached.
  first record in index is changed to be the last record in index during the
  phase of record processing, DO WHILE ! Eof() loop will iterate only this
  single records even if the database contains millions of records. Your sould
- do FLOCK() on DBF to guarantee the records are not changed. Do you use FLOCK()
+ do FLock() on DBF to guarantee the records are not changed. Do you use FLock()
  before readonly DO WHILE ! Eof() loops? :)
 
 
@@ -114,7 +114,7 @@ has a corresponding SDD. SDD driver implements a specific part of data
 exchange interface between SQLBASE and SQL server.
 
    A few additional functions are also implemented, ex. HB_SQLCONNECT().
-Usualy these functions are just a shorter version of corresponding RDDINFO()
+Usualy these functions are just a shorter version of corresponding rddInfo()
 call.
 
 
@@ -122,11 +122,11 @@ call.
 3. Modifying database
 
    SSI presents a query result via RDD interface and generates no hidden
-SQL queries. So, how database can be changed? Does DBAPPEND() and FIELDPUT()
+SQL queries. So, how database can be changed? Does dbAppend() and FieldPut()
 works, or is it readonly SQL interface?
-   DBAPPEND(), FIELDPUT() and other similiar functions work on cached query
+   dbAppend(), FieldPut() and other similiar functions work on cached query
 result, i.e. query can be appended by new rows and field values can be
-changed, but SQL database is not changed. DBCREATE() function can also be
+changed, but SQL database is not changed. dbCreate() function can also be
 used to create an "empty query result" but no table is created on SQL server.
 So, SSI can also be used as implementation of "array RDD".
    The programmer must call SQL command explicitly to modify SQL tables.

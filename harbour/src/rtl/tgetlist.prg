@@ -1343,7 +1343,7 @@ METHOD TBReader( oGet, oMenu, aMsg ) CLASS HBGetList
 
       IF oGet:exitState == GE_NOEXIT
          IF ::nHitcode == HTCELL
-            // Replaces call to TBMouse( oTB, mROW(), mCOL() ):
+            // Replaces call to TBMouse( oTB, MRow(), MCol() ):
             oTB:RowPos := oTb:mRowPos
             oTB:ColPos := oTb:mColPos
             oTB:Invalidate()

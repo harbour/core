@@ -895,10 +895,10 @@ STATIC FUNCTION ADO_ORDLSTFOCUS( nWA, aOrderInfo )
 
    oRecordSet:Close()
    IF aOrderInfo[ UR_ORI_TAG ] == 0
-       oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ] , HB_QWith(), adOpenDynamic, adLockPessimistic )
+       oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ] , hb_QWith(), adOpenDynamic, adLockPessimistic )
    ELSE
     // oRecordSet:Open( "SELECT * FROM " + ::oTabla:cTabla + " ORDER BY " + ::OrdKey( uTag ) , QWith(), adOpenDynamic, adLockPessimistic, adCmdUnspecified )
-       oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ], HB_QWith(), adOpenDynamic, adLockPessimistic )
+       oRecordSet:Open( "SELECT * FROM " + s_aTableNames[ nWA ], hb_QWith(), adOpenDynamic, adLockPessimistic )
    ENDIF
    aOrderInfo[ UR_ORI_RESULT ] := aOrderInfo[ UR_ORI_TAG ]
 
@@ -1510,37 +1510,37 @@ STATIC FUNCTION ADO_GETFIELDTYPE( nADOFieldType )
 
    RETURN nDBFFieldType
 
-PROCEDURE HB_AdoSetTable( cTableName )
+PROCEDURE hb_adoSetTable( cTableName )
 
    t_cTableName := cTableName
 
    RETURN
 
-PROCEDURE HB_AdoSetEngine( cEngine )
+PROCEDURE hb_adoSetEngine( cEngine )
 
    t_cEngine := cEngine
 
    RETURN
 
-PROCEDURE HB_AdoSetServer( cServer )
+PROCEDURE hb_adoSetServer( cServer )
 
    t_cServer := cServer
 
    RETURN
 
-PROCEDURE HB_AdoSetUser( cUser )
+PROCEDURE hb_adoSetUser( cUser )
 
    t_cUserName := cUser
 
    RETURN
 
-PROCEDURE HB_AdoSetPassword( cPassword )
+PROCEDURE hb_adoSetPassword( cPassword )
 
    t_cPassword := cPassword
 
    RETURN
 
-PROCEDURE HB_AdoSetQuery( cQuery )
+PROCEDURE hb_adoSetQuery( cQuery )
 
    hb_default( @cQuery, "SELECT * FROM " )
 
@@ -1548,7 +1548,7 @@ PROCEDURE HB_AdoSetQuery( cQuery )
 
    RETURN
 
-PROCEDURE HB_AdoSetLocateFor( cLocateFor )
+PROCEDURE hb_adoSetLocateFor( cLocateFor )
 
    USRRDD_AREADATA( Select() )[ WA_LOCATEFOR ] := cLocateFor
 
@@ -1571,7 +1571,7 @@ STATIC FUNCTION SQLTranslate( cExpr )
 
    RETURN cExpr
 
-FUNCTION HB_AdoRddGetConnection( nWA )
+FUNCTION hb_adoRddGetConnection( nWA )
 
    IF ! HB_ISNUMERIC( nWA )
       nWA := Select()
@@ -1579,7 +1579,7 @@ FUNCTION HB_AdoRddGetConnection( nWA )
 
    RETURN USRRDD_AREADATA( nWA )[ WA_CONNECTION ]
 
-FUNCTION HB_AdoRddGetCatalog( nWA )
+FUNCTION hb_adoRddGetCatalog( nWA )
 
    IF ! HB_ISNUMERIC( nWA )
       nWA := Select()
@@ -1587,7 +1587,7 @@ FUNCTION HB_AdoRddGetCatalog( nWA )
 
    RETURN USRRDD_AREADATA( nWA )[ WA_CATALOG ]
 
-FUNCTION HB_AdoRddGetRecordSet( nWA )
+FUNCTION hb_adoRddGetRecordSet( nWA )
 
    LOCAL aWAData
 

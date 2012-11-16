@@ -316,7 +316,7 @@ METHOD display() CLASS GET
        */
       /*
       nRowPos := ::nCapRow
-      nColPos := ::nCapCol + len( cCaption )
+      nColPos := ::nCapCol + Len( cCaption )
       */
 
    ENDIF
@@ -1352,7 +1352,7 @@ METHOD unTransform() CLASS GET
             cBuffer := Upper( cBuffer )
             xValue := "T" $ cBuffer .OR. ;
                       "Y" $ cBuffer .OR. ;
-                      hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
+                      hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) $ cBuffer
             EXIT
 
          CASE "D"
@@ -1788,8 +1788,8 @@ METHOD Input( cChar ) CLASS GET
       /* Clipper 5.2 undocumented: # allow T,F,Y,N for Logical [ckedem] */
       CASE cPic == "L" .OR. ( cPic == "#" .AND. ::cType == "L" )
          IF !( Upper( cChar ) $ "YNTF" + ;
-                                hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + ;
-                                hb_LangMessage( HB_LANG_ITEM_BASE_TEXT + 2 ) )
+                                hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 1 ) + ;
+                                hb_langMessage( HB_LANG_ITEM_BASE_TEXT + 2 ) )
             cChar := ""
          ENDIF
 

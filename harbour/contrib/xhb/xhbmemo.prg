@@ -136,7 +136,7 @@ METHOD MemoInit( xUDF ) CLASS xhb_TMemoEditor
    IF ::ExistUdf()
       /* Keep calling user function until it returns 0
          05/08/2004 - <maurilio.longo@libero.it>
-                      Clipper 5.2 memoedit() treats a NIL as ME_DEFAULT
+                      Clipper 5.2 MemoEdit() treats a NIL as ME_DEFAULT
       */
       DO WHILE AScan( { ME_DEFAULT, NIL }, nUdfReturn := ::CallUdf( ME_INIT ) ) == 0
 
@@ -179,7 +179,7 @@ METHOD Edit() CLASS xhb_TMemoEditor
 
          Eval( ::bKeyBlock, ::ProcName, ::ProcLine, ReadVar() )
 
-         /* 2006/SEP/15 - E.F. - After Setkey() is executed, if exist nextkey,
+         /* 2006/SEP/15 - E.F. - After SetKey() is executed, if exist nextkey,
           *                      I need trap this nextkey to memoedit process
           *                      <nKey> first and the <nNextKey> on the next loop.
           */
@@ -197,19 +197,19 @@ METHOD Edit() CLASS xhb_TMemoEditor
                         The user function: <cUserFunction>, a user-defined function
                         specified as an argument, handles key exceptions and reconfigures
                         special keys.  The user function is called at various times by
-                        MEMOEDIT(), most often in response to keys it does not recognize.
+                        MemoEdit(), most often in response to keys it does not recognize.
                         Keys that instigate a key exception are all available control keys,
                         function keys, and Alt keys.  Since these keys are not processed by
-                        MEMOEDIT(), they can be reconfigured.  Some of these keys have a
+                        MemoEdit(), they can be reconfigured.  Some of these keys have a
                         default action assigned to them.  In the user function, you perform
-                        various actions, depending on the current MEMOEDIT() mode, then
-                        RETURN a value telling MEMOEDIT() what to do next.
+                        various actions, depending on the current MemoEdit() mode, then
+                        RETURN a value telling MemoEdit() what to do next.
 
-                        When the user function argument is specified, MEMOEDIT() defines two
+                        When the user function argument is specified, MemoEdit() defines two
                         classes of keys: nonconfigurable and key exceptions.  When a
-                        nonconfigurable key is pressed, MEMOEDIT() executes it, otherwise a
+                        nonconfigurable key is pressed, MemoEdit() executes it, otherwise a
                         key exception is generated and the user function is called.  When
-                        there are no keys left in the keyboard buffer for MEMOEDIT() to
+                        there are no keys left in the keyboard buffer for MemoEdit() to
                         process, the user function is called once again.
       */
 

@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      ADSBlob2File()
+      AdsBlob2File()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Write a Binary (memo) field's contents to a file
    $SYNTAX$
-      ADSBlob2File(cFileName, cFieldName) --> lSuccess
+      AdsBlob2File(cFileName, cFieldName) --> lSuccess
    $ARGUMENTS$
       <cFileName>    File to create. If it already exists, it will be
       overwritten on success and destroyed on error.
@@ -21,7 +21,7 @@
       <lSuccess>  True if the file is successfully written.
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
-      ADSBlob2File() is a wrapper for AdsBinaryToFile.
+      AdsBlob2File() is a wrapper for AdsBinaryToFile.
    $EXAMPLES$
 
    $TESTS$
@@ -78,19 +78,19 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSBlob2File()
+      AdsBlob2File()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSClearAOF()
+      AdsClearAOF()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Clears an Advantage Optimized Filter in the current workarea.
    $SYNTAX$
-      ADSClearAOF()
+      AdsClearAOF()
    $ARGUMENTS$
       None
    $RETURNS$
@@ -111,19 +111,19 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSCustomizeAOF(),AdsEvalAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
+      AdsCustomizeAOF(),AdsEvalAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSCustomizeAOF()
+      AdsCustomizeAOF()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Add or remove records from an existing AOF
    $SYNTAX$
-      ADSCustomizeAOF( [<nRecno | aRecNos>] [, <nType>] ) --> nSuccess
+      AdsCustomizeAOF( [<nRecno | aRecNos>] [, <nType>] ) --> nSuccess
    $ARGUMENTS$
       <nRecno | aRecNos> Can be either a single record number or an array of
       record numbers to add or delete from the AOF. If omitted, defaults to
@@ -143,7 +143,7 @@
       the database. If bit 5 is on, record 5 is considered a visible record.
       If bit 5 is off, record 5 is not visible. It does not "pass the test".
       Initially, the bits are set by the Server according to a filter expression
-      from SET FILTER TO or AdsSetAOF(). But by using ADSCustomizeAOF() you can
+      from SET FILTER TO or AdsSetAOF(). But by using AdsCustomizeAOF() you can
       add or remove records at will from the visible set.  This is useful for
       tagging records or for refining a result set after the data has been retrieved
       from the server.
@@ -182,7 +182,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),AdsEvalAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
+      AdsClearAOF(),AdsEvalAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
@@ -219,7 +219,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
+      AdsClearAOF(),AdsGetAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
@@ -254,7 +254,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),AdsGetAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
+      AdsClearAOF(),AdsGetAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
@@ -287,7 +287,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
+      AdsClearAOF(),AdsGetAOFOptLevel(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
@@ -321,7 +321,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
+      AdsClearAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
@@ -357,7 +357,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),AdsIsRecordInAOF(),AdsSetAOF()
+      AdsClearAOF(),AdsIsRecordInAOF(),AdsSetAOF()
    $END$
  */
 
@@ -395,7 +395,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
+      AdsClearAOF(),AdsIsRecordInAOF(),AdsRefreshAOF()
    $END$
  */
 
@@ -428,7 +428,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSClearAOF(),AdsRefreshAOF()
+      AdsClearAOF(),AdsRefreshAOF()
    $END$
  */
 
@@ -738,7 +738,7 @@
               every 2 seconds while indexing.
               The codeblock can return .T. to abort.   */
          INDEX ON First + LAST + LABEL1 + LABEL2 TAG First
-         AdsClrCallBack()
+         AdsClrCallback()
          RETURN
 
       FUNCTION outputstuff( nPercent )  /* The "callback" function */
@@ -755,19 +755,19 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      AdsClrCallBack()
+      AdsClrCallback()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      AdsClrCallBack()
+      AdsClrCallback()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Clears the callback set by AdsRegCallback().
    $SYNTAX$
-      AdsClrCallBack() --> nil
+      AdsClrCallback() --> nil
    $ARGUMENTS$
 
    $RETURNS$
@@ -1242,13 +1242,13 @@
 
 /* $DOC$
    $NAME$
-      ADSDDADDTABLE()
+      AdsDDAddTable()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Add a new table to a Data dictionary
    $SYNTAX$
-      ADSDDADDTABLE( <cTableName>, <cFileName>, <cIndexFileName> ) --> lSuccess
+      AdsDDAddTable( <cTableName>, <cFileName>, <cIndexFileName> ) --> lSuccess
    $ARGUMENTS$
       <cTableName> Name of the table inside the data dictionary
       <cFileName>  Name of the adt or dbf file name
@@ -1260,11 +1260,11 @@
       AdsDDAddTable() adds a new table to an ADS data dictionary.
       To add the table you must be connected as ADSSYS user using the AdsConnect60() function
    $EXAMPLES$
-      IF adsConnect60( "harbour.add", 7 /* All types of connection */, "ADSSYS", "", )
+      IF AdsConnect60( "harbour.add", 7 /* All types of connection */, "ADSSYS", "", )
          // Add one user
          AdsDDCreateUser( , "Luiz", "papael", "This is luiz User" )
          // Add the tables
-         AdsDDaddTable( "Table1", "table1.adt", "table1.adi" )
+         AdsDDAddTable( "Table1", "table1.adt", "table1.adi" )
    $TESTS$
 
    $STATUS$
@@ -1277,7 +1277,7 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSCONNECT60(),ADSUSEDICTIONARY()
+      AdsConnect60(),ADSUSEDICTIONARY()
    $END$
  */
 
@@ -1307,19 +1307,19 @@
    $FILES$
 
    $SEEALSO$
-      ADSCONNECT60()
+      AdsConnect60()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSCONNECT60()
+      AdsConnect60()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Connect to a local/remote/internet server
    $SYNTAX$
-      ADSCONNECT60(<cFilePath>, <nServertype>, [<cUserName>], [<cUserPass>], [<nOptions>]) -> lSuccess
+      AdsConnect60(<cFilePath>, <nServertype>, [<cUserName>], [<cUserPass>], [<nOptions>]) -> lSuccess
    $ARGUMENTS$
       <cFilePath>   Name of data dictionary to connect to.
       <nServertype> The server type to connect (LOCAL, REMOTE, AIS or all together)
@@ -1330,10 +1330,10 @@
    $RETURNS$
       <lSuccess>   True if connected, otherwise False.
    $DESCRIPTION$
-      Adsconnect60() makes the connection to an advantage database server.
+      AdsConnect60() makes the connection to an advantage database server.
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-      IF adsConnect60( "harbour.add", 7 /* All types of connection */, "ADSSYS", "", )
+      IF AdsConnect60( "harbour.add", 7 /* All types of connection */, "ADSSYS", "", )
          // Add one user
          AdsDDCreateUser( , "Luiz", "papael", "This is luiz User" )
       ENDIF
@@ -1347,19 +1347,19 @@
       Library is rddads
       Header is ads.ch
    $SEEALSO$
-      ADSDDADDTABLE()
+      AdsDDAddTable()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADSCACHEOPENTABLES()
+      AdsCacheOpenTables()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Provides caching of open tables
    $SYNTAX$
-      ADSCACHEOPENTABLES(<nOpen>) -> nRetVal
+      AdsCacheOpenTables(<nOpen>) -> nRetVal
    $ARGUMENTS$
       <nOpen>       Number of tables to cache.
 
@@ -1391,13 +1391,13 @@
 
 /* $DOC$
    $NAME$
-      ADSCACHEOPENCURSORS()
+      AdsCacheOpenCursors()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Provides caching of open cursors
    $SYNTAX$
-      ADSCACHEOPENCURSORS(<nOpen>) -> nRetVal
+      AdsCacheOpenCursors(<nOpen>) -> nRetVal
    $ARGUMENTS$
       <nOpen>       Number of cursors to cache.
 
@@ -1430,13 +1430,13 @@
 
 /* $DOC$
    $NAME$
-      ADSCLOSECACHEDTABLES()
+      AdsCloseCachedTables()
    $CATEGORY$
       Advantage Database RDD
    $ONELINER$
       Close all cached tables on the given connection
    $SYNTAX$
-      ADSCLOSECACHEDTABLES([<hConnection>]) -> nRetVal
+      AdsCloseCachedTables([<hConnection>]) -> nRetVal
    $ARGUMENTS$
       <hConnection>    A connection handle retrieved via AdsConnect()
       or AdsConnect60(). If omitted, the RDD's current connection

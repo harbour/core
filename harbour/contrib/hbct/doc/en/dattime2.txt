@@ -136,13 +136,13 @@
 
 /* $DOC$
    $NAME$
-      ADDMONTH()
+      AddMonth()
    $CATEGORY$
       CT3 date and time functions
    $ONELINER$
       add months to a date
    $SYNTAX$
-      ADDMONTH( [<dDate>,] <nMonths> ) -> dShiftedDate
+      AddMonth( [<dDate>,] <nMonths> ) -> dShiftedDate
    $ARGUMENTS$
 
    $RETURNS$
@@ -156,7 +156,7 @@
    $STATUS$
       Started
    $COMPLIANCE$
-      ADDMONTH() is compatible with CT3's ADDMOTH().
+      AddMonth() is compatible with CT3's ADDMOTH().
    $PLATFORMS$
       All
    $FILES$

@@ -31,8 +31,8 @@ proc main()
       cChars += ";"
       for j := 0 to 31
          n := i * 32 + j
-         cChars += iif( n == asc( ";" ), ",", ;
-                   iif( n == 10, " ", chr( n ) ) )
+         cChars += iif( n == Asc( ";" ), ",", ;
+                   iif( n == 10, " ", Chr( n ) ) )
       next
    next
 
@@ -43,13 +43,13 @@ proc main()
    while n == 2
       ? hb_gtInfo( HB_GTI_FONTSEL )
       hb_gtInfo( HB_GTI_FONTSEL, xFontSel() )
-      n := alert( "What do you think about this font;;" + ;
+      n := Alert( "What do you think about this font;;" + ;
                   hb_gtInfo( HB_GTI_FONTSEL ) + ";" + cChars, ;
                   { "FINE", "CHANGE" } )
    enddo
    ? "current font:"
    ? hb_gtInfo( HB_GTI_FONTSEL )
-   outstd( hb_gtInfo( HB_GTI_FONTSEL ) )
+   OutStd( hb_gtInfo( HB_GTI_FONTSEL ) )
    wait
 return
 

@@ -529,7 +529,7 @@ METHOD Prior() CLASS TODBC
 
    IF nResult == SQL_SUCCESS
       ::nRecno := ::nRecno - 1
-   ELSEIF nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == 1 // permit skip-1 on first row, so that BOF() can work properly
+   ELSEIF nResult == SQL_NO_DATA_FOUND .AND. ::nRecNo == 1 // permit skip-1 on first row, so that Bof() can work properly
       ::nRecno := ::nRecno - 1
       ::Next()
       ::lBof := .T.

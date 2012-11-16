@@ -120,7 +120,7 @@ FUNCTION Wvt_KillFocus()
 #endif
 
 // Wvt_Mouse() must be present if you want to catch and fire
-// mouse call back outside of the inkey() loop.
+// mouse call back outside of the Inkey() loop.
 
 FUNCTION Wvt_Mouse( nKey, nRow, nCol )
 

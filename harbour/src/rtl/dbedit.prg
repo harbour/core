@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * DBEDIT() function
+ * dbEdit() function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -139,7 +139,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
 
       /* Simplified logic compared to CA-Cl*pper. In the latter there
          is logic to detect several typical cBlock types (memvar,
-         aliased field, field) and using MemvarBlock()/FieldWBlock()/FieldBlock()
+         aliased field, field) and using MemVarBlock()/FieldWBlock()/FieldBlock()
          calls to create codeblocks for them if possible. In Harbour,
          simple macro compilation will result in faster code for all
          situations. As Maurilio Longo has pointed, there is no point in

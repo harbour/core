@@ -145,7 +145,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    DO WHILE LastRec() < MAX_TEST_RECS
 
-      // TEST: DBAppend()/APPEND BLANK
+      // TEST: dbAppend()/APPEND BLANK
 
       APPEND BLANK
 
@@ -177,7 +177,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
       NotifyUser( "DbGoBottom failed" )
    ENDIF
 
-   // TEST: DbGoTop()/GO TOP
+   // TEST: dbGoTop()/GO TOP
 
    GO TOP
 
@@ -327,7 +327,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
 
    MYTEST->( dbCloseArea() )
 
-   IF SELECT( "MYTEST" ) > 0
+   IF Select( "MYTEST" ) > 0
       NotifyUser( "Failed to close table" )
    ENDIF
 

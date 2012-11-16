@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Main Harbour VM initialization function __HBVMINIT()
+ * Main Harbour VM initialization function __HBVMInit()
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

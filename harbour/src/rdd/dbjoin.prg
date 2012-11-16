@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __DBJOIN() function
+ * __dbJoin() function
  *
  * Copyright 2005 Pavel Tsarenko <tpe2@mail.ru>
  * www - http://harbour-project.org

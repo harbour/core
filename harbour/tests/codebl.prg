@@ -132,7 +132,7 @@ FUNCTION ReferParam()
    ? "Printed value in Clipper  .T. =", Eval( bResult )
    ?
    // Notice the Clipper bug: GetBlock is receiving the reference to
-   // the codeblock parameter than the value of EVAL(bResult) shouldn't
+   // the codeblock parameter than the value of Eval( bResult ) shouldn't
    // depend on the order of block creation/value changing (GetBlock/SetRef).
 
    PassByRef( {| lEnd | ;

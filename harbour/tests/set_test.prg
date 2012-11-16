@@ -78,7 +78,7 @@ PROCEDURE Main()
    TestLine( "_SET_FILECASE",    102 )
    TestLine( "_SET_DIRCASE",     103 )
    TestLine( "_SET_DIRSEPARATOR", 104 )
-   SET( _SET_DIRSEPARATOR, "/" )
+   Set( _SET_DIRSEPARATOR, "/" )
    TestLine( "_SET_DIRSEPARATOR", 104 )
 #endif
 

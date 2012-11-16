@@ -298,7 +298,7 @@ FUNCTION WVW_INPUTFOCUS( nWinNum, hWnd, message, wParam, lParam )
 // SUPPORTING FUNCTIONS
 // ********************************************************************
 
-// returns maxrow() of window nWinNum
+// returns MaxRow() of window nWinNum
 STATIC FUNCTION winMaxRow( nWinNum )
 
    LOCAL nOldWin := wvw_nSetCurWindow( nWinNum )
@@ -308,7 +308,7 @@ STATIC FUNCTION winMaxRow( nWinNum )
 
    RETURN nmaxrow
 
-// returns maxCol() of window nWinNum
+// returns MaxCol() of window nWinNum
 STATIC FUNCTION winMaxCol( nWinNum )
 
    LOCAL nOldWin := wvw_nSetCurWindow( nWinNum )

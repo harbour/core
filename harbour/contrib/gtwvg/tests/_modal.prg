@@ -12,7 +12,7 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-#xuntranslate alert( =>
+#xuntranslate Alert( =>
 
 FUNCTION MyAlert( cMsg, aOpt )
 
@@ -40,7 +40,7 @@ FUNCTION My_Alert( cMessage, aOptions, cCaption, nInit, nTime )
 
    RETURN DialogAlert( cCaption, cMessage, aOptions, nInit, , , nTime )
 
-#xuntranslate alert( =>
+#xuntranslate Alert( =>
 
 FUNCTION Just_Alert( cMsg, aOpt )
 

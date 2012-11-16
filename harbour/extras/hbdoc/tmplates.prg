@@ -327,7 +327,7 @@ PROCEDURE init_Templates()
                      "else Harbour will use/display a 8.3 file name consistent with CA-Cl*pper" }, ;
       { "Linux(GT)", "Under Linux the number of columns avaliable depends of the current Terminal screen size." }, ;
       { "OS2(GT)",   "Under OS/2 the number of columns avaliable depends of the current Terminal screen size." }, ;
-      { "Win(GT)",   "Under Windows, the return value of MAXROW() function is only affected if called after an SETMODE() function" }, ;
+      { "Win(GT)",   "Under Windows, the return value of MaxRow() function is only affected if called after an SetMode() function" }, ;
       { "BSD",       "This is available on the BSD platform" }, ;
       { "DARWIN",    "This is available on the DARWIN platform" }, ;
       { "DOS",       "This is available on the MS-DOS platform" }, ;

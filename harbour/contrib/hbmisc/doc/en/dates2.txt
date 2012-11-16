@@ -31,19 +31,19 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      ADAYS()
+      ADays()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ADAYS()
+      ADays()
    $CATEGORY$
       Date
    $ONELINER$
       Returns an array with the days names.
    $SYNTAX$
-      ADAYS()  --> aDays
+      ADays()  --> aDays
    $ARGUMENTS$
       None
    $RETURNS$
@@ -64,7 +64,7 @@
    $FILES$
       Library is hbmisc
    $SEEALSO$
-      ADAYS()
+      ADays()
    $END$
  */
 

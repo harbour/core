@@ -18,7 +18,7 @@ proc main()
    if ! dbExists( cFile )
       dbCreate( cFile, { { "F", "C", 10, 0 } } )
       use _tst exclusive
-      while lastRec() < 100
+      while LastRec() < 100
          dbAppend()
       enddo
       close
@@ -26,11 +26,11 @@ proc main()
    ? "Test exclusive access"
    select 1
    use _tst exclusive alias tst1
-   ? "neterr->", netErr(), "used->", used(), "alias->", alias()
+   ? "neterr->", NetErr(), "used->", Used(), "alias->", Alias()
    select 2
    use _tst exclusive alias tst2
-   ? "neterr->", netErr(), "used->", used(), "alias->", alias()
-   if used()
+   ? "neterr->", NetErr(), "used->", Used(), "alias->", Alias()
+   if Used()
       ? "Error, exclusive mode in aliased work areas does not work"
    else
       ? "OK"
@@ -41,7 +41,7 @@ proc main()
    ? "Test shared access"
    select 1
    use _tst shared alias tst1
-   ? "neterr->", netErr(), "used->", used(), "alias->", alias()
+   ? "neterr->", NetErr(), "used->", Used(), "alias->", Alias()
    setLock(2)
    setLock(4)
    setLock(6)
@@ -49,7 +49,7 @@ proc main()
    dspLock()
    select 2
    use _tst shared alias tst2
-   ? "neterr->", netErr(), "used->", used(), "alias->", alias()
+   ? "neterr->", NetErr(), "used->", Used(), "alias->", Alias()
    setLock(1)
    setLock(2)
    setLock(3)
@@ -63,11 +63,11 @@ proc main()
    wait
    ?
    select 1
-   ? "unlock all in", alias()
-   dbUnLock()
+   ? "unlock all in", Alias()
+   dbUnlock()
    dspLock()
    select 2
-   ? "lock 10 records in", alias()
+   ? "lock 10 records in", Alias()
    setLock(1)
    setLock(2)
    setLock(3)
@@ -80,13 +80,13 @@ proc main()
    dspLock()
    wait
    ?
-   ? "unlock 3, 5, 9 in", alias()
-   dbRUnLock(3)
-   dbRUnLock(5)
-   dbRUnLock(9)
+   ? "unlock 3, 5, 9 in", Alias()
+   dbRUnlock(3)
+   dbRUnlock(5)
+   dbRUnlock(9)
    dspLock()
    select 1
-   ? "lock 10 records in", alias()
+   ? "lock 10 records in", Alias()
    setLock(1)
    setLock(2)
    setLock(3)
@@ -108,7 +108,7 @@ return
 
 proc dspLock()
    local n
-   ? alias(), "active locks:"
+   ? Alias(), "active locks:"
    for each n in dbRLockList()
       ?? "", hb_ntos( n )
    next

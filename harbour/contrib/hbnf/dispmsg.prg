@@ -91,7 +91,7 @@ FUNCTION ft_DispMsg( aInfo, cKey, nBoxTop, nBoxLeft, cnBoxString, lShadow )
    nBoxBottom := nBoxTop + Len( aInfo[ 1 ] ) + 1
 
    // following is to keep from breaking old code and to be
-   // consistent with DISPBOX()
+   // consistent with DispBox()
 
    IF cnBoxString == NIL .OR. cnBoxString == 2
       cnBoxString := hb_UTF8ToStrBox( "╔═╗║╝═╚║ " )

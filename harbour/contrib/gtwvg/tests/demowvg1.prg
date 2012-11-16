@@ -14,12 +14,12 @@
 #include "hbgtwvg.ch"
 #include "wvgparts.ch"
 
-#define IMAGE_VOUCH                hb_dirBase() + "vouch1.bmp"
-#define IMAGE_BROWSE               hb_dirBase() + "v_browse.ico"
-#define IMAGE_VR                   hb_dirBase() + "vr_1.ico"
-#define IMAGE_NOTES                hb_dirBase() + "v_notes.ico"
-#define IMAGE_TOOLS                hb_dirBase() + "v_tools.ico"
-#define IMAGE_HELP                 hb_dirBase() + "v_notes.ico"
+#define IMAGE_VOUCH                hb_DirBase() + "vouch1.bmp"
+#define IMAGE_BROWSE               hb_DirBase() + "v_browse.ico"
+#define IMAGE_VR                   hb_DirBase() + "vr_1.ico"
+#define IMAGE_NOTES                hb_DirBase() + "v_notes.ico"
+#define IMAGE_TOOLS                hb_DirBase() + "v_tools.ico"
+#define IMAGE_HELP                 hb_DirBase() + "v_notes.ico"
 
 MEMVAR GetList
 

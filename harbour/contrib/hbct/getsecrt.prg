@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   CT3 GET function:
  *
- * GETSECRET()
+ * GetSecret()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

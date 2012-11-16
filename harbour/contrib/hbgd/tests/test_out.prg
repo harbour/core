@@ -247,7 +247,7 @@ FUNCTION GetVars( cFields, cSeparator )
       cName  := LTrim( aField[ 1 ] )
       xValue := UrlDecode( aField[ 2 ] )
 
-      // Tracelog( "cName, xValue", cName, xValue )
+      // TraceLog( "cName, xValue", cName, xValue )
 
       // is it an array entry?
       IF SubStr( cName, Len( cName ) - 1 ) == "[]"
@@ -260,7 +260,7 @@ FUNCTION GetVars( cFields, cSeparator )
          hHashVars[ cName ] := xValue
 
       ENDIF
-      // Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
+      // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
    // __OutDebug( hHashVars )
 
@@ -283,7 +283,7 @@ FUNCTION GetParams( aParams )
       cName  := LTrim( aField[ 1 ] )
       xValue := UrlDecode( aField[ 2 ] )
 
-      // Tracelog( "cName, xValue", cName, xValue )
+      // TraceLog( "cName, xValue", cName, xValue )
 
       // is it an array entry?
       IF SubStr( cName, Len( cName ) - 1 ) == "[]"
@@ -296,7 +296,7 @@ FUNCTION GetParams( aParams )
          hHashVars[ cName ] := xValue
 
       ENDIF
-      // Tracelog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
+      // TraceLog( "hHashVars, cName, xValue", DumpValue( hHashVars ), cName, xValue )
    NEXT
    // __OutDebug( hHashVars )
 

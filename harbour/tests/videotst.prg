@@ -4,7 +4,7 @@
 
 // Copyright 2000 Alejandro de Garate <alex_degarate@hotmail.com>
 
-// Test SETMODE() for Harbour
+// Test SetMode() for Harbour
 
 #define HB_NOT_SUPPORTED  "Video mode not supported on this system.."
 #define HB_VROW   1
@@ -54,13 +54,10 @@ PROCEDURE Main()
 
    RETURN
 
-//*************************
+// Simple testing screen.
 
 PROCEDURE TESTBOX( cMode )
 
-   //***************************************************************************
-   // Simple testing screen..
-   //***************************************************************************
    LOCAL nRow
 
    CLS

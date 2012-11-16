@@ -57,7 +57,7 @@
 #xtranslate BLINKER DEMONSTRATION DATE <cDate>   => INIT PROCEDURE _init_hb_blidemdte() ; hb_BliDemDte( hb_SToD( <cDate> ) ) ; RETURN
 #xtranslate BLINKER DEMONSTRATION MINUTES <nMin> => INIT PROCEDURE _init_hb_blidemmin() ; hb_BliDemMin( <nMin> ) ; RETURN
 
-/* BLIMGRSTS() parameters */
+/* BliMgrSts() parameters */
 #define BliCacheLoc         1  /* Get location of real mode overlay cache (EMS/XMS) */
 #define BliCacheSize        2  /* Get size of overlay cache */
 #define BliExtMemAvail      3  /* Get bytes extended memory available to the extender */
@@ -68,18 +68,18 @@
 #define BliRealMemAvail     8  /* Get bytes real memory available to the extender */
 #define BliVirMemAvail      9  /* Get bytes virtual memory available to the extender */
 
-/* BLIMGRSTS() BliCacheLoc values */
+/* BliMgrSts() BliCacheLoc values */
 #define BliCacheNone        0  /* No overlay cache */
 #define BliCacheEMS         1  /* Overlay cache is in EMS */
 #define BliCacheXMS         2  /* Overlay cache is in XMS */
 
-/* BLIMGRSTS() BliHostMode values */
+/* BliMgrSts() BliHostMode values */
 #define BliHostNone         0
 #define BliHostDPMI         1
 #define BliHostVCPI         2
 #define BliHostXMS          3
 
-/* BLIMGRSTS() BliMachineMode values */
+/* BliMgrSts() BliMachineMode values */
 #define BliModeReal         0
 #define BliMode286Prot      1
 

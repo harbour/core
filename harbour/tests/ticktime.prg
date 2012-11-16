@@ -7,8 +7,8 @@ PROCEDURE Main()
    LOCAL nTime0, nTime, nTimeLast, nMin := 9999, nMax := - 9999, nTick := 0, nLoop := 0
 
    ? "Wait for 10 seconds..."
-   nTimeLast := nTime0 := hb_milliSeconds()
-   DO WHILE ( nTime := hb_milliSeconds() ) - nTime0 < 10000
+   nTimeLast := nTime0 := hb_MilliSeconds()
+   DO WHILE ( nTime := hb_MilliSeconds() ) - nTime0 < 10000
       IF nTimeLast != nTime
          nTick ++
          nMin := Min( nMin, nTime - nTimeLast )

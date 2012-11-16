@@ -171,7 +171,7 @@ PROCEDURE Main()
    hbshell_gtSelect( "GTWVW" )
 #endif
 
-   SET( _SET_EVENTMASK, INKEY_ALL )
+   Set( _SET_EVENTMASK, INKEY_ALL )
 
    SET DATE ANSI
    SET CENTURY ON
@@ -211,7 +211,7 @@ PROCEDURE Main()
    wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_GET, "~GET demo"  )
    wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_BROWSE, "~BROWSE demo" )
    wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_CONSOLE, "~CONSOLE demo (F3)" )
-   // WVW_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
+   // wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_COLOR, "~COLOR demo" )
    wvw_AppendMenu( hPopupMenu, MF_SEPARATOR )
    wvw_AppendMenu( hPopupMenu, MF_ENABLED + MF_STRING, IDM_DEMO_EXIT, "E~xit"  )
    wvw_AppendMenu( hMenu, MF_ENABLED + MF_POPUP, hPopupMenu, "~Demos",  )
@@ -292,7 +292,7 @@ PROCEDURE Main()
          wvw_SetPaintRefresh( 0 )
          Alert( wvw_SetPaintRefresh() )
       OTHERWISE
-         // do nothing. inkey() has been handled by nAfterInket()
+         // do nothing. Inkey() has been handled by nAfterInket()
       ENDCASE
    ENDDO
 
@@ -461,7 +461,7 @@ PROCEDURE Demo_Get()
    wvwm_ResetMouseObjects( nCurWindow )
 
    /* we now use native push button
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", maxrow() - 1, maxcol() - 15, , , {|| xDebugInfo() } ))
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", MaxRow() - 1, MaxCol() - 15, , , {|| xDebugInfo() } ))
    */
    wvw_pbCreate( nCurWindow, MaxRow() - 1, MaxCol() - 15, MaxRow() - 1, MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
 
@@ -498,7 +498,7 @@ FUNCTION DEMO_Browse()
 
    LOCAL nKey, bBlock, oBrowse, i
    LOCAL lEnd    := .F.
-   LOCAL info_                     // WVW_nOpenWindow() has not been performed, so...
+   LOCAL info_                     // wvw_nOpenWindow() has not been performed, so...
    LOCAL nTop    :=  3             // pls notice that this is relative to PARENT window!
    LOCAL nLeft   :=  3             // pls notice that this is relative to PARENT window!
    LOCAL nBottom := MaxRow() - 2   // pls notice that this is relative to PARENT window!
@@ -564,7 +564,7 @@ FUNCTION DEMO_Browse()
    AddMiscObjects( nCurWindow, {| nWindow | wvw_DrawGridVert( nWindow, oBrowse:nTop, oBrowse:nBottom, aColumnsSep, Len( aColumnsSep ) ) } )
 
    /* we now use native push button
-   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", maxrow(), maxcol() - 15, , , {|| xDebugInfo() } ))
+   wvwm_AddMouseObjects( nCurWindow, WVWMouseButton():New("Info", MaxRow(), MaxCol() - 15, , , {|| xDebugInfo() } ))
    */
    wvw_pbCreate( nCurWindow, MaxRow(), MaxCol() - 15, MaxRow(), MaxCol() - 5, "Info", NIL, {|| xDebugInfo() }, NIL )
 
@@ -761,7 +761,7 @@ FUNCTION HXBscroller( oBrowse, nWinNum, XBid, XBmsg )
 0 <= nPage <= (nMax - nMin + 1)
 nPage :: pagesize
 
-nMin <= nPos <= (nMax - max(nPage-1, 0))
+nMin <= nPos <= (nMax - Max(nPage-1, 0))
 **/
 
 STATIC FUNCTION RefreshVXB( oBrowse, nWinNum, XBid )
@@ -1025,9 +1025,9 @@ FUNCTION AddMiscObjects( nWinNum, bAction )
 
    RETURN .T.
 
-// inkey() handler **************************************
+// Inkey() handler **************************************
 
-/* this is for use with SETINKEYAFTERBLOCK() */
+/* this is for use with SetInkeyAfterBlock() */
 
 FUNCTION nAfterInkey( nkey )
 
@@ -1038,7 +1038,7 @@ FUNCTION nAfterInkey( nkey )
    IF nkey == WVW_DEFAULT_MENUKEYEVENT
       // MenuKeyEvent
       RETURN nMenuChecker( wvw_GetLastMenuEvent() )
-      // was: elseif ASCAN({K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE}, nKey) > 0
+      // was: elseif AScan({K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE}, nKey) > 0
    ELSEIF AScan( { K_LBUTTONDOWN, K_LBUTTONUP, K_MOUSEMOVE, K_MMLEFTDOWN, ;
          K_LDBLCLK }, nKey ) > 0
       // MouseEvent
@@ -1132,9 +1132,9 @@ FUNCTION xDebugInfo()
 
    MSetPos( MaxRow(), MaxCol() )
 
-   // SETMOUSE( .T., MaxRow(), MaxCol() )
+   // SetMouse( .T., MaxRow(), MaxCol() )
 
-   // WVW_SETMOUSEPOS( WVW_nNumWindows() - 1, MaxRow(), MaxCol() )
+   // wvw_SetMousePos( WVW_nNumWindows() - 1, MaxRow(), MaxCol() )
 
    lboxmessage( "GTWVW test/demo" + hb_eol() + ;
       "Budyanto Dj. <budyanto@centrin.net.id>" + hb_eol() + ;
@@ -1151,7 +1151,7 @@ FUNCTION xDebugInfo()
       "Font Height = " + hb_ntos( s_aFontInfo[ 2 ] ) + hb_eol() + ;
       "Font Width = " + hb_ntos( s_aFontInfo[ 3 ] ) + hb_eol() + ;
       hb_eol() + ;
-      "BTW, mouse pointer now sits on maxrow(),maxcol(), doesn't it?" )
+      "BTW, mouse pointer now sits on MaxRow(),MaxCol(), doesn't it?" )
 
    RETURN NIL
 

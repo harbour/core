@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ALERT(), HB_ALERT() functions
+ * Alert(), hb_Alert() functions
  *
  * Released to Public Domain by Vladimir Kazimirchik <v_kazimirchik@yahoo.com>
  * www - http://harbour-project.org
@@ -17,7 +17,7 @@
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *    Changes for higher Clipper compatibility, console mode, extensions
- *    __NONOALERT()
+ *    __NoNoAlert()
  *
  * See COPYING for licensing terms.
  *

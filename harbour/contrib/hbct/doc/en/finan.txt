@@ -50,7 +50,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PV(),Payment(),Periods(),RATE()
+      PV(),Payment(),Periods(),Rate()
    $END$
  */
 
@@ -101,7 +101,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      FV(),Payment(),Periods(),RATE()
+      FV(),Payment(),Periods(),Rate()
    $END$
  */
 
@@ -150,7 +150,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PV(),FV(),Periods(),RATE()
+      PV(),FV(),Periods(),Rate()
    $END$
  */
 
@@ -204,19 +204,19 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      PV(),FV(),Payment(),RATE()
+      PV(),FV(),Payment(),Rate()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      RATE()
+      Rate()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Estimate rate of interest for a loan
    $SYNTAX$
-      RATE( nLoan, nPayment, nPeriods ) --> nRate
+      Rate( nLoan, nPayment, nPeriods ) --> nRate
    $ARGUMENTS$
       <nLoan>          amount of money you get from the bank
       <nPayment>       amount of money you pay back per period
@@ -224,7 +224,7 @@
    $RETURNS$
       <nInterest>    estimated rate of interest per period, 1 == 100%
    $DESCRIPTION$
-      RATE() calculates the rate of interest per period for the given
+      Rate() calculates the rate of interest per period for the given
       loan, payment per periods and number of periods. This is done with
       the same equation used in the Payment() or Periods() function:
 
@@ -237,14 +237,14 @@
       // 5 years (60 months). The effective interest rate per
       // period (=month) is
 
-      ? rate( 5172.56, 100, 60 ) // --> 0.005
+      ? Rate( 5172.56, 100, 60 ) // --> 0.005
    $TESTS$
-      rate( 5172.56, 100, 60.0 ) == 0.005
-      rate( 6000.0, 100, 60.0 ) == 0.0
+      Rate( 5172.56, 100, 60.0 ) == 0.005
+      Rate( 6000.0, 100, 60.0 ) == 0.0
    $STATUS$
       Ready
    $COMPLIANCE$
-      RATE() is compatible with CT3's RATE().
+      Rate() is compatible with CT3's Rate().
    $PLATFORMS$
       All
    $FILES$

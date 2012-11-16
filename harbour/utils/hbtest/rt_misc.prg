@@ -354,7 +354,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( ( o:colorSpec := '"W"'+"/"+'"R"'             , o:colorSpec ) , "W/R,W/R"                )
    TEST_LINE( ( o:colorSpec := "'W'"+"/"+"'R'"             , o:colorSpec ) , "W/R,W/R"                )
 #endif
-   /* "Samples" function tests (AMPM(), DAYS(), ELAPTIME(), ... ) */
+   /* "Samples" function tests (AMPM(), Days(), ElapTime(), ... ) */
 
    TEST_LINE( AMPM( "" )                      , "12 am"                                   )
    TEST_LINE( AMPM( "HELLO" )                 , "12LLO am"                                )
@@ -370,10 +370,10 @@ PROCEDURE Main_MISC()
    TEST_LINE( AMPM( "02:23" )                 , "02:23 am"                                )
    TEST_LINE( AMPM( "02:23:45.10" )           , "02:23:45.10 am"                          )
 
-   TEST_LINE( DAYS( 100000 )                  , 1 )
+   TEST_LINE( Days( 100000 )                  , 1 )
 
-   TEST_LINE( ELAPTIME("23:12:34","12:34:57") , "13:22:23" )
-   TEST_LINE( ELAPTIME("12:34:57","23:12:34") , "10:37:37" )
+   TEST_LINE( ElapTime("23:12:34","12:34:57") , "13:22:23" )
+   TEST_LINE( ElapTime("12:34:57","23:12:34") , "10:37:37" )
 
    TEST_LINE( LENNUM( 10 )                    , 2 )
    TEST_LINE( LENNUM( 10.9 )                  , 4 )
@@ -412,9 +412,9 @@ PROCEDURE Main_MISC()
       /* NOTE: Use the identical internal versions if Harbour
                was compiled without C5.x undocumented features.
                [vszakats] */
-      #xtranslate NationMsg([<x,...>])  => __NatMsg(<x>)
-      #xtranslate IsAffirm([<x,...>])   => __NatIsAffirm(<x>)
-      #xtranslate IsNegative([<x,...>]) => __NatIsNegative(<x>)
+      #xtranslate NationMsg([<x,...>])  => __natMsg(<x>)
+      #xtranslate IsAffirm([<x,...>])   => __natIsAffirm(<x>)
+      #xtranslate IsNegative([<x,...>]) => __natIsNegative(<x>)
    #endif
 #endif
 
@@ -527,7 +527,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( TFORNEXTXF(   1, 10, -4 )       , "F-9999T1S1R1"                                                                   )
    TEST_LINE( TFORNEXTXF(  10,  1,  4 )       , "F-9999T10S10R10"                                                                )
 
-   /* EVAL(), :EVAL(), :EVAL */
+   /* Eval(), :Eval(), :EVAL */
 
    TEST_LINE( Eval( NIL )                     , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( Eval( 1 )                       , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:1 F:S" )
@@ -556,9 +556,9 @@ PROCEDURE Main_MISC()
    TEST_LINE( saArray:Eval                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S" )
    TEST_LINE( soObject:Eval                   , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:O:ERROR Object F:S" )
 
-   /* HB_STOD() */
+   /* hb_SToD() */
 
-   /* For these tests in CA-Cl*pper 5.2e the following native HB_STOD() has
+   /* For these tests in CA-Cl*pper 5.2e the following native hb_SToD() has
       been used ( not the emulated one written in Clipper ):
 
       CLIPPER HB_STOD( void )
@@ -604,7 +604,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( hb_SToD("1999090" + Chr(0))     , hb_SToD("        ")          )
 #endif
 
-   /* DESCEND() */
+   /* Descend() */
 
 #ifndef __CLIPPER__ /* Bug in CA-Cl*pper, it returns undefined trash */
 #ifndef __XPP__ /* Compiler time error */
@@ -644,7 +644,7 @@ PROCEDURE Main_MISC()
 
 #ifdef __HARBOUR__
 
-   /* HB_COLORINDEX() */
+   /* hb_ColorIndex() */
 
    TEST_LINE( hb_ColorIndex()                  , ""               )
    TEST_LINE( hb_ColorIndex("", -1)            , ""               )
@@ -687,7 +687,7 @@ PROCEDURE Main_MISC()
 
 #ifndef __XPP__
 
-   /* FKMAX(), FKLABEL() */
+   /* FKMax(), FKLabel() */
 
    TEST_LINE( FKMax()                         , 40               )
    TEST_LINE( FKMax( 1 )                      , 40               )
@@ -708,99 +708,99 @@ PROCEDURE Main_MISC()
    /* NOTE: BIN2*() functions are quite untable in CA-Cl*pper when the passed
       parameter is smaller than the required length. */
 
-   /* BIN2I() */
+   /* Bin2I() */
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   TEST_LINE( BIN2I()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( Bin2I()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   TEST_LINE( BIN2I(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
-   TEST_LINE( BIN2I("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
+   TEST_LINE( Bin2I(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( Bin2I("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( BIN2I("AB")                     , 16961            )
-   TEST_LINE( BIN2I("BA")                     , 16706            )
-   TEST_LINE( BIN2I(Chr(255))                 , 255              )
-   TEST_LINE( BIN2I(Chr(255)+Chr(255))        , -1               )
-   TEST_LINE( BIN2I(Chr(0))                   , 0                )
-   TEST_LINE( BIN2I(Chr(0)+Chr(0))            , 0                )
-   TEST_LINE( BIN2I("A")                      , 65               )
-   TEST_LINE( BIN2I("ABC")                    , 16961            )
+   TEST_LINE( Bin2I("AB")                     , 16961            )
+   TEST_LINE( Bin2I("BA")                     , 16706            )
+   TEST_LINE( Bin2I(Chr(255))                 , 255              )
+   TEST_LINE( Bin2I(Chr(255)+Chr(255))        , -1               )
+   TEST_LINE( Bin2I(Chr(0))                   , 0                )
+   TEST_LINE( Bin2I(Chr(0)+Chr(0))            , 0                )
+   TEST_LINE( Bin2I("A")                      , 65               )
+   TEST_LINE( Bin2I("ABC")                    , 16961            )
 
-   /* BIN2W() */
+   /* Bin2W() */
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   TEST_LINE( BIN2W()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( Bin2W()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   TEST_LINE( BIN2W(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
-   TEST_LINE( BIN2W("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
+   TEST_LINE( Bin2W(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( Bin2W("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( BIN2W("AB")                     , 16961            )
-   TEST_LINE( BIN2W("BA")                     , 16706            )
-   TEST_LINE( BIN2W(Chr(255))                 , 255              )
-   TEST_LINE( BIN2W(Chr(255)+Chr(255))        , 65535            )
-   TEST_LINE( BIN2W(Chr(0))                   , 0                )
-   TEST_LINE( BIN2W(Chr(0)+Chr(0))            , 0                )
-   TEST_LINE( BIN2W("A")                      , 65               )
-   TEST_LINE( BIN2W("ABC")                    , 16961            )
+   TEST_LINE( Bin2W("AB")                     , 16961            )
+   TEST_LINE( Bin2W("BA")                     , 16706            )
+   TEST_LINE( Bin2W(Chr(255))                 , 255              )
+   TEST_LINE( Bin2W(Chr(255)+Chr(255))        , 65535            )
+   TEST_LINE( Bin2W(Chr(0))                   , 0                )
+   TEST_LINE( Bin2W(Chr(0)+Chr(0))            , 0                )
+   TEST_LINE( Bin2W("A")                      , 65               )
+   TEST_LINE( Bin2W("ABC")                    , 16961            )
 
-   /* BIN2L() */
+   /* Bin2L() */
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   TEST_LINE( BIN2L()                                    , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( Bin2L()                                    , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   TEST_LINE( BIN2L(100)                                 , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
-   TEST_LINE( BIN2L("")                                  , 0                ) /* Bug in CA-Cl*pper, it will return trash */
+   TEST_LINE( Bin2L(100)                                 , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   TEST_LINE( Bin2L("")                                  , 0                ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( BIN2L("ABCD")                              , 1145258561       )
-   TEST_LINE( BIN2L("DCBA")                              , 1094861636       )
+   TEST_LINE( Bin2L("ABCD")                              , 1145258561       )
+   TEST_LINE( Bin2L("DCBA")                              , 1094861636       )
 #ifndef __CLIPPER__
-   TEST_LINE( BIN2L(Chr(255))                            , 255              ) /* Bug in CA-Cl*pper, it will return trash */
+   TEST_LINE( Bin2L(Chr(255))                            , 255              ) /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( BIN2L(Chr(255)+Chr(255)+Chr(255))          , 16777215         )
-   TEST_LINE( BIN2L(Chr(255)+Chr(255)+Chr(255)+Chr(255)) , -1               )
-   TEST_LINE( BIN2L(Chr(0)+Chr(0)+Chr(0))                , 0                )
-   TEST_LINE( BIN2L(Chr(0)+Chr(0)+Chr(0)+Chr(0))         , 0                )
-   TEST_LINE( BIN2L("ABC")                               , 4407873          )
-   TEST_LINE( BIN2L("ABCDE")                             , 1145258561       )
+   TEST_LINE( Bin2L(Chr(255)+Chr(255)+Chr(255))          , 16777215         )
+   TEST_LINE( Bin2L(Chr(255)+Chr(255)+Chr(255)+Chr(255)) , -1               )
+   TEST_LINE( Bin2L(Chr(0)+Chr(0)+Chr(0))                , 0                )
+   TEST_LINE( Bin2L(Chr(0)+Chr(0)+Chr(0)+Chr(0))         , 0                )
+   TEST_LINE( Bin2L("ABC")                               , 4407873          )
+   TEST_LINE( Bin2L("ABCDE")                             , 1145258561       )
 
-   /* I2BIN() */
+   /* I2Bin() */
 
 #ifndef __XPP__
-   TEST_LINE( I2BIN()                         , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2Bin()                         , ""+Chr(0)+""+Chr(0)+"" )
 #endif
-   TEST_LINE( I2BIN(""     )                  , ""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( I2BIN(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( I2BIN(16961  )                  , "AB"                   )
-   TEST_LINE( I2BIN(16706  )                  , "BA"                   )
-   TEST_LINE( I2BIN(255    )                  , "ÿ"+Chr(0)+""          )
-   TEST_LINE( I2BIN(-1     )                  , "ÿÿ"                   )
-   TEST_LINE( I2BIN(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( I2BIN(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( I2BIN(65     )                  , "A"+Chr(0)+""          )
-   TEST_LINE( I2BIN(16961  )                  , "AB"                   )
+   TEST_LINE( I2Bin(""     )                  , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2Bin(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2Bin(16961  )                  , "AB"                   )
+   TEST_LINE( I2Bin(16706  )                  , "BA"                   )
+   TEST_LINE( I2Bin(255    )                  , "ÿ"+Chr(0)+""          )
+   TEST_LINE( I2Bin(-1     )                  , "ÿÿ"                   )
+   TEST_LINE( I2Bin(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2Bin(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
+   TEST_LINE( I2Bin(65     )                  , "A"+Chr(0)+""          )
+   TEST_LINE( I2Bin(16961  )                  , "AB"                   )
 
-   /* L2BIN() */
+   /* L2Bin() */
 
 #ifndef __XPP__
-   TEST_LINE( L2BIN()                         , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   TEST_LINE( L2Bin()                         , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
 #endif
-   TEST_LINE( L2BIN("")                       , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
-   TEST_LINE( L2BIN(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
-   TEST_LINE( L2BIN(1145258561 )              , "ABCD"                                      )
-   TEST_LINE( L2BIN(1094861636 )              , "DCBA"                                      )
-   TEST_LINE( L2BIN(255        )              , "ÿ"+Chr(0)+""+Chr(0)+""+Chr(0)+""           )
-   TEST_LINE( L2BIN(16777215   )              , "ÿÿÿ"+Chr(0)+""                             )
-   TEST_LINE( L2BIN(-1         )              , Chr(255)+Chr(255)+Chr(255)+Chr(255)         )
-   TEST_LINE( L2BIN(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
-   TEST_LINE( L2BIN(0          )              , Chr(0)+Chr(0)+Chr(0)+Chr(0)                 )
-   TEST_LINE( L2BIN(4407873    )              , "ABC"+Chr(0)+""                             )
-   TEST_LINE( L2BIN(1145258561 )              , "ABCD"                                      )
+   TEST_LINE( L2Bin("")                       , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   TEST_LINE( L2Bin(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   TEST_LINE( L2Bin(1145258561 )              , "ABCD"                                      )
+   TEST_LINE( L2Bin(1094861636 )              , "DCBA"                                      )
+   TEST_LINE( L2Bin(255        )              , "ÿ"+Chr(0)+""+Chr(0)+""+Chr(0)+""           )
+   TEST_LINE( L2Bin(16777215   )              , "ÿÿÿ"+Chr(0)+""                             )
+   TEST_LINE( L2Bin(-1         )              , Chr(255)+Chr(255)+Chr(255)+Chr(255)         )
+   TEST_LINE( L2Bin(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   TEST_LINE( L2Bin(0          )              , Chr(0)+Chr(0)+Chr(0)+Chr(0)                 )
+   TEST_LINE( L2Bin(4407873    )              , "ABC"+Chr(0)+""                             )
+   TEST_LINE( L2Bin(1145258561 )              , "ABCD"                                      )
 
 #ifndef __XPP__
 
-   /* __COPYFILE() */
+   /* __CopyFile() */
 
    FClose(FCreate("$$COPYFR.TMP"))
 
@@ -819,32 +819,32 @@ PROCEDURE Main_MISC()
 
 #ifndef __XPP__
 
-   /* __RUN() */
+   /* __Run() */
 
    /* NOTE: Only error cases are tested. */
 
-   TEST_LINE( __RUN()                         , NIL              )
-   TEST_LINE( __RUN( NIL )                    , NIL              )
-   TEST_LINE( __RUN( 10 )                     , NIL              )
+   TEST_LINE( __Run()                         , NIL              )
+   TEST_LINE( __Run( NIL )                    , NIL              )
+   TEST_LINE( __Run( 10 )                     , NIL              )
 
 #endif /* __XPP__ */
 
-   /* MEMVARBLOCK() */
+   /* MemVarBlock() */
 
-   TEST_LINE( MEMVARBLOCK()                   , NIL             )
-   TEST_LINE( MEMVARBLOCK( NIL )              , NIL             )
-   TEST_LINE( MEMVARBLOCK( 100 )              , NIL             )
-   TEST_LINE( MEMVARBLOCK( "mxNotHere" )      , NIL             )
-   TEST_LINE( MEMVARBLOCK( "mcString" )       , "{||...}"       )
+   TEST_LINE( MemVarBlock()                   , NIL             )
+   TEST_LINE( MemVarBlock( NIL )              , NIL             )
+   TEST_LINE( MemVarBlock( 100 )              , NIL             )
+   TEST_LINE( MemVarBlock( "mxNotHere" )      , NIL             )
+   TEST_LINE( MemVarBlock( "mcString" )       , "{||...}"       )
 
-   /* Defines for HARDCR() and MEMOTRAN() */
+   /* Defines for HardCR() and MemoTran() */
 
    #define SO Chr( 141 )
    #define NU Chr( 0 )
    #define LF Chr( 10 )
    #define CR Chr( 13 )
 
-   /* HARDCR() */
+   /* HardCR() */
 
 #ifndef __XPP__
    TEST_LINE( HardCR()                                                      , ""                                                                                 )
@@ -857,7 +857,7 @@ PROCEDURE Main_MISC()
    TEST_LINE( HardCR("H"+SO+LF+"P"+SO+LF+"W"+SO+"M")                        , "H"+Chr(13)+""+Chr(10)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"                                )
    TEST_LINE( HardCR("H"+NU+"B"+SO+LF+NU+"P"+SO+LF+"W"+SO+"M"+NU)           , "H"+Chr(0)+"B"+Chr(13)+""+Chr(10)+""+Chr(0)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"+Chr(0)+"" )
 
-   /* MEMOTRAN() */
+   /* MemoTran() */
 
 #ifndef __XPP__
    TEST_LINE( MemoTran()                                                    , ""                                                 )
@@ -898,7 +898,7 @@ PROCEDURE Main_MISC()
 
 #ifdef __HARBOUR__
 
-   /* HB_FNAMESPLIT(), HB_FNAMEMERGE() */
+   /* hb_FNameSplit(), hb_FNameMerge() */
 
    TEST_LINE( TESTFNAME( ""                            ) , ";;;;"                                                                    )
    TEST_LINE( TESTFNAME( "                           " ) , ";;;;"                                                                    )
@@ -1013,57 +1013,57 @@ PROCEDURE Main_MISC()
 
 #endif
 
-   /* MLCTOPOS() */
+   /* MLCToPos() */
 
 #ifdef __HARBOUR__
-   cEOL := Set( _SET_EOL, CHR(13) + CHR( 10 ) )
+   cEOL := Set( _SET_EOL, Chr(13) + Chr( 10 ) )
 #endif
 
-   TEST_LINE( MLCTOPOS( 'A message from me', 10, 2, 0 )                                , 11 )
-   TEST_LINE( MLCTOPOS( 'A message from me', 5, 2, 0, 4, .F. )                         ,  6 )
-   TEST_LINE( MLCTOPOS( 'A'+CHR(9)+'message'+CHR(9)+'from'+CHR(9)+'me', 10, 2, 0, 8 )  ,  3 )
-   TEST_LINE( MLCTOPOS( 'abcd efg hijk lm nopqr stu vwxyz', 5, 3, 0 )                  , 10 )
-   TEST_LINE( MLCTOPOS( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0 )                  , 10 )
-   TEST_LINE( MLCTOPOS( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0,, .F. )            ,  9 )
-   TEST_LINE( MLCTOPOS( 'A message from our me', 9, 2, 0 )                             , 11 )
-   TEST_LINE( MLCTOPOS( 'A message  from our me', 9, 2, 0 )                            , 11 )
-   TEST_LINE( MLCTOPOS( 'A message'+CHR(9)+'from me', 10, 2, 0 )                       , 11 )
-   TEST_LINE( MLCTOPOS( 'A message from me', 9, 2, 0,, .F. )                           , 10 )
-   TEST_LINE( MLCTOPOS( 'A message  from me', 9, 2, 0,, .F. )                          , 10 )
-   TEST_LINE( MLCTOPOS( 'A message'+CHR(141)+'from me', 10, 2, 0 )                     ,  3 )
-   TEST_LINE( MLCTOPOS( 'A message'+CHR(141)+'from me', 9, 2, 0 )                      ,  3 )
-   TEST_LINE( MLCTOPOS( 'A message'+CHR(141)+'from me', 10, 2, 0,, .F. )               , 11 )
-   TEST_LINE( MLCTOPOS( 'A message'+CHR(141)+'from me', 9, 2, 0,, .F. )                , 10 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 0 )                                 ,  1 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 8 )                                 ,  9 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 9 )                                 , 10 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 10 )                                , 11 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 11 )                                , 12 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 360 )                               , 17 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 0,, .F. )                           ,  1 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 8,, .F. )                           ,  9 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 9,, .F. )                           , 10 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 10,, .F. )                          , 11 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 11,, .F. )                          , 12 )
-   TEST_LINE( MLCTOPOS( ' message from me', 10, 1, 360,, .F. )                         , 17 )
-   TEST_LINE( MLCTOPOS( ' message'+CHR(9)+'from me', 10, 1, 11,, .T. )                 ,  9 )
-   TEST_LINE( MLCTOPOS( ' message'+CHR(9)+'from me', 10, 1, 11,, .F. )                 ,  9 )
-   TEST_LINE( MLCTOPOS( ' message'+CHR(9)+'from me', 10, 2, 11 )                       , 17 )
-   TEST_LINE( MLCTOPOS( ' message'+CHR(9)+'from me', 10, 1, 15,, .T. )                 , 13 )
-   TEST_LINE( MLCTOPOS( ' message'+CHR(9)+'from me', 10, 1, 15,, .F. )                 , 13 )
-   TEST_LINE( MLCTOPOS( CHR(13)+CHR(10)+' message'+CHR(9)+'from me', 10, 1, 15,, .F. ) ,  1 )
-   TEST_LINE( MLCTOPOS( CHR(13)+CHR(10)+' message'+CHR(9)+'from me', 10, 1, 15,, .T. ) ,  1 )
-   TEST_LINE( MLCTOPOS( 'A '+CHR(13)+CHR(10)+'message from me', 9, 2, 0 )              ,  5 )
-   TEST_LINE( MLCTOPOS( 'A '+CHR(141)+CHR(10)+'message from me', 9, 2, 0 )             , 13 )
-   TEST_LINE( MLCTOPOS( 'A'+CHR(141)+CHR(10)+'message from me', 9, 2, 0 )              , 12 )
-   TEST_LINE( MLCTOPOS( 'A'+CHR(141)+'message from me', 9, 2, 0 )                      , 11 )
-   TEST_LINE( MLCTOPOS( 'A'+CHR(13)+'message from me', 9, 2, 0 )                       , 11 )
-   TEST_LINE( MLCTOPOS( 'A'+CHR(10)+'message from me', 9, 2, 0 )                       , 11 )
-   TEST_LINE( MLCTOPOS( 'A '+CHR(13)+'message from me', 9, 2, 0 )                      ,  3 )
-   TEST_LINE( MLCTOPOS( 'A '+CHR(10)+'message from me', 9, 2, 0 )                      ,  3 )
-   TEST_LINE( MLCTOPOS( 'A message from me', 10, 7, 0 )                                , 18 )
-   TEST_LINE( MLCTOPOS( , , ,  )                                                       ,  1 )
-   TEST_LINE( MLCTOPOS( , .T., ,  )                                                    ,  1 )
+   TEST_LINE( MLCToPos( 'A message from me', 10, 2, 0 )                                , 11 )
+   TEST_LINE( MLCToPos( 'A message from me', 5, 2, 0, 4, .F. )                         ,  6 )
+   TEST_LINE( MLCToPos( 'A'+Chr(9)+'message'+Chr(9)+'from'+Chr(9)+'me', 10, 2, 0, 8 )  ,  3 )
+   TEST_LINE( MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 5, 3, 0 )                  , 10 )
+   TEST_LINE( MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0 )                  , 10 )
+   TEST_LINE( MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0,, .F. )            ,  9 )
+   TEST_LINE( MLCToPos( 'A message from our me', 9, 2, 0 )                             , 11 )
+   TEST_LINE( MLCToPos( 'A message  from our me', 9, 2, 0 )                            , 11 )
+   TEST_LINE( MLCToPos( 'A message'+Chr(9)+'from me', 10, 2, 0 )                       , 11 )
+   TEST_LINE( MLCToPos( 'A message from me', 9, 2, 0,, .F. )                           , 10 )
+   TEST_LINE( MLCToPos( 'A message  from me', 9, 2, 0,, .F. )                          , 10 )
+   TEST_LINE( MLCToPos( 'A message'+Chr(141)+'from me', 10, 2, 0 )                     ,  3 )
+   TEST_LINE( MLCToPos( 'A message'+Chr(141)+'from me', 9, 2, 0 )                      ,  3 )
+   TEST_LINE( MLCToPos( 'A message'+Chr(141)+'from me', 10, 2, 0,, .F. )               , 11 )
+   TEST_LINE( MLCToPos( 'A message'+Chr(141)+'from me', 9, 2, 0,, .F. )                , 10 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 0 )                                 ,  1 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 8 )                                 ,  9 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 9 )                                 , 10 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 10 )                                , 11 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 11 )                                , 12 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 360 )                               , 17 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 0,, .F. )                           ,  1 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 8,, .F. )                           ,  9 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 9,, .F. )                           , 10 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 10,, .F. )                          , 11 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 11,, .F. )                          , 12 )
+   TEST_LINE( MLCToPos( ' message from me', 10, 1, 360,, .F. )                         , 17 )
+   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 11,, .T. )                 ,  9 )
+   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 11,, .F. )                 ,  9 )
+   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 2, 11 )                       , 17 )
+   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 15,, .T. )                 , 13 )
+   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 15,, .F. )                 , 13 )
+   TEST_LINE( MLCToPos( Chr(13)+Chr(10)+' message'+Chr(9)+'from me', 10, 1, 15,, .F. ) ,  1 )
+   TEST_LINE( MLCToPos( Chr(13)+Chr(10)+' message'+Chr(9)+'from me', 10, 1, 15,, .T. ) ,  1 )
+   TEST_LINE( MLCToPos( 'A '+Chr(13)+Chr(10)+'message from me', 9, 2, 0 )              ,  5 )
+   TEST_LINE( MLCToPos( 'A '+Chr(141)+Chr(10)+'message from me', 9, 2, 0 )             , 13 )
+   TEST_LINE( MLCToPos( 'A'+Chr(141)+Chr(10)+'message from me', 9, 2, 0 )              , 12 )
+   TEST_LINE( MLCToPos( 'A'+Chr(141)+'message from me', 9, 2, 0 )                      , 11 )
+   TEST_LINE( MLCToPos( 'A'+Chr(13)+'message from me', 9, 2, 0 )                       , 11 )
+   TEST_LINE( MLCToPos( 'A'+Chr(10)+'message from me', 9, 2, 0 )                       , 11 )
+   TEST_LINE( MLCToPos( 'A '+Chr(13)+'message from me', 9, 2, 0 )                      ,  3 )
+   TEST_LINE( MLCToPos( 'A '+Chr(10)+'message from me', 9, 2, 0 )                      ,  3 )
+   TEST_LINE( MLCToPos( 'A message from me', 10, 7, 0 )                                , 18 )
+   TEST_LINE( MLCToPos( , , ,  )                                                       ,  1 )
+   TEST_LINE( MLCToPos( , .T., ,  )                                                    ,  1 )
 
 #ifdef __HARBOUR__
    Set( _SET_EOL, cEOL )
@@ -1139,7 +1139,7 @@ STATIC FUNCTION HB_TString()
       oClass:AddInline( ".AND.", {| self, cTest | ::cValue + " AND " + cTest } )
       oClass:AddInline( ".OR." , {| self, cTest | ::cValue + " OR " + cTest } )
 
-      oClass:AddInline( "HasMsg", {| self, cMsg | HB_SYMBOL_UNUSED( self ), __ObjHasMsg( QSelf(), cMsg ) } )
+      oClass:AddInline( "HasMsg", {| self, cMsg | HB_SYMBOL_UNUSED( self ), __objHasMsg( QSelf(), cMsg ) } )
 
       oClass:Create()
    ENDIF
@@ -1202,9 +1202,9 @@ STATIC FUNCTION TFORNEXTXF( xFrom, xTo, xStep )
 STATIC FUNCTION TESTFNAME( cFull )
    LOCAL cPath, cName, cExt, cDrive
 
-   HB_FNameSplit( RTrim( cFull ), @cPath, @cName, @cExt, @cDrive )
+   hb_FNameSplit( RTrim( cFull ), @cPath, @cName, @cExt, @cDrive )
 
-   RETURN HB_FNameMerge( cPath, cName, cExt ) + ";" + ;
+   RETURN hb_FNameMerge( cPath, cName, cExt ) + ";" + ;
           cPath + ";" +;
           cName + ";" +;
           cExt + ";" +;

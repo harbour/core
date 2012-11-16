@@ -205,7 +205,7 @@ METHOD Clone() CLASS TXmlIterator
 
    LOCAL oRet
 
-   oRet := TXmlIterator():New( ::oNodeTop )
+   oRet := TXMLIterator():New( ::oNodeTop )
    oRet:cName := ::cName
    oRet:cAttribute := ::cAttribute
    oRet:cValue := ::cValue
@@ -435,13 +435,13 @@ METHOD Write( fHandle, nStyle ) CLASS TXMLDocument
 
 METHOD FindFirst( cName, cAttrib, cValue, cData ) CLASS TXMLDocument
 
-   ::oIterator := TXmlIteratorScan():New( ::oRoot )
+   ::oIterator := TXMLIteratorScan():New( ::oRoot )
 
    RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
 
 METHOD FindFirstRegex( cName, cAttrib, cValue, cData ) CLASS TXMLDocument
 
-   ::oIterator := TXmlIteratorRegex():New( ::oRoot )
+   ::oIterator := TXMLIteratorRegex():New( ::oRoot )
 
    RETURN ::oIterator:Find( cName, cAttrib, cValue, cData )
 

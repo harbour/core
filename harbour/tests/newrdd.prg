@@ -257,7 +257,7 @@ PROCEDURE Main()
    ? "NEWRDD->( dbDelete() )"
    ? "? NEWRDD->( Deleted() )"
    ? "NEWRDD->( dbRLock( 3 ) )"
-   SELECT( "TESTDBF" )
+   Select( "TESTDBF" )
    SET FILTER TO TESTDBF->SALARY > 120000
    TESTDBF->( dbGoTop() )
    WHILE ! TESTDBF->( Eof() )
@@ -356,7 +356,7 @@ PROCEDURE Main()
    CLS
 
    NEWRDD->( dbCloseArea() )
-   SELECT( "TESTDBF" )
+   Select( "TESTDBF" )
    SORT ON FIRST /DC, AGE /D TO newrdd
 
    dbUseArea( .T., "DBF", "newrdd", "NEWRDD", .F., .F. )

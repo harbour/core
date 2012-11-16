@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * WIN_BMP() class
+ * win_BMP() class
  *
  * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
  * www - http://harbour-project.org

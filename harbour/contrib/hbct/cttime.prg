@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * TIMETOSEC(), SECTOTIME(), MILLISEC()
+ * TimeToSec(), SecToTime(), Millisec()
  *
  * Copyright 2003 Piero Vincenzo Lupano <pierovincenzo1956@supereva.it>
  * Copyright 2003 Przemyslaw Czerpak <druzus@acn.waw.pl>

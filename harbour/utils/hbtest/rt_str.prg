@@ -63,12 +63,12 @@ PROCEDURE Main_STR()
    LOCAL l64
 
 #ifdef __HARBOUR__
-   l64 := hb_version( HB_VERSION_BITWIDTH ) >= 64
+   l64 := hb_Version( HB_VERSION_BITWIDTH ) >= 64
 #else
    l64 := .F.
 #endif
 
-   /* VAL() */
+   /* Val() */
 
    TEST_LINE( Val( NIL )                      , "E 1 BASE 1098 Argument error (VAL) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( Val( 10 )                       , "E 1 BASE 1098 Argument error (VAL) OS:0 #:0 A:1:N:10 F:S" )
@@ -181,7 +181,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Str(Val("2.00000000001"))       , "2.00000000001"                        )
    TEST_LINE( Str(Val("1HELLO."))             , "      1"                              )
 
-   /* CHR() */
+   /* Chr() */
 
    TEST_LINE( Chr( NIL )                      , "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( Chr( "A" )                      , "E 1 BASE 1104 Argument error (CHR) OS:0 #:0 A:1:C:A F:S" )
@@ -243,7 +243,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Chr( 100000.0 )                 , " "                                    )
 #endif
 
-   /* ASC() */
+   /* Asc() */
 
    TEST_LINE( Asc( NIL )                      , "E 1 BASE 1107 Argument error (ASC) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( Asc( 100 )                      , "E 1 BASE 1107 Argument error (ASC) OS:0 #:0 A:1:N:100 F:S" )
@@ -347,7 +347,7 @@ PROCEDURE Main_STR()
    TEST_LINE( IsLower( "™" )                  , .F.              )
    TEST_LINE( IsLower( "”" )                  , .F.              )
 
-   /* ALLTRIM() */
+   /* AllTrim() */
 
 #ifdef HB_COMPAT_C53
    /* These lines will cause CA-Cl*pper 5.2e to trash memory and later crash, it was fixed in 5.3 */
@@ -373,7 +373,7 @@ PROCEDURE Main_STR()
    TEST_LINE( AllTrim( "A"+Chr(13))           , "A"+Chr(13)+""   )
    TEST_LINE( AllTrim( "  "+Chr(0)+"ABC"+Chr(0)+"  "), ""+Chr(0)+"ABC"+Chr(0)+"" )
 
-   /* TRIM() */
+   /* Trim() */
 
    TEST_LINE( Trim( 100 )                     , "E 1 BASE 1100 Argument error (TRIM) OS:0 #:0 A:1:N:100 F:S" )
    TEST_LINE( Trim( NIL )                     , "E 1 BASE 1100 Argument error (TRIM) OS:0 #:0 A:1:U:NIL F:S" )
@@ -396,7 +396,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Trim( "A"+Chr(13))              , "A"+Chr(13)+""            )
    TEST_LINE( Trim( "  "+Chr(0)+"ABC"+Chr(0)+"  "), "  "+Chr(0)+"ABC"+Chr(0)+"" )
 
-   /* RTRIM() */
+   /* RTrim() */
 
    TEST_LINE( RTrim( 100 )                    , "E 1 BASE 1100 Argument error (TRIM) OS:0 #:0 A:1:N:100 F:S" )
    TEST_LINE( RTrim( NIL )                    , "E 1 BASE 1100 Argument error (TRIM) OS:0 #:0 A:1:U:NIL F:S" )
@@ -419,7 +419,7 @@ PROCEDURE Main_STR()
    TEST_LINE( RTrim( "A"+Chr(13))             , "A"+Chr(13)+""            )
    TEST_LINE( RTrim( "  "+Chr(0)+"ABC"+Chr(0)+"  "), "  "+Chr(0)+"ABC"+Chr(0)+"" )
 
-   /* LTRIM() */
+   /* LTrim() */
 
    TEST_LINE( LTrim( 100 )                    , "E 1 BASE 1101 Argument error (LTRIM) OS:0 #:0 A:1:N:100 F:S" )
    TEST_LINE( LTrim( NIL )                    , "E 1 BASE 1101 Argument error (LTRIM) OS:0 #:0 A:1:U:NIL F:S" )
@@ -442,9 +442,9 @@ PROCEDURE Main_STR()
    TEST_LINE( LTrim( "A"+Chr(13))             , "A"+Chr(13)+""            )
    TEST_LINE( LTrim( "  "+Chr(0)+"ABC"+Chr(0)+"  "), ""+Chr(0)+"ABC"+Chr(0)+"  " )
 
-   /* STRTRAN() */
+   /* StrTran() */
 
-   /* TODO: STRTRAN() */
+   /* TODO: StrTran() */
 
 /* NOTE: It seems like CA-Cl*pper 5.x is not aware of the BREAK return value of
          the error handler, so the error is thrown, but we can't catch it.
@@ -461,7 +461,7 @@ PROCEDURE Main_STR()
    TEST_LINE( StrTran( "AA", "A", "1" )       , "11" )
    TEST_LINE( StrTran( "AA", "A", "1", "2" )  , "11" )
 
-   /* UPPER() */
+   /* Upper() */
 
    TEST_LINE( Upper( scString )               , "HELLO"                                )
 #ifdef __HARBOUR__
@@ -480,7 +480,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Upper( " µ" )                   , " µ"                                   )
    TEST_LINE( Upper( "H rbor 8-) µ" )         , "H RBOR 8-) µ"                         )
 
-   /* LOWER() */
+   /* Lower() */
 
    TEST_LINE( Lower( scString )               , "hello"                                )
 #ifdef __HARBOUR__
@@ -499,7 +499,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Lower( " µ" )                   , " µ"                                   )
    TEST_LINE( Lower( "H rbor 8-) µ" )         , "h rbor 8-) µ"                         )
 
-   /* AT() */
+   /* At() */
 
    TEST_LINE( At(90, 100)                     , "E 1 BASE 1108 Argument error (AT) OS:0 #:0 A:2:N:90;N:100 F:S" )
    TEST_LINE( At("", 100)                     , "E 1 BASE 1108 Argument error (AT) OS:0 #:0 A:2:C:;N:100 F:S" )
@@ -533,7 +533,7 @@ PROCEDURE Main_STR()
    TEST_LINE( At("ABCDEFG", "ABCDEF")         , 0                )
    TEST_LINE( At("FI", "ABCDEF")              , 0                )
 
-   /* RAT() */
+   /* RAt() */
 
    TEST_LINE( RAt(90, 100)                    , 0                )
    TEST_LINE( RAt("", 100)                    , 0                )
@@ -559,7 +559,7 @@ PROCEDURE Main_STR()
    TEST_LINE( RAt("ABCDEFG", "ABCDEF")        , 0                )
    TEST_LINE( RAt("FI", "ABCDEF")             , 0                )
 
-   /* REPLICATE() */
+   /* Replicate() */
 
 #ifdef __HARBOUR__
    IF l64
@@ -583,7 +583,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Replicate("HE", -3 )            , "" )
    TEST_LINE( Replicate("H"+Chr(0), 2 )       , "H"+Chr(0)+"H"+Chr(0)+"" )
 
-   /* SPACE() */
+   /* Space() */
 
    TEST_LINE( Space( "A" )                    , "E 1 BASE 1105 Argument error (SPACE) OS:0 #:0 A:1:C:A F:S" )
    TEST_LINE( Space( 0 )                      , "" )
@@ -593,7 +593,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Space( 10.5 )                   , "          " )
    TEST_LINE( Space( 10.7 )                   , "          " )
 
-   /* SUBSTR() */
+   /* SubStr() */
 
    TEST_LINE( SubStr(100     , 0, -1)         , "E 1 BASE 1110 Argument error (SUBSTR) OS:0 #:0 A:3:N:100;N:0;N:-1 F:S" )
    TEST_LINE( SubStr("abcdef", 1, "a")        , "E 1 BASE 1110 Argument error (SUBSTR) OS:0 #:0 A:3:C:abcdef;N:1;C:a F:S" )
@@ -634,7 +634,7 @@ PROCEDURE Main_STR()
    TEST_LINE( SubStr("abc" + Chr(0) + "def", 4, 1) , "" + Chr(0) + "" )
    TEST_LINE( SubStr("abc" + Chr(0) + "def", 5, 1) , "d" )
 
-   /* LEFT() */
+   /* Left() */
 
    TEST_LINE( Left(100     , -10)                , "E 1 BASE 1124 Argument error (LEFT) OS:0 #:0 A:2:N:100;N:-10 F:S" )
    TEST_LINE( Left("abcdef", "A")                , "E 1 BASE 1124 Argument error (LEFT) OS:0 #:0 A:2:C:abcdef;C:A F:S" )
@@ -645,7 +645,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Left("abcdef", 10)                 , "abcdef"         )
    TEST_LINE( Left("ab" + Chr(0) + "def", 5)     , "ab" + Chr(0) + "de" )
 
-   /* RIGHT() */
+   /* Right() */
 
    TEST_LINE( Right(100     , -10)               , ""               )
    TEST_LINE( Right("abcdef", "A")               , ""               )
@@ -656,7 +656,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Right("abcdef", 10)                , "abcdef"         )
    TEST_LINE( Right("ab" + Chr(0) + "def", 5)    , "b" + Chr(0) + "def" )
 
-   /* PADR() */
+   /* PadR() */
 
    TEST_LINE( Pad(NIL, 5)                        , ""               )
    TEST_LINE( Pad(.T., 5)                        , ""               )
@@ -684,7 +684,7 @@ PROCEDURE Main_STR()
    TEST_LINE( Pad("abcdef", 10, "1")             , "abcdef1111"     )
    TEST_LINE( Pad("abcdef", 10, "12")            , "abcdef1111"     )
 
-   /* PADR() */
+   /* PadR() */
 
    TEST_LINE( PadR(NIL, 5)                       , ""               )
    TEST_LINE( PadR(.T., 5)                       , ""               )
@@ -711,7 +711,7 @@ PROCEDURE Main_STR()
    TEST_LINE( PadR("abcdef", 10, "1")            , "abcdef1111"     )
    TEST_LINE( PadR("abcdef", 10, "12")           , "abcdef1111"     )
 
-   /* PADL() */
+   /* PadL() */
 
    TEST_LINE( PadL(NIL, 5)                       , ""               )
    TEST_LINE( PadL(.T., 5)                       , ""               )
@@ -738,7 +738,7 @@ PROCEDURE Main_STR()
    TEST_LINE( PadL("abcdef", 10, "1")            , "1111abcdef"     )
    TEST_LINE( PadL("abcdef", 10, "12")           , "1111abcdef"     )
 
-   /* PADC() */
+   /* PadC() */
 
    TEST_LINE( PadC(NIL, 5)                       , ""               )
    TEST_LINE( PadC(.T., 5)                       , ""               )
@@ -766,7 +766,7 @@ PROCEDURE Main_STR()
    TEST_LINE( PadC("abcdef", 10, "1")            , "11abcdef11"     )
    TEST_LINE( PadC("abcdef", 10, "12")           , "11abcdef11"     )
 
-   /* STUFF() */
+   /* Stuff() */
 
 #ifndef __XPP__
    TEST_LINE( Stuff()                                          , ""                        )

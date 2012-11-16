@@ -32,7 +32,7 @@ FUNCTION ft_SInkey( waittime )
       nKey := Inkey()
 
       /* dig this... if you pass Inkey( NIL ), it is identical to Inkey( 0 )!
-         therefore, I allow you to pass FT_SINKEY( NIL ) -- hence this mild bit
+         therefore, I allow you to pass ft_SInkey( NIL ) -- hence this mild bit
          of convolution */
 
    CASE waittime == NIL .AND. PCount() == 1

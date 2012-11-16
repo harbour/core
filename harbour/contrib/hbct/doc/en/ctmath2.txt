@@ -113,30 +113,30 @@
 
 /* $DOC$
    $NAME$
-      LOG10()
+      Log10()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Decadic logarithm of a number
    $SYNTAX$
-      LOG10( <nNumber> ) -> nLogarithm
+      Log10( <nNumber> ) -> nLogarithm
    $ARGUMENTS$
       <nNumber>             number to logarithm
    $RETURNS$
       <nLogarithm>          decadic logarithm of <nNumber>
    $DESCRIPTION$
-      The function LOG10() calculates the decadic logarithm of <nNumber>,
+      The function Log10() calculates the decadic logarithm of <nNumber>,
       i.e. 10^<nLogarithm> == <nNumber>.
    $EXAMPLES$
-      ? log10( 10.0 )         // --> 1.0
-      ? log10( Sqrt( 10.0 ) ) // --> 0.5
+      ? Log10( 10.0 )         // --> 1.0
+      ? Log10( Sqrt( 10.0 ) ) // --> 0.5
    $TESTS$
-      log10( 10.0 )         == 1.0
-      log10( Sqrt( 10.0 ) ) == 0.5
+      Log10( 10.0 )         == 1.0
+      Log10( Sqrt( 10.0 ) ) == 0.5
    $STATUS$
       Ready
    $COMPLIANCE$
-      LOG10() is compatible with CT3's LOG10().
+      Log10() is compatible with CT3's Log10().
    $PLATFORMS$
       All
    $FILES$

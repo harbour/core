@@ -137,7 +137,7 @@ PROCEDURE Main()
    WAIT
 
    ? "Show it - Please don't press any key except movement keys and ESC"
-   ? "          to exit from browse(), otherwise you will get an error"
+   ? "          to exit from Browse(), otherwise you will get an error"
    ? "          due to missing index support"
    WAIT
    Browse()

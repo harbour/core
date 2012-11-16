@@ -667,7 +667,7 @@ STATIC FUNCTION strvalue( c, l )
 STATIC PROCEDURE FWriteLine( nh, c )
 
    FWrite( nh, c + hb_eol() )
-   // HB_OutDebug( c + hb_eol() )
+   // hb_OutDebug( c + hb_eol() )
 
    RETURN
 

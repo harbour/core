@@ -154,7 +154,7 @@ FUNCTION ToChar( xTxt, cSeparator, lDebug )
    RETURN cOut
 
 //
-// <xItem> Debug ( <xItem> )
+// <xItem> Debug( <xItem> )
 //
 // Non-volatile debugging function showing contents of xItem and returing
 // passed argument.

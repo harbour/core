@@ -130,7 +130,7 @@
                every 2 seconds while indexing.
                The codeblock can return .T. to abort.   */
           INDEX ON First+LAST+LABEL1+LABEL2 TAG First
-          AdsClrCallBack()
+          AdsClrCallback()
           RETURN
 
        FUNCTION outputstuff( nPercent )  /* The "callback" function */

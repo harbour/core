@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *   CT3 file functions:
- *    FILECOPY(), FILECOPEN(), FILECCLOSE(), FILEAPPEND()
+ *    FileCopy(), FileCOpen(), FileCCLose(), FileAppend()
  *
  *    Author...: Frederic J. Bell
  *    Dated....: Jun,17 94

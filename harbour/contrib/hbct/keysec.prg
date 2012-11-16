@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 Miscellaneous functions: - KEYSEC()
+ *   CT3 Miscellaneous functions: - KeySec()
  *
  * Copyright 2005 Pavel Tsarenko - <tpe2@mail.ru>
  * www - http://harbour-project.org

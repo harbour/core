@@ -79,7 +79,7 @@ PROCEDURE Main( ... )
       ENDIF
    NEXT
 
-   oRef := hbFormatCode():New( aParams, hb_FNameMerge( hb_DirBase(), "hbformat.ini" ) )
+   oRef := HBFormatCode():New( aParams, hb_FNameMerge( hb_DirBase(), "hbformat.ini" ) )
    IF oRef:nErr > 0
       OutStd( "Initialization error", hb_ntos( oRef:nErr ), iif( oRef:nLineErr == 0, "in parameter", "on line " + hb_ntos( oRef:nLineErr ) ), ":", oRef:cLineErr, hb_eol() )
       RETURN

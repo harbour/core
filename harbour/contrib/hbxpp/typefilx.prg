@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * XPP compatible _Typefile() function
+ * XPP compatible _TypeFile() function
  *
  * Copyright 1999-2007 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

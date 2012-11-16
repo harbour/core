@@ -1020,7 +1020,7 @@ FUNCTION Sp_Init()
 //   Returns:  nStatus      -  0 if successful
 //                            -1 DBF file does not exist
 //                            -2 Field WORD does not exist in DBF
-//                            >0 File error occurred, see FERROR()
+//                            >0 File error occurred, see FError()
 
 FUNCTION DBF2Dic( cDbf, cDictionary, lTalk )
 

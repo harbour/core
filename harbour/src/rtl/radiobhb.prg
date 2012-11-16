@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * RADIOBUTTON() constructor function
+ * RadioButton() constructor function
  *
  * Copyright 2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

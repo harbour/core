@@ -55,7 +55,7 @@
 #include "directry.ch"
 
 #xtranslate SetNewValueReturnOld( <p>, <v> ) => LOCAL xOld, xOld := <p>, iif( <v> != NIL, <p> := <v>,  ), xOld
-#xtranslate DEFAULT( <p>, <v> ) => ( <p> := iif( <p> == NIL, <v>, <p> ) )
+#xtranslate Default( <p>, <v> ) => ( <p> := iif( <p> == NIL, <v>, <p> ) )
 
 
 MEMVAR _COOKIE, _SESSION, _REQUEST, _SERVER
@@ -99,7 +99,7 @@ CLASS uhttpd_Session
    METHOD GC( nMaxLifeTime )
 
    METHOD SessionContainer( hHash )  INLINE SetNewValueReturnOld( _SESSION, hHash )
-   METHOD Encode()              // INLINE HB_Serialize( _SESSION )
+   METHOD Encode()              // INLINE hb_Serialize( _SESSION )
    METHOD Decode()
 
    HIDDEN:
@@ -201,7 +201,7 @@ METHOD Start( cSID ) CLASS uhttpd_Session
       ::cSID := cSID
    ENDIF
 
-   // hb_toOutDebug( "cSID = %s, ::cSID = %s\n\r", cSID, ::cSID )
+   // hb_ToOutDebug( "cSID = %s, ::cSID = %s\n\r", cSID, ::cSID )
 
    // TraceLog( "Active Sessions : " + hb_CStr( ::nActiveSessions ) )
 
@@ -458,7 +458,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
          xValue := uhttpd_UrlDecode( aField[ 2 ] )
          // TraceLog( "SESSION: cName, xValue", cName, xValue )
 
-         // Tracelog( "cName, xValue", cName, xValue )
+         // TraceLog( "cName, xValue", cName, xValue )
 
          // is it an array entry?
          IF SubStr( cName, Len( cName ) - 1 ) == "[]"
@@ -468,7 +468,7 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
             aHashVars[ cName ] := { xValue }
 
             // aHashVars:Keys( cName )
-            // __ObjSendMsg( aHashVars, "_" + cName, { xValue } )  // variant from Ron to handle 1 lenght name
+            // __objSendMsg( aHashVars, "_" + cName, { xValue } )  // variant from Ron to handle 1 lenght name
 
          ELSE
             // aHashVars[ cName ] := xValue
@@ -476,9 +476,9 @@ METHOD GetSessionVars( aHashVars, cFields, cSeparator ) CLASS uhttpd_Session
             aHashVars[ cName ] := xValue
 
             // aHashVars:Keys( cName )
-            // __ObjSendMsg( aHashVars, "_" + cName, xValue )  // variant from Ron to handle 1 lenght name
+            // __objSendMsg( aHashVars, "_" + cName, xValue )  // variant from Ron to handle 1 lenght name
          ENDIF
-         // Tracelog( "aHashVars, cName, xValue", DumpValue( aHashVars ), cName, xValue )
+         // TraceLog( "aHashVars, cName, xValue", DumpValue( aHashVars ), cName, xValue )
       ELSE
          AAdd( aNotSessionFlds, aField )
       ENDIF
@@ -560,7 +560,7 @@ METHOD CheckSID( cSID, cCRCKey ) CLASS uhttpd_Session
    // Max Lenght must to be 10
    __defaultNIL( @cCRCKey, MY_CRCKEY )
 
-   // hb_toOutDebug( "cSID = %s, ::cSID = %s\n\r", hb_valtoexp( cSID ), hb_valtoexp( ::cSID ) )
+   // hb_ToOutDebug( "cSID = %s, ::cSID = %s\n\r", hb_ValToExp( cSID ), hb_ValToExp( ::cSID ) )
 
    IF ! Empty( cSID )
 
@@ -842,7 +842,7 @@ METHOD Decode( cData ) CLASS uhttpd_Session
          // TraceLog( "Decode - xVal - Array", xVal )
          // ::oCGI:ToLogFile( "Decode - xVal - Array = " + hb_CStr( xVal ) + ", Len = " + hb_CStr( Len( xVal ) ), "/pointtoit/tmp/log.txt" )
          FOR EACH aElem IN xVal
-            // ::oCGI:ToLogFile( "Decode - aElem = " + hb_CStr( hb_valtoexp( aElem ) ), "/pointtoit/tmp/log.txt" )
+            // ::oCGI:ToLogFile( "Decode - aElem = " + hb_CStr( hb_ValToExp( aElem ) ), "/pointtoit/tmp/log.txt" )
             _SESSION[ aElem[ 1 ] ] := aElem[ 2 ]
          NEXT
          EXIT

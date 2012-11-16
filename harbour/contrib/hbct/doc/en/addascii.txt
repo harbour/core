@@ -4,13 +4,13 @@
 
 /* $DOC$
    $NAME$
-      ADDASCII()
+      AddAscii()
    $CATEGORY$
       CT3 string functions
    $ONELINER$
       Add an integer value to an ascii value of a string
    $SYNTAX$
-      ADDASCII( <[@]cString>, <nValue>, [<nPosition>], [<lCarryOver>] ) --> cString
+      AddAscii( <[@]cString>, <nValue>, [<nPosition>], [<lCarryOver>] ) --> cString
    $ARGUMENTS$
       <[@]cString>   is the string that should be edited
       <nValue>       is a integer value that should be added to the
@@ -28,11 +28,11 @@
       using the CSetRef() function. The string must then be passed by
       reference [@].
    $DESCRIPTION$
-      ADDASCII() can be used to add or subtract integer values from
+      AddAscii() can be used to add or subtract integer values from
       ASCII values in a string. The new <lCarryOver> parameter allows
       to treat a string as an integer written to the base 256. Since
       <nValue> is limited to a signed long, only substrings 4 characters
-      long can be affected by one ADDASCII() call.
+      long can be affected by one AddAscii() call.
       If the length of <[@]cString> is smaller than <nPosition>, the
       string remains unchanged. The same happens, if uninterpretable
       parameters are passed to this function.
@@ -40,21 +40,21 @@
       // Add 32 to the ASCII value of the character at the last position
       // in the string
 
-      ? addascii( "SmitH", 32 ) // --> "Smith"
+      ? AddAscii( "SmitH", 32 ) // --> "Smith"
    $TESTS$
-      addascii( "0000", 1, 1 ) == "1000"
-      addascii( "0000", 1 ) == "0001"
-      addascii( "AAAA", -255, 1 ) == "BAAA"
-      addascii( "AAAA", -255 ) == "AAAB"
-      addascii( "AAAA", 1, 2, .T. ) == "ABAA"
-      addascii( "AAAA", 257, 2, .T. ) == "BBAA"
-      addascii( "AAAA", 257, 2, .F. ) == "ABAA"
-      addascii( "AAAA", 258,, .T. ) == "AABC"
-      addascii( "ABBA", -257, 3, .T. ) == "AAAA"
+      AddAscii( "0000", 1, 1 ) == "1000"
+      AddAscii( "0000", 1 ) == "0001"
+      AddAscii( "AAAA", -255, 1 ) == "BAAA"
+      AddAscii( "AAAA", -255 ) == "AAAB"
+      AddAscii( "AAAA", 1, 2, .T. ) == "ABAA"
+      AddAscii( "AAAA", 257, 2, .T. ) == "BBAA"
+      AddAscii( "AAAA", 257, 2, .F. ) == "ABAA"
+      AddAscii( "AAAA", 258,, .T. ) == "AABC"
+      AddAscii( "ABBA", -257, 3, .T. ) == "AAAA"
    $STATUS$
       Ready
    $COMPLIANCE$
-      ADDASCII() is compatible with CT3's ADDASCII().
+      AddAscii() is compatible with CT3's AddAscii().
       A new, 4th, parameter has been added who defaults to the original
       behaviour if omitted.
    $PLATFORMS$

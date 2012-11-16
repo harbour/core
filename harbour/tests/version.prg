@@ -12,7 +12,7 @@
 PROCEDURE Main()
 
    ? '"' + Version() + '"'
-   ? '"' + hb_compiler() + '"'
+   ? '"' + hb_Compiler() + '"'
    ? '"' + OS() + '"'
 
    RETURN

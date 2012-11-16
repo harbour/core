@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FT_ONTICK()
+ * ft_OnTick()
  *
  * Copyright 2011 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
@@ -55,7 +55,7 @@ THREAD STATIC t_nTickInterval := 0
 THREAD STATIC t_nLastCheck := 0
 THREAD STATIC t_hIdle
 
-STATIC PROCEDURE __FT_ONTICK()
+STATIC PROCEDURE __ft_OnTick()
 
    IF hb_MilliSeconds() >= ( t_nLastCheck + t_nTickInterval )
       t_nLastCheck := hb_MilliSeconds()
@@ -73,7 +73,7 @@ PROCEDURE ft_OnTick( bOnTick, nTickInterval )
       ENDIF
       t_nLastCheck := hb_MilliSeconds()
       IF Empty( t_hIdle )
-         t_hIdle := hb_idleAdd( {|| __FT_ONTICK() } )
+         t_hIdle := hb_idleAdd( {|| __ft_OnTick() } )
       ENDIF
    ELSE
       t_bOnTick := NIL

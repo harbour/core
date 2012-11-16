@@ -1185,7 +1185,7 @@ FUNCTION pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor,
    nNew := nTab
 
    cString := AllTrim( cString )
-   nTokens := numtoken( cString, cDelim )
+   nTokens := NumToken( cString, cDelim )
    nStart := 1
 
    IF nJustify == 1 .OR. nJustify == 4
@@ -1204,7 +1204,7 @@ FUNCTION pdfText( cString, nTop, nLeft, nLength, nTab, nJustify, cUnits, cColor,
    nI := 1
 
    WHILE nI <= nTokens
-      cToken := token( cString, cDelim, nI )
+      cToken := Token( cString, cDelim, nI )
       nTokenLen := pdfLen( cToken )
       nLen := Len( cToken )
 
@@ -1299,7 +1299,7 @@ STATIC FUNCTION pdfTextPrint( nI, nLeft, lParagraph, nJustify, nSpace, nNew, nLe
       nB := ( nLength - nLineLen + ( nFinish - nStart ) * nSpace ) / ( nFinish - nStart )
    ENDIF
    FOR nJ := nStart TO nFinish
-      cToken := token( cString, cDelim, nJ )
+      cToken := Token( cString, cDelim, nJ )
       IF lPrint
          // version 0.02
          pdfAtSay( cColor + cToken, pdfR2M( nRow + t_aReport[ PDFTOP ] ), nL, "M" )
@@ -1322,9 +1322,9 @@ STATIC FUNCTION pdfTextNextPara( cString, cDelim, nI )
    LOCAL nAt, cAt, nCRLF, nNew, nRat, nRet := 0
 
    // check if next spaces paragraph(s)
-   nAt := attoken( cString, cDelim, nI ) + Len( token( cString, cDelim, nI ) )
-   cAt := SubStr( cString, nAt, attoken( cString, cDelim, nI + 1 ) - nAt )
-   nCRLF := numat( Chr( 13 ) + Chr( 10 ), cAt )
+   nAt := atToken( cString, cDelim, nI ) + Len( Token( cString, cDelim, nI ) )
+   cAt := SubStr( cString, nAt, atToken( cString, cDelim, nI + 1 ) - nAt )
+   nCRLF := NumAt( Chr( 13 ) + Chr( 10 ), cAt )
    nRat := RAt( Chr( 13 ) + Chr( 10 ), cAt )
    nNew := Len( cAt ) - nRat - iif( nRat > 0, 1, 0 )
    IF nCRLF > 1 .OR. ( nCRLF == 1 .AND. nNew > 0 )
@@ -1369,7 +1369,7 @@ FUNCTION pdfOpenHeader( cFile )
          COPY File ( cFile ) TO temp.tmp
          cFile := "temp.tmp"
       ENDIF
-      // t_aReport[ HEADER ] := FT_RestArr( cFile, @nErrorCode )
+      // t_aReport[ HEADER ] := ft_RestArr( cFile, @nErrorCode )
       t_aReport[ HEADER ] := File2Array( cFile )
    ELSE
       t_aReport[ HEADER ] := {}
@@ -1897,7 +1897,7 @@ FUNCTION pdfTIFFInfo( cFile )
             --nCount
          ENDIF
          // ? "Tag"
-         // ?? " " + padr( nTag, 10 )
+         // ?? " " + PadR( nTag, 10 )
          // cTag := ""
          DO CASE
          CASE nTag == 256
@@ -1982,7 +1982,7 @@ FUNCTION pdfTIFFInfo( cFile )
             // cTag := "Compression"
             /*nTemp := 0
             IF nFieldType == SHORT
-               nTemp := bin2w( cValues )
+               nTemp := Bin2W( cValues )
             ELSE
                // Alert( "Wrong Type for Compression" )
             ENDIF*/
@@ -2392,7 +2392,7 @@ FUNCTION pdfJPEGInfo( cFile )
 
    nSpace := Asc( SubStr( c255, nAt + 4, 1 ) )
 
-   nLength := filesize( nHandle )
+   nLength := FileSize( nHandle )
 
    FClose( nHandle )
 
@@ -2576,7 +2576,7 @@ STATIC FUNCTION File2Array( cFile, nLen, hFile )
       ELSEIF cType == "N"
          aRay[ nDepth ] := Val( cData )
       ELSEIF cType == "D"
-         aRay[ nDepth ] := CToD( Left( cData, 4 ) + "/" + SubStr( cData, 5, 2 ) + "/" + SubStr( cData, 7, 2 ) ) // stod(cData)
+         aRay[ nDepth ] := CToD( Left( cData, 4 ) + "/" + SubStr( cData, 5, 2 ) + "/" + SubStr( cData, 7, 2 ) ) // SToD(cData)
       ELSEIF cType == "L"
          aRay[ nDepth ] := ( cData == "T" )
       ELSEIF cType == "A"

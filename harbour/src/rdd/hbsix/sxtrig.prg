@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *    SIX compatible functions:
- *          Sx_DefTrigger()
+ *          sx_DefTrigger()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
@@ -62,7 +62,7 @@ FUNCTION sx_DefTrigger( nEvent, nArea, nFieldPos, xTrigVal )
    SWITCH nEvent
    CASE EVENT_PREUSE
 #if 0
-      _sx_INIinit( nArea )
+      _sx_IniInit( nArea )
 #endif
       sx_SetTrigger( TRIGGER_REMOVE )
       EXIT

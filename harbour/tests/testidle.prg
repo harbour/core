@@ -16,7 +16,7 @@ PROCEDURE Main()
    hb_idleAdd( {|| QOut( "Idle Block" ) } )
    Inkey( 2 )
 
-   SET( _SET_IDLEREPEAT, .F. )
+   Set( _SET_IDLEREPEAT, .F. )
 
    hb_idleAdd( {|| QOut( "Idle Block2" ) } )
 

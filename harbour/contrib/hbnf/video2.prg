@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FT_CLS(), FT_VIDSTR(), FT_WRTCHR()
+ * ft_CLS(), ft_VidStr(), ft_WrtChr()
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

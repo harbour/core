@@ -214,7 +214,7 @@ FUNCTION cUserFunction( nMode, nCurElement, nRowPos )
       // After all pending keys are processed, display message
    CASE nMode == AC_IDLE
       @  0,  0 SAY PadR( hb_ntos( nCurElement ), 10 )
-      nRetVal := AC_CONT                   // Continue ACHOICE()
+      nRetVal := AC_CONT                   // Continue AChoice()
    CASE nMode == AC_HITTOP                 // Attempt to go past Top
       @  0,  0 SAY "Hit Top   "
       // Tone( 100, 3 )

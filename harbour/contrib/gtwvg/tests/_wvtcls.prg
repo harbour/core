@@ -319,11 +319,11 @@ STATIC FUNCTION MyDialogOne( oCrt )
    oDlg:Destroy()
 
    IF lOpen
-      SELECT( cUseAlias )
+      Select( cUseAlias )
       USE
    ENDIF
    IF lOpen1
-      SELECT( cUseAlias1 )
+      Select( cUseAlias1 )
       USE
    ENDIF
 

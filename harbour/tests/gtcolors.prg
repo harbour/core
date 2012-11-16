@@ -27,7 +27,7 @@ PROCEDURE Main( xBlink )
    FOR bg := 0 TO 15
       FOR fg := 0 TO 15
          n := bg * 16 + fg
-         @ 5 + bg, 5 + fg * 4 SAY "[" + NUM2HEX( n ) + "]" COLOR NTOCOLOR( n )
+         @ 5 + bg, 5 + fg * 4 SAY "[" + NUM2HEX( n ) + "]" COLOR NToColor( n )
       NEXT
    NEXT
    ?
@@ -37,7 +37,7 @@ PROCEDURE Main( xBlink )
 
    RETURN
 
-STATIC FUNCTION NTOCOLOR( nClr )
+STATIC FUNCTION NToColor( nClr )
 
    RETURN LTrim( Str( Int( nClr % 16 ), 2 ) ) + "/" + ;
       LTrim( Str( Int( nClr / 16 ), 2 ) )

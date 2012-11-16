@@ -123,7 +123,7 @@ THREAD STATIC t_oDebugger
 PROCEDURE __dbgAltDEntry()
 
    /* do not activate the debugger imediatelly because the module
-      where ALTD() was called can have no debugger info - stop
+      where AltD() was called can have no debugger info - stop
       on first LINE with debugged info
     */
 

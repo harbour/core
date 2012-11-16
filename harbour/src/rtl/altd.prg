@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ALTD() procedure
+ * AltD() procedure
  *
  * Copyright 2004 Ryszard Glab <rglab@imid.med.pl>
  * www - http://harbour-project.org
@@ -63,7 +63,7 @@ PROCEDURE AltD( nAction )
    IF PCount() == 0
 
       /* do not activate the debugger imediatelly because the module
-         where ALTD() was called can have no debugger info - stop
+         where AltD() was called can have no debugger info - stop
          on first LINE with debugged info
       */
       __dbgInvokeDebug( Set( _SET_DEBUG ) )

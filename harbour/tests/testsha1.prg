@@ -11,12 +11,12 @@
 
 PROCEDURE Main()
 
-   ? ">" + hb_sha1( "hello" ) + "<"
-   ? ">" + hb_sha1( "hello", .F. ) + "<"
-   ? ">" + hb_sha1( "hello", .T. ) + "<"
+   ? ">" + hb_SHA1( "hello" ) + "<"
+   ? ">" + hb_SHA1( "hello", .F. ) + "<"
+   ? ">" + hb_SHA1( "hello", .T. ) + "<"
 
-   ? ">" + hb_hmac_sha1( "hello", "key" ) + "<"
-   ? ">" + hb_hmac_sha1( "hello", "key", .F. ) + "<"
-   ? ">" + hb_hmac_sha1( "hello", "key", .T. ) + "<"
+   ? ">" + hb_HMAC_SHA1( "hello", "key" ) + "<"
+   ? ">" + hb_HMAC_SHA1( "hello", "key", .F. ) + "<"
+   ? ">" + hb_HMAC_SHA1( "hello", "key", .T. ) + "<"
 
    RETURN

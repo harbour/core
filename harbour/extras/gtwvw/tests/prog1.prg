@@ -268,7 +268,7 @@ STATIC FUNCTION VouBlockField( i )
 
 FUNCTION lMessage( cMsg )
 
-   // displays a message on maxrow() and returns .T.
+   // displays a message on MaxRow() and returns .T.
    LOCAL cOldColor := SetColor( s_cStdColor )
    @ MaxRow(), 0 SAY PadC( cMsg, MaxCol() + 1 )
    SetColor( cOldColor )

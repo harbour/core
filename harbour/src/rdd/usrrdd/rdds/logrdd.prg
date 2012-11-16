@@ -379,7 +379,7 @@ STATIC PROCEDURE OpenLogFile( nWA )
    LOCAL nHandle   := aRDDData[ ARRAY_FHANDLE  ]
    LOCAL lActive   := aRDDData[ ARRAY_ACTIVE   ]
 
-   // TraceLog( "nHandle " + cStr( nHandle ) )
+   // TraceLog( "nHandle " + CStr( nHandle ) )
 
    IF lActive .AND. nHandle == NIL
 

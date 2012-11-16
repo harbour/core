@@ -16,7 +16,7 @@
 
 PROCEDURE Main()
 
-   LOCAL oHTML := THTML():New()
+   LOCAL oHTML := THtml():New()
 
    oHTML:SetTitle( "Harbour Power Demonstration" )
    oHTML:AddHead( "Harbour" )

@@ -11,43 +11,43 @@ PROCEDURE Main()
 
    CLS
 
-   ? "Testing math function: EXP(), LOG() and SQRT():"
+   ? "Testing math function: Exp(), Log() and SQRT():"
    ?
    ? "  I) Test with correct arguments:"
-   ? "     exp(0.0) == 1.00         ? ", Exp( 0.0 )
-   ? "     exp(1.0) == 2.71(8)...  ? ", Exp( 1.0 )
-   ? "     exp(-1.0) == 0.36(7)... ? ", Exp( -1.0 )
+   ? "     Exp(0.0) == 1.00         ? ", Exp( 0.0 )
+   ? "     Exp(1.0) == 2.71(8)...  ? ", Exp( 1.0 )
+   ? "     Exp(-1.0) == 0.36(7)... ? ", Exp( -1.0 )
    ?
-   ? "     log(1.0) == 0.00        ? ", Log( 1.0 )
-   ? "     log(2.7) == 0.99(3)...  ? ", Log( 2.7 )
-   ? "     log(0.36) == -1.02(1)... ? ", Log( 0.36 )
+   ? "     Log(1.0) == 0.00        ? ", Log( 1.0 )
+   ? "     Log(2.7) == 0.99(3)...  ? ", Log( 2.7 )
+   ? "     Log(0.36) == -1.02(1)... ? ", Log( 0.36 )
    ?
-   ? "     sqrt(1.0) == 1.00      ? ", Sqrt( 1.0 )
-   ? "     sqrt(4.0) == 2.00      ? ", Sqrt( 4.0 )
-   ? "     sqrt(2.0) == 1.41(4).. ? ", Sqrt( 2.0 )
+   ? "     Sqrt(1.0) == 1.00      ? ", Sqrt( 1.0 )
+   ? "     Sqrt(4.0) == 2.00      ? ", Sqrt( 4.0 )
+   ? "     Sqrt(2.0) == 1.41(4).. ? ", Sqrt( 2.0 )
    ?
    ? "  II) Test with numeric but incorrect arguments:"
    ?
    ? "  IIa) default error handling(by the functions themselves)"
-   ? "       exp(-1000) == 0.00   ?", Exp( -1000 )
-   ? "       exp(1000) == ****... ?", Exp( 1000 )
+   ? "       Exp(-1000) == 0.00   ?", Exp( -1000 )
+   ? "       Exp(1000) == ****... ?", Exp( 1000 )
    ?
-   ? "       log(0) == ****...  ?", Log( 0 )
-   ? "       log(-10) == *****... ?", Log( -10 )
+   ? "       Log(0) == ****...  ?", Log( 0 )
+   ? "       Log(-10) == *****... ?", Log( -10 )
    ?
-   ? "       sqrt(-4) == 0.00 ?", Sqrt( -4 )
+   ? "       Sqrt(-4) == 0.00 ?", Sqrt( -4 )
    ?
 
    nOldMathErrMode := hb_matherMode( HB_MATH_ERRMODE_USERDEFAULT )
 
    ? "  IIb) error handling by error(hb_MathErMode() == HB_MATH_ERRMODE_USERDEFAULT)"
-   ? "       exp(-1000) == 0.00   ?", Exp( -1000 )
-   ? "       exp(1000) == ****... ?", Exp( 1000 )
+   ? "       Exp(-1000) == 0.00   ?", Exp( -1000 )
+   ? "       Exp(1000) == ****... ?", Exp( 1000 )
    ?
-   ? "       log(0) == ****...  ?", Log( 0 )
-   ? "       log(-10) == *****... ?", Log( -10 )
+   ? "       Log(0) == ****...  ?", Log( 0 )
+   ? "       Log(-10) == *****... ?", Log( -10 )
    ?
-   ? "       sqrt(-4) == 0.00 ?", Sqrt( -4 )
+   ? "       Sqrt(-4) == 0.00 ?", Sqrt( -4 )
    ?
 
    hb_matherMode( nOldMathErrMode )
@@ -56,13 +56,13 @@ PROCEDURE Main()
       localmatherr( nType, cFuncname, cError, nArg1, nArg2, aInfo ) } )
 
    ? "  IIc) error handling by callback block(hb_MathErBlock())"
-   ? "       exp(-1000) == ?", Exp( -1000 )
-   ? "       exp(1000) ==  ?", Exp( 1000 )
+   ? "       Exp(-1000) == ?", Exp( -1000 )
+   ? "       Exp(1000) ==  ?", Exp( 1000 )
    ?
-   ? "       log(0) ==     ?", Log( 0 )
-   ? "       log(-10) ==   ?", Log( -10 )
+   ? "       Log(0) ==     ?", Log( 0 )
+   ? "       Log(-10) ==   ?", Log( -10 )
    ?
-   ? "       sqrt(-4) ==   ?", Sqrt( -4 )
+   ? "       Sqrt(-4) ==   ?", Sqrt( -4 )
 
    hb_matherBlock( bOldMathErr )
 

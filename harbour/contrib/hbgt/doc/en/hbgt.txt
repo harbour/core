@@ -186,13 +186,13 @@
 
 /* $DOC$
    $NAME$
-      GT_CHARODD()
+      gt_CharOdd()
    $CATEGORY$
       String Tools
    $ONELINER$
       Return a string of all the characters in odd positions
    $SYNTAX$
-      GT_CharOdd(<cStr>) --> cRet
+      gt_CharOdd(<cStr>) --> cRet
    $ARGUMENTS$
       <cStr>   - A character string to extract chars from
    $RETURNS$
@@ -220,26 +220,26 @@
 
 /* $DOC$
    $NAME$
-      GT_CHRCOUNT()
+      gt_ChrCount()
    $CATEGORY$
       String Tools
    $ONELINER$
       Count the number of times a character appears in a string
    $SYNTAX$
-      GT_ChrCount(<cChr>, <cStr>) --> nFreq
+      gt_ChrCount(<cChr>, <cStr>) --> nFreq
    $ARGUMENTS$
       <cChr>  - The character to find the frequence of
       <cStr>  - The string in which to find the character
    $RETURNS$
       nFreq   - The number of times <cChr> occurs in <cStr>
    $DESCRIPTION$
-      GT_ChrCount() counts how many times a specified character
+      gt_ChrCount() counts how many times a specified character
       appears in a string.
 
       NOTE:
          invalid parameters will return -1
    $EXAMPLES$
-      ? GT_ChrCount( "t", "the cat sat on the mat" )      // prints 4
+      ? gt_ChrCount( "t", "the cat sat on the mat" )      // prints 4
    $TESTS$
 
    $STATUS$
@@ -255,13 +255,13 @@
 
 /* $DOC$
    $NAME$
-      GT_CHRFIRST()
+      gt_ChrFirst()
    $CATEGORY$
       String Tools
    $ONELINER$
       Find which character occurs first in a string
    $SYNTAX$
-      GT_ChrFirst(<cChars>, <cStr>) --> nAsc
+      gt_ChrFirst(<cChars>, <cStr>) --> nAsc
    $ARGUMENTS$
       <cChars> - The set of characters to find
       <cStr>   - The input string
@@ -272,8 +272,8 @@
       Return the ascii value of a character in <cChars>
       which appears first in <cStr>.
    $EXAMPLES$
-      ? Chr( GT_ChrFirst( "sa ", "This is a test" ) )  // prints "s"
-      ? Chr( GT_ChrFirst( "et",  "This is a test" ) )   // prints "t"
+      ? Chr( gt_ChrFirst( "sa ", "This is a test" ) )  // prints "s"
+      ? Chr( gt_ChrFirst( "et",  "This is a test" ) )   // prints "t"
    $TESTS$
 
    $STATUS$
@@ -289,13 +289,13 @@
 
 /* $DOC$
    $NAME$
-      GT_CHRTOTAL()
+      gt_ChrTotal()
    $CATEGORY$
       String Tools
    $ONELINER$
       Find number of times a set of characters appears in a string
    $SYNTAX$
-      GT_ChrTotal(<cChrs>, <cStr>) --> nTotOcc
+      gt_ChrTotal(<cChrs>, <cStr>) --> nTotOcc
    $ARGUMENTS$
       <cChrs> - The set of characters
       <cStr>  - The string to search
@@ -305,15 +305,15 @@
    $DESCRIPTION$
       Returns the numnber of occurrences of characters belonging
       to the set <cChrs> in the string <cStr>.  If no characters
-      in <cChrs> appears in <cStr> GT_ChrTotal() will return 0.
+      in <cChrs> appears in <cStr> gt_ChrTotal() will return 0.
 
       NOTE:
          invalid parameters will return -1
    $EXAMPLES$
       LOCAL cStr1 := "the cat sat on the mat"
 
-         ? GT_ChrTotal( "tae", cStr1 )            // prints 10
-         ? GT_ChrTotal( "zqw", cStr1 )            // prints  0
+         ? gt_ChrTotal( "tae", cStr1 )            // prints 10
+         ? gt_ChrTotal( "zqw", cStr1 )            // prints  0
    $TESTS$
 
    $STATUS$
@@ -329,30 +329,30 @@
 
 /* $DOC$
    $NAME$
-      GT_STRCOUNT()
+      gt_StrCount()
    $CATEGORY$
       String Tools
    $ONELINER$
       Count the number of times a substring appears in a string
    $SYNTAX$
-      GT_StrCount(<cChrs>, <cStr>) --> nFreq
+      gt_StrCount(<cChrs>, <cStr>) --> nFreq
    $ARGUMENTS$
       <cChrs> - The substring to find the frequence of
       <cStr>  - The string in which to find the character
    $RETURNS$
       <nFreq>   - The number of times <cChrs> occurs in <cStr>
    $DESCRIPTION$
-      GT_StrCount() counts how many times a specified substring
+      gt_StrCount() counts how many times a specified substring
       appears in a string.
       If the substring does NOT appear in <cStr> this function
       will return 0.
-      If the substring is a single character use GT_ChrCount() as
+      If the substring is a single character use gt_ChrCount() as
       it will be faster.
 
       NOTE:
          invalid parameters will return -1
    $EXAMPLES$
-      ? GT_StrCount( "the", "the cat sat on the mat" )      // prints 2
+      ? gt_StrCount( "the", "the cat sat on the mat" )      // prints 2
    $TESTS$
 
    $STATUS$
@@ -368,13 +368,13 @@
 
 /* $DOC$
    $NAME$
-      GT_STRCSPN()
+      gt_StrCSPN()
    $CATEGORY$
       String Tools
    $ONELINER$
       Return length of prefix in string of chars NOT in set.
    $SYNTAX$
-      GT_strcspn(<cString>, <cSet>) --> nLength
+      gt_StrCSPN(<cString>, <cSet>) --> nLength
    $ARGUMENTS$
       <cString> - The string to find the prefix in
       <cSet>    - The set of characters
@@ -384,8 +384,8 @@
       Return the number of characters in the leading segment of a
       string that consists solely of characters NOT in the set.
    $EXAMPLES$
-      ? GT_strcspn( "this is a test", "as " )      // prints 3
-      ? GT_strcspn( "this is a test", "elnjpq" )   // prints 11
+      ? gt_StrCSPN( "this is a test", "as " )      // prints 3
+      ? gt_StrCSPN( "this is a test", "elnjpq" )   // prints 11
    $TESTS$
 
    $STATUS$
@@ -401,13 +401,13 @@
 
 /* $DOC$
    $NAME$
-      GT_STRDIFF()
+      gt_StrDiff()
    $CATEGORY$
       String Tools
    $ONELINER$
       Return a string where it begins to differ from another
    $SYNTAX$
-      GT_StrDiff(<cStr1>, <cStr2>) --> cRet
+      gt_StrDiff(<cStr1>, <cStr2>) --> cRet
    $ARGUMENTS$
       <cStr1>  - A character string to compare
       <cStr2>  - The string to compare with
@@ -423,8 +423,8 @@
       NOTE:
          invalid parameters will return ""
    $EXAMPLES$
-      ? gt_strDiff( "the cat", "the rat" )          // prints "rat"
-      ? gt_strDiff( "the cat", "the " )             // prints ""
+      ? gt_StrDiff( "the cat", "the rat" )          // prints "rat"
+      ? gt_StrDiff( "the cat", "the " )             // prints ""
    $TESTS$
 
    $STATUS$
@@ -440,13 +440,13 @@
 
 /* $DOC$
    $NAME$
-      GT_STREXPAND()
+      gt_StrExpand()
    $CATEGORY$
       String Tools
    $ONELINER$
       Insert fillers between characters in a passed string
    $SYNTAX$
-      GT_StrExpand(<cStr>, [<nNum>], [<cChar>]) --> cRet
+      gt_StrExpand(<cStr>, [<nNum>], [<cChar>]) --> cRet
    $ARGUMENTS$
       <cStr1>  - A character string to insert chars into
       <nNum>   - The number of fill characters to insert (default 1)
@@ -460,9 +460,9 @@
       NOTE:
          invalid parameters will return ""
    $EXAMPLES$
-      ? gt_strexpand( "abc" )                    // prints "a b c"
-      ? gt_strexpand( "abc", 2 )                 // prints "a  b  c"
-      ? gt_strexpand( "abc", 2, '|' )            // prints "a||b||c"
+      ? gt_StrExpand( "abc" )                    // prints "a b c"
+      ? gt_StrExpand( "abc", 2 )                 // prints "a  b  c"
+      ? gt_StrExpand( "abc", 2, '|' )            // prints "a||b||c"
    $TESTS$
 
    $STATUS$
@@ -478,13 +478,13 @@
 
 /* $DOC$
    $NAME$
-      GT_STRLEFT()
+      gt_StrLeft()
    $CATEGORY$
       String Tools
    $ONELINER$
       Find length of prefix of a string
    $SYNTAX$
-      GT_StrLeft(<cStr>, <cChars>) --> nLen
+      gt_StrLeft(<cStr>, <cChars>) --> nLen
    $ARGUMENTS$
       <cStr>   - The input string
       <cChars> - The set of characters to find
@@ -498,9 +498,9 @@
       If no characters in the the search set are found, the function
       shall return 0
    $EXAMPLES$
-      ? GT_StrLeft( "this is a test", "hsit " )       // prints 8
-      ? GT_StrLeft( "this is a test", "hit a" )       // prints 3
-      ? GT_StrLeft( "this is a test", "zxy" )         // prints 0
+      ? gt_StrLeft( "this is a test", "hsit " )       // prints 8
+      ? gt_StrLeft( "this is a test", "hit a" )       // prints 3
+      ? gt_StrLeft( "this is a test", "zxy" )         // prints 0
    $TESTS$
 
    $STATUS$
@@ -516,13 +516,13 @@
 
 /* $DOC$
    $NAME$
-      GT_STRPBRK()
+      gt_StrPBRK()
    $CATEGORY$
       String Tools
    $ONELINER$
       Return string after 1st char from a set
    $SYNTAX$
-      GT_StrpBrk(<cStr>, <cSet>) --> cString
+      gt_StrPBRK(<cStr>, <cSet>) --> cString
    $ARGUMENTS$
       <cStr>   - The input string
       <cSet>   - The set of characters to find
@@ -533,8 +533,8 @@
       Return a string after the first occurance of any character from
       the input set <cSet>.
    $EXAMPLES$
-      ? GT_Strpbrk( "This is a test", "sa " )  // prints "s is a test"
-      ? GT_Strpbrk( "This is a test", "et" )   // prints "test"
+      ? gt_StrPBRK( "This is a test", "sa " )  // prints "s is a test"
+      ? gt_StrPBRK( "This is a test", "et" )   // prints "test"
    $TESTS$
 
    $STATUS$
@@ -550,13 +550,13 @@
 
 /* $DOC$
    $NAME$
-      GT_STRRIGHT()
+      gt_StrRight()
    $CATEGORY$
       String Tools
    $ONELINER$
       Find length of a suffix of a string
    $SYNTAX$
-      GT_StrRight(<cStr>, <cChars>) --> nLen
+      gt_StrRight(<cStr>, <cChars>) --> nLen
    $ARGUMENTS$
       <cStr>   - The input string
       <cChars> - The set of characters to find
@@ -570,9 +570,9 @@
       If no characters in the the search set are found, the function
       shall return 0
    $EXAMPLES$
-      ? GT_StrRight( "this is a test", "teas " )       // prints 8
-      ? GT_StrRight( "this is a test", "tes h" )       // prints 5
-      ? GT_StrRight( "this is a test", "zxy" )         // prints 0
+      ? gt_StrRight( "this is a test", "teas " )       // prints 8
+      ? gt_StrRight( "this is a test", "tes h" )       // prints 5
+      ? gt_StrRight( "this is a test", "zxy" )         // prints 0
    $TESTS$
 
    $STATUS$

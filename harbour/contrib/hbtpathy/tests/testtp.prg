@@ -75,6 +75,6 @@ PROCEDURE Main()
    tp_inkey( .5 )
    ? tp_recv( 1 )
    ?
-   tp_Close( 1 )
+   tp_close( 1 )
 
    RETURN

@@ -32,7 +32,7 @@ PROCEDURE Main()
 
    oI:SaveJpeg( IMAGES_OUT + "testfile.jpg" )
 
-   // Tracelog( oI:ToString() )
+   // TraceLog( oI:ToString() )
 
    hb_MemoWrit( IMAGES_OUT + "teststring.jpg", oI:ToString() )
 

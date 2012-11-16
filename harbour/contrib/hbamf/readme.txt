@@ -6,7 +6,7 @@
 Short description of Harbour functions
 --------------------------------------
 
-   cAMF := AMF3_ENCODE( xVal, symConvOut, lBinaryStrings )
+   cAMF := amf3_Encode( xVal, symConvOut, lBinaryStrings )
    xVal           - any supported datatype:
                     Character (String/MEMO), Numeric (Integer/Double), NIL, Logical, Date (encoded as DateTime),
                     DateTime, Array, Hash (String and Integer keys only),
@@ -26,11 +26,11 @@ Short description of Harbour functions
                     datatype will be ByteArray. Normally
                     a string is encoded to UTF-8.
 
-   xVal := AMF3_DECODE( cAMF, symConvIn )
+   xVal := amf3_Decode( cAMF, symConvIn )
    cAMF           - AMF3 serialized binary string
    symConvIn      - function symbol for inbound conversion
 
-   cAMF := AMF3_FROMWA( [ <bWhile> ], [ <bFor> ], [ <aFields> ], [ <nCount> ], [ <lStrTrim> ], [ <nPackage> ], [ pContext ] )
+   cAMF := amf3_FromWA( [ <bWhile> ], [ <bFor> ], [ <aFields> ], [ <nCount> ], [ <lStrTrim> ], [ <nPackage> ], [ pContext ] )
 
    Function to convert current workarea to AMF3 Array.
 
@@ -58,7 +58,7 @@ Short description of Harbour functions
                        lClose := xVal:lCloseWA
                        SELECT ( xVal:nWorkArea )
 
-                       xVal := AMF_Raw():New( AMF3_FROMWA( xVal:bWhile, xVal:bFor, xVal:aFields, xVal:nCount, xVal:lStrTrim, 1, pOuterContext ) )
+                       xVal := amf_Raw():New( amf3_FromWA( xVal:bWhile, xVal:bFor, xVal:aFields, xVal:nCount, xVal:lStrTrim, 1, pOuterContext ) )
                        IF lClose
                           CLOSE
                        ENDIF

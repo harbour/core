@@ -59,7 +59,7 @@
 /* subsystem name */
 #define CT_SUBSYSTEM "CT"
 
-/* CSETARGERR() argument error behaviour */
+/* CSetArgErr() argument error behaviour */
 #include "error.ch"
 #define CT_ARGERR_WHOCARES      ES_WHOCARES
 #define CT_ARGERR_WARNING       ES_WARNING
@@ -77,7 +77,7 @@
 #define CT_MATHERR_MODE_USER         2  /* error will be thrown to user who is responsible for error correction */
 #define CT_MATHERR_MODE_USERDEFAULT  3  /* error will be thrown, but if user fails, default correction will be used */
 
-/* SETATLIKE() modes */
+/* SetAtLike() modes */
 #define CT_SETATLIKE_EXACT     0
 #define CT_SETATLIKE_WILDCARD  1
 

@@ -28,9 +28,9 @@ PROCEDURE DllMain()
 
 CREATE CLASS OleObjServer
 
-   METHOD   timer
-   METHOD   info
-   METHOD   ref
+   METHOD timer
+   METHOD info
+   METHOD ref
 
 ENDCLASS
 

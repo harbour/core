@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __DBCOPYSTRUCT(), __DBCOPYXSTRUCT(), __DBCREATE() functions
+ * __dbCopyStruct(), __dbCopyXStruct(), __dbCreate() functions
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -160,7 +160,7 @@ FUNCTION __dbCreate( cFileName, cFileFrom, cRDD, lNew, cAlias, cCodePage, nConne
 
    RETURN Used()
 
-/* NOTE: Internal helper function, CA-Cl*pper name is: __FLEDIT() */
+/* NOTE: Internal helper function, CA-Cl*pper name is: __FLedit() */
 
 FUNCTION __dbStructFilter( aStruct, aFieldList )
    LOCAL aStructFiltered

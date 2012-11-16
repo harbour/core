@@ -76,7 +76,7 @@ Class TMySQLQuery -------------------------------------------
      ENDDO
   do not show last record
   With new definition this behaviour are corrected
-  With Eof() true, record pointer is placed in LASTREC()+1
+  With Eof() true, record pointer is placed in LastRec()+1
 
 - TMySQLQuery:New()
   Application of TMySQLQuery:lBof, TMySQLQuery:lEof, TMySQLQuery:lFieldAsData,
@@ -88,7 +88,7 @@ Class TMySQLQuery -------------------------------------------
   Only SKIP movement can set Bof() true
 
 - TMySQLQuery:Skip()
-  Apply NIL for return.  DBSKIP() return NIL
+  Apply NIL for return.  dbSkip() return NIL
 
 - TMySQLQuery:GetRow()
   Application of TMySQLQuery:lBof, TMySQLQuery:lEof, TMySQLQuery:lFieldAsData,
@@ -146,7 +146,7 @@ Class TMySQLTable -------------------------------------------
   Apply TMySQLTable:GetBlankRow( .T. ), with true value for lSetValues
 
 - TMySQLTable:Skip()
-  Apply NIL for return.  DBSKIP() return NIL
+  Apply NIL for return.  dbSkip() return NIL
 
 - TMySQLTable:Update(oRow, lOldRecord, lRefresh)
   = Application of TMySQLRow:aOriValue, TMySQLTable:aRow

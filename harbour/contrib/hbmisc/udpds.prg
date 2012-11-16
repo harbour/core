@@ -13,11 +13,11 @@
  * threads, so, it should be compiled in MT mode.
  *
  * Server functions:
- *   hb_UDPDS_Start( nPort, cName [, cVersion ] ) --> hServer
- *   hb_UDPDS_Stop( hServer )
+ *   hb_udpds_Start( nPort, cName [, cVersion ] ) --> hServer
+ *   hb_udpds_Stop( hServer )
  *
  * Client function:
- *   hb_UDPDS_Find( nPort, cName ) --> { { "ip_addr_1", "version_1" }, ... }
+ *   hb_udpds_Find( nPort, cName ) --> { { "ip_addr_1", "version_1" }, ... }
  *
  */
 

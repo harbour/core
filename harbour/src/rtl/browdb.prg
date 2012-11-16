@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TBROWSEDB() function
+ * TBrowseDB() function
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  * www - http://harbour-project.org

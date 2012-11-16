@@ -54,7 +54,7 @@
 PROCEDURE Main()
 
    LOCAL oIni  := TIniFile():New( "C:\inetpub\wwwroot\guestbk.ini" )
-   LOCAL oHTML := THTML():New()
+   LOCAL oHTML := THtml():New()
    LOCAL aEntr := {}
    LOCAL cOddColor, cEvenColor
    LOCAL cCode, i, j, l, cField, nEntry, cColor

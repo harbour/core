@@ -192,7 +192,7 @@ STATIC PROCEDURE hbnetiocon_waitStream( netiocli, bBlock ) /* in separate thread
          IF hb_MilliSeconds() > nLastPing + 5000
             /* Is connection alive? */
             BEGIN SEQUENCE WITH {| oError | Break( oError ) }
-               netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_ping" )
+               netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_ping" )
             RECOVER
                hbnetiocon_dispevent( netiocli, "Connection lost." )
                EXIT
@@ -228,7 +228,7 @@ STATIC PROCEDURE ConnectLow( netiocli, cIP, nPort, cPassword )
 
    hbnetiocon_dispevent( netiocli, hb_StrFormat( "Connecting to hbnetio server management at %1$s:%2$d...", cIP, nPort ) )
 
-   netiocli[ _NETIOCLI_pConnection ] := netio_getconnection( cIP, nPort,, cPassword )
+   netiocli[ _NETIOCLI_pConnection ] := netio_GetConnection( cIP, nPort,, cPassword )
    cPassword := NIL
 
    IF ! Empty( netiocli[ _NETIOCLI_pConnection ] )
@@ -240,7 +240,7 @@ STATIC PROCEDURE ConnectLow( netiocli, cIP, nPort, cPassword )
       netiocli[ _NETIOCLI_lWaitStream ] := .T.
       netiocli[ _NETIOCLI_hWaitThread ] := hb_threadStart( {| ... | hbnetiocon_waitStream( netiocli, {| nStreamID, xItem | HB_SYMBOL_UNUSED( nStreamID ), hbnetiocon_acceptStreamData( netiocli, xItem ) } ) } )
 
-      netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_setclientinfo", MyClientInfo() )
+      netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_setclientinfo", MyClientInfo() )
       netiocli[ _NETIOCLI_nStreamID ] := netio_OpenItemStream( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_regnotif", .T. )
 
       hbnetiocon_dispevent( netiocli, "Connected." )
@@ -419,7 +419,7 @@ STATIC PROCEDURE cmdSysInfo( netiocli )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      FOR EACH cLine IN netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_sysinfo" )
+      FOR EACH cLine IN netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_sysinfo" )
          hbnetiocon_dispevent( netiocli, cLine )
       NEXT
    ENDIF
@@ -433,7 +433,7 @@ STATIC PROCEDURE cmdServerConfig( netiocli )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      FOR EACH cLine IN netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_serverconfig" )
+      FOR EACH cLine IN netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_serverconfig" )
          hbnetiocon_dispevent( netiocli, cLine )
       NEXT
    ENDIF
@@ -449,7 +449,7 @@ STATIC PROCEDURE cmdConnStop( netiocli, cCommand )
    ELSE
       aToken := hb_ATokens( cCommand, " " )
       IF Len( aToken ) > 1
-         netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_stop", aToken[ 2 ] )
+         netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_stop", aToken[ 2 ] )
       ELSE
          hbnetiocon_dispevent( netiocli, "Error: Invalid syntax." )
       ENDIF
@@ -467,7 +467,7 @@ STATIC PROCEDURE cmdConnClientInfo( netiocli, cCommand )
    ELSE
       aToken := hb_ATokens( cCommand, " " )
       IF Len( aToken ) > 1
-         xCargo := netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_clientinfo", aToken[ 2 ] )
+         xCargo := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_clientinfo", aToken[ 2 ] )
          IF xCargo == NIL
             hbnetiocon_dispevent( netiocli, "No information" )
          ELSE
@@ -488,7 +488,7 @@ STATIC PROCEDURE cmdConnInfo( netiocli, lManagement )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      aArray := netio_funcexec( netiocli[ _NETIOCLI_pConnection ], iif( lManagement, "hbnetiomgm_adminfo", "hbnetiomgm_conninfo" ) )
+      aArray := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], iif( lManagement, "hbnetiomgm_adminfo", "hbnetiomgm_conninfo" ) )
 
       hbnetiocon_dispevent( netiocli, hb_StrFormat( "Number of connections: %1$d", Len( aArray ) ) )
 
@@ -511,7 +511,7 @@ STATIC PROCEDURE cmdShutdown( netiocli )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_shutdown" )
+      netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_shutdown" )
    ENDIF
 
    RETURN
@@ -521,7 +521,7 @@ STATIC PROCEDURE cmdConnEnable( netiocli, lValue )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_conn", lValue )
+      netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_conn", lValue )
    ENDIF
 
    RETURN
@@ -531,7 +531,7 @@ STATIC PROCEDURE cmdConnLogEnable( netiocli, lValue )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_logconn", lValue )
+      netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_logconn", lValue )
    ENDIF
 
    RETURN
@@ -545,7 +545,7 @@ STATIC PROCEDURE cmdConnFilterMod( netiocli, cCommand, cRPC )
    ELSE
       aToken := hb_ATokens( cCommand, " " )
       IF Len( aToken ) > 1
-         IF netio_funcexec( netiocli[ _NETIOCLI_pConnection ], cRPC, aToken[ 2 ] )
+         IF netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], cRPC, aToken[ 2 ] )
             hbnetiocon_dispevent( netiocli, "Done" )
          ELSE
             hbnetiocon_dispevent( netiocli, "Failed" )
@@ -565,7 +565,7 @@ STATIC PROCEDURE cmdConnFilters( netiocli, lManagement )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      aArray := netio_funcexec( netiocli[ _NETIOCLI_pConnection ], iif( lManagement, "hbnetiomgm_filtersadmin", "hbnetiomgm_filters" ) )
+      aArray := netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], iif( lManagement, "hbnetiomgm_filtersadmin", "hbnetiomgm_filters" ) )
 
       FOR EACH hFilter IN aArray
          hbnetiocon_dispevent( netiocli, hFilter[ "cType" ], ;
@@ -580,7 +580,7 @@ STATIC PROCEDURE cmdConnFilterSave( netiocli )
    IF Empty( netiocli[ _NETIOCLI_pConnection ] )
       hbnetiocon_dispevent( netiocli, "Not connected." )
    ELSE
-      netio_funcexec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_filtersave" )
+      netio_FuncExec( netiocli[ _NETIOCLI_pConnection ], "hbnetiomgm_filtersave" )
    ENDIF
 
    RETURN

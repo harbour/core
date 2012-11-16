@@ -63,7 +63,7 @@ PROCEDURE Main()
 
    // enable mouse events in CL53/Harbour
 #ifdef _SET_EVENTMASK
-   SET( _SET_EVENTMASK, INKEY_ALL )
+   Set( _SET_EVENTMASK, INKEY_ALL )
    MSetCursor( .T. )
 #endif
 

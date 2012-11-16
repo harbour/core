@@ -19,10 +19,10 @@
 
 #ifndef __CLIP__
    #ifdef FlagShip
-      #xtranslate hb_secondsCPU( [<x>] ) => secondsCPU( [<x>] )
+      #xtranslate hb_SecondsCPU( [<x>] ) => SecondsCPU( [<x>] )
    #else
       #ifndef __HARBOUR__
-         #xtranslate hb_secondsCPU( [<x>] ) => Seconds( [<x>] )
+         #xtranslate hb_SecondsCPU( [<x>] ) => Seconds( [<x>] )
       #endif
    #endif
 #endif
@@ -84,7 +84,7 @@ STATIC FUNCTION StaticText()
    LOCAL c
    LOCAL i
    LOCAL nEnd
-   LOCAL nStart  := hb_secondsCPU()
+   LOCAL nStart  := hb_SecondsCPU()
 
    str := "Hello World - From " + Left( str, At( " ", str ) - 1 )
    c   := ( MaxCol() - Len( str ) ) / 2
@@ -93,7 +93,7 @@ STATIC FUNCTION StaticText()
       @ r, c SAY str
    NEXT
 
-   nEnd := hb_secondsCPU()
+   nEnd := hb_SecondsCPU()
 
    cResult := "StaticText:  Iterations=5000, Time=" + hb_ntos( nEnd - nStart ) + ;
       "secs,  Average FPS = " + hb_ntos( Round( 5000 / ( nEnd - nStart ), 0 ) ) + " FPS"
@@ -129,7 +129,7 @@ STATIC FUNCTION WindowBounce()
       clr[ i ] := "W+/" + aCol[ ( i - 1 ) % 16 + 1 ]
    NEXT
 
-   nStart := hb_secondsCPU()
+   nStart := hb_SecondsCPU()
    DispBegin()
 
    DO WHILE nFrames < 5000
@@ -165,7 +165,7 @@ STATIC FUNCTION WindowBounce()
    ENDDO
 
    DispEnd()
-   nEnd := hb_secondsCPU()
+   nEnd := hb_SecondsCPU()
 
    cResult := "WindowBounce:Iterations=" + hb_ntos( nFrames ) + ", Time=" + hb_ntos( nEnd - nStart ) + ;
       "secs,  Average FPS = " + hb_ntos( Round( nFrames / ( nEnd - nStart ), 0 ) ) + " FPS"
@@ -174,7 +174,7 @@ STATIC FUNCTION WindowBounce()
 
 // Display colour boxes,  repeatedly, this will determine
 // how efficiently the screen i/o subsystem is caching the
-// dispbegin()'s and dispend()'s
+// DispBegin()'s and dispend()'s
 
 STATIC FUNCTION ColourBoxes()
 
@@ -188,7 +188,7 @@ STATIC FUNCTION ColourBoxes()
    LOCAL aCol    := { "N", "B", "G", "BG", "R", "RB", "GR", "W", ;
                       "N*", "B*", "G*", "BG*", "R*", "RB*", "GR*", "W*" }
 
-   nStart := hb_secondsCPU()
+   nStart := hb_SecondsCPU()
    // display boxes to screen
 
    DO WHILE nFrames < 5000
@@ -216,7 +216,7 @@ STATIC FUNCTION ColourBoxes()
       nDepth--
    ENDDO
 
-   nEnd := hb_secondsCPU()
+   nEnd := hb_SecondsCPU()
 
    cResult := "ColourBoxes: Iterations=" + hb_ntos( nFrames ) + ", Time=" + hb_ntos( nEnd - nStart ) + ;
       "secs,  Average FPS = " + hb_ntos( Round( nFrames / ( nEnd - nStart ), 0 ) ) + " FPS"

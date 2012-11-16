@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Editor Class (base for Memoedit(), debugger, etc.)
+ * Editor Class (base for MemoEdit(), debugger, etc.)
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://www.harbour-project.org
@@ -84,7 +84,7 @@
  * Note: -- If using the paste function to enter text, increase size of keyboard buffer to 2048 or 4096!
  *          Otherwise buffer will overrun -- it takes some processor time to do all the dynamic reformatting
  *       -- SetCursor() is used to change cursor between insert and overwrite. Modify if desired....
- *          This will need to be cleared to return to original cursor within Memoedit()!!
+ *          This will need to be cleared to return to original cursor within MemoEdit()!!
  *       -- K_LEFT is set to exit MemoEdit() in read-only mode, in addition to the standard exit keys ESC.
  *       -- __SoftCR() "soft CR" inserted by Clipper MemoEdit() is automatically removed when encountered in text
  *       -- Color persistence problems in previous version corrected by taking SetColor() at Method New file call.
@@ -156,7 +156,7 @@ CREATE CLASS XHBEditor
    VAR   nColSelEnd     INIT 0                             // Last col selected
 
    // Class VAR can be faster, but since the user can change directly
-   // READINSERT(), ::lInsert must check in it.
+   // ReadInsert(), ::lInsert must check in it.
    // VAR   lInsert        INIT .F.              // Is editor in Insert mode or in Overstrike one? Default : Overstrike - Clipper
    METHOD lInsert()              BLOCK {|| Set( _SET_INSERT ) }
    METHOD _lInsert( lInsert )    BLOCK {| Self, lInsert | HB_SYMBOL_UNUSED( Self ), iif( HB_ISLOGICAL( lInsert ), Set( _SET_INSERT, lInsert ), Set( _SET_INSERT ) ) }
@@ -279,7 +279,7 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    ENDIF
 
 
-   // fix setcolor() to value at New() call
+   // fix SetColor() to value at New() call
    ::cColorSpec := SetColor()
 
    // Note original cursor to restore after editing
@@ -1058,7 +1058,7 @@ METHOD PageDown() CLASS XHBEditor
          ENDIF
          ::RefreshWindow()
       ENDIF
-      // ::GotoLine( min( ::nRow + ::nNumRows - 1, ::LastRow() ) )
+      // ::GotoLine( Min( ::nRow + ::nNumRows - 1, ::LastRow() ) )
 
    ELSE
       nJump := Min( nJump, ::LastRow() - ::nFirstRow + 1 )
@@ -1554,7 +1554,7 @@ METHOD K_Del() CLASS XHBEditor
       // eventually pad.
       //
       // IF ::nCol > ::LineLen( ::nRow ) + 1
-      //   ::aText[ ::nRow ]:cText := Padr( ::aText[ ::nRow ]:cText, ::nCol - 1 )
+      //   ::aText[ ::nRow ]:cText := PadR( ::aText[ ::nRow ]:cText, ::nCol - 1 )
       // ENDIF
       lMerge := .T.
 

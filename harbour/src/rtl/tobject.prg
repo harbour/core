@@ -68,10 +68,10 @@ FUNCTION HBObject()
          oClass := HBClass():New( "HBObject",, @HBObject() )
 
 #ifndef HB_CLP_STRICT
-         oClass:AddInline( "ISDERIVEDFROM"   , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, HB_OO_CLSTP_EXPORTED ) /* Xbase++ compatibility */
+         oClass:AddInline( "ISDERIVEDFROM"   , {| Self, xPar1 | __objDerivedFrom( Self, xPar1 ) }, HB_OO_CLSTP_EXPORTED ) /* Xbase++ compatibility */
 #endif
          /* Class(y) */
-         oClass:AddInline( "ISKINDOF"        , {| Self, xPar1 | __ObjDerivedFrom( Self, xPar1 ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "ISKINDOF"        , {| Self, xPar1 | __objDerivedFrom( Self, xPar1 ) }, HB_OO_CLSTP_EXPORTED )
 
          oClass:AddMethod( "NEW"  , @HBObject_New()   , HB_OO_CLSTP_EXPORTED )
          oClass:AddMethod( "INIT" , @HBObject_Init()  , HB_OO_CLSTP_EXPORTED )
@@ -85,8 +85,8 @@ FUNCTION HBObject()
 #if 0
          oClass:AddMultiData( , , HB_OO_CLSTP_EXPORTED, { "CLASS" }, .F. )
 
-         oClass:AddInline( "ADDMETHOD" , {| Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __CLASSH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
-         oClass:AddInline( "ADDVAR"    , {| Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass:=__CLASSH( Self ) ,     cVar , uidata := __CLS_INCDATA( hClass ), HB_OO_MSG_ACCESS, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ;
+         oClass:AddInline( "ADDMETHOD" , {| Self, cMeth, pFunc, nScopeMeth         | __clsAddMsg( __classH( Self ) , cMeth , pFunc ,HB_OO_MSG_METHOD , NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
+         oClass:AddInline( "ADDVAR"    , {| Self, cVAR, nScopeMeth, uiData, hClass | __clsAddMsg( hClass:=__classH( Self ) ,     cVar , uidata := __cls_IncData( hClass ), HB_OO_MSG_ACCESS, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) )  , ;
                                                                                      __clsAddMsg( hClass                   , "_"+cVar , uiData                           , HB_OO_MSG_ASSIGN, NIL, iif( nScopeMeth == NIL, 1, nScopeMeth ) ) }, HB_OO_CLSTP_EXPORTED )
 
          /* These ones exist within Class(y), so we will probably try to implement it */

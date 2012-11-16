@@ -1071,9 +1071,9 @@ PROCEDURE Main_CLASS()
 STATIC FUNCTION INSTANCE_DATA( oValue )
    LOCAL cData, i
 
-   cData := "[" + LTRIM( STR( LEN( oValue ) ) ) + "]:"
-   FOR i := 1 TO LEN( oValue )
-      IF VALTYPE( oValue[ i ] ) == "C"
+   cData := "[" + LTrim( STR( Len( oValue ) ) ) + "]:"
+   FOR i := 1 TO Len( oValue )
+      IF ValType( oValue[ i ] ) == "C"
          cData += " " + oValue[ i ]
       ELSEIF oValue[ i ] == NIL
          cData += " NIL"

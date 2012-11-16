@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *    test code for TRANSFORM() function
+ *    test code for Transform() function
  *
  * Copyright 2008 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
@@ -33,7 +33,7 @@ FUNCTION transtest( xVal, cPict, cExpect )
 PROC stop()
 
    IF s_stop
-      ? replicate( "*", 50 )
+      ? Replicate( "*", 50 )
       Inkey( 0 )
       s_stop := .F.
    ENDIF
@@ -211,14 +211,14 @@ PROC tofix()
    ? transtest( -1234567890123456789, "99999999999999999999", "-1234567890123457000" )
 #endif
    stop()
-   SET( _SET_DATEFORMAT, "YYYY/MM/DD" )
+   Set( _SET_DATEFORMAT, "YYYY/MM/DD" )
    ? transtest( 12345678, "@D", "1234/56/78" )
-   SET( _SET_DATEFORMAT, "YYYY.MM.DD" )
+   Set( _SET_DATEFORMAT, "YYYY.MM.DD" )
    ? transtest( 1234.56789, "@D", "1234.56.9 " )
-   SET( _SET_DATEFORMAT, "YYYY.MM:DD" )
+   Set( _SET_DATEFORMAT, "YYYY.MM:DD" )
    ? transtest( 1234.56789, "@D", "1234.56:79" )
    ? transtest( 123.345678912, "@D ", " 123.34:57" )
-   SET( _SET_DATEFORMAT, "MM-DD-YYYY" )
+   Set( _SET_DATEFORMAT, "MM-DD-YYYY" )
    ? transtest( .T., "@RE <|,yY#lL,|>", "99-99-9999T" )
    ? transtest( .F., "@RE <|,yY#lL,|>", "99-99-9999F" )
    ? transtest( .T., "@RD <|,yY#lL,|>", "99-99-9999T" )
@@ -316,7 +316,7 @@ FUNC SToD( s )
    LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
 
    dt := CToD( Stuff( Stuff( s, 7, 0, "/" ), 5, 0, "/" ) )
-   SET( _SET_DATEFORMAT, cDf )
+   Set( _SET_DATEFORMAT, cDf )
 
    RETURN dt
 

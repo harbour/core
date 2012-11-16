@@ -7075,7 +7075,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    PlugIn_Execute_All( hbmk, "post_all" )
 
    IF hbmk[ _HBMK_lDEBUGTIME ]
-      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Running time: %1$ds" ), Round( ( hb_milliSeconds() - nStart ) / 1000, 1 ) ) )
+      _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Running time: %1$ds" ), Round( ( hb_MilliSeconds() - nStart ) / 1000, 1 ) ) )
    ENDIF
 
    IF ! lSkipBuild .AND. hbmk[ _HBMK_lBEEP ]
@@ -8091,7 +8091,7 @@ STATIC FUNCTION getNewestTime( hbmk, cFile, hFiles, lCMode )
    IF hFiles == NIL
       hFiles := { => }
       /* for easier visualization the scan steps in debug mode */
-      /* hb_hKeepOrder( hFiles, .T. ) */
+      /* hb_HKeepOrder( hFiles, .T. ) */
    ENDIF
    s_getFilesDep( hbmk, cFile, hFiles, hb_FNameDir( cFile ), .F., lCMode )
    tTime := s_getNewestTime( cFile, hFiles )
@@ -13343,7 +13343,7 @@ STATIC PROCEDURE __hbshell_prompt( aParams, aCommand )
              s_aHistory[ ++nHistIndex ], ;
              ( nHistIndex := Len( s_aHistory ) + 1, Space( HB_LINE_LEN ) ) ) } )
       bKeyResize := SetKey( HB_K_RESIZE, ;
-         {|| lResize := .T., hb_KeyPut( K_ENTER ) } )
+         {|| lResize := .T., hb_keyPut( K_ENTER ) } )
 
       ReadModal( GetList )
 

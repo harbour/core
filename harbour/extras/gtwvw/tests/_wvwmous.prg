@@ -85,7 +85,7 @@ CREATE CLASS WVWMouseButton
 
    VAR cCaption
    VAR cCaptionFont                 // font name for caption
-   VAR nCaptionHeight               // height of font for caption, if NIL use current wvw_getfontinfo()
+   VAR nCaptionHeight               // height of font for caption, if NIL use current wvw_GetFontInfo()
    VAR cImage                       // 20040325, image file name
 
    VAR cNormalColor    // button normal color, pls use single color, eg "W"

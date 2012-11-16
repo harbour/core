@@ -70,7 +70,7 @@
 
 #xtrans P_SEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos, <a>:p_pos:=hb_At(<c>,<a>:p_str,<a>:p_end+1))
 #xtrans P_SEEKI( <a>, <c> )   =>   (<a>:p_end:=<a>:p_pos, <a>:p_pos:=hb_AtI(<c>,<a>:p_str,<a>:p_end+1))
-#xtrans P_PEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos, __tip_PStrCompi( <a>:p_str, <a>:p_pos, <c> ))
+#xtrans P_PEEK( <a>, <c> )    =>   (<a>:p_end:=<a>:p_pos, __tip_PStrCompI( <a>:p_str, <a>:p_pos, <c> ))
 #xtrans P_NEXT( <a> )         =>   (<a>:p_end:=<a>:p_pos, SubStr(<a>:p_str,++<a>:p_pos,1))
 #xtrans P_PREV( <a> )         =>   (<a>:p_end:=<a>:p_pos, SubStr(<a>:p_str,--<a>:p_pos,1))
 

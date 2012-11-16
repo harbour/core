@@ -2120,7 +2120,7 @@ FUNCTION HtmlPageObject()
 
 /****
 *
-*     HtmlDecodeURL()
+*     HtmlDecodeUrl()
 *
 *     Decodes a URL encoded string. Also handles international charsets.
 *
@@ -2196,7 +2196,7 @@ FUNCTION HtmlDecodeUrl( cString )
 
 /****
 *
-*     HtmlJsCmd()
+*     HtmlJSCmd()
 *
 *     Inserts inline Javascript source
 *

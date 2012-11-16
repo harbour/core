@@ -236,7 +236,7 @@ FUNCTION UseVar( value )
 
 #ifdef __HARBOUR__
    __mvPublic( "public1" )      // , "public21" )
-// __mvPRIVATE( "private1", "private2", "private3" )
+// __mvPrivate( "private1", "private2", "private3" )
    __mvPrivate( { "private1", "private2", "private3" } )
    ? "undeclared PUBLIC created by __PUBLIC function : ", public1
    ? "undeclared PRIVATE created by __PRIVATE function : ", private1

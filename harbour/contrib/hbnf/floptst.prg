@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FT_FLOPTST()
+ * ft_FlopTst()
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

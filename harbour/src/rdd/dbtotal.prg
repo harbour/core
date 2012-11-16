@@ -214,7 +214,7 @@ STATIC FUNCTION __GetField( cField )
 
          lError := Eval( ErrorBlock(), oError )
          IF ! HB_ISLOGICAL( lError ) .OR. lError
-            __ErrInHandler()
+            __errInHandler()
          ENDIF
 
          Break( oError )

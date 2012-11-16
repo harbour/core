@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * xpp_TBrowseDB(), DBSKIPPER() functions for Xbase++
+ * xpp_TBrowseDB(), dbSkipper() functions for Xbase++
  *
  * Copyright 1999 Paul Tucker <ptucker@sympatico.ca>
  * www - http://harbour-project.org
@@ -59,7 +59,7 @@ FUNCTION xpp_TBrowseDB( nTop, nLeft, nBottom, nRight )
 
    LOCAL oBrowse := TBrowseNew( nTop, nLeft, nBottom, nRight )
 
-   oBrowse:SkipBlock     := {| nRecs | DbSkipper( nRecs ) }
+   oBrowse:SkipBlock     := {| nRecs | dbSkipper( nRecs ) }
    oBrowse:GoTopBlock    := {|| dbGoTop() }
    oBrowse:GoBottomBlock := {|| dbGoBottom() }
 

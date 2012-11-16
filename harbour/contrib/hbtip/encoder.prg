@@ -55,7 +55,7 @@
  */
 
 /* 2007-04-12, Hannes Ziegler <hz AT knowlexbase.com>
-   Added Function: TIp_GetEncoder()
+   Added Function: tip_GetEncoder()
 */
 
 #include "hbclass.ch"

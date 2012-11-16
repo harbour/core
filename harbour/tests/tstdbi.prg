@@ -31,16 +31,16 @@ PROCEDURE Main()
    MemoWrit( "dbicl.txt", cStr )
 #endif
 
-   ? DbRecordInfo( 1 )
-   ? DbRecordInfo( 2 )
-   ? DbRecordInfo( 3 )
-   ? DbRecordInfo( 4 )
-   ? DbRecordInfo( 5 )
+   ? dbRecordInfo( 1 )
+   ? dbRecordInfo( 2 )
+   ? dbRecordInfo( 3 )
+   ? dbRecordInfo( 4 )
+   ? dbRecordInfo( 5 )
 
-   ? DbFieldInfo( 1, 1 )
-   ? DbFieldInfo( 2, 1 )
-   ? DbFieldInfo( 3, 1 )
-   ? DbFieldInfo( 4, 1 )
+   ? dbFieldInfo( 1, 1 )
+   ? dbFieldInfo( 2, 1 )
+   ? dbFieldInfo( 3, 1 )
+   ? dbFieldInfo( 4, 1 )
 
    RETURN
 

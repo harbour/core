@@ -81,10 +81,10 @@ METHOD new( ... ) CLASS SIGNAL
    RETURN Self
 
 METHOD wait( nTimeOut ) CLASS SIGNAL
-   RETURN __ClsSyncWait( ::mutex, nTimeOut )
+   RETURN __clsSyncWait( ::mutex, nTimeOut )
 
 METHOD signal() CLASS SIGNAL
-   __ClsSyncSignal( ::mutex )
+   __clsSyncSignal( ::mutex )
    RETURN Self
 
 
@@ -158,7 +158,7 @@ METHOD execute() CLASS THREAD
 
 METHOD quit( xResult, nRestart ) CLASS THREAD
    IF hb_threadSelf() == ::pThreadID
-      IF PCOUNT() > 0
+      IF PCount() > 0
          ::result := xResult
       ENDIF
       IF ! HB_ISNUMERIC( nRestart ) .OR. nRestart != QUIT_RESTART
@@ -226,24 +226,24 @@ METHOD start( xAction, ... ) CLASS THREAD
 
                ::atStart( ... )
                IF HB_ISBLOCK( ::_atStart )
-                  EVAL( ::_atStart, ... )
+                  Eval( ::_atStart, ... )
                ENDIF
 
                WHILE .T.
 
-                  nTime := hb_milliSeconds()
+                  nTime := hb_MilliSeconds()
 
                   BEGIN SEQUENCE
                      IF ! Empty( xAction ) .AND. ValType( xAction ) $ "CBS"
-                        ::result := DO( xAction, ... )
+                        ::result := Do( xAction, ... )
                      ELSE
                         ::result := ::execute( ... )
                      ENDIF
                   ALWAYS
-                     __QUITCANCEL()
+                     __QuitCancel()
                   ENDSEQUENCE
 
-                  nTime := Int( ( hb_milliSeconds() - nTime ) / 10 )
+                  nTime := Int( ( hb_MilliSeconds() - nTime ) / 10 )
                   ::deltaTime := nTime
 
                   /* TODO: when ::startTime is set execution is suspended
@@ -265,7 +265,7 @@ METHOD start( xAction, ... ) CLASS THREAD
 
                ::atEnd( ... )
                IF HB_ISBLOCK( ::_atEnd )
-                  EVAL( ::_atEnd, ... )
+                  Eval( ::_atEnd, ... )
                ENDIF
                ::active := .F.
 

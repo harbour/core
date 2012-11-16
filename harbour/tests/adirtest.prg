@@ -21,8 +21,8 @@ STATIC FUNCTION TestIt( cSpec )
    LOCAL a5
 
 // In order to account for documented behavour, this call will ensure
-// that Adir() returns the same length array in both cases.
-// ie: adir( cSpec ) could return a different length array than
+// that ADir() returns the same length array in both cases.
+// ie: ADir( cSpec ) could return a different length array than
 // ADir( cSpec,,,,,{} )
 
    a := ADir( cSpec, , , , , {} )

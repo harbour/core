@@ -587,7 +587,7 @@ STATIC FUNCTION Page_Text( pdf )
    rad1   := angle1 / 180 * 3.141592
    rad2   := angle2 / 180 * 3.141592
 
-   HPDF_Page_Concat( page, 1, tan( rad1 ), tan( rad2 ), 1, 25, 350 )
+   HPDF_Page_Concat( page, 1, Tan( rad1 ), Tan( rad2 ), 1, 25, 350 )
    rect[ rLEFT   ] := 0
    rect[ rTOP    ] := 40
    rect[ rRIGHT  ] := 175
@@ -617,7 +617,7 @@ STATIC FUNCTION Page_Text( pdf )
    angle1 := 5
    rad1   := angle1 / 180 * 3.141592
 
-   HPDF_Page_Concat( page, cos( rad1 ), sin( rad1 ), - sin( rad1 ), cos( rad1 ), 220, 350 )
+   HPDF_Page_Concat( page, Cos( rad1 ), Sin( rad1 ), - Sin( rad1 ), Cos( rad1 ), 220, 350 )
    rect[ rLEFT   ] := 0
    rect[ rTOP    ] := 40
    rect[ rRIGHT  ] := 175
@@ -658,10 +658,10 @@ STATIC FUNCTION Page_Text( pdf )
       rad1 := ( angle2 - 90 ) / 180 * 3.141592
       rad2 := angle2 / 180 * 3.141592
 
-      x := 210 + cos( rad2 ) * 122
-      y := 190 + sin( rad2 ) * 122
+      x := 210 + Cos( rad2 ) * 122
+      y := 190 + Sin( rad2 ) * 122
 
-      HPDF_Page_SetTextMatrix( page, cos( rad1 ), sin( rad1 ), - sin( rad1 ), cos( rad1 ), x, y )
+      HPDF_Page_SetTextMatrix( page, Cos( rad1 ), Sin( rad1 ), - Sin( rad1 ), Cos( rad1 ), x, y )
 
       buf := SubStr( SAMP_TXT, i, 1 )
       HPDF_Page_ShowText( page, buf )
@@ -854,7 +854,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
 
    show_description( page, 320, ypos - 60, "Rotating text" )
    HPDF_Page_BeginText( page )
-   HPDF_Page_SetTextMatrix( page, cos( rad1 ), sin( rad1 ), - sin( rad1 ), cos( rad1 ), 330, ypos - 60 )
+   HPDF_Page_SetTextMatrix( page, Cos( rad1 ), Sin( rad1 ), - Sin( rad1 ), Cos( rad1 ), 330, ypos - 60 )
    HPDF_Page_ShowText( page, "ABCabc123" )
    HPDF_Page_EndText( page )
 
@@ -870,7 +870,7 @@ STATIC FUNCTION Page_TextScaling( pdf )
    rad1 := angle1 / 180 * 3.141592
    rad2 := angle2 / 180 * 3.141592
 
-   HPDF_Page_SetTextMatrix( page, 1, tan( rad1 ), tan( rad2 ), 1, 320, ypos - 120 )
+   HPDF_Page_SetTextMatrix( page, 1, Tan( rad1 ), Tan( rad2 ), 1, 320, ypos - 120 )
    HPDF_Page_ShowText( page, "ABCabc123" )
    HPDF_Page_EndText( page )
 
@@ -1376,7 +1376,7 @@ STATIC FUNCTION Page_Images( pdf )
    rad2   := angle2 / 180 * 3.141592
 
    HPDF_Page_GSave( page )
-   HPDF_Page_Concat( page, iw, tan( rad1 ) * iw, tan( rad2 ) * ih, ih, x, y )
+   HPDF_Page_Concat( page, iw, Tan( rad1 ) * iw, Tan( rad2 ) * ih, ih, x, y )
    HPDF_Page_ExecuteXObject( page, image )
    HPDF_Page_GRestore( page )
 
@@ -1389,10 +1389,10 @@ STATIC FUNCTION Page_Images( pdf )
    rad := angle / 180 * 3.141592 /* Calcurate the radian value. */
 
    HPDF_Page_GSave( page )
-   HPDF_Page_Concat( page, iw * cos( rad ), ;
-      iw * sin( rad ), ;
-      ih * - sin( rad ), ;
-      ih * cos( rad ), ;
+   HPDF_Page_Concat( page, iw * Cos( rad ), ;
+      iw * Sin( rad ), ;
+      ih * - Sin( rad ), ;
+      ih * Cos( rad ), ;
       x, y )
    HPDF_Page_ExecuteXObject( page, image )
    HPDF_Page_GRestore( page )

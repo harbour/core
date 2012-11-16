@@ -480,7 +480,7 @@ FUNCTION Wvt_GetOpenFileName( hWnd, cPath, cTitle, acFilter, nFlags, cInitDir, c
    __defaultNIL( @cPath, "" )
    __defaultNIL( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
 
-/* WIN_GETOPENFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetOpenFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */
@@ -522,7 +522,7 @@ FUNCTION Wvt_GetSaveFileName( hWnd, cDefName, cTitle, acFilter, nFlags, cInitDir
 
    __defaultNIL( @nFlags, OFN_EXPLORER + OFN_NOCHANGEDIR )
 
-/* WIN_GETSAVEFILENAME( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
+/* win_GetSaveFileName( [[@]<nFlags>], [<cTitle>], [<cInitDir>], [<cDefExt>],;
  *                      [<acFilter>], [[@]<nFilterIndex>], [<nBufferSize>], [<cDefName>] )
  *    -> <cFilePath> | <cPath> + e"\0" + <cFile1> [ + e"\0" + <cFileN> ] | ""
  */

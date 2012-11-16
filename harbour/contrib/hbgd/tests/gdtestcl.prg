@@ -183,7 +183,7 @@ PROCEDURE Main()
    oI4:SaveJpeg( IMAGES_OUT + "writing.jpg" )
 
 
-   // oI4 := __ObjClone( oI2 )
+   // oI4 := __objClone( oI2 )
    oI4 := oI2:Clone()
 
    nSecs := Seconds()

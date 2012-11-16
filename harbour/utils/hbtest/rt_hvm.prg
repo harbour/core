@@ -57,7 +57,7 @@
 
 PROCEDURE Main_HVM()
 
-   /* VALTYPE() */
+   /* ValType() */
 
    TEST_LINE( ValType(  scString  )           , "C"   )
    TEST_LINE( ValType(  scStringE )           , "C"   )
@@ -149,7 +149,7 @@ PROCEDURE Main_HVM()
    TEST_LINE( ValType( @maArray   )           , "A"   ) /* Bug in CA-Cl*pper, it will return "U" */
 #endif
 
-   /* TYPE() */
+   /* Type() */
 
 #ifndef __XPP__
    TEST_LINE( Type( NIL )                     , "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:U:NIL F:S"     )

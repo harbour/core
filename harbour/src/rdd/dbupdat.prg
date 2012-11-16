@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __DBUPDATE() function
+ * __dbUpdate() function
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://harbour-project.org

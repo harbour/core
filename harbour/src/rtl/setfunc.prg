@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __SETFUNCTION() function
+ * __SetFunction() function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org

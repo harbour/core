@@ -54,7 +54,7 @@ PROCEDURE Main()
       ? "Default connection is now this admin handle:", AdsConnection()
       AdsDisconnect()   // disconnect current default.
       // if you wanted to retain this connection for later, you could use
-      // hAdminCon := adsConnection(0)
+      // hAdminCon := AdsConnection(0)
       // This get/set call would return the current connection, then set it to 0
 
       ? "Default connection is now this handle (zero):", AdsConnection()

@@ -166,7 +166,7 @@ METHOD DeleteAllCookies( cDomain, cPath, lSecure ) CLASS uhttpd_Cookie
    LOCAL cCookieName
 
    FOR EACH cCookieName IN _COOKIE:Keys
-      // ::DeleteCookie( Substr( cCookieName, 2 ), cDomain, cPath, lSecure )
+      // ::DeleteCookie( SubStr( cCookieName, 2 ), cDomain, cPath, lSecure )
       ::DeleteCookie( cCookieName, cDomain, cPath, lSecure )
    NEXT
 

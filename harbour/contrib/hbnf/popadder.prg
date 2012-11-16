@@ -95,7 +95,7 @@ THREAD STATIC t_aStdColor
 
 // ----------------------------------------------------------
 // Pop Up Adder / Calculator with Tape Display
-// NOTE: To make FT_Adder() pop up from any wait state in your
+// NOTE: To make ft_Adder() pop up from any wait state in your
 //       application just insert the line:
 //         SET KEY K_ALT_A  TO FT_Adder
 //       at the top of your application
@@ -781,9 +781,9 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
    RETURN NIL
 
 // ----------------------------------------------------------
-// Sets the LASTKEY() value to value of nLastKey
+// Sets the LastKey() value to value of nLastKey
 // NOTE: I use this in most of my Pop-Up routines to reset the
-//       original value of LASTKEY() when quitting.
+//       original value of LastKey() when quitting.
 
 STATIC FUNCTION _ftSetLastKey( nLastKey )
 
@@ -972,7 +972,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
    RETURN xVarVal
 
 // ----------------------------------------------------------
-// User function for ACHOICE() when scrolling tape
+// User function for AChoice() when scrolling tape
 
 STATIC FUNCTION _ftAdderTapeUDF( mode, cur_elem, rel_pos, /* @ */ lAC_exit_ok )
 
@@ -1120,7 +1120,7 @@ STATIC FUNCTION _ftSetSCRColor( nStd, nEnh, nBord, nBack, nUnsel )
 //       window color and use it for all the colors. If
 //       cTypeBord==NIL use the single line border, else use the
 //       one they requested. Push the window coordinates, the
-//       color number, the SAVESCREEN() value, and whether they
+//       color number, the SaveScreen() value, and whether they
 //       picked the window color they wanted to use. If
 //       lAutoWindow=.F. then the window color was incremented
 //       and we will will restore the color number when we pop

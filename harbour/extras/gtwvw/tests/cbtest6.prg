@@ -161,7 +161,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
              * But do NOT assign oGetList:oGet into this oNewGet
              * from within here!
              * Remember that the reader() is still suspended
-             * on inkey(0). If we change the ActiveGet from here, then
+             * on Inkey(0). If we change the ActiveGet from here, then
              * when we leave this CB (eg. by means of K_TAB)
              * this reader() will resume, but alas the active get
              * is no longer the same! Thus reader() most likely
@@ -169,7 +169,7 @@ FUNCTION CBhandler( nWinNum, nId, nEvent, nIndex, cVar, GetList )
              *
              * The trick is simple:
              * reject the SETFOCUS. This will cause reader()
-             * resume its action on inkey(0).
+             * resume its action on Inkey(0).
              * All we have to do here is emulate the mouseclick
              * event on oNewGet object beneath the CB, ie.
              * putting K_LBUTTONDOWN into keyboard buffer
@@ -258,7 +258,7 @@ FUNCTION CBreader( oGet )
       ENDIF
 
    ELSEIF HB_ISBLOCK( bKeyBlock := SetKey( nKey ) )
-      oGetList:GetDoSetKey( bKeyBlock )  // eval(bKeyBlock)
+      oGetList:GetDoSetKey( bKeyBlock )  // Eval(bKeyBlock)
       oGet:exitState := GE_NOEXIT
 
    ENDIF

@@ -51,7 +51,7 @@
  */
 
 
-/* COM_MCR() */
+/* com_MCR() */
 #define MCR_ERROR             0     /* Parameter error */
 #define MCR_DTR               1     /* Data terminal ready (DTR) */
 #define MCR_RTS               2     /* Request to send (RTS) */
@@ -60,7 +60,7 @@
 #define MCR_LOOP              16    /* LOOP */
 
 
-/* COM_MSR() */
+/* com_MSR() */
 #define MSR_ERROR             0     /* Parameter error */
 #define MSR_DELTA_CTS         1     /* DELTA ready to send (DCTS) */
 #define MSR_DELTA_DSR         2     /* DELTA data terminal ready (DDSR) */
@@ -72,7 +72,7 @@
 #define MSR_DCD               128   /* Data carrier detected (DCD) */
 
 
-/* COM_LSR() */
+/* com_LSR() */
 #define LSR_ERROR             0     /* Parameter error */
 #define LSR_DATA_READY        1     /* Data ready */
 #define LSR_OVERRUN_ERR       2     /* Overflow error */
@@ -83,14 +83,14 @@
 #define LSR_TRANS_EMPTY       64    /* TX shift register empty */
 
 
-/* COM_SMODE() */
+/* com_SMode() */
 #define SMODE_EMPTY     1     /* Sending buffer empty */
 #define SMODE_SOFT      2     /* Wait for software handshake release(XON) */
 #define SMODE_HARD      4     /* Wait for hardware handshake release(CTS) */
 #define SMODE_RFLUSH    8     /* Deleted from remote station */
 
 
-/* COM_CRC() polynomials */
+/* com_CRC() polynomials */
 #define Parity          3        /* 2^1 + 1^0 */
 #define LCR_8           257      /* 2^8 + 1^0 */
 #define CRC_12          5011     /* 2^12 + 2^11 + 2^3 + 2^2 + 2^1 + 1^0 */

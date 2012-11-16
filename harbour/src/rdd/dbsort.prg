@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __DBSORT() function
+ * __dbSort() function
  *
  * Copyright 2000 Bruno Cantero <bruno@issnet.net>
  * www - http://harbour-project.org

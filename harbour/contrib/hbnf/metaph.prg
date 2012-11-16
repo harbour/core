@@ -26,7 +26,7 @@
 /*
  * File Contents
  *
- *   FT_METAPH()      Calculates the metaphone of a name
+ *   ft_Metaph()      Calculates the metaphone of a name
  *   _ftMakeAlpha()   Removes non-alpha characters from a string
  *   _ftConvVowel()   Converts all vowels to the letter 'v'
  *

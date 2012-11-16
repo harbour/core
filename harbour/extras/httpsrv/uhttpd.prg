@@ -79,7 +79,7 @@
 
 */
 
-// remove comment to activate hb_toOutDebug()
+// remove comment to activate hb_ToOutDebug()
 // #define DEBUG_ACTIVE
 
 #define FIXED_THREADS         // This force application to use fixed number of running threads and no service threads
@@ -138,8 +138,8 @@ REQUEST GDIMAGE, GDIMAGECHAR, GDCHART
 // TOCHECK: Caching of HRB modules (Is this faster than loading HRBBody from file where OS will cache ?)
 #define HRB_ACTIVATE_CACHE   .F.   // if .T. caching of HRB modules will be enabled. (NOTE: changes of files will not be loaded until server is active)
 
-#define CR_LF    ( CHR( 13 ) + CHR( 10 ) )
-#define HB_IHASH()   HB_HSETCASEMATCH( { => }, .F. )
+#define CR_LF    ( Chr( 13 ) + Chr( 10 ) )
+#define HB_IHASH()   hb_HSetCaseMatch( { => }, .F. )
 
 #ifdef __PLATFORM__WINDOWS
 REQUEST HB_GT_WVT_DEFAULT
@@ -246,7 +246,7 @@ PROCEDURE Main( ... )
    ENDIF
 
    // TOCHECK: now not force case insensitive
-   // HB_HSETCASEMATCH( s_hScriptAliases, .F. )
+   // hb_HSetCaseMatch( s_hScriptAliases, .F. )
 
    // ----------------- Line command parameters checking ----------------------
 
@@ -428,7 +428,7 @@ PROCEDURE Main( ... )
 #endif
 
    IF HB_ISSTRING( cDocumentRoot )
-      // cI := STRTRAN( SUBSTR( cDocumentRoot, 2 ), "\", "/" )
+      // cI := StrTran( SUBSTR( cDocumentRoot, 2 ), "\", "/" )
       cI := cDocumentRoot
       IF hb_DirExists( cI )
          IF Right( cI, 1 ) == "/" .AND. Len( cI ) > 2 .AND. !( SubStr( cI, Len( cI ) - 2, 1 ) == ":" )
@@ -514,8 +514,8 @@ PROCEDURE Main( ... )
    IF s_lConsole
       SET CURSOR OFF
       SetMode( nConsoleRows, nConsoleCols )
-      // hb_toOutDebug( "nConsoleRows = %s, nConsoleCols = %s", nConsoleRows, nConsoleCols )
-      // hb_toOutDebug( "nCmdConsoleRows = %s, nCmdConsoleCols = %s", nCmdConsoleRows, nCmdConsoleCols )
+      // hb_ToOutDebug( "nConsoleRows = %s, nConsoleCols = %s", nConsoleRows, nConsoleCols )
+      // hb_ToOutDebug( "nCmdConsoleRows = %s, nCmdConsoleCols = %s", nCmdConsoleRows, nCmdConsoleCols )
    ENDIF
 
    // --------------------- define mutexes -------------------------------------
@@ -624,7 +624,7 @@ PROCEDURE Main( ... )
          ENDIF
 
          // Memory release
-         // hb_GCAll( .T. )
+         // hb_gcAll( .T. )
 
       ENDDO
 
@@ -1188,7 +1188,7 @@ STATIC FUNCTION ParseRequest( cRequest )
             EXIT
          CASE "HOST"
             // aVal := uhttpd_split( ":", aRequest[ nI ] )
-            // _SERVER[ "HTTP_" + STRTRAN( UPPER( aVal[ 1 ] ), "-", "_")] := AllTrim( aVal[ 2 ] )
+            // _SERVER[ "HTTP_" + StrTran( Upper( aVal[ 1 ] ), "-", "_")] := AllTrim( aVal[ 2 ] )
             _SERVER[ "HTTP_" + StrTran( Upper( Left( aRequest[ nI ], nJ - 1 ) ), "-", "_" ) ] := cI
             EXIT
          CASE "CONTENT-TYPE"
@@ -1226,7 +1226,7 @@ STATIC FUNCTION ParseRequest( cRequest )
 
    ENDIF
 
-   // hb_toOutDebug( "_HTTP_REQUEST: aRequest = %s, _HTTP_REQUEST = %s\n\r", hb_ValToExp( aRequest ), hb_ValToExp( _HTTP_REQUEST ) )
+   // hb_ToOutDebug( "_HTTP_REQUEST: aRequest = %s, _HTTP_REQUEST = %s\n\r", hb_ValToExp( aRequest ), hb_ValToExp( _HTTP_REQUEST ) )
 
    // GET
    cFields := _SERVER[ "QUERY_STRING" ]
@@ -1236,7 +1236,7 @@ STATIC FUNCTION ParseRequest( cRequest )
       hb_HMerge( _REQUEST, hVars )
    ENDIF
 
-   // hb_toOutDebug( "GET: cFields = %s, hVars = %s, _GET = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _GET ), hb_ValToExp( _REQUEST ) )
+   // hb_ToOutDebug( "GET: cFields = %s, hVars = %s, _GET = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _GET ), hb_ValToExp( _REQUEST ) )
 
    // POST
    IF "POST" $ Upper( _SERVER[ "REQUEST_METHOD" ] )
@@ -1249,7 +1249,7 @@ STATIC FUNCTION ParseRequest( cRequest )
       m_cPost := cFields  // TOFIX: Who needs this ?
    ENDIF
 
-   // hb_toOutDebug( "POST: cFields = %s, hVars = %s, _POST = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ) )
+   // hb_ToOutDebug( "POST: cFields = %s, hVars = %s, _POST = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _POST ), hb_ValToExp( _REQUEST ) )
 
    // COOKIES
    cFields := _SERVER[ "HTTP_COOKIE" ]
@@ -1258,7 +1258,7 @@ STATIC FUNCTION ParseRequest( cRequest )
       hb_HMerge( _COOKIE, hVars )
       hb_HMerge( _REQUEST, hVars )
    ENDIF
-   // hb_toOutDebug( "COOKIE: cFields = %s, hVars = %s, _COOKIE = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _COOKIE ), hb_ValToExp( _REQUEST ) )
+   // hb_ToOutDebug( "COOKIE: cFields = %s, hVars = %s, _COOKIE = %s, _REQUEST = %s\n\r", cFields, hb_ValToExp( hVars ), hb_ValToExp( _COOKIE ), hb_ValToExp( _REQUEST ) )
 
 
    // define _HTTP_RESPONSE
@@ -1359,7 +1359,7 @@ STATIC FUNCTION MakeResponse()
       cRet += v:__enumKey() + ": " + v + CR_LF
    NEXT
 
-   // AEVAL( t_aHeader, {| x | cRet += x[1] + ": " + x[2] + CR_LF } )
+   // AEval( t_aHeader, {| x | cRet += x[1] + ": " + x[2] + CR_LF } )
    cRet += CR_LF
    cRet += t_cResult
 
@@ -1439,7 +1439,7 @@ STATIC PROCEDURE WriteToLog( cRequest )
 
    IF hb_mutexLock( s_hmtxLog )
 
-      // hb_ToOutDebug( "TIP_TimeStamp() = %s \n\r", TIP_TIMESTAMP() )
+      // hb_ToOutDebug( "TIP_TimeStamp() = %s \n\r", tip_TimeStamp() )
 
       cTime    := Time()
       dDate    := Date()
@@ -1497,29 +1497,29 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
 
    IF HB_ISSTRING( cProc )
 
-      // hb_toOutDebug( "Launching process: %s\n\r", cProc )
+      // hb_ToOutDebug( "Launching process: %s\n\r", cProc )
       // No hIn, hErr == hOut
 
       // save current directory
       cCurPath := hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir()
 
-      // hb_toOutDebug( "cCurPath: %s\n\r", cCurPath )
+      // hb_ToOutDebug( "cCurPath: %s\n\r", cCurPath )
 
       // Change dir to document root
       DirChange( s_cDocumentRoot )
 
-      // hb_toOutDebug( "New Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+      // hb_ToOutDebug( "New Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
       hProc := hb_processOpen( cProc, @hIn, @hOut, @hOut, .T. ) // .T. = Detached Process (Hide Window)
 
       // return to original folder
       DirChange( cCurPath )
 
-      // hb_toOutDebug( "New 2 Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
+      // hb_ToOutDebug( "New 2 Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
       IF hProc > -1
-         // hb_toOutDebug( "Process handler: %s\n\r", hProc )
-         // hb_toOutDebug( "Error: %s\n\r", FError() )
+         // hb_ToOutDebug( "Process handler: %s\n\r", hProc )
+         // hb_ToOutDebug( "Error: %s\n\r", FError() )
 
          pThread := hb_threadStart( @CGIKill(), hProc, hmtxCGIKill )
 
@@ -1529,11 +1529,11 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
             cSend += v:__enumKey() + "=" + LTrim( hb_CStr( v ) ) + iif( v:__enumIndex() < Len( _POST ), "&", "" )
          NEXT
          FWrite( hIn, cSend )
-         // hb_toOutDebug( "Sending: %s\n\r", cSend )
+         // hb_ToOutDebug( "Sending: %s\n\r", cSend )
 
          hb_mutexNotify( hmtxCGIKill, { hProc, .T. } )
 
-         // hb_toOutDebug( "Reading output\n\r" )
+         // hb_ToOutDebug( "Reading output\n\r" )
          cData := Space( 1000 )
          cOutPut := ""
          DO WHILE ( nLen := FRead( hOut, @cData, Len( cData ) ) ) > 0
@@ -1544,7 +1544,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          /*
          cData := Space( 1000 )
          cError := ""
-         DO WHILE ( nLen := Fread( hErr, @cData, Len( cData ) ) ) > 0
+         DO WHILE ( nLen := FRead( hErr, @cData, Len( cData ) ) ) > 0
             cError += SubStr( cData, 1, nLen )
             cData := Space( 1000 )
          ENDDO
@@ -1552,19 +1552,19 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          cOutPut += cError
          */
 
-         // hb_toOutDebug( "Received: cOutPut = %s\n\r", cOutPut )
+         // hb_ToOutDebug( "Received: cOutPut = %s\n\r", cOutPut )
 
          // ? "Waiting for process termination"
          // Return value
          nErrorLevel := hb_processValue( hProc )
 
-         // hb_toOutDebug( "CGIExec HB_ProcessValue nErrorLevel = %s\n\r", nErrorLevel )
+         // hb_ToOutDebug( "CGIExec HB_ProcessValue nErrorLevel = %s\n\r", nErrorLevel )
 
          // Notify to CGIKill to terminate
          hb_mutexNotify( hmtxCGIKill, { hProc, .F. } )
          hb_threadJoin( pThread, @nKillExit )
 
-         // hb_toOutDebug( "CGIExec quitting CGI, nErrorLevel = %s\n\r", nKillExit )
+         // hb_ToOutDebug( "CGIExec quitting CGI, nErrorLevel = %s\n\r", nKillExit )
          IF nKillExit != 0
             // retrieving last command from
             nErrorLevel := nKillExit
@@ -1575,7 +1575,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          FClose( hOut )
          // FClose( hErr )
 
-         // hb_toOutDebug( "CGIExec closed handles\n\r" )
+         // hb_ToOutDebug( "CGIExec closed handles\n\r" )
 
       ENDIF
 
@@ -1597,7 +1597,7 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
    LOCAL aValue, hRecProc
    LOCAL hCurProc := hProc
 
-   // hb_toOutDebug( "CGIKill() Started. nStartTime = %s\n\r", nStartTime )
+   // hb_ToOutDebug( "CGIKill() Started. nStartTime = %s\n\r", nStartTime )
 
    // Kill process after MAX_PROCESS_EXEC_TIME
    DO WHILE .T.
@@ -1616,7 +1616,7 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
          ENDIF
       ENDIF
 
-      // hb_toOutDebug( "CGIKill() lWait = %s, time := %s\n\r", lWait, hb_milliseconds() - nStartTime )
+      // hb_ToOutDebug( "CGIKill() lWait = %s, time := %s\n\r", lWait, hb_MilliSeconds() - nStartTime )
 
       IF HB_ISLOGICAL( lWait )
          IF lWait
@@ -1628,7 +1628,7 @@ STATIC FUNCTION CGIKill( hProc, hmtxCGIKill )
 
       IF ( hb_MilliSeconds() - nStartTime ) > CGI_MAX_EXEC_TIME * 1000
 
-         // hb_toOutDebug( "CGIKill() Killing Process hCurProc = %s\n\r", hCurProc )
+         // hb_ToOutDebug( "CGIKill() Killing Process hCurProc = %s\n\r", hCurProc )
 
          // Killing process if still exists
          IF hCurProc != NIL
@@ -1670,10 +1670,10 @@ PROCEDURE uhttpd_SetHeader( cType, cValue )
    hb_HSet( _HTTP_RESPONSE, cType, cValue )
 
    /*
-   IF lReplace .AND. ( nI := ASCAN( t_aHeader, {| x | UPPER( x[ 1 ] ) == UPPER( cType ) } ) ) > 0
+   IF lReplace .AND. ( nI := AScan( t_aHeader, {| x | Upper( x[ 1 ] ) == Upper( cType ) } ) ) > 0
       t_aHeader[ nI, 2 ] := cValue
    ELSE
-      AADD( t_aHeader, { cType, cValue } )
+      AAdd( t_aHeader, { cType, cValue } )
    ENDIF
    */
 
@@ -1860,7 +1860,7 @@ STATIC FUNCTION uproc_default()
    // Starting from Script Name request
    cScript := _SERVER[ "SCRIPT_NAME" ]
 
-   // cFileName := STRTRAN(cRoot + _SERVER["SCRIPT_NAME"], "//", "/")
+   // cFileName := StrTran(cRoot + _SERVER["SCRIPT_NAME"], "//", "/")
    cFileName := NIL
    cPathInfo := ""
 
@@ -1902,7 +1902,7 @@ STATIC FUNCTION uproc_default()
          RETURN MakeResponse()
       ENDIF
 
-      // hb_toOutDebug( "cFileName = %s, uhttpd_OSFileName( cFileName ) = %s,\n\r s_hScriptAliases = %s\n\r", cFileName, uhttpd_OSFileName( cFileName ), hb_ValToExp( s_hScriptAliases ) )
+      // hb_ToOutDebug( "cFileName = %s, uhttpd_OSFileName( cFileName ) = %s,\n\r s_hScriptAliases = %s\n\r", cFileName, uhttpd_OSFileName( cFileName ), hb_ValToExp( s_hScriptAliases ) )
 
       // checking extension
       IF cExt == NIL
@@ -1942,7 +1942,7 @@ STATIC FUNCTION uproc_default()
             lFound := .F.
             DO WHILE ! Empty( cBaseFile )
 
-               // hb_toOutDebug( "cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
+               // hb_ToOutDebug( "cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
 
                IF ( nPos := RAt( "/", cBaseFile ) ) > 0
                   cPathInfo := SubStr( cBaseFile, nPos ) + cPathInfo
@@ -1965,7 +1965,7 @@ STATIC FUNCTION uproc_default()
                ENDIF
             ENDDO
 
-            // hb_toOutDebug( "Uscita: cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
+            // hb_ToOutDebug( "Uscita: cBaseFile = %s, cPathInfo = %s\n\r", cBaseFile, cPathInfo )
 
             // Found a script file name
             IF lFound .AND. ! Empty( cPathInfo )
@@ -1982,26 +1982,26 @@ STATIC FUNCTION uproc_default()
 
       // Ok, now I have to see what action I have to take
 
-      // hb_toOutDebug( "cExt = %s\n\r", cExt )
+      // hb_ToOutDebug( "cExt = %s\n\r", cExt )
 
       // Begin to search Handlers
       IF cExt != NIL
          cHandler := uhttpd_HGetValue( s_hHandlers, cExt )
       ENDIF
 
-      // hb_toOutDebug( "cHandler = %s\n\r", cHandler )
+      // hb_ToOutDebug( "cHandler = %s\n\r", cHandler )
 
       IF cHandler != NIL
          xAction := uhttpd_HGetValue( s_hActions, cHandler )
       ENDIF
 
-      // hb_toOutDebug( "xAction = %s\n\r", xAction )
+      // hb_ToOutDebug( "xAction = %s\n\r", xAction )
 
       IF xAction == NIL
          xAction := @Handler_Default()
       ENDIF
 
-      // hb_toOutDebug( "xAction = %s\n\r", xAction )
+      // hb_ToOutDebug( "xAction = %s\n\r", xAction )
 
       // Setting CGI vars
       define_Env( _SERVER )
@@ -2145,9 +2145,9 @@ STATIC FUNCTION HRB_LoadFromFileEncrypted( cFile, cKey )
 PROCEDURE HRB_SaveToFileEncrypted( cHrbBody, cKey, cEncFileName )
    LOCAL cFile
    IF ! Empty( cHrbBody )
-      cHrbBody := hb_zcompress( cHrbBody )
-      cHrbBody := sx_encrypt( cHrbBody, cKey )
-      hb_memowrit( cEncFileName, cHrbBody )
+      cHrbBody := hb_ZCompress( cHrbBody )
+      cHrbBody := sx_Encrypt( cHrbBody, cKey )
+      hb_MemoWrit( cEncFileName, cHrbBody )
    ENDIF
    RETURN
 */
@@ -2203,7 +2203,7 @@ STATIC PROCEDURE SysSettings()
    SET CONFIRM     ON
    SET ESCAPE      ON
    SET WRAP        ON
-   // RDDSetDefault( "DBFCDX" )
+   // rddSetDefault( "DBFCDX" )
 
    RETURN
 
@@ -2254,7 +2254,7 @@ STATIC PROCEDURE Progress( /*@*/ nProgress )
       nProgress := 0
    ENDIF
 
-   // using hb_dispOutAt() to avoid MT screen updates problem
+   // using hb_DispOutAt() to avoid MT screen updates problem
    hb_DispOutAt( 10,  5, cString )
    hb_DispOutAt(  0, 60, "Time: " + Time() )
 

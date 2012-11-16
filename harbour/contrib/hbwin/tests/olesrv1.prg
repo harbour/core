@@ -51,17 +51,17 @@ PROCEDURE DllMain()
     * variables inside hash array are also local to OLE object.
     * Alternatively programmer can use <bAction> or <sAction> to create
     * seprate copy of hash array for each object, i.e.:
-    *    bAction := {|| hb_hClone( hValue ) }
+    *    bAction := {|| hb_HClone( hValue ) }
     * When hash array contains symbol item (@funcName()) then when it's
     * executed by OLE object message it's possible to access the hash
     * array bound with given OLE object using QSelf() function. It maybe
     * useful if hash array contains instance variables and programmer
     * wants to access them.
     * Please remember that using hash array which was initialized to keep
-    * original assign order by HB_HKEEPORDER( <hAction>, .T. ) before
+    * original assign order by hb_HKeepOrder( <hAction>, .T. ) before
     * adding its items you can define strict message numbers (DISPIDs), i.e.:
     *    hAction := {=>}
-    *    HB_HKEEPORDER( hAction, .T. )
+    *    hb_HKeepOrder( hAction, .T. )
     *    hAction[ "OPEN" ]  := @myole_open()     // DISPID=1
     *    hAction[ "CLOSE" ] := @myole_close()    // DISPID=2
     *    hAction[ "SAVE" ]  := @myole_save()     // DISPID=3
@@ -92,15 +92,15 @@ PROCEDURE DllMain()
     * it's possible to also set 4-th parameter <lAcceptAll> to .T. and
     * in such case <xAction> parameter is used in different way. Newly
     * created OLE object accepts any massage names invoking for each
-    * of them EVAL() message which is sent to <xAction> with OLE message
+    * of them Eval() message which is sent to <xAction> with OLE message
     * name inserted as the 1-st item to OLE object parameters.
     * It allows to create OLE server which will accept unknown messages
     * redirecting them to some other code, i.e.:
-    *    if netio_connect( cServer,,, cPasswd )
+    *    if netio_Connect( cServer,,, cPasswd )
     *       win_oleServerInit( cClassID, cServerName, @netio_funcExec(), .T. )
     *    endif
     * initialize OLE server which redirects all messages to default netio
-    * connection established by netio_connect().
+    * connection established by netio_Connect().
     *
     * If 3-rd parameter is not given then all HVM functions becomes
     * OLE methods and HVM memvars (public and private variables) are
@@ -119,11 +119,11 @@ CREATE CLASS OleNetioSrv
 
    HIDDEN:
 
-   VAR      pConn
+   VAR    pConn
 
    EXPORTED:
 
-   METHOD   Eval( cMethodName, ... )
+   METHOD Eval( cMethodName, ... )
 
 ENDCLASS
 
@@ -134,27 +134,27 @@ METHOD Eval( cMethodName, ... ) CLASS OleNetioSrv
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
       SWITCH cMethodName
       CASE "CONNECT"
-         xRetVal := ! Empty( ::pConn := NETIO_GETCONNECTION( ... ) )
+         xRetVal := ! Empty( ::pConn := netio_GetConnection( ... ) )
          EXIT
       CASE "DISCONNECT"
          ::pConn := NIL
          xRetVal := .T.
          EXIT
       CASE "PROCEXISTS"
-         xRetVal := NETIO_PROCEXISTS( ::pConn, ... )
+         xRetVal := netio_ProcExists( ::pConn, ... )
          EXIT
       CASE "PROCEXEC"
-         xRetVal := NETIO_PROCEXEC( ::pConn, ... )
+         xRetVal := netio_ProcExec( ::pConn, ... )
          EXIT
       CASE "PROCEXECW"
-         xRetVal := NETIO_PROCEXECW( ::pConn, ... )
+         xRetVal := netio_ProcExecW( ::pConn, ... )
          EXIT
       CASE "FUNCEXEC"
-         xRetVal := NETIO_FUNCEXEC( ::pConn, ... )
+         xRetVal := netio_FuncExec( ::pConn, ... )
          EXIT
       OTHERWISE
          /* redirect all other messages to RPC server as function calls */
-         xRetVal := NETIO_FUNCEXEC( ::pConn, cMethodName, ... )
+         xRetVal := netio_FuncExec( ::pConn, cMethodName, ... )
       ENDSWITCH
    RECOVER USING oErr
       xRetVal := oErr

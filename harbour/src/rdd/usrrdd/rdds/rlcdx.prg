@@ -52,9 +52,9 @@
 
 /*
  * A simple RDD which introduce lock counters. It has full DBFCDX
- * functionality from which it inherits but if you execute DBRLOCK(100)
- * twice then you will have to also repeat call to DBRUNLOCK(100) to
- * really unlock the record 100. The same if for FLOCK()
+ * functionality from which it inherits but if you execute dbRLock(100)
+ * twice then you will have to also repeat call to dbRUnlock(100) to
+ * really unlock the record 100. The same if for FLock()
  * This idea comes from one of messages sent by Mindaugas Kavaliauskas.
  */
 

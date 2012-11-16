@@ -303,7 +303,7 @@ STATIC FUNCTION VouBlockField( i )
 
 // supporting functions ***************************
 
-// displays a message on maxrow() and returns .T.
+// displays a message on MaxRow() and returns .T.
 FUNCTION lMessage( cMsg )
 
 #ifndef __GTWVW__

@@ -54,7 +54,7 @@
  * A simple RDD which uses HB_F*() functions from MISC library
  * to access CSV files. It allow to open an CSV file and navigate
  * using SKIP()/GOTO()/GOTOP()/GOBOTTOM() functions using
- * BOF()/EOF()/RECNO()/LASTREC() to check current state.
+ * Bof()/EOF()/RECNO()/LASTREC() to check current state.
  * HB_F*() functions does not support single field access and allow
  * to read only the whole line. This RDD also. I only added one
  * virtual field which exist in all tables open by this RDD called
@@ -227,7 +227,7 @@ STATIC FUNCTION FCM_GOTO( nWA, nRecord )
       aWData[ 2 ] := aWData[ 3 ] := hb_FEof()
    ELSE
       hb_FSkip( 0 ) /* Clear the EOF flag inside HB_F* engin
-                     - it's not done automatically in HB_FGOBOTTOM() :-( */
+                     - it's not done automatically in hb_FGoBottom() :-( */
       hb_FGoto( nRecord )
       aWData[ 2 ] := hb_FRecNo() == 0
       aWData[ 3 ] := hb_FEof()
@@ -257,7 +257,7 @@ STATIC FUNCTION FCM_GOBOTTOM( nWA )
       aWData[ 2 ] := aWData[ 3 ] := .T.
    ELSE
       hb_FSkip( 0 ) /* Clear the EOF flag inside HB_F* engin
-                     - it's not done automatically in HB_FGOBOTTOM() :-( */
+                     - it's not done automatically in hb_FGoBottom() :-( */
       hb_FGoBottom()
       aWData[ 2 ] := aWData[ 3 ] := .F.
    ENDIF
@@ -291,7 +291,7 @@ STATIC FUNCTION FCM_SKIPRAW( nWA, nRecords )
 
    RETURN HB_SUCCESS
 
-STATIC FUNCTION FCM_BOF( nWA, lBof )
+STATIC FUNCTION FCM_Bof( nWA, lBof )
 
    LOCAL aWData := USRRDD_AREADATA( nWA )
 
@@ -348,7 +348,7 @@ FUNCTION FCOMMA_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID )
    aMyFunc[ UR_CREATE ]   := ( @FCM_CREATE()   )
    aMyFunc[ UR_OPEN ]     := ( @FCM_OPEN()     )
    aMyFunc[ UR_CLOSE ]    := ( @FCM_CLOSE()    )
-   aMyFunc[ UR_BOF  ]     := ( @FCM_BOF()      )
+   aMyFunc[ UR_BOF  ]     := ( @FCM_Bof()      )
    aMyFunc[ UR_EOF  ]     := ( @FCM_EOF()      )
    aMyFunc[ UR_DELETED ]  := ( @FCM_DELETED()  )
    aMyFunc[ UR_SKIPRAW ]  := ( @FCM_SKIPRAW()  )

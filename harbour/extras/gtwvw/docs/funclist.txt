@@ -129,7 +129,7 @@ read the source code :-).
 //then assigns s_bMainCoordMode := lMainCoord (if supplied)
 //
 
-// WVW_ADDROWS( [nWinNum], nRows)
+// wvw_AddRows( [nWinNum], nRows)
 // add nRows rows to window nWinNum (nRows may be < 0)
 // returns .t. if successful
 //

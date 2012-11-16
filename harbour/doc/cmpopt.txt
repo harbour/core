@@ -31,7 +31,7 @@ optimized at compile time:
       CToD( "" [ , ... ] )
       DToS( <dConst> ] )
       SToD( [ <cConst> ] )
-      HB_SToD( [ <cConst> ] )
+      hb_SToD( [ <cConst> ] )
       hb_SToT( [ <cConst> ] )
       hb_bitNot( <nConst> [, ... ] )
       hb_bitAnd( <nConst1>, <nConst2> [, <nConstN> ] )

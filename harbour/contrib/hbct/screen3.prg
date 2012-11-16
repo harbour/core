@@ -6,7 +6,7 @@
  * Harbour Project source code:
  *   CT3 video functions:
  *
- * CLEAREOL(), CLEOL(), CLWIN()
+ * ClearEol(), ClEol(), ClWin()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *

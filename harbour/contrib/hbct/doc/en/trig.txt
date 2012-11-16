@@ -35,7 +35,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR()
    $END$
  */
 
@@ -75,7 +75,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -115,7 +115,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -155,7 +155,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -193,7 +193,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -234,43 +234,43 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      ACos()
+      Acos()
    $CATEGORY$
       CT3 math functions
    $ONELINER$
       Arcus cosine of the argument
    $SYNTAX$
-      ACos( nCosine ) -> nRadiant
+      Acos( nCosine ) -> nRadiant
    $ARGUMENTS$
       <nCosine>       the cosine of an angle
    $RETURNS$
       <nRadiant>      the angle whose cosine is <nCosine>
    $DESCRIPTION$
-      The function ACos() is the inverse function of Cos(). It takes a
+      The function Acos() is the inverse function of Cos(). It takes a
       cosine value and returns the smallest(!) angle whose cosine equals to the argument.
       The return value is given in radiants (full angle equals 2*Pi -
       see DToR() if you need to convert it into degress).
       Note, that <nCosine> must be between -1 and 1 and that <nRadiant>
       is always between 0 and Pi().
    $EXAMPLES$
-      ? aCos( 0.0 ) // --> Pi() / 2
-      ? aCos( 0.5 ) // --> 1.04719...
+      ? Acos( 0.0 ) // --> Pi() / 2
+      ? Acos( 0.5 ) // --> 1.04719...
    $TESTS$
-      aCos( 0.0 ) == Pi() / 2
-      aCos( Sqrt( 1 / 2 ) ) == Pi() / 4
-      aCos( 1.0 ) == 0.0
-      aCos( -1.0 ) == Pi()
-      aCos( 0.0 ) == Pi() / 2  // and not -Pi()/2, although cos (-Pi()/2) == 0.0 !
+      Acos( 0.0 ) == Pi() / 2
+      Acos( Sqrt( 1 / 2 ) ) == Pi() / 4
+      Acos( 1.0 ) == 0.0
+      Acos( -1.0 ) == Pi()
+      Acos( 0.0 ) == Pi() / 2  // and not -Pi()/2, although cos (-Pi()/2) == 0.0 !
    $STATUS$
       Ready
    $COMPLIANCE$
-      ACos() is compatible with CT3's ACos().
+      Acos() is compatible with CT3's Acos().
    $PLATFORMS$
       All
    $FILES$
@@ -288,7 +288,7 @@
    $ONELINER$
       Arcus tangent of the argument
    $SYNTAX$
-      ACos( nTangent ) -> nRadiant
+      Acos( nTangent ) -> nRadiant
    $ARGUMENTS$
       <nTangent>      the tangent of an angle
    $RETURNS$
@@ -314,7 +314,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -359,7 +359,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Sinh(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -398,7 +398,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Cosh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Cosh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -437,7 +437,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Tanh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Tanh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -472,7 +472,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),RToD(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),RToD(),DToR(),Pi()
    $END$
  */
 
@@ -508,7 +508,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),DToR(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),DToR(),Pi()
    $END$
  */
 
@@ -543,6 +543,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      Sin(),Cos(),Tan(),Cot(),Asin(),ACos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),Pi()
+      Sin(),Cos(),Tan(),Cot(),Asin(),Acos(),Atan(),Atn2(),Sinh(),Cosh(),Tanh(),RToD(),Pi()
    $END$
  */

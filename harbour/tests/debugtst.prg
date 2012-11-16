@@ -196,8 +196,8 @@ STATIC FUNCTION Show()
 //
 // If we do not want 'cName' duplicated we have to use __objGetValueList :
 //
-// aNewExcept := aClone( oSource:aExcept() )
-// aAdd( aNewExcept, "cName" )  /* Add cName to exception list               */
+// aNewExcept := AClone( oSource:aExcept() )
+// AAdd( aNewExcept, "cName" )  /* Add cName to exception list               */
 // oTarget:Transfer( __objGetValueList( oSource, aNewExcept ) )
 //                              /* Get DATA from oSource with new exceptions */
 //                              /* Transfer DATA to oTarget                  */
@@ -209,8 +209,8 @@ STATIC FUNCTION Show()
 // or :
 //
 // aCollect := {}
-// aAdd( aCollect, { "nLeft" , 10 } )
-// aAdd( aCollect, { "nRight", 5  } )
+// AAdd( aCollect, { "nLeft" , 10 } )
+// AAdd( aCollect, { "nRight", 5  } )
 // oTarget:Transfer( aCollect )
 //
 // Copy oSource to a memo field :

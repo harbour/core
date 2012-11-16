@@ -597,7 +597,7 @@ METHOD WvgWindow:toBack()
 
 METHOD WvgWindow:toFront()
 
-   /*RETURN WVG_SetForeGroundWindow( ::hWnd ) */
+   /*RETURN Wvg_SetForegroundWindow( ::hWnd ) */
 
    RETURN Wvg_SetWindowPosToTop( ::hWnd )
 

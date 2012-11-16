@@ -232,7 +232,7 @@ MEMVAR _wvwtemp_
 
   Using wvw_nSetCurWindow() in MainCoord Mode may not be appropriate, because
   current window is reset to 0 upon returning from a standard GT function
-  (DispOut(), QQout(), DevOut(), etc.). Remember that these functions
+  (DispOut(), QQOut(), DevOut(), etc.). Remember that these functions
   may also be called indirectly through many other functions/commands
   (Alert(), AChoice(), GET, etc.).
 

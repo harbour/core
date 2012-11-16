@@ -80,7 +80,7 @@
 #define PQTRANS_INERROR                 3
 #define PQTRANS_UNKNOWN                 4
 
-/* PQMETADATA() positions for array returned */
+/* PQmetadata() positions for array returned */
 #define HBPG_META_FIELDNAME             1
 #define HBPG_META_FIELDTYPE             2
 #define HBPG_META_FIELDLEN              3

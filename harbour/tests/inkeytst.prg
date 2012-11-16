@@ -84,10 +84,10 @@ PROCEDURE TEST1
    CLS
    ?
    ? "Testing the KEYBOARD and CLEAR TYPEAHEAD commands and the"
-   ? "INKEY(), NEXTKEY(), and LASTKEY() functions."
+   ? "Inkey(), NextKey(), and LastKey() functions."
    ?
    ? "For the first test, the keyboard will be stuffed with the"
-   ? "text 'AB' and then INKEY() will be called twice."
+   ? "text 'AB' and then Inkey() will be called twice."
    ?
    ? "The result should be:   65   66"
    ?
@@ -105,7 +105,7 @@ PROCEDURE TEST2
    ?
    ? "For the second test, the keyboard will be stuffed with the"
    ? "text 'HELLO', then the typeahead will be cleared, and then"
-   ? "INKEY() will be called once."
+   ? "Inkey() will be called once."
    ?
    ? "The result should be:   0"
    ?
@@ -123,8 +123,8 @@ PROCEDURE TEST3
    CLS
    ?
    ? "For the third test, the keyboard will be stuffed with the"
-   ? "text 'AB', then NEXTKEY() will be called twice and finally"
-   ? "INKEY() will be called twice."
+   ? "text 'AB', then NextKey() will be called twice and finally"
+   ? "Inkey() will be called twice."
    ?
    ? "The result should be:   65   65   65   66"
    ?
@@ -141,9 +141,9 @@ PROCEDURE TEST4
    CLS
    ?
    ? "For the fourth test, the keyboard will be stuffed with the"
-   ? "Text 'AB', then INKEY() will be called once, LASTKEY() will"
-   ? "be called twice, NEXTKEY() will be called once, and finally"
-   ? "INKEY() will be called once."
+   ? "Text 'AB', then Inkey() will be called once, LastKey() will"
+   ? "be called twice, NextKey() will be called once, and finally"
+   ? "Inkey() will be called once."
    ?
    ? "The result should be:   65   65   65   66   66"
    ?
@@ -165,7 +165,7 @@ PROCEDURE TEST5
    ? "Text '" + cText + "'"
    ? "with the typeahead buffer set to the default size, then 25"
    ? "then 16, then 0. After each attempt to stuff the buffer,"
-   ? "the buffer will be emptied using NEXTKEY() and INKEY() and"
+   ? "the buffer will be emptied using NextKey() and Inkey() and"
    ? "the ASCII text that was extracted will be displayed."
    ?
    ? "For the default size, which is 50, all but '" + Right( cText, Len( cText ) - 49 ) + "' should be"
@@ -226,7 +226,7 @@ PROCEDURE TEST7( cSkip, cRaw )
       ENDIF
    ENDIF
 
-   SET( _SET_EVENTMASK, nMask )
+   Set( _SET_EVENTMASK, nMask )
 
    IF ! Empty( cSkip )
       IF Upper( cSkip ) == "BREAK"

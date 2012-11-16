@@ -22,6 +22,6 @@ PROCEDURE Main()
    ? 'gt_StrExpand( "HARBOUR", 2, "-" )                        =>', gt_StrExpand( "HARBOUR", 2, "-" )
    ? 'gt_StrLeft( "this is a test", "hsit " )                  =>', gt_StrLeft( "this is a test", "hsit " )
    ? 'gt_StrPBRK( "this is a test", "sa " )                    =>', gt_StrPBRK( "this is a test", "sa " )
-   ? 'gt_StrRight( "this is a test", "teas " )                 =>', gt_strright( "this is a test", "teas " )
+   ? 'gt_StrRight( "this is a test", "teas " )                 =>', gt_StrRight( "this is a test", "teas " )
 
    RETURN

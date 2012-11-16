@@ -143,7 +143,7 @@ METHOD New( cInBuffer ) CLASS TCgi
 
 /****
 *
-*        TCgi():ToObject()
+*        TCGI():ToObject()
 *
 *        Creates instance variables out of CGI FORM return values
 *        or URL encoded content.

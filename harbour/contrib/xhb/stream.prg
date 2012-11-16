@@ -177,7 +177,7 @@ METHOD Read( sBuffer, nOffset, nCount ) CLASS TStreamFileReader
 
 /*
    IF ! HB_ISBYREF( @sBuffer )
-      Throw( xhb_ErrorNew( "Stream", 0, 1002, ProcName(), "Buffer not BYREF.", HB_aParams() ) )
+      Throw( xhb_ErrorNew( "Stream", 0, 1002, ProcName(), "Buffer not BYREF.", hb_AParams() ) )
    ENDIF
 */
 

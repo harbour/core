@@ -155,7 +155,7 @@ FUNCTION NetLock( nType, lReleaseLocks, nSeconds )
       ( nType != 1 .AND. ;
         nType != 2 .AND. ;
         nType != 3 )
-      Alert( "Invalid Argument passed to NETLOCK()" )
+      Alert( "Invalid Argument passed to NetLock()" )
       RETURN lSuccess
    ENDIF
 
@@ -438,7 +438,7 @@ FUNCTION SetNetMsgColor( cColor )
 *
 *     TableNew()
 *
-*     getTable()
+*     GetTable()
 */
 
 FUNCTION TableNew( cDBF, cALIAS, cOrderBag, cDRIVER, ;
@@ -820,7 +820,7 @@ METHOD Open() CLASS HBTable
       ENDIF
    ENDIF
 
-   SELECT( ::Alias )
+   Select( ::Alias )
    ::Area := Select()
    IF ::cOrderBag != NIL .AND. hb_dbExists( ::cPath + ::cOrderFile )
 
@@ -907,7 +907,7 @@ METHOD FldInit() CLASS HBTable
    oNew:oParent     := ::oParent
    oNew:Buffer      := ::buffer
 
-   SELECT( oNew:Alias )
+   Select( oNew:Alias )
 
    oNew:Area := Select()
 
@@ -954,7 +954,7 @@ METHOD PROCEDURE Read( lKeepBuffer ) CLASS HBTable
       AAdd( ::ReadBuffers, { ( ::Alias )->( RecNo() ), ::Buffer } )
    ENDIF
 
-   SELECT( nSel )
+   Select( nSel )
 
    RETURN
 
@@ -986,7 +986,7 @@ METHOD PROCEDURE ReadBlank( lKeepBuffer ) CLASS HBTable
    ENDIF
 
    ( ::Alias )->( dbGoto( nRec ) )
-   SELECT( nSel )
+   Select( nSel )
 
    RETURN
 
@@ -1031,7 +1031,7 @@ METHOD Write( lKeepBuffer ) CLASS HBTable
       ( ::Alias )->( dbRUnlock() )
    ENDIF
    ( ::Alias )->( ordSetFocus( nOrd ) )
-   SELECT( nSel )
+   Select( nSel )
 
    RETURN .T.
 
@@ -1060,7 +1060,7 @@ METHOD BUFWrite( aBuffer ) CLASS HBTable
       ( ::Alias )->( dbRUnlock() )
    ENDIF
    ( ::Alias )->( ordSetFocus( nOrd ) )
-   SELECT( nSel )
+   Select( nSel )
 
    RETURN .T.
 
@@ -1269,7 +1269,7 @@ METHOD Reindex() CLASS HBTable
 
       IF hb_dbExists( ::cPath + ::cOrderFile )
          IF ! hb_dbDrop( ::cPath + ::cOrderFile )
-            // --> ALERT(".cdx *NOT* Deleted !!!" )
+            // --> Alert(".cdx *NOT* Deleted !!!" )
          ENDIF
       ENDIF
 
@@ -1292,7 +1292,7 @@ METHOD Reindex() CLASS HBTable
    ( ::Alias )->( ordSetFocus( nOrd ) )
    ( ::Alias )->( dbGoTop() )
    ( ::Alias )->( dbUnlock() )
-   SELECT( nSel )
+   Select( nSel )
 
    RETURN .T.
 
@@ -1308,7 +1308,7 @@ METHOD FastReindex() CLASS HBTable
       ::Isnet := .F.
       IF hb_dbExists( ::cPath + ::cOrderFile )
          IF ! hb_dbDrop( ::cPath + ::cOrderFile )
-            // --> ALERT(".cdx *NOT* Deleted !!!" )
+            // --> Alert(".cdx *NOT* Deleted !!!" )
          ENDIF
       ENDIF
 
@@ -1331,7 +1331,7 @@ METHOD FastReindex() CLASS HBTable
    ( ::Alias )->( ordSetFocus( nOrd ) )
    ( ::Alias )->( dbGoTop() )
    ( ::Alias )->( dbUnlock() )
-   SELECT( nSel )
+   Select( nSel )
 
    RETURN .T.
 

@@ -25,74 +25,67 @@ Changes and Enhancements over the original CA-T**ls 3 Library
 Martin Vogel <vogel@inttec.de>
 =============================================================
 
-* ADDASCII()   New 4th parameter to enable a carry over in the addition
+* AddAscii()   New 4th parameter to enable a carry over in the addition
                process
 
-* ATREPL()     New 6th parameter to specify characters to be ignored
+* AtRepl()     New 6th parameter to specify characters to be ignored
 
-* ATTOKEN()    New 4th parameter to specify a skip width equal to the
-               TOKEN() function
+* AtToken()    New 4th parameter to specify a skip width equal to the
+               Token() function
 
-+ CHARHIST()   generates a character histogram of a string
++ CharHist()   generates a character histogram of a string
 
-+ CHARRLL()    bitwise roll to the left operation on characters
++ CharRll()    bitwise roll to the left operation on characters
 
-+ CHARRLR()    bitwise roll to the right operation on characters
++ CharRlr()    bitwise roll to the right operation on characters
 
-+ CHARSHL()    bitwise shift left operation on characters
++ CharShl()    bitwise shift left operation on characters
 
-+ CHARSHR()    bitwise shift right operation on characters
++ CharShr()    bitwise shift right operation on characters
 
-+ CHARSLIST()  generates a sorted character list of a string
++ CharSList()  generates a sorted character list of a string
 
-+ CHARSUB()    subtracts corresponding ASCII values
++ CharSub()    subtracts corresponding ASCII values
 
-+ COSH()       hyperbolic cosine
++ Cosh()       hyperbolic cosine
 
-+ CSETARGERR() set behaviour on argument errors
++ CSetArgErr() set behaviour on argument errors
 
-+ CTINIT()     library init function
++ ctinit()     library init function
 
-+ CTEXIT()     library exit function
++ ctexit()     library exit function
 
-+ DAYSINMONTH() Returns the number of days in month
++ DaysInMonth() Returns the number of days in month
 
-+ DAYSTOMONTH() Total number of days from first of Jan to beginning of nMonth.
++ DaysToMonth() Total number of days from first of Jan to beginning of nMonth.
 
-+ NUMANDX()    \
-+ NUMORX()     |
-+ NUMXORX()    |- equivalents to NUMAND(),... functions, but working
-+ NUMNOTX()    |  with any bit number of 1 to 32
-+ NUMROLX()    |
-+ NUMMIRRX()   /
-
-* SETATLIKE()  2nd parameter can be passed by reference so that SETATLIKE
+* SetAtLike()  2nd parameter can be passed by reference so that SETATLIKE
                can store the acutal wildcard character in it
 
-+ SINH()       hyperbolic sine
++ Sinh()       hyperbolic sine
 
-* TABPACK()    new 4th, 5th and 6th parameter to let one set the carriage-return-line-feed string,
-* TABEXPAND()  the tab character and the chr(141)[soft line feed] behaviour
+* TabPack()    new 4th, 5th and 6th parameter to let one set the carriage-return-line-feed string,
+* TabExpand()  the tab character and the Chr(141)[soft line feed] behaviour
 
-+ TANH()       hyperbolic tangent
++ Tanh()       hyperbolic tangent
 
-* TOKEN()      New 5th and 6th parameter where the function can store
+* Token()      New 5th and 6th parameter where the function can store
                the tokenizer before and after the extracted token.
 
-* TOKENINIT()  all incremental tokenizer functions
-                 TOKENINIT(),TOKENEXIT(),TOKENNEXT(),TOKENNUM(),
-                 TOKENAT(),SAVETOKEN(),RESTTOKEN(),TOKENEND()
+* TokenInit()  all incremental tokenizer functions
+                 TokenInit(),TokenExit(),TOKENNEXT(),TokenNum(),
+                 TokenAt(),SAVEToken(),RESTToken(),TOKENEND()
                now support locally stored token environments
 
-+ TOKENEXIT()  new function related to TOKENINIT
++ TokenExit()  new function related to TOKENINIT
 
-+ TOKENNUM()   numtoken() functionality for incremental tokenizer
++ TokenNum()   NumToken() functionality for incremental tokenizer
 
-* TOKENLOWER() New 4th parameter <nSkipWidth>
+* TokenLower() New 4th parameter <nSkipWidth>
 
-* TOKENUPPER() New 4th parameter <nSkipWidth>
+* TokenUpper() New 4th parameter <nSkipWidth>
 
-* WEEK()       New 2nd parameter <lSWN>; week() function can either return
+* Week()       New 2nd parameter <lSWN>; Week() function can either return
                "simple week number" of week number defined by ISO 6801
 
-+ WORDREM()    remove double characters from a string
++ WordRem()    remove double characters from a string

@@ -161,7 +161,7 @@ FUNCTION ft_MenuTo( bGetSet, cReadVar, lCold )
    ENDIF
 
    // Increment the recursion level in case a hotkey procedure
-   // calls FT_Prompt().  This will cause a new set of prompts
+   // calls ft_Prompt().  This will cause a new set of prompts
    // to be created without disturbing the current set.
 
    AAdd(          t_aRow, {} )

@@ -109,7 +109,7 @@ FUNCTION ExecBrowser( oCrt )
 
    Popups( 2 )
 
-   oBrowse := TBrowseWVG():New( nTop + 2, nLeft + 12, nBottom - 1, nRight - 1 )
+   oBrowse := TBrowseWvg():New( nTop + 2, nLeft + 12, nBottom - 1, nRight - 1 )
 
    oBrowse:ColSep        := "  "
    oBrowse:HeadSep       := "__"
@@ -217,7 +217,7 @@ FUNCTION ExecBrowser( oCrt )
    IF oCrt == NIL
       RestScreen( 0, 0, MaxRow(), MaxCol(), cScr )
    ENDIF
-   Wvt_setPopupMenu( hPopup )
+   Wvt_SetPopupMenu( hPopup )
    SetGT( 2, pGT )
 
    RETURN NIL
@@ -960,7 +960,7 @@ FUNCTION ConfigBrowser( aFields, cUseAlias, aTLBR, cDesc, oParent, cColorSpec, n
    AAdd( aPopup, { "Top"      , {|| oBrowse:GoTop()   , oBrowse:ForceStable() } } )
    AAdd( aPopup, { "Bottom"   , {|| oBrowse:GoBottom(), oBrowse:ForceStable() } } )
 
-   SELECT( cUseAlias )
+   Select( cUseAlias )
    info_ := dbStruct()
 
    oBrowse := TBrowseWvg():New( aTLBR[ 1 ], aTLBR[ 2 ], aTLBR[ 3 ], aTLBR[ 4 ] )

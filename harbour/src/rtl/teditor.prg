@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Editor Class (base for Memoedit(), debugger, etc.)
+ * Editor Class (base for MemoEdit(), debugger, etc.)
  *
  * Copyright 2000 Maurilio Longo <maurilio.longo@libero.it>
  * www - http://harbour-project.org

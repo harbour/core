@@ -61,7 +61,7 @@
 PROCEDURE Main_MT()
 
 #ifdef __HARBOUR__
-   IF HB_MTVM()
+   IF hb_mtvm()
       TEST_LINE( DO_MTTES1()              , "OK"                        )
    ENDIF
 #endif
@@ -92,19 +92,19 @@ FUNCTION DO_MTTES1()
       hb_mutexSubscribe( mtxResults,, @nDigit )
       AAdd( aResults, nDigit )
    NEXT
-   aEval( aThreads, {| x | hb_threadJoin( x ) } )
+   AEval( aThreads, {| x | hb_threadJoin( x ) } )
    nSum := 0
    FOR EACH nDigit IN aResults
       nSum += nDigit
    NEXT
-   nSum := round( nSum, 2 )
-   nExpected := round( ( 10 + 10 + N_JOBS - 1 ) / 2 / 3 * N_JOBS, 2 )
-   if ROUND( nSum - nExpected, 2 ) == 0
+   nSum := Round( nSum, 2 )
+   nExpected := Round( ( 10 + 10 + N_JOBS - 1 ) / 2 / 3 * N_JOBS, 2 )
+   if Round( nSum - nExpected, 2 ) == 0
       RETURN "OK"
    ENDIF
 
-   RETURN "ERROR, final sum: " + ltrim( str( nSum ) ) + ;
-                 " expected: " + ltrim( str( nExpected ) )
+   RETURN "ERROR, final sum: " + hb_ntos( nSum ) + ;
+                 " expected: " + hb_ntos( nExpected )
 
 PROCEDURE thFunc( mtxJobs, mtxResults )
    LOCAL xJob, xResult

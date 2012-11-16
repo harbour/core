@@ -31,7 +31,6 @@ PROCEDURE DllMain()
 
 
 FUNCTION MyMethod( ... )
-
    RETURN "Hello from MyOleServer [" + hb_ValToExp( { ... } ) + "]"
 
 

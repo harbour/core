@@ -444,7 +444,7 @@ PROCEDURE Main_HVMA()
    TEST_LINE( soObject:hello                  , "E 13 BASE 1004 No exported method (HELLO) OS:0 #:0 A:1:O:ERROR Object F:S" )
    TEST_LINE( soObject:hello := 1             , "E 16 BASE 1005 No exported variable (HELLO) OS:0 #:0 A:2:O:ERROR Object;N:1 F:S" )
 
-   /* LEN() */
+   /* Len() */
 
    TEST_LINE( Len( NIL )                      , "E 1 BASE 1111 Argument error (LEN) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( Len( 123 )                      , "E 1 BASE 1111 Argument error (LEN) OS:0 #:0 A:1:N:123 F:S" )
@@ -466,7 +466,7 @@ PROCEDURE Main_HVMA()
    TEST_LINE( Len( Space( 40000 ) )           , 40000                                  )
 #endif
 
-   /* EMPTY() */
+   /* Empty() */
 
 #ifdef __HARBOUR__
    TEST_LINE( Empty( @scString              ) , .F.                                    ) /* Bug in CA-Cl*pper, it will return .T. */

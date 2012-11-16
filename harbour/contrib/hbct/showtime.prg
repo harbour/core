@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *   CT3 time function: SHOWTIME()
+ *   CT3 time function: ShowTime()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

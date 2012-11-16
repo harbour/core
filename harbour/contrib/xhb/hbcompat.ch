@@ -138,7 +138,7 @@
    #xtranslate hb_DisableWaitLocks( [<x>] )    => DisableWaitLocks( <x> )
 
    #xtranslate hb_gtLock()                     => hbConsoleLock()
-   #xtranslate hb_gtUnLock()                   => hbConsoleUnLock()
+   #xtranslate hb_gtUnlock()                   => hbConsoleUnlock()
 
    /* MT functions */
    #xtranslate hb_mtvm()                       => hb_MultiThread()
@@ -222,7 +222,7 @@
    #xtranslate hb_inetRecv( [<x,...>] )                => inetRecv( <x> )
    #xtranslate hb_inetRecvAll( [<x,...>] )             => inetRecvAll( <x> )
    #xtranslate hb_inetRecvLine( [<x,...>] )            => inetRecvLine( <x> )
-   #xtranslate hb_inetRecvEndbLock( [<x,...>] )        => inetRecvEndBlock( <x> )
+   #xtranslate hb_inetRecvEndblock( [<x,...>] )        => inetRecvEndBlock( <x> )
    #xtranslate hb_inetDataReady( [<x,...>] )           => inetDataReady( <x> )
    #xtranslate hb_inetSend( [<x,...>] )                => inetSend( <x> )
    #xtranslate hb_inetSendAll( [<x,...>] )             => inetSendAll( <x> )
@@ -276,7 +276,7 @@
    #xtranslate MaxCol( .T. )                   => hb_gtInfo( HB_GTI_VIEWPORTWIDTH )
    #xtranslate NextKey( [<x>] )                => hb_keyNext( <x> )
 
-   #xtranslate Str( <x>, [<y>], [<y>], <z> )   => iif( <z>, hb_ntOS( <x> ), Str( <x> ) )
+   #xtranslate Str( <x>, [<y>], [<y>], <z> )   => iif( <z>, hb_ntos( <x> ), Str( <x> ) )
 
    #xuntranslate NetName(                      =>
    #xuntranslate MemoWrit(                     =>
@@ -382,7 +382,7 @@
    #xtranslate DisableWaitLocks( [<x>] )       => hb_DisableWaitLocks( <x> )
 
    #xtranslate hbConsoleLock()                 => hb_gtLock()
-   #xtranslate hbConsoleUnLock()               => hb_gtUnLock()
+   #xtranslate hbConsoleUnlock()               => hb_gtUnlock()
 
    #xtranslate hb_CmdArgArgV( [<x,...>] )      => hb_argv( <x> )
 
@@ -451,7 +451,7 @@
 
    /* do not need translation */
    /* hb_mutexCreate()                         => hb_mutexCreate() */
-   /* hb_mutexUnLock( <x> )                    => hb_mutexUnLock( <x> ) */
+   /* hb_mutexUnlock( <x> )                    => hb_mutexUnlock( <x> ) */
 
    /* do not need translation only when xHarbour code is compiled by Harbour */
    /* hb_mutexLock( <x> )                      => hb_mutexLock( <x> ) */
@@ -539,7 +539,7 @@
    #xtranslate inetRecv( [<x,...>] )                => hb_inetRecv( <x> )
    #xtranslate inetRecvAll( [<x,...>] )             => hb_inetRecvAll( <x> )
    #xtranslate inetRecvLine( [<x,...>] )            => hb_inetRecvLine( <x> )
-   #xtranslate inetRecvEndBlock( [<x,...>] )        => hb_inetRecvEndbLock( <x> )
+   #xtranslate inetRecvEndBlock( [<x,...>] )        => hb_inetRecvEndblock( <x> )
    #xtranslate inetDataReady( [<x,...>] )           => hb_inetDataReady( <x> )
    #xtranslate inetSend( [<x,...>] )                => hb_inetSend( <x> )
    #xtranslate inetSendAll( [<x,...>] )             => hb_inetSendAll( <x> )

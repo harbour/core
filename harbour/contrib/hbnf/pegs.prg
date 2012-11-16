@@ -84,7 +84,7 @@ FUNCTION ft_Pegs()
       { { 18, 45, 20, 50 }, { 30, 32 }, { 25, 31 }, .T. } }
 
    /*
-      the following code block is used in conjunction with ASCAN()
+      the following code block is used in conjunction with AScan()
       to validate entry when there is more than one possible move
    */
 

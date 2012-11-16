@@ -49,12 +49,12 @@ proc main()
 
    pGT := hb_gtSelect( pGT1 )
    SetColor( "W+/R" )
-   dispBox( 10, 10, 20, 50, HB_B_DOUBLE_UNI + " " )
+   DispBox( 10, 10, 20, 50, HB_B_DOUBLE_UNI + " " )
    ?? "This test is shown in 1-st GT window"
 
    hb_gtSelect( pGT2 )
    SetColor( "W+/B" )
-   dispBox( 15, 30, 20, 70, HB_B_DOUBLE_UNI + " " )
+   DispBox( 15, 30, 20, 70, HB_B_DOUBLE_UNI + " " )
    ?? "This test is shown in 2-nd GT window"
 
    hb_gtSelect( pGT )

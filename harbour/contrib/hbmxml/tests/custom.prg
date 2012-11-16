@@ -4,7 +4,7 @@
 
 #require "hbmxml"
 
-#xtranslate _ENCODE( <xData> ) => ( hb_base64encode( hb_serialize( mxmlGetCustom( <xData> ) ) ) )
+#xtranslate _ENCODE( <xData> ) => ( hb_base64Encode( hb_serialize( mxmlGetCustom( <xData> ) ) ) )
 
 #include "hbmxml.ch"
 

@@ -3,7 +3,7 @@
  */
 
 /*
- * File......: Header file for users of FT_INT86() function
+ * File......: Header file for users of ft_int86() function
  * Author....: Ted Means
  * CIS ID....: 73067,3332
  *

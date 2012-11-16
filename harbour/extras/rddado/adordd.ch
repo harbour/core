@@ -204,11 +204,11 @@
             [ FROM <cServer> ] ;
             [ QUERY <cQuery> ] ;
             [ USER <cUser> PASSWORD <cPassword> ]=> ;
-         [ HB_AdoSetTable( <cTable> ) ; ] ;
-         [ HB_AdoSetEngine( <(dbEngine)> ) ; ] ;
-         [ HB_AdoSetServer( <cServer> ) ; ] ;
-         [ HB_AdoSetQuery( <cQuery> ) ; ] ;
-         [ HB_AdoSetUser( <cUser> ); HB_AdoSetPassword( <cPassword> ) ; ] ;
+         [ hb_adoSetTable( <cTable> ) ; ] ;
+         [ hb_adoSetEngine( <(dbEngine)> ) ; ] ;
+         [ hb_adoSetServer( <cServer> ) ; ] ;
+         [ hb_adoSetQuery( <cQuery> ) ; ] ;
+         [ hb_adoSetUser( <cUser> ); hb_adoSetPassword( <cPassword> ) ; ] ;
          dbUseArea( <.nw.>, <rdd>, <(db)>, <(a)>, ;
                     iif( <.sh.> .OR. <.ex.>, ! <.ex.>, NIL ), <.ro.> [, <cp>] ) ;
          [; dbSetIndex( <(index1)> )] ;
@@ -216,7 +216,7 @@
 
 #command LOCATE [FOR <for>] [WHILE <while>] [NEXT <next>] ;
                 [RECORD <rec>] [<rest:REST>] [ALL] => ;
-         [ HB_AdoSetLocateFor( <(for)> ); ] ;
+         [ hb_adoSetLocateFor( <(for)> ); ] ;
          __dbLocate( <{for}>, <{while}>, <next>, <rec>, <.rest.> )
 
 #endif

@@ -50,8 +50,8 @@
  *
  */
 
-/* TRANSFORM() tests mostly written by Eddie Runia <eddie@runia.com> */
-/* EMPTY() tests written by Eddie Runia <eddie@runia.com> */
+/* Transform() tests mostly written by Eddie Runia <eddie@runia.com> */
+/* Empty() tests written by Eddie Runia <eddie@runia.com> */
 /* :class* tests written by Dave Pearson <davep@hagbard.demon.co.uk> */
 
 /* NOTE: Always compile with /n switch */
@@ -231,7 +231,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    OutMsg( s_nFhnd, "---------------------------------------------------------------------------" + hb_eol() +;
                     "      Version: " + Version() + hb_eol() )
 #ifdef __HARBOUR__
-   OutMsg( s_nFhnd, "     Compiler: " + HB_Compiler() + hb_eol() )
+   OutMsg( s_nFhnd, "     Compiler: " + hb_Compiler() + hb_eol() )
 #endif
    OutMsg( s_nFhnd, "           OS: " + OS() + hb_eol() +;
                     "   Date, Time: " + DToC( Date() ) + " " + Time() + hb_eol() +;

@@ -76,7 +76,7 @@ Clase TMySQLQuery -------------------------------------------
      ENDDO
   no muestren el ultimo registro
   Con la nueva definicion se corrige este comportamiento
-  Con Eof() verdadero, el puntero de registro se ubica en LASTREC()+1
+  Con Eof() verdadero, el puntero de registro se ubica en LastRec()+1
 
 - TMySQLQuery:New()
   Aplicacion de TMySQLQuery:lBof, TMySQLQuery:lEof, TMySQLQuery:lFieldAsData,
@@ -88,7 +88,7 @@ Clase TMySQLQuery -------------------------------------------
   Solamente el movimiento con SKIP puede establecer Bof() verdadero
 
 - TMySQLQuery:Skip()
-  Aplicar NIL para retorno.  DBSKIP() retorna NIL
+  Aplicar NIL para retorno.  dbSkip() retorna NIL
 
 - TMySQLQuery:GetRow()
   Aplicacion de TMySQLQuery:lBof, TMySQLQuery:lEof, TMySQLQuery:lFieldAsData,
@@ -147,7 +147,7 @@ Clase TMySQLTable -------------------------------------------
   Aplica TMySQLTable:GetBlankRow( .T. ), con valor de lSetValues verdadero
 
 - TMySQLTable:Skip()
-  Aplicar NIL para retorno.  DBSKIP() retorna NIL
+  Aplicar NIL para retorno.  dbSkip() retorna NIL
 
 - TMySQLTable:Update(oRow, lOldRecord, lRefresh)
   = Aplicacion de TMySQLRow:aOriValue, TMySQLTable:aRow

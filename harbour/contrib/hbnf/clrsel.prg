@@ -26,7 +26,7 @@
 /*
  * File Contents
  *
- *   FT_ClrSel( aClrs, lColour, cChr )         user selectable colour routine
+ *   ft_ClrSel( aClrs, lColour, cChr )         user selectable colour routine
  *   _ftHiLite( nRow, nCol, cStr, nLen )       re-hilite an achoice prompt
  *   _ftColours( aOpt, aClrPal, lColour )      control colour selection
  *   _ftShowIt( aOpt )                         show a sample of the colours
@@ -99,7 +99,7 @@ FUNCTION ft_ClrSel( aClrs, lColour, cChr )
    AEval( aClrs, {| aOpt | nLen := Max( nLen, Len( aOpt[ C_NAME ] ) ) } )
    nLen := Min( Max( nLen, 1 ), 20 ) + 2
 
-   // .... prepare an array for use with aChoice(); truncate names at 20 chrs.
+   // .... prepare an array for use with AChoice(); truncate names at 20 chrs.
    aPrompt := Array( Len( aClrs ) )
    AEval( aClrs, ;
       {| aOpt, nE | aPrompt[ nE ] := " " + SubStr( aOpt[ C_NAME ], 1, nLen - 2 ) + " " };

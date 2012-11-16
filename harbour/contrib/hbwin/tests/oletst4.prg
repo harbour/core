@@ -37,7 +37,7 @@ PROCEDURE Main()
       ? "        p2:", hb_ValToExp( p2 )
       ? "        p3:", hb_ValToExp( p3 )
       ? "        p4:", hb_ValToExp( p4 )
-      ? "        p5:", p5:className() // hb_valToExp( p5 )
+      ? "        p5:", p5:className() // hb_ValToExp( p5 )
       ? "        p6:", hb_ValToExp( p6 )
       ? "        p7:", hb_ValToExp( p7 )
    ELSE

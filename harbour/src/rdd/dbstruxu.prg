@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * __FLEDIT() undocumented function
+ * __FLedit() undocumented function
  *
  * Copyright 1999 {list of individual authors and e-mail addresses}
  * www - http://harbour-project.org
@@ -54,7 +54,7 @@
 
 #ifdef HB_CLP_UNDOC
 
-FUNCTION __FLEDIT( aStruct, aFieldList )
+FUNCTION __FLedit( aStruct, aFieldList )
    RETURN __dbStructFilter( aStruct, aFieldList )
 
 #endif

@@ -31,7 +31,7 @@ PROCEDURE Main()
    // hb_LogRddMsgLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) } )
 
    // Uncomment next command to change standard destination of my logged string
-   // hb_LogRddUserLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | hb_toOutDebug( MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) + "\n\r" ) } )
+   // hb_LogRddUserLogBlock( {| cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 | hb_ToOutDebug( MyToString( cTag, cRDDName, cCmd, nWA, xPar1, xPar2, xPar3 ) + "\n\r" ) } )
 
    // Start program logic
 

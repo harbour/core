@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * Header file for SET() function
+ * Header file for Set() function
  *
  * Copyright 1999-2003 David G. Holm <dholm@jsd-llc.com>
  * www - http://harbour-project.org

@@ -70,8 +70,8 @@ FUNCTION dbCloseAre()
 FUNCTION dbSelectAr( xArea )
    RETURN dbSelectArea( xArea )
 
-FUNCTION dbUnLockAl()
-   RETURN dbUnLockAll()
+FUNCTION dbUnlockAl()
+   RETURN dbUnlockAll()
 
 FUNCTION dbClearRel()
    RETURN dbClearRelation()

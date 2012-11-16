@@ -5,7 +5,7 @@
 /*
  * Harbour Project source code:
  *    IsDbExcl() -> <lExclusive>
- *    IsDbFlock() -> <lFLocked>
+ *    IsDbFLock() -> <lFLocked>
  *    IsDbRLock( [ <xRec> ] ) -> <lLocked>
  * FlagShip compatible functions
  *
@@ -58,7 +58,7 @@
 FUNCTION IsDbExcl()
    RETURN ! dbInfo( DBI_SHARED )
 
-FUNCTION IsDbFlock()
+FUNCTION IsDbFLock()
    RETURN dbInfo( DBI_ISFLOCK )
 
 FUNCTION IsDbRLock( xRec )

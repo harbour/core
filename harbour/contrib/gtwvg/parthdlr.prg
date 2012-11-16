@@ -241,7 +241,7 @@ METHOD WvgPartHandler:notifierBlock( ... )
    RETURN NIL
 
 /*
-   This will be called by the WvgCRT() console FOR various events TO be propogated TO child controls
+   This will be called by the WvgCrt() console FOR various events TO be propogated TO child controls
 */
 METHOD WvgPartHandler:notifier( nEvent, xParams )
 
@@ -336,7 +336,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       ENDIF
 
    CASE nEvent == HB_GTE_SETFOCUS
-      /* aeval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } ) */
+      /* AEval( ::aChildren, {| o | Wvg_InvalidateRect( o:hWnd ) } ) */
 
       IF HB_ISBLOCK( ::sl_setInputFocus )
          Eval( ::sl_setInputFocus, NIL, NIL, Self )
@@ -350,7 +350,7 @@ METHOD WvgPartHandler:notifier( nEvent, xParams )
       ::lHasInputFocus := .F.
 
    CASE nEvent == HB_GTE_PAINT
-      /* aeval( ::aChildren, {| o | WVG_InvalidateRect( o:hWnd ) } ) */
+      /* AEval( ::aChildren, {| o | Wvg_InvalidateRect( o:hWnd ) } ) */
 
    CASE nEvent == HB_GTE_GUIPARTS
       /* Eventally every window be checked if it falls within returned rectangle or not

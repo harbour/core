@@ -17,13 +17,13 @@ PROCEDURE Main( x )
    ? "========================="
 
    //  ? "Loading('exthrb.hrb' )"
-   //  pHrb := hb_HrbLoad("exthrb.hrb" )
+   //  pHrb := hb_hrbLoad("exthrb.hrb" )
 
    //  ? "Loading(HB_HRB_BIND_DEFAULT,'exthrb.hrb' )"
-   //  pHrb := hb_HrbLoad(HB_HRB_BIND_DEFAULT,"exthrb.hrb" )
+   //  pHrb := hb_hrbLoad(HB_HRB_BIND_DEFAULT,"exthrb.hrb" )
 
    //  ? "Loading(HB_HRB_BIND_LOCAL,'exthrb.hrb' )"
-   //  pHrb := hb_HrbLoad(HB_HRB_BIND_LOCAL,"exthrb.hrb" )
+   //  pHrb := hb_hrbLoad(HB_HRB_BIND_LOCAL,"exthrb.hrb" )
 
    ? "Loading(" + iif( n == 0, "HB_HRB_BIND_DEFAULT", iif( n == 1,"HB_HRB_BIND_LOCAL","HB_HRB_BIND_OVERLOAD" ) ) + ",'exthrb.hrb' )"
    pHrb := hb_hrbLoad( n, "exthrb.hrb" )

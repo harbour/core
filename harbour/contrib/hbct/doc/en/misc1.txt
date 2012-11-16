@@ -26,7 +26,7 @@
       -----------------------------------------------------------
       Data Type    Result Length      Similar function
       -----------------------------------------------------------
-      Numeric      sizeof( DOUBLE )   FTOC()
+      Numeric      sizeof( DOUBLE )   FToC()
       Logical      1
       Date         8                  DToS()
       String       Unchanged
@@ -46,6 +46,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CToF(), FTOC()
+      CToF(), FToC()
    $END$
  */

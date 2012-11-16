@@ -5,7 +5,7 @@
  * xHarbour Project source code:
  *   CT3 SETKEY Functions
  *
- * SAVESETKEY(), RESTSETKEY()
+ * SaveSetKey(), RestSetKey()
  * Copyright 2004 Philip Chee <philip@aleytys.pc.my>
  *
  * This program is free software; you can redistribute it and/or modify

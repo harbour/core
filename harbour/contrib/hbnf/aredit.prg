@@ -120,7 +120,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
 
          CASE nKey == K_F8
             FOR nDim := 1 TO Len( ar )
-               // check valtype of current element before AINS()
+               // check valtype of current element before AIns()
                cType := ValType( ar[ nDim, nElem ] )
                cVal  := ar[ nDim, nElem ]
                hb_AIns( ar[ nDim ], nElem,, .T. )

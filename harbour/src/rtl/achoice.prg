@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * ACHOICE() function
+ * AChoice() function
  *
  * Released to Public Domain by Peter Townsend <cephas@tpgi.com.au>
  * www - http://harbour-project.org
@@ -75,7 +75,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
 
    ColorSelect( CLR_STANDARD )
 
-   /* NOTE: Undocumented parameter passing handled. ACHOICE()
+   /* NOTE: Undocumented parameter passing handled. AChoice()
             is called in such way in rldialg.prg from RL tool
             supplied with Clipper 5.x. 6th parameter is the
             user function and 7th parameter is zero (empty I

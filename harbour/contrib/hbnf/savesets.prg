@@ -16,7 +16,7 @@
  * Forest Belt proofread/edited/cleaned up doc
  *
  *    Rev 1.1   12 Apr 1991 00:18:04   GLENN
- * There was a call to SETCENTURY() that should have been FT_SETCENTURY().
+ * There was a call to SETCENTURY() that should have been ft_SetCentury().
  * Another one of those errors that came from testing earlier versions of
  * a routine before FT_ prefix was added to function names.  Lesson learned.
  *

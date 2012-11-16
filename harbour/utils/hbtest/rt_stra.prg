@@ -57,7 +57,7 @@
 
 PROCEDURE Main_STRA()
 
-   /* STR() */
+   /* Str() */
 
    TEST_LINE( Str(NIL)                        , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( Str("A", 10, 2)                 , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:C:A;N:10;N:2 F:S" )
@@ -162,7 +162,7 @@ PROCEDURE Main_STRA()
    TEST_LINE( Str(-100000, 8, -1)             , " -100000"       )
 #endif
 
-   /* STRZERO() */
+   /* StrZero() */
 
 #ifdef HB_CLP_STRICT
    TEST_LINE( StrZero(NIL)                    , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:1:U:NIL F:S" )

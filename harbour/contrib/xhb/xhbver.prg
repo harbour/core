@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * xhb HB_BUILDINFO() emulation.
+ * xhb hb_BuildInfo() emulation.
  *
  * Copyright 2009 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org

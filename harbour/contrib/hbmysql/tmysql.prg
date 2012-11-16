@@ -448,7 +448,7 @@ METHOD Skip( nRows ) CLASS TMySQLQuery
       ::lBof := .T.
    ENDIF
 
-   // DAVID: DBSKIP() RETURN NIL  RETURN ::nCurRow
+   // DAVID: dbSkip() RETURN NIL  RETURN ::nCurRow
 
    RETURN NIL
 
@@ -471,7 +471,7 @@ METHOD GetRow( nRow ) CLASS TMySQLQuery
 
       IF nRow < 1 .OR. nRow > ::LastRec()  // Out of range
          // Equal to Clipper behaviour
-         nRow := ::LastRec() + 1  // LASTREC()+1
+         nRow := ::LastRec() + 1  // LastRec()+1
          ::nCurRow := ::LastRec() + 1
          // ::lEof := .T.
       ENDIF
@@ -637,7 +637,7 @@ METHOD FieldGet( cnField ) CLASS TMySQLQuery
    ENDIF
 
    IF nNum > 0 .AND. nNum <= ::nNumfields
-      // DAVID: Value := __objsendmsg( Self,::aFieldStruct[ nNum ][ MYSQL_FS_NAME ] )
+      // DAVID: Value := __objSendMsg( Self,::aFieldStruct[ nNum ][ MYSQL_FS_NAME ] )
       Value := ::aRow[ nNum ]
 
       // Char fields are padded with spaces since a real .dbf field would be
@@ -789,7 +789,7 @@ METHOD Skip( nRow ) CLASS TMySQLTable
       ::aOldValue[ i ] := ::FieldGet( i )
    NEXT
 
-   // DAVID: DBSKIP() RETURN NIL  RETURN Self
+   // DAVID: dbSkip() RETURN NIL  RETURN Self
 
    RETURN NIL
 
@@ -1050,7 +1050,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
             ::refresh()
          ELSE
             // DAVID: just reset values in memory (?)
-            /* was same values from fieldget( i ) !
+            /* was same values from FieldGet( i ) !
             FOR i := 1 TO ::nNumFields
                 ::aOldValue[ i ] := ::FieldGet( i )
             NEXT
@@ -1183,7 +1183,7 @@ METHOD FieldPut( cnField, Value ) CLASS TMySQLTable
 
    IF nNum > 0 .AND. nNum <= ::nNumFields
 
-      // DAVID:      IF Valtype( Value ) == Valtype( ::FieldGet( nNum ) ) .OR. Empty( ::Fieldget( nNum ) )
+      // DAVID:      IF ValType( Value ) == ValType( ::FieldGet( nNum ) ) .OR. Empty( ::Fieldget( nNum ) )
       IF ValType( Value ) == ValType( ::aRow[ nNum ] ) .OR. ::aRow[ nNum ] == NIL
 
          // if it is a char field remove trailing spaces

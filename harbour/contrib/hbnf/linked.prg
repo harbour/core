@@ -35,7 +35,7 @@ FUNCTION ft_Linked( cFuncs )
 
    IF At( "(", cFuncs ) == 0
       // No functions in string
-      Alert( "Warning: Expected function(s) in FT_Linked(), but none were found" )
+      Alert( "Warning: Expected function(s) in ft_Linked(), but none were found" )
    ELSE
       DO WHILE ( nFEnd := At( "(", cFuncs ) ) > 0
          // Add the current function to the array of functions
@@ -58,7 +58,7 @@ FUNCTION ft_Linked( cFuncs )
          ENDDO
       ENDDO
       // Scan through the array of functions, stop after the first occurence
-      // of a function which returns a TYPE() of "U" (hence is not linked in)
+      // of a function which returns a Type() of "U" (hence is not linked in)
       lRetVal := AScan( aFuncArray, {| element | Type( element ) == "U" } ) == 0
    ENDIF
 

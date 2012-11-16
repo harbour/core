@@ -5,8 +5,8 @@
 /*
  * Harbour Project source code:
  *    SIX compatible functions:
- *          _sx_INIinit()
- *          Sx_INIheader()
+ *          _sx_IniInit()
+ *          sx_IniHeader()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

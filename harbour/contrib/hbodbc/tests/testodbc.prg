@@ -63,7 +63,7 @@ PROCEDURE Main()
    ENDDO
 
    ? "------------------------------------------------------------------------------"
-   ? Str( nRows, 4 ), " row(s) affected."
+   ? Str( nRows, 4 ), " Row(s) affected."
 
 #if defined( _HBODBC_AUTO_MM_ )
    // hStmt := NIL  // TOFIX: There should be no GPF even without this line

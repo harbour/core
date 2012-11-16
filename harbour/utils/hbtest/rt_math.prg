@@ -61,7 +61,7 @@ PROCEDURE Main_MATH()
    MEMVAR s0, s1, v2
    PRIVATE s0 := "V2", s1 := "V", v2
 
-   /* LOG() */
+   /* Log() */
 
    TEST_LINE( Log("A")                        , "E 1 BASE 1095 Argument error (LOG) OS:0 #:0 A:1:C:A F:S" )
    TEST_LINE( Str(Log(-1))                    , "***********************"              )
@@ -73,7 +73,7 @@ PROCEDURE Main_MATH()
    TEST_LINE( Str(Log(@snIntP))               , "         2.30"                        ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1095 Argument error (LOG) OS:0 #:0 A:1:U:10 F:S" */
 #endif
 
-   /* SQRT() */
+   /* Sqrt() */
 
    TEST_LINE( Sqrt("A")                       , "E 1 BASE 1097 Argument error (SQRT) OS:0 #:0 A:1:C:A F:S" )
    TEST_LINE( Sqrt(-1)                        , 0                                      )
@@ -86,7 +86,7 @@ PROCEDURE Main_MATH()
    TEST_LINE( Str(Sqrt(4),21,18)              , " 2.000000000000000000"                )
    TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877000"                )
 
-   /* ABS() */
+   /* Abs() */
 
    TEST_LINE( Abs("A")                        , "E 1 BASE 1089 Argument error (ABS) OS:0 #:0 A:1:C:A F:S" )
    TEST_LINE( Abs(0)                          , 0                                      )
@@ -125,7 +125,7 @@ PROCEDURE Main_MATH()
    TEST_LINE( Abs(100000)                     , 100000                                 )
    TEST_LINE( Abs(-100000)                    , 100000                                 )
 
-   /* EXP() */
+   /* Exp() */
 
    TEST_LINE( Exp("A")                        , "E 1 BASE 1096 Argument error (EXP) OS:0 #:0 A:1:C:A F:S" )
    TEST_LINE( Exp(0)                          , 1.00                                   )
@@ -139,7 +139,7 @@ PROCEDURE Main_MATH()
    TEST_LINE( Round(Exp(10),2)                , 22026.47                               )
    TEST_LINE( Str(Exp(10),20,10)              , "    22026.4657948067"                 )
 
-   /* ROUND() */
+   /* Round() */
 
    TEST_LINE( Round(snDoubleP, snIntZ)        , 11                                     )
 #ifdef __HARBOUR__
@@ -268,7 +268,7 @@ PROCEDURE Main_MATH()
    TEST_LINE( Int(5000000000) / 100000        , 50000                                )
    TEST_LINE( Int(-5000000000) / 100000       , -50000                               )
 
-   /* MIN()/MAX() */
+   /* Min()/Max() */
 
    TEST_LINE( Max(NIL, NIL)                                 , "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
    TEST_LINE( Max(10, NIL)                                  , "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:N:10;U:NIL F:S" )
@@ -358,54 +358,54 @@ PROCEDURE Main_MATH()
    TEST_LINE( Str(sdDate - sdDate         )   , "         0"                   )
    TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052000"         ) // real val is 1524157875019052100
 
-   /* MOD() */
+   /* Mod() */
 
-   TEST_LINE( MOD()                           , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( MOD( NIL )                      , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( MOD( 100 )                      , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:100;U:NIL F:S" )
-   TEST_LINE( MOD( "A", "B" )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:C:A;C:B F:S" )
-   TEST_LINE( MOD( "A", 100 )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:C:A;N:100 F:S" )
-   TEST_LINE( MOD( 100, "B" )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:100;C:B F:S" )
-   TEST_LINE( MOD( NIL, NIL )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( MOD( 100, 60, "A" )             , 40.00                              )
+   TEST_LINE( Mod()                           , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( Mod( NIL )                      , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( Mod( 100 )                      , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:100;U:NIL F:S" )
+   TEST_LINE( Mod( "A", "B" )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:C:A;C:B F:S" )
+   TEST_LINE( Mod( "A", 100 )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:C:A;N:100 F:S" )
+   TEST_LINE( Mod( 100, "B" )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:100;C:B F:S" )
+   TEST_LINE( Mod( NIL, NIL )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
+   TEST_LINE( Mod( 100, 60, "A" )             , 40.00                              )
 
-   TEST_LINE( MOD( 1, 0 )                     , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:1;N:0 F:S" )
-   TEST_LINE( MOD( 1, NIL )                   , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:1;U:NIL F:S" )
-   TEST_LINE( Str( MOD( 1, 0   ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:1;N:0 F:S" )
-   TEST_LINE( Str( MOD( 2, 4   ) )            , "         2.00"                    )
-   TEST_LINE( Str( MOD( 4, 2   ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( 4, 2.0 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( 2, 4.0 ) )            , "         2.00"                    )
-   TEST_LINE( Str( MOD( 8, 3   ) )            , "         2.00"                    )
+   TEST_LINE( Mod( 1, 0 )                     , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:1;N:0 F:S" )
+   TEST_LINE( Mod( 1, NIL )                   , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:1;U:NIL F:S" )
+   TEST_LINE( Str( Mod( 1, 0   ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:1;N:0 F:S" )
+   TEST_LINE( Str( Mod( 2, 4   ) )            , "         2.00"                    )
+   TEST_LINE( Str( Mod( 4, 2   ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod( 4, 2.0 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod( 2, 4.0 ) )            , "         2.00"                    )
+   TEST_LINE( Str( Mod( 8, 3   ) )            , "         2.00"                    )
 
-   TEST_LINE( Str( MOD(  3,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD(  3,  2 ) )            , "         1.00"                    )
-   TEST_LINE( Str( MOD(  3,  1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD(  3,  0 ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:3;N:0 F:S" )
-   TEST_LINE( Str( MOD(  3, -1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD(  3, -2 ) )            , "        -1.00"                    )
-   TEST_LINE( Str( MOD(  3, -3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( -3,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( -3,  2 ) )            , "         1.00"                    )
-   TEST_LINE( Str( MOD( -3,  1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( -3,  0 ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:-3;N:0 F:S" )
-   TEST_LINE( Str( MOD( -3, -1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( -3, -2 ) )            , "        -1.00"                    )
-   TEST_LINE( Str( MOD( -3, -3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD(  3,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD(  2,  3 ) )            , "         2.00"                    )
-   TEST_LINE( Str( MOD(  1,  3 ) )            , "         1.00"                    )
-   TEST_LINE( Str( MOD(  0,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( -1,  3 ) )            , "         2.00"                    )
-   TEST_LINE( Str( MOD( -2,  3 ) )            , "         1.00"                    )
-   TEST_LINE( Str( MOD( -3,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD(  3, -3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD(  2, -3 ) )            , "        -1.00"                    )
-   TEST_LINE( Str( MOD(  1, -3 ) )            , "        -2.00"                    )
-   TEST_LINE( Str( MOD(  0, -3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( MOD( -1, -3 ) )            , "        -1.00"                    )
-   TEST_LINE( Str( MOD( -2, -3 ) )            , "        -2.00"                    )
-   TEST_LINE( Str( MOD( -3, -3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod(  3,  3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod(  3,  2 ) )            , "         1.00"                    )
+   TEST_LINE( Str( Mod(  3,  1 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod(  3,  0 ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:3;N:0 F:S" )
+   TEST_LINE( Str( Mod(  3, -1 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod(  3, -2 ) )            , "        -1.00"                    )
+   TEST_LINE( Str( Mod(  3, -3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod( -3,  3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod( -3,  2 ) )            , "         1.00"                    )
+   TEST_LINE( Str( Mod( -3,  1 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod( -3,  0 ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:-3;N:0 F:S" )
+   TEST_LINE( Str( Mod( -3, -1 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod( -3, -2 ) )            , "        -1.00"                    )
+   TEST_LINE( Str( Mod( -3, -3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod(  3,  3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod(  2,  3 ) )            , "         2.00"                    )
+   TEST_LINE( Str( Mod(  1,  3 ) )            , "         1.00"                    )
+   TEST_LINE( Str( Mod(  0,  3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod( -1,  3 ) )            , "         2.00"                    )
+   TEST_LINE( Str( Mod( -2,  3 ) )            , "         1.00"                    )
+   TEST_LINE( Str( Mod( -3,  3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod(  3, -3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod(  2, -3 ) )            , "        -1.00"                    )
+   TEST_LINE( Str( Mod(  1, -3 ) )            , "        -2.00"                    )
+   TEST_LINE( Str( Mod(  0, -3 ) )            , "         0.00"                    )
+   TEST_LINE( Str( Mod( -1, -3 ) )            , "        -1.00"                    )
+   TEST_LINE( Str( Mod( -2, -3 ) )            , "        -2.00"                    )
+   TEST_LINE( Str( Mod( -3, -3 ) )            , "         0.00"                    )
 
    /* <OP>assign and (pre/post)(inc/dec)rementation */
    o:=errornew()

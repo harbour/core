@@ -6,15 +6,15 @@
 test program for hb_f*()
 harbour clones for nanfor's ft_f*()
 inplementation of :
-  * hb_fuse()
-  * hb_fskip()
-  * hb_feof()
-  * hb_frecno()
-  * hb_freadln()
-  * hb_flastrec()
-  * hb_fgoto()
-  * hb_fgotop()
-  * hb_fgobottom()
+  * hb_FUse()
+  * hb_FSkip()
+  * hb_FEof()
+  * hb_FRecNo()
+  * hb_FReadLn()
+  * hb_FLastRec()
+  * hb_FGoto()
+  * hb_FGoTop()
+  * hb_FGoBottom()
 */
 
 #require "hbmisc"
@@ -34,14 +34,14 @@ PROCEDURE Main()
 
       hb_FGoBottom()
       ?
-      ? "after hb_fgobottom() now in line # " + hb_ntos( hb_FRecNo() )
+      ? "after hb_FGoBottom() now in line # " + hb_ntos( hb_FRecNo() )
 
       hb_FGoTop()
       ?
-      ? "after hb_fgotop() now in line # " + hb_ntos( hb_FRecNo() )
+      ? "after hb_FGoTop() now in line # " + hb_ntos( hb_FRecNo() )
 
       ?
-      ? "hb_flastrec() = " + hb_ntos( hb_FLastRec() )
+      ? "hb_FLastRec() = " + hb_ntos( hb_FLastRec() )
 
       // close the file
       hb_FUse()
@@ -53,7 +53,7 @@ STATIC PROCEDURE my_goto( n_go )
 
    hb_FGoto( n_go )
    ?
-   ? "after hb_fgoto(" + hb_ntos( n_go ) + ")"
+   ? "after hb_FGoto(" + hb_ntos( n_go ) + ")"
    ? "line " + hb_ntos( hb_FRecNo() ) + " is " + LTrim( hb_FReadLn() )
 
    RETURN

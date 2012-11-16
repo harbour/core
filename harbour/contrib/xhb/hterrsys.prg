@@ -87,7 +87,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
       ENDIF
    ENDIF
 
-   // for network open error, set NETERR() and subsystem default
+   // for network open error, set NetErr() and subsystem default
    IF e:genCode == EG_OPEN .AND. ( e:osCode == 32 .OR. e:osCode == 5 ) ;
          .AND. e:canDefault
 
@@ -96,7 +96,7 @@ STATIC FUNCTION xhb_cgi_DefError( e )
 
    ENDIF
 
-   // for lock error during APPEND BLANK, set NETERR() and subsystem default
+   // for lock error during APPEND BLANK, set NetErr() and subsystem default
    IF e:genCode == EG_APPENDLOCK .AND. e:canDefault
 
       NetErr( .T. )

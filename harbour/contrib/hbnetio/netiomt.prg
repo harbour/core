@@ -8,12 +8,12 @@
  *    very simple TCP/IP file server with RPC support
  *    All files which names starts 'net:' are redirected to this API.
  *    This is code for simple MT server which is activated by:
- *       NETIO_MTSERVER( [<nPort>], [<cIfAddr>], [<cRootDir>], [<xRPC>],
+ *       netio_MTServer( [<nPort>], [<cIfAddr>], [<cRootDir>], [<xRPC>],
  *                       [<cPasswd>], [<nCompressionLevel>], [<nStrategy>],
  *                       [<sSrvFunc>] )
  *                                              -> <pListenSocket> | NIL
  *    and can be stopped by:
- *       NETIO_SERVERSTOP( <pListenSocket>, .T. )
+ *       netio_ServerStop( <pListenSocket>, .T. )
  *
  * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

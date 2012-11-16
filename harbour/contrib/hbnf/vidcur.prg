@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * FT_SETVCUR()/FT_GETVCUR()
+ * ft_SetVcur()/FT_GETVCUR()
  *
  * Copyright 2012 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
