@@ -1041,6 +1041,8 @@ extern HB_EXPORT char **       hb_cmdargARGV( void ); /* retrieve command line a
 extern HB_EXPORT const char *  hb_cmdargARGVN( int argc ); /* retrieve given command line argument */
 extern HB_EXPORT HB_BOOL       hb_cmdargIsInternal( const char * szArg, int * piLen ); /* determine if a string is an internal setting */
 extern HB_EXPORT char *        hb_cmdargProgName( void ); /* return application name with path or NULL if not set, caller must free returned value with hb_xfree() if not NULL */
+extern HB_EXPORT char *        hb_cmdargBaseProgName( void ); /* return application name without path or NULL if not set, caller must free returned value with hb_xfree() if not NULL */
+extern           int           hb_cmdargPushArgs( void ); /* places application parameters on the HVM stack */
 extern           void          hb_cmdargUpdate( void ); /* update arguments after HVM initialization */
 extern           HB_BOOL       hb_cmdargCheck( const char * pszName ); /* Check if a given internal switch (like //INFO) was set */
 extern           char *        hb_cmdargString( const char * pszName ); /* Returns the string value of an internal switch (like //TEMPPATH:"C:\") */

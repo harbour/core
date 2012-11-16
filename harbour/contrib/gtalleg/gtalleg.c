@@ -330,7 +330,6 @@ static void hb_gt_alleg_ScreenUpdate( PHB_GT pGT )
 
 static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, HB_BOOL lClearInit )
 {
-   PHB_FNAME pFileName;
    int       iRet  = 1, iWidth, iHeight; /* Don't remove iRet, ixFP and iyFP initializers! */
    short     ixFP  = 0, iyFP = 0;
    HB_BOOL   lMode = HB_FALSE, lPrev = s_fInit;
@@ -432,9 +431,13 @@ static HB_BOOL hb_gt_alleg_InitializeScreen( PHB_GT pGT, int iRows, int iCols, H
       else
          lMode = HB_TRUE;
 
-      pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-      al_set_window_title( ( char * ) pFileName->szName );
-      hb_xfree( pFileName );
+      {
+         char * pszBaseName = hb_cmdargBaseProgName();
+
+         al_set_window_title( pszBaseName );
+         if( pszBaseName )
+            hb_xfree( pszBaseName );
+      }
 
       if( ! lPrev )
       {

@@ -75,6 +75,7 @@
  */
 
 #include "hbapi.h"
+#include "hbapiitm.h"
 #include "hbapierr.h"
 #include "hbapistr.h"
 #include "hbset.h"
@@ -193,102 +194,155 @@ static void hb_SQLHENV_stor( SQLHENV hEnv, int iParam )
 
 /* GC - SQLHDBC */
 
+typedef struct
+{
+   SQLHDBC  hDbc;
+   PHB_ITEM pHEnvItm;
+}
+HB_SQLHDBC, * PHB_SQLHDBC;
+
 static HB_GARBAGE_FUNC( hb_SQLHDBC_Destructor )
 {
    /* Retrieve image pointer holder */
-   SQLHDBC * ptr = ( SQLHDBC * ) Cargo;
+   PHB_SQLHDBC pHDbc = ( PHB_SQLHDBC ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( *ptr )
+   if( pHDbc->hDbc )
    {
 #if defined( _HBODBC_AUTO_MM_ )
 #if ODBCVER >= 0x0300
-      SQLFreeHandle( SQL_HANDLE_DBC, ( SQLHANDLE ) *ptr );
+      SQLFreeHandle( SQL_HANDLE_DBC, ( SQLHANDLE ) pHDbc->hDbc );
 #else
-      SQLFreeConnect( *ptr );
+      SQLFreeConnect( pHDbc->hDbc );
 #endif
 #endif
 
       /* set pointer to NULL to avoid multiple freeing */
-      *ptr = NULL;
+      pHDbc->hDbc = NULL;
+   }
+   if( pHDbc->pHEnvItm )
+   {
+      /* release reference to parent handler */
+      hb_itemRelease( pHDbc->pHEnvItm );
+      /* set pointer to NULL to avoid multiple freeing */
+      pHDbc->pHEnvItm = NULL;
+   }
+}
+
+static HB_GARBAGE_FUNC( hb_SQLHDBC_Mark )
+{
+   /* Retrieve image pointer holder */
+   PHB_SQLHDBC pHDbc = ( PHB_SQLHDBC ) Cargo;
+
+   if( pHDbc->pHEnvItm )
+   {
+      /* mark parent item handler as used */
+      hb_gcMark( pHDbc->pHEnvItm );
    }
 }
 
 static const HB_GC_FUNCS s_gcSQLHDBCFuncs =
 {
    hb_SQLHDBC_Destructor,
-   hb_gcDummyMark
+   hb_SQLHDBC_Mark
 };
 
 static SQLHDBC hb_SQLHDBC_par( int iParam )
 {
-   SQLHDBC * ptr = ( SQLHDBC * ) hb_parptrGC( &s_gcSQLHDBCFuncs, iParam );
+   PHB_SQLHDBC pHDbc = ( PHB_SQLHDBC ) hb_parptrGC( &s_gcSQLHDBCFuncs, iParam );
 
-   return ptr ? *ptr : NULL;
+   return pHDbc ? pHDbc->hDbc : NULL;
 }
 
-static SQLHDBC hb_SQLHDBC_is( int iParam )
+static HB_BOOL hb_SQLHDBC_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSQLHDBCFuncs, iParam );
+   return hb_SQLHDBC_par( iParam ) != NULL;
 }
 
-static void hb_SQLHDBC_stor( SQLHDBC hDbc, int iParam )
+static void hb_SQLHDBC_stor( PHB_ITEM pHEnvItm, SQLHDBC hDbc, int iParam )
 {
-   SQLHDBC * ptr = ( SQLHDBC * ) hb_gcAllocate( sizeof( SQLHDBC ), &s_gcSQLHDBCFuncs );
+   PHB_SQLHDBC pHDbc = ( PHB_SQLHDBC ) hb_gcAllocate( sizeof( HB_SQLHDBC ), &s_gcSQLHDBCFuncs );
 
-   *ptr = hDbc;
+   pHDbc->hDbc = hDbc;
+   pHDbc->pHEnvItm = pHEnvItm ? hb_itemNew( pHEnvItm ) : NULL;
 
-   hb_storptrGC( ( void * ) ptr, iParam );
+   hb_storptrGC( ( void * ) pHDbc, iParam );
 }
 
 /* GC - SQLHSTMT */
 
+typedef struct
+{
+   SQLHSTMT hStmt;
+   PHB_ITEM pHDbcItm;
+}
+HB_SQLHSTMT, * PHB_SQLHSTMT;
+
 static HB_GARBAGE_FUNC( hb_SQLHSTMT_Destructor )
 {
    /* Retrieve image pointer holder */
-   SQLHSTMT * ptr = ( SQLHSTMT * ) Cargo;
+   PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( *ptr )
+   if( pHStmt->hStmt )
    {
 #if defined( _HBODBC_AUTO_MM_ )
 #if ODBCVER >= 0x0300
-      SQLFreeHandle( SQL_HANDLE_STMT, ( SQLHANDLE ) *ptr );
+      SQLFreeHandle( SQL_HANDLE_STMT, ( SQLHANDLE ) pHStmt->hStmt );
 #else
-      SQLFreeStmt( *ptr, SQL_DROP );
+      SQLFreeStmt( pHStmt->hStmt, SQL_DROP );
 #endif
 #endif
 
       /* set pointer to NULL to avoid multiple freeing */
-      *ptr = NULL;
+      pHStmt->hStmt = NULL;
+   }
+   if( pHStmt->pHDbcItm )
+   {
+      /* release reference to parent handler */
+      hb_itemRelease( pHStmt->pHDbcItm );
+      /* set pointer to NULL to avoid multiple freeing */
+      pHStmt->pHDbcItm = NULL;
    }
 }
 
+static HB_GARBAGE_FUNC( hb_SQLHSTMT_Mark )
+{
+   /* Retrieve image pointer holder */
+   PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) Cargo;
+
+   if( pHStmt->pHDbcItm )
+   {
+      /* mark parent item handler as used */
+      hb_gcMark( pHStmt->pHDbcItm );
+   }
+}
 static const HB_GC_FUNCS s_gcSQLHSTMTFuncs =
 {
    hb_SQLHSTMT_Destructor,
-   hb_gcDummyMark
+   hb_SQLHSTMT_Mark
 };
 
 static SQLHSTMT hb_SQLHSTMT_par( int iParam )
 {
-   SQLHSTMT * ptr = ( SQLHSTMT * ) hb_parptrGC( &s_gcSQLHSTMTFuncs, iParam );
+   PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) hb_parptrGC( &s_gcSQLHSTMTFuncs, iParam );
 
-   return ptr ? *ptr : NULL;
+   return pHStmt ? pHStmt->hStmt : NULL;
 }
 
-static SQLHSTMT hb_SQLHSTMT_is( int iParam )
+static HB_BOOL hb_SQLHSTMT_is( int iParam )
 {
-   return hb_parptrGC( &s_gcSQLHSTMTFuncs, iParam );
+   return hb_SQLHSTMT_par( iParam ) != NULL;
 }
 
-static void hb_SQLHSTMT_stor( SQLHSTMT hStmt, int iParam )
+static void hb_SQLHSTMT_stor( PHB_ITEM pHDbcItm, SQLHSTMT hStmt, int iParam )
 {
-   SQLHSTMT * ptr = ( SQLHSTMT * ) hb_gcAllocate( sizeof( SQLHSTMT ), &s_gcSQLHSTMTFuncs );
+   PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) hb_gcAllocate( sizeof( HB_SQLHSTMT ), &s_gcSQLHSTMTFuncs );
 
-   *ptr = hStmt;
+   pHStmt->hStmt = hStmt;
+   pHStmt->pHDbcItm = pHDbcItm ? hb_itemNew( pHDbcItm ) : NULL;
 
-   hb_storptrGC( ( void * ) ptr, iParam );
+   hb_storptrGC( ( void * ) pHStmt, iParam );
 }
 
 HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
@@ -317,7 +371,7 @@ HB_FUNC( SQLALLOCCONNECT ) /* hEnv, @hDbc --> nRetCode */
       hb_retni( SQLAllocConnect( hEnv, &hDbc ) );
 #endif
 
-      hb_SQLHDBC_stor( hDbc, 2 );
+      hb_SQLHDBC_stor( hb_param( 1, HB_IT_ANY ), hDbc, 2 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -428,7 +482,7 @@ HB_FUNC( SQLALLOCSTMT ) /* hDbc, @hStmt --> nRetCode */
       hb_retni( SQLAllocStmt( hDbc, &hStmt ) );
 #endif
 
-      hb_SQLHSTMT_stor( hStmt, 2 );
+      hb_SQLHSTMT_stor( hb_param( 1, HB_IT_ANY ), hStmt, 2 );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );

@@ -79,10 +79,12 @@ static char    s_szAppName[ HB_PATH_MAX ];
 
 #else
 
+#include "hbwinuni.h"
 #include <windows.h>
 
-static char    s_szAppName[ MAX_PATH ];
+/* static LPTSTR* s_lpArgV = NULL; */
 static TCHAR   s_lpAppName[ MAX_PATH ];
+static char    s_szAppName[ MAX_PATH ];
 static int     s_fSkipAppName  = HB_FALSE;
 
 static HANDLE  s_hInstance     = 0;
@@ -147,6 +149,7 @@ const char * hb_cmdargARGVN( int argc )
 
 static char * hb_cmdargDup( int argc )
 {
+   /* TODO: TCHAR conv */
    return argc >= 0 && argc < s_argc ? hb_osStrDecode( s_argv[ argc ] ) : NULL;
 }
 
@@ -157,6 +160,7 @@ void hb_cmdargUpdate( void )
    if( s_argc > 0 )
    {
 #if defined( HB_OS_WIN )
+      /* TODO: TCHAR conv */
 
       /* NOTE: Manually setup the executable name in Windows,
                because in console apps the name may be truncated
@@ -261,6 +265,27 @@ void hb_cmdargUpdate( void )
    }
 }
 
+/* places application parameters on the HVM stack */
+
+int hb_cmdargPushArgs( void )
+{
+   int argc = hb_cmdargARGC();
+   char ** argv = hb_cmdargARGV();
+   int iArgCount = 0, i;
+
+   for( i = 1; i < argc; i++ )
+   {
+      /* Filter out any parameters beginning with //, like //INFO */
+      if( ! hb_cmdargIsInternal( argv[ i ], NULL ) )
+      {
+         hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
+         iArgCount++;
+      }
+   }
+
+   return iArgCount;
+}
+
 HB_BOOL hb_cmdargIsInternal( const char * szArg, int * piLen )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargIsInternal(%s, %p)", szArg, piLen ) );
@@ -307,6 +332,7 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
       {
          if( bRetValue )
          {
+            /* TODO: TCHAR conv */
             char * pszPos = s_argv[ i ] + iPrefixLen + strlen( pszName );
 
             if( *pszPos == ':' )
@@ -426,6 +452,7 @@ int hb_cmdargNum( const char * pszName )
 char * hb_cmdargProgName( void )
 {
 #if defined( HB_OS_WIN )
+   /* TODO: TCHAR conv */
    if( ! s_fSkipAppName )
    {
       if( s_lpAppName[ 0 ] == 0 )
@@ -437,10 +464,26 @@ char * hb_cmdargProgName( void )
             s_lpAppName[ 0 ] = 0;
       }
       if( s_lpAppName[ 0 ] != 0 )
-         return hb_osStrU16Decode( s_lpAppName );
+         return HB_OSSTRDUP( s_lpAppName );
    }
 #endif
    return hb_cmdargDup( 0 );
+}
+
+/* NOTE: Pointer must be freed with hb_xfree() if not NULL */
+
+char * hb_cmdargBaseProgName( void )
+{
+   char * pszProgName, * pszBaseProgName;
+   PHB_FNAME pFileName;
+
+   pszProgName = hb_cmdargProgName();
+   pFileName = hb_fsFNameSplit( pszProgName );
+   pszBaseProgName = hb_strdup( pFileName->szName );
+   hb_xfree( pFileName );
+   hb_xfree( pszProgName );
+
+   return pszBaseProgName;
 }
 
 /* Check if an internal switch has been set */
@@ -502,6 +545,7 @@ HB_FUNC( HB_ARGSHIFT )
       {
          if( ! hb_cmdargIsInternal( s_argv[ iArg ], NULL ) )
          {
+            /* TODO: TCHAR conv */
             s_argv[ 0 ] = s_argv[ iArg ];
 #if defined( HB_OS_WIN )
             s_fSkipAppName = HB_TRUE;
@@ -516,6 +560,7 @@ HB_FUNC( HB_ARGSHIFT )
       --s_argc;
       while( iArg < s_argc )
       {
+         /* TODO: TCHAR conv */
          s_argv[ iArg ] = s_argv[ iArg + 1 ];
          ++iArg;
       }
@@ -529,6 +574,8 @@ HB_FUNC( HB_CMDLINE )
    char * pszBuffer, * ptr;
    HB_SIZE nLen;
    int iArg;
+
+   /* TODO: TCHAR conv */
 
    nLen = 0;
    for( iArg = 1; iArg < argc; iArg++ )

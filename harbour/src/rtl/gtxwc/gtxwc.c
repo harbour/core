@@ -3984,6 +3984,27 @@ static HB_ULONG hb_gt_xwc_CurrentTime( void )
 
 /* *********************************************************************** */
 
+static void hb_gt_xwc_SetTitle( PXWND_DEF wnd, const char * szTitle )
+{
+   if( szTitle && * szTitle )
+   {
+      XTextProperty text;
+      char * pBuffer;
+
+      pBuffer = hb_cdpDup( szTitle, HB_GTSELF_HOSTCP( wnd->pGT ), wnd->utf8CDP );
+      text.value = ( unsigned char * ) pBuffer;
+      text.encoding = s_atomUTF8String;
+      text.format = 8;
+      text.nitems = strlen( pBuffer );
+      XSetWMName( wnd->dpy, wnd->window, &text );
+      hb_xfree( pBuffer );
+   }
+   else
+      XStoreName( wnd->dpy, wnd->window, "" );
+}
+
+/* *********************************************************************** */
+
 static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
 {
    if( wnd->cursorType != SC_NONE )
@@ -4011,21 +4032,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
    if( wnd->fDspTitle )
    {
       wnd->fDspTitle = HB_FALSE;
-      if( wnd->szTitle )
-      {
-         XTextProperty text;
-         char * pBuffer;
-
-         pBuffer = hb_cdpDup( wnd->szTitle, HB_GTSELF_HOSTCP( wnd->pGT ), wnd->utf8CDP );
-         text.value = ( unsigned char * ) pBuffer;
-         text.encoding = s_atomUTF8String;
-         text.format = 8;
-         text.nitems = strlen( pBuffer );
-         XSetWMName( wnd->dpy, wnd->window, &text );
-         hb_xfree( pBuffer );
-      }
-      else
-         XStoreName( wnd->dpy, wnd->window, "" );
+      hb_gt_xwc_SetTitle( wnd, wnd->szTitle );
    }
 
 #if 1
@@ -4327,7 +4334,6 @@ static HB_BOOL hb_gt_xwc_isUTF8( void )
 
 static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
 {
-   PHB_FNAME pFileName;
    PXWND_DEF wnd = ( PXWND_DEF ) hb_xgrab( sizeof( XWND_DEF ) );
    int i;
 
@@ -4351,10 +4357,8 @@ static PXWND_DEF hb_gt_xwc_CreateWndDef( PHB_GT pGT )
    wnd->cursorType = SC_NORMAL;
 
    /* Window Title */
-   pFileName = hb_fsFNameSplit( hb_cmdargARGVN( 0 ) );
-   wnd->szTitle = pFileName->szName ? hb_strdup( pFileName->szName ) : NULL;
+   wnd->szTitle = hb_cmdargBaseProgName();
    wnd->fDspTitle = HB_TRUE;
-   hb_xfree( pFileName );
 
    /* Font parameters */
    wnd->fontHeight = XWC_DEFAULT_FONT_HEIGHT;
@@ -4594,7 +4598,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 
       /* Line width 2 */
       XSetLineAttributes( wnd->dpy, wnd->gc, 1, LineSolid, CapRound, JoinBevel );
-      XStoreName( wnd->dpy, wnd->window, wnd->szTitle ? wnd->szTitle : "" );
+      hb_gt_xwc_SetTitle( wnd, wnd->szTitle );
    }
 
    XSetFont( wnd->dpy, wnd->gc, wnd->xfs->fid );
@@ -5107,16 +5111,21 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       }
 
       case HB_GTI_WINTITLE:
-         pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szTitle );
+         pInfo->pResult = hb_itemPutStrLenUTF8( pInfo->pResult, wnd->szTitle,
+                                                strlen( wnd->szTitle ) );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
+            void * hString;
+            HB_SIZE nLen;
+            const char * pszTitle = hb_itemGetStrUTF8( pInfo->pNewVal, &hString, &nLen );
+
             if( wnd->szTitle )
                hb_xfree( wnd->szTitle );
-
-            if( hb_itemGetCLen( pInfo->pNewVal ) > 0 )
-               wnd->szTitle = hb_strdup( hb_itemGetCPtr( pInfo->pNewVal ) );
+            if( nLen > 0 )
+               wnd->szTitle = hb_strdup( pszTitle );
             else
                wnd->szTitle = NULL;
+            hb_strfree( hString );
 
             wnd->fDspTitle = HB_TRUE;
          }

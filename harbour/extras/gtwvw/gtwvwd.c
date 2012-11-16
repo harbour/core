@@ -468,15 +468,12 @@ static void hb_gt_wvw_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
       hb_errRT_TERM( EG_CREATE, 10001, "WINAPI CreateWindow() failed", "hb_gt_Init()", 0, 0 );
 
    {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGVN( 0 ) );
-      PHB_ITEM  pItem     = hb_itemPutC( NULL, pFileName->szName );
-      void *    hWindowTitle;
+      PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
+      void *   hWindowTitle;
 
       hb_gt_wvwSetWindowTitle( 0, HB_ITEMGETSTR( pItem, &hWindowTitle, NULL ) );
-
       hb_strfree( hWindowTitle );
       hb_itemRelease( pItem );
-      hb_xfree( pFileName );
    }
 
    hb_gt_wvwCreateObjects( 0 );
@@ -7097,11 +7094,9 @@ HB_FUNC( WVW_NOPENWINDOW )
    }
    else
    {
-      pFileName = hb_fsFNameSplit( hb_cmdargARGV()[ 0 ] );
-      PHB_ITEM pItem = hb_itemPutC( NULL, pFileName->szName );
+      PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
 
       lpszWinName = HB_ITEMGETSTR( pItem, &hWinName, NULL );
-
       hb_itemRelease( pItem );
    }
 

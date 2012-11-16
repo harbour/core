@@ -1125,25 +1125,9 @@ void hb_vmInit( HB_BOOL bStartMainProc )
 
    if( bStartMainProc && s_pSymStart )
    {
-      int argc = hb_cmdargARGC();
-      char ** argv = hb_cmdargARGV();
-      int iArgCount = 0;
-      int i;
-
       hb_vmPushSymbol( s_pSymStart ); /* pushes first HB_FS_PUBLIC defined symbol to the stack */
       hb_vmPushNil();                 /* places NIL at self */
-
-      for( i = 1; i < argc; i++ )     /* places application parameters on the stack */
-      {
-         /* Filter out any parameters beginning with //, like //INFO */
-         if( ! hb_cmdargIsInternal( argv[ i ], NULL ) )
-         {
-            hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
-            iArgCount++;
-         }
-      }
-
-      hb_vmProc( ( HB_USHORT ) iArgCount ); /* invoke it with number of supplied parameters */
+      hb_vmProc( ( HB_USHORT ) hb_cmdargPushArgs() ); /* invoke it with number of supplied parameters */
    }
 }
 
@@ -8142,26 +8126,9 @@ static void hb_vmDoInitFunctions( HB_BOOL fClipInit )
                 ( strcmp( ( pLastSymbols->pModuleSymbols + ui )->szName,
                           "CLIPINIT$" ) == 0 ? fClipInit : !fClipInit ) )
             {
-               int argc = hb_cmdargARGC();
-               char ** argv = hb_cmdargARGV();
-               int iArgCount;
-               int i;
-
                hb_vmPushSymbol( pLastSymbols->pModuleSymbols + ui );
                hb_vmPushNil();
-
-               iArgCount = 0;
-               for( i = 1; i < argc; i++ ) /* places application parameters on the stack */
-               {
-                  /* Filter out any parameters beginning with //, like //INFO */
-                  if( ! hb_cmdargIsInternal( argv[ i ], NULL ) )
-                  {
-                     hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
-                     iArgCount++;
-                  }
-               }
-
-               hb_vmProc( ( HB_USHORT ) iArgCount );
+               hb_vmProc( ( HB_USHORT ) hb_cmdargPushArgs() );
                if( hb_vmRequestQuery() != 0 )
                   break;
             }

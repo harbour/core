@@ -372,13 +372,10 @@ static PHB_GTWVT hb_gt_wvt_New( PHB_GT pGT, HINSTANCE hInstance, int iCmdShow )
    pWVT->bSelectCopy       = HB_TRUE;
 
    {
-      PHB_FNAME pFileName = hb_fsFNameSplit( hb_cmdargARGVN( 0 ) );
-      PHB_ITEM  pItem = hb_itemPutC( NULL, pFileName->szName );
+      PHB_ITEM pItem = hb_itemPutCPtr( NULL, hb_cmdargBaseProgName() );
 
       pWVT->lpWindowTitle = HB_ITEMGETSTR( pItem, &pWVT->hWindowTitle, NULL );
-
       hb_itemRelease( pItem );
-      hb_xfree( pFileName );
    }
 
    pWVT->bResizable        = HB_TRUE;

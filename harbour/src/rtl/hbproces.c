@@ -427,7 +427,7 @@ HB_FHANDLE hb_fsProcessOpen( const char * pszFilename,
       PROCESS_INFORMATION pi;
       STARTUPINFO si;
       DWORD dwFlags = 0;
-      LPWSTR lpCommand = HB_CHARDUP( pszFilename );
+      LPTSTR lpCommand = HB_CHARDUP( pszFilename );
 
       memset( &pi, 0, sizeof( pi ) );
       memset( &si, 0, sizeof( si ) );
