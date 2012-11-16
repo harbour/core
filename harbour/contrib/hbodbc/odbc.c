@@ -161,24 +161,29 @@ typedef unsigned char SQLTCHAR;
 
 /* GC - SQLHENV */
 
+typedef struct
+{
+   SQLHENV  hEnv;
+}
+HB_SQLHENV, * PHB_SQLHENV;
+
 static HB_GARBAGE_FUNC( hb_SQLHENV_Destructor )
 {
-   /* Retrieve image pointer holder */
-   SQLHENV * ptr = ( SQLHENV * ) Cargo;
+   PHB_SQLHENV pHEnv = ( PHB_SQLHENV ) Cargo;
 
    /* Check if pointer is not NULL to avoid multiple freeing */
-   if( *ptr )
+   if( pHEnv->hEnv )
    {
 #if defined( _HBODBC_AUTO_MM_ )
 #if ODBCVER >= 0x0300
-      SQLFreeHandle( SQL_HANDLE_ENV, ( SQLHANDLE ) *ptr );
+      SQLFreeHandle( SQL_HANDLE_ENV, ( SQLHANDLE ) pHEnv->hEnv );
 #else
-      SQLFreeEnv( *ptr );
+      SQLFreeEnv( pHEnv->hEnv );
 #endif
 #endif
 
       /* set pointer to NULL to avoid multiple freeing */
-      *ptr = NULL;
+      pHEnv->hEnv = NULL;
    }
 }
 
@@ -188,25 +193,20 @@ static const HB_GC_FUNCS s_gcSQLHENVFuncs =
    hb_gcDummyMark
 };
 
-static SQLHENV hb_SQLHENV_par( int iParam )
-{
-   SQLHENV * ptr = ( SQLHENV * ) hb_parptrGC( &s_gcSQLHENVFuncs, iParam );
-
-   return ptr ? *ptr : NULL;
-}
-
-static SQLHENV hb_SQLHENV_is( int iParam )
-{
-   return hb_parptrGC( &s_gcSQLHENVFuncs, iParam );
-}
-
 static void hb_SQLHENV_stor( SQLHENV hEnv, int iParam )
 {
-   SQLHENV * ptr = ( SQLHENV * ) hb_gcAllocate( sizeof( SQLHENV ), &s_gcSQLHENVFuncs );
+   PHB_SQLHENV pHEnv = ( PHB_SQLHENV ) hb_gcAllocate( sizeof( HB_SQLHENV ), &s_gcSQLHENVFuncs );
 
-   *ptr = hEnv;
+   pHEnv->hEnv = hEnv;
 
-   hb_storptrGC( ( void * ) ptr, iParam );
+   hb_storptrGC( ( void * ) pHEnv, iParam );
+}
+
+static SQLHENV hb_SQLHENV_par( int iParam )
+{
+   PHB_SQLHENV pHEnv = ( PHB_SQLHENV ) hb_parptrGC( &s_gcSQLHENVFuncs, iParam );
+
+   return pHEnv ? pHEnv->hEnv : NULL;
 }
 
 /* GC - SQLHDBC */
@@ -215,6 +215,7 @@ typedef struct
 {
    SQLHDBC  hDbc;
    PHB_ITEM pHEnvItm;
+   int      conn_counter;
 }
 HB_SQLHDBC, * PHB_SQLHDBC;
 
@@ -262,23 +263,12 @@ static const HB_GC_FUNCS s_gcSQLHDBCFuncs =
    hb_SQLHDBC_Mark
 };
 
-static SQLHDBC hb_SQLHDBC_par( int iParam )
-{
-   PHB_SQLHDBC pHDbc = ( PHB_SQLHDBC ) hb_parptrGC( &s_gcSQLHDBCFuncs, iParam );
-
-   return pHDbc ? pHDbc->hDbc : NULL;
-}
-
-static HB_BOOL hb_SQLHDBC_is( int iParam )
-{
-   return hb_SQLHDBC_par( iParam ) != NULL;
-}
-
 static void hb_SQLHDBC_stor( PHB_ITEM pHEnvItm, SQLHDBC hDbc, int iParam )
 {
    PHB_SQLHDBC pHDbc = ( PHB_SQLHDBC ) hb_gcAllocate( sizeof( HB_SQLHDBC ), &s_gcSQLHDBCFuncs );
 
    pHDbc->hDbc = hDbc;
+   pHDbc->conn_counter = 1;
    /* initialize pointer scanned by mark function before allocating new
     * new GC block - such allocation may activate GC and uninitalized
     * pointer will be accessed from our mark function
@@ -293,12 +283,37 @@ static void hb_SQLHDBC_stor( PHB_ITEM pHEnvItm, SQLHDBC hDbc, int iParam )
    hb_storptrGC( ( void * ) pHDbc, iParam );
 }
 
+static PHB_SQLHDBC hb_SQLHDBC_get( PHB_ITEM pItem )
+{
+   return ( PHB_SQLHDBC ) hb_itemGetPtrGC( pItem, &s_gcSQLHDBCFuncs );
+}
+
+static HB_BOOL hb_SQLHDBC_check( PHB_ITEM pItem, int conn_counter )
+{
+   if( pItem )
+   {
+      PHB_SQLHDBC pHDbc = hb_SQLHDBC_get( pItem );
+
+      return pHDbc != NULL && pHDbc->conn_counter == conn_counter;
+   }
+   else
+      return HB_TRUE;
+}
+
+static SQLHDBC hb_SQLHDBC_par( int iParam )
+{
+   PHB_SQLHDBC pHDbc = hb_SQLHDBC_get( hb_param( iParam, HB_IT_POINTER ) );
+
+   return pHDbc ? pHDbc->hDbc : NULL;
+}
+
 /* GC - SQLHSTMT */
 
 typedef struct
 {
    SQLHSTMT hStmt;
    PHB_ITEM pHDbcItm;
+   int      conn_counter;
 }
 HB_SQLHSTMT, * PHB_SQLHSTMT;
 
@@ -310,17 +325,21 @@ static HB_GARBAGE_FUNC( hb_SQLHSTMT_Destructor )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( pHStmt->hStmt )
    {
+      if( hb_SQLHDBC_check(  pHStmt->pHDbcItm, pHStmt->conn_counter ) )
+      {
 #if defined( _HBODBC_AUTO_MM_ )
 #if ODBCVER >= 0x0300
-      SQLFreeHandle( SQL_HANDLE_STMT, ( SQLHANDLE ) pHStmt->hStmt );
+         SQLFreeHandle( SQL_HANDLE_STMT, ( SQLHANDLE ) pHStmt->hStmt );
 #else
-      SQLFreeStmt( pHStmt->hStmt, SQL_DROP );
+         SQLFreeStmt( pHStmt->hStmt, SQL_DROP );
 #endif
 #endif
+      }
 
       /* set pointer to NULL to avoid multiple freeing */
       pHStmt->hStmt = NULL;
    }
+
    if( pHStmt->pHDbcItm )
    {
       /* release reference to parent handler */
@@ -345,35 +364,40 @@ static const HB_GC_FUNCS s_gcSQLHSTMTFuncs =
    hb_SQLHSTMT_Mark
 };
 
-static SQLHSTMT hb_SQLHSTMT_par( int iParam )
-{
-   PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) hb_parptrGC( &s_gcSQLHSTMTFuncs, iParam );
-
-   return pHStmt ? pHStmt->hStmt : NULL;
-}
-
-static HB_BOOL hb_SQLHSTMT_is( int iParam )
-{
-   return hb_SQLHSTMT_par( iParam ) != NULL;
-}
-
 static void hb_SQLHSTMT_stor( PHB_ITEM pHDbcItm, SQLHSTMT hStmt, int iParam )
 {
    PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) hb_gcAllocate( sizeof( HB_SQLHSTMT ), &s_gcSQLHSTMTFuncs );
 
    pHStmt->hStmt = hStmt;
+   pHStmt->conn_counter = 0;
    /* initialize pointer scanned by mark function before allocating new
     * new GC block - such allocation may activate GC and uninitalized
     * pointer will be accessed from our mark function
     */
    pHStmt->pHDbcItm = NULL;
+
    if( pHDbcItm )
    {
-      pHStmt->pHDbcItm = hb_itemNew( pHDbcItm );
-      hb_gcUnlock( pHStmt->pHDbcItm );
+      PHB_SQLHDBC pHDbc = hb_SQLHDBC_get( pHDbcItm );
+
+      if( pHDbc )
+      {
+         pHStmt->conn_counter = pHDbc->conn_counter;
+         pHStmt->pHDbcItm = hb_itemNew( pHDbcItm );
+         hb_gcUnlock( pHStmt->pHDbcItm );
+      }
    }
 
    hb_storptrGC( ( void * ) pHStmt, iParam );
+}
+
+static SQLHSTMT hb_SQLHSTMT_par( int iParam )
+{
+   PHB_SQLHSTMT pHStmt = ( PHB_SQLHSTMT ) hb_parptrGC( &s_gcSQLHSTMTFuncs, iParam );
+
+   return ( pHStmt && pHStmt->hStmt &&
+            hb_SQLHDBC_check(  pHStmt->pHDbcItm, pHStmt->conn_counter ) ) ?
+          pHStmt->hStmt : NULL;
 }
 
 HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
@@ -397,9 +421,10 @@ HB_FUNC( SQLALLOCENV ) /* @hEnv --> nRetCode */
 
 HB_FUNC( SQLALLOCCONNECT ) /* hEnv, @hDbc --> nRetCode */
 {
-   if( hb_SQLHENV_is( 1 ) )
+   SQLHENV hEnv = hb_SQLHENV_par( 1 );
+
+   if( hEnv )
    {
-      SQLHENV hEnv = hb_SQLHENV_par( 1 );
       SQLHDBC hDbc;
 
 #if ODBCVER >= 0x0300
@@ -416,19 +441,23 @@ HB_FUNC( SQLALLOCCONNECT ) /* hEnv, @hDbc --> nRetCode */
 
 HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
 {
-   if( hb_SQLHDBC_is( 1 ) )
+   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+
+   if( hDbc )
    {
       SQLSMALLINT iLen;
       SQLRETURN   ret;
       void *      hConnStr;
+      HB_SIZE     nConnStr;
+      SQLTCHAR *  cConnStr = ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hConnStr, &nConnStr );
       SQLTCHAR    buffer[ 1024 ];
 
       buffer[ 0 ] = '\0';
 
-      ret = SQLDriverConnect( hb_SQLHDBC_par( 1 ),
+      ret = SQLDriverConnect( hDbc,
                               ( SQLHWND ) NULL,
-                              ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hConnStr, NULL ),
-                              ( SQLSMALLINT ) hb_parclen( 2 ),
+                              cConnStr,
+                              ( SQLSMALLINT ) nConnStr,
                               ( SQLTCHAR * ) buffer,
                               ( SQLSMALLINT ) HB_SIZEOFARRAY( buffer ),
                               ( SQLSMALLINT * ) &iLen,
@@ -446,21 +475,29 @@ HB_FUNC( SQLDRIVERCONNECT ) /* hDbc, @cConnectString --> nRetCode */
 
 HB_FUNC( SQLCONNECT ) /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
 {
-   if( hb_SQLHDBC_is( 1 ) )
+   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+
+   /* TOFIX: add protection against connection with connected hDbc handle */
+
+   if( hDbc )
    {
       SQLRETURN ret;
 
-      void * hDSN;
-      void * hUser;
-      void * hPass;
+      void *     hDSN;
+      void *     hUser;
+      void *     hPass;
+      HB_SIZE    nDSN, nUser, nPass;
+      SQLTCHAR * cDSN  = ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hDSN, &nDSN );
+      SQLTCHAR * cUser = ( SQLTCHAR * ) O_HB_PARSTRDEF( 3, &hUser, &nUser );
+      SQLTCHAR * cPass = ( SQLTCHAR * ) O_HB_PARSTRDEF( 4, &hPass, &nPass );
 
-      ret = SQLConnect( hb_SQLHDBC_par( 1 ),
-                        ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hDSN, NULL ),
-                        ( SQLSMALLINT ) hb_parclen( 2 ),
-                        ( SQLTCHAR * ) O_HB_PARSTRDEF( 3, &hUser, NULL ),
-                        ( SQLSMALLINT ) hb_parclen( 3 ),
-                        ( SQLTCHAR * ) O_HB_PARSTRDEF( 4, &hPass, NULL ),
-                        ( SQLSMALLINT ) hb_parclen( 4 ) );
+      ret = SQLConnect( hDbc,
+                        cDSN,
+                        ( SQLSMALLINT ) nDSN,
+                        cUser,
+                        ( SQLSMALLINT ) nUser,
+                        cPass,
+                        ( SQLSMALLINT ) nPass );
 
       hb_strfree( hDSN );
       hb_strfree( hUser );
@@ -474,8 +511,17 @@ HB_FUNC( SQLCONNECT ) /* hDbc, cDSN, cUseName, cPassword --> nRetCode */
 
 HB_FUNC( SQLDISCONNECT ) /* hDbc --> nRetCode */
 {
-   if( hb_SQLHDBC_is( 1 ) )
-      hb_retni( SQLDisconnect( hb_SQLHDBC_par( 1 ) ) );
+   PHB_SQLHDBC pHDbc = hb_SQLHDBC_get( hb_param( 1, HB_IT_POINTER ) );
+
+   if( pHDbc && pHDbc->hDbc )
+   {
+      SQLRETURN result = SQLDisconnect( pHDbc->hDbc );
+
+      if( SQL_SUCCEEDED( result ) )
+         pHDbc->conn_counter++;
+
+      hb_retni( result );
+   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -485,14 +531,20 @@ HB_FUNC( SQLDISCONNECT ) /* hDbc --> nRetCode */
 HB_FUNC( SQLFREECONNECT ) /* hDbc --> nRetCode */
 {
 #if ! defined( _HBODBC_AUTO_MM_ )
-   hb_retni( SQLFreeConnect( hb_SQLHDBC_par( 1 ) ) );
+   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+
+   if( hDbc )
+      hb_retni( SQLFreeConnect( hDbc ) );
 #endif
 }
 
 HB_FUNC( SQLFREEENV ) /* hEnv --> nRetCode */
 {
 #if ! defined( _HBODBC_AUTO_MM_ )
-   hb_retni( SQLFreeEnv( hb_SQLHENV_par( 1 ) ) );
+   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+
+   if( hDbc )
+      hb_retni( SQLFreeEnv( hDbc ) );
 #endif
 }
 
@@ -508,9 +560,10 @@ HB_FUNC( SQLFREESTMT ) /* hStmt, nType --> nRetCode */
 
 HB_FUNC( SQLALLOCSTMT ) /* hDbc, @hStmt --> nRetCode */
 {
-   if( hb_SQLHDBC_is( 1 ) )
+   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+
+   if( hDbc )
    {
-      SQLHDBC  hDbc = hb_SQLHDBC_par( 1 );
       SQLHSTMT hStmt;
 
 #if ODBCVER >= 0x0300
@@ -527,13 +580,17 @@ HB_FUNC( SQLALLOCSTMT ) /* hDbc, @hStmt --> nRetCode */
 
 HB_FUNC( SQLEXECDIRECT ) /* hStmt, cStatement --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
-   {
-      void * hStatement;
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
 
-      hb_retni( SQLExecDirect( hb_SQLHSTMT_par( 1 ),
-                               ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hStatement, NULL ),
-                               ( SQLINTEGER ) hb_parclen( 2 ) ) );
+   if( hStmt )
+   {
+      void *     hStatement;
+      HB_SIZE    nStatement;
+      SQLTCHAR * cStatement = ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hStatement, &nStatement );
+
+      hb_retni( SQLExecDirect( hStmt,
+                               cStatement,
+                               ( SQLINTEGER ) nStatement ) );
       hb_strfree( hStatement );
    }
    else
@@ -542,15 +599,19 @@ HB_FUNC( SQLEXECDIRECT ) /* hStmt, cStatement --> nRetCode */
 
 HB_FUNC( SQLFETCH ) /* hStmt --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
-      hb_retni( SQLFetch( hb_SQLHSTMT_par( 1 ) ) );
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
+      hb_retni( SQLFetch( hStmt ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
       SQLLEN      nLen;
       SQLLEN      nInitBuff;
@@ -570,7 +631,7 @@ HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
       result = ! SQL_NO_DATA;
       while( result != SQL_NO_DATA )
       {
-         result = SQLGetData( hb_SQLHSTMT_par( 1 ),
+         result = SQLGetData( hStmt,
                               ( SQLUSMALLINT ) hb_parni( 2 ),
                               ( SQLSMALLINT ) iType,
                               ( SQLPOINTER ) buffer,
@@ -622,11 +683,13 @@ HB_FUNC( SQLGETDATA ) /* hStmt, nField, nType, nLen, @cBuffer --> nRetCode */
 
 HB_FUNC( SQLNUMRESULTCOLS ) /* hStmt, @nColCount --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
       SQLSMALLINT iCols = 0;
 
-      hb_retni( SQLNumResultCols( hb_SQLHSTMT_par( 1 ), &iCols ) );
+      hb_retni( SQLNumResultCols( hStmt, &iCols ) );
 
       hb_stornl( ( long ) iCols, 2 );
    }
@@ -636,7 +699,9 @@ HB_FUNC( SQLNUMRESULTCOLS ) /* hStmt, @nColCount --> nRetCode */
 
 HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType, @nColSize, @nDec, @nNull --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
       SQLSMALLINT iLen      = ( SQLSMALLINT ) hb_parni( 4 );
       SQLSMALLINT iBufLen   = ( SQLUSMALLINT ) hb_parni( 5 );
@@ -652,7 +717,7 @@ HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType,
       buffer      = ( SQLTCHAR * ) hb_xgrab( iLen * sizeof( SQLTCHAR ) );
       buffer[ 0 ] = '\0';
 
-      hb_retni( SQLDescribeCol( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLDescribeCol( hStmt,
                                 ( SQLUSMALLINT ) hb_parni( 2 ),
                                 ( SQLTCHAR * ) buffer,
                                 ( SQLSMALLINT ) iLen,
@@ -677,7 +742,9 @@ HB_FUNC( SQLDESCRIBECOL ) /* hStmt, nCol, @cName, nLen, @nBufferLen, @nDataType,
 
 HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @nAttribute --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
       SQLSMALLINT iLen    = ( SQLSMALLINT ) hb_parni( 5 );
       SQLSMALLINT iBufLen = ( SQLUSMALLINT ) hb_parni( 6 );
@@ -696,7 +763,7 @@ HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @n
       buffer[ 0 ] = '\0';
 
 #if ODBCVER >= 0x0300
-      hb_retni( SQLColAttribute( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLColAttribute( hStmt,
                                  ( SQLUSMALLINT ) hb_parni( 2 ),
                                  ( SQLUSMALLINT ) hb_parni( 3 ),
                                  ( SQLPOINTER ) buffer,
@@ -704,7 +771,7 @@ HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @n
                                  ( SQLSMALLINT * ) &iBufLen,
                                  ( SQLLEN * ) &nNumPtr ) );
 #else
-      hb_retni( SQLColAttributes( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLColAttributes( hStmt,
                                   ( SQLUSMALLINT ) hb_parni( 2 ),
                                   ( SQLUSMALLINT ) hb_parni( 3 ),
                                   ( SQLPOINTER ) buffer,
@@ -725,10 +792,12 @@ HB_FUNC( SQLCOLATTRIBUTE ) /* hStmt, nCol, nField, @cName, nLen, @nBufferLen, @n
 
 HB_FUNC( SQLFETCHSCROLL )
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
 #if ODBCVER >= 0x0300
-      hb_retni( SQLFetchScroll( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLFetchScroll( hStmt,
                                 ( SQLSMALLINT ) hb_parni( 2 ),
                                 ( SQLLEN ) hb_parnint( 3 ) ) );
 #else
@@ -741,7 +810,11 @@ HB_FUNC( SQLFETCHSCROLL )
 
 HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
 {
-   if( hb_SQLHENV_is( 1 ) || hb_SQLHDBC_is( 2 ) || hb_SQLHSTMT_is( 3 ) )
+   SQLHENV  hEnv  = hb_SQLHENV_par( 1 );
+   SQLHDBC  hDbc  = hb_SQLHDBC_par( 2 );
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 3 );
+
+   if( hEnv || hDbc || hStmt )
    {
       SQLINTEGER  lError;
       SQLSMALLINT iLen;
@@ -752,9 +825,9 @@ HB_FUNC( SQLERROR ) /* hEnv, hDbc, hStmt, @cErrorClass, @nType, @cErrorMsg */
       szErrorMsg[ 0 ] = '\0';
       iLen = 0;
 
-      hb_retni( SQLError( hb_SQLHENV_par( 1 ),
-                          hb_SQLHDBC_par( 2 ),
-                          hb_SQLHSTMT_par( 3 ),
+      hb_retni( SQLError( hEnv,
+                          hDbc,
+                          hStmt,
                           ( SQLTCHAR * ) buffer,
                           ( SQLINTEGER * ) &lError,
                           ( SQLTCHAR * ) szErrorMsg,
@@ -826,12 +899,13 @@ HB_FUNC( SQLGETDIAGREC ) /* nHandleType, hHandle, nRecNumber, @cSQLState, @nErro
 
 HB_FUNC( SQLROWCOUNT )
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
       SQLLEN iRowCountPtr = ( SQLLEN ) hb_parnint( 2 );
 
-      hb_retni( SQLRowCount( hb_SQLHSTMT_par( 1 ),
-                             ( SQLLEN * ) &iRowCountPtr ) );
+      hb_retni( SQLRowCount( hStmt, ( SQLLEN * ) &iRowCountPtr ) );
 
       hb_stornint( iRowCountPtr, 2 );
    }
@@ -841,14 +915,16 @@ HB_FUNC( SQLROWCOUNT )
 
 HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
 {
-   if( hb_SQLHDBC_is( 1 ) )
+   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+
+   if( hDbc )
    {
       char        buffer[ 512 ];
       SQLSMALLINT iLen = 0;
 
       buffer[ 0 ] = '\0';
 
-      hb_retni( SQLGetInfo( hb_SQLHDBC_par( 1 ),
+      hb_retni( SQLGetInfo( hDbc,
                             ( SQLUSMALLINT ) hb_parni( 2 ),
                             ( SQLPOINTER ) buffer,
                             ( SQLSMALLINT ) sizeof( buffer ),
@@ -862,15 +938,17 @@ HB_FUNC( SQLGETINFO ) /* hDbc, nType, @cResult */
 
 HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
 {
-   if( hb_SQLHDBC_is( 1 ) )
+   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+
+   if( hDbc )
    {
 #if ODBCVER >= 0x0300
-      hb_retni( SQLSetConnectAttr( hb_SQLHDBC_par( 1 ),
+      hb_retni( SQLSetConnectAttr( hDbc,
                                    ( SQLINTEGER ) hb_parnl( 2 ),
                                    HB_ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
                                    HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
-      hb_retni( SQLSetConnectOption( hb_SQLHDBC_par( 1 ),
+      hb_retni( SQLSetConnectOption( hDbc,
                                      ( SQLUSMALLINT ) hb_parni( 2 ),
                                      HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : ( SQLULEN ) hb_parnl( 3 ) ) );
 #endif
@@ -881,15 +959,17 @@ HB_FUNC( SQLSETCONNECTATTR ) /* hDbc, nOption, uOption */
 
 HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
 #if ODBCVER >= 0x0300
-      hb_retni( SQLSetStmtAttr( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLSetStmtAttr( hStmt,
                                 ( SQLINTEGER ) hb_parnl( 2 ),
                                 HB_ISCHAR( 3 ) ? ( SQLPOINTER ) hb_parc( 3 ) : ( SQLPOINTER ) ( HB_PTRUINT ) hb_parnint( 3 ),
                                 HB_ISCHAR( 3 ) ? ( SQLINTEGER ) hb_parclen( 3 ) : ( SQLINTEGER ) SQL_IS_INTEGER ) );
 #else
-      hb_retni( SQLSetStmtOption( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLSetStmtOption( hStmt,
                                   ( SQLUSMALLINT ) hb_parni( 2 ),
                                   HB_ISCHAR( 3 ) ? ( SQLULEN ) hb_parc( 3 ) : ( SQLULEN ) hb_parnl( 3 ) ) );
 #endif
@@ -900,13 +980,15 @@ HB_FUNC( SQLSETSTMTATTR ) /* hStmt, nOption, uOption --> nRetCode */
 
 HB_FUNC( SQLGETCONNECTATTR ) /* hDbc, nOption, @cOption */
 {
-   if( hb_SQLHDBC_is( 1 ) )
+   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
+
+   if( hDbc )
    {
 #if ODBCVER >= 0x0300
       SQLPOINTER buffer[ 512 ];
       SQLINTEGER lLen = 0;
       buffer[ 0 ] = '\0';
-      hb_retni( SQLGetConnectAttr( hb_SQLHDBC_par( 1 ),
+      hb_retni( SQLGetConnectAttr( hDbc,
                                    ( SQLINTEGER ) hb_parnl( 2 ),
                                    ( SQLPOINTER ) buffer,
                                    ( SQLINTEGER ) sizeof( buffer ),
@@ -915,7 +997,7 @@ HB_FUNC( SQLGETCONNECTATTR ) /* hDbc, nOption, @cOption */
 #else
       char buffer[ 512 ];
       buffer[ 0 ] = '\0';
-      hb_retni( SQLGetConnectOption( hb_SQLHDBC_par( 1 ),
+      hb_retni( SQLGetConnectOption( hDbc,
                                      ( SQLSMALLINT ) hb_parni( 2 ),
                                      ( SQLPOINTER ) buffer ) );
       hb_storc( buffer, 3 );
@@ -927,13 +1009,15 @@ HB_FUNC( SQLGETCONNECTATTR ) /* hDbc, nOption, @cOption */
 
 HB_FUNC( SQLGETSTMTATTR ) /* hStmt, nOption, @cOption */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
 #if ODBCVER >= 0x0300
       SQLPOINTER buffer[ 512 ];
       SQLINTEGER lLen = 0;
       buffer[ 0 ] = '\0';
-      hb_retni( SQLGetStmtAttr( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLGetStmtAttr( hStmt,
                                 ( SQLINTEGER ) hb_parnl( 2 ),
                                 ( SQLPOINTER ) buffer,
                                 ( SQLINTEGER ) sizeof( buffer ),
@@ -942,7 +1026,7 @@ HB_FUNC( SQLGETSTMTATTR ) /* hStmt, nOption, @cOption */
 #else
       char buffer[ 512 ];
       buffer[ 0 ] = '\0';
-      hb_retni( SQLGetStmtOption( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLGetStmtOption( hStmt,
                                   ( SQLSMALLINT ) hb_parni( 2 ),
                                   ( SQLPOINTER ) buffer ) );
       hb_storc( buffer, 3 );
@@ -954,27 +1038,35 @@ HB_FUNC( SQLGETSTMTATTR ) /* hStmt, nOption, @cOption */
 
 HB_FUNC( SQLCOMMIT ) /* hEnv, hDbc */
 {
-   if( hb_SQLHENV_is( 1 ) && hb_SQLHDBC_is( 2 ) )
-      hb_retni( SQLTransact( hb_SQLHENV_par( 1 ), hb_SQLHDBC_par( 2 ), SQL_COMMIT ) );
+   SQLHENV hEnv = hb_SQLHENV_par( 1 );
+   SQLHDBC hDbc = hb_SQLHDBC_par( 2 );
+
+   if( hEnv && hDbc )
+      hb_retni( SQLTransact( hEnv, hDbc, SQL_COMMIT ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( SQLROLLBACK ) /* hEnv, hDbc */
 {
-   if( hb_SQLHENV_is( 1 ) && hb_SQLHDBC_is( 2 ) )
-      hb_retni( SQLTransact( hb_SQLHENV_par( 1 ), hb_SQLHDBC_par( 2 ), SQL_ROLLBACK ) );
+   SQLHENV hEnv = hb_SQLHENV_par( 1 );
+   SQLHDBC hDbc = hb_SQLHDBC_par( 2 );
+
+   if( hEnv && hDbc )
+      hb_retni( SQLTransact( hEnv, hDbc, SQL_ROLLBACK ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( SQLPREPARE ) /* hStmt, cStatement --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
       void * hStatement;
 
-      hb_retni( SQLPrepare( hb_SQLHSTMT_par( 1 ),
+      hb_retni( SQLPrepare( hStmt,
                             ( SQLTCHAR * ) O_HB_PARSTRDEF( 2, &hStatement, NULL ),
                             ( SQLINTEGER ) SQL_NTS ) );
 
@@ -986,27 +1078,34 @@ HB_FUNC( SQLPREPARE ) /* hStmt, cStatement --> nRetCode */
 
 HB_FUNC( SQLEXECUTE ) /* hStmt --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
-      hb_retni( SQLExecute( hb_SQLHSTMT_par( 1 ) ) );
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
+      hb_retni( SQLExecute( hStmt ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( SQLMORERESULTS ) /* hEnv, hDbc */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
-      hb_retni( SQLMoreResults( hb_SQLHSTMT_par( 1 ) ) );
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
+      hb_retni( SQLMoreResults( hStmt ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
 HB_FUNC( SQLBINDPARAMETER ) /* nStatementHandle, nParameterNumber, nParameterType, ColumnSize, DecimalDigits, @ParamValue, @ParamLength --> nRetCode */
 {
-   if( hb_SQLHSTMT_is( 1 ) )
+   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
+
+   if( hStmt )
    {
       SQLLEN nLen = ( SQLLEN ) hb_parnint( 7 );
 
-      hb_retni( SQLBindParameter( hb_SQLHSTMT_par( 1 ),
+      /* TOFIX: hb_parc() pointer is passed as write buffer */
+      hb_retni( SQLBindParameter( hStmt,
                                   ( SQLUSMALLINT ) hb_parni( 2 ),
                                   ( SQLSMALLINT ) SQL_PARAM_OUTPUT,
                                   ( SQLSMALLINT ) SQL_CHAR,
