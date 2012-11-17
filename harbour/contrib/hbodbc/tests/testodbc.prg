@@ -65,15 +65,6 @@ PROCEDURE Main()
    ? "------------------------------------------------------------------------------"
    ? Str( nRows, 4 ), " Row(s) affected."
 
-#if defined( _HBODBC_AUTO_MM_ )
-   // hStmt := NIL  // TOFIX: There should be no GPF even without this line
-
    SQLDisconnect( hDbc )
-#else
-   SQLFreeStmt( hStmt, SQL_DROP )
-   SQLDisconnect( hDbc )
-   SQLFreeConnect( hDbc )
-   SQLFreeEnv( hEnv )
-#endif
 
    RETURN

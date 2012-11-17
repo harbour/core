@@ -19,12 +19,6 @@
 -depincpath=odbc:/usr/include
 -depincpath=odbc:/usr/local/include
 
-# Automatic memory management. Causes
-# memory corruption, so it's disabled
-# until fixed:
--D_HBODBC_AUTO_MM_
--cflag=-D_HBODBC_AUTO_MM_
-
 hbodbc.hbx
 
 odbc.c

@@ -80,12 +80,6 @@
 #include "hbapistr.h"
 #include "hbset.h"
 
-/* Make sure to not deprecate manual MM functions if
-   automatic MM is not enabled yet */
-#if ! defined( _HBODBC_AUTO_MM_ ) && ! defined( HB_LEGACY_LEVEL4 )
-#  define HB_LEGACY_LEVEL4
-#endif
-
 /* NOTE: This code using pointer items is a little bit more complicated
          then it has to be.
          In current code pointer items can keep references only to other
@@ -174,12 +168,10 @@ static HB_GARBAGE_FUNC( hb_SQLHENV_Destructor )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( pHEnv->hEnv )
    {
-#if defined( _HBODBC_AUTO_MM_ )
 #if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_ENV, ( SQLHANDLE ) pHEnv->hEnv );
 #else
       SQLFreeEnv( pHEnv->hEnv );
-#endif
 #endif
 
       /* set pointer to NULL to avoid multiple freeing */
@@ -227,12 +219,10 @@ static HB_GARBAGE_FUNC( hb_SQLHDBC_Destructor )
    /* Check if pointer is not NULL to avoid multiple freeing */
    if( pHDbc->hDbc )
    {
-#if defined( _HBODBC_AUTO_MM_ )
 #if ODBCVER >= 0x0300
       SQLFreeHandle( SQL_HANDLE_DBC, ( SQLHANDLE ) pHDbc->hDbc );
 #else
       SQLFreeConnect( pHDbc->hDbc );
-#endif
 #endif
 
       /* set pointer to NULL to avoid multiple freeing */
@@ -327,12 +317,10 @@ static HB_GARBAGE_FUNC( hb_SQLHSTMT_Destructor )
    {
       if( hb_SQLHDBC_check(  pHStmt->pHDbcItm, pHStmt->conn_counter ) )
       {
-#if defined( _HBODBC_AUTO_MM_ )
 #if ODBCVER >= 0x0300
          SQLFreeHandle( SQL_HANDLE_STMT, ( SQLHANDLE ) pHStmt->hStmt );
 #else
          SQLFreeStmt( pHStmt->hStmt, SQL_DROP );
-#endif
 #endif
       }
 
@@ -530,30 +518,14 @@ HB_FUNC( SQLDISCONNECT ) /* hDbc --> nRetCode */
 
 HB_FUNC( SQLFREECONNECT ) /* hDbc --> nRetCode */
 {
-#if ! defined( _HBODBC_AUTO_MM_ )
-   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
-
-   if( hDbc )
-      hb_retni( SQLFreeConnect( hDbc ) );
-#endif
 }
 
 HB_FUNC( SQLFREEENV ) /* hEnv --> nRetCode */
 {
-#if ! defined( _HBODBC_AUTO_MM_ )
-   SQLHDBC hDbc = hb_SQLHDBC_par( 1 );
-
-   if( hDbc )
-      hb_retni( SQLFreeEnv( hDbc ) );
-#endif
 }
 
 HB_FUNC( SQLFREESTMT ) /* hStmt, nType --> nRetCode */
 {
-#if ! defined( _HBODBC_AUTO_MM_ )
-   hb_retni( SQLFreeStmt( hb_SQLHSTMT_par( 1 ),
-                          ( SQLUSMALLINT ) hb_parni( 2 ) ) );
-#endif
 }
 
 #endif

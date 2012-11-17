@@ -568,7 +568,7 @@ HB_FUNC( SQLITE3_SHUTDOWN )
 /**
    Enable Or Disable Extended Result Codes
 
-   sqlite3_extended_result_codes( db, lOnOff) -> nResultCode
+   sqlite3_extended_result_codes( db, lOnOff ) -> nResultCode
  */
 
 HB_FUNC( SQLITE3_EXTENDED_RESULT_CODES )
@@ -654,7 +654,7 @@ HB_FUNC( SQLITE3_LAST_INSERT_ROWID )
 /**
    Name Of The Folder Holding Temporary Files
 
-   sqlite3_temp_directory( cDirName ) -> lResult (HB_TRUE/HB_FALSE)
+   sqlite3_temp_directory( cDirName ) -> lResult
  */
 
 HB_FUNC( SQLITE3_TEMP_DIRECTORY )
@@ -775,7 +775,7 @@ HB_FUNC( SQLITE3_OPEN_V2 )
 /**
    One-Step Query Execution Interface
 
-   sqlite3_exec( db, cSQLTEXT, [pCallbackFunc]|[cCallbackFunc] ) -> nResultCode
+   sqlite3_exec( db, cSQLTEXT, [pCallbackFunc | cCallbackFunc] ) -> nResultCode
  */
 
 HB_FUNC( SQLITE3_EXEC )
@@ -897,7 +897,7 @@ HB_FUNC( SQLITE3_SQL )
 /**
    Prepared Statement Status.
 
-   sqlite3_stmt_status( pStmt, nOp, lResetFlag) -> nStatus
+   sqlite3_stmt_status( pStmt, nOp, lResetFlag ) -> nStatus
  */
 
 HB_FUNC( SQLITE3_STMT_STATUS )
@@ -1265,7 +1265,7 @@ HB_FUNC( SQLITE3_COLUMN_DECLTYPE )
 /**
    Column Names In A Result Set
 
-   sqlite3_column_name( pStmt, columnIndex) -> columnName
+   sqlite3_column_name( pStmt, columnIndex ) -> columnName
  */
 
 HB_FUNC( SQLITE3_COLUMN_NAME )
@@ -1535,9 +1535,9 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
 /**
    Source Of Data In A Query Result
 
-   sqlite3_column_database_name( pStmt, ColumnIndex) -> cDatabaseName
-   sqlite3_column_table_name( pStmt, ColumnIndex)    -> cTableName
-   sqlite3_column_origin_name( pStmt, ColumnIndex)   -> cColumnName
+   sqlite3_column_database_name( pStmt, ColumnIndex ) -> cDatabaseName
+   sqlite3_column_table_name( pStmt, ColumnIndex )    -> cTableName
+   sqlite3_column_origin_name( pStmt, ColumnIndex )   -> cColumnName
  */
 
 HB_FUNC( SQLITE3_COLUMN_DATABASE_NAME )
@@ -1736,7 +1736,7 @@ HB_FUNC( SQLITE3_BLOB_WRITE )
 /**
     Test To See If The Database Is In Auto-Commit Mode
 
-    sqlite3_get_autocommit( db ) -> lResult (HB_TRUE/HB_FALSE)
+    sqlite3_get_autocommit( db ) -> lResult
  */
 
 HB_FUNC( SQLITE3_GET_AUTOCOMMIT )
@@ -1861,7 +1861,7 @@ HB_FUNC( SQLITE3_BUFF_TO_FILE )
    Causes any pending database operation to abort and return at its
    earliest opportunity.
 
-   sqlite3_interrupt( db) -> Nil
+   sqlite3_interrupt( db ) -> Nil
  */
 
 HB_FUNC( SQLITE3_INTERRUPT )
@@ -2032,9 +2032,9 @@ HB_FUNC( SQLITE3_SET_AUTHORIZER )
                return pointer to Backup or NIL if error occurs
 
    sqlite3_backup_step( pBackup, nPage ) -> nResult
-   sqlite3_backup_finish( pBackup ) -> nResult
-   sqlite3_backup_remaining( pBackup ) -> nResult
-   sqlite3_backup_pagecount( pBackup ) -> nResult
+   sqlite3_backup_finish( pBackup )      -> nResult
+   sqlite3_backup_remaining( pBackup )   -> nResult
+   sqlite3_backup_pagecount( pBackup )   -> nResult
  */
 
 HB_FUNC( SQLITE3_BACKUP_INIT )
@@ -2159,7 +2159,7 @@ HB_FUNC( SQLITE3_THREADSAFE )
 /**
    SQLite Runtime Status
 
-   sqlite3_status( nOp, @nCurrent, @nHighwater, lResetFlag) -> nResult
+   sqlite3_status( nOp, @nCurrent, @nHighwater, lResetFlag ) -> nResult
  */
 
 HB_FUNC( SQLITE3_STATUS )
@@ -2182,7 +2182,7 @@ HB_FUNC( SQLITE3_STATUS )
 /**
    Database Connection Status
 
-   sqlite3_db_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag) -> nResult
+   sqlite3_db_status( pDb, nOp, @nCurrent, @nHighwater, lResetFlag ) -> nResult
  */
 
 HB_FUNC( SQLITE3_DB_STATUS )

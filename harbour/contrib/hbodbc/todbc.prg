@@ -208,18 +208,10 @@ METHOD SetAutoCommit( lEnable ) CLASS TODBC
 
 METHOD Destroy() CLASS TODBC
 
-#if defined( _HBODBC_AUTO_MM_ )
-   // ::hStmt := NIL  // TOFIX: There should be no GPF even without this line
-
    SQLDisconnect( ::hDbc )                     // Disconnects from Driver
 
    ::hDbc := NIL                               // Frees the connection
    ::hEnv := NIL                               // Frees the environment
-#else
-   SQLDisconnect( ::hDbc )                     // Disconnects from Driver
-   SQLFreeConnect( ::hDbc )                    // Frees the connection
-   SQLFreeEnv( ::hEnv )                        // Frees the environment
-#endif
 
    RETURN NIL
 
@@ -388,11 +380,7 @@ METHOD ExecSQL() CLASS TODBC
 METHOD Close() CLASS TODBC
 
    // Frees the statement
-#if defined( _HBODBC_AUTO_MM_ )
    ::hStmt := NIL
-#else
-   SQLFreeStmt( ::hStmt, SQL_DROP )
-#endif
    ::Active := .F.
 
    // Reset all recordset related variables
