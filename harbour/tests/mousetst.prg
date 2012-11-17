@@ -15,7 +15,7 @@ PROCEDURE Main()
    LOCAL nR := 5, nC := 38
 
    SET CURSOR OFF
-   ? "."; CLS
+   CLS
    IF ! MPresent()
       ? " No mouse present !"
       QUIT
