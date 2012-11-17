@@ -193,7 +193,7 @@
       // Set the system date in each case; but the hardware clock only
       // on an AT:
 
-      dNewDate := SToD( "19910730" )
+      dNewDate := hb_SToD( "19910730" )
       IF IsAt()
          SetDate( dNewDate, .T. )
       ELSE

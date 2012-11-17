@@ -84,7 +84,6 @@ int main( void )
       if( ! f )
          iRet = 1;
       printf( "HB_GET_LE_UINT16(%x,%x) = %x -> %s\n", buf[ l ], buf[ l + 1 ], n,
-
               f ? "OK" : "BAD" );
    }
 

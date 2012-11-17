@@ -23,7 +23,7 @@
       day for the beginning of the week has been changed with
       ft_DateCnfg().
    $EXAMPLES$
-      dDate := SToD( "19900915" )
+      dDate := hb_SToD( "19900915" )
 
       ? DoW( dDate )               // 7
       ? CDoW( dDate )              // Saturday

@@ -139,7 +139,7 @@ PROCEDURE GetSession()
    LOCAL aEBGets := {}
    LOCAL cName      := Space( 30 )
    LOCAL cNickName  := Space( 10 )
-   LOCAL dBirthdate := SToD()
+   LOCAL dBirthdate := hb_SToD()
    LOCAL nBudget    := 125000
    LOCAL cRemark    := "Some notes" + hb_eol() + ;
       "about this person"

@@ -139,11 +139,11 @@ HEADER EXAMPLES
        ENDIF
    $TESTS$
        ValType( IsLeapYr( Date() ) ) == "L"
-       ValType( IsLeapYr( SToD() ) ) == "L"
+       ValType( IsLeapYr( hb_SToD() ) ) == "L"
        ValType( IsLeapYr() ) == "L"
-       IsLeapYr( SToD( "20000101" ) )
-       !IsLeapYr( SToD( "19000101" ) )
-       IsLeapYr( SToD( "19841231" ) )
+       IsLeapYr( hb_SToD( "20000101" ) )
+       ! IsLeapYr( hb_SToD( "19000101" ) )
+       IsLeapYr( hb_SToD( "19841231" ) )
        !IsLeapYr()
    $STATUS$
        C

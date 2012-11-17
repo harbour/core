@@ -7,7 +7,7 @@
 PROCEDURE Main()
 
    LOCAL a := { 100, 200, "Third" }
-   LOCAL b := Array( 8832 )  // 8832 elements !!! Maximum for 16 Bit !!!
+   LOCAL b := Array( 8832 )
 
    ? ValType( a )
    ? ValType( { "A" } )

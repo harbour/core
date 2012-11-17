@@ -35,25 +35,25 @@ PROCEDURE Main()
 
    RETURN
 
-FUNCTION ref1( x )
+PROCEDURE ref1( x )
 
    x++
    ? " In ref1 before ref2 =", x
    Ref2( @x )
    ? " In ref1 after ref2 =", x
 
-   RETURN NIL
+   RETURN
 
-FUNCTION ref2( x )
+PROCEDURE ref2( x )
 
    x++
    ? "  In ref2 before ref3 =", x
    Ref3( @x )
    ? "  In ref2 after ref3 =", x
 
-   RETURN NIL
+   RETURN
 
-FUNCTION ref3( x )
+PROCEDURE ref3( x )
 
    STATIC s_a
 
@@ -63,14 +63,14 @@ FUNCTION ref3( x )
    Ref4( @s_a )
    ? "   In ref3 after ref4 =", x
 
-   RETURN NIL
+   RETURN
 
-FUNCTION ref4( a )
+PROCEDURE ref4( a )
 
    a[ 1 ]++
    ? "    In ref4 =", a[ 1 ]
 
-   RETURN NIL
+   RETURN
 
 ]]></script>
 

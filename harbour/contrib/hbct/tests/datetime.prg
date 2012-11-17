@@ -166,7 +166,7 @@ FUNCTION addmtest()
    // This version will only accept an nMonths value of from 0 to 70
 
    LOCAL getlist := {}
-   LOCAL dDate   := SToD()
+   LOCAL dDate   := hb_SToD()
    LOCAL c       := .T.
    LOCAL mnth    := 0
    LOCAL nKey
@@ -214,7 +214,7 @@ FUNCTION bomtest()
    // =============
 
    LOCAL getlist := {}
-   LOCAL dDate   := SToD()
+   LOCAL dDate   := hb_SToD()
    LOCAL c       := .T.
    LOCAL nKey
 
@@ -258,7 +258,7 @@ FUNCTION boqtest()
    // =============
 
    LOCAL getlist := {}
-   LOCAL dDate   := SToD()
+   LOCAL dDate   := hb_SToD()
    LOCAL c       := .T.
    LOCAL nKey
 
@@ -304,7 +304,7 @@ FUNCTION boytest()
    // =============
 
    LOCAL getlist := {}
-   LOCAL dDate   := SToD()
+   LOCAL dDate   := hb_SToD()
    LOCAL c       := .T.
    LOCAL nkey
 
@@ -331,7 +331,7 @@ FUNCTION boytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate   := SToD()
+         dDate   := hb_SToD()
 
       ENDIF
 
@@ -578,7 +578,7 @@ FUNCTION dmytest()
    // only.
 
    LOCAL getlist := {}
-   LOCAL dDate   := SToD()
+   LOCAL dDate   := hb_SToD()
    LOCAL cMode   := Space( 1 )
    LOCAL c       := .T.
    LOCAL nKey
@@ -611,7 +611,7 @@ FUNCTION dmytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
          cMode := Space( 1 )
 
       ENDIF
@@ -633,7 +633,7 @@ FUNCTION doytest()
    // if dDate is invalid, returns 0
 
    LOCAL getlist := {}
-   LOCAL dDate   := SToD()
+   LOCAL dDate   := hb_SToD()
    LOCAL c       := .T.
    LOCAL nKey
 
@@ -660,7 +660,7 @@ FUNCTION doytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
 
       ENDIF
 
@@ -681,7 +681,7 @@ FUNCTION eomtest()
    // date.
 
    LOCAL getlist := {}
-   LOCAL dDate := SToD()
+   LOCAL dDate := hb_SToD()
    LOCAL c     := .T.
    LOCAL nKey
 
@@ -709,7 +709,7 @@ FUNCTION eomtest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
 
       ENDIF
 
@@ -729,7 +729,7 @@ FUNCTION eoqtest()
    // Returns the last date in the quarter in which dDate falls.
 
    LOCAL getlist := {}
-   LOCAL dDate := SToD()
+   LOCAL dDate := hb_SToD()
    LOCAL c     := .T.
    LOCAL nKey
 
@@ -757,7 +757,7 @@ FUNCTION eoqtest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
 
       ENDIF
 
@@ -778,7 +778,7 @@ FUNCTION eoytest()
    // date.
 
    LOCAL getlist := {}
-   LOCAL dDate := SToD()
+   LOCAL dDate := hb_SToD()
    LOCAL c     := .T.
    LOCAL nKey
 
@@ -806,7 +806,7 @@ FUNCTION eoytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
 
       ENDIF
 
@@ -827,7 +827,7 @@ FUNCTION isleaptest()
    // Leap years are exactly divisible by 4 and 1,000 but not 100.
 
    LOCAL getlist := {}
-   LOCAL dDate := SToD()
+   LOCAL dDate := hb_SToD()
    LOCAL c     := .T.
    LOCAL cResult
    LOCAL nKey
@@ -861,7 +861,7 @@ FUNCTION isleaptest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
 
       ENDIF
 
@@ -884,7 +884,7 @@ FUNCTION lastdayomtest()
    // If xDate is invalid, returns 0
 
    LOCAL getlist := {}
-   LOCAL dDate := SToD()
+   LOCAL dDate := hb_SToD()
    LOCAL c     := .T.
    LOCAL nKey
    LOCAL cMth  := "  "
@@ -920,7 +920,7 @@ FUNCTION lastdayomtest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
          cMth  := "  "
 
       ENDIF
@@ -943,7 +943,7 @@ FUNCTION mdytest()
    // This version does not observe the Nations module. English only.
 
    LOCAL getlist := {}
-   LOCAL dDate := SToD()
+   LOCAL dDate := hb_SToD()
    LOCAL c     := .T.
    LOCAL nKey
 
@@ -972,7 +972,7 @@ FUNCTION mdytest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
 
       ENDIF
 
@@ -1093,7 +1093,7 @@ FUNCTION qtrtest()
    // the system date is used.
 
    LOCAL getlist := {}
-   LOCAL dDate  := SToD()
+   LOCAL dDate  := hb_SToD()
    LOCAL c      := .T.
    LOCAL nKey
 
@@ -1121,7 +1121,7 @@ FUNCTION qtrtest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate  := SToD()
+         dDate  := hb_SToD()
 
       ENDIF
 
@@ -1136,7 +1136,7 @@ FUNCTION qtrtest()
 FUNCTION stodtest()
 
    //
-   // SToD( ansi-date)
+   // hb_SToD( ansi-date)
    // ================
    // Returns a Clipper format date. If Ansi date is invalid, a
    // null date is returned.
@@ -1165,7 +1165,7 @@ FUNCTION stodtest()
          c := .F.
       ELSE
 
-         dDate := SToD( cAnsidate )
+         dDate := hb_SToD( cAnsidate )
 
          @ 10, 10 SAY "The Clipper format date is " + ;
             PadR( LTrim( DToC( dDate ) ), 10 )
@@ -1216,11 +1216,11 @@ FUNCTION weektest()
    // nWeek := Week( dDate, lSWN )
    // =============================
    // Returns the calendar week as a number. If no date is specified,
-   // the system date is used. An empty date viz SToD()
+   // the system date is used. An empty date viz hb_SToD()
    // returns 0.
 
    LOCAL getlist := {}
-   LOCAL dDate  := SToD()
+   LOCAL dDate  := hb_SToD()
    LOCAL c      := .T.
    LOCAL nKey
    LOCAL cMode := Space( 1 )
@@ -1253,7 +1253,7 @@ FUNCTION weektest()
          Inkey( 0 )
          SET CURSOR ON
 
-         dDate := SToD()
+         dDate := hb_SToD()
 
       ENDIF
 

@@ -7,7 +7,7 @@
 PROCEDURE Main()
 
    LOCAL aArray := { ;
-      { "Invoice 1", SToD( "19910415" ), 1234.32, .T. }, ;
+      { "Invoice 1", hb_SToD( "19910415" ), 1234.32, .T. }, ;
       { "Invoice 2", Date(), 234.98, .F. }, ;
       { "Invoice 3", Date() + 1, 0, .T. } }, aSave
    LOCAL nErrorCode := 0

@@ -261,7 +261,7 @@ STATIC FUNCTION MyDialogOne( oCrt )
       PadR( "Ludhiana, INDIA", 30 ), ;
       "PB", ;
       PadR( "141004", 10 ), ;
-      SToD( "20040622" ), ;
+      hb_SToD( "20040622" ), ;
       .T., ;
       48, ;
       17000, ;

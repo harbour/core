@@ -565,7 +565,7 @@
       a zero value.
    $EXAMPLES$
       ? Year( Date() )
-      ? Year( SToD( "32510125" ) )
+      ? Year( hb_SToD( "32510125" ) )
    $STATUS$
       R
    $COMPLIANCE$

@@ -100,7 +100,7 @@ PROCEDURE Main()
    dbAppend()
    field->name     := "Giudice Francesco Saverio"
    field->address  := "Main Street 10"
-   field->birthday := SToD( "19670103" )
+   field->birthday := hb_SToD( "19670103" )
    field->age      := 39
 
    ? RecNo(), '"' + FIELD->NAME + '"'
@@ -108,7 +108,7 @@ PROCEDURE Main()
    dbAppend()
    field->name     := "Mouse Mickey"
    field->address  := "Main Street 20"
-   field->birthday := SToD( "19400101" )
+   field->birthday := hb_SToD( "19400101" )
    field->age      := 66
 
    WHILE ! Eof()

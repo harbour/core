@@ -39,13 +39,13 @@
       parameters.
    $EXAMPLES$
       // get info about quarter containing 9/15/90
-      aDateInfo := ft_Qtr( SToD( "19900915" ) )
+      aDateInfo := ft_Qtr( hb_SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  199003       (3rd quarter)
       ? aDateInfo[ 2 ]   //  07/01/90     beginning of quarter 3
       ? aDateInfo[ 3 ]   //  09/30/90     end of week quarter 3
 
       // get info about quarter 2 in year containing 9/15/90
-      aDateInfo := ft_Qtr( SToD( "19900915" ), 2 )
+      aDateInfo := ft_Qtr( hb_SToD( "19900915" ), 2 )
       ? aDateInfo[ 1 ]   //  199002
       ? aDateInfo[ 2 ]   //  04/01/90   beginning of quarter 2
       ? aDateInfo[ 3 ]   //  06/30/90   end of quarter 2

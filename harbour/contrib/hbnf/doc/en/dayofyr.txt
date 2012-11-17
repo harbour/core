@@ -43,7 +43,7 @@
       The beginning of year date defaults to January 1st but may be
       changed with ft_DateCnfg().
    $EXAMPLES$
-      aDateInfo := ft_DayOfYr( SToD( "19910331" ) )
+      aDateInfo := ft_DayOfYr( hb_SToD( "19910331" ) )
       ? aDateInfo[ 1 ]        // 1991090    (90th day of year 1991)
       ? aDateInfo[ 2 ]        // 01/01/91
       ? aDateInfo[ 3 ]        // 12/31/91

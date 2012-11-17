@@ -8,8 +8,8 @@ PROCEDURE Main()
 
    LOCAL dStart, dEnd, cTimeStart, cTimeEnd, n, aDataTest
 
-   dStart := SToD( "19901128" )
-   dEnd   := SToD( "19901130" )
+   dStart := hb_SToD( "19901128" )
+   dEnd   := hb_SToD( "19901130" )
    cTimeStart := "08:00:00"
    cTimeEnd   := "12:10:30"
 

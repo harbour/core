@@ -33,7 +33,7 @@ PROCEDURE Main()
    ?
    ? dDate, DToS( dDate )
 
-   ? "19990429", SToD( "19990429" )
+   ? "19990429", hb_SToD( "19990429" )
 
    ?
    Set( _SET_EPOCH, 1950 )

@@ -6,6 +6,6 @@
 
 PROCEDURE Main( cStart, cStop )
 
-   ? ft_Workdays( SToD( cStart ), SToD( cStop ) )
+   ? ft_Workdays( hb_SToD( cStart ), hb_SToD( cStop ) )
 
    RETURN

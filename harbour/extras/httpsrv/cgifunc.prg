@@ -691,7 +691,7 @@ FUNCTION uhttpd_CStrToVal( cExp, cType )
 
    CASE "D"
       IF cExp[ 3 ] >= "0" .AND. cExp[ 3 ] <= "9" .AND. cExp[ 5 ] >= "0" .AND. cExp[ 5 ] <= "9"
-         RETURN SToD( cExp )
+         RETURN hb_SToD( cExp )
       ELSE
          RETURN CToD( cExp )
       ENDIF

@@ -22,6 +22,7 @@ PROCEDURE Main()
    RETURN
 
 INIT FUNCTION SecondOne()
+
    STATIC s_static_var := "SECOND()"
 
    ? "Hello from:", s_static_var
@@ -31,6 +32,7 @@ INIT FUNCTION SecondOne()
    RETURN NIL
 
 INIT FUNCTION Third()
+
    STATIC s_static_var := "THIRD()"
 
    ? "Hello from:", s_static_var
@@ -40,6 +42,7 @@ INIT FUNCTION Third()
    RETURN NIL
 
 EXIT FUNCTION Fifth()
+
    STATIC s_static_var := "FIFTH()"
 
    ? "Hello from:", s_static_var
@@ -49,6 +52,7 @@ EXIT FUNCTION Fifth()
    RETURN NIL
 
 EXIT FUNCTION Sixth()
+
    STATIC s_static_var := "SIXTH()"
 
    ? "Hello from:", s_static_var

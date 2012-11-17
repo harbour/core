@@ -41,18 +41,18 @@
    $EXAMPLES$
       Beginning of period mode (lIsEnd == .F.)
 
-        dDate := SToD( "19910131" )  // In last 3 days of work week
+        dDate := hb_SToD( "19910131" )  // In last 3 days of work week
         ? ft_AcctAdj( dDate )        // 1991.02.03 (next week's start)
 
-        dDate := SToD( "19910331" )  // Not in last 3 days of work week
+        dDate := hb_SToD( "19910331" )  // Not in last 3 days of work week
         ? ft_AcctAdj( dDate )        // 1991.03.31 (this week's start)
 
       End of period mode (lIsEnd == .T.)
 
-        dDate := SToD( "19910131" )  // In last 4 days of work week
+        dDate := hb_SToD( "19910131" )  // In last 4 days of work week
         ? ft_AcctAdj( dDate, .T. )   // 1991.02.02 (this week's end)
 
-        dDate := SToD( "19910331" )  // Not in last 4 days of work week
+        dDate := hb_SToD( "19910331" )  // Not in last 4 days of work week
         ? ft_AcctAdj( dDate, .T. )   // 1991.03.30 (prior week's end)
    $SEEALSO$
       ft_DateCnfg() ft_DayToBoW()

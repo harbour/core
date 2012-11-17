@@ -182,7 +182,7 @@ METHOD PROCEDURE WriteNumber( cSection, cIdent, nNumber ) CLASS TIniFile
 
 METHOD ReadDate( cSection, cIdent, dDefault ) CLASS TIniFile
 
-   RETURN SToD( ::ReadString( cSection, cIdent, DToS( dDefault ) ) )
+   RETURN hb_SToD( ::ReadString( cSection, cIdent, DToS( dDefault ) ) )
 
 METHOD PROCEDURE WriteDate( cSection, cIdent, dDate ) CLASS TIniFile
 

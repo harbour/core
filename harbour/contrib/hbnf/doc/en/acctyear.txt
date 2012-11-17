@@ -38,7 +38,7 @@
       weeks.
    $EXAMPLES$
       // get info about accounting year containing 9/15/90
-      aDateInfo := ft_AcctYear( SToD( "19900915" ) )
+      aDateInfo := ft_AcctYear( hb_SToD( "19900915" ) )
       ? aDateInfo[ 1 ]   //  1990
       ? aDateInfo[ 2 ]   //  12/31/89    beginning of year
       ? aDateInfo[ 3 ]   //  12/29/90    end of year

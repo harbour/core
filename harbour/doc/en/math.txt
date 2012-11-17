@@ -201,7 +201,7 @@
       well. It will be the later of the two dates passed to it.
    $EXAMPLES$
       ? Max( 214514214, 6251242142 )
-      ? Max( SToD( "20001111" ), SToD( "20140621" ) )
+      ? Max( hb_SToD( "20001111" ), hb_SToD( "20140621" ) )
    $STATUS$
       R
    $COMPLIANCE$
@@ -240,7 +240,7 @@
       smaller number is returned. If dates, the earlier date is returned.
    $EXAMPLES$
       ? Min( 214514214, 6251242142 )
-      ? Min( SToD( "20001111" ), SToD( "20140621" ) )
+      ? Min( hb_SToD( "20001111" ), hb_SToD( "20140621" ) )
    $STATUS$
       R
    $COMPLIANCE$

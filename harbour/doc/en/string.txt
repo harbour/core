@@ -694,7 +694,7 @@
       ? hb_ValToStr( 4 ) == "         4"
       ? hb_ValToStr( 4.0 / 2 ) == "         2.00"
       ? hb_ValToStr( "String" ) == "String"
-      ? hb_ValToStr( SToD( "20010101" ) ) == "01/01/01"
+      ? hb_ValToStr( hb_SToD( "20010101" ) ) == "01/01/01"
       ? hb_ValToStr( NIL ) == "NIL"
       ? hb_ValToStr( .F. ) == ".F."
       ? hb_ValToStr( .T. ) == ".T."

@@ -329,7 +329,7 @@ CREATE CLASS hdbcSQLTResultSet
 
    METHOD getString( nField )
    METHOD getNumber( nField ) INLINE Val( ::getString( nField ) )
-   METHOD getDate( nField ) INLINE SToD( StrTran( ::getString( nField ), "-" ) )
+   METHOD getDate( nField ) INLINE hb_SToD( StrTran( ::getString( nField ), "-" ) )
    METHOD getBoolean( nField ) INLINE ( ::getString( nField ) == "t" )
 
    METHOD getMetaData()

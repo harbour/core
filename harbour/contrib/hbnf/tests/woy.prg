@@ -16,7 +16,7 @@ PROCEDURE Main()
 
       @ 2, 10 SAY "Date to Test"
 
-      dDate := SToD( "" )
+      dDate := hb_SToD()
       @ 2, 24 GET dDate
       READ
 

@@ -244,7 +244,7 @@ PROCEDURE Main( ... )
                   cValue := CToD( cValue )
 
                ELSEIF dType == "D" .AND. sType == "N"
-                  cValue := SToD( Str( cValue ) )
+                  cValue := hb_SToD( Str( cValue ) )
 
                ELSEIF dType == "L" .AND. sType == "N"
                   cValue := ! Empty( cValue )

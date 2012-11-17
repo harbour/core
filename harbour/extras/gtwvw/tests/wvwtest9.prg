@@ -431,7 +431,7 @@ PROCEDURE Demo_Get()
    LOCAL nBottom    := 21
    LOCAL nRight    := 75
    LOCAL nColGet := 8
-   LOCAL get_1   := SToD()
+   LOCAL get_1   := hb_SToD()
    LOCAL get_2   := PadR( "Pritpal Bedi", 35 )
    LOCAL get_3   := PadR( "60, New Professor Colony", 35 )
    LOCAL get_4   := PadR( "Ludhiana, INDIA", 35 )
