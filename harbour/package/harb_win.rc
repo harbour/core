@@ -58,7 +58,7 @@ END
 /* Preparation for manifest */
 
 /* Not using predefined Windows macros here, because some C compilers
-   with fail badly with their own definitions (f.e. pocc) and/or their own
-   Windows headers. [vszakats] */
+   will fail badly with their own definitions (f.e. pocc) and/or their
+   own Windows headers. [vszakats] */
 #define __HB_CREATEPROCESS_MANIFEST_RESOURCE_ID 1
 #define __HB_RT_MANIFEST                        24
