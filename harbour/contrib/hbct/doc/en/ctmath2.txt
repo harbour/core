@@ -33,7 +33,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CEILING
+      Ceiling()
    $END$
  */
 
@@ -68,7 +68,7 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      FLOOR
+      Floor()
    $END$
  */
 

@@ -133,7 +133,7 @@
    $FILES$
       Library is rdd
    $SEEALSO$
-      DBF()
+      Dbf()
    $END$
  */
 

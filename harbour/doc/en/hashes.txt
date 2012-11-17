@@ -1143,7 +1143,7 @@
    $FILES$
 
    $SEEALSO$
-      hb_HCaseMatch(),hb_HSetAutoAdd(),HB_HSETBINARY
+      hb_HCaseMatch(),hb_HSetAutoAdd(),hb_HSetBinary()
    $END$
  */
 

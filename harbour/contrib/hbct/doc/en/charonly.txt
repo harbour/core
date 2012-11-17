@@ -153,6 +153,6 @@
    $FILES$
       Library is hbct.
    $SEEALSO$
-      CHARONLY   CharRem()   WordRem()
+      CharOnly()   CharRem()   WordRem()
    $END$
  */

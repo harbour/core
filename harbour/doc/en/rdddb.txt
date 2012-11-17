@@ -76,7 +76,7 @@
    $TEMPLATE$
       Function
    $NAME$
-      DBF()
+      Dbf()
    $CATEGORY$
       API
    $SUBCATEGORY$
@@ -84,7 +84,7 @@
    $ONELINER$
       Alias name of a work area
    $SYNTAX$
-      DBF() --> <cWorkArea>
+      Dbf() --> <cWorkArea>
    $RETURNS$
       <cWorkArea> Name of alias
    $DESCRIPTION$
@@ -95,8 +95,8 @@
 
          USE test
          SELECT 0
-         ? iif( DBF() == "", "No Name", DBF() )
-         ? test->( DBF() )
+         ? iif( Dbf() == "", "No Name", Dbf() )
+         ? test->( Dbf() )
          ? Alias( 1 )
 
          RETURN

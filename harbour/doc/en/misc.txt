@@ -91,7 +91,7 @@
    $ONELINER$
       Obtains a system environmental setting.
    $SYNTAX$
-      GetEnv(<cEnviroment> )  --> <cReturn>
+      GetEnv( <cEnviroment> )  --> <cReturn>
    $ARGUMENTS$
       <cEnviroment> Enviromental variable to obtain.
    $RETURNS$
@@ -118,7 +118,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      GETE
+      GetE()
    $END$
  */
 
@@ -134,7 +134,7 @@
    $ONELINER$
       Obtains a system environmental setting.
    $SYNTAX$
-      GetE(<cEnviroment> )  --> <cReturn>
+      GetE( <cEnviroment> )  --> <cReturn>
    $ARGUMENTS$
       <cEnviroment> Enviromental variable to obtain.
    $RETURNS$
@@ -163,7 +163,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      GETENV
+      GetEnv()
    $END$
  */
 
@@ -216,7 +216,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      GETENV, GETE
+      GetEnv(), GetE()
    $END$
  */
 

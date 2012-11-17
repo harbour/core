@@ -85,6 +85,7 @@ PROCEDURE Main()
       "contrib/xhb/thtm.prg"       , ;
       "contrib/hbnetio/readme.txt" , ;
       "contrib/hbnetio/tests/*"    , ;
+      "extras/httpsrv/home/*"      , ;
       "tests/hbpptest/*"           , ;
       "tests/mt/*"                 , ;
       "tests/multifnc/*"           , ;
