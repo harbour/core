@@ -1,81 +1,78 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>byref.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// Managing variables by reference
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> s:=</SPAN><SPAN class=any1-number>10
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> x := </SPAN><SPAN class=any1-number>0
+// Managing variables by reference
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Managing LOCAL variables by reference"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>'In main before ref1 x='</SPAN><SPAN class=any1-symbol>, x )
-   </SPAN><SPAN class=any1-variable>ref1</SPAN><SPAN class=any1-symbol>( @x )
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>' In main after ref1 x='</SPAN><SPAN class=any1-symbol>, x )
+PROCEDURE Main()
+
+   STATIC s_x := 10
+
+   LOCAL x := 0
+
+   ? "Managing LOCAL variables by reference"
+   ? "In main before ref1 x=", x
+   ref1( @x )
+   ? " In main after ref1 x=", x
 
 
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Managing STATIC variables by reference"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>'In main before ref1 s='</SPAN><SPAN class=any1-symbol>, s )
-   </SPAN><SPAN class=any1-variable>ref1</SPAN><SPAN class=any1-symbol>( @s )
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>' In main after ref1 s='</SPAN><SPAN class=any1-symbol>, s )
+   ? "Managing STATIC variables by reference"
+   ? "In main before ref1 s=", s_x
+   ref1( @s_x )
+   ? " In main after ref1 s=", s_x
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+   RETURN
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ref1</SPAN><SPAN class=any1-symbol>( x )
+FUNCTION ref1( x )
 
-  x++
-  </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>' In ref1 before ref2 ='</SPAN><SPAN class=any1-symbol>, x )
-  </SPAN><SPAN class=any1-variable>Ref2</SPAN><SPAN class=any1-symbol>( @x )
-  </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>' In ref1 after ref2 ='</SPAN><SPAN class=any1-symbol>, x )
+   x++
+   ? " In ref1 before ref2 =", x
+   Ref2( @x )
+   ? " In ref1 after ref2 =", x
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+   RETURN NIL
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ref2</SPAN><SPAN class=any1-symbol>( x )
+FUNCTION ref2( x )
 
-  x++
-  </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>'  In ref2 before ref3 ='</SPAN><SPAN class=any1-symbol>, x )
-  </SPAN><SPAN class=any1-variable>Ref3</SPAN><SPAN class=any1-symbol>( @x )
-  </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>'  In ref2 after ref3 ='</SPAN><SPAN class=any1-symbol>, x )
+   x++
+   ? "  In ref2 before ref3 =", x
+   Ref3( @x )
+   ? "  In ref2 after ref3 =", x
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+   RETURN NIL
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ref3</SPAN><SPAN class=any1-symbol>( x )
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> a
+FUNCTION ref3( x )
 
-  x++
-  </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>'   In ref3 before ref4 ='</SPAN><SPAN class=any1-symbol>, x )
-  a ={ x, x }
-  </SPAN><SPAN class=any1-variable>Ref4</SPAN><SPAN class=any1-symbol>( @a )
-  </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>'   In ref3 after ref4 ='</SPAN><SPAN class=any1-symbol>, x )
+   STATIC s_a
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+   x++
+   ? "   In ref3 before ref4 =", x
+   s_a := { x, x }
+   Ref4( @s_a )
+   ? "   In ref3 after ref4 =", x
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ref4</SPAN><SPAN class=any1-symbol>( a )
+   RETURN NIL
 
-  a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ]++
-  </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>'    In ref4 ='</SPAN><SPAN class=any1-symbol>, a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] )
+FUNCTION ref4( a )
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+   a[ 1 ]++
+   ? "    In ref4 =", a[ 1 ]
+
+   RETURN NIL
+
+]]></script>
+
+</body>
+</html>

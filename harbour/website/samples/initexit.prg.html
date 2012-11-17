@@ -1,84 +1,81 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>initexit.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// Testing Harbour INIT and EXIT functions and initialization 
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
+
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
+
+// Testing Harbour INIT and EXIT functions and initialization
 // of static variables
-<br>
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var_accessed_in_INIT_function:=</SPAN><SPAN class=any1-number>10000.15
-</SPAN><SPAN class=any1-reservedword>MEMVAR</SPAN><SPAN class=any1-space> _initStatics
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"MAIN()"
+STATIC s_static_var_accessed_in_INIT_function := 10000.15
+MEMVAR p_initStatics
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
-   static_var_accessed_in_INIT_function++
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+PROCEDURE Main()
 
-   </SPAN><SPAN class=any1-comment>// Use PUBLIC variable created in INIT procedure
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"PUBLIC variable created in INIT procedure="</SPAN><SPAN class=any1-symbol>, _initStatics )
+   STATIC s_static_var := "MAIN()"
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+   ? "Hello from:", s_static_var
+   s_static_var_accessed_in_INIT_function++
+   ? "global static=", s_static_var_accessed_in_INIT_function
 
-</SPAN><SPAN class=any1-reservedword>init</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SecondOne</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"SECOND()"
+   // Use PUBLIC variable created in INIT PROCEDURE
+   ? "PUBLIC variable created in INIT PROCEDURE=", p_initStatics
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
-   static_var_accessed_in_INIT_function++
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+   RETURN
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+INIT FUNCTION SecondOne()
+   STATIC s_static_var := "SECOND()"
 
-</SPAN><SPAN class=any1-reservedword>init</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Third</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"THIRD()"
+   ? "Hello from:", s_static_var
+   s_static_var_accessed_in_INIT_function++
+   ? "global static=", s_static_var_accessed_in_INIT_function
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
-   static_var_accessed_in_INIT_function++
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+   RETURN NIL
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+INIT FUNCTION Third()
+   STATIC s_static_var := "THIRD()"
 
-</SPAN><SPAN class=any1-reservedword>exit</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Fifth</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"FIFTH()"
+   ? "Hello from:", s_static_var
+   s_static_var_accessed_in_INIT_function++
+   ? "global static=", s_static_var_accessed_in_INIT_function
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
-   static_var_accessed_in_INIT_function--
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+   RETURN NIL
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+EXIT FUNCTION Fifth()
+   STATIC s_static_var := "FIFTH()"
 
-</SPAN><SPAN class=any1-reservedword>exit</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Sixth</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> static_var:=</SPAN><SPAN class=any1-string>"SIXTH()"
+   ? "Hello from:", s_static_var
+   s_static_var_accessed_in_INIT_function--
+   ? "global static=", s_static_var_accessed_in_INIT_function
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Hello from:"</SPAN><SPAN class=any1-symbol>, static_var )
-   static_var_accessed_in_INIT_function--
-   </SPAN><SPAN class=any1-function>Qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"global static="</SPAN><SPAN class=any1-symbol>, static_var_accessed_in_INIT_function )
+   RETURN NIL
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+EXIT FUNCTION Sixth()
+   STATIC s_static_var := "SIXTH()"
 
-</SPAN><SPAN class=any1-reservedword>INIT</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>_INITSTATICS</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>PUBLIC</SPAN><SPAN class=any1-space> _initStatics:=</SPAN><SPAN class=any1-string>"_INITSTATICS"
-</SPAN><SPAN class=any1-reservedword>RETURN
-</SPAN></SPAN>
-</CODE></PRE>
-</BODY></HTML>
+   ? "Hello from:", s_static_var
+   s_static_var_accessed_in_INIT_function--
+   ? "global static=", s_static_var_accessed_in_INIT_function
+
+   RETURN NIL
+
+INIT PROCEDURE initStatics()
+
+   PUBLIC p_initStatics := "P_INITSTATICS"
+
+   RETURN
+
+]]></script>
+
+</body>
+</html>

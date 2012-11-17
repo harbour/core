@@ -1,130 +1,200 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>parseini.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>******************************************************************
-* Test for Ini file reading/writing
-*
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>( cName )
-   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> aIni, aSect
-   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cSection
-   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cKey
-   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nRow := </SPAN><SPAN class=any1-number>1
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>set</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>color</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>to</SPAN><SPAN class=any1-space> w+/b
-   </SPAN><SPAN class=any1-function>CLEAR</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SCREEN
-</SPAN><SPAN class=any1-space>   @nRow++,</SPAN><SPAN class=any1-number>20</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"H A R B O U R - .ini file parser test"
-</SPAN><SPAN class=any1-space>   @nRow++,</SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Call from command line using a .ini filename as the only parameter"
-</SPAN><SPAN class=any1-space>   nRow++
+/**
+ * Test for Ini file reading/writing
+ *
+ * Giancarlo Niccolai
+ */
 
-   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>Empty</SPAN><SPAN class=any1-symbol>( cName )
-      cName := </SPAN><SPAN class=any1-string>"parseini.ini"
-</SPAN><SPAN class=any1-space>      @nRow++, </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>SAY</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"Using default parseini.ini file"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+PROCEDURE Main( cName )
 
-</SPAN><SPAN class=any1-space>   aIni := </SPAN><SPAN class=any1-variable>hb_IniRead</SPAN><SPAN class=any1-symbol>( cName )
+   LOCAL hIni, aSect, cIni
+   LOCAL cSection
+   LOCAL cKey
+   LOCAL nRow := 1
 
-   @nRow, </SPAN><SPAN class=any1-number>0
+   SET COLOR TO w +/ b
+   CLS
+   @ nRow++, 20 SAY "H A R B O U R - .ini file parser test"
+   @ nRow++, 5 SAY "Call from command line using a .ini filename as the only parameter"
+   nRow++
 
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Content of "</SPAN><SPAN class=any1-space> + cName
+   IF Empty( cName )
+      cName := "parseini.ini"
+      @ nRow++, 5 SAY "Using default parseini.ini file"
+   ENDIF
 
-   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>Empty</SPAN><SPAN class=any1-symbol>( aIni )
-      ? </SPAN><SPAN class=any1-string>"Not a valid .ini file!"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH cSection IN aIni:Keys
+   hIni := hb_iniRead( cName )
+
+   @ nRow, 0
+
+   ? "Content of " + cName
+
+   IF Empty( hIni )
+      ? "Not a valid .ini file!"
+   ELSE
+      FOR EACH cSection IN hIni:Keys
          ?
-         ? </SPAN><SPAN class=any1-string>"Section ["</SPAN><SPAN class=any1-space> + cSection + </SPAN><SPAN class=any1-string>"]"
-</SPAN><SPAN class=any1-space>         aSect := aIni[ cSection ]
+         ? "Section [" + cSection + "]"
+         aSect := hIni[ cSection ]
 
-         </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH cKey IN aSect:Keys
-            ? cKey + </SPAN><SPAN class=any1-string>" = "</SPAN><SPAN class=any1-space> + aSect[ cKey ]
-         </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+         FOR EACH cKey IN aSect:Keys
+            ? cKey + " = " + aSect[ cKey ]
+         NEXT
+      NEXT
+   ENDIF
 
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"Adding section 'Added', with key NEW = new"
-</SPAN><SPAN class=any1-space>   aIni[ </SPAN><SPAN class=any1-string>"Added"</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-variable>hb_Hash</SPAN><SPAN class=any1-symbol>()
-   aIni[ </SPAN><SPAN class=any1-string>"Added"</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-string>"NEW"</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-string>"new"
-
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Writing output to parseini_out.ini"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>hb_IniWrite</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"parseini_out.ini"</SPAN><SPAN class=any1-symbol>, aIni, </SPAN><SPAN class=any1-string>"#Generated file; don't touch"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"#End of file"</SPAN><SPAN class=any1-symbol>)
-      ? </SPAN><SPAN class=any1-string>"File written"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"Can't write file"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"Press any key to next text."
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>Inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
    ?
-   ? </SPAN><SPAN class=any1-string>"REPEATING TESTS WITHOUT AUTOMATIC MAIN SECTION"
+   ? "Adding section 'Added', with key NEW = new"
+   hIni[ "Added" ] := { => }
+   hIni[ "Added" ][ "NEW" ] := "new"
 
-</SPAN><SPAN class=any1-space>   aIni := </SPAN><SPAN class=any1-variable>hb_IniRead</SPAN><SPAN class=any1-symbol>( cName, </SPAN><SPAN class=any1-comment>/*default case*/</SPAN><SPAN class=any1-space> , </SPAN><SPAN class=any1-comment>/*Default key indicators */</SPAN><SPAN class=any1-space> , </SPAN><SPAN class=any1-activedot>.F.</SPAN><SPAN class=any1-space> )
+   ? "Writing output to parseini_out.ini"
+   IF hb_iniWrite( "parseini_out.ini", hIni, "#Generated file; don't touch", "#End of file" )
+      ? "File written"
+   ELSE
+      ? "Can't write file"
+   ENDIF
+   ?
+   ? "Press any key to next text."
+   Inkey( 0 )
 
-   @nRow, </SPAN><SPAN class=any1-number>0
+   nRow := 3
+   @ nRow, 0 CLEAR
+   ?
+   ? "REPEATING TESTS WITHOUT AUTOMATIC MAIN SECTION"
+   ?
 
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Content of "</SPAN><SPAN class=any1-space> + cName
+   hIni := hb_iniRead( cName,; /* default case */
+                       ,; /* default key indicators */
+                       , .F. )
 
-   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>Empty</SPAN><SPAN class=any1-symbol>( aIni )
-      ? </SPAN><SPAN class=any1-string>"Not a valid .ini file!"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH cSection IN aIni:Keys
-         </SPAN><SPAN class=any1-comment>/* Now (without automatic main), toplevel options may be in the root hash */
-</SPAN><SPAN class=any1-space>         aSect := aIni[ cSection ]
+   ? "Content of " + cName
 
-         </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>HB_IsHash</SPAN><SPAN class=any1-symbol>( aSect )
-            </SPAN><SPAN class=any1-comment>/* It's a section */
-</SPAN><SPAN class=any1-space>            ?
-            ? </SPAN><SPAN class=any1-string>"Section ["</SPAN><SPAN class=any1-space> + cSection + </SPAN><SPAN class=any1-string>"]"
+   IF Empty( hIni )
+      ? "Not a valid .ini file!"
+   ELSE
+      FOR EACH cSection IN hIni:Keys
+         /* Now (without automatic main), toplevel options may be in the root hash */
+         aSect := hIni[ cSection ]
 
-</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH cKey IN aSect:Keys
-               ? cKey + </SPAN><SPAN class=any1-string>" = "</SPAN><SPAN class=any1-space> + aSect[ cKey ]
-            </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>ELSE
-</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-comment>/* It's a toplevel option */
-</SPAN><SPAN class=any1-space>            ? </SPAN><SPAN class=any1-string>"TOPLEVEL option:"</SPAN><SPAN class=any1-symbol>, cSection + </SPAN><SPAN class=any1-string>" = "</SPAN><SPAN class=any1-space> + aSect
-         </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
+         IF HB_ISHASH( aSect )
+            /* It's a section */
+            ?
+            ? "Section [" + cSection + "]"
 
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"Adding section 'Added', with key NEW = new"
-</SPAN><SPAN class=any1-space>   aIni[ </SPAN><SPAN class=any1-string>"Added"</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-variable>hb_Hash</SPAN><SPAN class=any1-symbol>()
-   aIni[ </SPAN><SPAN class=any1-string>"Added"</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-string>"NEW"</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-string>"new"
+            FOR EACH cKey IN aSect:Keys
+               ? cKey + " = " + aSect[ cKey ]
+            NEXT
+         ELSE
+            /* It's a toplevel option */
+            ? "TOPLEVEL option:", cSection + " = " + aSect
+         ENDIF
+      NEXT
+   ENDIF
 
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Writing output to parseini_out1.ini"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>hb_IniWrite</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"parseini_out1.ini"</SPAN><SPAN class=any1-symbol>, aIni,;
-         </SPAN><SPAN class=any1-string>"#Generated file without main auto section; don't touch"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"#End of file"</SPAN><SPAN class=any1-symbol>,;
-         </SPAN><SPAN class=any1-activedot>.F.</SPAN><SPAN class=any1-space> )
-      ? </SPAN><SPAN class=any1-string>"File written"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ELSE
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"Can't write file"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"Press any key to next text."
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>Inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
+   ?
+   ? "Adding section 'Added', with key NEW = new"
+   hIni[ "Added" ] := { => }
+   hIni[ "Added" ][ "NEW" ] := "new"
 
-</SPAN><SPAN class=any1-reservedword>RETURN
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+   ? "Writing output to parseini_out1.ini"
+   IF hb_iniWrite( "parseini_out1.ini", hIni,;
+                   "#Generated file without main auto section; don't touch", "#End of file",;
+                   .F. )
+      ? "File written"
+   ELSE
+      ? "Can't write file"
+   ENDIF
+   ?
+   ? "Press any key to next text."
+   Inkey( 0 )
+
+   nRow := 3
+   @ nRow, 0 CLEAR
+   ?
+   ? "WRITING INI TO A STRING"
+   ?
+
+   cIni := hb_iniWriteStr( hIni )
+
+   ? "Content of hIni : "
+   ?
+   ? cIni
+   ?
+   ? "Press any key to next text."
+   Inkey( 0 )
+
+   nRow := 3
+   @ nRow, 0 CLEAR
+   ?
+   ? "READING INI FILE FROM A STRING"
+   ?
+
+   hIni := hb_iniReadStr( cIni,; /*default case*/
+            ,; /*Default key indicators */
+            , .F. )
+
+   ? "Content: "
+
+   IF Empty( hIni )
+      ? "Not a valid .ini file!"
+   ELSE
+      FOR EACH cSection IN hIni:Keys
+         /* Now (without automatic main), toplevel options may be in the root hash */
+         aSect := hIni[ cSection ]
+
+         IF HB_ISHASH( aSect )
+            /* It's a section */
+            ?
+            ? "Section [" + cSection + "]"
+
+            FOR EACH cKey IN aSect:Keys
+               ? cKey + " = " + aSect[ cKey ]
+            NEXT
+         ELSE
+            /* It's a toplevel option */
+            ? "TOPLEVEL option:", cSection + " = " + aSect
+         ENDIF
+      NEXT
+   ENDIF
+
+   ?
+   ? "Press any key to next text."
+   Inkey( 0 )
+
+   nRow := 3
+   @ nRow, 0 CLEAR
+   ?
+   ? "WRITING INI FILE TO A STRING "
+   ?
+
+   cIni := hb_iniWriteStr( hb_iniRead( cName ) )
+
+   ? "Content of " + cName
+   ?
+   ? cIni
+   ?
+   ? "Press any key to next text."
+   Inkey( 0 )
+
+   RETURN
+
+]]></script>
+
+</body>
+</html>

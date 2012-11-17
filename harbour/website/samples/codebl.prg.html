@@ -1,193 +1,209 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>codebl.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> cbStatic
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> a := </SPAN><SPAN class=any1-variable>TestBlocks</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cb
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
-   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 23
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-space> ) )  </SPAN><SPAN class=any1-comment>// 42
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 42
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], </SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-space> ) )  </SPAN><SPAN class=any1-comment>// 15
+STATIC s_cbStatic
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 15 15
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 14 15
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-space> ) )  </SPAN><SPAN class=any1-comment>// 42 42
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-space> ) )  </SPAN><SPAN class=any1-comment>// 14 42
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>42</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 42 42
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>14</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )      </SPAN><SPAN class=any1-comment>// 14 42
+PROCEDURE Main()
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>GetArray</SPAN><SPAN class=any1-symbol>( @a )
-   </SPAN><SPAN class=any1-variable>PrintArray</SPAN><SPAN class=any1-symbol>( @a )
+   LOCAL a := TestBlocks()
+   LOCAL cb
 
-   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Test for variables passed by reference in a codeblock"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-variable>DetachWithRefer</SPAN><SPAN class=any1-symbol>()
+   ? Eval( a[ 1 ] )       // 23
+   ? Eval( a[ 2 ], 42 )   // 42
+   ? Eval( a[ 1 ] )       // 42
+   ? Eval( a[ 2 ], 15 )   // 15
 
-   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Test for indirect detaching of local variables"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-variable>DetachToStatic</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cbStatic, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) )
-   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cbStatic, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ) )
-   cb :=cbStatic
-   </SPAN><SPAN class=any1-variable>DetachToStatic</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>200</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cbStatic, </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> ) )
-   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>300</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cbStatic, </SPAN><SPAN class=any1-number>200</SPAN><SPAN class=any1-space> ) )
-   </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cb, </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> ) )
+   myout( 15, Eval( a[ 1 ] ) )      // 15 15
+   myout( 14, Eval( a[ 1 ] ) )      // 14 15
+   myout( 42, Eval( a[ 2 ], 42 ) )  // 42 42
+   myout( 14, Eval( a[ 2 ], 42 ) )  // 14 42
+   myout( 42, Eval( a[ 1 ] ) )      // 42 42
+   myout( 14, Eval( a[ 1 ] ) )      // 14 42
 
-   </SPAN><SPAN class=any1-variable>ReferParam</SPAN><SPAN class=any1-symbol>()
+   GetArray( @a )
+   PrintArray( @a )
 
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( NIL )
+   ? "Test for variables passed by reference in a codeblock"
+   DetachWithRefer()
 
-</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>TestBlocks</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> nFoo := </SPAN><SPAN class=any1-number>23
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( { {|| nFoo }, {|n| nFoo := n } } )
+   ? "Test for indirect detaching of local variables"
+   DetachToStatic( 1 )
+   myout( 2, Eval( s_cbStatic, 1 ) )
+   myout( 3, Eval( s_cbStatic, 2 ) )
+   cb := s_cbStatic
+   DetachToStatic( 100 )
+   myout( 200, Eval( s_cbStatic, 100 ) )
+   myout( 300, Eval( s_cbStatic, 200 ) )
+   myout( 4, Eval( cb, 3 ) )
 
-</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( nExpected, nGot )
+   ReferParam()
 
-   </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( nExpected, nGot )
+   RETURN
 
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( NIL )
+STATIC FUNCTION TestBlocks()
 
-</SPAN><SPAN class=any1-comment>/////////////////////////////////////////////////////////////////
-</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>GetArray</SPAN><SPAN class=any1-symbol>( a )
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> i
+   LOCAL nFoo := 23
 
-   a :=</SPAN><SPAN class=any1-function>ARRAY</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> i:=</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>100
-</SPAN><SPAN class=any1-space>     </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-symbol>( (i % </SPAN><SPAN class=any1-number>6</SPAN><SPAN class=any1-symbol>) == </SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-space> )
-         a[ i-2 ] =NIL
-         a[ i-4 ] =NIL
-     </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>     a[ i ] := </SPAN><SPAN class=any1-variable>TestBlocks</SPAN><SPAN class=any1-symbol>()
-   </SPAN><SPAN class=any1-reservedword>NEXT
+   RETURN { {|| nFoo }, {| n | nFoo := n } }
 
-RETURN
+STATIC FUNCTION myout( nExpected, nGot )
 
-PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>PrintArray</SPAN><SPAN class=any1-symbol>( a )
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> i
+   ? nExpected, nGot
 
-   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> i:=</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>TO</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>100
-</SPAN><SPAN class=any1-space>     </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-symbol>( a[i] != NIL )
-       </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a[ i ][ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ], i )
-       </SPAN><SPAN class=any1-variable>mqout</SPAN><SPAN class=any1-symbol>( i, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a[ i ][ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) )
-     </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>NEXT
+   RETURN NIL
 
-RETURN
+//
 
-</SPAN><SPAN class=any1-comment>//////////////////////////////////////////////////////////////////
-</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>DetachWithRefer</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> nTest
-</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> bBlock1 := </SPAN><SPAN class=any1-variable>MakeBlock</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> bBlock2 := {|| </SPAN><SPAN class=any1-variable>DoThing</SPAN><SPAN class=any1-symbol>( @nTest ), </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( nTest ) }
+PROCEDURE GetArray( a )
 
-   </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( bBlock1 )
-   </SPAN><SPAN class=any1-function>eval</SPAN><SPAN class=any1-symbol>( bBlock2 )
+   LOCAL i
 
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( NIL )
+   a := Array( 100 )
+   FOR i := 1 TO 100
+      IF ( i % 6 ) == 0
+         a[ i - 2 ] := NIL
+         a[ i - 4 ] := NIL
+      ENDIF
+      a[ i ] := TestBlocks()
+   NEXT
 
-</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MakeBlock</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> nTest
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( {|| </SPAN><SPAN class=any1-variable>DoThing</SPAN><SPAN class=any1-symbol>( @nTest ), </SPAN><SPAN class=any1-function>qout</SPAN><SPAN class=any1-symbol>( nTest ) } )
+   RETURN
 
-</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>DoThing</SPAN><SPAN class=any1-symbol>( n )
+PROCEDURE PrintArray( a )
 
-   n := </SPAN><SPAN class=any1-number>42
+   LOCAL i
 
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-symbol>( NIL )
+   FOR i := 1 TO 100
+      IF a[ i ] != NIL
+         Eval( a[ i ][ 2 ], i )
+         myout( i, Eval( a[ i ][ 1 ] ) )
+      ENDIF
+   NEXT
 
-</SPAN><SPAN class=any1-comment>//////////////////////////////////////////////////////////////////////
-</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>DetachToStatic</SPAN><SPAN class=any1-symbol>( n )
+   RETURN
 
-  cbStatic ={|x| n+x}
+//
 
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> NIL
+FUNCTION DetachWithRefer()
 
-</SPAN><SPAN class=any1-comment>// ------------------------------------------------------------
-</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ReferParam</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> bResult
+   LOCAL nTest
+   LOCAL bBlock1 := MakeBlock()
+   LOCAL bBlock2 := {|| DoThing( @nTest ), QOut( nTest ) }
 
-? </SPAN><SPAN class=any1-string>"Test for codeblock parameter passed by reference"
+   Eval( bBlock1 )
+   Eval( bBlock2 )
 
-</SPAN><SPAN class=any1-variable>PassByValue</SPAN><SPAN class=any1-symbol>( {|lEnd| ;
-   bResult := </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( @lEnd ), ;  
-   </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( @lEnd ) } )
-</SPAN><SPAN class=any1-comment>// Clipper &amp; xHarbour it's .T.
-//In Harbour it is .F. 
-</SPAN><SPAN class=any1-symbol>? </SPAN><SPAN class=any1-string>"Printed value in Clipper  .T. ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bResult )           
-?
-</SPAN><SPAN class=any1-comment>// Notice the Clipper bug: GetBlock is receiving the reference to
-// the codeblock parameter than the value of Eval(bResult) shouldn't
-// depend on the order of block creation/value changing (GetBlock/SetRef).
+   RETURN NIL
 
-</SPAN><SPAN class=any1-variable>PassByRef</SPAN><SPAN class=any1-symbol>( {|lEnd| ;
-   bResult := </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( @lEnd ), ;  
-   </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( @lEnd ) } )
-</SPAN><SPAN class=any1-comment>// Clipper &amp; xHarbour it's .T.
-//In Harbour it is .F. 
-</SPAN><SPAN class=any1-symbol>? </SPAN><SPAN class=any1-string>"Printed value in Clipper  .T. ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bResult )           
-?
+FUNCTION MakeBlock()
 
-? </SPAN><SPAN class=any1-string>"2nd test for codeblock parameter passed by reference"
+   LOCAL nTest
 
-</SPAN><SPAN class=any1-variable>PassByValue</SPAN><SPAN class=any1-symbol>( {|lEnd| ;
-   </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( @lEnd ), ;
-   bResult := </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( @lEnd ) } )
-</SPAN><SPAN class=any1-comment>// Clipper &amp; xHarbour it's .T.
-//In Harbour it is .F. 
-</SPAN><SPAN class=any1-symbol>? </SPAN><SPAN class=any1-string>"Printed value in Clipper  .F. ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bResult )           
-?
+   RETURN {|| DoThing( @nTest ), QOut( nTest ) }
 
-</SPAN><SPAN class=any1-variable>PassByRef</SPAN><SPAN class=any1-symbol>( {|lEnd| ;
-   </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( @lEnd ), ;
-   bResult := </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( @lEnd ) } )
-</SPAN><SPAN class=any1-comment>// Clipper &amp; xHarbour it's .T.
-//In Harbour it is .F. 
-</SPAN><SPAN class=any1-symbol>? </SPAN><SPAN class=any1-string>"Printed value in Clipper  .F. ="</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bResult )           
-?
+FUNCTION DoThing( n )
 
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> Nil
+   n := 42
 
-</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>PassByValue</SPAN><SPAN class=any1-symbol>( bBlock )
-</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> lSomeVar := </SPAN><SPAN class=any1-activedot>.T.
-</SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bBlock, lSomeVar )
-? </SPAN><SPAN class=any1-string>"lSomeVar value in Clipper .T. ="</SPAN><SPAN class=any1-symbol>, lSomeVar
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-activedot>.T.
+   RETURN NIL
 
-</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>PassByRef</SPAN><SPAN class=any1-symbol>( bBlock )
-</SPAN><SPAN class=any1-reservedword>Local</SPAN><SPAN class=any1-space> lSomeVar := </SPAN><SPAN class=any1-activedot>.T.
-</SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( bBlock, @lSomeVar )
-? </SPAN><SPAN class=any1-string>"lSomeVar value in Clipper .F. ="</SPAN><SPAN class=any1-symbol>, lSomeVar
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-activedot>.T.
+//
 
-</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SetByRef</SPAN><SPAN class=any1-symbol>( lVar )
-lVar := </SPAN><SPAN class=any1-activedot>.F.
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> Nil
+FUNCTION DetachToStatic( n )
 
-</SPAN><SPAN class=any1-reservedword>Static</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>GetBlock</SPAN><SPAN class=any1-symbol>( lVar )
-</SPAN><SPAN class=any1-reservedword>Return</SPAN><SPAN class=any1-space> {|| lVar }
-</SPAN><SPAN class=any1-comment>// ------------------------------------------------------------
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+   s_cbStatic := {| x | n + x }
+
+   RETURN NIL
+
+//
+
+FUNCTION ReferParam()
+
+   LOCAL bResult
+
+   ? "Test for codeblock parameter passed by reference"
+
+   PassByValue( {| lEnd | ;
+      bResult := GetBlock( @lEnd ), ;
+      SetByRef( @lEnd ) } )
+   // Clipper & xHarbour it's .T.
+   // In Harbour it is .F.
+   ? "Printed value in Clipper  .T. =", Eval( bResult )
+   ?
+   // Notice the Clipper bug: GetBlock is receiving the reference to
+   // the codeblock parameter than the value of Eval( bResult ) shouldn't
+   // depend on the order of block creation/value changing (GetBlock/SetRef).
+
+   PassByRef( {| lEnd | ;
+      bResult := GetBlock( @lEnd ), ;
+      SetByRef( @lEnd ) } )
+   // Clipper & xHarbour it's .T.
+   // In Harbour it is .F.
+   ? "Printed value in Clipper  .T. =", Eval( bResult )
+   ?
+
+   ? "2nd test for codeblock parameter passed by reference"
+
+   PassByValue( {| lEnd | ;
+      SetByRef( @lEnd ), ;
+      bResult := GetBlock( @lEnd ) } )
+   // Clipper & xHarbour it's .T.
+   // In Harbour it is .F.
+   ? "Printed value in Clipper  .F. =", Eval( bResult )
+   ?
+
+   PassByRef( {| lEnd | ;
+      SetByRef( @lEnd ), ;
+      bResult := GetBlock( @lEnd ) } )
+   // Clipper & xHarbour it's .T.
+   // In Harbour it is .F.
+   ? "Printed value in Clipper  .F. =", Eval( bResult )
+   ?
+
+   RETURN NIL
+
+STATIC FUNCTION PassByValue( bBlock )
+
+   LOCAL lSomeVar := .T.
+
+   Eval( bBlock, lSomeVar )
+   ? "lSomeVar value in Clipper .T. =", lSomeVar
+
+   RETURN .T.
+
+STATIC FUNCTION PassByRef( bBlock )
+
+   LOCAL lSomeVar := .T.
+
+   Eval( bBlock, @lSomeVar )
+   ? "lSomeVar value in Clipper .F. =", lSomeVar
+
+   RETURN .T.
+
+STATIC FUNCTION SetByRef( lVar )
+
+   lVar := .F.
+
+   RETURN NIL
+
+STATIC FUNCTION GetBlock( lVar )
+
+   RETURN {|| lVar }
+
+]]></script>
+
+</body>
+</html>

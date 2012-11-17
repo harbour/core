@@ -1,188 +1,193 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>tstmacro.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-constant>#include</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"hbclass.ch"
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-</SPAN><SPAN class=any1-reservedword>MEMVAR</SPAN><SPAN class=any1-space> cStr, cStr_1, cVar_1, aVar, oVar, OtherVar, SomeVar, </SPAN><SPAN class=any1-reservedword>Private
-MEMVAR</SPAN><SPAN class=any1-space> cMainPrivate, GlobalPrivate, BornInRunTimeVar, </SPAN><SPAN class=any1-reservedword>Public
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
-Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>( )
+#include "hbclass.ch"
 
-        </SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> cStr := </SPAN><SPAN class=any1-string>'cVar'</SPAN><SPAN class=any1-symbol>, cStr_1 := </SPAN><SPAN class=any1-string>'cVar_1'</SPAN><SPAN class=any1-symbol>, aVar := { </SPAN><SPAN class=any1-string>'cVar_1'</SPAN><SPAN class=any1-space> }, oVar
+MEMVAR cStr, cStr_1, cVar_1, aVar, oVar, OtherVar, SomeVar, Private
+MEMVAR cMainPrivate, GlobalPrivate, BornInRunTimeVar, Public
 
-        </SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> cVar_1, cMainPrivate := </SPAN><SPAN class=any1-string>'cVar_1'</SPAN><SPAN class=any1-symbol>, GlobalPrivate := </SPAN><SPAN class=any1-string>'BornInRunTimeVar'
+PROCEDURE Main()
 
-</SPAN><SPAN class=any1-space>        &amp;cStr_1 = </SPAN><SPAN class=any1-string>'Simple '
-</SPAN><SPAN class=any1-space>        ? M-&gt;cVar_1
+   PRIVATE cStr := "cVar", cStr_1 := "cVar_1", aVar := { "cVar_1" }, oVar
 
-        &amp;( </SPAN><SPAN class=any1-string>'cVar'</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-string>'_1'</SPAN><SPAN class=any1-space> ) := </SPAN><SPAN class=any1-string>'Macro'
-</SPAN><SPAN class=any1-space>        ?? M-&gt;cVar_1
+   PRIVATE cVar_1, cMainPrivate := "cVar_1", GlobalPrivate := "BornInRunTimeVar"
 
-        M-&gt;&amp;cStr_1 = </SPAN><SPAN class=any1-string>'Aliased'
-</SPAN><SPAN class=any1-space>        ? M-&gt;cVar_1
+   // to avoid unused STATIC FUNCTION warnings
+   UDF_STATIC()
+   UDF2_STATIC()
 
-        MEMVAR-&gt;&amp;( </SPAN><SPAN class=any1-string>'cVar'</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-string>'_1'</SPAN><SPAN class=any1-space> ) := </SPAN><SPAN class=any1-string>' Macro'
-</SPAN><SPAN class=any1-space>        ?? M-&gt;cVar_1
+   &cStr_1 := "Simple "
+   ? M->cVar_1
 
-        cStr := </SPAN><SPAN class=any1-string>'cVar_'
-</SPAN><SPAN class=any1-space>        &amp;cStr.</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> = </SPAN><SPAN class=any1-string>'Concatenated Macro (Numeric)'
-</SPAN><SPAN class=any1-space>        ? M-&gt;cVar_1
+   &( "cVar" + "_1" ) := "Macro"
+   ?? M->cVar_1
 
-        cStr := </SPAN><SPAN class=any1-string>'cVar'
-</SPAN><SPAN class=any1-space>        &amp;cStr._1 = </SPAN><SPAN class=any1-string>'Concatenated Macro (String)'
-</SPAN><SPAN class=any1-space>        ? M-&gt;cVar_1
+   M->&cStr_1 := "Aliased"
+   ? M->cVar_1
 
-        &amp;( aVar[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>] ) := </SPAN><SPAN class=any1-string>'Array Macro'
-</SPAN><SPAN class=any1-space>        ? M-&gt;cVar_1
+   MEMVAR->&( "cVar" + "_1" ) := " Macro"
+   ?? M->cVar_1
 
-        oVar := </SPAN><SPAN class=any1-variable>TValue</SPAN><SPAN class=any1-symbol>():</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>()
-        oVar:cVal := </SPAN><SPAN class=any1-string>'cVar_1'
-</SPAN><SPAN class=any1-space>        &amp;( oVar:cVal ) := </SPAN><SPAN class=any1-string>'Class Macro'
-</SPAN><SPAN class=any1-space>        ? M-&gt;cVar_1
+   cStr := "cVar_"
+   &cStr.1 := "Concatenated Macro (Numeric)"
+   ? M->cVar_1
 
-        </SPAN><SPAN class=any1-variable>SubFun</SPAN><SPAN class=any1-symbol>()
+   cStr := "cVar"
+   &cStr._1 := "Concatenated Macro (String)"
+   ? M->cVar_1
 
-        ? </SPAN><SPAN class=any1-string>'"cVar_1" = ['</SPAN><SPAN class=any1-space> + M-&gt;cVar_1 + </SPAN><SPAN class=any1-string>'] AFTER SubFun() PRIVATE'
+   &( aVar[1] ) := "Array Macro"
+   ? M->cVar_1
 
-</SPAN><SPAN class=any1-space>        ? M-&gt;NewPublicVar
+   oVar := TValue():New()
+   oVar:cVal := "cVar_1"
+   &( oVar:cVal ) := "Class Macro"
+   ? M->cVar_1
 
-   </SPAN><SPAN class=any1-variable>TEST_TYPE</SPAN><SPAN class=any1-symbol>()
-   
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> NIL
+   SubFun()
 
-</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> TValue
+   ? '"cVar_1" = [' + M->cVar_1 + '] AFTER SubFun() PRIVATE'
 
-   </SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> oClass
+   ? M->NewPublicVar
 
-   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> oClass == NIL
-      oClass = </SPAN><SPAN class=any1-variable>HBClass</SPAN><SPAN class=any1-symbol>():</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"TValue"</SPAN><SPAN class=any1-space> )
+   TEST_Type()
 
-      oClass:</SPAN><SPAN class=any1-variable>AddData</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"cVal"</SPAN><SPAN class=any1-space> )
-      oClass:</SPAN><SPAN class=any1-variable>AddMethod</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"New"</SPAN><SPAN class=any1-symbol>,        @</SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>() )         </SPAN><SPAN class=any1-comment>// New Method
+   RETURN
 
-</SPAN><SPAN class=any1-space>                oClass:</SPAN><SPAN class=any1-function>Create</SPAN><SPAN class=any1-symbol>()
+FUNCTION TValue
 
-   </SPAN><SPAN class=any1-reservedword>ENDIF
+   STATIC oClass
 
-RETURN</SPAN><SPAN class=any1-symbol>( oClass:</SPAN><SPAN class=any1-variable>Instance</SPAN><SPAN class=any1-symbol>() )
+   IF oClass == NIL
+      oClass := HBClass():New( "TValue" )
 
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>New</SPAN><SPAN class=any1-symbol>()
+      oClass:AddData( "cVal" )
+      oClass:AddMethod( "New",        @New() )         // New Method
 
-   </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> Self := </SPAN><SPAN class=any1-variable>QSelf</SPAN><SPAN class=any1-symbol>()
+      oClass:Create()
 
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> Self
+   ENDIF
 
-</SPAN><SPAN class=any1-reservedword>Function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>SubFun</SPAN><SPAN class=any1-symbol>()
+   RETURN oClass:Instance()
 
-        ? </SPAN><SPAN class=any1-string>'"cVar_1" = ['</SPAN><SPAN class=any1-space> + M-&gt;cVar_1 + </SPAN><SPAN class=any1-string>'] BEFORE SubFun() PRIVATE'
+STATIC FUNCTION New()
 
-</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-comment>// Testing conflict with KEY WORDS
-</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> := </SPAN><SPAN class=any1-string>'I am a Var named PRIVATE '</SPAN><SPAN class=any1-symbol>, &amp;cMainPrivate, SomeVar, OtherVar := </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, &amp;GlobalPrivate := </SPAN><SPAN class=any1-string>'I was born in Run Time'
-</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-reservedword>PUBLIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>PUBLIC</SPAN><SPAN class=any1-space> := </SPAN><SPAN class=any1-string>'NewPublicVar'
-</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-reservedword>PUBLIC</SPAN><SPAN class=any1-space> &amp;</SPAN><SPAN class=any1-reservedword>PUBLIC
+   LOCAL Self := QSelf()
 
-</SPAN><SPAN class=any1-space>        ? M-&gt;NewPublicVar
+   RETURN Self
 
-        M-&gt;NewPublicVar := </SPAN><SPAN class=any1-string>'Still Alive because I am PUBLIC'
+FUNCTION SubFun()
 
-</SPAN><SPAN class=any1-space>        ? M-&gt;</SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> + </SPAN><SPAN class=any1-reservedword>PRIVATE
-</SPAN><SPAN class=any1-space>        ? </SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> + M-&gt;</SPAN><SPAN class=any1-reservedword>PRIVATE
+   ? '"cVar_1" = [' + M->cVar_1 + '] BEFORE SubFun() PRIVATE'
 
-</SPAN><SPAN class=any1-space>        ? BornInRunTimeVar
+   // Testing conflict with KEY WORDS
+   PRIVATE PRIVATE := "I am a Var named PRIVATE ", &cMainPrivate, SomeVar, OtherVar := 1, &GlobalPrivate := "I was born in Run Time"
+   PUBLIC PUBLIC := "NewPublicVar"
+   PUBLIC &PUBLIC
 
-        &amp;cMainPrivate := </SPAN><SPAN class=any1-string>'In SubFun()'
+   ? M->NewPublicVar
 
-</SPAN><SPAN class=any1-space>        ? </SPAN><SPAN class=any1-string>'"cVar_1" = ['</SPAN><SPAN class=any1-space> + M-&gt;cVar_1 + </SPAN><SPAN class=any1-string>'] in SubFun() PRIVATE'
+   M->NewPublicVar := "Still Alive because I am PUBLIC"
 
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> NIL
+   ? M->PRIVATE + PRIVATE
+   ? PRIVATE + M->PRIVATE
 
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>TEST_TYPE</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> v1, v2, v1a, v2a
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> bErr:=</SPAN><SPAN class=any1-function>ERRORBLOCK</SPAN><SPAN class=any1-symbol>({|e|</SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-symbol>(e)}), oE
+   ? BornInRunTimeVar
+
+   &cMainPrivate := "In SubFun()"
+
+   ? '"cVar_1" = [' + M->cVar_1 + '] in SubFun() PRIVATE'
+
+   RETURN NIL
+
+STATIC PROCEDURE TEST_Type()
+
+   LOCAL v1, v2, v1a, v2a
+   LOCAL bErr := ErrorBlock( {| e | Break( e ) } ), oE
 
    ?
-   ? </SPAN><SPAN class=any1-string>"=========== Type() function ================="
-</SPAN><SPAN class=any1-space>   v1 := </SPAN><SPAN class=any1-string>"UDF()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
-   v2 := </SPAN><SPAN class=any1-string>"UDF_STATIC()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
-   ? </SPAN><SPAN class=any1-string>"Test for &amp;"</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-string>"'UDF()'  - should print 'udf': "</SPAN><SPAN class=any1-symbol>, &amp;v1
-   ? </SPAN><SPAN class=any1-string>"Test for &amp;"</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-string>"'UDF_STATIC()'  - should print 'ERROR: undefined function': "
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>      ?? &amp;v2
+   ? "=========== Type() function ================="
+   v1 := "UDF()"
+   ? "Test for Type('UDF()')        - should be 'UI': ", Type( v1 )
+   v2 := "UDF_STATIC()"
+   ? "Test for Type('UDF_STATIC()') - should be 'U': ", Type( v2 )
+   ? "Test for &" + "'UDF()'  - should print 'udf': ", &v1
+   ? "Test for &" + "'UDF_STATIC()'  - should print 'ERROR: undefined function': "
+   BEGIN SEQUENCE
+      ?? &v2
    RECOVER USING oE
-      ? </SPAN><SPAN class=any1-string>"ERROR: "</SPAN><SPAN class=any1-symbol>+oE:Description
-   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>ERRORBLOCK</SPAN><SPAN class=any1-symbol>(bErr)
+      ? "ERROR: " + oE:Description
+   END SEQUENCE
+   ErrorBlock( bErr )
 
-   v1 := </SPAN><SPAN class=any1-string>"UDF"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF')        - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
-   v2 := </SPAN><SPAN class=any1-string>"UDF_STATIC"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+   v1 := "UDF"
+   ? "Test for Type('UDF')        - should be 'U': ", Type( v1 )
+   v2 := "UDF_STATIC"
+   ? "Test for Type('UDF_STATIC') - should be 'U': ", Type( v2 )
 
-   v1a := </SPAN><SPAN class=any1-string>"UDF:=1"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF:=1')        - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1a)
-   v2a := </SPAN><SPAN class=any1-string>"UDF_STATIC:=1"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC:=1') - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2a)
+   v1a := "UDF:=1"
+   ? "Test for Type('UDF:=1')        - should be 'N': ", Type( v1a )
+   v2a := "UDF_STATIC:=1"
+   ? "Test for Type('UDF_STATIC:=1') - should be 'N': ", Type( v2a )
 
-   ? </SPAN><SPAN class=any1-string>"=== after the assignment ==="
-</SPAN><SPAN class=any1-space>   v1 := </SPAN><SPAN class=any1-string>"UDF"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF')        - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
-   v2 := </SPAN><SPAN class=any1-string>"UDF_STATIC"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC') - should be 'N': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+   ? "=== after the assignment ==="
+   v1 := "UDF"
+   ? "Test for Type('UDF')        - should be 'N': ", Type( v1 )
+   v2 := "UDF_STATIC"
+   ? "Test for Type('UDF_STATIC') - should be 'N': ", Type( v2 )
 
-   v1 := </SPAN><SPAN class=any1-string>"UDF()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
-   v2 := </SPAN><SPAN class=any1-string>"UDF_STATIC()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+   v1 := "UDF()"
+   ? "Test for Type('UDF()')        - should be 'UI': ", Type( v1 )
+   v2 := "UDF_STATIC()"
+   ? "Test for Type('UDF_STATIC()') - should be 'U': ", Type( v2 )
 
 
-   ? </SPAN><SPAN class=any1-string>"=== declared public variable ==="
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>PUBLIC</SPAN><SPAN class=any1-space> UDF2, UDF2_STATIC
-   v1 := </SPAN><SPAN class=any1-string>"UDF2()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF2()')        - should be 'UI': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
-   v2 := </SPAN><SPAN class=any1-string>"UDF2_STATIC()"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF2_STATIC()') - should be 'U': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+   ? "=== declared public variable ==="
+   PUBLIC UDF2, UDF2_STATIC
+   v1 := "UDF2()"
+   ? "Test for Type('UDF2()')        - should be 'UI': ", Type( v1 )
+   v2 := "UDF2_STATIC()"
+   ? "Test for Type('UDF2_STATIC()') - should be 'U': ", Type( v2 )
 
-   v1 := </SPAN><SPAN class=any1-string>"UDF2"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF')        - should be 'L': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v1)
-   v2 := </SPAN><SPAN class=any1-string>"UDF2_STATIC"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Test for Type('UDF_STATIC') - should be 'L': "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>TYPE</SPAN><SPAN class=any1-symbol>(v2)
+   v1 := "UDF2"
+   ? "Test for Type('UDF')        - should be 'L': ", Type( v1 )
+   v2 := "UDF2_STATIC"
+   ? "Test for Type('UDF_STATIC') - should be 'L': ", Type( v2 )
 
-   ?   
-</SPAN><SPAN class=any1-reservedword>RETURN
+   ?
 
-STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>UDF_STATIC</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"udf_static"
+   RETURN
 
-</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>UDF</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"udf"
+STATIC FUNCTION UDF_STATIC()
 
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>UDF2_STATIC</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"udf2_static"
+   RETURN "udf_static"
 
-</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>UDF2</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"udf2"
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+FUNCTION UDF()
+
+   RETURN "udf"
+
+STATIC FUNCTION UDF2_STATIC()
+
+   RETURN "udf2_static"
+
+FUNCTION UDF2()
+
+   RETURN "udf2"
+
+]]></script>
+
+</body>
+</html>

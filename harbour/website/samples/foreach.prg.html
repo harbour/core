@@ -1,163 +1,163 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>foreach.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MAIN</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> A:={ </SPAN><SPAN class=any1-string>"one  "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"two  "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"three"</SPAN><SPAN class=any1-space> }
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> AA:={ </SPAN><SPAN class=any1-string>"AA-one  "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"AA-two  "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"AA-three"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"AA-four "</SPAN><SPAN class=any1-space> }
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> c:=</SPAN><SPAN class=any1-string>"abcdefghij"
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> enum:=</SPAN><SPAN class=any1-string>"b"
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> bb, cc
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> i
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-</SPAN><SPAN class=any1-comment>/*
-   test(@a,b)
-   test(a,@b)
-   test(@a,@b)
-*/
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"========================================================"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"before loop: ENUM="</SPAN><SPAN class=any1-symbol>,ENUM
-   ? </SPAN><SPAN class=any1-string>'before loop: a[1]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[2]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[3]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>]
-   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH enum IN A
-      ? </SPAN><SPAN class=any1-string>"start: ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> ENUM = </SPAN><SPAN class=any1-string>'two'
-</SPAN><SPAN class=any1-space>         ENUM := </SPAN><SPAN class=any1-function>UPPER</SPAN><SPAN class=any1-symbol>( ENUM )
-      </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"end:   ENUM="</SPAN><SPAN class=any1-symbol>, ENUM, </SPAN><SPAN class=any1-string>"| index:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumIndex, </SPAN><SPAN class=any1-string>"| value:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumValue, </SPAN><SPAN class=any1-string>"| base: "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(ENUM:__enumBase)
-   </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"after loop ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-   ? </SPAN><SPAN class=any1-string>'after loop: a[1]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[2]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[3]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>]
-   ? </SPAN><SPAN class=any1-string>"-----------------"
-</SPAN><SPAN class=any1-space>   ?
-   </SPAN><SPAN class=any1-function>inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
- 
-   ? </SPAN><SPAN class=any1-string>"========================================================"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Testing passing by reference"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"before loop: ENUM="</SPAN><SPAN class=any1-symbol>,ENUM
-   ? </SPAN><SPAN class=any1-string>'after loop: a[1]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[2]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[3]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>]
-   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH ENUM IN A
-      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>UPPER</SPAN><SPAN class=any1-symbol>(ENUM) = </SPAN><SPAN class=any1-string>'TWO'
-</SPAN><SPAN class=any1-space>         ENUM := </SPAN><SPAN class=any1-function>UPPER</SPAN><SPAN class=any1-symbol>( ENUM )
-         ? </SPAN><SPAN class=any1-string>"before passing by @ | ENUM="</SPAN><SPAN class=any1-symbol>, ENUM, </SPAN><SPAN class=any1-string>"| index:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumIndex, </SPAN><SPAN class=any1-string>"| value:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumValue, </SPAN><SPAN class=any1-string>"| base: "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(ENUM:__enumBase)
-         </SPAN><SPAN class=any1-variable>testBYREF</SPAN><SPAN class=any1-symbol>( @ENUM )
-         ? </SPAN><SPAN class=any1-string>" after passing by @ | ENUM="</SPAN><SPAN class=any1-symbol>, ENUM, </SPAN><SPAN class=any1-string>"| index:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumIndex, </SPAN><SPAN class=any1-string>"| value:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumValue, </SPAN><SPAN class=any1-string>"| base: "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(ENUM:__enumBase)
-      </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"after loop ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-   ? </SPAN><SPAN class=any1-string>'after loop: a[1]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[2]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[3]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>]
-   </SPAN><SPAN class=any1-function>inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
+#define LEFTEQUAL( l, r )       ( Left( l, Len( r ) ) == r )
 
-   ? </SPAN><SPAN class=any1-string>"========================================================"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"Testing BREAK"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"before loop: ENUM="</SPAN><SPAN class=any1-symbol>,ENUM
-   ? </SPAN><SPAN class=any1-string>'after loop: a[1]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[2]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[3]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>]
-   </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH enum IN A </SPAN><SPAN class=any1-function>DESCEND
-</SPAN><SPAN class=any1-space>         ? </SPAN><SPAN class=any1-string>"loop:   ENUM="</SPAN><SPAN class=any1-symbol>, ENUM, </SPAN><SPAN class=any1-string>"| index:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumIndex, </SPAN><SPAN class=any1-string>"| value:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumValue, </SPAN><SPAN class=any1-string>"| base: "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(ENUM:__enumBase)
-         </SPAN><SPAN class=any1-variable>TESTbreak</SPAN><SPAN class=any1-symbol>( ENUM )
-      </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   
+PROCEDURE Main()
+
+   LOCAL A := { "one  ", "two  ", "three" }
+   LOCAL AA := { "AA-one  ", "AA-two  ", "AA-three", "AA-four " }
+   LOCAL c := "abcdefghij"
+   LOCAL enum := "b"
+   LOCAL bb, cc
+   LOCAL i
+
+#if 0
+   test( @a, b )
+   test( a, @b )
+   test( @a, @b )
+#endif
+
+   ? "========================================================"
+   ? "before loop: ENUM=", ENUM
+   ? "before loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
+   FOR EACH enum IN A
+      ? "start: ENUM=", enum
+      IF LEFTEQUAL( enum, "two" )
+         enum := Upper( enum )
+      ENDIF
+      ? "end:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+   NEXT
+   ? "after loop ENUM=", enum
+   ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
+   ? "-----------------"
+   ?
+   Inkey( 0 )
+
+
+   ? "========================================================"
+   ? "Testing passing by reference"
+   ? "before loop: ENUM=", enum
+   ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
+   FOR EACH enum IN A
+      IF LEFTEQUAL( Upper( enum ), "TWO" )
+         enum := Upper( enum )
+         ? "before passing by @ | ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+         testBYREF( @enum )
+         ? " after passing by @ | ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+      ENDIF
+   NEXT
+   ? "after loop ENUM=", enum
+   ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
+   Inkey( 0 )
+
+   ? "========================================================"
+   ? "Testing BREAK"
+   ? "before loop: ENUM=", enum
+   ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
+   BEGIN SEQUENCE
+      FOR EACH enum IN A DESCEND
+         ? "loop:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+         TESTbreak( enum )
+      NEXT
+
    RECOVER USING i
-      ? </SPAN><SPAN class=any1-string>"after loop ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-      ? </SPAN><SPAN class=any1-string>'after loop: a[1]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[2]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>], </SPAN><SPAN class=any1-string>'a[3]='</SPAN><SPAN class=any1-symbol>,a[</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>]
-      ? </SPAN><SPAN class=any1-string>"recover variable i="</SPAN><SPAN class=any1-symbol>, i
-   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
+      ? "after loop ENUM=", enum
+      ? "after loop: a[1]=", a[ 1 ], "a[2]=", a[ 2 ], "a[3]=", a[ 3 ]
+      ? "recover variable i=", i
+   END SEQUENCE
+   Inkey( 0 )
 
-   ? </SPAN><SPAN class=any1-string>"========================================================"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"before loop: ENUM="</SPAN><SPAN class=any1-symbol>,ENUM
-   ? </SPAN><SPAN class=any1-string>'before loop: c='</SPAN><SPAN class=any1-symbol>,c
-   </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH enum IN c
-         ? </SPAN><SPAN class=any1-string>"start: ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-         </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> enum = </SPAN><SPAN class=any1-string>'d'
-</SPAN><SPAN class=any1-space>            enum := </SPAN><SPAN class=any1-function>UPPER</SPAN><SPAN class=any1-symbol>( enum )
-         </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-variable>Testbreak</SPAN><SPAN class=any1-symbol>( enum )
-         ? </SPAN><SPAN class=any1-string>"end:   ENUM="</SPAN><SPAN class=any1-symbol>, ENUM, </SPAN><SPAN class=any1-string>"| index:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumIndex, </SPAN><SPAN class=any1-string>"| value:"</SPAN><SPAN class=any1-symbol>, ENUM:__enumValue, </SPAN><SPAN class=any1-string>"| base: "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>VALTYPE</SPAN><SPAN class=any1-symbol>(ENUM:__enumBase)
-      </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   RECOVER USING i
-      ? </SPAN><SPAN class=any1-string>"after loop ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-      ? </SPAN><SPAN class=any1-string>'after loop: c='</SPAN><SPAN class=any1-symbol>, c
-      ? </SPAN><SPAN class=any1-string>"recover variable i="</SPAN><SPAN class=any1-symbol>, i
-   </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>   
-
-   ? </SPAN><SPAN class=any1-string>"========================================================"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH enum,bb,cc IN A,AA,c
-      ? enum, enum:__enumIndex, enum:__enumValue
-      ? bb, bb:__enumIndex, bb:__enumValue
-      ? cc, cc:__enumIndex, cc:__enumValue
-   </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>inkey</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>0</SPAN><SPAN class=any1-symbol>)
-   
-   ? </SPAN><SPAN class=any1-string>"========================================================"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH enum,bb,cc IN A,AA,c </SPAN><SPAN class=any1-function>DESCEND
-</SPAN><SPAN class=any1-space>      ? enum, enum:__enumIndex, enum:__enumValue
-      ? bb, bb:__enumIndex, bb:__enumValue
-      ? cc, cc:__enumIndex, cc:__enumValue
-   </SPAN><SPAN class=any1-reservedword>NEXT
-
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH enum IN a
-      </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> enum = </SPAN><SPAN class=any1-string>'2'
-</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-function>BREAK
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>NEXT
-
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH enum IN a
-      </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> enum = </SPAN><SPAN class=any1-string>'2'
-</SPAN><SPAN class=any1-space>         ? </SPAN><SPAN class=any1-string>"Breaking... enum="</SPAN><SPAN class=any1-symbol>, enum
-         </SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-space> enum
-      </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>      RECOVER USING enum
-         ? </SPAN><SPAN class=any1-string>"after recovery: enum="</SPAN><SPAN class=any1-symbol>, enum
-      </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   
-</SPAN><SPAN class=any1-reservedword>RETURN
+   ? "========================================================"
+   ? "before loop: ENUM=", enum
+   ? "before loop: c=", c
+   BEGIN SEQUENCE
+      FOR EACH enum IN c
+         ? "start: ENUM=", enum
+         IF LEFTEQUAL( enum, "d" )
+            enum := Upper( enum )
+         ENDIF
+         Testbreak( enum )
+         ? "end:   ENUM=", enum, "| index:", enum:__enumIndex(), "| value:", enum:__enumValue(), "| base: ", ValType( enum:__enumBase() )
+      NEXT
+   RECOVER USING i
+      ? "after loop ENUM=", enum
+      ? "after loop: c=", c
+      ? "recover variable i=", i
+   END SEQUENCE
 
 
-PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>TESTbreak</SPAN><SPAN class=any1-symbol>( v )
-   </SPAN><SPAN class=any1-reservedword>IF</SPAN><SPAN class=any1-space> v = </SPAN><SPAN class=any1-string>'2'</SPAN><SPAN class=any1-space> .or. v = </SPAN><SPAN class=any1-string>'d'
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"issuing break"
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-symbol>( v )
-   </SPAN><SPAN class=any1-reservedword>ENDIF
-</SPAN><SPAN class=any1-space>   
-</SPAN><SPAN class=any1-reservedword>RETURN
+   ? "========================================================"
+   FOR EACH enum, bb, cc IN A, AA, c
+      ? enum, enum:__enumIndex(), enum:__enumValue()
+      ? bb, bb:__enumIndex(), bb:__enumValue()
+      ? cc, cc:__enumIndex(), cc:__enumValue()
+   NEXT
+   Inkey( 0 )
 
-PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>TESTBYREF</SPAN><SPAN class=any1-symbol>( enum )
-   ? </SPAN><SPAN class=any1-string>"start of testBYREF ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-   </SPAN><SPAN class=any1-reservedword>FOR</SPAN><SPAN class=any1-space> EACH ENUM IN {</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>}
-      ? </SPAN><SPAN class=any1-string>"  -testBYREF="</SPAN><SPAN class=any1-symbol>, ENUM
-   </SPAN><SPAN class=any1-reservedword>NEXT
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"end of loop: ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-   ENUM := </SPAN><SPAN class=any1-string>"22222"
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"end of testBYREF ENUM="</SPAN><SPAN class=any1-symbol>, ENUM
-</SPAN><SPAN class=any1-reservedword>RETURN
+   ? "========================================================"
+   FOR EACH enum, bb, cc IN A, AA, c DESCEND
+      ? enum, enum:__enumIndex(), enum:__enumValue()
+      ? bb, bb:__enumIndex(), bb:__enumValue()
+      ? cc, cc:__enumIndex(), cc:__enumValue()
+   NEXT
 
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+   FOR EACH enum IN a
+      BEGIN SEQUENCE
+         IF LEFTEQUAL( enum, "2" )
+            BREAK
+         ENDIF
+      END SEQUENCE
+   NEXT
+
+   FOR EACH enum IN a
+      BEGIN SEQUENCE
+         IF LEFTEQUAL( enum, "2" )
+            ? "Breaking... enum=", enum
+            BREAK enum
+         ENDIF
+      RECOVER USING enum
+         ? "after recovery: enum=", enum
+      END SEQUENCE
+   NEXT
+
+   RETURN
+
+PROCEDURE TESTbreak( v )
+
+   IF LEFTEQUAL( v, "2" ) .OR. LEFTEQUAL( v, "d" )
+      ? "issuing break"
+      Break( v )
+   ENDIF
+
+   RETURN
+
+PROCEDURE TESTBYREF( enum )
+
+   ? "start of testBYREF ENUM=", enum
+   FOR EACH enum IN { 1, 2, 3 }
+      ? "  -testBYREF=", enum
+   NEXT
+   ? "end of loop: ENUM=", enum
+   enum := "22222"
+   ? "end of testBYREF ENUM=", enum
+
+   RETURN
+
+]]></script>
+
+</body>
+</html>

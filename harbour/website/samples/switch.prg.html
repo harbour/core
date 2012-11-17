@@ -1,142 +1,141 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>switch.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-constant>#ifdef</SPAN><SPAN class=any1-space> __XHARBOUR__  
-   </SPAN><SPAN class=any1-constant>#define</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>OTHERWISE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>DEFAULT
-</SPAN><SPAN class=any1-constant>#endif</SPAN><SPAN class=any1-space>   
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> MAIN
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> a:=</SPAN><SPAN class=any1-number>1
-</SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> b:=</SPAN><SPAN class=any1-string>"b"
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
-</SPAN><SPAN class=any1-constant>#ifndef</SPAN><SPAN class=any1-space> __XHARBOUR__  
+#ifdef __XHARBOUR__
+#define OTHERWISE DEFAULT
+#define ENDSWITCH END
+#endif
+
+PROCEDURE Main()
+
+   LOCAL a := 1
+   MEMVAR m_b
+   PRIVATE m_b := "m_b"
+
+#ifndef __XHARBOUR__
+
    SWITCH a
-   </SPAN><SPAN class=any1-reservedword>END
-</SPAN><SPAN class=any1-constant>#endif
+   ENDSWITCH
+#endif
 
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"1111111111111111111111111111111"
-</SPAN><SPAN class=any1-space>   SWITCH a
-   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 1"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END
-
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"2222222222222222222222222222222"
-</SPAN><SPAN class=any1-space>   SWITCH a
-   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 1"
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"2"
-</SPAN><SPAN class=any1-space>      ? a
-   </SPAN><SPAN class=any1-reservedword>END
-
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"3333333333333333333333333333333"
-</SPAN><SPAN class=any1-space>   SWITCH a
-   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 1"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"2"
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 2"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>OTHERWISE
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"other"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END
-
-</SPAN><SPAN class=any1-constant>#ifndef</SPAN><SPAN class=any1-space> __XHARBOUR__  
    ?
-   ? </SPAN><SPAN class=any1-string>"44444444444444444444444444444444444"
-</SPAN><SPAN class=any1-space>   SWITCH a
-   </SPAN><SPAN class=any1-reservedword>OTHERWISE</SPAN><SPAN class=any1-space> 
-      ? </SPAN><SPAN class=any1-string>"OTHERWISE"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END
-</SPAN><SPAN class=any1-constant>#endif
-
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"55555555555555555555555555555555555"
-</SPAN><SPAN class=any1-space>   a := </SPAN><SPAN class=any1-string>'EE'
-</SPAN><SPAN class=any1-constant>#ifndef</SPAN><SPAN class=any1-space> __XHARBOUR__  
+   ? "1111111111111111111111111111111"
    SWITCH a
-   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>11
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"11"
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>exit
-</SPAN><SPAN class=any1-space>      
-   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>'CCCC'</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-string>'DDDD'
-</SPAN><SPAN class=any1-space>      ? a+a
-      </SPAN><SPAN class=any1-reservedword>EXIT
+   CASE 1
+      ? "FOUND: 1"
+   ENDSWITCH
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"a&amp;b"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>1
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> {</SPAN><SPAN class=any1-number>11111111</SPAN><SPAN class=any1-symbol>,</SPAN><SPAN class=any1-number>22222222222</SPAN><SPAN class=any1-symbol>}[</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>]
-   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>1
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"3"
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>      
-   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>*</SPAN><SPAN class=any1-number>3
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>123</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-symbol>*</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>-</SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>*</SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>+</SPAN><SPAN class=any1-number>2
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>-</SPAN><SPAN class=any1-number>4
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"4"
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>123456789
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>0
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>'AAAA'
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>'BBBBB'
-</SPAN><SPAN class=any1-space>      ? a
-      </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-function>CHR</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>12</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>CHR</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>15</SPAN><SPAN class=any1-symbol>)
-      ? </SPAN><SPAN class=any1-string>"Chr()"
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>OTHERWISE
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"NOT FOUND: running OTHER"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>END
-</SPAN><SPAN class=any1-constant>#endif
+   ?
+   ? "2222222222222222222222222222222"
+   SWITCH a
+   CASE 1
+      ? "FOUND: 1"
+      EXIT
+   CASE "2"
+      ? a
+   ENDSWITCH
 
-</SPAN><SPAN class=any1-space>   ?
-   ? </SPAN><SPAN class=any1-string>"666666666666666666666666666666666666666666"
-</SPAN><SPAN class=any1-space>   a := </SPAN><SPAN class=any1-string>"2"
-</SPAN><SPAN class=any1-space>   SWITCH a
-   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
-</SPAN><SPAN class=any1-space>      ? </SPAN><SPAN class=any1-string>"FOUND: 1"
-</SPAN><SPAN class=any1-space>      ? a
-      </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"2"
-</SPAN><SPAN class=any1-space>      SWITCH a+a
-      </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-number>1
-</SPAN><SPAN class=any1-space>         ? </SPAN><SPAN class=any1-string>"Nested FOUND 1"
-</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>CASE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-string>"22"
-</SPAN><SPAN class=any1-space>         ? </SPAN><SPAN class=any1-string>"Nested FOUND: 22"
-</SPAN><SPAN class=any1-space>         </SPAN><SPAN class=any1-reservedword>EXIT
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>OTHERWISE
-</SPAN><SPAN class=any1-space>         ? </SPAN><SPAN class=any1-string>"Nested OTHERWISE"
-</SPAN><SPAN class=any1-space>      </SPAN><SPAN class=any1-reservedword>END
-</SPAN><SPAN class=any1-space>      ?? </SPAN><SPAN class=any1-string>"In CASE 1"
-</SPAN><SPAN class=any1-space>      ? a
-   </SPAN><SPAN class=any1-reservedword>END
+   ?
+   ? "3333333333333333333333333333333"
+   SWITCH a
+   CASE 1
+      ? "FOUND: 1"
+   CASE "2"
+      ? "FOUND: 2"
+   OTHERWISE
+      ? "other"
+   ENDSWITCH
 
-</SPAN><SPAN class=any1-space>   ? </SPAN><SPAN class=any1-string>"========================================="
+#ifndef __XHARBOUR__
+   ?
+   ? "44444444444444444444444444444444444"
+   SWITCH a
+   OTHERWISE
+      ? "OTHERWISE"
+   ENDSWITCH
+#endif
 
-</SPAN><SPAN class=any1-reservedword>RETURN
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+   ?
+   ? "55555555555555555555555555555555555"
+   a := "EE"
+#ifndef __XHARBOUR__
+   SWITCH a
+   CASE 11
+      ? "11"
+      EXIT
+
+   CASE "CCCC" + "DDDD"
+      ? a + a
+      EXIT
+
+   CASE "a&m_b"
+   CASE 1 + 1
+   CASE { 11111111, 22222222222 }[ 1 ]
+   CASE 1 + 1 + 1
+      ? "3"
+      EXIT
+
+   CASE 1 + 1 * 3
+   CASE 123 + 12 * 4 - 1 * 4 + 2
+   CASE 1 - 4
+      ? "4"
+      EXIT
+   CASE 123456789
+   CASE 0
+      EXIT
+   CASE "AAAA"
+   CASE "BBBBB"
+      ? a
+      EXIT
+   CASE Chr( 12 ) + Chr( 15 )
+      ? "Chr()"
+      EXIT
+   OTHERWISE
+      ? "NOT FOUND: running OTHER"
+   ENDSWITCH
+#endif
+
+   ?
+   ? "666666666666666666666666666666666666666666"
+   a := "2"
+   SWITCH a
+   CASE 1
+      ? "FOUND: 1"
+      ? a
+      EXIT
+   CASE "2"
+      SWITCH a + a
+      CASE 1
+         ? "Nested FOUND 1"
+         EXIT
+      CASE "22"
+         ? "Nested FOUND: 22"
+         EXIT
+      OTHERWISE
+         ? "Nested OTHERWISE"
+      ENDSWITCH
+      ?? "In CASE 1"
+      ? a
+   ENDSWITCH
+
+   ? "========================================="
+
+   RETURN
+
+]]></script>
+
+</body>
+</html>

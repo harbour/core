@@ -1,143 +1,145 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>codebloc.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// codeblocks test
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> B := </SPAN><SPAN class=any1-string>"this will never print"
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> a := {| b, c | </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"I am a codeblock"</SPAN><SPAN class=any1-space> + b + c ) }
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> d
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> de
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> ar := { </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> }
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> crlf:=</SPAN><SPAN class=any1-function>CHR</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>)
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> YY, X
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> x1, x2
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"this should print first"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+// codeblocks test
 
-   </SPAN><SPAN class=any1-function>Eval</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>" with parameters"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>" ... and it works!"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+PROCEDURE Main()
 
-   d =</SPAN><SPAN class=any1-string>"with access to local variables"
+   LOCAL B := "this will never print"
+   LOCAL a := {| b, c | OutStd( "I am a codeblock" + b + c ) }
+   LOCAL d
+   LOCAL de
+   LOCAL ar := { 1, 2 }
+   LOCAL YY, X
+   LOCAL x1, x2
 
-</SPAN><SPAN class=any1-space>   a ={| b, c | </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"I am a second codeblock "</SPAN><SPAN class=any1-space> +d +b +;
-        </SPAN><SPAN class=any1-variable>IIF</SPAN><SPAN class=any1-symbol>(c==NIL, </SPAN><SPAN class=any1-string>' empty second parameter '</SPAN><SPAN class=any1-symbol>, c)), </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(crlf), </SPAN><SPAN class=any1-string>"WITH return value"</SPAN><SPAN class=any1-space> }
-   </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>", codeblock parameters"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+   HB_SYMBOL_UNUSED( b )
 
-   </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>", codeblock parameters "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"and with second parameter"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+   OutStd( "this should print first" )
+   OutStd( hb_eol() )
 
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>MyEval</SPAN><SPAN class=any1-symbol>( a ) )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+   Eval( a, " with parameters", " ... and it works!" )
+   OutStd( hb_eol() )
 
-   </SPAN><SPAN class=any1-variable>OtherTest</SPAN><SPAN class=any1-symbol>( a )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+   d := "with access to local variables"
 
-   </SPAN><SPAN class=any1-variable>AnotherTest</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>"==&gt; Another "</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+   a := {| b, c | OutStd( "I am a second codeblock " + d + b + ;
+      iif( c == NIL, " empty second parameter ", c ) ), OutStd( hb_eol() ), "WITH return value" }
+   Eval( a, ", codeblock parameters" )
+   OutStd( hb_eol() )
 
-   a ={| c | </SPAN><SPAN class=any1-variable>IIF</SPAN><SPAN class=any1-symbol>( c=NIL, {| a | </SPAN><SPAN class=any1-string>"First "</SPAN><SPAN class=any1-symbol>+a}, {| a | </SPAN><SPAN class=any1-string>"Second "</SPAN><SPAN class=any1-symbol>+a}) }
-   a =</SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>"codeblock created in a codeblock"</SPAN><SPAN class=any1-space> ) )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+   Eval( a, ", codeblock parameters ", "and with second parameter" )
+   OutStd( hb_eol() )
 
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( ar[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
-   a :={|| ar[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ]++}
-   </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( ar[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+   OutStd( MyEval( a ) )
+   OutStd( hb_eol() )
 
-   yy :=</SPAN><SPAN class=any1-number>5
-</SPAN><SPAN class=any1-space>   x  :={|xx| </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-variable>LTRIM</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-function>STR</SPAN><SPAN class=any1-symbol>(xx))), </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-string>"+"</SPAN><SPAN class=any1-symbol>), </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-variable>LTRIM</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-function>STR</SPAN><SPAN class=any1-symbol>(yy))), </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-string>"="</SPAN><SPAN class=any1-symbol>), xx + yy }
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( x, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ) )       </SPAN><SPAN class=any1-comment>//this is OK
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( CRLF )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( x, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ) )    </SPAN><SPAN class=any1-comment>//this should ignore unnecesary parameters
+   OtherTest( a )
+   OutStd( hb_eol() )
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-variable>RetBlock</SPAN><SPAN class=any1-symbol>(), </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-space> ) )
+   AnotherTest( a, "==> Another " )
+   OutStd( hb_eol() )
 
-</SPAN><SPAN class=any1-comment>//   BugToFix()
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
+   a := {| c | iif( c == NIL, {| a | "First " + a }, {| a | "Second " + a } ) }
+   a := Eval( a )
+   OutStd( hb_eol() )
+   OutStd( Eval( a, "codeblock created in a codeblock" ) )
+   OutStd( hb_eol() )
 
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"Trying to use detached variable ..."</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
-   x1 :=</SPAN><SPAN class=any1-number>5
-</SPAN><SPAN class=any1-space>   x2 :=</SPAN><SPAN class=any1-number>6
-</SPAN><SPAN class=any1-space>   de =</SPAN><SPAN class=any1-variable>DetachLocal</SPAN><SPAN class=any1-symbol>( x1, x2 )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( de ) )
-   </SPAN><SPAN class=any1-comment>//changing the value of variables
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( crlf )
-   x1 := </SPAN><SPAN class=any1-number>10
-</SPAN><SPAN class=any1-space>   x2 := </SPAN><SPAN class=any1-number>11
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( de ) )
-   de =</SPAN><SPAN class=any1-variable>DetachLocal</SPAN><SPAN class=any1-symbol>( x1, x2 )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( de ) )
+   OutStd( ar[ 1 ] )
+   OutStd( hb_eol() )
+   a := {|| ar[ 1 ]++ }
+   Eval( a )
+   OutStd( ar[ 1 ] )
+   OutStd( hb_eol() )
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+   yy := 5
+   x  := {| xx | OutStd( hb_ntos( xx ) ), OutStd( "+" ), OutStd( hb_ntos( yy ) ), OutStd( "=" ), xx + yy }
+   OutStd( Eval( x, 1 ) )       // this is OK
+   OutStd( hb_eol() )
+   OutStd( Eval( x, 1, 2 ) )    // this should ignore unnecesary parameters
 
-</SPAN><SPAN class=any1-reservedword>FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>MyEval</SPAN><SPAN class=any1-symbol>( bCodeBlock )
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> D:=</SPAN><SPAN class=any1-string>"this is another variable"
+   QOut( Eval( RetBlock(), 5 ) )
 
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>(bCodeBlock, </SPAN><SPAN class=any1-string>" from "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"MyEval Function"</SPAN><SPAN class=any1-space> ) )
+   //   BugToFix()
+   OutStd( hb_eol() )
 
-</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>OtherTest</SPAN><SPAN class=any1-symbol>( cblock )
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cb
+   OutStd( "Trying to use detached variable ..." )
+   OutStd( hb_eol() )
+   x1 := 5
+   x2 := 6
+   de := DetachLocal( x1, x2 )
+   OutStd( Eval( de ) )
+   // changing the value of variables
+   OutStd( hb_eol() )
+   x1 := 10
+   x2 := 11
+   QOut( Eval( de ) )
+   de := DetachLocal( x1, x2 )
+   QOut( Eval( de ) )
 
-  cb :={| a, b | </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cblock,a,b ) }
+   RETURN
 
-  </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cb, </SPAN><SPAN class=any1-string>"--&gt; with nested "</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"EVAL"</SPAN><SPAN class=any1-space> )
+FUNCTION MyEval( bCodeBlock )
 
-</SPAN><SPAN class=any1-reservedword>RETURN
+   LOCAL D := "this is another variable"
 
-PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>AnotherTest</SPAN><SPAN class=any1-symbol>( cb, a )
-  </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cb, a ) )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>) )
-  </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( cb, a, </SPAN><SPAN class=any1-string>"again and again"</SPAN><SPAN class=any1-space> ) )
-   </SPAN><SPAN class=any1-function>OutStd</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>13</SPAN><SPAN class=any1-symbol>)+</SPAN><SPAN class=any1-function>chr</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-number>10</SPAN><SPAN class=any1-symbol>) )
-</SPAN><SPAN class=any1-reservedword>RETURN
+   RETURN Eval( bCodeBlock, " from ", "MyEval Function" )
 
-FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>DetachLocal</SPAN><SPAN class=any1-symbol>( x, y )
-</SPAN><SPAN class=any1-comment>//NOTE! this should work
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> z:=x+y
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> cb:={|| </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-string>"z=x+y="</SPAN><SPAN class=any1-symbol>), </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>(z), </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-string>"x*x="</SPAN><SPAN class=any1-symbol>), </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>(x*x), </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>(</SPAN><SPAN class=any1-string>"x*x+z="</SPAN><SPAN class=any1-symbol>), x*x+z}
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( cb )
+PROCEDURE OtherTest( cblock )
 
-</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>BugToFix</SPAN><SPAN class=any1-symbol>()
+   LOCAL cb
 
-  </SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> b, a := {|| a+b }
+   cb := {| a, b | Eval( cblock, a, b ) }
 
-  b =</SPAN><SPAN class=any1-string>"bug "
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( a )
+   Eval( cb, "--> with nested ", "EVAL" )
 
-</SPAN><SPAN class=any1-reservedword>RETURN
+   RETURN
 
-FUNCTION</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>RetBlock</SPAN><SPAN class=any1-symbol>()
+PROCEDURE AnotherTest( cb, a )
 
-</SPAN><SPAN class=any1-reservedword>RETURN</SPAN><SPAN class=any1-symbol>( {|x| x*x} )
+   OutStd( Eval( cb, a ) )
+   OutStd( hb_eol() )
+   OutStd( Eval( cb, a, "again and again" ) )
+   OutStd( hb_eol() )
 
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+   RETURN
+
+FUNCTION DetachLocal( x, y )
+
+   // NOTE! this should work
+   LOCAL z := x + y
+   LOCAL cb := {|| QOut( "z=x+y=" ), QOut( z ), QOut( "x*x=" ), QOut( x * x ), QOut( "x*x+z=" ), x * x + z }
+
+   RETURN cb
+
+PROCEDURE BugToFix()
+
+   LOCAL b, a := {|| a + b }
+
+   b := "bug "
+   Eval( a )
+
+   RETURN
+
+FUNCTION RetBlock()
+
+   RETURN {| x | x * x }
+
+]]></script>
+
+</body>
+</html>

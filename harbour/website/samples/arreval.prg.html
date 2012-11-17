@@ -1,35 +1,28 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>arreval.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> a := { </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>200</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>300</SPAN><SPAN class=any1-space> }
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
-   </SPAN><SPAN class=any1-function>aEval</SPAN><SPAN class=any1-symbol>(a, {|nValue, nIndex| </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>(nValue, nIndex) })
+PROCEDURE Main()
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+   LOCAL a := { 100, 200, 300 }
 
-</SPAN></SPAN>
-</CODE></PRE>
-</BODY></HTML>
+   AEval( a, {| nValue, nIndex | QOut( nValue, nIndex ) } )
+
+   RETURN
+
+]]></script>
+
+</body>
+</html>

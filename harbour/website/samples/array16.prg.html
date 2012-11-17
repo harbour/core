@@ -1,95 +1,92 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>array16.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// Harbour multidimensional arrays support
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Main</SPAN><SPAN class=any1-symbol>()
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
 
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> a := { </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>200</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"Third"</SPAN><SPAN class=any1-space> }
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> b := </SPAN><SPAN class=any1-function>Array</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-number>8832</SPAN><SPAN class=any1-space> )  </SPAN><SPAN class=any1-comment>// 8832 elements !!! Maximum for 16 Bit !!!
+// Harbour multidimensional arrays support
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>ValType</SPAN><SPAN class=any1-symbol>( a ) )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>ValType</SPAN><SPAN class=any1-symbol>( { </SPAN><SPAN class=any1-string>"A"</SPAN><SPAN class=any1-space> } ) )
+PROCEDURE Main()
 
-   </SPAN><SPAN class=any1-function>AAdd</SPAN><SPAN class=any1-symbol>( a, </SPAN><SPAN class=any1-string>"new element"</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>Len</SPAN><SPAN class=any1-symbol>( a ) )
+   LOCAL a := { 100, 200, "Third" }
+   LOCAL b := Array( 8832 )  // 8832 elements !!! Maximum for 16 Bit !!!
 
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ] )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> ] )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-space> ] )
+   ? ValType( a )
+   ? ValType( { "A" } )
 
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>ATail</SPAN><SPAN class=any1-symbol>( a ) )
+   AAdd( a, "new element" )
+   ? Len( a )
 
-   a[ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> ] := { </SPAN><SPAN class=any1-string>"this"</SPAN><SPAN class=any1-symbol>, { </SPAN><SPAN class=any1-string>"seems"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"to"</SPAN><SPAN class=any1-symbol>, { </SPAN><SPAN class=any1-string>"work"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"so"</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-string>"well"</SPAN><SPAN class=any1-space> } } }
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] ) </SPAN><SPAN class=any1-comment>// "work"
+   ? a[ 1 ]
+   ? a[ 2 ]
+   ? a[ 3 ]
+   ? a[ 4 ]
 
-</SPAN><SPAN class=any1-space>   a[ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-string>"Harbour power!"</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-comment>// different ways to specify the indexes
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( a[ </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] )
+   ? ATail( a )
 
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>ValType</SPAN><SPAN class=any1-symbol>( b ) )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>Len</SPAN><SPAN class=any1-symbol>( b ) )
+   a[ 3 ] := { "this", { "seems", "to", { "work", "so", "well" } } }
+   ? a[ 3 ][ 2 ][ 3 ][ 1 ] // "work"
 
-   b[ </SPAN><SPAN class=any1-number>8832</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-string>"Harbour"
+   a[ 3, 2 ][ 3, 1 ] := "Harbour power!"  // different ways to specify the indexes
+   ? a[ 3, 2, 3, 1 ]
 
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( b[ </SPAN><SPAN class=any1-number>8832</SPAN><SPAN class=any1-space> ] )
+   ? ValType( b )
+   ? Len( b )
 
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>atail</SPAN><SPAN class=any1-symbol>( b ) )
+   b[ 8832 ] := "Harbour"
 
-   </SPAN><SPAN class=any1-function>ASize</SPAN><SPAN class=any1-symbol>( b, </SPAN><SPAN class=any1-number>200</SPAN><SPAN class=any1-space> )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-function>Len</SPAN><SPAN class=any1-symbol>( b ) )
+   ? b[ 8832 ]
 
-   b[ </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-number>10
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>Test</SPAN><SPAN class=any1-symbol>( b[ </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> ]++ )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( b[ </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> ] )
+   ? ATail( b )
 
-   b[ </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-number>10
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>Test</SPAN><SPAN class=any1-symbol>( ++b[ </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> ] )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( b[ </SPAN><SPAN class=any1-number>100</SPAN><SPAN class=any1-space> ] )
+   ASize( b, 200 )
+   ? Len( b )
 
-   b := { </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, { </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>, { </SPAN><SPAN class=any1-number>4</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>5</SPAN><SPAN class=any1-space> } } }
-   </SPAN><SPAN class=any1-variable>Test</SPAN><SPAN class=any1-symbol>( b[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ]++ )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( b[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] )
+   b[ 100 ] := 10
+   Test( b[ 100 ]++ )
+   ? b[ 100 ]
 
-   b[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] := </SPAN><SPAN class=any1-number>2
-</SPAN><SPAN class=any1-space>   </SPAN><SPAN class=any1-variable>Test</SPAN><SPAN class=any1-symbol>( ++b[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] )
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( b[ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-space> ][ </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-space> ] )
+   b[ 100 ] := 10
+   Test( ++b[ 100 ] )
+   ? b[ 100 ]
 
-   </SPAN><SPAN class=any1-variable>ReleaseTest</SPAN><SPAN class=any1-symbol>()
+   b := { 1, { 2, { 4, 5 } } }
+   Test( b[ 2 ][ 2 ][ 1 ]++ )
+   ? b[ 2 ][ 2 ][ 1 ]
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+   b[ 2 ][ 2 ][ 1 ] := 2
+   Test( ++b[ 2 ][ 2 ][ 1 ] )
+   ? b[ 2 ][ 2 ][ 1 ]
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Test</SPAN><SPAN class=any1-symbol>( n )
+   ReleaseTest()
 
-   </SPAN><SPAN class=any1-function>QOut</SPAN><SPAN class=any1-symbol>( n )
+   RETURN
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
+FUNCTION Test( n )
 
-</SPAN><SPAN class=any1-reservedword>function</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>ReleaseTest</SPAN><SPAN class=any1-symbol>()
+   ? n
 
-   </SPAN><SPAN class=any1-reservedword>local</SPAN><SPAN class=any1-space> a := { </SPAN><SPAN class=any1-number>1</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>2</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-number>3</SPAN><SPAN class=any1-space> }
+   RETURN NIL
 
-</SPAN><SPAN class=any1-reservedword>return</SPAN><SPAN class=any1-space> nil
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+FUNCTION ReleaseTest()
+
+   LOCAL a := { 1, 2, 3 }
+
+   HB_SYMBOL_UNUSED( a )
+
+   RETURN NIL
+
+]]></script>
+
+</body>
+</html>

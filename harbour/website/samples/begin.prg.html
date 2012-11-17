@@ -1,155 +1,147 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
-<HTML xmlns="http://www.w3.org/1999/xhtml"><HEAD><TITLE>begin.prg</TITLE>
-<META http-equiv=Content-Type content="text/html; charset=utf-8">
-<META content="MSHTML 6.00.6000.16386" name=GENERATOR>
-<STYLE type=text/css>
-<!--
-body { color: #000000; background-color: #FFFFFF; }
-.any1-activedot { color: #800080; }
-.any1-comment { color: #008080; }
-.any1-constant { color: #800080; }
-.any1-escapeampersand { color: #00FF00; font-weight: bold; }
-.any1-function { color: #808000; }
-.any1-identifier { color: #000000; }
-.any1-number { color: #FF0000; }
-.any1-preprocessor { }
-.any1-reservedword { color: #800000; }
-.any1-space { }
-.any1-string { color: #0000FF; }
-.any1-symbol { }
-.any1-variable { color: #808000; }
--->
-</STYLE>
-</HEAD>
-<BODY bgColor=#ffffff>
-<PRE><CODE><SPAN style="FONT: 10pt Courier New"><SPAN class=any1-comment>// This files demonstrates the use of BEGIN/RECOVER/END SEQUENCE
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+<head>
+   <meta charset="utf-8">
+   <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/xregexp/2.0.0/xregexp-min.js"></script>
+   <script type="text/javascript" src="http://www.xregexp.com/addons/backcompat.js"></script>
+   <script type="text/javascript" src="/js/shCore.js"></script>
+   <script type="text/javascript" src="/js/shBrushHarbour.js"></script>
+   <link href="/css/shCore.css" rel="stylesheet" type="text/css" />
+   <link href="/css/shThemeDefault.css" rel="stylesheet" type="text/css" />
+   <script type="text/javascript">SyntaxHighlighter.all()</script>
+</head>
+<body>
+
+<script type="syntaxhighlighter" class="brush: harbour"><![CDATA[
+
+// This files demonstrates the use of BEGIN/RECOVER/END SEQUENCE
 // and BREAK statement
-//
-</SPAN><SPAN class=any1-reservedword>MEMVAR</SPAN><SPAN class=any1-space> oMemvar
-</SPAN><SPAN class=any1-reservedword>MEMVAR</SPAN><SPAN class=any1-space> mPrivate
 
-</SPAN><SPAN class=any1-reservedword>PROCEDURE</SPAN><SPAN class=any1-space> MAIN
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> oLocal
-</SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> mPrivate:=</SPAN><SPAN class=any1-string>'private value in MAIN'
+MEMVAR m_oMemvar
+MEMVAR m_cPrivate
 
+PROCEDURE Main()
 
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 1"
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>"  No break issued...."
-</SPAN><SPAN class=any1-space>  RECOVER
-    ? </SPAN><SPAN class=any1-string>"  Recovering in 1 ..."
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>  ? </SPAN><SPAN class=any1-string>"After SEQUENCE 1"
+   LOCAL oLocal
+   PRIVATE m_cPrivate := "private value in MAIN"
 
-
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 2"
-</SPAN><SPAN class=any1-space>    </SPAN><SPAN class=any1-function>Break</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"VALUE 2"</SPAN><SPAN class=any1-space> )
-  RECOVER USING oLocal
-    ? </SPAN><SPAN class=any1-string>"  Recovering in 2 using...."</SPAN><SPAN class=any1-symbol>, oLocal
-  </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>  ? </SPAN><SPAN class=any1-string>"After SEQUENCE 2"
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 1"
+      ? "  No break issued...."
+   RECOVER
+      ? "  Recovering in 1 ..."
+   END SEQUENCE
+   ? "After SEQUENCE 1"
 
 
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 3"
-</SPAN><SPAN class=any1-space>    </SPAN><SPAN class=any1-function>Break
-</SPAN><SPAN class=any1-space>  RECOVER USING oLocal
-    ? </SPAN><SPAN class=any1-string>"  Recovering in 3 using...."</SPAN><SPAN class=any1-symbol>, oLocal
-  </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>  ? </SPAN><SPAN class=any1-string>"After SEQUENCE 3"
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 2"
+      Break( "VALUE 2" )
+   RECOVER USING oLocal
+      ? "  Recovering in 2 using....", oLocal
+   END SEQUENCE
+   ? "After SEQUENCE 2"
 
 
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 4"
-</SPAN><SPAN class=any1-space>    </SPAN><SPAN class=any1-function>Break
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>"  Recovering in 4 using...."</SPAN><SPAN class=any1-symbol>, oLocal
-  </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>  ? </SPAN><SPAN class=any1-string>"After SEQUENCE 4"
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 3"
+      Break
+   RECOVER USING oLocal
+      ? "  Recovering in 3 using....", oLocal
+   END SEQUENCE
+   ? "After SEQUENCE 3"
 
 
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 5"
-</SPAN><SPAN class=any1-space>    </SPAN><SPAN class=any1-variable>Break1</SPAN><SPAN class=any1-symbol>( )
-    ? </SPAN><SPAN class=any1-string>"  Recovering in 5 using...."</SPAN><SPAN class=any1-symbol>, oLocal
-  </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>  ? </SPAN><SPAN class=any1-string>"After SEQUENCE 5"
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 4"
+      Break
+      ? "  Recovering in 4 using....", oLocal
+   END SEQUENCE
+   ? "After SEQUENCE 4"
 
 
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 6"
-</SPAN><SPAN class=any1-space>    </SPAN><SPAN class=any1-variable>Break1</SPAN><SPAN class=any1-symbol>( )
-  RECOVER USING oMemvar
-    ? </SPAN><SPAN class=any1-string>"  Recovering in 6 using... "</SPAN><SPAN class=any1-symbol>, oMemvar
-  </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>  ? </SPAN><SPAN class=any1-string>"After SEQUENCE 6"
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 5"
+      Break1()
+      ? "  Recovering in 5 using....", oLocal
+   END SEQUENCE
+   ? "After SEQUENCE 5"
 
 
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 7"
-</SPAN><SPAN class=any1-space>    </SPAN><SPAN class=any1-variable>Break2</SPAN><SPAN class=any1-symbol>( )
-  RECOVER USING oMemvar
-    ? </SPAN><SPAN class=any1-string>"  Recovering in 7 using... "</SPAN><SPAN class=any1-symbol>, oMemvar
-  </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>  ? </SPAN><SPAN class=any1-string>"After SEQUENCE 7"
-
-</SPAN><SPAN class=any1-space>  ? M-&gt;mPrivate  
-  </SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"exit from MAIN"</SPAN><SPAN class=any1-space> )
-  ? </SPAN><SPAN class=any1-string>"This text will be not printed"
-</SPAN><SPAN class=any1-space>  
-</SPAN><SPAN class=any1-reservedword>RETURN
-
-PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Break1</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>PRIVATE</SPAN><SPAN class=any1-space> mPrivate:=</SPAN><SPAN class=any1-string>'VALUE from Break1'
-
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-space> M-&gt;mPrivate
-
-</SPAN><SPAN class=any1-reservedword>RETURN
-
-PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Break2</SPAN><SPAN class=any1-symbol>()
-
-    </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>        ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 8"
-</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-variable>Break3</SPAN><SPAN class=any1-symbol>( )
-    RECOVER USING oMemvar
-        ? </SPAN><SPAN class=any1-string>"  Recovering in 8 using..."</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( oMemvar, </SPAN><SPAN class=any1-string>' eval in 8'</SPAN><SPAN class=any1-space> )
-        </SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"BREAK from recovery code"</SPAN><SPAN class=any1-space> )
-    </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>"After SEQUENCE 8"
-
-</SPAN><SPAN class=any1-reservedword>RETURN
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 6"
+      Break1()
+   RECOVER USING m_oMemvar
+      ? "  Recovering in 6 using... ", m_oMemvar
+   END SEQUENCE
+   ? "After SEQUENCE 6"
 
 
-PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Break3</SPAN><SPAN class=any1-symbol>()
-</SPAN><SPAN class=any1-reservedword>STATIC</SPAN><SPAN class=any1-space> oStatic
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 7"
+      Break2()
+   RECOVER USING m_oMemvar
+      ? "  Recovering in 7 using... ", m_oMemvar
+   END SEQUENCE
+   ? "After SEQUENCE 7"
 
-    </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>        ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 9"
+   ? M->m_cPrivate
+   Break( "exit from MAIN" )
+   ? "This text will be not printed"
 
-</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-reservedword>BEGIN</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>            ? </SPAN><SPAN class=any1-string>" Inside SEQUENCE 10"
-</SPAN><SPAN class=any1-space>            </SPAN><SPAN class=any1-function>Break</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>"value from nested SEQUENCE 10"</SPAN><SPAN class=any1-space> )
-        RECOVER USING oStatic
-            ? </SPAN><SPAN class=any1-string>"  Recovering in 10 using..."</SPAN><SPAN class=any1-symbol>, oStatic
-        </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>        ? </SPAN><SPAN class=any1-string>"After SEQUENCE 10"
+   RETURN
 
-</SPAN><SPAN class=any1-space>        </SPAN><SPAN class=any1-variable>Break4</SPAN><SPAN class=any1-symbol>( </SPAN><SPAN class=any1-string>" and parameter"</SPAN><SPAN class=any1-space> )
+PROCEDURE Break1()
 
-    RECOVER USING oMemvar
-        ? </SPAN><SPAN class=any1-string>"  Recovering in 9 using..."</SPAN><SPAN class=any1-symbol>, </SPAN><SPAN class=any1-function>EVAL</SPAN><SPAN class=any1-symbol>( oMemvar, </SPAN><SPAN class=any1-string>' eval in 9'</SPAN><SPAN class=any1-space> )
-        </SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-symbol>( oMemvar )
-    </SPAN><SPAN class=any1-reservedword>END</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-reservedword>SEQUENCE
-</SPAN><SPAN class=any1-space>    ? </SPAN><SPAN class=any1-string>"After SEQUENCE 9"
+   PRIVATE m_cPrivate := "VALUE from Break1"
 
-</SPAN><SPAN class=any1-reservedword>RETURN
+   BREAK M->m_cPrivate
 
+PROCEDURE Break2()
 
-PROCEDURE</SPAN><SPAN class=any1-space> </SPAN><SPAN class=any1-variable>Break4</SPAN><SPAN class=any1-symbol>( cValue )
-</SPAN><SPAN class=any1-reservedword>LOCAL</SPAN><SPAN class=any1-space> oLocal:=</SPAN><SPAN class=any1-string>' detached Break4 '
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 8"
+      Break3()
+   RECOVER USING m_oMemvar
+      ? "  Recovering in 8 using...", Eval( m_oMemvar, " eval in 8" )
+      Break( "BREAK from recovery code" )
+   END SEQUENCE
+   ? "After SEQUENCE 8"
 
-</SPAN><SPAN class=any1-space>  </SPAN><SPAN class=any1-function>BREAK</SPAN><SPAN class=any1-symbol>( {|x| oLocal + x + cValue} )
+   RETURN
 
-</SPAN><SPAN class=any1-reservedword>RETURN
-</SPAN></SPAN>
-</CODE></PRE></BODY></HTML>
+PROCEDURE Break3()
+
+   STATIC s_oStatic
+
+   BEGIN SEQUENCE
+      ? " Inside SEQUENCE 9"
+
+      BEGIN SEQUENCE
+         ? " Inside SEQUENCE 10"
+         Break( "value from nested SEQUENCE 10" )
+      RECOVER USING s_oStatic
+         ? "  Recovering in 10 using...", s_oStatic
+      END SEQUENCE
+      ? "After SEQUENCE 10"
+
+      Break4( " and parameter" )
+
+   RECOVER USING m_oMemvar
+      ? "  Recovering in 9 using...", Eval( m_oMemvar, " eval in 9" )
+      Break( m_oMemvar )
+   END SEQUENCE
+   ? "After SEQUENCE 9"
+
+   RETURN
+
+PROCEDURE Break4( cValue )
+
+   LOCAL oLocal := " detached Break4 "
+
+   Break( {| x | oLocal + x + cValue } )
+
+]]></script>
+
+</body>
+</html>

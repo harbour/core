@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/******************************************************************
+/**
  * Test for Ini file reading/writing
  *
  * Giancarlo Niccolai
