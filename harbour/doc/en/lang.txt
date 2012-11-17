@@ -32,7 +32,7 @@
       hb_langErrMsg( <nErrorCode> ) --> cErrorMessage
    $ARGUMENTS$
       <nErrorCode> is one of the generic error codes (EG_...) defined
-      in include/error.ch
+      in error.ch
    $RETURNS$
       hb_langErrMsg() return the error message string represented by
       the code <nErrorCode>.

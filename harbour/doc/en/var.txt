@@ -221,7 +221,7 @@
    $ARGUMENTS$
       <cVarName> = a string with a variable name to check
    $RETURNS$
-      The symbolic values are defined in include/hbmemvar.ch
+      The symbolic values are defined in hbmemvar.ch
       HB_MV_NOT_FOUND     =variable is not declared (not found in symbol table)
       HB_MV_UNKNOWN       =if variable doesn't exist (but found in symbol table)
       HB_MV_ERROR         =if information cannot be obtained (memory error
@@ -237,17 +237,17 @@
          PRIVATE mPrivateGlobal
 
          CallProc()
-         ? __mvScope( "mPrivateLocal" )      //HB_MV_UNKNOWN
+         ? __mvScope( "mPrivateLocal" )      // HB_MV_UNKNOWN
 
          RETURN
 
       PROCEDURE CallProc()
          PRIVATE mPrivateLocal
 
-         ? __mvScope( "mPublic" )            //HB_MV_PUBLIC
-         ? __mvScope( "mPrivateGlobal" )     //HB_MV_PRIVATE_GLOBAL
-         ? __mvScope( "mPrivateLocal" )      //HB_MV_PRIVATE_LOCAL
-         ? __mvScope( "mFindMe" )            //HB_MV_NOT_FOUND
+         ? __mvScope( "mPublic" )            // HB_MV_PUBLIC
+         ? __mvScope( "mPrivateGlobal" )     // HB_MV_PRIVATE_GLOBAL
+         ? __mvScope( "mPrivateLocal" )      // HB_MV_PRIVATE_LOCAL
+         ? __mvScope( "mFindMe" )            // HB_MV_NOT_FOUND
 
          IF __mvScope( "mPublic" ) > HB_MV_ERROR
             ? "Variable exists"
@@ -868,26 +868,24 @@
    $TEMPLATE$
       Function
    $NAME$
-      HB_ISBYREF()
+      hb_PIsByRef()
    $CATEGORY$
       API
    $SUBCATEGORY$
       Variable management
    $ONELINER$
-      Determine if a variable is passed by reference.
+      Determine if a parameter is passed by reference.
    $SYNTAX$
-      HB_ISBYREF( @<Var> ) --> <lVarIsByRef>
+      hb_PIsByRef( nParam ) --> <lParamIsByRef>
    $ARGUMENTS$
-      @<Var> is the variable to test; it must be passed by reference.
+      <nParam> is the parameter number to test.
    $RETURNS$
-      <lVarIsByRef> a logical value indicating if the variable is passed
-      by reference to actual function or procedure.
+      <lVarIsByRef> a logical value indicating if the parameter is
+      passed by reference to actual function or procedure.
    $DESCRIPTION$
-      This function return a logical value indicating if the variable
+      This function return a logical value indicating if the parameter
       is passed by reference to actual function or procedure.
 
-      ATTENTION: The variable to test must be passed by reference.
-      If the variable is not passed by reference, the function return NIL.
       This function is based on the form that Harbour manages to the
       variables for reference. When a variable is passed by reference,
       what receives the function or procedure is, a pointer to the
@@ -900,16 +898,17 @@
    $TESTS$
       PROCEDURE Main()
          LOCAL cVar := "Test local"
+         MEMVAR m_nVar
          PRIVATE m_nVar := 0
 
          Test( @cVar, @m_nVar, cVar, m_nVar )
          RETURN
 
       STATIC PROCEDURE Test( Arg1, Arg2, Arg3, Arg4 )
-         ? hb_isbyref( @Arg1 )        // .T.
-         ? hb_isbyref( @Arg2 )        // .T.
-         ? hb_isbyref( @Arg3 )        // .F.
-         ? hb_isbyref( @Arg4 )        // .F.
+         ? hb_PIsByRef( 1 )        // .T.
+         ? hb_PIsByRef( 2 )        // .T.
+         ? hb_PIsByRef( 3 )        // .F.
+         ? hb_PIsByRef( 4 )        // .F.
          RETURN
    $STATUS$
       S
