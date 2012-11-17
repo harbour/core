@@ -11,8 +11,8 @@ body {
 .name {
 	font-weight: bold;
 	font-size: 18px;
-	margin-left: 0px;
-	padding-top: 0px;
+	margin-left: 0;
+	padding-top: 0;
 	padding-bottom: 4px;
 }
 
@@ -23,8 +23,8 @@ body {
 
 .itemtitle {
 	font-weight: bold;
-	margin-left: 0px;
-	padding-top: 0px;
+	margin-left: 0;
+	padding-top: 0;
 	padding-bottom: 4px;
 }
 

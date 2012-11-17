@@ -7,10 +7,10 @@ body,td,th {
 }
 body {
 	background-color: #333333;
-	margin-left: 0px;
-	margin-top: 0px;
-	margin-right: 0px;
-	margin-bottom: 0px;
+	margin-left: 0;
+	margin-top: 0;
+	margin-right: 0;
+	margin-bottom: 0;
 }
 .header1 {
 	/*font-weight: bolder;*/
@@ -132,7 +132,7 @@ a:active {
 	color: #bc0000;
 	margin: 3px;
 	font-style: italic;
-/*	padding: 3px; 
+/*	padding: 3px;
 	background-color: #FF0000;
 	/***/
 }
