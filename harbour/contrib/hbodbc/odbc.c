@@ -1068,31 +1068,6 @@ HB_FUNC( SQLMORERESULTS ) /* hEnv, hDbc */
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
 
-HB_FUNC( SQLBINDPARAMETER ) /* nStatementHandle, nParameterNumber, nParameterType, ColumnSize, DecimalDigits, @ParamValue, @ParamLength --> nRetCode */
-{
-   SQLHSTMT hStmt = hb_SQLHSTMT_par( 1 );
-
-   if( hStmt )
-   {
-      SQLLEN nLen = ( SQLLEN ) hb_parnint( 7 );
-
-      /* TOFIX: hb_parc() pointer is passed as write buffer */
-      hb_retni( SQLBindParameter( hStmt,
-                                  ( SQLUSMALLINT ) hb_parni( 2 ),
-                                  ( SQLSMALLINT ) SQL_PARAM_OUTPUT,
-                                  ( SQLSMALLINT ) SQL_CHAR,
-                                  ( SQLSMALLINT ) hb_parni( 3 ),
-                                  ( SQLULEN ) hb_parnint( 4 ),
-                                  ( SQLSMALLINT ) hb_parni( 5 ),
-                                  ( SQLPOINTER ) hb_parcx( 6 ),
-                                  ( SQLLEN ) hb_parclen( 6 ),
-                                  ( SQLLEN * ) &nLen ) );
-      hb_stornint( nLen, 7 );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
 HB_FUNC( HB_ODBCSTOD )
 {
    if( hb_parclen( 1 ) >= 10 )

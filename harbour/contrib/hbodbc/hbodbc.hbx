@@ -28,7 +28,6 @@ DYNAMIC hb_odbcVer
 DYNAMIC SQLAllocConnect
 DYNAMIC SQLAllocEnv
 DYNAMIC SQLAllocStmt
-DYNAMIC SQLBindParameter
 DYNAMIC SQLColAttribute
 DYNAMIC SQLCommit
 DYNAMIC SQLConnect
