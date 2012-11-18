@@ -26,8 +26,8 @@
  *
  */
 
-#define _MY_NAME_ "Firstname Lastname (me domain.net)"
-#define _CONFIGF_ ".hbcommit"
+#define _CONFIGFIL_ ".hbcommit"
+#define _CONFIGENV_ "HBCOMMIT_USER"
 
 #pragma warninglevel=3
 #pragma -km+
@@ -54,10 +54,12 @@ PROCEDURE Main()
 
    // ;
 
-   IF hb_FileExists( _CONFIGF_ )
-      cMyName := AllTrim( hb_MemoRead( _CONFIGF_ ) )
+   IF ! Empty( GetEnv( _CONFIGENV_ ) )
+      cMyName := GetEnv( _CONFIGENV_ )
+   ELSEIF hb_FileExists( _CONFIGFIL_ )
+      cMyName := AllTrim( hb_MemoRead( _CONFIGFIL_ ) )
    ELSE
-      cMyName := _MY_NAME_
+      cMyName := "Firstname Lastname (me domain.net)"
    ENDIF
 
    nOffset := hb_UTCOffset()
