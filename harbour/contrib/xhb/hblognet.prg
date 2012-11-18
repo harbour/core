@@ -110,8 +110,8 @@ METHOD New( nLevel, cHelo, cServer, cSendTo, cSubject, cFrom ) CLASS HB_LogEmail
    RETURN SELF
 
 /**
-* Inet init must be called here
-*/
+ * Inet init must be called here
+ */
 
 METHOD Open( cName ) CLASS HB_LogEmail
 
@@ -121,8 +121,8 @@ METHOD Open( cName ) CLASS HB_LogEmail
    RETURN .T.
 
 /**
-* InetCleanup to be called here
-*/
+ * InetCleanup to be called here
+ */
 
 METHOD Close( cName ) CLASS HB_LogEmail
 
@@ -133,8 +133,8 @@ METHOD Close( cName ) CLASS HB_LogEmail
 
 
 /**
-* Sends the real message in e-mail
-*/
+ * Sends the real message in e-mail
+ */
 
 METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
@@ -180,8 +180,8 @@ METHOD Send( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
    RETURN ::GetOk( skCon )  // if quit fails, the mail does not go!
 
 /**
-* Get the reply and returns true if it is allright
-*/
+ * Get the reply and returns true if it is allright
+ */
 
 METHOD GetOk( skCon ) CLASS HB_LogEmail
 
@@ -216,9 +216,9 @@ METHOD Prepare( nStyle, cMessage, cName, nPriority ) CLASS HB_LogEmail
 
 
 
-/************************************************
-* Channel for monitors listening on a port
-*************************************************/
+/*****
+ * Channel for monitors listening on a port
+ */
 
 CREATE CLASS HB_LogInetPort FROM HB_LogChannel
 

@@ -6,10 +6,10 @@
 Febrero 2004
 I.Q. David Arturo Macias Corona
 
-Modificaciones a los programas de harbour\contrib\hbmysql
+Modificaciones
 
 
-Programa TMySql.prg *****************************************
+Programa tmysql.prg *****************************************
 
 Clase TMySQLRow ---------------------------------------------
 - DATA nueva TMySQLRow:aOriValue
@@ -243,7 +243,7 @@ Clase TMySQLTable -------------------------------------------
   correspondiente al nombre del campo
 
 
-Programa TSqlBrw.prg ************************************
+Programa tsqlbrw.prg ************************************
 
 - Skipper()
   Modificacion del control de movimiento para aplicar las nuevas definiciones para

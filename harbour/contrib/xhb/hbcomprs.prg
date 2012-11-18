@@ -56,12 +56,12 @@
 
 THREAD STATIC t_nLastError := HB_ZLIB_RES_OK
 
-/****** COMPRESSOR WRAPPER *****
-*  hb_Compress(               cSource [,nSourceLen ] ) --> cDest
-*  hb_Compress( nComprFactor, cSource [,nSourceLen ] ) --> cDest
-*  hb_Compress(               cSource, nSourceLen, @cDest, @nDestLen ) --> nError
-*  hb_Compress( nComprFactor, cSource, nSourceLen, @cDest, @nDestLen ) --> nError
-*/
+/****** COMPRESSOR WRAPPER
+ *  hb_Compress(               cSource [,nSourceLen ] ) --> cDest
+ *  hb_Compress( nComprFactor, cSource [,nSourceLen ] ) --> cDest
+ *  hb_Compress(               cSource, nSourceLen, @cDest, @nDestLen ) --> nError
+ *  hb_Compress( nComprFactor, cSource, nSourceLen, @cDest, @nDestLen ) --> nError
+ */
 FUNCTION hb_Compress( xPar1, xPar2, xPar3, xPar4, xPar5 )
 
    LOCAL nComprFactor
@@ -123,10 +123,10 @@ FUNCTION hb_Compress( xPar1, xPar2, xPar3, xPar4, xPar5 )
 
    RETURN hb_ZCompress( cSource, nDestLen, @t_nLastError, nComprFactor )
 
-/****** DECOMPRESSOR WRAPPER *****
-*  hb_Uncompress( nDestLen, cSource [, nSourceLen ] ) --> cDest
-*  hb_Uncompress( nDestLen, cSource, nSourceLen, @cDest ) --> nError
-*/
+/****** DECOMPRESSOR WRAPPER
+ *  hb_Uncompress( nDestLen, cSource [, nSourceLen ] ) --> cDest
+ *  hb_Uncompress( nDestLen, cSource, nSourceLen, @cDest ) --> nError
+ */
 FUNCTION hb_Uncompress( nDestLen, cSource, nSourceLen, /* @ */ cDest )
 
    LOCAL oError
@@ -157,21 +157,21 @@ FUNCTION hb_Uncompress( nDestLen, cSource, nSourceLen, /* @ */ cDest )
 
    RETURN hb_ZUncompress( cSource, nDestLen, @t_nLastError )
 
-/*********************************
-*  hb_CompressError() --> nError
-*/
+/**
+ *  hb_CompressError() --> nError
+ */
 FUNCTION hb_CompressError()
    RETURN t_nLastError
 
-/*********************************
-*  hb_CompressErrorDesc( nErrorCode ) --> cDesc
-*/
+/**
+ *  hb_CompressErrorDesc( nErrorCode ) --> cDesc
+ */
 FUNCTION hb_CompressErrorDesc( nError )
    RETURN hb_ZError( nError )
 
-/*******************************
-*  hb_CompressBufLen( nSrcLen ) --> nDestLen
-*/
+/**
+ *  hb_CompressBufLen( nSrcLen ) --> nDestLen
+ */
 FUNCTION hb_CompressBufLen( nSrcLen )
 
    LOCAL nRet

@@ -51,7 +51,7 @@
  *
  */
 
-/***************************************************************
+/*****
  * NXS aglorithm is FREE SOFTWARE. It can be reused for any
  * purpose, provided that this copyright notice is still present
  * in the software.
@@ -60,7 +60,7 @@
  * fit any particular need.
  *
  * NXS author is Giancarlo Niccolai <giancarlo@niccolai.ws>
- **************************************************************/
+ */
 
 
 #include "hbapi.h"
@@ -387,9 +387,9 @@ void nxs_make_scramble( HB_ISIZ * scramble, const unsigned char * key, HB_SIZE k
  * END OF NXS
  */
 
-/***********************************
- * XHarbour implementation
- ************************************/
+/*****
+ * xHarbour implementation
+ */
 
 /*****
  * Encrypt a text using a key

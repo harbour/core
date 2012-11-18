@@ -1352,15 +1352,15 @@ METHOD sql_version() CLASS TMySQLServer
 //   RETURN .F.
 
 
-// ****************alterado
+// === alterado ===
 METHOD SelectDB( cDBName ) CLASS TMySQLServer
 
    ::lError := .F.
 
-   IF mysql_select_db( ::nSocket, cDBName ) != 0     /* tabela nao existe */
+   IF mysql_select_db( ::nSocket, cDBName ) != 0     /* table doesn't exist */
       ::cDBName := ""
       ::lError := .T.
-   ELSE                                       /* tabela existe */
+   ELSE                                       /* table exists */
       ::cDBName := cDBName
       ::lError := .F.
       RETURN .T.

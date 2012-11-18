@@ -2,7 +2,6 @@
  * $Id$
  */
 
-// *******************************************************************
 //
 // NOTES: 1) The date functions are 'international'; i.e., the
 //           system date format is maintained, although ANSI is
@@ -44,7 +43,6 @@
 //
 //              See function: ft_DateCnfg()
 //
-// *******************************************************************
 
 #require "hbnf"
 

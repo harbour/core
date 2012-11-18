@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/***************************************************
+/**
  * Harbour Inet demo server program
  *
  * Giancarlo Niccolai

@@ -459,7 +459,7 @@ HB_ERRCODE hb_rddSelectWorkAreaNumber( int iArea )
 }
 
 
-/* *********************************************************** */
+/* =========================================================== */
 
 /*
  * Moving work ares between threads

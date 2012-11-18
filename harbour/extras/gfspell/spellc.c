@@ -11,14 +11,14 @@
 static const char * s_cSearch = "INEDTIERESTEON";
 static const char * s_cRepl   = "[\\]^_`a";
 
-/*
+/**
  *   Function: XForm()
  *    Purpose: Internal function to translate words to dictionary
  *  Arguments: cWord    - upper case word to format
  *    Returns: cXformed - translated word
  *
  *      Notes: I'm assuming that the passed word won't exceed 128 bytes.
- **************************/
+ */
 HB_FUNC( XFORM )
 {
    char cRet[ 128 ];
@@ -75,14 +75,14 @@ HB_FUNC( XFORM )
    hb_retclen( cRet, iRetLen );
 }
 
-/*
+/**
  *   Function: XUnForm()
  *    Purpose: Internal function to translate words from dictionary
  *  Arguments: cWord    - formatted word
  *    Returns: cXformed - unformatted word
  *
  *      Notes: I'm assuming that the returned word won't exceed 128 bytes.
- **************************/
+ */
 HB_FUNC( XUNFORM )
 {
    char cRet[ 128 ];
@@ -130,7 +130,7 @@ HB_FUNC( XUNFORM )
    hb_retclen( cRet, iRetLen );
 }
 
-/*
+/**
  *   Function: Sp_Rate()
  *     Syntax: cRating := Sp_Rate( cFound, cWord )
  *    Purpose: Returns a letter code indicating how similar the two
@@ -149,7 +149,7 @@ HB_FUNC( XUNFORM )
  *             either an I if the words are the same length, or a Z.
  *
  *    C Notes: I'm assuming the words passed are already trimmed.
- **************************/
+ */
 HB_FUNC( SP_RATE )
 {
    const char * cFound  = hb_parc( 1 );
@@ -185,7 +185,7 @@ HB_FUNC( SP_RATE )
    hb_retclen_buffer( cRating, 3 );
 }
 
-/*
+/**
  * Author: Clayton Neff
  * Copyright (c) 1992 by CoN Computer Consultants
  *
@@ -768,14 +768,14 @@ HB_FUNC( C_METAFONE )
    hb_xfree( sReturn );
 }
 
-/*
+/**
  *  Purpose: Sets the given bit in a passed bit string.  Returns the previous
  *           value.  Be sure to pass the string by reference.  NOTE.  In order
  *           to stay as fast as possible, minimal parameter checking is
  *           performed.  It is up to the user to not be too stupid.
  *
  *   Syntax: bit( @<OptC String>, <OptN (1...n) Offset> [, <OptL Set/Clear>] )
- **************************/
+ */
 HB_FUNC( BIT )
 {
    HB_UCHAR mask;
@@ -815,7 +815,7 @@ static HB_BOOL WordSep( HB_UCHAR c )
           ( c > 'z' && c < 128 ); /* Support international characters, too. */
 }
 
-/*
+/**
  *  Author: John F. Kaster
  *   Notes: Copyright (c) 1994 by John F. Kaster and Joseph D. Booth
  *          Written for Grumpfish Speller to make it way faster than Prolixity.
@@ -828,7 +828,7 @@ static HB_BOOL WordSep( HB_UCHAR c )
  *              Will be set to 0 when the end of the string is encountered.
  *              Defaults to start of string.
  *  <nLineLen>  Maximum wrap length for line.  Defaults to 75.
- **************************/
+ */
 HB_FUNC( SP_LINE )
 {
    int          nArgs      = hb_pcount();

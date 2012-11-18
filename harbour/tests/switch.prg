@@ -14,7 +14,6 @@ PROCEDURE Main()
    PRIVATE m_b := "m_b"
 
 #ifndef __XHARBOUR__
-
    SWITCH a
    ENDSWITCH
 #endif

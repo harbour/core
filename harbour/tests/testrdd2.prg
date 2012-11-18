@@ -315,12 +315,7 @@ PROCEDURE Main( cRDDType, cAdsMode )
    ENDIF
 
    //
-   //
-   // *********************************************
-   // P U T   M O R E   R D D   T E S T S   H E R E
-   // *********************************************
-   //
-   //
+   // PUT MORE RDD TESTS HERE
    //
 
    // TEST: dbCloseArea()

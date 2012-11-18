@@ -54,9 +54,9 @@
 #include "fileio.ch"
 
 
-/*************************************************************
-* Static standard logger access
-*/
+/*****
+ * Static standard logger access
+ */
 
 #define HB_THREAD_SUPPORT
 
@@ -209,9 +209,9 @@ FUNCTION hb_LogDateStamp()
 
    RETURN  Str( Year( dToday ), 4 ) + "-" + PadL( Month( dToday ), 2, "0" ) + "-" + PadL( Day( dToday ), 2, "0" )
 
-/**********************************************
-* Logger class
-***********************************************/
+/*****
+ * Logger class
+ */
 
 CREATE CLASS HB_Logger
 
@@ -233,11 +233,11 @@ CREATE CLASS HB_Logger
 ENDCLASS
 
 /**
-* Builds a new logger object.
-* Call with ::New( ch1, ch2... chN ) where ch are the channels
-* where to log.
-* Channels can be called at a second time.
-*/
+ * Builds a new logger object.
+ * Call with ::New( ch1, ch2... chN ) where ch are the channels
+ * where to log.
+ * Channels can be called at a second time.
+ */
 
 METHOD New() CLASS HB_Logger
 
@@ -250,8 +250,8 @@ METHOD New() CLASS HB_Logger
    RETURN Self
 
 /**
-* Open all the channels calling their ::Open() method
-*/
+ * Open all the channels calling their ::Open() method
+ */
 
 METHOD PROCEDURE Open() CLASS HB_Logger
 
@@ -268,8 +268,8 @@ METHOD PROCEDURE Open() CLASS HB_Logger
    RETURN
 
 /**
-* Close all the channels calling their ::Close() method
-*/
+ * Close all the channels calling their ::Close() method
+ */
 
 METHOD PROCEDURE close() CLASS HB_Logger
 
@@ -286,8 +286,8 @@ METHOD PROCEDURE close() CLASS HB_Logger
    RETURN
 
 /**
-* Send a log message to all the channels
-*/
+ * Send a log message to all the channels
+ */
 
 METHOD PROCEDURE Log( cMessage, nPriority ) CLASS HB_Logger
 
@@ -305,9 +305,9 @@ METHOD PROCEDURE Log( cMessage, nPriority ) CLASS HB_Logger
 
    RETURN
 
-/**********************************************
-* Logger Channel class (mostly VIRTUAL)
-***********************************************/
+/*****
+ * Logger Channel class (mostly VIRTUAL)
+ */
 
 CREATE CLASS HB_LogChannel
 
@@ -332,9 +332,9 @@ CREATE CLASS HB_LogChannel
 ENDCLASS
 
 /**
-*  Creates a new channel. nLeven can be nil ( and will log all ),
-*  cName is the "program name" and must be given
-*/
+ *  Creates a new channel. nLeven can be nil ( and will log all ),
+ *  cName is the "program name" and must be given
+ */
 
 METHOD New( nLevel ) CLASS HB_LogChannel
 
@@ -348,9 +348,9 @@ METHOD New( nLevel ) CLASS HB_LogChannel
    RETURN Self
 
 /**
-* Log the message: it send a request to the subclass "send" method
-* if the log level is higher or equal than the channel setting
-*/
+ * Log the message: it send a request to the subclass "send" method
+ * if the log level is higher or equal than the channel setting
+ */
 
 METHOD PROCEDURE Log( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
@@ -361,10 +361,10 @@ METHOD PROCEDURE Log( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
    RETURN
 
 /**
-* This is an utility functions for subclasses, used to
-* have a standard formatting for the message. Subclasses
-* may or may not call it.
-*/
+ * This is an utility functions for subclasses, used to
+ * have a standard formatting for the message. Subclasses
+ * may or may not call it.
+ */
 
 METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
@@ -416,9 +416,9 @@ METHOD Format( nStyle, cMessage, cName, nPriority ) CLASS HB_LogChannel
 
    RETURN cPrefix + cMessage
 
-/**********************************************
-* Console channel
-***********************************************/
+/*****
+ * Console channel
+ */
 
 CREATE CLASS HB_LogConsole FROM HB_LogChannel
 
@@ -488,9 +488,9 @@ METHOD PROCEDURE Out( ... ) CLASS HB_LogConsole
 
    RETURN
 
-/**********************************************
-* Console channel - to file
-***********************************************/
+/*****
+ * Console channel - to file
+ */
 
 CREATE CLASS HB_LogFile FROM HB_LogChannel
 
@@ -596,9 +596,9 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogFile
    RETURN FError() == 0
 
 
-/**********************************************
-* Console channel - to dbf
-***********************************************/
+/*****
+ * Console channel - to dbf
+ */
 
 CREATE CLASS HB_LogDbf FROM HB_LogChannel
 
@@ -725,10 +725,10 @@ METHOD Send( nStyle, cMessage, cProgName, nPriority ) CLASS HB_LogDbf
    RETURN .T.
 
 
-/**********************************************
-* Syslog channel - a wrapper for the low level
-* C interface to syslog/ event log system
-***********************************************/
+/*****
+ * Syslog channel - a wrapper for the low level
+ * C interface to syslog/ event log system
+ */
 
 CREATE CLASS HB_LogSysLog FROM HB_LogChannel
 
@@ -784,9 +784,9 @@ METHOD Send( nType, cMessage, cName, nPriority ) CLASS HB_LogSysLog
    RETURN hb_SysLogMessage( ::Format( HB_LOG_ST_LEVEL, cMessage, cName, nPriority ), nPriority, ::nId )
 
 
-/**********************************************
-* Debug channel
-***********************************************/
+/*****
+ * Debug channel
+ */
 
 CREATE CLASS HB_LogDebug FROM HB_LogChannel
 

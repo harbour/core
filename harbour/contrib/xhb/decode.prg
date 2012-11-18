@@ -51,14 +51,14 @@
  *
  */
 
-/******************
-* Function .......: hb_Decode( <var>, [ <case1,ret1 [,...,caseN,retN] ] [, <def> ]> ) ---> <xRet>
-* Author .........: Francesco Saverio Giudice
-* Date of creation: 25/01/1991
-* Last revision ..: 24/01/2006 1.13 - rewritten for xHarbour and renamed in hb_Decode()
-*
-*                   Decode a value from a list.
-*******************/
+/**
+ * Function .......: hb_Decode( <var>, [ <case1,ret1 [,...,caseN,retN] ] [, <def> ]> ) ---> <xRet>
+ * Author .........: Francesco Saverio Giudice
+ * Date of creation: 1991/01/25
+ * Last revision ..: 2006/01/24 1.13 - rewritten for xHarbour and renamed in hb_Decode()
+ *
+ *                   Decode a value from a list.
+ */
 
 FUNCTION hb_Decode( ... )
 

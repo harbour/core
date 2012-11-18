@@ -146,47 +146,47 @@ static HB_UINT SCItm( char * cBuffer, HB_UINT ulMaxBuf, char * cParFrm, int iCOu
    return s;
 }
 
-/*******************************************************************************
-* ANSI C sprintf() for ANSI SQL with DATE, DATETIME, LOGICAL, NIL, NUMERIC
-* ------------------------------------------------------------------------
-*                      cRes := Sql_sprintf( cFrm, ... )
-*
-* Full compatible ANSI C99 formats with C,S converters wchar_t (UNICODE)
-* Integer & Floating point converters with Width and Precision for NUMERIC & STRING
-* a,A converters Hexadecimal floating point format. Thanks Rafa.
-*  ? Sql_sprintf( "Phi = %A", (1 + 5**0.5) / 2 ) // Phi = 0X1,9E3779B97F4A8P+0
-* %m$,*m$ Index & Indirect arguments C99. Thanks Viktor.
-*  ? Sql_sprintf( "Phi = %2$0*3$.*1$f", 4, (1 + 5**0.5) / 2, 7 ) // Phi = 01.6180
-*
-* s converter for format Harbour data types.
-*    NUMERIC with FIXED DECIMALS = n | n.d   STRING = String's ANSI\C
-*    DATE = HB_SET_DATEFORMAT      DATETIME = HB_SET_DATEFORMAT hh:mm:ss
-*     New Internal Modifier {}. Thanks Mindaugas.
-*     Date and Time Format separate by first space {DD/MM/YYYY hh:mm:ss.fff pp}
-*     {DD/MM/YYYY} = Only Date | { hh:mm:ss.fff pp} = Only Time
-*        ? Sql_sprintf( "%s", Date() )                   // 16/06/08
-*        ? Sql_sprintf( "%s", HB_DateTime() )            // 16/06/08 04:11:21.531
-*        ? Sql_sprintf( "%{YYYYMMDD}s", HB_DateTime() )  // 20080616
-*        ? Sql_sprintf( "%{ hh:mm pp}s", HB_DateTime() ) // 04:11 AM
-*    LOGICAL = TRUE | FALSE        %d converter for LOGICAL = 1 | 0
-*     Accepts Internal Modifier TRUE and FALSE Format separate by first comma
-*     {T .T.,F .F.} = TRUE & FALSE | {ON} = Only TRUE | {,OFF} = Only FALSE
-*        ? Sql_sprintf( "%{VERDADERO,FALSO}s", .F. ) // FALSO
-*        ? Sql_sprintf( "%{ONLY IF TRUE}s", .T. ) // ONLY IF TRUE
-*
-* New t,T converter for format ANSI SQL types.
-*    NUMERIC with FIXED DECIMALS = n | n.d   STRING = 'String''s ANSI\\SQL'
-*     Print DEFAULT if 0 length STRING for T converter
-*    DATE = 'YYYY-MM-DD' DATETIME = 'YYYY-MM-DD HH:MM:SS'
-*     Accepts Internal Modifier like s converter {DD/MM/YYYY hh:mm:ss.fff pp}
-*     Print DEFAULT if the DATE, DATETIME is EMPTY for T converter or print
-*           DK_EMPTYDATE, DK_EMPTYDATETIME for t converter
-*    LOGICAL = TRUE | FALSE        Accepts Internal Modifier like s {ON,OFF}
-*
-* Print DEFAULT if the parameter is NIL for T converter.
-* Print NULL if the parameter is HB_IT_NULL or NIL for the rest of converters.
-* Processing %% and n converter Position.
-*******************************************************************************/
+/**
+ * ANSI C sprintf() for ANSI SQL with DATE, DATETIME, LOGICAL, NIL, NUMERIC
+ * ------------------------------------------------------------------------
+ *                      cRes := Sql_sprintf( cFrm, ... )
+ *
+ * Full compatible ANSI C99 formats with C,S converters wchar_t (UNICODE)
+ * Integer & Floating point converters with Width and Precision for NUMERIC & STRING
+ * a,A converters Hexadecimal floating point format. Thanks Rafa.
+ *  ? Sql_sprintf( "Phi = %A", (1 + 5**0.5) / 2 ) // Phi = 0X1,9E3779B97F4A8P+0
+ * %m$,*m$ Index & Indirect arguments C99. Thanks Viktor.
+ *  ? Sql_sprintf( "Phi = %2$0*3$.*1$f", 4, (1 + 5**0.5) / 2, 7 ) // Phi = 01.6180
+ *
+ * s converter for format Harbour data types.
+ *    NUMERIC with FIXED DECIMALS = n | n.d   STRING = String's ANSI\C
+ *    DATE = HB_SET_DATEFORMAT      DATETIME = HB_SET_DATEFORMAT hh:mm:ss
+ *     New Internal Modifier {}. Thanks Mindaugas.
+ *     Date and Time Format separate by first space {DD/MM/YYYY hh:mm:ss.fff pp}
+ *     {DD/MM/YYYY} = Only Date | { hh:mm:ss.fff pp} = Only Time
+ *        ? Sql_sprintf( "%s", Date() )                   // 16/06/08
+ *        ? Sql_sprintf( "%s", HB_DateTime() )            // 16/06/08 04:11:21.531
+ *        ? Sql_sprintf( "%{YYYYMMDD}s", HB_DateTime() )  // 20080616
+ *        ? Sql_sprintf( "%{ hh:mm pp}s", HB_DateTime() ) // 04:11 AM
+ *    LOGICAL = TRUE | FALSE        %d converter for LOGICAL = 1 | 0
+ *     Accepts Internal Modifier TRUE and FALSE Format separate by first comma
+ *     {T .T.,F .F.} = TRUE & FALSE | {ON} = Only TRUE | {,OFF} = Only FALSE
+ *        ? Sql_sprintf( "%{VERDADERO,FALSO}s", .F. ) // FALSO
+ *        ? Sql_sprintf( "%{ONLY IF TRUE}s", .T. ) // ONLY IF TRUE
+ *
+ * New t,T converter for format ANSI SQL types.
+ *    NUMERIC with FIXED DECIMALS = n | n.d   STRING = 'String''s ANSI\\SQL'
+ *     Print DEFAULT if 0 length STRING for T converter
+ *    DATE = 'YYYY-MM-DD' DATETIME = 'YYYY-MM-DD HH:MM:SS'
+ *     Accepts Internal Modifier like s converter {DD/MM/YYYY hh:mm:ss.fff pp}
+ *     Print DEFAULT if the DATE, DATETIME is EMPTY for T converter or print
+ *           DK_EMPTYDATE, DK_EMPTYDATETIME for t converter
+ *    LOGICAL = TRUE | FALSE        Accepts Internal Modifier like s {ON,OFF}
+ *
+ * Print DEFAULT if the parameter is NIL for T converter.
+ * Print NULL if the parameter is HB_IT_NULL or NIL for the rest of converters.
+ * Processing %% and n converter Position.
+ */
 
 #define DK_INCRES         1024
 #define DK_INCBUF         512
@@ -259,20 +259,18 @@ HB_FUNC( SQL_SPRINTF )
                {
                   if( IsIndP )
                   {
-                     f = 3; iErrorPar = 1;
+                     f         = 3;
+                     iErrorPar = 1;
                   }
                   else
-                  {
                      IsIndP = 1;
-                  }
                }
                else if( ! IsIndW )
-               {
                   IsIndW = 1;
-               }
                else
                {
-                  f = 3; iErrorPar = 1;
+                  f         = 3;
+                  iErrorPar = 1;
                }
             }
             else if( f && *c == '$' )
@@ -285,55 +283,60 @@ HB_FUNC( SQL_SPRINTF )
                else if( ulWidth && IsIndW && ! iIndWidth )
                {
                   iIndWidth = ulWidth;
-                  ulWidth   = 0; iCOut = '*';
+                  ulWidth   = 0;
+                  iCOut     = '*';
                }
                else if( ulWidth && ! arg )
                {
                   arg     = ulWidth;
-                  ulWidth = 0; iCOut = '%';
+                  ulWidth = 0;
+                  iCOut   = '%';
                }
                else
                {
-                  f = 3; iErrorPar = 1;
+                  f         = 3;
+                  iErrorPar = 1;
                }
                while( i && cParFrm[ --i ] != iCOut )
                {
                }
-               ;
-               ++i; iCOut = 0;
+               ++i;
+               iCOut = 0;
             }
             else if( f && *c == '{' )
             {
                if( s )
                {
-                  f = 3; iErrorPar = 1;
+                  f         = 3;
+                  iErrorPar = 1;
                }
                else     /* Remove Internal Modifier */
                {
                   if( cIntMod == NULL )
-                  {
                      cIntMod = ( char * ) hb_xgrab( ulItmFrm + sizeof( char ) );
-                  }
+
                   while( *c++ && *c != '}' )
                      cIntMod[ s++ ] = *c;
-                  --i; cIntMod[ s ] = '\0';
+                  --i;
+                  cIntMod[ s ] = '\0';
                   if( *( c - 1 ) == '\0' )
                   {
-                     f = 3; iErrorPar = 1;
+                     f         = 3;
+                     iErrorPar = 1;
                   }
                }
             }
             else if( f && strchr( s_szToken, *c ) )
             {
-               f = 3; iCOut = *c;
+               f     = 3;
+               iCOut = *c;
             }
             else if( *c == '%' )
-            {
                f = 1;
-            }
             c++;
          }
-         while( f < 3 && *c ); cParFrm[ f = i ] = '\0';
+         while( f < 3 && *c );
+         cParFrm[ f = i ] = '\0';
          if( iErrorPar )
             break;
 
@@ -341,11 +344,13 @@ HB_FUNC( SQL_SPRINTF )
          {
             if( cParFrm[ f - 2 ] == '%' )
             {
-               IsType = ( iCOut == 'T' ? 2 : 1 ); iCOut = cParFrm[ f - 1 ] = 's';
+               IsType = ( iCOut == 'T' ? 2 : 1 );
+               iCOut  = cParFrm[ f - 1 ] = 's';
             }
             else
             {
-               iErrorPar = 1; break;
+               iErrorPar = 1;
+               break;
             }
          }
 
@@ -355,17 +360,14 @@ HB_FUNC( SQL_SPRINTF )
             if( pItmPar )
             {
                if( ( iIndWidth = hb_itemGetNI( pItmPar ) ) < 0 )
-               {
                   ulWidth = -iIndWidth;
-               }
                else
-               {
                   ulWidth = iIndWidth;
-               }
             }
             else
             {
-               iErrorPar = 1; break;
+               iErrorPar = 1;
+               break;
             }
          }
 
@@ -378,7 +380,8 @@ HB_FUNC( SQL_SPRINTF )
             }
             else
             {
-               iErrorPar = 1; break;
+               iErrorPar = 1;
+               break;
             }
          }
 
@@ -388,13 +391,15 @@ HB_FUNC( SQL_SPRINTF )
             {
                cParFrm[ i++ ] = *c;
             }
-            while( *c++ ); i--;
+            while( *c++ );
+            i--;
          }  /* i == strlen(cParFrm) */
 
          pItmPar = hb_param( ( arg ? arg + 1 :  p++ + 2 ), HB_IT_ANY );   /* Get Par Item */
          if( ! pItmPar )
          {
-            iErrorPar = 1; break;
+            iErrorPar = 1;
+            break;
          }
 
          if( ! iCOut || iCOut == 'n' )      /* Par Text Out */
@@ -424,7 +429,8 @@ HB_FUNC( SQL_SPRINTF )
                }
                else
                {
-                  iErrorPar = 1; break;
+                  iErrorPar = 1;
+                  break;
                }
             }
             if( ( f = i + sizeof( char ) ) > ulMaxBuf )
@@ -432,8 +438,8 @@ HB_FUNC( SQL_SPRINTF )
                ulMaxBuf += f + DK_INCBUF;
                cBuffer   = ( char * ) hb_xrealloc( cBuffer, ulMaxBuf );
             }
-            hb_strncpy( cBuffer, cParFrm, i ); s = i;
-
+            hb_strncpy( cBuffer, cParFrm, i );
+            s = i;
          }
          else     /* Par Item sprintf() Out */
          {
@@ -444,11 +450,11 @@ HB_FUNC( SQL_SPRINTF )
             if( HB_IS_NIL( pItmPar ) )
             {
 #        endif
-               ulWidth = f; IsIndW = IsIndP = 0;
+               ulWidth = f;
+               IsIndW  = IsIndP = 0;
                while( cParFrm[ --f ] != '%' )
                {
                }
-               ;
                iCOut = cParFrm[ f + 1 ] = 's';  /* Change format with %s */
                memcpy( cParFrm + f + 2, cParFrm + ulWidth, i - ulWidth + 1 );
                i -= ulWidth - f - 2;            /* i == strlen(cParFrm) */
@@ -476,7 +482,8 @@ HB_FUNC( SQL_SPRINTF )
             {
                if( IsType )
                {
-                  hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar ); pItmPar = pItmCpy;
+                  hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar );
+                  pItmPar = pItmCpy;
                   if( IsType == 2 && hb_itemGetCLen( pItmPar ) == 0 )   /* 0 length string print DEFAULT for T converter */
                      hb_itemPutCL( pItmPar, "DEFAULT", 7 );
                   else
@@ -504,7 +511,6 @@ HB_FUNC( SQL_SPRINTF )
                   for( f = 0; cIntMod[ f ] && cIntMod[ f ] != ' '; f++ )
                   {
                   }
-                  ;
                   if( f != s )
                      cIntMod[ f++ ] = '\0';           /* Date & Time */
                }
@@ -521,13 +527,9 @@ HB_FUNC( SQL_SPRINTF )
                   if( s )
                   {
                      if( ! cIntMod[ 0 ] )
-                     {
-                        memcpy( cDTFrm, cDTFrm + 1, 26 );   /* LTrim 1 space if only Time */
-                     }
+                        memcpy( cDTFrm, cDTFrm + 1, 26 );  /* LTrim 1 space if only Time */
                      else if( cDTFrm[ s ] == ' ' )
-                     {
-                        cDTFrm[ s ] = '\0'; /* RTrim 1 space if only Date */
-                     }
+                        cDTFrm[ s ] = '\0';                /* RTrim 1 space if only Date */
                   }
                }
                else
@@ -565,13 +567,13 @@ HB_FUNC( SQL_SPRINTF )
                   for( f = 0; cIntMod[ f ] && cIntMod[ f ] != ','; f++ )
                   {
                   }
-                  ;
                   if( f != s )
                      cIntMod[ f++ ] = '\0';           /* TRUE & FALSE */
                }
                if( iCOut == 's' )
                {
-                  hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar ); pItmPar = pItmCpy;
+                  hb_itemCopy( pItmCpy = hb_itemNew( NULL ), pItmPar );
+                  pItmPar = pItmCpy;
                   hb_itemPutC( pItmPar,
                                ( hb_itemGetL( pItmPar ) ? ( s ? cIntMod : "TRUE" ) : ( s ? cIntMod
                                                                                        + f :
@@ -594,7 +596,7 @@ HB_FUNC( SQL_SPRINTF )
             }
             else if( iCOut == 's' )
             {
-               char * cStr = hb_itemStr( pItmPar, NULL, NULL );
+               char *       cStr = hb_itemStr( pItmPar, NULL, NULL );
                const char * cTrimStr;
 
                if( cStr )
@@ -611,11 +613,13 @@ HB_FUNC( SQL_SPRINTF )
                   hb_itemPutCL( pItmCpy, cTrimStr, f );
                   s = SCItm( cBuffer, ulMaxBuf, cParFrm, iCOut, IsIndW, iIndWidth, IsIndP, iIndPrec,
                              pItmCpy );
-                  hb_itemRelease( pItmCpy ); hb_xfree( cStr );
+                  hb_itemRelease( pItmCpy );
+                  hb_xfree( cStr );
                }
                else
                {
-                  iErrorPar = p + 2; break;
+                  iErrorPar = p + 2;
+                  break;
                }
 
             }
@@ -632,7 +636,8 @@ HB_FUNC( SQL_SPRINTF )
             }
             else
             {
-               iErrorPar = p + 2; break;
+               iErrorPar = p + 2;
+               break;
             }
          }
 
@@ -642,7 +647,8 @@ HB_FUNC( SQL_SPRINTF )
             cRes      = ( char * ) hb_xrealloc( cRes, ulMaxRes );
          }
 
-         hb_strncpy( cRes + ulResPos, cBuffer, s ); ulResPos += s;
+         hb_strncpy( cRes + ulResPos, cBuffer, s );
+         ulResPos += s;
 
          if( ( ulParPos = ( HB_UINT ) ( c - cItmFrm ) ) >= ulItmFrm )
             break;   /* No more Par Format */
