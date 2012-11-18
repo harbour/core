@@ -26,7 +26,7 @@ DOC_FILES := \
    pcode.txt \
    pp.txt \
    pragma.txt \
-   readme.txt \
+   welcome.txt \
    statics.txt \
    todo.txt \
    tracing.txt \

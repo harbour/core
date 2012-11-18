@@ -311,7 +311,7 @@ PROC tofix()
 
 #ifndef __HARBOUR__
 
-FUNC SToD( s )
+FUNCTION SToD( s )
 
    LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
 
