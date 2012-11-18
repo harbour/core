@@ -19,7 +19,7 @@
   !define MUI_HEADERIMAGE
   !define MUI_HEADERIMAGE_BITMAP "${NSISDIR}\Contrib\Graphics\Header\win.bmp"
   !define MUI_FINISHPAGE_SHOWREADME_NOTCHECKED
-  !define MUI_FINISHPAGE_SHOWREADME "$INSTDIR\doc\welcome.txt"
+  !define MUI_FINISHPAGE_SHOWREADME 'notepad.exe "$\"$INSTDIR\README$\""'
   !define MUI_ICON "harb_win.ico"
   !define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\orange-uninstall.ico"
 
