@@ -1470,7 +1470,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       gdImagePtr im = hb_parGdImage( 1 );
 
       PHB_ITEM     pRect    = hb_param( 2, HB_IT_ARRAY );
-      int          fg       = hb_parni( 3 ); /* foreground color */
+      int          fgcolor  = hb_parni( 3 ); /* foreground color */
       const char * fontname = hb_parc( 4 );
       double       ptsize   = hb_parnd( 5 ); /* point size */
       double       angle    = hb_parnd( 6 ); /* angle value in radians */
@@ -1525,7 +1525,7 @@ HB_FUNC( GDIMAGESTRINGFTEX )
       }
 
       /* Write string */
-      err = gdImageStringFTEx( im, &aRect[ 0 ], fg, ( char * ) fontname, ptsize, angle, x, y, ( char * ) string, ( flags != 0 ? &extra : NULL ) );
+      err = gdImageStringFTEx( im, &aRect[ 0 ], fgcolor, ( char * ) fontname, ptsize, angle, x, y, ( char * ) string, ( flags != 0 ? &extra : NULL ) );
       if( ! err )
       {
          /* Save in array the correct text rectangle dimensions */
@@ -1562,14 +1562,14 @@ HB_FUNC( GDIMAGESTRINGFTCIRCLE ) /* char *gdImageStringFTCircle(gdImagePtr im, i
       double       radius      = hb_parnd( 4 );
       double       textRadius  = hb_parnd( 5 );
       double       fillPortion = hb_parnd( 6 );
-      const char * font        = hb_parc( 7 ); /* fontname */
+      const char * fontname    = hb_parc( 7 );
       double       points      = hb_parnd( 8 );
       const char * top         = hb_parcx( 9 );
       const char * bottom      = hb_parcx( 10 );
       int          fgcolor     = hb_parni( 11 ); /* foreground color */
 
       /* Write string */
-      hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion, ( char * ) font, points, ( char * ) top, ( char * ) bottom, fgcolor ) );
+      hb_retc( gdImageStringFTCircle( im, cx, cy, radius, textRadius, fillPortion, ( char * ) fontname, points, ( char * ) top, ( char * ) bottom, fgcolor ) );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
