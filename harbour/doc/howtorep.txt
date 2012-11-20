@@ -106,7 +106,7 @@ by Viktor Szakats
    + dir/filenam2.txt
    - dir/filenam3.txt
      * Change
-     ! Fixe
+     ! Fix
      % Optimization
      + Addition
      - Removal
