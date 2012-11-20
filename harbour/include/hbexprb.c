@@ -857,7 +857,7 @@ static HB_EXPR_FUNC( hb_compExprUseRef )
             if( pExp->value.asAlias.pVar->ExprType == HB_ET_VARIABLE &&
                 pExp->value.asAlias.pAlias->ExprType == HB_ET_ALIAS &&
                 hb_compExprIsMemvarAlias( pExp->value.asAlias.pAlias->value.asSymbol.name ) )
-            { 
+            {
                /* @M-> @MEMVAR-> or @MEMVA-> or @MEMV-> */
                HB_GEN_FUNC1( PushMemvarRef, pExp->value.asAlias.pVar->value.asSymbol.name );
                break;
@@ -1803,7 +1803,7 @@ static HB_EXPR_FUNC( hb_compExprUseFunCall )
                         hb_compExprReduceSTOD( pSelf, usCount, HB_COMP_PARAM );
                      break;
                   case HB_F_STOT:
-                        hb_compExprReduceSTOT( pSelf, usCount, HB_COMP_PARAM );
+                     hb_compExprReduceSTOT( pSelf, usCount, HB_COMP_PARAM );
                      break;
                   case HB_F_DTOS:
                      if( usCount == 1 )
