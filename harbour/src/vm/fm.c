@@ -1056,28 +1056,29 @@ void hb_xinit( void ) /* Initialize fixed memory subsystem */
 #ifdef HB_FM_NEED_INIT
    if( ! s_fInitedFM )
    {
-
-#ifdef HB_FM_STATISTICS
-      char buffer[ 5 ];
-
-      if( hb_getenv_buffer( "HB_FM_STAT", buffer, sizeof( buffer ) ) )
-      {
-         if( hb_stricmp( "yes", buffer ) == 0 )
-            s_fStatistic = HB_TRUE;
-         else if( hb_stricmp( "no", buffer ) == 0 )
-            s_fStatistic = HB_FALSE;
-      }
-#ifndef HB_FM_STATISTICS_DYN_OFF
-      else
-         s_fStatistic = HB_TRUE;  /* enabled by default */
-#endif /* HB_FM_STATISTICS_DYN_OFF */
-#endif /* HB_FM_STATISTICS */
-
-#if defined( HB_FM_HEAP_INIT )
-      s_hProcessHeap = GetProcessHeap();
-#endif
-
       s_fInitedFM = HB_TRUE;
+
+#  if defined( HB_FM_HEAP_INIT )
+      s_hProcessHeap = GetProcessHeap();
+#  endif
+
+#  ifdef HB_FM_STATISTICS
+      {
+         char buffer[ 5 ];
+
+         if( hb_getenv_buffer( "HB_FM_STAT", buffer, sizeof( buffer ) ) )
+         {
+            if( hb_stricmp( "yes", buffer ) == 0 )
+               s_fStatistic = HB_TRUE;
+            else if( hb_stricmp( "no", buffer ) == 0 )
+               s_fStatistic = HB_FALSE;
+         }
+#     ifndef HB_FM_STATISTICS_DYN_OFF
+         else
+            s_fStatistic = HB_TRUE;  /* enabled by default */
+#     endif /* HB_FM_STATISTICS_DYN_OFF */
+      }
+#  endif /* HB_FM_STATISTICS */
    }
 #endif /* HB_FM_NEED_INIT */
 }

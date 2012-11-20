@@ -92,6 +92,9 @@ static HANDLE  s_hPrevInstance = 0;
 static int     s_iCmdShow      = 0;
 static HB_BOOL s_WinMainParam  = HB_FALSE;
 
+#define HB_WINARG_ALLOC( n )  HeapAlloc( GetProcessHeap(), 0, ( n ) )
+#define HB_WINARG_FREE( p )   HeapFree( GetProcessHeap(), 0, ( p ) )
+
 void hb_winmainArgVBuild( void )
 {
    LPCTSTR lpCmdLine, lpSrc;
@@ -100,9 +103,7 @@ void hb_winmainArgVBuild( void )
    HB_SIZE nSize, nModuleName;
    int iArgC;
    HB_BOOL fQuoted;
-   HANDLE hHeap;
 
-   hHeap = GetProcessHeap();
    lpCmdLine = GetCommandLine();
    nModuleName = GetModuleFileName( NULL, NULL, 0 );
    lpArgV = NULL;
@@ -114,9 +115,8 @@ void hb_winmainArgVBuild( void )
    {
       if( nSize != 0 )
       {
-         lpArgV = ( LPTSTR * ) HeapAlloc( hHeap, 0,
-                                          iArgC * sizeof( LPTSTR ) +
-                                          nSize * sizeof( TCHAR ) );
+         lpArgV = ( LPTSTR * ) HB_WINARG_ALLOC( iArgC * sizeof( LPTSTR ) +
+                                                nSize * sizeof( TCHAR ) );
          lpDst = ( LPTSTR ) ( lpArgV + iArgC );
          lpArgV[ 0 ] = lpDst;
          lpDst += nModuleName;
@@ -193,9 +193,8 @@ void hb_winmainArgVBuild( void )
       if( nModuleName != 0 )
       {
          iArgC = 1;
-         lpArgV = ( LPTSTR * ) HeapAlloc( hHeap, 0,
-                                          iArgC * sizeof( LPTSTR ) +
-                                          nModuleName * sizeof( TCHAR ) );
+         lpArgV = ( LPTSTR * ) HB_WINARG_ALLOC( iArgC * sizeof( LPTSTR ) +
+                                                nModuleName * sizeof( TCHAR ) );
          lpArgV[ 0 ] = ( LPTSTR ) ( lpArgV + iArgC );
       }
       else
@@ -228,14 +227,13 @@ void hb_winmainArgVBuild( void )
          for( iArgC = 0; iArgC < s_argc; ++iArgC )
             nSize += hb_wctomblen( s_lpArgV[ iArgC ] ) + 1;
 
-         s_lpArgVStr = ( LPSTR * ) HeapAlloc( hHeap, 0,
-                                              iArgC * sizeof( LPSTR ) +
-                                              nSize * sizeof( char ) );
-         lpStr = ( LPSTR ) ( s_lpArgVStr + iArgC );
+         s_lpArgVStr = ( LPSTR * ) HB_WINARG_ALLOC( s_argc * sizeof( LPSTR ) +
+                                                    nSize * sizeof( char ) );
+         lpStr = ( LPSTR ) ( s_lpArgVStr + s_argc );
          for( iArgC = 0; iArgC < s_argc; ++iArgC )
          {
             nSize = hb_wctomblen( s_lpArgV[ iArgC ] ) + 1;
-            hb_wcntombcpy( lpStr, s_lpArgV[ iArgC ], nSize );
+            hb_wcntombcpy( lpStr, s_lpArgV[ iArgC ], nSize - 1 );
             s_lpArgVStr[ iArgC ] = lpStr;
             lpStr += nSize;
          }
@@ -256,7 +254,7 @@ void hb_winmainArgVFree( void )
       {
          if( s_argv == s_lpArgVStr )
             s_argv = NULL;
-         HeapFree( GetProcessHeap(), 0, ( void * ) s_lpArgVStr );
+         HB_WINARG_FREE( ( void * ) s_lpArgVStr );
          s_lpArgVStr = NULL;
       }
 #else
@@ -264,7 +262,7 @@ void hb_winmainArgVFree( void )
          s_argv = NULL;
 #endif
 
-      HeapFree( GetProcessHeap(), 0, ( void * ) s_lpArgV );
+      HB_WINARG_FREE( ( void * ) s_lpArgV );
       s_lpArgV = NULL;
       s_argc = 0;
    }
@@ -644,14 +642,17 @@ char * hb_cmdargProgName( void )
 
 char * hb_cmdargBaseProgName( void )
 {
-   char * pszProgName, * pszBaseProgName;
-   PHB_FNAME pFileName;
+   char * pszProgName, * pszBaseProgName = NULL;
 
    pszProgName = hb_cmdargProgName();
-   pFileName = hb_fsFNameSplit( pszProgName );
-   pszBaseProgName = hb_strdup( pFileName->szName );
-   hb_xfree( pFileName );
-   hb_xfree( pszProgName );
+   if( pszProgName )
+   {
+      PHB_FNAME pFileName = hb_fsFNameSplit( pszProgName );
+
+      pszBaseProgName = hb_strdup( pFileName->szName );
+      hb_xfree( pFileName );
+      hb_xfree( pszProgName );
+   }
 
    return pszBaseProgName;
 }
