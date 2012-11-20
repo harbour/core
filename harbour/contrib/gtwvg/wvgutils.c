@@ -126,9 +126,7 @@ HB_FUNC( WVT_CHOOSEFONT )
    LONG       PointSize = 0;
 
    if( HB_ISNUM( 2 ) )
-   {
       PointSize = -MulDiv( ( LONG ) hb_parnl( 2 ), GetDeviceCaps( _s->hdc, LOGPIXELSY ), 72 );
-   }
 
    lf.lfHeight         = PointSize;
    lf.lfWidth          = hb_parni( 3 );
@@ -196,8 +194,22 @@ HB_FUNC( WVT_CHOOSEFONT )
 
       hb_itemReturnRelease( ary );
    }
+#else
+   {
+      PHB_ITEM ary = hb_itemNew( NULL );
+      hb_arrayNew( ary, 9 );
 
-   return;
+      HB_ARRAYSETSTR( ary, 1, NULL );
+      hb_arraySetNI( ary, 2, 0 );
+      hb_arraySetNI( ary, 3, 0 );
+      hb_arraySetNI( ary, 4, 0 );
+      hb_arraySetNI( ary, 5, 0 );
+      hb_arraySetL( ary, 6, 0 );
+      hb_arraySetL( ary, 7, 0 );
+      hb_arraySetNI( ary, 8, 0 );
+
+      hb_itemReturnRelease( ary );
+   }
 #endif
 }
 
@@ -330,7 +342,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXT )
 
 HB_FUNC( WVT_SETTOOLTIPMARGIN )
 {
-#if ! defined( __WINCE__ )
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    RECT rc = { 0, 0, 0, 0 };
@@ -346,23 +358,23 @@ HB_FUNC( WVT_SETTOOLTIPMARGIN )
 
 HB_FUNC( WVT_SETTOOLTIPWIDTH )
 {
-#if ! defined( __WINCE__ )
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    int iTipWidth = ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 );
 
    if( HB_ISNUM( 1 ) )
-   {
       SendMessage( _s->hWndTT, TTM_SETMAXTIPWIDTH, 0, ( LPARAM ) ( HB_PTRDIFF ) hb_parnint( 1 ) );
-   }
 
    hb_retni( iTipWidth );
+#else
+   hb_retni( 0 );
 #endif
 }
 
 HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
 {
-#if ! defined( __WINCE__ )
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 );
@@ -371,12 +383,14 @@ HB_FUNC( WVT_SETTOOLTIPBKCOLOR )
       SendMessage( _s->hWndTT, TTM_SETTIPBKCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
 
    hb_retnl( ( COLORREF ) cr );
+#else
+   hb_retnl( 0 );
 #endif
 }
 
 HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 {
-#if ! defined( __WINCE__ )
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    COLORREF cr = ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 );
@@ -385,6 +399,8 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
       SendMessage( _s->hWndTT, TTM_SETTIPTEXTCOLOR, ( WPARAM ) ( COLORREF ) hb_parnl( 1 ), 0 );
 
    hb_retnl( ( COLORREF ) cr );
+#else
+   hb_retnl( 0 );
 #endif
 }
 
@@ -392,7 +408,7 @@ HB_FUNC( WVT_SETTOOLTIPTEXTCOLOR )
 
 HB_FUNC( WVT_SETTOOLTIPTITLE )
 {
-#if ! defined( __WINCE__ )
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    int iIcon;
@@ -415,28 +431,34 @@ HB_FUNC( WVT_SETTOOLTIPTITLE )
 
 HB_FUNC( WVT_GETTOOLTIPWIDTH )
 {
-#if ! defined( __WINCE__ )
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    hb_retni( ( int ) SendMessage( _s->hWndTT, TTM_GETMAXTIPWIDTH, 0, 0 ) );
+#else
+   hb_retni( 0 );
 #endif
 }
 
 HB_FUNC( WVT_GETTOOLTIPBKCOLOR )
 {
-#if ! defined( __WINCE__ )
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPBKCOLOR, 0, 0 ) );
+#else
+   hb_retnl( 0 );
 #endif
 }
 
 HB_FUNC( WVT_GETTOOLTIPTEXTCOLOR )
 {
-#if ! defined( __WINCE__ )
+#if ! defined( HB_OS_WIN_CE )
    PHB_GTWVT _s = hb_wvt_gtGetWVT();
 
    hb_retnl( ( COLORREF ) SendMessage( _s->hWndTT, TTM_GETTIPTEXTCOLOR, 0, 0 ) );
+#else
+   hb_retnl( 0 );
 #endif
 }
 
