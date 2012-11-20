@@ -356,7 +356,7 @@ METHOD UDPAccept() CLASS TRPCClient
       IF ::nTimeout >= 0
          nTime := Int( Seconds() * 1000 )
          // a little tollerance must be added for double roundings
-         // in the double INT() functions
+         // in the double Int() functions
          IF nTime - ::nUDPTimeBegin >= ::nTimeout - 5
             EXIT
          ENDIF
@@ -832,7 +832,7 @@ METHOD TCPAccept() CLASS TRPCClient
       IF nTimeLimit >= 0
          nTime := Int( Seconds() * 1000 )
          // a little tollerance must be added for double roundings
-         // in the double INT() functions
+         // in the double Int() functions
          IF nTime - ::nTCPTimeBegin >= nTimeLimit - 5
             EXIT
          ENDIF

@@ -21,6 +21,10 @@ ifneq ($(HB_HAS_SLANG),)
 
    HB_CFLAGS += $(foreach d,$(HB_HAS_SLANG),-I$(d))
 
+   ifeq ($(HB_PLATFORM),aix)
+      HB_CFLAGS := -DREAL_UNIX_SYSTEM
+   endif
+
    ifneq ($(HB_HAS_GPM),)
       HB_CFLAGS += -DHB_HAS_GPM
    endif

@@ -29,8 +29,18 @@ PROCEDURE Main()
    SQLAllocEnv( @hEnv )
    ? "Allocating connection... "
    SQLAllocConnect( hEnv, @hDbc )
+   ? "-- 1st"
    ? "Connecting to driver " + cConnStr + "... "
-   SQLDriverConnect( hDbc, cConnStr, @cConstrout )
+   ? SQLDriverConnect( hDbc, cConnStr, @cConstrout )
+   ? cConstrout
+   ? "-- 2nd (test)"
+   cConnStr := "DBQ=" + hb_FNameMerge( hb_DirBase(), "test_nothere.mdb" ) + ";Driver={Not here (*.non)}"
+   ? "Connecting to driver " + cConnStr + "... "
+   ? SQLDriverConnect( hDbc, cConnStr, @cConstrout )
+   ? cConstrout
+   ? SQLError( , hDbc,, @cError1, @nError, @cError2 )
+   ? "SQLError", cError1, nError, cError2
+   ? "--"
    ? "Allocating statement... "
    SQLAllocStmt( hDbc, @hStmt )
 

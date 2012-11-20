@@ -105,11 +105,11 @@ by Viktor Szakats
    * dir/filenam1.txt
    + dir/filenam2.txt
    - dir/filenam3.txt
-     * Changed, bla-bla
-     ! Fixed
-     % Optimized
-     + Added
-     - Removed
+     * Change
+     ! Fixe
+     % Optimization
+     + Addition
+     - Removal
      ; Comment
 
 - Best is to use commit.hb script to add new entry:

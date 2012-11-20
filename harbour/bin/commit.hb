@@ -193,20 +193,28 @@ STATIC FUNCTION Shell()
 #endif
 
    IF ! Empty( cShell )
-#if ! defined( __PLATFORM__UNIX )
-      cShell := cShell + " /c"
+#if defined( __PLATFORM__UNIX )
+      cShell += " -c"
+#else
+      cShell += " /c"
 #endif
    ENDIF
 
    RETURN cShell
+
+STATIC FUNCTION CmdEscape( cCmd )
+#if defined( __PLATFORM__UNIX )
+   cCmd := Chr( 34 ) + cCmd + Chr( 34 )
+#endif
+   RETURN cCmd
 
 STATIC FUNCTION Changes( cVCS )
 
    LOCAL cStdOut := ""
 
    DO CASE
-   CASE cVCS == "svn" ; hb_processRun( Shell() + " " + "svn status -q",, @cStdOut )
-   CASE cVCS == "git" ; hb_processRun( Shell() + " " + "git status -s",, @cStdOut )
+   CASE cVCS == "svn" ; hb_processRun( Shell() + " " + CmdEscape( "svn status -q" ),, @cStdOut )
+   CASE cVCS == "git" ; hb_processRun( Shell() + " " + CmdEscape( "git status -s" ),, @cStdOut )
    ENDCASE
 
    RETURN hb_ATokens( StrTran( cStdOut, Chr( 13 ) ), Chr( 10 ) )

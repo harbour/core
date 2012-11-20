@@ -126,7 +126,7 @@ FUNCTION ExecBrowser( oCrt )
    IF s_nStyle > 5
       s_nStyle := 0
    ENDIF
-   Wvt_SetPen( s_nStyle, 0, rgb( 210,1210,210 ) )
+   Wvt_SetPen( s_nStyle, 0, RGB( 210,1210,210 ) )
    s_nStyle++
    hb_gtInfo( HB_GTI_WINTITLE, "WVT Gui TBrowse()" )
 

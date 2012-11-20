@@ -241,7 +241,7 @@ PROCEDURE Main_MATH()
    TEST_LINE( Round(-5000000000.129, -2)      , -5000000000      )
    TEST_LINE( Round(-5000000000.129, -2)      , -5000000000      )
 
-   /* INT() */
+   /* Int() */
 
    TEST_LINE( Int( NIL )                      , "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:U:NIL F:S" )
    TEST_LINE( Int( "A" )                      , "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:C:A F:S" )

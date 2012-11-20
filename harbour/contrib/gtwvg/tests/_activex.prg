@@ -391,7 +391,7 @@ STATIC FUNCTION ExeActiveX( nActiveX, oCom, xParam )
       // oCom:emboss( 3,0 )
       oCom:copy2ClipBoard()
       oCom:view := 11
-      oCom:setBackGroundColor( rgb( 225, 225, 225 ) )
+      oCom:setBackGroundColor( RGB( 225, 225, 225 ) )
       // oCom:rotate90()
 
    ENDIF

@@ -126,9 +126,8 @@ STATIC PROCEDURE ProcFile( hAll, cFileName )
       IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "Dd" )
          cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ], 1 ) ) + "("
          IF !( cProper == a[ 3 ] ) .AND. ;
-            !( Upper( cProper ) == "FILE(" ) .AND. ;
-            !( Upper( cProper ) == "RGB(" ) .AND. ;
-            !( Upper( cProper ) == "INT(" )
+            !( Upper( cProper ) == "FILE(" ) .AND. ; /* interacts with "file(s)" text */
+            !( Upper( cProper ) == "INT(" )          /* interacts with SQL statements */
             cLog := StrTran( cLog, a[ 1 ], StrTran( a[ 1 ], a[ 3 ], cProper ) )
             ? cFileName, a[ 3 ], cProper, "|" + a[ 1 ] + "|"
             nChanged++

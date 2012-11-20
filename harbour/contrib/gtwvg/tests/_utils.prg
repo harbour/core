@@ -267,7 +267,7 @@ FUNCTION WvtWindowExpand( nUnits )
 
    RETURN .T.
 
-FUNCTION rgb( r, g, b )
+FUNCTION RGB( r, g, b )
 
    RETURN r + ( g * 256 ) + ( b * 256 * 256 )
 
@@ -443,7 +443,7 @@ FUNCTION Popups( nID, lDestroy )
 
 FUNCTION DispStatusMsg( cMsg )
 
-   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, rgb( 198, 198, 198 ), "Arial", 18, , 900 )
+   Wvt_DrawLabel( MaxRow(), 60, cMsg, 6, , 0, RGB( 198, 198, 198 ), "Arial", 18, , 900 )
 
    RETURN .T.
 

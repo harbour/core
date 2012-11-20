@@ -63,160 +63,147 @@ PROCEDURE Main()
    LOCAL xTitulo
    LOCAL xPeriodo
    LOCAL xOrdem
+   LOCAL oObj
 
    SET DATE ANSI
 
    oXml := ExcelWriterXML():New( xarquivo )
    oXml:setOverwriteFile( .T. )
 
-   WITH OBJECT oXml:addStyle( "textLeft" )
-      :alignHorizontal( "Left" )
-      :alignVertical( "Center" )
-      :fontSize( 10 )
-   ENDWITH
+   oObj := oXml:addStyle( "textLeft" )
+   oObj:alignHorizontal( "Left" )
+   oObj:alignVertical( "Center" )
+   oObj:fontSize( 10 )
 
-   WITH OBJECT oXml:addStyle( "textLeftWrap" )
-      :alignHorizontal( "Left" )
-      :alignVertical( "Center" )
-      :alignWraptext()
-      :fontSize( 10 )
-   ENDWITH
-   WITH OBJECT oXml:addStyle( "textLeftBold" )
-      :alignHorizontal( "Left" )
-      :alignVertical( "Center" )
-      :fontSize( 10 )
-      :setFontBold()
-   ENDWITH
+   oObj := oXml:addStyle( "textLeftWrap" )
+   oObj:alignHorizontal( "Left" )
+   oObj:alignVertical( "Center" )
+   oObj:alignWraptext()
+   oObj:fontSize( 10 )
 
-   WITH OBJECT oXml:addStyle( "textLeftBoldCor" )
-      :alignHorizontal( "Left" )
-      :alignVertical( "Center" )
-      :fontSize( 10 )
-      :setFontBold()
-      :bgColor( "lightblue" )
-      :alignWraptext()
-   ENDWITH
+   oObj := oXml:addStyle( "textLeftBold" )
+   oObj:alignHorizontal( "Left" )
+   oObj:alignVertical( "Center" )
+   oObj:fontSize( 10 )
+   oObj:setFontBold()
 
-   WITH OBJECT oXml:addStyle( "textRight" )
-      :alignHorizontal( "Right" )
-      :alignVertical( "Center" )
-      :fontSize( 10 )
-   ENDWITH
+   oObj := oXml:addStyle( "textLeftBoldCor" )
+   oObj:alignHorizontal( "Left" )
+   oObj:alignVertical( "Center" )
+   oObj:fontSize( 10 )
+   oObj:setFontBold()
+   oObj:bgColor( "lightblue" )
+   oObj:alignWraptext()
 
-   WITH OBJECT oXml:addStyle( "textRightBold" )
-      :alignHorizontal( "Right" )
-      :alignVertical( "Center" )
-      :fontSize( 10 )
-      :setFontBold()
-   ENDWITH
+   oObj := oXml:addStyle( "textRight" )
+   oObj:alignHorizontal( "Right" )
+   oObj:alignVertical( "Center" )
+   oObj:fontSize( 10 )
 
-   WITH OBJECT oXml:addStyle( "textRightBoldCor" )
-      :alignHorizontal( "Right" )
-      :alignVertical( "Center" )
-      :fontSize( 10 )
-      :setFontBold()
-      :bgColor( "lightblue" )
-      :alignWraptext()
-   ENDWITH
+   oObj := oXml:addStyle( "textRightBold" )
+   oObj:alignHorizontal( "Right" )
+   oObj:alignVertical( "Center" )
+   oObj:fontSize( 10 )
+   oObj:setFontBold()
 
-   WITH OBJECT oXml:addStyle( "numberRight" )
-      :alignHorizontal( "Right" )
-      :alignVertical( "Center" )
-      :setNumberFormat( "#,##0.00" )
-      :fontSize( 10 )
-   ENDWITH
+   oObj := oXml:addStyle( "textRightBoldCor" )
+   oObj:alignHorizontal( "Right" )
+   oObj:alignVertical( "Center" )
+   oObj:fontSize( 10 )
+   oObj:setFontBold()
+   oObj:bgColor( "lightblue" )
+   oObj:alignWraptext()
 
-   WITH OBJECT oXml:addStyle( "numberRightBold" )
-      :alignHorizontal( "Right" )
-      :alignVertical( "Center" )
-      :setNumberFormat( "#,##0.00" )
-      :fontSize( 10 )
-      :setFontBold()
-   ENDWITH
+   oObj := oXml:addStyle( "numberRight" )
+   oObj:alignHorizontal( "Right" )
+   oObj:alignVertical( "Center" )
+   oObj:setNumberFormat( "#,##0.00" )
+   oObj:fontSize( 10 )
 
-   WITH OBJECT oXml:addStyle( "numberRightBoldCor" )
-      :alignHorizontal( "Right" )
-      :alignVertical( "Center" )
-      :setNumberFormat( "#,##0.00" )
-      :fontSize( 10 )
-      :setFontBold()
-      :bgColor( "lightblue" )
-   ENDWITH
+   oObj := oXml:addStyle( "numberRightBold" )
+   oObj:alignHorizontal( "Right" )
+   oObj:alignVertical( "Center" )
+   oObj:setNumberFormat( "#,##0.00" )
+   oObj:fontSize( 10 )
+   oObj:setFontBold()
 
-   WITH OBJECT oXml:addStyle( "numberRightZero" )
-      :alignHorizontal( "Right" )
-      :alignVertical( "Center" )
-      :setNumberFormat( "#,##0.00;[Red]-#,##0.00;;@" ) //"#,###.00")
-      :fontSize( 10 )
-      :setFontBold()
-   ENDWITH
+   oObj := oXml:addStyle( "numberRightBoldCor" )
+   oObj:alignHorizontal( "Right" )
+   oObj:alignVertical( "Center" )
+   oObj:setNumberFormat( "#,##0.00" )
+   oObj:fontSize( 10 )
+   oObj:setFontBold()
+   oObj:bgColor( "lightblue" )
 
-   WITH OBJECT oXml:addStyle( "Cabec" )
-      :alignHorizontal( "Left" )
-      :alignVertical( "Center" )
-      :fontSize( 12 )
-      :setFontBold()
-   ENDWITH
+   oObj := oXml:addStyle( "numberRightZero" )
+   oObj:alignHorizontal( "Right" )
+   oObj:alignVertical( "Center" )
+   oObj:setNumberFormat( "#,##0.00;[Red]-#,##0.00;;@" ) //"#,###.00")
+   oObj:fontSize( 10 )
+   oObj:setFontBold()
 
-   WITH OBJECT oXml:addStyle( "CabecRight" )
-      :alignHorizontal( "Right" )
-      :alignVertical( "Center" )
-      :fontSize( 12 )
-      :setFontBold()
-   ENDWITH
+   oObj := oXml:addStyle( "Cabec" )
+   oObj:alignHorizontal( "Left" )
+   oObj:alignVertical( "Center" )
+   oObj:fontSize( 12 )
+   oObj:setFontBold()
+
+   oObj := oXml:addStyle( "CabecRight" )
+   oObj:alignHorizontal( "Right" )
+   oObj:alignVertical( "Center" )
+   oObj:fontSize( 12 )
+   oObj:setFontBold()
 
    oSheet := oXml:addSheet( "Plan1" )
 
-   WITH OBJECT oSheet
-      :columnWidth(  1,  70 ) // N.Fiscal
-      :columnWidth(  2,  20 ) // TM
-      :columnWidth(  3,  70 ) // Data Movto
-      :columnWidth(  4,  70 ) // Data Emis.
-      :columnWidth(  5,  50 ) // CFOP
-      :columnWidth(  6,  50 ) // Cod. Cliente/Fornecedor
-      :columnWidth(  7, 300 ) // Nome Cliente/Fornecedor
-      :columnWidth(  8,  20 ) // UF
-      :columnWidth(  9,  80 ) // Vlr.Tot.
-      :columnWidth( 10,  80 ) // Base Calc.
-      :columnWidth( 11,  80 ) // Vlr ICMS
-      :columnWidth( 12,  80 ) // Base IPI
-      :columnWidth( 13,  80 ) // Valor IPI
+   oObj := oSheet
+   oObj:columnWidth(  1,  70 ) // N.Fiscal
+   oObj:columnWidth(  2,  20 ) // TM
+   oObj:columnWidth(  3,  70 ) // Data Movto
+   oObj:columnWidth(  4,  70 ) // Data Emis.
+   oObj:columnWidth(  5,  50 ) // CFOP
+   oObj:columnWidth(  6,  50 ) // Cod. Cliente/Fornecedor
+   oObj:columnWidth(  7, 300 ) // Nome Cliente/Fornecedor
+   oObj:columnWidth(  8,  20 ) // UF
+   oObj:columnWidth(  9,  80 ) // Vlr.Tot.
+   oObj:columnWidth( 10,  80 ) // Base Calc.
+   oObj:columnWidth( 11,  80 ) // Vlr ICMS
+   oObj:columnWidth( 12,  80 ) // Base IPI
+   oObj:columnWidth( 13,  80 ) // Valor IPI
 
-      xEmpresa := "EMPRESA DEMONSTRACAO LTDA"
-      xDataImp := "22.03.2011"
-      xTitulo := "RELATORIO PARA DEMONSTRAR XML EXCEL"
-      xPeriodo := "01.02.2011 a 28.02.2011"
-      xOrdem  := "DATA DE EMISSAO"
+   xEmpresa := "EMPRESA DEMONSTRACAO LTDA"
+   xDataImp := "22.03.2011"
+   xTitulo := "RELATORIO PARA DEMONSTRAR XML EXCEL"
+   xPeriodo := "01.02.2011 a 28.02.2011"
+   xOrdem  := "DATA DE EMISSAO"
 
-      nLinha := 0
+   nLinha := 0
 
-      :writeString( ++nLinha, 1, xEmpresa , "Cabec" )
-      :cellMerge(     nLinha, 1, 5, 0 )
-      :writeString(   nLinha, 12, "Data:" + xDataImp , "CabecRight" )
-      :cellMerge(     nLinha, 12, 1, 0 )
-      :writeString( ++nLinha, 1, xTitulo  , "Cabec" )
-      :cellMerge(     nLinha, 1, 5, 0 )
-      :writeString( ++nLinha, 1, xPeriodo , "Cabec" )
-      :cellMerge(     nLinha, 1, 5, 0 )
-      :writeString( ++nLinha, 1, xOrdem   , "Cabec" )
-      :cellMerge(     nLinha, 1, 5, 0 )
-   ENDWITH
+   oObj:writeString( ++nLinha, 1, xEmpresa , "Cabec" )
+   oObj:cellMerge(     nLinha, 1, 5, 0 )
+   oObj:writeString(   nLinha, 12, "Data:" + xDataImp , "CabecRight" )
+   oObj:cellMerge(     nLinha, 12, 1, 0 )
+   oObj:writeString( ++nLinha, 1, xTitulo  , "Cabec" )
+   oObj:cellMerge(     nLinha, 1, 5, 0 )
+   oObj:writeString( ++nLinha, 1, xPeriodo , "Cabec" )
+   oObj:cellMerge(     nLinha, 1, 5, 0 )
+   oObj:writeString( ++nLinha, 1, xOrdem   , "Cabec" )
+   oObj:cellMerge(     nLinha, 1, 5, 0 )
 
-   WITH OBJECT oSheet
-      :writeString( ++nLinha,  1, "N.Fiscal"          , "textLeftBoldCor" )
-      :writeString(   nLinha,  2, "TM"                , "textLeftBoldCor" )
-      :writeString(   nLinha,  3, "Data Movto"        , "textLeftBoldCor" )
-      :writeString(   nLinha,  4, "Data Emis."        , "textLeftBoldCor" )
-      :writeString(   nLinha,  5, "CFOP"              , "textLeftBoldCor" )
-      :writeString(   nLinha,  6, "Codigo"            , "textLeftBoldCor" )
-      :writeString(   nLinha,  7, "Cliente/Fornecedor", "textLeftBoldCor" )
-      :writeString(   nLinha,  8, "UF"                , "textLeftBoldCor" )
-      :writeString(   nLinha,  9, "Vlr.Tot."          , "textRightBoldCor" )
-      :writeString(   nLinha, 10, "Base Calc."        , "textRightBoldCor" )
-      :writeString(   nLinha, 11, "Vlr ICMS"          , "textRightBoldCor" )
-      :writeString(   nLinha, 12, "Base IPI"          , "textRightBoldCor" )
-      :writeString(   nLinha, 13, "Valor IPI"         , "textRightBoldCor" )
-   ENDWITH
+   oObj := oSheet
+   oObj:writeString( ++nLinha,  1, "N.Fiscal"          , "textLeftBoldCor" )
+   oObj:writeString(   nLinha,  2, "TM"                , "textLeftBoldCor" )
+   oObj:writeString(   nLinha,  3, "Data Movto"        , "textLeftBoldCor" )
+   oObj:writeString(   nLinha,  4, "Data Emis."        , "textLeftBoldCor" )
+   oObj:writeString(   nLinha,  5, "CFOP"              , "textLeftBoldCor" )
+   oObj:writeString(   nLinha,  6, "Codigo"            , "textLeftBoldCor" )
+   oObj:writeString(   nLinha,  7, "Cliente/Fornecedor", "textLeftBoldCor" )
+   oObj:writeString(   nLinha,  8, "UF"                , "textLeftBoldCor" )
+   oObj:writeString(   nLinha,  9, "Vlr.Tot."          , "textRightBoldCor" )
+   oObj:writeString(   nLinha, 10, "Base Calc."        , "textRightBoldCor" )
+   oObj:writeString(   nLinha, 11, "Vlr ICMS"          , "textRightBoldCor" )
+   oObj:writeString(   nLinha, 12, "Base IPI"          , "textRightBoldCor" )
+   oObj:writeString(   nLinha, 13, "Valor IPI"         , "textRightBoldCor" )
 
    aDoc := {}
    FOR i := 1 TO 40
@@ -239,21 +226,21 @@ PROCEDURE Main()
    xqtddoc := xttotnot := xtbascal := xtvlricm := xtbasipi := xtvlripi := 0
 
    FOR i := 1 TO 40
-      WITH OBJECT oSheet
-         :writeString( ++nLinha, 1, aDoc[ i, 1 ], "textLeft" )
-         :writeString( nLinha, 2, aDoc[ i, 2 ], "textLeft" )
-         :writeString( nLinha, 3, DToC( aDoc[ i, 3 ] ), "textLeft" )
-         :writeString( nLinha, 4, DToC( aDoc[ i, 4 ] ), "textLeft" )
-         :writeString( nLinha, 5, aDoc[ i, 5 ], "textLeft" )
-         :writeString( nLinha, 6, aDoc[ i, 6 ], "textLeft" )
-         :writeString( nLinha, 7, aDoc[ i, 7 ], "textLeft" )
-         :writeString( nLinha, 8, aDoc[ i, 8 ], "textLeft" )
-         :writeNumber( nLinha, 9, aDoc[ i, 9 ], "numberRight" )
-         :writeNumber( nLinha, 10, aDoc[ i, 10 ], "numberRight" )
-         :writeNumber( nLinha, 11, aDoc[ i, 11 ], "numberRight" )
-         :writeNumber( nLinha, 12, aDoc[ i, 12 ], "numberRight" )
-         :writeNumber( nLinha, 13, aDoc[ i, 13 ], "numberRight" )
-      ENDWITH
+      oObj := oSheet
+      oObj:writeString( ++nLinha, 1, aDoc[ i, 1 ], "textLeft" )
+      oObj:writeString( nLinha, 2, aDoc[ i, 2 ], "textLeft" )
+      oObj:writeString( nLinha, 3, DToC( aDoc[ i, 3 ] ), "textLeft" )
+      oObj:writeString( nLinha, 4, DToC( aDoc[ i, 4 ] ), "textLeft" )
+      oObj:writeString( nLinha, 5, aDoc[ i, 5 ], "textLeft" )
+      oObj:writeString( nLinha, 6, aDoc[ i, 6 ], "textLeft" )
+      oObj:writeString( nLinha, 7, aDoc[ i, 7 ], "textLeft" )
+      oObj:writeString( nLinha, 8, aDoc[ i, 8 ], "textLeft" )
+      oObj:writeNumber( nLinha, 9, aDoc[ i, 9 ], "numberRight" )
+      oObj:writeNumber( nLinha, 10, aDoc[ i, 10 ], "numberRight" )
+      oObj:writeNumber( nLinha, 11, aDoc[ i, 11 ], "numberRight" )
+      oObj:writeNumber( nLinha, 12, aDoc[ i, 12 ], "numberRight" )
+      oObj:writeNumber( nLinha, 13, aDoc[ i, 13 ], "numberRight" )
+
       xqtddoc++
       xttotnot += aDoc[ i, 9 ]
       xtbascal += aDoc[ i, 10 ]
@@ -262,24 +249,23 @@ PROCEDURE Main()
       xtvlripi += aDoc[ i, 13 ]
    NEXT
 
-   WITH OBJECT oSheet
-      :writeString( ++nLinha,  1, "", "textLeft" )
-      :writeString(   nLinha,  2, "", "textLeft" )
-      :writeString(   nLinha,  3, "", "textLeft" )
-      :writeString(   nLinha,  4, "", "textLeft" )
-      :writeString(   nLinha,  5, "", "textLeft" )
-      :writeString(   nLinha,  6, "", "textLeft" )
-      :writeString(   nLinha,  7, "TOTAL ==> " + hb_ntos( xqtddoc ) + " document(s)", "textLeftBold" )
-      :writeString(   nLinha,  8, "", "textLeft" )
-      :writeFormula( "Number", nLinha, 9, "=SUM(R[-40]C:R[-1]C)", "numberRightBold" )
+   oObj := oSheet
+   oObj:writeString( ++nLinha,  1, "", "textLeft" )
+   oObj:writeString(   nLinha,  2, "", "textLeft" )
+   oObj:writeString(   nLinha,  3, "", "textLeft" )
+   oObj:writeString(   nLinha,  4, "", "textLeft" )
+   oObj:writeString(   nLinha,  5, "", "textLeft" )
+   oObj:writeString(   nLinha,  6, "", "textLeft" )
+   oObj:writeString(   nLinha,  7, "TOTAL ==> " + hb_ntos( xqtddoc ) + " document(s)", "textLeftBold" )
+   oObj:writeString(   nLinha,  8, "", "textLeft" )
+   oObj:writeFormula( "Number", nLinha, 9, "=SUM(R[-40]C:R[-1]C)", "numberRightBold" )
 #if 0
-      :writeNumber(   nLinha,  9, xttotnot, "numberRightBold" )
+   oObj:writeNumber(   nLinha,  9, xttotnot, "numberRightBold" )
 #endif
-      :writeNumber(   nLinha, 10, xtbascal, "numberRightBold" )
-      :writeNumber(   nLinha, 11, xtvlricm, "numberRightBold" )
-      :writeNumber(   nLinha, 12, xtbasipi, "numberRightBold" )
-      :writeNumber(   nLinha, 13, xtvlripi, "numberRightBold" )
-   ENDWITH
+   oObj:writeNumber(   nLinha, 10, xtbascal, "numberRightBold" )
+   oObj:writeNumber(   nLinha, 11, xtvlricm, "numberRightBold" )
+   oObj:writeNumber(   nLinha, 12, xtbasipi, "numberRightBold" )
+   oObj:writeNumber(   nLinha, 13, xtvlripi, "numberRightBold" )
 
    oXml:writeData( xarquivo )
 
