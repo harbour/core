@@ -1558,7 +1558,7 @@ typedef HB_U32 HB_FATTR;
 
 #endif
 
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN ) && defined( HB_LEGACY_LEVEL4 )
    #if defined( UNICODE )
       #define HB_TCHAR_COPYTO(d,s,l)       hb_mbntowccpy(d,s,l)
       #define HB_TCHAR_COPYFROM(d,s,l)     hb_wcntombcpy(d,s,l)

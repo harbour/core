@@ -78,7 +78,7 @@ HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExp
 {
    HB_SIZE nLen = 0;
 
-   if( !pEval )
+   if( ! pEval )
       return nLen;
 
    if( ( pExpr1->ExprType == HB_ET_LIST || pExpr1->ExprType == HB_ET_ARGLIST )
@@ -143,9 +143,9 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
        * e.g. &MyVar()
        */
 
-      HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(%s)", pName->value.asSymbol.name));
+      HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNewFunCall(%s)", pName->value.asSymbol.name ) );
 
-#if !defined( HB_MACRO_SUPPORT ) && defined( HB_USE_ENUM_FUNCTIONS )
+#if ! defined( HB_MACRO_SUPPORT ) && defined( HB_USE_ENUM_FUNCTIONS )
       {
          int iLen = strlen( pName->value.asSymbol.name );
          if( iLen >= 10 && i <= 12 && memcmp( "HB_ENUM", pName->value.asSymbol.name, 7 ) == 0 )
@@ -201,7 +201,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                }
             }
          }
-      else
+         else
 #endif
       if( pName->value.asSymbol.funcid == HB_F_EVAL &&
           hb_compExprParamListLen( pParms ) != 0 )
@@ -216,7 +216,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                         hb_compExprNewArgList(
                               pParms->value.asList.pExprList->pNext,
                               HB_COMP_PARAM ) );
-#if !defined( HB_MACRO_SUPPORT )
+#if ! defined( HB_MACRO_SUPPORT )
          /* force reduction */
          pEval->nLength = 1;
 #endif
@@ -257,7 +257,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                _GET_( a[1], "a[1]", , , )
                into:
                __GETA( {||a }, "a", , , , { 1 } )
-            */
+             */
             HB_EXPR_PTR pIndex, pVar;
             HB_EXPR_PTR pBase;
 
@@ -328,7 +328,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             if( pVar->ExprType == HB_ET_STRING )
             {
                HB_SIZE i = 0;
-               char *szVar = pVar->value.asString.string;
+               char * szVar = pVar->value.asString.string;
 
                /* NOTE: Clipper strips a string at the first '[' character too
                 */
@@ -336,7 +336,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                {
                   if( szVar[ i ] == '[' )
                   {
-                     if( !pVar->value.asString.dealloc )
+                     if( ! pVar->value.asString.dealloc )
                      {
                         szVar = pVar->value.asString.string = ( char * )
                            hb_xmemdup( pVar->value.asString.string, i + 1 );
@@ -408,8 +408,9 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                }
             }
             else
-            {   /* @ 0,0 GET &(var)
-                 */
+            {   
+               /* @ 0,0 GET &(var)
+                */
 #if defined( HB_MACRO_SUPPORT )
                hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
 #else
@@ -425,7 +426,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
             pNext = pArg->pNext;
             pArg->pNext = NULL;
             /* replace first argument with a set/get codeblock */
-#if !defined( HB_MACRO_SUPPORT )
+#if ! defined( HB_MACRO_SUPPORT )
             if( pArg->ExprType == HB_ET_VARIABLE )
             {
                if( hb_compVariableFind( HB_COMP_PARAM, pArg->value.asSymbol.name, NULL, NULL ) )
@@ -456,7 +457,6 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
                                                 &pName->value.asSymbol.flags );
       }
    }
-
    else if( pName->ExprType == HB_ET_MACRO )
    {
       /* Signal that macro compiler have to generate a pcode that will
@@ -464,7 +464,7 @@ HB_EXPR_PTR hb_compExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COM
        */
       pName->value.asMacro.SubType = HB_ET_MACRO_SYMBOL;
 
-      HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewFunCall(&)"));
+      HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNewFunCall(&)" ) );
    }
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_FUNCALL );
@@ -488,9 +488,9 @@ HB_EXPR_PTR hb_compExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_CO
    HB_EXPR_PTR pExpr;
 
 #ifdef HB_MACRO_SUPPORT
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprNewArrayAt()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprNewArrayAt()" ) );
 #else
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprNewArrayAt()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNewArrayAt()" ) );
 #endif
 
    pExpr = HB_COMP_EXPR_NEW( HB_ET_ARRAYAT );
@@ -517,11 +517,12 @@ static const char * s_szStaticFun[] = {
    "HB_MUTEXCREATE"
 };
 
-#define STATIC_FUNCTIONS      ( sizeof( s_szStaticFun ) / sizeof( char * ) )
+#define STATIC_FUNCTIONS  ( sizeof( s_szStaticFun ) / sizeof( char * ) )
 
 static HB_BOOL hb_compStaticFunction( const char * szName )
 {
    unsigned int ui;
+
    for( ui = 0; ui < STATIC_FUNCTIONS; ++ui )
    {
       if( strcmp( szName, s_szStaticFun[ ui ] ) == 0 )
@@ -535,11 +536,11 @@ static void hb_compExprCheckStaticInitializer( HB_EXPR_PTR pLeftExpr, HB_EXPR_PT
 {
    if( ( pRightExpr->ExprType > HB_ET_FUNREF ||
          pRightExpr->ExprType == HB_ET_SELF ) &&
-       !( pRightExpr->ExprType == HB_ET_FUNCALL &&
-          pRightExpr->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
-          hb_compStaticFunction( pRightExpr->value.asFunCall.pFunName->
-                                 value.asSymbol.name ) &&
-          hb_compExprParamListLen( pRightExpr->value.asFunCall.pParms ) == 0 ) )
+       ! ( pRightExpr->ExprType == HB_ET_FUNCALL &&
+           pRightExpr->value.asFunCall.pFunName->ExprType == HB_ET_FUNNAME &&
+           hb_compStaticFunction( pRightExpr->value.asFunCall.pFunName->
+                                  value.asSymbol.name ) &&
+           hb_compExprParamListLen( pRightExpr->value.asFunCall.pParms ) == 0 ) )
    {
       /* Illegal initializer for static variable (not a constant value)
        */
@@ -553,7 +554,7 @@ static void hb_compExprCheckStaticListInitializers( HB_EXPR_PTR pLeftExpr, HB_EX
 
    while( *pExpr )
    {
-      if( !HB_SUPPORT_HARBOUR )
+      if( ! HB_SUPPORT_HARBOUR )
       {
          /* When -kc switch is used expression list is not stripped
           * in reduce operation
@@ -567,8 +568,8 @@ static void hb_compExprCheckStaticListInitializers( HB_EXPR_PTR pLeftExpr, HB_EX
          ( *pExpr )->pNext = pNext;             /* restore the link to next expression */
       }
 
-      if( (*pExpr)->ExprType == HB_ET_ARRAY ||
-          (*pExpr)->ExprType == HB_ET_HASH )
+      if( ( *pExpr )->ExprType == HB_ET_ARRAY ||
+          ( *pExpr )->ExprType == HB_ET_HASH )
       {
          hb_compExprCheckStaticListInitializers( pLeftExpr, *pExpr, HB_COMP_PARAM );
       }
@@ -591,7 +592,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
 {
    HB_EXPR_PTR pExpr;
 
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprAssignStatic()"));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprAssignStatic()" ) );
 
    pExpr = HB_COMP_EXPR_NEW( HB_EO_ASSIGN );
 
@@ -601,17 +602,17 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
    /* When -kc switch is used expression list is not stripped
     * in reduce operation
     */
-   if( !HB_SUPPORT_HARBOUR )
+   if( ! HB_SUPPORT_HARBOUR )
       pRightExpr = hb_compExprListStrip( pRightExpr, HB_COMP_PARAM );
 
    pExpr->value.asOperator.pRight = pRightExpr;
 
    if( pRightExpr->ExprType == HB_ET_ARGLIST )
    {
-       /* HB_ET_ARGLIST is used in case of STATIC var[dim1, dim2, dimN]
-        * was used - we have to check if all array dimensions are
-        * constant values
-        */
+      /* HB_ET_ARGLIST is used in case of STATIC var[dim1, dim2, dimN]
+       * was used - we have to check if all array dimensions are
+       * constant values
+       */
       hb_compExprCheckStaticListInitializers( pLeftExpr, pRightExpr, HB_COMP_PARAM );
    }
    else if( pRightExpr->ExprType == HB_ET_ARRAY )
@@ -640,7 +641,7 @@ HB_EXPR_PTR hb_compExprAssignStatic( HB_EXPR_PTR pLeftExpr, HB_EXPR_PTR pRightEx
 
 HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, HB_SIZE nLen )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprSetCodeblockBody(%p,%p,%" HB_PFS "u)", pExpr, pCode, nLen));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprSetCodeblockBody(%p,%p,%" HB_PFS "u)", pExpr, pCode, nLen ) );
 
    pExpr->value.asCodeblock.string = ( char * ) hb_xgrab( nLen + 1 );
    memcpy( pExpr->value.asCodeblock.string, pCode, nLen );
@@ -660,7 +661,7 @@ HB_EXPR_PTR hb_compExprSetCodeblockBody( HB_EXPR_PTR pExpr, HB_BYTE * pCode, HB_
  */
 HB_EXPR_PTR hb_macroExprGenPush( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprGenPush(%i)", pExpr->ExprType));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprGenPush(%i)", pExpr->ExprType ) );
 
    pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
    return HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -670,7 +671,7 @@ HB_EXPR_PTR hb_macroExprGenPush( HB_EXPR_PTR pExpr, HB_COMP_DECL )
  */
 HB_EXPR_PTR hb_macroExprGenPop( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_macroExprGenPop(%i)", pExpr->ExprType));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprGenPop(%i)", pExpr->ExprType ) );
 
    pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
    HB_EXPR_USE( pExpr, HB_EA_LVALUE );
@@ -684,7 +685,7 @@ HB_EXPR_PTR hb_macroExprGenPop( HB_EXPR_PTR pExpr, HB_COMP_DECL )
  */
 HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenPush(%i)", pExpr->ExprType));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprGenPush(%i)", pExpr->ExprType ) );
 
    pExpr = HB_EXPR_USE( pExpr, HB_EA_REDUCE );
    return HB_EXPR_USE( pExpr, HB_EA_PUSH_PCODE );
@@ -694,7 +695,7 @@ HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR pExpr, HB_COMP_DECL )
  */
 HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenPop(%i)", pExpr->ExprType));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprGenPop(%i)", pExpr->ExprType ) );
 
    HB_EXPR_USE( pExpr, HB_EA_LVALUE );
    return HB_EXPR_USE( pExpr, HB_EA_POP_PCODE );
@@ -705,7 +706,7 @@ HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR pExpr, HB_COMP_DECL )
  */
 HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR pExpr, HB_COMP_DECL )
 {
-   HB_TRACE(HB_TR_DEBUG, ("hb_compExprGenStatement(%p)", pExpr));
+   HB_TRACE( HB_TR_DEBUG, ( "hb_compExprGenStatement(%p)", pExpr ) );
    if( pExpr )
    {
       if( pExpr->ExprType == HB_EO_EQUAL )

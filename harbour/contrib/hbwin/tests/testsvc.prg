@@ -109,13 +109,18 @@ PROCEDURE Main( cMode )
 
 #include "fileio.ch"
 
-PROCEDURE SrvMain()
+PROCEDURE SrvMain( cParam1, cParam2 )
 
    LOCAL n := 0
    LOCAL fhnd := hb_FCreate( hb_DirBase() + "testsvc.out", FC_NORMAL, FO_DENYNONE + FO_WRITE )
    LOCAL cParam
 
+   hb_default( @cParam1, "" )
+   hb_default( @cParam2, "" )
+
    FWrite( fhnd, "Startup" + hb_eol() )
+   FWrite( fhnd, "|" + hb_CmdLine() + "|" + hb_eol() )
+   FWrite( fhnd, "|" + cParam1 + "|" + cParam2 + "|" + hb_eol() )
 
    FOR EACH cParam IN hb_AParams()
       FWrite( fhnd, "Parameter " + hb_ntos( cParam:__enumIndex() ) + " >" + cParam + "<" + hb_eol() )

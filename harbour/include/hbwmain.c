@@ -53,9 +53,9 @@
 #include <windows.h>
 
 #if defined( HB_OS_WIN_CE )
-#  define HB_LPSTR      LPWSTR
+#  define HB_LPSTR  LPWSTR
 #else
-#  define HB_LPSTR      LPSTR
+#  define HB_LPSTR  LPSTR
 #endif
 
 int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
@@ -69,7 +69,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 
    HB_SYMBOL_UNUSED( lpCmdLine );
 
-   /* HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow)); */
+   /* HB_TRACE( HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow ) ); */
 
    hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
 
@@ -108,9 +108,9 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
       {
          if( pArg == NULL )
             pArg = pDst;
-         fQuoted = !fQuoted;
+         fQuoted = ! fQuoted;
       }
-      else if( fQuoted || !HB_ISSPACE( *pSrc ) )
+      else if( fQuoted || ! HB_ISSPACE( *pSrc ) )
       {
          if( pArg == NULL )
             pArg = pDst;
