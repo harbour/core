@@ -200,7 +200,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
    DO WHILE lContinue
 
       DO WHILE ! oBrowse:stabilize()
-         nKey := InKey()
+         nKey := Inkey()
 #ifdef HB_COMPAT_C53
          IF nKey != 0 .AND. nKey != K_MOUSEMOVE
             EXIT
@@ -213,7 +213,7 @@ FUNCTION dbEdit( nTop, nLeft, nBottom, nRight, ;
       ENDDO
 
       IF nKey == 0
-         nKey := InKey()
+         nKey := Inkey()
       ENDIF
       IF nKey == 0
          IF lDoIdleCall

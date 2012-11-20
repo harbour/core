@@ -82,7 +82,7 @@ static char    s_szAppName[ HB_PATH_MAX ];
 #include "hbwinuni.h"
 #include <windows.h>
 
-static LPTSTR* s_lpArgV = NULL;
+static LPTSTR * s_lpArgV = NULL;
 #ifdef UNICODE
 static LPSTR * s_lpArgVStr = NULL;
 #endif
@@ -110,7 +110,7 @@ void hb_winmainArgVBuild( void )
    nSize = 0;
    iArgC = -1;
 
-   while( lpCmdLine && !lpArgV && iArgC != 0 )
+   while( lpCmdLine && ! lpArgV && iArgC != 0 )
    {
       if( nSize != 0 )
       {
@@ -138,9 +138,9 @@ void hb_winmainArgVBuild( void )
          {
             if( lpArg == NULL )
                lpArg = lpDst;
-            fQuoted = !fQuoted;
+            fQuoted = ! fQuoted;
          }
-         else if( fQuoted || !HB_ISSPACE( *lpSrc ) )
+         else if( fQuoted || ! HB_ISSPACE( *lpSrc ) )
          {
             if( lpArg == NULL )
                lpArg = lpDst;
@@ -196,7 +196,7 @@ void hb_winmainArgVBuild( void )
          lpArgV = ( LPTSTR * ) HeapAlloc( hHeap, 0,
                                           iArgC * sizeof( LPTSTR ) +
                                           nSize * sizeof( TCHAR ) );
-         lpArgV[ 0 ] = ( LPTSTR ) ( lpArgV + iArgC );;
+         lpArgV[ 0 ] = ( LPTSTR ) ( lpArgV + iArgC );
       }
       else
          iArgC = 0;
@@ -343,7 +343,7 @@ void hb_cmdargUpdate( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargUpdate()" ) );
 
-#if !defined( HB_OS_WIN )
+#if ! defined( HB_OS_WIN )
    if( s_argc > 0 )
    {
 #  if defined( HB_OS_OS2 )

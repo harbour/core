@@ -27,6 +27,9 @@ PROCEDURE Main()
    LOCAL hAll := { => }
 
    LOCAL hExtExceptions := { ;
+      hb_libExt() => NIL, ;
+      ".zip"  => NIL, ;
+      ".o"    => NIL, ;
       ".js"   => NIL, ;
       ".dif"  => NIL, ;
       ".c"    => NIL, ;
