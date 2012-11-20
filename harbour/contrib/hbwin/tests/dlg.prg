@@ -9,6 +9,8 @@
  * 2010/06/10 - 00:16:41 - [vailtom]
  */
 
+#require "hbwin"
+
 // Some constants
 #define IDD_DIALOG1                        101
 #define IDC_BUTTON1                        4001

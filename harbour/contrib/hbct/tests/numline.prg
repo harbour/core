@@ -10,6 +10,10 @@
  *
  */
 
+#ifdef __HARBOUR__
+#require "hbct"
+#endif
+
 #include "simpleio.ch"
 
 PROCEDURE Main()

@@ -16,6 +16,8 @@
  *
  */
 
+#require "hbwin"
+
 PROCEDURE Main()
 
    LOCAL nOption

@@ -52,6 +52,10 @@
  *
  */
 
+#ifdef __HARBOUR__
+#require "hbct"
+#endif
+
 PROCEDURE Main()
 
    LOCAL cStr := "This is a test!"

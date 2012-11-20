@@ -11,6 +11,8 @@
  *    above WWW page.
  */
 
+#require "hbwin"
+
 PROCEDURE Main()
 
    LOCAL oObject

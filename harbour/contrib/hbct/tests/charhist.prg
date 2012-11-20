@@ -52,6 +52,10 @@
  *
  */
 
+#ifdef __HARBOUR__
+#require "hbct"
+#endif
+
 PROCEDURE Main()
 
    LOCAL nTotal := 0

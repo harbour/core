@@ -11,6 +11,8 @@
  *
  */
 
+#require "hbnetio"
+
 #define NETSERVER  "127.0.0.1"
 #define NETPORT    2940
 #define NETPASSWD  "toptopsecret"

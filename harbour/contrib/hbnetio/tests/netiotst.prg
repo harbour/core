@@ -12,6 +12,8 @@
  *
  */
 
+#require "hbnetio"
+
 /* net:127.0.0.1:2941:topsecret:data/_tst_ */
 
 #define DBSERVER  "127.0.0.1"

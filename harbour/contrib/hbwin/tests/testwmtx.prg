@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbwin"
+
 STATIC s_hMutex
 
 PROCEDURE Main()

@@ -12,6 +12,8 @@
  * www - http://harbour-project.org
  */
 
+#require "hbwin"
+
 PROCEDURE Main()
 
    LOCAL oObject

@@ -20,6 +20,8 @@
  *
  */
 
+#require "hbwin"
+
 PROCEDURE Main()
 
    LOCAL oPC, nTime, cDefaultPrinter, cFilename, oPrinter, nEvent := 0

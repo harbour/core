@@ -52,13 +52,13 @@
  *
  */
 
+#ifdef __HARBOUR__
 #require "hbct"
-
-#include "ct.ch"
-
-#ifndef __HARBOUR__
+#else
 #define hb_ntos( n ) LTrim( Str( n ) )
 #endif
+
+#include "ct.ch"
 
 PROCEDURE Main()
 

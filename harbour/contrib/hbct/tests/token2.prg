@@ -60,6 +60,10 @@
  *
  */
 
+#ifdef __HARBOUR__
+#require "hbct"
+#endif
+
 PROCEDURE Main()
 
    LOCAL cStr1 := "A,BB,CCC,DDDD,EEEEE,FFFFFF"

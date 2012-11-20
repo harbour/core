@@ -52,6 +52,10 @@
  *
  */
 
+#ifdef __HARBOUR__
+#require "hbct"
+#endif
+
 #include "inkey.ch"
 #include "setcurs.ch"
 

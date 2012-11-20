@@ -54,6 +54,10 @@
  *
  */
 
+#ifdef __HARBOUR__
+#require "hbct"
+#endif
+
 PROCEDURE Main()
 
    ctinit()

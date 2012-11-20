@@ -2,6 +2,8 @@
  * $Id$
  */
 
+#require "hbwin"
+
 PROCEDURE Main()
 
    LOCAL nPrn := 1

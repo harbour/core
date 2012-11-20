@@ -11,6 +11,7 @@
  *
  */
 
+#require "hbnetio"
 
 /* to execute this code run server (netiosrv) on the same machine
  * with support for RPC and "topsecret" password, i.e.:

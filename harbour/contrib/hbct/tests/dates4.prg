@@ -2,6 +2,10 @@
  * $Id$
  */
 
+#ifdef __HARBOUR__
+#require "hbct"
+#endif
+
 // Testing Harbour dates management.
 
 PROCEDURE Main()
