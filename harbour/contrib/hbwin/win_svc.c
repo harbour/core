@@ -51,9 +51,9 @@
  */
 
 #include "hbwapi.h"
-
-#include "hbvm.h"
 #include "hbapiitm.h"
+#include "hbvm.h"
+#include "hbstack.h"
 
 #if ! defined( HB_OS_WIN_CE )
 
@@ -115,15 +115,13 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
 
             for( i = 1; i < dwArgc; ++i )
             {
-               char * pszArg = HB_TCHAR_CONVFROM( lpszArgv[ i ] );
+               PHB_ITEM pItem = hb_stackAllocItem();
 
-               if( ! hb_cmdargIsInternal( pszArg, NULL ) )
-               {
-                  hb_vmPushString( pszArg, strlen( pszArg ) );
+               HB_ITEMPUTSTR( pItem, lpszArgv[ i ] );
+               if( hb_cmdargIsInternal( hb_itemGetCPtr( pItem ), NULL ) )
+                  hb_stackPop();
+               else
                   ++iArgCount;
-               }
-
-               HB_TCHAR_FREE( pszArg );
             }
 
             hb_vmSend( ( HB_USHORT ) iArgCount );

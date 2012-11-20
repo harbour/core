@@ -972,6 +972,10 @@ void hb_vmInit( HB_BOOL bStartMainProc )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_vmInit()" ) );
 
+#if defined( HB_OS_WIN )
+   hb_winmainArgVBuild();
+#endif
+
    hb_xinit();
 
    hb_vmSetExceptionHandler();
@@ -1217,6 +1221,10 @@ int hb_vmQuit( void )
    hb_vmUnsetExceptionHandler();
 
    hb_xexit();
+
+#if defined( HB_OS_WIN )
+   hb_winmainArgVFree();
+#endif
 
    return s_nErrorLevel;
 }

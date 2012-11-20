@@ -1547,6 +1547,7 @@ typedef HB_U32 HB_FATTR;
    /* Features provided for Windows builds only */
 
    HB_EXTERN_BEGIN
+      extern HB_EXPORT int       hb_wctomblen( const wchar_t * szText );
       extern HB_EXPORT wchar_t * hb_mbtowc( const char * srcA );
       extern HB_EXPORT char *    hb_wctomb( const wchar_t * srcW );
       extern HB_EXPORT wchar_t * hb_mbntowc( const char * srcA, HB_SIZE nLen );

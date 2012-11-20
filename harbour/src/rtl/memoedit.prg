@@ -115,11 +115,10 @@ METHOD Edit() CLASS HBMemoEditor
 
          // I need to test this condition here since I never block inside HBEditor:Edit()
          // if there is an user function
-         IF NextKey() == 0
+         IF ( nKey := Inkey() ) == 0
             ::IdleHook()
+            nKey := Inkey( 0 )
          ENDIF
-
-         nKey := Inkey( 0 )
 
          IF ( bKeyBlock := SetKey( nKey ) ) != NIL
             Eval( bKeyBlock )

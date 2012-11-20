@@ -66,6 +66,11 @@ static HB_SIZE hb_wcnlen( const wchar_t * szText, HB_SIZE nCount )
    return nLen;
 }
 
+int hb_wctomblen( const wchar_t * szText )
+{
+   return WideCharToMultiByte( CP_ACP, 0, szText, -1, NULL, 0, NULL, NULL ) - 1;
+}
+
 void hb_wcntombcpy( char * dstA, const wchar_t * srcW, HB_SIZE nLen )
 {
    WideCharToMultiByte( CP_ACP, 0, srcW, -1, dstA, ( int ) nLen, NULL, NULL );

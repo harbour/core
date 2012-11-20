@@ -82,15 +82,193 @@ static char    s_szAppName[ HB_PATH_MAX ];
 #include "hbwinuni.h"
 #include <windows.h>
 
-/* static LPTSTR* s_lpArgV = NULL; */
-static TCHAR   s_lpAppName[ MAX_PATH ];
-static char    s_szAppName[ MAX_PATH ];
-static int     s_fSkipAppName  = HB_FALSE;
+static LPTSTR* s_lpArgV = NULL;
+#ifdef UNICODE
+static LPSTR * s_lpArgVStr = NULL;
+#endif
 
 static HANDLE  s_hInstance     = 0;
 static HANDLE  s_hPrevInstance = 0;
 static int     s_iCmdShow      = 0;
 static HB_BOOL s_WinMainParam  = HB_FALSE;
+
+void hb_winmainArgVBuild( void )
+{
+   LPCTSTR lpCmdLine, lpSrc;
+   LPTSTR * lpArgV;
+   LPTSTR lpDst, lpArg;
+   HB_SIZE nSize, nModuleName;
+   int iArgC;
+   HB_BOOL fQuoted;
+   HANDLE hHeap;
+
+   hHeap = GetProcessHeap();
+   lpCmdLine = GetCommandLine();
+   nModuleName = GetModuleFileName( NULL, NULL, 0 );
+   lpArgV = NULL;
+   lpDst = NULL;
+   nSize = 0;
+   iArgC = -1;
+
+   while( lpCmdLine && !lpArgV && iArgC != 0 )
+   {
+      if( nSize != 0 )
+      {
+         lpArgV = ( LPTSTR * ) HeapAlloc( hHeap, 0,
+                                          iArgC * sizeof( LPTSTR ) +
+                                          nSize * sizeof( TCHAR ) );
+         lpDst = ( LPTSTR ) ( lpArgV + iArgC );
+         lpArgV[ 0 ] = lpDst;
+         lpDst += nModuleName;
+      }
+      else
+      {
+         lpDst = ( LPTSTR ) lpCmdLine;
+         nSize = nModuleName;
+      }
+
+      lpSrc = lpCmdLine;
+      lpArg = NULL;
+      iArgC = 0;
+      fQuoted = HB_FALSE;
+
+      while( *lpSrc != 0 )
+      {
+         if( *lpSrc == TEXT( '"' ) )
+         {
+            if( lpArg == NULL )
+               lpArg = lpDst;
+            fQuoted = !fQuoted;
+         }
+         else if( fQuoted || !HB_ISSPACE( *lpSrc ) )
+         {
+            if( lpArg == NULL )
+               lpArg = lpDst;
+            if( iArgC > 0 || nModuleName == 0 )
+            {
+               if( lpArgV )
+                  *lpDst++ = *lpSrc;
+               else
+                  nSize++;
+            }
+         }
+         else
+         {
+            if( lpArg )
+            {
+               if( iArgC > 0 || nModuleName == 0 )
+               {
+                  if( lpArgV )
+                  {
+                     *lpDst++ = '\0';
+                     lpArgV[ iArgC ] = lpArg;
+                  }
+                  else
+                     nSize++;
+               }
+               iArgC++;
+               lpArg = NULL;
+            }
+         }
+         ++lpSrc;
+      }
+      if( lpArg )
+      {
+         if( iArgC > 0 || nModuleName == 0 )
+         {
+            if( lpArgV )
+            {
+               *lpDst = '\0';
+               lpArgV[ iArgC ] = lpArg;
+            }
+            else
+               nSize++;
+         }
+         iArgC++;
+      }
+   }
+
+   if( iArgC <= 0 )
+   {
+      if( nModuleName != 0 )
+      {
+         iArgC = 1;
+         lpArgV = ( LPTSTR * ) HeapAlloc( hHeap, 0,
+                                          iArgC * sizeof( LPTSTR ) +
+                                          nSize * sizeof( TCHAR ) );
+         lpArgV[ 0 ] = ( LPTSTR ) ( lpArgV + iArgC );;
+      }
+      else
+         iArgC = 0;
+   }
+   if( iArgC > 0 && nModuleName )
+   {
+      /* NOTE: Manually setup the executable name in Windows,
+               because in console apps the name may be truncated
+               in some cases, and in GUI apps it's not filled
+               at all. [vszakats] */
+      if( GetModuleFileName( NULL, lpArgV[ 0 ], nModuleName ) != 0 )
+      {
+         /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
+         lpArgV[ 0 ][ nModuleName - 1 ] = 0;
+      }
+   }
+
+   hb_winmainArgVFree();
+
+   if( iArgC > 0 )
+   {
+      s_lpArgV = lpArgV;
+      s_argc = iArgC;
+#ifdef UNICODE
+      {
+         LPSTR lpStr;
+
+         nSize = 0;
+         for( iArgC = 0; iArgC < s_argc; ++iArgC )
+            nSize += hb_wctomblen( s_lpArgV[ iArgC ] ) + 1;
+
+         s_lpArgVStr = ( LPSTR * ) HeapAlloc( hHeap, 0,
+                                              iArgC * sizeof( LPSTR ) +
+                                              nSize * sizeof( char ) );
+         lpStr = ( LPSTR ) ( s_lpArgVStr + iArgC );
+         for( iArgC = 0; iArgC < s_argc; ++iArgC )
+         {
+            nSize = hb_wctomblen( s_lpArgV[ iArgC ] ) + 1;
+            hb_wcntombcpy( lpStr, s_lpArgV[ iArgC ], nSize );
+            s_lpArgVStr[ iArgC ] = lpStr;
+            lpStr += nSize;
+         }
+         s_argv = s_lpArgVStr;
+      }
+#else
+      s_argv = s_lpArgV;
+#endif
+   }
+}
+
+void hb_winmainArgVFree( void )
+{
+   if( s_lpArgV )
+   {
+#ifdef UNICODE
+      if( s_lpArgVStr )
+      {
+         if( s_argv == s_lpArgVStr )
+            s_argv = NULL;
+         HeapFree( GetProcessHeap(), 0, ( void * ) s_lpArgVStr );
+         s_lpArgVStr = NULL;
+      }
+#else
+      if( s_argv == s_lpArgV )
+         s_argv = NULL;
+#endif
+
+      HeapFree( GetProcessHeap(), 0, ( void * ) s_lpArgV );
+      s_lpArgV = NULL;
+      s_argc = 0;
+   }
+}
 
 void hb_winmainArgInit( void * hInstance, void * hPrevInstance, int iCmdShow )
 {
@@ -117,6 +295,11 @@ HB_BOOL hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdS
 void hb_cmdargInit( int argc, char * argv[] )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargInit(%d, %p)", argc, argv ) );
+
+#if defined( HB_OS_WIN )
+   if( s_lpArgV )
+      return;
+#endif
 
    if( argc == 0 || argv == NULL )
    {
@@ -149,7 +332,10 @@ const char * hb_cmdargARGVN( int argc )
 
 static char * hb_cmdargDup( int argc )
 {
-   /* TODO: TCHAR conv */
+#if defined( HB_OS_WIN )
+   if( s_lpArgV )
+      return argc >= 0 && argc < s_argc ? HB_OSSTRDUP( s_lpArgV[ argc ] ) : NULL;
+#endif
    return argc >= 0 && argc < s_argc ? hb_osStrDecode( s_argv[ argc ] ) : NULL;
 }
 
@@ -157,26 +343,10 @@ void hb_cmdargUpdate( void )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_cmdargUpdate()" ) );
 
+#if !defined( HB_OS_WIN )
    if( s_argc > 0 )
    {
-#if defined( HB_OS_WIN )
-      /* TODO: TCHAR conv */
-
-      /* NOTE: Manually setup the executable name in Windows,
-               because in console apps the name may be truncated
-               in some cases, and in GUI apps it's not filled
-               at all. [vszakats] */
-      if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
-      {
-         /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
-         s_lpAppName[ HB_SIZEOFARRAY( s_lpAppName ) - 1 ] = 0;
-         HB_TCHAR_COPYFROM( s_szAppName, s_lpAppName, HB_SIZEOFARRAY( s_szAppName ) - 1 );
-         s_argv[ 0 ] = s_szAppName;
-      }
-      else
-         s_lpAppName[ 0 ] = 0;
-
-#elif defined( HB_OS_OS2 )
+#  if defined( HB_OS_OS2 )
       {
          PPIB ppib = NULL;
          APIRET ulrc;
@@ -191,7 +361,7 @@ void hb_cmdargUpdate( void )
                s_argv[ 0 ] = s_szAppName;
          }
       }
-#else
+#  else
       /* NOTE: try to create absolute path from s_argv[ 0 ] if necessary */
       {
          PHB_FNAME pFName = hb_fsFNameSplit( s_argv[ 0 ] );
@@ -235,11 +405,11 @@ void hb_cmdargUpdate( void )
          }
          if( pFName->szPath )
          {
-#  if defined( HB_OS_HAS_DRIVE_LETTER )
+#     if defined( HB_OS_HAS_DRIVE_LETTER )
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR && ! pFName->szDrive )
-#  else
+#     else
             if( pFName->szPath[ 0 ] != HB_OS_PATH_DELIM_CHR )
-#  endif
+#     endif
             {
                if( pFName->szPath[ 0 ] == '.' &&
                    pFName->szPath[ 1 ] == HB_OS_PATH_DELIM_CHR )
@@ -261,24 +431,28 @@ void hb_cmdargUpdate( void )
          }
          hb_xfree( pFName );
       }
-#endif
+#  endif
    }
+#endif
 }
 
 /* places application parameters on the HVM stack */
 
 int hb_cmdargPushArgs( void )
 {
-   int argc = hb_cmdargARGC();
-   char ** argv = hb_cmdargARGV();
    int iArgCount = 0, i;
 
-   for( i = 1; i < argc; i++ )
+   for( i = 1; i < s_argc; i++ )
    {
       /* Filter out any parameters beginning with //, like //INFO */
-      if( ! hb_cmdargIsInternal( argv[ i ], NULL ) )
+      if( ! hb_cmdargIsInternal( s_argv[ i ], NULL ) )
       {
-         hb_vmPushString( argv[ i ], strlen( argv[ i ] ) );
+#if defined( HB_OS_WIN )
+         if( s_lpArgV )
+            HB_ITEMPUTSTR( hb_stackAllocItem(), s_lpArgV[ i ] );
+         else
+#endif
+            hb_vmPushString( s_argv[ i ], strlen( s_argv[ i ] ) );
          iArgCount++;
       }
    }
@@ -332,13 +506,25 @@ static char * hb_cmdargGet( const char * pszName, HB_BOOL bRetValue )
       {
          if( bRetValue )
          {
-            /* TODO: TCHAR conv */
-            char * pszPos = s_argv[ i ] + iPrefixLen + strlen( pszName );
+#if defined( HB_OS_WIN )
+            if( s_lpArgV )
+            {
+               LPCTSTR lpPos = s_lpArgV[ i ] + iPrefixLen + strlen( pszName );
 
-            if( *pszPos == ':' )
-               pszPos++;
+               if( *lpPos == TEXT( ':' ) )
+                  lpPos++;
+               return HB_OSSTRDUP( lpPos );
+            }
+            else
+#endif
+            {
+               char * pszPos = s_argv[ i ] + iPrefixLen + strlen( pszName );
 
-            return hb_osStrDecode( pszPos );
+               if( *pszPos == ':' )
+                  pszPos++;
+
+               return hb_osStrDecode( pszPos );
+            }
          }
          else
             return ( char * ) "";
@@ -451,22 +637,6 @@ int hb_cmdargNum( const char * pszName )
 
 char * hb_cmdargProgName( void )
 {
-#if defined( HB_OS_WIN )
-   /* TODO: TCHAR conv */
-   if( ! s_fSkipAppName )
-   {
-      if( s_lpAppName[ 0 ] == 0 )
-      {
-         if( GetModuleFileName( NULL, s_lpAppName, HB_SIZEOFARRAY( s_lpAppName ) ) != 0 )
-            /* Windows XP does not set trailing 0 if buffer is not large enough [druzus] */
-            s_lpAppName[ HB_SIZEOFARRAY( s_lpAppName ) - 1 ] = 0;
-         else
-            s_lpAppName[ 0 ] = 0;
-      }
-      if( s_lpAppName[ 0 ] != 0 )
-         return HB_OSSTRDUP( s_lpAppName );
-   }
-#endif
    return hb_cmdargDup( 0 );
 }
 
@@ -545,10 +715,10 @@ HB_FUNC( HB_ARGSHIFT )
       {
          if( ! hb_cmdargIsInternal( s_argv[ iArg ], NULL ) )
          {
-            /* TODO: TCHAR conv */
             s_argv[ 0 ] = s_argv[ iArg ];
 #if defined( HB_OS_WIN )
-            s_fSkipAppName = HB_TRUE;
+            if( s_lpArgV )
+               s_lpArgV[ 0 ] = s_lpArgV[ iArg ];
 #endif
             break;
          }
@@ -560,8 +730,11 @@ HB_FUNC( HB_ARGSHIFT )
       --s_argc;
       while( iArg < s_argc )
       {
-         /* TODO: TCHAR conv */
          s_argv[ iArg ] = s_argv[ iArg + 1 ];
+#if defined( HB_OS_WIN )
+         if( s_lpArgV )
+            s_lpArgV[ iArg ] = s_lpArgV[ iArg + 1 ];
+#endif
          ++iArg;
       }
    }
@@ -569,32 +742,58 @@ HB_FUNC( HB_ARGSHIFT )
 
 HB_FUNC( HB_CMDLINE )
 {
-   char** argv = hb_cmdargARGV();
-   int argc = hb_cmdargARGC();
-   char * pszBuffer, * ptr;
-   HB_SIZE nLen;
-   int iArg;
-
-   /* TODO: TCHAR conv */
-
-   nLen = 0;
-   for( iArg = 1; iArg < argc; iArg++ )
-      nLen += strlen( argv[ iArg ] ) + 1;
-
-   if( nLen )
+   if( s_argc > 1 )
    {
-      ptr = pszBuffer = ( char * ) hb_xgrab( nLen );
-      for( iArg = 1; iArg < argc; iArg++ )
-      {
-         nLen = strlen( argv[ iArg ] );
-         memcpy( ptr, argv[ iArg ], nLen );
-         ptr += nLen;
-         *ptr++ = ' ';
-      }
-      *--ptr = '\0';
+      HB_SIZE nLen = 0;
+      int iArg;
 
-      /* Convert from OS codepage */
-      hb_retc_buffer( ( char * ) hb_osDecodeCP( pszBuffer, NULL, NULL ) );
+#if defined( HB_OS_WIN )
+      if( s_lpArgV )
+      {
+         LPTSTR lpBuffer, ptr;
+
+         for( iArg = 1; iArg < s_argc; iArg++ )
+            nLen += HB_STRLEN( s_lpArgV[ iArg ] ) + 1;
+
+         ptr = lpBuffer = ( LPTSTR ) hb_xgrab( nLen * sizeof( TCHAR ) );
+         for( iArg = 1; iArg < s_argc; iArg++ )
+         {
+            nLen = HB_STRLEN( s_lpArgV[ iArg ] );
+            memcpy( ptr, s_lpArgV[ iArg ], nLen * sizeof( TCHAR ) );
+            ptr += nLen;
+            *ptr++ = TEXT( ' ' );
+         }
+         *--ptr = TEXT( '\0' );
+
+         /* Convert from OS codepage */
+#ifdef UNICODE
+         HB_RETSTR( lpBuffer );
+         hb_xfree( lpBuffer );
+#else
+         hb_retc_buffer( ( char * ) hb_osDecodeCP( lpBuffer, NULL, NULL ) );
+#endif
+      }
+      else
+#endif
+      {
+         char * pszBuffer, * ptr;
+
+         for( iArg = 1; iArg < s_argc; iArg++ )
+            nLen += strlen( s_argv[ iArg ] ) + 1;
+
+         ptr = pszBuffer = ( char * ) hb_xgrab( nLen );
+         for( iArg = 1; iArg < s_argc; iArg++ )
+         {
+            nLen = strlen( s_argv[ iArg ] );
+            memcpy( ptr, s_argv[ iArg ], nLen );
+            ptr += nLen;
+            *ptr++ = ' ';
+         }
+         *--ptr = '\0';
+
+         /* Convert from OS codepage */
+         hb_retc_buffer( ( char * ) hb_osDecodeCP( pszBuffer, NULL, NULL ) );
+      }
    }
    else
       hb_retc_null();

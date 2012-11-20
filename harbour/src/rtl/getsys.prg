@@ -310,6 +310,7 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
 
    LOCAL xValue
    LOCAL cMessage
+   LOCAL nKey
 
    HB_SYMBOL_UNUSED( xDummy )
 
@@ -330,8 +331,9 @@ FUNCTION RangeCheck( oGet, xDummy, xLow, xHigh )
 
       hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), cMessage )
 
-      DO WHILE NextKey() == 0
+      DO WHILE ( nKey := InKey( 0 ) ) == 0
       ENDDO
+      hb_keyIns( nKey )
 
       hb_DispOutAt( SCORE_ROW, Min( 60, MaxCol() - Len( cMessage ) ), Space( Len( cMessage ) ) )
 

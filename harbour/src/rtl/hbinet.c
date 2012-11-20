@@ -478,10 +478,10 @@ HB_FUNC( HB_INETTIMELIMIT )
 
    if( socket )
    {
-      hb_retnl( socket->iTimeLimit );
+      hb_retni( socket->iTimeLimit );
 
       if( HB_ISNUM( 2 ) )
-         socket->iTimeLimit = hb_parnl( 2 );
+         socket->iTimeLimit = hb_parni( 2 );
    }
    else
       hb_inetErrRT();

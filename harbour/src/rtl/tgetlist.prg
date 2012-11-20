@@ -815,13 +815,15 @@ METHOD ShowScoreboard() CLASS HBGetList
    RETURN Self
 
 METHOD DateMsg() CLASS HBGetList
+   LOCAL nKey
 
    IF Set( _SET_SCOREBOARD )
 
       hb_DispOutAt( SCORE_ROW, SCORE_COL, __natMsg( _GET_INVD_DATE ) )
 
-      DO WHILE NextKey() == 0
+      DO WHILE ( nKey := InKey( 0 ) ) == 0
       ENDDO
+      hb_keyIns( nKey )
 
       hb_DispOutAt( SCORE_ROW, SCORE_COL, Space( Len( __natMsg( _GET_INVD_DATE ) ) ) )
 

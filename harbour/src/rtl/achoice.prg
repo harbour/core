@@ -143,7 +143,7 @@ FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPo
       CASE ( bAction := SetKey( nKey ) ) != NIL
 
          Eval( bAction, ProcName( 1 ), ProcLine( 1 ), "" )
-         IF Empty( NextKey() )
+         IF NextKey() == 0
             hb_keySetLast( 255 )
             nKey := 0
          ENDIF

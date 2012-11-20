@@ -686,12 +686,10 @@ METHOD Edit( nPassedKey ) CLASS HBEditor
 
          // If I haven't been called with a key already preset, evaluate this key and then exit
          IF nPassedKey == NIL
-
-            IF NextKey() == 0
+            IF ( nKey := Inkey() ) == 0
                ::IdleHook()
+               nKey := Inkey( 0 )
             ENDIF
-
-            nKey := Inkey( 0 )
          ELSE
             lSingleKeyProcess := .T.
             nKey := nPassedKey
@@ -971,12 +969,10 @@ METHOD BrowseText( nPassedKey )
 
       // If I haven't been called with a key already preset, evaluate this key and then exit
       IF nPassedKey == NIL
-
-         IF NextKey() == 0
+         IF ( nKey := Inkey() ) == 0
             ::IdleHook()
+            nKey := Inkey( 0 )
          ENDIF
-
-         nKey := Inkey( 0 )
       ELSE
          nKey := nPassedKey
       ENDIF

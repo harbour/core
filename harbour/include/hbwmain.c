@@ -52,11 +52,6 @@
 
 #include <windows.h>
 
-#define HB_MAX_ARGS     128
-
-static int    s_argc = 0;
-static char * s_argv[ HB_MAX_ARGS ];
-
 #if defined( HB_OS_WIN_CE )
 #  define HB_LPSTR      LPWSTR
 #else
@@ -68,30 +63,46 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
                     HB_LPSTR  lpCmdLine,      /* pointer to command line */
                     int iCmdShow )            /* show state of window */
 {
-   LPSTR pArgs, pArg, pDst, pSrc;
-   HB_BOOL fQuoted;
    int iErrorCode;
-   HANDLE hHeap;
-#if defined( HB_OS_WIN_CE )
-   LPSTR pFree;
-#endif
+
+#if defined( HB_VM_STARTUP )
+
+   HB_SYMBOL_UNUSED( lpCmdLine );
 
    /* HB_TRACE(HB_TR_DEBUG, ("WinMain(%p, %p, %s, %d)", hInstance, hPrevInstance, lpCmdLine, iCmdShow)); */
 
-   s_argv[ s_argc++ ] = ( char * ) "";
+   hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
+
+   hb_vmInit( HB_TRUE );
+   iErrorCode = hb_vmQuit();
+
+#else
+#  define HB_MAX_ARGS   256
+
+   int argc = 0;
+   char ** argv[ HB_MAX_ARGS ];
+
+   LPSTR pArgs, pArg, pDst, pSrc;
+   HB_BOOL fQuoted;
+   HANDLE hHeap;
+#  if defined( HB_OS_WIN_CE )
+   LPSTR pFree;
+#  endif
+
+   argv[ argc++ ] = ( char * ) "";
 
    pArg = NULL;
 
-#if defined( HB_OS_WIN_CE )
-   pSrc = pFree = hb_wctomb( lpCmdLine );
-#else
+#  if defined( HB_OS_WIN_CE )
+   pSrc = pFree = hb_wctomb( lpCmdLine ); /* No HVM stack */
+#  else
    pSrc = lpCmdLine;
-#endif
+#  endif
    hHeap = GetProcessHeap();
    pDst = pArgs = ( LPSTR ) HeapAlloc( hHeap, 0, strlen( pSrc ) + 1 );
    fQuoted = HB_FALSE;
 
-   while( *pSrc != 0 && s_argc < HB_MAX_ARGS )
+   while( *pSrc != 0 && argc < HB_MAX_ARGS )
    {
       if( *pSrc == '"' )
       {
@@ -110,7 +121,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
          if( pArg )
          {
             *pDst++ = '\0';
-            s_argv[ s_argc++ ] = pArg;
+            argv[ argc++ ] = pArg;
             pArg = NULL;
          }
       }
@@ -119,28 +130,21 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
    if( pArg )
    {
       *pDst = '\0';
-      s_argv[ s_argc++ ] = pArg;
+      argv[ argc++ ] = pArg;
    }
 
-#if defined( HB_OS_WIN_CE )
+#  if defined( HB_OS_WIN_CE )
    hb_xfree( pFree );
-#endif
+#  endif
 
-#if defined( HB_VM_STARTUP )
-   hb_winmainArgInit( hInstance, hPrevInstance, iCmdShow );
-   hb_cmdargInit( s_argc, s_argv );
-
-   hb_vmInit( HB_TRUE );
-   iErrorCode = hb_vmQuit();
-#else
    HB_SYMBOL_UNUSED( hInstance );
    HB_SYMBOL_UNUSED( hPrevInstance );
    HB_SYMBOL_UNUSED( iCmdShow );
 
-   iErrorCode = main( s_argc, s_argv );
-#endif
+   iErrorCode = main( argc, argv );
 
    HeapFree( hHeap, 0, ( void * ) pArgs );
+#endif
 
    return iErrorCode;
 }

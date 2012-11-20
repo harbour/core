@@ -2831,8 +2831,8 @@ static void hb_gt_def_InkeyPoll( PHB_GT pGT )
    /*
     * Clipper 5.3 always poll events without respecting
     * _SET_TYPEAHEAD when CL5.2 only when it's non zero.
-    * IMHO keeping CL5.2 behavior will be more accurate for xharbour
-    * because it allow to control it by user what some times could be
+    * IMHO keeping CL5.2 behavior will be more accurate for harbour
+    * because it allows to control it by user what some times could be
     * necessary due to different low level GT behavior on some platforms
     */
    if( hb_setGetTypeAhead() )

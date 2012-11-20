@@ -1051,6 +1051,8 @@ extern           HB_U32        hb_cmdargProcessVM( int * pCancelKey, int * pCanc
 #if defined( HB_OS_WIN )
 extern HB_EXPORT void          hb_winmainArgInit( void * hInstance, void * hPrevInstance, int iCmdShow ); /* Set WinMain() parameters */
 extern HB_EXPORT HB_BOOL       hb_winmainArgGet( void * phInstance, void * phPrevInstance, int * piCmdShow ); /* Retrieve WinMain() parameters */
+extern HB_EXPORT void          hb_winmainArgVBuild( void );
+extern HB_EXPORT void          hb_winmainArgVFree( void );
 #endif
 
 /* Codeblock management */
