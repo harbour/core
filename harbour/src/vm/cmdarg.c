@@ -195,13 +195,13 @@ void hb_winmainArgVBuild( void )
          iArgC = 1;
          lpArgV = ( LPTSTR * ) HeapAlloc( hHeap, 0,
                                           iArgC * sizeof( LPTSTR ) +
-                                          nSize * sizeof( TCHAR ) );
+                                          nModuleName * sizeof( TCHAR ) );
          lpArgV[ 0 ] = ( LPTSTR ) ( lpArgV + iArgC );
       }
       else
          iArgC = 0;
    }
-   if( iArgC > 0 && nModuleName )
+   if( iArgC > 0 && nModuleName != 0 )
    {
       /* NOTE: Manually setup the executable name in Windows,
                because in console apps the name may be truncated
