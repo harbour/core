@@ -363,9 +363,7 @@ static HBITMAP hPrepareBitmap( LPCTSTR szBitmap, UINT uiBitmap,
                         );
 
                      if( ! bResult )
-                     {
                         DeleteObject( hBitmap2 );
-                     }
                      else
                      {
                         DeleteObject( hBitmap );
@@ -954,9 +952,8 @@ HB_FUNC( WVG_FONTCREATE )
       hb_arraySetNInt( aFont, 15, ( HB_PTRDIFF ) hFont );
    }
    else
-   {
       aFont = wvg_logfontTOarray( &lf, HB_TRUE );
-   }
+
    hb_itemReturnRelease( aFont );
 }
 
@@ -1020,9 +1017,7 @@ HB_FUNC( WVG_ADDTOOLBARBUTTON )
          hb_strfree( hCaption );
 
          if( hb_parl( 6 ) )
-         {
             SendMessage( hWndTB, TB_SETMAXTEXTROWS, ( WPARAM ) 0, ( LPARAM ) 0 );
-         }
 
          /* add button */
          tbb.iBitmap   = hb_parni( 2 );

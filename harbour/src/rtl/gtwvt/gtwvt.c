@@ -452,9 +452,7 @@ static void hb_gt_wvt_UpdateCaret( PHB_GTWVT pWVT )
    HB_GTSELF_GETSCRCURSOR( pWVT->pGT, &iRow, &iCol, &iStyle );
 
    if( iRow < 0 || iCol < 0 || iRow >= pWVT->ROWS || iCol >= pWVT->COLS )
-   {
       iCaretSize = 0;
-   }
    else switch( iStyle )
    {
       case SC_INSERT:
@@ -1374,13 +1372,9 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                int  iScanCode = HIWORD( lParam ) & 0xFF;
 
                if( bCtrl && iScanCode == 76 ) /* CTRL_VK_NUMPAD5 */
-               {
                   hb_gt_wvt_AddCharToInputQueue( pWVT, KP_CTRL_5 );
-               }
                else if( bCtrl && wParam == VK_TAB ) /* K_CTRL_TAB */
-               {
                   hb_gt_wvt_AddCharToInputQueue( pWVT, bShift ? K_CTRL_SH_TAB : K_CTRL_TAB );
-               }
                else if( iScanCode == 70 ) /* Ctrl_Break key OR Scroll Lock Key */
                {
                   if( bCtrl )  /* Not scroll lock */
@@ -1392,9 +1386,7 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
                      DefWindowProc( pWVT->hWnd, message, wParam, lParam );   /* Let windows handle ScrollLock */
                }
                else if( bCtrl && iScanCode == 53 && bShift )
-               {
                   hb_gt_wvt_AddCharToInputQueue( pWVT, K_CTRL_QUESTION );
-               }
                else if( ( bAlt || bCtrl ) && (
                         wParam == VK_MULTIPLY || wParam == VK_ADD ||
                         wParam == VK_SUBTRACT || wParam == VK_DIVIDE ) )
@@ -1432,13 +1424,9 @@ static HB_BOOL hb_gt_wvt_KeyEvent( PHB_GTWVT pWVT, UINT message, WPARAM wParam, 
          if( ! pWVT->IgnoreWM_SYSCHAR )
          {
             if( bCtrl && iScanCode == 28 )  /* K_CTRL_RETURN */
-            {
                hb_gt_wvt_AddCharToInputQueue( pWVT, K_CTRL_RETURN );
-            }
             else if( bCtrl && ( c >= 1 && c <= 26 ) )  /* K_CTRL_A - Z */
-            {
                hb_gt_wvt_AddCharToInputQueue( pWVT, K_Ctrl[ c - 1 ] );
-            }
             else
             {
                switch( c )
@@ -1746,9 +1734,7 @@ static void hb_gt_wvt_PaintText( PHB_GTWVT pWVT )
           */
          iColor &= 0xff;
          if( len == 0 )
-         {
             iOldColor = iColor;
-         }
          else if( iColor != iOldColor )
          {
             hb_gt_wvt_TextOut( pWVT, hdc, startCol, iRow, iOldColor, pWVT->TextLine, ( UINT ) len );
@@ -2628,9 +2614,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( iVal != pWVT->CodePage )
             {
                if( ! pWVT->hWnd )
-               {
                   pWVT->CodePage = iVal;
-               }
 #if ! defined( UNICODE )
                else if( iVal == pWVT->boxCodePage )
                {
@@ -2672,9 +2656,7 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
             if( iVal != pWVT->boxCodePage )
             {
                if( ! pWVT->hWnd )
-               {
                   pWVT->boxCodePage = iVal;
-               }
                else if( iVal == pWVT->CodePage )
                {
                   if( pWVT->hFontBox != pWVT->hFont )

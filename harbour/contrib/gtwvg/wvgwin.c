@@ -556,9 +556,7 @@ HB_FUNC( WVG_TRACKPOPUPMENU )
    POINT xy = { 0, 0 };
 
    if( ! HB_ISNUM( 3 ) )
-   {
       GetCursorPos( &xy );
-   }
    else
    {
       xy.x = x;
@@ -715,9 +713,7 @@ HB_FUNC( WVG_ISMENUITEMCHECKED )
 
    lSuccess = GetMenuItemInfo( ( HMENU ) ( HB_PTRDIFF ) hb_parnint( 1 ), ( UINT ) hb_parni( 2 ), TRUE, &lpmii );
    if( lSuccess )
-   {
       hb_retl( lpmii.fState & MFS_CHECKED ? TRUE : FALSE );
-   }
    else
       hb_retl( FALSE );
 }

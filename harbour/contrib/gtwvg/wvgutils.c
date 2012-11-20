@@ -225,9 +225,7 @@ HB_FUNC( WVT_CHOOSECOLOR )
    int         i;
 
    for( i = 0; i < 16; i++ )
-   {
       crCustClr[ i ] = ( HB_ISARRAY( 2 ) ? ( COLORREF ) hb_parvnl( 2, i + 1 ) : GetSysColor( COLOR_BTNFACE ) );
-   }
 
    cc.lStructSize  = sizeof( CHOOSECOLOR );
    cc.hwndOwner    = _s->hWnd;
@@ -236,13 +234,9 @@ HB_FUNC( WVT_CHOOSECOLOR )
    cc.Flags        = ( WORD ) hb_parnldef( 3, CC_ANYCOLOR | CC_RGBINIT | CC_FULLOPEN );
 
    if( ChooseColor( &cc ) )
-   {
       hb_retnl( cc.rgbResult );
-   }
    else
-   {
       hb_retnl( -1 );
-   }
 }
 
 /*
@@ -271,9 +265,7 @@ HB_FUNC( WVT_SETTOOLTIPACTIVE )
    HB_BOOL bActive = _s->bToolTipActive;
 
    if( HB_ISLOG( 1 ) )
-   {
       _s->bToolTipActive = hb_parl( 1 );
-   }
 
    hb_retl( bActive );
 }
@@ -848,9 +840,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    for( iIndex = 0; iIndex < WVT_DLGML_MAX; iIndex++ )
    {
       if( _s->hDlgModeless[ iIndex ] == NULL )
-      {
          break;
-      }
    }
 
    if( iIndex >= WVT_DLGML_MAX )
@@ -870,9 +860,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
    {
       pExecSym = hb_dynsymFindName( hb_itemGetCPtr( pFirst ) );
       if( pExecSym )
-      {
          pFunc = ( PHB_ITEM ) pExecSym;
-      }
       iType = 1;
    }
 
@@ -926,9 +914,7 @@ HB_FUNC( WVT_CREATEDIALOGDYNAMIC )
          {
             /* if codeblock, store the codeblock and lock it there */
             if( HB_IS_BLOCK( pFirst ) )
-            {
                _s->pcbFunc[ iIndex ] = pFunc;
-            }
 
             _s->pFunc[ iIndex ] = pFunc;
             _s->iType[ iIndex ] = iType;
@@ -1079,9 +1065,8 @@ HB_FUNC( WVT__MAKEDLGTEMPLATE )
       p    += nchar;
    }
    else
-   {
       *p++ = 0;
-   }
+
    /* add in the wPointSize and szFontName here iff the DS_SETFONT bit on */
 
    if( ( lStyle & DS_SETFONT ) )
@@ -1220,17 +1205,13 @@ HB_FUNC( WVT_DLGSETICON )
    HICON hIcon;
 
    if( HB_ISNUM( 2 ) )
-   {
       hIcon = LoadIcon( ( HINSTANCE ) wvg_hInstance(), MAKEINTRESOURCE( hb_parni( 2 ) ) );
-   }
    else
    {
       void * cIcon;
       hIcon = ( HICON ) LoadImage( ( HINSTANCE ) NULL, HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, LR_LOADFROMFILE );
       if( ! hIcon )
-      {
          hIcon = ( HICON ) LoadImage( GetModuleHandle( NULL ), HB_PARSTR( 2, &cIcon, NULL ), IMAGE_ICON, 0, 0, 0 );
-      }
       hb_strfree( cIcon );
    }
 
@@ -1241,9 +1222,7 @@ HB_FUNC( WVT_DLGSETICON )
    }
 
    if( hIcon )
-   {
       hb_retnint( ( HB_PTRDIFF ) hIcon );
-   }
 }
 
 HB_FUNC( WVT_GETFONTHANDLE )

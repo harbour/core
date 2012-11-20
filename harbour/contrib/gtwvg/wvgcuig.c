@@ -1283,9 +1283,7 @@ HB_FUNC( WVG_PICTURE )
       pWVT->gObjs    = gObj;
    }
    else
-   {
       hb_retni( 0 );
-   }
 #else
    hb_retni( 0 );
 #endif
@@ -1311,9 +1309,7 @@ HB_FUNC( WVG_IMAGE )
    {
       case GOBJ_IMAGESOURCE_SLOT:
          if( HB_ISNUM( 7 ) && hb_parni( 7 ) <= WVT_PICTURES_MAX )
-         {
             iPicture = pWVT->pGUI->iPicture[ hb_parni( 7 ) - 1 ];
-         }
          break;
       case GOBJ_IMAGESOURCE_RESOURCE:
       {
@@ -1352,21 +1348,15 @@ HB_FUNC( WVG_IMAGE )
       gObj->iPicture = iPicture;
 
       if( iSource == GOBJ_IMAGESOURCE_SLOT )
-      {
          gObj->bDestroyPicture = HB_FALSE;
-      }
       else
-      {
          gObj->bDestroyPicture = HB_TRUE;
-      }
 
       gObj->gObjNext = pWVT->gObjs;
       pWVT->gObjs    = gObj;
    }
    else
-   {
       hb_retni( 0 );
-   }
 #else
    hb_retni( 0 );
 #endif
@@ -1520,9 +1510,7 @@ static void hb_wvg_GridHorz( PHB_GTWVT pWVT, PHB_ITEM pArray, RECT * uRect )
 
    if( ( uRect->left > iRight ) || ( uRect->top > iBottom ) ||
        ( uRect->bottom < iTop ) || ( uRect->right < iLeft ) )
-   {
       return;
-   }
 
    hdc = pWVT->hdc;
    SelectObject( hdc, pWVT->currentPen );
@@ -1578,14 +1566,10 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT * uRect )
                   if( iObjType == GOBJ_OBJTYPE_GRIDVERT )
                   {
                      if( hb_arrayGetNI( pArray, 4 ) > 0 )
-                     {
                         hb_wvg_GridVert( pWVT, pArray, uRect );
-                     }
                   }
                   else if( iObjType == GOBJ_OBJTYPE_GRIDHORZ )
-                  {
                      hb_wvg_GridHorz( pWVT, pArray, uRect );
-                  }
                   else
                   {
                      /* Take care of offsets 5th element */
@@ -1596,9 +1580,8 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT * uRect )
                   }
                }
                else
-               {
                   iObjType = 0;
-               }
+
                /*  C A R E F U L */
                #if 0
                if( pArray )
@@ -1744,9 +1727,7 @@ void hb_gt_wvt_PaintGObjects( PHB_GTWVT pWVT, RECT * uRect )
                   /* It is inside of the boundaries */
                }
                else
-               {
                   hb_wvg_Outline( pWVT, gObj, iLeft - 1, iTop - 1, iRight + 1, iBottom + 1 );
-               }
                break;
          }
       }
