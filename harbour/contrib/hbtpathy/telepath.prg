@@ -104,14 +104,6 @@ FUNCTION tp_baud( nPort, nNewBaud )
 FUNCTION tp_inkey( ... )
    RETURN Inkey( ... )
 
-FUNCTION tp_idle( lNewval )
-
-   IF lNewval != NIL .AND. lNewval
-      RETURN .T.
-   ENDIF
-
-   RETURN .F.
-
 PROCEDURE tp_delay( nTime )
 
    hb_default( @nTime, 0 )
