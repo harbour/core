@@ -155,7 +155,7 @@ static char * hb_fsReadLine( HB_FHANDLE hFileHandle, HB_ISIZ * plBuffLen, const 
 
       nTries++;
    }
-   while( ( ! *pbFound ) && nRead > 0 );
+   while( ! *pbFound && nRead > 0 );
 
    return pBuff;
 }

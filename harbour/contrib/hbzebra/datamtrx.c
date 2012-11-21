@@ -364,7 +364,8 @@ static void _datamatrix_do_placement( PHB_BITBUFFER pBits, unsigned char * pCW, 
             _datamatrix_place( pArr, iPRow, iPCol, iR, iC, i++ );
          iR -= 2;
          iC += 2;
-      } while( iR >= 0 && iC < iPCol );
+      }
+      while( iR >= 0 && iC < iPCol );
 
       iR++;
       iC += 3;
@@ -375,11 +376,13 @@ static void _datamatrix_do_placement( PHB_BITBUFFER pBits, unsigned char * pCW, 
             _datamatrix_place( pArr, iPRow, iPCol, iR, iC, i++ );
          iR += 2;
          iC -= 2;
-      } while( iR < iPRow && iC >= 0 );
+      }
+      while( iR < iPRow && iC >= 0 );
 
       iR += 3;
       iC++;
-   } while( iR < iPRow || iC < iPCol );
+   }
+   while( iR < iPRow || iC < iPCol );
 
    if( pArr[ iPRow * iPCol - 1 ] == 0 )
       pArr[ iPRow * iPCol - 1 ] = pArr[ iPRow * iPCol - iPCol - 2 ] = 1;

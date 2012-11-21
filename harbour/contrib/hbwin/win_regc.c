@@ -143,9 +143,7 @@ HB_FUNC( WIN_REGQUERYVALUEEX )
                                  lpValue,
                                  &dwSize ) == ERROR_SUCCESS )
             {
-               #if defined( UNICODE )
-               dwSize >>= 1;
-               #endif
+               dwSize /= sizeof( TCHAR );
 
                HB_STORSTRLEN( ( LPTSTR ) lpValue, dwSize, 5 );
             }
@@ -225,9 +223,7 @@ HB_FUNC( WIN_REGSETVALUEEX )
 
       ++nValueLen;
 
-      #if defined( UNICODE )
-      nValueLen *= 2;
-      #endif
+      nValueLen *= sizeof( TCHAR );
 
       hb_retl( RegSetValueEx( ( HKEY ) hb_parptr( 1 ),
                               lpKey,
