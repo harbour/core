@@ -99,13 +99,19 @@ void hb_winmainArgVBuild( void )
 {
    LPCTSTR lpCmdLine, lpSrc;
    LPTSTR * lpArgV;
-   LPTSTR lpDst, lpArg;
+   LPTSTR lpDst, lpArg, lpModuleName;
    HB_SIZE nSize, nModuleName;
    int iArgC;
    HB_BOOL fQuoted;
 
+   /* NOTE: MAX_PATH used intentionally instead of HB_MAX_PATH */
+   lpModuleName = ( LPTSTR ) HB_WINARG_ALLOC( ( MAX_PATH + 1 ) * sizeof( TCHAR ) );
+   nModuleName = GetModuleFileName( NULL, lpModuleName, MAX_PATH + 1 );
+   if( nModuleName )
+      nModuleName++;
+   HB_WINARG_FREE( lpModuleName );
+
    lpCmdLine = GetCommandLine();
-   nModuleName = GetModuleFileName( NULL, NULL, 0 );
    lpArgV = NULL;
    lpDst = NULL;
    nSize = 0;
@@ -254,7 +260,7 @@ void hb_winmainArgVFree( void )
       {
          if( s_argv == s_lpArgVStr )
             s_argv = NULL;
-         HB_WINARG_FREE( ( void * ) s_lpArgVStr );
+         HB_WINARG_FREE( s_lpArgVStr );
          s_lpArgVStr = NULL;
       }
 #else
@@ -262,7 +268,7 @@ void hb_winmainArgVFree( void )
          s_argv = NULL;
 #endif
 
-      HB_WINARG_FREE( ( void * ) s_lpArgV );
+      HB_WINARG_FREE( s_lpArgV );
       s_lpArgV = NULL;
       s_argc = 0;
    }
