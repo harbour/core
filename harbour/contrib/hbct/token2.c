@@ -339,7 +339,7 @@ HB_FUNC( TOKENINIT )
 
          if( pc == NULL )
             break;
-      }  /* for( ;; ) */
+      }
 
       /* save token environment to 4th parameter OR to the static */
       if( HB_ISBYREF( 4 ) )

@@ -122,37 +122,37 @@ HB_EXTERN_BEGIN
 #if HB_TR_LEVEL >= HB_TR_DEBUG
 #define HB_ECHO_TRACE_HB_TR_DEBUG(x)    HB_ECHO_CREATE(HB_TR_DEBUG, x)
 #else
-#define HB_ECHO_TRACE_HB_TR_DEBUG(x)
+#define HB_ECHO_TRACE_HB_TR_DEBUG(x)    {}
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_INFO
 #define HB_ECHO_TRACE_HB_TR_INFO(x)     HB_ECHO_CREATE(HB_TR_INFO, x)
 #else
-#define HB_ECHO_TRACE_HB_TR_INFO(x)
+#define HB_ECHO_TRACE_HB_TR_INFO(x)     {}
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_WARNING
 #define HB_ECHO_TRACE_HB_TR_WARNING(x)  HB_ECHO_CREATE(HB_TR_WARNING, x)
 #else
-#define HB_ECHO_TRACE_HB_TR_WARNING(x)
+#define HB_ECHO_TRACE_HB_TR_WARNING(x)  {}
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_ERROR
 #define HB_ECHO_TRACE_HB_TR_ERROR(x)    HB_ECHO_CREATE(HB_TR_ERROR, x)
 #else
-#define HB_ECHO_TRACE_HB_TR_ERROR(x)
+#define HB_ECHO_TRACE_HB_TR_ERROR(x)    {}
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_FATAL
 #define HB_ECHO_TRACE_HB_TR_FATAL(x)    HB_ECHO_CREATE(HB_TR_FATAL, x)
 #else
-#define HB_ECHO_TRACE_HB_TR_FATAL(x)
+#define HB_ECHO_TRACE_HB_TR_FATAL(x)    {}
 #endif
 
 #if 1  /* always! */
 #define HB_ECHO_TRACE_HB_TR_ALWAYS(x)   HB_ECHO_CREATE(HB_TR_ALWAYS, x)
 #else
-#define HB_ECHO_TRACE_HB_TR_ALWAYS(x)
+#define HB_ECHO_TRACE_HB_TR_ALWAYS(x)   {}
 #endif
 
 
@@ -171,37 +171,37 @@ HB_EXTERN_BEGIN
 #if HB_TR_LEVEL >= HB_TR_DEBUG
 #define HB_ECHO_STEALTH_HB_TR_DEBUG(x)    HB_ECHO_STEALTH(HB_TR_DEBUG, x)
 #else
-#define HB_ECHO_STEALTH_HB_TR_DEBUG(x)
+#define HB_ECHO_STEALTH_HB_TR_DEBUG(x)    {}
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_INFO
 #define HB_ECHO_STEALTH_HB_TR_INFO(x)     HB_ECHO_STEALTH(HB_TR_INFO, x)
 #else
-#define HB_ECHO_STEALTH_HB_TR_INFO(x)
+#define HB_ECHO_STEALTH_HB_TR_INFO(x)     {}
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_WARNING
 #define HB_ECHO_STEALTH_HB_TR_WARNING(x)  HB_ECHO_STEALTH(HB_TR_WARNING, x)
 #else
-#define HB_ECHO_STEALTH_HB_TR_WARNING(x)
+#define HB_ECHO_STEALTH_HB_TR_WARNING(x)  {}
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_ERROR
 #define HB_ECHO_STEALTH_HB_TR_ERROR(x)    HB_ECHO_STEALTH(HB_TR_ERROR, x)
 #else
-#define HB_ECHO_STEALTH_HB_TR_ERROR(x)
+#define HB_ECHO_STEALTH_HB_TR_ERROR(x)    {}
 #endif
 
 #if HB_TR_LEVEL >= HB_TR_FATAL
 #define HB_ECHO_STEALTH_HB_TR_FATAL(x)    HB_ECHO_STEALTH(HB_TR_FATAL, x)
 #else
-#define HB_ECHO_STEALTH_HB_TR_FATAL(x)
+#define HB_ECHO_STEALTH_HB_TR_FATAL(x)    {}
 #endif
 
 #if 1  /* always! */
 #define HB_ECHO_STEALTH_HB_TR_ALWAYS(x)   HB_ECHO_STEALTH(HB_TR_ALWAYS, x)
 #else
-#define HB_ECHO_STEALTH_HB_TR_ALWAYS(x)
+#define HB_ECHO_STEALTH_HB_TR_ALWAYS(x)   {}
 #endif
 
 /* NOTE: This will print tracing info without changing current

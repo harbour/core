@@ -182,7 +182,7 @@ static void do_charone( int iSwitch )
                hb_retclen( pcString, sStrLen );
             }
             break;
-      }  /* switch( iSwitch ) */
+      }
    }
    else  /* if( HB_ISCHAR( 1 ) ) */
    {

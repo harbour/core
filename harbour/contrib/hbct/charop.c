@@ -292,7 +292,7 @@ void ct_charop( int iMode )
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
-      }  /* endswitch( iMode ) */
+      }
 
       if( HB_ISBYREF( 1 ) )
          hb_storclen( ( char * ) pucResult, sStrLen, 1 );

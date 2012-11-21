@@ -12244,7 +12244,6 @@ STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
    LOCAL hOutErr
 
    LOCAL cData
-   LOCAL cChunk
    LOCAL nLen
 
    LOCAL nErrorLevel
@@ -12255,13 +12254,14 @@ STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
 
       cData := Space( 1024 )
       DO WHILE ( nLen := FRead( hOutErr, @cData, hb_BLen( cData ) ) ) > 0
-         OutStd( cChunk := hb_BLeft( cData, nLen ) )
-         cStdOutErr += cChunk
+         cStdOutErr += hb_BLeft( cData, nLen )
       ENDDO
 
       nErrorLevel := hb_processValue( hProc )
 
       FClose( hOutErr )
+
+      OutStd( cStdOutErr )
    ELSE
       nErrorLevel := -999
    ENDIF

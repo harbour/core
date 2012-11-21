@@ -297,7 +297,7 @@ static void do_token1( int iSwitch )
             else if( pc + 1 == pcString + sStrLen )
                break;
          }
-      }  /* while( nToken < nTokenCounter ) */
+      }
 
       switch( iSwitch )
       {

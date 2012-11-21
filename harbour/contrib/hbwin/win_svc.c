@@ -129,19 +129,13 @@ static VOID WINAPI hbwin_SvcMainFunction( DWORD dwArgc, LPTSTR * lpszArgv )
             hb_vmRequestRestore();
          }
          else
-         {
             HB_TRACE( HB_TR_DEBUG, ( "HVM stack not available" ) );
-         }
       }
       else
-      {
          HB_TRACE( HB_TR_DEBUG, ( "Harbour service entry function not found" ) );
-      }
    }
    else
-   {
       HB_TRACE( HB_TR_DEBUG, ( "Error registering service" ) );
-   }
 }
 
 #endif
