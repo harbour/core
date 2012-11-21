@@ -29,6 +29,8 @@ PROCEDURE Main()
    LOCAL hExtExceptions := { ;
       hb_libExt() => NIL, ;
       ".zip"  => NIL, ;
+      ".7z"   => NIL, ;
+      ".exe"  => NIL, ;
       ".o"    => NIL, ;
       ".js"   => NIL, ;
       ".dif"  => NIL, ;
@@ -102,7 +104,8 @@ PROCEDURE Main()
 
    FOR EACH aFile IN hb_DirScan( "", hb_osFileMask() )
       cExt := hb_FNameExt( aFile[ F_NAME ] )
-      IF !( hb_FNameExt( aFile[ F_NAME ] ) $ hExtExceptions ) .AND. ;
+      IF ! Empty( hb_FNameExt( aFile[ F_NAME ] ) ) .AND. ;
+         !( hb_FNameExt( aFile[ F_NAME ] ) $ hExtExceptions ) .AND. ;
          !( hb_FNameNameExt( aFile[ F_NAME ] ) $ hFileExceptions ) .AND. ;
          AScan( aMaskExceptions, {| tmp | hb_FileMatch( StrTran( aFile[ F_NAME ], "\", "/" ), tmp ) } ) == 0
          ProcFile( hAll, aFile[ F_NAME ] )

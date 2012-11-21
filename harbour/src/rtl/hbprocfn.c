@@ -59,7 +59,7 @@
 
 HB_FUNC( HB_PROCESSOPEN )
 {
-   const char *szName = hb_parc( 1 );
+   const char * szName = hb_parc( 1 );
    PHB_ITEM pStdIn  = hb_param( 2, HB_IT_BYREF );
    PHB_ITEM pStdOut = hb_param( 3, HB_IT_BYREF );
    PHB_ITEM pStdErr = hb_param( 4, HB_IT_BYREF );

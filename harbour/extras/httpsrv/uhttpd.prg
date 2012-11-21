@@ -1517,7 +1517,7 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
 
       // hb_ToOutDebug( "New 2 Path: %s\n\r", hb_CurDrive() + hb_osDriveSeparator() + hb_ps() + CurDir() )
 
-      IF hProc > -1
+      IF hProc != F_ERROR
          // hb_ToOutDebug( "Process handler: %s\n\r", hProc )
          // hb_ToOutDebug( "Error: %s\n\r", FError() )
 
@@ -1536,21 +1536,21 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
          // hb_ToOutDebug( "Reading output\n\r" )
          cData := Space( 1000 )
          cOutPut := ""
-         DO WHILE ( nLen := FRead( hOut, @cData, Len( cData ) ) ) > 0
-            cOutPut += SubStr( cData, 1, nLen )
+         DO WHILE ( nLen := FRead( hOut, @cData, hb_BLen( cData ) ) ) > 0
+            cOutPut += hb_BLeft( cData, nLen )
             cData := Space( 1000 )
          ENDDO
 
-         /*
+         #if 0
          cData := Space( 1000 )
          cError := ""
-         DO WHILE ( nLen := FRead( hErr, @cData, Len( cData ) ) ) > 0
-            cError += SubStr( cData, 1, nLen )
+         DO WHILE ( nLen := FRead( hErr, @cData, hb_BLen( cData ) ) ) > 0
+            cError += hb_BLeft( cData, nLen )
             cData := Space( 1000 )
          ENDDO
 
          cOutPut += cError
-         */
+         #endif
 
          // hb_ToOutDebug( "Received: cOutPut = %s\n\r", cOutPut )
 
@@ -1570,7 +1570,6 @@ STATIC FUNCTION CGIExec( cProc, /*@*/ cOutPut )
             nErrorLevel := nKillExit
          ENDIF
 
-         FClose( hProc )
          FClose( hIn )
          FClose( hOut )
          // FClose( hErr )

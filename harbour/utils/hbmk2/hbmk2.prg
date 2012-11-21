@@ -134,8 +134,6 @@
               On IA64 Windows: msvcia64, msvc, msvc64, mingw, mingw64, ...
  */
 
-#define _HBMK_LIB_HINTS_
-
 #ifndef _HBMK_EMBEDDED_
 
 #include "hbextcdp.ch"
@@ -1331,9 +1329,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    LOCAL lHBMAINDLLP
 
-#ifdef _HBMK_LIB_HINTS_
-   LOCAL cStdOut, cStdErr
-#endif
+   LOCAL cStdOutErr
 
    IF s_cSecToken == NIL
       s_cSecToken := StrZero( hb_rand32(), 10, 0 )
@@ -6611,7 +6607,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand  ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_hb_processRunCatch( cCommand, @cStdOutErr ) ) != 0
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running linker. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6620,14 +6616,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
 
-#ifdef _HBMK_LIB_HINTS_
                   /* Run failed linker command again to
                      analyze its output and present hints */
-                  IF ! hbmk[ _HBMK_lQuiet ] .AND. ! hbmk[ _HBMK_lIGNOREERROR ]
-                     hb_processRun( cCommand,, @cStdOut, @cStdErr )
-                     AdviseMissingLibs( hbmk, cStdOut + hb_eol() + cStdErr )
+                  IF ! hbmk[ _HBMK_lQuiet ]
+                     AdviseMissingLibs( hbmk, cStdOutErr )
                   ENDIF
-#endif
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -6733,7 +6726,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hb_processRun( cCommand  ) ) != 0
+               IF ! hbmk[ _HBMK_lDONTEXEC ] .AND. ( tmp := hbmk_hb_processRunCatch( cCommand, @cStdOutErr ) ) != 0
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Running dynamic lib link command. %1$d" ), tmp ) )
                   IF ! hbmk[ _HBMK_lQuiet ]
                      OutErr( cCommand + _OUT_EOL )
@@ -6742,14 +6735,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                      hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_RUNLINKER
                   ENDIF
 
-#ifdef _HBMK_LIB_HINTS_
                   /* Run failed linker command again to
                      analyze its output and present hints */
-                  IF ! hbmk[ _HBMK_lQuiet ] .AND. ! hbmk[ _HBMK_lIGNOREERROR ]
-                     hb_processRun( cCommand,, @cStdOut, @cStdErr )
-                     AdviseMissingLibs( hbmk, cStdOut + hb_eol() + cStdErr )
+                  IF ! hbmk[ _HBMK_lQuiet ]
+                     AdviseMissingLibs( hbmk, cStdOutErr )
                   ENDIF
-#endif
                ENDIF
 
                IF ! Empty( cScriptFile )
@@ -12249,7 +12239,34 @@ STATIC FUNCTION Apple_App_Template_Info_plist()
 </plist>
 #pragma __endtext
 
-#ifdef _HBMK_LIB_HINTS_
+STATIC FUNCTION hbmk_hb_processRunCatch( cCommand, /* @ */ cStdOutErr )
+   LOCAL hProc
+   LOCAL hOutErr
+
+   LOCAL cData
+   LOCAL cChunk
+   LOCAL nLen
+
+   LOCAL nErrorLevel
+
+   cStdOutErr := ""
+
+   IF ( hProc := hb_processOpen( cCommand,, @hOutErr, @hOutErr ) ) != F_ERROR
+
+      cData := Space( 1024 )
+      DO WHILE ( nLen := FRead( hOutErr, @cData, hb_BLen( cData ) ) ) > 0
+         OutStd( cChunk := hb_BLeft( cData, nLen ) )
+         cStdOutErr += cChunk
+      ENDDO
+
+      nErrorLevel := hb_processValue( hProc )
+
+      FClose( hOutErr )
+   ELSE
+      nErrorLevel := -999
+   ENDIF
+
+   RETURN nErrorLevel
 
 STATIC PROCEDURE AdviseMissingLibs( hbmk, cOutput )
 
@@ -12406,8 +12423,6 @@ STATIC FUNCTION GetListOfFunctionsKnownLoadHBX( cFileName, cRoot, hAll )
    ENDIF
 
    RETURN aDynamic
-
-#endif
 
 STATIC FUNCTION mk_extern( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex, cOutputName )
 
