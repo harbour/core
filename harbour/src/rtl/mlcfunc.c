@@ -435,7 +435,8 @@ HB_FUNC( MLPOS )
    {
       if( hb_mlInit( &MLC, 1 ) )
       {
-         while( --nLine && hb_mlGetLine( &MLC ) ) { ; }
+         while( --nLine && hb_mlGetLine( &MLC ) )
+            ;
          nOffset = MLC.nOffset;
          if( MLC.cdp )
             nOffset = hb_cdpTextLen( MLC.cdp, MLC.pszString, nOffset );
@@ -465,7 +466,8 @@ HB_FUNC( MLCTOPOS )
       {
          if( MLC.nLineLength > 4 )
          {
-            while( --nLine && hb_mlGetLine( &MLC ) ) { ; }
+            while( --nLine && hb_mlGetLine( &MLC ) )
+               ;
             if( nCol && nLine == 0 )
             {
                MLC.nMaxCol = nCol;

@@ -266,7 +266,8 @@ static int hb_pp_preprocesfile( PHB_PP_STATE pState, const char * szRuleFile, co
    int iResult = 0;
    HB_SIZE nLen;
 
-   while( hb_pp_nextLine( pState, &nLen ) != NULL && nLen ) {};
+   while( hb_pp_nextLine( pState, &nLen ) != NULL && nLen )
+      ;
 
    if( szRuleFile )
    {

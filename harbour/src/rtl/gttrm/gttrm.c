@@ -633,7 +633,8 @@ static void sig_handler( int iSigNo )
    switch( iSigNo )
    {
       case SIGCHLD:
-         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 ) { ; }
+         while( ( pid = waitpid( -1, &stat, WNOHANG ) ) > 0 )
+            ;
          break;
       case SIGWINCH:
          s_WinSizeChangeFlag = HB_TRUE;

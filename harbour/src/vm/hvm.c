@@ -1791,7 +1791,8 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
                             ( const char * ) pCode + 3 );
 #endif
             pCode += 3;
-            while( *pCode++ ) {};
+            while( *pCode++ )
+               ;
             break;
 
          case HB_P_STATICNAME:
@@ -1800,7 +1801,8 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
                              ( const char * ) pCode + 4 );
 #endif
             pCode += 4;
-            while( *pCode++ ) {};
+            while( *pCode++ )
+               ;
             break;
 
          case HB_P_MODULENAME:
@@ -1808,7 +1810,8 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
             hb_vmModuleName( ( const char * ) pCode + 1 );
 #endif
             pCode++;
-            while( *pCode++ ) {};
+            while( *pCode++ )
+               ;
             break;
 
          case HB_P_RETVALUE:

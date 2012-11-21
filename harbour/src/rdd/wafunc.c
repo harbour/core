@@ -85,7 +85,8 @@ HB_ERRCODE hb_rddVerifyAliasName( const char * szAlias )
             {
                if( c == ' ' )
                {
-                  while( *( ++szAlias ) == ' ' ) { ; }
+                  while( *( ++szAlias ) == ' ' )
+                     ;
                   if( ! *szAlias )
                      break;
                }

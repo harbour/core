@@ -1179,7 +1179,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          else if( ( ch == 't' || ch == 'T' ) && nLen > 1 && pBuffer[ 1 ] == '"' )
          {
             ++n;
-            while( ++n < nLen && pBuffer[ n ] != '"' ) {};
+            while( ++n < nLen && pBuffer[ n ] != '"' )
+               ;
             hb_pp_tokenAddNext( pState, pBuffer + 2, n - 2,
                                 HB_PP_TOKEN_TIMESTAMP );
             if( n == nLen )
@@ -1195,7 +1196,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          else if( ( ch == 'd' || ch == 'D' ) && nLen > 1 && pBuffer[ 1 ] == '"' )
          {
             ++n;
-            while( ++n < nLen && pBuffer[ n ] != '"' ) {};
+            while( ++n < nLen && pBuffer[ n ] != '"' )
+               ;
             hb_pp_tokenAddNext( pState, pBuffer + 2, n - 2,
                                 HB_PP_TOKEN_DATE );
             if( n == nLen )
@@ -1213,7 +1215,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          {
             if( ch == '`' )
                ch = '\'';
-            while( ++n < nLen && pBuffer[ n ] != ch ) {};
+            while( ++n < nLen && pBuffer[ n ] != ch )
+               ;
 #ifdef HB_PP_MULTILINE_STRINGS
             {
                while( n == nLen )
@@ -1308,7 +1311,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
          }
          else if( HB_PP_ISFIRSTIDCHAR( ch ) )
          {
-            while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) ) {};
+            while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) )
+               ;
 
             /*
              * In Clipper note can be used only as 1-st token and after
@@ -1337,9 +1341,11 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                   while( nLen - n > 1 && pBuffer[ n ] == '&' &&
                          HB_PP_ISFIRSTIDCHAR( pBuffer[ n + 1 ] ) )
                   {
-                     while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) ) {};
+                     while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) )
+                        ;
                      if( n < nLen && pBuffer[ n ] == '.' )
-                        while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) ) {};
+                        while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) )
+                           ;
                   }
                   if( n < nLen && pBuffer[ n ] == '&' )
                      ++n;
@@ -1365,7 +1371,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
             to change HB_PP_ISILLEGAL() macro */
          else if( HB_PP_ISTEXTCHAR( ch ) )
          {
-            while( ++n < nLen && HB_PP_ISTEXTCHAR( pBuffer[ n ] ) ) {};
+            while( ++n < nLen && HB_PP_ISTEXTCHAR( pBuffer[ n ] ) )
+               ;
 
             hb_pp_tokenAddNext( pState, pBuffer, n, HB_PP_TOKEN_TEXT );
          }
@@ -1384,7 +1391,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                 HB_PP_ISHEX( pBuffer[ 2 ] ) )
             {
                n = 2;
-               while( ++n < nLen && HB_PP_ISHEX( pBuffer[ n ] ) ) {};
+               while( ++n < nLen && HB_PP_ISHEX( pBuffer[ n ] ) )
+                  ;
 
                /* (LEX: mark token as hex?) */
                hb_pp_tokenAddNext( pState, pBuffer, n, HB_PP_TOKEN_NUMBER );
@@ -1394,25 +1402,29 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                      HB_PP_ISDIGIT( pBuffer[ 2 ] ) )
             {
                n = 2;
-               while( ++n < nLen && HB_PP_ISDIGIT( pBuffer[ n ] ) ) {};
+               while( ++n < nLen && HB_PP_ISDIGIT( pBuffer[ n ] ) )
+                  ;
 
                hb_pp_tokenAddNext( pState, pBuffer, n, HB_PP_TOKEN_DATE );
             }
             else
             {
-               while( ++n < nLen && HB_PP_ISDIGIT( pBuffer[ n ] ) ) {};
+               while( ++n < nLen && HB_PP_ISDIGIT( pBuffer[ n ] ) )
+                  ;
                if( nLen - n > 1 && pBuffer[ n ] == '.' &&
                                      HB_PP_ISDIGIT( pBuffer[ n + 1 ] ) )
                {
                   ++n;
-                  while( ++n < nLen && HB_PP_ISDIGIT( pBuffer[ n ] ) ) {};
+                  while( ++n < nLen && HB_PP_ISDIGIT( pBuffer[ n ] ) )
+                     ;
                }
                hb_pp_tokenAddNext( pState, pBuffer, n, HB_PP_TOKEN_NUMBER );
             }
          }
          else if( ch == '.' && nLen > 1 && HB_PP_ISDIGIT( pBuffer[ 1 ] ) )
          {
-            while( ++n < nLen && HB_PP_ISDIGIT( pBuffer[ n ] ) ) {};
+            while( ++n < nLen && HB_PP_ISDIGIT( pBuffer[ n ] ) )
+               ;
 
             hb_pp_tokenAddNext( pState, pBuffer, n, HB_PP_TOKEN_NUMBER );
          }
@@ -1436,7 +1448,8 @@ static void hb_pp_getLine( PHB_PP_STATE pState )
                    HB_PP_ISFIRSTIDCHAR( pBuffer[ n + 1 ] ) )
             {
                ++iParts;
-               while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) ) {};
+               while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) )
+                  ;
                if( n < nLen && pBuffer[ n ] == '.' )
                   while( ++n < nLen && HB_PP_ISNEXTIDCHAR( pBuffer[ n ] ) )
                      ++iParts;

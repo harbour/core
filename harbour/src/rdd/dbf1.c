@@ -2220,7 +2220,8 @@ static HB_ERRCODE hb_dbfGetValue( DBFAREAP pArea, HB_USHORT uiIndex, PHB_ITEM pI
          pszVal = ( char * ) pArea->pRecord + pArea->pFieldOffset[ uiIndex ];
          dVal = hb_strVal( pszVal, pField->uiLen );
          nLen = pField->uiLen;
-         while( --nLen && HB_ISDIGIT( pszVal[ nLen ] ) ) { ; }
+         while( --nLen && HB_ISDIGIT( pszVal[ nLen ] ) )
+            ;
          if( nLen && ( pszVal[ nLen ] == '+' || pszVal[ nLen ] == '-' ) &&
              ( pszVal[ nLen - 1 ] == 'e' || pszVal[ nLen - 1 ] == 'E' ) )
          {

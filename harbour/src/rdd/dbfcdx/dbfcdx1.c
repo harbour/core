@@ -1899,7 +1899,9 @@ static void hb_cdxPageLeafInitSpace( LPCDXPAGE pPage )
    int iLen = pPage->TagParent->uiLen;
    HB_BYTE  bBits;
 
-   for( bBits = 0; iLen; bBits++, iLen >>= 1 ) {}
+   for( bBits = 0; iLen; bBits++, iLen >>= 1 )
+      ;
+
    pPage->ReqByte = 3;
    pPage->RNBits  = 24 - ( bBits << 1 );
    pPage->DCBits  = pPage->TCBits = bBits;

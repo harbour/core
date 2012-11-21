@@ -393,7 +393,7 @@ HB_FUNC( SQL_SPRINTF )
             }
             while( *c++ );
             i--;
-         }  /* i == strlen(cParFrm) */
+         }  /* i == strlen( cParFrm ) */
 
          pItmPar = hb_param( ( arg ? arg + 1 :  p++ + 2 ), HB_IT_ANY );   /* Get Par Item */
          if( ! pItmPar )
@@ -411,7 +411,7 @@ HB_FUNC( SQL_SPRINTF )
                   memcpy( cParFrm + i, cParFrm + i + 1, f - i );
                   f--;
                }
-            }  /* i == strlen(cParFrm) */
+            }  /* i == strlen( cParFrm ) */
             if( iCOut )
             {
                for( f = 0; f < i; f++ )   /* Erase %n */
