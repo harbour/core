@@ -746,9 +746,8 @@ HB_ERRCODE hb_adsCloseCursor( ADSAREAP pArea )
       UNSIGNED32 u32RetVal = AdsCloseTable( pArea->hTable );
 
       if( u32RetVal != AE_SUCCESS )
-      {
          HB_TRACE( HB_TR_DEBUG, ( "adsCloseTable(%lu, %s) failed", ( HB_ULONG ) u32RetVal, pArea->szDataFileName ) );
-      }
+
       pArea->hTable = 0;
    }
    if( pArea->hStatement )

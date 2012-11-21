@@ -573,14 +573,10 @@ static PHB_BITBUFFER _qr_interlace( PHB_BITBUFFER pData, unsigned char * pECC, i
 
 #ifdef DEBUG_CODE
    if( uiDst != pVersion->uiTotal )
-   {
       HB_TRACE( HB_TR_ALWAYS, ( "ERROR!!! uiDst:%d  pVersion->uiTotal:%d", uiDst, pVersion->uiTotal ) );
-   }
 
    for( uiPos = 0; uiPos < pVersion->uiTotal; uiPos++ )
-   {
       HB_TRACE( HB_TR_ALWAYS, ( "interlaced:%3d %02X", ( int ) s_rev[ ( unsigned char ) pRetBuf[ uiPos ] ], ( int ) s_rev[ ( unsigned char ) pRetBuf[ uiPos ] ] ) );
-   }
 #endif
    return pRet;
 }
@@ -734,9 +730,7 @@ static int _qr_dataencode( const char * szCode, HB_SIZE nSize, PHB_BITBUFFER pDa
 
 #ifdef DEBUG_CODE
    for( m = 0; m < iDataLen; m++ )
-   {
       HB_TRACE( HB_TR_ALWAYS, ( "data:%3d %02X", s_rev[ *( hb_bitbuffer_buffer( pData ) + m ) ], s_rev[ *( hb_bitbuffer_buffer( pData ) + m ) ] ) );
-   }
 #endif
    return iVersion;
 }
@@ -820,9 +814,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 
 #ifdef DEBUG_CODE
    for( i = 0; i <= iECCLen; i++ )
-   {
       HB_TRACE( HB_TR_ALWAYS, ( "POLY[%3d %02X]:%3d %02X", i, i, pPoly[ i ], pPoly[ i ] ) );
-   }
 #endif
 
    pECC = ( unsigned char * ) hb_xgrab( pLevel->block[ 0 ].uiECC * ( pLevel->block[ 0 ].uiCount + pLevel->block[ 1 ].uiCount ) );
@@ -863,9 +855,7 @@ static unsigned char * _qr_checksum( PHB_BITBUFFER pData, int iVersion, int iLev
 #ifdef DEBUG_CODE
    iECCLen = pLevel->block[ 0 ].uiECC * ( pLevel->block[ 0 ].uiCount + pLevel->block[ 1 ].uiCount );
    for( i = 0; i < iECCLen; i++ )
-   {
       HB_TRACE( HB_TR_ALWAYS, ( "ecc:%3d %02X", ( int ) ( unsigned char ) pECC[ i ], ( int ) ( unsigned char ) pECC[ i ] ) );
-   }
 #endif
    return pECC;
 }
@@ -1176,7 +1166,7 @@ static int _qr_mask( PHB_BITBUFFER pBits, int iVersion )
    }
 #ifdef DEBUG_CODE
    HB_TRACE( HB_TR_ALWAYS, ( "mask:%d", iMaskMin ) );
-//   iMaskMin = 0;
+/* iMaskMin = 0; */
    HB_TRACE( HB_TR_ALWAYS, ( "mask applied:%d", iMaskMin ) );
 #endif
    _qr_mask_pattern( pBits, iVersion, iMaskMin );
@@ -1309,9 +1299,7 @@ HB_FUNC( HB_ZEBRA_CREATE_QRCODE )
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
-   {
       hb_zebra_ret( hb_zebra_create_qrcode( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
-   }
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

@@ -457,18 +457,14 @@ PHB_ZEBRA hb_zebra_create_datamatrix( const char * szCode, HB_SIZE nLen, int iFl
 
    pCW = ( unsigned char * ) hb_xrealloc( pCW, pSize->iDataSize + iErrorSize );
    for( i = iDataCount; i < pSize->iDataSize; i++ )
-   {
       pCW[ i ] = PADDING;
-   }
 
    /* Reed-Solomon error correction */
    _datamatrix_reed_solomon( pCW, pSize );
 
 #if 0
    for( i = 0; i < pSize->iDataSize + iErrorSize; i++ )
-   {
       HB_TRACE( HB_TR_ALWAYS, ( "cw=%d", pCW[ i ] ) );
-   }
 #endif
 
    pZebra->iCol = pSize->iCol;
@@ -507,9 +503,7 @@ HB_FUNC( HB_ZEBRA_CREATE_DATAMATRIX )
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
-   {
       hb_zebra_ret( hb_zebra_create_datamatrix( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
-   }
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }

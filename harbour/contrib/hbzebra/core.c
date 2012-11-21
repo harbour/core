@@ -273,9 +273,7 @@ HB_FUNC( HB_ZEBRA_GETERROR )
    PHB_ZEBRA pZebra = hb_zebra_param( 1 );
 
    if( pZebra )
-   {
       hb_retni( pZebra->iError );
-   }
 }
 
 
@@ -284,7 +282,5 @@ HB_FUNC( HB_ZEBRA_GETCODE )
    PHB_ZEBRA pZebra = hb_zebra_param( 1 );
 
    if( pZebra )
-   {
       hb_retc( pZebra->szCode );
-   }
 }

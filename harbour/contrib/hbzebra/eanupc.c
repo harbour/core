@@ -388,9 +388,7 @@ HB_FUNC( HB_ZEBRA_CREATE_EAN13 )
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
-   {
       hb_zebra_ret( hb_zebra_create_ean13( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
-   }
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -400,9 +398,7 @@ HB_FUNC( HB_ZEBRA_CREATE_EAN8 )
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
-   {
       hb_zebra_ret( hb_zebra_create_ean8( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
-   }
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -412,9 +408,7 @@ HB_FUNC( HB_ZEBRA_CREATE_UPCA )
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
-   {
       hb_zebra_ret( hb_zebra_create_upca( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
-   }
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
@@ -424,9 +418,7 @@ HB_FUNC( HB_ZEBRA_CREATE_UPCE )
    PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
 
    if( pItem )
-   {
       hb_zebra_ret( hb_zebra_create_upce( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
-   }
    else
       hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
 }
