@@ -371,7 +371,7 @@ LONG  GetFontDialogUnits( HWND h, HFONT f )
    hDc = GetDC( h );
 
    //with the current font attributes, select the font
-   hFont    = f; //GetStockObject(ANSI_VAR_FONT)   ;
+   hFont    = f; //GetStockObject(ANSI_VAR_FONT);
    hFontOld = ( HFONT ) SelectObject( hDc, &hFont );
 
    //get its length, then calculate the average character width

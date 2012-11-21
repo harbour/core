@@ -942,7 +942,7 @@ HB_FUNC( SQLITE3_DB_HANDLE )
 
    if( pStmt )
    {
-      ;
+      /* ... */
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );

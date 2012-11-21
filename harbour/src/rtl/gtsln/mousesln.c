@@ -447,7 +447,6 @@ void hb_gt_sln_mouse_Show( PHB_GT pGT )
    if( hb_sln_UnderLinuxConsole && s_bMousePresent )
       Gpm_DrawPointer( s_iMouseCol, s_iMouseRow, gpm_consolefd );
 #endif
-   ;
 }
 
 /* *********************************************************************** */
@@ -459,7 +458,6 @@ void hb_gt_sln_mouse_Hide( PHB_GT pGT )
 #if defined( HB_HAS_GPM )
    gpm_visiblepointer = 0;
 #endif
-   ;
 }
 
 /* *********************************************************************** */

@@ -4882,12 +4882,10 @@ HB_FUNC_STATIC( msgSetData )
 HB_FUNC_STATIC( msgVirtual )
 {
    /* hb_ret(); */ /* NOTE: It's safe to comment this out */
-   ;
 }
 
 HB_FUNC_STATIC( msgNull )
 {
-   ;
 }
 
 #ifndef HB_NO_PROFILER

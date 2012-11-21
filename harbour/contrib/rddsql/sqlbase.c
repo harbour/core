@@ -1206,7 +1206,6 @@ static RDDFUNCS sqlbaseTable =
 
 HB_FUNC( SQLBASE )
 {
-   ;
 }
 
 HB_FUNC_STATIC( SQLBASE_GETFUNCTABLE )
