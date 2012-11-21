@@ -304,7 +304,9 @@ PHB_ZEBRA hb_zebra_create_code128( const char * szCode, HB_SIZE nLen, int iFlags
 
       if( 16 <= pCode[ i ] && pCode[ i ] <= 25 )
       {
-         for( j = i + 1; j < iCodeLen && 16 <= pCode[ j ] && pCode[ j ] <= 25; j++ );
+         for( j = i + 1; j < iCodeLen && 16 <= pCode[ j ] && pCode[ j ] <= 25; j++ )
+            ;
+
          if( j - i == 2 && i == 1 && j == iCodeLen )
          {
             /* [StartB] 1 2  -->  [StartC] [12] */
