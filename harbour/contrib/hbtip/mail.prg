@@ -251,7 +251,7 @@ METHOD SetFieldOption( cPart, cOption, cValue ) CLASS TIPMail
 
 METHOD Attach( oSubPart ) CLASS TIPMail
 
-   IF HB_ISOBJECT( oSubPart ) .AND. oSubPart:ClassName == "TIPMail"
+   IF HB_ISOBJECT( oSubPart ) .AND. oSubPart:ClassName == "TIPMAIL"
       // reset wrong content-type
       IF At( "multipart/", Lower( ::GetFieldPart( "Content-Type" ) ) ) == 0
          ::hHeaders[ "Content-Type" ] := "multipart/mixed"
