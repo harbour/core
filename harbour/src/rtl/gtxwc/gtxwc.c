@@ -74,11 +74,11 @@ static HB_GT_FUNCS SuperTable;
 
 #ifdef HB_XWC_XLIB_NEEDLOCKS
    static HB_CRITICAL_NEW( s_xwcMtx );
-#  define HB_XWC_XLIB_LOCK    hb_threadEnterCriticalSection( &s_xwcMtx );
-#  define HB_XWC_XLIB_UNLOCK  hb_threadLeaveCriticalSection( &s_xwcMtx );
+#  define HB_XWC_XLIB_LOCK()    hb_threadEnterCriticalSection( &s_xwcMtx )
+#  define HB_XWC_XLIB_UNLOCK()  hb_threadLeaveCriticalSection( &s_xwcMtx )
 #else
-#  define HB_XWC_XLIB_LOCK
-#  define HB_XWC_XLIB_UNLOCK
+#  define HB_XWC_XLIB_LOCK()    do {} while( 0 )
+#  define HB_XWC_XLIB_UNLOCK()  do {} while( 0 )
 #endif
 
 /* mouse button mapping into Clipper keycodes */
@@ -4025,7 +4025,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
       }
    }
 
-   HB_XWC_XLIB_LOCK
+   HB_XWC_XLIB_LOCK();
 
    hb_gt_xwc_UpdateChr( wnd );
 
@@ -4077,7 +4077,7 @@ static void hb_gt_xwc_ProcessMessages( PXWND_DEF wnd, HB_BOOL fSync )
 }
 #endif
 
-   HB_XWC_XLIB_UNLOCK
+   HB_XWC_XLIB_UNLOCK();
 
 }
 
@@ -4192,7 +4192,7 @@ static void hb_gt_xwc_ClearSelection( PXWND_DEF wnd )
 
 static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE ulSize, HB_BOOL fCopy )
 {
-   HB_XWC_XLIB_LOCK
+   HB_XWC_XLIB_LOCK();
 
    if( ulSize == 0 )
       hb_gt_xwc_ClearSelection( wnd );
@@ -4232,7 +4232,7 @@ static void hb_gt_xwc_SetSelection( PXWND_DEF wnd, const char * szData, HB_SIZE 
       }
    }
 
-   HB_XWC_XLIB_UNLOCK
+   HB_XWC_XLIB_UNLOCK();
 }
 
 /* *********************************************************************** */
@@ -4260,7 +4260,7 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
             if( aRequest == None )
                break;
 
-            HB_XWC_XLIB_LOCK
+            HB_XWC_XLIB_LOCK();
 
 #ifdef XWC_DEBUG
             printf( "XConvertSelection: %ld (%s)\r\n", aRequest,
@@ -4269,7 +4269,7 @@ static void hb_gt_xwc_RequestSelection( PXWND_DEF wnd )
             XConvertSelection( wnd->dpy, s_atomPrimary, aRequest,
                                s_atomCutBuffer0, wnd->window, wnd->lastEventTime );
 
-            HB_XWC_XLIB_UNLOCK
+            HB_XWC_XLIB_UNLOCK();
          }
 
          if( s_updateMode == XWC_ASYNC_UPDATE )
@@ -4394,14 +4394,14 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
    if( wnd->dpy != NULL )
       return HB_TRUE;
 
-   HB_XWC_XLIB_LOCK
+   HB_XWC_XLIB_LOCK();
 
    /* with NULL, it gets the DISPLAY environment variable. */
    wnd->dpy = XOpenDisplay( NULL );
 
    if( wnd->dpy == NULL )
    {
-      HB_XWC_XLIB_UNLOCK
+      HB_XWC_XLIB_UNLOCK();
       if( fExit )
       {
          /* TODO: a standard Harbour error should be generated here when
@@ -4433,14 +4433,14 @@ static HB_BOOL hb_gt_xwc_ConnectX( PXWND_DEF wnd, HB_BOOL fExit )
    s_atomFullScreen   = XInternAtom( wnd->dpy, "_NET_WM_STATE_FULLSCREEN", False );
    s_atomState        = XInternAtom( wnd->dpy, "_NET_WM_STATE", False );
 
-   HB_XWC_XLIB_UNLOCK
+   HB_XWC_XLIB_UNLOCK();
 
    return HB_TRUE;
 }
 
 static void hb_gt_xwc_DissConnectX( PXWND_DEF wnd )
 {
-   HB_XWC_XLIB_LOCK
+   HB_XWC_XLIB_LOCK();
 
    if( wnd->dpy != NULL )
    {
@@ -4492,7 +4492,7 @@ static void hb_gt_xwc_DissConnectX( PXWND_DEF wnd )
       s_fIgnoreErrors = HB_TRUE;
    }
 
-   HB_XWC_XLIB_UNLOCK
+   HB_XWC_XLIB_UNLOCK();
 }
 
 /* *********************************************************************** */
@@ -4556,7 +4556,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
 {
    HB_BOOL fResizable = wnd->fResizable;
 
-   HB_XWC_XLIB_LOCK
+   HB_XWC_XLIB_LOCK();
 
    /* load the standard font */
    if( ! wnd->szFontSel )
@@ -4565,7 +4565,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
       {
          if( ! hb_gt_xwc_SetFont( wnd, XWC_DEFAULT_FONT_NAME, XWC_DEFAULT_FONT_WEIGHT, XWC_DEFAULT_FONT_HEIGHT, XWC_DEFAULT_FONT_ENCODING ) )
          {
-            HB_XWC_XLIB_UNLOCK
+            HB_XWC_XLIB_UNLOCK();
 
             /* TODO: a standard Harbour error should be generated here when
                      it can run without console!
@@ -4655,7 +4655,7 @@ static void hb_gt_xwc_CreateWindow( PXWND_DEF wnd )
       hb_gt_xwc_SetResizing( wnd );
    }
 
-   HB_XWC_XLIB_UNLOCK
+   HB_XWC_XLIB_UNLOCK();
 }
 
 /* *********************************************************************** */
@@ -4786,9 +4786,9 @@ static HB_BOOL hb_gt_xwc_SetMode( PHB_GT pGT, int iRow, int iCol )
       else
       {
          hb_gt_xwc_Disable();
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          fResult = hb_gt_xwc_Resize( wnd, iCol, iRow );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_Enable();
 
          /* hack for multiple window resizing when user executes
@@ -4869,10 +4869,10 @@ static void hb_gt_xwc_Tone( PHB_GT pGT, double dFrequency, double dDuration )
       XkbCtrl.bell_pitch    = ( int ) dFrequency;
       XkbCtrl.bell_duration = ( int ) ( dDuration * 1000 );
 
-      HB_XWC_XLIB_LOCK
+      HB_XWC_XLIB_LOCK();
       XChangeKeyboardControl( wnd->dpy, KBBellPitch | KBBellDuration, &XkbCtrl );
       XBell( wnd->dpy, 0 );
-      HB_XWC_XLIB_UNLOCK
+      HB_XWC_XLIB_UNLOCK();
    }
    hb_idleSleep( dDuration );
 }
@@ -5058,11 +5058,11 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          pInfo->pResult = hb_itemPutC( pInfo->pResult, wnd->szFontSel );
          if( hb_itemType( pInfo->pNewVal ) & HB_IT_STRING )
          {
-            HB_XWC_XLIB_LOCK
+            HB_XWC_XLIB_LOCK();
             if( hb_gt_xwc_SetFont( wnd, hb_itemGetCPtr( pInfo->pNewVal ), NULL, 0, NULL ) &&
                 wnd->fInit )
                hb_gt_xwc_CreateWindow( wnd );
-            HB_XWC_XLIB_UNLOCK
+            HB_XWC_XLIB_UNLOCK();
          }
          break;
 
@@ -5086,9 +5086,9 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
       case HB_GTI_DESKTOPROWS:
       {
          XWindowAttributes wndAttr;
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XGetWindowAttributes( wnd->dpy, DefaultRootWindow( wnd->dpy ), &wndAttr );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          switch( iType )
          {
             case HB_GTI_DESKTOPWIDTH:
@@ -5215,9 +5215,9 @@ static HB_BOOL hb_gt_xwc_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
                wnd->fResizable = ( iVal != 0 );
                if( wnd->fInit )
                {
-                  HB_XWC_XLIB_LOCK
+                  HB_XWC_XLIB_LOCK();
                   hb_gt_xwc_SetResizing( wnd );
-                  HB_XWC_XLIB_UNLOCK
+                  HB_XWC_XLIB_UNLOCK();
                }
             }
          }
@@ -5390,9 +5390,9 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          color.green = iLeft * 256;
          color.blue = iBottom * 256;
          color.flags = DoRed | DoGreen | DoBlue;
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          hb_gt_xwc_AllocColor( wnd, &color );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          iRet = color.pixel;
          break;
 
@@ -5417,9 +5417,9 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          wnd->ClipRect.x = iLeft;
          wnd->ClipRect.width = iBottom;
          wnd->ClipRect.height = iRight;
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetClipRectangles( wnd->dpy, wnd->gc, 0, 0, &wnd->ClipRect, 1, YXBanded );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          break;
 
       case HB_GFX_DRAWINGMODE:
@@ -5432,76 +5432,76 @@ static int hb_gt_xwc_gfx_Primitive( PHB_GT pGT, int iType, int iTop, int iLeft, 
          break;
 
       case HB_GFX_PUTPIXEL:
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iBottom );
          XDrawPoint( wnd->dpy, wnd->drw, wnd->gc, iLeft, iTop );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iLeft, iTop );
          break;
 
       case HB_GFX_LINE:
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XDrawLine( wnd->dpy, wnd->drw, wnd->gc,
                     iLeft, iTop, iRight, iBottom );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
       case HB_GFX_RECT:
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XDrawRectangle( wnd->dpy, wnd->drw, wnd->gc,
                          iLeft, iTop, iRight - iLeft, iBottom - iTop );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
       case HB_GFX_FILLEDRECT:
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XFillRectangle( wnd->dpy, wnd->drw, wnd->gc,
                          iLeft, iTop, iRight - iLeft, iBottom - iTop );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_InvalidatePts( wnd, iLeft, iTop, iRight, iBottom );
          break;
 
       case HB_GFX_CIRCLE:
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iRight );
          XDrawArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iBottom, iBottom, 0, 360*64 );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_InvalidatePts( wnd, iLeft - iBottom, iTop - iBottom,
                                        iLeft + iBottom, iTop + iBottom );
          break;
 
       case HB_GFX_FILLEDCIRCLE:
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iRight );
          XFillArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iBottom, iBottom, 0, 360*64 );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_InvalidatePts( wnd, iLeft - iBottom, iTop - iBottom,
                                        iLeft + iBottom, iTop + iBottom );
          break;
 
       case HB_GFX_ELLIPSE:
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XDrawArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iRight, iBottom, 0, 360*64 );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_InvalidatePts( wnd, iLeft - iRight, iTop - iBottom,
                                        iLeft + iRight, iTop + iBottom );
          break;
 
       case HB_GFX_FILLEDELLIPSE:
-         HB_XWC_XLIB_LOCK
+         HB_XWC_XLIB_LOCK();
          XSetForeground( wnd->dpy, wnd->gc, iColor );
          XFillArc( wnd->dpy, wnd->drw, wnd->gc,
                    iLeft, iTop, iRight, iBottom, 0, 360*64 );
-         HB_XWC_XLIB_UNLOCK
+         HB_XWC_XLIB_UNLOCK();
          hb_gt_xwc_InvalidatePts( wnd, iLeft - iRight, iTop - iBottom,
                                        iLeft + iRight, iTop + iBottom );
          break;

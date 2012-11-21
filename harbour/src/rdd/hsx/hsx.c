@@ -357,8 +357,8 @@ HSXTABLE, * LPHSXTABLE;
 
 #include "hbstack.h"
 
-#define HB_HSX_LOCK
-#define HB_HSX_UNLOCK
+#define HB_HSX_LOCK()    do {} while( 0 )
+#define HB_HSX_UNLOCK()  do {} while( 0 )
 
 static int hb_hsxDestroy( int iHandle );
 
@@ -386,8 +386,8 @@ static HSXTABLE s_hsxTable;
 #define hb_hsxTable()  ( &s_hsxTable )
 
 static HB_CRITICAL_NEW( s_hsxMtx );
-#define HB_HSX_LOCK    hb_threadEnterCriticalSection( &s_hsxMtx );
-#define HB_HSX_UNLOCK  hb_threadLeaveCriticalSection( &s_hsxMtx );
+#define HB_HSX_LOCK()    hb_threadEnterCriticalSection( &s_hsxMtx )
+#define HB_HSX_UNLOCK()  hb_threadLeaveCriticalSection( &s_hsxMtx )
 
 #endif
 
@@ -559,13 +559,13 @@ static LPHSXINFO hb_hsxGetPointer( int iHandle )
 {
    LPHSXINFO pHSX = NULL;
 
-   HB_HSX_LOCK
+   HB_HSX_LOCK();
    {
       LPHSXTABLE pTable = hb_hsxTable();
       if( iHandle >= 0 && iHandle < pTable->iHandleSize )
          pHSX = pTable->handleArray[ iHandle ];
    }
-   HB_HSX_UNLOCK
+   HB_HSX_UNLOCK();
 
    return pHSX;
 }
@@ -1229,7 +1229,7 @@ static LPHSXINFO hb_hsxNew( void )
    int iHandle = 0;
    LPHSXTABLE pTable;
 
-   HB_HSX_LOCK
+   HB_HSX_LOCK();
 
    pTable = hb_hsxTable();
    if( pTable->iHandleSize == 0 )
@@ -1260,7 +1260,7 @@ static LPHSXINFO hb_hsxNew( void )
    pHSX->iHandle = iHandle;
    pHSX->pFile = NULL;
 
-   HB_HSX_UNLOCK
+   HB_HSX_UNLOCK();
 
    return pHSX;
 }
@@ -1348,7 +1348,7 @@ static int hb_hsxDestroy( int iHandle )
 
    iRetVal = hb_hsxFlushAll( iHandle );
 
-   HB_HSX_LOCK
+   HB_HSX_LOCK();
    {
       LPHSXTABLE pTable = hb_hsxTable();
       if( iHandle >= 0 && iHandle < pTable->iHandleSize &&
@@ -1364,7 +1364,7 @@ static int hb_hsxDestroy( int iHandle )
          }
       }
    }
-   HB_HSX_UNLOCK
+   HB_HSX_UNLOCK();
 
    if( pHSX )
    {

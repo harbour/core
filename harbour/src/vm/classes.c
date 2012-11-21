@@ -388,15 +388,15 @@ static HB_USHORT s_uiObjectClass    = 0;
 #  include "hbthread.h"
 
 #  define HB_CLASS_POOL_SIZE  16384
-#  define HB_CLASS_LOCK       hb_threadEnterCriticalSection( &s_clsMtx );
-#  define HB_CLASS_UNLOCK     hb_threadLeaveCriticalSection( &s_clsMtx );
+#  define HB_CLASS_LOCK()       hb_threadEnterCriticalSection( &s_clsMtx )
+#  define HB_CLASS_UNLOCK()     hb_threadLeaveCriticalSection( &s_clsMtx )
    static HB_CRITICAL_NEW( s_clsMtx );
 
 #else
 
 #  define HB_CLASS_POOL_SIZE  0
-#  define HB_CLASS_LOCK
-#  define HB_CLASS_UNLOCK
+#  define HB_CLASS_LOCK()       do {} while( 0 )
+#  define HB_CLASS_UNLOCK()     do {} while( 0 )
 
 #endif
 
@@ -3231,7 +3231,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
    pNewCls = ( PCLASS ) hb_xgrab( sizeof( CLASS ) );
    memset( pNewCls, 0, sizeof( CLASS ) );
 
-   HB_CLASS_LOCK
+   HB_CLASS_LOCK();
 
    if( s_uiClasses == s_uiClsSize )
    {
@@ -3242,7 +3242,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
    s_pClasses[ ++s_uiClasses ] = pNewCls;
    pNewCls->uiClass = s_uiClasses;
 
-   HB_CLASS_UNLOCK
+   HB_CLASS_UNLOCK();
 
    pNewCls->szName = hb_strdup( szClassName );
    pNewCls->pClassSym = hb_dynsymGet( pNewCls->szName );
@@ -5060,7 +5060,7 @@ HB_FUNC( __CLSPREALLOCATE )
    if( lNewSize > ( HB_LONG ) USHRT_MAX )
       lNewSize = USHRT_MAX;
 
-   HB_CLASS_LOCK
+   HB_CLASS_LOCK();
 
    if( lNewSize > ( HB_LONG ) s_uiClsSize )
    {
@@ -5069,7 +5069,7 @@ HB_FUNC( __CLSPREALLOCATE )
                                              ( ( HB_SIZE ) s_uiClsSize + 1 ) );
    }
 
-   HB_CLASS_UNLOCK
+   HB_CLASS_UNLOCK();
 
    hb_retnl( s_uiClsSize );
 }

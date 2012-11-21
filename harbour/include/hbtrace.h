@@ -218,21 +218,21 @@ typedef struct
 }
 HB_TRACEINFO, * PHB_TRACEINFO;
 
-extern HB_EXPORT int       hb_tracestate( int new_state );
-extern HB_EXPORT int       hb_tracelevel( int new_level );
-extern HB_EXPORT int       hb_traceflush( int new_flush );
-extern HB_EXPORT int       hb_tracesysout( int new_sysout );
-extern HB_EXPORT const char * hb_tracemode( const char * szNewMode );
-extern HB_EXPORT HB_BOOL   hb_tracefile( const char * szFile );
+extern HB_EXPORT int           hb_tracestate( int new_state );
+extern HB_EXPORT int           hb_tracelevel( int new_level );
+extern HB_EXPORT int           hb_traceflush( int new_flush );
+extern HB_EXPORT int           hb_tracesysout( int new_sysout );
+extern HB_EXPORT const char *  hb_tracemode( const char * szNewMode );
+extern HB_EXPORT HB_BOOL       hb_tracefile( const char * szFile );
 
-extern HB_EXPORT void      hb_tracelog( int level, const char * file, int line, const char * proc, const char * fmt, ... ) HB_PRINTF_FORMAT( 5, 6 );
+extern HB_EXPORT void          hb_tracelog( int level, const char * file, int line, const char * proc, const char * fmt, ... ) HB_PRINTF_FORMAT( 5, 6 );
 
-extern HB_EXPORT void      hb_traceset( int level, const char * file, int line, const char * proc );
+extern HB_EXPORT void          hb_traceset( int level, const char * file, int line, const char * proc );
 extern HB_EXPORT PHB_TRACEINFO hb_traceinfo( void );
 
-extern HB_EXPORT int       hb_tr_level( void );
-extern HB_EXPORT void      hb_tr_trace( const char * fmt, ... ) HB_PRINTF_FORMAT( 1, 2 );
-extern HB_EXPORT void      hb_tr_stealth( const char * fmt, ... ) HB_PRINTF_FORMAT( 1, 2 );
+extern HB_EXPORT int           hb_tr_level( void );
+extern HB_EXPORT void          hb_tr_trace( const char * fmt, ... ) HB_PRINTF_FORMAT( 1, 2 );
+extern HB_EXPORT void          hb_tr_stealth( const char * fmt, ... ) HB_PRINTF_FORMAT( 1, 2 );
 
 HB_EXTERN_END
 

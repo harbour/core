@@ -76,21 +76,21 @@
 #  if defined( HB_SPINLOCK_INIT ) && 1
 
       HB_SPINLOCK_T s_gcSpinLock = HB_SPINLOCK_INIT;
-#     define HB_GC_LOCK       HB_SPINLOCK_ACQUIRE( &s_gcSpinLock );
-#     define HB_GC_UNLOCK     HB_SPINLOCK_RELEASE( &s_gcSpinLock );
+#     define HB_GC_LOCK()       HB_SPINLOCK_ACQUIRE( &s_gcSpinLock )
+#     define HB_GC_UNLOCK()     HB_SPINLOCK_RELEASE( &s_gcSpinLock )
 
 #  else
 
       static HB_CRITICAL_NEW( s_gcMtx );
-#     define HB_GC_LOCK       hb_threadEnterCriticalSection( &s_gcMtx );
-#     define HB_GC_UNLOCK     hb_threadLeaveCriticalSection( &s_gcMtx );
+#     define HB_GC_LOCK()       hb_threadEnterCriticalSection( &s_gcMtx )
+#     define HB_GC_UNLOCK()     hb_threadLeaveCriticalSection( &s_gcMtx )
 
 #endif
 
 #else
 
-#  define HB_GC_LOCK
-#  define HB_GC_UNLOCK
+#  define HB_GC_LOCK()       do {} while( 0 )
+#  define HB_GC_UNLOCK()     do {} while( 0 )
 
 #endif /* HB_MT_VM */
 
@@ -141,11 +141,11 @@ static HB_PTRUINT s_ulBlocksAuto = 0;
 /* number of allocated memory blocks which should force next GC activation */
 static HB_PTRUINT s_ulBlocksCheck = 0;
 
-#  define HB_GC_AUTO_INC      ++s_ulBlocks;
-#  define HB_GC_AUTO_DEC      --s_ulBlocks;
+#  define HB_GC_AUTO_INC()    ++s_ulBlocks
+#  define HB_GC_AUTO_DEC()    --s_ulBlocks
 #else
-#  define HB_GC_AUTO_INC
-#  define HB_GC_AUTO_DEC
+#  define HB_GC_AUTO_INC()    do {} while( 0 )
+#  define HB_GC_AUTO_DEC()    do {} while( 0 )
 #endif
 
 /* pointer to memory block that will be checked in next step */
@@ -204,9 +204,9 @@ void * hb_gcAllocate( HB_SIZE nSize, const HB_GC_FUNCS * pFuncs )
    pAlloc->pFuncs = pFuncs;
    pAlloc->locked = 1;
    pAlloc->used   = s_uUsedFlag;
-   HB_GC_LOCK
+   HB_GC_LOCK();
    hb_gcLink( &s_pLockedBlock, pAlloc );
-   HB_GC_UNLOCK
+   HB_GC_UNLOCK();
 
    return HB_BLOCK_PTR( pAlloc );        /* hide the internal data */
 }
@@ -221,19 +221,19 @@ void * hb_gcAllocRaw( HB_SIZE nSize, const HB_GC_FUNCS * pFuncs )
    pAlloc->locked = 0;
    pAlloc->used   = s_uUsedFlag;
 
-   HB_GC_LOCK
+   HB_GC_LOCK();
 #ifdef HB_GC_AUTO
    if( s_ulBlocks > s_ulBlocksCheck )
    {
-      HB_GC_UNLOCK
+      HB_GC_UNLOCK();
       hb_gcCollectAll( HB_TRUE );
-      HB_GC_LOCK
+      HB_GC_LOCK();
       pAlloc->used   = s_uUsedFlag;
    }
-   HB_GC_AUTO_INC
+   HB_GC_AUTO_INC();
 #endif
    hb_gcLink( &s_pCurrBlock, pAlloc );
-   HB_GC_UNLOCK
+   HB_GC_UNLOCK();
 
    return HB_BLOCK_PTR( pAlloc );        /* hide the internal data */
 }
@@ -248,15 +248,15 @@ void hb_gcFree( void * pBlock )
       /* Don't release the block that will be deleted during finalization */
       if( ! ( pAlloc->used & HB_GC_DELETE ) )
       {
-         HB_GC_LOCK
+         HB_GC_LOCK();
          if( pAlloc->locked )
             hb_gcUnlink( &s_pLockedBlock, pAlloc );
          else
          {
             hb_gcUnlink( &s_pCurrBlock, pAlloc );
-            HB_GC_AUTO_DEC
+            HB_GC_AUTO_DEC();
          }
-         HB_GC_UNLOCK
+         HB_GC_UNLOCK();
 
          HB_GARBAGE_FREE( pAlloc );
       }
@@ -296,15 +296,15 @@ void hb_gcRefFree( void * pBlock )
             /* unlink the block first to avoid possible problems
              * if cleanup function activate GC
              */
-            HB_GC_LOCK
+            HB_GC_LOCK();
             if( pAlloc->locked )
                hb_gcUnlink( &s_pLockedBlock, pAlloc );
             else
             {
                hb_gcUnlink( &s_pCurrBlock, pAlloc );
-               HB_GC_AUTO_DEC
+               HB_GC_AUTO_DEC();
             }
-            HB_GC_UNLOCK
+            HB_GC_UNLOCK();
 
             pAlloc->used |= HB_GC_DELETE;
 
@@ -345,10 +345,10 @@ void hb_gcRefCheck( void * pBlock )
          pAlloc->used = s_uUsedFlag;
          pAlloc->locked = 0;
 
-         HB_GC_LOCK
+         HB_GC_LOCK();
          hb_gcLink( &s_pCurrBlock, pAlloc );
-         HB_GC_AUTO_INC
-         HB_GC_UNLOCK
+         HB_GC_AUTO_INC();
+         HB_GC_UNLOCK();
 
          if( hb_vmRequestQuery() == 0 )
             hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
@@ -390,9 +390,9 @@ PHB_ITEM hb_gcGripGet( PHB_ITEM pOrigin )
 
    pItem->type = HB_IT_NIL;
 
-   HB_GC_LOCK
+   HB_GC_LOCK();
    hb_gcLink( &s_pLockedBlock, pAlloc );
-   HB_GC_UNLOCK
+   HB_GC_UNLOCK();
 
    if( pOrigin )
       hb_itemCopy( pItem, pOrigin );
@@ -414,15 +414,15 @@ void * hb_gcLock( void * pBlock )
    {
       HB_GARBAGE_PTR pAlloc = HB_GC_PTR( pBlock );
 
-      HB_GC_LOCK
+      HB_GC_LOCK();
       if( ! pAlloc->locked )
       {
          hb_gcUnlink( &s_pCurrBlock, pAlloc );
          hb_gcLink( &s_pLockedBlock, pAlloc );
-         HB_GC_AUTO_DEC
+         HB_GC_AUTO_DEC();
       }
       ++pAlloc->locked;
-      HB_GC_UNLOCK
+      HB_GC_UNLOCK();
    }
 
    return pBlock;
@@ -439,7 +439,7 @@ void * hb_gcUnlock( void * pBlock )
 
       if( pAlloc->locked )
       {
-         HB_GC_LOCK
+         HB_GC_LOCK();
          if( pAlloc->locked )
          {
             if( --pAlloc->locked == 0 )
@@ -448,10 +448,10 @@ void * hb_gcUnlock( void * pBlock )
 
                hb_gcUnlink( &s_pLockedBlock, pAlloc );
                hb_gcLink( &s_pCurrBlock, pAlloc );
-               HB_GC_AUTO_INC
+               HB_GC_AUTO_INC();
             }
          }
-         HB_GC_UNLOCK
+         HB_GC_UNLOCK();
       }
    }
    return pBlock;
@@ -463,7 +463,7 @@ void hb_gcAttach( void * pBlock )
 
    if( pAlloc->locked )
    {
-      HB_GC_LOCK
+      HB_GC_LOCK();
       if( pAlloc->locked )
       {
          if( --pAlloc->locked == 0 )
@@ -472,11 +472,11 @@ void hb_gcAttach( void * pBlock )
 
             hb_gcUnlink( &s_pLockedBlock, pAlloc );
             hb_gcLink( &s_pCurrBlock, pAlloc );
-            HB_GC_AUTO_INC
+            HB_GC_AUTO_INC();
             pAlloc = NULL;
          }
       }
-      HB_GC_UNLOCK
+      HB_GC_UNLOCK();
    }
    if( pAlloc )
       hb_xRefInc( pAlloc );
@@ -659,7 +659,7 @@ void hb_gcCollectAll( HB_BOOL fForce )
             pDelete->used |= HB_GC_DELETE | HB_GC_DELETELST;
             hb_gcUnlink( &s_pCurrBlock, pDelete );
             hb_gcLink( &s_pDeletedBlock, pDelete );
-            HB_GC_AUTO_DEC
+            HB_GC_AUTO_DEC();
          }
          else
          {
@@ -720,10 +720,10 @@ void hb_gcCollectAll( HB_BOOL fForce )
             {
                pDelete->used = s_uUsedFlag;
                pDelete->locked = 0;
-               HB_GC_LOCK
+               HB_GC_LOCK();
                hb_gcLink( &s_pCurrBlock, pDelete );
-               HB_GC_AUTO_INC
-               HB_GC_UNLOCK
+               HB_GC_AUTO_INC();
+               HB_GC_UNLOCK();
                if( hb_vmRequestQuery() == 0 )
                   hb_errRT_BASE( EG_DESTRUCTOR, 1301, NULL, "Reference to freed block", 0 );
             }
@@ -767,7 +767,7 @@ void hb_gcReleaseAll( void )
          HB_TRACE( HB_TR_INFO, ( "Release %p", s_pCurrBlock ) );
          pDelete = s_pCurrBlock;
          hb_gcUnlink( &s_pCurrBlock, pDelete );
-         HB_GC_AUTO_DEC
+         HB_GC_AUTO_DEC();
          HB_GARBAGE_FREE( pDelete );
 
       }
@@ -814,7 +814,7 @@ HB_FUNC( HB_GCSETAUTO )
 
    nBlocks = fSet ? hb_parnint( 1 ) * 1000 : 0;
 
-   HB_GC_LOCK
+   HB_GC_LOCK();
    nPrevBlocks = s_ulBlocksAuto;
    if( fSet )
    {
@@ -828,7 +828,7 @@ HB_FUNC( HB_GCSETAUTO )
             s_ulBlocksCheck = HB_GC_AUTO_MAX;
       }
    }
-   HB_GC_UNLOCK
+   HB_GC_UNLOCK();
 
    hb_retnint( nPrevBlocks / 1000 );
 }
