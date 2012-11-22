@@ -825,28 +825,22 @@ HB_FUNC( SQLITE3_PREPARE )
 
    if( pHbSqlite3 && pHbSqlite3->db )
    {
-      PHB_ITEM SQL = hb_param( 2, HB_IT_STRING );
+      void *  hSQLText;
+      HB_SIZE nSQLText;
 
-      if( SQL )
-      {
-         const char *  pSQL  = hb_itemGetCPtr( SQL );
-         int           ulLen = ( int ) hb_itemGetCLen( SQL );
-         psqlite3_stmt pStmt;
-         const char *  pszTail;
+      const char * pszSQLText = hb_parstr_utf8( 2, &hSQLText, &nSQLText );
+      psqlite3_stmt pStmt;
+      const char * pszTail;
 
-         if( sqlite3_prepare_v2( pHbSqlite3->db, pSQL, ulLen, &pStmt, &pszTail ) == SQLITE_OK )
-         {
-            hb_retptr( pStmt );
-         }
-         else
-         {
-            sqlite3_finalize( pStmt );
-
-            hb_retptr( NULL );
-         }
-      }
+      if( sqlite3_prepare_v2( pHbSqlite3->db, pszSQLText, ( int ) nSQLText, &pStmt, &pszTail ) == SQLITE_OK )
+         hb_retptr( pStmt );
       else
-         hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 2 ) );
+      {
+         sqlite3_finalize( pStmt );
+         hb_retptr( NULL );
+      }
+
+      hb_strfree( hSQLText );
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
