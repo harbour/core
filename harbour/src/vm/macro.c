@@ -1002,7 +1002,7 @@ void hb_macroPushSymbol( PHB_ITEM pItem )
                                      &fNewBuffer );
       if( szString )
       {
-         HB_DYNS_PTR pDynSym = hb_dynsymGetCase( szString );
+         PHB_DYNS pDynSym = hb_dynsymGetCase( szString );
 
          if( fNewBuffer )
             hb_xfree( szString );   /* free space allocated in hb_macroTextSymbol */
@@ -1317,8 +1317,8 @@ void hb_macroGenJumpHere( HB_SIZE nOffset, HB_COMP_DECL )
  */
 static void hb_macroMemvarGenPCode( HB_BYTE bPCode, const char * szVarName, HB_COMP_DECL )
 {
-   HB_BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
-   HB_DYNS_PTR pSym;
+   HB_BYTE byBuf[ sizeof( PHB_DYNS ) + 1 ];
+   PHB_DYNS pSym;
 
    if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
    {
@@ -1345,8 +1345,8 @@ static void hb_macroMemvarGenPCode( HB_BYTE bPCode, const char * szVarName, HB_C
 /* generates the pcode to push a symbol on the virtual machine stack */
 void hb_macroGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL )
 {
-   HB_BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
-   HB_DYNS_PTR pSym;
+   HB_BYTE byBuf[ sizeof( PHB_DYNS ) + 1 ];
+   PHB_DYNS pSym;
 
    if( HB_MACRO_DATA->Flags & HB_MACRO_GEN_TYPE )
    {
@@ -1441,11 +1441,11 @@ void hb_macroGenMessage( const char * szMsgName, HB_BOOL bIsObject, HB_COMP_DECL
 {
    if( szMsgName )
    {
-      HB_BYTE byBuf[ sizeof( HB_DYNS_PTR ) + 1 ];
+      HB_BYTE byBuf[ sizeof( PHB_DYNS ) + 1 ];
 
       /* Find the address of passed symbol - create the symbol if doesn't exist
        */
-      HB_DYNS_PTR pSym = hb_dynsymGetCase( szMsgName );
+      PHB_DYNS pSym = hb_dynsymGetCase( szMsgName );
 
       byBuf[ 0 ] = HB_P_MMESSAGE;
       HB_PUT_PTR( &byBuf[ 1 ], pSym );

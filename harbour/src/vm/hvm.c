@@ -2615,64 +2615,64 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MMESSAGE:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_vmPushSymbol( pDynSym->pSymbol );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPOPALIASEDFIELD:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_vmPopAliasedField( pDynSym->pSymbol );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPOPALIASEDVAR:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_vmPopAliasedVar( pDynSym->pSymbol );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPOPFIELD:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             /* Pops a value from the eval stack and uses it to set
              * a new value of the given field
              */
             hb_rddPutFieldValue( ( hb_stackItemFromTop( -1 ) ), pDynSym->pSymbol );
             hb_stackPop();
             HB_TRACE( HB_TR_INFO, ( "(hb_vmMPopField)" ) );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPOPMEMVAR:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_memvarSetValue( pDynSym->pSymbol, hb_stackItemFromTop( -1 ) );
             hb_stackPop();
             HB_TRACE( HB_TR_INFO, ( "(hb_vmMPopMemvar)" ) );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPUSHALIASEDFIELD:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_vmPushAliasedField( pDynSym->pSymbol );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPUSHALIASEDVAR:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_vmPushAliasedVar( pDynSym->pSymbol );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
@@ -2714,46 +2714,46 @@ void hb_vmExecute( const HB_BYTE * pCode, PHB_SYMB pSymbols )
 
          case HB_P_MPUSHFIELD:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             /* It pushes the current value of the given field onto the eval stack
              */
             hb_rddGetFieldValue( hb_stackAllocItem(), pDynSym->pSymbol );
             HB_TRACE( HB_TR_INFO, ( "(hb_vmMPushField)" ) );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPUSHMEMVAR:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_memvarGetValue( hb_stackAllocItem(), pDynSym->pSymbol );
             HB_TRACE( HB_TR_INFO, ( "(hb_vmMPushMemvar)" ) );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPUSHMEMVARREF:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_memvarGetRefer( hb_stackAllocItem(), pDynSym->pSymbol );
             HB_TRACE( HB_TR_INFO, ( "(hb_vmMPushMemvarRef)" ) );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPUSHSYM:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_vmPushSymbol( pDynSym->pSymbol );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 
          case HB_P_MPUSHVARIABLE:
          {
-            HB_DYNS_PTR pDynSym = ( HB_DYNS_PTR ) HB_GET_PTR( pCode + 1 );
+            PHB_DYNS pDynSym = ( PHB_DYNS ) HB_GET_PTR( pCode + 1 );
             hb_vmPushVariable( pDynSym->pSymbol );
-            pCode += sizeof( HB_DYNS_PTR ) + 1;
+            pCode += sizeof( PHB_DYNS ) + 1;
             break;
          }
 

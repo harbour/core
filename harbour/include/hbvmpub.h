@@ -146,7 +146,7 @@ struct _HB_SYMB;
       HB_ULONG  ulTime;           /* profiler support */
       HB_ULONG  ulRecurse;        /* profiler support */
 #  endif /* !HB_NO_PROFILER */
-   } HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
+   } HB_DYNS, * PHB_DYNS;
 
    /* pCode dynamic function - HRB */
    typedef struct _HB_PCODEFUNC
@@ -189,10 +189,9 @@ struct _HB_SYMB;
    typedef struct
    {
       struct _HB_SYMB * pSymbol; /* pointer to its relative local symbol */
-   } _HB_DYNS, * PHB_DYNS, * HB_DYNS_PTR;
+   } _HB_DYNS, * PHB_DYNS;
 #else
    typedef void *  PHB_DYNS;
-   typedef void *  PHB_DYNS_PTR;
 #endif
 
 #endif /* !_HB_API_INTERNAL_ */

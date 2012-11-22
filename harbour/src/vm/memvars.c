@@ -87,9 +87,9 @@
 
 struct mv_PUBLIC_var_info
 {
-   int         iPos;
-   HB_BOOL     bFound;
-   HB_DYNS_PTR pDynSym;
+   int      iPos;
+   HB_BOOL  bFound;
+   PHB_DYNS pDynSym;
 };
 
 struct mv_memvarArray_info
@@ -542,9 +542,9 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
    hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, VS_PRIVATE, pValue );
 }
 
-static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE nLen )
+static PHB_DYNS hb_memvarFindSymbol( const char * szArg, HB_SIZE nLen )
 {
-   HB_DYNS_PTR pDynSym = NULL;
+   PHB_DYNS pDynSym = NULL;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_memvarFindSymbol(%p,%" HB_PFS "u)", szArg, nLen ) );
 
@@ -588,7 +588,7 @@ static HB_DYNS_PTR hb_memvarFindSymbol( const char * szArg, HB_SIZE nLen )
 
 char * hb_memvarGetStrValuePtr( char * szVarName, HB_SIZE * pnLen )
 {
-   HB_DYNS_PTR pDynVar;
+   PHB_DYNS pDynVar;
    char * szValue = NULL;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_memvarGetStrValuePtr(%s, %p)", szVarName, pnLen ) );
@@ -967,7 +967,7 @@ static PHB_ITEM hb_memvarDebugVariable( int iScope, int iPos, const char ** pszN
          HB_STACK_TLS_PRELOAD
          if( ( HB_SIZE ) iPos < hb_stackGetPrivateStack()->count )
          {
-            HB_DYNS_PTR pDynSym = hb_stackGetPrivateStack()->stack[ iPos ].pDynSym;
+            PHB_DYNS pDynSym = hb_stackGetPrivateStack()->stack[ iPos ].pDynSym;
 
             pValue = hb_dynsymGetMemvar( pDynSym );
             *pszName = pDynSym->pSymbol->szName;
@@ -1256,8 +1256,8 @@ HB_FUNC( __MVGET )
    if( pName )
    {
       HB_STACK_TLS_PRELOAD
-      HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
-                                                 pName->item.asString.length );
+      PHB_DYNS pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
+                                              pName->item.asString.length );
 
       if( pDynVar )
       {
@@ -1313,8 +1313,8 @@ HB_FUNC( __MVPUT )
    {
       /* the first parameter is a string with not empty variable name
        */
-      HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
-                                                 pName->item.asString.length );
+      PHB_DYNS pDynVar = hb_memvarFindSymbol( pName->item.asString.value,
+                                              pName->item.asString.length );
       if( pDynVar )
       {
          /* variable was declared somwhere - assign a new value
@@ -1697,7 +1697,7 @@ HB_FUNC( __MVRESTORE )
                if( bIncludeMask ? bMatch : ! bMatch )
                {
                   /* the first parameter is a string with not empty variable name */
-                  HB_DYNS_PTR pDynVar = hb_memvarFindSymbol( szName, strlen( szName ) );
+                  PHB_DYNS pDynVar = hb_memvarFindSymbol( szName, strlen( szName ) );
 
                   if( pDynVar )
                      /* variable was declared somwhere - assign a new value */
