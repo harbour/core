@@ -476,3 +476,63 @@ HB_FUNC( WAPI_QUERYPERFORMANCEFREQUENCY )
       hb_stornint( HBWAPI_GET_LARGEUINT( frequency ), 1 );
    hb_retl( result != 0 );
 }
+
+/* wapi_GetVolumeInformation( <cRootPath>, @<cVolumeName>, @<nSerial>,
+ *                            @<nMaxComponentLength>, @<nFileSystemFlags>,
+ *                            @<cFileSystemName> ) -> <lSuccess>
+ */
+
+HB_FUNC( WAPI_GETVOLUMEINFORMATION )
+{
+#if defined( HB_OS_WIN ) && ! defined( HB_OS_WIN_CE )
+   BOOL bResult;
+   DWORD dwSerialNumber, dwMaxFileNameLen, dwFileSystemFlags;
+   DWORD dwVolNameSize, dwFSNameSize;
+   LPTSTR lpVolNameBuf, lpFSNameBuf;
+   void * hRootPath;
+   LPCTSTR lpRootPath;
+
+   dwSerialNumber = dwMaxFileNameLen = dwFileSystemFlags = 0;
+   dwVolNameSize = dwFSNameSize = 0;
+   lpVolNameBuf = lpFSNameBuf = NULL;
+   lpRootPath = HB_PARSTR( 1, &hRootPath, NULL );
+   if( HB_ISBYREF( 2 ) )
+   {
+      dwVolNameSize = MAX_PATH + 1;
+      lpVolNameBuf = ( LPTSTR ) hb_xgrab( MAX_PATH + 1 );
+   }
+   if( HB_ISBYREF( 6 ) )
+   {
+      dwFSNameSize = MAX_PATH + 1;
+      lpFSNameBuf = ( LPTSTR ) hb_xgrab( MAX_PATH + 1 );
+   }
+
+   bResult = GetVolumeInformation( lpRootPath,         /* RootPathName */
+                                   lpVolNameBuf,       /* VolumeName */
+                                   dwVolNameSize,      /* VolumeNameSize */
+                                   &dwSerialNumber,    /* VolumeSerialNumber */
+                                   &dwMaxFileNameLen,  /* MaxComponentLength */
+                                   &dwFileSystemFlags, /* FileSystemFlags */
+                                   lpFSNameBuf,        /* FileSystemName */
+                                   dwFSNameSize );     /* FileSystemSize */
+   hb_strfree( hRootPath );
+
+   if( lpVolNameBuf )
+   {
+      HB_STORSTR( lpVolNameBuf, 2 );
+      hb_xfree( lpVolNameBuf );
+   }
+   hb_stornint( dwSerialNumber, 3 );
+   hb_stornint( dwMaxFileNameLen, 4 );
+   hb_stornint( dwFileSystemFlags, 5 );
+   if( lpFSNameBuf )
+   {
+      HB_STORSTR( lpFSNameBuf, 6 );
+      hb_xfree( lpFSNameBuf );
+   }
+
+   hb_retl( bResult != 0 );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}

@@ -96,6 +96,7 @@ DYNAMIC wapi_GetSystemMetrics
 DYNAMIC wapi_GetTextAlign
 DYNAMIC wapi_GetTextColor
 DYNAMIC wapi_GetTextFace
+DYNAMIC wapi_GetVolumeInformation
 DYNAMIC wapi_GetWindowsDirectory
 DYNAMIC wapi_ImageList_Add
 DYNAMIC wapi_ImageList_AddMasked
