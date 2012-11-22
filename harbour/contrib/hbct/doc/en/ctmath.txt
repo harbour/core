@@ -20,8 +20,6 @@
       calculation precision of the math functions at the moment.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -52,8 +50,6 @@
       Be aware that calls to this functions do _NOT_ affect the
       calculation precision of the math functions at the moment.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Ready

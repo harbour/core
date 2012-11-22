@@ -44,8 +44,6 @@
       executed function if no arguments are passed. Otherwise it returns
       the name of the function or procedure at <nLevel>.
    $EXAMPLES$
-      See Test
-   $TESTS$
       This test will show the functions and procedures in stack.
       before executing it.
       PROCEDURE Main()
@@ -88,8 +86,6 @@
       Otherwise it returns the line number of the function or procedure
       at <nLevel>.
    $EXAMPLES$
-      See Test
-   $TESTS$
       PROCEDURE Main()
          ? ProcLine( 0 )
          ? ProcName( 2 )
@@ -126,8 +122,6 @@
       This function is added to the RTL for full compatibility. It
       always returns an empty string.
    $EXAMPLES$
-      ? ProcFile()
-   $TESTS$
       PROCEDURE Main()
          ? ProcFile()
          ? ProcFile( NIL )
@@ -164,8 +158,6 @@
    $DESCRIPTION$
       This function is useful to check the value stored in an argument.
    $EXAMPLES$
-      See Test
-   $TESTS$
       PROCEDURE Test( nValue, cString )
          IF PCount() == 2
             ? hb_PValue( 1 ), nValue
@@ -205,8 +197,6 @@
       This function is useful to check if a function or procedure
       has received the required number of arguments.
    $EXAMPLES$
-      See Test
-   $TESTS$
       PROCEDURE Test( xExp )
          IF PCount() == 0
             ? "This function needs a parameter"
@@ -244,8 +234,6 @@
       This function terminates the current application and returns
       to the system.
    $EXAMPLES$
-      See Test
-   $TESTS$
       PROCEDURE EndApp( lYesNo )
          IF lYesNo
             __Quit()

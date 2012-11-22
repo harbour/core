@@ -19,8 +19,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -50,8 +48,6 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -85,8 +81,6 @@
       TODO: add further documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -119,8 +113,6 @@
       TODO: add further documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -150,8 +142,6 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -185,8 +175,6 @@
       TODO: add further documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -216,8 +204,6 @@
    $DESCRIPTION$
       TODO: add further documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -251,8 +237,6 @@
       TODO: add further documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -282,8 +266,6 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -316,8 +298,6 @@
       falls. If ddate  is empty, the system date is employed.
       TODO: add further documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -352,8 +332,6 @@
       TODO: add further documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -384,8 +362,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -415,8 +391,6 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -457,8 +431,6 @@
       will be calculated
       TODO: add further documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started

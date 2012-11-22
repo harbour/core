@@ -595,8 +595,6 @@
       // wait-states such as menus, achoices, etc...
       SetKey( K_F10, {|| GetActive():State := GE_WRITE },;
        {|| GetActive() != NIL } )
-   $TESTS$
-      None definable
    $STATUS$
       R
    $COMPLIANCE$
@@ -639,8 +637,6 @@
       bOldF10 := hb_SetKeyGet( K_F10, @bOldF10Cond )
       ... // some other processing
       SetKey( K_F10, bOldF10, bOldF10Cond )
-   $TESTS$
-      See test code above
    $STATUS$
       R
    $COMPLIANCE$
@@ -681,8 +677,6 @@
       LOCAL aKeys := hb_SetKeySave( NIL )  // removes all current set=keys
       ... // some other processing
       hb_SetKeySave( aKeys )
-   $TESTS$
-      None definable
    $STATUS$
       R
    $COMPLIANCE$
@@ -734,8 +728,6 @@
          RETURN
       CASE nInKey == K_ESC
          ... // some other processing
-   $TESTS$
-      None definable
    $STATUS$
       R
    $COMPLIANCE$
@@ -786,8 +778,6 @@
          // wait-states such as menus, achoices, etc...
          SetKey( K_F10, {|| GetActive():State := GE_WRITE }, ;
             {|| GetActive() != NIL } )
-   $TESTS$
-      None definable
    $STATUS$
       R
    $COMPLIANCE$
@@ -1158,8 +1148,6 @@
       ? Date()
       SET DATE GERMAN
       ? Date()
-   $TESTS$
-      See tests/dates.prg
    $STATUS$
       R
    $COMPLIANCE$

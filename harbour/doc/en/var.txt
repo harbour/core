@@ -838,8 +838,6 @@
       This function returns one character which represents the data type
       of the argument.
    $EXAMPLES$
-      See Test(s)
-   $TESTS$
       PROCEDURE Main()
          ? ValType( Array( 1 ) )   // "A"
          ? ValType( {|| 1 + 1 } )  // "B"
@@ -894,8 +892,6 @@
       variable passed points to a common variable or to a variable
       passed by reference.
    $EXAMPLES$
-      See Tests
-   $TESTS$
       PROCEDURE Main()
          LOCAL cVar := "Test local"
          MEMVAR m_nVar

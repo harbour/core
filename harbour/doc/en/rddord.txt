@@ -93,8 +93,6 @@
       ordBagName( "teZip" )         // Returns: Customer
       SET ORDER TO TAG TeName
       ? OrderBagName()              // Returns: Custumer
-   $TESTS$
-      See Examples
    $STATUS$
       S
    $COMPLIANCE$
@@ -147,8 +145,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       S
@@ -219,8 +215,6 @@
 
       USE tests VIA "DBFCDX" NEW
       ordCreate( , "lName", "tests->lName" )
-   $TESTS$
-      See examples
    $STATUS$
       S
    $COMPLIANCE$
@@ -267,8 +261,6 @@
    $EXAMPLES$
       USE tests VIA "DBFCDX" NEW
       ordDestroy( "lName", "tests" )
-   $TESTS$
-      See examples
    $STATUS$
       S
    $COMPLIANCE$
@@ -317,8 +309,6 @@
          FOR tests->ID > 100
 
       ordFor( "tests" )      // Returns: tests->ID > 100
-   $TESTS$
-      See examples
    $STATUS$
       S
    $COMPLIANCE$

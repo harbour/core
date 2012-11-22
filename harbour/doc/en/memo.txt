@@ -48,10 +48,6 @@
       specified chars.
    $EXAMPLES$
       ? MemoTran( DATA->CNOTES )
-   $TESTS$
-      @ 1, 1 SAY MemoTran( Data->CNOTES )
-      will display converted string starting on row two, column two of the
-      current device.
    $STATUS$
       R
    $COMPLIANCE$
@@ -85,10 +81,6 @@
       hard carriage return chars.
    $EXAMPLES$
       ? HardCR( Data->CNOTES )
-   $TESTS$
-      @ 1, 1 SAY HardCR( Data->CNOTES )
-      will display converted string starting on row two, column two of the
-      current device.
    $STATUS$
       R
    $COMPLIANCE$

@@ -630,8 +630,6 @@
    $EXAMPLES$
       USE tests NEW
       ? LastRec(), RecCount()
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -672,8 +670,6 @@
          ? LUpdate()
          USE
          RETURN
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -765,8 +761,6 @@
       ? RecCount()
       ? Test->( RecCount() )
       CLOSE ALL
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -807,8 +801,6 @@
       RecNo()            // Returns 1
       dbGoto( 50 )
       RecNo()            // Returns 50
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -848,8 +840,6 @@
       RecSize()            // Returns 1
       dbGoto( 50 )
       RecSize()
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -905,8 +895,6 @@
          ENDIF
       ENDIF
       USE
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -946,8 +934,6 @@
       SELECT test
       LIST
       SELECT cOldArea
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -990,8 +976,6 @@
       ? Used()  // .F.
       SELECT tests
       ? Used() //.T.
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$

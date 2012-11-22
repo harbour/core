@@ -66,8 +66,6 @@
       // Import new customer records.
       USE CUSTOMER NEW
       APPEND FROM customer SDF
-   $TESTS$
-
    $STATUS$
       S
    $COMPLIANCE$

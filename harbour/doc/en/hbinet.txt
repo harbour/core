@@ -73,8 +73,6 @@
       of every program using INET functions.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -107,8 +105,6 @@
       Closes inet support; mainly used for Windows. Put it at the end of any program
       using Inet functions, just before the program exits.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -146,8 +142,6 @@
       connection function from allocating some data that could be never used in
       certain cases, i.e. an asynchronously detected timeout.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -194,8 +188,6 @@
       thread is using it.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -232,8 +224,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -267,8 +257,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -308,8 +296,6 @@
       are the same); 1 is reserved for "connection closed" message.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -346,8 +332,6 @@
       purposes.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -379,8 +363,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -416,8 +398,6 @@
       Returns the amount of characters read or written in the latest socket
       operation.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -457,8 +437,6 @@
       TODO: have a version that returns a vector of 4 numbers.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -493,8 +471,6 @@
       Returns the port to which this socket is bound, or the remote port if this
       socket is connected with a remote host or client
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -532,8 +508,6 @@
       Sets or changes the timeout value of the socket.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -566,8 +540,6 @@
       Clears the default timeout of the given socket. Default timeout is used in all
       blocking operations.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -605,8 +577,6 @@
       Sets or changes the time limit value of the socket.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -638,8 +608,6 @@
    $DESCRIPTION$
       Clears the default time limit of the given socket.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -680,8 +648,6 @@
       TODO: describe these better
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -713,8 +679,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -750,8 +714,6 @@
       Returns the socket send buffer size or -1 if the socket is closed or an error occurs
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -785,8 +747,6 @@
    $DESCRIPTION$
       Returns the socket receive buffer size or -1 if the socket is closed or an error occurs
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -824,8 +784,6 @@
       Sets the send buffer size of a socket
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -861,8 +819,6 @@
    $DESCRIPTION$
       Sets the receive buffer size of a socket
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -916,8 +872,6 @@
       use the hb_inetRecvAll().
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -959,8 +913,6 @@
       blocks until nAmount bytes are read, if nAmount is given, or
       cString is filled for its whole length.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -1026,8 +978,6 @@
       once, at the beginning of the function).
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1072,8 +1022,6 @@
       If not given, this parameter defaults to the CRLF sequence.
       Provided by: Marcelo Lombardo
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -1127,8 +1075,6 @@
       of error happened.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1180,8 +1126,6 @@
       On error, the error in the socket is set.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1220,8 +1164,6 @@
       This function works exactly as hb_inetSend() but it ensures that all the
       data to be sent is written before returning.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -1272,8 +1214,6 @@
       On error, and if the server can't be found, the function returns NIL.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1312,8 +1252,6 @@
       to have the complete list of aliases or not depends on the verbosity
       of the DNS server.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -1373,8 +1311,6 @@
       On error, sets error description in the newly returned socket.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1413,8 +1349,6 @@
 
       This error can be accessed using hb_inetErrorCode() function.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -1479,8 +1413,6 @@
       host address not reachable and host reachable but port not open.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1534,8 +1466,6 @@
       On error, the error of the returned socket is set.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1580,8 +1510,6 @@
       Returns the socket, and if an error occurs, the socket error message
       and code are set.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -1630,8 +1558,6 @@
       If an error occurs, the socket error message
       and code are set.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 
@@ -1694,8 +1620,6 @@
       Returns -1 on error, or the number of bytes actually sent on success.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1740,8 +1664,6 @@
       to nSize bytes.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1776,8 +1698,6 @@
       Returns a CRLF sequence used in many internet protocols.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
 
    $COMPLIANCE$
@@ -1811,8 +1731,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
 

@@ -39,8 +39,6 @@
       DO WHILE <cond1> .AND. <cond2> .AND. WaitPeriod()
          // ...
       ENDDO
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -101,8 +99,6 @@
       @ 5, 10 SAY "Please input time for beginning work:";
          GET cBegin VALID TimeValid( cBegin )
       READ
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -153,8 +149,6 @@
       Or, more compactly:
 
       SetTime( cNewTime, IsAt() )
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -203,8 +197,6 @@
       Or, more compactly:
 
       SetDate( dNewDate, IsAt() )
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$

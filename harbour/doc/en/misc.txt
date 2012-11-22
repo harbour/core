@@ -32,8 +32,6 @@
       This function will return the current operating system.
    $EXAMPLES$
       ? OS()
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -64,8 +62,6 @@
       This function returns the current Harbour Version.
    $EXAMPLES$
       ? Version() // "Harbour Terminal: Standard stream console"
-   $TESTS$
-
    $STATUS$
       S
    $COMPLIANCE$
@@ -107,8 +103,6 @@
       ? GetEnv( "PATH" )
       ? GetEnv( "CONFIG" )
       ? GetEnv( "HARBOURCMD", "-n -l -es2" )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -150,8 +144,6 @@
       ? GetE( "PATH" )
       ? GetE( "CONFIG" )
       ? GetE( "HARBOURCMD", "-n -l -es2" )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -205,8 +197,6 @@
       ? hb_GetEnv( "PATH" )
       ? hb_GetEnv( "CONFIG" )
       ? hb_GetEnv( "HARBOURCMD", "-n -l -es2" )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -247,8 +237,6 @@
    $EXAMPLES$
       __Run( "edit " + cMyTextFile )    // Runs an external editor
       __Run( "command" )                // Gives a OS shell
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -342,8 +330,6 @@
    $EXAMPLES$
       RUN ( "edit " + cMyTextFile )  // Runs an external editor
       RUN command                    // Gives a OS shell
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$

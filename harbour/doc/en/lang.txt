@@ -146,8 +146,6 @@
          ? CMonth( Date() )          // Mayo
          ? CDoW( Date() )            // Lunes
          RETURN
-   $TESTS$
-      See tests/langapi.prg, tests/langmsg.prg
    $STATUS$
       R
    $COMPLIANCE$
@@ -245,8 +243,6 @@
          ? CMonth( Date() )          // Mayo
          ? CDoW( Date() )            // Lunes
          RETURN
-   $TESTS$
-      See tests/langapi.prg, tests/langmsg.prg
    $STATUS$
       R
    $COMPLIANCE$

@@ -77,8 +77,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -115,8 +113,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -157,8 +153,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -197,8 +191,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -241,8 +233,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -282,8 +272,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -320,8 +308,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -360,8 +346,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -403,8 +387,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -441,8 +423,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -481,8 +461,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -517,8 +495,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -552,8 +528,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -591,8 +565,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -626,8 +598,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -668,8 +638,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -717,8 +685,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -761,8 +727,6 @@
 
       The code block is passed the entry key, value, and numeric position
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -807,8 +771,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -844,8 +806,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -888,8 +848,6 @@
       hsTable := { "one" => 1, "two" => 2 }
       // turn 'case match' on for a new hash table, storing ol flag
       lFlag := hb_HCaseMatch( hsTable, .T. )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -931,8 +889,6 @@
       hsTable := { "one" => 1, "two" => 2 }
       // turn 'binary' on for a new hash table, storing ol flag
       lFlag := hb_HBinary( hsTable, .T. )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -974,8 +930,6 @@
       hsTable := { "one" => 1, "two" => 2 }
       // turn 'auto add' on for a new hash table, storing ol flag
       lFlag := hb_HAutoAdd( hsTable, .T. )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1009,8 +963,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -1047,8 +999,6 @@
    $DESCRIPTION$
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -1090,8 +1040,6 @@
       LOCAL hsTable
       // turn 'auto add' on for a new hash table
       hsTable := hb_HSetAutoAdd( { "one" => 1, "two" => 2 }, .T. )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1132,8 +1080,6 @@
       LOCAL hsTable
       // turn 'case match' on for a new hash table
       hsTable := hb_HSetCaseMatch( { "one" => 1, "two" => 2 }, .T. )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1174,8 +1120,6 @@
       LOCAL hsTable
       // turn 'binary' on for a new hash table
       hsTable := hb_HSetBinary( { "one" => 1, "two" => 2 }, .T. )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$

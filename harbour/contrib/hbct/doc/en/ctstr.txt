@@ -41,8 +41,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -90,8 +88,6 @@
       further description how the switch influences these functions.
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Ready
@@ -152,8 +148,6 @@
       CT_SETATLIKE_WILDCARD |   1
 
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Ready

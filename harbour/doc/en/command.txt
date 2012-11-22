@@ -297,7 +297,7 @@
                    when you are first creating and testing a Class.
 
       OPERATOR     Operator Overloading for classes.
-                   See example Tests/TestOp.prg for details.
+                   See example tests/testop.prg for details.
 
       CLASS <ClassName>
                    Use this syntax only for defining a full method after
@@ -319,8 +319,6 @@
          ... <code> ...
          ... <code> ...
          RETURN Self
-   $TESTS$
-      TestOp.prg
    $STATUS$
       R
    $COMPLIANCE$

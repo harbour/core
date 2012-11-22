@@ -40,8 +40,6 @@
          Id := 5
          USE
          RETURN
-   $TESTS$
-      See tests/testwarn.prg
    $STATUS$
       R
    $COMPLIANCE$
@@ -106,8 +104,6 @@
          n := Int( Seconds() + 2 )
 
          RETURN
-   $TESTS$
-      See tests/testwarn.prg for more examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -163,8 +159,6 @@
          ? y
 
          RETURN
-   $TESTS$
-      See tests/testwarn.prg for more examples
    $STATUS$
       R
    $COMPLIANCE$

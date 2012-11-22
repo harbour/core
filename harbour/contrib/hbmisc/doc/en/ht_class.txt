@@ -69,8 +69,6 @@
             oFile:Close()
          ENDIF
          RETURN
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$

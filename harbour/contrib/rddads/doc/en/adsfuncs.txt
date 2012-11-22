@@ -24,8 +24,6 @@
       AdsBlob2File() is a wrapper for AdsBinaryToFile.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -66,8 +64,6 @@
       Use of this function is illegal in an ADS transaction.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -98,8 +94,6 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -170,8 +164,6 @@
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -207,8 +199,6 @@
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -242,8 +232,6 @@
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -274,8 +262,6 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -308,8 +294,6 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -344,8 +328,6 @@
       or may not be valid records for the filter. AdsRefreshAOF()
       re-evaluates the data to include or exclude changed records.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -383,8 +365,6 @@
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -415,8 +395,6 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -457,8 +435,6 @@
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -496,8 +472,6 @@
       a dragged scrollbar thumb or other "coarse" navigation interface.
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -547,8 +521,6 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -689,8 +661,6 @@
       Advantage-based applications to access specific data.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -776,8 +746,6 @@
       See AdsRegCallback().
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -813,8 +781,6 @@
       SET DEFAULT TO command, so normal programming will not use this.
       It exists primarily for testing purposes.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -855,8 +821,6 @@
       It exists primarily for testing purposes.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -893,8 +857,6 @@
       It exists primarily for testing purposes.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -930,8 +892,6 @@
       SET EXACT ON/OFF command, so normal programming will not use this.
       It exists primarily for testing purposes.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -975,8 +935,6 @@
       This sets the usCharType parameter used when ADS opens a table.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1007,8 +965,6 @@
    $DESCRIPTION$
       Equivalent to <b>Empty(ordSetFocus())<\b>, but faster.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -1059,8 +1015,6 @@
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1091,8 +1045,6 @@
    $DESCRIPTION$
       See ace.hlp for full details about the Advantage Database Server.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -1141,8 +1093,6 @@
       filter expressions ADS can understand.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1185,8 +1135,6 @@
       See ace.hlp for full details.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1223,8 +1171,6 @@
       but others via the Local server or an Internect connection.
       This function identifies the type of server used in the current workarea.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -1265,8 +1211,6 @@
          AdsDDCreateUser( , "Luiz", "papael", "This is luiz User" )
          // Add the tables
          AdsDDAddTable( "Table1", "table1.adt", "table1.adi" )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1296,8 +1240,6 @@
       None
    $DESCRIPTION$
       This function no longer exists.  See the Data Dictionary topic
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -1484,8 +1426,6 @@
       See ace.hlp for full details about the Advantage Database Server.
       AdsRightsCheck() is a Get/Set function for the "rights checking" mode.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R

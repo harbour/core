@@ -1036,8 +1036,6 @@
       IF DirRemove( cDir ) == 0
          ? "Remove of directory", cDir, "was successfull"
       ENDIF
-   $TESTS$
-      See examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1078,8 +1076,6 @@
       IF DirChange( "\temp" ) == 0
          ? "Change to diretory was successfull"
       ENDIF
-   $TESTS$
-      See examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1121,8 +1117,6 @@
       IF MakeDir( cDir ) == 0
          ? "Directory", cDir, "successfully created"
       ENDIF
-   $TESTS$
-      See examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1162,8 +1156,6 @@
       IF IsDisk( "A" )
          ? "Drive is ready "
       ENDIF
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$

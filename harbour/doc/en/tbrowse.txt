@@ -171,8 +171,6 @@
       DispCell( nColumn, cColor )  Displays a single cell
    $EXAMPLES$
       See tests/testbrw.prg
-   $TESTS$
-      See tests/testbrw.prg
    $STATUS$
       S
    $COMPLIANCE$

@@ -23,8 +23,6 @@
       your program to check the initialization.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -58,8 +56,6 @@
       to call it explicitly somewhere at the end of your program to make
       sure that the deinitialization takes place.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Ready

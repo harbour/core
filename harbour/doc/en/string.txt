@@ -594,8 +594,6 @@
    $EXAMPLES$
       ? Str( 10, 6, 2 ) // " 10.00"
       ? Str( -10, 8, 2 ) // "  -10.00"
-   $TESTS$
-      See the regression test suit for comprehensive tests.
    $STATUS$
       R
    $COMPLIANCE$
@@ -674,8 +672,6 @@
    $EXAMPLES$
       ? StrZero( 10, 6, 2 ) // "010.00"
       ? StrZero( -10, 8, 2 ) // "-0010.00"
-   $TESTS$
-      see the regression test suit for comprehensive tests.
    $STATUS$
       R
    $COMPLIANCE$
@@ -838,10 +834,7 @@
       useful to build descending indexes.
    $EXAMPLES$
       // Seek for Smith in a descending index
-      SEEK Descend( "SMITH" )
-   $TESTS$
-      DATA->( dbSeek( Descend( "SMITH" ) ) )
-      will seek "SMITH" into a descending index.
+      dbSeek( Descend( "SMITH" ) )
    $STATUS$
       R
    $COMPLIANCE$
@@ -1038,8 +1031,6 @@
       ? PadC( "Harbour", 20 )
       ? PadC( 34.5142, 20 )
       ? PadC( Date(), 35 )
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1088,8 +1079,6 @@
       ? PadL( "Harbour", 20 )
       ? PadL( 34.5142, 20 )
       ? PadL( Date(), 35 )
-   $TESTS$
-      See examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1138,8 +1127,6 @@
       ? PadR( "Harbour", 20 )
       ? PadR( 34.5142, 20 )
       ? PadR( Date(), 35 )
-   $TESTS$
-      See examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1178,8 +1165,6 @@
       ? AllTrim( "     HELLO HARBOUR" )
       ? AllTrim( "HELLO HARBOUR     " )
       ? AllTrim( "     HELLO HARBOUR     " )
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1222,8 +1207,6 @@
       ? RTrim( "" )                   //  ""
       ? RTrim( "UA   " )              //  "UA"
       ? RTrim( "   UA" )              //  "   UA"
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1266,8 +1249,6 @@
       ? Trim( "" )          //   ""
       ? Trim( "UA   " )     //   "UA"
       ? Trim( "   UA" )     //   "   UA"
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1310,8 +1291,6 @@
    $EXAMPLES$
       ? Replicate( "a", 10 )      // aaaaaaaaaa
       ? Replicate( "b", 100000 )
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1384,8 +1363,6 @@
             dbGoto( nrecord )
          ENDIF
          RETURN xRetvalue
-   $TESTS$
-      See examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -1423,8 +1400,6 @@
       This functions is the oppose of the Str() function.
    $EXAMPLES$
       ? Val( "31421" ) // 31421
-   $TESTS$
-      See regression test
    $STATUS$
       R
    $COMPLIANCE$
@@ -1478,8 +1453,6 @@
       ? StrTran( "Harbour  Power", "  ", " " )   // Harbour Power
       // Harbour Power The future  of  xBase
       ? StrTran( "Harbour  Power  The Future  of  xBase", "  ", " " , , 2 )
-   $TESTS$
-      See regression test
    $STATUS$
       R
    $COMPLIANCE$
@@ -1577,8 +1550,6 @@
       ? "Date is ", Transform( ddate, "@D" )
       ? Transform( nNumber, "@L 99999999" )  //  "009923.34"
       ? Transform( 0      , "@L 9999"     )  //  "0000"
-   $TESTS$
-      See regression Test
    $STATUS$
       R
    $COMPLIANCE$

@@ -184,8 +184,6 @@
       __dbCopyXStruct( "TestStru" )
       USE TestStru
       LIST
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$

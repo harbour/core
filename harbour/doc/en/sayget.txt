@@ -139,8 +139,6 @@
          ? "The name you entered is", cVar
          ? "The id you entered is", nId
          RETURN
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$
@@ -191,8 +189,6 @@
          @ 3, 1 SAY "is" COLOR "b/r+"
          @ 4, 1 SAY "Power" PICTURE "@!"
          RETURN
-   $TESTS$
-      See Examples
    $STATUS$
       R
    $COMPLIANCE$

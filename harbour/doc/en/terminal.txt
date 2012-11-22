@@ -423,8 +423,6 @@
       defined in color.ch to identify and extract common colors.
    $EXAMPLES$
       ? hb_ColorIndex( "W/N, N/W", CLR_ENHANCED ) // "N/W"
-   $TESTS$
-      see the regression test suit for comprehensive tests.
    $STATUS$
       R
    $COMPLIANCE$
@@ -461,11 +459,7 @@
       using the default transformation for the type of expression.
    $EXAMPLES$
       // Output a negative dollar amount using debit notation.
-      DevOutPict( -1.25, "@D$ 99,999.99 )
-   $TESTS$
-      @ 3, 1 SAY -1.25 PICTURE "@D$ 99,999.99"
-      will display "$(     1.25)" starting on row four, column two of the
-      current device (without the double quotation marks, of course).
+      DevOutPict( -1.25, "@D$ 99,999.99 ) // -> $(     1.25)
    $STATUS$
       R
    $COMPLIANCE$
@@ -648,8 +642,6 @@
 
       OutStd( 1, .T., NIL, "A" )
       OutStd( "B" )                // Result:          1 .T. NIL AB
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -699,8 +691,6 @@
    $EXAMPLES$
       // write error log information
       OutErr( Date(), Time(), "Core meltdown detected" )
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -754,8 +744,6 @@
       ENDDO
       SET DEVICE TO SCREEN
       USE
-   $TESTS$
-      See examples
    $STATUS$
       R
    $COMPLIANCE$

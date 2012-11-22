@@ -30,8 +30,6 @@
       I process contain embedded NULs.
    $EXAMPLES$
       ? gt_AscPos( "the cat sat on the mat", 3 ) // prints e
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -60,8 +58,6 @@
       Sum the ascii value of every character in the passed string
       and return the result.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       R
@@ -99,8 +95,6 @@
    $EXAMPLES$
       ? gt_AtDiff( "the cat", "the rat" )          // prints 5
       ? gt_AtDiff( "the cat", "the " )             // prints 0
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -133,8 +127,6 @@
          invalid parameters will return ""
    $EXAMPLES$
       ? gt_CharEven( "abcdefghijklm" )             // prints "bdfhjl"
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -171,8 +163,6 @@
       ? gt_CharMix( "abc", "123" )               // prints "a1b2c3"
       ? gt_CharMix( "abcde", "123" )             // prints "a1b2c3de"
       ? gt_CharMix( "abc", "12345" )             // prints "a1b2c345"
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -205,8 +195,6 @@
          invalid parameters will return ""
    $EXAMPLES$
       ? gt_CharOdd( "abcdefghijklm" )             // prints "acegikm"
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -240,8 +228,6 @@
          invalid parameters will return -1
    $EXAMPLES$
       ? gt_ChrCount( "t", "the cat sat on the mat" )      // prints 4
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -274,8 +260,6 @@
    $EXAMPLES$
       ? Chr( gt_ChrFirst( "sa ", "This is a test" ) )  // prints "s"
       ? Chr( gt_ChrFirst( "et",  "This is a test" ) )   // prints "t"
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -314,8 +298,6 @@
 
          ? gt_ChrTotal( "tae", cStr1 )            // prints 10
          ? gt_ChrTotal( "zqw", cStr1 )            // prints  0
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -353,8 +335,6 @@
          invalid parameters will return -1
    $EXAMPLES$
       ? gt_StrCount( "the", "the cat sat on the mat" )      // prints 2
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -386,8 +366,6 @@
    $EXAMPLES$
       ? gt_StrCSPN( "this is a test", "as " )      // prints 3
       ? gt_StrCSPN( "this is a test", "elnjpq" )   // prints 11
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -425,8 +403,6 @@
    $EXAMPLES$
       ? gt_StrDiff( "the cat", "the rat" )          // prints "rat"
       ? gt_StrDiff( "the cat", "the " )             // prints ""
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -463,8 +439,6 @@
       ? gt_StrExpand( "abc" )                    // prints "a b c"
       ? gt_StrExpand( "abc", 2 )                 // prints "a  b  c"
       ? gt_StrExpand( "abc", 2, '|' )            // prints "a||b||c"
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -501,8 +475,6 @@
       ? gt_StrLeft( "this is a test", "hsit " )       // prints 8
       ? gt_StrLeft( "this is a test", "hit a" )       // prints 3
       ? gt_StrLeft( "this is a test", "zxy" )         // prints 0
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -535,8 +507,6 @@
    $EXAMPLES$
       ? gt_StrPBRK( "This is a test", "sa " )  // prints "s is a test"
       ? gt_StrPBRK( "This is a test", "et" )   // prints "test"
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
@@ -573,8 +543,6 @@
       ? gt_StrRight( "this is a test", "teas " )       // prints 8
       ? gt_StrRight( "this is a test", "tes h" )       // prints 5
       ? gt_StrRight( "this is a test", "zxy" )         // prints 0
-   $TESTS$
-
    $STATUS$
       R
    $COMPLIANCE$
