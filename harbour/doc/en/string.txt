@@ -306,7 +306,7 @@
    $SUBCATEGORY$
       Strings
    $ONELINER$
-      Searches for a substring from the right side of a string.
+      Searches for last occurrence a substring of a string.
    $SYNTAX$
       RAt( <cSearch>, <cString> ) --> nPos
    $ARGUMENTS$
@@ -314,15 +314,17 @@
 
       <cString> Main string
    $RETURNS$
-      RAt() return the location of beginning position.
+      RAt() return the location of beginning position of last occurrence
+      a substring of a string.
    $DESCRIPTION$
-      This function searches through <cString> for the first existence
-      of <cSearch>. The search operation is performed from the right side
-      of <cString> to the left. If the function is unable to find any
-      occurrence of <cSearch> in <cString>, the return value is 0.
+      This function searches for last occurrence a <cSearch> in <cString>.
+      If the function is unable to find any occurrence of <cSearch> in
+      <cString>, the return value is 0.
    $EXAMPLES$
-      ? 'RAt( "cde", "abcdefgfedcba" ) = ' + ;
-         Str( RAt( "cde", "abcdefgfedcba" ) )
+      ? 'RAt( "cde", "abcdefgfcdeedcba" ) = ' + ;
+         hb_ntos( RAt( "cde", "abcdefgfcdeedcba" ) )     // 9
+      ? 'RAt( "cdr", "abcdefgfedcba" ) = ' + ;
+         hb_ntos( RAt( "cdr", "abcdefgfedcba" ) )        // 0
    $STATUS$
       R
    $COMPLIANCE$
@@ -332,7 +334,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      At(), SubStr(), Right()
+      At(), SubStr(), Right(), hb_RAt()
    $END$
  */
 
@@ -346,7 +348,7 @@
    $SUBCATEGORY$
       Strings
    $ONELINER$
-      Searches for a substring from the right side of a string.
+      Searches for last occurrence a substring of a string.
    $SYNTAX$
       hb_RAt( <cSearch>, <cString>, [<nStart>], [<nEnd>]  ) --> nPos
    $ARGUMENTS$
@@ -354,21 +356,39 @@
 
       <cString> Main string
 
-      <nStart> First position to search in cString, by default cString length
+      <nStart> First position to search in cString, by default 1.
 
-      <nEnd> End position to search, by default 1
+      <nEnd> End position to search, by default cString length
    $RETURNS$
-      hb_RAt() return the location of beginning position.
+      hb_RAt() return the location of beginning position of last occurrence
+      a substring of a string.
    $DESCRIPTION$
-      This function searches through <cString> for the first existence
-      of <cSearch>. The search operation is performed from the right side
-      of <cString> to the left. If the function is unable to find any
-      occurrence of <cSearch> in <cString>, the return value is 0.
-      The third and fourth parameters lets you indicate a starting and
-      end offset to search in.
+      This function searches for last occurrence a <cSearch> in <cString>.
+      If the function is unable to find any occurrence of <cSearch> in
+      <cString>, the return value is 0. 3rd and 4th parameters define
+      inclusive range for 2nd parameter on which operation is performed.
+      If 3rd and 4th parameters is not specified, then hb_RAt() is equal
+      to RAt().
    $EXAMPLES$
       ? 'hb_RAt( "cde", "abcdefgfedcba" ) = ' + ;
          Str( hb_RAt( "cde", "abcdefgfedcba" ) )   // 3
+   $TESTS$
+      LOCAL cString
+      LOCAL cSearch
+      LOCAL i, y, r, nLen
+
+      cString := "acdefcdeedcb"
+      cSearch := "cde"
+      nLen := Len( cString )
+      FOR y := 1 TO nLen
+         FOR i := 1 TO nLen
+            r := hb_RAt( cSearch, cString, y, i )
+            IF r != 0
+            ? 'hb_RAt( "' + cSearch + '", "' + cString + '", ' + hb_ntos( y ) + ', ' + hb_ntos( i ) + ' ) = ' + ;
+               hb_ntos( r )
+            ENDIF
+         NEXT
+      NEXT
    $STATUS$
       R
    $COMPLIANCE$
@@ -378,7 +398,7 @@
    $FILES$
       Library is core
    $SEEALSO$
-      hb_At(), SubStr(), Right()
+      hb_At(), SubStr(), Right(), RAt()
    $END$
  */
 
