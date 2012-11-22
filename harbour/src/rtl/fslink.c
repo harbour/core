@@ -79,12 +79,10 @@ HB_BOOL hb_fsLink( const char * pszExisting, const char * pszNewFile )
          static _HB_CREATEHARDLINK s_pCreateHardLink = NULL;
 
          if( ! s_pCreateHardLink )
-            s_pCreateHardLink = ( _HB_CREATEHARDLINK ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-#if defined( UNICODE )
-               "CreateHardLinkW" );
-#else
-               "CreateHardLinkA" );
-#endif
+            s_pCreateHardLink =
+               ( _HB_CREATEHARDLINK )
+                  GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+                  HB_WINAPI_FUNCTION_NAME( "CreateHardLink" ) );
 
          if( s_pCreateHardLink )
          {
@@ -163,12 +161,10 @@ HB_BOOL hb_fsLinkSym( const char * pszTarget, const char * pszNewFile )
          #endif
 
          if( ! s_pCreateSymbolicLink )
-            s_pCreateSymbolicLink = ( _HB_CREATESYMBOLICLINK ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-#if defined( UNICODE )
-               "CreateSymbolicLinkW" );
-#else
-               "CreateSymbolicLinkA" );
-#endif
+            s_pCreateSymbolicLink =
+               ( _HB_CREATESYMBOLICLINK )
+                  GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+                  HB_WINAPI_FUNCTION_NAME( "CreateSymbolicLink" ) );
 
          if( s_pCreateSymbolicLink )
          {
@@ -269,12 +265,10 @@ char * hb_fsLinkRead( const char * pszFile )
          #endif
 
          if( ! s_pGetFinalPathNameByHandle )
-            s_pGetFinalPathNameByHandle = ( _HB_GETFINALPATHNAMEBYHANDLE ) GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-#if defined( UNICODE )
-               "GetFinalPathNameByHandleW" );
-#else
-               "GetFinalPathNameByHandleA" );
-#endif
+            s_pGetFinalPathNameByHandle =
+               ( _HB_GETFINALPATHNAMEBYHANDLE )
+                  GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
+                  HB_WINAPI_FUNCTION_NAME( "GetFinalPathNameByHandle" ) );
 
          if( s_pGetFinalPathNameByHandle )
          {

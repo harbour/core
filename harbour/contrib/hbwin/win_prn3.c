@@ -128,12 +128,10 @@ static HB_BOOL hb_SetDefaultPrinter( LPCTSTR lpPrinterName )
          hWinSpool = hbwapi_LoadLibrarySystem( TEXT( "winspool.drv" ) );
          if( ! hWinSpool )
             return HB_FALSE;
+
          fnSetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool,
-#if defined( UNICODE )
-            "SetDefaultPrinterW" );
-#else
-            "SetDefaultPrinterA" );
-#endif
+            HB_WINAPI_FUNCTION_NAME( "SetDefaultPrinter" ) );
+
          if( ! fnSetDefaultPrinter )
          {
             FreeLibrary( hWinSpool );

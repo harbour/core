@@ -137,11 +137,7 @@ static void hb_GetDefaultPrinter( PHB_ITEM pPrinterName )
       if( hWinSpool )
       {
          fnGetDefaultPrinter = ( DEFPRINTER ) GetProcAddress( hWinSpool,
-#if defined( UNICODE )
-             "GetDefaultPrinterW" );
-#else
-             "GetDefaultPrinterA" );
-#endif
+             HB_WINAPI_FUNCTION_NAME( "GetDefaultPrinter" ) );
 
          if( fnGetDefaultPrinter )
          {

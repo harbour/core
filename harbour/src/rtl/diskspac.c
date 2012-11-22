@@ -74,6 +74,7 @@
 #  endif
 #elif defined( HB_OS_WIN )
 #  include <windows.h>
+#  include "hbwinuni.h"
 #  if defined( HB_OS_WIN_CE )
 #     include "hbwince.h"
 #  endif
@@ -166,14 +167,15 @@ HB_FUNC( DISKSPACE )
 
             if( ! s_fInit )
             {
-               s_pGetDiskFreeSpaceEx = ( P_GDFSE )
+               s_pGetDiskFreeSpaceEx =
+                  ( P_GDFSE )
+                     GetProcAddress(
 #if defined( UNICODE )
-                     GetProcAddress( GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
-                                     "GetDiskFreeSpaceExW" );
+                                     GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
 #else
-                     GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-                                     "GetDiskFreeSpaceExA" );
+                                     GetModuleHandle( TEXT( "kernel32.dll" ) ),
 #endif
+                                     HB_WINAPI_FUNCTION_NAME( "GetDiskFreeSpaceEx" ) );
                s_fInit = HB_TRUE;
             }
 

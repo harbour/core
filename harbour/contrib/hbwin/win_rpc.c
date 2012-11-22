@@ -78,19 +78,8 @@ HB_FUNC( WIN_UUIDCREATESTRING )
 
       s_pUuidCreate = ( _HB_UUIDCREATE ) GetProcAddress( hRpcrt4, "UuidCreate" );
 
-      s_pUuidToString = ( _HB_UUIDTOSTRING ) GetProcAddress( hRpcrt4,
-#if defined( UNICODE )
-                                                             "UuidToStringW" );
-#else
-                                                             "UuidToStringA" );
-#endif
-
-      s_pRpcStringFree = ( _HB_RPCSTRINGFREE ) GetProcAddress( hRpcrt4,
-#if defined( UNICODE )
-                                                               "RpcStringFreeW" );
-#else
-                                                               "RpcStringFreeA" );
-#endif
+      s_pUuidToString = ( _HB_UUIDTOSTRING ) GetProcAddress( hRpcrt4, HB_WINAPI_FUNCTION_NAME( "UuidToString" ) );
+      s_pRpcStringFree = ( _HB_RPCSTRINGFREE ) GetProcAddress( hRpcrt4, HB_WINAPI_FUNCTION_NAME( "RpcStringFree" ) );
    }
 
    if( s_pUuidCreate &&

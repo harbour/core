@@ -89,6 +89,7 @@
    #define HB_CHARDUPN( str, len )               hb_osStrU16EncodeN( str, len )
    #define HB_OSSTRDUP( str )                    hb_osStrU16Decode( str )
    #define HB_OSSTRDUP2( str, buf, len )         hb_osStrU16Decode2( str, buf, len )
+   #define HB_WINAPI_FUNCTION_NAME( a )          ( a "W" )
 #else
    #define HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
    #define HB_PARSTRDEF( n, h, len )             hb_strnull( hb_parstr( n, hb_setGetOSCP(), h, len ) )
@@ -119,6 +120,7 @@
    #define HB_CHARDUPN( str, len )               hb_osStrEncodeN( str, len )
    #define HB_OSSTRDUP( str )                    hb_osStrDecode( str )
    #define HB_OSSTRDUP2( str, buf, len )         hb_osStrDecode2( str, buf, len )
+   #define HB_WINAPI_FUNCTION_NAME( a )          ( a "A" )
 #endif
 
 #endif /* HB_OS_WIN */
