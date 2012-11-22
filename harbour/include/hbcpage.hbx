@@ -9,6 +9,7 @@
 
 // HB_FUNC_EXCLUDE HB_CODEPAGE_BIG5
 // HB_FUNC_EXCLUDE HB_CODEPAGE_CP950
+// HB_FUNC_EXCLUDE HB_CODEPAGE_GBK
 
 /* --------------------------------------------------------------------
  * WARNING: Automatically generated code below. DO NOT EDIT!

@@ -237,20 +237,14 @@ METHOD Start( cSID ) CLASS uhttpd_Session
 
       // hb_ToOutDebug( "hUrl = %s\n\r", hb_ValToExp( hUrl ) )
 
-      // IF !( oUrl:cServer == _SERVER[ "SERVER_NAME" ] )
+      // Check whether the current request was referred to by
+      // an external site which invalidates the previously found ID
+
       IF !( hUrl[ "HOST" ] == _SERVER[ "SERVER_NAME" ] )
          ::cSID      := NIL   // invalidate current SID, i'll generate a new one
          lSendCookie := .T.
          lDefine_SID := .T.
       ENDIF
-
-      // // Check whether the current request was referred to by
-      // // an external site which invalidates the previously found ID
-      // $url = parse_url($GLOBALS['HTTP_REFERER']);
-      // IF !(Trim($url['host']) == $GLOBALS['SERVER_NAME'])
-      //    unset(session->id)
-      //    send_cookie := .T.
-      //    define_sid := .T.
    ENDIF
 
    // Do we have an existing session ID?

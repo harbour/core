@@ -7,6 +7,7 @@ ROOT := ../../
 C_SOURCES := \
    cp_950.c \
    cp_big5.c \
+   cp_gbk.c \
    cp_utf8.c \
    cp_u16le.c \
    cpbg866.c \

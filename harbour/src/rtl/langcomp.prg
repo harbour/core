@@ -127,7 +127,7 @@ FUNCTION hb_langSelect( cLangID, cCP )
       CASE "UAKOI8" ; cCPDef := "UAKOI8"; cLangIDBase := "uk" ; EXIT
       CASE "UAWIN"  ; cCPDef := "UA1251"; cLangIDBase := "uk" ; EXIT
       CASE "ZHB5"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_tra" ; EXIT
-      CASE "ZHGB"   ; cCPDef := "BIG5"  ; cLangIDBase := "zh_sim" ; EXIT /* INCOMPATIBILITY: Was using CP936 in legacy implementation. */
+      CASE "ZHGB"   ; cCPDef := "GBK"   ; cLangIDBase := "zh_sim" ; EXIT
       OTHERWISE
          /* Case sensitive legacy IDs. Lowercase flavours denote new
             language module IDs, so they won't be recognized as
