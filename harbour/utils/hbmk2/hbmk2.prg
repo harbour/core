@@ -9718,6 +9718,10 @@ STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
    LOCAL cLibPath
    LOCAL lFound
 
+   LOCAL cDir
+   LOCAL aFile
+   LOCAL tmp
+
    hb_default( @nNesting, 1 )
 
    lFound := .F.
@@ -9731,6 +9735,25 @@ STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
             EXIT
          ENDIF
       NEXT
+
+      IF ! lFound
+
+         FOR EACH cDir IN { ;
+            hbmk[ _HBMK_cHB_INSTALL_CON ], ;
+            hbmk[ _HBMK_cHB_INSTALL_ADD ] }
+
+            FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
+               IF hb_FileExists( tmp := hb_DirSepAdd( cDir ) + aFile[ F_NAME ] + hb_ps() + hb_FNameNameExt( cFile ) )
+                  cFile := tmp
+                  lFound := .T.
+                  EXIT
+               ENDIF
+            NEXT
+            IF lFound
+               EXIT
+            ENDIF
+         NEXT
+      ENDIF
    ENDIF
 
    IF lFound
