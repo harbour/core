@@ -461,7 +461,7 @@ typedef struct _HB_EXTREF
    HB_EXTREF_FUNC3 copy;
    HB_EXTREF_FUNC0 clear;
    HB_EXTREF_FUNC0 mark;
-} HB_EXTREF, * PHB_EXTREF, * HB_EXTREF_PTR;
+} HB_EXTREF, * PHB_EXTREF;
 
 typedef struct _HB_NESTED_CLONED
 {

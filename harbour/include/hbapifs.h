@@ -227,7 +227,7 @@ typedef struct
    const char * szExtension;
    const char * szDrive;
    char   szBuffer[ HB_PATH_MAX + HB_MAX_DRIVE_LENGTH + 6 ];
-} HB_FNAME, * PHB_FNAME, * HB_FNAME_PTR;
+} HB_FNAME, * PHB_FNAME;
 
 extern HB_EXPORT PHB_FNAME  hb_fsFNameSplit( const char * pszFileName ); /* Split given filename into path, name and extension */
 extern HB_EXPORT char *     hb_fsFNameMerge( char * pszFileName, PHB_FNAME pFileName ); /* This function joins path, name and extension into a string with a filename */
