@@ -1,8 +1,0 @@
-/*
- * $Id$
- */
-
-#define IDR_MANIFEST  1
-#define RT_MANIFEST  24
-
-IDR_MANIFEST RT_MANIFEST MOVEABLE PURE "wvwtest9.mft"
