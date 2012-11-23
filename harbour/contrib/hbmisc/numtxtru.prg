@@ -466,8 +466,8 @@ FUNCTION MnyToTxtRU( nValue, cLang, nMode1, nMode2 )
    nCent  := Round( ( nValue - Int( nValue ) ) * 100, 0 )
    nValue := Int( nValue )
 
-   cRetVal := MnyToStrRaw( nValue, cLang, aMsg[ NTSR_CURR ], nMode1 ) + " " + ;
-      MnyToStrRaw( nCent, cLang, aMsg[ NTSR_CENT ], nMode2 )
+   cRetVal := MnyToStrRaw( nValue, aMsg, aMsg[ NTSR_CURR ], nMode1 ) + " " + ;
+      MnyToStrRaw( nCent, aMsg, aMsg[ NTSR_CENT ], nMode2 )
 
    RETURN hb_UTF8ToStr( cRetVal )
 
@@ -492,9 +492,8 @@ FUNCTION DateToTxtRU( dDate, cLang, lWord )
 
    RETURN hb_UTF8ToStr( cRetVal )
 
-STATIC FUNCTION MnyToStrRaw( nValue, cLang, aCur, nMode )
+STATIC FUNCTION MnyToStrRaw( nValue, aMsg, aCur, nMode )
 
-   LOCAL aMsg := GetLangMsg( cLang )
    LOCAL cRetVal
    LOCAL cTemp, nTemp
    LOCAL lShort := nMode == 2 .OR. nMode == 4

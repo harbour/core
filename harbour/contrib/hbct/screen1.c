@@ -109,22 +109,30 @@ HB_FUNC( SCREENMIX )
       if( iRow >= 0 && iCol >= 0 &&
           iRow <= hb_gtMaxRow() && iCol <= hb_gtMaxCol() )
       {
+         int iColor;
+         HB_BYTE bAttr;
+         HB_USHORT usChar;
+         HB_WCHAR wc;
+         PHB_CODEPAGE cdp = hb_gtHostCP();
+         HB_SIZE nIndex = 0;
+
          hb_gtBeginWrite();
          i = iCol;
-         do
+         for( ;; )
          {
-            if( hb_gtPutChar( iRow, i++, ( HB_UCHAR ) szAttr[ ul ], 0, ( HB_UCHAR ) *szText++ ) != HB_SUCCESS )
+            if( hb_gtGetChar( iRow, i, &iColor, &bAttr, &usChar ) != HB_SUCCESS )
             {
                if( ++iRow > hb_gtMaxRow() )
                   break;
-               --szText;
-               ++nLen;
                i = iCol;
             }
-            else if( ++ul == nAttr )
+            else if( HB_CDPCHAR_GET( cdp, szText, nLen, &nIndex, &wc ) )
+               hb_gtPutChar( iRow, i++, ( HB_UCHAR ) szAttr[ ul ], 0, wc );
+            else
+               break;
+            if( ++ul == nAttr )
                ul = 0;
          }
-         while( --nLen );
          hb_gtEndWrite();
       }
    }
@@ -150,24 +158,28 @@ HB_FUNC( SAYSCREEN )
       if( iRow >= 0 && iCol >= 0 &&
           iRow <= hb_gtMaxRow() && iCol <= hb_gtMaxCol() )
       {
+         PHB_CODEPAGE cdp = hb_gtHostCP();
+         HB_SIZE nIndex = 0;
+
          hb_gtBeginWrite();
          i = iCol;
-         do
+         for( ;; )
          {
             int iColor;
             HB_BYTE bAttr;
             HB_USHORT usChar;
+            HB_WCHAR wc;
             if( hb_gtGetChar( iRow, i, &iColor, &bAttr, &usChar ) != HB_SUCCESS )
             {
                if( ++iRow > hb_gtMaxRow() )
                   break;
-               ++nLen;
                i = iCol;
             }
+            else if( HB_CDPCHAR_GET( cdp, szText, nLen, &nIndex, &wc ) )
+               hb_gtPutChar( iRow, i++, iColor, bAttr, wc );
             else
-               hb_gtPutChar( iRow, i++, iColor, bAttr, ( HB_UCHAR ) *szText++ );
+               break;
          }
-         while( --nLen );
          hb_gtEndWrite();
       }
    }
