@@ -102,11 +102,12 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
    exit_requested := .F.
    DO WHILE ! exit_requested
 
-      /* TODO: avoid NextKey() */
-      DO WHILE NextKey() == 0 .AND. ! b:stabilize()
+      DO WHILE ( nKey := Inkey() ) == 0 .AND. ! b:stabilize()
       ENDDO
 
-      nKey := Inkey( 0 )
+      IF nKey == 0
+         nKey := Inkey( 0 )
+      ENDIF
 
       meth_no := AScan( tb_methods, {| elem | nKey == elem[ KEY_ELEM ] } )
       IF meth_no != 0

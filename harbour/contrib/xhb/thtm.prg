@@ -47,9 +47,9 @@
 #include "hbclass.ch"
 #include "cgi.ch"
 
-STATIC s_nHtm   := NIL
-STATIC s_cForm  := 0
-STATIC s_oPage  := 0
+THREAD STATIC t_nHtm   := NIL
+THREAD STATIC t_cForm  := 0
+THREAD STATIC t_oPage  := 0
 
 /****
 *
@@ -499,9 +499,9 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
    ::cStr +=  CRLF()
 
-   s_nHtm := ::nH
+   t_nHtm := ::nH
 
-   s_oPage := Self
+   t_oPage := Self
 
    RETURN self
 
@@ -510,9 +510,9 @@ METHOD NewAlt( cType ) CLASS THtml
    ::nH    := STD_OUT
    ::cStr +=  'Content-Type: ' + cType + CRLF() + CRLF()
 
-   s_nHtm := ::nH
+   t_nHtm := ::nH
 
-   s_oPage := Self
+   t_oPage := Self
 
    RETURN self
 
@@ -1603,7 +1603,7 @@ METHOD NewForm( cMethod, cAction, cName ) CLASS THtml
 
    ::cStr +=  '>' + CRLF()
 
-   s_cForm := cName
+   t_cForm := cName
 
    RETURN Self
 
@@ -2093,7 +2093,7 @@ METHOD PutLinkName( cName ) CLASS THtml
 
 FUNCTION HtmlPageHandle()
 
-   RETURN s_nHtm
+   RETURN t_nHtm
 
 /****
 *
@@ -2105,7 +2105,7 @@ FUNCTION HtmlPageHandle()
 
 FUNCTION HtmlFormName()
 
-   RETURN s_cForm
+   RETURN t_cForm
 
 /****
 *     HtmlPageObject()
@@ -2116,7 +2116,7 @@ FUNCTION HtmlFormName()
 
 FUNCTION HtmlPageObject()
 
-   RETURN s_oPage
+   RETURN t_oPage
 
 /****
 *

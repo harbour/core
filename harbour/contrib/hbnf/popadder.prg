@@ -788,8 +788,7 @@ STATIC FUNCTION _ftDisplayTape( aAdder, nKey )
 STATIC FUNCTION _ftSetLastKey( nLastKey )
 
    _ftPushKeys()
-   hb_keyPut( nLastKey )
-   Inkey()
+   hb_keySetLast( nLastKey )
    _ftPopKeys()
 
    RETURN NIL
@@ -800,9 +799,10 @@ STATIC FUNCTION _ftSetLastKey( nLastKey )
 
 STATIC FUNCTION _ftPushKeys()
 
-   /* TODO: avoid NextKey() */
-   DO WHILE NextKey() != 0
-      AAdd( t_aKeys, Inkey() )
+   LOCAL nKey
+
+   DO WHILE ( nKey := Inkey() ) != 0
+      AAdd( t_aKeys, nKey )
    ENDDO
 
    RETURN NIL

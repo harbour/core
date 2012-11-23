@@ -154,15 +154,14 @@ METHOD New( cInBuffer ) CLASS TCgi
 METHOD ToObject() CLASS TCgi
 
    LOCAL i
-   LOCAL nScope    := 1
+   LOCAL nScope := 1
    LOCAL aDb
    LOCAL oNew
 
    STATIC s_n := 0
 
    // --> create new oObject class from this one...
-   s_n++
-   aDb := HBClass():New( "NewCgi" + StrZero( s_n, 3 ), { "TCgi" } )
+   aDb := HBClass():New( "NewCgi" + StrZero( ++s_n, 3 ), { "TCgi" } )
 
    FOR i := 1 TO Len( ::aQueryFields )
 

@@ -56,8 +56,6 @@
 #define HB_SET_TRACESTACK_CURRENT 1
 #define HB_SET_TRACESTACK_ALL     2
 
-#xtranslate Write( <cString> ) => FWrite( FileHandle, <cString> )
-
 STATIC s_lSET_TRACE      := .T.
 STATIC s_cSET_TRACEFILE  := "trace.log"
 STATIC s_nSET_TRACESTACK := HB_SET_TRACESTACK_ALL
@@ -147,24 +145,24 @@ FUNCTION TraceLog( ... )
    FSeek( FileHandle, 0, FS_END )
 
    IF nLevel > 0
-      Write( "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
+      FWrite( FileHandle, "[" + ProcFile( 1 ) + "->" + ProcName( 1 ) + "] (" + hb_ntos( ProcLine( 1 ) ) + ")" )
    ENDIF
 
    IF nLevel > 1 .AND. ! ( ProcName( 2 ) == "" )
-      Write( " Called from: "  + hb_eol() )
+      FWrite( FileHandle, " Called from: "  + hb_eol() )
       nLevel := 1
       DO WHILE ! ( ( ProcName := ProcName( ++nLevel ) ) == "" )
-         Write( Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
+         FWrite( FileHandle, Space( 30 ) + ProcFile( nLevel ) + "->" + ProcName + "(" + hb_ntos( ProcLine( nLevel ) ) + ")" + hb_eol() )
       ENDDO
    ELSE
-      Write( hb_eol() )
+      FWrite( FileHandle, hb_eol() )
    ENDIF
 
    FOR EACH xParam IN hb_AParams()
-      Write( "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
+      FWrite( FileHandle, "Type: " + ValType( xParam ) + " >>>" + hb_CStr( xParam ) + "<<<" + hb_eol() )
    NEXT
 
-   Write( hb_eol() )
+   FWrite( FileHandle, hb_eol() )
 
    FClose( FileHandle )
 
