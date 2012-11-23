@@ -102,6 +102,7 @@ FUNCTION ft_ArEdit( nTop, nLeft, nBot, nRight, ;
    exit_requested := .F.
    DO WHILE ! exit_requested
 
+      /* TODO: avoid NextKey() */
       DO WHILE NextKey() == 0 .AND. ! b:stabilize()
       ENDDO
 

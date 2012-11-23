@@ -52,96 +52,96 @@
 #include "dll.ch"
 
 #ifndef __DLL_CH
-   #define __DLL_CH
+#define __DLL_CH
 
-   #define DC_MICROSOFT           0x0000      // Default
-   #define DC_BORLAND             0x0001      // Borland compat
-   #define DC_CALL_CDECL          DLL_CDECL
-   #define DC_CALL_STD            DLL_STDCALL
-   #define DC_RETVAL_MATH4        0x0100      // Return value in ST
-   #define DC_RETVAL_MATH8        0x0200      // Return value in ST
+#define DC_MICROSOFT           0x0000      // Default
+#define DC_BORLAND             0x0001      // Borland compat
+#define DC_CALL_CDECL          DLL_CDECL
+#define DC_CALL_STD            DLL_STDCALL
+#define DC_RETVAL_MATH4        0x0100      // Return value in ST
+#define DC_RETVAL_MATH8        0x0200      // Return value in ST
 
-   // Avoid xHarbour code when included by dllcall.c
-   #if defined( __PLATFORM__WINDOWS )
+// Avoid xHarbour code when included by dllcall.c
+#if defined( __PLATFORM__WINDOWS )
 
-      #include "cstruct.ch"
-      #include "wintypes.ch"
+#include "cstruct.ch"
+#include "wintypes.ch"
 
-      // Native syntax
-      #xcommand IMPORT [<Qualifier: STATIC>] [<CallConvention: 0x0000, 0x0001, 0x0010, 0x0020, 0x0100, 0x0200> ] ;
-                       <FuncName>( [<ArgName> [, <ArgNameN>] ] ) FROM [<!DllFuncName!> OF ] <(DllName)> => ;
-          [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
-             THREAD STATIC t_cTemplate ;;
-             IF t_cTemplate == NIL ;;
-                t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.CallConvention.>, <CallConvention>, DC_CALL_STD ), iif( <.DllFuncName.>, #<DllFuncName>, #<FuncName> ) ) ;;
-             END ;;
-             IF <.ArgName.>;;
-                RETURN DllExecuteCall( t_cTemplate, <ArgName> [, <ArgNameN>] ) ;;
-             END ;;
-          RETURN DllExecuteCall( t_cTemplate )
+// Native syntax
+#xcommand IMPORT [<Qualifier: STATIC>] [<CallConvention: 0x0000, 0x0001, 0x0010, 0x0020, 0x0100, 0x0200> ] ;
+                 <FuncName>( [<ArgName> [, <ArgNameN>] ] ) FROM [<!DllFuncName!> OF ] <(DllName)> => ;
+    [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
+       THREAD STATIC t_cTemplate ;;
+       IF t_cTemplate == NIL ;;
+          t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.CallConvention.>, <CallConvention>, DC_CALL_STD ), iif( <.DllFuncName.>, #<DllFuncName>, #<FuncName> ) ) ;;
+       END ;;
+       IF <.ArgName.>;;
+          RETURN DllExecuteCall( t_cTemplate, <ArgName> [, <ArgNameN>] ) ;;
+       END ;;
+    RETURN DllExecuteCall( t_cTemplate )
 
-      #xcommand IMPORT [<Qualifier: STATIC>] [<CallConvention: 0x0000, 0x0001, 0x0010, 0x0020, 0x0100, 0x0200> ] ;
-                       <FuncName>( [<ArgName> [, <ArgNameN>] ] ) FROM <(DllName)> [EXPORTED AS <!DllFuncName!>] => ;
-          [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
-             THREAD STATIC t_cTemplate ;;
-             IF t_cTemplate == NIL ;;
-                t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.CallConvention.>, <CallConvention>, DC_CALL_STD ), iif( <.DllFuncName.>, #<DllFuncName>, #<FuncName> ) ) ;;
-             END ;;
-             IF <.ArgName.>;;
-                RETURN DllExecuteCall( t_cTemplate, <ArgName> [, <ArgNameN>] ) ;;
-             END ;;
-          RETURN DllExecuteCall( t_cTemplate )
+#xcommand IMPORT [<Qualifier: STATIC>] [<CallConvention: 0x0000, 0x0001, 0x0010, 0x0020, 0x0100, 0x0200> ] ;
+                 <FuncName>( [<ArgName> [, <ArgNameN>] ] ) FROM <(DllName)> [EXPORTED AS <!DllFuncName!>] => ;
+    [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
+       THREAD STATIC t_cTemplate ;;
+       IF t_cTemplate == NIL ;;
+          t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.CallConvention.>, <CallConvention>, DC_CALL_STD ), iif( <.DllFuncName.>, #<DllFuncName>, #<FuncName> ) ) ;;
+       END ;;
+       IF <.ArgName.>;;
+          RETURN DllExecuteCall( t_cTemplate, <ArgName> [, <ArgNameN>] ) ;;
+       END ;;
+    RETURN DllExecuteCall( t_cTemplate )
 
 
-      #xcommand IMPORT [<Qualifier: STATIC>] [<CallConvention: 0x0000, 0x0001, 0x0010, 0x0020, 0x0100, 0x0200> ] ;
-                       <Type> <FuncName>( [0] [<ArgType> <ArgName> [, <ArgTypeN> <ArgNameN>] ] ) FROM <(DllName)> [EXPORTED AS <!DllFuncName!>] => ;
-          [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
-             THREAD STATIC t_cTemplate ;;
-             IF t_cTemplate == NIL ;;
-                t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.CallConvention.>, <CallConvention>, DC_CALL_STD ), iif( <.DllFuncName.>, #<DllFuncName>, #<FuncName> ) ) ;;
-             END ;;
-             IF <.ArgName.>;;
-                RETURN DllExecuteCall( t_cTemplate, <ArgName> [, <ArgNameN>] ) ;;
-             END ;;
-          RETURN DllExecuteCall( t_cTemplate )
+#xcommand IMPORT [<Qualifier: STATIC>] [<CallConvention: 0x0000, 0x0001, 0x0010, 0x0020, 0x0100, 0x0200> ] ;
+                 <Type> <FuncName>( [0] [<ArgType> <ArgName> [, <ArgTypeN> <ArgNameN>] ] ) FROM <(DllName)> [EXPORTED AS <!DllFuncName!>] => ;
+    [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
+       THREAD STATIC t_cTemplate ;;
+       IF t_cTemplate == NIL ;;
+          t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.CallConvention.>, <CallConvention>, DC_CALL_STD ), iif( <.DllFuncName.>, #<DllFuncName>, #<FuncName> ) ) ;;
+       END ;;
+       IF <.ArgName.>;;
+          RETURN DllExecuteCall( t_cTemplate, <ArgName> [, <ArgNameN>] ) ;;
+       END ;;
+    RETURN DllExecuteCall( t_cTemplate )
 
-      #xcommand IMPORT [<Qualifier: STATIC>] [<CallConvention: 0x0000, 0x0001, 0x0010, 0x0020, 0x0100, 0x0200> ] ;
-                       <Type> <FuncName>( [0] [<ArgType> <ArgName> [, <ArgTypeN> <ArgNameN>] ] ) FROM [<!DllFuncName!> OF ] <(DllName)> => ;
-          [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
-             THREAD STATIC t_cTemplate ;;
-             IF t_cTemplate == NIL ;;
-                t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.CallConvention.>, <CallConvention>, DC_CALL_STD ), iif( <.DllFuncName.>, #<DllFuncName>, #<FuncName> ) ) ;;
-             END ;;
-             IF <.ArgName.>;;
-                RETURN DllExecuteCall( t_cTemplate, <ArgName> [, <ArgNameN>] ) ;;
-             END ;;
-          RETURN DllExecuteCall( t_cTemplate )
+#xcommand IMPORT [<Qualifier: STATIC>] [<CallConvention: 0x0000, 0x0001, 0x0010, 0x0020, 0x0100, 0x0200> ] ;
+                 <Type> <FuncName>( [0] [<ArgType> <ArgName> [, <ArgTypeN> <ArgNameN>] ] ) FROM [<!DllFuncName!> OF ] <(DllName)> => ;
+    [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
+       THREAD STATIC t_cTemplate ;;
+       IF t_cTemplate == NIL ;;
+          t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.CallConvention.>, <CallConvention>, DC_CALL_STD ), iif( <.DllFuncName.>, #<DllFuncName>, #<FuncName> ) ) ;;
+       END ;;
+       IF <.ArgName.>;;
+          RETURN DllExecuteCall( t_cTemplate, <ArgName> [, <ArgNameN>] ) ;;
+       END ;;
+    RETURN DllExecuteCall( t_cTemplate )
 
-      // FoxPro syntax
-      #xcommand DECLARE <!Type!> <!FuncName!> IN <(DllName)> [AS <(DllFuncName)>] [<ArgType> [@] [<ArgName>] [, <ArgTypeN> [@] [<ArgNameN>]]] => ;
-          FUNCTION <FuncName>( ... ) ;;
-             THREAD STATIC t_cTemplate ;;
-             IF t_cTemplate == NIL ;;
-                t_cTemplate := DllPrepareCall( <(DllName)>, DC_CALL_STD, iif( <.DllFuncName.>, <(DllFuncName)>, #<FuncName> ) ) ;;
-             END ;;
-          RETURN DllExecuteCall( t_cTemplate, ... )
+// FoxPro syntax
+#xcommand DECLARE <!Type!> <!FuncName!> IN <(DllName)> [AS <(DllFuncName)>] [<ArgType> [@] [<ArgName>] [, <ArgTypeN> [@] [<ArgNameN>]]] => ;
+    FUNCTION <FuncName>( ... ) ;;
+       THREAD STATIC t_cTemplate ;;
+       IF t_cTemplate == NIL ;;
+          t_cTemplate := DllPrepareCall( <(DllName)>, DC_CALL_STD, iif( <.DllFuncName.>, <(DllFuncName)>, #<FuncName> ) ) ;;
+       END ;;
+    RETURN DllExecuteCall( t_cTemplate, ... )
 
-      // FWH
-      #xcommand DLL [<Qualifier: STATIC>] FUNCTION <FuncName>( [ <ArgName> AS <ArgType> ] [, <ArgNameN> AS <ArgTypeN> ] ) AS <Type> [<Pascal: PASCAL>] [ FROM <DllFuncName> ] LIB <(DllName)> => ;
-          [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
-             THREAD STATIC t_cTemplate ;;
-             IF t_cTemplate == NIL ;;
-                t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.Pascal.>, DC_CALL_STD, DC_CALL_CDECL ), iif( <.DllFuncName.>, <(DllFuncName)>, #<FuncName> ) ) ;;
-             END ;;
-          RETURN DllExecuteCall( t_cTemplate [, <ArgName>] [, <ArgNameN>] )
+// FWH
+#xcommand DLL [<Qualifier: STATIC>] FUNCTION <FuncName>( [ <ArgName> AS <ArgType> ] [, <ArgNameN> AS <ArgTypeN> ] ) AS <Type> [<Pascal: PASCAL>] [ FROM <DllFuncName> ] LIB <(DllName)> => ;
+    [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
+       THREAD STATIC t_cTemplate ;;
+       IF t_cTemplate == NIL ;;
+          t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.Pascal.>, DC_CALL_STD, DC_CALL_CDECL ), iif( <.DllFuncName.>, <(DllFuncName)>, #<FuncName> ) ) ;;
+       END ;;
+    RETURN DllExecuteCall( t_cTemplate [, <ArgName>] [, <ArgNameN>] )
 
-      #xcommand DLL32 [<Qualifier: STATIC>] FUNCTION <FuncName>( [ <ArgName> AS <ArgType> ] [, <ArgNameN> AS <ArgTypeN> ] ) AS <Type> [<Pascal: PASCAL>] [ FROM <DllFuncName> ] LIB <(DllName)> => ;
-          [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
-             THREAD STATIC t_cTemplate ;;
-             IF t_cTemplate == NIL ;;
-                t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.Pascal.>, DC_CALL_STD, DC_CALL_CDECL ), iif( <.DllFuncName.>, <(DllFuncName)>, #<FuncName> ) ) ;;
-             END ;;
-          RETURN DllExecuteCall( t_cTemplate [, <ArgName>] [, <ArgNameN>] )
+#xcommand DLL32 [<Qualifier: STATIC>] FUNCTION <FuncName>( [ <ArgName> AS <ArgType> ] [, <ArgNameN> AS <ArgTypeN> ] ) AS <Type> [<Pascal: PASCAL>] [ FROM <DllFuncName> ] LIB <(DllName)> => ;
+    [<Qualifier>] FUNCTION <FuncName>( <ArgName> [, <ArgNameN>] ) ;;
+       THREAD STATIC t_cTemplate ;;
+       IF t_cTemplate == NIL ;;
+          t_cTemplate := DllPrepareCall( <(DllName)>, iif( <.Pascal.>, DC_CALL_STD, DC_CALL_CDECL ), iif( <.DllFuncName.>, <(DllFuncName)>, #<FuncName> ) ) ;;
+       END ;;
+    RETURN DllExecuteCall( t_cTemplate [, <ArgName>] [, <ArgNameN>] )
 
-   #endif
+#endif
 #endif

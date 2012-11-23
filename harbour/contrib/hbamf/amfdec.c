@@ -115,9 +115,10 @@ static HB_BOOL amfX_decode_double( amfContext * context, double * val )
     * Put bytes from byte array into double
     * TOFIX: does this aligment work on any platform?
 
-      union aligned {
-       double d_val;
-       char c_val[8];
+      union aligned
+      {
+         double d_val;
+         char c_val[ 8 ];
       } d;
 
     */
@@ -302,7 +303,7 @@ static HB_BOOL amf3_decode_dynamic_dict( amfContext * context, PHB_ITEM pItem )
    PHB_ITEM pValue;
    HB_BOOL  result;
 
-   for( ;; )
+   for(;; )
    {
       pKey = hb_itemNew( NULL );
       if( ! amf3_deserialize_string( context, pKey ) )
@@ -916,14 +917,10 @@ static HB_BOOL amf3_decode_externalizable( amfContext * context, PHB_ITEM pItem 
    if( HB_IS_INTEGER( pPos ) )
    {
       if( ! readBytes( context, hb_itemGetNI( pPos ) ) )
-      {
          result = HB_FALSE;
-      }
    }
    else
-   {
       result = HB_FALSE;
-   }
 
    hb_itemMove( hb_stackReturnItem(), pRetCopy );
 
@@ -996,9 +993,7 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
          hb_itemRelease( pClass );
 
          if( ! readByte( context ) ) /* Skip array type marker */
-         {
             return HB_FALSE;
-         }
 
          return amf3_deserialize_array( context, pItem, HB_TRUE );
       }
@@ -1008,9 +1003,7 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
          hb_itemRelease( pClass );
 
          if( ! readByte( context ) ) /* Skip array type marker */
-         {
             return HB_FALSE;
-         }
 
          return amf3_deserialize_obj( context, pItem, HB_TRUE );
       }
@@ -1065,7 +1058,9 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
    else
    {
       /* Create obj_val for all typed objs. */
-      /* obj_val = PyObject_CallMethod(class_def, "getInstance", NULL); */
+#if 0
+      obj_val = PyObject_CallMethod( class_def, "getInstance", NULL );
+#endif
    }
 
    if( ! HB_IS_OBJECT( pItem ) )
@@ -1079,11 +1074,11 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
 
    if( proxy )
    {
-      /*  If this is an ObjectProxy,
-          we need to add another reference,
-          so there is one that
-          points to the obj and one that points
-          to the proxy. */
+      /* If this is an ObjectProxy,
+         we need to add another reference,
+         so there is one that
+         points to the obj and one that points
+         to the proxy. */
 
       amf3_add_reference( pHash, pItem );
    }
@@ -1100,7 +1095,9 @@ static HB_BOOL amf3_deserialize_obj( amfContext * context, PHB_ITEM pItem, HB_BO
    }
    else if( obj_type == 2 )
    {
-      /* result = decode_typed_obj_AMF3(context, obj_val, class_def_dict); */
+#if 0
+      result = decode_typed_obj_AMF3( context, obj_val, class_def_dict );
+#endif
    }
 
    hb_itemRelease( pClass );
@@ -1278,8 +1275,10 @@ HB_FUNC( AMF3_DECODE )
    hb_itemRelease( context->str_ref );
    hb_itemRelease( context->class_ref );
 
-   /*if(context->conv_function)
-      hb_itemRelease(context->conv_function);*/
+#if 0
+   if( context->conv_function )
+      hb_itemRelease( context->conv_function );
+#endif
 
    hb_xfree( context );
 }

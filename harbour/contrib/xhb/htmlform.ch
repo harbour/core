@@ -46,7 +46,7 @@
 
 #ifndef _FORMS_CH
 
-#xCommand DEFINE FORM <oFrm>                                       ;
+#xcommand DEFINE FORM <oFrm>                                       ;
           [NAME <name>]                                            ;
           [METHOD <method>]                                        ;
           [ACTION <action>]                                        ;
@@ -80,14 +80,14 @@
           [<oFrm>:setOnReset( <(onreset)> ) ]
 
 
-#xCommand ACTIVATE <oFrm> ;
+#xcommand ACTIVATE <oFrm> ;
           =>;
           <oFrm>:Put( .T. ) ; <oFrm>:End()
 
 
 // --> Controls
 
-#xCommand CONTROL ;
+#xcommand CONTROL ;
           [OF <obj>];
           [<typ:EDIT,TEXT,TEXTAREA,PASSWORD,BUTTON,IMAGE,CHECKBOX,CHECK,HIDDEN,RADIO,FILE,RESET,SUBMIT,SELECT,LISTBOX>] ;
           [ALIGN <aln:LEFT,RIGHT,CENTER,MIDDLE,TOP,TEXTTOP,BOTTOM,ABSMIDDLE,ABSCENTER,ABSBOTTOM,BASELINE>];
@@ -136,7 +136,7 @@
                   <style>, <id>, <.l.> ) )
 
 
-#xCommand DEFINE <typ:EDIT,TEXT,TEXTAREA,PASSWORD,BUTTON,IMAGE,CHECKBOX,CHECK,HIDDEN,RADIO,FILE,RESET,SUBMIT,SELECT,LISTBOX> <oCtr>;
+#xcommand DEFINE <typ:EDIT,TEXT,TEXTAREA,PASSWORD,BUTTON,IMAGE,CHECKBOX,CHECK,HIDDEN,RADIO,FILE,RESET,SUBMIT,SELECT,LISTBOX> <oCtr>;
           [WRAP <wrap:OFF,VIRTUAL,PHYSICAL,NORMAL>] ;
           [ALIGN <aln:LEFT,RIGHT,CENTER,MIDDLE,TOP,TEXTTOP,BOTTOM,ABSMIDDLE,ABSCENTER,ABSBOTTOM,BASELINE>];
           [NAME <name>]                            ;
@@ -218,34 +218,34 @@
 
 // --> Literals
 
-#xCommand LINE BREAK                       ;
+#xcommand LINE BREAK                       ;
           IN <oForm>                       ;
           =>                               ;
           <oForm>:AddControl( "<BR>" + CRLF() )
 
 
-#xCommand LINE IN <oForm>                  ;
+#xcommand LINE IN <oForm>                  ;
           =>                               ;
           <oForm>:AddControl( CRLF() + "<HR WIDTH = 100%>" + CRLF() )
 
-#xCommand SPACE <n> IN <oForm>             ;
+#xcommand SPACE <n> IN <oForm>             ;
           =>                               ;
           <oForm>:AddControl( Replicate( "&nbsp;", <n> ) )
 
 
-#xCommand TEXT <c> IN <oForm>              ;
+#xcommand TEXT <c> IN <oForm>              ;
           =>                               ;
           <oForm>:AddControl( <c> )
 
-#xCommand SCRIPT <c> IN <oForm>            ;
+#xcommand SCRIPT <c> IN <oForm>            ;
           =>                               ;
           <oForm>:AddControl( <c> )
 
 
-#xCommand START GROUP <c> IN <oForm> => ;
+#xcommand START GROUP <c> IN <oForm> => ;
           <oForm>:AddControl( CRLF() + "<FIELDSET><LEGEND>" + <c> + "</LEGEND>" + CRLF() )
 
-#xCommand END GROUP IN <oForm> => ;
+#xcommand END GROUP IN <oForm> => ;
           <oForm>:AddControl( CRLF() + "</FIELDSET>" + CRLF() )
 
 

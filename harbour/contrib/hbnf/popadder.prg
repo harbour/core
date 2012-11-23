@@ -800,6 +800,7 @@ STATIC FUNCTION _ftSetLastKey( nLastKey )
 
 STATIC FUNCTION _ftPushKeys()
 
+   /* TODO: avoid NextKey() */
    DO WHILE NextKey() != 0
       AAdd( t_aKeys, Inkey() )
    ENDDO

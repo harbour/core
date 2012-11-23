@@ -26,15 +26,15 @@
 
 FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
 
-   LOCAL  nJump := 0, nKey := 0, cSavColor, cSaveScreen, cSaveCursor
-   LOCAL  aRetVal[ 8 ]
-   LOCAL  nHelpRow, cSaveHelp, lHelpIsDisplayed := .F.
+   LOCAL nJump := 0, nKey := 0, cSavColor, cSaveScreen, cSaveCursor
+   LOCAL aRetVal[ 8 ]
+   LOCAL nHelpRow, cSaveHelp, lHelpIsDisplayed := .F.
 
-   __defaultNIL( @nRow, 1 )       // check display row
-   __defaultNIL( @nCol, 63 )      // check display col
+   __defaultNIL( @nRow, 1 )         // check display row
+   __defaultNIL( @nCol, 63 )        // check display col
    __defaultNIL( @cColor, "W+/G" )  // check display color
-   __defaultNIL( @lShadow, .F. )     // check shadow switch
-   __defaultNIL( @lShowHelp, .F. )     // check help switch
+   __defaultNIL( @lShadow, .F. )    // check shadow switch
+   __defaultNIL( @lShowHelp, .F. )  // check help switch
 
    nRow := iif( nRow < 1 .OR. nRow > 21,  1, nRow )     // check row bounds
    nCol := iif( nCol < 1 .OR. nCol > 63, 63, nCol )     // check col bounds
@@ -93,7 +93,6 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
                "Hit Ins to reset to today's date, F1 to get this help, ESC to quit." )
          ENDIF
 
-      OTHERWISE
       ENDCASE
 
       aRetVal[ 1 ] :=         Date() + nJump
@@ -121,9 +120,9 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
       aRetVal[ 8 ] := Time()
    ENDDO
 
-   SetColor( cSavColor )                 // restore colors.
-   SetCursor( cSaveCursor )              // restore cursor.
-   RestScreen( nRow - 1, nCol - 1, nRow + 3, nCol + 17, cSaveScreen ) // restore screen.
+   SetColor( cSavColor )                 // restore colors
+   SetCursor( cSaveCursor )              // restore cursor
+   RestScreen( nRow - 1, nCol - 1, nRow + 3, nCol + 17, cSaveScreen ) // restore screen
    IF lHelpIsDisplayed
       RestScreen( nHelpRow - 1, 1, nHelpRow + 7, 80, cSaveHelp )
    ENDIF

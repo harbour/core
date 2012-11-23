@@ -322,6 +322,11 @@ HB_FUNC( HB_OSNEWLINE )
    hb_retc_const( s_szCrLf );
 }
 
+HB_FUNC( HB_OSPATHSEPARATOR )
+{
+   hb_retc_const( HB_OS_PATH_DELIM_CHR_STRING );
+}
+
 #endif
 
 #if 0

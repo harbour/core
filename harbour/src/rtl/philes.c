@@ -555,11 +555,15 @@ HB_FUNC( HB_PS )
    hb_retc_const( HB_OS_PATH_DELIM_CHR_STRING );
 }
 
+#if defined( HB_LEGACY_LEVEL4 )
+
 /* Deprecated */
 HB_FUNC( HB_OSPATHSEPARATOR )
 {
    hb_retc_const( HB_OS_PATH_DELIM_CHR_STRING );
 }
+
+#endif
 
 HB_FUNC( HB_OSPATHLISTSEPARATOR )
 {

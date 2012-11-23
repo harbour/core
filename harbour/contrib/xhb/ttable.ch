@@ -85,7 +85,7 @@
 #xtranslate BYNAME <V> DEFAULT <Val> => ::<V> := BYDEFAULT <V>, <Val>
 #xtranslate BYDEFAULT <V>, <Val>     => iif( <V> == NIL, <Val>, <V> )
 
-#xCommand  NETUSE <(cDBF)>  ;
+#xcommand  NETUSE <(cDBF)>  ;
            [ALIAS <cAlias>] ;
            [VIA <cRDD>]     ;
            [TIMER <nSecs>]  ;
@@ -97,7 +97,7 @@
 
 
 // --> new table object
-#xCommand DEFINE TABLE <oTable>         ;
+#xcommand DEFINE TABLE <oTable>         ;
                  [FILE <cFileDBF>]      ;
                  [INDEX <cFileIDX>]     ;
                  [ALIAS <cAlias>]       ;
@@ -119,7 +119,7 @@
 
 
 // --> new order object
-#xCommand DEFINE ORDER [<oOrder>]   ;
+#xcommand DEFINE ORDER [<oOrder>]   ;
                  ON [KEY] <key>     ;
                  [TAG <cTag>]       ;
                  [LABEL <cLabel>]   ;
@@ -145,11 +145,11 @@
 
 
 
-#xCommand ADD FIELD <cFld> DATA [<xpression,...>] TO <oObj> ;
+#xcommand ADD FIELD <cFld> DATA [<xpression,...>] TO <oObj> ;
           => ;
           <oObj>:ClassAdd( <"cFld">,, {| Self | [<xpression>] },,)
 
-#xCommand DEFINE FIELD <cFld> DATA [<xpression,...>] TO <oObj> ;
+#xcommand DEFINE FIELD <cFld> DATA [<xpression,...>] TO <oObj> ;
           => ;
           <oObj>:ClassAdd( <"cFld">,, {| Self | [<xpression>] },,)
 
@@ -161,15 +161,15 @@
 #define _RECALL_BUFFER       3
 
 
-#xCommand BEGIN TRANSACTION IN <oTable> => <oTable>:SetMonitor( .T. )
+#xcommand BEGIN TRANSACTION IN <oTable> => <oTable>:SetMonitor( .T. )
 
-#xCommand ROLLBACK <nType> ;
+#xcommand ROLLBACK <nType> ;
           [STEP <n>]       ;
           IN <oTable>      ;
           =>               ;
           <oTable>:UnDo( <nType>, [<n>] )
 
-#xCommand END TRANSACTION IN <oTable>   => <oTable>:SetMonitor( .F. )
+#xcommand END TRANSACTION IN <oTable>   => <oTable>:SetMonitor( .F. )
 
 #command SKIP        in <o>           => <o>:dbSkip( 1 )
 #command SKIP <n>    in <o>           => <o>:dbSkip( <n> )
@@ -187,7 +187,7 @@
 #xtranslate CSY_TYPE Logical    => "L"
 #xtranslate CSY_TYPE Auto    => "A"
 #xcommand CREATE DATABASE <o> FILE <file> => <o>:=HBTable():CreateTable(<(file)>);#define _TABLE_ <o>
-#xTranslate FIELD [ <oFld> ]                        ;
+#xtranslate FIELD [ <oFld> ]                        ;
                 [ NAME <(cName)> ]                  ;
                 [ TYPE <cType> ]                    ;
                 [ LEN <nLen> ]                      ;
@@ -195,6 +195,6 @@
                 OF <oDbf>                           ;
                 => ;
     [ <oFld> := ] _TABLE_:AddField( <(cName)>,CSY_TYPE <cType>, <nLen>, <nDec>)
-#xCommand BUILD TABLE <o> => _TABLE_:Gentable()
+#xcommand BUILD TABLE <o> => _TABLE_:Gentable()
 #define _OTABLE_CH_
 #endif
