@@ -90,6 +90,7 @@
    #define HB_OSSTRDUP( str )                    hb_osStrU16Decode( str )
    #define HB_OSSTRDUP2( str, buf, len )         hb_osStrU16Decode2( str, buf, len )
    #define HB_WINAPI_FUNCTION_NAME( a )          ( a "W" )
+   #define HB_WINAPI_KERNEL32_DLL()              ( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) )
 #else
    #define HB_PARSTR( n, h, len )                hb_parstr( n, hb_setGetOSCP(), h, len )
    #define HB_PARSTRDEF( n, h, len )             hb_strnull( hb_parstr( n, hb_setGetOSCP(), h, len ) )
@@ -121,6 +122,7 @@
    #define HB_OSSTRDUP( str )                    hb_osStrDecode( str )
    #define HB_OSSTRDUP2( str, buf, len )         hb_osStrDecode2( str, buf, len )
    #define HB_WINAPI_FUNCTION_NAME( a )          ( a "A" )
+   #define HB_WINAPI_KERNEL32_DLL()              ( TEXT( "kernel32.dll" ) )
 #endif
 
 #endif /* HB_OS_WIN */

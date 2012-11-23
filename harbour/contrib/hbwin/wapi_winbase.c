@@ -385,12 +385,7 @@ HB_FUNC( WAPI_GETLONGPATHNAME )
    {
       s_getPathNameAddr =
          ( _HB_GETPATHNAME )
-            GetProcAddress(
-#if defined( UNICODE )
-                            GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
-#else
-                            GetProcAddress( GetModuleHandle( TEXT( "kernel32.dll" ) ),
-#endif
+            GetProcAddress( GetModuleHandle( HB_WINAPI_KERNEL32_DLL() ),
                             HB_WINAPI_FUNCTION_NAME( "GetLongPathName" ) );
 
       if( ! s_getPathNameAddr )

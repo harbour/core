@@ -66,8 +66,8 @@
       #include <sys/statvfs.h>
    #endif
 #elif defined( HB_OS_WIN )
-   #include "hbwinuni.h"
    #include <windows.h>
+   #include "hbwinuni.h"
    #if defined( HB_OS_WIN_CE )
       #include "hbwince.h"
    #endif
@@ -128,13 +128,8 @@ HB_FUNC( HB_DISKSPACE )
          {
             s_pGetDiskFreeSpaceEx =
                ( P_GDFSE )
-                  GetProcAddress(
-#if defined( UNICODE )
-                            GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
-#else
-                            GetModuleHandle( TEXT( "kernel32.dll" ) ),
-#endif
-                            HB_WINAPI_FUNCTION_NAME( "GetDiskFreeSpaceEx" ) );
+                  GetProcAddress( GetModuleHandle( HB_WINAPI_KERNEL32_DLL() ),
+                                  HB_WINAPI_FUNCTION_NAME( "GetDiskFreeSpaceEx" ) );
 
             s_fInit = HB_TRUE;
          }

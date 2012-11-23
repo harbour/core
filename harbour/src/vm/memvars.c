@@ -389,7 +389,6 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
          /* assignment to undeclared memvar - PRIVATE is assumed */
          hb_memvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
       }
-
    }
    else
       hb_errInternal( HB_EI_MVBADSYMBOL, NULL, pMemvarSymb->szName, NULL );
@@ -406,7 +405,6 @@ HB_ERRCODE hb_memvarGet( PHB_ITEM pItem, PHB_SYMB pMemvarSymb )
    if( pDyn )
    {
       PHB_ITEM pMemvar;
-
 
       pMemvar = hb_dynsymGetMemvar( pDyn );
 
@@ -558,22 +556,16 @@ static PHB_DYNS hb_memvarFindSymbol( const char * szArg, HB_SIZE nLen )
          char cChar = *szArg++;
 
          if( cChar >= 'a' && cChar <= 'z' )
-         {
             szUprName[ iSize++ ] = cChar - ( 'a' - 'A' );
-         }
          else if( cChar == ' ' || cChar == '\t' || cChar == '\n' )
          {
             if( iSize )
                break;
          }
          else if( ! cChar )
-         {
             break;
-         }
          else
-         {
             szUprName[ iSize++ ] = cChar;
-         }
       }
       while( --nLen && iSize < HB_SYMBOL_NAME_LEN );
 

@@ -105,27 +105,27 @@
 
 HB_FUNC( DIRECTORY )
 {
-   const char *   szDirSpec = hb_parc( 1 );
-   const char *   szAttributes = hb_parc( 2 );
-   char *         pszFree = NULL;
-   HB_FATTR       ulMask;
+   const char * szDirSpec    = hb_parc( 1 );
+   const char * szAttributes = hb_parc( 2 );
+   char *       pszFree      = NULL;
+   HB_FATTR     ulMask;
 
    PHB_ITEM  pDir = hb_itemArrayNew( 0 );
    PHB_FFIND ffind;
 
    /* Get the passed attributes and convert them to Harbour Flags */
 
-   ulMask = HB_FA_ARCHIVE
-          | HB_FA_READONLY
-          | HB_FA_DEVICE
-          | HB_FA_TEMPORARY
-          | HB_FA_SPARSE
-          | HB_FA_REPARSE
-          | HB_FA_COMPRESSED
-          | HB_FA_OFFLINE
-          | HB_FA_NOTINDEXED
-          | HB_FA_ENCRYPTED
-          | HB_FA_VOLCOMP;
+   ulMask = HB_FA_ARCHIVE |
+            HB_FA_READONLY |
+            HB_FA_DEVICE |
+            HB_FA_TEMPORARY |
+            HB_FA_SPARSE |
+            HB_FA_REPARSE |
+            HB_FA_COMPRESSED |
+            HB_FA_OFFLINE |
+            HB_FA_NOTINDEXED |
+            HB_FA_ENCRYPTED |
+            HB_FA_VOLCOMP;
 
    if( szAttributes && *szAttributes )
       ulMask |= hb_fsAttrEncode( szAttributes );
@@ -145,7 +145,7 @@ HB_FUNC( DIRECTORY )
          if( szDirSpec[ nLen ] == HB_OS_PATH_DELIM_CHR )
 #endif
             szDirSpec = pszFree =
-                        hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
+                           hb_xstrcpy( NULL, szDirSpec, HB_OS_ALLFILE_MASK, NULL );
       }
    }
    else
@@ -161,12 +161,12 @@ HB_FUNC( DIRECTORY )
       {
          char buffer[ 32 ];
 
-         hb_arrayNew( pSubarray, F_LEN );
-         hb_arraySetC   ( pSubarray, F_NAME, ffind->szName );
+         hb_arrayNew(     pSubarray, F_LEN );
+         hb_arraySetC(    pSubarray, F_NAME, ffind->szName );
          hb_arraySetNInt( pSubarray, F_SIZE, ffind->size );
-         hb_arraySetDL  ( pSubarray, F_DATE, ffind->lDate );
-         hb_arraySetC   ( pSubarray, F_TIME, ffind->szTime );
-         hb_arraySetC   ( pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
+         hb_arraySetDL(   pSubarray, F_DATE, ffind->lDate );
+         hb_arraySetC(    pSubarray, F_TIME, ffind->szTime );
+         hb_arraySetC(    pSubarray, F_ATTR, hb_fsAttrDecode( ffind->attr, buffer ) );
 
          /* Don't exit when array limit is reached */
          hb_arrayAddForward( pDir, pSubarray );

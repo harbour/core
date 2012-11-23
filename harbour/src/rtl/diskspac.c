@@ -169,12 +169,7 @@ HB_FUNC( DISKSPACE )
             {
                s_pGetDiskFreeSpaceEx =
                   ( P_GDFSE )
-                     GetProcAddress(
-#if defined( UNICODE )
-                                     GetModuleHandle( hb_iswin9x() ? TEXT( "unicows.dll" ) : TEXT( "kernel32.dll" ) ),
-#else
-                                     GetModuleHandle( TEXT( "kernel32.dll" ) ),
-#endif
+                     GetProcAddress( GetModuleHandle( HB_WINAPI_KERNEL32_DLL() ),
                                      HB_WINAPI_FUNCTION_NAME( "GetDiskFreeSpaceEx" ) );
                s_fInit = HB_TRUE;
             }

@@ -151,19 +151,13 @@ static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb,
    for( ;; )
    {
       while( j >= i && ! hb_itemIsLess( pBaseArray->pItems + j, pBaseArray->pItems + lb, pBlock, pBaseArray, j ) )
-      {
          j--;
-      }
 
       while( i < j && ! hb_itemIsLess( pBaseArray->pItems + lb, pBaseArray->pItems + i, pBlock, pBaseArray, i ) )
-      {
          i++;
-      }
 
       if( i >= j )
-      {
          break;
-      }
 
       /* Swap the items */
       hb_itemSwap( pBaseArray->pItems + i, pBaseArray->pItems + j );
@@ -171,7 +165,7 @@ static HB_ISIZ hb_arraySortQuickPartition( PHB_BASEARRAY pBaseArray, HB_ISIZ lb,
       i++;
    }
 
-   /* pivot belongs in pBaseArray->pItems[j] */
+   /* pivot belongs in pBaseArray->pItems[ j ] */
    if( j > lb && pBaseArray->nLen > ( HB_SIZE ) j )
       hb_itemSwap( pBaseArray->pItems + lb, pBaseArray->pItems + j );
 
@@ -222,7 +216,7 @@ HB_BOOL hb_arraySort( PHB_ITEM pArray, HB_SIZE * pnStart, HB_SIZE * pnCount, PHB
       HB_SIZE nCount;
       HB_SIZE nEnd;
 
-      if( pnStart && ( *pnStart >= 1 ) )
+      if( pnStart && *pnStart >= 1 )
          nStart = *pnStart;
       else
          nStart = 1;
