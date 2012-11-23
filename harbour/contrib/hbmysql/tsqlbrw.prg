@@ -331,10 +331,16 @@ METHOD BrowseTable( lCanEdit, aExitKeys ) CLASS TBrowseSQL
 
    DO WHILE lKeepGoing
 
-      DO WHILE ! ::Stabilize() .AND. NextKey() == 0
+      DO WHILE .T.
+         nKey := Inkey()
+         IF ::Stabilize() .AND. nKey != 0
+            EXIT
+         ENDIF
       ENDDO
 
-      nKey := Inkey( 0 )
+      IF nKey == 0
+         nKey := Inkey( 0 )
+      ENDIF
 
       IF AScan( aExitKeys, nKey ) > 0
          lKeepGoing := .F.

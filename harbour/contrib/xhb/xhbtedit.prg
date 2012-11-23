@@ -695,11 +695,10 @@ METHOD Edit( nPassedKey ) CLASS XHBEditor
       //
       IF nPassedKey == NIL
 
-         IF NextKey() == 0
+         IF ( nKey := Inkey( , INKEY_ALL ) ) == 0
             ::IdleHook()
+            nKey := Inkey( 0, INKEY_ALL )
          ENDIF
-
-         nKey := Inkey( 0, INKEY_ALL )
 
       ELSE
 
@@ -3068,11 +3067,11 @@ METHOD BrowseText( nPassedKey, lHandleOneKey ) CLASS XHBEditor
       // If I haven't been called with a key already preset, evaluate this key and then exit
       IF nPassedKey == NIL
 
-         IF NextKey() == 0
+         IF ( nKey := Inkey() ) == 0
             ::IdleHook()
+            nKey := Inkey( 0 )
          ENDIF
 
-         nKey := Inkey( 0 )
       ELSE
          nKey := nPassedKey
       ENDIF
