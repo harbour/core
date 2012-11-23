@@ -62,7 +62,6 @@ HB_FUNC( SAYDOWN )
 
    if( nLen )
    {
-      const char * szText = hb_parc( 1 );
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
 
@@ -78,6 +77,13 @@ HB_FUNC( SAYDOWN )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
+         const char * szText = hb_parc( 1 );
+         HB_SIZE nTextLen = hb_parclen( 1 );
+
+         HB_WCHAR wc;
+         PHB_CODEPAGE cdp = hb_gtHostCP();
+         HB_SIZE nIndex = 0;
+
          int iColor = hb_gtGetCurrColor();
 
          if( nLen > ( HB_SIZE ) ( iMaxRow - iRow + 1 ) )
@@ -86,7 +92,11 @@ HB_FUNC( SAYDOWN )
          hb_gtBeginWrite();
          while( nLen-- )
          {
-            hb_gtPutChar( iRow++, iCol, iColor, 0, ( HB_UCHAR ) *szText++ );
+            if( HB_CDPCHAR_GET( cdp, szText, nTextLen, &nIndex, &wc ) )
+               hb_gtPutChar( iRow++, iCol, iColor, 0, wc );
+            else
+               break;
+
             if( lDelay )
             {
                hb_gtEndWrite();
@@ -107,7 +117,6 @@ HB_FUNC( SAYSPREAD )
 
    if( nLen )
    {
-      const char * szText = hb_parc( 1 );
       HB_SIZE nPos, ul;
       int iRow, iCol, iMaxRow, iMaxCol;
       long lDelay;
@@ -125,6 +134,8 @@ HB_FUNC( SAYSPREAD )
 
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
+         const char * szText = hb_parc( 1 );
+
          int iColor = hb_gtGetCurrColor();
 
          nPos = nLen >> 1;
@@ -163,7 +174,6 @@ HB_FUNC( SAYMOVEIN )
 
    if( iLen )
    {
-      const char * szText = hb_parc( 1 );
       HB_SIZE nChars, ul;
       int iRow, iCol, iMaxRow, iMaxCol, iNewCol;
       long lDelay;
@@ -179,8 +189,11 @@ HB_FUNC( SAYMOVEIN )
          iRow = hb_parni( 3 );
       if( HB_ISNUM( 4 ) )
          iCol = hb_parni( 4 );
+
       if( iRow >= 0 && iCol >= 0 && iRow <= iMaxRow && iCol <= iMaxCol )
       {
+         const char * szText = hb_parc( 1 );
+
          int iColor = hb_gtGetCurrColor();
 
          iNewCol = iCol + iLen;
