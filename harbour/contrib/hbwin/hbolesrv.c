@@ -54,6 +54,7 @@
 
 #include "hbapi.h"
 
+#include "hbwinuni.h"
 #include "hbwinole.h"
 #include <olectl.h>
 #include <tchar.h>
@@ -61,16 +62,15 @@
 #define MAX_CLSID_SIZE    64
 #define MAX_CLSNAME_SIZE  256
 #define MAX_REGSTR_SIZE   ( MAX_CLSNAME_SIZE + 64 )
-#define REGTABLE_SIZE     ( sizeof( s_regTable ) / sizeof( *s_regTable ) )
 
-static const char * s_regTable[][ 3 ] =
+static const LPCTSTR s_regTable[][ 3 ] =
 {
-   { "CLSID\\@",                 0,                "$"                 },
-   { "CLSID\\@\\InprocServer32", 0,                ( const char * ) -1 },
-   { "CLSID\\@\\InprocServer32", "ThreadingModel", "Apartment"         },
-   { "CLSID\\@\\ProgId",         0,                "$"                 },
-   { "$",                        0,                "$"                 },
-   { "$\\CLSID",                 0,                "@"                 }
+   { TEXT( "CLSID\\@" ),                 NULL,                     TEXT( "$" )         },
+   { TEXT( "CLSID\\@\\InprocServer32" ), NULL,                     ( LPCTSTR ) -1      },
+   { TEXT( "CLSID\\@\\InprocServer32" ), TEXT( "ThreadingModel" ), TEXT( "Apartment" ) },
+   { TEXT( "CLSID\\@\\ProgId" ),         NULL,                     TEXT( "$" )         },
+   { TEXT( "$" ),                        NULL,                     TEXT( "$" )         },
+   { TEXT( "$\\CLSID" ),                 NULL,                     TEXT( "@" )         }
 };
 
 static LONG s_lLockCount;
@@ -78,8 +78,8 @@ static LONG s_lObjectCount;
 
 static GUID s_IID_IHbOleServer;
 
-static char s_szClsId[ MAX_CLSID_SIZE ] = "";
-static char s_szClsName[ MAX_CLSNAME_SIZE ] = "";
+static TCHAR s_lpClsId[ MAX_CLSID_SIZE ] = TEXT( "" );
+static TCHAR s_lpClsName[ MAX_CLSNAME_SIZE ] = TEXT( "" );
 
 static HB_BOOL  s_fServerReady = HB_FALSE;
 static HB_BOOL  s_fHashClone   = HB_FALSE;
@@ -137,13 +137,6 @@ static HB_BOOL s_hashWithNumKeys( PHB_ITEM pHash )
    return HB_TRUE;
 }
 
-static wchar_t * s_AnsiToWideBuffer( const char * szString, wchar_t * szWide, int iLen )
-{
-   MultiByteToWideChar( CP_ACP, MB_PRECOMPOSED, szString, -1, szWide, iLen );
-   szWide[ iLen - 1 ] = L'\0';
-   return szWide;
-}
-
 static int s_WideToAnsiBuffer( const wchar_t * wszString, char * szBuffer, int iLen )
 {
    int iResult = WideCharToMultiByte( CP_ACP, 0, wszString, -1, szBuffer, iLen, NULL, NULL );
@@ -152,55 +145,49 @@ static int s_WideToAnsiBuffer( const wchar_t * wszString, char * szBuffer, int i
    return iResult;
 }
 
-static HB_BOOL s_getKeyValue( const char * pszKey, LPTSTR lpBuffer, int iLen )
+static HB_BOOL s_getKeyValue( LPCTSTR lpKey, LPTSTR lpBuffer, int iLen )
 {
-   char pszBuffer[ MAX_REGSTR_SIZE ], * pszPtr;
+   LPTSTR lpPtr;
    int iSize, iPos, iCount;
 
-   if( pszKey == ( const char * ) -1 )
+   if( lpKey == ( LPCTSTR ) -1 )
       return GetModuleFileName( s_hInstDll, lpBuffer, iLen );
 
-   pszPtr = pszBuffer;
-   iSize = HB_SIZEOFARRAY( pszBuffer ) - 1;
+   lpPtr = lpBuffer;
+   iSize = iLen - 1;
    iPos = 0;
    for( ;; )
    {
-      char c = pszKey[ iPos++ ];
-      if( c == '$' || c == '@' || c == '\0' )
+      char c = lpKey[ iPos++ ];
+      if( c == TEXT( '$' ) || c == TEXT( '@' ) || c == TEXT( '\0' ) )
       {
          if( --iPos )
          {
             iCount = HB_MIN( iPos, iSize );
-            memcpy( pszPtr, pszKey, iCount );
-            pszKey += iPos;
-            pszPtr += iCount;
+            memcpy( lpPtr, lpKey, iCount * sizeof( TCHAR ) );
+            lpKey += iPos;
+            lpPtr += iCount;
             iSize -= iCount;
             if( iSize == 0 )
                break;
             iPos = 0;
          }
-         if( c == '\0' )
+         if( c == TEXT( '\0' ) )
             break;
          else
          {
-            const char * pszVal = c == '$' ? s_szClsName : s_szClsId;
-            iCount = ( int ) hb_strnlen( pszVal, iSize );
-            memcpy( pszPtr, pszVal, iCount );
-            pszKey++;
-            pszPtr += iCount;
+            LPCTSTR lpVal = c == TEXT( '$' ) ? s_lpClsName : s_lpClsId;
+            iCount = ( int ) HB_STRNLEN( lpVal, iSize );
+            memcpy( lpPtr, lpVal, iCount * sizeof( TCHAR ) );
+            lpKey++;
+            lpPtr += iCount;
             iSize -= iCount;
             if( iSize == 0 )
                break;
          }
       }
    }
-   pszPtr[ 0 ] = '\0';
-
-#ifdef UNICODE
-   s_AnsiToWideBuffer( pszBuffer, lpBuffer, iLen );
-#else
-   hb_strncpy( lpBuffer, pszBuffer, iLen - 1 );
-#endif
+   *lpPtr = TEXT( '\0' );
 
    return iSize != 0;
 }
@@ -715,7 +702,7 @@ STDAPI DllUnregisterServer( void )
    TCHAR lpKeyName[ MAX_REGSTR_SIZE ];
    int i;
 
-   for( i = ( int ) REGTABLE_SIZE - 1; i >= 0; --i )
+   for( i = ( int ) HB_SIZEOFARRAY( s_regTable ) - 1; i >= 0; --i )
    {
       if( s_getKeyValue( s_regTable[ i ][ 0 ], lpKeyName, MAX_REGSTR_SIZE ) )
          RegDeleteKey( HKEY_CLASSES_ROOT, lpKeyName );
@@ -742,7 +729,7 @@ STDAPI DllRegisterServer( void )
    long err;
    int i;
 
-   for( i = 0; i < ( int ) REGTABLE_SIZE; ++i )
+   for( i = 0; i < ( int ) HB_SIZEOFARRAY( s_regTable ); ++i )
    {
       s_getKeyValue( s_regTable[ i ][ 0 ], lpKeyName, MAX_REGSTR_SIZE );
       if( s_regTable[ i ][ 1 ] )
@@ -853,17 +840,19 @@ HB_FUNC( WIN_OLESERVERINIT )
 
    if( ! s_fServerReady )
    {
-      const char * pszClsId, * pszClsName;
+      void * hClsId, * hClsName;
+      LPCTSTR lpClsId, lpClsName;
 
-      pszClsId = hb_parc( 1 );
-      pszClsName = hb_parc( 2 );
+      lpClsId = HB_PARSTR( 1, &hClsId, NULL );
+      lpClsName = HB_PARSTR( 2, &hClsName, NULL );
 
-      if( pszClsId && pszClsName )
+      if( lpClsId && lpClsName )
       {
-         WCHAR wcCLSID[ MAX_CLSID_SIZE ];
+         void * hOleClsId;
+         LPCOLESTR lpOleClsId;
 
-         s_AnsiToWideBuffer( pszClsId, wcCLSID, HB_SIZEOFARRAY( wcCLSID ) );
-         if( CLSIDFromString( wcCLSID, &s_IID_IHbOleServer ) == S_OK )
+         lpOleClsId = hb_parstr_u16( 1, HB_CDP_ENDIAN_NATIVE, &hOleClsId, NULL );
+         if( CLSIDFromString( ( LPOLESTR ) lpOleClsId, &s_IID_IHbOleServer ) == S_OK )
          {
             PHB_ITEM pAction;
 
@@ -902,16 +891,21 @@ HB_FUNC( WIN_OLESERVERINIT )
             else if( ! HB_ISNIL( 3 ) )
                errCode = 1001;
 
-            hb_strncpy( s_szClsId, pszClsId, sizeof( s_szClsId ) - 1 );
-            hb_strncpy( s_szClsName, pszClsName, sizeof( s_szClsName ) - 1 );
+            HB_STRNCPY( s_lpClsId, lpClsId, HB_SIZEOFARRAY( s_lpClsId ) - 1 );
+            HB_STRNCPY( s_lpClsName, lpClsName, HB_SIZEOFARRAY( s_lpClsName ) - 1 );
 
             s_fServerReady = HB_TRUE;
          }
          else
             errCode = 1002;
+
+         hb_strfree( hOleClsId );
       }
       else
          errCode = 1001;
+
+      hb_strfree( hClsId );
+      hb_strfree( hClsName );
    }
 
    if( errCode )

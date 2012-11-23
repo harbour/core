@@ -57,7 +57,7 @@
  */
 
 /* TODO: Disabled UNICODE until this code gets support for it. */
-#ifdef UNICODE
+#if defined( UNICODE )
    #undef UNICODE
 #endif
 

@@ -83,7 +83,7 @@ static char    s_szAppName[ HB_PATH_MAX ];
 #include <windows.h>
 
 static LPTSTR * s_lpArgV = NULL;
-#ifdef UNICODE
+#if defined( UNICODE )
 static LPSTR * s_lpArgVStr = NULL;
 #endif
 
@@ -225,7 +225,7 @@ void hb_winmainArgVBuild( void )
    {
       s_lpArgV = lpArgV;
       s_argc = iArgC;
-#ifdef UNICODE
+#if defined( UNICODE )
       {
          LPSTR lpStr;
 
@@ -255,7 +255,7 @@ void hb_winmainArgVFree( void )
 {
    if( s_lpArgV )
    {
-#ifdef UNICODE
+#if defined( UNICODE )
       if( s_lpArgVStr )
       {
          if( s_argv == s_lpArgVStr )
@@ -773,7 +773,7 @@ HB_FUNC( HB_CMDLINE )
          *--ptr = TEXT( '\0' );
 
          /* Convert from OS codepage */
-#ifdef UNICODE
+#if defined( UNICODE )
          HB_RETSTR( lpBuffer );
          hb_xfree( lpBuffer );
 #else
