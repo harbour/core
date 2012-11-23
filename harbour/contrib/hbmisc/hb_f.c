@@ -187,9 +187,7 @@ static long hb_hbfskip( PFT_TEXT ft_text, char * buffer, HB_SIZE bufsize, int re
          {
             if( ( ( *( buffer + x ) == 13 ) && ( *( buffer + x + 1 ) == 10 ) ) ||
                 ( ( *( buffer + x ) == 10 ) && ( *( buffer + x + 1 ) == 13 ) ) )
-            {
                break;
-            }
          }
          if( x < 0 )
          {
@@ -236,9 +234,7 @@ HB_FUNC( HB_FREADLN )
       if( ( ( *( buffer + x ) == 13 ) && ( *( buffer + x + 1 ) == 10 ) ) ||
           ( ( *( buffer + x ) == 10 ) && ( *( buffer + x + 1 ) == 13 ) ) ||
           ( *( buffer + x ) == 26 ) || x >= read )
-      {
          break;
-      }
    }
 
    hb_retclen( buffer, x );

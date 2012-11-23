@@ -1176,40 +1176,40 @@ HB_FUNC( PQPUTCOPYEND )
 #endif
 }
 
-/*
+#if 0
 
-   TODO: Implement Full Large Objects Support
-   TODO: Implement Prepared Query handling
+ TODO: Implement Full Large Objects Support
+ TODO: Implement Prepared Query handling
 
-   extern int  lo_open(PGconn *conn, Oid lobjId, int mode);
-   extern int  lo_close(PGconn *conn, int fd);
-   extern int  lo_read(PGconn *conn, int fd, char *buf, size_t len);
-   extern int  lo_write(PGconn *conn, int fd, char *buf, size_t len);
-   extern int  lo_lseek(PGconn *conn, int fd, int offset, int whence);
-   extern Oid  lo_creat(PGconn *conn, int mode);
-   extern int  lo_tell(PGconn *conn, int fd);
+extern int lo_open( PGconn * conn, Oid lobjId, int mode );
+extern int lo_close( PGconn * conn, int fd );
+extern int lo_read( PGconn * conn, int fd, char * buf, size_t len );
+extern int lo_write( PGconn * conn, int fd, char * buf, size_t len );
+extern int lo_lseek( PGconn * conn, int fd, int offset, int whence );
+extern Oid lo_creat( PGconn * conn, int mode );
+extern int lo_tell( PGconn * conn, int fd );
 
-   int PQsendQueryParams(PGconn *conn,
-                      const char *command,
-                      int nParams,
-                      const Oid *paramTypes,
-                      const char * const *paramValues,
-                      const int *paramLengths,
-                      const int *paramFormats,
-                      int resultFormat);
+int PQsendQueryParams( PGconn * conn,
+                       const char * command,
+                       int nParams,
+                       const Oid * paramTypes,
+                       const char * const * paramValues,
+                       const int * paramLengths,
+                       const int * paramFormats,
+                       int resultFormat );
 
-   int PQsendPrepare(PGconn *conn,
-                  const char *stmtName,
-                  const char *query,
-                  int nParams,
-                  const Oid *paramTypes);
+int PQsendPrepare( PGconn * conn,
+                   const char * stmtName,
+                   const char * query,
+                   int nParams,
+                   const Oid * paramTypes );
 
-   int PQsendQueryPrepared(PGconn *conn,
-                        const char *stmtName,
-                        int nParams,
-                        const char * const *paramValues,
-                        const int *paramLengths,
-                        const int *paramFormats,
-                        int resultFormat);
+int PQsendQueryPrepared( PGconn * conn,
+                         const char * stmtName,
+                         int nParams,
+                         const char * const * paramValues,
+                         const int * paramLengths,
+                         const int * paramFormats,
+                         int resultFormat );
 
- */
+#endif

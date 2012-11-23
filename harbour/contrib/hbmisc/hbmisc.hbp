@@ -12,7 +12,7 @@
 hbmisc.hbx
 
 bbabble.c
-dates2.c
+dates.c
 ffind.c
 hb_f.c
 hbeditc.c

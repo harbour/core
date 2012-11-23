@@ -667,9 +667,7 @@ HB_FUNC( SQLITE3_TEMP_DIRECTORY )
       const char * pszDirName = hb_fsNameConv( hb_parcx( 1 ), &pszFree );
 
       if( hb_fsIsDirectory( pszDirName ) )
-      {
          bResult = HB_TRUE;
-      }
       else
       {
          if( hb_parl( 2 ) )  /* create temp directory if not exist */
@@ -785,16 +783,12 @@ HB_FUNC( SQLITE3_EXEC )
       int    rc;
 
       if( HB_ISBLOCK( 3 ) || HB_ISSYMBOL( 3 ) )
-      {
          rc = sqlite3_exec( pHbSqlite3->db, hb_parstr_utf8( 2, &hSQLText,
                                                             NULL ), callback, ( void * ) hb_param( 3, HB_IT_BLOCK | HB_IT_SYMBOL ),
                             &pszErrMsg );
-      }
       else
-      {
          rc = sqlite3_exec( pHbSqlite3->db, hb_parstr_utf8( 2, &hSQLText,
                                                             NULL ), NULL, 0, &pszErrMsg );
-      }
 
       if( rc != SQLITE_OK )
       {
@@ -828,9 +822,9 @@ HB_FUNC( SQLITE3_PREPARE )
       void *  hSQLText;
       HB_SIZE nSQLText;
 
-      const char * pszSQLText = hb_parstr_utf8( 2, &hSQLText, &nSQLText );
+      const char *  pszSQLText = hb_parstr_utf8( 2, &hSQLText, &nSQLText );
       psqlite3_stmt pStmt;
-      const char * pszTail;
+      const char *  pszTail;
 
       if( sqlite3_prepare_v2( pHbSqlite3->db, pszSQLText, ( int ) nSQLText, &pStmt, &pszTail ) == SQLITE_OK )
          hb_retptr( pStmt );
@@ -1362,9 +1356,7 @@ HB_FUNC( SQLITE3_ENABLE_LOAD_EXTENSION )
    HB_SQLITE3 * pHbSqlite3 = ( HB_SQLITE3 * ) hb_sqlite3_param( 1, HB_SQLITE3_DB, HB_TRUE );
 
    if( pHbSqlite3 && pHbSqlite3->db )
-   {
       hb_retni( sqlite3_enable_load_extension( pHbSqlite3->db, hb_parl( 2 ) ) );
-   }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 #else
@@ -1484,21 +1476,16 @@ HB_FUNC( SQLITE3_TABLE_COLUMN_METADATA )
       void * hTableName;
       void * hColumnName;
 
-      if
-      (
-         sqlite3_table_column_metadata
-         (
-            pHbSqlite3->db,
-            hb_parstr_utf8( 2, &hDbName, NULL ),
-            hb_parstr_utf8( 3, &hTableName, NULL ),
-            hb_parstr_utf8( 4, &hColumnName, NULL ),
-            &pzDataType /* pzDataDtype */,
-            &pzCollSeq /* pzCollSeq */,
-            &iNotNull,
-            &iPrimaryKey,
-            &iAutoinc
-         ) == SQLITE_OK
-      )
+      if( sqlite3_table_column_metadata(
+             pHbSqlite3->db,
+             hb_parstr_utf8( 2, &hDbName, NULL ),
+             hb_parstr_utf8( 3, &hTableName, NULL ),
+             hb_parstr_utf8( 4, &hColumnName, NULL ),
+             &pzDataType /* pzDataDtype */,
+             &pzCollSeq /* pzCollSeq */,
+             &iNotNull,
+             &iPrimaryKey,
+             &iAutoinc ) == SQLITE_OK )
       {
          PHB_ITEM pArray = hb_itemArrayNew( 5 );
 
@@ -1597,22 +1584,15 @@ HB_FUNC( SQLITE3_BLOB_OPEN )
       void * hTableName;
       void * hColumnName;
 
-      if
-      (
-         sqlite3_blob_open
-         (
-            pHbSqlite3->db,
-            hb_parstr_utf8( 2, &hDbName, NULL ),
-            hb_parstr_utf8( 3, &hTableName, NULL ),
-            hb_parstr_utf8( 4, &hColumnName, NULL ),
-            ( sqlite3_int64 ) hb_parnint( 5 ) /* iRow */,
-            hb_parni( 6 ) /* flags */,
-            &ppBlob
-         ) == SQLITE_OK
-      )
-      {
+      if( sqlite3_blob_open(
+             pHbSqlite3->db,
+             hb_parstr_utf8( 2, &hDbName, NULL ),
+             hb_parstr_utf8( 3, &hTableName, NULL ),
+             hb_parstr_utf8( 4, &hColumnName, NULL ),
+             ( sqlite3_int64 ) hb_parnint( 5 ) /* iRow */,
+             hb_parni( 6 ) /* flags */,
+             &ppBlob ) == SQLITE_OK )
          hb_retptr( ppBlob );
-      }
       else
          hb_retptr( NULL );
 
@@ -1865,7 +1845,7 @@ HB_FUNC( SQLITE3_INTERRUPT )
 /**
    A Callback To Handle SQLITE_BUSY Errors
 
-   sqlite3_busy_handler( db, nNumOfOpCodes, [Nil]|[cFunc]|[sFunc] )
+   sqlite3_busy_handler( db, nNumOfOpCodes, [cFunc|sFunc] )
  */
 
 HB_FUNC( SQLITE3_BUSY_HANDLER )
@@ -1896,7 +1876,7 @@ HB_FUNC( SQLITE3_BUSY_HANDLER )
 /**
    Query Progress Callbacks
 
-   sqlite3_progress_handler( db, nNumOfOpCodes, [Nil]|[cFunc]|[sFunc] )
+   sqlite3_progress_handler( db, nNumOfOpCodes, [cFunc|sFunc] )
  */
 
 HB_FUNC( SQLITE3_PROGRESS_HANDLER )
@@ -1927,8 +1907,8 @@ HB_FUNC( SQLITE3_PROGRESS_HANDLER )
 /**
    Commit And Rollback Notification Callbacks
 
-   sqlite3_commit_hook( db, [Nil]|[cFunc]|[sFunc] )
-   sqlite3_rollback_hook( db, [Nil]|[cFunc]|[sFunc] )
+   sqlite3_commit_hook( db, [cFunc|sFunc] )
+   sqlite3_rollback_hook( db, [cFunc|sFunc] )
  */
 
 HB_FUNC( SQLITE3_COMMIT_HOOK )
@@ -1983,7 +1963,7 @@ HB_FUNC( SQLITE3_ROLLBACK_HOOK )
 /**
    Compile-Time Authorization Callbacks
 
-   sqlite3_set_authorizer( pDb, [Nil]|[cFunc]|[sFunc] )
+   sqlite3_set_authorizer( pDb, [cFunc|sFunc] )
  */
 
 HB_FUNC( SQLITE3_SET_AUTHORIZER )
@@ -2060,8 +2040,10 @@ HB_FUNC( SQLITE3_BACKUP_STEP )
    if( pBackup )
       hb_retni( sqlite3_backup_step( pBackup, hb_parni( 2 ) ) );
    else
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+      hb_retni( -1 );
+#else
    hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
 }
 
 HB_FUNC( SQLITE3_BACKUP_FINISH )
@@ -2073,8 +2055,10 @@ HB_FUNC( SQLITE3_BACKUP_FINISH )
    if( pBackup )
       hb_retni( sqlite3_backup_finish( pBackup ) );
    else
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+      hb_retni( -1 );
+#else
    hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
 }
 
 HB_FUNC( SQLITE3_BACKUP_REMAINING )
@@ -2086,8 +2070,10 @@ HB_FUNC( SQLITE3_BACKUP_REMAINING )
    if( pBackup )
       hb_retni( sqlite3_backup_remaining( pBackup ) );
    else
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+      hb_retni( -1 );
+#else
    hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
 }
 
 HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
@@ -2099,8 +2085,10 @@ HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
    if( pBackup )
       hb_retni( sqlite3_backup_pagecount( pBackup ) );
    else
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+      hb_retni( -1 );
+#else
    hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
 }
 
 /**
@@ -2165,8 +2153,10 @@ HB_FUNC( SQLITE3_STATUS )
       hb_storni( iHighwater, 3 );
    }
    else
-#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
       hb_retni( -1 );
+#else
+   hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
 }
 
 /**
@@ -2191,8 +2181,10 @@ HB_FUNC( SQLITE3_DB_STATUS )
       hb_storni( iHighwater, 4 );
    }
    else
-#endif /* SQLITE_VERSION_NUMBER >= 3006001 */
       hb_retni( -1 );
+#else
+   hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3006001 */
 }
 
 /**
@@ -2209,8 +2201,10 @@ HB_FUNC( SQLITE3_LIMIT )
    if( pHbSqlite3 && pHbSqlite3->db && ( hb_pcount() > 2 ) && HB_ISNUM( 2 ) && HB_ISNUM( 3 ) )
       hb_retni( sqlite3_limit( pHbSqlite3->db, hb_parni( 2 ), hb_parni( 3 ) ) );
    else
-#endif /* SQLITE_VERSION_NUMBER >= 3005008 */
       hb_retni( -1 );
+#else
+   hb_retni( -1 );
+#endif /* SQLITE_VERSION_NUMBER >= 3005008 */
 }
 
 /**
@@ -2242,22 +2236,9 @@ HB_FUNC( SQLITE3_COMPILEOPTION_GET )
 /**
    Create Or Redefine SQL Functions
 
-   sqlite3_create_function( db, cFuncName, nArg, [Nil]|[cFunc]|[sFunc] )
+   sqlite3_create_function( db, cFuncName, nArg, [cFunc|sFunc] )
 
    Only scalar function creation now supported.
- */
-
-/*
-   int sqlite3_create_function(
-   sqlite3 *db,
-   const char *zFunctionName,
-   int nArg,
-   int eTextRep,
-   void *pApp,
-   void (*xFunc)(sqlite3_context*,int,sqlite3_value**),
-   void (*xStep)(sqlite3_context*,int,sqlite3_value**),
-   void (*xFinal)(sqlite3_context*)
-   );
  */
 HB_FUNC( SQLITE3_CREATE_FUNCTION )
 {
@@ -2287,7 +2268,6 @@ HB_FUNC( SQLITE3_CREATE_FUNCTION )
                                      func, NULL, NULL ) );
       }
       else
-      {
          hb_retni(
             sqlite3_create_function( pHbSqlite3->db,
                                      hb_parstr_utf8( 2, &hFuncName, NULL ),
@@ -2295,7 +2275,6 @@ HB_FUNC( SQLITE3_CREATE_FUNCTION )
                                      SQLITE_UTF8,
                                      NULL,
                                      NULL, NULL, NULL ) );
-      }
 
       if( hFuncName )
          hb_strfree( hFuncName );

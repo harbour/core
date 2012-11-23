@@ -504,13 +504,10 @@ HB_FUNC( FBFREE )
          return;
       }
 
-      if( trans )
+      if( trans && isc_commit_transaction( status, &trans ) )
       {
-         if( isc_commit_transaction( status, &trans ) )
-         {
-            hb_retnl( isc_sqlcode( status ) );
-            return;
-         }
+         hb_retnl( isc_sqlcode( status ) );
+         return;
       }
 
       /* TOFIX: Freeing pointer received as parameter? We should at least set the item NULL. */
@@ -698,10 +695,9 @@ HB_FUNC( FBGETBLOB )
       ISC_STATUS_ARRAY status;
       isc_tr_handle    trans       = ( isc_tr_handle ) 0;
       isc_blob_handle  blob_handle = ( isc_blob_handle ) 0;
-      short blob_seg_len;
-      char  blob_segment[ 512 ];
+      short      blob_seg_len;
+      char       blob_segment[ 512 ];
       ISC_QUAD * blob_id = ( ISC_QUAD * ) hb_parptr( 2 );
-      char       p[ 1024 ];
       ISC_STATUS blob_stat;
 
       if( HB_ISPOINTER( 3 ) )
@@ -732,6 +728,7 @@ HB_FUNC( FBGETBLOB )
 
          while( blob_stat == 0 || status[ 1 ] == isc_segment )
          {
+            char     p[ 1024 ];
             PHB_ITEM temp;
 
             hb_snprintf( p, sizeof( p ), "%*.*s", blob_seg_len, blob_seg_len, blob_segment );

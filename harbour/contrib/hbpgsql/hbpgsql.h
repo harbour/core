@@ -53,40 +53,49 @@
  *
  */
 
+#ifndef __HBPGSQL_H
+#define __HBPGSQL_H
+
 #include "hbapi.h"
 
 #include "libpq-fe.h"
 #include "pg_config.h"
 
-#define VARHDRSZ              4
-#define BOOLOID               16
-#define INT8OID               20
-#define INT2OID               21
-#define INT4OID               23
-#define TEXTOID               25
-#define OIDOID                26
-#define FLOAT4OID             700
-#define FLOAT8OID             701
-#define CASHOID               790
-#define BPCHAROID             1042
-#define VARCHAROID            1043
-#define DATEOID               1082
-#define TIMEOID               1083
-#define TIMESTAMPOID          1114
-#define TIMESTAMPTZOID        1184
-#define TIMETZOID             1266
-#define BITOID                1560
-#define VARBITOID             1562
-#define NUMERICOID            1700
+#define VARHDRSZ        4
+#define BOOLOID         16
+#define INT8OID         20
+#define INT2OID         21
+#define INT4OID         23
+#define TEXTOID         25
+#define OIDOID          26
+#define FLOAT4OID       700
+#define FLOAT8OID       701
+#define CASHOID         790
+#define BPCHAROID       1042
+#define VARCHAROID      1043
+#define DATEOID         1082
+#define TIMEOID         1083
+#define TIMESTAMPOID    1114
+#define TIMESTAMPTZOID  1184
+#define TIMETZOID       1266
+#define BITOID          1560
+#define VARBITOID       1562
+#define NUMERICOID      1700
 
-#define INV_WRITE             0x00020000
-#define INV_READ              0x00040000
+#define INV_WRITE       0x00020000
+#define INV_READ        0x00040000
 
 #ifndef PG_VERSION_NUM
-#define PG_VERSION_NUM 0
+#define PG_VERSION_NUM  0
 #endif
 
-extern void hb_PGconn_ret( PGconn * p );
-extern PGconn * hb_PGconn_par( int iParam );
-extern void hb_PGresult_ret( PGresult * p );
-extern PGresult * hb_PGresult_par( int iParam );
+HB_EXTERN_BEGIN
+
+extern HB_EXPORT void hb_PGconn_ret( PGconn * p );
+extern HB_EXPORT PGconn * hb_PGconn_par( int iParam );
+extern HB_EXPORT void hb_PGresult_ret( PGresult * p );
+extern HB_EXPORT PGresult * hb_PGresult_par( int iParam );
+
+HB_EXTERN_END
+
+#endif /* __HBPGSQL_H */
