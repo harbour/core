@@ -9743,7 +9743,9 @@ STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
             hbmk[ _HBMK_cHB_INSTALL_ADD ] }
 
             FOR EACH aFile IN Directory( hb_DirSepAdd( cDir ), "D" )
-               IF hb_FileExists( tmp := hb_DirSepAdd( cDir ) + aFile[ F_NAME ] + hb_ps() + hb_FNameNameExt( cFile ) )
+               IF "D" $ aFile[ F_ATTR ] .AND. !( aFile[ F_NAME ] == "." ) .AND. !( aFile[ F_NAME ] == ".." ) .AND. ;
+                  hb_FileExists( tmp := hb_DirSepAdd( cDir ) + aFile[ F_NAME ] + hb_ps() + hb_FNameNameExt( cFile ) )
+
                   cFile := tmp
                   lFound := .T.
                   EXIT

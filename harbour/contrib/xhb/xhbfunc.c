@@ -307,6 +307,23 @@ HB_FUNC( XHB_MEMOWRIT )
       HB_FUNC_EXEC( MEMOWRIT )
 }
 
+#if ! defined( HB_LEGACY_LEVEL4 )
+
+#if defined( HB_OS_UNIX ) && ! defined( HB_EOL_CRLF )
+   static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_LF, 0 };
+   static const int  s_iCrLfLen = 1;
+#else
+   static const char s_szCrLf[ CRLF_BUFFER_LEN ] = { HB_CHAR_CR, HB_CHAR_LF, 0 };
+   static const int  s_iCrLfLen = 2;
+#endif
+
+HB_FUNC( HB_OSNEWLINE )
+{
+   hb_retc_const( s_szCrLf );
+}
+
+#endif
+
 #if 0
 
 HB_FUNC( HB_ISBYREF )

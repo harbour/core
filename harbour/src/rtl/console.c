@@ -208,11 +208,15 @@ HB_FUNC( HB_EOL )
    hb_retc_const( s_szCrLf );
 }
 
+#if defined( HB_LEGACY_LEVEL4 )
+
 /* Deprecated */
 HB_FUNC( HB_OSNEWLINE )
 {
    hb_retc_const( s_szCrLf );
 }
+
+#endif
 
 /* Output an item to STDOUT */
 void hb_conOutStd( const char * szStr, HB_SIZE nLen )
