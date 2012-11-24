@@ -181,12 +181,9 @@ For GCC on OS/2 for VIO mode:
   HB_PLATFORM       os2
   HB_COMPILER       gcc
 
-For Borland C++ 5.5
+For Borland C++
   HB_PLATFORM       win
   HB_COMPILER       bcc
-
-For Borland C++ 3.x
-  HB_PLATFORM       dos
 
 For DJGPP (GCC port for MS-DOS)
   HB_PLATFORM       dos

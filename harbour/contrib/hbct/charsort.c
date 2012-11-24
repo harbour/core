@@ -54,9 +54,17 @@
 
 #include "ct.h"
 
+#include "hbstack.h"
+
 /* statics */
-static HB_SIZE s_sCompareLen;     /* TODO: make this thread safe */
-static HB_SIZE s_sElementPos;     /* TODO: make this thread safe */
+
+typedef struct
+{
+   HB_SIZE sCompareLen;
+   HB_SIZE sElementPos;
+} CT_CHARSORT, * PCT_CHARSORT;
+
+static HB_TSD_NEW( s_charsort, sizeof( CT_CHARSORT ), NULL, NULL );
 
 /* qsort function */
 #ifdef __IBMCPP__
@@ -66,9 +74,11 @@ static int
 #endif
 _hb_do_sortascend( const void * p1, const void * p2 )
 {
-   return strncmp( ( const char * ) p1 + s_sElementPos,
-                   ( const char * ) p2 + s_sElementPos,
-                   s_sCompareLen );
+   PCT_CHARSORT charsort = ( PCT_CHARSORT ) hb_stackGetTSD( &s_charsort );
+
+   return strncmp( ( const char * ) p1 + charsort->sElementPos,
+                   ( const char * ) p2 + charsort->sElementPos,
+                   charsort->sCompareLen );
 }
 
 #ifdef __IBMCPP__
@@ -78,9 +88,11 @@ static int
 #endif
 _hb_do_sortdescend( const void * p1, const void * p2 )
 {
-   return -strncmp( ( const char * ) p1 + s_sElementPos,
-                    ( const char * ) p2 + s_sElementPos,
-                    s_sCompareLen );
+   PCT_CHARSORT charsort = ( PCT_CHARSORT ) hb_stackGetTSD( &s_charsort );
+
+   return -strncmp( ( const char * ) p1 + charsort->sElementPos,
+                    ( const char * ) p2 + charsort->sElementPos,
+                    charsort->sCompareLen );
 }
 
 HB_FUNC( CHARSORT )
@@ -93,24 +105,25 @@ HB_FUNC( CHARSORT )
    /* param check I */
    if( HB_ISCHAR( 1 ) )
    {
+      PCT_CHARSORT charsort = ( PCT_CHARSORT ) hb_stackGetTSD( &s_charsort );
+
       /* get parameters */
       const char * pcString = hb_parc( 1 );
-      char *       pcRet;
-      HB_SIZE      sStrLen = hb_parclen( 1 );
-      HB_SIZE      sElementLen, sIgnore, sSortLen;
-      int          iDescend;
 
-      sElementLen   = hb_parnsdef( 2, 1 );
-      s_sCompareLen = hb_parnsdef( 3, sElementLen );
-      sIgnore       = hb_parnsdef( 4, 0 );
-      s_sElementPos = hb_parnsdef( 5, 0 );
-      sSortLen      = hb_parnsdef( 6, sStrLen - sIgnore );
-      iDescend      = hb_parldef( 7, 0 );
+      char *  pcRet;
+      HB_SIZE sStrLen     = hb_parclen( 1 );
+      HB_SIZE sElementLen = hb_parnsdef( 2, 1 );
+      HB_SIZE sIgnore     = hb_parnsdef( 4, 0 );
+      HB_SIZE sSortLen    = hb_parnsdef( 6, sStrLen - sIgnore );
+      int     iDescend    = hb_parldef( 7, 0 );
+
+      charsort->sCompareLen = hb_parnsdef( 3, sElementLen );
+      charsort->sElementPos = hb_parnsdef( 5, 0 );
 
       /* param check II */
-      if( sElementLen == 0 || s_sCompareLen > sElementLen ||
+      if( sElementLen == 0 || charsort->sCompareLen > sElementLen ||
           sIgnore + sElementLen > sStrLen ||
-          s_sElementPos + s_sCompareLen > sElementLen ||
+          charsort->sElementPos + charsort->sCompareLen > sElementLen ||
           sSortLen + sIgnore > sStrLen )
       {
          int iArgErrorMode = ct_getargerrormode();

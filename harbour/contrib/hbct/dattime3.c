@@ -58,30 +58,46 @@
 
 #include "hbapi.h"
 #include "hbdate.h"
+#include "hbstack.h"
 
 #if defined( HB_OS_WIN )
 #  include <windows.h>
 #endif
 #include <time.h>
 
+typedef struct
+{
+   /* even if these are chars, variable must be int, since we need an extra -1 */
+   double dTimeSet;
+   double dTimeCounter;
+} CT_DATE, * PCT_DATE;
+
+static void s_ct_date_init( void * cargo )
+{
+   PCT_DATE ct_date = ( PCT_DATE ) cargo;
+
+   ct_date->dTimeSet     = 0;
+   ct_date->dTimeCounter = 0;
+}
+
+static HB_TSD_NEW( s_ct_date, sizeof( CT_DATE ), s_ct_date_init, NULL );
+
 HB_FUNC( WAITPERIOD )
 {
-   /* TODO: make it MT safe */
-   static double s_dTimeSet     = 0;
-   static double s_dTimeCounter = 0;
+   PCT_DATE ct_date = ( PCT_DATE ) hb_stackGetTSD( &s_ct_date );
 
    double d = hb_dateSeconds();
 
    if( hb_pcount() > 0 )
    {
-      s_dTimeSet     = d;
-      s_dTimeCounter = d + hb_parnd( 1 ) / 100.0;
+      ct_date->dTimeSet     = d;
+      ct_date->dTimeCounter = d + hb_parnd( 1 ) / 100.0;
    }
 
-   if( d < s_dTimeSet )
+   if( d < ct_date->dTimeSet )
       d += 86400.0;
 
-   hb_retl( d < s_dTimeCounter );
+   hb_retl( d < ct_date->dTimeCounter );
 }
 
 static HB_BOOL _hb_timeValid( const char * szTime, HB_SIZE nLen, int * piDecode )

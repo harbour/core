@@ -54,6 +54,28 @@
 
 #include "ct.h"
 
+#include "hbstack.h"
+
+typedef struct
+{
+   int  iRefSwitch;
+   int  iAtMupaSwitch;
+   int  iAtLikeMode;
+   char cAtLikeChar;
+} CT_STR, * PCT_STR;
+
+static void s_ct_str_init( void * cargo )
+{
+   PCT_STR ct_str = ( PCT_STR ) cargo;
+
+   ct_str->iRefSwitch = 0;
+   ct_str->iAtMupaSwitch = 0;
+   ct_str->iAtLikeMode = 0;
+   ct_str->cAtLikeChar = '?';
+}
+
+static HB_TSD_NEW( s_ct_str, sizeof( CT_STR ), s_ct_str_init, NULL );
+
 /* -------------- */
 /* initialization */
 /* -------------- */
@@ -223,12 +245,14 @@ const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
    for( pcRet = pcString; pcRet < pcStop1; pcRet++ )
    {
       for( pcSet = pcCharSet; pcSet < pcStop2; pcSet++ )
+      {
          if( *pcSet == *pcRet )
          {
             if( psMatchedCharPos != NULL )
                *( psMatchedCharPos ) = pcSet - pcCharSet;
             return pcRet;
          }
+      }
    }
 
    return NULL;
@@ -254,12 +278,14 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
    for( pcRet = pcString + sStrLen - 1; pcRet >= pcString; pcRet-- )
    {
       for( pcSet = pcCharSet; pcSet < pcStop; pcSet++ )
+      {
          if( *pcSet == *pcRet )
          {
             if( psMatchedCharPos != NULL )
                *( psMatchedCharPos ) = pcSet - pcCharSet;
             return pcRet;
          }
+      }
    }
 
    return NULL;
@@ -269,18 +295,22 @@ const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
  *  CSETREF() stuff
  */
 
-static int s_iRefSwitch = 0;     /* TODO: make this tread safe */
-
 void ct_setref( int iNewSwitch )
 {
+   PCT_STR ct_str = ( PCT_STR ) hb_stackGetTSD( &s_ct_str );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setref(%i)", iNewSwitch ) );
-   s_iRefSwitch = iNewSwitch;
+
+   ct_str->iRefSwitch = iNewSwitch;
 }
 
 int ct_getref( void )
 {
+   PCT_STR ct_str = ( PCT_STR ) hb_stackGetTSD( &s_ct_str );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getref()" ) );
-   return s_iRefSwitch;
+
+   return ct_str->iRefSwitch;
 }
 
 HB_FUNC( CSETREF )
@@ -303,18 +333,22 @@ HB_FUNC( CSETREF )
  * CSETATMUPA() stuff
  */
 
-static int s_iAtMupaSwitch = 0;  /* TODO: make this tread safe */
-
 void ct_setatmupa( int iNewSwitch )
 {
+   PCT_STR ct_str = ( PCT_STR ) hb_stackGetTSD( &s_ct_str );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setatmupa(%i)", iNewSwitch ) );
-   s_iAtMupaSwitch = iNewSwitch;
+
+   ct_str->iAtMupaSwitch = iNewSwitch;
 }
 
 int ct_getatmupa( void )
 {
+   PCT_STR ct_str = ( PCT_STR ) hb_stackGetTSD( &s_ct_str );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatmupa()" ) );
-   return s_iAtMupaSwitch;
+
+   return ct_str->iAtMupaSwitch;
 }
 
 HB_FUNC( CSETATMUPA )
@@ -337,36 +371,44 @@ HB_FUNC( CSETATMUPA )
  * SETATLIKE() stuff
  */
 
-static int  s_iAtLikeMode = 0;   /* TODO: make this tread safe */
-static char s_cAtLikeChar = '?'; /* TODO: make this tread safe */
-
 void ct_setatlike( int iNewMode )
 {
+   PCT_STR ct_str = ( PCT_STR ) hb_stackGetTSD( &s_ct_str );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setatlike(%i)", iNewMode ) );
-   s_iAtLikeMode = iNewMode;
+
+   ct_str->iAtLikeMode = iNewMode;
 }
 
 int ct_getatlike( void )
 {
+   PCT_STR ct_str = ( PCT_STR ) hb_stackGetTSD( &s_ct_str );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatlike()" ) );
-   return s_iAtLikeMode;
+
+   return ct_str->iAtLikeMode;
 }
 
 void ct_setatlikechar( char cNewChar )
 {
+   PCT_STR ct_str = ( PCT_STR ) hb_stackGetTSD( &s_ct_str );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_setatlikechar(\'%c\')", cNewChar ) );
-   s_cAtLikeChar = cNewChar;
+
+   ct_str->cAtLikeChar = cNewChar;
 }
 
 char ct_getatlikechar( void )
 {
+   PCT_STR ct_str = ( PCT_STR ) hb_stackGetTSD( &s_ct_str );
+
    HB_TRACE( HB_TR_DEBUG, ( "ct_getatlikechar()" ) );
-   return s_cAtLikeChar;
+
+   return ct_str->cAtLikeChar;
 }
 
 HB_FUNC( SETATLIKE )
 {
-
    hb_retni( ct_getatlike() );
 
    /* set new mode if first parameter is CT_SETATLIKE_EXACT (==0)
@@ -376,9 +418,7 @@ HB_FUNC( SETATLIKE )
       int iNewMode = hb_parni( 1 );
 
       if( iNewMode == CT_SETATLIKE_EXACT || iNewMode == CT_SETATLIKE_WILDCARD )
-      {
          ct_setatlike( iNewMode );
-      }
       else
       {
          int iArgErrorMode = ct_getargerrormode();

@@ -56,18 +56,18 @@ HB_FUNC( GT_SETFLAG )
       char *   FlagString = hb_itemGetC( hb_param( 1, HB_IT_STRING ) );
       unsigned StartBit   = hb_parnidef( 2, 1 );
       unsigned EndBit     = hb_parnidef( 3, 1 );
-      unsigned BitCount;
-      unsigned BitPointer;
-      unsigned BytePointer;
 
       EndBit = HB_MAX( StartBit, EndBit );
 
       if( StartBit > 0 && EndBit <= ( hb_parclen( 1 ) * 8 ) )
       {
+         unsigned BitCount;
+
          for( BitCount = StartBit; BitCount <= EndBit; BitCount++ )
          {
-            BitPointer  = BitCount % 8;
-            BytePointer = ( unsigned ) ( BitCount / 8 );
+            unsigned BitPointer  = BitCount % 8;
+            unsigned BytePointer = ( unsigned ) ( BitCount / 8 );
+
             if( ! BitPointer )
             {
                BitPointer = 8;
@@ -89,18 +89,18 @@ HB_FUNC( GT_CLRFLAG )
       char *   FlagString = hb_itemGetC( hb_param( 1, HB_IT_STRING ) );
       unsigned StartBit   = hb_parnidef( 2, 1 );
       unsigned EndBit     = hb_parnidef( 3, 1 );
-      unsigned BitCount;
-      unsigned BitPointer;
-      unsigned BytePointer;
 
       EndBit = HB_MAX( StartBit, EndBit );
 
       if( StartBit > 0 && EndBit <= ( hb_parclen( 1 ) * 8 ) )
       {
+         unsigned BitCount;
+
          for( BitCount = StartBit; BitCount <= EndBit; BitCount++ )
          {
-            BitPointer  = BitCount % 8;
-            BytePointer = ( unsigned ) ( BitCount / 8 );
+            unsigned BitPointer  = BitCount % 8;
+            unsigned BytePointer = ( unsigned ) ( BitCount / 8 );
+
             if( ! BitPointer )
             {
                BitPointer = 8;
@@ -121,15 +121,15 @@ HB_FUNC( GT_ISFLAG )
 
    if( HB_ISCHAR( 1 ) )
    {
-      unsigned     Bit = hb_parnidef( 2, 1 );
-      unsigned     BitPointer;
-      unsigned     BytePointer;
-      const char * FlagString = hb_parc( 1 );
+      unsigned Bit = hb_parnidef( 2, 1 );
 
       if( Bit > 0 && Bit <= ( hb_parclen( 1 ) * 8 ) )
       {
-         BitPointer  = Bit % 8;
-         BytePointer = ( unsigned ) ( Bit / 8 );
+         const char * FlagString = hb_parc( 1 );
+
+         unsigned BitPointer  = Bit % 8;
+         unsigned BytePointer = ( unsigned ) ( Bit / 8 );
+
          if( ! BitPointer )
          {
             BitPointer = 8;

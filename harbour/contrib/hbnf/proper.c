@@ -91,9 +91,7 @@ HB_FUNC( FT_PROPER )
       for( i = 0; i < iLen - 2; i++ )
       {
          if( cStr[ i ] == 'M' && cStr[ i + 1 ] == 'c' )
-         {
             cDst[ i + 2 ] = _ftToUpper( cDst[ i + 2 ] );
-         }
       }
    }
 
