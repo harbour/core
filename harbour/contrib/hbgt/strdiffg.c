@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: strdiff.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -21,14 +20,12 @@
 
 HB_FUNC( GT_STRDIFF )
 {
-   const char * s1, * s2;
-   HB_ISIZ      pos, len;
-
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      s1  = hb_parc( 1 );
-      s2  = hb_parc( 2 );
-      len = hb_parclen( 2 );
+      const char * s1 = hb_parc( 1 );
+      const char * s2 = hb_parc( 2 );
+      HB_ISIZ      pos;
+      HB_ISIZ      len = hb_parclen( 2 );
 
       /*
          loop through comparing both strings
@@ -46,7 +43,5 @@ HB_FUNC( GT_STRDIFF )
          hb_retc( s2 );
    }
    else
-   {
       hb_ret();                       /* parameter mismatch - error return NIL */
-   }
 }

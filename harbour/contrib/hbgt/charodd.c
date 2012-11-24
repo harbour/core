@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: charodd.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -21,25 +20,20 @@
 
 HB_FUNC( GT_CHARODD )
 {
-   const char * s1;
-   char *       s2;
-   HB_ISIZ      len, i;
-
    if( HB_ISCHAR( 1 ) )
    {
-      s1  = hb_parc( 1 );
-      len = hb_parclen( 1 );
+      const char * s1 = hb_parc( 1 );
+      char *       s2;
+      HB_ISIZ      len = hb_parclen( 1 );
+      HB_ISIZ      i;
 
-      s2 = ( char * ) hb_xgrab( len / 2 );    /* grab us some mem to work with */
+      s2 = ( char * ) hb_xgrab( len / 2 + 1 );    /* grab us some mem to work with */
 
       for( i = 0; i <= len; i += 2 )
          s2[ i / 2 ] = s1[ i ] & 0x7f;
 
-      hb_retclen( s2, len );
-      hb_xfree( s2 );                 /* free alloc'ed mem */
+      hb_retclen_buffer( s2, len / 2 );
    }
    else
-   {
       hb_retc_null();                 /* parameter mismatch - error NullStr */
-   }
 }

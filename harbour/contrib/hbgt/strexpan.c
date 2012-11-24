@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: strexpan.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -21,21 +20,15 @@
 
 HB_FUNC( GT_STREXPAND )
 {
-   const char * in;
-   char *       out;
-   int          nIns   = 1;
-   const char * insert = " ";
-   HB_ISIZ      len;
-   HB_ISIZ      i, p;
-   int          j;
-
    if( HB_ISCHAR( 1 ) && ( HB_ISNUM( 2 ) || hb_pcount() < 2 ) && ( HB_ISCHAR( 3 ) || hb_pcount() < 3 ) )
    {
-      in  = hb_parc( 1 );
-      len = hb_parclen( 1 );
-
-      if( HB_ISNUM( 2 ) )
-         nIns = hb_parni( 2 );
+      const char * in = hb_parc( 1 );
+      char *       out;
+      int          nIns   = hb_parnidef( 2, 1 );
+      const char * insert = " ";
+      HB_ISIZ      len    = hb_parclen( 1 );
+      HB_ISIZ      i, p;
+      int          j;
 
       if( HB_ISCHAR( 3 ) )
          insert = hb_parc( 3 );
@@ -54,11 +47,8 @@ HB_FUNC( GT_STREXPAND )
       }
       out[ p ] = '\0';                 /* Add terminating NUL */
 
-      hb_retc( out );
-      hb_xfree( out );                 /* free alloc'ed mem */
+      hb_retc_buffer( out );
    }
    else
-   {
       hb_retc_null();                  /* parameter mismatch - error NullStr */
-   }
 }

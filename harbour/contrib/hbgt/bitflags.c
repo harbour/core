@@ -3,7 +3,6 @@
  */
 
 /*
- * File......: BITFLAGS.C
  * Author....: Dave Pearson
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -25,64 +24,44 @@
  *
  */
 
-
 #include "hbapi.h"
-
-#define _GT_MAX( x, y )  ( x > y ? x : y )
+#include "hbapiitm.h"
 
 HB_FUNC( GT_NEWFLAG )
 {
-   char *   FlagString;
-   unsigned ByteCount;
-   unsigned FlagCount = 1;
-   unsigned Byte;
+   unsigned FlagCount = ( unsigned ) hb_parnidef( 1, 1 );
 
-   if( ISNUM( 1 ) )
-   {
-      FlagCount = ( unsigned ) hb_parni( 1 );
-   }
    if( FlagCount > 0 )
    {
-      ByteCount = ( unsigned ) ( ( FlagCount / 8 ) + 1 );
+      char *   FlagString;
+      unsigned ByteCount = ( unsigned ) ( ( FlagCount / 8 ) + 1 );
+      unsigned Byte;
+
       if( ! ( FlagCount % 8 ) )
-      {
          --ByteCount;
-      }
-      FlagString = hb_xgrab( ByteCount );
+      FlagString = ( char * ) hb_xgrab( ByteCount );
       for( Byte = 0; Byte < ByteCount; Byte++ )
-      {
          FlagString[ Byte ] = 0;
-      }
       hb_retclen( FlagString, ByteCount );
       hb_xfree( FlagString );
    }
    else
-   {
       hb_retc_null();
-   }
 }
 
 HB_FUNC( GT_SETFLAG )
 {
-   char *   FlagString;
-   unsigned StartBit = 1;
-   unsigned EndBit   = 1;
-   unsigned BitCount;
-   unsigned BitPointer;
-   unsigned BytePointer;
-
    if( HB_ISCHAR( 1 ) )
    {
-      FlagString = hb_parc( 1 );
-      if( HB_ISNUM( 2 ) )
-      {
-         StartBit = hb_parni( 2 );
-      }
-      if( HB_ISNUM( 3 ) )
-      {
-         EndBit = hb_parni( 3 );
-      }
-      EndBit = _GT_MAX( StartBit, EndBit );
+      char *   FlagString = hb_itemGetC( hb_param( 1, HB_IT_STRING ) );
+      unsigned StartBit   = hb_parnidef( 2, 1 );
+      unsigned EndBit     = hb_parnidef( 3, 1 );
+      unsigned BitCount;
+      unsigned BitPointer;
+      unsigned BytePointer;
+
+      EndBit = HB_MAX( StartBit, EndBit );
+
       if( StartBit > 0 && EndBit <= ( hb_parclen( 1 ) * 8 ) )
       {
          for( BitCount = StartBit; BitCount <= EndBit; BitCount++ )
@@ -97,35 +76,25 @@ HB_FUNC( GT_SETFLAG )
             FlagString[ BytePointer ] |= 1 << ( BitPointer - 1 );
          }
       }
-      hb_retclen( FlagString, hb_parclen( 1 ) );
+      hb_retclen_buffer( FlagString, hb_parclen( 1 ) );
    }
    else
-   {
       hb_retc_null();
-   }
 }
 
 HB_FUNC( GT_CLRFLAG )
 {
-   char *   FlagString;
-   unsigned StartBit = 1;
-   unsigned EndBit   = 1;
-   unsigned BitCount;
-   unsigned BitPointer;
-   unsigned BytePointer;
-
    if( HB_ISCHAR( 1 ) )
    {
-      FlagString = hb_parc( 1 );
-      if( HB_ISNUM( 2 ) )
-      {
-         StartBit = hb_parni( 2 );
-      }
-      if( HB_ISNUM( 3 ) )
-      {
-         EndBit = hb_parni( 3 );
-      }
-      EndBit = _GT_MAX( StartBit, EndBit );
+      char *   FlagString = hb_itemGetC( hb_param( 1, HB_IT_STRING ) );
+      unsigned StartBit   = hb_parnidef( 2, 1 );
+      unsigned EndBit     = hb_parnidef( 3, 1 );
+      unsigned BitCount;
+      unsigned BitPointer;
+      unsigned BytePointer;
+
+      EndBit = HB_MAX( StartBit, EndBit );
+
       if( StartBit > 0 && EndBit <= ( hb_parclen( 1 ) * 8 ) )
       {
          for( BitCount = StartBit; BitCount <= EndBit; BitCount++ )
@@ -140,30 +109,23 @@ HB_FUNC( GT_CLRFLAG )
             FlagString[ BytePointer ] &= 0xff - ( 1 << ( BitPointer - 1 ) );
          }
       }
-      hb_retclen( FlagString, hb_parclen( 1 ) );
+      hb_retclen_buffer( FlagString, hb_parclen( 1 ) );
    }
    else
-   {
       hb_retc_null();
-   }
 }
 
-HB_FUNC( GT_ISFLAG  )
+HB_FUNC( GT_ISFLAG )
 {
-
-   HB_BOOL  FlagStatus = HB_FALSE;
-   unsigned Bit        = 1;
-   unsigned BitPointer;
-   unsigned BytePointer;
-   char *   FlagString;
+   HB_BOOL FlagStatus = HB_FALSE;
 
    if( HB_ISCHAR( 1 ) )
    {
-      FlagString = hb_parc( 1 );
-      if( HB_ISNUM( 2 ) )
-      {
-         Bit = hb_parni( 2 );
-      }
+      unsigned     Bit = hb_parnidef( 2, 1 );
+      unsigned     BitPointer;
+      unsigned     BytePointer;
+      const char * FlagString = hb_parc( 1 );
+
       if( Bit > 0 && Bit <= ( hb_parclen( 1 ) * 8 ) )
       {
          BitPointer  = Bit % 8;

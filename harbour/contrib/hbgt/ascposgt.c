@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: ascpos.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -21,13 +20,11 @@
 
 HB_FUNC( GT_ASCPOS )
 {
-   const char * s;
-   HB_SIZE      p;
-
    if( HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) )
    {
-      s = hb_parc( 1 );
-      p = hb_parns( 2 );
+      const char * s = hb_parc( 1 );
+      HB_SIZE      p = hb_parns( 2 );
+
       p--;                             /* decrement p to adjust for c strings */
                                        /* starting at position 0 */
 
@@ -38,7 +35,5 @@ HB_FUNC( GT_ASCPOS )
                                        /* character in string */
    }
    else
-   {
       hb_retni( -1 );                 /* parameter mismatch - error -1 */
-   }
 }

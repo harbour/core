@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: asciisum.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069

@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: chareven.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -21,14 +20,12 @@
 
 HB_FUNC( GT_CHAREVEN )
 {
-   const char * s1;
-   char *       s2;
-   HB_ISIZ      len, i;
-
    if( HB_ISCHAR( 1 ) )
    {
-      s1  = hb_parc( 1 );
-      len = hb_parclen( 1 );
+      const char * s1 = hb_parc( 1 );
+      char *       s2;
+      HB_ISIZ      len = hb_parclen( 1 );
+      HB_ISIZ      i;
 
       s2 = ( char * ) hb_xgrab( len / 2 + 1 );    /* grab us some mem to work with */
 
@@ -38,7 +35,5 @@ HB_FUNC( GT_CHAREVEN )
       hb_retclen_buffer( s2, len / 2 );
    }
    else
-   {
       hb_retc_null();         /* parameter mismatch - error NullStr */
-   }
 }

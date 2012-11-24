@@ -27,5 +27,6 @@ int _GT_Internal_StringAsInt( char * String, HB_ISIZ Start, HB_ISIZ End )
          Decimal *= 0xA;
       }
    }
+
    return Value;
 }

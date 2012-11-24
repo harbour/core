@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: chrcount.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -21,14 +20,12 @@
 
 HB_FUNC( GT_CHRCOUNT )
 {
-   const char * s1, * s2;
-   HB_ISIZ      count, pos2, len;
-
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      s1  = hb_parc( 1 );
-      s2  = hb_parc( 2 );
-      len = hb_parclen( 2 );
+      const char * s1  = hb_parc( 1 );
+      const char * s2  = hb_parc( 2 );
+      HB_ISIZ      len = hb_parclen( 2 );
+      HB_ISIZ      count, pos2;
 
       /* loop through s2 matching passed character (s1) with
          each character of s1 */
@@ -40,7 +37,5 @@ HB_FUNC( GT_CHRCOUNT )
       hb_retns( count );   /* return result */
    }
    else
-   {
-      hb_retns( -1 );                 /* parameter mismatch - error -1 */
-   }
+      hb_retns( -1 );   /* parameter mismatch - error -1 */
 }

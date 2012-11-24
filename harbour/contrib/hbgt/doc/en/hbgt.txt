@@ -556,44 +556,44 @@
 
 /* $DOC$
    $NAME$
-      GT_NEWFLAG()
+      gt_NewFlag()
    $CATEGORY$
       General
    $ONELINER$
       Create a new bit flag string.
    $SYNTAX$
-      GT_NewFlag(<nFlagCount>) --> cFlagString
+      gt_NewFlag(<nFlagCount>) --> cFlagString
    $ARGUMENTS$
       <nFlagCount> is the number of flags you wish to store.
    $RETURNS$
       A string to hold the bit flags. All flags are set to FALSE.
    $DESCRIPTION$
-      GT_NewFlag() is used to construct a bit flag string. The bit flag
+      gt_NewFlag() is used to construct a bit flag string. The bit flag
       functions can be used for storing a large number of logical values
       in a small space.
 
-      To create a bit flag string you need to pass GT_NewFlag() a value
+      To create a bit flag string you need to pass gt_NewFlag() a value
       that is equal to or greater than the number of flags required (you
       may want to allow for future expansion). Each character in the
-      string returned from GT_NewFlag() will hold 8 logical values.
+      string returned from gt_NewFlag() will hold 8 logical values.
    $EXAMPLES$
-      cFlags := GT_NewFlag( 20 )   // Create a bit flag string for 20 logical values.
+      cFlags := gt_NewFlag( 20 )   // Create a bit flag string for 20 logical values.
    $SEEALSO$
-      GT_SETFLAG() GT_CLRFLAG() GT_ISFLAG()
+      gt_SetFlag() gt_ClrFlag() gt_IsFlag()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      GT_SETFLAG()
+      gt_SetFlag()
    $CATEGORY$
       General
    $ONELINER$
       Set a number of flags to TRUE in a bit flag string.
    $SYNTAX$
-      GT_SetFlag(<cFlagString>,[<nStart>],[<nEnd>]) --> cFlagString
+      gt_SetFlag(<cFlagString>,[<nStart>],[<nEnd>]) --> cFlagString
    $ARGUMENTS$
-      <cFlagString> is a bit flag string created with GT_NewFlag()
+      <cFlagString> is a bit flag string created with gt_NewFlag()
 
       <nStart> is the starting flag. This is an optional numeric value.
       If not supplied it defaults to 1.
@@ -603,38 +603,38 @@
    $RETURNS$
       The bit map string with the new flag settings.
    $DESCRIPTION$
-      GT_SetFlag() is used to turn flags within the flag string on.
+      gt_SetFlag() is used to turn flags within the flag string on.
    $EXAMPLES$
-      cFlags := GT_NewFlag( 20 )   // Create a bit flag string for 20
+      cFlags := gt_NewFlag( 20 )   // Create a bit flag string for 20
       // logical values.
 
       // Now set flags 10 to 15 to true.
 
-      cFlags := GT_SetFlag( cFlags, 10, 15 )
+      cFlags := gt_SetFlag( cFlags, 10, 15 )
 
       // And set flag 18 to true.
 
-      cFlags := GT_SetFlag( cFlags, 18 )
+      cFlags := gt_SetFlag( cFlags, 18 )
 
       // And set flag 1 to true.
 
-      cFlags := GT_SetFlag( cFlags )
+      cFlags := gt_SetFlag( cFlags )
    $SEEALSO$
-      GT_NEWFLAG() GT_CLRFLAG() GT_ISFLAG()
+      gt_NewFlag() gt_ClrFlag() gt_IsFlag()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      GT_CLRFLAG()
+      gt_ClrFlag()
    $CATEGORY$
       General
    $ONELINER$
       Set a number of flags to FALSE in a bit flag string.
    $SYNTAX$
-      GT_ClrFlag(<cFlagString>,[<nStart>],[<nEnd>]) --> cFlagString
+      gt_ClrFlag(<cFlagString>,[<nStart>],[<nEnd>]) --> cFlagString
    $ARGUMENTS$
-      <cFlagString> is a bit flag string created with GT_NewFlag()
+      <cFlagString> is a bit flag string created with gt_NewFlag()
 
       <nStart> is the starting flag. This is an optional numeric value.
       If not supplied it defaults to 1.
@@ -644,56 +644,56 @@
    $RETURNS$
       The bit map string with the new flag settings.
    $DESCRIPTION$
-      GT_ClrFlag() is used to turn flags within the flag string off.
+      gt_ClrFlag() is used to turn flags within the flag string off.
    $EXAMPLES$
-      cFlags := GT_NewFlag( 20 )   // Create a bit flag string for 20
+      cFlags := gt_NewFlag( 20 )   // Create a bit flag string for 20
       // logical values.
 
       // Now, turn them all on.
 
-      cFlags := GT_SetFlag( cFlags, 1, 20 )
+      cFlags := gt_SetFlag( cFlags, 1, 20 )
 
       // Now set flags 10 to 15 to false.
 
-      cFlags := GT_ClrFlag( cFlags, 10, 15 )
+      cFlags := gt_ClrFlag( cFlags, 10, 15 )
 
       // And set flag 18 to false.
 
-      cFlags := GT_ClrFlag( cFlags, 18 )
+      cFlags := gt_ClrFlag( cFlags, 18 )
 
       // And set flag 1 to false.
 
-      cFlags := GT_ClrFlag( cFlags )
+      cFlags := gt_ClrFlag( cFlags )
    $SEEALSO$
-      GT_NEWFLAG() GT_SETFLAG() GT_ISFLAG()
+      gt_NewFlag() gt_SetFlag() gt_IsFlag()
    $END$
  */
 
 /* $DOC$
    $NAME$
-      GT_ISFLAG()
+      gt_IsFlag()
    $CATEGORY$
       General
    $ONELINER$
       Test the setting of a flag in a bit flag string.
    $SYNTAX$
-      GT_IsFlag(<cFlagString>,[<nFlag>]) --> lSetting
+      gt_IsFlag(<cFlagString>,[<nFlag>]) --> lSetting
    $ARGUMENTS$
-      <cFlagString> is a bit flag string created with GT_NewFlag()
+      <cFlagString> is a bit flag string created with gt_NewFlag()
 
       <nFlag> is the flag to be tested.
    $RETURNS$
       A boolean value, TRUE if the flag is on, FALSE if it's off.
    $DESCRIPTION$
-      GT_IsFlag() is used to test the state of a flag with a bit flag
+      gt_IsFlag() is used to test the state of a flag with a bit flag
       string.
    $EXAMPLES$
       // Print the setting of the flags in a flag string called ``cDave''
 
       FOR nFlag := 1 to ( Len( cDave ) * 8 )
-         ? "Flag number ", nFlag, " == ", GT_IsFlag( cDave, nFlag )
+         ? "Flag number ", nFlag, " == ", gt_IsFlag( cDave, nFlag )
       NEXT
    $SEEALSO$
-      GT_NEWFLAG() GT_SETFLAG() GT_CLRFLAG()
+      gt_NewFlag() gt_SetFlag() gt_ClrFlag()
    $END$
  */

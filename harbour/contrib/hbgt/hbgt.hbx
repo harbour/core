@@ -30,6 +30,10 @@ DYNAMIC gt_CharOdd
 DYNAMIC gt_ChrCount
 DYNAMIC gt_ChrFirst
 DYNAMIC gt_ChrTotal
+DYNAMIC gt_ClrFlag
+DYNAMIC gt_IsFlag
+DYNAMIC gt_NewFlag
+DYNAMIC gt_SetFlag
 DYNAMIC gt_StrCount
 DYNAMIC gt_StrCSPN
 DYNAMIC gt_StrDiff

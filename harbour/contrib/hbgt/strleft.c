@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: strleft.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -21,17 +20,13 @@
 
 HB_FUNC( GT_STRLEFT )
 {
-   const char * string;
-   const char * cset;
-   HB_ISIZ      l1, l2;
-   HB_ISIZ      p1, p2;
-
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      string = hb_parc( 1 );
-      cset   = hb_parc( 2 );
-      l1     = hb_parclen( 1 );
-      l2     = hb_parclen( 2 );
+      const char * string = hb_parc( 1 );
+      const char * cset   = hb_parc( 2 );
+      HB_ISIZ      l1     = hb_parclen( 1 );
+      HB_ISIZ      l2     = hb_parclen( 2 );
+      HB_ISIZ      p1, p2;
 
       for( p1 = 0; p1 < l1; p1++ )
       {
@@ -42,10 +37,7 @@ HB_FUNC( GT_STRLEFT )
             break;
       }
       hb_retns( p1 );
-
    }
    else
-   {
       hb_retns( -1 );           /* parameter mismatch - error NullStr */
-   }
 }

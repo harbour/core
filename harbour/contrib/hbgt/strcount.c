@@ -5,7 +5,6 @@
 /*
  * GT CLIPPER STANDARD HEADER
  *
- * File......: strcount.c
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
  * Net/Node..: 050/069
@@ -21,16 +20,14 @@
 
 HB_FUNC( GT_STRCOUNT )
 {
-   const char * s1, * s2;
-   HB_ISIZ      count, p1, p2, l1, l2;
-   int          match;
-
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) )
    {
-      s1 = hb_parc( 1 );
-      s2 = hb_parc( 2 );
-      l1 = hb_parclen( 1 );
-      l2 = hb_parclen( 2 );
+      const char * s1 = hb_parc( 1 );
+      const char * s2 = hb_parc( 2 );
+      HB_ISIZ      l1 = hb_parclen( 1 );
+      HB_ISIZ      l2 = hb_parclen( 2 );
+      HB_ISIZ      count, p1, p2;
+      int          match;
 
       /* loop through s2 matching passed character (s1) with
          each character of s1 */
@@ -52,7 +49,5 @@ HB_FUNC( GT_STRCOUNT )
       hb_retns( count );              /* return result */
    }
    else
-   {
       hb_retns( -1 );                 /* parameter mismatch - error -1 */
-   }
 }
