@@ -75,7 +75,6 @@ int ct_str_exit( void )
 const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
                                   const char * pcMatch, HB_SIZE sMatchLen, HB_SIZE * psMatchStrLen )
 {
-
    HB_SIZE sPos;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_exact_forward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
@@ -86,16 +85,13 @@ const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
 
    sPos = hb_strAt( pcMatch, sMatchLen, pcString, sStrLen );
    if( sPos == 0 )
-   {
       return NULL;
-   }
    else
    {
       if( psMatchStrLen != NULL )
          *psMatchStrLen = sMatchLen;
       return pcString + sPos - 1;
    }
-
 }
 
 /* ------------------------------------------------ */
@@ -104,7 +100,6 @@ const char * ct_at_exact_forward( const char * pcString, HB_SIZE sStrLen,
 const char * ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
                                    const char * pcMatch, HB_SIZE sMatchLen, HB_SIZE * psMatchStrLen )
 {
-
    HB_SIZE sIndex;
    const char * pcRet;
 
@@ -117,8 +112,10 @@ const char * ct_at_exact_backward( const char * pcString, HB_SIZE sStrLen,
    for( pcRet = pcString + sStrLen - sMatchLen; pcRet >= pcString; pcRet-- )
    {
       for( sIndex = 0; sIndex < sMatchLen; sIndex++ )
+      {
          if( *( pcRet + sIndex ) != *( pcMatch + sIndex ) )
             break;
+      }
       if( sIndex == sMatchLen )
       {
          /* last match found */
@@ -138,7 +135,6 @@ const char * ct_at_wildcard_forward( const char * pcString, HB_SIZE sStrLen,
                                      const char * pcMatch, HB_SIZE sMatchLen,
                                      char cWildCard, HB_SIZE * psMatchStrLen )
 {
-
    HB_SIZE sIndex;
    const char * pcRet, * pcStop;
 
@@ -176,7 +172,6 @@ const char * ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
                                       const char * pcMatch, HB_SIZE sMatchLen,
                                       char cWildCard, HB_SIZE * psMatchStrLen )
 {
-
    HB_SIZE sIndex;
    const char * pcRet;
 
@@ -213,7 +208,6 @@ const char * ct_at_wildcard_backward( const char * pcString, HB_SIZE sStrLen,
 const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
                                     const char * pcCharSet, HB_SIZE sCharSetLen, HB_SIZE * psMatchedCharPos )
 {
-
    const char * pcRet, * pcSet, * pcStop1, * pcStop2;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_forward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
@@ -246,7 +240,6 @@ const char * ct_at_charset_forward( const char * pcString, HB_SIZE sStrLen,
 const char * ct_at_charset_backward( const char * pcString, HB_SIZE sStrLen,
                                      const char * pcCharSet, HB_SIZE sCharSetLen, HB_SIZE * psMatchedCharPos )
 {
-
    const char * pcRet, * pcSet, * pcStop;
 
    HB_TRACE( HB_TR_DEBUG, ( "ct_at_charset_backward (\"%s\", %" HB_PFS "u, \"%s\", %" HB_PFS "u, %p)",
@@ -295,18 +288,14 @@ HB_FUNC( CSETREF )
    hb_retl( ct_getref() );
 
    if( HB_ISLOG( 1 ) )
-   {
       ct_setref( hb_parl( 1 ) );
-   }
    else if( hb_pcount() > 0 ) /* 1 params, but is not logical ! */
    {
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETREF,
                    NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-      }
    }
 }
 
@@ -333,18 +322,14 @@ HB_FUNC( CSETATMUPA )
    hb_retl( ct_getatmupa() );
 
    if( HB_ISLOG( 1 ) )
-   {
       ct_setatmupa( hb_parl( 1 ) );
-   }
    else if( hb_pcount() > 0 ) /* 1 params, but is not logical ! */
    {
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CSETATMUPA, NULL,
                    HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-      }
    }
 }
 
@@ -399,15 +384,13 @@ HB_FUNC( SETATLIKE )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETATLIKE,
                       NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
-         }
       }
    }
 
-   /* set new wildcard character, if HB_ISCHAR(2) but !HB_ISBYREF(2) */
+   /* set new wildcard character, if HB_ISCHAR( 2 ) but ! HB_ISBYREF( 2 ) */
    if( HB_ISCHAR( 2 ) )
    {
       if( HB_ISBYREF( 2 ) )
@@ -431,9 +414,7 @@ HB_FUNC( SETATLIKE )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_SETATLIKE, NULL,
                    HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-      }
    }
 }

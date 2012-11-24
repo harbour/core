@@ -59,7 +59,8 @@
 #define DO_REPLACE_REPLLEFT   1
 #define DO_REPLACE_REPLRIGHT  2
 
-static const HB_ERRCODE sulErrorSubcodes[] = {
+static const HB_ERRCODE sulErrorSubcodes[] =
+{
    CT_ERROR_REPLALL,
    CT_ERROR_REPLLEFT,
    CT_ERROR_REPLRIGHT
@@ -68,7 +69,6 @@ static const HB_ERRCODE sulErrorSubcodes[] = {
 /* helper function for the replxxx functions */
 static void do_replace( int iSwitch )
 {
-
    /* suppressing return value ? */
    int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
@@ -124,8 +124,7 @@ static void do_replace( int iSwitch )
          }
       }
 
-      if( HB_ISBYREF( 1 ) )
-         hb_storclen( pcRet, sStrLen, 1 );
+      hb_storclen( pcRet, sStrLen, 1 );
 
       if( iNoRet )
       {
@@ -135,18 +134,16 @@ static void do_replace( int iSwitch )
       else
          hb_retclen_buffer( pcRet, sStrLen );
    }
-   else  /* HB_ISCHAR( 1 ) && ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   sulErrorSubcodes[ iSwitch ],
                                   NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

@@ -6,15 +6,15 @@
  * Harbour Project source code:
  *   CT3 files functions
  *
- * SETFATTR
+ * SETFATTR()
  * Copyright 2001 Luiz Rafael Culik <culik@sl.conex.net>
  *
- * SETFDATI, FILESMAX, FILEDELETE
+ * SETFDATI(), FILESMAX(), FILEDELETE()
  * Copyright 2004 Phil Krylov <phil@newstar.rinet.ru>
  *
- * FILESEEK, FILESIZE, FILEATTR, FILETIME, FILEDATE
- * FILEMOVE, FILESMAX,
- * DELETEFILE, RENAMEFILE
+ * FILESEEK(), FILESIZE(), FILEATTR(), FILETIME(), FILEDATE()
+ * FILEMOVE(), FILESMAX(),
+ * DELETEFILE(), RENAMEFILE()
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
@@ -241,13 +241,9 @@ HB_FUNC( FILEDELETE )
 
    if( HB_ISCHAR( 1 ) )
    {
-      const char * pszDirSpec;
+      const char * pszDirSpec = hb_parc( 1 );
+      HB_FATTR ulAttr = hb_parnldef( 2, HB_FA_ALL );
       PHB_FFIND ffind;
-      HB_FATTR ulAttr = HB_FA_ALL;
-
-      pszDirSpec = hb_parc( 1 );
-      if( HB_ISNUM( 2 ) )
-         ulAttr = hb_parnl( 2 );
 
       if( ( ffind = hb_fsFindFirst( pszDirSpec, ulAttr ) ) != NULL )
       {

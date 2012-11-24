@@ -107,24 +107,20 @@ HB_FUNC( CHARRELA )
             }
          }
          else
-         {
             sOffset1 = sOffset2 = sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2;
-         }
       }
 
       hb_retns( 0 );
    }
-   else  /* HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) && HB_ISCHAR( 4 ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_CHARRELA, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
@@ -222,15 +218,10 @@ HB_FUNC( CHARRELREP )
             }
          }
          else
-         {
             sOffset1 = sOffset2 = sStrLen1 < sStrLen2 ? sStrLen1 : sStrLen2;
-         }
       }
 
-      if( HB_ISBYREF( 4 ) )
-      {
-         hb_storclen( pcRet, sStrLen2, 4 );
-      }
+      hb_storclen( pcRet, sStrLen2, 4 );
 
       if( iNoRet )
       {
@@ -238,22 +229,17 @@ HB_FUNC( CHARRELREP )
          hb_ret();
       }
       else
-      {
          hb_retclen_buffer( pcRet, sStrLen2 );
-      }
    }
-   else  /* HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) &&
-            HB_ISCHAR( 4 ) && HB_ISCHAR( 5 ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_CHARRELREP, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

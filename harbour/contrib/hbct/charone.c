@@ -116,7 +116,7 @@ static void do_charone( int iSwitch )
                hb_retclen( pcRet, sRetStrLen );
                hb_xfree( pcRet );
             }
-            else                /* if( sStrLen > 1 ) */
+            else
             {
                /* algorithm does nothing to 1-char-strings */
                hb_retclen( pcString, sStrLen );
@@ -170,13 +170,12 @@ static void do_charone( int iSwitch )
 
                /* copy last character if string len is odd */
                if( sStrLen & 1 )
-               {
                   pcRet[ sRetStrLen++ ] = pcString[ sStrLen - 1 ];
-               }
+
                hb_retclen( pcRet, sRetStrLen );
                hb_xfree( pcRet );
             }
-            else                /* if( sStrLen > 3 ) */
+            else
             {
                /* algorithm does nothing to 3-char-strings */
                hb_retclen( pcString, sStrLen );
@@ -184,7 +183,7 @@ static void do_charone( int iSwitch )
             break;
       }
    }
-   else  /* if( HB_ISCHAR( 1 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

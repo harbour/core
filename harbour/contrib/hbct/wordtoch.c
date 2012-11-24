@@ -66,7 +66,6 @@ HB_FUNC( WORDTOCHAR )
        ( sStrLen = hb_parclen( 2 ) ) / 2 > 0 &&
        ( sReplaceLen = hb_parclen( 3 ) ) > 0 )
    {
-
       /* get parameters */
       const char * pcSearch = hb_parc( 1 );
       const char * pcString = hb_parc( 2 );
@@ -118,19 +117,15 @@ HB_FUNC( WORDTOCHAR )
       hb_retclen( pcRet, sRetIndex + 1 );
       hb_xfree( pcRet );
    }
-   else  /* ( sSearchLen = hb_parclen( 1 ) ) / 2 > 0 &&
-            ( sStrLen = hb_parclen( 2 ) ) / 2 > 0 &&
-            ( sReplaceLen = hb_parclen( 3 ) ) > 0 */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_WORDTOCHAR, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

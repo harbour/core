@@ -67,17 +67,10 @@ static void do_ascpos( int iSwitch )
    {
       HB_SIZE sStrSize = hb_parclen( 1 );
       const HB_BYTE * pcString = ( const HB_BYTE * ) hb_parc( 1 );
-      HB_SIZE sPos;
-
-      if( HB_ISNUM( 2 ) )
-         sPos = hb_parns( 2 );
-      else
-         sPos = sStrSize;
+      HB_SIZE sPos = hb_parnsdef( 2, sStrSize );
 
       if( sPos == 0 || sPos > sStrSize )
-      {
          hb_retni( 0 );
-      }
       else
       {
          if( iSwitch == DO_ASCPOS_VALPOS )
@@ -87,10 +80,8 @@ static void do_ascpos( int iSwitch )
             else
                hb_retni( 0 );
          }
-         else                   /* iSwitch == DO_ASCPOS_ASCPOS */
-         {
+         else
             hb_retni( pcString[ sPos - 1 ] );
-         }
       }
    }
    else
@@ -99,22 +90,16 @@ static void do_ascpos( int iSwitch )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_ASCPOS_VALPOS ?
                                   CT_ERROR_VALPOS : CT_ERROR_ASCPOS, NULL,
                                   HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
-      {
          hb_itemReturnRelease( pSubst );
-      }
       else
-      {
          hb_retni( 0 );
-      }
    }
 }
 

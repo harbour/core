@@ -83,10 +83,9 @@ HB_FUNC( ATREPL )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ATREPL, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retclen( pcString, nStrLen );
          return;
       }
@@ -185,7 +184,7 @@ HB_FUNC( ATREPL )
             sRetSubStrLen = nRetStrLen - ( pcRetSubStr - pcRetStr );
          }
       }
-      else /* ( nCounter != 0 ) */
+      else
       {
          /* find and replace last match */
          nRetStrLen = nStrLen;
@@ -239,17 +238,15 @@ HB_FUNC( ATREPL )
 
       hb_retclen_buffer( pcRetStr, nRetStrLen );
    }
-   else /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_ATREPL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

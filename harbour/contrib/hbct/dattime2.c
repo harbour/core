@@ -347,7 +347,6 @@ HB_FUNC( DAYSINMONTH )
    HB_BOOL bLeap = hb_parl( 2 );
 
    hb_retni( ct_daysinmonth( iMonth, bLeap ) );
-
 }
 
 HB_FUNC( QUARTER )
@@ -380,7 +379,6 @@ HB_FUNC( LASTDAYOM )
    }
 
    hb_retni( ( iMonth && ( iMonth <= 12 ) ? ct_daysinmonth( iMonth, bLeap ) : 0 ) );
-
 }
 
 HB_FUNC( NTOCDOW )

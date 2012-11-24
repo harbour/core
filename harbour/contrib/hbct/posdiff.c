@@ -63,22 +63,16 @@ HB_FUNC( POSDIFF )
       const char * pcString2 = hb_parc( 2 );
       HB_SIZE sStrLen2 = hb_parclen( 2 );
       const char * pc1, * pc2;
-      HB_SIZE sIgnore;
+      HB_SIZE sIgnore = hb_parnsdef( 3, 0 );
 
-      if( HB_ISNUM( 3 ) )
-         sIgnore = hb_parns( 3 );
-      else
-         sIgnore = 0;
-
-      if( ( sIgnore > sStrLen1 ) || ( sIgnore > sStrLen2 ) )
+      if( sIgnore > sStrLen1 || sIgnore > sStrLen2 )
       {
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSDIFF, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retns( 0 );
          return;
       }
@@ -102,17 +96,15 @@ HB_FUNC( POSDIFF )
       else
          hb_retns( 0 );
    }
-   else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_POSDIFF, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
@@ -132,12 +124,8 @@ HB_FUNC( POSEQUAL )
       const char * pcString2 = hb_parc( 2 );
       HB_SIZE sStrLen2 = hb_parclen( 2 );
       const char * pc1, * pc2;
-      HB_SIZE sIgnore, sCompare, sCompareCnt, sRet = 0;
-
-      if( HB_ISNUM( 4 ) )
-         sIgnore = hb_parns( 4 );
-      else
-         sIgnore = 0;
+      HB_SIZE sIgnore = hb_parnsdef( 4, 0 );
+      HB_SIZE sCompare, sCompareCnt, sRet = 0;
 
       if( HB_ISNUM( 3 ) )
          sCompare = hb_parns( 3 );
@@ -149,10 +137,9 @@ HB_FUNC( POSEQUAL )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retns( 0 );
          return;
       }
@@ -162,10 +149,9 @@ HB_FUNC( POSEQUAL )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_POSEQUAL, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retns( 0 );
          return;
       }
@@ -199,17 +185,15 @@ HB_FUNC( POSEQUAL )
       }
       hb_retns( 0 );
    }
-   else  /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_POSEQUAL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

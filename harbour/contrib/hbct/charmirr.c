@@ -68,22 +68,16 @@ HB_FUNC( CHARMIRR )
       const char * pcString = hb_parc( 1 ), * pc1;
       HB_SIZE sStrLen = hb_parclen( 1 );
       char * pcRet, * pc2;
-      int iDontMirrorSpaces;
-
-      if( HB_ISLOG( 2 ) )
-         iDontMirrorSpaces = hb_parl( 2 );
-      else
-         iDontMirrorSpaces = 0;
+      int iDontMirrorSpaces = hb_parldef( 2, 0 );
 
       if( sStrLen == 0 )
       {
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIRR, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          if( iNoRet )
             hb_retl( HB_FALSE );
          else
@@ -113,8 +107,7 @@ HB_FUNC( CHARMIRR )
       }
 
       /* return string */
-      if( HB_ISBYREF( 1 ) )
-         hb_storclen( pcRet, sStrLen, 1 );
+      hb_storclen( pcRet, sStrLen, 1 );
 
       if( iNoRet )
       {
@@ -124,17 +117,15 @@ HB_FUNC( CHARMIRR )
       else
          hb_retclen_buffer( pcRet, sStrLen );
    }
-   else /* if( HB_ISCHAR( 1 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_CHARMIRR, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

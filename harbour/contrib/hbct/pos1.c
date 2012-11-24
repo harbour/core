@@ -81,16 +81,13 @@ static void do_pos1( int iSwitch )
 
       if( iSwitch == DO_POS1_POSRANGE )
       {
-
          if( hb_parclen( 1 ) == 0 )
          {
             hb_retns( 0 );
             return;
          }
          else
-         {
             ucChar1 = *( hb_parc( 1 ) );
-         }
 
          if( hb_parclen( 2 ) == 0 )
          {
@@ -98,9 +95,7 @@ static void do_pos1( int iSwitch )
             return;
          }
          else
-         {
             ucChar2 = *( hb_parc( 2 ) );
-         }
 
          iParamShift += 2;
       }
@@ -108,15 +103,8 @@ static void do_pos1( int iSwitch )
       pcString = ( const unsigned char * ) hb_parc( iParamShift + 1 );
       sStrLen = hb_parclen( iParamShift + 1 );
 
-      if( HB_ISLOG( iParamShift + 2 ) )
-         iMode = hb_parl( iParamShift + 2 );
-      else
-         iMode = 0;
-
-      if( HB_ISNUM( iParamShift + 3 ) )
-         sIgnore = hb_parns( iParamShift + 3 );
-      else
-         sIgnore = 0;
+      iMode = hb_parldef( iParamShift + 2, 0 );
+      sIgnore = hb_parnsdef( iParamShift + 3, 0 );
 
       for( puc = pcString + sIgnore; puc < pcString + sStrLen; puc++ )
       {
@@ -149,7 +137,7 @@ static void do_pos1( int iSwitch )
       }
       hb_retns( 0 );
    }
-   else                         /* ISCHAR (1) etc. */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

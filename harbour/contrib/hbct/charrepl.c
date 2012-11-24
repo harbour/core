@@ -71,7 +71,7 @@ HB_FUNC( CHARREPL )
       const char * pcString = hb_parc( 2 );
       HB_SIZE sStrLen = hb_parclen( 2 );
       const char * pcReplace = hb_parc( 3 );
-      int iMode;
+      int iMode = hb_parldef( 4, 0 );
       char * pcRet;
       HB_SIZE sIndex;
 
@@ -79,23 +79,10 @@ HB_FUNC( CHARREPL )
       if( sStrLen == 0 )
       {
          if( iNoRet )
-         {
             hb_retl( HB_FALSE );
-         }
          else
-         {
             hb_retc_null();
-         }
          return;
-      }
-
-      if( HB_ISLOG( 4 ) )
-      {
-         iMode = hb_parl( 4 );
-      }
-      else
-      {
-         iMode = 0;
       }
 
       pcRet = ( char * ) hb_xgrab( sStrLen + 1 );
@@ -108,14 +95,12 @@ HB_FUNC( CHARREPL )
          HB_SIZE sReplIndex = sIndex;
 
          if( sReplIndex > sReplaceLen - 1 )
-         {
             sReplIndex = sReplaceLen - 1;
-         }
 
          if( iMode )
          {
             /* no multiple replacements: searching in pcString,
-               replacing in pcRet     */
+               replacing in pcRet */
             pc = pcString;
 
             while( ( pc = ct_at_exact_forward( pc, sStrLen - ( pc - pcString ),
@@ -140,10 +125,7 @@ HB_FUNC( CHARREPL )
       }
 
       /* return string */
-      if( HB_ISBYREF( 2 ) )
-      {
-         hb_storclen( pcRet, sStrLen, 2 );
-      }
+      hb_storclen( pcRet, sStrLen, 2 );
 
       if( iNoRet )
       {
@@ -151,22 +133,17 @@ HB_FUNC( CHARREPL )
          hb_xfree( pcRet );
       }
       else
-      {
          hb_retclen_buffer( pcRet, sStrLen );
-      }
    }
-   else  /* ( ( sSearchLen = hb_parclen( 1 ) ) > 0 && HB_ISCHAR( 2 ) &&
-              ( sReplaceLen = hb_parclen( 3 ) ) > 0 ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_CHARREPL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

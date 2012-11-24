@@ -5,24 +5,22 @@
 /*
  * Harbour Project source code:
  *   CT3 trigonometric functions
- *     - PI
- *     - SIN
- *     - COS
- *     - TAN
- *     - COT
- *     - ASIN
- *     - ACOS
- *     - ATAN
- *     - SINH
- *     - COSH
- *     - TANH
- *     - ATN2
- *     - RTOD
- *     - DTOR
+ *     - PI()
+ *     - SIN()
+ *     - COS()
+ *     - TAN()
+ *     - COT()
+ *     - ASIN()
+ *     - ACOS()
+ *     - ATAN()
+ *     - SINH()
+ *     - COSH()
+ *     - TANH()
+ *     - ATN2()
+ *     - RTOD()
+ *     - DTOR()
  *
- * NOTE: All these functions were builded using Borland C++ 5.5 (free version)
- *
- * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
+ * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  *
  * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
@@ -104,11 +102,10 @@ HB_FUNC( SIN )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_SIN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -141,11 +138,10 @@ HB_FUNC( COS )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_COS, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -178,11 +174,10 @@ HB_FUNC( TAN )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_TAN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -200,9 +195,8 @@ HB_FUNC( COT )
       hb_mathResetError( &hb_exc );
       dResult = tan( dArg );
       if( hb_mathGetError( &hb_exc, "TAN", dArg, 0.0, dResult ) )
-      {
          dResult = hb_exc.handled ? hb_exc.retval : 0.0;
-      }
+
       dResult = dResult ? 1 / dResult : HUGE_VAL;
       hb_retnd( dResult );
    }
@@ -212,11 +206,10 @@ HB_FUNC( COT )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_COT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -249,11 +242,10 @@ HB_FUNC( ASIN )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_ASIN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -286,11 +278,10 @@ HB_FUNC( ACOS )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_ACOS, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -331,11 +322,10 @@ HB_FUNC( ATAN )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_ATAN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -382,11 +372,10 @@ HB_FUNC( ATN2 )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_ATN2, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -426,11 +415,10 @@ HB_FUNC( SINH )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_SINH, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -465,11 +453,10 @@ HB_FUNC( COSH )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_COSH, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -509,11 +496,10 @@ HB_FUNC( TANH )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_TANH, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -536,11 +522,10 @@ HB_FUNC( RTOD )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_RTOD, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -563,11 +548,10 @@ HB_FUNC( DTOR )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_DTOR, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else

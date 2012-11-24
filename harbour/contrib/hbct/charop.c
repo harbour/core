@@ -125,21 +125,23 @@ void ct_charop( int iMode )
             hb_xmemcpy( pucResult, pucString, sStrLen );
 
             if( iRLL != 0 )
+            {
                for( sPos = 0; sPos < sStrLen; ++sPos )
                {
                   int iRLLCnt;
 
                   for( iRLLCnt = 0; iRLLCnt < iRLL; iRLLCnt++ )
+                  {
                      if( pucResult[ sPos ] & 0x80 )  /* most left bit set -> roll over */
                      {
                         pucResult[ sPos ] <<= 1;
                         pucResult[ sPos ] |= 0x01;
                      }
                      else
-                     {
                         pucResult[ sPos ] <<= 1;
-                     }
+                  }
                }
+            }
             break;
          }
 
@@ -187,11 +189,10 @@ void ct_charop( int iMode )
                int iArgErrorMode = ct_getargerrormode();
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
-               {
                   ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARADD,
                             NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-               }
+
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
@@ -212,11 +213,10 @@ void ct_charop( int iMode )
                int iArgErrorMode = ct_getargerrormode();
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
-               {
                   ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARSUB,
                             NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-               }
+
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
@@ -237,10 +237,9 @@ void ct_charop( int iMode )
                int iArgErrorMode = ct_getargerrormode();
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
-               {
                   ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARAND, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-               }
+
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
@@ -261,10 +260,9 @@ void ct_charop( int iMode )
                int iArgErrorMode = ct_getargerrormode();
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
-               {
                   ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHAROR, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-               }
+
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
@@ -285,24 +283,22 @@ void ct_charop( int iMode )
                int iArgErrorMode = ct_getargerrormode();
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
-               {
                   ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARXOR, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-               }
+
                hb_xmemcpy( pucResult, pucString, sStrLen );
             }
             break;
       }
 
-      if( HB_ISBYREF( 1 ) )
-         hb_storclen( ( char * ) pucResult, sStrLen, 1 );
+      hb_storclen( ( char * ) pucResult, sStrLen, 1 );
 
       if( iNoRet )
          hb_xfree( pucResult );
       else
          hb_retclen_buffer( ( char * ) pucResult, sStrLen );
    }
-   else  /* if( HB_ISCHAR( 1 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();

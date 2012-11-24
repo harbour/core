@@ -61,7 +61,6 @@
 /* helper function for the justxxx() functions */
 static void do_justify( int iSwitch )
 {
-
    int iNoRet;
 
    iNoRet = ct_getref() && HB_ISBYREF( 1 );
@@ -103,11 +102,12 @@ static void do_justify( int iSwitch )
                sJustOffset++;
                pc++;
             }
+
             hb_xmemcpy( pcRet, pcString + sJustOffset, sStrLen - sJustOffset );
+
             for( pcw = pcRet + sStrLen - sJustOffset; pcw < pcRet + sStrLen; pcw++ )
-            {
                *pcw = cJustChar;
-            }
+
             break;
 
          case DO_JUSTIFY_JUSTRIGHT:
@@ -118,16 +118,15 @@ static void do_justify( int iSwitch )
                sJustOffset++;
                pc--;
             }
+
             for( pcw = pcRet; pcw < pcRet + sJustOffset; pcw++ )
-            {
                *pcw = cJustChar;
-            }
+
             hb_xmemcpy( pcRet + sJustOffset, pcString, sStrLen - sJustOffset );
             break;
       }
 
-      if( HB_ISBYREF( 1 ) )
-         hb_storclen( pcRet, sStrLen, 1 );
+      hb_storclen( pcRet, sStrLen, 1 );
 
       if( iNoRet )
       {
@@ -137,19 +136,17 @@ static void do_justify( int iSwitch )
       else
          hb_retclen_buffer( pcRet, sStrLen );
    }
-   else  /* HB_ISCHAR( 1 ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_JUSTIFY_JUSTLEFT ?
                                   CT_ERROR_JUSTLEFT : CT_ERROR_JUSTRIGHT,
                                   NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

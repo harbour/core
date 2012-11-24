@@ -92,14 +92,10 @@ static void do_charswap( int iSwitch )
       {
          iShift = 4;
          if( hb_parl( 2 ) )
-         {
             iSwitch = DO_CHARSWAP_WORDSWAP_CHARSWAP;
-         }
       }
       else
-      {
          iShift = 2;
-      }
 
       pcRet = ( char * ) hb_xgrab( sStrLen );
 
@@ -126,24 +122,15 @@ static void do_charswap( int iSwitch )
 
       /* copy rest of string */
       if( iSwitch == DO_CHARSWAP_WORDSWAP || iSwitch == DO_CHARSWAP_WORDSWAP_CHARSWAP )
-      {
          iMod = sStrLen % 4;
-      }
       else
-      {
          iMod = sStrLen % 2;
-      }
 
       for( pcSub = pcString + sStrLen - iMod; pcSub < pcString + sStrLen; pcSub++ )
-      {
          pcRet[ sRetIndex++ ] = *pcSub;
-      }
 
       /* return string */
-      if( HB_ISBYREF( 1 ) )
-      {
-         hb_storclen( pcRet, sRetIndex, 1 );
-      }
+      hb_storclen( pcRet, sRetIndex, 1 );
 
       if( iNoRet )
          hb_retl( HB_FALSE );
@@ -151,7 +138,7 @@ static void do_charswap( int iSwitch )
          hb_retclen( pcRet, sRetIndex );
       hb_xfree( pcRet );
    }
-   else                         /* if( HB_ISCHAR( 1 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
@@ -159,19 +146,15 @@ static void do_charswap( int iSwitch )
       if( iArgErrorMode != CT_ARGERR_IGNORE )
       {
          if( iSwitch == DO_CHARSWAP_CHARSWAP )
-         {
             pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                      CT_ERROR_CHARSWAP,
                                      NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                      HB_ERR_ARGS_BASEPARAMS );
-         }
          else
-         {
             pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                      CT_ERROR_WORDSWAP,
                                      NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                      HB_ERR_ARGS_BASEPARAMS );
-         }
       }
 
       if( pSubst != NULL )

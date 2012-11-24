@@ -4,10 +4,9 @@
 
 /*
  * Harbour Project source code:
- *   CTOOLS for Harbour, Math header file
+ *   CA-T*ols for Harbour, Math header file
  *
- * Copyright 2001  Alejandro de garate  <alex_degarate@hotmail.com>
- *
+ * Copyright 2001 Alejandro de garate <alex_degarate@hotmail.com>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,11 +55,11 @@
 
 #include "hbmath.h"
 
-HB_EXTERN_BEGIN
-
 #define CT_PI      3.14159265358979323846
 #define CT_PI_2    1.57079632679489661923
 #define CT_PI_RAD  0.0174532925199432957692  /* 3.14159265358979323846 / 180.0 */
+
+HB_EXTERN_BEGIN
 
 /* initialization */
 extern int ct_math_init( void );

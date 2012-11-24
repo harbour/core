@@ -130,13 +130,12 @@ static void do_charonly( int iSwitch )
 
       /* copy last character if string len is odd */
       if( iShift == 2 && sStrLen % 2 == 1 )
-      {
          pcRet[ sRetStrLen++ ] = pcString[ sStrLen - 1 ];
-      }
+
       hb_retclen( pcRet, sRetStrLen );
       hb_xfree( pcRet );
    }
-   else                         /* if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode(), iError = 0;

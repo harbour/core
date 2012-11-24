@@ -74,14 +74,9 @@ HB_FUNC( WORDREPL )
       const char * pcString = hb_parc( 2 );
       HB_SIZE sStrLen = hb_parclen( 2 );
       const char * pcReplace = hb_parc( 3 );
-      int iMode;
+      int iMode = hb_parldef( 4, 0 );
       char * pcRet;
       HB_SIZE sIndex;
-
-      if( HB_ISLOG( 4 ) )
-         iMode = hb_parl( 4 );
-      else
-         iMode = 0;
 
       pcRet = ( char * ) hb_xgrab( sStrLen + 1 );
       hb_xmemcpy( pcRet, pcString, sStrLen );
@@ -94,9 +89,7 @@ HB_FUNC( WORDREPL )
          HB_SIZE sReplIndex = sIndex;
 
          if( sReplIndex > ( sReplaceLen & 0xFFFFFFFE ) )
-         {
             sReplIndex = ( sReplaceLen & 0xFFFFFFFE );
-         }
 
          pc = pcString;
          while( ( pc = ct_at_exact_forward( pc, sStrLen - ( pc - pcString ),
@@ -133,10 +126,7 @@ HB_FUNC( WORDREPL )
       }
 
       /* return string */
-      if( HB_ISBYREF( 2 ) )
-      {
-         hb_storclen( pcRet, sStrLen, 2 );
-      }
+      hb_storclen( pcRet, sStrLen, 2 );
 
       if( iNoRet )
       {
@@ -144,22 +134,17 @@ HB_FUNC( WORDREPL )
          hb_xfree( pcRet );
       }
       else
-      {
          hb_retclen_buffer( pcRet, sStrLen );
-      }
    }
-   else  /* ( sSearchLen = hb_parclen( 1 ) ) / 2 > 0 && HB_ISCHAR( 2 ) &&
-            ( sReplaceLen = hb_parclen( 3 ) ) / 2 > 0 */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_WORDREPL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

@@ -71,10 +71,9 @@ HB_FUNC( CHARMIX )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX, NULL, HB_ERR_FUNCNAME, 0,
                       EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retc_null();
          return;
       }
@@ -88,11 +87,10 @@ HB_FUNC( CHARMIX )
             int iArgErrorMode = ct_getargerrormode();
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
-            {
                ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARMIX,
                          NULL, HB_ERR_FUNCNAME, 0,
                          EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-            }
+
             hb_retclen( pcString1, sLen1 );
             return;
          }
@@ -121,11 +119,9 @@ HB_FUNC( CHARMIX )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_CHARMIX, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

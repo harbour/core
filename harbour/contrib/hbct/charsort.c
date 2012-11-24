@@ -66,13 +66,9 @@ static int
 #endif
 _hb_do_sortascend( const void * p1, const void * p2 )
 {
-   const char * pc1 = ( const char * ) p1;
-   const char * pc2 = ( const char * ) p2;
-
-   pc1 += s_sElementPos;
-   pc2 += s_sElementPos;
-
-   return strncmp( pc1, pc2, s_sCompareLen );
+   return strncmp( ( const char * ) p1 + s_sElementPos,
+                   ( const char * ) p2 + s_sElementPos,
+                   s_sCompareLen );
 }
 
 #ifdef __IBMCPP__
@@ -82,13 +78,9 @@ static int
 #endif
 _hb_do_sortdescend( const void * p1, const void * p2 )
 {
-   const char * pc1 = ( const char * ) p1;
-   const char * pc2 = ( const char * ) p2;
-
-   pc1 += s_sElementPos;
-   pc2 += s_sElementPos;
-
-   return -strncmp( pc1, pc2, s_sCompareLen );
+   return -strncmp( ( const char * ) p1 + s_sElementPos,
+                    ( const char * ) p2 + s_sElementPos,
+                    s_sCompareLen );
 }
 
 HB_FUNC( CHARSORT )
@@ -103,40 +95,17 @@ HB_FUNC( CHARSORT )
    {
       /* get parameters */
       const char * pcString = hb_parc( 1 );
-      char * pcRet;
-      HB_SIZE sStrLen = hb_parclen( 1 );
-      HB_SIZE sElementLen, sIgnore, sSortLen;
-      int iDescend;
+      char *       pcRet;
+      HB_SIZE      sStrLen = hb_parclen( 1 );
+      HB_SIZE      sElementLen, sIgnore, sSortLen;
+      int          iDescend;
 
-      if( HB_ISNUM( 2 ) )
-         sElementLen = hb_parns( 2 );
-      else
-         sElementLen = 1;
-
-      if( HB_ISNUM( 3 ) )
-         s_sCompareLen = hb_parns( 3 );
-      else
-         s_sCompareLen = sElementLen;
-
-      if( HB_ISNUM( 4 ) )
-         sIgnore = hb_parns( 4 );
-      else
-         sIgnore = 0;
-
-      if( HB_ISNUM( 5 ) )
-         s_sElementPos = hb_parns( 5 );
-      else
-         s_sElementPos = 0;
-
-      if( HB_ISNUM( 6 ) )
-         sSortLen = hb_parns( 6 );
-      else
-         sSortLen = sStrLen - sIgnore;
-
-      if( HB_ISLOG( 7 ) )
-         iDescend = hb_parl( 7 );
-      else
-         iDescend = 0;
+      sElementLen   = hb_parnsdef( 2, 1 );
+      s_sCompareLen = hb_parnsdef( 3, sElementLen );
+      sIgnore       = hb_parnsdef( 4, 0 );
+      s_sElementPos = hb_parnsdef( 5, 0 );
+      sSortLen      = hb_parnsdef( 6, sStrLen - sIgnore );
+      iDescend      = hb_parldef( 7, 0 );
 
       /* param check II */
       if( sElementLen == 0 || s_sCompareLen > sElementLen ||
@@ -147,11 +116,10 @@ HB_FUNC( CHARSORT )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_CHARSORT,
                       NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
-         }
+
          if( iNoRet )
             hb_retl( HB_FALSE );
          else
@@ -168,8 +136,7 @@ HB_FUNC( CHARSORT )
          qsort( pcRet + sIgnore, ( sSortLen / sElementLen ), sElementLen, _hb_do_sortascend );
 
       /* return string */
-      if( HB_ISBYREF( 1 ) )
-         hb_storclen( pcRet, sStrLen, 1 );
+      hb_storclen( pcRet, sStrLen, 1 );
 
       if( iNoRet )
       {
@@ -179,17 +146,15 @@ HB_FUNC( CHARSORT )
       else
          hb_retclen_buffer( pcRet, sStrLen );
    }
-   else  /* if( HB_ISCHAR( 1 ) ) */
+   else
    {
-      PHB_ITEM pSubst = NULL;
-      int iArgErrorMode = ct_getargerrormode();
+      PHB_ITEM pSubst        = NULL;
+      int      iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_CHARSORT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

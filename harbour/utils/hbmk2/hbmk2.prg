@@ -3815,7 +3815,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
             /* It's to avoid warning message generated when 'long double' is used
                remove it if you have newer compiler version */
-/*          AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" ) */
+#if 0
+            AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" )
+#endif
             IF hbmk[ _HBMK_lSHARED ]
                AAdd( hbmk[ _HBMK_aOPTL ], "-bind_at_load" )
             ENDIF

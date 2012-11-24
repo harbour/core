@@ -6,13 +6,11 @@
  * Harbour Project source code:
  *
  *   CT3 Numeric functions - PART 1
- *     - CELSIUS
- *     - FAHRENHEIT
- *     - INFINITY
+ *     - CELSIUS()
+ *     - FAHRENHEIT()
+ *     - INFINITY()
  *
- * NOTE: All these functions were builded using Borland C++ 5.5 (free version)
- *
- * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
+ * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  *
  * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
@@ -81,11 +79,9 @@ HB_FUNC( CELSIUS )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_CELSIUS, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
@@ -110,11 +106,9 @@ HB_FUNC( FAHRENHEIT )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_FAHRENHEIT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

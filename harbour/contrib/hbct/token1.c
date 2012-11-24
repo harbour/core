@@ -226,8 +226,7 @@ static void do_token1( int iSwitch )
 
                case DO_TOKEN1_TOKENLOWER:
                case DO_TOKEN1_TOKENUPPER:
-                  if( HB_ISBYREF( 1 ) )
-                     hb_storclen( pcRet, sRetStrLen, 1 );
+                  hb_storclen( pcRet, sRetStrLen, 1 );
 
                   if( iNoRef )
                   {
@@ -268,9 +267,11 @@ static void do_token1( int iSwitch )
 
          if( pc == NULL )
          {
-            pc = pcSubStr + sSubStrLen; /* little trick for return values */
-            break;              /* we must leave the while loop even if we have not
-                                   yet found the <nTokenCounter>th token */
+            /* little trick for return values */
+            pc = pcSubStr + sSubStrLen;
+            /* we must leave the while loop even if we have not
+               yet found the <nTokenCounter>th token */
+            break;
          }
 
          /* should we find the last token, but string ends with tokenizer, i.e.
@@ -337,8 +338,7 @@ static void do_token1( int iSwitch )
 
          case DO_TOKEN1_TOKENLOWER:
          case DO_TOKEN1_TOKENUPPER:
-            if( HB_ISBYREF( 1 ) )
-               hb_storclen( pcRet, sRetStrLen, 1 );
+            hb_storclen( pcRet, sRetStrLen, 1 );
 
             if( iNoRef )
             {
@@ -350,7 +350,7 @@ static void do_token1( int iSwitch )
             break;
       }
    }
-   else  /* iParamCheck */
+   else
    {
       switch( iSwitch )
       {
@@ -372,12 +372,10 @@ static void do_token1( int iSwitch )
             }
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
-            {
                pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                         CT_ERROR_TOKEN, NULL, HB_ERR_FUNCNAME, 0,
                                         EF_CANSUBSTITUTE,
                                         HB_ERR_ARGS_BASEPARAMS );
-            }
 
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
@@ -394,14 +392,13 @@ static void do_token1( int iSwitch )
             int iArgErrorMode = ct_getargerrormode();
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
-            {
                pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                         iSwitch == DO_TOKEN1_TOKENLOWER ?
                                         CT_ERROR_TOKENLOWER : CT_ERROR_TOKENUPPER,
                                         NULL, HB_ERR_FUNCNAME, 0,
                                         EF_CANSUBSTITUTE,
                                         HB_ERR_ARGS_BASEPARAMS );
-            }
+
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
             else if( ! iNoRef )
@@ -417,13 +414,12 @@ static void do_token1( int iSwitch )
             int iArgErrorMode = ct_getargerrormode();
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
-            {
                pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                         iSwitch == DO_TOKEN1_NUMTOKEN ?
                                         CT_ERROR_NUMTOKEN : CT_ERROR_ATTOKEN,
                                         NULL, HB_ERR_FUNCNAME, 0,
                                         EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-            }
+
             if( pSubst != NULL )
                hb_itemReturnRelease( pSubst );
             else

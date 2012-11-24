@@ -59,7 +59,6 @@
 
 HB_FUNC( MANTISSA )
 {
-
 #ifdef CT_EXPONENT_MANTISSA_BIT
 
    union
@@ -104,12 +103,10 @@ HB_FUNC( MANTISSA )
    hb_retnd( dValue );
 
 #endif
-
 }
 
 HB_FUNC( EXPONENT )
 {
-
 #ifdef CT_EXPONENT_MANTISSA_BIT
 
    int iExponent = 0;
@@ -164,5 +161,4 @@ HB_FUNC( EXPONENT )
    hb_retni( iExponent );
 
 #endif
-
 }

@@ -66,29 +66,24 @@ HB_FUNC( ADDASCII )
       const char * pcSource = hb_parc( 1 );
       HB_SIZE sLen = hb_parclen( 1 );
       char * pcResult;
-      HB_SIZE sPos;
+      HB_SIZE sPos = hb_parnsdef( 3, sLen );
       HB_LONG lValue;
       int iCarryOver;
-
-      if( HB_ISNUM( 3 ) )
-         sPos = hb_parns( 3 );
-      else
-         sPos = sLen;
 
       if( sPos > sLen || ! HB_ISNUM( 2 ) || sLen == 0 )
       {
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          /* return string unchanged */
          if( iNoRet )
             hb_retl( HB_FALSE );
          else
             hb_retclen( pcSource, sLen );
+
          return;
       }
 
@@ -96,10 +91,7 @@ HB_FUNC( ADDASCII )
       hb_xmemcpy( pcResult, pcSource, sLen );
 
       lValue = hb_parnl( 2 );
-      if( HB_ISLOG( 4 ) )
-         iCarryOver = hb_parl( 4 );
-      else
-         iCarryOver = 0;
+      iCarryOver = hb_parldef( 4, 0 );
 
       if( iCarryOver )
       {
@@ -120,12 +112,9 @@ HB_FUNC( ADDASCII )
          }
       }
       else
-      {
          pcResult[ sPos - 1 ] = ( char ) ( ( ( HB_LONG ) pcResult[ sPos - 1 ] + lValue ) % 256 );
-      }
 
-      if( HB_ISBYREF( 1 ) )
-         hb_storclen( pcResult, sLen, 1 );
+      hb_storclen( pcResult, sLen, 1 );
 
       if( iNoRet )
       {
@@ -141,10 +130,8 @@ HB_FUNC( ADDASCII )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ADDASCII,
                                   NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

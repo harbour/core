@@ -87,10 +87,9 @@ HB_FUNC( CHARSPREAD )
                   ++ul;
             }
          }
+
          if( nTokens == 0 )
-         {
             hb_itemReturn( hb_param( 1, HB_IT_ANY ) );
-         }
          else
          {
             nRest = ( HB_SIZE ) nSize - nLen;

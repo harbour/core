@@ -99,18 +99,15 @@ HB_FUNC( RANGEREM )
       hb_retclen( pcRet, sRetIndex );
       hb_xfree( pcRet );
    }
-   else  /* ( hb_parclen( 1 ) > 0 || HB_ISNUM( 1 ) ) &&
-            ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) && HB_ISCHAR( 3 ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_RANGEREM, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
@@ -176,8 +173,7 @@ HB_FUNC( RANGEREPL )
          }
       }
 
-      if( HB_ISBYREF( 3 ) )
-         hb_storclen( pcRet, sStrLen, 3 );
+      hb_storclen( pcRet, sStrLen, 3 );
 
       if( iNoRef )
          /* Contrary to the official documentation, RANGREPL() returns NIL instead of .F.
@@ -189,19 +185,15 @@ HB_FUNC( RANGEREPL )
 
       hb_xfree( pcRet );
    }
-   else  /* ( hb_parclen( 1 ) > 0 || HB_ISNUM( 1 ) ) &&
-            ( hb_parclen( 2 ) > 0 || HB_ISNUM( 2 ) ) &&
-            HB_ISCHAR( 3 ) && ( hb_parclen( 4 ) > 0 || HB_ISNUM( 4 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_RANGEREPL, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

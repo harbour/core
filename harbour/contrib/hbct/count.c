@@ -102,19 +102,17 @@ static void do_count( int iSwitch )
 
       hb_retns( sRetVal );
    }
-   else  /* if( HB_ISCHAR( 1 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_COUNT_COUNTLEFT ?
                                   CT_ERROR_COUNTLEFT : CT_ERROR_COUNTRIGHT,
                                   NULL, HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

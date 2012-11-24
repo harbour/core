@@ -77,20 +77,16 @@ HB_FUNC( ATADJUST )
       HB_SIZE sRetStrLen;
 
       /* eventually ignore some characters */
-      if( HB_ISNUM( 5 ) )
-         sIgnore = hb_parns( 5 );
-      else
-         sIgnore = 0;
+      sIgnore = hb_parnsdef( 5, 0 );
 
       if( sIgnore >= sStrLen )
       {
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ATADJUST, NULL, HB_ERR_FUNCNAME, 0,
                       EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retclen( pcString, sStrLen );
          return;
       }
@@ -106,10 +102,9 @@ HB_FUNC( ATADJUST )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_ATADJUST, NULL, HB_ERR_FUNCNAME, 0,
                       EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retclen( pcString, sStrLen );
          return;
       }
@@ -161,7 +156,7 @@ HB_FUNC( ATADJUST )
             sSubStrLen = sStrLen - ( pcSubStr - pcString );
          }
       }
-      else /* ( HB_ISNUM( 4 ) && ( ( nCounter = hb_parns( 4 ) ) != 0 ) */
+      else
       {
          /* we have to find the last match */
          switch( iAtLike )
@@ -257,17 +252,15 @@ HB_FUNC( ATADJUST )
          }
       }
    }
-   else                         /* ( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISNUM( 3 ) ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_ATADJUST, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

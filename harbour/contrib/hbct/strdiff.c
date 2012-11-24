@@ -109,38 +109,24 @@ HB_FUNC( STRDIFF )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_STRDIFF, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retni( -1 );
          return;
       }
 
       /* get penalty points */
-      if( HB_ISNUM( 3 ) )
-         iReplace = hb_parni( 3 );
-      else
-         iReplace = 3;
-
-      if( HB_ISNUM( 4 ) )
-         iDelete = hb_parni( 4 );
-      else
-         iDelete = 6;
-
-      if( HB_ISNUM( 5 ) )
-         iInsert = hb_parni( 5 );
-      else
-         iInsert = 1;
+      iReplace = hb_parnidef( 3, 3 );
+      iDelete = hb_parnidef( 4, 6 );
+      iInsert = hb_parnidef( 5, 1 );
 
       piPenalty = ( int * ) hb_xgrab( ( sStrLen1 + 1 ) *
                                       ( sStrLen2 + 1 ) * sizeof( int ) );
 
       MATRIXELEMENT( 0, 0 ) = 0;
       for( sColCnt = 0; sColCnt <= sStrLen2 - 1; sColCnt++ )
-      {
          MATRIXELEMENT( 0, sColCnt + 1 ) = MATRIXELEMENT( 0, sColCnt ) + iInsert;
-      }
 
       for( sRowCnt = 0; sRowCnt <= sStrLen1 - 1; sRowCnt++ )
       {
@@ -167,17 +153,15 @@ HB_FUNC( STRDIFF )
       hb_retni( MATRIXELEMENT( sStrLen1, sStrLen2 ) );
       hb_xfree( piPenalty );
    }
-   else  /* HB_ISCHAR( 1 ) || HB_ISCHAR( 2 ) */
+   else
    {
       PHB_ITEM pSubst        = NULL;
       int      iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_STRDIFF, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

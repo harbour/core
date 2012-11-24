@@ -282,11 +282,10 @@ HB_FUNC( TOKENINIT )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_MEM, CT_ERROR_TOKENINIT,
                       NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retl( HB_FALSE );
          return;
       }
@@ -327,11 +326,10 @@ HB_FUNC( TOKENINIT )
             int iArgErrorMode = ct_getargerrormode();
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
-            {
                ct_error( ( HB_USHORT ) iArgErrorMode, EG_MEM, CT_ERROR_TOKENINIT,
                          NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                          HB_ERR_ARGS_BASEPARAMS );
-            }
+
             sTokEnvDel( sTokenEnvironment );
             hb_retl( HB_FALSE );
             return;
@@ -348,12 +346,11 @@ HB_FUNC( TOKENINIT )
          sTokEnvDel( sTokenEnvironment );
       }
       else
-      {
          sTokSet( sTokenEnvironment );
-      }
+
       hb_retl( HB_TRUE );
    }
-   else  /* HB_ISCHAR( 1 ) */
+   else
    {
       /* if there is a token environment stored in either the 4th parameter or
          in the static variable -> rewind to first token */
@@ -378,11 +375,10 @@ HB_FUNC( TOKENINIT )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                      CT_ERROR_TOKENINIT, NULL, HB_ERR_FUNCNAME, 0,
                                      EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          if( pSubst != NULL )
             hb_itemReturnRelease( pSubst );
          else
@@ -411,11 +407,10 @@ HB_FUNC( TOKENNEXT )
             int iArgErrorMode = ct_getargerrormode();
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
-            {
                ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENNEXT,
                          NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                          HB_ERR_ARGS_BASEPARAMS );
-            }
+
             hb_retc_null();
             return;
          }
@@ -430,11 +425,10 @@ HB_FUNC( TOKENNEXT )
             int iArgErrorMode = ct_getargerrormode();
 
             if( iArgErrorMode != CT_ARGERR_IGNORE )
-            {
                ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENNEXT,
                          NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                          HB_ERR_ARGS_BASEPARAMS );
-            }
+
             hb_retc_null();
             return;
          }
@@ -459,10 +453,9 @@ HB_FUNC( TOKENNEXT )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENNEXT, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-         }
+
          if( HB_ISCHAR( 3 ) && HB_ISBYREF( 3 ) )
          {
             hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 3 );
@@ -484,7 +477,6 @@ HB_FUNC( TOKENNEXT )
          hb_storclen( ( char * ) sTokenEnvironment, sTokEnvGetSize( sTokenEnvironment ), 3 );
          hb_xfree( sTokenEnvironment );
       }
-
    }
    else
    {
@@ -493,11 +485,10 @@ HB_FUNC( TOKENNEXT )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_TOKENNEXT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -522,11 +513,10 @@ HB_FUNC( TOKENNUM )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_TOKENNUM, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -551,11 +541,10 @@ HB_FUNC( TOKENEND )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_TOKENEND, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -595,10 +584,9 @@ HB_FUNC( TOKENAT )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENAT,
                    NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       hb_retns( 0 );
       return;
    }
@@ -614,10 +602,9 @@ HB_FUNC( TOKENAT )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_TOKENAT, NULL,
                    HB_ERR_FUNCNAME, 0, EF_CANDEFAULT, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       hb_retns( 0 );
       return;
    }
@@ -657,11 +644,10 @@ HB_FUNC( RESTTOKEN )
                int iArgErrorMode = ct_getargerrormode();
 
                if( iArgErrorMode != CT_ARGERR_IGNORE )
-               {
                   ct_error( ( HB_USHORT ) iArgErrorMode, EG_MEM, CT_ERROR_RESTTOKEN,
                             NULL, HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                             HB_ERR_ARGS_BASEPARAMS );
-               }
+
                hb_retc_null();
                return;
             }
@@ -686,11 +672,10 @@ HB_FUNC( RESTTOKEN )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_RESTTOKEN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else

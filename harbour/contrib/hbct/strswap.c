@@ -91,14 +91,10 @@ HB_FUNC( STRSWAP )
             cExchange = *( pcString1 + sIndex );
             *( pcRet1 + sIndex ) = *( pcString2 + sIndex );
             if( iChange2 )
-            {
                *( pcRet2 + sIndex ) = cExchange;
-            }
          }
          else
-         {
             *( pcRet2 + sIndex ) = *( pcString1 + sIndex );
-         }
       }
 
       /* strings */
@@ -116,18 +112,15 @@ HB_FUNC( STRSWAP )
 
       hb_retc_null();
    }
-   else  /* ( sStrLen1 = hb_parclen( 1 ) ) > 0 &&
-            ( sStrLen2 = hb_parclen( 2 ) ) > 0 */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_STRSWAP, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );

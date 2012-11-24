@@ -106,10 +106,7 @@ HB_FUNC( TABEXPAND )
       else
          cTab = 0x09;
 
-      if( HB_ISLOG( 6 ) )
-         iIgnore141 = hb_parl( 6 );
-      else
-         iIgnore141 = 0;
+      iIgnore141 = hb_parldef( 6, 0 );
 
       /* estimate maximum return length by assuming that EVERY tab char
          can be replaced by at most <nTabWidth> characters */
@@ -193,17 +190,16 @@ HB_FUNC( TABEXPAND )
       hb_retclen( pcRet, sRetLen );
       hb_xfree( pcRet );
    }
-   else  /* HB_ISCHAR( 1 ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_TABEXPAND, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -258,10 +254,7 @@ HB_FUNC( TABPACK )
       else
          cTab = 0x09;
 
-      if( HB_ISLOG( 6 ) )
-         iIgnore141 = hb_parl( 6 );
-      else
-         iIgnore141 = 0;
+      iIgnore141 = hb_parldef( 6, 0 );
 
       if( sStrLen == 0 )
       {
@@ -363,9 +356,7 @@ HB_FUNC( TABPACK )
                sRetLen++;
                sTabIndex++;
                if( sTabIndex == sTabWidth - 1 )
-               {
                   sTabIndex = 0;
-               }
             }
             *( pcRet + sRetLen ) = *( pcString + sIndex );
             sRetLen++;
@@ -384,17 +375,16 @@ HB_FUNC( TABPACK )
       hb_retclen( pcRet, sRetLen );
       hb_xfree( pcRet );
    }
-   else  /* HB_ISCHAR( 1 ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_TABPACK, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else

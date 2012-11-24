@@ -6,15 +6,13 @@
  * Harbour Project source code:
  *
  *   CT3 mathematical functions
- *     - FLOOR
- *     - CEILING
- *     - SIGN
- *     - LOG10
- *     - FACT
+ *     - FLOOR()
+ *     - CEILING()
+ *     - SIGN()
+ *     - LOG10()
+ *     - FACT()
  *
- * NOTE: All these functions were builded using Borland C++ 5.5 (free version)
- *
- * Copyright 2001  Alejandro de Garate  <alex_degarate@hotmail.com>
+ * Copyright 2001 Alejandro de Garate <alex_degarate@hotmail.com>
  *
  * Documentation and changes concerning error handling Copyright 2001
  *   IntTec GmbH, Freiburg, Germany, Author: Martin Vogel <vogel@inttec.de>
@@ -91,11 +89,10 @@ HB_FUNC( FLOOR )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst =
             ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG, CT_ERROR_FLOOR, NULL, HB_ERR_FUNCNAME, 0,
                             EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -128,11 +125,10 @@ HB_FUNC( CEILING )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_CEILING, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -164,11 +160,10 @@ HB_FUNC( SIGN )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_SIGN, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -214,11 +209,10 @@ HB_FUNC( LOG10 )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_LOG10, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else
@@ -249,11 +243,10 @@ HB_FUNC( FACT )
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   CT_ERROR_FACT, NULL, HB_ERR_FUNCNAME, 0,
                                   EF_CANSUBSTITUTE, HB_ERR_ARGS_BASEPARAMS );
-      }
+
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
       else

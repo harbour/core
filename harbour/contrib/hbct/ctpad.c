@@ -76,13 +76,12 @@ static void do_pad( int iSwitch )
          int iArgErrorMode = ct_getargerrormode();
 
          if( iArgErrorMode != CT_ARGERR_IGNORE )
-         {
             ct_error( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                       iSwitch == DO_PAD_PADLEFT ?
                       CT_ERROR_PADLEFT : CT_ERROR_PADRIGHT, NULL,
                       HB_ERR_FUNCNAME, 0, EF_CANDEFAULT,
                       HB_ERR_ARGS_BASEPARAMS );
-         }
+
          hb_retc_null();
          return;
       }
@@ -107,9 +106,7 @@ static void do_pad( int iSwitch )
             hb_xmemcpy( pcRet + ( sRetLen - sStrLen ), pcString, sStrLen );
          }
          else
-         {
             hb_xmemcpy( pcRet, pcString + ( sStrLen - sRetLen ), sRetLen );
-         }
       }
       else
       {
@@ -123,19 +120,17 @@ static void do_pad( int iSwitch )
       }
       hb_retclen_buffer( pcRet, sRetLen );
    }
-   else  /* HB_ISCHAR( 1 ) && HB_ISNUM( 2 ) */
+   else
    {
       PHB_ITEM pSubst = NULL;
       int iArgErrorMode = ct_getargerrormode();
 
       if( iArgErrorMode != CT_ARGERR_IGNORE )
-      {
          pSubst = ct_error_subst( ( HB_USHORT ) iArgErrorMode, EG_ARG,
                                   iSwitch == DO_PAD_PADLEFT ?
                                   CT_ERROR_PADLEFT : CT_ERROR_PADRIGHT, NULL,
                                   HB_ERR_FUNCNAME, 0, EF_CANSUBSTITUTE,
                                   HB_ERR_ARGS_BASEPARAMS );
-      }
 
       if( pSubst != NULL )
          hb_itemReturnRelease( pSubst );
