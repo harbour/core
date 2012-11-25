@@ -36,7 +36,3 @@
 # output dir (in sync with GNU Make)
 {hbdyn&unix&!cygwin}-olib/${hb_plat}/${hb_comp}${hb_build}/
 {hbdyn&(cygwin|!unix)}-obin/${hb_plat}/${hb_comp}${hb_build}/
-
-# workdir (in sync with GNU Make)
-{hbdyn&unix&!cygwin}-workdir=lib/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
-{hbdyn&(cygwin|!unix)}-workdir=bin/${hb_plat}/${hb_comp}${hb_build}/${hb_work}/${hb_outputname}${hb_workdynsub}
