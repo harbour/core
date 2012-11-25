@@ -118,7 +118,7 @@ PROCEDURE Main()
    ? '    rewind with TokenInit() == .T. ? ------> ' + LToC( TokenInit() )
    ? '      TokenEnd() ? -------------------------> ' + LToC( TokenEnd() )
    WHILE ! TokenEnd()
-      ? '      start & end with TokenAt(.F./.T.)-----> ' + Str( TokenAt() ) + ' ' + Str( TokenAt( .T. ) )
+      ? '      start / end with TokenAt(.F./.T.)-----> ' + Str( TokenAt() ) + ' ' + Str( TokenAt( .T. ) )
       TokenNext( @cStr1 )
       ? '      TokenEnd() ? -------------------------> ' + LToC( TokenEnd() )
    ENDDO

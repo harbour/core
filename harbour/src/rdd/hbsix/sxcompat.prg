@@ -527,7 +527,7 @@ FUNCTION sx_VFGet( cExpr, nLen )
     * we can simply evaluate given expression */
 
    IF Used() .AND. PCount() == 2
-      RETURN PadR( &cExpr, nLen )
+      RETURN PadR( Eval( hb_macroBlock( cExpr ) ), nLen )
    ENDIF
 
    RETURN NIL

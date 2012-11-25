@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * win_BMP() class
  *
- * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
+ * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -54,7 +54,7 @@
 
 #include "hbwin.ch"
 
-CREATE CLASS WIN_BMP
+CREATE CLASS win_BMP
 
    EXPORTED:
 
@@ -78,10 +78,10 @@ CREATE CLASS WIN_BMP
 
 ENDCLASS
 
-METHOD New() CLASS WIN_BMP
+METHOD New() CLASS win_BMP
    RETURN Self
 
-METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
+METHOD LoadFile( cFileName, aDimXY ) CLASS win_BMP
 
    ::FileName := cFileName
    ::Bitmap := win_LoadBitmapFile( ::FileName )
@@ -99,16 +99,16 @@ METHOD LoadFile( cFileName, aDimXY ) CLASS WIN_BMP
 
    RETURN ::Type != HB_WIN_BITMAP_UNKNOWN
 
-METHOD Create() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
+METHOD Create() CLASS win_BMP  // Compatibility function for Alaska Xbase++
    RETURN Self
 
-METHOD Destroy() CLASS WIN_BMP  // Compatibility function for Alaska Xbase++
+METHOD Destroy() CLASS win_BMP  // Compatibility function for Alaska Xbase++
    RETURN NIL
 
-METHOD IsSupported( oPrn, /* @ */ nError ) CLASS WIN_BMP
+METHOD IsSupported( oPrn, /* @ */ nError ) CLASS win_BMP
    RETURN ( nError := win_bitmapIsSupported( oPrn:hPrinterDc, ::Bitmap ) ) == 0
 
-METHOD Draw( oPrn, aRectangle, /* @ */ nError ) CLASS WIN_BMP // Pass a WIN_PRN object reference & Rectangle array
+METHOD Draw( oPrn, aRectangle, /* @ */ nError ) CLASS win_BMP // Pass a win_Prn object reference and rectangle array
 
    IF HB_ISARRAY( aRectangle )
       ::Rect := aRectangle

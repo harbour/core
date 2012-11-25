@@ -99,7 +99,7 @@ FUNCTION ft_Metaph( cName, nSize ) //  Calculates the metaphone of a character s
    __defaultNIL( @nSize, 4 )   //  default size: 4-bytes
 
    // Remove non-alpha characters and make upper case.
-   // The string is padded with 1 space at the beginning & end.
+   // The string is padded with 1 space at the beginning and end.
    // Spaces, if present inside the string, are not removed until all
    // the prefix/suffix checking has been completed.
    cMeta := " " + _ftMakeAlpha( Upper( AllTrim( cName ) ) ) + " "

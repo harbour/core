@@ -670,7 +670,7 @@ STATIC FUNCTION Ach_Select( alSelect, nPos )
    IF nPos >= 1 .AND. nPos <= Len( alSelect )
       sel := alSelect[ nPos ]
       IF HB_ISSTRING( sel ) .AND. ! Empty( sel )
-         sel := &sel
+         sel := Eval( hb_macroBlock( sel ) )
       ENDIF
       IF HB_ISLOGICAL( sel )
          RETURN sel

@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Printing subsystem for Windows using GUI printing
  *
- * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
+ * Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -52,7 +52,7 @@
 
 /*
    win_Prn() was designed to make it easy to emulate Clipper Dot Matrix printing.
-   Dot Matrix printing was in CPI ( Characters per inch & Lines per inch ).
+   Dot Matrix printing was in CPI ( Characters per inch and Lines per inch ).
    Even though "Mapping Mode" for win_Prn() is WIN_MM_TEXT, ::SetFont() accepts the
    xWidth parameter in CPI not Pixels. Also the default ::LineHeight is for
    6 lines per inch so ::NewLine() works as per "LineFeed" on Dot Matrix printers.
@@ -76,7 +76,7 @@ CREATE CLASS win_Prn
 
    METHOD New( cPrinter )
    METHOD Create()                  // CreatesDC and sets "Courier New" font, set Orientation, Copies, Bin#
-                                    // Create() ( & StartDoc() ) must be called before printing can start.
+                                    // Create() ( and StartDoc() ) must be called before printing can start.
    METHOD Destroy()                 // Calls EndDoc() - restores default font, Deletes DC.
    DESTRUCTOR Destruct()
 
@@ -130,8 +130,8 @@ CREATE CLASS win_Prn
    METHOD SetPRC( nRow, nCol )   // Based on ::LineHeight and current ::CharWidth
    METHOD PRow()
    METHOD PCol()
-   METHOD MaxRow()               // Based on ::LineHeight & Form dimensions
-   METHOD MaxCol()               // Based on ::CharWidth & Form dimensions
+   METHOD MaxRow()               // Based on ::LineHeight and Form dimensions
+   METHOD MaxCol()               // Based on ::CharWidth and Form dimensions
 
    METHOD MM_TO_POSX( nMm )      // Convert position on page from MM to pixel location Column
    METHOD MM_TO_POSY( nMm )      //   "       "      "    "    "   "  "   "      "     Row

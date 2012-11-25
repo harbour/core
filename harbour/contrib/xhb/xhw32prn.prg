@@ -8,7 +8,7 @@
  *    hiding some differences between Harbour and xHarbour
  *
  * original WIN32PRN/WIN_PRN class author:
- *    Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software & Systems Ltd
+ *    Copyright 2004 Peter Rees <peter@rees.co.nz> Rees Software and Systems Ltd
  * this wrapper:
  *    Copyright 2010 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org

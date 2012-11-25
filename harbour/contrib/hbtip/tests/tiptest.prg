@@ -35,7 +35,7 @@
  *      headers) to RCPT e.f.
  *      stmp://user&at;myprovider.com@smtp.myprovider.com/gian@niccolai.ws
  *
- *      NOTE: IN UNIX, to use & from command line you have to surround
+ *      NOTE: In Unix, to use '&' from command line you have to surround
  *      the url with "", eg "smtp://...&at;...@server/dest"
  *
  * FTP Protocol

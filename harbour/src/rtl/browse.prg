@@ -318,6 +318,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
    LOCAL lScore, lExit, bIns, nCursor
    LOCAL oCol, oGet
    LOCAL cIndexKey, cForExp, xKeyValue
+   LOCAL bIndexKey
    LOCAL lSuccess, nKey, xValue
 
    oBrw:HitTop := .F.
@@ -330,7 +331,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
       SC_NORMAL, SC_INSERT ) ) } )
    nCursor := SetCursor( iif( ReadInsert(), SC_INSERT, SC_NORMAL ) )
    IF ! Empty( cIndexKey := IndexKey( 0 ) )
-      xKeyValue := &cIndexKey
+      xKeyValue := Eval( bIndexKey := hb_macroBlock( cIndexKey ) )
    ENDIF
 
    oCol := oBrw:GetColumn( oBrw:ColPos )
@@ -346,10 +347,10 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
       Eval( oCol:Block, xValue )
 
       IF ! lAppend .AND. ! Empty( cForExp := ordFor( IndexOrd() ) ) .AND. ;
-         ! &cForExp
+         ! Eval( hb_macroBlock( cForExp ) )
          dbGoTop()
       ENDIF
-      IF ! lAppend .AND. ! Empty( cIndexKey ) .AND. ! xKeyValue == &cIndexKey
+      IF ! lAppend .AND. ! Empty( cIndexKey ) .AND. ! xKeyValue == Eval( bIndexKey )
          lSuccess := .T.
       ENDIF
    ENDIF

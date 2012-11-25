@@ -78,7 +78,7 @@
  * Teditor Fix: v2.0 2003-11-17
  * Copyright 2003 Lance Owens <servant@gnosis.org>
  *
- * This Revised Version has a completely rewritten edit method key commands, with dynamic line & paragraph reformatting.
+ * This Revised Version has a completely rewritten edit method key commands, with dynamic line and paragraph reformatting.
  * Includes a fix for the bugs in TEditor key processing that previously caused array errors
  *
  * Note: -- If using the paste function to enter text, increase size of keyboard buffer to 2048 or 4096!

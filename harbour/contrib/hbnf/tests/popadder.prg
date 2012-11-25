@@ -26,7 +26,7 @@ PROCEDURE Main()
    @ 15, 60 SAY "Vaca. hrs."
    @ 23, 20 SAY "Press <ALT-A> to Pop - Up the Adder."
    @ 24, 20 SAY "Press <ESC> to Quit the adder Demo."
-   DO WHILE .T.                               // Get the sick, personal, & vaca
+   DO WHILE .T.                               // Get the sick, personal, and vaca
       @ 16, 24 GET nSickHrs PICTURE "9999.999"  // Normally I have a VALID()
       @ 16, 43 GET nPersHrs PICTURE "9999.999"  // to make sure the value is
       @ 16, 63 GET nVacaHrs PICTURE "9999.999"  // within the allowable range.

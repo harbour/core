@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * hb_SendMail() (This version of hb_SendMail() started from Luiz's original work on SendMail())
  *
- * Copyright 2007 Luiz Rafael Culik Guimaraes & Patrick Mast
+ * Copyright 2007 Luiz Rafael Culik Guimaraes and Patrick Mast
  * Copyright 2009 Viktor Szakats (harbour syenar.net) (SSL support)
  * www - http://www.xharbour.org
  *

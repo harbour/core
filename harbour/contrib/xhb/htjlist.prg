@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- *     Generates Javascript & DHTML list menus
+ *     Generates Javascript and DHTML list menus
  *     (see the website/jList dir for an example)
  *
  *     Uses list.js and resize.js (heavily modified) found at

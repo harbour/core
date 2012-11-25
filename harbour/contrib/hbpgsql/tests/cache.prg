@@ -166,7 +166,7 @@ PROCEDURE SQLCloseTemp( cAlias )
    LOCAL x
 
    IF ! Empty( Select( cAlias ) )
-      CLOSE &calias
+      ( cAlias )->( dbCloseArea() )
    ENDIF
 
    x := AScan( s_aTableTemp, {| aVal | aVal[ DB_ALIAS ] == cAlias } )
@@ -323,7 +323,7 @@ FUNCTION SQLOpen( cAlias, cQuery, xFetch, cOrder )
       dbUseArea( .T., NIL, cFile, cAlias, .F. )
 
    ELSE
-      SELECT &cAlias
+      Select( cAlias )
       ZAP
    ENDIF
 
@@ -439,7 +439,7 @@ FUNCTION SQLPrepare( cQuery, ... )
          IF x != NIL .AND. Empty( x )
             x := "null"
 
-         ELSEIF HB_ISNUMBER( x )
+         ELSEIF HB_ISNUMERIC( x )
             x := hb_ntos( x )
 
          ELSEIF HB_ISDATE( x )
@@ -548,7 +548,7 @@ PROCEDURE MakeDBF( cAlias, aStructure, aIndex )
       cKey := aIndex[ i ]
       cIndex := TempFile()
 
-      INDEX ON &cKey TO &cIndex
+      INDEX ON &cKey TO ( cIndex )
 
       AAdd( s_aTempDBF, cIndex )
    NEXT

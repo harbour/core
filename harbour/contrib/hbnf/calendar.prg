@@ -104,9 +104,9 @@ FUNCTION ft_Calendar( nRow, nCol, cColor, lShadow, lShowHelp )
       aRetVal[ 7 ] :=   JDOY( aRetVal[ 4 ], aRetVal[ 2 ], aRetVal[ 3 ] )
 
       hb_DispOutAt( nRow, nCol, ;
-         SubStr( aRetval[ 6 ], 1, 3 ) + " " + ;
+         Left( aRetval[ 6 ], 3 ) + " " + ;
          Str( aRetVal[ 3 ], 2, 0 ) + " " + ;
-         SubStr( aRetVal[ 5 ], 1, 3 ) + " " + ;
+         Left( aRetVal[ 5 ], 3 ) + " " + ;
          Str( aRetVal[ 4 ], 4, 0 ) )
 
       hb_DispOutAt( nRow + 1, nCol, ;

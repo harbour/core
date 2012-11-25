@@ -59,7 +59,7 @@
 
 // Instead of using STATIC variables for these I'm using a LOCAL array
 //   and passing aAdder[] all over the place.... Don't let this confuse
-//   you. I wrote the Adder using the variable names & now let the
+//   you. I wrote the Adder using the variable names and now let the
 //   PreProcessor do all the work.
 #define nTotal     aAdder[ 1 ]
 #define nNumTotal  aAdder[ 2 ]
@@ -138,7 +138,7 @@ FUNCTION ft_Adder()
    lDecSet      := .F.                   // Decimal ? - keyboard routine
    lSubRtn      := lTotalOk := lTape := lAddError := lDivError := .F.
 
-   nTopOS       := Int( ( MaxRow() - 24 ) / 2 )  // Using the TopOffSet & LeftOffSet
+   nTopOS       := Int( ( MaxRow() - 24 ) / 2 )  // Using the TopOffSet and LeftOffSet
    nLeftOS      := Int( ( MaxCol() - 79 ) / 2 )  // the Adder will always be centered
    nAddSpace    := iif( lShowRight, 40, 0 ) + nLeftOS
    nTapeSpace   := iif( lShowRight, 0, 40 ) + nLeftOS
@@ -150,11 +150,11 @@ FUNCTION ft_Adder()
 
    _ftAddScreen( aAdder )
 
-   // Set the decimals to 2 & display a cleared adder
+   // Set the decimals to 2 and display a cleared adder
    _ftChangeDec( aAdder, 2 )
    hb_DispOutAt( 4 + nTopOS, 7 + nAddSpace, Transform( nTotal, cTotPict ) )
 
-   DO WHILE ! lDone                      // Input key & test loop
+   DO WHILE ! lDone                      // Input key and test loop
       nKey := _ftInkey( 0, "nKey" )
       DO CASE
       CASE hb_keyChar( nKey ) $ "1234567890."
@@ -693,7 +693,7 @@ STATIC FUNCTION _ftUpdateTrans( aAdder, lTypeTotal, nAmount )
    RETURN NIL
 
 // ----------------------------------------------------------
-// Clear the <TOTAL> & <SUBTOTAL> from Adder
+// Clear the <TOTAL> and <SUBTOTAL> from Adder
 
 STATIC FUNCTION _ftEraseTotSubTot( aAdder )
 
@@ -928,7 +928,7 @@ STATIC FUNCTION _ftQuest( cMessage, xVarVal, cPict, bValid, lNoESC, nWinColor, n
       {| x | iif( PCount() > 0, xVarVal := x, xVarVal ) }, ;
       "xVarVal" )
 
-   // If the input line is character & wider than window SCROLL
+   // If the input line is character and wider than window SCROLL
    IF lGetOnNextLine .AND. HB_ISSTRING( xVarVal ) .AND. nVarLen > nWide
       oNewGet:Picture := "@S" + hb_ntos( nWide ) + iif( cPict == NIL, "", " " + cPict )
    ENDIF

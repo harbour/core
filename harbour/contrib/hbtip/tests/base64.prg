@@ -69,7 +69,7 @@ PROCEDURE Main( ... )
       ? "base64test -d [<] encoded-file  [>] file-to-decode"
       ? "base64test -q [-d]  to use quoted printable encoding/decoding"
       ? "base64test -u [-d]  to use url encoding/decoding."
-      ? "input & output-redirection is optional"
+      ? "input/output redirection is optional"
       ?
       QUIT
    ENDIF

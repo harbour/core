@@ -315,7 +315,7 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
    nAction := iif( HB_ISBLOCK( xUserFunc ), ;
                                  Eval( xUserFunc, nMode, oBrowse:colPos ), ;
               iif( HB_ISSTRING( xUserFunc ) .AND. ! Empty( xUserFunc ), ;
-                                 &xUserFunc( nMode, oBrowse:colPos ), ;
+                                 &xUserFunc( nMode, oBrowse:colPos ), ;  /* NOTE: Macro operator! */
               iif( nKey == K_ENTER .OR. nKey == K_ESC, DE_ABORT, DE_CONT ) ) )
 
    IF ! lAppend .AND. Eof() .AND. ! IsDbEmpty()
@@ -343,7 +343,7 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
          lAppend := .F.
 
          IF ( Set( _SET_DELETED ) .AND. Deleted() ) .OR. ;
-            ( ! Empty( dbFilter() ) .AND. ! &( dbFilter() ) )
+            ( ! Empty( dbFilter() ) .AND. ! Eval( hb_macroBlock( dbFilter() ) ) )
             dbSkip()
          ENDIF
          IF Eof()

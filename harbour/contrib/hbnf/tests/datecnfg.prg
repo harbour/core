@@ -56,7 +56,7 @@ PROCEDURE Main()
    SET CENTURY ON
    hb_langSelect( "EN" )
 
-   aTemp      := ft_DateCnfg()                   // Get/Set cFY_Start & nDOW_Start.
+   aTemp      := ft_DateCnfg()                   // Get/Set cFY_Start and nDOW_Start.
 #if 0
    aTemp      := ft_DateCnfg( "1980.01.03", 1 )  // Date string in user's format.
 #endif

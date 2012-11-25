@@ -280,7 +280,7 @@ FUNCTION Wvt_MakeDlgTemplate( nTop, nLeft, nRows, nCols, aOffSet, cTitle, nStyle
       nX  := aXY[ 1 ] + aOffSet[ 2 ]
       nY  := aXY[ 2 ] + aOffSet[ 1 ]
 
-      /* MSDN says DlgBaseUnits and Screen Coordinates has multiplier of 4,8 for x & Y.
+      /* MSDN says DlgBaseUnits and Screen Coordinates has multiplier of 4,8 for X and Y.
        * But in my practice, the values below are 99% accurate.
        * I have tested it on many fonts but on 1280/800 resolution.
        * Please feel free to experiment if you find thses values inappropriate.

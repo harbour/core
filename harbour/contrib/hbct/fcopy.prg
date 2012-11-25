@@ -11,7 +11,7 @@
  *    Dated....: Jun,17 94
  *    Revised..: Sep,20 94
  *    Purpose..: Replaces the following CA-T*ols functions which generate GPF's
- *               FileCopy(), FileCOpen() & FileAppend()!
+ *               FileCopy(), FileCOpen(), FileAppend()!
  *    Relies on: Clipper (can you believe it!)
  *    Compile..: /n /m /w /[/p /b /l] /es2
  *    Notes....:

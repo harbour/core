@@ -146,7 +146,7 @@ PROCEDURE Main()
    ? "end", Seconds() - nSecs
 
    nSecs := Seconds()
-   ? "start clone & zoom"
+   ? "start clone and zoom"
    oI2:Clone():Zoom( 200 )
    ? "end", Seconds() - nSecs
 

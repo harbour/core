@@ -364,7 +364,7 @@ STATIC FUNCTION LogError( oerr )
 
       IF hb_IsFunction( "Select" )
          FWriteLine( nHandle, "" )
-         FWriteLine( nHandle, "Current Area ......:" + strvalue( &( "Select()" ) ) )
+         FWriteLine( nHandle, "Current Area ......:" + strvalue( Eval( hb_macroBlock( "Select()" ) ) ) )
       ENDIF
 
       FWriteLine( nHandle, "" )
@@ -481,25 +481,25 @@ STATIC FUNCTION LogError( oerr )
 
       hb_WAeval( {||
          IF hb_IsFunction( "Select" )
-            FWriteLine( nHandle, "Work Area No ......: " + strvalue( &( "Select()" ) ) )
+            FWriteLine( nHandle, "Work Area No ......: " + strvalue( Eval( hb_macroBlock( "Select()" ) ) ) )
          ENDIF
          IF hb_IsFunction( "Alias" )
-            FWriteLine( nHandle, "Alias .............: " + &( "Alias()" ) )
+            FWriteLine( nHandle, "Alias .............: " + Eval( hb_macroBlock( "Alias()" ) ) )
          ENDIF
          IF hb_IsFunction( "RecNo" )
-            FWriteLine( nHandle, "Current Recno .....: " + strvalue( &( "RecNo()" ) ) )
+            FWriteLine( nHandle, "Current Recno .....: " + strvalue( Eval( hb_macroBlock( "RecNo()" ) ) ) )
          ENDIF
          IF hb_IsFunction( "DbFilter" )
-            FWriteLine( nHandle, "Current Filter ....: " + &( "dbFilter()" ) )
+            FWriteLine( nHandle, "Current Filter ....: " + Eval( hb_macroBlock( "dbFilter()" ) ) )
          ENDIF
          IF hb_IsFunction( "DbRelation" )
-            FWriteLine( nHandle, "Relation Exp. .....: " + &( "dbRelation()" ) )
+            FWriteLine( nHandle, "Relation Exp. .....: " + Eval( hb_macroBlock( "dbRelation()" ) ) )
          ENDIF
          IF hb_IsFunction( "IndexOrd" )
-            FWriteLine( nHandle, "Index Order .......: " + strvalue( &( "IndexOrd(0)" ) ) )
+            FWriteLine( nHandle, "Index Order .......: " + strvalue( Eval( hb_macroBlock( "IndexOrd(0)" ) ) ) )
          ENDIF
          IF hb_IsFunction( "IndexKey" )
-            FWriteLine( nHandle, "Active Key ........: " + strvalue( &( "IndexKey(0)" ) ) )
+            FWriteLine( nHandle, "Active Key ........: " + strvalue( Eval( hb_macroBlock( "IndexKey(0)" ) ) ) )
          ENDIF
          FWriteLine( nHandle, "" )
          RETURN .T.

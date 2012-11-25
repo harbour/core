@@ -260,7 +260,7 @@ FUNCTION ValToPrg( xVal, cName, nPad, aObjs )
 
 FUNCTION PrgExpToVal( cExp )
 
-   RETURN &( cExp )
+   RETURN Eval( hb_macroBlock( cExp ) )
 
 //
 
