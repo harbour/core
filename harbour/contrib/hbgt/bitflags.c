@@ -5,10 +5,7 @@
 /*
  * Author....: Dave Pearson
  * BBS.......: The Dark Knight Returns
- * Net/Node..: 050/069
- * User Name.: Dave Pearson
- * Date......: 31/03/93
- * Revision..: 1.0
+ * Date......: 1993.03.31
  *
  * This is an original work by Dave Pearson and is placed in the public
  * domain.
@@ -138,5 +135,6 @@ HB_FUNC( GT_ISFLAG )
          FlagStatus = FlagString[ BytePointer ] & ( 1 << ( BitPointer - 1 ) );
       }
    }
+
    hb_retl( FlagStatus );
 }

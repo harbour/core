@@ -18,8 +18,6 @@
 #include "hbmemvar.ch"
 #include "setcurs.ch"
 
-#xtranslate COLORARRAY( <x> ) => &( '{"' + StrTran( <x>, ',', '","' ) + '"}' )
-
 THREAD STATIC t_aLevel   := {}
 THREAD STATIC t_nPointer := 1
 
@@ -67,9 +65,9 @@ FUNCTION __MenuTo( bBlock, cVariable )
 #endif
 
    LOCAL nPointer
-   LOCAL aColor
-   LOCAL cBackColor
-   LOCAL cFrontColor
+   LOCAL cColor
+   LOCAL cColorSelect
+   LOCAL cColorNormal
 
    // Detect if a memvar was passed
    lDeclared := ! __mvExist( cVariable )
@@ -113,7 +111,6 @@ FUNCTION __MenuTo( bBlock, cVariable )
       lMsgCenter := Set( _SET_MCENTER )
       lExit := .F.
 
-
       DO WHILE n != 0
 
          // should we display messages?
@@ -143,29 +140,20 @@ FUNCTION __MenuTo( bBlock, cVariable )
          // save the current row
          q := n
 
-         IF t_aLevel[ t_nPointer - 1, n, 5 ] != NIL
-            aColor := COLORARRAY( t_aLevel[ t_nPointer - 1, n, 5 ] )
-            cFrontColor := iif( Empty( aColor[ 1 ] ), NIL, aColor[ 1 ] )
-            cBackColor  := iif( Len( aColor ) > 1, aColor[ 2 ], NIL )
-         ENDIF
-
+         cColor := t_aLevel[ t_nPointer - 1, n, 5 ]
+         cColorNormal := hb_ColorIndex( iif( Empty( hb_ColorIndex( cColor, CLR_STANDARD ) ), SetColor(), cColor ), CLR_STANDARD )
          IF Set( _SET_INTENSITY )
-            IF cBackColor == NIL    // Only select Color Enhace if no color was passed
-               ColorSelect( CLR_ENHANCED )
-            ENDIF
+            cColorSelect := hb_ColorIndex( iif( Empty( hb_ColorIndex( cColor, CLR_ENHANCED ) ), SetColor(), cColor ), CLR_ENHANCED )
+         ELSE
+            cColorSelect := cColorNormal
          ENDIF
 
          // highlight the prompt
-         DispOutAt( t_aLevel[ nPointer - 1, n, 1 ], ;
+         DispOutAt( ;
+            t_aLevel[ nPointer - 1, n, 1 ], ;
             t_aLevel[ nPointer - 1, n, 2 ], ;
             t_aLevel[ nPointer - 1, n, 3 ], ;
-            cBackColor )
-
-         IF Set( _SET_INTENSITY )
-            IF cFrontColor == NIL    // Only select Color Enhace if no color was passed
-               ColorSelect( CLR_STANDARD )
-            ENDIF
-         ENDIF
+            cColorSelect )
 
          IF lExit
             EXIT
@@ -254,7 +242,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
                t_aLevel[ nPointer - 1, q, 1 ], ;
                t_aLevel[ nPointer - 1, q, 2 ], ;
                t_aLevel[ nPointer - 1, q, 3 ], ;
-               cFrontColor )
+               cColorNormal )
          ENDIF
 
       ENDDO
@@ -263,7 +251,7 @@ FUNCTION __MenuTo( bBlock, cVariable )
       SetCursor( nSaveCursor )
 
       t_nPointer := nPointer
-      t_nPointer --
+      t_nPointer--
       ASize( t_aLevel, t_nPointer - 1 )
 
    ENDIF

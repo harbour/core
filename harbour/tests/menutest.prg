@@ -19,7 +19,7 @@ PROCEDURE Main()
    CLS
 
    @  1, 10 PROMPT "Menu Item 1" MESSAGE "Menu Message 1"
-   @  2, 10 PROMPT "Menu Item 2" MESSAGE "Menu Message 2"
+   __AtPrompt( 2, 10, "Menu Item 2", "Menu Message 2", "R+/GR, GR+/N" )
    @  3, 10 PROMPT "Menu Item 3" MESSAGE "Menu Message 3"
    @  4, 10 PROMPT "Menu Item 4" MESSAGE "Menu Message 4"
 

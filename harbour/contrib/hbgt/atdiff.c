@@ -7,10 +7,7 @@
  *
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
- * Net/Node..: 050/069
- * User Name.: Andy Leighton
- * Date......: 23/05/93
- * Revision..: 1.00
+ * Date......: 1993.05.23
  *
  * This is an original work by Andy Leighton and is placed in the
  * public domain.
@@ -37,11 +34,11 @@ HB_FUNC( GT_ATDIFF )
       for( pos = 1; ( pos <= len ) && ( *s1 == *s2 ); s2++, s1++ )
          pos++;
 
-      if( pos > len )               /* strings match exactly!!! */
+      if( pos > len )   /* strings match exactly!!! */
          hb_retns( 0 );
       else
          hb_retns( pos );
    }
    else
-      hb_retns( -1 );                 /* parameter mismatch - error -1 */
+      hb_retns( -1 );
 }

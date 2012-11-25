@@ -2,12 +2,12 @@
  * $Id$
  */
 
-/*****************************************************************************
-* Function: _GT_Internal_StringAsInt()                                       *
-* Syntax..: int _GT_Internal_StringAsInt(char *String, int Start, int End)   *
-* Usage...: Convert a numeric value in a string to an int value.             *
-* By......: David A Pearson                                                  *
-*****************************************************************************/
+/***
+* Function: _GT_Internal_StringAsInt()
+* Syntax..: int _GT_Internal_StringAsInt(char *String, int Start, int End)
+* Usage...: Convert a numeric value in a string to an int value.
+* By......: David A Pearson
+*/
 
 #include "hbapi.h"
 
@@ -23,8 +23,8 @@ int _GT_Internal_StringAsInt( char * String, HB_ISIZ Start, HB_ISIZ End )
    {
       if( HB_ISDIGIT( String[ Digit ] ) )
       {
-         Value   += ( String[ Digit ] - 0x30 ) * Decimal;
-         Decimal *= 0xA;
+         Value   += ( String[ Digit ] - '0' ) * Decimal;
+         Decimal *= 10;
       }
    }
 

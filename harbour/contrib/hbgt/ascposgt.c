@@ -7,10 +7,7 @@
  *
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
- * Net/Node..: 050/069
- * User Name.: Andy Leighton
- * Date......: 23/05/93
- * Revision..: 1.00
+ * Date......: 1993.05.23
  *
  * This is an original work by Andy Leighton and is placed in the
  * public domain.
@@ -35,5 +32,5 @@ HB_FUNC( GT_ASCPOS )
                                        /* character in string */
    }
    else
-      hb_retni( -1 );                 /* parameter mismatch - error -1 */
+      hb_retni( -1 );
 }

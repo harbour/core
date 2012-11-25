@@ -54,7 +54,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- * Copyright 2000 J. Lefebvre <jfl@mafact.com> & RA. Cuylen <rac@mafact.com>
+ * Copyright 2000 J. Lefebvre <jfl@mafact.com> and RA. Cuylen <rac@mafact.com>
  *    Multiple inheritance
  *    Support shared class DATA
  *    scoping (hidden, protected, readOnly)

@@ -7,10 +7,7 @@
  *
  * Author....: Andy M Leighton
  * BBS.......: The Dark Knight Returns
- * Net/Node..: 050/069
- * User Name.: Andy Leighton
- * Date......: 24/05/93
- * Revision..: 1.00
+ * Date......: 1993.05.24
  *
  * This is an original work by Andy Leighton and is placed in the
  * public domain.
@@ -33,7 +30,7 @@ HB_FUNC( GT_STREXPAND )
       if( HB_ISCHAR( 3 ) )
          insert = hb_parc( 3 );
 
-      out = ( char * ) hb_xgrab( len * ( nIns + 1 ) );   /* alloc us some memory */
+      out = ( char * ) hb_xgrab( len * ( nIns + 1 ) );   /* grab us some mem to work with */
 
       for( i = 0, p = 0; i < len; i++ )                  /* loop thru input */
       {
@@ -45,10 +42,10 @@ HB_FUNC( GT_STREXPAND )
                out[ p++ ] = insert[ 0 ];
          }
       }
-      out[ p ] = '\0';                 /* Add terminating NUL */
+      out[ p ] = '\0';   /* Add terminating NUL */
 
       hb_retc_buffer( out );
    }
    else
-      hb_retc_null();                  /* parameter mismatch - error NullStr */
+      hb_retc_null();
 }
