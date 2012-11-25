@@ -870,7 +870,7 @@ DYNAMIC hb_UTF8ToStrBox
 DYNAMIC hb_ValToExp
 DYNAMIC hb_ValToStr
 DYNAMIC hb_Version
-DYNAMIC hb_WAeval
+DYNAMIC hb_WAEval
 DYNAMIC hb_WildMatch
 DYNAMIC hb_WildMatchI
 DYNAMIC hb_ZCompress

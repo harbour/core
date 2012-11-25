@@ -479,7 +479,7 @@ STATIC FUNCTION LogError( oerr )
       ENDIF
       FWriteLine( nHandle, "" )
 
-      hb_WAeval( {||
+      hb_WAEval( {||
          IF hb_IsFunction( "Select" )
             FWriteLine( nHandle, "Work Area No ......: " + strvalue( Eval( hb_macroBlock( "Select()" ) ) ) )
          ENDIF
