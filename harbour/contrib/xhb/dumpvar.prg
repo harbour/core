@@ -111,7 +111,7 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
    DO CASE
    CASE cType == "O"
 
-      IF ! lAssocAsObj .AND. xVar:ClassName == "TASSOCIATIVEARRAY"
+      IF ! lAssocAsObj .AND. xVar:className() == "TASSOCIATIVEARRAY"
          cString += Space( nIndent ) + "Type='Associative' -> " + hb_eol()
          // Keys extraction.
          IF Len( xVar:Keys ) > 0
@@ -129,7 +129,7 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
             cString += Space( nIndent ) + "}" + hb_eol()
          ENDIF
       ELSE
-         cString += Space( nIndent ) + "<" + xVar:ClassName + " Object>" + hb_eol()
+         cString += Space( nIndent ) + "<" + xVar:className() + " Object>" + hb_eol()
          cString += Space( nIndent ) + " | " + hb_eol()
          cString += Space( nIndent ) + " +- PRIVATE/HIDDEN:" + hb_eol()
          cString += DShowProperties( xVar, HB_OO_CLSTP_HIDDEN, lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )

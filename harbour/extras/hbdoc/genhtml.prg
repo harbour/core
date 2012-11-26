@@ -175,7 +175,7 @@ METHOD EndSection( cSection, cFilename ) CLASS  GenerateHTML
 
 METHOD AddReference( oEntry, cReference, cSubReference ) CLASS GenerateHTML
 
-   IF HB_ISOBJECT( oEntry ) .AND. oEntry:ClassName == "ENTRY"
+   IF HB_ISOBJECT( oEntry ) .AND. oEntry:ClassName() == "ENTRY"
       ::OpenTag( "a", "href", ::TargetFilename + ::cExtension + "#" + oEntry:Filename ):Append( oEntry:Name ):CloseTag( "a" ):Append( oEntry:OneLiner ):Newline()
    ELSE
       IF cSubReference == NIL

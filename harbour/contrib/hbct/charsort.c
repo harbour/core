@@ -97,10 +97,8 @@ _hb_do_sortdescend( const void * p1, const void * p2 )
 
 HB_FUNC( CHARSORT )
 {
-   int iNoRet;
-
    /* suppressing return value ? */
-   iNoRet = ct_getref() && HB_ISBYREF( 1 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    /* param check I */
    if( HB_ISCHAR( 1 ) )

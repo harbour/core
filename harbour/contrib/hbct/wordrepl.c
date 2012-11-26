@@ -56,14 +56,11 @@
 
 HB_FUNC( WORDREPL )
 {
-   int iNoRet;
-   int iMultiPass;
+   /* suppressing return value ? */
+   int iNoRet = ct_getref() && HB_ISBYREF( 2 );
+   int iMultiPass = ct_getatmupa();
 
    HB_SIZE sSearchLen, sReplaceLen;
-
-   /* suppressing return value ? */
-   iNoRet = ct_getref() && HB_ISBYREF( 2 );
-   iMultiPass = ct_getatmupa();
 
    /* param check */
    if( ( sSearchLen = hb_parclen( 1 ) ) / 2 > 0 && HB_ISCHAR( 2 ) &&

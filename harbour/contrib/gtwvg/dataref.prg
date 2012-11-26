@@ -100,7 +100,7 @@ METHOD WvgDataRef:new()
 METHOD WvgDataRef:getData()
 
    DO CASE
-   CASE ::className == "COMBOBOX"
+   CASE ::className() == "COMBOBOX"
       IF HB_ISOBJECT( ::XbpListBox ) .AND. HB_ISBLOCK( ::XbpListBox:dataLink )
          ::sl_editBuffer := ::XbpListBox:getData()
       ELSEIF HB_ISOBJECT( ::XbpSLE ) .AND. HB_ISBLOCK( ::XbpSLE:dataLink )
@@ -109,14 +109,14 @@ METHOD WvgDataRef:getData()
          ::sl_editBuffer := ::XbpListBox:getData()
       ENDIF
 
-   CASE ::className == "EDIT"
+   CASE ::className() == "EDIT"
       ::sl_editBuffer := Wvg_GetMessageText( ::hWnd, WM_GETTEXT, ::bufferLength + 1 )
 
-   CASE ::className == "LISTBOX"
+   CASE ::className() == "LISTBOX"
       ::sl_editBuffer := Wvg_LBGetCurSel( ::hWnd ) + 1
 
 #if 0 /* This is contrary the documentation of Xbase++ */
-      IF ::oParent:className == "COMBOBOX"
+      IF ::oParent:className() == "COMBOBOX"
          ::sl_editBuffer := {}
          FOR i := 1 TO ::numItems()
             AAdd( ::sl_editBuffer, ::getItem( i ) )
@@ -147,30 +147,30 @@ METHOD WvgDataRef:setData( xValue, mp2 )
 
    DO CASE
 
-   CASE ::className == "BUTTON"     /* CheckBox, Radio, 3State */
+   CASE ::className() == "BUTTON"     /* CheckBox, Radio, 3State */
       ::sendMessage( BM_SETCHECK, iif( ::sl_editBuffer, BST_CHECKED, BST_UNCHECKED ), 0 )
 
-   CASE ::className == "LISTBOX"    /* Single Selection */
+   CASE ::className() == "LISTBOX"    /* Single Selection */
       IF HB_ISNUMERIC( ::sl_editBuffer )
          RETURN Wvg_LBSetCurSel( ::hWnd, ::sl_editBuffer - 1 ) >= 0
       ENDIF
 
-   CASE ::className == "SysTreeView32"
+   CASE ::className() == "SysTreeView32"
       IF ::sl_editBuffer != NIL .AND. ::sl_editBuffer:hItem != NIL
          Wvg_TreeView_SelectItem( ::hWnd, ::sl_editBuffer:hItem )
       ENDIF
 
-   CASE ::className == "EDIT"
+   CASE ::className() == "EDIT"
       IF HB_ISSTRING( ::sl_editBuffer )
          Wvg_SendMessageText( ::hWnd, WM_SETTEXT, 0, ::sl_editBuffer )
       ENDIF
 
-   CASE ::className == "SCROLLBAR"
+   CASE ::className() == "SCROLLBAR"
       IF ::sl_editBuffer != NIL
          wapi_SetScrollPos( ::pWnd, SB_CTL, ::sl_editBuffer, .T. )
       ENDIF
 
-   CASE ::className == "COMBOBOX"
+   CASE ::className() == "COMBOBOX"
       IF HB_ISARRAY( ::sl_editBuffer )
          // NOT sure which way it should behave.
          // XBase++ documentation IN this regard is crappy.

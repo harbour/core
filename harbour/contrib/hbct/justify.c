@@ -61,9 +61,7 @@
 /* helper function for the justxxx() functions */
 static void do_justify( int iSwitch )
 {
-   int iNoRet;
-
-   iNoRet = ct_getref() && HB_ISBYREF( 1 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    if( HB_ISCHAR( 1 ) )
    {

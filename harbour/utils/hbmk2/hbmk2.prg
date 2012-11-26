@@ -13522,7 +13522,7 @@ STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
    LOCAL xArg, cMessage
 
    cMessage := I_( "Could not execute:" ) + ";;" + cCommand + ";;"
-   IF oErr:ClassName == "ERROR"
+   IF oErr:ClassName() == "ERROR"
       cMessage += oErr:Description
       IF ! Empty( oErr:Operation )
          cMessage += " " + oErr:Operation
@@ -14507,7 +14507,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Libraries and object files built with/for CA-Cl*pper won't work with any supported platform/compiler." ) , ;
       I_( "Defaults and feature support may vary by platform/compiler." ) , ;
       hb_StrFormat( I_( "Options can also be specified in environment variable %1$s" ), _HBMK_ENV_NAME ), ;
-      I_( ".hb or .hrb file passed as first parameter will be run as Harbour script." ) , ;
+      I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default." ) , ;
       I_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ) }
 
    hb_default( @lLong, .F. )

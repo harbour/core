@@ -56,10 +56,8 @@
 
 HB_FUNC( CHARMIRR )
 {
-   int iNoRet;
-
    /* suppressing return value ? */
-   iNoRet = ct_getref() && HB_ISBYREF( 1 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    /* param check */
    if( HB_ISCHAR( 1 ) )

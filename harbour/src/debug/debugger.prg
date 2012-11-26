@@ -3410,7 +3410,7 @@ FUNCTION __dbgCStr( xVal )
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "S" ; RETURN "@" + xVal:name + "()"
    CASE "B" ; RETURN "{|| ... }"
-   CASE "O" ; RETURN "{ " + xVal:className + " Object }"
+   CASE "O" ; RETURN "{ " + xVal:className() + " Object }"
    CASE "A" ; RETURN "{ Array of " + hb_ntos( Len( xVal ) ) + " Items }"
    CASE "H" ; RETURN "{ Hash of " + hb_ntos( Len( xVal ) ) + " Items }"
    CASE "P" ; RETURN "<pointer>"

@@ -822,7 +822,7 @@ METHOD Decode( cData ) CLASS uhttpd_Session
 #if 0
       CASE "O"
          // TraceLog( "Decode - xVal - Object", xVal )
-         IF xVal:classname == "TASSOCIATIVEARRAY"
+         IF xVal:className() == "TASSOCIATIVEARRAY"
             // TraceLog( "Decode - xVal - Object - TAssociativeArray - Keys", xVal:Keys )
             FOR EACH cKey IN xVal:Keys
                // TraceLog( "Decode TassociativeArray - cKey, xVal:SendKey( cKey )", cKey, xVal:SendKey( cKey ) )

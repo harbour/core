@@ -81,6 +81,12 @@
    #xtranslate hb_eol() => ( Chr( 13 ) + Chr( 10 ) )
 #endif
 
+#define TEST_RESULT_COL1_WIDTH  1
+#define TEST_RESULT_COL2_WIDTH  20
+#define TEST_RESULT_COL3_WIDTH  40
+#define TEST_RESULT_COL4_WIDTH  85
+#define TEST_RESULT_COL5_WIDTH  85
+
 STATIC s_nPass
 STATIC s_nFail
 STATIC s_nFhnd
@@ -277,19 +283,19 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
 
    bErrorOld := ErrorBlock( {| oError | Break( oError ) } )
    BEGIN SEQUENCE
-      dbCreate( "_hbtmp_.dbf",;
-         { { "TYPE_C"   , "C", 15, 0 } ,;
-           { "TYPE_C_E" , "C", 15, 0 } ,;
-           { "TYPE_D"   , "D",  8, 0 } ,;
-           { "TYPE_D_E" , "D",  8, 0 } ,;
-           { "TYPE_M"   , "M", 10, 0 } ,;
-           { "TYPE_M_E" , "M", 10, 0 } ,;
-           { "TYPE_N_I" , "N", 11, 0 } ,;
-           { "TYPE_N_IE", "N", 11, 0 } ,;
-           { "TYPE_N_D" , "N", 11, 3 } ,;
-           { "TYPE_N_DE", "N", 11, 3 } ,;
-           { "TYPE_L"   , "L",  1, 0 } ,;
-           { "TYPE_L_E" , "L",  1, 0 } } )
+      dbCreate( "_hbtmp_.dbf", { ;
+         { "TYPE_C"   , "C", 15, 0 } ,;
+         { "TYPE_C_E" , "C", 15, 0 } ,;
+         { "TYPE_D"   , "D",  8, 0 } ,;
+         { "TYPE_D_E" , "D",  8, 0 } ,;
+         { "TYPE_M"   , "M", 10, 0 } ,;
+         { "TYPE_M_E" , "M", 10, 0 } ,;
+         { "TYPE_N_I" , "N", 11, 0 } ,;
+         { "TYPE_N_IE", "N", 11, 0 } ,;
+         { "TYPE_N_D" , "N", 11, 3 } ,;
+         { "TYPE_N_DE", "N", 11, 3 } ,;
+         { "TYPE_L"   , "L",  1, 0 } ,;
+         { "TYPE_L_E" , "L",  1, 0 } } )
 
       USE ( "_hbtmp_.dbf" ) NEW ALIAS w_TEST EXCLUSIVE
 
@@ -460,9 +466,9 @@ FUNCTION XToStr( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...}'
-   CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
-   CASE cType == "M" ; RETURN 'M:"' + xValue + '"'
+   CASE cType == "B" ; RETURN "{||...}"
+   CASE cType == "A" ; RETURN "{.[" + LTrim( Str( Len( xValue ) ) ) + "].}"
+   CASE cType == "M" ; RETURN "M:" + '"' + xValue + '"'
    ENDCASE
 
    RETURN ""
@@ -486,9 +492,9 @@ FUNCTION XToStrE( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...}'
-   CASE cType == "A" ; RETURN '{.[' + LTrim( Str( Len( xValue ) ) ) + '].}'
-   CASE cType == "M" ; RETURN 'M:' + xValue
+   CASE cType == "B" ; RETURN "{||...}"
+   CASE cType == "A" ; RETURN "{.[" + LTrim( Str( Len( xValue ) ) ) + "].}"
+   CASE cType == "M" ; RETURN "M:" + xValue
    ENDCASE
 
    RETURN ""
@@ -515,10 +521,10 @@ FUNCTION XToStrX( xValue )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"
-   CASE cType == "B" ; RETURN '{||...} -> ' + XToStrX( Eval( xValue ) )
+   CASE cType == "B" ; RETURN "{||...} -> " + XToStrX( Eval( xValue ) )
    CASE cType == "A"
 
-      cRetVal := '{ '
+      cRetVal := "{ "
 
       FOR tmp := 1 TO Len( xValue )
          cRetVal += XToStrX( xValue[ tmp ] )
@@ -527,9 +533,9 @@ FUNCTION XToStrX( xValue )
          ENDIF
       NEXT
 
-      RETURN cRetVal + ' }'
+      RETURN cRetVal + " }"
 
-   CASE cType == "M" ; RETURN 'M:' + xValue
+   CASE cType == "M" ; RETURN "M:" + xValue
    ENDCASE
 
    RETURN ""

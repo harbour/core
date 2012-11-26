@@ -138,7 +138,7 @@ FUNCTION dbModifyStructure( cFile )
       ENDIF
 
    RECOVER USING oErr
-      IF oErr:ClassName == "ERROR"
+      IF oErr:className() == "ERROR"
          IF oErr:genCode == EG_RENAME
             // This kind of error must be reported
             lRet := Throw( oErr )

@@ -131,9 +131,7 @@ HB_FUNC( CHARRELA )
 
 HB_FUNC( CHARRELREP )
 {
-   int iNoRet;
-
-   iNoRet = ct_getref() && HB_ISBYREF( 4 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 4 );
 
    if( HB_ISCHAR( 1 ) && HB_ISCHAR( 2 ) && HB_ISCHAR( 3 ) &&
        HB_ISCHAR( 4 ) && HB_ISCHAR( 5 ) )

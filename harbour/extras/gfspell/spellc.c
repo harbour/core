@@ -336,14 +336,12 @@ HB_FUNC( C_METAFONE )
          /* GN   -> N */
          if( sMeta[ iStrPtr + 1 ] == 'N' )
          {
-
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'N';
             iStrPtr += 2;
          }
          else if( sMeta[ iStrPtr + 1 ] == 'I' )
          {
-
             /* Put in the first return character and increment the pointer. */
             sReturn[ iRetPtr++ ] = 'K';
             iStrPtr += 2;

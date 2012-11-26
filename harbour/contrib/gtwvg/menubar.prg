@@ -334,11 +334,11 @@ METHOD WvgMenuBar:putItem( aItem, nPos, lInsert )
    ENDIF
 
    IF ++::nPass == 1
-      IF ::oParent:className $ "WVGCRT,WVGDIALOG"
+      IF ::oParent:className() $ "WVGCRT,WVGDIALOG"
          Wvg_SetMenu( ::oParent:getHWND(), ::hMenu )
       ENDIF
    ELSE
-      IF ::oParent:className $ "WVGCRT,WVGDIALOG"
+      IF ::oParent:className() $ "WVGCRT,WVGDIALOG"
          Wvg_DrawMenuBar( ::oParent:getHWND() )
       ENDIF
    ENDIF

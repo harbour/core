@@ -56,10 +56,8 @@
 
 HB_FUNC( ADDASCII )
 {
-   int iNoRet;
-
    /* suppressing return value ? */
-   iNoRet = ct_getref() && HB_ISBYREF( 1 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    if( HB_ISCHAR( 1 ) )
    {

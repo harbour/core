@@ -56,9 +56,7 @@
 
 HB_FUNC( POSCHAR )
 {
-   int iNoRet;
-
-   iNoRet = ct_getref() && HB_ISBYREF( 1 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    if( hb_parclen( 1 ) > 0 )
    {
@@ -267,9 +265,7 @@ HB_FUNC( POSINS )
 
 HB_FUNC( POSREPL )
 {
-   int iNoRet;
-
-   iNoRet = ct_getref() && HB_ISBYREF( 1 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 1 );
 
    if( HB_ISCHAR( 1 ) )
    {

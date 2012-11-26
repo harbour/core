@@ -101,7 +101,7 @@ METHOD WvgDrawingArea:create( oParent, oOwner, aPos, aSize, aPresParams, lVisibl
 
    ::oParent:addChild( Self )
 
-   Wvg_RegisterClass_ByName( ::className )
+   Wvg_RegisterClass_ByName( ::className() )
 
    ::createControl()
 

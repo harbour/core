@@ -473,7 +473,7 @@ METHOD WvgWindow:setColorBG( nRGB )
          ::clr_BG := nRGB
          ::hBrushBG := hBrush
 
-         IF ::className == "WVGDIALOG" .OR. __objGetClsName( Self ) == "WVGCHECKBOX"
+         IF ::className() == "WVGDIALOG" .OR. __objGetClsName( Self ) == "WVGCHECKBOX"
             Wvg_SetCurrentBrush( ::hWnd, ::hBrushBG )
          ENDIF
       ENDIF
@@ -576,7 +576,7 @@ METHOD WvgWindow:isDerivedFrom( cClassORoObject )
       ENDIF
 
    ELSEIF HB_ISOBJECT( cClassORoObject )
-      IF Upper( SubStr( cClassORoObject:className, 4 ) ) == Upper( SubStr( cCls, 4 ) )
+      IF Upper( SubStr( cClassORoObject:className(), 4 ) ) == Upper( SubStr( cCls, 4 ) )
          lTrue := .T.
       ENDIF
    ENDIF
@@ -1235,7 +1235,7 @@ METHOD WvgWindow:createControl()
 
    hWnd := Wvg_CreateWindowEx( ;
       ::exStyle, ;
-      ::className, ;
+      ::className(), ;
       "", ;                              /* window name */
       ::style, ;
       aPosSz[ 1 ], aPosSz[ 2 ], ;

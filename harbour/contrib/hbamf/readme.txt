@@ -54,7 +54,7 @@ Short description of Harbour functions
                  LOCAL lClose
 
                  IF HB_ISOBJECT( xVal )
-                     IF xVal:className == "WORKAREAEXPORT"
+                     IF xVal:className() == "WORKAREAEXPORT"
                        lClose := xVal:lCloseWA
                        SELECT ( xVal:nWorkArea )
 

@@ -438,7 +438,7 @@ METHOD WvtDialog:Inkey()
                   ::aObjects[ ::nObjOver ]:nType == DLG_OBJ_SCROLLBAR
 
                oObj := ::aObjects[ ::nObjOver ]
-               IF oObj:oParent:ClassName == "WVTBROWSE"
+               IF oObj:oParent:className() == "WVTBROWSE"
                   nID := oObj:oParent:nID
                   IF ( n := AScan( ::aObjects, {| o | o:nID == nID } ) ) > 0
                      ::nCurObj := n
@@ -503,7 +503,7 @@ METHOD WvtDialog:Inkey()
          IF ::nUseObj > 0
             IF !( ::lEventHandled := ::aObjects[ ::nUseObj ]:LeftDown() )
                ::lEventHandled := ::Eval( ::aObjects[ ::nUseObj ]:bOnLeftDown )
-               IF ::aObjects[ ::nUseObj ]:className == "WVTBROWSE"
+               IF ::aObjects[ ::nUseObj ]:className() == "WVTBROWSE"
                   ::lEventHandled := .F.
                ENDIF
             ENDIF

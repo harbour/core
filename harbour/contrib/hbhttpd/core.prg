@@ -1110,7 +1110,7 @@ STATIC FUNCTION cvt2str( xI, lLong )
             cI += ",XVALUE=" + cvt2str( xJ )
          ENDIF
       ENDIF
-      RETURN "[O:" + xI:ClassName + cI + "]"
+      RETURN "[O:" + xI:ClassName() + cI + "]"
    ELSEIF cValtype == "D"
       RETURN iif( lLong, "[D]:", "" ) + DToC( xI )
    ELSEIF cValtype == "L"

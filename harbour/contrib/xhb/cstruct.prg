@@ -354,7 +354,7 @@ STATIC PROCEDURE AllocateMembers( oStructure )
 
    aCTypes := oStructure:aCTypes
 
-   // TraceLog( "Scaning: " + oStructure:ClassName )
+   // TraceLog( "Scaning: " + oStructure:className() )
 
    FOR EACH CType IN aCTypes
       IF CType > CTYPE_STRUCTURE .AND. CType < CTYPE_STRUCTURE_PTR
@@ -363,7 +363,7 @@ STATIC PROCEDURE AllocateMembers( oStructure )
       ENDIF
    NEXT
 
-   // TraceLog( "Finished: " + oStructure:ClassName )
+   // TraceLog( "Finished: " + oStructure:className() )
 
    RETURN
 
@@ -493,12 +493,12 @@ STATIC FUNCTION SayMembers( cPad, lShowMembers, lReturnString )
    ENDIF
 
 #if 0
-   QOut( cPad + SubStr( QSelf():ClassName, 13 ) )
-   QOut( cPad + Replicate( "-", Len( SubStr( QSelf():ClassName, 13 ) ) ) )
+   QOut( cPad + SubStr( QSelf():className(), 13 ) )
+   QOut( cPad + Replicate( "-", Len( SubStr( QSelf():className(), 13 ) ) ) )
 #endif
 
-   cOut += cPad + SubStr( QSelf():ClassName, 13 )
-   cOut += hb_eol() + cPad + Replicate( "-", Len( SubStr( QSelf():ClassName, 13 ) ) )
+   cOut += cPad + SubStr( QSelf():className(), 13 )
+   cOut += hb_eol() + cPad + Replicate( "-", Len( SubStr( QSelf():className(), 13 ) ) )
 
    FOR EACH xProperty IN QSelf():Array
       IF hb_Is_CStructure( xProperty )
@@ -628,7 +628,7 @@ STATIC FUNCTION Init( aValues )
          EXIT
       ENDIF
 
-      IF Left( xProperty:ClassName, 11 ) == "C Structure"
+      IF Left( xProperty:className(), 11 ) == "C Structure"
          xProperty:Init( aValues[ xProperty:__enumIndex() ] )
       ELSE
          xProperty := aValues[ xProperty:__enumIndex() ]

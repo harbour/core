@@ -62,12 +62,6 @@
    #endif
 #endif
 
-#define TEST_RESULT_COL1_WIDTH  1
-#define TEST_RESULT_COL2_WIDTH  20
-#define TEST_RESULT_COL3_WIDTH  40
-#define TEST_RESULT_COL4_WIDTH  85
-#define TEST_RESULT_COL5_WIDTH  85
-
 #ifdef __HARBOUR__
    #pragma linenumber=on
 #else

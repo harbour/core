@@ -28,8 +28,7 @@ HB_FUNC( GT_CHRCOUNT )
          each character of s1 */
       for( count = 0, pos2 = 1; pos2 <= len; s2++, pos2++ )
          if( *s1 == *s2 )  /* character matches s1 */
-            count++;
-      /* increment counter */
+            count++;  /* increment counter */
 
       hb_retns( count );
    }

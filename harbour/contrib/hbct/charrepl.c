@@ -56,11 +56,10 @@
 
 HB_FUNC( CHARREPL )
 {
-   int iNoRet;
-   HB_SIZE sSearchLen, sReplaceLen;
-
    /* suppressing return value ? */
-   iNoRet = ct_getref() && HB_ISBYREF( 2 );
+   int iNoRet = ct_getref() && HB_ISBYREF( 2 );
+
+   HB_SIZE sSearchLen, sReplaceLen;
 
    /* param check */
    if( ( sSearchLen = hb_parclen( 1 ) ) > 0 && HB_ISCHAR( 2 ) &&
