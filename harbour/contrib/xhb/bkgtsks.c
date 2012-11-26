@@ -68,7 +68,7 @@
 
 HB_EXTERN_BEGIN
 
-typedef struct HB_BACKGROUNDTASK_
+typedef struct
 {
    HB_ULONG ulTaskID;      /* task identifier */
    PHB_ITEM pTask;         /* pointer to the task item */

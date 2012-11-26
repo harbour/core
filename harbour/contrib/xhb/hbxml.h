@@ -205,15 +205,15 @@ typedef struct tag_mxml_output
 
 } MXML_OUTPUT;
 
-
-typedef struct tag_mxml_self_growing_string
+/* tag mxml self growing string */
+typedef struct
 {
    char *  buffer;
    HB_ISIZ allocated;
    HB_ISIZ length;
 } MXML_SGS;
 
-typedef struct _hbxml_attribute
+typedef struct
 {
    PHB_ITEM pName;
    PHB_ITEM pValue;

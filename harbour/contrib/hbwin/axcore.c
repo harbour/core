@@ -240,14 +240,15 @@ typedef struct
 #endif
 
 
-typedef struct {
-   const IDispatchVtbl* lpVtbl;
-   DWORD                count;
-   IConnectionPoint*    pConnectionPoint;
-   DWORD                dwCookie;
-   IID                  rriid;
-   PHB_ITEM             pItemHandler;
-   HB_USHORT            uiClass;
+typedef struct
+{
+   const IDispatchVtbl * lpVtbl;
+   DWORD                 count;
+   IConnectionPoint *    pConnectionPoint;
+   DWORD                 dwCookie;
+   IID                   rriid;
+   PHB_ITEM              pItemHandler;
+   HB_USHORT             uiClass;
 } ISink;
 
 
@@ -368,7 +369,8 @@ static HRESULT STDMETHODCALLTYPE Invoke( IDispatch * lpThis, DISPID dispid, REFI
 }
 
 
-static const IDispatchVtbl ISink_Vtbl = {
+static const IDispatchVtbl ISink_Vtbl =
+{
    QueryInterface,
    AddRef,
    Release,

@@ -767,17 +767,17 @@
 
 /* RPC status code (win_UuidCreateString() first reference parameter) */
 #define HB_RPC_S_ERROR                     ( -1 )
-#define RPC_S_OK                           0
-#define RPC_S_INVALID_ARG                  87
-#define RPC_S_OUT_OF_MEMORY                14
-#define RPC_S_OUT_OF_THREADS               164
-#define RPC_S_INVALID_LEVEL                87
-#define RPC_S_BUFFER_TOO_SMALL             122
-#define RPC_S_INVALID_SECURITY_DESC        1338
-#define RPC_S_ACCESS_DENIED                5
-#define RPC_S_SERVER_OUT_OF_MEMORY         1130
-#define RPC_S_ASYNC_CALL_PENDING           997
-#define RPC_S_UNKNOWN_PRINCIPAL            1332
-#define RPC_S_TIMEOUT                      1460
+#define HB_RPC_S_OK                        0
+#define HB_RPC_S_INVALID_ARG               87
+#define HB_RPC_S_OUT_OF_MEMORY             14
+#define HB_RPC_S_OUT_OF_THREADS            164
+#define HB_RPC_S_INVALID_LEVEL             87
+#define HB_RPC_S_BUFFER_TOO_SMALL          122
+#define HB_RPC_S_INVALID_SECURITY_DESC     1338
+#define HB_RPC_S_ACCESS_DENIED             5
+#define HB_RPC_S_SERVER_OUT_OF_MEMORY      1130
+#define HB_RPC_S_ASYNC_CALL_PENDING        997
+#define HB_RPC_S_UNKNOWN_PRINCIPAL         1332
+#define HB_RPC_S_TIMEOUT                   1460
 
 #endif /* HBWIN_CH_ */

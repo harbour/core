@@ -67,13 +67,12 @@
 
 #define TOKEN_ENVIRONMENT_STEP  100
 
-typedef struct _TOKEN_POSITION
+typedef struct
 {
    HB_SIZE sStartPos;            /* relative 0-based index of first char of token */
    HB_SIZE sEndPos;              /* relative 0-based index of first char BEHIND token,
                                     so that length = sEndPos-sStartPos */
-} TOKEN_POSITION;
-typedef TOKEN_POSITION * TOKEN_ENVIRONMENT;
+} TOKEN_POSITION, * TOKEN_ENVIRONMENT;
 
 /* alloc new token environment */
 static TOKEN_ENVIRONMENT sTokEnvNew( void )
