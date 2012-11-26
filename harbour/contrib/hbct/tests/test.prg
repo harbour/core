@@ -137,7 +137,7 @@ PROCEDURE Main()
    HBTEST CharSort( "XXXqwert", 1, 1, 3 )         IS "XXXeqrtw"
    HBTEST CharSort( "b1a4a3a2a1", 2, 1, 0, 1 )    IS "a1b1a2a3a4"
    HBTEST CharSort( "384172852", 1, 1, 0, 0, 4 )  IS "134872852"
-   HBTEST CharSort( "qwert", .T. )                IS "wtrqe"
+   HBTEST CharSort( "qwert",,,,,, .T. )           IS "wtrqe"
 
    HBTEST CharSwap( "0123456789" )  IS "1032547698"
    HBTEST CharSwap( "ABCDEFGHIJK" ) IS "BADCFEHGJIK"
@@ -171,7 +171,7 @@ PROCEDURE Main()
    HBTEST Round( Celsius( 32.0 ), 1 )  IS 0.0
    HBTEST Round( Celsius( 212.0 ), 1 ) IS 100.0
    HBTEST Round( Fahrenheit( 0.0 ), 1 ) IS 32.0
-   HBTEST Round( Celsius( 100.0 ), 1 ) IS 212.0
+   HBTEST Round( Celsius( 100.0 ), 2 ) IS 37.78
 
    HBTEST RangeRem( "0", "9", "year2002.dbf" ) IS "year.dbf"
    HBTEST RangeRem( "9", "0", "year2002.dbf" ) IS "22"
