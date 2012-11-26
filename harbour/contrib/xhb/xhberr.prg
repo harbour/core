@@ -481,25 +481,25 @@ STATIC FUNCTION LogError( oerr )
 
       hb_WAEval( {||
          IF hb_IsFunction( "Select" )
-            FWriteLine( nHandle, "Work Area No ......: " + strvalue( Eval( hb_macroBlock( "Select()" ) ) ) )
+            FWriteLine( nHandle, "Work Area No ......: " + strvalue( Eval( __dynsN2Sym( "Select" ) ) ) )
          ENDIF
          IF hb_IsFunction( "Alias" )
-            FWriteLine( nHandle, "Alias .............: " + Eval( hb_macroBlock( "Alias()" ) ) )
+            FWriteLine( nHandle, "Alias .............: " + Eval( __dynsN2Sym( "Alias" ) ) )
          ENDIF
          IF hb_IsFunction( "RecNo" )
-            FWriteLine( nHandle, "Current Recno .....: " + strvalue( Eval( hb_macroBlock( "RecNo()" ) ) ) )
+            FWriteLine( nHandle, "Current Recno .....: " + strvalue( Eval( __dynsN2Sym( "RecNo" ) ) ) )
          ENDIF
-         IF hb_IsFunction( "DbFilter" )
-            FWriteLine( nHandle, "Current Filter ....: " + Eval( hb_macroBlock( "dbFilter()" ) ) )
+         IF hb_IsFunction( "dbFilter" )
+            FWriteLine( nHandle, "Current Filter ....: " + Eval( __dynsN2Sym( "dbFilter" ) ) )
          ENDIF
-         IF hb_IsFunction( "DbRelation" )
-            FWriteLine( nHandle, "Relation Exp. .....: " + Eval( hb_macroBlock( "dbRelation()" ) ) )
+         IF hb_IsFunction( "dbRelation" )
+            FWriteLine( nHandle, "Relation Exp. .....: " + Eval( __dynsN2Sym( "dbRelation" ) ) )
          ENDIF
          IF hb_IsFunction( "IndexOrd" )
-            FWriteLine( nHandle, "Index Order .......: " + strvalue( Eval( hb_macroBlock( "IndexOrd(0)" ) ) ) )
+            FWriteLine( nHandle, "Index Order .......: " + strvalue( Eval( __dynsN2Sym( "IndexOrd" ) ) ) )
          ENDIF
          IF hb_IsFunction( "IndexKey" )
-            FWriteLine( nHandle, "Active Key ........: " + strvalue( Eval( hb_macroBlock( "IndexKey(0)" ) ) ) )
+            FWriteLine( nHandle, "Active Key ........: " + strvalue( Eval( hb_macroBlock( "IndexKey( 0 )" ) ) ) )
          ENDIF
          FWriteLine( nHandle, "" )
          RETURN .T.
