@@ -382,7 +382,7 @@ METHOD Output() CLASS UWBrowse
          xField := Self:aColumns[ nI, 3 ]
          IF HB_ISSTRING( xField )
             xI := FieldGet( FieldPos( xField ) )
-         ELSEIF HB_ISBLOCK( xField )
+         ELSEIF HB_ISEVALITEM( xField )
             xI := Eval( xField )
          ENDIF
          SWITCH ValType( xI )

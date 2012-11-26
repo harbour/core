@@ -194,7 +194,7 @@ METHOD New( oUrl, xTrace, oCredentials ) CLASS TIPClient
       ( HB_ISLOGICAL( xTrace ) .AND. xTrace )
       oLog := TIPLog():New( iif( HB_ISSTRING( xTrace ), xTrace, NIL ) )
       ::bTrace := {| cMsg | iif( PCount() > 0, oLog:Add( cMsg ), oLog:Close() ) }
-   ELSEIF HB_ISBLOCK( xTrace )
+   ELSEIF HB_ISEVALITEM( xTrace )
       ::bTrace := xTrace
    ENDIF
 
@@ -382,7 +382,7 @@ METHOD Close() CLASS TIPClient
       ::isOpen := .F.
    ENDIF
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
       /* Call with no parameter to signal end of logging session */
       Eval( ::bTrace )
    ENDIF
@@ -560,9 +560,9 @@ METHOD WriteFromFile( cFile ) CLASS TIPClient
 
    RETURN .T.
 
-/*
-HZ: METHOD :getOk() is not declared in TIPClient
+#if 0
 
+/* HZ: METHOD :getOk() is not declared in TIPClient */
 METHOD Data( cData ) CLASS TIPClient
    ::InetSendall( ::SocketCon, "DATA" + ::cCRLF )
    IF ! ::GetOk()
@@ -570,7 +570,8 @@ METHOD Data( cData ) CLASS TIPClient
    ENDIF
    ::InetSendall(::SocketCon, cData + ::cCRLF + "." + ::cCRLF )
    RETURN ::GetOk()
-*/
+
+#endif
 
 METHOD Write( cData, nLen, bCommit ) CLASS TIPClient
 
@@ -610,7 +611,7 @@ METHOD inetSendAll( SocketCon, cData, nLen ) CLASS TIPClient
       nRet := hb_inetSendAll( SocketCon, cData, nLen )
    ENDIF
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
       ::Log( SocketCon, nlen, cData, nRet )
    ENDIF
 
@@ -620,7 +621,7 @@ METHOD inetCount( SocketCon ) CLASS TIPClient
 
    LOCAL nRet := hb_inetCount( SocketCon )
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
       ::Log( SocketCon, nRet )
    ENDIF
 
@@ -644,7 +645,7 @@ METHOD inetRecv( SocketCon, cStr1, len ) CLASS TIPClient
       nRet := hb_inetRecv( SocketCon, @cStr1, len )
    ENDIF
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
       ::Log( SocketCon, "", len, iif( nRet >= 0, cStr1, nRet ) )
    ENDIF
 
@@ -672,7 +673,7 @@ METHOD inetRecvLine( SocketCon, nRet, size ) CLASS TIPClient
       cRet := hb_inetRecvLine( SocketCon, @nRet, size )
    ENDIF
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
       ::Log( SocketCon, "", size, cRet )
    ENDIF
 
@@ -700,7 +701,7 @@ METHOD inetRecvAll( SocketCon, cRet, size ) CLASS TIPClient
       nRet := hb_inetRecvAll( SocketCon, @cRet, size )
    ENDIF
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
       ::Log( SocketCon, "", size, iif( nRet >= 0, cRet, nRet ) )
    ENDIF
 
@@ -722,7 +723,7 @@ METHOD inetErrorCode( SocketCon ) CLASS TIPClient
 
    ::nLastError := nRet
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
       ::Log( SocketCon, nRet )
    ENDIF
 
@@ -768,7 +769,7 @@ METHOD inetConnect( cServer, nPort, SocketCon ) CLASS TIPClient
       /* TODO: Add error handling */
    ENDIF
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
       ::Log( cServer, nPort, SocketCon )
    ENDIF
 
@@ -812,7 +813,7 @@ METHOD Log( ... ) CLASS TIPClient
    LOCAL xVar
    LOCAL cMsg
 
-   IF HB_ISBLOCK( ::bTrace )
+   IF HB_ISEVALITEM( ::bTrace )
 
       cMsg := DToS( Date() ) + "-" + Time() + Space( 2 ) + ;
          SubStr( ProcName( 1 ), RAt( ":", ProcName( 1 ) ) ) + ;

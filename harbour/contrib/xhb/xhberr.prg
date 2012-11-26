@@ -481,22 +481,22 @@ STATIC FUNCTION LogError( oerr )
 
       hb_WAEval( {||
          IF hb_IsFunction( "Select" )
-            FWriteLine( nHandle, "Work Area No ......: " + strvalue( Eval( __dynsN2Sym( "Select" ) ) ) )
+            FWriteLine( nHandle, "Work Area No ......: " + strvalue( Do( "Select" ) ) )
          ENDIF
          IF hb_IsFunction( "Alias" )
-            FWriteLine( nHandle, "Alias .............: " + Eval( __dynsN2Sym( "Alias" ) ) )
+            FWriteLine( nHandle, "Alias .............: " + Do( "Alias" ) )
          ENDIF
          IF hb_IsFunction( "RecNo" )
-            FWriteLine( nHandle, "Current Recno .....: " + strvalue( Eval( __dynsN2Sym( "RecNo" ) ) ) )
+            FWriteLine( nHandle, "Current Recno .....: " + strvalue( Do( "RecNo" ) ) )
          ENDIF
          IF hb_IsFunction( "dbFilter" )
-            FWriteLine( nHandle, "Current Filter ....: " + Eval( __dynsN2Sym( "dbFilter" ) ) )
+            FWriteLine( nHandle, "Current Filter ....: " + Do( "dbFilter" ) )
          ENDIF
          IF hb_IsFunction( "dbRelation" )
-            FWriteLine( nHandle, "Relation Exp. .....: " + Eval( __dynsN2Sym( "dbRelation" ) ) )
+            FWriteLine( nHandle, "Relation Exp. .....: " + Do( "dbRelation" ) )
          ENDIF
          IF hb_IsFunction( "IndexOrd" )
-            FWriteLine( nHandle, "Index Order .......: " + strvalue( Eval( __dynsN2Sym( "IndexOrd" ) ) ) )
+            FWriteLine( nHandle, "Index Order .......: " + strvalue( Do( "IndexOrd" ) ) )
          ENDIF
          IF hb_IsFunction( "IndexKey" )
             FWriteLine( nHandle, "Active Key ........: " + strvalue( Eval( hb_macroBlock( "IndexKey( 0 )" ) ) ) )
