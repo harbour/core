@@ -28,8 +28,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -69,8 +67,6 @@
 
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started

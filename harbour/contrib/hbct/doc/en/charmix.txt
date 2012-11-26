@@ -32,12 +32,6 @@
       ? CharMix( "AB", "12345" )   // "A1B2"
       ? CharMix( "HELLO", " " )    //  "H E L L O "
       ? CharMix( "HELLO", "" )     //  "HELLO"
-   $TESTS$
-      CharMix( "ABC", "123" )  == "A1B2C3"
-      CharMix( "ABCDE", "12" ) == "A1B2C1D2E1"
-      CharMix( "AB", "12345" ) == "A1B2"
-      CharMix( "HELLO", " " )  == "H E L L O "
-      CharMix( "HELLO", "" )   == "HELLO"
    $STATUS$
       Ready
    $COMPLIANCE$

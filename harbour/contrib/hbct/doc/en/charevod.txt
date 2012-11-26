@@ -21,10 +21,6 @@
       in a given string, collects them and returns them as a string.
    $EXAMPLES$
       ? CharEven( " H E L L O !" ) // -> "HELLO!"
-   $TESTS$
-      CharEven( " 1 2 3 4 5" ) == "12345"
-      CharEven( " 1 2 3 4 " ) == "1234"
-      CharEven( " " ) == ""
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -57,9 +53,6 @@
       in a given string, collects them and returns them as a string.
    $EXAMPLES$
       ? CharOdd( "H E L L O ! " ) // -> "HELLO!"
-   $TESTS$
-      CharOdd( "1A2B3C4D5E" ) == "12345"
-      CharOdd( "1A2B3C4D5" )  == "12345"
    $STATUS$
       Ready
    $COMPLIANCE$

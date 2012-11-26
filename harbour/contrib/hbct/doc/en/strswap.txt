@@ -19,8 +19,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$

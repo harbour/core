@@ -59,11 +59,6 @@
    $EXAMPLES$
       ? Sin( 0.0 ) // --> 0.0
       ? Sin( 1.0 ) // --> 0.8414...
-   $TESTS$
-      Sin( 0.0 ) == 0.0
-      Sin( Pi() / 4 ) == Sqrt( 1 / 2 )
-      Sin( Pi() / 2 ) == 1.0
-      Sin( Pi() ) == 0.0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -99,11 +94,6 @@
    $EXAMPLES$
       ? Cos( 0.0 ) // --> 1.0
       ? Cos( 1.0 ) // --> 0.5403...
-   $TESTS$
-      Cos( 0.0 ) == 1.0
-      Cos( Pi() / 4 ) == Sqrt( 1 / 2 )
-      Cos( Pi() / 2 ) == 0.0
-      Cos( Pi() ) == -1.0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -140,10 +130,6 @@
    $EXAMPLES$
       ? Tan( 0.0 ) // --> 0.0
       ? Tan( 1.0 ) // --> 1.5574...
-   $TESTS$
-      Tan( 0.0 ) == 0.0
-      Tan( Pi() / 4 ) == 1
-      Tan( Pi() ) == 0.0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -179,9 +165,6 @@
       Cot(x) = Cos(x)/Sin(x)=1/Tan(x).
    $EXAMPLES$
       ? Cot( 1.0 ) // --> 0.6420...
-   $TESTS$
-      Cot( Pi() / 4 ) == 1
-      Cot( Pi() / 2 ) == 0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -218,11 +201,6 @@
    $EXAMPLES$
       ? Asin( 0.0 ) // --> 0.0
       ? Asin( 0.5 ) // --> 0.5235...
-   $TESTS$
-      Asin( 0.0 ) == 0.0
-      Asin( Sqrt( 1 / 2 ) ) == Pi() / 4
-      Asin( 1.0 ) == Pi() / 2
-      Asin( 0.0 ) == 0.0  // and not Pi(), since the smallest angle is returned !
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -259,12 +237,6 @@
    $EXAMPLES$
       ? Acos( 0.0 ) // --> Pi() / 2
       ? Acos( 0.5 ) // --> 1.04719...
-   $TESTS$
-      Acos( 0.0 ) == Pi() / 2
-      Acos( Sqrt( 1 / 2 ) ) == Pi() / 4
-      Acos( 1.0 ) == 0.0
-      Acos( -1.0 ) == Pi()
-      Acos( 0.0 ) == Pi() / 2  // and not -Pi()/2, although cos (-Pi()/2) == 0.0 !
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -299,10 +271,6 @@
    $EXAMPLES$
       ? Atan( 0.0 ) // --> 0.0
       ? Atan( 0.5 ) // --> 0.4636...
-   $TESTS$
-      Atan( 0.0 ) == 0.0
-      Atan( 1.0 ) == Pi() / 4
-      Atan( 0.0 ) == 0.0 // and not Pi(), although Tan( Pi() ) == 0.0 !
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -344,10 +312,6 @@
    $EXAMPLES$
       ? Atn2( 0.0, 1.0 ) // --> 0.0
       ? Atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) // --> Pi() / 4
-   $TESTS$
-      Atn2( 0.0, 1.0 ) == 0.0
-      Atn2( Sqrt( 1 / 2 ), Sqrt( 1 / 2 ) ) == Pi() / 4
-      Atn2( -Sqrt( 1 / 2 ), -Sqrt( 1 / 2 ) ) == -3 / 4 * Pi()  // Atan() would return Pi() / 4 !
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -384,9 +348,6 @@
    $EXAMPLES$
       ? Sinh( 0.0 ) // --> 0.0
       ? Sinh( 1.0 ) // --> 1.1752...
-   $TESTS$
-      Sinh( 0.0 ) == 0.0
-      Sinh( -0.5 ) == -Sinh( 0.5 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -423,9 +384,6 @@
    $EXAMPLES$
       ? Cosh( 0.0 ) // --> 1.0
       ? Cosh( 1.0 ) // --> 1.5430...
-   $TESTS$
-      Cosh( 0.0 ) == 1.0
-      Cosh( -0.5 ) == Cosh( 0.5 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -458,9 +416,6 @@
    $EXAMPLES$
       ? Tanh( 0.0 ) // --> 0.0
       ? Tanh( 1.0 ) // --> 0.7615...
-   $TESTS$
-      Tanh( 0.0 ) == 0.0
-      Tanh( -0.5 ) == -Tanh( 0.5 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -494,9 +449,6 @@
    $EXAMPLES$
       ? RToD( Pi() ) // --> 180
       ? Tanh( Pi() / 3 ) // --> 60
-   $TESTS$
-      RToD( 0.0 ) == 0.0
-      RToD( Pi() ) == 180.0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -529,9 +481,6 @@
    $EXAMPLES$
       ? DToR( 180 ) // --> Pi()
       ? DToR( 60 ) // --> Pi() / 3
-   $TESTS$
-      DToR( 0.0 ) == 0.0
-      DToR( 180.0 ) == Pi()
    $STATUS$
       Ready
    $COMPLIANCE$

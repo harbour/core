@@ -24,9 +24,6 @@
       characters first that are occuring in <cString> first.
    $EXAMPLES$
       ? CharList( "Hello World !" ) // --> "Helo Wrd!"
-   $TESTS$
-      CharList( "Hello World !" ) == "Helo Wrd!"
-      CharList( NIL ) == ""
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -62,9 +59,6 @@
       sorted.
    $EXAMPLES$
       ? CharNoList( CharNoList( "Hello World !" ) ) // --> " !HWdelor"
-   $TESTS$
-      CharNoList( CharNoList( "Hello World !" ) ) == CharSList( "Hello World !" )
-      CharNoList( CharNoList( NIL ) ) == ""
    $STATUS$
       Ready
    $COMPLIANCE$

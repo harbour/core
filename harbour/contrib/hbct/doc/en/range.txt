@@ -22,10 +22,6 @@
       ? RangeRem( "9", "0", "year2002.dbf" ) // "22", testing removal from "9" to Chr(255)
                                              // and from Chr(0) to "0"
       ? RangeRem( "0", "9", "yearcurr.dbf" ) // "yearcurr.dbf", test leaving string untouched
-   $TESTS$
-      RangeRem( "0", "9", "year2002.dbf" ) == "year.dbf"
-      RangeRem( "9", "0", "year2002.dbf" ) == "22"
-      RangeRem( "0", "9", "yearcurr.dbf" ) == "yearcurr.dbf"
    $STATUS$
       Started
    $COMPLIANCE$
@@ -60,10 +56,6 @@
       ? RangeRepl( "9", "0", "year2002.dbf", "?" ) // "????2??2????", testing replacement from "9" to Chr(255)
                                                    // and from Chr(0) to "0"
       ? RangeRepl( "0", "9", "yearcurr.dbf", "?" ) // "yearcurr.dbf", test leaving string untouched
-   $TESTS$
-      RangeRepl( "0", "9", "year2002.dbf", "?" ) == "year????.dbf"
-      RangeRepl( "9", "0", "year2002.dbf", "?" ) == "????2??2????"
-      RangeRepl( "0", "9", "yearcurr.dbf", "?" ) == "yearcurr.dbf"
    $STATUS$
       Started
    $COMPLIANCE$

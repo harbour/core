@@ -23,10 +23,6 @@
    $EXAMPLES$
       ? AsciiSum( "ABC" ) // -->  197
       ? AsciiSum( "ACB" ) // -->  197
-   $TESTS$
-      AsciiSum( Replicate( "A", 10000 ) ) == 650000
-      AsciiSum( "0123456789" ) == 525
-      AsciiSum( NIL ) == 0
    $STATUS$
       Ready
    $COMPLIANCE$

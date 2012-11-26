@@ -29,8 +29,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -60,8 +58,6 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -96,8 +92,6 @@
       attributes.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -127,8 +121,6 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -181,8 +173,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -223,8 +213,6 @@
       Exchanges particular characters in a screen area.
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -269,8 +257,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -305,8 +291,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -340,8 +324,6 @@
       Exchanges particular screen attributes
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started

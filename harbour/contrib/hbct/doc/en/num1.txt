@@ -23,9 +23,6 @@
       ? Celsius( 32.0 )      // --> 0.0
       // boiling point of water in standard conditions
       ? Celsius( 212.0 )     // --> 100.0
-   $TESTS$
-      Celsius( 32.0 )  == 0.0
-      Celsius( 212.0 ) == 100.0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -60,9 +57,6 @@
       ? Fahrenheit( 0.0 )       // --> 32.0
       // boiling point of water in standard conditions
       ? Fahrenheit( 100.0 )     // --> 212.0
-   $TESTS$
-      Fahrenheit( 0.0 ) == 32.0
-      Celsius( 100.0 ) == 212.0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -98,8 +92,6 @@
       Infinity() returns the largest floating point number available
       in the system. For platform independance, this is set to DBL_MAX.
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Ready

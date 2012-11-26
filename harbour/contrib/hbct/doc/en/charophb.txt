@@ -31,11 +31,6 @@
       ? CharSub( "012345678", Chr( 1 ) ) // --> "/01234567"
       ? CharSub( "123456789", Chr( 255 ) ) // --> "23456789:"
       ? CharSub( "9999", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "9876"
-   $TESTS$
-      CharSub( "123456789", Chr( 1 ) ) == "012345678"
-      CharSub( "123456789", Chr( 1 ) + Chr( 2 ) ) == "002244668"
-      CharSub( "012345678", Chr( 255 ) ) == "123456789"
-      CharSub( "012345678", Chr( 255 ) + Chr( 254 ) ) == "133557799"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -81,9 +76,6 @@
       ? CharShl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
                  Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(0)+Chr(0)+Chr(0)
-   $TESTS$
-      CharShl( Chr(  1 ) + Chr(  2 ) + Chr(  4 ) + Chr(   8 ) + ;
-               Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 0 ) + Chr( 0 ) + Chr( 0 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -128,8 +120,6 @@
    $EXAMPLES$
       ? CharShr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(0)+Chr(0)+Chr(0)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
-   $TESTS$
-      CharShr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 0 ) + Chr( 0 ) + Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -174,8 +164,6 @@
    $EXAMPLES$
       ? CharRll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(8)+Chr(16)+Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)
-   $TESTS$
-      CharRll( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 )
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -220,8 +208,6 @@
    $EXAMPLES$
       ? CharRlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 )
       // --> Chr(32)+Chr(64)+Chr(128)+Chr(1)+Chr(2)+Chr(4)+Chr(8)+Chr(16)
-   $TESTS$
-      CharRlr( Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 ) + Chr( 32 ) + Chr( 64 ) + Chr( 128 ), 3 ) == Chr( 32 ) + Chr( 64 ) + Chr( 128 ) + Chr( 1 ) + Chr( 2 ) + Chr( 4 ) + Chr( 8 ) + Chr( 16 )
    $STATUS$
       Ready
    $COMPLIANCE$

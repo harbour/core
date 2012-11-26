@@ -41,10 +41,6 @@
       ? AfterAtNum( "!", "What is the answer ? 4 ! 5 !" ) // -> ""
       ? AfterAtNum( "!", "What is the answer ? 4 ! 5 ?" ) // -> " 5 ?"
       <TODO: add some examples here with CSetAtMupa() and SetAtLike()>
-   $TESTS$
-      AfterAtNum( "..", "..This..is..a..test!" ) == "test!"
-      AfterAtNum( "..", "..This..is..a..test!", 2 ) == "is..a..test!"
-      AfterAtNum( "..", "..This..is..a..test!", 2, 2 ) == "a..test!"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -97,10 +93,6 @@
       ? BeforAtNum( "!", "What is the answer ? 4 ! 5 !" ) // -> "What is the answer ? 4 ! 5 "
       ? BeforAtNum( "!", "What is the answer ? 4 ! 5 ?" ) // -> "What is the answer ? 4 "
       <TODO: add some examples here with CSetAtMupa() and SetAtLike()>
-   $TESTS$
-      BeforAtNum( "..", "..This..is..a..test!" ) == "..This..is..a"
-      BeforAtNum( "..", "..This..is..a..test!", 2 ) == "..This"
-      BeforAtNum( "..", "..This..is..a..test!", 2, 2 ) == "..This..is"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -152,10 +144,6 @@
       ? AtNum( "!", "What is the answer ? 4 ! 5 !" ) // -> 28
       ? AtNum( "!", "What is the answer ? 4 ! 5 ?" ) // -> 24
       <TODO: add some examples here with CSetAtMupa() and SetAtLike()>
-   $TESTS$
-      AtNum( "..", "..This..is..a..test!" ) == 14
-      AtNum( "..", "..This..is..a..test!", 2 ) == 7
-      AtNum( "..", "..This..is..a..test!", 2, 2 ) == 11
    $STATUS$
       Ready
    $COMPLIANCE$

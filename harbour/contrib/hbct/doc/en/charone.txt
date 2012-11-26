@@ -28,11 +28,6 @@
       ? CharOne( "A  B  CCCD" )      // "A B CD"
       ? CharOne( " ", "A  B  A  B" ) // "A B A B"
       ? CharOne( "o", "122oooB12o" ) // "122oB12o"
-   $TESTS$
-      CharOne( "122333a123" )      == "123a123"
-      CharOne( "A  B  CCCD" )      == "A B CD"
-      CharOne( " ", "A  B  A  B" ) == "A B A B"
-      CharOne( "o", "122oooB12o" ) == "122oB12o"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -70,10 +65,6 @@
       ? WordOne( "12ABAB12" )       // "12AB12"
       ? WordOne( "1AAAA2" )         // "1AAAA2"
       ? WordOne( "12", "1212ABAB" ) // "12ABAB"
-   $TESTS$
-      WordOne( "12ABAB12" )       == "12AB12"
-      WordOne( "1AAAA2" )         == "1AAAA2"
-      WordOne( "12", "1212ABAB" ) == "12ABAB"
    $STATUS$
       Ready
    $COMPLIANCE$

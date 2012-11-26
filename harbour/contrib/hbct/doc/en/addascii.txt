@@ -41,16 +41,6 @@
       // in the string
 
       ? AddAscii( "SmitH", 32 ) // --> "Smith"
-   $TESTS$
-      AddAscii( "0000", 1, 1 ) == "1000"
-      AddAscii( "0000", 1 ) == "0001"
-      AddAscii( "AAAA", -255, 1 ) == "BAAA"
-      AddAscii( "AAAA", -255 ) == "AAAB"
-      AddAscii( "AAAA", 1, 2, .T. ) == "ABAA"
-      AddAscii( "AAAA", 257, 2, .T. ) == "BBAA"
-      AddAscii( "AAAA", 257, 2, .F. ) == "ABAA"
-      AddAscii( "AAAA", 258,, .T. ) == "AABC"
-      AddAscii( "ABBA", -257, 3, .T. ) == "AAAA"
    $STATUS$
       Ready
    $COMPLIANCE$

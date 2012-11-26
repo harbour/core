@@ -21,9 +21,6 @@
    $EXAMPLES$
       ? Floor( 1.1 )  // --> 1.0
       ? Floor( -1.1 ) // --> -2.0
-   $TESTS$
-      Floor( 1.1 )  == 1.0
-      Floor( -1.1 ) == -2.0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -56,9 +53,6 @@
    $EXAMPLES$
       ? Ceiling( 1.1 )  // --> 2.0
       ? Ceiling( -1.1 ) // --> -1.0
-   $TESTS$
-      Ceiling( 1.1 )  == 2.0
-      Ceiling( -1.1 ) == -1.0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -94,10 +88,6 @@
       ? Sign( 1.1 )   // --> 1
       ? Sign( -1.1 )  // --> -1
       ? Sign( 0.0 )   // --> 0
-   $TESTS$
-      Sign( 1.1 )  == 1
-      Sign( -1.1 ) == -1
-      Sign( 0.0 )  == 0
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -130,9 +120,6 @@
    $EXAMPLES$
       ? Log10( 10.0 )         // --> 1.0
       ? Log10( Sqrt( 10.0 ) ) // --> 0.5
-   $TESTS$
-      Log10( 10.0 )         == 1.0
-      Log10( Sqrt( 10.0 ) ) == 0.5
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -168,10 +155,6 @@
       ? Fact( 0 ) // --> 1
       ? Fact( 1 ) // --> 1
       ? Fact( 4 ) // --> 24
-   $TESTS$
-      Fact( 0 ) == 1
-      Fact( 1 ) == 1
-      Fact( 4 ) == 24
    $STATUS$
       Ready
    $COMPLIANCE$

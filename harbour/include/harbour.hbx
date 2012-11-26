@@ -1387,8 +1387,9 @@ DYNAMIC __hbdoc_LoadDir
 DYNAMIC __hbdoc_LoadHBD
 DYNAMIC __hbdoc_SaveHBD
 DYNAMIC __hbdoc_ToSource
-DYNAMIC __hbtest_Setup
 DYNAMIC __hbtest_Call
+DYNAMIC __hbtest_NumGetDec
+DYNAMIC __hbtest_Setup
 DYNAMIC __HBHash
 DYNAMIC __HBLogical
 DYNAMIC __HBNil

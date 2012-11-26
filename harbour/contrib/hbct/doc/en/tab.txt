@@ -31,14 +31,6 @@
       TODO: add documentation
    $EXAMPLES$
 
-   $TESTS$
-      TabExpand( "-" + Chr( 9 ) + "!" )             == "-       !"
-      TabExpand( "----" + Chr( 9 ) + "!" )         == "----    !"
-      TabExpand( "-" + Chr( 9 ) + "!", , "+" )       == "-+++++++!"
-      TabExpand( "-" + Chr( 9 ) + "!", 4 )         == "-   !"
-      TabExpand( "----" + Chr( 9 ) + "!", 8 )      == "----    !"
-      TabExpand( "----" + Chr( 9 ) + "!", 8, "+" ) == "----++++!"
-      TabExpand( "-" + Chr( 9 ) + "!" + hb_eol() + "----" + Chr( 9 ) + "!", , "+" ) == "-+++++++!" + hb_eol() + "----++++!"
    $STATUS$
       Started
    $COMPLIANCE$
@@ -82,8 +74,6 @@
    $DESCRIPTION$
       TODO: add documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started

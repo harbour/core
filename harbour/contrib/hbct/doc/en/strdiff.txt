@@ -50,13 +50,6 @@
       ? StrDiff( "ABC", "AXBC" ) // 1, one character inserted
       ? StrDiff( "AXBC", "ABC" ) // 6, one character removed
       ? StrDiff( "AXBC", "ADC" ) // 9, one character removed and one replaced
-   $TESTS$
-      StrDiff( "ABC", "ADC" ) == 3
-      StrDiff( "ABC", "AEC" ) == 3
-      StrDiff( "CBA", "ABC" ) == 6
-      StrDiff( "ABC", "AXBC" ) == 1
-      StrDiff( "AXBC", "ABC" ) == 6
-      StrDiff( "AXBC", "ADC" ) == 9
    $STATUS$
       Ready
    $COMPLIANCE$

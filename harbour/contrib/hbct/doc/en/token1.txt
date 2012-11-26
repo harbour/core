@@ -44,11 +44,6 @@
       is within the tokenizer list.
    $EXAMPLES$
       AtToken( "Hello, World!" ) // --> 8 (empty strings after tokenizer are not a token !)
-   $TESTS$
-      AtToken( "Hello, World!" ) == 8
-      AtToken( "Hello, World!",, 2 ) == 8
-      AtToken( "Hello, World!",, 2, 1 ) == 7
-      AtToken( "Hello, World!", " ", 2, 1 ) == 8
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -113,11 +108,6 @@
       ? Token( "Hello, World!",, 2, 1 )     --> ""
       ? Token( "Hello, World!", ",", 2, 1 ) --> " World!"
       ? Token( "Hello, World!", " ", 2, 1 ) --> "World!"
-   $TESTS$
-      Token( "Hello, World!" )            == "World"
-      Token( "Hello, World!",, 2, 1 )     == ""
-      Token( "Hello, World!", ",", 2, 1 ) == " World!"
-      Token( "Hello, World!", " ", 2, 1 ) == "World!"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -150,10 +140,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-      NumToken( "Hello, World!" ) ==  2
-      NumToken( "This is good. See you! How do you do?", ".!?" ) == 3
-      NumToken( "one,,three,four,,six", ",", 1 ) ==  6
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -209,11 +195,6 @@
       ? TokenLower( "Hello, World, here I am!",, 3 )     // "hello, world, here I am!"
       ? TokenLower( "Hello, World, here I am!", ",", 3 ) // "hello, World, here I am!"
       ? TokenLower( "Hello, World, here I am!", " W" )   // "hello, World, here i am!"
-   $TESTS$
-      TokenLower( "Hello, World, here I am!" )         == "hello, world, here i am!"
-      TokenLower( "Hello, World, here I am!",, 3 )     == "hello, world, here I am!"
-      TokenLower( "Hello, World, here I am!", ",", 3 ) == "hello, World, here I am!"
-      TokenLower( "Hello, World, here I am!", " W" )   == "hello, World, here i am!"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -271,11 +252,6 @@
       ? TokenUpper( "Hello, world, here I am!",, 3 )     // "Hello, World, Here I am!"
       ? TokenUpper( "Hello, world, here I am!", ",", 3 ) // "Hello, world, here I am!"
       ? TokenUpper( "Hello, world, here I am!", " w" )   // "Hello, wOrld, Here I Am!"
-   $TESTS$
-      TokenUpper( "Hello, world, here I am!" )         == "Hello, World, Here I Am!"
-      TokenUpper( "Hello, world, here I am!",, 3 )     == "Hello, World, Here I am!"
-      TokenUpper( "Hello, world, here I am!", ",", 3 ) == "Hello, world, here I am!"
-      TokenUpper( "Hello, world, here I am!", " w" )   == "Hello, wOrld, Here I Am!"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -317,8 +293,6 @@
       use the new 5th and 6th parameter of the Token() function.
    $EXAMPLES$
       see Token() function
-   $TESTS$
-
    $STATUS$
       Ready
    $COMPLIANCE$

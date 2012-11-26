@@ -47,12 +47,6 @@
       CSetAtMupa( .T. )
       ? WordRepl( "aa", "1aaaa", "ba" )      // "1abaa"
       ? WordRepl( "aa", "1aaaa", "ba", .T. ) // "1bbba"
-   $TESTS$
-      WordRepl( "CC", "AABBCCDDEE", "XX" ) == "AABBXXDDEE"
-      WordRepl( "aa", "1aaaa", "ba" )      == "1abaa"
-      WordRepl( "aa", "1aaaa", "ba", .T. ) == "1baba"
-      Eval( {|| CSetAtMupa( .T. ), WordRepl( "aa", "1aaaa", "ba" ) } ) == "1abaa"
-      Eval( {|| CSetAtMupa( .T. ), WordRepl( "aa", "1aaaa", "ba", .T. ) } ) == "1bbba"
    $STATUS$
       Ready
    $COMPLIANCE$

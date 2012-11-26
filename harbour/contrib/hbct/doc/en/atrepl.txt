@@ -48,11 +48,6 @@
       ? AtRepl( "ABC", "ABCDABC", "ZYXW" )      // --> "ZYXWDZYXW"
       ? AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) // --> "xxDxxDABC"
       ? AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. )  // --> "ABCDxxDABC"
-   $TESTS$
-      AtRepl( "ABC", "ABCDABCDABC", "xx" ) == "xxDxxDxx"
-      AtRepl( "ABC", "ABCDABC", "ZYXW" ) == "ZYXWDZYXW"
-      AtRepl( "ABC", "ABCDABCDABC", "xx", 2 ) == "xxDxxDABC"
-      AtRepl( "ABC", "ABCDABCDABC", "xx", 2, .T. ) == "ABCDxxDABC"
    $STATUS$
       Ready
    $COMPLIANCE$

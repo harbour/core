@@ -24,9 +24,6 @@
    $EXAMPLES$
       ? CharSwap( "0123456789" )   // "1032547698"
       ? CharSwap( "ABCDEFGHIJK" )  // "BADCFEHGJIK"
-   $TESTS$
-      CharSwap( "0123456789" )  == "1032547698"
-      CharSwap( "ABCDEFGHIJK" ) == "BADCFEHGJIK"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -68,9 +65,6 @@
    $EXAMPLES$
       ? WordSwap( "1234567890" )       // "3412785690"
       ? WordSwap( "1234567890", .T. )  // "4321876590"
-   $TESTS$
-      WordSwap( "1234567890" )      == "3412785690"
-      WordSwap( "1234567890", .T. ) == "4321876590"
    $STATUS$
       Ready
    $COMPLIANCE$

@@ -31,11 +31,6 @@
       ? CharAdd( "012345678", Chr( 1 ) ) // --> "123456789"
       ? CharAdd( "123456789", Chr( 255 ) ) // --> "012345678"
       ? CharAdd( "0000", Chr( 0 ) + Chr( 1 ) + Chr( 2 ) + Chr( 3 ) ) // --> "0123"
-   $TESTS$
-      CharAdd( "012345678", Chr( 1 ) ) == "123456789"
-      CharAdd( "012345678", Chr( 1 ) + Chr( 2 ) ) == "133557799"
-      CharAdd( "123456789", Chr( 255 ) ) == "012345678"
-      CharAdd( "123456789", Chr( 255 ) + Chr( 254 ) ) == "002244668"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -82,9 +77,6 @@
       // clear the LSB
       ? CharAnd( "012345678", Chr( 254 ) ) // --> "002244668"
       ? CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) // --> "002044648"
-   $TESTS$
-      CharAnd( "012345678", Chr( 254 ) ) == "002244668"
-      CharAnd( "012345678", Chr( 254 ) + Chr( 252 ) ) == "002044648"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -127,9 +119,6 @@
    $EXAMPLES$
       ? CharNot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) // --> Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
       ? CharNot( CharNot( "This is a test!" ) ) // --> "This is a test!"
-   $TESTS$
-      CharNot( Chr( 85 ) + Chr( 128 ) + Chr( 170 ) + Chr( 1 ) ) == Chr( 170 ) + Chr( 127 ) + Chr( 85 ) + Chr( 254 )
-      CharNot( CharNot( "This is a test!" ) ) == "This is a test!"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -176,9 +165,6 @@
       // set the LSB
       ? CharOr( "012345678", Chr( 1 ) ) // --> "113355779"
       ? CharOr( "012345678", Chr( 1 ) + Chr( 3 ) ) // --> "133357779"
-   $TESTS$
-      CharOr( "012345678", Chr( 1 ) ) == "113355779"
-      CharOr( "012345678", Chr( 1 ) + Chr( 3 ) ) == "133357779"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -224,8 +210,6 @@
    $EXAMPLES$
       // easy encryption
       ? CharXor( "This is top secret !", "My Password" ) // --> <encrypted sentence>
-   $TESTS$
-      CharXor( CharXor( "This is top secret !", "My Password" ), "My Password" ) == "This is top secret !"
    $STATUS$
       Ready
    $COMPLIANCE$

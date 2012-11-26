@@ -38,9 +38,6 @@
       // of 5 per cent per year
 
       ? FV( 1000, 0.05, 10 ) // --> 12577.893
-   $TESTS$
-      FV( 1000, 0.00, 10 ) == 10000.0
-      FV( 1000, 0.05, 10 ) == 12577.893
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -89,9 +86,6 @@
       // you
 
       ? PV( 100, 0.005, 60 ) // --> 5172.56
-   $TESTS$
-      PV( 100, 0.0, 60 )   == 6000.0
-      PV( 100, 0.005, 60 ) == 5172.56
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -138,9 +132,6 @@
       // For 5 years, you have to pay back every month
 
       ? Payment( 5172.56, 0.005, 60 ) // --> 100.00
-   $TESTS$
-      Payment( 5172.56, 0.0, 60 )   == 86.21
-      Payment( 5172.56, 0.005, 60 ) == 100.00
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -192,9 +183,6 @@
       ? Periods( 5172.56, 100, 0.005 ) // --> 60.0
 
       // months to cancel the loan.
-   $TESTS$
-      Periods( 5172.56, 100, 0.005 ) == 60.0
-      Periods( 5172.56, 100, 0.0 ) == 51.7256
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -238,9 +226,6 @@
       // period (=month) is
 
       ? Rate( 5172.56, 100, 60 ) // --> 0.005
-   $TESTS$
-      Rate( 5172.56, 100, 60.0 ) == 0.005
-      Rate( 6000.0, 100, 60.0 ) == 0.0
    $STATUS$
       Ready
    $COMPLIANCE$

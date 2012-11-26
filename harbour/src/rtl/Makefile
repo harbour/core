@@ -115,6 +115,7 @@ C_SOURCES := \
    hbsockhb.c \
    hbstrfmt.c \
    hbstrsh.c \
+   hbtestc.c \
    hbtoken.c \
    hbzlib.c \
    hbzlibgz.c \

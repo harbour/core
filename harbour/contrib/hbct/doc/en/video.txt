@@ -19,8 +19,6 @@
       Returns the number of scan lines per character.
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -59,8 +57,6 @@
 
    $EXAMPLES$
 
-   $TESTS$
-
    $STATUS$
       Started
    $COMPLIANCE$
@@ -90,8 +86,6 @@
    $DESCRIPTION$
       TODO: Finish documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started
@@ -128,8 +122,6 @@
    $DESCRIPTION$
       TODO: Finish documentation
    $EXAMPLES$
-
-   $TESTS$
 
    $STATUS$
       Started

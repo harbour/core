@@ -100,7 +100,7 @@ PROCEDURE __hbtest_Call( cBlock, bBlock, xResultExpected )
    ErrorBlock( bOldError )
 
    IF !( ValType( xResult ) == ValType( xResultExpected ) )
-      IF ValType( xResultExpected ) == "C" .AND. ValType( xResult ) $ "ABMO"
+      IF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
          lFailed := !( XToStr( xResult ) == xResultExpected )
       ELSE
          lFailed := .T.

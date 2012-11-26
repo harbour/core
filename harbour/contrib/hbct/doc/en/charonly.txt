@@ -25,9 +25,6 @@
    $EXAMPLES$
       ? CharOnly( "0123456789", "0211 - 38 99 77" )  //  "0211389977"
       ? CharOnly( "0123456789", "0211/ 389 977" )    //  "0211389977"
-   $TESTS$
-      CharOnly( "0123456789", "0211 - 38 99 77" ) == "0211389977"
-      CharOnly( "0123456789", "0211/ 389 977" )   == "0211389977"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -64,9 +61,6 @@
    $EXAMPLES$
       ? WordOnly( "AABBCCDD", "XXAAYYBBZZ" )  // "AABB"
       ? WordOnly( "AABBCCDD", "XAAYYYBBZZ" )  // "BB"
-   $TESTS$
-      WordOnly( "AABBCCDD", "XXAAYYBBZZ" ) == "AABB"
-      WordOnly( "AABBCCDD", "XAAYYYBBZZ" ) == "BB"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -102,9 +96,6 @@
    $EXAMPLES$
       ? CharRem( " ", " 1  2  " )   // "12"
       ? CharRem( "3y", "xyz123" )   // "xz12"
-   $TESTS$
-      CharRem( " ", " 1  2  " ) == "12"
-      CharRem( "3y", "xyz123" ) == "xz12"
    $STATUS$
       Ready
    $COMPLIANCE$
@@ -141,9 +132,6 @@
    $EXAMPLES$
       ? WordRem( "abcd", "0ab1cd" )   // "0ab1"
       ? WordRem( "abcd", "ab0cd1" )   // "0cd1"
-   $TESTS$
-      WordRem( "abcd", "0ab1cd" ) == "0ab1"
-      WordRem( "abcd", "ab0cd1" ) == "0cd1"
    $STATUS$
       Ready
    $COMPLIANCE$
