@@ -350,7 +350,7 @@ STATIC FUNCTION DoGet( oBrw, lAppend )
          ! Eval( hb_macroBlock( cForExp ) )
          dbGoTop()
       ENDIF
-      IF ! lAppend .AND. ! Empty( cIndexKey ) .AND. ! xKeyValue == Eval( bIndexKey )
+      IF ! lAppend .AND. ! Empty( bIndexKey ) .AND. ! xKeyValue == Eval( bIndexKey )
          lSuccess := .T.
       ENDIF
    ENDIF

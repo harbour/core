@@ -54,8 +54,8 @@
 #include "inkey.ch"
 #include "setcurs.ch"
 
-/* NOTE: Extension: Harbour supports codeblocks as the xUserFunc parameter
-         [vszakats] */
+/* NOTE: Extension: Harbour supports codeblocks and function pointers
+         as the xUserFunc parameter. [vszakats] */
 /* NOTE: Clipper is buggy and will throw an error if the number of
          columns is zero. (Check: dbEdit(0,0,20,20,{})) [vszakats] */
 /* NOTE: Clipper will throw an error if there's no database open [vszakats] */
@@ -312,7 +312,7 @@ STATIC FUNCTION CallUser( oBrowse, xUserFunc, nKey, lAppend, lFlag )
    /* NOTE: CA-Cl*pper won't check the type of the return value here,
             and will crash if it's a non-NIL, non-numeric type. We're
             replicating this behavior. */
-   nAction := iif( HB_ISBLOCK( xUserFunc ), ;
+   nAction := iif( HB_ISEVALITEM( xUserFunc ), ;
                                  Eval( xUserFunc, nMode, oBrowse:colPos ), ;
               iif( HB_ISSTRING( xUserFunc ) .AND. ! Empty( xUserFunc ), ;
                                  &xUserFunc( nMode, oBrowse:colPos ), ;  /* NOTE: Macro operator! */

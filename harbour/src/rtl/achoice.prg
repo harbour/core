@@ -28,6 +28,10 @@
 #define INRANGE( xLo, xVal, xHi )       ( xVal >= xLo .AND. xVal <= xHi )
 #define BETWEEN( xLo, xVal, xHi )       Min( Max( xLo, xVal ), xHi )
 
+/* NOTE: Extension: Harbour supports codeblocks and function pointers
+         as the xSelect parameter (both when supplied as is, or as an
+         array of codeblocks). [vszakats] */
+
 FUNCTION AChoice( nTop, nLeft, nBottom, nRight, acItems, xSelect, xUserFunc, nPos, nHiLiteRow )
 
    LOCAL nNumCols                          // Number of columns in the window
@@ -669,7 +673,9 @@ STATIC FUNCTION Ach_Select( alSelect, nPos )
 
    IF nPos >= 1 .AND. nPos <= Len( alSelect )
       sel := alSelect[ nPos ]
-      IF HB_ISSTRING( sel ) .AND. ! Empty( sel )
+      IF HB_ISEVALITEM( sel )
+         sel := Eval( sel )
+      ELSEIF HB_ISSTRING( sel ) .AND. ! Empty( sel )
          sel := Eval( hb_macroBlock( sel ) )
       ENDIF
       IF HB_ISLOGICAL( sel )

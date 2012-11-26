@@ -60,7 +60,7 @@
 HB_FUNC( WAPI_SHELLEXECUTE )
 {
 #if defined( HB_OS_WIN_CE )
-   hb_retni( -1 );
+   hb_retnint( -1 );
 #else
    void * hOperation;
    void * hFile;
@@ -74,10 +74,10 @@ HB_FUNC( WAPI_SHELLEXECUTE )
                                             HB_PARSTR( 5, &hDirectory, NULL ),
                                             hb_parnidef( 6, SW_SHOWNORMAL ) /* nShowCmd */ ) );
 
-   hb_strfree( hOperation  );
-   hb_strfree( hFile       );
+   hb_strfree( hOperation );
+   hb_strfree( hFile );
    hb_strfree( hParameters );
-   hb_strfree( hDirectory  );
+   hb_strfree( hDirectory );
 #endif
 }
 
