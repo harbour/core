@@ -42,7 +42,7 @@ TABLE OF CONTENT
    hope they will be useful, but there is NO GUARANTEE that they are
    complete, accurate, non-infringing or usable for any purpose whatsoever.
    Contributors are NOT LIABLE for any damages that result from using
-   Harbour in any ways. For more legal details, see COPYING.
+   Harbour in any ways. For more legal details, see COPYING.txt.
 
    If you think you can make Harbour better, start to contribute.
    See this section: 'HOW TO PARTICIPATE'
@@ -1871,4 +1871,4 @@ TABLE OF CONTENT
 [ Copyright (c) 2009-2012 Viktor Szakats (harbour syenar.net)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   http://creativecommons.org/licenses/by-sa/3.0/
-  See COPYING. ]
+  See COPYING.txt. ]

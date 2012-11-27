@@ -7,8 +7,8 @@
    http://creativecommons.org/licenses/by-sa/3.0/ or send a letter to
    Creative Commons, 559 Nathan Abbott Way, Stanford, California 94305,
    USA.  A summary of the license and the full legal text is included
-   in file: COPYING.  If you wish to distribute some or all of this work
-   under different terms, please contact respective author(s).
+   in file: COPYING.txt.  If you wish to distribute some or all of this
+   work under different terms, please contact respective author(s).
    The license applies to all entries on or after Version 1.1.0.
 */
 

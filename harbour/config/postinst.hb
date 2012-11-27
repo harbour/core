@@ -8,7 +8,7 @@
  *
  * Copyright 2009-2010 Viktor Szakats (harbour syenar.net)
  * Copyright 2003 Przemyslaw Czerpak (druzus/at/priv.onet.pl) (embedded autoinstall bash script)
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  */
 
 #pragma warninglevel=3
@@ -68,7 +68,7 @@ PROCEDURE Main( ... )
                   mk_hb_FCopy( aFile[ F_NAME ], tmp + hb_ps() + iif( GetEnvC( "HB_PLATFORM" ) == "dos", "CHANGES", "" ) )
                NEXT
 
-               mk_hb_FCopy( "COPYING", tmp + hb_ps() )
+               mk_hb_FCopy( "COPYING.txt", tmp + hb_ps() )
                mk_hb_FCopy( "README.txt", tmp + hb_ps() )
             ELSE
                OutStd( hb_StrFormat( "! Error: Cannot create directory '%1$s'", tmp ) + hb_eol() )

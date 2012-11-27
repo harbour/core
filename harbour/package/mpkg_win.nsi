@@ -4,7 +4,7 @@
 
 ; ---------------------------------------------------------------
 ; Copyright 2009 Viktor Szakats (harbour syenar.net)
-; See COPYING for licensing terms.
+; See COPYING.txt for licensing terms.
 ;
 ; Harbour Nullsoft installer script (for Windows/MS-DOS)
 ; [ Do not try to use this script directly. It won't work. ]
@@ -65,7 +65,7 @@ InstallDir C:\$%HB_PKGNAMI%
 ;--------------------------------
 ; License Language String
 
-LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_INSTALL_PREFIX%\COPYING"
+LicenseLangString MUILicense ${LANG_ENGLISH} "$%HB_INSTALL_PREFIX%\COPYING.txt"
 
 ;--------------------------------
 ; The stuff to install
@@ -77,7 +77,7 @@ Section "Main components" hb_main
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
-  File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING"
+  File /nonfatal "$%HB_INSTALL_PREFIX%\COPYING.txt"
   File /nonfatal "$%HB_INSTALL_PREFIX%\README.txt"
   ; Let it work also for MS-DOS packages where short filename is used here
   File /nonfatal "$%HB_INSTALL_PREFIX%\Change*"

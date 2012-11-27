@@ -99,4 +99,4 @@ Exceptions:
 [ Copyright (c) 1999-2009 Viktor Szakats (harbour syenar.net)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   http://creativecommons.org/licenses/by-sa/3.0/
-  See COPYING. ]
+  See COPYING.txt. ]

@@ -54,7 +54,7 @@
  *    optimized header time scan algorithm
  *    runner core logic
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

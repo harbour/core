@@ -4,7 +4,7 @@
 
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (harbour syenar.net)
-# See COPYING for licensing terms.
+# See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
 # ---------------------------------------------------------------
@@ -1886,7 +1886,7 @@ ifneq ($(HB_INSTALL_PREFIX),)
    endif
 else
    # Require HB_INSTALL_PREFIX on non-*nix when install is used,
-   # so that obligatory supplement files (like COPYING) are always
+   # so that obligatory supplement files (like COPYING.txt) are always
    # copied to install destination.
    ifneq ($(filter install,$(HB_MAKECMDGOALS)),)
       ifeq ($(HB_PLATFORM_UNIX),)
