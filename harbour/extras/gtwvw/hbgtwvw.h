@@ -102,7 +102,6 @@
 #include "hbole.h"
 
 #include <windows.h>
-#include <tchar.h>
 #include <stdlib.h>
 #include <commctrl.h>
 

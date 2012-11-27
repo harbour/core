@@ -3648,7 +3648,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
             //long             lSBColorForeground, lSBColorBackground;
 
             size_t stLen;
-            const _TCHAR * pEnd;
+            const TCHAR * pEnd;
 
             pWindowData->bSBPaint = FALSE;
 
@@ -3666,7 +3666,7 @@ static LRESULT CALLBACK hb_gt_wvwWndProc( HWND hWnd, UINT message, WPARAM wParam
                //lSBColorBackground = strtol( s_cSBColorBackground, NULL, 10 );
                SetBkColor( lpDIS->hDC, pWindowData->cSBColorBackground );  //lSBColorBackground );
 
-            for( pEnd = ptStr; *pEnd != _TEXT( '\0' ); pEnd++ )
+            for( pEnd = ptStr; *pEnd != TEXT( '\0' ); pEnd++ )
                continue;
 
             stLen = pEnd - ptStr;
