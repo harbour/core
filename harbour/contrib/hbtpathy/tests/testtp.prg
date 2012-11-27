@@ -52,10 +52,8 @@
 
 /*
    This is based upon a library originally made by Dan Levitt <dan@boba-fett.net>
-   (see README and ChangeLog). The original files have been committed as v1.0,
-   so you can always retrieve them (see CVS docs on how to)
-
-   First xHarbour Port by Luiz Rafael Culik Guimaraes (culikr@brturbo.com)
+   The original files have been committed as v1.0. So you can always retrieve them
+   (see VCS docs on how to)
 */
 
 /*

@@ -31,7 +31,7 @@ PROCEDURE Main( cRoot )
       /* Detect Harbour root */
       cRoot := "." + hb_ps()
       DO WHILE hb_DirExists( cRoot + ".." )
-         IF hb_FileExists( cRoot + "README" ) .AND. ;
+         IF hb_FileExists( cRoot + "README.txt" ) .AND. ;
             hb_FileExists( cRoot + "COPYING" ) .AND. ;
             hb_DirExists( cRoot + "config" )
             EXIT

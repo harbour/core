@@ -101,7 +101,7 @@ rem ; Create unified archive
 
 echo.> _hbfiles
 echo "%HB_DR%RELNOTES.txt"                          >> _hbfiles
-echo "%HB_DR%README"                                >> _hbfiles
+echo "%HB_DR%README.txt"                            >> _hbfiles
 echo "%HB_DR%COPYING"                               >> _hbfiles
 echo "%HB_DR%ChangeLog*"                            >> _hbfiles
 echo "%HB_DR%bin\*-%HB_VS%.dll"                     >> _hbfiles

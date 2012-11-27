@@ -11,7 +11,7 @@ stm_ep();
 stm_aix("p0i4","p0i2",[]);
 stm_aix("p0i5","p0i1",[2,"","documentation.png","documentation.png",90,65,0,"/doc/harbour.html","_self","","","","",0,0,0,"","",-1,-1,0,0,1,"#E6EFF9",1,"#FFD602"]);
 stm_bpx("p2","p1",[1,4,0,-3,3,0,0,0,100,"",-2,"",-2,50,0,0,"#CCCCCC"]);
-stm_aix("p2i0","p1i0",[0," Basic information (README) ","","",-1,-1,0,"http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/README"]);
+stm_aix("p2i0","p1i0",[0," Essential information (README.txt) ","","",-1,-1,0,"http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/README.txt"]);
 stm_aix("p2i1","p1i0",[0," ChangeLog ","","",-1,-1,0,"http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/ChangeLog"]);
 stm_aix("p2i2","p1i0",[0," Clipper 5.3 ","","",-1,-1,0,"http://x-hacker.org/ng/53guide/"]);
 stm_aix("p2i3","p1i0",[0," Harbour ","","",-1,-1,0,"/doc/harbour.html"]);
