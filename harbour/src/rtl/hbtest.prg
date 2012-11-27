@@ -58,15 +58,15 @@
 #define TEST_RESULT_COL4_WIDTH  85
 #define TEST_RESULT_COL5_WIDTH  85
 
-STATIC s_hParams := { => }
+THREAD STATIC t_hParams := { => }
 
 PROCEDURE __hbtest_Setup( cName, xValue )
 
    IF HB_ISSTRING( cName ) .AND. ! Empty( cName )
       IF PCount() > 1
-         s_hParams[ cName ] := xValue
-      ELSEIF cName $ s_hParams
-         hb_HDel( s_hParams, cName )
+         t_hParams[ cName ] := xValue
+      ELSEIF cName $ t_hParams
+         hb_HDel( t_hParams, cName )
       ENDIF
    ENDIF
 
@@ -76,7 +76,6 @@ PROCEDURE __hbtest_Call( cBlock, bBlock, xResultExpected )
 
    LOCAL xResult
    LOCAL oError
-   LOCAL bOldError
    LOCAL lPPError
    LOCAL lFailed
 
@@ -89,15 +88,11 @@ PROCEDURE __hbtest_Call( cBlock, bBlock, xResultExpected )
       lPPError := .T.
    ENDIF
 
-   bOldError := ErrorBlock( {| oError | Break( oError ) } )
-
-   BEGIN SEQUENCE
+   BEGIN SEQUENCE WITH ErrorBlock( {| oError | Break( oError ) } )
       xResult := Eval( bBlock )
    RECOVER USING oError
       xResult := ErrorMessage( oError )
    END SEQUENCE
-
-   ErrorBlock( bOldError )
 
    IF !( ValType( xResult ) == ValType( xResultExpected ) )
       IF HB_ISSTRING( xResultExpected ) .AND. ValType( xResult ) $ "ABOHPS"
@@ -109,11 +104,11 @@ PROCEDURE __hbtest_Call( cBlock, bBlock, xResultExpected )
       lFailed := !( xResult == xResultExpected )
    ENDIF
 
-   IF lFailed .OR. lPPError .OR. hb_HGetDef( s_hParams, "showall", .T. )
-      bOut := hb_HGetDef( s_hParams, "output", {| cMsg | OutStd( cMsg ) } )
+   IF lFailed .OR. lPPError .OR. hb_HGetDef( t_hParams, "showall", .T. )
+      bOut := hb_HGetDef( t_hParams, "output", {| cMsg | OutStd( cMsg ) } )
       IF lFailed
          Eval( bOut, PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                     PadR( ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
+                     PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
                      PadR( cBlock, TEST_RESULT_COL3_WIDTH ) +;
                      hb_eol() +;
                      Space( 5 ) + "  Result: " + XToStr( xResult ) +;
@@ -122,7 +117,7 @@ PROCEDURE __hbtest_Call( cBlock, bBlock, xResultExpected )
                      hb_eol() )
       ELSE
          Eval( bOut, PadR( iif( lFailed, "!", " " ), TEST_RESULT_COL1_WIDTH ) + " " +;
-                     PadR( ProcName( 1 ) + "(" + LTrim( Str( ProcLine( 1 ), 5 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
+                     PadR( ProcName( 1 ) + "(" + hb_ntos( ProcLine( 1 ) ) + ")", TEST_RESULT_COL2_WIDTH ) + " " +;
                      PadR( cBlock, TEST_RESULT_COL3_WIDTH ) + " -> " +;
                      PadR( XToStr( xResult ), TEST_RESULT_COL4_WIDTH ) + " | " +;
                      PadR( XToStr( xResultExpected ), TEST_RESULT_COL5_WIDTH ) +;
@@ -228,9 +223,8 @@ FUNCTION XToStr( xValue )
    RETURN iif( xValue == NIL, "NIL", "" )
 
 FUNCTION XToStrE( xValue )
-   LOCAL cType := ValType( xValue )
 
-   SWITCH cType
+   SWITCH ValType( xValue )
    CASE "C"
 
       xValue := StrTran( xValue, Chr( 0 ), '" + Chr( 0 ) + "' )
