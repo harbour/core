@@ -41,7 +41,7 @@ Tool/lib versions used to create this package:
    MinGW GNU C 4.6.1 (TDM-DW2) (included)
    MinGW w64 GNU C 4.5.3-20110207 (prerelease)
    MinGW CeGCC 4.4.0
-   MSVC 2012
+   MSVC 2012 Update 1
 
    External lib dependencies
    -------------------------
