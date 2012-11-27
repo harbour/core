@@ -82,7 +82,7 @@ Section "Main components" hb_main
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR
 
-  File /nonfatal "$%HB_ABSROOT%RELNOTES"
+  File /nonfatal "$%HB_ABSROOT%RELNOTES.txt"
 
   File /nonfatal "$%HB_ABSROOT%README"
   File /nonfatal "$%HB_ABSROOT%COPYING"

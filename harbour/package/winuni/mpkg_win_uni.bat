@@ -30,7 +30,7 @@ rem ; Assemble unified package from per-target builds
 
 if exist %HB_ABSROOT% rd /q /s %HB_ABSROOT%
 
-xcopy /y       %~dp0RELNOTES                                                              %HB_ABSROOT%
+xcopy /y       %~dp0RELNOTES.txt                                                          %HB_ABSROOT%
 xcopy /y /s    %~dp0..\..\extras\*.*                                                      %HB_ABSROOT%extras\
 xcopy /y /s    %~dp0..\..\tests\*.*                                                       %HB_ABSROOT%tests\
 xcopy /y       %~dp0HARBOUR_README_ADDONS.txt                                             %HB_ABSROOT%addons\
@@ -100,7 +100,7 @@ if exist %HB_RT%harbour-%HB_VF%-win.exe del %HB_RT%harbour-%HB_VF%-win.exe
 rem ; Create unified archive
 
 echo.> _hbfiles
-echo "%HB_DR%RELNOTES"                              >> _hbfiles
+echo "%HB_DR%RELNOTES.txt"                          >> _hbfiles
 echo "%HB_DR%README"                                >> _hbfiles
 echo "%HB_DR%COPYING"                               >> _hbfiles
 echo "%HB_DR%ChangeLog*"                            >> _hbfiles
