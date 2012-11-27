@@ -74,3 +74,17 @@ FILE * hb_fopen( const char * path, const char * mode )
 
    return file;
 }
+
+#if defined( __XCC__ )
+#inlcude "hb_io.h"
+int __cdecl _wopen( const wchar_t * path, int flags, int mode )
+{
+   char * pszPath = hb_osStrU16Decode( path );
+   int iResult;
+
+   iResult = _open( pszPath, flags, mode );
+   hb_xfree( pszPath );
+
+   return iResult;
+}
+#endif

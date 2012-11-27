@@ -113,7 +113,6 @@ void hb_winmainArgVBuild( void )
 
    lpCmdLine = GetCommandLine();
    lpArgV = NULL;
-   lpDst = NULL;
    nSize = 0;
    iArgC = -1;
 
