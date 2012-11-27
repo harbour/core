@@ -371,15 +371,9 @@
       characters (0x0d 0x0a, Chr( 13 ) + Chr( 10 )).
    $EXAMPLES$
       // Get the newline character(s) for the current OS.
-      // Get the newline character(s) for the current OS.
-      STATIC s_cNewLine
-      ...
-      s_cNewLine := hb_eol()
-      ...
-      OutStd( "Hello World!" + s_cNewLine )
-   $TESTS$
+      OutStd( "Hello World!" + hb_eol() )
       ? ValType( hb_eol() ) == "C"
-      ? Len( hb_eol() ) == 1
+      ? Len( hb_eol() ) <= 2
    $STATUS$
       R
    $COMPLIANCE$
@@ -592,7 +586,7 @@
    $EXAMPLES$
       // Wait for a key stroke
       __Wait( "Press a key to continue" )
-   $TESTS$
+      //
       DO WHILE !( cKey == "Q" )
          cKey := __Wait( "Press 'Q' to continue" )
       ENDDO

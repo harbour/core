@@ -350,16 +350,17 @@
    $EXAMPLES$
       #include "hbmemvar.ch"
 
-      LOCAL nCount, i, xValue, cName
-
-      nCount := _mvDBGINFO( HB_MV_PUBLIC )
-      FOR i := 1 TO nCount
-         xValue := __mvDbgInfo( HB_MV_PUBLIC, i, @cName )
-         ? i, cName, xValue
-      NEXT
-   $TESTS$
-      #include "hbmemvar.ch"
       PROCEDURE Main()
+
+         LOCAL nCount, i, xValue, cName
+
+         nCount := __mvDbgInfo( HB_MV_PUBLIC )
+         FOR i := 1 TO nCount
+            xValue := __mvDbgInfo( HB_MV_PUBLIC, i, @cName )
+            ? i, cName, xValue
+         NEXT
+
+         //
 
          ? "PUBLIC=", __mvDbgInfo( HB_MV_PUBLIC )
          ? "PRIVATE=", __mvDbgInfo( HB_MV_PRIVATE )

@@ -370,12 +370,12 @@
       If 3rd and 4th parameters is not specified, then hb_RAt() is equal
       to RAt().
    $EXAMPLES$
-      ? 'hb_RAt( "cde", "abcdefgfedcba" ) = ' + ;
-         Str( hb_RAt( "cde", "abcdefgfedcba" ) )   // 3
-   $TESTS$
       LOCAL cString
       LOCAL cSearch
       LOCAL i, y, r, nLen
+
+      ? 'hb_RAt( "cde", "abcdefgfedcba" ) = ', ;
+         hb_RAt( "cde", "abcdefgfedcba" ) // -> 3
 
       cString := "acdefcdeedcb"
       cSearch := "cde"
@@ -704,13 +704,12 @@
    $DESCRIPTION$
       HB_VALTOSTR can be used to convert any scalar value to a string.
    $EXAMPLES$
-      ? hb_ValToStr( 4 )
-      ? hb_ValToStr( "String" )
-   $TESTS$
+      SET DATE ANSI
+      SET CENTURY ON
       ? hb_ValToStr( 4 ) == "         4"
       ? hb_ValToStr( 4.0 / 2 ) == "         2.00"
       ? hb_ValToStr( "String" ) == "String"
-      ? hb_ValToStr( hb_SToD( "20010101" ) ) == "01/01/01"
+      ? hb_ValToStr( hb_SToD( "20010101" ) ) == "2001.01.01"
       ? hb_ValToStr( NIL ) == "NIL"
       ? hb_ValToStr( .F. ) == ".F."
       ? hb_ValToStr( .T. ) == ".T."
@@ -748,13 +747,16 @@
       size of a hash table. If it is used with a multidimensional array it
       returns the size of the first dimension.
    $EXAMPLES$
-      ? Len( "Harbour" )           // 7
-      ? Len( { "One", "Two" } )    // 2
-   $TESTS$
       PROCEDURE Main()
-         LOCAL cName := ""
+         LOCAL cName
+
+         ? Len( "Harbour" )          // --> 7
+         ? Len( { "One", "Two" } )   // --> 2
+
+         cName := ""
          ACCEPT "Enter your name: " TO cName
          ? Len( cName )
+
          RETURN
    $STATUS$
       R
@@ -789,9 +791,8 @@
       This function checks if an expression has empty value and returns a
       logical indicating whether it the expression is empty or not.
    $EXAMPLES$
-      ? Empty( "I'm not empty" )    // .F.
-   $TESTS$
       PROCEDURE Main()
+         ? Empty( "I'm not empty" ) // .F.
          ? Empty( NIL )             // .T.
          ? Empty( 0 )               // .T.
          ? Empty( .F. )             // .T.

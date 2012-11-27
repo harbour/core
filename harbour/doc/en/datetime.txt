@@ -114,7 +114,6 @@
       This function returns the current system date.
    $EXAMPLES$
       ? Date()
-   $TESTS$
       ? "Today is ", Day( Date() ), " of ", CMonth( Date() ), " of ", Year( Date() )
    $STATUS$
       R

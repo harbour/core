@@ -96,7 +96,7 @@
       ? "Please press the ESC key."
       DO WHILE Inkey( 0.1 ) != K_ESC
       ENDDO
-   $TESTS$
+      //
       KEYBOARD "AB"; ? Inkey(), Inkey() // ==>   65   66
    $STATUS$
       S
@@ -142,7 +142,7 @@
       KEYBOARD Chr( 13 )
       // Clear the keyboard buffer
       CLEAR TYPEAHEAD
-   $TESTS$
+      //
       KEYBOARD Chr( 13 ); ? Inkey() // ==> 13
       KEYBOARD ";" ? Inkey() // ==> 13
       KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? Inkey() // ==> 0
@@ -183,8 +183,6 @@
       be inserted.
    $EXAMPLES$
       // Stuff an Alt+PgDn key into the keyboard buffer
-      hb_keyPut( K_ALT_PGDN )
-   $TESTS$
       hb_keyPut( K_ALT_PGDN ) ; ? Inkey() // ==> 417
       hb_keyPut( K_F11 ) ; ? Inkey() // ==> -40
    $STATUS$
@@ -236,7 +234,7 @@
             ENDIF
          ENDIF
       ENDDO
-   $TESTS$
+      //
       KEYBOARD "AB"; ? NextKey(), NextKey() // ==>   65   65
    $STATUS$
       R
@@ -281,7 +279,7 @@
             EXIT
          ENDIF
       ENDDO
-   $TESTS$
+      //
       KEYBOARD "AB"; ? Inkey(), LastKey() // ==>   65   65
    $STATUS$
       R
@@ -327,7 +325,7 @@
       KEYBOARD Chr( 13 )
       // Clear the keyboard buffer
       CLEAR TYPEAHEAD
-   $TESTS$
+      //
       KEYBOARD Chr( 13 ); ? Inkey() // ==> 13
       KEYBOARD "HELLO"; CLEAR TYPEAHEAD; ? Inkey() // ==> 0
    $STATUS$

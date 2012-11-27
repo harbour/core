@@ -285,7 +285,7 @@
          Tone(  499, 5 )
          Tone(  700, 5 )
       ENDIF
-   $TESTS$
+      //
       Tone( 800, 1 )                         // same as ? Chr( 7 )
       Tone( 32000, 200 )                     // any dogs around yet?
       Tone( 130.80, 1 )                      // musical note - C
@@ -293,7 +293,7 @@
       Tone( 700 )                            // short beep
       Tone( 10, 18.2 )                       // 1 second delay
       Tone( -1 )                             // 1/18.2 second delay
-      Tone( )                                // 1/18.2 second delay
+      Tone()                                 // 1/18.2 second delay
    $STATUS$
       S
    $COMPLIANCE$
