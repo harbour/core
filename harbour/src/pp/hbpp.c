@@ -454,13 +454,13 @@ static int hb_pp_parseChangelog( PHB_PP_STATE pState, const char * pszFileName,
    if( ! pFileName->szName )
    {
       static const char * s_szNames[] = {
-         "ChangeLog",
-         "CHANGES",
+         "ChangeLog.txt",
+         "CHANGES.txt",
 #if defined( HB_OS_DOS )
-         "ChangeLo",
-         "Change~1",
-         "Change~?",
-         "Chang~??",
+         "ChangeLo.txt",
+         "Change~1.txt",
+         "Change~?.txt",
+         "Chang~??.txt",
 #endif
          NULL
       };

@@ -33,18 +33,18 @@ by Viktor Szakats
 =======================================================
 by Viktor Szakats
 
- 1) Do the changes in the source, and in parallel modify ChangeLog
+ 1) Do the changes in the source, and in parallel modify ChangeLog.txt
  2) Go online (if needed)
  3) svn update
  4) Resolve all conflicts
- 5) Copy the last ChangeLog entry to the clipboard
+ 5) Copy the last ChangeLog.txt entry to the clipboard
  6) svn commit --editor-cmd notepad.exe --username sfuser
     Change notepad.exe to the editor of your choice and platform.
     Change "sfuser" to your sf.net username.
  7) The SVN pops up a window with the changed filenames
- 8) Check if all the changed filenames are referred in the ChangeLog entry,
+ 8) Check if all the changed filenames are referred in the ChangeLog.txt entry,
     if not, make the corrections and start again
- 9) Paste the ChangeLog entry header to the SVN window, save, exit
+ 9) Paste the ChangeLog.txt entry header to the SVN window, save, exit
 10) SVN is now uploading,
     if there are any errors, make the corrections and start again
 11) Always check if the upload session ended without errors.
@@ -61,16 +61,16 @@ by Ryszard Glab
  4) Run 'svn status' redirecting the output into a file
     (for example: "svn status >.log"
  5) Copy all names of modifed, added or deleted files (files marked with
-    'M', 'A' or 'D' flag) from update log into a ChangeLog
- 6) Write necessary comments in the ChangeLog
- 7) Save all your changes from ChangeLog into a file
+    'M', 'A' or 'D' flag) from update log into the ChangeLog.txt
+ 6) Write necessary comments in the ChangeLog.txt
+ 7) Save all your changes from ChangeLog.txt into a file
  8) Run 'svn update' again
  9) Commit changes running:
     svn commit -F file_with_saved_ChangeLog_changes --username sfuser
 
 Important notes:
 
- 1) *Always* add a ChangeLog entry when committing to the SVN.
+ 1) *Always* add a ChangeLog.txt entry when committing to the SVN.
  2) When adding a new file to the SVN, always use lower case 8.3
     filenames (*), add a SVN ID header to the file, don't use tabs
     in the file, end the file with a newline char.
@@ -80,11 +80,11 @@ Important notes:
     (*) There are some exceptions: ChangeLog.*, Makefile, COPYING.txt,
         README.txt.
 
-1.3 Here's how to format your ChangeLog entries
-===============================================
+1.3 Here's how to format your ChangeLog.txt entries
+===================================================
 by Viktor Szakats
 
-- Always add new entries to the top of the ChangeLog file.
+- Always add new entries to the top of the ChangeLog.txt
 
 - Add an entry header using this format:
   YYYY-MM-DD HH:MM UTC[-|+]hhmm Your Full Name <your_email_address>
@@ -159,17 +159,18 @@ by David G. Holm
    to a file and look at the results to confirm that you are ready to do
    a commit. Any files marked M, A or D are files that you have modified
    or are adding or deleting. Confirm that you have comments for all of
-   them in your ChangeLog entry. If you see many modules marked P or U,
+   them in your ChangeLog.txt entry. If you see many modules marked P or U,
    then you need to recompile and retest before you commit your changes.
 
    If you see any conflicts reported in the update output, then you need
    to resolve them before committing. SVN is generally good at merging
    changes, so you probably won't see conflicts very often, but if you
-   edit the ChangeLog file before you run 'svn update' and other changes
-   have been committed by others, then ChangeLog will have conflicts. To
-   resolve those conflicts, simply remove the conflict markers. What I do
-   to avoid conflicts to ChangeLog is to record my changes in changes.txt
-   and then copy them into ChangeLog between the update and the commit.
+   edit the ChangeLog.txt before you run 'svn update' and other changes
+   have been committed by others, then ChangeLog.txt will have conflicts.
+   To resolve those conflicts, simply remove the conflict markers. What
+   I do to avoid conflicts to ChangeLog.txt is to record my changes in
+   changes.txt and then copy them into ChangeLog.txt between the update
+   and the commit.
 
 1.6 How to add SVN ID to new files
 ==================================

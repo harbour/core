@@ -690,7 +690,7 @@ rm -rf $RPM_BUILD_ROOT
 * Mon Jul 31 2000 Dave Pearson <davep@davep.org>
 - Re-worked the layout of the spec file to make it cleaner and easier to
   read and maintain.
-- The latest harbour ChangeLog is now installed into the RPM's doc
+- The latest harbour ChangeLog.txt is now installed into the RPM's doc
   directory.
 - The content of the RPM's doc directory reflects the layout and content of
   the harbour source's doc directory.

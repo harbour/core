@@ -46,6 +46,7 @@ PROCEDURE Main()
    LOCAL nPos
    LOCAL cMyName
    LOCAL cOldLang
+   LOCAL cLogName
 
    IF Empty( aChanges )
       OutStd( hb_ProgName() + ": no changes" + hb_eol() )
@@ -77,7 +78,14 @@ PROCEDURE Main()
 
    // ;
 
-   cLog := MemoRead( "ChangeLog" )
+   IF ! hb_FileExists( cLogName := "ChangeLog.txt" )
+      IF ! hb_FileExists( cLogName := "ChangeLog" )
+         OutStd( hb_ProgName() + ": can't find ChangeLog file" + hb_eol() )
+         RETURN
+      ENDIF
+   ENDIF
+
+   cLog := MemoRead( cLogName )
    cOldLang := hb_cdpSelect( "EN" )
    cHit := hb_AtX( "\n[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9] [0-9][0-9]:[0-9][0-9] UTC[\-+][0-9][0-9][0-9][0-9] ", cLog )
    IF Empty( cHit )
@@ -92,7 +100,7 @@ PROCEDURE Main()
       cLog += hb_eol() + cLogNew
    ENDIF
 
-   hb_MemoWrit( "ChangeLog", cLog )
+   hb_MemoWrit( cLogName, cLog )
 
    RETURN
 

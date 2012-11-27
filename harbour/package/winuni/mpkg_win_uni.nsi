@@ -86,7 +86,7 @@ Section "Main components" hb_main
 
   File /nonfatal "$%HB_ABSROOT%README.txt"
   File /nonfatal "$%HB_ABSROOT%COPYING.txt"
-  File /nonfatal "$%HB_ABSROOT%ChangeLog*"
+  File /nonfatal "$%HB_ABSROOT%ChangeLog.txt*"
 
   SetOutPath $INSTDIR\bin
   File "$%HB_ABSROOT%bin\*-$%HB_VS%.dll"

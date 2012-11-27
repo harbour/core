@@ -1284,7 +1284,7 @@ TABLE OF CONTENT
 
       WARNING: Recommended for users contributing to Harbour development,
                following the development mailing list, commits and reading
-               ChangeLog.
+               ChangeLog.txt.
 
       1.) Harbour live source repository
 
@@ -1758,7 +1758,7 @@ TABLE OF CONTENT
             http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-bin.tar.lzma/download
             http://sourceforge.net/projects/mingw/files/MinGW/Extension/make/make-3.82-mingw32/make-3.82-5-mingw32-src.tar.lzma/download
             cvs -z3 -d:pserver:anonymous@cvs.savannah.gnu.org:/sources/make co make
-            (included in Harbour as win-make.exe and w64-make.exe)
+            (included in Harbour as win-make.exe)
          MS-DOS binary + source:
             ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/
             ftp://ftp.delorie.com/pub/djgpp/beta/v2gnu/mak381b.zip
@@ -1865,7 +1865,7 @@ TABLE OF CONTENT
       Comparing Harbour to xHarbour:
          http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/doc/xhb-diff.txt
       ChangeLog:
-         http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/ChangeLog
+         http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/ChangeLog.txt
 
 
 [ Copyright (c) 2009-2012 Viktor Szakats (harbour syenar.net)

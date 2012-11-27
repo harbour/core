@@ -141,7 +141,7 @@ Changes since previous (2.0.0beta3 20090905) release:
 - Deleted hbmake from examples.
 - Many other smaller improvements, additions, fixes, cleanups.
 - For 3rd party developers it's recommended to look for the word
-  "incompatibility" in ChangeLog to find spots which may imply changes
+  "incompatibility" in ChangeLog.txt to find spots which may imply changes
   on their part.
 
 Changes since previous (2.0.0beta2 20090624) release:
@@ -197,7 +197,7 @@ Changes since previous (2.0.0beta1 20090609) release:
 - MinGW64 updated to 4.4.1
 - There were a few changes in this release which may require updating
   your source code (hb_par*()/hb_stor*() in .c files and GTWVG WIN_*()
-  function in .prg files). Search for 'incompatible' word in ChangeLog
+  function in .prg files). Search for 'incompatible' word in ChangeLog.txt
   for more.
 -----------------------------------------------------------------------
 
