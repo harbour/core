@@ -18,7 +18,7 @@
 -depincpathlocal=tinymt:3rd/tinymt
 -depfinish=tinymt
 
-hbtinymt.hbx
+${hb_name}.hbx
 
 core32.c
 core64.c

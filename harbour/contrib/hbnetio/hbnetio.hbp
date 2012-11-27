@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-hbnetio.hbx
+${hb_name}.hbx
 
 netiosrv.c
 netiocli.c

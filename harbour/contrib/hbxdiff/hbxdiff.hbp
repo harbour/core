@@ -16,7 +16,7 @@
 -depincpathlocal=xdiff:3rd/libxdiff
 -depfinish=xdiff
 
-hbxdiff.hbx
+${hb_name}.hbx
 
 core.c
 

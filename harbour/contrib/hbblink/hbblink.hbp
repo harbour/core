@@ -9,6 +9,6 @@
 
 -w3 -es2
 
-hbblink.hbx
+${hb_name}.hbx
 
 blinker.prg

@@ -20,7 +20,7 @@
 
 -iflag={bcc}-a
 
-hbcairo.hbx
+${hb_name}.hbx
 
 context.c
 core.c

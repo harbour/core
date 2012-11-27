@@ -31,7 +31,7 @@
 -depincpath=zlib:/boot/develop/headers/3rdparty
 -depincpathlocal=zlib:../../src/3rd/zlib
 
-hbmzip.hbx
+${hb_name}.hbx
 
 mzip.c
 mziperr.prg

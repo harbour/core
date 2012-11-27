@@ -9,6 +9,6 @@
 
 -w3 -es2
 
-hbmemio.hbx
+${hb_name}.hbx
 
 memio.c

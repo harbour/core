@@ -16,7 +16,7 @@
 -depincpathlocal=lzf:3rd/liblzf
 -depfinish=lzf
 
-hblzf.hbx
+${hb_name}.hbx
 
 core.c
 

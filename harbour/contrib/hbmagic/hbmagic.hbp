@@ -15,7 +15,7 @@
 -depincpath=libmagic:/usr/include
 -depincpath=libmagic:/opt/local/include
 
-hbmagic.hbx
+${hb_name}.hbx
 
 core.c
 hbmagis.prg

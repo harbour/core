@@ -10,7 +10,7 @@
 
 -w3 -es2
 
-hbtip.hbx
+${hb_name}.hbx
 
 encurlc.c
 utils.c

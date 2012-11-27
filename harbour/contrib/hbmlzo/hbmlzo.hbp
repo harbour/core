@@ -16,7 +16,7 @@
 -depincpathlocal=minilzo:3rd/minilzo
 -depfinish=minilzo
 
-hbmlzo.hbx
+${hb_name}.hbx
 
 core.c
 

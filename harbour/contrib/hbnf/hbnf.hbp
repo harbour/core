@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-hbnf.hbx
+${hb_name}.hbx
 
 alt.c
 caplock.c

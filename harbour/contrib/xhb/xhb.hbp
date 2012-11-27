@@ -24,7 +24,7 @@ hbwin.hbc
 hbfship.hbc
 hbxpp.hbc
 
-xhb.hbx
+${hb_name}.hbx
 
 bkgtsks.c
 cstructc.c

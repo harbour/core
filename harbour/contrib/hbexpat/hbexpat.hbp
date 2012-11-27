@@ -18,7 +18,7 @@
 
 -cflag=-DXML_STATIC
 
-hbexpat.hbx
+${hb_name}.hbx
 
 core.c
 internal.c

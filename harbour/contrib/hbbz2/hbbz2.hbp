@@ -18,7 +18,7 @@
 -depincpathlocal=bzip2:3rd/bz2
 -depfinish=bzip2
 
-hbbz2.hbx
+${hb_name}.hbx
 
 core.c
 

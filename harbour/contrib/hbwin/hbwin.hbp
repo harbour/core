@@ -26,7 +26,7 @@
 -instfile=contrib:hbwinole.h
 -instfile=contrib:*.def
 
-hbwin.hbx
+${hb_name}.hbx
 
 axcore.c
 mapi.c

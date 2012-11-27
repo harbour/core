@@ -22,6 +22,6 @@
 # For FreeImage headers
 -c=gnu90
 
-hbfimage.hbx
+${hb_name}.hbx
 
 fi_wrp.c

@@ -16,7 +16,7 @@
 -depincpathlocal=mxml:3rd/minixml
 -depfinish=mxml
 
-hbmxml.hbx
+${hb_name}.hbx
 
 core.c
 format.prg

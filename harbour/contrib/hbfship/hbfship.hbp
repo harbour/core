@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-hbfship.hbx
+${hb_name}.hbx
 
 fldarr.prg
 isdb.prg

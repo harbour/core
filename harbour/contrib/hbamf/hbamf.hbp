@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-hbamf.hbx
+${hb_name}.hbx
 
 amfenc.c
 amfdec.c

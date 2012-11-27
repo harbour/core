@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-hbxpp.hbx
+${hb_name}.hbx
 
 binnumx.c
 dbcmdx.c

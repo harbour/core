@@ -19,7 +19,7 @@
 -instfile=contrib:ctstrfil.h
 -instfile=contrib:ctwin.h
 
-hbct.hbx
+${hb_name}.hbx
 
 addascii.c
 asciisum.c

@@ -9,6 +9,6 @@
 
 -w3 -es2
 
-hbsms.hbx
+${hb_name}.hbx
 
 sms.prg

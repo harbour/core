@@ -19,7 +19,7 @@
 -depincpath=odbc:/usr/include
 -depincpath=odbc:/usr/local/include
 
-hbodbc.hbx
+${hb_name}.hbx
 
 odbc.c
 

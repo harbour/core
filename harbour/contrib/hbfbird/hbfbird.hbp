@@ -24,7 +24,7 @@
 # For FireBird headers
 -c=gnu90
 
-hbfbird.hbx
+${hb_name}.hbx
 
 firebird.c
 tfirebrd.prg

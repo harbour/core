@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-hbfoxpro.hbx
+${hb_name}.hbx
 
 dll.prg
 misc.prg

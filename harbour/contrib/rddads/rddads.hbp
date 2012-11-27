@@ -26,7 +26,7 @@
 # for ADS headers
 -c=gnu90
 
-rddads.hbx
+${hb_name}.hbx
 
 ads1.c
 adsfunc.c

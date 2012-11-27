@@ -24,7 +24,7 @@
 
 -iflag={bcc}-a
 
-hbpgsql.hbx
+${hb_name}.hbx
 
 postgres.c
 rddcopy.c

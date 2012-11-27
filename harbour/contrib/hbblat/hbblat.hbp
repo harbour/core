@@ -18,7 +18,7 @@
 
 -iflag={bcc}-a
 
-hbblat.hbx
+${hb_name}.hbx
 
 blatwrp.c
 blatcls.prg

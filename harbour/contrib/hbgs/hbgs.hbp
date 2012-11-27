@@ -21,6 +21,6 @@
 -depimplibs=gs:${HB_WITH_GS_BIN}/gsdll2.dll{os2}
 -depimplibd=gs:gs
 
-hbgs.hbx
+${hb_name}.hbx
 
 core.c

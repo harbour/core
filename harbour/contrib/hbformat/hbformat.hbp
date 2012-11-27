@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-hbformat.hbx
+${hb_name}.hbx
 
 hbfmtcls.prg
 hbfuncs.prg

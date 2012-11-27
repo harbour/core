@@ -26,7 +26,7 @@ wvgutils.c
 wvgwin.c
 wvgwing.c
 
-gtwvg.hbx
+${hb_name}.hbx
 
 3state.prg
 activex.prg

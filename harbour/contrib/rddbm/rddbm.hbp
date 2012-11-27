@@ -9,7 +9,7 @@
 
 -w3 -es2
 
-rddbm.hbx
+${hb_name}.hbx
 
 bmdbfx.c
 bmdbfcdx.prg
