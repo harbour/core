@@ -6,8 +6,6 @@
 
 #include "simpleio.ch"
 
-#include "sql.ch"
-
 PROCEDURE Main()
 
    LOCAL hEnv

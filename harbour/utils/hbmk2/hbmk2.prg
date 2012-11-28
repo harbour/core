@@ -12797,7 +12797,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL cExt
    LOCAL tmp
    LOCAL l_cHB_INSTALL_PREFIX
-   LOCAL aINCPATH
+   LOCAL aOPTPRG
    LOCAL hHRB
 
    s_cDirBase_hbshell := hb_DirBase()
@@ -12884,14 +12884,19 @@ STATIC PROCEDURE __hbshell( cFile, ... )
             ENDIF
          NEXT
 
-         aINCPATH := {}
+         aOPTPRG := {}
+
          FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
-            AAdd( aINCPATH, "-I" + tmp )
+            AAdd( aOPTPRG, "-I" + tmp )
+         NEXT
+
+         FOR EACH tmp IN hbmk[ _HBMK_aCH ]
+            AAdd( aOPTPRG, "-u+" + tmp )
          NEXT
 
          /* We can use this function as this is a GPL licenced application */
          cFile := hb_compileBuf( hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-w", "-es2", "-q0", ;
-                                 hb_ArrayToParams( aINCPATH ), "-D" + _HBMK_SHELL, cFile )
+                                 hb_ArrayToParams( aOPTPRG ), "-D" + _HBMK_SHELL, cFile )
          IF cFile == NIL
             ErrorLevel( 1 )
             EXIT
