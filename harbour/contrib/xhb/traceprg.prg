@@ -49,7 +49,6 @@
  *
  */
 
-#include "set.ch"
 #include "fileio.ch"
 
 #define HB_SET_TRACESTACK_NONE    0

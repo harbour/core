@@ -19,8 +19,6 @@
  * Initial revision.
  */
 
-#include "set.ch"
-
 #define PV_ROW     1
 #define PV_COL     2
 #define PV_COLOR   3

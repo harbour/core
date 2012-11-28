@@ -26,8 +26,6 @@
  *
  */
 
-#include "set.ch"
-
 #define FT_EXTRA_SETS    2
 #define FT_SET_CENTURY   _SET_COUNT + 1
 #define FT_SET_BLINK     _SET_COUNT + 2

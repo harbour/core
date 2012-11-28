@@ -22,8 +22,6 @@
       RELATION, TYPEAHEAD
    $EXAMPLES$
       aOldSets := ft_SaveSets()
-   $INCLUDE$
-      set.ch
    $SEEALSO$
       ft_RestSets() ft_SetCentury()
    $END$

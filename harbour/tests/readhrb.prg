@@ -15,7 +15,6 @@
  */
 
 #include "fileio.ch"
-#include "set.ch"
 
 #define HRB_HEADER      ( hb_BChar( 192 ) + hb_BChar( 72 ) + hb_BChar( 82 ) + hb_BChar( 66 ) )
 #define HB_FS_PUBLIC    ( 0x0001 )

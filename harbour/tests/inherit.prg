@@ -3,7 +3,6 @@
  */
 
 #include "fileio.ch"
-#include "set.ch"
 
 //
 // Test of inheritance

@@ -3,7 +3,6 @@
  */
 
 #include "fileio.ch"
-#include "set.ch"
 #include "hbclass.ch"
 
 #xtranslate Default( <Var>, <xVal> ) => iif( <Var> == NIL, <xVal>, <Var> )

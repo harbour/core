@@ -4,8 +4,6 @@
 
 // Testing SET
 
-#include "set.ch"
-
 PROCEDURE Main()
 
    LOCAL n

@@ -17,7 +17,6 @@
 //
 
 #include "color.ch"
-#include "set.ch"
 
 PROCEDURE Main()
 

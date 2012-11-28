@@ -68,7 +68,6 @@
 
 #include "error.ch"
 #include "fileio.ch"
-#include "set.ch"
 
 REQUEST Select, Alias, RecNo, DbFilter, DbRelation, IndexOrd, IndexKey
 

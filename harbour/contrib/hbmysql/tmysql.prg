@@ -54,7 +54,6 @@
 #include "hbclass.ch"
 
 #include "dbstruct.ch"
-#include "set.ch"
 
 #include "mysql.ch"
 

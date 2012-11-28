@@ -2,8 +2,6 @@
  * $Id$
  */
 
-#include "set.ch"
-
 PROCEDURE Main()
 
    LOCAL dDate := hb_SToD( "19990430" )

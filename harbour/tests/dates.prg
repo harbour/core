@@ -4,8 +4,6 @@
 
 // Testing Harbour dates management.
 
-#include "set.ch"
-
 PROCEDURE Main()
 
    LOCAL dDate, dDate2, cMask, cDate

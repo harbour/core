@@ -26,7 +26,6 @@
 #require "gtwvw"
 
 #include "inkey.ch"
-#include "set.ch"
 #include "setcurs.ch"
 
 #define EN_SETFOCUS         0x0100

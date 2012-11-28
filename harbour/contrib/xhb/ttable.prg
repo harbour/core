@@ -64,7 +64,6 @@
 #include "hbclass.ch"
 
 #include "ttable.ch"
-#include "set.ch"
 #include "ord.ch"
 #include "inkey.ch"
 #include "dbinfo.ch"

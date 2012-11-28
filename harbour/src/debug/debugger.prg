@@ -83,7 +83,6 @@
 #include "box.ch"
 #include "getexit.ch"
 #include "inkey.ch"
-#include "set.ch"
 #include "setcurs.ch"
 
 
