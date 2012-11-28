@@ -1155,7 +1155,7 @@ static void set_tmevt( unsigned char * cMBuf, mouseEvent * mEvt )
          break;
    }
    chk_mevtdblck( mEvt );
-   /* printf("\n\rmouse event: %02x, %02x, %02x\n\r", cMBuf[0], cMBuf[1], cMBuf[2]); */
+   /* printf( "\n\rmouse event: %02x, %02x, %02x\n\r", cMBuf[ 0 ], cMBuf[ 1 ], cMBuf[ 2 ] ); */
 }
 
 #if defined( HB_HAS_GPM )
@@ -1374,13 +1374,13 @@ static void gt_refresh( InOutBase * ioBase )
 {
    if( ioBase->disp_count == 0 )
    {
-/*
-   if(ioBase->cursor == SC_NONE)
-       leaveok( ioBase->hb_stdscr, HB_TRUE );
-   else
-       leaveok( ioBase->hb_stdscr, HB_FALSE );
- */
-/* if(ioBase->cursor != SC_NONE) */
+#if 0
+      if( ioBase->cursor == SC_NONE )
+         leaveok( ioBase->hb_stdscr, HB_TRUE );
+      else
+         leaveok( ioBase->hb_stdscr, HB_FALSE );
+#endif
+      /* if( ioBase->cursor != SC_NONE ) */
       wmove( ioBase->hb_stdscr, ioBase->row, ioBase->col );
       wrefresh( ioBase->hb_stdscr );
       disp_cursor( ioBase );
@@ -1790,22 +1790,23 @@ static int gt_resize( InOutBase * ioBase )
 
    if( gt_getsize( ioBase, &rows, &cols ) >= 0 )
    {
-/*
+#if 0
 #if defined( NCURSES_VERSION )
-   wresize( ioBase->hb_stdscr, rows, cols );
+      wresize( ioBase->hb_stdscr, rows, cols );
 #endif
-*/
+#endif
       endwin();
       gt_refresh( ioBase );
       ret = 0;
-/*
+#if 0
 #if defined( NCURSES_VERSION )
-        if( resize_term( rows, cols ) == OK ) {
-       ret = 0;
-            gt_refresh( ioBase );
-   }
+      if( resize_term( rows, cols ) == OK )
+      {
+         ret = 0;
+         gt_refresh( ioBase );
+      }
 #endif
-*/
+#endif
       getmaxyx( ioBase->hb_stdscr, ioBase->maxrow, ioBase->maxcol );
    }
    return ret;
@@ -2027,10 +2028,10 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
 
    /* curses screen initialization */
    ioBase->basescr = newterm( crsterm, ioBase->baseout, ioBase->basein );
-   /*
+#if 0
    def_shell_mode();
    def_prog_mode();
-   */
+#endif
    curs_wrkaround();
 
    if( ioBase->basescr == NULL )
@@ -2088,18 +2089,19 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
                                         COLOR_WHITE };
 
       start_color();
-/*
-        for( bg = 0; bg < COLORS; bg++ )
-            for( fg = 0; fg < COLORS; fg++ )
-       {
-      i = bg * COLORS + fg;
-      if( i == 0 )
-          i = 7;
-      else if( i == 7 )
-          i = 0;
-                init_pair( i, color_map[ fg ], color_map[ bg ] );
-       }
- */
+
+#if 0
+      for( bg = 0; bg < COLORS; bg++ )
+         for( fg = 0; fg < COLORS; fg++ )
+         {
+            i = bg * COLORS + fg;
+            if( i == 0 )
+               i = 7;
+            else if( i == 7 )
+               i = 0;
+            init_pair( i, color_map[ fg ], color_map[ bg ] );
+         }
+#endif
       for( i = 0; i < 256; i++ )
       {
          bg = ( i >> 4 ) & 0x07; /* extract background color bits 4-6 */
@@ -2141,11 +2143,11 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
 
    getmaxyx( ioBase->hb_stdscr, ioBase->maxrow, ioBase->maxcol );
    scrollok( ioBase->hb_stdscr, HB_FALSE );
-/*
-    idlok( ioBase->hb_stdscr, HB_FALSE );
-    idcok( ioBase->hb_stdscr, HB_FALSE );
-    leaveok( ioBase->hb_stdscr, HB_FALSE );
- */
+#if 0
+   idlok( ioBase->hb_stdscr, HB_FALSE );
+   idcok( ioBase->hb_stdscr, HB_FALSE );
+   leaveok( ioBase->hb_stdscr, HB_FALSE );
+#endif
    /*
     * curses keyboard initialization
     * we have our own keyboard routine so it's unnecessary now
@@ -2157,14 +2159,14 @@ static InOutBase * create_ioBase( char * term, int infd, int outfd, int errfd,
    leaveok( ioBase->hb_stdscr, HB_FALSE );
    curs_set( 0 );
 
-/*
-    nonl();
-    nodelay( ioBase->hb_stdscr, HB_TRUE);
-    keypad( ioBase->hb_stdscr, HB_FALSE);
-    timeout( 0 );
-    noecho();
-    curs_set( 0 );
- */
+#if 0
+   nonl();
+   nodelay( ioBase->hb_stdscr, HB_TRUE );
+   keypad( ioBase->hb_stdscr, HB_FALSE );
+   timeout( 0 );
+   noecho();
+   curs_set( 0 );
+#endif
    wclear( ioBase->hb_stdscr );
    wrefresh( ioBase->hb_stdscr );
 
@@ -2183,10 +2185,8 @@ static void destroy_ioBase( InOutBase * ioBase )
    del_all_efds( ioBase );
 
    if( ioBase->terminal_type == TERM_LINUX )
-   {
       /* restore a standard bell frequency and duration */
       write_ttyseq( ioBase, "\033[10]\033[11]" );
-   }
 
    /* curses SCREEN delete */
    if( ioBase->hb_stdscr != NULL )
@@ -2265,20 +2265,20 @@ static InOutBase * create_newXterm( void )
       else
          ptr = ptyname;
       hb_snprintf( buf, sizeof( buf ), "-S%s/%d", ptr, masterfd );
-/*
-      close(0);
-      close(1);
-      close(2);
- */
-/*
-      dup2(masterfd, 0);
-      dup2(masterfd, 1);
 #if 0
-      fd = open("/tmp/hb-xterm.log", O_WRONLY|O_CREAT|O_TRUNC, S_IRUSR|S_IWUSR);
+      close( 0 );
+      close( 1 );
+      close( 2 );
 #endif
-      fd = open("/dev/null", O_WRONLY);
-      dup2(fd, 2);
- */
+#if 0
+      dup2( masterfd, 0 );
+      dup2( masterfd, 1 );
+#if 0
+      fd = open( "/tmp/hb-xterm.log", O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR );
+#endif
+      fd = open( "/dev/null", O_WRONLY );
+      dup2( fd, 2 );
+#endif
       for( fd = 3; fd < MAXFD; ++fd )
          if( fd != masterfd )
             close( fd );
@@ -2543,6 +2543,7 @@ static HB_BOOL hb_gt_crs_SetMode( PHB_GT pGT, int iRows, int iCols )
       HB_GTSELF_RESIZE( pGT, iRows, iCols );
       return HB_TRUE;
    }
+
    return HB_FALSE;
 }
 
@@ -2571,10 +2572,8 @@ static void hb_gt_crs_Tone( PHB_GT pGT, double dFrequency, double dDuration )
    gt_tone( s_ioBase, dFrequency, dDuration );
 
    if( s_ioBase->terminal_type == TERM_LINUX )
-   {
       /* convert Clipper (DOS) timer tick units to seconds ( x / 18.2 ) */
       hb_idleSleep( dDuration / 18.2 );
-   }
 }
 
 /* *********************************************************************** */
@@ -2638,6 +2637,7 @@ static HB_BOOL hb_gt_crs_Suspend( PHB_GT pGT )
       endwin();
       gt_ttyrestore( s_ioBase );
    }
+
    return HB_TRUE;
 }
 
@@ -2657,6 +2657,7 @@ static HB_BOOL hb_gt_crs_Resume( PHB_GT pGT )
       /* redrawwin( s_ioBase->hb_stdscr ); */
       gt_refresh( s_ioBase );
    }
+
    return HB_TRUE;
 }
 
@@ -2669,9 +2670,8 @@ static HB_BOOL hb_gt_crs_PreExt( PHB_GT pGT )
    HB_SYMBOL_UNUSED( pGT );
 
    if( s_ioBase )
-   {
       gt_refresh( s_ioBase );
-   }
+
    return HB_TRUE;
 }
 
@@ -2722,9 +2722,7 @@ static void hb_gt_crs_mouse_Hide( PHB_GT pGT )
 
 #if defined( HB_HAS_GPM )
    if( s_ioBase->mouse_type == MOUSE_GPM )
-   {
       gpm_visiblepointer = 0;
-   }
 #endif
 }
 
@@ -2978,7 +2976,9 @@ static HB_BOOL hb_gt_FuncInit( PHB_GT_FUNCS pFuncTable )
 static void curs_wrkaround( void )
 {
    back_color_erase = HB_FALSE;
-   /* cur_term->type.Booleans[28] = 0; */
+#if 0
+   cur_term->type.Booleans[ 28 ] = 0;
+#endif
 }
 #else
 static void curs_wrkaround( void ) { ; }

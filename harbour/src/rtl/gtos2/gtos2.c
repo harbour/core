@@ -573,9 +573,7 @@ static void hb_gt_os2_Init( PHB_GT pGT, HB_FHANDLE hFilenoStdin, HB_FHANDLE hFil
    /* If I could not set codepage 437 I reset previous codepage,
       maybe I do not need to do this */
    if( VioSetCp( 0, 437, 0 ) != NO_ERROR )
-   {
       VioSetCp( 0, s_usOldCodePage, 0 );
-   }
 
    hb_gt_os2_GetCursorPosition( &s_iCurRow, &s_iCurCol );
    s_iCursorStyle = hb_gt_os2_GetCursorStyle();
