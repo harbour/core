@@ -6,7 +6,8 @@
  * Harbour Project source code:
  * xhb compatibility functions
  *
- * Copyright 2007 Viktor Szakats (harbour syenar.net)
+ * Copyright 2007-2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2004 Eduardo Fernandes <modalsist@yahoo.com.br> (original of OCCURS())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -147,3 +148,27 @@ CREATE CLASS Block FUNCTION _Block
    OPERATOR "==" FUNCTION xhb_EEqual()
 
 ENDCLASS
+
+/* Return the number of times s1 occurs in s2 */
+FUNCTION Occurs( s1, s2 )
+
+   LOCAL nCount := 0
+   LOCAL nPos
+
+   IF HB_ISSTRING( s1 ) .AND. ;
+      HB_ISSTRING( s2 ) .AND. ;
+      Len( s1 ) != 0 .AND. ;
+      Len( s2 ) != 0
+
+      DO WHILE .T.
+         nPos := At( s1, s2 )
+         IF nPos > 0
+            nCount++
+            s2 := SubStr( s2, nPos + 1 )
+         ELSE
+            EXIT
+         ENDIF
+      ENDDO
+   ENDIF
+
+   RETURN nCount
