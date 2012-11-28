@@ -2170,6 +2170,9 @@ HB_BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
          PCLASS pClass   = s_pClasses[ pStack->uiClass ];
          PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
 
+         if( pMethod->pMessage == s___msgOnError.pDynSym )
+            return hb_vmMsgReference( pObject, pMessage->pDynSym, NULL );
+
          if( ! pMethod->pAccMsg )
             pMethod->pAccMsg = hb_dynsymGetCase( pMessage->szName + 1 );
 
