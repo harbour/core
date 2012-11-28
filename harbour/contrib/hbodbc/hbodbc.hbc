@@ -8,6 +8,8 @@ incpaths=.
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
+headers=sql.ch
+
 {win}libs=odbc32
 {unix&!darwin}libs=odbc
 {unix&darwin}libs=iodbc
