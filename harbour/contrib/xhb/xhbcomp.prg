@@ -7,7 +7,7 @@
  * xhb compatibility functions
  *
  * Copyright 2007-2012 Viktor Szakats (harbour syenar.net)
- * Copyright 2004 Eduardo Fernandes <modalsist@yahoo.com.br> (original of OCCURS())
+ * Copyright 2004 Eduardo Fernandes <modalsist@yahoo.com.br> (original of Occurs())
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
