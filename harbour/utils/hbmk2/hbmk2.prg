@@ -12710,6 +12710,7 @@ STATIC FUNCTION hbmk_CoreHeaderFiles()
       ADD HEADER TO t_hHeaders FILE "hbsocket.ch"
       ADD HEADER TO t_hHeaders FILE "hbstdgen.ch"
       ADD HEADER TO t_hHeaders FILE "hbsxdef.ch"
+      ADD HEADER TO t_hHeaders FILE "hbtest.ch"
       ADD HEADER TO t_hHeaders FILE "hbthread.ch"
       ADD HEADER TO t_hHeaders FILE "hbtrace.ch"
       ADD HEADER TO t_hHeaders FILE "hbusrrdd.ch"
