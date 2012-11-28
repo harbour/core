@@ -63,467 +63,467 @@ PROCEDURE Main_MATH()
 
    /* Log() */
 
-   TEST_LINE( Log("A")                        , "E 1 BASE 1095 Argument error (LOG) OS:0 #:0 A:1:C:A F:S" )
-   TEST_LINE( Str(Log(-1))                    , "***********************"              )
-// TEST_LINE( Str(Log(0))                     , "***********************"              )
-   TEST_LINE( Str(Log(1))                     , "         0.00"                        )
-   TEST_LINE( Str(Log(12))                    , "         2.48"                        )
-   TEST_LINE( Str(Log(snIntP))                , "         2.30"                        )
+   HBTEST Log("A")                        IS "E 1 BASE 1095 Argument error (LOG) OS:0 #:0 A:1:C:A F:S"
+   HBTEST Str(Log(-1))                    IS "***********************"
+// HBTEST Str(Log(0))                     IS "***********************"
+   HBTEST Str(Log(1))                     IS "         0.00"
+   HBTEST Str(Log(12))                    IS "         2.48"
+   HBTEST Str(Log(snIntP))                IS "         2.30"
 #ifdef __HARBOUR__
-   TEST_LINE( Str(Log(@snIntP))               , "         2.30"                        ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1095 Argument error (LOG) OS:0 #:0 A:1:U:10 F:S" */
+   HBTEST Str(Log(@snIntP))               IS "         2.30"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1095 Argument error (LOG) OS:0 #:0 A:1:U:10 F:S" */
 #endif
 
    /* Sqrt() */
 
-   TEST_LINE( Sqrt("A")                       , "E 1 BASE 1097 Argument error (SQRT) OS:0 #:0 A:1:C:A F:S" )
-   TEST_LINE( Sqrt(-1)                        , 0                                      )
-   TEST_LINE( Sqrt(0)                         , 0                                      )
-   TEST_LINE( Sqrt(4)                         , 2                                      )
-   TEST_LINE( Str(Sqrt(snIntP))               , "         3.16"                        )
+   HBTEST Sqrt("A")                       IS "E 1 BASE 1097 Argument error (SQRT) OS:0 #:0 A:1:C:A F:S"
+   HBTEST Sqrt(-1)                        IS 0
+   HBTEST Sqrt(0)                         IS 0
+   HBTEST Sqrt(4)                         IS 2
+   HBTEST Str(Sqrt(snIntP))               IS "         3.16"
 #ifdef __HARBOUR__
-   TEST_LINE( Str(Sqrt(@snIntP))              , "         3.16"                        ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1097 Argument error (SQRT) OS:0 #:0 A:1:U:10 F:S" */
+   HBTEST Str(Sqrt(@snIntP))              IS "         3.16"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1097 Argument error (SQRT) OS:0 #:0 A:1:U:10 F:S" */
 #endif
-   TEST_LINE( Str(Sqrt(4),21,18)              , " 2.000000000000000000"                )
-   TEST_LINE( Str(Sqrt(3),21,18)              , " 1.732050807568877000"                )
+   HBTEST Str(Sqrt(4),21,18)              IS " 2.000000000000000000"
+   HBTEST Str(Sqrt(3),21,18)              IS " 1.732050807568877000"
 
    /* Abs() */
 
-   TEST_LINE( Abs("A")                        , "E 1 BASE 1089 Argument error (ABS) OS:0 #:0 A:1:C:A F:S" )
-   TEST_LINE( Abs(0)                          , 0                                      )
-   TEST_LINE( Abs(10)                         , 10                                     )
-   TEST_LINE( Abs(-10)                        , 10                                     )
-   TEST_LINE( Str(Abs(snIntN))                , "        10"                           )
+   HBTEST Abs("A")                        IS "E 1 BASE 1089 Argument error (ABS) OS:0 #:0 A:1:C:A F:S"
+   HBTEST Abs(0)                          IS 0
+   HBTEST Abs(10)                         IS 10
+   HBTEST Abs(-10)                        IS 10
+   HBTEST Str(Abs(snIntN))                IS "        10"
 #ifdef __HARBOUR__
-   TEST_LINE( Str(Abs(@snIntN))               , "        10"                           ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1089 Argument error (ABS) OS:0 #:0 A:1:U:-10 F:S" */
+   HBTEST Str(Abs(@snIntN))               IS "        10"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1089 Argument error (ABS) OS:0 #:0 A:1:U:-10 F:S" */
 #endif
-   TEST_LINE( Abs(Month(sdDate))              , 3                                      )
-   TEST_LINE( Abs(-Month(sdDate))             , 3                                      )
-   TEST_LINE( Str(Abs(Year(sdDateE)))         , "    0"                                )
-   TEST_LINE( Str(Abs(-Year(sdDateE)))        , "         0"                           )
-   TEST_LINE( Str(Abs(Year(sdDate)))          , " 1984"                                )
-   TEST_LINE( Str(Abs(-Year(sdDate)))         , "      1984"                           )
-   TEST_LINE( Str(Abs(Month(sdDate)))         , "  3"                                  )
-   TEST_LINE( Str(Abs(-Month(sdDate)))        , "         3"                           )
-   TEST_LINE( Str(Abs(0))                     , "         0"                           )
-   TEST_LINE( Str(Abs(0.0))                   , "         0.0"                         )
-   TEST_LINE( Str(Abs(-0))                    , "         0"                           )
-   TEST_LINE( Str(Abs(150))                   , "       150"                           )
-   TEST_LINE( Str(Abs(-150))                  , "       150"                           )
-   TEST_LINE( Str(Abs(150.245))               , "       150.245"                       )
-   TEST_LINE( Str(Abs(-150.245))              , "       150.245"                       )
-   TEST_LINE( Str(Abs(Val("0")))              , "0"                                    )
-   TEST_LINE( Str(Abs(Val("-0")))             , " 0"                                   )
-   TEST_LINE( Str(Abs(Val("150")))            , "150"                                  )
-   TEST_LINE( Str(Abs(Val("-150")))           , "       150"                           )
-   TEST_LINE( Str(Abs(Val("150.245")))        , "       150.245"                       )
-   TEST_LINE( Str(Abs(Val("-150.245")))       , "       150.245"                       )
-   TEST_LINE( Abs(0.1)                        , 0.1                                    )
-   TEST_LINE( Abs(10.5)                       , 10.5                                   )
-   TEST_LINE( Abs(-10.7)                      , 10.7                                   )
-   TEST_LINE( Abs(10.578)                     , 10.578                                 )
-   TEST_LINE( Abs(-10.578)                    , 10.578                                 )
-   TEST_LINE( Abs(100000)                     , 100000                                 )
-   TEST_LINE( Abs(-100000)                    , 100000                                 )
+   HBTEST Abs(Month(sdDate))              IS 3
+   HBTEST Abs(-Month(sdDate))             IS 3
+   HBTEST Str(Abs(Year(sdDateE)))         IS "    0"
+   HBTEST Str(Abs(-Year(sdDateE)))        IS "         0"
+   HBTEST Str(Abs(Year(sdDate)))          IS " 1984"
+   HBTEST Str(Abs(-Year(sdDate)))         IS "      1984"
+   HBTEST Str(Abs(Month(sdDate)))         IS "  3"
+   HBTEST Str(Abs(-Month(sdDate)))        IS "         3"
+   HBTEST Str(Abs(0))                     IS "         0"
+   HBTEST Str(Abs(0.0))                   IS "         0.0"
+   HBTEST Str(Abs(-0))                    IS "         0"
+   HBTEST Str(Abs(150))                   IS "       150"
+   HBTEST Str(Abs(-150))                  IS "       150"
+   HBTEST Str(Abs(150.245))               IS "       150.245"
+   HBTEST Str(Abs(-150.245))              IS "       150.245"
+   HBTEST Str(Abs(Val("0")))              IS "0"
+   HBTEST Str(Abs(Val("-0")))             IS " 0"
+   HBTEST Str(Abs(Val("150")))            IS "150"
+   HBTEST Str(Abs(Val("-150")))           IS "       150"
+   HBTEST Str(Abs(Val("150.245")))        IS "       150.245"
+   HBTEST Str(Abs(Val("-150.245")))       IS "       150.245"
+   HBTEST Abs(0.1)                        IS 0.1
+   HBTEST Abs(10.5)                       IS 10.5
+   HBTEST Abs(-10.7)                      IS 10.7
+   HBTEST Abs(10.578)                     IS 10.578
+   HBTEST Abs(-10.578)                    IS 10.578
+   HBTEST Abs(100000)                     IS 100000
+   HBTEST Abs(-100000)                    IS 100000
 
    /* Exp() */
 
-   TEST_LINE( Exp("A")                        , "E 1 BASE 1096 Argument error (EXP) OS:0 #:0 A:1:C:A F:S" )
-   TEST_LINE( Exp(0)                          , 1.00                                   )
-   TEST_LINE( Str(Exp(15))                    , "   3269017.37"                        )
-   TEST_LINE( Str(Exp(snIntZ))                , "         1.00"                        )
+   HBTEST Exp("A")                        IS "E 1 BASE 1096 Argument error (EXP) OS:0 #:0 A:1:C:A F:S"
+   HBTEST Exp(0)                          IS 1.00
+   HBTEST Str(Exp(15))                    IS "   3269017.37"
+   HBTEST Str(Exp(snIntZ))                IS "         1.00"
 #ifdef __HARBOUR__
-   TEST_LINE( Str(Exp(@snIntZ))               , "         1.00"                        ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1096 Argument error (EXP) OS:0 #:0 A:1:U:0 F:S" */
+   HBTEST Str(Exp(@snIntZ))               IS "         1.00"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1096 Argument error (EXP) OS:0 #:0 A:1:U:0 F:S" */
 #endif
-   TEST_LINE( Round(Exp(1),2)                 , 2.72                                   )
-   TEST_LINE( Str(Exp(1),20,10)               , "        2.7182818285"                 )
-   TEST_LINE( Round(Exp(10),2)                , 22026.47                               )
-   TEST_LINE( Str(Exp(10),20,10)              , "    22026.4657948067"                 )
+   HBTEST Round(Exp(1),2)                 IS 2.72
+   HBTEST Str(Exp(1),20,10)               IS "        2.7182818285"
+   HBTEST Round(Exp(10),2)                IS 22026.47
+   HBTEST Str(Exp(10),20,10)              IS "    22026.4657948067"
 
    /* Round() */
 
-   TEST_LINE( Round(snDoubleP, snIntZ)        , 11                                     )
+   HBTEST Round(snDoubleP, snIntZ)        IS 11
 #ifdef __HARBOUR__
-   TEST_LINE( Round(@snDoubleP, @snIntZ)      , 11                                     ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1094 Argument error (ROUND) OS:0 #:0 A:2:U:10.567;U:0 F:S" */
+   HBTEST Round(@snDoubleP, @snIntZ)      IS 11  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1094 Argument error (ROUND) OS:0 #:0 A:2:U:10.567;U:0 F:S" */
 #endif
-   TEST_LINE( Round(NIL, 0)                   , "E 1 BASE 1094 Argument error (ROUND) OS:0 #:0 A:2:U:NIL;N:0 F:S" )
-   TEST_LINE( Round(0, NIL)                   , "E 1 BASE 1094 Argument error (ROUND) OS:0 #:0 A:2:N:0;U:NIL F:S" )
-   TEST_LINE( Round(0, 0)                     , 0                )
-   TEST_LINE( Round(0, 2)                     , 0.00             )
-   TEST_LINE( Round(0, -2)                    , 0                )
-   TEST_LINE( Round(0.5, 0)                   , 1                )
-   TEST_LINE( Round(0.5, 1)                   , 0.5              )
-   TEST_LINE( Round(0.5, 2)                   , 0.50             )
-   TEST_LINE( Round(0.5, -1)                  , 0                )
-   TEST_LINE( Round(0.5, -2)                  , 0                )
-   TEST_LINE( Round(0.50, 0)                  , 1                )
-   TEST_LINE( Round(0.50, 1)                  , 0.5              )
-   TEST_LINE( Round(0.50, 2)                  , 0.50             )
-   TEST_LINE( Round(0.50, -1)                 , 0                )
-   TEST_LINE( Round(0.50, -2)                 , 0                )
-   TEST_LINE( Round(0.55, 0)                  , 1                )
-   TEST_LINE( Round(0.55, 1)                  , 0.6              )
-   TEST_LINE( Round(0.55, 2)                  , 0.55             )
-   TEST_LINE( Round(0.55, -1)                 , 0                )
-   TEST_LINE( Round(0.55, -2)                 , 0                )
-   TEST_LINE( Round(0.557, 0)                 , 1                )
-   TEST_LINE( Round(0.557, 1)                 , 0.6              )
-   TEST_LINE( Round(0.557, 2)                 , 0.56             )
-   TEST_LINE( Round(0.557, -1)                , 0                )
-   TEST_LINE( Round(0.557, -2)                , 0                )
-   TEST_LINE( Round(50, 0)                    , 50               )
-   TEST_LINE( Round(50, 1)                    , 50.0             )
-   TEST_LINE( Round(50, 2)                    , 50.00            )
-   TEST_LINE( Round(50, -1)                   , 50               )
-   TEST_LINE( Round(50, -2)                   , 100              )
-   TEST_LINE( Round(10.50, 0)                 , 11               )
-   TEST_LINE( Round(10.50, -1)                , 10               )
-   TEST_LINE( Round(500000, 0)                , 500000           )
-   TEST_LINE( Round(500000, 1)                , 500000.0         )
-   TEST_LINE( Round(500000, 2)                , 500000.00        )
-   TEST_LINE( Round(500000, -1)               , 500000           )
-   TEST_LINE( Round(500000, -2)               , 500000           )
-   TEST_LINE( Round(500000, -2)               , 500000           )
-   TEST_LINE( Round(5000000000, 0)            , 5000000000       )
-   TEST_LINE( Round(5000000000, 1)            , 5000000000.0     )
-   TEST_LINE( Round(5000000000, 2)            , 5000000000.00    )
-   TEST_LINE( Round(5000000000, -1)           , 5000000000       )
-   TEST_LINE( Round(5000000000, -2)           , 5000000000       )
-   TEST_LINE( Round(5000000000, -2)           , 5000000000       )
-   TEST_LINE( Round(5000000000.129, 0)        , 5000000000       )
-   TEST_LINE( Round(5000000000.129, 1)        , 5000000000.1     )
-   TEST_LINE( Round(5000000000.129, 2)        , 5000000000.13    )
-   TEST_LINE( Round(5000000000.129, -1)       , 5000000000       )
-   TEST_LINE( Round(5000000000.129, -2)       , 5000000000       )
-   TEST_LINE( Round(5000000000.129, -2)       , 5000000000       )
-   TEST_LINE( Round(-0.5, 0)                  , -1               )
-   TEST_LINE( Round(-0.5, 1)                  , -0.5             )
-   TEST_LINE( Round(-0.5, 2)                  , -0.50            )
-   TEST_LINE( Round(-0.5, -1)                 , 0                )
-   TEST_LINE( Round(-0.5, -2)                 , 0                )
-   TEST_LINE( Round(-0.50, 0)                 , -1               )
-   TEST_LINE( Round(-0.50, 1)                 , -0.5             )
-   TEST_LINE( Round(-0.50, 2)                 , -0.50            )
-   TEST_LINE( Round(-0.50, -1)                , 0                )
-   TEST_LINE( Round(-0.50, -2)                , 0                )
-   TEST_LINE( Round(-0.55, 0)                 , -1               )
-   TEST_LINE( Round(-0.55, 1)                 , -0.6             )
-   TEST_LINE( Round(-0.55, 2)                 , -0.55            )
-   TEST_LINE( Round(-0.55, -1)                , 0                )
-   TEST_LINE( Round(-0.55, -2)                , 0                )
-   TEST_LINE( Round(-0.557, 0)                , -1               )
-   TEST_LINE( Round(-0.557, 1)                , -0.6             )
-   TEST_LINE( Round(-0.557, 2)                , -0.56            )
-   TEST_LINE( Round(-0.557, -1)               , 0                )
-   TEST_LINE( Round(-0.557, -2)               , 0                )
-   TEST_LINE( Round(-50, 0)                   , -50              )
-   TEST_LINE( Round(-50, 1)                   , -50.0            )
-   TEST_LINE( Round(-50, 2)                   , -50.00           )
-   TEST_LINE( Round(-50, -1)                  , -50              )
-   TEST_LINE( Round(-50, -2)                  , -100             )
-   TEST_LINE( Round(-10.50, 0)                , -11              )
-   TEST_LINE( Round(-10.50, -1)               , -10              )
-   TEST_LINE( Round(-500000, 0)               , -500000          )
-   TEST_LINE( Round(-500000, 1)               , -500000.0        )
-   TEST_LINE( Round(-500000, 2)               , -500000.00       )
-   TEST_LINE( Round(-500000, -1)              , -500000          )
-   TEST_LINE( Round(-500000, -2)              , -500000          )
-   TEST_LINE( Round(-500000, -2)              , -500000          )
-   TEST_LINE( Round(-5000000000, 0)           , -5000000000      )
-   TEST_LINE( Round(-5000000000, 1)           , -5000000000.0    )
-   TEST_LINE( Round(-5000000000, 2)           , -5000000000.00   )
-   TEST_LINE( Round(-5000000000, -1)          , -5000000000      )
-   TEST_LINE( Round(-5000000000, -2)          , -5000000000      )
-   TEST_LINE( Round(-5000000000, -2)          , -5000000000      )
-   TEST_LINE( Round(-5000000000.129, 0)       , -5000000000      )
-   TEST_LINE( Round(-5000000000.129, 1)       , -5000000000.1    )
-   TEST_LINE( Round(-5000000000.129, 2)       , -5000000000.13   )
-   TEST_LINE( Round(-5000000000.129, -1)      , -5000000000      )
-   TEST_LINE( Round(-5000000000.129, -2)      , -5000000000      )
-   TEST_LINE( Round(-5000000000.129, -2)      , -5000000000      )
+   HBTEST Round(NIL, 0)                   IS "E 1 BASE 1094 Argument error (ROUND) OS:0 #:0 A:2:U:NIL;N:0 F:S"
+   HBTEST Round(0, NIL)                   IS "E 1 BASE 1094 Argument error (ROUND) OS:0 #:0 A:2:N:0;U:NIL F:S"
+   HBTEST Round(0, 0)                     IS 0
+   HBTEST Round(0, 2)                     IS 0.00
+   HBTEST Round(0, -2)                    IS 0
+   HBTEST Round(0.5, 0)                   IS 1
+   HBTEST Round(0.5, 1)                   IS 0.5
+   HBTEST Round(0.5, 2)                   IS 0.50
+   HBTEST Round(0.5, -1)                  IS 0
+   HBTEST Round(0.5, -2)                  IS 0
+   HBTEST Round(0.50, 0)                  IS 1
+   HBTEST Round(0.50, 1)                  IS 0.5
+   HBTEST Round(0.50, 2)                  IS 0.50
+   HBTEST Round(0.50, -1)                 IS 0
+   HBTEST Round(0.50, -2)                 IS 0
+   HBTEST Round(0.55, 0)                  IS 1
+   HBTEST Round(0.55, 1)                  IS 0.6
+   HBTEST Round(0.55, 2)                  IS 0.55
+   HBTEST Round(0.55, -1)                 IS 0
+   HBTEST Round(0.55, -2)                 IS 0
+   HBTEST Round(0.557, 0)                 IS 1
+   HBTEST Round(0.557, 1)                 IS 0.6
+   HBTEST Round(0.557, 2)                 IS 0.56
+   HBTEST Round(0.557, -1)                IS 0
+   HBTEST Round(0.557, -2)                IS 0
+   HBTEST Round(50, 0)                    IS 50
+   HBTEST Round(50, 1)                    IS 50.0
+   HBTEST Round(50, 2)                    IS 50.00
+   HBTEST Round(50, -1)                   IS 50
+   HBTEST Round(50, -2)                   IS 100
+   HBTEST Round(10.50, 0)                 IS 11
+   HBTEST Round(10.50, -1)                IS 10
+   HBTEST Round(500000, 0)                IS 500000
+   HBTEST Round(500000, 1)                IS 500000.0
+   HBTEST Round(500000, 2)                IS 500000.00
+   HBTEST Round(500000, -1)               IS 500000
+   HBTEST Round(500000, -2)               IS 500000
+   HBTEST Round(500000, -2)               IS 500000
+   HBTEST Round(5000000000, 0)            IS 5000000000
+   HBTEST Round(5000000000, 1)            IS 5000000000.0
+   HBTEST Round(5000000000, 2)            IS 5000000000.00
+   HBTEST Round(5000000000, -1)           IS 5000000000
+   HBTEST Round(5000000000, -2)           IS 5000000000
+   HBTEST Round(5000000000, -2)           IS 5000000000
+   HBTEST Round(5000000000.129, 0)        IS 5000000000
+   HBTEST Round(5000000000.129, 1)        IS 5000000000.1
+   HBTEST Round(5000000000.129, 2)        IS 5000000000.13
+   HBTEST Round(5000000000.129, -1)       IS 5000000000
+   HBTEST Round(5000000000.129, -2)       IS 5000000000
+   HBTEST Round(5000000000.129, -2)       IS 5000000000
+   HBTEST Round(-0.5, 0)                  IS -1
+   HBTEST Round(-0.5, 1)                  IS -0.5
+   HBTEST Round(-0.5, 2)                  IS -0.50
+   HBTEST Round(-0.5, -1)                 IS 0
+   HBTEST Round(-0.5, -2)                 IS 0
+   HBTEST Round(-0.50, 0)                 IS -1
+   HBTEST Round(-0.50, 1)                 IS -0.5
+   HBTEST Round(-0.50, 2)                 IS -0.50
+   HBTEST Round(-0.50, -1)                IS 0
+   HBTEST Round(-0.50, -2)                IS 0
+   HBTEST Round(-0.55, 0)                 IS -1
+   HBTEST Round(-0.55, 1)                 IS -0.6
+   HBTEST Round(-0.55, 2)                 IS -0.55
+   HBTEST Round(-0.55, -1)                IS 0
+   HBTEST Round(-0.55, -2)                IS 0
+   HBTEST Round(-0.557, 0)                IS -1
+   HBTEST Round(-0.557, 1)                IS -0.6
+   HBTEST Round(-0.557, 2)                IS -0.56
+   HBTEST Round(-0.557, -1)               IS 0
+   HBTEST Round(-0.557, -2)               IS 0
+   HBTEST Round(-50, 0)                   IS -50
+   HBTEST Round(-50, 1)                   IS -50.0
+   HBTEST Round(-50, 2)                   IS -50.00
+   HBTEST Round(-50, -1)                  IS -50
+   HBTEST Round(-50, -2)                  IS -100
+   HBTEST Round(-10.50, 0)                IS -11
+   HBTEST Round(-10.50, -1)               IS -10
+   HBTEST Round(-500000, 0)               IS -500000
+   HBTEST Round(-500000, 1)               IS -500000.0
+   HBTEST Round(-500000, 2)               IS -500000.00
+   HBTEST Round(-500000, -1)              IS -500000
+   HBTEST Round(-500000, -2)              IS -500000
+   HBTEST Round(-500000, -2)              IS -500000
+   HBTEST Round(-5000000000, 0)           IS -5000000000
+   HBTEST Round(-5000000000, 1)           IS -5000000000.0
+   HBTEST Round(-5000000000, 2)           IS -5000000000.00
+   HBTEST Round(-5000000000, -1)          IS -5000000000
+   HBTEST Round(-5000000000, -2)          IS -5000000000
+   HBTEST Round(-5000000000, -2)          IS -5000000000
+   HBTEST Round(-5000000000.129, 0)       IS -5000000000
+   HBTEST Round(-5000000000.129, 1)       IS -5000000000.1
+   HBTEST Round(-5000000000.129, 2)       IS -5000000000.13
+   HBTEST Round(-5000000000.129, -1)      IS -5000000000
+   HBTEST Round(-5000000000.129, -2)      IS -5000000000
+   HBTEST Round(-5000000000.129, -2)      IS -5000000000
 
    /* Int() */
 
-   TEST_LINE( Int( NIL )                      , "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( Int( "A" )                      , "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:C:A F:S" )
-   TEST_LINE( Int( {} )                       , "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:A:{.[0].} F:S" )
-   TEST_LINE( Int( 0 )                        , 0                                    )
-   TEST_LINE( Int( 0.0 )                      , 0                                    )
-   TEST_LINE( Int( 10 )                       , 10                                   )
-   TEST_LINE( Int( snIntP )                   , 10                                   )
+   HBTEST Int( NIL )                      IS "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST Int( "A" )                      IS "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:C:A F:S"
+   HBTEST Int( {} )                       IS "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:A:{.[0].} F:S"
+   HBTEST Int( 0 )                        IS 0
+   HBTEST Int( 0.0 )                      IS 0
+   HBTEST Int( 10 )                       IS 10
+   HBTEST Int( snIntP )                   IS 10
 #ifdef __HARBOUR__
-   TEST_LINE( Int( @snIntP )                  , 10                                   ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:U:10 F:S" */
+   HBTEST Int( @snIntP )                  IS 10  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1090 Argument error (INT) OS:0 #:0 A:1:U:10 F:S" */
 #endif
-   TEST_LINE( Int( -10 )                      , -10                                  )
-   TEST_LINE( Int( 100000 )                   , 100000                               )
-   TEST_LINE( Int( -100000 )                  , -100000                              )
-   TEST_LINE( Int( 10.5 )                     , 10                                   )
-   TEST_LINE( Int( -10.5 )                    , -10                                  )
-   TEST_LINE( Str(Int(Val("100.290")))        , "100"                                )
-   TEST_LINE( Str(Int(Val("  100.290")))      , "  100"                              )
-   TEST_LINE( Str(Int(Val(" 100")))           , " 100"                               )
-   TEST_LINE( Int(5000000000.90)              , 5000000000                           )
-   TEST_LINE( Int(-5000000000.90)             , -5000000000                          )
-   TEST_LINE( Int(5000000000)                 , 5000000000                           )
-   TEST_LINE( Int(-5000000000)                , -5000000000                          )
-   TEST_LINE( Int(5000000000) / 100000        , 50000                                )
-   TEST_LINE( Int(-5000000000) / 100000       , -50000                               )
+   HBTEST Int( -10 )                      IS -10
+   HBTEST Int( 100000 )                   IS 100000
+   HBTEST Int( -100000 )                  IS -100000
+   HBTEST Int( 10.5 )                     IS 10
+   HBTEST Int( -10.5 )                    IS -10
+   HBTEST Str(Int(Val("100.290")))        IS "100"
+   HBTEST Str(Int(Val("  100.290")))      IS "  100"
+   HBTEST Str(Int(Val(" 100")))           IS " 100"
+   HBTEST Int(5000000000.90)              IS 5000000000
+   HBTEST Int(-5000000000.90)             IS -5000000000
+   HBTEST Int(5000000000)                 IS 5000000000
+   HBTEST Int(-5000000000)                IS -5000000000
+   HBTEST Int(5000000000) / 100000        IS 50000
+   HBTEST Int(-5000000000) / 100000       IS -50000
 
    /* Min()/Max() */
 
-   TEST_LINE( Max(NIL, NIL)                                 , "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( Max(10, NIL)                                  , "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:N:10;U:NIL F:S" )
-   TEST_LINE( Max(hb_SToD("19800101"), 10)                  , "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:D:19800101;N:10 F:S" )
-   TEST_LINE( Max(hb_SToD("19800101"), hb_SToD("19800101")) , hb_SToD("19800101")                  )
-   TEST_LINE( Max(hb_SToD("19800102"), hb_SToD("19800101")) , hb_SToD("19800102")                  )
-   TEST_LINE( Max(hb_SToD("19800101"), hb_SToD("19800102")) , hb_SToD("19800102")                  )
-   TEST_LINE( Max(snIntP, snLongP)                          , 100000                               )
+   HBTEST Max(NIL, NIL)                                 IS "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST Max(10, NIL)                                  IS "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:N:10;U:NIL F:S"
+   HBTEST Max(hb_SToD("19800101"), 10)                  IS "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:D:19800101;N:10 F:S"
+   HBTEST Max(hb_SToD("19800101"), hb_SToD("19800101")) IS hb_SToD("19800101")
+   HBTEST Max(hb_SToD("19800102"), hb_SToD("19800101")) IS hb_SToD("19800102")
+   HBTEST Max(hb_SToD("19800101"), hb_SToD("19800102")) IS hb_SToD("19800102")
+   HBTEST Max(snIntP, snLongP)                          IS 100000
 #ifdef __HARBOUR__
-   TEST_LINE( Max(@snIntP, @snLongP)                        , 100000                               ) /* Bug in CA-Cl*pper, it will return: "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:U:10;U:100000 F:S" */
+   HBTEST Max(@snIntP, @snLongP)                        IS 100000  /* Bug in CA-Cl*pper, it will return: "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:U:10;U:100000 F:S" */
 #endif
-   TEST_LINE( Min(NIL, NIL)                                 , "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( Min(10, NIL)                                  , "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:N:10;U:NIL F:S" )
-   TEST_LINE( Min(hb_SToD("19800101"), 10)                  , "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:D:19800101;N:10 F:S" )
-   TEST_LINE( Min(hb_SToD("19800101"), hb_SToD("19800101")) , hb_SToD("19800101")                  )
-   TEST_LINE( Min(hb_SToD("19800102"), hb_SToD("19800101")) , hb_SToD("19800101")                  )
-   TEST_LINE( Min(hb_SToD("19800101"), hb_SToD("19800102")) , hb_SToD("19800101")                  )
-   TEST_LINE( Min(snIntP, snLongP)                          , 10                                   )
+   HBTEST Min(NIL, NIL)                                 IS "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST Min(10, NIL)                                  IS "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:N:10;U:NIL F:S"
+   HBTEST Min(hb_SToD("19800101"), 10)                  IS "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:D:19800101;N:10 F:S"
+   HBTEST Min(hb_SToD("19800101"), hb_SToD("19800101")) IS hb_SToD("19800101")
+   HBTEST Min(hb_SToD("19800102"), hb_SToD("19800101")) IS hb_SToD("19800101")
+   HBTEST Min(hb_SToD("19800101"), hb_SToD("19800102")) IS hb_SToD("19800101")
+   HBTEST Min(snIntP, snLongP)                          IS 10
 #ifdef __HARBOUR__
-   TEST_LINE( Min(@snIntP, @snLongP)                        , 10                                   ) /* Bug in CA-Cl*pper, it will return: "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:U:10;U:100000 F:S" */
+   HBTEST Min(@snIntP, @snLongP)                        IS 10      /* Bug in CA-Cl*pper, it will return: "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:U:10;U:100000 F:S" */
 #endif
 
    /* Decimals handling */
 
-   TEST_LINE( Str(Max(10, 12)             )   , "        12"                   )
-   TEST_LINE( Str(Max(10.50, 10)          )   , "        10.50"                )
-   TEST_LINE( Str(Max(10, 9.50)           )   , "        10"                   )
-   TEST_LINE( Str(Max(100000, 10)         )   , "    100000"                   )
-   TEST_LINE( Str(Max(20.50, 20.670)      )   , "        20.670"               )
-   TEST_LINE( Str(Max(20.5125, 20.670)    )   , "        20.670"               )
-   TEST_LINE( Str(Min(10, 12)             )   , "        10"                   )
-   TEST_LINE( Str(Min(10.50, 10)          )   , "        10"                   )
-   TEST_LINE( Str(Min(10, 9.50)           )   , "         9.50"                )
-   TEST_LINE( Str(Min(100000, 10)         )   , "        10"                   )
-   TEST_LINE( Str(Min(20.50, 20.670)      )   , "        20.50"                )
-   TEST_LINE( Str(Min(20.5125, 20.670)    )   , "        20.5125"              )
-   TEST_LINE( Str(Val("0x10")             )   , "   0"                         )
-   TEST_LINE( Str(Val("0X10")             )   , "   0"                         )
-   TEST_LINE( Str(Val("15E2")             )   , "  15"                         )
-   TEST_LINE( Str(Val("15E21")            )   , "   15"                        )
-   TEST_LINE( Str(Val("15.1A10")          )   , "15.1000"                      )
-   TEST_LINE( Str(Val("15.1A1")           )   , "15.100"                       )
-   TEST_LINE( Str(Val("A")                )   , "0"                            )
-   TEST_LINE( Str(Val("AAA0")             )   , "   0"                         )
-   TEST_LINE( Str(Val("AAA2")             )   , "   0"                         )
-   TEST_LINE( Str(Val("")                 )   , "         0"                   )
-   TEST_LINE( Str(Val("0")                )   , "0"                            )
-   TEST_LINE( Str(Val(" 0")               )   , " 0"                           )
-   TEST_LINE( Str(Val("-0")               )   , " 0"                           )
-   TEST_LINE( Str(Val("00")               )   , " 0"                           )
-   TEST_LINE( Str(Val("1")                )   , "1"                            )
-   TEST_LINE( Str(Val("15")               )   , "15"                           )
-   TEST_LINE( Str(Val("200")              )   , "200"                          )
-   TEST_LINE( Str(Val(" 200")             )   , " 200"                         )
-   TEST_LINE( Str(Val("200 ")             )   , " 200"                         )
-   TEST_LINE( Str(Val(" 200 ")            )   , "  200"                        )
-   TEST_LINE( Str(Val("-200")             )   , "-200"                         )
-   TEST_LINE( Str(Val(" -200")            )   , " -200"                        )
-   TEST_LINE( Str(Val("-200 ")            )   , " -200"                        )
-   TEST_LINE( Str(Val(" -200 ")           )   , "  -200"                       )
-   TEST_LINE( Str(Val("15.0")             )   , "15.0"                         )
-   TEST_LINE( Str(Val("15.00")            )   , "15.00"                        )
-   TEST_LINE( Str(Val("15.000")           )   , "15.000"                       )
-   TEST_LINE( Str(Val("15.001 ")          )   , "15.0010"                      )
-   TEST_LINE( Str(Val("100000000")        )   , "100000000"                    )
-   TEST_LINE( Str(Val("5000000000")       )   , "5000000000"                   )
-   TEST_LINE( Str(10                      )   , "        10"                   )
-   TEST_LINE( Str(15.0                    )   , "        15.0"                 )
-   TEST_LINE( Str(10.1                    )   , "        10.1"                 )
-   TEST_LINE( Str(15.00                   )   , "        15.00"                )
-//   TEST_LINE( Str(Log(0)                  )   , "***********************"      )
-   TEST_LINE( Str(100.2 * 200.12          )   , "     20052.024"               )
-   TEST_LINE( Str(100.20 * 200.12         )   , "     20052.0240"              )
-   TEST_LINE( Str(1000.2 * 200.12         )   , "    200160.024"               )
-   TEST_LINE( Str(100/1000                )   , "         0.10"                )
-   TEST_LINE( Str(100/100000              )   , "         0.00"                )
-   TEST_LINE( Str(10 * 10                 )   , "       100"                   )
-   TEST_LINE( Str(100 / 10                )   , "        10"                   )
-   TEST_LINE( Str(100 / 13                )   , "         7.69"                )
-   TEST_LINE( Str(100.0 / 10              )   , "        10.00"                )
-   TEST_LINE( Str(100.0 / 10.00           )   , "        10.00"                )
-   TEST_LINE( Str(100.0 / 10.000          )   , "        10.00"                )
-   TEST_LINE( Str(100 / 10.00             )   , "        10.00"                )
-   TEST_LINE( Str(100 / 10.000            )   , "        10.00"                )
-   TEST_LINE( Str(100.00 / 10.0           )   , "        10.00"                )
-   TEST_LINE( Str(sdDate - sdDateE        )   , "   2445785"                   )
-   TEST_LINE( Str(sdDate - sdDate         )   , "         0"                   )
-   TEST_LINE( Str(1234567890 * 1234567890 )   , " 1524157875019052000"         ) // real val is 1524157875019052100
+   HBTEST Str(Max(10, 12)             )   IS "        12"
+   HBTEST Str(Max(10.50, 10)          )   IS "        10.50"
+   HBTEST Str(Max(10, 9.50)           )   IS "        10"
+   HBTEST Str(Max(100000, 10)         )   IS "    100000"
+   HBTEST Str(Max(20.50, 20.670)      )   IS "        20.670"
+   HBTEST Str(Max(20.5125, 20.670)    )   IS "        20.670"
+   HBTEST Str(Min(10, 12)             )   IS "        10"
+   HBTEST Str(Min(10.50, 10)          )   IS "        10"
+   HBTEST Str(Min(10, 9.50)           )   IS "         9.50"
+   HBTEST Str(Min(100000, 10)         )   IS "        10"
+   HBTEST Str(Min(20.50, 20.670)      )   IS "        20.50"
+   HBTEST Str(Min(20.5125, 20.670)    )   IS "        20.5125"
+   HBTEST Str(Val("0x10")             )   IS "   0"
+   HBTEST Str(Val("0X10")             )   IS "   0"
+   HBTEST Str(Val("15E2")             )   IS "  15"
+   HBTEST Str(Val("15E21")            )   IS "   15"
+   HBTEST Str(Val("15.1A10")          )   IS "15.1000"
+   HBTEST Str(Val("15.1A1")           )   IS "15.100"
+   HBTEST Str(Val("A")                )   IS "0"
+   HBTEST Str(Val("AAA0")             )   IS "   0"
+   HBTEST Str(Val("AAA2")             )   IS "   0"
+   HBTEST Str(Val("")                 )   IS "         0"
+   HBTEST Str(Val("0")                )   IS "0"
+   HBTEST Str(Val(" 0")               )   IS " 0"
+   HBTEST Str(Val("-0")               )   IS " 0"
+   HBTEST Str(Val("00")               )   IS " 0"
+   HBTEST Str(Val("1")                )   IS "1"
+   HBTEST Str(Val("15")               )   IS "15"
+   HBTEST Str(Val("200")              )   IS "200"
+   HBTEST Str(Val(" 200")             )   IS " 200"
+   HBTEST Str(Val("200 ")             )   IS " 200"
+   HBTEST Str(Val(" 200 ")            )   IS "  200"
+   HBTEST Str(Val("-200")             )   IS "-200"
+   HBTEST Str(Val(" -200")            )   IS " -200"
+   HBTEST Str(Val("-200 ")            )   IS " -200"
+   HBTEST Str(Val(" -200 ")           )   IS "  -200"
+   HBTEST Str(Val("15.0")             )   IS "15.0"
+   HBTEST Str(Val("15.00")            )   IS "15.00"
+   HBTEST Str(Val("15.000")           )   IS "15.000"
+   HBTEST Str(Val("15.001 ")          )   IS "15.0010"
+   HBTEST Str(Val("100000000")        )   IS "100000000"
+   HBTEST Str(Val("5000000000")       )   IS "5000000000"
+   HBTEST Str(10                      )   IS "        10"
+   HBTEST Str(15.0                    )   IS "        15.0"
+   HBTEST Str(10.1                    )   IS "        10.1"
+   HBTEST Str(15.00                   )   IS "        15.00"
+// HBTEST Str(Log(0)                  )   IS "***********************"
+   HBTEST Str(100.2 * 200.12          )   IS "     20052.024"
+   HBTEST Str(100.20 * 200.12         )   IS "     20052.0240"
+   HBTEST Str(1000.2 * 200.12         )   IS "    200160.024"
+   HBTEST Str(100/1000                )   IS "         0.10"
+   HBTEST Str(100/100000              )   IS "         0.00"
+   HBTEST Str(10 * 10                 )   IS "       100"
+   HBTEST Str(100 / 10                )   IS "        10"
+   HBTEST Str(100 / 13                )   IS "         7.69"
+   HBTEST Str(100.0 / 10              )   IS "        10.00"
+   HBTEST Str(100.0 / 10.00           )   IS "        10.00"
+   HBTEST Str(100.0 / 10.000          )   IS "        10.00"
+   HBTEST Str(100 / 10.00             )   IS "        10.00"
+   HBTEST Str(100 / 10.000            )   IS "        10.00"
+   HBTEST Str(100.00 / 10.0           )   IS "        10.00"
+   HBTEST Str(sdDate - sdDateE        )   IS "   2445785"
+   HBTEST Str(sdDate - sdDate         )   IS "         0"
+   HBTEST Str(1234567890 * 1234567890 )   IS " 1524157875019052000"  /* real val is 1524157875019052100 */
 
    /* Mod() */
 
-   TEST_LINE( Mod()                           , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( Mod( NIL )                      , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( Mod( 100 )                      , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:100;U:NIL F:S" )
-   TEST_LINE( Mod( "A", "B" )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:C:A;C:B F:S" )
-   TEST_LINE( Mod( "A", 100 )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:C:A;N:100 F:S" )
-   TEST_LINE( Mod( 100, "B" )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:100;C:B F:S" )
-   TEST_LINE( Mod( NIL, NIL )                 , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( Mod( 100, 60, "A" )             , 40.00                              )
+   HBTEST Mod()                           IS "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST Mod( NIL )                      IS "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST Mod( 100 )                      IS "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:100;U:NIL F:S"
+   HBTEST Mod( "A", "B" )                 IS "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:C:A;C:B F:S"
+   HBTEST Mod( "A", 100 )                 IS "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:C:A;N:100 F:S"
+   HBTEST Mod( 100, "B" )                 IS "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:100;C:B F:S"
+   HBTEST Mod( NIL, NIL )                 IS "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST Mod( 100, 60, "A" )             IS 40.00
 
-   TEST_LINE( Mod( 1, 0 )                     , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:1;N:0 F:S" )
-   TEST_LINE( Mod( 1, NIL )                   , "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:1;U:NIL F:S" )
-   TEST_LINE( Str( Mod( 1, 0   ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:1;N:0 F:S" )
-   TEST_LINE( Str( Mod( 2, 4   ) )            , "         2.00"                    )
-   TEST_LINE( Str( Mod( 4, 2   ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod( 4, 2.0 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod( 2, 4.0 ) )            , "         2.00"                    )
-   TEST_LINE( Str( Mod( 8, 3   ) )            , "         2.00"                    )
+   HBTEST Mod( 1, 0 )                     IS "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:1;N:0 F:S"
+   HBTEST Mod( 1, NIL )                   IS "E 1 BASE 1085 Argument error (%) OS:0 #:0 A:2:N:1;U:NIL F:S"
+   HBTEST Str( Mod( 1, 0   ) )            IS "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:1;N:0 F:S"
+   HBTEST Str( Mod( 2, 4   ) )            IS "         2.00"
+   HBTEST Str( Mod( 4, 2   ) )            IS "         0.00"
+   HBTEST Str( Mod( 4, 2.0 ) )            IS "         0.00"
+   HBTEST Str( Mod( 2, 4.0 ) )            IS "         2.00"
+   HBTEST Str( Mod( 8, 3   ) )            IS "         2.00"
 
-   TEST_LINE( Str( Mod(  3,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod(  3,  2 ) )            , "         1.00"                    )
-   TEST_LINE( Str( Mod(  3,  1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod(  3,  0 ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:3;N:0 F:S" )
-   TEST_LINE( Str( Mod(  3, -1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod(  3, -2 ) )            , "        -1.00"                    )
-   TEST_LINE( Str( Mod(  3, -3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod( -3,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod( -3,  2 ) )            , "         1.00"                    )
-   TEST_LINE( Str( Mod( -3,  1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod( -3,  0 ) )            , "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:-3;N:0 F:S" )
-   TEST_LINE( Str( Mod( -3, -1 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod( -3, -2 ) )            , "        -1.00"                    )
-   TEST_LINE( Str( Mod( -3, -3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod(  3,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod(  2,  3 ) )            , "         2.00"                    )
-   TEST_LINE( Str( Mod(  1,  3 ) )            , "         1.00"                    )
-   TEST_LINE( Str( Mod(  0,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod( -1,  3 ) )            , "         2.00"                    )
-   TEST_LINE( Str( Mod( -2,  3 ) )            , "         1.00"                    )
-   TEST_LINE( Str( Mod( -3,  3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod(  3, -3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod(  2, -3 ) )            , "        -1.00"                    )
-   TEST_LINE( Str( Mod(  1, -3 ) )            , "        -2.00"                    )
-   TEST_LINE( Str( Mod(  0, -3 ) )            , "         0.00"                    )
-   TEST_LINE( Str( Mod( -1, -3 ) )            , "        -1.00"                    )
-   TEST_LINE( Str( Mod( -2, -3 ) )            , "        -2.00"                    )
-   TEST_LINE( Str( Mod( -3, -3 ) )            , "         0.00"                    )
+   HBTEST Str( Mod(  3,  3 ) )            IS "         0.00"
+   HBTEST Str( Mod(  3,  2 ) )            IS "         1.00"
+   HBTEST Str( Mod(  3,  1 ) )            IS "         0.00"
+   HBTEST Str( Mod(  3,  0 ) )            IS "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:3;N:0 F:S"
+   HBTEST Str( Mod(  3, -1 ) )            IS "         0.00"
+   HBTEST Str( Mod(  3, -2 ) )            IS "        -1.00"
+   HBTEST Str( Mod(  3, -3 ) )            IS "         0.00"
+   HBTEST Str( Mod( -3,  3 ) )            IS "         0.00"
+   HBTEST Str( Mod( -3,  2 ) )            IS "         1.00"
+   HBTEST Str( Mod( -3,  1 ) )            IS "         0.00"
+   HBTEST Str( Mod( -3,  0 ) )            IS "E 5 BASE 1341 Zero divisor (%) OS:0 #:0 A:2:N:-3;N:0 F:S"
+   HBTEST Str( Mod( -3, -1 ) )            IS "         0.00"
+   HBTEST Str( Mod( -3, -2 ) )            IS "        -1.00"
+   HBTEST Str( Mod( -3, -3 ) )            IS "         0.00"
+   HBTEST Str( Mod(  3,  3 ) )            IS "         0.00"
+   HBTEST Str( Mod(  2,  3 ) )            IS "         2.00"
+   HBTEST Str( Mod(  1,  3 ) )            IS "         1.00"
+   HBTEST Str( Mod(  0,  3 ) )            IS "         0.00"
+   HBTEST Str( Mod( -1,  3 ) )            IS "         2.00"
+   HBTEST Str( Mod( -2,  3 ) )            IS "         1.00"
+   HBTEST Str( Mod( -3,  3 ) )            IS "         0.00"
+   HBTEST Str( Mod(  3, -3 ) )            IS "         0.00"
+   HBTEST Str( Mod(  2, -3 ) )            IS "        -1.00"
+   HBTEST Str( Mod(  1, -3 ) )            IS "        -2.00"
+   HBTEST Str( Mod(  0, -3 ) )            IS "         0.00"
+   HBTEST Str( Mod( -1, -3 ) )            IS "        -1.00"
+   HBTEST Str( Mod( -2, -3 ) )            IS "        -2.00"
+   HBTEST Str( Mod( -3, -3 ) )            IS "         0.00"
 
    /* <OP>assign and (pre/post)(inc/dec)rementation */
    o:=ErrorNew()
    o:oscode := 1
-   TEST_LINE( o:oscode                        , 1   )
+   HBTEST o:oscode                        IS 1
    o:oscode++
-   TEST_LINE( o:oscode                        , 2   )
-   TEST_LINE( o:oscode++                      , 2   )
+   HBTEST o:oscode                        IS 2
+   HBTEST o:oscode++                      IS 2
    ++o:oscode
-   TEST_LINE( o:oscode                        , 4   )
-   TEST_LINE( ++o:oscode                      , 5   )
+   HBTEST o:oscode                        IS 4
+   HBTEST ++o:oscode                      IS 5
    o:oscode+=10
-   TEST_LINE( o:oscode                        , 15  )
-   TEST_LINE( o:oscode+=200                   , 215 )
+   HBTEST o:oscode                        IS 15
+   HBTEST o:oscode+=200                   IS 215
 
    l := 1
-   TEST_LINE( l                               , 1   )
+   HBTEST l                               IS 1
    l++
-   TEST_LINE( l                               , 2   )
-   TEST_LINE( l++                             , 2   )
+   HBTEST l                               IS 2
+   HBTEST l++                             IS 2
    ++l
-   TEST_LINE( l                               , 4   )
-   TEST_LINE( ++l                             , 5   )
+   HBTEST l                               IS 4
+   HBTEST ++l                             IS 5
    l+=10
-   TEST_LINE( l                               , 15  )
-   TEST_LINE( l+=200                          , 215 )
+   HBTEST l                               IS 15
+   HBTEST l+=200                          IS 215
 
    mnIntN := 1
-   TEST_LINE( mnIntN                          , 1   )
+   HBTEST mnIntN                          IS 1
    mnIntN++
-   TEST_LINE( mnIntN                          , 2   )
-   TEST_LINE( mnIntN++                        , 2   )
+   HBTEST mnIntN                          IS 2
+   HBTEST mnIntN++                        IS 2
    ++mnIntN
-   TEST_LINE( mnIntN                          , 4   )
-   TEST_LINE( ++mnIntN                        , 5   )
+   HBTEST mnIntN                          IS 4
+   HBTEST ++mnIntN                        IS 5
    mnIntN+=10
-   TEST_LINE( mnIntN                          , 15  )
-   TEST_LINE( mnIntN+=200                     , 215 )
+   HBTEST mnIntN                          IS 15
+   HBTEST mnIntN+=200                     IS 215
 
    snIntN := 1
-   TEST_LINE( snIntN                          , 1   )
+   HBTEST snIntN                          IS 1
    snIntN++
-   TEST_LINE( snIntN                          , 2   )
-   TEST_LINE( snIntN++                        , 2   )
+   HBTEST snIntN                          IS 2
+   HBTEST snIntN++                        IS 2
    ++snIntN
-   TEST_LINE( snIntN                          , 4   )
-   TEST_LINE( ++snIntN                        , 5   )
+   HBTEST snIntN                          IS 4
+   HBTEST ++snIntN                        IS 5
    snIntN+=10
-   TEST_LINE( snIntN                          , 15  )
-   TEST_LINE( snIntN+=200                     , 215 )
+   HBTEST snIntN                          IS 15
+   HBTEST snIntN+=200                     IS 215
 
 #ifdef __HARBOUR__
 
    o := ErrorNew()
    s := "oscode"
    o:&s := 1
-   TEST_LINE( o:&(s)                          , 1   )
+   HBTEST o:&(s)                          IS 1
    o:&s++
-   TEST_LINE( o:&(s)                          , 2   )
-   TEST_LINE( o:&(s)++                        , 2   )
+   HBTEST o:&(s)                          IS 2
+   HBTEST o:&(s)++                        IS 2
    ++o:&s
-   TEST_LINE( o:&(s)                          , 4   )
-   TEST_LINE( ++o:&(s)                        , 5   )
+   HBTEST o:&(s)                          IS 4
+   HBTEST ++o:&(s)                        IS 5
    o:&s+=10
-   TEST_LINE( o:&(s)                          , 15  )
-   TEST_LINE( o:&(s)+=200                     , 215 )
+   HBTEST o:&(s)                          IS 15
+   HBTEST o:&(s)+=200                     IS 215
 
    WITH OBJECT ErrorNew()
       :&(s) := 1
-      TEST_LINE( :&(s)                           , 1   )
+      HBTEST :&(s)                           IS 1
       :&(s)++
-      TEST_LINE( :&(s)                           , 2   )
-      TEST_LINE( :&(s)++                         , 2   )
+      HBTEST :&(s)                           IS 2
+      HBTEST :&(s)++                         IS 2
       ++:&(s)
-      TEST_LINE( :&(s)                           , 4   )
-      TEST_LINE( ++:&(s)                         , 5   )
+      HBTEST :&(s)                           IS 4
+      HBTEST ++:&(s)                         IS 5
       :&(s)+=10
-      TEST_LINE( :&(s)                           , 15  )
-      TEST_LINE( :&(s)+=200                      , 215 )
+      HBTEST :&(s)                           IS 15
+      HBTEST :&(s)+=200                      IS 215
    ENDWITH
 
    WITH OBJECT ErrorNew()
       :oscode := 1
-      TEST_LINE( :oscode                         , 1   )
+      HBTEST :oscode                         IS 1
       :oscode++
-      TEST_LINE( :oscode                         , 2   )
-      TEST_LINE( :oscode++                       , 2   )
+      HBTEST :oscode                         IS 2
+      HBTEST :oscode++                       IS 2
       ++:oscode
-      TEST_LINE( :oscode                         , 4   )
-      TEST_LINE( ++:oscode                       , 5   )
+      HBTEST :oscode                         IS 4
+      HBTEST ++:oscode                       IS 5
       :oscode+=10
-      TEST_LINE( :oscode                         , 15  )
-      TEST_LINE( :oscode+=200                    , 215 )
+      HBTEST :oscode                         IS 15
+      HBTEST :oscode+=200                    IS 215
    ENDWITH
 
    &s0 := 1
-   TEST_LINE( &s0                             , 1   )
+   HBTEST &s0                             IS 1
    &s0++
-   TEST_LINE( &s0                             , 2   )
-   TEST_LINE( &(s0)++                         , 2   )
+   HBTEST &s0                             IS 2
+   HBTEST &(s0)++                         IS 2
    ++&s0
-   TEST_LINE( &s0                             , 4   )
-   TEST_LINE( ++&(s0)                         , 5   )
+   HBTEST &s0                             IS 4
+   HBTEST ++&(s0)                         IS 5
    &s0+=10
-   TEST_LINE( &s0                             , 15  )
-   TEST_LINE( &(s0)+=200                      , 215 )
+   HBTEST &s0                             IS 15
+   HBTEST &(s0)+=200                      IS 215
 
    &s1.2 := 1
-   TEST_LINE( &s1.2                           , 1   )
+   HBTEST &s1.2                           IS 1
    &s1.2++
-   TEST_LINE( &s1.2                           , 2   )
-   TEST_LINE( &s1.2++                         , 2   )
+   HBTEST &s1.2                           IS 2
+   HBTEST &s1.2++                         IS 2
    ++&s1.2
-   TEST_LINE( &s1.2                           , 4   )
-   TEST_LINE( ++&s1.2                         , 5   )
+   HBTEST &s1.2                           IS 4
+   HBTEST ++&s1.2                         IS 5
    &s1.2+=10
-   TEST_LINE( &s1.2                           , 15  )
-   TEST_LINE( &s1.2+=200                      , 215 )
+   HBTEST &s1.2                           IS 15
+   HBTEST &s1.2+=200                      IS 215
 
 #endif
 

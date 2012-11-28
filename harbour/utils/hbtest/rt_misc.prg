@@ -72,337 +72,337 @@ PROCEDURE Main_MISC()
    /* Some random error object tests taken from the separate test source */
 
    oError := ErrorNew()
-   TEST_LINE( oError:ClassName()              , "ERROR"                   )
+   HBTEST oError:ClassName()              IS "ERROR"
    oError:Description := "Its description"
-   TEST_LINE( oError:Description              , "Its description"         )
+   HBTEST oError:Description              IS "Its description"
 #ifdef __CLIPPER__
-   TEST_LINE( Len( oError )                   , 7                         )
+   HBTEST Len( oError )                   IS 7
 #endif
 #ifdef __HARBOUR__
-   TEST_LINE( Len( oError )                   , 12                        )
+   HBTEST Len( oError )                   IS 12
 #endif
 
    /* Set()s */
 
-   TEST_LINE( Set( _SET_MARGIN     )       , 0 )
-   TEST_LINE( Set( _SET_MARGIN    , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:25;N:-1 " )
+   HBTEST Set( _SET_MARGIN     )       IS 0
+   HBTEST Set( _SET_MARGIN    , -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:25;N:-1 "
 
 #ifdef HB_COMPAT_C53
-   TEST_LINE( Set( _SET_EVENTMASK  )       , 128 )
-   TEST_LINE( Set( _SET_VIDEOMODE  )       , NIL )
-   TEST_LINE( Set( _SET_MBLOCKSIZE )       , 64 )
-   TEST_LINE( Set( _SET_MFILEEXT   )       , "" )
-   TEST_LINE( Set( _SET_STRICTREAD )       , .F. )
-   TEST_LINE( Set( _SET_OPTIMIZE   )       , .T. )
-   TEST_LINE( Set( _SET_AUTOPEN    )       , .T. )
-   TEST_LINE( Set( _SET_AUTORDER   )       , 0 )
-   TEST_LINE( Set( _SET_AUTOSHARE  )       , 0 )
+   HBTEST Set( _SET_EVENTMASK  )       IS 128
+   HBTEST Set( _SET_VIDEOMODE  )       IS NIL
+   HBTEST Set( _SET_MBLOCKSIZE )       IS 64
+   HBTEST Set( _SET_MFILEEXT   )       IS ""
+   HBTEST Set( _SET_STRICTREAD )       IS .F.
+   HBTEST Set( _SET_OPTIMIZE   )       IS .T.
+   HBTEST Set( _SET_AUTOPEN    )       IS .T.
+   HBTEST Set( _SET_AUTORDER   )       IS 0
+   HBTEST Set( _SET_AUTOSHARE  )       IS 0
 
-   TEST_LINE( Set( _SET_EVENTMASK , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:39;N:-1 " )
-   TEST_LINE( Set( _SET_VIDEOMODE , -1 )   , NIL )
-   TEST_LINE( Set( _SET_MBLOCKSIZE, -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:41;N:-1 " )
-   TEST_LINE( Set( _SET_MFILEEXT  , {} )   , "" )
-   TEST_LINE( Set( _SET_STRICTREAD, {} )   , .F. )
-   TEST_LINE( Set( _SET_OPTIMIZE  , {} )   , .T. )
-   TEST_LINE( Set( _SET_AUTOPEN   , {} )   , .T. )
-   TEST_LINE( Set( _SET_AUTORDER  , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:46;N:-1 " )
-   TEST_LINE( Set( _SET_AUTOSHARE , -1 )   , "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:47;N:-1 " )
+   HBTEST Set( _SET_EVENTMASK , -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:39;N:-1 "
+   HBTEST Set( _SET_VIDEOMODE , -1 )   IS NIL
+   HBTEST Set( _SET_MBLOCKSIZE, -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:41;N:-1 "
+   HBTEST Set( _SET_MFILEEXT  , {} )   IS ""
+   HBTEST Set( _SET_STRICTREAD, {} )   IS .F.
+   HBTEST Set( _SET_OPTIMIZE  , {} )   IS .T.
+   HBTEST Set( _SET_AUTOPEN   , {} )   IS .T.
+   HBTEST Set( _SET_AUTORDER  , -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:46;N:-1 "
+   HBTEST Set( _SET_AUTOSHARE , -1 )   IS "E 1 BASE 2020 Argument error (SET) OS:0 #:0 A:2:N:47;N:-1 "
 #endif
 
-   TEST_LINE( Set( _SET_ALTFILE,   BADFNAME2() ), "E 20 TERM 2013 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR" )
-   TEST_LINE( Set( _SET_PRINTFILE, BADFNAME2() ), "E 20 TERM 2014 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR" )
-   TEST_LINE( Set( _SET_EXTRAFILE, BADFNAME2() ), "E 20 TERM 2015 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR" )
+   HBTEST Set( _SET_ALTFILE,   BADFNAME2() ) IS "E 20 TERM 2013 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR"
+   HBTEST Set( _SET_PRINTFILE, BADFNAME2() ) IS "E 20 TERM 2014 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR"
+   HBTEST Set( _SET_EXTRAFILE, BADFNAME2() ) IS "E 20 TERM 2015 Create error <" + BADFNAME2() + "> OS:2 #:1 F:DR"
 
    /* Some color handling tests */
 
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "T"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "A"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "B"                          ), SetColor() ) , "B/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "C"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "D"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "E"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "F"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "G"                          ), SetColor() ) , "G/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "H"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "I"                          ), SetColor() ) , "N/W,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "J"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "K"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "L"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "M"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "N"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "O"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "P"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "Q"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "R"                          ), SetColor() ) , "R/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "S"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "T"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "U"                          ), SetColor() ) , "U/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "V"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "W"                          ), SetColor() ) , "W/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "X"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "Y"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "Z"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "0"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "1"                          ), SetColor() ) , "B/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "2"                          ), SetColor() ) , "G/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "3"                          ), SetColor() ) , "BG/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "4"                          ), SetColor() ) , "R/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "5"                          ), SetColor() ) , "BR/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "6"                          ), SetColor() ) , "GR/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "7"                          ), SetColor() ) , "W/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "8"                          ), SetColor() ) , "N+/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "9"                          ), SetColor() ) , "B+/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "10"                         ), SetColor() ) , "G+/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "11"                         ), SetColor() ) , "BG+/N,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "12"                         ), SetColor() ) , "R+/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "13"                         ), SetColor() ) , "BR+/N,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "14"                         ), SetColor() ) , "GR+/N,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "15"                         ), SetColor() ) , "W+/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "16"                         ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "@"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "!"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "-"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "/"                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "//"                         ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( ","                          ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( ",,"                         ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+"                          ), SetColor() ) , "N+/N,N/N,N/N,N/N,N/N"  )
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "T"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "A"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "B"                          ), SetColor() ) IS "B/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "C"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "D"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "E"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "F"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "G"                          ), SetColor() ) IS "G/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "H"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "I"                          ), SetColor() ) IS "N/W,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "J"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "K"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "L"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "M"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "N"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "O"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "P"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "Q"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "R"                          ), SetColor() ) IS "R/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "S"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "T"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "U"                          ), SetColor() ) IS "U/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "V"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "W"                          ), SetColor() ) IS "W/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "X"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "Y"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "Z"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "0"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "1"                          ), SetColor() ) IS "B/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "2"                          ), SetColor() ) IS "G/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "3"                          ), SetColor() ) IS "BG/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "4"                          ), SetColor() ) IS "R/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "5"                          ), SetColor() ) IS "BR/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "6"                          ), SetColor() ) IS "GR/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "7"                          ), SetColor() ) IS "W/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "8"                          ), SetColor() ) IS "N+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "9"                          ), SetColor() ) IS "B+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "10"                         ), SetColor() ) IS "G+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "11"                         ), SetColor() ) IS "BG+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "12"                         ), SetColor() ) IS "R+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "13"                         ), SetColor() ) IS "BR+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "14"                         ), SetColor() ) IS "GR+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "15"                         ), SetColor() ) IS "W+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "16"                         ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "@"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "!"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "-"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "/"                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "//"                         ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( ","                          ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( ",,"                         ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+"                          ), SetColor() ) IS "N+/N,N/N,N/N,N/N,N/N"
 #ifdef HB_CLP_STRICT_OFF
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+*"                         ), SetColor() ) , "N+/N*,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*"                          ), SetColor() ) , "N/N*,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*+"                         ), SetColor() ) , "N+/N*,N/N,N/N,N/N,N/N" )
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+*"                         ), SetColor() ) IS "N+/N*,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*"                          ), SetColor() ) IS "N/N*,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*+"                         ), SetColor() ) IS "N+/N*,N/N,N/N,N/N,N/N"
 #else
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+*"                         ), SetColor() ) , "N*+/N,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*"                          ), SetColor() ) , "N*/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*+"                         ), SetColor() ) , "N*+/N,N/N,N/N,N/N,N/N" )
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "+*"                         ), SetColor() ) IS "N*+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*"                          ), SetColor() ) IS "N*/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "*+"                         ), SetColor() ) IS "N*+/N,N/N,N/N,N/N,N/N"
 #endif
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "BR/W+"                      ), SetColor() ) , "BR+/W,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "BR/W+"                      ), SetColor() ) , "BR+/W,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "RB/W+"                      ), SetColor() ) , "BR+/W,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "0123456789"                 ), SetColor() ) , "BR/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "1234567890"                 ), SetColor() ) , "G/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "1"                          ), SetColor() ) , "B/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "11"                         ), SetColor() ) , "BG+/N,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "1111111111"                 ), SetColor() ) , "W/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "2"                          ), SetColor() ) , "G/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "22"                         ), SetColor() ) , "GR/N,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "2222222222"                 ), SetColor() ) , "GR+/N,N/N,N/N,N/N,N/N" )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ), SetColor() ) , "N/N,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "ABCDEFGHIJKLMNOPQRSTUVW"    ), SetColor() ) , "N/U,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "N/W+"                       ), SetColor() ) , "N+/W,N/N,N/N,N/N,N/N"  )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( '"W"'+"/"+'"R"'              ), SetColor() ) , "W/R,N/N,N/N,N/N,N/N"   )
-   TEST_LINE( ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "'W'"+"/"+"'R'"              ), SetColor() ) , "W/R,N/N,N/N,N/N,N/N"   )
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "BR/W+"                      ), SetColor() ) IS "BR+/W,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "BR/W+"                      ), SetColor() ) IS "BR+/W,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "RB/W+"                      ), SetColor() ) IS "BR+/W,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "0123456789"                 ), SetColor() ) IS "BR/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "1234567890"                 ), SetColor() ) IS "G/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "1"                          ), SetColor() ) IS "B/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "11"                         ), SetColor() ) IS "BG+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "1111111111"                 ), SetColor() ) IS "W/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "2"                          ), SetColor() ) IS "G/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "22"                         ), SetColor() ) IS "GR/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "2222222222"                 ), SetColor() ) IS "GR+/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ), SetColor() ) IS "N/N,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "ABCDEFGHIJKLMNOPQRSTUVW"    ), SetColor() ) IS "N/U,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "N/W+"                       ), SetColor() ) IS "N+/W,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( '"W"'+"/"+'"R"'              ), SetColor() ) IS "W/R,N/N,N/N,N/N,N/N"
+   HBTEST ( SetColor( "N/N,N/N,N/N,N/N,N/N" ), SetColor( "'W'"+"/"+"'R'"              ), SetColor() ) IS "W/R,N/N,N/N,N/N,N/N"
 
    SetColor( "" ) /* Reset color to default */
 
    o := _GET_( tmp, "tmp" )
 
 #ifdef HB_COMPAT_C53
-   TEST_LINE( ( o:colorSpec := "T"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "A"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "B"                         , o:colorSpec ) , "B/N,B/N,B/N,B/N"        )
-   TEST_LINE( ( o:colorSpec := "C"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "D"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "E"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "F"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "G"                         , o:colorSpec ) , "G/N,G/N,G/N,G/N"        )
-   TEST_LINE( ( o:colorSpec := "H"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "I"                         , o:colorSpec ) , "N/W,N/W,N/W,N/W"        )
-   TEST_LINE( ( o:colorSpec := "J"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "K"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "L"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "M"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "N"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "O"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "P"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "Q"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "R"                         , o:colorSpec ) , "R/N,R/N,R/N,R/N"        )
-   TEST_LINE( ( o:colorSpec := "S"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "T"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "U"                         , o:colorSpec ) , "U/N,U/N,U/N,U/N"        )
-   TEST_LINE( ( o:colorSpec := "V"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "W"                         , o:colorSpec ) , "W/N,W/N,W/N,W/N"        )
-   TEST_LINE( ( o:colorSpec := "X"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "Y"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "Z"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "0"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "1"                         , o:colorSpec ) , "B/N,B/N,B/N,B/N"        )
-   TEST_LINE( ( o:colorSpec := "2"                         , o:colorSpec ) , "G/N,G/N,G/N,G/N"        )
-   TEST_LINE( ( o:colorSpec := "3"                         , o:colorSpec ) , "BG/N,BG/N,BG/N,BG/N"    )
-   TEST_LINE( ( o:colorSpec := "4"                         , o:colorSpec ) , "R/N,R/N,R/N,R/N"        )
-   TEST_LINE( ( o:colorSpec := "5"                         , o:colorSpec ) , "BR/N,BR/N,BR/N,BR/N"    )
-   TEST_LINE( ( o:colorSpec := "6"                         , o:colorSpec ) , "GR/N,GR/N,GR/N,GR/N"    )
-   TEST_LINE( ( o:colorSpec := "7"                         , o:colorSpec ) , "W/N,W/N,W/N,W/N"        )
-   TEST_LINE( ( o:colorSpec := "8"                         , o:colorSpec ) , "N+/N,N+/N,N+/N,N+/N"    )
-   TEST_LINE( ( o:colorSpec := "9"                         , o:colorSpec ) , "B+/N,B+/N,B+/N,B+/N"    )
-   TEST_LINE( ( o:colorSpec := "10"                        , o:colorSpec ) , "G+/N,G+/N,G+/N,G+/N"    )
-   TEST_LINE( ( o:colorSpec := "11"                        , o:colorSpec ) , "BG+/N,BG+/N,BG+/N,BG+/N")
-   TEST_LINE( ( o:colorSpec := "12"                        , o:colorSpec ) , "R+/N,R+/N,R+/N,R+/N"    )
-   TEST_LINE( ( o:colorSpec := "13"                        , o:colorSpec ) , "BR+/N,BR+/N,BR+/N,BR+/N")
-   TEST_LINE( ( o:colorSpec := "14"                        , o:colorSpec ) , "GR+/N,GR+/N,GR+/N,GR+/N")
-   TEST_LINE( ( o:colorSpec := "15"                        , o:colorSpec ) , "W+/N,W+/N,W+/N,W+/N"    )
-   TEST_LINE( ( o:colorSpec := "16"                        , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "@"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "!"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "-"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "/"                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "//"                        , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := ","                         , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := ",,"                        , o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "+"                         , o:colorSpec ) , "N+/N,N+/N,N+/N,N+/N"    )
+   HBTEST ( o:colorSpec := "T"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "A"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "B"                         , o:colorSpec ) IS "B/N,B/N,B/N,B/N"
+   HBTEST ( o:colorSpec := "C"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "D"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "E"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "F"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "G"                         , o:colorSpec ) IS "G/N,G/N,G/N,G/N"
+   HBTEST ( o:colorSpec := "H"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "I"                         , o:colorSpec ) IS "N/W,N/W,N/W,N/W"
+   HBTEST ( o:colorSpec := "J"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "K"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "L"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "M"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "N"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "O"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "P"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "Q"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "R"                         , o:colorSpec ) IS "R/N,R/N,R/N,R/N"
+   HBTEST ( o:colorSpec := "S"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "T"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "U"                         , o:colorSpec ) IS "U/N,U/N,U/N,U/N"
+   HBTEST ( o:colorSpec := "V"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "W"                         , o:colorSpec ) IS "W/N,W/N,W/N,W/N"
+   HBTEST ( o:colorSpec := "X"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "Y"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "Z"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "0"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "1"                         , o:colorSpec ) IS "B/N,B/N,B/N,B/N"
+   HBTEST ( o:colorSpec := "2"                         , o:colorSpec ) IS "G/N,G/N,G/N,G/N"
+   HBTEST ( o:colorSpec := "3"                         , o:colorSpec ) IS "BG/N,BG/N,BG/N,BG/N"
+   HBTEST ( o:colorSpec := "4"                         , o:colorSpec ) IS "R/N,R/N,R/N,R/N"
+   HBTEST ( o:colorSpec := "5"                         , o:colorSpec ) IS "BR/N,BR/N,BR/N,BR/N"
+   HBTEST ( o:colorSpec := "6"                         , o:colorSpec ) IS "GR/N,GR/N,GR/N,GR/N"
+   HBTEST ( o:colorSpec := "7"                         , o:colorSpec ) IS "W/N,W/N,W/N,W/N"
+   HBTEST ( o:colorSpec := "8"                         , o:colorSpec ) IS "N+/N,N+/N,N+/N,N+/N"
+   HBTEST ( o:colorSpec := "9"                         , o:colorSpec ) IS "B+/N,B+/N,B+/N,B+/N"
+   HBTEST ( o:colorSpec := "10"                        , o:colorSpec ) IS "G+/N,G+/N,G+/N,G+/N"
+   HBTEST ( o:colorSpec := "11"                        , o:colorSpec ) IS "BG+/N,BG+/N,BG+/N,BG+/N"
+   HBTEST ( o:colorSpec := "12"                        , o:colorSpec ) IS "R+/N,R+/N,R+/N,R+/N"
+   HBTEST ( o:colorSpec := "13"                        , o:colorSpec ) IS "BR+/N,BR+/N,BR+/N,BR+/N"
+   HBTEST ( o:colorSpec := "14"                        , o:colorSpec ) IS "GR+/N,GR+/N,GR+/N,GR+/N"
+   HBTEST ( o:colorSpec := "15"                        , o:colorSpec ) IS "W+/N,W+/N,W+/N,W+/N"
+   HBTEST ( o:colorSpec := "16"                        , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "@"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "!"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "-"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "/"                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "//"                        , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := ","                         , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := ",,"                        , o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "+"                         , o:colorSpec ) IS "N+/N,N+/N,N+/N,N+/N"
 #ifdef HB_CLP_STRICT_OFF
-   TEST_LINE( ( o:colorSpec := "+*"                        , o:colorSpec ) , "N+/N*,N+/N*,N+/N*,N+/N*")
-   TEST_LINE( ( o:colorSpec := "*"                         , o:colorSpec ) , "N/N*,N/N*,N/N*,N/N*"    )
-   TEST_LINE( ( o:colorSpec := "*+"                        , o:colorSpec ) , "N+/N*,N+/N*,N+/N*,N+/N*")
+   HBTEST ( o:colorSpec := "+*"                        , o:colorSpec ) IS "N+/N*,N+/N*,N+/N*,N+/N*"
+   HBTEST ( o:colorSpec := "*"                         , o:colorSpec ) IS "N/N*,N/N*,N/N*,N/N*"
+   HBTEST ( o:colorSpec := "*+"                        , o:colorSpec ) IS "N+/N*,N+/N*,N+/N*,N+/N*"
 #else
-   TEST_LINE( ( o:colorSpec := "+*"                        , o:colorSpec ) , "N*+/N,N*+/N,N*+/N,N*+/N")
-   TEST_LINE( ( o:colorSpec := "*"                         , o:colorSpec ) , "N*/N,N*/N,N*/N,N*/N"    )
-   TEST_LINE( ( o:colorSpec := "*+"                        , o:colorSpec ) , "N*+/N,N*+/N,N*+/N,N*+/N")
+   HBTEST ( o:colorSpec := "+*"                        , o:colorSpec ) IS "N*+/N,N*+/N,N*+/N,N*+/N"
+   HBTEST ( o:colorSpec := "*"                         , o:colorSpec ) IS "N*/N,N*/N,N*/N,N*/N"
+   HBTEST ( o:colorSpec := "*+"                        , o:colorSpec ) IS "N*+/N,N*+/N,N*+/N,N*+/N"
 #endif
-   TEST_LINE( ( o:colorSpec := "BR/W+"                     , o:colorSpec ) , "BR+/W,BR+/W,BR+/W,BR+/W")
-   TEST_LINE( ( o:colorSpec := "BR/W+"                     , o:colorSpec ) , "BR+/W,BR+/W,BR+/W,BR+/W")
-   TEST_LINE( ( o:colorSpec := "RB/W+"                     , o:colorSpec ) , "BR+/W,BR+/W,BR+/W,BR+/W")
-   TEST_LINE( ( o:colorSpec := "0123456789"                , o:colorSpec ) , "BR/N,BR/N,BR/N,BR/N"    )
-   TEST_LINE( ( o:colorSpec := "1234567890"                , o:colorSpec ) , "G/N,G/N,G/N,G/N"        )
-   TEST_LINE( ( o:colorSpec := "1"                         , o:colorSpec ) , "B/N,B/N,B/N,B/N"        )
-   TEST_LINE( ( o:colorSpec := "11"                        , o:colorSpec ) , "BG+/N,BG+/N,BG+/N,BG+/N")
-   TEST_LINE( ( o:colorSpec := "1111111111"                , o:colorSpec ) , "W/N,W/N,W/N,W/N"        )
-   TEST_LINE( ( o:colorSpec := "2"                         , o:colorSpec ) , "G/N,G/N,G/N,G/N"        )
-   TEST_LINE( ( o:colorSpec := "22"                        , o:colorSpec ) , "GR/N,GR/N,GR/N,GR/N"    )
-   TEST_LINE( ( o:colorSpec := "2222222222"                , o:colorSpec ) , "GR+/N,GR+/N,GR+/N,GR+/N")
-   TEST_LINE( ( o:colorSpec := "ABCDEFGHIJKLMNOPQRSTUVWXYZ", o:colorSpec ) , "N/N,N/N,N/N,N/N"        )
-   TEST_LINE( ( o:colorSpec := "ABCDEFGHIJKLMNOPQRSTUVW"   , o:colorSpec ) , "N/U,N/U,N/U,N/U"        )
-   TEST_LINE( ( o:colorSpec := "N/W+"                      , o:colorSpec ) , "N+/W,N+/W,N+/W,N+/W"    )
-   TEST_LINE( ( o:colorSpec := '"W"'+"/"+'"R"'             , o:colorSpec ) , "W/R,W/R,W/R,W/R"        )
-   TEST_LINE( ( o:colorSpec := "'W'"+"/"+"'R'"             , o:colorSpec ) , "W/R,W/R,W/R,W/R"        )
+   HBTEST ( o:colorSpec := "BR/W+"                     , o:colorSpec ) IS "BR+/W,BR+/W,BR+/W,BR+/W"
+   HBTEST ( o:colorSpec := "BR/W+"                     , o:colorSpec ) IS "BR+/W,BR+/W,BR+/W,BR+/W"
+   HBTEST ( o:colorSpec := "RB/W+"                     , o:colorSpec ) IS "BR+/W,BR+/W,BR+/W,BR+/W"
+   HBTEST ( o:colorSpec := "0123456789"                , o:colorSpec ) IS "BR/N,BR/N,BR/N,BR/N"
+   HBTEST ( o:colorSpec := "1234567890"                , o:colorSpec ) IS "G/N,G/N,G/N,G/N"
+   HBTEST ( o:colorSpec := "1"                         , o:colorSpec ) IS "B/N,B/N,B/N,B/N"
+   HBTEST ( o:colorSpec := "11"                        , o:colorSpec ) IS "BG+/N,BG+/N,BG+/N,BG+/N"
+   HBTEST ( o:colorSpec := "1111111111"                , o:colorSpec ) IS "W/N,W/N,W/N,W/N"
+   HBTEST ( o:colorSpec := "2"                         , o:colorSpec ) IS "G/N,G/N,G/N,G/N"
+   HBTEST ( o:colorSpec := "22"                        , o:colorSpec ) IS "GR/N,GR/N,GR/N,GR/N"
+   HBTEST ( o:colorSpec := "2222222222"                , o:colorSpec ) IS "GR+/N,GR+/N,GR+/N,GR+/N"
+   HBTEST ( o:colorSpec := "ABCDEFGHIJKLMNOPQRSTUVWXYZ", o:colorSpec ) IS "N/N,N/N,N/N,N/N"
+   HBTEST ( o:colorSpec := "ABCDEFGHIJKLMNOPQRSTUVW"   , o:colorSpec ) IS "N/U,N/U,N/U,N/U"
+   HBTEST ( o:colorSpec := "N/W+"                      , o:colorSpec ) IS "N+/W,N+/W,N+/W,N+/W"
+   HBTEST ( o:colorSpec := '"W"'+"/"+'"R"'             , o:colorSpec ) IS "W/R,W/R,W/R,W/R"
+   HBTEST ( o:colorSpec := "'W'"+"/"+"'R'"             , o:colorSpec ) IS "W/R,W/R,W/R,W/R"
 #else
-   TEST_LINE( ( o:colorSpec := "T"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "A"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "B"                         , o:colorSpec ) , "B/N,B/N"                )
-   TEST_LINE( ( o:colorSpec := "C"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "D"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "E"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "F"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "G"                         , o:colorSpec ) , "G/N,G/N"                )
-   TEST_LINE( ( o:colorSpec := "H"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "I"                         , o:colorSpec ) , "N/W,N/W"                )
-   TEST_LINE( ( o:colorSpec := "J"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "K"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "L"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "M"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "N"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "O"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "P"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "Q"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "R"                         , o:colorSpec ) , "R/N,R/N"                )
-   TEST_LINE( ( o:colorSpec := "S"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "T"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "U"                         , o:colorSpec ) , "U/N,U/N"                )
-   TEST_LINE( ( o:colorSpec := "V"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "W"                         , o:colorSpec ) , "W/N,W/N"                )
-   TEST_LINE( ( o:colorSpec := "X"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "Y"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "Z"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "0"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "1"                         , o:colorSpec ) , "B/N,B/N"                )
-   TEST_LINE( ( o:colorSpec := "2"                         , o:colorSpec ) , "G/N,G/N"                )
-   TEST_LINE( ( o:colorSpec := "3"                         , o:colorSpec ) , "BG/N,BG/N"              )
-   TEST_LINE( ( o:colorSpec := "4"                         , o:colorSpec ) , "R/N,R/N"                )
-   TEST_LINE( ( o:colorSpec := "5"                         , o:colorSpec ) , "BR/N,BR/N"              )
-   TEST_LINE( ( o:colorSpec := "6"                         , o:colorSpec ) , "GR/N,GR/N"              )
-   TEST_LINE( ( o:colorSpec := "7"                         , o:colorSpec ) , "W/N,W/N"                )
-   TEST_LINE( ( o:colorSpec := "8"                         , o:colorSpec ) , "N+/N,N+/N"              )
-   TEST_LINE( ( o:colorSpec := "9"                         , o:colorSpec ) , "B+/N,B+/N"              )
-   TEST_LINE( ( o:colorSpec := "10"                        , o:colorSpec ) , "G+/N,G+/N"              )
-   TEST_LINE( ( o:colorSpec := "11"                        , o:colorSpec ) , "BG+/N,BG+/N"            )
-   TEST_LINE( ( o:colorSpec := "12"                        , o:colorSpec ) , "R+/N,R+/N"              )
-   TEST_LINE( ( o:colorSpec := "13"                        , o:colorSpec ) , "BR+/N,BR+/N"            )
-   TEST_LINE( ( o:colorSpec := "14"                        , o:colorSpec ) , "GR+/N,GR+/N"            )
-   TEST_LINE( ( o:colorSpec := "15"                        , o:colorSpec ) , "W+/N,W+/N"              )
-   TEST_LINE( ( o:colorSpec := "16"                        , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "@"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "!"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "-"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "/"                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "//"                        , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := ","                         , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := ",,"                        , o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "+"                         , o:colorSpec ) , "N+/N,N+/N"              )
+   HBTEST ( o:colorSpec := "T"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "A"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "B"                         , o:colorSpec ) IS "B/N,B/N"
+   HBTEST ( o:colorSpec := "C"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "D"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "E"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "F"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "G"                         , o:colorSpec ) IS "G/N,G/N"
+   HBTEST ( o:colorSpec := "H"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "I"                         , o:colorSpec ) IS "N/W,N/W"
+   HBTEST ( o:colorSpec := "J"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "K"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "L"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "M"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "N"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "O"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "P"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "Q"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "R"                         , o:colorSpec ) IS "R/N,R/N"
+   HBTEST ( o:colorSpec := "S"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "T"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "U"                         , o:colorSpec ) IS "U/N,U/N"
+   HBTEST ( o:colorSpec := "V"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "W"                         , o:colorSpec ) IS "W/N,W/N"
+   HBTEST ( o:colorSpec := "X"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "Y"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "Z"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "0"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "1"                         , o:colorSpec ) IS "B/N,B/N"
+   HBTEST ( o:colorSpec := "2"                         , o:colorSpec ) IS "G/N,G/N"
+   HBTEST ( o:colorSpec := "3"                         , o:colorSpec ) IS "BG/N,BG/N"
+   HBTEST ( o:colorSpec := "4"                         , o:colorSpec ) IS "R/N,R/N"
+   HBTEST ( o:colorSpec := "5"                         , o:colorSpec ) IS "BR/N,BR/N"
+   HBTEST ( o:colorSpec := "6"                         , o:colorSpec ) IS "GR/N,GR/N"
+   HBTEST ( o:colorSpec := "7"                         , o:colorSpec ) IS "W/N,W/N"
+   HBTEST ( o:colorSpec := "8"                         , o:colorSpec ) IS "N+/N,N+/N"
+   HBTEST ( o:colorSpec := "9"                         , o:colorSpec ) IS "B+/N,B+/N"
+   HBTEST ( o:colorSpec := "10"                        , o:colorSpec ) IS "G+/N,G+/N"
+   HBTEST ( o:colorSpec := "11"                        , o:colorSpec ) IS "BG+/N,BG+/N"
+   HBTEST ( o:colorSpec := "12"                        , o:colorSpec ) IS "R+/N,R+/N"
+   HBTEST ( o:colorSpec := "13"                        , o:colorSpec ) IS "BR+/N,BR+/N"
+   HBTEST ( o:colorSpec := "14"                        , o:colorSpec ) IS "GR+/N,GR+/N"
+   HBTEST ( o:colorSpec := "15"                        , o:colorSpec ) IS "W+/N,W+/N"
+   HBTEST ( o:colorSpec := "16"                        , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "@"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "!"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "-"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "/"                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "//"                        , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := ","                         , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := ",,"                        , o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "+"                         , o:colorSpec ) IS "N+/N,N+/N"
 #ifdef HB_CLP_STRICT_OFF
-   TEST_LINE( ( o:colorSpec := "+*"                        , o:colorSpec ) , "N+/N*,N+/N*"            )
-   TEST_LINE( ( o:colorSpec := "*"                         , o:colorSpec ) , "N/N*,N/N*"              )
-   TEST_LINE( ( o:colorSpec := "*+"                        , o:colorSpec ) , "N+/N*,N+/N*"            )
+   HBTEST ( o:colorSpec := "+*"                        , o:colorSpec ) IS "N+/N*,N+/N*"
+   HBTEST ( o:colorSpec := "*"                         , o:colorSpec ) IS "N/N*,N/N*"
+   HBTEST ( o:colorSpec := "*+"                        , o:colorSpec ) IS "N+/N*,N+/N*"
 #else
-   TEST_LINE( ( o:colorSpec := "+*"                        , o:colorSpec ) , "N*+/N,N*+/N"            )
-   TEST_LINE( ( o:colorSpec := "*"                         , o:colorSpec ) , "N*/N,N*/N"              )
-   TEST_LINE( ( o:colorSpec := "*+"                        , o:colorSpec ) , "N*+/N,N*+/N"            )
+   HBTEST ( o:colorSpec := "+*"                        , o:colorSpec ) IS "N*+/N,N*+/N"
+   HBTEST ( o:colorSpec := "*"                         , o:colorSpec ) IS "N*/N,N*/N"
+   HBTEST ( o:colorSpec := "*+"                        , o:colorSpec ) IS "N*+/N,N*+/N"
 #endif
-   TEST_LINE( ( o:colorSpec := "BR/W+"                     , o:colorSpec ) , "BR+/W,BR+/W"            )
-   TEST_LINE( ( o:colorSpec := "BR/W+"                     , o:colorSpec ) , "BR+/W,BR+/W"            )
-   TEST_LINE( ( o:colorSpec := "RB/W+"                     , o:colorSpec ) , "BR+/W,BR+/W"            )
-   TEST_LINE( ( o:colorSpec := "0123456789"                , o:colorSpec ) , "BR/N,BR/N"              )
-   TEST_LINE( ( o:colorSpec := "1234567890"                , o:colorSpec ) , "G/N,G/N"                )
-   TEST_LINE( ( o:colorSpec := "1"                         , o:colorSpec ) , "B/N,B/N"                )
-   TEST_LINE( ( o:colorSpec := "11"                        , o:colorSpec ) , "BG+/N,BG+/N"            )
-   TEST_LINE( ( o:colorSpec := "1111111111"                , o:colorSpec ) , "W/N,W/N"                )
-   TEST_LINE( ( o:colorSpec := "2"                         , o:colorSpec ) , "G/N,G/N"                )
-   TEST_LINE( ( o:colorSpec := "22"                        , o:colorSpec ) , "GR/N,GR/N"              )
-   TEST_LINE( ( o:colorSpec := "2222222222"                , o:colorSpec ) , "GR+/N,GR+/N"            )
-   TEST_LINE( ( o:colorSpec := "ABCDEFGHIJKLMNOPQRSTUVWXYZ", o:colorSpec ) , "N/N,N/N"                )
-   TEST_LINE( ( o:colorSpec := "ABCDEFGHIJKLMNOPQRSTUVW"   , o:colorSpec ) , "N/U,N/U"                )
-   TEST_LINE( ( o:colorSpec := "N/W+"                      , o:colorSpec ) , "N+/W,N+/W"              )
-   TEST_LINE( ( o:colorSpec := '"W"'+"/"+'"R"'             , o:colorSpec ) , "W/R,W/R"                )
-   TEST_LINE( ( o:colorSpec := "'W'"+"/"+"'R'"             , o:colorSpec ) , "W/R,W/R"                )
+   HBTEST ( o:colorSpec := "BR/W+"                     , o:colorSpec ) IS "BR+/W,BR+/W"
+   HBTEST ( o:colorSpec := "BR/W+"                     , o:colorSpec ) IS "BR+/W,BR+/W"
+   HBTEST ( o:colorSpec := "RB/W+"                     , o:colorSpec ) IS "BR+/W,BR+/W"
+   HBTEST ( o:colorSpec := "0123456789"                , o:colorSpec ) IS "BR/N,BR/N"
+   HBTEST ( o:colorSpec := "1234567890"                , o:colorSpec ) IS "G/N,G/N"
+   HBTEST ( o:colorSpec := "1"                         , o:colorSpec ) IS "B/N,B/N"
+   HBTEST ( o:colorSpec := "11"                        , o:colorSpec ) IS "BG+/N,BG+/N"
+   HBTEST ( o:colorSpec := "1111111111"                , o:colorSpec ) IS "W/N,W/N"
+   HBTEST ( o:colorSpec := "2"                         , o:colorSpec ) IS "G/N,G/N"
+   HBTEST ( o:colorSpec := "22"                        , o:colorSpec ) IS "GR/N,GR/N"
+   HBTEST ( o:colorSpec := "2222222222"                , o:colorSpec ) IS "GR+/N,GR+/N"
+   HBTEST ( o:colorSpec := "ABCDEFGHIJKLMNOPQRSTUVWXYZ", o:colorSpec ) IS "N/N,N/N"
+   HBTEST ( o:colorSpec := "ABCDEFGHIJKLMNOPQRSTUVW"   , o:colorSpec ) IS "N/U,N/U"
+   HBTEST ( o:colorSpec := "N/W+"                      , o:colorSpec ) IS "N+/W,N+/W"
+   HBTEST ( o:colorSpec := '"W"'+"/"+'"R"'             , o:colorSpec ) IS "W/R,W/R"
+   HBTEST ( o:colorSpec := "'W'"+"/"+"'R'"             , o:colorSpec ) IS "W/R,W/R"
 #endif
    /* "Samples" function tests (AMPM(), Days(), ElapTime(), ... ) */
 
-   TEST_LINE( AMPM( "" )                      , "12 am"                                   )
-   TEST_LINE( AMPM( "HELLO" )                 , "12LLO am"                                )
-   TEST_LINE( AMPM( " 0:23:45" )              , "12:23:45 am"                             )
-   TEST_LINE( AMPM( "00:23:45" )              , "12:23:45 am"                             )
-   TEST_LINE( AMPM( " 5:23:45" )              , " 5:23:45 am"                             )
-   TEST_LINE( AMPM( "05:23:45" )              , "05:23:45 am"                             )
-   TEST_LINE( AMPM( "12:23:45" )              , "12:23:45 pm"                             )
-   TEST_LINE( AMPM( "20:23:45" )              , " 8:23:45 pm"                             )
-   TEST_LINE( AMPM( "24:23:45" )              , "12:23:45 am"                             )
-   TEST_LINE( AMPM( "25:23:45" )              , "13:23:45 pm"                             )
-   TEST_LINE( AMPM( "2" )                     , "2 am"                                    )
-   TEST_LINE( AMPM( "02:23" )                 , "02:23 am"                                )
-   TEST_LINE( AMPM( "02:23:45.10" )           , "02:23:45.10 am"                          )
+   HBTEST AMPM( "" )                      IS "12 am"
+   HBTEST AMPM( "HELLO" )                 IS "12LLO am"
+   HBTEST AMPM( " 0:23:45" )              IS "12:23:45 am"
+   HBTEST AMPM( "00:23:45" )              IS "12:23:45 am"
+   HBTEST AMPM( " 5:23:45" )              IS " 5:23:45 am"
+   HBTEST AMPM( "05:23:45" )              IS "05:23:45 am"
+   HBTEST AMPM( "12:23:45" )              IS "12:23:45 pm"
+   HBTEST AMPM( "20:23:45" )              IS " 8:23:45 pm"
+   HBTEST AMPM( "24:23:45" )              IS "12:23:45 am"
+   HBTEST AMPM( "25:23:45" )              IS "13:23:45 pm"
+   HBTEST AMPM( "2" )                     IS "2 am"
+   HBTEST AMPM( "02:23" )                 IS "02:23 am"
+   HBTEST AMPM( "02:23:45.10" )           IS "02:23:45.10 am"
 
-   TEST_LINE( Days( 100000 )                  , 1 )
+   HBTEST Days( 100000 )                  IS 1
 
-   TEST_LINE( ElapTime("23:12:34","12:34:57") , "13:22:23" )
-   TEST_LINE( ElapTime("12:34:57","23:12:34") , "10:37:37" )
+   HBTEST ElapTime("23:12:34","12:34:57") IS "13:22:23"
+   HBTEST ElapTime("12:34:57","23:12:34") IS "10:37:37"
 
-   TEST_LINE( LenNum( 10 )                    , 2 )
-   TEST_LINE( LenNum( 10.9 )                  , 4 )
-   TEST_LINE( LenNum( 10.90 )                 , 5 )
+   HBTEST LenNum( 10 )                    IS 2
+   HBTEST LenNum( 10.9 )                  IS 4
+   HBTEST LenNum( 10.90 )                 IS 5
 
-   TEST_LINE( Secs("23:12:34")                , 83554 )
-   TEST_LINE( Secs("12:34:57")                , 45297 )
+   HBTEST Secs("23:12:34")                IS 83554
+   HBTEST Secs("12:34:57")                IS 45297
 
-   TEST_LINE( TString(1000)                   , "00:16:40" )
+   HBTEST TString(1000)                   IS "00:16:40"
 
 #ifndef __XPP__
-   TEST_LINE( SoundEx()                       , "0000" )
-   TEST_LINE( SoundEx( 10 )                   , "0000" )
-   TEST_LINE( SoundEx( @scString )            , "H400" )
-   TEST_LINE( SoundEx( "" )                   , "0000" )
-   TEST_LINE( SoundEx( "Hm" )                 , "H500" )
-   TEST_LINE( SoundEx( "Smith" )              , "S530" )
-   TEST_LINE( SoundEx( "Harbour" )            , "H616" )
-   TEST_LINE( SoundEx( "HARBOUR" )            , "H616" )
-   TEST_LINE( SoundEx( "Harpour" )            , "H616" )
-   TEST_LINE( SoundEx( "Hello" )              , "H400" )
-   TEST_LINE( SoundEx( "Aardwaark" )          , "A636" )
-   TEST_LINE( SoundEx( "Ardwark" )            , "A636" )
-   TEST_LINE( SoundEx( "Bold" )               , "B430" )
-   TEST_LINE( SoundEx( "Cold" )               , "C430" )
-   TEST_LINE( SoundEx( "Colt" )               , "C430" )
-   TEST_LINE( SoundEx( "C"+Chr(0)+"olt" )     , "C430" )
-   TEST_LINE( SoundEx( "µ A‚" )              , "A000" )
-   TEST_LINE( SoundEx( "12345" )              , "0000" )
+   HBTEST SoundEx()                       IS "0000"
+   HBTEST SoundEx( 10 )                   IS "0000"
+   HBTEST SoundEx( @scString )            IS "H400"
+   HBTEST SoundEx( "" )                   IS "0000"
+   HBTEST SoundEx( "Hm" )                 IS "H500"
+   HBTEST SoundEx( "Smith" )              IS "S530"
+   HBTEST SoundEx( "Harbour" )            IS "H616"
+   HBTEST SoundEx( "HARBOUR" )            IS "H616"
+   HBTEST SoundEx( "Harpour" )            IS "H616"
+   HBTEST SoundEx( "Hello" )              IS "H400"
+   HBTEST SoundEx( "Aardwaark" )          IS "A636"
+   HBTEST SoundEx( "Ardwark" )            IS "A636"
+   HBTEST SoundEx( "Bold" )               IS "B430"
+   HBTEST SoundEx( "Cold" )               IS "C430"
+   HBTEST SoundEx( "Colt" )               IS "C430"
+   HBTEST SoundEx( "C"+Chr(0)+"olt" )     IS "C430"
+   HBTEST SoundEx( "µ A‚" )              IS "A000"
+   HBTEST SoundEx( "12345" )              IS "0000"
 #endif
 
    /* NATION functions (do not exist in 5.2e US) */
@@ -419,149 +419,149 @@ PROCEDURE Main_MISC()
 #endif
 
 #ifndef __XPP__
-   TEST_LINE( NationMsg()                     , "Invalid argument" )
+   HBTEST NationMsg()                     IS "Invalid argument"
 #endif
-   TEST_LINE( NationMsg("A")                  , "" )
-   TEST_LINE( NationMsg(-1)                   , "" ) /* CA-Cl*pper bug: 5.3 may return trash. */
-   TEST_LINE( NationMsg(0)                    , "" )
-   TEST_LINE( NationMsg(1)                    , "Database Files    # Records    Last Update     Size" )
-   TEST_LINE( NationMsg(2)                    , "Do you want more samples?"                           )
-   TEST_LINE( NationMsg(3)                    , "Page No."                                            )
-   TEST_LINE( NationMsg(4)                    , "** Subtotal **"                                      )
-   TEST_LINE( NationMsg(5)                    , "* Subsubtotal *"                                     )
-   TEST_LINE( NationMsg(6)                    , "*** Total ***"                                       )
-   TEST_LINE( NationMsg(7)                    , "Ins"                                                 )
-   TEST_LINE( NationMsg(8)                    , "   "                                                 )
-   TEST_LINE( NationMsg(9)                    , "Invalid date"                                        )
-   TEST_LINE( NationMsg(10)                   , "Range: "                                             )
-   TEST_LINE( NationMsg(11)                   , " - "                                                 )
-   TEST_LINE( NationMsg(12)                   , "Y/N"                                                 )
-   TEST_LINE( NationMsg(13)                   , "INVALID EXPRESSION"                                  )
-   TEST_LINE( NationMsg(14)                   , "" ) /* Bug in CA-Cl*pper 5.3a/b, it will return "ATSORT v1.3i x19 06/Mar/95" */
+   HBTEST NationMsg("A")                  IS ""
+   HBTEST NationMsg(-1)                   IS ""  /* CA-Cl*pper bug: 5.3 may return trash. */
+   HBTEST NationMsg(0)                    IS ""
+   HBTEST NationMsg(1)                    IS "Database Files    # Records    Last Update     Size"
+   HBTEST NationMsg(2)                    IS "Do you want more samples?"
+   HBTEST NationMsg(3)                    IS "Page No."
+   HBTEST NationMsg(4)                    IS "** Subtotal **"
+   HBTEST NationMsg(5)                    IS "* Subsubtotal *"
+   HBTEST NationMsg(6)                    IS "*** Total ***"
+   HBTEST NationMsg(7)                    IS "Ins"
+   HBTEST NationMsg(8)                    IS "   "
+   HBTEST NationMsg(9)                    IS "Invalid date"
+   HBTEST NationMsg(10)                   IS "Range: "
+   HBTEST NationMsg(11)                   IS " - "
+   HBTEST NationMsg(12)                   IS "Y/N"
+   HBTEST NationMsg(13)                   IS "INVALID EXPRESSION"
+   HBTEST NationMsg(14)                   IS ""  /* Bug in CA-Cl*pper 5.3a/b, it will return "ATSORT v1.3i x19 06/Mar/95" */
 #ifndef __CLIPPER__ /* Causes GPF in CA-Cl*pper (5.2e International, 5.3b) */
-   TEST_LINE( NationMsg(200)                  , "" ) /* Bug in CA-Cl*pper, it will return "74?" or other trash */
+   HBTEST NationMsg(200)                  IS ""  /* Bug in CA-Cl*pper, it will return "74?" or other trash */
 #endif
 
 #ifndef __XPP__
 
 /* These will cause a GPF in CA-Cl*pper (5.2e International, 5.3b) */
 #ifndef __CLIPPER__
-   TEST_LINE( IsAffirm()                      , .F.    )
-   TEST_LINE( IsAffirm(.F.)                   , .F.    )
-   TEST_LINE( IsAffirm(.T.)                   , .F.    )
-   TEST_LINE( IsAffirm(0)                     , .F.    )
-   TEST_LINE( IsAffirm(1)                     , .F.    )
+   HBTEST IsAffirm()                      IS .F.
+   HBTEST IsAffirm(.F.)                   IS .F.
+   HBTEST IsAffirm(.T.)                   IS .F.
+   HBTEST IsAffirm(0)                     IS .F.
+   HBTEST IsAffirm(1)                     IS .F.
 #endif
-   TEST_LINE( IsAffirm("")                    , .F.    )
-   TEST_LINE( IsAffirm("I")                   , .F.    )
-   TEST_LINE( IsAffirm("y")                   , .T.    )
-   TEST_LINE( IsAffirm("Y")                   , .T.    )
-   TEST_LINE( IsAffirm("yes")                 , .T.    )
-   TEST_LINE( IsAffirm("YES")                 , .T.    )
-   TEST_LINE( IsAffirm("n")                   , .F.    )
-   TEST_LINE( IsAffirm("N")                   , .F.    )
-   TEST_LINE( IsAffirm("no")                  , .F.    )
-   TEST_LINE( IsAffirm("NO")                  , .F.    )
+   HBTEST IsAffirm("")                    IS .F.
+   HBTEST IsAffirm("I")                   IS .F.
+   HBTEST IsAffirm("y")                   IS .T.
+   HBTEST IsAffirm("Y")                   IS .T.
+   HBTEST IsAffirm("yes")                 IS .T.
+   HBTEST IsAffirm("YES")                 IS .T.
+   HBTEST IsAffirm("n")                   IS .F.
+   HBTEST IsAffirm("N")                   IS .F.
+   HBTEST IsAffirm("no")                  IS .F.
+   HBTEST IsAffirm("NO")                  IS .F.
 
 /* These will cause a GPF in CA-Cl*pper (5.2e International, 5.3b) */
 #ifndef __CLIPPER__
-   TEST_LINE( IsNegative()                    , .F.    )
-   TEST_LINE( IsNegative(.F.)                 , .F.    )
-   TEST_LINE( IsNegative(.T.)                 , .F.    )
-   TEST_LINE( IsNegative(0)                   , .F.    )
-   TEST_LINE( IsNegative(1)                   , .F.    )
+   HBTEST IsNegative()                    IS .F.
+   HBTEST IsNegative(.F.)                 IS .F.
+   HBTEST IsNegative(.T.)                 IS .F.
+   HBTEST IsNegative(0)                   IS .F.
+   HBTEST IsNegative(1)                   IS .F.
 #endif
-   TEST_LINE( IsNegative("")                  , .F.    )
-   TEST_LINE( IsNegative("I")                 , .F.    )
-   TEST_LINE( IsNegative("y")                 , .F.    )
-   TEST_LINE( IsNegative("Y")                 , .F.    )
-   TEST_LINE( IsNegative("yes")               , .F.    )
-   TEST_LINE( IsNegative("YES")               , .F.    )
-   TEST_LINE( IsNegative("n")                 , .T.    )
-   TEST_LINE( IsNegative("N")                 , .T.    )
-   TEST_LINE( IsNegative("no")                , .T.    )
-   TEST_LINE( IsNegative("NO")                , .T.    )
+   HBTEST IsNegative("")                  IS .F.
+   HBTEST IsNegative("I")                 IS .F.
+   HBTEST IsNegative("y")                 IS .F.
+   HBTEST IsNegative("Y")                 IS .F.
+   HBTEST IsNegative("yes")               IS .F.
+   HBTEST IsNegative("YES")               IS .F.
+   HBTEST IsNegative("n")                 IS .T.
+   HBTEST IsNegative("N")                 IS .T.
+   HBTEST IsNegative("no")                IS .T.
+   HBTEST IsNegative("NO")                IS .T.
 
 #endif /* __XPP__ */
 
    /* FOR/NEXT */
 
-   TEST_LINE( TFORNEXT( .F., .T., NIL )       , "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:L:.F. F:S" )
-   TEST_LINE( TFORNEXT( .T., .F., NIL )       , .T.                                       )
-   TEST_LINE( TFORNEXT( .F., .F., NIL )       , "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:L:.F. F:S" )
-   TEST_LINE( TFORNEXT( 100, 101, NIL )       , 102                                       )
-   TEST_LINE( TFORNEXT( "A", "A", NIL )       , "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:C:A F:S" )
-   TEST_LINE( TFORNEXT( NIL, NIL, NIL )       , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( TFORNEXT( .F., .T.,   1 )       , "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:L:.F.;N:1 F:S" )
-   TEST_LINE( TFORNEXT( .F., .T.,  -1 )       , .F.                                       )
-   TEST_LINE( TFORNEXT( .F., .T., .F. )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:L:.F.;N:0 F:S" )
-   TEST_LINE( TFORNEXT( .T., .F.,   1 )       , .T.                                       )
-   TEST_LINE( TFORNEXT( .T., .F.,  -1 )       , "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:L:.T.;N:-1 F:S" )
-   TEST_LINE( TFORNEXT( .T., .F., .T. )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:L:.T.;N:0 F:S" )
-   TEST_LINE( TFORNEXT( 100, 101,   1 )       , 102                                       )
-   TEST_LINE( TFORNEXT( 101, 100,  -1 )       , 99                                        )
-   TEST_LINE( TFORNEXT( "A", "A", "A" )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S" )
-   TEST_LINE( TFORNEXT( "A", "B", "A" )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S" )
-   TEST_LINE( TFORNEXT( "B", "A", "A" )       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S" )
-   TEST_LINE( TFORNEXT( NIL, NIL, NIL )       , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
+   HBTEST TFORNEXT( .F., .T., NIL )       IS "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:L:.F. F:S"
+   HBTEST TFORNEXT( .T., .F., NIL )       IS .T.
+   HBTEST TFORNEXT( .F., .F., NIL )       IS "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:L:.F. F:S"
+   HBTEST TFORNEXT( 100, 101, NIL )       IS 102
+   HBTEST TFORNEXT( "A", "A", NIL )       IS "E 1 BASE 1086 Argument error (++) OS:0 #:0 A:1:C:A F:S"
+   HBTEST TFORNEXT( NIL, NIL, NIL )       IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST TFORNEXT( .F., .T.,   1 )       IS "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:L:.F.;N:1 F:S"
+   HBTEST TFORNEXT( .F., .T.,  -1 )       IS .F.
+   HBTEST TFORNEXT( .F., .T., .F. )       IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:L:.F.;N:0 F:S"
+   HBTEST TFORNEXT( .T., .F.,   1 )       IS .T.
+   HBTEST TFORNEXT( .T., .F.,  -1 )       IS "E 1 BASE 1081 Argument error (+) OS:0 #:0 A:2:L:.T.;N:-1 F:S"
+   HBTEST TFORNEXT( .T., .F., .T. )       IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:L:.T.;N:0 F:S"
+   HBTEST TFORNEXT( 100, 101,   1 )       IS 102
+   HBTEST TFORNEXT( 101, 100,  -1 )       IS 99
+   HBTEST TFORNEXT( "A", "A", "A" )       IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S"
+   HBTEST TFORNEXT( "A", "B", "A" )       IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S"
+   HBTEST TFORNEXT( "B", "A", "A" )       IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:0 F:S"
+   HBTEST TFORNEXT( NIL, NIL, NIL )       IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
 
-   TEST_LINE( TFORNEXTX(   1, 10,NIL )        , "FTTTTTTTTTTT"                            )
-   TEST_LINE( TFORNEXTX(  10,  1,NIL )        , "FT"                                      )
-   TEST_LINE( TFORNEXTX(   1, 10,  1 )        , "FTSSTSSTSSTSSTSSTSSTSSTSSTSSTSSTS"       )
-   TEST_LINE( TFORNEXTX(  10,  1, -1 )        , "FTSSTSSTSSTSSTSSTSSTSSTSSTSSTSSTS"       )
-   TEST_LINE( TFORNEXTX(   1, 10, -1 )        , "FTS"                                     )
-   TEST_LINE( TFORNEXTX(  10,  1,  1 )        , "FTS"                                     )
-   TEST_LINE( TFORNEXTX(   1, 10,  4 )        , "FTSSTSSTSSTS"                            )
-   TEST_LINE( TFORNEXTX(  10,  1, -4 )        , "FTSSTSSTSSTS"                            )
-   TEST_LINE( TFORNEXTX(   1, 10, -4 )        , "FTS"                                     )
-   TEST_LINE( TFORNEXTX(  10,  1,  4 )        , "FTS"                                     )
+   HBTEST TFORNEXTX(   1, 10,NIL )        IS "FTTTTTTTTTTT"
+   HBTEST TFORNEXTX(  10,  1,NIL )        IS "FT"
+   HBTEST TFORNEXTX(   1, 10,  1 )        IS "FTSSTSSTSSTSSTSSTSSTSSTSSTSSTSSTS"
+   HBTEST TFORNEXTX(  10,  1, -1 )        IS "FTSSTSSTSSTSSTSSTSSTSSTSSTSSTSSTS"
+   HBTEST TFORNEXTX(   1, 10, -1 )        IS "FTS"
+   HBTEST TFORNEXTX(  10,  1,  1 )        IS "FTS"
+   HBTEST TFORNEXTX(   1, 10,  4 )        IS "FTSSTSSTSSTS"
+   HBTEST TFORNEXTX(  10,  1, -4 )        IS "FTSSTSSTSSTS"
+   HBTEST TFORNEXTX(   1, 10, -4 )        IS "FTS"
+   HBTEST TFORNEXTX(  10,  1,  4 )        IS "FTS"
 
-   TEST_LINE( TFORNEXTXF(   1, 10,NIL )       , "F-9999T1T2T3T4T5T6T7T8T9T10T11R11"                                              )
-   TEST_LINE( TFORNEXTXF(  10,  1,NIL )       , "F-9999T10R10"                                                                   )
-   TEST_LINE( TFORNEXTXF(   1, 10,  1 )       , "F-9999T1S1S1T2S2S2T3S3S3T4S4S4T5S5S5T6S6S6T7S7S7T8S8S8T9S9S9T10S10S10T11S11R11" )
-   TEST_LINE( TFORNEXTXF(  10,  1, -1 )       , "F-9999T10S10S10T9S9S9T8S8S8T7S7S7T6S6S6T5S5S5T4S4S4T3S3S3T2S2S2T1S1S1T0S0R0"    )
-   TEST_LINE( TFORNEXTXF(   1, 10, -1 )       , "F-9999T1S1R1"                                                                   )
-   TEST_LINE( TFORNEXTXF(  10,  1,  1 )       , "F-9999T10S10R10"                                                                )
-   TEST_LINE( TFORNEXTXF(   1, 10,  4 )       , "F-9999T1S1S1T5S5S5T9S9S9T13S13R13"                                              )
-   TEST_LINE( TFORNEXTXF(  10,  1, -4 )       , "F-9999T10S10S10T6S6S6T2S2S2T-2S-2R-2"                                           )
-   TEST_LINE( TFORNEXTXF(   1, 10, -4 )       , "F-9999T1S1R1"                                                                   )
-   TEST_LINE( TFORNEXTXF(  10,  1,  4 )       , "F-9999T10S10R10"                                                                )
+   HBTEST TFORNEXTXF(   1, 10,NIL )       IS "F-9999T1T2T3T4T5T6T7T8T9T10T11R11"
+   HBTEST TFORNEXTXF(  10,  1,NIL )       IS "F-9999T10R10"
+   HBTEST TFORNEXTXF(   1, 10,  1 )       IS "F-9999T1S1S1T2S2S2T3S3S3T4S4S4T5S5S5T6S6S6T7S7S7T8S8S8T9S9S9T10S10S10T11S11R11"
+   HBTEST TFORNEXTXF(  10,  1, -1 )       IS "F-9999T10S10S10T9S9S9T8S8S8T7S7S7T6S6S6T5S5S5T4S4S4T3S3S3T2S2S2T1S1S1T0S0R0"
+   HBTEST TFORNEXTXF(   1, 10, -1 )       IS "F-9999T1S1R1"
+   HBTEST TFORNEXTXF(  10,  1,  1 )       IS "F-9999T10S10R10"
+   HBTEST TFORNEXTXF(   1, 10,  4 )       IS "F-9999T1S1S1T5S5S5T9S9S9T13S13R13"
+   HBTEST TFORNEXTXF(  10,  1, -4 )       IS "F-9999T10S10S10T6S6S6T2S2S2T-2S-2R-2"
+   HBTEST TFORNEXTXF(   1, 10, -4 )       IS "F-9999T1S1R1"
+   HBTEST TFORNEXTXF(  10,  1,  4 )       IS "F-9999T10S10R10"
 
    /* Eval(), :Eval(), :EVAL */
 
-   TEST_LINE( Eval( NIL )                     , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( Eval( 1 )                       , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:1 F:S" )
-   TEST_LINE( Eval( @sbBlock )                , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:B:{||...} F:S" ) /* CA-Cl*pper returns "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:{||...} F:S" */
-   TEST_LINE( Eval( {| p1 | p1 },"A","B")     , "A"                                       )
-   TEST_LINE( Eval( {| p1, p2 | p1 + p2 },"A","B"), "AB"                                      )
+   HBTEST Eval( NIL )                     IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST Eval( 1 )                       IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:1 F:S"
+   HBTEST Eval( @sbBlock )                IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:B:{||...} F:S"  /* CA-Cl*pper returns "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:{||...} F:S" */
+   HBTEST Eval( {| p1 | p1 },"A","B")     IS "A"
+   HBTEST Eval( {| p1, p2 | p1 + p2 },"A","B") IS "AB"
 #ifdef __HARBOUR__
-   TEST_LINE( Eval( {| p1, p2, p3 | HB_SYMBOL_UNUSED( p2 ), HB_SYMBOL_UNUSED( p3 ), p1 }, "A", "B" ), "A"                                       )
+   HBTEST Eval( {| p1, p2, p3 | HB_SYMBOL_UNUSED( p2 ), HB_SYMBOL_UNUSED( p3 ), p1 }, "A", "B" ) IS "A"
 #else
-   TEST_LINE( Eval( {| p1, p2, p3 | p1 }, "A", "B" ) , "A"                                       )
+   HBTEST Eval( {| p1, p2, p3 | p1 }, "A", "B" ) IS "A"
 #endif
-   TEST_LINE( suNIL:Eval()                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( scString:Eval()                 , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S" )
-   TEST_LINE( snIntP:Eval()                   , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S" )
-   TEST_LINE( sdDateE:Eval()                  , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:         F:S" )
-   TEST_LINE( slFalse:Eval()                  , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S" )
-   TEST_LINE( sbBlock:Eval()                  , NIL                                       )
-   TEST_LINE( saArray:Eval()                  , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S" )
-   TEST_LINE( soObject:Eval()                 , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:O:ERROR Object F:S" )
-   TEST_LINE( suNIL:Eval                      , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( scString:Eval                   , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S" )
-   TEST_LINE( snIntP:Eval                     , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S" )
-   TEST_LINE( sdDateE:Eval                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:         F:S" )
-   TEST_LINE( slFalse:Eval                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S" )
-   TEST_LINE( sbBlock:Eval                    , NIL                                       )
-   TEST_LINE( saArray:Eval                    , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S" )
-   TEST_LINE( soObject:Eval                   , "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:O:ERROR Object F:S" )
+   HBTEST suNIL:Eval()                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST scString:Eval()                 IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S"
+   HBTEST snIntP:Eval()                   IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S"
+   HBTEST sdDateE:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:         F:S"
+   HBTEST slFalse:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S"
+   HBTEST sbBlock:Eval()                  IS NIL
+   HBTEST saArray:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S"
+   HBTEST soObject:Eval()                 IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:O:ERROR Object F:S"
+   HBTEST suNIL:Eval                      IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST scString:Eval                   IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S"
+   HBTEST snIntP:Eval                     IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S"
+   HBTEST sdDateE:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:         F:S"
+   HBTEST slFalse:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S"
+   HBTEST sbBlock:Eval                    IS NIL
+   HBTEST saArray:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S"
+   HBTEST soObject:Eval                   IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:O:ERROR Object F:S"
 
    /* hb_SToD() */
 
    /* For these tests in CA-Cl*pper 5.2e the following native hb_SToD() has
       been used ( not the emulated one written in Clipper ):
 
-      CLIPPER hb_SToD( void )
+      CLIPPER hb_SToD( void
       {
          // The length check is a fix to avoid buggy behaviour of _retds()
          _retds( ( ISCHAR( 1 ) && _parclen( 1 ) == 8 ) ? _parc( 1 ) : "        " );
@@ -570,118 +570,118 @@ PROCEDURE Main_MISC()
 
 #ifndef RT_NO_C
 #ifndef __XPP__
-   TEST_LINE( hb_SToD()                       , hb_SToD("        ")          )
+   HBTEST hb_SToD()                       IS hb_SToD("        ")
 #endif
-   TEST_LINE( hb_SToD(1)                      , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD(NIL)                    , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("")                     , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("        ")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("       ")              , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("         ")            , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD(" 1234567")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("1999    ")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("99999999")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("99990101")             , hb_SToD("99990101")          )
-   TEST_LINE( hb_SToD("19991301")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("19991241")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("01000101")             , hb_SToD("01000101")          )
-   TEST_LINE( hb_SToD("29991231")             , hb_SToD("29991231")          )
-   TEST_LINE( hb_SToD("19990905")             , hb_SToD("19990905")          )
-   TEST_LINE( hb_SToD(" 9990905")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("  990905")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("   90905")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("    0905")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("     905")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("      05")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("1 990905")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("19 90905")             , hb_SToD("17490905")          )
-   TEST_LINE( hb_SToD("199 0905")             , hb_SToD("19740905")          )
-   TEST_LINE( hb_SToD("1999 905")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("19990 05")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("199909 5")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("1999090 ")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("1999 9 5")             , hb_SToD("        ")          )
-   TEST_LINE( hb_SToD("1999090" + Chr(0))     , hb_SToD("        ")          )
+   HBTEST hb_SToD(1)                      IS hb_SToD("        ")
+   HBTEST hb_SToD(NIL)                    IS hb_SToD("        ")
+   HBTEST hb_SToD("")                     IS hb_SToD("        ")
+   HBTEST hb_SToD("        ")             IS hb_SToD("        ")
+   HBTEST hb_SToD("       ")              IS hb_SToD("        ")
+   HBTEST hb_SToD("         ")            IS hb_SToD("        ")
+   HBTEST hb_SToD(" 1234567")             IS hb_SToD("        ")
+   HBTEST hb_SToD("1999    ")             IS hb_SToD("        ")
+   HBTEST hb_SToD("99999999")             IS hb_SToD("        ")
+   HBTEST hb_SToD("99990101")             IS hb_SToD("99990101")
+   HBTEST hb_SToD("19991301")             IS hb_SToD("        ")
+   HBTEST hb_SToD("19991241")             IS hb_SToD("        ")
+   HBTEST hb_SToD("01000101")             IS hb_SToD("01000101")
+   HBTEST hb_SToD("29991231")             IS hb_SToD("29991231")
+   HBTEST hb_SToD("19990905")             IS hb_SToD("19990905")
+   HBTEST hb_SToD(" 9990905")             IS hb_SToD("        ")
+   HBTEST hb_SToD("  990905")             IS hb_SToD("        ")
+   HBTEST hb_SToD("   90905")             IS hb_SToD("        ")
+   HBTEST hb_SToD("    0905")             IS hb_SToD("        ")
+   HBTEST hb_SToD("     905")             IS hb_SToD("        ")
+   HBTEST hb_SToD("      05")             IS hb_SToD("        ")
+   HBTEST hb_SToD("1 990905")             IS hb_SToD("        ")
+   HBTEST hb_SToD("19 90905")             IS hb_SToD("17490905")
+   HBTEST hb_SToD("199 0905")             IS hb_SToD("19740905")
+   HBTEST hb_SToD("1999 905")             IS hb_SToD("        ")
+   HBTEST hb_SToD("19990 05")             IS hb_SToD("        ")
+   HBTEST hb_SToD("199909 5")             IS hb_SToD("        ")
+   HBTEST hb_SToD("1999090 ")             IS hb_SToD("        ")
+   HBTEST hb_SToD("1999 9 5")             IS hb_SToD("        ")
+   HBTEST hb_SToD("1999090" + Chr(0))     IS hb_SToD("        ")
 #endif
 
    /* Descend() */
 
 #ifndef __CLIPPER__ /* Bug in CA-Cl*pper, it returns undefined trash */
 #ifndef __XPP__ /* Compiler time error */
-   TEST_LINE( Descend()                       , NIL                                                 )
+   HBTEST Descend()                       IS NIL
 #endif
 #endif
-   TEST_LINE( Descend( NIL )                  , NIL                                                 )
-   TEST_LINE( Descend( { "A", "B" } )         , NIL                                                 )
+   HBTEST Descend( NIL )                  IS NIL
+   HBTEST Descend( { "A", "B" } )         IS NIL
 #ifdef __HARBOUR__
-   TEST_LINE( Descend( @scString )            , "¸»´´±"                                             ) /* Bug in CA-Cl*pper, it will return NIL */
+   HBTEST Descend( @scString )            IS "¸»´´±"  /* Bug in CA-Cl*pper, it will return NIL */
 #endif
-   TEST_LINE( Descend( scString )             , "¸»´´±"                                             )
-   TEST_LINE( Descend( scString )             , "¸»´´±"                                             )
-   TEST_LINE( Descend( Descend( scString ) )  , "HELLO"                                             )
-   TEST_LINE( Descend( .F. )                  , .T.                                                 )
-   TEST_LINE( Descend( .T. )                  , .F.                                                 )
-   TEST_LINE( Descend( 0 )                    , 0.00                                                )
-   TEST_LINE( Descend( 1 )                    , -1.00                                               )
-   TEST_LINE( Descend( -1 )                   , 1.00                                                )
-   TEST_LINE( Descend( Descend( 256 ) )       , 256.00                                              )
-   TEST_LINE( Descend( 2.0 )                  , -2.00                                               )
-   TEST_LINE( Descend( 2.5 )                  , -2.50                                               )
-   TEST_LINE( Descend( -100.35 )              , 100.35                                              )
-   TEST_LINE( Str(Descend( -740.354 ))        , "       740.35"                                     )
-   TEST_LINE( Str(Descend( -740.359 ))        , "       740.36"                                     )
-   TEST_LINE( Str(Descend( -740.354 ), 15, 5) , "      740.35400"                                   )
-   TEST_LINE( Str(Descend( -740.359 ), 15, 5) , "      740.35900"                                   )
-   TEST_LINE( Descend( 100000 )               , -100000.00                                          )
-   TEST_LINE( Descend( -100000 )              , 100000.00                                           )
-   TEST_LINE( Descend( "" )                   , ""                                                  )
-   TEST_LINE( Descend( Chr(0) )               , ""+Chr(0)+""                                        )
-   TEST_LINE( Descend( Chr(0) + "Hello" )     , ""+Chr(0)+"¸›””‘"                                   )
-   TEST_LINE( Descend( "Hello"+Chr(0)+"wo" )  , "¸›””‘"+Chr(0)+"‰‘"                                 )
-   TEST_LINE( Descend( hb_SToD( "" ) )        , 5231808                                             )
-   TEST_LINE( Descend( hb_SToD( "01000101" ) ), 3474223                                             )
-   TEST_LINE( Descend( hb_SToD( "19801220" ) ), 2787214                                             )
+   HBTEST Descend( scString )              IS "¸»´´±"
+   HBTEST Descend( scString )              IS "¸»´´±"
+   HBTEST Descend( Descend( scString ) )   IS "HELLO"
+   HBTEST Descend( .F. )                   IS .T.
+   HBTEST Descend( .T. )                   IS .F.
+   HBTEST Descend( 0 )                     IS 0.00
+   HBTEST Descend( 1 )                     IS -1.00
+   HBTEST Descend( -1 )                    IS 1.00
+   HBTEST Descend( Descend( 256 ) )        IS 256.00
+   HBTEST Descend( 2.0 )                   IS -2.00
+   HBTEST Descend( 2.5 )                   IS -2.50
+   HBTEST Descend( -100.35 )               IS 100.35
+   HBTEST Str(Descend( -740.354 ))         IS "       740.35"
+   HBTEST Str(Descend( -740.359 ))         IS "       740.36"
+   HBTEST Str(Descend( -740.354 ), 15, 5)  IS "      740.35400"
+   HBTEST Str(Descend( -740.359 ), 15, 5)  IS "      740.35900"
+   HBTEST Descend( 100000 )                IS -100000.00
+   HBTEST Descend( -100000 )               IS 100000.00
+   HBTEST Descend( "" )                    IS ""
+   HBTEST Descend( Chr(0) )                IS ""+Chr(0)+""
+   HBTEST Descend( Chr(0) + "Hello" )      IS ""+Chr(0)+"¸›””‘"
+   HBTEST Descend( "Hello"+Chr(0)+"wo" )   IS "¸›””‘"+Chr(0)+"‰‘"
+   HBTEST Descend( hb_SToD( "" ) )         IS 5231808
+   HBTEST Descend( hb_SToD( "01000101" ) ) IS 3474223
+   HBTEST Descend( hb_SToD( "19801220" ) ) IS 2787214
 
 #ifdef __HARBOUR__
 
    /* hb_ColorIndex() */
 
-   TEST_LINE( hb_ColorIndex()                  , ""               )
-   TEST_LINE( hb_ColorIndex("", -1)            , ""               )
-   TEST_LINE( hb_ColorIndex("", 0)             , ""               )
-   TEST_LINE( hb_ColorIndex("W/R", -1)         , ""               )
-   TEST_LINE( hb_ColorIndex("W/R", 0)          , "W/R"            )
-   TEST_LINE( hb_ColorIndex("W/R", 1)          , ""               )
-   TEST_LINE( hb_ColorIndex("W/R", 2)          , ""               )
-   TEST_LINE( hb_ColorIndex("W/R,GR/0", 0)     , "W/R"            )
-   TEST_LINE( hb_ColorIndex("W/R,GR/0", 1)     , "GR/0"           )
-   TEST_LINE( hb_ColorIndex("W/R,GR/0", 2)     , ""               )
-   TEST_LINE( hb_ColorIndex("W/R,GR/0", 3)     , ""               )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0", 0)    , "W/R"            )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0", 1)    , "GR/0"           )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0", 2)    , ""               )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0", 3)    , ""               )
-   TEST_LINE( hb_ColorIndex("W/R,GR/0 ", 0)    , "W/R"            )
-   TEST_LINE( hb_ColorIndex("W/R,GR/0 ", 1)    , "GR/0"           )
-   TEST_LINE( hb_ColorIndex("W/R,GR/0 ", 2)    , ""               )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0 ", 0)   , "W/R"            )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0 ", 1)   , "GR/0"           )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0 ", 2)   , ""               )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0 ,", 0)  , "W/R"            )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0 ,", 1)  , "GR/0"           )
-   TEST_LINE( hb_ColorIndex("W/R, GR/0 ,", 2)  , ""               )
-   TEST_LINE( hb_ColorIndex(" W/R, GR/0 ,", 0) , "W/R"            )
-   TEST_LINE( hb_ColorIndex(" W/R, GR/0 ,", 1) , "GR/0"           )
-   TEST_LINE( hb_ColorIndex(" W/R, GR/0 ,", 2) , ""               )
-   TEST_LINE( hb_ColorIndex(" W/R , GR/0 ,", 0), "W/R"            )
-   TEST_LINE( hb_ColorIndex(" W/R , GR/0 ,", 1), "GR/0"           )
-   TEST_LINE( hb_ColorIndex(" W/R , GR/0 ,", 2), ""               )
-   TEST_LINE( hb_ColorIndex(" W/R ,   ,", 1)   , ""               )
-   TEST_LINE( hb_ColorIndex(" W/R ,,", 1)      , ""               )
-   TEST_LINE( hb_ColorIndex(",,", 0)           , ""               )
-   TEST_LINE( hb_ColorIndex(",,", 1)           , ""               )
-   TEST_LINE( hb_ColorIndex(",,", 2)           , ""               )
-   TEST_LINE( hb_ColorIndex(",  ,", 2)         , ""               )
+   HBTEST hb_ColorIndex()                   IS ""
+   HBTEST hb_ColorIndex("", -1)             IS ""
+   HBTEST hb_ColorIndex("", 0)              IS ""
+   HBTEST hb_ColorIndex("W/R", -1)          IS ""
+   HBTEST hb_ColorIndex("W/R", 0)           IS "W/R"
+   HBTEST hb_ColorIndex("W/R", 1)           IS ""
+   HBTEST hb_ColorIndex("W/R", 2)           IS ""
+   HBTEST hb_ColorIndex("W/R,GR/0", 0)      IS "W/R"
+   HBTEST hb_ColorIndex("W/R,GR/0", 1)      IS "GR/0"
+   HBTEST hb_ColorIndex("W/R,GR/0", 2)      IS ""
+   HBTEST hb_ColorIndex("W/R,GR/0", 3)      IS ""
+   HBTEST hb_ColorIndex("W/R, GR/0", 0)     IS "W/R"
+   HBTEST hb_ColorIndex("W/R, GR/0", 1)     IS "GR/0"
+   HBTEST hb_ColorIndex("W/R, GR/0", 2)     IS ""
+   HBTEST hb_ColorIndex("W/R, GR/0", 3)     IS ""
+   HBTEST hb_ColorIndex("W/R,GR/0 ", 0)     IS "W/R"
+   HBTEST hb_ColorIndex("W/R,GR/0 ", 1)     IS "GR/0"
+   HBTEST hb_ColorIndex("W/R,GR/0 ", 2)     IS ""
+   HBTEST hb_ColorIndex("W/R, GR/0 ", 0)    IS "W/R"
+   HBTEST hb_ColorIndex("W/R, GR/0 ", 1)    IS "GR/0"
+   HBTEST hb_ColorIndex("W/R, GR/0 ", 2)    IS ""
+   HBTEST hb_ColorIndex("W/R, GR/0 ,", 0)   IS "W/R"
+   HBTEST hb_ColorIndex("W/R, GR/0 ,", 1)   IS "GR/0"
+   HBTEST hb_ColorIndex("W/R, GR/0 ,", 2)   IS ""
+   HBTEST hb_ColorIndex(" W/R, GR/0 ,", 0)  IS "W/R"
+   HBTEST hb_ColorIndex(" W/R, GR/0 ,", 1)  IS "GR/0"
+   HBTEST hb_ColorIndex(" W/R, GR/0 ,", 2)  IS ""
+   HBTEST hb_ColorIndex(" W/R , GR/0 ,", 0) IS "W/R"
+   HBTEST hb_ColorIndex(" W/R , GR/0 ,", 1) IS "GR/0"
+   HBTEST hb_ColorIndex(" W/R , GR/0 ,", 2) IS ""
+   HBTEST hb_ColorIndex(" W/R ,   ,", 1)    IS ""
+   HBTEST hb_ColorIndex(" W/R ,,", 1)       IS ""
+   HBTEST hb_ColorIndex(",,", 0)            IS ""
+   HBTEST hb_ColorIndex(",,", 1)            IS ""
+   HBTEST hb_ColorIndex(",,", 2)            IS ""
+   HBTEST hb_ColorIndex(",  ,", 2)          IS ""
 
 #endif
 
@@ -689,19 +689,19 @@ PROCEDURE Main_MISC()
 
    /* FKMax(), FKLabel() */
 
-   TEST_LINE( FKMax()                         , 40               )
-   TEST_LINE( FKMax( 1 )                      , 40               )
+   HBTEST FKMax()                         IS 40
+   HBTEST FKMax( 1 )                      IS 40
 #ifdef __HARBOUR__
-   TEST_LINE( FKLabel()                       , ""               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;N:40 F:S" */
-   TEST_LINE( FKLabel( NIL )                  , ""               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;N:40 F:S" */
-   TEST_LINE( FKLabel( "A" )                  , ""               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:A;N:40 F:S" */
+   HBTEST FKLabel()                       IS ""  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;N:40 F:S" */
+   HBTEST FKLabel( NIL )                  IS ""  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;N:40 F:S" */
+   HBTEST FKLabel( "A" )                  IS ""  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:A;N:40 F:S" */
 #endif
-   TEST_LINE( FKLabel( -1 )                   , ""               )
-   TEST_LINE( FKLabel( 0 )                    , ""               )
-   TEST_LINE( FKLabel( 1 )                    , "F1"             )
-   TEST_LINE( FKLabel( 25 )                   , "F25"            )
-   TEST_LINE( FKLabel( 40 )                   , "F40"            )
-   TEST_LINE( FKLabel( 41 )                   , ""               )
+   HBTEST FKLabel( -1 )                   IS ""
+   HBTEST FKLabel( 0 )                    IS ""
+   HBTEST FKLabel( 1 )                    IS "F1"
+   HBTEST FKLabel( 25 )                   IS "F25"
+   HBTEST FKLabel( 40 )                   IS "F40"
+   HBTEST FKLabel( 41 )                   IS ""
 
 #endif /* __XPP__ */
 
@@ -712,91 +712,91 @@ PROCEDURE Main_MISC()
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   TEST_LINE( Bin2I()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2I()                         IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   TEST_LINE( Bin2I(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
-   TEST_LINE( Bin2I("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
+   HBTEST Bin2I(100)                      IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2I("")                       IS 0  /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( Bin2I("AB")                     , 16961            )
-   TEST_LINE( Bin2I("BA")                     , 16706            )
-   TEST_LINE( Bin2I(Chr(255))                 , 255              )
-   TEST_LINE( Bin2I(Chr(255)+Chr(255))        , -1               )
-   TEST_LINE( Bin2I(Chr(0))                   , 0                )
-   TEST_LINE( Bin2I(Chr(0)+Chr(0))            , 0                )
-   TEST_LINE( Bin2I("A")                      , 65               )
-   TEST_LINE( Bin2I("ABC")                    , 16961            )
+   HBTEST Bin2I("AB")                     IS 16961
+   HBTEST Bin2I("BA")                     IS 16706
+   HBTEST Bin2I(Chr(255))                 IS 255
+   HBTEST Bin2I(Chr(255)+Chr(255))        IS -1
+   HBTEST Bin2I(Chr(0))                   IS 0
+   HBTEST Bin2I(Chr(0)+Chr(0))            IS 0
+   HBTEST Bin2I("A")                      IS 65
+   HBTEST Bin2I("ABC")                    IS 16961
 
    /* Bin2W() */
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   TEST_LINE( Bin2W()                         , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2W()                         IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   TEST_LINE( Bin2W(100)                      , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
-   TEST_LINE( Bin2W("")                       , 0                ) /* Bug in CA-Cl*pper, it will return trash */
+   HBTEST Bin2W(100)                      IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2W("")                       IS 0  /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( Bin2W("AB")                     , 16961            )
-   TEST_LINE( Bin2W("BA")                     , 16706            )
-   TEST_LINE( Bin2W(Chr(255))                 , 255              )
-   TEST_LINE( Bin2W(Chr(255)+Chr(255))        , 65535            )
-   TEST_LINE( Bin2W(Chr(0))                   , 0                )
-   TEST_LINE( Bin2W(Chr(0)+Chr(0))            , 0                )
-   TEST_LINE( Bin2W("A")                      , 65               )
-   TEST_LINE( Bin2W("ABC")                    , 16961            )
+   HBTEST Bin2W("AB")                     IS 16961
+   HBTEST Bin2W("BA")                     IS 16706
+   HBTEST Bin2W(Chr(255))                 IS 255
+   HBTEST Bin2W(Chr(255)+Chr(255))        IS 65535
+   HBTEST Bin2W(Chr(0))                   IS 0
+   HBTEST Bin2W(Chr(0)+Chr(0))            IS 0
+   HBTEST Bin2W("A")                      IS 65
+   HBTEST Bin2W("ABC")                    IS 16961
 
    /* Bin2L() */
 
 #ifndef __CLIPPER__
 #ifndef __XPP__
-   TEST_LINE( Bin2L()                                    , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2L()                                    IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
 #endif
-   TEST_LINE( Bin2L(100)                                 , 0                ) /* Bug in CA-Cl*pper, this causes a GPF */
-   TEST_LINE( Bin2L("")                                  , 0                ) /* Bug in CA-Cl*pper, it will return trash */
+   HBTEST Bin2L(100)                                 IS 0  /* Bug in CA-Cl*pper, this causes a GPF */
+   HBTEST Bin2L("")                                  IS 0  /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( Bin2L("ABCD")                              , 1145258561       )
-   TEST_LINE( Bin2L("DCBA")                              , 1094861636       )
+   HBTEST Bin2L("ABCD")                              IS 1145258561
+   HBTEST Bin2L("DCBA")                              IS 1094861636
 #ifndef __CLIPPER__
-   TEST_LINE( Bin2L(Chr(255))                            , 255              ) /* Bug in CA-Cl*pper, it will return trash */
+   HBTEST Bin2L(Chr(255))                            IS 255  /* Bug in CA-Cl*pper, it will return trash */
 #endif
-   TEST_LINE( Bin2L(Chr(255)+Chr(255)+Chr(255))          , 16777215         )
-   TEST_LINE( Bin2L(Chr(255)+Chr(255)+Chr(255)+Chr(255)) , -1               )
-   TEST_LINE( Bin2L(Chr(0)+Chr(0)+Chr(0))                , 0                )
-   TEST_LINE( Bin2L(Chr(0)+Chr(0)+Chr(0)+Chr(0))         , 0                )
-   TEST_LINE( Bin2L("ABC")                               , 4407873          )
-   TEST_LINE( Bin2L("ABCDE")                             , 1145258561       )
+   HBTEST Bin2L(Chr(255)+Chr(255)+Chr(255))          IS 16777215
+   HBTEST Bin2L(Chr(255)+Chr(255)+Chr(255)+Chr(255)) IS -1
+   HBTEST Bin2L(Chr(0)+Chr(0)+Chr(0))                IS 0
+   HBTEST Bin2L(Chr(0)+Chr(0)+Chr(0)+Chr(0))         IS 0
+   HBTEST Bin2L("ABC")                               IS 4407873
+   HBTEST Bin2L("ABCDE")                             IS 1145258561
 
    /* I2Bin() */
 
 #ifndef __XPP__
-   TEST_LINE( I2Bin()                         , ""+Chr(0)+""+Chr(0)+"" )
+   HBTEST I2Bin()                         IS ""+Chr(0)+""+Chr(0)+""
 #endif
-   TEST_LINE( I2Bin(""     )                  , ""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( I2Bin(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( I2Bin(16961  )                  , "AB"                   )
-   TEST_LINE( I2Bin(16706  )                  , "BA"                   )
-   TEST_LINE( I2Bin(255    )                  , "ÿ"+Chr(0)+""          )
-   TEST_LINE( I2Bin(-1     )                  , "ÿÿ"                   )
-   TEST_LINE( I2Bin(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( I2Bin(0      )                  , ""+Chr(0)+""+Chr(0)+"" )
-   TEST_LINE( I2Bin(65     )                  , "A"+Chr(0)+""          )
-   TEST_LINE( I2Bin(16961  )                  , "AB"                   )
+   HBTEST I2Bin(""     )                  IS ""+Chr(0)+""+Chr(0)+""
+   HBTEST I2Bin(0      )                  IS ""+Chr(0)+""+Chr(0)+""
+   HBTEST I2Bin(16961  )                  IS "AB"
+   HBTEST I2Bin(16706  )                  IS "BA"
+   HBTEST I2Bin(255    )                  IS "ÿ"+Chr(0)+""
+   HBTEST I2Bin(-1     )                  IS "ÿÿ"
+   HBTEST I2Bin(0      )                  IS ""+Chr(0)+""+Chr(0)+""
+   HBTEST I2Bin(0      )                  IS ""+Chr(0)+""+Chr(0)+""
+   HBTEST I2Bin(65     )                  IS "A"+Chr(0)+""
+   HBTEST I2Bin(16961  )                  IS "AB"
 
    /* L2Bin() */
 
 #ifndef __XPP__
-   TEST_LINE( L2Bin()                         , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
+   HBTEST L2Bin()                         IS ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""
 #endif
-   TEST_LINE( L2Bin("")                       , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
-   TEST_LINE( L2Bin(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
-   TEST_LINE( L2Bin(1145258561 )              , "ABCD"                                      )
-   TEST_LINE( L2Bin(1094861636 )              , "DCBA"                                      )
-   TEST_LINE( L2Bin(255        )              , "ÿ"+Chr(0)+""+Chr(0)+""+Chr(0)+""           )
-   TEST_LINE( L2Bin(16777215   )              , "ÿÿÿ"+Chr(0)+""                             )
-   TEST_LINE( L2Bin(-1         )              , Chr(255)+Chr(255)+Chr(255)+Chr(255)         )
-   TEST_LINE( L2Bin(0          )              , ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""  )
-   TEST_LINE( L2Bin(0          )              , Chr(0)+Chr(0)+Chr(0)+Chr(0)                 )
-   TEST_LINE( L2Bin(4407873    )              , "ABC"+Chr(0)+""                             )
-   TEST_LINE( L2Bin(1145258561 )              , "ABCD"                                      )
+   HBTEST L2Bin("")                       IS ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""
+   HBTEST L2Bin(0          )              IS ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""
+   HBTEST L2Bin(1145258561 )              IS "ABCD"
+   HBTEST L2Bin(1094861636 )              IS "DCBA"
+   HBTEST L2Bin(255        )              IS "ÿ"+Chr(0)+""+Chr(0)+""+Chr(0)+""
+   HBTEST L2Bin(16777215   )              IS "ÿÿÿ"+Chr(0)+""
+   HBTEST L2Bin(-1         )              IS Chr(255)+Chr(255)+Chr(255)+Chr(255)
+   HBTEST L2Bin(0          )              IS ""+Chr(0)+""+Chr(0)+""+Chr(0)+""+Chr(0)+""
+   HBTEST L2Bin(0          )              IS Chr(0)+Chr(0)+Chr(0)+Chr(0)
+   HBTEST L2Bin(4407873    )              IS "ABC"+Chr(0)+""
+   HBTEST L2Bin(1145258561 )              IS "ABCD"
 
 #ifndef __XPP__
 
@@ -807,10 +807,10 @@ PROCEDURE Main_MISC()
    /* NOTE: Cannot yet test the return value of the function on a DEFAULT-ed
             failure. */
 
-   TEST_LINE( __CopyFile("$$COPYFR.TMP")                 , "E 1 BASE 2010 Argument error (__COPYFILE) OS:0 #:0 A:1:C:$$COPYFR.TMP " )
-   TEST_LINE( __CopyFile("$$COPYFR.TMP", "$$COPYTO.TMP") , NIL                                        )
-   TEST_LINE( __CopyFile("NOT_HERE.$$$", "$$COPYTO.TMP") , "E 21 BASE 2012 Open error <NOT_HERE.$$$> OS:2 #:1 F:DR" )
-   TEST_LINE( __CopyFile("$$COPYFR.TMP", BADFNAME())     , "E 20 BASE 2012 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR" )
+   HBTEST __CopyFile("$$COPYFR.TMP")                 IS "E 1 BASE 2010 Argument error (__COPYFILE) OS:0 #:0 A:1:C:$$COPYFR.TMP "
+   HBTEST __CopyFile("$$COPYFR.TMP", "$$COPYTO.TMP") IS NIL
+   HBTEST __CopyFile("NOT_HERE.$$$", "$$COPYTO.TMP") IS "E 21 BASE 2012 Open error <NOT_HERE.$$$> OS:2 #:1 F:DR"
+   HBTEST __CopyFile("$$COPYFR.TMP", BADFNAME())     IS "E 20 BASE 2012 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR"
 
    FErase("$$COPYFR.TMP")
    FErase("$$COPYTO.TMP")
@@ -823,19 +823,19 @@ PROCEDURE Main_MISC()
 
    /* NOTE: Only error cases are tested. */
 
-   TEST_LINE( __Run()                         , NIL              )
-   TEST_LINE( __Run( NIL )                    , NIL              )
-   TEST_LINE( __Run( 10 )                     , NIL              )
+   HBTEST __Run()                         IS NIL
+   HBTEST __Run( NIL )                    IS NIL
+   HBTEST __Run( 10 )                     IS NIL
 
 #endif /* __XPP__ */
 
    /* MemVarBlock() */
 
-   TEST_LINE( MemVarBlock()                   , NIL             )
-   TEST_LINE( MemVarBlock( NIL )              , NIL             )
-   TEST_LINE( MemVarBlock( 100 )              , NIL             )
-   TEST_LINE( MemVarBlock( "mxNotHere" )      , NIL             )
-   TEST_LINE( MemVarBlock( "mcString" )       , "{||...}"       )
+   HBTEST MemVarBlock()                   IS NIL
+   HBTEST MemVarBlock( NIL )              IS NIL
+   HBTEST MemVarBlock( 100 )              IS NIL
+   HBTEST MemVarBlock( "mxNotHere" )      IS NIL
+   HBTEST MemVarBlock( "mcString" )       IS "{||...}"
 
    /* Defines for HardCR() and MemoTran() */
 
@@ -847,52 +847,52 @@ PROCEDURE Main_MISC()
    /* HardCR() */
 
 #ifndef __XPP__
-   TEST_LINE( HardCR()                                                      , ""                                                                                 )
+   HBTEST HardCR()                                                      IS ""
 #endif
-   TEST_LINE( HardCR(NIL)                                                   , ""                                                                                 )
-   TEST_LINE( HardCR(100)                                                   , ""                                                                                 )
+   HBTEST HardCR(NIL)                                                   IS ""
+   HBTEST HardCR(100)                                                   IS ""
 #ifdef __HARBOUR__
-   TEST_LINE( HardCR(@scString)                                             , "HELLO"                                                                            ) /* Bug in CA-Cl*pper, it will return "" */
+   HBTEST HardCR(@scString)                                             IS "HELLO"  /* Bug in CA-Cl*pper, it will return "" */
 #endif
-   TEST_LINE( HardCR("H"+SO+LF+"P"+SO+LF+"W"+SO+"M")                        , "H"+Chr(13)+""+Chr(10)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"                                )
-   TEST_LINE( HardCR("H"+NU+"B"+SO+LF+NU+"P"+SO+LF+"W"+SO+"M"+NU)           , "H"+Chr(0)+"B"+Chr(13)+""+Chr(10)+""+Chr(0)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"+Chr(0)+"" )
+   HBTEST HardCR("H"+SO+LF+"P"+SO+LF+"W"+SO+"M")                        IS "H"+Chr(13)+""+Chr(10)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"
+   HBTEST HardCR("H"+NU+"B"+SO+LF+NU+"P"+SO+LF+"W"+SO+"M"+NU)           IS "H"+Chr(0)+"B"+Chr(13)+""+Chr(10)+""+Chr(0)+"P"+Chr(13)+""+Chr(10)+"W"+Chr(141)+"M"+Chr(0)+""
 
    /* MemoTran() */
 
 #ifndef __XPP__
-   TEST_LINE( MemoTran()                                                    , ""                                                 )
+   HBTEST MemoTran()                                                    IS ""
 #endif
-   TEST_LINE( MemoTran(NIL)                                                 , ""                                                 )
-   TEST_LINE( MemoTran(100)                                                 , ""                                                 )
-   TEST_LINE( MemoTran(100,"1","2")                                         , ""                                                 )
+   HBTEST MemoTran(NIL)                                                 IS ""
+   HBTEST MemoTran(100)                                                 IS ""
+   HBTEST MemoTran(100,"1","2")                                         IS ""
 #ifdef __HARBOUR__
-   TEST_LINE( MemoTran(@scString)                                           , "HELLO"                                            ) /* Bug in CA-Cl*pper, it will return "" */
+   HBTEST MemoTran(@scString)                                           IS "HELLO"  /* Bug in CA-Cl*pper, it will return "" */
 #endif
-   TEST_LINE( MemoTran("H"+SO+LF+"P"+CR+LF+"M")                             , "H P;M"                                            )
-   TEST_LINE( MemoTran("H"+NU+"O"+SO+LF+"P"+CR+LF+"M"+NU+"I")               , "H"+Chr(0)+"O P;M"+Chr(0)+"I"                      )
-   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR)            , "M"+Chr(13)+"s;w"+Chr(141)+"w h"+Chr(13)+""        )
-   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"111","222"), "M"+Chr(13)+"s1w"+Chr(141)+"w2h"+Chr(13)+""        )
-   TEST_LINE( MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"","")      , "M"+Chr(13)+"s"+Chr(0)+"w"+Chr(141)+"w"+Chr(0)+"h"+Chr(13)+"" )
+   HBTEST MemoTran("H"+SO+LF+"P"+CR+LF+"M")                              IS "H P;M"
+   HBTEST MemoTran("H"+NU+"O"+SO+LF+"P"+CR+LF+"M"+NU+"I")                IS "H"+Chr(0)+"O P;M"+Chr(0)+"I"
+   HBTEST MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR)             IS "M"+Chr(13)+"s;w"+Chr(141)+"w h"+Chr(13)+""
+   HBTEST MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"111","222") IS "M"+Chr(13)+"s1w"+Chr(141)+"w2h"+Chr(13)+""
+   HBTEST MemoTran("M"+CR+"s"+CR+LF+"w"+SO+"w"+SO+LF+"h"+CR,"","")       IS "M"+Chr(13)+"s"+Chr(0)+"w"+Chr(141)+"w"+Chr(0)+"h"+Chr(13)+""
 
    /* MEMOWRITE()/MemoRead() */
 
 #ifndef __XPP__
-   TEST_LINE( MemoWrit()                         , .F.              )
-   TEST_LINE( MemoWrit("$$MEMOFI.TMP")           , .F.              )
+   HBTEST MemoWrit()                         IS .F.
+   HBTEST MemoWrit("$$MEMOFI.TMP")           IS .F.
 #endif
-   TEST_LINE( MemoWrit("$$MEMOFI.TMP","")        , .T.              )
-   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""               )
-   TEST_LINE( MemoWrit("$$MEMOFI.TMP",scStringZ) , .T.              )
-   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , "A"+Chr(0)+"B"   )
-   TEST_LINE( MemoWrit("$$MEMOFI.TMP",Chr(26))   , .T.              )
-   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(26)+""    )
-   TEST_LINE( MemoWrit("$$MEMOFI.TMP",scStringW) , .T.              )
-   TEST_LINE( MemoRead("$$MEMOFI.TMP")           , ""+Chr(13)+""+Chr(10)+Chr(141)+Chr(10)+""+Chr(9)+"" )
-   TEST_LINE( MemoWrit(BADFNAME2()   ,scStringZ) , .F.              )
+   HBTEST MemoWrit("$$MEMOFI.TMP","")        IS .T.
+   HBTEST MemoRead("$$MEMOFI.TMP")           IS ""
+   HBTEST MemoWrit("$$MEMOFI.TMP",scStringZ) IS .T.
+   HBTEST MemoRead("$$MEMOFI.TMP")           IS "A"+Chr(0)+"B"
+   HBTEST MemoWrit("$$MEMOFI.TMP",Chr(26))   IS .T.
+   HBTEST MemoRead("$$MEMOFI.TMP")           IS ""+Chr(26)+""
+   HBTEST MemoWrit("$$MEMOFI.TMP",scStringW) IS .T.
+   HBTEST MemoRead("$$MEMOFI.TMP")           IS ""+Chr(13)+""+Chr(10)+Chr(141)+Chr(10)+""+Chr(9)+""
+   HBTEST MemoWrit(BADFNAME2()   ,scStringZ) IS .F.
 #ifndef __XPP__
-   TEST_LINE( MemoRead()                         , ""               )
+   HBTEST MemoRead()                         IS ""
 #endif
-   TEST_LINE( MemoRead( BADFNAME2() )            , ""               )
+   HBTEST MemoRead( BADFNAME2() )            IS ""
 
    FErase("$$MEMOFI.TMP")
 
@@ -900,116 +900,116 @@ PROCEDURE Main_MISC()
 
    /* hb_FNameSplit(), hb_FNameMerge() */
 
-   TEST_LINE( TESTFNAME( ""                            ) , ";;;;"                                                                    )
-   TEST_LINE( TESTFNAME( "                           " ) , ";;;;"                                                                    )
+   HBTEST TESTFNAME( ""                            ) IS ";;;;"
+   HBTEST TESTFNAME( "                           " ) IS ";;;;"
 #ifdef __PLATFORM__UNIX
-   TEST_LINE( TESTFNAME( ":                          " ) , ":;;:;;"                                                                  )
+   HBTEST TESTFNAME( ":                          " ) IS ":;;:;;"
 #else
-   TEST_LINE( TESTFNAME( ":                          " ) , ":;:;;;"                                                                  )
+   HBTEST TESTFNAME( ":                          " ) IS ":;:;;;"
 #endif
-   TEST_LINE( TESTFNAME( "C:/work/hello              " ) , "C:/work/hello;C:/work/;hello;;"                                          )
-   TEST_LINE( TESTFNAME( "C:/work/hello              " ) , "C:/work/hello;C:/work/;hello;;"                                          )
-   TEST_LINE( TESTFNAME( "C:/work/hello              " ) , "C:/work/hello;C:/work/;hello;;"                                          )
-   TEST_LINE( TESTFNAME( "C:/work/hello.             " ) , "C:/work/hello.;C:/work/;hello;.;"                                        )
-   TEST_LINE( TESTFNAME( "C:/work/hello.prg          " ) , "C:/work/hello.prg;C:/work/;hello;.prg;"                                  )
-   TEST_LINE( TESTFNAME( "C:/work/hello/             " ) , "C:/work/hello/;C:/work/hello/;;;"                                        )
-   TEST_LINE( TESTFNAME( "C:/work/hello/.prg         " ) , "C:/work/hello/.prg;C:/work/hello/;.prg;;"                                )
-   TEST_LINE( TESTFNAME( "C:/work/hello/a.prg        " ) , "C:/work/hello/a.prg;C:/work/hello/;a;.prg;"                              )
-   TEST_LINE( TESTFNAME( "C:/work/hello/a.b.prg      " ) , "C:/work/hello/a.b.prg;C:/work/hello/;a.b;.prg;"                          )
-   TEST_LINE( TESTFNAME( "C:work/hello               " ) , "C:work/hello;C:work/;hello;;"                                            )
-   TEST_LINE( TESTFNAME( "C:work/hello.              " ) , "C:work/hello.;C:work/;hello;.;"                                          )
-   TEST_LINE( TESTFNAME( "C:work/hello.prg           " ) , "C:work/hello.prg;C:work/;hello;.prg;"                                    )
-   TEST_LINE( TESTFNAME( "C:work/hello/              " ) , "C:work/hello/;C:work/hello/;;;"                                          )
-   TEST_LINE( TESTFNAME( "C:work/hello/.prg          " ) , "C:work/hello/.prg;C:work/hello/;.prg;;"                                  )
-   TEST_LINE( TESTFNAME( "C:work/hello/a.prg         " ) , "C:work/hello/a.prg;C:work/hello/;a;.prg;"                                )
-   TEST_LINE( TESTFNAME( "C:work/hello/a.b.prg       " ) , "C:work/hello/a.b.prg;C:work/hello/;a.b;.prg;"                            )
-   TEST_LINE( TESTFNAME( "C:/work.old/hello          " ) , "C:/work.old/hello;C:/work.old/;hello;;"                                  )
-   TEST_LINE( TESTFNAME( "C:/work.old/hello.         " ) , "C:/work.old/hello.;C:/work.old/;hello;.;"                                )
-   TEST_LINE( TESTFNAME( "C:/work.old/hello.prg      " ) , "C:/work.old/hello.prg;C:/work.old/;hello;.prg;"                          )
-   TEST_LINE( TESTFNAME( "C:/work.old/hello/         " ) , "C:/work.old/hello/;C:/work.old/hello/;;;"                                )
-   TEST_LINE( TESTFNAME( "C:/work.old/hello/.prg     " ) , "C:/work.old/hello/.prg;C:/work.old/hello/;.prg;;"                        )
-   TEST_LINE( TESTFNAME( "C:/work.old/hello/a.prg    " ) , "C:/work.old/hello/a.prg;C:/work.old/hello/;a;.prg;"                      )
-   TEST_LINE( TESTFNAME( "C:/work.old/hello/a.b.prg  " ) , "C:/work.old/hello/a.b.prg;C:/work.old/hello/;a.b;.prg;"                  )
-   TEST_LINE( TESTFNAME( "C:work.old/hello           " ) , "C:work.old/hello;C:work.old/;hello;;"                                    )
-   TEST_LINE( TESTFNAME( "C:work.old/hello.          " ) , "C:work.old/hello.;C:work.old/;hello;.;"                                  )
-   TEST_LINE( TESTFNAME( "C:work.old/hello.prg       " ) , "C:work.old/hello.prg;C:work.old/;hello;.prg;"                            )
-   TEST_LINE( TESTFNAME( "C:work.old/hello/          " ) , "C:work.old/hello/;C:work.old/hello/;;;"                                  )
-   TEST_LINE( TESTFNAME( "C:work.old/hello/.prg      " ) , "C:work.old/hello/.prg;C:work.old/hello/;.prg;;"                          )
-   TEST_LINE( TESTFNAME( "C:work.old/hello/a.prg     " ) , "C:work.old/hello/a.prg;C:work.old/hello/;a;.prg;"                        )
-   TEST_LINE( TESTFNAME( "C:work.old/hello/a.b.prg   " ) , "C:work.old/hello/a.b.prg;C:work.old/hello/;a.b;.prg;"                    )
-   TEST_LINE( TESTFNAME( "C:.old/hello               " ) , "C:.old/hello;C:.old/;hello;;"                                            )
-   TEST_LINE( TESTFNAME( "C:.old/hello.              " ) , "C:.old/hello.;C:.old/;hello;.;"                                          )
-   TEST_LINE( TESTFNAME( "C:.old/hello.prg           " ) , "C:.old/hello.prg;C:.old/;hello;.prg;"                                    )
-   TEST_LINE( TESTFNAME( "C:.old/hello/              " ) , "C:.old/hello/;C:.old/hello/;;;"                                          )
-   TEST_LINE( TESTFNAME( "C:.old/hello/.prg          " ) , "C:.old/hello/.prg;C:.old/hello/;.prg;;"                                  )
-   TEST_LINE( TESTFNAME( "C:.old/hello/a.prg         " ) , "C:.old/hello/a.prg;C:.old/hello/;a;.prg;"                                )
-   TEST_LINE( TESTFNAME( "C:.old/hello/a.b.prg       " ) , "C:.old/hello/a.b.prg;C:.old/hello/;a.b;.prg;"                            )
-   TEST_LINE( TESTFNAME( "//server/work/hello        " ) , "//server/work/hello;//server/work/;hello;;"                              )
-   TEST_LINE( TESTFNAME( "//server/work/hello.       " ) , "//server/work/hello.;//server/work/;hello;.;"                            )
-   TEST_LINE( TESTFNAME( "//server/work/hello.prg    " ) , "//server/work/hello.prg;//server/work/;hello;.prg;"                      )
-   TEST_LINE( TESTFNAME( "//server/work/hello/       " ) , "//server/work/hello/;//server/work/hello/;;;"                            )
-   TEST_LINE( TESTFNAME( "//server/work/hello/.prg   " ) , "//server/work/hello/.prg;//server/work/hello/;.prg;;"                    )
-   TEST_LINE( TESTFNAME( "//server/work/hello/a.prg  " ) , "//server/work/hello/a.prg;//server/work/hello/;a;.prg;"                  )
-   TEST_LINE( TESTFNAME( "//server/work/hello/a.b.prg" ) , "//server/work/hello/a.b.prg;//server/work/hello/;a.b;.prg;"              )
-   TEST_LINE( TESTFNAME( "/server/work/hello         " ) , "/server/work/hello;/server/work/;hello;;"                                )
-   TEST_LINE( TESTFNAME( "/server/work/hello.        " ) , "/server/work/hello.;/server/work/;hello;.;"                              )
-   TEST_LINE( TESTFNAME( "/server/work/hello.prg     " ) , "/server/work/hello.prg;/server/work/;hello;.prg;"                        )
-   TEST_LINE( TESTFNAME( "/server/work/hello/        " ) , "/server/work/hello/;/server/work/hello/;;;"                              )
-   TEST_LINE( TESTFNAME( "/server/work/hello/.prg    " ) , "/server/work/hello/.prg;/server/work/hello/;.prg;;"                      )
-   TEST_LINE( TESTFNAME( "/server/work/hello/a.prg   " ) , "/server/work/hello/a.prg;/server/work/hello/;a;.prg;"                    )
-   TEST_LINE( TESTFNAME( "/server/work/hello/a.b.prg " ) , "/server/work/hello/a.b.prg;/server/work/hello/;a.b;.prg;"                )
-   TEST_LINE( TESTFNAME( "C:/hello                   " ) , "C:/hello;C:/;hello;;"                                                    )
-   TEST_LINE( TESTFNAME( "C:/hello.                  " ) , "C:/hello.;C:/;hello;.;"                                                  )
-   TEST_LINE( TESTFNAME( "C:/hello.prg               " ) , "C:/hello.prg;C:/;hello;.prg;"                                            )
-   TEST_LINE( TESTFNAME( "C:/hello/                  " ) , "C:/hello/;C:/hello/;;;"                                                  )
-   TEST_LINE( TESTFNAME( "C:/hello/.prg              " ) , "C:/hello/.prg;C:/hello/;.prg;;"                                          )
-   TEST_LINE( TESTFNAME( "C:/hello/a.prg             " ) , "C:/hello/a.prg;C:/hello/;a;.prg;"                                        )
-   TEST_LINE( TESTFNAME( "C:/hello/a.b.prg           " ) , "C:/hello/a.b.prg;C:/hello/;a.b;.prg;"                                    )
+   HBTEST TESTFNAME( "C:/work/hello              " ) IS "C:/work/hello;C:/work/;hello;;"
+   HBTEST TESTFNAME( "C:/work/hello              " ) IS "C:/work/hello;C:/work/;hello;;"
+   HBTEST TESTFNAME( "C:/work/hello              " ) IS "C:/work/hello;C:/work/;hello;;"
+   HBTEST TESTFNAME( "C:/work/hello.             " ) IS "C:/work/hello.;C:/work/;hello;.;"
+   HBTEST TESTFNAME( "C:/work/hello.prg          " ) IS "C:/work/hello.prg;C:/work/;hello;.prg;"
+   HBTEST TESTFNAME( "C:/work/hello/             " ) IS "C:/work/hello/;C:/work/hello/;;;"
+   HBTEST TESTFNAME( "C:/work/hello/.prg         " ) IS "C:/work/hello/.prg;C:/work/hello/;.prg;;"
+   HBTEST TESTFNAME( "C:/work/hello/a.prg        " ) IS "C:/work/hello/a.prg;C:/work/hello/;a;.prg;"
+   HBTEST TESTFNAME( "C:/work/hello/a.b.prg      " ) IS "C:/work/hello/a.b.prg;C:/work/hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "C:work/hello               " ) IS "C:work/hello;C:work/;hello;;"
+   HBTEST TESTFNAME( "C:work/hello.              " ) IS "C:work/hello.;C:work/;hello;.;"
+   HBTEST TESTFNAME( "C:work/hello.prg           " ) IS "C:work/hello.prg;C:work/;hello;.prg;"
+   HBTEST TESTFNAME( "C:work/hello/              " ) IS "C:work/hello/;C:work/hello/;;;"
+   HBTEST TESTFNAME( "C:work/hello/.prg          " ) IS "C:work/hello/.prg;C:work/hello/;.prg;;"
+   HBTEST TESTFNAME( "C:work/hello/a.prg         " ) IS "C:work/hello/a.prg;C:work/hello/;a;.prg;"
+   HBTEST TESTFNAME( "C:work/hello/a.b.prg       " ) IS "C:work/hello/a.b.prg;C:work/hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "C:/work.old/hello          " ) IS "C:/work.old/hello;C:/work.old/;hello;;"
+   HBTEST TESTFNAME( "C:/work.old/hello.         " ) IS "C:/work.old/hello.;C:/work.old/;hello;.;"
+   HBTEST TESTFNAME( "C:/work.old/hello.prg      " ) IS "C:/work.old/hello.prg;C:/work.old/;hello;.prg;"
+   HBTEST TESTFNAME( "C:/work.old/hello/         " ) IS "C:/work.old/hello/;C:/work.old/hello/;;;"
+   HBTEST TESTFNAME( "C:/work.old/hello/.prg     " ) IS "C:/work.old/hello/.prg;C:/work.old/hello/;.prg;;"
+   HBTEST TESTFNAME( "C:/work.old/hello/a.prg    " ) IS "C:/work.old/hello/a.prg;C:/work.old/hello/;a;.prg;"
+   HBTEST TESTFNAME( "C:/work.old/hello/a.b.prg  " ) IS "C:/work.old/hello/a.b.prg;C:/work.old/hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "C:work.old/hello           " ) IS "C:work.old/hello;C:work.old/;hello;;"
+   HBTEST TESTFNAME( "C:work.old/hello.          " ) IS "C:work.old/hello.;C:work.old/;hello;.;"
+   HBTEST TESTFNAME( "C:work.old/hello.prg       " ) IS "C:work.old/hello.prg;C:work.old/;hello;.prg;"
+   HBTEST TESTFNAME( "C:work.old/hello/          " ) IS "C:work.old/hello/;C:work.old/hello/;;;"
+   HBTEST TESTFNAME( "C:work.old/hello/.prg      " ) IS "C:work.old/hello/.prg;C:work.old/hello/;.prg;;"
+   HBTEST TESTFNAME( "C:work.old/hello/a.prg     " ) IS "C:work.old/hello/a.prg;C:work.old/hello/;a;.prg;"
+   HBTEST TESTFNAME( "C:work.old/hello/a.b.prg   " ) IS "C:work.old/hello/a.b.prg;C:work.old/hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "C:.old/hello               " ) IS "C:.old/hello;C:.old/;hello;;"
+   HBTEST TESTFNAME( "C:.old/hello.              " ) IS "C:.old/hello.;C:.old/;hello;.;"
+   HBTEST TESTFNAME( "C:.old/hello.prg           " ) IS "C:.old/hello.prg;C:.old/;hello;.prg;"
+   HBTEST TESTFNAME( "C:.old/hello/              " ) IS "C:.old/hello/;C:.old/hello/;;;"
+   HBTEST TESTFNAME( "C:.old/hello/.prg          " ) IS "C:.old/hello/.prg;C:.old/hello/;.prg;;"
+   HBTEST TESTFNAME( "C:.old/hello/a.prg         " ) IS "C:.old/hello/a.prg;C:.old/hello/;a;.prg;"
+   HBTEST TESTFNAME( "C:.old/hello/a.b.prg       " ) IS "C:.old/hello/a.b.prg;C:.old/hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "//server/work/hello        " ) IS "//server/work/hello;//server/work/;hello;;"
+   HBTEST TESTFNAME( "//server/work/hello.       " ) IS "//server/work/hello.;//server/work/;hello;.;"
+   HBTEST TESTFNAME( "//server/work/hello.prg    " ) IS "//server/work/hello.prg;//server/work/;hello;.prg;"
+   HBTEST TESTFNAME( "//server/work/hello/       " ) IS "//server/work/hello/;//server/work/hello/;;;"
+   HBTEST TESTFNAME( "//server/work/hello/.prg   " ) IS "//server/work/hello/.prg;//server/work/hello/;.prg;;"
+   HBTEST TESTFNAME( "//server/work/hello/a.prg  " ) IS "//server/work/hello/a.prg;//server/work/hello/;a;.prg;"
+   HBTEST TESTFNAME( "//server/work/hello/a.b.prg" ) IS "//server/work/hello/a.b.prg;//server/work/hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "/server/work/hello         " ) IS "/server/work/hello;/server/work/;hello;;"
+   HBTEST TESTFNAME( "/server/work/hello.        " ) IS "/server/work/hello.;/server/work/;hello;.;"
+   HBTEST TESTFNAME( "/server/work/hello.prg     " ) IS "/server/work/hello.prg;/server/work/;hello;.prg;"
+   HBTEST TESTFNAME( "/server/work/hello/        " ) IS "/server/work/hello/;/server/work/hello/;;;"
+   HBTEST TESTFNAME( "/server/work/hello/.prg    " ) IS "/server/work/hello/.prg;/server/work/hello/;.prg;;"
+   HBTEST TESTFNAME( "/server/work/hello/a.prg   " ) IS "/server/work/hello/a.prg;/server/work/hello/;a;.prg;"
+   HBTEST TESTFNAME( "/server/work/hello/a.b.prg " ) IS "/server/work/hello/a.b.prg;/server/work/hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "C:/hello                   " ) IS "C:/hello;C:/;hello;;"
+   HBTEST TESTFNAME( "C:/hello.                  " ) IS "C:/hello.;C:/;hello;.;"
+   HBTEST TESTFNAME( "C:/hello.prg               " ) IS "C:/hello.prg;C:/;hello;.prg;"
+   HBTEST TESTFNAME( "C:/hello/                  " ) IS "C:/hello/;C:/hello/;;;"
+   HBTEST TESTFNAME( "C:/hello/.prg              " ) IS "C:/hello/.prg;C:/hello/;.prg;;"
+   HBTEST TESTFNAME( "C:/hello/a.prg             " ) IS "C:/hello/a.prg;C:/hello/;a;.prg;"
+   HBTEST TESTFNAME( "C:/hello/a.b.prg           " ) IS "C:/hello/a.b.prg;C:/hello/;a.b;.prg;"
 #ifdef __PLATFORM__UNIX
-   TEST_LINE( TESTFNAME( "C:hello                    " ) , "C:hello;;C:hello;;"                                                      )
-   TEST_LINE( TESTFNAME( "C:hello.                   " ) , "C:hello.;;C:hello;.;"                                                    )
-   TEST_LINE( TESTFNAME( "C:hello.prg                " ) , "C:hello.prg;;C:hello;.prg;"                                              )
+   HBTEST TESTFNAME( "C:hello                    " ) IS "C:hello;;C:hello;;"
+   HBTEST TESTFNAME( "C:hello.                   " ) IS "C:hello.;;C:hello;.;"
+   HBTEST TESTFNAME( "C:hello.prg                " ) IS "C:hello.prg;;C:hello;.prg;"
 #else
-   TEST_LINE( TESTFNAME( "C:hello                    " ) , "C:hello;C:;hello;;"                                                      )
-   TEST_LINE( TESTFNAME( "C:hello.                   " ) , "C:hello.;C:;hello;.;"                                                    )
-   TEST_LINE( TESTFNAME( "C:hello.prg                " ) , "C:hello.prg;C:;hello;.prg;"                                              )
+   HBTEST TESTFNAME( "C:hello                    " ) IS "C:hello;C:;hello;;"
+   HBTEST TESTFNAME( "C:hello.                   " ) IS "C:hello.;C:;hello;.;"
+   HBTEST TESTFNAME( "C:hello.prg                " ) IS "C:hello.prg;C:;hello;.prg;"
 #endif
-   TEST_LINE( TESTFNAME( "C:hello/                   " ) , "C:hello/;C:hello/;;;"                                                    )
-   TEST_LINE( TESTFNAME( "C:hello/.prg               " ) , "C:hello/.prg;C:hello/;.prg;;"                                            )
-   TEST_LINE( TESTFNAME( "C:hello/a.prg              " ) , "C:hello/a.prg;C:hello/;a;.prg;"                                          )
-   TEST_LINE( TESTFNAME( "C:hello/a.b.prg            " ) , "C:hello/a.b.prg;C:hello/;a.b;.prg;"                                      )
-   TEST_LINE( TESTFNAME( "//hello                    " ) , "//hello;//;hello;;"                                                      )
-   TEST_LINE( TESTFNAME( "//hello.                   " ) , "//hello.;//;hello;.;"                                                    )
-   TEST_LINE( TESTFNAME( "//hello.prg                " ) , "//hello.prg;//;hello;.prg;"                                              )
-   TEST_LINE( TESTFNAME( "//hello/                   " ) , "//hello/;//hello/;;;"                                                    )
-   TEST_LINE( TESTFNAME( "//.prg                     " ) , "//.prg;//;.prg;;"                                                        )
-   TEST_LINE( TESTFNAME( "//a.prg                    " ) , "//a.prg;//;a;.prg;"                                                      )
-   TEST_LINE( TESTFNAME( "//a.b.prg                  " ) , "//a.b.prg;//;a.b;.prg;"                                                  )
-   TEST_LINE( TESTFNAME( "/hello                     " ) , "/hello;/;hello;;"                                                        )
-   TEST_LINE( TESTFNAME( "/hello.                    " ) , "/hello.;/;hello;.;"                                                      )
-   TEST_LINE( TESTFNAME( "/hello.prg                 " ) , "/hello.prg;/;hello;.prg;"                                                )
-   TEST_LINE( TESTFNAME( "/hello/                    " ) , "/hello/;/hello/;;;"                                                      )
-   TEST_LINE( TESTFNAME( "/hello/.prg                " ) , "/hello/.prg;/hello/;.prg;;"                                              )
-   TEST_LINE( TESTFNAME( "/hello/a.prg               " ) , "/hello/a.prg;/hello/;a;.prg;"                                            )
-   TEST_LINE( TESTFNAME( "/hello/a.b.prg             " ) , "/hello/a.b.prg;/hello/;a.b;.prg;"                                        )
-   TEST_LINE( TESTFNAME( "hello                      " ) , "hello;;hello;;"                                                          )
-   TEST_LINE( TESTFNAME( "hello.                     " ) , "hello.;;hello;.;"                                                        )
-   TEST_LINE( TESTFNAME( "hello.prg                  " ) , "hello.prg;;hello;.prg;"                                                  )
-   TEST_LINE( TESTFNAME( "hello/                     " ) , "hello/;hello/;;;"                                                        )
-   TEST_LINE( TESTFNAME( ".prg                       " ) , ".prg;;.prg;;"                                                            )
-   TEST_LINE( TESTFNAME( "a.prg                      " ) , "a.prg;;a;.prg;"                                                          )
-   TEST_LINE( TESTFNAME( "a.b.prg                    " ) , "a.b.prg;;a.b;.prg;"                                                      )
-   TEST_LINE( TESTFNAME( "                           " ) , ";;;;"                                                                    )
-   TEST_LINE( TESTFNAME( "/                          " ) , "/;/;;;"                                                                  )
-   TEST_LINE( TESTFNAME( "//                         " ) , "//;//;;;"                                                                )
-   TEST_LINE( TESTFNAME( "C                          " ) , "C;;C;;"                                                                  )
+   HBTEST TESTFNAME( "C:hello/                   " ) IS "C:hello/;C:hello/;;;"
+   HBTEST TESTFNAME( "C:hello/.prg               " ) IS "C:hello/.prg;C:hello/;.prg;;"
+   HBTEST TESTFNAME( "C:hello/a.prg              " ) IS "C:hello/a.prg;C:hello/;a;.prg;"
+   HBTEST TESTFNAME( "C:hello/a.b.prg            " ) IS "C:hello/a.b.prg;C:hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "//hello                    " ) IS "//hello;//;hello;;"
+   HBTEST TESTFNAME( "//hello.                   " ) IS "//hello.;//;hello;.;"
+   HBTEST TESTFNAME( "//hello.prg                " ) IS "//hello.prg;//;hello;.prg;"
+   HBTEST TESTFNAME( "//hello/                   " ) IS "//hello/;//hello/;;;"
+   HBTEST TESTFNAME( "//.prg                     " ) IS "//.prg;//;.prg;;"
+   HBTEST TESTFNAME( "//a.prg                    " ) IS "//a.prg;//;a;.prg;"
+   HBTEST TESTFNAME( "//a.b.prg                  " ) IS "//a.b.prg;//;a.b;.prg;"
+   HBTEST TESTFNAME( "/hello                     " ) IS "/hello;/;hello;;"
+   HBTEST TESTFNAME( "/hello.                    " ) IS "/hello.;/;hello;.;"
+   HBTEST TESTFNAME( "/hello.prg                 " ) IS "/hello.prg;/;hello;.prg;"
+   HBTEST TESTFNAME( "/hello/                    " ) IS "/hello/;/hello/;;;"
+   HBTEST TESTFNAME( "/hello/.prg                " ) IS "/hello/.prg;/hello/;.prg;;"
+   HBTEST TESTFNAME( "/hello/a.prg               " ) IS "/hello/a.prg;/hello/;a;.prg;"
+   HBTEST TESTFNAME( "/hello/a.b.prg             " ) IS "/hello/a.b.prg;/hello/;a.b;.prg;"
+   HBTEST TESTFNAME( "hello                      " ) IS "hello;;hello;;"
+   HBTEST TESTFNAME( "hello.                     " ) IS "hello.;;hello;.;"
+   HBTEST TESTFNAME( "hello.prg                  " ) IS "hello.prg;;hello;.prg;"
+   HBTEST TESTFNAME( "hello/                     " ) IS "hello/;hello/;;;"
+   HBTEST TESTFNAME( ".prg                       " ) IS ".prg;;.prg;;"
+   HBTEST TESTFNAME( "a.prg                      " ) IS "a.prg;;a;.prg;"
+   HBTEST TESTFNAME( "a.b.prg                    " ) IS "a.b.prg;;a.b;.prg;"
+   HBTEST TESTFNAME( "                           " ) IS ";;;;"
+   HBTEST TESTFNAME( "/                          " ) IS "/;/;;;"
+   HBTEST TESTFNAME( "//                         " ) IS "//;//;;;"
+   HBTEST TESTFNAME( "C                          " ) IS "C;;C;;"
 #ifdef __PLATFORM__UNIX
-   TEST_LINE( TESTFNAME( "C:                         " ) , "C:;;C:;;"                                                                )
+   HBTEST TESTFNAME( "C:                         " ) IS "C:;;C:;;"
 #else
-   TEST_LINE( TESTFNAME( "C:                         " ) , "C:;C:;;;"                                                                )
+   HBTEST TESTFNAME( "C:                         " ) IS "C:;C:;;;"
 #endif
-   TEST_LINE( TESTFNAME( "C:/                        " ) , "C:/;C:/;;;"                                                              )
-   TEST_LINE( TESTFNAME( "C://                       " ) , "C://;C://;;;"                                                            )
+   HBTEST TESTFNAME( "C:/                        " ) IS "C:/;C:/;;;"
+   HBTEST TESTFNAME( "C://                       " ) IS "C://;C://;;;"
 
 #endif
 
@@ -1019,51 +1019,51 @@ PROCEDURE Main_MISC()
    cEOL := Set( _SET_EOL, Chr(13) + Chr( 10 ) )
 #endif
 
-   TEST_LINE( MLCToPos( 'A message from me', 10, 2, 0 )                                , 11 )
-   TEST_LINE( MLCToPos( 'A message from me', 5, 2, 0, 4, .F. )                         ,  6 )
-   TEST_LINE( MLCToPos( 'A'+Chr(9)+'message'+Chr(9)+'from'+Chr(9)+'me', 10, 2, 0, 8 )  ,  3 )
-   TEST_LINE( MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 5, 3, 0 )                  , 10 )
-   TEST_LINE( MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0 )                  , 10 )
-   TEST_LINE( MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0,, .F. )            ,  9 )
-   TEST_LINE( MLCToPos( 'A message from our me', 9, 2, 0 )                             , 11 )
-   TEST_LINE( MLCToPos( 'A message  from our me', 9, 2, 0 )                            , 11 )
-   TEST_LINE( MLCToPos( 'A message'+Chr(9)+'from me', 10, 2, 0 )                       , 11 )
-   TEST_LINE( MLCToPos( 'A message from me', 9, 2, 0,, .F. )                           , 10 )
-   TEST_LINE( MLCToPos( 'A message  from me', 9, 2, 0,, .F. )                          , 10 )
-   TEST_LINE( MLCToPos( 'A message'+Chr(141)+'from me', 10, 2, 0 )                     ,  3 )
-   TEST_LINE( MLCToPos( 'A message'+Chr(141)+'from me', 9, 2, 0 )                      ,  3 )
-   TEST_LINE( MLCToPos( 'A message'+Chr(141)+'from me', 10, 2, 0,, .F. )               , 11 )
-   TEST_LINE( MLCToPos( 'A message'+Chr(141)+'from me', 9, 2, 0,, .F. )                , 10 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 0 )                                 ,  1 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 8 )                                 ,  9 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 9 )                                 , 10 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 10 )                                , 11 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 11 )                                , 12 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 360 )                               , 17 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 0,, .F. )                           ,  1 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 8,, .F. )                           ,  9 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 9,, .F. )                           , 10 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 10,, .F. )                          , 11 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 11,, .F. )                          , 12 )
-   TEST_LINE( MLCToPos( ' message from me', 10, 1, 360,, .F. )                         , 17 )
-   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 11,, .T. )                 ,  9 )
-   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 11,, .F. )                 ,  9 )
-   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 2, 11 )                       , 17 )
-   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 15,, .T. )                 , 13 )
-   TEST_LINE( MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 15,, .F. )                 , 13 )
-   TEST_LINE( MLCToPos( Chr(13)+Chr(10)+' message'+Chr(9)+'from me', 10, 1, 15,, .F. ) ,  1 )
-   TEST_LINE( MLCToPos( Chr(13)+Chr(10)+' message'+Chr(9)+'from me', 10, 1, 15,, .T. ) ,  1 )
-   TEST_LINE( MLCToPos( 'A '+Chr(13)+Chr(10)+'message from me', 9, 2, 0 )              ,  5 )
-   TEST_LINE( MLCToPos( 'A '+Chr(141)+Chr(10)+'message from me', 9, 2, 0 )             , 13 )
-   TEST_LINE( MLCToPos( 'A'+Chr(141)+Chr(10)+'message from me', 9, 2, 0 )              , 12 )
-   TEST_LINE( MLCToPos( 'A'+Chr(141)+'message from me', 9, 2, 0 )                      , 11 )
-   TEST_LINE( MLCToPos( 'A'+Chr(13)+'message from me', 9, 2, 0 )                       , 11 )
-   TEST_LINE( MLCToPos( 'A'+Chr(10)+'message from me', 9, 2, 0 )                       , 11 )
-   TEST_LINE( MLCToPos( 'A '+Chr(13)+'message from me', 9, 2, 0 )                      ,  3 )
-   TEST_LINE( MLCToPos( 'A '+Chr(10)+'message from me', 9, 2, 0 )                      ,  3 )
-   TEST_LINE( MLCToPos( 'A message from me', 10, 7, 0 )                                , 18 )
-   TEST_LINE( MLCToPos( , , ,  )                                                       ,  1 )
-   TEST_LINE( MLCToPos( , .T., ,  )                                                    ,  1 )
+   HBTEST MLCToPos( 'A message from me', 10, 2, 0 )                                IS 11
+   HBTEST MLCToPos( 'A message from me', 5, 2, 0, 4, .F. )                         IS  6
+   HBTEST MLCToPos( 'A'+Chr(9)+'message'+Chr(9)+'from'+Chr(9)+'me', 10, 2, 0, 8 )  IS  3
+   HBTEST MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 5, 3, 0 )                  IS 10
+   HBTEST MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0 )                  IS 10
+   HBTEST MLCToPos( 'abcd efg hijk lm nopqr stu vwxyz', 8, 2, 0,, .F. )            IS  9
+   HBTEST MLCToPos( 'A message from our me', 9, 2, 0 )                             IS 11
+   HBTEST MLCToPos( 'A message  from our me', 9, 2, 0 )                            IS 11
+   HBTEST MLCToPos( 'A message'+Chr(9)+'from me', 10, 2, 0 )                       IS 11
+   HBTEST MLCToPos( 'A message from me', 9, 2, 0,, .F. )                           IS 10
+   HBTEST MLCToPos( 'A message  from me', 9, 2, 0,, .F. )                          IS 10
+   HBTEST MLCToPos( 'A message'+Chr(141)+'from me', 10, 2, 0 )                     IS  3
+   HBTEST MLCToPos( 'A message'+Chr(141)+'from me', 9, 2, 0 )                      IS  3
+   HBTEST MLCToPos( 'A message'+Chr(141)+'from me', 10, 2, 0,, .F. )               IS 11
+   HBTEST MLCToPos( 'A message'+Chr(141)+'from me', 9, 2, 0,, .F. )                IS 10
+   HBTEST MLCToPos( ' message from me', 10, 1, 0 )                                 IS  1
+   HBTEST MLCToPos( ' message from me', 10, 1, 8 )                                 IS  9
+   HBTEST MLCToPos( ' message from me', 10, 1, 9 )                                 IS 10
+   HBTEST MLCToPos( ' message from me', 10, 1, 10 )                                IS 11
+   HBTEST MLCToPos( ' message from me', 10, 1, 11 )                                IS 12
+   HBTEST MLCToPos( ' message from me', 10, 1, 360 )                               IS 17
+   HBTEST MLCToPos( ' message from me', 10, 1, 0,, .F. )                           IS  1
+   HBTEST MLCToPos( ' message from me', 10, 1, 8,, .F. )                           IS  9
+   HBTEST MLCToPos( ' message from me', 10, 1, 9,, .F. )                           IS 10
+   HBTEST MLCToPos( ' message from me', 10, 1, 10,, .F. )                          IS 11
+   HBTEST MLCToPos( ' message from me', 10, 1, 11,, .F. )                          IS 12
+   HBTEST MLCToPos( ' message from me', 10, 1, 360,, .F. )                         IS 17
+   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 11,, .T. )                 IS  9
+   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 11,, .F. )                 IS  9
+   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 2, 11 )                       IS 17
+   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 15,, .T. )                 IS 13
+   HBTEST MLCToPos( ' message'+Chr(9)+'from me', 10, 1, 15,, .F. )                 IS 13
+   HBTEST MLCToPos( Chr(13)+Chr(10)+' message'+Chr(9)+'from me', 10, 1, 15,, .F. ) IS  1
+   HBTEST MLCToPos( Chr(13)+Chr(10)+' message'+Chr(9)+'from me', 10, 1, 15,, .T. ) IS  1
+   HBTEST MLCToPos( 'A '+Chr(13)+Chr(10)+'message from me', 9, 2, 0 )              IS  5
+   HBTEST MLCToPos( 'A '+Chr(141)+Chr(10)+'message from me', 9, 2, 0 )             IS 13
+   HBTEST MLCToPos( 'A'+Chr(141)+Chr(10)+'message from me', 9, 2, 0 )              IS 12
+   HBTEST MLCToPos( 'A'+Chr(141)+'message from me', 9, 2, 0 )                      IS 11
+   HBTEST MLCToPos( 'A'+Chr(13)+'message from me', 9, 2, 0 )                       IS 11
+   HBTEST MLCToPos( 'A'+Chr(10)+'message from me', 9, 2, 0 )                       IS 11
+   HBTEST MLCToPos( 'A '+Chr(13)+'message from me', 9, 2, 0 )                      IS  3
+   HBTEST MLCToPos( 'A '+Chr(10)+'message from me', 9, 2, 0 )                      IS  3
+   HBTEST MLCToPos( 'A message from me', 10, 7, 0 )                                IS 18
+   HBTEST MLCToPos( , , ,  )                                                       IS  1
+   HBTEST MLCToPos( , .T., ,  )                                                    IS  1
 
 #ifdef __HARBOUR__
    Set( _SET_EOL, cEOL )
@@ -1078,33 +1078,33 @@ PROCEDURE Main_OPOVERL()
 
    oString:cValue := "Hello"
 
-   TEST_LINE( oString =  "Hello"        , .T.                 )
-   TEST_LINE( oString == "Hello"        , .T.                 )
-   TEST_LINE( oString != "Hello"        , .F.                 )
-   TEST_LINE( oString <> "Hello"        , .F.                 )
-   TEST_LINE( oString #  "Hello"        , .F.                 )
-   TEST_LINE( oString $  "Hello"        , .T.                 )
-   TEST_LINE( oString <  "Hello"        , .F.                 )
-   TEST_LINE( oString <= "Hello"        , .T.                 )
-   TEST_LINE( oString <  "Hello"        , .F.                 )
-   TEST_LINE( oString <= "Hello"        , .T.                 )
-   TEST_LINE( oString +  "Hello"        , "HelloHello"        )
-   TEST_LINE( oString -  "Hello"        , "HelloHello"        )
-   TEST_LINE( oString * 3               , "HelloHelloHello"   )
-   TEST_LINE( oString / 2               , "He"                )
-   TEST_LINE( oString % "TST"           , "Hello % TST"       )
-   TEST_LINE( oString ^ "TST"           , "Hello ^ TST"       )
-   TEST_LINE( oString ** "TST"          , "Hello ^ TST"       )
+   HBTEST oString =  "Hello"        IS .T.
+   HBTEST oString == "Hello"        IS .T.
+   HBTEST oString != "Hello"        IS .F.
+   HBTEST oString <> "Hello"        IS .F.
+   HBTEST oString #  "Hello"        IS .F.
+   HBTEST oString $  "Hello"        IS .T.
+   HBTEST oString <  "Hello"        IS .F.
+   HBTEST oString <= "Hello"        IS .T.
+   HBTEST oString <  "Hello"        IS .F.
+   HBTEST oString <= "Hello"        IS .T.
+   HBTEST oString +  "Hello"        IS "HelloHello"
+   HBTEST oString -  "Hello"        IS "HelloHello"
+   HBTEST oString * 3               IS "HelloHelloHello"
+   HBTEST oString / 2               IS "He"
+   HBTEST oString % "TST"           IS "Hello % TST"
+   HBTEST oString ^ "TST"           IS "Hello ^ TST"
+   HBTEST oString ** "TST"          IS "Hello ^ TST"
    IF ! TEST_OPT_Z()
-   TEST_LINE( oString .AND. "TST"       , "Hello AND TST"     )
-   TEST_LINE( oString .OR. "TST"        , "Hello OR TST"      )
+   HBTEST oString .AND. "TST"       IS "Hello AND TST"
+   HBTEST oString .OR. "TST"        IS "Hello OR TST"
    ENDIF
-   TEST_LINE( .NOT. oString             , "¸›””‘"             )
-   TEST_LINE( !oString                  , "¸›””‘"             )
-   TEST_LINE( oString++                 , "HB_TSTRING Object" )
-   TEST_LINE( oString:cValue            , "Hello "            )
-   TEST_LINE( oString--                 , "HB_TSTRING Object" )
-   TEST_LINE( oString:cValue            , "Hello"             )
+   HBTEST .NOT. oString             IS "¸›””‘"
+   HBTEST !oString                  IS "¸›””‘"
+   HBTEST oString++                 IS "HB_TSTRING Object"
+   HBTEST oString:cValue            IS "Hello "
+   HBTEST oString--                 IS "HB_TSTRING Object"
+   HBTEST oString:cValue            IS "Hello"
 
    RETURN
 

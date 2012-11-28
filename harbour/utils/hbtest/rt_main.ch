@@ -50,7 +50,7 @@
  *
  */
 
-#translate TEST_LINE( <x>, <result> ) => TEST_CALL( #<x>, {|| <x> }, <result> )
+#translate HBTEST <x> IS <result> => TEST_CALL( #<x>, {|| <x> }, <result> )
 
 #ifndef __HARBOUR__
    #ifndef __XPP__

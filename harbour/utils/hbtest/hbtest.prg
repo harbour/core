@@ -179,18 +179,18 @@ PROCEDURE Main( cPar1, cPar2 )
 
 STATIC PROCEDURE Main_LAST()
 
-   TEST_LINE( MemVarBlock( "mcString" )           , "{||...}"                                         )
+   HBTEST MemVarBlock( "mcString" )           IS "{||...}"
 #ifndef __XPP__
-   TEST_LINE( __MRestore()                        , "E 1 BASE 2007 Argument error (__MRESTORE) OS:0 #:0 " )
+   HBTEST __MRestore()                        IS "E 1 BASE 2007 Argument error (__MRESTORE) OS:0 #:0 "
 #endif
-   TEST_LINE( MemVarBlock( "mcString" )           , "{||...}"                                         )
+   HBTEST MemVarBlock( "mcString" )           IS "{||...}"
 #ifndef __XPP__
-   TEST_LINE( __MSave()                           , "E 1 BASE 2008 Argument error (__MSAVE) OS:0 #:0 " )
-   TEST_LINE( __MRestore( "$NOTHERE.MEM", .F. )   , "E 21 BASE 2005 Open error <$NOTHERE.MEM> OS:2 #:1 F:DR" )
+   HBTEST __MSave()                           IS "E 1 BASE 2008 Argument error (__MSAVE) OS:0 #:0 "
+   HBTEST __MRestore( "$NOTHERE.MEM", .F. )   IS "E 21 BASE 2005 Open error <$NOTHERE.MEM> OS:2 #:1 F:DR"
 #endif
-   TEST_LINE( MemVarBlock( "mcString" )           , NIL                                               )
+   HBTEST MemVarBlock( "mcString" )           IS NIL
 #ifndef __XPP__
-   TEST_LINE( __MSave( BADFNAME(), "*", .T. )     , "E 20 BASE 2006 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR" )
+   HBTEST __MSave( BADFNAME(), "*", .T. )     IS "E 20 BASE 2006 Create error <" + BADFNAME() + "> OS:2 #:1 F:DR"
 #endif
 
    RETURN

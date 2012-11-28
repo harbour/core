@@ -60,136 +60,136 @@ PROCEDURE Main_DATE()
 
    /* Year() */
 
-   TEST_LINE( Year(NIL)                       , "E 1 BASE 1112 Argument error (YEAR) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( Year(100)                       , "E 1 BASE 1112 Argument error (YEAR) OS:0 #:0 A:1:N:100 F:S" )
+   HBTEST Year(NIL)                       IS "E 1 BASE 1112 Argument error (YEAR) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST Year(100)                       IS "E 1 BASE 1112 Argument error (YEAR) OS:0 #:0 A:1:N:100 F:S"
 #ifdef __HARBOUR__
-   TEST_LINE( Year(@sdDate)                   , 1984                                   ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1112 Argument error (YEAR) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST Year(@sdDate)                   IS 1984   /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1112 Argument error (YEAR) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( Year(sdDate)                    , 1984                                   )
-   TEST_LINE( Year(sdDateE)                   , 0                                      )
-   TEST_LINE( Str(Year(hb_SToD("19990905")))  , " 1999"                                )
+   HBTEST Year(sdDate)                    IS 1984
+   HBTEST Year(sdDateE)                   IS 0
+   HBTEST Str(Year(hb_SToD("19990905")))  IS " 1999"
 
    /* Month() */
 
-   TEST_LINE( Month(NIL)                      , "E 1 BASE 1113 Argument error (MONTH) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( Month(100)                      , "E 1 BASE 1113 Argument error (MONTH) OS:0 #:0 A:1:N:100 F:S" )
+   HBTEST Month(NIL)                      IS "E 1 BASE 1113 Argument error (MONTH) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST Month(100)                      IS "E 1 BASE 1113 Argument error (MONTH) OS:0 #:0 A:1:N:100 F:S"
 #ifdef __HARBOUR__
-   TEST_LINE( Month(@sdDate)                  , 3                                      ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1113 Argument error (MONTH) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST Month(@sdDate)                  IS 3      /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1113 Argument error (MONTH) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( Month(sdDate)                   , 3                                      )
-   TEST_LINE( Month(sdDateE)                  , 0                                      )
-   TEST_LINE( Str(Month(hb_SToD("19990905"))) , "  9"                                  )
+   HBTEST Month(sdDate)                   IS 3
+   HBTEST Month(sdDateE)                  IS 0
+   HBTEST Str(Month(hb_SToD("19990905"))) IS "  9"
 
    /* Day() */
 
-   TEST_LINE( Day(NIL)                        , "E 1 BASE 1114 Argument error (DAY) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( Day(100)                        , "E 1 BASE 1114 Argument error (DAY) OS:0 #:0 A:1:N:100 F:S" )
+   HBTEST Day(NIL)                        IS "E 1 BASE 1114 Argument error (DAY) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST Day(100)                        IS "E 1 BASE 1114 Argument error (DAY) OS:0 #:0 A:1:N:100 F:S"
 #ifdef __HARBOUR__
-   TEST_LINE( Day(@sdDate)                    , 25                                     ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1114 Argument error (DAY) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST Day(@sdDate)                    IS 25     /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1114 Argument error (DAY) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( Day(sdDate)                     , 25                                     )
-   TEST_LINE( Day(sdDateE)                    , 0                                      )
-   TEST_LINE( Str(Day(hb_SToD("19990905")))   , "  5"                                  )
+   HBTEST Day(sdDate)                     IS 25
+   HBTEST Day(sdDateE)                    IS 0
+   HBTEST Str(Day(hb_SToD("19990905")))   IS "  5"
 
    /* Time() */
 
-   TEST_LINE( Len(Time())                     , 8                                      )
+   HBTEST Len(Time())                     IS 8
 
    /* DoW() */
 
-   TEST_LINE( DoW(NIL)                        , "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( DoW(100)                        , "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:N:100 F:S" )
+   HBTEST DoW(NIL)                        IS "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST DoW(100)                        IS "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:N:100 F:S"
 #ifdef __HARBOUR__
-   TEST_LINE( DoW(@sdDate)                    , 1                                      ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST DoW(@sdDate)                    IS 1  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1115 Argument error (DOW) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( DoW(sdDate)                     , 1                                      )
-   TEST_LINE( DoW(sdDateE)                    , 0                                      )
-   TEST_LINE( DoW(hb_SToD("20000222"))        , 3                                      )
-   TEST_LINE( DoW(hb_SToD("20000223"))        , 4                                      )
-   TEST_LINE( DoW(hb_SToD("20000224"))        , 5                                      )
-   TEST_LINE( DoW(hb_SToD("20000225"))        , 6                                      )
-   TEST_LINE( DoW(hb_SToD("20000226"))        , 7                                      )
-   TEST_LINE( DoW(hb_SToD("20000227"))        , 1                                      )
-   TEST_LINE( DoW(hb_SToD("20000228"))        , 2                                      )
-   TEST_LINE( DoW(hb_SToD("20000229"))        , 3                                      )
-   TEST_LINE( DoW(hb_SToD("20000230"))        , 0                                      )
-   TEST_LINE( DoW(hb_SToD("20000231"))        , 0                                      )
-   TEST_LINE( DoW(hb_SToD("20000301"))        , 4                                      )
+   HBTEST DoW(sdDate)                     IS 1
+   HBTEST DoW(sdDateE)                    IS 0
+   HBTEST DoW(hb_SToD("20000222"))        IS 3
+   HBTEST DoW(hb_SToD("20000223"))        IS 4
+   HBTEST DoW(hb_SToD("20000224"))        IS 5
+   HBTEST DoW(hb_SToD("20000225"))        IS 6
+   HBTEST DoW(hb_SToD("20000226"))        IS 7
+   HBTEST DoW(hb_SToD("20000227"))        IS 1
+   HBTEST DoW(hb_SToD("20000228"))        IS 2
+   HBTEST DoW(hb_SToD("20000229"))        IS 3
+   HBTEST DoW(hb_SToD("20000230"))        IS 0
+   HBTEST DoW(hb_SToD("20000231"))        IS 0
+   HBTEST DoW(hb_SToD("20000301"))        IS 4
 
    /* CMonth() */
 
-   TEST_LINE( CMonth(NIL)                     , "E 1 BASE 1116 Argument error (CMONTH) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( CMonth(100)                     , "E 1 BASE 1116 Argument error (CMONTH) OS:0 #:0 A:1:N:100 F:S" )
+   HBTEST CMonth(NIL)                     IS "E 1 BASE 1116 Argument error (CMONTH) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST CMonth(100)                     IS "E 1 BASE 1116 Argument error (CMONTH) OS:0 #:0 A:1:N:100 F:S"
 #ifdef __HARBOUR__
-   TEST_LINE( CMonth(@sdDate)                 , "March"                                 ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1116 Argument error (CMONTH) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST CMonth(@sdDate)                 IS "March"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1116 Argument error (CMONTH) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( CMonth(sdDate)                  , "March"                                 )
-   TEST_LINE( CMonth(sdDateE)                 , ""                                      )
-   TEST_LINE( CMonth(hb_SToD("19990101"))     , "January"                               )
-   TEST_LINE( CMonth(hb_SToD("19990201"))     , "February"                              )
-   TEST_LINE( CMonth(hb_SToD("19990301"))     , "March"                                 )
-   TEST_LINE( CMonth(hb_SToD("19990401"))     , "April"                                 )
-   TEST_LINE( CMonth(hb_SToD("19990501"))     , "May"                                   )
-   TEST_LINE( CMonth(hb_SToD("19990601"))     , "June"                                  )
-   TEST_LINE( CMonth(hb_SToD("19990701"))     , "July"                                  )
-   TEST_LINE( CMonth(hb_SToD("19990801"))     , "August"                                )
-   TEST_LINE( CMonth(hb_SToD("19990901"))     , "September"                             )
-   TEST_LINE( CMonth(hb_SToD("19991001"))     , "October"                               )
-   TEST_LINE( CMonth(hb_SToD("19991101"))     , "November"                              )
-   TEST_LINE( CMonth(hb_SToD("19991201"))     , "December"                              )
+   HBTEST CMonth(sdDate)                  IS "March"
+   HBTEST CMonth(sdDateE)                 IS ""
+   HBTEST CMonth(hb_SToD("19990101"))     IS "January"
+   HBTEST CMonth(hb_SToD("19990201"))     IS "February"
+   HBTEST CMonth(hb_SToD("19990301"))     IS "March"
+   HBTEST CMonth(hb_SToD("19990401"))     IS "April"
+   HBTEST CMonth(hb_SToD("19990501"))     IS "May"
+   HBTEST CMonth(hb_SToD("19990601"))     IS "June"
+   HBTEST CMonth(hb_SToD("19990701"))     IS "July"
+   HBTEST CMonth(hb_SToD("19990801"))     IS "August"
+   HBTEST CMonth(hb_SToD("19990901"))     IS "September"
+   HBTEST CMonth(hb_SToD("19991001"))     IS "October"
+   HBTEST CMonth(hb_SToD("19991101"))     IS "November"
+   HBTEST CMonth(hb_SToD("19991201"))     IS "December"
 
    /* CDoW() */
 
-   TEST_LINE( CDoW(NIL)                       , "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( CDoW(100)                       , "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:N:100 F:S" )
+   HBTEST CDoW(NIL)                       IS "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST CDoW(100)                       IS "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:N:100 F:S"
 #ifdef __HARBOUR__
-   TEST_LINE( CDoW(@sdDate)                   , "Sunday"                               ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST CDoW(@sdDate)                   IS "Sunday"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1117 Argument error (CDOW) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( CDoW(sdDate)                    , "Sunday"                               )
-   TEST_LINE( CDoW(sdDateE)                   , ""                                     )
-   TEST_LINE( CDoW(hb_SToD("20000222"))       , "Tuesday"                              )
-   TEST_LINE( CDoW(hb_SToD("20000223"))       , "Wednesday"                            )
-   TEST_LINE( CDoW(hb_SToD("20000224"))       , "Thursday"                             )
-   TEST_LINE( CDoW(hb_SToD("20000225"))       , "Friday"                               )
-   TEST_LINE( CDoW(hb_SToD("20000226"))       , "Saturday"                             )
-   TEST_LINE( CDoW(hb_SToD("20000227"))       , "Sunday"                               )
-   TEST_LINE( CDoW(hb_SToD("20000228"))       , "Monday"                               )
-   TEST_LINE( CDoW(hb_SToD("20000229"))       , "Tuesday"                              )
-   TEST_LINE( CDoW(hb_SToD("20000230"))       , ""                                     )
-   TEST_LINE( CDoW(hb_SToD("20000231"))       , ""                                     )
-   TEST_LINE( CDoW(hb_SToD("20000301"))       , "Wednesday"                            )
+   HBTEST CDoW(sdDate)                    IS "Sunday"
+   HBTEST CDoW(sdDateE)                   IS ""
+   HBTEST CDoW(hb_SToD("20000222"))       IS "Tuesday"
+   HBTEST CDoW(hb_SToD("20000223"))       IS "Wednesday"
+   HBTEST CDoW(hb_SToD("20000224"))       IS "Thursday"
+   HBTEST CDoW(hb_SToD("20000225"))       IS "Friday"
+   HBTEST CDoW(hb_SToD("20000226"))       IS "Saturday"
+   HBTEST CDoW(hb_SToD("20000227"))       IS "Sunday"
+   HBTEST CDoW(hb_SToD("20000228"))       IS "Monday"
+   HBTEST CDoW(hb_SToD("20000229"))       IS "Tuesday"
+   HBTEST CDoW(hb_SToD("20000230"))       IS ""
+   HBTEST CDoW(hb_SToD("20000231"))       IS ""
+   HBTEST CDoW(hb_SToD("20000301"))       IS "Wednesday"
 
    /* DToC() */
 
-   TEST_LINE( DToC(NIL)                       , "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( DToC(100)                       , "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:N:100 F:S" )
-   TEST_LINE( DToC("")                        , "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:C: F:S" )
+   HBTEST DToC(NIL)                       IS "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST DToC(100)                       IS "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:N:100 F:S"
+   HBTEST DToC("")                        IS "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:C: F:S"
 #ifdef __HARBOUR__
-   TEST_LINE( DToC(@sdDate)                   , "1984.03.25"                           ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST DToC(@sdDate)                   IS "1984.03.25"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1118 Argument error (DTOC) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( DToC(sdDate)                    , "1984.03.25"                           )
-   TEST_LINE( DToC(sdDateE)                   , "    .  .  "                           )
+   HBTEST DToC(sdDate)                    IS "1984.03.25"
+   HBTEST DToC(sdDateE)                   IS "    .  .  "
 
    /* CToD() */
 
-   TEST_LINE( CToD(NIL)                       , "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( CToD(100)                       , "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:N:100 F:S" )
-   TEST_LINE( CToD("")                        , hb_SToD("        ")                    )
+   HBTEST CToD(NIL)                       IS "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST CToD(100)                       IS "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:N:100 F:S"
+   HBTEST CToD("")                        IS hb_SToD("        ")
 #ifdef __HARBOUR__
-   TEST_LINE( CToD(@cDate)                    , hb_SToD("19991125")                    ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:1999/11/25 F:S" */
+   HBTEST CToD(@cDate)                    IS hb_SToD("19991125")  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1119 Argument error (CTOD) OS:0 #:0 A:1:U:1999/11/25 F:S" */
 #endif
-   TEST_LINE( CToD(cDate)                     , hb_SToD("19991125")                    )
-   TEST_LINE( CToD("1999/11/25/10")           , hb_SToD("19991125")                    )
+   HBTEST CToD(cDate)                     IS hb_SToD("19991125")
+   HBTEST CToD("1999/11/25/10")           IS hb_SToD("19991125")
 
    /* DToS() */
 
-   TEST_LINE( DToS(NIL)                       , "E 1 BASE 1120 Argument error (DTOS) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( DToS(100)                       , "E 1 BASE 1120 Argument error (DTOS) OS:0 #:0 A:1:N:100 F:S" )
+   HBTEST DToS(NIL)                       IS "E 1 BASE 1120 Argument error (DTOS) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST DToS(100)                       IS "E 1 BASE 1120 Argument error (DTOS) OS:0 #:0 A:1:N:100 F:S"
 #ifdef __HARBOUR__
-   TEST_LINE( DToS(@sdDate)                   , "19840325"                             ) /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1120 Argument error (DTOS) OS:0 #:0 A:1:U:19840325 F:S" */
+   HBTEST DToS(@sdDate)                   IS "19840325"  /* Bug in CA-Cl*pper, it returns: "E 1 BASE 1120 Argument error (DTOS) OS:0 #:0 A:1:U:19840325 F:S" */
 #endif
-   TEST_LINE( DToS(sdDate)                    , "19840325"                             )
-   TEST_LINE( DToS(sdDateE)                   , "        "                             )
+   HBTEST DToS(sdDate)                    IS "19840325"
+   HBTEST DToS(sdDateE)                   IS "        "
 
    RETURN
 

@@ -68,94 +68,94 @@ PROCEDURE Main_CLASS()
 
    /* Test destructors */
 
-   TEST_LINE( cDtorResult := ""               , ""                                     )
-   TEST_LINE( objHolder := NIL                , NIL                                    )
+   HBTEST cDtorResult := ""               IS ""
+   HBTEST objHolder := NIL                IS NIL
    oValue := DTORCLASS():NEW(0)
-   TEST_LINE( oValue:type                     , 0                                      )
-   TEST_LINE( oValue := NIL                   , NIL                                    )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , "No references to self."               )
+   HBTEST oValue:type                     IS 0
+   HBTEST oValue := NIL                   IS NIL
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS "No references to self."
 
-   TEST_LINE( cDtorResult := ""               , ""                                     )
-   TEST_LINE( objHolder := NIL                , NIL                                    )
+   HBTEST cDtorResult := ""               IS ""
+   HBTEST objHolder := NIL                IS NIL
    oValue := DTORCLASS():NEW(1)
-   TEST_LINE( oValue:type                     , 1                                      )
-   TEST_LINE( oValue := NIL                   , NIL                                    )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , "Reference to self in instance variable." )
+   HBTEST oValue:type                     IS 1
+   HBTEST oValue := NIL                   IS NIL
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS "Reference to self in instance variable."
 
-   TEST_LINE( cDtorResult := ""               , ""                                     )
-   TEST_LINE( objHolder := NIL                , NIL                                    )
+   HBTEST cDtorResult := ""               IS ""
+   HBTEST objHolder := NIL                IS NIL
    oValue := DTORCLASS():NEW(2)
-   TEST_LINE( oValue:type                     , 2                                      )
-   TEST_LINE( oValue := NIL                   , "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 " )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , "Reference to self in class variable." )
+   HBTEST oValue:type                     IS 2
+   HBTEST oValue := NIL                   IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS "Reference to self in class variable."
 
-   TEST_LINE( cDtorResult := ""               , ""                                     )
-   TEST_LINE( objHolder := NIL                , NIL                                    )
+   HBTEST cDtorResult := ""               IS ""
+   HBTEST objHolder := NIL                IS NIL
    oValue := DTORCLASS():NEW(3)
-   TEST_LINE( oValue:type                     , 3                                      )
-   TEST_LINE( oValue := NIL                   , "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 " )
-   TEST_LINE( ValType(objHolder)              , "A"                                    )
-   TEST_LINE( Len(objHolder)                  , 0                                      )
-   TEST_LINE( cDtorResult                     , "Reference to self in private memvar." )
+   HBTEST oValue:type                     IS 3
+   HBTEST oValue := NIL                   IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
+   HBTEST ValType(objHolder)              IS "A"
+   HBTEST Len(objHolder)                  IS 0
+   HBTEST cDtorResult                     IS "Reference to self in private memvar."
 
 
    /* Tests with cross references and releasing by Garbage Collector */
 
-   TEST_LINE( cDtorResult := ""               , ""                                     )
-   TEST_LINE( objHolder := NIL                , NIL                                    )
+   HBTEST cDtorResult := ""               IS ""
+   HBTEST objHolder := NIL                IS NIL
    oValue := DTORCLASS():NEW(0)
-   TEST_LINE( oValue:type                     , 0                                      )
+   HBTEST oValue:type                     IS 0
    /* create cross reference */
    aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
-   TEST_LINE( oValue := NIL                   , NIL                                    )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , ""                                     )
-   TEST_LINE( hb_gcAll()                      , NIL                                    )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , "No references to self."               )
+   HBTEST oValue := NIL                   IS NIL
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS ""
+   HBTEST hb_gcAll()                      IS NIL
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS "No references to self."
 
-   TEST_LINE( cDtorResult := ""               , ""                                     )
-   TEST_LINE( objHolder := NIL                , NIL                                    )
+   HBTEST cDtorResult := ""               IS ""
+   HBTEST objHolder := NIL                IS NIL
    oValue := DTORCLASS():NEW(1)
-   TEST_LINE( oValue:type                     , 1                                      )
+   HBTEST oValue:type                     IS 1
    /* create cross reference */
    aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
-   TEST_LINE( oValue := NIL                   , NIL                                    )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , ""                                     )
-   TEST_LINE( hb_gcAll()                      , NIL                                    )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , "Reference to self in instance variable." )
+   HBTEST oValue := NIL                   IS NIL
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS ""
+   HBTEST hb_gcAll()                      IS NIL
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS "Reference to self in instance variable."
 
-   TEST_LINE( cDtorResult := ""               , ""                                     )
-   TEST_LINE( objHolder := NIL                , NIL                                    )
+   HBTEST cDtorResult := ""               IS ""
+   HBTEST objHolder := NIL                IS NIL
    oValue := DTORCLASS():NEW(2)
-   TEST_LINE( oValue:type                     , 2                                      )
+   HBTEST oValue:type                     IS 2
    /* create cross reference */
    aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
-   TEST_LINE( oValue := NIL                   , NIL                                    )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , ""                                     )
-   TEST_LINE( hb_gcAll()                      , "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 " )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , "Reference to self in class variable." )
+   HBTEST oValue := NIL                   IS NIL
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS ""
+   HBTEST hb_gcAll()                      IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS "Reference to self in class variable."
 
-   TEST_LINE( cDtorResult := ""               , ""                                     )
-   TEST_LINE( objHolder := NIL                , NIL                                    )
+   HBTEST cDtorResult := ""               IS ""
+   HBTEST objHolder := NIL                IS NIL
    oValue := DTORCLASS():NEW(3)
-   TEST_LINE( oValue:type                     , 3                                      )
+   HBTEST oValue:type                     IS 3
    /* create cross reference */
    aRef := { oValue, NIL }; aRef[2] := aRef; aRef := NIL
-   TEST_LINE( oValue := NIL                   , NIL                                    )
-   TEST_LINE( objHolder                       , NIL                                    )
-   TEST_LINE( cDtorResult                     , ""                                     )
-   TEST_LINE( hb_gcAll()                      , "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 " )
-   TEST_LINE( ValType(objHolder)              , "A"                                    )
-   TEST_LINE( Len(objHolder)                  , 0                                      )
-   TEST_LINE( cDtorResult                     , "Reference to self in private memvar." )
+   HBTEST oValue := NIL                   IS NIL
+   HBTEST objHolder                       IS NIL
+   HBTEST cDtorResult                     IS ""
+   HBTEST hb_gcAll()                      IS "E 45 BASE 1301 Object destructor failure (Reference to freed block) OS:0 #:0 "
+   HBTEST ValType(objHolder)              IS "A"
+   HBTEST Len(objHolder)                  IS 0
+   HBTEST cDtorResult                     IS "Reference to self in private memvar."
 
 
 
@@ -163,901 +163,901 @@ PROCEDURE Main_CLASS()
 
    oValue := IVARSCLASS4():new()
 
-   TEST_LINE( oValue:x1                       , "(x1)"                                 )
-   TEST_LINE( oValue:y1                       , "(y1)"                                 )
-   TEST_LINE( oValue:z1                       , "(z1)"                                 )
-   TEST_LINE( oValue:x2                       , "(x2)"                                 )
-   TEST_LINE( oValue:y2                       , "(y2)"                                 )
-   TEST_LINE( oValue:z2                       , "(z2)"                                 )
-   TEST_LINE( oValue:x3                       , "(x3)"                                 )
-   TEST_LINE( oValue:y3                       , "(y3)"                                 )
-   TEST_LINE( oValue:z3                       , "(z3)"                                 )
-   TEST_LINE( oValue:x4                       , "(x4)"                                 )
-   TEST_LINE( oValue:y4                       , "(y4)"                                 )
-   TEST_LINE( oValue:z4                       , "(z4)"                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]: (x1) (y1) (z1) (x2) (y2) (z2) (x3) (y3) (z3) (x4) (y4) (z4)" )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "(x1)"
+   HBTEST oValue:y1                       IS "(y1)"
+   HBTEST oValue:z1                       IS "(z1)"
+   HBTEST oValue:x2                       IS "(x2)"
+   HBTEST oValue:y2                       IS "(y2)"
+   HBTEST oValue:z2                       IS "(z2)"
+   HBTEST oValue:x3                       IS "(x3)"
+   HBTEST oValue:y3                       IS "(y3)"
+   HBTEST oValue:z3                       IS "(z3)"
+   HBTEST oValue:x4                       IS "(x4)"
+   HBTEST oValue:y4                       IS "(y4)"
+   HBTEST oValue:z4                       IS "(z4)"
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]: (x1) (y1) (z1) (x2) (y2) (z2) (x3) (y3) (z3) (x4) (y4) (z4)"
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* simple assignment... */
-   TEST_LINE( oValue:x1 := " X1 "             , " X1 "                                 )
-   TEST_LINE( oValue:y1 := " Y1 "             , " Y1 "                                 )
-   TEST_LINE( oValue:z1 := " Z1 "             , " Z1 "                                 )
-   TEST_LINE( oValue:x2 := " X2 "             , " X2 "                                 )
-   TEST_LINE( oValue:y2 := " Y2 "             , " Y2 "                                 )
-   TEST_LINE( oValue:z2 := " Z2 "             , " Z2 "                                 )
-   TEST_LINE( oValue:x3 := " X3 "             , " X3 "                                 )
-   TEST_LINE( oValue:y3 := " Y3 "             , " Y3 "                                 )
-   TEST_LINE( oValue:z3 := " Z3 "             , " Z3 "                                 )
-   TEST_LINE( oValue:x4 := " X4 "             , " X4 "                                 )
-   TEST_LINE( oValue:y4 := " Y4 "             , " Y4 "                                 )
-   TEST_LINE( oValue:z4 := " Z4 "             , " Z4 "                                 )
+   HBTEST oValue:x1 := " X1 "             IS " X1 "
+   HBTEST oValue:y1 := " Y1 "             IS " Y1 "
+   HBTEST oValue:z1 := " Z1 "             IS " Z1 "
+   HBTEST oValue:x2 := " X2 "             IS " X2 "
+   HBTEST oValue:y2 := " Y2 "             IS " Y2 "
+   HBTEST oValue:z2 := " Z2 "             IS " Z2 "
+   HBTEST oValue:x3 := " X3 "             IS " X3 "
+   HBTEST oValue:y3 := " Y3 "             IS " Y3 "
+   HBTEST oValue:z3 := " Z3 "             IS " Z3 "
+   HBTEST oValue:x4 := " X4 "             IS " X4 "
+   HBTEST oValue:y4 := " Y4 "             IS " Y4 "
+   HBTEST oValue:z4 := " Z4 "             IS " Z4 "
 
-   TEST_LINE( oValue:x1                       , " X1 "                                 )
-   TEST_LINE( oValue:y1                       , " Y1 "                                 )
-   TEST_LINE( oValue:z1                       , " Z1 "                                 )
-   TEST_LINE( oValue:x2                       , " X2 "                                 )
-   TEST_LINE( oValue:y2                       , " Y2 "                                 )
-   TEST_LINE( oValue:z2                       , " Z2 "                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]:  X1   Y1   Z1   X2   Y2   Z2   X3   Y3   Z3   X4   Y4   Z4 " )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS " X1 "
+   HBTEST oValue:y1                       IS " Y1 "
+   HBTEST oValue:z1                       IS " Z1 "
+   HBTEST oValue:x2                       IS " X2 "
+   HBTEST oValue:y2                       IS " Y2 "
+   HBTEST oValue:z2                       IS " Z2 "
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]:  X1   Y1   Z1   X2   Y2   Z2   X3   Y3   Z3   X4   Y4   Z4 "
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting IVARSCLASS1 instance variables... */
-   TEST_LINE( oValue:IVARSCLASS1:x1 := "[X1]"    , "[X1]"                              )
-   TEST_LINE( oValue:IVARSCLASS1:y1 := "[Y1]"    , "[Y1]"                              )
-   TEST_LINE( oValue:IVARSCLASS1:z1 := "[Z1]"    , "[Z1]"                              )
+   HBTEST oValue:IVARSCLASS1:x1 := "[X1]"    IS "[X1]"
+   HBTEST oValue:IVARSCLASS1:y1 := "[Y1]"    IS "[Y1]"
+   HBTEST oValue:IVARSCLASS1:z1 := "[Z1]"    IS "[Z1]"
 
-   TEST_LINE( oValue:x1                       , "[X1]"                                 )
-   TEST_LINE( oValue:y1                       , "[Y1]"                                 )
-   TEST_LINE( oValue:z1                       , "[Z1]"                                 )
-   TEST_LINE( oValue:x2                       , " X2 "                                 )
-   TEST_LINE( oValue:y2                       , " Y2 "                                 )
-   TEST_LINE( oValue:z2                       , " Z2 "                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]: [X1] [Y1] [Z1]  X2   Y2   Z2   X3   Y3   Z3   X4   Y4   Z4 " )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "[X1]"
+   HBTEST oValue:y1                       IS "[Y1]"
+   HBTEST oValue:z1                       IS "[Z1]"
+   HBTEST oValue:x2                       IS " X2 "
+   HBTEST oValue:y2                       IS " Y2 "
+   HBTEST oValue:z2                       IS " Z2 "
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]: [X1] [Y1] [Z1]  X2   Y2   Z2   X3   Y3   Z3   X4   Y4   Z4 "
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting IVARSCLASS2 instance variables... */
-   TEST_LINE( oValue:IVARSCLASS2:x2 := "[X2]"    , "[X2]"                              )
-   TEST_LINE( oValue:IVARSCLASS2:y2 := "[Y2]"    , "[Y2]"                              )
-   TEST_LINE( oValue:IVARSCLASS2:z2 := "[Z2]"    , "[Z2]"                              )
+   HBTEST oValue:IVARSCLASS2:x2 := "[X2]"    IS "[X2]"
+   HBTEST oValue:IVARSCLASS2:y2 := "[Y2]"    IS "[Y2]"
+   HBTEST oValue:IVARSCLASS2:z2 := "[Z2]"    IS "[Z2]"
 
-   TEST_LINE( oValue:x1                       , "[X1]"                                 )
-   TEST_LINE( oValue:y1                       , "[Y1]"                                 )
-   TEST_LINE( oValue:z1                       , "[Z1]"                                 )
-   TEST_LINE( oValue:x2                       , "[X2]"                                 )
-   TEST_LINE( oValue:y2                       , "[Y2]"                                 )
-   TEST_LINE( oValue:z2                       , "[Z2]"                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]: [X1] [Y1] [Z1] [X2] [Y2] [Z2]  X3   Y3   Z3   X4   Y4   Z4 " )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "[X1]"
+   HBTEST oValue:y1                       IS "[Y1]"
+   HBTEST oValue:z1                       IS "[Z1]"
+   HBTEST oValue:x2                       IS "[X2]"
+   HBTEST oValue:y2                       IS "[Y2]"
+   HBTEST oValue:z2                       IS "[Z2]"
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]: [X1] [Y1] [Z1] [X2] [Y2] [Z2]  X3   Y3   Z3   X4   Y4   Z4 "
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting IVARSCLASS3 instance variables... */
-   TEST_LINE( oValue:IVARSCLASS3:x3 := "[X3]"    , "[X3]"                              )
-   TEST_LINE( oValue:IVARSCLASS3:y3 := "[Y3]"    , "[Y3]"                              )
-   TEST_LINE( oValue:IVARSCLASS3:z3 := "[Z3]"    , "[Z3]"                              )
+   HBTEST oValue:IVARSCLASS3:x3 := "[X3]"    IS "[X3]"
+   HBTEST oValue:IVARSCLASS3:y3 := "[Y3]"    IS "[Y3]"
+   HBTEST oValue:IVARSCLASS3:z3 := "[Z3]"    IS "[Z3]"
 
-   TEST_LINE( oValue:x1                       , "[X1]"                                 )
-   TEST_LINE( oValue:y1                       , "[Y1]"                                 )
-   TEST_LINE( oValue:z1                       , "[Z1]"                                 )
-   TEST_LINE( oValue:x2                       , "[X2]"                                 )
-   TEST_LINE( oValue:y2                       , "[Y2]"                                 )
-   TEST_LINE( oValue:z2                       , "[Z2]"                                 )
-   TEST_LINE( oValue:x3                       , "[X3]"                                 )
-   TEST_LINE( oValue:y3                       , "[Y3]"                                 )
-   TEST_LINE( oValue:z3                       , "[Z3]"                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]: [X1] [Y1] [Z1] [X2] [Y2] [Z2] [X3] [Y3] [Z3]  X4   Y4   Z4 " )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "[X1]"
+   HBTEST oValue:y1                       IS "[Y1]"
+   HBTEST oValue:z1                       IS "[Z1]"
+   HBTEST oValue:x2                       IS "[X2]"
+   HBTEST oValue:y2                       IS "[Y2]"
+   HBTEST oValue:z2                       IS "[Z2]"
+   HBTEST oValue:x3                       IS "[X3]"
+   HBTEST oValue:y3                       IS "[Y3]"
+   HBTEST oValue:z3                       IS "[Z3]"
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]: [X1] [Y1] [Z1] [X2] [Y2] [Z2] [X3] [Y3] [Z3]  X4   Y4   Z4 "
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting IVARSCLASS4 instance variables... */
-   TEST_LINE( oValue:IVARSCLASS4:x4 := "[X4]"    , "[X4]"                              )
-   TEST_LINE( oValue:IVARSCLASS4:y4 := "[Y4]"    , "[Y4]"                              )
-   TEST_LINE( oValue:IVARSCLASS4:z4 := "[Z4]"    , "[Z4]"                              )
+   HBTEST oValue:IVARSCLASS4:x4 := "[X4]"    IS "[X4]"
+   HBTEST oValue:IVARSCLASS4:y4 := "[Y4]"    IS "[Y4]"
+   HBTEST oValue:IVARSCLASS4:z4 := "[Z4]"    IS "[Z4]"
 
-   TEST_LINE( oValue:x1                       , "[X1]"                                 )
-   TEST_LINE( oValue:y1                       , "[Y1]"                                 )
-   TEST_LINE( oValue:z1                       , "[Z1]"                                 )
-   TEST_LINE( oValue:x2                       , "[X2]"                                 )
-   TEST_LINE( oValue:y2                       , "[Y2]"                                 )
-   TEST_LINE( oValue:z2                       , "[Z2]"                                 )
-   TEST_LINE( oValue:x3                       , "[X3]"                                 )
-   TEST_LINE( oValue:y3                       , "[Y3]"                                 )
-   TEST_LINE( oValue:z3                       , "[Z3]"                                 )
-   TEST_LINE( oValue:x4                       , "[X4]"                                 )
-   TEST_LINE( oValue:y4                       , "[Y4]"                                 )
-   TEST_LINE( oValue:z4                       , "[Z4]"                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]: [X1] [Y1] [Z1] [X2] [Y2] [Z2] [X3] [Y3] [Z3] [X4] [Y4] [Z4]" )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "[X1]"
+   HBTEST oValue:y1                       IS "[Y1]"
+   HBTEST oValue:z1                       IS "[Z1]"
+   HBTEST oValue:x2                       IS "[X2]"
+   HBTEST oValue:y2                       IS "[Y2]"
+   HBTEST oValue:z2                       IS "[Z2]"
+   HBTEST oValue:x3                       IS "[X3]"
+   HBTEST oValue:y3                       IS "[Y3]"
+   HBTEST oValue:z3                       IS "[Z3]"
+   HBTEST oValue:x4                       IS "[X4]"
+   HBTEST oValue:y4                       IS "[Y4]"
+   HBTEST oValue:z4                       IS "[Z4]"
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]: [X1] [Y1] [Z1] [X2] [Y2] [Z2] [X3] [Y3] [Z3] [X4] [Y4] [Z4]"
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting IVARSCLASS3:IVARSCLASS1 instance variables... */
-   TEST_LINE( oValue:IVARSCLASS3:IVARSCLASS1:x1 := "<X1>"    , "<X1>"                  )
-   TEST_LINE( oValue:IVARSCLASS3:IVARSCLASS1:y1 := "<Y1>"    , "<Y1>"                  )
-   TEST_LINE( oValue:IVARSCLASS3:IVARSCLASS1:z1 := "<Z1>"    , "<Z1>"                  )
+   HBTEST oValue:IVARSCLASS3:IVARSCLASS1:x1 := "<X1>"    IS "<X1>"
+   HBTEST oValue:IVARSCLASS3:IVARSCLASS1:y1 := "<Y1>"    IS "<Y1>"
+   HBTEST oValue:IVARSCLASS3:IVARSCLASS1:z1 := "<Z1>"    IS "<Z1>"
 
-   TEST_LINE( oValue:x1                       , "<X1>"                                 )
-   TEST_LINE( oValue:y1                       , "<Y1>"                                 )
-   TEST_LINE( oValue:z1                       , "<Z1>"                                 )
-   TEST_LINE( oValue:x2                       , "[X2]"                                 )
-   TEST_LINE( oValue:y2                       , "[Y2]"                                 )
-   TEST_LINE( oValue:z2                       , "[Z2]"                                 )
-   TEST_LINE( oValue:x3                       , "[X3]"                                 )
-   TEST_LINE( oValue:y3                       , "[Y3]"                                 )
-   TEST_LINE( oValue:z3                       , "[Z3]"                                 )
-   TEST_LINE( oValue:x4                       , "[X4]"                                 )
-   TEST_LINE( oValue:y4                       , "[Y4]"                                 )
-   TEST_LINE( oValue:z4                       , "[Z4]"                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]: <X1> <Y1> <Z1> [X2] [Y2] [Z2] [X3] [Y3] [Z3] [X4] [Y4] [Z4]" )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "<X1>"
+   HBTEST oValue:y1                       IS "<Y1>"
+   HBTEST oValue:z1                       IS "<Z1>"
+   HBTEST oValue:x2                       IS "[X2]"
+   HBTEST oValue:y2                       IS "[Y2]"
+   HBTEST oValue:z2                       IS "[Z2]"
+   HBTEST oValue:x3                       IS "[X3]"
+   HBTEST oValue:y3                       IS "[Y3]"
+   HBTEST oValue:z3                       IS "[Z3]"
+   HBTEST oValue:x4                       IS "[X4]"
+   HBTEST oValue:y4                       IS "[Y4]"
+   HBTEST oValue:z4                       IS "[Z4]"
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]: <X1> <Y1> <Z1> [X2] [Y2] [Z2] [X3] [Y3] [Z3] [X4] [Y4] [Z4]"
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting IVARSCLASS3:IVARSCLASS2 instance variables... */
-   TEST_LINE( oValue:IVARSCLASS3:IVARSCLASS2:x2 := "<X2>"    , "<X2>"                  )
-   TEST_LINE( oValue:IVARSCLASS3:IVARSCLASS2:y2 := "<Y2>"    , "<Y2>"                  )
-   TEST_LINE( oValue:IVARSCLASS3:IVARSCLASS2:z2 := "<Z2>"    , "<Z2>"                  )
+   HBTEST oValue:IVARSCLASS3:IVARSCLASS2:x2 := "<X2>"    IS "<X2>"
+   HBTEST oValue:IVARSCLASS3:IVARSCLASS2:y2 := "<Y2>"    IS "<Y2>"
+   HBTEST oValue:IVARSCLASS3:IVARSCLASS2:z2 := "<Z2>"    IS "<Z2>"
 
-   TEST_LINE( oValue:x1                       , "<X1>"                                 )
-   TEST_LINE( oValue:y1                       , "<Y1>"                                 )
-   TEST_LINE( oValue:z1                       , "<Z1>"                                 )
-   TEST_LINE( oValue:x2                       , "<X2>"                                 )
-   TEST_LINE( oValue:y2                       , "<Y2>"                                 )
-   TEST_LINE( oValue:z2                       , "<Z2>"                                 )
-   TEST_LINE( oValue:x3                       , "[X3]"                                 )
-   TEST_LINE( oValue:y3                       , "[Y3]"                                 )
-   TEST_LINE( oValue:z3                       , "[Z3]"                                 )
-   TEST_LINE( oValue:x4                       , "[X4]"                                 )
-   TEST_LINE( oValue:y4                       , "[Y4]"                                 )
-   TEST_LINE( oValue:z4                       , "[Z4]"                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]: <X1> <Y1> <Z1> <X2> <Y2> <Z2> [X3] [Y3] [Z3] [X4] [Y4] [Z4]" )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "<X1>"
+   HBTEST oValue:y1                       IS "<Y1>"
+   HBTEST oValue:z1                       IS "<Z1>"
+   HBTEST oValue:x2                       IS "<X2>"
+   HBTEST oValue:y2                       IS "<Y2>"
+   HBTEST oValue:z2                       IS "<Z2>"
+   HBTEST oValue:x3                       IS "[X3]"
+   HBTEST oValue:y3                       IS "[Y3]"
+   HBTEST oValue:z3                       IS "[Z3]"
+   HBTEST oValue:x4                       IS "[X4]"
+   HBTEST oValue:y4                       IS "[Y4]"
+   HBTEST oValue:z4                       IS "[Z4]"
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]: <X1> <Y1> <Z1> <X2> <Y2> <Z2> [X3] [Y3] [Z3] [X4] [Y4] [Z4]"
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting SUPER instance variables... */
-   TEST_LINE( oValue:super:x1 := "{X1}"       , "{X1}"                                 )
-   TEST_LINE( oValue:super:y1 := "{Y1}"       , "{Y1}"                                 )
-   TEST_LINE( oValue:super:z1 := "{Z1}"       , "{Z1}"                                 )
-   TEST_LINE( oValue:super:x2 := "{X2}"       , "{X2}"                                 )
-   TEST_LINE( oValue:super:y2 := "{Y2}"       , "{Y2}"                                 )
-   TEST_LINE( oValue:super:z2 := "{Z2}"       , "{Z2}"                                 )
-   TEST_LINE( oValue:super:x3 := "{X3}"       , "{X3}"                                 )
-   TEST_LINE( oValue:super:y3 := "{Y3}"       , "{Y3}"                                 )
-   TEST_LINE( oValue:super:z3 := "{Z3}"       , "{Z3}"                                 )
+   HBTEST oValue:super:x1 := "{X1}"       IS "{X1}"
+   HBTEST oValue:super:y1 := "{Y1}"       IS "{Y1}"
+   HBTEST oValue:super:z1 := "{Z1}"       IS "{Z1}"
+   HBTEST oValue:super:x2 := "{X2}"       IS "{X2}"
+   HBTEST oValue:super:y2 := "{Y2}"       IS "{Y2}"
+   HBTEST oValue:super:z2 := "{Z2}"       IS "{Z2}"
+   HBTEST oValue:super:x3 := "{X3}"       IS "{X3}"
+   HBTEST oValue:super:y3 := "{Y3}"       IS "{Y3}"
+   HBTEST oValue:super:z3 := "{Z3}"       IS "{Z3}"
 
-   TEST_LINE( oValue:x1                       , "{X1}"                                 )
-   TEST_LINE( oValue:y1                       , "{Y1}"                                 )
-   TEST_LINE( oValue:z1                       , "{Z1}"                                 )
-   TEST_LINE( oValue:x2                       , "{X2}"                                 )
-   TEST_LINE( oValue:y2                       , "{Y2}"                                 )
-   TEST_LINE( oValue:z2                       , "{Z2}"                                 )
-   TEST_LINE( oValue:x3                       , "{X3}"                                 )
-   TEST_LINE( oValue:y3                       , "{Y3}"                                 )
-   TEST_LINE( oValue:z3                       , "{Z3}"                                 )
-   TEST_LINE( oValue:x4                       , "[X4]"                                 )
-   TEST_LINE( oValue:y4                       , "[Y4]"                                 )
-   TEST_LINE( oValue:z4                       , "[Z4]"                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[12]: {X1} {Y1} {Z1} {X2} {Y2} {Z2} {X3} {Y3} {Z3} [X4] [Y4] [Z4]" )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:IVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "{X1}"
+   HBTEST oValue:y1                       IS "{Y1}"
+   HBTEST oValue:z1                       IS "{Z1}"
+   HBTEST oValue:x2                       IS "{X2}"
+   HBTEST oValue:y2                       IS "{Y2}"
+   HBTEST oValue:z2                       IS "{Z2}"
+   HBTEST oValue:x3                       IS "{X3}"
+   HBTEST oValue:y3                       IS "{Y3}"
+   HBTEST oValue:z3                       IS "{Z3}"
+   HBTEST oValue:x4                       IS "[X4]"
+   HBTEST oValue:y4                       IS "[Y4]"
+   HBTEST oValue:z4                       IS "[Z4]"
+   HBTEST INSTANCE_DATA( oValue )         IS "[12]: {X1} {Y1} {Z1} {X2} {Y2} {Z2} {X3} {Y3} {Z3} [X4] [Y4] [Z4]"
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:IVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
 
    /* Test class variables allocating and casting */
 
    oValue := CVARSCLASS4():new()
 
-   TEST_LINE( oValue:x1                       , "(x1)"                                 )
-   TEST_LINE( oValue:y1                       , "(y1)"                                 )
-   TEST_LINE( oValue:z1                       , "(z1)"                                 )
-   TEST_LINE( oValue:x2                       , "(x2)"                                 )
-   TEST_LINE( oValue:y2                       , "(y2)"                                 )
-   TEST_LINE( oValue:z2                       , "(z2)"                                 )
-   TEST_LINE( oValue:x3                       , "(x3)"                                 )
-   TEST_LINE( oValue:y3                       , "(y3)"                                 )
-   TEST_LINE( oValue:z3                       , "(z3)"                                 )
-   TEST_LINE( oValue:x4                       , "(x4)"                                 )
-   TEST_LINE( oValue:y4                       , "(y4)"                                 )
-   TEST_LINE( oValue:z4                       , "(z4)"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x3           , "(x3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y3           , "(y3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z3           , "(z3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x3           , "(x3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y3           , "(y3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z3           , "(z3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x4           , "(x4)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y4           , "(y4)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z4           , "(z4)"                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS2:classH ) , 6                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS3:classH ) , 9                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS4:classH ) , 12                       )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 12                       )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS "(x1)"
+   HBTEST oValue:y1                       IS "(y1)"
+   HBTEST oValue:z1                       IS "(z1)"
+   HBTEST oValue:x2                       IS "(x2)"
+   HBTEST oValue:y2                       IS "(y2)"
+   HBTEST oValue:z2                       IS "(z2)"
+   HBTEST oValue:x3                       IS "(x3)"
+   HBTEST oValue:y3                       IS "(y3)"
+   HBTEST oValue:z3                       IS "(z3)"
+   HBTEST oValue:x4                       IS "(x4)"
+   HBTEST oValue:y4                       IS "(y4)"
+   HBTEST oValue:z4                       IS "(z4)"
+   HBTEST oValue:CVARSCLASS1:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS1:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS1:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS2:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS2:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS2:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS2:x2           IS "(x2)"
+   HBTEST oValue:CVARSCLASS2:y2           IS "(y2)"
+   HBTEST oValue:CVARSCLASS2:z2           IS "(z2)"
+   HBTEST oValue:CVARSCLASS3:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS3:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS3:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS3:x2           IS "(x2)"
+   HBTEST oValue:CVARSCLASS3:y2           IS "(y2)"
+   HBTEST oValue:CVARSCLASS3:z2           IS "(z2)"
+   HBTEST oValue:CVARSCLASS3:x3           IS "(x3)"
+   HBTEST oValue:CVARSCLASS3:y3           IS "(y3)"
+   HBTEST oValue:CVARSCLASS3:z3           IS "(z3)"
+   HBTEST oValue:CVARSCLASS4:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS4:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS4:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS4:x2           IS "(x2)"
+   HBTEST oValue:CVARSCLASS4:y2           IS "(y2)"
+   HBTEST oValue:CVARSCLASS4:z2           IS "(z2)"
+   HBTEST oValue:CVARSCLASS4:x3           IS "(x3)"
+   HBTEST oValue:CVARSCLASS4:y3           IS "(y3)"
+   HBTEST oValue:CVARSCLASS4:z3           IS "(z3)"
+   HBTEST oValue:CVARSCLASS4:x4           IS "(x4)"
+   HBTEST oValue:CVARSCLASS4:y4           IS "(y4)"
+   HBTEST oValue:CVARSCLASS4:z4           IS "(z4)"
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS2:classH ) IS 6
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS3:classH ) IS 9
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS4:classH ) IS 12
+   HBTEST __cls_CntClsData( oValue:classH )             IS 12
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* simple assignment... */
-   TEST_LINE( oValue:x1 := " X1 "             , " X1 "                                 )
-   TEST_LINE( oValue:y1 := " Y1 "             , " Y1 "                                 )
-   TEST_LINE( oValue:z1 := " Z1 "             , " Z1 "                                 )
-   TEST_LINE( oValue:x2 := " X2 "             , " X2 "                                 )
-   TEST_LINE( oValue:y2 := " Y2 "             , " Y2 "                                 )
-   TEST_LINE( oValue:z2 := " Z2 "             , " Z2 "                                 )
-   TEST_LINE( oValue:x3 := " X3 "             , " X3 "                                 )
-   TEST_LINE( oValue:y3 := " Y3 "             , " Y3 "                                 )
-   TEST_LINE( oValue:z3 := " Z3 "             , " Z3 "                                 )
-   TEST_LINE( oValue:x4 := " X4 "             , " X4 "                                 )
-   TEST_LINE( oValue:y4 := " Y4 "             , " Y4 "                                 )
-   TEST_LINE( oValue:z4 := " Z4 "             , " Z4 "                                 )
+   HBTEST oValue:x1 := " X1 "             IS " X1 "
+   HBTEST oValue:y1 := " Y1 "             IS " Y1 "
+   HBTEST oValue:z1 := " Z1 "             IS " Z1 "
+   HBTEST oValue:x2 := " X2 "             IS " X2 "
+   HBTEST oValue:y2 := " Y2 "             IS " Y2 "
+   HBTEST oValue:z2 := " Z2 "             IS " Z2 "
+   HBTEST oValue:x3 := " X3 "             IS " X3 "
+   HBTEST oValue:y3 := " Y3 "             IS " Y3 "
+   HBTEST oValue:z3 := " Z3 "             IS " Z3 "
+   HBTEST oValue:x4 := " X4 "             IS " X4 "
+   HBTEST oValue:y4 := " Y4 "             IS " Y4 "
+   HBTEST oValue:z4 := " Z4 "             IS " Z4 "
 
-   TEST_LINE( oValue:x1                       , " X1 "                                 )
-   TEST_LINE( oValue:y1                       , " Y1 "                                 )
-   TEST_LINE( oValue:z1                       , " Z1 "                                 )
-   TEST_LINE( oValue:x2                       , " X2 "                                 )
-   TEST_LINE( oValue:y2                       , " Y2 "                                 )
-   TEST_LINE( oValue:z2                       , " Z2 "                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS1:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x3           , "(x3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y3           , "(y3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z3           , "(z3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x1           , " X1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y1           , " Y1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z1           , " Z1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x2           , " X2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x3           , " X3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x4           , " X4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y4           , " Y4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z4           , " Z4 "                                 )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS2:classH ) , 6                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS3:classH ) , 9                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS4:classH ) , 12                       )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 12                       )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS " X1 "
+   HBTEST oValue:y1                       IS " Y1 "
+   HBTEST oValue:z1                       IS " Z1 "
+   HBTEST oValue:x2                       IS " X2 "
+   HBTEST oValue:y2                       IS " Y2 "
+   HBTEST oValue:z2                       IS " Z2 "
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST oValue:CVARSCLASS1:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS1:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS1:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS2:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS2:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS2:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS2:x2           IS "(x2)"
+   HBTEST oValue:CVARSCLASS2:y2           IS "(y2)"
+   HBTEST oValue:CVARSCLASS2:z2           IS "(z2)"
+   HBTEST oValue:CVARSCLASS3:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS3:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS3:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS3:x2           IS "(x2)"
+   HBTEST oValue:CVARSCLASS3:y2           IS "(y2)"
+   HBTEST oValue:CVARSCLASS3:z2           IS "(z2)"
+   HBTEST oValue:CVARSCLASS3:x3           IS "(x3)"
+   HBTEST oValue:CVARSCLASS3:y3           IS "(y3)"
+   HBTEST oValue:CVARSCLASS3:z3           IS "(z3)"
+   HBTEST oValue:CVARSCLASS4:x1           IS " X1 "
+   HBTEST oValue:CVARSCLASS4:y1           IS " Y1 "
+   HBTEST oValue:CVARSCLASS4:z1           IS " Z1 "
+   HBTEST oValue:CVARSCLASS4:x2           IS " X2 "
+   HBTEST oValue:CVARSCLASS4:y2           IS " Y2 "
+   HBTEST oValue:CVARSCLASS4:z2           IS " Z2 "
+   HBTEST oValue:CVARSCLASS4:x3           IS " X3 "
+   HBTEST oValue:CVARSCLASS4:y3           IS " Y3 "
+   HBTEST oValue:CVARSCLASS4:z3           IS " Z3 "
+   HBTEST oValue:CVARSCLASS4:x4           IS " X4 "
+   HBTEST oValue:CVARSCLASS4:y4           IS " Y4 "
+   HBTEST oValue:CVARSCLASS4:z4           IS " Z4 "
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS2:classH ) IS 6
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS3:classH ) IS 9
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS4:classH ) IS 12
+   HBTEST __cls_CntClsData( oValue:classH )             IS 12
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting CVARSCLASS1 class variables... */
-   TEST_LINE( oValue:CVARSCLASS1:x1 := "[X1]"    , "[X1]"                              )
-   TEST_LINE( oValue:CVARSCLASS1:y1 := "[Y1]"    , "[Y1]"                              )
-   TEST_LINE( oValue:CVARSCLASS1:z1 := "[Z1]"    , "[Z1]"                              )
+   HBTEST oValue:CVARSCLASS1:x1 := "[X1]"    IS "[X1]"
+   HBTEST oValue:CVARSCLASS1:y1 := "[Y1]"    IS "[Y1]"
+   HBTEST oValue:CVARSCLASS1:z1 := "[Z1]"    IS "[Z1]"
 
-   TEST_LINE( oValue:x1                       , " X1 "                                 )
-   TEST_LINE( oValue:y1                       , " Y1 "                                 )
-   TEST_LINE( oValue:z1                       , " Z1 "                                 )
-   TEST_LINE( oValue:x2                       , " X2 "                                 )
-   TEST_LINE( oValue:y2                       , " Y2 "                                 )
-   TEST_LINE( oValue:z2                       , " Z2 "                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS1:x1           , "[X1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:y1           , "[Y1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:z1           , "[Z1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x3           , "(x3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y3           , "(y3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z3           , "(z3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x1           , " X1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y1           , " Y1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z1           , " Z1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x2           , " X2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x3           , " X3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x4           , " X4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y4           , " Y4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z4           , " Z4 "                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS2:classH ) , 6                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS3:classH ) , 9                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS4:classH ) , 12                       )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 12                       )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS " X1 "
+   HBTEST oValue:y1                       IS " Y1 "
+   HBTEST oValue:z1                       IS " Z1 "
+   HBTEST oValue:x2                       IS " X2 "
+   HBTEST oValue:y2                       IS " Y2 "
+   HBTEST oValue:z2                       IS " Z2 "
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST oValue:CVARSCLASS1:x1           IS "[X1]"
+   HBTEST oValue:CVARSCLASS1:y1           IS "[Y1]"
+   HBTEST oValue:CVARSCLASS1:z1           IS "[Z1]"
+   HBTEST oValue:CVARSCLASS2:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS2:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS2:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS2:x2           IS "(x2)"
+   HBTEST oValue:CVARSCLASS2:y2           IS "(y2)"
+   HBTEST oValue:CVARSCLASS2:z2           IS "(z2)"
+   HBTEST oValue:CVARSCLASS3:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS3:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS3:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS3:x2           IS "(x2)"
+   HBTEST oValue:CVARSCLASS3:y2           IS "(y2)"
+   HBTEST oValue:CVARSCLASS3:z2           IS "(z2)"
+   HBTEST oValue:CVARSCLASS3:x3           IS "(x3)"
+   HBTEST oValue:CVARSCLASS3:y3           IS "(y3)"
+   HBTEST oValue:CVARSCLASS3:z3           IS "(z3)"
+   HBTEST oValue:CVARSCLASS4:x1           IS " X1 "
+   HBTEST oValue:CVARSCLASS4:y1           IS " Y1 "
+   HBTEST oValue:CVARSCLASS4:z1           IS " Z1 "
+   HBTEST oValue:CVARSCLASS4:x2           IS " X2 "
+   HBTEST oValue:CVARSCLASS4:y2           IS " Y2 "
+   HBTEST oValue:CVARSCLASS4:z2           IS " Z2 "
+   HBTEST oValue:CVARSCLASS4:x3           IS " X3 "
+   HBTEST oValue:CVARSCLASS4:y3           IS " Y3 "
+   HBTEST oValue:CVARSCLASS4:z3           IS " Z3 "
+   HBTEST oValue:CVARSCLASS4:x4           IS " X4 "
+   HBTEST oValue:CVARSCLASS4:y4           IS " Y4 "
+   HBTEST oValue:CVARSCLASS4:z4           IS " Z4 "
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS2:classH ) IS 6
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS3:classH ) IS 9
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS4:classH ) IS 12
+   HBTEST __cls_CntClsData( oValue:classH )             IS 12
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting CVARSCLASS2 class variables... */
-   TEST_LINE( oValue:CVARSCLASS2:x1 := "{X1}"    , "{X1}"                              )
-   TEST_LINE( oValue:CVARSCLASS2:y1 := "{Y1}"    , "{Y1}"                              )
-   TEST_LINE( oValue:CVARSCLASS2:z1 := "{Z1}"    , "{Z1}"                              )
-   TEST_LINE( oValue:CVARSCLASS2:x2 := "{X2}"    , "{X2}"                              )
-   TEST_LINE( oValue:CVARSCLASS2:y2 := "{Y2}"    , "{Y2}"                              )
-   TEST_LINE( oValue:CVARSCLASS2:z2 := "{Z2}"    , "{Z2}"                              )
+   HBTEST oValue:CVARSCLASS2:x1 := "{X1}"    IS "{X1}"
+   HBTEST oValue:CVARSCLASS2:y1 := "{Y1}"    IS "{Y1}"
+   HBTEST oValue:CVARSCLASS2:z1 := "{Z1}"    IS "{Z1}"
+   HBTEST oValue:CVARSCLASS2:x2 := "{X2}"    IS "{X2}"
+   HBTEST oValue:CVARSCLASS2:y2 := "{Y2}"    IS "{Y2}"
+   HBTEST oValue:CVARSCLASS2:z2 := "{Z2}"    IS "{Z2}"
 
-   TEST_LINE( oValue:x1                       , " X1 "                                 )
-   TEST_LINE( oValue:y1                       , " Y1 "                                 )
-   TEST_LINE( oValue:z1                       , " Z1 "                                 )
-   TEST_LINE( oValue:x2                       , " X2 "                                 )
-   TEST_LINE( oValue:y2                       , " Y2 "                                 )
-   TEST_LINE( oValue:z2                       , " Z2 "                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS1:x1           , "[X1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:y1           , "[Y1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:z1           , "[Z1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x1           , "{X1}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y1           , "{Y1}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z1           , "{Z1}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x2           , "{X2}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y2           , "{Y2}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z2           , "{Z2}"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x3           , "(x3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y3           , "(y3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z3           , "(z3)"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x1           , " X1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y1           , " Y1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z1           , " Z1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x2           , " X2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x3           , " X3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x4           , " X4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y4           , " Y4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z4           , " Z4 "                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS2:classH ) , 6                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS3:classH ) , 9                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS4:classH ) , 12                       )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 12                       )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS " X1 "
+   HBTEST oValue:y1                       IS " Y1 "
+   HBTEST oValue:z1                       IS " Z1 "
+   HBTEST oValue:x2                       IS " X2 "
+   HBTEST oValue:y2                       IS " Y2 "
+   HBTEST oValue:z2                       IS " Z2 "
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST oValue:CVARSCLASS1:x1           IS "[X1]"
+   HBTEST oValue:CVARSCLASS1:y1           IS "[Y1]"
+   HBTEST oValue:CVARSCLASS1:z1           IS "[Z1]"
+   HBTEST oValue:CVARSCLASS2:x1           IS "{X1}"
+   HBTEST oValue:CVARSCLASS2:y1           IS "{Y1}"
+   HBTEST oValue:CVARSCLASS2:z1           IS "{Z1}"
+   HBTEST oValue:CVARSCLASS2:x2           IS "{X2}"
+   HBTEST oValue:CVARSCLASS2:y2           IS "{Y2}"
+   HBTEST oValue:CVARSCLASS2:z2           IS "{Z2}"
+   HBTEST oValue:CVARSCLASS3:x1           IS "(x1)"
+   HBTEST oValue:CVARSCLASS3:y1           IS "(y1)"
+   HBTEST oValue:CVARSCLASS3:z1           IS "(z1)"
+   HBTEST oValue:CVARSCLASS3:x2           IS "(x2)"
+   HBTEST oValue:CVARSCLASS3:y2           IS "(y2)"
+   HBTEST oValue:CVARSCLASS3:z2           IS "(z2)"
+   HBTEST oValue:CVARSCLASS3:x3           IS "(x3)"
+   HBTEST oValue:CVARSCLASS3:y3           IS "(y3)"
+   HBTEST oValue:CVARSCLASS3:z3           IS "(z3)"
+   HBTEST oValue:CVARSCLASS4:x1           IS " X1 "
+   HBTEST oValue:CVARSCLASS4:y1           IS " Y1 "
+   HBTEST oValue:CVARSCLASS4:z1           IS " Z1 "
+   HBTEST oValue:CVARSCLASS4:x2           IS " X2 "
+   HBTEST oValue:CVARSCLASS4:y2           IS " Y2 "
+   HBTEST oValue:CVARSCLASS4:z2           IS " Z2 "
+   HBTEST oValue:CVARSCLASS4:x3           IS " X3 "
+   HBTEST oValue:CVARSCLASS4:y3           IS " Y3 "
+   HBTEST oValue:CVARSCLASS4:z3           IS " Z3 "
+   HBTEST oValue:CVARSCLASS4:x4           IS " X4 "
+   HBTEST oValue:CVARSCLASS4:y4           IS " Y4 "
+   HBTEST oValue:CVARSCLASS4:z4           IS " Z4 "
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS2:classH ) IS 6
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS3:classH ) IS 9
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS4:classH ) IS 12
+   HBTEST __cls_CntClsData( oValue:classH )             IS 12
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
    /* Setting CVARSCLASS3 class variables... */
-   TEST_LINE( oValue:CVARSCLASS3:x1 := "<X1>"    , "<X1>"                              )
-   TEST_LINE( oValue:CVARSCLASS3:y1 := "<Y1>"    , "<Y1>"                              )
-   TEST_LINE( oValue:CVARSCLASS3:z1 := "<Z1>"    , "<Z1>"                              )
-   TEST_LINE( oValue:CVARSCLASS3:x2 := "<X2>"    , "<X2>"                              )
-   TEST_LINE( oValue:CVARSCLASS3:y2 := "<Y2>"    , "<Y2>"                              )
-   TEST_LINE( oValue:CVARSCLASS3:z2 := "<Z2>"    , "<Z2>"                              )
-   TEST_LINE( oValue:CVARSCLASS3:x3 := "<X3>"    , "<X3>"                              )
-   TEST_LINE( oValue:CVARSCLASS3:y3 := "<Y3>"    , "<Y3>"                              )
-   TEST_LINE( oValue:CVARSCLASS3:z3 := "<Z3>"    , "<Z3>"                              )
+   HBTEST oValue:CVARSCLASS3:x1 := "<X1>"    IS "<X1>"
+   HBTEST oValue:CVARSCLASS3:y1 := "<Y1>"    IS "<Y1>"
+   HBTEST oValue:CVARSCLASS3:z1 := "<Z1>"    IS "<Z1>"
+   HBTEST oValue:CVARSCLASS3:x2 := "<X2>"    IS "<X2>"
+   HBTEST oValue:CVARSCLASS3:y2 := "<Y2>"    IS "<Y2>"
+   HBTEST oValue:CVARSCLASS3:z2 := "<Z2>"    IS "<Z2>"
+   HBTEST oValue:CVARSCLASS3:x3 := "<X3>"    IS "<X3>"
+   HBTEST oValue:CVARSCLASS3:y3 := "<Y3>"    IS "<Y3>"
+   HBTEST oValue:CVARSCLASS3:z3 := "<Z3>"    IS "<Z3>"
 
-   TEST_LINE( oValue:x1                       , " X1 "                                 )
-   TEST_LINE( oValue:y1                       , " Y1 "                                 )
-   TEST_LINE( oValue:z1                       , " Z1 "                                 )
-   TEST_LINE( oValue:x2                       , " X2 "                                 )
-   TEST_LINE( oValue:y2                       , " Y2 "                                 )
-   TEST_LINE( oValue:z2                       , " Z2 "                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS1:x1           , "[X1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:y1           , "[Y1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS1:z1           , "[Z1]"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x1           , "{X1}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y1           , "{Y1}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z1           , "{Z1}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:x2           , "{X2}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:y2           , "{Y2}"                                 )
-   TEST_LINE( oValue:CVARSCLASS2:z2           , "{Z2}"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x1           , "<X1>"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y1           , "<Y1>"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z1           , "<Z1>"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x2           , "<X2>"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y2           , "<Y2>"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z2           , "<Z2>"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:x3           , "<X3>"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:y3           , "<Y3>"                                 )
-   TEST_LINE( oValue:CVARSCLASS3:z3           , "<Z3>"                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x1           , " X1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y1           , " Y1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z1           , " Z1 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x2           , " X2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x3           , " X3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:x4           , " X4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:y4           , " Y4 "                                 )
-   TEST_LINE( oValue:CVARSCLASS4:z4           , " Z4 "                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS2:classH ) , 6                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS3:classH ) , 9                        )
-   TEST_LINE( __cls_CntClsData( oValue:CVARSCLASS4:classH ) , 12                       )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 12                       )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:CVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 0                        )
+   HBTEST oValue:x1                       IS " X1 "
+   HBTEST oValue:y1                       IS " Y1 "
+   HBTEST oValue:z1                       IS " Z1 "
+   HBTEST oValue:x2                       IS " X2 "
+   HBTEST oValue:y2                       IS " Y2 "
+   HBTEST oValue:z2                       IS " Z2 "
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST oValue:CVARSCLASS1:x1           IS "[X1]"
+   HBTEST oValue:CVARSCLASS1:y1           IS "[Y1]"
+   HBTEST oValue:CVARSCLASS1:z1           IS "[Z1]"
+   HBTEST oValue:CVARSCLASS2:x1           IS "{X1}"
+   HBTEST oValue:CVARSCLASS2:y1           IS "{Y1}"
+   HBTEST oValue:CVARSCLASS2:z1           IS "{Z1}"
+   HBTEST oValue:CVARSCLASS2:x2           IS "{X2}"
+   HBTEST oValue:CVARSCLASS2:y2           IS "{Y2}"
+   HBTEST oValue:CVARSCLASS2:z2           IS "{Z2}"
+   HBTEST oValue:CVARSCLASS3:x1           IS "<X1>"
+   HBTEST oValue:CVARSCLASS3:y1           IS "<Y1>"
+   HBTEST oValue:CVARSCLASS3:z1           IS "<Z1>"
+   HBTEST oValue:CVARSCLASS3:x2           IS "<X2>"
+   HBTEST oValue:CVARSCLASS3:y2           IS "<Y2>"
+   HBTEST oValue:CVARSCLASS3:z2           IS "<Z2>"
+   HBTEST oValue:CVARSCLASS3:x3           IS "<X3>"
+   HBTEST oValue:CVARSCLASS3:y3           IS "<Y3>"
+   HBTEST oValue:CVARSCLASS3:z3           IS "<Z3>"
+   HBTEST oValue:CVARSCLASS4:x1           IS " X1 "
+   HBTEST oValue:CVARSCLASS4:y1           IS " Y1 "
+   HBTEST oValue:CVARSCLASS4:z1           IS " Z1 "
+   HBTEST oValue:CVARSCLASS4:x2           IS " X2 "
+   HBTEST oValue:CVARSCLASS4:y2           IS " Y2 "
+   HBTEST oValue:CVARSCLASS4:z2           IS " Z2 "
+   HBTEST oValue:CVARSCLASS4:x3           IS " X3 "
+   HBTEST oValue:CVARSCLASS4:y3           IS " Y3 "
+   HBTEST oValue:CVARSCLASS4:z3           IS " Z3 "
+   HBTEST oValue:CVARSCLASS4:x4           IS " X4 "
+   HBTEST oValue:CVARSCLASS4:y4           IS " Y4 "
+   HBTEST oValue:CVARSCLASS4:z4           IS " Z4 "
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS2:classH ) IS 6
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS3:classH ) IS 9
+   HBTEST __cls_CntClsData( oValue:CVARSCLASS4:classH ) IS 12
+   HBTEST __cls_CntClsData( oValue:classH )             IS 12
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:CVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntShrData( oValue:classH )             IS 0
 
 
    /* Test shared class variables allocating and casting */
 
    oValue := SVARSCLASS4():new()
 
-   TEST_LINE( oValue:x1                       , "(x1)"                                 )
-   TEST_LINE( oValue:y1                       , "(y1)"                                 )
-   TEST_LINE( oValue:z1                       , "(z1)"                                 )
-   TEST_LINE( oValue:x2                       , "(x2)"                                 )
-   TEST_LINE( oValue:y2                       , "(y2)"                                 )
-   TEST_LINE( oValue:z2                       , "(z2)"                                 )
-   TEST_LINE( oValue:x3                       , "(x3)"                                 )
-   TEST_LINE( oValue:y3                       , "(y3)"                                 )
-   TEST_LINE( oValue:z3                       , "(z3)"                                 )
-   TEST_LINE( oValue:x4                       , "(x4)"                                 )
-   TEST_LINE( oValue:y4                       , "(y4)"                                 )
-   TEST_LINE( oValue:z4                       , "(z4)"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x3           , "(x3)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y3           , "(y3)"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z3           , "(z3)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x1           , "(x1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y1           , "(y1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z1           , "(z1)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x2           , "(x2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y2           , "(y2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z2           , "(z2)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x3           , "(x3)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y3           , "(y3)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z3           , "(z3)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x4           , "(x4)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y4           , "(y4)"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z4           , "(z4)"                                 )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS2:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS3:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS4:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 3                        )
+   HBTEST oValue:x1                       IS "(x1)"
+   HBTEST oValue:y1                       IS "(y1)"
+   HBTEST oValue:z1                       IS "(z1)"
+   HBTEST oValue:x2                       IS "(x2)"
+   HBTEST oValue:y2                       IS "(y2)"
+   HBTEST oValue:z2                       IS "(z2)"
+   HBTEST oValue:x3                       IS "(x3)"
+   HBTEST oValue:y3                       IS "(y3)"
+   HBTEST oValue:z3                       IS "(z3)"
+   HBTEST oValue:x4                       IS "(x4)"
+   HBTEST oValue:y4                       IS "(y4)"
+   HBTEST oValue:z4                       IS "(z4)"
+   HBTEST oValue:SVARSCLASS1:x1           IS "(x1)"
+   HBTEST oValue:SVARSCLASS1:y1           IS "(y1)"
+   HBTEST oValue:SVARSCLASS1:z1           IS "(z1)"
+   HBTEST oValue:SVARSCLASS2:x1           IS "(x1)"
+   HBTEST oValue:SVARSCLASS2:y1           IS "(y1)"
+   HBTEST oValue:SVARSCLASS2:z1           IS "(z1)"
+   HBTEST oValue:SVARSCLASS2:x2           IS "(x2)"
+   HBTEST oValue:SVARSCLASS2:y2           IS "(y2)"
+   HBTEST oValue:SVARSCLASS2:z2           IS "(z2)"
+   HBTEST oValue:SVARSCLASS3:x1           IS "(x1)"
+   HBTEST oValue:SVARSCLASS3:y1           IS "(y1)"
+   HBTEST oValue:SVARSCLASS3:z1           IS "(z1)"
+   HBTEST oValue:SVARSCLASS3:x2           IS "(x2)"
+   HBTEST oValue:SVARSCLASS3:y2           IS "(y2)"
+   HBTEST oValue:SVARSCLASS3:z2           IS "(z2)"
+   HBTEST oValue:SVARSCLASS3:x3           IS "(x3)"
+   HBTEST oValue:SVARSCLASS3:y3           IS "(y3)"
+   HBTEST oValue:SVARSCLASS3:z3           IS "(z3)"
+   HBTEST oValue:SVARSCLASS4:x1           IS "(x1)"
+   HBTEST oValue:SVARSCLASS4:y1           IS "(y1)"
+   HBTEST oValue:SVARSCLASS4:z1           IS "(z1)"
+   HBTEST oValue:SVARSCLASS4:x2           IS "(x2)"
+   HBTEST oValue:SVARSCLASS4:y2           IS "(y2)"
+   HBTEST oValue:SVARSCLASS4:z2           IS "(z2)"
+   HBTEST oValue:SVARSCLASS4:x3           IS "(x3)"
+   HBTEST oValue:SVARSCLASS4:y3           IS "(y3)"
+   HBTEST oValue:SVARSCLASS4:z3           IS "(z3)"
+   HBTEST oValue:SVARSCLASS4:x4           IS "(x4)"
+   HBTEST oValue:SVARSCLASS4:y4           IS "(y4)"
+   HBTEST oValue:SVARSCLASS4:z4           IS "(z4)"
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS2:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS3:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS4:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:classH )             IS 3
 
    /* simple assignment... */
-   TEST_LINE( oValue:x1 := " X1 "             , " X1 "                                 )
-   TEST_LINE( oValue:y1 := " Y1 "             , " Y1 "                                 )
-   TEST_LINE( oValue:z1 := " Z1 "             , " Z1 "                                 )
-   TEST_LINE( oValue:x2 := " X2 "             , " X2 "                                 )
-   TEST_LINE( oValue:y2 := " Y2 "             , " Y2 "                                 )
-   TEST_LINE( oValue:z2 := " Z2 "             , " Z2 "                                 )
-   TEST_LINE( oValue:x3 := " X3 "             , " X3 "                                 )
-   TEST_LINE( oValue:y3 := " Y3 "             , " Y3 "                                 )
-   TEST_LINE( oValue:z3 := " Z3 "             , " Z3 "                                 )
-   TEST_LINE( oValue:x4 := " X4 "             , " X4 "                                 )
-   TEST_LINE( oValue:y4 := " Y4 "             , " Y4 "                                 )
-   TEST_LINE( oValue:z4 := " Z4 "             , " Z4 "                                 )
+   HBTEST oValue:x1 := " X1 "             IS " X1 "
+   HBTEST oValue:y1 := " Y1 "             IS " Y1 "
+   HBTEST oValue:z1 := " Z1 "             IS " Z1 "
+   HBTEST oValue:x2 := " X2 "             IS " X2 "
+   HBTEST oValue:y2 := " Y2 "             IS " Y2 "
+   HBTEST oValue:z2 := " Z2 "             IS " Z2 "
+   HBTEST oValue:x3 := " X3 "             IS " X3 "
+   HBTEST oValue:y3 := " Y3 "             IS " Y3 "
+   HBTEST oValue:z3 := " Z3 "             IS " Z3 "
+   HBTEST oValue:x4 := " X4 "             IS " X4 "
+   HBTEST oValue:y4 := " Y4 "             IS " Y4 "
+   HBTEST oValue:z4 := " Z4 "             IS " Z4 "
 
-   TEST_LINE( oValue:x1                       , " X1 "                                 )
-   TEST_LINE( oValue:y1                       , " Y1 "                                 )
-   TEST_LINE( oValue:z1                       , " Z1 "                                 )
-   TEST_LINE( oValue:x2                       , " X2 "                                 )
-   TEST_LINE( oValue:y2                       , " Y2 "                                 )
-   TEST_LINE( oValue:z2                       , " Z2 "                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS1:x1           , " X1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS1:y1           , " Y1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS1:z1           , " Z1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x1           , " X1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y1           , " Y1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z1           , " Z1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x2           , " X2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x1           , " X1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y1           , " Y1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z1           , " Z1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x2           , " X2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x3           , " X3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x1           , " X1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y1           , " Y1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z1           , " Z1 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x2           , " X2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x3           , " X3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x4           , " X4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y4           , " Y4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z4           , " Z4 "                                 )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS2:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS3:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS4:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 3                        )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
+   HBTEST oValue:x1                       IS " X1 "
+   HBTEST oValue:y1                       IS " Y1 "
+   HBTEST oValue:z1                       IS " Z1 "
+   HBTEST oValue:x2                       IS " X2 "
+   HBTEST oValue:y2                       IS " Y2 "
+   HBTEST oValue:z2                       IS " Z2 "
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST oValue:SVARSCLASS1:x1           IS " X1 "
+   HBTEST oValue:SVARSCLASS1:y1           IS " Y1 "
+   HBTEST oValue:SVARSCLASS1:z1           IS " Z1 "
+   HBTEST oValue:SVARSCLASS2:x1           IS " X1 "
+   HBTEST oValue:SVARSCLASS2:y1           IS " Y1 "
+   HBTEST oValue:SVARSCLASS2:z1           IS " Z1 "
+   HBTEST oValue:SVARSCLASS2:x2           IS " X2 "
+   HBTEST oValue:SVARSCLASS2:y2           IS " Y2 "
+   HBTEST oValue:SVARSCLASS2:z2           IS " Z2 "
+   HBTEST oValue:SVARSCLASS3:x1           IS " X1 "
+   HBTEST oValue:SVARSCLASS3:y1           IS " Y1 "
+   HBTEST oValue:SVARSCLASS3:z1           IS " Z1 "
+   HBTEST oValue:SVARSCLASS3:x2           IS " X2 "
+   HBTEST oValue:SVARSCLASS3:y2           IS " Y2 "
+   HBTEST oValue:SVARSCLASS3:z2           IS " Z2 "
+   HBTEST oValue:SVARSCLASS3:x3           IS " X3 "
+   HBTEST oValue:SVARSCLASS3:y3           IS " Y3 "
+   HBTEST oValue:SVARSCLASS3:z3           IS " Z3 "
+   HBTEST oValue:SVARSCLASS4:x1           IS " X1 "
+   HBTEST oValue:SVARSCLASS4:y1           IS " Y1 "
+   HBTEST oValue:SVARSCLASS4:z1           IS " Z1 "
+   HBTEST oValue:SVARSCLASS4:x2           IS " X2 "
+   HBTEST oValue:SVARSCLASS4:y2           IS " Y2 "
+   HBTEST oValue:SVARSCLASS4:z2           IS " Z2 "
+   HBTEST oValue:SVARSCLASS4:x3           IS " X3 "
+   HBTEST oValue:SVARSCLASS4:y3           IS " Y3 "
+   HBTEST oValue:SVARSCLASS4:z3           IS " Z3 "
+   HBTEST oValue:SVARSCLASS4:x4           IS " X4 "
+   HBTEST oValue:SVARSCLASS4:y4           IS " Y4 "
+   HBTEST oValue:SVARSCLASS4:z4           IS " Z4 "
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS2:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS3:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS4:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:classH )             IS 3
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
 
    /* Setting SVARSCLASS1 class variables... */
-   TEST_LINE( oValue:SVARSCLASS1:x1 := "[X1]"    , "[X1]"                              )
-   TEST_LINE( oValue:SVARSCLASS1:y1 := "[Y1]"    , "[Y1]"                              )
-   TEST_LINE( oValue:SVARSCLASS1:z1 := "[Z1]"    , "[Z1]"                              )
+   HBTEST oValue:SVARSCLASS1:x1 := "[X1]"    IS "[X1]"
+   HBTEST oValue:SVARSCLASS1:y1 := "[Y1]"    IS "[Y1]"
+   HBTEST oValue:SVARSCLASS1:z1 := "[Z1]"    IS "[Z1]"
 
-   TEST_LINE( oValue:x1                       , "[X1]"                                 )
-   TEST_LINE( oValue:y1                       , "[Y1]"                                 )
-   TEST_LINE( oValue:z1                       , "[Z1]"                                 )
-   TEST_LINE( oValue:x2                       , " X2 "                                 )
-   TEST_LINE( oValue:y2                       , " Y2 "                                 )
-   TEST_LINE( oValue:z2                       , " Z2 "                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS1:x1           , "[X1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:y1           , "[Y1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:z1           , "[Z1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x1           , "[X1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y1           , "[Y1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z1           , "[Z1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x2           , " X2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x1           , "[X1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y1           , "[Y1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z1           , "[Z1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x2           , " X2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x3           , " X3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x1           , "[X1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y1           , "[Y1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z1           , "[Z1]"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x2           , " X2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y2           , " Y2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z2           , " Z2 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x3           , " X3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x4           , " X4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y4           , " Y4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z4           , " Z4 "                                 )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS2:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS3:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS4:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 3                        )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
+   HBTEST oValue:x1                       IS "[X1]"
+   HBTEST oValue:y1                       IS "[Y1]"
+   HBTEST oValue:z1                       IS "[Z1]"
+   HBTEST oValue:x2                       IS " X2 "
+   HBTEST oValue:y2                       IS " Y2 "
+   HBTEST oValue:z2                       IS " Z2 "
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST oValue:SVARSCLASS1:x1           IS "[X1]"
+   HBTEST oValue:SVARSCLASS1:y1           IS "[Y1]"
+   HBTEST oValue:SVARSCLASS1:z1           IS "[Z1]"
+   HBTEST oValue:SVARSCLASS2:x1           IS "[X1]"
+   HBTEST oValue:SVARSCLASS2:y1           IS "[Y1]"
+   HBTEST oValue:SVARSCLASS2:z1           IS "[Z1]"
+   HBTEST oValue:SVARSCLASS2:x2           IS " X2 "
+   HBTEST oValue:SVARSCLASS2:y2           IS " Y2 "
+   HBTEST oValue:SVARSCLASS2:z2           IS " Z2 "
+   HBTEST oValue:SVARSCLASS3:x1           IS "[X1]"
+   HBTEST oValue:SVARSCLASS3:y1           IS "[Y1]"
+   HBTEST oValue:SVARSCLASS3:z1           IS "[Z1]"
+   HBTEST oValue:SVARSCLASS3:x2           IS " X2 "
+   HBTEST oValue:SVARSCLASS3:y2           IS " Y2 "
+   HBTEST oValue:SVARSCLASS3:z2           IS " Z2 "
+   HBTEST oValue:SVARSCLASS3:x3           IS " X3 "
+   HBTEST oValue:SVARSCLASS3:y3           IS " Y3 "
+   HBTEST oValue:SVARSCLASS3:z3           IS " Z3 "
+   HBTEST oValue:SVARSCLASS4:x1           IS "[X1]"
+   HBTEST oValue:SVARSCLASS4:y1           IS "[Y1]"
+   HBTEST oValue:SVARSCLASS4:z1           IS "[Z1]"
+   HBTEST oValue:SVARSCLASS4:x2           IS " X2 "
+   HBTEST oValue:SVARSCLASS4:y2           IS " Y2 "
+   HBTEST oValue:SVARSCLASS4:z2           IS " Z2 "
+   HBTEST oValue:SVARSCLASS4:x3           IS " X3 "
+   HBTEST oValue:SVARSCLASS4:y3           IS " Y3 "
+   HBTEST oValue:SVARSCLASS4:z3           IS " Z3 "
+   HBTEST oValue:SVARSCLASS4:x4           IS " X4 "
+   HBTEST oValue:SVARSCLASS4:y4           IS " Y4 "
+   HBTEST oValue:SVARSCLASS4:z4           IS " Z4 "
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS2:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS3:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS4:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:classH )             IS 3
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
 
    /* Setting SVARSCLASS2 class variables... */
-   TEST_LINE( oValue:SVARSCLASS2:x1 := "{X1}"    , "{X1}"                              )
-   TEST_LINE( oValue:SVARSCLASS2:y1 := "{Y1}"    , "{Y1}"                              )
-   TEST_LINE( oValue:SVARSCLASS2:z1 := "{Z1}"    , "{Z1}"                              )
-   TEST_LINE( oValue:SVARSCLASS2:x2 := "{X2}"    , "{X2}"                              )
-   TEST_LINE( oValue:SVARSCLASS2:y2 := "{Y2}"    , "{Y2}"                              )
-   TEST_LINE( oValue:SVARSCLASS2:z2 := "{Z2}"    , "{Z2}"                              )
+   HBTEST oValue:SVARSCLASS2:x1 := "{X1}"    IS "{X1}"
+   HBTEST oValue:SVARSCLASS2:y1 := "{Y1}"    IS "{Y1}"
+   HBTEST oValue:SVARSCLASS2:z1 := "{Z1}"    IS "{Z1}"
+   HBTEST oValue:SVARSCLASS2:x2 := "{X2}"    IS "{X2}"
+   HBTEST oValue:SVARSCLASS2:y2 := "{Y2}"    IS "{Y2}"
+   HBTEST oValue:SVARSCLASS2:z2 := "{Z2}"    IS "{Z2}"
 
-   TEST_LINE( oValue:x1                       , "{X1}"                                 )
-   TEST_LINE( oValue:y1                       , "{Y1}"                                 )
-   TEST_LINE( oValue:z1                       , "{Z1}"                                 )
-   TEST_LINE( oValue:x2                       , "{X2}"                                 )
-   TEST_LINE( oValue:y2                       , "{Y2}"                                 )
-   TEST_LINE( oValue:z2                       , "{Z2}"                                 )
-   TEST_LINE( oValue:x3                       , " X3 "                                 )
-   TEST_LINE( oValue:y3                       , " Y3 "                                 )
-   TEST_LINE( oValue:z3                       , " Z3 "                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS1:x1           , "{X1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:y1           , "{Y1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:z1           , "{Z1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x1           , "{X1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y1           , "{Y1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z1           , "{Z1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x2           , "{X2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y2           , "{Y2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z2           , "{Z2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x1           , "{X1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y1           , "{Y1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z1           , "{Z1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x2           , "{X2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y2           , "{Y2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z2           , "{Z2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x3           , " X3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x1           , "{X1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y1           , "{Y1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z1           , "{Z1}"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x2           , "{X2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y2           , "{Y2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z2           , "{Z2}"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x3           , " X3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y3           , " Y3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z3           , " Z3 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x4           , " X4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y4           , " Y4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z4           , " Z4 "                                 )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS2:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS3:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS4:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 3                        )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
+   HBTEST oValue:x1                       IS "{X1}"
+   HBTEST oValue:y1                       IS "{Y1}"
+   HBTEST oValue:z1                       IS "{Z1}"
+   HBTEST oValue:x2                       IS "{X2}"
+   HBTEST oValue:y2                       IS "{Y2}"
+   HBTEST oValue:z2                       IS "{Z2}"
+   HBTEST oValue:x3                       IS " X3 "
+   HBTEST oValue:y3                       IS " Y3 "
+   HBTEST oValue:z3                       IS " Z3 "
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST oValue:SVARSCLASS1:x1           IS "{X1}"
+   HBTEST oValue:SVARSCLASS1:y1           IS "{Y1}"
+   HBTEST oValue:SVARSCLASS1:z1           IS "{Z1}"
+   HBTEST oValue:SVARSCLASS2:x1           IS "{X1}"
+   HBTEST oValue:SVARSCLASS2:y1           IS "{Y1}"
+   HBTEST oValue:SVARSCLASS2:z1           IS "{Z1}"
+   HBTEST oValue:SVARSCLASS2:x2           IS "{X2}"
+   HBTEST oValue:SVARSCLASS2:y2           IS "{Y2}"
+   HBTEST oValue:SVARSCLASS2:z2           IS "{Z2}"
+   HBTEST oValue:SVARSCLASS3:x1           IS "{X1}"
+   HBTEST oValue:SVARSCLASS3:y1           IS "{Y1}"
+   HBTEST oValue:SVARSCLASS3:z1           IS "{Z1}"
+   HBTEST oValue:SVARSCLASS3:x2           IS "{X2}"
+   HBTEST oValue:SVARSCLASS3:y2           IS "{Y2}"
+   HBTEST oValue:SVARSCLASS3:z2           IS "{Z2}"
+   HBTEST oValue:SVARSCLASS3:x3           IS " X3 "
+   HBTEST oValue:SVARSCLASS3:y3           IS " Y3 "
+   HBTEST oValue:SVARSCLASS3:z3           IS " Z3 "
+   HBTEST oValue:SVARSCLASS4:x1           IS "{X1}"
+   HBTEST oValue:SVARSCLASS4:y1           IS "{Y1}"
+   HBTEST oValue:SVARSCLASS4:z1           IS "{Z1}"
+   HBTEST oValue:SVARSCLASS4:x2           IS "{X2}"
+   HBTEST oValue:SVARSCLASS4:y2           IS "{Y2}"
+   HBTEST oValue:SVARSCLASS4:z2           IS "{Z2}"
+   HBTEST oValue:SVARSCLASS4:x3           IS " X3 "
+   HBTEST oValue:SVARSCLASS4:y3           IS " Y3 "
+   HBTEST oValue:SVARSCLASS4:z3           IS " Z3 "
+   HBTEST oValue:SVARSCLASS4:x4           IS " X4 "
+   HBTEST oValue:SVARSCLASS4:y4           IS " Y4 "
+   HBTEST oValue:SVARSCLASS4:z4           IS " Z4 "
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS2:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS3:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS4:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:classH )             IS 3
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
 
    /* Setting SVARSCLASS3 class variables... */
-   TEST_LINE( oValue:SVARSCLASS3:x1 := "<X1>"    , "<X1>"                              )
-   TEST_LINE( oValue:SVARSCLASS3:y1 := "<Y1>"    , "<Y1>"                              )
-   TEST_LINE( oValue:SVARSCLASS3:z1 := "<Z1>"    , "<Z1>"                              )
-   TEST_LINE( oValue:SVARSCLASS3:x2 := "<X2>"    , "<X2>"                              )
-   TEST_LINE( oValue:SVARSCLASS3:y2 := "<Y2>"    , "<Y2>"                              )
-   TEST_LINE( oValue:SVARSCLASS3:z2 := "<Z2>"    , "<Z2>"                              )
-   TEST_LINE( oValue:SVARSCLASS3:x3 := "<X3>"    , "<X3>"                              )
-   TEST_LINE( oValue:SVARSCLASS3:y3 := "<Y3>"    , "<Y3>"                              )
-   TEST_LINE( oValue:SVARSCLASS3:z3 := "<Z3>"    , "<Z3>"                              )
+   HBTEST oValue:SVARSCLASS3:x1 := "<X1>"    IS "<X1>"
+   HBTEST oValue:SVARSCLASS3:y1 := "<Y1>"    IS "<Y1>"
+   HBTEST oValue:SVARSCLASS3:z1 := "<Z1>"    IS "<Z1>"
+   HBTEST oValue:SVARSCLASS3:x2 := "<X2>"    IS "<X2>"
+   HBTEST oValue:SVARSCLASS3:y2 := "<Y2>"    IS "<Y2>"
+   HBTEST oValue:SVARSCLASS3:z2 := "<Z2>"    IS "<Z2>"
+   HBTEST oValue:SVARSCLASS3:x3 := "<X3>"    IS "<X3>"
+   HBTEST oValue:SVARSCLASS3:y3 := "<Y3>"    IS "<Y3>"
+   HBTEST oValue:SVARSCLASS3:z3 := "<Z3>"    IS "<Z3>"
 
-   TEST_LINE( oValue:x1                       , "<X1>"                                 )
-   TEST_LINE( oValue:y1                       , "<Y1>"                                 )
-   TEST_LINE( oValue:z1                       , "<Z1>"                                 )
-   TEST_LINE( oValue:x2                       , "<X2>"                                 )
-   TEST_LINE( oValue:y2                       , "<Y2>"                                 )
-   TEST_LINE( oValue:z2                       , "<Z2>"                                 )
-   TEST_LINE( oValue:x3                       , "<X3>"                                 )
-   TEST_LINE( oValue:y3                       , "<Y3>"                                 )
-   TEST_LINE( oValue:z3                       , "<Z3>"                                 )
-   TEST_LINE( oValue:x4                       , " X4 "                                 )
-   TEST_LINE( oValue:y4                       , " Y4 "                                 )
-   TEST_LINE( oValue:z4                       , " Z4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS1:x1           , "<X1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:y1           , "<Y1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS1:z1           , "<Z1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x1           , "<X1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y1           , "<Y1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z1           , "<Z1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:x2           , "<X2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:y2           , "<Y2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS2:z2           , "<Z2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x1           , "<X1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y1           , "<Y1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z1           , "<Z1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x2           , "<X2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y2           , "<Y2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z2           , "<Z2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:x3           , "<X3>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:y3           , "<Y3>"                                 )
-   TEST_LINE( oValue:SVARSCLASS3:z3           , "<Z3>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x1           , "<X1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y1           , "<Y1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z1           , "<Z1>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x2           , "<X2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y2           , "<Y2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z2           , "<Z2>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x3           , "<X3>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y3           , "<Y3>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z3           , "<Z3>"                                 )
-   TEST_LINE( oValue:SVARSCLASS4:x4           , " X4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:y4           , " Y4 "                                 )
-   TEST_LINE( oValue:SVARSCLASS4:z4           , " Z4 "                                 )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS1:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS2:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS3:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:SVARSCLASS4:classH ) , 0                        )
-   TEST_LINE( __cls_CntClsData( oValue:classH )             , 0                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS1:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS2:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS3:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:SVARSCLASS4:classH ) , 3                        )
-   TEST_LINE( __cls_CntShrData( oValue:classH )             , 3                        )
-   TEST_LINE( INSTANCE_DATA( oValue )         , "[0]:"                                 )
+   HBTEST oValue:x1                       IS "<X1>"
+   HBTEST oValue:y1                       IS "<Y1>"
+   HBTEST oValue:z1                       IS "<Z1>"
+   HBTEST oValue:x2                       IS "<X2>"
+   HBTEST oValue:y2                       IS "<Y2>"
+   HBTEST oValue:z2                       IS "<Z2>"
+   HBTEST oValue:x3                       IS "<X3>"
+   HBTEST oValue:y3                       IS "<Y3>"
+   HBTEST oValue:z3                       IS "<Z3>"
+   HBTEST oValue:x4                       IS " X4 "
+   HBTEST oValue:y4                       IS " Y4 "
+   HBTEST oValue:z4                       IS " Z4 "
+   HBTEST oValue:SVARSCLASS1:x1           IS "<X1>"
+   HBTEST oValue:SVARSCLASS1:y1           IS "<Y1>"
+   HBTEST oValue:SVARSCLASS1:z1           IS "<Z1>"
+   HBTEST oValue:SVARSCLASS2:x1           IS "<X1>"
+   HBTEST oValue:SVARSCLASS2:y1           IS "<Y1>"
+   HBTEST oValue:SVARSCLASS2:z1           IS "<Z1>"
+   HBTEST oValue:SVARSCLASS2:x2           IS "<X2>"
+   HBTEST oValue:SVARSCLASS2:y2           IS "<Y2>"
+   HBTEST oValue:SVARSCLASS2:z2           IS "<Z2>"
+   HBTEST oValue:SVARSCLASS3:x1           IS "<X1>"
+   HBTEST oValue:SVARSCLASS3:y1           IS "<Y1>"
+   HBTEST oValue:SVARSCLASS3:z1           IS "<Z1>"
+   HBTEST oValue:SVARSCLASS3:x2           IS "<X2>"
+   HBTEST oValue:SVARSCLASS3:y2           IS "<Y2>"
+   HBTEST oValue:SVARSCLASS3:z2           IS "<Z2>"
+   HBTEST oValue:SVARSCLASS3:x3           IS "<X3>"
+   HBTEST oValue:SVARSCLASS3:y3           IS "<Y3>"
+   HBTEST oValue:SVARSCLASS3:z3           IS "<Z3>"
+   HBTEST oValue:SVARSCLASS4:x1           IS "<X1>"
+   HBTEST oValue:SVARSCLASS4:y1           IS "<Y1>"
+   HBTEST oValue:SVARSCLASS4:z1           IS "<Z1>"
+   HBTEST oValue:SVARSCLASS4:x2           IS "<X2>"
+   HBTEST oValue:SVARSCLASS4:y2           IS "<Y2>"
+   HBTEST oValue:SVARSCLASS4:z2           IS "<Z2>"
+   HBTEST oValue:SVARSCLASS4:x3           IS "<X3>"
+   HBTEST oValue:SVARSCLASS4:y3           IS "<Y3>"
+   HBTEST oValue:SVARSCLASS4:z3           IS "<Z3>"
+   HBTEST oValue:SVARSCLASS4:x4           IS " X4 "
+   HBTEST oValue:SVARSCLASS4:y4           IS " Y4 "
+   HBTEST oValue:SVARSCLASS4:z4           IS " Z4 "
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS1:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS2:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS3:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:SVARSCLASS4:classH ) IS 0
+   HBTEST __cls_CntClsData( oValue:classH )             IS 0
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS1:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS2:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS3:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:SVARSCLASS4:classH ) IS 3
+   HBTEST __cls_CntShrData( oValue:classH )             IS 3
+   HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
 
 
 

@@ -60,232 +60,232 @@ PROCEDURE Main_ARRAY()
    /* ARRAY function error conditions. */
 
 #ifndef __XPP__
-   TEST_LINE( ACopy()                         , NIL                                        )
+   HBTEST ACopy()                         IS NIL
 #endif
-   TEST_LINE( ACopy({}, "C")                  , NIL                                        )
-   TEST_LINE( ACopy("C", {})                  , NIL                                        )
-   TEST_LINE( ACopy({}, {})                   , "{.[0].}"                                  )
-   TEST_LINE( ACopy({}, ErrorNew())           , "ERROR Object"                             )
-   TEST_LINE( ACopy(ErrorNew(), {})           , "{.[0].}"                                  )
+   HBTEST ACopy({}, "C")                  IS NIL
+   HBTEST ACopy("C", {})                  IS NIL
+   HBTEST ACopy({}, {})                   IS "{.[0].}"
+   HBTEST ACopy({}, ErrorNew())           IS "ERROR Object"
+   HBTEST ACopy(ErrorNew(), {})           IS "{.[0].}"
 #ifndef __XPP__
-   TEST_LINE( AClone()                        , NIL                                        )
+   HBTEST AClone()                        IS NIL
 #endif
-   TEST_LINE( AClone( NIL )                   , NIL                                        )
-   TEST_LINE( AClone( {} )                    , "{.[0].}"                                  )
-   TEST_LINE( AClone( ErrorNew() )            , NIL                                        )
+   HBTEST AClone( NIL )                   IS NIL
+   HBTEST AClone( {} )                    IS "{.[0].}"
+   HBTEST AClone( ErrorNew() )            IS NIL
 #ifndef __XPP__
-   TEST_LINE( AEval()                         , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 " )
-   TEST_LINE( AEval( NIL )                    , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:1:U:NIL " )
-   TEST_LINE( AEval( {} )                     , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:1:A:{.[0].} " )
+   HBTEST AEval()                         IS "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 "
+   HBTEST AEval( NIL )                    IS "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:1:U:NIL "
+   HBTEST AEval( {} )                     IS "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:1:A:{.[0].} "
 #endif
-   TEST_LINE( AEval( {}, NIL )                , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:2:A:{.[0].};U:NIL " )
-   TEST_LINE( AEval( {}, {|| NIL } )          , "{.[0].}"                                  )
-   TEST_LINE( AEval( ErrorNew(), {|| NIL } )  , "ERROR Object"                             )
+   HBTEST AEval( {}, NIL )                IS "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:2:A:{.[0].};U:NIL "
+   HBTEST AEval( {}, {|| NIL } )          IS "{.[0].}"
+   HBTEST AEval( ErrorNew(), {|| NIL } )  IS "ERROR Object"
 #ifndef __XPP__
-   TEST_LINE( AScan()                         , 0                                          )
-   TEST_LINE( AScan( NIL )                    , 0                                          )
-   TEST_LINE( AScan( "A" )                    , 0                                          )
-   TEST_LINE( AScan( {} )                     , 0                                          )
+   HBTEST AScan()                         IS 0
+   HBTEST AScan( NIL )                    IS 0
+   HBTEST AScan( "A" )                    IS 0
+   HBTEST AScan( {} )                     IS 0
 #endif
-   TEST_LINE( AScan( {}, "" )                 , 0                                          )
-   TEST_LINE( AScan( ErrorNew(), "NOT_FOUND") , 0                                          )
+   HBTEST AScan( {}, "" )                 IS 0
+   HBTEST AScan( ErrorNew(), "NOT_FOUND") IS 0
 #ifndef __XPP__
-   TEST_LINE( ASort()                         , NIL                                        )
+   HBTEST ASort()                         IS NIL
 #endif
-   TEST_LINE( ASort(10)                       , NIL                                        )
-   TEST_LINE( ASort({})                       , "{.[0].}"                                  )
-   TEST_LINE( ASort(ErrorNew())               , NIL                                        )
+   HBTEST ASort(10)                       IS NIL
+   HBTEST ASort({})                       IS "{.[0].}"
+   HBTEST ASort(ErrorNew())               IS NIL
 #ifdef HB_CLP_STRICT
 #ifndef __XPP__
-   TEST_LINE( AFill()                         , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
+   HBTEST AFill()                         IS "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:4:U:NIL;B:{||...};U:NIL;U:NIL "
 #endif
-   TEST_LINE( AFill( NIL )                    , "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:4:U:NIL;B:{||...};U:NIL;U:NIL " )
+   HBTEST AFill( NIL )                    IS "E 1 BASE 2017 Argument error (AEVAL) OS:0 #:0 A:4:U:NIL;B:{||...};U:NIL;U:NIL "
 #else
 #ifndef __XPP__
-   TEST_LINE( AFill()                         , "E 1 BASE 6004 Argument error (AFILL) OS:0 #:0 " )
+   HBTEST AFill()                         IS "E 1 BASE 6004 Argument error (AFILL) OS:0 #:0 "
 #endif
-   TEST_LINE( AFill( NIL )                    , "E 1 BASE 6004 Argument error (AFILL) OS:0 #:0 A:1:U:NIL " )
+   HBTEST AFill( NIL )                    IS "E 1 BASE 6004 Argument error (AFILL) OS:0 #:0 A:1:U:NIL "
 #endif
-   TEST_LINE( AFill( {} )                     , "{.[0].}"                                  )
-   TEST_LINE( AFill( {}, 1 )                  , "{.[0].}"                                  )
-   TEST_LINE( AFill( ErrorNew() )             , "ERROR Object"                             )
-   TEST_LINE( AFill( ErrorNew(), 1 )          , "ERROR Object"                             )
+   HBTEST AFill( {} )                     IS "{.[0].}"
+   HBTEST AFill( {}, 1 )                  IS "{.[0].}"
+   HBTEST AFill( ErrorNew() )             IS "ERROR Object"
+   HBTEST AFill( ErrorNew(), 1 )          IS "ERROR Object"
 #ifndef __XPP__
-   TEST_LINE( ADel()                          , NIL                                        )
-   TEST_LINE( ADel( NIL )                     , NIL                                        )
-   TEST_LINE( ADel( { 1 } )                   , "{.[1].}"                                  )
+   HBTEST ADel()                          IS NIL
+   HBTEST ADel( NIL )                     IS NIL
+   HBTEST ADel( { 1 } )                   IS "{.[1].}"
 #endif
-   TEST_LINE( ADel( { 1 }, 0 )                , "{.[1].}"                                  )
-   TEST_LINE( ADel( { 1 }, 100 )              , "{.[1].}"                                  )
-   TEST_LINE( ADel( { 1 }, 1 )                , "{.[1].}"                                  )
-   TEST_LINE( ADel( { 1 }, -1 )               , "{.[1].}"                                  )
-   TEST_LINE( ADel( { 1 }, 0 )                , "{.[1].}"                                  )
-   TEST_LINE( ADel( { 1 }, NIL )              , "{.[1].}"                                  )
+   HBTEST ADel( { 1 }, 0 )                IS "{.[1].}"
+   HBTEST ADel( { 1 }, 100 )              IS "{.[1].}"
+   HBTEST ADel( { 1 }, 1 )                IS "{.[1].}"
+   HBTEST ADel( { 1 }, -1 )               IS "{.[1].}"
+   HBTEST ADel( { 1 }, 0 )                IS "{.[1].}"
+   HBTEST ADel( { 1 }, NIL )              IS "{.[1].}"
 #ifndef __XPP__
-   TEST_LINE( ADel( ErrorNew() )              , "ERROR Object"                             )
+   HBTEST ADel( ErrorNew() )              IS "ERROR Object"
 #endif
-   TEST_LINE( ADel( ErrorNew(), 0 )           , "ERROR Object"                             )
-   TEST_LINE( ADel( ErrorNew(), 100 )         , "ERROR Object"                             )
-   TEST_LINE( ADel( ErrorNew(), 1 )           , "ERROR Object"                             )
-   TEST_LINE( ADel( ErrorNew(), -1 )          , "ERROR Object"                             )
-   TEST_LINE( ADel( ErrorNew(), 0 )           , "ERROR Object"                             )
-   TEST_LINE( ADel( ErrorNew(), NIL )         , "ERROR Object"                             )
+   HBTEST ADel( ErrorNew(), 0 )           IS "ERROR Object"
+   HBTEST ADel( ErrorNew(), 100 )         IS "ERROR Object"
+   HBTEST ADel( ErrorNew(), 1 )           IS "ERROR Object"
+   HBTEST ADel( ErrorNew(), -1 )          IS "ERROR Object"
+   HBTEST ADel( ErrorNew(), 0 )           IS "ERROR Object"
+   HBTEST ADel( ErrorNew(), NIL )         IS "ERROR Object"
 #ifndef __XPP__
-   TEST_LINE( AIns()                          , NIL                                        )
-   TEST_LINE( AIns( NIL )                     , NIL                                        )
-   TEST_LINE( AIns( { 1 } )                   , "{.[1].}"                                  )
+   HBTEST AIns()                          IS NIL
+   HBTEST AIns( NIL )                     IS NIL
+   HBTEST AIns( { 1 } )                   IS "{.[1].}"
 #endif
-   TEST_LINE( AIns( { 1 }, 0 )                , "{.[1].}"                                  )
-   TEST_LINE( AIns( { 1 }, 100 )              , "{.[1].}"                                  )
-   TEST_LINE( AIns( { 1 }, 1 )                , "{.[1].}"                                  )
-   TEST_LINE( AIns( { 1 }, -1 )               , "{.[1].}"                                  )
-   TEST_LINE( AIns( { 1 }, 0 )                , "{.[1].}"                                  )
-   TEST_LINE( AIns( { 1 }, NIL )              , "{.[1].}"                                  )
+   HBTEST AIns( { 1 }, 0 )                IS "{.[1].}"
+   HBTEST AIns( { 1 }, 100 )              IS "{.[1].}"
+   HBTEST AIns( { 1 }, 1 )                IS "{.[1].}"
+   HBTEST AIns( { 1 }, -1 )               IS "{.[1].}"
+   HBTEST AIns( { 1 }, 0 )                IS "{.[1].}"
+   HBTEST AIns( { 1 }, NIL )              IS "{.[1].}"
 #ifndef __XPP__
-   TEST_LINE( AIns( ErrorNew() )              , "ERROR Object"                             )
+   HBTEST AIns( ErrorNew() )              IS "ERROR Object"
 #endif
-   TEST_LINE( AIns( ErrorNew(), 0 )           , "ERROR Object"                             )
-   TEST_LINE( AIns( ErrorNew(), 100 )         , "ERROR Object"                             )
-   TEST_LINE( AIns( ErrorNew(), 1 )           , "ERROR Object"                             )
-   TEST_LINE( AIns( ErrorNew(), -1 )          , "ERROR Object"                             )
-   TEST_LINE( AIns( ErrorNew(), 0 )           , "ERROR Object"                             )
-   TEST_LINE( AIns( ErrorNew(), NIL )         , "ERROR Object"                             )
+   HBTEST AIns( ErrorNew(), 0 )           IS "ERROR Object"
+   HBTEST AIns( ErrorNew(), 100 )         IS "ERROR Object"
+   HBTEST AIns( ErrorNew(), 1 )           IS "ERROR Object"
+   HBTEST AIns( ErrorNew(), -1 )          IS "ERROR Object"
+   HBTEST AIns( ErrorNew(), 0 )           IS "ERROR Object"
+   HBTEST AIns( ErrorNew(), NIL )         IS "ERROR Object"
 #ifndef __XPP__
-   TEST_LINE( ATail()                         , NIL                                        )
+   HBTEST ATail()                         IS NIL
 #endif
-   TEST_LINE( ATail( NIL )                    , NIL                                        )
-   TEST_LINE( ATail( "" )                     , NIL                                        )
-   TEST_LINE( ATail( {} )                     , NIL                                        )
-   TEST_LINE( ATail( { 1, 2 } )               , 2                                          )
-   TEST_LINE( ATail( ErrorNew() )             , NIL                                        )
+   HBTEST ATail( NIL )                    IS NIL
+   HBTEST ATail( "" )                     IS NIL
+   HBTEST ATail( {} )                     IS NIL
+   HBTEST ATail( { 1, 2 } )               IS 2
+   HBTEST ATail( ErrorNew() )             IS NIL
 #ifndef __XPP__
 #ifdef HB_COMPAT_C53
-   TEST_LINE( ASize()                         , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
-   TEST_LINE( ASize( NIL )                    , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
-   TEST_LINE( ASize( {} )                     , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
-   TEST_LINE( ASize( ErrorNew() )             , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
+   HBTEST ASize()                         IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( NIL )                    IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( {} )                     IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( ErrorNew() )             IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
 #else
-   TEST_LINE( ASize()                         , NIL                                        )
-   TEST_LINE( ASize( NIL )                    , NIL                                        )
-   TEST_LINE( ASize( {} )                     , NIL                                        )
-   TEST_LINE( ASize( ErrorNew() )             , NIL                                        )
+   HBTEST ASize()                         IS NIL
+   HBTEST ASize( NIL )                    IS NIL
+   HBTEST ASize( {} )                     IS NIL
+   HBTEST ASize( ErrorNew() )             IS NIL
 #endif
 #endif
 #ifdef HB_COMPAT_C53
-   TEST_LINE( ASize( NIL, 0 )                 , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
-   TEST_LINE( ASize( NIL, 1 )                 , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
-   TEST_LINE( ASize( NIL, -1 )                , "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 " )
+   HBTEST ASize( NIL, 0 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( NIL, 1 )                 IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
+   HBTEST ASize( NIL, -1 )                IS "E 1 BASE 2023 Argument error (ASIZE) OS:0 #:0 "
 #else
-   TEST_LINE( ASize( NIL, 0 )                 , NIL                                        )
-   TEST_LINE( ASize( NIL, 1 )                 , NIL                                        )
-   TEST_LINE( ASize( NIL, -1 )                , NIL                                        )
+   HBTEST ASize( NIL, 0 )                 IS NIL
+   HBTEST ASize( NIL, 1 )                 IS NIL
+   HBTEST ASize( NIL, -1 )                IS NIL
 #endif
-   TEST_LINE( ASize( {}, 0 )                  , "{.[0].}"                                  )
-   TEST_LINE( ASize( ErrorNew(), 0 )          , "ERROR Object"                             )
-   TEST_LINE( ASize( {}, 1 )                  , "{.[1].}"                                  )
-   TEST_LINE( ASize( { 1, 2 }, 1 )            , "{.[1].}"                                  )
-   TEST_LINE( ASize( { 1, "AAAA" }, 1 )       , "{.[1].}"                                  )
-   TEST_LINE( ASize( { "BBB", "AAAA" }, 0 )   , "{.[0].}"                                  )
-   TEST_LINE( ASize( ErrorNew(), 1 )          , "ERROR Object"                             )
-   TEST_LINE( ASize( {}, -1 )                 , "{.[0].}"                                  )
-   TEST_LINE( ASize( { 1 }, -1 )              , "{.[0].}"                                  )
+   HBTEST ASize( {}, 0 )                  IS "{.[0].}"
+   HBTEST ASize( ErrorNew(), 0 )          IS "ERROR Object"
+   HBTEST ASize( {}, 1 )                  IS "{.[1].}"
+   HBTEST ASize( { 1, 2 }, 1 )            IS "{.[1].}"
+   HBTEST ASize( { 1, "AAAA" }, 1 )       IS "{.[1].}"
+   HBTEST ASize( { "BBB", "AAAA" }, 0 )   IS "{.[0].}"
+   HBTEST ASize( ErrorNew(), 1 )          IS "ERROR Object"
+   HBTEST ASize( {}, -1 )                 IS "{.[0].}"
+   HBTEST ASize( { 1 }, -1 )              IS "{.[0].}"
 #ifdef __HARBOUR__
-   TEST_LINE( ASize( { 1 }, 5000 )            , "{.[5000].}"                               )
+   HBTEST ASize( { 1 }, 5000 )            IS "{.[5000].}"
 #else
-   TEST_LINE( ASize( { 1 }, 5000 )            , "{.[1].}"                                  )
+   HBTEST ASize( { 1 }, 5000 )            IS "{.[1].}"
 #endif
-   TEST_LINE( ASize( ErrorNew(), -1 )         , "ERROR Object"                             )
-   TEST_LINE( ASize( ErrorNew(), 100 )        , "ERROR Object"                             )
-   TEST_LINE( AAdd( NIL, NIL )                , "E 1 BASE 1123 Argument error (AADD) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( AAdd( {}, NIL )                 , NIL                                        )
-   TEST_LINE( AAdd( {}, "A" )                 , "A"                                        )
-   TEST_LINE( AAdd( ErrorNew(), NIL )         , NIL                                        )
-   TEST_LINE( AAdd( ErrorNew(), "A" )         , "A"                                        )
+   HBTEST ASize( ErrorNew(), -1 )         IS "ERROR Object"
+   HBTEST ASize( ErrorNew(), 100 )        IS "ERROR Object"
+   HBTEST AAdd( NIL, NIL )                IS "E 1 BASE 1123 Argument error (AADD) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST AAdd( {}, NIL )                 IS NIL
+   HBTEST AAdd( {}, "A" )                 IS "A"
+   HBTEST AAdd( ErrorNew(), NIL )         IS NIL
+   HBTEST AAdd( ErrorNew(), "A" )         IS "A"
 #ifndef __XPP__
-   TEST_LINE( Array()                         , NIL                                        )
+   HBTEST Array()                         IS NIL
 #endif
-   TEST_LINE( Array( 0 )                      , "{.[0].}"                                  )
+   HBTEST Array( 0 )                      IS "{.[0].}"
 #ifdef __HARBOUR__
-   TEST_LINE( Array( 5000 )                   , "{.[5000].}"                               )
+   HBTEST Array( 5000 )                   IS "{.[5000].}"
 #else
-   TEST_LINE( Array( 5000 )                   , "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 " )
+   HBTEST Array( 5000 )                   IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
 #endif
-   TEST_LINE( Array( 1 )                      , "{.[1].}"                                  )
-   TEST_LINE( Array( -1 )                     , "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 " )
-   TEST_LINE( Array( 1, 0, -10 )              , "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 " )
-   TEST_LINE( Array( 1, 0, "A" )              , NIL                                        )
-   TEST_LINE( Array( 1, 0, 2 )                , "{.[1].}"                                  )
-   TEST_LINE( Array( 4, 3, 2 )                , "{.[4].}"                                  )
-   TEST_LINE( Array( 0, 3, 2 )                , "{.[0].}"                                  )
+   HBTEST Array( 1 )                      IS "{.[1].}"
+   HBTEST Array( -1 )                     IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
+   HBTEST Array( 1, 0, -10 )              IS "E 2 BASE 1131 Bound error (array dimension) OS:0 #:0 "
+   HBTEST Array( 1, 0, "A" )              IS NIL
+   HBTEST Array( 1, 0, 2 )                IS "{.[1].}"
+   HBTEST Array( 4, 3, 2 )                IS "{.[4].}"
+   HBTEST Array( 0, 3, 2 )                IS "{.[0].}"
 
    /* AFill() */
 
-   TEST_LINE( TAStr(AFill(TANew(),"X")       ) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",NIL,-2)) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",NIL, 0)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",NIL, 3)) , "XXX......."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",NIL,20)) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  0)   ) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  0,-2)) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  0, 0)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  0, 3)) , "XXX......."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  0,20)) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  1)   ) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  1,-2)) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  1, 0)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  1, 3)) , "XXX......."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  1,20)) , "XXXXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  3)   ) , "..XXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  3,-2)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  3, 0)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  3, 3)) , "..XXX....."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X",  3,20)) , "..XXXXXXXX"     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", -1)   ) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", -1,-2)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", -1, 0)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", -1, 3)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", -1,20)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", 21)   ) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", 21,-2)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", 21, 0)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", 21, 3)) , ".........."     )
-   TEST_LINE( TAStr(AFill(TANew(),"X", 21,20)) , ".........."     )
+   HBTEST TAStr(AFill(TANew(),"X")       ) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",NIL,-2)) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",NIL, 0)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X",NIL, 3)) IS "XXX......."
+   HBTEST TAStr(AFill(TANew(),"X",NIL,20)) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",  0)   ) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",  0,-2)) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",  0, 0)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X",  0, 3)) IS "XXX......."
+   HBTEST TAStr(AFill(TANew(),"X",  0,20)) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",  1)   ) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",  1,-2)) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",  1, 0)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X",  1, 3)) IS "XXX......."
+   HBTEST TAStr(AFill(TANew(),"X",  1,20)) IS "XXXXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",  3)   ) IS "..XXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X",  3,-2)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X",  3, 0)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X",  3, 3)) IS "..XXX....."
+   HBTEST TAStr(AFill(TANew(),"X",  3,20)) IS "..XXXXXXXX"
+   HBTEST TAStr(AFill(TANew(),"X", -1)   ) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", -1,-2)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", -1, 0)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", -1, 3)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", -1,20)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", 21)   ) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", 21,-2)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", 21, 0)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", 21, 3)) IS ".........."
+   HBTEST TAStr(AFill(TANew(),"X", 21,20)) IS ".........."
 
    /* ACopy() */
 
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1        )) , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1,  0    )) , ".........."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1,  3    )) , "ABC......."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1, 20    )) , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3        )) , "CDEFGHIJ.."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3,  0    )) , ".........."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3,  3    )) , "CDE......."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3, 20    )) , "CDEFGHIJ.."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21        )) , ".........."     ) /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21,  0    )) , ".........."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21,  3    )) , ".........."     ) /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21, 20    )) , ".........."     ) /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1,NIL,  1)) , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1,  0,  1)) , ".........."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1,  3,  0)) , "ABC......."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1,  3,  2)) , ".ABC......"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1,  3,  8)) , ".......ABC"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1,  3, 20)) , ".........A"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  1, 20,  1)) , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3,NIL,  3)) , "..CDEFGHIJ"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3,  0,  3)) , ".........."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3,  3,  0)) , "CDE......."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3,  3,  2)) , ".CDE......"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3,  3,  8)) , ".......CDE"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3,  3, 20)) , ".........C"     ) /* Strange in CA-Cl*pper, it should return: ".........." */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(),  3, 20,  3)) , "..CDEFGHIJ"     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21,NIL, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21,  0, 21)) , ".........."     )
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21,  3,  0)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21,  3,  2)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".J........", fixed in 5.3a */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21,  3,  8)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".......J..", fixed in 5.3a */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21,  3, 20)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
-   TEST_LINE( TAStr(ACopy(TARng(),TANew(), 21, 20, 21)) , ".........."     ) /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1        )) IS "ABCDEFGHIJ"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  0    )) IS ".........."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3    )) IS "ABC......."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1, 20    )) IS "ABCDEFGHIJ"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3        )) IS "CDEFGHIJ.."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  0    )) IS ".........."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3    )) IS "CDE......."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3, 20    )) IS "CDEFGHIJ.."
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21        )) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  0    )) IS ".........."
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3    )) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21, 20    )) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1,NIL,  1)) IS "ABCDEFGHIJ"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  0,  1)) IS ".........."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3,  0)) IS "ABC......."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3,  2)) IS ".ABC......"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3,  8)) IS ".......ABC"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1,  3, 20)) IS ".........A"  /* Strange in CA-Cl*pper, it should return: ".........." */
+   HBTEST TAStr(ACopy(TARng(),TANew(),  1, 20,  1)) IS "ABCDEFGHIJ"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3,NIL,  3)) IS "..CDEFGHIJ"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  0,  3)) IS ".........."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3,  0)) IS "CDE......."
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3,  2)) IS ".CDE......"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3,  8)) IS ".......CDE"
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3,  3, 20)) IS ".........C"  /* Strange in CA-Cl*pper, it should return: ".........." */
+   HBTEST TAStr(ACopy(TARng(),TANew(),  3, 20,  3)) IS "..CDEFGHIJ"
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21,NIL, 21)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  0, 21)) IS ".........."
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3,  0)) IS ".........."  /* Bug in CA-Cl*pper, it will return: "J.........", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3,  2)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".J........", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3,  8)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".......J..", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21,  3, 20)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
+   HBTEST TAStr(ACopy(TARng(),TANew(), 21, 20, 21)) IS ".........."  /* Bug in CA-Cl*pper, it will return: ".........J", fixed in 5.3a */
 
    /* ASort() */
 
@@ -293,108 +293,108 @@ PROCEDURE Main_ARRAY()
       sorting algorithms. Anyhow the results pattern should match.
       [vszakats] */
 #ifdef __HARBOUR__
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||NIL})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||hb_SToD()})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"0"})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"1"})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"2"})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"a"})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"A"})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||""}))  , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"z"})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||.T.})) , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||.F.})) , "FEIDGCHBJA"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||2}))   , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||1}))   , "DCBAEFIHGJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||0}))   , "FEIDGCHBJA"     )
+   HBTEST TAStr(ASort(TARRv(),,,{||NIL})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||hb_SToD()})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"0"})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"1"})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"2"})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"a"})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"A"})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||""}))  IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"z"})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||.T.})) IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||.F.})) IS "FEIDGCHBJA"
+   HBTEST TAStr(ASort(TARRv(),,,{||2}))   IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||1}))   IS "DCBAEFIHGJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||0}))   IS "FEIDGCHBJA"
 #else
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||NIL})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||hb_SToD()})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"0"})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"1"})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"2"})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"a"})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"A"})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||""}))  , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||"z"})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||.T.})) , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||.F.})) , "DCEABJIHFG"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||2}))   , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||1}))   , "IHGFEDCBAJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),,,{||0}))   , "DCEABJIHFG"     )
+   HBTEST TAStr(ASort(TARRv(),,,{||NIL})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||hb_SToD()})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"0"})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"1"})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"2"})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"a"})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"A"})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||""}))  IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||"z"})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||.T.})) IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||.F.})) IS "DCEABJIHFG"
+   HBTEST TAStr(ASort(TARRv(),,,{||2}))   IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||1}))   IS "IHGFEDCBAJ"
+   HBTEST TAStr(ASort(TARRv(),,,{||0}))   IS "DCEABJIHFG"
 #endif
-   TEST_LINE( TAStr(ASort(TARRv()))           , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),NIL,NIL))   , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),NIL, -2))   , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),NIL,  0))   , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),NIL,  3))   , "HIJGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(),NIL, 20))   , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(), -5    ))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(), -5, -2))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(), -5,  0))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(), -5,  3))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(), -5, 20))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(),  0    ))   , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),  0, -2))   , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),  0,  0))   , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),  0,  3))   , "HIJGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(),  0, 20))   , "ABCDEFGHIJ"     )
-   TEST_LINE( TAStr(ASort(TARRv(),  5    ))   , "JIHGABCDEF"     )
+   HBTEST TAStr(ASort(TARRv()))           IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(),NIL,NIL))   IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(),NIL, -2))   IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(),NIL,  0))   IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(),NIL,  3))   IS "HIJGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(),NIL, 20))   IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(), -5    ))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(), -5, -2))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(), -5,  0))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(), -5,  3))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(), -5, 20))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(),  0    ))   IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(),  0, -2))   IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(),  0,  0))   IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(),  0,  3))   IS "HIJGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(),  0, 20))   IS "ABCDEFGHIJ"
+   HBTEST TAStr(ASort(TARRv(),  5    ))   IS "JIHGABCDEF"
 #ifdef __HARBOUR__
-   TEST_LINE( TAStr(ASort(TARRv(),  5, -2))   , "JIHGABCDEF"     ) /* CA-Cl*pper will crash or GPF on that line. */
+   HBTEST TAStr(ASort(TARRv(),  5, -2))   IS "JIHGABCDEF"  /* CA-Cl*pper will crash or GPF on that line. */
 #endif
-   TEST_LINE( TAStr(ASort(TARRv(),  5,  0))   , "JIHGABCDEF"     )
-   TEST_LINE( TAStr(ASort(TARRv(),  5,  3))   , "JIHGDEFCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(),  5, 20))   , "JIHGABCDEF"     )
-   TEST_LINE( TAStr(ASort(TARRv(), 20    ))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(), 20, -2))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(), 20,  0))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(), 20,  3))   , "JIHGFEDCBA"     )
-   TEST_LINE( TAStr(ASort(TARRv(), 20, 20))   , "JIHGFEDCBA"     )
+   HBTEST TAStr(ASort(TARRv(),  5,  0))   IS "JIHGABCDEF"
+   HBTEST TAStr(ASort(TARRv(),  5,  3))   IS "JIHGDEFCBA"
+   HBTEST TAStr(ASort(TARRv(),  5, 20))   IS "JIHGABCDEF"
+   HBTEST TAStr(ASort(TARRv(), 20    ))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(), 20, -2))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(), 20,  0))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(), 20,  3))   IS "JIHGFEDCBA"
+   HBTEST TAStr(ASort(TARRv(), 20, 20))   IS "JIHGFEDCBA"
 
    /* AScan() */
 
 #ifndef __XPP__
-   TEST_LINE( AScan()                         , 0           )
-   TEST_LINE( AScan( NIL )                    , 0           )
-   TEST_LINE( AScan( "A" )                    , 0           )
+   HBTEST AScan()                         IS 0
+   HBTEST AScan( NIL )                    IS 0
+   HBTEST AScan( "A" )                    IS 0
 #endif
-   TEST_LINE( AScan( "A", "A" )               , 0           )
-   TEST_LINE( AScan( "A", {|| .F. } )         , 0           )
-   TEST_LINE( AScan( {1,2,3}, {|| NIL } )     , 0           )
-   TEST_LINE( AScan( saAllTypes, scString   ) , 1           )
+   HBTEST AScan( "A", "A" )               IS 0
+   HBTEST AScan( "A", {|| .F. } )         IS 0
+   HBTEST AScan( {1,2,3}, {|| NIL } )     IS 0
+   HBTEST AScan( saAllTypes, scString   ) IS 1
 #ifdef __HARBOUR__
-   TEST_LINE( AScan( @saAllTypes, scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
-   TEST_LINE( AScan( saAllTypes, @scString )  , 1           ) /* Bug in CA-Cl*pper, it will return 0 */
+   HBTEST AScan( @saAllTypes, scString )  IS 1  /* Bug in CA-Cl*pper, it will return 0 */
+   HBTEST AScan( saAllTypes, @scString )  IS 1  /* Bug in CA-Cl*pper, it will return 0 */
 #endif
-   TEST_LINE( AScan( saAllTypes, scStringE  ) , 1           )
-   TEST_LINE( AScan( saAllTypes, scStringZ  ) , 3           )
-   TEST_LINE( AScan( saAllTypes, snIntZ     ) , 4           )
-   TEST_LINE( AScan( saAllTypes, snDoubleZ  ) , 4           )
-   TEST_LINE( AScan( saAllTypes, snIntP     ) , 6           )
-   TEST_LINE( AScan( saAllTypes, snLongP    ) , 7           )
-   TEST_LINE( AScan( saAllTypes, snDoubleP  ) , 8           )
-   TEST_LINE( AScan( saAllTypes, snIntN     ) , 9           )
-   TEST_LINE( AScan( saAllTypes, snLongN    ) , 10          )
-   TEST_LINE( AScan( saAllTypes, snDoubleN  ) , 11          )
-   TEST_LINE( AScan( saAllTypes, snDoubleI  ) , 4           )
-   TEST_LINE( AScan( saAllTypes, sdDateE    ) , 13          )
-   TEST_LINE( AScan( saAllTypes, slFalse    ) , 14          )
-   TEST_LINE( AScan( saAllTypes, slTrue     ) , 15          )
-   TEST_LINE( AScan( saAllTypes, soObject   ) , 0           )
-   TEST_LINE( AScan( saAllTypes, suNIL      ) , 17          )
-   TEST_LINE( AScan( saAllTypes, sbBlock    ) , 0           )
-   TEST_LINE( AScan( saAllTypes, sbBlockC   ) , 0           )
-   TEST_LINE( AScan( saAllTypes, saArray    ) , 0           )
+   HBTEST AScan( saAllTypes, scStringE  ) IS 1
+   HBTEST AScan( saAllTypes, scStringZ  ) IS 3
+   HBTEST AScan( saAllTypes, snIntZ     ) IS 4
+   HBTEST AScan( saAllTypes, snDoubleZ  ) IS 4
+   HBTEST AScan( saAllTypes, snIntP     ) IS 6
+   HBTEST AScan( saAllTypes, snLongP    ) IS 7
+   HBTEST AScan( saAllTypes, snDoubleP  ) IS 8
+   HBTEST AScan( saAllTypes, snIntN     ) IS 9
+   HBTEST AScan( saAllTypes, snLongN    ) IS 10
+   HBTEST AScan( saAllTypes, snDoubleN  ) IS 11
+   HBTEST AScan( saAllTypes, snDoubleI  ) IS 4
+   HBTEST AScan( saAllTypes, sdDateE    ) IS 13
+   HBTEST AScan( saAllTypes, slFalse    ) IS 14
+   HBTEST AScan( saAllTypes, slTrue     ) IS 15
+   HBTEST AScan( saAllTypes, soObject   ) IS 0
+   HBTEST AScan( saAllTypes, suNIL      ) IS 17
+   HBTEST AScan( saAllTypes, sbBlock    ) IS 0
+   HBTEST AScan( saAllTypes, sbBlockC   ) IS 0
+   HBTEST AScan( saAllTypes, saArray    ) IS 0
    SET EXACT ON
-   TEST_LINE( AScan( saAllTypes, scString   ) , 1           )
-   TEST_LINE( AScan( saAllTypes, scStringE  ) , 2           )
-   TEST_LINE( AScan( saAllTypes, scStringZ  ) , 3           )
+   HBTEST AScan( saAllTypes, scString   ) IS 1
+   HBTEST AScan( saAllTypes, scStringE  ) IS 2
+   HBTEST AScan( saAllTypes, scStringZ  ) IS 3
    SET EXACT OFF
 
-   TEST_LINE( TAEVSM()                        , "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0" ) /* Bug in CA-Cl*pper 5.x */
-   TEST_LINE( TASOSM1()                       , "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }" )
-   TEST_LINE( TASOSM2()                       , "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }" )
+   HBTEST TAEVSM()                        IS "N10N 9N 8N 7N 6N 5N 4N 3N 2N 1         0"  /* Bug in CA-Cl*pper 5.x */
+   HBTEST TASOSM1()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0NN 0NN 0         0{  }"
+   HBTEST TASOSM2()                       IS "NN 5NN 4NN 3NN 2NN 1NN 0NN 0NN 0NN 0NN 0         0{  }"
 
    RETURN
 

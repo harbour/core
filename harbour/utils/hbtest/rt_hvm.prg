@@ -59,532 +59,532 @@ PROCEDURE Main_HVM()
 
    /* ValType() */
 
-   TEST_LINE( ValType(  scString  )           , "C"   )
-   TEST_LINE( ValType(  scStringE )           , "C"   )
-   TEST_LINE( ValType(  scStringZ )           , "C"   )
-   TEST_LINE( ValType(  snIntZ    )           , "N"   )
-   TEST_LINE( ValType(  snDoubleZ )           , "N"   )
-   TEST_LINE( ValType(  snIntP    )           , "N"   )
-   TEST_LINE( ValType(  snLongP   )           , "N"   )
-   TEST_LINE( ValType(  snDoubleP )           , "N"   )
-   TEST_LINE( ValType(  snIntN    )           , "N"   )
-   TEST_LINE( ValType(  snLongN   )           , "N"   )
-   TEST_LINE( ValType(  snDoubleN )           , "N"   )
-   TEST_LINE( ValType(  snDoubleI )           , "N"   )
-   TEST_LINE( ValType(  sdDateE   )           , "D"   )
-   TEST_LINE( ValType(  slFalse   )           , "L"   )
-   TEST_LINE( ValType(  slTrue    )           , "L"   )
-   TEST_LINE( ValType(  soObject  )           , "O"   )
-   TEST_LINE( ValType(  suNIL     )           , "U"   )
-   TEST_LINE( ValType(  sbBlock   )           , "B"   )
-   TEST_LINE( ValType(  saArray   )           , "A"   )
-   TEST_LINE( ValType( { 1, 2, 3 } )          , "A"   )
+   HBTEST ValType(  scString  )           IS "C"
+   HBTEST ValType(  scStringE )           IS "C"
+   HBTEST ValType(  scStringZ )           IS "C"
+   HBTEST ValType(  snIntZ    )           IS "N"
+   HBTEST ValType(  snDoubleZ )           IS "N"
+   HBTEST ValType(  snIntP    )           IS "N"
+   HBTEST ValType(  snLongP   )           IS "N"
+   HBTEST ValType(  snDoubleP )           IS "N"
+   HBTEST ValType(  snIntN    )           IS "N"
+   HBTEST ValType(  snLongN   )           IS "N"
+   HBTEST ValType(  snDoubleN )           IS "N"
+   HBTEST ValType(  snDoubleI )           IS "N"
+   HBTEST ValType(  sdDateE   )           IS "D"
+   HBTEST ValType(  slFalse   )           IS "L"
+   HBTEST ValType(  slTrue    )           IS "L"
+   HBTEST ValType(  soObject  )           IS "O"
+   HBTEST ValType(  suNIL     )           IS "U"
+   HBTEST ValType(  sbBlock   )           IS "B"
+   HBTEST ValType(  saArray   )           IS "A"
+   HBTEST ValType( { 1, 2, 3 } )          IS "A"
    IF TEST_DBFAvail()
-   TEST_LINE( ValType( w_TEST->TYPE_C )       , "C"   )
-   TEST_LINE( ValType( w_TEST->TYPE_D )       , "D"   )
-   TEST_LINE( ValType( w_TEST->TYPE_M )       , "M"   )
-   TEST_LINE( ValType( w_TEST->TYPE_N_I )     , "N"   )
-   TEST_LINE( ValType( w_TEST->TYPE_N_D )     , "N"   )
-   TEST_LINE( ValType( w_TEST->TYPE_L )       , "L"   )
+   HBTEST ValType( w_TEST->TYPE_C )       IS "C"
+   HBTEST ValType( w_TEST->TYPE_D )       IS "D"
+   HBTEST ValType( w_TEST->TYPE_M )       IS "M"
+   HBTEST ValType( w_TEST->TYPE_N_I )     IS "N"
+   HBTEST ValType( w_TEST->TYPE_N_D )     IS "N"
+   HBTEST ValType( w_TEST->TYPE_L )       IS "L"
    ENDIF
 #ifdef __HARBOUR__
-   TEST_LINE( ValType( @scString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @scStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @scStringZ )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snIntZ    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snDoubleZ )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snIntP    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snLongP   )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snDoubleP )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snIntN    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snLongN   )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snDoubleN )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @snDoubleI )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @sdDateE   )           , "D"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @slFalse   )           , "L"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @slTrue    )           , "L"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @soObject  )           , "O"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @suNIL     )           , "U"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @sbBlock   )           , "B"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @saArray   )           , "A"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @scString  )           IS "C"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @scStringE )           IS "C"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @scStringZ )           IS "C"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snIntZ    )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snDoubleZ )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snIntP    )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snLongP   )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snDoubleP )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snIntN    )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snLongN   )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snDoubleN )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @snDoubleI )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @sdDateE   )           IS "D"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @slFalse   )           IS "L"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @slTrue    )           IS "L"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @soObject  )           IS "O"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @suNIL     )           IS "U"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @sbBlock   )           IS "B"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @saArray   )           IS "A"  /* Bug in CA-Cl*pper, it will return "U" */
 #endif
-   TEST_LINE( ValType(  mcString  )           , "C"   )
-   TEST_LINE( ValType(  mcStringE )           , "C"   )
-   TEST_LINE( ValType(  mcStringZ )           , "C"   )
-   TEST_LINE( ValType(  mnIntZ    )           , "N"   )
-   TEST_LINE( ValType(  mnDoubleZ )           , "N"   )
-   TEST_LINE( ValType(  mnIntP    )           , "N"   )
-   TEST_LINE( ValType(  mnLongP   )           , "N"   )
-   TEST_LINE( ValType(  mnDoubleP )           , "N"   )
-   TEST_LINE( ValType(  mnIntN    )           , "N"   )
-   TEST_LINE( ValType(  mnLongN   )           , "N"   )
-   TEST_LINE( ValType(  mnDoubleN )           , "N"   )
-   TEST_LINE( ValType(  mnDoubleI )           , "N"   )
-   TEST_LINE( ValType(  mdDateE   )           , "D"   )
-   TEST_LINE( ValType(  mlFalse   )           , "L"   )
-   TEST_LINE( ValType(  mlTrue    )           , "L"   )
-   TEST_LINE( ValType(  moObject  )           , "O"   )
-   TEST_LINE( ValType(  muNIL     )           , "U"   )
-   TEST_LINE( ValType(  mbBlock   )           , "B"   )
-   TEST_LINE( ValType(  maArray   )           , "A"   )
+   HBTEST ValType(  mcString  )           IS "C"
+   HBTEST ValType(  mcStringE )           IS "C"
+   HBTEST ValType(  mcStringZ )           IS "C"
+   HBTEST ValType(  mnIntZ    )           IS "N"
+   HBTEST ValType(  mnDoubleZ )           IS "N"
+   HBTEST ValType(  mnIntP    )           IS "N"
+   HBTEST ValType(  mnLongP   )           IS "N"
+   HBTEST ValType(  mnDoubleP )           IS "N"
+   HBTEST ValType(  mnIntN    )           IS "N"
+   HBTEST ValType(  mnLongN   )           IS "N"
+   HBTEST ValType(  mnDoubleN )           IS "N"
+   HBTEST ValType(  mnDoubleI )           IS "N"
+   HBTEST ValType(  mdDateE   )           IS "D"
+   HBTEST ValType(  mlFalse   )           IS "L"
+   HBTEST ValType(  mlTrue    )           IS "L"
+   HBTEST ValType(  moObject  )           IS "O"
+   HBTEST ValType(  muNIL     )           IS "U"
+   HBTEST ValType(  mbBlock   )           IS "B"
+   HBTEST ValType(  maArray   )           IS "A"
 #ifdef __HARBOUR__
-   TEST_LINE( ValType( @mcString  )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mcStringE )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mcStringZ )           , "C"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnIntZ    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnDoubleZ )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnIntP    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnLongP   )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnDoubleP )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnIntN    )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnLongN   )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnDoubleN )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mnDoubleI )           , "N"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mdDateE   )           , "D"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mlFalse   )           , "L"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mlTrue    )           , "L"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @moObject  )           , "O"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @muNIL     )           , "U"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @mbBlock   )           , "B"   ) /* Bug in CA-Cl*pper, it will return "U" */
-   TEST_LINE( ValType( @maArray   )           , "A"   ) /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mcString  )           IS "C"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mcStringE )           IS "C"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mcStringZ )           IS "C"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnIntZ    )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnDoubleZ )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnIntP    )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnLongP   )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnDoubleP )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnIntN    )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnLongN   )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnDoubleN )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mnDoubleI )           IS "N"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mdDateE   )           IS "D"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mlFalse   )           IS "L"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mlTrue    )           IS "L"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @moObject  )           IS "O"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @muNIL     )           IS "U"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @mbBlock   )           IS "B"  /* Bug in CA-Cl*pper, it will return "U" */
+   HBTEST ValType( @maArray   )           IS "A"  /* Bug in CA-Cl*pper, it will return "U" */
 #endif
 
    /* Type() */
 
 #ifndef __XPP__
-   TEST_LINE( Type( NIL )                     , "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:U:NIL F:S"     )
-   TEST_LINE( Type( 100 )                     , "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:N:100 F:S"     )
-   TEST_LINE( Type( {} )                      , "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:A:{.[0].} F:S" )
+   HBTEST Type( NIL )                     IS "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST Type( 100 )                     IS "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:N:100 F:S"
+   HBTEST Type( {} )                      IS "E 1 BASE 1121 Argument error (TYPE) OS:0 #:0 A:1:A:{.[0].} F:S"
 #endif
    IF TEST_DBFAvail()
-   TEST_LINE( Type( "w_TEST->TYPE_C" )        , "C"   )
-   TEST_LINE( Type( "w_TEST->TYPE_D" )        , "D"   )
-   TEST_LINE( Type( "w_TEST->TYPE_M" )        , "M"   )
-   TEST_LINE( Type( "w_TEST->TYPE_N_I" )      , "N"   )
-   TEST_LINE( Type( "w_TEST->TYPE_N_D" )      , "N"   )
-   TEST_LINE( Type( "w_TEST->TYPE_L" )        , "L"   )
+   HBTEST Type( "w_TEST->TYPE_C" )        IS "C"
+   HBTEST Type( "w_TEST->TYPE_D" )        IS "D"
+   HBTEST Type( "w_TEST->TYPE_M" )        IS "M"
+   HBTEST Type( "w_TEST->TYPE_N_I" )      IS "N"
+   HBTEST Type( "w_TEST->TYPE_N_D" )      IS "N"
+   HBTEST Type( "w_TEST->TYPE_L" )        IS "L"
    ENDIF
-   TEST_LINE( Type( "mxNotHere"  )            , "U"   )
-   TEST_LINE( Type( "mcString"  )             , "C"   )
-   TEST_LINE( Type( "mcStringE" )             , "C"   )
-   TEST_LINE( Type( "mcStringZ" )             , "C"   )
-   TEST_LINE( Type( "mnIntZ"    )             , "N"   )
-   TEST_LINE( Type( "mnDoubleZ" )             , "N"   )
-   TEST_LINE( Type( "mnIntP"    )             , "N"   )
-   TEST_LINE( Type( "mnLongP"   )             , "N"   )
-   TEST_LINE( Type( "mnDoubleP" )             , "N"   )
-   TEST_LINE( Type( "mnIntN"    )             , "N"   )
-   TEST_LINE( Type( "mnLongN"   )             , "N"   )
-   TEST_LINE( Type( "mnDoubleN" )             , "N"   )
-   TEST_LINE( Type( "mnDoubleI" )             , "N"   )
-   TEST_LINE( Type( "mdDateE"   )             , "D"   )
-   TEST_LINE( Type( "mlFalse"   )             , "L"   )
-   TEST_LINE( Type( "mlTrue"    )             , "L"   )
-   TEST_LINE( Type( "moObject"  )             , "O"   )
-   TEST_LINE( Type( "muNIL"     )             , "U"   )
-   TEST_LINE( Type( "mbBlock"   )             , "B"   )
-   TEST_LINE( Type( "maArray"   )             , "A"   )
+   HBTEST Type( "mxNotHere"  )            IS "U"
+   HBTEST Type( "mcString"  )             IS "C"
+   HBTEST Type( "mcStringE" )             IS "C"
+   HBTEST Type( "mcStringZ" )             IS "C"
+   HBTEST Type( "mnIntZ"    )             IS "N"
+   HBTEST Type( "mnDoubleZ" )             IS "N"
+   HBTEST Type( "mnIntP"    )             IS "N"
+   HBTEST Type( "mnLongP"   )             IS "N"
+   HBTEST Type( "mnDoubleP" )             IS "N"
+   HBTEST Type( "mnIntN"    )             IS "N"
+   HBTEST Type( "mnLongN"   )             IS "N"
+   HBTEST Type( "mnDoubleN" )             IS "N"
+   HBTEST Type( "mnDoubleI" )             IS "N"
+   HBTEST Type( "mdDateE"   )             IS "D"
+   HBTEST Type( "mlFalse"   )             IS "L"
+   HBTEST Type( "mlTrue"    )             IS "L"
+   HBTEST Type( "moObject"  )             IS "O"
+   HBTEST Type( "muNIL"     )             IS "U"
+   HBTEST Type( "mbBlock"   )             IS "B"
+   HBTEST Type( "maArray"   )             IS "A"
 
    /* Special internal messages */
 
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
 #ifndef __XPP__
-   TEST_LINE( NIL:className()                 , "NIL"       )
+   HBTEST NIL:className()                 IS "NIL"
 #endif
-#endif                                                      )
+#endif
 #ifndef __XPP__
-   TEST_LINE( "":className()                  , "CHARACTER" )
-   TEST_LINE( 0:className()                   , "NUMERIC"   )
-   TEST_LINE( hb_SToD( "" ):className()       , "DATE"      )
-   TEST_LINE( .F.:className()                 , "LOGICAL"   )
-   TEST_LINE( {|| NIL }:className()           , "BLOCK"     )
-   TEST_LINE( {}:className()                  , "ARRAY"     )
+   HBTEST "":className()                  IS "CHARACTER"
+   HBTEST 0:className()                   IS "NUMERIC"
+   HBTEST hb_SToD( "" ):className()       IS "DATE"
+   HBTEST .F.:className()                 IS "LOGICAL"
+   HBTEST {|| NIL }:className()           IS "BLOCK"
+   HBTEST {}:className()                  IS "ARRAY"
 #endif
-   TEST_LINE( ErrorNew():className()          , "ERROR"     )
-   TEST_LINE( ErrorNew():className            , "ERROR"     )
+   HBTEST ErrorNew():className()          IS "ERROR"
+   HBTEST ErrorNew():className            IS "ERROR"
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
 #ifndef __XPP__
-   TEST_LINE( NIL:classH()                    , 0           )
+   HBTEST NIL:classH()                    IS 0
 #endif
 #endif
 #ifndef __XPP__
-   TEST_LINE( "":classH()                     , 0           )
-   TEST_LINE( 0:classH()                      , 0           )
-   TEST_LINE( hb_SToD( "" ):classH()          , 0           )
-   TEST_LINE( .F.:classH()                    , 0           )
-   TEST_LINE( {|| NIL }:classH()              , 0           )
-   TEST_LINE( {}:classH()                     , 0           )
+   HBTEST "":classH()                     IS 0
+   HBTEST 0:classH()                      IS 0
+   HBTEST hb_SToD( "" ):classH()          IS 0
+   HBTEST .F.:classH()                    IS 0
+   HBTEST {|| NIL }:classH()              IS 0
+   HBTEST {}:classH()                     IS 0
 #endif
-   TEST_LINE( ErrorNew():classH() > 0         , .T.         )
-   TEST_LINE( ErrorNew():classH > 0           , .T.         )
+   HBTEST ErrorNew():classH() > 0         IS .T.
+   HBTEST ErrorNew():classH > 0           IS .T.
 
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
 #ifndef __XPP__
-   TEST_LINE( suNIL:className()               , "NIL"       )
+   HBTEST suNIL:className()               IS "NIL"
 #endif
 #endif
 #ifndef __XPP__
-   TEST_LINE( scString:className()            , "CHARACTER" )
-   TEST_LINE( snIntP:className()              , "NUMERIC"   )
-   TEST_LINE( sdDateE:className()             , "DATE"      )
-   TEST_LINE( slFalse:className()             , "LOGICAL"   )
-   TEST_LINE( sbBlock:className()             , "BLOCK"     )
-   TEST_LINE( saArray:className()             , "ARRAY"     )
+   HBTEST scString:className()            IS "CHARACTER"
+   HBTEST snIntP:className()              IS "NUMERIC"
+   HBTEST sdDateE:className()             IS "DATE"
+   HBTEST slFalse:className()             IS "LOGICAL"
+   HBTEST sbBlock:className()             IS "BLOCK"
+   HBTEST saArray:className()             IS "ARRAY"
 #endif
-   TEST_LINE( soObject:className()            , "ERROR"     )
-   TEST_LINE( soObject:className              , "ERROR"     )
+   HBTEST soObject:className()            IS "ERROR"
+   HBTEST soObject:className              IS "ERROR"
 /* Harbour compiler not yet handles these */
 #ifndef __HARBOUR__
 #ifndef __XPP__
-   TEST_LINE( suNIL:classH()                  , 0           )
+   HBTEST suNIL:classH()                  IS 0
 #endif
 #endif
 #ifndef __XPP__
-   TEST_LINE( scString:classH()               , 0           )
-   TEST_LINE( snIntP:classH()                 , 0           )
-   TEST_LINE( sdDateE:classH()                , 0           )
-   TEST_LINE( slFalse:classH()                , 0           )
-   TEST_LINE( sbBlock:classH()                , 0           )
-   TEST_LINE( saArray:classH()                , 0           )
+   HBTEST scString:classH()               IS 0
+   HBTEST snIntP:classH()                 IS 0
+   HBTEST sdDateE:classH()                IS 0
+   HBTEST slFalse:classH()                IS 0
+   HBTEST sbBlock:classH()                IS 0
+   HBTEST saArray:classH()                IS 0
 #endif
-   TEST_LINE( soObject:classH() > 0           , .T.         )
-   TEST_LINE( soObject:classH > 0             , .T.         )
+   HBTEST soObject:classH() > 0           IS .T.
+   HBTEST soObject:classH > 0             IS .T.
 
    /* (operators) */
 
    /* <= */
 
-   TEST_LINE( 2                   <= 1                   , .F.                                               )
-   TEST_LINE( 1                   <= 2                   , .T.                                               )
-   TEST_LINE( 2.0                 <= 2                   , .T.                                               )
-   TEST_LINE( 2                   <= 2.0                 , .T.                                               )
-   TEST_LINE( 2.5                 <= 3.7                 , .T.                                               )
-   TEST_LINE( 3.7                 <= 2.5                 , .F.                                               )
-   TEST_LINE( 10                  <= 10.50               , .T.                                               )
-   TEST_LINE( .F.                 <= .F.                 , .T.                                               )
-   TEST_LINE( .T.                 <= .F.                 , .F.                                               )
-   TEST_LINE( .F.                 <= .T.                 , .T.                                               )
-   TEST_LINE( hb_SToD("")         <= hb_SToD("")         , .T.                                               )
-   TEST_LINE( hb_SToD("")         <= hb_SToD("19800101") , .T.                                               )
-   TEST_LINE( hb_SToD("19800101") <= hb_SToD("")         , .F.                                               )
-   TEST_LINE( ""                  <= "AAA"               , .T.                                               )
-   TEST_LINE( "AAA"               <= ""                  , .T.                                               )
-   TEST_LINE( "AAA"               <= "AA"                , .T.                                               )
-   TEST_LINE( "AAA"               <= Chr(255)            , .T.                                               )
-   TEST_LINE( Chr(150)            <= Chr(255)            , .T.                                               )
-   TEST_LINE( "A"                 <= "a"                 , .T.                                               )
-   TEST_LINE( "A"                 <= "Z"                 , .T.                                               )
-   TEST_LINE( "Z"                 <= " "                 , .F.                                               )
-   TEST_LINE( Chr(0)              <= " "                 , .T.                                               )
-   TEST_LINE( "Hallo"             <= "Hello"             , .T.                                               )
-   TEST_LINE( "Hello"             <= "Hello"             , .T.                                               )
-   TEST_LINE( "Hell"              <= "Hello"             , .T.                                               )
-   TEST_LINE( "Hellow"            <= "Hello"             , .T.                                               )
-   TEST_LINE( "J"                 <= "Hello"             , .F.                                               )
-   TEST_LINE( ""                  <= "Hello"             , .T.                                               )
-   TEST_LINE( "J"                 <= ""                  , .T.                                               )
-   TEST_LINE( ""                  <= ""                  , .T.                                               )
+   HBTEST 2                   <= 1                   IS .F.
+   HBTEST 1                   <= 2                   IS .T.
+   HBTEST 2.0                 <= 2                   IS .T.
+   HBTEST 2                   <= 2.0                 IS .T.
+   HBTEST 2.5                 <= 3.7                 IS .T.
+   HBTEST 3.7                 <= 2.5                 IS .F.
+   HBTEST 10                  <= 10.50               IS .T.
+   HBTEST .F.                 <= .F.                 IS .T.
+   HBTEST .T.                 <= .F.                 IS .F.
+   HBTEST .F.                 <= .T.                 IS .T.
+   HBTEST hb_SToD("")         <= hb_SToD("")         IS .T.
+   HBTEST hb_SToD("")         <= hb_SToD("19800101") IS .T.
+   HBTEST hb_SToD("19800101") <= hb_SToD("")         IS .F.
+   HBTEST ""                  <= "AAA"               IS .T.
+   HBTEST "AAA"               <= ""                  IS .T.
+   HBTEST "AAA"               <= "AA"                IS .T.
+   HBTEST "AAA"               <= Chr(255)            IS .T.
+   HBTEST Chr(150)            <= Chr(255)            IS .T.
+   HBTEST "A"                 <= "a"                 IS .T.
+   HBTEST "A"                 <= "Z"                 IS .T.
+   HBTEST "Z"                 <= " "                 IS .F.
+   HBTEST Chr(0)              <= " "                 IS .T.
+   HBTEST "Hallo"             <= "Hello"             IS .T.
+   HBTEST "Hello"             <= "Hello"             IS .T.
+   HBTEST "Hell"              <= "Hello"             IS .T.
+   HBTEST "Hellow"            <= "Hello"             IS .T.
+   HBTEST "J"                 <= "Hello"             IS .F.
+   HBTEST ""                  <= "Hello"             IS .T.
+   HBTEST "J"                 <= ""                  IS .T.
+   HBTEST ""                  <= ""                  IS .T.
 
    /* < */
 
-   TEST_LINE( 2                   <  1                   , .F.                                               )
-   TEST_LINE( 1                   <  2                   , .T.                                               )
-   TEST_LINE( 2.0                 <  2                   , .F.                                               )
-   TEST_LINE( 2                   <  2.0                 , .F.                                               )
-   TEST_LINE( 2.5                 <  3.7                 , .T.                                               )
-   TEST_LINE( 3.7                 <  2.5                 , .F.                                               )
-   TEST_LINE( 10.50               <  10                  , .F.                                               )
-   TEST_LINE( .F.                 <  .F.                 , .F.                                               )
-   TEST_LINE( .T.                 <  .F.                 , .F.                                               )
-   TEST_LINE( .F.                 <  .T.                 , .T.                                               )
-   TEST_LINE( hb_SToD("")         <  hb_SToD("")         , .F.                                               )
-   TEST_LINE( hb_SToD("")         <  hb_SToD("19800101") , .T.                                               )
-   TEST_LINE( hb_SToD("19800101") <  hb_SToD("")         , .F.                                               )
-   TEST_LINE( ""                  <  "AAA"               , .T.                                               )
-   TEST_LINE( "AAA"               <  ""                  , .F.                                               )
-   TEST_LINE( "AAA"               <  "AA"                , .F.                                               )
-   TEST_LINE( "AAA"               <  Chr(255)            , .T.                                               )
-   TEST_LINE( Chr(150)            <  Chr(255)            , .T.                                               )
-   TEST_LINE( "A"                 <  "a"                 , .T.                                               )
-   TEST_LINE( "A"                 <  "Z"                 , .T.                                               )
-   TEST_LINE( "Z"                 <  "A"                 , .F.                                               )
-   TEST_LINE( Chr(0)              <  " "                 , .T.                                               )
-   TEST_LINE( "Hallo"             <  "Hello"             , .T.                                               )
-   TEST_LINE( "Hello"             <  "Hello"             , .F.                                               )
-   TEST_LINE( "Hell"              <  "Hello"             , .T.                                               )
-   TEST_LINE( "Hellow"            <  "Hello"             , .F.                                               )
-   TEST_LINE( "J"                 <  "Hello"             , .F.                                               )
-   TEST_LINE( ""                  <  "Hello"             , .T.                                               )
-   TEST_LINE( "J"                 <  ""                  , .F.                                               )
-   TEST_LINE( ""                  <  ""                  , .F.                                               )
+   HBTEST 2                   <  1                   IS .F.
+   HBTEST 1                   <  2                   IS .T.
+   HBTEST 2.0                 <  2                   IS .F.
+   HBTEST 2                   <  2.0                 IS .F.
+   HBTEST 2.5                 <  3.7                 IS .T.
+   HBTEST 3.7                 <  2.5                 IS .F.
+   HBTEST 10.50               <  10                  IS .F.
+   HBTEST .F.                 <  .F.                 IS .F.
+   HBTEST .T.                 <  .F.                 IS .F.
+   HBTEST .F.                 <  .T.                 IS .T.
+   HBTEST hb_SToD("")         <  hb_SToD("")         IS .F.
+   HBTEST hb_SToD("")         <  hb_SToD("19800101") IS .T.
+   HBTEST hb_SToD("19800101") <  hb_SToD("")         IS .F.
+   HBTEST ""                  <  "AAA"               IS .T.
+   HBTEST "AAA"               <  ""                  IS .F.
+   HBTEST "AAA"               <  "AA"                IS .F.
+   HBTEST "AAA"               <  Chr(255)            IS .T.
+   HBTEST Chr(150)            <  Chr(255)            IS .T.
+   HBTEST "A"                 <  "a"                 IS .T.
+   HBTEST "A"                 <  "Z"                 IS .T.
+   HBTEST "Z"                 <  "A"                 IS .F.
+   HBTEST Chr(0)              <  " "                 IS .T.
+   HBTEST "Hallo"             <  "Hello"             IS .T.
+   HBTEST "Hello"             <  "Hello"             IS .F.
+   HBTEST "Hell"              <  "Hello"             IS .T.
+   HBTEST "Hellow"            <  "Hello"             IS .F.
+   HBTEST "J"                 <  "Hello"             IS .F.
+   HBTEST ""                  <  "Hello"             IS .T.
+   HBTEST "J"                 <  ""                  IS .F.
+   HBTEST ""                  <  ""                  IS .F.
 
    /* >= */
 
-   TEST_LINE( 2                   >= 1                   , .T.                                               )
-   TEST_LINE( 1                   >= 2                   , .F.                                               )
-   TEST_LINE( 2.0                 >= 2                   , .T.                                               )
-   TEST_LINE( 2                   >= 2.0                 , .T.                                               )
-   TEST_LINE( 2.5                 >= 3.7                 , .F.                                               )
-   TEST_LINE( 3.7                 >= 2.5                 , .T.                                               )
-   TEST_LINE( 10.50               >= 10                  , .T.                                               )
-   TEST_LINE( .F.                 >= .F.                 , .T.                                               )
-   TEST_LINE( .T.                 >= .F.                 , .T.                                               )
-   TEST_LINE( .F.                 >= .T.                 , .F.                                               )
-   TEST_LINE( hb_SToD("")         >= hb_SToD("")         , .T.                                               )
-   TEST_LINE( hb_SToD("")         >= hb_SToD("19800101") , .F.                                               )
-   TEST_LINE( hb_SToD("19800101") >= hb_SToD("")         , .T.                                               )
-   TEST_LINE( ""                  >= "AAA"               , .F.                                               )
-   TEST_LINE( "AAA"               >= ""                  , .T.                                               )
-   TEST_LINE( "AAA"               >= "AA"                , .T.                                               )
-   TEST_LINE( "AAA"               >= Chr(255)            , .F.                                               )
-   TEST_LINE( Chr(150)            >= Chr(255)            , .F.                                               )
-   TEST_LINE( "A"                 >= "a"                 , .F.                                               )
-   TEST_LINE( "A"                 >= "Z"                 , .F.                                               )
-   TEST_LINE( "Z"                 >= "A"                 , .T.                                               )
-   TEST_LINE( Chr(0)              >= " "                 , .F.                                               )
-   TEST_LINE( "Hallo"             >= "Hello"             , .F.                                               )
-   TEST_LINE( "Hello"             >= "Hello"             , .T.                                               )
-   TEST_LINE( "Hell"              >= "Hello"             , .F.                                               )
-   TEST_LINE( "Hellow"            >= "Hello"             , .T.                                               )
-   TEST_LINE( "J"                 >= "Hello"             , .T.                                               )
-   TEST_LINE( ""                  >= "Hello"             , .F.                                               )
-   TEST_LINE( "J"                 >= ""                  , .T.                                               )
-   TEST_LINE( ""                  >= ""                  , .T.                                               )
+   HBTEST 2                   >= 1                   IS .T.
+   HBTEST 1                   >= 2                   IS .F.
+   HBTEST 2.0                 >= 2                   IS .T.
+   HBTEST 2                   >= 2.0                 IS .T.
+   HBTEST 2.5                 >= 3.7                 IS .F.
+   HBTEST 3.7                 >= 2.5                 IS .T.
+   HBTEST 10.50               >= 10                  IS .T.
+   HBTEST .F.                 >= .F.                 IS .T.
+   HBTEST .T.                 >= .F.                 IS .T.
+   HBTEST .F.                 >= .T.                 IS .F.
+   HBTEST hb_SToD("")         >= hb_SToD("")         IS .T.
+   HBTEST hb_SToD("")         >= hb_SToD("19800101") IS .F.
+   HBTEST hb_SToD("19800101") >= hb_SToD("")         IS .T.
+   HBTEST ""                  >= "AAA"               IS .F.
+   HBTEST "AAA"               >= ""                  IS .T.
+   HBTEST "AAA"               >= "AA"                IS .T.
+   HBTEST "AAA"               >= Chr(255)            IS .F.
+   HBTEST Chr(150)            >= Chr(255)            IS .F.
+   HBTEST "A"                 >= "a"                 IS .F.
+   HBTEST "A"                 >= "Z"                 IS .F.
+   HBTEST "Z"                 >= "A"                 IS .T.
+   HBTEST Chr(0)              >= " "                 IS .F.
+   HBTEST "Hallo"             >= "Hello"             IS .F.
+   HBTEST "Hello"             >= "Hello"             IS .T.
+   HBTEST "Hell"              >= "Hello"             IS .F.
+   HBTEST "Hellow"            >= "Hello"             IS .T.
+   HBTEST "J"                 >= "Hello"             IS .T.
+   HBTEST ""                  >= "Hello"             IS .F.
+   HBTEST "J"                 >= ""                  IS .T.
+   HBTEST ""                  >= ""                  IS .T.
 
    /* > */
 
-   TEST_LINE( 2                   >  1                   , .T.                                               )
-   TEST_LINE( 1                   >  2                   , .F.                                               )
-   TEST_LINE( 2.0                 >  2                   , .F.                                               )
-   TEST_LINE( 2                   >  2.0                 , .F.                                               )
-   TEST_LINE( 2.5                 >  3.7                 , .F.                                               )
-   TEST_LINE( 3.7                 >  2.5                 , .T.                                               )
-   TEST_LINE( 10.50               >  10                  , .T.                                               )
-   TEST_LINE( .F.                 >  .F.                 , .F.                                               )
-   TEST_LINE( .T.                 >  .F.                 , .T.                                               )
-   TEST_LINE( .F.                 >  .T.                 , .F.                                               )
-   TEST_LINE( hb_SToD("")         >  hb_SToD("")         , .F.                                               )
-   TEST_LINE( hb_SToD("")         >  hb_SToD("19800101") , .F.                                               )
-   TEST_LINE( hb_SToD("19800101") >  hb_SToD("")         , .T.                                               )
-   TEST_LINE( ""                  >  "AAA"               , .F.                                               )
-   TEST_LINE( "AAA"               >  ""                  , .F.                                               )
-   TEST_LINE( "AAA"               >  "AA"                , .F.                                               )
-   TEST_LINE( "AAA"               >  Chr(255)            , .F.                                               )
-   TEST_LINE( Chr(150)            >  Chr(255)            , .F.                                               )
-   TEST_LINE( "A"                 >  "a"                 , .F.                                               )
-   TEST_LINE( "A"                 >  "Z"                 , .F.                                               )
-   TEST_LINE( "Z"                 >  "A"                 , .T.                                               )
-   TEST_LINE( Chr(0)              >  " "                 , .F.                                               )
-   TEST_LINE( "Hallo"             >  "Hello"             , .F.                                               )
-   TEST_LINE( "Hello"             >  "Hello"             , .F.                                               )
-   TEST_LINE( "Hell"              >  "Hello"             , .F.                                               )
-   TEST_LINE( "Hellow"            >  "Hello"             , .F.                                               )
-   TEST_LINE( "J"                 >  "Hello"             , .T.                                               )
-   TEST_LINE( ""                  >  "Hello"             , .F.                                               )
-   TEST_LINE( "J"                 >  ""                  , .F.                                               )
-   TEST_LINE( ""                  >  ""                  , .F.                                               )
+   HBTEST 2                   >  1                   IS .T.
+   HBTEST 1                   >  2                   IS .F.
+   HBTEST 2.0                 >  2                   IS .F.
+   HBTEST 2                   >  2.0                 IS .F.
+   HBTEST 2.5                 >  3.7                 IS .F.
+   HBTEST 3.7                 >  2.5                 IS .T.
+   HBTEST 10.50               >  10                  IS .T.
+   HBTEST .F.                 >  .F.                 IS .F.
+   HBTEST .T.                 >  .F.                 IS .T.
+   HBTEST .F.                 >  .T.                 IS .F.
+   HBTEST hb_SToD("")         >  hb_SToD("")         IS .F.
+   HBTEST hb_SToD("")         >  hb_SToD("19800101") IS .F.
+   HBTEST hb_SToD("19800101") >  hb_SToD("")         IS .T.
+   HBTEST ""                  >  "AAA"               IS .F.
+   HBTEST "AAA"               >  ""                  IS .F.
+   HBTEST "AAA"               >  "AA"                IS .F.
+   HBTEST "AAA"               >  Chr(255)            IS .F.
+   HBTEST Chr(150)            >  Chr(255)            IS .F.
+   HBTEST "A"                 >  "a"                 IS .F.
+   HBTEST "A"                 >  "Z"                 IS .F.
+   HBTEST "Z"                 >  "A"                 IS .T.
+   HBTEST Chr(0)              >  " "                 IS .F.
+   HBTEST "Hallo"             >  "Hello"             IS .F.
+   HBTEST "Hello"             >  "Hello"             IS .F.
+   HBTEST "Hell"              >  "Hello"             IS .F.
+   HBTEST "Hellow"            >  "Hello"             IS .F.
+   HBTEST "J"                 >  "Hello"             IS .T.
+   HBTEST ""                  >  "Hello"             IS .F.
+   HBTEST "J"                 >  ""                  IS .F.
+   HBTEST ""                  >  ""                  IS .F.
 
    /* =, == */
 
    SET EXACT ON
-   TEST_LINE( "123" = "123  "                 , .T.                                               )
-   TEST_LINE( " 123" = "123"                  , .F.                                               )
-   TEST_LINE( "123" = "12345"                 , .F.                                               )
-   TEST_LINE( "12345" = "123"                 , .F.                                               )
-   TEST_LINE( "123" = ""                      , .F.                                               )
-   TEST_LINE( "" = "123"                      , .F.                                               )
-   TEST_LINE( "A" == "A"                      , .T.                                               )
-   TEST_LINE( "Z" == "A"                      , .F.                                               )
-   TEST_LINE( "A" == "A "                     , .F.                                               )
-   TEST_LINE( "AA" == "A"                     , .F.                                               )
+   HBTEST "123" = "123  "                 IS .T.
+   HBTEST " 123" = "123"                  IS .F.
+   HBTEST "123" = "12345"                 IS .F.
+   HBTEST "12345" = "123"                 IS .F.
+   HBTEST "123" = ""                      IS .F.
+   HBTEST "" = "123"                      IS .F.
+   HBTEST "A" == "A"                      IS .T.
+   HBTEST "Z" == "A"                      IS .F.
+   HBTEST "A" == "A "                     IS .F.
+   HBTEST "AA" == "A"                     IS .F.
    SET EXACT OFF
-   TEST_LINE( "123" = "123  "                 , .F.                                               )
-   TEST_LINE( " 123" = "123"                  , .F.                                               )
-   TEST_LINE( "123" = "12345"                 , .F.                                               )
-   TEST_LINE( "12345" = "123"                 , .T.                                               )
-   TEST_LINE( "123" = ""                      , .T.                                               )
-   TEST_LINE( "" = "123"                      , .F.                                               )
-   TEST_LINE( "A" == "A"                      , .T.                                               )
-   TEST_LINE( "Z" == "A"                      , .F.                                               )
-   TEST_LINE( "A" == "A "                     , .F.                                               )
-   TEST_LINE( "AA" == "A"                     , .F.                                               )
-   TEST_LINE( "Hallo"          == "Hello"     , .F.                                               )
-   TEST_LINE( "Hello"          == "Hello"     , .T.                                               )
-   TEST_LINE( "Hell"           == "Hello"     , .F.                                               )
-   TEST_LINE( "Hellow"         == "Hello"     , .F.                                               )
-   TEST_LINE( "J"              == "Hello"     , .F.                                               )
-   TEST_LINE( ""               == "Hello"     , .F.                                               )
-   TEST_LINE( "J"              == ""          , .F.                                               )
-   TEST_LINE( ""               == ""          , .T.                                               )
+   HBTEST "123" = "123  "                 IS .F.
+   HBTEST " 123" = "123"                  IS .F.
+   HBTEST "123" = "12345"                 IS .F.
+   HBTEST "12345" = "123"                 IS .T.
+   HBTEST "123" = ""                      IS .T.
+   HBTEST "" = "123"                      IS .F.
+   HBTEST "A" == "A"                      IS .T.
+   HBTEST "Z" == "A"                      IS .F.
+   HBTEST "A" == "A "                     IS .F.
+   HBTEST "AA" == "A"                     IS .F.
+   HBTEST "Hallo"          == "Hello"     IS .F.
+   HBTEST "Hello"          == "Hello"     IS .T.
+   HBTEST "Hell"           == "Hello"     IS .F.
+   HBTEST "Hellow"         == "Hello"     IS .F.
+   HBTEST "J"              == "Hello"     IS .F.
+   HBTEST ""               == "Hello"     IS .F.
+   HBTEST "J"              == ""          IS .F.
+   HBTEST ""               == ""          IS .T.
 
-   TEST_LINE( scString  = scString            , .T.                                               )
-   TEST_LINE( scString  = scStringE           , .T.                                               )
-   TEST_LINE( scString  = scStringZ           , .F.                                               )
-   TEST_LINE( scStringE = scString            , .F.                                               )
-   TEST_LINE( scStringE = scStringE           , .T.                                               )
-   TEST_LINE( scStringE = scStringZ           , .F.                                               )
-   TEST_LINE( scStringZ = scString            , .F.                                               )
-   TEST_LINE( scStringZ = scStringE           , .T.                                               )
-   TEST_LINE( scStringZ = scStringZ           , .T.                                               )
+   HBTEST scString  = scString            IS .T.
+   HBTEST scString  = scStringE           IS .T.
+   HBTEST scString  = scStringZ           IS .F.
+   HBTEST scStringE = scString            IS .F.
+   HBTEST scStringE = scStringE           IS .T.
+   HBTEST scStringE = scStringZ           IS .F.
+   HBTEST scStringZ = scString            IS .F.
+   HBTEST scStringZ = scStringE           IS .T.
+   HBTEST scStringZ = scStringZ           IS .T.
 
    /* != */
 
    SET EXACT ON
-   TEST_LINE( "123" != "123  "                , .F.                                               )
-   TEST_LINE( " 123" != "123"                 , .T.                                               )
-   TEST_LINE( "123" != "12345"                , .T.                                               )
-   TEST_LINE( "12345" != "123"                , .T.                                               )
-   TEST_LINE( "123" != ""                     , .T.                                               )
-   TEST_LINE( "" != "123"                     , .T.                                               )
-   TEST_LINE( "A" != "A"                      , .F.                                               )
-   TEST_LINE( "Z" != "A"                      , .T.                                               )
-   TEST_LINE( "A" != "A "                     , .F.                                               )
-   TEST_LINE( "AA" != "A"                     , .T.                                               )
+   HBTEST "123" != "123  "                IS .F.
+   HBTEST " 123" != "123"                 IS .T.
+   HBTEST "123" != "12345"                IS .T.
+   HBTEST "12345" != "123"                IS .T.
+   HBTEST "123" != ""                     IS .T.
+   HBTEST "" != "123"                     IS .T.
+   HBTEST "A" != "A"                      IS .F.
+   HBTEST "Z" != "A"                      IS .T.
+   HBTEST "A" != "A "                     IS .F.
+   HBTEST "AA" != "A"                     IS .T.
    SET EXACT OFF
-   TEST_LINE( "123" != "123  "                , .T.                                               )
-   TEST_LINE( " 123" != "123"                 , .T.                                               )
-   TEST_LINE( "123" != "12345"                , .T.                                               )
-   TEST_LINE( "12345" != "123"                , .F.                                               )
-   TEST_LINE( "123" != ""                     , .F.                                               )
-   TEST_LINE( "" != "123"                     , .T.                                               )
-   TEST_LINE( "A" != "A"                      , .F.                                               )
-   TEST_LINE( "Z" != "A"                      , .T.                                               )
-   TEST_LINE( "A" != "A "                     , .T.                                               )
-   TEST_LINE( "AA" != "A"                     , .F.                                               )
-   TEST_LINE( "Hallo"          != "Hello"     , .T.                                               )
-   TEST_LINE( "Hello"          != "Hello"     , .F.                                               )
-   TEST_LINE( "Hell"           != "Hello"     , .T.                                               )
-   TEST_LINE( "Hellow"         != "Hello"     , .F.                                               )
-   TEST_LINE( "J"              != "Hello"     , .T.                                               )
-   TEST_LINE( ""               != "Hello"     , .T.                                               )
-   TEST_LINE( "J"              != ""          , .F.                                               )
-   TEST_LINE( ""               != ""          , .F.                                               )
+   HBTEST "123" != "123  "                IS .T.
+   HBTEST " 123" != "123"                 IS .T.
+   HBTEST "123" != "12345"                IS .T.
+   HBTEST "12345" != "123"                IS .F.
+   HBTEST "123" != ""                     IS .F.
+   HBTEST "" != "123"                     IS .T.
+   HBTEST "A" != "A"                      IS .F.
+   HBTEST "Z" != "A"                      IS .T.
+   HBTEST "A" != "A "                     IS .T.
+   HBTEST "AA" != "A"                     IS .F.
+   HBTEST "Hallo"          != "Hello"     IS .T.
+   HBTEST "Hello"          != "Hello"     IS .F.
+   HBTEST "Hell"           != "Hello"     IS .T.
+   HBTEST "Hellow"         != "Hello"     IS .F.
+   HBTEST "J"              != "Hello"     IS .T.
+   HBTEST ""               != "Hello"     IS .T.
+   HBTEST "J"              != ""          IS .F.
+   HBTEST ""               != ""          IS .F.
 
-   TEST_LINE( scString  != scString           , .F.                                               )
-   TEST_LINE( scString  != scStringE          , .F.                                               )
-   TEST_LINE( scString  != scStringZ          , .T.                                               )
-   TEST_LINE( scStringE != scString           , .T.                                               )
-   TEST_LINE( scStringE != scStringE          , .F.                                               )
-   TEST_LINE( scStringE != scStringZ          , .T.                                               )
-   TEST_LINE( scStringZ != scString           , .T.                                               )
-   TEST_LINE( scStringZ != scStringE          , .F.                                               )
-   TEST_LINE( scStringZ != scStringZ          , .F.                                               )
+   HBTEST scString  != scString           IS .F.
+   HBTEST scString  != scStringE          IS .F.
+   HBTEST scString  != scStringZ          IS .T.
+   HBTEST scStringE != scString           IS .T.
+   HBTEST scStringE != scStringE          IS .F.
+   HBTEST scStringE != scStringZ          IS .T.
+   HBTEST scStringZ != scString           IS .T.
+   HBTEST scStringZ != scStringE          IS .F.
+   HBTEST scStringZ != scStringZ          IS .F.
 
    /* == special */
 
-   TEST_LINE( NIL == NIL                      , .T.                                               )
-   TEST_LINE( 1 == NIL                        , .F.                                               )
-   TEST_LINE( NIL == 1                        , .F.                                               )
-   TEST_LINE( "" == NIL                       , .F.                                               )
-   TEST_LINE( NIL == ""                       , .F.                                               )
-   TEST_LINE( 1 == suNIL                      , .F.                                               )
-   TEST_LINE( suNIL == 1                      , .F.                                               )
-   TEST_LINE( "" == suNIL                     , .F.                                               )
-   TEST_LINE( suNIL == ""                     , .F.                                               )
-   TEST_LINE( scString == NIL                 , .F.                                               )
-   TEST_LINE( "A" == 1                        , "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:C:A;N:1 F:S" )
-   TEST_LINE( scString == 1                   , "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
-   TEST_LINE( soObject == ""                  , "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
-   TEST_LINE( soObject == soObject            , .T.                                               )
-   TEST_LINE( soObject == ErrorNew()          , .F.                                               )
-   TEST_LINE( ErrorNew() == ErrorNew()        , .F.                                               )
-   TEST_LINE( soObject == TBColumnNew()       , .F.                                               )
-   TEST_LINE( saArray == saArray              , .T.                                               )
-   TEST_LINE( {} == {}                        , .F.                                               )
-   TEST_LINE( {|| NIL } == {|| NIL }          , "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:B:{||...};B:{||...} F:S" )
+   HBTEST NIL == NIL                      IS .T.
+   HBTEST 1 == NIL                        IS .F.
+   HBTEST NIL == 1                        IS .F.
+   HBTEST "" == NIL                       IS .F.
+   HBTEST NIL == ""                       IS .F.
+   HBTEST 1 == suNIL                      IS .F.
+   HBTEST suNIL == 1                      IS .F.
+   HBTEST "" == suNIL                     IS .F.
+   HBTEST suNIL == ""                     IS .F.
+   HBTEST scString == NIL                 IS .F.
+   HBTEST "A" == 1                        IS "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:C:A;N:1 F:S"
+   HBTEST scString == 1                   IS "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:C:HELLO;N:1 F:S"
+   HBTEST soObject == ""                  IS "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:O:ERROR Object;C: F:S"
+   HBTEST soObject == soObject            IS .T.
+   HBTEST soObject == ErrorNew()          IS .F.
+   HBTEST ErrorNew() == ErrorNew()        IS .F.
+   HBTEST soObject == TBColumnNew()       IS .F.
+   HBTEST saArray == saArray              IS .T.
+   HBTEST {} == {}                        IS .F.
+   HBTEST {|| NIL } == {|| NIL }          IS "E 1 BASE 1070 Argument error (==) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
 
    /* = special */
 
-   TEST_LINE( NIL = NIL                       , .T.                                               )
-   TEST_LINE( scString = NIL                  , .F.                                               )
-   TEST_LINE( "A" = 1                         , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:C:A;N:1 F:S" )
-   TEST_LINE( scString = 1                    , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
-   TEST_LINE( soObject = ""                   , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
-   TEST_LINE( soObject = soObject             , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject = ErrorNew()           , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( ErrorNew() = ErrorNew()         , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject = TBColumnNew()        , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S" )
-   TEST_LINE( saArray = saArray               , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S" )
-   TEST_LINE( {} = {}                         , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S" )
-   TEST_LINE( {|| NIL } = {|| NIL }           , "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:B:{||...};B:{||...} F:S" )
+   HBTEST NIL = NIL                       IS .T.
+   HBTEST scString = NIL                  IS .F.
+   HBTEST "A" = 1                         IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:C:A;N:1 F:S"
+   HBTEST scString = 1                    IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:C:HELLO;N:1 F:S"
+   HBTEST soObject = ""                   IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;C: F:S"
+   HBTEST soObject = soObject             IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject = ErrorNew()           IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST ErrorNew() = ErrorNew()         IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject = TBColumnNew()        IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S"
+   HBTEST saArray = saArray               IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S"
+   HBTEST {} = {}                         IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S"
+   HBTEST {|| NIL } = {|| NIL }           IS "E 1 BASE 1071 Argument error (=) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
 
    /* != special */
 
-   TEST_LINE( NIL != NIL                      , .F.                                               )
-   TEST_LINE( scString != NIL                 , .T.                                               )
-   TEST_LINE( "A" != 1                        , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:C:A;N:1 F:S" )
-   TEST_LINE( scString != 1                   , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
-   TEST_LINE( soObject != ""                  , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
-   TEST_LINE( soObject != soObject            , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject != ErrorNew()          , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( ErrorNew() != ErrorNew()        , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject != TBColumnNew()       , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S" )
-   TEST_LINE( saArray != saArray              , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S" )
-   TEST_LINE( {} != {}                        , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S" )
-   TEST_LINE( {|| NIL } != {|| NIL }          , "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:B:{||...};B:{||...} F:S" )
+   HBTEST NIL != NIL                      IS .F.
+   HBTEST scString != NIL                 IS .T.
+   HBTEST "A" != 1                        IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:C:A;N:1 F:S"
+   HBTEST scString != 1                   IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:C:HELLO;N:1 F:S"
+   HBTEST soObject != ""                  IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;C: F:S"
+   HBTEST soObject != soObject            IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject != ErrorNew()          IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST ErrorNew() != ErrorNew()        IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject != TBColumnNew()       IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S"
+   HBTEST saArray != saArray              IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S"
+   HBTEST {} != {}                        IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S"
+   HBTEST {|| NIL } != {|| NIL }          IS "E 1 BASE 1072 Argument error (<>) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
 
    /* < special */
 
-   TEST_LINE( NIL < NIL                       , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( scString < NIL                  , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
-   TEST_LINE( "A" < 1                         , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:1 F:S" )
-   TEST_LINE( scString < 1                    , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
-   TEST_LINE( soObject < ""                   , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
-   TEST_LINE( soObject < soObject             , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject < ErrorNew()           , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( ErrorNew() < ErrorNew()         , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject < TBColumnNew()        , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S" )
-   TEST_LINE( saArray < saArray               , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S" )
-   TEST_LINE( {} < {}                         , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S" )
-   TEST_LINE( {|| NIL } < {|| NIL }           , "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:B:{||...};B:{||...} F:S" )
+   HBTEST NIL < NIL                       IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST scString < NIL                  IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:HELLO;U:NIL F:S"
+   HBTEST "A" < 1                         IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:A;N:1 F:S"
+   HBTEST scString < 1                    IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:C:HELLO;N:1 F:S"
+   HBTEST soObject < ""                   IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;C: F:S"
+   HBTEST soObject < soObject             IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject < ErrorNew()           IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST ErrorNew() < ErrorNew()         IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject < TBColumnNew()        IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S"
+   HBTEST saArray < saArray               IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S"
+   HBTEST {} < {}                         IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S"
+   HBTEST {|| NIL } < {|| NIL }           IS "E 1 BASE 1073 Argument error (<) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
 
    /* <= special */
 
-   TEST_LINE( NIL <= NIL                      , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( scString <= NIL                 , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
-   TEST_LINE( "A" <= 1                        , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:A;N:1 F:S" )
-   TEST_LINE( scString <= 1                   , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
-   TEST_LINE( soObject <= ""                  , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
-   TEST_LINE( soObject <= soObject            , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject <= ErrorNew()          , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( ErrorNew() <= ErrorNew()        , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject <= TBColumnNew()       , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S" )
-   TEST_LINE( saArray <= saArray              , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S" )
-   TEST_LINE( {} <= {}                        , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S" )
-   TEST_LINE( {|| NIL } <= {|| NIL }          , "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:B:{||...};B:{||...} F:S" )
+   HBTEST NIL <= NIL                      IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST scString <= NIL                 IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:HELLO;U:NIL F:S"
+   HBTEST "A" <= 1                        IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:A;N:1 F:S"
+   HBTEST scString <= 1                   IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:C:HELLO;N:1 F:S"
+   HBTEST soObject <= ""                  IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;C: F:S"
+   HBTEST soObject <= soObject            IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject <= ErrorNew()          IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST ErrorNew() <= ErrorNew()        IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject <= TBColumnNew()       IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S"
+   HBTEST saArray <= saArray              IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S"
+   HBTEST {} <= {}                        IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S"
+   HBTEST {|| NIL } <= {|| NIL }          IS "E 1 BASE 1074 Argument error (<=) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
 
    /* > special */
 
-   TEST_LINE( NIL > NIL                       , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( scString > NIL                  , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
-   TEST_LINE( "A" > 1                         , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:A;N:1 F:S" )
-   TEST_LINE( scString > 1                    , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
-   TEST_LINE( soObject > ""                   , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
-   TEST_LINE( soObject > soObject             , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject > ErrorNew()           , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( ErrorNew() > ErrorNew()         , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject > TBColumnNew()        , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S" )
-   TEST_LINE( saArray > saArray               , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S" )
-   TEST_LINE( {} > {}                         , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S" )
-   TEST_LINE( {|| NIL } > {|| NIL }           , "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:B:{||...};B:{||...} F:S" )
+   HBTEST NIL > NIL                       IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST scString > NIL                  IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:HELLO;U:NIL F:S"
+   HBTEST "A" > 1                         IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:A;N:1 F:S"
+   HBTEST scString > 1                    IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:C:HELLO;N:1 F:S"
+   HBTEST soObject > ""                   IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;C: F:S"
+   HBTEST soObject > soObject             IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject > ErrorNew()           IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST ErrorNew() > ErrorNew()         IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject > TBColumnNew()        IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S"
+   HBTEST saArray > saArray               IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S"
+   HBTEST {} > {}                         IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S"
+   HBTEST {|| NIL } > {|| NIL }           IS "E 1 BASE 1075 Argument error (>) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
 
    /* >= special */
 
-   TEST_LINE( NIL >= NIL                      , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:U:NIL;U:NIL F:S" )
-   TEST_LINE( scString >= NIL                 , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:HELLO;U:NIL F:S" )
-   TEST_LINE( "A" >= 1                        , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:A;N:1 F:S" )
-   TEST_LINE( scString >= 1                   , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:HELLO;N:1 F:S" )
-   TEST_LINE( soObject >= ""                  , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;C: F:S" )
-   TEST_LINE( soObject >= soObject            , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject >= ErrorNew()          , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( ErrorNew() >= ErrorNew()        , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S" )
-   TEST_LINE( soObject >= TBColumnNew()       , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S" )
-   TEST_LINE( saArray >= saArray              , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S" )
-   TEST_LINE( {} >= {}                        , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S" )
-   TEST_LINE( {|| NIL } >= {|| NIL }          , "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:B:{||...};B:{||...} F:S" )
+   HBTEST NIL >= NIL                      IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
+   HBTEST scString >= NIL                 IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:HELLO;U:NIL F:S"
+   HBTEST "A" >= 1                        IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:A;N:1 F:S"
+   HBTEST scString >= 1                   IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:C:HELLO;N:1 F:S"
+   HBTEST soObject >= ""                  IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;C: F:S"
+   HBTEST soObject >= soObject            IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject >= ErrorNew()          IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST ErrorNew() >= ErrorNew()        IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:ERROR Object F:S"
+   HBTEST soObject >= TBColumnNew()       IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:O:ERROR Object;O:TBCOLUMN Object F:S"
+   HBTEST saArray >= saArray              IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:A:{.[1].};A:{.[1].} F:S"
+   HBTEST {} >= {}                        IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:A:{.[0].};A:{.[0].} F:S"
+   HBTEST {|| NIL } >= {|| NIL }          IS "E 1 BASE 1076 Argument error (>=) OS:0 #:0 A:2:B:{||...};B:{||...} F:S"
 
    RETURN
 

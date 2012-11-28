@@ -59,196 +59,196 @@ PROCEDURE Main_STRA()
 
    /* Str() */
 
-   TEST_LINE( Str(NIL)                        , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( Str("A", 10, 2)                 , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:C:A;N:10;N:2 F:S" )
-   TEST_LINE( Str(100, 10, "A")               , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;C:A F:S" )
-   TEST_LINE( Str(100, 10, NIL)               , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;U:NIL F:S" )
-   TEST_LINE( Str(100, NIL, NIL)              , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;U:NIL;U:NIL F:S" )
+   HBTEST Str(NIL)                        IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST Str("A", 10, 2)                 IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:C:A;N:10;N:2 F:S"
+   HBTEST Str(100, 10, "A")               IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;C:A F:S"
+   HBTEST Str(100, 10, NIL)               IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;U:NIL F:S"
+   HBTEST Str(100, NIL, NIL)              IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;U:NIL;U:NIL F:S"
    IF TEST_DBFAvail()
-   TEST_LINE( Str( w_TEST->TYPE_N_I )         , "        100"    )
-   TEST_LINE( Str( w_TEST->TYPE_N_IE )        , "          0"    )
-   TEST_LINE( Str( w_TEST->TYPE_N_D )         , "    101.127"    )
-   TEST_LINE( Str( w_TEST->TYPE_N_DE )        , "      0.000"    )
+   HBTEST Str( w_TEST->TYPE_N_I )         IS "        100"
+   HBTEST Str( w_TEST->TYPE_N_IE )        IS "          0"
+   HBTEST Str( w_TEST->TYPE_N_D )         IS "    101.127"
+   HBTEST Str( w_TEST->TYPE_N_DE )        IS "      0.000"
    ENDIF
-   TEST_LINE( Str(5000000000.0)               , "5000000000.0"   )
-   TEST_LINE( Str(50000000)                   , "  50000000"     )
-   TEST_LINE( Str(500000000)                  , " 500000000"     )
-   TEST_LINE( Str(5000000000)                 , " 5000000000"    )
-   TEST_LINE( Str(50000000000)                , " 50000000000"   )
-   TEST_LINE( Str(-5000000000.0)              , "         -5000000000.0" )
-   TEST_LINE( Str(-5000000000)                , "         -5000000000"   )
-   TEST_LINE( Str(2.0000000000000001)         , "         2.0000000000000000" )
-   TEST_LINE( Str(2.0000000000000009)         , "         2.0000000000000010" )
-   TEST_LINE( Str(2.000000000000001)          , "         2.000000000000001"  )
-   TEST_LINE( Str(2.000000000000009)          , "         2.000000000000009"  )
-   TEST_LINE( Str(2.00000000000001)           , "         2.00000000000001"   )
-   TEST_LINE( Str(2.00000000000009)           , "         2.00000000000009"   )
-   TEST_LINE( Str(2.000000000001)             , "         2.000000000001"     )
-   TEST_LINE( Str(2.00000000001)              , "         2.00000000001"      )
-   TEST_LINE( Str(10)                         , "        10"     )
-   TEST_LINE( Str(10.0)                       , "        10.0"   )
-   TEST_LINE( Str(10.00)                      , "        10.00"  )
-   TEST_LINE( Str(10.50)                      , "        10.50"  )
-   TEST_LINE( Str(100000)                     , "    100000"     )
-   TEST_LINE( Str(-10)                        , "       -10"     )
-   TEST_LINE( Str(-10.0)                      , "       -10.0"   )
-   TEST_LINE( Str(-10.00)                     , "       -10.00"  )
-   TEST_LINE( Str(-10.50)                     , "       -10.50"  )
-   TEST_LINE( Str(-100000)                    , "   -100000"     )
-   TEST_LINE( Str(10, 5)                      , "   10"          )
-   TEST_LINE( Str(10.0, 5)                    , "   10"          )
-   TEST_LINE( Str(10.00, 5)                   , "   10"          )
-   TEST_LINE( Str(10.50, 5)                   , "   11"          )
-   TEST_LINE( Str(100000, 5)                  , "*****"          )
-   TEST_LINE( Str(100000, 8)                  , "  100000"       )
-   TEST_LINE( Str(-10, 5)                     , "  -10"          )
-   TEST_LINE( Str(-10.0, 5)                   , "  -10"          )
-   TEST_LINE( Str(-10.00, 5)                  , "  -10"          )
-   TEST_LINE( Str(-10.50, 5)                  , "  -11"          )
-   TEST_LINE( Str(-100000, 5)                 , "*****"          )
-   TEST_LINE( Str(-100000, 6)                 , "******"         )
-   TEST_LINE( Str(-100000, 8)                 , " -100000"       )
+   HBTEST Str(5000000000.0)               IS "5000000000.0"
+   HBTEST Str(50000000)                   IS "  50000000"
+   HBTEST Str(500000000)                  IS " 500000000"
+   HBTEST Str(5000000000)                 IS " 5000000000"
+   HBTEST Str(50000000000)                IS " 50000000000"
+   HBTEST Str(-5000000000.0)              IS "         -5000000000.0"
+   HBTEST Str(-5000000000)                IS "         -5000000000"
+   HBTEST Str(2.0000000000000001)         IS "         2.0000000000000000"
+   HBTEST Str(2.0000000000000009)         IS "         2.0000000000000010"
+   HBTEST Str(2.000000000000001)          IS "         2.000000000000001"
+   HBTEST Str(2.000000000000009)          IS "         2.000000000000009"
+   HBTEST Str(2.00000000000001)           IS "         2.00000000000001"
+   HBTEST Str(2.00000000000009)           IS "         2.00000000000009"
+   HBTEST Str(2.000000000001)             IS "         2.000000000001"
+   HBTEST Str(2.00000000001)              IS "         2.00000000001"
+   HBTEST Str(10)                         IS "        10"
+   HBTEST Str(10.0)                       IS "        10.0"
+   HBTEST Str(10.00)                      IS "        10.00"
+   HBTEST Str(10.50)                      IS "        10.50"
+   HBTEST Str(100000)                     IS "    100000"
+   HBTEST Str(-10)                        IS "       -10"
+   HBTEST Str(-10.0)                      IS "       -10.0"
+   HBTEST Str(-10.00)                     IS "       -10.00"
+   HBTEST Str(-10.50)                     IS "       -10.50"
+   HBTEST Str(-100000)                    IS "   -100000"
+   HBTEST Str(10, 5)                      IS "   10"
+   HBTEST Str(10.0, 5)                    IS "   10"
+   HBTEST Str(10.00, 5)                   IS "   10"
+   HBTEST Str(10.50, 5)                   IS "   11"
+   HBTEST Str(100000, 5)                  IS "*****"
+   HBTEST Str(100000, 8)                  IS "  100000"
+   HBTEST Str(-10, 5)                     IS "  -10"
+   HBTEST Str(-10.0, 5)                   IS "  -10"
+   HBTEST Str(-10.00, 5)                  IS "  -10"
+   HBTEST Str(-10.50, 5)                  IS "  -11"
+   HBTEST Str(-100000, 5)                 IS "*****"
+   HBTEST Str(-100000, 6)                 IS "******"
+   HBTEST Str(-100000, 8)                 IS " -100000"
 #ifndef __XPP__ /* Internal structures corrupted */
-   TEST_LINE( Str(10, -5)                     , "        10"     )
-   TEST_LINE( Str(10.0, -5)                   , "        10"     )
-   TEST_LINE( Str(10.00, -5)                  , "        10"     )
-   TEST_LINE( Str(10.50, -5)                  , "        11"     )
-   TEST_LINE( Str(100000, -5)                 , "    100000"     )
-   TEST_LINE( Str(100000, -8)                 , "    100000"     )
-   TEST_LINE( Str(-10, -5)                    , "       -10"     )
-   TEST_LINE( Str(-10.0, -5)                  , "       -10"     )
-   TEST_LINE( Str(-10.00, -5)                 , "       -10"     )
-   TEST_LINE( Str(-10.50, -5)                 , "       -11"     )
-   TEST_LINE( Str(-100000, -5)                , "   -100000"     )
-   TEST_LINE( Str(-100000, -6)                , "   -100000"     )
-   TEST_LINE( Str(-100000, -8)                , "   -100000"     )
+   HBTEST Str(10, -5)                     IS "        10"
+   HBTEST Str(10.0, -5)                   IS "        10"
+   HBTEST Str(10.00, -5)                  IS "        10"
+   HBTEST Str(10.50, -5)                  IS "        11"
+   HBTEST Str(100000, -5)                 IS "    100000"
+   HBTEST Str(100000, -8)                 IS "    100000"
+   HBTEST Str(-10, -5)                    IS "       -10"
+   HBTEST Str(-10.0, -5)                  IS "       -10"
+   HBTEST Str(-10.00, -5)                 IS "       -10"
+   HBTEST Str(-10.50, -5)                 IS "       -11"
+   HBTEST Str(-100000, -5)                IS "   -100000"
+   HBTEST Str(-100000, -6)                IS "   -100000"
+   HBTEST Str(-100000, -8)                IS "   -100000"
 #endif
-   TEST_LINE( Str(10, 5, 0)                   , "   10"          )
-   TEST_LINE( Str(10.0, 5, 0)                 , "   10"          )
-   TEST_LINE( Str(10.00, 5, 0)                , "   10"          )
-   TEST_LINE( Str(10.50, 5, 0)                , "   11"          )
-   TEST_LINE( Str(100000, 5, 0)               , "*****"          )
-   TEST_LINE( Str(-10, 5, 0)                  , "  -10"          )
-   TEST_LINE( Str(-10.0, 5, 0)                , "  -10"          )
-   TEST_LINE( Str(-10.00, 5, 0)               , "  -10"          )
-   TEST_LINE( Str(-10.50, 5, 0)               , "  -11"          )
-   TEST_LINE( Str(-100000, 5, 0)              , "*****"          )
-   TEST_LINE( Str(-100000, 6, 0)              , "******"         )
-   TEST_LINE( Str(-100000, 8, 0)              , " -100000"       )
-   TEST_LINE( Str(10, 5, 1)                   , " 10.0"          )
-   TEST_LINE( Str(10.0, 5, 1)                 , " 10.0"          )
-   TEST_LINE( Str(10.00, 5, 1)                , " 10.0"          )
-   TEST_LINE( Str(10.50, 5, 1)                , " 10.5"          )
-   TEST_LINE( Str(100000, 5, 1)               , "*****"          )
-   TEST_LINE( Str(-10, 5, 1)                  , "-10.0"          )
-   TEST_LINE( Str(-10.0, 5, 1)                , "-10.0"          )
-   TEST_LINE( Str(-10.00, 5, 1)               , "-10.0"          )
-   TEST_LINE( Str(-10.50, 5, 1)               , "-10.5"          )
-   TEST_LINE( Str(-100000, 5, 1)              , "*****"          )
-   TEST_LINE( Str(-100000, 6, 1)              , "******"         )
-   TEST_LINE( Str(-100000, 8, 1)              , "********"       )
+   HBTEST Str(10, 5, 0)                   IS "   10"
+   HBTEST Str(10.0, 5, 0)                 IS "   10"
+   HBTEST Str(10.00, 5, 0)                IS "   10"
+   HBTEST Str(10.50, 5, 0)                IS "   11"
+   HBTEST Str(100000, 5, 0)               IS "*****"
+   HBTEST Str(-10, 5, 0)                  IS "  -10"
+   HBTEST Str(-10.0, 5, 0)                IS "  -10"
+   HBTEST Str(-10.00, 5, 0)               IS "  -10"
+   HBTEST Str(-10.50, 5, 0)               IS "  -11"
+   HBTEST Str(-100000, 5, 0)              IS "*****"
+   HBTEST Str(-100000, 6, 0)              IS "******"
+   HBTEST Str(-100000, 8, 0)              IS " -100000"
+   HBTEST Str(10, 5, 1)                   IS " 10.0"
+   HBTEST Str(10.0, 5, 1)                 IS " 10.0"
+   HBTEST Str(10.00, 5, 1)                IS " 10.0"
+   HBTEST Str(10.50, 5, 1)                IS " 10.5"
+   HBTEST Str(100000, 5, 1)               IS "*****"
+   HBTEST Str(-10, 5, 1)                  IS "-10.0"
+   HBTEST Str(-10.0, 5, 1)                IS "-10.0"
+   HBTEST Str(-10.00, 5, 1)               IS "-10.0"
+   HBTEST Str(-10.50, 5, 1)               IS "-10.5"
+   HBTEST Str(-100000, 5, 1)              IS "*****"
+   HBTEST Str(-100000, 6, 1)              IS "******"
+   HBTEST Str(-100000, 8, 1)              IS "********"
 #ifndef __XPP__ /* Internal structures corrupted */
-   TEST_LINE( Str(10, 5, -1)                  , "   10"          )
-   TEST_LINE( Str(10.0, 5, -1)                , "   10"          )
-   TEST_LINE( Str(10.00, 5, -1)               , "   10"          )
-   TEST_LINE( Str(10.50, 5, -1)               , "   11"          )
-   TEST_LINE( Str(100000, 5, -1)              , "*****"          )
-   TEST_LINE( Str(-10, 5, -1)                 , "  -10"          )
-   TEST_LINE( Str(-10.0, 5, -1)               , "  -10"          )
-   TEST_LINE( Str(-10.00, 5, -1)              , "  -10"          )
-   TEST_LINE( Str(-10.50, 5, -1)              , "  -11"          )
-   TEST_LINE( Str(-100000, 5, -1)             , "*****"          )
-   TEST_LINE( Str(-100000, 6, -1)             , "******"         )
-   TEST_LINE( Str(-100000, 8, -1)             , " -100000"       )
+   HBTEST Str(10, 5, -1)                  IS "   10"
+   HBTEST Str(10.0, 5, -1)                IS "   10"
+   HBTEST Str(10.00, 5, -1)               IS "   10"
+   HBTEST Str(10.50, 5, -1)               IS "   11"
+   HBTEST Str(100000, 5, -1)              IS "*****"
+   HBTEST Str(-10, 5, -1)                 IS "  -10"
+   HBTEST Str(-10.0, 5, -1)               IS "  -10"
+   HBTEST Str(-10.00, 5, -1)              IS "  -10"
+   HBTEST Str(-10.50, 5, -1)              IS "  -11"
+   HBTEST Str(-100000, 5, -1)             IS "*****"
+   HBTEST Str(-100000, 6, -1)             IS "******"
+   HBTEST Str(-100000, 8, -1)             IS " -100000"
 #endif
 
    /* StrZero() */
 
 #ifdef HB_CLP_STRICT
-   TEST_LINE( StrZero(NIL)                    , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( StrZero("A", 10, 2)             , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:C:A;N:10;N:2 F:S" )
-   TEST_LINE( StrZero(100, 10, "A")           , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;C:A F:S" )
-   TEST_LINE( StrZero(100, 10, NIL)           , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;U:NIL F:S" )
-   TEST_LINE( StrZero(100, NIL, NIL)          , "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;U:NIL;U:NIL F:S" )
+   HBTEST StrZero(NIL)                    IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST StrZero("A", 10, 2)             IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:C:A;N:10;N:2 F:S"
+   HBTEST StrZero(100, 10, "A")           IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;C:A F:S"
+   HBTEST StrZero(100, 10, NIL)           IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;N:10;U:NIL F:S"
+   HBTEST StrZero(100, NIL, NIL)          IS "E 1 BASE 1099 Argument error (STR) OS:0 #:0 A:3:N:100;U:NIL;U:NIL F:S"
 #else
-   TEST_LINE( StrZero(NIL)                    , "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:1:U:NIL F:S" )
-   TEST_LINE( StrZero("A", 10, 2)             , "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:3:C:A;N:10;N:2 F:S" )
-   TEST_LINE( StrZero(100, 10, "A")           , "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:3:N:100;N:10;C:A F:S" )
-   TEST_LINE( StrZero(100, 10, NIL)           , "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:3:N:100;N:10;U:NIL F:S" )
-   TEST_LINE( StrZero(100, NIL, NIL)          , "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:3:N:100;U:NIL;U:NIL F:S" )
+   HBTEST StrZero(NIL)                    IS "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:1:U:NIL F:S"
+   HBTEST StrZero("A", 10, 2)             IS "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:3:C:A;N:10;N:2 F:S"
+   HBTEST StrZero(100, 10, "A")           IS "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:3:N:100;N:10;C:A F:S"
+   HBTEST StrZero(100, 10, NIL)           IS "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:3:N:100;N:10;U:NIL F:S"
+   HBTEST StrZero(100, NIL, NIL)          IS "E 1 BASE 6003 Argument error (STRZERO) OS:0 #:0 A:3:N:100;U:NIL;U:NIL F:S"
 #endif
-   TEST_LINE( StrZero(10)                     , "0000000010"     )
-   TEST_LINE( StrZero(10.0)                   , "0000000010.0"   )
-   TEST_LINE( StrZero(10.00)                  , "0000000010.00"  )
-   TEST_LINE( StrZero(10.50)                  , "0000000010.50"  )
-   TEST_LINE( StrZero(100000)                 , "0000100000"     )
-   TEST_LINE( StrZero(-10)                    , "-000000010"     )
-   TEST_LINE( StrZero(-10.0)                  , "-000000010.0"   )
-   TEST_LINE( StrZero(-10.00)                 , "-000000010.00"  )
-   TEST_LINE( StrZero(-10.50)                 , "-000000010.50"  )
-   TEST_LINE( StrZero(-100000)                , "-000100000"     )
-   TEST_LINE( StrZero(10, 5)                  , "00010"          )
-   TEST_LINE( StrZero(10.0, 5)                , "00010"          )
-   TEST_LINE( StrZero(10.00, 5)               , "00010"          )
-   TEST_LINE( StrZero(10.50, 5)               , "00011"          )
-   TEST_LINE( StrZero(100000, 5)              , "*****"          )
-   TEST_LINE( StrZero(100000, 8)              , "00100000"       )
-   TEST_LINE( StrZero(-10, 5)                 , "-0010"          )
-   TEST_LINE( StrZero(-10.0, 5)               , "-0010"          )
-   TEST_LINE( StrZero(-10.00, 5)              , "-0010"          )
-   TEST_LINE( StrZero(-10.50, 5)              , "-0011"          )
-   TEST_LINE( StrZero(-100000, 5)             , "*****"          )
-   TEST_LINE( StrZero(-100000, 6)             , "******"         )
-   TEST_LINE( StrZero(-100000, 8)             , "-0100000"       )
+   HBTEST StrZero(10)                     IS "0000000010"
+   HBTEST StrZero(10.0)                   IS "0000000010.0"
+   HBTEST StrZero(10.00)                  IS "0000000010.00"
+   HBTEST StrZero(10.50)                  IS "0000000010.50"
+   HBTEST StrZero(100000)                 IS "0000100000"
+   HBTEST StrZero(-10)                    IS "-000000010"
+   HBTEST StrZero(-10.0)                  IS "-000000010.0"
+   HBTEST StrZero(-10.00)                 IS "-000000010.00"
+   HBTEST StrZero(-10.50)                 IS "-000000010.50"
+   HBTEST StrZero(-100000)                IS "-000100000"
+   HBTEST StrZero(10, 5)                  IS "00010"
+   HBTEST StrZero(10.0, 5)                IS "00010"
+   HBTEST StrZero(10.00, 5)               IS "00010"
+   HBTEST StrZero(10.50, 5)               IS "00011"
+   HBTEST StrZero(100000, 5)              IS "*****"
+   HBTEST StrZero(100000, 8)              IS "00100000"
+   HBTEST StrZero(-10, 5)                 IS "-0010"
+   HBTEST StrZero(-10.0, 5)               IS "-0010"
+   HBTEST StrZero(-10.00, 5)              IS "-0010"
+   HBTEST StrZero(-10.50, 5)              IS "-0011"
+   HBTEST StrZero(-100000, 5)             IS "*****"
+   HBTEST StrZero(-100000, 6)             IS "******"
+   HBTEST StrZero(-100000, 8)             IS "-0100000"
 #ifndef __XPP__ /* Internal structures corrupted */
-   TEST_LINE( StrZero(10, -5)                 , "0000000010"     )
-   TEST_LINE( StrZero(10.0, -5)               , "0000000010"     )
-   TEST_LINE( StrZero(10.00, -5)              , "0000000010"     )
-   TEST_LINE( StrZero(10.50, -5)              , "0000000011"     )
-   TEST_LINE( StrZero(100000, -5)             , "0000100000"     )
-   TEST_LINE( StrZero(100000, -8)             , "0000100000"     )
-   TEST_LINE( StrZero(-10, -5)                , "-000000010"     )
-   TEST_LINE( StrZero(-10.0, -5)              , "-000000010"     )
-   TEST_LINE( StrZero(-10.00, -5)             , "-000000010"     )
-   TEST_LINE( StrZero(-10.50, -5)             , "-000000011"     )
-   TEST_LINE( StrZero(-100000, -5)            , "-000100000"     )
-   TEST_LINE( StrZero(-100000, -6)            , "-000100000"     )
-   TEST_LINE( StrZero(-100000, -8)            , "-000100000"     )
+   HBTEST StrZero(10, -5)                 IS "0000000010"
+   HBTEST StrZero(10.0, -5)               IS "0000000010"
+   HBTEST StrZero(10.00, -5)              IS "0000000010"
+   HBTEST StrZero(10.50, -5)              IS "0000000011"
+   HBTEST StrZero(100000, -5)             IS "0000100000"
+   HBTEST StrZero(100000, -8)             IS "0000100000"
+   HBTEST StrZero(-10, -5)                IS "-000000010"
+   HBTEST StrZero(-10.0, -5)              IS "-000000010"
+   HBTEST StrZero(-10.00, -5)             IS "-000000010"
+   HBTEST StrZero(-10.50, -5)             IS "-000000011"
+   HBTEST StrZero(-100000, -5)            IS "-000100000"
+   HBTEST StrZero(-100000, -6)            IS "-000100000"
+   HBTEST StrZero(-100000, -8)            IS "-000100000"
 #endif
-   TEST_LINE( StrZero(10, 5, 0)               , "00010"          )
-   TEST_LINE( StrZero(10.0, 5, 0)             , "00010"          )
-   TEST_LINE( StrZero(10.50, 5, 0)            , "00011"          )
-   TEST_LINE( StrZero(100000, 5, 0)           , "*****"          )
-   TEST_LINE( StrZero(-10, 5, 0)              , "-0010"          )
-   TEST_LINE( StrZero(-10.0, 5, 0)            , "-0010"          )
-   TEST_LINE( StrZero(-10.00, 5, 0)           , "-0010"          )
-   TEST_LINE( StrZero(-10.50, 5, 0)           , "-0011"          )
-   TEST_LINE( StrZero(-100000, 5, 0)          , "*****"          )
-   TEST_LINE( StrZero(-100000, 6, 0)          , "******"         )
-   TEST_LINE( StrZero(-100000, 8, 0)          , "-0100000"       )
-   TEST_LINE( StrZero(10, 5, 1)               , "010.0"          )
-   TEST_LINE( StrZero(10.0, 5, 1)             , "010.0"          )
-   TEST_LINE( StrZero(10.50, 5, 1)            , "010.5"          )
-   TEST_LINE( StrZero(100000, 5, 1)           , "*****"          )
-   TEST_LINE( StrZero(-10, 5, 1)              , "-10.0"          )
-   TEST_LINE( StrZero(-10.0, 5, 1)            , "-10.0"          )
-   TEST_LINE( StrZero(-10.00, 5, 1)           , "-10.0"          )
-   TEST_LINE( StrZero(-10.50, 5, 1)           , "-10.5"          )
-   TEST_LINE( StrZero(-100000, 5, 1)          , "*****"          )
-   TEST_LINE( StrZero(-100000, 6, 1)          , "******"         )
-   TEST_LINE( StrZero(-100000, 8, 1)          , "********"       )
+   HBTEST StrZero(10, 5, 0)               IS "00010"
+   HBTEST StrZero(10.0, 5, 0)             IS "00010"
+   HBTEST StrZero(10.50, 5, 0)            IS "00011"
+   HBTEST StrZero(100000, 5, 0)           IS "*****"
+   HBTEST StrZero(-10, 5, 0)              IS "-0010"
+   HBTEST StrZero(-10.0, 5, 0)            IS "-0010"
+   HBTEST StrZero(-10.00, 5, 0)           IS "-0010"
+   HBTEST StrZero(-10.50, 5, 0)           IS "-0011"
+   HBTEST StrZero(-100000, 5, 0)          IS "*****"
+   HBTEST StrZero(-100000, 6, 0)          IS "******"
+   HBTEST StrZero(-100000, 8, 0)          IS "-0100000"
+   HBTEST StrZero(10, 5, 1)               IS "010.0"
+   HBTEST StrZero(10.0, 5, 1)             IS "010.0"
+   HBTEST StrZero(10.50, 5, 1)            IS "010.5"
+   HBTEST StrZero(100000, 5, 1)           IS "*****"
+   HBTEST StrZero(-10, 5, 1)              IS "-10.0"
+   HBTEST StrZero(-10.0, 5, 1)            IS "-10.0"
+   HBTEST StrZero(-10.00, 5, 1)           IS "-10.0"
+   HBTEST StrZero(-10.50, 5, 1)           IS "-10.5"
+   HBTEST StrZero(-100000, 5, 1)          IS "*****"
+   HBTEST StrZero(-100000, 6, 1)          IS "******"
+   HBTEST StrZero(-100000, 8, 1)          IS "********"
 #ifndef __XPP__ /* Internal structures corrupted */
-   TEST_LINE( StrZero(10, 5, -1)              , "00010"          )
-   TEST_LINE( StrZero(10.0, 5, -1)            , "00010"          )
-   TEST_LINE( StrZero(10.50, 5, -1)           , "00011"          )
-   TEST_LINE( StrZero(100000, 5, -1)          , "*****"          )
-   TEST_LINE( StrZero(-10, 5, -1)             , "-0010"          )
-   TEST_LINE( StrZero(-10.0, 5, -1)           , "-0010"          )
-   TEST_LINE( StrZero(-10.00, 5, -1)          , "-0010"          )
-   TEST_LINE( StrZero(-10.50, 5, -1)          , "-0011"          )
-   TEST_LINE( StrZero(-100000, 5, -1)         , "*****"          )
-   TEST_LINE( StrZero(-100000, 6, -1)         , "******"         )
-   TEST_LINE( StrZero(-100000, 8, -1)         , "-0100000"       )
+   HBTEST StrZero(10, 5, -1)              IS "00010"
+   HBTEST StrZero(10.0, 5, -1)            IS "00010"
+   HBTEST StrZero(10.50, 5, -1)           IS "00011"
+   HBTEST StrZero(100000, 5, -1)          IS "*****"
+   HBTEST StrZero(-10, 5, -1)             IS "-0010"
+   HBTEST StrZero(-10.0, 5, -1)           IS "-0010"
+   HBTEST StrZero(-10.00, 5, -1)          IS "-0010"
+   HBTEST StrZero(-10.50, 5, -1)          IS "-0011"
+   HBTEST StrZero(-100000, 5, -1)         IS "*****"
+   HBTEST StrZero(-100000, 6, -1)         IS "******"
+   HBTEST StrZero(-100000, 8, -1)         IS "-0100000"
 #endif
 
    RETURN
@@ -256,111 +256,111 @@ PROCEDURE Main_STRA()
 PROCEDURE Comp_Str()
    LOCAL old_exact := Set( _SET_EXACT, .F. )
 
-   TEST_LINE( "ABC" == "", .F. )
-   TEST_LINE( "ABC" = "", .T. )
-   TEST_LINE( "ABC" != "", .F. )
-   TEST_LINE( "ABC" < "", .F. )
-   TEST_LINE( "ABC" <= "", .T. )
-   TEST_LINE( "ABC" > "", .F. )
-   TEST_LINE( "ABC" >= "", .T. )
-   TEST_LINE( "" == "ABC", .F. )
-   TEST_LINE( "" = "ABC", .F. )
-   TEST_LINE( "" != "ABC", .T. )
-   TEST_LINE( "" < "ABC", .T. )
-   TEST_LINE( "" <= "ABC", .T. )
-   TEST_LINE( "" > "ABC", .F. )
-   TEST_LINE( "" >= "ABC", .F. )
-   TEST_LINE( "ABC" == " ", .F. )
-   TEST_LINE( "ABC" = " ", .F. )
-   TEST_LINE( "ABC" != " ", .T. )
-   TEST_LINE( "ABC" < " ", .F. )
-   TEST_LINE( "ABC" <= " ", .F. )
-   TEST_LINE( "ABC" > " ", .T. )
-   TEST_LINE( "ABC" >= " ", .T. )
-   TEST_LINE( " " == "ABC", .F. )
-   TEST_LINE( " " = "ABC", .F. )
-   TEST_LINE( " " != "ABC", .T. )
-   TEST_LINE( " " < "ABC", .T. )
-   TEST_LINE( " " <= "ABC", .T. )
-   TEST_LINE( " " > "ABC", .F. )
-   TEST_LINE( " " >= "ABC", .F. )
-   TEST_LINE( "ABC" == "ABC", .T. )
-   TEST_LINE( "ABC" = "ABC", .T. )
-   TEST_LINE( "ABC" != "ABC", .F. )
-   TEST_LINE( "ABC" < "ABC", .F. )
-   TEST_LINE( "ABC" <= "ABC", .T. )
-   TEST_LINE( "ABC" > "ABC", .F. )
-   TEST_LINE( "ABC" >= "ABC", .T. )
-   TEST_LINE( "ABC" == "ABCD", .F. )
-   TEST_LINE( "ABC" = "ABCD", .F. )
-   TEST_LINE( "ABC" != "ABCD", .T. )
-   TEST_LINE( "ABC" < "ABCD", .T. )
-   TEST_LINE( "ABC" <= "ABCD", .T. )
-   TEST_LINE( "ABC" > "ABCD", .F. )
-   TEST_LINE( "ABC" >= "ABCD", .F. )
-   TEST_LINE( "ABCD" == "ABC", .F. )
-   TEST_LINE( "ABCD" = "ABC", .T. )
-   TEST_LINE( "ABCD" != "ABC", .F. )
-   TEST_LINE( "ABCD" < "ABC", .F. )
-   TEST_LINE( "ABCD" <= "ABC", .T. )
-   TEST_LINE( "ABCD" > "ABC", .F. )
-   TEST_LINE( "ABCD" >= "ABC", .T. )
-   TEST_LINE( "ABC" == "ABC ", .F. )
-   TEST_LINE( "ABC" = "ABC ", .F. )
-   TEST_LINE( "ABC" != "ABC ", .T. )
-   TEST_LINE( "ABC" < "ABC ", .T. )
-   TEST_LINE( "ABC" <= "ABC ", .T. )
-   TEST_LINE( "ABC" > "ABC ", .F. )
-   TEST_LINE( "ABC" >= "ABC ", .F. )
-   TEST_LINE( "ABC " == "ABC", .F. )
-   TEST_LINE( "ABC " = "ABC", .T. )
-   TEST_LINE( "ABC " != "ABC", .F. )
-   TEST_LINE( "ABC " < "ABC", .F. )
-   TEST_LINE( "ABC " <= "ABC", .T. )
-   TEST_LINE( "ABC " > "ABC", .F. )
-   TEST_LINE( "ABC " >= "ABC", .T. )
-   TEST_LINE( "ABC" == "DEF", .F. )
-   TEST_LINE( "ABC" = "DEF", .F. )
-   TEST_LINE( "ABC" != "DEF", .T. )
-   TEST_LINE( "ABC" < "DEF", .T. )
-   TEST_LINE( "ABC" <= "DEF", .T. )
-   TEST_LINE( "ABC" > "DEF", .F. )
-   TEST_LINE( "ABC" >= "DEF", .F. )
-   TEST_LINE( "DEF" == "ABC", .F. )
-   TEST_LINE( "DEF" = "ABC", .F. )
-   TEST_LINE( "DEF" != "ABC", .T. )
-   TEST_LINE( "DEF" < "ABC", .F. )
-   TEST_LINE( "DEF" <= "ABC", .F. )
-   TEST_LINE( "DEF" > "ABC", .T. )
-   TEST_LINE( "DEF" >= "ABC", .T. )
-   TEST_LINE( "ABC" == "DEFG", .F. )
-   TEST_LINE( "ABC" = "DEFG", .F. )
-   TEST_LINE( "ABC" != "DEFG", .T. )
-   TEST_LINE( "ABC" < "DEFG", .T. )
-   TEST_LINE( "ABC" <= "DEFG", .T. )
-   TEST_LINE( "ABC" > "DEFG", .F. )
-   TEST_LINE( "ABC" >= "DEFG", .F. )
-   TEST_LINE( "DEFG" == "ABC", .F. )
-   TEST_LINE( "DEFG" = "ABC", .F. )
-   TEST_LINE( "DEFG" != "ABC", .T. )
-   TEST_LINE( "DEFG" < "ABC", .F. )
-   TEST_LINE( "DEFG" <= "ABC", .F. )
-   TEST_LINE( "DEFG" > "ABC", .T. )
-   TEST_LINE( "DEFG" >= "ABC", .T. )
-   TEST_LINE( "ABCD" == "DEF", .F. )
-   TEST_LINE( "ABCD" = "DEF", .F. )
-   TEST_LINE( "ABCD" != "DEF", .T. )
-   TEST_LINE( "ABCD" < "DEF", .T. )
-   TEST_LINE( "ABCD" <= "DEF", .T. )
-   TEST_LINE( "ABCD" > "DEF", .F. )
-   TEST_LINE( "ABCD" >= "DEF", .F. )
-   TEST_LINE( "DEF" == "ABCD", .F. )
-   TEST_LINE( "DEF" = "ABCD", .F. )
-   TEST_LINE( "DEF" != "ABCD", .T. )
-   TEST_LINE( "DEF" < "ABCD", .F. )
-   TEST_LINE( "DEF" <= "ABCD", .F. )
-   TEST_LINE( "DEF" > "ABCD", .T. )
-   TEST_LINE( "DEF" >= "ABCD", .T. )
+   HBTEST "ABC" == ""      IS .F.
+   HBTEST "ABC" = ""       IS .T.
+   HBTEST "ABC" != ""      IS .F.
+   HBTEST "ABC" < ""       IS .F.
+   HBTEST "ABC" <= ""      IS .T.
+   HBTEST "ABC" > ""       IS .F.
+   HBTEST "ABC" >= ""      IS .T.
+   HBTEST "" == "ABC"      IS .F.
+   HBTEST "" = "ABC"       IS .F.
+   HBTEST "" != "ABC"      IS .T.
+   HBTEST "" < "ABC"       IS .T.
+   HBTEST "" <= "ABC"      IS .T.
+   HBTEST "" > "ABC"       IS .F.
+   HBTEST "" >= "ABC"      IS .F.
+   HBTEST "ABC" == " "     IS .F.
+   HBTEST "ABC" = " "      IS .F.
+   HBTEST "ABC" != " "     IS .T.
+   HBTEST "ABC" < " "      IS .F.
+   HBTEST "ABC" <= " "     IS .F.
+   HBTEST "ABC" > " "      IS .T.
+   HBTEST "ABC" >= " "     IS .T.
+   HBTEST " " == "ABC"     IS .F.
+   HBTEST " " = "ABC"      IS .F.
+   HBTEST " " != "ABC"     IS .T.
+   HBTEST " " < "ABC"      IS .T.
+   HBTEST " " <= "ABC"     IS .T.
+   HBTEST " " > "ABC"      IS .F.
+   HBTEST " " >= "ABC"     IS .F.
+   HBTEST "ABC" == "ABC"   IS .T.
+   HBTEST "ABC" = "ABC"    IS .T.
+   HBTEST "ABC" != "ABC"   IS .F.
+   HBTEST "ABC" < "ABC"    IS .F.
+   HBTEST "ABC" <= "ABC"   IS .T.
+   HBTEST "ABC" > "ABC"    IS .F.
+   HBTEST "ABC" >= "ABC"   IS .T.
+   HBTEST "ABC" == "ABCD"  IS .F.
+   HBTEST "ABC" = "ABCD"   IS .F.
+   HBTEST "ABC" != "ABCD"  IS .T.
+   HBTEST "ABC" < "ABCD"   IS .T.
+   HBTEST "ABC" <= "ABCD"  IS .T.
+   HBTEST "ABC" > "ABCD"   IS .F.
+   HBTEST "ABC" >= "ABCD"  IS .F.
+   HBTEST "ABCD" == "ABC"  IS .F.
+   HBTEST "ABCD" = "ABC"   IS .T.
+   HBTEST "ABCD" != "ABC"  IS .F.
+   HBTEST "ABCD" < "ABC"   IS .F.
+   HBTEST "ABCD" <= "ABC"  IS .T.
+   HBTEST "ABCD" > "ABC"   IS .F.
+   HBTEST "ABCD" >= "ABC"  IS .T.
+   HBTEST "ABC" == "ABC "  IS .F.
+   HBTEST "ABC" = "ABC "   IS .F.
+   HBTEST "ABC" != "ABC "  IS .T.
+   HBTEST "ABC" < "ABC "   IS .T.
+   HBTEST "ABC" <= "ABC "  IS .T.
+   HBTEST "ABC" > "ABC "   IS .F.
+   HBTEST "ABC" >= "ABC "  IS .F.
+   HBTEST "ABC " == "ABC"  IS .F.
+   HBTEST "ABC " = "ABC"   IS .T.
+   HBTEST "ABC " != "ABC"  IS .F.
+   HBTEST "ABC " < "ABC"   IS .F.
+   HBTEST "ABC " <= "ABC"  IS .T.
+   HBTEST "ABC " > "ABC"   IS .F.
+   HBTEST "ABC " >= "ABC"  IS .T.
+   HBTEST "ABC" == "DEF"   IS .F.
+   HBTEST "ABC" = "DEF"    IS .F.
+   HBTEST "ABC" != "DEF"   IS .T.
+   HBTEST "ABC" < "DEF"    IS .T.
+   HBTEST "ABC" <= "DEF"   IS .T.
+   HBTEST "ABC" > "DEF"    IS .F.
+   HBTEST "ABC" >= "DEF"   IS .F.
+   HBTEST "DEF" == "ABC"   IS .F.
+   HBTEST "DEF" = "ABC"    IS .F.
+   HBTEST "DEF" != "ABC"   IS .T.
+   HBTEST "DEF" < "ABC"    IS .F.
+   HBTEST "DEF" <= "ABC"   IS .F.
+   HBTEST "DEF" > "ABC"    IS .T.
+   HBTEST "DEF" >= "ABC"   IS .T.
+   HBTEST "ABC" == "DEFG"  IS .F.
+   HBTEST "ABC" = "DEFG"   IS .F.
+   HBTEST "ABC" != "DEFG"  IS .T.
+   HBTEST "ABC" < "DEFG"   IS .T.
+   HBTEST "ABC" <= "DEFG"  IS .T.
+   HBTEST "ABC" > "DEFG"   IS .F.
+   HBTEST "ABC" >= "DEFG"  IS .F.
+   HBTEST "DEFG" == "ABC"  IS .F.
+   HBTEST "DEFG" = "ABC"   IS .F.
+   HBTEST "DEFG" != "ABC"  IS .T.
+   HBTEST "DEFG" < "ABC"   IS .F.
+   HBTEST "DEFG" <= "ABC"  IS .F.
+   HBTEST "DEFG" > "ABC"   IS .T.
+   HBTEST "DEFG" >= "ABC"  IS .T.
+   HBTEST "ABCD" == "DEF"  IS .F.
+   HBTEST "ABCD" = "DEF"   IS .F.
+   HBTEST "ABCD" != "DEF"  IS .T.
+   HBTEST "ABCD" < "DEF"   IS .T.
+   HBTEST "ABCD" <= "DEF"  IS .T.
+   HBTEST "ABCD" > "DEF"   IS .F.
+   HBTEST "ABCD" >= "DEF"  IS .F.
+   HBTEST "DEF" == "ABCD"  IS .F.
+   HBTEST "DEF" = "ABCD"   IS .F.
+   HBTEST "DEF" != "ABCD"  IS .T.
+   HBTEST "DEF" < "ABCD"   IS .F.
+   HBTEST "DEF" <= "ABCD"  IS .F.
+   HBTEST "DEF" > "ABCD"   IS .T.
+   HBTEST "DEF" >= "ABCD"  IS .T.
 
    Set( _SET_EXACT, old_exact )
    RETURN
@@ -368,111 +368,111 @@ PROCEDURE Comp_Str()
 PROCEDURE Exact_Str()
    LOCAL old_exact := Set( _SET_EXACT, .T. )
 
-   TEST_LINE( "ABC" == "", .F. )
-   TEST_LINE( "ABC" = "", .F. )
-   TEST_LINE( "ABC" != "", .T. )
-   TEST_LINE( "ABC" < "", .F. )
-   TEST_LINE( "ABC" <= "", .F. )
-   TEST_LINE( "ABC" > "", .T. )
-   TEST_LINE( "ABC" >= "", .T. )
-   TEST_LINE( "" == "ABC", .F. )
-   TEST_LINE( "" = "ABC", .F. )
-   TEST_LINE( "" != "ABC", .T. )
-   TEST_LINE( "" < "ABC", .T. )
-   TEST_LINE( "" <= "ABC", .T. )
-   TEST_LINE( "" > "ABC", .F. )
-   TEST_LINE( "" >= "ABC", .F. )
-   TEST_LINE( "ABC" == " ", .F. )
-   TEST_LINE( "ABC" = " ", .F. )
-   TEST_LINE( "ABC" != " ", .T. )
-   TEST_LINE( "ABC" < " ", .F. )
-   TEST_LINE( "ABC" <= " ", .F. )
-   TEST_LINE( "ABC" > " ", .T. )
-   TEST_LINE( "ABC" >= " ", .T. )
-   TEST_LINE( " " == "ABC", .F. )
-   TEST_LINE( " " = "ABC", .F. )
-   TEST_LINE( " " != "ABC", .T. )
-   TEST_LINE( " " < "ABC", .T. )
-   TEST_LINE( " " <= "ABC", .T. )
-   TEST_LINE( " " > "ABC", .F. )
-   TEST_LINE( " " >= "ABC", .F. )
-   TEST_LINE( "ABC" == "ABC", .T. )
-   TEST_LINE( "ABC" = "ABC", .T. )
-   TEST_LINE( "ABC" != "ABC", .F. )
-   TEST_LINE( "ABC" < "ABC", .F. )
-   TEST_LINE( "ABC" <= "ABC", .T. )
-   TEST_LINE( "ABC" > "ABC", .F. )
-   TEST_LINE( "ABC" >= "ABC", .T. )
-   TEST_LINE( "ABC" == "ABCD", .F. )
-   TEST_LINE( "ABC" = "ABCD", .F. )
-   TEST_LINE( "ABC" != "ABCD", .T. )
-   TEST_LINE( "ABC" < "ABCD", .T. )
-   TEST_LINE( "ABC" <= "ABCD", .T. )
-   TEST_LINE( "ABC" > "ABCD", .F. )
-   TEST_LINE( "ABC" >= "ABCD", .F. )
-   TEST_LINE( "ABCD" == "ABC", .F. )
-   TEST_LINE( "ABCD" = "ABC", .F. )
-   TEST_LINE( "ABCD" != "ABC", .T. )
-   TEST_LINE( "ABCD" < "ABC", .F. )
-   TEST_LINE( "ABCD" <= "ABC", .F. )
-   TEST_LINE( "ABCD" > "ABC", .T. )
-   TEST_LINE( "ABCD" >= "ABC", .T. )
-   TEST_LINE( "ABC" == "ABC ", .F. )
-   TEST_LINE( "ABC" = "ABC ", .T. )
-   TEST_LINE( "ABC" != "ABC ", .F. )
-   TEST_LINE( "ABC" < "ABC ", .F. )
-   TEST_LINE( "ABC" <= "ABC ", .T. )
-   TEST_LINE( "ABC" > "ABC ", .F. )
-   TEST_LINE( "ABC" >= "ABC ", .T. )
-   TEST_LINE( "ABC " == "ABC", .F. )
-   TEST_LINE( "ABC " = "ABC", .T. )
-   TEST_LINE( "ABC " != "ABC", .F. )
-   TEST_LINE( "ABC " < "ABC", .F. )
-   TEST_LINE( "ABC " <= "ABC", .T. )
-   TEST_LINE( "ABC " > "ABC", .F. )
-   TEST_LINE( "ABC " >= "ABC", .T. )
-   TEST_LINE( "ABC" == "DEF", .F. )
-   TEST_LINE( "ABC" = "DEF", .F. )
-   TEST_LINE( "ABC" != "DEF", .T. )
-   TEST_LINE( "ABC" < "DEF", .T. )
-   TEST_LINE( "ABC" <= "DEF", .T. )
-   TEST_LINE( "ABC" > "DEF", .F. )
-   TEST_LINE( "ABC" >= "DEF", .F. )
-   TEST_LINE( "DEF" == "ABC", .F. )
-   TEST_LINE( "DEF" = "ABC", .F. )
-   TEST_LINE( "DEF" != "ABC", .T. )
-   TEST_LINE( "DEF" < "ABC", .F. )
-   TEST_LINE( "DEF" <= "ABC", .F. )
-   TEST_LINE( "DEF" > "ABC", .T. )
-   TEST_LINE( "DEF" >= "ABC", .T. )
-   TEST_LINE( "ABC" == "DEFG", .F. )
-   TEST_LINE( "ABC" = "DEFG", .F. )
-   TEST_LINE( "ABC" != "DEFG", .T. )
-   TEST_LINE( "ABC" < "DEFG", .T. )
-   TEST_LINE( "ABC" <= "DEFG", .T. )
-   TEST_LINE( "ABC" > "DEFG", .F. )
-   TEST_LINE( "ABC" >= "DEFG", .F. )
-   TEST_LINE( "DEFG" == "ABC", .F. )
-   TEST_LINE( "DEFG" = "ABC", .F. )
-   TEST_LINE( "DEFG" != "ABC", .T. )
-   TEST_LINE( "DEFG" < "ABC", .F. )
-   TEST_LINE( "DEFG" <= "ABC", .F. )
-   TEST_LINE( "DEFG" > "ABC", .T. )
-   TEST_LINE( "DEFG" >= "ABC", .T. )
-   TEST_LINE( "ABCD" == "DEF", .F. )
-   TEST_LINE( "ABCD" = "DEF", .F. )
-   TEST_LINE( "ABCD" != "DEF", .T. )
-   TEST_LINE( "ABCD" < "DEF", .T. )
-   TEST_LINE( "ABCD" <= "DEF", .T. )
-   TEST_LINE( "ABCD" > "DEF", .F. )
-   TEST_LINE( "ABCD" >= "DEF", .F. )
-   TEST_LINE( "DEF" == "ABCD", .F. )
-   TEST_LINE( "DEF" = "ABCD", .F. )
-   TEST_LINE( "DEF" != "ABCD", .T. )
-   TEST_LINE( "DEF" < "ABCD", .F. )
-   TEST_LINE( "DEF" <= "ABCD", .F. )
-   TEST_LINE( "DEF" > "ABCD", .T. )
-   TEST_LINE( "DEF" >= "ABCD", .T. )
+   HBTEST "ABC" == ""      IS .F.
+   HBTEST "ABC" = ""       IS .F.
+   HBTEST "ABC" != ""      IS .T.
+   HBTEST "ABC" < ""       IS .F.
+   HBTEST "ABC" <= ""      IS .F.
+   HBTEST "ABC" > ""       IS .T.
+   HBTEST "ABC" >= ""      IS .T.
+   HBTEST "" == "ABC"      IS .F.
+   HBTEST "" = "ABC"       IS .F.
+   HBTEST "" != "ABC"      IS .T.
+   HBTEST "" < "ABC"       IS .T.
+   HBTEST "" <= "ABC"      IS .T.
+   HBTEST "" > "ABC"       IS .F.
+   HBTEST "" >= "ABC"      IS .F.
+   HBTEST "ABC" == " "     IS .F.
+   HBTEST "ABC" = " "      IS .F.
+   HBTEST "ABC" != " "     IS .T.
+   HBTEST "ABC" < " "      IS .F.
+   HBTEST "ABC" <= " "     IS .F.
+   HBTEST "ABC" > " "      IS .T.
+   HBTEST "ABC" >= " "     IS .T.
+   HBTEST " " == "ABC"     IS .F.
+   HBTEST " " = "ABC"      IS .F.
+   HBTEST " " != "ABC"     IS .T.
+   HBTEST " " < "ABC"      IS .T.
+   HBTEST " " <= "ABC"     IS .T.
+   HBTEST " " > "ABC"      IS .F.
+   HBTEST " " >= "ABC"     IS .F.
+   HBTEST "ABC" == "ABC"   IS .T.
+   HBTEST "ABC" = "ABC"    IS .T.
+   HBTEST "ABC" != "ABC"   IS .F.
+   HBTEST "ABC" < "ABC"    IS .F.
+   HBTEST "ABC" <= "ABC"   IS .T.
+   HBTEST "ABC" > "ABC"    IS .F.
+   HBTEST "ABC" >= "ABC"   IS .T.
+   HBTEST "ABC" == "ABCD"  IS .F.
+   HBTEST "ABC" = "ABCD"   IS .F.
+   HBTEST "ABC" != "ABCD"  IS .T.
+   HBTEST "ABC" < "ABCD"   IS .T.
+   HBTEST "ABC" <= "ABCD"  IS .T.
+   HBTEST "ABC" > "ABCD"   IS .F.
+   HBTEST "ABC" >= "ABCD"  IS .F.
+   HBTEST "ABCD" == "ABC"  IS .F.
+   HBTEST "ABCD" = "ABC"   IS .F.
+   HBTEST "ABCD" != "ABC"  IS .T.
+   HBTEST "ABCD" < "ABC"   IS .F.
+   HBTEST "ABCD" <= "ABC"  IS .F.
+   HBTEST "ABCD" > "ABC"   IS .T.
+   HBTEST "ABCD" >= "ABC"  IS .T.
+   HBTEST "ABC" == "ABC "  IS .F.
+   HBTEST "ABC" = "ABC "   IS .T.
+   HBTEST "ABC" != "ABC "  IS .F.
+   HBTEST "ABC" < "ABC "   IS .F.
+   HBTEST "ABC" <= "ABC "  IS .T.
+   HBTEST "ABC" > "ABC "   IS .F.
+   HBTEST "ABC" >= "ABC "  IS .T.
+   HBTEST "ABC " == "ABC"  IS .F.
+   HBTEST "ABC " = "ABC"   IS .T.
+   HBTEST "ABC " != "ABC"  IS .F.
+   HBTEST "ABC " < "ABC"   IS .F.
+   HBTEST "ABC " <= "ABC"  IS .T.
+   HBTEST "ABC " > "ABC"   IS .F.
+   HBTEST "ABC " >= "ABC"  IS .T.
+   HBTEST "ABC" == "DEF"   IS .F.
+   HBTEST "ABC" = "DEF"    IS .F.
+   HBTEST "ABC" != "DEF"   IS .T.
+   HBTEST "ABC" < "DEF"    IS .T.
+   HBTEST "ABC" <= "DEF"   IS .T.
+   HBTEST "ABC" > "DEF"    IS .F.
+   HBTEST "ABC" >= "DEF"   IS .F.
+   HBTEST "DEF" == "ABC"   IS .F.
+   HBTEST "DEF" = "ABC"    IS .F.
+   HBTEST "DEF" != "ABC"   IS .T.
+   HBTEST "DEF" < "ABC"    IS .F.
+   HBTEST "DEF" <= "ABC"   IS .F.
+   HBTEST "DEF" > "ABC"    IS .T.
+   HBTEST "DEF" >= "ABC"   IS .T.
+   HBTEST "ABC" == "DEFG"  IS .F.
+   HBTEST "ABC" = "DEFG"   IS .F.
+   HBTEST "ABC" != "DEFG"  IS .T.
+   HBTEST "ABC" < "DEFG"   IS .T.
+   HBTEST "ABC" <= "DEFG"  IS .T.
+   HBTEST "ABC" > "DEFG"   IS .F.
+   HBTEST "ABC" >= "DEFG"  IS .F.
+   HBTEST "DEFG" == "ABC"  IS .F.
+   HBTEST "DEFG" = "ABC"   IS .F.
+   HBTEST "DEFG" != "ABC"  IS .T.
+   HBTEST "DEFG" < "ABC"   IS .F.
+   HBTEST "DEFG" <= "ABC"  IS .F.
+   HBTEST "DEFG" > "ABC"   IS .T.
+   HBTEST "DEFG" >= "ABC"  IS .T.
+   HBTEST "ABCD" == "DEF"  IS .F.
+   HBTEST "ABCD" = "DEF"   IS .F.
+   HBTEST "ABCD" != "DEF"  IS .T.
+   HBTEST "ABCD" < "DEF"   IS .T.
+   HBTEST "ABCD" <= "DEF"  IS .T.
+   HBTEST "ABCD" > "DEF"   IS .F.
+   HBTEST "ABCD" >= "DEF"  IS .F.
+   HBTEST "DEF" == "ABCD"  IS .F.
+   HBTEST "DEF" = "ABCD"   IS .F.
+   HBTEST "DEF" != "ABCD"  IS .T.
+   HBTEST "DEF" < "ABCD"   IS .F.
+   HBTEST "DEF" <= "ABCD"  IS .F.
+   HBTEST "DEF" > "ABCD"   IS .T.
+   HBTEST "DEF" >= "ABCD"  IS .T.
 
    Set( _SET_EXACT, old_exact )
 
@@ -482,44 +482,44 @@ PROCEDURE New_STRINGS()
 
 #ifdef __HARBOUR__
 
-   TEST_LINE( hb_ValToStr( 4 )                     , "         4"    )
-   TEST_LINE( hb_ValToStr( 4.0 / 2 )               , "         2.00" )
-   TEST_LINE( hb_ValToStr( "String" )              , "String"        )
-   TEST_LINE( hb_ValToStr( hb_SToD( "20010101" ) ) , "2001.01.01"    )
-   TEST_LINE( hb_ValToStr( NIL )                   , "NIL"           )
-   TEST_LINE( hb_ValToStr( .F. )                   , ".F."           )
-   TEST_LINE( hb_ValToStr( .T. )                   , ".T."           )
+   HBTEST hb_ValToStr( 4 )                     IS "         4"
+   HBTEST hb_ValToStr( 4.0 / 2 )               IS "         2.00"
+   HBTEST hb_ValToStr( "String" )              IS "String"
+   HBTEST hb_ValToStr( hb_SToD( "20010101" ) ) IS "2001.01.01"
+   HBTEST hb_ValToStr( NIL )                   IS "NIL"
+   HBTEST hb_ValToStr( .F. )                   IS ".F."
+   HBTEST hb_ValToStr( .T. )                   IS ".T."
 
-   TEST_LINE( hb_StrShrink()                       , ""              )
-   TEST_LINE( hb_StrShrink( NIL )                  , ""              )
-   TEST_LINE( hb_StrShrink( "" )                   , ""              )
-   TEST_LINE( hb_StrShrink( "", -1 )               , ""              )
-   TEST_LINE( hb_StrShrink( "", 0 )                , ""              )
-   TEST_LINE( hb_StrShrink( "", 1 )                , ""              )
-   TEST_LINE( hb_StrShrink( "", 10 )               , ""              )
-   TEST_LINE( hb_StrShrink( "a" )                  , ""              )
-   TEST_LINE( hb_StrShrink( "a", -1 )              , "a"             )
-   TEST_LINE( hb_StrShrink( "a", 0 )               , "a"             )
-   TEST_LINE( hb_StrShrink( "a", 1 )               , ""              )
-   TEST_LINE( hb_StrShrink( "a", 10 )              , ""              )
-   TEST_LINE( hb_StrShrink( "ab" )                 , "a"             )
-   TEST_LINE( hb_StrShrink( "ab", -1 )             , "ab"            )
-   TEST_LINE( hb_StrShrink( "ab", 0 )              , "ab"            )
-   TEST_LINE( hb_StrShrink( "ab", 1 )              , "a"             )
-   TEST_LINE( hb_StrShrink( "ab", 10 )             , ""              )
-   TEST_LINE( hb_StrShrink( "ab" )                 , "a"             )
-   TEST_LINE( hb_StrShrink( "ab", -2 )             , "ab"            )
-   TEST_LINE( hb_StrShrink( "ab", 2 )              , ""              )
-   TEST_LINE( hb_StrShrink( "hello" )              , "hell"          )
-   TEST_LINE( hb_StrShrink( "hello", -1 )          , "hello"         )
-   TEST_LINE( hb_StrShrink( "hello", 0 )           , "hello"         )
-   TEST_LINE( hb_StrShrink( "hello", 1 )           , "hell"          )
-   TEST_LINE( hb_StrShrink( "hello", 2 )           , "hel"           )
-   TEST_LINE( hb_StrShrink( "hello", 3 )           , "he"            )
-   TEST_LINE( hb_StrShrink( "hello", 4 )           , "h"             )
-   TEST_LINE( hb_StrShrink( "hello", 5 )           , ""              )
-   TEST_LINE( hb_StrShrink( "hello", 6 )           , ""              )
-   TEST_LINE( hb_StrShrink( "hello", 7 )           , ""              )
+   HBTEST hb_StrShrink()                       IS ""
+   HBTEST hb_StrShrink( NIL )                  IS ""
+   HBTEST hb_StrShrink( "" )                   IS ""
+   HBTEST hb_StrShrink( "", -1 )               IS ""
+   HBTEST hb_StrShrink( "", 0 )                IS ""
+   HBTEST hb_StrShrink( "", 1 )                IS ""
+   HBTEST hb_StrShrink( "", 10 )               IS ""
+   HBTEST hb_StrShrink( "a" )                  IS ""
+   HBTEST hb_StrShrink( "a", -1 )              IS "a"
+   HBTEST hb_StrShrink( "a", 0 )               IS "a"
+   HBTEST hb_StrShrink( "a", 1 )               IS ""
+   HBTEST hb_StrShrink( "a", 10 )              IS ""
+   HBTEST hb_StrShrink( "ab" )                 IS "a"
+   HBTEST hb_StrShrink( "ab", -1 )             IS "ab"
+   HBTEST hb_StrShrink( "ab", 0 )              IS "ab"
+   HBTEST hb_StrShrink( "ab", 1 )              IS "a"
+   HBTEST hb_StrShrink( "ab", 10 )             IS ""
+   HBTEST hb_StrShrink( "ab" )                 IS "a"
+   HBTEST hb_StrShrink( "ab", -2 )             IS "ab"
+   HBTEST hb_StrShrink( "ab", 2 )              IS ""
+   HBTEST hb_StrShrink( "hello" )              IS "hell"
+   HBTEST hb_StrShrink( "hello", -1 )          IS "hello"
+   HBTEST hb_StrShrink( "hello", 0 )           IS "hello"
+   HBTEST hb_StrShrink( "hello", 1 )           IS "hell"
+   HBTEST hb_StrShrink( "hello", 2 )           IS "hel"
+   HBTEST hb_StrShrink( "hello", 3 )           IS "he"
+   HBTEST hb_StrShrink( "hello", 4 )           IS "h"
+   HBTEST hb_StrShrink( "hello", 5 )           IS ""
+   HBTEST hb_StrShrink( "hello", 6 )           IS ""
+   HBTEST hb_StrShrink( "hello", 7 )           IS ""
 
 #endif
 
@@ -527,9 +527,9 @@ PROCEDURE New_STRINGS()
 
 PROCEDURE Long_STRINGS()
 
-   TEST_LINE( Right( Space( 64 * 1024 - 5 ) + "12345 7890", 10                      ), "12345 7890"                                 )
-   TEST_LINE( Len( Space( 81910 ) + "1234567890"                                    ), 81920                                        )
-   TEST_LINE( ( "1234567890" + Space( 810910 ) ) - ( "1234567890" + Space( 810910 ) ), "12345678901234567890" + Space( 810910 * 2 ) )
+   HBTEST Right( Space( 64 * 1024 - 5 ) + "12345 7890", 10                      ) IS "12345 7890"
+   HBTEST Len( Space( 81910 ) + "1234567890"                                    ) IS 81920
+   HBTEST ( "1234567890" + Space( 810910 ) ) - ( "1234567890" + Space( 810910 ) ) IS "12345678901234567890" + Space( 810910 * 2 )
 
    RETURN
 

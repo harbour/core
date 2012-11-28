@@ -62,7 +62,7 @@ PROCEDURE Main_MT()
 
 #ifdef __HARBOUR__
    IF hb_mtvm()
-      TEST_LINE( DO_MTTES1()              , "OK"                        )
+      HBTEST DO_MTTES1()              IS "OK"
    ENDIF
 #endif
 
