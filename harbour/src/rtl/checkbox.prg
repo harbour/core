@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * CHECKBOX class
+ * CheckBox class
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://harbour-project.org
@@ -65,7 +65,7 @@
 
 #ifdef HB_COMPAT_C53
 
-CREATE CLASS CHECKBOX FUNCTION HBCheckBox
+CREATE CLASS CheckBox FUNCTION HBCheckBox
 
    EXPORTED:
 
@@ -114,7 +114,7 @@ CREATE CLASS CHECKBOX FUNCTION HBCheckBox
 
 ENDCLASS
 
-METHOD setFocus() CLASS CHECKBOX
+METHOD setFocus() CLASS CheckBox
 
    IF ! ::lHasFocus
       ::nCursor := SetCursor( SC_NONE )
@@ -128,7 +128,7 @@ METHOD setFocus() CLASS CHECKBOX
 
    RETURN Self
 
-METHOD select( lState ) CLASS CHECKBOX
+METHOD select( lState ) CLASS CheckBox
 
    LOCAL lOldState := ::lBuffer
 
@@ -144,7 +144,7 @@ METHOD select( lState ) CLASS CHECKBOX
 
    RETURN Self
 
-METHOD killFocus() CLASS CHECKBOX
+METHOD killFocus() CLASS CheckBox
 
    IF ::lHasFocus
       ::lHasFocus := .F.
@@ -160,7 +160,7 @@ METHOD killFocus() CLASS CHECKBOX
 
    RETURN Self
 
-METHOD hitTest( nMRow, nMCol ) CLASS CHECKBOX
+METHOD hitTest( nMRow, nMCol ) CLASS CheckBox
 
    LOCAL nPosAccel
    LOCAL nLenCaption
@@ -186,7 +186,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS CHECKBOX
 
    RETURN HTNOWHERE
 
-METHOD display() CLASS CHECKBOX
+METHOD display() CLASS CheckBox
 
    LOCAL cColor
    LOCAL cStyle := ::cStyle
@@ -228,7 +228,7 @@ METHOD display() CLASS CHECKBOX
 
    RETURN Self
 
-METHOD bitmaps( aBitmaps ) CLASS CHECKBOX
+METHOD bitmaps( aBitmaps ) CLASS CheckBox
 
    IF aBitmaps != NIL
       ::aBitmaps := __eInstVar53( Self, "BITMAPS", aBitmaps, "A", 1001 )
@@ -236,10 +236,10 @@ METHOD bitmaps( aBitmaps ) CLASS CHECKBOX
 
    RETURN ::aBitmaps
 
-METHOD buffer() CLASS CHECKBOX
+METHOD buffer() CLASS CheckBox
    RETURN ::lBuffer
 
-METHOD capCol( nCapCol ) CLASS CHECKBOX
+METHOD capCol( nCapCol ) CLASS CheckBox
 
    IF nCapCol != NIL
       ::nCapCol := __eInstVar53( Self, "CAPCOL", nCapCol, "N", 1001 )
@@ -247,7 +247,7 @@ METHOD capCol( nCapCol ) CLASS CHECKBOX
 
    RETURN ::nCapCol
 
-METHOD capRow( nCapRow ) CLASS CHECKBOX
+METHOD capRow( nCapRow ) CLASS CheckBox
 
    IF nCapRow != NIL
       ::nCapRow := __eInstVar53( Self, "CAPROW", nCapRow, "N", 1001 )
@@ -255,7 +255,7 @@ METHOD capRow( nCapRow ) CLASS CHECKBOX
 
    RETURN ::nCapRow
 
-METHOD caption( cCaption ) CLASS CHECKBOX
+METHOD caption( cCaption ) CLASS CheckBox
 
    IF cCaption != NIL
       ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
@@ -263,7 +263,7 @@ METHOD caption( cCaption ) CLASS CHECKBOX
 
    RETURN ::cCaption
 
-METHOD col( nCol ) CLASS CHECKBOX
+METHOD col( nCol ) CLASS CheckBox
 
    IF nCol != NIL
       ::nCol := __eInstVar53( Self, "COL", nCol, "N", 1001 )
@@ -271,7 +271,7 @@ METHOD col( nCol ) CLASS CHECKBOX
 
    RETURN ::nCol
 
-METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
+METHOD colorSpec( cColorSpec ) CLASS CheckBox
 
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
@@ -280,7 +280,7 @@ METHOD colorSpec( cColorSpec ) CLASS CHECKBOX
 
    RETURN ::cColorSpec
 
-METHOD fBlock( bFBlock ) CLASS CHECKBOX
+METHOD fBlock( bFBlock ) CLASS CheckBox
 
    IF PCount() > 0
       ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
@@ -288,10 +288,10 @@ METHOD fBlock( bFBlock ) CLASS CHECKBOX
 
    RETURN ::bFBlock
 
-METHOD hasFocus() CLASS CHECKBOX
+METHOD hasFocus() CLASS CheckBox
    RETURN ::lHasFocus
 
-METHOD message( cMessage ) CLASS CHECKBOX
+METHOD message( cMessage ) CLASS CheckBox
 
    IF cMessage != NIL
       ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
@@ -299,7 +299,7 @@ METHOD message( cMessage ) CLASS CHECKBOX
 
    RETURN ::cMessage
 
-METHOD row( nRow ) CLASS CHECKBOX
+METHOD row( nRow ) CLASS CheckBox
 
    IF nRow != NIL
       ::nRow := __eInstVar53( Self, "ROW", nRow, "N", 1001 )
@@ -307,7 +307,7 @@ METHOD row( nRow ) CLASS CHECKBOX
 
    RETURN ::nRow
 
-METHOD sBlock( bSBlock ) CLASS CHECKBOX
+METHOD sBlock( bSBlock ) CLASS CheckBox
 
    IF PCount() > 0
       ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
@@ -315,7 +315,7 @@ METHOD sBlock( bSBlock ) CLASS CHECKBOX
 
    RETURN ::bSBlock
 
-METHOD style( cStyle ) CLASS CHECKBOX
+METHOD style( cStyle ) CLASS CheckBox
 
    IF cStyle != NIL
       ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
@@ -323,10 +323,10 @@ METHOD style( cStyle ) CLASS CHECKBOX
 
    RETURN ::cStyle
 
-METHOD typeOut() CLASS CHECKBOX
+METHOD typeOut() CLASS CheckBox
    RETURN .F.
 
-METHOD New( nRow, nCol, cCaption ) CLASS CHECKBOX
+METHOD New( nRow, nCol, cCaption ) CLASS CheckBox
 
    LOCAL cColor
 

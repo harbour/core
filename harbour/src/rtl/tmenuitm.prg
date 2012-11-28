@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * MENUITEM class
+ * MenuItem class
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
@@ -59,7 +59,7 @@
 
 #ifdef HB_COMPAT_C53
 
-CREATE CLASS MENUITEM FUNCTION HBMenuItem
+CREATE CLASS MenuItem FUNCTION HBMenuItem
 
    EXPORTED:
 
@@ -94,7 +94,7 @@ CREATE CLASS MENUITEM FUNCTION HBMenuItem
 
 ENDCLASS
 
-METHOD caption( cCaption ) CLASS MENUITEM
+METHOD caption( cCaption ) CLASS MenuItem
 
    IF cCaption != NIL
 
@@ -111,7 +111,7 @@ METHOD caption( cCaption ) CLASS MENUITEM
 
    RETURN ::cCaption
 
-METHOD checked( lChecked ) CLASS MENUITEM
+METHOD checked( lChecked ) CLASS MenuItem
 
    // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
    //          to use it for flag purposes.
@@ -121,7 +121,7 @@ METHOD checked( lChecked ) CLASS MENUITEM
 
    RETURN ::lChecked
 
-METHOD data( boData ) CLASS MENUITEM
+METHOD data( boData ) CLASS MenuItem
 
    IF boData != NIL
       IF HB_ISBLOCK( boData )
@@ -133,7 +133,7 @@ METHOD data( boData ) CLASS MENUITEM
 
    RETURN ::boData
 
-METHOD enabled( lEnabled ) CLASS MENUITEM
+METHOD enabled( lEnabled ) CLASS MenuItem
 
    // ; TOFIX: HB_MENU_SEPARATOR_UNI is dynamic value, so it's not good
    //          to use it for flag purposes.
@@ -143,7 +143,7 @@ METHOD enabled( lEnabled ) CLASS MENUITEM
 
    RETURN ::lEnabled
 
-METHOD id( nID ) CLASS MENUITEM
+METHOD id( nID ) CLASS MenuItem
 
    IF nID != NIL
       ::nID := __eInstVar53( Self, "ID", nID, "N", 1001 )
@@ -151,7 +151,7 @@ METHOD id( nID ) CLASS MENUITEM
 
    RETURN ::nID
 
-METHOD message( cMessage ) CLASS MENUITEM
+METHOD message( cMessage ) CLASS MenuItem
 
    IF cMessage != NIL
       ::cMessage := __eInstVar53( Self, "MESSAGE", cMessage, "C", 1001 )
@@ -159,7 +159,7 @@ METHOD message( cMessage ) CLASS MENUITEM
 
    RETURN ::cMessage
 
-METHOD shortcut( nShortcut ) CLASS MENUITEM
+METHOD shortcut( nShortcut ) CLASS MenuItem
 
    IF nShortcut != NIL
       ::nShortcut := __eInstVar53( Self, "SHORTCUT", nShortcut, "N", 1001 )
@@ -167,7 +167,7 @@ METHOD shortcut( nShortcut ) CLASS MENUITEM
 
    RETURN ::nShortcut
 
-METHOD style( cStyle ) CLASS MENUITEM
+METHOD style( cStyle ) CLASS MenuItem
 
    IF cStyle != NIL
       ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 2 } )
@@ -175,10 +175,10 @@ METHOD style( cStyle ) CLASS MENUITEM
 
    RETURN ::cStyle
 
-METHOD isPopUp() CLASS MENUITEM
+METHOD isPopUp() CLASS MenuItem
    RETURN HB_ISOBJECT( ::data ) .AND. ::data:ClassName() $ "POPUPMENU|HB_POPUPMENU"
 
-METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MENUITEM
+METHOD New( cCaption, boData, nShortcut, cMessage, nID ) CLASS MenuItem
 
    hb_default( @nShortcut, 0 )
    hb_default( @cMessage, "" )

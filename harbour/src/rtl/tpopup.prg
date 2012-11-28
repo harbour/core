@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * POPUP menu class
+ * Popup menu class
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
@@ -65,7 +65,7 @@
 
 #ifdef HB_COMPAT_C53
 
-CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
+CREATE CLASS PopupMenu FUNCTION HBPopupMenu
 
    EXPORTED:
 
@@ -122,7 +122,7 @@ CREATE CLASS POPUPMENU FUNCTION HBPopUpMenu
 
 ENDCLASS
 
-METHOD addItem( oItem ) CLASS POPUPMENU
+METHOD addItem( oItem ) CLASS PopupMenu
 
    IF HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
@@ -135,7 +135,7 @@ METHOD addItem( oItem ) CLASS POPUPMENU
 
    RETURN Self
 
-METHOD close( lCloseChild ) CLASS POPUPMENU
+METHOD close( lCloseChild ) CLASS PopupMenu
 
    __defaultNIL( @lCloseChild, .T. )
 
@@ -158,7 +158,7 @@ METHOD close( lCloseChild ) CLASS POPUPMENU
 
    RETURN Self
 
-METHOD delItem( nPos ) CLASS POPUPMENU
+METHOD delItem( nPos ) CLASS PopupMenu
 
    LOCAL nLen
    LOCAL aItems
@@ -184,7 +184,7 @@ METHOD delItem( nPos ) CLASS POPUPMENU
 
    RETURN Self
 
-METHOD display() CLASS POPUPMENU
+METHOD display() CLASS PopupMenu
 
    LOCAL nTop
    LOCAL nLeft
@@ -282,7 +282,7 @@ METHOD display() CLASS POPUPMENU
 
    RETURN Self
 
-METHOD getAccel( xKey ) CLASS POPUPMENU
+METHOD getAccel( xKey ) CLASS PopupMenu
 
    LOCAL cKey
    LOCAL item
@@ -306,7 +306,7 @@ METHOD getAccel( xKey ) CLASS POPUPMENU
 
    RETURN 0
 
-METHOD getFirst() CLASS POPUPMENU
+METHOD getFirst() CLASS PopupMenu
 
    LOCAL nPos
    LOCAL nLen := ::nItemCount
@@ -320,10 +320,10 @@ METHOD getFirst() CLASS POPUPMENU
 
    RETURN 0
 
-METHOD getItem( nPos ) CLASS POPUPMENU
+METHOD getItem( nPos ) CLASS PopupMenu
    RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ], NIL )
 
-METHOD getLast() CLASS POPUPMENU
+METHOD getLast() CLASS PopupMenu
 
    LOCAL nPos
    LOCAL nLen := ::nItemCount
@@ -337,7 +337,7 @@ METHOD getLast() CLASS POPUPMENU
 
    RETURN 0
 
-METHOD getNext() CLASS POPUPMENU
+METHOD getNext() CLASS PopupMenu
 
    LOCAL nPos
 
@@ -351,7 +351,7 @@ METHOD getNext() CLASS POPUPMENU
 
    RETURN 0
 
-METHOD getPrev() CLASS POPUPMENU
+METHOD getPrev() CLASS PopupMenu
 
    LOCAL nPos
 
@@ -368,7 +368,7 @@ METHOD getPrev() CLASS POPUPMENU
 /* NOTE: This method corrects a bug in Cl*pper:
          1) when a menuitem is disabled it will ignore the key [jlalin] */
 
-METHOD getShortCt( nKey ) CLASS POPUPMENU
+METHOD getShortCt( nKey ) CLASS PopupMenu
 
    LOCAL nPos
    LOCAL nLen := ::nItemCount
@@ -385,7 +385,7 @@ METHOD getShortCt( nKey ) CLASS POPUPMENU
 /* NOTE: This method corrects one bug in CA-Cl*pper:
          1) when a menuitem is disabled it will ignore the click [jlalin] */
 
-METHOD hitTest( nMRow, nMCol ) CLASS POPUPMENU
+METHOD hitTest( nMRow, nMCol ) CLASS PopupMenu
 
    LOCAL nPos
 
@@ -438,7 +438,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS POPUPMENU
 
    RETURN HTNOWHERE
 
-METHOD insItem( nPos, oItem ) CLASS POPUPMENU
+METHOD insItem( nPos, oItem ) CLASS PopupMenu
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
@@ -453,10 +453,10 @@ METHOD insItem( nPos, oItem ) CLASS POPUPMENU
 
    RETURN Self
 
-METHOD isOpen() CLASS POPUPMENU
+METHOD isOpen() CLASS PopupMenu
    RETURN ::aSaveScr != NIL
 
-METHOD open() CLASS POPUPMENU
+METHOD open() CLASS PopupMenu
 
    LOCAL nTop
    LOCAL nLeft
@@ -494,7 +494,7 @@ METHOD open() CLASS POPUPMENU
 
    RETURN Self
 
-METHOD select( nPos ) CLASS POPUPMENU
+METHOD select( nPos ) CLASS PopupMenu
 
    IF ( nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       ::nCurrent != nPos .AND. ;
@@ -514,7 +514,7 @@ METHOD select( nPos ) CLASS POPUPMENU
 
    RETURN Self
 
-METHOD setItem( nPos, oItem ) CLASS POPUPMENU
+METHOD setItem( nPos, oItem ) CLASS PopupMenu
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
@@ -525,7 +525,7 @@ METHOD setItem( nPos, oItem ) CLASS POPUPMENU
 
    RETURN Self /* NOTE: CA-Cl*pper returns NIL, which is wrong. */
 
-METHOD setMetrics() CLASS POPUPMENU
+METHOD setMetrics() CLASS PopupMenu
 
    IF ::nTop != NIL
    ELSEIF ::nBottom == NIL
@@ -546,7 +546,7 @@ METHOD setMetrics() CLASS POPUPMENU
 
    RETURN Self
 
-METHOD border( cBorder ) CLASS POPUPMENU
+METHOD border( cBorder ) CLASS PopupMenu
 
    IF cBorder != NIL
       ::cBorder := __eInstVar53( Self, "BORDER", cBorder, "C", 1001, {|| Len( cBorder ) == 0 .OR. Len( cBorder ) == 11 } )
@@ -554,7 +554,7 @@ METHOD border( cBorder ) CLASS POPUPMENU
 
    RETURN ::cBorder
 
-METHOD bottom( nBottom ) CLASS POPUPMENU
+METHOD bottom( nBottom ) CLASS PopupMenu
 
 #ifdef HB_CLP_STRICT
    IF nBottom != NIL
@@ -568,7 +568,7 @@ METHOD bottom( nBottom ) CLASS POPUPMENU
 
    RETURN ::nBottom
 
-METHOD colorSpec( cColorSpec ) CLASS POPUPMENU
+METHOD colorSpec( cColorSpec ) CLASS PopupMenu
 
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
@@ -577,13 +577,13 @@ METHOD colorSpec( cColorSpec ) CLASS POPUPMENU
 
    RETURN ::cColorSpec
 
-METHOD current() CLASS POPUPMENU
+METHOD current() CLASS PopupMenu
    RETURN ::nCurrent
 
-METHOD itemCount() CLASS POPUPMENU
+METHOD itemCount() CLASS PopupMenu
    RETURN ::nItemCount
 
-METHOD left( nLeft ) CLASS POPUPMENU
+METHOD left( nLeft ) CLASS PopupMenu
 
 #ifdef HB_CLP_STRICT
    IF nLeft != NIL
@@ -597,7 +597,7 @@ METHOD left( nLeft ) CLASS POPUPMENU
 
    RETURN ::nLeft
 
-METHOD right( nRight ) CLASS POPUPMENU
+METHOD right( nRight ) CLASS PopupMenu
 
 #ifdef HB_CLP_STRICT
    IF nRight != NIL
@@ -611,7 +611,7 @@ METHOD right( nRight ) CLASS POPUPMENU
 
    RETURN ::nRight
 
-METHOD top( nTop ) CLASS POPUPMENU
+METHOD top( nTop ) CLASS PopupMenu
 
 #ifdef HB_CLP_STRICT
    IF nTop != NIL
@@ -625,10 +625,10 @@ METHOD top( nTop ) CLASS POPUPMENU
 
    RETURN ::nTop
 
-METHOD width() CLASS POPUPMENU
+METHOD width() CLASS PopupMenu
    RETURN ::nWidth
 
-METHOD New( nTop, nLeft, nBottom, nRight ) CLASS POPUPMENU
+METHOD New( nTop, nLeft, nBottom, nRight ) CLASS PopupMenu
 
    LOCAL cColor
 

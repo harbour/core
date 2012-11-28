@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * RADIOBUTTON class
+ * RadioButton class
  *
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  * www - http://harbour-project.org
@@ -64,7 +64,7 @@
 
 #ifdef HB_COMPAT_C53
 
-CREATE CLASS RADIOBUTTN FUNCTION HBRadioButton
+CREATE CLASS RadioButtn FUNCTION HBRadioButton
 
    EXPORTED:
 
@@ -111,7 +111,7 @@ CREATE CLASS RADIOBUTTN FUNCTION HBRadioButton
 
 ENDCLASS
 
-METHOD setFocus() CLASS RADIOBUTTN
+METHOD setFocus() CLASS RadioButtn
 
    IF ! ::lHasFocus
       ::lHasFocus := .T.
@@ -124,7 +124,7 @@ METHOD setFocus() CLASS RADIOBUTTN
 
    RETURN Self
 
-METHOD select( lState ) CLASS RADIOBUTTN
+METHOD select( lState ) CLASS RadioButtn
 
    LOCAL lOldState := ::lBuffer
 
@@ -138,7 +138,7 @@ METHOD select( lState ) CLASS RADIOBUTTN
 
    RETURN Self
 
-METHOD killFocus() CLASS RADIOBUTTN
+METHOD killFocus() CLASS RadioButtn
 
    IF ::lHasFocus
       ::lHasFocus := .F.
@@ -152,7 +152,7 @@ METHOD killFocus() CLASS RADIOBUTTN
 
    RETURN Self
 
-METHOD display() CLASS RADIOBUTTN
+METHOD display() CLASS RadioButtn
 
    LOCAL cColor
    LOCAL cStyle := ::cStyle
@@ -186,7 +186,7 @@ METHOD display() CLASS RADIOBUTTN
 
    RETURN Self
 
-METHOD isAccel( xKey ) CLASS RADIOBUTTN
+METHOD isAccel( xKey ) CLASS RadioButtn
 
    LOCAL cKey
 
@@ -200,7 +200,7 @@ METHOD isAccel( xKey ) CLASS RADIOBUTTN
 
    RETURN Len( cKey ) > 0 .AND. hb_AtI( "&" + cKey, ::cCaption ) > 0
 
-METHOD hitTest( nMRow, nMCol ) CLASS RADIOBUTTN
+METHOD hitTest( nMRow, nMCol ) CLASS RadioButtn
 
    LOCAL nPos
    LOCAL nLen
@@ -225,7 +225,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS RADIOBUTTN
 
    RETURN HTNOWHERE
 
-METHOD bitmaps( aBitmaps ) CLASS RADIOBUTTN
+METHOD bitmaps( aBitmaps ) CLASS RadioButtn
 
    IF aBitmaps != NIL
       ::aBitmaps := __eInstVar53( Self, "BITMAPS", aBitmaps, "A", 1001, {|| Len( aBitmaps ) == 2 } )
@@ -233,10 +233,10 @@ METHOD bitmaps( aBitmaps ) CLASS RADIOBUTTN
 
    RETURN ::aBitmaps
 
-METHOD buffer() CLASS RADIOBUTTN
+METHOD buffer() CLASS RadioButtn
    RETURN ::lBuffer
 
-METHOD data( cData ) CLASS RADIOBUTTN
+METHOD data( cData ) CLASS RadioButtn
 
    IF PCount() > 0
       ::cData := iif( cData == NIL, NIL, __eInstVar53( Self, "DATA", cData, "C", 1001 ) )
@@ -244,7 +244,7 @@ METHOD data( cData ) CLASS RADIOBUTTN
 
    RETURN iif( ::cData == NIL, __Caption( ::Caption ), ::cData )
 
-METHOD capCol( nCapCol ) CLASS RADIOBUTTN
+METHOD capCol( nCapCol ) CLASS RadioButtn
 
    IF nCapCol != NIL
       ::nCapCol := __eInstVar53( Self, "CAPCOL", nCapCol, "N", 1001 )
@@ -252,7 +252,7 @@ METHOD capCol( nCapCol ) CLASS RADIOBUTTN
 
    RETURN ::nCapCol
 
-METHOD capRow( nCapRow ) CLASS RADIOBUTTN
+METHOD capRow( nCapRow ) CLASS RadioButtn
 
    IF nCapRow != NIL
       ::nCapRow := __eInstVar53( Self, "CAPROW", nCapRow, "N", 1001 )
@@ -260,7 +260,7 @@ METHOD capRow( nCapRow ) CLASS RADIOBUTTN
 
    RETURN ::nCapRow
 
-METHOD caption( cCaption ) CLASS RADIOBUTTN
+METHOD caption( cCaption ) CLASS RadioButtn
 
    IF cCaption != NIL
       ::cCaption := __eInstVar53( Self, "CAPTION", cCaption, "C", 1001 )
@@ -268,7 +268,7 @@ METHOD caption( cCaption ) CLASS RADIOBUTTN
 
    RETURN ::cCaption
 
-METHOD col( nCol ) CLASS RADIOBUTTN
+METHOD col( nCol ) CLASS RadioButtn
 
    IF nCol != NIL
       ::nCol := __eInstVar53( Self, "COL", nCol, "N", 1001 )
@@ -276,7 +276,7 @@ METHOD col( nCol ) CLASS RADIOBUTTN
 
    RETURN ::nCol
 
-METHOD colorSpec( cColorSpec ) CLASS RADIOBUTTN
+METHOD colorSpec( cColorSpec ) CLASS RadioButtn
 
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001, ;
@@ -285,7 +285,7 @@ METHOD colorSpec( cColorSpec ) CLASS RADIOBUTTN
 
    RETURN ::cColorSpec
 
-METHOD fBlock( bFBlock ) CLASS RADIOBUTTN
+METHOD fBlock( bFBlock ) CLASS RadioButtn
 
    IF PCount() > 0
       ::bFBlock := iif( bFBlock == NIL, NIL, __eInstVar53( Self, "FBLOCK", bFBlock, "B", 1001 ) )
@@ -293,10 +293,10 @@ METHOD fBlock( bFBlock ) CLASS RADIOBUTTN
 
    RETURN ::bFBlock
 
-METHOD hasFocus() CLASS RADIOBUTTN
+METHOD hasFocus() CLASS RadioButtn
    RETURN ::lHasFocus
 
-METHOD row( nRow ) CLASS RADIOBUTTN
+METHOD row( nRow ) CLASS RadioButtn
 
    IF nRow != NIL
       ::nRow := __eInstVar53( Self, "ROW", nRow, "N", 1001 )
@@ -304,7 +304,7 @@ METHOD row( nRow ) CLASS RADIOBUTTN
 
    RETURN ::nRow
 
-METHOD sBlock( bSBlock ) CLASS RADIOBUTTN
+METHOD sBlock( bSBlock ) CLASS RadioButtn
 
    IF PCount() > 0
       ::bSBlock := iif( bSBlock == NIL, NIL, __eInstVar53( Self, "SBLOCK", bSBlock, "B", 1001 ) )
@@ -312,7 +312,7 @@ METHOD sBlock( bSBlock ) CLASS RADIOBUTTN
 
    RETURN ::bSBlock
 
-METHOD style( cStyle ) CLASS RADIOBUTTN
+METHOD style( cStyle ) CLASS RadioButtn
 
    IF cStyle != NIL
       ::cStyle := __eInstVar53( Self, "STYLE", cStyle, "C", 1001, {|| Len( cStyle ) == 0 .OR. Len( cStyle ) == 4 } )
@@ -320,7 +320,7 @@ METHOD style( cStyle ) CLASS RADIOBUTTN
 
    RETURN ::cStyle
 
-METHOD New( nRow, nCol, cCaption, cData ) CLASS RADIOBUTTN
+METHOD New( nRow, nCol, cCaption, cData ) CLASS RadioButtn
 
    LOCAL cColor
 

@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * TOPBAR menu class
+ * TopBar menu class
  *
  * Copyright 2000 Jose Lalin <dezac@corevia.com>
  * www - http://harbour-project.org
@@ -61,7 +61,7 @@
 
 #ifdef HB_COMPAT_C53
 
-CREATE CLASS TOPBARMENU FUNCTION HBTopBarMenu
+CREATE CLASS TopBarMenu FUNCTION HBTopBarMenu
 
    EXPORTED:
 
@@ -105,7 +105,7 @@ CREATE CLASS TOPBARMENU FUNCTION HBTopBarMenu
 
 ENDCLASS
 
-METHOD addItem( oItem ) CLASS TOPBARMENU
+METHOD addItem( oItem ) CLASS TopBarMenu
 
    IF HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
 
@@ -117,7 +117,7 @@ METHOD addItem( oItem ) CLASS TOPBARMENU
 
    RETURN Self
 
-METHOD delItem( nPos ) CLASS TOPBARMENU
+METHOD delItem( nPos ) CLASS TopBarMenu
 
    LOCAL nLen
    LOCAL aItems
@@ -143,7 +143,7 @@ METHOD delItem( nPos ) CLASS TOPBARMENU
 
    RETURN Self
 
-METHOD display() CLASS TOPBARMENU
+METHOD display() CLASS TopBarMenu
 
    LOCAL nRow := ::nRow
    LOCAL nLeft := ::nLeft
@@ -221,7 +221,7 @@ METHOD display() CLASS TOPBARMENU
 
    RETURN Self
 
-METHOD getFirst() CLASS TOPBARMENU
+METHOD getFirst() CLASS TopBarMenu
 
    LOCAL n
 
@@ -233,10 +233,10 @@ METHOD getFirst() CLASS TOPBARMENU
 
    RETURN 0
 
-METHOD getItem( nPos ) CLASS TOPBARMENU
+METHOD getItem( nPos ) CLASS TopBarMenu
    RETURN iif( nPos >= 1 .AND. nPos <= ::nItemCount, ::aItems[ nPos ], NIL )
 
-METHOD getLast() CLASS TOPBARMENU
+METHOD getLast() CLASS TopBarMenu
 
    LOCAL n
 
@@ -248,7 +248,7 @@ METHOD getLast() CLASS TOPBARMENU
 
    RETURN 0
 
-METHOD getNext() CLASS TOPBARMENU
+METHOD getNext() CLASS TopBarMenu
 
    LOCAL n
 
@@ -262,7 +262,7 @@ METHOD getNext() CLASS TOPBARMENU
 
    RETURN 0
 
-METHOD getPrev() CLASS TOPBARMENU
+METHOD getPrev() CLASS TopBarMenu
 
    LOCAL n
 
@@ -281,7 +281,7 @@ METHOD getPrev() CLASS TOPBARMENU
             first item is disabled
          2) when a menuitem is disabled it will ignore the key [jlalin] */
 
-METHOD getAccel( nKey ) CLASS TOPBARMENU
+METHOD getAccel( nKey ) CLASS TopBarMenu
 
    LOCAL nIndex := AScan( { ;
       K_ALT_A, K_ALT_B, K_ALT_C, K_ALT_D, K_ALT_E, K_ALT_F, ;
@@ -305,7 +305,7 @@ METHOD getAccel( nKey ) CLASS TOPBARMENU
 
    RETURN 0
 
-METHOD getShortCt( nKey ) CLASS TOPBARMENU
+METHOD getShortCt( nKey ) CLASS TopBarMenu
 
    LOCAL n
 
@@ -324,7 +324,7 @@ METHOD getShortCt( nKey ) CLASS TOPBARMENU
          This method correct a bug in Cl*pper:
          when click on a disabled menuitem it will ignore it [jlalin] */
 
-METHOD hitTest( nMRow, nMCol ) CLASS TOPBARMENU
+METHOD hitTest( nMRow, nMCol ) CLASS TopBarMenu
 
    LOCAL aItems
    LOCAL nColumn
@@ -346,7 +346,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS TOPBARMENU
 
    RETURN HTNOWHERE
 
-METHOD insItem( nPos, oItem ) CLASS TOPBARMENU
+METHOD insItem( nPos, oItem ) CLASS TopBarMenu
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
@@ -360,7 +360,7 @@ METHOD insItem( nPos, oItem ) CLASS TOPBARMENU
 
    RETURN Self
 
-METHOD select( nPos ) CLASS TOPBARMENU
+METHOD select( nPos ) CLASS TopBarMenu
 
    IF ( nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       ::nCurrent != nPos .AND. ;
@@ -380,7 +380,7 @@ METHOD select( nPos ) CLASS TOPBARMENU
 
    RETURN Self
 
-METHOD setItem( nPos, oItem ) CLASS TOPBARMENU
+METHOD setItem( nPos, oItem ) CLASS TopBarMenu
 
    IF nPos >= 1 .AND. nPos <= ::nItemCount .AND. ;
       HB_ISOBJECT( oItem ) .AND. oItem:ClassName() == "MENUITEM"
@@ -392,7 +392,7 @@ METHOD setItem( nPos, oItem ) CLASS TOPBARMENU
 
    RETURN Self
 
-METHOD colorSpec( cColorSpec ) CLASS TOPBARMENU
+METHOD colorSpec( cColorSpec ) CLASS TopBarMenu
 
    IF cColorSpec != NIL
       ::cColorSpec := __eInstVar53( Self, "COLORSPEC", cColorSpec, "C", 1001,;
@@ -401,13 +401,13 @@ METHOD colorSpec( cColorSpec ) CLASS TOPBARMENU
 
    RETURN ::cColorSpec
 
-METHOD current() CLASS TOPBARMENU
+METHOD current() CLASS TopBarMenu
    RETURN ::nCurrent
 
-METHOD itemCount() CLASS TOPBARMENU
+METHOD itemCount() CLASS TopBarMenu
    RETURN ::nItemCount
 
-METHOD left( nLeft ) CLASS TOPBARMENU
+METHOD left( nLeft ) CLASS TopBarMenu
 
    IF nLeft != NIL
       ::nLeft := __eInstVar53( Self, "LEFT", nLeft, "N", 1001 )
@@ -415,7 +415,7 @@ METHOD left( nLeft ) CLASS TOPBARMENU
 
    RETURN ::nLeft
 
-METHOD right( nRight ) CLASS TOPBARMENU
+METHOD right( nRight ) CLASS TopBarMenu
 
    IF nRight != NIL
       ::nRight := __eInstVar53( Self, "RIGHT", nRight, "N", 1001 )
@@ -423,7 +423,7 @@ METHOD right( nRight ) CLASS TOPBARMENU
 
    RETURN ::nRight
 
-METHOD row( nRow ) CLASS TOPBARMENU
+METHOD row( nRow ) CLASS TopBarMenu
 
    IF nRow != NIL
       /* NOTE: CA-Cl*pper 5.3 has a bug, where it would show "TOP" in case of an error. */
@@ -434,7 +434,7 @@ METHOD row( nRow ) CLASS TOPBARMENU
 
 /* -------------------------------------------- */
 
-METHOD New( nRow, nLeft, nRight ) CLASS TOPBARMENU
+METHOD New( nRow, nLeft, nRight ) CLASS TopBarMenu
 
    LOCAL cColor
 

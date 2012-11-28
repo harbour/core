@@ -69,7 +69,7 @@
 
 /* NOTE: In CA-Cl*pper, TGET class does not inherit from any other classes. */
 
-CREATE CLASS GET
+CREATE CLASS Get
 
    PROTECTED:
 
@@ -221,7 +221,7 @@ CREATE CLASS GET
 
 ENDCLASS
 
-METHOD assign() CLASS GET
+METHOD assign() CLASS Get
 
    LOCAL xValue
 
@@ -235,7 +235,7 @@ METHOD assign() CLASS GET
 
    RETURN Self
 
-METHOD updateBuffer() CLASS GET
+METHOD updateBuffer() CLASS Get
 
    IF ::hasFocus
       ::cBuffer := ::PutMask( ::varGet() )
@@ -247,7 +247,7 @@ METHOD updateBuffer() CLASS GET
 
    RETURN Self
 
-METHOD display() CLASS GET
+METHOD display() CLASS Get
 
    LOCAL nOldCursor := SetCursor( SC_NONE )
    LOCAL cBuffer
@@ -362,14 +362,14 @@ METHOD display() CLASS GET
 
 /* ------------------------------------------------------------------------- */
 
-METHOD colorDisp( cColorSpec ) CLASS GET
+METHOD colorDisp( cColorSpec ) CLASS Get
 
    ::colorSpec := cColorSpec
    ::display()
 
    RETURN Self
 
-METHOD end() CLASS GET
+METHOD end() CLASS Get
 
    LOCAL nLastCharPos
    LOCAL nPos
@@ -396,7 +396,7 @@ METHOD end() CLASS GET
 
    RETURN Self
 
-METHOD home() CLASS GET
+METHOD home() CLASS Get
 
    IF ::hasFocus
       ::pos := ::FirstEditable()
@@ -408,7 +408,7 @@ METHOD home() CLASS GET
 
    RETURN Self
 
-METHOD reset() CLASS GET
+METHOD reset() CLASS Get
 
    IF ::hasFocus
       ::cBuffer  := ::PutMask( ::varGet(), .F. )
@@ -425,7 +425,7 @@ METHOD reset() CLASS GET
 
    RETURN Self
 
-METHOD undo() CLASS GET
+METHOD undo() CLASS Get
 
    IF ::hasFocus
       IF ::original != NIL
@@ -437,7 +437,7 @@ METHOD undo() CLASS GET
 
    RETURN Self
 
-METHOD setFocus() CLASS GET
+METHOD setFocus() CLASS Get
 
    LOCAL xVarGet
 
@@ -476,7 +476,7 @@ METHOD setFocus() CLASS GET
 
    RETURN Self
 
-METHOD killFocus() CLASS GET
+METHOD killFocus() CLASS Get
 
    LOCAL lHadFocus := ::hasFocus
 
@@ -498,7 +498,7 @@ METHOD killFocus() CLASS GET
 
    RETURN Self
 
-METHOD varPut( xValue ) CLASS GET
+METHOD varPut( xValue ) CLASS Get
 
    LOCAL aSubs
    LOCAL nLen
@@ -531,7 +531,7 @@ METHOD varPut( xValue ) CLASS GET
 
    RETURN xValue
 
-METHOD varGet() CLASS GET
+METHOD varGet() CLASS Get
 
    LOCAL aSubs
    LOCAL nLen
@@ -563,7 +563,7 @@ METHOD varGet() CLASS GET
 /* NOTE: CA-Cl*pper will corrupt memory if cChar contains
          multiple chars. [vszakats] */
 
-METHOD overStrike( cChar ) CLASS GET
+METHOD overStrike( cChar ) CLASS Get
 
    IF ::hasFocus
 
@@ -614,7 +614,7 @@ METHOD overStrike( cChar ) CLASS GET
 /* NOTE: CA-Cl*pper will corrupt memory if cChar contains
          multiple chars. [vszakats] */
 
-METHOD insert( cChar ) CLASS GET
+METHOD insert( cChar ) CLASS Get
 
    LOCAL nFor
    LOCAL nMaxEdit
@@ -681,7 +681,7 @@ METHOD insert( cChar ) CLASS GET
 
    RETURN Self
 
-METHOD right() CLASS GET
+METHOD right() CLASS Get
 
    IF ::hasFocus .AND. ;
       ::rightLow()
@@ -692,7 +692,7 @@ METHOD right() CLASS GET
 
    RETURN Self
 
-METHOD left() CLASS GET
+METHOD left() CLASS Get
 
    IF ::hasFocus .AND. ;
       ::leftLow()
@@ -703,7 +703,7 @@ METHOD left() CLASS GET
 
    RETURN Self
 
-METHOD wordLeft() CLASS GET
+METHOD wordLeft() CLASS Get
 
    LOCAL nPos
 
@@ -734,7 +734,7 @@ METHOD wordLeft() CLASS GET
 
    RETURN Self
 
-METHOD wordRight() CLASS GET
+METHOD wordRight() CLASS Get
 
    LOCAL nPos
 
@@ -765,7 +765,7 @@ METHOD wordRight() CLASS GET
 
    RETURN Self
 
-METHOD toDecPos() CLASS GET
+METHOD toDecPos() CLASS Get
 
    IF ::hasFocus
 
@@ -787,7 +787,7 @@ METHOD toDecPos() CLASS GET
 
    RETURN Self
 
-METHOD backSpace() CLASS GET
+METHOD backSpace() CLASS Get
 
    IF ::hasFocus .AND. ;
       ::backSpaceLow()
@@ -797,7 +797,7 @@ METHOD backSpace() CLASS GET
 
    RETURN Self
 
-METHOD delete() CLASS GET
+METHOD delete() CLASS Get
 
    IF ::hasFocus
       ::deleteLow()
@@ -806,7 +806,7 @@ METHOD delete() CLASS GET
 
    RETURN Self
 
-METHOD delEnd() CLASS GET
+METHOD delEnd() CLASS Get
 
    LOCAL nPos
 
@@ -825,7 +825,7 @@ METHOD delEnd() CLASS GET
 
    RETURN Self
 
-METHOD delLeft() CLASS GET
+METHOD delLeft() CLASS Get
 
    ::leftLow()
    ::deleteLow()
@@ -833,7 +833,7 @@ METHOD delLeft() CLASS GET
 
    RETURN Self
 
-METHOD delRight() CLASS GET
+METHOD delRight() CLASS Get
 
    ::rightLow()
    ::deleteLow()
@@ -844,7 +844,7 @@ METHOD delRight() CLASS GET
 /* ::wordLeft()
    ::delWordRight() */
 
-METHOD delWordLeft() CLASS GET
+METHOD delWordLeft() CLASS Get
 
    IF ::hasFocus
 
@@ -870,7 +870,7 @@ METHOD delWordLeft() CLASS GET
 
    RETURN Self
 
-METHOD delWordRight() CLASS GET
+METHOD delWordRight() CLASS Get
 
    IF ::hasFocus
 
@@ -902,10 +902,10 @@ METHOD delWordRight() CLASS GET
  * be used for GET_CLR_UNSELECTED and GET_CLR_ENHANCED.
  */
 
-METHOD getColorSpec() CLASS GET
+METHOD getColorSpec() CLASS Get
    RETURN ::cColorSpec
 
-METHOD setColorSpec( cColorSpec ) CLASS GET
+METHOD setColorSpec( cColorSpec ) CLASS Get
 
    LOCAL nClrUns
    LOCAL nClrOth
@@ -949,10 +949,10 @@ METHOD setColorSpec( cColorSpec ) CLASS GET
 
    RETURN cColorSpec
 
-METHOD getPos() CLASS GET
+METHOD getPos() CLASS Get
    RETURN ::nPos
 
-METHOD setPos( nPos ) CLASS GET
+METHOD setPos( nPos ) CLASS Get
 
    LOCAL tmp
 
@@ -1007,7 +1007,7 @@ METHOD setPos( nPos ) CLASS GET
  * several tasks to adjust the internal data of the object.
  */
 
-METHOD picture( cPicture ) CLASS GET
+METHOD picture( cPicture ) CLASS Get
 
    LOCAL nAt
    LOCAL nFor
@@ -1153,7 +1153,7 @@ METHOD picture( cPicture ) CLASS GET
 
    RETURN ::cPicture
 
-METHOD PutMask( xValue, lEdit ) CLASS GET
+METHOD PutMask( xValue, lEdit ) CLASS Get
 
    LOCAL cChar
    LOCAL cBuffer
@@ -1235,7 +1235,7 @@ METHOD PutMask( xValue, lEdit ) CLASS GET
 
    RETURN cBuffer
 
-METHOD unTransform() CLASS GET
+METHOD unTransform() CLASS Get
 
    LOCAL cBuffer
    LOCAL xValue
@@ -1380,7 +1380,7 @@ METHOD unTransform() CLASS GET
 
    RETURN xValue
 
-METHOD type() CLASS GET
+METHOD type() CLASS Get
 
    RETURN ::cType := ValType( iif( ::hasFocus, ::xVarGet, ::varGet() ) )
 
@@ -1393,7 +1393,7 @@ METHOD type() CLASS GET
  * to display correctly.
  */
 
-METHOD block( bBlock ) CLASS GET
+METHOD block( bBlock ) CLASS Get
 
    IF PCount() == 0 .OR. bBlock == NIL
       RETURN ::bBlock
@@ -1405,7 +1405,7 @@ METHOD block( bBlock ) CLASS GET
 
    RETURN bBlock
 
-METHOD firstEditable() CLASS GET
+METHOD firstEditable() CLASS Get
 
    LOCAL nFor
 
@@ -1425,7 +1425,7 @@ METHOD firstEditable() CLASS GET
 
    RETURN 0
 
-METHOD lastEditable() CLASS GET
+METHOD lastEditable() CLASS Get
 
    LOCAL nFor
 
@@ -1441,7 +1441,7 @@ METHOD lastEditable() CLASS GET
 
    RETURN 0
 
-METHOD badDate() CLASS GET
+METHOD badDate() CLASS Get
 
    LOCAL xValue
 
@@ -1460,7 +1460,7 @@ METHOD badDate() CLASS GET
 
 #ifdef HB_CLP_UNDOC
 
-METHOD reform() CLASS GET
+METHOD reform() CLASS Get
 
    IF ::hasFocus
       ::cBuffer := ::PutMask( ::unTransform(), .F. )
@@ -1473,7 +1473,7 @@ METHOD reform() CLASS GET
 
 #ifdef HB_COMPAT_C53
 
-METHOD hitTest( nMRow, nMCol ) CLASS GET
+METHOD hitTest( nMRow, nMCol ) CLASS Get
 
    IF HB_ISOBJECT( ::oControl )
       RETURN ::oControl:hitTest( nMRow, nMCol )
@@ -1492,7 +1492,7 @@ METHOD hitTest( nMRow, nMCol ) CLASS GET
 
    RETURN HTNOWHERE
 
-METHOD control( oControl ) CLASS GET
+METHOD control( oControl ) CLASS Get
 
    IF PCount() == 1 .AND. ( oControl == NIL .OR. HB_ISOBJECT( oControl ) )
       ::oControl := oControl
@@ -1500,7 +1500,7 @@ METHOD control( oControl ) CLASS GET
 
    RETURN ::oControl
 
-METHOD caption( cCaption ) CLASS GET
+METHOD caption( cCaption ) CLASS Get
 
    IF HB_ISSTRING( cCaption )
       ::cCaption := cCaption
@@ -1508,7 +1508,7 @@ METHOD caption( cCaption ) CLASS GET
 
    RETURN ::cCaption
 
-METHOD capRow( nCapRow ) CLASS GET
+METHOD capRow( nCapRow ) CLASS Get
 
    IF HB_ISNUMERIC( nCapRow )
       ::nCapRow := Int( nCapRow )
@@ -1516,7 +1516,7 @@ METHOD capRow( nCapRow ) CLASS GET
 
    RETURN ::nCapRow
 
-METHOD capCol( nCapCol ) CLASS GET
+METHOD capCol( nCapCol ) CLASS Get
 
    IF HB_ISNUMERIC( nCapCol )
       ::nCapCol := Int( nCapCol )
@@ -1524,7 +1524,7 @@ METHOD capCol( nCapCol ) CLASS GET
 
    RETURN ::nCapCol
 
-METHOD message( cMessage ) CLASS GET
+METHOD message( cMessage ) CLASS Get
 
    IF HB_ISSTRING( cMessage )
       ::cMessage := cMessage
@@ -1536,7 +1536,7 @@ METHOD message( cMessage ) CLASS GET
 
 /* ------------------------------------------------------------------------- */
 
-METHOD rightLow() CLASS GET
+METHOD rightLow() CLASS Get
 
    LOCAL nPos
 
@@ -1562,7 +1562,7 @@ METHOD rightLow() CLASS GET
 
    RETURN .T.
 
-METHOD leftLow() CLASS GET
+METHOD leftLow() CLASS Get
 
    LOCAL nPos
 
@@ -1588,7 +1588,7 @@ METHOD leftLow() CLASS GET
 
    RETURN .T.
 
-METHOD backSpaceLow() CLASS GET
+METHOD backSpaceLow() CLASS Get
 
    LOCAL nMinus
    LOCAL nPos := ::nPos
@@ -1620,7 +1620,7 @@ METHOD backSpaceLow() CLASS GET
 
    RETURN .F.
 
-METHOD deleteLow() CLASS GET
+METHOD deleteLow() CLASS Get
 
    LOCAL nMaxLen := ::nMaxLen
    LOCAL n
@@ -1650,7 +1650,7 @@ METHOD deleteLow() CLASS GET
 
    RETURN NIL
 
-METHOD DeleteAll() CLASS GET
+METHOD DeleteAll() CLASS Get
 
    LOCAL xValue
 
@@ -1678,7 +1678,7 @@ METHOD DeleteAll() CLASS GET
 
    RETURN Self
 
-METHOD IsEditable( nPos ) CLASS GET
+METHOD IsEditable( nPos ) CLASS Get
 
    LOCAL cChar
 
@@ -1708,7 +1708,7 @@ METHOD IsEditable( nPos ) CLASS GET
 
    RETURN .F.
 
-METHOD Input( cChar ) CLASS GET
+METHOD Input( cChar ) CLASS Get
 
    LOCAL cPic
 
@@ -1817,18 +1817,18 @@ METHOD Input( cChar ) CLASS GET
 
 /* ------------------------------------------------------------------------- */
 
-METHOD getBuffer() CLASS GET
+METHOD getBuffer() CLASS Get
    RETURN ::cBuffer
 
-METHOD setBuffer( cBuffer ) CLASS GET
+METHOD setBuffer( cBuffer ) CLASS Get
    RETURN iif( ::hasFocus, ::cBuffer := cBuffer, cBuffer )
 
 /* NOTE: In contrary to CA-Cl*pper docs, this var is assignable. [vszakats] */
 
-METHOD getChanged() CLASS GET
+METHOD getChanged() CLASS Get
    RETURN ::lChanged
 
-METHOD setChanged( lChanged ) CLASS GET
+METHOD setChanged( lChanged ) CLASS Get
 
    IF HB_ISLOGICAL( lChanged )
       RETURN iif( ::hasFocus, ::lChanged := lChanged, lChanged )
@@ -1836,10 +1836,10 @@ METHOD setChanged( lChanged ) CLASS GET
 
    RETURN .F.
 
-METHOD getClear() CLASS GET
+METHOD getClear() CLASS Get
    RETURN ::lClear
 
-METHOD setClear( lClear ) CLASS GET
+METHOD setClear( lClear ) CLASS Get
 
    IF HB_ISLOGICAL( lClear )
       RETURN iif( ::hasFocus, ::lClear := lClear, lClear )
@@ -1847,10 +1847,10 @@ METHOD setClear( lClear ) CLASS GET
 
    RETURN .F.
 
-METHOD getMinus() CLASS GET
+METHOD getMinus() CLASS Get
    RETURN ::lMinus
 
-METHOD setMinus( lMinus ) CLASS GET
+METHOD setMinus( lMinus ) CLASS Get
 
    IF HB_ISLOGICAL( lMinus )
       RETURN iif( ::hasFocus, ::lMinus := lMinus, lMinus )
@@ -1861,22 +1861,22 @@ METHOD setMinus( lMinus ) CLASS GET
 /* NOTE: CA-Cl*pper has a bug where negative nRow value will be translated to 16bit unsigned int,
          so the behaviour will be different in this case. [vszakats] */
 
-METHOD getRow() CLASS GET
+METHOD getRow() CLASS Get
    RETURN ::nRow
 
-METHOD setRow( nRow ) CLASS GET
+METHOD setRow( nRow ) CLASS Get
    RETURN ::nRow := iif( HB_ISNUMERIC( nRow ), Int( nRow ), 0 )
 
 /* NOTE: CA-Cl*pper has a bug where negative nCol value will be translated to 16bit unsigned int,
          so the behaviour will be different in this case. [vszakats] */
 
-METHOD getCol() CLASS GET
+METHOD getCol() CLASS Get
    RETURN ::nCol
 
-METHOD setCol( nCol ) CLASS GET
+METHOD setCol( nCol ) CLASS Get
    RETURN ::nCol := iif( HB_ISNUMERIC( nCol ), Int( nCol ), 0 )
 
-METHOD name( cName ) CLASS GET
+METHOD name( cName ) CLASS Get
 
    IF PCount() > 0 .AND. cName != NIL
       ::cName := cName
@@ -1884,7 +1884,7 @@ METHOD name( cName ) CLASS GET
 
    RETURN ::cName
 
-METHOD SubScript( xValue ) CLASS GET
+METHOD SubScript( xValue ) CLASS Get
 
    IF xValue != NIL
       ::xSubScript := xValue
@@ -1892,7 +1892,7 @@ METHOD SubScript( xValue ) CLASS GET
 
    RETURN ::xSubScript
 
-METHOD PostBlock( xValue ) CLASS GET
+METHOD PostBlock( xValue ) CLASS Get
 
    IF xValue != NIL
       ::bPostBlock := xValue
@@ -1900,7 +1900,7 @@ METHOD PostBlock( xValue ) CLASS GET
 
    RETURN ::bPostBlock
 
-METHOD PreBlock( xValue ) CLASS GET
+METHOD PreBlock( xValue ) CLASS Get
 
    IF xValue != NIL
       ::bPreBlock := xValue
@@ -1908,7 +1908,7 @@ METHOD PreBlock( xValue ) CLASS GET
 
    RETURN ::bPreBlock
 
-METHOD Cargo( xValue ) CLASS GET
+METHOD Cargo( xValue ) CLASS Get
 
    IF xValue != NIL
       ::xCargo := xValue
@@ -1916,7 +1916,7 @@ METHOD Cargo( xValue ) CLASS GET
 
    RETURN ::xCargo
 
-METHOD ExitState( xValue ) CLASS GET
+METHOD ExitState( xValue ) CLASS Get
 
    IF xValue != NIL
       ::xExitState := xValue
@@ -1924,7 +1924,7 @@ METHOD ExitState( xValue ) CLASS GET
 
    RETURN ::xExitState
 
-METHOD Reader( xValue ) CLASS GET
+METHOD Reader( xValue ) CLASS Get
 
    IF xValue != NIL
       ::bReader := xValue
@@ -1934,7 +1934,7 @@ METHOD Reader( xValue ) CLASS GET
 
 /* ------------------------------------------------------------------------- */
 
-METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS GET
+METHOD New( nRow, nCol, bVarBlock, cVarName, cPicture, cColorSpec ) CLASS Get
 
    IF nRow == NIL
       nRow := Row()

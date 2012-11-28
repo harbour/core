@@ -55,7 +55,7 @@
 
 #ifdef HB_COMPAT_C53
 
-CREATE CLASS hb_POPUPMENU INHERIT hbPOPUPMENU
+CREATE CLASS hb_PopupMenu INHERIT HBPopupMenu
 
    EXPORTED:
 
@@ -67,7 +67,7 @@ CREATE CLASS hb_POPUPMENU INHERIT hbPOPUPMENU
 
 ENDCLASS
 
-METHOD shadowed( lShadowed ) CLASS hb_POPUPMENU
+METHOD shadowed( lShadowed ) CLASS hb_PopupMenu
 
    IF lShadowed != NIL
       ::lShadowed := __eInstVar53( Self, "SHADOWED", lShadowed, "L", 1001 )
@@ -75,7 +75,7 @@ METHOD shadowed( lShadowed ) CLASS hb_POPUPMENU
 
    RETURN ::lShadowed
 
-METHOD setCoors( nRow, nCol, lTop ) CLASS hb_POPUPMENU
+METHOD setCoors( nRow, nCol, lTop ) CLASS hb_PopupMenu
 
    LOCAL oItem
    LOCAL nDif
@@ -125,7 +125,7 @@ METHOD setCoors( nRow, nCol, lTop ) CLASS hb_POPUPMENU
 
    RETURN Self
 
-METHOD isShortCut( nKey, nID ) CLASS hb_POPUPMENU
+METHOD isShortCut( nKey, nID ) CLASS hb_PopupMenu
 
    LOCAL nItem
    LOCAL nTotal
@@ -169,7 +169,7 @@ METHOD isShortCut( nKey, nID ) CLASS hb_POPUPMENU
 
    RETURN .F.
 
-METHOD isQuick( nKey, nID ) CLASS hb_POPUPMENU
+METHOD isQuick( nKey, nID ) CLASS hb_PopupMenu
 
    LOCAL nItem
    LOCAL nTotal
