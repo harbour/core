@@ -879,7 +879,7 @@ static PHB_FILE s_fileNew( HB_FHANDLE hFile )
 }
 
 
-HB_FUNC( HB_MEMIO ) {;}
+HB_FUNC( HB_MEMIO ) { ; }
 
 
 HB_CALL_ON_STARTUP_BEGIN( _hb_file_memio_init_ )

@@ -5462,9 +5462,9 @@ static const RDDFUNCS fptTable =
 };
 
 HB_FUNC_TRANSLATE( DBFFPT, _DBF )
-HB_FUNC( DBFDBT ) {;}
-HB_FUNC( DBFSMT ) {;}
-HB_FUNC( DBFBLOB ) {;}
+HB_FUNC( DBFDBT ) { ; }
+HB_FUNC( DBFSMT ) { ; }
+HB_FUNC( DBFBLOB ) { ; }
 
 static void hb_dbffptRegisterRDD( HB_USHORT * pusRddId )
 {

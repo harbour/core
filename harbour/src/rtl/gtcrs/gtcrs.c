@@ -2981,5 +2981,5 @@ static void curs_wrkaround( void )
    /* cur_term->type.Booleans[28] = 0; */
 }
 #else
-static void curs_wrkaround( void ) {;}
+static void curs_wrkaround( void ) { ; }
 #endif

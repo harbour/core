@@ -52,175 +52,177 @@
 
 #include "hbapi.h"
 
-/* Introduction Extended Drivers */
-HB_FUNC( CGA40 )      {;}
-HB_FUNC( CGA80 )      {;}
-HB_FUNC( DSETNOLINE ) {;}
-HB_FUNC( DSETQFILE )  {;}
-HB_FUNC( DSETTYPE )   {;}
-HB_FUNC( DSETWINDEB ) {;}
-HB_FUNC( DSETWINDOW ) {;}
-HB_FUNC( EGA43 )      {;}
-HB_FUNC( FIRSTCOL )   {;}
-HB_FUNC( FIRSTROW )   {;}
-HB_FUNC( GETBOXGROW ) {;}
-HB_FUNC( GETCURSOR )  {;}
-HB_FUNC( GETLINES )   {;}
-HB_FUNC( GETMODE )    {;}
-HB_FUNC( GETPAGE )    {;}
-HB_FUNC( GETPBIOS )   {;}
-HB_FUNC( GETPXLAT )   {;}
-HB_FUNC( GETSCRMODE ) {;}
-HB_FUNC( GETTAB )     {;}
-HB_FUNC( INKEYTRAP )  {;}
-HB_FUNC( INPUTMODE )  {;}
-HB_FUNC( KEYREAD )    {;}
-HB_FUNC( KEYSEND )    {;}
-HB_FUNC( MAXCOL )     {;}
-HB_FUNC( MAXPAGE )    {;}
-HB_FUNC( MAXROW )     {;}
-HB_FUNC( MONOCHROME ) {;}
-HB_FUNC( PAGECOPY )   {;}
-HB_FUNC( PRINTERROR ) {;}
-HB_FUNC( SETBELL )    {;}
-HB_FUNC( SETBOXGROW ) {;}
-HB_FUNC( SETCURSOR )  {;}
-HB_FUNC( SETLINES )   {;}
-HB_FUNC( SETMAXCOL )  {;}
-HB_FUNC( SETMAXROW )  {;}
-HB_FUNC( SETPAGE )    {;}
-HB_FUNC( SETPBIOS )   {;}
-HB_FUNC( SETPXLAT )   {;}
-HB_FUNC( SETQNAME )   {;}
-HB_FUNC( SETSCRMODE ) {;}
-HB_FUNC( SETTAB )     {;}
-HB_FUNC( TRAPANYKEY ) {;}
-HB_FUNC( TRAPINPUT )  {;}
-HB_FUNC( TRAPSHIFT )  {;}
-HB_FUNC( VGA28 )      {;}
-HB_FUNC( VGA50 )      {;}
-/* Introduction Video Functions */
-HB_FUNC( EGAPALETTE ) {;}
-HB_FUNC( FONTLOAD )   {;}
-HB_FUNC( FONTRESET )  {;}
-HB_FUNC( FONTROTATE ) {;}
-HB_FUNC( FONTSELECT ) {;}
-HB_FUNC( GETFONT )    {;}
-HB_FUNC( GETSCRSTR )  {;}
-HB_FUNC( GETVGAPAL )  {;}
-HB_FUNC( ISCGA )      {;}
-HB_FUNC( ISEGA )      {;}
-HB_FUNC( ISHERCULES ) {;}
-HB_FUNC( ISMCGA )     {;}
-HB_FUNC( ISMONO )     {;}
-HB_FUNC( ISPGA )      {;}
-HB_FUNC( ISVGA )      {;}
-HB_FUNC( MAXFONT )    {;}
-HB_FUNC( MONISWITCH ) {;}
-HB_FUNC( NUMCOL )     {;}
-HB_FUNC( SCREENSIZE ) {;}
-HB_FUNC( SETSCRSTR )  {;}
-HB_FUNC( VIDEOINIT )  {;}
-HB_FUNC( VIDEOSETUP ) {;}
-/* Introduction Disk Utilities */
-/* HB_FUNC( DIRCHANGE )  {;} */ /* Implemented in Harbour core as C5.3 function. */
-/* HB_FUNC( DIRREMOVE )  {;} */ /* Implemented in Harbour core as C5.3 function. */
-/* HB_FUNC( DISKCHANGE ) {;} */ /* Implemented in Harbour core as C5.3 function. */
-HB_FUNC( DISKCHECK )  {;}
-HB_FUNC( DISKFORMAT ) {;}
-HB_FUNC( DISKFREE )   {;}
-HB_FUNC( DISKNAME )   {;}
-HB_FUNC( DISKREADY )  {;}
-HB_FUNC( DISKREADYW ) {;}
-HB_FUNC( DISKSPEED )  {;}
-HB_FUNC( DISKSTAT )   {;}
-HB_FUNC( DISKTOTAL )  {;}
-HB_FUNC( DISKTYPE )   {;}
-HB_FUNC( FILECHECK )  {;}
-HB_FUNC( FILEVALID )  {;}
-HB_FUNC( FLOPPYTYPE ) {;}
-HB_FUNC( GETSHARE )   {;}
-HB_FUNC( NUMDISKF )   {;}
-HB_FUNC( NUMDISKH )   {;}
-HB_FUNC( RESTFSEEK )  {;}
-HB_FUNC( SAVEFSEEK )  {;}
-HB_FUNC( SETSHARE )   {;}
-/* Introduction Printer Functions */
-HB_FUNC( NUMPRINTER ) {;}
-HB_FUNC( FILEPRINT )  {;}
-HB_FUNC( PRINTFILE )  {;}
-HB_FUNC( PRINTINIT )  {;}
-HB_FUNC( PRINTSCR )   {;}
-HB_FUNC( PRINTSCRX )  {;}
-HB_FUNC( SPOOLACTIV ) {;}
-HB_FUNC( SPOOLADD )   {;}
-HB_FUNC( SPOOLCOUNT ) {;}
-HB_FUNC( SPOOLDEL )   {;}
-HB_FUNC( SPOOLENTRY ) {;}
-HB_FUNC( SPOOLFLUSH ) {;}
-HB_FUNC( TOF )        {;}
-/* Introduction Database Functions */
-HB_FUNC( DBFDSKSIZE ) {;}
-HB_FUNC( ISDBT )      {;}
-/* Introduction Set Status */
-HB_FUNC( CSETALL )    {;}
-HB_FUNC( CSETCLIP )   {;}
-HB_FUNC( CSETDATE )   {;}
-HB_FUNC( CSETDECI )   {;}
-HB_FUNC( CSETDEFA )   {;}
-HB_FUNC( CSETFUNC )   {;}
-HB_FUNC( CSETLDEL )   {;}
-HB_FUNC( CSETMARG )   {;}
-HB_FUNC( CSETPATH )   {;}
-HB_FUNC( CSETRDEL )   {;}
-HB_FUNC( CSETRDONLY ) {;}
-HB_FUNC( CSETSNOW )   {;}
-HB_FUNC( CSETXXXX )   {;}
-HB_FUNC( ISDEBUG )    {;}
-HB_FUNC( LASTKFUNC )  {;}
-HB_FUNC( LASTKLINE )  {;}
-HB_FUNC( LASTKPROC )  {;}
-HB_FUNC( NUMFKEY )    {;}
-/* Introduction System Information */
-HB_FUNC( BIOSDATE )   {;}
-HB_FUNC( BOOTCOLD )   {;}
-HB_FUNC( BOOTWARM )   {;}
-HB_FUNC( CPUTYPE )    {;}
-HB_FUNC( ERRORACT )   {;}
-HB_FUNC( ERRORBASE )  {;}
-HB_FUNC( ERRORCODE )  {;}
-HB_FUNC( ERRORORG )   {;}
-HB_FUNC( FILESFREE )  {;}
-HB_FUNC( GETCOUNTRY ) {;}
-HB_FUNC( ISANSI )     {;}
-HB_FUNC( ISMATH )     {;}
-HB_FUNC( MEMSIZE )    {;}
-HB_FUNC( NUMBUFFERS ) {;}
-HB_FUNC( NUMFILES )   {;}
-HB_FUNC( OSVER )      {;}
-HB_FUNC( PCTYPE )     {;}
-HB_FUNC( SSETBREAK )  {;}
-HB_FUNC( SSETVERIFY ) {;}
-/* Introduction Miscellaneous Functions */
-HB_FUNC( DATATYPE )   {;}
-HB_FUNC( GETTIC )     {;}
-HB_FUNC( KBDDISABLE ) {;}
-HB_FUNC( KBDEMULATE ) {;}
-HB_FUNC( KBDSPEED )   {;}
-HB_FUNC( KBDTYPE )    {;}
-HB_FUNC( SCANKEY )    {;}
-HB_FUNC( SETTIC )     {;}
-HB_FUNC( SHOWKEY )    {;}
-HB_FUNC( SOUND )      {;}
-HB_FUNC( SPEED )      {;}
-HB_FUNC( STACKFREE )  {;}
-/* Introduction PEEK/POKE Functions */
-HB_FUNC( INBYTE )     {;}
-HB_FUNC( INWORD )     {;}
-HB_FUNC( OUTBYTE )    {;}
-HB_FUNC( OUTWORD )    {;}
-HB_FUNC( PEEKBYTE )   {;}
-HB_FUNC( PEEKSTR )    {;}
-HB_FUNC( PEEKWORD )   {;}
-HB_FUNC( POKEBYTE )   {;}
-HB_FUNC( POKEWORD )   {;}
+/* Extended Drivers */
+HB_FUNC( CGA40 )      { ; }
+HB_FUNC( CGA80 )      { ; }
+HB_FUNC( DSETNOLINE ) { ; }
+HB_FUNC( DSETQFILE )  { ; }
+HB_FUNC( DSETTYPE )   { ; }
+HB_FUNC( DSETWINDEB ) { ; }
+HB_FUNC( DSETWINDOW ) { ; }
+HB_FUNC( EGA43 )      { ; }
+HB_FUNC( FIRSTCOL )   { ; }
+HB_FUNC( FIRSTROW )   { ; }
+HB_FUNC( GETBOXGROW ) { ; }
+HB_FUNC( GETCURSOR )  { ; }
+HB_FUNC( GETLINES )   { ; }
+HB_FUNC( GETMODE )    { ; }
+HB_FUNC( GETPAGE )    { ; }
+HB_FUNC( GETPBIOS )   { ; }
+HB_FUNC( GETPXLAT )   { ; }
+HB_FUNC( GETSCRMODE ) { ; }
+HB_FUNC( GETTAB )     { ; }
+HB_FUNC( INKEYTRAP )  { ; }
+HB_FUNC( INPUTMODE )  { ; }
+HB_FUNC( KEYREAD )    { ; }
+HB_FUNC( KEYSEND )    { ; }
+HB_FUNC( MAXCOL )     { ; }
+HB_FUNC( MAXPAGE )    { ; }
+HB_FUNC( MAXROW )     { ; }
+HB_FUNC( MONOCHROME ) { ; }
+HB_FUNC( PAGECOPY )   { ; }
+HB_FUNC( PRINTERROR ) { ; }
+HB_FUNC( SETBELL )    { ; }
+HB_FUNC( SETBOXGROW ) { ; }
+HB_FUNC( SETCURSOR )  { ; }
+HB_FUNC( SETLINES )   { ; }
+HB_FUNC( SETMAXCOL )  { ; }
+HB_FUNC( SETMAXROW )  { ; }
+HB_FUNC( SETPAGE )    { ; }
+HB_FUNC( SETPBIOS )   { ; }
+HB_FUNC( SETPXLAT )   { ; }
+HB_FUNC( SETQNAME )   { ; }
+HB_FUNC( SETSCRMODE ) { ; }
+HB_FUNC( SETTAB )     { ; }
+HB_FUNC( TRAPANYKEY ) { ; }
+HB_FUNC( TRAPINPUT )  { ; }
+HB_FUNC( TRAPSHIFT )  { ; }
+HB_FUNC( VGA28 )      { ; }
+HB_FUNC( VGA50 )      { ; }
+/* Video Functions */
+HB_FUNC( EGAPALETTE ) { ; }
+HB_FUNC( FONTLOAD )   { ; }
+HB_FUNC( FONTRESET )  { ; }
+HB_FUNC( FONTROTATE ) { ; }
+HB_FUNC( FONTSELECT ) { ; }
+HB_FUNC( GETFONT )    { ; }
+HB_FUNC( GETSCRSTR )  { ; }
+HB_FUNC( GETVGAPAL )  { ; }
+HB_FUNC( ISCGA )      { ; }
+HB_FUNC( ISEGA )      { ; }
+HB_FUNC( ISHERCULES ) { ; }
+HB_FUNC( ISMCGA )     { ; }
+HB_FUNC( ISMONO )     { ; }
+HB_FUNC( ISPGA )      { ; }
+HB_FUNC( ISVGA )      { ; }
+HB_FUNC( MAXFONT )    { ; }
+HB_FUNC( MONISWITCH ) { ; }
+HB_FUNC( NUMCOL )     { ; }
+HB_FUNC( SCREENSIZE ) { ; }
+HB_FUNC( SETSCRSTR )  { ; }
+HB_FUNC( VIDEOINIT )  { ; }
+HB_FUNC( VIDEOSETUP ) { ; }
+/* Disk Utilities */
+#if 0
+HB_FUNC( DIRCHANGE )  { ; } /* Implemented in Harbour core as C5.3 function. */
+HB_FUNC( DIRREMOVE )  { ; } /* Implemented in Harbour core as C5.3 function. */
+HB_FUNC( DISKCHANGE ) { ; } /* Implemented in Harbour core as C5.3 function. */
+#endif
+HB_FUNC( DISKCHECK )  { ; }
+HB_FUNC( DISKFORMAT ) { ; }
+HB_FUNC( DISKFREE )   { ; }
+HB_FUNC( DISKNAME )   { ; }
+HB_FUNC( DISKREADY )  { ; }
+HB_FUNC( DISKREADYW ) { ; }
+HB_FUNC( DISKSPEED )  { ; }
+HB_FUNC( DISKSTAT )   { ; }
+HB_FUNC( DISKTOTAL )  { ; }
+HB_FUNC( DISKTYPE )   { ; }
+HB_FUNC( FILECHECK )  { ; }
+HB_FUNC( FILEVALID )  { ; }
+HB_FUNC( FLOPPYTYPE ) { ; }
+HB_FUNC( GETSHARE )   { ; }
+HB_FUNC( NUMDISKF )   { ; }
+HB_FUNC( NUMDISKH )   { ; }
+HB_FUNC( RESTFSEEK )  { ; }
+HB_FUNC( SAVEFSEEK )  { ; }
+HB_FUNC( SETSHARE )   { ; }
+/* Printer Functions */
+HB_FUNC( NUMPRINTER ) { ; }
+HB_FUNC( FILEPRINT )  { ; }
+HB_FUNC( PRINTFILE )  { ; }
+HB_FUNC( PRINTINIT )  { ; }
+HB_FUNC( PRINTSCR )   { ; }
+HB_FUNC( PRINTSCRX )  { ; }
+HB_FUNC( SPOOLACTIV ) { ; }
+HB_FUNC( SPOOLADD )   { ; }
+HB_FUNC( SPOOLCOUNT ) { ; }
+HB_FUNC( SPOOLDEL )   { ; }
+HB_FUNC( SPOOLENTRY ) { ; }
+HB_FUNC( SPOOLFLUSH ) { ; }
+HB_FUNC( TOF )        { ; }
+/* Database Functions */
+HB_FUNC( DBFDSKSIZE ) { ; }
+HB_FUNC( ISDBT )      { ; }
+/* Set Status */
+HB_FUNC( CSETALL )    { ; }
+HB_FUNC( CSETCLIP )   { ; }
+HB_FUNC( CSETDATE )   { ; }
+HB_FUNC( CSETDECI )   { ; }
+HB_FUNC( CSETDEFA )   { ; }
+HB_FUNC( CSETFUNC )   { ; }
+HB_FUNC( CSETLDEL )   { ; }
+HB_FUNC( CSETMARG )   { ; }
+HB_FUNC( CSETPATH )   { ; }
+HB_FUNC( CSETRDEL )   { ; }
+HB_FUNC( CSETRDONLY ) { ; }
+HB_FUNC( CSETSNOW )   { ; }
+HB_FUNC( CSETXXXX )   { ; }
+HB_FUNC( ISDEBUG )    { ; }
+HB_FUNC( LASTKFUNC )  { ; }
+HB_FUNC( LASTKLINE )  { ; }
+HB_FUNC( LASTKPROC )  { ; }
+HB_FUNC( NUMFKEY )    { ; }
+/* System Information */
+HB_FUNC( BIOSDATE )   { ; }
+HB_FUNC( BOOTCOLD )   { ; }
+HB_FUNC( BOOTWARM )   { ; }
+HB_FUNC( CPUTYPE )    { ; }
+HB_FUNC( ERRORACT )   { ; }
+HB_FUNC( ERRORBASE )  { ; }
+HB_FUNC( ERRORCODE )  { ; }
+HB_FUNC( ERRORORG )   { ; }
+HB_FUNC( FILESFREE )  { ; }
+HB_FUNC( GETCOUNTRY ) { ; }
+HB_FUNC( ISANSI )     { ; }
+HB_FUNC( ISMATH )     { ; }
+HB_FUNC( MEMSIZE )    { ; }
+HB_FUNC( NUMBUFFERS ) { ; }
+HB_FUNC( NUMFILES )   { ; }
+HB_FUNC( OSVER )      { ; }
+HB_FUNC( PCTYPE )     { ; }
+HB_FUNC( SSETBREAK )  { ; }
+HB_FUNC( SSETVERIFY ) { ; }
+/* Miscellaneous Functions */
+HB_FUNC( DATATYPE )   { ; }
+HB_FUNC( GETTIC )     { ; }
+HB_FUNC( KBDDISABLE ) { ; }
+HB_FUNC( KBDEMULATE ) { ; }
+HB_FUNC( KBDSPEED )   { ; }
+HB_FUNC( KBDTYPE )    { ; }
+HB_FUNC( SCANKEY )    { ; }
+HB_FUNC( SETTIC )     { ; }
+HB_FUNC( SHOWKEY )    { ; }
+HB_FUNC( SOUND )      { ; }
+HB_FUNC( SPEED )      { ; }
+HB_FUNC( STACKFREE )  { ; }
+/* PEEK/POKE Functions */
+HB_FUNC( INBYTE )     { ; }
+HB_FUNC( INWORD )     { ; }
+HB_FUNC( OUTBYTE )    { ; }
+HB_FUNC( OUTWORD )    { ; }
+HB_FUNC( PEEKBYTE )   { ; }
+HB_FUNC( PEEKSTR )    { ; }
+HB_FUNC( PEEKWORD )   { ; }
+HB_FUNC( POKEBYTE )   { ; }
+HB_FUNC( POKEWORD )   { ; }
