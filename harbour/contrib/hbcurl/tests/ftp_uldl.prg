@@ -4,7 +4,7 @@
 
 /* NOTE: Redirect STDERR to a file to see the verbose output. */
 
-#include "hbcurl.ch"
+#require "hbcurl"
 
 #include "fileio.ch"
 

@@ -6,8 +6,6 @@
 
 #require "hbcairo"
 
-#include "hbcairo.ch"
-
 REQUEST HB_CODEPAGE_LTWIN
 
 PROCEDURE Main()

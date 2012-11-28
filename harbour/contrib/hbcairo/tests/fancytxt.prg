@@ -4,8 +4,6 @@
 
 #require "hbcairo"
 
-#include "hbcairo.ch"
-
 PROCEDURE Main()
 
    LOCAL hSurface

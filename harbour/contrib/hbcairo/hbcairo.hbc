@@ -6,6 +6,8 @@ description=Cairo wrapper (imaging)
 
 incpaths=.
 
+headers=hbcairo.ch
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 {!unix|darwin}libs=cairo
