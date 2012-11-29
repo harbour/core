@@ -4,8 +4,6 @@
 
 #require "hblzf"
 
-#include "simpleio.ch"
-
 #define TEST_STRING "This is test of LZF extension"
 #define _NREPL_     128
 

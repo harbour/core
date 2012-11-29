@@ -9,8 +9,6 @@
 
 #require "hbssl"
 
-#include "simpleio.ch"
-
 #define CRLF Chr( 13 ) + Chr( 10 )
 
 PROCEDURE Main()

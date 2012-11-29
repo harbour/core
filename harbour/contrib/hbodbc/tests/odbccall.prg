@@ -4,8 +4,6 @@
 
 #require "hbodbc"
 
-#include "simpleio.ch"
-
 PROCEDURE Main()
 
    LOCAL dsFunctions := TODBC():New( "DBQ=" + hb_FNameMerge( hb_DirBase(), "test.mdb" ) + ";Driver={Microsoft Access Driver (*.mdb)}" )

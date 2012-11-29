@@ -5,7 +5,6 @@
 #require "hbxdiff"
 
 #include "fileio.ch"
-#include "simpleio.ch"
 
 PROCEDURE Main()
 

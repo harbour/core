@@ -5,8 +5,6 @@
 #require "hbbz2"
 #require "hblzf"
 
-#include "simpleio.ch"
-
 #define _NREPL_     50
 
 PROCEDURE Main()

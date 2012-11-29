@@ -9,8 +9,6 @@
 
 #require "hbssl"
 
-#include "simpleio.ch"
-
 PROCEDURE Main()
 
    LOCAL ctx

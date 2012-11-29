@@ -9,8 +9,6 @@
 
 #require "hbtinymt"
 
-#include "simpleio.ch"
-
 PROCEDURE Main()
 
    SET DECIMAL TO 0

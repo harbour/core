@@ -4,8 +4,6 @@
 
 #require "hbxdiff"
 
-#include "simpleio.ch"
-
 FUNCTION Diff( ... )
 
    LOCAL e

@@ -4,8 +4,6 @@
 
 #require "hbodbc"
 
-#include "simpleio.ch"
-
 PROCEDURE Main()
 
    LOCAL aOrders
