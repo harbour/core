@@ -51,7 +51,6 @@
  */
 
 #ifndef _WVG_CH
-
 #define _WVG_CH
 
 /*-*/

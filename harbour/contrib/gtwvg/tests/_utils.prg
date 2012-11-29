@@ -267,10 +267,6 @@ FUNCTION WvtWindowExpand( nUnits )
 
    RETURN .T.
 
-FUNCTION RGB( r, g, b )
-
-   RETURN r + ( g * 256 ) + ( b * 256 * 256 )
-
 FUNCTION VouChoice( aChoices )
 
    LOCAL scr, clr, nChoice

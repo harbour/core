@@ -55,7 +55,7 @@
 
 /* Extended GT Manipulation Constants */
 
-#ifndef HB_GTE_ACTIVATE
+#ifndef HB_LEGACY_LEVEL4
 #define HB_GTE_ACTIVATE                   1
 #define HB_GTE_SETFOCUS                   2
 #define HB_GTE_KILLFOCUS                  3
