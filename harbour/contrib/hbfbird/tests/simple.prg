@@ -4,8 +4,6 @@
 
 #require "hbfbird"
 
-#include "simpleio.ch"
-
 PROCEDURE Main()
 
    LOCAL oServer, oQuery, oRow, i, x, aTables, aStruct, aKey
