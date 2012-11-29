@@ -65,16 +65,14 @@ PROCEDURE Main()
    LOCAL i
    LOCAL aRay
 
-#if defined( __HBSCRIPT__HBSHELL )
-   rddRegister( "ADS" )
-#endif
-
 #if defined( __HBDYNLOAD__RDDADS__ )
    LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libPostfix() ) )
 
    hb_rddADSRegister()
 
    HB_SYMBOL_UNUSED( l )
+#elif defined( __HBSCRIPT__HBSHELL )
+   hb_rddADSRegister()
 #endif
 
    rddSetDefault( "ADS" )
