@@ -10,8 +10,6 @@
 
 #require "hbgd"
 
-#include "simpleio.ch"
-
 #define IMAGES_IN  "imgs_in" + hb_ps()
 #define IMAGES_OUT "imgs_out" + hb_ps()
 
@@ -19,12 +17,12 @@ PROCEDURE Main()
 
    LOCAL oI
 
-   /*
+#if 0
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-   */
+#endif
 
    /* Load an image from file */
    oI := GDImage():LoadFromFile( IMAGES_IN + "conv_tst.jpg" )

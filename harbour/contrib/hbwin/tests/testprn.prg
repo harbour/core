@@ -8,27 +8,25 @@ PROCEDURE Main( cPar1 )
 
    LOCAL nPrn := 1
    LOCAL cBMPFile := Space( 40 )
-   LOCAL aPrn := win_printerList()
    LOCAL GetList := {}
 
-   CLS
+   LOCAL aPrn := win_printerList()
 
    IF Empty( aPrn )
       Alert( "No printers installed - Cannot continue" )
-      QUIT
+   ELSE
+      DO WHILE nPrn != 0
+         CLS
+         @ 0, 0 SAY "win_Prn() Class test program. Choose a printer to test"
+         @ 1, 0 SAY "Bitmap file name:" GET cBMPFile PICT "@K"
+         READ
+         @ 2, 0 TO MaxRow(), MaxCol()
+         nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn )
+         IF nPrn != 0
+            PrnTest( aPrn[ nPrn ], cBMPFile, iif( HB_ISSTRING( cPar1 ) .AND. Lower( cPar1 ) == "ask", .T., NIL ) )
+         ENDIF
+      ENDDO
    ENDIF
-
-   DO WHILE nPrn != 0
-      CLS
-      @ 0, 0 SAY "win_Prn() Class test program. Choose a printer to test"
-      @ 1, 0 SAY "Bitmap file name" GET cBMPFile PICT "@K"
-      READ
-      @ 2, 0 TO MaxRow(), MaxCol()
-      nPrn := AChoice( 3, 1, MaxRow() - 1, MaxCol() - 1, aPrn, .T.,, nPrn )
-      IF nPrn != 0
-         PrnTest( aPrn[ nPrn ], cBMPFile, iif( HB_ISSTRING( cPar1 ) .AND. Lower( cPar1 ) == "ask", .T., NIL ) )
-      ENDIF
-   ENDDO
 
    RETURN
 
@@ -56,7 +54,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
       ELSE
          oPrinter:SetPen( WIN_PS_SOLID, 1, HB_WIN_RGB_RED )
          oPrinter:Bold( WIN_FW_EXTRABOLD )
-         oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() = " + Str( oPrinter:MaxRow(), 4 ) + "   MaxCol() = " + Str( oPrinter:MaxCol(), 4 ) )
+         oPrinter:TextOut( oPrinter:PrinterName + ": MaxRow() = " + hb_ntos( oPrinter:MaxRow() ) + "   MaxCol() = " + hb_ntos( oPrinter:MaxCol() ) )
          oPrinter:Bold( WIN_FW_DONTCARE )
          oPrinter:NewLine()
          oPrinter:TextOut( "   Partial list of available fonts that are available for OEM_" )
@@ -89,7 +87,7 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
                   oPrinter:SetPos( nColTTF )
                   oPrinter:TextOut( iif( aFonts[ x, 3 ], "Yes", "No" ) )
                   oPrinter:SetPos( nColCharSet )
-                  oPrinter:TextOut( Str( aFonts[ x, 4 ], 5 ) )
+                  oPrinter:TextOut( hb_ntos( aFonts[ x, 4 ] ) )
                   oPrinter:SetPos( oPrinter:LeftMargin, oPrinter:PosY + ( oPrinter:CharHeight * 2 ) )
                   IF oPrinter:PRow() > oPrinter:MaxRow() - 16  // Could use "oPrinter:NewPage()" to start a new page
                      EXIT
@@ -102,9 +100,9 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:CharSet( 0 )  // Reset default charset
          oPrinter:Bold( WIN_FW_EXTRABOLD )
          oPrinter:NewLine()
-         oPrinter:TextOut( "This is on line" + Str( oPrinter:PRow(), 4 ) + ", Printed bold, " )
+         oPrinter:TextOut( "This is on line" + hb_ntos( oPrinter:PRow() ) + ", Printed bold, " )
          oPrinter:TextOut( " finishing at Column: " )
-         oPrinter:TextOut( Str( oPrinter:PCol(), 4 ) )
+         oPrinter:TextOut( hb_ntos( oPrinter:PCol() ) )
          oPrinter:SetPRC( oPrinter:PRow() + 3, 0 )
          oPrinter:Bold( WIN_FW_DONTCARE )
          oPrinter:TextOut( "Notice: UNDERLINE only prints correctly if there is a blank line after", .T. )
@@ -121,11 +119,11 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
          oPrinter:Ellipse( 400, oPrinter:PosY + 100, 500, oPrinter:PosY + 200 )
          oPrinter:FillRect( 600, oPrinter:PosY + 100, 700, oPrinter:PosY + 200, HB_WIN_RGB_RED )
 
-         //       To print a barcode;
-         //       Replace 'BCod39HN' with your own bar code font or any other font
-         //         oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ), oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
+         // To print a barcode;
+         // Replace "BCod39HN" with your own bar code font or any other font
+         //   oPrinter:TextAtFont( oPrinter:MM_TO_POSX( 30 ), oPrinter:MM_TO_POSY( 60 ), "1234567890", "BCod39HN", 24, 0 )
          //
-         PrintBitMap( oPrinter, cBMPFile )
+         PrintBitmap( oPrinter, cBMPFile )
 
          oPrinter:EndDoc()
       ENDIF
@@ -134,26 +132,26 @@ STATIC PROCEDURE PrnTest( cPrinter, cBMPFile, lAsk )
 
    RETURN
 
-STATIC PROCEDURE PrintBitMap( oPrn, cBitFile )
+STATIC PROCEDURE PrintBitmap( oPrn, cBitFile )
 
    LOCAL oBMP
 
-   IF Empty( cBitFile )
-      //
-   ELSEIF ! hb_FileExists( cBitFile )
-      Alert( cBitFile + " not found " )
-   ELSE
-      oBMP := win_BMP():New()
-      IF oBmp:loadFile( cBitFile )
+   IF ! Empty( cBitFile )
+      IF hb_FileExists( cBitFile )
+         oBMP := win_BMP():New()
+         IF oBmp:loadFile( cBitFile )
 
-         oBmp:Draw( oPrn, { 200, 200, 2000, 1500 } )
-
-         // Note: Can also use this method to print bitmap
-         //   oBmp:Rect := { 200, 200, 2000, 1500 }
-         //   oPrn:DrawBitMap( oBmp )
-
+            oBmp:Draw( oPrn, { 200, 200, 2000, 1500 } )
+#if 0
+            /* Note: Can also use this method to print bitmap */
+            oBmp:Rect := { 200, 200, 2000, 1500 }
+            oPrn:DrawBitmap( oBmp )
+#endif
+         ENDIF
+         oBMP:Destroy()
+      ELSE
+         Alert( hb_StrFormat( "%1$s not found ", cBitFile ) )
       ENDIF
-      oBMP:Destroy()
    ENDIF
 
    RETURN

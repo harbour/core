@@ -13,8 +13,6 @@
 
 #require "hbgd"
 
-#include "simpleio.ch"
-
 /* Some digits images from:
    http://www.digitmania.holowww.com/all.html */
 

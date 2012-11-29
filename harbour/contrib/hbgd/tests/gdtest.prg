@@ -10,8 +10,6 @@
 
 #require "hbgd"
 
-#include "simpleio.ch"
-
 #define IMAGES_IN  "imgs_in" + hb_ps()
 #define IMAGES_OUT "imgs_out" + hb_ps()
 
@@ -21,12 +19,12 @@ PROCEDURE Main()
    LOCAL black, blue, red, green, cyan
    LOCAL color, font
 
-/*
+#if 0
    // Check output directory
    IF ! hb_DirExists( IMAGES_OUT )
       DirMake( IMAGES_OUT )
    ENDIF
-*/
+#endif
 
    ? gdVersion()
 

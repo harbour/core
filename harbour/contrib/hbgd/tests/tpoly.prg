@@ -8,8 +8,6 @@
 
 #require "hbgd"
 
-#include "simpleio.ch"
-
 #command TurnRight( <x> ) => s_nAngle += Pi() / 3 * <x>
 #command TurnLeft( <x> )  => s_nAngle -= Pi() / 3 * <x>
 

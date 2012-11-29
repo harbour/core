@@ -124,7 +124,7 @@ CREATE CLASS win_Prn
    METHOD GetCharHeight()
    METHOD GetTextWidth( cString )
    METHOD GetTextHeight( cString )
-   METHOD DrawBitMap( oBmp )
+   METHOD DrawBitmap( oBmp )
 
    /* Clipper compatible functions. */
    METHOD SetPRC( nRow, nCol )   // Based on ::LineHeight and current ::CharWidth
@@ -798,7 +798,7 @@ METHOD GetTextWidth( cString ) CLASS win_Prn
 METHOD GetTextHeight( cString ) CLASS win_Prn
    RETURN win_GetTextSize( ::hPrinterDC, cString, Len( cString ), .F. )  // Return Height in device units
 
-METHOD DrawBitMap( oBmp ) CLASS win_Prn
+METHOD DrawBitmap( oBmp ) CLASS win_Prn
 
    LOCAL lResult := .F.
 
