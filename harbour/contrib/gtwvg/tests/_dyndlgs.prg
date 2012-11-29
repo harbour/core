@@ -7,10 +7,7 @@
  */
 
 #include "inkey.ch"
-#include "wvtwin.ch"
 #include "hbgtinfo.ch"
-#include "hbgtwvg.ch"
-#include "wvgparts.ch"
 
 #define ID_BTN_OK                  1
 #define ID_MLE                     10

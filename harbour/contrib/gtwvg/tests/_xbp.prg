@@ -9,10 +9,7 @@
 //
 
 #include "inkey.ch"
-#include "wvtwin.ch"
 #include "hbgtinfo.ch"
-#include "hbgtwvg.ch"
-#include "wvgparts.ch"
 
 #define MUSIC_WAITON          {800, 1600}
 

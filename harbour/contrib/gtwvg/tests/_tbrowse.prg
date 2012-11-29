@@ -13,10 +13,7 @@
  */
 
 #include "inkey.ch"
-#include "wvtwin.ch"
 #include "hbgtinfo.ch"
-#include "hbgtwvg.ch"
-#include "wvgparts.ch"
 
 #define K_MOVING                1001
 

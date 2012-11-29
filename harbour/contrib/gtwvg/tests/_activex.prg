@@ -7,10 +7,7 @@
  */
 
 #include "inkey.ch"
-#include "wvtwin.ch"
 #include "hbgtinfo.ch"
-#include "hbgtwvg.ch"
-#include "wvgparts.ch"
 
 // The function has to be called via hb_threadStart( {|| ExecuteActiveX( nActiveX ) } )
 

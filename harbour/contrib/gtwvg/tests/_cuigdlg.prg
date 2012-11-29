@@ -7,10 +7,7 @@
  */
 
 #include "inkey.ch"
-#include "wvtwin.ch"
 #include "hbgtinfo.ch"
-#include "hbgtwvg.ch"
-#include "wvgparts.ch"
 
 // Simplified Console with GUI Look
 
