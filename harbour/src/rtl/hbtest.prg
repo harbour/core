@@ -222,7 +222,7 @@ FUNCTION XToStr( xValue )
 
    RETURN iif( xValue == NIL, "NIL", "" )
 
-FUNCTION XToStrE( xValue )
+STATIC FUNCTION XToStrE( xValue )
 
    SWITCH ValType( xValue )
    CASE "C"
