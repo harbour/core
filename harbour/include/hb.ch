@@ -57,7 +57,8 @@
 #include "dbstruct.ch"
 #include "directry.ch"
 #include "fileio.ch"
-#include "hbtrace.ch"
+#include "hbgtinfo.ch"
+#include "hbhash.ch"
 #include "inkey.ch"
 #include "setcurs.ch"
 
