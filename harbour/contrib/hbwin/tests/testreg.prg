@@ -4,8 +4,6 @@
 
 #require "hbwin"
 
-#include "hbwin.ch"
-
 #define KEY_WOW64_64KEY 0x0100
 #define KEY_WOW64_32KEY 0x0200
 

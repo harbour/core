@@ -4,8 +4,6 @@
 
 #require "hbmxml"
 
-#include "hbmxml.ch"
-
 STATIC s_mxml_error := .F.
 STATIC s_mxml_error_msg := ""
 

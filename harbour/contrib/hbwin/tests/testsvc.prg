@@ -52,8 +52,6 @@
 
 #if ! defined( __HBSCRIPT__HBSHELL )
 
-#include "hbwin.ch"
-
 #define _SERVICE_NAME "Harbour_Test_Service"
 
 PROCEDURE Main( cMode )

@@ -21,7 +21,6 @@
 
 #require "hbmxml"
 
-#include "hbmxml.ch"
 #include "simpleio.ch"
 
 REQUEST HB_GT_CGI_DEFAULT

@@ -70,6 +70,9 @@
       -DADS_LIB_VERSION=500
 */
 
+#ifndef ADS_CH_
+#define ADS_CH_
+
 /* Supported file types */
 #define ADS_NTX                           1
 #define ADS_CDX                           2
@@ -321,3 +324,5 @@
             [; dbSetIndex( <(index1)> )]                                   ;
             [; dbSetIndex( <(indexn)> )]                                   ;
        ; END
+
+#endif

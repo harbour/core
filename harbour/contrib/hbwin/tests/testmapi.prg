@@ -6,8 +6,6 @@
 
 #include "simpleio.ch"
 
-#include "hbwin.ch"
-
 PROCEDURE Main()
 
    LOCAL cSubject := "Test subject"

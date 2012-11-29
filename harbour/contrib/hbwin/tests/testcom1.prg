@@ -52,8 +52,6 @@
 
 #require "hbwin"
 
-#include "hbwin.ch"
-
 PROCEDURE Main( cPortName )
 
    LOCAL oWinPort := win_com():Init( cPortName, WIN_CBR_9600, WIN_NOPARITY, 8, WIN_ONESTOPBIT )

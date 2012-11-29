@@ -12,8 +12,6 @@
 
 #require "hbwin"
 
-#include "hbwin.ch"
-
 PROCEDURE Main()
 
    ? win_ReportEvent( NIL, "Application", WIN_EVENTLOG_SUCCESS, 0, 0, "hello" )

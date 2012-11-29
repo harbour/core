@@ -53,7 +53,6 @@
 #require "rddads"
 
 #include "ord.ch"
-#include "ads.ch"
 
 REQUEST ADS
 
@@ -65,6 +64,10 @@ PROCEDURE Main()
 
    LOCAL i
    LOCAL aRay
+
+#if defined( __HBSCRIPT__HBSHELL )
+   rddRegister( "ADS" )
+#endif
 
 #if defined( __HBDYNLOAD__RDDADS__ )
    LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libPostfix() ) )

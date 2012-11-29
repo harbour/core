@@ -4,8 +4,6 @@
 
 #require "hbwin"
 
-#include "hbwin.ch"
-
 PROCEDURE Main( cPar1 )
 
    LOCAL nPrn := 1

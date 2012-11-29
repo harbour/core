@@ -8,7 +8,6 @@
 
 #require "rddads"
 
-#include "ads.ch"
 REQUEST ADS
 
 #if defined( __HBDYNLOAD__RDDADS__ )
@@ -21,6 +20,10 @@ PROCEDURE Main()
    LOCAL cErr, cStr
    LOCAL aStru := { { "ID", "A", 1, 0 }, { "Name", "C", 50, 0 }, { "address", "C", 50, 0 }, { "city", "C", 30, 0 }, { "Age", "n", 3, 0 } }
    LOCAL hConnection1
+
+#if defined( __HBSCRIPT__HBSHELL )
+   rddRegister( "ADSADT" )
+#endif
 
 #if defined( __HBDYNLOAD__RDDADS__ )
    LOCAL l := hb_libLoad( hb_libName( "rddads" + hb_libPostfix() ) )

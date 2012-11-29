@@ -6,8 +6,6 @@
 
 #xtranslate _ENCODE( <xData> ) => ( hb_base64Encode( hb_Serialize( mxmlGetCustom( <xData> ) ) ) )
 
-#include "hbmxml.ch"
-
 PROCEDURE Main()
 
    LOCAL tree, node

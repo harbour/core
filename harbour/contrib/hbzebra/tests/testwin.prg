@@ -13,8 +13,6 @@
 #require "hbzebra"
 #require "hbwin"
 
-#include "hbwin.ch"
-
 PROCEDURE Main()
 
    LOCAL hDC

@@ -11,6 +11,8 @@ skip={!(linux|win)}
 
 incpaths=.
 
+headers=ads.ch
+
 {HB_DYNLOAD_RDDADS}prgflags=-D__HBDYNLOAD__RDDADS__
 # Dynamic loading requires -shared executable, but
 # let's leave enabling that to the host project.

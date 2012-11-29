@@ -12,8 +12,6 @@
 
 #require "hbwin"
 
-#include "hbwin.ch"
-
 #include "simpleio.ch"
 
 PROCEDURE Main()

@@ -52,8 +52,6 @@
 
 #require "hbmagic"
 
-#include "hbmagic.ch"
-
 #xcommand T( <(title)>, <(subject)> ) => ;
    magic_setflags( hMagic, MAGIC_NONE ) ;;
    OutStd( hb_StrFormat( <title> + ": t: [%s] ", magic_buffer( hMagic, <subject> ) ) ) ;;
