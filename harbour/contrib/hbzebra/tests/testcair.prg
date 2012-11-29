@@ -5,9 +5,6 @@
 #require "hbzebra"
 #require "hbcairo"
 
-#include "hbzebra.ch"
-#include "hbcairo.ch"
-
 PROCEDURE Main()
 
    LOCAL hCairo, hSurface

@@ -4,8 +4,6 @@
 
 #require "hbpgsql"
 
-#include "postgres.ch"
-
 PROCEDURE Main()
 
    LOCAL conn, res, aTemp, x, y, pFile

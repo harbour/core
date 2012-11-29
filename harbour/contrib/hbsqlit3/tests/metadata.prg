@@ -52,8 +52,6 @@
 
 #require "hbsqlit3"
 
-#include "hbsqlit3.ch"
-
 // #define SQLITE_ENABLE_COLUMN_METADATA
 
 PROCEDURE Main()

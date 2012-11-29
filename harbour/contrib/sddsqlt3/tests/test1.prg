@@ -2,10 +2,10 @@
  * $Id$
  */
 
+#require "rddsql"
 #require "sddsqlt3"
 
 #include "simpleio.ch"
-#include "hbrddsql.ch"
 
 REQUEST SDDSQLITE3, SQLMIX
 

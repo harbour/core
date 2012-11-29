@@ -6,6 +6,8 @@ description=libgd wrapper (imaging)
 
 incpaths=.
 
+headers=gd.ch
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 {win}libs=bgd

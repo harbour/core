@@ -49,8 +49,6 @@
 
 #require "hbhpdf"
 
-#include "harupdf.ch"
-
 //
 
 PROCEDURE Main( cFileToSave )

@@ -2,12 +2,11 @@
  * $Id$
  */
 
+#require "rddsql"
 #require "sddmy"
 
 #include "dbinfo.ch"
 #include "error.ch"
-
-#include "hbrddsql.ch"
 
 REQUEST SDDMY, SQLMIX
 

@@ -50,6 +50,8 @@
  *
  */
 
+#require "hbmysql"
+
 #include "inkey.ch"
 
 PROCEDURE Main( ... )

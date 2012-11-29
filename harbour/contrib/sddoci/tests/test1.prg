@@ -2,10 +2,10 @@
  * $Id$
  */
 
+#require "rddsql"
 #require "sddoci"
 
 #include "simpleio.ch"
-#include "hbrddsql.ch"
 
 REQUEST SDDOCI, SQLMIX
 

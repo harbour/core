@@ -6,5 +6,7 @@ description=libharu wrapper (PDF)
 
 incpaths=.
 
+headers=harupdf.ch
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 libs=3rd/libhpdf/libhpdf.hbc

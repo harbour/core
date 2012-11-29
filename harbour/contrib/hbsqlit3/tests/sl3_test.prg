@@ -52,8 +52,6 @@
 
 #require "hbsqlit3"
 
-#include "hbsqlit3.ch"
-
 #define TRACE
 #define TABLE_SQL "CREATE TABLE t1( id INTEGER PRIMARY KEY AUTOINCREMENT, name TEXT, age INTEGER )"
 

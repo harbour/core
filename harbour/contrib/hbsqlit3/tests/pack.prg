@@ -52,8 +52,6 @@
 
 #require "hbsqlit3"
 
-#include "hbsqlit3.ch"
-
 PROCEDURE Main()
 
    LOCAL db := sqlite3_open_v2( "new.s3db", SQLITE_OPEN_READWRITE + SQLITE_OPEN_EXCLUSIVE )

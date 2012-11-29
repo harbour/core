@@ -6,6 +6,8 @@ description=OpenSSL wrapper (encryption)
 
 incpaths=.
 
+headers=${hb_name}.ch
+
 skip={dos}
 
 {!HB_DYNBIND_OPENSSL&!(HB_STATIC_OPENSSL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

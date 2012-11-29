@@ -8,7 +8,7 @@ skip={!win}
 
 incpaths=.
 
-headers=hbblat.ch
+headers=${hb_name}.ch
 
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 libs=blat

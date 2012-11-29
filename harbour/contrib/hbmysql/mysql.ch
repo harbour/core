@@ -51,6 +51,9 @@
  *
  */
 
+#ifndef HBMYSQL_CH_
+#define HBMYSQL_CH_
+
 /* MySQL field types */
 #define MYSQL_TYPE_DECIMAL      0
 #define MYSQL_TYPE_TINY         1  /* NOTE: TINY is used to map clipper logical values to MySQL tables, so 0 == .F., 1 == .T. */
@@ -109,3 +112,5 @@
 
 /* Extension to DBS_xxx defines to encompass NOT NULL fields, needed by indexes */
 #define DBS_NOTNULL             5     /* True if field has to be NOT NULL */
+
+#endif /* HBMYSQL_CH_ */

@@ -8,8 +8,6 @@
 
 #require "hbpgsql"
 
-#include "postgres.ch"
-
 #define DB_ALIAS                        1
 #define DB_FILE                         2
 #define DB_QUERY                        3

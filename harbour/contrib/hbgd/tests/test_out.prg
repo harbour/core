@@ -10,8 +10,6 @@
 
 #require "hbgd"
 
-#include "gd.ch"
-
 #command WRITE <c> => FWrite( 1, <c> + hb_eol() )
 #command OutHTML <c> => WRITE <c>
 

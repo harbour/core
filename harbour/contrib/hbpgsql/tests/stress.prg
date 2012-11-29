@@ -8,8 +8,6 @@
 
 #require "hbpgsql"
 
-#include "postgres.ch"
-
 PROCEDURE Main( cServer, cDatabase, cUser, cPass )
 
    LOCAL conn, res, i, x

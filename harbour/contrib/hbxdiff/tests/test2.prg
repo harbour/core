@@ -4,8 +4,6 @@
 
 #require "hbxdiff"
 
-#include "hbxdiff.ch"
-
 #include "fileio.ch"
 #include "simpleio.ch"
 

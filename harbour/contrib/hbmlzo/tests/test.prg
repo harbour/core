@@ -8,8 +8,6 @@
 
 #include "simpleio.ch"
 
-#include "hbmlzo.ch"
-
 #define TEST_STRING  "This is test of LZO extension"
 #define FMT_STRING   "Compressed %d bytes into %d bytes (%d)"
 #define FMT2_STRING  "Decompressed %d bytes back into %d bytes (%d)"
@@ -89,7 +87,7 @@ PROCEDURE Main()
    ?
    ? "Simple compression test passed."
 
-/*
+#if 0
    cStr := Replicate( TEST_STRING, 1000000 )
    ?
    ? "BZ2 ", hb_ntos( Len( hb_bz2_Compress( cStr, NIL, @nResult ) ) )
@@ -105,7 +103,7 @@ PROCEDURE Main()
    ? "ZLIB", hb_ntos( Len( hb_ZCompress( cStr, NIL,  @nResult ) ) )
    ? "LZF ", hb_ntos( Len( hb_lzf_compress( cStr, NIL, @nResult ) ) )
    ? "LZO ", hb_ntos( Len( hb_lzo1x_1_compress( cStr, NIL, @nResult ) ) )
-*/
+#endif
 
    RETURN
 

@@ -6,6 +6,8 @@ description=MySQL wrapper (SQL)
 
 incpaths=.
 
+headers=mysql.ch
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 {unix}libs=mysqlclient

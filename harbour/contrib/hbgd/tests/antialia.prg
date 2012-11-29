@@ -10,7 +10,6 @@
 
 #require "hbgd"
 
-#include "gd.ch"
 #include "simpleio.ch"
 
 #define IMAGES_IN  "imgs_in" + hb_ps()

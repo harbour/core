@@ -6,5 +6,7 @@ description=libexpat wrapper (XML parser)
 
 incpaths=.
 
+headers=${hb_name}.ch
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 libs=3rd/expat/expat.hbc

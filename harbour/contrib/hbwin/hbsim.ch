@@ -50,6 +50,9 @@
  *
  */
 
+#ifndef HBSIM_CH_
+#define HBSIM_CH_
+
 /* Error codes for SIM API */
 #define SIM_E_OK                        0               // This is non standard...
 #define SIM_E_HB_MISC                   -1              // This is non standard...
@@ -125,3 +128,5 @@
 #define SIM_ADDRTYPE_SUBSCRIBER         0x00000004      // Subscriber number (protocol-specific)
 #define SIM_ADDRTYPE_ALPHANUM           0x00000005      // Alphanumeric address
 #define SIM_ADDRTYPE_ABBREV             0x00000006      // Abbreviated number
+
+#endif /* HBSIM_CH_ */

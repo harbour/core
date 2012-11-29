@@ -10,8 +10,6 @@
 
 #require "hbfimage"
 
-#include "freeimag.ch"
-
 #include "fileio.ch"
 #include "simpleio.ch"
 

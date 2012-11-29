@@ -6,4 +6,6 @@ description=RDDSQL core RDD
 
 incpaths=.
 
+headers=hbrddsql.ch
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}

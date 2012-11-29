@@ -13,7 +13,6 @@
 #require "hbzebra"
 #require "hbwin"
 
-#include "hbzebra.ch"
 #include "hbwin.ch"
 
 PROCEDURE Main()

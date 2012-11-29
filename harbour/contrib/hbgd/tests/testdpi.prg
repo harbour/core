@@ -11,8 +11,6 @@
 
 #require "hbgd"
 
-#include "gd.ch"
-
 #define IMAGES_IN  "imgs_in" + hb_ps()
 #define IMAGES_OUT "imgs_out" + hb_ps()
 

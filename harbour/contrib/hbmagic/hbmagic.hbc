@@ -6,6 +6,8 @@ description=libmagic wrapper (file identification)
 
 incpaths=.
 
+headers=${hb_name}.ch
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 
 {unix}libs=magic

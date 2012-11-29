@@ -66,8 +66,6 @@
 
 #require "hbsqlit3"
 
-#include "hbsqlit3.ch"
-
 PROCEDURE Main()
 
    LOCAL cFileSource := ":memory:", cFileDest := "backup.db", cSQLTEXT

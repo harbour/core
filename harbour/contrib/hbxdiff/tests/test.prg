@@ -4,8 +4,6 @@
 
 #require "hbxdiff"
 
-#include "hbxdiff.ch"
-
 #include "simpleio.ch"
 
 #define _SIZE 62

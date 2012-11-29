@@ -6,8 +6,6 @@
 
 #include "simpleio.ch"
 
-#include "hblzf.ch"
-
 #define TEST_STRING "This is test of LZF extension"
 #define _NREPL_     128
 

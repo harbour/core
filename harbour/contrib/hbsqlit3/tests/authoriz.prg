@@ -78,8 +78,6 @@
 
 #require "hbsqlit3"
 
-#include "hbsqlit3.ch"
-
 PROCEDURE Main()
 
    LOCAL cFile := ":memory:"

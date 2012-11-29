@@ -51,6 +51,9 @@
  *
  */
 
+#ifndef HBFOXPRO_CH_
+#define HBFOXPRO_CH_
+
 
 /* messages in FP */
 #xtranslate .<!msg!> => :<msg>
@@ -82,3 +85,5 @@
          __dbList( <.off.>, { <{v}> }, <.all.>, ;
                    <{for}>, <{while}>, <next>, ;
                    <rec>, <.rest.>, <.prn.>, <(f)> )
+
+#endif /* HBFOXPRO_CH_ */

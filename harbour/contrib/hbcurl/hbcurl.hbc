@@ -6,7 +6,7 @@ description=libcurl wrapper (IP communication)
 
 incpaths=.
 
-headers=hbcurl.ch
+headers=${hb_name}.ch
 
 {!(HB_STATIC_CURL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 { (HB_STATIC_CURL&!hbdyn)}libs=${_HB_DYNPREF}${hb_name}s${_HB_DYNSUFF}

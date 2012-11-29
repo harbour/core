@@ -6,4 +6,6 @@ description=Telepath(y) compatibility (serial communication)
 
 incpaths=.
 
+headers=telepath.ch
+
 libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
