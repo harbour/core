@@ -3260,6 +3260,12 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hb_default( @hbmk[ _HBMK_cFIRST ], cParam )
          NEXT
 
+      CASE hb_FNameExt( cParamL ) == ".ch"
+
+         FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
+            AAddNew( hbmk[ _HBMK_aCH ], cParam )
+         NEXT
+
       CASE hb_FNameExt( cParamL ) == ".rc"
 
          FOR EACH cParam IN FN_Expand( PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] ), Empty( aParam[ _PAR_cFileName ] ) )
@@ -9896,6 +9902,10 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                   FOR EACH tmp IN FN_Expand( cItem, .F. )
                      AAddNew( hbmk[ _HBMK_aPLUGINPars ], tmp )
                   NEXT
+               CASE hb_FNameExt( cItemL ) == ".ch"
+                  FOR EACH tmp IN FN_Expand( cItem, .F. )
+                     AAddNew( hbmk[ _HBMK_aCH ], tmp )
+                  NEXT
                OTHERWISE /* .prg */
                   IF Empty( hb_FNameExt( cItem ) )
                      cItem := hb_FNameExtSet( cItem, ".prg" )
@@ -14348,7 +14358,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aText_Basic := {;
       I_( "Syntax:" ), ;
       "", ;
-      hb_StrFormat( I_( "  %1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d]>" ), _SELF_NAME_ ), ;
+      hb_StrFormat( I_( "  %1$s [options] [<script[s]>] <src[s][.prg|.c|.obj|.o|.rc|.res|.def|.po|.pot|.hbl|@.clp|.d|.ch]>" ), _SELF_NAME_ ), ;
       "", ;
       I_( "Options:" ) }
 
