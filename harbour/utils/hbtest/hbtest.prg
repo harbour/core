@@ -488,7 +488,7 @@ FUNCTION XToStrE( xValue )
       RETURN xValue
 
    CASE cType == "N" ; RETURN LTrim( Str( xValue ) )
-   CASE cType == "D" ; RETURN DToS( xValue )
+   CASE cType == "D" ; RETURN "0d" + iif( Empty( xValue ), "00000000", DToS( xValue ) )
    CASE cType == "L" ; RETURN iif( xValue, ".T.", ".F." )
    CASE cType == "O" ; RETURN xValue:className() + " Object"
    CASE cType == "U" ; RETURN "NIL"

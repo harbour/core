@@ -272,7 +272,7 @@ PROCEDURE Main_MATH()
 
    HBTEST Max(NIL, NIL)                                 IS "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
    HBTEST Max(10, NIL)                                  IS "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:N:10;U:NIL F:S"
-   HBTEST Max(hb_SToD("19800101"), 10)                  IS "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:D:19800101;N:10 F:S"
+   HBTEST Max(hb_SToD("19800101"), 10)                  IS "E 1 BASE 1093 Argument error (MAX) OS:0 #:0 A:2:D:0d19800101;N:10 F:S"
    HBTEST Max(hb_SToD("19800101"), hb_SToD("19800101")) IS hb_SToD("19800101")
    HBTEST Max(hb_SToD("19800102"), hb_SToD("19800101")) IS hb_SToD("19800102")
    HBTEST Max(hb_SToD("19800101"), hb_SToD("19800102")) IS hb_SToD("19800102")
@@ -282,7 +282,7 @@ PROCEDURE Main_MATH()
 #endif
    HBTEST Min(NIL, NIL)                                 IS "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:U:NIL;U:NIL F:S"
    HBTEST Min(10, NIL)                                  IS "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:N:10;U:NIL F:S"
-   HBTEST Min(hb_SToD("19800101"), 10)                  IS "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:D:19800101;N:10 F:S"
+   HBTEST Min(hb_SToD("19800101"), 10)                  IS "E 1 BASE 1092 Argument error (MIN) OS:0 #:0 A:2:D:0d19800101;N:10 F:S"
    HBTEST Min(hb_SToD("19800101"), hb_SToD("19800101")) IS hb_SToD("19800101")
    HBTEST Min(hb_SToD("19800102"), hb_SToD("19800101")) IS hb_SToD("19800101")
    HBTEST Min(hb_SToD("19800101"), hb_SToD("19800102")) IS hb_SToD("19800101")

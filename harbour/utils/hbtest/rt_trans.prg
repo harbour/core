@@ -117,7 +117,7 @@ PROCEDURE Main_TRANS()
 #ifndef __XPP__
    HBTEST Transform( sdDate, NIL )                     IS "1984.03.25"
 #endif
-   HBTEST Transform( sdDate, 100 )                     IS "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:D:19840325;N:100 F:S"
+   HBTEST Transform( sdDate, 100 )                     IS "E 1 BASE 1122 Argument error (TRANSFORM) OS:0 #:0 A:2:D:0d19840325;N:100 F:S"
    HBTEST Transform( .T., "" )                         IS "T"
    HBTEST Transform( .T., "@" )                        IS "T"
 #ifndef __XPP__

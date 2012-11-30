@@ -8,9 +8,12 @@
 
 PROCEDURE Main()
 
+   SET DATE ANSI
+   SET CENTURY ON
+
    HBTEST StrFormat( "%1 thing %2", "a", "b" )                                 IS "a thing b"
-   HBTEST StrFormat( "%1 thing %2", "a", Date() )                              IS "a thing 2012.11.27"
-   HBTEST StrFormat( "%1 thing %2", .T., Date() )                              IS ".T. thing 2012.11.27"
+   HBTEST StrFormat( "%1 thing %2", "a", 0d20121127 )                          IS "a thing 2012.11.27"
+   HBTEST StrFormat( "%1 thing %2", .T., 0d20121127 )                          IS ".T. thing 2012.11.27"
    HBTEST StrFormat( "%1 thing %2", .T., NIL )                                 IS ".T. thing NIL"
    HBTEST StrFormat( "%1 thing %2", "space1  ", 100.20 )                       IS "space1 thing 100.20"
    HBTEST StrFormat( "%1 thing %2", "   space2  ", 213 )                       IS "space2 thing 213"

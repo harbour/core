@@ -542,7 +542,7 @@ PROCEDURE Main_MISC()
    HBTEST suNIL:Eval()                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S"
    HBTEST scString:Eval()                 IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S"
    HBTEST snIntP:Eval()                   IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S"
-   HBTEST sdDateE:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:         F:S"
+   HBTEST sdDateE:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:0d00000000 F:S"
    HBTEST slFalse:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S"
    HBTEST sbBlock:Eval()                  IS NIL
    HBTEST saArray:Eval()                  IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S"
@@ -550,7 +550,7 @@ PROCEDURE Main_MISC()
    HBTEST suNIL:Eval                      IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:U:NIL F:S"
    HBTEST scString:Eval                   IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:C:HELLO F:S"
    HBTEST snIntP:Eval                     IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:N:10 F:S"
-   HBTEST sdDateE:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:         F:S"
+   HBTEST sdDateE:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:D:0d00000000 F:S"
    HBTEST slFalse:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:L:.F. F:S"
    HBTEST sbBlock:Eval                    IS NIL
    HBTEST saArray:Eval                    IS "E 13 BASE 1004 No exported method (EVAL) OS:0 #:0 A:1:A:{.[1].} F:S"
