@@ -2,9 +2,7 @@
  * $Id$
  */
 
-#require "hbct"
-
-#include "hbtest.ch"
+#require "hbtest"
 
 PROCEDURE Main()
 

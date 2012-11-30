@@ -133,7 +133,6 @@ PRG_HEADERS := \
    hbstdgen.ch \
    hbstrict.ch \
    hbsxdef.ch \
-   hbtest.ch \
    hbthread.ch \
    hbtrace.ch \
    hbusrrdd.ch \

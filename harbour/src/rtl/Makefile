@@ -239,7 +239,6 @@ PRG_SOURCES := \
    hbfilehi.prg \
    hbi18n2.prg \
    hbini.prg \
-   hbtest.prg \
    input.prg \
    langcomp.prg \
    langlgcy.prg \
