@@ -13,6 +13,12 @@ PROCEDURE Main()
 
    LOCAL tmp
 
+#if defined( __HBSCRIPT__HBSHELL )
+   rddRegister( "SQLBASE" )
+   rddRegister( "SQLMIX" )
+   hb_SDDSQLITE3_Register()
+#endif
+
    rddSetDefault( "SQLMIX" )
    Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
 
@@ -37,7 +43,7 @@ PROCEDURE Main()
    Inkey( 0 )
    Browse()
 
-   INDEX ON FIELD -> AGE TO age
+   INDEX ON FIELD->AGE TO age
    dbGoTop()
    Browse()
    dbCloseArea()

@@ -16,6 +16,12 @@ FIELD RESIDENTS
 
 PROCEDURE Main()
 
+#if defined( __HBSCRIPT__HBSHELL )
+   rddRegister( "SQLBASE" )
+   rddRegister( "SQLMIX" )
+   hb_SDDMY_Register()
+#endif
+
    rddSetDefault( "SQLMIX" )
 
    AEval( rddList(), {| x | QOut( x ) } )

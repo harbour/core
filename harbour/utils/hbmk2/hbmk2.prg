@@ -10436,9 +10436,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       ENDCASE
    NEXT
 
-   cVersion := "0x" + hb_NumToHex( nVersion, 6 )
+   cVersion := iif( nVersion == 0, "0", "0x" + hb_NumToHex( nVersion, 6 ) )
 
-   AAdd( hbmk[ _HBMK_aOPTPRG ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( hb_FNameName( cFileName ) ) ) + "=" + cVersion )
+   AAddNew( hbmk[ _HBMK_aOPTPRG ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( hb_FNameName( cFileName ) ) ) + "=" + cVersion )
 
    RETURN cVersion
 
@@ -12917,7 +12917,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
             IF Empty( cVersion := HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) ) )
                OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
             ELSE
-               AAdd( aOPTPRG, "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( tmp ) ) + "=" + cVersion )
+               AAddNew( aOPTPRG, "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( tmp ) ) + "=" + cVersion )
             ENDIF
          NEXT
 

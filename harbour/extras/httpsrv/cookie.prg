@@ -70,13 +70,13 @@ CLASS uhttpd_Cookie
    VAR nExpireSecs        INIT 7200       // 1 hour  - TODO set environment constant
    VAR lCookiesSent       INIT .F.
 
-   METHOD SetCookie()
-   METHOD DeleteCookie()
-   METHOD DeleteAllCookies()
-   METHOD GetCookie()
+   METHOD SetCookie( cCookieName, xValue, cDomain, cPath, cExpires, lSecure, lHttpOnly )
+   METHOD DeleteCookie( cCookieName, cDomain, cPath, lSecure )
+   METHOD DeleteAllCookies( cDomain, cPath, lSecure )
+   METHOD GetCookie( cCookieName )
    METHOD IsCookie( cCookieName )  INLINE ::GetCookie( cCookieName ) != NIL
    METHOD IsCookies()      INLINE ! Empty( ::aaCookieToSet )
-   METHOD SetCookieDefaults()
+   METHOD SetCookieDefaults( cDomain, cPath, nExpireDays, nExpireSecs )
 
 ENDCLASS
 

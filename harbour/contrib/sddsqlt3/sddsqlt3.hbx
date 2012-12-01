@@ -1,0 +1,31 @@
+/* --------------------------------------------------------------------
+ * NOTE: You can add manual override which functions to include or
+ *       exclude from automatically generated EXTERNAL/DYNAMIC list.
+ *          Syntax: // HB_FUNC_INCLUDE <func>
+ *                  // HB_FUNC_EXCLUDE <func>
+ */
+
+/* --------------------------------------------------------------------
+ * WARNING: Automatically generated code below. DO NOT EDIT!
+ *          Regenerate using hbmk2 '-hbx=' option.
+ */
+
+#ifndef __HBEXTERN_CH__SDDSQLT3__
+#define __HBEXTERN_CH__SDDSQLT3__
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__SDDSQLT3__ANNOUNCE )
+   ANNOUNCE __HBEXTERN__SDDSQLT3__
+#endif
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__SDDSQLT3__REQUEST )
+   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+DYNAMIC hb_SDDSQLITE3_Register
+DYNAMIC SDDSQLITE3
+
+#if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__SDDSQLT3__REQUEST )
+   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
+#endif
+
+#endif

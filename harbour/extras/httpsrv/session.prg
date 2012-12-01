@@ -67,16 +67,16 @@ FUNCTION uhttpd_SessionNew( cSessionName, cSessionPath )
 
 CLASS uhttpd_Session
 
-   METHOD New()
+   METHOD New( cSessionName, cSessionPath )
 
    DESTRUCTOR DestroyObject()
 
-   METHOD Start()
+   METHOD Start( cSID )
    METHOD IsRegistered()
    METHOD CacheExpire( nTimeInMinutes ) INLINE SetNewValueReturnOld( ::nCache_Expire, nTimeInMinutes )
-   METHOD CacheLimiter()
+   METHOD CacheLimiter( cNewLimiter )
    METHOD GetCookieParams()     INLINE { ::nCookie_LifeTime, ::cCookie_Path, ::cCookie_Domain, ::lCookie_Secure  }
-   METHOD SetCookieParams()
+   METHOD SetCookieParams( nLifeTime, cPath, cDomain, lSecure  )
    METHOD ID( cID )             INLINE SetNewValueReturnOld( ::cSID, cID )
    METHOD Name( cName )         INLINE SetNewValueReturnOld( ::cName, cName )
    METHOD RegenerateID()
@@ -86,21 +86,21 @@ CLASS uhttpd_Session
    METHOD UseTransSID()         INLINE ::lUse_Only_Cookies
 
    METHOD SaveCookie()
-   METHOD GetSessionVars()
+   METHOD GetSessionVars( aHashVars, cFields, cSeparator )
    METHOD GetVar( cVar )        INLINE uhttpd_HGetValue( _SESSION, cVar )
    METHOD SetVar( cVar, xValue ) INLINE _SESSION[ cVar ] := xValue
 
-   METHOD SetSaveHandler()
+   METHOD SetSaveHandler( bOpen, bClose, bRead, bWrite, bDestroy, bGC )
    METHOD Open( cPath, cName )
    METHOD Close()
    METHOD Read( cID )
    METHOD Write( cID, cData )
-   METHOD Destroy( cID )
+   METHOD Destroy()
    METHOD GC( nMaxLifeTime )
 
    METHOD SessionContainer( hHash )  INLINE SetNewValueReturnOld( _SESSION, hHash )
-   METHOD Encode()              // INLINE hb_Serialize( _SESSION )
-   METHOD Decode()
+   METHOD Encode()
+   METHOD Decode( cData )
 
    HIDDEN:
 
@@ -139,14 +139,14 @@ CLASS uhttpd_Session
 
    VAR lSessionActive          INIT .F.
 
-   METHOD GenerateSID()
-   METHOD CheckSID()
-   METHOD SessionOpen()
+   METHOD GenerateSID( cCRCKey )
+   METHOD CheckSID( cSID, cCRCKey )
+   METHOD SessionOpen( cPath, cName )
    METHOD SessionClose()
-   METHOD SessionRead()
-   METHOD SessionWrite()
-   METHOD SessionDestroy()
-   METHOD SessionGC()
+   METHOD SessionRead( cID )
+   METHOD SessionWrite( cID, cData )
+   METHOD SessionDestroy( cID )
+   METHOD SessionGC( nMaxLifeTime )
 
    METHOD SendCacheLimiter()
 
@@ -413,7 +413,7 @@ METHOD SaveCookie() CLASS uhttpd_Session
    RETURN NIL
 
 #if 0
-METHOD ReadCookie()
+METHOD ReadCookie() CLASS uhttpd_Session
 
    oCGI:SetCookie( ::cName, ::cSID, ::cCookie_Domain, ::cCookie_Path, cExpires, ::lCookie_Secure )
 

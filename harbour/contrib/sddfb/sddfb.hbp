@@ -11,8 +11,6 @@
 
 rddsql.hbc
 
--hbx=
-
 -stop{pocc64|poccarm}
 
 -depkeyhead=firebird:ibase.h
@@ -28,4 +26,6 @@ rddsql.hbc
 # For FireBird headers
 -c=gnu90
 
-sddfb.c
+${hb_name}.hbx
+
+core.c

@@ -2,7 +2,14 @@
 # $Id$
 #
 
--mt -gui uhttpd.prg cgifunc.prg cookie.prg session.prg
+-w3 -es2
+
+-mt -gui
+
+uhttpd.prg
+cgifunc.prg
+cookie.prg
+session.prg
 
 hbwin.hbc
 hbnf.hbc

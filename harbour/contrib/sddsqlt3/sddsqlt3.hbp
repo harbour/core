@@ -11,8 +11,6 @@
 
 rddsql.hbc
 
--hbx=
-
 -depkeyhead=sqlite3:sqlite3.h
 -depcontrol=sqlite3:local{HB_BUILD_3RDEXT='no'}
 -depcontrol=sqlite3:${HB_WITH_SQLITE3}
@@ -21,6 +19,8 @@ rddsql.hbc
 -depincpathlocal=sqlite3:../3rd/sqlite3
 -depfinish=sqlite3
 
-sddsqlt3.c
+${hb_name}.hbx
+
+core.c
 
 ../3rd/sqlite3/sqlite3.hbc{HBMK_HAS_SQLITE3_LOCAL}

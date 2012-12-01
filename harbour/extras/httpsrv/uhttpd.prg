@@ -179,7 +179,7 @@ STATIC s_hActions := { ;
    /* "server-info"     => @Handler_ServerInfo(), */;
    "server-status"   => @Handler_ServerStatus() }
 
-STATIC s_hHandler := { ;
+STATIC s_hHandlers := { ;
    "hrb"            => "hrb-script", ;
    "exe"            => "cgi-script", ;
    "/serverstatus"  => "server-status" }
@@ -2025,6 +2025,7 @@ STATIC PROCEDURE Define_Env( hmServer )
 
 // ------------------------------- DEFAULT PAGES -----------------------------------
 
+#if 0
 STATIC PROCEDURE ShowServerStatus()
 
    LOCAL cThreads
@@ -2067,6 +2068,7 @@ STATIC PROCEDURE ShowServerStatus()
    uhttpd_Write( "<hr></pre></body></html>" )
 
    RETURN
+#endif
 
 STATIC PROCEDURE ShowFolder( cDir )
 
@@ -2129,6 +2131,7 @@ STATIC PROCEDURE ShowFolder( cDir )
 // ------------------------------- Utility functions --------------------------------
 
 // from Przemek's example, useful to use encrypted HRB module files
+#if 0
 STATIC FUNCTION HRB_LoadFromFileEncrypted( cFile, cKey )
 
    LOCAL cHrbBody
@@ -2139,7 +2142,6 @@ STATIC FUNCTION HRB_LoadFromFileEncrypted( cFile, cKey )
 
    RETURN cHrbBody
 
-/*
 // Reverse function to save is:
 PROCEDURE HRB_SaveToFileEncrypted( cHrbBody, cKey, cEncFileName )
    LOCAL cFile
@@ -2149,7 +2151,7 @@ PROCEDURE HRB_SaveToFileEncrypted( cHrbBody, cKey, cEncFileName )
       hb_MemoWrit( cEncFileName, cHrbBody )
    ENDIF
    RETURN
-*/
+#endif
 
 STATIC FUNCTION HRB_LoadFromFile( cFile )
    RETURN hb_MemoRead( cFile )
@@ -2218,17 +2220,6 @@ STATIC FUNCTION Exe_Path()
    ENDIF
 
    RETURN cPath
-
-STATIC FUNCTION Exe_Name()
-
-   LOCAL cPrg := hb_argv( 0 )
-   LOCAL nPos := RAt( hb_ps(), cPrg )
-
-   IF nPos > 0
-      cPrg := SubStr( cPrg, nPos + 1 )
-   ENDIF
-
-   RETURN cPrg
 
 STATIC PROCEDURE Progress( /*@*/ nProgress )
 

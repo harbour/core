@@ -11,8 +11,6 @@
 
 rddsql.hbc
 
--hbx=
-
 -stop{dos|os2|wce}
 
 -depkeyhead=ocilib:ocilib.h
@@ -32,4 +30,6 @@ rddsql.hbc
 # Required to link against generated implib
 -cflag=-DOCI_API=_stdcall{bcc}
 
-sddoci.c
+${hb_name}.hbx
+
+core.c

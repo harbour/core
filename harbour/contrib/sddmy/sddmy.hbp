@@ -11,8 +11,6 @@
 
 rddsql.hbc
 
--hbx=
-
 -depkeyhead=mysql:mysql.h
 -depcontrol=mysql:no{HB_BUILD_3RDEXT='no'}
 -depcontrol=mysql:${HB_WITH_MYSQL}
@@ -22,4 +20,6 @@ rddsql.hbc
 -depimplibs=mysql:../lib/opt/libmySQL.dll
 -depimplibs=mysql:../lib/libmySQL.dll
 
-sddmy.c
+${hb_name}.hbx
+
+core.c
