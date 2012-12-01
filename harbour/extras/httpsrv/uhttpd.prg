@@ -94,7 +94,7 @@ REQUEST __HB_EXTERN__
 
 #include "hbsocket.ch"
 
-#ifdef GD_SUPPORT
+#if defined( HBMK_HAS_HBGD )
 // adding GD support
 REQUEST GDIMAGE, GDIMAGECHAR, GDCHART
 #  define APP_GD_SUPPORT "_GD"

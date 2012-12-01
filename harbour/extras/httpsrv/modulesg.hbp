@@ -3,4 +3,5 @@
 #
 
 @modules.hbp
-hbgd.hbc -DGD_SUPPORT
+
+hbgd.hbc

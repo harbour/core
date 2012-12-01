@@ -261,6 +261,7 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
 #define _HBMK_HAS_TPL           "HBMK_HAS_%1$s"
 #define _HBMK_HAS_TPL_LOCAL     "HBMK_HAS_%1$s_LOCAL"
+#define _HBMK_HAS_TPL_HBC       "HBMK_HAS_%1$s"
 #define _HBMK_DIR_TPL           "HBMK_DIR_%1$s"
 #define _HBMK_PLUGIN            "__HBSCRIPT__HBMK_PLUGIN"
 #define _HBMK_SHELL             "__HBSCRIPT__HBSHELL"
@@ -3232,7 +3233,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := tmp1 := MacroProc( hbmk, cParam, aParam[ _PAR_cFileName ] )
          cParam := PathMakeAbsolute( PathSepToSelf( cParam ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
-            IF ! HBC_Find( hbmk, cParam )
+            IF Empty( HBC_Find( hbmk, cParam ) )
                IF Empty( aParam[ _PAR_cFileName ] )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), tmp1 ) )
                ELSE
@@ -5434,7 +5435,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ELSE
                   _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Triggered by '%1$s' header: %2$s" ), cParam:__enumKey(), cParam ) )
                ENDIF
-               IF ! HBC_Find( hbmk, cParam )
+               IF Empty( HBC_Find( hbmk, cParam ) )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cParam ) )
                ENDIF
             ENDIF
@@ -9772,10 +9773,10 @@ STATIC FUNCTION HBC_Find( hbmk, cFile, nNesting )
    ENDIF
 
    IF lFound
-      HBC_ProcessOne( hbmk, hb_PathNormalize( cFile ), nNesting )
+      RETURN HBC_ProcessOne( hbmk, hb_PathNormalize( cFile ), nNesting )
    ENDIF
 
-   RETURN lFound
+   RETURN ""
 
 STATIC FUNCTION AutoConfPathList()
 
@@ -9816,14 +9817,19 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
    LOCAL lFound
    LOCAL tmp, tmp1
 
+   LOCAL nVersion
+   LOCAL cVersion
+
    IF hbmk[ _HBMK_lInfo ]
       _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Processing: %1$s" ), cFileName ) )
    ENDIF
 
    IF ! hbmk_hb_FileExists( cFileName )
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Opening: %1$s" ), cFileName ) )
-      RETURN .F.
+      RETURN ""
    ENDIF
+
+   nVersion := 0
 
    AAddNew( hbmk[ _HBMK_aDEPTHBC ], { cFileName, nNestingLevel - 1 } )
 
@@ -9942,7 +9948,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             IF hb_FNameExt( cItem ) == ".hbc"
                cItem := PathMakeAbsolute( PathSepToSelf( cItem ), hb_FNameDir( cFileName ) )
                IF nNestingLevel < _HBMK_NEST_MAX
-                  IF ! HBC_Find( hbmk, cItem, nNestingLevel + 1 )
+                  IF Empty( HBC_Find( hbmk, cItem, nNestingLevel + 1 ) )
                      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                   ENDIF
                ELSE
@@ -9995,7 +10001,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
                   cItem := hb_FNameExtSet( cItem, ".hbc" )
                ENDIF
 
-               IF ! HBC_Find( hbmk, cItem, nNestingLevel + 1 )
+               IF Empty( HBC_Find( hbmk, cItem, nNestingLevel + 1 ) )
                   _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Cannot find %1$s (referenced from %2$s)" ), tmp1, cFileName ) )
                ENDIF
             ELSE
@@ -10403,7 +10409,17 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "version="      ) ) ) == "version="      ; cLine := SubStr( cLine, Len( "version="      ) + 1 )
 
-         /* Silently ignore */
+         /* x.y.z where x,y,z >= 0 <= 255 */
+         nVersion := 0
+         FOR EACH tmp IN ASize( hb_ATokens( cLine, "." ), 3 )
+            IF tmp != NIL
+               nVersion += Val( tmp )
+            ENDIF
+            IF tmp:__enumIndex() > 2
+               EXIT
+            ENDIF
+            nVersion *= 256
+         NEXT
 
       CASE Lower( Left( cLine, Len( "keywords="     ) ) ) == "keywords="     ; cLine := SubStr( cLine, Len( "keywords="     ) + 1 )
 
@@ -10420,7 +10436,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       ENDCASE
    NEXT
 
-   RETURN .T.
+   cVersion := "0x" + hb_NumToHex( nVersion, 6 )
+
+   AAdd( hbmk[ _HBMK_aOPTPRG ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( hb_FNameName( cFileName ) ) ) + "=" + cVersion )
+
+   RETURN cVersion
 
 STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
 
@@ -12811,6 +12831,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL l_cHB_INSTALL_PREFIX
    LOCAL aOPTPRG
    LOCAL hHRB
+   LOCAL cVersion
 
    s_cDirBase_hbshell := hb_DirBase()
    s_cProgName_hbshell := hb_ProgName()
@@ -12890,13 +12911,15 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
          /* NOTE: - most filters and macros in .hbc files won't work in this mode */
 
+         aOPTPRG := {}
+
          FOR EACH tmp IN aExtension
-            IF ! HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) )
+            IF Empty( cVersion := HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) ) )
                OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
+            ELSE
+               AAdd( aOPTPRG, "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( tmp ) ) + "=" + cVersion )
             ENDIF
          NEXT
-
-         aOPTPRG := {}
 
          FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
             AAdd( aOPTPRG, "-I" + tmp )
