@@ -571,6 +571,11 @@ EXTERNAL hb_FSetAttr
 STATIC s_cDirBase_hbshell
 STATIC s_cProgName_hbshell
 STATIC s_hLibExt := { => }
+STATIC s_hCH := { => }
+STATIC s_hOPTPRG := { => }
+STATIC s_hINCPATH := { => }
+STATIC s_hCHCORE := { => }
+STATIC s_hbmk
 
 #define HB_HISTORY_LEN 500
 #define HB_LINE_LEN    256
@@ -12842,7 +12847,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    /* Detect Harbour dir layout */
 
-   hbmk := hbmk_new()
+   hbmk := s_hbmk := hbmk_new()
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX, .T. )
       IF hb_Version( HB_VERSION_SHARED )
@@ -12862,8 +12867,18 @@ STATIC PROCEDURE __hbshell( cFile, ... )
             '#require' keyword in script source, rendering these scripts
              non-portable. */
 
+#if defined( HBMK_WITH_EXTS )
+   #translate _HBMK_STRINGIFY( <x> ) => <"x">
+   FOR EACH tmp IN hb_ATokens( _HBMK_STRINGIFY( HBMK_WITH_EXTS ), "|" )
+      AAdd( aExtension, tmp )
+   NEXT
+#endif
    __hbshell_LoadExtFromFile( aExtension, __hbshell_ConfigDir() + _EXT_FILE_ )
    __hbshell_LoadExtFromString( aExtension, GetEnv( _EXT_ENV_ ) )
+
+   /* Load default core headers for scripts and dot prompt */
+
+   hbshell_include( "hb.ch" )
 
    /* Do the thing */
 
@@ -12909,7 +12924,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
                   path list. For this we need to know where Harbour tree
                   is located. */
 
-         /* NOTE: - most filters and macros in .hbc files won't work in this mode */
+         /* NOTE: Most filters and macros in .hbc files won't work in this mode */
 
          aOPTPRG := {}
 
@@ -12922,7 +12937,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
          NEXT
 
          FOR EACH tmp IN hbmk[ _HBMK_aINCPATH ]
-            AAdd( aOPTPRG, "-I" + tmp )
+            AAdd( aOPTPRG, "-i" + tmp )
          NEXT
 
          FOR EACH tmp IN hbmk[ _HBMK_aCH ]
@@ -13087,9 +13102,28 @@ FUNCTION hbshell_ext_load( cName )
    LOCAL hLib
    LOCAL tmp
 
+   LOCAL cHBC
+   LOCAL cVersion
+
    IF ! Empty( cName )
       IF hb_Version( HB_VERSION_SHARED )
          IF !( cName $ s_hLibExt )
+
+            s_hbmk[ _HBMK_aINCPATH ] := {}
+            s_hbmk[ _HBMK_aCH ] := {}
+
+            s_hINCPATH[ cName ] := {}
+            s_hCH[ cName ] := {}
+            s_hOPTPRG[ cName ] := {}
+
+            IF Empty( cVersion := HBC_Find( s_hbmk, cHBC := hb_FNameExtSet( cName, ".hbc" ) ) )
+               OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
+            ELSE
+               AEval( s_hbmk[ _HBMK_aINCPATH ], {| tmp | AAdd( s_hINCPATH[ cName ], tmp ) } )
+               AEval( s_hbmk[ _HBMK_aCH ], {| tmp | AAdd( s_hCH[ cName ], tmp ) } )
+               AAddNew( s_hOPTPRG[ cName ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( cName ) ) + "=" + cVersion )
+            ENDIF
+
             cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ), ;
                             iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
             IF Empty( cFileName )
@@ -13114,6 +13148,9 @@ FUNCTION hbshell_ext_load( cName )
 FUNCTION hbshell_ext_unload( cName )
 
    IF cName $ s_hLibExt .AND. s_hLibExt[ cName ] != NIL
+      hb_HDel( s_hINCPATH, cName )
+      hb_HDel( s_hCH, cName )
+      hb_HDel( s_hOPTPRG, cName )
       hb_HDel( s_hLibExt, cName )
       RETURN .T.
    ENDIF
@@ -13612,6 +13649,19 @@ STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
 STATIC PROCEDURE __hbshell_Exec( cCommand )
 
    LOCAL pHRB, cHRB, cFunc, bBlock, nRowMin
+   LOCAL aOPTPRG := {}
+
+   IF ! Empty( s_hCHCORE )
+      AAdd( aOPTPRG, "-i" + s_hbmk[ _HBMK_cHB_INSTALL_INC ] )
+      hb_HEval( s_hCHCORE, {| tmp | AAdd( aOPTPRG, "-u+" + tmp ) } )
+   ENDIF
+
+   hb_HEval( s_hINCPATH, {| cExt |
+                            AEval( s_hINCPATH[ cExt ], {| tmp | AAdd( aOPTPRG, "-i" + tmp ) } )
+                            AEval( s_hCH[ cExt ]     , {| tmp | AAdd( aOPTPRG, "-u+" + tmp ) } )
+                            AEval( s_hOPTPRG[ cExt ] , {| tmp | AAdd( aOPTPRG, tmp ) } )
+                            RETURN NIL
+                         } )
 
    cFunc := "STATIC FUNCTION __HBDOT()" + hb_eol() +;
             "RETURN {||" + hb_eol() +;
@@ -13624,7 +13674,7 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
    BEGIN SEQUENCE WITH {| oErr | __hbshell_Err( oErr, cCommand ) }
 
       /* We can use this function as this is a GPL licenced application */
-      cHRB := hb_compileFromBuf( cFunc, hb_ProgName(), "-n2", "-q2" )
+      cHRB := hb_compileFromBuf( cFunc, hbmk_CoreHeaderFiles(), hb_ProgName(), "-n2", "-q2", hb_ArrayToParams( aOPTPRG ) )
       IF Empty( cHRB )
          Eval( ErrorBlock(), I_( "Syntax error." ) )
       ELSE
@@ -13851,6 +13901,46 @@ STATIC FUNCTION __hbshell_detect_GT( hHRB )
    even better if .hrb would natively support list of #require-ed
    modules, which could be queried and loaded. Shell prompt could
    support #require as well. */
+
+/* Check if a header is a valid core one */
+STATIC FUNCTION __hbshell_TryHeader( cName )
+
+   LOCAL lRetVal := .F.
+
+   BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
+
+      IF ! Empty( hb_compileFromBuf( "", hbmk_CoreHeaderFiles(), hb_ProgName(), "-q2", ;
+                "-i" + s_hbmk[ _HBMK_cHB_INSTALL_INC ], ;
+                "-u+" + cName ) )
+         lRetVal := .T.
+      ENDIF
+
+   END /* SEQUENCE */
+
+   RETURN lRetVal
+
+/* Public hbshell API usable in dot prompt and startup script */
+FUNCTION hbshell_include( cName )
+
+   cName := Lower( cName )
+
+   IF !( cName $ s_hCHCORE ) .AND. __hbshell_TryHeader( cName )
+      s_hCHCORE[ cName ] := NIL
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
+
+FUNCTION hbshell_uninclude( cName )
+
+   cName := Lower( cName )
+
+   IF cName $ s_hCHCORE
+      hb_HDel( s_hCHCORE, cName )
+      RETURN .T.
+   ENDIF
+
+   RETURN .F.
 
 /* Public hbshell API */
 FUNCTION hbshell_DirBase()
