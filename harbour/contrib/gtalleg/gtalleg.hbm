@@ -10,9 +10,7 @@
 
 -w3 -es2
 
--hbx=
-
--stop{hbdyn|pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm}
+-stop{pocc|pocc64|poccarm|xcc|dmc|watcom|mingwarm|msvcarm}
 
 -depkeyhead=allegro:allegro.h
 -depcontrol=allegro:no{HB_BUILD_3RDEXT='no'}
@@ -26,5 +24,7 @@
 # For allegro headers
 -c=gnu90
 
-gtalleg.c
+${hb_name}.hbx
+
+gtallegd.c
 ssf.c

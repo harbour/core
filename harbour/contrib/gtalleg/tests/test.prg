@@ -2,10 +2,13 @@
  * $Id$
  */
 
-REQUEST HB_GT_ALLEG_DEFAULT
-ANNOUNCE HB_GTSYS
+#require "gtalleg"
 
 PROCEDURE Main()
+
+#if defined( __HBSCRIPT__HBSHELL )
+   hbshell_gtSelect( "GTALLEG" )
+#endif
 
    CLS
    Alert( "Hello world!" )

@@ -4,6 +4,8 @@
 
 description=GT for Allegro GUI backend
 
+gt=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
+
 {!HB_STATIC_ALLEGRO}libs=${_HB_DYNPREF}${hb_name}${_HB_DYNSUFF}
 {HB_STATIC_ALLEGRO}libs=${_HB_DYNPREF}${hb_name}s${_HB_DYNSUFF}
 
