@@ -4,16 +4,6 @@
 
 #require "hbxdiff"
 
-FUNCTION Diff( ... )
-
-   LOCAL e
-
-   FOR EACH e IN { ... }
-      ? e
-   NEXT
-
-   RETURN 0
-
 PROCEDURE Main()
 
    LOCAL pMMFOld, pMMFNew
@@ -31,3 +21,13 @@ PROCEDURE Main()
    xdl_diff( pMMFOld, pMMFNew, 0, 3, @Diff() )
 
    RETURN
+
+FUNCTION Diff( ... )
+
+   LOCAL e
+
+   FOR EACH e IN { ... }
+      ? e
+   NEXT
+
+   RETURN 0

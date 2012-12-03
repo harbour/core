@@ -6,7 +6,8 @@
 
 PROCEDURE Main()
 
-   @ 0, 0 CLEAR
+   CLS
+
    ft_Pending( "Message one", 20, 0, 3, "W+/G" ) // Displays "Message one."
    // sets row to 20, col to 0.
    // wait to 3 and color to
