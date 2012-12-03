@@ -9,7 +9,7 @@
  * Copyright 1999 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: ErrorSys()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

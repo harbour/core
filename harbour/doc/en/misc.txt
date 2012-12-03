@@ -9,7 +9,7 @@
  * Copyright 2000 Chen Kedem <niki@actcom.co.il>
  *    Documentation for: Tone()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

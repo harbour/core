@@ -23,7 +23,7 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: EJECT,MaxRow(),MaxCol(),Row(),Col(),PRow(),PCol()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

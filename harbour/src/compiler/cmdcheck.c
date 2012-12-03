@@ -41,7 +41,7 @@
  *    hb_compChkDefineSwitch()
  *    hb_compChkDefines()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

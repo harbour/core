@@ -13,7 +13,7 @@
  *    Documentation for: Array(), AAdd(), AClone(), ACopy(), ASize(),
  *                       ATail(), AIns(), ADel(), AFill(), AScan(), AEval()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

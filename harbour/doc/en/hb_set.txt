@@ -9,7 +9,7 @@
  * Copyright 1999 David G. Holm <dholm@jsd-llc.com>
  *   Header file for the API
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

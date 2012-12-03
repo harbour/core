@@ -9,7 +9,7 @@
  * Copyright 2001-2002 David G. Holm <dholm@jsd-llc.com>
  *    Documentation for: __dbDelim()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

@@ -9,7 +9,7 @@
  * Copyright 2005 Francesco Saverio Giudice <info@fsgiudice.com>
  *    README file explaining howto compile FreeImage library
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

@@ -6,7 +6,7 @@
  * The following parts are Copyright of the individual authors.
  * www - http://harbour-project.org
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

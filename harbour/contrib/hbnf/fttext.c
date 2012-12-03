@@ -127,7 +127,7 @@
  * Copyright 1999-2008 Viktor Szakats (harbour syenar.net)
  *    _findeol(), _findbol()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

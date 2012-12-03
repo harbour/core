@@ -8,7 +8,7 @@
 # small set of functions used by Harbour scripts
 # warning: some bash extensions are used
 #
-# See COPYING for licensing terms.
+# See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
 get_hbver()

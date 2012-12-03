@@ -7,7 +7,7 @@
 # Copyright 2007 Przemyslaw Czerpak (druzus/at/priv.onet.pl)
 # simple script to build Harbour-Win32 cross build RPMs
 #
-# See COPYING for licensing terms.
+# See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
 test_reqrpm()

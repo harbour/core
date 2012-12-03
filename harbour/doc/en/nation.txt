@@ -11,7 +11,7 @@
  *    IsNegative() documentation
  *    NationMsg() documentation
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

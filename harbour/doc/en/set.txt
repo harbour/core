@@ -26,7 +26,7 @@
  *    Documentation for: SET CENTURY,SET DATE,SET CONSOLE
  *    Documentation for: SET EPOCH,SET PRINTER,SET FIXED
  *    Documentation for: SET BELL
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

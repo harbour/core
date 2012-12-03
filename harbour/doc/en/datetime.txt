@@ -9,7 +9,7 @@
  * Copyright 2000 Luiz Rafael Culik <culik@sl.conex.net>
  *    Documentation for: CDoW(),CMonth(),Date(),CToD(),Day(),Days()
  *    DoW(),DToS(),DToC(),ElapTime(),Month(),Seconds(),Secs(),Time(),Year()
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

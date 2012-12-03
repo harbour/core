@@ -19,7 +19,7 @@
  *    Changes for higher Clipper compatibility, console mode, extensions
  *    __NoNoAlert()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

@@ -21,7 +21,7 @@
  * Copyright 2002 Walter Negro <anegro@overnet.com.ar>
  *    Documentation for: HB_ISBYREF()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

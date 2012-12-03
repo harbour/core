@@ -11,7 +11,7 @@
  * $SUBCATEGORY$
  *      FileSys
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

@@ -16,7 +16,7 @@
  *                       PadL(), PadR(), AllTrim(), Trim(), RTrim(), Space(),
  *                       Replicate(), Val(), Transform(), StrTran()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

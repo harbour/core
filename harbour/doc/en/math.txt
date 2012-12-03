@@ -14,7 +14,7 @@
  *    Documentation for API
  *  $SUBCATEGORY$
  *      Math functions
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

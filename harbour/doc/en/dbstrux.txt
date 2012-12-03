@@ -11,7 +11,7 @@
  *                       COPY STRUCTURE EXTENDED, __dbCreate(), CREATE,
  *                       CREATE FROM, __FLedit(), __dbStructFilter()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

@@ -9,7 +9,7 @@
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
  *   Compatibility header file for CA-Cl*pper Virtual Memory API
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

@@ -6,7 +6,7 @@
 
 rem ---------------------------------------------------------------
 rem Copyright 2010 Viktor Szakats (harbour syenar.net)
-rem See COPYING for licensing terms.
+rem See COPYING.txt for licensing terms.
 rem ---------------------------------------------------------------
 
 rem ---------------------------------------------------------------

@@ -11,7 +11,7 @@
  * $SUBCATEGORY$
  *    Extend, Array API, misc API and base declarations
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

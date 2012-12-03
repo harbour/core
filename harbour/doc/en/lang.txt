@@ -13,7 +13,7 @@
  *    Documentation for: hb_langErrMsg(),hb_langMessage(),hb_cdpSelect(),
  *                       hb_Translate()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

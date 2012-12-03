@@ -4,7 +4,7 @@
 
 /* ---------------------------------------------------------------
    Copyright 2011 Viktor Szakats (harbour syenar.net)
-   See COPYING for licensing terms.
+   See COPYING.txt for licensing terms.
    ---------------------------------------------------------------
  */
 
@@ -38,7 +38,7 @@ BEGIN
       /* LANGUAGE: US English ENCODING: Windows-1250 (0x04E2) */
       BLOCK "040904B0"
       BEGIN
-         VALUE "Comments",         "See COPYING for licensing terms.\0"
+         VALUE "Comments",         "See COPYING.txt for licensing terms.\0"
          VALUE "CompanyName",      HB_NAME
          VALUE "FileDescription",  HB_NAME
          VALUE "FileVersion",      HB_VER_FILEVERSION_STR

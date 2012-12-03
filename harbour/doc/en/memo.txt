@@ -16,7 +16,7 @@
  *
  * Documentation for hb_MemoRead(), hb_MemoWrit()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

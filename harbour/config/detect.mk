@@ -4,7 +4,7 @@
 
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (harbour syenar.net)
-# See COPYING for licensing terms.
+# See COPYING.txt for licensing terms.
 #
 # This make file will detect optional 3rd party components
 # used in Harbour core code.

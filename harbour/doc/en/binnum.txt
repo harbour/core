@@ -10,7 +10,7 @@
  *    Documentation for: Bin2W(), Bin2I(), Bin2L(), Bin2U(), I2Bin(), W2Bin(),
  *                       L2Bin(), U2Bin()
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

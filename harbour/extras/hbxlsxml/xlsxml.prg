@@ -22,7 +22,7 @@
  * GNU General PUBLIC License FOR more details.
  *
  * You should have received a copy of the GNU General PUBLIC License
- * along WITH this software; see the file COPYING.  IF NOT, write TO
+ * along WITH this software; see the file COPYING.txt.  IF NOT, write TO
  * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
  * Boston, MA 02111-1307 USA( OR visit the web site http://www.gnu.org/ ).
  *

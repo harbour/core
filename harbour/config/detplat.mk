@@ -4,7 +4,7 @@
 
 # ---------------------------------------------------------------
 # Copyright 2009 Viktor Szakats (harbour syenar.net)
-# See COPYING for licensing terms.
+# See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
 ifneq ($(findstring MINGW,$(_DETPLAT_STR)),)

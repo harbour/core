@@ -7,7 +7,7 @@
 # Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>
 # simple script to build RPMs from Harbour sources
 #
-# See COPYING for licensing terms.
+# See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
 test_reqrpm()

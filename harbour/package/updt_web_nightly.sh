@@ -5,7 +5,7 @@
 
 # ---------------------------------------------------------------
 # Copyright 2012 Viktor Szakats (harbour syenar.net)
-# See COPYING for licensing terms.
+# See COPYING.txt for licensing terms.
 # ---------------------------------------------------------------
 
 #

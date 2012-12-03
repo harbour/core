@@ -4,7 +4,7 @@
 
 #=============================================================================
 # Copyright 2003 Przemyslaw Czerpak <druzus@polbox.com>,
-# See COPYING for licensing terms.
+# See COPYING.txt for licensing terms.
 #=============================================================================
 # Table Syntax:
 # <:> terminal[|terminal|terminal...] <space> comment

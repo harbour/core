@@ -9,7 +9,7 @@
  * Copyright 1999 Ryszard Glab
  *   Header file for the Macro compiler
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 

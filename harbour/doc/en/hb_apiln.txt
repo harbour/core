@@ -11,7 +11,7 @@
  * $SUBCATEGORY$
  *    Language and Nation
  *
- * See COPYING for licensing terms.
+ * See COPYING.txt for licensing terms.
  *
  */
 
