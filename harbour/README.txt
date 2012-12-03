@@ -736,7 +736,8 @@ TABLE OF CONTENT
    - HB_BUILD_PKG=yes            Create release package. Default: no
                                  Requires 'clean install' in root source dir.
    - HB_BUILD_DYN=no             Create Harbour dynamic libraries. Default: yes
-   - HB_BUILD_CONTRIB_DYN=yes    Create contrib dynamic libraries. Default: no
+   - HB_BUILD_CONTRIB_DYN=yes    Create contrib dynamic libraries. Default: no,
+                                 except Windows platform, where it's yes.
    - HB_BUILD_SHARED=yes         Create Harbour executables in shared mode.
                                  Default: yes when HB_INSTALL_PREFIX points
                                  to a *nix system location, otherwise no.

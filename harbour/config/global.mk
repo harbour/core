@@ -146,7 +146,6 @@ ifeq ($(HB_INIT_DONE),)
 
       # Enforce some basic settings for release packages
       export HB_BUILD_DYN := yes
-      export HB_BUILD_CONTRIB_DYN := yes
       export HB_BUILD_OPTIM := yes
       export HB_BUILD_DEBUG := no
       export HB_BUILD_SHARED := no
@@ -389,6 +388,12 @@ ifeq ($(HB_HOST_PLAT),)
    endif
    endif
    endif
+   endif
+endif
+
+ifneq ($(filter $(HB_HOST_PLAT),win),)
+   ifeq ($(HB_BUILD_CONTRIB_DYN),)
+      export HB_BUILD_CONTRIB_DYN := yes
    endif
 endif
 
