@@ -2,6 +2,9 @@
  * $Id$
  */
 
+#ifndef HBVPDF_CH
+#define HBVPDF_CH
+
 #define NORMAL        0
 #define BOLD          1
 #define ITALIC        2
@@ -221,3 +224,5 @@
 #define pdf_WHITESMOKE           "F5F5F5"
 #define pdf_YELLOW               "FFFF00"
 #define pdf_YELLOWGREEN          "9ACD32"
+
+#endif
