@@ -185,9 +185,10 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Credits:  The Harbour Team at harbour-project.org\n"
          "          (replace space with @ in e-mail addresses)\n"
          "\n"
-         "Alejandro de Garate (alex_degarate hotmail.com)\n"
+         "Alejandro de Garate (alex_degarate hotmail com)\n"
          "Alex Shashkov (shashkov ostu.ru)\n"
          "Alexander S. Kresin (alex belacy.belgorod.su)\n"
+         "Alexey Myronenko (m.oleksa ukr.net)\n"
          "Andi Jahja (xharbour cbn.net.id)\n"
          "Antonio Carlos Pantaglione (toninho fwi.com.br)\n"
          "Antonio Linares (alinares fivetechsoft.com)\n"
@@ -196,7 +197,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Bill Robertson (arcadia2 sbcglobal.net)\n"
          "Brian Hays (bhays abacuslaw.com)\n"
          "Bruno Cantero (bruno issnet.net)\n"
-         "Carlos Bacco (carlosbacco gmail.com)\n"
+         "Carlos Bacco (carlosbacco gmail com)\n"
          "Chen Kedem (niki synel.co.il)\n"
          "Dave Pearson (davep davep.org)\n"
          "David Arturo Macias Corona (dmacias mail.udg.mx)\n"
@@ -207,13 +208,13 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Enrico Maria Giordano (e.m.giordano emagsoftware.it)\n"
          "Felipe G. Coury (fcoury creation.com.br)\n"
          "Fernando Mancera (fmancera viaopen.com)\n"
-         "Francesco Perillo (fperillo gmail.com)\n"
+         "Francesco Perillo (fperillo gmail com)\n"
          "Francesco Saverio Giudice (info fsgiudice.com)\n"
          "Giancarlo Niccolai (gc niccolai.ws)\n"
          "Gonzalo A. Diethelm (gonzalo.diethelm iname.com)\n"
          "Gustavo Junior Alves (alves coslinux.com.br)\n"
          "Hannes Ziegler (hz knowleXbase.com)\n"
-         "Horacio D. Roldan Kasimatis (harbour_ar yahoo.com.ar)\n"
+         "Horacio D. Roldan Kasimatis (harbour_ar yahoo com.ar)\n"
          "Ignacio Ortiz de Zuniga (ignacio fivetech.com)\n"
          "Ilias Lazaridis (ilias lazaridis.com)\n"
          "Istvan Bisz (istvan.bisz t-online.hu)\n"
@@ -225,7 +226,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Jose Lalin (dezac corevia.com)\n"
          "Kwon, Oh-Chul (ohchul fivetech.net)\n"
          "Leslee Griffith (les.griffith vantagesystems.ca)\n"
-         "Lorenzo Fiorini (lorenzo.fiorini gmail.com)\n"
+         "Lorenzo Fiorini (lorenzo.fiorini gmail com)\n"
          "Luis Krause Mantilla (lkrausem shaw.ca)\n"
          "Luiz Rafael Culik (culik sl.conex.net)\n"
          "Manuel Ruiz (mrt joca.es)\n"
@@ -237,6 +238,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Matthew Hamilton (mhamilton bunge.com.au)\n"
          "Mauricio Abre (maurifull datafull.com)\n"
          "Maurilio Longo (maurilio.longo libero.it)\n"
+         "Maurizio la Cecilia (m.lacecilia gmail com)\n"
          "Miguel Angel Marchuet Frutos (miguelangel marchuet.net)\n"
          "Mindaugas Kavaliauskas (dbtopas dbtopas.lt)\n"
          "Mitja Podgornik (Yamamoto rocketmail.com)\n"
@@ -248,7 +250,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Peter Townsend (cephas tpgi.com.au)\n"
          "Phil Barnett (philb iag.net)\n"
          "Phil Krylov (phil newstar.rinet.ru)\n"
-         "Pritpal Bedi (pritpal vouchcac.com)\n"
+         "Pritpal Bedi (bedipritpal hotmail com)\n"
          "Przemyslaw Czerpak (druzus priv.onet.pl)\n"
          "Rab Thomson (rthomson synstar.com)\n"
          "Randy Portnoff (randy palmasdev.com)\n"
@@ -261,11 +263,11 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "Teo Fonrouge (teo windtelsoft.com)\n"
          "Tim Stone (timstone mstrlink.com)\n"
          "Tomaz Zupan (tomaz.zupan orpo.si)\n"
-         "Vailton Renato (vailtom gmail.com)\n"
+         "Vailton Renato (vailtom gmail com)\n"
          "Viktor Szakats (harbour syenar.net)\n"
-         "Vladimir Kazimirchik (v_kazimirchik yahoo.com)\n"
+         "Vladimir Kazimirchik (v_kazimirchik yahoo com)\n"
          "Walter Negro (anegro overnet.com.ar)\n"
-         "Xavi (jarabal gmail.com)\n"
+         "Xavi (jarabal gmail com)\n"
       );
 }
 
@@ -278,6 +280,6 @@ void hb_compPrintLogo( HB_COMP_DECL )
 
    hb_compOutStd( HB_COMP_PARAM, szVer );
    hb_compOutStd( HB_COMP_PARAM,
-                  "\nCopyright (c) 1999-2012, http://harbour-project.org/\n" );
+                  "\nCopyright (c) 1999-2013, http://harbour-project.org/\n" );
    hb_xfree( szVer );
 }

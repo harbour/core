@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * Harbour Make (alias hbmk/hbmk2)
  *
- * Copyright 1999-2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 1999-2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -13139,7 +13139,7 @@ STATIC FUNCTION __plugin_ext()
  * Harbour Project source code:
  * extension manager plugin
  *
- * Copyright 2012 Viktor Szakats (harbour syenar.net)
+ * Copyright 2012-2013 Viktor Szakats (harbour syenar.net)
  * www - http://harbour-project.org
  */
 
@@ -14355,7 +14355,7 @@ STATIC PROCEDURE ShowHeader( hbmk )
    LOCAL cTrsTextI
 
    OutStd( "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + _OUT_EOL +;
-           "Copyright (c) 1999-2012, Viktor Szakáts" + _OUT_EOL +;
+           "Copyright (c) 1999-2013, Viktor Szakáts" + _OUT_EOL +;
            "http://harbour-project.org/" + _OUT_EOL )
 
    IF !( hbmk[ _HBMK_cUILNG ] == "en" ) .AND. ;

@@ -164,7 +164,7 @@ STATIC PROCEDURE Logo()
 
    OutStd( ;
       "Harbour i18n .pot/.hbl file manager " + HBRawVersion() + hb_eol() + ;
-      "Copyright (c) 2009-2012, Przemyslaw Czerpak" + hb_eol() + ;
+      "Copyright (c) 2009-2013, Przemyslaw Czerpak" + hb_eol() + ;
       "http://harbour-project.org/" + hb_eol() + ;
       hb_eol() )
 

@@ -1869,7 +1869,7 @@ TABLE OF CONTENT
          http://harbour-project.svn.sourceforge.net/svnroot/harbour-project/trunk/harbour/ChangeLog.txt
 
 
-[ Copyright (c) 2009-2012 Viktor Szakats (harbour syenar.net)
+[ Copyright (c) 2009-2013 Viktor Szakats (harbour syenar.net)
   Licensed under Creative Commons Attribution-ShareAlike 3.0:
   http://creativecommons.org/licenses/by-sa/3.0/
   See COPYING.txt. ]
