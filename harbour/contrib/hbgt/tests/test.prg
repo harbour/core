@@ -2,6 +2,7 @@
  * $Id$
  */
 
+#require "hbgt"
 #require "hbtest"
 
 PROCEDURE Main()
