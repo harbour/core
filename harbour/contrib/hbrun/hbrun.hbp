@@ -15,10 +15,10 @@
 # it's required for dynamic extension loading. (only
 # do that if HB_BUILD_CONTRIB_DYN is enabled, so there
 # are actual dynamic extensions to load.)
-{_HB_BUILD_&(!(HB_BUILD_DYN='no')&!(HB_BUILD_CONTRIB_DYN='no')&(win|wce|os2))}-env:__HBMKDYN=yes
+{_HB_BUILD_&(!(HB_BUILD_DYN='no')&!(HB_BUILD_CONTRIB_DYN='no')&(win|wce|os2))}-shared
+{shared|(unix&!(HB_BUILD_CONTRIB_DYN='no'))}-env:__HBMKDYN=yes
 
-{__HBMKDYN='yes'}-shared
-{__HBMKDYN='yes'}-DHBMK_WITH_EXTS=hbct|hbexpat|hbmemio|hbmzip|hbnetio|hbunix|hbunix|hbwin
+{__HBMKDYN='yes'}-DHBMK_WITH_EXTS=hbct|hbexpat|hbmemio|hbmzip|hbnetio|hbunix|hbwin
 
 {!(__HBMKDYN='yes')}hbct.hbc         {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBCT__
 {!(__HBMKDYN='yes')}hbexpat.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBEXPAT__

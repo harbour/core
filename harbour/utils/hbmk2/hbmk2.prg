@@ -12850,7 +12850,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbmk := s_hbmk := hbmk_new()
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX, .T. )
-      IF hb_Version( HB_VERSION_SHARED )
+      IF __hbshell_CanLoadDyn()
          OutErr( StrTran( I_( "Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ), "\n", hb_eol() ) + _OUT_EOL )
       ENDIF
    ENDIF
@@ -13106,11 +13106,12 @@ FUNCTION hbshell_ext_load( cName )
    LOCAL cVersion
 
    IF ! Empty( cName )
-      IF hb_Version( HB_VERSION_SHARED )
+      IF __hbshell_CanLoadDyn()
          IF !( cName $ s_hLibExt )
 
             s_hbmk[ _HBMK_aINCPATH ] := {}
             s_hbmk[ _HBMK_aCH ] := {}
+            s_hbmk[ _HBMK_aLIBUSER ] := {}
 
             s_hINCPATH[ cName ] := {}
             s_hCH[ cName ] := {}
@@ -13122,19 +13123,26 @@ FUNCTION hbshell_ext_load( cName )
                AEval( s_hbmk[ _HBMK_aINCPATH ], {| tmp | AAdd( s_hINCPATH[ cName ], tmp ) } )
                AEval( s_hbmk[ _HBMK_aCH ], {| tmp | AAdd( s_hCH[ cName ], tmp ) } )
                AAddNew( s_hOPTPRG[ cName ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( cName ) ) + "=" + cVersion )
-            ENDIF
 
-            cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ), ;
-                            iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
-            IF Empty( cFileName )
-               OutErr( hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) + _OUT_EOL )
-            ELSE
-               hLib := hb_libLoad( cFileName )
-               IF Empty( hLib )
-                  OutErr( hb_StrFormat( I_( "Error loading '%1$s' (%2$s)." ), cName, cFileName ) + _OUT_EOL )
-               ELSE
-                  s_hLibExt[ cName ] := hLib
-                  RETURN .T.
+               /* NOTE: Hack. We detect if the .hbc had defined any libs to load.
+                        (f.e. there won't be any libs if the .hbc was skipped due
+                        to filters)
+                  TODO: In the future the .hbc should specify a list of dynamic libs
+                        to load, and we should load those, if any. */
+               IF ! Empty( s_hbmk[ _HBMK_aLIBUSER ] )
+                  cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ), ;
+                                           iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
+                  IF Empty( cFileName )
+                     OutErr( hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) + _OUT_EOL )
+                  ELSE
+                     hLib := hb_libLoad( cFileName )
+                     IF Empty( hLib )
+                        OutErr( hb_StrFormat( I_( "Error loading '%1$s' (%2$s)." ), cName, cFileName ) + _OUT_EOL )
+                     ELSE
+                        s_hLibExt[ cName ] := hLib
+                        RETURN .T.
+                     ENDIF
+                  ENDIF
                ENDIF
             ENDIF
          ENDIF
@@ -13163,7 +13171,7 @@ FUNCTION hbshell_ext_get_list()
    LOCAL hLib
 
    FOR EACH hLib IN s_hLibExt
-      aName[ hLib:__enumIndex() ] := hLib:__enumKey() + iif( Empty( hLib ), "", "*" )
+      aName[ hLib:__enumIndex() ] := iif( Empty( hLib ), Upper( hLib:__enumKey() ), hLib:__enumKey() )
    NEXT
 
    ASort( aName )
@@ -13617,9 +13625,14 @@ STATIC PROCEDURE __hbshell_Info( cCommand )
       hb_DispOutAt( 1, MaxCol(), "o", "R/BG" )
    ENDIF
 
-   hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( hbshell_ext_get_list(), ", " ), MaxCol() + 1 ), iif( hb_Version( HB_VERSION_SHARED ), "W/B", "N/N*" ) )
+   hb_DispOutAt( 2, 0, PadR( "Ext: " + ArrayToList( hbshell_ext_get_list(), ", " ), MaxCol() + 1 ), iif( __hbshell_CanLoadDyn(), "W/B", "N/N*" ) )
 
    RETURN
+
+STATIC FUNCTION __hbshell_CanLoadDyn()
+   /* Can load them only in -shared builds on Windows,
+      because dynlibs are built against harbour.dll. */
+   RETURN hb_Version( HB_VERSION_UNIX_COMPAT ) .OR. hb_Version( HB_VERSION_SHARED )
 
 STATIC PROCEDURE __hbshell_Err( oErr, cCommand )
 
@@ -13657,9 +13670,9 @@ STATIC PROCEDURE __hbshell_Exec( cCommand )
    ENDIF
 
    hb_HEval( s_hINCPATH, {| cExt |
-                            AEval( s_hINCPATH[ cExt ], {| tmp | AAdd( aOPTPRG, "-i" + tmp ) } )
-                            AEval( s_hCH[ cExt ]     , {| tmp | AAdd( aOPTPRG, "-u+" + tmp ) } )
-                            AEval( s_hOPTPRG[ cExt ] , {| tmp | AAdd( aOPTPRG, tmp ) } )
+                            AEval( s_hINCPATH[ cExt ], {| tmp | AAddNew( aOPTPRG, "-i" + tmp ) } )
+                            AEval( s_hCH[ cExt ]     , {| tmp | AAddNew( aOPTPRG, "-u+" + tmp ) } )
+                            AEval( s_hOPTPRG[ cExt ] , {| tmp | AAddNew( aOPTPRG, tmp ) } )
                             RETURN NIL
                          } )
 
@@ -13941,6 +13954,12 @@ FUNCTION hbshell_uninclude( cName )
    ENDIF
 
    RETURN .F.
+
+PROCEDURE hbshell_include_list()
+
+   hb_HEval( s_hCHCORE, {| tmp | __hbshell_ToConsole( tmp  ) } )
+
+   RETURN
 
 /* Public hbshell API */
 FUNCTION hbshell_DirBase()

@@ -34,5 +34,4 @@
 {hbdyn&!unix&!allwin}-o${hb_outputname}${hb_dynsuffix}
 
 # output dir (in sync with GNU Make)
-{hbdyn&unix&!cygwin}-olib/${hb_plat}/${hb_comp}${hb_build}/
-{hbdyn&(cygwin|!unix)}-obin/${hb_plat}/${hb_comp}${hb_build}/
+{hbdyn}-obin/${hb_plat}/${hb_comp}${hb_build}/

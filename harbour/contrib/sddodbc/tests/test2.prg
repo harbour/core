@@ -14,7 +14,8 @@ PROCEDURE Main()
    LOCAL nConnection, nI, aI
 
    rddSetDefault( "SQLMIX" )
-   Set( _SET_DATEFORMAT, "yyyy-mm-dd" )
+   SET DATE ANSI
+   SET CENTURY ON
    nConnection := rddInfo( RDDI_CONNECT, { "ODBC", "Server=localhost;Driver={MySQL ODBC 5.1 Driver};dsn=;User=test;database=test;" } )
    IF nConnection == 0
       ? "Unable connect to server", rddInfo( RDDI_ERRORNO ), rddInfo( RDDI_ERROR )

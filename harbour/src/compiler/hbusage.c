@@ -186,6 +186,7 @@ void hb_compPrintCredits( HB_COMP_DECL )
          "          (replace space with @ in e-mail addresses)\n"
          "\n"
          "Alejandro de Garate (alex_degarate hotmail com)\n"
+         "Aleksander Czajczynski <hb fki.pl>\n"
          "Alex Shashkov (shashkov ostu.ru)\n"
          "Alexander S. Kresin (alex belacy.belgorod.su)\n"
          "Alexey Myronenko (m.oleksa ukr.net)\n"

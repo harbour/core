@@ -396,15 +396,12 @@ FUNCTION uhttpd_URLDecode( cString )
  * cTime     : default "00:00:00"
  * nDayToAdd : default 0 - may be a negative number
  *
- * cGMTDate  : The string return in form of "Saturday, 31-Oct-03 00:00:00 GMT"
+ * cGMTDate  : The string return in form of "Sat, 31 Oct 2003 00:00:00 GMT"
  */
 
 FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
 
-   LOCAL cStr
-   LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd-mm-yy" )
-   LOCAL nDay, nMonth, nYear, nDoW
-   LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
+   LOCAL aDays   := { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
    LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 
    __defaultNIL( @dDate, Date() )
@@ -417,19 +414,12 @@ FUNCTION uhttpd_DateToGMT( dDate, cTime, nDayToAdd, nSecsToAdd )
    cTime := uhttpd_AddSecondsToTime( cTime, nSecsToAdd, @nDayToAdd )
    dDate += nDayToAdd
 
-   nDay   := Day( dDate )
-   nMonth := Month( dDate )
-   nYear  := Year( dDate )
-   nDoW   := DoW( dDate )
-
-   cStr := aDays[ nDow ] + ", " + StrZero( nDay, 2 ) + "-" + aMonths[ nMonth ] + "-" + ;
-      Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
-
-   // TraceLog( "DateToGMT", cStr )
-
-   Set( _SET_DATEFORMAT, cOldDateFormat )
-
-   RETURN cStr
+   RETURN ;
+      aDays[ DoW( dDate ) ] + ", " + ;
+      StrZero( Day( dDate ), 2 ) + " " + ;
+      aMonths[ Month( dDate ) ] + " " + ;
+      StrZero( Year( dDate ), 4 ) + " " + ;
+      cTime + " GMT"
 
 /*
  * AddSecondsToTime( cTime, nSecsToAdd, @nDaysAdded ) --> cNewTime

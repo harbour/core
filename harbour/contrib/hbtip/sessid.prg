@@ -125,23 +125,15 @@ FUNCTION tip_CheckSID( cSID, cCRCKey )
 
 FUNCTION tip_DateToGMT( dDate, cTime )
 
-   LOCAL cStr
-   LOCAL cOldDateFormat := Set( _SET_DATEFORMAT, "dd-mm-yy" )
-   LOCAL nDay, nMonth, nYear, nDoW
-   LOCAL aDays   := { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" }
+   LOCAL aDays   := { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" }
    LOCAL aMonths := { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" }
 
    hb_default( @dDate, Date() )
    hb_default( @cTime, Time() )
 
-   nDay   := Day( dDate )
-   nMonth := Month( dDate )
-   nYear  := Year( dDate )
-   nDoW   := DoW( dDate )
-
-   cStr := aDays[ nDow ] + ", " + StrZero( nDay, 2 ) + "-" + aMonths[ nMonth ] + "-" + ;
-      Right( StrZero( nYear, 4 ), 2 ) + " " + cTime + " GMT"
-
-   Set( _SET_DATEFORMAT, cOldDateFormat )
-
-   RETURN cStr
+   RETURN ;
+      aDays[ DoW( dDate ) ] + ", " + ;
+      StrZero( Day( dDate ), 2 ) + " " + ;
+      aMonths[ Month( dDate ) ] + " " + ;
+      StrZero( Year( dDate ), 4 ) + " " + ;
+      cTime + " GMT"
