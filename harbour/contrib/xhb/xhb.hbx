@@ -171,7 +171,7 @@ DYNAMIC hb_QSelf
 DYNAMIC hb_QWith
 DYNAMIC hb_ReadIni
 DYNAMIC hb_ReadLine
-DYNAMIC hb_RegexReplace
+DYNAMIC hb_regexReplace
 DYNAMIC hb_ResetWith
 DYNAMIC hb_ServiceGenerateFault
 DYNAMIC hb_ServiceGenerateFPE

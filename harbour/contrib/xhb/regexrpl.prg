@@ -53,7 +53,7 @@
 #define MATCH_START  2
 #define MATCH_END    3
 
-FUNCTION hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch )
+FUNCTION hb_regexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch )
 
    LOCAL aMatches, aMatch
    LOCAL cReturn
