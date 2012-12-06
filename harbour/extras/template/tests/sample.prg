@@ -6,16 +6,16 @@
 
 PROCEDURE Main()
 
-   // Public API
+   /* Using public API */
 
    ? hbtpl_MyPublicFunction()
    ? hbtpl_MyPublicFunction_In_C()
 
-   // Public constants
+   /* Using public constant */
 
    ? HBTPL_MYCONSTANT
 
-   // Public commands
+   /* Using public command */
 
    HBTPL_PRINT "Hello"
 
