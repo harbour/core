@@ -12851,7 +12851,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX, .T. )
       IF __hbshell_CanLoadDyn()
-         OutErr( StrTran( I_( "Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ), "\n", hb_eol() ) + _OUT_EOL )
+         OutErr( StrTran( I_( "hbshell: Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ), "\n", hb_eol() ) + _OUT_EOL )
       ENDIF
    ENDIF
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
@@ -12930,7 +12930,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
          FOR EACH tmp IN aExtension
             IF Empty( cVersion := HBC_Find( hbmk, cHBC := hb_FNameExtSet( tmp, ".hbc" ) ) )
-               OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
+               OutErr( hb_StrFormat( I_( "hbshell: Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
             ELSE
                AAddNew( aOPTPRG, "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( tmp ) ) + "=" + cVersion )
             ENDIF
@@ -13118,7 +13118,7 @@ FUNCTION hbshell_ext_load( cName )
             s_hOPTPRG[ cName ] := {}
 
             IF Empty( cVersion := HBC_Find( s_hbmk, cHBC := hb_FNameExtSet( cName, ".hbc" ) ) )
-               OutErr( hb_StrFormat( I_( "Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
+               OutErr( hb_StrFormat( I_( "hbshell: Warning: Cannot find %1$s" ), cHBC ) + _OUT_EOL )
             ELSE
                AEval( s_hbmk[ _HBMK_aINCPATH ], {| tmp | AAdd( s_hINCPATH[ cName ], tmp ) } )
                AEval( s_hbmk[ _HBMK_aCH ], {| tmp | AAdd( s_hCH[ cName ], tmp ) } )
@@ -13133,11 +13133,11 @@ FUNCTION hbshell_ext_load( cName )
                   cFileName := FindInPath( tmp := hb_libName( cName + hb_libPostfix() ), ;
                                            iif( hb_Version( HB_VERSION_UNIX_COMPAT ), GetEnv( "LD_LIBRARY_PATH" ), GetEnv( "PATH" ) ) )
                   IF Empty( cFileName )
-                     OutErr( hb_StrFormat( I_( "'%1$s' (%2$s) not found." ), cName, tmp ) + _OUT_EOL )
+                     OutErr( hb_StrFormat( I_( "hbshell: '%1$s' (%2$s) not found." ), cName, tmp ) + _OUT_EOL )
                   ELSE
                      hLib := hb_libLoad( cFileName )
                      IF Empty( hLib )
-                        OutErr( hb_StrFormat( I_( "Error loading '%1$s' (%2$s)." ), cName, cFileName ) + _OUT_EOL )
+                        OutErr( hb_StrFormat( I_( "hbshell: Error loading '%1$s' (%2$s)." ), cName, cFileName ) + _OUT_EOL )
                      ELSE
                         s_hLibExt[ cName ] := hLib
                         RETURN .T.
@@ -13147,7 +13147,7 @@ FUNCTION hbshell_ext_load( cName )
             ENDIF
          ENDIF
       ELSE
-         OutErr( hb_StrFormat( I_( "Cannot load '%1$s'. Requires -shared %2$s build." ), cName, hb_FNameName( hbshell_ProgName() ) ) + _OUT_EOL )
+         OutErr( hb_StrFormat( I_( "hbshell: Cannot load '%1$s'. Requires -shared %2$s build." ), cName, hb_FNameName( hbshell_ProgName() ) ) + _OUT_EOL )
       ENDIF
    ENDIF
 
@@ -13318,7 +13318,7 @@ STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
             ENDIF
          RECOVER USING oError
             plugin[ _PLUGIN_hHRB ] := NIL
-            OutErr( hb_StrFormat( I_( "Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ) + _OUT_EOL )
+            OutErr( hb_StrFormat( I_( "hbshell: Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ) + _OUT_EOL )
          END /* SEQUENCE */
       ENDIF
 
