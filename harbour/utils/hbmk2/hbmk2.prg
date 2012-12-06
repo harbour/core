@@ -9834,7 +9834,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       RETURN ""
    ENDIF
 
-   nVersion := 0
+   nVersion := 1
 
    AAddNew( hbmk[ _HBMK_aDEPTHBC ], { cFileName, nNestingLevel - 1 } )
 
@@ -10441,7 +10441,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
       ENDCASE
    NEXT
 
-   cVersion := iif( nVersion == 0, "0", "0x" + hb_NumToHex( nVersion, 6 ) )
+   cVersion := iif( nVersion == 1, "1", "0x" + hb_NumToHex( nVersion, 6 ) )
 
    AAddNew( hbmk[ _HBMK_aOPTPRG ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( hb_FNameName( cFileName ) ) ) + "=" + cVersion )
 
