@@ -23,7 +23,6 @@
 
 DYNAMIC hbtest_Call
 DYNAMIC hbtest_Setup
-DYNAMIC __hbtest_NumGetDec
 
 #if defined( __HBEXTREQ__ ) .OR. defined( __HBEXTERN__HBTEST__REQUEST )
    #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>
