@@ -18,7 +18,10 @@
 {_HB_BUILD_&(!(HB_BUILD_DYN='no')&!(HB_BUILD_CONTRIB_DYN='no')&(win|wce|os2))}-shared
 {shared|(unix&!(HB_BUILD_CONTRIB_DYN='no'))}-env:__HBMKDYN=yes
 
-{__HBMKDYN='yes'}-DHBMK_WITH_EXTS=hbct|hbexpat|hbmemio|hbmzip|hbnetio|hbunix|hbwin
+{__HBMKDYN='yes'}-env:_HBMK_WITH_EXTS=hbct|hbexpat|hbmemio|hbmzip|hbnetio
+{__HBMKDYN='yes'&unix}-env:_HBMK_WITH_EXTS+|hbunix
+{__HBMKDYN='yes'&allwin}-env:_HBMK_WITH_EXTS+|hbwin
+{__HBMKDYN='yes'}-DHBMK_WITH_EXTS=${_HBMK_WITH_EXTS}
 
 {!(__HBMKDYN='yes')}hbct.hbc         {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBCT__
 {!(__HBMKDYN='yes')}hbexpat.hbc      {!(__HBMKDYN='yes')}-request=__HBEXTERN__HBEXPAT__
