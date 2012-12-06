@@ -11,6 +11,15 @@
 
 -w3 -es2
 
+# NOTE: Uncomment, if the library has any 3rd party lib dependencies
+# -depkeyhead=lib3rd:lib3rd.h
+# -depcontrol=lib3rd:${HB_WITH_LIB3RD}
+# -depincpath=lib3rd:/usr/include
+# -depincpath=lib3rd:/boot/common/include
+# -depimplibs=lib3rd:../dll/lib3rd.dll
+# -depimplibd=lib3rd:lib3rd
+# -depfinish=lib3rd
+
 core.prg
 corec.c
 
