@@ -350,7 +350,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
          IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_MessageBox( NIL, "Button Failed Wvw_DrawImage(" + ::cImage + ")" )
+            win_MessageBox( NIL, "Button Failed wvw_DrawImage(" + ::cImage + ")" )
          ENDIF
       ENDIF
 
@@ -368,7 +368,7 @@ METHOD DRAW( nWinNum ) CLASS WVWMouseButton
 
       IF lUseImage .AND. ::nType != _BUTTON_NONE
          IF ! wvw_DrawImage( nWinNum, ::nRow1, ::nCol1, ::nRow2, ::nCol2, ::cImage, ::lTight )
-            win_MessageBox( NIL, "Button Failed Wvw_DrawImage(" + ::cImage + ")" )
+            win_MessageBox( NIL, "Button Failed wvw_DrawImage(" + ::cImage + ")" )
          ENDIF
       ENDIF
 

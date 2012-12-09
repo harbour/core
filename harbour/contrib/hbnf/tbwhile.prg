@@ -19,7 +19,7 @@
  *    Rev 1.3   28 Sep 1991 02:52:22   GLENN
  * Jim's modifications:
  *
- *  1.  Changed SAVESCREEN() and RESTSCREEN to use MaxRow(), MaxCol()
+ *  1.  Changed SaveScreen() and RestScreen() to use MaxRow(), MaxCol()
  *      instead of 24,79
  *
  *  2.  Added Nantucket's cleaner code for:

@@ -4,7 +4,7 @@
 
 /*
  * xHarbour Project source code:
- * hb_RegexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch ) --> cReturn
+ * hb_regexReplace( cRegex, cString, cReplace, lCaseSensitive, lNewLine, nMaxMatches, nGetMatch ) --> cReturn
  *
  * Copyright 2006 Francesco Saverio Giudice <info/at/fsgiudice.com>
  * www - http://www.xharbour.org

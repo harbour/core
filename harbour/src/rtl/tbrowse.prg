@@ -295,7 +295,7 @@ CREATE CLASS TBrowse
    METHOD dispFrames()                          // display TBrowse border, columns' headings, footings and separators
    METHOD dispRow( nRow )                       // display TBrowse data
 
-   FRIEND FUNCTION _mBrwPos                     // helper function for MRow() and mCol() methods
+   FRIEND FUNCTION _mBrwPos                     // helper function for MRow() and MCol() methods
 
 ENDCLASS
 
@@ -2394,7 +2394,7 @@ METHOD hitTest( mRow, mCol ) CLASS TBrowse
 
 #ifdef HB_BRW_STATICMOUSE
    /* This is not CA-Cl*pper compatible, in Clipper ::mRowPos and ::mColPos
-    * is calculated dynamically by call to MCol() and MROW()
+    * is calculated dynamically by call to MCol() and MRow()
     */
    ::mRowPos := ::mColPos := 0
 #endif

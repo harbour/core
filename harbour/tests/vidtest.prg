@@ -174,7 +174,7 @@ STATIC FUNCTION WindowBounce()
 
 // Display colour boxes,  repeatedly, this will determine
 // how efficiently the screen i/o subsystem is caching the
-// DispBegin()'s and dispend()'s
+// DispBegin()'s and DispEnd()'s
 
 STATIC FUNCTION ColourBoxes()
 

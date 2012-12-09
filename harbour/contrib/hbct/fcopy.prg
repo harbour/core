@@ -19,7 +19,7 @@
  *
  * Copyright 2007 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  *
- *    added FILECDATI() and rewritten above functions for CT3 compatibility
+ *    added FileCDaTi() and rewritten above functions for CT3 compatibility
  *    and some problems fixing,
  *
  * www - http://harbour-project.org

@@ -306,9 +306,9 @@ METHOD ReadSections() CLASS TIniFile
 
 METHOD PROCEDURE UpdateFile() CLASS TIniFile
 
-   LOCAL i, j, hFile
+   LOCAL i, j
 
-   hFile := FCreate( ::Filename )
+   LOCAL hFile := FCreate( ::Filename )
 
    FOR i := 1 TO Len( ::Contents )
       IF ::Contents[ i ][ 1 ] == NIL

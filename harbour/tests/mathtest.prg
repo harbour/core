@@ -11,7 +11,7 @@ PROCEDURE Main()
 
    CLS
 
-   ? "Testing math function: Exp(), Log() and SQRT():"
+   ? "Testing math function: Exp(), Log() and Sqrt():"
    ?
    ? "  I) Test with correct arguments:"
    ? "     Exp(0.0) == 1.00         ? ", Exp( 0.0 )

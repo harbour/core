@@ -19,7 +19,7 @@
 #include "directry.ch"
 #include "simpleio.ch"
 
-PROCEDURE Main()
+PROCEDURE Main( cFile )
 
    LOCAL aFile
    LOCAL cExt
@@ -82,6 +82,8 @@ PROCEDURE Main()
       "pp.txt"        => NIL, ;
       "locks.txt"     => NIL, ;
       "oldnews.txt"   => NIL, ;
+      "news.html"     => NIL, ;
+      "news1.html"    => NIL, ;
       "c_std.txt"     => NIL, ;
       "tracing.txt"   => NIL, ;
       "pcode.txt"     => NIL }
@@ -102,15 +104,19 @@ PROCEDURE Main()
 
    __hbformat_BuildListOfFunctions( hAll )
 
-   FOR EACH aFile IN hb_DirScan( "", hb_osFileMask() )
-      cExt := hb_FNameExt( aFile[ F_NAME ] )
-      IF ! Empty( hb_FNameExt( aFile[ F_NAME ] ) ) .AND. ;
-         !( hb_FNameExt( aFile[ F_NAME ] ) $ hExtExceptions ) .AND. ;
-         !( hb_FNameNameExt( aFile[ F_NAME ] ) $ hFileExceptions ) .AND. ;
-         AScan( aMaskExceptions, {| tmp | hb_FileMatch( StrTran( aFile[ F_NAME ], "\", "/" ), tmp ) } ) == 0
-         ProcFile( hAll, aFile[ F_NAME ] )
-      ENDIF
-   NEXT
+   IF HB_ISSTRING( cFile )
+      ProcFile( hAll, cFile )
+   ELSE
+      FOR EACH aFile IN hb_DirScan( "", hb_osFileMask() )
+         cExt := hb_FNameExt( aFile[ F_NAME ] )
+         IF ! Empty( hb_FNameExt( aFile[ F_NAME ] ) ) .AND. ;
+            !( hb_FNameExt( aFile[ F_NAME ] ) $ hExtExceptions ) .AND. ;
+            !( hb_FNameNameExt( aFile[ F_NAME ] ) $ hFileExceptions ) .AND. ;
+            AScan( aMaskExceptions, {| tmp | hb_FileMatch( StrTran( aFile[ F_NAME ], "\", "/" ), tmp ) } ) == 0
+            ProcFile( hAll, aFile[ F_NAME ] )
+         ENDIF
+      NEXT
+   ENDIF
 
    RETURN
 
@@ -129,7 +135,7 @@ STATIC PROCEDURE ProcFile( hAll, cFileName )
    LOCAL nChanged := 0
 
    FOR EACH a IN hb_regexAll( "([A-Za-z] |[^A-Za-z_:]|^)([A-Za-z_][A-Za-z0-9_]+\()", cLog,,,,, .T. )
-      IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "Dd" )
+      IF Len( a[ 2 ] ) != 2 .OR. !( Left( a[ 2 ], 1 ) $ "D" /* "METHOD" */ )
          cProper := ProperCase( hAll, hb_StrShrink( a[ 3 ], 1 ) ) + "("
          IF !( cProper == a[ 3 ] ) .AND. ;
             !( Upper( cProper ) == "FILE(" ) .AND. ; /* interacts with "file(s)" text */
