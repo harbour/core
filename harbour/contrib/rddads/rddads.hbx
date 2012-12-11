@@ -54,6 +54,7 @@ DYNAMIC AdsDDAddTable
 DYNAMIC AdsDDAddUserToGroup
 DYNAMIC AdsDDCreate
 DYNAMIC AdsDDCreateLink
+DYNAMIC AdsDDCreateRefIntegrity
 DYNAMIC AdsDDCreateUser
 DYNAMIC AdsDDDeleteUser
 DYNAMIC AdsDDDropLink
@@ -61,6 +62,7 @@ DYNAMIC AdsDDGetDatabaseProperty
 DYNAMIC AdsDDGetUserProperty
 DYNAMIC AdsDDModifyLink
 DYNAMIC AdsDDRemoveIndexFile
+DYNAMIC AdsDDRemoveRefIntegrity
 DYNAMIC AdsDDRemoveTable
 DYNAMIC AdsDDRemoveUserFromGroup
 DYNAMIC AdsDDSetDatabaseProperty

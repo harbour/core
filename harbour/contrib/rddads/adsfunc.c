@@ -1720,12 +1720,39 @@ HB_FUNC( ADSGETNUMACTIVELINKS )         /* Only valid for a DataDict */
    hb_retni( pusNumLinks );
 }
 
-/*  Please add all-version functions above this block */
+/* Please add all-version functions above this block */
+
+HB_FUNC( ADSDDCREATEREFINTEGRITY )
+{
+#if ADS_LIB_VERSION >= 600
+   hb_retl( AdsDDCreateRefIntegrity( HB_ADS_PARCONNECTION( 1 ) /* hDictionary */,
+                                     ( UNSIGNED8 * ) hb_parcx( 2 ) /* pucRIName */,
+                                     ( UNSIGNED8 * ) hb_parcx( 3 ) /* pucFailTable */,
+                                     ( UNSIGNED8 * ) hb_parcx( 4 ) /* pucParentTableName */,
+                                     ( UNSIGNED8 * ) hb_parcx( 5 ) /* pucParentTagName */,
+                                     ( UNSIGNED8 * ) hb_parcx( 6 ) /* pucChildTableName */,
+                                     ( UNSIGNED8 * ) hb_parcx( 7 ) /* pucChildTagName */,
+                                     ( UNSIGNED16 ) hb_parni( 8 ) /* usUpdateRule */,
+                                     ( UNSIGNED16 ) hb_parni( 9 ) /* usDeleteRule */ ) == AE_SUCCESS );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
+
+HB_FUNC( ADSDDREMOVEREFINTEGRITY )
+{
+#if ADS_LIB_VERSION >= 600
+   hb_retl( AdsDDRemoveRefIntegrity( HB_ADS_PARCONNECTION( 1 ) /* hDictionary */,
+                                     ( UNSIGNED8 * ) hb_parcx( 2 ) /* pucRIName */ ) == AE_SUCCESS );
+#else
+   hb_retl( HB_FALSE );
+#endif
+}
 
 HB_FUNC( ADSDDADDTABLE )
 {
 #if ADS_LIB_VERSION >= 600
-   hb_retl( AdsDDAddTable( HB_ADS_PARCONNECTION( 4 ) /* hConnect */,
+   hb_retl( AdsDDAddTable( HB_ADS_PARCONNECTION( 4 ) /* hDictionary */,
                            ( UNSIGNED8 * ) hb_parcx( 1 ) /* pTableName */,
                            ( UNSIGNED8 * ) hb_parcx( 2 ) /* pTableFileName */,
                            ( UNSIGNED16 ) hb_ads_iFileType,
