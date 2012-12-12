@@ -11,7 +11,7 @@
 
 -w3 -es2
 
-# NOTE: Uncomment, if the library has any 3rd party lib dependencies
+# NOTE: Adapt and uncomment, if the library has a 3rd party lib dependency
 # -depkeyhead=lib3rd:lib3rd.h
 # -depcontrol=lib3rd:${HB_WITH_LIB3RD}
 # -depincpath=lib3rd:/usr/include

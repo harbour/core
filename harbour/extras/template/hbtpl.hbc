@@ -10,5 +10,5 @@ libpaths=lib/${hb_plat}/${hb_comp}
 
 libs=${hb_name}
 
-# NOTE: Uncomment, if the library has any 3rd party lib dependencies
-# libs=lib3rdparty
+# NOTE: Adapt and uncomment, if the library has a 3rd party lib dependency
+# libs=lib3rd

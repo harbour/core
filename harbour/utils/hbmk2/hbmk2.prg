@@ -6839,7 +6839,14 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF lTargetUpToDate .OR. hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK
 
             IF ! Empty( hbmk[ _HBMK_cHBX ] )
-               mk_extern( hbmk, hbmk[ _HBMK_cPROGNAME ], cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex, hbmk[ _HBMK_cHBX ] )
+               /* Use the implib, if we created one.
+                  It's the safer target to extract exports from.
+                  On Windows, .dlls sometimes export stuff
+                  that is really meant to be imported, despite all
+                  the switches and hunt for finding any useful
+                  root reason for this behavior.
+                  Try '-hbdyn rddado.hbp' for an example. */
+               mk_extern( hbmk, iif( Empty( l_cIMPLIBNAME ), hbmk[ _HBMK_cPROGNAME ], l_cIMPLIBNAME ), cBin_LibHBX, cOpt_LibHBX, cLibHBX_Regex, hbmk[ _HBMK_cHBX ] )
             ENDIF
 
             DoLink( hbmk )

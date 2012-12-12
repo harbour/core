@@ -3,12 +3,6 @@
 #
 
 # dynamic lib creation settings
-
-# Do not generate .hbx when building dynamic libs.
-# It would cause core functions referenced from lib .prg
-# code to appear in the .hbx.
-{hbdyn}-hbx=
-
 {hbdyn}-shared
 {hbdyn}-implib=lib/${hb_plat}/${hb_comp}${hb_build}/
 {hbdyn&hb_dynsuffix}-implib=${hb_outputname}${hb_dynsuffix}
