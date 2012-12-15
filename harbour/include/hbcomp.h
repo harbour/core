@@ -156,12 +156,12 @@ extern const char * hb_compStaticVariableName( HB_COMP_DECL, HB_USHORT wVar );  
 #define HB_SYM_FUNCNAME HB_TRUE
 extern const char * hb_compSymbolName( HB_COMP_DECL, HB_USHORT );   /* returns a symbol name based on its index on the symbol table */
 
-extern PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * );
+extern PHB_HDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * );
 
-extern PCOMCLASS hb_compClassAdd( HB_COMP_DECL, const char *, const char * );
-extern PCOMCLASS hb_compClassFind( HB_COMP_DECL, const char * );
-extern PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, const char * );
-extern PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, const char * );
+extern PHB_HCLASS hb_compClassAdd( HB_COMP_DECL, const char *, const char * );
+extern PHB_HCLASS hb_compClassFind( HB_COMP_DECL, const char * );
+extern PHB_HDECLARED hb_compMethodAdd( HB_COMP_DECL, PHB_HCLASS pClass, const char * );
+extern PHB_HDECLARED hb_compMethodFind( PHB_HCLASS pClass, const char * );
 extern void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType );
 
 extern void hb_compGenBreak( HB_COMP_DECL );  /* generate code for BREAK statement */

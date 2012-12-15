@@ -159,7 +159,7 @@ static void hb_compGenCStdHeaders( HB_COMP_DECL, FILE * yyc, HB_BOOL fHbInLine )
    }
 }
 
-static void hb_compFuncUsed( HB_COMP_DECL, PCOMSYMBOL pSym )
+static void hb_compFuncUsed( HB_COMP_DECL, PHB_HSYMBOL pSym )
 {
    if( ( pSym->cScope & HB_FS_USED ) == 0 )
       hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_STATIC_FUNC_UNUSED, pSym->szName, NULL );
@@ -168,7 +168,7 @@ static void hb_compFuncUsed( HB_COMP_DECL, PCOMSYMBOL pSym )
 void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the C language output */
 {
    char        szFileName[ HB_PATH_MAX ];
-   PCOMSYMBOL  pSym;
+   PHB_HSYMBOL pSym;
    PFUNCTION   pFunc;
    PHB_HINLINE pInline;
    FILE *      yyc; /* file handle for C output */

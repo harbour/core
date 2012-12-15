@@ -39,7 +39,7 @@
 static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * pulFunctions )
 {
    PFUNCTION pFunc;
-   PCOMSYMBOL pSym;
+   PHB_HSYMBOL pSym;
    HB_SIZE nSize;
 
    *pulSymbols = *pulFunctions = 0;
@@ -72,7 +72,7 @@ static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * p
 void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize )
 {
    PFUNCTION pFunc;
-   PCOMSYMBOL pSym;
+   PHB_HSYMBOL pSym;
    HB_ULONG ulSymbols, ulFunctions;
    HB_SIZE nLen;
    HB_BYTE * ptr;

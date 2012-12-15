@@ -77,28 +77,28 @@ typedef enum
    HB_ERRORFMT_IDE
 } HB_ERRORFMT;
 
-struct _COMCLASS;    /* forward declaration */
+struct _HB_HCLASS;    /* forward declaration */
 
 /* Declared Function/Method support structure */
-typedef struct _COMDECLARED
+typedef struct _HB_HDECLARED
 {
-   const char          * szName;              /* the name of the symbol */
+   const char *          szName;              /* the name of the symbol */
    HB_BYTE               cType;
    HB_USHORT             iParamCount;
-   HB_BYTE             * cParamTypes;
-   struct _COMCLASS    * pClass;
-   struct _COMCLASS    * ( * pParamClasses );
-   struct _COMDECLARED * pNext;               /* pointer to the next declared function */
-} COMDECLARED, * PCOMDECLARED;
+   HB_BYTE *             cParamTypes;
+   struct _HB_HCLASS * pClass;
+   struct _HB_HCLASS * ( * pParamClasses );
+   struct _HB_HDECLARED * pNext;               /* pointer to the next declared function */
+} HB_HDECLARED, * PHB_HDECLARED;
 
 /* Declared Class support structure */
-typedef struct _COMCLASS
+typedef struct _HB_HCLASS
 {
-   const char       * szName;
-   PCOMDECLARED       pMethod;
-   PCOMDECLARED       pLastMethod;
-   struct _COMCLASS * pNext;
-} COMCLASS, * PCOMCLASS;
+   const char *       szName;
+   PHB_HDECLARED      pMethod;
+   PHB_HDECLARED      pLastMethod;
+   struct _HB_HCLASS * pNext;
+} HB_HCLASS, * PHB_HCLASS;
 
 /* locals, static, public variables support */
 typedef struct _VAR
@@ -109,7 +109,7 @@ typedef struct _VAR
    int            iDeclLine;        /* declaration line number */
    HB_USHORT      uiFlags;          /* optional falgs, f.e. THREAD STATIC */
    HB_BYTE        cType;            /* optional strong typing */
-   PCOMCLASS      pClass;
+   PHB_HCLASS     pClass;
    struct _VAR * pNext;            /* pointer to next defined variable */
 } VAR, * PVAR;
 
@@ -573,21 +573,21 @@ typedef struct
 } INLINES;
 
 /* compiler symbol support structure */
-typedef struct _COMSYMBOL
+typedef struct _HB_HSYMBOL
 {
    const char *   szName;     /* the name of the symbol */
    HB_SYMBOLSCOPE cScope;     /* the scope of the symbol */
    int            iFunc;      /* is it a function name (TRUE) or memvar (FALSE) */
    PFUNCTION      pFunc;
-   struct _COMSYMBOL * pNext; /* pointer to the next defined symbol */
-} COMSYMBOL, * PCOMSYMBOL;
+   struct _HB_HSYMBOL * pNext; /* pointer to the next defined symbol */
+} HB_HSYMBOL, * PHB_HSYMBOL;
 
 /* symbol table support structures */
 typedef struct
 {
-   PCOMSYMBOL pFirst;           /* pointer to the first defined symbol */
-   PCOMSYMBOL pLast;            /* pointer to the last defined symbol */
-   int        iCount;           /* number of defined symbols */
+   PHB_HSYMBOL pFirst;          /* pointer to the first defined symbol */
+   PHB_HSYMBOL pLast;           /* pointer to the last defined symbol */
+   int         iCount;          /* number of defined symbols */
 } SYMBOLS;
 
 typedef struct __EXTERN
@@ -726,14 +726,14 @@ HB_COMP_LEX, * PHB_COMP_LEX;
 typedef struct _HB_EXPRLST
 {
    HB_EXPR Expression;
-   struct _HB_EXPRLST *pPrev;
-   struct _HB_EXPRLST *pNext;
+   struct _HB_EXPRLST * pPrev;
+   struct _HB_EXPRLST * pNext;
 }
 HB_EXPRLST, * PHB_EXPRLST;
 
 typedef struct _HB_INCLST
 {
-   struct _HB_INCLST *pNext;
+   struct _HB_INCLST * pNext;
    char szFileName[ 1 ];
 }
 HB_INCLST, * PHB_INCLST;
@@ -758,11 +758,11 @@ typedef struct _HB_COMP
    PHB_VARTYPE       pVarType;
    PHB_INCLST        incfiles;
 
-   PCOMDECLARED      pFirstDeclared;
-   PCOMDECLARED      pLastDeclared;
-   PCOMDECLARED      pLastMethod;
-   PCOMCLASS         pFirstClass;
-   PCOMCLASS         pLastClass;
+   PHB_HDECLARED     pFirstDeclared;
+   PHB_HDECLARED     pLastDeclared;
+   PHB_HDECLARED     pLastMethod;
+   PHB_HCLASS        pFirstClass;
+   PHB_HCLASS        pLastClass;
 
    PFUNCTION         pInitFunc;
    PFUNCTION         pLineFunc;

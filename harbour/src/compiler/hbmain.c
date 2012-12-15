@@ -272,11 +272,11 @@ static int hb_compReadClpFile( HB_COMP_DECL, const char * szClpFile )
 /* ------------------------------------------------------------------------- */
 
 
-static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, HB_USHORT * pwPos, HB_BOOL bFunction )
+static PHB_HSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, HB_USHORT * pwPos, HB_BOOL bFunction )
 {
-   PCOMSYMBOL pSym;
+   PHB_HSYMBOL pSym;
 
-   pSym = ( PCOMSYMBOL ) hb_xgrab( sizeof( COMSYMBOL ) );
+   pSym = ( PHB_HSYMBOL ) hb_xgrab( sizeof( HB_HSYMBOL ) );
 
    pSym->szName = szSymbolName;
    pSym->cScope = 0;
@@ -302,9 +302,9 @@ static PCOMSYMBOL hb_compSymbolAdd( HB_COMP_DECL, const char * szSymbolName, HB_
    return pSym;
 }
 
-static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, HB_USHORT * pwPos, HB_BOOL bFunction )
+static PHB_HSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, HB_USHORT * pwPos, HB_BOOL bFunction )
 {
-   PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
+   PHB_HSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
    HB_USHORT wCnt = 0;
    int iFunc = bFunction ? HB_COMP_PARAM->iModulesCount : 0;
 
@@ -334,7 +334,7 @@ static PCOMSYMBOL hb_compSymbolFind( HB_COMP_DECL, const char * szSymbolName, HB
  */
 const char * hb_compSymbolName( HB_COMP_DECL, HB_USHORT uiSymbol )
 {
-   PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
+   PHB_HSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
 
    while( pSym )
    {
@@ -483,7 +483,7 @@ void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarT
 
    if( HB_COMP_PARAM->iVarScope & VS_MEMVAR )
    {
-      PCOMSYMBOL pSym;
+      PHB_HSYMBOL pSym;
       HB_USHORT wPos;
 
       if( HB_COMP_PARAM->fAutoMemvarAssume || HB_COMP_PARAM->iVarScope == VS_MEMVAR )
@@ -1012,7 +1012,7 @@ static void hb_compDeclaredReset( HB_COMP_DECL )
 {
    while( HB_COMP_PARAM->pFirstDeclared )
    {
-      PCOMDECLARED pDeclared = HB_COMP_PARAM->pFirstDeclared;
+      PHB_HDECLARED pDeclared = HB_COMP_PARAM->pFirstDeclared;
       HB_COMP_PARAM->pFirstDeclared = pDeclared->pNext;
       if( pDeclared->cParamTypes )
          hb_xfree( pDeclared->cParamTypes );
@@ -1024,11 +1024,11 @@ static void hb_compDeclaredReset( HB_COMP_DECL )
 
    while( HB_COMP_PARAM->pFirstClass )
    {
-      PCOMCLASS pClass = HB_COMP_PARAM->pFirstClass;
+      PHB_HCLASS pClass = HB_COMP_PARAM->pFirstClass;
       HB_COMP_PARAM->pFirstClass = pClass->pNext;
       while( pClass->pMethod )
       {
-         PCOMDECLARED pDeclared = pClass->pMethod;
+         PHB_HDECLARED pDeclared = pClass->pMethod;
          pClass->pMethod = pDeclared->pNext;
          if( pDeclared->cParamTypes )
             hb_xfree( pDeclared->cParamTypes );
@@ -1042,9 +1042,9 @@ static void hb_compDeclaredReset( HB_COMP_DECL )
    HB_COMP_PARAM->pLastMethod = NULL;
 }
 
-PCOMCLASS hb_compClassFind( HB_COMP_DECL, const char * szClassName )
+PHB_HCLASS hb_compClassFind( HB_COMP_DECL, const char * szClassName )
 {
-   PCOMCLASS pClass = HB_COMP_PARAM->pFirstClass;
+   PHB_HCLASS pClass = HB_COMP_PARAM->pFirstClass;
 
    if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
@@ -1058,10 +1058,10 @@ PCOMCLASS hb_compClassFind( HB_COMP_DECL, const char * szClassName )
    return NULL;
 }
 
-PCOMCLASS hb_compClassAdd( HB_COMP_DECL, const char * szClassName, const char * szClassFunc )
+PHB_HCLASS hb_compClassAdd( HB_COMP_DECL, const char * szClassName, const char * szClassFunc )
 {
-   PCOMCLASS pClass;
-   PCOMDECLARED pDeclared;
+   PHB_HCLASS pClass;
+   PHB_HDECLARED pDeclared;
 
    /*printf( "Declaring Class: %s\n", szClassName );*/
 
@@ -1074,7 +1074,7 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, const char * szClassName, const char * 
       return pClass;
    }
 
-   pClass = ( PCOMCLASS ) hb_xgrab( sizeof( COMCLASS ) );
+   pClass = ( PHB_HCLASS ) hb_xgrab( sizeof( HB_HCLASS ) );
 
    pClass->szName = szClassName;
    pClass->pMethod = NULL;
@@ -1095,11 +1095,11 @@ PCOMCLASS hb_compClassAdd( HB_COMP_DECL, const char * szClassName, const char * 
    return pClass;
 }
 
-PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, const char * szMethodName )
+PHB_HDECLARED hb_compMethodFind( PHB_HCLASS pClass, const char * szMethodName )
 {
    if( pClass )
    {
-      PCOMDECLARED pMethod = pClass->pMethod;
+      PHB_HDECLARED pMethod = pClass->pMethod;
 
       while( pMethod )
       {
@@ -1112,9 +1112,9 @@ PCOMDECLARED hb_compMethodFind( PCOMCLASS pClass, const char * szMethodName )
    return NULL;
 }
 
-PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, const char * szMethodName )
+PHB_HDECLARED hb_compMethodAdd( HB_COMP_DECL, PHB_HCLASS pClass, const char * szMethodName )
 {
-   PCOMDECLARED pMethod;
+   PHB_HDECLARED pMethod;
 
    /*printf( "\nDeclaring Method: %s of Class: %s Pointer: %li\n", szMethodName, pClass->szName, pClass );*/
 
@@ -1137,7 +1137,7 @@ PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, const char * szMe
       return pMethod;
    }
 
-   pMethod = ( PCOMDECLARED ) hb_xgrab( sizeof( COMDECLARED ) );
+   pMethod = ( PHB_HDECLARED ) hb_xgrab( sizeof( HB_HDECLARED ) );
 
    pMethod->szName = szMethodName;
    pMethod->cType = ' '; /* Not known yet */
@@ -1162,9 +1162,9 @@ PCOMDECLARED hb_compMethodAdd( HB_COMP_DECL, PCOMCLASS pClass, const char * szMe
  * and sets its position in the symbol table.
  * NOTE: symbol's position number starts from 0
  */
-static PCOMDECLARED hb_compDeclaredFind( HB_COMP_DECL, const char * szDeclaredName )
+static PHB_HDECLARED hb_compDeclaredFind( HB_COMP_DECL, const char * szDeclaredName )
 {
-   PCOMDECLARED pSym = HB_COMP_PARAM->pFirstDeclared;
+   PHB_HDECLARED pSym = HB_COMP_PARAM->pFirstDeclared;
 
    while( pSym )
    {
@@ -1175,9 +1175,9 @@ static PCOMDECLARED hb_compDeclaredFind( HB_COMP_DECL, const char * szDeclaredNa
    return NULL;
 }
 
-PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * szDeclaredName )
+PHB_HDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * szDeclaredName )
 {
-   PCOMDECLARED pDeclared;
+   PHB_HDECLARED pDeclared;
 
    if( HB_COMP_PARAM->iWarnings < 3 )
       return NULL;
@@ -1201,7 +1201,7 @@ PCOMDECLARED hb_compDeclaredAdd( HB_COMP_DECL, const char * szDeclaredName )
       return pDeclared;
    }
 
-   pDeclared = ( PCOMDECLARED ) hb_xgrab( sizeof( COMDECLARED ) );
+   pDeclared = ( PHB_HDECLARED ) hb_xgrab( sizeof( HB_HDECLARED ) );
 
    pDeclared->szName = szDeclaredName;
    pDeclared->cType = ' '; /* Not known yet */
@@ -1233,7 +1233,7 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
    if( HB_COMP_PARAM->szDeclaredFun )
    {
       /* Find the Declared Function owner of this parameter. */
-      PCOMDECLARED pDeclared = hb_compDeclaredFind( HB_COMP_PARAM, HB_COMP_PARAM->szDeclaredFun );
+      PHB_HDECLARED pDeclared = hb_compDeclaredFind( HB_COMP_PARAM, HB_COMP_PARAM->szDeclaredFun );
 
       if( pDeclared )
       {
@@ -1242,12 +1242,12 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
          if( pDeclared->cParamTypes )
          {
             pDeclared->cParamTypes = ( HB_BYTE * ) hb_xrealloc( pDeclared->cParamTypes, pDeclared->iParamCount );
-            pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( pDeclared->pParamClasses, pDeclared->iParamCount * sizeof( PCOMCLASS ) );
+            pDeclared->pParamClasses = ( PHB_HCLASS * ) hb_xrealloc( pDeclared->pParamClasses, pDeclared->iParamCount * sizeof( PHB_HCLASS ) );
          }
          else
          {
             pDeclared->cParamTypes = ( HB_BYTE * ) hb_xgrab( 1 );
-            pDeclared->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( PCOMCLASS ) );
+            pDeclared->pParamClasses = ( PHB_HCLASS * ) hb_xgrab( sizeof( PHB_HCLASS ) );
          }
 
          pDeclared->cParamTypes[ pDeclared->iParamCount - 1 ] = pVarType->cVarType;
@@ -1267,12 +1267,12 @@ void hb_compDeclaredParameterAdd( HB_COMP_DECL, const char * szVarName, PHB_VART
       if( HB_COMP_PARAM->pLastMethod->cParamTypes )
       {
          HB_COMP_PARAM->pLastMethod->cParamTypes = ( HB_BYTE * ) hb_xrealloc( HB_COMP_PARAM->pLastMethod->cParamTypes, HB_COMP_PARAM->pLastMethod->iParamCount );
-         HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xrealloc( HB_COMP_PARAM->pLastMethod->pParamClasses, HB_COMP_PARAM->pLastMethod->iParamCount * sizeof( COMCLASS ) );
+         HB_COMP_PARAM->pLastMethod->pParamClasses = ( PHB_HCLASS * ) hb_xrealloc( HB_COMP_PARAM->pLastMethod->pParamClasses, HB_COMP_PARAM->pLastMethod->iParamCount * sizeof( HB_HCLASS ) );
       }
       else
       {
          HB_COMP_PARAM->pLastMethod->cParamTypes = ( HB_BYTE * ) hb_xgrab( 1 );
-         HB_COMP_PARAM->pLastMethod->pParamClasses = ( PCOMCLASS * ) hb_xgrab( sizeof( COMCLASS ) );
+         HB_COMP_PARAM->pLastMethod->pParamClasses = ( PHB_HCLASS * ) hb_xgrab( sizeof( HB_HCLASS ) );
       }
 
       HB_COMP_PARAM->pLastMethod->cParamTypes[ HB_COMP_PARAM->pLastMethod->iParamCount - 1 ] = pVarType->cVarType;
@@ -2146,7 +2146,7 @@ static HB_BOOL hb_compRegisterFunc( HB_COMP_DECL, PFUNCTION pFunc, HB_BOOL fErro
    {
       if( ! hb_compCheckReservedNames( HB_COMP_PARAM, pFunc->szName, fError ) )
       {
-         PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
+         PHB_HSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
          if( ! pSym )
             pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
          pSym->cScope |= pFunc->cScope | HB_FS_LOCAL;
@@ -2233,7 +2233,7 @@ static void hb_compAnnounce( HB_COMP_DECL, const char * szFunName )
    }
    else
    {
-      PCOMSYMBOL pSym;
+      PHB_HSYMBOL pSym;
 
       /* create a new procedure
        */
@@ -2256,7 +2256,7 @@ static void hb_compAnnounce( HB_COMP_DECL, const char * szFunName )
 
 void hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName )
 {
-   PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
+   PHB_HSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFunName, NULL, HB_SYM_FUNCNAME );
 
    if( pSym )
    {
@@ -2268,7 +2268,7 @@ void hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName )
 PHB_HINLINE hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine )
 {
    PHB_HINLINE pInline;
-   PCOMSYMBOL pSym;
+   PHB_HSYMBOL pSym;
 
    if( szFunName )
    {
@@ -2308,7 +2308,7 @@ static void hb_compExternGen( HB_COMP_DECL )
    while( HB_COMP_PARAM->externs )
    {
       HB_SYMBOLSCOPE cScope = HB_COMP_PARAM->externs->cScope;
-      PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME );
+      PHB_HSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, HB_COMP_PARAM->externs->szName, NULL, HB_SYM_FUNCNAME );
 
       if( pSym )
       {
@@ -2520,7 +2520,7 @@ void hb_compGenStaticName( const char * szVarName, HB_COMP_DECL )
 static void hb_compGenVarPCode( HB_BYTE bPCode, const char * szVarName, HB_COMP_DECL )
 {
    HB_USHORT wVar;
-   PCOMSYMBOL pSym;
+   PHB_HSYMBOL pSym;
 
    /* Check if this variable name is placed into the symbol table
     */
@@ -2601,7 +2601,7 @@ static void hb_compGenFieldPCode( HB_COMP_DECL, HB_BYTE bPCode, PVAR pField )
 void hb_compGenMessage( const char * szMsgName, HB_BOOL bIsObject, HB_COMP_DECL )
 {
    HB_USHORT wSym;
-   PCOMSYMBOL pSym;
+   PHB_HSYMBOL pSym;
 
    if( szMsgName )
    {
@@ -2987,7 +2987,7 @@ void hb_compGenPushDouble( double dNumber, HB_BYTE bWidth, HB_BYTE bDec, HB_COMP
 
 void hb_compGenPushFunCall( const char * szFunName, int iFlags, HB_COMP_DECL )
 {
-   PCOMSYMBOL pSym;
+   PHB_HSYMBOL pSym;
    HB_USHORT wSym;
 
    HB_SYMBOL_UNUSED( iFlags );
@@ -3015,7 +3015,7 @@ void hb_compGenPushFunRef( const char * szFunName, HB_COMP_DECL )
 /* generates the pcode to push a symbol on the virtual machine stack */
 void hb_compGenPushSymbol( const char * szSymbolName, HB_BOOL bFunction, HB_COMP_DECL )
 {
-   PCOMSYMBOL pSym;
+   PHB_HSYMBOL pSym;
    HB_USHORT wSym;
 
    pSym = hb_compSymbolFind( HB_COMP_PARAM, szSymbolName, &wSym, bFunction );
@@ -3871,7 +3871,7 @@ static void hb_compOutputFile( HB_COMP_DECL )
 
 static void hb_compAddInitFunc( HB_COMP_DECL, PFUNCTION pFunc )
 {
-   PCOMSYMBOL pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
+   PHB_HSYMBOL pSym = hb_compSymbolAdd( HB_COMP_PARAM, pFunc->szName, NULL, HB_SYM_FUNCNAME );
 
    pSym->cScope |= pFunc->cScope;
    pSym->pFunc = pFunc;
@@ -3971,7 +3971,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
 
    while( HB_COMP_PARAM->symbols.pFirst )
    {
-      PCOMSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
+      PHB_HSYMBOL pSym = HB_COMP_PARAM->symbols.pFirst;
       HB_COMP_PARAM->symbols.pFirst = pSym->pNext;
       hb_xfree( pSym );
    }
@@ -4437,8 +4437,8 @@ static int hb_compCompile( HB_COMP_DECL, const char * szPrg, const char * szBuff
 
          if( szFirstFunction )
          {
-            PCOMSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFirstFunction,
-                                                 NULL, HB_SYM_FUNCNAME );
+            PHB_HSYMBOL pSym = hb_compSymbolFind( HB_COMP_PARAM, szFirstFunction,
+                                                  NULL, HB_SYM_FUNCNAME );
             if( pSym )
                pSym->cScope |= HB_FS_FIRST;
          }
