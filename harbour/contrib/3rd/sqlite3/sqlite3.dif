@@ -1,7 +1,7 @@
 diff -urN sqlite3.orig\sqlite3.c sqlite3\sqlite3.c
---- sqlite3.orig\sqlite3.c	Thu Oct 11 19:37:32 2012
-+++ sqlite3\sqlite3.c	Thu Oct 11 19:37:32 2012
-@@ -26293,7 +26293,11 @@
+--- sqlite3.orig\sqlite3.c	Sat Dec 15 23:55:32 2012
++++ sqlite3\sqlite3.c	Sat Dec 15 23:55:33 2012
+@@ -26421,7 +26421,11 @@
        ** is the same technique used by glibc to implement posix_fallocate()
        ** on systems that do not have a real fallocate() system call.
        */
@@ -13,7 +13,7 @@ diff -urN sqlite3.orig\sqlite3.c sqlite3\sqlite3.c
        i64 iWrite;                 /* Next offset to write to */
  
        if( robust_ftruncate(pFile->h, nSize) ){
-@@ -31418,6 +31422,11 @@
+@@ -31729,6 +31733,11 @@
  ** substitute.
  */
  /* #include <time.h> */
@@ -25,7 +25,7 @@ diff -urN sqlite3.orig\sqlite3.c sqlite3\sqlite3.c
  struct tm *__cdecl localtime(const time_t *t)
  {
    static struct tm y;
-@@ -31425,7 +31434,7 @@
+@@ -31736,7 +31745,7 @@
    SYSTEMTIME pTm;
    sqlite3_int64 t64;
    t64 = *t;

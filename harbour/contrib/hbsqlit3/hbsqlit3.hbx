@@ -76,6 +76,7 @@ DYNAMIC sqlite3_enable_load_extension
 DYNAMIC sqlite3_enable_shared_cache
 DYNAMIC sqlite3_errcode
 DYNAMIC sqlite3_errmsg
+DYNAMIC sqlite3_errstr
 DYNAMIC sqlite3_exec
 DYNAMIC sqlite3_extended_errcode
 DYNAMIC sqlite3_extended_result_codes

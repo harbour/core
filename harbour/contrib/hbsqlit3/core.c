@@ -535,7 +535,7 @@ HB_FUNC( SQLITE3_SOURCEID )
    hb_retc( sqlite3_sourceid() );
 #else
    hb_retc_null();
-#endif /* SQLITE_VERSION_NUMBER >= 3006018 */
+#endif
 }
 
 /**
@@ -553,7 +553,7 @@ HB_FUNC( SQLITE3_INITIALIZE )
    hb_retni( sqlite3_initialize() );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
+#endif
 }
 
 HB_FUNC( SQLITE3_SHUTDOWN )
@@ -562,7 +562,7 @@ HB_FUNC( SQLITE3_SHUTDOWN )
    hb_retni( sqlite3_shutdown() );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
+#endif
 }
 
 /**
@@ -611,7 +611,7 @@ HB_FUNC( SQLITE3_EXTENDED_ERRCODE )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006005 */
+#endif
 }
 
 HB_FUNC( SQLITE3_ERRMSG )
@@ -622,6 +622,15 @@ HB_FUNC( SQLITE3_ERRMSG )
       hb_retstr_utf8( sqlite3_errmsg( pHbSqlite3->db ) );
    else
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
+}
+
+HB_FUNC( SQLITE3_ERRSTR )
+{
+#if SQLITE_VERSION_NUMBER >= 3007015
+   hb_retstr_utf8( sqlite3_errstr( hb_parni( 1 ) ) );
+#else
+   hb_retc_null();
+#endif
 }
 
 /**
@@ -763,7 +772,7 @@ HB_FUNC( SQLITE3_OPEN_V2 )
       hb_xfree( pszFree );
 #else
    hb_retptr( NULL );
-#endif /* SQLITE_VERSION_NUMBER >= 3005000 */
+#endif
 }
 
 /**
@@ -895,7 +904,7 @@ HB_FUNC( SQLITE3_STMT_STATUS )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006004 */
+#endif
 }
 
 /**
@@ -914,7 +923,7 @@ HB_FUNC( SQLITE3_STMT_READONLY )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3007004 */
+#endif
 }
 
 /**
@@ -1619,7 +1628,7 @@ HB_FUNC( SQLITE3_BLOB_REOPEN )
       hb_errRT_BASE_SubstR( EG_ARG, 0, NULL, HB_ERR_FUNCNAME, 1, hb_paramError( 1 ) );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3007004 */
+#endif
 }
 
 /**
@@ -2027,8 +2036,10 @@ HB_FUNC( SQLITE3_BACKUP_INIT )
          hb_retptr( NULL );
    }
    else
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+      hb_retptr( NULL );
+#else
    hb_retptr( NULL );
+#endif
 }
 
 HB_FUNC( SQLITE3_BACKUP_STEP )
@@ -2043,7 +2054,7 @@ HB_FUNC( SQLITE3_BACKUP_STEP )
       hb_retni( -1 );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+#endif
 }
 
 HB_FUNC( SQLITE3_BACKUP_FINISH )
@@ -2058,7 +2069,7 @@ HB_FUNC( SQLITE3_BACKUP_FINISH )
       hb_retni( -1 );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+#endif
 }
 
 HB_FUNC( SQLITE3_BACKUP_REMAINING )
@@ -2073,7 +2084,7 @@ HB_FUNC( SQLITE3_BACKUP_REMAINING )
       hb_retni( -1 );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+#endif
 }
 
 HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
@@ -2088,7 +2099,7 @@ HB_FUNC( SQLITE3_BACKUP_PAGECOUNT )
       hb_retni( -1 );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006011 */
+#endif
 }
 
 /**
@@ -2156,7 +2167,7 @@ HB_FUNC( SQLITE3_STATUS )
       hb_retni( -1 );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006000 */
+#endif
 }
 
 /**
@@ -2184,7 +2195,7 @@ HB_FUNC( SQLITE3_DB_STATUS )
       hb_retni( -1 );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3006001 */
+#endif
 }
 
 /**
@@ -2204,7 +2215,7 @@ HB_FUNC( SQLITE3_LIMIT )
       hb_retni( -1 );
 #else
    hb_retni( -1 );
-#endif /* SQLITE_VERSION_NUMBER >= 3005008 */
+#endif
 }
 
 /**
@@ -2220,7 +2231,7 @@ HB_FUNC( SQLITE3_COMPILEOPTION_USED )
    hb_retl( ( HB_BOOL ) sqlite3_compileoption_used( hb_parc( 1 ) ) );
 #else
    hb_retl( HB_FALSE );
-#endif /* SQLITE_VERSION_NUMBER >= 3006023 */
+#endif
 }
 
 HB_FUNC( SQLITE3_COMPILEOPTION_GET )
@@ -2229,7 +2240,7 @@ HB_FUNC( SQLITE3_COMPILEOPTION_GET )
    hb_retc( sqlite3_compileoption_get( hb_parni( 1 ) ) );
 #else
    hb_retc_null();
-#endif /* SQLITE_VERSION_NUMBER >= 3006023 */
+#endif
 }
 
 
