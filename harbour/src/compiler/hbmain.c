@@ -1901,11 +1901,11 @@ static PFUNCTION hb_compFunctionNew( HB_COMP_DECL, const char * szName, HB_SYMBO
    return pFunc;
 }
 
-static PINLINE hb_compInlineNew( HB_COMP_DECL, const char * szName, int iLine )
+static PHB_HINLINE hb_compInlineNew( HB_COMP_DECL, const char * szName, int iLine )
 {
-   PINLINE pInline;
+   PHB_HINLINE pInline;
 
-   pInline = ( PINLINE ) hb_xgrab( sizeof( _INLINE ) );
+   pInline = ( PHB_HINLINE ) hb_xgrab( sizeof( HB_HINLINE ) );
 
    pInline->szName     = szName;
    pInline->pCode      = NULL;
@@ -2265,9 +2265,9 @@ void hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName )
    }
 }
 
-PINLINE hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine )
+PHB_HINLINE hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine )
 {
-   PINLINE pInline;
+   PHB_HINLINE pInline;
    PCOMSYMBOL pSym;
 
    if( szFunName )
@@ -3961,7 +3961,7 @@ void hb_compCompileEnd( HB_COMP_DECL )
 
    while( HB_COMP_PARAM->inlines.pFirst )
    {
-      PINLINE pInline = HB_COMP_PARAM->inlines.pFirst;
+      PHB_HINLINE pInline = HB_COMP_PARAM->inlines.pFirst;
 
       HB_COMP_PARAM->inlines.pFirst = pInline->pNext;
       if( pInline->pCode )

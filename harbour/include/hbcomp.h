@@ -139,7 +139,7 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define FUN_ATTACHED          0x0200   /* function attached to function list */
 
 extern               void         hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
-extern               PINLINE      hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine );
+extern               PHB_HINLINE  hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine );
 extern               void         hb_compFunctionMarkStatic( HB_COMP_DECL, const char * szFunName );
 extern HB_EXPORT_INT const char * hb_compGetFuncID( const char * szFuncName, HB_FUNC_ID * pFunID, int * piFlags );
 extern               HB_BOOL      hb_compFunCallCheck( HB_COMP_DECL, const char *, int );

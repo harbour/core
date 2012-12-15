@@ -50,7 +50,7 @@ typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
 
 static void hb_compDumpFindCFunc( HB_COMP_DECL )
 {
-   PINLINE pInline;
+   PHB_HINLINE pInline;
 
    pInline = HB_COMP_PARAM->inlines.pFirst;
    while( pInline )
@@ -167,13 +167,13 @@ static void hb_compFuncUsed( HB_COMP_DECL, PCOMSYMBOL pSym )
 
 void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the C language output */
 {
-   char       szFileName[ HB_PATH_MAX ];
-   PCOMSYMBOL pSym;
-   PFUNCTION  pFunc;
-   PINLINE    pInline;
-   FILE *     yyc; /* file handle for C output */
-   HB_BOOL    fHasHbInline = HB_FALSE;
-   int        iFuncSuffix;
+   char        szFileName[ HB_PATH_MAX ];
+   PCOMSYMBOL  pSym;
+   PFUNCTION   pFunc;
+   PHB_HINLINE pInline;
+   FILE *      yyc; /* file handle for C output */
+   HB_BOOL     fHasHbInline = HB_FALSE;
+   int         iFuncSuffix;
 
    hb_fsFNameMerge( szFileName, pFileName );
    if( ! pFileName->szExtension )

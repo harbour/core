@@ -538,15 +538,15 @@ typedef struct __FUNC
 } _FUNC, * PFUNCTION;
 
 /* structure to hold an INLINE block of source */
-typedef struct __INLINE
+typedef struct _HB_HINLINE
 {
    const char * szName;                   /* name of a inline function */
    HB_BYTE *    pCode;                    /* pointer to a memory block where pcode is stored */
    HB_SIZE      nPCodeSize;               /* total memory size for pcode */
    const char * szFileName;               /* Source file name */
    int          iLine;                    /* Source line number */
-   struct __INLINE * pNext;               /* pointer to the next defined inline */
-} _INLINE, * PINLINE;
+   struct _HB_HINLINE * pNext;               /* pointer to the next defined inline */
+} HB_HINLINE, * PHB_HINLINE;
 
 /* structure to hold a called functions */
 typedef struct __FUNCALL
@@ -567,9 +567,9 @@ typedef struct
 /* structure to control all Clipper defined functions */
 typedef struct
 {
-   PINLINE pFirst;            /* pointer to the first defined inline */
-   PINLINE pLast;             /* pointer to the last defined inline */
-   int     iCount;            /* number of defined inlines */
+   PHB_HINLINE pFirst;        /* pointer to the first defined inline */
+   PHB_HINLINE pLast;         /* pointer to the last defined inline */
+   int         iCount;        /* number of defined inlines */
 } INLINES;
 
 /* compiler symbol support structure */
