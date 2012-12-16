@@ -12721,7 +12721,7 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    ENDIF
    cExtern += hb_eol()
    cExtern += cLine
-   cExtern += " * WARNING: Automatically generated code below. DO NOT EDIT!" + hb_eol()
+   cExtern += " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol()
    cExtern += " *          Regenerate using " + _SELF_NAME_ + " '-hbx=' option." + hb_eol()
    cExtern += " */" + hb_eol()
    cExtern += hb_eol()
@@ -14083,7 +14083,7 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := hb_FNameExtSet( cSrcName, ".hbp" )
    ENDIF
 
-   AAdd( aDst, "# Automatically converted by " + _SELF_NAME_ + " from hbmake project:" )
+   AAdd( aDst, hb_StrFormat( "# Automatically converted by %1$s from hbmake project:", _SELF_NAME_ ) )
    AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
    AAdd( aDst, "" )
 
@@ -14215,7 +14215,7 @@ STATIC PROCEDURE convert_xbp_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := hb_FNameExtSet( cSrcName, ".hbp" )
    ENDIF
 
-   AAdd( aDst, "# Automatically converted by " + _SELF_NAME_ + " from xbuild project:" )
+   AAdd( aDst, hb_StrFormat( "# Automatically converted by %1$s from xbuild project:", _SELF_NAME_ ) )
    AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
    AAdd( aDst, "" )
    AAdd( aDst, "-inc" )
@@ -14347,7 +14347,7 @@ STATIC PROCEDURE convert_xhp_to_hbp( hbmk, cSrcName, cDstName )
       cDstName := hb_FNameExtSet( cSrcName, ".hbp" )
    ENDIF
 
-   AAdd( aDst, "# Automatically converted by " + _SELF_NAME_ + " from xMate project:" )
+   AAdd( aDst, hb_StrFormat( "# Automatically converted by %1$s from xMate project:", _SELF_NAME_ ) )
    AAdd( aDst, hb_StrFormat( "# %1$s", cSrcName ) )
    AAdd( aDst, "" )
    AAdd( aDst, "-inc" )

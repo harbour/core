@@ -718,7 +718,7 @@ STATIC FUNCTION __hb_extern_gen( aFuncList, cOutputName )
    ENDIF
    cExtern += hb_eol()
    cExtern += cLine
-   cExtern += " * WARNING: Automatically generated code below. DO NOT EDIT!" + hb_eol()
+   cExtern += " * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)" + hb_eol()
    cExtern += " *          Regenerate with HB_REBUILD_EXTERN=yes build option." + hb_eol()
    cExtern += " */" + hb_eol()
    cExtern += hb_eol()

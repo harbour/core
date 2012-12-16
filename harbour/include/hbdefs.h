@@ -78,7 +78,7 @@
         defined( HB_OS_VXWORKS ) || defined( HB_OS_MINIX ) ) )
    #include <stdint.h>
    /* NOTE: Hack to avoid collision between stdint.h and unistd.h. [vszakats] */
-#  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && !defined( _INTPTR_T )
+#  if defined( HB_OS_VXWORKS ) && defined( _INTPTR ) && ! defined( _INTPTR_T )
 #     define _INTPTR_T
 #  endif
    /* workaround for BCC 5.8 bug */
@@ -105,7 +105,7 @@
 
 #if defined( HB_OS_DOS )
 
-   #if defined( __WATCOMC__ ) && defined( __386__ ) && !defined( __WINDOWS_386__ )
+   #if defined( __WATCOMC__ ) && defined( __386__ ) && ! defined( __WINDOWS_386__ )
       #define HB_DOS_INT86 int386
       #define HB_DOS_INT86X int386x
       #define HB_XREGS w
@@ -151,7 +151,7 @@
 
 #ifndef HB_LONG_LONG_OFF
 
-   #if defined( HB_OS_WIN ) && !defined( __GNUC__ )
+   #if defined( HB_OS_WIN ) && ! defined( __GNUC__ )
       typedef __int64            HB_LONGLONG;
       typedef unsigned __int64   HB_ULONGLONG;
    #else
@@ -159,7 +159,7 @@
       typedef unsigned long long HB_ULONGLONG;
    #endif
 
-   #if !defined( ULONGLONG_MAX )
+   #if ! defined( ULONGLONG_MAX )
       #if defined( _UI64_MAX )
          #define ULONGLONG_MAX      _UI64_MAX
       #elif defined( ULLONG_MAX )
@@ -170,7 +170,7 @@
          #define ULONGLONG_MAX      18446744073709551615ULL
       #endif
    #endif
-   #if !defined( LONGLONG_MAX )
+   #if ! defined( LONGLONG_MAX )
       #if defined( _I64_MAX )
          #define LONGLONG_MAX       _I64_MAX
       #elif defined( LLONG_MAX )
@@ -181,7 +181,7 @@
          #define LONGLONG_MAX       9223372036854775807LL
       #endif
    #endif
-   #if !defined( LONGLONG_MIN )
+   #if ! defined( LONGLONG_MIN )
       #if defined( _I64_MIN )
          #define LONGLONG_MIN       _I64_MIN
       #elif defined( LLONG_MIN )
@@ -247,13 +247,13 @@ typedef HB_UCHAR            HB_U8;
    #define HB_I16_MIN          SHRT_MIN
    #define HB_I16_MAX          SHRT_MAX
    #define HB_U16_MAX          USHRT_MAX
-#  if !defined( UINT16_MAX )
+#  if ! defined( UINT16_MAX )
 #     define UINT16_MAX    USHRT_MAX
 #  endif
-#  if !defined( INT16_MAX )
+#  if ! defined( INT16_MAX )
 #     define INT16_MAX     SHRT_MAX
 #  endif
-#  if !defined( INT16_MIN )
+#  if ! defined( INT16_MIN )
 #     define INT16_MIN     SHRT_MIN
 #  endif
 #else
@@ -271,13 +271,13 @@ typedef HB_UCHAR            HB_U8;
    #define HB_I32_MIN          INT_MIN
    #define HB_I32_MAX          INT_MAX
    #define HB_U32_MAX          UINT_MAX
-#  if !defined( UINT32_MAX )
+#  if ! defined( UINT32_MAX )
 #     define UINT32_MAX    UINT_MAX
 #  endif
-#  if !defined( INT32_MAX )
+#  if ! defined( INT32_MAX )
 #     define INT32_MAX     INT_MAX
 #  endif
-#  if !defined( INT32_MIN )
+#  if ! defined( INT32_MIN )
 #     define INT32_MIN     INT_MIN
 #  endif
 #elif ULONG_MAX == 0xFFFFFFFF
@@ -286,60 +286,60 @@ typedef HB_UCHAR            HB_U8;
    #define HB_I32_MIN          LONG_MIN
    #define HB_I32_MAX          LONG_MAX
    #define HB_U32_MAX          ULONG_MAX
-#  if !defined( UINT32_MAX )
+#  if ! defined( UINT32_MAX )
 #     define UINT32_MAX    ULONG_MAX
 #  endif
-#  if !defined( INT32_MAX )
+#  if ! defined( INT32_MAX )
 #     define INT32_MAX     LONG_MAX
 #  endif
-#  if !defined( INT32_MIN )
+#  if ! defined( INT32_MIN )
 #     define INT32_MIN     LONG_MIN
 #  endif
 #endif
 
-#if !defined( UCHAR_MAX )
+#if ! defined( UCHAR_MAX )
 #  define UCHAR_MAX     0x0FF
 #endif
-#if !defined( UINT24_MAX )
+#if ! defined( UINT24_MAX )
 #  define UINT24_MAX    0x0FFFFFFL
 #endif
-#if !defined( INT24_MAX )
+#if ! defined( INT24_MAX )
 #  define INT24_MAX     8388607L
 #endif
-#if !defined( INT24_MIN )
+#if ! defined( INT24_MIN )
 #  define INT24_MIN     -8388608L
 #endif
 
 /* Guaranteed 64-bit types */
-#if defined( HB_ARCH_64BIT ) && !defined( HB_OS_WIN_64 )
+#if defined( HB_ARCH_64BIT ) && ! defined( HB_OS_WIN_64 )
    typedef signed long         HB_I64;
    typedef unsigned long       HB_U64;
    #define HB_I64_MIN          LONG_MIN
    #define HB_I64_MAX          LONG_MAX
    #define HB_U64_MAX          ULONG_MAX
    #define HB_PF64             "l"
-#  if !defined( UINT64_MAX )
+#  if ! defined( UINT64_MAX )
 #     define UINT64_MAX    ULONG_MAX
 #  endif
-#  if !defined( INT64_MAX )
+#  if ! defined( INT64_MAX )
 #     define INT64_MAX     LONG_MAX
 #  endif
-#  if !defined( INT64_MIN )
+#  if ! defined( INT64_MIN )
 #     define INT64_MIN     LONG_MIN
 #  endif
-#elif !defined( HB_LONG_LONG_OFF )
+#elif ! defined( HB_LONG_LONG_OFF )
    typedef HB_LONGLONG         HB_I64;
    typedef HB_ULONGLONG        HB_U64;
    #define HB_I64_MIN          LONGLONG_MIN
    #define HB_I64_MAX          LONGLONG_MAX
    #define HB_U64_MAX          ULONGLONG_MAX
-#  if !defined( UINT64_MAX )
+#  if ! defined( UINT64_MAX )
 #     define UINT64_MAX     ULONGLONG_MAX
 #  endif
-#  if !defined( INT64_MAX )
+#  if ! defined( INT64_MAX )
 #     define INT64_MAX      LONGLONG_MAX
 #  endif
-#  if !defined( INT64_MIN )
+#  if ! defined( INT64_MIN )
 #     define INT64_MIN      LONGLONG_MIN
 #  endif
 #endif
@@ -436,7 +436,7 @@ typedef HB_UCHAR            HB_U8;
    typedef long                  HB_MAXINT;
    typedef unsigned long         HB_MAXUINT;
 #  define PFHL                   "l"
-#elif !defined( HB_LONG_LONG_OFF ) && ULONG_MAX == UINT_MAX
+#elif ! defined( HB_LONG_LONG_OFF ) && ULONG_MAX == UINT_MAX
 #  define HB_VMINT_MAX           INT_MAX
 #  define HB_VMINT_MIN           INT_MIN
 #  define HB_VMUINT_MAX          UINT_MAX
@@ -522,7 +522,7 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 #  endif
 #endif
 
-#if !defined( HB_LONG_LONG_OFF )
+#if ! defined( HB_LONG_LONG_OFF )
 #  if HB_VMLONG_MAX > HB_LL( 9999999999 )
 #     define HB_LONG_LENGTH( l )    ( ( (l) < -999999999 || (l) > HB_LL( 9999999999 ) ) ? 20 : 10 )
 #  endif
@@ -531,13 +531,13 @@ typedef HB_MAXUINT   HB_VMMAXUINT;
 #  endif
 #endif
 
-#if !defined( HB_LONG_LENGTH )
+#if ! defined( HB_LONG_LENGTH )
 #  define HB_LONG_LENGTH( l )       ( ( (l) < -999999999 ) ? 20 : 10 )
 #endif
-#if !defined( HB_INT_EXPLENGTH )
+#if ! defined( HB_INT_EXPLENGTH )
 #  define HB_INT_EXPLENGTH( i )     ( ( (i) < -999999999 ) ? 20 : 10 )
 #endif
-#if !defined( HB_LONG_EXPLENGTH )
+#if ! defined( HB_LONG_EXPLENGTH )
 #  define HB_LONG_EXPLENGTH( l ) HB_LONG_LENGTH( l )
 #endif
 
@@ -627,8 +627,8 @@ typedef HB_U32 HB_FATTR;
 #define HB_DBLFL_PREC_FACTOR 1.0000000000000002;
 
 /* try to detect byte order if not explicitly set */
-#if !defined( HB_PDP_ENDIAN ) && !defined( HB_BIG_ENDIAN ) && \
-    !defined( HB_LITTLE_ENDIAN )
+#if ! defined( HB_PDP_ENDIAN ) && ! defined( HB_BIG_ENDIAN ) && \
+    ! defined( HB_LITTLE_ENDIAN )
 
    /* I intentionaly move the first two #if/#elif to the begining
       to avoid compiler error when this macro will be defined as
@@ -747,7 +747,7 @@ typedef HB_U32 HB_FATTR;
  * IMHO need HB_ARCH_<arch> macro yet - the same OS can be used with
  * different architectures - SPARC + LINUX, ALPHA + LINUX
  */
-#if !defined( HB_STRICT_ALIGNMENT )
+#if ! defined( HB_STRICT_ALIGNMENT )
 #  if ! defined( HB_CPU_X86 ) && \
       ! defined( HB_CPU_X86_64 )
 #     define HB_STRICT_ALIGNMENT
@@ -755,7 +755,7 @@ typedef HB_U32 HB_FATTR;
 #endif
 
 #if defined( HB_STRICT_ALIGNMENT )
-#  if !defined( HB_ALLOC_ALIGNMENT ) || ( HB_ALLOC_ALIGNMENT + 1 == 1 )
+#  if ! defined( HB_ALLOC_ALIGNMENT ) || ( HB_ALLOC_ALIGNMENT + 1 == 1 )
 #     define HB_ALLOC_ALIGNMENT     8
 #  endif
 #endif
@@ -779,7 +779,7 @@ typedef HB_U32 HB_FATTR;
 #if defined( __GNUC__ )
 #  define   HB_PUT_PTR( p, v )     _hb_put_ptr( ( HB_BYTE * ) ( p ), v )
 #  define   HB_GET_PTR( p )        _hb_get_ptr( ( const HB_BYTE * ) ( p ) )
-#elif !defined( HB_STRICT_ALIGNMENT )
+#elif ! defined( HB_STRICT_ALIGNMENT )
 #  define   HB_PUT_PTR( p, v )      do { *( void ** ) ( p ) = ( void * ) ( v ); } while( 0 )
 #  define   HB_GET_PTR( p )         ( *( void ** ) ( p ) )
 #else
@@ -813,7 +813,7 @@ typedef HB_U32 HB_FATTR;
 #if defined( __GNUC__ )
 
 #  if ( __GNUC__ > 4 || ( __GNUC__ == 4 && __GNUC_MINOR__ >= 3 ) ) && \
-      ! defined( __ICC ) && !defined( __OPENCC__ ) && !defined( __PCC__ )
+      ! defined( __ICC ) && ! defined( __OPENCC__ ) && ! defined( __PCC__ )
 #     define HB_BUILTIN_BSWAP 1
 #  else
 #     define HB_BUILTIN_BSWAP 0
@@ -823,37 +823,37 @@ typedef HB_U32 HB_FATTR;
    {
       void *   val;
 #  if defined( HB_ARCH_64BIT )
-      HB_BYTE  buf[8];
+      HB_BYTE  buf[ 8 ];
 #  else
-      HB_BYTE  buf[4];
+      HB_BYTE  buf[ 4 ];
 #  endif
    } HB_PTRCAST, * PHB_PTRCAST;
 
    typedef union
    {
       HB_U16   val;
-      HB_BYTE  buf[2];
+      HB_BYTE  buf[ 2 ];
    } HB_U16CAST, * PHB_U16CAST;
 
    typedef union
    {
       HB_U32   val;
-      HB_BYTE  buf[4];
+      HB_BYTE  buf[ 4 ];
    } HB_U32CAST, * PHB_U32CAST;
 
-#  if !defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
+#  if ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
    typedef union
    {
       HB_U64   val;
-      HB_BYTE  buf[8];
+      HB_BYTE  buf[ 8 ];
    } HB_U64CAST, * PHB_U64CAST;
 #  endif
 
    typedef union
    {
       double   val;
-      HB_BYTE  buf[8];
-#  if !defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
+      HB_BYTE  buf[ 8 ];
+#  if ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
       HB_U64   i64;
 #  endif
    } HB_DBLCAST, * PHB_DBLCAST;
@@ -946,7 +946,7 @@ typedef HB_U32 HB_FATTR;
 #  endif
    }
 
-#  if !defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
+#  if ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT )
       static __inline__ HB_U64 _hb_get_std_uint64( const HB_BYTE * buf )
       {
          HB_U64CAST u;
@@ -1017,7 +1017,7 @@ typedef HB_U32 HB_FATTR;
    static __inline__ double _hb_get_rev_double( const HB_BYTE * buf )
    {
       HB_DBLCAST u;
-#  if ( !defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT ) ) && \
+#  if ( ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT ) ) && \
       HB_BUILTIN_BSWAP
       memcpy( u.buf, buf, sizeof( u.buf ) );
       u.i64 = __builtin_bswap64( u.i64 );
@@ -1038,7 +1038,7 @@ typedef HB_U32 HB_FATTR;
    static __inline__ void _hb_put_rev_double( HB_BYTE * buf, double val )
    {
       HB_DBLCAST u;
-#  if ( !defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT ) ) && \
+#  if ( ! defined( HB_LONG_LONG_OFF ) || defined( HB_ARCH_64BIT ) ) && \
       HB_BUILTIN_BSWAP
       u.val = val;
       u.i64 = __builtin_bswap64( u.i64 );
@@ -1132,7 +1132,7 @@ typedef HB_U32 HB_FATTR;
             (( HB_BYTE * )( p ))[ 7 ] = u.buffer[ 7 ]; \
          } while( 0 )
 
-#  if !defined( HB_STRICT_ALIGNMENT ) && defined( HB_LITTLE_ENDIAN )
+#  if ! defined( HB_STRICT_ALIGNMENT ) && defined( HB_LITTLE_ENDIAN )
 
    #define HB_GET_LE_UINT16( p )    ( *( const HB_U16 * )( p ) )
    #define HB_PUT_LE_UINT16( p, w ) ( *( HB_U16 * )( p ) = ( HB_U16 ) ( w ) )
@@ -1183,7 +1183,7 @@ typedef HB_U32 HB_FATTR;
                                        } while( 0 )
 #  endif
 
-#  if !defined( HB_STRICT_ALIGNMENT ) && defined( HB_BIG_ENDIAN )
+#  if ! defined( HB_STRICT_ALIGNMENT ) && defined( HB_BIG_ENDIAN )
 
    #define HB_GET_BE_UINT16( p )    ( *( const HB_U16 * )( p ) )
    #define HB_PUT_BE_UINT16( p, w ) ( *( HB_U16 * )( p ) = ( HB_U16 ) ( w ) )
@@ -1418,7 +1418,7 @@ typedef HB_U32 HB_FATTR;
  * when INT64 is not supported - they are necessary for PCODE and
  * database access
  */
-#if defined( HB_LONG_LONG_OFF ) && !defined( HB_ARCH_64BIT )
+#if defined( HB_LONG_LONG_OFF ) && ! defined( HB_ARCH_64BIT )
    #undef HB_GET_LE_INT64
    #undef HB_GET_LE_UINT64
    #undef HB_PUT_LE_UINT64
@@ -1460,7 +1460,7 @@ typedef HB_U32 HB_FATTR;
  */
 #define HB_START_PROCEDURE "MAIN"
 #if defined( __WATCOMC__ ) || defined( __DMC__ ) || \
-    ( defined( __GNUC__ ) && !defined( __DJGPP__ ) && !defined( HB_OS_OS2_GCC ) )
+    ( defined( __GNUC__ ) && ! defined( __DJGPP__ ) && ! defined( HB_OS_OS2_GCC ) )
    #define HB_START_PROC_STRICT
 #endif
 
@@ -1560,17 +1560,17 @@ typedef HB_U32 HB_FATTR;
 
 #if defined( HB_OS_WIN ) && defined( HB_LEGACY_LEVEL4 )
    #if defined( UNICODE )
-      #define HB_TCHAR_COPYTO(d,s,l)       hb_mbntowccpy(d,s,l)
-      #define HB_TCHAR_COPYFROM(d,s,l)     hb_wcntombcpy(d,s,l)
-      #define HB_TCHAR_CONVTO(s)           hb_mbtowc(s)
-      #define HB_TCHAR_CONVFROM(s)         hb_wctomb(s)
-      #define HB_TCHAR_FREE(s)             hb_xfree(s)
+      #define HB_TCHAR_COPYTO( d, s, l )     hb_mbntowccpy( d, s, l )
+      #define HB_TCHAR_COPYFROM( d, s, l )   hb_wcntombcpy( d, s, l )
+      #define HB_TCHAR_CONVTO( s )           hb_mbtowc( s )
+      #define HB_TCHAR_CONVFROM( s )         hb_wctomb( s )
+      #define HB_TCHAR_FREE( s )             hb_xfree( s )
    #else
-      #define HB_TCHAR_COPYTO(d,s,l)       hb_strncpy(d,s,l)
-      #define HB_TCHAR_COPYFROM(d,s,l)     hb_strncpy(d,s,l)
-      #define HB_TCHAR_CONVTO(s)           ((char *)(s))
-      #define HB_TCHAR_CONVFROM(s)         ((char *)(s))
-      #define HB_TCHAR_FREE(s)             HB_SYMBOL_UNUSED(s)
+      #define HB_TCHAR_COPYTO( d, s, l )     hb_strncpy( d, s, l )
+      #define HB_TCHAR_COPYFROM( d, s, l )   hb_strncpy( d, s, l )
+      #define HB_TCHAR_CONVTO( s )           ( ( char * )( s ) )
+      #define HB_TCHAR_CONVFROM( s )         ( ( char * )( s ) )
+      #define HB_TCHAR_FREE( s )             HB_SYMBOL_UNUSED( s )
    #endif
 #endif
 
@@ -1586,7 +1586,7 @@ typedef HB_U32 HB_FATTR;
 #define HB_EXIT_FUNCNAME( funcname )   HB_FUN_exit_##funcname
 #define HB_INITSTATICS_FUNCNAME()      hb_INITSTATICS
 
-#if defined( __cplusplus ) && !defined( HB_FUNC_USE_DECORATION )
+#if defined( __cplusplus ) && ! defined( HB_FUNC_USE_DECORATION )
    #define HB_EXTERN_C_ HB_EXTERN_C
    #define HB_EXTERN_
 #else
@@ -1600,8 +1600,8 @@ typedef HB_U32 HB_FATTR;
 #define HB_FUNC_STATIC( funcname ) static HARBOUR HB_FUN_##funcname ( void )
 #define HB_FUNC_INIT( funcname )   static HARBOUR HB_FUN_init_##funcname ( void )
 #define HB_FUNC_EXIT( funcname )   static HARBOUR HB_FUN_exit_##funcname ( void )
-#define HB_FUNC_INITSTATICS( )     static HARBOUR hb_INITSTATICS( void )
-#define HB_FUNC_INITLINES( )       static HARBOUR hb_INITLINES( void )
+#define HB_FUNC_INITSTATICS()      static HARBOUR hb_INITSTATICS( void )
+#define HB_FUNC_INITLINES()        static HARBOUR hb_INITLINES( void )
 #define HB_FUNC_TRANSLATE( w, o )  HB_FUNC_EXTERN( o ); HB_FUNC( w ) { HB_FUNC_EXEC( o ); }
 
 
@@ -1613,7 +1613,6 @@ typedef HB_U32 HB_FATTR;
 
 HB_EXTERN_BEGIN
    typedef HARBOUR ( * PHB_FUNC )( void );
-   typedef PHB_FUNC HB_FUNC_PTR;
 HB_EXTERN_END
 
 typedef HB_SHORT HB_SYMBOLSCOPE;   /* stores symbol's scope */

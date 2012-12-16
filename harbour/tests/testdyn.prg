@@ -15,13 +15,14 @@
 
 #include "hbdyn.ch"
 
-#define MAX_PATH 260
-
 PROCEDURE Main()
+
+   #if defined( __PLATFORM__WINDOWS )
+
    LOCAL hLib
    LOCAL cData
 
-   #if defined( __PLATFORM__WINDOWS )
+   #define MAX_PATH 260
 
    #define MB_OK                       0x00000000
    #define MB_OKCANCEL                 0x00000001
@@ -102,7 +103,7 @@ PROCEDURE Main()
    ? "------"
    cData := Space( MAX_PATH )
    ? "cData BEFORE: ", cData, "<"
-   ? "HB_DYNCALL (MISSING @1): ", hb_DynCall( { "SHGetFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData )
+   ? "HB_DYNCALL (MISSING @): ", hb_DynCall( { "SHGetFolderPathA", hLib, HB_DYN_CALLCONV_STDCALL }, 0, CSIDL_ADMINTOOLS, 0, 0, cData )
    ? "cData AFTER: ", cData, "<"
    ? "------"
    hb_libFree( hLib )
