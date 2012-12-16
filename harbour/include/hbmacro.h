@@ -53,12 +53,6 @@
 #ifndef HB_MACRO_H_
 #define HB_MACRO_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-#include <time.h>
-
 #include "hbcompdf.h"
 #include "hbapi.h"
 #include "hbapiitm.h"

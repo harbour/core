@@ -302,13 +302,13 @@ Returns:       nothing
 static void
 pchars(const pcre_uchar *p, int length, FILE *f)
 {
-pcre_uint32 c;
+int c;
 while (length-- > 0)
   {
   if (isprint(c = *(p++)))
     fprintf(f, "%c", c);
   else
-    fprintf(f, "\\x{%02x}", c);
+    fprintf(f, "\\x%02x", c);
   }
 }
 #endif
@@ -571,7 +571,7 @@ for (;;)
   {
   int i, j;
   int clen, dlen;
-  pcre_uint32 c, d;
+  unsigned int c, d;
   int forced_fail = 0;
   BOOL partial_newline = FALSE;
   BOOL could_continue = reset_could_continue;
@@ -613,10 +613,9 @@ for (;;)
     {
     clen = 1;        /* Number of data items in the character */
 #ifdef SUPPORT_UTF
-    GETCHARLENTEST(c, ptr, clen);
-#else
-    c = *ptr;
+    if (utf) { GETCHARLEN(c, ptr, clen); } else
 #endif  /* SUPPORT_UTF */
+    c = *ptr;
     }
   else
     {
@@ -635,8 +634,7 @@ for (;;)
     BOOL caseless = FALSE;
     const pcre_uchar *code;
     int state_offset = current_state->offset;
-    int codevalue, rrc;
-    unsigned int count;
+    int count, codevalue, rrc;
 
 #ifdef PCRE_DEBUG
     printf ("%.*sProcessing state %d c=", rlevel*2-2, SP, state_offset);
@@ -1009,7 +1007,7 @@ for (;;)
           {
           const pcre_uchar *temp = ptr - 1;
           if (temp < md->start_used_ptr) md->start_used_ptr = temp;
-#if defined SUPPORT_UTF && !defined COMPILE_PCRE32
+#ifdef SUPPORT_UTF
           if (utf) { BACKCHAR(temp); }
 #endif
           GETCHARTEST(d, temp);
@@ -1062,7 +1060,6 @@ for (;;)
       if (clen > 0)
         {
         BOOL OK;
-        const pcre_uint32 *cp;
         const ucd_record * prop = GET_UCD(c);
         switch(code[1])
           {
@@ -1109,15 +1106,6 @@ for (;;)
           OK = PRIV(ucp_gentype)[prop->chartype] == ucp_L ||
                PRIV(ucp_gentype)[prop->chartype] == ucp_N ||
                c == CHAR_UNDERSCORE;
-          break;
-
-          case PT_CLIST:
-          cp = PRIV(ucd_caseless_sets) + code[2];
-          for (;;)
-            {
-            if (c < *cp) { OK = FALSE; break; }
-            if (c == *cp++) { OK = TRUE; break; }
-            }
           break;
 
           /* Should never occur, but keep compilers from grumbling. */
@@ -1306,7 +1294,6 @@ for (;;)
       if (clen > 0)
         {
         BOOL OK;
-        const pcre_uint32 *cp;
         const ucd_record * prop = GET_UCD(c);
         switch(code[2])
           {
@@ -1355,15 +1342,6 @@ for (;;)
                c == CHAR_UNDERSCORE;
           break;
 
-          case PT_CLIST:
-          cp = PRIV(ucd_caseless_sets) + code[3];
-          for (;;)
-            {
-            if (c < *cp) { OK = FALSE; break; }
-            if (c == *cp++) { OK = TRUE; break; }
-            }
-          break;
-
           /* Should never occur, but keep compilers from grumbling. */
 
           default:
@@ -1390,9 +1368,8 @@ for (;;)
       case OP_EXTUNI_EXTRA + OP_TYPEPOSPLUS:
       count = current_state->count;  /* Already matched */
       if (count > 0) { ADD_ACTIVE(state_offset + 2, 0); }
-      if (clen > 0)
+      if (clen > 0 && UCD_CATEGORY(c) != ucp_M)
         {
-        int lgb, rgb;
         const pcre_uchar *nptr = ptr + clen;
         int ncount = 0;
         if (count > 0 && codevalue == OP_EXTUNI_EXTRA + OP_TYPEPOSPLUS)
@@ -1400,16 +1377,14 @@ for (;;)
           active_count--;           /* Remove non-match possibility */
           next_active_state--;
           }
-        lgb = UCD_GRAPHBREAK(c);
         while (nptr < end_subject)
           {
-          dlen = 1;
-          if (!utf) d = *nptr; else { GETCHARLEN(d, nptr, dlen); }
-          rgb = UCD_GRAPHBREAK(d);
-          if ((PRIV(ucp_gbtable)[lgb] & (1 << rgb)) == 0) break;
+          int nd;
+          int ndlen = 1;
+          GETCHARLEN(nd, nptr, ndlen);
+          if (UCD_CATEGORY(nd) != ucp_M) break;
           ncount++;
-          lgb = rgb;
-          nptr += dlen;
+          nptr += ndlen;
           }
         count++;
         ADD_NEW_DATA(-state_offset, count, ncount);
@@ -1428,22 +1403,20 @@ for (;;)
         int ncount = 0;
         switch (c)
           {
-          case CHAR_VT:
-          case CHAR_FF:
-          case CHAR_NEL:
-#ifndef EBCDIC
+          case 0x000b:
+          case 0x000c:
+          case 0x0085:
           case 0x2028:
           case 0x2029:
-#endif  /* Not EBCDIC */
           if ((md->moptions & PCRE_BSR_ANYCRLF) != 0) break;
           goto ANYNL01;
 
-          case CHAR_CR:
-          if (ptr + 1 < end_subject && RAWUCHARTEST(ptr + 1) == CHAR_LF) ncount = 1;
+          case 0x000d:
+          if (ptr + 1 < end_subject && ptr[1] == 0x0a) ncount = 1;
           /* Fall through */
 
           ANYNL01:
-          case CHAR_LF:
+          case 0x000a:
           if (count > 0 && codevalue == OP_ANYNL_EXTRA + OP_TYPEPOSPLUS)
             {
             active_count--;           /* Remove non-match possibility */
@@ -1470,7 +1443,13 @@ for (;;)
         BOOL OK;
         switch (c)
           {
-          VSPACE_CASES:
+          case 0x000a:
+          case 0x000b:
+          case 0x000c:
+          case 0x000d:
+          case 0x0085:
+          case 0x2028:
+          case 0x2029:
           OK = TRUE;
           break;
 
@@ -1503,7 +1482,25 @@ for (;;)
         BOOL OK;
         switch (c)
           {
-          HSPACE_CASES:
+          case 0x09:      /* HT */
+          case 0x20:      /* SPACE */
+          case 0xa0:      /* NBSP */
+          case 0x1680:    /* OGHAM SPACE MARK */
+          case 0x180e:    /* MONGOLIAN VOWEL SEPARATOR */
+          case 0x2000:    /* EN QUAD */
+          case 0x2001:    /* EM QUAD */
+          case 0x2002:    /* EN SPACE */
+          case 0x2003:    /* EM SPACE */
+          case 0x2004:    /* THREE-PER-EM SPACE */
+          case 0x2005:    /* FOUR-PER-EM SPACE */
+          case 0x2006:    /* SIX-PER-EM SPACE */
+          case 0x2007:    /* FIGURE SPACE */
+          case 0x2008:    /* PUNCTUATION SPACE */
+          case 0x2009:    /* THIN SPACE */
+          case 0x200A:    /* HAIR SPACE */
+          case 0x202f:    /* NARROW NO-BREAK SPACE */
+          case 0x205f:    /* MEDIUM MATHEMATICAL SPACE */
+          case 0x3000:    /* IDEOGRAPHIC SPACE */
           OK = TRUE;
           break;
 
@@ -1544,7 +1541,6 @@ for (;;)
       if (clen > 0)
         {
         BOOL OK;
-        const pcre_uint32 *cp;
         const ucd_record * prop = GET_UCD(c);
         switch(code[2])
           {
@@ -1593,15 +1589,6 @@ for (;;)
                c == CHAR_UNDERSCORE;
           break;
 
-          case PT_CLIST:
-          cp = PRIV(ucd_caseless_sets) + code[3];
-          for (;;)
-            {
-            if (c < *cp) { OK = FALSE; break; }
-            if (c == *cp++) { OK = TRUE; break; }
-            }
-          break;
-
           /* Should never occur, but keep compilers from grumbling. */
 
           default:
@@ -1637,9 +1624,8 @@ for (;;)
       QS2:
 
       ADD_ACTIVE(state_offset + 2, 0);
-      if (clen > 0)
+      if (clen > 0 && UCD_CATEGORY(c) != ucp_M)
         {
-        int lgb, rgb;
         const pcre_uchar *nptr = ptr + clen;
         int ncount = 0;
         if (codevalue == OP_EXTUNI_EXTRA + OP_TYPEPOSSTAR ||
@@ -1648,16 +1634,14 @@ for (;;)
           active_count--;           /* Remove non-match possibility */
           next_active_state--;
           }
-        lgb = UCD_GRAPHBREAK(c);
         while (nptr < end_subject)
           {
-          dlen = 1;
-          if (!utf) d = *nptr; else { GETCHARLEN(d, nptr, dlen); }
-          rgb = UCD_GRAPHBREAK(d);
-          if ((PRIV(ucp_gbtable)[lgb] & (1 << rgb)) == 0) break;
+          int nd;
+          int ndlen = 1;
+          GETCHARLEN(nd, nptr, ndlen);
+          if (UCD_CATEGORY(nd) != ucp_M) break;
           ncount++;
-          lgb = rgb;
-          nptr += dlen;
+          nptr += ndlen;
           }
         ADD_NEW_DATA(-(state_offset + count), 0, ncount);
         }
@@ -1683,22 +1667,20 @@ for (;;)
         int ncount = 0;
         switch (c)
           {
-          case CHAR_VT:
-          case CHAR_FF:
-          case CHAR_NEL:
-#ifndef EBCDIC
+          case 0x000b:
+          case 0x000c:
+          case 0x0085:
           case 0x2028:
           case 0x2029:
-#endif  /* Not EBCDIC */
           if ((md->moptions & PCRE_BSR_ANYCRLF) != 0) break;
           goto ANYNL02;
 
-          case CHAR_CR:
-          if (ptr + 1 < end_subject && RAWUCHARTEST(ptr + 1) == CHAR_LF) ncount = 1;
+          case 0x000d:
+          if (ptr + 1 < end_subject && ptr[1] == 0x0a) ncount = 1;
           /* Fall through */
 
           ANYNL02:
-          case CHAR_LF:
+          case 0x000a:
           if (codevalue == OP_ANYNL_EXTRA + OP_TYPEPOSSTAR ||
               codevalue == OP_ANYNL_EXTRA + OP_TYPEPOSQUERY)
             {
@@ -1733,7 +1715,13 @@ for (;;)
         BOOL OK;
         switch (c)
           {
-          VSPACE_CASES:
+          case 0x000a:
+          case 0x000b:
+          case 0x000c:
+          case 0x000d:
+          case 0x0085:
+          case 0x2028:
+          case 0x2029:
           OK = TRUE;
           break;
 
@@ -1773,7 +1761,25 @@ for (;;)
         BOOL OK;
         switch (c)
           {
-          HSPACE_CASES:
+          case 0x09:      /* HT */
+          case 0x20:      /* SPACE */
+          case 0xa0:      /* NBSP */
+          case 0x1680:    /* OGHAM SPACE MARK */
+          case 0x180e:    /* MONGOLIAN VOWEL SEPARATOR */
+          case 0x2000:    /* EN QUAD */
+          case 0x2001:    /* EM QUAD */
+          case 0x2002:    /* EN SPACE */
+          case 0x2003:    /* EM SPACE */
+          case 0x2004:    /* THREE-PER-EM SPACE */
+          case 0x2005:    /* FOUR-PER-EM SPACE */
+          case 0x2006:    /* SIX-PER-EM SPACE */
+          case 0x2007:    /* FIGURE SPACE */
+          case 0x2008:    /* PUNCTUATION SPACE */
+          case 0x2009:    /* THIN SPACE */
+          case 0x200A:    /* HAIR SPACE */
+          case 0x202f:    /* NARROW NO-BREAK SPACE */
+          case 0x205f:    /* MEDIUM MATHEMATICAL SPACE */
+          case 0x3000:    /* IDEOGRAPHIC SPACE */
           OK = TRUE;
           break;
 
@@ -1807,7 +1813,6 @@ for (;;)
       if (clen > 0)
         {
         BOOL OK;
-        const pcre_uint32 *cp;
         const ucd_record * prop = GET_UCD(c);
         switch(code[1 + IMM2_SIZE + 1])
           {
@@ -1856,15 +1861,6 @@ for (;;)
                c == CHAR_UNDERSCORE;
           break;
 
-          case PT_CLIST:
-          cp = PRIV(ucd_caseless_sets) + code[1 + IMM2_SIZE + 2];
-          for (;;)
-            {
-            if (c < *cp) { OK = FALSE; break; }
-            if (c == *cp++) { OK = TRUE; break; }
-            }
-          break;
-
           /* Should never occur, but keep compilers from grumbling. */
 
           default:
@@ -1895,9 +1891,8 @@ for (;;)
       if (codevalue != OP_EXTUNI_EXTRA + OP_TYPEEXACT)
         { ADD_ACTIVE(state_offset + 2 + IMM2_SIZE, 0); }
       count = current_state->count;  /* Number already matched */
-      if (clen > 0)
+      if (clen > 0 && UCD_CATEGORY(c) != ucp_M)
         {
-        int lgb, rgb;
         const pcre_uchar *nptr = ptr + clen;
         int ncount = 0;
         if (codevalue == OP_EXTUNI_EXTRA + OP_TYPEPOSUPTO)
@@ -1905,16 +1900,14 @@ for (;;)
           active_count--;           /* Remove non-match possibility */
           next_active_state--;
           }
-        lgb = UCD_GRAPHBREAK(c);
         while (nptr < end_subject)
           {
-          dlen = 1;
-          if (!utf) d = *nptr; else { GETCHARLEN(d, nptr, dlen); }
-          rgb = UCD_GRAPHBREAK(d);
-          if ((PRIV(ucp_gbtable)[lgb] & (1 << rgb)) == 0) break;
+          int nd;
+          int ndlen = 1;
+          GETCHARLEN(nd, nptr, ndlen);
+          if (UCD_CATEGORY(nd) != ucp_M) break;
           ncount++;
-          lgb = rgb;
-          nptr += dlen;
+          nptr += ndlen;
           }
         if (nptr >= end_subject && (md->moptions & PCRE_PARTIAL_HARD) != 0)
             reset_could_continue = TRUE;
@@ -1939,22 +1932,20 @@ for (;;)
         int ncount = 0;
         switch (c)
           {
-          case CHAR_VT:
-          case CHAR_FF:
-          case CHAR_NEL:
-#ifndef EBCDIC
+          case 0x000b:
+          case 0x000c:
+          case 0x0085:
           case 0x2028:
           case 0x2029:
-#endif  /* Not EBCDIC */
           if ((md->moptions & PCRE_BSR_ANYCRLF) != 0) break;
           goto ANYNL03;
 
-          case CHAR_CR:
-          if (ptr + 1 < end_subject && RAWUCHARTEST(ptr + 1) == CHAR_LF) ncount = 1;
+          case 0x000d:
+          if (ptr + 1 < end_subject && ptr[1] == 0x0a) ncount = 1;
           /* Fall through */
 
           ANYNL03:
-          case CHAR_LF:
+          case 0x000a:
           if (codevalue == OP_ANYNL_EXTRA + OP_TYPEPOSUPTO)
             {
             active_count--;           /* Remove non-match possibility */
@@ -1985,7 +1976,13 @@ for (;;)
         BOOL OK;
         switch (c)
           {
-          VSPACE_CASES:
+          case 0x000a:
+          case 0x000b:
+          case 0x000c:
+          case 0x000d:
+          case 0x0085:
+          case 0x2028:
+          case 0x2029:
           OK = TRUE;
           break;
 
@@ -2021,7 +2018,25 @@ for (;;)
         BOOL OK;
         switch (c)
           {
-          HSPACE_CASES:
+          case 0x09:      /* HT */
+          case 0x20:      /* SPACE */
+          case 0xa0:      /* NBSP */
+          case 0x1680:    /* OGHAM SPACE MARK */
+          case 0x180e:    /* MONGOLIAN VOWEL SEPARATOR */
+          case 0x2000:    /* EN QUAD */
+          case 0x2001:    /* EM QUAD */
+          case 0x2002:    /* EN SPACE */
+          case 0x2003:    /* EM SPACE */
+          case 0x2004:    /* THREE-PER-EM SPACE */
+          case 0x2005:    /* FOUR-PER-EM SPACE */
+          case 0x2006:    /* SIX-PER-EM SPACE */
+          case 0x2007:    /* FIGURE SPACE */
+          case 0x2008:    /* PUNCTUATION SPACE */
+          case 0x2009:    /* THIN SPACE */
+          case 0x200A:    /* HAIR SPACE */
+          case 0x202f:    /* NARROW NO-BREAK SPACE */
+          case 0x205f:    /* MEDIUM MATHEMATICAL SPACE */
+          case 0x3000:    /* IDEOGRAPHIC SPACE */
           OK = TRUE;
           break;
 
@@ -2097,21 +2112,17 @@ for (;;)
       to wait for them to pass before continuing. */
 
       case OP_EXTUNI:
-      if (clen > 0)
+      if (clen > 0 && UCD_CATEGORY(c) != ucp_M)
         {
-        int lgb, rgb;
         const pcre_uchar *nptr = ptr + clen;
         int ncount = 0;
-        lgb = UCD_GRAPHBREAK(c);
         while (nptr < end_subject)
           {
-          dlen = 1;
-          if (!utf) d = *nptr; else { GETCHARLEN(d, nptr, dlen); }
-          rgb = UCD_GRAPHBREAK(d);
-          if ((PRIV(ucp_gbtable)[lgb] & (1 << rgb)) == 0) break;
+          int nclen = 1;
+          GETCHARLEN(c, nptr, nclen);
+          if (UCD_CATEGORY(c) != ucp_M) break;
           ncount++;
-          lgb = rgb;
-          nptr += dlen;
+          nptr += nclen;
           }
         if (nptr >= end_subject && (md->moptions & PCRE_PARTIAL_HARD) != 0)
             reset_could_continue = TRUE;
@@ -2128,27 +2139,25 @@ for (;;)
       case OP_ANYNL:
       if (clen > 0) switch(c)
         {
-        case CHAR_VT:
-        case CHAR_FF:
-        case CHAR_NEL:
-#ifndef EBCDIC
+        case 0x000b:
+        case 0x000c:
+        case 0x0085:
         case 0x2028:
         case 0x2029:
-#endif  /* Not EBCDIC */
         if ((md->moptions & PCRE_BSR_ANYCRLF) != 0) break;
 
-        case CHAR_LF:
+        case 0x000a:
         ADD_NEW(state_offset + 1, 0);
         break;
 
-        case CHAR_CR:
+        case 0x000d:
         if (ptr + 1 >= end_subject)
           {
           ADD_NEW(state_offset + 1, 0);
           if ((md->moptions & PCRE_PARTIAL_HARD) != 0)
             reset_could_continue = TRUE;
           }
-        else if (RAWUCHARTEST(ptr + 1) == CHAR_LF)
+        else if (ptr[1] == 0x0a)
           {
           ADD_NEW_DATA(-(state_offset + 1), 0, 1);
           }
@@ -2164,7 +2173,13 @@ for (;;)
       case OP_NOT_VSPACE:
       if (clen > 0) switch(c)
         {
-        VSPACE_CASES:
+        case 0x000a:
+        case 0x000b:
+        case 0x000c:
+        case 0x000d:
+        case 0x0085:
+        case 0x2028:
+        case 0x2029:
         break;
 
         default:
@@ -2177,12 +2192,17 @@ for (;;)
       case OP_VSPACE:
       if (clen > 0) switch(c)
         {
-        VSPACE_CASES:
+        case 0x000a:
+        case 0x000b:
+        case 0x000c:
+        case 0x000d:
+        case 0x0085:
+        case 0x2028:
+        case 0x2029:
         ADD_NEW(state_offset + 1, 0);
         break;
 
-        default:
-        break;
+        default: break;
         }
       break;
 
@@ -2190,7 +2210,25 @@ for (;;)
       case OP_NOT_HSPACE:
       if (clen > 0) switch(c)
         {
-        HSPACE_CASES:
+        case 0x09:      /* HT */
+        case 0x20:      /* SPACE */
+        case 0xa0:      /* NBSP */
+        case 0x1680:    /* OGHAM SPACE MARK */
+        case 0x180e:    /* MONGOLIAN VOWEL SEPARATOR */
+        case 0x2000:    /* EN QUAD */
+        case 0x2001:    /* EM QUAD */
+        case 0x2002:    /* EN SPACE */
+        case 0x2003:    /* EM SPACE */
+        case 0x2004:    /* THREE-PER-EM SPACE */
+        case 0x2005:    /* FOUR-PER-EM SPACE */
+        case 0x2006:    /* SIX-PER-EM SPACE */
+        case 0x2007:    /* FIGURE SPACE */
+        case 0x2008:    /* PUNCTUATION SPACE */
+        case 0x2009:    /* THIN SPACE */
+        case 0x200A:    /* HAIR SPACE */
+        case 0x202f:    /* NARROW NO-BREAK SPACE */
+        case 0x205f:    /* MEDIUM MATHEMATICAL SPACE */
+        case 0x3000:    /* IDEOGRAPHIC SPACE */
         break;
 
         default:
@@ -2203,11 +2241,26 @@ for (;;)
       case OP_HSPACE:
       if (clen > 0) switch(c)
         {
-        HSPACE_CASES:
+        case 0x09:      /* HT */
+        case 0x20:      /* SPACE */
+        case 0xa0:      /* NBSP */
+        case 0x1680:    /* OGHAM SPACE MARK */
+        case 0x180e:    /* MONGOLIAN VOWEL SEPARATOR */
+        case 0x2000:    /* EN QUAD */
+        case 0x2001:    /* EM QUAD */
+        case 0x2002:    /* EN SPACE */
+        case 0x2003:    /* EM SPACE */
+        case 0x2004:    /* THREE-PER-EM SPACE */
+        case 0x2005:    /* FOUR-PER-EM SPACE */
+        case 0x2006:    /* SIX-PER-EM SPACE */
+        case 0x2007:    /* FIGURE SPACE */
+        case 0x2008:    /* PUNCTUATION SPACE */
+        case 0x2009:    /* THIN SPACE */
+        case 0x200A:    /* HAIR SPACE */
+        case 0x202f:    /* NARROW NO-BREAK SPACE */
+        case 0x205f:    /* MEDIUM MATHEMATICAL SPACE */
+        case 0x3000:    /* IDEOGRAPHIC SPACE */
         ADD_NEW(state_offset + 1, 0);
-        break;
-
-        default:
         break;
         }
       break;
@@ -2262,7 +2315,7 @@ for (;;)
       if (count > 0) { ADD_ACTIVE(state_offset + dlen + 1, 0); }
       if (clen > 0)
         {
-        pcre_uint32 otherd = NOTACHAR;
+        unsigned int otherd = NOTACHAR;
         if (caseless)
           {
 #ifdef SUPPORT_UTF
@@ -2309,7 +2362,7 @@ for (;;)
       ADD_ACTIVE(state_offset + dlen + 1, 0);
       if (clen > 0)
         {
-        pcre_uint32 otherd = NOTACHAR;
+        unsigned int otherd = NOTACHAR;
         if (caseless)
           {
 #ifdef SUPPORT_UTF
@@ -2354,7 +2407,7 @@ for (;;)
       ADD_ACTIVE(state_offset + dlen + 1, 0);
       if (clen > 0)
         {
-        pcre_uint32 otherd = NOTACHAR;
+        unsigned int otherd = NOTACHAR;
         if (caseless)
           {
 #ifdef SUPPORT_UTF
@@ -2391,7 +2444,7 @@ for (;;)
       count = current_state->count;  /* Number already matched */
       if (clen > 0)
         {
-        pcre_uint32 otherd = NOTACHAR;
+        unsigned int otherd = NOTACHAR;
         if (caseless)
           {
 #ifdef SUPPORT_UTF
@@ -2435,7 +2488,7 @@ for (;;)
       count = current_state->count;  /* Number already matched */
       if (clen > 0)
         {
-        pcre_uint32 otherd = NOTACHAR;
+        unsigned int otherd = NOTACHAR;
         if (caseless)
           {
 #ifdef SUPPORT_UTF
@@ -2533,7 +2586,7 @@ for (;;)
             { ADD_ACTIVE(next_state_offset + 1 + 2 * IMM2_SIZE, 0); }
           if (isinclass)
             {
-            unsigned int max = GET2(ecode, 1 + IMM2_SIZE);
+            int max = GET2(ecode, 1 + IMM2_SIZE);
             if (++count >= max && max != 0)   /* Max 0 => no limit */
               { ADD_NEW(next_state_offset + 1 + 2 * IMM2_SIZE, 0); }
             else
@@ -2609,12 +2662,10 @@ for (;;)
             cb.version          = 1;   /* Version 1 of the callout block */
             cb.callout_number   = code[LINK_SIZE+2];
             cb.offset_vector    = offsets;
-#if defined COMPILE_PCRE8
+#ifdef COMPILE_PCRE8
             cb.subject          = (PCRE_SPTR)start_subject;
-#elif defined COMPILE_PCRE16
+#else
             cb.subject          = (PCRE_SPTR16)start_subject;
-#elif defined COMPILE_PCRE32
-            cb.subject          = (PCRE_SPTR32)start_subject;
 #endif
             cb.subject_length   = (int)(end_subject - start_subject);
             cb.start_match      = (int)(current_subject - start_subject);
@@ -2745,7 +2796,7 @@ for (;;)
           for (rc = rc*2 - 2; rc >= 0; rc -= 2)
             {
             int charcount = local_offsets[rc+1] - local_offsets[rc];
-#if defined SUPPORT_UTF && !defined COMPILE_PCRE32
+#ifdef SUPPORT_UTF
             if (utf)
               {
               const pcre_uchar *p = start_subject + local_offsets[rc];
@@ -2849,7 +2900,7 @@ for (;;)
             const pcre_uchar *p = ptr;
             const pcre_uchar *pp = local_ptr;
             charcount = (int)(pp - p);
-#if defined SUPPORT_UTF && !defined COMPILE_PCRE32
+#ifdef SUPPORT_UTF
             if (utf) while (p < pp) if (NOT_FIRSTCHAR(*p++)) charcount--;
 #endif
             ADD_NEW_DATA(-next_state_offset, 0, (charcount - 1));
@@ -2931,7 +2982,7 @@ for (;;)
             }
           else
             {
-#if defined SUPPORT_UTF && !defined COMPILE_PCRE32
+#ifdef SUPPORT_UTF
             if (utf)
               {
               const pcre_uchar *p = start_subject + local_offsets[0];
@@ -2960,12 +3011,10 @@ for (;;)
         cb.version          = 1;   /* Version 1 of the callout block */
         cb.callout_number   = code[1];
         cb.offset_vector    = offsets;
-#if defined COMPILE_PCRE8
+#ifdef COMPILE_PCRE8
         cb.subject          = (PCRE_SPTR)start_subject;
-#elif defined COMPILE_PCRE16
+#else
         cb.subject          = (PCRE_SPTR16)start_subject;
-#elif defined COMPILE_PCRE32
-        cb.subject          = (PCRE_SPTR32)start_subject;
 #endif
         cb.subject_length   = (int)(end_subject - start_subject);
         cb.start_match      = (int)(current_subject - start_subject);
@@ -3081,20 +3130,15 @@ Returns:          > 0 => number of match offset pairs placed in offsets
                  < -1 => some kind of unexpected problem
 */
 
-#if defined COMPILE_PCRE8
+#ifdef COMPILE_PCRE8
 PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
 pcre_dfa_exec(const pcre *argument_re, const pcre_extra *extra_data,
   const char *subject, int length, int start_offset, int options, int *offsets,
   int offsetcount, int *workspace, int wscount)
-#elif defined COMPILE_PCRE16
+#else
 PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
 pcre16_dfa_exec(const pcre16 *argument_re, const pcre16_extra *extra_data,
   PCRE_SPTR16 subject, int length, int start_offset, int options, int *offsets,
-  int offsetcount, int *workspace, int wscount)
-#elif defined COMPILE_PCRE32
-PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
-pcre32_dfa_exec(const pcre32 *argument_re, const pcre32_extra *extra_data,
-  PCRE_SPTR32 subject, int length, int start_offset, int options, int *offsets,
   int offsetcount, int *workspace, int wscount)
 #endif
 {
@@ -3122,7 +3166,6 @@ if (re == NULL || subject == NULL || workspace == NULL ||
    (offsets == NULL && offsetcount > 0)) return PCRE_ERROR_NULL;
 if (offsetcount < 0) return PCRE_ERROR_BADCOUNT;
 if (wscount < 20) return PCRE_ERROR_DFA_WSSIZE;
-if (length < 0) return PCRE_ERROR_BADLENGTH;
 if (start_offset < 0 || start_offset > length) return PCRE_ERROR_BADOFFSET;
 
 /* Check that the first field in the block is the magic number. If it is not,
@@ -3171,7 +3214,7 @@ end_subject = (const pcre_uchar *)subject + length;
 req_char_ptr = current_subject - 1;
 
 #ifdef SUPPORT_UTF
-/* PCRE_UTF(16|32) have the same value as PCRE_UTF8. */
+/* PCRE_UTF16 has the same value as PCRE_UTF8. */
 utf = (re->options & PCRE_UTF8) != 0;
 #else
 utf = FALSE;
@@ -3257,21 +3300,12 @@ if (utf && (options & PCRE_NO_UTF8_CHECK) == 0)
       offsets[0] = erroroffset;
       offsets[1] = errorcode;
       }
-#if defined COMPILE_PCRE8
-    return (errorcode <= PCRE_UTF8_ERR5 && (options & PCRE_PARTIAL_HARD) != 0) ?
+    return (errorcode <= PCRE_UTF8_ERR5 && (options & PCRE_PARTIAL_HARD) != 0)?
       PCRE_ERROR_SHORTUTF8 : PCRE_ERROR_BADUTF8;
-#elif defined COMPILE_PCRE16
-    return (errorcode <= PCRE_UTF16_ERR1 && (options & PCRE_PARTIAL_HARD) != 0) ?
-      PCRE_ERROR_SHORTUTF16 : PCRE_ERROR_BADUTF16;
-#elif defined COMPILE_PCRE32
-    return PCRE_ERROR_BADUTF32;
-#endif
     }
-#if defined COMPILE_PCRE8 || defined COMPILE_PCRE16
   if (start_offset > 0 && start_offset < length &&
         NOT_FIRSTCHAR(((PCRE_PUCHAR)subject)[start_offset]))
     return PCRE_ERROR_BADUTF8_OFFSET;
-#endif
   }
 #endif
 
@@ -3381,15 +3415,12 @@ for (;;)
       if (has_first_char)
         {
         if (first_char != first_char2)
-          {
-          pcre_uchar csc;
           while (current_subject < end_subject &&
-                 (csc = RAWUCHARTEST(current_subject)) != first_char && csc != first_char2)
+              *current_subject != first_char && *current_subject != first_char2)
             current_subject++;
-          }
         else
           while (current_subject < end_subject &&
-                 RAWUCHARTEST(current_subject) != first_char)
+                 *current_subject != first_char)
             current_subject++;
         }
 
@@ -3419,10 +3450,10 @@ for (;;)
           ANYCRLF, and we are now at a LF, advance the match position by one
           more character. */
 
-          if (RAWUCHARTEST(current_subject - 1) == CHAR_CR &&
+          if (current_subject[-1] == CHAR_CR &&
                (md->nltype == NLTYPE_ANY || md->nltype == NLTYPE_ANYCRLF) &&
                current_subject < end_subject &&
-               RAWUCHARTEST(current_subject) == CHAR_NL)
+               *current_subject == CHAR_NL)
             current_subject++;
           }
         }
@@ -3433,7 +3464,7 @@ for (;;)
         {
         while (current_subject < end_subject)
           {
-          register pcre_uint32 c = RAWUCHARTEST(current_subject);
+          register unsigned int c = *current_subject;
 #ifndef COMPILE_PCRE8
           if (c > 255) c = 255;
 #endif
@@ -3499,7 +3530,7 @@ for (;;)
             {
             while (p < end_subject)
               {
-              register pcre_uint32 pp = RAWUCHARINCTEST(p);
+              register int pp = *p++;
               if (pp == req_char || pp == req_char2) { p--; break; }
               }
             }
@@ -3507,7 +3538,7 @@ for (;;)
             {
             while (p < end_subject)
               {
-              if (RAWUCHARINCTEST(p) == req_char) { p--; break; }
+              if (*p++ == req_char) { p--; break; }
               }
             }
 
@@ -3565,9 +3596,9 @@ for (;;)
   not contain any explicit matches for \r or \n, and the newline option is CRLF
   or ANY or ANYCRLF, advance the match position by one more character. */
 
-  if (RAWUCHARTEST(current_subject - 1) == CHAR_CR &&
+  if (current_subject[-1] == CHAR_CR &&
       current_subject < end_subject &&
-      RAWUCHARTEST(current_subject) == CHAR_NL &&
+      *current_subject == CHAR_NL &&
       (re->flags & PCRE_HASCRORLF) == 0 &&
         (md->nltype == NLTYPE_ANY ||
          md->nltype == NLTYPE_ANYCRLF ||

@@ -68,15 +68,12 @@ Returns:        the (possibly updated) count value (a non-negative number), or
                 a negative error number
 */
 
-#if defined COMPILE_PCRE8
+#ifdef COMPILE_PCRE8
 PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
 pcre_refcount(pcre *argument_re, int adjust)
-#elif defined COMPILE_PCRE16
+#else
 PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
 pcre16_refcount(pcre16 *argument_re, int adjust)
-#elif defined COMPILE_PCRE32
-PCRE_EXP_DEFN int PCRE_CALL_CONVENTION
-pcre32_refcount(pcre32 *argument_re, int adjust)
 #endif
 {
 REAL_PCRE *re = (REAL_PCRE *)argument_re;

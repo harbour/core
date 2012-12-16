@@ -53,11 +53,6 @@
 #ifndef HB_COMP_H_
 #define HB_COMP_H_
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <limits.h>
-
 #include "hbmacro.ch"
 #include "hbapi.h"
 #include "hberrors.h"

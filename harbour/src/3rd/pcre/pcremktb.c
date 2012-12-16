@@ -66,15 +66,12 @@ Arguments:   none
 Returns:     pointer to the contiguous block of data
 */
 
-#if defined COMPILE_PCRE8
+#ifdef COMPILE_PCRE8
 const unsigned char *
 pcre_maketables(void)
-#elif defined COMPILE_PCRE16
+#else
 const unsigned char *
 pcre16_maketables(void)
-#elif defined COMPILE_PCRE32
-const unsigned char *
-pcre32_maketables(void)
 #endif
 {
 unsigned char *yield, *p;
@@ -130,7 +127,7 @@ within regexes. */
 for (i = 0; i < 256; i++)
   {
   int x = 0;
-  if (i != CHAR_VT && isspace(i)) x += ctype_space;
+  if (i != 0x0b && isspace(i)) x += ctype_space;
   if (isalpha(i)) x += ctype_letter;
   if (isdigit(i)) x += ctype_digit;
   if (isxdigit(i)) x += ctype_xdigit;

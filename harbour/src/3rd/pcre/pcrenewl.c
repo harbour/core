@@ -76,7 +76,7 @@ BOOL
 PRIV(is_newline)(PCRE_PUCHAR ptr, int type, PCRE_PUCHAR endptr, int *lenptr,
   BOOL utf)
 {
-pcre_uint32 c;
+int c;
 (void)utf;
 #ifdef SUPPORT_UTF
 if (utf)
@@ -87,13 +87,11 @@ else
 #endif  /* SUPPORT_UTF */
   c = *ptr;
 
-/* Note that this function is called only for ANY or ANYCRLF. */
-
 if (type == NLTYPE_ANYCRLF) switch(c)
   {
-  case CHAR_LF: *lenptr = 1; return TRUE;
-  case CHAR_CR: *lenptr = (ptr < endptr - 1 && ptr[1] == CHAR_LF)? 2 : 1;
-               return TRUE;
+  case 0x000a: *lenptr = 1; return TRUE;             /* LF */
+  case 0x000d: *lenptr = (ptr < endptr - 1 && ptr[1] == 0x0a)? 2 : 1;
+               return TRUE;                          /* CR */
   default: return FALSE;
   }
 
@@ -101,29 +99,20 @@ if (type == NLTYPE_ANYCRLF) switch(c)
 
 else switch(c)
   {
-#ifdef EBCDIC
-  case CHAR_NEL:
-#endif
-  case CHAR_LF:
-  case CHAR_VT:
-  case CHAR_FF: *lenptr = 1; return TRUE;
-
-  case CHAR_CR:
-  *lenptr = (ptr < endptr - 1 && ptr[1] == CHAR_LF)? 2 : 1;
-  return TRUE;
-
-#ifndef EBCDIC
+  case 0x000a:                                       /* LF */
+  case 0x000b:                                       /* VT */
+  case 0x000c: *lenptr = 1; return TRUE;             /* FF */
+  case 0x000d: *lenptr = (ptr < endptr - 1 && ptr[1] == 0x0a)? 2 : 1;
+               return TRUE;                          /* CR */
 #ifdef COMPILE_PCRE8
-  case CHAR_NEL: *lenptr = utf? 2 : 1; return TRUE;
+  case 0x0085: *lenptr = utf? 2 : 1; return TRUE;    /* NEL */
   case 0x2028:                                       /* LS */
   case 0x2029: *lenptr = 3; return TRUE;             /* PS */
-#else /* COMPILE_PCRE16 || COMPILE_PCRE32 */
-  case CHAR_NEL:
+#else
+  case 0x0085:                                       /* NEL */
   case 0x2028:                                       /* LS */
   case 0x2029: *lenptr = 1; return TRUE;             /* PS */
-#endif  /* COMPILE_PCRE8 */
-#endif  /* Not EBCDIC */
-
+#endif /* COMPILE_PCRE8 */
   default: return FALSE;
   }
 }
@@ -151,7 +140,7 @@ BOOL
 PRIV(was_newline)(PCRE_PUCHAR ptr, int type, PCRE_PUCHAR startptr, int *lenptr,
   BOOL utf)
 {
-pcre_uint32 c;
+int c;
 (void)utf;
 ptr--;
 #ifdef SUPPORT_UTF
@@ -164,45 +153,30 @@ else
 #endif  /* SUPPORT_UTF */
   c = *ptr;
 
-/* Note that this function is called only for ANY or ANYCRLF. */
-
 if (type == NLTYPE_ANYCRLF) switch(c)
   {
-  case CHAR_LF:
-  *lenptr = (ptr > startptr && ptr[-1] == CHAR_CR)? 2 : 1;
-  return TRUE;
-
-  case CHAR_CR: *lenptr = 1; return TRUE;
+  case 0x000a: *lenptr = (ptr > startptr && ptr[-1] == 0x0d)? 2 : 1;
+               return TRUE;                         /* LF */
+  case 0x000d: *lenptr = 1; return TRUE;            /* CR */
   default: return FALSE;
   }
 
-/* NLTYPE_ANY */
-
 else switch(c)
   {
-  case CHAR_LF:
-  *lenptr = (ptr > startptr && ptr[-1] == CHAR_CR)? 2 : 1;
-  return TRUE;
-
-#ifdef EBCDIC
-  case CHAR_NEL:
-#endif
-  case CHAR_VT:
-  case CHAR_FF:
-  case CHAR_CR: *lenptr = 1; return TRUE;
-
-#ifndef EBCDIC
+  case 0x000a: *lenptr = (ptr > startptr && ptr[-1] == 0x0d)? 2 : 1;
+               return TRUE;                         /* LF */
+  case 0x000b:                                      /* VT */
+  case 0x000c:                                      /* FF */
+  case 0x000d: *lenptr = 1; return TRUE;            /* CR */
 #ifdef COMPILE_PCRE8
-  case CHAR_NEL: *lenptr = utf? 2 : 1; return TRUE;
-  case 0x2028:                                       /* LS */
-  case 0x2029: *lenptr = 3; return TRUE;             /* PS */
-#else /* COMPILE_PCRE16 || COMPILE_PCRE32 */
-  case CHAR_NEL:
+  case 0x0085: *lenptr = utf? 2 : 1; return TRUE;   /* NEL */
+  case 0x2028:                                      /* LS */
+  case 0x2029: *lenptr = 3; return TRUE;            /* PS */
+#else
+  case 0x0085:                                       /* NEL */
   case 0x2028:                                       /* LS */
   case 0x2029: *lenptr = 1; return TRUE;             /* PS */
-#endif  /* COMPILE_PCRE8 */
-#endif  /* NotEBCDIC */
-
+#endif /* COMPILE_PCRE8 */
   default: return FALSE;
   }
 }

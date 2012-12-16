@@ -33,23 +33,18 @@
    Feature detection (boolean) macros:
    SLJIT_32BIT_ARCHITECTURE : 32 bit architecture
    SLJIT_64BIT_ARCHITECTURE : 64 bit architecture
-   SLJIT_WORD_SHIFT : the shift required to apply when accessing a sljit_sw/sljit_uw array by index
-   SLJIT_DOUBLE_SHIFT : the shift required to apply when accessing a double array by index
+   SLJIT_WORD_SHIFT : the shift required to apply when accessing a sljit_w/sljit_uw array by index
+   SLJIT_FLOAT_SHIFT : the shift required to apply when accessing a double array by index
    SLJIT_LITTLE_ENDIAN : little endian architecture
    SLJIT_BIG_ENDIAN : big endian architecture
    SLJIT_UNALIGNED : allows unaligned memory accesses for non-fpu operations (only!)
    SLJIT_INDIRECT_CALL : see SLJIT_FUNC_OFFSET() for more information
-   SLJIT_RETURN_ADDRESS_OFFSET : a return instruction always adds this offset to the return address
 
    Types and useful macros:
-   sljit_sb, sljit_ub : signed and unsigned 8 bit byte
-   sljit_sh, sljit_uh : signed and unsigned 16 bit half-word (short) type
-   sljit_si, sljit_ui : signed and unsigned 32 bit integer type
-   sljit_sw, sljit_uw : signed and unsigned machine word, enough to store a pointer
-   sljit_p : unsgined pointer value (usually the same as sljit_uw, but
-             some 64 bit ABIs may use 32 bit pointers)
-   sljit_s : single precision floating point value
-   sljit_d : double precision floating point value
+   sljit_b, sljit_ub : signed and unsigned 8 bit byte
+   sljit_h, sljit_uh : signed and unsigned 16 bit half-word (short) type
+   sljit_i, sljit_ui : signed and unsigned 32 bit integer type
+   sljit_w, sljit_uw : signed and unsigned machine word, enough to store a pointer (same as intptr_t)
    SLJIT_CALL : C calling convention define for both calling JIT form C and C callbacks for JIT
    SLJIT_W(number) : defining 64 bit constants on 64 bit architectures (compiler independent helper)
 */
@@ -62,7 +57,6 @@
 	|| (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) \
 	|| (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) \
 	|| (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32) \
-	|| (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32) \
 	|| (defined SLJIT_CONFIG_AUTO && SLJIT_CONFIG_AUTO) \
 	|| (defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED))
 #error "An architecture must be selected"
@@ -77,7 +71,6 @@
 	+ (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) \
 	+ (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) \
 	+ (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32) \
-	+ (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32) \
 	+ (defined SLJIT_CONFIG_AUTO && SLJIT_CONFIG_AUTO) \
 	+ (defined SLJIT_CONFIG_UNSUPPORTED && SLJIT_CONFIG_UNSUPPORTED) >= 2
 #error "Multiple architectures are selected"
@@ -100,14 +93,12 @@
 #else
 #define SLJIT_CONFIG_ARM_V5 1
 #endif
-#elif defined(__ppc64__) || defined(__powerpc64__) || defined(_ARCH_PPC64) || (defined(_POWER) && defined(__64BIT__))
+#elif defined(__ppc64__) || defined(__powerpc64__)
 #define SLJIT_CONFIG_PPC_64 1
-#elif defined(__ppc__) || defined(__powerpc__) || defined(_ARCH_PPC) || defined(_ARCH_PWR) || defined(_ARCH_PWR2) || defined(_POWER)
+#elif defined(__ppc__) || defined(__powerpc__)
 #define SLJIT_CONFIG_PPC_32 1
 #elif defined(__mips__)
 #define SLJIT_CONFIG_MIPS_32 1
-#elif defined(__sparc__) || defined(__sparc)
-#define SLJIT_CONFIG_SPARC_32 1
 #else
 /* Unsupported architecture */
 #define SLJIT_CONFIG_UNSUPPORTED 1
@@ -223,12 +214,6 @@
 #define SLJIT_CACHE_FLUSH(from, to) \
 	ppc_cache_flush((from), (to))
 
-#elif (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32)
-
-/* The __clear_cache() implementation of GCC is a dummy function on Sparc. */
-#define SLJIT_CACHE_FLUSH(from, to) \
-	sparc_cache_flush((from), (to))
-
 #else
 
 /* Calls __ARM_NR_cacheflush on ARM-Linux. */
@@ -241,15 +226,15 @@
 
 /* 8 bit byte type. */
 typedef unsigned char sljit_ub;
-typedef signed char sljit_sb;
+typedef signed char sljit_b;
 
 /* 16 bit half-word type. */
 typedef unsigned short int sljit_uh;
-typedef signed short int sljit_sh;
+typedef signed short int sljit_h;
 
 /* 32 bit integer type. */
 typedef unsigned int sljit_ui;
-typedef signed int sljit_si;
+typedef signed int sljit_i;
 
 /* Machine word type. Can encapsulate a pointer.
      32 bit for 32 bit machines.
@@ -258,35 +243,26 @@ typedef signed int sljit_si;
 /* Just to have something. */
 #define SLJIT_WORD_SHIFT 0
 typedef unsigned long int sljit_uw;
-typedef long int sljit_sw;
+typedef long int sljit_w;
 #elif !(defined SLJIT_CONFIG_X86_64 && SLJIT_CONFIG_X86_64) && !(defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
 #define SLJIT_32BIT_ARCHITECTURE 1
 #define SLJIT_WORD_SHIFT 2
 typedef unsigned int sljit_uw;
-typedef int sljit_sw;
+typedef int sljit_w;
 #else
 #define SLJIT_64BIT_ARCHITECTURE 1
 #define SLJIT_WORD_SHIFT 3
 #ifdef _WIN32
 typedef unsigned __int64 sljit_uw;
-typedef __int64 sljit_sw;
+typedef __int64 sljit_w;
 #else
 typedef unsigned long int sljit_uw;
-typedef long int sljit_sw;
+typedef long int sljit_w;
 #endif
 #endif
 
-typedef sljit_uw sljit_p;
-
-/* Floating point types. */
-typedef float sljit_s;
-typedef double sljit_d;
-
-/* Shift for pointer sized data. */
-#define SLJIT_POINTER_SHIFT SLJIT_WORD_SHIFT
-
-/* Shift for double precision sized data. */
-#define SLJIT_DOUBLE_SHIFT 3
+/* Double precision. */
+#define SLJIT_FLOAT_SHIFT 3
 
 #ifndef SLJIT_W
 
@@ -313,24 +289,20 @@ typedef double sljit_d;
 #define SLJIT_CALL
 #endif
 
-#elif defined(_MSC_VER)
+#elif defined(_WIN32)
 
-#define SLJIT_CALL __fastcall
-#define SLJIT_X86_32_FASTCALL 1
-
-#elif defined(__BORLANDC__)
-
+#ifdef __BORLANDC__
 #define SLJIT_CALL __msfastcall
+#else /* __BORLANDC__ */
+#define SLJIT_CALL __fastcall
+#endif /* __BORLANDC__ */
 #define SLJIT_X86_32_FASTCALL 1
 
-#else /* Unknown compiler. */
-
-/* The cdecl attribute is the default. */
-#define SLJIT_CALL
-
+#else /* defined(_WIN32) */
+#define SLJIT_CALL __stdcall
 #endif
 
-#else /* Non x86-32 architectures. */
+#else /* Other architectures. */
 
 #define SLJIT_CALL
 
@@ -341,9 +313,7 @@ typedef double sljit_d;
 #if !defined(SLJIT_BIG_ENDIAN) && !defined(SLJIT_LITTLE_ENDIAN)
 
 /* These macros are useful for the application. */
-#if (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) \
-	|| (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) \
-	|| (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32)
+#if (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32) || (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
 #define SLJIT_BIG_ENDIAN 1
 
 #elif (defined SLJIT_CONFIG_MIPS_32 && SLJIT_CONFIG_MIPS_32)
@@ -369,21 +339,11 @@ typedef double sljit_d;
 #error "Exactly one endianness must be selected"
 #endif
 
-#ifndef SLJIT_INDIRECT_CALL
-#if (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64) || (defined SLJIT_CONFIG_PPC_32 && SLJIT_CONFIG_PPC_32 && defined _AIX)
-/* It seems certain ppc compilers use an indirect addressing for functions
-   which makes things complicated. */
+#if (defined SLJIT_CONFIG_PPC_64 && SLJIT_CONFIG_PPC_64)
+/* It seems ppc64 compilers use an indirect addressing for functions.
+   It makes things really complicated. */
 #define SLJIT_INDIRECT_CALL 1
 #endif
-#endif /* SLJIT_INDIRECT_CALL */
-
-#ifndef SLJIT_RETURN_ADDRESS_OFFSET
-#if (defined SLJIT_CONFIG_SPARC_32 && SLJIT_CONFIG_SPARC_32)
-#define SLJIT_RETURN_ADDRESS_OFFSET 8
-#else
-#define SLJIT_RETURN_ADDRESS_OFFSET 0
-#endif
-#endif /* SLJIT_RETURN_ADDRESS_OFFSET */
 
 #ifndef SLJIT_SSE2
 
@@ -421,28 +381,17 @@ SLJIT_API_FUNC_ATTRIBUTE void sljit_free_exec(void* ptr);
 #define SLJIT_FREE_EXEC(ptr) sljit_free_exec(ptr)
 #endif
 
-#if (defined SLJIT_VERBOSE && SLJIT_VERBOSE)
+#if (defined SLJIT_DEBUG && SLJIT_DEBUG) || (defined SLJIT_VERBOSE && SLJIT_VERBOSE)
 #include <stdio.h>
 #endif
 
 #if (defined SLJIT_DEBUG && SLJIT_DEBUG)
 
-#if !defined(SLJIT_ASSERT) || !defined(SLJIT_ASSERT_STOP)
-
-/* SLJIT_HALT_PROCESS must halt the process. */
-#ifndef SLJIT_HALT_PROCESS
-#include <stdlib.h>
-
-#define SLJIT_HALT_PROCESS() \
-	abort();
-#endif /* !SLJIT_HALT_PROCESS */
-
-#include <stdio.h>
-
-#endif /* !SLJIT_ASSERT || !SLJIT_ASSERT_STOP */
-
 /* Feel free to redefine these two macros. */
 #ifndef SLJIT_ASSERT
+
+#define SLJIT_HALT_PROCESS() \
+	*((int*)0) = 0
 
 #define SLJIT_ASSERT(x) \
 	do { \
@@ -466,7 +415,6 @@ SLJIT_API_FUNC_ATTRIBUTE void sljit_free_exec(void* ptr);
 
 #else /* (defined SLJIT_DEBUG && SLJIT_DEBUG) */
 
-/* Forcing empty, but valid statements. */
 #undef SLJIT_ASSERT
 #undef SLJIT_ASSERT_STOP
 

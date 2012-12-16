@@ -79,15 +79,12 @@ I could find no way of detecting that a macro is defined as an empty string at
 pre-processor time. This hack uses a standard trick for avoiding calling
 the STRING macro with an empty argument when doing the test. */
 
-#if defined COMPILE_PCRE8
+#ifdef COMPILE_PCRE8
 PCRE_EXP_DEFN const char * PCRE_CALL_CONVENTION
 pcre_version(void)
-#elif defined COMPILE_PCRE16
+#else
 PCRE_EXP_DEFN const char * PCRE_CALL_CONVENTION
 pcre16_version(void)
-#elif defined COMPILE_PCRE32
-PCRE_EXP_DEFN const char * PCRE_CALL_CONVENTION
-pcre32_version(void)
 #endif
 {
 return (XSTRING(Z PCRE_PRERELEASE)[1] == 0)?

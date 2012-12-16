@@ -578,24 +578,22 @@ TABLE OF CONTENT
    linux
    -----
    gcc      - GNU C
-   clang    - Clang compiler frontend
+   clang    - Clang
    watcom   - Open Watcom C/C++
    icc      - Intel(R) C/C++
    sunpro   - Sun Studio C/C++
    open64   - Open64 C/C++
-   pcc      - Portable C Compiler (experimental)
 
    darwin
    ------
    gcc      - GNU C
-   clang    - Clang compiler frontend
+   clang    - Clang
    icc      - Intel(R) C/C++
-   pcc      - Portable C Compiler (experimental)
 
    bsd
    ---
    gcc      - GNU C
-   clang    - Clang compiler frontend
+   clang    - Clang
    pcc      - Portable C Compiler (experimental)
 
    hpux
@@ -627,8 +625,8 @@ TABLE OF CONTENT
    minix
    -----
    gcc      - GNU C
+   clang    - Clang
    ack      - Amsterdam Compiler Kit (does not work yet)
-   pcc      - Portable C Compiler (experimental)
 
    aix
    ---
@@ -642,7 +640,6 @@ TABLE OF CONTENT
    -----
    gcc      - GNU C
    sunpro   - Sun Studio C/C++
-   pcc      - Portable C Compiler (experimental)
 
    win
    ---
@@ -654,6 +651,7 @@ TABLE OF CONTENT
 
    Also supported, some features may be missing:
 
+   clang    - Clang
    watcom   - Open Watcom C/C++
    bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
    bcc64    - Embarcadero C++ 6.5 and above

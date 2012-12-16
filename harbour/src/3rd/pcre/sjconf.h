@@ -47,7 +47,6 @@
 /* #define SLJIT_CONFIG_PPC_32 1 */
 /* #define SLJIT_CONFIG_PPC_64 1 */
 /* #define SLJIT_CONFIG_MIPS_32 1 */
-/* #define SLJIT_CONFIG_SPARC_32 1 */
 
 /* #define SLJIT_CONFIG_AUTO 1 */
 /* #define SLJIT_CONFIG_UNSUPPORTED 1 */

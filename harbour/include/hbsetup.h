@@ -54,8 +54,6 @@
 #ifndef HB_SETUP_H_
 #define HB_SETUP_H_
 
-#include <limits.h>
-
 /* ***********************************************************************
  * Include settings common for .prg and .c files
  */
