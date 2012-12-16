@@ -48,6 +48,7 @@ xcopy /y /s    %~dp0..\..\pkg\dos\watcom\hb%HB_VL%wa\lib                        
 xcopy /y /s    %~dp0..\..\pkg\os2\watcom\harbour-%HB_VF%-os2-watcom\lib                   %HB_ABSROOT%lib\
 xcopy /y /s    %~dp0..\..\pkg\wce\mingwarm\harbour-%HB_VF%-wce-mingwarm\lib               %HB_ABSROOT%lib\
 xcopy /y /s    %~dp0..\..\pkg\win\bcc\harbour-%HB_VF%-win-bcc\lib                         %HB_ABSROOT%lib\
+xcopy /y /s    %~dp0..\..\pkg\win\bcc64\harbour-%HB_VF%-win-bcc64\lib                     %HB_ABSROOT%lib\
 xcopy /y /s    %~dp0..\..\pkg\win\mingw\harbour-%HB_VF%-win-mingw\lib                     %HB_ABSROOT%lib\
 xcopy /y /s    %~dp0..\..\pkg\win\mingw64\harbour-%HB_VF%-win-mingw64\lib                 %HB_ABSROOT%lib\
 xcopy /y /s    %~dp0..\..\pkg\win\msvc\harbour-%HB_VF%-win-msvc\lib                       %HB_ABSROOT%lib\
@@ -142,6 +143,7 @@ echo "%HB_DR%lib\win\msvc\*.*"                      >> _hbfiles
 echo "%HB_DR%lib\win\msvc64\*.*"                    >> _hbfiles
 rem echo "%HB_DR%bin\harbour-%HB_VS%-bcc.dll"           >> _hbfiles
 echo "%HB_DR%lib\win\bcc\*.*"                       >> _hbfiles
+echo "%HB_DR%lib\win\bcc64\*.*"                     >> _hbfiles
 echo "%HB_DR%lib\win\watcom\*.*"                    >> _hbfiles
 rem echo "%HB_DR%lib\win\pocc\*.*"                      >> _hbfiles
 rem echo "%HB_DR%lib\win\pocc64\*.*"                    >> _hbfiles

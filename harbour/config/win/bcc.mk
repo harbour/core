@@ -4,13 +4,23 @@
 
 # GNU Make file for Borland/CodeGear/Embarcadero C/C++ 32-bit (4.x-)
 
-OBJ_EXT := .obj
-LIB_PREF :=
-LIB_EXT := .lib
+ifeq ($(HB_COMPILER),bcc64)
+   OBJ_EXT := .o
+   LIB_PREF :=
+   LIB_EXT := .a
+else
+   OBJ_EXT := .obj
+   LIB_PREF :=
+   LIB_EXT := .lib
+endif
 
 HB_DYN_COPT := -DHB_DYNLIB
 
-CC := bcc32.exe
+ifeq ($(HB_COMPILER),bcc64)
+   CC := bcc64.exe
+else
+   CC := bcc32.exe
+endif
 CC_IN := -c
 CC_OUT := -o
 
@@ -25,9 +35,13 @@ else
 endif
 
 ifneq ($(HB_BUILD_OPTIM),no)
-   # for some reason -6 generates the exact same code as -4 with both 5.5 and 5.8.
-   # -5 seems to be significantly slower than both. [vszakats]
-   CFLAGS += -d -6 -O2 -OS -Ov -Oi -Oc
+   ifeq ($(HB_COMPILER),bcc64)
+      CFLAGS += -d -O2 -OS -Ov -Oc
+   else
+      # for some reason -6 generates the exact same code as -4 with both 5.5 and 5.8.
+      # -5 seems to be significantly slower than both. [vszakats]
+      CFLAGS += -d -O2 -OS -Ov -Oc -Oi -6
+   endif
 endif
 
 ifeq ($(HB_BUILD_MODE),cpp)
@@ -35,7 +49,11 @@ ifeq ($(HB_BUILD_MODE),cpp)
 endif
 
 ifeq ($(HB_BUILD_DEBUG),yes)
-   CFLAGS += -y -v
+   ifeq ($(HB_COMPILER),bcc64)
+      CFLAGS += -g
+   else
+      CFLAGS += -v -y
+   endif
 endif
 
 ifneq ($(HB_HOST_PLAT_UNIX),)
@@ -71,14 +89,26 @@ RC := brcc32.exe
 RC_OUT := -fo
 RCFLAGS += -I. -I$(HB_HOST_INC)
 
-LD := ilink32.exe
+ifeq ($(HB_COMPILER),bcc64)
+   LD := ilink64.exe
+else
+   LD := ilink32.exe
+endif
 LIBPATHS := $(foreach dir,$(LIB_DIR) $(3RDLIB_DIR),$(subst /,$(BACKSLASH),-L"$(dir)"))
 LDFLAGS += $(LIBPATHS) -Gn -Tpe
-LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw32mt import32,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
+ifeq ($(HB_COMPILER),bcc64)
+   LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x64.obj $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw64mt import64,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
+else
+   LD_RULE = $(LD) $(LDFLAGS) $(HB_LDFLAGS) $(HB_USER_LDFLAGS) c0x32.obj $(filter-out %$(RES_EXT),$(^F)), "$(subst /,$(BACKSLASH),$(BIN_DIR)/$@)", nul, $(LDLIBS) cw32mt import32,, $(filter %$(RES_EXT),$(^F)) $(LDSTRIP)
+endif
 
 LDLIBS := $(strip $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS))
 
-AR := tlib.exe
+ifeq ($(HB_COMPILER),bcc64)
+   AR := tlib64.exe
+else
+   AR := tlib.exe
+endif
 ARFLAGS += /P128
 AR_RULE = $(AR) $(ARFLAGS) $(HB_AFLAGS) $(HB_USER_AFLAGS) "$(subst /,$(BACKSLASH),$(LIB_DIR)/$@)" $(foreach file,$(?F),-+$(file))
 
@@ -113,11 +143,19 @@ ifneq ($(HB_SHELL),sh)
    endif
 endif
 
-DY := ilink32.exe
+ifeq ($(HB_COMPILER),bcc64)
+   DY := ilink64.exe
+else
+   DY := ilink32.exe
+endif
 DFLAGS += -q -Gn -C -aa -Tpd -Gi -x $(LIBPATHS)
 DY_OUT :=
 # NOTE: .lib extension not added to keep line short enough to work on Win9x/ME
-DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw32mt import32
+ifeq ($(HB_COMPILER),bcc64)
+   DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw64mt import64
+else
+   DLIBS := $(HB_USER_LIBS) $(LIBS) $(3RDLIBS) $(SYSLIBS) cw32mt import32
+endif
 
 # NOTE: The empty line directly before 'endef' HAVE TO exist!
 define dynlib_object

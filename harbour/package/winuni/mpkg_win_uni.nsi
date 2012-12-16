@@ -207,6 +207,14 @@ Section "Libs for Borland C" hb_lib_bcc
 SectionEnd
 !endif
 
+!ifndef PKG_NO_COMP_BCC64
+Section "Libs for Borland C x64" hb_lib_bcc64
+  SetOutPath $INSTDIR\bin
+  SetOutPath $INSTDIR\lib\win\bcc64
+  File "$%HB_ABSROOT%lib\win\bcc64\*.*"
+SectionEnd
+!endif
+
 !ifndef PKG_NO_COMP_WATCOM
 Section /o "Libs for Open Watcom" hb_lib_watcom
   SetOutPath $INSTDIR\lib\win\watcom
@@ -385,6 +393,9 @@ SectionEnd
 !ifndef PKG_NO_COMP_BCC
   LangString DESC_hb_lib_bcc      ${LANG_ENGLISH} "Harbour libs for Borland C"
 !endif
+!ifndef PKG_NO_COMP_BCC64
+  LangString DESC_hb_lib_bcc64    ${LANG_ENGLISH} "Harbour libs for Borland C x64"
+!endif
 !ifndef PKG_NO_COMP_WATCOM
   LangString DESC_hb_lib_watcom   ${LANG_ENGLISH} "Harbour libs for Open Watcom"
 !endif
@@ -446,6 +457,9 @@ SectionEnd
 !endif
 !ifndef PKG_NO_COMP_BCC
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_bcc}      $(DESC_hb_lib_bcc)
+!endif
+!ifndef PKG_NO_COMP_BCC64
+    !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_bcc64}    $(DESC_hb_lib_bcc64)
 !endif
 !ifndef PKG_NO_COMP_WATCOM
     !insertmacro MUI_DESCRIPTION_TEXT ${hb_lib_watcom}   $(DESC_hb_lib_watcom)

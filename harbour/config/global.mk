@@ -499,7 +499,7 @@ ifeq ($(HB_PLATFORM),)
       ifneq ($(filter $(HB_COMPILER),msvcarm msvcmips msvcsh mingwarm poccarm),)
          HB_PLATFORM := wce
       else
-      ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc xcc pocc pocc64),)
+      ifneq ($(filter $(HB_COMPILER),mingw mingw64 msvc msvc64 msvcia64 bcc bcc64 xcc pocc pocc64),)
          HB_PLATFORM := win
       endif
       endif
@@ -749,6 +749,7 @@ ifeq ($(HB_COMPILER),)
                                                       endif
                                                       endif
                                                    else
+                                                      # TODO: Add bcc64 autodetection
                                                       HB_COMP_PATH := $(call find_in_path_raw,bcc32.exe)
                                                       ifneq ($(HB_COMP_PATH),)
                                                          HB_COMPILER := bcc

@@ -601,6 +601,8 @@ STATIC FUNCTION __hb_extern_get_list( cInputName )
       cCommand := "wlib {I}"
    CASE GetEnv( "HB_COMPILER" ) == "bcc"
       cCommand := "tlib {I}, {T}"
+   CASE GetEnv( "HB_COMPILER" ) == "bcc64"
+      cCommand := "tlib64 {I}, {T}"
    ENDCASE
 
    IF ! Empty( cCommand ) .AND. ;

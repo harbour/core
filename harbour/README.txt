@@ -656,6 +656,7 @@ TABLE OF CONTENT
 
    watcom   - Open Watcom C/C++
    bcc      - Borland/CodeGear/Embarcadero C++ 4.x and above
+   bcc64    - Embarcadero C++ 6.5 and above
    icc      - Intel(R) C/C++
    iccia64  - Intel(R) C/C++ IA-64 (Itanium)
    pocc     - Pelles C 4.5 and above
@@ -1490,6 +1491,7 @@ TABLE OF CONTENT
  &nbsp;| host<br />plat | target<br />plat/comp | target<br />cpu
  :---- | :------------- | :-------------------- | :---------------------------------------
        | win            | win/bcc               | x86
+       | win            | win/bcc64             | x86-64
        | win            | win/gcc               | x86
        | win            | win/global            | x86
        | win            | win/icc               | x86
@@ -1542,6 +1544,7 @@ TABLE OF CONTENT
      x | linux          | win/mingw64           | x86-64
      x | linux          | win/watcom            | x86
      x | linux          | win/bcc               | x86 (requires WINE)
+     x | linux          | win/bcc64             | x86-64 (requires WINE)
      x | linux          | os2/watcom            | x86
      x | linux          | dos/watcom            | x86
      x | linux          | dos/djgpp             | x86
