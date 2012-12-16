@@ -376,7 +376,7 @@ static const PHB_LABEL_FUNC s_GenLabelFuncTable[] =
    NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
-void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info )
+void hb_compGenLabelTable( PHB_HFUNC pFunc, PHB_LABEL_INFO label_info )
 {
    const PHB_LABEL_FUNC * pFuncTable = s_GenLabelFuncTable;
    HB_SIZE nLabel = 0, n;

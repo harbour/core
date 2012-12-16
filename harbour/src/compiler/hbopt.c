@@ -927,7 +927,7 @@ static const HB_OPT_FUNC_PTR s_opt_table[] =
    NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
-void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc )
+void hb_compOptimizePCode( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
    const HB_OPT_FUNC_PTR * pFuncTable = s_opt_table;
 
@@ -1052,7 +1052,7 @@ static HB_ISIZ hb_compJumpGetOffset( HB_BYTE * pCode )
 }
 
 
-static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
+static void hb_compPCodeEnumScanLocals( PHB_HFUNC pFunc, PHB_OPT_LOCAL pLocals )
 {
    HB_SIZE nPos = 0, nLastPos = 0;
    HB_SHORT isVar = 0;
@@ -1208,7 +1208,7 @@ static void hb_compPCodeEnumScanLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
 }
 
 
-static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, HB_SHORT isLocal )
+static void hb_compPCodeEnumSelfifyLocal( PHB_HFUNC pFunc, HB_SHORT isLocal )
 {
    HB_SIZE nPos = 0, nLastPos = 0;
 
@@ -1260,7 +1260,7 @@ static void hb_compPCodeEnumSelfifyLocal( PFUNCTION pFunc, HB_SHORT isLocal )
 }
 
 
-static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, HB_SIZE nPos, HB_BYTE * pMap, HB_SHORT isLocal )
+static int hb_compPCodeTraceAssignedUnused( PHB_HFUNC pFunc, HB_SIZE nPos, HB_BYTE * pMap, HB_SHORT isLocal )
 {
    for( ;; )
    {
@@ -1333,7 +1333,7 @@ static int hb_compPCodeTraceAssignedUnused( PFUNCTION pFunc, HB_SIZE nPos, HB_BY
 }
 
 
-static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
+static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PHB_HFUNC pFunc, PHB_OPT_LOCAL pLocals )
 {
    HB_BYTE * pMap;
    HB_SIZE nPos = 0, nLastPos = 0;
@@ -1410,7 +1410,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
 
       if( fCheck && ( isLocal = hb_compLocalGetNumber( &pFunc->pCode[ nPos ] ) ) > ( HB_SHORT ) pFunc->wParamCount )
       {
-         PVAR     pVar = pFunc->pLocals;
+         PHB_HVAR pVar = pFunc->pLocals;
          HB_SHORT is;
 
          for( is = 1; is < isLocal; is++ )
@@ -1455,7 +1455,7 @@ static void hb_compPCodeEnumAssignedUnused( HB_COMP_DECL, PFUNCTION pFunc, PHB_O
 }
 
 
-static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLocals )
+static void hb_compPCodeEnumRenumberLocals( PHB_HFUNC pFunc, PHB_OPT_LOCAL pLocals )
 {
    HB_SIZE nPos = 0;
 
@@ -1550,11 +1550,11 @@ static void hb_compPCodeEnumRenumberLocals( PFUNCTION pFunc, PHB_OPT_LOCAL pLoca
 
 void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
 {
-   PFUNCTION       pFunc = HB_COMP_PARAM->functions.pLast;
-   PHB_OPT_LOCAL   pLocals;
-   PVAR            pVar, * ppVar;
-   HB_USHORT       usLocalCount, usIndex;
-   HB_BOOL         fBool;
+   PHB_HFUNC     pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_OPT_LOCAL pLocals;
+   PHB_HVAR      pVar, * ppVar;
+   HB_USHORT     usLocalCount, usIndex;
+   HB_BOOL       fBool;
 
    /* Many (perhaps ALL) functions of pcode trace optimization dependes on pcodes.
       Please, check these functions if new pcode is added, or existing changed.
@@ -1610,8 +1610,8 @@ void hb_compPCodeTraceOptimizer( HB_COMP_DECL )
        * [druzus]
        */
 #if 0
-      assert( ( ! ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags == 0 ) ||
-              (   ( pVar->iUsed & VU_USED ) && pLocals[ usIndex ].bFlags != 0 ) );
+      assert( ( ! ( pVar->iUsed & HB_VU_USED ) && pLocals[ usIndex ].bFlags == 0 ) ||
+              (   ( pVar->iUsed & HB_VU_USED ) && pLocals[ usIndex ].bFlags != 0 ) );
 #endif
 
       if( usIndex >= pFunc->wParamCount && pLocals[ usIndex ].bFlags == OPT_LOCAL_FLAG_PUSH )

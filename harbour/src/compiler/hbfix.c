@@ -332,7 +332,7 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
    NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
-void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc )
+void hb_compFixFuncPCode( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
    const HB_FIX_FUNC_PTR * pFuncTable = s_fixlocals_table;
    HB_FIX_INFO fix_info;

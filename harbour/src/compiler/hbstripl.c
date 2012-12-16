@@ -287,7 +287,7 @@ static const PHB_STRIP_FUNC s_stripLines_table[] =
    NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
-void hb_compStripFuncLines( HB_COMP_DECL, PFUNCTION pFunc )
+void hb_compStripFuncLines( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
    assert( HB_P_LAST_PCODE == sizeof( s_stripLines_table ) / sizeof( PHB_STRIP_FUNC ) );
 

@@ -30,8 +30,8 @@
 #include "hbdate.h"
 #include "hbassert.h"
 
-static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
-static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc );
+static void hb_compGenCReadable( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc );
+static void hb_compGenCCompact( PHB_HFUNC pFunc, FILE * yyc );
 static void hb_compGenCFunc( FILE * yyc, const char * cDecor, const char * szName, HB_BOOL fStrip, int iFuncSuffix );
 static void hb_writeEndInit( HB_COMP_DECL, FILE * yyc, const char * szModulname, const char * szSourceFile );
 
@@ -169,7 +169,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 {
    char        szFileName[ HB_PATH_MAX ];
    PHB_HSYMBOL pSym;
-   PFUNCTION   pFunc;
+   PHB_HFUNC   pFunc;
    PHB_HINLINE pInline;
    FILE *      yyc; /* file handle for C output */
    HB_BOOL     fHasHbInline = HB_FALSE;
@@ -209,7 +209,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
 
    pFunc = HB_COMP_PARAM->functions.pFirst;
    while( pFunc &&
-          ( ( pFunc->funFlags & FUN_FILE_DECL ) != 0 ||
+          ( ( pFunc->funFlags & HB_FUNF_FILE_DECL ) != 0 ||
             pFunc == HB_COMP_PARAM->pInitFunc ||
             pFunc == HB_COMP_PARAM->pLineFunc ) )
       pFunc = pFunc->pNext;
@@ -309,7 +309,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
             else
                fprintf( yyc, "HB_FS_PUBLIC" );
 
-            if( pSym->cScope & VS_MEMVAR )
+            if( pSym->cScope & HB_VSCOMP_MEMVAR )
                fprintf( yyc, " | HB_FS_MEMVAR" );
 
             if( pSym->cScope & HB_FS_MESSAGE )
@@ -353,7 +353,7 @@ void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME pFileName )       /* generates the
       pFunc = HB_COMP_PARAM->functions.pFirst;
       while( pFunc )
       {
-         if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
+         if( ( pFunc->funFlags & HB_FUNF_FILE_DECL ) == 0 )
          {
             /* Is it _STATICS$ - static initialization function */
             if( pFunc == HB_COMP_PARAM->pInitFunc )
@@ -519,7 +519,7 @@ static void hb_compGenCByteStr( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen 
    }
 }
 
-static void hb_compGenCLocalName( PFUNCTION pFunc, int iLocal, HB_SIZE nPCodePos, HB_GENC_INFO_PTR cargo )
+static void hb_compGenCLocalName( PHB_HFUNC pFunc, int iLocal, HB_SIZE nPCodePos, HB_GENC_INFO_PTR cargo )
 {
    /* Variable with negative order are local variables
     * referenced in a codeblock -handle it with care
@@ -2727,7 +2727,7 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushaparams
 };
 
-static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
+static void hb_compGenCReadable( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
 {
    const HB_GENC_FUNC_PTR * pFuncTable = s_verbose_table;
    HB_GENC_INFO genc_info;
@@ -2749,7 +2749,7 @@ static void hb_compGenCReadable( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
    fprintf( yyc, "   hb_vmExecute( pcode, symbols );\n}\n" );
 }
 
-static void hb_compGenCCompact( PFUNCTION pFunc, FILE * yyc )
+static void hb_compGenCCompact( PHB_HFUNC pFunc, FILE * yyc )
 {
    HB_SIZE nPCodePos = 0;
    int     nChar;

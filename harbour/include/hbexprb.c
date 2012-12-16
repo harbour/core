@@ -4508,7 +4508,7 @@ static HB_BOOL hb_compExprCodeblockPush( HB_EXPR_PTR pSelf, int iEarlyEvalPass, 
    {
       HB_CBVAR_PTR pVar;
 
-      HB_COMP_PARAM->iVarScope = VS_PARAMETER;
+      HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER;
       pVar = pSelf->value.asCodeblock.pLocals;
       while( pVar )
       {

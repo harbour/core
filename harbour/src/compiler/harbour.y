@@ -323,9 +323,9 @@ Line       : LINE NUM_LONG Crlf
            ;
 
 Function   : FunScope FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); } Crlf
-           | FunScope PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); } Crlf
-           | FunScope FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); HB_COMP_PARAM->iVarScope = VS_PARAMETER; } '(' Params ')' Crlf
-           | FunScope PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, FUN_PROCEDURE ); HB_COMP_PARAM->iVarScope = VS_PARAMETER;} '(' Params ')' Crlf
+           | FunScope PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, HB_FUNF_PROCEDURE ); } Crlf
+           | FunScope FUNCTION  IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, 0 ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER; } '(' Params ')' Crlf
+           | FunScope PROCEDURE IdentName { hb_compFunctionAdd( HB_COMP_PARAM, $3, ( HB_SYMBOLSCOPE ) $1, HB_FUNF_PROCEDURE ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER;} '(' Params ')' Crlf
            ;
 
 FunScope   :                  { $$ = HB_FS_PUBLIC; }
@@ -380,45 +380,45 @@ ParamList  : IdentName AsType                { hb_compVariableAdd( HB_COMP_PARAM
  *    stop compilation if invalid syntax will be used.
  */
 Statement  : ExecFlow CrlfStmnt
-           | IfInline CrlfStmnt     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | FunCall CrlfStmnt      { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | AliasExpr CrlfStmnt    { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | ObjectMethod CrlfStmnt { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
+           | IfInline CrlfStmnt     { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | FunCall CrlfStmnt      { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | AliasExpr CrlfStmnt    { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | ObjectMethod CrlfStmnt { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
            | MacroAny CrlfStmnt     { if( HB_COMP_ISSUPPORTED( HB_COMPFLAG_XBASE ) )
                                          HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) );
                                       else
                                          HB_COMP_EXPR_FREE( HB_COMP_ERROR_SYNTAX( $1 ) );
-                                       HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN;
+                                       HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                                     }
-           | PareExpList CrlfStmnt  { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | ExprPreOp CrlfStmnt    { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | ExprPostOp CrlfStmnt   { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | ExprOperEq CrlfStmnt   { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | ExprEqual CrlfStmnt    { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | ExprAssign CrlfStmnt   { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
-           | DoProc CrlfStmnt       { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN; }
+           | PareExpList CrlfStmnt  { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | ExprPreOp CrlfStmnt    { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | ExprPostOp CrlfStmnt   { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | ExprOperEq CrlfStmnt   { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | ExprEqual CrlfStmnt    { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | ExprAssign CrlfStmnt   { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
+           | DoProc CrlfStmnt       { HB_COMP_EXPR_FREE( hb_compExprGenStatement( $1, HB_COMP_PARAM ) ); HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN; }
            | BREAK CrlfStmnt        { hb_compGenBreak( HB_COMP_PARAM ); hb_compGenPCode2( HB_P_DOSHORT, 0, HB_COMP_PARAM );
-                                      HB_COMP_PARAM->functions.pLast->funFlags |= FUN_BREAK_CODE; }
+                                      HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_BREAK_CODE; }
            | BREAK { hb_compLinePushIfInside( HB_COMP_PARAM ); } Expression Crlf
                                     {
                                        hb_compGenBreak( HB_COMP_PARAM ); HB_COMP_EXPR_FREE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
                                        hb_compGenPCode2( HB_P_DOSHORT, 1, HB_COMP_PARAM );
-                                       HB_COMP_PARAM->functions.pLast->funFlags |= FUN_BREAK_CODE;
+                                       HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_BREAK_CODE;
                                     }
-           | EXIT CrlfStmnt { hb_compLoopExit( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->funFlags |= FUN_BREAK_CODE; }
-           | LOOP CrlfStmnt { hb_compLoopLoop( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->funFlags |= FUN_BREAK_CODE; }
+           | EXIT CrlfStmnt { hb_compLoopExit( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_BREAK_CODE; }
+           | LOOP CrlfStmnt { hb_compLoopLoop( HB_COMP_PARAM ); HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_BREAK_CODE; }
            | RETURN CrlfStmnt {
                         if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                         {
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_EXIT_IN_SEQUENCE, "RETURN", NULL );
                         }
                         hb_compGenPCode1( HB_P_ENDPROC, HB_COMP_PARAM );
-                        if( ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_PROCEDURE ) == 0 )
+                        if( ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_PROCEDURE ) == 0 )
                         {
                            /* return from a function without a return value */
                            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_NO_RETURN_VALUE, NULL, NULL );
                         }
-                        HB_COMP_PARAM->functions.pLast->funFlags |= FUN_WITH_RETURN | FUN_BREAK_CODE;
+                        HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE;
                      }
            | RETURN  {  hb_compLinePushIfInside( HB_COMP_PARAM ); }
              Expression Crlf
@@ -429,29 +429,29 @@ Statement  : ExecFlow CrlfStmnt
                         }
                         /* TODO: check if return value agree with declared value */
                         HB_COMP_EXPR_FREE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
-                        if( HB_COMP_PARAM->functions.pLast->funFlags & FUN_EXTBLOCK )
+                        if( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK )
                            /* extended clodeblock, use HB_P_ENDBLOCK to return value and stop execution */
                            hb_compGenPCode1( HB_P_ENDBLOCK, HB_COMP_PARAM );
                         else
                            hb_compGenPCode2( HB_P_RETVALUE, HB_P_ENDPROC, HB_COMP_PARAM );
-                        if( HB_COMP_PARAM->functions.pLast->funFlags & FUN_PROCEDURE )
+                        if( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_PROCEDURE )
                         {
                            /* procedure returns a value */
                            hb_compGenWarning( HB_COMP_PARAM, hb_comp_szWarnings, 'W', HB_COMP_WARN_PROC_RETURN_VALUE, NULL, NULL );
                         }
-                        HB_COMP_PARAM->functions.pLast->funFlags |= FUN_WITH_RETURN | FUN_BREAK_CODE;
+                        HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE;
                      }
-           | PUBLIC  {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PUBLIC; }
+           | PUBLIC  {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PUBLIC; }
                      ExtVarList
                      {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPUBLIC" );
-                        HB_COMP_PARAM->iVarScope = VS_NONE;
-                        HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN;
+                        HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE;
+                        HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                      } Crlf
-           | PRIVATE {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = VS_PRIVATE; }
+           | PRIVATE {  hb_compLinePushIfInside( HB_COMP_PARAM ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_PRIVATE; }
                      ExtVarList
                      {  hb_compRTVariableGen( HB_COMP_PARAM, "__MVPRIVATE" );
-                        HB_COMP_PARAM->iVarScope = VS_NONE;
-                        HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN;
+                        HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE;
+                        HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                      } Crlf
            | VarDefs
            | FieldsDef
@@ -1029,8 +1029,8 @@ BlockVars  : /* empty list */          { $$ = NULL; }
            | BlockVarList ',' EPSILON  { $$ = $1;   $<asExpr>0->value.asCodeblock.flags |= HB_BLOCK_VPARAMS; }
            ;
 
-BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, $2->cVarType, HB_COMP_PARAM ); }
-             | BlockVarList ',' IdentName AsType   { HB_COMP_PARAM->iVarScope = VS_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, $4->cVarType, HB_COMP_PARAM ); }
+BlockVarList : IdentName AsType                    { HB_COMP_PARAM->iVarScope = HB_VSCOMP_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $1, $2->cVarType, HB_COMP_PARAM ); }
+             | BlockVarList ',' IdentName AsType   { HB_COMP_PARAM->iVarScope = HB_VSCOMP_LOCAL; $$ = hb_compExprCBVarAdd( $<asExpr>0, $3, $4->cVarType, HB_COMP_PARAM ); }
              ;
 
 BlockExpList : Expression                    { $$ = hb_compExprAddCodeblockExpr( $<asExpr>-1, $1 ); }
@@ -1049,7 +1049,7 @@ CodeBlock   : BlockHead
                $<sNumber>$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                $<sNumber>2 = HB_COMP_PARAM->lastLine;
                hb_compCodeBlockStart( HB_COMP_PARAM, 0 );
-               HB_COMP_PARAM->functions.pLast->funFlags |= FUN_EXTBLOCK;
+               HB_COMP_PARAM->functions.pLast->funFlags |= HB_FUNF_EXTBLOCK;
                HB_COMP_PARAM->functions.pLast->fVParams =
                   ( $1->value.asCodeblock.flags & HB_BLOCK_VPARAMS ) != 0;
 
@@ -1061,7 +1061,7 @@ CodeBlock   : BlockHead
                   $1->nLength = 0;
                }
 
-               HB_COMP_PARAM->iVarScope = VS_PARAMETER;
+               HB_COMP_PARAM->iVarScope = HB_VSCOMP_PARAMETER;
                pVar = $1->value.asCodeblock.pLocals;
                while( pVar )
                {
@@ -1102,20 +1102,20 @@ IfInline : IIF '(' Expression ',' Argument ',' Argument ')'
 IfInlineAlias : IfInline ALIASOP
               ;
 
-VarDefs  : LOCAL { HB_COMP_PARAM->iVarScope = VS_LOCAL; hb_compLinePush( HB_COMP_PARAM ); }
+VarDefs  : LOCAL { HB_COMP_PARAM->iVarScope = HB_VSCOMP_LOCAL; hb_compLinePush( HB_COMP_PARAM ); }
            VarList Crlf
-         | STATIC { HB_COMP_PARAM->iVarScope = VS_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
+         | STATIC { HB_COMP_PARAM->iVarScope = HB_VSCOMP_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
            VarList Crlf
-         | THREAD STATIC { HB_COMP_PARAM->iVarScope = VS_TH_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
+         | THREAD STATIC { HB_COMP_PARAM->iVarScope = HB_VSCOMP_TH_STATIC; hb_compLinePush( HB_COMP_PARAM ); }
            VarList Crlf
-         | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->funFlags & FUN_USES_LOCAL_PARAMS )
+         | PARAMETERS { if( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_USES_LOCAL_PARAMS )
                            hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_PARAMETERS_NOT_ALLOWED, NULL, NULL );
                         else
                         {
                            HB_COMP_PARAM->functions.pLast->wParamNum = 0;
-                           HB_COMP_PARAM->iVarScope = ( VS_PRIVATE | VS_PARAMETER );
+                           HB_COMP_PARAM->iVarScope = ( HB_VSCOMP_PRIVATE | HB_VSCOMP_PARAMETER );
                         }
-                      } MemvarList Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
+                      } MemvarList Crlf { HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
          ;
 
 VarList  : VarDef                         { $$ = 1; }
@@ -1148,17 +1148,17 @@ ExtVarDef  : VarDef
 VarDef     : IdentName AsType
                {
                   hb_compVariableAdd( HB_COMP_PARAM, $1, $2 );
-                  if( HB_COMP_PARAM->iVarScope & VS_STATIC )
+                  if( HB_COMP_PARAM->iVarScope & HB_VSCOMP_STATIC )
                   {
                      hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
                      hb_compStaticDefEnd( HB_COMP_PARAM, $1 );
                   }
-                  else if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
+                  else if( HB_COMP_PARAM->iVarScope == HB_VSCOMP_PUBLIC || HB_COMP_PARAM->iVarScope == HB_VSCOMP_PRIVATE )
                   {
                      hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( $1, NULL, HB_COMP_PARAM ), HB_FALSE );
                   }
-                  else if( HB_COMP_PARAM->iVarScope == VS_LOCAL &&
-                           ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_EXTBLOCK ) )
+                  else if( HB_COMP_PARAM->iVarScope == HB_VSCOMP_LOCAL &&
+                           ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) )
                   {
                      HB_COMP_EXPR_FREE( hb_compExprGenPush( hb_compExprNewNil( HB_COMP_PARAM ), HB_COMP_PARAM ) );
                   }
@@ -1169,19 +1169,19 @@ VarDef     : IdentName AsType
              INASSIGN Expression
                {
                   HB_COMP_PARAM->iVarScope = $<iNumber>3;
-                  if( HB_COMP_PARAM->iVarScope & VS_STATIC )
+                  if( HB_COMP_PARAM->iVarScope & HB_VSCOMP_STATIC )
                   {
                      hb_compStaticDefStart( HB_COMP_PARAM );   /* switch to statics pcode buffer */
                      HB_COMP_EXPR_FREE( hb_compExprGenStatement( hb_compExprAssignStatic( hb_compExprNewVar( $1, HB_COMP_PARAM ), $5, HB_COMP_PARAM ), HB_COMP_PARAM ) );
                      hb_compStaticDefEnd( HB_COMP_PARAM, $1 );
                   }
-                  else if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
+                  else if( HB_COMP_PARAM->iVarScope == HB_VSCOMP_PUBLIC || HB_COMP_PARAM->iVarScope == HB_VSCOMP_PRIVATE )
                   {
                      HB_COMP_EXPR_FREE( hb_compExprGenPush( $5, HB_COMP_PARAM ) );
                      hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( $1, NULL, HB_COMP_PARAM ), HB_TRUE );
                   }
-                  else if( HB_COMP_PARAM->iVarScope == VS_LOCAL &&
-                           ( HB_COMP_PARAM->functions.pLast->funFlags & FUN_EXTBLOCK ) )
+                  else if( HB_COMP_PARAM->iVarScope == HB_VSCOMP_LOCAL &&
+                           ( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) )
                   {
                      HB_COMP_EXPR_FREE( hb_compExprGenPush( $5, HB_COMP_PARAM ) );
                   }
@@ -1206,7 +1206,7 @@ DimIndex   : '[' Expression               { $$ = hb_compExprNewArgList( $2, HB_C
            | DimIndex ']' '[' Expression  { $$ = hb_compExprAddListExpr( $1, $4 ); }
            ;
 
-FieldsDef  : FIELD { HB_COMP_PARAM->iVarScope = VS_FIELD; }
+FieldsDef  : FIELD { HB_COMP_PARAM->iVarScope = HB_VSCOMP_FIELD; }
              FieldList InAlias Crlf
              {
                if( $4 ) hb_compFieldSetAlias( HB_COMP_PARAM, $4, $3 );
@@ -1221,7 +1221,7 @@ InAlias    : /* no alias */   { $$ = NULL; }
            | IN IdentName     { $$ = $2; }
            ;
 
-MemvarDef  : MEMVAR { HB_COMP_PARAM->iVarScope = VS_MEMVAR; } MemvarList Crlf
+MemvarDef  : MEMVAR { HB_COMP_PARAM->iVarScope = HB_VSCOMP_MEMVAR; } MemvarList Crlf
            ;
 
 MemvarList : IdentName AsType                   { hb_compVariableAdd( HB_COMP_PARAM, $1, $2 ); }
@@ -1245,13 +1245,13 @@ Declaration: DECLARE IdentName '(' { hb_compDeclaredAdd( HB_COMP_PARAM, $2 ); HB
                  }
                }
                HB_COMP_PARAM->szDeclaredFun = NULL;
-               HB_COMP_PARAM->iVarScope = VS_NONE;
+               HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE;
              }
-           | DECLARE IdentName { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, NULL ); } ClassInfo Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
-           | DECLARE_CLASS IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, NULL ); HB_COMP_PARAM->iVarScope = VS_NONE; }
-           | DECLARE_CLASS IdentName IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, $3 ); HB_COMP_PARAM->iVarScope = VS_NONE; }
-           | DECLARE_MEMBER DecMethod Crlf { HB_COMP_PARAM->iVarScope = VS_NONE; }
-           | DECLARE_MEMBER '{' AsType { HB_COMP_PARAM->cDataListType = $3->cVarType; } DecDataList '}' Crlf { HB_COMP_PARAM->cDataListType = 0; HB_COMP_PARAM->iVarScope = VS_NONE; }
+           | DECLARE IdentName { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, NULL ); } ClassInfo Crlf { HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
+           | DECLARE_CLASS IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, NULL ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
+           | DECLARE_CLASS IdentName IdentName Crlf { HB_COMP_PARAM->pLastClass = hb_compClassAdd( HB_COMP_PARAM, $2, $3 ); HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
+           | DECLARE_MEMBER DecMethod Crlf { HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
+           | DECLARE_MEMBER '{' AsType { HB_COMP_PARAM->cDataListType = $3->cVarType; } DecDataList '}' Crlf { HB_COMP_PARAM->cDataListType = 0; HB_COMP_PARAM->iVarScope = HB_VSCOMP_NONE; }
            ;
 
 DecDataList: DecData
@@ -1361,19 +1361,19 @@ DummyArgument : EmptyExpression     { HB_COMP_EXPR_FREE( $1 ); }
               ;
 
 FormalList : IdentName AsType                                  { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $1, $2 ); }
-           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, hb_compVarTypeNew( HB_COMP_PARAM, $3->cVarType + VT_OFFSET_BYREF, NULL ) ); }
+           | '@' IdentName AsType                              { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, hb_compVarTypeNew( HB_COMP_PARAM, $3->cVarType + HB_VT_OFFSET_BYREF, NULL ) ); }
            | '@' IdentName '(' DummyArgList ')'                { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, hb_compVarTypeNew( HB_COMP_PARAM, 'F', NULL ) ); }
            | FormalList ',' IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, $4 ); }
-           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, hb_compVarTypeNew( HB_COMP_PARAM, $5->cVarType + VT_OFFSET_BYREF, NULL ) ); }
+           | FormalList ',' '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, hb_compVarTypeNew( HB_COMP_PARAM, $5->cVarType + HB_VT_OFFSET_BYREF, NULL ) ); }
            | FormalList ',' '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, hb_compVarTypeNew( HB_COMP_PARAM, 'F', NULL ) ); }
            ;
 
-OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, hb_compVarTypeNew( HB_COMP_PARAM, $3->cVarType + VT_OFFSET_OPTIONAL, NULL ) ); }
-           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, hb_compVarTypeNew( HB_COMP_PARAM, $4->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF, NULL ) ); }
-           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, hb_compVarTypeNew( HB_COMP_PARAM, 'F' + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF, NULL ) ); }
-           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, hb_compVarTypeNew( HB_COMP_PARAM, $5->cVarType + VT_OFFSET_OPTIONAL, NULL ) ); }
-           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, hb_compVarTypeNew( HB_COMP_PARAM, $6->cVarType + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF, NULL ) ); }
-           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, hb_compVarTypeNew( HB_COMP_PARAM, 'F' + VT_OFFSET_OPTIONAL + VT_OFFSET_BYREF, NULL ) ); }
+OptList    : OPTIONAL IdentName AsType                               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $2, hb_compVarTypeNew( HB_COMP_PARAM, $3->cVarType + HB_VT_OFFSET_OPTIONAL, NULL ) ); }
+           | OPTIONAL '@' IdentName AsType                           { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, hb_compVarTypeNew( HB_COMP_PARAM, $4->cVarType + HB_VT_OFFSET_OPTIONAL + HB_VT_OFFSET_BYREF, NULL ) ); }
+           | OPTIONAL '@' IdentName '(' DummyArgList ')'             { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $3, hb_compVarTypeNew( HB_COMP_PARAM, 'F' + HB_VT_OFFSET_OPTIONAL + HB_VT_OFFSET_BYREF, NULL ) ); }
+           | OptList ',' OPTIONAL IdentName AsType                   { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $4, hb_compVarTypeNew( HB_COMP_PARAM, $5->cVarType + HB_VT_OFFSET_OPTIONAL, NULL ) ); }
+           | OptList ',' OPTIONAL '@' IdentName AsType               { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, hb_compVarTypeNew( HB_COMP_PARAM, $6->cVarType + HB_VT_OFFSET_OPTIONAL + HB_VT_OFFSET_BYREF, NULL ) ); }
+           | OptList ',' OPTIONAL '@' IdentName '(' DummyArgList ')' { hb_compDeclaredParameterAdd( HB_COMP_PARAM, $5, hb_compVarTypeNew( HB_COMP_PARAM, 'F' + HB_VT_OFFSET_OPTIONAL + HB_VT_OFFSET_BYREF, NULL ) ); }
            ;
 
 ExecFlow   : IfEndif
@@ -1400,11 +1400,11 @@ IfBegin    : IF ExpList
                { $$ = hb_compGenJump( 0, HB_COMP_PARAM ); hb_compGenJumpHere( $<sNumber>5, HB_COMP_PARAM ); }
            ;
 
-IfElse     : ELSE Crlf { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE; }
+IfElse     : ELSE Crlf { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
                EmptyStats
            ;
 
-IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); }
+IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); }
                ExpList Crlf
                { HB_COMP_EXPR_FREE( hb_compExprGenPush( $3, HB_COMP_PARAM ) );
                   $<sNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -1414,7 +1414,7 @@ IfElseIf   : ELSEIF { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CO
                   hb_compGenJumpHere( $<sNumber>5, HB_COMP_PARAM );
                }
 
-           | IfElseIf ELSEIF { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); }
+           | IfElseIf ELSEIF { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; hb_compLinePush( HB_COMP_PARAM ); }
                ExpList Crlf
                { HB_COMP_EXPR_FREE( hb_compExprGenPush( $4, HB_COMP_PARAM ) );
                   $<sNumber>$ = hb_compGenJumpFalse( 0, HB_COMP_PARAM );
@@ -1429,7 +1429,7 @@ EndIf      : EndIfID
                {
                   if( HB_COMP_PARAM->functions.pLast->wIfCounter )
                      --HB_COMP_PARAM->functions.pLast->wIfCounter;
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
            ;
 
@@ -1457,7 +1457,7 @@ DoCase     : DoCaseBegin
 EndCase    : EndCaseID
                {  if( HB_COMP_PARAM->functions.pLast->wCaseCounter )
                      --HB_COMP_PARAM->functions.pLast->wCaseCounter;
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
            ;
 
@@ -1484,7 +1484,7 @@ Cases      : CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } ExpList Crlf
                }
              EmptyStats
                {
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE;
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   $$ = hb_compElseIfGen( HB_COMP_PARAM, NULL, hb_compGenJump( 0, HB_COMP_PARAM ) );
                   hb_compGenJumpHere( $<sNumber>5, HB_COMP_PARAM );
                }
@@ -1496,13 +1496,13 @@ Cases      : CASE { hb_compLinePushIfInside( HB_COMP_PARAM ); } ExpList Crlf
                }
              EmptyStats
                {
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE;
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   $$ = hb_compElseIfGen( HB_COMP_PARAM, $1, hb_compGenJump( 0, HB_COMP_PARAM ) );
                   hb_compGenJumpHere( $<sNumber>6, HB_COMP_PARAM );
                }
            ;
 
-Otherwise  : OTHERWISE {hb_compLinePushIfDebugger( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE; }
+Otherwise  : OTHERWISE {hb_compLinePushIfDebugger( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
                 EmptyStats
            | Otherwise OTHERWISE { hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_MAYHEM_IN_CASE, NULL, NULL ); } Crlf
                 EmptyStats
@@ -1524,7 +1524,7 @@ DoWhile    : WhileBegin ExpList Crlf
                   if( HB_COMP_PARAM->functions.pLast->wWhileCounter )
                      --HB_COMP_PARAM->functions.pLast->wWhileCounter;
                   hb_compLoopEnd( HB_COMP_PARAM );
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_WITH_RETURN;
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_WITH_RETURN;
                }
            ;
 
@@ -1538,7 +1538,7 @@ WhileBegin : WHILE
            ;
 
 EndWhile   : EndWhileID
-               { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE; }
+               { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
            ;
 
 EndWhileID : ENDDO
@@ -1608,7 +1608,7 @@ ForNext    : FOR LValue ForAssign Expression          /* 1  2  3  4 */
                   if( hb_compExprAsSymbol( $<asExpr>2 ) )
                      hb_compForEnd( HB_COMP_PARAM, hb_compExprAsSymbol( $<asExpr>2 ) );
                   HB_COMP_EXPR_FREE( $<asExpr>5 );  /* deletes $5, $2, $4 */
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
            ;
 
@@ -1680,7 +1680,7 @@ ForEach    : FOREACH ForList IN ForArgs          /* 1  2  3  4 */
 
                 hb_compGenJumpHere( $<sNumber>9, HB_COMP_PARAM );
                 hb_compLoopEnd( HB_COMP_PARAM );
-                HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+                HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                 hb_compEnumEnd( HB_COMP_PARAM, $2 );
                 HB_COMP_EXPR_FREE( $2 );
                 HB_COMP_EXPR_FREE( $4 );
@@ -1715,7 +1715,7 @@ EndSwitch   : EndSwitchID
                {
                   if( HB_COMP_PARAM->functions.pLast->wSwitchCounter )
                      --HB_COMP_PARAM->functions.pLast->wSwitchCounter;
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                }
             ;
 
@@ -1755,7 +1755,7 @@ SwitchCases : CASE Expression { hb_compSwitchAdd( HB_COMP_PARAM, $2 ); hb_compLi
             | SwitchCases SwitchDefault
             ;
 
-SwitchDefault : OTHERWISE { hb_compSwitchAdd( HB_COMP_PARAM, NULL ); hb_compLinePush( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE; }
+SwitchDefault : OTHERWISE { hb_compSwitchAdd( HB_COMP_PARAM, NULL ); hb_compLinePush( HB_COMP_PARAM ); } Crlf { HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
                 EmptyStats
               ;
 
@@ -1791,7 +1791,7 @@ BeginSeq    : BEGINSEQ        /* 1 */
                AlwaysSeq      /* 9 */
                {              /* 10 */
                   long lLoopCount = hb_compLoopCount( HB_COMP_PARAM );
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                   if( $9 )
                   {
                      if( $<lNumber>4 != lLoopCount )
@@ -1839,21 +1839,21 @@ AlwaysSeq   : /* no always */    { $$ = 0; }
 
 Always      : ALWAYS
                {
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( FUN_WITH_RETURN | FUN_BREAK_CODE );
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ ( HB_FUNF_WITH_RETURN | HB_FUNF_BREAK_CODE );
                   $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   ++HB_COMP_PARAM->functions.pLast->wAlwaysCounter;
                   hb_compSequenceAlways( HB_COMP_PARAM );
                }
             ;
 
-RecoverSeq  : /* no recover */   { $$ = 0; HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE; }
+RecoverSeq  : /* no recover */   { $$ = 0; HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE; }
             | RecoverEmpty Crlf EmptyStats
             | RecoverUsing Crlf EmptyStats
             ;
 
 RecoverEmpty : RECOVER
                {
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE;
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
@@ -1864,7 +1864,7 @@ RecoverEmpty : RECOVER
 
 RecoverUsing : RECOVERUSING IdentName
                {
-                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ FUN_BREAK_CODE;
+                  HB_COMP_PARAM->functions.pLast->funFlags &= ~ HB_FUNF_BREAK_CODE;
                   $$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                   if( HB_COMP_PARAM->functions.pLast->wSeqCounter )
                      --HB_COMP_PARAM->functions.pLast->wSeqCounter;
@@ -1966,7 +1966,7 @@ Crlf       : '\n'       { HB_COMP_PARAM->fError = HB_FALSE; }
 static void hb_compLoopStart( HB_COMP_DECL, HB_BOOL fCanLoop )
 {
    HB_LOOPEXIT_PTR pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    if( pFunc->pLoops )
    {
@@ -1995,7 +1995,7 @@ static void hb_compLoopStart( HB_COMP_DECL, HB_BOOL fCanLoop )
 static long hb_compLoopCount( HB_COMP_DECL )
 {
    HB_LOOPEXIT_PTR pLastLoop, pLastExit, pLoop;
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
    long lCount = 0;
 
    pLastLoop = pLastExit = NULL;
@@ -2034,7 +2034,7 @@ static long hb_compLoopCount( HB_COMP_DECL )
 static void hb_compLoopLoop( HB_COMP_DECL )
 {
    HB_LOOPEXIT_PTR pLast = NULL, pLoop;
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pLoop = pFunc->pLoops;
    while( pLoop )
@@ -2092,7 +2092,7 @@ static void hb_compLoopLoop( HB_COMP_DECL )
  */
 static void hb_compLoopExit( HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    if( ! pFunc->pLoops )
    {
@@ -2148,7 +2148,7 @@ static void hb_compLoopExit( HB_COMP_DECL )
  */
 static void hb_compLoopHere( HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
    HB_LOOPEXIT_PTR pLoop = pFunc->pLoops, pFree, pLast;
 
    if( pLoop )
@@ -2174,7 +2174,7 @@ static void hb_compLoopHere( HB_COMP_DECL )
  */
 static void hb_compLoopEnd( HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
    HB_LOOPEXIT_PTR pLoop = pFunc->pLoops, pLast = pFunc->pLoops, pExit, pFree;
 
    if( pLoop )
@@ -2201,7 +2201,7 @@ static void hb_compLoopEnd( HB_COMP_DECL )
    }
 }
 
-void hb_compLoopKill( PFUNCTION pFunc )
+void hb_compLoopKill( PHB_HFUNC pFunc )
 {
    HB_LOOPEXIT_PTR pLoop, pFree;
 
@@ -2228,7 +2228,7 @@ void hb_compLoopKill( PFUNCTION pFunc )
 static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, HB_SIZE nOffset )
 {
    HB_ELSEIF_PTR pElseIf = ( HB_ELSEIF_PTR ) hb_xgrab( sizeof( HB_ELSEIF ) ), pLast;
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pElseIf->nOffset = nOffset;
    pElseIf->pPrev   = NULL;
@@ -2269,7 +2269,7 @@ static void hb_compElseIfFix( HB_COMP_DECL, void * pFixElseIfs )
    }
 }
 
-void hb_compElseIfKill( PFUNCTION pFunc )
+void hb_compElseIfKill( PHB_HFUNC pFunc )
 {
    HB_ELSEIF_PTR pFix;
    HB_ELSEIF_PTR pDel;
@@ -2290,7 +2290,7 @@ void hb_compElseIfKill( PFUNCTION pFunc )
 static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR pVar, HB_BOOL bPopInitValue )
 {
    HB_RTVAR_PTR pRTvar = ( HB_RTVAR_PTR ) hb_xgrab( sizeof( HB_RTVAR ) );
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pRTvar->pVar = pVar;
    pRTvar->bPopValue = bPopInitValue;
@@ -2312,7 +2312,7 @@ static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR pVar, HB_BOOL bPopIn
 static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
 {
    HB_USHORT usCount = 0;
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
    HB_RTVAR_PTR pVar = pFunc->rtvars;
    HB_RTVAR_PTR pDel;
 
@@ -2349,7 +2349,7 @@ static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
    pFunc->rtvars = NULL;
 }
 
-void hb_compRTVariableKill( HB_COMP_DECL, PFUNCTION pFunc )
+void hb_compRTVariableKill( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
    HB_RTVAR_PTR pVar;
 
@@ -2383,13 +2383,13 @@ static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL )
 
 static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_COMP_DECL )
 {
-   if( HB_COMP_PARAM->iVarScope == VS_PUBLIC || HB_COMP_PARAM->iVarScope == VS_PRIVATE )
+   if( HB_COMP_PARAM->iVarScope == HB_VSCOMP_PUBLIC || HB_COMP_PARAM->iVarScope == HB_VSCOMP_PRIVATE )
    {
       hb_compVariableAdd( HB_COMP_PARAM, szName, hb_compVarTypeNew( HB_COMP_PARAM, 'A', NULL ) );
       HB_COMP_EXPR_FREE( hb_compArrayDimPush( pInitValue, HB_COMP_PARAM ) );
       hb_compRTVariableAdd( HB_COMP_PARAM, hb_compExprNewRTVar( szName, NULL, HB_COMP_PARAM ), HB_TRUE );
    }
-   else if( HB_COMP_PARAM->iVarScope & VS_STATIC )
+   else if( HB_COMP_PARAM->iVarScope & HB_VSCOMP_STATIC )
    {
       HB_EXPR_PTR pVar = hb_compExprNewVar( szName, HB_COMP_PARAM );
       HB_EXPR_PTR pAssign;
@@ -2412,8 +2412,8 @@ static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_
    {
       hb_compVariableAdd( HB_COMP_PARAM, szName, hb_compVarTypeNew( HB_COMP_PARAM, 'A', NULL ) );
       HB_COMP_EXPR_FREE( hb_compArrayDimPush( pInitValue, HB_COMP_PARAM ) );
-      if( HB_COMP_PARAM->iVarScope != VS_LOCAL ||
-          !( HB_COMP_PARAM->functions.pLast->funFlags & FUN_EXTBLOCK ) )
+      if( HB_COMP_PARAM->iVarScope != HB_VSCOMP_LOCAL ||
+          !( HB_COMP_PARAM->functions.pLast->funFlags & HB_FUNF_EXTBLOCK ) )
       {
          HB_COMP_EXPR_FREE( hb_compExprGenPop( hb_compExprNewVar( szName, HB_COMP_PARAM ), HB_COMP_PARAM ) );
       }
@@ -2563,7 +2563,7 @@ static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    HB_SWITCHCMD_PTR pSwitch = ( HB_SWITCHCMD_PTR ) hb_xgrab( sizeof( HB_SWITCHCMD ) );
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pSwitch->pCases = NULL;
    pSwitch->pLast  = NULL;
@@ -2577,9 +2577,9 @@ static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 {
    HB_SWITCHCASE_PTR pCase;
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
-   pFunc->funFlags &= ~FUN_BREAK_CODE;
+   pFunc->funFlags &= ~HB_FUNF_BREAK_CODE;
 
    if( pExpr )
    {
@@ -2647,7 +2647,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
 static void hb_compSwitchEnd( HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
    HB_SWITCHCMD_PTR pSwitch = pFunc->pSwitch;
    HB_EXPR_PTR pExpr = pSwitch->pExpr;
    HB_SWITCHCASE_PTR pCase, pTmp;
@@ -2749,7 +2749,7 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
 
 /* Release all switch statements
 */
-void hb_compSwitchKill( HB_COMP_DECL, PFUNCTION pFunc )
+void hb_compSwitchKill( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
    HB_SWITCHCASE_PTR pCase;
    HB_SWITCHCMD_PTR pSwitch;
@@ -2830,7 +2830,7 @@ static HB_EXPR_PTR hb_compCheckMethod( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
 /* ************************************************************************* */
 
-HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION pFunc )
+HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
    HB_BOOL fUnclosed = HB_TRUE;
 
@@ -2869,10 +2869,10 @@ HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION pFunc )
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "BEGIN SEQUENCE", NULL );
       pFunc->wSeqCounter = 0;
    }
-   else if( pFunc->funFlags & FUN_EXTBLOCK )
+   else if( pFunc->funFlags & HB_FUNF_EXTBLOCK )
    {
       hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_UNCLOSED_STRU, "{||...}", NULL );
-      pFunc->funFlags &= ~FUN_EXTBLOCK;
+      pFunc->funFlags &= ~HB_FUNF_EXTBLOCK;
    }
    else
       fUnclosed = HB_FALSE;

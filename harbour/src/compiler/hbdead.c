@@ -545,7 +545,7 @@ static const PHB_CODETRACE_FUNC s_codeTraceFuncTable[] =
    hb_p_default                /* HB_P_PUSHAPARAMS           */
 };
 
-void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc )
+void hb_compCodeTraceMarkDead( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
    const PHB_CODETRACE_FUNC * pFuncTable = s_codeTraceFuncTable;
    HB_CODETRACE_INFO code_info;

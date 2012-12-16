@@ -58,13 +58,13 @@ PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL )
    HB_SIZE nPos, nSkip, nOffset;
    HB_ULONG ulLine;
    const char * pszModuleName = "", * ptr;
-   PFUNCTION pFunc;
+   PHB_HFUNC pFunc;
 
    pFunc = HB_COMP_PARAM->functions.pFirst;
 
    while( pFunc )
    {
-      if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
+      if( ( pFunc->funFlags & HB_FUNF_FILE_DECL ) == 0 )
       {
          nPos = ulLine = 0;
          while( nPos < pFunc->nPCodePos )

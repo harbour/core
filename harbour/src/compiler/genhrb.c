@@ -38,7 +38,7 @@
 
 static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * pulFunctions )
 {
-   PFUNCTION pFunc;
+   PHB_HFUNC pFunc;
    PHB_HSYMBOL pSym;
    HB_SIZE nSize;
 
@@ -58,7 +58,7 @@ static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * p
    pFunc = HB_COMP_PARAM->functions.pFirst;
    while( pFunc )
    {
-      if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
+      if( ( pFunc->funFlags & HB_FUNF_FILE_DECL ) == 0 )
       {
          ( *pulFunctions )++;
          nSize += strlen( pFunc->szName ) + 5 + pFunc->nPCodePos; /* \0 + func_size[4] + function_body */
@@ -71,7 +71,7 @@ static HB_SIZE hb_compHrbSize( HB_COMP_DECL, HB_ULONG * pulSymbols, HB_ULONG * p
 
 void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize )
 {
-   PFUNCTION pFunc;
+   PHB_HFUNC pFunc;
    PHB_HSYMBOL pSym;
    HB_ULONG ulSymbols, ulFunctions;
    HB_SIZE nLen;
@@ -124,7 +124,7 @@ void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize )
    pFunc = HB_COMP_PARAM->functions.pFirst;
    while( pFunc )
    {
-      if( ( pFunc->funFlags & FUN_FILE_DECL ) == 0 )
+      if( ( pFunc->funFlags & HB_FUNF_FILE_DECL ) == 0 )
       {
          nLen = strlen( pFunc->szName ) + 1;
          memcpy( ptr, pFunc->szName, nLen );

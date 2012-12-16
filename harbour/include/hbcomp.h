@@ -66,14 +66,14 @@ HB_EXTERN_BEGIN
 
 /* definitions for hb_compPCodeEval() support */
 typedef void * HB_VOID_PTR;
-#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PFUNCTION pFunc, HB_SIZE nPCodePos, type cargo )
+#define HB_PCODE_FUNC( func, type ) HB_SIZE func( PHB_HFUNC pFunc, HB_SIZE nPCodePos, type cargo )
 typedef HB_PCODE_FUNC( ( * HB_PCODE_FUNC_PTR ), HB_VOID_PTR );
 
-extern HB_ISIZ hb_compPCodeSize( PFUNCTION, HB_SIZE );
-extern void hb_compPCodeEval( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
-extern void hb_compPCodeTrace( PFUNCTION, const HB_PCODE_FUNC_PTR *, void * );
+extern HB_ISIZ hb_compPCodeSize( PHB_HFUNC, HB_SIZE );
+extern void hb_compPCodeEval( PHB_HFUNC, const HB_PCODE_FUNC_PTR *, void * );
+extern void hb_compPCodeTrace( PHB_HFUNC, const HB_PCODE_FUNC_PTR *, void * );
 
-extern void hb_compGenLabelTable( PFUNCTION pFunc, PHB_LABEL_INFO label_info );
+extern void hb_compGenLabelTable( PHB_HFUNC pFunc, PHB_LABEL_INFO label_info );
 extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );
 
 extern void hb_compChkFileSwitches( int argc, char * argv[] );
@@ -85,16 +85,16 @@ extern int  hb_comp_yyparse( HB_COMP_DECL );
 extern void hb_compParserStop( HB_COMP_DECL );
 extern void hb_compParserRun( HB_COMP_DECL );
 
-#define VS_NONE       0
-#define VS_LOCAL      1
-#define VS_STATIC     2
-#define VS_FIELD      4
-#define VS_PARAMETER  8
-#define VS_THREAD     16
-#define VS_PRIVATE    64
-#define VS_PUBLIC     128
-#define VS_MEMVAR     ( VS_PUBLIC | VS_PRIVATE )
-#define VS_TH_STATIC  ( VS_STATIC | VS_THREAD )
+#define HB_VSCOMP_NONE       0
+#define HB_VSCOMP_LOCAL      1
+#define HB_VSCOMP_STATIC     2
+#define HB_VSCOMP_FIELD      4
+#define HB_VSCOMP_PARAMETER  8
+#define HB_VSCOMP_THREAD     16
+#define HB_VSCOMP_PRIVATE    64
+#define HB_VSCOMP_PUBLIC     128
+#define HB_VSCOMP_MEMVAR     ( HB_VSCOMP_PUBLIC | HB_VSCOMP_PRIVATE )
+#define HB_VSCOMP_TH_STATIC  ( HB_VSCOMP_STATIC | HB_VSCOMP_THREAD )
 
 /* return detailed information about a class of variable  */
 extern int hb_compVariableScope( HB_COMP_DECL, const char * );
@@ -111,27 +111,27 @@ extern int hb_compVariableScope( HB_COMP_DECL, const char * );
 #define HB_VS_GLOBAL_FIELD    ( HB_VS_FILEWIDE | HB_VS_LOCAL_FIELD )
 #define HB_VS_GLOBAL_STATIC   ( HB_VS_FILEWIDE | HB_VS_STATIC_VAR )
 
-#define VU_NOT_USED           0
-#define VU_INITIALIZED        1
-#define VU_USED               2
+#define HB_VU_NOT_USED           0
+#define HB_VU_INITIALIZED        1
+#define HB_VU_USED               2
 
-#define VT_OFFSET_BYREF       60
-#define VT_OFFSET_VARIANT     90
-#define VT_OFFSET_OPTIONAL    90
+#define HB_VT_OFFSET_BYREF       60
+#define HB_VT_OFFSET_VARIANT     90
+#define HB_VT_OFFSET_OPTIONAL    90
 
 /*
  * flags for funFlags member
  */
-#define FUN_STATEMENTS        0x0001   /* Function have at least one executable statement */
-#define FUN_USES_STATICS      0x0002   /* Function uses static variables */
-#define FUN_PROCEDURE         0x0004   /* This is a procedure that shouldn't return value */
-#define FUN_BREAK_CODE        0x0008   /* last statement breaks execution flow */
-#define FUN_USES_LOCAL_PARAMS 0x0010   /* parameters are declared using () */
-#define FUN_WITH_RETURN       0x0020   /* there was RETURN statement in previous line */
-#define FUN_EXTBLOCK          0x0040   /* it's extended codeblock */
-#define FUN_FILE_DECL         0x0080   /* pseudo function with file wide declarations */
-#define FUN_FILE_FIRST        0x0100   /* 1-st real or pseudo function in compiled .prg module */
-#define FUN_ATTACHED          0x0200   /* function attached to function list */
+#define HB_FUNF_STATEMENTS        0x0001   /* Function have at least one executable statement */
+#define HB_FUNF_USES_STATICS      0x0002   /* Function uses static variables */
+#define HB_FUNF_PROCEDURE         0x0004   /* This is a procedure that shouldn't return value */
+#define HB_FUNF_BREAK_CODE        0x0008   /* last statement breaks execution flow */
+#define HB_FUNF_USES_LOCAL_PARAMS 0x0010   /* parameters are declared using () */
+#define HB_FUNF_WITH_RETURN       0x0020   /* there was RETURN statement in previous line */
+#define HB_FUNF_EXTBLOCK          0x0040   /* it's extended codeblock */
+#define HB_FUNF_FILE_DECL         0x0080   /* pseudo function with file wide declarations */
+#define HB_FUNF_FILE_FIRST        0x0100   /* 1-st real or pseudo function in compiled .prg module */
+#define HB_FUNF_ATTACHED          0x0200   /* function attached to function list */
 
 extern               void         hb_compFunctionAdd( HB_COMP_DECL, const char * szFunName, HB_SYMBOLSCOPE cScope, int iType ); /* starts a new Clipper language function definition */
 extern               PHB_HINLINE  hb_compInlineAdd( HB_COMP_DECL, const char * szFunName, int iLine );
@@ -141,8 +141,8 @@ extern               HB_BOOL      hb_compFunCallCheck( HB_COMP_DECL, const char 
 
 extern PHB_VARTYPE hb_compVarTypeNew( HB_COMP_DECL, char cVarType, const char * szFromClass );
 extern void hb_compVariableAdd( HB_COMP_DECL, const char * szVarName, PHB_VARTYPE pVarType ); /* add a new param, local, static variable to a function definition or a public or private */
-extern PVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int * piScope );
-extern const char * hb_compLocalVariableName( PFUNCTION pFunc, HB_USHORT wVar );   /* returns the name of local variable */
+extern PHB_HVAR hb_compVariableFind( HB_COMP_DECL, const char * szVarName, int * piPos, int * piScope );
+extern const char * hb_compLocalVariableName( PHB_HFUNC pFunc, HB_USHORT wVar );   /* returns the name of local variable */
 extern const char * hb_compStaticVariableName( HB_COMP_DECL, HB_USHORT wVar );   /* returns the name of static variable */
 
 #define HB_SYM_MEMVAR   HB_FALSE
@@ -165,10 +165,10 @@ extern void hb_compExternAdd( HB_COMP_DECL, const char * szExternName, HB_SYMBOL
 
 extern void hb_compModuleAdd( HB_COMP_DECL, const char * szModuleName, HB_BOOL fForce );
 
-extern void hb_compRTVariableKill( HB_COMP_DECL, PFUNCTION );
-extern void hb_compSwitchKill( HB_COMP_DECL, PFUNCTION );
-extern void hb_compElseIfKill( PFUNCTION );
-extern void hb_compLoopKill( PFUNCTION );
+extern void hb_compRTVariableKill( HB_COMP_DECL, PHB_HFUNC );
+extern void hb_compSwitchKill( HB_COMP_DECL, PHB_HFUNC );
+extern void hb_compElseIfKill( PHB_HFUNC );
+extern void hb_compLoopKill( PHB_HFUNC );
 
 extern void hb_compGenError( HB_COMP_DECL, const char * const szErrors[], char cPrefix, int iError, const char * szError1, const char * szError2 ); /* generic parsing error management function */
 extern void hb_compGenWarning( HB_COMP_DECL, const char * const szWarnings[], char cPrefix, int iWarning, const char * szWarning1, const char * szWarning2); /* generic parsing warning management function */
@@ -227,7 +227,7 @@ extern int  hb_compFieldsCount( HB_COMP_DECL );
 extern void hb_compStaticDefStart( HB_COMP_DECL );
 extern void hb_compStaticDefEnd( HB_COMP_DECL, const char * szVarName );
 
-extern HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PFUNCTION );
+extern HB_BOOL hb_compCheckUnclosedStru( HB_COMP_DECL, PHB_HFUNC );
 
 #define HB_COMP_ERROR_TYPE( x )     HB_COMP_PARAM->funcs->ErrorType( HB_COMP_PARAM, x )
 #define HB_COMP_ERROR_SYNTAX( x )   HB_COMP_PARAM->funcs->ErrorSyntax( HB_COMP_PARAM, x )
@@ -308,18 +308,18 @@ extern void hb_compPrintLogo( HB_COMP_DECL );
 extern void hb_compPrintModes( HB_COMP_DECL );
 
 /* Misc functions defined in harbour.c */
-extern void hb_compNOOPfill( PFUNCTION pFunc, HB_SIZE nFrom, HB_ISIZ nCount, HB_BOOL fPop, HB_BOOL fCheck );
-extern HB_BOOL hb_compHasJump( PFUNCTION pFunc, HB_SIZE nPos );
+extern void hb_compNOOPfill( PHB_HFUNC pFunc, HB_SIZE nFrom, HB_ISIZ nCount, HB_BOOL fPop, HB_BOOL fCheck );
+extern HB_BOOL hb_compHasJump( PHB_HFUNC pFunc, HB_SIZE nPos );
 
 /* Misc functions defined in hbfix.c */
-extern void hb_compFixFuncPCode( HB_COMP_DECL, PFUNCTION pFunc );
+extern void hb_compFixFuncPCode( HB_COMP_DECL, PHB_HFUNC pFunc );
 /* Misc functions defined in hbdead.c */
-extern void hb_compCodeTraceMarkDead( HB_COMP_DECL, PFUNCTION pFunc );
+extern void hb_compCodeTraceMarkDead( HB_COMP_DECL, PHB_HFUNC pFunc );
 /* Misc functions defined in hbopt.c */
-extern void hb_compOptimizePCode( HB_COMP_DECL, PFUNCTION pFunc );
+extern void hb_compOptimizePCode( HB_COMP_DECL, PHB_HFUNC pFunc );
 extern void hb_compPCodeTraceOptimizer( HB_COMP_DECL );
 /* Misc functions defined in hbstripl.c */
-extern void hb_compStripFuncLines( HB_COMP_DECL, PFUNCTION pFunc );
+extern void hb_compStripFuncLines( HB_COMP_DECL, PHB_HFUNC pFunc );
 
 /* output related functions defined in gen*.c */
 extern void hb_compGenCCode( HB_COMP_DECL, PHB_FNAME );      /* generates the C language output */
@@ -327,7 +327,7 @@ extern void hb_compGenPortObj( HB_COMP_DECL, PHB_FNAME );    /* generates the po
 
 extern void hb_compGenBufPortObj( HB_COMP_DECL, HB_BYTE ** pBufPtr, HB_SIZE * pnSize ); /* generates the portable objects to memory buffer */
 
-extern void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc );
+extern void hb_compGenCRealCode( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc );
 extern void hb_compGenCString( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen );
 
 /* hbident.c */

@@ -69,7 +69,7 @@
 #include "hbapierr.h"
 #include "hbapifs.h" /* for __MVSAVE()/__MVRESTORE() */
 #include "hbdate.h"  /* for __MVSAVE()/__MVRESTORE() */
-#include "hbcomp.h"  /* for VS_* macros */
+#include "hbcomp.h"  /* for HB_VSCOMP_* macros */
 #include "error.ch"
 #include "hbmemvar.ch"
 #include "hbset.h"
@@ -387,7 +387,7 @@ void hb_memvarSetValue( PHB_SYMB pMemvarSymb, PHB_ITEM pItem )
       else
       {
          /* assignment to undeclared memvar - PRIVATE is assumed */
-         hb_memvarCreateFromDynSymbol( pDyn, VS_PRIVATE, pItem );
+         hb_memvarCreateFromDynSymbol( pDyn, HB_VSCOMP_PRIVATE, pItem );
       }
    }
    else
@@ -537,7 +537,7 @@ void hb_memvarNewParameter( PHB_SYMB pSymbol, PHB_ITEM pValue )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_memvarNewParameter(%p, %p)", pSymbol, pValue ) );
 
-   hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, VS_PRIVATE, pValue );
+   hb_memvarCreateFromDynSymbol( pSymbol->pDynSym, HB_VSCOMP_PRIVATE, pValue );
 }
 
 static PHB_DYNS hb_memvarFindSymbol( const char * szArg, HB_SIZE nLen )
@@ -648,7 +648,7 @@ static void hb_memvarCreateFromDynSymbol( PHB_DYNS pDynVar, int iScope, PHB_ITEM
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_memvarCreateFromDynSymbol(%p, %d, %p)", pDynVar, iScope, pValue ) );
 
-   if( iScope & VS_PUBLIC )
+   if( iScope & HB_VSCOMP_PUBLIC )
    {
       /* If the variable with the same name exists already
        * then the current value have to be unchanged
@@ -1092,10 +1092,10 @@ HB_FUNC( __MVPUBLIC )
                HB_SIZE n, nLen = hb_arrayLen( pMemvar );
 
                for( n = 1; n <= nLen; n++ )
-                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, n ), VS_PUBLIC, NULL );
+                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, n ), HB_VSCOMP_PUBLIC, NULL );
             }
             else
-               hb_memvarCreateFromItem( pMemvar, VS_PUBLIC, NULL );
+               hb_memvarCreateFromItem( pMemvar, HB_VSCOMP_PUBLIC, NULL );
          }
       }
    }
@@ -1124,10 +1124,10 @@ HB_FUNC( __MVPRIVATE )
                HB_SIZE n, nLen = hb_arrayLen( pMemvar );
 
                for( n = 1; n <= nLen; n++ )
-                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, n ), VS_PRIVATE, NULL );
+                  hb_memvarCreateFromItem( hb_arrayGetItemPtr( pMemvar, n ), HB_VSCOMP_PRIVATE, NULL );
             }
             else
-               hb_memvarCreateFromItem( pMemvar, VS_PRIVATE, NULL );
+               hb_memvarCreateFromItem( pMemvar, HB_VSCOMP_PRIVATE, NULL );
          }
       }
       hb_memvarUpdatePrivatesBase();
@@ -1318,7 +1318,7 @@ HB_FUNC( __MVPUT )
          /* attempt to assign a value to undeclared variable
           * create the PRIVATE one
           */
-         hb_memvarCreateFromDynSymbol( hb_dynsymGet( pName->item.asString.value ), VS_PRIVATE, pValue );
+         hb_memvarCreateFromDynSymbol( hb_dynsymGet( pName->item.asString.value ), HB_VSCOMP_PRIVATE, pValue );
       }
       hb_memvarUpdatePrivatesBase();
       hb_itemReturn( pValue );
@@ -1696,7 +1696,7 @@ HB_FUNC( __MVRESTORE )
                      hb_memvarSetValue( pDynVar->pSymbol, pItem );
                   else
                      /* attempt to assign a value to undeclared variable create the PRIVATE one */
-                     hb_memvarCreateFromDynSymbol( hb_dynsymGet( szName ), VS_PRIVATE, pItem );
+                     hb_memvarCreateFromDynSymbol( hb_dynsymGet( szName ), HB_VSCOMP_PRIVATE, pItem );
                }
             }
          }

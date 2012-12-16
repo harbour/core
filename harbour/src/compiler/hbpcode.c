@@ -498,7 +498,7 @@ static HB_PCODE_FUNC_PTR s_psize_table[] =
    NULL                        /* HB_P_PUSHAPARAMS           */
 };
 
-HB_ISIZ hb_compPCodeSize( PFUNCTION pFunc, HB_SIZE nOffset )
+HB_ISIZ hb_compPCodeSize( PHB_HFUNC pFunc, HB_SIZE nOffset )
 {
    HB_ISIZ nSize = 0;
    HB_BYTE opcode = pFunc->pCode[ nOffset ];
@@ -518,7 +518,7 @@ HB_ISIZ hb_compPCodeSize( PFUNCTION pFunc, HB_SIZE nOffset )
    return nSize;
 }
 
-void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
+void hb_compPCodeEval( PHB_HFUNC pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
    HB_SIZE nPos = 0;
    HB_SIZE nSkip;
@@ -578,7 +578,7 @@ void hb_compPCodeEval( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
    }
 }
 
-void hb_compPCodeTrace( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
+void hb_compPCodeTrace( PHB_HFUNC pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
 {
    HB_SIZE nPos = 0;
 
@@ -608,7 +608,7 @@ void hb_compPCodeTrace( PFUNCTION pFunc, const HB_PCODE_FUNC_PTR * pFunctions, v
 
 void hb_compGenPCode1( HB_BYTE byte, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
@@ -624,7 +624,7 @@ void hb_compGenPCode1( HB_BYTE byte, HB_COMP_DECL )
 
 void hb_compGenPCode2( HB_BYTE byte1, HB_BYTE byte2, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
@@ -641,7 +641,7 @@ void hb_compGenPCode2( HB_BYTE byte1, HB_BYTE byte2, HB_COMP_DECL )
 
 void hb_compGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
@@ -659,7 +659,7 @@ void hb_compGenPCode3( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_COMP_DECL
 
 void hb_compGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte4, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {
@@ -678,7 +678,7 @@ void hb_compGenPCode4( HB_BYTE byte1, HB_BYTE byte2, HB_BYTE byte3, HB_BYTE byte
 
 void hb_compGenPCodeN( const HB_BYTE * pBuffer, HB_SIZE nSize, HB_COMP_DECL )
 {
-   PFUNCTION pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
+   PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;   /* get the currently defined Clipper function */
 
    if( ! pFunc->pCode )                              /* has been created the memory block to hold the pcode ? */
    {

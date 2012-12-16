@@ -151,7 +151,7 @@ static void hb_gencc_copyLocals( FILE * yyc, int iLocal1, int iLocal2 )
       fprintf( yyc, "\thb_xvmCopyLocals( %d, %d );\n", iLocal1, iLocal2 );
 }
 
-static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo,
+static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo,
                                         const char * szFunc )
 {
    if( HB_GENC_GETLABEL( nPCodePos + 1 ) == 0 )
@@ -210,7 +210,7 @@ static int hb_gencc_checkJumpCondAhead( HB_LONG lValue, PFUNCTION pFunc, HB_SIZE
    return 1;
 }
 
-static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo )
+static int hb_gencc_checkNumAhead( HB_LONG lValue, PHB_HFUNC pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo )
 {
    if( HB_GENC_GETLABEL( nPCodePos ) == 0 )
    {
@@ -299,7 +299,7 @@ static int hb_gencc_checkNumAhead( HB_LONG lValue, PFUNCTION pFunc, HB_SIZE nPCo
    return 0;
 }
 
-static int hb_gencc_checkPlusAhead( PFUNCTION pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo )
+static int hb_gencc_checkPlusAhead( PHB_HFUNC pFunc, HB_SIZE nPCodePos, PHB_LABEL_INFO cargo )
 {
    if( HB_GENC_GETLABEL( nPCodePos ) == 0 )
    {
@@ -1840,7 +1840,7 @@ static HB_GENC_FUNC( hb_p_switch )
          fprintf( cargo->yyc, "\t\tconst char * pszText;\n\t\tHB_SIZE nLen;\n" );
       if( fNum )
          fprintf( cargo->yyc, "\t\tlong lVal;\n" );
-      fprintf( cargo->yyc, 
+      fprintf( cargo->yyc,
                "\t\tif( hb_xvmSwitchGet( &pSwitch ) ) break;\n"
                "\t\ttype = hb_itemType( pSwitch );\n" );
       if( fStr )
@@ -2377,7 +2377,7 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
    hb_p_pushaparams
 };
 
-void hb_compGenCRealCode( HB_COMP_DECL, PFUNCTION pFunc, FILE * yyc )
+void hb_compGenCRealCode( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
 {
    const HB_GENC_FUNC_PTR * pFuncTable = s_verbose_table;
    HB_LABEL_INFO label_info;
