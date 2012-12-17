@@ -447,7 +447,7 @@ typedef struct _HB_CODEBLOCK
    void *      pStatics;     /* STATICs base frame */
    HB_USHORT   uiLocals;     /* number of referenced local variables */
    HB_SHORT    dynBuffer;    /* is pcode buffer allocated dynamically, SHORT used instead of HB_BOOL intentionally to force optimal alignment */
-} HB_CODEBLOCK, * HB_CODEBLOCK_PTR;
+} HB_CODEBLOCK, * PHB_CODEBLOCK;
 
 typedef void     ( * HB_EXTREF_FUNC0 )( void * );
 typedef PHB_ITEM ( * HB_EXTREF_FUNC1 )( PHB_ITEM );
@@ -531,7 +531,7 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_S
 #if defined( HB_LEGACY_LEVEL4 )
 #  define HB_ITEM_PTR      PHB_ITEM
 #  define HB_BASEARRAY_PTR PHB_BASEARRAY
-#  define PHB_CODEBLOCK    HB_CODEBLOCK_PTR
+#  define HB_CODEBLOCK_PTR PHB_CODEBLOCK
 #endif
 
 #define hb_xgrabz( n )        memset( hb_xgrab( ( n ) ), 0, ( n ) )
@@ -675,10 +675,10 @@ extern HB_EXPORT void *       hb_parvptrGC( const HB_GC_FUNCS * pFuncs, int iPar
 extern HB_EXPORT HB_LONGLONG  hb_parvnll( int iParam, ... ); /* retrieve a numeric parameter as a long long */
 #endif
 
-extern HB_EXPORT int    hb_pcount( void );          /* returns the number of suplied parameters */
-extern HB_EXPORT void   hb_ret( void );             /* post a NIL return value */
-extern HB_EXPORT void   hb_retc( const char * szText );  /* returns a string */
-extern HB_EXPORT void   hb_retc_null( void );       /* returns an empty string */
+extern HB_EXPORT int    hb_pcount( void ); /* returns the number of suplied parameters */
+extern HB_EXPORT void   hb_ret( void );  /* post a NIL return value */
+extern HB_EXPORT void   hb_retc( const char * szText ); /* returns a string */
+extern HB_EXPORT void   hb_retc_null( void ); /* returns an empty string */
 extern HB_EXPORT void   hb_retc_buffer( char * szText ); /* sames as above, but accepts an allocated buffer */
 extern HB_EXPORT void   hb_retc_const( const char * szText ); /* returns a string as a pcode based string */
 extern HB_EXPORT void   hb_retclen( const char * szText, HB_SIZE nLen ); /* returns a string with a specific length */
@@ -686,25 +686,25 @@ extern HB_EXPORT void   hb_retclen_buffer( char * szText, HB_SIZE nLen ); /* sam
 extern HB_EXPORT void   hb_retclen_const( const char * szText, HB_SIZE nLen ); /* returns a string with a specific length formed from a constant buffer */
 extern HB_EXPORT void   hb_retds( const char * szDate );  /* returns a date, must use YYYYMMDD format */
 extern HB_EXPORT void   hb_retd( int iYear, int iMonth, int iDay ); /* returns a date */
-extern HB_EXPORT void   hb_retdl( long lJulian );   /* returns a long value as a julian date */
-extern HB_EXPORT void   hb_rettd( double dTimeStamp );   /* returns a double value as a timestamp */
-extern HB_EXPORT void   hb_rettdt( long lJulian, long lMilliSec );   /* returns two long values as a timestamp */
-extern HB_EXPORT void   hb_retl( int iTrueFalse );  /* returns a logical integer */
+extern HB_EXPORT void   hb_retdl( long lJulian ); /* returns a long value as a julian date */
+extern HB_EXPORT void   hb_rettd( double dTimeStamp ); /* returns a double value as a timestamp */
+extern HB_EXPORT void   hb_rettdt( long lJulian, long lMilliSec ); /* returns two long values as a timestamp */
+extern HB_EXPORT void   hb_retl( int iTrueFalse ); /* returns a logical integer */
 extern HB_EXPORT void   hb_retnd( double dNumber ); /* returns a double */
-extern HB_EXPORT void   hb_retni( int iNumber );    /* returns a integer number */
-extern HB_EXPORT void   hb_retnl( long lNumber );/* returns a long number */
-extern HB_EXPORT void   hb_retns( HB_ISIZ nNumber );/* returns a size */
-extern HB_EXPORT void   hb_retnint( HB_MAXINT nNumber );/* returns a long number */
+extern HB_EXPORT void   hb_retni( int iNumber ); /* returns a integer number */
+extern HB_EXPORT void   hb_retnl( long lNumber ); /* returns a long number */
+extern HB_EXPORT void   hb_retns( HB_ISIZ nNumber ); /* returns a size */
+extern HB_EXPORT void   hb_retnint( HB_MAXINT nNumber ); /* returns a long number */
 extern HB_EXPORT void   hb_retnlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
 extern HB_EXPORT void   hb_retndlen( double dNumber, int iWidth, int iDec ); /* returns a double, with specific width and decimals */
 extern HB_EXPORT void   hb_retnilen( int iNumber, int iWidth ); /* returns a integer number, with specific width */
 extern HB_EXPORT void   hb_retnllen( long lNumber, int iWidth ); /* returns a long number, with specific width */
 extern HB_EXPORT void   hb_retnintlen( HB_MAXINT nNumber, int iWidth ); /* returns a long long number, with specific width */
-extern HB_EXPORT void   hb_reta( HB_SIZE nLen );  /* returns an array with a specific length */
-extern HB_EXPORT void   hb_retptr( void * ptr );  /* returns a pointer */
-extern HB_EXPORT void   hb_retptrGC( void * ptr );  /* returns a pointer to an allocated memory, collected by GC */
+extern HB_EXPORT void   hb_reta( HB_SIZE nLen ); /* returns an array with a specific length */
+extern HB_EXPORT void   hb_retptr( void * ptr ); /* returns a pointer */
+extern HB_EXPORT void   hb_retptrGC( void * ptr ); /* returns a pointer to an allocated memory, collected by GC */
 #ifndef HB_LONG_LONG_OFF
-extern HB_EXPORT void   hb_retnll( HB_LONGLONG lNumber );/* returns a long long number */
+extern HB_EXPORT void   hb_retnll( HB_LONGLONG lNumber ); /* returns a long long number */
 extern HB_EXPORT void   hb_retnlllen( HB_LONGLONG lNumber, int iWidth ); /* returns a long long number, with specific width */
 #endif
 
@@ -1057,10 +1057,10 @@ extern HB_EXPORT void          hb_winmainArgVFree( void );
 
 /* Codeblock management */
 extern HB_EXPORT void * hb_codeblockId( PHB_ITEM pItem ); /* retrieves the codeblock unique ID */
-extern HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer, HB_USHORT uiLocals, const HB_BYTE * pLocalPosTable, PHB_SYMB pSymbols, HB_SIZE nLen ); /* create a code-block */
-extern HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen );
+extern PHB_CODEBLOCK    hb_codeblockNew( const HB_BYTE * pBuffer, HB_USHORT uiLocals, const HB_BYTE * pLocalPosTable, PHB_SYMB pSymbols, HB_SIZE nLen ); /* create a code-block */
+extern PHB_CODEBLOCK    hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen );
 extern PHB_ITEM         hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos ); /* get local variable referenced in a codeblock */
-extern PHB_ITEM         hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, int iItemPos ); /* get local variable passed by reference */
+extern PHB_ITEM         hb_codeblockGetRef( PHB_CODEBLOCK pCBlock, int iItemPos ); /* get local variable passed by reference */
 
 /* memvars subsystem */
 extern           void       hb_memvarsClear( HB_BOOL fAll ); /* clear all PUBLIC and PRIVATE variables optionally without GetList PUBLIC variable */

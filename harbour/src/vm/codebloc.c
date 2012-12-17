@@ -70,7 +70,7 @@ static const HB_BYTE s_pCode[ 2 ] = { HB_P_PUSHNIL, HB_P_ENDBLOCK };
  */
 static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
 {
-   HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
+   PHB_CODEBLOCK pCBlock = ( PHB_CODEBLOCK ) Cargo;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGarbageDelete(%p)", Cargo ) );
 
@@ -107,7 +107,7 @@ static HB_GARBAGE_FUNC( hb_codeblockGarbageDelete )
 
 static HB_GARBAGE_FUNC( hb_codeblockGarbageMark )
 {
-   HB_CODEBLOCK_PTR pCBlock = ( HB_CODEBLOCK_PTR ) Cargo;
+   PHB_CODEBLOCK pCBlock = ( PHB_CODEBLOCK ) Cargo;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGarbageMark(%p)", Cargo ) );
 
@@ -140,14 +140,14 @@ static const HB_GC_FUNCS s_gcCodeblockFuncs =
  * Note: pLocalPosTable cannot be used if uiLocals is ZERO
  *
  */
-HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
-                                  HB_USHORT uiLocals,
-                                  const HB_BYTE * pLocalPosTable,
-                                  PHB_SYMB pSymbols,
-                                  HB_SIZE nLen )
+PHB_CODEBLOCK hb_codeblockNew( const HB_BYTE * pBuffer,
+                               HB_USHORT uiLocals,
+                               const HB_BYTE * pLocalPosTable,
+                               PHB_SYMB pSymbols,
+                               HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
-   HB_CODEBLOCK_PTR pCBlock;
+   PHB_CODEBLOCK pCBlock;
    PHB_ITEM pLocals, pBase;
    const HB_BYTE * pCode;
 
@@ -227,7 +227,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
       pLocal = hb_stackSelfItem();
       if( HB_IS_BLOCK( pLocal ) )
       {
-         HB_CODEBLOCK_PTR pOwner = pLocal->item.asBlock.value;
+         PHB_CODEBLOCK pOwner = pLocal->item.asBlock.value;
 
          uiLocals = pOwner->uiLocals;
          pLocals  = pOwner->pLocals;
@@ -239,7 +239,7 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
    }
 
    pBase = hb_stackBaseItem();
-   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
+   pCBlock = ( PHB_CODEBLOCK ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
 
    pCBlock->pCode     = pCode;
    pCBlock->dynBuffer = nLen != 0;
@@ -255,10 +255,10 @@ HB_CODEBLOCK_PTR hb_codeblockNew( const HB_BYTE * pBuffer,
    return pCBlock;
 }
 
-HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
+PHB_CODEBLOCK hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
 {
    HB_STACK_TLS_PRELOAD
-   HB_CODEBLOCK_PTR pCBlock;
+   PHB_CODEBLOCK pCBlock;
    PHB_ITEM pBase;
    HB_BYTE * pCode;
 
@@ -276,7 +276,7 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
     */
    pCode = ( HB_BYTE * ) memcpy( hb_xgrab( nLen ), pBuffer, nLen );
 
-   pCBlock = ( HB_CODEBLOCK_PTR ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
+   pCBlock = ( PHB_CODEBLOCK ) hb_gcAllocRaw( sizeof( HB_CODEBLOCK ), &s_gcCodeblockFuncs );
    pBase = hb_stackBaseItem();
    /* Store the number of referenced local variables */
    pCBlock->pCode     = pCode;
@@ -295,9 +295,9 @@ HB_CODEBLOCK_PTR hb_codeblockMacroNew( const HB_BYTE * pBuffer, HB_SIZE nLen )
 
 /* Get local variable referenced in a codeblock
  */
-PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos )
+PHB_ITEM hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos )
 {
-   HB_CODEBLOCK_PTR pCBlock = pItem->item.asBlock.value;
+   PHB_CODEBLOCK pCBlock = pItem->item.asBlock.value;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGetVar(%p, %d)", pItem, iItemPos ) );
 
@@ -307,7 +307,7 @@ PHB_ITEM  hb_codeblockGetVar( PHB_ITEM pItem, int iItemPos )
 
 /* Get local variable passed by reference
  */
-PHB_ITEM  hb_codeblockGetRef( HB_CODEBLOCK_PTR pCBlock, int iItemPos )
+PHB_ITEM hb_codeblockGetRef( PHB_CODEBLOCK pCBlock, int iItemPos )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_codeblockGetRef(%p, %d)", pCBlock, iItemPos ) );
 
