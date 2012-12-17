@@ -12902,12 +12902,14 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL hHRB
    LOCAL cVersion
 
-   s_cDirBase_hbshell := hb_DirBase()
-   s_cProgName_hbshell := hb_ProgName()
-
    /* Set CP and language */
 
    SetUILang( GetUILang() )
+
+   /* Save originals */
+
+   s_cDirBase_hbshell := hb_DirBase()
+   s_cProgName_hbshell := hb_ProgName()
 
    /* Detect Harbour dir layout */
 
@@ -13987,8 +13989,8 @@ STATIC FUNCTION __hbshell_TryHeader( cName )
    BEGIN SEQUENCE WITH {| oErr | Break( oErr ) }
 
       IF ! Empty( hb_compileFromBuf( "", hbmk_CoreHeaderFiles(), hb_ProgName(), "-q2", ;
-                "-i" + s_hbmk[ _HBMK_cHB_INSTALL_INC ], ;
-                "-u+" + cName ) )
+                                     "-i" + s_hbmk[ _HBMK_cHB_INSTALL_INC ], ;
+                                     "-u+" + cName ) )
          lRetVal := .T.
       ENDIF
 
@@ -14027,10 +14029,10 @@ PROCEDURE hbshell_include_list()
 
 /* Public hbshell API */
 FUNCTION hbshell_DirBase()
-   RETURN s_cDirBase_hbshell
+   RETURN hb_UTF8ToStr( s_cDirBase_hbshell )
 
 FUNCTION hbshell_ProgName()
-   RETURN s_cProgName_hbshell
+   RETURN hb_UTF8ToStr( s_cProgName_hbshell )
 
 FUNCTION hbshell_gtSelect( cGT )
 
