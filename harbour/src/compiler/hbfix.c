@@ -57,11 +57,11 @@
 typedef struct HB_stru_fix_info
 {
    HB_COMP_DECL;
-} HB_FIX_INFO, * HB_FIX_INFO_PTR;
+} HB_FIX_INFO, * PHB_FIX_INFO;
 
-#define HB_FIX_FUNC( func )  HB_PCODE_FUNC( func, HB_FIX_INFO_PTR )
+#define HB_FIX_FUNC( func )  HB_PCODE_FUNC( func, PHB_FIX_INFO )
 typedef HB_FIX_FUNC( HB_FIX_FUNC_ );
-typedef HB_FIX_FUNC_ * HB_FIX_FUNC_PTR;
+typedef HB_FIX_FUNC_ * PHB_FIX_FUNC;
 
 
 static HB_FIX_FUNC( hb_p_pushblock )
@@ -145,7 +145,7 @@ static HB_FIX_FUNC( hb_p_localnearerr )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
+static const PHB_FIX_FUNC s_fixlocals_table[] =
 {
    NULL,                       /* HB_P_AND,                  */
    NULL,                       /* HB_P_ARRAYPUSH,            */
@@ -334,12 +334,12 @@ static const HB_FIX_FUNC_PTR s_fixlocals_table[] =
 
 void hb_compFixFuncPCode( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
-   const HB_FIX_FUNC_PTR * pFuncTable = s_fixlocals_table;
+   const PHB_FIX_FUNC * pFuncTable = s_fixlocals_table;
    HB_FIX_INFO fix_info;
 
    fix_info.HB_COMP_PARAM = HB_COMP_PARAM;
 
-   assert( HB_P_LAST_PCODE == sizeof( s_fixlocals_table ) / sizeof( HB_FIX_FUNC_PTR ) );
+   assert( HB_P_LAST_PCODE == sizeof( s_fixlocals_table ) / sizeof( PHB_FIX_FUNC ) );
 
-   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &fix_info );
+   hb_compPCodeEval( pFunc, ( const PHB_PCODE_FUNC * ) pFuncTable, ( void * ) &fix_info );
 }

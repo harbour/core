@@ -529,9 +529,13 @@ extern void *     hb_xRefResize( void * pMem, HB_SIZE nSave, HB_SIZE nSize, HB_S
 #endif /* _HB_API_INTERNAL_ */
 
 #if defined( HB_LEGACY_LEVEL4 )
-#  define HB_ITEM_PTR      PHB_ITEM
-#  define HB_BASEARRAY_PTR PHB_BASEARRAY
-#  define HB_CODEBLOCK_PTR PHB_CODEBLOCK
+#  define HB_ITEM_PTR         PHB_ITEM
+#  define HB_BASEARRAY_PTR    PHB_BASEARRAY
+#  define HB_CODEBLOCK_PTR    PHB_CODEBLOCK
+#  define HB_MACRO_PTR        PHB_MACRO
+#  define HB_ERROR_INFO_PTR   PHB_ERROR_INFO
+#  define HB_HASH_TABLE_PTR   PHB_HASH_TABLE
+#  define HB_GARBAGE_FUNC_PTR PHB_GARBAGE_FUNC
 #endif
 
 #define hb_xgrabz( n )        memset( hb_xgrab( ( n ) ), 0, ( n ) )
@@ -575,14 +579,13 @@ extern HB_EXPORT void        hb_xvheapunlock( HB_VMHANDLE h, HB_SIZE nOffset );
 
 /* garbage collector */
 #define HB_GARBAGE_FUNC( hbfunc )   void hbfunc( void * Cargo ) /* callback function for cleaning garbage memory pointer */
-typedef HB_GARBAGE_FUNC( ( * HB_GARBAGE_FUNC_PTR ) );
+typedef HB_GARBAGE_FUNC( ( * PHB_GARBAGE_FUNC ) );
 
 typedef struct
 {
-   HB_GARBAGE_FUNC_PTR  clear;
-   HB_GARBAGE_FUNC_PTR  mark;
-}
-HB_GC_FUNCS;
+   PHB_GARBAGE_FUNC  clear;
+   PHB_GARBAGE_FUNC  mark;
+} HB_GC_FUNCS;
 
 extern HB_EXPORT  void *   hb_gcAllocate( HB_SIZE nSize, const HB_GC_FUNCS * pFuncs ); /* allocates a memory controlled by the garbage collector */
 extern HB_EXPORT  void     hb_gcFree( void * pAlloc ); /* deallocates a memory allocated by the garbage collector */
@@ -1110,18 +1113,18 @@ extern HB_EXPORT HB_BOOL  hb_procinfo( int iLevel, char * szName, HB_USHORT * pu
 /* macro compiler */
 #if defined( HB_MACRO_SUPPORT )
 struct HB_MACRO_;
-typedef struct HB_MACRO_ * HB_MACRO_PTR;
+typedef struct HB_MACRO_ * PHB_MACRO;
 #else
-typedef void * HB_MACRO_PTR;
+typedef void * PHB_MACRO;
 #endif
 extern HB_EXPORT void         hb_macroGetValue( PHB_ITEM pItem, int iContext, int flags ); /* retrieve results of a macro expansion */
 extern           void         hb_macroSetValue( PHB_ITEM pItem, int flags ); /* assign a value to a macro-expression item */
 extern           void         hb_macroPushReference( PHB_ITEM pItem ); /* push reference to given expression */
 extern           void         hb_macroTextValue( PHB_ITEM pItem ); /* macro text substitution */
 extern           void         hb_macroPushSymbol( PHB_ITEM pItem ); /* handle a macro function calls, e.g. var := &macro() */
-extern           void         hb_macroRun( HB_MACRO_PTR pMacro ); /* executes pcode compiled by macro compiler */
-extern           HB_MACRO_PTR hb_macroCompile( const char * szString ); /* compile a string and return a pcode buffer */
-extern           void         hb_macroDelete( HB_MACRO_PTR pMacro ); /* release all memory allocated for macro evaluation */
+extern           void         hb_macroRun( PHB_MACRO pMacro ); /* executes pcode compiled by macro compiler */
+extern           PHB_MACRO    hb_macroCompile( const char * szString ); /* compile a string and return a pcode buffer */
+extern           void         hb_macroDelete( PHB_MACRO pMacro ); /* release all memory allocated for macro evaluation */
 extern           char *       hb_macroTextSymbol( const char * szString, HB_SIZE nLength, HB_BOOL * pfNewString ); /* substitute macro variables occurences within a given string and check if result is a valid function or variable name */
 extern           char *       hb_macroExpandString( const char * szString, HB_SIZE nLength, HB_BOOL * pfNewString ); /* expands valid '&' operator */
 extern           void         hb_macroPopAliasedValue( PHB_ITEM pAlias, PHB_ITEM pVar, int flags ); /* compiles and evaluates an aliased macro expression */

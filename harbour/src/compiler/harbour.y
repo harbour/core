@@ -1,6 +1,6 @@
 %pure-parser
-%parse-param { HB_COMP_PTR pComp }
-%lex-param   { HB_COMP_PTR pComp }
+%parse-param { PHB_COMP pComp }
+%lex-param   { PHB_COMP pComp }
 %name-prefix = "hb_comp_yy"
 %{
 /*
@@ -89,24 +89,24 @@ static long hb_compLoopCount( HB_COMP_DECL );
 static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirstElseIf, HB_SIZE nOffset ); /* generates a support structure for elseifs pcode fixups */
 static void hb_compElseIfFix( HB_COMP_DECL, void * pIfElseIfs ); /* implements the ElseIfs pcode fixups */
 
-static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR, HB_BOOL );
+static void hb_compRTVariableAdd( HB_COMP_DECL, PHB_EXPR, HB_BOOL );
 static void hb_compRTVariableGen( HB_COMP_DECL, const char * );
 
-static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL );
-static void hb_compVariableDim( const char *, HB_EXPR_PTR, HB_COMP_DECL );
+static PHB_EXPR hb_compArrayDimPush( PHB_EXPR pInitValue, HB_COMP_DECL );
+static void hb_compVariableDim( const char *, PHB_EXPR, HB_COMP_DECL );
 
 static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEach );
 static void hb_compForEnd( HB_COMP_DECL, const char *szVarName );
-static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend );
-static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend );
-static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr );
+static void hb_compEnumStart( HB_COMP_DECL, PHB_EXPR pVars, PHB_EXPR pExprs, int descend );
+static void hb_compEnumNext( HB_COMP_DECL, PHB_EXPR pExpr, int descend );
+static void hb_compEnumEnd( HB_COMP_DECL, PHB_EXPR pExpr );
 
-static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR );
-static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR );
+static void hb_compSwitchStart( HB_COMP_DECL, PHB_EXPR );
+static void hb_compSwitchAdd( HB_COMP_DECL, PHB_EXPR );
 static void hb_compSwitchEnd( HB_COMP_DECL );
 
-static HB_EXPR_PTR hb_compCheckMethod( HB_COMP_DECL, HB_EXPR_PTR pExpr );
-static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr );
+static PHB_EXPR hb_compCheckMethod( HB_COMP_DECL, PHB_EXPR pExpr );
+static PHB_EXPR hb_compCheckPassByRef( HB_COMP_DECL, PHB_EXPR pExpr );
 
 #ifdef HB_YYDEBUG
    #define YYDEBUG        1 /* Parser debug information support */
@@ -128,7 +128,7 @@ static void hb_compDebugStart( void ) { }
    HB_SIZE sNumber;     /* to hold a temporary HB_SIZE values */
    HB_MAXINT lNumber;   /* to hold a temporary long number */
    HB_BOOL bTrue;
-   HB_EXPR_PTR asExpr;
+   PHB_EXPR asExpr;
    void * pVoid;        /* to hold any memory structure we may need */
    struct
    {
@@ -1045,7 +1045,7 @@ CodeBlock   : BlockHead
               '}'
             | BlockHead Crlf
             {  /* 3 */
-               HB_CBVAR_PTR pVar;
+               PHB_CBVAR pVar;
                $<sNumber>$ = HB_COMP_PARAM->functions.pLast->nPCodePos;
                $<sNumber>2 = HB_COMP_PARAM->lastLine;
                hb_compCodeBlockStart( HB_COMP_PARAM, 0 );
@@ -1965,12 +1965,12 @@ Crlf       : '\n'       { HB_COMP_PARAM->fError = HB_FALSE; }
  */
 static void hb_compLoopStart( HB_COMP_DECL, HB_BOOL fCanLoop )
 {
-   HB_LOOPEXIT_PTR pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
+   PHB_LOOPEXIT pLoop = ( PHB_LOOPEXIT ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    if( pFunc->pLoops )
    {
-      HB_LOOPEXIT_PTR pLast = pFunc->pLoops;
+      PHB_LOOPEXIT pLast = pFunc->pLoops;
 
       while( pLast->pNext )
          pLast = pLast->pNext;
@@ -1994,7 +1994,7 @@ static void hb_compLoopStart( HB_COMP_DECL, HB_BOOL fCanLoop )
  */
 static long hb_compLoopCount( HB_COMP_DECL )
 {
-   HB_LOOPEXIT_PTR pLastLoop, pLastExit, pLoop;
+   PHB_LOOPEXIT pLastLoop, pLastExit, pLoop;
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
    long lCount = 0;
 
@@ -2033,7 +2033,7 @@ static long hb_compLoopCount( HB_COMP_DECL )
  */
 static void hb_compLoopLoop( HB_COMP_DECL )
 {
-   HB_LOOPEXIT_PTR pLast = NULL, pLoop;
+   PHB_LOOPEXIT pLast = NULL, pLoop;
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pLoop = pFunc->pLoops;
@@ -2069,7 +2069,7 @@ static void hb_compLoopLoop( HB_COMP_DECL )
       {
          HB_USHORT wWithObjectCnt = pLast->wWithObjectCnt;
 
-         pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
+         pLoop = ( PHB_LOOPEXIT ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
          pLoop->pLoopList = NULL;
          while( pLast->pLoopList )
             pLast = pLast->pLoopList;
@@ -2100,7 +2100,7 @@ static void hb_compLoopExit( HB_COMP_DECL )
    }
    else
    {
-      HB_LOOPEXIT_PTR pLast, pLoop;
+      PHB_LOOPEXIT pLast, pLoop;
 
       pLast = pFunc->pLoops;
       while( pLast->pNext )
@@ -2125,7 +2125,7 @@ static void hb_compLoopExit( HB_COMP_DECL )
       {
          HB_USHORT wWithObjectCnt = pLast->wWithObjectCnt;
 
-         pLoop = ( HB_LOOPEXIT_PTR ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
+         pLoop = ( PHB_LOOPEXIT ) hb_xgrab( sizeof( HB_LOOPEXIT ) );
          pLoop->pExitList = NULL;
          while( pLast->pExitList )
             pLast = pLast->pExitList;
@@ -2149,7 +2149,7 @@ static void hb_compLoopExit( HB_COMP_DECL )
 static void hb_compLoopHere( HB_COMP_DECL )
 {
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
-   HB_LOOPEXIT_PTR pLoop = pFunc->pLoops, pFree, pLast;
+   PHB_LOOPEXIT pLoop = pFunc->pLoops, pFree, pLast;
 
    if( pLoop )
    {
@@ -2175,7 +2175,7 @@ static void hb_compLoopHere( HB_COMP_DECL )
 static void hb_compLoopEnd( HB_COMP_DECL )
 {
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
-   HB_LOOPEXIT_PTR pLoop = pFunc->pLoops, pLast = pFunc->pLoops, pExit, pFree;
+   PHB_LOOPEXIT pLoop = pFunc->pLoops, pLast = pFunc->pLoops, pExit, pFree;
 
    if( pLoop )
    {
@@ -2203,7 +2203,7 @@ static void hb_compLoopEnd( HB_COMP_DECL )
 
 void hb_compLoopKill( PHB_HFUNC pFunc )
 {
-   HB_LOOPEXIT_PTR pLoop, pFree;
+   PHB_LOOPEXIT pLoop, pFree;
 
    while( pFunc->pLoops )
    {
@@ -2227,7 +2227,7 @@ void hb_compLoopKill( PHB_HFUNC pFunc )
 
 static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, HB_SIZE nOffset )
 {
-   HB_ELSEIF_PTR pElseIf = ( HB_ELSEIF_PTR ) hb_xgrab( sizeof( HB_ELSEIF ) ), pLast;
+   PHB_ELSEIF pElseIf = ( PHB_ELSEIF ) hb_xgrab( sizeof( HB_ELSEIF ) ), pLast;
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pElseIf->nOffset = nOffset;
@@ -2236,7 +2236,7 @@ static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, HB_SIZE nOffset )
 
    if( pFirst )
    {
-      pLast = ( HB_ELSEIF_PTR ) pFirst;
+      pLast = ( PHB_ELSEIF ) pFirst;
       while( pLast->pElseif )
          pLast = pLast->pElseif;
       pLast->pElseif = pElseIf;
@@ -2256,8 +2256,8 @@ static void * hb_compElseIfGen( HB_COMP_DECL, void * pFirst, HB_SIZE nOffset )
 
 static void hb_compElseIfFix( HB_COMP_DECL, void * pFixElseIfs )
 {
-   HB_ELSEIF_PTR pFix = ( HB_ELSEIF_PTR ) pFixElseIfs;
-   HB_ELSEIF_PTR pDel;
+   PHB_ELSEIF pFix = ( PHB_ELSEIF ) pFixElseIfs;
+   PHB_ELSEIF pDel;
 
    HB_COMP_PARAM->functions.pLast->elseif = pFix->pPrev;
    while( pFix )
@@ -2271,8 +2271,8 @@ static void hb_compElseIfFix( HB_COMP_DECL, void * pFixElseIfs )
 
 void hb_compElseIfKill( PHB_HFUNC pFunc )
 {
-   HB_ELSEIF_PTR pFix;
-   HB_ELSEIF_PTR pDel;
+   PHB_ELSEIF pFix;
+   PHB_ELSEIF pDel;
 
    while( pFunc->elseif )
    {
@@ -2287,9 +2287,9 @@ void hb_compElseIfKill( PHB_HFUNC pFunc )
    }
 }
 
-static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR pVar, HB_BOOL bPopInitValue )
+static void hb_compRTVariableAdd( HB_COMP_DECL, PHB_EXPR pVar, HB_BOOL bPopInitValue )
 {
-   HB_RTVAR_PTR pRTvar = ( HB_RTVAR_PTR ) hb_xgrab( sizeof( HB_RTVAR ) );
+   PHB_RTVAR pRTvar = ( PHB_RTVAR ) hb_xgrab( sizeof( HB_RTVAR ) );
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pRTvar->pVar = pVar;
@@ -2299,7 +2299,7 @@ static void hb_compRTVariableAdd( HB_COMP_DECL, HB_EXPR_PTR pVar, HB_BOOL bPopIn
 
    if( pFunc->rtvars )
    {
-      HB_RTVAR_PTR pLast = pFunc->rtvars;
+      PHB_RTVAR pLast = pFunc->rtvars;
       while( pLast->pNext )
          pLast = pLast->pNext;
       pLast->pNext = pRTvar;
@@ -2313,8 +2313,8 @@ static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
 {
    HB_USHORT usCount = 0;
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
-   HB_RTVAR_PTR pVar = pFunc->rtvars;
-   HB_RTVAR_PTR pDel;
+   PHB_RTVAR pVar = pFunc->rtvars;
+   PHB_RTVAR pDel;
 
    /* generate the function call frame */
    hb_compGenPushFunCall( szCreateFun, HB_FN_UDF, HB_COMP_PARAM );
@@ -2351,7 +2351,7 @@ static void hb_compRTVariableGen( HB_COMP_DECL, const char * szCreateFun )
 
 void hb_compRTVariableKill( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
-   HB_RTVAR_PTR pVar;
+   PHB_RTVAR pVar;
 
    while( pFunc->rtvars )
    {
@@ -2364,7 +2364,7 @@ void hb_compRTVariableKill( HB_COMP_DECL, PHB_HFUNC pFunc )
    pFunc->rtvars = NULL;
 }
 
-static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL )
+static PHB_EXPR hb_compArrayDimPush( PHB_EXPR pInitValue, HB_COMP_DECL )
 {
    HB_USHORT uCount = ( HB_USHORT ) hb_compExprListLen( pInitValue );
 
@@ -2381,7 +2381,7 @@ static HB_EXPR_PTR hb_compArrayDimPush( HB_EXPR_PTR pInitValue, HB_COMP_DECL )
    return pInitValue;
 }
 
-static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_COMP_DECL )
+static void hb_compVariableDim( const char * szName, PHB_EXPR pInitValue, HB_COMP_DECL )
 {
    if( HB_COMP_PARAM->iVarScope == HB_VSCOMP_PUBLIC || HB_COMP_PARAM->iVarScope == HB_VSCOMP_PRIVATE )
    {
@@ -2391,8 +2391,8 @@ static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_
    }
    else if( HB_COMP_PARAM->iVarScope & HB_VSCOMP_STATIC )
    {
-      HB_EXPR_PTR pVar = hb_compExprNewVar( szName, HB_COMP_PARAM );
-      HB_EXPR_PTR pAssign;
+      PHB_EXPR pVar = hb_compExprNewVar( szName, HB_COMP_PARAM );
+      PHB_EXPR pAssign;
 
       /* create a static variable */
       hb_compVariableAdd( HB_COMP_PARAM, szName, hb_compVarTypeNew( HB_COMP_PARAM, 'A', NULL ) );
@@ -2422,18 +2422,18 @@ static void hb_compVariableDim( const char * szName, HB_EXPR_PTR pInitValue, HB_
 
 static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEach )
 {
-   HB_ENUMERATOR_PTR pEnumVar;
+   PHB_ENUMERATOR pEnumVar;
 
    pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    if( pEnumVar == NULL )
    {
-      HB_COMP_PARAM->functions.pLast->pEnum = ( HB_ENUMERATOR_PTR ) hb_xgrab( sizeof( HB_ENUMERATOR ) );
+      HB_COMP_PARAM->functions.pLast->pEnum = ( PHB_ENUMERATOR ) hb_xgrab( sizeof( HB_ENUMERATOR ) );
       pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    }
    else
    {
       HB_BOOL bWarn = HB_TRUE;
-      HB_ENUMERATOR_PTR pLast = pEnumVar;
+      PHB_ENUMERATOR pLast = pEnumVar;
 
       while( pEnumVar )
       {
@@ -2449,7 +2449,7 @@ static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEa
          pLast = pEnumVar;
          pEnumVar = pEnumVar->pNext;
       }
-      pLast->pNext = ( HB_ENUMERATOR_PTR ) hb_xgrab( sizeof( HB_ENUMERATOR ) );
+      pLast->pNext = ( PHB_ENUMERATOR ) hb_xgrab( sizeof( HB_ENUMERATOR ) );
       pEnumVar = pLast->pNext;
    }
    pEnumVar->szName   = szVarName;
@@ -2459,7 +2459,7 @@ static void hb_compForStart( HB_COMP_DECL, const char *szVarName, HB_BOOL bForEa
 
 static HB_BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
 {
-   HB_ENUMERATOR_PTR pEnumVar;
+   PHB_ENUMERATOR pEnumVar;
 
    pEnumVar = HB_COMP_PARAM->functions.pLast->pEnum;
    if( pEnumVar && ! HB_COMP_PARAM->functions.pLast->bBlock )
@@ -2486,7 +2486,7 @@ static HB_BOOL hb_compForEachVarError( HB_COMP_DECL, const char *szVarName )
 
 static void hb_compForEnd( HB_COMP_DECL, const char *szVar )
 {
-   HB_ENUMERATOR_PTR * pEnumVar;
+   PHB_ENUMERATOR * pEnumVar;
 
    HB_SYMBOL_UNUSED( szVar );
 
@@ -2503,16 +2503,16 @@ static void hb_compForEnd( HB_COMP_DECL, const char *szVar )
 
 static HB_COMP_CARGO2_FUNC( hb_compEnumEvalStart )
 {
-   const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
+   const char * szName = hb_compExprAsSymbol( ( PHB_EXPR ) cargo );
 
    if( szName )
       hb_compForStart( HB_COMP_PARAM, szName, HB_TRUE );
 
-   hb_compExprGenPush( ( HB_EXPR_PTR ) dummy, HB_COMP_PARAM );  /* expression */
-   hb_compExprGenPush( ( HB_EXPR_PTR ) cargo, HB_COMP_PARAM );  /* variable */
+   hb_compExprGenPush( ( PHB_EXPR ) dummy, HB_COMP_PARAM );  /* expression */
+   hb_compExprGenPush( ( PHB_EXPR ) cargo, HB_COMP_PARAM );  /* variable */
 }
 
-static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExprs, int descend )
+static void hb_compEnumStart( HB_COMP_DECL, PHB_EXPR pVars, PHB_EXPR pExprs, int descend )
 {
    HB_SIZE ulLen;
 
@@ -2533,7 +2533,7 @@ static void hb_compEnumStart( HB_COMP_DECL, HB_EXPR_PTR pVars, HB_EXPR_PTR pExpr
    }
 }
 
-static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend )
+static void hb_compEnumNext( HB_COMP_DECL, PHB_EXPR pExpr, int descend )
 {
    HB_SYMBOL_UNUSED( pExpr );
    if( descend > 0 )
@@ -2548,21 +2548,21 @@ static void hb_compEnumNext( HB_COMP_DECL, HB_EXPR_PTR pExpr, int descend )
 
 static HB_COMP_CARGO_FUNC( hb_compEnumEvalEnd )
 {
-   const char * szName = hb_compExprAsSymbol( ( HB_EXPR_PTR ) cargo );
+   const char * szName = hb_compExprAsSymbol( ( PHB_EXPR ) cargo );
 
    if( szName )
       hb_compForEnd( HB_COMP_PARAM, szName );
 }
 
-static void hb_compEnumEnd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static void hb_compEnumEnd( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    hb_compExprListEval( HB_COMP_PARAM, pExpr, hb_compEnumEvalEnd );
    hb_compGenPCode1( HB_P_ENUMEND, HB_COMP_PARAM );
 }
 
-static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static void hb_compSwitchStart( HB_COMP_DECL, PHB_EXPR pExpr )
 {
-   HB_SWITCHCMD_PTR pSwitch = ( HB_SWITCHCMD_PTR ) hb_xgrab( sizeof( HB_SWITCHCMD ) );
+   PHB_SWITCHCMD pSwitch = ( PHB_SWITCHCMD ) hb_xgrab( sizeof( HB_SWITCHCMD ) );
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pSwitch->pCases = NULL;
@@ -2574,9 +2574,9 @@ static void hb_compSwitchStart( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    pFunc->pSwitch = pSwitch;
 }
 
-static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static void hb_compSwitchAdd( HB_COMP_DECL, PHB_EXPR pExpr )
 {
-   HB_SWITCHCASE_PTR pCase;
+   PHB_SWITCHCASE pCase;
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
 
    pFunc->funFlags &= ~HB_FUNF_BREAK_CODE;
@@ -2584,7 +2584,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    if( pExpr )
    {
       /* normal CASE */
-      pCase = ( HB_SWITCHCASE_PTR ) hb_xgrab( sizeof( HB_SWITCHCASE ) );
+      pCase = ( PHB_SWITCHCASE ) hb_xgrab( sizeof( HB_SWITCHCASE ) );
       pCase->nOffset = pFunc->nPCodePos;
       pCase->pNext = NULL;
       pCase->pExpr = pExpr = hb_compExprReduce( pExpr, HB_COMP_PARAM );
@@ -2592,7 +2592,7 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
          hb_compGenError( HB_COMP_PARAM, hb_comp_szErrors, 'E', HB_COMP_ERR_NOT_LITERAL_CASE, NULL, NULL );
       else if( pFunc->pSwitch->pCases )
       {
-         HB_SWITCHCASE_PTR pCases = pFunc->pSwitch->pCases;
+         PHB_SWITCHCASE pCases = pFunc->pSwitch->pCases;
          while( pCases )
          {
             HB_BOOL fEqual = HB_FALSE;
@@ -2648,9 +2648,9 @@ static void hb_compSwitchAdd( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 static void hb_compSwitchEnd( HB_COMP_DECL )
 {
    PHB_HFUNC pFunc = HB_COMP_PARAM->functions.pLast;
-   HB_SWITCHCMD_PTR pSwitch = pFunc->pSwitch;
-   HB_EXPR_PTR pExpr = pSwitch->pExpr;
-   HB_SWITCHCASE_PTR pCase, pTmp;
+   PHB_SWITCHCMD pSwitch = pFunc->pSwitch;
+   PHB_EXPR pExpr = pSwitch->pExpr;
+   PHB_SWITCHCASE pCase, pTmp;
    HB_SIZE ulExitPos, ulCountPos;
    int iCount = 0;
 
@@ -2751,8 +2751,8 @@ static void hb_compSwitchEnd( HB_COMP_DECL )
 */
 void hb_compSwitchKill( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
-   HB_SWITCHCASE_PTR pCase;
-   HB_SWITCHCMD_PTR pSwitch;
+   PHB_SWITCHCASE pCase;
+   PHB_SWITCHCMD pSwitch;
 
    while( pFunc->pSwitch )
    {
@@ -2771,13 +2771,13 @@ void hb_compSwitchKill( HB_COMP_DECL, PHB_HFUNC pFunc )
    }
 }
 
-static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static PHB_EXPR hb_compCheckPassByRef( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    if( pExpr->ExprType == HB_ET_FUNCALL )
    {
       if( hb_compExprParamListLen( pExpr->value.asFunCall.pParms ) == 0 )
       {
-         HB_EXPR_PTR pDelExpr = pExpr;
+         PHB_EXPR pDelExpr = pExpr;
          if( pExpr->value.asFunCall.pFunName->ExprType == HB_ET_MACRO )
          {
             pExpr = pExpr->value.asFunCall.pFunName;
@@ -2805,7 +2805,7 @@ static HB_EXPR_PTR hb_compCheckPassByRef( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    return pExpr;
 }
 
-static HB_EXPR_PTR hb_compCheckMethod( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static PHB_EXPR hb_compCheckMethod( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    if( pExpr->value.asMessage.szMessage &&
        pExpr->value.asMessage.pObject &&

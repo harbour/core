@@ -30,7 +30,7 @@
 #include "hbcomp.h"
 #include "hbassert.h"
 
-#define HB_PSIZE_FUNC( func )  HB_PCODE_FUNC( func, HB_VOID_PTR )
+#define HB_PSIZE_FUNC( func )  HB_PCODE_FUNC( func, PHB_VOID )
 
 /*
  * functions for variable size PCODE tracing
@@ -310,7 +310,7 @@ const HB_BYTE hb_comp_pcode_len[] = {
  * this table has pointers to functions which count
  * real size of variable size PCODEs
  */
-static HB_PCODE_FUNC_PTR s_psize_table[] =
+static PHB_PCODE_FUNC s_psize_table[] =
 {
    NULL,                       /* HB_P_AND,                  */
    NULL,                       /* HB_P_ARRAYPUSH,            */
@@ -509,7 +509,7 @@ HB_ISIZ hb_compPCodeSize( PHB_HFUNC pFunc, HB_SIZE nOffset )
 
       if( nSize == 0 )
       {
-         HB_PCODE_FUNC_PTR pCall = s_psize_table[ opcode ];
+         PHB_PCODE_FUNC pCall = s_psize_table[ opcode ];
 
          if( pCall != NULL )
             nSize = pCall( pFunc, nOffset, NULL );
@@ -518,7 +518,7 @@ HB_ISIZ hb_compPCodeSize( PHB_HFUNC pFunc, HB_SIZE nOffset )
    return nSize;
 }
 
-void hb_compPCodeEval( PHB_HFUNC pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
+void hb_compPCodeEval( PHB_HFUNC pFunc, const PHB_PCODE_FUNC * pFunctions, void * cargo )
 {
    HB_SIZE nPos = 0;
    HB_SIZE nSkip;
@@ -526,14 +526,14 @@ void hb_compPCodeEval( PHB_HFUNC pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
 
    /* Make sure that table is correct */
    assert( sizeof( hb_comp_pcode_len ) == HB_P_LAST_PCODE );
-   assert( sizeof( s_psize_table ) / sizeof( HB_PCODE_FUNC_PTR ) == HB_P_LAST_PCODE );
+   assert( sizeof( s_psize_table ) / sizeof( PHB_PCODE_FUNC ) == HB_P_LAST_PCODE );
 
    while( nPos < pFunc->nPCodePos )
    {
       opcode = pFunc->pCode[ nPos ];
       if( opcode < HB_P_LAST_PCODE )
       {
-         HB_PCODE_FUNC_PTR pCall = pFunctions[ opcode ];
+         PHB_PCODE_FUNC pCall = pFunctions[ opcode ];
          nSkip = pCall ? pCall( pFunc, nPos, cargo ) : 0;
          if( nSkip == 0 )
          {
@@ -578,7 +578,7 @@ void hb_compPCodeEval( PHB_HFUNC pFunc, const HB_PCODE_FUNC_PTR * pFunctions, vo
    }
 }
 
-void hb_compPCodeTrace( PHB_HFUNC pFunc, const HB_PCODE_FUNC_PTR * pFunctions, void * cargo )
+void hb_compPCodeTrace( PHB_HFUNC pFunc, const PHB_PCODE_FUNC * pFunctions, void * cargo )
 {
    HB_SIZE nPos = 0;
 
@@ -590,7 +590,7 @@ void hb_compPCodeTrace( PHB_HFUNC pFunc, const HB_PCODE_FUNC_PTR * pFunctions, v
       HB_BYTE opcode = pFunc->pCode[ nPos ];
       if( opcode < HB_P_LAST_PCODE )
       {
-         HB_PCODE_FUNC_PTR pCall = pFunctions[ opcode ];
+         PHB_PCODE_FUNC pCall = pFunctions[ opcode ];
          if( pCall )
             nPos = pCall( pFunc, nPos, cargo );
          else

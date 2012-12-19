@@ -60,7 +60,7 @@ HB_EXTERN_BEGIN
 struct HB_HASH_TABLE_;
 
 #define HB_HASH_FUNC( hbfunc )   HB_SIZE hbfunc( struct HB_HASH_TABLE_ * HashPtr, const void * Value, const void * Cargo )
-typedef HB_HASH_FUNC( ( * HB_HASH_FUNC_PTR ) );
+typedef HB_HASH_FUNC( ( * PHB_HASH_FUNC ) );
 
 typedef struct HB_HASH_ITEM_
 {
@@ -68,30 +68,30 @@ typedef struct HB_HASH_ITEM_
    const void * KeyPtr;
    HB_SIZE key;
    struct HB_HASH_ITEM_ *next;
-} HB_HASH_ITEM, * HB_HASH_ITEM_PTR;
+} HB_HASH_ITEM, * PHB_HASH_ITEM;
 
 typedef struct HB_HASH_TABLE_
 {
-   HB_HASH_ITEM_PTR * pItems;    /* pointer to items */
-   HB_SIZE nTableSize;          /* the table size - number of slots */
-   HB_SIZE nCount;              /* number of items stored in the table */
-   HB_SIZE nUsed;               /* number of used slots */
-   HB_HASH_FUNC_PTR pKeyFunc;    /* pointer to func that returns key value */
-   HB_HASH_FUNC_PTR pDeleteItemFunc; /* ptr to func that deletes value stored in the table */
-   HB_HASH_FUNC_PTR pCompFunc;       /* ptr to func that compares two items */
-} HB_HASH_TABLE, * HB_HASH_TABLE_PTR;
+   PHB_HASH_ITEM * pItems;        /* pointer to items */
+   HB_SIZE nTableSize;            /* the table size - number of slots */
+   HB_SIZE nCount;                /* number of items stored in the table */
+   HB_SIZE nUsed;                 /* number of used slots */
+   PHB_HASH_FUNC pKeyFunc;        /* pointer to func that returns key value */
+   PHB_HASH_FUNC pDeleteItemFunc; /* ptr to func that deletes value stored in the table */
+   PHB_HASH_FUNC pCompFunc;       /* ptr to func that compares two items */
+} HB_HASH_TABLE, * PHB_HASH_TABLE;
 
 
-extern HB_EXPORT_INT HB_HASH_TABLE_PTR hb_hashTableCreate( HB_SIZE nSize,
-                                                           HB_HASH_FUNC_PTR pHashFunc,
-                                                           HB_HASH_FUNC_PTR pDelete,
-                                                           HB_HASH_FUNC_PTR pComp );
-extern HB_EXPORT_INT void hb_hashTableKill( HB_HASH_TABLE_PTR pTable ); /* release all items and the hash table */
-extern HB_EXPORT_INT HB_BOOL hb_hashTableAdd( HB_HASH_TABLE_PTR pTable, const void * pKey, const void * pValue ); /* add a new item into the table */
-extern HB_EXPORT_INT HB_BOOL hb_hashTableDel( HB_HASH_TABLE_PTR pTable, const void * pKey ); /* delete an item from the table  */
-extern HB_EXPORT_INT const void * hb_hashTableFind( HB_HASH_TABLE_PTR pTable, const void * pKey ); /* return the pointer to item's value or NULL if not found */
-extern HB_EXPORT_INT HB_HASH_TABLE_PTR hb_hashTableResize( HB_HASH_TABLE_PTR pTable, HB_SIZE nNewSize ); /* resize the hash table */
-extern HB_EXPORT_INT HB_SIZE hb_hashTableSize( HB_HASH_TABLE_PTR pTable ); /* return the hash table size */
+extern HB_EXPORT_INT PHB_HASH_TABLE hb_hashTableCreate( HB_SIZE nSize,
+                                                        PHB_HASH_FUNC pHashFunc,
+                                                        PHB_HASH_FUNC pDelete,
+                                                        PHB_HASH_FUNC pComp );
+extern HB_EXPORT_INT void hb_hashTableKill( PHB_HASH_TABLE pTable ); /* release all items and the hash table */
+extern HB_EXPORT_INT HB_BOOL hb_hashTableAdd( PHB_HASH_TABLE pTable, const void * pKey, const void * pValue ); /* add a new item into the table */
+extern HB_EXPORT_INT HB_BOOL hb_hashTableDel( PHB_HASH_TABLE pTable, const void * pKey ); /* delete an item from the table  */
+extern HB_EXPORT_INT const void * hb_hashTableFind( PHB_HASH_TABLE pTable, const void * pKey ); /* return the pointer to item's value or NULL if not found */
+extern HB_EXPORT_INT PHB_HASH_TABLE hb_hashTableResize( PHB_HASH_TABLE pTable, HB_SIZE nNewSize ); /* resize the hash table */
+extern HB_EXPORT_INT HB_SIZE hb_hashTableSize( PHB_HASH_TABLE pTable ); /* return the hash table size */
 
 HB_EXTERN_END
 

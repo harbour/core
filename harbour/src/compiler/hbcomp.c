@@ -53,7 +53,7 @@
 
 #include "hbcomp.h"
 
-static HB_EXPR_PTR hb_compExprAlloc( HB_COMP_DECL )
+static PHB_EXPR hb_compExprAlloc( HB_COMP_DECL )
 {
    PHB_EXPRLST pExpItm = ( PHB_EXPRLST ) hb_xgrab( sizeof( HB_EXPRLST ) );
 
@@ -71,7 +71,7 @@ static HB_EXPR_PTR hb_compExprAlloc( HB_COMP_DECL )
    return &pExpItm->Expression;
 }
 
-static void hb_compExprDealloc( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static void hb_compExprDealloc( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    if( HB_COMP_PARAM->pExprLst )
    {
@@ -92,9 +92,9 @@ static void hb_compExprDealloc( HB_COMP_DECL, HB_EXPR_PTR pExpr )
       pExpr->ExprType = HB_ET_NONE;
 }
 
-static HB_EXPR_PTR hb_compExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
+static PHB_EXPR hb_compExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 {
-   HB_EXPR_PTR pExpr;
+   PHB_EXPR pExpr;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_compExprNew(%p,%i)", HB_COMP_PARAM, iType ) );
 
@@ -108,14 +108,14 @@ static HB_EXPR_PTR hb_compExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 
 /* Delete self - all components will be deleted somewhere else
  */
-static void hb_compExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static void hb_compExprClear( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    hb_compExprDealloc( HB_COMP_PARAM, pExpr );
 }
 
 /* Delete all components and delete self
  */
-static void hb_compExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static void hb_compExprFree( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_compExprFree()" ) );
 
@@ -146,7 +146,7 @@ void hb_compExprLstDealloc( HB_COMP_DECL )
    }
 }
 
-static HB_EXPR_PTR hb_compErrorType( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static PHB_EXPR hb_compErrorType( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    const char * szDesc = hb_compExprDescription( pExpr );
 
@@ -154,7 +154,7 @@ static HB_EXPR_PTR hb_compErrorType( HB_COMP_DECL, HB_EXPR_PTR pExpr )
    return pExpr;
 }
 
-static HB_EXPR_PTR hb_compErrorSyntax( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static PHB_EXPR hb_compErrorSyntax( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    const char * szDesc = hb_compExprDescription( pExpr );
 
@@ -183,7 +183,7 @@ static void hb_compOutMsg( void * cargo, int iErrorFmt, int iLine,
       else
          hb_snprintf( buffer, sizeof( buffer ), "\n%s:%s ", szModule, szPar2 );
 
-      hb_compOutErr( ( HB_COMP_PTR ) cargo, buffer );
+      hb_compOutErr( ( PHB_COMP ) cargo, buffer );
    }
 
    if( iErrorFmt == HB_ERRORFMT_CLIPPER )
@@ -193,10 +193,10 @@ static void hb_compOutMsg( void * cargo, int iErrorFmt, int iLine,
       hb_snprintf( buffer, sizeof( buffer ), "%s %c%04i  ",
                    cPrefix == 'W' ? "warning" : "error", cPrefix, iValue );
 
-   hb_compOutErr( ( HB_COMP_PTR ) cargo, buffer );
+   hb_compOutErr( ( PHB_COMP ) cargo, buffer );
    hb_snprintf( buffer, sizeof( buffer ), szText, szPar1, szPar2 );
-   hb_compOutErr( ( HB_COMP_PTR ) cargo, buffer );
-   hb_compOutErr( ( HB_COMP_PTR ) cargo, "\n" );
+   hb_compOutErr( ( PHB_COMP ) cargo, buffer );
+   hb_compOutErr( ( PHB_COMP ) cargo, "\n" );
 }
 
 void hb_compOutStd( HB_COMP_DECL, const char * szMessage )
@@ -239,14 +239,14 @@ static const HB_COMP_FUNCS s_comp_funcs =
    hb_compErrorDuplVar,
 };
 
-HB_COMP_PTR hb_comp_new( void )
+PHB_COMP hb_comp_new( void )
 {
-   HB_COMP_PTR pComp = NULL;
+   PHB_COMP pComp = NULL;
    PHB_PP_STATE pPP = hb_pp_new();
 
    if( pPP )
    {
-      pComp = ( HB_COMP_PTR ) hb_xgrab( sizeof( HB_COMP ) );
+      pComp = ( PHB_COMP ) hb_xgrab( sizeof( HB_COMP ) );
       memset( pComp, 0, sizeof( HB_COMP ) );
       pComp->pLex = ( PHB_COMP_LEX ) hb_xgrab( sizeof( HB_COMP_LEX ) );
       memset( pComp->pLex, 0, sizeof( HB_COMP_LEX ) );
@@ -297,7 +297,7 @@ HB_COMP_PTR hb_comp_new( void )
    return pComp;
 }
 
-void hb_comp_free( HB_COMP_PTR pComp )
+void hb_comp_free( PHB_COMP pComp )
 {
    hb_compI18nFree( pComp );
    hb_compCompileEnd( pComp );

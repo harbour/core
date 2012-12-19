@@ -1663,7 +1663,7 @@ static HB_ERRCODE hb_waSetLocate( AREAP pArea, LPDBSCOPEINFO pScopeInfo )
  */
 static HB_ERRCODE hb_waCompile( AREAP pArea, const char * pExpr )
 {
-   HB_MACRO_PTR pMacro;
+   PHB_MACRO pMacro;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_waCompile(%p, %p)", pArea, pExpr ) );
 

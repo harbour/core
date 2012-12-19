@@ -42,11 +42,11 @@ typedef struct HB_stru_genc_info
    FILE *  yyc;
    HB_BOOL bVerbose;
    HB_SIZE nEndBlockPos;
-} HB_GENC_INFO, * HB_GENC_INFO_PTR;
+} HB_GENC_INFO, * PHB_GENC_INFO;
 
-#define HB_GENC_FUNC( func )  HB_PCODE_FUNC( func, HB_GENC_INFO_PTR )
+#define HB_GENC_FUNC( func )  HB_PCODE_FUNC( func, PHB_GENC_INFO )
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
-typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
+typedef HB_GENC_FUNC_ * PHB_GENC_FUNC;
 
 static void hb_compDumpFindCFunc( HB_COMP_DECL )
 {
@@ -519,7 +519,7 @@ static void hb_compGenCByteStr( FILE * yyc, const HB_BYTE * pText, HB_SIZE nLen 
    }
 }
 
-static void hb_compGenCLocalName( PHB_HFUNC pFunc, int iLocal, HB_SIZE nPCodePos, HB_GENC_INFO_PTR cargo )
+static void hb_compGenCLocalName( PHB_HFUNC pFunc, int iLocal, HB_SIZE nPCodePos, PHB_GENC_INFO cargo )
 {
    /* Variable with negative order are local variables
     * referenced in a codeblock -handle it with care
@@ -545,7 +545,7 @@ static void hb_compGenCLocalName( PHB_HFUNC pFunc, int iLocal, HB_SIZE nPCodePos
    }
 }
 
-static void hb_compGenCStaticName( HB_USHORT uiStatic, HB_GENC_INFO_PTR cargo )
+static void hb_compGenCStaticName( HB_USHORT uiStatic, PHB_GENC_INFO cargo )
 {
    const char * szName = hb_compStaticVariableName( cargo->HB_COMP_PARAM, uiStatic );
 
@@ -2538,7 +2538,7 @@ static HB_GENC_FUNC( hb_p_pushaparams )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static const HB_GENC_FUNC_PTR s_verbose_table[] = {
+static const PHB_GENC_FUNC s_verbose_table[] = {
    hb_p_and,
    hb_p_arraypush,
    hb_p_arraypop,
@@ -2729,11 +2729,11 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
 
 static void hb_compGenCReadable( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
 {
-   const HB_GENC_FUNC_PTR * pFuncTable = s_verbose_table;
+   const PHB_GENC_FUNC * pFuncTable = s_verbose_table;
    HB_GENC_INFO genc_info;
 
    /* Make sure that table is correct */
-   assert( HB_P_LAST_PCODE == sizeof( s_verbose_table ) / sizeof( HB_GENC_FUNC_PTR ) );
+   assert( HB_P_LAST_PCODE == sizeof( s_verbose_table ) / sizeof( PHB_GENC_FUNC ) );
 
    genc_info.HB_COMP_PARAM = HB_COMP_PARAM;
    genc_info.nEndBlockPos  = 0;
@@ -2741,7 +2741,7 @@ static void hb_compGenCReadable( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
    genc_info.yyc = yyc;
 
    fprintf( yyc, "{\n   static const HB_BYTE pcode[] =\n   {\n" );
-   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &genc_info );
+   hb_compPCodeEval( pFunc, ( const PHB_PCODE_FUNC * ) pFuncTable, ( void * ) &genc_info );
 
    if( genc_info.bVerbose )
       fprintf( yyc, "/* %05" HB_PFS "i */\n", pFunc->nPCodePos );

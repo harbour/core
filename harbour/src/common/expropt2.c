@@ -77,7 +77,7 @@ static HB_BOOL hb_compExprHasMacro( const char * szText, HB_SIZE nLen, HB_COMP_D
    return HB_FALSE;
 }
 
-static HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_COMP_DECL )
+static PHB_EXPR hb_compExprReducePlusStrings( PHB_EXPR pLeft, PHB_EXPR pRight, HB_COMP_DECL )
 {
    if( pLeft->value.asString.dealloc )
    {
@@ -102,7 +102,7 @@ static HB_EXPR_PTR hb_compExprReducePlusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR 
    return pLeft;
 }
 
-static HB_EXPR_PTR hb_compExprReduceMinusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR pRight, HB_COMP_DECL )
+static PHB_EXPR hb_compExprReduceMinusStrings( PHB_EXPR pLeft, PHB_EXPR pRight, HB_COMP_DECL )
 {
    char * szText = pLeft->value.asString.string;
    HB_SIZE nLen = pLeft->nLength;
@@ -136,9 +136,9 @@ static HB_EXPR_PTR hb_compExprReduceMinusStrings( HB_EXPR_PTR pLeft, HB_EXPR_PTR
    return pLeft;
 }
 
-HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceMod( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -194,9 +194,9 @@ HB_EXPR_PTR hb_compExprReduceMod( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceDiv( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceDiv( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -285,9 +285,9 @@ HB_EXPR_PTR hb_compExprReduceDiv( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceMult( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -353,9 +353,9 @@ HB_EXPR_PTR hb_compExprReduceMult( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReducePower( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReducePower( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -401,7 +401,7 @@ HB_EXPR_PTR hb_compExprReducePower( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-static void hb_compExprReduceTimeStampPut( HB_EXPR_PTR pExpr, long lJulian, long lMilliSec )
+static void hb_compExprReduceTimeStampPut( PHB_EXPR pExpr, long lJulian, long lMilliSec )
 {
    /* timestamp normalization */
    if( lJulian < 0 )
@@ -447,7 +447,7 @@ static void hb_compExprReduceTimeStampPut( HB_EXPR_PTR pExpr, long lJulian, long
    pExpr->ValType  = HB_EV_TIMESTAMP;
 }
 
-static void hb_compExprReduceTimeStampAdd( HB_EXPR_PTR pExpr, HB_EXPR_PTR pTimeStamp, double dValue )
+static void hb_compExprReduceTimeStampAdd( PHB_EXPR pExpr, PHB_EXPR pTimeStamp, double dValue )
 {
    long lJulian, lMilliSec;
 
@@ -459,9 +459,9 @@ static void hb_compExprReduceTimeStampAdd( HB_EXPR_PTR pExpr, HB_EXPR_PTR pTimeS
    hb_compExprReduceTimeStampPut( pExpr, lJulian, lMilliSec );
 }
 
-HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceMinus( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -629,9 +629,9 @@ HB_EXPR_PTR hb_compExprReduceMinus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-static HB_BOOL hb_compExprReducePlusNums( HB_EXPR_PTR pSelf, HB_EXPR_PTR pAdd )
+static HB_BOOL hb_compExprReducePlusNums( PHB_EXPR pSelf, PHB_EXPR pAdd )
 {
-   HB_EXPR_PTR pLeft, pRight, pNum;
+   PHB_EXPR pLeft, pRight, pNum;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -687,9 +687,9 @@ static HB_BOOL hb_compExprReducePlusNums( HB_EXPR_PTR pSelf, HB_EXPR_PTR pAdd )
    return HB_TRUE;
 }
 
-HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReducePlus( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -932,9 +932,9 @@ HB_EXPR_PTR hb_compExprReducePlus( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceNegate( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceNegate( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pExpr;
+   PHB_EXPR pExpr;
 
    pExpr = pSelf->value.asOperator.pLeft;
 
@@ -980,9 +980,9 @@ HB_EXPR_PTR hb_compExprReduceNegate( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 }
 
 
-HB_EXPR_PTR hb_compExprReduceIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceIN( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1032,9 +1032,9 @@ HB_EXPR_PTR hb_compExprReduceIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceNE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceNE( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1208,9 +1208,9 @@ HB_EXPR_PTR hb_compExprReduceNE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceGE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceGE( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1295,9 +1295,9 @@ HB_EXPR_PTR hb_compExprReduceGE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceLE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceLE( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1382,9 +1382,9 @@ HB_EXPR_PTR hb_compExprReduceLE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceGT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceGT( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1469,9 +1469,9 @@ HB_EXPR_PTR hb_compExprReduceGT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceLT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceLT( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1556,9 +1556,9 @@ HB_EXPR_PTR hb_compExprReduceLT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceEQ( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1741,9 +1741,9 @@ HB_EXPR_PTR hb_compExprReduceEQ( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceAnd( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceAnd( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1809,9 +1809,9 @@ HB_EXPR_PTR hb_compExprReduceAnd( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceOr( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceOr( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pLeft, pRight;
+   PHB_EXPR pLeft, pRight;
 
    pLeft  = pSelf->value.asOperator.pLeft;
    pRight = pSelf->value.asOperator.pRight;
@@ -1877,9 +1877,9 @@ HB_EXPR_PTR hb_compExprReduceOr( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprReduceIIF( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pExpr;
+   PHB_EXPR pExpr;
 
    /* get conditional expression */
    pExpr = pSelf->value.asList.pExprList;
@@ -1962,7 +1962,7 @@ HB_EXPR_PTR hb_compExprReduceIIF( HB_EXPR_PTR pSelf, HB_COMP_DECL )
  * - strips parenthesis
  *  ( EXPR ) -> EXPR
  */
-HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+PHB_EXPR hb_compExprListStrip( PHB_EXPR pSelf, HB_COMP_DECL )
 {
    while( pSelf->ExprType == HB_ET_LIST &&
           pSelf->value.asList.pExprList->ExprType <= HB_ET_VARIABLE &&
@@ -1971,7 +1971,7 @@ HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       /* replace the list with a simple expression
        *  ( EXPR ) -> EXPR
        */
-      HB_EXPR_PTR pExpr = pSelf;
+      PHB_EXPR pExpr = pSelf;
 
       pSelf = pSelf->value.asList.pExprList;
       pExpr->value.asList.pExprList = NULL;
@@ -1981,12 +1981,12 @@ HB_EXPR_PTR hb_compExprListStrip( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return pSelf;
 }
 
-HB_BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceAT( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pSub   = pParms->value.asList.pExprList;
-   HB_EXPR_PTR pText  = pSub->pNext;
-   HB_EXPR_PTR pReduced;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pSub   = pParms->value.asList.pExprList;
+   PHB_EXPR pText  = pSub->pNext;
+   PHB_EXPR pReduced;
 
    if( pSub->ExprType == HB_ET_STRING && pText->ExprType == HB_ET_STRING &&
        ! HB_SUPPORT_USERCP )
@@ -2022,11 +2022,11 @@ HB_BOOL hb_compExprReduceAT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
       return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceCHR( PHB_EXPR pSelf, HB_COMP_DECL )
 {
    HB_BOOL fDoOpt = HB_FALSE;
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    if( pArg->ExprType == HB_ET_NUMERIC )
    {
@@ -2056,7 +2056,7 @@ HB_BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
        *       [druzus]
        */
 
-      HB_EXPR_PTR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
+      PHB_EXPR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
 
       pExpr->ValType = HB_EV_STRING;
       if( pArg->value.asNum.NumType == HB_ET_LONG )
@@ -2094,14 +2094,14 @@ HB_BOOL hb_compExprReduceCHR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceBCHAR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceBCHAR( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    if( pArg->ExprType == HB_ET_NUMERIC )
    {
-      HB_EXPR_PTR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
+      PHB_EXPR pExpr = HB_COMP_EXPR_NEW( HB_ET_STRING );
 
       pExpr->ValType = HB_EV_STRING;
       pExpr->value.asString.string =
@@ -2121,18 +2121,18 @@ HB_BOOL hb_compExprReduceBCHAR( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceLEN( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    /* TOFIX: do not optimize when array/hash args have user expressions */
    if( ( pArg->ExprType == HB_ET_STRING && !HB_SUPPORT_USERCP ) ||
        pArg->ExprType == HB_ET_ARRAY ||
        pArg->ExprType == HB_ET_HASH )
    {
-      HB_EXPR_PTR pExpr = hb_compExprNewLong( pArg->ExprType == HB_ET_HASH ?
-                        pArg->nLength >> 1 : pArg->nLength, HB_COMP_PARAM );
+      PHB_EXPR pExpr = hb_compExprNewLong( pArg->ExprType == HB_ET_HASH ?
+                          pArg->nLength >> 1 : pArg->nLength, HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
@@ -2143,10 +2143,10 @@ HB_BOOL hb_compExprReduceLEN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceEMPTY( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceEMPTY( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
    HB_BOOL fReduced = HB_TRUE, fResult = HB_FALSE;
 
    switch( pArg->ExprType )
@@ -2195,7 +2195,7 @@ HB_BOOL hb_compExprReduceEMPTY( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( fReduced )
    {
-      HB_EXPR_PTR pExpr = hb_compExprNewLogical( fResult, HB_COMP_PARAM );
+      PHB_EXPR pExpr = hb_compExprNewLogical( fResult, HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
@@ -2206,16 +2206,16 @@ HB_BOOL hb_compExprReduceEMPTY( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceASC( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    if( pArg->ExprType == HB_ET_STRING &&
        ( ! HB_SUPPORT_USERCP ||
          ( HB_UCHAR ) pArg->value.asString.string[ 0 ] <= 127 ) )
    {
-      HB_EXPR_PTR pExpr = hb_compExprNewLong(
+      PHB_EXPR pExpr = hb_compExprNewLong(
          ( HB_UCHAR ) pArg->value.asString.string[ 0 ], HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );
@@ -2227,14 +2227,14 @@ HB_BOOL hb_compExprReduceASC( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceBCODE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceBCODE( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    if( pArg->ExprType == HB_ET_STRING )
    {
-      HB_EXPR_PTR pExpr = hb_compExprNewLong(
+      PHB_EXPR pExpr = hb_compExprNewLong(
          ( HB_UCHAR ) pArg->value.asString.string[ 0 ], HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );
@@ -2246,14 +2246,14 @@ HB_BOOL hb_compExprReduceBCODE( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceINT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceINT( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    if( pArg->ExprType == HB_ET_NUMERIC )
    {
-      HB_EXPR_PTR pExpr;
+      PHB_EXPR pExpr;
 
       if( pArg->value.asNum.NumType == HB_ET_LONG )
          pExpr = hb_compExprNewLong( pArg->value.asNum.val.l, HB_COMP_PARAM );
@@ -2276,11 +2276,11 @@ HB_BOOL hb_compExprReduceINT( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceSTOT( HB_EXPR_PTR pSelf, HB_USHORT usCount, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceSTOT( PHB_EXPR pSelf, HB_USHORT usCount, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms ? pParms->value.asList.pExprList : NULL;
-   HB_EXPR_PTR pExpr = NULL;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms ? pParms->value.asList.pExprList : NULL;
+   PHB_EXPR pExpr = NULL;
 
    if( usCount == 0 )
    {
@@ -2307,11 +2307,11 @@ HB_BOOL hb_compExprReduceSTOT( HB_EXPR_PTR pSelf, HB_USHORT usCount, HB_COMP_DEC
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, HB_USHORT usCount, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceSTOD( PHB_EXPR pSelf, HB_USHORT usCount, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms ? pParms->value.asList.pExprList : NULL;
-   HB_EXPR_PTR pExpr = NULL;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms ? pParms->value.asList.pExprList : NULL;
+   PHB_EXPR pExpr = NULL;
 
    if( usCount == 0 )
    {
@@ -2338,15 +2338,15 @@ HB_BOOL hb_compExprReduceSTOD( HB_EXPR_PTR pSelf, HB_USHORT usCount, HB_COMP_DEC
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceDTOS( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceDTOS( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    if( pArg->ExprType == HB_ET_DATE || pArg->ExprType == HB_ET_TIMESTAMP )
    {
       char szBuffer[ 9 ], * szDate;
-      HB_EXPR_PTR pExpr;
+      PHB_EXPR pExpr;
 
       szDate = ( char * ) memcpy( hb_xgrab( 9 ),
             hb_dateDecStr( szBuffer, ( long ) pArg->value.asDate.lDate ), 9 );
@@ -2362,14 +2362,14 @@ HB_BOOL hb_compExprReduceDTOS( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceCTOD( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceCTOD( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    if( pArg->ExprType == HB_ET_STRING && pArg->nLength == 0 )
    {
-      HB_EXPR_PTR pExpr = hb_compExprNewDate( 0, HB_COMP_PARAM );
+      PHB_EXPR pExpr = hb_compExprNewDate( 0, HB_COMP_PARAM );
 
       HB_COMP_EXPR_FREE( pParms );
       HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );
@@ -2381,10 +2381,10 @@ HB_BOOL hb_compExprReduceCTOD( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceUPPER( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pArg = pParms->value.asList.pExprList;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pArg = pParms->value.asList.pExprList;
 
    if( pArg->ExprType == HB_ET_STRING )
    {
@@ -2408,7 +2408,7 @@ HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
       if( nLen == 0 )
       {
-         HB_EXPR_PTR pExpr;
+         PHB_EXPR pExpr;
          char * szValue;
          HB_BOOL fDealloc;
 
@@ -2466,12 +2466,12 @@ HB_BOOL hb_compExprReduceUPPER( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceMIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceMIN( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pFirst = pParms->value.asList.pExprList;
-   HB_EXPR_PTR pNext = pFirst->pNext;
-   HB_EXPR_PTR pExpr = NULL;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pFirst = pParms->value.asList.pExprList;
+   PHB_EXPR pNext = pFirst->pNext;
+   PHB_EXPR pExpr = NULL;
 
    if( pFirst->ExprType == pNext->ExprType )
    {
@@ -2531,7 +2531,7 @@ HB_BOOL hb_compExprReduceMIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pExpr )
    {
-      HB_EXPR_PTR * pExprPtr = &pParms->value.asList.pExprList;
+      PHB_EXPR * pExprPtr = &pParms->value.asList.pExprList;
 
       while( *pExprPtr )
       {
@@ -2552,12 +2552,12 @@ HB_BOOL hb_compExprReduceMIN( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceMAX( HB_EXPR_PTR pSelf, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceMAX( PHB_EXPR pSelf, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pFirst = pParms->value.asList.pExprList;
-   HB_EXPR_PTR pNext = pFirst->pNext;
-   HB_EXPR_PTR pExpr = NULL;
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pFirst = pParms->value.asList.pExprList;
+   PHB_EXPR pNext = pFirst->pNext;
+   PHB_EXPR pExpr = NULL;
 
    if( pFirst->ExprType == pNext->ExprType )
    {
@@ -2618,7 +2618,7 @@ HB_BOOL hb_compExprReduceMAX( HB_EXPR_PTR pSelf, HB_COMP_DECL )
 
    if( pExpr )
    {
-      HB_EXPR_PTR * pExprPtr = &pParms->value.asList.pExprList;
+      PHB_EXPR * pExprPtr = &pParms->value.asList.pExprList;
 
       while( *pExprPtr )
       {
@@ -2639,11 +2639,11 @@ HB_BOOL hb_compExprReduceMAX( HB_EXPR_PTR pSelf, HB_COMP_DECL )
    return HB_FALSE;
 }
 
-HB_BOOL hb_compExprReduceBitFunc( HB_EXPR_PTR pSelf, HB_MAXINT nResult, HB_BOOL fBool, HB_COMP_DECL )
+HB_BOOL hb_compExprReduceBitFunc( PHB_EXPR pSelf, HB_MAXINT nResult, HB_BOOL fBool, HB_COMP_DECL )
 {
-   HB_EXPR_PTR pParms = pSelf->value.asFunCall.pParms;
-   HB_EXPR_PTR pExpr = fBool ? hb_compExprNewLogical( nResult != 0, HB_COMP_PARAM ) :
-                               hb_compExprNewLong( nResult, HB_COMP_PARAM );
+   PHB_EXPR pParms = pSelf->value.asFunCall.pParms;
+   PHB_EXPR pExpr = fBool ? hb_compExprNewLogical( nResult != 0, HB_COMP_PARAM ) :
+                            hb_compExprNewLong( nResult, HB_COMP_PARAM );
 
    HB_COMP_EXPR_FREE( pParms );
    HB_COMP_EXPR_FREE( pSelf->value.asFunCall.pFunName );

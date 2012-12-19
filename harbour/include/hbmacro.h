@@ -90,18 +90,18 @@ HB_EXTERN_BEGIN
 /* Global functions
  */
 extern void hb_macroError( int iError, HB_COMP_DECL );
-extern int hb_macroYYParse( HB_MACRO_PTR pMacro );
+extern int hb_macroYYParse( PHB_MACRO pMacro );
 extern int hb_macroSetMacro( HB_BOOL fSet, int flag );
 extern HB_ULONG hb_macroAutoSetMacro( HB_ULONG ulFlag );
-extern HB_BOOL hb_macroLexNew( HB_MACRO_PTR pMacro );
-extern void hb_macroLexDelete( HB_MACRO_PTR pMacro );
+extern HB_BOOL hb_macroLexNew( PHB_MACRO pMacro );
+extern void hb_macroLexDelete( PHB_MACRO pMacro );
 extern char * hb_macroIdentNew( HB_COMP_DECL, char * );
 
-extern HB_EXPR_PTR hb_macroExprGenPush( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_macroExprGenPop( HB_EXPR_PTR, HB_COMP_DECL );
+extern PHB_EXPR hb_macroExprGenPush( PHB_EXPR, HB_COMP_DECL );
+extern PHB_EXPR hb_macroExprGenPop( PHB_EXPR, HB_COMP_DECL );
 
-extern HB_EXPR_PTR hb_macroExprNewArrayAt( HB_EXPR_PTR pArray, HB_EXPR_PTR pIndex, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_macroExprNewFunCall( HB_EXPR_PTR pName, HB_EXPR_PTR pParms, HB_COMP_DECL );
+extern PHB_EXPR hb_macroExprNewArrayAt( PHB_EXPR pArray, PHB_EXPR pIndex, HB_COMP_DECL );
+extern PHB_EXPR hb_macroExprNewFunCall( PHB_EXPR pName, PHB_EXPR pParms, HB_COMP_DECL );
 
 /* Size of pcode buffer incrementation
  */

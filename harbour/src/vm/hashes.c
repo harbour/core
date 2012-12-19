@@ -80,7 +80,7 @@ typedef struct _HB_BASEHASH
    HB_SIZE      nSize;        /* size of allocated pair array */
    HB_SIZE      nLen;         /* number of used items in pair array */
    int          iFlags;       /* hash item flags */
-} HB_BASEHASH, * PHB_BASEHASH, * HB_BASEHASH_PTR;
+} HB_BASEHASH, * PHB_BASEHASH;
 
 
 /* This releases hash when called from the garbage collector */

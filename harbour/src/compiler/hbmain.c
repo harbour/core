@@ -1922,7 +1922,7 @@ static PHB_HINLINE hb_compInlineNew( HB_COMP_DECL, const char * szName, int iLin
 static PHB_HFUNC hb_compFunctionKill( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
    PHB_HFUNC pNext = pFunc->pNext;
-   HB_ENUMERATOR_PTR pEVar;
+   PHB_ENUMERATOR pEVar;
    PHB_HVAR pVar;
 
    hb_compRTVariableKill( HB_COMP_PARAM, pFunc );

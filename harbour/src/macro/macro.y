@@ -1,6 +1,6 @@
 %pure-parser
-%parse-param { HB_MACRO_PTR pMacro }
-%lex-param   { HB_MACRO_PTR pMacro }
+%parse-param { PHB_MACRO pMacro }
+%lex-param   { PHB_MACRO pMacro }
 %name-prefix = "hb_macro_yy"
 
 %{
@@ -145,7 +145,7 @@
    int       iNumber;   /* to hold a temporary integer number */
    HB_MAXINT lNumber;   /* to hold a temporary long number */
    void *    pVoid;     /* to hold any memory structure we may need */
-   HB_EXPR_PTR asExpr;
+   PHB_EXPR  asExpr;
    struct
    {
       const char * string;
@@ -177,9 +177,9 @@
 /* This must be placed after the above union - the union is
  * typedef-ined to YYSTYPE
  */
-extern int  yylex( YYSTYPE *, HB_MACRO_PTR );   /* main lex token function, called by yyparse() */
-extern int  yyparse( HB_MACRO_PTR );            /* main yacc parsing function */
-extern void yyerror( HB_MACRO_PTR, const char * );    /* parsing error management function */
+extern int  yylex( YYSTYPE *, PHB_MACRO );   /* main lex token function, called by yyparse() */
+extern int  yyparse( PHB_MACRO );            /* main yacc parsing function */
+extern void yyerror( PHB_MACRO, const char * );    /* parsing error management function */
 
 %}
 
@@ -726,7 +726,7 @@ IfInline    : IIF '(' Expression ',' Argument ',' Argument ')'
  ** ------------------------------------------------------------------------ **
  */
 
-void yyerror( HB_MACRO_PTR pMacro, const char * s )
+void yyerror( PHB_MACRO pMacro, const char * s )
 {
    HB_SYMBOL_UNUSED( pMacro );
    HB_SYMBOL_UNUSED( s );
@@ -742,26 +742,26 @@ typedef struct HB_MEXPR_
    HB_EXPR  Expressions[ HB_MEXPR_PREALLOC ];
    struct HB_MEXPR_ *pPrev;
 }
-HB_MEXPR, * HB_MEXPR_PTR;
+HB_MEXPR, * PHB_MEXPR;
 
 typedef struct HB_MIDENT_
 {
    char * Identifier;
-   struct HB_MIDENT_ *pPrev;
+   struct HB_MIDENT_ * pPrev;
 }
-HB_MIDENT, * HB_MIDENT_PTR;
+HB_MIDENT, * PHB_MIDENT;
 
 /* Allocates memory for Expression holder structure and stores it
  * on the linked list
 */
-static HB_EXPR_PTR hb_macroExprAlloc( HB_COMP_DECL )
+static PHB_EXPR hb_macroExprAlloc( HB_COMP_DECL )
 {
-   HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
+   PHB_MEXPR pMExpr = ( PHB_MEXPR ) HB_MACRO_DATA->pExprLst;
 
    if( ! pMExpr || pMExpr->count >= HB_MEXPR_PREALLOC )
    {
-      pMExpr = ( HB_MEXPR_PTR ) hb_xgrab( sizeof( HB_MEXPR ) );
-      pMExpr->pPrev = ( HB_MEXPR_PTR ) HB_MACRO_DATA->pExprLst;
+      pMExpr = ( PHB_MEXPR ) hb_xgrab( sizeof( HB_MEXPR ) );
+      pMExpr->pPrev = ( PHB_MEXPR ) HB_MACRO_DATA->pExprLst;
       pMExpr->count = 0;
       HB_MACRO_DATA->pExprLst = ( void * ) pMExpr;
    }
@@ -770,18 +770,18 @@ static HB_EXPR_PTR hb_macroExprAlloc( HB_COMP_DECL )
 
 char * hb_macroIdentNew( HB_COMP_DECL, char * szIdent )
 {
-   HB_MIDENT_PTR pMIdent = ( HB_MIDENT_PTR ) hb_xgrab( sizeof( HB_MIDENT ) );
+   PHB_MIDENT pMIdent = ( PHB_MIDENT ) hb_xgrab( sizeof( HB_MIDENT ) );
 
    pMIdent->Identifier = szIdent;
-   pMIdent->pPrev = ( HB_MIDENT_PTR ) HB_MACRO_DATA->pIdentLst;
+   pMIdent->pPrev = ( PHB_MIDENT ) HB_MACRO_DATA->pIdentLst;
    HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent;
 
    return szIdent;
 }
 
-static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
+static PHB_EXPR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 {
-   HB_EXPR_PTR pExpr;
+   PHB_EXPR pExpr;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprNew(%p,%i)", HB_COMP_PARAM, iType ) );
 
@@ -795,7 +795,7 @@ static HB_EXPR_PTR hb_macroExprNew( HB_COMP_DECL, HB_EXPRTYPE iType )
 
 /* Delete self - all components will be deleted somewhere else
  */
-static void hb_macroExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static void hb_macroExprClear( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    HB_SYMBOL_UNUSED( HB_COMP_PARAM );
 
@@ -804,7 +804,7 @@ static void hb_macroExprClear( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 
 /* Delete all components and delete self
  */
-static void hb_macroExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static void hb_macroExprFree( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_macroExprFree()" ) );
 
@@ -813,11 +813,11 @@ static void hb_macroExprFree( HB_COMP_DECL, HB_EXPR_PTR pExpr )
 }
 
 /* Deallocate all memory used by expression optimizer */
-static void hb_macroLstFree( HB_MACRO_PTR pMacro )
+static void hb_macroLstFree( PHB_MACRO pMacro )
 {
    if( pMacro->pExprLst )
    {
-      HB_MEXPR_PTR pMExpr = ( HB_MEXPR_PTR ) pMacro->pExprLst;
+      PHB_MEXPR pMExpr = ( PHB_MEXPR ) pMacro->pExprLst;
       do
       {
          while( pMExpr->count )
@@ -827,7 +827,7 @@ static void hb_macroLstFree( HB_MACRO_PTR pMacro )
       while( pMExpr );
       do
       {
-         pMExpr = ( HB_MEXPR_PTR ) pMacro->pExprLst;
+         pMExpr = ( PHB_MEXPR ) pMacro->pExprLst;
          pMacro->pExprLst = ( void * ) pMExpr->pPrev;
          hb_xfree( pMExpr );
       }
@@ -836,20 +836,20 @@ static void hb_macroLstFree( HB_MACRO_PTR pMacro )
 
    while( pMacro->pIdentLst )
    {
-      HB_MIDENT_PTR pMIdent = ( HB_MIDENT_PTR ) HB_MACRO_DATA->pIdentLst;
+      PHB_MIDENT pMIdent = ( PHB_MIDENT ) HB_MACRO_DATA->pIdentLst;
       HB_MACRO_DATA->pIdentLst = ( void * ) pMIdent->pPrev;
       hb_xfree( pMIdent->Identifier );
       hb_xfree( pMIdent );
    }
 }
 
-static HB_EXPR_PTR hb_macroErrorType( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static PHB_EXPR hb_macroErrorType( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    hb_macroError( EG_ARG, HB_COMP_PARAM );
    return pExpr;
 }
 
-static HB_EXPR_PTR hb_macroErrorSyntax( HB_COMP_DECL, HB_EXPR_PTR pExpr )
+static PHB_EXPR hb_macroErrorSyntax( HB_COMP_DECL, PHB_EXPR pExpr )
 {
    hb_macroError( EG_SYNTAX, HB_COMP_PARAM );
    return pExpr;
@@ -873,7 +873,7 @@ static const HB_COMP_FUNCS s_macro_funcs =
    hb_macroErrorDuplVar,
 };
 
-int hb_macroYYParse( HB_MACRO_PTR pMacro )
+int hb_macroYYParse( PHB_MACRO pMacro )
 {
    int iResult;
 
@@ -901,13 +901,13 @@ int hb_macroYYParse( HB_MACRO_PTR pMacro )
 
 /* it's an example of PP token translator which change tokens generated by
    PP into terminal symbols used by our grammar parser generated by Bison */
-HB_BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
+HB_BOOL hb_macroLexNew( PHB_MACRO pMacro )
 {
    pMacro->pLex = ( void * ) hb_pp_lexNew( pMacro->string, pMacro->length );
    return pMacro->pLex != NULL;
 }
 
-void hb_macroLexDelete( HB_MACRO_PTR pMacro )
+void hb_macroLexDelete( PHB_MACRO pMacro )
 {
    if( pMacro->pLex )
    {
@@ -916,7 +916,7 @@ void hb_macroLexDelete( HB_MACRO_PTR pMacro )
    }
 }
 
-int hb_macro_yylex( YYSTYPE *yylval_ptr, HB_MACRO_PTR pMacro )
+int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro )
 {
    PHB_PP_TOKEN pToken = hb_pp_lexGet( ( PHB_PP_STATE ) pMacro->pLex );
 

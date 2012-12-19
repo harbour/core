@@ -74,7 +74,7 @@ HB_EXTERN_BEGIN
 /* forward declaration */
 struct _HB_CODEPAGE;
 
-#define HB_CODEPAGE_PTR       struct _HB_CODEPAGE *
+#define _PHB_CODEPAGE       struct _HB_CODEPAGE *
 
 #define HB_CDPCHAR_GET( c, s, n, i, w )         (c)->wcharGet( c, s, n, i, w )
 #define HB_CDPCHAR_PUT( c, s, n, i, w )         (c)->wcharPut( c, s, n, i, w )
@@ -85,25 +85,25 @@ struct _HB_CODEPAGE;
 #define HB_CDPCHAR_CMP( c, s1, n1, s2, n2, e )  (c)->wcharCmp( c, s1, n1, s2, n2, e )
 #define HB_CDPCHAR_CMPI( c, s1, n1, s2, n2, e ) (c)->wcharCmpI( c, s1, n1, s2, n2, e )
 
-#define HB_CDP_GET_FUNC( func ) HB_BOOL func( HB_CODEPAGE_PTR cdp, const char * pSrc, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR * wc )
+#define HB_CDP_GET_FUNC( func ) HB_BOOL func( _PHB_CODEPAGE cdp, const char * pSrc, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR * wc )
 typedef HB_CDP_GET_FUNC( ( * PHB_CDP_GET_FUNC ) );
 
-#define HB_CDP_PUT_FUNC( func ) HB_BOOL func( HB_CODEPAGE_PTR cdp, char * pDst, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR wc )
+#define HB_CDP_PUT_FUNC( func ) HB_BOOL func( _PHB_CODEPAGE cdp, char * pDst, HB_SIZE nLen, HB_SIZE * pnIndex, HB_WCHAR wc )
 typedef HB_CDP_PUT_FUNC( ( * PHB_CDP_PUT_FUNC ) );
 
-#define HB_CDP_LEN_FUNC( func ) int func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
+#define HB_CDP_LEN_FUNC( func ) int func( _PHB_CODEPAGE cdp, HB_WCHAR wc )
 typedef HB_CDP_LEN_FUNC( ( * PHB_CDP_LEN_FUNC ) );
 
-#define HB_CDP_UPPER_FUNC( func ) HB_WCHAR func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
+#define HB_CDP_UPPER_FUNC( func ) HB_WCHAR func( _PHB_CODEPAGE cdp, HB_WCHAR wc )
 typedef HB_CDP_UPPER_FUNC( ( * PHB_CDP_UPPER_FUNC ) );
 
-#define HB_CDP_LOWER_FUNC( func ) HB_WCHAR func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
+#define HB_CDP_LOWER_FUNC( func ) HB_WCHAR func( _PHB_CODEPAGE cdp, HB_WCHAR wc )
 typedef HB_CDP_LOWER_FUNC( ( * PHB_CDP_LOWER_FUNC ) );
 
-#define HB_CDP_FLAGS_FUNC( func ) int func( HB_CODEPAGE_PTR cdp, HB_WCHAR wc )
+#define HB_CDP_FLAGS_FUNC( func ) int func( _PHB_CODEPAGE cdp, HB_WCHAR wc )
 typedef HB_CDP_FLAGS_FUNC( ( * PHB_CDP_FLAGS_FUNC ) );
 
-#define HB_CDP_CMP_FUNC( func ) int func( HB_CODEPAGE_PTR cdp, const char * szFirst, HB_SIZE nLenFirst, const char * szSecond, HB_SIZE nLenSecond, HB_BOOL fExact )
+#define HB_CDP_CMP_FUNC( func ) int func( _PHB_CODEPAGE cdp, const char * szFirst, HB_SIZE nLenFirst, const char * szSecond, HB_SIZE nLenSecond, HB_BOOL fExact )
 typedef HB_CDP_CMP_FUNC( ( * PHB_CDP_CMP_FUNC ) );
 
 

@@ -122,7 +122,7 @@ typedef struct _HB_CURL
 
    PHB_ITEM pProgressCallback;
 
-   HB_HASH_TABLE_PTR pHash;
+   PHB_HASH_TABLE pHash;
 
 } HB_CURL, * PHB_CURL;
 

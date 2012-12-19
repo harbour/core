@@ -68,7 +68,7 @@ typedef struct _HB_MACRO_LEX
 }
 HB_MACRO_LEX, * PHB_MACRO_LEX;
 
-HB_BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
+HB_BOOL hb_macroLexNew( PHB_MACRO pMacro )
 {
    if( pMacro->length )
    {
@@ -92,7 +92,7 @@ HB_BOOL hb_macroLexNew( HB_MACRO_PTR pMacro )
    return HB_FALSE;
 }
 
-void hb_macroLexDelete( HB_MACRO_PTR pMacro )
+void hb_macroLexDelete( PHB_MACRO pMacro )
 {
    if( pMacro->pLex )
    {
@@ -125,7 +125,7 @@ static void hb_lexIdentCopy( PHB_MACRO_LEX pLex )
    }
 }
 
-static int hb_lexTimestampGet( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro,
+static int hb_lexTimestampGet( YYSTYPE * yylval_ptr, PHB_MACRO pMacro,
                                PHB_MACRO_LEX pLex )
 {
    HB_BOOL fOK = HB_FALSE;
@@ -152,7 +152,7 @@ static int hb_lexTimestampGet( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro,
    return TIMESTAMP;
 }
 
-static int hb_lexDateGet( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro,
+static int hb_lexDateGet( YYSTYPE * yylval_ptr, PHB_MACRO pMacro,
                           PHB_MACRO_LEX pLex )
 {
    HB_BOOL fOK = HB_FALSE;
@@ -184,7 +184,7 @@ static int hb_lexDateGet( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro,
    return NUM_DATE;
 }
 
-static int hb_lexStringCopy( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro,
+static int hb_lexStringCopy( YYSTYPE * yylval_ptr, PHB_MACRO pMacro,
                              PHB_MACRO_LEX pLex, char cDelim )
 {
    pLex->quote = HB_FALSE;
@@ -206,7 +206,7 @@ static int hb_lexStringCopy( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro,
    return LITERAL;
 }
 
-static int hb_lexStringExtCopy( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro,
+static int hb_lexStringExtCopy( YYSTYPE * yylval_ptr, PHB_MACRO pMacro,
                                 PHB_MACRO_LEX pLex )
 {
    HB_SIZE nLen;
@@ -269,9 +269,9 @@ static int hb_lexNumConv( YYSTYPE * yylval_ptr, PHB_MACRO_LEX pLex, HB_SIZE nLen
    }
 }
 
-extern int hb_macro_yylex( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro );
+extern int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro );
 
-int hb_macro_yylex( YYSTYPE * yylval_ptr, HB_MACRO_PTR pMacro )
+int hb_macro_yylex( YYSTYPE * yylval_ptr, PHB_MACRO pMacro )
 {
    PHB_MACRO_LEX pLex = ( PHB_MACRO_LEX ) pMacro->pLex;
 

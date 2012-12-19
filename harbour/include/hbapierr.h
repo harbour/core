@@ -174,19 +174,19 @@ extern           void      hb_errInternalRaw    ( HB_ERRCODE errCode, const char
 struct HB_ERROR_INFO_;   /* forward declaration */
 #define HB_ERROR_HANDLE( hbfunc )   PHB_ITEM hbfunc( struct HB_ERROR_INFO_ * ErrorInfo )
 typedef HB_ERROR_HANDLE( HB_ERROR_HANDLER );
-typedef HB_ERROR_HANDLER * HB_ERROR_HANDLER_PTR;
+typedef HB_ERROR_HANDLER * PHB_ERROR_HANDLER;
 
 typedef struct HB_ERROR_INFO_
 {
-   HB_ERROR_HANDLER_PTR Func;
+   PHB_ERROR_HANDLER Func;
    PHB_ITEM Error;
    void * Cargo;
    struct HB_ERROR_INFO_ * Previous;
    PHB_ITEM ErrorBlock;
-} HB_ERROR_INFO, * HB_ERROR_INFO_PTR;
+} HB_ERROR_INFO, * PHB_ERROR_INFO;
 
 /* set/get current error handler */
-extern HB_EXPORT HB_ERROR_INFO_PTR  hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler );
+extern HB_EXPORT PHB_ERROR_INFO hb_errorHandler( PHB_ERROR_INFO pNewHandler );
 
 /* current errorblock item */
 extern HB_EXPORT PHB_ITEM hb_errorBlock( void );

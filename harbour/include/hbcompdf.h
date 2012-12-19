@@ -120,7 +120,7 @@ typedef struct HB_CBVAR_
    HB_BYTE bType;
    HB_BOOL bUsed;
    struct HB_CBVAR_ * pNext;
-} HB_CBVAR, * HB_CBVAR_PTR;
+} HB_CBVAR, * PHB_CBVAR;
 
 typedef struct _HB_VARTYPE
 {
@@ -403,7 +403,7 @@ typedef struct HB_EXPR_
       struct
       {
          struct HB_EXPR_ * pExprList;  /* list elements */
-         HB_CBVAR_PTR pLocals;         /* list of local variables */
+         PHB_CBVAR pLocals;            /* list of local variables */
          char * string;                /* source code of a codeblock */
          HB_USHORT flags;              /* HB_BLOCK_* */
       } asCodeblock;
@@ -436,14 +436,14 @@ typedef struct HB_EXPR_
    HB_EXPRTYPE ExprType;      /* internal expression type */
    HB_USHORT   ValType;       /* language level value type */
    struct HB_EXPR_ * pNext;   /* next expression in the list of expressions */
-} HB_EXPR, * HB_EXPR_PTR;
+} HB_EXPR, * PHB_EXPR;
 
 typedef struct HB_ENUMERATOR_
 {
    const char * szName;
    HB_BOOL bForEach;
    struct HB_ENUMERATOR_ *pNext;
-} HB_ENUMERATOR, * HB_ENUMERATOR_PTR; /* support structure for FOR EACH statements */
+} HB_ENUMERATOR, * PHB_ENUMERATOR; /* support structure for FOR EACH statements */
 
 /* support structure for else if pcode fixups */
 typedef struct HB_ELSEIF_
@@ -451,7 +451,7 @@ typedef struct HB_ELSEIF_
    HB_SIZE  nOffset;
    struct   HB_ELSEIF_ * pElseif;   /* next ELSEIF in the current IF statement */
    struct   HB_ELSEIF_ * pPrev;     /* previous IF statement */
-} HB_ELSEIF, * HB_ELSEIF_PTR;
+} HB_ELSEIF, * PHB_ELSEIF;
 
 /* support structure for EXIT and LOOP statements */
 typedef struct HB_LOOPEXIT_
@@ -464,34 +464,34 @@ typedef struct HB_LOOPEXIT_
    struct HB_LOOPEXIT_ * pLoopList;
    struct HB_LOOPEXIT_ * pExitList;
    struct HB_LOOPEXIT_ * pNext;
-} HB_LOOPEXIT, * HB_LOOPEXIT_PTR;
+} HB_LOOPEXIT, * PHB_LOOPEXIT;
 
 /* support structure for SWITCH statement */
 typedef struct HB_SWITCHCASE_
 {
    HB_SIZE nOffset;
-   HB_EXPR_PTR pExpr;
+   PHB_EXPR pExpr;
    struct HB_SWITCHCASE_ * pNext;
-} HB_SWITCHCASE, * HB_SWITCHCASE_PTR;
+} HB_SWITCHCASE, * PHB_SWITCHCASE;
 
 typedef struct HB_SWITCHCMD_
 {
    HB_SIZE nOffset;
-   HB_SWITCHCASE_PTR pCases;
-   HB_SWITCHCASE_PTR pLast;
-   HB_EXPR_PTR pExpr;
+   PHB_SWITCHCASE pCases;
+   PHB_SWITCHCASE pLast;
+   PHB_EXPR pExpr;
    HB_SIZE nDefault;
    struct HB_SWITCHCMD_ * pPrev;
-} HB_SWITCHCMD, * HB_SWITCHCMD_PTR;
+} HB_SWITCHCMD, * PHB_SWITCHCMD;
 
 /* support structure for PUBLIC and PRIVATE statements */
 typedef struct HB_RTVAR_
 {
-   HB_EXPR_PTR pVar;
+   PHB_EXPR pVar;
    HB_BOOL bPopValue;
    struct HB_RTVAR_ * pNext;
    struct HB_RTVAR_ * pPrev;
-} HB_RTVAR, * HB_RTVAR_PTR;
+} HB_RTVAR, * PHB_RTVAR;
 
 /* structure to hold a Clipper defined function */
 typedef struct _HB_HFUNC
@@ -522,11 +522,11 @@ typedef struct _HB_HFUNC
    HB_BOOL      bBlock;                   /* HB_TRUE if simple codeblock body is compiled */
    struct _HB_HFUNC * pOwner;             /* pointer to the function/procedure that owns the codeblock */
    struct _HB_HFUNC * pNext;              /* pointer to the next defined function */
-   HB_ENUMERATOR_PTR pEnum;               /* pointer to FOR EACH variables */
-   HB_LOOPEXIT_PTR   pLoops;
-   HB_SWITCHCMD_PTR  pSwitch;
-   HB_ELSEIF_PTR     elseif;
-   HB_RTVAR_PTR      rtvars;
+   PHB_ENUMERATOR    pEnum;               /* pointer to FOR EACH variables */
+   PHB_LOOPEXIT      pLoops;
+   PHB_SWITCHCMD     pSwitch;
+   PHB_ELSEIF        elseif;
+   PHB_RTVAR         rtvars;
    HB_USHORT         wSeqCounter;
    HB_USHORT         wAlwaysCounter;
    HB_USHORT         wForCounter;
@@ -639,15 +639,15 @@ typedef struct _HB_COMMON
    int    mode;               /* HB_MODE_* */
    int    supported;          /* various flags for supported capabilities */
    const struct _HB_COMP_FUNCS * funcs;
-} HB_COMMON, * HB_COMMON_PTR;
+} HB_COMMON, * PHB_COMMON;
 
 #define HB_COMP_PARAM         pCommon
-#define HB_COMP_DECL          HB_COMMON_PTR HB_COMP_PARAM
+#define HB_COMP_DECL          PHB_COMMON HB_COMP_PARAM
 
 #elif defined( HB_MACRO_SUPPORT )
 
 #define HB_COMP_PARAM         pMacro
-#define HB_COMP_DECL          HB_MACRO_PTR HB_COMP_PARAM
+#define HB_COMP_DECL          PHB_MACRO HB_COMP_PARAM
 
 typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
 {
@@ -655,9 +655,9 @@ typedef struct HB_PCODE_INFO_ /* compiled pcode container for macro compiler */
    HB_SIZE nPCodeSize;     /* total memory size for pcode */
    HB_SIZE nPCodePos;      /* actual pcode offset */
    HB_BOOL fVParams;       /* function/codeblock with variable parameters */
-   HB_CBVAR_PTR pLocals;
+   PHB_CBVAR pLocals;
    struct HB_PCODE_INFO_ * pPrev;
-} HB_PCODE_INFO, * HB_PCODE_INFO_PTR;
+} HB_PCODE_INFO, * PHB_PCODE_INFO;
 
 typedef struct HB_MACRO_      /* a macro compiled pcode container */
 {
@@ -672,7 +672,7 @@ typedef struct HB_MACRO_      /* a macro compiled pcode container */
    int      Flags;            /* some flags we may need */
    int      status;           /* status of compilation */
    PHB_ITEM pError;           /* error object returned from the parser */
-   HB_PCODE_INFO_PTR pCodeInfo;  /* pointer to pcode buffer and info */
+   PHB_PCODE_INFO pCodeInfo;  /* pointer to pcode buffer and info */
    void *   pLex;             /* lexer buffer pointer */
    void *   pExprLst;         /* list with allocated expressions */
    void *   pIdentLst;        /* list with allocated identifiers */
@@ -685,7 +685,7 @@ typedef struct HB_MACRO_      /* a macro compiled pcode container */
 #else
 
 #define HB_COMP_PARAM         pComp
-#define HB_COMP_DECL          HB_COMP_PTR HB_COMP_PARAM
+#define HB_COMP_DECL          PHB_COMP HB_COMP_PARAM
 
 #define HB_I18N_PLURAL_MAX    8
 
@@ -745,7 +745,7 @@ typedef struct _HB_COMP
    PHB_COMP_LEX      pLex;
    PHB_EXPRLST       pExprLst;
 
-   HB_HASH_TABLE_PTR pIdentifiers;
+   PHB_HASH_TABLE    pIdentifiers;
    HB_HFUNCTION_LIST functions;
    HB_HSYMBOL_LIST   symbols;
    HB_HINLINE_LIST   inlines;
@@ -831,7 +831,7 @@ typedef struct _HB_COMP
    HB_BOOL           fNoArchDefs;         /* do not define architecture dependent macros: __PLATFORM__*, __ARCH??BIT__, __*_ENDIAN__ */
    HB_BOOL           fMeaningful;         /* do not generate warnings about meaningless expression usage */
    HB_BOOL           fINCLUDE;            /* use INCLUDE envvar as header path (default) */
-} HB_COMP, * HB_COMP_PTR;
+} HB_COMP, * PHB_COMP;
 
 typedef struct
 {
@@ -850,20 +850,20 @@ typedef struct
    int      supported;
 } HB_COMP_SWITCHES, * PHB_COMP_SWITCHES;
 
-extern HB_COMP_PTR hb_comp_new( void );
-extern void hb_comp_free( HB_COMP_PTR );
+extern PHB_COMP hb_comp_new( void );
+extern void hb_comp_free( PHB_COMP );
 
 #endif /* !HB_MACRO_SUPPORT  */
 
 typedef struct _HB_COMP_FUNCS
 {
-   HB_EXPR_PTR ( * ExprNew )        ( HB_COMP_DECL, HB_EXPRTYPE iType );
-   void        ( * ExprClear )      ( HB_COMP_DECL, HB_EXPR_PTR pExpr );
-   void        ( * ExprFree )       ( HB_COMP_DECL, HB_EXPR_PTR pExpr );
+   PHB_EXPR ( * ExprNew )        ( HB_COMP_DECL, HB_EXPRTYPE iType );
+   void     ( * ExprClear )      ( HB_COMP_DECL, PHB_EXPR pExpr );
+   void     ( * ExprFree )       ( HB_COMP_DECL, PHB_EXPR pExpr );
 
-   HB_EXPR_PTR ( * ErrorType )      ( HB_COMP_DECL, HB_EXPR_PTR );
-   HB_EXPR_PTR ( * ErrorSyntax )    ( HB_COMP_DECL, HB_EXPR_PTR );
-   void        ( * ErrorDuplVar )   ( HB_COMP_DECL, const char* );
+   PHB_EXPR ( * ErrorType )      ( HB_COMP_DECL, PHB_EXPR );
+   PHB_EXPR ( * ErrorSyntax )    ( HB_COMP_DECL, PHB_EXPR );
+   void     ( * ErrorDuplVar )   ( HB_COMP_DECL, const char * );
 } HB_COMP_FUNCS, * PHB_COMP_FUNCS;
 
 
@@ -872,11 +872,11 @@ typedef struct _HB_COMP_FUNCS
 
 
 /* Support for traversing of linked list */
-#define HB_COMP_CARGO_FUNC( proc )   void proc( HB_COMP_DECL, void *cargo )
-typedef HB_COMP_CARGO_FUNC( ( * HB_COMP_CARGO_FUNC_PTR ) );
+#define HB_COMP_CARGO_FUNC( proc )   void proc( HB_COMP_DECL, void * cargo )
+typedef HB_COMP_CARGO_FUNC( ( * PHB_COMP_CARGO_FUNC ) );
 
-#define HB_COMP_CARGO2_FUNC( proc )  void proc( HB_COMP_DECL, void *cargo, void *dummy )
-typedef HB_COMP_CARGO2_FUNC( ( * HB_COMP_CARGO2_FUNC_PTR ) );
+#define HB_COMP_CARGO2_FUNC( proc )  void proc( HB_COMP_DECL, void * cargo, void * dummy )
+typedef HB_COMP_CARGO2_FUNC( ( * PHB_COMP_CARGO2_FUNC ) );
 
 /* pcode chunks bytes size */
 #define HB_PCODE_CHUNK   100

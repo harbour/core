@@ -65,13 +65,13 @@
 HB_EXTERN_BEGIN
 
 /* definitions for hb_compPCodeEval() support */
-typedef void * HB_VOID_PTR;
+typedef void * PHB_VOID;
 #define HB_PCODE_FUNC( func, type ) HB_SIZE func( PHB_HFUNC pFunc, HB_SIZE nPCodePos, type cargo )
-typedef HB_PCODE_FUNC( ( * HB_PCODE_FUNC_PTR ), HB_VOID_PTR );
+typedef HB_PCODE_FUNC( ( * PHB_PCODE_FUNC ), PHB_VOID );
 
 extern HB_ISIZ hb_compPCodeSize( PHB_HFUNC, HB_SIZE );
-extern void hb_compPCodeEval( PHB_HFUNC, const HB_PCODE_FUNC_PTR *, void * );
-extern void hb_compPCodeTrace( PHB_HFUNC, const HB_PCODE_FUNC_PTR *, void * );
+extern void hb_compPCodeEval( PHB_HFUNC, const PHB_PCODE_FUNC *, void * );
+extern void hb_compPCodeTrace( PHB_HFUNC, const PHB_PCODE_FUNC *, void * );
 
 extern void hb_compGenLabelTable( PHB_HFUNC pFunc, PHB_LABEL_INFO label_info );
 extern PHB_DEBUGINFO hb_compGetDebugInfo( HB_COMP_DECL );
@@ -267,24 +267,24 @@ extern void hb_compOutErr( HB_COMP_DECL, const char * szMessage );
 
 extern void hb_compExprLstDealloc( HB_COMP_DECL );
 
-extern HB_EXPR_PTR hb_compExprGenStatement( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprGenPush( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprGenPop( HB_EXPR_PTR, HB_COMP_DECL );
-extern HB_EXPR_PTR hb_compExprReduce( HB_EXPR_PTR, HB_COMP_DECL );
+extern PHB_EXPR hb_compExprGenStatement( PHB_EXPR, HB_COMP_DECL );
+extern PHB_EXPR hb_compExprGenPush( PHB_EXPR, HB_COMP_DECL );
+extern PHB_EXPR hb_compExprGenPop( PHB_EXPR, HB_COMP_DECL );
+extern PHB_EXPR hb_compExprReduce( PHB_EXPR, HB_COMP_DECL );
 
-extern HB_EXPR_PTR hb_compErrorIndex( HB_COMP_DECL, HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorLValue( HB_COMP_DECL, HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorBound( HB_COMP_DECL, HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorAlias( HB_COMP_DECL, HB_EXPR_PTR );
-extern HB_EXPR_PTR hb_compErrorRefer( HB_COMP_DECL, HB_EXPR_PTR, const char * );
-extern HB_EXPR_PTR hb_compWarnMeaningless( HB_COMP_DECL, HB_EXPR_PTR );
-extern void        hb_compErrorMacro( HB_COMP_DECL, const char * szText );
-extern void        hb_compErrorVParams( HB_COMP_DECL, const char * szFuncOrBlock );
+extern PHB_EXPR hb_compErrorIndex( HB_COMP_DECL, PHB_EXPR );
+extern PHB_EXPR hb_compErrorLValue( HB_COMP_DECL, PHB_EXPR );
+extern PHB_EXPR hb_compErrorBound( HB_COMP_DECL, PHB_EXPR );
+extern PHB_EXPR hb_compErrorAlias( HB_COMP_DECL, PHB_EXPR );
+extern PHB_EXPR hb_compErrorRefer( HB_COMP_DECL, PHB_EXPR, const char * );
+extern PHB_EXPR hb_compWarnMeaningless( HB_COMP_DECL, PHB_EXPR );
+extern void     hb_compErrorMacro( HB_COMP_DECL, const char * szText );
+extern void     hb_compErrorVParams( HB_COMP_DECL, const char * szFuncOrBlock );
 
-extern HB_EXPR_PTR hb_compErrorStatic( HB_COMP_DECL, const char *, HB_EXPR_PTR );
-extern void        hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock );
+extern PHB_EXPR hb_compErrorStatic( HB_COMP_DECL, const char *, PHB_EXPR );
+extern void     hb_compErrorCodeblock( HB_COMP_DECL, const char * szBlock );
 
-extern void        hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_BOOL fMacro );
+extern void     hb_compPushMacroText( HB_COMP_DECL, const char * szText, HB_SIZE nLen, HB_BOOL fMacro );
 
 /* Codeblocks */
 extern void hb_compCodeBlockStart( HB_COMP_DECL, int iEarlyEvalPass );  /* starts a codeblock creation */
@@ -295,8 +295,8 @@ extern void hb_compCodeBlockRewind( HB_COMP_DECL );                     /* resta
 #endif    /* HB_MACRO_SUPPORT */
 
 
-extern HB_SIZE hb_compExprListEval( HB_COMP_DECL, HB_EXPR_PTR pExpr, HB_COMP_CARGO_FUNC_PTR pEval );
-extern HB_SIZE hb_compExprListEval2( HB_COMP_DECL, HB_EXPR_PTR pExpr1, HB_EXPR_PTR pExpr2, HB_COMP_CARGO2_FUNC_PTR pEval );
+extern HB_SIZE hb_compExprListEval( HB_COMP_DECL, PHB_EXPR pExpr, PHB_COMP_CARGO_FUNC pEval );
+extern HB_SIZE hb_compExprListEval2( HB_COMP_DECL, PHB_EXPR pExpr1, PHB_EXPR pExpr2, PHB_COMP_CARGO2_FUNC pEval );
 
 extern void hb_compChkCompilerSwitch( HB_COMP_DECL, int iArg, const char * const args[] );
 extern void hb_compChkPaths( HB_COMP_DECL );

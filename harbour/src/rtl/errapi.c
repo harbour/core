@@ -118,10 +118,10 @@ static HB_SYMB s_symErrorNew = { "ERRORNEW", { HB_FS_PUBLIC | HB_FS_LOCAL }, { H
 
 typedef struct
 {
-   HB_ERROR_INFO_PTR errorHandler;
-   PHB_ITEM          errorBlock;
-   int               iLaunchCount;
-   int               uiErrorDOS;    /* The value of DOSERROR() */
+   PHB_ERROR_INFO errorHandler;
+   PHB_ITEM       errorBlock;
+   int            iLaunchCount;
+   int            uiErrorDOS;    /* The value of DOSERROR() */
 } HB_ERRDATA, * PHB_ERRDATA;
 
 static void hb_errorDataRelease( void * Cargo )
@@ -481,10 +481,10 @@ PHB_ITEM hb_errorBlock( void )
 /* set new low-level error launcher (C function) and return
  * handler currently active
  */
-HB_ERROR_INFO_PTR hb_errorHandler( HB_ERROR_INFO_PTR pNewHandler )
+PHB_ERROR_INFO hb_errorHandler( PHB_ERROR_INFO pNewHandler )
 {
    PHB_ERRDATA pErrData = ( PHB_ERRDATA ) hb_stackGetTSD( &s_errData );
-   HB_ERROR_INFO_PTR pOld = pErrData->errorHandler;
+   PHB_ERROR_INFO pOld = pErrData->errorHandler;
 
    if( pNewHandler )
       pNewHandler->Previous = pErrData->errorHandler;

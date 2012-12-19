@@ -584,7 +584,7 @@ static int hb_hsxCompile( const char * szExpr, PHB_ITEM * pExpr )
    }
    else
    {
-      HB_MACRO_PTR pMacro = hb_macroCompile( szExpr );
+      PHB_MACRO pMacro = hb_macroCompile( szExpr );
       if( ! pMacro )
          return HSX_BADPARMS;
       *pExpr = hb_itemPutPtr( NULL, ( void * ) pMacro );

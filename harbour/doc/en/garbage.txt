@@ -113,7 +113,7 @@
    $SYNTAX$
       #include "hbapi.h"
       void * hb_gcAlloc( HB_SIZE nSize,
-                         HB_GARBAGE_FUNC_PTR pCleanupFunc );
+                         PHB_GARBAGE_FUNC pCleanupFunc );
    $ARGUMENTS$
       <ulSize> Requested size of memory block
 

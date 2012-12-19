@@ -95,7 +95,7 @@ static int s_pp_openFile( void * cargo, char * szFileName,
 
    if( ! fBefore )
    {
-      HB_COMP_DECL = ( HB_COMP_PTR ) cargo;
+      HB_COMP_DECL = ( PHB_COMP ) cargo;
       PHB_ITEM pIncItem = ( PHB_ITEM ) HB_COMP_PARAM->cargo;
 
       if( pIncItem )

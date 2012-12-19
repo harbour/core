@@ -56,7 +56,7 @@
 
 #define HB_GENC_FUNC( func )   HB_PCODE_FUNC( func, PHB_LABEL_INFO )
 typedef HB_GENC_FUNC( HB_GENC_FUNC_ );
-typedef HB_GENC_FUNC_ * HB_GENC_FUNC_PTR;
+typedef HB_GENC_FUNC_ * PHB_GENC_FUNC;
 
 #define HB_GENC_GETLABEL( l )  ( ( l ) < pFunc->nPCodePos ? cargo->pnLabels[ ( l ) ] : 0 )
 
@@ -2188,7 +2188,7 @@ static HB_GENC_FUNC( hb_p_pushaparams )
 /* NOTE: The  order of functions have to match the order of opcodes
  *       mnemonics
  */
-static const HB_GENC_FUNC_PTR s_verbose_table[] = {
+static const PHB_GENC_FUNC s_verbose_table[] = {
    hb_p_and,
    hb_p_arraypush,
    hb_p_arraypop,
@@ -2379,11 +2379,11 @@ static const HB_GENC_FUNC_PTR s_verbose_table[] = {
 
 void hb_compGenCRealCode( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
 {
-   const HB_GENC_FUNC_PTR * pFuncTable = s_verbose_table;
+   const PHB_GENC_FUNC * pFuncTable = s_verbose_table;
    HB_LABEL_INFO label_info;
 
    /* Make sure that table is correct */
-   assert( HB_P_LAST_PCODE == sizeof( s_verbose_table ) / sizeof( HB_GENC_FUNC_PTR ) );
+   assert( HB_P_LAST_PCODE == sizeof( s_verbose_table ) / sizeof( PHB_GENC_FUNC ) );
 
    label_info.yyc = yyc;
    label_info.fVerbose = ( HB_COMP_PARAM->iGenCOutput == HB_COMPGENC_VERBOSE );
@@ -2405,7 +2405,7 @@ void hb_compGenCRealCode( HB_COMP_DECL, PHB_HFUNC pFunc, FILE * yyc )
       fprintf( yyc, "   HB_BOOL fValue;\n" );
    fprintf( yyc, "   do {\n" );
 
-   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, ( void * ) &label_info );
+   hb_compPCodeEval( pFunc, ( const PHB_PCODE_FUNC * ) pFuncTable, ( void * ) &label_info );
 
    fprintf( yyc, "   } while( 0 );\n" );
    if( label_info.fEndRequest )

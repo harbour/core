@@ -56,7 +56,7 @@
 
 #define HB_OPT_FUNC( func )  HB_PCODE_FUNC( func, void * )
 typedef HB_OPT_FUNC( HB_OPT_FUNC_ );
-typedef HB_OPT_FUNC_ * HB_OPT_FUNC_PTR;
+typedef HB_OPT_FUNC_ * PHB_OPT_FUNC;
 
 
 static HB_OPT_FUNC( hb_p_poplocal )
@@ -740,7 +740,7 @@ static HB_OPT_FUNC( hb_p_endproc )
 
 /* NOTE: The  order of functions have to match the order of opcodes mnemonics
  */
-static const HB_OPT_FUNC_PTR s_opt_table[] =
+static const PHB_OPT_FUNC s_opt_table[] =
 {
    NULL,                       /* HB_P_AND,                  */
    NULL,                       /* HB_P_ARRAYPUSH,            */
@@ -929,13 +929,13 @@ static const HB_OPT_FUNC_PTR s_opt_table[] =
 
 void hb_compOptimizePCode( HB_COMP_DECL, PHB_HFUNC pFunc )
 {
-   const HB_OPT_FUNC_PTR * pFuncTable = s_opt_table;
+   const PHB_OPT_FUNC * pFuncTable = s_opt_table;
 
    HB_SYMBOL_UNUSED( HB_COMP_PARAM );
 
-   assert( HB_P_LAST_PCODE == sizeof( s_opt_table ) / sizeof( HB_OPT_FUNC_PTR ) );
+   assert( HB_P_LAST_PCODE == sizeof( s_opt_table ) / sizeof( PHB_OPT_FUNC ) );
 
-   hb_compPCodeEval( pFunc, ( const HB_PCODE_FUNC_PTR * ) pFuncTable, NULL );
+   hb_compPCodeEval( pFunc, ( const PHB_PCODE_FUNC * ) pFuncTable, NULL );
 }
 
 

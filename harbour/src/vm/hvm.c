@@ -6164,16 +6164,14 @@ PHB_ITEM hb_vmEvalBlockOrMacro( PHB_ITEM pItem )
    }
    else
    {
-      HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pItem );
+      PHB_MACRO pMacro = ( PHB_MACRO ) hb_itemGetPtr( pItem );
       if( pMacro )
       {
          hb_macroRun( pMacro );
          hb_stackPopReturn();
       }
       else
-      {
          hb_itemSetNil( hb_stackReturnItem() );
-      }
    }
    return hb_stackReturnItem();
 }
@@ -6185,11 +6183,9 @@ void hb_vmDestroyBlockOrMacro( PHB_ITEM pItem )
 {
    if( HB_IS_POINTER( pItem ) )
    {
-      HB_MACRO_PTR pMacro = ( HB_MACRO_PTR ) hb_itemGetPtr( pItem );
+      PHB_MACRO pMacro = ( PHB_MACRO ) hb_itemGetPtr( pItem );
       if( pMacro )
-      {
          hb_macroDelete( pMacro );
-      }
    }
    hb_itemRelease( pItem );
 }
