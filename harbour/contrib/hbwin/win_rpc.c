@@ -61,9 +61,9 @@
 
 HB_FUNC( WIN_UUIDCREATESTRING )
 {
+#if ! defined( HB_OS_WIN_CE )
    RPC_STATUS lRPCStatus = HB_RPC_S_ERROR;
 
-#if ! defined( HB_OS_WIN_CE )
    typedef RPC_STATUS ( RPC_ENTRY * _HB_UUIDCREATE )( UUID * );
    typedef RPC_STATUS ( RPC_ENTRY * _HB_UUIDTOSTRING )( UUID *, unsigned char ** );
    typedef RPC_STATUS ( RPC_ENTRY * _HB_RPCSTRINGFREE )( unsigned char ** );
@@ -107,6 +107,7 @@ HB_FUNC( WIN_UUIDCREATESTRING )
    else
       hb_retc_null();
 #else
+   long lRPCStatus = HB_RPC_S_ERROR;
    hb_retc_null();
 #endif
 

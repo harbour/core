@@ -1475,19 +1475,19 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
+   if( timeout >= 0 )
+   {
+      tv.tv_sec = ( long ) ( timeout / 1000 );
+      tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
+      ptv = &tv;
+   }
+   else
+      ptv = NULL;
+
    for( ;; )
    {
       FD_ZERO( &rfds );
       FD_SET( ( HB_SOCKET_T ) sd, &rfds );
-
-      if( timeout >= 0 )
-      {
-         tv.tv_sec = ( long ) ( timeout / 1000 );
-         tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
-         ptv = &tv;
-      }
-      else
-         ptv = NULL;
 
       iResult = select( ( int ) ( sd + 1 ), &rfds, NULL, NULL, ptv );
       iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
@@ -1502,9 +1502,13 @@ static int hb_socketSelectRD( HB_SOCKET sd, HB_MAXINT timeout )
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
-            timer = timecurr;
             if( timeout > 0 )
+            {
+               timer = timecurr;
+               tv.tv_sec = ( long ) ( timeout / 1000 );
+               tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
                continue;
+            }
          }
       }
 #endif
@@ -1525,19 +1529,19 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
+   if( timeout >= 0 )
+   {
+      tv.tv_sec = ( long ) ( timeout / 1000 );
+      tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
+      ptv = &tv;
+   }
+   else
+      ptv = NULL;
+
    for( ;; )
    {
       FD_ZERO( &wfds );
       FD_SET( ( HB_SOCKET_T ) sd, &wfds );
-
-      if( timeout >= 0 )
-      {
-         tv.tv_sec = ( long ) ( timeout / 1000 );
-         tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
-         ptv = &tv;
-      }
-      else
-         ptv = NULL;
 
       iResult = select( ( int ) ( sd + 1 ), NULL, &wfds, NULL, ptv );
       iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
@@ -1552,9 +1556,13 @@ static int hb_socketSelectWR( HB_SOCKET sd, HB_MAXINT timeout )
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
-            timer = timecurr;
             if( timeout > 0 )
+            {
+               timer = timecurr;
+               tv.tv_sec = ( long ) ( timeout / 1000 );
+               tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
                continue;
+            }
          }
       }
 #endif
@@ -1579,6 +1587,15 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
 #endif
 
+   if( timeout >= 0 )
+   {
+      tv.tv_sec = ( long ) ( timeout / 1000 );
+      tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
+      ptv = &tv;
+   }
+   else
+      ptv = NULL;
+
    for( ;; )
    {
       FD_ZERO( &wfds );
@@ -1590,14 +1607,6 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
 #else
       pefds = NULL;
 #endif
-      if( timeout >= 0 )
-      {
-         tv.tv_sec = ( long ) ( timeout / 1000 );
-         tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
-         ptv = &tv;
-      }
-      else
-         ptv = NULL;
 
       iResult = select( ( int ) ( sd + 1 ), NULL, &wfds, pefds, ptv );
       iError = iResult >= 0 ? 0 : HB_SOCK_GETERROR();
@@ -1623,9 +1632,13 @@ static int hb_socketSelectWRE( HB_SOCKET sd, HB_MAXINT timeout )
          if( timecurr > timer )
          {
             timeout -= timecurr - timer;
-            timer = timecurr;
             if( timeout > 0 )
+            {
+               timer = timecurr;
+               tv.tv_sec = ( long ) ( timeout / 1000 );
+               tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
                continue;
+            }
          }
       }
 #endif
@@ -2228,7 +2241,7 @@ HB_SOCKET hb_socketAccept( HB_SOCKET sd, void ** pSockAddr, unsigned * puiLen, H
       /* it's not guarantied that socket returned by accept will use
        * blocking IO operations. On some systems it inherits blocking IO
        * from parent handler so we have to force blocking IO mode
-       * explicitly..
+       * explicitly.
        */
       if( newsd != HB_NO_SOCKET )
          hb_socketSetBlockingIO( newsd, HB_TRUE );

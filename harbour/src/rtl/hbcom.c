@@ -346,6 +346,9 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
 
 #if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+#else
+   tv.tv_sec = ( long ) ( timeout / 1000 );
+   tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
 #endif
 
    for( ;; )
@@ -358,11 +361,13 @@ static int hb_comCanRead( PHB_COM pCom, HB_MAXINT timeout )
          tv.tv_sec = 1;
          tv.tv_usec = 0;
       }
+#if ! defined( HB_HAS_SELECT_TIMER )
       else
       {
          tv.tv_sec = ( long ) ( timeout / 1000 );
-         tv.tv_usec = ( timeout % 1000 ) * 1000;
+         tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
       }
+#endif
 
       iResult = select( ( int ) ( pCom->fd + 1 ), &rfds, NULL, NULL, &tv );
       hb_comSetOsError( pCom, iResult == -1 );
@@ -397,6 +402,9 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
 
 #if ! defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = timeout <= 0 ? 0 : hb_dateMilliSeconds();
+#else
+   tv.tv_sec = ( long ) ( timeout / 1000 );
+   tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
 #endif
 
    for( ;; )
@@ -409,11 +417,13 @@ static int hb_comCanWrite( PHB_COM pCom, HB_MAXINT timeout )
          tv.tv_sec = 1;
          tv.tv_usec = 0;
       }
+#if ! defined( HB_HAS_SELECT_TIMER )
       else
       {
          tv.tv_sec = ( long ) ( timeout / 1000 );
-         tv.tv_usec = ( timeout % 1000 ) * 1000;
+         tv.tv_usec = ( long ) ( timeout % 1000 ) * 1000;
       }
+#endif
 
       iResult = select( ( int ) ( pCom->fd + 1 ), NULL, &wfds, NULL, &tv );
       hb_comSetOsError( pCom, iResult == -1 );
@@ -715,8 +725,12 @@ int hb_comSendBreak( int iPort, int iDurationInMilliSecs )
        */
       HB_SYMBOL_UNUSED( iDurationInMilliSecs );
 
+      hb_vmUnlock();
+
       iResult = tcsendbreak( pCom->fd, 0 );
       hb_comSetOsError( pCom, iResult == -1 );
+
+      hb_vmLock();
    }
    return iResult;
 }
@@ -1521,6 +1535,8 @@ int hb_comSendBreak( int iPort, int iDurationInMilliSecs )
 
    if( pCom )
    {
+      hb_vmUnlock();
+
       fResult = SetCommBreak( pCom->hComm );
       if( fResult )
       {
@@ -1528,6 +1544,8 @@ int hb_comSendBreak( int iPort, int iDurationInMilliSecs )
          fResult = ClearCommBreak( pCom->hComm );
       }
       hb_comSetOsError( pCom, ! fResult );
+
+      hb_vmLock();
    }
    return fResult ? 0 : -1;
 }
@@ -1566,13 +1584,13 @@ int hb_comFlowControl( int iPort, int * piFlow, int iFlow )
             if( iFlow & HB_COM_FLOW_IRTSCTS )
                dcb.fRtsControl = RTS_CONTROL_HANDSHAKE;
             else if( dcb.fRtsControl == RTS_CONTROL_HANDSHAKE )
-               dcb.fRtsControl = RTS_CONTROL_DISABLE;
+               dcb.fRtsControl = RTS_CONTROL_ENABLE;
             dcb.fOutxCtsFlow = ( iFlow & HB_COM_FLOW_ORTSCTS ) != 0;
 
             if( iFlow & HB_COM_FLOW_IDTRDSR )
                dcb.fDtrControl = DTR_CONTROL_HANDSHAKE;
             else if( dcb.fDtrControl == DTR_CONTROL_HANDSHAKE )
-               dcb.fDtrControl = DTR_CONTROL_DISABLE;
+               dcb.fDtrControl = DTR_CONTROL_ENABLE;
             dcb.fOutxDsrFlow = ( iFlow & HB_COM_FLOW_ODTRDSR ) != 0;
 
             dcb.fInX = ( iFlow & HB_COM_FLOW_XOFF ) != 0;
@@ -1935,14 +1953,14 @@ int hb_comInit( int iPort, int iBaud, int iParity, int iSize, int iStop )
             dcb.fParity = 0;
             dcb.fOutxCtsFlow = 0;
             dcb.fOutxDsrFlow = 0;
-            dcb.fDtrControl = DTR_CONTROL_DISABLE;
+            dcb.fDtrControl = DTR_CONTROL_ENABLE;
             dcb.fDsrSensitivity = 0;
             dcb.fTXContinueOnXoff = 1;
             dcb.fOutX = 0;
             dcb.fInX = 0;
             dcb.fErrorChar = 0;
             dcb.fNull = 0;
-            dcb.fRtsControl = RTS_CONTROL_DISABLE;
+            dcb.fRtsControl = RTS_CONTROL_ENABLE;
             dcb.fAbortOnError = 0;
           /*dcb.XonLim*/
           /*dcb.XoffLim*/
@@ -2284,6 +2302,8 @@ int hb_comSendBreak( int iPort, int iDurationInMilliSecs )
       APIRET rc;
       USHORT comError = 0;
 
+      hb_vmUnlock();
+
       rc = DosDevIOCtl( pCom->hFile, IOCTL_ASYNC, ASYNC_SETBREAKON,
                         NULL, 0, NULL, &comError, sizeof( comError ), NULL );
       if( rc == NO_ERROR )
@@ -2296,6 +2316,8 @@ int hb_comSendBreak( int iPort, int iDurationInMilliSecs )
             iResult = 0;
       }
       hb_comSetOsError( pCom, rc );
+
+      hb_vmLock();
    }
    return iResult;
 }

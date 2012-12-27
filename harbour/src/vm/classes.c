@@ -4734,7 +4734,7 @@ HB_FUNC_STATIC( msgSetClsData )
       }
 
       hb_arraySet( pClass->pClassDatas, pMethod->uiData, pReturn );
-      hb_itemReturnForward( pReturn );
+      hb_itemReturn( pReturn );
    }
 }
 
@@ -4788,7 +4788,7 @@ HB_FUNC_STATIC( msgSetShrData )
 
       hb_arraySet( s_pClasses[ pMethod->uiSprClass ]->pSharedDatas,
                    pMethod->uiData, pReturn );
-      hb_itemReturnForward( pReturn );
+      hb_itemReturn( pReturn );
    }
 }
 
@@ -4876,7 +4876,7 @@ HB_FUNC_STATIC( msgSetData )
          if( nIndex > hb_arrayLen( pObject ) ) /* Resize needed ? */
             hb_arraySize( pObject, nIndex );   /* Make large enough */
          hb_arraySet( pObject, nIndex, pReturn );
-         hb_itemReturnForward( pReturn );
+         hb_itemReturn( pReturn );
       }
    }
 }

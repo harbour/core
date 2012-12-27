@@ -1164,23 +1164,29 @@ HB_FUNC( HB_INETACCEPT )
       hb_inetErrRT();
    else if( hb_inetIsOpen( socket ) )
    {
-      void * sa;
-      unsigned len;
-      HB_SOCKET incoming = hb_socketAccept( socket->sd, &sa, &len, socket->iTimeout );
-
-      if( incoming == HB_NO_SOCKET )
-         hb_inetGetError( socket );
-      else
+      do
       {
-         PHB_SOCKET_STRUCT new_socket;
-         PHB_ITEM pSocket = NULL;
-         HB_SOCKET_INIT( new_socket, pSocket );
-         new_socket->remote = sa;
-         new_socket->remotelen = len;
-         new_socket->sd = incoming;
-         hb_itemReturnRelease( pSocket );
-         socket->iError = HB_INET_ERR_OK;
+         void * sa;
+         unsigned len;
+         HB_SOCKET incoming = hb_socketAccept( socket->sd, &sa, &len, socket->iTimeout );
+
+         if( incoming == HB_NO_SOCKET )
+            hb_inetGetError( socket );
+         else
+         {
+            PHB_SOCKET_STRUCT new_socket;
+            PHB_ITEM pSocket = NULL;
+            HB_SOCKET_INIT( new_socket, pSocket );
+            new_socket->remote = sa;
+            new_socket->remotelen = len;
+            new_socket->sd = incoming;
+            hb_itemReturnRelease( pSocket );
+            socket->iError = HB_INET_ERR_OK;
+            break;
+         }
       }
+      while( socket->iError == HB_SOCKET_ERR_AGAIN &&
+             hb_vmRequestQuery() == 0 );
    }
 }
 

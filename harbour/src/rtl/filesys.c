@@ -211,6 +211,9 @@
 #if defined( HB_USE_SHARELOCKS ) && defined( HB_USE_BSDLOCKS )
    #include <sys/file.h>
 #endif
+#if defined( HB_OS_LINUX )
+#  define HB_HAS_SELECT_TIMER
+#endif
 
 #if ! defined( HB_USE_LARGEFILE64 ) && defined( HB_OS_UNIX )
    #if defined( __USE_LARGEFILE64 )
@@ -940,8 +943,11 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
    struct timeval tv;
    fd_set rfds;
    int iResult;
-#if !defined( HB_OS_LINUX )
+#if !defined( HB_HAS_SELECT_TIMER )
    HB_MAXUINT timer = nTimeOut <= 0 ? 0 : hb_dateMilliSeconds();
+#else
+   tv.tv_sec = ( long ) nTimeOut / 1000;
+   tv.tv_usec = ( long ) ( nTimeOut % 1000 ) * 1000;
 #endif
 
    for( ;; )
@@ -951,11 +957,13 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
          tv.tv_sec = 1;
          tv.tv_usec = 0;
       }
+#if !defined( HB_HAS_SELECT_TIMER )
       else
       {
-         tv.tv_sec = nTimeOut / 1000;
-         tv.tv_usec = ( nTimeOut % 1000 ) * 1000;
+         tv.tv_sec = ( long ) nTimeOut / 1000;
+         tv.tv_usec = ( long ) ( nTimeOut % 1000 ) * 1000;
       }
+#endif
 
       FD_ZERO( &rfds );
       FD_SET( hPipeHandle, &rfds );
@@ -967,7 +975,7 @@ HB_SIZE hb_fsPipeIsData( HB_FHANDLE hPipeHandle, HB_SIZE nBufferSize,
           hb_fsOsError() != ( HB_ERRCODE ) EINTR ||
           hb_vmRequestQuery() != 0 )
          break;
-#if !defined( HB_OS_LINUX )
+#if !defined( HB_HAS_SELECT_TIMER )
       else if( nTimeOut > 0 )
       {
          HB_MAXUINT timecurr = hb_dateMilliSeconds();
