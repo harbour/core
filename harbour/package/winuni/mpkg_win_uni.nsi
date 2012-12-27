@@ -34,6 +34,7 @@ RequestExecutionLevel user
 !define PKG_NO_COMP_POCC
 !define PKG_NO_COMP_POCC64
 !define PKG_NO_COMP_POCCARM
+!define PKG_NO_COMP_BCC64
 
 !define /date NOW "%Y%m%d"
 
