@@ -1013,10 +1013,10 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    hb_default( @nWndRow     , 0        )
    hb_default( @nWndCol     , 0        )
 
-   IF ! ISNUMBER( nLineLength )
+   IF ! HB_ISNUMBER( nLineLength )
       nLineLength := NIL
    ENDIF
-   IF ! ISNUMBER( nTabSize )
+   IF ! HB_ISNUMBER( nTabSize )
       nTabSize := NIL
    ENDIF
 
