@@ -1008,12 +1008,17 @@ METHOD New( cString, nTop, nLeft, nBottom, nRight, lEditMode, nLineLength, nTabS
    hb_default( @nBottom     , MaxRow() )
    hb_default( @nRight      , MaxCol() )
    hb_default( @lEditMode   , .T.      )
-   hb_default( @nLineLength , NIL      )
-   hb_default( @nTabSize    , NIL      )
    hb_default( @nTextRow    , 1        )
    hb_default( @nTextCol    , 0        )
    hb_default( @nWndRow     , 0        )
    hb_default( @nWndCol     , 0        )
+
+   IF ! ISNUMBER( nLineLength )
+      nLineLength := NIL
+   ENDIF
+   IF ! ISNUMBER( nTabSize )
+      nTabSize := NIL
+   ENDIF
 
    ::aText := Text2Array( cString, nLineLength )
    ::naTextLen := Len( ::aText )
