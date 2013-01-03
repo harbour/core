@@ -326,9 +326,19 @@ static void hb_comSetOsError( PHB_COM pCom, HB_BOOL fError )
          pCom->error = HB_COM_ERR_TIMEOUT;
          break;
       case EACCES:
+#if defined( ETXTBSY )
+      case ETXTBSY:
+#endif
+#if defined( EPERM )
+      case EPERM:
+#endif
          pCom->error = HB_COM_ERR_ACCESS;
          break;
       case ENOTTY:
+      case ENOENT:
+#if defined( ENOTDIR )
+      case ENOTDIR:
+#endif
          pCom->error = HB_COM_ERR_NOCOM;
          break;
       default:
@@ -1346,6 +1356,14 @@ static void hb_comSetOsError( PHB_COM pCom, BOOL fError )
       case ERROR_TIMEOUT:
          pCom->error = HB_COM_ERR_TIMEOUT;
          break;
+      case ERROR_ACCESS_DENIED:
+      case ERROR_SHARING_VIOLATION:
+         pCom->error = HB_COM_ERR_BUSY;
+         break;
+      case ERROR_FILE_NOT_FOUND:
+      case ERROR_PATH_NOT_FOUND:
+         pCom->error = HB_COM_ERR_NOCOM;
+         break;
       default:
          pCom->error = HB_COM_ERR_OTHER;
          break;
@@ -2064,6 +2082,17 @@ static void hb_comSetOsError( PHB_COM pCom, APIRET rc )
    {
       case NO_ERROR:
          pCom->error = 0;
+         break;
+      case ERROR_TIMEOUT:
+         pCom->error = HB_COM_ERR_TIMEOUT;
+         break;
+      case ERROR_ACCESS_DENIED:
+      case ERROR_SHARING_VIOLATION:
+         pCom->error = HB_COM_ERR_BUSY;
+         break;
+      case ERROR_FILE_NOT_FOUND:
+      case ERROR_PATH_NOT_FOUND:
+         pCom->error = HB_COM_ERR_NOCOM;
          break;
       default:
          pCom->error = HB_COM_ERR_OTHER;

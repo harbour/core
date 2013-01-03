@@ -95,8 +95,8 @@ HB_FUNC( HB_DBDETACH )
 }
 
 /*
- * DbRequest( [<cAlias>], [<lFreeArea>], [<@xCargo>], [<lWait>] )
- *         -> <lSuccess>
+ * hb_dbRequest( [<cAlias>], [<lFreeArea>], [<@xCargo>], [<lWait>] )
+ *          -> <lSuccess>
  */
 HB_FUNC( HB_DBREQUEST )
 {
