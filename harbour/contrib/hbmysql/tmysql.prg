@@ -1013,7 +1013,7 @@ METHOD Append( oRow, lRefresh ) CLASS TMySQLTable
 #if 0
             /* was same values from FieldGet( i ) ! */
             FOR i := 1 TO ::nNumFields
-                ::aOldValue[ i ] := ::FieldGet( i )
+               ::aOldValue[ i ] := ::FieldGet( i )
             NEXT
 #endif
          ENDIF
@@ -1546,7 +1546,8 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
 
    HB_SYMBOL_UNUSED( cTable )
 
-   /* TODO: rewrite for MySQL
+#if 0
+   /* TODO: rewrite for MySQL */
    LOCAL nRes, aField, aStruct, aSField, i
 
    aStruct := {}
@@ -1608,7 +1609,8 @@ METHOD TableStruct( cTable ) CLASS TMySQLServer
          ENDIF
       NEXT
 
-   ENDIF*/
+   ENDIF
+#endif
 
    RETURN aStruct
 
