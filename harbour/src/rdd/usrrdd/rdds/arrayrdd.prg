@@ -1109,6 +1109,12 @@ STATIC FUNCTION AR_ZAP( nWA )
 
    RETURN HB_SUCCESS
 
+STATIC FUNCTION AR_GOCOLD( nWA )
+
+   HB_SYMBOL_UNUSED( nWA )
+
+   RETURN HB_SUCCESS
+
 STATIC FUNCTION AR_FOUND( nWa, lFound )
 
    HB_TRACE( HB_TR_DEBUG, hb_StrFormat( "nWA = %1$d, lFound = %2$s", nWa, hb_ValToExp( lFound ) ) )
@@ -1473,6 +1479,7 @@ FUNCTION ARRAYRDD_GETFUNCTABLE( pFuncCount, pFuncTable, pSuperTable, nRddID, pSu
    aMyFunc[ UR_PUTVALUE     ] := ( @AR_PUTVALUE()     )
    aMyFunc[ UR_PACK         ] := ( @AR_PACK()         )
    aMyFunc[ UR_ZAP          ] := ( @AR_ZAP()          )
+   aMyFunc[ UR_GOCOLD       ] := ( @AR_GOCOLD()       )
    aMyFunc[ UR_FOUND        ] := ( @AR_FOUND()        )
    aMyFunc[ UR_SEEK         ] := ( @AR_SEEK()         )
    aMyFunc[ UR_INFO         ] := ( @AR_INFO()         )

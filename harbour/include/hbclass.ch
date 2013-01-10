@@ -216,7 +216,7 @@ DECLARE HBClass ;
                                 ::realclass:<MessageName>([ <MsgParams>])
 
 /* Indirect super casting translation */
-#xtranslate :Super( <SuperClass> ): => :<SuperClass>:
+#xtranslate :Super( <!SuperClass!> ): => :<SuperClass>:
 
 
 #xtranslate __HB_CLS_OPT(<a>,<b>) =>  <a>
@@ -260,12 +260,7 @@ DECLARE HBClass ;
             nScope := HB_OO_CLSTP_EXPORTED ; HB_SYMBOL_UNUSED( nScope ) ;;
             oClass  := iif( <.metaClass.>, <(metaClass)>, HBClass():new( <(ClassName)>, __HB_CLS_PAR( [ @<SuperClass1>() ] [ , @<SuperClassN>() ] ), @__HB_CLS_OPT([__HB_CLS_ASID(<FuncName>),] <ClassName>)() [, <.modulfriend.> ] ) ) ;;
    #undef  _CLASS_NAME_ ; #define _CLASS_NAME_ <ClassName> ;;
-   #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_ ;
-   [ ; #translate Super( <SuperClassN> ): => ::<SuperClassN>: ] ;
-   [ ; #translate Super( <SuperClass1> ): => ::<SuperClass1>: ] ;
-   [ ; #translate Super(): => ::<SuperClass1>: ] ;
-   [ ; #translate Super: => ::<SuperClass1>: ] ;
-   [ ; #translate ::Super : => ::<SuperClass1>: ]
+   #undef  _CLASS_MODE_ ; #define _CLASS_MODE_ _CLASS_DECLARATION_
 
 #xcommand ENDCLASS [<lck: LOCK, LOCKED>] => ;
             oClass:Create() ; [<-lck-> __clsLock( oClass:hClass ) ] ;;

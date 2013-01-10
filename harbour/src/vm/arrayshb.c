@@ -374,7 +374,7 @@ HB_FUNC( AEVAL )
                     HB_ISNUM( 3 ) ? &nStart : NULL,
                     HB_ISNUM( 4 ) ? &nCount : NULL );
 
-      hb_itemReturn( hb_stackItemFromBase( 1 ) ); /* AEval() returns the array itself */
+      hb_itemReturn( pArray ); /* AEval() returns the array itself */
    }
    else
       hb_errRT_BASE( EG_ARG, 2017, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -401,7 +401,7 @@ HB_FUNC( ACOPY )
                        HB_ISNUM( 5 ) ? &nTarget : NULL );
       }
 
-      hb_itemReturn( hb_stackItemFromBase( 2 ) ); /* ACopy() returns the target array */
+      hb_itemReturn( pDstArray ); /* ACopy() returns the target array */
    }
 }
 

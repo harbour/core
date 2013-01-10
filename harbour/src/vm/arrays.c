@@ -1465,7 +1465,7 @@ static void hb_arrayCloneBody( PHB_BASEARRAY pSrcBaseArray, PHB_BASEARRAY pDstBa
 void hb_cloneNested( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pClonedList )
 {
    /* Clipper clones nested array ONLY if NOT an Object!!! */
-   if( HB_IS_ARRAY( pSrcItem ) && pSrcItem->item.asArray.value->uiClass == 0 )
+   if( HB_IS_ARRAY( pSrcItem ) )
    {
       PHB_NESTED_CLONED pCloned = pClonedList;
       PHB_BASEARRAY pBaseArray = pSrcItem->item.asArray.value;
@@ -1480,6 +1480,8 @@ void hb_cloneNested( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pCl
 
       if( pCloned )
          hb_itemCopy( pDstItem, pCloned->pDest );
+      else if( pSrcItem->item.asArray.value->uiClass != 0 )
+         hb_objCloneTo( pDstItem, pSrcItem, pClonedList );
       else
       {
          hb_arrayNew( pDstItem, pBaseArray->nLen );

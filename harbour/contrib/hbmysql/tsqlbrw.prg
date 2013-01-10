@@ -93,7 +93,7 @@ ENDCLASS
 
 METHOD New( cHeading, bBlock, oBrw ) CLASS TBColumnSQL
 
-   super:New( cHeading, bBlock )
+   ::super:New( cHeading, bBlock )
    ::oBrw := oBrw
 
    RETURN Self
@@ -163,7 +163,7 @@ METHOD New( nTop, nLeft, nBottom, nRight, oServer, oQuery, cTable ) CLASS TBrows
    HB_SYMBOL_UNUSED( oServer )
    HB_SYMBOL_UNUSED( cTable )
 
-   super:New( nTop, nLeft, nBottom, nRight )
+   ::super:New( nTop, nLeft, nBottom, nRight )
 
    ::oQuery := oQuery
 

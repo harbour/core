@@ -174,7 +174,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemUnShareString( PHB_ITEM pItem ); /* un-shar
 extern HB_EXPORT PHB_ITEM     hb_itemReSizeString( PHB_ITEM pItem, HB_SIZE nSize ); /* Resize string buffer of given string item - the pItem have to be valid unrefed string item */
 extern HB_EXPORT HB_BOOL      hb_itemGetWriteCL( PHB_ITEM pItem, char ** pszValue, HB_SIZE * pnLen );
 extern HB_EXPORT PHB_ITEM     hb_itemClone     ( PHB_ITEM pItem ); /* clone the given item */
-extern HB_EXPORT PHB_ITEM     hb_itemCloneTo   ( PHB_ITEM pDest, PHB_ITEM pSource ); /* clone the given item */
+extern HB_EXPORT void         hb_itemCloneTo   ( PHB_ITEM pDest, PHB_ITEM pSource ); /* clone the given item */
 extern HB_EXPORT char *       hb_itemStr       ( PHB_ITEM pNumber, PHB_ITEM pWidth, PHB_ITEM pDec ); /* convert a number to a string */
 extern HB_EXPORT char *       hb_itemString    ( PHB_ITEM pItem, HB_SIZE * nLen, HB_BOOL * bFreeReq );  /* Convert any scalar to a string */
 extern HB_EXPORT HB_BOOL      hb_itemStrBuf    ( char *szResult, PHB_ITEM pNumber, int iSize, int iDec ); /* convert a number to a string */

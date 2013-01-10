@@ -169,7 +169,7 @@ typedef struct
    HB_TYPE     itemType;         /* Type of item in restricted assignment */
    HB_USHORT   uiSprClass;       /* Originalclass'handel (super or current class'handel if not herited). */ /*Added by RAC&JF*/
    HB_USHORT   uiScope;          /* Scoping value */
-   HB_USHORT   uiData;           /* Item position for instance data, class data and shared data (Harbour like, begin from 1) or delegated message index object */
+   HB_USHORT   uiData;           /* Item position for instance data, class data and shared data (Harbour like, begin from 1), supercast class or delegated message index object */
    HB_USHORT   uiOffset;         /* position in pInitData for class datas (from 1) or offset to instance area in inherited instance data and supercast messages (from 0) */
    HB_USHORT   uiPrevCls;
    HB_USHORT   uiPrevMth;
@@ -1431,8 +1431,7 @@ HB_SIZE hb_clsGetVarIndex( HB_USHORT uiClass, PHB_DYNS pVarSym )
          if( pFuncSym == &s___msgSync || pFuncSym == &s___msgSyncClass )
             pFuncSym = pMethod->pRealSym;
 
-         if( pFuncSym->value.pFunPtr == HB_FUNCNAME( msgSetData ) ||
-             pFuncSym->value.pFunPtr == HB_FUNCNAME( msgGetData ) )
+         if( pFuncSym == &s___msgSetData || pFuncSym == &s___msgGetData )
             return pMethod->uiData + pMethod->uiOffset;
       }
    }
@@ -2126,7 +2125,7 @@ HB_BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
    if( pExecSym )
    {
       HB_STACK_TLS_PRELOAD
-      if( pExecSym->value.pFunPtr == HB_FUNCNAME( msgSetData ) )
+      if( pExecSym == &s___msgSetData )
       {
          HB_USHORT uiObjClass = pObject->item.asArray.value->uiClass;
          PCLASS pClass        = s_pClasses[ pStack->uiClass ];
@@ -2145,7 +2144,7 @@ HB_BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
 
          return hb_arrayGetItemRef( pObject, nIndex, hb_stackReturnItem() );
       }
-      else if( pExecSym->value.pFunPtr == HB_FUNCNAME( msgSetClsData ) )
+      else if( pExecSym == &s___msgSetClsData )
       {
          PCLASS pClass   = s_pClasses[ pStack->uiClass ];
          PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -2153,7 +2152,7 @@ HB_BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
          return hb_arrayGetItemRef( pClass->pClassDatas, pMethod->uiData,
                                     hb_stackReturnItem() );
       }
-      else if( pExecSym->value.pFunPtr == HB_FUNCNAME( msgSetShrData ) )
+      else if( pExecSym == &s___msgSetShrData )
       {
          PCLASS pClass   = s_pClasses[ pStack->uiClass ];
          PMETHOD pMethod = pClass->pMethods + pStack->uiMethod;
@@ -2161,7 +2160,7 @@ HB_BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
          return hb_arrayGetItemRef( s_pClasses[ pMethod->uiSprClass ]->pSharedDatas,
                                     pMethod->uiData, hb_stackReturnItem() );
       }
-      else if( pExecSym->value.pFunPtr == HB_FUNCNAME( msgScopeErr ) )
+      else if( pExecSym == &s___msgScopeErr )
       {
          pExecSym->value.pFunPtr();
       }
@@ -2214,9 +2213,9 @@ static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
       {
          if( pMethod->pFuncSym == &s___msgSuper )
          {
-            PCLASS pSupperClass = s_pClasses[ pMethod->uiSprClass ];
+            PCLASS pSupperClass = s_pClasses[ pMethod->uiData ];
             if( pSupperClass->fHasDestructor && pSupperClass != pClass )
-               pcClasses[ pMethod->uiSprClass ] |= 1;
+               pcClasses[ pMethod->uiData ] |= 1;
          }
          else if( pMethod->pMessage == s___msgDestructor.pDynSym )
             pcClasses[ pMethod->uiSprClass ] |= 2;
@@ -2426,8 +2425,7 @@ PHB_ITEM hb_objGetVarPtr( PHB_ITEM pObject, PHB_DYNS pVarMsg )
          if( pFuncSym == &s___msgSync || pFuncSym == &s___msgSyncClass )
             pFuncSym = pMethod->pRealSym;
 
-         if( pFuncSym->value.pFunPtr == HB_FUNCNAME( msgSetData ) ||
-             pFuncSym->value.pFunPtr == HB_FUNCNAME( msgGetData ) )
+         if( pFuncSym == &s___msgSetData || pFuncSym == &s___msgGetData )
          {
             HB_SIZE nIndex = pMethod->uiData + pMethod->uiOffset;
             if( pObject->item.asArray.value->uiPrevCls )
@@ -2487,6 +2485,18 @@ static PHB_SYMB hb_objGetFuncSym( PHB_ITEM pItem )
    }
 
    return NULL;
+}
+
+/* clone object if user defined clone method or copy it */
+void hb_objCloneTo( PHB_ITEM pDest, PHB_ITEM pSource, PHB_NESTED_CLONED pClonedList )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_objCloneTo(%p,%p,%p)", pDest, pSource, pClonedList ) );
+
+   HB_SYMBOL_UNUSED( pClonedList );
+
+   /* TODO: add support for user defined clone operation */
+
+   hb_itemCopy( pDest, pSource );
 }
 
 /* send message which allows to set execution context for debugger */
@@ -3035,7 +3045,7 @@ static HB_BOOL hb_clsAddMsg( HB_USHORT uiClass, const char * szMessage,
 
          case HB_OO_MSG_SUPER:
 
-            pNewMeth->uiSprClass = uiSprClass; /* store the super handel */
+            pNewMeth->uiData = uiSprClass; /* store the super handel */
             pNewMeth->uiOffset = uiIndex; /* offset to instance area */
             pNewMeth->uiScope = uiScope;
             pNewMeth->pFuncSym = &s___msgSuper;
@@ -3297,7 +3307,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
                if( pSprCls->pMethods[ n ].pMessage &&
                    pSprCls->pMethods[ n ].pFuncSym == &s___msgSuper )
                {
-                  PCLASS pCls = s_pClasses[ pSprCls->pMethods[ n ].uiSprClass ];
+                  PCLASS pCls = s_pClasses[ pSprCls->pMethods[ n ].uiData ];
 
                   pMethod = hb_clsAllocMsg( pNewCls,
                                             pSprCls->pMethods[ n ].pMessage );
@@ -3321,7 +3331,8 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
             {
                pNewCls->uiMethods++;
                pMethod->pMessage = pSprCls->pClassSym;
-               pMethod->uiSprClass = uiSuperCls;
+               pMethod->uiSprClass = pNewCls->uiClass;
+               pMethod->uiData = uiSuperCls;
                pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
                pMethod->pFuncSym = &s___msgSuper;
                pMethod->uiOffset = pNewCls->uiDatas;
@@ -3445,7 +3456,8 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
       {
          pNewCls->uiMethods++;
          pMethod->pMessage = pNewCls->pClassSym;
-         pMethod->uiSprClass = s_uiClasses;
+         pMethod->uiSprClass = pNewCls->uiClass;
+         pMethod->uiData = s_uiClasses;
          pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
          pMethod->pFuncSym = &s___msgSuper;
          pMethod->uiOffset = pNewCls->uiDatas;
@@ -4658,7 +4670,7 @@ HB_FUNC_STATIC( msgSuper )
    PHB_STACK_STATE pStack = hb_stackBaseItem()->item.asSymbol.stackstate;
 
    hb_clsMakeSuperObject( hb_stackReturnItem(), hb_stackSelfItem(),
-      s_pClasses[ pStack->uiClass ]->pMethods[ pStack->uiMethod ].uiSprClass );
+      s_pClasses[ pStack->uiClass ]->pMethods[ pStack->uiMethod ].uiData );
 }
 
 /*

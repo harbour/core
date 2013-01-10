@@ -2084,15 +2084,19 @@ In xHarbour by default work areas are global to the application and there
 is no protection mechanism against concurrent access so if two threads try
 to access the same work area in the same time they can corrupt internal
 RDD data. It means that for safe concurrent WA access in xHarbour user have
-to create his own protection mechanism (some different version of LOCAL
-WORKAREA / UNLOCK WORKAREA commands using some other synchronization
-methods available in xHarbour, i.e. mutexes).
+to create his own protection mechanism (different version of LOCK WORKAREA/
+UNLOCK WORKAREA commands using some other synchronization methods available
+in xHarbour, i.e. mutexes).
 Later support for thread local work areas was added to xHarbour but
-without any mechanism which allows to move work area from one thread to
-another. This can be controlled by global SET (SETs are global in xHarbour)
-   _SET_WORKAREAS_SHARED
-Setting it to .T. disables global work areas and switches to thread local
-ones.
+without any mechanism which allows to move work area from one thread
+to another. This can be controlled by global SET:
+   SET( _SET_WORKAREAS_SHARED, <lOnOff> )
+or commands:
+   SET WORKAREAS SHARED       => SET( _SET_WORKAREAS_SHARED, .T. )
+   SET WORKAREAS PRIVATE      => SET( _SET_WORKAREAS_SHARED, .F. )
+(SETs are global not thread local in xHarbour MT model)
+Setting _SET_WORKAREAS_SHARED to .F. disables global work areas and
+switches to thread local ones.
 There is no technical or mathematical reason to keep such strange
 implementation because it does not give any new functionality to
 programmer in comparison to xBase++ and Harbour but allows to easy

@@ -233,8 +233,8 @@ STATIC PROCEDURE Create( /* MetaClass */ )
 
    IF ! Empty( ahSuper )
       IF ahSuper[ 1 ] != 0
-         __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
-         __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED )
+         __clsAddMsg( hClass, "SUPER"  , 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
+         __clsAddMsg( hClass, "__SUPER", 0, HB_OO_MSG_SUPER, ahSuper[ 1 ], HB_OO_CLSTP_EXPORTED + HB_OO_CLSTP_NONVIRTUAL )
       ENDIF
    ENDIF
    __clsAddMsg( hClass, "REALCLASS", 0, HB_OO_MSG_REALCLASS, 0, HB_OO_CLSTP_EXPORTED )

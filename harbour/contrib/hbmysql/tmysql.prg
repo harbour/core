@@ -726,7 +726,7 @@ METHOD New( nSocket, cQuery, cTableName ) CLASS TMySQLTable
 
    LOCAL i
 
-   super:New( nSocket, AllTrim( cQuery ) )
+   ::super:New( nSocket, AllTrim( cQuery ) )
 
    ::cTable := Lower( cTableName )
    ::aOldValue := {}
@@ -740,7 +740,7 @@ METHOD New( nSocket, cQuery, cTableName ) CLASS TMySQLTable
 
 METHOD GetRow( nRow ) CLASS TMySQLTable
 
-   LOCAL oRow := super:GetRow( nRow ), i
+   LOCAL oRow := ::super:GetRow( nRow ), i
 
    IF oRow != NIL
       oRow:cTable := ::cTable
@@ -759,7 +759,7 @@ METHOD Skip( nRow ) CLASS TMySQLTable
 
    LOCAL i
 
-   super:skip( nRow )
+   ::super:skip( nRow )
 
    FOR i := 1 TO ::nNumFields
       ::aOldValue[ i ] := ::FieldGet( i )

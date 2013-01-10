@@ -102,6 +102,7 @@ extern HB_BOOL    hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage, PHB_STAC
 extern HB_BOOL    hb_objHasOperator( PHB_ITEM pObject, HB_USHORT uiOperator );
 extern HB_BOOL    hb_objOperatorCall( HB_USHORT uiOperator, PHB_ITEM pResult, PHB_ITEM pObject, PHB_ITEM pMsgArg1, PHB_ITEM pMsgArg2 );
 extern void       hb_objDestructorCall( PHB_ITEM pObject );
+extern void       hb_objCloneTo( PHB_ITEM pDest, PHB_ITEM pSource, PHB_NESTED_CLONED pClonedList );
 
 #ifndef HB_NO_PROFILER
 /* profiler for object management */

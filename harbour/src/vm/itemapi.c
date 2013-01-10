@@ -2133,27 +2133,38 @@ PHB_ITEM hb_itemClone( PHB_ITEM pItem )
    HB_TRACE( HB_TR_DEBUG, ( "hb_itemClone(%p)", pItem ) );
 
    if( HB_IS_ARRAY( pItem ) )
-      return hb_arrayClone( pItem );
+   {
+      if( HB_IS_OBJECT( pItem ) )
+      {
+         PHB_ITEM pResult = hb_itemNew( NULL );
 
+         hb_objCloneTo( pResult, pItem, NULL );
+         return pResult;
+      }
+      else
+         return hb_arrayClone( pItem );
+   }
    else if( HB_IS_HASH( pItem ) )
       return hb_hashClone( pItem );
-
    else
       return hb_itemNew( pItem );
 }
 
-PHB_ITEM hb_itemCloneTo( PHB_ITEM pDest, PHB_ITEM pSource )
+void hb_itemCloneTo( PHB_ITEM pDest, PHB_ITEM pSource )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_itemCloneTo(%p,%p)", pDest, pSource ) );
 
    if( HB_IS_ARRAY( pSource ) )
-      return hb_arrayCloneTo( pDest, pSource );
-
+   {
+      if( HB_IS_OBJECT( pSource ) )
+         hb_objCloneTo( pDest, pSource, NULL );
+      else
+         hb_arrayCloneTo( pDest, pSource );
+   }
    else if( HB_IS_HASH( pSource ) )
-      return hb_hashCloneTo( pDest, pSource );
-
-   hb_itemCopy( pDest, pSource );
-   return pDest;
+      hb_hashCloneTo( pDest, pSource );
+   else
+      hb_itemCopy( pDest, pSource );
 }
 
 
