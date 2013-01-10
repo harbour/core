@@ -2816,7 +2816,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := MacroProc( hbmk, SubStr( cParam, 3 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             FOR EACH tmp IN hb_ATokens( cParam, ";" ) /* intentionally not using hb_osPathListSeparator() to keep value portable */
-               IF ! Empty( tmp )
+               IF hb_FileMatch( tmp, hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+                  _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library directory: %1$s" ), tmp ) )
+               ELSEIF ! Empty( tmp )
                   tmp := hb_DirSepDel( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) )
                   IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp .OR. hb_DirExists( tmp )
                      AAdd( hbmk[ _HBMK_aLIBPATH ], tmp )
@@ -2884,7 +2886,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := MacroProc( hbmk, SubStr( cParam, 3 ), aParam[ _PAR_cFileName ] )
          IF ! Empty( cParam )
             FOR EACH tmp IN hb_ATokens( cParam, ";" ) /* intentionally not using hb_osPathListSeparator() to keep value portable */
-               IF ! Empty( tmp )
+               IF hb_FileMatch( tmp, hbmk[ _HBMK_cHB_INSTALL_INC ] )
+                  _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core header directory: %1$s" ), tmp ) )
+               ELSEIF ! Empty( tmp )
                   AAddNew( hbmk[ _HBMK_aINCPATH ], hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) ) )
                ENDIF
             NEXT
