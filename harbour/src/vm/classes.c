@@ -736,6 +736,13 @@ static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
 #endif
 }
 
+static HB_BOOL hb_clsHasParentClass( PCLASS pClass, HB_USHORT uiParentCls )
+{
+   PMETHOD pMethod = hb_clsFindMsg( pClass, s_pClasses[ uiParentCls ]->pClassSym );
+
+   return pMethod && pMethod->pFuncSym == &s___msgSuper;
+}
+
 static HB_BOOL hb_clsHasParent( PCLASS pClass, PHB_DYNS pParentSym )
 {
    PMETHOD pMethod = hb_clsFindMsg( pClass, pParentSym );
@@ -1625,16 +1632,16 @@ static PHB_SYMB hb_clsValidScope( PMETHOD pMethod, PHB_STACK_STATE pStack )
    {
       HB_USHORT uiSenderClass = hb_clsSenderMethodClass();
 
-      if( uiSenderClass )
+      if( uiSenderClass == pMethod->uiSprClass )
+         return pMethod->pFuncSym;
+      else if( uiSenderClass )
       {
-         if( uiSenderClass == pMethod->uiSprClass )
-            return pMethod->pFuncSym;
-
          /*
           * Warning!!! Friends cannot access overloaded non virtual methods.
           * This feature is available _ONLY_ for real class members, [druzus]
           */
-         if( pMethod->uiScope & HB_OO_CLSTP_OVERLOADED )
+         if( pMethod->uiScope & HB_OO_CLSTP_OVERLOADED &&
+             hb_clsHasParentClass( s_pClasses[ pStack->uiClass ], uiSenderClass ) )
          {
             PCLASS pClass = s_pClasses[ uiSenderClass ];
             PMETHOD pHiddenMthd = hb_clsFindMsg( pClass, pMethod->pMessage );
@@ -1655,10 +1662,10 @@ static PHB_SYMB hb_clsValidScope( PMETHOD pMethod, PHB_STACK_STATE pStack )
                return &s___msgScopeErr;
          }
          else if( pMethod->uiScope & HB_OO_CLSTP_PROTECTED &&
-             ! hb_clsHasParent( s_pClasses[ pStack->uiClass ],
-                                s_pClasses[ uiSenderClass ]->pClassSym ) &&
-             ! hb_clsHasParent( s_pClasses[ uiSenderClass ],
-                                s_pClasses[ pStack->uiClass ]->pClassSym ) &&
+             ! hb_clsHasParentClass( s_pClasses[ pStack->uiClass ],
+                                     uiSenderClass ) &&
+             ! hb_clsHasParentClass( s_pClasses[ uiSenderClass ],
+                                     pStack->uiClass ) &&
              ! hb_clsIsFriendSymbol( s_pClasses[ pMethod->uiSprClass ],
                                      s_pClasses[ uiSenderClass ]->pClassFuncSym ) &&
              ( pStack->uiClass == pMethod->uiSprClass ||
@@ -3278,7 +3285,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
          {
             hb_clsCopyClass( pNewCls, pSprCls );
          }
-         else if( ! hb_clsHasParent( pNewCls, pSprCls->pClassSym ) )
+         else if( ! hb_clsHasParentClass( pNewCls, uiSuperCls ) )
          {
             HB_SIZE n, nLimit;
             HB_USHORT nLenClsDatas;
@@ -4424,22 +4431,23 @@ HB_FUNC_STATIC( msgClass )
  */
 HB_FUNC_STATIC( msgClassParent )
 {
-   char * szParentName = NULL;
+   HB_BOOL fHasParent = HB_FALSE;
    PHB_ITEM pItem;
    HB_USHORT uiClass;
 
    uiClass = hb_stackBaseItem()->item.asSymbol.stackstate->uiClass;
    pItemParam = hb_param( 1, HB_IT_ANY );
 
-   if( pItemParam )
+   if( pItemParam && uiClass && uiClass <= s_uiClasses )
    {
       if( HB_IS_OBJECT( pItemParam ) )
-         szParentName = hb_objGetClsName( pItemParam );
+         fHasParent = hb_clsHasParentClass( s_pClasses[ uiClass ],
+                                   pItemParam->item.asArray.value->uiClass );
       else if( HB_IS_STRING( pItemParam ) )
-         szParentName = hb_parc( pItemParam );
+         fHasParent = hb_clsIsParent( uiClass, hb_parc( pItemParam ) )
    }
 
-   hb_retl( szParentName && hb_clsIsParent( uiClass, szParentName ) );
+   hb_retl( fHasParent );
 }
 
 #endif
