@@ -2423,7 +2423,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            cParamL == "-nodebug"         ; hbmk[ _HBMK_lDEBUG ]       := .F.
       CASE cParamL == "-optim"           ; hbmk[ _HBMK_lOPTIM ]       := .T.
       CASE cParamL == "-optim-" .OR. ;
-           cParamL == "-noopt"           ; hbmk[ _HBMK_lOPTIM ]       := .F.
+           cParamL == "-nooptim"         ; hbmk[ _HBMK_lOPTIM ]       := .F.
       CASE cParamL == "-debugtime"       ; hbmk[ _HBMK_lDEBUGTIME ]   := .T.
       CASE cParamL == "-debuginc"        ; hbmk[ _HBMK_lDEBUGINC ]    := .T.
       CASE cParamL == "-debugstub"       ; hbmk[ _HBMK_lDEBUGSTUB ]   := .T.
@@ -2819,7 +2819,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                IF ! Empty( tmp )
                   tmp := hb_DirSepDel( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) )
                   IF hb_FileMatch( tmp, hbmk[ _HBMK_cHB_INSTALL_LIB ] )
-                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library directory: %1$s" ), tmp ) )
+                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library directory: %1$s (in option %2$s)" ), tmp, ParamToString( aParam ) ) )
                   ELSE
                      IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp .OR. hb_DirExists( tmp )
                         AAdd( hbmk[ _HBMK_aLIBPATH ], tmp )
@@ -2891,7 +2891,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                IF ! Empty( tmp )
                   tmp := hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) )
                   IF hb_FileMatch( tmp, hbmk[ _HBMK_cHB_INSTALL_INC ] )
-                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core header directory: %1$s" ), tmp ) )
+                     _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core header directory: %1$s (in option %2$s)" ), tmp, ParamToString( aParam ) ) )
                   ELSE
                      AAddNew( hbmk[ _HBMK_aINCPATH ], tmp )
                   ENDIF
@@ -3387,7 +3387,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF hbmk[ _HBMK_lDEBUGPARS ]
       FOR EACH aParam IN aParams
-         _hbmk_OutStd( hbmk, hb_StrFormat( "debugpars: %1$3d '%2$s' (%3$s:%4$d)", aParam:__enumIndex(), aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ], aParam[ _PAR_nLine ] ) )
+         _hbmk_OutStd( hbmk, hb_StrFormat( "debugpars: %1$3d %2$s", aParam:__enumIndex(), ParamToString( aParam ) ) )
       NEXT
    ENDIF
 
@@ -7221,6 +7221,11 @@ STATIC PROCEDURE ProcEnvOption( cValue )
    ENDIF
 
    RETURN
+
+STATIC FUNCTION ParamToString( aParam )
+   RETURN iif( Empty( aParam[ _PAR_cFileName ] ), ;
+      hb_StrFormat( "'%1$s'", aParam[ _PAR_cParam ] ), ; /* on the command line */
+      hb_StrFormat( "'%1$s' in %2$s:%3$d", aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ], aParam[ _PAR_nLine ] ) )
 
 STATIC FUNCTION CheckLibParam( hbmk, cLibName )
 
