@@ -91,18 +91,18 @@
 #include <time.h>
 #if ( defined( HB_OS_LINUX ) || defined( HB_OS_BSD ) || defined( HB_OS_MINIX ) ) && ! defined( __WATCOMC__ )
 #  if defined( HB_OS_LINUX )
-#     include <pty.h>  /* for openpty and forkpty */
+#     include <pty.h>         /* for openpty and forkpty */
+#     include <utmp.h>        /* for login_tty */
 #  elif defined( HB_OS_DARWIN ) || defined( __NetBSD__ ) || defined( __OpenBSD__ )
-#     include <util.h> /* for openpty and forkpty */
+#     include <util.h>        /* for openpty, forkpty and login_tty */
 #     if defined( __NetBSD__ )
 #        include <termcap.h>
 #        define tigetnum( id )  tgetnum( id )
 #        define tigetstr( id )  tgetstr( id, NULL )
 #     endif
 #  elif defined( HB_OS_BSD ) || defined( HB_OS_MINIX )
-#     include <libutil.h> /* for openpty and forkpty */
+#     include <libutil.h>     /* for openpty, forkpty and login_tty */
 #  endif
-#  include <utmp.h>       /* for login_tty */
 #endif
 
 #ifndef O_ACCMODE
