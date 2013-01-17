@@ -220,7 +220,7 @@ static DWORD         s_cNumRead;   /* Ok to use DWORD here, because this is spec
 static DWORD         s_cNumIndex;  /* ...to the Windows API, which defines DWORD, etc.  */
 static WORD          s_wRepeated = 0;   /* number of times the event (key) was repeated */
 static INPUT_RECORD  s_irInBuf[ INPUT_BUFFER_LEN ];
-static int           s_altisdown = 0;
+static HB_BOOL       s_altisdown = HB_FALSE;
 static int           s_altnum = 0;
 static int           s_mouseLast;  /* Last mouse button to be pressed                   */
 static int           s_mouse_iCol;
@@ -1154,7 +1154,7 @@ static HB_BOOL hb_gt_win_Resume( PHB_GT pGT )
 
 /* *********************************************************************** */
 
-static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey, int ch )
+static int Handle_Alt_Key( HB_BOOL * paltisdown, int * paltnum, WORD wKey, int ch )
 {
    if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
    {
@@ -1178,7 +1178,7 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
             break;
 
          default:
-            *paltisdown = 0;
+            *paltisdown = HB_FALSE;
             break;
       }
    }
@@ -1193,7 +1193,7 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
          case 0x38:
             /* Alt key ... */
 #if 0
-            printf( " the state %ld ", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
+            printf( " the state %ld\n", s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState );
 #endif
 
             if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState &
@@ -1208,7 +1208,8 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
             {
                s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown = 1;
             }
-            *paltisdown = *paltnum = 0;
+            *paltisdown = HB_FALSE;
+            *paltnum = 0;
             break;
 
          case 0x52: --nm;
@@ -1225,7 +1226,7 @@ static int Handle_Alt_Key( int * paltisdown, int * paltnum, unsigned short wKey,
             break;
 
          default:
-            *paltisdown = 0;
+            *paltisdown = HB_FALSE;
             break;
       }
    }
@@ -1282,7 +1283,7 @@ static int SpecialHandling( WORD * wChar, unsigned short wKey, int ch, HB_BOOL l
             ch = 126;
             break;
 
-         case 43:          /* \  */
+         case 43:          /* \ */
             ch = 124;
             break;
 
@@ -1435,60 +1436,76 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
          }
 #endif
 
-         if( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
+#ifdef _TRACE
          {
-            unsigned short wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
+            DWORD tmp;
 
-#if 0
-            if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
-            {
-               printf( "\n scan %ld key %ld char %ld state %ld alt %d %d %d %d %d",
-                       wKey,                                                      /* scan code */
-                       s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode,   /* key code */
-                       s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.AsciiChar,   /* char */
-                       s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState, /* state */
-                       s_altisdown, s_wRepeated, s_cNumRead, s_cNumIndex, ( int ) s_bAltKeyHandling );
-            }
-#endif
-            if( s_bAltKeyHandling )
-            {
-               if( s_altisdown )
-               {
-                  ch = Handle_Alt_Key( &s_altisdown, &s_altnum, wKey, ch );
-               }
-               else
-               {
-                  if( wKey == 0x38 &&
-                      s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown &&
-                      ( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState
-                        & NUMLOCK_ON ) )
-                  {
-                     s_altisdown = 1;
-                  }
-               }
-            }
+            for( tmp = 0; tmp < s_cNumRead; ++tmp )
+               printf( "eventtype %d "
+                       "downflag %d "
+                       "key 0x%04x "
+                       "scan 0x%04x "
+                       "achar %d "
+                       "wchar %d "
+                       "state %ld "
+                       "repeat %d\n",
+                       s_irInBuf[ tmp ].EventType,
+                       ( int ) s_irInBuf[ tmp ].Event.KeyEvent.bKeyDown,
+                       s_irInBuf[ tmp ].Event.KeyEvent.wVirtualKeyCode,   /* key code */
+                       s_irInBuf[ tmp ].Event.KeyEvent.wVirtualScanCode,  /* scan code */
+                       s_irInBuf[ tmp ].Event.KeyEvent.uChar.AsciiChar,   /* char */
+                       s_irInBuf[ tmp ].Event.KeyEvent.uChar.UnicodeChar, /* char unicode */
+                       s_irInBuf[ tmp ].Event.KeyEvent.dwControlKeyState, /* state */
+                       s_irInBuf[ tmp ].Event.KeyEvent.wRepeatCount );
          }
+#endif
       }
    }
 
    /* Only process one keyboard event at a time. */
    if( s_wRepeated > 0 || s_cNumRead > s_cNumIndex )
    {
-#if 0
-      printf( " event %ld ", s_irInBuf[ s_cNumIndex ].EventType );
-#endif
-
       if( s_irInBuf[ s_cNumIndex ].EventType == KEY_EVENT )
       {
+         /* Save the keyboard state and ASCII, scan, key code */
+         WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
+         WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
+         DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
+
+         HB_BOOL bNotHandled = HB_TRUE;
+
          /* Only process key down events */
 
-         if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown )
+         if( s_bAltKeyHandling )
          {
-            /* Save the keyboard state and ASCII,scan, key code */
-            WORD wKey = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualScanCode;
-            WORD wChar = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.wVirtualKeyCode;
-            DWORD dwState = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.dwControlKeyState;
+#ifdef _TRACE
+            printf( "altisdown %d altnum %d\n", ( int ) s_altisdown, ( int ) s_altnum );
+#endif
+            if( s_altisdown )
+            {
+               ch = Handle_Alt_Key( &s_altisdown, &s_altnum, wKey, ch );
+#ifdef _TRACE
+               if( ! s_altisdown )
+                   printf( "alt went up\n" );
+#endif
+            }
+            else
+            {
+               if( wKey == 0x38 &&
+                   s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown &&
+                   ( dwState & NUMLOCK_ON ) )
+               {
+                  s_altisdown = HB_TRUE;
+                  bNotHandled = HB_FALSE;
+#ifdef _TRACE
+                  printf( "alt went down\n" );
+#endif
+               }
+            }
+         }
 
+         if( s_irInBuf[ s_cNumIndex ].Event.KeyEvent.bKeyDown && bNotHandled )
+         {
 #if defined( UNICODE )
             ch = s_irInBuf[ s_cNumIndex ].Event.KeyEvent.uChar.UnicodeChar;
 #else
@@ -1529,8 +1546,8 @@ static int hb_gt_win_ReadKey( PHB_GT pGT, int iEventMask )
 
             if( s_wRepeated > 0 ) /* Might not be redundant */
                s_wRepeated--;
-#if 0
-            printf( "\n\nhb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d", dwState, wChar, wKey, ch );
+#ifdef _TRACE
+            printf( "hb_gt_ReadKey(): dwState is %ld, wChar is %d, wKey is %d, ch is %d\n", dwState, wChar, wKey, ch );
 #endif
 
             if( wChar == 8 )                   /* VK_BACK */
