@@ -105,6 +105,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    ENDIF
 
    SET DATE ANSI
+   SET CENTURY OFF
 
    // ;
 
@@ -419,6 +420,61 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    TEST_LINE( o:picture := NIL )
    TEST_LINE( o:setFocus() )
    TEST_LINE( o:display() )
+
+   // ; Mauricio and variations
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", ".99",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, { "12" } )
+   TEST_LINE( o:Assign() )
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "-.99",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, { "12" } )
+   TEST_LINE( o:Assign() )
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", ".-99",, )
+   o:display()
+   o:setFocus()
+   TGetTOVS( o, { "12" } )
+   TEST_LINE( o:Assign() )
+
+   // ; Overstrike/Insert
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "9999999999",, )
+   o:display()
+   o:setFocus()
+   TEST_LINE( o:OverStrike( "12" ) )
+   TEST_LINE( o:OverStrike( "9" ) )
+   TEST_LINE( o:OverStrike( "13" ) )
+   TEST_LINE( o:OverStrike( "9" ) )
+   TEST_LINE( o:OverStrike( NIL ) )
+   TEST_LINE( o:OverStrike( "9" ) )
+   TEST_LINE( o:OverStrike( 1 ) )
+   TEST_LINE( o:OverStrike( "9" ) )
+   TEST_LINE( o:OverStrike( "" ) )
+   TEST_LINE( o:Assign() )
+
+   nInt02 := 0
+   SetPos( 14, 16 ) ; o := _GET_( nInt02, "nInt02", "9999999999",, )
+   o:display()
+   o:setFocus()
+   TEST_LINE( o:Insert( "12" ) )
+   TEST_LINE( o:Insert( "9" ) )
+   TEST_LINE( o:Insert( "13" ) )
+   TEST_LINE( o:Insert( "9" ) )
+   TEST_LINE( o:Insert( NIL ) )
+   TEST_LINE( o:Insert( "9" ) )
+   TEST_LINE( o:Insert( 1 ) )
+   TEST_LINE( o:Insert( "9" ) )
+   TEST_LINE( o:Insert( "" ) )
+   TEST_LINE( o:Assign() )
 
    // ; Buffer
 

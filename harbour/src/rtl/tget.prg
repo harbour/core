@@ -565,7 +565,7 @@ METHOD varGet() CLASS Get
 
 METHOD overStrike( cChar ) CLASS Get
 
-   IF ::hasFocus
+   IF ::hasFocus .AND. HB_ISSTRING( cChar )
 
       IF ::cType == "N" .AND. ! ::lEdit .AND. ::lClear
          ::pos := ::FirstEditable()
@@ -573,7 +573,7 @@ METHOD overStrike( cChar ) CLASS Get
 
       IF ::pos <= ::nMaxEdit
 
-         cChar := ::Input( cChar )
+         cChar := ::Input( Left( cChar, 1 ) )
 
          IF cChar == ""
             ::rejected := .T.
@@ -619,7 +619,7 @@ METHOD insert( cChar ) CLASS Get
    LOCAL nFor
    LOCAL nMaxEdit
 
-   IF ::hasFocus
+   IF ::hasFocus .AND. HB_ISSTRING( cChar )
 
       nMaxEdit := ::nMaxEdit
 
@@ -629,7 +629,7 @@ METHOD insert( cChar ) CLASS Get
 
       IF ::nPos <= ::nMaxEdit
 
-         cChar := ::Input( cChar )
+         cChar := ::Input( Left( cChar, 1 ) )
 
          IF cChar == ""
             ::rejected := .T.
@@ -1284,6 +1284,11 @@ METHOD unTransform() CLASS Get
                NEXT
             ENDIF
             cBuffer := Space( ::FirstEditable() - 1 ) + SubStr( cBuffer, ::FirstEditable(), ::LastEditable() - ::FirstEditable() + 1 )
+
+            /* Readd leading decimal point, if any */
+            IF ::decPos <= ::FirstEditable() - 1
+               cBuffer := Left( cBuffer, ::decPos - 1 ) + "." + SubStr( cBuffer, ::decPos + 1 )
+            ENDIF
 
             IF "D" $ ::cPicFunc .OR. ;
                "T" $ ::cPicFunc

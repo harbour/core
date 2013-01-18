@@ -111,6 +111,7 @@ PROCEDURE Main( cArg01, cArg02, cArg03, cArg04 )
    ENDIF
 
    SET DATE ANSI
+   SET CENTURY OFF
 
    // ;
 
