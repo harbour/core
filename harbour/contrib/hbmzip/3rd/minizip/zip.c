@@ -55,16 +55,7 @@
 /* compile with -Dlocal if your debugger can't find static symbols */
 
 #ifndef VERSIONMADEBY
-
-#  include "hbdefs.h"
-
-#  if defined( HB_OS_UNIX )
-#     define VERSIONMADEBY_HI 0x03  /* it's necessary for file attributes in unzip */
-#  else
-#     define VERSIONMADEBY_HI 0x00
-#  endif
-
-#  define VERSIONMADEBY   (0x14|(VERSIONMADEBY_HI<<8)) /* platform depedent */
+# define VERSIONMADEBY   (0x0) /* platform depedent */
 #endif
 
 #ifndef Z_BUFSIZE

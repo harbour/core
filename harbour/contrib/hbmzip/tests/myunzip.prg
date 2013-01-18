@@ -52,11 +52,22 @@
 
 #require "hbmzip"
 
+#include "simpleio.ch"
+
+REQUEST HB_CODEPAGE_UTF8EX
+
 PROCEDURE Main( ... )
 
    LOCAL hUnzip, aWild, cFileName, cExt, cPath, cFile, ;
       dDate, cTime, nSize, nCompSize, nErr, ;
       lCrypted, cPassword, cComment, tmp
+
+   hb_cdpSelect( "UTF8EX" )
+   hb_SetTermCP( hb_cdpTerm() )
+   Set( _SET_OSCODEPAGE, hb_cdpOS() )
+
+   SET DATE ANSI
+   SET CENTURY ON
 
    aWild := { ... }
    IF Len( aWild ) < 1
@@ -87,13 +98,13 @@ PROCEDURE Main( ... )
    IF ! Empty( hUnzip )
       ? "Archive file:", cFileName
       hb_unzipGlobalInfo( hUnzip, @nSize, @cComment )
-      ? "Number of entires:", nSize
+      ? "Number of entries:", nSize
       IF ! Empty( cComment )
          ? "global comment:", cComment
       ENDIF
       ? ""
-      ? "Filename                         Date     Time         Size Compressed  Action"
-      ? "---------------------------------------------------------------------------------"
+      ? "Filename                          Date      Time         Size Compressed  Action"
+      ? "-----------------------------------------------------------------------------------"
       nErr := hb_unzipFileFirst( hUnzip )
       DO WHILE nErr == 0
          hb_unzipFileInfo( hUnzip, @cFile, @dDate, @cTime, , , , @nSize, @nCompSize, @lCrypted, @cComment )

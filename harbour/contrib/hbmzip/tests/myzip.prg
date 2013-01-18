@@ -52,15 +52,29 @@
 
 #require "hbmzip"
 
+#include "simpleio.ch"
+
+REQUEST HB_CODEPAGE_UTF8EX
+
 PROCEDURE Main( ... )
 
    LOCAL hZip, aDir, aFile, aWild, ;
       cZipName, cPath, cFileName, cExt, cWild, cPassword, cComment, ;
       tmp
+   LOCAL lUnicode
+
+   IF "--unicode" $ hb_CmdLine()
+      hb_cdpSelect( "UTF8EX" )
+      hb_SetTermCP( hb_cdpTerm() )
+      Set( _SET_OSCODEPAGE, hb_cdpOS() )
+      lUnicode := .T.
+   ELSE
+      lUnicode := .F.
+   ENDIF
 
    aWild := { ... }
    IF Len( aWild ) < 2
-      ? "Usage: myzip <ZipName> [ --pass <password> ] [ --comment <comment> ] <FilePattern1> [ <FilePattern2> ... ]"
+      ? "Usage: myzip <ZipName> [ --pass <password> ] [ --unicode ] [ --comment <comment> ] <FilePattern1> [ <FilePattern2> ... ]"
       RETURN
    ENDIF
 
@@ -85,6 +99,8 @@ PROCEDURE Main( ... )
          ENDIF
          aWild[ tmp ] := ""
          aWild[ tmp + 1 ] := ""
+      ELSEIF Lower( aWild[ tmp ] ) == "--unicode"
+         /* skip */
       ENDIF
    NEXT
 
@@ -98,12 +114,20 @@ PROCEDURE Main( ... )
             FOR EACH aFile IN aDir
                IF ! cPath + aFile[ 1 ] == cZipName
                   ? "Adding", cPath + aFile[ 1 ]
-                  hb_zipStoreFile( hZip, cPath + aFile[ 1 ], cPath + aFile[ 1 ], cPassword )
+                  hb_zipStoreFile( hZip, cPath + aFile[ 1 ], cPath + aFile[ 1 ], cPassword,, lUnicode )
                ENDIF
             NEXT
          ENDIF
       NEXT
       hb_zipClose( hZip, cComment )
+   ENDIF
+
+   RETURN
+
+INIT PROCEDURE ClipInit()
+
+   IF "--unicode" $ hb_CmdLine()
+      hb_cdpSelect( "UTF8EX" )
    ENDIF
 
    RETURN
