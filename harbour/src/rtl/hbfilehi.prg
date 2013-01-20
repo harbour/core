@@ -185,8 +185,8 @@ FUNCTION hb_PathRelativize( cPathBase, cPathTarget, lForceRelative )
    ENDIF
 
    /* Force to return relative paths even when base is different. */
-   IF lForceRelative
-      RETURN s_FN_FromArray( aPathTarget, tmp, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) )
+   IF lForceRelative .AND. hb_DirExists( cPathBase + ( cTestTarget := s_FN_FromArray( aPathTarget, tmp, cTargetFileName, Replicate( ".." + hb_ps(), Len( aPathBase ) - tmp ) ) ) )
+      RETURN cTestTarget
    ENDIF
 
    RETURN cPathTarget

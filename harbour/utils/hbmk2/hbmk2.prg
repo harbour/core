@@ -12511,20 +12511,28 @@ STATIC FUNCTION LibReferenceToOption( cLib )
 
 STATIC FUNCTION ExtractHarbourSymbols( cString )
 
-   LOCAL aList
+   LOCAL aList := {}
+
    LOCAL pRegex
    LOCAL tmp
-   LOCAL cOldCP
+   LOCAL cLine, cLineLow
 
-   cOldCP := hb_cdpSelect( "EN" )
+   LOCAL cOldCP := hb_cdpSelect( "EN" )
+
    IF ! Empty( pRegex := hb_regexComp( "HB_FUN_([A-Z_][A-Z_0-9]*)", .T., .T. ) )
-      aList := hb_regexAll( pRegex, StrTran( cString, Chr( 13 ) ),,,,, .T. )
-      FOR EACH tmp IN aList
-         tmp := tmp[ 2 ]
+      FOR EACH cLine IN hb_ATokens( StrTran( cString, Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
+         cLineLow := Lower( cLine )
+         IF !( "multiple definition" $ cLineLow ) /* gcc */ .AND. ;
+            !( "duplicate symbol" $ cLineLow ) /* clang */ .AND. ;
+            !( "already defined" $ cLineLow ) /* msvc */ .AND. ;
+            !( "defined in both" $ cLineLow ) /* bcc */
+            FOR EACH tmp IN hb_regexAll( pRegex, cLine,,,,, .T. )
+               AAddNew( aList, tmp[ 2 ] )
+            NEXT
+         ENDIF
       NEXT
-   ELSE
-      aList := {}
    ENDIF
+
    hb_cdpSelect( cOldCP )
 
    RETURN aList
