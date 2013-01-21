@@ -180,6 +180,7 @@ EXTERNAL hbmk_KEYW
 #define _TARG_COMP              2
 #define _TARG_CPU               3
 
+#define _PAR_NEW( cParam, cFileName, nLine ) { cParam, cFileName, nLine }
 #define _PAR_cParam             1
 #define _PAR_cFileName          2
 #define _PAR_nLine              3
@@ -1413,7 +1414,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_COMP )
       CASE Left( cParamL, 6 )  == "-plat="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
       CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_PLAT )
-      CASE Left( cParamL, 6 )  == "-arch="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_PLAT ) /* Compatibility */
       CASE Left( cParamL, 5 )  == "-cpu="      ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 6 ), _TARG_CPU )
       CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := StrTran( PathSepToSelf( SubStr( cParam, 8 ) ), hb_ps() )
       CASE Left( cParamL, 6 )  == "-build"     ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
@@ -2284,7 +2284,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             RETURN tmp
          ENDIF
       OTHERWISE
-         AAdd( aParams, { cParam, "", 0 } )
+         AAdd( aParams, _PAR_NEW( cParam, "", 0 ) )
       ENDCASE
    NEXT
 
@@ -2304,7 +2304,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            Left( cParamL, 10 ) == "-compiler=" .OR. ;
            Left( cParamL, 6 )  == "-plat=" .OR. ;
            Left( cParamL, 10 ) == "-platform=" .OR. ;
-           Left( cParamL, 6 )  == "-arch=" .OR. ; /* Compatibility */
            Left( cParamL, 5 )  == "-cpu=" .OR. ;
            Left( cParamL, 7 )  == "-build=" .OR. ;
            Left( cParamL, 6 )  == "-lang=" .OR. ;
@@ -2327,7 +2326,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            cParamL             == "-blinker" .OR. ;
            cParamL             == "-exospace"
 
-         /* Simply ignore. They were already processed in the first pass. */
+         /* Command line option were already processed in the first pass, ignore those. */
+
+         IF ! Empty( aParam[ _PAR_cFileName ] )
+            _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Ignored option valid only on command line: %1$s" ), ParamToString( aParam ) ) )
+         ENDIF
 
       /* -env options used inside makefiles */
       CASE Left( cParamL, 5 )  == "-env:"
@@ -2392,10 +2395,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hbmk[ _HBMK_lCreateImpLib ] := .T. ; lAcceptIFlag := .T.
          ENDIF
 
-      CASE cParamL == "-gui" .OR. ;
-           cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. /* Compatibility */
-      CASE cParamL == "-std" .OR. ;
-           cParamL == "-mconsole"        ; hbmk[ _HBMK_lGUI ]       := .F. /* Compatibility */
+      CASE cParamL == "-gui"             ; hbmk[ _HBMK_lGUI ]       := .T.
+      CASE cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. ; LegacyWarning( hbmk, aParam, "-gui" )
+      CASE cParamL == "-std"             ; hbmk[ _HBMK_lGUI ]       := .F.
+      CASE cParamL == "-mconsole"        ; hbmk[ _HBMK_lGUI ]       := .F. ; LegacyWarning( hbmk, aParam, "-std" )
       CASE cParamL == "-mt"              ; hbmk[ _HBMK_lMT ]        := .T.
       CASE cParamL == "-st"              ; hbmk[ _HBMK_lMT ]        := .F.
       CASE cParamL == "-shared"          ; hbmk[ _HBMK_lSHARED ]    := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
@@ -2958,28 +2961,28 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-ldflag=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF Left( cParam, 1 ) $ cOptPrefix
-            AAdd( hbmk[ _HBMK_aOPTL ], PathSepToSelf( cParam, 2 ) )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTL ], PathSepToSelf( cParam, 2 ), aParam, .F. )
          ENDIF
 
       CASE Left( cParamL, Len( "-ldflag+=" ) ) == "-ldflag+="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-ldflag+=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF Left( cParam, 1 ) $ cOptPrefix
-            AAdd( hbmk[ _HBMK_aOPTLPOST ], PathSepToSelf( cParam, 2 ) )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTLPOST ], PathSepToSelf( cParam, 2 ), aParam, .F. )
          ENDIF
 
       CASE Left( cParamL, Len( "-dflag=" ) ) == "-dflag="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-dflag=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF Left( cParam, 1 ) $ cOptPrefix
-            AAdd( hbmk[ _HBMK_aOPTD ], PathSepToSelf( cParam, 2 ) )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTD ], PathSepToSelf( cParam, 2 ), aParam, .F. )
          ENDIF
 
       CASE Left( cParamL, Len( "-dflag+=" ) ) == "-dflag+="
 
          cParam := MacroProc( hbmk, SubStr( cParam, Len( "-dflag+=" ) + 1 ), aParam[ _PAR_cFileName ] )
          IF Left( cParam, 1 ) $ cOptPrefix
-            AAdd( hbmk[ _HBMK_aOPTDPOST ], PathSepToSelf( cParam, 2 ) )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTDPOST ], PathSepToSelf( cParam, 2 ), aParam, .F. )
          ENDIF
 
       CASE Left( cParamL, Len( "-aflag=" ) ) == "-aflag="
@@ -3184,7 +3187,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          DO CASE
          CASE lAcceptLDFlag
-            AAddNotEmpty( hbmk[ _HBMK_aOPTL ], PathSepToSelf( cParam, 2 ) )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTL ], PathSepToSelf( cParam, 2 ), aParam, .F. )
          CASE lAcceptCFlag
             IF SubStr( cParamL, 2 ) == "c"
                lStopAfterCComp := .T.
@@ -7227,6 +7230,28 @@ STATIC FUNCTION ParamToString( aParam )
       hb_StrFormat( "'%1$s'", aParam[ _PAR_cParam ] ), ; /* on the command line */
       hb_StrFormat( "'%1$s' in %2$s:%3$d", aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ], aParam[ _PAR_nLine ] ) )
 
+STATIC FUNCTION LegacyWarning( hbmk, aParam, cSuggestion )
+    RETURN _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead." ), ParamToString( aParam ), cSuggestion ) )
+
+STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
+
+    STATIC sc_aWarning := { ;
+       "-Wl,--allow-multiple-definition", ; /* gcc */
+       "force:multiple", ; /* msvc */
+       "w-dpl" } /* bcc */
+
+    IF AScan( sc_aWarning, {| tmp | Lower( tmp ) $ Lower( cOption ) } ) > 0
+       _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Dangerous low-level option not recommended: %1$s" ), ParamToString( aParam ) ) )
+    ENDIF
+
+    IF lNew
+       AAddNewNotEmpty( aArray, cOption )
+    ELSE
+       AAddNotEmpty( aArray, cOption )
+    ENDIF
+
+    RETURN
+
 STATIC FUNCTION CheckLibParam( hbmk, cLibName )
 
    cLibName := Lower( cLibName )
@@ -9335,14 +9360,14 @@ STATIC FUNCTION FindInPath( cFileName, xPath, aExtDef )
 
    RETURN NIL
 
-/*
+#if 0
 STATIC FUNCTION ArrayJoinNoClone( arraySrc1, arraySrc2 )
    LOCAL nLen1 := Len( arraySrc1 )
 
    ASize( arraySrc1, nLen1 + Len( arraySrc2 ) )
 
    RETURN ACopy( arraySrc2, arraySrc1, , , nLen1 + 1 )
-*/
+#endif
 
 STATIC FUNCTION ArrayJoin( arraySrc1, arraySrc2 )
 
@@ -9411,7 +9436,7 @@ STATIC FUNCTION AAddNewNotEmpty( array, xItem )
 
    RETURN array
 
-/*
+#if 0
 STATIC FUNCTION AAddNewAtTop( array, xItem )
 
    IF AScan( array, {| tmp | tmp == xItem } ) == 0
@@ -9419,7 +9444,7 @@ STATIC FUNCTION AAddNewAtTop( array, xItem )
    ENDIF
 
    RETURN array
-*/
+#endif
 
 STATIC FUNCTION AAddNew( array, xItem )
 
@@ -9449,14 +9474,14 @@ STATIC FUNCTION AAddNotEmpty( array, xItem )
 
    RETURN array
 
-/*
+#if 0
 STATIC FUNCTION DepTreeToList( aTree )
    LOCAL aList := {}
 
    DepTreeWorker( aList, aTree )
 
    RETURN aList
-*/
+#endif
 
 STATIC PROCEDURE DepTreeWorker( aList, aTree )
 
@@ -9890,6 +9915,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
    LOCAL cFile
    LOCAL cLine
+   LOCAL cLineOri
    LOCAL cItem
    LOCAL cItemL
    LOCAL cName
@@ -9923,7 +9949,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
    FOR EACH cLine IN hb_ATokens( cFile, _CHR_EOL )
 
-      cLine := AllTrim( ArchCompFilter( hbmk, AllTrim( cLine ), cFileName ) )
+      cLineOri := cLine := AllTrim( ArchCompFilter( hbmk, AllTrim( cLine ), cFileName ) )
 
       DO CASE
       CASE Lower( Left( cLine, Len( "skip="        ) ) ) == "skip="          ; cLine := SubStr( cLine, Len( "skip="         ) + 1 )
@@ -10199,12 +10225,12 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "ldflags="      ) ) ) == "ldflags="      ; cLine := SubStr( cLine, Len( "ldflags="      ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            AAddNewNotEmpty( hbmk[ _HBMK_aOPTL ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTL ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ), .T. )
          NEXT
 
       CASE Lower( Left( cLine, Len( "ldflags+="     ) ) ) == "ldflags+="     ; cLine := SubStr( cLine, Len( "ldflags+="     ) + 1 )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
-            AAddNewNotEmpty( hbmk[ _HBMK_aOPTLPOST ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ) )
+            AAddWithWarning( hbmk, hbmk[ _HBMK_aOPTLPOST ], MacroProc( hbmk, StrStripQuote( cItem ), cFileName ), _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ), .T. )
          NEXT
 
       CASE Lower( Left( cLine, Len( "pflags="       ) ) ) == "pflags="       ; cLine := SubStr( cLine, Len( "pflags="       ) + 1 )
@@ -10228,7 +10254,6 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
       CASE Lower( Left( cLine, Len( "mt="           ) ) ) == "mt="           ; cLine := SubStr( cLine, Len( "mt="           ) + 1 )
          DO CASE
-         CASE Lower( cLine ) == "mt" ; hbmk[ _HBMK_lMT ] := .T. /* Compatibility */
          CASE ValueIsT( cLine ) ; hbmk[ _HBMK_lMT ] := .T.
          CASE ValueIsF( cLine ) ; hbmk[ _HBMK_lMT ] := .F.
          ENDCASE
@@ -10691,7 +10716,7 @@ STATIC FUNCTION HBM_Load( hbmk, aParams, cFileName, nNestingLevel, lProcHBP, cPa
                         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Project reference (%1$s) ignored in automatic make file: %2$s" ), cHBP, cFileName ) )
                      ENDIF
                   OTHERWISE
-                     AAdd( aParams, { cParam, cFileName, cLine:__enumIndex() } )
+                     AAdd( aParams, _PAR_NEW( cParam, cFileName, cLine:__enumIndex() ) )
                   ENDCASE
                ENDIF
             NEXT
@@ -10901,7 +10926,6 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
       cMacro := hbmk_TARGETTYPE( hbmk ) ; EXIT
    CASE "HB_PLAT"
    CASE "HB_PLATFORM" /* Compatibility */
-   CASE "HB_ARCH" /* Compatibility */
       cMacro := hbmk[ _HBMK_cPLAT ] ; EXIT
    CASE "HB_COMP"
    CASE "HB_COMPILER" /* Compatibility */
@@ -11252,7 +11276,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
 #define RTLNK_MODE_SKIP         6
 #define RTLNK_MODE_SKIPNEXT     7
 
-/*
+#if 0
 STATIC PROCEDURE rtlnk_libtrans( aLibList )
    STATIC s_hTrans := { ;
       "CT"        => "hbct"   , ;
@@ -11334,7 +11358,7 @@ STATIC PROCEDURE rtlnk_filetrans( aFileList )
    NEXT
 
    RETURN
-*/
+#endif
 
 STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
 
@@ -12511,21 +12535,23 @@ STATIC FUNCTION LibReferenceToOption( cLib )
 
 STATIC FUNCTION ExtractHarbourSymbols( cString )
 
+   STATIC sc_aException := { ;
+      "multiple definition", ; /* gcc */
+      "duplicate symbol", ; /* clang */
+      "already defined", ; /* msvc */
+      "defined in both" } /* bcc */
+
    LOCAL aList := {}
 
    LOCAL pRegex
    LOCAL tmp
-   LOCAL cLine, cLineLow
+   LOCAL cLine
 
    LOCAL cOldCP := hb_cdpSelect( "EN" )
 
    IF ! Empty( pRegex := hb_regexComp( "HB_FUN_([A-Z_][A-Z_0-9]*)", .T., .T. ) )
       FOR EACH cLine IN hb_ATokens( StrTran( cString, Chr( 13 ), Chr( 10 ) ), Chr( 10 ) )
-         cLineLow := Lower( cLine )
-         IF !( "multiple definition" $ cLineLow ) /* gcc */ .AND. ;
-            !( "duplicate symbol" $ cLineLow ) /* clang */ .AND. ;
-            !( "already defined" $ cLineLow ) /* msvc */ .AND. ;
-            !( "defined in both" $ cLineLow ) /* bcc */
+         IF AScan( sc_aException, {| tmp | tmp $ Lower( cLine ) } ) == 0
             FOR EACH tmp IN hb_regexAll( pRegex, cLine,,,,, .T. )
                AAddNew( aList, tmp[ 2 ] )
             NEXT

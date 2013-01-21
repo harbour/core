@@ -33,7 +33,7 @@ PROCEDURE Main( cVidMode )
    // .... a typical application might have the following different settings
    //     normally these would be stored in a .dbf/.dbv
    aClrs := { ;
-      { "Desktop",        "N/BG",                          "D", hb_UTF8ToStr( "▒" ) }, ;
+      { "Desktop",        "N/BG",                          "D", hb_UTF8ToStrBox( "░" ) }, ;
       { "Title",          "N/W",                           "T" }, ;
       { "Top Menu",       "N/BG,N/W,W+/BG,W+/N,GR+/N",     "M" }, ;
       { "Sub Menu",       "W+/N*,GR+/N*,GR+/N*,W+/R,G+/R", "M" }, ;

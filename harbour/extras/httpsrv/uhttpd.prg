@@ -1836,13 +1836,14 @@ FUNCTION uhttpd_join( cSeparator, aData )
    LOCAL cRet := "", nI
 
    FOR nI := 1 TO Len( aData )
-      IF nI > 1;  cRet += cSeparator
+      IF nI > 1
+         cRet += cSeparator
       ENDIF
       SWITCH ValType( aData[ nI ] )
       CASE "C"
-      CASE "M"; cRet += aData[ nI ]; EXIT
-      CASE "N"; cRet += LTrim( Str( aData[ nI ] ) ); EXIT
-      CASE "D"; cRet += iif( ! Empty( aData[ nI ] ), DToC( aData[ nI ] ), "" ); EXIT
+      CASE "M" ; cRet += aData[ nI ]; EXIT
+      CASE "N" ; cRet += hb_ntos( aData[ nI ] ); EXIT
+      CASE "D" ; cRet += iif( ! Empty( aData[ nI ] ), DToC( aData[ nI ] ), "" ); EXIT
       ENDSWITCH
    NEXT
 

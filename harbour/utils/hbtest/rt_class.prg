@@ -1094,9 +1094,9 @@ PROCEDURE Main_CLASS()
 STATIC FUNCTION INSTANCE_DATA( oValue )
    LOCAL cData, i
 
-   cData := "[" + LTrim( Str( Len( oValue ) ) ) + "]:"
+   cData := "[" + hb_ntos( Len( oValue ) ) + "]:"
    FOR i := 1 TO Len( oValue )
-      IF ValType( oValue[ i ] ) == "C"
+      IF HB_ISSTRING( oValue[ i ] )
          cData += " " + oValue[ i ]
       ELSEIF oValue[ i ] == NIL
          cData += " NIL"
@@ -1251,13 +1251,13 @@ ENDCLASS
 METHOD m1 CLASS NVCLASS1
 
    RETURN "NVCLASS1:M1 " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v ) + "|" + ;
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v ) + "|" + ;
          ::x() + "|" + ;
          ::y() + "|" + ;
          ::z()
@@ -1265,35 +1265,35 @@ METHOD m1 CLASS NVCLASS1
 METHOD x CLASS NVCLASS1
 
    RETURN "NVCLASS1:X  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 METHOD y CLASS NVCLASS1
 
    RETURN "NVCLASS1:Y  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 METHOD z CLASS NVCLASS1
 
    RETURN "NVCLASS1:Z  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 
 CREATE CLASS NVCLASS2
@@ -1318,13 +1318,13 @@ ENDCLASS
 METHOD m2 CLASS NVCLASS2
 
    RETURN "NVCLASS2:M2 " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v ) + "|" + ;
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v ) + "|" + ;
          ::x() + "|" + ;
          ::y() + "|" + ;
          ::z()
@@ -1332,35 +1332,35 @@ METHOD m2 CLASS NVCLASS2
 METHOD x CLASS NVCLASS2
 
    RETURN "NVCLASS2:X  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 METHOD y CLASS NVCLASS2
 
    RETURN "NVCLASS2:Y  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 METHOD z CLASS NVCLASS2
 
    RETURN "NVCLASS2:Z  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 
 CREATE CLASS NVCLASS3 FROM NVCLASS1, NVCLASS2
@@ -1386,13 +1386,13 @@ ENDCLASS
 METHOD m3 CLASS NVCLASS3
 
    RETURN "NVCLASS3:M3 " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v ) + "|" + ;
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v ) + "|" + ;
          ::x() + "|" + ;
          ::y() + "|" + ;
          ::z()
@@ -1400,35 +1400,35 @@ METHOD m3 CLASS NVCLASS3
 METHOD x CLASS NVCLASS3
 
    RETURN "NVCLASS3:X  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 METHOD y CLASS NVCLASS3
 
    RETURN "NVCLASS3:Y  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 METHOD z CLASS NVCLASS3
 
    RETURN "NVCLASS3:Z  " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v )
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v )
 
 
 CREATE CLASS NVCLASS4 FROM NVCLASS3
@@ -1438,13 +1438,13 @@ ENDCLASS
 METHOD m4
 
    RETURN "NVCLASS4:M4 " + ;
-          HB_CSTR( ::a ) + " " + ;
-          HB_CSTR( ::b ) + " " + ;
-          HB_CSTR( ::c ) + " " + ;
-          HB_CSTR( ::d ) + " " + ;
-          HB_CSTR( ::e ) + " " + ;
-          HB_CSTR( ::f ) + " " + ;
-          HB_CSTR( ::v ) + "|" + ;
+          hb_CStr( ::a ) + " " + ;
+          hb_CStr( ::b ) + " " + ;
+          hb_CStr( ::c ) + " " + ;
+          hb_CStr( ::d ) + " " + ;
+          hb_CStr( ::e ) + " " + ;
+          hb_CStr( ::f ) + " " + ;
+          hb_CStr( ::v ) + "|" + ;
          ::x() + "|" + ;
          ::y() + "|" + ;
          ::z()

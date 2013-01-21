@@ -277,7 +277,7 @@ STATIC FUNCTION _ftShowIt( aOpt )
 
    CASE "D"    // Desktop Background
       SetColor( aClr[ 1 ] )
-      BkGrnd( 19, 43, 22, 64, hb_UTF8ToStrBox( aOpt[ C_CHAR ] ) )
+      BkGrnd( 19, 43, 22, 64, aOpt[ C_CHAR ] )
       EXIT
 
    CASE "T"    // Title
@@ -462,7 +462,11 @@ STATIC FUNCTION _ftClrPut( cClrStr, nElem, cClr )
 
 STATIC FUNCTION _ftDeskChar( aOpt )
 
-   LOCAL aChar := { " ", "░", "▒", "▓" }
+   LOCAL aChar := { ;
+      hb_UTF8ToStrBox( " " ), ;
+      hb_UTF8ToStrBox( "░" ), ;
+      hb_UTF8ToStrBox( "▒" ), ;
+      hb_UTF8ToStrBox( "▓" ) }
    LOCAL cChar := aOpt[ C_CHAR ]
    LOCAL cClr  := aOpt[ C_CLR ]
    LOCAL nElem := hb_AScan( aChar, cChar,,, .T. )
@@ -476,7 +480,7 @@ STATIC FUNCTION _ftDeskChar( aOpt )
    // .... draw the choices on the screen
    SetColor( cClr )
    FOR n := 1 TO Len( aChar )
-      hb_DispOutAt( n + 18, 29, Replicate( hb_UTF8ToStr( aChar[ n ] ), 10 ) )
+      hb_DispOutAtBox( n + 18, 29, Replicate( aChar[ n ], 10 ) )
    NEXT
 
    n := nElem + 18
