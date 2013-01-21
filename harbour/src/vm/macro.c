@@ -904,7 +904,7 @@ HB_FUNC( FIELDBLOCK )
 
             byBuf[ 8 + sizeof( PHB_DYNS ) ] = HB_P_PUSHLOCALNEAR;
             byBuf[ 9 + sizeof( PHB_DYNS ) ] = 1;
-            byBuf[ 10 + sizeof( PHB_DYNS ) ] = HB_P_PUSHUNREF;
+            byBuf[ 10 + sizeof( PHB_DYNS ) ] = HB_P_DUPLICATE;
             byBuf[ 11 + sizeof( PHB_DYNS ) ] = HB_P_MPOPFIELD;
             HB_PUT_PTR( &byBuf[ 12 + sizeof( PHB_DYNS ) ], pFieldSym );
             byBuf[ 12 + sizeof( PHB_DYNS ) + sizeof( PHB_DYNS ) ] = HB_P_ENDBLOCK;
@@ -959,7 +959,7 @@ HB_FUNC( FIELDWBLOCK )
 
             byBuf[ 13 + sizeof( PHB_DYNS ) ] = HB_P_PUSHLOCALNEAR;
             byBuf[ 14 + sizeof( PHB_DYNS ) ] = 1;
-            byBuf[ 15 + sizeof( PHB_DYNS ) ] = HB_P_PUSHUNREF;
+            byBuf[ 15 + sizeof( PHB_DYNS ) ] = HB_P_DUPLICATE;
             byBuf[ 16 + sizeof( PHB_DYNS ) ] = HB_P_PUSHLONG;
             HB_PUT_LE_UINT32( &byBuf[ 17 + sizeof( PHB_DYNS ) ], iWorkArea );
 

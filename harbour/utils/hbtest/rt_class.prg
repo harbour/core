@@ -1059,7 +1059,30 @@ PROCEDURE Main_CLASS()
    HBTEST __cls_CntShrData( oValue:classH )             IS 3
    HBTEST INSTANCE_DATA( oValue )         IS "[0]:"
 
+   /* Test non virtual hidden messages */
 
+   oValue := NVCLASS4():new()
+
+   HBTEST oValue:m1() IS "NVCLASS1:M1 (a1) (b1) (c3) (d3) (e3) (f3) (ex1)|" + ;
+                         "NVCLASS1:X  (a1) (b1) (c3) (d3) (e3) (f3) (ex1)|" + ;
+                         "NVCLASS3:Y  (a3) (b3) (c3) (d3) (e3) (f3) (HI3)|" + ;
+                         "NVCLASS3:Z  (a3) (b3) (c3) (d3) (e3) (f3) (HI3)"
+   HBTEST oValue:m2() IS "NVCLASS2:M2 (a2) (b2) (c3) (d3) (e3) (f3) (ex1)|" + ;
+                         "NVCLASS2:X  (a2) (b2) (c3) (d3) (e3) (f3) (ex1)|" + ;
+                         "NVCLASS3:Y  (a3) (b3) (c3) (d3) (e3) (f3) (HI3)|" + ;
+                         "NVCLASS3:Z  (a3) (b3) (c3) (d3) (e3) (f3) (HI3)"
+   HBTEST oValue:m3() IS "NVCLASS3:M3 (a3) (b3) (c3) (d3) (e3) (f3) (HI3)|" + ;
+                         "NVCLASS3:X  (a3) (b3) (c3) (d3) (e3) (f3) (HI3)|" + ;
+                         "NVCLASS3:Y  (a3) (b3) (c3) (d3) (e3) (f3) (HI3)|" + ;
+                         "NVCLASS3:Z  (a3) (b3) (c3) (d3) (e3) (f3) (HI3)"
+
+   /* Test super casting */
+
+   HBTEST oValue:classname()                                IS "NVCLASS4"
+   HBTEST oValue:super:classname()                          IS "NVCLASS3"
+   HBTEST oValue:super:super:classname()                    IS "NVCLASS1"
+   HBTEST oValue:super:super:super:classname()              IS "HBOBJECT"
+   HBTEST oValue:super:super:super:super:classname()        IS "E 13 BASE 1004 Message not found (NVCLASS4:SUPER) OS:0 #:0 A:1:O:NVCLASS4 Object F:S"
 
 #endif
 
@@ -1204,6 +1227,228 @@ EXPORTED:
    CLASS VAR y4 INIT "(y4)" SHARED
    CLASS VAR z4 INIT "(z4)" SHARED
 ENDCLASS
+
+
+CREATE CLASS NVCLASS1
+HIDDEN:
+   VAR a init "(a1)"
+   CLASS VAR b init "(b1)"
+   METHOD x
+
+PROTECTED:
+   VAR c init "(c1)"
+   CLASS VAR d init "(d1)"
+   METHOD y
+
+EXPORTED:
+   VAR e init "(e1)"
+   CLASS VAR f init "(f1)"
+   VAR v init "(ex1)"
+   METHOD z
+   METHOD m1
+ENDCLASS
+
+METHOD m1 CLASS NVCLASS1
+
+   RETURN "NVCLASS1:M1 " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v ) + "|" + ;
+         ::x() + "|" + ;
+         ::y() + "|" + ;
+         ::z()
+
+METHOD x CLASS NVCLASS1
+
+   RETURN "NVCLASS1:X  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+METHOD y CLASS NVCLASS1
+
+   RETURN "NVCLASS1:Y  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+METHOD z CLASS NVCLASS1
+
+   RETURN "NVCLASS1:Z  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+
+CREATE CLASS NVCLASS2
+HIDDEN:
+   VAR a init "(a2)"
+   CLASS VAR b init "(b2)"
+   METHOD x
+
+PROTECTED:
+   VAR c init "(c2)"
+   CLASS VAR d init "(d2)"
+   METHOD y
+
+EXPORTED:
+   VAR e init "(e2)"
+   CLASS VAR f init "(f2)"
+   METHOD z
+   METHOD m2
+
+ENDCLASS
+
+METHOD m2 CLASS NVCLASS2
+
+   RETURN "NVCLASS2:M2 " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v ) + "|" + ;
+         ::x() + "|" + ;
+         ::y() + "|" + ;
+         ::z()
+
+METHOD x CLASS NVCLASS2
+
+   RETURN "NVCLASS2:X  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+METHOD y CLASS NVCLASS2
+
+   RETURN "NVCLASS2:Y  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+METHOD z CLASS NVCLASS2
+
+   RETURN "NVCLASS2:Z  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+
+CREATE CLASS NVCLASS3 FROM NVCLASS1, NVCLASS2
+HIDDEN:
+   VAR a init "(a3)"
+   CLASS VAR b init "(b3)"
+   METHOD x
+   VAR v init "(HI3)"
+
+PROTECTED:
+   VAR c init "(c3)"
+   CLASS VAR d init "(d3)"
+   METHOD y
+
+EXPORTED:
+   VAR e init "(e3)"
+   CLASS VAR f init "(f3)"
+   METHOD z
+   METHOD m3
+
+ENDCLASS
+
+METHOD m3 CLASS NVCLASS3
+
+   RETURN "NVCLASS3:M3 " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v ) + "|" + ;
+         ::x() + "|" + ;
+         ::y() + "|" + ;
+         ::z()
+
+METHOD x CLASS NVCLASS3
+
+   RETURN "NVCLASS3:X  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+METHOD y CLASS NVCLASS3
+
+   RETURN "NVCLASS3:Y  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+METHOD z CLASS NVCLASS3
+
+   RETURN "NVCLASS3:Z  " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v )
+
+
+CREATE CLASS NVCLASS4 FROM NVCLASS3
+   METHOD m4
+ENDCLASS
+
+METHOD m4
+
+   RETURN "NVCLASS4:M4 " + ;
+          HB_CSTR( ::a ) + " " + ;
+          HB_CSTR( ::b ) + " " + ;
+          HB_CSTR( ::c ) + " " + ;
+          HB_CSTR( ::d ) + " " + ;
+          HB_CSTR( ::e ) + " " + ;
+          HB_CSTR( ::f ) + " " + ;
+          HB_CSTR( ::v ) + "|" + ;
+         ::x() + "|" + ;
+         ::y() + "|" + ;
+         ::z()
+
 #endif
 
 

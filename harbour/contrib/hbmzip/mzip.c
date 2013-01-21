@@ -330,13 +330,19 @@ HB_FUNC( HB_ZIPFILEWRITE )
    if( pData )
    {
       zipFile hZip = hb_zipfileParam( 1 );
-      HB_ISIZ nLen = hb_parclen( 2 );
-
-      if( HB_ISNUM( 3 ) && hb_parns( 3 ) < nLen )
-         nLen = hb_parns( 3 );
-
       if( hZip )
+      {
+         HB_SIZE nLen = hb_parclen( 2 );
+
+         if( HB_ISNUM( 3 ) )
+         {
+            HB_SIZE nWrite = hb_parns( 3 );
+            if( nWrite < nLen )
+               nLen = nWrite;
+         }
+
          hb_retni( zipWriteInFileInZip( hZip, pData, ( unsigned ) nLen ) );
+      }
    }
    else
       hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
@@ -605,7 +611,7 @@ HB_FUNC( HB_UNZIPFILEREAD )
                nSize = nRead;
          }
 
-         hb_retnl( unzReadCurrentFile( hUnzip, buffer, ( unsigned ) nSize ) );
+         hb_retns( unzReadCurrentFile( hUnzip, buffer, ( unsigned ) nSize ) );
       }
    }
    else

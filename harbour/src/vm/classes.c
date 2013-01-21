@@ -148,8 +148,11 @@
 #include "hbthread.h"
 #include "hboo.ch"
 
-/* DEBUG only*/
-/* #include <windows.h> */
+typedef struct
+{
+   HB_USHORT   uiClass;
+   HB_USHORT   uiOffset;
+} HB_CLSCAST, * PHB_CLSCAST;
 
 typedef struct
 {
@@ -195,6 +198,7 @@ typedef struct
    PHB_ITEM    pInlines;         /* Array for inline codeblocks */
    PHB_ITEM    pMutex;           /* Class sync method mutex */
    PHB_SYMB *  pFriendSyms;      /* Friend functions' symbols */
+   PHB_CLSCAST pSuperClasses;    /* Super classes */
    HB_U32      nOpFlags;         /* Flags for overloaded operators */
    HB_USHORT   uiClass;          /* This class handle */
    HB_USHORT   fHasDestructor;   /* has the class destructor message? */
@@ -204,6 +208,7 @@ typedef struct
    HB_USHORT   uiInitDatas;      /* Total Method initialised Counter */
    HB_USHORT   uiDatas;          /* Total Data Counter */
    HB_USHORT   uiDataFirst;      /* First instance item from this class */
+   HB_USHORT   uiSuperClasses;   /* Number of super classes */
    HB_USHORT   uiFriendSyms;     /* Number of friend function's symbols */
    HB_USHORT   uiFriendModule;   /* Number of friend symbols in pFriendModule */
    HB_USHORT   uiMutexOffset;    /* Offset in instance area to SYNC method mutex */
@@ -387,20 +392,20 @@ static HB_USHORT s_uiObjectClass    = 0;
 
 #  include "hbthread.h"
 
-#  define HB_CLASS_POOL_SIZE  16384
-#  define HB_CLASS_LOCK()       hb_threadEnterCriticalSection( &s_clsMtx )
-#  define HB_CLASS_UNLOCK()     hb_threadLeaveCriticalSection( &s_clsMtx )
+#  define HB_CLASS_POOL_SIZE  16382
+#  define HB_CLASS_LOCK()     hb_threadEnterCriticalSection( &s_clsMtx )
+#  define HB_CLASS_UNLOCK()   hb_threadLeaveCriticalSection( &s_clsMtx )
    static HB_CRITICAL_NEW( s_clsMtx );
 
 #else
 
 #  define HB_CLASS_POOL_SIZE  0
-#  define HB_CLASS_LOCK()       do {} while( 0 )
-#  define HB_CLASS_UNLOCK()     do {} while( 0 )
+#  define HB_CLASS_LOCK()     do {} while( 0 )
+#  define HB_CLASS_UNLOCK()   do {} while( 0 )
 
 #endif
 
-#define HB_CLASS_POOL_RESIZE  16
+#define HB_CLASS_POOL_RESIZE  64
 
 static PCLASS *  s_pClasses  = NULL;
 static HB_USHORT s_uiClsSize = 0;
@@ -580,10 +585,10 @@ static PMETHOD hb_clsFindMsg( PCLASS pClass, PHB_DYNS pMsg )
 
    do
    {
-      if( pClass->pMethods[ *puiMsgIdx ].pMessage == pMsg )
-      {
-         return &pClass->pMethods[ *puiMsgIdx ];
-      }
+      PMETHOD pMethod = &pClass->pMethods[ *puiMsgIdx ];
+
+      if( pMethod->pMessage == pMsg )
+         return pMethod;
       ++puiMsgIdx;
    }
    while( --uiBucket );
@@ -605,6 +610,7 @@ static PMETHOD hb_clsFindMsg( PCLASS pClass, PHB_DYNS pMsg )
       ++pMethod;
    }
    while( --uiBucket );
+
 #endif
 
    return NULL;
@@ -655,6 +661,8 @@ static PMETHOD hb_clsAllocMsg( PCLASS pClass, PHB_DYNS pMsg )
 
    }
    while( hb_clsDictRealloc( pClass ) );
+
+   hb_errInternal( 6001, "Unable to allocate new message", NULL, NULL );
 
    return NULL;
 }
@@ -738,24 +746,64 @@ static void hb_clsFreeMsg( PCLASS pClass, PHB_DYNS pMsg )
 
 static HB_BOOL hb_clsHasParentClass( PCLASS pClass, HB_USHORT uiParentCls )
 {
-   PMETHOD pMethod = hb_clsFindMsg( pClass, s_pClasses[ uiParentCls ]->pClassSym );
+   HB_USHORT uiCount = pClass->uiSuperClasses;
 
+   while( uiCount )
+   {
+      if( pClass->pSuperClasses[ --uiCount ].uiClass == uiParentCls )
+         return HB_TRUE;
+   }
+   return HB_FALSE;
+
+   /* alternative method but can give wrong results
+    * if user overloads super casting method, [druzus].
+    */
+   /*
+   PMETHOD pMethod = hb_clsFindMsg( pClass, s_pClasses[ uiParentCls ]->pClassSym );
    return pMethod && pMethod->pFuncSym == &s___msgSuper;
+   */
 }
 
 static HB_BOOL hb_clsHasParent( PCLASS pClass, PHB_DYNS pParentSym )
 {
-   PMETHOD pMethod = hb_clsFindMsg( pClass, pParentSym );
+   HB_USHORT uiCount = pClass->uiSuperClasses;
 
+   while( uiCount )
+   {
+      if( s_pClasses[ pClass->pSuperClasses[ --uiCount ].uiClass ]->pClassSym == pParentSym )
+         return HB_TRUE;
+   }
+   return HB_FALSE;
+
+   /* alternative method but can give wrong results
+    * if user overloads super casting method, [druzus].
+    */
+   /*
+   PMETHOD pMethod = hb_clsFindMsg( pClass, pParentSym );
    return pMethod && pMethod->pFuncSym == &s___msgSuper;
+   */
 }
 
-static HB_USHORT hb_clsParentInstanceOffset( PCLASS pClass, PHB_DYNS pParentSym )
+static HB_USHORT hb_clsParentInstanceOffset( PCLASS pClass, HB_USHORT uiParentCls )
 {
-   PMETHOD pMethod = hb_clsFindMsg( pClass, pParentSym );
+   HB_USHORT uiCount = pClass->uiSuperClasses;
+
+   while( uiCount )
+   {
+      if( pClass->pSuperClasses[ --uiCount ].uiClass == uiParentCls )
+         return pClass->pSuperClasses[ uiCount ].uiOffset;
+   }
+   return 0;
+}
+
+/*
+static HB_USHORT hb_clsParentInstanceOffset( PCLASS pClass, HB_USHORT uiParentCls )
+{
+   PMETHOD pMethod = hb_clsFindMsg( pClass, s_pClasses[ uiParentCls ]->pClassSym );
 
    return ( pMethod && pMethod->pFuncSym == &s___msgSuper ) ? pMethod->uiOffset : 0;
 }
+*/
 
 static HB_USHORT hb_clsAddInitValue( PCLASS pClass, PHB_ITEM pItem,
                                      HB_USHORT uiType, HB_USHORT uiData,
@@ -888,7 +936,7 @@ static HB_BOOL hb_clsUpdateHiddenMessages( PMETHOD pSrcMethod, PMETHOD pDstMetho
              pDstMethod->pFuncSym == &s___msgGetData )
          {
             pDstMethod->uiOffset = hb_clsParentInstanceOffset( pDstClass,
-                           s_pClasses[ pDstMethod->uiSprClass ]->pClassSym );
+                                                   pDstMethod->uiSprClass );
          }
          else if( pDstMethod->pFuncSym == &s___msgSetClsData ||
                   pDstMethod->pFuncSym == &s___msgGetClsData )
@@ -916,6 +964,51 @@ static HB_BOOL hb_clsUpdateHiddenMessages( PMETHOD pSrcMethod, PMETHOD pDstMetho
    }
 
    return HB_FALSE;
+}
+
+static void hb_clsAddSupperClass( PCLASS pClass, HB_USHORT uiSuperCls, HB_USHORT uiOffset )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_clsAddSupperClass(%p,%hu,%hu)", pClass, uiSuperCls, uiOffset ) );
+
+   pClass->pSuperClasses = ( PHB_CLSCAST ) hb_xrealloc( pClass->pSuperClasses,
+                     ( pClass->uiSuperClasses + 1 ) * sizeof( HB_CLSCAST ) );
+   pClass->pSuperClasses[ pClass->uiSuperClasses ].uiClass = uiSuperCls;
+   pClass->pSuperClasses[ pClass->uiSuperClasses++ ].uiOffset = uiOffset;
+}
+
+static void hb_clsDefineSupperClass( PCLASS pClass, HB_USHORT uiSuperCls, HB_BOOL fNew )
+{
+   PMETHOD pMethod;
+   PCLASS pSprCls;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_clsDefineSupperClass(%p,%hu,%d)", pClass, uiSuperCls, fNew ) );
+
+   pSprCls = s_pClasses[ uiSuperCls ];
+
+   if( !hb_clsHasParentClass( pClass, uiSuperCls ) )
+   {
+      if( fNew )
+      {
+         hb_clsAddSupperClass( pClass, uiSuperCls, pClass->uiDatas );
+         pClass->uiDatas += pSprCls->uiDatas - pSprCls->uiDataFirst;
+      }
+      else
+         hb_clsAddSupperClass( pClass, uiSuperCls, pSprCls->uiDataFirst );
+   }
+
+   pMethod = hb_clsAllocMsg( pClass, pSprCls->pClassSym );
+   if( pMethod->pMessage == NULL )
+   {
+      pClass->uiMethods++;
+      pMethod->pMessage = pSprCls->pClassSym;
+      pMethod->uiSprClass = pClass->uiClass;
+      pMethod->uiData = uiSuperCls;
+      pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
+      pMethod->pFuncSym = &s___msgSuper;
+      pMethod->uiOffset = hb_clsParentInstanceOffset( pClass, uiSuperCls );
+   }
+   else if( pMethod->pFuncSym == &s___msgSuper && pMethod->uiData == uiSuperCls )
+      pMethod->uiOffset = hb_clsParentInstanceOffset( pClass, uiSuperCls );
 }
 
 static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
@@ -975,6 +1068,16 @@ static void hb_clsCopyClass( PCLASS pClsDst, PCLASS pClsSrc )
 #endif
    memcpy( pClsDst->pMethods, pClsSrc->pMethods, nLimit * sizeof( METHOD ) );
    pClsDst->uiMethods = pClsSrc->uiMethods;
+
+   if( pClsSrc->uiSuperClasses )
+   {
+      pClsDst->uiSuperClasses = pClsSrc->uiSuperClasses;
+      pClsDst->pSuperClasses = ( PHB_CLSCAST )
+                     hb_xgrab( pClsSrc->uiSuperClasses * sizeof( HB_CLSCAST ) );
+      memcpy( pClsDst->pSuperClasses, pClsSrc->pSuperClasses,
+              pClsSrc->uiSuperClasses * sizeof( HB_CLSCAST ) );
+   }
+   hb_clsDefineSupperClass( pClsDst, pClsSrc->uiClass, HB_FALSE );
 
    pMethod = pClsDst->pMethods;
    do
@@ -1148,6 +1251,8 @@ static void hb_clsRelease( PCLASS pClass )
       hb_xfree( pClass->pMethods );
    if( pClass->uiFriendSyms )
       hb_xfree( pClass->pFriendSyms );
+   if( pClass->pSuperClasses )
+      hb_xfree( pClass->pSuperClasses );
 #ifdef HB_MSG_POOL
    if( pClass->puiMsgIdx )
       hb_xfree( pClass->puiMsgIdx );
@@ -2141,7 +2246,7 @@ HB_BOOL hb_objGetVarRef( PHB_ITEM pObject, PHB_SYMB pMessage,
 
          if( pStack->uiClass != uiObjClass )
             nIndex += hb_clsParentInstanceOffset( s_pClasses[ uiObjClass ],
-                                 s_pClasses[ pMethod->uiSprClass ]->pClassSym );
+                                                  pMethod->uiSprClass );
          else
             nIndex += pMethod->uiOffset;
 
@@ -2205,6 +2310,7 @@ HB_BOOL hb_clsHasDestructor( HB_USHORT uiClass )
  */
 static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
 {
+#if 0
    HB_STACK_TLS_PRELOAD
    PMETHOD pMethod = pClass->pMethods;
    HB_SIZE nLimit = hb_clsMthNum( pClass );
@@ -2253,6 +2359,36 @@ static void hb_objSupperDestructorCall( PHB_ITEM pObject, PCLASS pClass )
    }
 
    hb_xfree( pcClasses );
+#else
+   HB_STACK_TLS_PRELOAD
+   HB_USHORT uiCount, uiDtorClass;
+
+   uiDtorClass = hb_clsFindMsg( pClass, s___msgDestructor.pDynSym )->uiSprClass;
+   uiCount = pClass->uiSuperClasses;
+   while( uiCount-- )
+   {
+      HB_USHORT uiParentCls = pClass->pSuperClasses[ uiCount ].uiClass;
+
+      if( uiParentCls != uiDtorClass && uiParentCls != pClass->uiClass )
+      {
+         PCLASS pSupperClass = s_pClasses[ uiParentCls ];
+
+         if( pSupperClass->fHasDestructor )
+         {
+            PMETHOD pDestructor = hb_clsFindMsg( s_pClasses[ uiParentCls ],
+                                                 s___msgDestructor.pDynSym );
+            if( pDestructor && pDestructor->uiSprClass == uiParentCls )
+            {
+               hb_vmPushSymbol( &s___msgDestructor );
+               hb_clsMakeSuperObject( hb_stackAllocItem(), pObject, uiParentCls );
+               hb_vmSend( 0 );
+               if( hb_vmRequestQuery() != 0 )
+                  break;
+            }
+         }
+      }
+   }
+#endif
 }
 
 /*
@@ -2443,7 +2579,7 @@ PHB_ITEM hb_objGetVarPtr( PHB_ITEM pObject, PHB_DYNS pVarMsg )
                if( uiClass != pObject->item.asArray.value->uiClass )
                   nIndex = pMethod->uiData +
                            hb_clsParentInstanceOffset( s_pClasses[ pObject->item.asArray.value->uiClass ],
-                                                       s_pClasses[ pMethod->uiSprClass ]->pClassSym );
+                                                       pMethod->uiSprClass );
             }
             return hb_arrayGetItemPtr( pObject, nIndex );
          }
@@ -2913,8 +3049,6 @@ static HB_BOOL hb_clsAddMsg( HB_USHORT uiClass, const char * szMessage,
       }
 
       pNewMeth = hb_clsAllocMsg( pClass, pMessage );
-      if( ! pNewMeth )
-         return HB_FALSE;
 
       uiPrevCls = uiClass;
       uiPrevMth = ( HB_USHORT ) ( pClass->pMethods - pNewMeth );
@@ -3259,8 +3393,9 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
       s_pClasses = ( PCLASS * ) hb_xrealloc( s_pClasses, sizeof( PCLASS ) *
                                              ( ( HB_SIZE ) s_uiClsSize + 1 ) );
    }
-   s_pClasses[ ++s_uiClasses ] = pNewCls;
-   pNewCls->uiClass = s_uiClasses;
+   pNewCls->uiClass = s_uiClasses + 1;
+   s_pClasses[ pNewCls->uiClass ] = pNewCls;
+   ++s_uiClasses;
 
    HB_CLASS_UNLOCK();
 
@@ -3276,7 +3411,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
    for( ui = 1; ui <= uiSuper; ++ui )
    {
       uiSuperCls = ( HB_USHORT ) hb_arrayGetNI( pSuperArray, ui );
-      if( uiSuperCls && uiSuperCls < s_uiClasses )
+      if( uiSuperCls && uiSuperCls < pNewCls->uiClass )
       {
          PCLASS pSprCls;
 
@@ -3289,6 +3424,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
          {
             HB_SIZE n, nLimit;
             HB_USHORT nLenClsDatas;
+            HB_USHORT uiCount;
 
             /* create class data translation tables */
             nLenClsDatas = ( HB_USHORT ) hb_itemSize( pSprCls->pClassDatas );
@@ -3296,55 +3432,17 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
             {
                if( nLenClsDatas > uiClassDataSize )
                {
-                  if( puiClassData )
-                     puiClassData = ( HB_USHORT * ) hb_xrealloc( puiClassData,
+                  puiClassData = ( HB_USHORT * ) hb_xrealloc( puiClassData,
                                              sizeof( HB_USHORT ) * nLenClsDatas );
-                  else
-                     puiClassData = ( HB_USHORT * ) hb_xgrab( sizeof( HB_USHORT ) *
-                                                           nLenClsDatas );
                   uiClassDataSize = nLenClsDatas;
                }
                memset( puiClassData, 0, sizeof( HB_USHORT ) * nLenClsDatas );
             }
 
             /* Copy super class handles */
-            nLimit = hb_clsMthNum( pSprCls );
-            for( n = 0; n < nLimit; ++n )
-            {
-               if( pSprCls->pMethods[ n ].pMessage &&
-                   pSprCls->pMethods[ n ].pFuncSym == &s___msgSuper )
-               {
-                  PCLASS pCls = s_pClasses[ pSprCls->pMethods[ n ].uiData ];
-
-                  pMethod = hb_clsAllocMsg( pNewCls,
-                                            pSprCls->pMethods[ n ].pMessage );
-                  if( ! pMethod )
-                     return 0;
-                  if( pMethod->pMessage == NULL )
-                  {
-                     pNewCls->uiMethods++;
-                     memcpy( pMethod, pSprCls->pMethods + n, sizeof( METHOD ) );
-                     pMethod->uiOffset = pNewCls->uiDatas;
-                     pNewCls->uiDatas += pCls->uiDatas - pCls->uiDataFirst;
-                  }
-               }
-            }
-
-            /* add class casting if not exist */
-            pMethod = hb_clsAllocMsg( pNewCls, pSprCls->pClassSym );
-            if( ! pMethod )
-               return 0;
-            if( pMethod->pMessage == NULL )
-            {
-               pNewCls->uiMethods++;
-               pMethod->pMessage = pSprCls->pClassSym;
-               pMethod->uiSprClass = pNewCls->uiClass;
-               pMethod->uiData = uiSuperCls;
-               pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
-               pMethod->pFuncSym = &s___msgSuper;
-               pMethod->uiOffset = pNewCls->uiDatas;
-               pNewCls->uiDatas += pSprCls->uiDatas - pSprCls->uiDataFirst;
-            }
+            for( uiCount = 0; uiCount < pSprCls->uiSuperClasses; ++uiCount )
+               hb_clsDefineSupperClass( pNewCls, pSprCls->pSuperClasses[ uiCount ].uiClass, HB_TRUE );
+            hb_clsDefineSupperClass( pNewCls, uiSuperCls, HB_TRUE );
 
             /* Copy instance area init data */
             if( pSprCls->uiInitDatas )
@@ -3356,11 +3454,11 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
                   {
                      HB_USHORT uiCls = pSprCls->pInitData[ u ].uiSprClass;
                      hb_clsAddInitValue( pNewCls,
-                        pSprCls->pInitData[ u ].pInitValue, HB_OO_MSG_DATA,
-                        pSprCls->pInitData[ u ].uiData,
-                        hb_clsParentInstanceOffset( pNewCls,
-                                          s_pClasses[ uiCls ]->pClassSym ),
-                        uiCls );
+                                 pSprCls->pInitData[ u ].pInitValue,
+                                 HB_OO_MSG_DATA,
+                                 pSprCls->pInitData[ u ].uiData,
+                                 hb_clsParentInstanceOffset( pNewCls, uiCls ),
+                                 uiCls );
                   }
                }
             }
@@ -3372,8 +3470,10 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
                if( pSprCls->pMethods[ n ].pMessage )
                {
                   pMethod = hb_clsAllocMsg( pNewCls, pSprCls->pMethods[ n ].pMessage );
-                  if( ! pMethod )
-                     return 0;
+
+                  /* update instance area offset */
+                  if( pMethod->pMessage && pMethod->pFuncSym == &s___msgSuper )
+                     pMethod->uiOffset = hb_clsParentInstanceOffset( pNewCls, pMethod->uiData );
 
                   /* Ok, this bucket is empty */
                   if( pMethod->pMessage == NULL ||
@@ -3415,7 +3515,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
                                  pMethod->pFuncSym == &s___msgGetData )
                         {
                            pMethod->uiOffset = hb_clsParentInstanceOffset( pNewCls,
-                                 s_pClasses[ pMethod->uiSprClass ]->pClassSym );
+                                                            pMethod->uiSprClass );
                         }
                         pMethod->uiScope |= HB_OO_CLSTP_SUPER;
                      }
@@ -3454,30 +3554,15 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
    }
 
    /* add self class casting */
-   if( hb_stricmp( pNewCls->szName, pNewCls->pClassSym->pSymbol->szName ) == 0 )
-   {
-      pMethod = hb_clsAllocMsg( pNewCls, pNewCls->pClassSym );
-      if( ! pMethod )
-         return 0;
-      if( pMethod->pMessage == NULL )
-      {
-         pNewCls->uiMethods++;
-         pMethod->pMessage = pNewCls->pClassSym;
-         pMethod->uiSprClass = pNewCls->uiClass;
-         pMethod->uiData = s_uiClasses;
-         pMethod->uiScope = HB_OO_CLSTP_EXPORTED;
-         pMethod->pFuncSym = &s___msgSuper;
-         pMethod->uiOffset = pNewCls->uiDatas;
-      }
-   }
    pNewCls->uiDataFirst = pNewCls->uiDatas;
+   hb_clsDefineSupperClass( pNewCls, pNewCls->uiClass, HB_FALSE );
    pNewCls->uiDatas += uiDatas;
    if( pNewCls->uiMutexOffset )
       pNewCls->uiMutexOffset = pNewCls->uiDatas + 1;
    if( fClsMutex && ! pNewCls->pMutex )
       pNewCls->pMutex = hb_threadMutexCreate();
 
-   return s_uiClasses;
+   return pNewCls->uiClass;
 }
 
 /*
@@ -3869,7 +3954,7 @@ HB_FUNC( __OBJCLONE )
 }
 
 /*
- * __clsInstSuper( <cName> ) -> <hClass>
+ * __clsInstSuper( <cName> | <sName> ) -> <hClass>
  *
  * Instance super class and return class handle
  */
@@ -4177,12 +4262,21 @@ HB_FUNC( __GETMESSAGE )
    hb_retc( hb_stackItem ( hb_stackBaseItem()->item.asSymbol.stackstate->nBaseItem )->item.asSymbol.value->szName );
 }
 
+/* __clsParent( <hClass>, <cParentClass> ) -> <lIsParent>
+ * Checks if <cParentClass> is parent of <hClass>
+ */
 HB_FUNC( __CLSPARENT )
 {
    HB_STACK_TLS_PRELOAD
-   hb_retl( hb_clsIsParent( ( HB_USHORT ) hb_parni( 1 ), hb_parc( 2 ) ) );
+   const char * szParentName = hb_parc( 2 );
+
+   hb_retl( szParentName &&
+            hb_clsIsParent( ( HB_USHORT ) hb_parni( 1 ), szParentName ) );
 }
 
+/* __Sender() -> <obj> | NIL
+ * returns sender object
+ */
 HB_FUNC( __SENDER )
 {
    HB_STACK_TLS_PRELOAD
@@ -4482,7 +4576,7 @@ HB_FUNC_STATIC( msgEvalInline )
       hb_vmPush( hb_stackItemFromBase( uiParam ) );
    }
 
-   hb_vmSend( ( HB_USHORT ) ( uiPCount + 1 ) );
+   hb_vmEval( ( HB_USHORT ) ( uiPCount + 1 ) );
 }
 
 HB_FUNC_STATIC( msgPerform )
@@ -4614,7 +4708,7 @@ HB_FUNC_STATIC( msgNoMethod )
    else
       hb_errRT_BASE_SubstR( EG_NOMETHOD, 1004, NULL, pSym->szName, HB_ERR_ARGS_SELFPARAMS );
 #else
-   char szDesc[ 128 ];
+   char szDesc[ 40 + HB_SYMBOL_NAME_LEN ];
 
    if( pSym->szName[ 0 ] == '_' )
    {
@@ -4834,7 +4928,7 @@ HB_FUNC_STATIC( msgGetData )
       if( uiClass != uiObjClass )
       {
          nIndex += hb_clsParentInstanceOffset( s_pClasses[ uiObjClass ],
-                              s_pClasses[ pMethod->uiSprClass ]->pClassSym );
+                                               pMethod->uiSprClass );
       }
       else
       {
@@ -4868,7 +4962,7 @@ HB_FUNC_STATIC( msgSetData )
       if( uiClass != uiObjClass )
       {
          nIndex += hb_clsParentInstanceOffset( s_pClasses[ uiObjClass ],
-                              s_pClasses[ pMethod->uiSprClass ]->pClassSym );
+                                               pMethod->uiSprClass );
       }
       else
       {
@@ -5162,7 +5256,7 @@ HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
  */
 HB_FUNC( __OBJSETCLASS )
 {
-   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
+   PHB_ITEM pObject = hb_param( 1, HB_IT_ARRAY );
 
    if( pObject && pObject->item.asArray.value->uiClass == 0 )
    {

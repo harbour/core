@@ -80,7 +80,7 @@ int WINAPI WinMain( HINSTANCE hInstance,      /* handle to current instance */
 #  define HB_MAX_ARGS   256
 
    int argc = 0;
-   char ** argv[ HB_MAX_ARGS ];
+   char * argv[ HB_MAX_ARGS ];
 
    LPSTR pArgs, pArg, pDst, pSrc;
    HB_BOOL fQuoted;

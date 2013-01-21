@@ -285,17 +285,15 @@ extern HB_EXPORT PHB_ITEM    hb_stackReturnItem( void ); /* returns RETURN Item 
 
 extern HB_EXPORT PHB_ITEM    hb_stackAllocItem( void );  /* allocates new item on the top of stack, returns pointer to it */
 extern HB_EXPORT void        hb_stackPop( void );        /* pops an item from the stack */
+extern HB_EXPORT void        hb_stackPush( void );       /* pushes an item on to the stack */
 
-extern void        hb_stackPush( void );                 /* pushes an item on to the stack */
-extern void        hb_stackPushReturn( void );
-extern void        hb_stackPopReturn( void );
-extern void        hb_stackRemove( HB_ISIZ nUntilPos );
+extern           void        hb_stackPushReturn( void );
+extern           void        hb_stackPopReturn( void );
 
-extern           HB_ISIZ     hb_stackTopOffset( void );
+extern HB_EXPORT HB_ISIZ     hb_stackTopOffset( void );
 extern HB_EXPORT HB_ISIZ     hb_stackBaseOffset( void );
-extern           HB_ISIZ     hb_stackTotalItems( void );
+extern HB_EXPORT HB_ISIZ     hb_stackTotalItems( void );
 extern HB_EXPORT PHB_ITEM    hb_stackItem( HB_ISIZ nItemPos );
-extern           char *      hb_stackDateBuffer( void );
 
 /* stack management functions */
 extern HB_EXPORT int         hb_stackCallDepth( void );
@@ -303,15 +301,13 @@ extern HB_EXPORT void        hb_stackBaseProcInfo( char * szProcName, HB_USHORT 
 
 extern HB_EXPORT HB_ISIZ     hb_stackBaseProcOffset( int iLevel );
 extern           void        hb_stackDispCall( void );
-extern           void        hb_stackFree( void );       /* releases all memory used by the stack */
-extern           void        hb_stackInit( void );       /* initializes the stack */
-extern           void        hb_stackIncrease( void );   /* increase the stack size */
 
 /* thread specific data */
 extern HB_EXPORT void * hb_stackGetTSD( PHB_TSD pTSD );
 extern HB_EXPORT void * hb_stackTestTSD( PHB_TSD pTSD );
 extern HB_EXPORT void   hb_stackReleaseTSD( PHB_TSD pTSD );
 
+extern char *       hb_stackDateBuffer( void );
 extern char *       hb_stackDirBuffer( void );
 extern PHB_IOERRORS hb_stackIOErrors( void );
 extern void *       hb_stackGetGT( void );
@@ -321,8 +317,12 @@ extern PHB_STACKRDD hb_stackRDD( void );
 extern HB_EXPORT void ** hb_stackDebugInfo( void );
 
 #ifdef _HB_API_INTERNAL_
+extern void        hb_stackFree( void );       /* releases all memory used by the stack */
+extern void        hb_stackInit( void );       /* initializes the stack */
+extern void        hb_stackIncrease( void );   /* increase the stack size */
 extern void        hb_stackDec( void );
 extern void        hb_stackDecrease( HB_SIZE nItems );
+extern void        hb_stackRemove( HB_ISIZ nUntilPos );
 extern PHB_ITEM    hb_stackNewFrame( PHB_STACK_STATE pFrame, HB_USHORT uiParams );
 extern void        hb_stackOldFrame( PHB_STACK_STATE pFrame );
 extern void        hb_stackClearMemvarsBase( void );

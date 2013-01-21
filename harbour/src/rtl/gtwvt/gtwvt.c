@@ -956,7 +956,7 @@ static HB_BOOL hb_gt_wvt_SetWindowSize( PHB_GTWVT pWVT, int iRows, int iCols )
          pWVT->FixedSize = ( int * ) hb_xrealloc( pWVT->FixedSize,
                                                   iCols * sizeof( int ) );
       }
-      if( iRows != pWVT->ROWS || iCols != pWVT->COLS )
+      if( pWVT->hWnd && ( iRows != pWVT->ROWS || iCols != pWVT->COLS ) )
          hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_RESIZE );
 
       pWVT->ROWS = iRows;
