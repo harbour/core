@@ -483,7 +483,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ENDIF
       IF ::Row() == ::nBottom
          IF ::nRow < ::naTextLen
-            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, 1 )
+            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, 1,, ::cColorSpec )
             ::nFirstRow++
             ::nRow++
             ::RefreshLine()
@@ -530,7 +530,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
       ENDIF
       IF ::Row() == ::nTop
          IF ::nRow > 1
-            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, -1 )
+            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight, -1,, ::cColorSpec )
             ::nFirstRow--
             ::nRow--
             ::RefreshLine()
@@ -570,7 +570,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
    CASE K_RIGHT
       IF ::Col() == ::nRight
          IF ::nCol <= iif( ::lWordWrap, ::nWordWrapCol, ::LineLen( ::nRow ) )
-            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, 1 )
+            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, 1, ::cColorSpec )
             ::nFirstCol++
             ::nCol++
             ::RefreshColumn()
@@ -594,7 +594,7 @@ METHOD MoveCursor( nKey ) CLASS HBEditor
    CASE K_LEFT
       IF ::Col() == ::nLeft
          IF ::nCol > 1
-            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, -1 )
+            hb_Scroll( ::nTop, ::nLeft, ::nBottom, ::nRight,, -1, ::cColorSpec )
             ::nFirstCol--
             ::nCol--
             ::RefreshColumn()
