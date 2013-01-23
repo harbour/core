@@ -3566,9 +3566,7 @@ static HB_USHORT hb_clsNew( const char * szClassName, HB_USHORT uiDatas,
 }
 
 /*
- * hb_clsNew( <szClassName>, < ) -> <hClass>
- *
- * <hClass> := __clsNew( <cClassName>, <nDatas>, [<ahSuper>], [<pClassFunc>], [<lModuleFriendly>] )
+ * __clsNew( <cClassName>, <nDatas>, [<ahSuper>], [<pClassFunc>], [<lModuleFriendly>] ) -> <hClass>
  *
  * Create a new class
  *
@@ -3618,9 +3616,9 @@ HB_FUNC( __CLSNEW )
 }
 
 /*
- *  __clsAddFriend( <hClass>, <pFyncSym> )
+ * __clsAddFriend( <hClass>, <pFyncSym> )
  *
- *  Add friend function
+ * Add friend function
  */
 HB_FUNC( __CLSADDFRIEND )
 {
@@ -4112,7 +4110,7 @@ HB_FUNC( __CLSASSOCTYPE )
 }
 
 /*
- * __ClsCntClasses() -> <nCount>
+ * __clsCntClasses() -> <nCount>
  *
  * Return number of classes
  */
@@ -4274,7 +4272,7 @@ HB_FUNC( __CLSPARENT )
             hb_clsIsParent( ( HB_USHORT ) hb_parni( 1 ), szParentName ) );
 }
 
-/* __Sender() -> <obj> | NIL
+/* __sender() -> <obj> | NIL
  * returns sender object
  */
 HB_FUNC( __SENDER )
@@ -4356,7 +4354,7 @@ HB_FUNC( __CLSSYNCWAIT )
 }
 
 /*
- * __ClassH( <obj> ) -> <hClass>
+ * __classH( <obj> ) -> <hClass>
  *
  * Returns class handle of <obj>
  */
@@ -5035,7 +5033,7 @@ void hb_mthAddTime( HB_ULONG ulClockTicks )
 }
 #endif
 
-/* ( nClass, cMsg ) --> aMethodInfo { nTimes, nTime } */
+/* __getMsgPrf( nClass, cMsg ) --> aMethodInfo { nTimes, nTime } */
 HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times */
 {
    HB_STACK_TLS_PRELOAD
@@ -5067,7 +5065,7 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
    hb_storvnl( 0, -1, 2 );
 }
 
-/* __ClsGetProperties( nClassHandle, [ lAllExported ] ) --> aPropertiesNames
+/* __clsGetProperties( <nClassHandle>, [ <lAllExported> ] ) --> <acProperties>
  * Notice that this function works quite similar to __CLASSSEL()
  * except that just returns the name of the datas and methods
  * that have been declared as PROPERTY (PERSISTENT) or also EXPORTED
@@ -5168,6 +5166,7 @@ HB_FUNC( __CLSMSGTYPE )
  * for MT programs which will allocate dynamically at runtime
  * more then 16386 classes. In practice rather impossible though
  * who knows ;-)
+ * __clsPreAllocate( [<nMaxClasses>] ) -> <nMaxClasses>
  */
 HB_FUNC( __CLSPREALLOCATE )
 {
@@ -5191,6 +5190,8 @@ HB_FUNC( __CLSPREALLOCATE )
    hb_retnl( s_uiClsSize );
 }
 
+/* __clsLockDef( <clsItem> ) -> <lLocked>
+ */
 HB_FUNC( __CLSLOCKDEF )
 {
    HB_STACK_TLS_PRELOAD
@@ -5210,6 +5211,8 @@ HB_FUNC( __CLSLOCKDEF )
    hb_retl( fLocked );
 }
 
+/* __clsUnlockDef( @<clsItem>, <clsDef> )
+ */
 HB_FUNC( __CLSUNLOCKDEF )
 {
    PHB_ITEM pClsDst = hb_param( 1, HB_IT_BYREF ),
@@ -5227,13 +5230,31 @@ HB_FUNC( __CLSUNLOCKDEF )
       hb_threadMutexUnlock( s_pClassMtx );
 }
 
+/* Dirty functions which converts array to object of given class
+ * __objSetClass( <oObject>, <cClassName> [, <cClassFuncName> ] ) -> <oObject>
+ */
+HB_FUNC( __OBJSETCLASS )
+{
+   PHB_ITEM pObject = hb_param( 1, HB_IT_ARRAY );
+
+   if( pObject && pObject->item.asArray.value->uiClass == 0 )
+   {
+      const char * szClass = hb_parc( 2 );
+
+      if( szClass )
+         hb_objSetClass( pObject, szClass, hb_parc( 3 ) );
+   }
+
+   hb_itemReturn( pObject );
+}
+
 /* Real dirty function, though very usefull under certain circunstances:
  * It allows to change the class handle of an object into another class handle,
  * so the object behaves like a different Class of object.
  * Based on objects.lib SetClsHandle()
+ * __objSetClassHandle( <oObject>, <nClassHandle> ) --> <nPrevClassHandle>
  */
-
-HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
+HB_FUNC( __OBJSETCLASSHANDLE )
 {
    HB_STACK_TLS_PRELOAD
    PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
@@ -5251,23 +5272,9 @@ HB_FUNC( HB_SETCLSHANDLE ) /* ( oObject, nClassHandle ) --> nPrevClassHandle */
    hb_retnl( uiPrevClassHandle );
 }
 
-/* Dirty functions which converts array to object of given class
- * __OBJSETCLASS( <oObject>, <cClassName> [, <cClassFuncName> ] ) -> <oObject>
- */
-HB_FUNC( __OBJSETCLASS )
-{
-   PHB_ITEM pObject = hb_param( 1, HB_IT_ARRAY );
-
-   if( pObject && pObject->item.asArray.value->uiClass == 0 )
-   {
-      const char * szClass = hb_parc( 2 );
-
-      if( szClass )
-         hb_objSetClass( pObject, szClass, hb_parc( 3 ) );
-   }
-
-   hb_itemReturn( pObject );
-}
+#if defined( HB_LEGACY_LEVEL5 )
+HB_FUNC_TRANSLATE( HB_SETCLSHANDLE, __OBJSETCLASSHANDLE )
+#endif
 
 /* Harbour equivalent for Clipper internal __mdCreate() */
 HB_USHORT hb_clsCreate( HB_USHORT usSize, const char * szClassName )
