@@ -43,8 +43,8 @@ msgstr "Erro: Ao executar o compilador de recursos. %1$d"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "force C/C++ mode or reset to default"
-msgstr "forçar compilação em modo C/C++ ou reseta para o modo padrão"
+msgid "force C/C++ mode"
+msgstr "forçar compilação em modo C/C++"
 
 #: hbmk2.prg:1104 hbmk2.prg:1450 hbmk2.prg:1561
 #, c-format
@@ -98,8 +98,8 @@ msgstr "Compilador C detectado automaticamente: %1$s"
 
 #: hbmk2.prg:1301 hbmk2.prg:1673 hbmk2.prg:1756
 #, c-format
-msgid "Could not detect any supported C compiler in your PATH.\\nSetup one or set -compiler= option to one of these values: %1$s"
-msgstr "Nenhum compilador C suportado foi encontrado em seu PATH.\\nPor favor, utilize a opção -compiler= com um destes valores: %1$s"
+msgid "Could not detect any supported C compiler in your PATH.\\nSetup one or set -comp= option to one of these values: %1$s"
+msgstr "Nenhum compilador C suportado foi encontrado em seu PATH.\\nPor favor, utilize a opção -comp= com um destes valores: %1$s"
 
 #: hbmk2.prg:1307 hbmk2.prg:1679 hbmk2.prg:1762
 #, c-format
@@ -113,8 +113,8 @@ msgstr "Usando Harbour: %1$s %2$s %3$s %4$s"
 
 #: hbmk2.prg:1299 hbmk2.prg:1671 hbmk2.prg:1754
 #, c-format
-msgid "Choose a C compiler by using -compiler= option.\\nYou have the following choices on your platform: %1$s"
-msgstr "Por favor, selecione um compilador C usando a opção -compiler= ou a variável de ambiente HBCOMPILER.\\nVocê possui as seguintes opções para sua plataforma> %1$s"
+msgid "Choose a C compiler by using -comp= option.\\nYou have the following choices on your platform: %1$s"
+msgstr "Por favor, selecione um compilador C usando a opção -comp=.\\nVocê possui as seguintes opções para sua plataforma> %1$s"
 
 #: hbmk2.prg:1380 hbmk2.prg:1855 hbmk2.prg:1954
 #, c-format
@@ -458,8 +458,8 @@ msgstr "diretório de trabalho para o modo de compilação incremental\\n(defaul
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "compress executable/dynamic lib (needs UPX)\\n<lev> can be: min, max, def"
-msgstr "comprime o executável/biblioteca dinânica (necessita de UPX)\\n<lev> pode ser: min, max, def"
+msgid "compress executable/dynamic lib (needs UPX)\\n<lev> can be: yes, no, min, max"
+msgstr "comprime o executável/biblioteca dinânica (necessita de UPX)\\n<lev> pode ser: yes, no, min, max"
 
 #: hbmk2.prg:7960 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
@@ -618,7 +618,7 @@ msgstr "especifica flags para o compilador de recursos (apenas windows)"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "enable incremental build mode"
+msgid "enable/disable incremental build mode (default: disabled)"
 msgstr "habilita o modo de compilação incremental"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102

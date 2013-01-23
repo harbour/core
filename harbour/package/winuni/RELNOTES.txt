@@ -27,9 +27,9 @@ Usage:
 1) install/unpack to any directory (C:\hb30)
 2) go to bin dir (optional if you specify path for hbmk2)
 3) For x86 executable, type: 'hbmk2 ../tests/hello.prg'
-4) For x64 executable, type: 'hbmk2 ../tests/hello.prg -compiler=mingw64'
+4) For x64 executable, type: 'hbmk2 ../tests/hello.prg -comp=mingw64'
    [needs mingw64 to be installed in 'comp/mingw64' dir beforehand]
-5) For WinCE/ARM executable, type: 'hbmk2 ../tests/hello.prg -compiler=mingwarm'
+5) For WinCE/ARM executable, type: 'hbmk2 ../tests/hello.prg -comp=mingwarm'
    [needs cegcc to be installed in 'comp/mingwarm' dir beforehand]
 
 Tool/lib versions used to create this package:

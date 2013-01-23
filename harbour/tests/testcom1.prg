@@ -23,10 +23,10 @@ PROCEDURE Main( cPortName )
          ? "Cannot initialize port to: 9600:N:8:1", ;
            "error: " + hb_ntos( hb_comGetError( nPort ) )
       ELSE
-         nResult := hb_comSend( nPort, cString, Len( cString ), nTimeOut )
-         IF nResult != Len( cString )
+         nResult := hb_comSend( nPort, cString, hb_BLen( cString ), nTimeOut )
+         IF nResult != hb_BLen( cString )
             ? "SEND() failed,", nResult, "bytes sent in", nTimeOut / 1000, ;
-              "sec., expected:", Len( cString ), "bytes."
+              "sec., expected:", hb_BLen( cString ), "bytes."
             ? "error: " + hb_ntos( hb_comGetError( nPort ) )
          ELSE
             ? "SEND() succeeded."
@@ -35,7 +35,7 @@ PROCEDURE Main( cPortName )
          WAIT "Press any key to begin reading..."
          cString := Space( 32 )
          nTimeOut := 500 // 500 milliseconds = 0.5 sec.
-         nResult := hb_comRecv( nPort, @cString, Len( cString ), nTimeOut )
+         nResult := hb_comRecv( nPort, @cString, hb_BLen( cString ), nTimeOut )
          IF nResult == -1
             ? "RECV() failed,", ;
               "error: " + hb_ntos( hb_comGetError( nPort ) )

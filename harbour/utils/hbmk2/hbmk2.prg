@@ -81,6 +81,8 @@
 #include "set.ch" /* needed for -u */
 #include "simpleio.ch" /* Don't delete this, it's useful for development. */
 
+#define HB_LEGACY_LEVEL4 /* needed for -u */
+
 #include "hbgtinfo.ch"
 #include "hbhrb.ch"
 #include "hbver.ch"
@@ -1372,10 +1374,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       cEnv += " -l" + tmp
    NEXT
    IF ! Empty( GetEnv( "HB_PLATFORM" ) )
-      cEnv += " -platform=" + GetEnv( "HB_PLATFORM" )
+      cEnv += " -plat=" + GetEnv( "HB_PLATFORM" )
    ENDIF
    IF ! Empty( GetEnv( "HB_COMPILER" ) )
-      cEnv += " -compiler=" + GetEnv( "HB_COMPILER" )
+      cEnv += " -comp=" + GetEnv( "HB_COMPILER" )
    ENDIF
    IF ! Empty( GetEnv( "HB_CPU" ) )
       cEnv += " -cpu=" + GetEnv( "HB_CPU" )
@@ -1411,9 +1413,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE cParamL             == "-quiet-"    ; hbmk[ _HBMK_lQuiet ] := .F.
       CASE Left( cParamL, 6 )  == "-comp="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_COMP )
-      CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_COMP )
       CASE Left( cParamL, 6 )  == "-plat="     ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 7 ), _TARG_PLAT )
-      CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_PLAT )
+#ifdef HB_LEGACY_LEVEL4
+      CASE Left( cParamL, 10 ) == "-compiler=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_COMP ) ; LegacyWarning( hbmk, aParam, "-plat" )
+      CASE Left( cParamL, 10 ) == "-platform=" ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 11 ), _TARG_PLAT ) ; LegacyWarning( hbmk, aParam, "-comp" )
+#endif
       CASE Left( cParamL, 5 )  == "-cpu="      ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 6 ), _TARG_CPU )
       CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := StrTran( PathSepToSelf( SubStr( cParam, 8 ) ), hb_ps() )
       CASE Left( cParamL, 6 )  == "-build"     ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
@@ -2015,9 +2019,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
-               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Choose a C compiler by using -compiler= option.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Choose a C compiler by using -comp= option.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ELSE
-               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Could not detect any supported C compiler in your PATH.\nSetup one or set -compiler= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Could not detect any supported C compiler in your PATH.\nSetup one or set -comp= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ENDIF
             RETURN _ERRLEV_UNKNCOMP
          ENDIF
@@ -2301,9 +2305,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE Empty( cParam )
          /* do nothing */
       CASE Left( cParamL, 6 )  == "-comp=" .OR. ;
-           Left( cParamL, 10 ) == "-compiler=" .OR. ;
            Left( cParamL, 6 )  == "-plat=" .OR. ;
-           Left( cParamL, 10 ) == "-platform=" .OR. ;
+           Left( cParamL, 10 ) == "-compiler=" .OR. ; /* Compatibility HB_LEGACY_LEVEL4 */
+           Left( cParamL, 10 ) == "-platform=" .OR. ; /* Compatibility HB_LEGACY_LEVEL4 */
            Left( cParamL, 5 )  == "-cpu=" .OR. ;
            Left( cParamL, 7 )  == "-build=" .OR. ;
            Left( cParamL, 6 )  == "-lang=" .OR. ;
@@ -2316,7 +2320,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            cParamL             == "-hbcmp" .OR. ;
            cParamL             == "-hbcc"  .OR. ;
            cParamL             == "-hblnk" .OR. ;
-           cParamL             == "-nohbc" .OR. ; /* Ignore it for compatibility */
            cParamL             == "-xhb" .OR. ;
            cParamL             == "-hb10" .OR. ;
            cParamL             == "-hb20" .OR. ;
@@ -2396,9 +2399,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ENDIF
 
       CASE cParamL == "-gui"             ; hbmk[ _HBMK_lGUI ]       := .T.
-      CASE cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. ; LegacyWarning( hbmk, aParam, "-gui" ) /* Compatibility */
       CASE cParamL == "-std"             ; hbmk[ _HBMK_lGUI ]       := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-mwindows"        ; hbmk[ _HBMK_lGUI ]       := .T. ; LegacyWarning( hbmk, aParam, "-gui" ) /* Compatibility */
       CASE cParamL == "-mconsole"        ; hbmk[ _HBMK_lGUI ]       := .F. ; LegacyWarning( hbmk, aParam, "-std" ) /* Compatibility */
+#endif
       CASE cParamL == "-mt"              ; hbmk[ _HBMK_lMT ]        := .T.
       CASE cParamL == "-st"              ; hbmk[ _HBMK_lMT ]        := .F.
       CASE cParamL == "-shared"          ; hbmk[ _HBMK_lSHARED ]    := .T. ; hbmk[ _HBMK_lSTATICFULL ] := .F. ; hbmk[ _HBMK_lSHAREDDIST ] := NIL
@@ -2422,11 +2427,15 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          hbmk[ _HBMK_lBLDFLGC ] := "c" $ cParam
          hbmk[ _HBMK_lBLDFLGL ] := "l" $ cParam
       CASE cParamL == "-debug"           ; hbmk[ _HBMK_lDEBUG ]       := .T.
-      CASE cParamL == "-debug-" .OR. ;
-           cParamL == "-nodebug"         ; hbmk[ _HBMK_lDEBUG ]       := .F.
+      CASE cParamL == "-debug-"          ; hbmk[ _HBMK_lDEBUG ]       := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nodebug"         ; hbmk[ _HBMK_lDEBUG ]       := .F. ; LegacyWarning( hbmk, aParam, "-debug-" ) /* Compatibility */
+#endif
       CASE cParamL == "-optim"           ; hbmk[ _HBMK_lOPTIM ]       := .T.
-      CASE cParamL == "-optim-" .OR. ;
-           cParamL == "-nooptim"         ; hbmk[ _HBMK_lOPTIM ]       := .F.
+      CASE cParamL == "-optim-"          ; hbmk[ _HBMK_lOPTIM ]       := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nooptim"         ; hbmk[ _HBMK_lOPTIM ]       := .F. ; LegacyWarning( hbmk, aParam, "-optim-" ) /* Compatibility */
+#endif
       CASE cParamL == "-debugtime"       ; hbmk[ _HBMK_lDEBUGTIME ]   := .T.
       CASE cParamL == "-debuginc"        ; hbmk[ _HBMK_lDEBUGINC ]    := .T.
       CASE cParamL == "-debugstub"       ; hbmk[ _HBMK_lDEBUGSTUB ]   := .T.
@@ -2439,16 +2448,22 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-nodefgt"         ; hbmk[ _HBMK_aLIBCOREGT ]   := {}
       CASE cParamL == "-nodefgt-"        ; hbmk[ _HBMK_aLIBCOREGT ]   := hbmk[ _HBMK_aLIBCOREGTDEF ]
       CASE cParamL == "-map"             ; hbmk[ _HBMK_lMAP ]         := .T.
-      CASE cParamL == "-map-" .OR. ;
-           cParamL == "-nomap"           ; hbmk[ _HBMK_lMAP ]         := .F.
+      CASE cParamL == "-map-"            ; hbmk[ _HBMK_lMAP ]         := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nomap"           ; hbmk[ _HBMK_lMAP ]         := .F. ; LegacyWarning( hbmk, aParam, "-map-" ) /* Compatibility */
+#endif
       CASE cParamL == "-implib"          ; hbmk[ _HBMK_lIMPLIB ]      := .T.
-      CASE cParamL == "-implib-" .OR. ;
-           cParamL == "-noimplib"        ; hbmk[ _HBMK_lIMPLIB ]      := .F.
+      CASE cParamL == "-implib-"         ; hbmk[ _HBMK_lIMPLIB ]      := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-noimplib"        ; hbmk[ _HBMK_lIMPLIB ]      := .F. ; LegacyWarning( hbmk, aParam, "-implib-" ) /* Compatibility */
+#endif
       CASE cParamL == "-winuni"          ; hbmk[ _HBMK_lWINUNI ]      := .T.
       CASE cParamL == "-winuni-"         ; hbmk[ _HBMK_lWINUNI ]      := .F.
       CASE cParamL == "-beep"            ; hbmk[ _HBMK_lBEEP ]        := .T.
-      CASE cParamL == "-beep-" .OR. ;
-           cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]        := .F.
+      CASE cParamL == "-beep-"           ; hbmk[ _HBMK_lBEEP ]        := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nobeep"          ; hbmk[ _HBMK_lBEEP ]        := .F. ; LegacyWarning( hbmk, aParam, "-beep-" ) /* Compatibility */
+#endif
       CASE cParamL == "-rebuild"
 
          hbmk[ _HBMK_lINC ] := .T.
@@ -2463,21 +2478,31 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       CASE cParamL == "-rebuildpo"       ; hbmk[ _HBMK_lREBUILDPO ]   := .T.
       CASE cParamL == "-minipo"          ; hbmk[ _HBMK_lMINIPO ]      := .T.
-      CASE cParamL == "-minipo-" .OR. ;
-           cParamL == "-nominipo"        ; hbmk[ _HBMK_lMINIPO ]      := .F.
+      CASE cParamL == "-minipo-"         ; hbmk[ _HBMK_lMINIPO ]      := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nominipo"        ; hbmk[ _HBMK_lMINIPO ]      := .F. ; LegacyWarning( hbmk, aParam, "-minipo-" ) /* Compatibility */
+#endif
       CASE cParamL == "-clean"           ; hbmk[ _HBMK_lINC ]         := .T. ; hbmk[ _HBMK_lCLEAN ] := .T.
       CASE cParamL == "-inc"             ; hbmk[ _HBMK_lINC ]         := .T.
-      CASE cParamL == "-inc-" .OR. ;
-           cParamL == "-noinc"           ; hbmk[ _HBMK_lINC ]         := .F.
+      CASE cParamL == "-inc-"            ; hbmk[ _HBMK_lINC ]         := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-noinc"           ; hbmk[ _HBMK_lINC ]         := .F. ; LegacyWarning( hbmk, aParam, "-inc-" ) /* Compatibility */
+#endif
       CASE cParamL == "-ignore"          ; hbmk[ _HBMK_lIGNOREERROR ] := .T.
-      CASE cParamL == "-ignore-" .OR. ;
-           cParamL == "-noignore"        ; hbmk[ _HBMK_lIGNOREERROR ] := .F.
+      CASE cParamL == "-ignore-"         ; hbmk[ _HBMK_lIGNOREERROR ] := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-noignore"        ; hbmk[ _HBMK_lIGNOREERROR ] := .F. ; LegacyWarning( hbmk, aParam, "-ignore-" ) /* Compatibility */
+#endif
       CASE cParamL == "-hbcppmm"         ; hbmk[ _HBMK_lHBCPPMM ]     := .T.
-      CASE cParamL == "-hbcppmm-" .OR. ;
-           cParamL == "-nohbcppmm"       ; hbmk[ _HBMK_lHBCPPMM ]     := .F.
+      CASE cParamL == "-hbcppmm-"        ; hbmk[ _HBMK_lHBCPPMM ]     := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nohbcppmm"       ; hbmk[ _HBMK_lHBCPPMM ]     := .F. ; LegacyWarning( hbmk, aParam, "-hbcppmm-" ) /* Compatibility */
+#endif
       CASE cParamL == "-strip"           ; hbmk[ _HBMK_lSTRIP ]       := .T.
-      CASE cParamL == "-strip-" .OR. ;
-           cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]       := .F.
+      CASE cParamL == "-strip-"          ; hbmk[ _HBMK_lSTRIP ]       := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nostrip"         ; hbmk[ _HBMK_lSTRIP ]       := .F. ; LegacyWarning( hbmk, aParam, "-strip-" ) /* Compatibility */
+#endif
       CASE cParamL == "-depimplib"       ; hbmk[ _HBMK_lDEPIMPLIB ]   := .T.
       CASE cParamL == "-depimplib-"      ; hbmk[ _HBMK_lDEPIMPLIB ]   := .F.
       CASE cParamL == "-instforce"       ; hbmk[ _HBMK_lInstForce ]   := .T.
@@ -2487,45 +2512,64 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-harbourhelp"     ; AAdd( hbmk[ _HBMK_aOPTPRG ], "--help" ) ; lHarbourInfo := .T.
       CASE cParamL == "-build"           ; AAdd( hbmk[ _HBMK_aOPTPRG ], "-build" ) ; lHarbourInfo := .T.
 
-      CASE cParamL == "-warn" .OR. ;
-           Left( cParamL, 6 ) == "-warn="
+      CASE cParamL == "-warn"               ; hbmk[ _HBMK_nWARN ] := _WARN_YES /* synonym to -warn=yes */
+      CASE cParamL == "-warn-"              ; hbmk[ _HBMK_nWARN ] := _WARN_NO /* synonym to -warn=no */
+
+      CASE Left( cParamL, 6 ) == "-warn="
 
          DO CASE
          CASE SubStr( cParamL, 7 ) == "def" ; hbmk[ _HBMK_nWARN ] := _WARN_DEF
+         CASE SubStr( cParamL, 7 ) == "yes" ; hbmk[ _HBMK_nWARN ] := _WARN_YES
          CASE SubStr( cParamL, 7 ) == "no"  ; hbmk[ _HBMK_nWARN ] := _WARN_NO
          CASE SubStr( cParamL, 7 ) == "low" ; hbmk[ _HBMK_nWARN ] := _WARN_LOW
          CASE SubStr( cParamL, 7 ) == "max" ; hbmk[ _HBMK_nWARN ] := _WARN_MAX
-         OTHERWISE                          ; hbmk[ _HBMK_nWARN ] := _WARN_YES
+#ifdef HB_LEGACY_LEVEL4
+         OTHERWISE                          ; hbmk[ _HBMK_nWARN ] := _WARN_YES ; LegacyWarning( hbmk, aParam, "-warn=yes" ) /* Compatibility */
+#endif
          ENDCASE
 
-      CASE cParamL == "-warn-" .OR. ;
-           cParamL == "-nowarn"               ; hbmk[ _HBMK_nWARN ] := _WARN_NO
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nowarn"             ; hbmk[ _HBMK_nWARN ] := _WARN_NO ; LegacyWarning( hbmk, aParam, "-warn=no" ) /* Compatibility */
+#endif
 
-      CASE cParamL == "-compr" .OR. ;
-           Left( cParamL, 7 ) == "-compr="
+      CASE cParamL == "-compr"              ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF /* synonym to -compr=yes */
+      CASE cParamL == "-compr-"             ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF /* synonym to -compr=no */
+
+      CASE Left( cParamL, 7 ) == "-compr="
 
          DO CASE
+#ifdef HB_LEGACY_LEVEL4
+         CASE SubStr( cParamL, 8 ) == "def" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF ; LegacyWarning( hbmk, aParam, "-compr=yes" ) /* Compatibility */
+#endif
+         CASE SubStr( cParamL, 8 ) == "yes" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
+         CASE SubStr( cParamL, 8 ) == "no"  ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
          CASE SubStr( cParamL, 8 ) == "min" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MIN
          CASE SubStr( cParamL, 8 ) == "max" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
-         OTHERWISE                          ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
+#ifdef HB_LEGACY_LEVEL4
+         OTHERWISE                          ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF ; LegacyWarning( hbmk, aParam, "-compr=yes" ) /* Compatibility */
+#endif
          ENDCASE
 
-      CASE cParamL == "-compr-" .OR. ;
-           cParamL == "-nocompr"              ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
-
-      CASE cParamL == "-head" .OR. ;
-           Left( cParamL, 6 ) == "-head="
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nocompr"            ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF ; LegacyWarning( hbmk, aParam, "-compr=no" ) /* Compatibility */
+#endif
+      CASE Left( cParamL, 6 ) == "-head="
 
          DO CASE
          CASE SubStr( cParamL, 7 ) == "off"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
          CASE SubStr( cParamL, 7 ) == "full"   ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
          CASE SubStr( cParamL, 7 ) == "native" ; hbmk[ _HBMK_nHEAD ] := _HEAD_NATIVE
          CASE SubStr( cParamL, 7 ) == "dep"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_DEP
-         OTHERWISE                             ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL
+#ifdef HB_LEGACY_LEVEL4
+         OTHERWISE                             ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL ; LegacyWarning( hbmk, aParam, "-head=full" ) /* Compatibility */
+#endif
          ENDCASE
 
-      CASE cParamL == "-head-" .OR. ;
-           cParamL == "-nohead"               ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-head"                  ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL ; LegacyWarning( hbmk, aParam, "-head=full" ) /* Compatibility */
+      CASE cParamL == "-head-"                 ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF ; LegacyWarning( hbmk, aParam, "-head=off" ) /* Compatibility */
+      CASE cParamL == "-nohead"                ; hbmk[ _HBMK_nHEAD ] := _HEAD_OFF ; LegacyWarning( hbmk, aParam, "-head=off" ) /* Compatibility */
+#endif
 
       CASE Left( cParamL, 5 ) == "-cpp="
 
@@ -2559,9 +2603,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          /* dangerous? disable it */
          hbmk[ _HBMK_cC ] := ""
 
-      CASE cParamL == "-cpp"             ; hbmk[ _HBMK_lCPP ]       := .T.
-      CASE cParamL == "-cpp-" .OR. ;
-           cParamL == "-nocpp"           ; hbmk[ _HBMK_lCPP ]       := .F.
+      CASE cParamL == "-cpp"             ; hbmk[ _HBMK_lCPP ]       := .T. /* synonym to -cpp=yes */
+      CASE cParamL == "-cpp-"            ; hbmk[ _HBMK_lCPP ]       := .F. /* synonym to -cpp=no */
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-nocpp"           ; hbmk[ _HBMK_lCPP ]       := .F. ; LegacyWarning( hbmk, aParam, "-cpp-" ) /* Compatibility */
+#endif
 
       CASE cParamL == "-run"
 
@@ -2569,8 +2615,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hbmk[ _HBMK_lRUN ] := .T.
          ENDIF
 
-      CASE cParamL == "-run-" .OR. ;
-           cParamL == "-norun"           ; hbmk[ _HBMK_lRUN ]       := .F.
+      CASE cParamL == "-run-"            ; hbmk[ _HBMK_lRUN ]       := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-norun"           ; hbmk[ _HBMK_lRUN ]       := .F. ; LegacyWarning( hbmk, aParam, "-run-" ) /* Compatibility */
+#endif
 
       CASE cParamL == "-trace"
 
@@ -2578,8 +2626,10 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             hbmk[ _HBMK_lTRACE ]     := .T.
          ENDIF
 
-      CASE cParamL == "-trace-" .OR. ;
-           cParamL == "-notrace"         ; hbmk[ _HBMK_lTRACE ]     := .F.
+      CASE cParamL == "-trace-"          ; hbmk[ _HBMK_lTRACE ]     := .F.
+#ifdef HB_LEGACY_LEVEL4
+      CASE cParamL == "-notrace"         ; hbmk[ _HBMK_lTRACE ]     := .F. ; LegacyWarning( hbmk, aParam, "-trace-" ) /* Compatibility */
+#endif
       CASE cParamL == "-traceonly"       ; hbmk[ _HBMK_lTRACE ]     := .T. ; hbmk[ _HBMK_lDONTEXEC ] := .T.
 
       CASE cParamL == "--hbdirbin"       ; hbmk[ _HBMK_lStopAfterInit ] := .T.
@@ -7228,8 +7278,12 @@ STATIC FUNCTION ParamToString( aParam )
       hb_StrFormat( "'%1$s'", aParam[ _PAR_cParam ] ), ; /* on the command line */
       hb_StrFormat( "'%1$s' in %2$s:%3$d", aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ], aParam[ _PAR_nLine ] ) )
 
+#ifdef HB_LEGACY_LEVEL4
+/* Do not delete this function when legacy level is reached,
+   only convert above guard to a temporary '#if 0' one. */
 STATIC FUNCTION LegacyWarning( hbmk, aParam, cSuggestion )
     RETURN _hbmk_OutStd( hbmk, hb_StrFormat( I_( "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead." ), ParamToString( aParam ), cSuggestion ) )
+#endif
 
 STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
 
@@ -10363,7 +10417,9 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          DO CASE
          CASE ValueIsT( cLine )       ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
          CASE ValueIsF( cLine )       ; hbmk[ _HBMK_nCOMPR ] := _COMPR_OFF
+#ifdef HB_LEGACY_LEVEL4
          CASE Lower( cLine ) == "def" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF
+#endif
          CASE Lower( cLine ) == "min" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MIN
          CASE Lower( cLine ) == "max" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
          ENDCASE
@@ -10568,15 +10624,26 @@ STATIC FUNCTION StrStripQuote( cString )
 STATIC FUNCTION ValueIsT( cString )
 
    cString := Lower( cString )
-   RETURN cString == "yes" .OR. ;
-          cString == "1" /* Compatibility */
+
+#ifdef HB_LEGACY_LEVEL4
+   IF cString == "1" /* Compatibility */
+      RETURN .T.
+   ENDIF
+#endif
+
+   RETURN cString == "yes"
 
 STATIC FUNCTION ValueIsF( cString )
 
    cString := Lower( cString )
 
-   RETURN cString == "no" .OR. ;
-          cString == "0" /* Compatibility */
+#ifdef HB_LEGACY_LEVEL4
+   IF cString == "0" /* Compatibility */
+      RETURN .T.
+   ENDIF
+#endif
+
+   RETURN cString == "no"
 
 /* built-in files */
 
@@ -10931,10 +10998,14 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
    CASE "HB_TARGETTYPE"
       cMacro := hbmk_TARGETTYPE( hbmk ) ; EXIT
    CASE "HB_PLAT"
+#ifdef HB_LEGACY_LEVEL4
    CASE "HB_PLATFORM" /* Compatibility */
+#endif
       cMacro := hbmk[ _HBMK_cPLAT ] ; EXIT
    CASE "HB_COMP"
+#ifdef HB_LEGACY_LEVEL4
    CASE "HB_COMPILER" /* Compatibility */
+#endif
       cMacro := hbmk[ _HBMK_cCOMP ] ; EXIT
    CASE "HB_COMP_VER"
       cMacro := hb_ntos( hbmk[ _HBMK_nCOMPVer ] ) ; EXIT
@@ -14157,7 +14228,7 @@ STATIC PROCEDURE convert_hbmake_to_hbp( hbmk, cSrcName, cDstName )
             SWITCH cSetting
             CASE "COMPRESS"
                IF cValue == "YES"
-                  AAdd( aDst, "-compr=on" )
+                  AAdd( aDst, "-compr=yes" )
                ENDIF
                EXIT
             CASE "GUI"
@@ -14644,6 +14715,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-static|-shared"    , I_( "link with static/shared libs" ) }, ;
       { "-mt|-st"            , I_( "link with multi/single-thread Harbour VM" ) }, ;
       { "-gt<name>"          , I_( "link with GT<name> GT driver, can be repeated to link with more GTs. First one will be the default at runtime" ) }, ;
+      { "-inc[-]"            , I_( "enable/disable incremental build mode (default: disabled)" ) }, ;
       { "-hbexe"             , I_( "create executable (default)" ) }, ;
       { "-hblib"             , I_( "create static library" ) }, ;
       { "-hbdyn"             , I_( "create dynamic library (without linked Harbour VM)" ) }, ;
@@ -14662,29 +14734,30 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-pic[-]"            , I_( "create position independent object code (always enabled in -hbdyn/-hbdynvm modes)" ) }, ;
       { "-[full|fix]shared"  , I_( "create shared Harbour binaries without/with absolute dir reference to Harbour library (default: 'fullshared' when Harbour is installed on system location, 'fixshared' otherwise) (fix/full option in *nix only)" ) }, ;
       { "-nulrdd[-]"         , I_( "link with nulrdd" ) }, ;
-      { "-[no]debug"         , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) }, ;
-      { "-[no]optim"         , I_( "toggle C compiler optimizations (default: on)" ) }, ;
-      { "-[no]cpp[=def]"     , I_( "force C/C++ mode or reset to default" ) }, ;
-/*    { "-c=[<std>]"         , I_( "select C standard. Allowed values are: iso90, iso99, iso1x, gnu90, gnu99, gnu1x" ) }, */;
-/*    { "-cpp=[<std>]"       , I_( "select C++ standard. Allowed values are: iso98, iso03, iso0x, gnu98, gnu0x" ) }, */;
-      { "-[no]map"           , I_( "create (or not) a map file" ) }, ;
-      { "-[no]implib"        , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) }, ;
+      { "-debug[-]"          , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) }, ;
+      { "-optim[-]"          , I_( "toggle C compiler optimizations (default: on)" ) }, ;
+      { "-cpp[-]"            , I_( "force C/C++ mode" ) }, ;
+      { "-cpp=<value>"       , I_( "select C++ mode. Allowed values are: def, yes, no" ) }, ;
+/*    { "-c=<value>"         , I_( "select C standard. Allowed values are: iso90, iso99, iso1x, gnu90, gnu99, gnu1x" ) }, */;
+/*    { "-cpp=<value>"       , I_( "select C++ mode or standard. Allowed values are: def, yes, no, iso98, iso03, iso0x, gnu98, gnu0x" ) }, */;
+      { "-map[-]"            , I_( "create (or not) a map file" ) }, ;
+      { "-implib[-]"         , I_( "create (or not) an import library (in -hbdyn/-hbexe mode). The name will have a postfix added." ) }, ;
       { "-implib=<output>"   , I_( "create import library (in -hbdyn/-hbexe mode) name to <output> (default: same as output)" ) }, ;
       { "-ln=<link>"         , I_( "create symbolic link pointing to <output> (<link> is considered relative to <output>)" ) }, ;
-      { "-[no]strip"         , I_( "strip (no strip) binaries" ) }, ;
-      { "-[no]trace"         , I_( "show commands executed" ) }, ;
-      { "-[no]beep"          , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) }, ;
-      { "-[no]ignore"        , I_( "ignore errors when running compiler tools (default: off)" ) }, ;
-      { "-[no]hbcppmm"       , I_( "override standard C++ memory management functions with Harbour ones" ) }, ;
+      { "-strip[-]"          , I_( "strip (no strip) binaries" ) }, ;
+      { "-trace[-]"          , I_( "show commands executed" ) }, ;
+      { "-beep[-]"           , I_( "enable (or disable) single beep on successful exit, double beep on failure" ) }, ;
+      { "-ignore[-]"         , I_( "ignore errors when running compiler tools (default: off)" ) }, ;
+      { "-hbcppmm[-]"        , I_( "override standard C++ memory management functions with Harbour ones" ) }, ;
       { "-winuni[-]"         , I_( "select between UNICODE (WIDE) and ANSI compilation modes (default: ANSI) (Windows only. For WinCE it is always set to UNICODE)" ) }, ;
       { "-nohblib[-]"        , I_( "do not use static core Harbour libraries when linking" ) }, ;
       { "-nodefgt[-]"        , I_( "do not link default GTs (effective in -static mode)" ) }, ;
       { "-nolibgrouping[-]"  , I_( "disable library grouping on gcc based compilers" ) }, ;
       { "-nomiscsyslib[-]"   , I_( "do not add extra list of system libraries to default library list" ) }, ;
       { "-traceonly"         , I_( "show commands to be executed, but do not execute them" ) }, ;
-      { "-[no]warn[=lev]"    , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) }, ;
-      { "-[no]compr[=lev]"   , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: min, max, def" ) }, ;
-      { "-[no]run"           , I_( "run/do not run output executable" ) }, ;
+      { "-warn=<lev>"        , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) }, ;
+      { "-compr=<lev>"       , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: yes, no, min, max" ) }, ;
+      { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) }, ;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) }, ;
@@ -14716,8 +14789,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-3rd=<f>"           , hb_StrFormat( I_( "options/flags reserved for 3rd party tools, always ignored by %1$s itself" ), _SELF_NAME_ ) }, ;
       { "-env:<e>[<o>[<v>]]" , I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert." ) }, ;
       { "-jobs=<n>"          , I_( "start n compilation threads (multiprocess platforms only)" ) }, ;
-      { "-inc"               , I_( "enable incremental build mode" ) }, ;
-      { "-[no]head[=<m>]"    , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off" ) }, ;
+      { "-head=<m>"          , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off" ) }, ;
       { "-rebuild"           , I_( "rebuild (in incremental build mode)" ) }, ;
       { "-rebuildall"        , I_( "rebuild with sub-projects (in incremental build mode)" ) }, ;
       { "-clean"             , I_( "clean (in incremental build mode)" ) }, ;
@@ -14726,7 +14798,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-hbl[=<output>]"    , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) }, ;
       { "-lng=<languages>"   , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) }, ;
       { "-po=<output>"       , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) }, ;
-      { "-[no]minipo"        , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) }, ;
+      { "-minipo[-]"         , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) }, ;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) }, ;
       NIL, ;
       { "-hbx=[<.ch>]"       , I_( "Create Harbour header (in .hbx format) with all external symbols. Empty parameter will disable it." ) }, ;
@@ -14777,8 +14849,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "--hbdirinc"         , I_( "output Harbour header directory" ) }, ;
       { "--hbinfo[=nested]"  , I_( "output Harbour build information. Output is in JSON format. The included paths always contain forward slashes. Each JSON block is followed by an 0x0A byte." ) }, ;
       NIL, ;
-      { "-plat[form]=<plat>" , I_( "select target platform." ) }, ;
-      { "-comp[iler]=<comp>" , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) }, ;
+      { "-plat=<platform>"   , I_( "select target platform." ) }, ;
+      { "-comp=<compiler>"   , I_( "select C compiler.\nSpecial value:\n - bld: use original build settings (default on *nix)" ) }, ;
       { "-cpu=<cpu>"         , I_( "select target CPU. (EXPERIMENTAL)" ) }, ;
       { "-build=<name>"      , I_( "use a specific build name" ) }, ;
       { "-lang=<lang>"       , I_( "override default language. Similar to HB_LANG envvar." ) }, ;
@@ -14796,7 +14868,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Regular Harbour compiler options are also accepted.\n(see them with -harbourhelp option)" ), ;
       hb_StrFormat( I_( "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory." ), _HBMK_AUTOHBC_NAME, _SELF_NAME_ ), ;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ), ;
-      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], frameworks=[<framework[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], headers=[Harbour header files], psources=[source files for plugins], incpaths=[paths], requests=[func], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|pic|shared|nulrdd|nodefgt|debug|opt|map|strip|hbcppmm|winuni|implib|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|full|native|dep], skip=<reason>, stop=<reason>, echo=<text>\nLines starting with '#' char are ignored" ), ;
+      I_( ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], frameworks=[<framework[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], headers=[Harbour header files], psources=[source files for plugins], incpaths=[paths], requests=[func], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|pic|shared|nulrdd|nodefgt|debug|opt|map|strip|hbcppmm|winuni|implib|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|min|max], head=[off|full|native|dep], skip=<reason>, stop=<reason>, echo=<text>\nLines starting with '#' char are ignored" ), ;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allbcc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|winuni|winansi|xhb}" ), ;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_dirname}, ${hb_name}, ${hb_self}, ${hb_curdir}, ${hb_tempdir}, ${hb_targetname}, ${hb_targettype}, ${hb_plat}, ${hb_comp}, ${hb_comp_ver}, ${hb_build}, ${hb_cpu}, ${hb_work}, ${hb_workdynsub}, ${hb_dynprefix}, ${hb_dynsuffix}, ${hb_dynext}, ${hb_ver}, ${hb_verstr}, ${hb_major}, ${hb_minor}, ${hb_release}, ${hb_status}, ${hb_revision}, ${hb_host_plat}, ${hb_host_plat_unix}, ${hb_bin}, ${hb_lib}, ${hb_lib3rd}, ${hb_dyn}, ${hb_inc}, ${hb_first}, ${hb_outputdir}, ${hb_outputname}, ${hb_level}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ), ;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ), ;
