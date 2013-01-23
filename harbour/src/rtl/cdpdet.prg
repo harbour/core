@@ -234,7 +234,7 @@ STATIC FUNCTION __CPStdToHarbour( cCPStd, cCtryStd )
       ELSEIF Lower( cCPStd ) == "utf16"
          cCP := "UTF16LE"
       ELSE
-         IF ! Empty( cCtryHb := __CtryStdToCtry( cCtryStd ) )
+         IF ! Empty( cCtryHb := __LangStdToCPCtryHb( cCtryStd ) )
             FOR EACH cdp IN hb_cdpList()
                IF Left( cdp, 2 ) == cCtryHb
                   IF Lower( cCPStd ) == hb_cdpUniID( cdp )
@@ -257,7 +257,7 @@ STATIC FUNCTION __CPStdToHarbour( cCPStd, cCtryStd )
 
    RETURN cCP
 
-STATIC FUNCTION __CtryStdToCtry( cCtryStd )
+STATIC FUNCTION __LangStdToCPCtryHb( cCtryStd )
 
    LOCAL cCtryHb := Left( hb_cdpSelect(), 2 )
 

@@ -13,6 +13,8 @@ PROCEDURE Main( cPort )
 
 #if   defined( __PLATFORM__WINDOWS )
    hb_default( @cPort, "\\.\COM22" )
+#elif defined( __PLATFORM__LINUX )
+   hb_default( @cPort, "/dev/ttyS1" )
 #elif defined( __PLATFORM__DARWIN )
    hb_default( @cPort, "/dev/cu.myport-COM1-1" )
 #endif

@@ -7167,11 +7167,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] .AND. ;
       hbmk[ _HBMK_nErrorLevel ] == _ERRLEV_OK .AND. ! hbmk[ _HBMK_lCLEAN ] .AND. hbmk[ _HBMK_lRUN ]
       cCommand := hbmk[ _HBMK_cPROGNAME ]
-      #if defined( __PLATFORM__UNIX )
-         IF Empty( hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) )
-            cCommand := "." + hb_ps() + hbmk[ _HBMK_cPROGNAME ]
-         ENDIF
-      #endif
+      IF Empty( hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ) )
+         cCommand := "." + hb_ps() + hbmk[ _HBMK_cPROGNAME ]
+      ENDIF
       #if defined( __PLATFORM__WINDOWS )
          IF hbmk[ _HBMK_lGUI ]
             IF hb_osIsWinNT()
@@ -7237,7 +7235,8 @@ STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
 
     STATIC sc_aWarning := { ;
        "-Wl,--allow-multiple-definition", ; /* gcc */
-       "force:multiple", ; /* msvc */
+       "muldefs", ; /* ld '-z muldefs' */
+       "force:multiple", ; /* msvc, pocc, watcom */
        "w-dpl" } /* bcc */
 
     IF AScan( sc_aWarning, {| tmp | Lower( tmp ) $ Lower( cOption ) } ) > 0
@@ -9312,7 +9311,14 @@ STATIC FUNCTION FindInPath( cFileName, xPath, aExtDef )
    #else
       hb_default( @aExtDef, { cExt } )
    #endif
-   aExt := iif( Empty( cExt ), aExtDef, { cExt } )
+   aExt := { cExt }
+   IF Empty( cExt )
+      FOR EACH cExt IN aExtDef
+         IF AScan( aExt, {| tmp | hb_FileMatch( tmp, cExt ) } ) == 0
+            AAdd( aExt, cExt )
+         ENDIF
+      NEXT
+   ENDIF
 
    FOR EACH cExt IN aExt
       /* Check original filename (in supplied path or current dir) */
@@ -12539,7 +12545,8 @@ STATIC FUNCTION ExtractHarbourSymbols( cString )
       "multiple definition", ; /* gcc */
       "duplicate symbol", ; /* clang */
       "already defined", ; /* msvc */
-      "defined in both" } /* bcc */
+      "defined in both", ; /* bcc */
+      "previous definition different" } /* dmc */
 
    LOCAL aList := {}
 
