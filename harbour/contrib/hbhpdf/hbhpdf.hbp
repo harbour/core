@@ -35,6 +35,7 @@ fontkr.c
 image.c
 pdfa.c
 
+error.prg
 misc.prg
 
 3rd/libhpdf/libhpdf.hbc{HBMK_HAS_LIBHARU_LOCAL}

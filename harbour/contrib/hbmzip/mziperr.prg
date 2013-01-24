@@ -54,6 +54,10 @@
 
 FUNCTION hb_zipErrorStr( nStatus )
 
+   IF ! HB_ISNUMERIC( nStatus )
+        RETURN "ZIP_INVALID"
+   ENDIF
+
    DO CASE
    CASE nStatus == ZIP_OK                  ; RETURN "ZIP_OK"
    CASE nStatus == ZIP_EOF                 ; RETURN "ZIP_EOF"
@@ -71,9 +75,13 @@ FUNCTION hb_zipErrorStr( nStatus )
    CASE nStatus == -6                      ; RETURN "Z_VERSION_ERROR"
    ENDCASE
 
-   RETURN "ZIP_UNKNOWN: " + hb_ntos( nStatus )
+   RETURN "ZIP_UNKNOWN_" + hb_ntos( nStatus )
 
 FUNCTION hb_unzipErrorStr( nStatus )
+
+   IF ! HB_ISNUMERIC( nStatus )
+        RETURN "UNZ_INVALID"
+   ENDIF
 
    DO CASE
    CASE nStatus == UNZ_OK                  ; RETURN "UNZ_OK"
@@ -94,4 +102,4 @@ FUNCTION hb_unzipErrorStr( nStatus )
    CASE nStatus == -6                      ; RETURN "Z_VERSION_ERROR"
    ENDCASE
 
-   RETURN "UNZ_UNKNOWN: " + hb_ntos( nStatus )
+   RETURN "UNZ_UNKNOWN_" + hb_ntos( nStatus )

@@ -21,6 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC hb_HPDF_GetErrorString
 DYNAMIC hb_HPDF_IsVersion
 DYNAMIC hb_HPDF_Version
 DYNAMIC HPDF_AddPage

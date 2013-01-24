@@ -53,6 +53,8 @@
 
 PROCEDURE Main( cFileToSave )
 
+   CLS
+
    IF Empty( cFileToSave )
       cFileToSave := "myharu.pdf"
    ENDIF
@@ -165,7 +167,9 @@ FUNCTION DesignHaruPDF( cFileToSave )
    // Commentout the following line if you need ASCII chart by Codepages
    Page_CodePages( pdf )
 
-   HPDF_SaveToFile( pdf, cFileToSave )
+   IF HPDF_SaveToFile( pdf, cFileToSave ) != 0
+      ? "0x" + hb_NumToHex( HPDF_GetError( pdf ), 4 ), hb_HPDF_GetErrorString( HPDF_GetError( pdf ) ), HPDF_GetErrorDetail( pdf )
+   ENDIF
 
    HPDF_Free( pdf )
 
