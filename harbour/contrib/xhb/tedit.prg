@@ -216,21 +216,21 @@ METHOD Put() CLASS THtmlControl
    ENDIF
 
    IF ::Name != NIL
-      ::cOutput += Space( 2 ) + '     NAME="' + ::Name + '"' + CRLF()
+      ::cOutput += Space( 2 ) + '     name="' + ::Name + '"' + CRLF()
    ENDIF
 
    IF ::Type == "TEXTAREA"
 
       IF ::Rows != NIL
-         ::cOutput += Space( 2 ) + '     ROWS="' + hb_ntos( ::Rows ) + '"' + CRLF()
+         ::cOutput += Space( 2 ) + '     rows="' + hb_ntos( ::Rows ) + '"' + CRLF()
       ENDIF
 
       IF ::Cols != NIL
-         ::cOutput += Space( 2 ) + '     COLS="' + hb_ntos( ::Cols ) + '"' + CRLF()
+         ::cOutput += Space( 2 ) + '     cols="' + hb_ntos( ::Cols ) + '"' + CRLF()
       ENDIF
 
       IF ::Wrap != NIL
-         ::cOutput += Space( 2 ) + '     WRAP="' + ::Wrap + '"' + CRLF()
+         ::cOutput += Space( 2 ) + '     wrap="' + ::Wrap + '"' + CRLF()
       ENDIF
 
    ENDIF
@@ -241,35 +241,35 @@ METHOD Put() CLASS THtmlControl
          ::Picture := "@X"
       ENDIF
 
-      ::cOutput += Space( 2 ) + '    VALUE="' + Transform( ::Value, ::Picture ) + '"' + CRLF()
+      ::cOutput += Space( 2 ) + '    value="' + Transform( ::Value, ::Picture ) + '"' + CRLF()
    ENDIF
 
    IF ::maxChars != NIL
-      ::cOutput += Space( 2 ) + 'MAXLENGTH="' + hb_ntos( ::maxChars ) + '"' + CRLF()
+      ::cOutput += Space( 2 ) + 'maxlength="' + hb_ntos( ::maxChars ) + '"' + CRLF()
    ENDIF
 
    IF ::Size != NIL
-      ::cOutput += Space( 2 ) + '     SIZE="' + hb_ntos( ::Size ) + '"' + CRLF()
+      ::cOutput += Space( 2 ) + '     size="' + hb_ntos( ::Size ) + '"' + CRLF()
    ENDIF
 
    IF ::Id != NIL
-      ::cOutput += Space( 2 ) + '       ID="' + ::Id + '"' + CRLF()
+      ::cOutput += Space( 2 ) + '       id="' + ::Id + '"' + CRLF()
    ENDIF
 
    IF ::Style != NIL
-      ::cOutput += Space( 2 ) + '    STYLE="' + ::Style + '"' + CRLF()
+      ::cOutput += Space( 2 ) + '    style="' + ::Style + '"' + CRLF()
    ENDIF
 
    IF ::type == "IMAGE"
 
       IF ::Source != NIL
-         ::cOutput += Space( 2 ) + '      SRC="' + ::Source + '"' + CRLF()
+         ::cOutput += Space( 2 ) + '      src="' + ::Source + '"' + CRLF()
       ENDIF
 
    ENDIF
 
    IF ::Align != NIL
-      ::cOutput += Space( 2 ) + '    ALIGN="' + ::Align + '"' + CRLF()
+      ::cOutput += Space( 2 ) + '    align="' + ::Align + '"' + CRLF()
    ENDIF
 
    IF ::type == "RADIO" .OR. ::type == "CHECKBOX"
@@ -555,14 +555,14 @@ METHOD Put( lPutControls ) CLASS THtmlForm
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
       ::cOutPut := '<table bgcolor="#9196A0" ' + CRLF() + ;
-         "       COLS=1 " + CRLF() + ;
-         "       ROWS=1 " + CRLF() + ;
-         "       CELLPADDING=3 " + CRLF() + ;
-         "       CELLSPACING=3 " + CRLF() + ;
-         "       WIDTH=" + hb_ntos( ::width ) + "% " + CRLF() + ;
-         '       BORDERCOLORLIGHT="#000000" ' + CRLF() + ;
-         '       BORDERCOLORDARK="#FFFFFF" ' + CRLF() + ;
-         "       BORDER " + CRLF() + ;
+         "       cols=1 " + CRLF() + ;
+         "       rows=1 " + CRLF() + ;
+         "       cellpadding=3 " + CRLF() + ;
+         "       cellspacing=3 " + CRLF() + ;
+         "       width=" + hb_ntos( ::width ) + "% " + CRLF() + ;
+         '       bordercolorlight="#000000" ' + CRLF() + ;
+         '       bordercolordark="#FFFFFF" ' + CRLF() + ;
+         "       border " + CRLF() + ;
          "       >" + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
@@ -574,7 +574,7 @@ METHOD Put( lPutControls ) CLASS THtmlForm
          ::oHtm:cStr += ::cOutput
 
          IF ::captionImage != NIL
-            ::cOutPut := ' BACKGROUND="' + ::captionImage + '"' + CRLF()
+            ::cOutPut := ' background="' + ::captionImage + '"' + CRLF()
 //          FWrite( ::nH, ::cOutput )
             ::oHtm:cStr += ::cOutput
          ENDIF
@@ -597,14 +597,14 @@ METHOD Put( lPutControls ) CLASS THtmlForm
          ::oHtm:cStr += ::cOutput
       ENDIF
 
-      ::cOutPut := '<tr BGCOLOR="' + ::color + '">' + CRLF()
+      ::cOutPut := '<tr bgcolor="' + ::color + '">' + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
       ::cOutPut := '<td'
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
       IF ::bgImage != NIL
-         ::cOutPut := ' BACKGROUND="' + ::bgImage + '"' + CRLF()
+         ::cOutPut := ' background="' + ::bgImage + '"' + CRLF()
 //       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
       ENDIF
@@ -625,31 +625,31 @@ METHOD Put( lPutControls ) CLASS THtmlForm
    ::oHtm:cStr += ::cOutput
 
    IF ::name != NIL
-      ::cOutPut := Space( 5 ) + '    NAME="' + ::Name + '"' + CRLF()
+      ::cOutPut := Space( 5 ) + '    name="' + ::Name + '"' + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::method != NIL
-      ::cOutPut := Space( 5 ) + '  METHOD="' + ::Method + '"' + CRLF()
+      ::cOutPut := Space( 5 ) + '  method="' + ::Method + '"' + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::Action != NIL
-      ::cOutPut := Space( 5 ) + '  ACTION=' + ::Action + '' + CRLF()
+      ::cOutPut := Space( 5 ) + '  action=' + ::Action + '' + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::Target != NIL
-      ::cOutPut := Space( 5 ) + '  TARGET=' + ::Target + '' + CRLF()
+      ::cOutPut := Space( 5 ) + '  target=' + ::Target + '' + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
    ENDIF
 
    IF ::Enctype != NIL
-      ::cOutPut := Space( 5 ) + ' ENCTYPE="' + ::encType + '"' + CRLF()
+      ::cOutPut := Space( 5 ) + ' enctype="' + ::encType + '"' + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
    ENDIF

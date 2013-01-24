@@ -81,7 +81,7 @@ HPDF_Doc hb_HPDF_Doc_par( int iParam )
      Most of the functions return hStatus == HPDF_OK or ERROR Code
  */
 
-/* HPdf_New() -> hDoc
+/* HPDF_New() -> hDoc
  */
 HB_FUNC( HPDF_NEW )
 {
@@ -92,7 +92,7 @@ HB_FUNC( HPDF_NEW )
    hb_retptrGC( ph );
 }
 
-/* HPdf_Free( hDoc ) -> NIL
+/* HPDF_Free( hDoc ) -> NIL
  */
 HB_FUNC( HPDF_FREE )
 {
@@ -108,28 +108,28 @@ HB_FUNC( HPDF_FREE )
    }
 }
 
-/* HPdf_NewDoc( hDoc ) -> hStatus
+/* HPDF_NewDoc( hDoc ) -> hStatus
  */
 HB_FUNC( HPDF_NEWDOC )
 {
    hb_retnl( ( long ) HPDF_NewDoc( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_FreeDoc( hNewDoc ) -> NIL
+/* HPDF_FreeDoc( hNewDoc ) -> NIL
  */
 HB_FUNC( HPDF_FREEDOC )
 {
    HPDF_FreeDoc( hb_HPDF_Doc_par( 1 ) );
 }
 
-/* HPdf_FreeDocAll() -> NIL
+/* HPDF_FreeDocAll() -> NIL
  */
 HB_FUNC( HPDF_FREEDOCALL )
 {
    HPDF_FreeDocAll( hb_HPDF_Doc_par( 1 ) );
 }
 
-/* HPdf_SaveToFile( hDoc, cFileToSave ) -> hStatus
+/* HPDF_SaveToFile( hDoc, cFileToSave ) -> hStatus
  */
 HB_FUNC( HPDF_SAVETOFILE )
 {
@@ -142,21 +142,21 @@ HB_FUNC( HPDF_SAVETOFILE )
       hb_xfree( pszFree );
 }
 
-/* HPdf_SaveToStream( hDoc ) -> hStatus
+/* HPDF_SaveToStream( hDoc ) -> hStatus
  */
 HB_FUNC( HPDF_SAVETOSTREAM )
 {
    hb_retnl( ( long ) HPDF_SaveToStream( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_GetStreamSize( hDoc ) -> nSize
+/* HPDF_GetStreamSize( hDoc ) -> nSize
  */
 HB_FUNC( HPDF_GETSTREAMSIZE )
 {
    hb_retnl( ( long ) HPDF_GetStreamSize( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_ReadFromStream( hDoc, @cBuffer ) -> nBytesRead
+/* HPDF_ReadFromStream( hDoc, @cBuffer ) -> nBytesRead
  */
 HB_FUNC( HPDF_READFROMSTREAM )
 {
@@ -174,21 +174,21 @@ HB_FUNC( HPDF_READFROMSTREAM )
       hb_xfree( buffer );
 }
 
-/* HPdf_ResetStream( hDoc ) -> hStatus
+/* HPDF_ResetStream( hDoc ) -> hStatus
  */
 HB_FUNC( HPDF_RESETSTREAM )
 {
    hb_retnl( ( long ) HPDF_ResetStream( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_HasDoc( hDoc ) -> lHasDoc
+/* HPDF_HasDoc( hDoc ) -> lHasDoc
  */
 HB_FUNC( HPDF_HASDOC )
 {
    hb_retl( HPDF_HasDoc( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_SetErrorHandler( hDoc, procErrHandler ) -> hStatus
+/* HPDF_SetErrorHandler( hDoc, procErrHandler ) -> hStatus
  */
 HB_FUNC( HPDF_SETERRORHANDLER )
 {
@@ -198,28 +198,35 @@ HB_FUNC( HPDF_SETERRORHANDLER )
    hb_retnl( ( long ) HPDF_SetErrorHandler( hb_HPDF_Doc_par( 1 ), ( HPDF_Error_Handler ) hb_parptr( 2 ) ) );
 }
 
-/* HPdf_GetError( hDoc ) -> nErrorCode
+/* HPDF_GetError( hDoc ) -> nErrorCode
  */
 HB_FUNC( HPDF_GETERROR )
 {
    hb_retnl( ( long ) HPDF_GetError( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_ResetError( hDoc ) -> NIL
+/* HPDF_GetErrorDetail( hDoc ) -> nErrorCode
+ */
+HB_FUNC( HPDF_GETERRORDETAIL )
+{
+   hb_retnl( ( long ) HPDF_GetErrorDetail( hb_HPDF_Doc_par( 1 ) ) );
+}
+
+/* HPDF_ResetError( hDoc ) -> NIL
  */
 HB_FUNC( HPDF_RESETERROR )
 {
    HPDF_ResetError( hb_HPDF_Doc_par( 1 ) );
 }
 
-/* HPdf_SetPagesConfiguration( hDoc, nPagePerPages ) -> hStatus
+/* HPDF_SetPagesConfiguration( hDoc, nPagePerPages ) -> hStatus
  */
 HB_FUNC( HPDF_SETPAGESCONFIGURATION )
 {
    hb_retnl( ( long ) HPDF_SetPagesConfiguration( hb_HPDF_Doc_par( 1 ), hb_parni( 2 ) ) );
 }
 
-/* HPdf_SetPageLayout( hDoc, nLayout ) -> hStatus
+/* HPDF_SetPageLayout( hDoc, nLayout ) -> hStatus
         nLayout ==
    HPDF_PAGE_LAYOUT_SINGLE             0
    HPDF_PAGE_LAYOUT_ONE_COLUMN         1
@@ -232,14 +239,14 @@ HB_FUNC( HPDF_SETPAGELAYOUT )
    hb_retnl( ( long ) HPDF_SetPageLayout( hb_HPDF_Doc_par( 1 ), ( HPDF_PageLayout ) hb_parni( 2 ) ) );
 }
 
-/* HPdf_GetPageLayout( hDoc ) -> nLayout
+/* HPDF_GetPageLayout( hDoc ) -> nLayout
  */
 HB_FUNC( HPDF_GETPAGELAYOUT )
 {
    hb_retni( ( int ) HPDF_GetPageLayout( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_SetPageMode( hDoc, nPageMode ) -> hStatus
+/* HPDF_SetPageMode( hDoc, nPageMode ) -> hStatus
        nPageMode ==
    HPDF_PAGE_MODE_USE_NONE     0  Display the document with neither outline nor thumbnail.
    HPDF_PAGE_MODE_USE_OUTLINE  1  Display the document with outline pane.
@@ -252,49 +259,49 @@ HB_FUNC( HPDF_SETPAGEMODE )
    hb_retnl( ( long ) HPDF_SetPageMode( hb_HPDF_Doc_par( 1 ), ( HPDF_PageMode ) hb_parni( 2 ) ) );
 }
 
-/* HPdf_GetPageMode( hDoc ) -> nPageMode
+/* HPDF_GetPageMode( hDoc ) -> nPageMode
  */
 HB_FUNC( HPDF_GETPAGEMODE )
 {
    hb_retni( ( int ) HPDF_GetPageMode( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_SetOpenAction( hDoc, hDestn ) -> hStatus
+/* HPDF_SetOpenAction( hDoc, hDestn ) -> hStatus
  */
 HB_FUNC( HPDF_SETOPENACTION )
 {
    hb_retnl( ( long ) HPDF_SetOpenAction( hb_HPDF_Doc_par( 1 ), ( HPDF_Destination ) hb_parptr( 2 ) ) );
 }
 
-/* HPdf_GetCurrentPage( hDoc ) -> hPage
+/* HPDF_GetCurrentPage( hDoc ) -> hPage
  */
 HB_FUNC( HPDF_GETCURRENTPAGE )
 {
    hb_retptr( ( void * ) HPDF_GetCurrentPage( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_AddPage( hDoc ) -> hPage
+/* HPDF_AddPage( hDoc ) -> hPage
  */
 HB_FUNC( HPDF_ADDPAGE )
 {
    hb_retptr( ( void  * ) HPDF_AddPage( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_InsertPage( hDoc, hPage ) -> hPageInserted  : Just before hPage
+/* HPDF_InsertPage( hDoc, hPage ) -> hPageInserted  : Just before hPage
  */
 HB_FUNC( HPDF_INSERTPAGE )
 {
    hb_retptr( ( void * ) HPDF_InsertPage( hb_HPDF_Doc_par( 1 ), ( HPDF_Page ) hb_parptr( 2 ) ) );
 }
 
-/* HPdf_GetFont( hDoc, cFontName, cEncoding ) -> hFont
+/* HPDF_GetFont( hDoc, cFontName, cEncoding ) -> hFont
  */
 HB_FUNC( HPDF_GETFONT )
 {
    hb_retptr( ( void * ) HPDF_GetFont( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parc( 3 ) ) );
 }
 
-/* HPdf_AddPageLabel( hDoc, nPageNum, nPgNoStyle, nFirstPageInRange, cPrefixToLabel ) -> hStatus
+/* HPDF_AddPageLabel( hDoc, nPageNum, nPgNoStyle, nFirstPageInRange, cPrefixToLabel ) -> hStatus
        nPgNoStyle
    HPDF_PAGE_NUM_STYLE_DECIMAL         1   Page label is displayed by Arabic numerals.
    HPDF_PAGE_NUM_STYLE_UPPER_ROMAN     2   Page label is displayed by Uppercase roman numerals.
@@ -307,42 +314,42 @@ HB_FUNC( HPDF_ADDPAGELABEL )
    hb_retnl( ( long ) HPDF_AddPageLabel( hb_HPDF_Doc_par( 1 ), hb_parni( 2 ), ( HPDF_PageNumStyle ) hb_parni( 3 ), hb_parni( 4 ), hb_parc( 5 ) ) );
 }
 
-/* HPdf_CreateExtGState( hDoc ) -> hExtGState
+/* HPDF_CreateExtGState( hDoc ) -> hExtGState
  */
 HB_FUNC( HPDF_CREATEEXTGSTATE )
 {
    hb_retptr( ( void * ) HPDF_CreateExtGState( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_CreateOutline( hDoc, hParentOutline, cTitle, hEncoder ) -> hOutline
+/* HPDF_CreateOutline( hDoc, hParentOutline, cTitle, hEncoder ) -> hOutline
  */
 HB_FUNC( HPDF_CREATEOUTLINE )
 {
    hb_retptr( ( void * ) HPDF_CreateOutline( hb_HPDF_Doc_par( 1 ), ( HPDF_Outline ) hb_parptr( 2 ), hb_parc( 3 ), ( HPDF_Encoder ) hb_parptr( 4 ) ) );
 }
 
-/* HPdf_GetEncoder( hDoc, cEncoding ) -> hEncoder
+/* HPDF_GetEncoder( hDoc, cEncoding ) -> hEncoder
  */
 HB_FUNC( HPDF_GETENCODER )
 {
    hb_retptr( ( void * ) HPDF_GetEncoder( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 
-/* HPdf_GetCurrentEncoder( hDoc ) -> hEncoder
+/* HPDF_GetCurrentEncoder( hDoc ) -> hEncoder
  */
 HB_FUNC( HPDF_GETCURRENTENCODER )
 {
    hb_retptr( ( void * ) HPDF_GetCurrentEncoder( hb_HPDF_Doc_par( 1 ) ) );
 }
 
-/* HPdf_SetCurrentEncoder( hDoc, hEncoder ) -> hStatus
+/* HPDF_SetCurrentEncoder( hDoc, hEncoder ) -> hStatus
  */
 HB_FUNC( HPDF_SETCURRENTENCODER )
 {
    hb_retnl( ( long ) HPDF_SetCurrentEncoder( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 
-/* HPdf_SetInfoAttr( hDoc, nInfoType, cInfo ) -> hStatus
+/* HPDF_SetInfoAttr( hDoc, nInfoType, cInfo ) -> hStatus
        nInfoType ==
    HPDF_INFO_AUTHOR
    HPDF_INFO_CREATOR
@@ -355,14 +362,14 @@ HB_FUNC( HPDF_SETINFOATTR )
    hb_retnl( ( long ) HPDF_SetInfoAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), hb_parc( 3 ) ) );
 }
 
-/* HPdf_GetInfoAttr( hDoc, nInfoType ) -> cInfo
+/* HPDF_GetInfoAttr( hDoc, nInfoType ) -> cInfo
  */
 HB_FUNC( HPDF_GETINFOATTR )
 {
    hb_retc( HPDF_GetInfoAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ) ) );
 }
 
-/* HPdf_SetInfoDateAttr( hDoc, nInfoType, aDateValues ) -> hStatus
+/* HPDF_SetInfoDateAttr( hDoc, nInfoType, aDateValues ) -> hStatus
        nInfoType ==
    HPDF_INFO_CREATION_DATE
    HPDF_INFO_MOD_DATE
@@ -384,14 +391,14 @@ HB_FUNC( HPDF_SETINFODATEATTR )
    hb_retnl( ( long ) HPDF_SetInfoDateAttr( hb_HPDF_Doc_par( 1 ), ( HPDF_InfoType ) hb_parni( 2 ), date ) );
 }
 
-/* HPdf_SetPassword( hDoc, cOwnerPassword = NO NIL, cUserPassword = CANBE NIL ) -> hStatus
+/* HPDF_SetPassword( hDoc, cOwnerPassword = NO NIL, cUserPassword = CANBE NIL ) -> hStatus
  */
 HB_FUNC( HPDF_SETPASSWORD )
 {
    hb_retnl( ( long ) HPDF_SetPassword( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parc( 3 ) ) );
 }
 
-/* HPdf_SetPermission( hDoc, nPermission ) -> hStatus
+/* HPDF_SetPermission( hDoc, nPermission ) -> hStatus
        nPermission ==
    HPDF_ENABLE_READ      1   user can read the document.
    HPDF_ENABLE_PRINT     2   user can print the document.
@@ -404,7 +411,7 @@ HB_FUNC( HPDF_SETPERMISSION )
    hb_retnl( ( long ) HPDF_SetPermission( hb_HPDF_Doc_par( 1 ), hb_parni( 2 ) ) );
 }
 
-/* HPdf_SetEncryptionMode( hDoc, nEncMode, nKeyLen ) -> hStatus
+/* HPDF_SetEncryptionMode( hDoc, nEncMode, nKeyLen ) -> hStatus
        nEncMode ==
    HPDF_ENCRYPT_R2    1   Use "Revision 2" algorithm.
                              The length of key is automatically set to 5(40bit).
@@ -416,7 +423,7 @@ HB_FUNC( HPDF_SETENCRYPTIONMODE )
    hb_retnl( ( long ) HPDF_SetEncryptionMode( hb_HPDF_Doc_par( 1 ), ( HPDF_EncryptMode ) hb_parni( 2 ), hb_parni( 3 ) ) );
 }
 
-/* HPdf_SetCompressionMode( hDoc, nCompMode ) -> hStatus
+/* HPDF_SetCompressionMode( hDoc, nCompMode ) -> hStatus
        nCompMode ==
    HPDF_COMP_NONE         1    All contents are not compressed.
    HPDF_COMP_TEXT         2    Compress the contents stream of the page.
@@ -433,21 +440,21 @@ HB_FUNC( HPDF_SETCOMPRESSIONMODE )
 /*                           Page Handling                              */
 /*----------------------------------------------------------------------*/
 
-/* HPdf_Page_SetWidth( hPage, nWidth ) -> hStatus
+/* HPDF_Page_SetWidth( hPage, nWidth ) -> hStatus
  */
 HB_FUNC( HPDF_PAGE_SETWIDTH )
 {
    hb_retnl( ( long ) HPDF_Page_SetWidth( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ) ) );
 }
 
-/* HPdf_Page_SetHeight( hPage, nHeight ) -> hStatus
+/* HPDF_Page_SetHeight( hPage, nHeight ) -> hStatus
  */
 HB_FUNC( HPDF_PAGE_SETHEIGHT )
 {
    hb_retnl( ( long ) HPDF_Page_SetHeight( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_REAL ) hb_parnd( 2 ) ) );
 }
 
-/* HPdf_Page_SetSize( hPage, nSize, nOrientation = 1 Portrait, 2 Landscape ) -> hStatus
+/* HPDF_Page_SetSize( hPage, nSize, nOrientation = 1 Portrait, 2 Landscape ) -> hStatus
        nSize ==
    HPDF_PAGE_SIZE_LETTER         1      8.5 x 11 (Inches) 612 x 792
    HPDF_PAGE_SIZE_LEGAL          2      8.5 x 14 (Inches) 612 x 1008
@@ -467,35 +474,35 @@ HB_FUNC( HPDF_PAGE_SETSIZE )
    hb_retnl( ( long ) HPDF_Page_SetSize( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_PageSizes ) hb_parni( 2 ), ( HPDF_PageDirection ) hb_parni( 3 ) ) );
 }
 
-/* HPdf_Page_SetRotate( hPage, nAngle = 0-360 ) -> hStatus
+/* HPDF_Page_SetRotate( hPage, nAngle = 0-360 ) -> hStatus
  */
 HB_FUNC( HPDF_PAGE_SETROTATE )
 {
    hb_retnl( ( long ) HPDF_Page_SetRotate( ( HPDF_Page ) hb_parptr( 1 ), ( HPDF_UINT16 ) hb_parni( 2 ) ) );
 }
 
-/* HPdf_Page_GetWidth( hPage ) -> nWidth
+/* HPDF_Page_GetWidth( hPage ) -> nWidth
  */
 HB_FUNC( HPDF_PAGE_GETWIDTH )
 {
    hb_retnd( ( double ) HPDF_Page_GetWidth( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetHeight( hPage ) -> nHeight
+/* HPDF_Page_GetHeight( hPage ) -> nHeight
  */
 HB_FUNC( HPDF_PAGE_GETHEIGHT )
 {
    hb_retnd( ( double ) HPDF_Page_GetHeight( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_CreateDestination( hPage ) -> hDestn
+/* HPDF_Page_CreateDestination( hPage ) -> hDestn
  */
 HB_FUNC( HPDF_PAGE_CREATEDESTINATION )
 {
    hb_retptr( ( void * ) HPDF_Page_CreateDestination( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_CreateAnnot( hPage, aRect[nLeft,nTop,nRight,nBottom], cText, cEncoder ) -> nHandle
+/* HPDF_Page_CreateAnnot( hPage, aRect[nLeft,nTop,nRight,nBottom], cText, cEncoder ) -> nHandle
  */
 HB_FUNC( HPDF_PAGE_CREATETEXTANNOT )
 {
@@ -509,7 +516,7 @@ HB_FUNC( HPDF_PAGE_CREATETEXTANNOT )
    hb_retptr( HPDF_Page_CreateTextAnnot( ( HPDF_Page ) hb_parptr( 1 ), rc, hb_parc( 3 ), ( HPDF_Encoder ) hb_parptr( 4 ) ) );
 }
 
-/* HPdf_Page_CreateLinkAnnot( hPage, aRect, hDestn ) -> nHandle
+/* HPDF_Page_CreateLinkAnnot( hPage, aRect, hDestn ) -> nHandle
  */
 HB_FUNC( HPDF_PAGE_CREATELINKANNOT )
 {
@@ -523,7 +530,7 @@ HB_FUNC( HPDF_PAGE_CREATELINKANNOT )
    hb_retptr( HPDF_Page_CreateLinkAnnot( ( HPDF_Page ) hb_parptr( 1 ), rc, ( HPDF_Destination ) hb_parptr( 3 ) ) );
 }
 
-/* HPdf_Page_CreateURILinkAnnot( hPage, aRect, cURI ) -> nHandle
+/* HPDF_Page_CreateURILinkAnnot( hPage, aRect, cURI ) -> nHandle
  */
 HB_FUNC( HPDF_PAGE_CREATEURILINKANNOT )
 {
@@ -537,28 +544,28 @@ HB_FUNC( HPDF_PAGE_CREATEURILINKANNOT )
    hb_retptr( HPDF_Page_CreateURILinkAnnot( ( HPDF_Page ) hb_parptr( 1 ), rc, hb_parc( 3 ) ) );
 }
 
-/* HPdf_Page_TextWidth( hPage, cText ) -> nTextWidth
+/* HPDF_Page_TextWidth( hPage, cText ) -> nTextWidth
  */
 HB_FUNC( HPDF_PAGE_TEXTWIDTH )
 {
    hb_retnd( ( double ) HPDF_Page_TextWidth( ( HPDF_Page ) hb_parptr( 1 ), hb_parc( 2 ) ) );
 }
 
-/* HPdf_Page_MeasureText( hPage, cText, nWidth, lWordWrap ) -> nByteLenOfTextToFitWidth
+/* HPDF_Page_MeasureText( hPage, cText, nWidth, lWordWrap ) -> nByteLenOfTextToFitWidth
  */
 HB_FUNC( HPDF_PAGE_MEASURETEXT )
 {
    hb_retnl( ( long ) HPDF_Page_MeasureText( ( HPDF_Page ) hb_parptr( 1 ), hb_parc( 2 ), ( HPDF_REAL ) hb_parnd( 3 ), hb_parl( 4 ) ? HPDF_TRUE : HPDF_FALSE, NULL ) );
 }
 
-/* HPdf_Page_GetMode( hPage ) -> nGraphicMode
+/* HPDF_Page_GetMode( hPage ) -> nGraphicMode
  */
 HB_FUNC( HPDF_PAGE_GETGMODE )
 {
    hb_retnl( ( long ) HPDF_Page_GetGMode( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetCurrentPos( hPage ) -> aCurPos[ nX, nY ]
+/* HPDF_Page_GetCurrentPos( hPage ) -> aCurPos[ nX, nY ]
  */
 HB_FUNC( HPDF_PAGE_GETCURRENTPOS )
 {
@@ -573,7 +580,7 @@ HB_FUNC( HPDF_PAGE_GETCURRENTPOS )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetCurrentTextPos( hPage ) -> aCurTextPos[ nX, nY ]
+/* HPDF_Page_GetCurrentTextPos( hPage ) -> aCurTextPos[ nX, nY ]
  */
 HB_FUNC( HPDF_PAGE_GETCURRENTTEXTPOS )
 {
@@ -588,21 +595,21 @@ HB_FUNC( HPDF_PAGE_GETCURRENTTEXTPOS )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetCurrentFont( hPage ) -> hFont
+/* HPDF_Page_GetCurrentFont( hPage ) -> hFont
  */
 HB_FUNC( HPDF_PAGE_GETCURRENTFONT )
 {
    hb_retptr( ( void * ) HPDF_Page_GetCurrentFont( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetCurrentFontSize( hPage ) -> nFontSize
+/* HPDF_Page_GetCurrentFontSize( hPage ) -> nFontSize
  */
 HB_FUNC( HPDF_PAGE_GETCURRENTFONTSIZE )
 {
    hb_retnd( ( double ) HPDF_Page_GetCurrentFontSize( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetTransMatrix( hPage ) -> aMatrix[ ]
+/* HPDF_Page_GetTransMatrix( hPage ) -> aMatrix[ ]
  */
 HB_FUNC( HPDF_PAGE_GETTRANSMATRIX )
 {
@@ -621,35 +628,35 @@ HB_FUNC( HPDF_PAGE_GETTRANSMATRIX )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetLineWidth( hPage ) -> nLineWidth
+/* HPDF_Page_GetLineWidth( hPage ) -> nLineWidth
  */
 HB_FUNC( HPDF_PAGE_GETLINEWIDTH )
 {
    hb_retnd( ( double ) HPDF_Page_GetLineWidth( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetLineCap( hPage ) -> nLineCapStyle
+/* HPDF_Page_GetLineCap( hPage ) -> nLineCapStyle
  */
 HB_FUNC( HPDF_PAGE_GETLINECAP )
 {
    hb_retnl( ( long ) HPDF_Page_GetLineCap( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetLineJoin( hPage ) -> nLineJoinStyle
+/* HPDF_Page_GetLineJoin( hPage ) -> nLineJoinStyle
  */
 HB_FUNC( HPDF_PAGE_GETLINEJOIN )
 {
    hb_retnl( ( long ) HPDF_Page_GetLineJoin( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetMiterLimit( hPage ) -> nMiterLimit
+/* HPDF_Page_GetMiterLimit( hPage ) -> nMiterLimit
  */
 HB_FUNC( HPDF_PAGE_GETMITERLIMIT )
 {
    hb_retnd( ( double ) HPDF_Page_GetMiterLimit( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetDash( hPage ) -> aDash
+/* HPDF_Page_GetDash( hPage ) -> aDash
  */
 HB_FUNC( HPDF_PAGE_GETDASH )
 {
@@ -672,56 +679,56 @@ HB_FUNC( HPDF_PAGE_GETDASH )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetFlat( hPage ) -> nCurFlatness
+/* HPDF_Page_GetFlat( hPage ) -> nCurFlatness
  */
 HB_FUNC( HPDF_PAGE_GETFLAT )
 {
    hb_retnd( ( double ) HPDF_Page_GetFlat( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetCharSpace( hPage ) -> nCurCharSpace
+/* HPDF_Page_GetCharSpace( hPage ) -> nCurCharSpace
  */
 HB_FUNC( HPDF_PAGE_GETCHARSPACE )
 {
    hb_retnd( ( double ) HPDF_Page_GetCharSpace( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetWordSpace( hPage ) -> nCurWordSpace
+/* HPDF_Page_GetWordSpace( hPage ) -> nCurWordSpace
  */
 HB_FUNC( HPDF_PAGE_GETWORDSPACE )
 {
    hb_retnd( ( double ) HPDF_Page_GetWordSpace( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetHorizontalScalling( hPage ) -> nHorzScaling
+/* HPDF_Page_GetHorizontalScalling( hPage ) -> nHorzScaling
  */
 HB_FUNC( HPDF_PAGE_GETHORIZONTALSCALLING )
 {
    hb_retnd( ( double ) HPDF_Page_GetHorizontalScalling( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetTextLeading( hPage ) -> nTextLeading
+/* HPDF_Page_GetTextLeading( hPage ) -> nTextLeading
  */
 HB_FUNC( HPDF_PAGE_GETTEXTLEADING )
 {
    hb_retnd( ( double ) HPDF_Page_GetTextLeading( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetTextRenderingMode( hPage ) -> nTextRenderingMode
+/* HPDF_Page_GetTextRenderingMode( hPage ) -> nTextRenderingMode
  */
 HB_FUNC( HPDF_PAGE_GETTEXTRENDERINGMODE )
 {
    hb_retnd( ( double ) HPDF_Page_GetTextRenderingMode( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetTextRise( hPage ) -> nTextRise
+/* HPDF_Page_GetTextRise( hPage ) -> nTextRise
  */
 HB_FUNC( HPDF_PAGE_GETTEXTRISE )
 {
    hb_retnd( ( double ) HPDF_Page_GetTextRise( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetRGBFill( hPage ) -> aRGBFill[ nRed, nGreen, nBlue ]
+/* HPDF_Page_GetRGBFill( hPage ) -> aRGBFill[ nRed, nGreen, nBlue ]
  */
 HB_FUNC( HPDF_PAGE_GETRGBFILL )
 {
@@ -737,7 +744,7 @@ HB_FUNC( HPDF_PAGE_GETRGBFILL )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetRGBStroke( hPage ) -> aRGBStroke[ nRed, nGreen, nBlue ]
+/* HPDF_Page_GetRGBStroke( hPage ) -> aRGBStroke[ nRed, nGreen, nBlue ]
  */
 HB_FUNC( HPDF_PAGE_GETRGBSTROKE )
 {
@@ -753,7 +760,7 @@ HB_FUNC( HPDF_PAGE_GETRGBSTROKE )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetCMYKFill( hPage ) -> aCMYKFill[ nC, nM, nY, nK ]
+/* HPDF_Page_GetCMYKFill( hPage ) -> aCMYKFill[ nC, nM, nY, nK ]
  */
 HB_FUNC( HPDF_PAGE_GETCMYKFILL )
 {
@@ -770,7 +777,7 @@ HB_FUNC( HPDF_PAGE_GETCMYKFILL )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetCMYKStroke( hPage ) -> aCMYKStroke[ nC, nM, nY, nK ]
+/* HPDF_Page_GetCMYKStroke( hPage ) -> aCMYKStroke[ nC, nM, nY, nK ]
  */
 HB_FUNC( HPDF_PAGE_GETCMYKSTROKE )
 {
@@ -787,35 +794,35 @@ HB_FUNC( HPDF_PAGE_GETCMYKSTROKE )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetGrayFill( hPage ) -> nGrayFillValue
+/* HPDF_Page_GetGrayFill( hPage ) -> nGrayFillValue
  */
 HB_FUNC( HPDF_PAGE_GETGRAYFILL )
 {
    hb_retnd( ( double ) HPDF_Page_GetGrayFill( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetGrayStroke( hPage ) -> nGrayStrokeValue
+/* HPDF_Page_GetGrayStroke( hPage ) -> nGrayStrokeValue
  */
 HB_FUNC( HPDF_PAGE_GETGRAYSTROKE )
 {
    hb_retnd( ( double ) HPDF_Page_GetGrayStroke( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetStrokingColorSpace( hPage ) -> nStrokingSpace
+/* HPDF_Page_GetStrokingColorSpace( hPage ) -> nStrokingSpace
  */
 HB_FUNC( HPDF_PAGE_GETSTROKINGCOLORSPACE )
 {
    hb_retni( ( int ) HPDF_Page_GetStrokingColorSpace( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetFillingColorSpace( hPage ) -> nFillingColorSpace
+/* HPDF_Page_GetFillingColorSpace( hPage ) -> nFillingColorSpace
  */
 HB_FUNC( HPDF_PAGE_GETFILLINGCOLORSPACE )
 {
    hb_retni( ( int ) HPDF_Page_GetFillingColorSpace( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_GetTextMatrix( hPage ) -> aMatrix[ ]
+/* HPDF_Page_GetTextMatrix( hPage ) -> aMatrix[ ]
  */
 HB_FUNC( HPDF_PAGE_GETTEXTMATRIX )
 {
@@ -834,14 +841,14 @@ HB_FUNC( HPDF_PAGE_GETTEXTMATRIX )
    hb_itemReturnRelease( info );
 }
 
-/* HPdf_Page_GetGStateDepth( hPage ) -> nGStateDepth
+/* HPDF_Page_GetGStateDepth( hPage ) -> nGStateDepth
  */
 HB_FUNC( HPDF_PAGE_GETGSTATEDEPTH )
 {
    hb_retni( ( int ) HPDF_Page_GetGStateDepth( ( HPDF_Page ) hb_parptr( 1 ) ) );
 }
 
-/* HPdf_Page_SetSlideShow( hPage, nType, nDurationPerFrame, nTranstnTime = 1 Second ) -> hStatus
+/* HPDF_Page_SetSlideShow( hPage, nType, nDurationPerFrame, nTranstnTime = 1 Second ) -> hStatus
        nType ==
    HPDF_TS_WIPE_RIGHT
    HPDF_TS_WIPE_UP

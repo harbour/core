@@ -452,11 +452,11 @@ static HB_SIZE hb_itemSerialSize( PHB_ITEM pItem, HB_BOOL fNumSize,
             u = nLen - u;
             nLen = hb_cdpnDupLen( szVal, nLen, cdpIn, cdpOut );
             if( nLen <= 255 )
-               nSize = u > 1 ? nLen - u + 3: nLen + 2;
+               nSize = u > 1 ? nLen - u + 3 : nLen + 2;
             else if( nLen <= UINT16_MAX )
-               nSize = u > 2 ? nLen - u + 5: nLen + 3;
+               nSize = u > 2 ? nLen - u + 5 : nLen + 3;
             else
-               nSize = u > 4 ? nLen - u + 9: nLen + 5;
+               nSize = u > 4 ? nLen - u + 9 : nLen + 5;
          }
          break;
 
@@ -1351,8 +1351,8 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
 static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSize,
                                    HB_SIZE nOffset, PHB_CYCLIC_REF * pRefPtr )
 {
-   const HB_UCHAR * pBuffer = * pBufferPtr;
-   HB_SIZE nSize = * pnSize, nLen = 0;
+   const HB_UCHAR * pBuffer = *pBufferPtr;
+   HB_SIZE nSize = *pnSize, nLen = 0;
 
    if( nSize == 0 )
       return HB_FALSE;
@@ -1488,7 +1488,7 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
             nSize++;
          break;
       case HB_SERIAL_REF:
-         if( !hb_itemSerialOffsetRef( pRefPtr, HB_GET_LE_UINT32( pBuffer ) ) )
+         if( ! hb_itemSerialOffsetRef( pRefPtr, HB_GET_LE_UINT32( pBuffer ) ) )
             return HB_FALSE;
          nSize = 5;
          break;
@@ -1603,19 +1603,19 @@ static HB_BOOL hb_deserializeTest( const HB_UCHAR ** pBufferPtr, HB_SIZE * pnSiz
          break;
    }
 
-   if( nSize > * pnSize )
+   if( nSize > *pnSize )
       return HB_FALSE;
 
-   * pnSize -= nSize;
-   * pBufferPtr += nSize;
+   *pnSize -= nSize;
+   *pBufferPtr += nSize;
 
    while( nLen )
    {
       nOffset += nSize;
-      nSize = * pnSize;
-      if( !hb_deserializeTest( pBufferPtr, pnSize, nOffset, pRefPtr ) )
+      nSize = *pnSize;
+      if( ! hb_deserializeTest( pBufferPtr, pnSize, nOffset, pRefPtr ) )
          return HB_FALSE;
-      nSize -= * pnSize;
+      nSize -= *pnSize;
       --nLen;
    }
 

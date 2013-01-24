@@ -49,7 +49,7 @@
 
 #include "hbhpdf.h"
 
-/* HPdf_UseKREncodings( hDoc ) -> hStatus
+/* HPDF_UseKREncodings( hDoc ) -> hStatus
  */
 HB_FUNC( HPDF_USEKRENCODINGS )
 {

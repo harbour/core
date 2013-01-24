@@ -622,14 +622,14 @@ METHOD Begin() CLASS JWindow
    IF ::aScriptSrc != NIL
       FOR i := 1 TO Len( ::aScriptSrc )
          ::QOut( ;
-            '<script language=JavaScript SRC="' + ::aScriptSrc[ i ] + '"></script>' )
+            '<script language=JavaScript src="' + ::aScriptSrc[ i ] + '"></script>' )
       NEXT
    ENDIF
 
    IF ::aServerSrc != NIL
       FOR i := 1 TO Len( ::aServerSrc )
          ::QOut( ;
-            '<script language=JavaScript SRC="' + ::aServerSrc[ i ] + '" runat=SERVER></script>' )
+            '<script language=JavaScript src="' + ::aServerSrc[ i ] + '" runat=SERVER></script>' )
       NEXT
    ENDIF
 

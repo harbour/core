@@ -359,7 +359,7 @@ METHOD Begin() CLASS TJSWindow
    IF ::aScriptSrc != NIL
       FOR i := 1 TO Len( ::aScriptSrc )
          ::QOut( ;
-            '<script language=JavaScript SRC="' + ::aScriptSrc[ i ] + '"></script>' )
+            '<script language=JavaScript src="' + ::aScriptSrc[ i ] + '"></script>' )
       NEXT
    ENDIF
 

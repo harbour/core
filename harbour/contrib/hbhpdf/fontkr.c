@@ -49,7 +49,7 @@
 
 #include "hbhpdf.h"
 
-/* HPdf_UseKRFonts( hDoc ) -> hStatus
+/* HPDF_UseKRFonts( hDoc ) -> hStatus
  */
 HB_FUNC( HPDF_USEKRFONTS )
 {

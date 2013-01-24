@@ -861,11 +861,11 @@ METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
    IF lShade
       ::cStr +=  CRLF() + ;
-         '<hr size = ' + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + hb_ntos( nWidth ) + '%>' + ;
+         "<hr size = " + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + " width= " + hb_ntos( nWidth ) + '%>' + ;
          CRLF()
    ELSE
       ::cStr +=  CRLF() + ;
-         '<hr noshade size = ' + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + hb_ntos( nWidth ) + '%>' + ;
+         "<hr noshade size = " + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + " width= " + hb_ntos( nWidth ) + '%>' + ;
          CRLF()
    ENDIF
 
@@ -1134,21 +1134,21 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
    ENDIF
 
    IF nBorder != NIL .AND. HB_ISNUMERIC( nBorder )
-      cStr += " BORDER = " + hb_ntos( nBorder )
+      cStr += " border= " + hb_ntos( nBorder )
    ELSEIF nBorder != NIL .AND. HB_ISSTRING( nBorder )
-      cStr += " BORDER = " + '"' + nBorder + '"'
+      cStr += " border= " + '"' + nBorder + '"'
    ENDIF
 
    IF nHeight != NIL .AND. HB_ISNUMERIC( nHeight )
-      cStr += " HEIGHT = " + hb_ntos( nHeight ) + " "
+      cStr += " height= " + hb_ntos( nHeight ) + " "
    ELSEIF nHeight != NIL .AND. HB_ISSTRING( nHeight )
-      cStr += " HEIGHT = " + '"' + nHeight + '"'
+      cStr += " height= " + '"' + nHeight + '"'
    ENDIF
 
    IF nWidth != NIL .AND. HB_ISNUMERIC( nWidth )
-      cStr += " width = " + hb_ntos( nWidth ) + " "
+      cStr += " width= " + hb_ntos( nWidth ) + " "
    ELSEIF nWidth != NIL .AND. HB_ISSTRING( nWidth )
-      cStr += " width = " + nWidth + " "
+      cStr += " width= " + nWidth + " "
    ENDIF
 
    IF cOnClick != NIL

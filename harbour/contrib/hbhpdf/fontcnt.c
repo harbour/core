@@ -49,7 +49,7 @@
 
 #include "hbhpdf.h"
 
-/* HPdf_UseCNTFonts( hDoc ) -> hStatus
+/* HPDF_UseCNTFonts( hDoc ) -> hStatus
  */
 HB_FUNC( HPDF_USECNTFONTS )
 {

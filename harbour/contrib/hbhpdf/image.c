@@ -49,21 +49,21 @@
 
 #include "hbhpdf.h"
 
-/* HPdf_LoadPngImageFromFile( hDoc, cPNGFileName ) -> hImage
+/* HPDF_LoadPngImageFromFile( hDoc, cPNGFileName ) -> hImage
  */
 HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE )
 {
    hb_retptr( ( void * ) HPDF_LoadPngImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 
-/* HPdf_LoadPngImageFromFile2( hDoc, cPNGFileName ) -> hImage
+/* HPDF_LoadPngImageFromFile2( hDoc, cPNGFileName ) -> hImage
  */
 HB_FUNC( HPDF_LOADPNGIMAGEFROMFILE2 )
 {
    hb_retptr( ( void * ) HPDF_LoadPngImageFromFile2( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ) ) );
 }
 
-/* HPdf_LoadRawImageFromFile( hDoc, cImageFileName, nWidth, nHeight, nColorSpace ) -> hImage
+/* HPDF_LoadRawImageFromFile( hDoc, cImageFileName, nWidth, nHeight, nColorSpace ) -> hImage
        nColorSpace
    HPDF_CS_DEVICE_GRAY
    HPDF_CS_DEVICE_RGB
@@ -74,14 +74,14 @@ HB_FUNC( HPDF_LOADRAWIMAGEFROMFILE )
    hb_retptr( ( void * ) HPDF_LoadRawImageFromFile( hb_HPDF_Doc_par( 1 ), hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ) ) );
 }
 
-/* HPdf_LoadRawImageFromMem( hDoc, cBuffer, nWidth, nHeight, nColorSpace, nBitsPerComponents ) -> hImage
+/* HPDF_LoadRawImageFromMem( hDoc, cBuffer, nWidth, nHeight, nColorSpace, nBitsPerComponents ) -> hImage
  */
 HB_FUNC( HPDF_LOADRAWIMAGEFROMMEM )
 {
    hb_retptr( ( void * ) HPDF_LoadRawImageFromMem( hb_HPDF_Doc_par( 1 ), ( HPDF_BYTE * ) hb_parc( 2 ), hb_parni( 3 ), hb_parni( 4 ), ( HPDF_ColorSpace ) hb_parni( 5 ), hb_parni( 6 ) ) );
 }
 
-/* HPdf_LoadJPEGImageFromFile( hDoc, cHPEGFileName ) -> hImage
+/* HPDF_LoadJPEGImageFromFile( hDoc, cHPEGFileName ) -> hImage
  */
 HB_FUNC( HPDF_LOADJPEGIMAGEFROMFILE )
 {

@@ -405,7 +405,7 @@ PROCEDURE thFunc()
    ENDIF
    hb_gtInfo( HB_GTI_FONTNAME , "Lucida Console" )
    hb_gtInfo( HB_GTI_WINTITLE, "test.dbf    [" + iif( ( s_nBrowser % 2 ) != 0, "RESIZABLE_BY_ROWS", "RESIZABLE_BY_FONT" ) + "]" )
-   hb_gtInfo( HB_GTI_ALTENTER, .T. )  //allow alt-enter for full screen
+   hb_gtInfo( HB_GTI_ALTENTER, .T. )  // allow alt-enter for full screen
 
    SetCursor( SC_NONE )
 
@@ -424,7 +424,7 @@ PROCEDURE thFunc()
       " Rows and " + hb_ntos( MaxCol() ) + " Columns"
    hb_DispOutAt( 0, 0, PadC( cTitle, MaxCol() + 1 ), "N/GR*" )
 
-   hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy ) //this does not work until something is displayed
+   hb_gtInfo( HB_GTI_SETPOS_XY, s_nZx, s_nZy ) // this does not work until something is displayed
 
    USE test NEW SHARED
    aStruct := dbStruct()

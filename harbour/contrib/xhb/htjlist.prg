@@ -191,9 +191,9 @@ METHOD SetFont( name, font, fntColor, fntSize ) CLASS TJSList
    __defaultNIL( @fntSize, ::Size )
 
    cStr += name + [.SetFont("<font ] + ;
-      " FACE = '" + font + "' " + ;
-      " SIZE = " + hb_ntos( fntSize ) + "'" + ;
-      " COLOR = '" + fntColor + "' " + ;
+      " face= '" + font + "' " + ;
+      " size= " + hb_ntos( fntSize ) + "'" + ;
+      " color= '" + fntColor + "' " + ;
       [ > ","</font>");] + CRLF()
 
    AAdd( ::aScript, cStr )

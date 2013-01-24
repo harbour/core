@@ -93,7 +93,6 @@ FUNCTION hb_DumpVar( xVar, lRecursive, nMaxRecursionLevel )
 
 STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )
 
-   LOCAL cType := ValType( xVar )
    LOCAL cString := "", cKey
    LOCAL nEolLen
 
@@ -108,8 +107,8 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
       RETURN AsString( xVar )
    ENDIF
 
-   DO CASE
-   CASE cType == "O"
+   SWITCH ValType( xVar )
+   CASE "O"
 
       IF ! lAssocAsObj .AND. xVar:className() == "TASSOCIATIVEARRAY"
          cString += Space( nIndent ) + "Type='Associative' -> " + hb_eol()
@@ -143,8 +142,9 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
 #endif
          cString += Space( nIndent ) + " +----------->" + hb_eol()
       ENDIF
+      EXIT
 
-   CASE cType == "A"
+   CASE "A"
       IF nRecursionLevel == 1
          cString += Space( nIndent ) + "Type='A' -> { Array of " + hb_ntos( Len( xVar ) ) + " Items }" + hb_eol()
       ENDIF
@@ -153,8 +153,9 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
       ELSE
          cString += DShowArray( xVar, lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )
       ENDIF
+      EXIT
 
-   CASE cType == "H"
+   CASE "H"
       IF nRecursionLevel == 1
          cString += Space( nIndent ) + "Type='H' -> { Hash of " + hb_ntos( Len( xVar ) ) + " Items }" + hb_eol()
       ENDIF
@@ -163,10 +164,11 @@ STATIC FUNCTION __HB_DumpVar( xVar, lAssocAsObj, lRecursive, nIndent, nRecursion
       ELSE
          cString += DShowHash( xVar, lRecursive, nIndent, nRecursionLevel, nMaxRecursionLevel )
       ENDIF
+      EXIT
 
    OTHERWISE
-      cString +=  Space( nIndent ) + AsString( xVar ) + hb_eol()
-   ENDCASE
+      cString += Space( nIndent ) + AsString( xVar ) + hb_eol()
+   ENDSWITCH
 
    RETURN cString
 
@@ -351,17 +353,7 @@ STATIC FUNCTION DecodeType( nType AS NUMERIC )
    RETURN PadR( cString, 7 )
 
 STATIC FUNCTION asString( x )
-
-   LOCAL v := ValType( x )
-
-   DO CASE
-   CASE v == "C"
-      RETURN '"' + x + '"'
-   OTHERWISE
-      RETURN hb_CStr( x )
-   ENDCASE
-
-   RETURN x
+   RETURN iif( HB_ISSTRING( x ), '"' + x + '"', hb_CStr( x ) )
 
 #include "error.ch"
 
