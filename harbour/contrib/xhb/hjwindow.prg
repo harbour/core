@@ -89,17 +89,17 @@ CREATE CLASS TJSWindow
 
    METHOD Write( c )
 
-   METHOD lineBreak() INLINE ::QOut( "<BR>" )
+   METHOD lineBreak() INLINE ::QOut( "<br />" )
 
-   METHOD Paragraph() INLINE ::QOut( "<P></P>" )
+   METHOD Paragraph() INLINE ::QOut( "<p></p>" )
 
-   METHOD Center( l ) INLINE ::QOut( iif( l, "<CENTER>", "</CENTER>" ) )
+   METHOD Center( l ) INLINE ::QOut( iif( l, "<center>", "</center>" ) )
 
-   METHOD bold( l ) INLINE ::QOut( iif( l, "<B>", "</B>" ) )
+   METHOD bold( l ) INLINE ::QOut( iif( l, "<b>", "</b>" ) )
 
-   METHOD Italic( l ) INLINE ::QOut( iif( l, "<I>", "</I>" ) )
+   METHOD Italic( l ) INLINE ::QOut( iif( l, "<i>", "</i>" ) )
 
-   METHOD ULine( l ) INLINE ::QOut( iif( l, "<U>", "</U>" ) )
+   METHOD ULine( l ) INLINE ::QOut( iif( l, "<u>", "</u>" ) )
 
    METHOD Put()
 
@@ -348,33 +348,33 @@ METHOD Begin() CLASS TJSWindow
 
    LOCAL i
 
-   FWrite( ::nH, "<SCRIPT LANGUAGE=JavaScript 1.2>" + CRLF() )
+   FWrite( ::nH, "<script language=JavaScript 1.2>" + CRLF() )
    FWrite( ::nH, "<!--" + CRLF() )
-   ::QOut( "<HTML><HEAD>" )
+   ::QOut( "<html><head>" )
 
    IF ::Title != NIL
-      ::QOut( "<TITLE>" + ::Title + "</TITLE>" )
+      ::QOut( "<title>" + ::Title + "</title>" )
    ENDIF
 
    IF ::aScriptSrc != NIL
       FOR i := 1 TO Len( ::aScriptSrc )
          ::QOut( ;
-            '<SCRIPT LANGUAGE=JavaScript SRC="' + ::aScriptSrc[ i ] + '"></SCRIPT>' )
+            '<script language=JavaScript SRC="' + ::aScriptSrc[ i ] + '"></script>' )
       NEXT
    ENDIF
 
    IF ::aServerSrc != NIL
       FOR i := 1 TO Len( ::aServerSrc )
          ::QOut( ;
-            '<SCRIPT LANGUAGE=JavaScript SRC="' + ::aServerSrc[ i ] + '" RUNAT=SERVER></SCRIPT>' )
+            '<script language=JavaScript src="' + ::aServerSrc[ i ] + '" runat=SERVER></script>' )
       NEXT
    ENDIF
 
    IF ::Style != NIL
-      ::QOut( "<STYLE> " + ::Style + " </STYLE>" )
+      ::QOut( "<style> " + ::Style + " </style>" )
    ENDIF
 
-   ::QOut( "</HEAD>" + "<BODY" )
+   ::QOut( "</head>" + "<body" )
 
    IF ::onLoad != NIL
       ::QOut( '   onLoad="' + ::onLoad + '"' )
@@ -387,19 +387,19 @@ METHOD Begin() CLASS TJSWindow
    ::QOut( '>' )
 
    IF ::bgColor != NIL
-      ::QOut( '<BODY BGCOLOR="' + ::bgColor + '">' )
+      ::QOut( '<body bgcolor="' + ::bgColor + '">' )
    ENDIF
 
-   IF ::fontColor != NIL
-      ::QOut( '<BODY TEXT="' + ::fontColor + '">' )
+   IF ::fontColor != nil
+      ::QOut( '<body text="' + ::fontColor + '">' )
    ENDIF
 
-   IF ::bgImage != NIL
-      ::QOut( '<BODY BACKGROUND="' + ::bgImage + '">' )
+   IF ::bgImage != nil
+      ::QOut( '<body background="' + ::bgImage + '">' )
    ENDIF
 
    FWrite( ::nH, "//-->" )
-   FWrite( ::nH, "</SCRIPT>" + CRLF() )
+   FWrite( ::nH, "</script>" + crlf() )
 
    RETURN Self
 
@@ -411,7 +411,7 @@ METHOD Begin() CLASS TJSWindow
 
 METHOD End() CLASS TJSWindow
 
-   HtmlJSCmd( ::nH, ::varName + ".document.write('</BODY></HTML>')" + CRLF() )
+   HtmlJSCmd( ::nH, ::varName + ".document.write('</body></html>')" + CRLF() )
 
    RETURN Self
 
@@ -430,18 +430,18 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    __defaultNIL( @cUrl, "" )
 
    IF cName != NIL
-      cStr += ' NAME= "' + cName + '"' + CRLF()
+      cStr += ' name= "' + cName + '"' + CRLF()
    ENDIF
    IF cAlt != NIL
-      cStr += ' ALT= "' + cAlt + '"' + CRLF()
+      cStr += ' alt= "' + cAlt + '"' + CRLF()
    ENDIF
 
    IF nBorder != NIL
-      cStr += " BORDER = " + hb_ntos( nBorder ) + CRLF()
+      cStr += " border= " + hb_ntos( nBorder ) + CRLF()
    ENDIF
 
    IF nHeight != NIL
-      cStr += " HEIGHT = " + hb_ntos( nHeight ) + "% " + CRLF()
+      cStr += " height= " + hb_ntos( nHeight ) + "% " + CRLF()
    ENDIF
 
    IF cOnClick != NIL
@@ -455,11 +455,11 @@ METHOD ImageURL( cImage, cUrl, nHeight, nBorder, ;
    ENDIF
 
    IF cURL != NIL
-      ::QOut( '<A HREF=' + cUrl + '><IMG SRC="' + cImage + '"' + ;
-         cStr + '></A>' )
+      ::QOut( '<a href=' + cUrl + '><img src="' + cImage + '"' + ;
+         cStr + '></a>' )
    ELSE
-      ::QOut( '<IMG SRC="' + cImage + '"' + ;
-         cStr + '></A>' )
+      ::QOut( '<img src="' + cImage + '"' + ;
+         cStr + '></a>' )
    ENDIF
 
    RETURN Self

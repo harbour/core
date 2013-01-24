@@ -78,7 +78,7 @@ ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateXML
 
-   super:NewDocument( cFolder, cFilename, cTitle, ".xml" )
+   ::super:NewDocument( cFolder, cFilename, cTitle, ".xml" )
    FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
    FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
 
@@ -86,7 +86,7 @@ METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateXML
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
 
-   super:NewIndex( cFolder, cFilename, cTitle, ".xml" )
+   ::super:NewIndex( cFolder, cFilename, cTitle, ".xml" )
    FWrite( ::nHandle, '<?xml version="1.0" encoding="UTF-8" standalone="yes"?>' + hb_eol() )
    FWrite( ::nHandle, '<HarbourReference>' + hb_eol() )
 
@@ -95,9 +95,9 @@ METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateXML
 METHOD BeginSection( cSection, cFilename ) CLASS GenerateXML
 
    IF ::Depth == 0
-      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [<Section name="] + cSection + [" file="] + cFilename + ::cExtension + [">] + hb_eol() )
+      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + '<Section name="' + cSection + '" file="' + cFilename + ::cExtension + '">' + hb_eol() )
    ELSE
-      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [<Section name="] + cSection + [">] + hb_eol() )
+      FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + '<Section name="' + cSection + '">' + hb_eol() )
    ENDIF
    ::Depth++
 
@@ -108,7 +108,7 @@ METHOD EndSection( cSection, cFilename ) CLASS GenerateXML
    HB_SYMBOL_UNUSED( cSection )
    HB_SYMBOL_UNUSED( cFilename )
    ::Depth--
-   FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + [</Section>] + hb_eol() )
+   FWrite( ::nHandle, Replicate( Chr( 9 ), ::Depth ) + '</Section>' + hb_eol() )
 
    RETURN self
 

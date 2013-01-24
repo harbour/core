@@ -221,12 +221,12 @@
 #xcommand LINE BREAK                       ;
           IN <oForm>                       ;
           =>                               ;
-          <oForm>:AddControl( "<BR>" + CRLF() )
+          <oForm>:AddControl( "<br />" + CRLF() )
 
 
 #xcommand LINE IN <oForm>                  ;
           =>                               ;
-          <oForm>:AddControl( CRLF() + "<HR WIDTH = 100%>" + CRLF() )
+          <oForm>:AddControl( CRLF() + "<hr width = 100%>" + CRLF() )
 
 #xcommand SPACE <n> IN <oForm>             ;
           =>                               ;
@@ -243,10 +243,10 @@
 
 
 #xcommand START GROUP <c> IN <oForm> => ;
-          <oForm>:AddControl( CRLF() + "<FIELDSET><LEGEND>" + <c> + "</LEGEND>" + CRLF() )
+          <oForm>:AddControl( CRLF() + "<fieldset><legend>" + <c> + "</legend>" + CRLF() )
 
 #xcommand END GROUP IN <oForm> => ;
-          <oForm>:AddControl( CRLF() + "</FIELDSET>" + CRLF() )
+          <oForm>:AddControl( CRLF() + "</fieldset>" + CRLF() )
 
 
 #xtranslate __TYPE__                  => "TEXT"

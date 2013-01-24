@@ -1260,7 +1260,7 @@ static HB_SIZE hb_deserializeItem( PHB_ITEM pItem,
       case HB_SERIAL_XHB_R:
          /* nIndex = ( HB_SIZE ) HB_GET_BE_UINT64( &pBuffer[ nOffset ] ); */
          /* TODO: add support for references */
-         nOffset =+ 9;
+         nOffset += 9;
 
       default:
          hb_itemClear( pItem );

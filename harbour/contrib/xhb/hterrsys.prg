@@ -47,7 +47,7 @@
 #include "error.ch"
 #include "cgi.ch"
 
-#define DEF_ERR_HEADER "Date : " + DToC( Date() ) + "<BR>" + "Time : " + Time() + "<BR>"
+#define DEF_ERR_HEADER "Date : " + DToC( Date() ) + "<br />" + "Time : " + Time() + "<br />"
 
 // put messages to STDERR
 #command ? <list,...>   =>  ?? Chr( 13 ) + Chr( 10 ) ; ?? <list>
@@ -114,64 +114,64 @@ STATIC FUNCTION xhb_cgi_DefError( e )
 
    // RESET System //
 
-   cErrString := CRLF() + "</TD></TR></TABLE>" + CRLF()
-   cErrString += '<TABLE bgcolor="white" border CellPadding=1 CellSpacing=1 COLS=2 WIDTH=80%>'
+   cErrString := CRLF() + "</td></tr></table>" + CRLF()
+   cErrString += '<table bgcolor="white" border CellPadding=1 CellSpacing=1 cols=2 width=80%>'
 
-   cErrString += '<TR><TD bgcolor="black" align="CENTER">'
-   cErrstring += '<FONT face = "verdana" size ="5" color="white">' + CRLF()
-   cErrString += "<B>ERROR REPORT</B>"
-   cErrString += "</TD></TR>"
+   cErrString += '<tr><td bgcolor="black" align="center">'
+   cErrstring += '<font face = "verdana" size ="5" color="white">' + CRLF()
+   cErrString += "<b>ERROR REPORT</b>"
+   cErrString += "</td></tr>"
 
-   cErrString += '<TR><TD bgcolor="blue">'
-   cErrstring += '<FONT face = "verdana" size ="2" color="white">' + CRLF()
+   cErrString += '<tr><td bgcolor="blue">'
+   cErrstring += '<font face = "verdana" size ="2" color="white">' + CRLF()
    cErrString += DEF_ERR_HEADER
-   cErrString += "</TD></TR>"
+   cErrString += "</td></tr>"
 
-   cErrString += '<TR><TD bgcolor="red">'
-   cErrstring += '<FONT face ="verdana" size ="2" color="white">' + CRLF()
-   cErrString += '<EM>' + cMessage + '</EM>'
+   cErrString += '<tr><td bgcolor="red">'
+   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
+   cErrString += '<em>' + cMessage + '</em>'
 
-   cErrString += '</TD></TR><TR><TD bgcolor="cyan">' + CRLF()
-   cErrstring += '<FONT face ="verdana" size ="2" color="black">' + CRLF()
-   cErrString += "ERRORCODE...... :" + hb_ntos( e:GenCode ) + "<BR>" + CRLF()
-   cErrString += "SUBSYSTEM..... :" + e:SubSystem + "<BR>" + CRLF()
-   cErrString += "DESCRIPTION...:" + e:Description + "<BR>" + CRLF()
-   cErrString += "OPERATION......:" + e:Operation + "<BR>" + CRLF()
-   cErrString += "FILENAME........ :" + e:FileName + "<BR>" + CRLF()
+   cErrString += '</td></tr><tr><td bgcolor="cyan">' + CRLF()
+   cErrstring += '<font face ="verdana" size ="2" color="black">' + CRLF()
+   cErrString += "ERRORCODE...... :" + hb_ntos( e:GenCode ) + "<br />" + CRLF()
+   cErrString += "SUBSYSTEM..... :" + e:SubSystem + "<br />" + CRLF()
+   cErrString += "DESCRIPTION...:" + e:Description + "<br />" + CRLF()
+   cErrString += "OPERATION......:" + e:Operation + "<br />" + CRLF()
+   cErrString += "FILENAME........ :" + e:FileName + "<br />" + CRLF()
    cErrString += "TRIES............. :" + hb_ntos( e:Tries ) + CRLF()
 
-   cErrString += '</TD></TR>'
-   cErrString += '<TR><TD bgcolor="red">'
-   cErrstring += '<FONT face ="verdana" size ="2" color="white">' + CRLF()
-   cErrstring += '<EM>'
+   cErrString += '</td></tr>'
+   cErrString += '<tr><td bgcolor="red">'
+   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
+   cErrstring += '<em>'
 
    i := 2
 
    DO WHILE ! Empty( ProcName( i ) )
 
       cErrString += "Called from " + RTrim( ProcName( i ) ) + ;
-         "(" + hb_ntos( ProcLine( i ) ) + ") <BR>" + CRLF()
+         "(" + hb_ntos( ProcLine( i ) ) + ") <br />" + CRLF()
 
       i++
    ENDDO
 
-   cErrstring += '</EM>'
-   cErrString += '</TD></TR>'
-   cErrString += '<TR><TD bgcolor="black">'
-   cErrstring += '<FONT face ="verdana" size ="2" color="white">' + CRLF()
+   cErrstring += '</em>'
+   cErrString += '</td></tr>'
+   cErrString += '<tr><td bgcolor="black">'
+   cErrstring += '<font face ="verdana" size ="2" color="white">' + CRLF()
    cErrstring += "Extra Notes..."
 
-   cErrString += "</TD>" + CRLF() + "</TR>" + CRLF() + "</TABLE>" + CRLF()
-   FWrite( nH, "<BR>" + cErrString + CRLF() )
+   cErrString += "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF()
+   FWrite( nH, "<br />" + cErrString + CRLF() )
    MemoWrit( "Error.Log", HardCR( cErrString ) + CRLF() + ;
       HardCR( MemoRead( "Error.Log" ) ) )
 
-   FWrite( nH, "</TD>" + CRLF() + "</TR>" + CRLF() + "</TABLE>" + CRLF() )
+   FWrite( nH, "</td>" + CRLF() + "</tr>" + CRLF() + "</table>" + CRLF() )
 
    HtmlJSCmd( nH, 'Alert("There was an error processing your request:\n' + ;
       'Look at the bottom of this page for\n' + ;
       'error description and parameters...");' )
-   FWrite( nH, "</FONT>" + CRLF() + "</BODY></HTML>" + CRLF() )
+   FWrite( nH, "</font>" + CRLF() + "</body></html>" + CRLF() )
 
    CLOSE ALL
 
@@ -223,7 +223,7 @@ STATIC FUNCTION ErrorMessage( e )
 
    // add error description if available
    IF HB_ISSTRING( e:description )
-      cMessage += "<BR>  " + e:description
+      cMessage += "<br />  " + e:description
    ENDIF
 
    // add either filename or operation

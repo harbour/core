@@ -22,8 +22,8 @@ ENDCLASS
 
 CREATE CLASS Two FROM One
 
-   METHOD Test() INLINE Super:Test()
-   METHOD CheckIt() INLINE Super:CheckIt()
+   METHOD Test() INLINE ::super:Test()
+   METHOD CheckIt() INLINE ::super:CheckIt()
 
 ENDCLASS
 

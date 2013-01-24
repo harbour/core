@@ -7,7 +7,6 @@
 *.bas     text
 *.c       text
 *.cfg     text
-*.cfm     text
 *.ch      text
 *.css     text
 *.def     text

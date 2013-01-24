@@ -66,6 +66,16 @@
    Program Library HOWTO:
       http://www.linux.org/docs/ldp/howto/Program-Library-HOWTO/index.html
 
+   Markdown syntax:
+      http://daringfireball.net/projects/markdown/syntax
+
+   Markdown to man page converter:
+      https://github.com/sunaku/md2man
+   Requires Ruby. Install with:
+      gem install md2man
+   Convert with:
+      md2man hbmk2.md > hbmk2.1
+
    Man page HOWTO:
       http://www.schweikhardt.net/man_page_howto.html
    Groff manual:
@@ -75,13 +85,16 @@
       http://cm.bell-labs.com/sys/doc/troff.pdf
  */
 
+/* needed for -u */
+#ifndef HB_LEGACY_LEVEL4
+#define HB_LEGACY_LEVEL4
+#endif
+
 #include "directry.ch"
 #include "error.ch"
 #include "fileio.ch"
 #include "set.ch" /* needed for -u */
 #include "simpleio.ch" /* Don't delete this, it's useful for development. */
-
-#define HB_LEGACY_LEVEL4 /* needed for -u */
 
 #include "hbgtinfo.ch"
 #include "hbhrb.ch"

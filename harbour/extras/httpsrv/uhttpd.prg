@@ -2039,31 +2039,31 @@ STATIC PROCEDURE ShowServerStatus()
    // uhttpd_Write( '<table border="0">')
 
    uhttpd_Write( 'SERVER: ' + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] )
-   uhttpd_Write( '<br>' )
+   uhttpd_Write( '<br />' )
    IF hb_mutexLock( s_hmtxBusy )
-      uhttpd_Write( '<br>Thread: ' + Str( s_nThreads ) )
-      uhttpd_Write( '<br>Connections: ' + Str( s_nConnections ) )
-      uhttpd_Write( '<br>Max Connections: ' + Str( s_nMaxConnections ) )
-      uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
+      uhttpd_Write( '<br />Thread: ' + Str( s_nThreads ) )
+      uhttpd_Write( '<br />Connections: ' + Str( s_nConnections ) )
+      uhttpd_Write( '<br />Max Connections: ' + Str( s_nMaxConnections ) )
+      uhttpd_Write( '<br />Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
       cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
-      uhttpd_Write( '<br>Running Threads: ' + cThreads )
+      uhttpd_Write( '<br />Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
-      uhttpd_Write( '<br>Service Thread: ' + Str( s_nServiceThreads ) )
-      uhttpd_Write( '<br>Service Connections: ' + Str( s_nServiceConnections ) )
-      uhttpd_Write( '<br>Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
-      uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
+      uhttpd_Write( '<br />Service Thread: ' + Str( s_nServiceThreads ) )
+      uhttpd_Write( '<br />Service Connections: ' + Str( s_nServiceConnections ) )
+      uhttpd_Write( '<br />Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
+      uhttpd_Write( '<br />Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
       cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
-      uhttpd_Write( '<br>Service Threads: ' + cThreads )
+      uhttpd_Write( '<br />Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
-   uhttpd_Write( '<br>Time: ' + Time() )
+   uhttpd_Write( '<br />Time: ' + Time() )
 
    // uhttpd_Write( '</table>')
    uhttpd_Write( "<hr></pre></body></html>" )
@@ -2677,31 +2677,31 @@ STATIC FUNCTION Handler_ServerStatus()
    // uhttpd_Write( '<table border="0">')
 
    uhttpd_Write( 'SERVER: ' + _SERVER[ "SERVER_SOFTWARE" ] + " Server at " + _SERVER[ "SERVER_NAME" ] + " Port " + _SERVER[ "SERVER_PORT" ] )
-   uhttpd_Write( '<br>' )
+   uhttpd_Write( '<br />' )
    IF hb_mutexLock( s_hmtxBusy )
-      uhttpd_Write( '<br>Thread: ' + Str( s_nThreads ) )
-      uhttpd_Write( '<br>Connections: ' + Str( s_nConnections ) )
-      uhttpd_Write( '<br>Max Connections: ' + Str( s_nMaxConnections ) )
-      uhttpd_Write( '<br>Total Connections: ' + Str( s_nTotConnections ) )
+      uhttpd_Write( '<br />Thread: ' + Str( s_nThreads ) )
+      uhttpd_Write( '<br />Connections: ' + Str( s_nConnections ) )
+      uhttpd_Write( '<br />Max Connections: ' + Str( s_nMaxConnections ) )
+      uhttpd_Write( '<br />Total Connections: ' + Str( s_nTotConnections ) )
       cThreads := ""
       AEval( s_aRunningThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
       cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
-      uhttpd_Write( '<br>Running Threads: ' + cThreads )
+      uhttpd_Write( '<br />Running Threads: ' + cThreads )
 
 #ifndef FIXED_THREADS
-      uhttpd_Write( '<br>Service Thread: ' + Str( s_nServiceThreads ) )
-      uhttpd_Write( '<br>Service Connections: ' + Str( s_nServiceConnections ) )
-      uhttpd_Write( '<br>Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
-      uhttpd_Write( '<br>Total Service Connections: ' + Str( s_nTotServiceConnections ) )
+      uhttpd_Write( '<br />Service Thread: ' + Str( s_nServiceThreads ) )
+      uhttpd_Write( '<br />Service Connections: ' + Str( s_nServiceConnections ) )
+      uhttpd_Write( '<br />Max Service Connections: ' + Str( s_nMaxServiceConnections ) )
+      uhttpd_Write( '<br />Total Service Connections: ' + Str( s_nTotServiceConnections ) )
       cThreads := ""
       AEval( s_aServiceThreads, {| e | cThreads += hb_ntos( hb_threadID( e ) ) + "," } )
       cThreads := "{ " + iif( ! Empty( cThreads ), Left( cThreads, Len( cThreads ) - 1 ), "<empty>" ) + " }"
-      uhttpd_Write( '<br>Service Threads: ' + cThreads )
+      uhttpd_Write( '<br />Service Threads: ' + cThreads )
 #endif // FIXED_THREADS
 
       hb_mutexUnlock( s_hmtxBusy )
    ENDIF
-   uhttpd_Write( '<br>Time: ' + Time() )
+   uhttpd_Write( '<br />Time: ' + Time() )
 
    // uhttpd_Write( '</table>')
    uhttpd_Write( "<hr></pre></body></html>" )
@@ -2770,16 +2770,16 @@ STATIC FUNCTION Handler_HrbScript( cFileName )
 
       uhttpd_SetHeader( "Content-Type", "text/html" )
       uhttpd_Write( "Error" )
-      uhttpd_Write( "<br>Description: " + hb_CStr( oError:Description ) )
-      uhttpd_Write( "<br>Filename: "    + hb_CStr( oError:filename ) )
-      uhttpd_Write( "<br>Operation: "   + hb_CStr( oError:operation ) )
-      uhttpd_Write( "<br>OsCode: "      + hb_CStr( oError:osCode ) )
-      uhttpd_Write( "<br>GenCode: "     + hb_CStr( oError:genCode ) )
-      uhttpd_Write( "<br>SubCode: "     + hb_CStr( oError:subCode ) )
-      uhttpd_Write( "<br>SubSystem: "   + hb_CStr( oError:subSystem ) )
-      uhttpd_Write( "<br>Args: "        + hb_CStr( hb_ValToExp( oError:args ) ) )
-      uhttpd_Write( "<br>ProcName: "    + hb_CStr( ProcName( 0 ) ) )
-      uhttpd_Write( "<br>ProcLine: "    + hb_CStr( ProcLine( 0 ) ) )
+      uhttpd_Write( "<br />Description: " + hb_CStr( oError:Description ) )
+      uhttpd_Write( "<br />Filename: "    + hb_CStr( oError:filename ) )
+      uhttpd_Write( "<br />Operation: "   + hb_CStr( oError:operation ) )
+      uhttpd_Write( "<br />OsCode: "      + hb_CStr( oError:osCode ) )
+      uhttpd_Write( "<br />GenCode: "     + hb_CStr( oError:genCode ) )
+      uhttpd_Write( "<br />SubCode: "     + hb_CStr( oError:subCode ) )
+      uhttpd_Write( "<br />SubSystem: "   + hb_CStr( oError:subSystem ) )
+      uhttpd_Write( "<br />Args: "        + hb_CStr( hb_ValToExp( oError:args ) ) )
+      uhttpd_Write( "<br />ProcName: "    + hb_CStr( ProcName( 0 ) ) )
+      uhttpd_Write( "<br />ProcLine: "    + hb_CStr( ProcLine( 0 ) ) )
 
    END SEQUENCE
 

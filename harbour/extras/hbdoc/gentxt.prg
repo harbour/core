@@ -67,14 +67,14 @@ ENDCLASS
 METHOD NewDocument( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
 
    ::lContinuous := .T.
-   super:NewDocument( cFolder, cFilename, cTitle, cDescription )
+   ::super:NewDocument( cFolder, cFilename, cTitle, cDescription )
 
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle, cDescription ) CLASS GenerateAscii
 
    ::lContinuous := .T.
-   super:NewIndex( cFolder, cFilename, cTitle, cDescription )
+   ::super:NewIndex( cFolder, cFilename, cTitle, cDescription )
 
    RETURN self
 
@@ -100,14 +100,14 @@ ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateText
 
-   super:NewDocument( cFolder, cFilename, cTitle, ".txt" )
+   ::super:NewDocument( cFolder, cFilename, cTitle, ".txt" )
    ::WriteEntry( "", cTitle + hb_eol(), .F. )
 
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateText
 
-   super:NewIndex( cFolder, cFilename, cTitle, ".txt" )
+   ::super:NewIndex( cFolder, cFilename, cTitle, ".txt" )
    ::WriteEntry( "", cTitle + hb_eol(), .F. )
 
    RETURN self

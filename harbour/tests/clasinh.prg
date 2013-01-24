@@ -35,7 +35,7 @@ ENDCLASS
 
 METHOD New() CLASS TAnyClass
 
-   super:New()
-   super:Test()
+   ::super:New()
+   ::super:Test()
 
    RETURN Self

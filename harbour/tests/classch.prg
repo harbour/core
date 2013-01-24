@@ -36,7 +36,7 @@ ENDCLASS
 
 METHOD New( One, Two ) CLASS TTest
 
-   Super:New()
+   ::super:New()
 
    ::One := One
    ::Two := Two

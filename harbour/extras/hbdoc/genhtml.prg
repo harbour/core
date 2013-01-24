@@ -74,13 +74,13 @@ ENDCLASS
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateHTML2
 
-   super:NewDocument( cFolder, cFilename, cTitle, EXTENSION )
+   ::super:NewDocument( cFolder, cFilename, cTitle, EXTENSION )
 
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML2
 
-   super:NewIndex( cFolder, cFilename, cTitle, EXTENSION )
+   ::super:NewIndex( cFolder, cFilename, cTitle, EXTENSION )
 
    RETURN self
 
@@ -137,14 +137,14 @@ METHOD NewFile() CLASS GenerateHTML
 
 METHOD NewDocument( cFolder, cFilename, cTitle ) CLASS GenerateHTML
 
-   super:NewDocument( cFolder, cFilename, cTitle, EXTENSION )
+   ::super:NewDocument( cFolder, cFilename, cTitle, EXTENSION )
    ::NewFile()
 
    RETURN self
 
 METHOD NewIndex( cFolder, cFilename, cTitle ) CLASS GenerateHTML
 
-   super:NewIndex( cFolder, cFilename, cTitle, EXTENSION )
+   ::super:NewIndex( cFolder, cFilename, cTitle, EXTENSION )
    ::NewFile()
 
    RETURN self

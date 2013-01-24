@@ -199,9 +199,9 @@ METHOD Put() CLASS THtmlControl
    ::form := HtmlFormName()
    ::oHtm := HtmlPageObject()
 
-   ::cOutput += iif( ::lBreak, CRLF() + "<BR>", CRLF() )
+   ::cOutput += iif( ::lBreak, CRLF() + "<br />", CRLF() )
    IF ::lLabel
-      ::cOutPut += CRLF() + "<LABEL>" + CRLF()
+      ::cOutPut += CRLF() + "<label>" + CRLF()
    ENDIF
 
    IF ::Caption != NIL
@@ -209,9 +209,9 @@ METHOD Put() CLASS THtmlControl
    ENDIF
 
    IF ::Type == "SELECT"
-      ::cOutPut += CRLF() + ' <SELECT ' + CRLF()
+      ::cOutPut += CRLF() + ' <select ' + CRLF()
    ELSE
-      ::cOutPut += CRLF() + ' <INPUT TYPE="'
+      ::cOutPut += CRLF() + ' <input type="'
       ::cOutput += ::Type + '"' + CRLF()
    ENDIF
 
@@ -339,7 +339,7 @@ METHOD Put() CLASS THtmlControl
    ::cOutput += " >" + CRLF()
 
    IF ::lLabel
-      ::cOutPut += CRLF() + "</LABEL>" + CRLF()
+      ::cOutPut += CRLF() + "</label>" + CRLF()
    ENDIF
 
 // FWrite( ::nH, ::cOutput )
@@ -348,7 +348,7 @@ METHOD Put() CLASS THtmlControl
    IF ::Type == "SELECT"
 
       FOR i := 1 TO Len( ::aOptions )
-         cStr := "<OPTION"
+         cStr := "<option"
          cStr += iif( ::aOptions[ i, _OPTION_VALUE ] != NIL, ;
             " value=" + ::aOptions[ i, _OPTION_VALUE ], "" )
          cStr += iif( ::aOptions[ i, _OPTION_LABEL ] != NIL, ;
@@ -357,13 +357,13 @@ METHOD Put() CLASS THtmlControl
             " SELECTED ", "" )
          cStr += iif( ::aOptions[ i, _OPTION_DISABLED ] != NIL .AND. ::aOptions[ i, _OPTION_DISABLED ], ;
             " DISABLED ", "" )
-         cStr += ">" + ::aOptions[ i, _OPTION_TEXT ] + "</OPTION>" + CRLF()
+         cStr += ">" + ::aOptions[ i, _OPTION_TEXT ] + "</option>" + CRLF()
 //       FWrite( ::nH, cStr )
          ::oHtm:cStr += cStr
       NEXT
 
-//    FWrite( ::nH, "</SELECT>" )
-      ::oHtm:cStr += "</SELECT>"
+//    FWrite( ::nH, "</select>" )
+      ::oHtm:cStr += "</select>"
    ENDIF
 
    RETURN Self
@@ -554,7 +554,7 @@ METHOD Put( lPutControls ) CLASS THtmlForm
       ::cOutPut := CRLF() + CRLF() + CRLF() + "<!-------  Start of Form ------->" + CRLF() + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
-      ::cOutPut := '<TABLE BGCOLOR="#9196A0" ' + CRLF() + ;
+      ::cOutPut := '<table bgcolor="#9196A0" ' + CRLF() + ;
          "       COLS=1 " + CRLF() + ;
          "       ROWS=1 " + CRLF() + ;
          "       CELLPADDING=3 " + CRLF() + ;
@@ -566,10 +566,10 @@ METHOD Put( lPutControls ) CLASS THtmlForm
          "       >" + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
-      ::cOutPut := '<TR BGCOLOR="' + ::captionColor + '">' + CRLF()
+      ::cOutPut := '<tr bgcolor="' + ::captionColor + '">' + CRLF()
 
       IF ::Caption != NIL
-         ::cOutPut := "<TD"
+         ::cOutPut := "<td"
 //       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
 
@@ -584,23 +584,23 @@ METHOD Put( lPutControls ) CLASS THtmlForm
          ::oHtm:cStr += ::cOutput
 
          IF ::capFontColor != NIL
-            ::cOutPut := '<FONT COLOR="' + ::capFontColor + '">' + CRLF()
+            ::cOutPut := '<font color="' + ::capFontColor + '">' + CRLF()
 //          FWrite( ::nH, ::cOutput )
             ::oHtm:cStr += ::cOutput
          ENDIF
 
-         ::cOutPut := "<B>" + ::Caption + "</B>" + CRLF()
+         ::cOutPut := "<b>" + ::Caption + "</b>" + CRLF()
 //       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
-         ::cOutPut := "</TD></TR>"
+         ::cOutPut := "</td></tr>"
 //       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
       ENDIF
 
-      ::cOutPut := '<TR BGCOLOR="' + ::color + '">' + CRLF()
+      ::cOutPut := '<tr BGCOLOR="' + ::color + '">' + CRLF()
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
-      ::cOutPut := '<TD'
+      ::cOutPut := '<td'
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
       IF ::bgImage != NIL
@@ -613,14 +613,14 @@ METHOD Put( lPutControls ) CLASS THtmlForm
 //    FWrite( ::nH, ::cOutput )
       ::oHtm:cStr += ::cOutput
       IF ::fontColor != NIL
-         ::cOutPut := '<FONT COLOR="' + ::FontColor + '">' + CRLF()
+         ::cOutPut := '<font color="' + ::FontColor + '">' + CRLF()
 //       FWrite( ::nH, ::cOutput )
          ::oHtm:cStr += ::cOutput
       ENDIF
 
    ENDIF
 
-   ::cOutput += CRLF() + "<FORM " + CRLF()
+   ::cOutput += CRLF() + "<form " + CRLF()
 // FWrite( ::nH, ::cOutput )
    ::oHtm:cStr += ::cOutput
 
@@ -685,12 +685,12 @@ METHOD Put( lPutControls ) CLASS THtmlForm
 
 METHOD End() CLASS THtmlForm
 
-   ::ohtm:cStr += "</FORM>" + CRLF()
+   ::ohtm:cStr += "</form>" + CRLF()
 
    IF ::Frame
-      ::ohtm:cStr += "</TD>" + CRLF()
-      ::ohtm:cStr += "</TR>" + CRLF()
-      ::ohtm:cStr += "</TABLE>" + CRLF()
+      ::ohtm:cStr += "</td>" + CRLF()
+      ::ohtm:cStr += "</tr>" + CRLF()
+      ::ohtm:cStr += "</table>" + CRLF()
    ENDIF
 
    ::ohtm:cStr += CRLF() + CRLF() + "<!---  End of Form --->" + CRLF() + CRLF() + CRLF()

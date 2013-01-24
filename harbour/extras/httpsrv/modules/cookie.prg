@@ -84,9 +84,9 @@ FUNCTION HRBMAIN()
     <input type="hidden" name="action" value="gotoinfo">
 </form>
 Pressing button you will redirect to /info page. Look at COOKIE values.
-<br>You will see a "mycookie" variable name.
-<br>
-<br>Return to <a href="/">Main Page</a>
+<br />You will see a "mycookie" variable name.
+<br />
+<br />Return to <a href="/">Main Page</a>
 
 </body>
 </html>

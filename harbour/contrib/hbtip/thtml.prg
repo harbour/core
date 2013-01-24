@@ -701,7 +701,7 @@ METHOD isOptional() CLASS THtmlNode
 
    RETURN hb_bitAnd( ::htmlTagType[ 2 ], CM_OPT ) > 0
 
-// checks if this is a node (leafs contain no further nodes, e.g. <br>,<hr>,_text_)
+// checks if this is a node (leafs contain no further nodes, e.g. <br />,<hr>,_text_)
 
 METHOD isNode() CLASS THtmlNode
 

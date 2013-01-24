@@ -52,26 +52,20 @@ inherit all/no (default) flags from Harbour build
 .IP "\fB-bldf=[p][c][l]\fP" 10
 inherit .prg/.c/linker flags (or none) from Harbour build
 
-.IP "\fB-[no]debug\fP" 10
+.IP "\fB-debug[-]\fP" 10
 add/exclude debug info
 
-.IP "\fB-[no]map\fP" 10
+.IP "\fB-map[-]\fP" 10
 create (or not) a map file
 
-.IP "\fB-[no]strip\fP" 10
+.IP "\fB-strip[-]\fP" 10
 strip (no strip) binaries
 
-.IP "\fB-[no]fmstat\fP" 10
-enable/disable runtime memory statistics (gcc builds only)
-
-.IP "\fB-[no]trace\fP" 10
+.IP "\fB-trace[-]\fP" 10
 show commands executed
 
-.IP "\fB-[no]run\fP" 10
+.IP "\fB-run[-]\fP" 10
 run/don't run the created executable
-
-.IP "\fB-nohbc\fP" 10
-do not process .hbc files in current directory
 
 .IP "\fB-hbcc, -hbcmp\fP" 10
 stop after creating the object files
@@ -100,10 +94,9 @@ Regular Harbour compiler options are also accepted.
 
 Multiple -l, -L and <script> parameters are accepted.
 
-hbmk.cfg option file in hbmk2 directory is always processed if it exists.
+hbmk.hbc option file in hbmk2 directory is always processed if it exists.
 On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour,
 <base>/etc are checked (in that order) before the hbmk2 directory.
-The file format is the same as .hbc.
 
 .hbc option files in current dir are automatically processed.
 
@@ -131,24 +124,33 @@ bsd, hpux, sunos: gcc
 
 .SH FILES
 
+hbmk.hbc
+hbmk.hbm
+hb_extension / hb_ext.ini
+
 .SH ENVIRONMENT
 
+.IP "\fBHBMK_OPTIONS\fP" 10
 .IP "\fBHB_CCPATH\fP" 10
 .IP "\fBHB_CCPREFIX\fP" 10
+.IP "\fBHB_CCPOSTFIX\fP" 10
 .IP "\fBHB_PLATFORM\fP" 10
 .IP "\fBHB_COMPILER\fP" 10
+.IP "\fBHB_COMPILER_VER\fP" 10
+.IP "\fBHB_CPU\fP" 10
+.IP "\fBHB_BUILD_NAME\fP" 10
 .IP "\fBHB_INSTALL_PREFIX\fP" 10
-.IP "\fBHB_MT\fP" 10
-.IP "\fBHB_GUI\fP" 10
-.IP "\fBHB_SHARED\fP" 10
-.IP "\fBHB_DEBUG\fP" 10
-.IP "\fBHB_NULRDD\fP" 10
-.IP "\fBHB_GT\fP" 10
-.IP "\fBHB_USER_PRGFLAGS\fP" 10
+.IP "\fBHB_INSTALL_ADDONS\fP" 10
 .IP "\fBHB_USER_LIBS\fP" 10
+.IP "\fBHB_USER_LIBPATHS\fP" 10
+.IP "\fBHB_USER_PRGFLAGS\fP" 10
 .IP "\fBHB_USER_RESFLAGS\fP" 10
 .IP "\fBHB_USER_CFLAGS\fP" 10
 .IP "\fBHB_USER_LDFLAGS\fP" 10
+.IP "\fBHB_USER_DFLAGS\fP" 10
+.IP "\fBHB_USER_AFLAGS\fP" 10
+.IP "\fBHB_EXTENSION\fP" 10
+.IP "\fBHB_LANG\fP" 10
 
 .SH AUTHOR
 

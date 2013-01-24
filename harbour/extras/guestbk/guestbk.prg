@@ -84,7 +84,7 @@ PROCEDURE Main()
       oIni:UpdateFile()
 
       oHTML:cContent := '<html><head><meta http-equiv="Refresh" ' + ;
-         'content="0;url=/cgi-bin/guestbk.exe"></HEAD>'  + ;
+         'content="0;url=/cgi-bin/guestbk.exe"></head>'  + ;
          '<body></body></html>'
 
       oHTML:ShowResult()
@@ -105,7 +105,6 @@ PROCEDURE Main()
 
       // Preprocess entries and stores in aEntries
       DO WHILE i > 0
-
 
          aLine := {}
 

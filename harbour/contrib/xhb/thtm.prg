@@ -106,15 +106,15 @@ CREATE CLASS THtml
 
    METHOD CGIClose()
 
-   METHOD SetPageColor( cColor, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BGCOLOR="' + cColor + '">', ' BGCOLOR="' + cColor + '" ' )
+   METHOD SetPageColor( cColor, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<body bgcolor="' + cColor + '">', ' bgcolor="' + cColor + '" ' )
 
-   METHOD SetTextColor( cColor, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY TEXT="' + cColor + '">', ' TEXT="' + cColor + '" ' )
+   METHOD SetTextColor( cColor, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<body text="' + cColor + '">', ' text="' + cColor + '" ' )
 
-   METHOD SetBgImage( cImage, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<BODY BACKGROUND="' + cImage + '">', ' BACKGROUND="' + cImage + '" ' )
+   METHOD SetBgImage( cImage, lBody ) INLINE Default( lBody, .T. ), ::cStr +=  iif( lBody, '<body background="' + cImage + '">', ' background="' + cImage + '" ' )
 
    METHOD Close()
 
-   METHOD SetCenter( lOn ) INLINE ::cStr +=  iif( lOn, "<CENTER>", "</CENTER>" )
+   METHOD SetCenter( lOn ) INLINE ::cStr +=  iif( lOn, "<center>", "</center>" )
 
    METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet )
 
@@ -128,14 +128,14 @@ CREATE CLASS THtml
 
    METHOD QQOut( c ) INLINE Default( c, "" ), ::cStr +=  c
 
-   METHOD QOut( c ) INLINE Default( c, "" ), ::cStr +=  CRLF() + c + '<BR>' + CRLF()
+   METHOD QOut( c ) INLINE Default( c, "" ), ::cStr +=  CRLF() + c + '<br />' + CRLF()
 
    METHOD Write( c ) INLINE Default( c, "" ), ::cStr +=  c
 
-   METHOD WriteLN( c ) INLINE Default( c, "" ), ::cStr +=  CRLF() + c + '<BR>' + CRLF()
+   METHOD WriteLN( c ) INLINE Default( c, "" ), ::cStr +=  CRLF() + c + '<br />' + CRLF()
 
    METHOD SayColor( t, c ) INLINE Default( t, "" ), Default( c, "black" ), ;
-      ::cStr +=  '<FONT COLOR="' + c + '">' + t + '</FONT>'
+      ::cStr +=  '<font color="' + c + '">' + t + '</font>'
 
    METHOD Space( n ) INLINE Default( n, 1 ), ::cStr +=  Replicate( "&nbsp;", n  )
 
@@ -143,25 +143,25 @@ CREATE CLASS THtml
       cName, cAlt, cTarget, nWidth, lBreak, ID, MAP, ALING, HSPACE )
 
    METHOD Text( cText, nCols, lWrap ) INLINE Default( lWrap, .T. ), Default( nCols, 80 ), ;
-      ::cStr +=  "<PRE" + iif( nCols != NIL, ' COLS="' + hb_ntos( nCols ) + "'", "" ) + iif( lWrap, " WRAP>", ">" ) + CRLF() + cText + CRLF() + "</PRE>" + CRLF()
+      ::cStr +=  "<pre" + iif( nCols != NIL, ' cols="' + hb_ntos( nCols ) + "'", "" ) + iif( lWrap, " WRAP>", ">" ) + CRLF() + cText + CRLF() + "</pre>" + CRLF()
 
    METHOD MultiCol( txt, cols, gutter, width ) INLINE Default( txt, "" ), ;
       Default( cols, 2 ), ;
       Default( gutter, 5 ), ;
       Default( width, 100 ), ;
-      ::cStr +=  '<MULTICOL COLS="' + hb_ntos( cols ) + '" GUTTER="' + hb_ntos( gutter ) + '" WIDTH="' + hb_ntos( width ) + '">', ;
+      ::cStr +=  '<multicol cols="' + hb_ntos( cols ) + '" gutter="' + hb_ntos( gutter ) + '" width="' + hb_ntos( width ) + '">', ;
       ::cStr +=  txt, ;
-      ::cStr +=  "</MULTICOL>"
+      ::cStr +=  "</multicol>"
 
    METHOD PutHeading( cText, nWeight, lCentered )
 
    METHOD HLine( nSize, nWidth, lShade, cColor )
 
-   METHOD PutParagraph() INLINE ::cStr +=  "<P> </P>" + CRLF()
+   METHOD PutParagraph() INLINE ::cStr +=  "<p> </p>" + CRLF()
 
    METHOD Paragraph( lStart, cAlign, cStyle )
 
-   METHOD PutBreak() INLINE ::cStr +=  "<BR>" + CRLF()
+   METHOD PutBreak() INLINE ::cStr +=  "<br />" + CRLF()
 
    METHOD Marquee( cText, cFont, cFntColor, nFntSize, cAlign, nWidth, nHeight, cbgColor, ;
       cBehavior, cDirection, nScrollAmt, nScrollDelay, LOOP, ;
@@ -197,11 +197,11 @@ CREATE CLASS THtml
 
    METHOD EndTable()
 
-   METHOD NewList() INLINE ::cStr +=  "<UL>" + CRLF()
+   METHOD NewList() INLINE ::cStr +=  "<ul>" + CRLF()
 
-   METHOD ListItem() INLINE ::cStr +=  "<LI> "
+   METHOD ListItem() INLINE ::cStr +=  "<li> "
 
-   METHOD EndList() INLINE ::cStr +=  "</UL> "
+   METHOD EndList() INLINE ::cStr +=  "</ul> "
 
    METHOD NewForm( cMethod, cAction, cName )
 
@@ -213,11 +213,11 @@ CREATE CLASS THtml
 
    METHOD FormSubmit( cText )
 
-   METHOD FormQOut( c ) INLINE ::cStr +=  c + '<BR>' + CRLF()
+   METHOD FormQOut( c ) INLINE ::cStr +=  c + '<br />' + CRLF()
 
    METHOD FormQQOut( c ) INLINE ::cStr +=  c + CRLF()
 
-   METHOD EndForm() INLINE ::cStr +=  CRLF() + "</FORM>" + CRLF()
+   METHOD EndForm() INLINE ::cStr +=  CRLF() + "</form>" + CRLF()
 
    METHOD PushButton( cName, cCaption, cCgiApp, cOnClick, cOnFocus, cOnBlur, cOnMsOver, cOnMsOut, style, ID )
 
@@ -227,15 +227,15 @@ CREATE CLASS THtml
 
    METHOD iFrame( name, src, border, marginwidth, marginheight, scrolling, align, WIDTH, HEIGHT )
 
-   METHOD StartJava() INLINE ::cStr +=  '<SCRIPT LANGUAGE="JavaScript">' + CRLF() + "<!--" + CRLF()
+   METHOD StartJava() INLINE ::cStr +=  '<script language="JavaScript">' + CRLF() + "<!--" + CRLF()
 
-   METHOD PutJavaSource( c ) INLINE ::cStr +=  Space( 5 ) + 'SRC="' + c + '"' + CRLF()
+   METHOD PutJavaSource( c ) INLINE ::cStr +=  Space( 5 ) + 'src="' + c + '"' + CRLF()
 
    METHOD PutJava( c ) INLINE ::cStr +=  Space( 5 ) + c + CRLF()
 
-   METHOD EndJava() INLINE ::cStr +=  "                  //-->" + CRLF() + "</SCRIPT>" + CRLF()
+   METHOD EndJava() INLINE ::cStr +=  "                  //-->" + CRLF() + "</script>" + CRLF()
 
-   METHOD serverCode( c ) INLINE ::cStr +=  "<SERVER>" + Space( 9 ) + c + CRLF() + "</SERVER>" + CRLF()
+   METHOD serverCode( c ) INLINE ::cStr +=  "<server>" + Space( 9 ) + c + CRLF() + "</server>" + CRLF()
 
    METHOD FWrite( c ) INLINE FWrite( ::nH, c )
 
@@ -257,13 +257,13 @@ CREATE CLASS THtml
 
    METHOD PutLinkName( cName )
 
-   METHOD NewMap( cName ) INLINE ::cStr +=  "<MAP NAME=" + cName + ">"
+   METHOD NewMap( cName ) INLINE ::cStr +=  "<map name=" + cName + ">"
 
 
    METHOD MapArea( Shape, Alt, Coord, Url ) INLINE ;
-      ::cStr +=  "<AREA  shape=" + Shape + " alt=" + alt + " coords=" + Coord + " href=" + Url + ">" + CRLF()
+      ::cStr += "<area shape=" + Shape + " alt=" + alt + " coords=" + Coord + " href=" + Url + ">" + CRLF()
 
-   METHOD EndMap() INLINE ::cStr +=  "</MAP>"
+   METHOD EndMap() INLINE ::cStr +=  "</map>"
 
 ENDCLASS
 
@@ -339,34 +339,36 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
    ::cStr := ''
 
-   ::cStr +=  '<HTML>' + CRLF() + ;
-      '<HEAD>' + CRLF() + ;
-      '   <TITLE>' + cTitle + ' </TITLE>' + CRLF()
+   ::cStr +=  '<html>' + CRLF() + ;
+      '<head>' + CRLF() + ;
+      '   <title>' + cTitle + ' </title>' + CRLF()
 
    IF cBaseURL != NIL
-      ::cStr +=  "<BASE HREF='" + cBaseURL + "'"
+      ::cStr +=  "<base href='" + cBaseURL + "'"
 
       IF cBaseTarget != NIL
-         ::cStr +=  " TARGET='" + cBaseTarget + "'"
+         ::cStr +=  " target='" + cBaseTarget + "'"
       ENDIF
 
       ::cStr +=  ">" + CRLF()
    ENDIF
-/* TOFIX: Luiz please review it
-   ::cStr +=  '   <LINK TITLE="' + cLinkTitle + '"' + CRLF() + ;
-           '                HREF="mailto:culik@sl.conex.net" >' + CRLF() + ;
-           '   <META HTTP-EQUIV="Content-Type" content="text/html; charset=' + cCharset + '">' + CRLF() )
-*/
+#if 0
+/* TOFIX: Luiz please review it */
+   ::cStr += ;
+      '   <link title="' + cLinkTitle + '"' + CRLF() + ;
+      '                href="mailto:culik@sl.conex.net" >' + CRLF() + ;
+      '   <meta http-equiv="Content-Type" content="text/html; charset=' + cCharset + '">' + CRLF() )
+#endif
    IF cStyleScr != NIL
-      ::cStr +=  '   <LINK HREF="' + cStyleScr + '"' + " rel='STYLESHEET' type='text/css'>" + CRLF()
+      ::cStr +=  '   <link href="' + cStyleScr + '"' + " rel='STYLESHEET' type='text/css'>" + CRLF()
    ENDIF
 
    IF nRefresh != NIL
-      ::cStr +=  [   <META HTTP-EQUIV="Refresh" CONTENT="] + hb_ntos( nRefresh ) + [; URL=] + cRefreshURL + [">]
+      ::cStr +=  [   <meta http-equiv="Refresh" content="] + hb_ntos( nRefresh ) + [; url=] + cRefreshURL + [">]
    ENDIF
 
    IF lnocache
-      ::cStr +=  [   <META HTTP-EQUIV="pragma" CONTENT="no-cache"> ]
+      ::cStr +=  [   <meta http-equiv="pragma" content="no-cache"> ]
    ENDIF
 
    IF aJsCode != NIL
@@ -377,7 +379,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
       FOR i := 1 TO Len( aScriptSrc )
          ::cStr +=  ;
-            '<SCRIPT LANGUAGE=JavaScript SRC="' + aScriptSrc[ i ] + '"></SCRIPT>' + CRLF()
+            '<script language=JavaScript src="' + aScriptSrc[ i ] + '"></script>' + CRLF()
       NEXT
 
    ENDIF
@@ -386,7 +388,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
 
       FOR i := 1 TO Len( aServerSrc )
          ::cStr +=  ;
-            '<SCRIPT LANGUAGE=JavaScript SRC="' + aServerSrc[ i ] + '" RUNAT=SERVER></SCRIPT>' + CRLF()
+            '<script language=JavaScript src="' + aServerSrc[ i ] + '" runat=SERVER></script>' + CRLF()
       NEXT
 
    ENDIF
@@ -395,7 +397,7 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    IF aImages != NIL
       ::aImages := aImages
       ::cStr +=  ;
-         '<SCRIPT LANGUAGE="JavaScript">' + CRLF()
+         '<script language="JavaScript">' + CRLF()
       ::cStr +=  '<!--' + CRLF()
       ::cStr +=  "if(document.images)" + CRLF()
       ::cStr +=  "{" + CRLF()
@@ -431,24 +433,24 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
       ::cStr +=  Space( 5 ) + "}" + CRLF()
       ::cStr +=  CRLF()
       ::cStr +=  '//-->' + CRLF()
-      ::cStr +=  '</SCRIPT>' + CRLF()
+      ::cStr +=  '</script>' + CRLF()
 
    ENDIF
 
    IF cStyle != NIL
-      ::cStr +=  "<STYLE> " + cStyle + " </STYLE>" + CRLF()
+      ::cStr +=  "<style> " + cStyle + " </style>" + CRLF()
    ENDIF
 
    ::cStr +=  ;
-      '</HEAD>' + CRLF() + ;
-      '<BODY'
+      '</head>' + CRLF() + ;
+      '<body'
 
    IF onLoad != NIL
       ::cStr +=  '   onLoad="' + onLoad + '"'
    ENDIF
 
    IF NOF != NIL
-      ::cStr +=  '   NOF="' + nof + '"'
+      ::cStr +=  '   nof="' + nof + '"'
    ENDIF
 
    IF onUnLoad != NIL
@@ -488,11 +490,11 @@ METHOD New( cTitle, cLinkTitle, cCharSet, aScriptSRC, ;
    ENDIF
 
    IF nMarginHeight != NIL
-      ::cStr +=  ' MARGINHEIGHT=' + hb_ntos( nMarginHeight )
+      ::cStr +=  ' marginheight=' + hb_ntos( nMarginHeight )
    ENDIF
 
    IF nMarginWidth != NIL
-      ::cStr +=  ' MARGINWIDTH=' + hb_ntos( nMarginWidth )
+      ::cStr +=  ' marginwidth=' + hb_ntos( nMarginWidth )
    ENDIF
 
    ::cStr +=  '>'
@@ -526,7 +528,7 @@ METHOD NewAlt( cType ) CLASS THtml
 
 METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
 
-   LOCAL cStr := CRLF() + '<FONT'
+   LOCAL cStr := CRLF() + '<font'
 
    __defaultNIL( @cFont, ::fontFace )
    __defaultNIL( @nSize, ::fontSize )
@@ -534,7 +536,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    __defaultNIL( @lset, iif( cFont != NIL, .T., .F. ) )
 
    IF cFont != NIL
-      cStr += ' FACE="' + cFont + '"'
+      cStr += ' face="' + cFont + '"'
 
       IF lSet
          ::fontFace := cFont
@@ -543,7 +545,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF nSize != NIL
-      cStr += ' SIZE="' + hb_ntos( nSize ) + '"'
+      cStr += ' size="' + hb_ntos( nSize ) + '"'
 
       IF lSet
          ::fontSize := nSize
@@ -552,7 +554,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF cColor != NIL
-      cStr += ' COLOR= "' + cColor + '">'
+      cStr += ' color= "' + cColor + '">'
 
       IF lset
          ::fontColor := cColor
@@ -563,18 +565,18 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF lBold != NIL
-      iif( lBold, cStr += '<B>', cStr += '</B>' )
+      iif( lBold, cStr += '<b>', cStr += '</b>' )
    ENDIF
 
    IF lItalic != NIL
-      iif( lItalic, cStr += '<I>', cStr += '</I>' )
+      iif( lItalic, cStr += '<i>', cStr += '</i>' )
    ENDIF
 
    IF lULine != NIL
-      iif( lULine, cStr += '<U>', cStr += '</U>' )
+      iif( lULine, cStr += '<u>', cStr += '</u>' )
    ENDIF
 
-   cStr += '</FONT>'
+   cStr += '</font>'
    ::cStr +=  cStr + CRLF()
 
    RETURN Self
@@ -589,7 +591,7 @@ METHOD SetFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet ) CLASS THtml
 
 METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLASS THtml
 
-   LOCAL cStr := "<FONT "
+   LOCAL cStr := "<font "
 
    __defaultNIL( @lSet, .T. )
    __defaultNIL( @lPut, .F. )
@@ -598,7 +600,7 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    __defaultNIL( @cColor, ::fontColor )
 
    IF cFont != NIL
-      cStr += ' FACE="' + cFont + '"'
+      cStr += ' face="' + cFont + '"'
 
       IF lSet
          ::fontFace := cFont
@@ -609,7 +611,7 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    IF lPut
 
       IF nSize != NIL
-         cStr += ' SIZE="' + hb_ntos( nSize ) + '"'
+         cStr += ' size="' + hb_ntos( nSize ) + '"'
 
          IF lSet
             ::fontSize := nSize
@@ -618,7 +620,7 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
       ENDIF
 
       IF cColor != NIL
-         cStr += ' COLOR= "' + cColor + '">'
+         cStr += ' color= "' + cColor + '">'
 
          IF lSet
             ::fontColor := cColor
@@ -633,15 +635,15 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
    ENDIF
 
    IF lBold != NIL
-      iif( lBold, cStr += '<B>', cStr += '</B>' )
+      iif( lBold, cStr += '<b>', cStr += '</b>' )
    ENDIF
 
    IF lItalic != NIL
-      iif( lItalic, cStr += '<I>', cStr += '</I>' )
+      iif( lItalic, cStr += '<i>', cStr += '</i>' )
    ENDIF
 
    IF lULine != NIL
-      iif( lULine, cStr += '<U>', cStr += '</U>' )
+      iif( lULine, cStr += '<u>', cStr += '</u>' )
    ENDIF
 
    ::cStr +=  cStr + CRLF()
@@ -658,7 +660,7 @@ METHOD StartFont( cFont, lBold, lItalic, lULine, nSize, cColor, lSet, lPut ) CLA
 
 METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
 
-   LOCAL cStr := "<FONT "
+   LOCAL cStr := "<font "
 
    __defaultNIL( @cFont, ::fontFace )
    __defaultNIL( @nSize, ::fontSize )
@@ -666,7 +668,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
    __defaultNIL( @lset, iif( cFont != NIL, .T., .F. ) )
 
    IF cFont != NIL
-      cStr += ' FACE="' + cFont + '"'
+      cStr += ' face="' + cFont + '"'
 
       IF lSet
          ::fontFace := cFont
@@ -675,7 +677,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF nSize != NIL
-      cStr += ' SIZE="' + hb_ntos( nSize ) + '"'
+      cStr += ' size="' + hb_ntos( nSize ) + '"'
 
       IF lSet
          ::fontSize := nSize
@@ -684,7 +686,7 @@ METHOD DefineFont( cFont, cType, nSize, cColor, lSet ) CLASS THtml
    ENDIF
 
    IF cColor != NIL
-      cStr += ' COLOR= "' + cColor + '">'
+      cStr += ' color= "' + cColor + '">'
 
       IF lset
          ::fontColor := cColor
@@ -739,7 +741,7 @@ METHOD Say( str, font, size, type, color, style ) CLASS THtml
    __defaultNIL( @COLOR, ::FontColor )
 
    IF FONT != NIL .OR. Size != NIL .OR. COLOR != NIL
-      cOut := '<FONT ' + iif( font != NIL, 'FACE="' + font + '"', '' ) + iif( color != NIL, ' COLOR=' + color, '' ) + iif( nSize != NIL, ' SIZE=' + hb_ntos( size ), "" )
+      cOut := '<font ' + iif( font != NIL, 'face="' + font + '"', '' ) + iif( color != NIL, ' color=' + color, '' ) + iif( nSize != NIL, ' size=' + hb_ntos( size ), "" )
 
       IF Style != NIL
          cOut += '" Style="' + style + '">'
@@ -753,29 +755,29 @@ METHOD Say( str, font, size, type, color, style ) CLASS THtml
 
       IF "<" $ type
 
-         IF "<B>" $ type
+         IF "<b>" $ type
             lBold := .T.
-            cOut  += "<B>"
+            cOut  += "<b>"
          ENDIF
 
-         IF "<I>" $ type
+         IF "<i>" $ type
             lItalic := .T.
-            cOut    += "<I>"
+            cOut    += "<i>"
          ENDIF
 
-         IF "<U>" $ type
+         IF "<u>" $ type
             lULine := .T.
-            cOut   += "<U>"
+            cOut   += "<u>"
          ENDIF
 
-         IF "<EM>" $ type
+         IF "<em>" $ type
             lEm  := .T.
-            cOut += "<EM>"
+            cOut += "<em>"
          ENDIF
 
-         IF "<STRONG>" $ type
+         IF "<strong>" $ type
             lStrong := .T.
-            cOut    += "<STRONG>"
+            cOut    += "<strong>"
          ENDIF
 
       ENDIF
@@ -785,27 +787,27 @@ METHOD Say( str, font, size, type, color, style ) CLASS THtml
    cOut += str
 
    IF lBold
-      cOut += "</B>"
+      cOut += "</b>"
    ENDIF
 
    IF lItalic
-      cOut += "</I>"
+      cOut += "</i>"
    ENDIF
 
    IF lULine
-      cOut += "</U>"
+      cOut += "</u>"
    ENDIF
 
    IF lStrong
-      cOut += "</STRONG>"
+      cOut += "</strong>"
    ENDIF
 
    IF lEm
-      cOut += "</EM>"
+      cOut += "</em>"
    ENDIF
 
    IF FONT != NIL .OR. Size != NIL .OR. COLOR != NIL
-      cOut += "</FONT>"
+      cOut += "</font>"
    ENDIF
 
    ::cStr +=  cOut + CRLF()
@@ -822,21 +824,21 @@ METHOD Say( str, font, size, type, color, style ) CLASS THtml
 
 METHOD Paragraph( lStart, cAlign, cStyle ) CLASS THtml
 
-   LOCAL cStr := "<P"
+   LOCAL cStr := "<p"
 
    __defaultNIL( @lStart, .T. )
    __defaultNIL( @cAlign, "LEFT" )
 
    IF lStart
-      cStr := "<P ALIGN='" + cAlign + "'"
+      cStr := "<p align='" + cAlign + "'"
 
       IF cStyle != NIL
-         cStr += ' STYLE="' + cStyle + '"'
+         cStr += ' style="' + cStyle + '"'
       ENDIF
 
       cStr += ">"
    ELSE
-      cStr := "</P>"
+      cStr := "</p>"
    ENDIF
 
    cStr += CRLF()
@@ -859,11 +861,11 @@ METHOD HLine( nSize, nWidth, lShade, cColor ) CLASS THtml
 
    IF lShade
       ::cStr +=  CRLF() + ;
-         '<HR SIZE = ' + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + hb_ntos( nWidth ) + '%>' + ;
+         '<hr size = ' + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + hb_ntos( nWidth ) + '%>' + ;
          CRLF()
    ELSE
       ::cStr +=  CRLF() + ;
-         '<HR NOSHADE SIZE = ' + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + hb_ntos( nWidth ) + '%>' + ;
+         '<hr noshade size = ' + hb_ntos( nSize ) + iif( cColor != NIL, " COLOR  " + cColor, "" ) + ' WIDTH = ' + hb_ntos( nWidth ) + '%>' + ;
          CRLF()
    ENDIF
 
@@ -882,13 +884,13 @@ METHOD PutHeading( cText, nWeight, lCentered ) CLASS THtml
    __defaultNIL( @lCentered, .F. )
 
    IF lCentered
-      ::cStr +=  "<CENTER>"
+      ::cStr +=  "<center>"
    ENDIF
 
-   ::cStr +=  "<H" + hb_ntos( nWeight ) + ">" + cText + "</H" + hb_ntos( nWeight ) + ">" + CRLF()
+   ::cStr +=  "<h" + hb_ntos( nWeight ) + ">" + cText + "</h" + hb_ntos( nWeight ) + ">" + CRLF()
 
    IF lCentered
-      ::cStr +=  "</CENTER>"
+      ::cStr +=  "</center>"
    ENDIF
 
    RETURN Self
@@ -909,7 +911,7 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
    __defaultNIL( @lBreak, .F. )
 
    ::cStr +=  ;
-      '<A HREF="' + cUrl + '"' + CRLF()
+      '<a href="' + cUrl + '"' + CRLF()
 
    IF cOnClick != NIL
       ::cStr +=  ;
@@ -926,21 +928,21 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
 
    IF cTarget != NIL
       ::cStr +=  ;
-         Space( 5 ) + 'TARGET=' + cTarget + CRLF()
+         Space( 5 ) + 'target=' + cTarget + CRLF()
    ENDIF
 
    IF cClass != NIL
       ::cStr +=  ;
-         Space( 5 ) + 'CLASS=' + cClass + CRLF()
+         Space( 5 ) + 'class=' + cClass + CRLF()
    ENDIF
 
    IF bld
-      cStr += "<B>" + CRLF()
+      cStr += "<b>" + CRLF()
    ENDIF
 
    IF FONT != NIL .OR. clr != NIL .OR. size != NIL .OR. style != NIL
       //    cStr +=" Font" +valtype(font)+"color"+valtype(clr)+"size"+valtype(size)+"style"+valtype(style)
-      cStr += " <FONT " + CRLF()
+      cStr += " <font " + CRLF()
 
       IF FONT != NIL
          cStr += ' face="' + FONT + '"'
@@ -975,11 +977,11 @@ METHOD PutTextUrl( cText, cUrl, cOnClick, cOnMsOver, cOnMsout, cTarget, font, cl
 
    IF bld
       ::cStr +=  ;
-         '</B>'
+         '</b>'
    ENDIF
 
    ::cStr +=  ;
-      '</A>' + iif( lBreak, '<br>' + CRLF(), CRLF() )
+      '</a>' + iif( lBreak, '<br />' + CRLF(), CRLF() )
 
    RETURN Self
 
@@ -999,11 +1001,11 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
    __defaultNIL( @lbreak, .F. )
 
    IF cName != NIL
-      cStr += ' NAME= "' + cName + '"' + CRLF()
+      cStr += ' name= "' + cName + '"' + CRLF()
    ENDIF
 
    IF cAlt != NIL
-      cStr += ' ALT= "' + cAlt + '"' + CRLF()
+      cStr += ' alt= "' + cAlt + '"' + CRLF()
    ENDIF
 
    IF nBorder != NIL
@@ -1035,7 +1037,7 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    IF cTarget != NIL
-      cStr += ' TARGET=' + cTarget + CRLF()
+      cStr += ' target=' + cTarget + CRLF()
    ENDIF
 
    IF Id != NIL
@@ -1051,8 +1053,8 @@ METHOD PutImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    ::cStr +=  ;
-      '<A HREF=' + cUrl + iif( cClass != NIL, ' class="' + cClass + '"', "" ) + '><IMG SRC="' + cImage + '"' + ;
-      cStr + '></A>' + iif( lBreak, '<br>' + CRLF(), "" )
+      '<a href=' + cUrl + iif( cClass != NIL, ' class="' + cClass + '"', "" ) + '><img src="' + cImage + '"' + ;
+      cStr + '></a>' + iif( lBreak, '<br />' + CRLF(), "" )
 
    RETURN Self
 
@@ -1063,11 +1065,11 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
 
    __defaultNIL( @lbreak, .F. )
    IF cName != NIL
-      cStr += ' NAME= "' + cName + '"'
+      cStr += ' name= "' + cName + '"'
    ENDIF
 
    IF cAlt != NIL
-      cStr += ' ALT= "' + cAlt + '"'
+      cStr += ' alt= "' + cAlt + '"'
    ENDIF
 
    IF nBorder != NIL
@@ -1099,12 +1101,12 @@ METHOD PutTextImageUrl( cImage, nBorder, nHeight, cUrl, ;
    ENDIF
 
    IF cTarget != NIL
-      cStr += ' TARGET=' + cTarget
+      cStr += ' target=' + cTarget
    ENDIF
 
    ::cStr +=  ;
-      '<A HREF=' + cUrl + iif( cClass != NIL, ' class="' + cClass + '"', "" ) + '>' + cText + '<IMG SRC="' + cImage + '"' + ;
-      cStr + '></A>' + iif( lBreak, '<br>' + CRLF(), "" )
+      '<a href=' + cUrl + iif( cClass != NIL, ' class="' + cClass + '"', "" ) + '>' + cText + '<img src="' + cImage + '"' + ;
+      cStr + '></a>' + iif( lBreak, '<br />' + CRLF(), "" )
 
    RETURN Self
 
@@ -1124,11 +1126,11 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
    __defaultNIL( @lbreak, .F. )
 
    IF cName != NIL
-      cStr += ' NAME= "' + cName + '"'
+      cStr += ' name= "' + cName + '"'
    ENDIF
 
    IF cAlt != NIL
-      cStr += ' ALT= "' + cAlt + '"'
+      cStr += ' alt= "' + cAlt + '"'
    ENDIF
 
    IF nBorder != NIL .AND. HB_ISNUMERIC( nBorder )
@@ -1166,7 +1168,7 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
    ENDIF
 
    IF cTarget != NIL
-      cStr += ' TARGET="' + cTarget + '"'
+      cStr += ' target="' + cTarget + '"'
    ENDIF
 
    IF Id != NIL
@@ -1182,8 +1184,8 @@ METHOD PutImage( cImage, nBorder, nHeight, ;
    ENDIF
 
    ::cStr +=  ;
-      '<IMG SRC="' + cImage + '"' + ;
-      cStr + '>' + iif( lBreak, "<br>" + CRLF(), "" )
+      '<img src="' + cImage + '"' + ;
+      cStr + '>' + iif( lBreak, "<br />" + CRLF(), "" )
 
    RETURN Self
 
@@ -1243,7 +1245,7 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       nCellPadding, nCellSpacing, cAling, lRules, ;
       bgImage, cStyle, Id, NOF ) CLASS THtml
 
-   LOCAL cStr  := CRLF() + CRLF() + "<TABLE "
+   LOCAL cStr  := CRLF() + CRLF() + "<table "
    LOCAL xCols := nCols
 
    __defaultNIL( @l3d, .T. )
@@ -1272,18 +1274,18 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
       cStr += ' aling=' + '"' + cAling + '"'
    ENDIF
 
-   cStr += iif( xCols != NIL, " COLS=" + hb_ntos( nCols ), "" )
+   cStr += iif( xCols != NIL, " cols=" + hb_ntos( nCols ), "" )
 
    IF nWidth != NIL .AND. HB_ISNUMERIC( nWidth )
-      cStr += " WIDTH=" + hb_ntos( nWidth )
+      cStr += " width=" + hb_ntos( nWidth )
    ELSEIF nWidth != NIL .AND. HB_ISSTRING( nWidth )
-      cStr += " WIDTH=" + '"' + nWidth + '"'
+      cStr += " width=" + '"' + nWidth + '"'
    ENDIF
 
    IF nHeight != NIL .AND. HB_ISNUMERIC( nHeight )
-      cStr += " HEIGHT=" + hb_ntos( nHeight )
+      cStr += " height=" + hb_ntos( nHeight )
    ELSEIF nHeight != NIL .AND. HB_ISSTRING( nHeight )
-      cStr += " HEIGHT=" + '"' + nHeight + '"'
+      cStr += " height=" + '"' + nHeight + '"'
    ENDIF
 
    IF l3d
@@ -1304,11 +1306,11 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    ENDIF
 
    IF lRuleCols
-      cStr += " RULES=COLS"
+      cStr += " rules=COLS"
    ELSEIF lRuleRows
-      cStr += " RULES=ROWS"
+      cStr += " rules=ROWS"
    ELSEIF lRules != NIL .AND. lRules
-      cStr += " RULES=ALL"
+      cStr += " rules=ALL"
    ENDIF
 
    IF bgImage != NIL
@@ -1323,7 +1325,7 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
    ENDIF
 
    IF NOF != NIL
-      cStr += ' NOF="' + NOF + '"'
+      cStr += ' nof="' + NOF + '"'
    ENDIF
 
    cStr += ">" + CRLF()
@@ -1343,7 +1345,7 @@ METHOD DefineTable( nCols, nBorder, nWidth, nHeight, ColorFore, ColorBG, ;
 METHOD TableHead( cHead, cColor, cAlign, ;
       cFont, nSize, cFntColor, nHeight, cBgPic ) CLASS THtml
 
-   LOCAL cStr := Space( 3 ) + "<TH"
+   LOCAL cStr := Space( 3 ) + "<th"
 
    __defaultNIL( @cFont, ::fontFace )
    __defaultNIL( @nSize, ::fontSize )
@@ -1397,7 +1399,7 @@ METHOD TableHead( cHead, cColor, cAlign, ;
 
 METHOD NewTableRow( cColor, vAling, aLing ) CLASS THtml
 
-   LOCAL cStr := Space( 5 ) + "<TR"
+   LOCAL cStr := Space( 5 ) + "<tr"
 
    IF cColor != NIL
       cStr += " bgcolor=" + cColor
@@ -1426,7 +1428,7 @@ METHOD NewTableRow( cColor, vAling, aLing ) CLASS THtml
 
 METHOD EndTableRow() CLASS THtml
 
-   ::cStr +=  Space( 5 ) + "</TR>" + CRLF()
+   ::cStr +=  Space( 5 ) + "</tr>" + CRLF()
 
    RETURN Self
 
@@ -1443,7 +1445,7 @@ METHOD NewTableCell( cAlign, cColor, ;
       cBgPic, nWidth, lWrap, ;
       nColspan, nRowspan, cValign, clrdrk, clrlt, cBdrClr, cClass, lNoFont ) CLASS THtml
 
-   LOCAL cStr := Space( 10 ) + "<TD"
+   LOCAL cStr := Space( 10 ) + "<td"
    LOCAL cAli := cAlign
 
    __defaultNIL( @lNoFont, .T. )
@@ -1454,41 +1456,41 @@ METHOD NewTableCell( cAlign, cColor, ;
    __defaultNIL( @lWrap, .T. )
 
    IF cBdrClr != NIL
-      cStr += " BORDERCOLOR=" + cBdrClr
+      cStr += " bordercolor=" + cBdrClr
    ENDIF
 
    IF cColor != NIL
-      cStr += " BGCOLOR=" + cColor
+      cStr += " bgcolor=" + cColor
    ENDIF
 
    IF cAlign != NIL .AND. caLi != NIL
-      cStr += " ALIGN=" + cAlign
+      cStr += " align=" + cAlign
    ENDIF
 
    IF cValign != NIL
-      cStr += " VALIGN=" + cValign
+      cStr += " valign=" + cValign
    ENDIF
 
    IF nHeight != NIL .AND. HB_ISNUMERIC( nHeight )
-      cStr += " HEIGHT=" + hb_ntos( nHeight )
+      cStr += " height=" + hb_ntos( nHeight )
    ELSEIF nHeight != NIL .AND. HB_ISSTRING( nHeight )
-      cStr += " HEIGHT=" + '"' + nHeight + '"'
+      cStr += " height=" + '"' + nHeight + '"'
    ENDIF
 
    IF cBgPic != NIL
-      cStr += " BACKGROUND=" + '"' + cBgPic + '"'
+      cStr += " background=" + '"' + cBgPic + '"'
    ENDIF
 
    IF nWidth != NIL .AND. HB_ISNUMERIC( nWidth )
-      cStr += " WIDTH=" + hb_ntos( nWidth )
+      cStr += " width=" + hb_ntos( nWidth )
    ELSEIF nWidth != NIL .AND. HB_ISSTRING( nWidth )
-      cStr += " WIDTH=" + '"' + nWidth + '"'
+      cStr += " width=" + '"' + nWidth + '"'
    ENDIF
 
    IF nColspan != NIL .AND. HB_ISNUMERIC( nColspan )
-      cStr += " COLSPAN=" + hb_ntos( nColspan )
+      cStr += " colspan=" + hb_ntos( nColspan )
    ELSEIF nColspan != NIL .AND. HB_ISSTRING( nColspan )
-      cStr += " COLSPAN=" + '"' + nColspan + '"'
+      cStr += " colspan=" + '"' + nColspan + '"'
    ENDIF
 
    IF clrdrk != NIL
@@ -1504,30 +1506,30 @@ METHOD NewTableCell( cAlign, cColor, ;
    ENDIF
 
    IF nRowspan != NIL .AND. HB_ISNUMERIC( nRowspan )
-      cStr += " ROWSPAN=" + hb_ntos( nRowspan )
+      cStr += " rowspan=" + hb_ntos( nRowspan )
    ELSEIF nRowspan != NIL .AND. HB_ISSTRING( nRowspan )
-      cStr += " ROWSPAN=" + '"' + nRowspan + '"'
+      cStr += " rowspan=" + '"' + nRowspan + '"'
    ENDIF
 
    IF ! lWrap
-      cStr += " NOWRAP"
+      cStr += " nowrap"
    ENDIF
 
    cStr += ">"
 
    IF ! lNoFont
-      cStr += '<FONT '
+      cStr += '<font '
 
       IF nSize != NIL
-         cStr += 'SIZE=' + hb_ntos( nSize )
+         cStr += 'size=' + hb_ntos( nSize )
       ENDIF
 
       IF cFntColor != NIL
-         cStr += ' COLOR=' + cFntColor
+         cStr += ' color=' + cFntColor
       ENDIF
 
       IF ! Empty( cFont )
-         cStr += ' FACE="' + cFont + '"' + ">"
+         cStr += ' face="' + cFont + '"' + ">"
       ELSE
          cStr += ">"
       ENDIF
@@ -1587,18 +1589,18 @@ METHOD NewForm( cMethod, cAction, cName ) CLASS THtml
    __defaultNIL( @cMethod, "POST" )
    __defaultNIL( @cName, "newForm" )
 
-   ::cStr +=  CRLF() + "<FORM"
+   ::cStr +=  CRLF() + "<form"
 
    IF cMethod != NIL
-      ::cStr +=  ' METHOD="' + cMethod + '"'
+      ::cStr +=  ' method="' + cMethod + '"'
    ENDIF
 
    IF cName != NIL
-      ::cStr +=  ' NAME="' + cName + '"'
+      ::cStr +=  ' name="' + cName + '"'
    ENDIF
 
    IF cAction != NIL
-      ::cStr +=  ' ACTION="' + cAction + '"'
+      ::cStr +=  ' action="' + cAction + '"'
    ENDIF
 
    ::cStr +=  '>' + CRLF()
@@ -1619,7 +1621,7 @@ METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
 
    __defaultNIL( @cType, "edit" )
 
-   ::cStr +=  '<INPUT Type="' + cType + '"'
+   ::cStr +=  '<input type="' + cType + '"'
 
    IF cName != NIL
       ::cStr +=  ' Name="' + cName + '"'
@@ -1647,7 +1649,7 @@ METHOD FormEdit( cType, cName, xValue, nSize ) CLASS THtml
 
 METHOD FormSubmit( cText ) CLASS THtml
 
-   ::cStr +=  '<INPUT Type="submit" Value="' + cText + '">' + CRLF()
+   ::cStr +=  '<input type="submit" Value="' + cText + '">' + CRLF()
 
    RETURN Self
 
@@ -1663,7 +1665,7 @@ METHOD FormImage( cText, name, file ) CLASS THtml
 
    HB_SYMBOL_UNUSED( cText )
 
-   ::cStr +=  '<INPUT TYPE="IMAGE" NAME="' + name + '" SRC="' + file + '">' + CRLF()
+   ::cStr +=  '<input type="IMAGE" name="' + name + '" src="' + file + '">' + CRLF()
 
    RETURN Self
 
@@ -1677,7 +1679,7 @@ METHOD FormImage( cText, name, file ) CLASS THtml
 
 METHOD FormReset( cText ) CLASS THtml
 
-   ::cStr +=  '<INPUT Type="Reset" Value="' + cText + '">' + CRLF()
+   ::cStr +=  '<input type="Reset" Value="' + cText + '">' + CRLF()
 
    RETURN Self
 
@@ -1696,25 +1698,25 @@ METHOD PushButton( cName, cCaption, ;
       cOnMsOver, cOnMsOut, ;
       style, ID ) CLASS THtml
 
-   LOCAL cStr := CRLF() + "<INPUT TYPE=BUTTON " + CRLF()
+   LOCAL cStr := CRLF() + "<input type=BUTTON " + CRLF()
 
    __defaultNIL( @cOnMsOver, "window.status=this.name;" )
    __defaultNIL( @cOnMsOut, "window.status='';" )
 
    IF cName != NIL
-      cStr += "        NAME=" + cName
+      cStr += "        name=" + cName
    ENDIF
 
    IF cCaption != NIL
-      cStr += "       VALUE=" + cCaption
+      cStr += "       value=" + cCaption
    ENDIF
 
    IF style != NIL
-      cStr += '       STYLE="' + style + '"'
+      cStr += '       style="' + style + '"'
    ENDIF
 
    IF ID != NIL
-      cStr += '          ID="' + ID + '"'
+      cStr += '          id="' + ID + '"'
    ENDIF
 
    IF cOnClick != NIL
@@ -1749,7 +1751,7 @@ METHOD PushButton( cName, cCaption, ;
 *
 *     THtml():Button()
 *
-*     Insert a standalone <BUTTON> push button and assign an action to it
+*     Insert a standalone <button> push button and assign an action to it
 *
 */
 
@@ -1759,25 +1761,25 @@ METHOD Button( cName, cCaption, ;
       cOnMsOver, cOnMsOut, ;
       Style, ID ) CLASS THtml
 
-   LOCAL cStr := CRLF() + "<BUTTON " + CRLF()
+   LOCAL cStr := CRLF() + "<button " + CRLF()
 
    __defaultNIL( @cOnMsOver, "window.status=this.name;" )
    __defaultNIL( @cOnMsOut, "window.status='';" )
 
    IF cName != NIL
-      cStr += "        NAME=" + cName
+      cStr += "        name=" + cName
    ENDIF
 
    IF cCaption != NIL
-      cStr += "       TITLE=" + cCaption
+      cStr += "       title=" + cCaption
    ENDIF
 
    IF style != NIL
-      cStr += '       STYLE="' + style + '"'
+      cStr += '       style="' + style + '"'
    ENDIF
 
    IF ID != NIL
-      cStr += '          ID="' + ID + '"'
+      cStr += '          id="' + ID + '"'
    ENDIF
 
    IF cOnClick != NIL
@@ -1804,13 +1806,13 @@ METHOD Button( cName, cCaption, ;
 *
 *     THtml():EndButton()
 *
-*     End a <BUTTON> definition
+*     End a <button> definition
 *
 */
 
 METHOD EndButton() CLASS THtml
 
-   ::cStr +=  CRLF() + CRLF() + "</BUTTON>" + CRLF()
+   ::cStr +=  CRLF() + CRLF() + "</button>" + CRLF()
 
    RETURN Self
 
@@ -1843,7 +1845,7 @@ METHOD Marquee( cText, cFont, cFntColor, nFntSize, ;
 
    ::StartFont( cFont, , , , nFntSize, cFntColor )
 
-   ::cStr +=  '<MARQUEE align="' + cAlign + '" '
+   ::cStr +=  '<marquee align="' + cAlign + '" '
    ::cStr +=  'behavior="' + cBehavior + '" '
    ::cStr +=  'width="' + hb_ntos( nWidth ) + '%" '
    ::cStr +=  iif( nHeight != NIL, 'height=' + hb_ntos( nHeight ) + " ", "" )
@@ -1860,7 +1862,7 @@ METHOD Marquee( cText, cFont, cFntColor, nFntSize, ;
    ::cStr +=  '>'
    ::cStr +=  cText
 
-   ::cStr +=  "</MARQUEE>" + CRLF()
+   ::cStr +=  "</marquee>" + CRLF()
    ::EndFont()
 
    RETURN Self
@@ -1894,7 +1896,7 @@ METHOD StartMarquee( cFont, cFntColor, nFntSize, ;
 
    ::StartFont( cFont, , , , nFntSize, cFntColor )
 
-   cStr += '<MARQUEE align="' + cAlign + '" ' + ;
+   cStr += '<marquee align="' + cAlign + '" ' + ;
       'behavior="' + cBehavior + '" ' + ;
       'width="' + hb_ntos( nWidth ) + '%" ' + ;
       iif( nHeight != NIL, 'height=' + hb_ntos( nHeight ) + " ", "" ) + ;
@@ -1924,7 +1926,7 @@ METHOD StartMarquee( cFont, cFntColor, nFntSize, ;
 
 METHOD EndMarquee() CLASS THtml
 
-   ::cStr +=  "</MARQUEE>" + CRLF()
+   ::cStr +=  "</marquee>" + CRLF()
 
    RETURN Self
 
@@ -1939,53 +1941,53 @@ METHOD EndMarquee() CLASS THtml
 METHOD iFrame( name, src, border, marginwidth, marginheight, ;
       scrolling, align, WIDTH, HEIGHT ) CLASS THtml
 
-   LOCAL cStr := "<IFRAME " + CRLF()
+   LOCAL cStr := "<iframe " + CRLF()
 
    __defaultNIL( @BORDER, .T. )
    __defaultNIL( @name, "Frame01" )
 // __defaultNIL( @align, "vertical" )
 
    IF name != NIL
-      cStr += Space( 5 ) + '        NAME="' + name + '"' + CRLF()
+      cStr += Space( 5 ) + '        name="' + name + '"' + CRLF()
    ENDIF
    IF src != NIL
-      cStr += Space( 5 ) + '         SRC="' + src + '"' + CRLF()
+      cStr += Space( 5 ) + '         src="' + src + '"' + CRLF()
    ENDIF
 
    IF BORDER
-      cStr += Space( 5 ) + " FRAMEBORDER='1'" + CRLF()
+      cStr += Space( 5 ) + " frameborder='1'" + CRLF()
    ELSE
-      cStr += Space( 5 ) + " FRAMEBORDER='0'" + CRLF()
+      cStr += Space( 5 ) + " frameborder='0'" + CRLF()
    ENDIF
 
    IF scrolling
-      cStr += Space( 5 ) + "   SCROLLING='yes'" + CRLF()
+      cStr += Space( 5 ) + "   scrolling='yes'" + CRLF()
    ELSE
-      cStr += Space( 5 ) + "   SCROLLING='no'" + CRLF()
+      cStr += Space( 5 ) + "   scrolling='no'" + CRLF()
    ENDIF
 
    IF marginwidth != NIL
-      cStr += Space( 5 ) + " MARGINWIDTH='" + hb_ntos( marginWidth ) + "'" + CRLF()
+      cStr += Space( 5 ) + " marginwidth='" + hb_ntos( marginWidth ) + "'" + CRLF()
    ENDIF
 
    IF marginheight != NIL
-      cStr += Space( 5 ) + "MARGINHEIGHT='" + hb_ntos( marginheight ) + "'" + CRLF()
+      cStr += Space( 5 ) + "marginheight='" + hb_ntos( marginheight ) + "'" + CRLF()
    ENDIF
 
    IF WIDTH != NIL
-      cStr += Space( 5 ) + "       WIDTH='" + hb_ntos( Width ) + "'" + CRLF()
+      cStr += Space( 5 ) + "       width='" + hb_ntos( Width ) + "'" + CRLF()
    ENDIF
 
    IF HEIGHT != NIL
-      cStr += Space( 5 ) + "      HEIGHT='" + hb_ntos( height ) + "'" + CRLF()
+      cStr += Space( 5 ) + "      height='" + hb_ntos( height ) + "'" + CRLF()
    ENDIF
 
    IF align != NIL
-      cStr += Space( 5 ) + "       ALIGN='" + align + "'" + CRLF()
+      cStr += Space( 5 ) + "       align='" + align + "'" + CRLF()
    ENDIF
 
    cStr += ">" + CRLF()
-   cStr += "</IFRAME>" + CRLF()
+   cStr += "</iframe>" + CRLF()
 
    ::cStr +=  cStr
 
@@ -1995,7 +1997,7 @@ METHOD iFrame( name, src, border, marginwidth, marginheight, ;
 
 METHOD Span( c, Style ) CLASS THtml
 
-   LOCAL cStr := "<Span "
+   LOCAL cStr := "<span "
 
    IF style != NIL
       cStr += ' style ="' + Style + '"'
@@ -2016,7 +2018,7 @@ METHOD Comment( cText ) CLASS THtml
 
 METHOD AddObject( cType, cClassid, cAling, cCode, lDisable, cCodeBase, cName, nWidth, nHeight ) CLASS THtml
 
-   LOCAL cStr := "<Object "
+   LOCAL cStr := "<object "
 
    IF cType != NIL
       cStr += ' type="' + cType + '"' + CRLF()
@@ -2065,7 +2067,7 @@ METHOD AddObject( cType, cClassid, cAling, cCode, lDisable, cCodeBase, cName, nW
 
 METHOD EndObject() CLASS THtml
 
-   ::cStr +=  "</OBJECT>" + CRLF()
+   ::cStr +=  "</object>" + CRLF()
 
    RETURN Self
 
@@ -2209,11 +2211,11 @@ PROCEDURE HtmlJSCmd( nH, cCmd )
    __defaultNIL( @nH, HtmlPageHandle() )
    __defaultNIL( @cCmd, "" )
 
-   cStr += '<SCRIPT LANGUAGE=JavaScript 1.2>' + CRLF() + ;
+   cStr += '<script language=JavaScript 1.2>' + CRLF() + ;
       "<!--" + CRLF()
    cStr += cCmd + CRLF()
    cStr += "//-->" + CRLF() + ;
-      "</SCRIPT>" + CRLF()
+      "</script>" + CRLF()
    FWrite( nH, cStr )
 
    RETURN

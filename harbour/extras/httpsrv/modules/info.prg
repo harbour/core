@@ -66,28 +66,28 @@ STATIC FUNCTION ShowServerInfo()
 
 // LOCAL oCookie
 
-   cHtml += "<BIG>Server Info</BIG>"
-// cHtml += "<br><br>If it is first time you see this page reload it to see cookies<br><br>"
-   cHtml += '<br><br>Return to <a href="/">Main Page</a><br><br>'
+   cHtml += "<big>Server Info</big>"
+// cHtml += "<br /><br />If it is first time you see this page reload it to see cookies<br /><br />"
+   cHtml += '<br /><br />Return to <a href="/">Main Page</a><br /><br />'
 
    cHtml += DisplayVars( _Server       , "SERVER Vars" )
-   cHtml += "<br>"
+   cHtml += "<br />"
    cHtml += DisplayVars( _HTTP_REQUEST , "HTTP Request Headers" )
-   cHtml += "<br>"
+   cHtml += "<br />"
    cHtml += DisplayVars( _HTTP_RESPONSE, "HTTP Response Headers" )
-   cHtml += "<br>"
+   cHtml += "<br />"
    cHtml += DisplayVars( _Get          , "GET Vars" )
-   cHtml += "<br>"
+   cHtml += "<br />"
    cHtml += DisplayVars( _Post         , "POST Vars" )
-   cHtml += "<br>"
+   cHtml += "<br />"
    cHtml += DisplayVars( _Cookie       , "COOKIE Vars" )
-   cHtml += "<br>"
+   cHtml += "<br />"
 // cHtml += DisplayVars( _Files        , "FILE Vars" )
-// cHtml += "<br>"
+// cHtml += "<br />"
    cHtml += DisplayVars( _Request      , "REQUEST Vars" )
-   cHtml += "<br>"
+   cHtml += "<br />"
    cHtml += DisplayVars( _Session      , "SESSION Vars" )
-   cHtml += "<br>"
+   cHtml += "<br />"
 
    // Set a simple cookie
 // oCookie := uhttpd_CookieNew( "localhost", "/", 1, 0 )

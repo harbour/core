@@ -1,7 +1,7 @@
 {{extend _main}}
 <a href="/app/login">Login</a>
 <hr>
-<H1>Create new account</H1>
+<h1>Create new account</h1>
 {{if errtext}}<span style="color:red; font-weight:bold; border:2px solid red; padding:5px; background-color:#FCC;">{{= errtext}}</span><p>{{endif}}
 <form method="post">
 <table>
