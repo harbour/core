@@ -175,7 +175,7 @@ STATIC FUNCTION AR_WADATAINIT()
       0, ;   /* WADATA_INDEX */
       {}, ;  /* WADATA_WAORDINFO */
       0, ;   /* WADATA_ORDRECNO */
-      NIL,;  /* WADATA_FILTERINFO */
+      NIL, ; /* WADATA_FILTERINFO */
       array( UR_SI_SIZE ); /* WADATA_LOCATE */
    }
 
