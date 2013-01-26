@@ -1469,16 +1469,16 @@ STATIC FUNCTION AR_LOCATE( nWA, lContinue )
    IF lContinue
       AR_SKIPRAW( nWA, 1 )
    ENDIF
-   IF bWhile == nil
+   IF bWhile == NIL
       bLocate := {|| ! Eval( bFor ) }
-      IF !lContinue .AND. aScopeInfo[ UR_SI_NEXT ] == nil .AND. aScopeInfo[ UR_SI_RECORD ] == nil .AND. !aScopeInfo[ UR_SI_REST ]
+      IF !lContinue .AND. aScopeInfo[ UR_SI_NEXT ] == NIL .AND. aScopeInfo[ UR_SI_RECORD ] == NIL .AND. !aScopeInfo[ UR_SI_REST ]
          AR_GOTOP( nWA )
       ENDIF
    ELSE
       bLocate := {|| ! Eval( bFor ) .AND. Eval( bWhile ) }
    ENDIF
    dbEval( {|| NIL },, bLocate, aScopeInfo[ UR_SI_NEXT ], aScopeInfo[ UR_SI_RECORD ], aScopeInfo[ UR_SI_REST ] .OR. lContinue )
-   aWAData[ WADATA_FOUND ] := !aWAData[ WADATA_EOF ] .AND. Eval( bFor )
+   aWAData[ WADATA_FOUND ] := ! aWAData[ WADATA_EOF ] .AND. Eval( bFor )
 
    RETURN HB_SUCCESS
 
