@@ -44,6 +44,7 @@ ifneq ($(HB_HAS_ZLIB_LOCAL),)
    endif
    ifeq ($(filter $(HB_PLATFORM),win wce),)
       HB_CFLAGS += -DHAVE_UNISTD_H
+      HB_CFLAGS += -D_WINCE
    else
       ifneq ($(filter $(HB_COMPILER),watcom),)
          HB_CFLAGS += -DHAVE_UNISTD_H

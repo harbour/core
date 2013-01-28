@@ -289,9 +289,6 @@ STATIC FUNCTION LogError( oerr )
    LOCAL cScreen
    LOCAL cLogFile    := s_cErrorLog       // error log file name
    LOCAL lAppendLog  := s_lErrorLogAppend // .F. = create a new error log (default) .T. = append to a existing one.
-   LOCAL nStart      := 1
-   LOCAL nCellSize
-   LOCAL nRange
    LOCAL nCols
    LOCAL nRows
 
@@ -299,7 +296,6 @@ STATIC FUNCTION LogError( oerr )
 
    LOCAL nForLoop
    LOCAL cOutString
-   LOCAL cSubString
 
    LOCAL nHandle
    LOCAL nBytes
@@ -545,19 +541,13 @@ STATIC FUNCTION LogError( oerr )
       IF HB_ISSTRING( cScreen )
          FWriteLine( nHandle, PadC( " Video Screen Dump ", nCols, "#" ) )
          FWriteLine( nHandle, "" )
-         // FWriteLine( nHandle, "" )
          FWriteLine( nHandle, "+" + Replicate( "-", nCols + 1 ) + "+" )
-         // FWriteLine( nHandle, "" )
-         nCellSize := Len( SaveScreen( 0, 0, 0, 0 ) )
-         nRange := ( nCols + 1 ) * nCellSize
-         FOR nCount := 1 TO nRows + 1
+         FOR nCount := 0 TO nRows
             cOutString := ""
-            cSubString := SubStr( cScreen, nStart, nRange )
-            FOR nForLoop := 1 TO nRange STEP nCellSize
-               cOutString += SubStr( cSubString, nForLoop, 1 )
+            FOR nForLoop := 0 TO nCols
+               cOutString += __XSaveGetChar( cScreen, nCount * ( nCols + 1 ) + nForLoop )
             NEXT
             FWriteLine( nHandle, "|" + cOutString + "|" )
-            nStart += nRange
          NEXT
          FWriteLine( nHandle, "+" + Replicate( "-", nCols + 1 ) + "+" )
          FWriteLine( nHandle, "" )
@@ -567,44 +557,21 @@ STATIC FUNCTION LogError( oerr )
       ENDIF
 
 #if 0
+      /* NOTE: Adapted from hb_mvSave() source in Harbour RTL. [vszakats] */
+      LOCAL nScope, nCount, tmp, cName, xValue
+
       FWriteLine( nHandle, PadC( " Available Memory Variables ", nCols, "+" ) )
       FWriteLine( nHandle, "" )
-      SAVE ALL Like * TO errormem
-      nMemHandle := FOpen( "errormem.mem", FO_READWRITE )
-      nMemLength := FSeek( nMemHandle, 0, FS_END )
-      FSeek( nMemHandle, 0 )
-      nCount := 1
-      WHILE FSeek( nMemHandle, 0, FS_RELATIVE ) + 1 < nMemLength
-         nMemWidth := Space( 18 )
-         FRead( nMemHandle, @nMemWidth, 18 )
-         cVarName  := hb_BLeft( nMemWidth, hb_BAt( Chr( 0 ), nMemWidth ) - 1 )
-         cVarType  := hb_BSubStr( nMemWidth, 12, 1 )
-         cVarRec   := Bin2W( hb_BRight( nMemWidth, 2 ) )
-         nMemCount := iif( cVarType $ hb_BChar( 195 ) + hb_BChar( 204 ), 14 + cVarRec, 22 )
-         FSeek( nMemHandle, nMemCount, FS_RELATIVE )
-         cTemp  := hb_BLeft( cVarName + Space( 10 ), 10 )
-         cTemp  += " TYPE " + Type( cVarName )
-         cTemp  += " " + iif( Type( cVarName ) == "C", '"' + &cVarName + '"', strvalue( &cVarName ) )
-         nBytes := 0
-         SWITCH ValType( cVarName )
-         CASE "C"
-            nBytes += ( nLenTemp := Len( &cVarName ) )
-            EXIT
-         CASE "N"
-            nBytes += ( nLenTemp := 9 )
-            EXIT
-         CASE "L"
-            nBytes += ( nLenTemp := 2 )
-            EXIT
-         CASE "D"
-            nBytes += ( nLenTemp := 9 )
-            EXIT
-         ENDSWITCH
-         FWrite( nFhandle, "            " + Transform( nLenTemp, "999999" ) + "bytes -> " )
-         FWriteLine( nHandle, "      " + cTemp )
-      ENDDO
-      FClose( nMemHandle )
-      FErase( "errormem.mem" )
+
+      FOR EACH nScope IN { HB_MV_PUBLIC, HB_MV_PRIVATE }
+         nCount := __mvDbgInfo( nScope )
+         FOR tmp := 1 TO nCount
+            xValue := __mvDbgInfo( nScope, tmp, @cName )
+            IF ValType( xValue ) $ "CNDTL"
+               FWriteLine( nHandle, "      " + cName + " TYPE " + ValType( xValue ) + " " + hb_CStr( xValue ) )
+            ENDIF
+         NEXT
+      NEXT
 #endif
 
       IF lAppendLog .AND. nHandle2 != F_ERROR
@@ -654,10 +621,7 @@ STATIC FUNCTION strvalue( c, l )
       cr := DToC( c )
       EXIT
    CASE "L"
-#if 0
-      cr := iif( l, iif( c, "On", "Off" ), iif( c, "True", "False" ) )
-#endif
-      cr := iif( l, iif( c, "On", "Off" ), iif( c, ".t.", ".f." ) )
+      cr := iif( l, iif( c, "On", "Off" ), iif( c, ".T.", ".F." ) )
       EXIT
    ENDSWITCH
 

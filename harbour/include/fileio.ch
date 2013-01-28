@@ -64,8 +64,6 @@
 /* File attributes flags */
 #define HB_FA_ALL          0x00000000
 
-#define HB_FA_ANY          ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM | HB_FA_DIRECTORY | HB_FA_ARCHIVE )
-
 #define HB_FA_READONLY     0x00000001  /* R */
 #define HB_FA_HIDDEN       0x00000002  /* H */
 #define HB_FA_SYSTEM       0x00000004  /* S */
@@ -74,6 +72,8 @@
 #define HB_FA_ARCHIVE      0x00000020  /* A | S_ISREG() */
 #define HB_FA_DEVICE       0x00000040  /* I | S_ISBLK() */
 #define HB_FA_NORMAL       0x00000080  /*   */
+
+#define HB_FA_ANY          ( HB_FA_READONLY + HB_FA_HIDDEN + HB_FA_SYSTEM + HB_FA_DIRECTORY + HB_FA_ARCHIVE )
 
 #define HB_FA_TEMPORARY    0x00000100  /* T | S_ISFIFO()??? */
 #define HB_FA_SPARSE       0x00000200  /* P | S_ISSOCK()??? */

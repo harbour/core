@@ -778,6 +778,10 @@
 #define HPDF_PDFA_1B                        1
 
 /* Error code */
+
+/* NOTE: After making any changes in the list below,
+         always update hb_HPDF_GetErrorString() accordingly. */
+
 #define HPDF_ARRAY_COUNT_ERR                0x1001
 #define HPDF_ARRAY_ITEM_NOT_FOUND           0x1002
 #define HPDF_ARRAY_ITEM_UNEXPECTED_TYPE     0x1003
