@@ -614,6 +614,35 @@ HB_BOOL hb_itemGetL( PHB_ITEM pItem )
    return HB_FALSE;
 }
 
+HB_BOOL hb_itemGetLX( PHB_ITEM pItem )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetLX(%p)", pItem ) );
+
+   if( pItem )
+   {
+      if( HB_IS_LOGICAL( pItem ) )
+         return pItem->item.asLogical.value;
+
+      else if( HB_IS_INTEGER( pItem ) )
+         return pItem->item.asInteger.value != 0;
+
+      else if( HB_IS_LONG( pItem ) )
+         return pItem->item.asLong.value != 0;
+
+      else if( HB_IS_DOUBLE( pItem ) )
+         return pItem->item.asDouble.value != 0.0;
+
+      else if( HB_IS_DATETIME( pItem ) )
+         return pItem->item.asDateTime.julian != 0 ||
+                pItem->item.asDateTime.time != 0;
+
+      else
+         return HB_TRUE;
+   }
+
+   return HB_FALSE;
+}
+
 double hb_itemGetND( PHB_ITEM pItem )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_itemGetND(%p)", pItem ) );

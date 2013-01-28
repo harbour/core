@@ -102,7 +102,11 @@ static HB_TSD_NEW( s_FFData, sizeof( HB_FFDATA ), NULL, hb_fileFindRelease );
 
 #define HB_GET_FFDATA()  ( ( PHB_FFDATA ) hb_stackGetTSD( &s_FFData ) )
 
-static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
+/* limit attributes to DOS ones for code portability */
+#define HB_FF_ATTR( ff ) ( ( ff )->attr & 0xFF )
+
+
+static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_BOOL fAny )
 {
    PHB_FFDATA pFFData = HB_GET_FFDATA();
 
@@ -118,12 +122,13 @@ static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
 
       if( szFile )
       {
-         if( HB_ISNUM( 2 ) )
-            ulAttr = ( HB_FATTR ) hb_parnl( 2 );
-         pFFData->ulAttr = hb_parl( 3 ) ? ulAttr : HB_FA_ALL;
+         HB_FATTR ulAttr;
+
+         ulAttr = ( HB_FATTR ) hb_parnldef( 2, fAny ? HB_FA_ANY : HB_FA_ALL );
+         pFFData->ulAttr = hb_parl( 3 ) ? ulAttr : 0;
          pFFData->ffind  = hb_fsFindFirst( szFile, ulAttr );
          while( pFFData->ffind && pFFData->ulAttr &&
-                pFFData->ffind->attr != pFFData->ulAttr )
+                HB_FF_ATTR( pFFData->ffind ) != pFFData->ulAttr )
          {
             if( ! hb_fsFindNext( pFFData->ffind ) )
             {
@@ -144,7 +149,7 @@ static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
             break;
          }
       }
-      while( pFFData->ulAttr && pFFData->ffind->attr != pFFData->ulAttr );
+      while( pFFData->ulAttr && HB_FF_ATTR( pFFData->ffind ) != pFFData->ulAttr );
    }
 
    return pFFData->ffind;
@@ -152,35 +157,35 @@ static PHB_FFIND _hb_fileStart( HB_BOOL fNext, HB_FATTR ulAttr )
 
 HB_FUNC( FILESEEK )
 {
-   PHB_FFIND ffind = _hb_fileStart( HB_TRUE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_TRUE, HB_FALSE );
 
    hb_retc( ffind ? ffind->szName : NULL );
 }
 
 HB_FUNC( FILEATTR )
 {
-   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_TRUE );
 
-   hb_retni( ffind ? ffind->attr : 0 );
+   hb_retni( ffind ? HB_FF_ATTR( ffind ) : 0 );
 }
 
 HB_FUNC( FILESIZE )
 {
-   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FALSE );
 
    hb_retnint( ffind ? ffind->size : -1 );
 }
 
 HB_FUNC( FILEDATE )
 {
-   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FALSE );
 
    hb_retdl( ffind ? ffind->lDate : 0 );
 }
 
 HB_FUNC( FILETIME )
 {
-   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FA_ALL );
+   PHB_FFIND ffind = _hb_fileStart( HB_FALSE, HB_FALSE );
 
    hb_retc( ffind ? ffind->szTime : NULL );
 }

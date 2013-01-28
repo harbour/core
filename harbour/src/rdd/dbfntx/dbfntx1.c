@@ -6235,7 +6235,8 @@ static HB_ERRCODE hb_ntxOrderCreate( NTXAREAP pArea, LPDBORDERCREATEINFO pOrderI
    HB_ERRCODE errCode;
    HB_ULONG ulRecNo;
    HB_BOOL fCompound, fTagName, fBagName, fProd, fLocked = HB_FALSE,
-        fAscend = HB_TRUE, fCustom = HB_FALSE, fTemporary = HB_FALSE, fExclusive = HB_FALSE;
+           fAscend = HB_TRUE, fCustom = HB_FALSE, fTemporary = HB_FALSE,
+           fExclusive = HB_FALSE;
    HB_BYTE bType;
 
    HB_TRACE( HB_TR_DEBUG, ( "hb_ntxOrderCreate(%p, %p)", pArea, pOrderInfo ) );

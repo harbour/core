@@ -3616,7 +3616,7 @@ HB_FUNC( __CLSNEW )
 }
 
 /*
- * __clsAddFriend( <hClass>, <pFyncSym> )
+ * __clsAddFriend( <hClass>, <sFuncSym> )
  *
  * Add friend function
  */
@@ -3952,7 +3952,7 @@ HB_FUNC( __OBJCLONE )
 }
 
 /*
- * __clsInstSuper( <cName> | <sName> ) -> <hClass>
+ * __clsInstSuper( <cClassName> | <sClassFunc> ) -> <hClass>
  *
  * Instance super class and return class handle
  */
@@ -4062,7 +4062,10 @@ HB_FUNC( __CLSASSOCTYPE )
    if( uiClass && uiClass <= s_uiClasses && pType )
    {
       HB_TYPE nType = hb_clsGetItemType( pType, HB_IT_ANY );
-      if( nType != HB_IT_ANY )
+
+      if( s_pClasses[ uiClass ]->uiDatas )
+         hb_errRT_BASE( EG_ARG, 3005, "Scalar class can not contain instance variables", HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
+      else if( nType != HB_IT_ANY )
       {
          switch( nType )
          {
@@ -4163,7 +4166,7 @@ HB_FUNC( __CLS_CNTDATA )
 }
 
 /*
- * __cls_DecData( <hClass> ) -> <nSeq>
+ * __cls_DecData( <hClass> ) -> <nCount>
  *
  * Decrease number of datas and return new value
  */
@@ -4184,7 +4187,7 @@ HB_FUNC( __CLS_DECDATA )
 }
 
 /*
- * __cls_IncData( <hClass> ) -> <nSeq>
+ * __cls_IncData( <hClass> ) -> <nCount>
  * Increase number of datas and return offset to new value
  */
 HB_FUNC( __CLS_INCDATA )
@@ -5033,7 +5036,8 @@ void hb_mthAddTime( HB_ULONG ulClockTicks )
 }
 #endif
 
-/* __getMsgPrf( nClass, cMsg ) --> aMethodInfo { nTimes, nTime } */
+/* __getMsgPrf( <hClass>, <cMsg> ) -> <aMethodInfo> { { <nTimes>, <nTime> }, ... }
+ */
 HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times */
 {
    HB_STACK_TLS_PRELOAD
@@ -5065,7 +5069,7 @@ HB_FUNC( __GETMSGPRF ) /* profiler: returns a method called and consumed times *
    hb_storvnl( 0, -1, 2 );
 }
 
-/* __clsGetProperties( <nClassHandle>, [ <lAllExported> ] ) --> <acProperties>
+/* __clsGetProperties( <nClassHandle>, [<lAllExported>] ) -> <acProperties>
  * Notice that this function works quite similar to __CLASSSEL()
  * except that just returns the name of the datas and methods
  * that have been declared as PROPERTY (PERSISTENT) or also EXPORTED
@@ -5133,6 +5137,30 @@ HB_FUNC( __CLSGETPROPERTIES )
    }
 
    hb_itemReturnRelease( pReturn );
+}
+
+/* __clsGetAncestors( <nClass> ) -> { <nSupper1>, <nSupper2>, ... }
+ */
+HB_FUNC( __CLSGETANCESTORS )
+{
+   HB_USHORT uiClass = ( HB_USHORT ) hb_parni( 1 ), uiCount;
+
+   if( uiClass && uiClass <= s_uiClasses )
+   {
+      PHB_ITEM pReturn = hb_stackReturnItem();
+      PCLASS pClass = s_pClasses[ uiClass ];
+      HB_SIZE nPos = 0;
+
+      uiCount = pClass->uiSuperClasses;
+      hb_arrayNew( pReturn, uiCount );
+      while( uiCount-- )
+      {
+         HB_USHORT uiSuperCls = pClass->pSuperClasses[ uiCount ].uiClass;
+         if( uiSuperCls != uiClass )
+            hb_arraySetNI( pReturn, ++nPos, uiSuperCls );
+      }
+      hb_arraySize( pReturn, nPos );
+   }
 }
 
 /*
@@ -5252,7 +5280,7 @@ HB_FUNC( __OBJSETCLASS )
  * It allows to change the class handle of an object into another class handle,
  * so the object behaves like a different Class of object.
  * Based on objects.lib SetClsHandle()
- * __objSetClassHandle( <oObject>, <nClassHandle> ) --> <nPrevClassHandle>
+ * __objSetClassHandle( <oObject>, <nClassHandle> ) -> <nPrevClassHandle>
  */
 HB_FUNC( __OBJSETCLASSHANDLE )
 {

@@ -64,6 +64,8 @@
 /* File attributes flags */
 #define HB_FA_ALL          0x00000000
 
+#define HB_FA_ANY          ( HB_FA_READONLY | HB_FA_HIDDEN | HB_FA_SYSTEM | HB_FA_DIRECTORY | HB_FA_ARCHIVE )
+
 #define HB_FA_READONLY     0x00000001  /* R */
 #define HB_FA_HIDDEN       0x00000002  /* H */
 #define HB_FA_SYSTEM       0x00000004  /* S */

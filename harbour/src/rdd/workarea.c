@@ -973,7 +973,7 @@ static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
       lNext = hb_itemGetNL( pEvalInfo->dbsci.lNext );
    }
    else if( ! pEvalInfo->dbsci.itmCobWhile &&
-            ! hb_itemGetL( pEvalInfo->dbsci.fRest ) )
+            ! hb_itemGetLX( pEvalInfo->dbsci.fRest ) )
    {
       if( SELF_GOTOP( pArea ) != HB_SUCCESS )
          return HB_FAILURE;
@@ -995,7 +995,7 @@ static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
          {
             if( SELF_EVALBLOCK( pArea, pEvalInfo->dbsci.itmCobWhile ) != HB_SUCCESS )
                return HB_FAILURE;
-            if( ! hb_itemGetL( pArea->valResult ) )
+            if( ! hb_itemGetLX( pArea->valResult ) )
                break;
          }
 
@@ -1003,7 +1003,7 @@ static HB_ERRCODE hb_waEval( AREAP pArea, LPDBEVALINFO pEvalInfo )
          {
             if( SELF_EVALBLOCK( pArea, pEvalInfo->dbsci.itmCobFor ) != HB_SUCCESS )
                return HB_FAILURE;
-            fFor = hb_itemGetL( pArea->valResult );
+            fFor = hb_itemGetLX( pArea->valResult );
          }
          else
             fFor = HB_TRUE;
@@ -1053,7 +1053,7 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, HB_BOOL fContinue )
       lNext = hb_itemGetNL( pArea->dbsi.lNext );
    }
    else if( ! pArea->dbsi.itmCobWhile &&
-            ! hb_itemGetL( pArea->dbsi.fRest ) )
+            ! hb_itemGetLX( pArea->dbsi.fRest ) )
    {
       if( SELF_GOTOP( pArea ) != HB_SUCCESS )
          return HB_FAILURE;
@@ -1077,7 +1077,7 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, HB_BOOL fContinue )
          {
             if( SELF_EVALBLOCK( pArea, pArea->dbsi.itmCobWhile ) != HB_SUCCESS )
                return HB_FAILURE;
-            if( ! hb_itemGetL( pArea->valResult ) )
+            if( ! hb_itemGetLX( pArea->valResult ) )
                break;
          }
 
@@ -1091,7 +1091,7 @@ static HB_ERRCODE hb_waLocate( AREAP pArea, HB_BOOL fContinue )
             if( SELF_EVALBLOCK( pArea, pArea->dbsi.itmCobFor ) != HB_SUCCESS )
                return HB_FAILURE;
 
-            if( hb_itemGetL( pArea->valResult ) )
+            if( hb_itemGetLX( pArea->valResult ) )
             {
                pArea->fFound = HB_TRUE;
                break;
@@ -1130,7 +1130,7 @@ static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
       lNext = hb_itemGetNL( pTransInfo->dbsci.lNext );
    }
    else if( ! pTransInfo->dbsci.itmCobWhile &&
-            ! hb_itemGetL( pTransInfo->dbsci.fRest ) )
+            ! hb_itemGetLX( pTransInfo->dbsci.fRest ) )
    {
       if( SELF_GOTOP( pArea ) != HB_SUCCESS )
          return HB_FAILURE;
@@ -1152,7 +1152,7 @@ static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
          {
             if( SELF_EVALBLOCK( pArea, pTransInfo->dbsci.itmCobWhile ) != HB_SUCCESS )
                return HB_FAILURE;
-            if( ! hb_itemGetL( pArea->valResult ) )
+            if( ! hb_itemGetLX( pArea->valResult ) )
                break;
          }
 
@@ -1160,7 +1160,7 @@ static HB_ERRCODE hb_waTrans( AREAP pArea, LPDBTRANSINFO pTransInfo )
          {
             if( SELF_EVALBLOCK( pArea, pTransInfo->dbsci.itmCobFor ) != HB_SUCCESS )
                return HB_FAILURE;
-            fFor = hb_itemGetL( pArea->valResult );
+            fFor = hb_itemGetLX( pArea->valResult );
          }
          else
             fFor = HB_TRUE;

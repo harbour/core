@@ -93,6 +93,7 @@ extern HB_EXPORT long         hb_itemGetDL     ( PHB_ITEM pItem );
 extern HB_EXPORT double       hb_itemGetTD     ( PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL      hb_itemGetTDT    ( PHB_ITEM pItem, long * plJulian, long * plMilliSec );
 extern HB_EXPORT HB_BOOL      hb_itemGetL      ( PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL      hb_itemGetLX     ( PHB_ITEM pItem );
 extern HB_EXPORT double       hb_itemGetND     ( PHB_ITEM pItem );
 extern HB_EXPORT double       hb_itemGetNDDec  ( PHB_ITEM pItem, int * piDec );
 extern HB_EXPORT int          hb_itemGetNI     ( PHB_ITEM pItem );

@@ -4734,7 +4734,7 @@ static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
    {
       if( ! pSortInfo->dbtri.dbsci.itmCobWhile &&
           ( ! pSortInfo->dbtri.dbsci.fRest ||
-            ! hb_itemGetL( pSortInfo->dbtri.dbsci.fRest ) ) )
+            ! hb_itemGetLX( pSortInfo->dbtri.dbsci.fRest ) ) )
          errCode = SELF_GOTOP( ( AREAP ) pArea );
       bMoreRecords = HB_TRUE;
       bLimited = HB_FALSE;
@@ -4749,7 +4749,7 @@ static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
             hb_dbQSortExit( &dbQuickSort );
             return HB_FAILURE;
          }
-         bMoreRecords = hb_itemGetL( pArea->area.valResult );
+         bMoreRecords = hb_itemGetLX( pArea->area.valResult );
       }
 
       if( bMoreRecords && pSortInfo->dbtri.dbsci.itmCobFor )
@@ -4759,7 +4759,7 @@ static HB_ERRCODE hb_dbfSort( DBFAREAP pArea, LPDBSORTINFO pSortInfo )
             hb_dbQSortExit( &dbQuickSort );
             return HB_FAILURE;
          }
-         bValidRecord = hb_itemGetL( pArea->area.valResult );
+         bValidRecord = hb_itemGetLX( pArea->area.valResult );
       }
       else
          bValidRecord = bMoreRecords;
