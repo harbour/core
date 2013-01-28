@@ -5147,6 +5147,7 @@ HB_FUNC( __CLSGETANCESTORS )
 
    if( uiClass && uiClass <= s_uiClasses )
    {
+      HB_STACK_TLS_PRELOAD
       PHB_ITEM pReturn = hb_stackReturnItem();
       PCLASS pClass = s_pClasses[ uiClass ];
       HB_SIZE nPos = 0;
