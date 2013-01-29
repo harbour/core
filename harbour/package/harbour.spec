@@ -405,6 +405,7 @@ make install %{?_smp_mflags}
 %{?_without_slang:rm -f $HB_INSTALL_LIB/libgtsln.a}
 rm -fR %{!?hb_ldconf:$HB_INSTALL_ETC/ld.so.conf.d}
 rm -f %{?hb_ldconf:$RPM_BUILD_ROOT/%{_libdir}/*.so*}
+rm -f $RPM_BUILD_ROOT/%{_bindir}/{3rdpatch.hb,harbour.ucf}
 rm -f $HB_INSTALL_LIB/libbz2.a \
       $HB_INSTALL_LIB/libjpeg.a \
       $HB_INSTALL_LIB/liblibhpdf.a \
@@ -446,7 +447,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbi18n
 %{_bindir}/hbmk2
 %{_bindir}/hbmk2.*.hbl
-%{_bindir}/3rdpatch.hb
+%{_bindir}/find.hb
+%{_bindir}/contrib.hbr
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}
 %attr(644,root,root) %{_includedir}/%{name}/*
