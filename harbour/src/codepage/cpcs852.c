@@ -6,57 +6,22 @@
  * Harbour Project source code:
  * National Collation Support Module (CS852)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * Copyright 2009 Przemyslaw Czerpak <druzus / at / priv.onet.pl>
  * www - http://harbour-project.org
- * Czech collating sequence (CS852) done by Vojtech Obrdlik <vobrdlik@centrum.cz>
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2, or (at your option)
- * any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this software; see the file COPYING.txt.  If not, write to
- * the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
- * Boston, MA 02111-1307 USA (or visit the web site http://www.gnu.org/).
- *
- * As a special exception, the Harbour Project gives permission for
- * additional uses of the text contained in its release of Harbour.
- *
- * The exception is that, if you link the Harbour libraries with other
- * files to produce an executable, this does not by itself cause the
- * resulting executable to be covered by the GNU General Public License.
- * Your use of that executable is in no way restricted on account of
- * linking the Harbour library code into it.
- *
- * This exception does not however invalidate any other reasons why
- * the executable file might be covered by the GNU General Public License.
- *
- * This exception applies only to the code released by the Harbour
- * Project under the name Harbour.  If you copy code from other
- * Harbour Project or Free Software Foundation releases into a copy of
- * Harbour, as the General Public License permits, the exception does
- * not apply to the code that you add in this way.  To avoid misleading
- * anyone as to the status of such modified files, you must delete
- * this exception notice from them.
- *
- * If you write modifications of your own for Harbour, it is your choice
- * whether to permit this exception to apply to your modifications.
- * If you do not wish that, delete this exception notice.
- *
+ * This file is generated automatically by cpinfo.prg
  */
 
 #define HB_CP_ID        CS852
 #define HB_CP_INFO      "Czech CP-852"
 #define HB_CP_UNITB     HB_UNITB_852
-#define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AµéBC¨D“Eê∑”FGH.CH.I÷JKLMN’O‡ôPQR¸SÊTõUÈﬁöVWXYÌZ¶"
-#define HB_CP_LOWER     "a†Ñbcüd‘eÇÿâfgh.ch.i°jklmnÂo¢îpqr˝sÁtúu£ÖÅvwxyÏzß"
+
+#define HB_CP_RAW
+
+static const unsigned char s_flags[ 256 ] = { 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,10,0,0,0,0,0,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,0,0,0,0,0,0,6,6,0,6,6,0,0,0,6,0,0,0,0,10,0,10,0,0,0,6,0,0,0,0,10,10,10,6,0,0,6,6,6,6,6,0,0,10,6,0,0,0,0,10,0,0,0,0,0,0,0,0,10,0,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,10,6,10,10,0,6,0,0,0,0,0,10,0,10,0,0,0,0,6,10,6,0,10,0,0,6,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,10,6,0,0 };
+static const unsigned char s_upper[ 256 ] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,123,124,125,126,127,128,154,144,131,142,222,134,135,136,211,138,139,140,141,142,143,144,145,146,147,153,149,150,151,152,153,154,155,155,157,158,172,181,214,224,233,164,165,166,166,168,169,170,171,172,173,174,175,176,177,178,179,180,181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,210,213,214,215,183,217,218,219,220,221,222,223,224,225,226,227,228,213,230,230,232,233,234,235,237,237,238,239,240,241,242,243,244,245,246,247,248,249,250,251,252,252,254,255 };
+static const unsigned char s_lower[ 256 ] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140,141,132,143,130,145,146,147,148,149,150,151,152,148,129,156,156,157,158,159,160,161,162,163,164,165,167,167,168,169,170,171,159,173,174,175,176,177,178,179,180,160,182,216,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,212,137,212,229,161,215,216,217,218,219,220,221,133,223,162,225,226,227,228,229,231,231,232,163,234,235,236,236,238,239,240,241,242,243,244,245,246,247,248,249,250,251,253,253,254,255 };
+static const unsigned char s_sort [ 256 ] = { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,68,69,71,73,77,78,79,80,82,83,84,85,86,88,91,92,93,95,97,99,103,104,105,106,108,110,111,112,113,114,115,116,119,120,122,124,128,129,130,131,133,134,135,136,137,139,142,143,144,146,148,150,154,155,156,157,159,161,162,163,164,165,166,153,125,167,118,152,168,169,170,127,171,172,173,174,67,175,74,176,177,178,141,179,180,181,182,90,102,98,149,183,184,121,117,132,140,151,185,186,109,160,187,188,189,190,70,191,192,193,194,195,196,197,198,66,199,75,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219,220,221,222,223,224,225,72,76,123,87,81,226,126,227,228,229,230,231,101,232,89,233,234,235,236,138,96,147,237,100,238,239,158,107,240,241,242,243,244,245,246,247,248,249,250,251,252,253,94,145,254,255 };
 
 /* include CP registration code */
 #include "hbcdpreg.h"
