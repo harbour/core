@@ -78,6 +78,7 @@
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 #define HB_CP_LOWER     "abcdefghijklmnopqrstuvwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"
