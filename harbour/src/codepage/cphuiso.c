@@ -50,8 +50,6 @@
  *
  */
 
-/* NOTE: Ä/ä has been added to work like sixhu852.obj for S*ccessWare SIx Driver. [vszakats] */
-
 #define HB_CP_ID        HUISO
 #define HB_CP_INFO      "Hungarian ISO-8859-2"
 #define HB_CP_UNITB     HB_UNITB_8859_2

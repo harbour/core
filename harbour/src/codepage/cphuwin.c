@@ -50,8 +50,6 @@
  *
  */
 
-/* NOTE: Ä/ä has been added to work like sixhu852.obj for S*ccessWare SIx Driver. [vszakats] */
-
 #define HB_CP_ID        HUWIN
 #define HB_CP_INFO      "Hungarian Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250
