@@ -52,8 +52,8 @@
  */
 
 #define HB_CP_ID        SVISO
-#define HB_CP_INFO      "Swedish ISO-8859-1"
-#define HB_CP_UNITB     HB_UNITB_8859_1
+#define HB_CP_INFO      "Swedish ISO-8859-15"
+#define HB_CP_UNITB     HB_UNITB_8859_15
 #define HB_CP_ACSORT    HB_CDP_ACSORT_INTERLEAVED
 #include "l_sv.c"
 #define HB_CP_UTF8
