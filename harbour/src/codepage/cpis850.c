@@ -16,8 +16,7 @@
 #define HB_CP_INFO      "Icelandic CP-850 (ntxic850.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÁBCDÐEÉFGHIÍJKLMNOÓPQRSTUÚVWXYÝZÞÆÖ"
-#define HB_CP_LOWER     "aábcdðeéfghiíjklmnoópqrstuúvwxyýzþæö"
+#include "l_is.c"
 #define HB_CP_UTF8
 
 /* include CP registration code */

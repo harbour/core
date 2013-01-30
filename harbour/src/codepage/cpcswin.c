@@ -55,8 +55,7 @@
 #define HB_CP_INFO      "Czech Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÁÄBCČDĎEÉĚËFGH.CH.IÍJKLMNŇOÓÖPQRŘSŠTŤUÚŮÜVWXYÝZŽ"
-#define HB_CP_LOWER     "aáäbcčdďeéěëfgh.ch.iíjklmnňoóöpqrřsštťuúůüvwxyýzž"
+#include "l_cs.c"
 #define HB_CP_UTF8
 
 /* include CP registration code */

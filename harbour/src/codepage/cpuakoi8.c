@@ -54,8 +54,7 @@
 #define HB_CP_INFO      "Ukrainian KOI8-U"
 #define HB_CP_UNITB     HB_UNITB_KOI_8U
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "АБВГҐДЕЁЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
-#define HB_CP_LOWER     "абвгґдеёєжзиіїйклмнопрстуфхцчшщъыьэюя"
+#include "l_ua.c"
 #define HB_CP_UTF8
 
 /* include CP registration code */

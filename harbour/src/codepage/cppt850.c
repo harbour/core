@@ -56,8 +56,7 @@
 #define HB_CP_INFO      "Portuguese CP-850"
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÁÀÂÃÄBCÇDEÉÈÊFGHIÍÌÎÏJKLMNÑOÓÒÔÕÖPQRSTUÚÙÛÜVWXYZ"
-#define HB_CP_LOWER     "aáàâãäbcçdeéèêfghiíìîïjklmnñoóòôõöpqrstuúùûüvwxyz"
+#include "l_pt.c"
 #define HB_CP_UTF8
 
 /* include CP registration code */

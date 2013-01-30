@@ -55,8 +55,7 @@
 #define HB_CP_INFO      "German ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÄBCDEFGHIJKLMNOÖPQRS TUÜVWXYZ"
-#define HB_CP_LOWER     "aäbcdefghijklmnoöpqrsßtuüvwxyz"
+#include "l_de.c"
 #define HB_CP_UTF8
 
 /* include CP registration code */

@@ -8,7 +8,6 @@
  *
  * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
  * www - http://harbour-project.org
- * Spanish MS-DOS support by Antonio Linares <alinares@fivetechsoft.com>
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -55,8 +54,7 @@
 #define HB_CP_INFO      "Italian ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÀÁÂÃÄÅBCDEÈÉFGHIÌÍJKLMNOÒÓPQRSTUÙÚVWXYZ"
-#define HB_CP_LOWER     "aàáâãäåbcdeèéfghiìíjklmnoòópqrstuùúvwxyz"
+#include "l_it.c"
 #define HB_CP_UTF8
 
 /* include CP registration code */

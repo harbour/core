@@ -55,8 +55,7 @@
 #define HB_CP_INFO      "Spanish (Modern) Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÁÀÄBCÇDEÉÈËFGHIÍÌÏJKLMNÑOÓÒÖPQRSTUÚÙÜVWXYZ"
-#define HB_CP_LOWER     "aáàäbcçdeéèëfghiíìïjklmnñoóòöpqrstuúùüvwxyz"
+#include "l_es.c"
 #define HB_CP_UTF8
 
 /* include CP registration code */
