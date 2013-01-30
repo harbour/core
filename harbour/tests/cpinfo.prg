@@ -434,10 +434,18 @@ static function genCPfile( id, info, unicode, flags, upper, lower, sort, ;
       if lMixed
          cDef += '#define HB_CP_CSSORT    HB_CDP_CSSORT_MIXED' + EOL
       endif
+#ifdef __HARBOUR__
+      cDef += ;
+         '#define HB_CP_UPPER     "' + hb_StrToUTF8( cUp ) + '"' + EOL + ;
+         '#define HB_CP_LOWER     "' + hb_StrToUTF8( cLo ) + '"' + EOL + ;
+         '#define HB_CP_UTF8' + EOL + ;
+         EOL
+#else
       cDef += ;
          '#define HB_CP_UPPER     "' + cUp + '"' + EOL + ;
          '#define HB_CP_LOWER     "' + cLo + '"' + EOL + ;
          EOL
+#endif
       if lWarn
          cDef += ;
             '#if 0 /* TOVERIFY: binary tables */' + EOL

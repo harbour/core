@@ -56,7 +56,7 @@
 #define HB_CP_INFO      "Croatian ISO-646 (CROSCII)"
 #define HB_CP_UNITB     HB_UNITB_646YU
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABCČĆDĐĐEFGHIJKLMNOPQRSŠTUVWXYZŽ"
+#define HB_CP_UPPER     "ABCČĆDĐEFGHIJKLMNOPQRSŠTUVWXYZŽ"
 #define HB_CP_LOWER     "abcčćdđefghijklmnopqrsštuvwxyzž"
 #define HB_CP_UTF8
 
