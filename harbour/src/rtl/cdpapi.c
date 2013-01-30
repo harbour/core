@@ -2637,8 +2637,8 @@ static HB_UCHAR hb_cdpUtf8Char( const char ** pStrPtr, PHB_UNITABLE uniTable )
    return uc;
 }
 
-#define _HB_CDP_GETUC( p )  ( !fUtf8 ? ( HB_UCHAR ) (*(p) ? *(p)++ : *(p)) \
-                                     : hb_cdpUtf8Char( &(p), uniTable ) )
+#define _HB_CDP_GETUC( p )  ( ! fUtf8 ? ( HB_UCHAR ) ( *( p ) ? *( p )++ : *( p ) ) \
+                                      : hb_cdpUtf8Char( &( p ), uniTable ) )
 
 static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
                                       PHB_UNITABLE uniTable,
