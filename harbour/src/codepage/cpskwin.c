@@ -16,8 +16,9 @@
 #define HB_CP_INFO      "Slovak Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÁÄBCÈDÏ.DZ..D.EÉÌËFGH.CH.IÍJKLÅ¼MNÒOÓÔÖÕPQRÀØSŠTUÚÙÜÛVWXYİZ"
-#define HB_CP_LOWER     "aáäbcèdï.dz..d.eéìëfgh.ch.iíjklå¾mnòoóôöõpqràøsštuúùüûvwxyız"
+#define HB_CP_UPPER     "AÃÃ„BCÄŒDÄ.DZ..DÅ½.EÃ‰ÄšÃ‹FGH.CH.IÃJKLÄ¹Ä½MNÅ‡OÃ“Ã”Ã–ÅPQRÅ”Å˜SÅ TÅ¤UÃšÅ®ÃœÅ°VWXYÃZÅ½"
+#define HB_CP_LOWER     "aÃ¡Ã¤bcÄdÄ.dz..dÅ¾.eÃ©Ä›Ã«fgh.ch.iÃ­jklÄºÄ¾mnÅˆoÃ³Ã´Ã¶Å‘pqrÅ•Å™sÅ¡tÅ¥uÃºÅ¯Ã¼Å±vwxyÃ½zÅ¾"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

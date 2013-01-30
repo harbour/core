@@ -54,8 +54,9 @@
 #define HB_CP_INFO      "Russian ISO-8859-5"
 #define HB_CP_UNITB     HB_UNITB_8859_5
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "°±²³΄µ¶·ΈΉΊ»Ό½ΎΏΐΑΒΓΔΕΖΗΘΙΚΛΜΝΞΟ΅¤§®"
-#define HB_CP_LOWER     "ΠΡÒΣΤΥΦΧΨΩΪΫάέήίΰαβγδεζηθικλμνξορτχώ"
+#define HB_CP_UPPER     "ΠΠ‘Π’Π“Π”Π•Π–Π—ΠΠ™ΠΠ›ΠΠΠΠΠ Π΅ΠΆΠ£Π¤Π¥Π¦Π§Π¨Π©ΠªΠ«Π¬Π­Π®Π―ΠΠ„Π‡Π"
+#define HB_CP_LOWER     "Π°Π±Π²Π³Π΄ΠµΠ¶Π·ΠΈΠΉΠΊΠ»ΠΌΠ½ΠΎΠΏΡ€ΡΡ‚ΡƒΡ„Ρ…Ρ†Ρ‡ΡΡ‰ΡΡ‹ΡΡΡΡΡ‘Ρ”Ρ—Ρ"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

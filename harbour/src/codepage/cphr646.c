@@ -6,7 +6,7 @@
  * Harbour Project source code:
  * National Collation Support Module (HR646)
  *
- * Copyright 2003 Vlado Miholic <Vladimir.Miholic@sk.hinet.hr>
+ * Copyright 2003 Vlado Miholic <Vladimir.MiholicŽsk.hinet.hr>
  * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
@@ -56,8 +56,9 @@
 #define HB_CP_INFO      "Croatian ISO-646 (CROSCII)"
 #define HB_CP_UNITB     HB_UNITB_646YU
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABC^]D\\EFGHIJKLMNOPQRS[TUVWXYZ@"
-#define HB_CP_LOWER     "abc~}d|efghijklmnopqrs{tuvwxyz`"
+#define HB_CP_UPPER     "ABCČĆDĐĐEFGHIJKLMNOPQRSŠTUVWXYZŽ"
+#define HB_CP_LOWER     "abcčćdđefghijklmnopqrsštuvwxyzž"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

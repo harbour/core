@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "Czech Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÁÄBCÈDÏEÉÌËFGH.CH.IÍJKLMNÒOÓÖPQRØSŠTUÚÙÜVWXYİZ"
-#define HB_CP_LOWER     "aáäbcèdïeéìëfgh.ch.iíjklmnòoóöpqrøsštuúùüvwxyız"
+#define HB_CP_UPPER     "AÃÃ„BCÄŒDÄEÃ‰ÄšÃ‹FGH.CH.IÃJKLMNÅ‡OÃ“Ã–PQRÅ˜SÅ TÅ¤UÃšÅ®ÃœVWXYÃZÅ½"
+#define HB_CP_LOWER     "aÃ¡Ã¤bcÄdÄeÃ©Ä›Ã«fgh.ch.iÃ­jklmnÅˆoÃ³Ã¶pqrÅ™sÅ¡tÅ¥uÃºÅ¯Ã¼vwxyÃ½zÅ¾"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

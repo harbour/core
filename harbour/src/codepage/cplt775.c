@@ -56,8 +56,9 @@
 #define HB_CP_INFO      "Lithuanian CP-775"
 #define HB_CP_UNITB     HB_UNITB_775
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AµBC¶DE·¸FGHI½YJKLMNOPQRS¾TUÆÇVWXZÏ"
-#define HB_CP_LOWER     "aĞbcÑdeÒÓfghiÔyjklmnopqrsÕtuÖ×vwxzØ"
+#define HB_CP_UPPER     "AÄ„BCÄŒDEÄ˜Ä–FGHIÄ®YJKLMNOPQRSÅ TUÅ²ÅªVWXZÅ½"
+#define HB_CP_LOWER     "aÄ…bcÄdeÄ™Ä—fghiÄ¯yjklmnopqrsÅ¡tuÅ³Å«vwxzÅ¾"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

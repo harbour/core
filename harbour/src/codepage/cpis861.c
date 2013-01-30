@@ -16,8 +16,9 @@
 #define HB_CP_INFO      "Icelandic CP-861 (ntxic861.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_861
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "A§BCDãEêFGHI•JKLMNO¶PQRSTUßVWXYóZçíô"
-#define HB_CP_LOWER     "a†bcdåeÇfghi°jklmno¢pqrstu£vwxyòzïëî"
+#define HB_CP_UPPER     "A√ÅBCD√êE√âFGHI√çJKLMNO√ìPQRSTU√öVWXY√ùZ√û√Ü√ñ"
+#define HB_CP_LOWER     "a√°bcd√∞e√©fghi√≠jklmno√≥pqrstu√∫vwxy√Ωz√æ√¶√∂"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

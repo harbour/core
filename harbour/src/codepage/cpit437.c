@@ -53,8 +53,9 @@
 #define HB_CP_INFO      "Italian CP-437"
 #define HB_CP_UNITB     HB_UNITB_437
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AAAAéèBCDEEêFGHIIIJKLMNOOOPQRSTUUUVWXYZ"
-#define HB_CP_LOWER     "aÖ†ÉÑÜbcdeäÇfghiç°jklmnoï¢pqrstuó£vwxyz"
+#define HB_CP_UPPER     "AAAA√Ñ√ÖBCDEE√âFGHIIIJKLMNOOOPQRSTUUUVWXYZ"
+#define HB_CP_LOWER     "a√†√°√¢√§√•bcde√®√©fghi√¨√≠jklmno√≤√≥pqrstu√π√∫vwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

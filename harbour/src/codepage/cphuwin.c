@@ -50,14 +50,15 @@
  *
  */
 
-/* NOTE: ƒ/‰ has been added to work like sixhu852.obj for S*ccessWare SIx Driver. [vszakats] */
+/* NOTE: √Ñ/√§ has been added to work like sixhu852.obj for S*ccessWare SIx Driver. [vszakats] */
 
 #define HB_CP_ID        HUWIN
 #define HB_CP_INFO      "Hungarian Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "A¡ƒBCDE…FGHIÕJKLMNO”÷’PQRSTU⁄‹€VWXYZ"
-#define HB_CP_LOWER     "a·‰bcdeÈfghiÌjklmnoÛˆıpqrstu˙¸˚vwxyz"
+#define HB_CP_UPPER     "A√Å√ÑBCDE√âFGHI√çJKLMNO√ì√ñ≈êPQRSTU√ö√ú≈∞VWXYZ"
+#define HB_CP_LOWER     "a√°√§bcde√©fghi√≠jklmno√≥√∂≈ëpqrstu√∫√º≈±vwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

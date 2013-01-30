@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "Greek ANSI CP-1253"
 #define HB_CP_UNITB     HB_UNITB_1253
 #define HB_CP_ACSORT    HB_CDP_ACSORT_EQUAL
-#define HB_CP_UPPER     "Α~ΆΒΓΔΕ~ΈΖΗ~ΉΘΙ~ΊΚΛΜΝΞΟ~ΌΠΡΣΣΤΥ~ΎΦΧΨΩ~Ώ"
-#define HB_CP_LOWER     "α~άβγδε~έζη~ήθι~ίκλμνξο~όπρσςτυ~ύφχψω~ώ"
+#define HB_CP_UPPER     "Ξ‘~Ξ†Ξ’Ξ“Ξ”Ξ•~ΞΞ–Ξ—~Ξ‰ΞΞ™~ΞΞΞ›ΞΞΞΞ~ΞΞ Ξ΅Ξ£Ξ£Ξ¤Ξ¥~ΞΞ¦Ξ§Ξ¨Ξ©~Ξ"
+#define HB_CP_LOWER     "Ξ±~Ξ¬Ξ²Ξ³Ξ΄Ξµ~Ξ­Ξ¶Ξ·~Ξ®ΞΈΞΉ~Ξ―ΞΊΞ»ΞΌΞ½ΞΎΞΏ~ΟΟ€ΟΟƒΟ‚Ο„Ο…~ΟΟ†Ο‡ΟΟ‰~Ο"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

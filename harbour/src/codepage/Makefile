@@ -32,8 +32,8 @@ C_SOURCES := \
    cpes850c.c \
    cpes850m.c \
    cpesiso.c \
+   cpesmwin.c \
    cpeswin.c \
-   cpeswinm.c \
    cpfi850.c \
    cpfr850.c \
    cpfr850m.c \
@@ -72,10 +72,10 @@ C_SOURCES := \
    cpro852.c \
    cproiso.c \
    cprowin.c \
+   cpru1251.c \
    cpru866.c \
    cpruiso.c \
-   cprukoi.c \
-   cpruwin.c \
+   cprukoi8.c \
    cpsk852.c \
    cpsk852c.c \
    cpskiso.c \
@@ -97,9 +97,9 @@ C_SOURCES := \
    cptriso.c \
    cptrwin.c \
    cpua1125.c \
+   cpua1251.c \
    cpua866.c \
-   cpuakoi.c \
-   cpuawin.c \
+   cpuakoi8.c \
    \
    uc1125.c \
    uc1250.c \

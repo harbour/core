@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "German Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÄBCDEFGHIJKLMNOÖPQRS TUÜVWXYZ"
-#define HB_CP_LOWER     "aäbcdefghijklmnoöpqrsßtuüvwxyz"
+#define HB_CP_UPPER     "AÃ„BCDEFGHIJKLMNOÃ–PQRS TUÃœVWXYZ"
+#define HB_CP_LOWER     "aÃ¤bcdefghijklmnoÃ¶pqrsÃŸtuÃ¼vwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

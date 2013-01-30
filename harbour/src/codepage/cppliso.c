@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "Polish ISO-8859-2"
 #define HB_CP_UNITB     HB_UNITB_8859_2
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "A¡BCÆDEÊFGHIJKL£MNÑOÓPQRS¦TUVWXYZ¬¯"
-#define HB_CP_LOWER     "a±bcædeêfghijkl³mnñoópqrs¶tuvwxyz¼¿"
+#define HB_CP_UPPER     "AÄ„BCÄ†DEÄ˜FGHIJKLÅMNÅƒOÃ“PQRSÅšTUVWXYZÅ¹Å»"
+#define HB_CP_LOWER     "aÄ…bcÄ‡deÄ™fghijklÅ‚mnÅ„oÃ³pqrsÅ›tuvwxyzÅºÅ¼"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

@@ -54,8 +54,9 @@
 #define HB_CP_INFO      "Turkish ISO-8859-9"
 #define HB_CP_UNITB     HB_UNITB_8859_9
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÂBCÇDEÊFGĞHIİÎJKLMNOÔÖPRSŞTUÛÜVYZ"
-#define HB_CP_LOWER     "aâbcçdeêfgğhıiîjklmnoôöprsştuûüvyz"
+#define HB_CP_UPPER     "AÃ‚BCÃ‡DEÃŠFGÄHIÄ°ÃJKLMNOÃ”Ã–PRSÅTUÃ›ÃœVYZ"
+#define HB_CP_LOWER     "aÃ¢bcÃ§deÃªfgÄŸhÄ±iÃ®jklmnoÃ´Ã¶prsÅŸtuÃ»Ã¼vyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

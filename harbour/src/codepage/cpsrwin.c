@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "Serbian Windows-1251"
 #define HB_CP_UNITB     HB_UNITB_1251
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ΐΑΒΓΔ€ΕΖΗΘ£ΚΛΜΝΞΟΠΡÒΣΤΥΦΧΨ"
-#define HB_CP_LOWER     "ΰαβγδεζηθΌκλμνξοπρςστυφχψ"
+#define HB_CP_UPPER     "ΠΠ‘Π’Π“Π”Π‚Π•Π–Π—ΠΠΠΠ›Π‰ΠΠΠΠΠΠ Π΅ΠΆΠ‹Π£Π¤Π¥Π¦Π§ΠΠ¨"
+#define HB_CP_LOWER     "Π°Π±Π²Π³Π΄Ρ’ΠµΠ¶Π·ΠΈΡΠΊΠ»Ρ™ΠΌΠ½ΡΠΎΠΏΡ€ΡΡ‚Ρ›ΡƒΡ„Ρ…Ρ†Ρ‡ΡΡ"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

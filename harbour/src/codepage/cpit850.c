@@ -16,8 +16,9 @@
 #define HB_CP_INFO      "Italian CP-850 (ntxita.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AAABCDEêEFGHIIIJKLMNOOOPQRSTUUUVWXYZ"
-#define HB_CP_LOWER     "aÖ†bcdeÇäfghiç°jklmnoï¢pqrstuó£vwxyz"
+#define HB_CP_UPPER     "AAABCDE√âEFGHIIIJKLMNOOOPQRSTUUUVWXYZ"
+#define HB_CP_LOWER     "a√†√°bcde√©√®fghi√¨√≠jklmno√≤√≥pqrstu√π√∫vwxyz"
+#define HB_CP_UTF8
 
 #if 0 /* VERIFIED: 20091116 */
 

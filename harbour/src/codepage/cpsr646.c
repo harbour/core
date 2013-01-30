@@ -54,8 +54,9 @@
 #define HB_CP_INFO      "Serbian ISO-646 (YUSCII)"
 #define HB_CP_UNITB     HB_UNITB_646YU
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABC^]D\\EFGHIJKLMNOPQRS[TUVWXYZ@"
-#define HB_CP_LOWER     "abc~}d|efghijklmnopqrs{tuvwxyz`"
+#define HB_CP_UPPER     "ABCČĆDĐĐEFGHIJKLMNOPQRSŠTUVWXYZŽ"
+#define HB_CP_LOWER     "abcčćdđefghijklmnopqrsštuvwxyzž"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

@@ -17,8 +17,9 @@
 #define HB_CP_UNITB     HB_UNITB_KAM
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_CSSORT    HB_CDP_CSSORT_MIXED
-#define HB_CP_UPPER     "ABC€D…E‰FGHI‹JKLŠœMN¥O•§™PQR«S›T†U—¦šVWXYZ’"
-#define HB_CP_LOWER     "a „bc‡dƒe‚ˆfghi¡jklŒmn¤o¢“”pqrª©s¨tŸu£–vwxy˜z‘"
+#define HB_CP_UPPER     "AÃÃ„BCÄŒDÄEÃ‰ÄšFGHIÃJKLÄ¹Ä½MNÅ‡OÃ“Ã”Ã–PQRÅ”Å˜SÅ TÅ¤UÃšÅ®ÃœVWXYÃZÅ½"
+#define HB_CP_LOWER     "aÃ¡Ã¤bcÄdÄeÃ©Ä›fghiÃ­jklÄºÄ¾mnÅˆoÃ³Ã´Ã¶pqrÅ•Å™sÅ¡tÅ¥uÃºÅ¯Ã¼vwxyÃ½zÅ¾"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

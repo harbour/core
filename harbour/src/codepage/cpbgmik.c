@@ -54,8 +54,9 @@
 #define HB_CP_INFO      "Bulgarian MIK"
 #define HB_CP_UNITB     HB_UNITB_MIK
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "€‚ƒ„…†‡ˆ‰Š‹Œ‘’“”•–—˜™š›œŸ"
-#define HB_CP_LOWER     " ¡¢£¤¥¦§¨©ª«¬­®¯°±²³´µ¶·¸¹º»¼½¾¿"
+#define HB_CP_UPPER     "ĞĞ‘Ğ’Ğ“Ğ”Ğ•Ğ–Ğ—Ğ˜Ğ™ĞšĞ›ĞœĞĞĞŸĞ Ğ¡Ğ¢Ğ£Ğ¤Ğ¥Ğ¦Ğ§Ğ¨Ğ©ĞªĞ«Ğ¬Ğ­Ğ®Ğ¯"
+#define HB_CP_LOWER     "Ğ°Ğ±Ğ²Ğ³Ğ´ĞµĞ¶Ğ·Ğ¸Ğ¹ĞºĞ»Ğ¼Ğ½Ğ¾Ğ¿Ñ€ÑÑ‚ÑƒÑ„Ñ…Ñ†Ñ‡ÑˆÑ‰ÑŠÑ‹ÑŒÑÑÑ"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

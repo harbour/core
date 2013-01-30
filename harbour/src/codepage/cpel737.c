@@ -54,8 +54,9 @@
 #define HB_CP_INFO      "Greek CP-737"
 #define HB_CP_UNITB     HB_UNITB_737
 #define HB_CP_ACSORT    HB_CDP_ACSORT_EQUAL
-#define HB_CP_UPPER     "�~ꁂ��~녆~쇈~퉊����~����~��~�"
-#define HB_CP_LOWER     "�~ᙚ��~❞~㟠~塢����~槨����~筮��~�"
+#define HB_CP_UPPER     "Α~ΆΒΓΔΕ~ΈΖΗ~ΉΘΙ~ΊΚΛΜΝΞΟ~ΌΠΡΣΣΤΥ~ΎΦΧΨΩ~Ώ"
+#define HB_CP_LOWER     "α~άβγδε~έζη~ήθι~ίκλμνξο~όπρσςτυ~ύφχψω~ώ"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

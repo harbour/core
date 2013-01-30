@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "Italian ISO-8859-1b (with BOX characters)"
 #define HB_CP_UNITB     HB_UNITB_8859_1B
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÀÁÂÃÄÅBCDEÈÉFGHIÌÍJKLMNOÒÓPQRSTUÙÚVWXYZ"
-#define HB_CP_LOWER     "aàáâãäåbcdeèéfghiìíjklmnoòópqrstuùúvwxyz"
+#define HB_CP_UPPER     "Aâ””â”´â”¬â”œâ”€â”¼BCDEâ•šâ•”FGHIâ• â•JKLMNOâ•¥â•™PQRSTUâ”˜â”ŒVWXYZ"
+#define HB_CP_LOWER     "aÃ Ã¡Ã¢Ã£Ã¤Ã¥bcdeÃ¨Ã©fghiÃ¬Ã­jklmnoÃ²Ã³pqrstuÃ¹Ãºvwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

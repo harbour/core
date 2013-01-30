@@ -16,8 +16,9 @@
 #define HB_CP_INFO      "Norwegian CP-865 (ntxnor.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_865
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABCDEêFGHIJKLMNOPQRSTUVWXYöZí ùè"
-#define HB_CP_LOWER     "abcdeäfghijklmnopqrstuvwxyÅzëÇõÜ"
+#define HB_CP_UPPER     "ABCDE√âFGHIJKLMNOPQRSTUVWXY√úZ√Ü √ò√Ö"
+#define HB_CP_LOWER     "abcde√®fghijklmnopqrstuvwxy√ºz√¶√©√∏√•"
+#define HB_CP_UTF8
 
 #if 0 /* VERIFIED: 20091116 */
 

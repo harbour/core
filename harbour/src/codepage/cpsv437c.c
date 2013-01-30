@@ -67,7 +67,7 @@
    For sharing data with Clipper, assuming that the chr(146) and chr(145)
    problem is properly taken care of in your code, this codepage version
    must be used. For correct collation according to the book "Svenska
-   skrivregler" (Swedish Writing Rules) by Svenska SprÜknÑmnden (the Swedish
+   skrivregler" (Swedish Writing Rules) by Svenska Spr√•kn√§mnden (the Swedish
    Language Council), use the SV850 version instead. That will of course
    not be Clipper compatible.
  */
@@ -84,8 +84,9 @@
 #define HB_CP_INFO      "Swedish CP-437"
 #define HB_CP_UNITB     HB_UNITB_437
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABCDEêFGHIJKLMNOPQRSTUVWXYöZèéô"
-#define HB_CP_LOWER     "abcdeäfghijklmnopqrstuvwxyÅzÜÑî"
+#define HB_CP_UPPER     "ABCDE√âFGHIJKLMNOPQRSTUVWXY√úZ√Ö√Ñ√ñ"
+#define HB_CP_LOWER     "abcde√®fghijklmnopqrstuvwxy√ºz√•√§√∂"
+#define HB_CP_UTF8
 */
 
 #define HB_CP_ID        SV437C

@@ -4,10 +4,10 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (UAKOI8)
+ * National Collation Support Module (RUWIN)
  *
- * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
- * www - http://www.xharbour.org
+ * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
+ * www - http://harbour-project.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -50,12 +50,13 @@
  *
  */
 
-#define HB_CP_ID        UAKOI8
-#define HB_CP_INFO      "Ukrainian KOI8-U"
-#define HB_CP_UNITB     HB_UNITB_KOI_8U
+#define HB_CP_ID        RU1251
+#define HB_CP_INFO      "Russian Windows-1251"
+#define HB_CP_UNITB     HB_UNITB_1251
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "áâ÷ç½äå³´öúé¶·êëìíîïğòóôõæèãşûıÿùøüàñ"
-#define HB_CP_LOWER     "ÁÂ×Ç­ÄÅ£¤ÖÚÉ¦§ÊËÌÍÎÏĞÒÓÔÕÆÈÃŞÛİßÙØÜÀÑ"
+#define HB_CP_UPPER     "ĞĞ‘Ğ’Ğ“Ğ”Ğ•Ğ–Ğ—Ğ˜Ğ™ĞšĞ›ĞœĞĞĞŸĞ Ğ¡Ğ¢Ğ£Ğ¤Ğ¥Ğ¦Ğ§Ğ¨Ğ©ĞªĞ«Ğ¬Ğ­Ğ®Ğ¯"
+#define HB_CP_LOWER     "Ğ°Ğ±Ğ²Ğ³Ğ´ĞµĞ¶Ğ·Ğ¸Ğ¹ĞºĞ»Ğ¼Ğ½Ğ¾Ğ¿Ñ€ÑÑ‚ÑƒÑ„Ñ…Ñ†Ñ‡ÑˆÑ‰ÑŠÑ‹ÑŒÑÑÑ"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "Spanish (Modern) CP-850"
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "Aµ·BC€DEÔÓFGHIÖŞØJKLMN¥Oàã™PQRSTUéëšVWXYZ"
-#define HB_CP_LOWER     "a …„bc‡de‚Š‰fghi¡‹jklmn¤o¢•”pqrstu£—vwxyz"
+#define HB_CP_UPPER     "AÃÃ€Ã„BCÃ‡DEÃ‰ÃˆÃ‹FGHIÃÃŒÃJKLMNÃ‘OÃ“Ã’Ã–PQRSTUÃšÃ™ÃœVWXYZ"
+#define HB_CP_LOWER     "aÃ¡Ã Ã¤bcÃ§deÃ©Ã¨Ã«fghiÃ­Ã¬Ã¯jklmnÃ±oÃ³Ã²Ã¶pqrstuÃºÃ¹Ã¼vwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

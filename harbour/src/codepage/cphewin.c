@@ -56,6 +56,7 @@
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     ""
 #define HB_CP_LOWER     ""
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

@@ -54,8 +54,9 @@
 #define HB_CP_INFO      "Italian Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÀÁÂÃÄÅBCDEÈÉFGHIÌÍJKLMNOÒÓPQRSTUÙÚVWXYZ"
-#define HB_CP_LOWER     "aàáâãäåbcdeèéfghiìíjklmnoòópqrstuùúvwxyz"
+#define HB_CP_UPPER     "AÃ€ÃÃ‚ÃƒÃ„Ã…BCDEÃˆÃ‰FGHIÃŒÃJKLMNOÃ’Ã“PQRSTUÃ™ÃšVWXYZ"
+#define HB_CP_LOWER     "aÃ Ã¡Ã¢Ã£Ã¤Ã¥bcdeÃ¨Ã©fghiÃ¬Ã­jklmnoÃ²Ã³pqrstuÃ¹Ãºvwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

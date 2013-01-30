@@ -17,7 +17,8 @@
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
 #define HB_CP_UPPER     "AAAAABCDEEEEEFGHIIIIIJKLMNOOOOOPQRSTUUUUUVWXYZ"
-#define HB_CP_LOWER     "a†ÖÉÑbcdeÇäàâfghi°çåãjklmno¢ïìîpqrstu£óñÅvwxyz"
+#define HB_CP_LOWER     "a√°√†√¢√§bcde√©√®√™√´fghi√≠√¨√Æ√Øjklmno√≥√≤√¥√∂pqrstu√∫√π√ª√ºvwxyz"
+#define HB_CP_UTF8
 
 #if 0 /* VERIFIED: 20091116 */
 

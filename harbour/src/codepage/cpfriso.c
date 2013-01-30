@@ -54,8 +54,9 @@
 #define HB_CP_INFO      "French ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1
 #define HB_CP_ACSORT    HB_CDP_ACSORT_EQUAL
-#define HB_CP_UPPER     "A~Á~À~Â~ÄBCDE~É~È~Ê~ËFGHI~Í~Ì~Î~ÏJKLMNO~Ó~Ò~Ô~ÖPQRSTU~Ú~Ù~Û~ÜVWXYZ"
-#define HB_CP_LOWER     "a~á~à~â~äbcde~é~è~ê~ëfghi~í~ì~î~ïjklmno~ó~ò~ô~öpqrstu~ú~ù~û~üvwxyz"
+#define HB_CP_UPPER     "A~Ã~Ã€~Ã‚~Ã„BCDE~Ã‰~Ãˆ~ÃŠ~Ã‹FGHI~Ã~ÃŒ~Ã~ÃJKLMNO~Ã“~Ã’~Ã”~Ã–PQRSTU~Ãš~Ã™~Ã›~ÃœVWXYZ"
+#define HB_CP_LOWER     "a~Ã¡~Ã ~Ã¢~Ã¤bcde~Ã©~Ã¨~Ãª~Ã«fghi~Ã­~Ã¬~Ã®~Ã¯jklmno~Ã³~Ã²~Ã´~Ã¶pqrstu~Ãº~Ã¹~Ã»~Ã¼vwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

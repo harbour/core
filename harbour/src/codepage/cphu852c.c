@@ -16,8 +16,9 @@
 #define HB_CP_INFO      "Hungarian CP-852 (ntxhu852.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_852
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AµBCDEFGHIÖJKLMNO•à™§ ŠPQRSTU—éš˜ ëVWXYZ"
-#define HB_CP_LOWER     "a  „bcde‚fghi ¡jklmno ¢” “‹pqrstu £ –ûvwxyz"
+#define HB_CP_UPPER     "AÄ†ÃÃ„BCDEÃ‰FGHIÅ¹ÃJKLMNOÄ½Ã“Ã–Å¾ ÅPQRSTUÅšÃšÃœÅ› Å°VWXYZ"
+#define HB_CP_LOWER     "a Ã¡Ã¤bcdeÃ©fghi Ã­jklmno Ã³Ã¶ Ã´Å‘pqrstu ÃºÃ¼ Ä¾Å±vwxyz"
+#define HB_CP_UTF8
 
 #if 0 /* VERIFIED: 20091116 */
 

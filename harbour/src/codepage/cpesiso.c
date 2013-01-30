@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "Spanish (Modern) ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AÁÀÄBCÇDEÉÈËFGHIÍÌÏJKLMNÑOÓÒÖPQRSTUÚÙÜVWXYZ"
-#define HB_CP_LOWER     "aáàäbcçdeéèëfghiíìïjklmnñoóòöpqrstuúùüvwxyz"
+#define HB_CP_UPPER     "AÃÃ€Ã„BCÃ‡DEÃ‰ÃˆÃ‹FGHIÃÃŒÃJKLMNÃ‘OÃ“Ã’Ã–PQRSTUÃšÃ™ÃœVWXYZ"
+#define HB_CP_LOWER     "aÃ¡Ã Ã¤bcÃ§deÃ©Ã¨Ã«fghiÃ­Ã¬Ã¯jklmnÃ±oÃ³Ã²Ã¶pqrstuÃºÃ¹Ã¼vwxyz"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

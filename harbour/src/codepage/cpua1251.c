@@ -4,12 +4,10 @@
 
 /*
  * Harbour Project source code:
- * National Collation Support Module (ESMWIN - Modern Spanish)
- * (COMPATIBILITY - Use ESWIN or ESISO instead.)
+ * National Collation Support Module (UA1251)
  *
- * Copyright 2002 Alexander S.Kresin <alex@belacy.belgorod.su>
- * www - http://harbour-project.org
- * Spanish Windows support by Antonio Linares <alinares@fivetechsoft.com>
+ * Copyright 2004 Pavel Tsarenko <tpe2@mail.ru>
+ * www - http://www.xharbour.org
  *
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -52,12 +50,13 @@
  *
  */
 
-#define HB_CP_ID        ESMWIN
-#define HB_CP_INFO      "Spanish (Modern) ISO-8859-1"
-#define HB_CP_UNITB     HB_UNITB_8859_1
+#define HB_CP_ID        UA1251
+#define HB_CP_INFO      "Ukrainian Windows-1251"
+#define HB_CP_UNITB     HB_UNITB_1251
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "A���BC�DE���FGHI���JKLMN�O���PQRSTU���VWXYZ"
-#define HB_CP_LOWER     "a���bc�de���fghi���jklmn�o���pqrstu���vwxyz"
+#define HB_CP_UPPER     "АБВГҐДЕЁЄЖЗИІЇЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
+#define HB_CP_LOWER     "абвгґдеёєжзиіїйклмнопрстуфхцчшщъыьэюя"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

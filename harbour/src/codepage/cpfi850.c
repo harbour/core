@@ -16,8 +16,9 @@
 #define HB_CP_INFO      "Finnish CP-850 (ntxfin.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABCDEêFGHIJKLMNOPQRSTUVWXYöZèéô"
-#define HB_CP_LOWER     "abcdeÇfghijklmnopqrstuvwxyÅzÜÑî"
+#define HB_CP_UPPER     "ABCDE√âFGHIJKLMNOPQRSTUVWXY√úZ√Ö√Ñ√ñ"
+#define HB_CP_LOWER     "abcde√©fghijklmnopqrstuvwxy√ºz√•√§√∂"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

@@ -54,8 +54,9 @@
 #define HB_CP_INFO      "Ukrainian CP-1125"
 #define HB_CP_UNITB     HB_UNITB_1125
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "€‚ƒς„…πτ†‡φψ‰‹‘’“”•–—™›"
-#define HB_CP_LOWER     " ΅Ά£σ¤¥ρυ¦§¨χω©ª«¬­®―ΰαβγδεζηθικλμνξο"
+#define HB_CP_UPPER     "ΠΠ‘Π’Π“ÒΠ”Π•ΠΠ„Π–Π—ΠΠ†Π‡Π™ΠΠ›ΠΠΠΠΠ Π΅ΠΆΠ£Π¤Π¥Π¦Π§Π¨Π©ΠªΠ«Π¬Π­Π®Π―"
+#define HB_CP_LOWER     "Π°Π±Π²Π³Ò‘Π΄ΠµΡ‘Ρ”Π¶Π·ΠΈΡ–Ρ—ΠΉΠΊΠ»ΠΌΠ½ΠΎΠΏΡ€ΡΡ‚ΡƒΡ„Ρ…Ρ†Ρ‡ΡΡ‰ΡΡ‹ΡΡΡΡ"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

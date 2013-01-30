@@ -16,8 +16,9 @@
 #define HB_CP_INFO      "German CP-850 (ntxger.obj compatible)"
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "AéBCDEFGHIJKLMNOôPQRS TUöVWXYZ"
-#define HB_CP_LOWER     "aÑbcdefghijklmnoîpqrs·tuÅvwxyz"
+#define HB_CP_UPPER     "A√ÑBCDEFGHIJKLMNO√ñPQRS TU√úVWXYZ"
+#define HB_CP_LOWER     "a√§bcdefghijklmno√∂pqrs√ütu√ºvwxyz"
+#define HB_CP_UTF8
 
 #if 0 /* VERIFIED: 20091116 */
 
