@@ -425,7 +425,8 @@ extern HB_EXPORT HB_BOOL      hb_cdpRegisterNew( const char * id,
                                                  const char * pszUpper,
                                                  const char * pszLower,
                                                  unsigned int nACSort,
-                                                 unsigned int nCaseSort );
+                                                 unsigned int nCaseSort,
+                                                 HB_BOOL fUtf8 );
 extern HB_EXPORT void         hb_cdpBuildTransTable( PHB_UNITABLE uniTable );
 extern HB_EXPORT void         hb_cdpReleaseAll( void );
 extern HB_EXPORT const char * hb_cdpID( void );

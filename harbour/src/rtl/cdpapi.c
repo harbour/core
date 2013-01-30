@@ -2598,12 +2598,55 @@ HB_BOOL hb_cdpCharCaseEq( PHB_CODEPAGE cdp, const char * szText1, HB_SIZE nLen1,
 /*
  * CP management
  */
+static HB_UCHAR hb_cdpUtf8Char( const char ** pStrPtr, PHB_UNITABLE uniTable )
+{
+   const char * pszString = *pStrPtr;
+   HB_UCHAR uc = 0;
+   HB_WCHAR wc = 0;
+   int n = 0;
+
+   while( *pszString )
+   {
+      if( ! hb_cdpUTF8ToU16NextChar( ( HB_UCHAR ) *pszString++, &n, &wc ) )
+         break;
+      if( n == 0 )
+      {
+         if( wc < 127 )
+            uc = ( HB_UCHAR ) wc;
+         else
+         {
+            for( n = 0; n < 256; ++n )
+            {
+               if( wc == uniTable->uniCodes[ n ] )
+               {
+                  uc = ( HB_UCHAR ) n;
+                  break;
+               }
+            }
+         }
+         break;
+      }
+   }
+   if( uc == 0 )
+   {
+      while( *pszString )
+         pszString++;
+   }
+   *pStrPtr = ( const char * ) pszString;
+
+   return uc;
+}
+
+#define _HB_CDP_GETUC( p )  ( !fUtf8 ? ( HB_UCHAR ) (*(p) ? *(p)++ : *(p)) \
+                                     : hb_cdpUtf8Char( &(p), uniTable ) )
+
 static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
                                       PHB_UNITABLE uniTable,
                                       const char * pszUpper,
                                       const char * pszLower,
                                       unsigned int nACSort,
-                                      unsigned int nCaseSort )
+                                      unsigned int nCaseSort,
+                                      HB_BOOL fUtf8 )
 {
    HB_BOOL lSort, fError;
    int iMulti, iAcc, iAccUp, iAccLo, iSortUp, iSortLo, i;
@@ -2625,33 +2668,36 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
    plo = pszLower;
    for( ;; )
    {
-      ucUp = ( HB_UCHAR ) *pup++;
-      ucLo = ( HB_UCHAR ) *plo++;
-      if( ucUp == 0 || ucLo == 0 )
+      ucUp = _HB_CDP_GETUC( pup );
+      ucLo = _HB_CDP_GETUC( plo );
+      if( ucUp == 0 || ucLo == 0 ||
+          ( ucUp == '.' && ucLo != '.' ) ||
+          ( ucUp == '~' && ucLo != '~' ) )
       {
          if( ucUp || ucLo )
             fError = HB_TRUE;
          break;
       }
+
       if( ucUp == '.' )
       {
-         if( ucLo == '.' &&
-             pup[ 0 ] && pup[ 1 ] &&
-             ( pup[ 2 ] == '.' || pup[ 2 ] == '=' ) &&
-             plo[ 0 ] && plo[ 1 ] &&
-             ( plo[ 2 ] == '.' || plo[ 2 ] == '=' ) )
-         {
-            ucUp = ( HB_UCHAR ) *pup;
-            ucLo = ( HB_UCHAR ) *plo;
+         HB_UCHAR ucU1, ucU2, ucL1, ucL2;
 
-            if( ( ucUp != ' ' || ucLo != ' ' ) &&
-                ( ucUp == ( HB_UCHAR ) *pup || ( ucUp != ' ' && *pup != ' ' ) ) &&
-                ( ucLo == ( HB_UCHAR ) *plo || ( ucLo != ' ' && *plo != ' ' ) ) )
+         ucU1 = _HB_CDP_GETUC( pup );
+         ucU2 = _HB_CDP_GETUC( pup );
+         ucL1 = _HB_CDP_GETUC( plo );
+         ucL2 = _HB_CDP_GETUC( plo );
+
+         if( ucU1 && ucU2 && ( *pup == '.' || *pup == '=' ) &&
+             ucL1 && ucL2 && ( *plo == '.' || *plo == '=' ) )
+         {
+            if( ( ucU1 != ' ' || ucL1 != ' ' ) &&
+                ( ucU1 == ucU2 || ( ucU1 != ' ' && ucU2 != ' ' ) ) &&
+                ( ucL1 == ucL2 || ( ucL1 != ' ' && ucL2 != ' ' ) ) )
             {
-               if( ucUp != ' ' )
+               if( ucU1 != ' ' )
                   ++iSortLo;
-               pup += 2;
-               plo += 2;
+
                if( *pup == '=' )
                {
                   do
@@ -2683,13 +2729,13 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
       }
       if( ucUp == '~' )
       {
-         if( ucLo != '~' || *pup == '\0' || *plo == '\0' )
+         ucUp = _HB_CDP_GETUC( pup );
+         ucLo = _HB_CDP_GETUC( plo );
+         if( ucUp == '\0' || ucLo == '\0' )
          {
             fError = HB_TRUE;
             break;
          }
-         ucUp = ( HB_UCHAR ) *pup++;
-         ucLo = ( HB_UCHAR ) *plo++;
          ++iAcc;
       }
       if( used[ ucUp ] != 0 )
@@ -2803,14 +2849,14 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
    memset( used, '\0', sizeof( used ) );
    while( *pup )
    {
-      ucUp = ( HB_UCHAR ) *pup++;
-      ucLo = ( HB_UCHAR ) *plo++;
+      ucUp = _HB_CDP_GETUC( pup );
+      ucLo = _HB_CDP_GETUC( plo );
       if( ucUp == '.' )
       {
-         multi->cFirst[ 0 ] = *pup++;
-         multi->cLast[ 0 ]  = *pup++;
-         multi->cFirst[ 1 ] = *plo++;
-         multi->cLast[ 1 ]  = *plo++;
+         multi->cFirst[ 0 ] = _HB_CDP_GETUC( pup );
+         multi->cLast[ 0 ]  = _HB_CDP_GETUC( pup );
+         multi->cFirst[ 1 ] = _HB_CDP_GETUC( plo );
+         multi->cLast[ 1 ]  = _HB_CDP_GETUC( plo );
          if( multi->cFirst[ 0 ] != ' ' )
          {
             flags[ ( HB_UCHAR ) multi->cFirst[ 0 ] ] |= HB_CDP_MULTI1;
@@ -2866,8 +2912,8 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
          if( ucUp == '~' )
          {
             iAcc = 1;
-            ucUp = ( HB_UCHAR ) *pup++;
-            ucLo = ( HB_UCHAR ) *plo++;
+            ucUp = _HB_CDP_GETUC( pup );
+            ucLo = _HB_CDP_GETUC( plo );
          }
          if( ucUp != ' ' )
          {
@@ -3114,17 +3160,18 @@ HB_BOOL hb_cdpRegisterNew( const char * id, const char * info,
                            PHB_UNITABLE uniTable,
                            const char * pszUpper, const char * pszLower,
                            unsigned int nACSort,
-                           unsigned int nCaseSort )
+                           unsigned int nCaseSort,
+                           HB_BOOL fUtf8 )
 {
    PHB_CODEPAGE * cdp_ptr;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_cdpRegisterNew(%s,%s,%s,%s,%u,%u)", id, info, pszUpper, pszLower, nACSort, nCaseSort ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_cdpRegisterNew(%s,%s,%s,%s,%u,%u,%d)", id, info, pszUpper, pszLower, nACSort, nCaseSort, fUtf8 ) );
 
    cdp_ptr = hb_cdpFindPos( id );
    if( *cdp_ptr == NULL )
    {
       *cdp_ptr = hb_buildCodePage( id, info, uniTable, pszUpper, pszLower,
-                                   nACSort, nCaseSort );
+                                   nACSort, nCaseSort, fUtf8 );
       return *cdp_ptr != NULL;
    }
    return HB_FALSE;

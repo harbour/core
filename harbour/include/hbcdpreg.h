@@ -141,8 +141,14 @@ HB_CALL_ON_STARTUP_BEGIN( HB_MACRONAME_JOIN( _hb_codepage_Init_, HB_CP_ID ) )
    #ifndef HB_CP_CSSORT
       #define HB_CP_CSSORT    HB_CDP_CSSORT_UPLO
    #endif
+   #ifdef HB_CP_UTF8
+      #define HB_CP_UTF8_STR  HB_TRUE
+   #else
+      #define HB_CP_UTF8_STR  HB_FALSE
+   #endif
    hb_cdpRegisterNew( HB_MACRO2STRING( HB_CP_ID ), HB_CP_INFO, HB_CP_UNITB,
-                      HB_CP_UPPER, HB_CP_LOWER, HB_CP_ACSORT, HB_CP_CSSORT );
+                      HB_CP_UPPER, HB_CP_LOWER, HB_CP_ACSORT, HB_CP_CSSORT,
+                      HB_CP_UTF8_STR );
 #endif /* HB_CP_RAW */
 
 #if defined( HB_PRAGMA_STARTUP )

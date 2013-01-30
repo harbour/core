@@ -55,8 +55,9 @@
 #define HB_CP_INFO      "Polish Mazovia"
 #define HB_CP_UNITB     HB_UNITB_MAZ
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "ABC•DEFGHIJKLœMN¥O£PQRS˜TUVWXYZ ¡"
-#define HB_CP_LOWER     "a†bcde‘fghijkl’mn¤o¢pqrstuvwxyz¦§"
+#define HB_CP_UPPER     "AÄ„BCÄ†DEÄ˜FGHIJKLÅMNÅƒOÃ“PQRSÅšTUVWXYZÅ¹Å»"
+#define HB_CP_LOWER     "aÄ…bcÄ‡deÄ™fghijklÅ‚mnÅ„oÃ³pqrsÅ›tuvwxyzÅºÅ¼"
+#define HB_CP_UTF8
 
 /* include CP registration code */
 #include "hbcdpreg.h"

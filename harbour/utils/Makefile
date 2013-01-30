@@ -11,9 +11,10 @@ DIRS := \
 
 ifneq ($(HB_BUILD_PARTS),compiler)
 
-   DIRS += \
-      hbi18n \
+   DIRS := \
       hbtest \
+      hbmk2 \
+      hbi18n \
       $(__HB_UTIL_ADDONS)
 
 endif
