@@ -364,11 +364,6 @@ msgstr ""
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "select C compiler.\\nSpecial value:\\n - bld: use original build settings (default on *nix)"
-msgstr "használja a megadott C fordítót.\\nSpeciális érték:\\n - bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
-
-#: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
-#, c-format
 msgid "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual"
 msgstr "C fordító debug információ hozzáadása (vagy sem). Harbour szintű debughoz használja a -b kapcsolót"
 
@@ -954,8 +949,13 @@ msgstr "kapcsolókat adja tovább a szerkesztőnek"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "select target platform."
-msgstr "válasszon cél platformot."
+msgid "force/select target platform (default: autodetection)"
+msgstr "válassza a megadott cél platformot (alapértelmezés: automatikus)"
+
+#: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
+#, c-format
+msgid "force/select C compiler (default: autodetection)\nSpecial value:\n - bld: use original build settings (default on *nix)"
+msgstr "használja a megadott C fordítót (alapértelmezés: automatikus)\\nSpeciális érték:\\n - bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format

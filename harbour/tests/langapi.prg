@@ -5,7 +5,7 @@
 // ; Donated to the public domain by
 //   Viktor Szakats (harbour syenar.net)
 
-REQUEST HB_LANG_HU852
+REQUEST HB_LANG_HU
 REQUEST HB_LANG_KO
 
 PROCEDURE Main()
@@ -17,7 +17,14 @@ PROCEDURE Main()
    ? CDoW( Date() )
    ? "---------"
 
-   ? "Prev:", hb_langSelect( "HU852" )
+   ? "Prev:", hb_langSelect( "hu" )
+   ? hb_langName()
+   ? NationMsg( 1 )
+   ? CMonth( Date() )
+   ? CDoW( Date() )
+   ? "---------"
+
+   ? "Prev:", hb_langSelect( "ko" )
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )
@@ -25,13 +32,6 @@ PROCEDURE Main()
    ? "---------"
 
    ? "Prev:", hb_langSelect( "NOTHERE" )
-   ? hb_langName()
-   ? NationMsg( 1 )
-   ? CMonth( Date() )
-   ? CDoW( Date() )
-   ? "---------"
-
-   ? "Prev:", hb_langSelect( "KO" )
    ? hb_langName()
    ? NationMsg( 1 )
    ? CMonth( Date() )

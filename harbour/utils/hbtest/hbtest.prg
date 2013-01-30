@@ -224,7 +224,7 @@ STATIC PROCEDURE TEST_BEGIN( cParam )
    /* Set up the initial state */
 
 #ifdef __HARBOUR__
-   hb_langSelect( "EN" )
+   hb_langSelect( "en" )
 #endif
    SET DATE ANSI
    SET CENTURY ON

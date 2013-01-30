@@ -54,7 +54,7 @@ PROCEDURE Main()
 
    SET DATE ANSI                                 // User's normal date format
    SET CENTURY ON
-   hb_langSelect( "EN" )
+   hb_langSelect( "en" )
 
    aTemp      := ft_DateCnfg()                   // Get/Set cFY_Start and nDOW_Start.
 #if 0

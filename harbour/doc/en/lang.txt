@@ -45,7 +45,7 @@
       PROCEDURE Main()
          // English: Argument error
          ? "English:", hb_langErrMsg( EG_ARG )
-         hb_langSelect( "ES" )
+         hb_langSelect( "es" )
          // Spanish: Error de argumento
          ? "Spanish:", hb_langErrMsg( EG_ARG )
          RETURN
@@ -75,9 +75,11 @@
    $ONELINER$
       Returns international strings messages and errors
    $SYNTAX$
-      hb_langMessage( <nMsg> ) --> cMessage
+      hb_langMessage( <nMsg>[, <cLangID>] ) --> cMessage
    $ARGUMENTS$
-      <nMsg> is the message number to get.
+      <nMsg>    is the message number to get.
+      <cLangID> is an optional language module ID. Uses the currently
+                selected language module, if not specified.
    $RETURNS$
       hb_langMessage() return the text associated with the code <nMsg>.
    $DESCRIPTION$
@@ -92,9 +94,10 @@
       PROCEDURE Main()
          // English: Monday
          ? "English:", hb_langMessage( HB_LANG_ITEM_BASE_DAY + 1 )
-         hb_langSelect( "ES" )
+         hb_langSelect( "es" )
          // Spanish: Lunes
          ? "Spanish:", hb_langMessage( HB_LANG_ITEM_BASE_DAY + 1 )
+         ? "English:", hb_langMessage( HB_LANG_ITEM_BASE_DAY + 1, "en" )
          RETURN
    $STATUS$
       R
@@ -120,22 +123,27 @@
    $SUBCATEGORY$
       Language and Nation
    $ONELINER$
-      Return the name of the current language module in use
+      Return the name of the language module
    $SYNTAX$
-      hb_langName() --> cLangName
+      hb_langName( [<cLangID>] ) --> cLangName
    $ARGUMENTS$
-      None.
+      <cLangID> is an optional language module ID. Uses the currently
+                selected language module, if not specified.
    $RETURNS$
-      <cLangName>  Name of the current language in use
+      <cLangName>  Name of the language module
    $DESCRIPTION$
-      This function return the current name of the language module in use.
+      This function return the name of the language module in use or
+      specified.
    $EXAMPLES$
       REQUEST HB_LANG_PT
       REQUEST HB_LANG_RO
       REQUEST HB_LANG_ES
+      REQUEST HB_LANG_HU
       PROCEDURE Main()
+         ? hb_langName( "hu" )
+         ? hb_langName( "<non-existent>" )
          hb_langSelect( "pt" )       // Default language is now Portuguese
-         ? CDoW( Date() )            //Segunda-feira
+         ? CDoW( Date() )            // Segunda-feira
          ? "Current language is ", hb_langName()             // Portuguese
          ? "Old language id selected is ", hb_langSelect()   // PT
          hb_langSelect( "ro" )       // Default language is now Romanian
@@ -171,9 +179,9 @@
    $ONELINER$
       Select a specific nation message module
    $SYNTAX$
-      hb_langSelect( [ <cNewLang> ][, <cCodepage> ] ) --> cOldLang
+      hb_langSelect( [<cNewLang>][, <cCodepage>] ) --> cOldLang
    $ARGUMENTS$
-      <cNewLang>  The optional ID of the country language module.
+      <cNewLang>  The optional ID of the language module.
       Possible values for <cNewLang> are below as defined in the
       Lang library, sorted by language.
       <cCodepage>  Optional codepage ID into which the language
@@ -270,7 +278,7 @@
    $SYNTAX$
       hb_cdpSelect( [<cNewLang>] ) --> cOldLang
    $ARGUMENTS$
-      <cNewLang>  The optional ID of the country language module.
+      <cNewLang>  The optional ID of the language module.
       Possible values for <cNewLang> are below as defined in the
       Codepage library, sorted by language.
 
@@ -413,7 +421,7 @@
       PROCEDURE Main()
          LOCAL cTxt := "A" + Chr( 142 ) + "BC"
          ? "German CP-850 text:", cTxt
-         ? "German Windows-1252 text:", hb_Translate( cTxt, "DE", "DEWIN" )
+         ? "German Windows-1252 text:", hb_Translate( cTxt, "DE850", "DEWIN" )
          RETURN
    $STATUS$
       R
