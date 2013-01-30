@@ -54,8 +54,7 @@
 #define HB_CP_INFO      "Ukrainian CP-866"
 #define HB_CP_UNITB     HB_UNITB_866
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#define HB_CP_UPPER     "АБВГДЕЁЄЖЗИIЇЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯ"
-#define HB_CP_LOWER     "абвгдеёєжзиiїйклмнопрстуфхцчшщъыьэюя"
+#include "l_uk.c"
 #define HB_CP_UTF8
 
 /* include CP registration code */
