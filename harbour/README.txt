@@ -1322,6 +1322,11 @@ TABLE OF CONTENT
    3.  If that still fails, make sure to install fresh source tree in a new
        local directory and start over. See 'HOW TO GET HARBOUR' section for
        instructions to get the source.
+       In case you installed Harbour into system locations (this used to be
+       the case with some *nix users, albeit mostly completely unnecessarily
+       or wrongly - f.e. for unstable versions), you will need to remember
+       cleaning off Harbour from all of these locations, too.
+       Advice: Never install unstable Harbour versions to system locations.
    4.  If you are doing a cross-build, make sure to have rebuilt the native
        Harbour executables for your host platform. See 'HB_HOST_BIN'
        build messages to find their location.
