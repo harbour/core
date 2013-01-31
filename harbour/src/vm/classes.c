@@ -5509,7 +5509,10 @@ void hb_clsAssociate( HB_USHORT usClassH )
    if( pSelf )
       hb_itemReturnRelease( pSelf );
    else
+   {
+      HB_STACK_TLS_PRELOAD
       hb_ret();
+   }
 }
 
 #if 0
