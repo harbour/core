@@ -56,6 +56,11 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
+#if defined( HB_OS_WIN )
+   #include "hbwinuni.h"
+   #include <windows.h>
+#endif
+
 /* TOFIX: The screen buffer handling is not right for all platforms (Windows)
           The output of the launched (MS-DOS?) app is not visible. */
 
@@ -65,12 +70,18 @@ HB_FUNC( __RUN )
 
    if( pszCommand && hb_gtSuspend() == HB_SUCCESS )
    {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN_CE )
       hb_fsProcessRun( pszCommand, NULL, 0, NULL, NULL, NULL, NULL, HB_FALSE );
+#elif defined( HB_OS_WIN )
+      LPTSTR lpCommand;
+
+      lpCommand = HB_CHARDUP( pszCommand );
+      ( void ) HB_WINAPI_SYSTEM( lpCommand );
+      hb_xfree( lpCommand );
 #else
       char * pszFree = NULL;
 
-      if( system( hb_osEncodeCP( pszCommand, &pszFree, NULL ) ) != 0 ) {}
+      ( void ) system( hb_osEncodeCP( pszCommand, &pszFree, NULL ) );
 
       if( pszFree )
          hb_xfree( pszFree );

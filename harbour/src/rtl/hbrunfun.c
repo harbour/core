@@ -56,6 +56,11 @@
 #include "hbapiitm.h"
 #include "hbapifs.h"
 
+#if defined( HB_OS_WIN )
+   #include "hbwinuni.h"
+   #include <windows.h>
+#endif
+
 HB_FUNC( HB_RUN )
 {
    const char * pszCommand = hb_parc( 1 );
@@ -66,9 +71,15 @@ HB_FUNC( HB_RUN )
 
       if( hb_gtSuspend() == HB_SUCCESS )
       {
-#if defined( HB_OS_WIN )
+#if defined( HB_OS_WIN_CE )
          iResult = hb_fsProcessRun( pszCommand,
                                     NULL, 0, NULL, NULL, NULL, NULL, HB_FALSE );
+#elif defined( HB_OS_WIN )
+         LPTSTR lpCommand;
+
+         lpCommand = HB_CHARDUP( pszCommand );
+         iResult = HB_WINAPI_SYSTEM( lpCommand );
+         hb_xfree( lpCommand );
 #else
          char * pszFree = NULL;
 
