@@ -685,27 +685,8 @@ HB_BOOL hb_hashScan( PHB_ITEM pHash, PHB_ITEM pKey, HB_SIZE * pnPos )
          {
             PHB_ITEM pVal1 = &pHash->item.asHash.value->pPairs[ nPos ].value;
             PHB_ITEM pVal2 = &pKey->item.asHash.value->pPairs[ 0 ].value;
-            HB_BOOL fResult = HB_FALSE;
-            if( HB_IS_STRING( pVal1 ) && HB_IS_STRING( pVal2 ) )
-               fResult = hb_itemStrCmp( pVal1, pVal2, HB_TRUE ) == 0;
-            else if( HB_IS_NUMINT( pVal1 ) && HB_IS_NUMINT( pVal2 ) )
-               fResult = HB_ITEM_GET_NUMINTRAW( pVal1 ) == HB_ITEM_GET_NUMINTRAW( pVal2 );
-            else if( HB_IS_NUMERIC( pVal1 ) && HB_IS_NUMERIC( pVal2 ) )
-               fResult = hb_itemGetND( pVal1 ) == hb_itemGetND( pVal2 );
-            else if( HB_IS_NIL( pVal1 ) && HB_IS_NIL( pVal2 ) )
-               fResult = HB_TRUE;
-            else if( hb_itemType( pVal1 ) & hb_itemType( pVal2 ) )
-            {
-               hb_vmPush( pVal1 );
-               hb_vmPush( pVal2 );
-               if( ! hb_xvmExactlyEqual() )
-               {
-                  HB_STACK_TLS_PRELOAD
-                  fResult = hb_itemGetL( hb_stackItemFromTop( -1 ) );
-                  hb_stackPop();
-               }
-            }
-            if( fResult )
+
+            if( hb_itemEqual( pVal1, pVal2 ) )
             {
                if( pnPos )
                   *pnPos = nPos + 1;

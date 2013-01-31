@@ -2637,7 +2637,7 @@ static HB_UCHAR hb_cdpUtf8Char( const char ** pStrPtr, PHB_UNITABLE uniTable )
    return uc;
 }
 
-#define _HB_CDP_GETUC( p )  ( ! fUtf8 ? ( HB_UCHAR ) ( *( p ) ? *( p )++ : *( p ) ) \
+#define _HB_CDP_GETUC( p )  ( ! fUtf8 ? ( HB_UCHAR ) ( *( p ) ? *( p )++ : 0 ) \
                                       : hb_cdpUtf8Char( &( p ), uniTable ) )
 
 static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
@@ -2666,7 +2666,7 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
    ucUp2 = ucLo2 = 0;
    pup = pszUpper;
    plo = pszLower;
-   for( ;; )
+   while( *pup || *plo )
    {
       ucUp = _HB_CDP_GETUC( pup );
       ucLo = _HB_CDP_GETUC( plo );
@@ -2674,8 +2674,7 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
           ( ucUp == '.' && ucLo != '.' ) ||
           ( ucUp == '~' && ucLo != '~' ) )
       {
-         if( ucUp || ucLo )
-            fError = HB_TRUE;
+         fError = HB_TRUE;
          break;
       }
 
@@ -2771,6 +2770,7 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
        nCaseSort > HB_CDP_CSSORT_IGNORE )
    {
 #ifdef __HB_IGNORE_CP_ERRORS
+      fprintf( stderr, "Harbour CP (%s) initialization failure (1)\n", id ); fflush( stderr );
       return NULL;
 #else
       hb_errInternal( 9994, "Harbour CP (%s) initialization failure", id, NULL );
@@ -2988,6 +2988,7 @@ static PHB_CODEPAGE hb_buildCodePage( const char * id, const char * info,
          if( iMulti > ucUp2 || iMulti > ucLo2 )
          {
 #ifdef __HB_IGNORE_CP_ERRORS
+            fprintf( stderr, "Harbour CP (%s) initialization failure (2)\n", id ); fflush( stderr );
             hb_xfree( buffer );
             return NULL;
 #else

@@ -156,6 +156,7 @@ extern HB_EXPORT PHB_ITEM     hb_itemParamPtr  ( HB_USHORT uiParam, long lMask )
 extern HB_EXPORT HB_BOOL      hb_itemParamStore( HB_USHORT uiParam, PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL      hb_itemParamStoreForward( HB_USHORT uiParam, PHB_ITEM pItem );
 extern HB_EXPORT HB_BOOL      hb_itemParamStoreRelease( HB_USHORT uiParam, PHB_ITEM pItem );
+extern HB_EXPORT HB_BOOL      hb_itemEqual( PHB_ITEM pItem1, PHB_ITEM pItem2 );
 extern HB_EXPORT int          hb_itemStrCmp    ( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT int          hb_itemStrICmp   ( PHB_ITEM pFirst, PHB_ITEM pSecond, HB_BOOL bForceExact ); /* our string compare */
 extern HB_EXPORT void         hb_itemCopy      ( PHB_ITEM pDest, PHB_ITEM pSource ); /* copies an item to one place to another respecting its containts */
