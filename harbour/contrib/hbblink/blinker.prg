@@ -395,7 +395,7 @@ FUNCTION SwpRunCmd( cCommand, nMem, cRunPath, cTempPath )
 
    IF ! Empty( cShell )
 #if defined( __PLATFORM__UNIX )
-      cCommand := cShell + " " + cCommand
+      cCommand := cShell + " -c " + "'" + StrTran( cCommand, "'", "'\''" ) + "'"
 #else
       cCommand := cShell + " /c " + cCommand
 #endif

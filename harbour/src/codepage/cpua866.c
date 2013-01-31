@@ -50,6 +50,16 @@
  *
  */
 
+/* NOTE: This collation misses two characters (Ґґ) from
+         the Ukrainian alphabet and uses non-cyrillic
+         versions for another two (Іі), because the
+         originals cannot be encoded in CP-866:
+           Ґ - U+0490 - http://codepoints.net/U+0490
+           ґ - U+0491 - http://codepoints.net/U+0491
+           І - U+0406 - http://codepoints.net/U+0406
+           і - U+0456 - http://codepoints.net/U+0456
+         [druzus/vszakats] */
+
 #define HB_CP_ID        UA866
 #define HB_CP_INFO      "Ukrainian CP-866"
 #define HB_CP_UNITB     HB_UNITB_866

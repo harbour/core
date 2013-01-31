@@ -82,7 +82,7 @@ FUNCTION RunShell( cCommand, cProgram, lAsync, lBackground )
 
    IF HB_ISSTRING( cCommand )
 #if defined( __PLATFORM__UNIX )
-      cProgram += " " + cCommand
+      cProgram += " -c " + "'" + StrTran( cCommand, "'", "'\''" ) + "'"
 #else
       cProgram += " /c " + cCommand
 #endif
