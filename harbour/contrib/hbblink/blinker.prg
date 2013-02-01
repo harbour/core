@@ -381,29 +381,21 @@ FUNCTION SwpNobOot( lValue )
 
 FUNCTION SwpRunCmd( cCommand, nMem, cRunPath, cTempPath )
 
-   LOCAL cShell
-
    HB_SYMBOL_UNUSED( nMem )
    HB_SYMBOL_UNUSED( cRunPath )
    HB_SYMBOL_UNUSED( cTempPath )
 
+   IF Empty( cCommand )
 #if defined( __PLATFORM__UNIX )
-   cShell := hb_GetEnv( "SHELL" )
+      cCommand := hb_GetEnv( "SHELL" )
 #else
-   cShell := hb_GetEnv( "COMSPEC" )
-#endif
-
-   IF ! Empty( cShell )
-#if defined( __PLATFORM__UNIX )
-      cCommand := cShell + " -c " + "'" + StrTran( cCommand, "'", "'\''" ) + "'"
-#else
-      cCommand := cShell + " /c " + cCommand
+      cCommand := hb_GetEnv( "COMSPEC" )
 #endif
    ENDIF
 
    t_nErrorLevel := hb_run( cCommand )
 
-   RETURN .T.
+   RETURN ( t_nErrorLevel != -1 )
 
 FUNCTION SwpSetEnv( cString )
 

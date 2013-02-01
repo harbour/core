@@ -7236,9 +7236,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       #if defined( __PLATFORM__WINDOWS )
          IF hbmk[ _HBMK_lGUI ]
             IF hb_osIsWinNT()
-               cCommand := GetEnv( "COMSPEC" ) + " /c " + 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
+               cCommand := 'start "" ' + FNameEscape( cCommand, _ESC_DBLQUOTE )
             ELSE
-               cCommand := GetEnv( "COMSPEC" ) + " /c " + "start " + cCommand
+               cCommand := "start " + cCommand
             ENDIF
          ENDIF
       #elif defined( __PLATFORM__OS2 )
