@@ -23,7 +23,7 @@
 // HB_FUNC_EXCLUDE HB_MT
 
 /* --------------------------------------------------------------------
- * WARNING: Automatically generated code below. DO NOT EDIT!
+ * WARNING: Automatically generated code below. DO NOT EDIT! (except casing)
  *          Regenerate with HB_REBUILD_EXTERN=yes build option.
  */
 
@@ -1261,6 +1261,7 @@ DYNAMIC __clsAddMsg
 DYNAMIC __clsAssocType
 DYNAMIC __clsCntClasses
 DYNAMIC __clsDelMsg
+DYNAMIC __clsGetAncestors
 DYNAMIC __clsGetProperties
 DYNAMIC __clsInst
 DYNAMIC __clsInstSuper
@@ -1444,6 +1445,7 @@ DYNAMIC __objDelInline
 DYNAMIC __objDelMethod
 DYNAMIC __objDerivedFrom
 DYNAMIC __objGetClsName
+DYNAMIC __objGetIVars
 DYNAMIC __objGetMethodList
 DYNAMIC __objGetMsgList
 DYNAMIC __objGetProperties
@@ -1456,6 +1458,8 @@ DYNAMIC __objModInline
 DYNAMIC __objModMethod
 DYNAMIC __objSendMsg
 DYNAMIC __objSetClass
+DYNAMIC __objSetClassHandle
+DYNAMIC __objSetIVars
 DYNAMIC __objSetValueList
 DYNAMIC __opCount
 DYNAMIC __opGetPrf
