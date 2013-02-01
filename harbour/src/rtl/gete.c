@@ -4,7 +4,7 @@
 
 /*
  * Harbour Project source code:
- * GETENV(), GETE() functions
+ * GetEnv(), GetE() functions
  *
  * Copyright 1999 Matthew Hamilton <mhamilton@bunge.com.au>
  * www - http://harbour-project.org
@@ -55,7 +55,7 @@
  * www - http://harbour-project.org
  *
  * Copyright 1999-2001 Viktor Szakats (harbour syenar.net)
- *    GETE()
+ *    GetE()
  *
  * See COPYING.txt for licensing terms.
  *
@@ -107,10 +107,6 @@ HB_FUNC_TRANSLATE( GETE, GETENV )
 /* NOTE: Harbour extended version of GETENV(). The 2nd parameter
          can be used to specify a default value, returned if the
          requested envvar doesn't exist.
-         3rd, optional logical parameter can specify whether to
-         apply automatic codepage conversion [ to the codepage
-         specified by Set( _SET_OSCODEPAGE ) ] onto the retrieved
-         envvar value. The default is .T.
          [vszakats] */
 
 HB_FUNC( HB_GETENV )

@@ -772,27 +772,27 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
    CASE cARCH == "dos" .AND. cCOMP == "djgpp"
 
       hb_SetEnv( "DJGPP", cBasePath + hb_ps() + "djgpp.env" )
-      hb_SetEnv( "PATH", cBasePath + hb_ps() + "bin" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+      hb_SetEnv( "PATH", cBasePath + hb_ps() + "bin" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
 
    CASE cARCH == "win" .AND. cCOMP == "mingw"
 
-      hb_SetEnv( "PATH", cBasePath + hb_ps() + "bin" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+      hb_SetEnv( "PATH", cBasePath + hb_ps() + "bin" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
 
    CASE cARCH == "win" .AND. cCOMP == "pocc"
 
-      hb_SetEnv( "PATH", cBasePath + hb_ps() + "Bin" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+      hb_SetEnv( "PATH", cBasePath + hb_ps() + "Bin" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
       hb_SetEnv( "INCLUDE", cBasePath + hb_ps() + "Include" + hb_osPathListSeparator() + cBasePath + hb_ps() + "Include" + hb_ps() + "Win" )
       hb_SetEnv( "LIB", cBasePath + hb_ps() + "Lib" + hb_osPathListSeparator() + cBasePath + hb_ps() + "Lib" + hb_ps() + "Win" )
 
    CASE cARCH == "win" .AND. cCOMP == "pocc64"
 
-      hb_SetEnv( "PATH", cBasePath + hb_ps() + "Bin" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+      hb_SetEnv( "PATH", cBasePath + hb_ps() + "Bin" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
       hb_SetEnv( "INCLUDE", cBasePath + hb_ps() + "Include" + hb_osPathListSeparator() + cBasePath + hb_ps() + "Include" + hb_ps() + "Win" )
       hb_SetEnv( "LIB", cBasePath + hb_ps() + "Lib" + hb_osPathListSeparator() + cBasePath + hb_ps() + "Lib" + hb_ps() + "Win64" )
 
    CASE cARCH == "wce" .AND. cCOMP == "poccarm"
 
-      hb_SetEnv( "PATH", cBasePath + hb_ps() + "Bin" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+      hb_SetEnv( "PATH", cBasePath + hb_ps() + "Bin" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
       hb_SetEnv( "INCLUDE", cBasePath + hb_ps() + "Include" + hb_ps() + "WinCE" + hb_osPathListSeparator() + cBasePath + hb_ps() + "Include" )
       hb_SetEnv( "LIB", cBasePath + hb_ps() + "Lib" + hb_osPathListSeparator() + cBasePath + hb_ps() + "Lib" + hb_ps() + "WinCE" )
 
@@ -802,13 +802,13 @@ STATIC PROCEDURE hbmk_COMP_Setup( cARCH, cCOMP, cBasePath )
       hb_SetEnv( "EDPATH", cBasePath + hb_ps() + "eddat" )
 
       #if   defined( __PLATFORM__WINDOWS )
-         hb_SetEnv( "PATH", cBasePath + hb_ps() + "binnt" + hb_osPathListSeparator() + cBasePath + hb_ps() + "binw" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+         hb_SetEnv( "PATH", cBasePath + hb_ps() + "binnt" + hb_osPathListSeparator() + cBasePath + hb_ps() + "binw" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
       #elif defined( __PLATFORM__OS2 )
-         hb_SetEnv( "PATH", cBasePath + hb_ps() + "binp" + hb_osPathListSeparator() + cBasePath + hb_ps() + "binw" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+         hb_SetEnv( "PATH", cBasePath + hb_ps() + "binp" + hb_osPathListSeparator() + cBasePath + hb_ps() + "binw" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
       #elif defined( __PLATFORM__DOS )
-         hb_SetEnv( "PATH", cBasePath + hb_ps() + "binw" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+         hb_SetEnv( "PATH", cBasePath + hb_ps() + "binw" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
       #elif defined( __PLATFORM__LINUX )
-         hb_SetEnv( "PATH", cBasePath + hb_ps() + "binl" + hb_osPathListSeparator() + hb_GetEnv( "PATH" ) )
+         hb_SetEnv( "PATH", cBasePath + hb_ps() + "binl" + hb_osPathListSeparator() + GetEnv( "PATH" ) )
       #endif
 
       DO CASE
@@ -7274,9 +7274,9 @@ STATIC PROCEDURE ProcEnvOption( cValue )
       IF     ( tmp := At( "=", cValue ) ) > 1
          hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) )
       ELSEIF ( tmp := At( "+", cValue ) ) > 1
-         hb_SetEnv( Left( cValue, tmp - 1 ), hb_GetEnv( Left( cValue, tmp - 1 ) ) + SubStr( cValue, tmp + 1 ) )
+         hb_SetEnv( Left( cValue, tmp - 1 ), GetEnv( Left( cValue, tmp - 1 ) ) + SubStr( cValue, tmp + 1 ) )
       ELSEIF ( tmp := At( "#", cValue ) ) > 1
-         hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) + hb_GetEnv( Left( cValue, tmp - 1 ) ) )
+         hb_SetEnv( Left( cValue, tmp - 1 ), SubStr( cValue, tmp + 1 ) + GetEnv( Left( cValue, tmp - 1 ) ) )
       ELSEIF ( tmp := At( "-", cValue ) ) > 1
          hb_SetEnv( Left( cValue, tmp - 1 ) )
       ELSE

@@ -57,11 +57,11 @@ FUNCTION RunShell( cCommand, cProgram, lAsync, lBackground )
 
    IF ! HB_ISSTRING( cProgram )
 #if defined( __PLATFORM__UNIX )
-      cProgram := hb_GetEnv( "SHELL" )
+      cProgram := GetEnv( "SHELL" )
 #elif defined( __PLATFORM__OS2 )
-      cProgram := hb_GetEnv( "OS2_SHELL" )
+      cProgram := GetEnv( "OS2_SHELL" )
 #else
-      cProgram := hb_GetEnv( "COMSPEC" )
+      cProgram := GetEnv( "COMSPEC" )
 #endif
       IF Empty( cProgram )
 #if defined( __PLATFORM__WINDOWS )

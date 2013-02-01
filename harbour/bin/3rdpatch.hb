@@ -557,7 +557,7 @@ STATIC PROCEDURE SetupTools()
     * Helps non-GNU userland systems with GNU tools installed.
     * Only several of the tools are known to have GNU variants. */
 
-   FOR EACH cPathComp IN hb_ATokens( hb_GetEnv( "PATH" ), hb_osPathListSeparator() )
+   FOR EACH cPathComp IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
       FOR EACH cTool IN hb_HKeys( s_aTools )
          IF cTool $ "patch|diff|tar" .AND. hb_FileExists( CombinePath( cPathComp, "g" + cTool ) + cExeExt )
             s_aTools[ cTool ] := CombinePath( cPathComp, "g" + cTool )
@@ -565,7 +565,7 @@ STATIC PROCEDURE SetupTools()
       NEXT
    NEXT
 
-   FOR EACH cPathComp IN hb_ATokens( hb_GetEnv( "PATH" ), hb_osPathListSeparator() )
+   FOR EACH cPathComp IN hb_ATokens( GetEnv( "PATH" ), hb_osPathListSeparator() )
       FOR EACH cTool IN hb_HKeys( s_aTools )
          IF s_aTools[ cTool ] == NIL .AND. hb_FileExists( CombinePath( cPathComp, cTool ) + cExeExt )
             s_aTools[ cTool ] := CombinePath( cPathComp, cTool )

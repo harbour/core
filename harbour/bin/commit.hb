@@ -195,9 +195,9 @@ STATIC FUNCTION Shell()
    LOCAL cShell
 
 #if defined( __PLATFORM__UNIX )
-   cShell := hb_GetEnv( "SHELL" )
+   cShell := GetEnv( "SHELL" )
 #else
-   cShell := hb_GetEnv( "COMSPEC" )
+   cShell := GetEnv( "COMSPEC" )
 #endif
 
    IF ! Empty( cShell )

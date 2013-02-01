@@ -387,9 +387,9 @@ FUNCTION SwpRunCmd( cCommand, nMem, cRunPath, cTempPath )
 
    IF Empty( cCommand )
 #if defined( __PLATFORM__UNIX )
-      cCommand := hb_GetEnv( "SHELL" )
+      cCommand := GetEnv( "SHELL" )
 #else
-      cCommand := hb_GetEnv( "COMSPEC" )
+      cCommand := GetEnv( "COMSPEC" )
 #endif
    ENDIF
 
