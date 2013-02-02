@@ -28,8 +28,12 @@
 {darwin}-cflag=-DOPENSSL_NO_DGRAM
 {darwin}-cflag=-DHB_OPENSSL_OLD_OSX_
 
-# Patent will expire in 2010/2011
+# Patent expires in 2010/2011
 -cflag=-DOPENSSL_NO_IDEA
+
+# to suppress Apple's deprecation warnings that apply to
+# the complete OpenSSL API, starting with OS X Lion 10.7
+-cflag={allgcc&darwin}-Wno-deprecated
 
 # For _fileno() in openssl/applink.c
 -c=gnu90

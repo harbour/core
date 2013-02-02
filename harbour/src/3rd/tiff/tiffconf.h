@@ -163,6 +163,7 @@
 #define PHOTOSHOP_SUPPORT
 #define IPTC_SUPPORT
 
+#if ! defined( HB_OS_DARWIN )
 #ifndef O_RDONLY
 #define O_RDONLY 0
 #endif
@@ -177,6 +178,7 @@
 #endif
 #ifndef O_TRUNC
 #define O_TRUNC 001000
+#endif
 #endif
 
 #endif /* _TIFFCONF_ */
