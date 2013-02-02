@@ -1245,24 +1245,24 @@ STATIC FUNCTION _ftWinTitle( cTheTitle, cTopOrBot )
 STATIC FUNCTION _ftInitColors()
 
    t_aWinColor := { ;
-      { "GR+/BG", "GR+/G", "B+/RB",  "G+/R" },;
-      { "R+/N",   "W+/RB", "W+/BG",  "GR+/B" },;
-      { "GR+/N",  "GR+/N", "GR+/N",  "GR+/N" },;
-      {  "B/BG",  "BG+/G", "W+/RB",  "BG+/R" },;
-      { "W+/BG",  "W+/G",  "GR+/RB", "W+/R" },;
-      { "GR+/B",  "GR+/R", "R+/B",   "W+/BG" },;
-      {  "N/N",   "N/N",   "N/N",    "N/N" }   }
+      { "GR+/BG", "GR+/G", "B+/RB",  "G+/R" }, ;
+      { "R+/N",   "W+/RB", "W+/BG",  "GR+/B" }, ;
+      { "GR+/N",  "GR+/N", "GR+/N",  "GR+/N" }, ;
+      {  "B/BG",  "BG+/G", "W+/RB",  "BG+/R" }, ;
+      { "W+/BG",  "W+/G",  "GR+/RB", "W+/R" }, ;
+      { "GR+/B",  "GR+/R", "R+/B",   "W+/BG" }, ;
+      {  "N/N",   "N/N",   "N/N",    "N/N" } }
 
    t_aStdColor := { ;
-      "BG+*/RB",;
-      "GR+/R",;
-      "GR+/N",;
-      "W/B",;
-      "GR+/N",;
-      "GR+/GR",;
+      "BG+*/RB", ;
+      "GR+/R", ;
+      "GR+/N", ;
+      "W/B", ;
+      "GR+/N", ;
+      "GR+/GR", ;
       { ;
-      "W+/B",  "W/B",   "G+/B", "R+/B",;
-      "GR+/B", "BG+/B", "B+/B", "G+/B" },;
+      "W+/B",  "W/B",   "G+/B", "R+/B", ;
+      "GR+/B", "BG+/B", "B+/B", "G+/B" }, ;
       "N/N" }
 
    RETURN NIL

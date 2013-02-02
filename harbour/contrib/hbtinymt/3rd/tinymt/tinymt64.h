@@ -41,6 +41,10 @@
 #define TINYMT64_MASK UINT64_C(0x7fffffffffffffff)
 #define TINYMT64_MUL (1.0 / 18446744073709551616.0)
 
+#if defined(__cplusplus)
+extern "C" {
+#endif
+
 /*
  * tinymt64 internal state vector and parameters
  */
@@ -222,5 +226,9 @@ _HB_INLINE_ static double tinymt64_generate_doubleOO(tinymt64_t * random) {
     tinymt64_next_state(random);
     return tinymt64_temper_conv_open(random) - 1.0;
 }
+
+#if defined(__cplusplus)
+}
+#endif
 
 #endif

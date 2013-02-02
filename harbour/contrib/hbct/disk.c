@@ -146,13 +146,13 @@ HB_FUNC( DRIVETYPE )
          uiType = 3;           /* Hard Drive  - Clipper compatible */
          break;
       case DRIVE_CDROM:
-         uiType = 4;           /* CD-Rom Drive - xHarbour extension */
+         uiType = 4;           /* CD-Rom Drive - xHarbour extension */ /* HB_EXTENSION */
          break;
       case DRIVE_REMOTE:
-         uiType = 5;           /* Network Drive - xHarbour extension */
+         uiType = 5;           /* Network Drive - xHarbour extension */ /* HB_EXTENSION */
          break;
       default:
-         uiType = 9;           /* Unknown Drive - xHarbour extension */
+         uiType = 9;           /* Unknown Drive - xHarbour extension */ /* HB_EXTENSION */
          break;
    }
    hb_retni( uiType );

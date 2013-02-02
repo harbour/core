@@ -265,7 +265,7 @@ FUNCTION myerrhandler( oerr )
 
          CASE nDigit == 5
             ?? "Date."
-            cInput := CToD( "" )
+            cInput := CToD( "" ) /* Need to compile with CA-Cl*pper, too */
 
          CASE nDigit == 6
             ?? "Block."

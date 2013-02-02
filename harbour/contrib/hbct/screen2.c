@@ -111,7 +111,7 @@ HB_FUNC( SAYDOWN )
    hb_retc_null();
 }
 
-HB_FUNC( SAYSPREAD )
+HB_FUNC( SAYSPREAD ) /* TODO: Unicode support */
 {
    HB_SIZE nLen = hb_parclen( 1 );
 
@@ -168,7 +168,7 @@ HB_FUNC( SAYSPREAD )
    hb_retc_null();
 }
 
-HB_FUNC( SAYMOVEIN )
+HB_FUNC( SAYMOVEIN ) /* TODO: Unicode support */
 {
    int iLen = ( int ) hb_parclen( 1 );
 
@@ -371,7 +371,7 @@ HB_FUNC( SCREENSTR )
       hb_retc_null();
 }
 
-HB_FUNC( STRSCREEN )
+HB_FUNC( STRSCREEN ) /* TODO: Unicode support */
 {
    HB_SIZE nLen = hb_parclen( 1 );
 

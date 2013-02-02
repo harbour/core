@@ -110,27 +110,33 @@ void tinymt32_init_by_array(tinymt32_t * random, uint32_t init_key[],
     st[0] = r;
     count--;
     for (i = 1, j = 0; (j < count) && (j < key_length); j++) {
-	r = ini_func1(st[i] ^ st[(i + mid) % size] ^ st[(i + size - 1) % size]);
+	r = ini_func1(st[i % size]
+		      ^ st[(i + mid) % size]
+		      ^ st[(i + size - 1) % size]);
 	st[(i + mid) % size] += r;
 	r += init_key[j] + i;
 	st[(i + mid + lag) % size] += r;
-	st[i] = r;
+	st[i % size] = r;
 	i = (i + 1) % size;
     }
     for (; j < count; j++) {
-	r = ini_func1(st[i] ^ st[(i + mid) % size] ^ st[(i + size - 1) % size]);
+	r = ini_func1(st[i % size]
+		      ^ st[(i + mid) % size]
+		      ^ st[(i + size - 1) % size]);
 	st[(i + mid) % size] += r;
 	r += i;
 	st[(i + mid + lag) % size] += r;
-	st[i] = r;
+	st[i % size] = r;
 	i = (i + 1) % size;
     }
     for (j = 0; j < size; j++) {
-	r = ini_func2(st[i] + st[(i + mid) % size] + st[(i + size - 1) % size]);
+	r = ini_func2(st[i % size]
+		      + st[(i + mid) % size]
+		      + st[(i + size - 1) % size]);
 	st[(i + mid) % size] ^= r;
 	r -= i;
 	st[(i + mid + lag) % size] ^= r;
-	st[i] = r;
+	st[i % size] = r;
 	i = (i + 1) % size;
     }
     period_certification(random);

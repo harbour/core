@@ -678,7 +678,7 @@ msgstr "assume uma arquitetura específica."
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "use a specific build name"
+msgid "specify a build name"
 msgstr "utilizar um nome de build especifico"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
@@ -1368,7 +1368,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "select target CPU. (EXPERIMENTAL)"
+msgid "override default target CPU (default: automatic) (EXPERIMENTAL)"
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102

@@ -60,15 +60,15 @@
 #include "hbapigt.h"
 
 #if defined( HB_OS_DOS )
-#  if defined( __DJGPP__ )
-#     include <dpmi.h>
-#     include <go32.h>
-#     include <pc.h>
-#     include <sys/farptr.h>
-#  endif
-#endif /* HB_OS_DOS */
+   #if defined( __DJGPP__ )
+      #include <dpmi.h>
+      #include <go32.h>
+      #include <pc.h>
+      #include <sys/farptr.h>
+   #endif
+#endif
 
-#  include "ctvideo.ch"
+#include "ctvideo.ch"
 
 HB_FUNC( CHARPIX )
 {
@@ -192,9 +192,9 @@ HB_FUNC( SETFONT )
       height = len / count;
 
 #if defined( __DJGPP__ )
-#  ifndef __tb_size
-#     define __tb_size  _go32_info_block.size_of_transfer_buffer
-#  endif
+   #ifndef __tb_size
+      #define __tb_size  _go32_info_block.size_of_transfer_buffer
+   #endif
    {
       __dpmi_regs r;
 

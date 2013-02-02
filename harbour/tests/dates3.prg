@@ -2,7 +2,7 @@
  * $Id$
  */
 
-// Testing Harbour dates management.
+// Testing Harbour date management
 
 PROCEDURE Main()
 
@@ -35,12 +35,12 @@ PROCEDURE Main()
    ? dDate, DoW( dDate )
 
    ?
-   dDate := Date ()
+   dDate := Date()
    FOR i := 1 TO 7
       ? dDate, DoW( dDate )
       dDate++
    NEXT
-   ? CToD( "" ), DoW( CToD( "" ) )
+   ? hb_SToD(), DoW( hb_SToD() )
 
    RETURN
 

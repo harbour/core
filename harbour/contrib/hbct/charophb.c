@@ -59,27 +59,27 @@
 
 #include "ct.h"
 
-HB_FUNC( CHARSUB )
+HB_FUNC( CHARSUB ) /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARSUB );
 }
 
-HB_FUNC( CHARSHL )
+HB_FUNC( CHARSHL ) /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARSHL );
 }
 
-HB_FUNC( CHARSHR )
+HB_FUNC( CHARSHR ) /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARSHR );
 }
 
-HB_FUNC( CHARRLL )
+HB_FUNC( CHARRLL ) /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARRLL );
 }
 
-HB_FUNC( CHARRLR )
+HB_FUNC( CHARRLR ) /* HB_EXTENSION */
 {
    ct_charop( CT_CHAROP_CHARRLR );
 }

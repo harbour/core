@@ -57,7 +57,7 @@
 #define _CTERROR_CH
 
 /* sub code ranges */
-#define CT_ERROR_MATHLIB_RANGEL     100  /* math lib errors */
+#define CT_ERROR_MATHLIB_RANGEL     100 /* math lib errors */
 #define CT_ERROR_MATHLIB_RANGEH     199
 
 #define CT_ERROR_GENERAL_RANGEL    1000 /* general functions */
@@ -560,7 +560,7 @@
 #define CT_ERROR_ISDBT           7174
 
 /* switch and state functions */
-#define CT_ERROR_CSETALL         7310   /* TODO: change last digit */
+#define CT_ERROR_CSETALL         7310  /* TODO: change last digit */
 #define CT_ERROR_CSETCLIP        7320
 #define CT_ERROR_CSETDATE        7330
 #define CT_ERROR_CSETDECI        7340
@@ -606,7 +606,7 @@
 #define CT_ERROR_SETLASTKEY      7740
 
 /* system info functions */
-#define CT_ERROR_BIOSDATE        7810    /* TODO: change last digit */
+#define CT_ERROR_BIOSDATE        7810  /* TODO: change last digit */
 #define CT_ERROR_BOOTCOLD        7820
 #define CT_ERROR_BOOTWARM        7830
 #define CT_ERROR_CPUTYPE         7840

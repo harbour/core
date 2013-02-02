@@ -168,17 +168,17 @@ HB_FUNC( WOPEN )
    int iColor;
 
    /* 6-th (color) and 7-th (lVisible) parameters are Harbour extensions */
-   iColor = hb_ctColorParam( 6, -1 );   /* Harbour extension */
+   iColor = hb_ctColorParam( 6, -1 );   /* Harbour extension */ /* HB_EXTENSION */
    hb_retni( hb_ctwCreateWindow( hb_parni( 1 ), hb_parni( 2 ),
                                  hb_parni( 3 ), hb_parni( 4 ),
                                  hb_parl( 5 ), iColor,
-                                 hb_parldef( 7, 1 ) ) );
+                                 hb_parldef( 7, 1 ) ) ); /* HB_EXTENSION */
 }
 
 HB_FUNC( WCLOSE )
 {
    /* 1-st parameter (window handle) is Harbour extension */
-   hb_retni( hb_ctwCloseWindow( HB_ISNUM( 1 ) ? hb_parni( 1 ) :
+   hb_retni( hb_ctwCloseWindow( HB_ISNUM( 1 ) ? hb_parni( 1 ) : /* HB_EXTENSION */
                                              hb_ctwCurrentWindow() ) );
 }
 
@@ -191,7 +191,7 @@ HB_FUNC( WSELECT )
 {
    /* 2-nd parameter (fBringToTop) is Harbour extension */
    hb_retni( HB_ISNUM( 1 ) ? hb_ctwSelectWindow( hb_parni( 1 ),
-                                                 hb_parldef( 2, 1 ) ) :
+                                                 hb_parldef( 2, 1 ) ) : /* HB_EXTENSION */
                           hb_ctwCurrentWindow() );
 }
 
@@ -245,7 +245,7 @@ HB_FUNC( WBOX )
       szBoxBuf[ 9 ] = '\0';
    }
 
-   iColor = hb_ctColorParam( 2, -1 );   /* Harbour extension */
+   iColor = hb_ctColorParam( 2, -1 );   /* Harbour extension */ /* HB_EXTENSION */
    hb_retni( hb_ctwAddWindowBox( hb_ctwCurrentWindow(), szBoxBuf, iColor ) );
 }
 
@@ -451,29 +451,25 @@ HB_FUNC_TRANSLATE( _WSTACK, WLIST )
 /* Temporary Harbour extensions to test some extended CTW functionality
  */
 
-/* Harbour extension */
-HB_FUNC( WHIDE )
+HB_FUNC( WHIDE ) /* HB_EXTENSION */
 {
    hb_ctwVisible( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_ctwCurrentWindow(),
                   HB_CTW_HIDDEN );
 }
 
-/* Harbour extension */
-HB_FUNC( WSHOW )
+HB_FUNC( WSHOW ) /* HB_EXTENSION */
 {
    hb_ctwVisible( HB_ISNUM( 1 ) ? hb_parni( 1 ) : hb_ctwCurrentWindow(),
                   HB_CTW_VISIBLE );
 }
 
-/* Harbour extension */
-HB_FUNC( WSHADOW )
+HB_FUNC( WSHADOW ) /* HB_EXTENSION */
 {
    hb_retni( hb_ctwSetWindowShadow( hb_ctwCurrentWindow(),
                                     hb_parnidef( 1, HB_CTW_SHADOW_UNDEF ) /* nAttr */ ) );
 }
 
-/* Harbour extension */
-HB_FUNC( WLEVEL )
+HB_FUNC( WLEVEL ) /* HB_EXTENSION */
 {
    hb_retni( hb_ctwSetWindowLevel( hb_ctwCurrentWindow(),
                                    hb_parnidef( 1, HB_CTW_UNDEF ) /* nLevel */ ) );

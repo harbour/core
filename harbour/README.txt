@@ -715,7 +715,8 @@ TABLE OF CONTENT
    - HB_USER_AFLAGS              User linker options for libraries
    - HB_USER_DFLAGS              User linker options for dynamic libraries
 
-   (* Only set these if autodetection doesn't suite your purpose:)
+   Set these only if autodetection doesn't suit your purpose:
+
    - HB_PLATFORM                 Override platform autodetection
    - HB_COMPILER                 Override C compiler autodetection
                                  See this section for possible values:

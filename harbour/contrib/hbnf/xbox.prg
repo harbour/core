@@ -33,14 +33,15 @@
          but only if _SET_EXACT was set to .F., Harbour accepts them
          that way regardless of _SET_EXACT setting. [vszakats] */
 
-FUNCTION ft_XBox( cJustType, ; // "L" -> left, otherwise centered
+FUNCTION ft_XBox( ;
+      cJustType, ; // "L" -> left, otherwise centered
       cRetWait, ; // "W" -> wait for keypress before continuing
-   cBorType, ; // "D" -> double, anything else single border
-   cBorColor, ; // color string for border
-   cBoxColor, ; // color string for text
-   nStartRow, ; // upper row of box.  99=center vertically
-   nStartCol, ; // left edge of box.  99=center horizontally
-   cLine1, cLine2, cLine3, cLine4, cLine5, cLine6, cLine7, cLine8 )
+      cBorType, ; // "D" -> double, anything else single border
+      cBorColor, ; // color string for border
+      cBoxColor, ; // color string for text
+      nStartRow, ; // upper row of box.  99=center vertically
+      nStartCol, ; // left edge of box.  99=center horizontally
+      cLine1, cLine2, cLine3, cLine4, cLine5, cLine6, cLine7, cLine8 )
 
    LOCAL nLLen := 0
    LOCAL nLCol

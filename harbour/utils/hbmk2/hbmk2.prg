@@ -14862,10 +14862,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "--hbdirinc"         , I_( "output Harbour header directory" ) }, ;
       { "--hbinfo[=nested]"  , I_( "output Harbour build information. Output is in JSON format. The included paths always contain forward slashes. Each JSON block is followed by an 0x0A byte." ) }, ;
       NIL, ;
-      { "-plat=<platform>"   , I_( "force/select target platform (default: autodetection)" ) }, ;
-      { "-comp=<compiler>"   , I_( "force/select C compiler (default: autodetection)\nSpecial value:\n - bld: use original build settings (default on *nix)" ) }, ;
-      { "-cpu=<cpu>"         , I_( "select target CPU. (EXPERIMENTAL)" ) }, ;
-      { "-build=<name>"      , I_( "use a specific build name" ) }, ;
+      { "-plat=<platform>"   , I_( "override default target platform (default: automatic)" ) }, ;
+      { "-cpu=<cpu>"         , I_( "override default target CPU (default: automatic) (EXPERIMENTAL)" ) }, ;
+      { "-comp=<compiler>"   , I_( "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)" ) }, ;
+      { "-build=<name>"      , I_( "specify a build name" ) }, ;
       { "-lang=<lang>"       , I_( "override default language. Similar to HB_LANG envvar." ) }, ;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) }, ;
       { "-shl"               , I_( "show sub-project level in output lines" ) }, ;

@@ -57,7 +57,7 @@ PROC test()
    ? transtest( -134.24, "@E99,999.99", "      -134,24" )
    ?
    ? transtest( -7, "@X 9999", "   7 DB" )
-   ? transtest( SToD( "19920509" ), "@E", "09/05/92" )
+   ? transtest( hb_SToD( "19920509" ), "@E", "09/05/92" )
    ? transtest( Val( "3.10" ), "@X", "3.10" )
    ? transtest( 0.80, ".9999", ".8000" )
    ? transtest( -0.80, ".9999", ".****" )
@@ -67,7 +67,7 @@ PROC test()
    ? transtest( 0, "@C 9.99", "0.00" )
    stop()
 #ifdef __HARBOUR__
-   dt := SToD( "19871231" )
+   dt := hb_SToD( "19871231" )
    SET DATE FORMAT TO "MM:DD:YYYY"
    ? transtest( dt, "@E", "31:12:1987" )
    SET DATE FORMAT TO "DD:MM:YYYY"
@@ -311,7 +311,7 @@ PROC tofix()
 
 #ifndef __HARBOUR__
 
-FUNCTION SToD( s )
+FUNCTION hb_SToD( s )
 
    LOCAL cDf := Set( _SET_DATEFORMAT, "YYYY/MM/DD" ), dt
 

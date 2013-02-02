@@ -495,7 +495,7 @@ msgstr "Normál Harbour fordító kapcsolók is megadhatók."
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
 msgid "override the name of starting function/procedure"
-msgstr "adjon meg alternatív kezdő-/belépési függvénynevet"
+msgstr "állítson be alternatív kezdő/belépési függvénynevet"
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
@@ -949,17 +949,17 @@ msgstr "kapcsolókat adja tovább a szerkesztőnek"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "force/select target platform (default: autodetection)"
-msgstr "válassza a megadott cél platformot (alapértelmezés: automatikus)"
+msgid "override default target platform (default: automatic)"
+msgstr "felülbírálja az alapértelmezett cél platformot (alapértelmezés: automatikus)"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "force/select C compiler (default: autodetection)\nSpecial value:\n - bld: use original build settings (default on *nix)"
-msgstr "használja a megadott C fordítót (alapértelmezés: automatikus)\\nSpeciális érték:\\n - bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
+msgid "override C compiler autodetection\\nSpecial value:\\n - bld: use original build settings (default on *nix)"
+msgstr "felülbírálja a C fordító detektálást\\nSpeciális érték:\\n - bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "use a specific build name"
+msgid "specify a build name"
 msgstr ""
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -1364,7 +1364,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "select target CPU. (EXPERIMENTAL)"
+msgid "override default target CPU (default: automatic) (EXPERIMENTAL)"
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
