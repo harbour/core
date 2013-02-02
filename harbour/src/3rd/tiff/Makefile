@@ -90,6 +90,8 @@ ifeq ($(filter $(HB_COMPILER),<>),)
       ifneq ($(HB_HAS_JPEG),)
          HB_CFLAGS += -DJPEG_SUPPORT
          HB_CFLAGS += $(foreach d,$(HB_HAS_JPEG),-I$(d))
+         # workaround for jpeglib 9 weirdness
+         HB_CFLAGS += -DHAVE_BOOLEAN -Dboolean=int
       endif
 
       ifneq ($(HB_HAS_ZLIB),)
