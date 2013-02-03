@@ -77,23 +77,6 @@ ifeq ($(filter $(HB_COMPILER),<>),)
 
    ifneq ($(HB_HAS_TIFF_LOCAL),)
 
-      _DET_DSP_NAME := jpeg
-      _DET_VAR_INC_ := HB_INC_JPEG
-      _DET_VAR_HAS_ := HB_HAS_JPEG
-      _DET_FLT_PLAT :=
-      _DET_FLT_COMP :=
-      _DET_INC_DEFP := /usr/include
-      _DET_INC_LOCL := src/3rd/jpeg
-      _DET_INC_HEAD := /jpeglib.h
-      include $(TOP)$(ROOT)config/detfun.mk
-
-      ifneq ($(HB_HAS_JPEG),)
-         HB_CFLAGS += -DJPEG_SUPPORT
-         HB_CFLAGS += $(foreach d,$(HB_HAS_JPEG),-I$(d))
-         # workaround for jpeglib 9 weirdness
-         HB_CFLAGS += -DHAVE_BOOLEAN -Dboolean=int
-      endif
-
       ifneq ($(HB_HAS_ZLIB),)
          HB_CFLAGS += -DZIP_SUPPORT
          HB_CFLAGS += $(foreach d,$(HB_HAS_ZLIB),-I$(d))
