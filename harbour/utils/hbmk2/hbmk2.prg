@@ -76,7 +76,7 @@
    Convert with:
       md2man hbmk2.md > hbmk2.1
       (hbmk2.md should come out from hbmk2 executable as output,
-      so the help doesn't have to be updated in two disctinct places)
+      so the help does not have to be updated in two disctinct places)
 
    Man page HOWTO:
       http://www.schweikhardt.net/man_page_howto.html
@@ -96,7 +96,7 @@
 #include "error.ch"
 #include "fileio.ch"
 #include "set.ch" /* needed for -u */
-#include "simpleio.ch" /* Don't delete this, it's useful for development. */
+#include "simpleio.ch" /* Do not delete this, it is useful for development. */
 
 #include "hbgtinfo.ch"
 #include "hbhrb.ch"
@@ -120,7 +120,7 @@
      accordingly, and user can use it to further tweak settings.
    - Further clean hbmk context var usage (global scope, project scope,
      adding rest of variables).
-   - Add a way to fallback to stop if required headers couldn't be found.
+   - Add a way to fallback to stop if required headers could not be found.
      This needs a way to spec what key headers to look for.
    - Clean up compiler autodetection and add those few feature only
      found in GNU Make / global.mk, like *nix native autodetection,
@@ -202,7 +202,7 @@ EXTERNAL hbmk_KEYW
 #define _PAR_cFileName          2
 #define _PAR_nLine              3
 
-#define _WARN_DEF               0 /* Don't set any explicit warning level */
+#define _WARN_DEF               0 /* Do not set any explicit warning level */
 #define _WARN_MAX               1
 #define _WARN_YES               2 /* Default level in Harbour build */
 #define _WARN_LOW               3 /* Low level, used for 3rd party code in Harbour build */
@@ -1238,11 +1238,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_cDynLibDir
 
    /* lib ordering tries to satisfy linkers which require this
-      (mingw*, linux/gcc, bsd/gcc and dos/djgpp), but this won't solve
+      (mingw*, linux/gcc, bsd/gcc and dos/djgpp), but this will not solve
       potential problems when users are speccing custom libs themselves
       and expect them to work the same way on all supported platforms/compilers.
       So I decided to readd this feature until we find a solution which
-      doesn't have such bad side-effect.
+      does not have such bad side-effect.
       [vszakats] */
    LOCAL l_lLIBGROUPING := .T.
 
@@ -1412,7 +1412,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       cParamL := Lower( cParam )
 
-      /* NOTE: Don't forget to make these ignored in the main
+      /* NOTE: Do not forget to make these ignored in the main
                option processing loop. */
       DO CASE
       CASE cParamL == "-quiet" .OR. ;
@@ -1956,7 +1956,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    cPath_CompC := NIL
 
    IF hbmk[ _HBMK_lStopAfterHarbour ]
-      /* If we're just compiling .prg to .c we don't need a C compiler. */
+      /* If we're just compiling .prg to .c we do not need a C compiler. */
       hbmk[ _HBMK_cCOMP ] := ""
    ELSE
       IF Empty( hbmk[ _HBMK_cCOMP ] ) .OR. hbmk[ _HBMK_cCOMP ] == "bld"
@@ -2079,7 +2079,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
       IF ! Empty( cPath_CompC )
          /* NOTE: Automatically configure bcc installation with missing configuration. [vszakats]
-                  Permanently enabled. Apparently this is still top problem for bcc users. It's
+                  Permanently enabled. Apparently this is still top problem for bcc users. It is
                   also in sync this way with Harbour core build system. */
          IF .T. .OR. ;
             ! hb_FileExists( hb_FNameDir( cPath_CompC ) + ".." + hb_ps() + "Bin" + hb_ps() + "bcc32.cfg" ) .OR. ;
@@ -2755,7 +2755,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 #if ! defined( __PLATFORM__UNIX )
       CASE Left( cParamL, 2 ) == "/o" .AND. ! hbmk[ _HBMK_lStopAfterHarbour ]
 
-         /* Swallow this switch. We don't pass it to Harbour, as it may badly
+         /* Swallow this switch. We do not pass it to Harbour, as it may badly
             interact with hbmk. */
 #endif
 
@@ -3517,7 +3517,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF ! hbmk[ _HBMK_lStopAfterInit ] .AND. ! hbmk[ _HBMK_lCreateImpLib ]
 
       IF ! hbmk[ _HBMK_lCreateHRB ]
-         /* If -o with full name wasn't specified, let's
+         /* If -o with full name was not specified, let us
             make it the first source file specified. */
          hb_default( @hbmk[ _HBMK_cPROGNAME ], hb_FNameName( hbmk[ _HBMK_cFIRST ] ) )
 
@@ -3552,7 +3552,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF hbmk[ _HBMK_lStopAfterInit ] .OR. ;
             hbmk[ _HBMK_lStopAfterHarbour ] .OR. ;
             ( lStopAfterCComp .AND. ! hbmk[ _HBMK_lCreateLib ] .AND. ! hbmk[ _HBMK_lCreateDyn ] )
-            /* It's controlled by -o option in these cases */
+            /* It is controlled by -o option in these cases */
             hbmk[ _HBMK_cWorkDir ] := ""
          ELSE
             IF hbmk[ _HBMK_cWorkDir ] == NIL
@@ -3847,7 +3847,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                cOpt_CompC += " {LC}"
             ELSE
                IF HBMK_ISPLAT( "linux|bsd" ) .AND. hbmk[ _HBMK_cCOMP ] == "clang"
-                  /* NOTE: It's also accepted by darwin/clang */
+                  /* NOTE: It is also accepted by darwin/clang */
                   cOpt_CompC += " {IC} -o{OO}"
                ELSE
                   cOpt_CompC += " {IC} -o {OO}"
@@ -3910,7 +3910,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTL ], "-static" )
          ENDIF
          IF hbmk[ _HBMK_cPLAT ] == "darwin" .AND. hbmk[ _HBMK_cCOMP ] == "gcc"
-            /* It's to avoid warning message generated when 'long double' is used
+            /* It is to avoid warning message generated when 'long double' is used
                remove it if you have newer compiler version */
 #if 0
             AAdd( hbmk[ _HBMK_aOPTC ], "-Wno-long-double" )
@@ -4036,7 +4036,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ELSE
                AAdd( l_aLIBSYS, "slang" )
             ENDIF
-            /* Add paths, where this isn't a system component */
+            /* Add paths, where this is not a system component */
             DO CASE
             CASE hbmk[ _HBMK_cPLAT ] == "darwin"
                IF hb_DirExists( "/usr/local/lib" )
@@ -4770,8 +4770,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             AAdd( hbmk[ _HBMK_aOPTD ], "-ap" )
          ENDIF
          IF hbmk[ _HBMK_lIMPLIB ]
-            /* NOTE: Borland C doesn't support creating implibs with a specific name,
-                     so it's done using post command. The resulting implib won't be
+            /* NOTE: Borland C does not support creating implibs with a specific name,
+                     so it is done using post command. The resulting implib will not be
                      as optimal as the generated one, but it _should_ be the same.
                      [vszakats] */
             /* AAdd( hbmk[ _HBMK_aOPTL ], "-Gi" ) */
@@ -5021,7 +5021,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cBin_Dyn := cBin_Link
          cOpt_CompC := "-c -Ze"
          IF !( hbmk[ _HBMK_cCOMP ] == "poccarm" ) .AND. ;
-            !( hbmk[ _HBMK_cCOMP ] == "xcc" ) /* xcc doesn't have this enabled in default Harbour builds. */
+            !( hbmk[ _HBMK_cCOMP ] == "xcc" ) /* xcc does not have this enabled in default Harbour builds. */
             cOpt_CompC += " -MT"
          ENDIF
          IF !( hbmk[ _HBMK_cCOMP ] == "xcc" )
@@ -5974,7 +5974,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                   RETURN _ERRLEV_STUBCREATE
                ENDIF
-               /* Don't delete stub in workdir in incremental mode. */
+               /* Do not delete stub in workdir in incremental mode. */
                IF hbmk[ _HBMK_lINC ]
                   l_cCSTUB := NIL
                ENDIF
@@ -6082,7 +6082,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                   RETURN _ERRLEV_STUBCREATE
                ENDIF
-               /* Don't delete stub in workdir in incremental mode. */
+               /* Do not delete stub in workdir in incremental mode. */
                IF hbmk[ _HBMK_lINC ]
                   l_cCPPSTUB := NIL
                ENDIF
@@ -6100,7 +6100,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          /* Library list assembly */
          IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
-            /* Don't link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
+            /* Do not link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
             IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] )
                l_aLIBHB := AClone( l_aLIBSHAREDPOST )
                /* NOTE: Make sure to add these static libs only if they can be found.
@@ -6162,9 +6162,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
       /* Process build-time configuration */
 
-      /* TOFIX: This doesn't work well when doing cross-platform
+      /* TOFIX: This does not work well when doing cross-platform
                 build f.e. on a 32-bit *nix system to 64-bit target
-                where the 64-bit target doesn't happen to provide
+                where the 64-bit target does not happen to provide
                 64-bit flavor of gpm lib. This is the case when
                 building 64-bit target on a 32-bit Ubuntu 10.10
                 system. Moral of the story: we should decide about
@@ -6191,7 +6191,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       l_aLIBA := {}
       ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBRAW, NIL, cLibExt )
       IF hbmk[ _HBMK_lSHARED ] .AND. ! Empty( l_aLIBSHARED )
-         /* Don't link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
+         /* Do not link Harbour dynamic/static libs when in '-hbdyn -shared' mode */
          IF !( hbmk[ _HBMK_lCreateDyn ] .AND. ! hbmk[ _HBMK_lDynVM ] ) .OR. lHBMAINDLLP
             l_aLIBRAW := ArrayJoin( l_aLIBSHARED, l_aLIBRAW )
             ListCookLib( hbmk, l_aLIB, l_aLIBA, l_aLIBSHARED, NIL )
@@ -6199,8 +6199,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       ENDIF
       /* Dress obj names. */
       IF cObjExt == NIL
-         /* NOTE: May only happen if the plat/comp combination isn't supported.
-                  Don't let the obj filelist be the exact same as the source list,
+         /* NOTE: May only happen if the plat/comp combination is not supported.
+                  Do not let the obj filelist be the exact same as the source list,
                   it would cause unwanted deletion of source at cleanup stage.
                   [vszakats] */
          l_aOBJ := {}
@@ -6310,14 +6310,14 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ELSE
                _hbmk_OutErr( hbmk, I_( "Warning: Stub helper .rc file could not be created." ) )
             ENDIF
-            /* Don't delete stub in workdir in incremental mode. */
+            /* Do not delete stub in workdir in incremental mode. */
             IF hbmk[ _HBMK_lINC ]
                l_cRESSTUB := NIL
             ENDIF
          ENDIF
       ENDIF
 
-      /* Avoid this list being added at link phase if resource compiling isn't available
+      /* Avoid this list being added at link phase if resource compiling is not available
          in target compiler. */
       IF Empty( cBin_Res )
          ASize( hbmk[ _HBMK_aRESSRC ], 0 )
@@ -6974,7 +6974,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
             IF ! Empty( hbmk[ _HBMK_cHBX ] )
                /* Use the implib, if we created one.
-                  It's the safer target to extract exports from.
+                  It is the safer target to extract exports from.
                   On Windows, .dlls sometimes export stuff
                   that is really meant to be imported, despite all
                   the switches and hunt for finding any useful
@@ -7465,7 +7465,7 @@ STATIC PROCEDURE vxworks_env_init( hbmk )
 
    IF hbmk[ _HBMK_cCPU ] $ aTable
       IF Empty( hbmk[ _HBMK_cCCSUFFIX ] )
-         /* Used by gcc, and it's also used for strip even with diab compiler */
+         /* Used by gcc, and it is also used for strip even with diab compiler */
          hbmk[ _HBMK_cCCSUFFIX ] := aTable[ hbmk[ _HBMK_cCPU ] ][ _VX_CCSUFFIX ]
       ENDIF
       IF hbmk[ _HBMK_cCOMP ] == "diab"
@@ -7643,7 +7643,7 @@ STATIC PROCEDURE DoInstCopy( hbmk )
                IF Empty( hb_FNameNameExt( cInstPath ) )
                   cDestFileName := hb_DirSepAdd( cInstPath ) + hb_FNameNameExt( cInstFile )
                ELSE
-                  /* If destination is a full name, don't copy the extra files, only the first one.
+                  /* If destination is a full name, do not copy the extra files, only the first one.
                      (for the empty group name, this will be the build target) */
                   IF nCopied > 0
                      IF hbmk[ _HBMK_lInfo ]
@@ -7814,7 +7814,7 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
       cGT := cGT_New
 
       /* Setup default GUI mode for core GTs:
-         (please don't add contrib/3rd parties here) */
+         (please do not add contrib/3rd parties here) */
       SWITCH Lower( cGT_New )
       CASE "gtcgi"
       CASE "gtcrs"
@@ -7842,11 +7842,11 @@ STATIC FUNCTION SetupForGT( cGT_New, /* @ */ cGT, /* @ */ lGUI )
    RETURN .F.
 
 /* This function will scan and detect header dependencies newer than
-   root file. It won't attempt to parse all possible #include syntaxes
-   and source code formats, won't try to interpret comments, line
+   root file. It will not attempt to parse all possible #include syntaxes
+   and source code formats, will not try to interpret comments, line
    continuation, different keyword and filename cases, etc, etc. In
    order to work, it will need #include "filename" and #include
-   <filename> format in source. If this isn't enough for your needs,
+   <filename> format in source. If this is not enough for your needs,
    feel free to update the code.
    [vszakats] */
 
@@ -8038,7 +8038,7 @@ STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
             lSystemHeader := ( Left( cHeader, 1 ) == "<" )
             cHeader := SubStr( cHeader, 2, Len( cHeader ) - 2 )
 
-            /* Don't spend time on known system headers */
+            /* Do not spend time on known system headers */
             IF lSystemHeader
 
                IF t_hExclStd == NIL
@@ -8188,7 +8188,7 @@ STATIC PROCEDURE s_getFilesDep( hbmk, cFile, hFiles, cParentDir, lSystemHeader, 
    IF ! cFile $ hFiles
 
       IF lSystemHeader
-         /* Don't scan into system headers */
+         /* Do not scan into system headers */
          aDeps := {}
       ELSE
          aDeps := s_getIncludedFiles( hbmk, cFile, iif( lCMode, hb_FNameDir( cFile ), cParentDir ), lCMode )
@@ -8241,7 +8241,7 @@ STATIC FUNCTION s_getNewestTime( cFile, hFiles, lFileReq )
          NEXT
          IF lReq
             /* This file has references to some other files already
-             * scanned. It's possible that these are circular references
+             * scanned. It is possible that these are circular references
              * and the time of files with such references is not fully
              * calculated yet (they are now process on higher recursion
              * levels) so we cannot store calculated time as the final
@@ -8393,7 +8393,7 @@ STATIC FUNCTION inst_split_arg( cParam, /* @ */ cName, /* @ */ cData )
    LOCAL nPos
 
    /* separate install group from install file or path.
-      install group must be at least 2 chars, otherwise it's considered as drive letter */
+      install group must be at least 2 chars, otherwise it is considered as drive letter */
 
    IF ( nPos := At( ":", cParam ) ) > 2
       cName := Left( cParam, nPos - 1 )
@@ -8568,7 +8568,7 @@ STATIC FUNCTION dep_evaluate( hbmk )
          IF dep[ _HBMKDEP_lOptional ]
             AAdd( aOPT, dep[ _HBMKDEP_cName ] )
          ELSE
-            /* Don't issue a missing dependency error (just warning) for non-*nix
+            /* Do not issue a missing dependency error (just warning) for non-*nix
                platforms if no manual dependency location and no local dir were
                specified. This assumes that on these platforms dependencies can never
                be found on locations known in advance and specified in make
@@ -8933,8 +8933,8 @@ STATIC FUNCTION LibExists( hbmk, cDir, cLib, cLibPrefix, cLibExt )
 
    DO CASE
    CASE HBMK_ISCOMP( "gcc|mingw|mingw64|mingwarm|clang" ) .AND. HBMK_ISPLAT( "win|wce|cygwin" )
-      /* NOTE: ld/gcc option -dll-search-prefix isn't taken into account here,
-               So, '<prefix>xxx.dll' format libs won't be found here in any case. */
+      /* NOTE: ld/gcc option -dll-search-prefix is not taken into account here,
+               So, '<prefix>xxx.dll' format libs will not be found here in any case. */
       DO CASE
       CASE                                       hb_FileExists( tmp := cDir + "lib" + hb_FNameExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
       CASE                                       hb_FileExists( tmp := cDir +         hb_FNameExtSet( cLib, ".dll.a" ) ) ; RETURN tmp
@@ -9011,7 +9011,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       IF ! Empty( cFile )
          lOK := .F.
-         /* Optimization: Don't try to load it as .hrb if the extension is .prg, .hb (Harbour script) */
+         /* Optimization: Do not try to load it as .hrb if the extension is .prg, .hb (Harbour script) */
          IF !( Lower( cExt ) == ".prg" ) .AND. ;
             !( Lower( cExt ) == ".hb" )
             BEGIN SEQUENCE WITH {| oError | Break( oError ) }
@@ -9020,7 +9020,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
                lOK := .T.
             END /* SEQUENCE */
          ENDIF
-         IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Don't try to load it as .prg if the extension is .hrb */
+         IF ! lOK .AND. !( Lower( cExt ) == ".hrb" ) /* Optimization: Do not try to load it as .prg if the extension is .hrb */
             cType := I_( "(source)" )
             /* We can use this function as this is a GPL licenced application */
             cFile := hb_compileFromBuf( cFile, "-n2", "-w3", "-es2", "-q0", "-i" + hbmk[ _HBMK_cHB_INSTALL_INC ], "-D" + _HBMK_PLUGIN )
@@ -9032,7 +9032,7 @@ STATIC PROCEDURE PlugIn_Load( hbmk, cFileName )
 
       IF ! Empty( hrb )
          IF ! PlugIn_call_low( hbmk, cFileName, hrb, PlugIn_make_ctx( hbmk, "init" ) )
-            /* Don't call plugin any further if initialization returned error */
+            /* Do not call plugin any further if initialization returned error */
             IF hbmk[ _HBMK_lInfo ]
                _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Initializing plugin: %1$s" ), cFileName ) )
             ENDIF
@@ -9615,7 +9615,7 @@ STATIC FUNCTION ListCookLib( hbmk, aLIB, aLIBA, array, cPrefix, cExtNew )
          IF Empty( cDir )
             cLibNameCooked := cLibName
 #if 0
-            /* Don't attempt to strip this as it can be valid for libs which have double lib prefixes (f.e. libpng) */
+            /* Do not attempt to strip this as it can be valid for libs which have double lib prefixes (f.e. libpng) */
             IF Left( cLibNameCooked, 3 ) == "lib"
                cLibNameCooked := SubStr( cLibNameCooked, 4 )
             ENDIF
@@ -10631,7 +10631,7 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
 
 STATIC FUNCTION IsGTRequested( hbmk, cWhichGT )
 
-   /* Check if it's a core/user GT. */
+   /* Check if it is a core/user GT. */
    RETURN AScan( hbmk[ _HBMK_aLIBCOREGT ], {| tmp | Lower( tmp ) == Lower( cWhichGT ) } ) > 0 .OR. ;
           AScan( hbmk[ _HBMK_aLIBUSERGT ], {| tmp | Lower( tmp ) == Lower( cWhichGT ) } ) > 0
 
@@ -11089,7 +11089,7 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
          ENDIF
       ELSE
          /* NOTE: If macro not found, try to interpret as
-                  envvar. If it doesn't exist, empty string
+                  envvar. If it does not exist, empty string
                   will be returned (without warning) [vszakats] */
          cMacro := GetEnv( cMacro )
       ENDIF
@@ -11319,7 +11319,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
 
       /* Setup those CPU flags which we can be sure about.
          This is not fully generic solution, cross builds
-         to *nix systems aren't covered. Anyway, it's not
+         to *nix systems are not covered. Anyway, it is not
          recommended to use these macros in .prg code.
          [vszakats] */
       DO CASE
@@ -11340,7 +11340,7 @@ STATIC PROCEDURE PlatformPRGFlags( hbmk, aOPTPRG )
       OTHERWISE
          /* NOTE: Users will have to manually #define fitting macros for
                   given platform + compiler settings. We could only guess.
-                  Let's assume the most probable CPU platform (as of 2009). */
+                  Let us assume the most probable CPU platform (as of 2009). */
          AAdd( aDf, "__LITTLE_ENDIAN__" )
          AAdd( aDf, "__ARCH32BIT__" )
       ENDCASE
@@ -11468,7 +11468,7 @@ STATIC FUNCTION rtlnk_read( cFileName, aPrevFiles )
    ENDIF
 
    cFileName := hb_FNameMerge( cPath, cFile, ".lnk" )
-   /* it's blinker extension, look for .lnk file in paths
+   /* it is blinker extension, look for .lnk file in paths
     * specified by LIB envvar
     */
    IF ! hb_FileExists( cFileName ) .AND. ;
@@ -12304,7 +12304,7 @@ STATIC FUNCTION hbmk_CPU( hbmk )
         ( hbmk[ _HBMK_cPLAT ] == "win" .AND. hbmk[ _HBMK_cCOMP ] == "icc" )
       RETURN "x86"
    CASE HBMK_ISCOMP( "gcc|icc|clang|sunpro|diab|pcc" )
-      /* TOFIX: This isn't necessarily correct, since these inherit the
+      /* TOFIX: This is not necessarily correct, since these inherit the
                 default CPU architecture from OS default, by and large,
                 and targets can be overridden using user options. */
       RETURN "x86"
@@ -12348,7 +12348,7 @@ STATIC FUNCTION hbmk_DYNSUFFIX( hbmk )
 
    RETURN ""
 
-/* Keep this public, it's used from macro. */
+/* Keep this public, it is used from macro. */
 FUNCTION hbmk_KEYW( hbmk, cFileName, cKeyword, cValue, cOperator )
 
    LOCAL tmp
@@ -13142,7 +13142,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
                   path list. For this we need to know where Harbour tree
                   is located. */
 
-         /* NOTE: Most filters and macros in .hbc files won't work in this mode */
+         /* NOTE: Most filters and macros in .hbc files will not work in this mode */
 
          aOPTPRG := {}
 
@@ -13343,7 +13343,7 @@ FUNCTION hbshell_ext_load( cName )
                AAddNew( s_hOPTPRG[ cName ], "-D" + hb_StrFormat( _HBMK_HAS_TPL_HBC, StrToDefine( cName ) ) + "=" + cVersion )
 
                /* NOTE: Hack. We detect if the .hbc had defined any libs to load.
-                        (f.e. there won't be any libs if the .hbc was skipped due
+                        (f.e. there will not be any libs if the .hbc was skipped due
                         to filters)
                   TODO: In the future the .hbc should specify a list of dynamic libs
                         to load, and we should load those, if any. */
@@ -13989,7 +13989,7 @@ STATIC PROCEDURE __hbshell_HistorySave()
 #if defined( __PLATFORM__WINDOWS )
 
 /* NOTE: Using an optional contrib component dynamically.
-         It's a little trick to work around the limitation
+         It is a little trick to work around the limitation
          that core components cannot depend on contribs.
          This way we depend on it, but only dynamically.
          Probably in the future, this functionality should
@@ -14790,7 +14790,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) }, ;
       { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only)" ) }, ;
       { "-signpw=<pw>"       , I_( "use <pw> as password when signing executable (Windows and Darwin only)" ) }, ;
-      { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you don't specify <file>, the list of files in that group will be emptied." ) }, ;
+      { "-instfile=<g:file>" , I_( "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied." ) }, ;
       { "-instpath=<g:path>" , I_( "copy target to <path>. if <path> is a directory, it should end with path separatorm, in this case files specified by -instfile option will also be copied. can be specified multiple times. <g> is an optional copy group, it must be at least two characters long. Build target will be automatically copied to default (empty) copy group." ) }, ;
       { "-instforce[-]"      , I_( "copy target to install path even if it is up to date" ) }, ;
       { "-depimplib[-]"      , I_( "enable (or disable) import library generation for import library sources specified in -depimplibs= options (default: yes)" ) }, ;
@@ -14931,10 +14931,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
    LOCAL aMacros := { ;
       NIL, ;
       { "${hb_root}"           , hb_StrFormat( I_( "directory of %1$s" ), _SELF_NAME_ ) }, ;
-      { "${hb_dir}"            , I_( "directory of the filename it's used in" ) }, ;
-      { "${hb_dirname}"        , I_( "top directory of the filename it's used in" ) }, ;
-      { "${hb_name}"           , I_( "name of the filename it's used in (without directory and extension)" ) }, ;
-      { "${hb_self}"           , I_( "full filename it's used in" ) }, ;
+      { "${hb_dir}"            , I_( "directory of the filename it is used in" ) }, ;
+      { "${hb_dirname}"        , I_( "top directory of the filename it is used in" ) }, ;
+      { "${hb_name}"           , I_( "name of the filename it is used in (without directory and extension)" ) }, ;
+      { "${hb_self}"           , I_( "full filename it is used in" ) }, ;
       { "${hb_curdir}"         , I_( "current working directory" ) }, ;
       { "${hb_tempdir}"        , I_( "OS directory for temporary files" ) }, ;
       { "${hb_targetname}"     , hb_StrFormat( I_( "name of the project (without directory and extension). Returns %1$s if there is not project file." ), _HBMK_TARGENAME_ADHOC ) }, ;
@@ -14968,7 +14968,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       { "${hb_outputdir}"      , I_( "Directory of the output" ) }, ;
       { "${hb_outputname}"     , I_( "Name of the output (without extension)" ) }, ;
       { "${hb_level}"          , I_( "Subproject recursion level" ) }, ;
-      { "${<depname>}"         , I_( "Returns the header directory of dependency <depname>, or '1' if it's not detected" ) }, ;
+      { "${<depname>}"         , I_( "Returns the header directory of dependency <depname>, or '1' if it is not detected" ) }, ;
       { "${<envvar>}"          , I_( "Returns the value of the environment variable <envvar>" ) } }
 
    LOCAL aText_Notes := { ;
@@ -14985,7 +14985,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lLong )
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allbcc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|winuni|winansi|xhb}" ), ;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ), ;
       I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ), ;
-      I_( "Libraries and object files built with/for CA-Cl*pper won't work with any supported platform/compiler." ) , ;
+      I_( "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler." ) , ;
       I_( "Defaults and feature support may vary by platform/compiler." ) , ;
       I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default." ) , ;
       I_( ". (dot) passed as first parameter will enter the interactive Harbour shell." ) }

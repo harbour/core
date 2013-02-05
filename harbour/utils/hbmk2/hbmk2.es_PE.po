@@ -1013,7 +1013,7 @@ msgstr "especifica un nuevo destino de construcción. <script> puede ser .prg (o
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you don't specify <file>, the list of files in that group will be emptied."
+msgid "add <file> in to the list of files to be copied to path specified by -instpath option. <g> is an optional copy group (case sensitive), it must be at least two characters long. In case you do not specify <file>, the list of files in that group will be emptied."
 msgstr "añadir <archivo> a la lista de archivos que desea copiar a la ruta especificada por la opción -instpath. <g> es un grupo opcional de copia (distingue mayúsculas y minúsculas), debe haber al menos dos caracteres. En caso de que no se especifica <archivo>, la lista de archivos en ese grupo se vaciará."
 
 #: hbmk2.prg:6385 hbmk2.prg:7111
