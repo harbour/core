@@ -118,10 +118,12 @@ PROCEDURE Main( cPar1, cPar2 )
       cPar2 := ""
    ENDIF
 
-   IF "/?" $ Upper( cPar1 ) .OR. ;
-      "/H" $ Upper( cPar1 ) .OR. ;
-      "-?" $ Upper( cPar1 ) .OR. ;
-      "-H" $ Upper( cPar1 )
+   IF "/?" $ Lower( cPar1 ) .OR. ;
+      "/h" $ Lower( cPar1 ) .OR. ;
+      "-?" $ Lower( cPar1 ) .OR. ;
+      "-h" $ Lower( cPar1 ) .OR. ;
+      "-help" $ Lower( cPar1 ) .OR. ;
+      "--help" $ Lower( cPar1 )
 
       OutStd( hb_eol() +;
               "Syntax:  hbtest [options]" + hb_eol() +;

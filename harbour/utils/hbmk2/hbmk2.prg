@@ -75,6 +75,8 @@
       gem install md2man
    Convert with:
       md2man hbmk2.md > hbmk2.1
+      (hbmk2.md should come out from hbmk2 executable as output,
+      so the help doesn't have to be updated in two disctinct places)
 
    Man page HOWTO:
       http://www.schweikhardt.net/man_page_howto.html
