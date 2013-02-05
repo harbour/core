@@ -840,7 +840,9 @@ extern HB_EXPORT HB_BOOL      hb_arraySetNInt( PHB_ITEM pArray, HB_SIZE nIndex, 
 extern HB_EXPORT HB_BOOL      hb_arraySetND( PHB_ITEM pArray, HB_SIZE nIndex, double dNumber );
 extern HB_EXPORT HB_BOOL      hb_arraySetC( PHB_ITEM pArray, HB_SIZE nIndex, const char * szText );
 extern HB_EXPORT HB_BOOL      hb_arraySetCL( PHB_ITEM pArray, HB_SIZE nIndex, const char * szText, HB_SIZE nLen );
+extern HB_EXPORT HB_BOOL      hb_arraySetCPtr( PHB_ITEM pArray, HB_SIZE nIndex, char * szText );
 extern HB_EXPORT HB_BOOL      hb_arraySetCLPtr( PHB_ITEM pArray, HB_SIZE nIndex, char * szText, HB_SIZE nLen );
+extern HB_EXPORT HB_BOOL      hb_arraySetCConst( PHB_ITEM pArray, HB_SIZE nIndex, const char * szText );
 extern HB_EXPORT HB_BOOL      hb_arraySetPtr( PHB_ITEM pArray, HB_SIZE nIndex, void * pValue );
 extern HB_EXPORT HB_BOOL      hb_arraySetPtrGC( PHB_ITEM pArray, HB_SIZE nIndex, void * pValue );
 extern HB_EXPORT HB_BOOL      hb_arraySetSymbol( PHB_ITEM pArray, HB_SIZE nIndex, PHB_SYMB pSymbol );

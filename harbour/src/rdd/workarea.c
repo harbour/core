@@ -2204,14 +2204,14 @@ int hb_rddRegister( const char * szDriver, HB_USHORT uiType )
  */
 HB_ERRCODE hb_rddInheritEx( RDDFUNCS * pTable, const RDDFUNCS * pSubTable,
                             RDDFUNCS * pSuperTable, const char * szDrvName,
-                            HB_USHORT * puiSupperRddId )
+                            HB_USHORT * puiSuperRddId )
 {
    LPRDDNODE pRddNode;
    HB_USHORT uiCount;
    DBENTRYP_V * pFunction;
    const DBENTRYP_V * pSubFunction;
 
-   HB_TRACE( HB_TR_DEBUG, ( "hb_rddInheritEx(%p, %p, %p, %s, %p)", pTable, pSubTable, pSuperTable, szDrvName, puiSupperRddId ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_rddInheritEx(%p, %p, %p, %s, %p)", pTable, pSubTable, pSuperTable, szDrvName, puiSuperRddId ) );
 
    if( ! pTable )
    {
@@ -2224,8 +2224,8 @@ HB_ERRCODE hb_rddInheritEx( RDDFUNCS * pTable, const RDDFUNCS * pSubTable,
       /* no name for inherited driver - use the default one */
       memcpy( pTable, &waTable, sizeof( RDDFUNCS ) );
       memcpy( pSuperTable, &waTable, sizeof( RDDFUNCS ) );
-      if( puiSupperRddId )
-         *puiSupperRddId = ( HB_USHORT ) -1;
+      if( puiSuperRddId )
+         *puiSuperRddId = ( HB_USHORT ) -1;
    }
    else
    {
@@ -2238,8 +2238,8 @@ HB_ERRCODE hb_rddInheritEx( RDDFUNCS * pTable, const RDDFUNCS * pSubTable,
 
       memcpy( pTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
       memcpy( pSuperTable, &pRddNode->pTable, sizeof( RDDFUNCS ) );
-      if( puiSupperRddId )
-         *puiSupperRddId = pRddNode->rddID;
+      if( puiSuperRddId )
+         *puiSuperRddId = pRddNode->rddID;
    }
 
    /* Copy the non NULL entries from pSubTable into pTable */
@@ -2263,15 +2263,15 @@ HB_ERRCODE hb_rddInherit( RDDFUNCS * pTable, const RDDFUNCS * pSubTable,
    return hb_rddInheritEx( pTable, pSubTable, pSuperTable, szDrvName, NULL );
 }
 
-HB_BOOL hb_rddIsDerivedFrom( HB_USHORT uiRddID, HB_USHORT uiSupperRddID )
+HB_BOOL hb_rddIsDerivedFrom( HB_USHORT uiRddID, HB_USHORT uiSuperRddID )
 {
-   if( uiRddID == uiSupperRddID )
+   if( uiRddID == uiSuperRddID )
       return HB_TRUE;
 
    while( uiRddID < s_uiRddCount )
    {
       uiRddID = s_RddList[ uiRddID ]->rddSuperID;
-      if( uiRddID == uiSupperRddID )
+      if( uiRddID == uiSuperRddID )
          return HB_TRUE;
    }
    return HB_FALSE;

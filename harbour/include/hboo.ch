@@ -103,7 +103,7 @@
 #define HB_OO_MSG_CLSACCESS    11
 #define HB_OO_MSG_REALCLASS    12
 #define HB_OO_MSG_DESTRUCTOR   13
-#define HB_OO_MSG_INITIALIZED  14
+#define HB_OO_MSG_INITIALIZED  14 /* initialized class data: HB_OO_MSG_CLASSDATA */
 #define HB_OO_MSG_PERFORM      15
 #define HB_OO_MSG_DELEGATE     16
 

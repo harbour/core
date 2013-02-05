@@ -75,15 +75,17 @@ FUNCTION hb_CStr( xVal )
 
    RETURN "???:" + v
 
-REQUEST __objSetClass
+REQUEST __objSetClass, __objGetIVars, __objSetIVars
 
-FUNCTION hb_ValToExp( xVal )
+FUNCTION hb_ValToExp( xVal, lRaw )
 
-   RETURN s_valToExp( xVal )
+   hb_default( @lRaw, .F. )
 
-STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
+   RETURN s_valToExp( xVal, lRaw )
 
-   LOCAL cVal, cKey
+STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs )
+
+   LOCAL cVal, cKey, cClass
    LOCAL tmp
    LOCAL v := ValType( xVal )
 
@@ -95,8 +97,12 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
    CASE "T" ; RETURN 't"' + hb_TSToStr( xVal, .T. ) + '"'
    CASE "L" ; RETURN iif( xVal, ".T.", ".F." )
    CASE "S" ; RETURN "@" + xVal:name + "()"
-   CASE "A"
    CASE "O"
+      cClass := xVal:className()
+      IF !lRaw
+         xVal := __objGetIVars( xVal )
+      ENDIF
+   CASE "A"
    CASE "H"
       tmp := __vmItemID( xVal )
       IF cInd == NIL
@@ -119,10 +125,10 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
          ELSE
             cVal := "{"
             FOR EACH tmp IN xVal
-               cKey := s_valToExp( tmp:__enumKey() )
+               cKey := s_valToExp( tmp:__enumKey(), lRaw )
                cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
                   cKey + "=>" + ;
-                  s_valToExp( tmp, cInd + cKey, hRefs, @cRefs )
+                  s_valToExp( tmp, lRaw, cInd + cKey, hRefs, @cRefs )
             NEXT
             cVal += "}"
          ENDIF
@@ -130,7 +136,7 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
          cVal := "{"
          FOR EACH tmp IN xVal
             cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
-               s_valToExp( tmp, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs )
+               s_valToExp( tmp, lRaw, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs )
          NEXT
          cVal += "}"
       ENDIF
@@ -139,7 +145,11 @@ STATIC FUNCTION s_valToExp( xVal, cInd, hRefs, cRefs )
          cVal := "__itemSetRef( " + cVal + ", {" + cRefs + "} )"
       ENDIF
       IF v == "O"
-         cVal := "__objSetClass( " + cVal + ", '" + xVal:className() + "' )"
+         IF lRaw
+            cVal := "__objSetClass( " + cVal + ", '" + cClass + "' )"
+         ELSE
+            cVal := "__objSetIVars( '" + cClass + "', " + cVal + " )"
+         ENDIF
       ENDIF
       EXIT
    CASE "P" ; RETURN "<pointer>"

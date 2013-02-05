@@ -891,6 +891,19 @@ HB_BOOL hb_arraySetCL( PHB_ITEM pArray, HB_SIZE nIndex, const char * szText, HB_
       return HB_FALSE;
 }
 
+HB_BOOL hb_arraySetCPtr( PHB_ITEM pArray, HB_SIZE nIndex, char * szText )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arraySetCLPtr(%p, %" HB_PFS "u, %p)", pArray, nIndex, szText ) );
+
+   if( HB_IS_ARRAY( pArray ) && nIndex > 0 && nIndex <= pArray->item.asArray.value->nLen )
+   {
+      hb_itemPutCPtr( pArray->item.asArray.value->pItems + nIndex - 1, szText );
+      return HB_TRUE;
+   }
+   else
+      return HB_FALSE;
+}
+
 HB_BOOL hb_arraySetCLPtr( PHB_ITEM pArray, HB_SIZE nIndex, char * szText, HB_SIZE nLen )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_arraySetCLPtr(%p, %" HB_PFS "u, %p, %" HB_PFS "u)", pArray, nIndex, szText, nLen ) );
@@ -898,6 +911,19 @@ HB_BOOL hb_arraySetCLPtr( PHB_ITEM pArray, HB_SIZE nIndex, char * szText, HB_SIZ
    if( HB_IS_ARRAY( pArray ) && nIndex > 0 && nIndex <= pArray->item.asArray.value->nLen )
    {
       hb_itemPutCLPtr( pArray->item.asArray.value->pItems + nIndex - 1, szText, nLen );
+      return HB_TRUE;
+   }
+   else
+      return HB_FALSE;
+}
+
+HB_BOOL hb_arraySetCConst( PHB_ITEM pArray, HB_SIZE nIndex, const char * szText )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arraySetCConst(%p, %" HB_PFS "u, %p)", pArray, nIndex, szText ) );
+
+   if( HB_IS_ARRAY( pArray ) && nIndex > 0 && nIndex <= pArray->item.asArray.value->nLen )
+   {
+      hb_itemPutCConst( pArray->item.asArray.value->pItems + nIndex - 1, szText );
       return HB_TRUE;
    }
    else
