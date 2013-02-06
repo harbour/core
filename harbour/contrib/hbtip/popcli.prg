@@ -217,7 +217,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
 
    cRet := ""
    nRetLen := 0
-   /* 04/05/2004 - <maurilio.longo@libero.it>
+   /* 2004/05/04 - <maurilio.longo@libero.it>
       Instead of receiving a single char at a time until after we have the full mail, let's receive as
       much as we can and stop when we reach EOM (end of mail :)) sequence. This way is _a lot_ faster
    */
@@ -229,7 +229,7 @@ METHOD Retrieve( nId, nLen ) CLASS TIPClientPOP
 
       cRet += Left( cBuffer, nRead )
 
-      /* 24/11/2005 - <maurilio.longo@libero.it>
+      /* 2005/11/24 - <maurilio.longo@libero.it>
                       "- Len( cEOM )" to be sure to always find a full EOM,
                       otherwise if response breaks EOM in two, it will never
                       be found
@@ -363,9 +363,11 @@ METHOD GetOk() CLASS TIPClientPOP
 
    RETURN .T.
 
+/* QUESTION: This method will return .T./.F./NIL or string
+             Is it really intended that way? [vszakats] */
 METHOD Read( nLen ) CLASS TIPClientPOP
 
-   /** Set what to read for */
+   /* Set what to read for */
    IF Empty( ::oUrl:cFile )
       RETURN ::List()
    ENDIF
@@ -395,6 +397,7 @@ METHOD retrieveAll( lDelete )
 
    FOR i := 1 TO imax
       ::reset()
+      /* TOFIX: cMail might get assigned NIL here, creating RTE later. */
       cMail := ::retrieve( i )
       aMails[ i ] := TIPMail():new()
       aMails[ i ]:fromString( cMail )

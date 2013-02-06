@@ -1405,6 +1405,8 @@ DYNAMIC __i18n_potArraySave
 DYNAMIC __i18n_potArrayToHash
 DYNAMIC __i18n_potArrayTrans
 DYNAMIC __Input
+DYNAMIC __itemSetObj
+DYNAMIC __itemSetObjRaw
 DYNAMIC __itemSetRef
 DYNAMIC __Keyboard
 DYNAMIC __KillRead
@@ -1456,6 +1458,7 @@ DYNAMIC __objHasMsg
 DYNAMIC __objHasMsgAssigned
 DYNAMIC __objModInline
 DYNAMIC __objModMethod
+DYNAMIC __objRestoreIVars
 DYNAMIC __objSendMsg
 DYNAMIC __objSetClass
 DYNAMIC __objSetClassHandle
