@@ -15101,15 +15101,13 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
    AEval( aOpt_Basic, {| tmp | OutOpt( hbmk, tmp ) } )
    IF lFull
       AEval( aOpt_Long, {| tmp | OutOpt( hbmk, tmp ) } )
-      IF lLong
-         AEval( aText_EnvVars, {| tmp | OutStd( tmp + _OUT_EOL ) } )
-         AEval( aEnvVars, {| tmp | OutOpt( hbmk, tmp ) } )
-      ENDIF
       AEval( aText_Files, {| tmp | OutStd( tmp + _OUT_EOL ) } )
       AEval( aFiles, {| tmp | OutOpt( hbmk, tmp ) } )
       AEval( aText_Macros, {| tmp | OutStd( tmp + _OUT_EOL ) } )
       AEval( aMacros, {| tmp | OutOpt( hbmk, tmp ) } )
       IF lLong
+         AEval( aText_EnvVars, {| tmp | OutStd( tmp + _OUT_EOL ) } )
+         AEval( aEnvVars, {| tmp | OutOpt( hbmk, tmp ) } )
          AEval( aText_HBC, {| tmp | OutStd( tmp + _OUT_EOL ) } )
          AEval( aHBC, {| tmp | OutOpt( hbmk, tmp ) } )
          /* TODO: Move to separate section from notes:
