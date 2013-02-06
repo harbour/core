@@ -5162,14 +5162,14 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
    }
 
    uiSuperClasses = pClass->uiSuperClasses;
-   nOffset = hb_clsParentInstanceOffset( pClass, uiClass );
+   nOffset = 0;
    nLimit = hb_clsMthNum( pClass );
    pMethod = pClass->pMethods;
    while( nCount && nLimit )
    {
       if( pMethod->pMessage &&
           ( uiScope == 0 || ( pMethod->uiScope & uiScope ) != 0 ) &&
-          ( uiClass == pClass->uiClass || pMethod->uiSprClass == uiClass ) )
+          ( uiClass == pClass->uiClass || uiClass == pMethod->uiSprClass ) )
       {
          PHB_SYMB pFuncSym = pMethod->pFuncSym;
 
@@ -5207,10 +5207,13 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
       ++pMethod;
       if( --nLimit == 0 )
       {
-         if( uiSuperClasses )
+         if( uiSuperClasses-- )
          {
-            uiClass = pClass->pSuperClasses[ --uiSuperClasses ].uiClass;
-            nOffset = hb_clsParentInstanceOffset( pClass, uiClass );
+            if( uiClass == pClass->pSuperClasses[ uiSuperClasses ].uiClass )
+               if( uiSuperClasses-- == 0 )
+                  break;
+            uiClass = pClass->pSuperClasses[ uiSuperClasses ].uiClass;
+            nOffset = pClass->pSuperClasses[ uiSuperClasses ].uiOffset;
             nLimit = hb_clsMthNum( s_pClasses[ uiClass ] );
             pMethod = s_pClasses[ uiClass ]->pMethods;
          }
@@ -5227,7 +5230,6 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
          const char * pszVar = pInfo->pMethod->pMessage->pSymbol->szName;
          PHB_ITEM pValue = hb_arrayGetItemPtr( pReturn, ++nCount );
 
-         pItem = hb_arrayGetItemPtr( pObject, nIndex );
          hb_arrayNew( pValue, 2 );
          if( pInfo->uiClass != pClass->uiClass )
          {
@@ -5237,7 +5239,7 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
          }
          else
             hb_arraySetCConst( pValue, 1, pszVar );
-         hb_arraySet( pValue, 2, pItem );
+         hb_arraySet( pValue, 2, hb_arrayGetItemPtr( pObject, nIndex ) );
       }
    }
 
@@ -5246,44 +5248,15 @@ static PHB_ITEM hb_objGetIVars( PHB_ITEM pObject,
    return pReturn;
 }
 
-
-/* __objGetIVars( <oObject>, [<nScope>], [<lChanged>] )
- *          -> <aIVars> { { <cName>, <xVal> }, ... }
- */
-HB_FUNC( __OBJGETIVARS )
+static void hb_objSetIVars( PHB_ITEM pObject, PHB_ITEM pArray )
 {
-   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
-   HB_USHORT uiScope = ( HB_USHORT ) hb_parni( 2 );
-   HB_BOOL fChanged = hb_parldef( 3, HB_TRUE );
-
-   hb_itemReturnRelease( hb_objGetIVars( pObject, uiScope, fChanged ) );
-}
-
-/* __objSetIVars( <oObject> | <hClass> | <cClassName> | <sClassFunc>,
- *                <aIVars> ) -> <oObject>
- */
-HB_FUNC( __OBJSETIVARS )
-{
-   PHB_ITEM pObject = hb_param( 1, HB_IT_ANY );
-   PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
-   PHB_ITEM pNewObj = NULL, pValue;
-
-   if( pObject )
-   {
-      if( HB_IS_NUMERIC( pObject ) )
-         pObject = pNewObj = hb_clsInst( ( HB_USHORT ) hb_itemGetNI( pObject ) );
-      else if( HB_IS_STRING( pObject ) )
-         pObject = pNewObj = hb_clsInst( hb_clsFindClass( hb_itemGetCPtr( pObject ), NULL ) );
-      else if( HB_IS_SYMBOL( pObject ) )
-         pObject = pNewObj = hb_clsInst( hb_clsFindClassByFunc( hb_itemGetSymbol( pObject ) ) );
-      else if( !HB_IS_OBJECT( pObject ) )
-         pObject = NULL;
-   }
-
-   if( pObject && pArray && pArray->item.asArray.value->uiClass == 0 )
+   if( pObject && HB_IS_OBJECT( pObject ) &&
+       pArray && HB_IS_ARRAY( pArray ) &&
+       pArray->item.asArray.value->uiClass == 0 )
    {
       HB_USHORT uiClass = pObject->item.asArray.value->uiClass;
       HB_SIZE nPos, nIndex, nLen;
+      PHB_ITEM pValue;
 
       nPos = 0;
       while( ( pValue = hb_arrayGetItemPtr( pArray, ++nPos ) ) != NULL )
@@ -5322,11 +5295,79 @@ HB_FUNC( __OBJSETIVARS )
          }
       }
    }
+}
 
-   if( pObject )
-      hb_itemReturn( pObject );
-   if( pNewObj )
-      hb_itemRelease( pNewObj );
+/* __objGetIVars( <oObject>, [<nScope>], [<lChanged>] )
+ *          -> <aIVars> { { <cName>, <xVal> }, ... }
+ */
+HB_FUNC( __OBJGETIVARS )
+{
+   PHB_ITEM pObject = hb_param( 1, HB_IT_OBJECT );
+   HB_USHORT uiScope = ( HB_USHORT ) hb_parni( 2 );
+   HB_BOOL fChanged = hb_parldef( 3, HB_TRUE );
+
+   hb_itemReturnRelease( hb_objGetIVars( pObject, uiScope, fChanged ) );
+}
+
+/* __objSetIVars( <oObject> | <hClass> | <cClassName> | <sClassFunc>,
+ *                <aIVars> ) -> <oObject>
+ */
+HB_FUNC( __OBJSETIVARS )
+{
+   PHB_ITEM pObject = hb_param( 1, HB_IT_ANY );
+   PHB_ITEM pArray = hb_param( 2, HB_IT_ARRAY );
+
+   if( pObject && pArray )
+   {
+      PHB_ITEM pNewObj = NULL;
+
+      if( HB_IS_NUMERIC( pObject ) )
+         pObject = pNewObj = hb_clsInst( ( HB_USHORT ) hb_itemGetNI( pObject ) );
+      else if( HB_IS_STRING( pObject ) )
+         pObject = pNewObj = hb_clsInst( hb_clsFindClass( hb_itemGetCPtr( pObject ), NULL ) );
+      else if( HB_IS_SYMBOL( pObject ) )
+         pObject = pNewObj = hb_clsInst( hb_clsFindClassByFunc( hb_itemGetSymbol( pObject ) ) );
+      else if( !HB_IS_OBJECT( pObject ) )
+         pObject = NULL;
+
+      hb_objSetIVars( pObject, pArray );
+
+      if( pObject )
+         hb_itemReturn( pObject );
+      if( pNewObj )
+         hb_itemRelease( pNewObj );
+   }
+}
+
+/* __objRestoreIVars( <aIVars>, <hClass> | <sClassFunc> |
+                                <cClassName>[, <cClassFuncName>] ) -> <oObject>
+ */
+HB_FUNC( __OBJRESTOREIVARS )
+{
+   PHB_ITEM pArray = hb_param( 1, HB_IT_ARRAY );
+   PHB_ITEM pClass = hb_param( 2, HB_IT_NUMERIC | HB_IT_STRING | HB_IT_SYMBOL );
+
+   if( pClass && pArray && pArray->item.asArray.value->uiClass == 0 )
+   {
+      PHB_ITEM pObject = NULL;
+
+
+      if( HB_IS_NUMERIC( pClass ) )
+         pObject = hb_clsInst( ( HB_USHORT ) hb_itemGetNI( pClass ) );
+      else if( HB_IS_STRING( pClass ) )
+         pObject = hb_clsInst( hb_clsFindClass( hb_itemGetCPtr( pClass ), hb_parc( 3 ) ) );
+      else if( HB_IS_SYMBOL( pClass ) )
+         pObject = hb_clsInst( hb_clsFindClassByFunc( hb_itemGetSymbol( pClass ) ) );
+
+      if( pObject )
+      {
+         hb_objSetIVars( pObject, pArray );
+         hb_arraySwap( pObject, pArray );
+         hb_itemRelease( pObject );
+      }
+   }
+
+   hb_itemReturn( pArray );
 }
 
 /* __clsGetProperties( <nClassHandle>, [<lAllExported>] ) -> <acProperties>

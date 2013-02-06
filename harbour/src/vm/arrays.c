@@ -216,6 +216,20 @@ HB_BOOL hb_arrayNew( PHB_ITEM pItem, HB_SIZE nLen ) /* creates a new array */
    return HB_TRUE;
 }
 
+void hb_arraySwap( PHB_ITEM pArray1, PHB_ITEM pArray2 )
+{
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arraySwap(%p, %p)", pArray1, pArray2 ) );
+
+   if( HB_IS_ARRAY( pArray1 ) && HB_IS_ARRAY( pArray2 ) )
+   {
+      HB_BASEARRAY tmpBaseArray;
+
+      tmpBaseArray = * pArray1->item.asArray.value;
+      * pArray1->item.asArray.value = * pArray2->item.asArray.value;
+      * pArray2->item.asArray.value = tmpBaseArray;
+   }
+}
+
 HB_BOOL hb_arraySize( PHB_ITEM pArray, HB_SIZE nLen )
 {
    HB_TRACE( HB_TR_DEBUG, ( "hb_arraySize(%p, %" HB_PFS "u)", pArray, nLen ) );
@@ -893,7 +907,7 @@ HB_BOOL hb_arraySetCL( PHB_ITEM pArray, HB_SIZE nIndex, const char * szText, HB_
 
 HB_BOOL hb_arraySetCPtr( PHB_ITEM pArray, HB_SIZE nIndex, char * szText )
 {
-   HB_TRACE( HB_TR_DEBUG, ( "hb_arraySetCLPtr(%p, %" HB_PFS "u, %p)", pArray, nIndex, szText ) );
+   HB_TRACE( HB_TR_DEBUG, ( "hb_arraySetCPtr(%p, %" HB_PFS "u, %p)", pArray, nIndex, szText ) );
 
    if( HB_IS_ARRAY( pArray ) && nIndex > 0 && nIndex <= pArray->item.asArray.value->nLen )
    {

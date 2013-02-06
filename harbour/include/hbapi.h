@@ -864,6 +864,7 @@ extern HB_EXPORT HB_LONGLONG  hb_arrayGetNLL( PHB_ITEM pArray, HB_SIZE nIndex );
 #ifdef _HB_API_INTERNAL_
 /* internal array API not exported */
 extern void hb_arrayPushBase( PHB_BASEARRAY pBaseArray );
+extern void hb_arraySwap( PHB_ITEM pArray1, PHB_ITEM pArray2 );
 extern void hb_cloneNested( PHB_ITEM pDstItem, PHB_ITEM pSrcItem, PHB_NESTED_CLONED pClonedList );
 extern void hb_hashCloneBody( PHB_ITEM pHash, PHB_ITEM pDest, PHB_NESTED_CLONED pClonedList );
 #endif

@@ -12118,6 +12118,8 @@ HB_FUNC( __VMITEMID )
          hb_retptr( hb_arrayId( pItem ) );
       else if( HB_IS_HASH( pItem ) )
          hb_retptr( hb_hashId( pItem ) );
+      else if( HB_IS_BLOCK( pItem ) )
+         hb_retptr( hb_codeblockId( pItem ) );
    }
 }
 

@@ -75,15 +75,13 @@ FUNCTION hb_CStr( xVal )
 
    RETURN "???:" + v
 
-REQUEST __objSetClass, __objGetIVars, __objSetIVars
-
 FUNCTION hb_ValToExp( xVal, lRaw )
 
    hb_default( @lRaw, .F. )
 
    RETURN s_valToExp( xVal, lRaw )
 
-STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs )
+STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs, cObjs )
 
    LOCAL cVal, cKey, cClass
    LOCAL tmp
@@ -99,9 +97,6 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs )
    CASE "S" ; RETURN "@" + xVal:name + "()"
    CASE "O"
       cClass := xVal:className()
-      IF !lRaw
-         xVal := __objGetIVars( xVal )
-      ENDIF
    CASE "A"
    CASE "H"
       tmp := __vmItemID( xVal )
@@ -128,27 +123,48 @@ STATIC FUNCTION s_valToExp( xVal, lRaw, cInd, hRefs, cRefs )
                cKey := s_valToExp( tmp:__enumKey(), lRaw )
                cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
                   cKey + "=>" + ;
-                  s_valToExp( tmp, lRaw, cInd + cKey, hRefs, @cRefs )
+                  s_valToExp( tmp, lRaw, cInd + cKey, hRefs, @cRefs, @cObjs )
             NEXT
             cVal += "}"
          ENDIF
       ELSE
          cVal := "{"
-         FOR EACH tmp IN xVal
-            cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
-               s_valToExp( tmp, lRaw, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs )
-         NEXT
+         IF !lRaw .AND. v == "O"
+            FOR EACH tmp IN __objGetIVars( xVal )
+               cVal += iif( tmp:__enumIndex() == 1, "{'", ", {'" ) + ;
+                       tmp[ 1 ] + "', " + ;
+                       s_valToExp( tmp[ 2 ], lRaw, ;
+                                   cInd + hb_ntos( tmp:__enumIndex() ) + ",2", ;
+                                   hRefs, @cRefs, @cObjs ) + "}"
+            NEXT
+         ELSE
+            FOR EACH tmp IN xVal
+               cVal += iif( tmp:__enumIndex() == 1, "", ", " ) + ;
+                  s_valToExp( tmp, lRaw, cInd + hb_ntos( tmp:__enumIndex() ), hRefs, @cRefs, @cObjs )
+            NEXT
+         ENDIF
          cVal += "}"
       ENDIF
 
-      IF ! Empty( cRefs ) .AND. cInd == ""
-         cVal := "__itemSetRef( " + cVal + ", {" + cRefs + "} )"
-      ENDIF
       IF v == "O"
-         IF lRaw
-            cVal := "__objSetClass( " + cVal + ", '" + cClass + "' )"
+         IF cObjs == NIL
+            cObjs := ""
          ELSE
-            cVal := "__objSetIVars( '" + cClass + "', " + cVal + " )"
+            cObjs += ","
+         ENDIF
+         cObjs += "{'" + cClass + "',"
+         IF ! cInd == ""
+            cObjs += "{" + hb_strShrink( cInd ) + "}"
+         ENDIF
+         cObjs += "}"
+      ENDIF
+      IF cInd == ""
+         IF ! Empty( cRefs )
+            cVal := "__itemSetRef( " + cVal + ", {" + cRefs + "} )"
+         ENDIF
+         IF ! Empty( cObjs )
+            cVal := iif( lRaw, "__itemSetObjRaw( ", ;
+                               "__itemSetObj( " ) + cVal + ", {" + cObjs + "} )"
          ENDIF
       ENDIF
       EXIT
@@ -171,6 +187,28 @@ FUNCTION __itemSetRef( xVal, aRefs )
    FOR EACH aRef in aRefs
       xVal[ hb_ArrayToParams( aRef[ 1 ] ) ] := ;
          iif( aRef[ 2 ] == NIL, xVal, xVal[ hb_ArrayToParams( aRef[ 2 ] ) ] )
+   NEXT
+
+   RETURN xVal
+
+FUNCTION __itemSetObj( xVal, aObjs )
+
+   LOCAL aRef
+
+   FOR EACH aRef in aObjs
+      __objRestoreIVars( iif( aRef[ 2 ] == NIL, xVal, ;
+                              xVal[ hb_ArrayToParams( aRef[ 2 ] ) ] ), aRef[ 1 ] )
+   NEXT
+
+   RETURN xVal
+
+FUNCTION __itemSetObjRaw( xVal, aObjs )
+
+   LOCAL aRef
+
+   FOR EACH aRef in aObjs
+      __objSetClass( iif( aRef[ 2 ] == NIL, xVal, ;
+                          xVal[ hb_ArrayToParams( aRef[ 2 ] ) ] ), aRef[ 1 ] )
    NEXT
 
    RETURN xVal
