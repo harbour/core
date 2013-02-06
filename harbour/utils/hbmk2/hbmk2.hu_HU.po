@@ -489,7 +489,7 @@ msgstr "felülbírálja az alapértelmezett nyelvet. Hasonlóan HB_LANG környez
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Regular Harbour compiler options are also accepted.\\n(see them with -harbourhelp option)"
+msgid "Regular Harbour compiler options are also accepted as is.\\n(see them with -harbourhelp option)"
 msgstr "Normál Harbour fordító kapcsolók is megadhatók."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102

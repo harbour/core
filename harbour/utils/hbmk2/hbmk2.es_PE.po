@@ -468,7 +468,7 @@ msgstr "Múltiples parámetros son aceptados -l, -L, -i y <script>."
 
 #: hbmk2.prg:7960 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Regular Harbour compiler options are also accepted.\\n(see them with -harbourhelp option)"
+msgid "Regular Harbour compiler options are also accepted as is.\\n(see them with -harbourhelp option)"
 msgstr "las opciones regulares de compilador Harbour también son aceptadas.\\n(Verlos con la opción -harbourhelp)"
 
 #: hbmk2.prg:7960 hbmk2.prg:13120
