@@ -14,7 +14,7 @@ LIB_EXT := .a
 
 HB_DYN_COPT := -DHB_DYNLIB
 
-CC := $(HB_CCPATH)$(HB_CMP)$(HB_CCPOSTFIX)
+CC := $(HB_CCPATH)$(HB_CMP)$(HB_CCSUFFIX)
 ifneq ($(filter --analyze, $(HB_USER_CFLAGS)),)
    CC_IN :=
 else

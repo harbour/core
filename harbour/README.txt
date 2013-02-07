@@ -804,8 +804,8 @@ TABLE OF CONTENT
                                  tools. Ending slash must be added.
    - HB_CCPREFIX=[<prefix>]      Used with gcc compiler family to specify
                                  compiler/linker/archive tool name prefix.
-   - HB_CCPOSTFIX=[<postfix>]    Used with gcc compiler family to specify
-                                 compiler/linker tool name postfix
+   - HB_CCSUFFIX=[<suffix>]      Used with gcc compiler family to specify
+                                 compiler/linker tool name suffix
                                  (usually version number).
 
    Cross-building

@@ -1672,11 +1672,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    hbmk[ _HBMK_cCCPATH ]   := GetEnv( "HB_CCPATH" )
    hbmk[ _HBMK_cCCPREFIX ] := GetEnv( "HB_CCPREFIX" )
-#ifdef HB_LEGACY_LEVEL4
-   hbmk[ _HBMK_cCCSUFFIX ] := hb_GetEnv( "HB_CCSUFFIX", GetEnv( "HB_CCPOSTFIX" ) )
-#else
    hbmk[ _HBMK_cCCSUFFIX ] := GetEnv( "HB_CCSUFFIX" )
-#endif
 
    #if defined( __PLATFORM__UNIX )
       #if ! defined( __PLATFORM__CYGWIN )
@@ -2697,6 +2693,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := SubStr( cParam, 6 )
          IF ! Empty( cParam )
             hbmk[ _HBMK_aLNG ] := ListToArray( cParam, "," )
+            FOR EACH tmp IN hbmk[ _HBMK_aLNG ]
+               tmp := AllTrim( tmp )
+            NEXT
          ENDIF
 
       CASE Left( cParamL, 5 ) == "-hbl="

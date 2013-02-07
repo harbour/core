@@ -16,7 +16,7 @@ LIB_EXT := .a
 
 HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
-CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
 CC_IN := -c
 # NOTE: The ending space after -o is important, please preserve it.
 CC_OUT := -o$(subst x,x, )

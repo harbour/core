@@ -522,7 +522,7 @@ HB_COMPILER_ORI := $(HB_COMPILER)
 HB_CC_DET :=
 ifneq ($(HB_HOST_PLAT),$(HB_PLATFORM))
    ifeq ($(filter $(HB_HOST_PLAT),win dos os2),)
-      ifeq ($(HB_CCPATH)$(HB_CCPREFIX)$(HB_CCPOSTFIX),)
+      ifeq ($(HB_CCPATH)$(HB_CCPREFIX)$(HB_CCSUFFIX),)
          HB_CC_DET := yes
       endif
       ifeq ($(HB_COMPILER),)
@@ -594,7 +594,7 @@ ifeq ($(HB_COMPILER),)
                      HB_COMP_PATH := $(call find_in_path,gcc-dw2)
                      ifneq ($(HB_COMP_PATH),)
                         HB_COMPILER := mingw
-                        HB_CCPOSTFIX := -dw2
+                        HB_CCSUFFIX := -dw2
                      else
                         # Equation Solution build (requires x86_64 host)
                         HB_COMP_PATH := $(call find_in_path,x86_64-pc-mingw32-gcc)
@@ -1220,13 +1220,13 @@ endif
 ifeq ($(HB_COMPILER_ORI),)
    ifneq ($(HB_COMPILER),)
       HB_COMP_PATH := $(subst $(substpat), ,$(dir $(firstword $(subst $(subst x, ,x),$(substpat),$(HB_COMP_PATH)))))
-      HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),)$(if $(HB_CCPREFIX), [$(HB_CCPREFIX)*],)$(if $(HB_CCPOSTFIX), [*$(HB_CCPOSTFIX)],))
+      HB_COMP_AUTO := (autodetected$(if $(HB_COMP_PATH),: $(HB_COMP_PATH),)$(if $(HB_CCPREFIX), [$(HB_CCPREFIX)*],)$(if $(HB_CCSUFFIX), [*$(HB_CCSUFFIX)],))
       HB_COMP_VERD := $(if $(HB_COMPILER_VER), (v$(HB_COMPILER_VER)),)
    endif
 endif
 export HB_CCPATH
 export HB_CCPREFIX
-export HB_CCPOSTFIX
+export HB_CCSUFFIX
 
 ifeq ($(HB_PLATFORM),)
    $(error ! HB_PLATFORM not set, could not autodetect)

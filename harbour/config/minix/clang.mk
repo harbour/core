@@ -17,7 +17,7 @@ LIB_EXT := .a
 
 ## HB_DYN_COPT := -DHB_DYNLIB -fPIC
 
-CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCPOSTFIX)
+CC := $(HB_CCACHE) $(HB_CCPREFIX)$(HB_CMP)$(HB_CCSUFFIX)
 ifneq ($(filter --analyze, $(HB_USER_CFLAGS)),)
    CC_IN :=
 else
