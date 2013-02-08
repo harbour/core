@@ -2781,7 +2781,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   tmp := PathSepToSelf( tmp )
                   hb_FNameSplit( tmp, @cDir, @cName, @cExt )
                   IF Lower( cExt ) == ".exe" .AND. hbmk_TARGETTYPE( hbmk ) == "hbexe"
-                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable option: %1$s. Delete '.exe' extension." ), ParamToString( aParam ) ) )
+                     _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable option value: %1$s. Delete '.exe' extension." ), ParamToString( aParam ) ) )
                   ENDIF
                   DO CASE
                   CASE Empty( cDir )
@@ -3315,7 +3315,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          cParam := PathSepToSelf( cParam )
          IF hb_FNameExt( cParamL ) == ".lib"
             cParam := FNameDirName( cParam )
-            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable option: %1$s. Use '-l%2$s' instead." ), ParamToString( aParam ), cParam ) )
+            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable parameter: %1$s. Use '-l%2$s' option instead." ), ParamToString( aParam ), cParam ) )
          ENDIF
          IF CheckLibParam( hbmk, cParam )
             IF _IS_AUTOLIBSYSPRE( cParam )
