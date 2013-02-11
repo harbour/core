@@ -10703,11 +10703,11 @@ STATIC FUNCTION hbmk_builtin_File_hb_pkg_install()
 
 STATIC FUNCTION hbmk_builtin_List()
 
-   STATIC s_hHBM_BuildIn := { ;
+   STATIC s_hHBM_BuiltIn := { ;
       _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_dynlib.hbm" => {|| hbmk_builtin_File_hb_pkg_dynlib() } , ;
       _HBMK_BUILTIN_FILENAME_MARKER_ + "hb_pkg_install.hbm" => {|| hbmk_builtin_File_hb_pkg_install() } }
 
-   RETURN s_hHBM_BuildIn
+   RETURN s_hHBM_BuiltIn
 
 STATIC FUNCTION hbmk_builtin_Is( cFileName )
 
