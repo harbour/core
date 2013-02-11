@@ -2,7 +2,7 @@
 # $Id$
 #
 
-# hbmk2 include file to setup standard installation rules
+# Include file to setup standard installation rules
 # for 3rd party packages. To use it just add the line
 # '$hb_pkg_install.hbm' to the beginning of your project
 # .hbp file. [vszakats]
