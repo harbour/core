@@ -1444,12 +1444,12 @@ FUNCTION AWords( cLine )
    DO WHILE z <= nSize
       z++
       y := Asc( SubStr( cLine, z, 1 ) )
-      IF y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~"
+      IF y >= Asc( "0" ) .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~"
          nOffset := z
          cWord   := Chr( y )
          z++
          y := Asc( SubStr( cLine, z, 1 ) )
-         WHILE ( y >= 48 .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" ) .OR. y == "'"
+         WHILE ( y >= Asc( "0" ) .AND. ! Chr( y ) $ ":;<=>?@[\^]_`{|}~" ) .OR. y == "'"
             cWord += Chr( y )
             z++
             IF z > nSize

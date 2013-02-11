@@ -276,6 +276,7 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_SPECDIR_CONTRIB   "contrib"
 #define _HBMK_SPECDIR_ADDONS    "addons"
 
+#define _HBMK_HBEXTREQ          "__HBEXTREQ__"
 #define _HBMK_WITH_TPL          "HBMK_WITH_%1$s"
 #define _HBMK_HAS_TPL           "HBMK_HAS_%1$s"
 #define _HBMK_HAS_TPL_LOCAL     "HBMK_HAS_%1$s_LOCAL"
@@ -3460,7 +3461,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             cParam := hb_FNameExtSet( cParam, ".prg" )
          ELSEIF hb_FNameExt( cParamL ) == ".hbx"
             IF hb_FileExists( cParam )
-               AAddNew( hbmk[ _HBMK_aOPTPRG ], "-D__HBEXTREQ__" )
+               AAddNew( hbmk[ _HBMK_aOPTPRG ], "-D" + _HBMK_HBEXTREQ )
                AAdd( hbmk[ _HBMK_aPRG ], cParam )
             ENDIF
             LOOP
@@ -12897,11 +12898,11 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
    cExtern += "#ifndef " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
    cExtern += "#define " + "__HBEXTERN_CH__" + StrToDefine( hb_FNameName( cOutputName ) ) + "__" + hb_eol()
    cExtern += hb_eol()
-   cExtern += "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol()
+   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "ANNOUNCE" + " )" + hb_eol()
    cExtern += "   ANNOUNCE " + cSelfName + hb_eol()
    cExtern += "#endif" + hb_eol()
    cExtern += hb_eol()
-   cExtern += "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
+   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
    cExtern += "   #command DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
    cExtern += "#endif" + hb_eol()
    cExtern += hb_eol()
@@ -12923,7 +12924,7 @@ STATIC FUNCTION __hb_extern_gen( hbmk, aFuncList, cOutputName )
       ENDIF
    NEXT
    cExtern += hb_eol()
-   cExtern += "#if defined( __HBEXTREQ__ ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
+   cExtern += "#if defined( " + _HBMK_HBEXTREQ + " ) .OR. defined( " + cSelfName + "REQUEST" + " )" + hb_eol()
    cExtern += "   #uncommand DYNAMIC <fncs,...> => EXTERNAL <fncs>" + hb_eol()
    cExtern += "#endif" + hb_eol()
    cExtern += hb_eol()
@@ -14865,7 +14866,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-depincpathlocal=<d:i>" , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) }, ;
       { "-depimplibs=<d:dll>"    , I_( "<d> is the name of the dependency. Add <dll> to the import library source list." ) }, ;
       { "-depimplibd=<d:lib>"    , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) }, ;
-      { "-depfinish=<d>"         , I_( "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all filter macros and build options accordingly. Optional, if omitted, detection will take place after processing all options." ) }, ;
+      { "-depfinish=<d>"         , I_( "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macros and build options accordingly. Optional, if omitted, detection will take place after processing all options." ) }, ;
       NIL, ;
       { "-plugin=<filename>" , I_( "add plugin. <filename> can be: .hb, .prg, .hrb" ) }, ;
       { "-pi=<filename>"     , I_( "pass input file to plugins" ) }, ;
@@ -14949,6 +14950,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "*.hbp"              , I_( "project file. Can contain command line options, expected to create an output. Lines beginning with '#' character are ignored, otherwise newline is optional, same rules apply as for the command-line." ) }, ;
       { "*.hbm"              , I_( "collection of options. Can be used to collect common ones into a file and include that into project files. Lines beginning with '#' character are ignored, otherwise newline is optional, same rules apply as for the command-line." ) }, ;
       { "*.hbc"              , I_( "collection of options that accompany components (aka 'libs', aka packages). Use different syntax than command-line and .hbp/.hbm files. Lines beginning with '#' character are ignored, each directive must be placed in separate lines." ) }, ;
+      { "*.hb"               , I_( "Harbour script" ) }, ;
+      { "*.hrb"              , I_( "Harbour portable binary (aka precompiled script)" ) }, ;
       { "*.ch"               , I_( "if passed directly as a source file, it will be used as additional standard header" ) }, ;
       { _HBMK_AUTOHBC_NAME   , hb_StrFormat( I_( "standard .hbc file that gets automatically processed, if present. Possible location(s) (in order of precedence): %1$s" ), ArrayToList( AutoConfPathList(), ", " ) ) }, ;
       { _HBMK_AUTOHBM_NAME   , I_( "optional .hbm file residing in current working directory, which gets automatically processed before other options" ) } }
@@ -15071,6 +15074,29 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "licences="         , I_( "space separated list of licenses" ) }, ;
       { "repository="       , I_( "space separated list of source repository references" ) } }
 
+   LOCAL aText_PredSource := { ;
+      NIL, ;
+      { "", I_( "Predefined constants in sources:" ) } }
+
+   LOCAL aPredSource := { ;
+      NIL, ;
+      { _HBMK_SHELL                                            , I_( "when a Harbour source file is run as a shell script" ) }, ;
+      { _HBMK_PLUGIN                                           , hb_StrFormat( I_( "when an .hb script is compiled as %1$s plugin" ), _SELF_NAME_ ) }, ;
+      { _HBMK_HBEXTREQ                                         , I_( "when an .hbx source file is present in a project (available in Harbour sources)" ) }, ;
+      { hb_StrFormat( _HBMK_HAS_TPL_HBC, I_( "<hbcname>" ) )   , I_( "when <hbcname>.hbc package is linked to the target. The value is the version= value from the .hbc file, or '1', if not specified. (available in Harbour sources)" ) }, ;
+      { hb_StrFormat( _HBMK_HAS_TPL, I_( "<depname>" ) )       , I_( "when <depname> dependency was detected (available in C sources)" ) }, ;
+      { "<standard Harbour>"                                   , I_( "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..." ) } }
+
+   LOCAL aText_PredBuild := { ;
+      NIL, ;
+      { "", I_( "Predefined constants in build files (they are available after '-depfinish=<depname>' / 'depfinish=<depname>'):" ) } }
+
+   LOCAL aPredBuild := { ;
+      NIL, ;
+      { hb_StrFormat( _HBMK_HAS_TPL, I_( "<depname>" ) )       , I_( "when <depname> dependency was detected" ) }, ;
+      { hb_StrFormat( _HBMK_DIR_TPL, I_( "<depname>" ) )       , I_( "return the header directory where <depname> was detected, or empty if it wasn't." ) }, ;
+      { hb_StrFormat( _HBMK_HAS_TPL_LOCAL, I_( "<depname>" ) ) , I_( "when <depname> dependency was detected in a location configured by -depincpathlocal= option" ) } }
+
    LOCAL aText_Notes := { ;
       "", ;
       I_( "Notes:" ) }
@@ -15108,6 +15134,10 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       AEval( aFiles, {| tmp | OutOpt( hbmk, tmp ) } )
       AEval( aText_Macros, {| tmp | OutStd( tmp + _OUT_EOL ) } )
       AEval( aMacros, {| tmp | OutOpt( hbmk, tmp ) } )
+      AEval( aText_PredSource, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+      AEval( aPredSource, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
+      AEval( aText_PredBuild, {| tmp | OutOpt( hbmk, tmp, 0 ) } )
+      AEval( aPredBuild, {| tmp | OutOpt( hbmk, tmp, 28 ) } )
       IF lLong
          AEval( aText_EnvVars, {| tmp | OutStd( tmp + _OUT_EOL ) } )
          AEval( aEnvVars, {| tmp | OutOpt( hbmk, tmp ) } )
@@ -15130,9 +15160,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
    RETURN
 
-#define _OPT_WIDTH 22
-
-STATIC PROCEDURE OutOpt( hbmk, aOpt )
+STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
 
    LOCAL nLine
    LOCAL nLines
@@ -15141,12 +15169,13 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt )
       OutStd( _OUT_EOL )
    ELSE
       IF Len( aOpt ) > 1
+         hb_default( @nWidth, 22 )
          aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_eol() )
-         nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH ), ;
-                        MLCount( aOpt[ 1 ], _OPT_WIDTH ) )
+         nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth ), ;
+                        MLCount( aOpt[ 1 ], nWidth ) )
          FOR nLine := 1 TO nLines
-            OutStd( PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], _OPT_WIDTH, nLine ), _OPT_WIDTH ) )
-            OutStd( RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - _OPT_WIDTH, nLine ) ) + _OUT_EOL )
+            OutStd( PadR( Space( 2 ) + MemoLine( aOpt[ 1 ], nWidth, nLine ), nWidth ) )
+            OutStd( RTrim( MemoLine( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) + _OUT_EOL )
          NEXT
       ELSE
          OutStd( Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
