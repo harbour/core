@@ -203,14 +203,7 @@ PHB_ITEM hb_strFormat( PHB_ITEM pItemReturn, PHB_ITEM pItemFormat, int iCount, P
          if( iParamNo == -1 )
             iParamNo = ++iParam;
 
-         if( iParamNo > iCount )
-         {
-            hb_xfree( buffer.pData );
-            hb_errRT_BASE_SubstR( EG_ARG, 1099, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-            return NULL;
-         }
-
-         pItem = pItemArray[ iParamNo - 1 ];
+         pItem = ( iParamNo > iCount ) ? NULL : pItemArray[ iParamNo - 1 ];
       }
       else
          pItem = NULL;

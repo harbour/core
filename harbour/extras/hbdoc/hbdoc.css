@@ -3,29 +3,29 @@
 @charset "utf-8";
 
 body {
-	font-family: arial;
 	font-size: 14px;
+	font-family: arial;
 	line-height: 18px;
 }
 
 .name {
-	font-weight: bold;
-	font-size: 18px;
 	margin-left: 0;
 	padding-top: 0;
 	padding-bottom: 4px;
+	font-weight: bold;
+	font-size: 18px;
 }
 
 .oneliner {
-	font-style: italic;
 	margin-bottom: 12px;
+	font-style: italic;
 }
 
 .itemtitle {
-	font-weight: bold;
 	margin-left: 0;
 	padding-top: 0;
 	padding-bottom: 4px;
+	font-weight: bold;
 }
 
 .itemtext {
