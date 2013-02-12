@@ -14865,8 +14865,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-warn=<lev>"        , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) }, ;
       { "-compr=<lev>"       , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: yes, no, min, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
-      { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) }, ;
-      { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
+      { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) }, ;
+      { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
       { "-icon=<file>"       , I_( "set <file> as application icon. <file> should be a supported format on the target platform" ) }, ;
       { "-manifest=<file>"   , I_( "embed manifest <file> in executable/dynamic lib (Windows only)" ) }, ;
       { "-sign=<key>"        , I_( "sign executable with <key> (Windows and Darwin only)" ) }, ;
@@ -14922,7 +14922,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-depincpathlocal=<d:i>" , I_( "<d> is the name of the dependency. Add <i> to the header detection path list, where <i> is pointing to a directory local to the project and containing an embedded (or locally hosted) dependency." ) }, ;
       { "-depimplibs=<d:dll>"    , I_( "<d> is the name of the dependency. Add <dll> to the import library source list." ) }, ;
       { "-depimplibd=<d:lib>"    , I_( "<d> is the name of the dependency. Set generated import library name to <lib>" ) }, ;
-      { "-depfinish=<d>"         , I_( "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macros and build options accordingly. Optional, if omitted, detection will take place after processing all options." ) }, ;
+      { "-depfinish=<d>"         , I_( "<d> is the name of the dependency. Closes the dependency definition and does the actual dependency detection, setting all predefined filter macro variables and build options accordingly. Optional, if omitted, detection will take place after processing all options." ) }, ;
       NIL, ;
       { "-plugin=<filename>" , I_( "add plugin. <filename> can be: .hb, .prg, .hrb" ) }, ;
       { "-pi=<filename>"     , I_( "pass input file to plugins" ) }, ;
@@ -15021,7 +15021,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
    LOCAL aHdr_Macros := { ;
       "", ;
-      I_( "Macros:" ) }
+      I_( "Macro variables:" ) }
 
    LOCAL aLst_Macros := { ;
       NIL, ;
@@ -15172,8 +15172,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       hb_StrFormat( I_( "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory." ), _HBMK_AUTOHBC_NAME, _SELF_NAME_ ), ;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ), ;
       I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allbcc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|winuni|winansi|xhb}" ), ;
-      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ), ;
-      I_( 'Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ), ;
+      I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ), ;
+      I_( 'Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ), ;
       I_( "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler." ) , ;
       I_( "Defaults and feature support may vary by platform/compiler." ) , ;
       I_( ".hb or .hrb file passed as first parameter will be run as Harbour script. Note, for Harbour scripts, the codepage is set to UTF-8 by default." ) , ;

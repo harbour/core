@@ -328,7 +328,7 @@ msgstr "PATH adicional para detectar automáticamente lugares de archivos de cab
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "generate .ch header file with timestamp information. Generated header will define macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
+msgid "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build"
 msgstr "generar archivo de cabecera .ch con información de fecha/hora. Cabecera generado definirá macros _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ con fecha/hora de creación de archivo."
 
 #: hbmk2.prg:4609
@@ -723,7 +723,7 @@ msgstr "especifique un nuevo destino de compilación. <script> puede ser módulo
 
 #: hbmk2.prg:7960 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Options accepting macros also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. \"-cflag=`wx-config --cflags`\", or ldflags={unix&gcc}\"`wx-config --libs`\"."
+msgid "Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. \"-cflag=`wx-config --cflags`\", or ldflags={unix&gcc}\"`wx-config --libs`\"."
 msgstr "Tambien acepta Opciones de macros sustitución de comandos. Incluya comando dentro de ``, y, si el comando contiene espacios, también entre comillas dobles. F.e. \"-cflag==`wx-config -cflags`\", o ldflags={unix&gcc}\"`wx-config --libs`\"."
 
 #: hbmk2.prg:6872 hbmk2.prg:10136 hbmk2.prg:10862
@@ -818,7 +818,7 @@ msgstr "archivo de opciones %1$s en directorio de %2$s siempre es procesado si e
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define macro _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
+msgid "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository"
 msgstr "genera archivo .ch con información de repositorio local. SVN, CVS, Git, Mercurial, Bazaar, Fossil y Monotone están actualmente soportadas. Archivo de cabecera generado contendrá macro _HBMK_VCS_TYPE_ con en nombre de VCS detectado y _HBMK_VCS_ID_ con ID único del repositorio local"
 
 #: hbmk2.prg:5805 hbmk2.prg:8785 hbmk2.prg:9362
