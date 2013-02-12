@@ -943,8 +943,8 @@ msgstr "não adicione bibliotecas extras do sistema à lista padrão de bibliote
 
 #: hbmk2.prg:7960 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<plat>|<comp>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allbcc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|winuni|winansi|xhb}"
-msgstr "Os filtros para plataformas são aceitos para cada uma das linhas de um arquivo .hbc e possuem diversas opções.\\nFormato de um filtro: {[!][<arquitetura>|<compilador>|<cpu>|<palavra-chave>]}. Os filtros podem ser combinados usando os operadores '&', '|' e agrupados por parênteses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}, {allwin|allmsvc|allgcc|allmingw|allicc|allbcc|allpocc|unix}, {x86|x86_64|ia64|arm|mips|sh}, {debug|nodebug|gui|std|mt|st|shared|static|winuni|winansi|xhb}"
+msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
+msgstr "Os filtros para plataformas são aceitos para cada uma das linhas de um arquivo .hbc e possuem diversas opções.\\nFormato de um filtro: {[!][<arquitetura>|<compilador>|<cpu>|<palavra-chave>]}. Os filtros podem ser combinados usando os operadores '&', '|' e agrupados por parênteses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
 
 #: hbmk2.prg:7555 hbmk2.prg:7672 hbmk2.prg:7755 hbmk2.prg:11163 hbmk2.prg:11284 hbmk2.prg:11408 hbmk2.prg:12183 hbmk2.prg:12311 hbmk2.prg:12459
 #, c-format
@@ -953,8 +953,8 @@ msgstr "Salvando arquivo no formato .hbp: %1$s"
 
 #: hbmk2.prg:7840 hbmk2.prg:11498 hbmk2.prg:12956
 #, c-format
-msgid "Supported <comp> values for each supported <plat> value:"
-msgstr "Valores suportados para <comp> conforme a <plat> disponível:"
+msgid "Supported <compiler> values for each supported <platform> value:"
+msgstr "Valores suportados para <compiler> conforme a <platform> disponível:"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
