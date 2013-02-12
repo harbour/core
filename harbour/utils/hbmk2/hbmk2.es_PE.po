@@ -43,8 +43,8 @@ msgstr "Error: Ejecución de compilador de recursos. %1$d"
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "force C/C++ mode"
-msgstr "fuerza modo C/C++"
+msgid "force C++/C mode"
+msgstr "fuerza modo C++/C"
 
 #: hbmk2.prg:1104 hbmk2.prg:1450 hbmk2.prg:1561
 #, c-format

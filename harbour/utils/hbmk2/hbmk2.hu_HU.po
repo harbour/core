@@ -724,7 +724,7 @@ msgstr "Figyelem: Fájl nem található: %1$s"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "force C/C++ mode"
+msgid "force C++/C mode"
 msgstr ""
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102

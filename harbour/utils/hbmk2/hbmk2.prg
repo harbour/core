@@ -14843,7 +14843,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-nulrdd[-]"         , I_( "link with nulrdd" ) }, ;
       { "-debug[-]"          , I_( "add/exclude C compiler debug info. For Harbour level debug, use Harbour option -b as usual" ) }, ;
       { "-optim[-]"          , I_( "toggle C compiler optimizations (default: on)" ) }, ;
-      { "-cpp[-]"            , I_( "force C/C++ mode" ) }, ;
+      { "-cpp[-]"            , I_( "force C++/C mode" ) }, ;
       { "-cpp=<value>"       , I_( "select C++ mode. Allowed values are: def, yes, no" ) }, ;
 /*    { "-c=<value>"         , I_( "select C standard. Allowed values are: iso90, iso99, iso1x, gnu90, gnu99, gnu1x" ) }, */;
 /*    { "-cpp=<value>"       , I_( "select C++ mode or standard. Allowed values are: def, yes, no, iso98, iso03, iso0x, gnu98, gnu0x" ) }, */;
@@ -15085,7 +15085,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "{shared}"                , I_( "shared build (see -shared and related options)" ) }, ;
       { "{static}"                , I_( "static build (see -static and related options)" ) }, ;
       { "{lngcpp}"                , I_( "forced C++ mode (see -cpp option)" ) }, ;
-      { "{lngc}"                  , I_( "forced C mode (see -c option)" ) }, ;
+      { "{lngc}"                  , I_( "forced C mode (see -cpp- option)" ) }, ;
       { "{winuni}"                , I_( "Windows UNICODE (WIDE) mode (see -winuni option)" ) }, ;
       { "{winansi}"               , I_( "Windows ANSI mode (see -winuni- option)" ) }, ;
       { "{unix}"                  , I_( "target platform is *nix compatible (bsd, hpux, sunos, beos, qnx, android, vxworks, symbian, linux, darwin, cygwin, minix, aix)" ) }, ;
