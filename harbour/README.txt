@@ -1361,8 +1361,8 @@ TABLE OF CONTENT
    8.  Try to do no or only small modifications at once to command examples
        included in 'EXAMPLES' section of this document. If it doesn't work,
        fall back to documented examples _as is_.
-   9.  If everything fails and you are to report a problem to Harbour developers,
-       make sure to include your OS version/language/CPU architecture,
+   9.  If everything fails and you are to report a build problem to Harbour
+       developers, make sure to include your OS version/language/CPU architecture,
        Harbour revision, C compiler name/release and version, environment
        variables and verbose log output containing _both stderr and stdout in
        one combined stream_ (use 'make > log.txt 2>&1'). Enable verbose
@@ -1395,9 +1395,10 @@ TABLE OF CONTENT
        the problem using official stable or nightly Harbour build.
        Do not post executables and other binary files. If your source contains
        non-ASCII (national, accented, special) chars, clearly mark the
-       codepage/encoding used and attach the files compressed with zip.
-       (use the extension '.zip')
-       See more on self-contained examples: http://sscce.org/
+       codepage/encoding used (UTF-8 recommended) and attach the files
+       compressed with zip. (use the extension '.zip')
+       See more on self-contained examples:
+          http://sscce.org/
    13. If your example involves compatibility components, make sure to test
        it against original implementation (for example, test legacy Clipper
        core language elements against real CA-Clipper 5.2e or 5.3b, or hbct
