@@ -3147,11 +3147,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          IF ! Empty( cParam )
             cParam := PathSepToSelf( cParam )
             IF Left( cParam, 1 ) == "-"
-               IF CheckLibParam( hbmk, SubStr( cParam, 2 ) )
+               IF CheckLibParam( hbmk, SubStr( cParam, 2 ), .F., aParam )
                   AAdd( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cParam, 2 ) )
                ENDIF
             ELSE
-               IF CheckLibParam( hbmk, cParam )
+               IF CheckLibParam( hbmk, cParam, .F., aParam )
                   IF _IS_AUTOLIBSYSPRE( cParam )
                      AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
                   ELSE
@@ -3325,11 +3325,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
            ( ! Empty( hbmk[ _HBMK_cDynLibExt ] ) .AND. hb_FNameExt( cParamL ) == hbmk[ _HBMK_cDynLibExt ] )
 
          cParam := PathSepToSelf( cParam )
-         IF hb_FNameExt( cParamL ) == ".lib"
-            cParam := FNameDirName( cParam )
-            _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable parameter: %1$s. Use '-l%2$s' option instead." ), ParamToString( aParam ), cParam ) )
-         ENDIF
-         IF CheckLibParam( hbmk, cParam )
+         IF CheckLibParam( hbmk, cParam, .F., aParam )
             IF _IS_AUTOLIBSYSPRE( cParam )
                AAdd( hbmk[ _HBMK_aLIBUSERSYSPRE ], cParam )
             ELSE
@@ -7350,12 +7346,64 @@ STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
 
     RETURN
 
-STATIC FUNCTION CheckLibParam( hbmk, cLibName )
+STATIC FUNCTION CheckLibParam( hbmk, cLibName, lHBC, aParam )
 
-   cLibName := Lower( cLibName )
+   LOCAL cExtL := Lower( hb_FNameExt( cLibName ) )
+
+   LOCAL cSuggestion := ""
+   LOCAL cOpt
+
+   /* detect path in libname (non-portable) */
+   IF ! Empty( hb_FNameDir( cLibName ) )
+      cOpt := hb_DirSepDel( hb_FNameDir( cLibName ) )
+      IF ! hb_FileMatch( cOpt, hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+         cSuggestion += iif( lHBC, "'" + "libpaths=", "-L" ) + cOpt + iif( lHBC, "'", "" )
+      ENDIF
+   ENDIF
+
+   /* detect certain variations of non-portable libname */
+   IF cExtL == ".lib" .OR. ;
+      cExtL == ".a" .OR. ;
+      cOpt != NIL /* always include lib name suggestion, if there was a path in the value */
+
+      cOpt := hb_FNameName( cLibName )
+      IF cExtL == ".a" .AND. Lower( Left( cOpt, 3 ) ) == "lib"
+         cOpt := SubStr( cOpt, 4 )
+      ENDIF
+      /* never suggest core libs */
+      IF AScan( hbmk[ _HBMK_aLIB_BASE_WARN ], {| tmp | Lower( tmp ) == Lower( cOpt ) } ) > 0
+         cOpt := ""
+      ENDIF
+      IF ! Empty( cOpt )
+         IF ! Empty( cSuggestion )
+            cSuggestion += iif( lHBC, ", ", " " )
+         ENDIF
+         cSuggestion += iif( lHBC, "'" + "libs=", "-l" ) + cOpt + iif( lHBC, "'", "" )
+      ENDIF
+   ENDIF
+
+   /* offer suggestions */
+   IF ! Empty( cSuggestion )
+#ifdef HB_LEGACY_LEVEL4
+      IF lHBC
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable parameter: %1$s. Use %2$s directives(s) instead." ), ParamToString( aParam ), cSuggestion ) )
+      ELSE
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Non-portable parameter: %1$s. Use '%2$s' option(s) instead." ), ParamToString( aParam ), cSuggestion ) )
+      ENDIF
+#else
+      IF lHBC
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring non-portable parameter: %1$s. Use %2$s directives(s) instead." ), ParamToString( aParam ), cSuggestion ) )
+      ELSE
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring non-portable parameter: %1$s. Use '%2$s' option(s) instead." ), ParamToString( aParam ), cSuggestion ) )
+      ENDIF
+      RETURN .F.
+#endif
+   ENDIF
+
+   cLibName := Lower( hb_FNameName( cLibName ) )
 
    IF AScan( hbmk[ _HBMK_aLIB_BASE_WARN ], {| tmp | Lower( tmp ) == cLibName } ) > 0
-      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library: %1$s" ), cLibName ) )
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library: %1$s (in option %2$s)" ), cLibName, ParamToString( aParam ) ) )
       RETURN .F.
    ENDIF
 
@@ -9879,14 +9927,6 @@ STATIC FUNCTION FNameNameGetNoExt( cFileName )
 
    RETURN cName
 
-STATIC FUNCTION FNameDirName( cFileName )
-
-   LOCAL cDir, cName
-
-   hb_FNameSplit( cFileName, @cDir, @cName )
-
-   RETURN hb_FNameMerge( cDir, cName )
-
 STATIC FUNCTION FNameDirExtSet( cFileName, cDirNew, cExtNew )
 
    LOCAL cDir, cName, cExt
@@ -10169,11 +10209,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             ELSE
                cItem := PathSepToSelf( cItem )
                IF Left( cItem, 1 ) == "-"
-                  IF CheckLibParam( hbmk, SubStr( cItem, 2 ) )
+                  IF CheckLibParam( hbmk, SubStr( cItem, 2 ), .T., _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
                      AAddNewNotEmpty( hbmk[ _HBMK_aLIBFILTEROUT ], SubStr( cItem, 2 ) )
                   ENDIF
                ELSE
-                  IF CheckLibParam( hbmk, cItem )
+                  IF CheckLibParam( hbmk, cItem, .T., _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) )
                      IF _IS_AUTOLIBSYSPRE( cItem )
                         AAddNewNotEmpty( hbmk[ _HBMK_aLIBUSERSYSPRE ], cItem )
                      ELSE
