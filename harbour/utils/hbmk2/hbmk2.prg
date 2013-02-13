@@ -11033,88 +11033,88 @@ STATIC FUNCTION MacroGet( hbmk, cMacro, cFileName )
    ENDIF
 #endif
 
-   SWITCH Upper( cMacro )
-   CASE "HB_ROOT"
+   SWITCH Lower( cMacro )
+   CASE "hb_root"
       cMacro := hb_DirSepAdd( hb_DirBase() ) ; EXIT
-   CASE "HB_DIR"
+   CASE "hb_dir"
       cMacro := PathSepToSelf( hb_FNameDir( cFileName ) ) ; EXIT
-   CASE "HB_DIRNAME"
+   CASE "hb_dirname"
       cMacro := hb_FNameName( hb_DirSepDel( PathSepToSelf( hb_FNameDir( cFileName ) ) ) ) ; EXIT
-   CASE "HB_NAME"
+   CASE "hb_name"
       cMacro := PathSepToSelf( hb_FNameName( cFileName ) ) ; EXIT
-   CASE "HB_SELF"
+   CASE "hb_self"
       cMacro := PathSepToSelf( cFileName ) ; EXIT
-   CASE "HB_CURDIR"
+   CASE "hb_curdir"
       cMacro := hb_cwd() ; EXIT
-   CASE "HB_TEMPDIR"
+   CASE "hb_tempdir"
       cMacro := hb_DirTemp() ; EXIT
-   CASE "HB_TARGETNAME"
+   CASE "hb_targetname"
       cMacro := hb_FNameName( PathSepToSelf( hbmk_TARGETNAME( hbmk ) ) ) ; EXIT
-   CASE "HB_TARGETTYPE"
+   CASE "hb_targettype"
       cMacro := hbmk_TARGETTYPE( hbmk ) ; EXIT
-   CASE "HB_PLAT"
+   CASE "hb_plat"
 #ifdef HB_LEGACY_LEVEL4
-   CASE "HB_PLATFORM" /* Compatibility */
+   CASE "hb_platform" /* Compatibility */
 #endif
       cMacro := hbmk[ _HBMK_cPLAT ] ; EXIT
-   CASE "HB_COMP"
+   CASE "hb_comp"
 #ifdef HB_LEGACY_LEVEL4
-   CASE "HB_COMPILER" /* Compatibility */
+   CASE "hb_compiler" /* Compatibility */
 #endif
       cMacro := hbmk[ _HBMK_cCOMP ] ; EXIT
-   CASE "HB_COMP_VER"
+   CASE "hb_comp_ver"
       cMacro := hb_ntos( hbmk[ _HBMK_nCOMPVer ] ) ; EXIT
-   CASE "HB_BUILD"
+   CASE "hb_build"
       cMacro := hbmk[ _HBMK_cBUILD ] ; EXIT
-   CASE "HB_CPU"
+   CASE "hb_cpu"
       cMacro := hbmk[ _HBMK_cCPU ] ; EXIT
-   CASE "HB_WORK"
+   CASE "hb_work"
       cMacro := _WORKDIR_BASE_ ; EXIT
-   CASE "HB_WORKDYNSUB"
+   CASE "hb_workdynsub"
       cMacro := hbmk[ _HBMK_cWorkDirDynSub ] ; EXIT
-   CASE "HB_DYNPREFIX"
+   CASE "hb_dynprefix"
       cMacro := hbmk[ _HBMK_cDynLibPrefix ] ; EXIT
-   CASE "HB_DYNSUFFIX"
+   CASE "hb_dynsuffix"
       cMacro := hbmk_DYNSUFFIX( hbmk ) ; EXIT
-   CASE "HB_DYNEXT"
+   CASE "hb_dynext"
       cMacro := hbmk[ _HBMK_cDynLibExt ] ; EXIT
-   CASE "HB_VER"
+   CASE "hb_ver"
       cMacro := hb_NumToHex( hb_Version( HB_VERSION_MAJOR ), 2 ) + hb_NumToHex( hb_Version( HB_VERSION_MINOR ), 2 ) + hb_NumToHex( hb_Version( HB_VERSION_RELEASE ), 2 ) ; EXIT
-   CASE "HB_VERSTR"
+   CASE "hb_verstr"
       cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) + "." + hb_ntos( hb_Version( HB_VERSION_MINOR ) ) + "." + hb_ntos( hb_Version( HB_VERSION_RELEASE ) ) + hb_Version( HB_VERSION_STATUS ) ; EXIT
-   CASE "HB_MAJOR"
+   CASE "hb_major"
       cMacro := hb_ntos( hb_Version( HB_VERSION_MAJOR ) ) ; EXIT
-   CASE "HB_MINOR"
+   CASE "hb_minor"
       cMacro := hb_ntos( hb_Version( HB_VERSION_MINOR ) ) ; EXIT
-   CASE "HB_RELEASE"
+   CASE "hb_release"
       cMacro := hb_ntos( hb_Version( HB_VERSION_RELEASE ) ) ; EXIT
-   CASE "HB_STATUS"
+   CASE "hb_status"
       cMacro := hb_Version( HB_VERSION_STATUS ) ; EXIT
-   CASE "HB_REVISION"
+   CASE "hb_revision"
       cMacro := hb_ntos( hb_Version( HB_VERSION_REVISION ) ) ; EXIT
-   CASE "HB_HOST_PLAT"
+   CASE "hb_host_plat"
       cMacro := hb_Version( HB_VERSION_PLATFORM ) ; EXIT
-   CASE "HB_HOST_PLAT_UNIX"
+   CASE "hb_host_plat_unix"
       cMacro := iif( hb_Version( HB_VERSION_UNIX_COMPAT ), "1", "" ) ; EXIT
-   CASE "HB_BIN"
+   CASE "hb_bin"
       cMacro := hbmk[ _HBMK_cHB_INSTALL_BIN ] ; EXIT
-   CASE "HB_LIB"
+   CASE "hb_lib"
       cMacro := hbmk[ _HBMK_cHB_INSTALL_LIB ] ; EXIT
-   CASE "HB_LIB3RD"
+   CASE "hb_lib3rd"
       cMacro := hbmk[ _HBMK_cHB_INSTALL_LI3 ] ; EXIT
-   CASE "HB_DYN"
+   CASE "hb_dyn"
       cMacro := hbmk[ _HBMK_cHB_INSTALL_DYN ] ; EXIT
-   CASE "HB_INC"
+   CASE "hb_inc"
       cMacro := hbmk[ _HBMK_cHB_INSTALL_INC ] ; EXIT
-   CASE "HB_ADDONS"
+   CASE "hb_addons"
       cMacro := hbmk[ _HBMK_cHB_INSTALL_ADD ] ; EXIT
-   CASE "HB_FIRST"
+   CASE "hb_first"
       cMacro := hb_FNameName( hbmk[ _HBMK_cFIRST ] ) ; EXIT
-   CASE "HB_OUTPUTDIR"
+   CASE "hb_outputdir"
       cMacro := iif( HB_ISSTRING( hbmk[ _HBMK_cPROGDIR ] ), hb_FNameDir( hbmk[ _HBMK_cPROGDIR ] ), "" ) ; EXIT
-   CASE "HB_OUTPUTNAME"
+   CASE "hb_outputname"
       cMacro := iif( HB_ISSTRING( hbmk[ _HBMK_cPROGNAME ] ), hb_FNameName( hbmk[ _HBMK_cPROGNAME ] ), "" ) ; EXIT
-   CASE "HB_LEVEL"
+   CASE "hb_level"
       cMacro := hb_ntos( hbmk[ _HBMK_nLevel ] ) ; EXIT
    OTHERWISE
       IF cMacro $ hbmk[ _HBMK_hDEPTMACRO ] /* Check for dependency detection macros */
@@ -15120,7 +15120,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "frameworks="       , I_( "add space separated list of frameworks (Darwin only)" ) }, ;
       { "requests="         , I_( "add space separated list of symbols to force link to the target" ) }, ;
       { "syslibs="          , I_( "add space separated list of libraries as system libraries (before regular libraries)" ) }, ;
-      { "hbcs="             , I_( "embed space separated list of .hbc files. These are processed in place." ) }, ;
+      { "hbcs="             , I_( "embed space separated list of .hbc files. Names without the extension is accepted. These references are processed in place." ) }, ;
       { "autohbcs="         , I_( "space separated list of values as in -autohbc= option" ) }, ;
       { "libpaths="         , I_( "space separated list of additional library paths" ) }, ;
       { "incpaths="         , I_( "add space separated list of additional header paths (for both Harbour and C)" ) }, ;
@@ -15326,10 +15326,11 @@ STATIC PROCEDURE OutNote( hbmk, cText )
    LOCAL nLines
    LOCAL tmp
 
-   IF Empty( cText)
+   IF Empty( cText )
       IF hbmk[ _HBMK_lMarkDown ]
-         OutStd( _OUT_EOL + _OUT_EOL )
+         OutStd( _OUT_EOL )
       ENDIF
+      OutStd( _OUT_EOL )
    ELSE
       IF hbmk[ _HBMK_lMarkDown ]
          OutStd( " - " + ToMarkDown( StrTran( cText, "\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
