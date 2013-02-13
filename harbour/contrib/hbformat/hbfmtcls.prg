@@ -102,6 +102,7 @@ CREATE CLASS HBFormatCode
    VAR nIndCont       INIT   3      // Indent for continuation ( after ';' ) lines - amount of spaces
    VAR lCnvAst        INIT .T.      // If true, convert asterisk '*' to '//'
    VAR lCnvAmp        INIT .T.      // If true, convert '&&' to '//'
+   VAR nSpaceComment  INIT   1      // Number of spaces after '//' and '/*' comments ( -1 - no change )
    VAR lCnvNot        INIT .T.      // If true, convert .NOT. TO !
    VAR nCaseCmd       INIT   1      // Case of commands ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
    VAR nCaseBoo       INIT   1      // Case of boolean operators ( -1 - no change, 1 - upper, 2 - lower, 3 - title )
@@ -283,8 +284,8 @@ METHOD Reformat( aFile ) CLASS HBFormatCode
          ENDIF
          IF nPosComment > 0
             nPos := nPosComment + iif( SubStr( cLineAll, nPosComment, 1 ) == "*", 1, 2 )
-            IF SubStr( cLineAll, nPos, 1 ) != " "
-               cLineAll := Left( cLineAll, nPos - 1 ) + " " + SubStr( cLineAll, nPos )
+            IF ::nSpaceComment >= 0
+               cLineAll := Left( cLineAll, nPos - 1 ) + Space( ::nSpaceComment ) + LTrim( SubStr( cLineAll, nPos ) )
             ENDIF
          ENDIF
          IF ( nPos := FindNotQuoted( "/*", cLineAll ) ) != 0 .AND. ( nPosComment == 0 .OR. nPosComment > nPos )
