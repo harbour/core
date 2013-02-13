@@ -7367,6 +7367,10 @@ STATIC FUNCTION CheckLibParam( hbmk, cLibName, lHBC, aParam )
       cOpt != NIL /* always include lib name suggestion, if there was a path in the value */
 
       cOpt := hb_FNameName( cLibName )
+      /* readd empty extension */
+      IF Right( hb_FNameNameExt( cLibName ), 1 ) == "."
+         cOpt += "."
+      ENDIF
       IF cExtL == ".a" .AND. Lower( Left( cOpt, 3 ) ) == "lib"
          cOpt := SubStr( cOpt, 4 )
       ENDIF
