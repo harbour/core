@@ -1439,6 +1439,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE Left( cParamL, 5 )  == "-cpu="      ; ParseCOMPPLATCPU( hbmk, SubStr( cParam, 6 ), _TARG_CPU )
       CASE Left( cParamL, 7 )  == "-build="    ; hbmk[ _HBMK_cBUILD ] := StrTran( PathSepToSelf( SubStr( cParam, 8 ) ), hb_ps() )
       CASE Left( cParamL, 6 )  == "-build"     ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
+      CASE Left( cParamL, 8 )  == "-credits"   ; hbmk[ _HBMK_lStopAfterHarbour ] := .T.
       CASE Left( cParamL, 6 )  == "-lang="     ; SetUILang( hbmk[ _HBMK_cUILNG ] := SubStr( cParam, 7 ) )
       CASE Left( cParamL, 4 )  == "-shl"       ; hbmk[ _HBMK_lShowLevel ] := .T.
       CASE Left( cParamL, 7 )  == "-width="
@@ -2545,6 +2546,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "--harbourhelp"    ; AAdd( hbmk[ _HBMK_aOPTPRG ], "--help" ) ; lHarbourInfo := .T.
       CASE cParamL == "-harbourhelp"     ; AAdd( hbmk[ _HBMK_aOPTPRG ], "--help" ) ; lHarbourInfo := .T.
       CASE cParamL == "-build"           ; AAdd( hbmk[ _HBMK_aOPTPRG ], "-build" ) ; lHarbourInfo := .T.
+      CASE cParamL == "-credits"         ; AAdd( hbmk[ _HBMK_aOPTPRG ], "-credits" ) ; lHarbourInfo := .T.
 
       CASE cParamL == "-warn"               ; hbmk[ _HBMK_nWARN ] := _WARN_YES /* synonym to -warn=yes */
       CASE cParamL == "-warn-"              ; hbmk[ _HBMK_nWARN ] := _WARN_NO /* synonym to -warn=no */
@@ -7323,28 +7325,28 @@ STATIC FUNCTION ParamToString( aParam )
 /* Do not delete this function when legacy level is reached,
    only convert above guard to a temporary '#if 0' one. */
 STATIC FUNCTION LegacyWarning( hbmk, aParam, cSuggestion )
-    RETURN _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead." ), ParamToString( aParam ), cSuggestion ) )
+   RETURN _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Deprecated compatibility option: %1$s. Use '%2$s' instead." ), ParamToString( aParam ), cSuggestion ) )
 #endif
 
 STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
 
-    STATIC sc_aWarning := { ;
-       "-Wl,--allow-multiple-definition", ; /* gcc */
-       "muldefs", ; /* ld '-z muldefs' */
-       "force:multiple", ; /* msvc, pocc, watcom */
-       "w-dpl" } /* bcc */
+   STATIC sc_aWarning := { ;
+      "-Wl,--allow-multiple-definition", ; /* gcc */
+      "muldefs", ; /* ld '-z muldefs' */
+      "force:multiple", ; /* msvc, pocc, watcom */
+      "w-dpl" } /* bcc */
 
-    IF AScan( sc_aWarning, {| tmp | Lower( tmp ) $ Lower( cOption ) } ) > 0
-       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Dangerous low-level option not recommended: %1$s" ), ParamToString( aParam ) ) )
-    ENDIF
+   IF AScan( sc_aWarning, {| tmp | Lower( tmp ) $ Lower( cOption ) } ) > 0
+      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Dangerous low-level option not recommended: %1$s" ), ParamToString( aParam ) ) )
+   ENDIF
 
-    IF lNew
-       AAddNewNotEmpty( aArray, cOption )
-    ELSE
-       AAddNotEmpty( aArray, cOption )
-    ENDIF
+   IF lNew
+      AAddNewNotEmpty( aArray, cOption )
+   ELSE
+      AAddNotEmpty( aArray, cOption )
+   ENDIF
 
-    RETURN
+   RETURN
 
 STATIC FUNCTION CheckLibParam( hbmk, cLibName, lHBC, aParam )
 
@@ -15014,9 +15016,11 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-lang=<lang>"       , I_( "override default language. <lang> is an ISO language code." ) }, ;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) }, ;
       { "-shl"               , I_( "show sub-project level in output lines" ) }, ;
-      { "-harbourhelp"       , I_( "Harbour compiler help" ) }, ;
       { "-longhelp"          , I_( "long help" ) }, ;
       { "-longhelpmd"        , I_( "long help in MarkDown format" ) }, ;
+      { "-harbourhelp"       , hb_StrFormat( I_( "Harbour compiler help (all Harbour compiler options are accepted as is by %1$s)" ), _SELF_NAME_ ) }, ;
+      { "-credits"           , I_( "display credits (via Harbour compiler)" ) }, ;
+      { "-build"             , I_( "display detailed build information (via Harbour compiler)" ) }, ;
       { "--version"          , I_( "display version header only" ) } }
 
    LOCAL aHdr_EnvVar := { ;
@@ -15226,12 +15230,12 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
    LOCAL aLst_PredSource := { ;
       NIL, ;
-      { _HBMK_SHELL                                            , I_( "when a Harbour source file is run as a shell script" ) }, ;
-      { _HBMK_PLUGIN                                           , hb_StrFormat( I_( "when an .hb script is compiled as %1$s plugin" ), _SELF_NAME_ ) }, ;
-      { _HBMK_HBEXTREQ                                         , I_( "when an .hbx source file is present in a project (available in Harbour sources)" ) }, ;
-      { hb_StrFormat( _HBMK_HAS_TPL_HBC, I_( "<hbcname>" ) )   , I_( "when <hbcname>.hbc package is linked to the target. The value is the version= value from the .hbc file, or '1', if not specified. (available in Harbour sources)" ) }, ;
-      { hb_StrFormat( _HBMK_HAS_TPL, I_( "<depname>" ) )       , I_( "when <depname> dependency was detected (available in C sources)" ) }, ;
-      { "<standard Harbour>"                                   , I_( "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..." ) } }
+      { _HBMK_SHELL                                          , I_( "when a Harbour source file is run as a shell script" ) }, ;
+      { _HBMK_PLUGIN                                         , hb_StrFormat( I_( "when an .hb script is compiled as %1$s plugin" ), _SELF_NAME_ ) }, ;
+      { _HBMK_HBEXTREQ                                       , I_( "when an .hbx source file is present in a project (available in Harbour sources)" ) }, ;
+      { hb_StrFormat( _HBMK_HAS_TPL_HBC, I_( "<hbcname>" ) ) , I_( "when <hbcname>.hbc package is linked to the target. The value is the version= value from the .hbc file, or '1', if not specified. (available in Harbour sources)" ) }, ;
+      { hb_StrFormat( _HBMK_HAS_TPL, I_( "<depname>" ) )     , I_( "when <depname> dependency was detected (available in C sources)" ) }, ;
+      { "<standard Harbour>"                                 , I_( "__PLATFORM__*, __ARCH*BIT__, __*_ENDIAN__, etc..." ) } }
 
    LOCAL aHdr_PredBuild := { ;
       NIL, ;

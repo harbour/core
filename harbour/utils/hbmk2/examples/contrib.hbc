@@ -6,5 +6,5 @@
 hbcs=hbct hbmzip
 
 # Some platform specific ones
-{win}hbcs=hbwin
+{allwin}hbcs=hbwin
 {unix}hbcs=hbunix
