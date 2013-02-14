@@ -431,6 +431,9 @@ static MXML_STATUS mxml_attribute_read( MXML_REFIL * ref, PHB_ITEM pDoc, PHB_ITE
    pDest->pName  = hb_itemPutCL( pDest->pName, mxml_sgs_extract( buf_name ), iLenName );
    pDest->pValue = hb_itemPutCL( pDest->pValue, mxml_sgs_extract( buf_attrib ), iLenAttrib );
 
+   mxml_sgs_destroy( buf_name );
+   mxml_sgs_destroy( buf_attrib );
+
    return MXML_STATUS_OK;
 }
 
@@ -876,6 +879,7 @@ static void mxml_node_read_data( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc,
    hb_itemPutCL( pItem, buf, iPos );
    hb_objSendMsg( pNode, "_CDATA", 1, pItem );
    hb_itemRelease( pItem );
+   MXML_DELETOR( buf );
 }
 
 static MXML_STATUS mxml_node_read_name( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc )
@@ -960,6 +964,7 @@ static MXML_STATUS mxml_node_read_name( MXML_REFIL * ref, PHB_ITEM pNode, PHB_IT
    pItem = hb_itemPutCL( NULL, buf, iPos );
    hb_objSendMsg( pNode, "_CNAME", 1, pItem );
    hb_itemRelease( pItem );
+   MXML_DELETOR( buf );
 
    return MXML_STATUS_OK;
 }
@@ -1043,12 +1048,10 @@ static void mxml_node_read_directive( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM
       }
       else
       {
-         MXML_DELETOR( buf );
          hbxml_set_doc_status( ref, doc, pNode, ref->status, ref->error );
       }
    }
-   else
-      MXML_DELETOR( buf );
+   MXML_DELETOR( buf );
 }
 
 static void mxml_node_read_pi( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc )
@@ -1124,9 +1127,9 @@ static void mxml_node_read_pi( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc )
    }
    else
    {
-      MXML_DELETOR( buf );
       hbxml_set_doc_status( ref, doc, pNode, ref->status, ref->error );
    }
+   MXML_DELETOR( buf );
 }
 
 static void mxml_node_read_tag( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM doc,
@@ -1239,10 +1242,10 @@ static void mxml_node_read_comment( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM d
    }
    else
    {
-      MXML_DELETOR( buf );
       hbxml_set_doc_status( ref, doc, pNode, ref->status, ref->error );
    }
    hb_itemRelease( pItem );
+   MXML_DELETOR( buf );
 }
 
 static void mxml_node_read_cdata( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM pDoc )
@@ -1396,9 +1399,9 @@ static void mxml_node_read_cdata( MXML_REFIL * ref, PHB_ITEM pNode, PHB_ITEM pDo
       }
       else
       {
-         MXML_DELETOR( buf );
          hbxml_set_doc_status( ref, pDoc, pNode, ref->status, ref->error );
       }
+      MXML_DELETOR( buf );
    }
    hb_itemRelease( pItem );
 }
@@ -2203,18 +2206,12 @@ static MXML_STATUS mxml_sgs_append_string( MXML_SGS * sgs, char * s )
 
 static char * mxml_sgs_extract( MXML_SGS * sgs )
 {
-   char * ret;
-
    sgs->buffer[ sgs->length ] = 0;
 
    if( sgs->allocated > sgs->length + 1 )
-      ret = ( char * ) MXML_REALLOCATOR( sgs->buffer, sgs->length + 1 );
-   else
-      ret = sgs->buffer;
+      sgs->buffer = ( char * ) MXML_REALLOCATOR( sgs->buffer, sgs->length + 1 );
 
-   MXML_DELETOR( sgs );
-
-   return ret;
+   return sgs->buffer;
 }
 
 /***********************************************************
@@ -2345,13 +2342,9 @@ HB_FUNC( HBXML_NODE_TO_STRING )
    out.u.vPtr = ( void * ) sgs;
 
    if( mxml_node_write( &out, pNode, iStyle ) == MXML_STATUS_OK )
-   {
-      HB_ISIZ iLen   = sgs->length;
-      char *  buffer = mxml_sgs_extract( sgs );
-      hb_retclen_buffer( buffer, iLen );
-   }
-   else
-      mxml_sgs_destroy( sgs );
+      hb_retclen_buffer( mxml_sgs_extract( sgs ), sgs->length );
+
+   mxml_sgs_destroy( sgs );
 }
 
 /**

@@ -5866,20 +5866,22 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
                /* Create list of requested symbols */
                array := {}
-               IF l_cMAIN != NIL
-                  /* NOTE: Request this function to generate link error, rather
-                           than starting with the wrong (default) function. */
-                  AAdd( array, Upper( iif( Left( l_cMAIN, 1 ) == "@", SubStr( l_cMAIN, 2 ), l_cMAIN ) ) )
-               ENDIF
-               IF hbmk[ _HBMK_cGT ] != NIL
-                  /* Always request default GT first */
-                  AAdd( array, "HB_GT_" + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) )
-               ENDIF
-               FOR EACH tmp IN hbmk[ _HBMK_aGT ]
-                  IF hbmk[ _HBMK_cGT ] == NIL .OR. !( Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) == Upper( SubStr( tmp, 3 ) ) )
-                     AAdd( array, "HB_GT_" + Upper( SubStr( tmp, 3 ) ) )
+               IF ! lHBMAINDLLP
+                  IF l_cMAIN != NIL
+                     /* NOTE: Request this function to generate link error, rather
+                              than starting with the wrong (default) function. */
+                     AAdd( array, Upper( iif( Left( l_cMAIN, 1 ) == "@", SubStr( l_cMAIN, 2 ), l_cMAIN ) ) )
                   ENDIF
-               NEXT
+                  IF hbmk[ _HBMK_cGT ] != NIL
+                     /* Always request default GT first */
+                     AAdd( array, "HB_GT_" + Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) )
+                  ENDIF
+                  FOR EACH tmp IN hbmk[ _HBMK_aGT ]
+                     IF hbmk[ _HBMK_cGT ] == NIL .OR. !( Upper( SubStr( hbmk[ _HBMK_cGT ], 3 ) ) == Upper( SubStr( tmp, 3 ) ) )
+                        AAdd( array, "HB_GT_" + Upper( SubStr( tmp, 3 ) ) )
+                     ENDIF
+                  NEXT
+               ENDIF
                AEval( hbmk[ _HBMK_aREQUEST ], {| tmp | AAdd( array, tmp ) } )
 
                /* Build C stub */
@@ -5890,10 +5892,13 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         '#include "hbapi.h"'                                                      + Chr( 10 ) +;
                         ""                                                                        + Chr( 10 )
 
-               IF ( ! Empty( array ) .OR. l_cCMAIN != NIL ) .AND. ! lHBMAINDLLP
+               IF ! Empty( array ) .OR. ( l_cCMAIN != NIL .AND. ! lHBMAINDLLP )
+
                   AEval( array, {| tmp, i | array[ i ] := FuncNameEncode( tmp ) } )
+
                   AEval( array, {| tmp | cFile += "HB_FUNC_EXTERN( " + tmp + " );"                + Chr( 10 ) } )
-                  IF l_cCMAIN != NIL
+
+                  IF l_cCMAIN != NIL .AND. ! lHBMAINDLLP
                      IF ! Empty( array )
                         cFile += ""                                                               + Chr( 10 )
                      ENDIF
@@ -5905,7 +5910,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   cFile += "void _hb_lnk_ForceLink_hbmk( void )"                                  + Chr( 10 )
                   cFile += "{"                                                                    + Chr( 10 )
                   AEval( array, {| tmp | cFile += "   HB_FUNC_EXEC( " + tmp + " );"               + Chr( 10 ) } )
-                  IF l_cCMAIN != NIL
+                  IF l_cCMAIN != NIL .AND. ! lHBMAINDLLP
                      IF ! Empty( array )
                         cFile += ""                                                               + Chr( 10 )
                      ENDIF
@@ -7336,7 +7341,8 @@ STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
       "-Wl,--allow-multiple-definition", ; /* gcc */
       "muldefs", ; /* ld '-z muldefs' */
       "force:multiple", ; /* msvc, pocc, watcom */
-      "w-dpl" } /* bcc */
+      "w-dup" , ; /* bcc */
+      "w-dpl" } /* bcc (for libs) */
 
    IF AScan( sc_aWarning, {| tmp | Lower( tmp ) $ Lower( cOption ) } ) > 0
       _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Dangerous low-level option not recommended: %1$s" ), ParamToString( aParam ) ) )
