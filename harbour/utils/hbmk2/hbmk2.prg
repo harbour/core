@@ -269,6 +269,7 @@ EXTERNAL hbmk_KEYW
 
 #define _LNG_MARKER             ( _MACRO_LATE_PREFIX + _MACRO_OPEN + "hb_lng" + _MACRO_CLOSE )
 
+#define _HBMK_ENV_INSTALL_PFX   "HB_INSTALL_PREFIX"
 #define _HBMK_ENV_NAME          "HBMK_OPTIONS"
 #define _HBMK_AUTOHBC_NAME      "hbmk.hbc"
 #define _HBMK_AUTOHBM_NAME      "hbmk.hbm"
@@ -301,7 +302,7 @@ EXTERNAL hbmk_KEYW
 #define _VAR_MODE_INSERT        3
 #define _VAR_MODE_DELETE        4
 
-#define _COMPEMBED_BASE_        ( "comp" + hb_ps() )
+#define _COMPEMBED_BASE_        "comp"
 
 #if defined( __PLATFORM__DOS )
    #define _WORKDIR_BASE_          "~hbmk"
@@ -346,168 +347,170 @@ EXTERNAL hbmk_KEYW
 #define _HBMK_aLIBCOREGTDEF     10
 #define _HBMK_cGT               11
 
-#define _HBMK_cHB_INSTALL_BIN   12
-#define _HBMK_cHB_INSTALL_LIB   13
-#define _HBMK_cHB_INSTALL_LI3   14
-#define _HBMK_cHB_INSTALL_DYN   15
-#define _HBMK_cHB_INSTALL_INC   16
-#define _HBMK_cHB_INSTALL_ADD   17
-#define _HBMK_cHB_INSTALL_CON   18
+#define _HBMK_cHB_INSTALL_PFX   12
+#define _HBMK_cHB_INSTALL_BIN   13
+#define _HBMK_cHB_INSTALL_LIB   14
+#define _HBMK_cHB_INSTALL_LI3   15
+#define _HBMK_cHB_INSTALL_DYN   16
+#define _HBMK_cHB_INSTALL_INC   17
+#define _HBMK_cHB_INSTALL_ADD   18
+#define _HBMK_cHB_INSTALL_CON   19
 
-#define _HBMK_lGUI              19
-#define _HBMK_lMT               20
-#define _HBMK_lPIC              21
-#define _HBMK_lDEBUG            22
-#define _HBMK_nHEAD             23
-#define _HBMK_aINCPATH          24
-#define _HBMK_lREBUILD          25
-#define _HBMK_lCLEAN            26
-#define _HBMK_lTRACE            27
-#define _HBMK_lDONTEXEC         28
-#define _HBMK_nHBMODE           29
-#define _HBMK_cUILNG            30
-#define _HBMK_aLIBUSER          31
-#define _HBMK_aLIBUSERFWK       32
-#define _HBMK_aLIBUSERGT        33
-#define _HBMK_aLIBUSERSYS       34
-#define _HBMK_aLIBUSERSYSPRE    35
-#define _HBMK_aLIBFILTEROUT     36
-#define _HBMK_aLIBPATH          37
-#define _HBMK_aINSTPATH         38
-#define _HBMK_aOPTC             39
-#define _HBMK_aOPTCUSER         40
-#define _HBMK_aOPTCX            41
-#define _HBMK_aOPTCPPX          42
-#define _HBMK_aOPTPRG           43
-#define _HBMK_aOPTRES           44
-#define _HBMK_aOPTL             45
-#define _HBMK_aOPTLPOST         46
-#define _HBMK_aOPTA             47
-#define _HBMK_aOPTD             48
-#define _HBMK_aOPTDPOST         49
-#define _HBMK_aOPTI             50
-#define _HBMK_lCPP              51
-#define _HBMK_lSHARED           52
-#define _HBMK_lSTATICFULL       53
-#define _HBMK_lSHAREDDIST       54
-#define _HBMK_lNULRDD           55
-#define _HBMK_lMAP              56
-#define _HBMK_lBEEP             57
-#define _HBMK_lSTRIP            58
-#define _HBMK_lOPTIM            59
-#define _HBMK_nCOMPR            60
-#define _HBMK_nWARN             61
-#define _HBMK_lRUN              62
-#define _HBMK_lINC              63
-#define _HBMK_lREBUILDPO        64
-#define _HBMK_lMINIPO           65
-#define _HBMK_lWINUNI           66
-#define _HBMK_nCONF             67
-#define _HBMK_lIGNOREERROR      68
-#define _HBMK_lIMPLIB           69
-#define _HBMK_lHBCPPMM          70
-#define _HBMK_hDEP              71
+#define _HBMK_lGUI              20
+#define _HBMK_lMT               21
+#define _HBMK_lPIC              22
+#define _HBMK_lDEBUG            23
+#define _HBMK_nHEAD             24
+#define _HBMK_aINCPATH          25
+#define _HBMK_lREBUILD          26
+#define _HBMK_lCLEAN            27
+#define _HBMK_lTRACE            28
+#define _HBMK_lDONTEXEC         29
+#define _HBMK_nHBMODE           30
+#define _HBMK_cUILNG            31
+#define _HBMK_aLIBUSER          32
+#define _HBMK_aLIBUSERFWK       33
+#define _HBMK_aLIBUSERGT        34
+#define _HBMK_aLIBUSERSYS       35
+#define _HBMK_aLIBUSERSYSPRE    36
+#define _HBMK_aLIBFILTEROUT     37
+#define _HBMK_aLIBPATH          38
+#define _HBMK_aINSTPATH         39
+#define _HBMK_aOPTC             40
+#define _HBMK_aOPTCUSER         41
+#define _HBMK_aOPTCX            42
+#define _HBMK_aOPTCPPX          43
+#define _HBMK_aOPTPRG           44
+#define _HBMK_aOPTRES           45
+#define _HBMK_aOPTL             46
+#define _HBMK_aOPTLPOST         47
+#define _HBMK_aOPTA             48
+#define _HBMK_aOPTD             49
+#define _HBMK_aOPTDPOST         50
+#define _HBMK_aOPTI             51
+#define _HBMK_lCPP              52
+#define _HBMK_lSHARED           53
+#define _HBMK_lSTATICFULL       54
+#define _HBMK_lSHAREDDIST       55
+#define _HBMK_lNULRDD           56
+#define _HBMK_lMAP              57
+#define _HBMK_lBEEP             58
+#define _HBMK_lSTRIP            59
+#define _HBMK_lOPTIM            60
+#define _HBMK_nCOMPR            61
+#define _HBMK_nWARN             62
+#define _HBMK_lRUN              63
+#define _HBMK_lINC              64
+#define _HBMK_lREBUILDPO        65
+#define _HBMK_lMINIPO           66
+#define _HBMK_lWINUNI           67
+#define _HBMK_nCONF             68
+#define _HBMK_lIGNOREERROR      69
+#define _HBMK_lIMPLIB           70
+#define _HBMK_lHBCPPMM          71
+#define _HBMK_hDEP              72
 
-#define _HBMK_lCreateLib        72
-#define _HBMK_lCreateDyn        73
-#define _HBMK_lCreateImpLib     74
-#define _HBMK_lCreatePPO        75
-#define _HBMK_lCreateHRB        76
+#define _HBMK_lCreateLib        73
+#define _HBMK_lCreateDyn        74
+#define _HBMK_lCreateImpLib     75
+#define _HBMK_lCreatePPO        76
+#define _HBMK_lCreateHRB        77
 
-#define _HBMK_lDynVM            77
+#define _HBMK_lDynVM            78
 
-#define _HBMK_lBLDFLGP          78
-#define _HBMK_lBLDFLGC          79
-#define _HBMK_lBLDFLGL          80
+#define _HBMK_lBLDFLGP          79
+#define _HBMK_lBLDFLGC          80
+#define _HBMK_lBLDFLGL          81
 
-#define _HBMK_cFIRST            81
-#define _HBMK_aPRG              82
-#define _HBMK_aCH               83
-#define _HBMK_aC                84
-#define _HBMK_aCPP              85
-#define _HBMK_aRESSRC           86
-#define _HBMK_aRESCMP           87
-#define _HBMK_aOBJUSER          88
-#define _HBMK_aICON             89
-#define _HBMK_cMANIFEST         90
-#define _HBMK_aIMPLIBSRC        91
-#define _HBMK_aDEF              92
-#define _HBMK_aINSTFILE         93
-#define _HBMK_hDEPTS            94
-#define _HBMK_aREQUEST          95
+#define _HBMK_cFIRST            82
+#define _HBMK_aPRG              83
+#define _HBMK_aCH               84
+#define _HBMK_aC                85
+#define _HBMK_aCPP              86
+#define _HBMK_aRESSRC           87
+#define _HBMK_aRESCMP           88
+#define _HBMK_aOBJUSER          89
+#define _HBMK_aICON             90
+#define _HBMK_cMANIFEST         91
+#define _HBMK_aIMPLIBSRC        92
+#define _HBMK_aDEF              93
+#define _HBMK_aINSTFILE         94
+#define _HBMK_hDEPTS            95
+#define _HBMK_aREQUEST          96
 
-#define _HBMK_aPO               96
-#define _HBMK_cHBL              97
-#define _HBMK_cHBLDir           98
-#define _HBMK_aLNG              99
-#define _HBMK_cPO               100
+#define _HBMK_aPO               97
+#define _HBMK_cHBL              98
+#define _HBMK_cHBLDir           99
+#define _HBMK_aLNG              100
+#define _HBMK_cPO               101
 
-#define _HBMK_hPLUGINHRB        101
-#define _HBMK_hPLUGINVars       102
-#define _HBMK_aPLUGINPars       103
-#define _HBMK_hPLUGINExt        104
+#define _HBMK_hPLUGINHRB        102
+#define _HBMK_hPLUGINVars       103
+#define _HBMK_aPLUGINPars       104
+#define _HBMK_hPLUGINExt        105
 
-#define _HBMK_lDEBUGTIME        105
-#define _HBMK_lDEBUGINC         106
-#define _HBMK_lDEBUGSTUB        107
-#define _HBMK_lDEBUGI18N        108
-#define _HBMK_lDEBUGDEPD        109
-#define _HBMK_lDEBUGPARS        110
+#define _HBMK_lDEBUGTIME        106
+#define _HBMK_lDEBUGINC         107
+#define _HBMK_lDEBUGSTUB        108
+#define _HBMK_lDEBUGI18N        109
+#define _HBMK_lDEBUGDEPD        110
+#define _HBMK_lDEBUGPARS        111
 
-#define _HBMK_cCCPATH           111
-#define _HBMK_cCCPREFIX         112
-#define _HBMK_cCCSUFFIX         113
-#define _HBMK_cCCEXT            114
+#define _HBMK_cCCPATH           112
+#define _HBMK_cCCPREFIX         113
+#define _HBMK_cCCSUFFIX         114
+#define _HBMK_cCCEXT            115
 
-#define _HBMK_cWorkDir          115
-#define _HBMK_cWorkDirDynSub    116
-#define _HBMK_nCmd_Esc          117
-#define _HBMK_nScr_Esc          118
-#define _HBMK_nCmd_FNF          119
-#define _HBMK_nScr_FNF          120
-#define _HBMK_nErrorLevel       121
+#define _HBMK_cWorkDir          116
+#define _HBMK_cWorkDirDynSub    117
+#define _HBMK_nCmd_Esc          118
+#define _HBMK_nScr_Esc          119
+#define _HBMK_nCmd_FNF          120
+#define _HBMK_nScr_FNF          121
+#define _HBMK_nErrorLevel       122
 
-#define _HBMK_cPROGDIR          122
-#define _HBMK_cPROGNAME         123
+#define _HBMK_cPROGDIR          123
+#define _HBMK_cPROGNAME         124
 
-#define _HBMK_hAUTOHBC          124 /* trigger header => .hbc associations */
-#define _HBMK_hAUTOHBCFOUND     125 /* trigger headers found */
+#define _HBMK_hAUTOHBC          125 /* trigger header => .hbc associations */
+#define _HBMK_hAUTOHBCFOUND     126 /* trigger headers found */
 
-#define _HBMK_aDEPTHBC          126 /* .hbc references found */
-#define _HBMK_hDEPTSDIR         127 /* Header dirs found for dependencies */
+#define _HBMK_aDEPTHBC          127 /* .hbc references found */
+#define _HBMK_hDEPTSDIR         128 /* Header dirs found for dependencies */
 
-#define _HBMK_lStopAfterInit    128
-#define _HBMK_lStopAfterHarbour 129
+#define _HBMK_lStopAfterInit    129
+#define _HBMK_lStopAfterHarbour 130
 
-#define _HBMK_nCOMPVer          130
-#define _HBMK_lDEPIMPLIB        131 /* Generate import libs configured in dependecy specification */
-#define _HBMK_lInstForce        132 /* Force to install target even if was up to date */
-#define _HBMK_lAutoHBM          133 /* Toggles processing of hbmk.hbm file in current directory */
-#define _HBMK_lContainer        134 /* Target type: container */
-#define _HBMK_lShowLevel        135 /* Show project nesting level in all output lines */
-#define _HBMK_hFiles            136 /* Cache for the header parser (common for C and Harbour) */
-#define _HBMK_cDynLibPrefix     137 /* Dynamic lib filename prefix */
-#define _HBMK_cDynLibExt        138 /* Dynamic lib filename extension */
-#define _HBMK_aLINK             139 /* Links to be created and pointing to the target */
-#define _HBMK_hDEPTMACRO        140 /* Links to be created and pointing to the target */
-#define _HBMK_cC                141 /* C dialect */
-#define _HBMK_cCPP              142 /* C++ dialect */
-#define _HBMK_aLIB_BASE_WARN    143
+#define _HBMK_nCOMPVer          131
+#define _HBMK_lDEPIMPLIB        132 /* Generate import libs configured in dependecy specification */
+#define _HBMK_lInstForce        133 /* Force to install target even if was up to date */
+#define _HBMK_lAutoHBM          134 /* Toggles processing of hbmk.hbm file in current directory */
+#define _HBMK_lContainer        135 /* Target type: container */
+#define _HBMK_lShowLevel        136 /* Show project nesting level in all output lines */
+#define _HBMK_hFiles            137 /* Cache for the header parser (common for C and Harbour) */
+#define _HBMK_cDynLibPrefix     138 /* Dynamic lib filename prefix */
+#define _HBMK_cDynLibExt        139 /* Dynamic lib filename extension */
+#define _HBMK_aLINK             140 /* Links to be created and pointing to the target */
+#define _HBMK_hDEPTMACRO        141 /* Links to be created and pointing to the target */
+#define _HBMK_cC                142 /* C dialect */
+#define _HBMK_cCPP              143 /* C++ dialect */
+#define _HBMK_aLIB_BASE_WARN    144
 
-#define _HBMK_aArgs             144
-#define _HBMK_nArgTarget        145
-#define _HBMK_lPause            146
-#define _HBMK_nLevel            147
+#define _HBMK_aArgs             145
+#define _HBMK_nArgTarget        146
+#define _HBMK_lPause            147
+#define _HBMK_nLevel            148
 
-#define _HBMK_cHBX              148
+#define _HBMK_cHBX              149
 
-#define _HBMK_aGT               149
-#define _HBMK_cCPPRG            150
+#define _HBMK_aGT               150
+#define _HBMK_cCPPRG            151
 
-#define _HBMK_lDumpInfo         151
-#define _HBMK_lMarkDown         152
+#define _HBMK_lSysLoc           152
+#define _HBMK_lDumpInfo         153
+#define _HBMK_lMarkDown         154
 
-#define _HBMK_MAX_              152
+#define _HBMK_MAX_              154
 
 #define _HBMK_DEP_CTRL_MARKER   ".control." /* must be an invalid path */
 
@@ -988,61 +991,61 @@ STATIC PROCEDURE hbmk_init_stage2( hbmk )
 
    RETURN
 
-STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFIX, lIgnoreEnvVar )
+STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, lIgnoreEnvVar )
 
    LOCAL tmp
 
    hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
 
    IF lIgnoreEnvVar
-      l_cHB_INSTALL_PREFIX := ""
+      hbmk[ _HBMK_cHB_INSTALL_PFX ] := ""
       hbmk[ _HBMK_cHB_INSTALL_BIN ] := ""
       hbmk[ _HBMK_cHB_INSTALL_LIB ] := ""
       hbmk[ _HBMK_cHB_INSTALL_INC ] := ""
    ELSE
-      l_cHB_INSTALL_PREFIX := MacroProc( hbmk, PathSepToSelf( GetEnv( "HB_INSTALL_PREFIX" ) ), NIL, _MACRO_NO_PREFIX )
+      hbmk[ _HBMK_cHB_INSTALL_PFX ] := MacroProc( hbmk, PathSepToSelf( GetEnv( _HBMK_ENV_INSTALL_PFX ) ), NIL, _MACRO_NO_PREFIX )
       hbmk[ _HBMK_cHB_INSTALL_BIN ] := PathSepToSelf( GetEnv( "HB_INSTALL_BIN" ) )
       hbmk[ _HBMK_cHB_INSTALL_LIB ] := PathSepToSelf( GetEnv( "HB_INSTALL_LIB" ) )
       hbmk[ _HBMK_cHB_INSTALL_INC ] := PathSepToSelf( GetEnv( "HB_INSTALL_INC" ) )
    ENDIF
-   IF Empty( l_cHB_INSTALL_PREFIX )
-      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( hb_DirBase() ) + ".."
+   IF Empty( hbmk[ _HBMK_cHB_INSTALL_PFX ] )
+      hbmk[ _HBMK_cHB_INSTALL_PFX ] := hb_DirSepAdd( hb_DirBase() ) + ".."
    ENDIF
 
-   IF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
+   IF hb_FileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "include" +;
                                    hb_ps() + "hbvm.h" )
       /* do nothing */
    /* Detect special non-installed dir layout (after simple 'make') */
-   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
+   ELSEIF hb_FileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
                                        hb_ps() + "hbvm.h" )
-      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + ".." + hb_ps()
+      hbmk[ _HBMK_cHB_INSTALL_PFX ] := hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + ".." + hb_ps() + ".." + hb_ps()
    /* Detect special multi-host dir layout */
-   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps() + "include" +;
+   ELSEIF hb_FileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + ".." + hb_ps() + "include" +;
                                        hb_ps() + "hbvm.h" )
-      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + ".." + hb_ps()
+      hbmk[ _HBMK_cHB_INSTALL_PFX ] := hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + ".." + hb_ps()
    /* Detect non-installed dir layout with build name containing sub-dirs */
    ELSEIF PathSepCount( hbmk[ _HBMK_cBUILD ] ) > 0 .AND. ;
-          hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
+          hb_FileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps() + "include" +;
                                        hb_ps() + "hbvm.h" )
-      l_cHB_INSTALL_PREFIX := hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps()
+      hbmk[ _HBMK_cHB_INSTALL_PFX ] := hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + Replicate( ".." + hb_ps(), PathSepCount( hbmk[ _HBMK_cBUILD ] ) ) + ".." + hb_ps() + ".." + hb_ps()
    /* Detect special *nix dir layout (/bin, /lib/harbour, /lib64/harbour, /include/harbour) */
-   ELSEIF hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" +;
-                                   hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
-                                   hb_ps() + "hbvm.h" )
+   ELSEIF hb_FileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "include" +;
+                                       hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) +;
+                                       hb_ps() + "hbvm.h" )
       IF Empty( hbmk[ _HBMK_cHB_INSTALL_BIN ] )
-         hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
+         hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "bin" )
       ENDIF
       IF Empty( hbmk[ _HBMK_cHB_INSTALL_LIB ] )
-         IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib64" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) ) )
+         IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "lib64" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) ) )
             hbmk[ _HBMK_cHB_INSTALL_LIB ] := tmp
          ELSE
-            hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
+            hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "lib" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
          ENDIF
       ENDIF
       IF Empty( hbmk[ _HBMK_cHB_INSTALL_INC ] )
-         hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
+         hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "include" + hb_ps() + iif( _HBMODE_IS_XHB( hbmk[ _HBMK_nHBMODE ] ), "xharbour", "harbour" ) )
       ENDIF
-   ELSEIF ! hb_FileExists( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + hb_ps() + "include" +;
+   ELSEIF ! hb_FileExists( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + hb_ps() + "include" +;
                                          hb_ps() + "hbvm.h" )
       RETURN .F.
    ENDIF
@@ -1050,36 +1053,36 @@ STATIC FUNCTION hbmk_harbour_dirlayout_detect( hbmk, /* @ */ l_cHB_INSTALL_PREFI
    RETURN .T.
 
 /* This stage needs COMP and PLAT to be filled */
-STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
+STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk )
 
    LOCAL tmp
    LOCAL lDOSWinTokens
 
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_BIN ] )
       /* Autodetect multi-compiler/platform bin structure (also .dlls are in bin dir on non-*nix platforms) */
-      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "bin" +;
+      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "bin" +;
                                                 hb_ps() + hbmk[ _HBMK_cPLAT ] +;
                                                 hb_ps() + hbmk[ _HBMK_cCOMP ] +;
                                                 PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
          hbmk[ _HBMK_cHB_INSTALL_BIN ] := tmp
       ELSE
-         hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "bin" )
+         hbmk[ _HBMK_cHB_INSTALL_BIN ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "bin" )
       ENDIF
    ENDIF
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_LIB ] )
       /* Autodetect multi-compiler/platform lib structure */
-      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
+      IF hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" +;
                                                 hb_ps() + hbmk[ _HBMK_cPLAT ] +;
                                                 hb_ps() + hbmk[ _HBMK_cCOMP ] +;
                                                 PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
          hbmk[ _HBMK_cHB_INSTALL_LIB ] := tmp
       ELSE
-         hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "lib" )
+         hbmk[ _HBMK_cHB_INSTALL_LIB ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "lib" )
       ENDIF
    ENDIF
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_LI3 ] )
       IF hbmk[ _HBMK_cPLAT ] == "win" .AND. ;
-         hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
+         hb_DirExists( tmp := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" +;
                                                 hb_ps() + "3rd" +;
                                                 hb_ps() + hbmk[ _HBMK_cPLAT ] +;
                                                 hb_ps() + hbmk[ _HBMK_cCOMP ] )
@@ -1087,7 +1090,7 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
       ENDIF
    ENDIF
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_INC ] )
-      hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + "include" )
+      hbmk[ _HBMK_cHB_INSTALL_INC ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "include" )
    ENDIF
 
    IF hbmk[ _HBMK_cHB_INSTALL_DYN ] == NIL
@@ -1138,8 +1141,8 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
       hbmk[ _HBMK_cHB_INSTALL_ADD ] := ""
    ENDIF
    /* Add default search paths for .hbc files */
-   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
-   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_CONTRIB + hb_ps() + "%{hb_name}" )
+   AAdd( hbmk[ _HBMK_aLIBPATH ], hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_ADDONS + hb_ps() + "%{hb_name}" )
 #if defined( __PLATFORM__UNIX )
    IF hb_DirExists( tmp := "/opt/harbour" )
       IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
@@ -1166,13 +1169,13 @@ STATIC PROCEDURE hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
       AAdd( hbmk[ _HBMK_aLIBPATH ], tmp + hb_ps() + _HBMK_SPECDIR_ADDONS + "/%{hb_name}" )
    ENDIF
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
-      hbmk[ _HBMK_cHB_INSTALL_CON ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_CONTRIB
-      hbmk[ _HBMK_cHB_INSTALL_ADD ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_ADDONS
+      hbmk[ _HBMK_cHB_INSTALL_CON ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_CONTRIB
+      hbmk[ _HBMK_cHB_INSTALL_ADD ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_ADDONS
    ENDIF
 #endif
    IF Empty( hbmk[ _HBMK_cHB_INSTALL_ADD ] )
-      hbmk[ _HBMK_cHB_INSTALL_CON ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_CONTRIB
-      hbmk[ _HBMK_cHB_INSTALL_ADD ] := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + _HBMK_SPECDIR_ADDONS
+      hbmk[ _HBMK_cHB_INSTALL_CON ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_CONTRIB
+      hbmk[ _HBMK_cHB_INSTALL_ADD ] := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + _HBMK_SPECDIR_ADDONS
    ENDIF
 
    RETURN
@@ -1200,8 +1203,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL l_cCSTUB
    LOCAL l_cCPPSTUB
    LOCAL l_cRESSTUB
-
-   LOCAL l_cHB_INSTALL_PREFIX
 
    LOCAL l_aPRG_TO_DO
    LOCAL l_aC_TO_DO
@@ -1314,7 +1315,6 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cScriptFile
    LOCAL fhnd
    LOCAL cFile
-   LOCAL lSysLoc
    LOCAL cSuffix
    LOCAL aOBJLIST
    LOCAL cHarbourDyn
@@ -1859,34 +1859,36 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
-      IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX, .F. )
-         hbmk_OutErr( hbmk, I_( "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory." ) )
+      IF ! hbmk_harbour_dirlayout_detect( hbmk, .F. )
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory." ), _HBMK_ENV_INSTALL_PFX ) )
          RETURN _ERRLEV_FAILHBDETECT
       ENDIF
 
       #if defined( __PLATFORM__UNIX )
          /* Detect system locations to enable shared library option by default */
          IF hbmk[ _HBMK_cPLAT ] == "beos"
-            lSysLoc := LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/common"      ) .OR. ;
-                       LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/system"      ) .OR. ;
-                       LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/home/config" ) .OR. ;
-                       AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
+            hbmk[ _HBMK_lSysLoc ] := ;
+               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/common"      ) .OR. ;
+               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/system"      ) .OR. ;
+               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/boot/home/config" ) .OR. ;
+               AScan( ListToArray( GetEnv( "LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
          ELSE
-            lSysLoc := LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/local/bin" ) .OR. ;
-                       LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/bin"       ) .OR. ;
-                       AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
+            hbmk[ _HBMK_lSysLoc ] := ;
+               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/local/bin" ) .OR. ;
+               LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_BIN ], "/usr/bin"       ) .OR. ;
+               AScan( ListToArray( GetEnv( "LD_LIBRARY_PATH" ), ":" ), {| tmp | LEFTEQUAL( hbmk[ _HBMK_cHB_INSTALL_LIB ], tmp ) } ) > 0
          ENDIF
       #else
-         lSysLoc := .F.
+         hbmk[ _HBMK_lSysLoc ] := .F.
       #endif
    ELSE
-      lSysLoc := .F.
+      hbmk[ _HBMK_lSysLoc ] := .F.
 
       hbmk[ _HBMK_cHB_INSTALL_LI3 ] := ""
       hbmk[ _HBMK_cHB_INSTALL_BIN ] := ""
       hbmk[ _HBMK_cHB_INSTALL_LIB ] := ""
       hbmk[ _HBMK_cHB_INSTALL_INC ] := ""
-      l_cHB_INSTALL_PREFIX := ""
+      hbmk[ _HBMK_cHB_INSTALL_PFX ] := ""
    ENDIF
 
    aCOMPDET_EMBED := {}
@@ -1897,39 +1899,39 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw"    + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw64" , "i686-w64-mingw32-"   , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingw64"  + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw64" , "x86_64-w64-mingw32-" , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-mingw32ce-"      , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-wince-mingw32ce-", NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "mingwarm" + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingw"   , "i386-mingw32ce-"     , NIL, NIL } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc.exe"                    ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binnt" ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binnt" ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binnt" ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binnt" ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_ps() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "win"  , "pocc"    , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_ps() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "win"  , "pocc64"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "pocc"     + hb_ps() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "wce"  , "poccarm" , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "mingw"    + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "mingw64"  + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw64" , "i686-w64-mingw32-"   , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "mingw64"  + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "win"  , "mingw64" , "x86_64-w64-mingw32-" , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "mingwarm" + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-mingw32ce-"      , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "mingwarm" + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingwarm", "arm-wince-mingw32ce-", NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "mingwarm" + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc" + hbmk[ _HBMK_cCCEXT ] ), tmp1, NIL ) }, "wce"  , "mingw"   , "i386-mingw32ce-"     , NIL, NIL } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "djgpp"    + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc.exe"                    ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binnt" ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binnt" ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binnt" ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binnt" ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "pocc"     + hb_ps() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "win"  , "pocc"    , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "pocc"     + hb_ps() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "win"  , "pocc64"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "pocc"     + hb_ps() + "Bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "pocc.exe"                   ), tmp1, NIL ) }, "wce"  , "poccarm" , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
 
       #elif defined( __PLATFORM__DOS )
 
          tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "djgpp"    + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc.exe"                    ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binw"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binw"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binw"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binw"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "djgpp"    + hb_ps() + "bin"   ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "gcc.exe"                    ), tmp1, NIL ) }, "dos"  , "djgpp"   , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binw"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binw"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binw"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binw"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
 
       #elif defined( __PLATFORM__OS2 )
 
          tmp3 := NIL; HB_SYMBOL_UNUSED( tmp3 )
 
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binp"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binp"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binp"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
-         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) + _COMPEMBED_BASE_ + "watcom"   + hb_ps() + "binp"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binp"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "os2"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binp"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "win"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binp"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "dos"  , "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
+         AAdd( aCOMPDET_EMBED, { {| cPrefix | tmp1 := hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ + hb_ps() + "watcom"   + hb_ps() + "binp"  ), iif( hb_FileExists( tmp1 + hb_ps() + cPrefix + "wcc386.exe"                 ), tmp1, NIL ) }, "linux", "watcom"  , ""                    , NIL, {| cARCH, cCOMP, cPathBin | hbmk_COMP_Setup( cARCH, cCOMP, cPathBin + hb_ps() + ".." ) } } )
 
       #elif defined( __PLATFORM__UNIX )
 
@@ -1987,12 +1989,12 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          ELSE
             IF Empty( hbmk[ _HBMK_cCOMP ] ) .AND. ! Empty( aCOMPDET )
                lDoSupportDetection := Empty( hbmk[ _HBMK_cHB_INSTALL_LIB ] ) .AND. ;
-                                      hb_DirExists( hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" + hb_ps() + hbmk[ _HBMK_cPLAT ] )
+                                      hb_DirExists( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" + hb_ps() + hbmk[ _HBMK_cPLAT ] )
                /* Check compilers */
                FOR tmp := 1 TO Len( aCOMPDET )
                   IF ! Empty( cPath_CompC := Eval( aCOMPDET[ tmp ][ _COMPDET_bBlock ] ) )
                      IF ! lDoSupportDetection .OR. ;
-                        hb_DirExists( hb_PathNormalize( hb_DirSepAdd( l_cHB_INSTALL_PREFIX ) ) + "lib" +;
+                        hb_DirExists( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) ) + "lib" +;
                                                         hb_ps() + hbmk[ _HBMK_cPLAT ] +;
                                                         hb_ps() + aCOMPDET[ tmp ][ _COMPDET_cCOMP ] +;
                                                         PathSepToSelf( hbmk[ _HBMK_cBUILD ] ) )
@@ -2217,7 +2219,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Finish detecting bin/lib/include dirs */
 
-   hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
+   hbmk_harbour_dirlayout_init( hbmk )
 
    /* Display detection results */
 
@@ -2235,7 +2237,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
    /* Build with shared libs by default, if we're installed to default system locations. */
 
-   IF lSysLoc .AND. HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|linux|cygwin|aix" )
+   IF hbmk[ _HBMK_lSysLoc ] .AND. HBMK_ISPLAT( "darwin|bsd|hpux|sunos|beos|qnx|android|vxworks|linux|cygwin|aix" )
       hbmk[ _HBMK_lSHARED ] := .T.
       hbmk[ _HBMK_lSTATICFULL ] := .F.
    ELSE
@@ -2913,7 +2915,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             FOR EACH tmp IN hb_ATokens( cParam, ";" ) /* intentionally not using hb_osPathListSeparator() to keep value portable */
                IF ! Empty( tmp )
                   tmp := hb_DirSepDel( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) )
-                  IF hb_FileMatch( tmp, hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+                  IF ! CheckLibPathParam( hbmk, tmp )
                      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library directory: %1$s (in option %2$s)" ), tmp, ParamToString( aParam ) ) )
                   ELSE
                      IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ tmp .OR. hb_DirExists( tmp )
@@ -2985,7 +2987,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             FOR EACH tmp IN hb_ATokens( cParam, ";" ) /* intentionally not using hb_osPathListSeparator() to keep value portable */
                IF ! Empty( tmp )
                   tmp := hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( tmp ), aParam[ _PAR_cFileName ] ) ) )
-                  IF hb_FileMatch( tmp, hbmk[ _HBMK_cHB_INSTALL_INC ] )
+                  IF ! CheckIncParam( hbmk, tmp )
                      _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core header directory: %1$s (in option %2$s)" ), tmp, ParamToString( aParam ) ) )
                   ELSE
                      AAddNew( hbmk[ _HBMK_aINCPATH ], tmp )
@@ -3636,7 +3638,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          NEXT
       ENDIF
 
-      hb_default( @hbmk[ _HBMK_lSHAREDDIST ], lSysLoc )
+      hb_default( @hbmk[ _HBMK_lSHAREDDIST ], hbmk[ _HBMK_lSysLoc ] )
 
       IF hbmk[ _HBMK_lSHAREDDIST ] .OR. ! HBMK_ISCOMP( "gcc|clang|open64" )
          l_cDynLibDir := ""
@@ -7348,6 +7350,60 @@ STATIC PROCEDURE AAddWithWarning( hbmk, aArray, cOption, aParam, lNew )
 
    RETURN
 
+STATIC FUNCTION CheckIncParam( hbmk, cPath )
+
+#if ! defined( __PLATFORM__UNIX )
+   LOCAL cComp
+#endif
+
+   cPath := hb_DirSepDel( hb_PathNormalize( cPath ) )
+
+   /* check against Harbour core header directory */
+   IF hb_FileMatch( cPath, hbmk[ _HBMK_cHB_INSTALL_INC ] )
+      RETURN .F.
+   ENDIF
+
+#if ! defined( __PLATFORM__UNIX )
+   /* check against any directory under 'comp' */
+   cComp := hb_DirSepDel( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ ) )
+   IF hb_FileMatch( Left( cPath, Len( cComp ) ), cComp )
+      RETURN .F.
+   ENDIF
+#endif
+
+   RETURN .T.
+
+STATIC FUNCTION CheckLibPathParam( hbmk, cPath )
+
+#if ! defined( __PLATFORM__UNIX )
+   LOCAL cComp
+#endif
+
+   cPath := hb_DirSepDel( hb_PathNormalize( cPath ) )
+
+   /* check against Harbour core lib directory */
+   IF hb_FileMatch( cPath, hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+      RETURN .F.
+   ENDIF
+
+   /* check against Harbour core lib directory in its legacy
+      (non multi-compiler/platform) location. It's even more
+      dangerous than above. */
+   IF ! hbmk[ _HBMK_lSysLoc ] .AND. ;
+      hb_FileMatch( cPath, hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + "lib" ) )
+      RETURN .F.
+   ENDIF
+
+#if ! defined( __PLATFORM__UNIX )
+   /* check against any directory under 'comp' */
+   cComp := hb_DirSepDel( hb_PathNormalize( hb_DirSepAdd( hbmk[ _HBMK_cHB_INSTALL_PFX ] ) + _COMPEMBED_BASE_ ) )
+   IF hb_FileMatch( Left( cPath, Len( cComp ) ), cComp )
+      RETURN .F.
+   ENDIF
+#endif
+
+   RETURN .T.
+
 STATIC FUNCTION CheckLibParam( hbmk, cLibName, lHBC, aParam )
 
    LOCAL cExtL := Lower( hb_FNameExt( cLibName ) )
@@ -7358,7 +7414,7 @@ STATIC FUNCTION CheckLibParam( hbmk, cLibName, lHBC, aParam )
    /* detect path in libname (non-portable) */
    IF ! Empty( hb_FNameDir( cLibName ) )
       cOpt := hb_DirSepDel( hb_FNameDir( cLibName ) )
-      IF ! hb_FileMatch( cOpt, hbmk[ _HBMK_cHB_INSTALL_LIB ] )
+      IF CheckLibPathParam( hbmk, cOpt )
          cSuggestion += iif( lHBC, "'" + "libpaths=", "-L" ) + cOpt + iif( lHBC, "'", "" )
       ENDIF
    ENDIF
@@ -10308,8 +10364,12 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
                cItem := hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( cItem ), hb_FNameDir( cFileName ) ) ) )
-               IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ cItem .OR. hb_DirExists( cItem )
-                  AAddNew( hbmk[ _HBMK_aLIBPATH ], cItem )
+               IF ! CheckLibPathParam( hbmk, cItem )
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core library directory: %1$s (in directive %2$s)" ), cItem, ParamToString( _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) ) ) )
+               ELSE
+                  IF ( _MACRO_LATE_PREFIX + _MACRO_OPEN ) $ cItem .OR. hb_DirExists( cItem )
+                     AAddNew( hbmk[ _HBMK_aLIBPATH ], cItem )
+                  ENDIF
                ENDIF
             ENDIF
          NEXT
@@ -10318,7 +10378,11 @@ STATIC FUNCTION HBC_ProcessOne( hbmk, cFileName, nNestingLevel )
          FOR EACH cItem IN hb_ATokens( cLine,, .T. )
             cItem := MacroProc( hbmk, StrStripQuote( cItem ), cFileName )
             IF ! Empty( cItem )
-               AAddNew( hbmk[ _HBMK_aINCPATH ], hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( cItem ), hb_FNameDir( cFileName ) ) ) ) )
+               IF ! CheckIncParam( hbmk, cItem )
+                  _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignoring explicitly specified core header directory: %1$s (in directive %2$s)" ), cItem, ParamToString( _PAR_NEW( cLineOri, cFileName, cLine:__enumIndex() ) ) ) )
+               ELSE
+                  AAddNew( hbmk[ _HBMK_aINCPATH ], hb_DirSepDel( hb_PathNormalize( PathMakeAbsolute( PathSepToSelf( cItem ), hb_FNameDir( cFileName ) ) ) ) )
+               ENDIF
             ENDIF
          NEXT
 
@@ -13131,7 +13195,6 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    LOCAL cHBC
    LOCAL cExt
    LOCAL tmp
-   LOCAL l_cHB_INSTALL_PREFIX
    LOCAL aOPTPRG
    LOCAL hHRB
    LOCAL cVersion
@@ -13149,7 +13212,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
 
    hbmk := s_hbmk := hbmk_new()
    hbmk_init_stage2( hbmk )
-   IF ! hbmk_harbour_dirlayout_detect( hbmk, @l_cHB_INSTALL_PREFIX, .T. )
+   IF ! hbmk_harbour_dirlayout_detect( hbmk, .T. )
       IF __hbshell_CanLoadDyn()
          OutErr( StrTran( I_( "hbshell: Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ), "\n", hb_eol() ) + _OUT_EOL )
       ENDIF
@@ -13157,7 +13220,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
    hbmk[ _HBMK_cPLAT ] := hb_Version( HB_VERSION_BUILD_PLAT )
    hbmk[ _HBMK_cCPU ] := hb_Version( HB_VERSION_CPU )
-   hbmk_harbour_dirlayout_init( hbmk, l_cHB_INSTALL_PREFIX )
+   hbmk_harbour_dirlayout_init( hbmk )
 
    __hbshell_ext_static_init()
 
@@ -15047,7 +15110,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "HB_CCPATH"          , I_( "override C compiler executable directory (gcc compiler families only)" ) }, ;
       { "HB_CCPREFIX"        , I_( "override C compiler executable prefix (gcc compiler families only)" ) }, ;
       { "HB_CCSUFFIX"        , I_( "override C compiler executable suffix (gcc compiler families only)" ) }, ;
-      { "HB_INSTALL_PREFIX"  , I_( "override Harbour base installation directory" ) }, ;
+      { _HBMK_ENV_INSTALL_PFX, I_( "override Harbour base installation directory" ) }, ;
       { "HB_INSTALL_ADDONS"  , I_( "override Harbour base addons directory" ) } }
 
    LOCAL aHdr_File := { ;

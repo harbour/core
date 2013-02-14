@@ -48,8 +48,8 @@ msgstr "fuerza modo C++/C"
 
 #: hbmk2.prg:1104 hbmk2.prg:1450 hbmk2.prg:1561
 #, c-format
-msgid "Error: HB_INSTALL_PREFIX not set, failed to autodetect.\\nRun this tool from its original location inside the Harbour installation or set HB_INSTALL_PREFIX environment variable to Harbour's root directory."
-msgstr "Error: HB_INSTALL_PREFIX no definido, fallo autodetección.\\nPor favor, ejecute esta herramienta desde su ubicación original dentro de la carpeta de instalación de Harbour o configure la variable de entorno HB_INSTALL_PREFIX hacia el directorio raíz de Harbour."
+msgid "Error: %1$s not set, failed to autodetect.\\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory."
+msgstr "Error: %1$s no definido, fallo autodetección.\\nPor favor, ejecute esta herramienta desde su ubicación original dentro de la carpeta de instalación de Harbour o configure la variable de entorno %1$s hacia el directorio raíz de Harbour."
 
 #: hbmk2.prg:953 hbmk2.prg:1268 hbmk2.prg:1341
 #, c-format
