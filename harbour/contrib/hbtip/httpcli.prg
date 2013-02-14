@@ -73,6 +73,7 @@ CREATE CLASS TIPClientHTTP FROM TIPClient
    METHOD New( oUrl, xTrace, oCredentials )
    METHOD Get( cQuery )
    METHOD Post( xPostData, cQuery )
+   METHOD Put( xPostData, cQuery )
    METHOD ReadHeaders( lClear )
    METHOD Read( nLen )
    METHOD UseBasicAuth()      INLINE   ::cAuthMode := "Basic"
@@ -84,9 +85,11 @@ CREATE CLASS TIPClientHTTP FROM TIPClient
    METHOD PostMultiPart( xPostData, cQuery )
    METHOD WriteAll( cFile )
 
-   HIDDEN:
-
    METHOD StandardFields()
+
+   PROTECTED:
+
+   METHOD PostByVerb( xPostData, cQuery, cVerb )
 
 ENDCLASS
 
@@ -119,7 +122,17 @@ METHOD Get( cQuery ) CLASS TIPClientHTTP
 
 METHOD Post( xPostData, cQuery ) CLASS TIPClientHTTP
 
+   RETURN ::postByVerb( xPostData, cQuery, "POST" )
+
+METHOD Put( xPostData, cQuery ) CLASS TIPClientHTTP
+
+   RETURN ::postByVerb( xPostData, cQuery, "PUT" )
+
+METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
+
    LOCAL cData, nI, cTmp, y
+
+   hb_default( @cVerb, "POST" )
 
    IF HB_ISHASH( xPostData )
       cData := ""
@@ -155,7 +168,7 @@ METHOD Post( xPostData, cQuery ) CLASS TIPClientHTTP
       cQuery := ::oUrl:BuildQuery()
    ENDIF
 
-   ::inetSendAll( ::SocketCon, "POST " + cQuery + " HTTP/1.1" + ::cCRLF )
+   ::inetSendAll( ::SocketCon, cVerb + " " + cQuery + " HTTP/1.1" + ::cCRLF )
    ::StandardFields()
 
    IF ! "Content-Type" $ ::hFields
