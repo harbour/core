@@ -1318,6 +1318,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    LOCAL cSuffix
    LOCAL aOBJLIST
    LOCAL cHarbourDyn
+   LOCAL hStrXChg
 
    LOCAL lSkipBuild := .F.
    LOCAL lStopAfterCComp := .F.
@@ -6373,20 +6374,18 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
          nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
-         /* TODO: Use hb_StrXChg() */
-         cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTRES ] ) )
-         cOpt_Res := StrTran( cOpt_Res, "{DI}"  , FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], nOpt_Esc, nOpt_FNF ) )
+         hStrXChg := { ;
+            "{FR}" => GetEnv( "HB_USER_RESFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTRES ] ), ;
+            "{DI}" => FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], nOpt_Esc, nOpt_FNF ) }
 
          IF "{IR}" $ cOpt_Res
 
             FOR EACH tmp IN l_aRESSRC_TO_DO
 
-               /* TODO: Use hb_StrXChg() */
-               cCommand := cOpt_Res
-               cCommand := StrTran( cCommand, "{IR}", FNameEscape( tmp, nOpt_Esc, nOpt_FNF ) )
-               cCommand := StrTran( cCommand, "{OS}", FNameEscape( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), nOpt_Esc, nOpt_FNF ) )
+               hStrXChg[ "{IR}" ] := FNameEscape( tmp, nOpt_Esc, nOpt_FNF )
+               hStrXChg[ "{OS}" ] := FNameEscape( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), nOpt_Esc, nOpt_FNF )
 
-               cCommand := cBin_Res + " " + AllTrim( cCommand )
+               cCommand := cBin_Res + " " + AllTrim( hb_StrXChg( cOpt_Res, hStrXChg ) )
 
                IF hbmk[ _HBMK_lTRACE ]
                   IF ! hbmk[ _HBMK_lQuiet ]
@@ -6407,10 +6406,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ENDIF
             NEXT
          ELSE
-            /* TODO: Use hb_StrXChg() */
-            cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TO_DO,, nOpt_Esc, nOpt_FNF ) )
+            hStrXChg[ "{LR}" ] := ArrayToList( l_aRESSRC_TO_DO,, nOpt_Esc, nOpt_FNF )
 
-            cOpt_Res := AllTrim( cOpt_Res )
+            cOpt_Res := AllTrim( hb_StrXChg( cOpt_Res, hStrXChg ) )
 
             /* Handle moving the whole command line to a script, if requested. */
             cScriptFile := NIL
@@ -7119,14 +7117,11 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          IF ! Empty( cBin_Post )
 
-            /* TODO: Use hb_StrXChg() */
-            cOpt_Post := StrTran( cOpt_Post, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
-            IF l_cIMPLIBNAME != NIL
-               cOpt_Post := StrTran( cOpt_Post, "{OI}", FNameEscape( l_cIMPLIBNAME, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
-            ENDIF
-            cOpt_Post := AllTrim( cOpt_Post )
-
-            cCommand := cBin_Post + " " + cOpt_Post
+            cCommand := ;
+               cBin_Post + " " + ;
+               AllTrim( hb_StrXChg( cOpt_Post, { ;
+                  "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ), ;
+                  "{OI}" => iif( l_cIMPLIBNAME == NIL, "", FNameEscape( l_cIMPLIBNAME, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) ) } ) ) /* for implib post-process command */
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
@@ -7232,12 +7227,14 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
             /* Code signing */
 
-            cOpt_Sign := AllTrim( hb_StrXChg( cOpt_Sign, { ;
+            hStrXChg := { ;
                "{ID}" => cOpt_SignID, ;
-               "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) } ) )
+               "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
+               "{PW}" => cOpt_SignPass }
 
-            cCommand := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", cOpt_SignPass ) )
-            tmp1     := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", iif( Empty( cOpt_SignPass ), "", "***" ) ) )
+            cCommand := cBin_Sign + " " + AllTrim( hb_StrXChg( cOpt_Sign, hStrXChg ) )
+            hStrXChg[ "{PW}" ] := iif( Empty( cOpt_SignPass ), "", "***" )
+            tmp1     := cBin_Sign + " " + AllTrim( hb_StrXChg( cOpt_Sign, hStrXChg ) )
 
             IF hbmk[ _HBMK_lTRACE ]
                IF ! hbmk[ _HBMK_lQuiet ]
@@ -12912,12 +12909,13 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
 
       IF hb_FileExists( cInputName )
 
-         /* TODO: Use hb_StrXChg() */
-         cOpt_LibHBX := StrTran( cOpt_LibHBX, "{LI}", FNameEscape( cInputName, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
          IF "{OT}" $ cOpt_LibHBX
             FClose( hb_FTempCreateEx( @cTempFile,,, ".tmp" ) )
-            cOpt_LibHBX := StrTran( cOpt_LibHBX, "{OT}", FNameEscape( cTempFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
          ENDIF
+
+         cOpt_LibHBX := hb_StrXChg( cOpt_LibHBX, { ;
+            "{LI}" => FNameEscape( cInputName, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ), ;
+            "{OT}" => FNameEscape( cTempFile, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) } )
 
          IF hb_processRun( cBin_LibHBX + " " + cOpt_LibHBX,, @cStdOut, @cStdErr ) == 0
             IF ! Empty( cTempFile )
