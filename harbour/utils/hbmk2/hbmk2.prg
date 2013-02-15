@@ -508,7 +508,7 @@ EXTERNAL hbmk_KEYW
 
 #define _HBMK_lSysLoc           152
 #define _HBMK_lDumpInfo         153
-#define _HBMK_lMarkDown         154
+#define _HBMK_lMarkdown         154
 
 #define _HBMK_MAX_              154
 
@@ -938,7 +938,7 @@ STATIC FUNCTION hbmk_new()
    hbmk[ _HBMK_aLIBPATH ] := {}
 
    hbmk[ _HBMK_lDumpInfo ] := .F.
-   hbmk[ _HBMK_lMarkDown ] := .F.
+   hbmk[ _HBMK_lMarkdown ] := .F.
 
    RETURN hbmk
 
@@ -1490,7 +1490,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
       CASE cParamL == "-longhelpmd" .OR. ;
            cParamL == "--longhelpmd"
 
-         hbmk[ _HBMK_lMarkDown ] := .T.
+         hbmk[ _HBMK_lMarkdown ] := .T.
 
          ShowHeader( hbmk )
          ShowHelp( hbmk, .T., .T. )
@@ -1860,7 +1860,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
    IF hbmk[ _HBMK_nHBMODE ] != _HBMODE_RAW_C
 
       IF ! hbmk_harbour_dirlayout_detect( hbmk, .F. )
-         hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: %1$s not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory." ), _HBMK_ENV_INSTALL_PFX ) )
+         hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Error: %1$s not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory." ), _HBMK_ENV_INSTALL_PFX ) )
          RETURN _ERRLEV_FAILHBDETECT
       ENDIF
 
@@ -2056,9 +2056,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
             ENDIF
          ELSE
             IF Empty( aCOMPDET )
-               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Choose a C compiler by using -comp= option.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               _hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Choose a C compiler by using -comp= option.\nYou have the following choices on your platform: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ELSE
-               _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Could not detect any supported C compiler in your PATH.\nSetup one or set -comp= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
+               _hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Could not detect any supported C compiler in your PATH.\nSetup one or set -comp= option to one of these values: %1$s" ), ArrayToList( aCOMPSUP, ", " ) ) )
             ENDIF
             RETURN _ERRLEV_UNKNCOMP
          ENDIF
@@ -9442,7 +9442,7 @@ STATIC FUNCTION PlugIn_call_low( hbmk, cName, hrb, ctx )
       ENDIF
    RECOVER USING oError
       IF ! hbmk[ _HBMK_lQuiet ]
-         _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'" ), cName, hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], oError:cargo[ 2 ] ) )
+         _hbmk_OutErr( hbmk, hb_StrFormat( I_( e"Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'" ), cName, hbmk_ErrorMessage( oError ), oError:cargo[ 1 ], oError:cargo[ 2 ] ) )
       ENDIF
    END /* SEQUENCE */
 
@@ -13220,7 +13220,7 @@ STATIC PROCEDURE __hbshell( cFile, ... )
    hbmk_init_stage2( hbmk )
    IF ! hbmk_harbour_dirlayout_detect( hbmk, .T. )
       IF __hbshell_CanLoadDyn()
-         OutErr( StrTran( I_( "hbshell: Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ), "\n", hb_eol() ) + _OUT_EOL )
+         OutErr( StrTran( I_( e"hbshell: Warning: Failed to detect Harbour.\nRun this tool from its original location inside the Harbour installation." ), e"\n", hb_eol() ) + _OUT_EOL )
       ENDIF
    ENDIF
    hbmk[ _HBMK_cCOMP ] := hb_Version( HB_VERSION_BUILD_COMP )
@@ -13687,7 +13687,7 @@ STATIC FUNCTION __hbshell_plugins_load( hPlugins, aParams )
             ENDIF
          RECOVER USING oError
             plugin[ _PLUGIN_hHRB ] := NIL
-            OutErr( hb_StrFormat( I_( "hbshell: Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ) + _OUT_EOL )
+            OutErr( StrTran( hb_StrFormat( I_( e"hbshell: Error: Loading shell plugin: %1$s\n'%2$s'" ), cFile:__enumKey(), hbmk_ErrorMessage( oError ) ), e"\n", hb_eol() ) + _OUT_EOL )
          END /* SEQUENCE */
       ENDIF
 
@@ -14827,7 +14827,7 @@ INIT PROCEDURE ClipInit()
 
    RETURN
 
-STATIC FUNCTION ToMarkDown( cText )
+STATIC FUNCTION ToMarkdown( cText )
 
    cText := StrTran( cText, "&", "&amp;" ) /* keep it at top */
    cText := StrTran( cText, "<", "&lt;" )
@@ -14852,6 +14852,12 @@ STATIC FUNCTION ToMarkDown( cText )
    cText := StrTran( cText, "(c)", "&copy;" )
    cText := StrTran( cText, "--", "\-\-" )
 
+#if 0
+   /* experiments with Markdown formatting */
+   cText := StrTran( cText, "&lt;", "*&lt;" )
+   cText := StrTran( cText, "&gt;", "&gt;*" )
+#endif
+
    RETURN cText
 
 STATIC PROCEDURE ShowHeader( hbmk )
@@ -14866,9 +14872,9 @@ STATIC PROCEDURE ShowHeader( hbmk )
       "Copyright (c) 1999-2013, Viktor Szakáts" + _OUT_EOL +;
       "%1$s" + _OUT_EOL
 
-   IF hbmk[ _HBMK_lMarkDown ]
-      hb_SetTermCP( "UTF8EX" ) /* UTF-8 output for MarkDown */
-      cText := StrTran( ToMarkDown( cText ), _OUT_EOL, "  " + _OUT_EOL )
+   IF hbmk[ _HBMK_lMarkdown ]
+      hb_SetTermCP( "UTF8EX" ) /* UTF-8 output for Markdown */
+      cText := StrTran( ToMarkdown( cText ), _OUT_EOL, "  " + _OUT_EOL )
       cURL := "<" + cURL + ">"
    ENDIF
 
@@ -14881,8 +14887,8 @@ STATIC PROCEDURE ShowHeader( hbmk )
       cTrsTextI := I_( cTrsText )
       IF !( cTrsText == cTrsTextI ) .AND. ! Empty( cTrsTextI )
          cText := hb_StrFormat( cTrsTextI, hbmk[ _HBMK_cUILNG ] ) + _OUT_EOL
-         IF hbmk[ _HBMK_lMarkDown ]
-            cText := StrTran( ToMarkDown( cText ), _OUT_EOL, "  " + _OUT_EOL )
+         IF hbmk[ _HBMK_lMarkdown ]
+            cText := StrTran( ToMarkdown( cText ), _OUT_EOL, "  " + _OUT_EOL )
          ENDIF
          OutStd( cText )
       ENDIF
@@ -14977,8 +14983,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-nolibgrouping[-]"  , I_( "disable library grouping on gcc based compilers" ) }, ;
       { "-nomiscsyslib[-]"   , I_( "do not add extra list of system libraries to default library list" ) }, ;
       { "-traceonly"         , I_( "show commands to be executed, but do not execute them" ) }, ;
-      { "-warn=<lev>"        , I_( "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) }, ;
-      { "-compr=<lev>"       , I_( "compress executable/dynamic lib (needs UPX)\n<lev> can be: yes, no, min, max" ) }, ;
+      { "-warn=<lev>"        , I_( e"set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)" ) }, ;
+      { "-compr=<lev>"       , I_( e"compress executable/dynamic lib (needs UPX)\n<lev> can be: yes, no, min, max" ) }, ;
       { "-run[-]"            , I_( "run/do not run output executable" ) }, ;
       { "-vcshead=<file>"    , I_( "generate .ch header file with local repository information. SVN, CVS, Git, Mercurial, Bazaar, Fossil and Monotone are currently supported. Generated header will define preprocessor constant _HBMK_VCS_TYPE_ with the name of detected VCS and _HBMK_VCS_ID_ with the unique ID of local repository" ) }, ;
       { "-tshead=<file>"     , I_( "generate .ch header file with timestamp information. Generated header will define preprocessor constants _HBMK_BUILD_DATE_, _HBMK_BUILD_TIME_, _HBMK_BUILD_TIMESTAMP_ with the date/time of build" ) }, ;
@@ -15013,14 +15019,14 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-3rd=<f>"           , hb_StrFormat( I_( "options/flags reserved for 3rd party tools, always ignored by %1$s itself" ), _SELF_NAME_ ) }, ;
       { "-env:<e>[<o>[<v>]]" , I_( "alter local environment. <e> is the name of the environment variable to alter. <o> can be '=' to set/override, '-' to delete, '+' to append to the end of existing value, '#' to insert to the beginning of existing value. <v> is the value to set/append/insert." ) }, ;
       { "-jobs=<n>"          , I_( "start n compilation threads (multiprocess platforms only)" ) }, ;
-      { "-head=<m>"          , I_( "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off" ) }, ;
+      { "-head=<m>"          , I_( e"control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off" ) }, ;
       { "-rebuild"           , I_( "rebuild (in incremental build mode)" ) }, ;
       { "-rebuildall"        , I_( "rebuild with sub-projects (in incremental build mode)" ) }, ;
       { "-clean"             , I_( "clean (in incremental build mode)" ) }, ;
-      { "-workdir=<dir>"     , hb_StrFormat( I_( "working directory\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) }, ;
+      { "-workdir=<dir>"     , hb_StrFormat( I_( e"working directory\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)" ), _WORKDIR_BASE_ ) }, ;
       NIL, ;
       { "-hbl[=<output>]"    , hb_StrFormat( I_( "output .hbl filename. %1$s macro is accepted in filename" ), _LNG_MARKER ) }, ;
-      { "-lng=<languages>"   , hb_StrFormat( I_( "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) }, ;
+      { "-lng=<languages>"   , hb_StrFormat( I_( e"list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de" ), _LNG_MARKER ) }, ;
       { "-po=<output>"       , I_( "create/update .po file from source. Merge it with previous .po file of the same name" ) }, ;
       { "-minipo[-]"         , I_( "do (not) add Harbour version number and source file reference to .po (default: add them)" ) }, ;
       { "-rebuildpo"         , I_( "recreate .po file, thus removing all obsolete entries in it" ) }, ;
@@ -15053,8 +15059,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       NIL, ;
       { "-hbrun"             , I_( "run target" ) }, ;
       { "-hbraw"             , I_( "stop after running Harbour compiler" ) }, ;
-      { "-hbcmp|-clipper"    , hb_StrFormat( I_( "stop after creating the object files\ncreate link/copy %1$s to hbcmp/clipper for the same effect" ), _SELF_NAME_ ) }, ;
-      { "-hbcc"              , hb_StrFormat( I_( "accept raw C flags\ncreate link/copy %1$s to hbcc for the same effect" ), _SELF_NAME_ ) }, ;
+      { "-hbcmp|-clipper"    , hb_StrFormat( I_( e"stop after creating the object files\ncreate link/copy %1$s to hbcmp/clipper for the same effect" ), _SELF_NAME_ ) }, ;
+      { "-hbcc"              , hb_StrFormat( I_( e"accept raw C flags\ncreate link/copy %1$s to hbcc for the same effect" ), _SELF_NAME_ ) }, ;
       { "-hblnk"             , I_( "accept raw linker flags" ) }, ;
       { "-autohbm[-]"        , hb_StrFormat( I_( "enable (or disable) processing of %1$s in current directory (default: yes)" ), _HBMK_AUTOHBM_NAME ) }, ;
       { "-hb10"              , I_( "enable Harbour 1.0.x compatibility mode" ) }, ;
@@ -15063,7 +15069,7 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       { "-hbc"               , I_( "enable pure C mode" ) }, ;
       { "-rtlink"            , "" }, ;
       { "-blinker"           , "" }, ;
-      { "-exospace"          , hb_StrFormat( I_( "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect" ), _SELF_NAME_ ) }, ;
+      { "-exospace"          , hb_StrFormat( I_( e"emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect" ), _SELF_NAME_ ) }, ;
       NIL, ;
       { "-hbreg[=global]"    , hb_StrFormat( I_( "register Harbour Script (.hb) with %1$s (Windows only)" ), _SELF_NAME_ ) }, ;
       { "-hbunreg[=global]"  , hb_StrFormat( I_( "unregister Harbour Script (.hb) from %1$s (Windows only)" ), _SELF_NAME_ ) }, ;
@@ -15080,13 +15086,13 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
       NIL, ;
       { "-plat=<platform>"   , I_( "override default target platform (default: automatic)" ) }, ;
       { "-cpu=<cpu>"         , I_( "override default target CPU (default: automatic) (EXPERIMENTAL)" ) }, ;
-      { "-comp=<compiler>"   , I_( "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)" ) }, ;
+      { "-comp=<compiler>"   , I_( e"override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)" ) }, ;
       { "-build=<name>"      , I_( "specify a build name" ) }, ;
       { "-lang=<lang>"       , I_( "override default language. <lang> is an ISO language code." ) }, ;
       { "-width=<n>"         , I_( "set output width to <n> characters (0=unlimited)." ) }, ;
       { "-shl"               , I_( "show sub-project level in output lines" ) }, ;
       { "-longhelp"          , I_( "long help" ) }, ;
-      { "-longhelpmd"        , I_( "long help in MarkDown format" ) }, ;
+      { "-longhelpmd"        , I_( "long help in Markdown format" ) }, ;
       { "-harbourhelp"       , hb_StrFormat( I_( "Harbour compiler help (all Harbour compiler options are accepted as is by %1$s)" ), _SELF_NAME_ ) }, ;
       { "-credits"           , I_( "display credits (via Harbour compiler)" ) }, ;
       { "-build"             , I_( "display detailed build information (via Harbour compiler)" ) }, ;
@@ -15322,13 +15328,13 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
    LOCAL aLst_Notes := { ;
       NIL, ;
-      I_( "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ), ;
+      I_( e"<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file" ), ;
       I_( "Source filename without extension will load the .hbp file, if such .hbp file exists in current directory. If not, .prg extension will be used." ), ;
       I_( "Multiple -l, -L, -i and <script> parameters are accepted." ), ;
-      I_( "Regular Harbour compiler options are also accepted as is.\n(see them with -harbourhelp option)" ), ;
+      I_( e"Regular Harbour compiler options are also accepted as is.\n(see them with -harbourhelp option)" ), ;
       hb_StrFormat( I_( "%1$s option file in %2$s directory is always processed if it exists. On *nix platforms ~/.harbour, /etc/harbour, <base>/etc/harbour, <base>/etc are checked (in that order) before the %2$s directory." ), _HBMK_AUTOHBC_NAME, _SELF_NAME_ ), ;
       hb_StrFormat( I_( "%1$s make script in current directory is always processed if it exists." ), _HBMK_AUTOHBM_NAME ), ;
-      I_( "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}" ), ;
+      I_( e"Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}" ), ;
       I_( "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macro variables. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search." ), ;
       I_( 'Options accepting macro variables also support command substitution. Enclose command inside ``, and, if the command contains space, also enclose in double quotes. F.e. "-cflag=`wx-config --cflags`", or ldflags={unix&gcc}"`wx-config --libs`".' ), ;
       I_( "Libraries and object files built with/for CA-Cl*pper will not work with any supported platform/compiler." ) , ;
@@ -15390,8 +15396,8 @@ STATIC PROCEDURE ShowHelp( hbmk, lFull, lLong )
 
 STATIC PROCEDURE OutHdr( hbmk, cText )
 
-   IF hbmk[ _HBMK_lMarkDown ]
-      cText := ToMarkDown( cText )
+   IF hbmk[ _HBMK_lMarkdown ]
+      cText := ToMarkdown( cText )
    ENDIF
 
    OutStd( cText )
@@ -15404,21 +15410,21 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
    LOCAL nLines
 
    IF Empty( aOpt )
-      IF hbmk[ _HBMK_lMarkDown ]
+      IF hbmk[ _HBMK_lMarkdown ]
          OutStd( _OUT_EOL )
       ENDIF
       OutStd( _OUT_EOL )
    ELSE
       IF Len( aOpt ) > 1
          hb_default( @nWidth, 22 )
-         IF hbmk[ _HBMK_lMarkDown ]
+         IF hbmk[ _HBMK_lMarkdown ]
             IF nWidth > 0
-               OutStd( " - " + "**" + ToMarkDown( aOpt[ 1 ] ) + "**" + " " + ToMarkDown( StrTran( aOpt[ 2 ], "\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
+               OutStd( " - " + "**" + ToMarkdown( aOpt[ 1 ] ) + "**" + " " + ToMarkdown( StrTran( aOpt[ 2 ], e"\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
             ELSE
-               OutStd( ToMarkDown( StrTran( aOpt[ 2 ], "\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
+               OutStd( ToMarkdown( StrTran( aOpt[ 2 ], e"\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
             ENDIF
          ELSE
-            aOpt[ 2 ] := StrTran( aOpt[ 2 ], "\n", hb_eol() )
+            aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
             nLines := Max( MLCount( aOpt[ 2 ], hbmk[ _HBMK_nMaxCol ] - nWidth ), ;
                            MLCount( aOpt[ 1 ], nWidth ) )
             FOR nLine := 1 TO nLines
@@ -15427,7 +15433,7 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
             NEXT
          ENDIF
       ELSE
-         IF hbmk[ _HBMK_lMarkDown ]
+         IF hbmk[ _HBMK_lMarkdown ]
             OutStd( " - " + "**" + aOpt[ 1 ] + "**" + _OUT_EOL )
          ELSE
             OutStd( Space( 2 ) + aOpt[ 1 ] + _OUT_EOL )
@@ -15444,15 +15450,15 @@ STATIC PROCEDURE OutNote( hbmk, cText )
    LOCAL tmp
 
    IF Empty( cText )
-      IF hbmk[ _HBMK_lMarkDown ]
+      IF hbmk[ _HBMK_lMarkdown ]
          OutStd( _OUT_EOL )
       ENDIF
       OutStd( _OUT_EOL )
    ELSE
-      IF hbmk[ _HBMK_lMarkDown ]
-         OutStd( " - " + ToMarkDown( StrTran( cText, "\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
+      IF hbmk[ _HBMK_lMarkdown ]
+         OutStd( " - " + ToMarkdown( StrTran( cText, e"\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
       ELSE
-         cText := StrTran( cText, "\n", hb_eol() )
+         cText := StrTran( cText, e"\n", hb_eol() )
          nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - 4 )
          FOR nLine := 1 TO nLines
             IF ! Empty( tmp := RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - 4, nLine ) ) )
@@ -15489,7 +15495,7 @@ STATIC PROCEDURE _hbmk_OutStd( hbmk, cText )
       cPrefix := _SELF_NAME_ + ":"
    ENDIF
 
-   cText := StrTran( cText, "\n", hb_eol() )
+   cText := StrTran( cText, e"\n", hb_eol() )
    nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - nWidth )
    FOR nLine := 1 TO nLines
       IF ! Empty( tmp := RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) )
@@ -15519,7 +15525,7 @@ STATIC PROCEDURE _hbmk_OutErr( hbmk, cText )
       cPrefix := _SELF_NAME_ + ":"
    ENDIF
 
-   cText := StrTran( cText, "\n", hb_eol() )
+   cText := StrTran( cText, e"\n", hb_eol() )
    nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - nWidth )
    FOR nLine := 1 TO nLines
       IF ! Empty( tmp := RTrim( MemoLine( cText, hbmk[ _HBMK_nMaxCol ] - nWidth, nLine ) ) )

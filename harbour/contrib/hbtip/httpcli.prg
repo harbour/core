@@ -84,7 +84,6 @@ CREATE CLASS TIPClientHTTP FROM TIPClient
    METHOD Attach( cName, cFileName, cType )
    METHOD PostMultiPart( xPostData, cQuery )
    METHOD WriteAll( cFile )
-
    METHOD StandardFields()
 
    PROTECTED:
@@ -181,7 +180,7 @@ METHOD PostByVerb( xPostData, cQuery, cVerb ) CLASS TIPClientHTTP
    // End of header
    ::inetSendAll( ::SocketCon, ::cCRLF )
 
-   IF ::inetErrorCode( ::SocketCon  ) ==  0
+   IF ::inetErrorCode( ::SocketCon ) ==  0
       ::inetSendAll( ::SocketCon, cData )
       ::bInitialized := .T.
       RETURN ::ReadHeaders()
@@ -199,13 +198,12 @@ METHOD StandardFields() CLASS TIPClientHTTP
    ::inetSendAll( ::SocketCon, "Connection: close" + ::cCRLF )
 
    // Perform a basic authentication request
-   IF ::cAuthMode == "Basic" .AND. ! ( "Authorization" $ ::hFields )
+   IF ::cAuthMode == "Basic" .AND. !( "Authorization" $ ::hFields )
       oEncoder := TIPEncoderBase64():New()
       oEncoder:bHttpExcept := .T.
       ::inetSendAll( ::SocketCon, "Authorization: Basic " + ;
          oEncoder:Encode(  ::oUrl:cUserID + ":" + ::oUrl:cPassword ) + ::cCRLF )
    ENDIF
-
 
    // send cookies
    cCookies := ::getCookies()
@@ -354,7 +352,6 @@ METHOD Read( nLen ) CLASS TIPClientHTTP
       ::nLength := -1
       // chunked data is followed by a blank line
       /* cLine := */ ::InetRecvLine( ::SocketCon, @nPos, 1024 )
-
    ENDIF
 
    RETURN cData
@@ -393,7 +390,7 @@ METHOD setCookie( cLine ) CLASS TIPClientHTTP
       cDefaultPath := "/"
    ENDIF
    // this function currently ignores expires, secure and other tags that may be in the cookie for now...
-   //   ?"Setting COOKIE:",cLine
+   //   ? "Setting COOKIE:", cLine
    aParam := hb_regexSplit( ";", cLine )
    cName := cValue := ""
    cHost := cDefaultHost
@@ -582,10 +579,11 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
          // nRead := FRead( nFile, @cBuf, nBuf )
          cBuf := FReadStr( nFile, nBuf )
          nRead := hb_BLen( cBuf )
-/*       IF nRead < nBuf
+#if 0
+         IF nRead < nBuf
             cBuf := PadR( cBuf, nRead )
          ENDIF
-*/
+#endif
          cData += cBuf
       ENDDO
       FClose( nFile )
@@ -607,7 +605,7 @@ METHOD PostMultiPart( xPostData, cQuery ) CLASS TIPClientHTTP
    // End of header
    ::inetSendAll( ::SocketCon, ::cCRLF )
 
-   IF ::inetErrorCode( ::SocketCon  ) ==  0
+   IF ::inetErrorCode( ::SocketCon ) ==  0
       ::inetSendAll( ::SocketCon, cData )
       ::bInitialized := .T.
       RETURN ::ReadHeaders()

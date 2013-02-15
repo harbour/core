@@ -99,8 +99,8 @@ msgstr "Figyelem: Hibás -gt érték figyelmen kívül hagyva: %1$s"
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Platform filters are accepted in each .hbc line and with several options.\\nFilter format: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
-msgstr "A szűrők az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\\nSzűrő formátum: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Szűrők kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
+msgid "Platform filters are accepted in each .hbc line and with several options.\nFilter format: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Filters can be combined using '&', '|' operators and grouped by parentheses. Ex.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
+msgstr "A szűrők az egyes .hbc sorokban használhatók és számos opció esetén támogatottak.\nSzűrő formátum: {[!][<platform>|<compiler>|<cpu>|<keyword>]}. Szűrők kombinálhatók '&', '|' operátorokkal és zárójelekkel csoportosíthatók. Pl.: {win}, {gcc}, {linux|darwin}, {win&!pocc}, {(win|linux)&!watcom}, {unix&mt&gui}, -cflag={win}-DMYDEF, -stop{dos}, -stop{!allwin}"
 
 #: hbmk2.prg:4128 hbmk2.prg:5633 hbmk2.prg:6212
 #, c-format
@@ -109,8 +109,8 @@ msgstr "Figyelem: C/C++ fordító parancsállománya ne hozható létre, folytat
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "compress executable/dynamic lib (needs UPX)\\n<lev> can be: yes, no, min, max"
-msgstr "tömörítse a végeredményt (UPX szükséges)\\n<lev> lehet: yes, no, min, max"
+msgid "compress executable/dynamic lib (needs UPX)\n<lev> can be: yes, no, min, max"
+msgstr "tömörítse a végeredményt (UPX szükséges)\n<lev> lehet: yes, no, min, max"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
@@ -124,8 +124,8 @@ msgstr "egyszeri sípolás sikeres végrehajtás esetén, dupla sípolás hiba e
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "stop after creating the object files\\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
-msgstr "álljon meg az object állományok létrehozása után\\nA %1$s program hbcmp/clipper nevekre való másolásával/átnevezésével hasonló hatás érhet el"
+msgid "stop after creating the object files\ncreate link/copy %1$s to hbcmp/clipper for the same effect"
+msgstr "álljon meg az object állományok létrehozása után\nA %1$s program hbcmp/clipper nevekre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:1296 hbmk2.prg:1667 hbmk2.prg:1750
 #, c-format
@@ -369,13 +369,13 @@ msgstr "C fordító debug információ hozzáadása (vagy sem). Harbour szintű 
 
 #: hbmk2.prg:1300 hbmk2.prg:1671 hbmk2.prg:1754
 #, c-format
-msgid "Choose a C compiler by using -comp= option.\\nYou have the following choices on your platform: %1$s"
-msgstr "Kérem, válasszon C fordítót a -comp= kapcsoló segítségével.\\nA következő lehetőségek közül választhat: %1$s"
+msgid "Choose a C compiler by using -comp= option.\nYou have the following choices on your platform: %1$s"
+msgstr "Kérem, válasszon C fordítót a -comp= kapcsoló segítségével.\nA következő lehetőségek közül választhat: %1$s"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
 #, c-format
-msgid "control source header parsing (in incremental build mode)\\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), off"
-msgstr "finomhangolja a forrásállományok automatikus fejléc detektálást (lépcsőzetes üzemmódban)\\n<m> lehet: native, full (default), off"
+msgid "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), off"
+msgstr "finomhangolja a forrásállományok automatikus fejléc detektálást (lépcsőzetes üzemmódban)\n<m> lehet: native, full (default), off"
 
 #: hbmk2.prg:7850 hbmk2.prg:11512 hbmk2.prg:12970
 #, c-format
@@ -384,8 +384,8 @@ msgstr "szerkessze be a GT<name> GT meghajtót. Több ilyen is megadható, az el
 
 #: hbmk2.prg:7941 hbmk2.prg:11633
 #, c-format
-msgid "stop after creating the object files and accept raw C flags\\ncreate link/copy %1$s to hbcc for the same effect"
-msgstr "álljon meg az object állományok létrehozása után és továbbítsa a kapcsolókat a C fordítónak\\nA %1$s program hbcc névre való másolásával/átnevezésével hasonló hatás érhet el"
+msgid "stop after creating the object files and accept raw C flags\ncreate link/copy %1$s to hbcc for the same effect"
+msgstr "álljon meg az object állományok létrehozása után és továbbítsa a kapcsolókat a C fordítónak\nA %1$s program hbcc névre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
@@ -399,8 +399,8 @@ msgstr ""
 
 #: hbmk2.prg:1105 hbmk2.prg:1450 hbmk2.prg:1561
 #, c-format
-msgid "Error: %1$s not set, failed to autodetect.\\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory."
-msgstr "Hiba: %1$s nincs megadva, automata detektálás nem járt sikerrel.\\nKérem, futtassa ezt a programot a Harbour könyvtárán belüli eredeti helyéről vagy állítsa be a %1$s környezeti változót a Harbour gyökér könyvtárára."
+msgid "Error: %1$s not set, failed to autodetect.\nRun this tool from its original location inside the Harbour installation or set %1$s environment variable to Harbour's root directory."
+msgstr "Hiba: %1$s nincs megadva, automata detektálás nem járt sikerrel.\nKérem, futtassa ezt a programot a Harbour könyvtárán belüli eredeti helyéről vagy állítsa be a %1$s környezeti változót a Harbour gyökér könyvtárára."
 
 #: hbmk2.prg:2096 hbmk2.prg:2938 hbmk2.prg:3276
 #, c-format
@@ -489,7 +489,7 @@ msgstr "felülbírálja az alapértelmezett nyelvet. Hasonlóan HB_LANG környez
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Regular Harbour compiler options are also accepted as is.\\n(see them with -harbourhelp option)"
+msgid "Regular Harbour compiler options are also accepted as is.\n(see them with -harbourhelp option)"
 msgstr "Normál Harbour fordító kapcsolók is megadhatók."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
@@ -599,13 +599,13 @@ msgstr "Figyelem: Statikus függvénykönyvtár létrehozás parancsállománya 
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "set C compiler warning level\\n<lev> can be: max, yes, low, no, def (default: yes)"
+msgid "set C compiler warning level\n<lev> can be: max, yes, low, no, def (default: yes)"
 msgstr ""
 
 #: hbmk2.prg:7941
 #, c-format
-msgid "working directory for incremental build mode\\n(default: %1$s/plat/comp)"
-msgstr "munkakönyvtár lépcsőzetes üzemmód használatakor\\n(alapértelmezés: %1$s/plat/ford)"
+msgid "working directory for incremental build mode\n(default: %1$s/plat/comp)"
+msgstr "munkakönyvtár lépcsőzetes üzemmód használatakor\n(alapértelmezés: %1$s/plat/ford)"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
@@ -619,8 +619,8 @@ msgstr ""
 
 #: hbmk2.prg:1302 hbmk2.prg:1673 hbmk2.prg:1756
 #, c-format
-msgid "Could not detect any supported C compiler in your PATH.\\nSetup one or set -comp= option to one of these values: %1$s"
-msgstr "Nem sikerült automatikusan detektálni egyetlen C fordítót sem a PATH-ban.\\nKérem, telepítsen egyet vagy állítsa a -comp= kapcsolót a következő értékek valamelyikére: %1$s"
+msgid "Could not detect any supported C compiler in your PATH.\nSetup one or set -comp= option to one of these values: %1$s"
+msgstr "Nem sikerült automatikusan detektálni egyetlen C fordítót sem a PATH-ban.\nKérem, telepítsen egyet vagy állítsa a -comp= kapcsolót a következő értékek valamelyikére: %1$s"
 
 #: hbmk2.prg:7824 hbmk2.prg:11479 hbmk2.prg:12934
 #, c-format
@@ -684,8 +684,8 @@ msgstr "Fordítás..."
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\\n-lng=en,hu-HU,de"
-msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levő %1$s makrókba kerülnek behelyettesítésre. Vesszővel elválasztott lista:\\n-lng=en,hu-HU,de"
+msgid "list of languages to be replaced in %1$s macros in .pot/.po filenames and output .hbl/.po filenames. Comma separared list:\n-lng=en,hu-HU,de"
+msgstr "nyelvek listája, amelyek a .pot/.po és .hbl/.po állományokban levő %1$s makrókba kerülnek behelyettesítésre. Vesszővel elválasztott lista:\n-lng=en,hu-HU,de"
 
 #: hbmk2.prg:7959 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
@@ -804,8 +804,8 @@ msgstr "szerkessze be <libname> függvénykönyvtárat. <libname>-ben nem szerep
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "emulate Clipper compatible linker behavior\\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
-msgstr "emuláljon Clipper kompatibilis szerkesztő üzemmódot.\\nA %1$s program rtlink/blinker/exospace nevekre való másolásával/átnevezésével hasonló hatás érhet el"
+msgid "emulate Clipper compatible linker behavior\ncreate link/copy %1$s to rtlink/blinker/exospace for the same effect"
+msgstr "emuláljon Clipper kompatibilis szerkesztő üzemmódot.\nA %1$s program rtlink/blinker/exospace nevekre való másolásával/átnevezésével hasonló hatás érhet el"
 
 #: hbmk2.prg:7941
 #, c-format
@@ -954,8 +954,8 @@ msgstr "felülbírálja az alapértelmezett cél platformot (alapértelmezés: a
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "override C compiler autodetection\\nSpecial value:\\n - bld: use original build settings (default on *nix)"
-msgstr "felülbírálja a C fordító detektálást\\nSpeciális érték:\\n - bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
+msgid "override C compiler autodetection\nSpecial value:\n - bld: use original build settings (default on *nix)"
+msgstr "felülbírálja a C fordító detektálást\nSpeciális érték:\n - bld: használja a Harbour fordításához használtat (*nix-okon alapértelmezés)"
 
 #: hbmk2.prg:7941 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
@@ -994,8 +994,8 @@ msgstr "cél futtatása"
 
 #: hbmk2.prg:7959 hbmk2.prg:13120
 #, c-format
-msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], frameworks=[<framework[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], headers=[Harbour header files], psources=[source files for plugins], incpaths=[paths], requests=[func], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|pic|shared|nulrdd|nodefgt|debug|opt|map|strip|hbcppmm|winuni|implib|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|full|native|dep], skip=<reason>, stop=<reason>, echo=<text>\\nLines starting with '#' character are ignored"
-msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], hbcs=[<.hbc nevek>], gt=[gtnév], syslibs=[<libnevek>], frameworks=[<framework-ök>], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erőforrás fordító kapcsolók], ldflags=[szerkesztő kapcsolók], libpaths=[útvonalak], sources=[forrás fájlok], headers=[Harbour fejléc fájlok], incpaths=[útvonalak], instfiles=[fájlok], instpaths=[útvonalak], autohbcs=[<.ch>:<.hbc>], plugins=[plugin-ek], gui|mt|pic|shared|nulrdd|nodefgt|debug|opt|map|strip|hbcppmm|winuni|implib|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|full|native|dep], skip=<ok>, stop=<ok>, echo=<szöveg>\\n'#' karakterrel kezdődő sorokat figyelmen kívül hagyja"
+msgid ".hbc options (they should come in separate lines): libs=[<libname[s]>], hbcs=[<.hbc file[s]>], gt=[gtname], syslibs=[<libname[s]>], frameworks=[<framework[s]>], prgflags=[Harbour flags], cflags=[C compiler flags], resflags=[resource compiler flags], ldflags=[linker flags], pflags=[flags for plugins], libpaths=[paths], sources=[source files], headers=[Harbour header files], psources=[source files for plugins], incpaths=[paths], requests=[func], instfiles=[files], instpaths=[paths], autohbcs=[<.ch>:<.hbc>], plugins=[plugins], gui|mt|pic|shared|nulrdd|nodefgt|debug|opt|map|strip|hbcppmm|winuni|implib|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|full|native|dep], skip=<reason>, stop=<reason>, echo=<text>\nLines starting with '#' character are ignored"
+msgstr ".hbc opciók (külön sorokba írandók): libs=[<libnevek>], hbcs=[<.hbc nevek>], gt=[gtnév], syslibs=[<libnevek>], frameworks=[<framework-ök>], prgflags=[Harbour opciók], cflags=[C fordító opciók], resflags=[erőforrás fordító kapcsolók], ldflags=[szerkesztő kapcsolók], libpaths=[útvonalak], sources=[forrás fájlok], headers=[Harbour fejléc fájlok], incpaths=[útvonalak], instfiles=[fájlok], instpaths=[útvonalak], autohbcs=[<.ch>:<.hbc>], plugins=[plugin-ek], gui|mt|pic|shared|nulrdd|nodefgt|debug|opt|map|strip|hbcppmm|winuni|implib|run|inc=[yes|no], cpp=[yes|no|def], warn=[max|yes|low|no|def], compr=[yes|no|def|min|max], head=[off|full|native|dep], skip=<ok>, stop=<ok>, echo=<szöveg>\n'#' karakterrel kezdődő sorokat figyelmen kívül hagyja"
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
@@ -1039,7 +1039,7 @@ msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "working directory\\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)"
+msgid "working directory\n(default: %1$s/plat/comp in incremental mode, OS temp directory otherwise)"
 msgstr ""
 
 #: hbmk2.prg:6519 hbmk2.prg:7245
@@ -1099,7 +1099,7 @@ msgstr ""
 
 #: hbmk2.prg:7934 hbmk2.prg:8776
 #, c-format
-msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\\n'%2$s'"
+msgid "Error: Executing plugin: %1$s at %3$s(%4$d)\n'%2$s'"
 msgstr ""
 
 #: hbmk2.prg:11512 hbmk2.prg:12970
@@ -1304,7 +1304,7 @@ msgstr ""
 
 #: hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "<script> can be:\\n  <@script> or <script.hbm>: command line options in file\\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\\n  <script.hbc>: package configuration file"
+msgid "<script> can be:\n  <@script> or <script.hbm>: command line options in file\n  <script.hbp>: command line options in file, it also marks a new target if specified on the command line\n  <script.hbc>: package configuration file"
 msgstr ""
 
 #: hbmk2.prg:11633 hbmk2.prg:13102
@@ -1519,7 +1519,7 @@ msgstr ""
 
 #: hbmk2.prg:13102
 #, c-format
-msgid "accept raw C flags\\ncreate link/copy %1$s to hbcc for the same effect"
+msgid "accept raw C flags\ncreate link/copy %1$s to hbcc for the same effect"
 msgstr ""
 
 #: hbmk2.prg:13102
@@ -1534,7 +1534,7 @@ msgstr ""
 
 #: hbmk2.prg:13102
 #, c-format
-msgid "control source header parsing (in incremental build mode)\\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off"
+msgid "control source header parsing (in incremental build mode)\n<m> can be: native (uses compiler to extract dependencies), full (default, uses simple text parser on the whole file), dep, off"
 msgstr ""
 
 #: hbmk2.prg:10233
