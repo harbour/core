@@ -1326,11 +1326,9 @@ METHOD unTransform() CLASS Get
 
             cBuffer := StrTran( cBuffer, Chr( 1 ) )
 
-            cBuffer := StrTran( cBuffer, "$", " " )
-            cBuffer := StrTran( cBuffer, "*", " " )
-            cBuffer := StrTran( cBuffer, "-", " " )
-            cBuffer := StrTran( cBuffer, "(", " " )
-            cBuffer := StrTran( cBuffer, ")", " " )
+            cBuffer := hb_StrXchg( cBuffer, ;
+               "$*-()", ;
+               "     " )
 
             cBuffer := PadL( StrTran( cBuffer, " " ), Len( cBuffer ) )
 

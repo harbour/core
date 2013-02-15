@@ -6367,6 +6367,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
          nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
+         /* TODO: Use hb_StrXchg() */
          cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTRES ] ) )
          cOpt_Res := StrTran( cOpt_Res, "{DI}"  , FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], nOpt_Esc, nOpt_FNF ) )
 
@@ -6374,6 +6375,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
             FOR EACH tmp IN l_aRESSRC_TO_DO
 
+               /* TODO: Use hb_StrXchg() */
                cCommand := cOpt_Res
                cCommand := StrTran( cCommand, "{IR}", FNameEscape( tmp, nOpt_Esc, nOpt_FNF ) )
                cCommand := StrTran( cCommand, "{OS}", FNameEscape( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), nOpt_Esc, nOpt_FNF ) )
@@ -6399,6 +6401,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ENDIF
             NEXT
          ELSE
+            /* TODO: Use hb_StrXchg() */
             cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TO_DO,, nOpt_Esc, nOpt_FNF ) )
 
             cOpt_Res := AllTrim( cOpt_Res )
@@ -6508,6 +6511,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   /* Order is significant */
                   tmp4 := iif( tmp3 == _CCOMP_PASS_C .AND. ( hbmk[ _HBMK_lCPP ] == NIL .OR. ! hbmk[ _HBMK_lCPP ] ), hbmk[ _HBMK_aOPTCX ], hbmk[ _HBMK_aOPTCPPX ] )
                   cOpt_CompCPass := cOpt_CompC
+                  /* TODO: Use hb_StrXchg() */
                   cOpt_CompCPass := StrTran( cOpt_CompCPass, "{FC}"  , iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                                                                        GetEnv( "HB_USER_CFLAGS" ) +;
                                                                        iif( Empty( hbmk[ _HBMK_aOPTC ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) ) +;
@@ -6543,6 +6547,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         NEXT
                      ENDIF
                   ELSE
+                     /* TODO: Use hb_StrXchg() */
                      cOpt_CompCPass := StrTran( cOpt_CompCPass, "{OO}"  , FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], cObjExt ), nOpt_Esc, nOpt_FNF ) )
                      cOpt_CompCPass := StrTran( cOpt_CompCPass, "{OW}"  , FNameEscape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, nOpt_FNF ) )
 
@@ -6747,6 +6752,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
                /* Order is significant */
+               /* TODO: Use hb_StrXchg() */
                cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( hbmk[ _HBMK_lBLDFLGL ], hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                           GetEnv( "HB_USER_LDFLAGS" ) +;
                                                           iif( Empty( hbmk[ _HBMK_aOPTL ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) ) )
@@ -6869,6 +6875,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ENDIF
 
                /* Order is significant */
+               /* TODO: Use hb_StrXchg() */
                cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , tmp )
                cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ) )
@@ -6948,6 +6955,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Lib, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
                /* Order is significant */
+               /* TODO: Use hb_StrXchg() */
                cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTA ] ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cLibObjPrefix ) )
                cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
@@ -7109,6 +7117,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          IF ! Empty( cBin_Post )
 
+            /* TODO: Use hb_StrXchg() */
             cOpt_Post := StrTran( cOpt_Post, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
             IF l_cIMPLIBNAME != NIL
                cOpt_Post := StrTran( cOpt_Post, "{OI}", FNameEscape( l_cIMPLIBNAME, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
@@ -7221,6 +7230,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
             /* Code signing */
 
+            /* TODO: Use hb_StrXchg() */
             cOpt_Sign := StrTran( cOpt_Sign, "{ID}", cOpt_SignID )
             cOpt_Sign := StrTran( cOpt_Sign, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
             cOpt_Sign := AllTrim( cOpt_Sign )
@@ -7908,6 +7918,7 @@ STATIC FUNCTION CompileCLoop( hbmk, aTO_DO, cBin_CompC, cOpt_CompC, cObjExt, nOp
       lOutputSpecified := "{OO}" $ cCommand
       cOutputFile := FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt )
 
+      /* TODO: Use hb_StrXchg() */
       cCommand := StrTran( cCommand, "{IC}", FNameEscape( tmp, nOpt_Esc, nOpt_FNF ) )
       cCommand := StrTran( cCommand, "{OO}", FNameEscape( cOutputFile, nOpt_Esc, nOpt_FNF ) )
 
@@ -11054,9 +11065,9 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
                ELSE
                   IF ! Empty( cKeyword ) .AND. ! Empty( cValue )
                      tmp := cExprWithValue
-                     tmp := StrTran( tmp, "%1", cKeyword )
-                     tmp := StrTran( tmp, "%2", cValue )
-                     tmp := StrTran( tmp, "%3", cOperator )
+                     tmp := hb_StrXchg( tmp, ;
+                        { "%1", "%2", "%3" }, ;
+                        { cKeyword, cValue, cOperator } )
                      cFilterHarb += tmp
                      cKeyword := ""
                      cValue := NIL
@@ -11068,9 +11079,9 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          IF ! Empty( cKeyword )
             IF ! Empty( cValue )
                tmp := cExprWithValue
-               tmp := StrTran( tmp, "%1", cKeyword )
-               tmp := StrTran( tmp, "%2", cValue )
-               tmp := StrTran( tmp, "%3", cOperator )
+               tmp := hb_StrXchg( tmp, ;
+                  { "%1", "%2", "%3" }, ;
+                  { cKeyword, cValue, cOperator } )
                cFilterHarb += tmp
             ELSE
                cFilterHarb += StrTran( cExpr, "%1", cKeyword )
@@ -12018,6 +12029,7 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFla
 
    hb_default( @cFlags, "" )
 
+   /* TODO: Use hb_StrXchg() */
    cCommand := StrTran( cCommand, "{FI}", cFlags )
    cCommand := StrTran( cCommand, "{ID}", FNameEscape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
    cCommand := StrTran( cCommand, "{OL}", FNameEscape( cTargetLib, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
@@ -12627,17 +12639,14 @@ STATIC FUNCTION Apple_App_Template_Files( hbmk, cFile, cPROGNAME )
       cString := ""
    ENDSWITCH
 
-   cString := StrTran( cString, "%TAB%", Chr( 9 ) )
-
+   /* TODO: Use hb_StrXchg() */
    cString := StrTran( cString, "%__APPNAME__%", cPROGNAME )
    cString := StrTran( cString, "%__APPTYPE__%", "APPL" )
    cString := StrTran( cString, "%__APPSIGN__%", PadR( cPROGNAME, 4, "?" ) )
    cString := StrTran( cString, "%__APPID__%" ) /* TODO */
    cString := StrTran( cString, "%__APPVERSION__%" ) /* TODO */
    cString := StrTran( cString, "%__APPCOPYRIGHT__%" ) /* TODO */
-   IF ! Empty( hbmk[ _HBMK_aICON ] )
-      cString := StrTran( cString, "%__APPICON__%", hb_FNameNameExt( hbmk[ _HBMK_aICON ][ 1 ] ) )
-   ENDIF
+   cString := StrTran( cString, "%__APPICON__%", iif( Empty( hbmk[ _HBMK_aICON ] ), "", hb_FNameNameExt( hbmk[ _HBMK_aICON ][ 1 ] ) ) )
 
    RETURN cString
 
@@ -12647,32 +12656,32 @@ STATIC FUNCTION Apple_App_Template_Info_plist()
 <!DOCTYPE plist SYSTEM "file://localhost/System/Library/DTDs/PropertyList.dtd">
 <plist version="0.9">
 <dict>
-%TAB%<key>CFBundleInfoDictionaryVersion</key>
-%TAB%<string>6.0</string>
-%TAB%<key>CFBundleIdentifier</key>
-%TAB%<string>%__APPID__%</string>
-%TAB%<key>CFBundleDevelopmentRegion</key>
-%TAB%<string>English</string>
-%TAB%<key>CFBundleExecutable</key>
-%TAB%<string>%__APPNAME__%</string>
-%TAB%<key>CFBundleIconFile</key>
-%TAB%<string>%__APPICON__%</string>
-%TAB%<key>CFBundleName</key>
-%TAB%<string>%__APPNAME__%</string>
-%TAB%<key>CFBundlePackageType</key>
-%TAB%<string>%__APPTYPE__%</string>
-%TAB%<key>CFBundleSignature</key>
-%TAB%<string>%__APPSIGN__%</string>
-%TAB%<key>CFBundleGetInfoString</key>
-%TAB%<string>%__APPNAME__% version %__APPVERSION__%, %__APPCOPYRIGHT__%</string>
-%TAB%<key>CFBundleLongVersionString</key>
-%TAB%<string>%__APPVERSION__%, %__APPCOPYRIGHT__%</string>
-%TAB%<key>NSHumanReadableCopyright</key>
-%TAB%<string>%__APPCOPYRIGHT__%</string>
-%TAB%<key>LSRequiresCarbon</key>
-%TAB%<true/>
-%TAB%<key>CSResourcesFileMapped</key>
-%TAB%<true/>
+\t<key>CFBundleInfoDictionaryVersion</key>
+\t<string>6.0</string>
+\t<key>CFBundleIdentifier</key>
+\t<string>%__APPID__%</string>
+\t<key>CFBundleDevelopmentRegion</key>
+\t<string>English</string>
+\t<key>CFBundleExecutable</key>
+\t<string>%__APPNAME__%</string>
+\t<key>CFBundleIconFile</key>
+\t<string>%__APPICON__%</string>
+\t<key>CFBundleName</key>
+\t<string>%__APPNAME__%</string>
+\t<key>CFBundlePackageType</key>
+\t<string>%__APPTYPE__%</string>
+\t<key>CFBundleSignature</key>
+\t<string>%__APPSIGN__%</string>
+\t<key>CFBundleGetInfoString</key>
+\t<string>%__APPNAME__% version %__APPVERSION__%, %__APPCOPYRIGHT__%</string>
+\t<key>CFBundleLongVersionString</key>
+\t<string>%__APPVERSION__%, %__APPCOPYRIGHT__%</string>
+\t<key>NSHumanReadableCopyright</key>
+\t<string>%__APPCOPYRIGHT__%</string>
+\t<key>LSRequiresCarbon</key>
+\t<true/>
+\t<key>CSResourcesFileMapped</key>
+\t<true/>
 </dict>
 </plist>
 #pragma __endtext
@@ -12900,6 +12909,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
 
       IF hb_FileExists( cInputName )
 
+         /* TODO: Use hb_StrXchg() */
          cOpt_LibHBX := StrTran( cOpt_LibHBX, "{LI}", FNameEscape( cInputName, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
          IF "{OT}" $ cOpt_LibHBX
             FClose( hb_FTempCreateEx( @cTempFile,,, ".tmp" ) )
@@ -14807,9 +14817,11 @@ STATIC PROCEDURE SetUILang( cUILNG )
       hb_i18n_Set( NIL )
       hb_langSelect( cUILNG )
    ELSE
-      tmp := "${hb_root}" + _SELF_NAME_ + ".${hb_lng}.hbl"
-      tmp := StrTran( tmp, "${hb_root}", hb_DirSepAdd( hb_DirBase() ) )
-      tmp := StrTran( tmp, "${hb_lng}", StrTran( cUILNG, "-", "_" ) )
+      tmp := hb_DirSepAdd( hb_DirBase() ) + ;
+             _SELF_NAME_ + ;
+             "." + ;
+             StrTran( cUILNG, "-", "_" ) + ;
+             ".hbl"
       IF hb_i18n_Check( tmp := hb_MemoRead( tmp ) )
          hb_i18n_Set( hb_i18n_RestoreTable( tmp ) )
          hb_langSelect( cUILNG )
@@ -14829,56 +14841,48 @@ INIT PROCEDURE ClipInit()
 
 STATIC FUNCTION ToMarkdown( cText )
 
-   cText := StrTran( cText, "&", "&amp;" ) /* keep it at top */
-   cText := StrTran( cText, "<", "&lt;" )
-   cText := StrTran( cText, ">", "&gt;" )
+   cText := hb_StrXchg( cText, ;
+      { "&"    , "<"   , ">"   , "(c)"   , e"\n"           }, ;
+      { "&amp;", "&lt;", "&gt;", "&copy;", "  " + _OUT_EOL } )
 
-   cText := StrTran( cText, "\", "\\" ) /* keep it at top */
-   cText := StrTran( cText, "`", "\`" )
-   cText := StrTran( cText, "*", "\*" )
-   cText := StrTran( cText, "_", "\_" )
-   cText := StrTran( cText, "{", "\{" )
-   cText := StrTran( cText, "}", "\}" )
-   cText := StrTran( cText, "[", "\[" )
-   cText := StrTran( cText, "]", "\]" )
-   cText := StrTran( cText, "(", "\(" )
-   cText := StrTran( cText, ")", "\)" )
-   cText := StrTran( cText, "#", "\#" )
-   cText := StrTran( cText, "+", "\+" )
-   cText := StrTran( cText, "-", "\-" )
-   cText := StrTran( cText, ".", "\." )
-   cText := StrTran( cText, "!", "\!" )
-
-   cText := StrTran( cText, "(c)", "&copy;" )
-   cText := StrTran( cText, "--", "\-\-" )
+   cText := hb_StrXchg( cText, ;
+      "\`*_{}[]()#+-.!", ;
+      { "\\", "\`", "\*", "\_", "\{", "\}", "\[", "\]", "\(", "\)", "\#", "\+", "\-", "\.", "\!" } )
 
 #if 0
    /* experiments with Markdown formatting */
-   cText := StrTran( cText, "&lt;", "*&lt;" )
-   cText := StrTran( cText, "&gt;", "&gt;*" )
+   cText := hb_StrXchg( cText, ;
+      {  "&lt;", "&gt;"  }, ;
+      { "*&lt;", "&gt;*" } )
 #endif
 
    RETURN cText
 
 STATIC PROCEDURE ShowHeader( hbmk )
 
+   LOCAL cText
    LOCAL cTrsText
    LOCAL cTrsTextI
 
-   LOCAL cURL := "http://harbour-project.org/"
-
-   LOCAL cText := ;
-      "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + _OUT_EOL +;
-      "Copyright (c) 1999-2013, Viktor Szakáts" + _OUT_EOL +;
-      "%1$s" + _OUT_EOL
+   cText := ;
+      e"Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion()  + e"\n" +;
+      e"Copyright (c) 1999-2013, Viktor Szakáts\n"
 
    IF hbmk[ _HBMK_lMarkdown ]
       hb_SetTermCP( "UTF8EX" ) /* UTF-8 output for Markdown */
-      cText := StrTran( ToMarkdown( cText ), _OUT_EOL, "  " + _OUT_EOL )
-      cURL := "<" + cURL + ">"
+      cText := ToMarkdown( cText )
+   ELSE
+      cText := StrTran( cText, e"\n", _OUT_EOL )
    ENDIF
+   OutStd( cText )
 
-   OutStd( hb_StrFormat( cText, cURL ) )
+   cText := "http://harbour-project.org/"
+   IF hbmk[ _HBMK_lMarkdown ]
+      cText := "<" + ToMarkdown( cText ) + ">" + ToMarkdown( e"\n" )
+   ELSE
+      cText += _OUT_EOL
+   ENDIF
+   OutStd( cText )
 
    IF !( hbmk[ _HBMK_cUILNG ] == "en" ) .AND. ;
       !( hbmk[ _HBMK_cUILNG ] == "en-GB" ) .AND. ;
@@ -14886,9 +14890,11 @@ STATIC PROCEDURE ShowHeader( hbmk )
       cTrsText := hb_i18n_gettext_noop( "Translation (%1$s): (add your name here)" )
       cTrsTextI := I_( cTrsText )
       IF !( cTrsText == cTrsTextI ) .AND. ! Empty( cTrsTextI )
-         cText := hb_StrFormat( cTrsTextI, hbmk[ _HBMK_cUILNG ] ) + _OUT_EOL
+         cText := hb_StrFormat( cTrsTextI, hbmk[ _HBMK_cUILNG ] ) + e"\n"
          IF hbmk[ _HBMK_lMarkdown ]
-            cText := StrTran( ToMarkdown( cText ), _OUT_EOL, "  " + _OUT_EOL )
+            cText := ToMarkdown( cText )
+         ELSE
+            cText := StrTran( cText, e"\n", _OUT_EOL )
          ENDIF
          OutStd( cText )
       ENDIF
@@ -15419,9 +15425,9 @@ STATIC PROCEDURE OutOpt( hbmk, aOpt, nWidth )
          hb_default( @nWidth, 22 )
          IF hbmk[ _HBMK_lMarkdown ]
             IF nWidth > 0
-               OutStd( " - " + "**" + ToMarkdown( aOpt[ 1 ] ) + "**" + " " + ToMarkdown( StrTran( aOpt[ 2 ], e"\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
+               OutStd( " - " + "**" + ToMarkdown( aOpt[ 1 ] ) + "**" + " " + ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
             ELSE
-               OutStd( ToMarkdown( StrTran( aOpt[ 2 ], e"\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
+               OutStd( ToMarkdown( aOpt[ 2 ] ) + _OUT_EOL )
             ENDIF
          ELSE
             aOpt[ 2 ] := StrTran( aOpt[ 2 ], e"\n", hb_eol() )
@@ -15456,7 +15462,7 @@ STATIC PROCEDURE OutNote( hbmk, cText )
       OutStd( _OUT_EOL )
    ELSE
       IF hbmk[ _HBMK_lMarkdown ]
-         OutStd( " - " + ToMarkdown( StrTran( cText, e"\n", "  " + _OUT_EOL ) ) + _OUT_EOL )
+         OutStd( " - " + ToMarkdown( cText ) + _OUT_EOL )
       ELSE
          cText := StrTran( cText, e"\n", hb_eol() )
          nLines := MLCount( cText, hbmk[ _HBMK_nMaxCol ] - 4 )
