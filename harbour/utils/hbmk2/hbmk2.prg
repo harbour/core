@@ -2563,6 +2563,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE SubStr( cParamL, 7 ) == "max" ; hbmk[ _HBMK_nWARN ] := _WARN_MAX
 #ifdef HB_LEGACY_LEVEL4
          OTHERWISE                          ; hbmk[ _HBMK_nWARN ] := _WARN_YES ; LegacyWarning( hbmk, aParam, "-warn=yes" ) /* Compatibility */
+#else
+         OTHERWISE                          ; InvalidOptionValue( hbmk, aParam )
 #endif
          ENDCASE
 
@@ -2585,6 +2587,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE SubStr( cParamL, 8 ) == "max" ; hbmk[ _HBMK_nCOMPR ] := _COMPR_MAX
 #ifdef HB_LEGACY_LEVEL4
          OTHERWISE                          ; hbmk[ _HBMK_nCOMPR ] := _COMPR_DEF ; LegacyWarning( hbmk, aParam, "-compr=yes" ) /* Compatibility */
+#else
+         OTHERWISE                          ; InvalidOptionValue( hbmk, aParam )
 #endif
          ENDCASE
 
@@ -2600,6 +2604,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          CASE SubStr( cParamL, 7 ) == "dep"    ; hbmk[ _HBMK_nHEAD ] := _HEAD_DEP
 #ifdef HB_LEGACY_LEVEL4
          OTHERWISE                             ; hbmk[ _HBMK_nHEAD ] := _HEAD_FULL ; LegacyWarning( hbmk, aParam, "-head=full" ) /* Compatibility */
+#else
+         OTHERWISE                             ; InvalidOptionValue( hbmk, aParam )
 #endif
          ENDCASE
 
@@ -6367,7 +6373,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
          nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Res, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
-         /* TODO: Use hb_StrXchg() */
+         /* TODO: Use hb_StrXChg() */
          cOpt_Res := StrTran( cOpt_Res, "{FR}"  , GetEnv( "HB_USER_RESFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTRES ] ) )
          cOpt_Res := StrTran( cOpt_Res, "{DI}"  , FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], nOpt_Esc, nOpt_FNF ) )
 
@@ -6375,7 +6381,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
             FOR EACH tmp IN l_aRESSRC_TO_DO
 
-               /* TODO: Use hb_StrXchg() */
+               /* TODO: Use hb_StrXChg() */
                cCommand := cOpt_Res
                cCommand := StrTran( cCommand, "{IR}", FNameEscape( tmp, nOpt_Esc, nOpt_FNF ) )
                cCommand := StrTran( cCommand, "{OS}", FNameEscape( FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cResExt ), nOpt_Esc, nOpt_FNF ) )
@@ -6401,7 +6407,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                ENDIF
             NEXT
          ELSE
-            /* TODO: Use hb_StrXchg() */
+            /* TODO: Use hb_StrXChg() */
             cOpt_Res := StrTran( cOpt_Res, "{LR}"  , ArrayToList( l_aRESSRC_TO_DO,, nOpt_Esc, nOpt_FNF ) )
 
             cOpt_Res := AllTrim( cOpt_Res )
@@ -6511,7 +6517,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   /* Order is significant */
                   tmp4 := iif( tmp3 == _CCOMP_PASS_C .AND. ( hbmk[ _HBMK_lCPP ] == NIL .OR. ! hbmk[ _HBMK_lCPP ] ), hbmk[ _HBMK_aOPTCX ], hbmk[ _HBMK_aOPTCPPX ] )
                   cOpt_CompCPass := cOpt_CompC
-                  /* TODO: Use hb_StrXchg() */
+                  /* TODO: Use hb_StrXChg() */
+                  /* NOTE: {FC} might contain recursive macros */
                   cOpt_CompCPass := StrTran( cOpt_CompCPass, "{FC}"  , iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
                                                                        GetEnv( "HB_USER_CFLAGS" ) +;
                                                                        iif( Empty( hbmk[ _HBMK_aOPTC ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) ) +;
@@ -6547,7 +6554,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         NEXT
                      ENDIF
                   ELSE
-                     /* TODO: Use hb_StrXchg() */
+                     /* TODO: Use hb_StrXChg() */
                      cOpt_CompCPass := StrTran( cOpt_CompCPass, "{OO}"  , FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], cObjExt ), nOpt_Esc, nOpt_FNF ) )
                      cOpt_CompCPass := StrTran( cOpt_CompCPass, "{OW}"  , FNameEscape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, nOpt_FNF ) )
 
@@ -6751,25 +6758,24 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
                nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
-               /* Order is significant */
-               /* TODO: Use hb_StrXchg() */
-               cOpt_Link := StrTran( cOpt_Link, "{FL}"  , iif( hbmk[ _HBMK_lBLDFLGL ], hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
-                                                          GetEnv( "HB_USER_LDFLAGS" ) +;
-                                                          iif( Empty( hbmk[ _HBMK_aOPTL ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cObjPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LA}"  , ArrayToList( l_aOBJA,, nOpt_Esc, nOpt_FNF ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
-               cOpt_Link := StrTran( cOpt_Link, "{LF}"  , iif( Empty( hbmk[ _HBMK_aOPTLPOST ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTLPOST ] ) ) )
-               cOpt_Link := StrTran( cOpt_Link, "{IM}"  , ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDefPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{OE}"  , FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
-               cOpt_Link := StrTran( cOpt_Link, "{OM}"  , FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ) )
-               cOpt_Link := StrTran( cOpt_Link, "{OI}"  , FNameEscape( l_cIMPLIBNAME, nOpt_Esc, nOpt_FNF ) )
-               cOpt_Link := StrTran( cOpt_Link, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
-               cOpt_Link := StrTran( cOpt_Link, "{DB}"  , hbmk[ _HBMK_cHB_INSTALL_BIN ] )
+               /* NOTE: contains recursive macros */
+               cOpt_Link := StrTran( cOpt_Link, "{FL}", hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
+                                                        GetEnv( "HB_USER_LDFLAGS" ) +;
+                                                        iif( Empty( hbmk[ _HBMK_aOPTL ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
 
-               cOpt_Link := AllTrim( cOpt_Link )
+               cOpt_Link := AllTrim( hb_StrXChg( cOpt_Link, { ;
+                  "{LO}" => ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cObjPrefix ), ;
+                  "{LS}" => ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ), ;
+                  "{LA}" => ArrayToList( l_aOBJA,, nOpt_Esc, nOpt_FNF ), ;
+                  "{LL}" => ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ), ;
+                  "{LB}" => ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ), ;
+                  "{LF}" => iif( Empty( hbmk[ _HBMK_aOPTLPOST ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTLPOST ] ) ), ;
+                  "{IM}" => ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDefPrefix ), ;
+                  "{OE}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
+                  "{OM}" => FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ), ;
+                  "{OI}" => FNameEscape( l_cIMPLIBNAME, nOpt_Esc, nOpt_FNF ), ;
+                  "{DL}" => ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ), ;
+                  "{DB}" => hbmk[ _HBMK_cHB_INSTALL_BIN ] } ) )
 
                /* Handle moving the whole command line to a script, if requested. */
                cScriptFile := NIL
@@ -6874,22 +6880,21 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               /* Order is significant */
-               /* TODO: Use hb_StrXchg() */
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}"  , GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LO}"  , tmp )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LS}"  , ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{LF}"  , iif( Empty( hbmk[ _HBMK_aOPTDPOST ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTDPOST ] ) ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{IM}"  , ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDefPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{OD}"  , FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{OM}"  , FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{OI}"  , FNameEscape( l_cIMPLIBNAME, nOpt_Esc, nOpt_FNF ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
-               cOpt_Dyn := StrTran( cOpt_Dyn, "{DB}"  , hbmk[ _HBMK_cHB_INSTALL_BIN ] )
+               /* NOTE: contains recursive macros */
+               cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}", GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
 
-               cOpt_Dyn := AllTrim( cOpt_Dyn )
+               cOpt_Dyn := AllTrim( hb_StrXChg( cOpt_Dyn, { ;
+                  "{LO}" => tmp, ;
+                  "{LS}" => ArrayToList( ArrayJoin( ListDirExt( hbmk[ _HBMK_aRESSRC ], hbmk[ _HBMK_cWorkDir ], cResExt ), hbmk[ _HBMK_aRESCMP ] ),, nOpt_Esc, nOpt_FNF, cResPrefix ), ;
+                  "{LL}" => ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ), ;
+                  "{LB}" => ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ), ;
+                  "{LF}" => iif( Empty( hbmk[ _HBMK_aOPTDPOST ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTDPOST ] ) ), ;
+                  "{IM}" => ArrayToList( hbmk[ _HBMK_aDEF ],, nOpt_Esc, nOpt_FNF, cDefPrefix ), ;
+                  "{OD}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
+                  "{OM}" => FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], ".map" ), nOpt_Esc, nOpt_FNF ), ;
+                  "{OI}" => FNameEscape( l_cIMPLIBNAME, nOpt_Esc, nOpt_FNF ), ;
+                  "{DL}" => ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ), ;
+                  "{DB}" => hbmk[ _HBMK_cHB_INSTALL_BIN ] } ) )
 
                /* Handle moving the whole command line to a script, if requested. */
                cScriptFile := NIL
@@ -6954,17 +6959,14 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Lib, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
                nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Lib, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
-               /* Order is significant */
-               /* TODO: Use hb_StrXchg() */
-               cOpt_Lib := StrTran( cOpt_Lib, "{FA}"  , GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTA ] ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LO}"  , ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cLibObjPrefix ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LL}"  , ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{LB}"  , ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{OL}"  , FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{DL}"  , ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ) )
-               cOpt_Lib := StrTran( cOpt_Lib, "{DB}"  , hbmk[ _HBMK_cHB_INSTALL_BIN ] )
-
-               cOpt_Lib := AllTrim( cOpt_Lib )
+               cOpt_Lib := AllTrim( hb_StrXChg( cOpt_Lib, { ;
+                  "{FA}" => GetEnv( "HB_USER_AFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTA ] ), ;
+                  "{LO}" => ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cLibObjPrefix ), ;
+                  "{LL}" => ArrayToList( l_aLIB,, nOpt_Esc, nOpt_FNF, cLibPrefix ), ;
+                  "{LB}" => ArrayToList( l_aLIBA,, nOpt_Esc, nOpt_FNF ), ;
+                  "{OL}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ), ;
+                  "{DL}" => ArrayToList( hbmk[ _HBMK_aLIBPATH ], cLibPathSep, nOpt_Esc, nOpt_FNF, cLibPathPrefix ), ;
+                  "{DB}" => hbmk[ _HBMK_cHB_INSTALL_BIN ] } ) )
 
                /* Handle moving the whole command line to a script, if requested. */
                cScriptFile := NIL
@@ -7117,7 +7119,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
          IF ! Empty( cBin_Post )
 
-            /* TODO: Use hb_StrXchg() */
+            /* TODO: Use hb_StrXChg() */
             cOpt_Post := StrTran( cOpt_Post, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
             IF l_cIMPLIBNAME != NIL
                cOpt_Post := StrTran( cOpt_Post, "{OI}", FNameEscape( l_cIMPLIBNAME, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
@@ -7230,10 +7232,9 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
 
             /* Code signing */
 
-            /* TODO: Use hb_StrXchg() */
-            cOpt_Sign := StrTran( cOpt_Sign, "{ID}", cOpt_SignID )
-            cOpt_Sign := StrTran( cOpt_Sign, "{OB}", FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) )
-            cOpt_Sign := AllTrim( cOpt_Sign )
+            cOpt_Sign := AllTrim( hb_StrXChg( cOpt_Sign, { ;
+               "{ID}" => cOpt_SignID, ;
+               "{OB}" => FNameEscape( hbmk[ _HBMK_cPROGNAME ], nOpt_Esc, nOpt_FNF ) } ) )
 
             cCommand := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", cOpt_SignPass ) )
             tmp1     := cBin_Sign + " " + AllTrim( StrTran( cOpt_Sign, "{PW}", iif( Empty( cOpt_SignPass ), "", "***" ) ) )
@@ -7337,6 +7338,11 @@ STATIC FUNCTION ParamToString( aParam )
    RETURN iif( Empty( aParam[ _PAR_cFileName ] ), ;
       hb_StrFormat( "'%1$s'", aParam[ _PAR_cParam ] ), ; /* on the command line */
       hb_StrFormat( "'%1$s' in %2$s:%3$d", aParam[ _PAR_cParam ], aParam[ _PAR_cFileName ], aParam[ _PAR_nLine ] ) )
+
+#ifndef HB_LEGACY_LEVEL4
+STATIC FUNCTION InvalidOptionValue( hbmk, aParam )
+   RETURN _hbmk_OutErr( hbmk, hb_StrFormat( I_( "Warning: Ignored invalid option value in: %1$s" ), ParamToString( aParam ) ) )
+#endif
 
 #ifdef HB_LEGACY_LEVEL4
 /* Do not delete this function when legacy level is reached,
@@ -7918,7 +7924,7 @@ STATIC FUNCTION CompileCLoop( hbmk, aTO_DO, cBin_CompC, cOpt_CompC, cObjExt, nOp
       lOutputSpecified := "{OO}" $ cCommand
       cOutputFile := FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt )
 
-      /* TODO: Use hb_StrXchg() */
+      /* TODO: Use hb_StrXChg() */
       cCommand := StrTran( cCommand, "{IC}", FNameEscape( tmp, nOpt_Esc, nOpt_FNF ) )
       cCommand := StrTran( cCommand, "{OO}", FNameEscape( cOutputFile, nOpt_Esc, nOpt_FNF ) )
 
@@ -8097,7 +8103,6 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
                      GetEnv( "HB_USER_CFLAGS" ) +;
                      " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) +;
                      " " + ArrayToList( hbmk[ _HBMK_aOPTCUSER ] ) +;
-                     " " + FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) +;
                      " " + cFileName,, @tmp )
 
       tmp := StrTran( tmp, Chr( 13 ) )
@@ -11065,7 +11070,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
                ELSE
                   IF ! Empty( cKeyword ) .AND. ! Empty( cValue )
                      tmp := cExprWithValue
-                     tmp := hb_StrXchg( tmp, ;
+                     tmp := hb_StrXChg( tmp, ;
                         { "%1", "%2", "%3" }, ;
                         { cKeyword, cValue, cOperator } )
                      cFilterHarb += tmp
@@ -11079,7 +11084,7 @@ STATIC FUNCTION ArchCompFilter( hbmk, cItem, cFileName )
          IF ! Empty( cKeyword )
             IF ! Empty( cValue )
                tmp := cExprWithValue
-               tmp := hb_StrXchg( tmp, ;
+               tmp := hb_StrXChg( tmp, ;
                   { "%1", "%2", "%3" }, ;
                   { cKeyword, cValue, cOperator } )
                cFilterHarb += tmp
@@ -12029,10 +12034,10 @@ STATIC FUNCTION win_implib_command( hbmk, cCommand, cSourceDLL, cTargetLib, cFla
 
    hb_default( @cFlags, "" )
 
-   /* TODO: Use hb_StrXchg() */
-   cCommand := StrTran( cCommand, "{FI}", cFlags )
-   cCommand := StrTran( cCommand, "{ID}", FNameEscape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
-   cCommand := StrTran( cCommand, "{OL}", FNameEscape( cTargetLib, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
+   cCommand := AllTrim( hb_StrXChg( cCommand, { ;
+      "{FI}" => cFlags, ;
+      "{ID}" => FNameEscape( cSourceDLL, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ), ;
+      "{OL}" => FNameEscape( cTargetLib, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) } ) )
 
    IF hbmk[ _HBMK_lTRACE ]
       IF ! hbmk[ _HBMK_lQuiet ]
@@ -12639,16 +12644,14 @@ STATIC FUNCTION Apple_App_Template_Files( hbmk, cFile, cPROGNAME )
       cString := ""
    ENDSWITCH
 
-   /* TODO: Use hb_StrXchg() */
-   cString := StrTran( cString, "%__APPNAME__%", cPROGNAME )
-   cString := StrTran( cString, "%__APPTYPE__%", "APPL" )
-   cString := StrTran( cString, "%__APPSIGN__%", PadR( cPROGNAME, 4, "?" ) )
-   cString := StrTran( cString, "%__APPID__%" ) /* TODO */
-   cString := StrTran( cString, "%__APPVERSION__%" ) /* TODO */
-   cString := StrTran( cString, "%__APPCOPYRIGHT__%" ) /* TODO */
-   cString := StrTran( cString, "%__APPICON__%", iif( Empty( hbmk[ _HBMK_aICON ] ), "", hb_FNameNameExt( hbmk[ _HBMK_aICON ][ 1 ] ) ) )
-
-   RETURN cString
+   RETURN hb_StrXChg( cString, { ;
+      "%__APPNAME__%"      => cPROGNAME, ;
+      "%__APPTYPE__%"      => "APPL", ;
+      "%__APPSIGN__%"      => PadR( cPROGNAME, 4, "?" ), ;
+      "%__APPID__%"        => /* TODO */ "%__APPID__%", ;
+      "%__APPVERSION__%"   => /* TODO */ "%__APPVERSION__%", ;
+      "%__APPCOPYRIGHT__%" => /* TODO */ "%__APPCOPYRIGHT__%", ;
+      "%__APPICON__%"      => iif( Empty( hbmk[ _HBMK_aICON ] ), "", hb_FNameNameExt( hbmk[ _HBMK_aICON ][ 1 ] ) ) } )
 
 STATIC FUNCTION Apple_App_Template_Info_plist()
 #pragma __cstream | RETURN %s
@@ -12909,7 +12912,7 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
 
       IF hb_FileExists( cInputName )
 
-         /* TODO: Use hb_StrXchg() */
+         /* TODO: Use hb_StrXChg() */
          cOpt_LibHBX := StrTran( cOpt_LibHBX, "{LI}", FNameEscape( cInputName, hbmk[ _HBMK_nCmd_Esc ], hbmk[ _HBMK_nCmd_FNF ] ) )
          IF "{OT}" $ cOpt_LibHBX
             FClose( hb_FTempCreateEx( @cTempFile,,, ".tmp" ) )
@@ -14817,11 +14820,12 @@ STATIC PROCEDURE SetUILang( cUILNG )
       hb_i18n_Set( NIL )
       hb_langSelect( cUILNG )
    ELSE
-      tmp := hb_DirSepAdd( hb_DirBase() ) + ;
-             _SELF_NAME_ + ;
-             "." + ;
-             StrTran( cUILNG, "-", "_" ) + ;
-             ".hbl"
+      tmp := ;
+         hb_DirSepAdd( hb_DirBase() ) + ;
+         _SELF_NAME_ + ;
+         "." + ;
+         StrTran( cUILNG, "-", "_" ) + ;
+         ".hbl"
       IF hb_i18n_Check( tmp := hb_MemoRead( tmp ) )
          hb_i18n_Set( hb_i18n_RestoreTable( tmp ) )
          hb_langSelect( cUILNG )
@@ -14841,19 +14845,35 @@ INIT PROCEDURE ClipInit()
 
 STATIC FUNCTION ToMarkdown( cText )
 
-   cText := hb_StrXchg( cText, ;
-      { "&"    , "<"   , ">"   , "(c)"   , e"\n"           }, ;
-      { "&amp;", "&lt;", "&gt;", "&copy;", "  " + _OUT_EOL } )
+   STATIC sc_hMarkdown := { ;
+      "&"   => "&amp;", ;
+      "<"   => "&lt;", ;
+      ">"   => "&gt;", ;
+      "(c)" => "&copy;", ;
+      e"\n" => "  " + _OUT_EOL, ;
+      "\"   => "\\", ;
+      "`"   => "\`", ;
+      "*"   => "\*", ;
+      "_"   => "\_", ;
+      "{"   => "\{", ;
+      "}"   => "\}", ;
+      "["   => "\[", ;
+      "]"   => "\]", ;
+      "("   => "\(", ;
+      ")"   => "\)", ;
+      "#"   => "\#", ;
+      "+"   => "\+", ;
+      "-"   => "\-", ;
+      "."   => "\.", ;
+      "!"   => "\!" }
 
-   cText := hb_StrXchg( cText, ;
-      "\`*_{}[]()#+-.!", ;
-      { "\\", "\`", "\*", "\_", "\{", "\}", "\[", "\]", "\(", "\)", "\#", "\+", "\-", "\.", "\!" } )
+   cText := hb_StrXChg( cText, sc_hMarkdown )
 
 #if 0
    /* experiments with Markdown formatting */
-   cText := hb_StrXchg( cText, ;
-      {  "&lt;", "&gt;"  }, ;
-      { "*&lt;", "&gt;*" } )
+   cText := hb_StrXChg( cText, { ;
+      "&lt;" => "*&lt;", ;
+      "&gt;" => "&gt;*" } )
 #endif
 
    RETURN cText
@@ -14865,8 +14885,8 @@ STATIC PROCEDURE ShowHeader( hbmk )
    LOCAL cTrsTextI
 
    cText := ;
-      e"Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion()  + e"\n" +;
-      e"Copyright (c) 1999-2013, Viktor Szakáts\n"
+      "Harbour Make (" + _SELF_NAME_ + ") " + HBRawVersion() + e"\n" +;
+      "Copyright (c) 1999-2013, Viktor Szakáts" + e"\n"
 
    IF hbmk[ _HBMK_lMarkdown ]
       hb_SetTermCP( "UTF8EX" ) /* UTF-8 output for Markdown */
