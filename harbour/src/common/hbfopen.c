@@ -76,7 +76,7 @@ FILE * hb_fopen( const char * path, const char * mode )
 }
 
 #if defined( __XCC__ )
-#inlcude "hb_io.h"
+#include "hb_io.h"
 int __cdecl _wopen( const wchar_t * path, int flags, int mode )
 {
    char * pszPath = hb_osStrU16Decode( path );
@@ -84,6 +84,17 @@ int __cdecl _wopen( const wchar_t * path, int flags, int mode )
 
    iResult = _open( pszPath, flags, mode );
    hb_xfree( pszPath );
+
+   return iResult;
+}
+
+int __cdecl _wsystem( const wchar_t * cmd )
+{
+   char * pszCmd = hb_osStrU16Decode( cmd );
+   int iResult;
+
+   iResult = system( pszCmd );
+   hb_xfree( pszCmd );
 
    return iResult;
 }

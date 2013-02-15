@@ -184,6 +184,7 @@ C_SOURCES := \
    strmatch.c \
    strtoexp.c \
    strtran.c \
+   strxchg.c \
    strxor.c \
    strzero.c \
    stuff.c \
