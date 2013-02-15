@@ -141,18 +141,46 @@ PHB_ITEM hb_paramError( int iParam )
    return s_paramError ? s_paramError( iParam ) : NULL;
 }
 
+HB_BOOL hb_extIsNil( int iParam )
+{
+   static HB_EXTISPARAM s_extIsNil = NULL;
+
+   if( ! s_extIsNil )
+   {
+      s_extIsNil = ( HB_EXTISPARAM ) hb_dllGetProcAddress( "hb_extIsNil" );
+      if( ! s_extIsNil )
+         HB_DLL_MSG_NO_FUNC( "hb_extIsNil" );
+   }
+
+   return s_extIsNil ? s_extIsNil( iParam ) : FALSE;
+}
+
 HB_BOOL hb_extIsArray( int iParam )
 {
-   static HB_EXTISARRAY s_extIsArray = NULL;
+   static HB_EXTISPARAM s_extIsArray = NULL;
 
    if( ! s_extIsArray )
    {
-      s_extIsArray = ( HB_EXTISARRAY ) hb_dllGetProcAddress( "hb_extIsArray" );
+      s_extIsArray = ( HB_EXTISPARAM ) hb_dllGetProcAddress( "hb_extIsArray" );
       if( ! s_extIsArray )
          HB_DLL_MSG_NO_FUNC( "hb_extIsArray" );
    }
 
    return s_extIsArray ? s_extIsArray( iParam ) : FALSE;
+}
+
+HB_BOOL hb_extIsObject( int iParam )
+{
+   static HB_EXTISPARAM s_extIsObject = NULL;
+
+   if( ! s_extIsObject )
+   {
+      s_extIsObject = ( HB_EXTISPARAM ) hb_dllGetProcAddress( "hb_extIsObject" );
+      if( ! s_extIsObject )
+         HB_DLL_MSG_NO_FUNC( "hb_extIsObject" );
+   }
+
+   return s_extIsObject ? s_extIsObject( iParam ) : FALSE;
 }
 
 

@@ -228,7 +228,7 @@ HB_EXTERN_BEGIN
 #endif
 
 
-#define HB_ISNIL( n )         ( hb_param( n, HB_IT_ANY ) == NULL || HB_IS_NIL( hb_param( n, HB_IT_ANY ) ) ) /* NOTE: Intentionally using a different method */
+#define HB_ISNIL( n )         ( hb_extIsNil( n ) )                         /* NOTE: Intentionally using a different method */
 #define HB_ISCHAR( n )        ( hb_param( n, HB_IT_STRING ) != NULL )
 #define HB_ISNUM( n )         ( hb_param( n, HB_IT_NUMERIC ) != NULL )
 #define HB_ISLOG( n )         ( hb_param( n, HB_IT_LOGICAL ) != NULL )
@@ -628,6 +628,7 @@ extern HB_EXPORT HB_ULONG     hb_parinfo( int iParam ); /* Determine the param c
 extern HB_EXPORT HB_SIZE      hb_parinfa( int iParamNum, HB_SIZE nArrayIndex ); /* retrieve length or element type of an array parameter */
 extern HB_EXPORT PHB_ITEM     hb_param( int iParam, long lMask ); /* retrieve a generic parameter */
 extern HB_EXPORT PHB_ITEM     hb_paramError( int iParam ); /* Returns either the generic parameter or a NIL item if param not provided */
+extern HB_EXPORT HB_BOOL      hb_extIsNil( int iParam );
 extern HB_EXPORT HB_BOOL      hb_extIsArray( int iParam );
 extern HB_EXPORT HB_BOOL      hb_extIsObject( int iParam );
 

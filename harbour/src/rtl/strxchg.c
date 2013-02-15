@@ -60,50 +60,61 @@
 HB_FUNC( HB_STRXCHG )
 {
    PHB_ITEM pText = hb_param( 1, HB_IT_STRING );
-   PHB_ITEM pSrc = hb_param( 2, HB_IT_STRING | HB_IT_ARRAY );
+   PHB_ITEM pSrc = hb_param( 2, HB_IT_STRING | HB_IT_ARRAY |
+                                ( HB_ISNIL( 3 ) ? HB_IT_HASH : 0 ) );
 
    if( pText && pSrc )
    {
-      const char * pszSrc = HB_IS_STRING( pSrc ) ? hb_itemGetCPtr( pSrc ) : NULL;
+      const char * pszSrc = HB_IS_STRING( pSrc ) ?
+                            hb_itemGetCPtr( pSrc ) : NULL;
       HB_SIZE nText = hb_itemGetCLen( pText ),
-              nSrc = pszSrc ? hb_itemGetCLen( pSrc ) : hb_arrayLen( pSrc );
+              nSrc = hb_itemSize( pSrc );
 
       if( nText > 0 && nSrc > 0 )
       {
          PHB_ITEM pDst = hb_param( 3, HB_IT_STRING | HB_IT_ARRAY );
-         const char * pszDst = pDst && HB_IS_STRING( pDst ) ? hb_itemGetCPtr( pDst ) : NULL;
+         const char * pszDst = pDst && HB_IS_STRING( pDst ) ?
+                               hb_itemGetCPtr( pDst ) : NULL;
          const char * pszText = hb_itemGetCPtr( pText );
          const char * ptr;
          char * pszResult = NULL;
          HB_SIZE nDst, nSize, nPos, nAt, nSkip, nTmp;
 
-         nDst = pszDst ? hb_itemGetCLen( pDst ) :
-                         ( pDst ? hb_arrayLen( pDst ) : 0 );
-
-         nSize = nPos = 0;
+         nDst = hb_itemSize( HB_IS_HASH( pSrc ) ? pSrc : pDst );
+         nSize = nPos = nSkip = 0;
          while( nPos < nText )
          {
             if( pszSrc )
             {
-               ptr = ( const char * ) memchr( pszSrc, ( HB_UCHAR ) pszText[ nPos ], nSrc );
+               ptr = ( const char * )
+                     memchr( pszSrc, ( HB_UCHAR ) pszText[ nPos ], nSrc );
                nAt = ptr ? ptr - pszSrc + 1 : 0;
                nSkip = 1;
             }
             else
             {
-               nSkip = nAt = 0;
-               for( nTmp = 1; nTmp <= nDst; ++nTmp )
+               for( nAt = 1; nAt <= nSrc; ++nAt )
                {
-                  nSkip = hb_arrayGetCLen( pSrc, nTmp );
-                  if( nSkip > 0 && nSkip <= nText - nPos &&
-                      memcmp( pszText + nPos, hb_arrayGetCPtr( pSrc, nTmp ), nSkip ) == 0 )
+                  if( HB_IS_HASH( pSrc ) )
                   {
-                     nAt = nTmp;
-                     break;
+                     pDst = hb_hashGetKeyAt( pSrc, nAt );
+                     nSkip = hb_itemGetCLen( pDst );
+                     ptr = hb_itemGetCPtr( pDst );
                   }
+                  else
+                  {
+                     nSkip = hb_arrayGetCLen( pSrc, nAt );
+                     ptr = hb_arrayGetCPtr( pSrc, nAt );
+                  }
+                  if( nSkip > 0 && nSkip <= nText - nPos &&
+                      memcmp( pszText + nPos, ptr , nSkip ) == 0 )
+                     break;
                }
-               if( nAt == 0 )
+               if( nAt > nSrc )
+               {
+                  nAt = 0;
                   nSkip = 1;
+               }
             }
 
             if( pszResult )
@@ -116,8 +127,18 @@ HB_FUNC( HB_STRXCHG )
                         pszResult[ nSize++ ] = pszDst[ nAt - 1 ];
                      else
                      {
-                        nTmp = hb_arrayGetCLen( pDst, nAt );
-                        memcpy( &pszResult[ nSize ], hb_arrayGetCPtr( pDst, nAt ), nTmp );
+                        if( HB_IS_HASH( pSrc ) )
+                        {
+                           pDst = hb_hashGetValueAt( pSrc, nAt );
+                           nTmp = hb_itemGetCLen( pDst );
+                           ptr = hb_itemGetCPtr( pDst );
+                        }
+                        else
+                        {
+                           nTmp = hb_arrayGetCLen( pDst, nAt );
+                           ptr = hb_arrayGetCPtr( pDst, nAt );
+                        }
+                        memcpy( &pszResult[ nSize ], ptr, nTmp );
                         nSize += nTmp;
                      }
                   }
@@ -134,6 +155,8 @@ HB_FUNC( HB_STRXCHG )
                   {
                      if( pszDst )
                         nSize++;
+                     else if( HB_IS_HASH( pSrc ) )
+                        nSize += hb_itemGetCLen( hb_hashGetValueAt( pSrc, nAt ) );
                      else
                         nSize += hb_arrayGetCLen( pDst, nAt );
                   }

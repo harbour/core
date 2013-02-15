@@ -164,6 +164,27 @@ HB_SIZE hb_parinfa( int iParamNum, HB_SIZE nArrayIndex )
       return 0;
 }
 
+HB_BOOL hb_extIsNil( int iParam )
+{
+   HB_STACK_TLS_PRELOAD
+   PHB_ITEM pItem;
+
+   HB_TRACE( HB_TR_DEBUG, ( "hb_extIsNil(%d)", iParam ) );
+
+   if( iParam == -1 )
+      pItem = hb_stackReturnItem();
+   else if( iParam >= 0 && iParam <= hb_pcount() )
+      pItem = hb_stackItemFromBase( iParam );
+   else
+      return HB_TRUE;
+
+   if( HB_IS_BYREF( pItem ) )
+      pItem = hb_itemUnRef( pItem );
+
+   return HB_IS_NIL( pItem );
+}
+
+
 /* function to be called from pcode DLLs to detect if the extend system
  * is going to use an array item */
 
