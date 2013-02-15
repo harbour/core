@@ -6515,24 +6515,26 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   /* Order is significant */
                   tmp4 := iif( tmp3 == _CCOMP_PASS_C .AND. ( hbmk[ _HBMK_lCPP ] == NIL .OR. ! hbmk[ _HBMK_lCPP ] ), hbmk[ _HBMK_aOPTCX ], hbmk[ _HBMK_aOPTCPPX ] )
                   cOpt_CompCPass := cOpt_CompC
-                  /* TODO: Use hb_StrXChg() */
-                  /* NOTE: {FC} might contain recursive macros */
-                  cOpt_CompCPass := StrTran( cOpt_CompCPass, "{FC}"  , iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
-                                                                       GetEnv( "HB_USER_CFLAGS" ) +;
-                                                                       iif( Empty( hbmk[ _HBMK_aOPTC ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) ) +;
-                                                                       iif( Empty( tmp4 ), "", " " + ArrayToList( tmp4 ) ) +;
-                                                                       iif( Empty( hbmk[ _HBMK_aOPTCUSER ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTCUSER ] ) ) )
-                  cOpt_CompCPass := StrTran( cOpt_CompCPass, "{OD}"  , FNameEscape( hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ), nOpt_Esc, nOpt_FNF ) )
-                  cOpt_CompCPass := StrTran( cOpt_CompCPass, "{DI}"  , FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], nOpt_Esc, nOpt_FNF ) )
+
+                  /* TODO: eliminate recursive macros from hbmk[ _HBMK_aOPTC ] */
+                  cOpt_CompCPass := StrTran( cOpt_CompCPass, "{FC}", iif( hbmk[ _HBMK_lBLDFLGC ], hb_Version( HB_VERSION_FLAG_C ) + " ", "" ) +;
+                                                                     GetEnv( "HB_USER_CFLAGS" ) +;
+                                                                     iif( Empty( hbmk[ _HBMK_aOPTC ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTC ] ) ) +;
+                                                                     iif( Empty( tmp4 ), "", " " + ArrayToList( tmp4 ) ) +;
+                                                                     iif( Empty( hbmk[ _HBMK_aOPTCUSER ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTCUSER ] ) ) )
+
+                  hStrXChg := { ;
+                     "{OD}" => FNameEscape( hb_FNameDir( hbmk[ _HBMK_cPROGNAME ] ), nOpt_Esc, nOpt_FNF ), ;
+                     "{DI}" => FNameEscape( hbmk[ _HBMK_cHB_INSTALL_INC ], nOpt_Esc, nOpt_FNF ) }
 
                   IF "{IC}" $ cOpt_CompCPass
 
                      aThreads := {}
                      FOR EACH aTO_DO IN ArraySplit( l_aCGEN_TO_DO, l_nJOBS )
                         IF hb_mtvm() .AND. Len( aTO_DO:__enumBase() ) > 1
-                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, cObjExt, nOpt_Esc, nOpt_FNF, aTO_DO:__enumIndex(), Len( aTO_DO:__enumBase() ) ) )
+                           AAdd( aThreads, hb_threadStart( @CompileCLoop(), hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, hStrXChg, cObjExt, nOpt_Esc, nOpt_FNF, aTO_DO:__enumIndex(), Len( aTO_DO:__enumBase() ) ) )
                         ELSE
-                           IF ! CompileCLoop( hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, cObjExt, nOpt_Esc, nOpt_FNF, 0, 0 )
+                           IF ! CompileCLoop( hbmk, aTO_DO, cBin_CompCGEN, cOpt_CompCPass, hStrXChg, cObjExt, nOpt_Esc, nOpt_FNF, 0, 0 )
                               IF ! hbmk[ _HBMK_lIGNOREERROR ]
                                  hbmk[ _HBMK_nErrorLevel ] := _ERRLEV_COMPC
                                  EXIT
@@ -6552,9 +6554,8 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                         NEXT
                      ENDIF
                   ELSE
-                     /* TODO: Use hb_StrXChg() */
-                     cOpt_CompCPass := StrTran( cOpt_CompCPass, "{OO}"  , FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], cObjExt ), nOpt_Esc, nOpt_FNF ) )
-                     cOpt_CompCPass := StrTran( cOpt_CompCPass, "{OW}"  , FNameEscape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, nOpt_FNF ) )
+                     hStrXChg[ "{OO}" ] := FNameEscape( hb_FNameExtSet( hbmk[ _HBMK_cPROGNAME ], cObjExt ), nOpt_Esc, nOpt_FNF )
+                     hStrXChg[ "{OW}" ] := FNameEscape( hbmk[ _HBMK_cWorkDir ], nOpt_Esc, nOpt_FNF )
 
                      IF lCHD_Comp
                         tmp2 := hb_DirSepAdd( hb_PathRelativize( hb_PathNormalize( PathMakeAbsolute( hbmk[ _HBMK_cWorkDir ], hb_cwd() ) ), hb_cwd(), .T. ) )
@@ -6577,10 +6578,12 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                            FOR EACH tmp1 IN tmp
                               tmp1 := hb_PathNormalize( PathMakeAbsolute( tmp1, tmp2 ) )
                            NEXT
-                           cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompCPass, "{LC}"  , ArrayToList( tmp,, nOpt_Esc, nOpt_FNF ) ) )
+                           hStrXChg[ "{LC}" ] := ArrayToList( tmp,, nOpt_Esc, nOpt_FNF )
                         ELSE
-                           cOpt_CompCLoop := AllTrim( StrTran( cOpt_CompCPass, "{LC}"  , ArrayToList( aTO_DO,, nOpt_Esc, nOpt_FNF ) ) )
+                           hStrXChg[ "{LC}" ] := ArrayToList( aTO_DO,, nOpt_Esc, nOpt_FNF )
                         ENDIF
+
+                        cOpt_CompCLoop := AllTrim( hb_StrXChg( cOpt_CompCPass, hStrXChg ) )
 
                         /* Handle moving the whole command line to a script, if requested. */
                         cScriptFile := NIL
@@ -6756,7 +6759,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                nOpt_Esc := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_Esc ], hbmk[ _HBMK_nCmd_Esc ] )
                nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
-               /* NOTE: contains recursive macros */
+               /* TODO: eliminate recursive macros from hbmk[ _HBMK_aOPTL ] */
                cOpt_Link := StrTran( cOpt_Link, "{FL}", hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                         GetEnv( "HB_USER_LDFLAGS" ) +;
                                                         iif( Empty( hbmk[ _HBMK_aOPTL ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
@@ -6878,7 +6881,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
                   ENDIF
                ENDIF
 
-               /* NOTE: contains recursive macros */
+               /* TODO: eliminate recursive macros from hbmk[ _HBMK_aOPTD ] */
                cOpt_Dyn := StrTran( cOpt_Dyn, "{FD}", GetEnv( "HB_USER_DFLAGS" ) + " " + ArrayToList( hbmk[ _HBMK_aOPTD ] ) )
 
                cOpt_Dyn := AllTrim( hb_StrXChg( cOpt_Dyn, { ;
@@ -7905,7 +7908,7 @@ STATIC FUNCTION hbmk_hb_compileBuf( hbmk, ... )
 
    RETURN xRetVal
 
-STATIC FUNCTION CompileCLoop( hbmk, aTO_DO, cBin_CompC, cOpt_CompC, cObjExt, nOpt_Esc, nOpt_FNF, nJob, nJobs )
+STATIC FUNCTION CompileCLoop( hbmk, aTO_DO, cBin_CompC, cOpt_CompC, hStrXChg, cObjExt, nOpt_Esc, nOpt_FNF, nJob, nJobs )
 
    LOCAL lResult := .T.
    LOCAL cCommand
@@ -7916,16 +7919,13 @@ STATIC FUNCTION CompileCLoop( hbmk, aTO_DO, cBin_CompC, cOpt_CompC, cObjExt, nOp
 
    FOR EACH tmp IN aTO_DO
 
-      cCommand := cOpt_CompC
-
-      lOutputSpecified := "{OO}" $ cCommand
+      lOutputSpecified := "{OO}" $ cOpt_CompC
       cOutputFile := FNameDirExtSet( tmp, hbmk[ _HBMK_cWorkDir ], cObjExt )
 
-      /* TODO: Use hb_StrXChg() */
-      cCommand := StrTran( cCommand, "{IC}", FNameEscape( tmp, nOpt_Esc, nOpt_FNF ) )
-      cCommand := StrTran( cCommand, "{OO}", FNameEscape( cOutputFile, nOpt_Esc, nOpt_FNF ) )
+      hStrXChg[ "{IC}" ] := FNameEscape( tmp, nOpt_Esc, nOpt_FNF )
+      hStrXChg[ "{OO}" ] := FNameEscape( cOutputFile, nOpt_Esc, nOpt_FNF )
 
-      cCommand := cBin_CompC + " " + AllTrim( cCommand )
+      cCommand := cBin_CompC + " " + AllTrim( hb_StrXChg( cOpt_CompC, hStrXChg ) )
 
       IF hbmk[ _HBMK_lTRACE ]
          IF ! hbmk[ _HBMK_lQuiet ]
