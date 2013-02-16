@@ -3711,7 +3711,7 @@ FUNCTION hbmk( aArgs, nArgTarget, /* @ */ lPause, nLevel )
          {DI}     dir for includes
          {DL}     dirs for libs
          {SCRIPT} save command line to script and pass it to command as @<filename>
-      */
+       */
 
       /* Assemble library list */
 
@@ -8147,6 +8147,7 @@ STATIC FUNCTION FindNewerHeaders( hbmk, cFileName, tTimeParent, lCMode, cBin_Com
 #define _HBMK_HEADER_LEN_           2
 
 STATIC FUNCTION s_getIncludedFiles( hbmk, cFile, cParentDir, lCMode )
+
    THREAD STATIC t_pRegexInclude
    THREAD STATIC t_pRegexRequire
    THREAD STATIC t_hExclStd
@@ -12911,6 +12912,8 @@ STATIC FUNCTION __hb_extern_get_list( hbmk, cInputName, cBin_LibHBX, cOpt_LibHBX
 
          IF "{OT}" $ cOpt_LibHBX
             FClose( hb_FTempCreateEx( @cTempFile,,, ".tmp" ) )
+         ELSE
+            cTempFile := ""
          ENDIF
 
          cOpt_LibHBX := hb_StrXChg( cOpt_LibHBX, { ;
