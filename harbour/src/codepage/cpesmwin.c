@@ -56,7 +56,7 @@
 #define HB_CP_INFO      "Spanish (Modern) ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#include "l_es.c"
+#include "l_es.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

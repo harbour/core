@@ -54,7 +54,7 @@
 #define HB_CP_INFO      "French ISO-8859-1"
 #define HB_CP_UNITB     HB_UNITB_8859_1
 #define HB_CP_ACSORT    HB_CDP_ACSORT_EQUAL
-#include "l_fr.c"
+#include "l_fr.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

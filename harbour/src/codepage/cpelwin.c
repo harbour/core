@@ -55,7 +55,7 @@
 #define HB_CP_INFO      "Greek ANSI CP-1253"
 #define HB_CP_UNITB     HB_UNITB_1253
 #define HB_CP_ACSORT    HB_CDP_ACSORT_EQUAL
-#include "l_el.c"
+#include "l_el.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

@@ -55,7 +55,7 @@
 #define HB_CP_INFO      "Serbian Windows-1251"
 #define HB_CP_UNITB     HB_UNITB_1251
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#include "l_sr_cyr.c"
+#include "l_sr_cyr.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

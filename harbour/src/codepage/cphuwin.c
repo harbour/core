@@ -54,7 +54,7 @@
 #define HB_CP_INFO      "Hungarian Windows-1250"
 #define HB_CP_UNITB     HB_UNITB_1250
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#include "l_hu.c"
+#include "l_hu.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

@@ -55,7 +55,7 @@
 #define HB_CP_INFO      "Spanish (Modern) CP-850"
 #define HB_CP_UNITB     HB_UNITB_850
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#include "l_es.c"
+#include "l_es.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

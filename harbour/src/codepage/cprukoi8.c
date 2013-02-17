@@ -54,7 +54,7 @@
 #define HB_CP_INFO      "Russian KOI-8"
 #define HB_CP_UNITB     HB_UNITB_KOI_8
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#include "l_ru.c"
+#include "l_ru.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

@@ -54,7 +54,7 @@
 #define HB_CP_INFO      "Italian Windows-1252"
 #define HB_CP_UNITB     HB_UNITB_1252
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#include "l_it.c"
+#include "l_it.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

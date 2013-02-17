@@ -56,7 +56,7 @@
 #define HB_CP_INFO      "Croatian CP-852"
 #define HB_CP_UNITB     HB_UNITB_852
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#include "l_hr.c"
+#include "l_hr.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */

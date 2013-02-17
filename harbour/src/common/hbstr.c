@@ -993,6 +993,15 @@ char * hb_strRemEscSeq( char * str, HB_SIZE * pnLen )
                case 'b':
                   ch = '\b';
                   break;
+               case 'f':
+                  ch = '\f';
+                  break;
+               case 'v':
+                  ch = '\v';
+                  break;
+               case 'a':
+                  ch = '\a';
+                  break;
                case '0':
                case '1':
                case '2':

@@ -54,7 +54,7 @@
 #define HB_CP_INFO      "Hebrew CP-862"
 #define HB_CP_UNITB     HB_UNITB_862
 #define HB_CP_ACSORT    HB_CDP_ACSORT_NONE
-#include "l_he.c"
+#include "l_he.h"
 #define HB_CP_UTF8
 
 /* include CP registration code */
