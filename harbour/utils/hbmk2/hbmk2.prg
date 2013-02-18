@@ -6809,7 +6809,7 @@ FUNCTION hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExitStr )
                nOpt_FNF := iif( "{SCRIPT}" $ cOpt_Link, hbmk[ _HBMK_nScr_FNF ], hbmk[ _HBMK_nCmd_FNF ] )
 
                /* TODO: eliminate recursive macros from hbmk[ _HBMK_aOPTL ] */
-               cOpt_Link := StrTran( cOpt_Link, "{FL}", hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
+               cOpt_Link := StrTran( cOpt_Link, "{FL}", iif( hbmk[ _HBMK_lBLDFLGL ], hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                         GetEnv( "HB_USER_LDFLAGS" ) +;
                                                         iif( Empty( hbmk[ _HBMK_aOPTL ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
 
