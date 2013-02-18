@@ -447,7 +447,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/hbi18n
 %{_bindir}/hbmk2
 %{_bindir}/hbmk2.*.hbl
-%{_bindir}/find.hb
 %{_bindir}/contrib.hbr
 %{_mandir}/man1/*.1*
 %dir %{_includedir}/%{name}

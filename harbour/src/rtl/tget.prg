@@ -1326,7 +1326,7 @@ METHOD unTransform() CLASS Get
 
             cBuffer := StrTran( cBuffer, Chr( 1 ) )
 
-            cBuffer := hb_StrXChg( cBuffer, ;
+            cBuffer := hb_StrReplace( cBuffer, ;
                "$*-()", ;
                "     " )
 

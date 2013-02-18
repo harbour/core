@@ -810,7 +810,7 @@ DYNAMIC hb_StrToExp
 DYNAMIC hb_StrToHex
 DYNAMIC hb_StrToTS
 DYNAMIC hb_StrToUTF8
-DYNAMIC hb_StrXChg
+DYNAMIC hb_StrReplace
 DYNAMIC hb_StrXor
 DYNAMIC hb_threadDetach
 DYNAMIC hb_threadID

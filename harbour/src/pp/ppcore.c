@@ -1629,6 +1629,15 @@ static int hb_pp_tokenStr( PHB_PP_TOKEN pToken, PHB_MEM_BUFFER pBuffer,
                case '\b':
                   iq = ch = 'b';
                   break;
+               case '\f':
+                  iq = ch = 'f';
+                  break;
+               case '\v':
+                  iq = ch = 'v';
+                  break;
+               case '\a':
+                  iq = ch = 'a';
+                  break;
                case '\0':
                   iq = ch = '0';
                   break;

@@ -20,6 +20,7 @@
 ${hb_name}.hbx
 
 core.c
-hdbcsqlt.prg
+errstr.prg
+hdbc.prg
 
 ../3rd/sqlite3/sqlite3.hbc{HBMK_HAS_SQLITE3_LOCAL}

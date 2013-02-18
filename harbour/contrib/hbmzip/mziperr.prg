@@ -55,7 +55,7 @@
 FUNCTION hb_zipErrorStr( nStatus )
 
    IF ! HB_ISNUMERIC( nStatus )
-        RETURN "ZIP_INVALID"
+      RETURN "ZIP_INVALID"
    ENDIF
 
    DO CASE
@@ -80,7 +80,7 @@ FUNCTION hb_zipErrorStr( nStatus )
 FUNCTION hb_unzipErrorStr( nStatus )
 
    IF ! HB_ISNUMERIC( nStatus )
-        RETURN "UNZ_INVALID"
+      RETURN "UNZ_INVALID"
    ENDIF
 
    DO CASE

@@ -293,7 +293,7 @@ msgstr "Advertencia: No se puede eliminar destino existente '%1$s'."
 
 #: hbmk2.prg:7960 hbmk2.prg:11650 hbmk2.prg:13120
 #, c-format
-msgid "Certain .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_dirname}, ${hb_name}, ${hb_self}, ${hb_curdir}, ${hb_tempdir}, ${hb_targetname}, ${hb_targettype}, ${hb_plat}, ${hb_comp}, ${hb_comp_ver}, ${hb_build}, ${hb_cpu}, ${hb_work}, ${hb_workdynsub}, ${hb_dynprefix}, ${hb_dynsuffix}, ${hb_dynext}, ${hb_ver}, ${hb_verstr}, ${hb_major}, ${hb_minor}, ${hb_release}, ${hb_status}, ${hb_revision}, ${hb_host_plat}, ${hb_host_plat_unix}, ${hb_bin}, ${hb_lib}, ${hb_lib3rd}, ${hb_dyn}, ${hb_inc}, ${hb_first}, ${hb_outputdir}, ${hb_outputname}, ${hb_level}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
+msgid "Most .hbc lines (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) and corresponding command line parameters will accept macros: ${hb_root}, ${hb_dir}, ${hb_dirname}, ${hb_name}, ${hb_self}, ${hb_curdir}, ${hb_tempdir}, ${hb_targetname}, ${hb_targettype}, ${hb_plat}, ${hb_comp}, ${hb_comp_ver}, ${hb_build}, ${hb_cpu}, ${hb_work}, ${hb_workdynsub}, ${hb_dynprefix}, ${hb_dynsuffix}, ${hb_dynext}, ${hb_ver}, ${hb_verstr}, ${hb_major}, ${hb_minor}, ${hb_release}, ${hb_status}, ${hb_revision}, ${hb_host_plat}, ${hb_host_plat_unix}, ${hb_bin}, ${hb_lib}, ${hb_lib3rd}, ${hb_dyn}, ${hb_inc}, ${hb_first}, ${hb_outputdir}, ${hb_outputname}, ${hb_level}, ${<envvar>}. libpaths= also accepts %{hb_name} which translates to the name of the .hbc file under search."
 msgstr "Algunas opciones del archivo .hbc (libs=, hbcs=, prgflags=, cflags=, ldflags=, libpaths=, instfiles=, instpaths=, echo=) y sus correspondientes parámetros de línea de comando aceptan las siguientes macros: ${hb_root}, ${hb_dir}, ${hb_dirname}, ${hb_name}, ${hb_self}, ${hb_curdir}, ${hb_tempdir}, ${hb_targetname}, ${hb_targettype}, ${hb_plat}, ${hb_comp}, ${hb_comp_ver}, ${hb_build}, ${hb_cpu}, ${hb_work}, ${hb_workdynsub}, ${hb_dynprefix}, ${hb_dynsuffix}, ${hb_dynext}, ${hb_ver}, ${hb_verstr}, ${hb_major}, ${hb_minor}, ${hb_release}, ${hb_status}, ${hb_revision}, ${hb_host_plat}, ${hb_host_plat_unix}, ${hb_bin}, ${hb_lib}, ${hb_lib3rd}, ${hb_dyn}, ${hb_inc}, ${hb_first}, ${hb_outputdir}, ${hb_outputname}, ${hb_level}, ${<envvar>}. libpaths= tambien acepta %{hb_name} que se traduce en el nombre del archivo. hbc bajo búsqueda."
 
 #: hbmk2.prg:4258 hbmk2.prg:5785 hbmk2.prg:6364
@@ -458,7 +458,7 @@ msgstr "directorio de trabajo para el modo de compilación incremental\n(default
 
 #: hbmk2.prg:7942 hbmk2.prg:11633 hbmk2.prg:13102
 #, c-format
-msgid "compress executable/dynamic lib (needs UPX)\n<lev> can be: yes, no, min, max"
+msgid "compress executable/dynamic lib (needs UPX tool)\n<lev> can be: yes, no, min, max"
 msgstr "comprime executable/librería dinamica (necesita UPX)\n<lev> puede ser: yes, no, min, max"
 
 #: hbmk2.prg:7960 hbmk2.prg:11650 hbmk2.prg:13120

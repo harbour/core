@@ -182,9 +182,9 @@ C_SOURCES := \
    strcase.c \
    strclear.c \
    strmatch.c \
+   strrepl.c \
    strtoexp.c \
    strtran.c \
-   strxchg.c \
    strxor.c \
    strzero.c \
    stuff.c \

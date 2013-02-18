@@ -21,6 +21,7 @@
    #command DYNAMIC <fncs,...> => EXTERNAL <fncs>
 #endif
 
+DYNAMIC hb_sqlite3_errstr_short
 DYNAMIC hdbcSQLTConnection
 DYNAMIC hdbcSQLTDatabaseMetaData
 DYNAMIC hdbcSQLTPreparedStatement
