@@ -889,6 +889,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
             hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
 
+            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_GOTFOCUS );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_SETFOCUS, pEvParams );
             return 0;
          }
@@ -901,6 +902,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             hb_arraySetNInt( pEvParams, 2, ( HB_PTRDIFF ) wParam );
             hb_arraySetNInt( pEvParams, 3, ( HB_PTRDIFF ) lParam );
 
+            hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_LOSTFOCUS );
             hb_gt_wvt_FireEvent( pWVT, HB_GTE_KILLFOCUS, pEvParams );
             return 0;
          }
@@ -1049,7 +1051,7 @@ static LRESULT CALLBACK hb_gt_wvt_WndProc( HWND hWnd, UINT message, WPARAM wPara
             PHB_ITEM pEvParams = hb_itemNew( NULL );
             if( hb_gt_wvt_FireEvent( pWVT, HB_GTE_CLOSE, pEvParams ) == 0 )
             {
-               hb_gt_wvt_AddCharToInputQueue( pWVT, 27 );      /* post ESCape */
+               hb_gt_wvt_AddCharToInputQueue( pWVT, HB_K_CLOSE );
             }
             return 0;
          }
@@ -1652,29 +1654,47 @@ static HB_BOOL hb_gt_wvt_Info( PHB_GT pGT, int iType, PHB_GT_INFO pInfo )
          break;
       case HB_GTI_SETPOS_XY:
       case HB_GTI_SETPOS_ROWCOL:
-         if( pWVT->hWnd && ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
-                           ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
+         if( pWVT->hWnd )
          {
-            int x, y;
             RECT rect = { 0, 0, 0, 0 };
             GetWindowRect( pWVT->hWnd, &rect );
 
+            pInfo->pResult = hb_itemNew( NULL );
+            hb_arrayNew( pInfo->pResult, 2 );
+
             if( iType == HB_GTI_SETPOS_ROWCOL )
             {
-               y = hb_itemGetNI( pInfo->pNewVal ) * pWVT->fontHeight;
-               x = hb_itemGetNI( pInfo->pNewVal2 ) * pWVT->fontWidth;
+               hb_arraySetNI( pInfo->pResult, 1, rect.top / pWVT->fontHeight );    /* Will only return approx value */
+               hb_arraySetNI( pInfo->pResult, 2, rect.left / pWVT->fontWidth );    /* Will only return approx value */
             }
             else
             {
-               x = hb_itemGetNI( pInfo->pNewVal );
-               y = hb_itemGetNI( pInfo->pNewVal2 );
+               hb_arraySetNI( pInfo->pResult, 1, rect.left );
+               hb_arraySetNI( pInfo->pResult, 2, rect.top );
             }
-            hb_retl( SetWindowPos( pWVT->hWnd, NULL,
-                                   x,
-                                   y,
-                                   rect.right - rect.left,
-                                   rect.bottom - rect.top,
-                                   SWP_NOSIZE | SWP_NOZORDER ) );
+
+            if( ( hb_itemType( pInfo->pNewVal ) & HB_IT_NUMERIC ) &&
+                              ( hb_itemType( pInfo->pNewVal2 ) & HB_IT_NUMERIC ) )
+            {
+               int x, y;
+
+               if( iType == HB_GTI_SETPOS_ROWCOL )
+               {
+                  y = hb_itemGetNI( pInfo->pNewVal ) * pWVT->fontHeight;
+                  x = hb_itemGetNI( pInfo->pNewVal2 ) * pWVT->fontWidth;
+               }
+               else
+               {
+                  x = hb_itemGetNI( pInfo->pNewVal );
+                  y = hb_itemGetNI( pInfo->pNewVal2 );
+               }
+               hb_retl( SetWindowPos( pWVT->hWnd, NULL,
+                                      x,
+                                      y,
+                                      rect.right - rect.left,
+                                      rect.bottom - rect.top,
+                                      SWP_NOSIZE | SWP_NOZORDER ) );
+            }
          }
          break;
       case HB_GTI_SPEC:
