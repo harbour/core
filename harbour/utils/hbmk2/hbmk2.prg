@@ -6811,7 +6811,7 @@ FUNCTION hbmk( aArgs, nArgTarget, nLevel, /* @ */ lPause, /* @ */ lExitStr )
                /* TODO: eliminate recursive macros from hbmk[ _HBMK_aOPTL ] */
                cOpt_Link := StrTran( cOpt_Link, "{FL}", iif( hbmk[ _HBMK_lBLDFLGL ], hb_Version( HB_VERSION_FLAG_LINKER ) + " ", "" ) +;
                                                         GetEnv( "HB_USER_LDFLAGS" ) +;
-                                                        iif( Empty( hbmk[ _HBMK_aOPTL ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) )
+                                                        iif( Empty( hbmk[ _HBMK_aOPTL ] ), "", " " + ArrayToList( hbmk[ _HBMK_aOPTL ] ) ) )
 
                cOpt_Link := AllTrim( hb_StrReplace( cOpt_Link, { ;
                   "{LO}" => ArrayToList( ArrayJoin( l_aOBJ, hbmk[ _HBMK_aOBJUSER ] ),, nOpt_Esc, nOpt_FNF, cObjPrefix ), ;
