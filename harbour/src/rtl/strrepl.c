@@ -65,8 +65,6 @@ HB_FUNC( HB_STRREPLACE )
 
    if( pText && pSrc )
    {
-      const char * pszSrc = HB_IS_STRING( pSrc ) ?
-                            hb_itemGetCPtr( pSrc ) : NULL;
       HB_SIZE nText = hb_itemGetCLen( pText ),
               nSrc = hb_itemSize( pSrc );
 
@@ -75,6 +73,8 @@ HB_FUNC( HB_STRREPLACE )
          PHB_ITEM pDst = hb_param( 3, HB_IT_STRING | HB_IT_ARRAY );
          const char * pszDst = pDst && HB_IS_STRING( pDst ) ?
                                hb_itemGetCPtr( pDst ) : NULL;
+         const char * pszSrc = HB_IS_STRING( pSrc ) ?
+                               hb_itemGetCPtr( pSrc ) : NULL;
          const char * pszText = hb_itemGetCPtr( pText );
          const char * ptr;
          char * pszResult = NULL;
