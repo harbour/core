@@ -2,7 +2,7 @@
  * $Id$
  */
 
-/* Przemyslaw Czerpak <druzus / at / priv.onet.pl> */
+/* SERBIAN collating sequence done by Srdjan Dragojlovic <digikv@yahoo.com> */
 
-#define HB_CP_UPPER     "АБЦЧЋДЂЕФГХИЈКЛМНОПЉРСШТУВЊЏЅЗЖ"
-#define HB_CP_LOWER     "абцчћдђефгхијклмнопљрсштувњџѕзж"
+#define HB_CP_UPPER     "АБВГДЂЕЖЗИЈКЛЉМНЊОПРСТЋУФХЦЧЏШ"
+#define HB_CP_LOWER     "абвгдђежзијклљмнњопрстћуфхцчџш"
